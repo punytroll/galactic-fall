@@ -229,6 +229,7 @@ public:
 				SelectLinkedSystem(g_MapDialog->GetSelectedSystem());
 			}
 			g_MapDialog = 0;
+			g_Pause = false;
 		}
 	}
 } g_GlobalDestroyListener;
@@ -462,6 +463,7 @@ void Key(unsigned char Key, int X, int Y)
 		{
 			if(g_MapDialog == 0)
 			{
+				g_Pause = true;
 				g_MapDialog = new MapDialog(0, g_CurrentSystem);
 				g_MapDialog->AddDestroyListener(&g_GlobalDestroyListener);
 			}
