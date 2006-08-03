@@ -113,3 +113,13 @@ void DrawText(const std::string & String)
 		glBitmap(6, 12, 0, 0, 6, 0, g_Letters[String[I] - CHARACTEROFFSET]);
 	}
 }
+
+void DrawTextWithoutTranslation(const std::string & String)
+{
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	glRasterPos2f(0.0f, 0.0f);
+	for(std::string::size_type I = 0; I < String.length(); ++I)
+	{
+		glBitmap(6, 12, 0, 0, 6, 0, g_Letters[String[I] - CHARACTEROFFSET]);
+	}
+}

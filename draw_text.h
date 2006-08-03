@@ -4,5 +4,6 @@
 #include <string>
 
 void DrawText(const std::string & String);
+void DrawTextWithoutTranslation(const std::string & String);
 
 #endif
