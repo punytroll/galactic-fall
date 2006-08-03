@@ -391,11 +391,15 @@ void Key(unsigned char Key, int X, int Y)
 		{
 			if(g_SelectedLinkedSystem != 0)
 			{
-				System * OldSystem(g_CurrentSystem);
-				System * NewSystem(g_SelectedLinkedSystem);
-				
-				LeaveSystem();
-				EnterSystem(NewSystem, OldSystem);
+				// only let the player jump if the ship is more than 280 clicks from system center
+				if(g_PlayerShip->GetPosition().length_squared() > 78400.0f)
+				{
+					System * OldSystem(g_CurrentSystem);
+					System * NewSystem(g_SelectedLinkedSystem);
+					
+					LeaveSystem();
+					EnterSystem(NewSystem, OldSystem);
+				}
 			}
 			
 			break;
