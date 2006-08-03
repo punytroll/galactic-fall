@@ -18,6 +18,7 @@
 #include "destroy_listener.h"
 #include "globals.h"
 #include "label.h"
+#include "map_dialog.h"
 #include "model.h"
 #include "model_manager.h"
 #include "planet.h"
@@ -29,9 +30,6 @@
 #include "system.h"
 #include "system_manager.h"
 #include "widget.h"
-
-#define GLUT_WHEEL_UP 3
-#define GLUT_WHEEL_DOWN 4
 
 int g_LastMotionX(-1);
 int g_LastMotionY(-1);
@@ -58,6 +56,7 @@ Planet * g_SelectedPlanet(0);
 float g_TimeWarp(1.0f);
 bool g_Pause(false);
 PlanetDialog * g_PlanetDialog;
+MapDialog * g_MapDialog;
 int g_WidgetCollectorCountDownInitializer(10);
 int g_WidgetCollectorCountDown(g_WidgetCollectorCountDownInitializer);
 
@@ -222,6 +221,14 @@ public:
 			SelectPlanet(0);
 			g_PlayerShip->m_Velocity.set(0.0f, 0.0f);
 			g_CreditsLabel->SetString("Credits: " + to_string_cast(g_PlayerCharacter->GetCredits()));
+		}
+		else if(EventSource == g_MapDialog)
+		{
+			if(g_CurrentSystem->IsLinkedToSystem(g_MapDialog->GetSelectedSystem()) == true)
+			{
+				SelectLinkedSystem(g_MapDialog->GetSelectedSystem());
+			}
+			g_MapDialog = 0;
 		}
 	}
 } g_GlobalDestroyListener;
@@ -447,6 +454,16 @@ void Key(unsigned char Key, int X, int Y)
 						SelectPlanet(MinimumPlanet);
 					}
 				}
+			}
+			
+			break;
+		}
+	case 'm':
+		{
+			if(g_MapDialog == 0)
+			{
+				g_MapDialog = new MapDialog(0, g_CurrentSystem);
+				g_MapDialog->AddDestroyListener(&g_GlobalDestroyListener);
 			}
 			
 			break;
