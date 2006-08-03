@@ -145,7 +145,7 @@ draw_text.o: draw_text.cpp $(draw_text_h)
 label.o: label.cpp $(label_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags math3d` -c $< -o $@
 
-main.o: main.cpp $(character_h) $(color_h) $(commodity_manager_h) $(destroy_listener_h) $(label_h) $(model_h) $(model_manager_h) $(planet_h) $(planet_dialog_h) $(ship_h) $(ship_class_h) $(ship_class_manager_h) $(system_h) $(system_manager_h) $(widget_h)
+main.o: main.cpp $(character_h) $(color_h) $(commodity_manager_h) $(destroy_listener_h) $(label_h) $(model_h) $(model_manager_h) $(planet_h) $(planet_dialog_h) $(ship_h) $(ship_class_h) $(ship_class_manager_h) $(string_cast_h) $(system_h) $(system_manager_h) $(widget_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags math3d` -c $< -o $@
 
 model.o: model.cpp $(model_h)
