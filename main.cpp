@@ -369,8 +369,8 @@ void MouseMotion(int X, int Y)
 	g_LastMotionY = Y;
 	if(g_MouseButton == GLUT_MIDDLE_BUTTON)
 	{
-		g_CameraPosition.m_V.m_A[0] -= static_cast< float >(DeltaX) * 0.1;
-		g_CameraPosition.m_V.m_A[1] += static_cast< float >(DeltaY) * 0.1;
+		g_CameraPosition.m_V.m_A[0] -= static_cast< float >(DeltaX) * 0.0008f * g_CameraPosition.m_V.m_A[2];
+		g_CameraPosition.m_V.m_A[1] += static_cast< float >(DeltaY) * 0.0008f * g_CameraPosition.m_V.m_A[2];
 	}
 }
 
