@@ -17,10 +17,10 @@ PlanetDialog::PlanetDialog(Widget * SupWidget, Planet * Planet) :
 	SetBackgroundColor(Color(0.2f, 0.2f, 0.2f));
 	m_NameLabel = new Label(this, m_Planet->GetName());
 	m_NameLabel->SetPosition(math3d::vector2f(10.0f, 10.0f));
-	m_NameLabel->SetSize(math3d::vector2f(50.0f, 12.0f));
+	m_NameLabel->SetSize(math3d::vector2f(100.0f, 20.0f));
 	m_DescriptionLabel = new Label(this, m_Planet->GetDescription());
-	m_DescriptionLabel->SetPosition(math3d::vector2f(290.0f, 10.0f));
-	m_DescriptionLabel->SetSize(math3d::vector2f(200.0f, 100.0f));
+	m_DescriptionLabel->SetPosition(math3d::vector2f(120.0f, 10.0f));
+	m_DescriptionLabel->SetSize(math3d::vector2f(360.0f, 100.0f));
 	m_DescriptionLabel->SetWrap(true);
 	m_DescriptionLabel->SetWordWrap(true);
 	m_OKButton = new Button(this);
