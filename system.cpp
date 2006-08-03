@@ -16,6 +16,19 @@ void System::SetPosition(const math3d::vector2f & Position)
 	m_Position = Position;
 }
 
+bool System::IsLinkedToSystem(const System * LinkedSystem) const
+{
+	for(std::list< System * >::const_iterator LinkedSystemIterator = m_LinkedSystems.begin(); LinkedSystemIterator != m_LinkedSystems.end(); ++LinkedSystemIterator)
+	{
+		if(*LinkedSystemIterator == LinkedSystem)
+		{
+			return true;
+		}
+	}
+	
+	return false;
+}
+
 Planet * System::CreatePlanet(const std::string & Identifier)
 {
 	m_Planets.push_back(new Planet(Identifier));

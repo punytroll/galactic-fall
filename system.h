@@ -6,6 +6,7 @@
 
 #include <math3d/vector2f.h>
 
+class Planet;
 class Ship;
 
 class System
@@ -18,6 +19,7 @@ public:
 	const std::list< Planet * > GetPlanets(void) const;
 	const std::list< System * > GetLinkedSystems(void) const;
 	const std::list< Ship * > GetShips(void) const;
+	bool IsLinkedToSystem(const System * System) const;
 	void SetName(const std::string & Name);
 	void SetPosition(const math3d::vector2f & Position);
 	Planet * CreatePlanet(const std::string & Identifier);
