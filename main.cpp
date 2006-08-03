@@ -25,6 +25,7 @@
 #include "ship.h"
 #include "ship_class.h"
 #include "ship_class_manager.h"
+#include "string_cast.h"
 #include "system.h"
 #include "system_manager.h"
 #include "widget.h"
@@ -50,6 +51,7 @@ float g_Height(0.0f);
 Label * g_SystemLabel(0);
 Label * g_TimeWarpLabel(0);
 Label * g_PlanetLabel(0);
+Label * g_CreditsLabel(0);
 System * g_CurrentSystem;
 System * g_SelectedLinkedSystem(0);
 Planet * g_SelectedPlanet(0);
@@ -219,6 +221,7 @@ public:
 			SelectLinkedSystem(0);
 			SelectPlanet(0);
 			g_PlayerShip->m_Velocity.set(0.0f, 0.0f);
+			g_CreditsLabel->SetString("Credits: " + to_string_cast(g_PlayerCharacter->GetCredits()));
 		}
 	}
 } g_GlobalDestroyListener;
@@ -582,15 +585,18 @@ void SpecialKeyUp(int Key, int X, int Y)
 int main(int argc, char **argv)
 {
 	// ui setup
-	g_SystemLabel = new Label(0);
-	g_SystemLabel->SetForegroundColor(Color(1.0f, 1.0f, 0.8f));
-	g_SystemLabel->SetPosition(math3d::vector2f(0.0f, 0.0f));
 	g_TimeWarpLabel = new Label(0);
 	g_TimeWarpLabel->SetForegroundColor(Color(1.0f, 1.0f, 0.8f));
-	g_TimeWarpLabel->SetPosition(math3d::vector2f(0.0f, 20.0f));
+	g_TimeWarpLabel->SetPosition(math3d::vector2f(0.0f, 00.0f));
+	g_SystemLabel = new Label(0);
+	g_SystemLabel->SetForegroundColor(Color(1.0f, 1.0f, 0.8f));
+	g_SystemLabel->SetPosition(math3d::vector2f(0.0f, 20.0f));
 	g_PlanetLabel = new Label(0);
 	g_PlanetLabel->SetForegroundColor(Color(1.0f, 1.0f, 0.8f));
 	g_PlanetLabel->SetPosition(math3d::vector2f(0.0f, 40.0f));
+	g_CreditsLabel = new Label(0);
+	g_CreditsLabel->SetForegroundColor(Color(1.0f, 1.0f, 0.8f));
+	g_CreditsLabel->SetPosition(math3d::vector2f(0.0f, 60.0f));
 	
 	// data reading
 	LoadModelsFromFile(&g_ModelManager, "data/shuttlecraft.xml");
@@ -614,6 +620,7 @@ int main(int argc, char **argv)
 	g_CameraFocus = g_PlayerShip;
 	EnterSystem(g_SystemManager.Get("sol"), 0);
 	SetTimeWarp(1.0f);
+	g_CreditsLabel->SetString("Credits: " + to_string_cast(g_PlayerCharacter->GetCredits()));
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 	glutCreateWindow("Escape Velocity");
