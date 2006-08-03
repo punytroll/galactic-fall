@@ -13,6 +13,7 @@ class SystemManager
 public:
 	SystemManager(CommodityManager * CommodityManager);
 	~SystemManager(void);
+	const std::map< std::string, System * > & GetSystems(void) const;
 	System * Get(const std::string & Identifier);
 	System * Create(const std::string & Identifier);
 	void Destroy(const std::string & Identifier);
@@ -21,6 +22,11 @@ private:
 	CommodityManager * m_CommodityManager;
 	std::map< std::string, System * > m_Systems;
 };
+
+inline const std::map< std::string, System * > & SystemManager::GetSystems(void) const
+{
+	return m_Systems;
+}
 
 inline CommodityManager * SystemManager::GetCommodityManager(void)
 {
