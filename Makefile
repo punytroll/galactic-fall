@@ -3,6 +3,9 @@ button_h = \
 	$(mouse_button_listener_h) \
 	$(widget_h)
 
+character_h = \
+	character.h
+
 clicked_listener_h = \
 	clicked_listener.h
 
@@ -191,7 +194,7 @@ system.o: system.cpp $(system_h)
 system_manager.o: system_manager.cpp $(commodity_manager_h) $(planet_h) $(string_cast_h) $(system_h) $(system_manager_h) $(xml_puny_dom_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags math3d` -c $< -o $@
 
-trade_center_dialog.o: trade_center_dialog.cpp $(button_h) $(commodity_h) $(globals_h) $(label_h) $(planet_h) $(ship_h) $(trade_center_dialog_h)
+trade_center_dialog.o: trade_center_dialog.cpp $(button_h) $(character_h) $(commodity_h) $(globals_h) $(label_h) $(planet_h) $(ship_h) $(trade_center_dialog_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags math3d` -c $< -o $@
 
 widget.o: widget.cpp $(color_h) $(destroy_listener_h) $(mouse_button_listener_h) $(widget_h)
