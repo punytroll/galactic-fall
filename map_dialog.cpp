@@ -100,7 +100,16 @@ void MapDialog::Draw(void) const
 		
 		for(std::list< System * >::const_iterator LinkedSystemIterator = LinkedSystems.begin(); LinkedSystemIterator != LinkedSystems.end(); ++LinkedSystemIterator)
 		{
-			glColor3f(0.0f, 0.0f, 0.8f);
+			if(UnexploredSystems.find(*LinkedSystemIterator) == UnexploredSystems.end())
+			{
+				// system already explored so make it blue
+				glColor3f(0.0f, 0.0f, 0.8f);
+			}
+			else
+			{
+				// system still unexplored so make it grey
+				glColor3f(0.5f, 0.5f, 0.5f);
+			}
 			glBegin(GL_LINES);
 			glVertex2f(0.0f, 0.0f);
 			glVertex2fv((((*LinkedSystemIterator)->GetPosition() - (*ExploredSystemIterator)->GetPosition()) * m_Scale).m_V.m_A);
