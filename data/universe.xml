@@ -102,12 +102,24 @@
 			<commodity identifier="equipment" base-price-modifier="1.03"/>
 		</planet>
 	</system>
+	<system identifier="tichel">
+		<name value="Tichel"/>
+		<position x="4" y="9"/>
+	</system>
 	<system-link>
 		<system identifier="sol"/>
 		<system identifier="alpha_centauri"/>
 	</system-link>
 	<system-link>
 		<system identifier="sol"/>
+		<system identifier="rigel"/>
+	</system-link>
+	<system-link>
+		<system identifier="tichel"/>
+		<system identifier="alpha_centauri"/>
+	</system-link>
+	<system-link>
+		<system identifier="tichel"/>
 		<system identifier="rigel"/>
 	</system-link>
 </definitions>
