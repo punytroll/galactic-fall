@@ -1,4 +1,10 @@
 #include "character.h"
+#include "map_knowledge.h"
+
+Character::Character(void) :
+	m_MapKnowledge(new MapKnowledge())
+{
+}
 
 void Character::AddCredits(const float & Credits)
 {
