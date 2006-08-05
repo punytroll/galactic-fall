@@ -103,7 +103,7 @@ void MapDialog::Draw(void) const
 			glColor3f(0.0f, 0.0f, 0.8f);
 			glBegin(GL_LINES);
 			glVertex2f(0.0f, 0.0f);
-			glVertex2fv(((*LinkedSystemIterator)->GetPosition() * m_Scale).m_V.m_A);
+			glVertex2fv((((*LinkedSystemIterator)->GetPosition() - (*ExploredSystemIterator)->GetPosition()) * m_Scale).m_V.m_A);
 			glEnd();
 		}
 		if(*ExploredSystemIterator == m_SelectedSystem)
