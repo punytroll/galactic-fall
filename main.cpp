@@ -19,6 +19,7 @@
 #include "globals.h"
 #include "label.h"
 #include "map_dialog.h"
+#include "map_knowledge.h"
 #include "model.h"
 #include "model_manager.h"
 #include "planet.h"
@@ -313,6 +314,7 @@ void EnterSystem(System * NewSystem, System * OldSystem)
 	g_CurrentSystem->AddShip(g_PlayerShip);
 	SelectLinkedSystem(0);
 	SelectPlanet(0);
+	g_PlayerCharacter->GetMapKnowledge()->AddExploredSystem(g_CurrentSystem);
 }
 
 void SetTimeWarp(float TimeWarp)

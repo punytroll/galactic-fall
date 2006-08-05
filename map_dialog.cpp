@@ -5,11 +5,13 @@
 #include <GL/glut.h>
 
 #include "button.h"
+#include "character.h"
 #include "color.h"
 #include "draw_text.h"
 #include "globals.h"
 #include "label.h"
 #include "map_dialog.h"
+#include "map_knowledge.h"
 #include "system.h"
 #include "system_manager.h"
 
@@ -46,17 +48,55 @@ void MapDialog::Draw(void) const
 	glTranslatef(Middle.m_V.m_A[0], Middle.m_V.m_A[1], 0.0f);
 	glScalef(1.0f, -1.0f, 1.0f);
 	
-	const std::map< std::string, System * > & Systems(g_SystemManager.GetSystems());
+	const std::set< System * > & UnexploredSystems(g_PlayerCharacter->GetMapKnowledge()->GetUnexploredSystems());
 	
-	for(std::map< std::string, System * >::const_iterator SystemIterator = Systems.begin(); SystemIterator != Systems.end(); ++SystemIterator)
+	for(std::set< System * >::const_iterator UnexploredSystemIterator = UnexploredSystems.begin(); UnexploredSystemIterator != UnexploredSystems.end(); ++UnexploredSystemIterator)
 	{
-		math3d::vector2f Position(SystemIterator->second->GetPosition() - m_System->GetPosition());
+		math3d::vector2f Position((*UnexploredSystemIterator)->GetPosition() - m_System->GetPosition());
+		
+		Position *= m_Scale;
+		glPushMatrix();
+		glTranslatef(Position.m_V.m_A[0], Position.m_V.m_A[1], 0.0f);
+		if(*UnexploredSystemIterator == m_SelectedSystem)
+		{
+			glColor3f(0.0f, 1.0f, 0.0f);
+		}
+		else if(*UnexploredSystemIterator == m_System)
+		{
+			glColor3f(0.8f, 0.8f, 0.0f);
+		}
+		else
+		{
+			glColor3f(0.5f, 0.5f, 0.5f);
+		}
+		glBegin(GL_LINE_LOOP);
+		glVertex2f(SystemSize, 0.0f);
+		glVertex2f(SystemSize * 0.866f, SystemSize * 0.5f);
+		glVertex2f(SystemSize * 0.5f, SystemSize * 0.866f);
+		glVertex2f(0.0f, SystemSize);
+		glVertex2f(-SystemSize * 0.5f, SystemSize * 0.866f);
+		glVertex2f(-SystemSize * 0.866f, SystemSize * 0.5f);
+		glVertex2f(-SystemSize, 0.0f);
+		glVertex2f(-SystemSize * 0.866f, -SystemSize * 0.5f);
+		glVertex2f(-SystemSize * 0.5f, -SystemSize * 0.866f);
+		glVertex2f(0.0f, -SystemSize);
+		glVertex2f(SystemSize * 0.5f, -SystemSize * 0.866f);
+		glVertex2f(SystemSize * 0.866f, -SystemSize * 0.5f);
+		glEnd();
+		glPopMatrix();
+	}
+	
+	const std::set< System * > & ExploredSystems(g_PlayerCharacter->GetMapKnowledge()->GetExploredSystems());
+	
+	for(std::set< System * >::const_iterator ExploredSystemIterator = ExploredSystems.begin(); ExploredSystemIterator != ExploredSystems.end(); ++ExploredSystemIterator)
+	{
+		math3d::vector2f Position((*ExploredSystemIterator)->GetPosition() - m_System->GetPosition());
 		
 		Position *= m_Scale;
 		glPushMatrix();
 		glTranslatef(Position.m_V.m_A[0], Position.m_V.m_A[1], 0.0f);
 		
-		const std::list< System * > & LinkedSystems(SystemIterator->second->GetLinkedSystems());
+		const std::list< System * > & LinkedSystems((*ExploredSystemIterator)->GetLinkedSystems());
 		
 		for(std::list< System * >::const_iterator LinkedSystemIterator = LinkedSystems.begin(); LinkedSystemIterator != LinkedSystems.end(); ++LinkedSystemIterator)
 		{
@@ -66,9 +106,13 @@ void MapDialog::Draw(void) const
 			glVertex2fv(((*LinkedSystemIterator)->GetPosition() * m_Scale).m_V.m_A);
 			glEnd();
 		}
-		if((SystemIterator->second == m_SelectedSystem) || (SystemIterator->second == m_System))
+		if(*ExploredSystemIterator == m_SelectedSystem)
 		{
 			glColor3f(0.0f, 1.0f, 0.0f);
+		}
+		else if(*ExploredSystemIterator == m_System)
+		{
+			glColor3f(0.8f, 0.8f, 0.0f);
 		}
 		else
 		{
@@ -90,7 +134,7 @@ void MapDialog::Draw(void) const
 		glEnd();
 		glColor3f(1.0f, 1.0f, 1.0f);
 		glTranslatef(0.0f, -12.0f - SystemSize * 2.0f, 0.0f);
-		DrawTextWithoutTranslation(SystemIterator->second->GetName());
+		DrawTextWithoutTranslation((*ExploredSystemIterator)->GetName());
 		glPopMatrix();
 	}
 	glPopMatrix();
