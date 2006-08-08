@@ -18,6 +18,8 @@ protected:
 	virtual bool OnClicked(Widget * EventSource);
 	virtual bool OnMouseButton(Widget * EventSource, int Button, int State, float X, float Y);
 private:
+	void UpdateTraderCredits(void);
+	void UpdateTraderFreeCargoHoldSize(void);
 	Planet * m_Planet;
 	Button * m_OKButton;
 	Label * m_OKButtonLabel;
@@ -25,6 +27,8 @@ private:
 	Label * m_BuyButtonLabel;
 	Button * m_SellButton;
 	Label * m_SellButtonLabel;
+	Label * m_TraderCreditsLabel;
+	Label * m_TraderFreeCargoHoldSizeLabel;
 	TradeCenterCommodity * m_SelectedTradeCenterCommodity;
 };
 
