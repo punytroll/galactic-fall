@@ -35,6 +35,7 @@ public:
 	virtual void Draw(void) const;
 	const std::string & GetString(void) const;
 	const Color & GetForegroundColor(void) const;
+	Color & GetForegroundColor(void);
 	const bool & GetWrap(void) const;
 	const bool & GetWordWrap(void) const;
 	const Label::HorizontalAlignment & GetHorizontalAlignment(void) const;
@@ -54,6 +55,11 @@ inline const std::string & Label::GetString(void) const
 }
 
 inline const Color & Label::GetForegroundColor(void) const
+{
+	return m_ForegroundColor;
+}
+
+inline Color & Label::GetForegroundColor(void)
 {
 	return m_ForegroundColor;
 }
