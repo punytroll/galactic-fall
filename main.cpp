@@ -96,6 +96,41 @@ float CalculateTime(void)
 	}
 }
 
+void DrawPlanetSelection(Planet * Planet)
+{
+	static const float OuterFactor(1.8f);
+	static const float InnerFactor(2.0f);
+	const math3d::vector2f & Position(Planet->GetPosition());
+	
+	glPushMatrix();
+	glPushAttrib(GL_LIGHTING_BIT);
+	glDisable(GL_LIGHTING);
+	glTranslatef(Position.m_V.m_A[0], Position.m_V.m_A[1], 0.0f);
+	glColor3f(1.0f, 0.0f, 0.0f);
+	glBegin(GL_LINE_STRIP);
+	glVertex2f(-Planet->GetSize() / OuterFactor, -Planet->GetSize() / InnerFactor);
+	glVertex2f(-Planet->GetSize() / OuterFactor, -Planet->GetSize() / OuterFactor);
+	glVertex2f(-Planet->GetSize() / InnerFactor, -Planet->GetSize() / OuterFactor);
+	glEnd();
+	glBegin(GL_LINE_STRIP);
+	glVertex2f(-Planet->GetSize() / OuterFactor, Planet->GetSize() / InnerFactor);
+	glVertex2f(-Planet->GetSize() / OuterFactor, Planet->GetSize() / OuterFactor);
+	glVertex2f(-Planet->GetSize() / InnerFactor, Planet->GetSize() / OuterFactor);
+	glEnd();
+	glBegin(GL_LINE_STRIP);
+	glVertex2f(Planet->GetSize() / OuterFactor, -Planet->GetSize() / InnerFactor);
+	glVertex2f(Planet->GetSize() / OuterFactor, -Planet->GetSize() / OuterFactor);
+	glVertex2f(Planet->GetSize() / InnerFactor, -Planet->GetSize() /OuterFactor);
+	glEnd();
+	glBegin(GL_LINE_STRIP);
+	glVertex2f(Planet->GetSize() / OuterFactor, Planet->GetSize() / InnerFactor);
+	glVertex2f(Planet->GetSize() / OuterFactor, Planet->GetSize() / OuterFactor);
+	glVertex2f(Planet->GetSize() / InnerFactor, Planet->GetSize() / OuterFactor);
+	glEnd();
+	glPopAttrib();
+	glPopMatrix();
+}
+
 void DisplayUserInterface(void)
 {
 	glDisable(GL_LIGHTING);
@@ -172,6 +207,12 @@ void Render(void)
 			glClear(GL_DEPTH_BUFFER_BIT);
 			(*ShipIterator)->Draw();
 		}
+	}
+	// HUD
+	if(g_SelectedPlanet != 0)
+	{
+		glClear(GL_DEPTH_BUFFER_BIT);
+		DrawPlanetSelection(g_SelectedPlanet);
 	}
 	// user interface updates
 	if((g_SelectedLinkedSystem != 0) && (CanJump(g_PlayerShip) == true))
