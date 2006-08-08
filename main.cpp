@@ -135,7 +135,9 @@ void Render(void)
 	
 	if(g_CurrentSystem != 0)
 	{
-		for(std::list< Ship * >::const_iterator ShipIterator = g_CurrentSystem->GetShips().begin(); ShipIterator != g_CurrentSystem->GetShips().end(); ++ShipIterator)
+		const std::list< Ship * > Ships(g_CurrentSystem->GetShips());
+		
+		for(std::list< Ship * >::const_iterator ShipIterator = Ships.begin(); ShipIterator != Ships.end(); ++ShipIterator)
 		{
 			(*ShipIterator)->Move(Seconds);
 		}
