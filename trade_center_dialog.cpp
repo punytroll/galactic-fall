@@ -110,6 +110,24 @@ TradeCenterDialog::TradeCenterDialog(Widget * SupWidget, Planet * Planet) :
 		Top += 20.0f;
 		++PlanetCommodityIterator;
 	}
+	m_TraderCreditsLabel = new Label(this, "");
+	m_TraderCreditsLabel->SetPosition(math3d::vector2f(10.0f, Top + 20.0f));
+	m_TraderCreditsLabel->SetSize(math3d::vector2f(200.0f, 20.0f));
+	m_TraderFreeCargoHoldSizeLabel = new Label(this, "");
+	m_TraderFreeCargoHoldSizeLabel->SetPosition(math3d::vector2f(10.0f, Top + 40.0f));
+	m_TraderFreeCargoHoldSizeLabel->SetSize(math3d::vector2f(200.0f, 20.0f));
+	UpdateTraderCredits();
+	UpdateTraderFreeCargoHoldSize();
+}
+
+void TradeCenterDialog::UpdateTraderCredits(void)
+{
+	m_TraderCreditsLabel->SetString("Credits: " + to_string_cast(g_PlayerCharacter->GetCredits()));
+}
+
+void TradeCenterDialog::UpdateTraderFreeCargoHoldSize(void)
+{
+	m_TraderFreeCargoHoldSizeLabel->SetString("Free Cargo Hold: " + to_string_cast(g_PlayerShip->GetFreeCargoHoldSize()));
 }
 
 bool TradeCenterDialog::OnClicked(Widget * EventSource)
@@ -132,7 +150,12 @@ bool TradeCenterDialog::OnClicked(Widget * EventSource)
 				{
 					g_PlayerCharacter->AddCredits(Price);
 				}
-				m_SelectedTradeCenterCommodity->UpdateCharacterAmount();
+				else
+				{
+					m_SelectedTradeCenterCommodity->UpdateCharacterAmount();
+					UpdateTraderCredits();
+					UpdateTraderFreeCargoHoldSize();
+				}
 			}
 		}
 	}
@@ -144,6 +167,8 @@ bool TradeCenterDialog::OnClicked(Widget * EventSource)
 			{
 				g_PlayerCharacter->AddCredits(m_SelectedTradeCenterCommodity->GetPlanetCommodity()->GetPrice());
 				m_SelectedTradeCenterCommodity->UpdateCharacterAmount();
+				UpdateTraderCredits();
+				UpdateTraderFreeCargoHoldSize();
 			}
 		}
 	}
