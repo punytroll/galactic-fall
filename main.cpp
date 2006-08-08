@@ -190,7 +190,16 @@ void SelectLinkedSystem(System * LinkedSystem)
 	g_SelectedLinkedSystem = LinkedSystem;
 	if(g_SelectedLinkedSystem != 0)
 	{
-		g_SystemLabel->SetString(LinkedSystem->GetName());
+		const std::set< System * > UnexploredSystems(g_PlayerCharacter->GetMapKnowledge()->GetUnexploredSystems());
+		
+		if(UnexploredSystems.find(g_SelectedLinkedSystem) == UnexploredSystems.end())
+		{
+			g_SystemLabel->SetString(LinkedSystem->GetName());
+		}
+		else
+		{
+			g_SystemLabel->SetString("Unknown System");
+		}
 	}
 	else
 	{
