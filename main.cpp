@@ -61,6 +61,12 @@ MapDialog * g_MapDialog;
 int g_WidgetCollectorCountDownInitializer(10);
 int g_WidgetCollectorCountDown(g_WidgetCollectorCountDownInitializer);
 
+bool CanJump(Ship * Ship)
+{
+	// only let the ships jump if they are more than 280 clicks from system center
+	return Ship->GetPosition().length_squared() > 78400.0f;
+}
+
 double GetTime(void)
 {
 	timeval TimeValue;
@@ -166,6 +172,15 @@ void Render(void)
 			glClear(GL_DEPTH_BUFFER_BIT);
 			(*ShipIterator)->Draw();
 		}
+	}
+	// user interface updates
+	if((g_SelectedLinkedSystem != 0) && (CanJump(g_PlayerShip) == true))
+	{
+		g_SystemLabel->GetForegroundColor().Set(1.0f, 1.0f, 1.0f);
+	}
+	else
+	{
+		g_SystemLabel->GetForegroundColor().Set(0.5f, 0.5f, 0.5f);
 	}
 	DisplayUserInterface();
 	glutSwapBuffers();
@@ -412,8 +427,7 @@ void Key(unsigned char Key, int X, int Y)
 		{
 			if(g_SelectedLinkedSystem != 0)
 			{
-				// only let the player jump if the ship is more than 280 clicks from system center
-				if(g_PlayerShip->GetPosition().length_squared() > 78400.0f)
+				if(CanJump(g_PlayerShip) == true)
 				{
 					System * OldSystem(g_CurrentSystem);
 					System * NewSystem(g_SelectedLinkedSystem);
