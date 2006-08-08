@@ -99,7 +99,7 @@ float CalculateTime(void)
 void DrawPlanetSelection(Planet * Planet)
 {
 	static const float OuterFactor(1.8f);
-	static const float InnerFactor(2.0f);
+	static const float InnerFactor(2.2f);
 	const math3d::vector2f & Position(Planet->GetPosition());
 	
 	glPushMatrix();
