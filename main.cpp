@@ -12,6 +12,7 @@
 #include <math3d/vector2f.h>
 #include <math3d/vector4f.h>
 
+#include "camera.h"
 #include "character.h"
 #include "color.h"
 #include "commodity_manager.h"
@@ -35,7 +36,7 @@
 int g_LastMotionX(-1);
 int g_LastMotionY(-1);
 int g_MouseButton(-1);
-math3d::vector4f g_CameraPosition(0.0f, 0.0f, 200.0f, 0.0f);
+Camera g_Camera;
 float g_GameTime;
 ModelManager g_ModelManager;
 ShipClassManager g_ShipClassManager(&g_ModelManager);
@@ -44,7 +45,6 @@ SystemManager g_SystemManager(&g_CommodityManager);
 Character * g_PlayerCharacter(0);
 Ship * g_PlayerShip(0);
 Ship * g_InputFocus(0);
-Position * g_CameraFocus(0);
 float g_Width(0.0f);
 float g_Height(0.0f);
 Label * g_SystemLabel(0);
@@ -186,12 +186,8 @@ void Render(void)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	glTranslatef(-g_CameraPosition.m_V.m_A[0], -g_CameraPosition.m_V.m_A[1], -g_CameraPosition.m_V.m_A[2]);
+	g_Camera.Draw();
 	glLightfv(GL_LIGHT0, GL_POSITION, math3d::vector4f(-50.0f, 50.0f, 100.0f, 0.0f).m_V.m_A);
-	if(g_CameraFocus != 0)
-	{
-		glTranslatef(-g_CameraFocus->m_Position.m_V.m_A[0], -g_CameraFocus->m_Position.m_V.m_A[1], 0.0f);
-	}
 	if(g_CurrentSystem != 0)
 	{
 		const std::list< Planet * > & Planets(g_CurrentSystem->GetPlanets());
@@ -412,13 +408,13 @@ void Mouse(int Button, int State, int X, int Y)
 	{
 	case GLUT_WHEEL_UP:
 		{
-			g_CameraPosition.m_V.m_A[2] *= 0.95f;
+			g_Camera.m_Position.m_V.m_A[2] *= 0.95f;
 			
 			break;
 		}
 	case GLUT_WHEEL_DOWN:
 		{
-			g_CameraPosition.m_V.m_A[2] *= 1.05f;
+			g_Camera.m_Position.m_V.m_A[2] *= 1.05f;
 			
 			break;
 		}
@@ -449,8 +445,8 @@ void MouseMotion(int X, int Y)
 	g_LastMotionY = Y;
 	if(g_MouseButton == GLUT_MIDDLE_BUTTON)
 	{
-		g_CameraPosition.m_V.m_A[0] -= static_cast< float >(DeltaX) * 0.0008f * g_CameraPosition.m_V.m_A[2];
-		g_CameraPosition.m_V.m_A[1] += static_cast< float >(DeltaY) * 0.0008f * g_CameraPosition.m_V.m_A[2];
+		g_Camera.m_Position.m_V.m_A[0] -= static_cast< float >(DeltaX) * 0.0008f * g_Camera.m_Position.m_V.m_A[2];
+		g_Camera.m_Position.m_V.m_A[1] += static_cast< float >(DeltaY) * 0.0008f * g_Camera.m_Position.m_V.m_A[2];
 	}
 }
 
@@ -708,10 +704,14 @@ int main(int argc, char **argv)
 	g_PlayerCharacter->AddCredits(1000.0f);
 	g_PlayerShip = new Ship(ShuttleCraftShipClass);
 	g_InputFocus = g_PlayerShip;
-	g_CameraFocus = g_PlayerShip;
 	EnterSystem(g_SystemManager.Get("sol"), 0);
 	SetTimeWarp(1.0f);
 	g_CreditsLabel->SetString("Credits: " + to_string_cast(g_PlayerCharacter->GetCredits()));
+	// camera setup
+	g_Camera.m_Position.m_V.m_A[0] = 0.0f;
+	g_Camera.m_Position.m_V.m_A[1] = 0.0f;
+	g_Camera.m_Position.m_V.m_A[2] = 200.0f;
+	g_Camera.SetFocus(g_PlayerShip);
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 	glutCreateWindow("Escape Velocity");
