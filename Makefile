@@ -106,6 +106,7 @@ all: escapevelocity
 clean:
 	$(RM) escapevelocity
 	$(RM) button.o
+	$(RM) camera.o
 	$(RM) character.o
 	$(RM) clicked_listener.o
 	$(RM) color.o
@@ -116,6 +117,7 @@ clean:
 	$(RM) label.o
 	$(RM) main.o
 	$(RM) map_dialog.o
+	$(RM) map_knowledge.o
 	$(RM) model.o
 	$(RM) model_manager.o
 	$(RM) mouse_button_listener.o
@@ -128,6 +130,7 @@ clean:
 	$(RM) system.o
 	$(RM) system_manager.o
 	$(RM) trade_center_dialog.o
+	$(RM) user_interface.o
 	$(RM) widget.o
 	$(RM) xml_parser.o
 	$(RM) xml_puny_dom.o
