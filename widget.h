@@ -18,19 +18,21 @@ public:
 	void SetBackgroundColor(const Color & BackgroundColor);
 	void SetPosition(const math3d::vector2f & Position);
 	void SetSize(const math3d::vector2f & Size);
-	const Color & GetBackgroundColor(void) const;
-	const math3d::vector2f GetPosition(void) const;
-	const math3d::vector2f GetSize(void) const;
 	void AddSubWidget(Widget * SubWidget);
 	void RemoveSubWidget(Widget * SubWidget);
 	void Destroy(void);
+	// getters
+	const Color & GetBackgroundColor(void) const;
+	const math3d::vector2f GetPosition(void) const;
+	const math3d::vector2f GetSize(void) const;
+	Widget * GetRootWidget(void);
+	const Widget * GetRootWidget(void) const;
 	// receive input
 	bool MouseButton(int Button, int State, float X, float Y);
 	// signal listeners
 	void AddDestroyListener(DestroyListener * DestroyListener);
 	void AddMouseButtonListener(MouseButtonListener * MouseButtonListener);
 	// static manager functions
-	static std::list< Widget * > & GetTopLevelWidgets(void);
 	static std::list< Widget * > & GetDestroyedWidgets(void);
 private:
 	Widget * m_SupWidget;
@@ -42,7 +44,6 @@ private:
 	std::list< DestroyListener * > m_DestroyListeners;
 	std::list< MouseButtonListener * > m_MouseButtonListeners;
 	// static manager properties
-	static std::list< Widget * > m_TopLevelWidgets;
 	static std::list< Widget * > m_DestroyedWidgets;
 };
 
@@ -61,14 +62,34 @@ inline const math3d::vector2f Widget::GetSize(void) const
 	return m_Size;
 }
 
-inline std::list< Widget * > & Widget::GetTopLevelWidgets(void)
-{
-	return m_TopLevelWidgets;
-}
-
 inline std::list< Widget * > & Widget::GetDestroyedWidgets(void)
 {
 	return m_DestroyedWidgets;
 }
+
+inline Widget * Widget::GetRootWidget(void)
+{
+	Widget * SupWidget(this);
+	
+	while(SupWidget->m_SupWidget != 0)
+	{
+		SupWidget = SupWidget->m_SupWidget;
+	}
+	
+	return SupWidget;
+}
+
+inline const Widget * Widget::GetRootWidget(void) const
+{
+	const Widget * SupWidget(this);
+	
+	while(SupWidget->m_SupWidget != 0)
+	{
+		SupWidget = SupWidget->m_SupWidget;
+	}
+	
+	return SupWidget;
+}
+
 
 #endif

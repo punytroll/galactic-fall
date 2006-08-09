@@ -8,7 +8,6 @@
 #include "mouse_button_listener.h"
 #include "widget.h"
 
-std::list< Widget * > Widget::m_TopLevelWidgets;
 std::list< Widget * > Widget::m_DestroyedWidgets;
 
 Widget::Widget(Widget * SupWidget) :
@@ -18,10 +17,6 @@ Widget::Widget(Widget * SupWidget) :
 	if(SupWidget != 0)
 	{
 		SupWidget->AddSubWidget(this);
-	}
-	else
-	{
-		m_TopLevelWidgets.push_back(this);
 	}
 }
 
@@ -95,13 +90,6 @@ void Widget::Destroy(void)
 	while(m_SubWidgets.size() > 0)
 	{
 		m_SubWidgets.front()->Destroy();
-	}
-	
-	std::list< Widget * >::iterator TopLevelWidgetIterator(find(m_TopLevelWidgets.begin(), m_TopLevelWidgets.end(), this));
-	
-	if(TopLevelWidgetIterator != m_TopLevelWidgets.end())
-	{
-		m_TopLevelWidgets.erase(TopLevelWidgetIterator);
 	}
 	if(m_SupWidget != 0)
 	{
