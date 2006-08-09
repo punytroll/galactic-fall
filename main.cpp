@@ -31,6 +31,7 @@
 #include "string_cast.h"
 #include "system.h"
 #include "system_manager.h"
+#include "user_interface.h"
 #include "widget.h"
 
 int g_LastMotionX(-1);
@@ -60,6 +61,7 @@ PlanetDialog * g_PlanetDialog;
 MapDialog * g_MapDialog;
 int g_WidgetCollectorCountDownInitializer(10);
 int g_WidgetCollectorCountDown(g_WidgetCollectorCountDownInitializer);
+UserInterface g_UserInterface;
 
 void NormalizeRadians(float & Radians)
 {
@@ -173,6 +175,7 @@ void DrawPlanetSelection(Planet * Planet)
 
 void DisplayUserInterface(void)
 {
+	glPushAttrib(GL_ENABLE_BIT);
 	glDisable(GL_LIGHTING);
 	glDisable(GL_DEPTH_TEST);
 	glMatrixMode(GL_PROJECTION);
@@ -184,19 +187,12 @@ void DisplayUserInterface(void)
 	glLoadIdentity();
 	glScalef(1.0f, -1.0f, 1.0f);
 	glTranslatef(0.0f, -g_Height, 0.0f);
-	for(std::list< Widget * >::const_iterator WidgetIterator = Widget::GetTopLevelWidgets().begin(); WidgetIterator != Widget::GetTopLevelWidgets().end(); ++WidgetIterator)
-	{
-		glPushMatrix();
-		glTranslatef((*WidgetIterator)->GetPosition().m_V.m_A[0], (*WidgetIterator)->GetPosition().m_V.m_A[1], 0.0f);
-		(*WidgetIterator)->Draw();
-		glPopMatrix();
-	}
+	g_UserInterface.Draw();
 	glMatrixMode(GL_PROJECTION);
 	glPopMatrix();
 	glMatrixMode(GL_MODELVIEW);
 	glPopMatrix();
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_LIGHTING);
+	glPopAttrib();
 	if(--g_WidgetCollectorCountDown == 0)
 	{
 		std::list< Widget * > & DestroyedWidgets(Widget::GetDestroyedWidgets());
@@ -295,6 +291,7 @@ void Resize(int Width, int Height)
 	glLoadIdentity();
 	glViewport(0, 0, Width, Height);
 	gluPerspective(45.0f, 1.0 * g_Width / g_Height, 1, 1000);
+	g_UserInterface.GetRootWidget()->SetSize(math3d::vector2f(g_Width, g_Height));
 }
 
 void SelectLinkedSystem(System * LinkedSystem)
@@ -412,17 +409,9 @@ void SetTimeWarp(float TimeWarp)
 
 void Mouse(int Button, int State, int X, int Y)
 {
-	for(std::list< Widget * >::const_iterator WidgetIterator = Widget::GetTopLevelWidgets().begin(); WidgetIterator != Widget::GetTopLevelWidgets().end(); ++WidgetIterator)
+	if(g_UserInterface.MouseButton(Button, State, X, Y) == true)
 	{
-		const math3d::vector2f & LeftTopCorner((*WidgetIterator)->GetPosition());
-		math3d::vector2f RightBottomCorner(LeftTopCorner + (*WidgetIterator)->GetSize());
-		
-		if((X >= LeftTopCorner.m_V.m_A[0]) && (X < RightBottomCorner.m_V.m_A[0]) && (Y >= LeftTopCorner.m_V.m_A[1]) && (Y < RightBottomCorner.m_V.m_A[1]))
-		{
-			(*WidgetIterator)->MouseButton(Button, State, X - LeftTopCorner.m_V.m_A[0], Y - LeftTopCorner.m_V.m_A[1]);
-			
-			return;
-		}
+		return;
 	}
 	switch(Button)
 	{
@@ -507,7 +496,7 @@ void Key(unsigned char Key, int X, int Y)
 					if(((g_SelectedPlanet->GetPosition() - g_PlayerShip->GetPosition()).length_squared() <= g_SelectedPlanet->GetSize() * g_SelectedPlanet->GetSize()) && (g_PlayerShip->GetVelocity().length_squared() < 2.0f))
 					{
 						g_Pause = true;
-						g_PlanetDialog = new PlanetDialog(0, g_SelectedPlanet);
+						g_PlanetDialog = new PlanetDialog(g_UserInterface.GetRootWidget(), g_SelectedPlanet);
 						g_PlanetDialog->AddDestroyListener(&g_GlobalDestroyListener);
 					}
 				}
@@ -549,7 +538,7 @@ void Key(unsigned char Key, int X, int Y)
 			if(g_MapDialog == 0)
 			{
 				g_Pause = true;
-				g_MapDialog = new MapDialog(0, g_CurrentSystem);
+				g_MapDialog = new MapDialog(g_UserInterface.GetRootWidget(), g_CurrentSystem);
 				g_MapDialog->AddDestroyListener(&g_GlobalDestroyListener);
 			}
 			
@@ -693,16 +682,16 @@ void SpecialKeyUp(int Key, int X, int Y)
 int main(int argc, char **argv)
 {
 	// ui setup
-	g_TimeWarpLabel = new Label(0);
+	g_TimeWarpLabel = new Label(g_UserInterface.GetRootWidget());
 	g_TimeWarpLabel->SetForegroundColor(Color(1.0f, 1.0f, 0.8f));
 	g_TimeWarpLabel->SetPosition(math3d::vector2f(0.0f, 00.0f));
-	g_SystemLabel = new Label(0);
+	g_SystemLabel = new Label(g_UserInterface.GetRootWidget());
 	g_SystemLabel->SetForegroundColor(Color(1.0f, 1.0f, 0.8f));
 	g_SystemLabel->SetPosition(math3d::vector2f(0.0f, 20.0f));
-	g_PlanetLabel = new Label(0);
+	g_PlanetLabel = new Label(g_UserInterface.GetRootWidget());
 	g_PlanetLabel->SetForegroundColor(Color(1.0f, 1.0f, 0.8f));
 	g_PlanetLabel->SetPosition(math3d::vector2f(0.0f, 40.0f));
-	g_CreditsLabel = new Label(0);
+	g_CreditsLabel = new Label(g_UserInterface.GetRootWidget());
 	g_CreditsLabel->SetForegroundColor(Color(1.0f, 1.0f, 0.8f));
 	g_CreditsLabel->SetPosition(math3d::vector2f(0.0f, 60.0f));
 	
