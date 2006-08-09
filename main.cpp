@@ -61,6 +61,46 @@ MapDialog * g_MapDialog;
 int g_WidgetCollectorCountDownInitializer(10);
 int g_WidgetCollectorCountDown(g_WidgetCollectorCountDownInitializer);
 
+void NormalizeRadians(float & Radians)
+{
+	while(Radians < 0.0f)
+	{
+		Radians += 2 * M_PI;
+	}
+	while(Radians > 2 * M_PI)
+	{
+		Radians -= 2 * M_PI;
+	}
+}
+
+float NormalizedRadians(float Radians)
+{
+	while(Radians < 0.0f)
+	{
+		Radians += 2 * M_PI;
+	}
+	while(Radians > 2 * M_PI)
+	{
+		Radians -= 2 * M_PI;
+	}
+	
+	return Radians;
+}
+
+float GetRadians(const math3d::vector2f & Vector)
+{
+	float Radians(acosf(Vector.m_V.m_A[0]));
+	
+	if(Vector.m_V.m_A[1] >= 0)
+	{
+		return Radians;
+	}
+	else
+	{
+		return NormalizedRadians(-Radians);
+	}
+}
+
 bool CanJump(Ship * Ship)
 {
 	// only let the ships jump if they are more than 280 clicks from system center
@@ -209,6 +249,26 @@ void Render(void)
 	{
 		glClear(GL_DEPTH_BUFFER_BIT);
 		DrawPlanetSelection(g_SelectedPlanet);
+		
+		math3d::vector2f RelativePlanetPosition(g_SelectedPlanet->GetPosition() - g_PlayerShip->GetPosition());
+		
+		RelativePlanetPosition.normalize();
+		glPushMatrix();
+		glPushAttrib(GL_LIGHTING_BIT);
+		glDisable(GL_LIGHTING);
+		glTranslatef(g_PlayerShip->GetPosition().m_V.m_A[0], g_PlayerShip->GetPosition().m_V.m_A[1], 0.0f);
+		glRotatef(GetRadians(RelativePlanetPosition) * 180.0f / M_PI, 0.0f, 0.0f, 1.0f);
+		glColor3f(0.0f, 0.5f, 0.5f);
+		glBegin(GL_LINES);
+		glVertex2f(20.0f, 0.0f);
+		glVertex2f(30.0f, 0.0f);
+		glVertex2f(26.0f, 4.0f);
+		glVertex2f(30.0f, 0.0f);
+		glVertex2f(26.0f, -4.0f);
+		glVertex2f(30.0f, 0.0f);
+		glEnd();
+		glPopAttrib();
+		glPopMatrix();
 	}
 	// user interface updates
 	if((g_SelectedLinkedSystem != 0) && (CanJump(g_PlayerShip) == true))
@@ -298,46 +358,6 @@ public:
 	}
 } g_GlobalDestroyListener;
 
-void NormalizeRadians(float & Radians)
-{
-	while(Radians < 0.0f)
-	{
-		Radians += 2 * M_PI;
-	}
-	while(Radians > 2 * M_PI)
-	{
-		Radians -= 2 * M_PI;
-	}
-}
-
-float NormalizedRadians(float Radians)
-{
-	while(Radians < 0.0f)
-	{
-		Radians += 2 * M_PI;
-	}
-	while(Radians > 2 * M_PI)
-	{
-		Radians -= 2 * M_PI;
-	}
-	
-	return Radians;
-}
-
-float GetRadians(const math3d::vector2f & Vector)
-{
-	float Radians(acosf(Vector.m_V.m_A[0]));
-	
-	if(Vector.m_V.m_A[1] >= 0)
-	{
-		return Radians;
-	}
-	else
-	{
-		return NormalizedRadians(-Radians);
-	}
-}
-
 void LeaveSystem(void)
 {
 	g_CurrentSystem->ClearShips();
@@ -408,13 +428,13 @@ void Mouse(int Button, int State, int X, int Y)
 	{
 	case GLUT_WHEEL_UP:
 		{
-			g_Camera.m_Position.m_V.m_A[2] *= 0.95f;
+			g_Camera.ZoomIn();
 			
 			break;
 		}
 	case GLUT_WHEEL_DOWN:
 		{
-			g_Camera.m_Position.m_V.m_A[2] *= 1.05f;
+			g_Camera.ZoomOut();
 			
 			break;
 		}
@@ -445,8 +465,9 @@ void MouseMotion(int X, int Y)
 	g_LastMotionY = Y;
 	if(g_MouseButton == GLUT_MIDDLE_BUTTON)
 	{
-		g_Camera.m_Position.m_V.m_A[0] -= static_cast< float >(DeltaX) * 0.0008f * g_Camera.m_Position.m_V.m_A[2];
-		g_Camera.m_Position.m_V.m_A[1] += static_cast< float >(DeltaY) * 0.0008f * g_Camera.m_Position.m_V.m_A[2];
+		const math3d::vector3f & CameraPosition(g_Camera.GetPosition());
+		
+		g_Camera.SetPosition(CameraPosition.m_V.m_A[0] - static_cast< float >(DeltaX) * 0.0008f * CameraPosition.m_V.m_A[2], CameraPosition.m_V.m_A[1] + static_cast< float >(DeltaY) * 0.0008f * CameraPosition.m_V.m_A[2]);
 	}
 }
 
@@ -708,9 +729,7 @@ int main(int argc, char **argv)
 	SetTimeWarp(1.0f);
 	g_CreditsLabel->SetString("Credits: " + to_string_cast(g_PlayerCharacter->GetCredits()));
 	// camera setup
-	g_Camera.m_Position.m_V.m_A[0] = 0.0f;
-	g_Camera.m_Position.m_V.m_A[1] = 0.0f;
-	g_Camera.m_Position.m_V.m_A[2] = 200.0f;
+	g_Camera.SetPosition(0.0f, 0.0f, 200.0f);
 	g_Camera.SetFocus(g_PlayerShip);
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);

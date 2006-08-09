@@ -21,3 +21,26 @@ void Camera::SetFocus(Position * Focus)
 {
 	m_Focus = Focus;
 }
+
+void Camera::SetPosition(float X, float Y)
+{
+	m_Position.m_V.m_A[0] = X;
+	m_Position.m_V.m_A[1] = Y;
+}
+
+void Camera::SetPosition(float X, float Y, float Z)
+{
+	m_Position.m_V.m_A[0] = X;
+	m_Position.m_V.m_A[1] = Y;
+	m_Position.m_V.m_A[2] = Z;
+}
+
+void Camera::ZoomIn(void)
+{
+	m_Position.m_V.m_A[2] *= 0.95f;
+}
+
+void Camera::ZoomOut(void)
+{
+	m_Position.m_V.m_A[2] *= 1.05f;
+}
