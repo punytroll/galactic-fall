@@ -25,4 +25,8 @@ bool UserInterface::MouseButton(int Button, int State, float X, float Y)
 	{
 		return m_RootWidget->MouseButton(Button, State, X - LeftTopCorner.m_V.m_A[0], Y - LeftTopCorner.m_V.m_A[1]);
 	}
+	else
+	{
+		return false;
+	}
 }
