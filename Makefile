@@ -126,6 +126,7 @@ clean:
 	$(RM) mouse_button_listener.o
 	$(RM) planet.o
 	$(RM) planet_dialog.o
+	$(RM) real_time.o
 	$(RM) ship.o
 	$(RM) ship_class.o
 	$(RM) ship_class_manager.o
