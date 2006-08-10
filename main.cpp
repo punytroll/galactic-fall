@@ -1,7 +1,5 @@
 #include <errno.h>
 #include <stdlib.h>
-#include <sys/time.h>
-#include <time.h>
 
 #include <iostream>
 #include <list>
@@ -25,6 +23,7 @@
 #include "model_manager.h"
 #include "planet.h"
 #include "planet_dialog.h"
+#include "real_time.h"
 #include "ship.h"
 #include "ship_class.h"
 #include "ship_class_manager.h"
@@ -109,22 +108,10 @@ bool CanJump(Ship * Ship)
 	return Ship->GetPosition().length_squared() > 78400.0f;
 }
 
-double GetTime(void)
-{
-	timeval TimeValue;
-	
-	gettimeofday(&TimeValue, 0);
-	
-	return TimeValue.tv_sec + 0.000001 * TimeValue.tv_usec;
-}
-
 float CalculateTime(void)
 {
-	static double LastNowSeconds(GetTime());
-	double NowSeconds(GetTime());
-	double DeltaSeconds(NowSeconds - LastNowSeconds);
+	double DeltaSeconds(RealTime::GetInterval());
 	
-	LastNowSeconds = NowSeconds;
 	if(g_Pause == false)
 	{
 		DeltaSeconds *= g_TimeWarp;
