@@ -15,6 +15,8 @@ public:
 	Widget(Widget * SupWidget);
 	virtual ~Widget(void);
 	virtual void Draw(void) const;
+	void Hide(void);
+	void Show(void);
 	void SetBackgroundColor(const Color & BackgroundColor);
 	void SetPosition(const math3d::vector2f & Position);
 	void SetSize(const math3d::vector2f & Size);
@@ -27,6 +29,7 @@ public:
 	const math3d::vector2f GetSize(void) const;
 	Widget * GetRootWidget(void);
 	const Widget * GetRootWidget(void) const;
+	bool IsVisible(void) const;
 	// receive input
 	bool MouseButton(int Button, int State, float X, float Y);
 	// signal listeners
@@ -40,6 +43,7 @@ private:
 	math3d::vector2f m_Position;
 	math3d::vector2f m_Size;
 	std::list< Widget * > m_SubWidgets;
+	bool m_Visible;
 	// listeners
 	std::list< DestroyListener * > m_DestroyListeners;
 	std::list< MouseButtonListener * > m_MouseButtonListeners;
@@ -91,5 +95,9 @@ inline const Widget * Widget::GetRootWidget(void) const
 	return SupWidget;
 }
 
+inline bool Widget::IsVisible(void) const
+{
+	return m_Visible;
+}
 
 #endif
