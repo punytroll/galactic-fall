@@ -27,7 +27,7 @@ public:
 	const ShipClass * GetShipClass(void) const;
 	const math3d::vector2f & GetVelocity(void) const;
 	float GetFreeCargoHoldSize(void) const;
-	float GetCargo(const Commodity * CargoCommodity) const;
+	float GetCargoAmount(const Commodity * CargoCommodity) const;
 	// modifiers
 	bool AddCargo(const Commodity * CargoCommodity, float Amount);
 	bool RemoveCargo(const Commodity * CargoCommodity, float Amount);
@@ -47,7 +47,7 @@ inline const math3d::vector2f & Ship::GetVelocity(void) const
 	return m_Velocity;
 }
 
-inline float Ship::GetCargo(const Commodity * CargoCommodity) const
+inline float Ship::GetCargoAmount(const Commodity * CargoCommodity) const
 {
 	std::map< const Commodity *, float >::const_iterator CargoIterator(m_Cargo.find(CargoCommodity));
 	
