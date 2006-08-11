@@ -49,7 +49,7 @@ TradeCenterCommodity::TradeCenterCommodity(Widget * SupWidget, PlanetCommodity *
 
 void TradeCenterCommodity::UpdateCharacterAmount(void)
 {
-	m_CharacterAmountLabel->SetString(to_string_cast(g_PlayerShip->GetCargo(m_PlanetCommodity->GetCommodity())));
+	m_CharacterAmountLabel->SetString(to_string_cast(g_PlayerShip->GetCargoAmount(m_PlanetCommodity->GetCommodity())));
 }
 
 const PlanetCommodity * TradeCenterCommodity::GetPlanetCommodity(void) const
