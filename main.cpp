@@ -11,6 +11,7 @@
 #include <math3d/vector4f.h>
 
 #include "camera.h"
+#include "cargo.h"
 #include "character.h"
 #include "color.h"
 #include "commodity_manager.h"
@@ -221,10 +222,15 @@ void Render(void)
 	if(g_CurrentSystem != 0)
 	{
 		const std::list< Ship * > Ships(g_CurrentSystem->GetShips());
+		const std::list< Cargo * > Cargos(g_CurrentSystem->GetCargos());
 		
 		for(std::list< Ship * >::const_iterator ShipIterator = Ships.begin(); ShipIterator != Ships.end(); ++ShipIterator)
 		{
 			(*ShipIterator)->Move(Seconds);
+		}
+		for(std::list< Cargo * >::const_iterator CargoIterator = Cargos.begin(); CargoIterator != Cargos.end(); ++CargoIterator)
+		{
+			(*CargoIterator)->Move(Seconds);
 		}
 	}
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -235,7 +241,8 @@ void Render(void)
 	if(g_CurrentSystem != 0)
 	{
 		const std::list< Planet * > & Planets(g_CurrentSystem->GetPlanets());
-		const std::list< Ship * > &Ships(g_CurrentSystem->GetShips());
+		const std::list< Ship * > & Ships(g_CurrentSystem->GetShips());
+		const std::list< Cargo * > & Cargos(g_CurrentSystem->GetCargos());
 		
 		for(std::list< Planet * >::const_iterator PlanetIterator = Planets.begin(); PlanetIterator != Planets.end(); ++PlanetIterator)
 		{
@@ -246,6 +253,11 @@ void Render(void)
 		{
 			glClear(GL_DEPTH_BUFFER_BIT);
 			(*ShipIterator)->Draw();
+		}
+		for(std::list< Cargo * >::const_iterator CargoIterator = Cargos.begin(); CargoIterator != Cargos.end(); ++CargoIterator)
+		{
+			glClear(GL_DEPTH_BUFFER_BIT);
+			(*CargoIterator)->Draw();
 		}
 	}
 	// HUD
@@ -370,6 +382,7 @@ public:
 void LeaveSystem(void)
 {
 	g_CurrentSystem->ClearShips();
+	g_CurrentSystem->ClearCargos();
 	g_CurrentSystem = 0;
 	SelectLinkedSystem(0);
 	SelectPlanet(0);
@@ -505,6 +518,20 @@ void Key(unsigned char Key, int X, int Y)
 						break;
 					}
 				}
+			}
+			
+			break;
+		}
+	case 'c':
+		{
+			while(g_PlayerShip->GetCargo().size() > 0)
+			{
+				const Commodity * Commodity(g_PlayerShip->GetCargo().begin()->first);
+				Cargo * NewCargo(new Cargo(g_ModelManager.Get("cargo_cube"), Commodity, g_PlayerShip->GetVelocity() * 0.8f + math3d::vector2f(-0.5f + static_cast< float >(random()) / RAND_MAX, -0.5f + static_cast< float >(random()) / RAND_MAX))); // TODO: memory leak
+				
+				g_PlayerShip->RemoveCargo(Commodity, 1.0f);
+				NewCargo->SetPosition(g_PlayerShip->GetPosition());
+				g_CurrentSystem->AddCargo(NewCargo);
 			}
 			
 			break;
@@ -716,6 +743,8 @@ void SpecialKeyUp(int Key, int X, int Y)
 
 int main(int argc, char **argv)
 {
+	// setup the random number generator for everyday use
+	srand(time(0));
 	// ui setup
 	g_TimeWarpLabel = new Label(g_UserInterface.GetRootWidget());
 	g_TimeWarpLabel->SetForegroundColor(Color(1.0f, 1.0f, 0.8f));

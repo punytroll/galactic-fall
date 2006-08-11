@@ -6,6 +6,7 @@
 
 #include <math3d/vector2f.h>
 
+class Cargo;
 class Planet;
 class Ship;
 
@@ -19,13 +20,16 @@ public:
 	const std::list< Planet * > GetPlanets(void) const;
 	const std::list< System * > GetLinkedSystems(void) const;
 	const std::list< Ship * > GetShips(void) const;
+	const std::list< Cargo * > GetCargos(void) const;
 	bool IsLinkedToSystem(const System * System) const;
 	void SetName(const std::string & Name);
 	void SetPosition(const math3d::vector2f & Position);
 	Planet * CreatePlanet(const std::string & Identifier);
 	void AddLinkedSystem(System * LinkedSystem);
 	void AddShip(Ship * Ship);
+	void AddCargo(Cargo * Cargo);
 	void ClearShips(void);
+	void ClearCargos(void);
 private:
 	std::string m_Identifier;
 	std::string m_Name;
@@ -33,6 +37,7 @@ private:
 	std::list< Planet * > m_Planets;
 	std::list< System * > m_LinkedSystems;
 	std::list< Ship * > m_Ships;
+	std::list< Cargo * > m_Cargos;
 };
 
 inline const std::string & System::GetIdentifier(void) const
@@ -63,6 +68,11 @@ inline const std::list< System * > System::GetLinkedSystems(void) const
 inline const std::list< Ship * > System::GetShips(void) const
 {
 	return m_Ships;
+}
+
+inline const std::list< Cargo * > System::GetCargos(void) const
+{
+	return m_Cargos;
 }
 
 #endif

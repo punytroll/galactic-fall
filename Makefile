@@ -7,6 +7,10 @@ camera_h = \
 	camera.h \
 	$(position_h)
 
+cargo_h = \
+	cargo.h \
+	$(position_h)
+
 character_h = \
 	character.h
 
@@ -139,13 +143,16 @@ clean:
 	$(RM) xml_parser.o
 	$(RM) xml_puny_dom.o
 
-escapevelocity: button.o camera.o character.o clicked_listener.o color.o commodity.o commodity_manager.o destroy_listener.o draw_text.o label.o main.o map_dialog.o map_knowledge.o model.o model_manager.o mouse_button_listener.o planet.o planet_dialog.o real_time.o ship.o ship_class.o ship_class_manager.o string_cast.o system.o system_manager.o trade_center_dialog.o user_interface.o widget.o xml_parser.o xml_puny_dom.o
+escapevelocity: button.o camera.o cargo.o character.o clicked_listener.o color.o commodity.o commodity_manager.o destroy_listener.o draw_text.o label.o main.o map_dialog.o map_knowledge.o model.o model_manager.o mouse_button_listener.o planet.o planet_dialog.o real_time.o ship.o ship_class.o ship_class_manager.o string_cast.o system.o system_manager.o trade_center_dialog.o user_interface.o widget.o xml_parser.o xml_puny_dom.o
 	$(CXX) $(LDFLAGS) $^ -lGL -lGLU -lglut -o $@
 
 button.o: button.cpp $(clicked_listener_h) $(button_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags math3d` -c $< -o $@
 
 camera.o: camera.cpp $(camera_h) $(position_h)
+	$(CXX) $(CXXFLAGS) `pkg-config --cflags math3d` -c $< -o $@
+
+cargo.o: cargo.cpp $(cargo_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags math3d` -c $< -o $@
 
 character.o: character.cpp $(character_h) $(map_knowledge_h)
@@ -172,7 +179,7 @@ draw_text.o: draw_text.cpp $(draw_text_h)
 label.o: label.cpp $(label_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags math3d` -c $< -o $@
 
-main.o: main.cpp $(camera_h) $(character_h) $(color_h) $(commodity_manager_h) $(destroy_listener_h) $(label_h) $(map_dialog_h) $(map_knowledge_h) $(model_h) $(model_manager_h) $(planet_h) $(planet_dialog_h) $(real_time_h) $(ship_h) $(ship_class_h) $(ship_class_manager_h) $(string_cast_h) $(system_h) $(system_manager_h) $(user_interface_h) $(widget_h)
+main.o: main.cpp $(camera_h) $(cargo_h) $(character_h) $(color_h) $(commodity_manager_h) $(destroy_listener_h) $(label_h) $(map_dialog_h) $(map_knowledge_h) $(model_h) $(model_manager_h) $(planet_h) $(planet_dialog_h) $(real_time_h) $(ship_h) $(ship_class_h) $(ship_class_manager_h) $(string_cast_h) $(system_h) $(system_manager_h) $(user_interface_h) $(widget_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags math3d` -c $< -o $@
 
 map_dialog.o: map_dialog.cpp $(button_h) $(character_h) $(color_h) $(globals_h) $(label_h) $(map_dialog_h) $(map_knowledge_h) $(system_h) $(system_manager_h)
