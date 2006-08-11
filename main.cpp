@@ -147,17 +147,15 @@ void SetMessage(const std::string & Message)
 	g_MessageLabelTimeout = RealTime::GetTime() + 2.0;
 }
 
-void DrawPlanetSelection(Planet * Planet)
+void DrawSelection(Position * Position, float RadialSize)
 {
 	static const float OuterFactor(1.8f);
 	static const float InnerFactor(2.2f);
-	const math3d::vector2f & Position(Planet->GetPosition());
-	float RadialSize(Planet->GetRadialSize());
 	
 	glPushMatrix();
 	glPushAttrib(GL_LIGHTING_BIT);
 	glDisable(GL_LIGHTING);
-	glTranslatef(Position.m_V.m_A[0], Position.m_V.m_A[1], 0.0f);
+	glTranslatef(Position->GetPosition().m_V.m_A[0], Position->GetPosition().m_V.m_A[1], 0.0f);
 	glColor3f(1.0f, 0.0f, 0.0f);
 	glBegin(GL_LINE_STRIP);
 	glVertex2f(-RadialSize / OuterFactor, -RadialSize / InnerFactor);
@@ -181,6 +179,11 @@ void DrawPlanetSelection(Planet * Planet)
 	glEnd();
 	glPopAttrib();
 	glPopMatrix();
+}
+
+void DrawPlanetSelection(Planet * Planet)
+{
+	DrawSelection(Planet, Planet->GetRadialSize());
 }
 
 void DisplayUserInterface(void)
