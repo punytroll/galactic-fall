@@ -46,7 +46,17 @@ void System::AddShip(Ship * Ship)
 	m_Ships.push_back(Ship);
 }
 
+void System::AddCargo(Cargo * Cargo)
+{
+	m_Cargos.push_back(Cargo);
+}
+
 void System::ClearShips(void)
 {
 	m_Ships.clear();
+}
+
+void System::ClearCargos(void)
+{
+	m_Cargos.clear();
 }
