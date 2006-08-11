@@ -51,6 +51,7 @@ Label * g_SystemLabel(0);
 Label * g_TimeWarpLabel(0);
 Label * g_PlanetLabel(0);
 Label * g_CreditsLabel(0);
+Label * g_MessageLabel;
 System * g_CurrentSystem;
 System * g_SelectedLinkedSystem(0);
 Planet * g_SelectedPlanet(0);
@@ -61,6 +62,7 @@ MapDialog * g_MapDialog;
 int g_WidgetCollectorCountDownInitializer(10);
 int g_WidgetCollectorCountDown(g_WidgetCollectorCountDownInitializer);
 UserInterface g_UserInterface;
+double g_MessageLabelTimeout;
 
 void NormalizeRadians(float & Radians)
 {
@@ -102,10 +104,21 @@ float GetRadians(const math3d::vector2f & Vector)
 	}
 }
 
-bool CanJump(Ship * Ship)
+enum WantToJumpCode
+{
+	OK_TO_JUMP,
+	TOO_NEAR_TO_SYSTEM_CENTER
+};
+
+bool WantToJump(Ship * Ship)
 {
 	// only let the ships jump if they are more than 280 clicks from system center
-	return Ship->GetPosition().length_squared() > 78400.0f;
+	if(Ship->GetPosition().length_squared() < 78400.0f)
+	{
+		return TOO_NEAR_TO_SYSTEM_CENTER;
+	}
+	
+	return OK_TO_JUMP;
 }
 
 float CalculateTime(void)
@@ -123,6 +136,14 @@ float CalculateTime(void)
 	{
 		return 0.0f;
 	}
+}
+
+void SetMessage(const std::string & Message)
+{
+	g_MessageLabel->SetString(Message);
+	g_MessageLabel->SetPosition(math3d::vector2f((g_Width - 6 * Message.length()) / 2, 40.0f));
+	g_MessageLabel->Show();
+	g_MessageLabelTimeout = RealTime::GetTime() + 2.0;
 }
 
 void DrawPlanetSelection(Planet * Planet)
@@ -254,13 +275,17 @@ void Render(void)
 		glPopMatrix();
 	}
 	// user interface updates
-	if((g_SelectedLinkedSystem != 0) && (CanJump(g_PlayerShip) == true))
+	if((g_SelectedLinkedSystem != 0) && (WantToJump(g_PlayerShip) == OK_TO_JUMP))
 	{
 		g_SystemLabel->GetForegroundColor().Set(1.0f, 1.0f, 1.0f);
 	}
 	else
 	{
 		g_SystemLabel->GetForegroundColor().Set(0.5f, 0.5f, 0.5f);
+	}
+	if(RealTime::GetTime() > g_MessageLabelTimeout)
+	{
+		g_MessageLabel->Hide();
 	}
 	DisplayUserInterface();
 	glutSwapBuffers();
@@ -461,13 +486,24 @@ void Key(unsigned char Key, int X, int Y)
 		{
 			if(g_SelectedLinkedSystem != 0)
 			{
-				if(CanJump(g_PlayerShip) == true)
+				switch(WantToJump(g_PlayerShip))
 				{
-					System * OldSystem(g_CurrentSystem);
-					System * NewSystem(g_SelectedLinkedSystem);
-					
-					LeaveSystem();
-					EnterSystem(NewSystem, OldSystem);
+				case OK_TO_JUMP:
+					{
+						System * OldSystem(g_CurrentSystem);
+						System * NewSystem(g_SelectedLinkedSystem);
+						
+						LeaveSystem();
+						EnterSystem(NewSystem, OldSystem);
+						
+						break;
+					}
+				case TOO_NEAR_TO_SYSTEM_CENTER:
+					{
+						SetMessage("You are too near to the system center to jump.");
+						
+						break;
+					}
 				}
 			}
 			
@@ -479,12 +515,24 @@ void Key(unsigned char Key, int X, int Y)
 			{
 				if(g_SelectedPlanet != 0)
 				{
-					// test distance and speed (should be relative speed but planets have no speed, yet)
-					if(((g_SelectedPlanet->GetPosition() - g_PlayerShip->GetPosition()).length_squared() <= g_SelectedPlanet->GetSize() * g_SelectedPlanet->GetSize()) && (g_PlayerShip->GetVelocity().length_squared() < 2.0f))
+					// test distance
+					if((g_SelectedPlanet->GetPosition() - g_PlayerShip->GetPosition()).length_squared() <= g_SelectedPlanet->GetSize() * g_SelectedPlanet->GetSize())
 					{
-						g_Pause = true;
-						g_PlanetDialog = new PlanetDialog(g_UserInterface.GetRootWidget(), g_SelectedPlanet);
-						g_PlanetDialog->AddDestroyListener(&g_GlobalDestroyListener);
+						// test speed (should be relative speed but planets have no speed, yet)
+						if(g_PlayerShip->GetVelocity().length_squared() <= 2.0f)
+						{
+							g_Pause = true;
+							g_PlanetDialog = new PlanetDialog(g_UserInterface.GetRootWidget(), g_SelectedPlanet);
+							g_PlanetDialog->AddDestroyListener(&g_GlobalDestroyListener);
+						}
+						else
+						{
+							SetMessage("You are too fast to land on the planet.");
+						}
+					}
+					else
+					{
+						SetMessage("You are too far away from the planet to land.");
 					}
 				}
 				else
@@ -681,6 +729,10 @@ int main(int argc, char **argv)
 	g_CreditsLabel = new Label(g_UserInterface.GetRootWidget());
 	g_CreditsLabel->SetForegroundColor(Color(1.0f, 1.0f, 0.8f));
 	g_CreditsLabel->SetPosition(math3d::vector2f(0.0f, 60.0f));
+	g_MessageLabel = new Label(g_UserInterface.GetRootWidget());
+	g_MessageLabel->SetForegroundColor(Color(1.0f, 0.3f, 0.3f));
+	g_MessageLabel->SetPosition(math3d::vector2f(0.0f, 0.0f));
+	g_MessageLabel->Hide();
 	
 	// data reading
 	LoadModelsFromFile(&g_ModelManager, "data/shuttlecraft.xml");
