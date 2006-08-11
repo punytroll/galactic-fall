@@ -12,7 +12,8 @@ std::list< Widget * > Widget::m_DestroyedWidgets;
 
 Widget::Widget(Widget * SupWidget) :
 	m_SupWidget(0),
-	m_BackgroundColor(0)
+	m_BackgroundColor(0),
+	m_Visible(true)
 {
 	if(SupWidget != 0)
 	{
@@ -25,6 +26,16 @@ Widget::~Widget(void)
 	assert(m_SupWidget == 0);
 	assert(m_SubWidgets.size() == 0);
 	delete m_BackgroundColor;
+}
+
+void Widget::Hide(void)
+{
+	m_Visible = false;
+}
+
+void Widget::Show(void)
+{
+	m_Visible = true;
 }
 
 void Widget::Draw(void) const
@@ -43,10 +54,13 @@ void Widget::Draw(void) const
 	{
 		Widget * SubWidget(*SubWidgetIterator);
 		
-		glPushMatrix();
-		glTranslatef(SubWidget->m_Position.m_V.m_A[0], SubWidget->m_Position.m_V.m_A[1], 0.0f);
-		SubWidget->Draw();
-		glPopMatrix();
+		if(SubWidget->IsVisible() == true)
+		{
+			glPushMatrix();
+			glTranslatef(SubWidget->m_Position.m_V.m_A[0], SubWidget->m_Position.m_V.m_A[1], 0.0f);
+			SubWidget->Draw();
+			glPopMatrix();
+		}
 	}
 }
 
