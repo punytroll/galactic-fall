@@ -28,7 +28,8 @@ public:
 	const std::string & GetIdentifier(void) const;
 	const std::string & GetName(void) const;
 	const std::string & GetDescription(void) const;
-	const float & GetSize(void) const;
+	float GetSize(void) const;
+	float GetRadialSize(void) const;
 	const std::vector< PlanetCommodity * > & GetCommodities(void) const;
 	void SetName(const std::string & Name);
 	void SetDescription(const std::string & Description);
@@ -63,7 +64,12 @@ inline const std::string & Planet::GetDescription(void) const
 	return m_Description;
 }
 
-inline const float & Planet::GetSize(void) const
+inline float Planet::GetSize(void) const
+{
+	return m_Size;
+}
+
+inline float Planet::GetRadialSize(void) const
 {
 	return m_Size;
 }
