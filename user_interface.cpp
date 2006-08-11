@@ -10,10 +10,13 @@ UserInterface::UserInterface(void) :
 
 void UserInterface::Draw(void) const
 {
-	glPushMatrix();
-	glTranslatef(m_RootWidget->GetPosition().m_V.m_A[0], m_RootWidget->GetPosition().m_V.m_A[1], 0.0f);
-	m_RootWidget->Draw();
-	glPopMatrix();
+	if(m_RootWidget->IsVisible() == true)
+	{
+		glPushMatrix();
+		glTranslatef(m_RootWidget->GetPosition().m_V.m_A[0], m_RootWidget->GetPosition().m_V.m_A[1], 0.0f);
+		m_RootWidget->Draw();
+		glPopMatrix();
+	}
 }
 
 bool UserInterface::MouseButton(int Button, int State, float X, float Y)
