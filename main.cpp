@@ -689,6 +689,12 @@ void Key(unsigned char Key, int X, int Y)
 			
 			break;
 		}
+	case ' ':
+		{
+			g_Camera.SetPosition(0.0f, 0.0f);
+			
+			break;
+		}
 	}
 }
 
