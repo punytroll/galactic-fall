@@ -11,7 +11,7 @@ Cargo::Cargo(Model * Model, const Commodity * Commodity, const math3d::vector2f 
 	m_RotationAxis.set(static_cast< float >(random()) / RAND_MAX, static_cast< float >(random()) / RAND_MAX, static_cast< float >(random()) / RAND_MAX);
 	m_RotationAxis.normalize();
 	m_AngularPosition = static_cast< float >(random()) / RAND_MAX;
-	m_AngularVelocity = 0.05f;
+	m_AngularVelocity = static_cast< float >(random()) / RAND_MAX;
 }
 
 void Cargo::Draw(void) const
