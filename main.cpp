@@ -741,6 +741,62 @@ void Key(unsigned char Key, int X, int Y)
 			
 			break;
 		}
+	case 's':
+		{
+			if(g_SelectedCargo == 0)
+			{
+				const std::list< Cargo * > & Cargos(g_CurrentSystem->GetCargos());
+				float MinimumDistance(0.0f);
+				Cargo * MinimumCargo(0);
+				
+				for(std::list< Cargo * >::const_iterator CargoIterator = Cargos.begin(); CargoIterator != Cargos.end(); ++CargoIterator)
+				{
+					if(MinimumCargo == 0)
+					{
+						MinimumCargo = *CargoIterator;
+						MinimumDistance = (MinimumCargo->GetPosition() - g_PlayerShip->GetPosition()).length_squared();
+					}
+					else
+					{
+						float Distance(((*CargoIterator)->GetPosition() - g_PlayerShip->GetPosition()).length_squared());
+						
+						if(Distance < MinimumDistance)
+						{
+							MinimumCargo = *CargoIterator;
+							MinimumDistance = Distance;
+						}
+					}
+				}
+				if(MinimumCargo != 0)
+				{
+					SelectCargo(MinimumCargo);
+				}
+			}
+			else
+			{
+				// test distance
+				if((g_SelectedCargo->GetPosition() - g_PlayerShip->GetPosition()).length_squared() <= 5.0f * g_SelectedCargo->GetRadialSize() * g_SelectedCargo->GetRadialSize())
+				{
+					// test speed
+					if((g_PlayerShip->GetVelocity() - g_SelectedCargo->GetVelocity()).length_squared() <= 2.0f)
+					{
+						g_PlayerShip->AddCargo(g_SelectedCargo->GetCommodity(), 1.0f);
+						g_CurrentSystem->RemoveCargo(g_SelectedCargo);
+						SelectCargo(0);
+					}
+					else
+					{
+						SetMessage("Your relative velocity to the cargo is too high to scoop it up.");
+					}
+				}
+				else
+				{
+					SetMessage("You are too far away from the cargo to scoop it up.");
+				}
+			}
+			
+			break;
+		}
 	case 't':
 		{
 			const std::list< Cargo * > & Cargos(g_CurrentSystem->GetCargos());
