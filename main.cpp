@@ -534,6 +534,10 @@ void MouseMotion(int X, int Y)
 
 void Key(unsigned char Key, int X, int Y)
 {
+	if(g_UserInterface.Key(Key, GLUT_DOWN) == true)
+	{
+		return;
+	}
 	switch(Key)
 	{
 	case 27:
@@ -835,6 +839,10 @@ void Key(unsigned char Key, int X, int Y)
 
 void SpecialKey(int Key, int X, int Y)
 {
+	if(g_UserInterface.Key(Key + 256, GLUT_DOWN) == true)
+	{
+		return;
+	}
 	switch(Key)
 	{
 	case GLUT_KEY_LEFT:
@@ -860,6 +868,10 @@ void SpecialKey(int Key, int X, int Y)
 
 void SpecialKeyUp(int Key, int X, int Y)
 {
+	if(g_UserInterface.Key(Key + 256, GLUT_UP) == true)
+	{
+		return;
+	}
 	switch(Key)
 	{
 	case GLUT_KEY_LEFT:
