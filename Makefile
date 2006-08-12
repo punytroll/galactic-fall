@@ -35,6 +35,9 @@ draw_text_h = \
 globals_h = \
 	globals.h
 
+key_listener_h = \
+	key_listener.h
+
 label_h = \
 	label.h \
 	$(color_h) \
@@ -114,6 +117,7 @@ clean:
 	$(RM) escapevelocity
 	$(RM) button.o
 	$(RM) camera.o
+	$(RM) cargo.o
 	$(RM) character.o
 	$(RM) clicked_listener.o
 	$(RM) color.o
@@ -122,6 +126,7 @@ clean:
 	$(RM) destroy_listener.o
 	$(RM) draw_text.o
 	$(RM) label.o
+	$(RM) key_listener.o
 	$(RM) main.o
 	$(RM) map_dialog.o
 	$(RM) map_knowledge.o
@@ -143,7 +148,7 @@ clean:
 	$(RM) xml_parser.o
 	$(RM) xml_puny_dom.o
 
-escapevelocity: button.o camera.o cargo.o character.o clicked_listener.o color.o commodity.o commodity_manager.o destroy_listener.o draw_text.o label.o main.o map_dialog.o map_knowledge.o model.o model_manager.o mouse_button_listener.o planet.o planet_dialog.o real_time.o ship.o ship_class.o ship_class_manager.o string_cast.o system.o system_manager.o trade_center_dialog.o user_interface.o widget.o xml_parser.o xml_puny_dom.o
+escapevelocity: button.o camera.o cargo.o character.o clicked_listener.o color.o commodity.o commodity_manager.o destroy_listener.o draw_text.o key_listener.o label.o main.o map_dialog.o map_knowledge.o model.o model_manager.o mouse_button_listener.o planet.o planet_dialog.o real_time.o ship.o ship_class.o ship_class_manager.o string_cast.o system.o system_manager.o trade_center_dialog.o user_interface.o widget.o xml_parser.o xml_puny_dom.o
 	$(CXX) $(LDFLAGS) $^ -lGL -lGLU -lglut -o $@
 
 button.o: button.cpp $(clicked_listener_h) $(button_h)
@@ -174,6 +179,9 @@ destroy_listener.o: destroy_listener.cpp $(destroy_listener_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 draw_text.o: draw_text.cpp $(draw_text_h)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+key_listener.o: key_listener.cpp $(key_listener_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 label.o: label.cpp $(label_h)
@@ -230,7 +238,7 @@ trade_center_dialog.o: trade_center_dialog.cpp $(button_h) $(character_h) $(comm
 user_interface.o: user_interface.cpp $(user_interface_h) $(widget_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags math3d` -c $< -o $@
 
-widget.o: widget.cpp $(color_h) $(destroy_listener_h) $(mouse_button_listener_h) $(widget_h)
+widget.o: widget.cpp $(color_h) $(destroy_listener_h) $(key_listener_h) $(mouse_button_listener_h) $(widget_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags math3d` -c $< -o $@
 
 xml_parser.o: xml_parser.cpp $(xml_parser_h)

@@ -5,6 +5,7 @@
 
 #include "color.h"
 #include "destroy_listener.h"
+#include "key_listener.h"
 #include "mouse_button_listener.h"
 #include "widget.h"
 
@@ -79,6 +80,11 @@ void Widget::SetSize(const math3d::vector2f & Size)
 	m_Size = Size;
 }
 
+void Widget::SetKeyFocus(Widget * KeyFocus)
+{
+	m_KeyFocus = KeyFocus;
+}
+
 void Widget::AddSubWidget(Widget * SubWidget)
 {
 	assert(SubWidget->m_SupWidget == 0);
@@ -112,6 +118,26 @@ void Widget::Destroy(void)
 	m_DestroyedWidgets.push_back(this);
 }
 
+bool Widget::Key(int Key, int State)
+{
+	if(m_KeyFocus != 0)
+	{
+		if(m_KeyFocus->Key(Key, State) == true)
+		{
+			return true;
+		}
+	}
+	for(std::list< KeyListener * >::iterator KeyListenerIterator = m_KeyListeners.begin(); KeyListenerIterator != m_KeyListeners.end(); ++KeyListenerIterator)
+	{
+		if((*KeyListenerIterator)->OnKey(this, Key, State) == true)
+		{
+			return true;
+		}
+	}
+	
+	return false;
+}
+
 bool Widget::MouseButton(int Button, int State, float X, float Y)
 {
 	for(std::list< Widget * >::iterator SubWidgetIterator = m_SubWidgets.begin(); SubWidgetIterator != m_SubWidgets.end(); ++SubWidgetIterator)
@@ -141,6 +167,11 @@ bool Widget::MouseButton(int Button, int State, float X, float Y)
 void Widget::AddDestroyListener(DestroyListener * DestroyListener)
 {
 	m_DestroyListeners.push_back(DestroyListener);
+}
+
+void Widget::AddKeyListener(KeyListener * KeyListener)
+{
+	m_KeyListeners.push_back(KeyListener);
 }
 
 void Widget::AddMouseButtonListener(MouseButtonListener * MouseButtonListener)
