@@ -7,6 +7,7 @@
 
 class Color;
 class DestroyListener;
+class KeyListener;
 class MouseButtonListener;
 
 class Widget
@@ -23,17 +24,21 @@ public:
 	void AddSubWidget(Widget * SubWidget);
 	void RemoveSubWidget(Widget * SubWidget);
 	void Destroy(void);
+	void SetKeyFocus(Widget * KeyFocus);
 	// getters
 	const Color & GetBackgroundColor(void) const;
 	const math3d::vector2f GetPosition(void) const;
 	const math3d::vector2f GetSize(void) const;
 	Widget * GetRootWidget(void);
 	const Widget * GetRootWidget(void) const;
+	Widget * GetKeyFocus(void);
 	bool IsVisible(void) const;
 	// receive input
 	bool MouseButton(int Button, int State, float X, float Y);
+	bool Key(int Key, int State);
 	// signal listeners
 	void AddDestroyListener(DestroyListener * DestroyListener);
+	void AddKeyListener(KeyListener * KeyListener);
 	void AddMouseButtonListener(MouseButtonListener * MouseButtonListener);
 	// static manager functions
 	static std::list< Widget * > & GetDestroyedWidgets(void);
@@ -44,8 +49,10 @@ private:
 	math3d::vector2f m_Size;
 	std::list< Widget * > m_SubWidgets;
 	bool m_Visible;
+	Widget * m_KeyFocus;
 	// listeners
 	std::list< DestroyListener * > m_DestroyListeners;
+	std::list< KeyListener * > m_KeyListeners;
 	std::list< MouseButtonListener * > m_MouseButtonListeners;
 	// static manager properties
 	static std::list< Widget * > m_DestroyedWidgets;
@@ -93,6 +100,11 @@ inline const Widget * Widget::GetRootWidget(void) const
 	}
 	
 	return SupWidget;
+}
+
+inline Widget * Widget::GetKeyFocus(void)
+{
+	return m_KeyFocus;
 }
 
 inline bool Widget::IsVisible(void) const
