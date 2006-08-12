@@ -14,7 +14,8 @@ std::list< Widget * > Widget::m_DestroyedWidgets;
 Widget::Widget(Widget * SupWidget) :
 	m_SupWidget(0),
 	m_BackgroundColor(0),
-	m_Visible(true)
+	m_Visible(true),
+	m_KeyFocus(0)
 {
 	if(SupWidget != 0)
 	{
