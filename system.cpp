@@ -60,3 +60,13 @@ void System::ClearCargos(void)
 {
 	m_Cargos.clear();
 }
+
+void System::RemoveCargo(Cargo * RemoveCargo)
+{
+	std::list< Cargo * >::iterator CargoIterator(find(m_Cargos.begin(), m_Cargos.end(), RemoveCargo));
+	
+	if(CargoIterator != m_Cargos.end())
+	{
+		m_Cargos.erase(CargoIterator);
+	}
+}

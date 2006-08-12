@@ -30,6 +30,7 @@ public:
 	void AddCargo(Cargo * Cargo);
 	void ClearShips(void);
 	void ClearCargos(void);
+	void RemoveCargo(Cargo * RemoveCargo);
 private:
 	std::string m_Identifier;
 	std::string m_Name;
