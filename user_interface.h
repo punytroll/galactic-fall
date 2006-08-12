@@ -9,6 +9,7 @@ public:
 	UserInterface(void);
 	void Draw(void) const;
 	bool MouseButton(int Button, int State, float X, float Y);
+	bool Key(int Key, int State);
 	Widget * GetRootWidget(void);
 private:
 	Widget * m_RootWidget;
