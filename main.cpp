@@ -14,6 +14,7 @@
 #include "cargo.h"
 #include "character.h"
 #include "color.h"
+#include "commodity.h"
 #include "commodity_manager.h"
 #include "destroy_listener.h"
 #include "globals.h"
@@ -53,9 +54,11 @@ Label * g_TimeWarpLabel(0);
 Label * g_PlanetLabel(0);
 Label * g_CreditsLabel(0);
 Label * g_MessageLabel;
+Label * g_CargoLabel;
 System * g_CurrentSystem;
 System * g_SelectedLinkedSystem(0);
 Planet * g_SelectedPlanet(0);
+Cargo * g_SelectedCargo(0);
 float g_TimeWarp(1.0f);
 bool g_Pause(false);
 PlanetDialog * g_PlanetDialog;
@@ -149,8 +152,10 @@ void SetMessage(const std::string & Message)
 
 void DrawSelection(Position * Position, float RadialSize)
 {
-	static const float OuterFactor(1.8f);
-	static const float InnerFactor(2.2f);
+	static const float OuterFactor(0.9f);
+	static const float InnerFactor(1.1f);
+	float OuterSize(RadialSize / OuterFactor);
+	float InnerSize(RadialSize / InnerFactor);
 	
 	glPushMatrix();
 	glPushAttrib(GL_LIGHTING_BIT);
@@ -158,24 +163,24 @@ void DrawSelection(Position * Position, float RadialSize)
 	glTranslatef(Position->GetPosition().m_V.m_A[0], Position->GetPosition().m_V.m_A[1], 0.0f);
 	glColor3f(1.0f, 0.0f, 0.0f);
 	glBegin(GL_LINE_STRIP);
-	glVertex2f(-RadialSize / OuterFactor, -RadialSize / InnerFactor);
-	glVertex2f(-RadialSize / OuterFactor, -RadialSize / OuterFactor);
-	glVertex2f(-RadialSize / InnerFactor, -RadialSize / OuterFactor);
+	glVertex2f(-OuterSize, -InnerSize);
+	glVertex2f(-OuterSize, -OuterSize);
+	glVertex2f(-InnerSize, -OuterSize);
 	glEnd();
 	glBegin(GL_LINE_STRIP);
-	glVertex2f(-RadialSize / OuterFactor, RadialSize / InnerFactor);
-	glVertex2f(-RadialSize / OuterFactor, RadialSize / OuterFactor);
-	glVertex2f(-RadialSize / InnerFactor, RadialSize / OuterFactor);
+	glVertex2f(-OuterSize, InnerSize);
+	glVertex2f(-OuterSize, OuterSize);
+	glVertex2f(-InnerSize, OuterSize);
 	glEnd();
 	glBegin(GL_LINE_STRIP);
-	glVertex2f(RadialSize / OuterFactor, -RadialSize / InnerFactor);
-	glVertex2f(RadialSize / OuterFactor, -RadialSize / OuterFactor);
-	glVertex2f(RadialSize / InnerFactor, -RadialSize /OuterFactor);
+	glVertex2f(OuterSize, -InnerSize);
+	glVertex2f(OuterSize, -OuterSize);
+	glVertex2f(InnerSize, -OuterSize);
 	glEnd();
 	glBegin(GL_LINE_STRIP);
-	glVertex2f(RadialSize / OuterFactor, RadialSize / InnerFactor);
-	glVertex2f(RadialSize / OuterFactor, RadialSize / OuterFactor);
-	glVertex2f(RadialSize / InnerFactor, RadialSize / OuterFactor);
+	glVertex2f(OuterSize, InnerSize);
+	glVertex2f(OuterSize, OuterSize);
+	glVertex2f(InnerSize, OuterSize);
 	glEnd();
 	glPopAttrib();
 	glPopMatrix();
@@ -270,15 +275,40 @@ void Render(void)
 		glClear(GL_DEPTH_BUFFER_BIT);
 		DrawPlanetSelection(g_SelectedPlanet);
 		
-		math3d::vector2f RelativePlanetPosition(g_SelectedPlanet->GetPosition() - g_PlayerShip->GetPosition());
+		math3d::vector2f RelativePosition(g_SelectedPlanet->GetPosition() - g_PlayerShip->GetPosition());
 		
-		RelativePlanetPosition.normalize();
+		RelativePosition.normalize();
 		glPushMatrix();
 		glPushAttrib(GL_LIGHTING_BIT);
 		glDisable(GL_LIGHTING);
 		glTranslatef(g_PlayerShip->GetPosition().m_V.m_A[0], g_PlayerShip->GetPosition().m_V.m_A[1], 0.0f);
-		glRotatef(GetRadians(RelativePlanetPosition) * 180.0f / M_PI, 0.0f, 0.0f, 1.0f);
+		glRotatef(GetRadians(RelativePosition) * 180.0f / M_PI, 0.0f, 0.0f, 1.0f);
 		glColor3f(0.0f, 0.5f, 0.5f);
+		glBegin(GL_LINES);
+		glVertex2f(20.0f, 0.0f);
+		glVertex2f(30.0f, 0.0f);
+		glVertex2f(26.0f, 4.0f);
+		glVertex2f(30.0f, 0.0f);
+		glVertex2f(26.0f, -4.0f);
+		glVertex2f(30.0f, 0.0f);
+		glEnd();
+		glPopAttrib();
+		glPopMatrix();
+	}
+	if(g_SelectedCargo != 0)
+	{
+		glClear(GL_DEPTH_BUFFER_BIT);
+		DrawSelection(g_SelectedCargo, g_SelectedCargo->GetRadialSize());
+		
+		math3d::vector2f RelativePosition(g_SelectedCargo->GetPosition() - g_PlayerShip->GetPosition());
+		
+		RelativePosition.normalize();
+		glPushMatrix();
+		glPushAttrib(GL_LIGHTING_BIT);
+		glDisable(GL_LIGHTING);
+		glTranslatef(g_PlayerShip->GetPosition().m_V.m_A[0], g_PlayerShip->GetPosition().m_V.m_A[1], 0.0f);
+		glRotatef(GetRadians(RelativePosition) * 180.0f / M_PI, 0.0f, 0.0f, 1.0f);
+		glColor3f(0.5f, 0.5f, 0.0f);
 		glBegin(GL_LINES);
 		glVertex2f(20.0f, 0.0f);
 		glVertex2f(30.0f, 0.0f);
@@ -354,6 +384,19 @@ void SelectPlanet(Planet * Planet)
 	else
 	{
 		g_PlanetLabel->SetString("");
+	}
+}
+
+void SelectCargo(Cargo * Cargo)
+{
+	g_SelectedCargo = Cargo;
+	if(g_SelectedCargo != 0)
+	{
+		g_CargoLabel->SetString(Cargo->GetCommodity()->GetName());
+	}
+	else
+	{
+		g_CargoLabel->SetString("");
 	}
 }
 
@@ -698,6 +741,39 @@ void Key(unsigned char Key, int X, int Y)
 			
 			break;
 		}
+	case 't':
+		{
+			const std::list< Cargo * > & Cargos(g_CurrentSystem->GetCargos());
+			
+			if(g_SelectedCargo == 0)
+			{
+				if(Cargos.size() > 0)
+				{
+					SelectCargo(Cargos.front());
+				}
+			}
+			else
+			{
+				std::list< Cargo * >::const_iterator CargoIterator(find(Cargos.begin(), Cargos.end(), g_SelectedCargo));
+				
+				if(CargoIterator == Cargos.end())
+				{
+					SelectCargo(0);
+				}
+				else
+				{
+					++CargoIterator;
+					if(CargoIterator == Cargos.end())
+					{
+						SelectCargo(0);
+					}
+					else
+					{
+						SelectCargo(*CargoIterator);
+					}
+				}
+			}
+		}
 	}
 }
 
@@ -772,6 +848,9 @@ int main(int argc, char **argv)
 	g_MessageLabel->SetForegroundColor(Color(1.0f, 0.3f, 0.3f));
 	g_MessageLabel->SetPosition(math3d::vector2f(0.0f, 0.0f));
 	g_MessageLabel->Hide();
+	g_CargoLabel = new Label(g_UserInterface.GetRootWidget());
+	g_CargoLabel->SetForegroundColor(Color(1.0f, 1.0f, 0.8f));
+	g_CargoLabel->SetPosition(math3d::vector2f(0.0f, 80.0f));
 	
 	// data reading
 	LoadModelsFromFile(&g_ModelManager, "data/shuttlecraft.xml");

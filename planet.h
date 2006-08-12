@@ -71,7 +71,7 @@ inline float Planet::GetSize(void) const
 
 inline float Planet::GetRadialSize(void) const
 {
-	return m_Size;
+	return m_Size / 2.0f;
 }
 
 inline const std::vector< PlanetCommodity * > & Planet::GetCommodities(void) const
