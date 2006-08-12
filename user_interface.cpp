@@ -33,3 +33,8 @@ bool UserInterface::MouseButton(int Button, int State, float X, float Y)
 		return false;
 	}
 }
+
+bool UserInterface::Key(int Key, int State)
+{
+	return m_RootWidget->Key(Key, State);
+}
