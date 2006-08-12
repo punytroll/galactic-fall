@@ -17,6 +17,7 @@ public:
 	void Move(float Seconds);
 	const Commodity * GetCommodity(void) const;
 	float GetRadialSize(void) const;
+	const math3d::vector2f & GetVelocity(void);
 private:
 	Model * m_Model;
 	const Commodity * m_Commodity;
@@ -34,6 +35,11 @@ inline const Commodity * Cargo::GetCommodity(void) const
 inline float Cargo::GetRadialSize(void) const
 {
 	return 0.867f;  // sqrt(sqr(0.5) + sqr(0.5) + sqr(0.5))
+}
+
+inline const math3d::vector2f & Cargo::GetVelocity(void)
+{
+	return m_Velocity;
 }
 
 #endif
