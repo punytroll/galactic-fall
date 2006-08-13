@@ -3,6 +3,7 @@
 
 #include "clicked_listener.h"
 #include "destroy_listener.h"
+#include "key_listener.h"
 #include "widget.h"
 
 class Button;
@@ -10,13 +11,14 @@ class Label;
 class Planet;
 class TradeCenterDialog;
 
-class PlanetDialog : public Widget, public ClickedListener, public DestroyListener
+class PlanetDialog : public ClickedListener, public DestroyListener, public KeyListener, public Widget
 {
 public:
 	PlanetDialog(Widget * SupWidget, Planet * Planet);
 protected:
 	virtual bool OnClicked(Widget * EventSource);
 	virtual void OnDestroy(Widget * EventSource);
+	virtual bool OnKey(Widget * EventSource, int Key, int State);
 private:
 	Planet * m_Planet;
 	Label * m_NameLabel;

@@ -1,4 +1,4 @@
-#include <iostream>
+#include <GL/glut.h>
 
 #include "button.h"
 #include "color.h"
@@ -15,6 +15,7 @@ PlanetDialog::PlanetDialog(Widget * SupWidget, Planet * Planet) :
 	SetPosition(math3d::vector2f(50.0f, 50.0f));
 	SetSize(math3d::vector2f(500.0f, 300.0f));
 	SetBackgroundColor(Color(0.2f, 0.2f, 0.2f));
+	AddKeyListener(this);
 	m_NameLabel = new Label(this, m_Planet->GetName());
 	m_NameLabel->SetPosition(math3d::vector2f(10.0f, 10.0f));
 	m_NameLabel->SetSize(math3d::vector2f(100.0f, 20.0f));
@@ -75,5 +76,25 @@ void PlanetDialog::OnDestroy(Widget * EventSource)
 	if(EventSource == m_TradeCenterDialog)
 	{
 		m_TradeCenterDialog = 0;
+		GrabKeyFocus();
 	}
+}
+
+bool PlanetDialog::OnKey(Widget * EventSource, int Key, int State)
+{
+	if(((Key == 13) || (Key == 27) || (Key == 'l')) && (State == GLUT_DOWN))
+	{
+		Destroy();
+	}
+	else if((Key == 't') && (State == GLUT_DOWN))
+	{
+		if(m_TradeCenterDialog == 0)
+		{
+			m_TradeCenterDialog = new TradeCenterDialog(GetRootWidget(), m_Planet);
+			m_TradeCenterDialog->GrabKeyFocus();
+			m_TradeCenterDialog->AddDestroyListener(this);
+		}
+	}
+	// eat up all other keys
+	return true;
 }

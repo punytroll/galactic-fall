@@ -67,6 +67,7 @@ planet_dialog_h = \
 	planet_dialog.h \
 	$(clicked_listener_h) \
 	$(destroy_listener_h) \
+	$(key_listener_h) \
 	$(widget_h)
 
 position_h = \
