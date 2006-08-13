@@ -652,6 +652,7 @@ void Key(unsigned char Key, int X, int Y)
 			{
 				g_Pause = true;
 				g_MapDialog = new MapDialog(g_UserInterface.GetRootWidget(), g_CurrentSystem);
+				g_MapDialog->GrabKeyFocus();
 				g_MapDialog->AddDestroyListener(&g_GlobalDestroyListener);
 			}
 			
@@ -837,6 +838,14 @@ void Key(unsigned char Key, int X, int Y)
 	}
 }
 
+void KeyUp(unsigned char Key, int X, int Y)
+{
+	if(g_UserInterface.Key(Key, GLUT_UP) == true)
+	{
+		return;
+	}
+}
+
 void SpecialKey(int Key, int X, int Y)
 {
 	if(g_UserInterface.Key(Key + 256, GLUT_DOWN) == true)
@@ -956,6 +965,7 @@ int main(int argc, char **argv)
 	glutMotionFunc(MouseMotion);
 	glutSetKeyRepeat(GLUT_KEY_REPEAT_OFF);
 	glutKeyboardFunc(Key);
+	glutKeyboardUpFunc(KeyUp);
 	glutSpecialFunc(SpecialKey);
 	glutSpecialUpFunc(SpecialKeyUp);
 	glEnable(GL_LIGHTING);
