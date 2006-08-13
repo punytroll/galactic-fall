@@ -24,6 +24,7 @@ MapDialog::MapDialog(Widget * SupWidget, System * System) :
 	SetPosition(math3d::vector2f(70.0f, 500.0f));
 	SetSize(math3d::vector2f(500.0f, 500.0f));
 	SetBackgroundColor(Color(0.2f, 0.2f, 0.2f));
+	AddKeyListener(this);
 	AddMouseButtonListener(this);
 	m_OKButton = new Button(this);
 	m_OKButton->SetPosition(math3d::vector2f(390.0f, 470.0f));
@@ -159,6 +160,16 @@ bool MapDialog::OnClicked(Widget * EventSource)
 	}
 	
 	return false;
+}
+
+bool MapDialog::OnKey(Widget * EventSource, int Key, int State)
+{
+	if(((Key == 27) || (Key == 13) || (Key == 'm')) && (State == GLUT_DOWN))
+	{
+		Destroy();
+	}
+	// eat all other input
+	return true;
 }
 
 bool MapDialog::OnMouseButton(Widget * EventSource, int Button, int State, float X, float Y)
