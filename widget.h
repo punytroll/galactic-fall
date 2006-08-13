@@ -25,6 +25,7 @@ public:
 	void RemoveSubWidget(Widget * SubWidget);
 	void Destroy(void);
 	void SetKeyFocus(Widget * KeyFocus);
+	void GrabKeyFocus(void);
 	// getters
 	const Color & GetBackgroundColor(void) const;
 	const math3d::vector2f GetPosition(void) const;

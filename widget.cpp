@@ -83,7 +83,18 @@ void Widget::SetSize(const math3d::vector2f & Size)
 
 void Widget::SetKeyFocus(Widget * KeyFocus)
 {
+	assert(find(m_SubWidgets.begin(), m_SubWidgets.end(), KeyFocus) != m_SubWidgets.end());
+	assert(KeyFocus->m_SupWidget == this);
 	m_KeyFocus = KeyFocus;
+}
+
+void Widget::GrabKeyFocus(void)
+{
+	if(m_SupWidget != 0)
+	{
+		m_SupWidget->m_KeyFocus = this;
+		m_SupWidget->GrabKeyFocus();
+	}
 }
 
 void Widget::AddSubWidget(Widget * SubWidget)
@@ -98,6 +109,10 @@ void Widget::RemoveSubWidget(Widget * SubWidget)
 	assert(SubWidget->m_SupWidget == this);
 	SubWidget->m_SupWidget = 0;
 	m_SubWidgets.erase(find(m_SubWidgets.begin(), m_SubWidgets.end(), SubWidget));
+	if(SubWidget == m_KeyFocus)
+	{
+		m_KeyFocus = 0;
+	}
 }
 
 void Widget::Destroy(void)
