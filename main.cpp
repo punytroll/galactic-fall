@@ -601,6 +601,7 @@ void Key(unsigned char Key, int X, int Y)
 						{
 							g_Pause = true;
 							g_PlanetDialog = new PlanetDialog(g_UserInterface.GetRootWidget(), g_SelectedPlanet);
+							g_PlanetDialog->GrabKeyFocus();
 							g_PlanetDialog->AddDestroyListener(&g_GlobalDestroyListener);
 						}
 						else
