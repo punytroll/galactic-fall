@@ -44,7 +44,7 @@ void Widget::Draw(void) const
 {
 	if(m_BackgroundColor != 0)
 	{
-		glColor3fv(m_BackgroundColor->GetColor().m_V.m_A);
+		glColor4fv(m_BackgroundColor->GetColor().m_V.m_A);
 		glBegin(GL_QUADS);
 		glVertex2f(0.0f, 0.0f);
 		glVertex2f(0.0f, m_Size.m_V.m_A[1]);

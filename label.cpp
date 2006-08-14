@@ -66,7 +66,7 @@ void Label::Draw(void) const
 	float Width(GetSize().m_V.m_A[0]);
 	
 	Widget::Draw();
-	glColor3fv(m_ForegroundColor.GetColor().m_V.m_A);
+	glColor4fv(m_ForegroundColor.GetColor().m_V.m_A);
 	if(m_Wrap == false)
 	{
 		glPushMatrix();
