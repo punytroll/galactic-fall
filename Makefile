@@ -140,6 +140,7 @@ clean:
 	$(RM) model.o
 	$(RM) model_manager.o
 	$(RM) mouse_button_listener.o
+	$(RM) object.o
 	$(RM) planet.o
 	$(RM) planet_dialog.o
 	$(RM) real_time.o
