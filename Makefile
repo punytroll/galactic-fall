@@ -98,6 +98,7 @@ system_manager_h = \
 trade_center_dialog_h = \
 	trade_center_dialog.h \
 	$(clicked_listener_h) \
+	$(key_listener_h) \
 	$(mouse_button_listener_h) \
 	$(widget_h)
 
