@@ -1,6 +1,3 @@
-#include <iostream>
-#include <vector>
-
 #include <GL/glut.h>
 
 #include "button.h"
@@ -65,6 +62,7 @@ TradeCenterDialog::TradeCenterDialog(Widget * SupWidget, Planet * Planet) :
 	SetPosition(math3d::vector2f(600.0f, 100.0f));
 	SetSize(math3d::vector2f(500.0f, 300.0f));
 	SetBackgroundColor(Color(0.2f, 0.2f, 0.2f));
+	AddKeyListener(this);
 	m_OKButton = new Button(this);
 	m_OKButton->SetPosition(math3d::vector2f(390.0f, 270.0f));
 	m_OKButton->SetSize(math3d::vector2f(100.0f, 20.0f));
@@ -174,6 +172,44 @@ bool TradeCenterDialog::OnClicked(Widget * EventSource)
 	}
 	
 	return false;
+}
+
+bool TradeCenterDialog::OnKey(Widget * EventSource, int Key, int State)
+{
+	if(((Key == 13) || (Key == 27) || (Key == 't')) && (State == GLUT_DOWN))
+	{
+		Destroy();
+	}
+	else if((Key == 'b') && (m_SelectedTradeCenterCommodity != 0) && (State == GLUT_DOWN))
+	{
+		float Price(m_SelectedTradeCenterCommodity->GetPlanetCommodity()->GetPrice());
+		
+		if(g_PlayerCharacter->RemoveCredits(Price) == true)
+		{
+			if(g_PlayerShip->AddCargo(m_SelectedTradeCenterCommodity->GetPlanetCommodity()->GetCommodity(), 1.0f) == false)
+			{
+				g_PlayerCharacter->AddCredits(Price);
+			}
+			else
+			{
+				m_SelectedTradeCenterCommodity->UpdateCharacterAmount();
+				UpdateTraderCredits();
+				UpdateTraderFreeCargoHoldSize();
+			}
+		}
+	}
+	else if((Key == 's') && (m_SelectedTradeCenterCommodity != 0) && (State == GLUT_DOWN))
+	{
+		if(g_PlayerShip->RemoveCargo(m_SelectedTradeCenterCommodity->GetPlanetCommodity()->GetCommodity(), 1.0f) == true)
+		{
+			g_PlayerCharacter->AddCredits(m_SelectedTradeCenterCommodity->GetPlanetCommodity()->GetPrice());
+			m_SelectedTradeCenterCommodity->UpdateCharacterAmount();
+			UpdateTraderCredits();
+			UpdateTraderFreeCargoHoldSize();
+		}
+	}
+	
+	return true;
 }
 
 bool TradeCenterDialog::OnMouseButton(Widget * EventSource, int Button, int State, float X, float Y)
