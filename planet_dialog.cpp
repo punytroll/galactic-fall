@@ -62,6 +62,7 @@ bool PlanetDialog::OnClicked(Widget * EventSource)
 		if(m_TradeCenterDialog == 0)
 		{
 			m_TradeCenterDialog = new TradeCenterDialog(GetRootWidget(), m_Planet);
+			m_TradeCenterDialog->GrabKeyFocus();
 			m_TradeCenterDialog->AddDestroyListener(this);
 		}
 		
