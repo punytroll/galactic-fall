@@ -198,6 +198,8 @@ void DisplayUserInterface(void)
 	glPushAttrib(GL_ENABLE_BIT);
 	glDisable(GL_LIGHTING);
 	glDisable(GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
 	glLoadIdentity();
@@ -972,7 +974,7 @@ int main(int argc, char **argv)
 	g_CargoLabel->SetPosition(math3d::vector2f(0.0f, 80.0f));
 	g_RadarWidget = new Widget(g_UserInterface.GetRootWidget());
 	g_RadarWidget->SetSize(math3d::vector2f(220.0f, 220.0f));
-	g_RadarWidget->SetBackgroundColor(Color(0.0f, 0.1f, 0.17f));
+	g_RadarWidget->SetBackgroundColor(Color(0.0f, 0.1f, 0.17f, 0.8f));
 	
 	// data reading
 	LoadModelsFromFile(&g_ModelManager, "data/shuttlecraft.xml");
