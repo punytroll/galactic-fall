@@ -39,6 +39,7 @@ int g_LastMotionX(-1);
 int g_LastMotionY(-1);
 int g_MouseButton(-1);
 Camera g_Camera;
+Camera g_RadarCamera;
 float g_GameTime;
 ModelManager g_ModelManager;
 ShipClassManager g_ShipClassManager(&g_ModelManager);
@@ -67,6 +68,7 @@ int g_WidgetCollectorCountDownInitializer(10);
 int g_WidgetCollectorCountDown(g_WidgetCollectorCountDownInitializer);
 UserInterface g_UserInterface;
 double g_MessageLabelTimeout;
+Widget * g_RadarWidget;
 
 void NormalizeRadians(float & Radians)
 {
@@ -242,9 +244,14 @@ void Render(void)
 			(*CargoIterator)->Move(Seconds);
 		}
 	}
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT);
+	glViewport(0, 0, static_cast< GLsizei >(g_Width), static_cast< GLsizei >(g_Height));
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	gluPerspective(45.0f, 1.0 * g_Width / g_Height, 1, 1000);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+	glClear(GL_DEPTH_BUFFER_BIT);
 	g_Camera.Draw();
 	glLightfv(GL_LIGHT0, GL_POSITION, math3d::vector4f(-50.0f, 50.0f, 100.0f, 0.0f).m_V.m_A);
 	if(g_CurrentSystem != 0)
@@ -334,6 +341,42 @@ void Render(void)
 		g_MessageLabel->Hide();
 	}
 	DisplayUserInterface();
+	if((g_SelectedPlanet != 0) || (g_SelectedCargo != 0))
+	{
+		Position * Position(0);
+		
+		if(g_SelectedPlanet != 0)
+		{
+			Position = g_SelectedPlanet;
+		}
+		else
+		{
+			Position = g_SelectedCargo;
+		}
+		
+		float RadialSize((g_SelectedPlanet != 0) ? (g_SelectedPlanet->GetRadialSize()) : (g_SelectedCargo->GetRadialSize()));
+		float ExtendedRadialSize((5.0f / 4.0f) * RadialSize);
+		
+		glViewport(0, 0, 220, 220);
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		gluPerspective(360.0f * asinf(ExtendedRadialSize / sqrtf(ExtendedRadialSize * ExtendedRadialSize + 16 * RadialSize * RadialSize)) / M_PI, 1.0, 1, 1000);
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+		glClear(GL_DEPTH_BUFFER_BIT);
+		g_RadarCamera.SetPosition(0.0f, 0.0f, 4.0f * RadialSize);
+		g_RadarCamera.SetFocus(Position);
+		g_RadarCamera.Draw();
+		glLightfv(GL_LIGHT0, GL_POSITION, math3d::vector4f(-50.0f, 50.0f, 100.0f, 0.0f).m_V.m_A);
+		if(g_SelectedPlanet != 0)
+		{
+			g_SelectedPlanet->Draw();
+		}
+		else
+		{
+			g_SelectedCargo->Draw();
+		}
+	}
 	glutSwapBuffers();
 }
 
@@ -345,11 +388,9 @@ void Resize(int Width, int Height)
 	}
 	g_Width = Width;
 	g_Height = Height;
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
 	glViewport(0, 0, Width, Height);
-	gluPerspective(45.0f, 1.0 * g_Width / g_Height, 1, 1000);
 	g_UserInterface.GetRootWidget()->SetSize(math3d::vector2f(g_Width, g_Height));
+	g_RadarWidget->SetPosition(math3d::vector2f(0.0f, g_Height - 220.0f));
 }
 
 void SelectLinkedSystem(System * LinkedSystem)
@@ -929,6 +970,9 @@ int main(int argc, char **argv)
 	g_CargoLabel = new Label(g_UserInterface.GetRootWidget());
 	g_CargoLabel->SetForegroundColor(Color(1.0f, 1.0f, 0.8f));
 	g_CargoLabel->SetPosition(math3d::vector2f(0.0f, 80.0f));
+	g_RadarWidget = new Widget(g_UserInterface.GetRootWidget());
+	g_RadarWidget->SetSize(math3d::vector2f(220.0f, 220.0f));
+	g_RadarWidget->SetBackgroundColor(Color(0.0f, 0.1f, 0.17f));
 	
 	// data reading
 	LoadModelsFromFile(&g_ModelManager, "data/shuttlecraft.xml");
@@ -955,6 +999,7 @@ int main(int argc, char **argv)
 	// camera setup
 	g_Camera.SetPosition(0.0f, 0.0f, 200.0f);
 	g_Camera.SetFocus(g_PlayerShip);
+	g_RadarCamera.SetPosition(0.0f, 0.0f, 200.0f);
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 	glutCreateWindow("Escape Velocity");
