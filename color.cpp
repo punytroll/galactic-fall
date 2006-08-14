@@ -1,11 +1,11 @@
 #include "color.h"
 
-Color::Color(float Red, float Green, float Blue) :
-	m_Color(Red, Green, Blue, 0.0f)
+Color::Color(float Red, float Green, float Blue, float Alpha) :
+	m_Color(Red, Green, Blue, Alpha)
 {
 }
 
-void Color::Set(float Red, float Green, float Blue)
+void Color::Set(float Red, float Green, float Blue, float Alpha)
 {
-	m_Color.set(Red, Green, Blue, 0.0f);
+	m_Color.set(Red, Green, Blue, Alpha);
 }
