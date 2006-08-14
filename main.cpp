@@ -52,14 +52,12 @@ float g_Width(0.0f);
 float g_Height(0.0f);
 Label * g_SystemLabel(0);
 Label * g_TimeWarpLabel(0);
-Label * g_PlanetLabel(0);
+Label * g_TargetLabel(0);
 Label * g_CreditsLabel(0);
-Label * g_MessageLabel;
-Label * g_CargoLabel;
+Label * g_MessageLabel(0);
 System * g_CurrentSystem;
 System * g_SelectedLinkedSystem(0);
-Planet * g_SelectedPlanet(0);
-Cargo * g_SelectedCargo(0);
+Object * g_TargetObject(0);
 float g_TimeWarp(1.0f);
 bool g_Pause(false);
 PlanetDialog * g_PlanetDialog;
@@ -279,12 +277,12 @@ void Render(void)
 		}
 	}
 	// HUD
-	if(g_SelectedPlanet != 0)
+	if(g_TargetObject != 0)
 	{
 		glClear(GL_DEPTH_BUFFER_BIT);
-		DrawPlanetSelection(g_SelectedPlanet);
+		DrawSelection(g_TargetObject, g_TargetObject->GetRadialSize());
 		
-		math3d::vector2f RelativePosition(g_SelectedPlanet->GetPosition() - g_PlayerShip->GetPosition());
+		math3d::vector2f RelativePosition(g_TargetObject->GetPosition() - g_PlayerShip->GetPosition());
 		
 		RelativePosition.normalize();
 		glPushMatrix();
@@ -304,59 +302,23 @@ void Render(void)
 		glPopAttrib();
 		glPopMatrix();
 	}
-	if(g_SelectedCargo != 0)
-	{
-		glClear(GL_DEPTH_BUFFER_BIT);
-		DrawSelection(g_SelectedCargo, g_SelectedCargo->GetRadialSize());
-		
-		math3d::vector2f RelativePosition(g_SelectedCargo->GetPosition() - g_PlayerShip->GetPosition());
-		
-		RelativePosition.normalize();
-		glPushMatrix();
-		glPushAttrib(GL_LIGHTING_BIT);
-		glDisable(GL_LIGHTING);
-		glTranslatef(g_PlayerShip->GetPosition().m_V.m_A[0], g_PlayerShip->GetPosition().m_V.m_A[1], 0.0f);
-		glRotatef(GetRadians(RelativePosition) * 180.0f / M_PI, 0.0f, 0.0f, 1.0f);
-		glColor3f(0.5f, 0.5f, 0.0f);
-		glBegin(GL_LINES);
-		glVertex2f(20.0f, 0.0f);
-		glVertex2f(30.0f, 0.0f);
-		glVertex2f(26.0f, 4.0f);
-		glVertex2f(30.0f, 0.0f);
-		glVertex2f(26.0f, -4.0f);
-		glVertex2f(30.0f, 0.0f);
-		glEnd();
-		glPopAttrib();
-		glPopMatrix();
-	}
 	// user interface updates
 	if((g_SelectedLinkedSystem != 0) && (WantToJump(g_PlayerShip) == OK_TO_JUMP))
 	{
-		g_SystemLabel->GetForegroundColor().Set(1.0f, 1.0f, 1.0f);
+		g_SystemLabel->GetForegroundColor().Set(0.7f, 0.8f, 1.0f);
 	}
 	else
 	{
-		g_SystemLabel->GetForegroundColor().Set(0.5f, 0.5f, 0.5f);
+		g_SystemLabel->GetForegroundColor().Set(0.4f, 0.4f, 0.4f);
 	}
 	if(RealTime::GetTime() > g_MessageLabelTimeout)
 	{
 		g_MessageLabel->Hide();
 	}
 	DisplayUserInterface();
-	if((g_SelectedPlanet != 0) || (g_SelectedCargo != 0))
+	if(g_TargetObject != 0)
 	{
-		Position * Position(0);
-		
-		if(g_SelectedPlanet != 0)
-		{
-			Position = g_SelectedPlanet;
-		}
-		else
-		{
-			Position = g_SelectedCargo;
-		}
-		
-		float RadialSize((g_SelectedPlanet != 0) ? (g_SelectedPlanet->GetRadialSize()) : (g_SelectedCargo->GetRadialSize()));
+		float RadialSize(g_TargetObject->GetRadialSize());
 		float ExtendedRadialSize((5.0f / 4.0f) * RadialSize);
 		
 		glViewport(0, 0, 220, 220);
@@ -367,17 +329,10 @@ void Render(void)
 		glLoadIdentity();
 		glClear(GL_DEPTH_BUFFER_BIT);
 		g_RadarCamera.SetPosition(0.0f, 0.0f, 4.0f * RadialSize);
-		g_RadarCamera.SetFocus(Position);
+		g_RadarCamera.SetFocus(g_TargetObject);
 		g_RadarCamera.Draw();
 		glLightfv(GL_LIGHT0, GL_POSITION, math3d::vector4f(-50.0f, 50.0f, 100.0f, 0.0f).m_V.m_A);
-		if(g_SelectedPlanet != 0)
-		{
-			g_SelectedPlanet->Draw();
-		}
-		else
-		{
-			g_SelectedCargo->Draw();
-		}
+		g_TargetObject->Draw();
 	}
 	glutSwapBuffers();
 }
@@ -392,7 +347,7 @@ void Resize(int Width, int Height)
 	g_Height = Height;
 	glViewport(0, 0, Width, Height);
 	g_UserInterface.GetRootWidget()->SetSize(math3d::vector2f(g_Width, g_Height));
-	g_RadarWidget->SetPosition(math3d::vector2f(0.0f, g_Height - 220.0f));
+	g_RadarWidget->SetPosition(math3d::vector2f(0.0f, g_Height - 240.0f));
 }
 
 void SelectLinkedSystem(System * LinkedSystem)
@@ -419,27 +374,27 @@ void SelectLinkedSystem(System * LinkedSystem)
 
 void SelectPlanet(Planet * Planet)
 {
-	g_SelectedPlanet = Planet;
-	if(g_SelectedPlanet != 0)
+	g_TargetObject = Planet;
+	if(g_TargetObject != 0)
 	{
-		g_PlanetLabel->SetString(Planet->GetName());
+		g_TargetLabel->SetString(Planet->GetName());
 	}
 	else
 	{
-		g_PlanetLabel->SetString("");
+		g_TargetLabel->SetString("");
 	}
 }
 
 void SelectCargo(Cargo * Cargo)
 {
-	g_SelectedCargo = Cargo;
-	if(g_SelectedCargo != 0)
+	g_TargetObject = Cargo;
+	if(g_TargetObject != 0)
 	{
-		g_CargoLabel->SetString(Cargo->GetCommodity()->GetName());
+		g_TargetLabel->SetString(Cargo->GetCommodity()->GetName());
 	}
 	else
 	{
-		g_CargoLabel->SetString("");
+		g_TargetLabel->SetString("");
 	}
 }
 
@@ -634,16 +589,18 @@ void Key(unsigned char Key, int X, int Y)
 		{
 			if(g_PlanetDialog == 0)
 			{
-				if(g_SelectedPlanet != 0)
+				Planet * SelectedPlanet(dynamic_cast< Planet * >(g_TargetObject));
+				
+				if(SelectedPlanet != 0)
 				{
 					// test distance
-					if((g_SelectedPlanet->GetPosition() - g_PlayerShip->GetPosition()).length_squared() <= g_SelectedPlanet->GetSize() * g_SelectedPlanet->GetSize())
+					if((SelectedPlanet->GetPosition() - g_PlayerShip->GetPosition()).length_squared() <= SelectedPlanet->GetSize() * SelectedPlanet->GetSize())
 					{
 						// test speed (should be relative speed but planets have no speed, yet)
 						if(g_PlayerShip->GetVelocity().length_squared() <= 2.0f)
 						{
 							g_Pause = true;
-							g_PlanetDialog = new PlanetDialog(g_UserInterface.GetRootWidget(), g_SelectedPlanet);
+							g_PlanetDialog = new PlanetDialog(g_UserInterface.GetRootWidget(), SelectedPlanet);
 							g_PlanetDialog->GrabKeyFocus();
 							g_PlanetDialog->AddDestroyListener(&g_GlobalDestroyListener);
 						}
@@ -740,10 +697,11 @@ void Key(unsigned char Key, int X, int Y)
 	case 'p':
 		{
 			const std::list< Planet * > & Planets(g_CurrentSystem->GetPlanets());
+			Planet * SelectedPlanet(dynamic_cast< Planet * >(g_TargetObject));
 			
-			if(g_SelectedPlanet != 0)
+			if(SelectedPlanet != 0)
 			{
-				std::list< Planet * >::const_iterator PlanetIterator(find(Planets.begin(), Planets.end(), g_SelectedPlanet));
+				std::list< Planet * >::const_iterator PlanetIterator(find(Planets.begin(), Planets.end(), SelectedPlanet));
 				
 				if(PlanetIterator == Planets.end())
 				{
@@ -792,7 +750,9 @@ void Key(unsigned char Key, int X, int Y)
 		}
 	case 's':
 		{
-			if(g_SelectedCargo == 0)
+			Cargo * SelectedCargo(dynamic_cast< Cargo * >(g_TargetObject));
+			
+			if(SelectedCargo == 0)
 			{
 				const std::list< Cargo * > & Cargos(g_CurrentSystem->GetCargos());
 				float MinimumDistance(0.0f);
@@ -824,13 +784,13 @@ void Key(unsigned char Key, int X, int Y)
 			else
 			{
 				// test distance
-				if((g_SelectedCargo->GetPosition() - g_PlayerShip->GetPosition()).length_squared() <= 5.0f * g_SelectedCargo->GetRadialSize() * g_SelectedCargo->GetRadialSize())
+				if((SelectedCargo->GetPosition() - g_PlayerShip->GetPosition()).length_squared() <= 5.0f * SelectedCargo->GetRadialSize() * SelectedCargo->GetRadialSize())
 				{
 					// test speed
-					if((g_PlayerShip->GetVelocity() - g_SelectedCargo->GetVelocity()).length_squared() <= 2.0f)
+					if((g_PlayerShip->GetVelocity() - SelectedCargo->GetVelocity()).length_squared() <= 2.0f)
 					{
-						g_PlayerShip->AddCargo(g_SelectedCargo->GetCommodity(), 1.0f);
-						g_CurrentSystem->RemoveCargo(g_SelectedCargo);
+						g_PlayerShip->AddCargo(SelectedCargo->GetCommodity(), 1.0f);
+						g_CurrentSystem->RemoveCargo(SelectedCargo);
 						SelectCargo(0);
 					}
 					else
@@ -849,8 +809,9 @@ void Key(unsigned char Key, int X, int Y)
 	case 't':
 		{
 			const std::list< Cargo * > & Cargos(g_CurrentSystem->GetCargos());
+			Cargo * SelectedCargo(dynamic_cast< Cargo * >(g_TargetObject));
 			
-			if(g_SelectedCargo == 0)
+			if(SelectedCargo == 0)
 			{
 				if(Cargos.size() > 0)
 				{
@@ -859,7 +820,7 @@ void Key(unsigned char Key, int X, int Y)
 			}
 			else
 			{
-				std::list< Cargo * >::const_iterator CargoIterator(find(Cargos.begin(), Cargos.end(), g_SelectedCargo));
+				std::list< Cargo * >::const_iterator CargoIterator(find(Cargos.begin(), Cargos.end(), SelectedCargo));
 				
 				if(CargoIterator == Cargos.end())
 				{
@@ -954,27 +915,27 @@ int main(int argc, char **argv)
 	srand(time(0));
 	// ui setup
 	g_TimeWarpLabel = new Label(g_UserInterface.GetRootWidget());
-	g_TimeWarpLabel->SetForegroundColor(Color(1.0f, 1.0f, 0.8f));
+	g_TimeWarpLabel->SetForegroundColor(Color(0.7f, 0.8f, 1.0f));
 	g_TimeWarpLabel->SetPosition(math3d::vector2f(0.0f, 00.0f));
 	g_SystemLabel = new Label(g_UserInterface.GetRootWidget());
-	g_SystemLabel->SetForegroundColor(Color(1.0f, 1.0f, 0.8f));
+	g_SystemLabel->SetForegroundColor(Color(0.7f, 0.8f, 1.0f));
 	g_SystemLabel->SetPosition(math3d::vector2f(0.0f, 20.0f));
-	g_PlanetLabel = new Label(g_UserInterface.GetRootWidget());
-	g_PlanetLabel->SetForegroundColor(Color(1.0f, 1.0f, 0.8f));
-	g_PlanetLabel->SetPosition(math3d::vector2f(0.0f, 40.0f));
 	g_CreditsLabel = new Label(g_UserInterface.GetRootWidget());
-	g_CreditsLabel->SetForegroundColor(Color(1.0f, 1.0f, 0.8f));
-	g_CreditsLabel->SetPosition(math3d::vector2f(0.0f, 60.0f));
+	g_CreditsLabel->SetForegroundColor(Color(0.7f, 0.8f, 1.0f));
+	g_CreditsLabel->SetPosition(math3d::vector2f(0.0f, 40.0f));
 	g_MessageLabel = new Label(g_UserInterface.GetRootWidget());
 	g_MessageLabel->SetForegroundColor(Color(1.0f, 0.3f, 0.3f));
 	g_MessageLabel->SetPosition(math3d::vector2f(0.0f, 0.0f));
 	g_MessageLabel->Hide();
-	g_CargoLabel = new Label(g_UserInterface.GetRootWidget());
-	g_CargoLabel->SetForegroundColor(Color(1.0f, 1.0f, 0.8f));
-	g_CargoLabel->SetPosition(math3d::vector2f(0.0f, 80.0f));
 	g_RadarWidget = new Widget(g_UserInterface.GetRootWidget());
-	g_RadarWidget->SetSize(math3d::vector2f(220.0f, 220.0f));
+	g_RadarWidget->SetSize(math3d::vector2f(220.0f, 240.0f));
 	g_RadarWidget->SetBackgroundColor(Color(0.0f, 0.1f, 0.17f, 0.8f));
+	g_TargetLabel = new Label(g_RadarWidget);
+	g_TargetLabel->SetForegroundColor(Color(0.7f, 0.8f, 1.0f));
+	g_TargetLabel->SetPosition(math3d::vector2f(0.0f, 0.0f));
+	g_TargetLabel->SetSize(math3d::vector2f(220.0f, 20.0f));
+	g_TargetLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
+	g_TargetLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
 	
 	// data reading
 	LoadModelsFromFile(&g_ModelManager, "data/shuttlecraft.xml");

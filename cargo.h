@@ -4,19 +4,18 @@
 #include <math3d/vector2f.h>
 #include <math3d/vector3f.h>
 
-#include "position.h"
+#include "object.h"
 
 class Commodity;
 class Model;
 
-class Cargo : public Position
+class Cargo : public Object
 {
 public:
 	Cargo(Model * Model, const Commodity * Commodity, const math3d::vector2f & Velocity);
-	void Draw(void) const;
+	virtual void Draw(void) const;
 	void Move(float Seconds);
 	const Commodity * GetCommodity(void) const;
-	float GetRadialSize(void) const;
 	const math3d::vector2f & GetVelocity(void);
 private:
 	Model * m_Model;
@@ -30,11 +29,6 @@ private:
 inline const Commodity * Cargo::GetCommodity(void) const
 {
 	return m_Commodity;
-}
-
-inline float Cargo::GetRadialSize(void) const
-{
-	return 0.867f;  // sqrt(sqr(0.5) + sqr(0.5) + sqr(0.5))
 }
 
 inline const math3d::vector2f & Cargo::GetVelocity(void)

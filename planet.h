@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "position.h"
+#include "object.h"
 
 class Commodity;
 
@@ -20,7 +20,7 @@ private:
 	float m_BasePriceModifier;
 };
 
-class Planet : public Position
+class Planet : public Object
 {
 public:
 	Planet(const std::string & Identifier);
@@ -29,12 +29,11 @@ public:
 	const std::string & GetName(void) const;
 	const std::string & GetDescription(void) const;
 	float GetSize(void) const;
-	float GetRadialSize(void) const;
 	const std::vector< PlanetCommodity * > & GetCommodities(void) const;
 	void SetName(const std::string & Name);
 	void SetDescription(const std::string & Description);
 	void SetSize(const float & Size);
-	void Draw(void) const;
+	virtual void Draw(void) const;
 	PlanetCommodity * CreateCommodity(Commodity * Commodity);
 private:
 	std::string m_Identifier;
@@ -67,11 +66,6 @@ inline const std::string & Planet::GetDescription(void) const
 inline float Planet::GetSize(void) const
 {
 	return m_Size;
-}
-
-inline float Planet::GetRadialSize(void) const
-{
-	return m_Size / 2.0f;
 }
 
 inline const std::vector< PlanetCommodity * > & Planet::GetCommodities(void) const

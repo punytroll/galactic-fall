@@ -9,7 +9,7 @@ camera_h = \
 
 cargo_h = \
 	cargo.h \
-	$(position_h)
+	$(object_h)
 
 character_h = \
 	character.h
@@ -59,9 +59,13 @@ model_manager_h = \
 mouse_button_listener_h = \
 	mouse_button_listener.h
 
+object_h = \
+	object.h \
+	$(position_h)
+
 planet_h = \
 	planet.h \
-	$(position_h)
+	$(object_h)
 
 planet_dialog_h = \
 	planet_dialog.h \
@@ -151,7 +155,7 @@ clean:
 	$(RM) xml_parser.o
 	$(RM) xml_puny_dom.o
 
-escapevelocity: button.o camera.o cargo.o character.o clicked_listener.o color.o commodity.o commodity_manager.o destroy_listener.o draw_text.o key_listener.o label.o main.o map_dialog.o map_knowledge.o model.o model_manager.o mouse_button_listener.o planet.o planet_dialog.o real_time.o ship.o ship_class.o ship_class_manager.o string_cast.o system.o system_manager.o trade_center_dialog.o user_interface.o widget.o xml_parser.o xml_puny_dom.o
+escapevelocity: button.o camera.o cargo.o character.o clicked_listener.o color.o commodity.o commodity_manager.o destroy_listener.o draw_text.o key_listener.o label.o main.o map_dialog.o map_knowledge.o model.o model_manager.o mouse_button_listener.o object.o planet.o planet_dialog.o real_time.o ship.o ship_class.o ship_class_manager.o string_cast.o system.o system_manager.o trade_center_dialog.o user_interface.o widget.o xml_parser.o xml_puny_dom.o
 	$(CXX) $(LDFLAGS) $^ -lGL -lGLU -lglut -o $@
 
 button.o: button.cpp $(clicked_listener_h) $(button_h)
@@ -207,6 +211,9 @@ model_manager.o: model_manager.cpp $(model_h) $(model_manager_h) $(string_cast_h
 
 mouse_button_listener.o: mouse_button_listener.cpp $(mouse_button_listener_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+object.o: object.cpp $(object_h)
+	$(CXX) $(CXXFLAGS) `pkg-config --cflags math3d` -c $< -o $@
 
 planet.o: planet.cpp $(commodity_h) $(planet_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags math3d` -c $< -o $@
