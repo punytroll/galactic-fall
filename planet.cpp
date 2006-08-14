@@ -47,6 +47,7 @@ void Planet::SetDescription(const std::string & Description)
 void Planet::SetSize(const float & Size)
 {
 	m_Size = Size;
+	SetRadialSize(m_Size / 2.0f);
 }
 
 void Planet::Draw(void) const
