@@ -41,7 +41,7 @@
 		<planet identifier="moon">
 			<name value="Moon"/>
 			<description value="Colonizing the Moon, the only satelite of Earth was the first and biggest space habitation project issued by the human race. Because of the enormous transportation costs in the beginning of the project, building a self-sufficient infrastructure on Moon had the highest priority. Nowadays, Moon pretty much provides for its own needs."/>
-			<position x="80" y="-60"/>
+			<position x="-60" y="60"/>
 			<size value="20"/>
 			<commodity identifier="food" base-price-modifier="0.87"/>
 			<commodity identifier="industrial" base-price-modifier="1.05"/>
