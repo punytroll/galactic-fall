@@ -40,6 +40,7 @@ int g_LastMotionY(-1);
 int g_MouseButton(-1);
 Camera g_Camera;
 Camera g_RadarCamera;
+Camera g_MiniMapCamera;
 float g_GameTime;
 ModelManager g_ModelManager;
 ShipClassManager g_ShipClassManager(&g_ModelManager);
@@ -55,6 +56,7 @@ Label * g_TimeWarpLabel(0);
 Label * g_TargetLabel(0);
 Label * g_CreditsLabel(0);
 Label * g_MessageLabel(0);
+Label * g_CurrentSystemLabel(0);
 System * g_CurrentSystem;
 System * g_SelectedLinkedSystem(0);
 Object * g_TargetObject(0);
@@ -66,7 +68,8 @@ int g_WidgetCollectorCountDownInitializer(10);
 int g_WidgetCollectorCountDown(g_WidgetCollectorCountDownInitializer);
 UserInterface g_UserInterface;
 double g_MessageLabelTimeout;
-Widget * g_RadarWidget;
+Widget * g_RadarWidget(0);
+Widget * g_MiniMapWidget(0);
 
 void NormalizeRadians(float & Radians)
 {
@@ -316,6 +319,7 @@ void Render(void)
 		g_MessageLabel->Hide();
 	}
 	DisplayUserInterface();
+	// radar
 	if(g_TargetObject != 0)
 	{
 		float RadialSize(g_TargetObject->GetRadialSize());
@@ -334,6 +338,68 @@ void Render(void)
 		glLightfv(GL_LIGHT0, GL_POSITION, math3d::vector4f(-50.0f, 50.0f, 100.0f, 0.0f).m_V.m_A);
 		g_TargetObject->Draw();
 	}
+	// mini map
+	if(g_CurrentSystem != 0)
+	{
+		glViewport(static_cast< GLint >(g_Width - 220.0f), 0, 220, 220);
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		gluPerspective(45.0f, 1.0, 1, 10000);
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+		glClear(GL_DEPTH_BUFFER_BIT);
+		g_MiniMapCamera.Draw();
+		glPushAttrib(GL_ENABLE_BIT);
+		glDisable(GL_LIGHTING);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		
+		const std::list< Planet * > & Planets(g_CurrentSystem->GetPlanets());
+		const std::list< Ship * > & Ships(g_CurrentSystem->GetShips());
+		const std::list< Cargo * > & Cargos(g_CurrentSystem->GetCargos());
+		
+		glBegin(GL_POINTS);
+		glColor3f(0.8f, 0.8f, 0.8f);
+		for(std::list< Planet * >::const_iterator PlanetIterator = Planets.begin(); PlanetIterator != Planets.end(); ++PlanetIterator)
+		{
+			if(*PlanetIterator == g_TargetObject)
+			{
+				glColor3f(0.2f, 1.0f, 0.0f);
+			}
+			glVertex2f((*PlanetIterator)->GetPosition().m_V.m_A[0], (*PlanetIterator)->GetPosition().m_V.m_A[1]);
+			if(*PlanetIterator == g_TargetObject)
+			{
+				glColor3f(0.8f, 0.8f, 0.8f);
+			}
+		}
+		for(std::list< Ship * >::const_iterator ShipIterator = Ships.begin(); ShipIterator != Ships.end(); ++ShipIterator)
+		{
+			// Ship is not an object yet
+			//~ if(*ShipIterator == g_TargetObject)
+			//~ {
+				//~ glColor3f(0.2f, 1.0f, 0.0f);
+			//~ }
+			glVertex2f((*ShipIterator)->GetPosition().m_V.m_A[0], (*ShipIterator)->GetPosition().m_V.m_A[1]);
+			//~ if(*ShipIterator == g_TargetObject)
+			//~ {
+				//~ glColor3f(0.8f, 0.8f, 0.8f);
+			//~ }
+		}
+		for(std::list< Cargo * >::const_iterator CargoIterator = Cargos.begin(); CargoIterator != Cargos.end(); ++CargoIterator)
+		{
+			if(*CargoIterator == g_TargetObject)
+			{
+				glColor3f(0.2f, 1.0f, 0.0f);
+			}
+			glVertex2f((*CargoIterator)->GetPosition().m_V.m_A[0], (*CargoIterator)->GetPosition().m_V.m_A[1]);
+			if(*CargoIterator == g_TargetObject)
+			{
+				glColor3f(0.8f, 0.8f, 0.8f);
+			}
+		}
+		glEnd();
+		glPopAttrib();
+	}
 	glutSwapBuffers();
 }
 
@@ -348,6 +414,7 @@ void Resize(int Width, int Height)
 	glViewport(0, 0, Width, Height);
 	g_UserInterface.GetRootWidget()->SetSize(math3d::vector2f(g_Width, g_Height));
 	g_RadarWidget->SetPosition(math3d::vector2f(0.0f, g_Height - 240.0f));
+	g_MiniMapWidget->SetPosition(math3d::vector2f(g_Width - 220.0f, g_Height - 240.0f));
 }
 
 void SelectLinkedSystem(System * LinkedSystem)
@@ -429,6 +496,7 @@ void LeaveSystem(void)
 	g_CurrentSystem->ClearShips();
 	g_CurrentSystem->ClearCargos();
 	g_CurrentSystem = 0;
+	g_CurrentSystemLabel->SetString("");
 	SelectLinkedSystem(0);
 	SelectPlanet(0);
 }
@@ -462,6 +530,7 @@ void EnterSystem(System * NewSystem, System * OldSystem)
 		g_PlayerShip->m_AngularPosition = 0.0f;
 	}
 	g_CurrentSystem->AddShip(g_PlayerShip);
+	g_CurrentSystemLabel->SetString(g_CurrentSystem->GetName());
 	SelectLinkedSystem(0);
 	SelectPlanet(0);
 	g_PlayerCharacter->GetMapKnowledge()->AddExploredSystem(g_CurrentSystem);
@@ -936,6 +1005,15 @@ int main(int argc, char **argv)
 	g_TargetLabel->SetSize(math3d::vector2f(220.0f, 20.0f));
 	g_TargetLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
 	g_TargetLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
+	g_MiniMapWidget = new Widget(g_UserInterface.GetRootWidget());
+	g_MiniMapWidget->SetSize(math3d::vector2f(220.0f, 240.0f));
+	g_MiniMapWidget->SetBackgroundColor(Color(0.0f, 0.1f, 0.17f, 0.8f));
+	g_CurrentSystemLabel = new Label(g_MiniMapWidget);
+	g_CurrentSystemLabel->SetForegroundColor(Color(0.7f, 0.8, 1.0f));
+	g_CurrentSystemLabel->SetPosition(math3d::vector2f(0.0f, 0.0f));
+	g_CurrentSystemLabel->SetSize(math3d::vector2f(220.0f, 20.0f));
+	g_CurrentSystemLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
+	g_CurrentSystemLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
 	
 	// data reading
 	LoadModelsFromFile(&g_ModelManager, "data/shuttlecraft.xml");
@@ -962,7 +1040,8 @@ int main(int argc, char **argv)
 	// camera setup
 	g_Camera.SetPosition(0.0f, 0.0f, 200.0f);
 	g_Camera.SetFocus(g_PlayerShip);
-	g_RadarCamera.SetPosition(0.0f, 0.0f, 200.0f);
+	g_MiniMapCamera.SetPosition(0.0f, 0.0f, 1500.0f);
+	g_MiniMapCamera.SetFocus(g_PlayerShip);
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 	glutCreateWindow("Escape Velocity");
