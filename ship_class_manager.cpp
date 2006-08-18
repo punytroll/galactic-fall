@@ -82,19 +82,23 @@ void LoadShipClassFromElement(ShipClassManager * ShipClassManager, const Element
 		}
 		else if(Child->GetName() == "forward-thrust")
 		{
-			NewShipClass->m_ForwardThrust = string_cast< float >(Child->GetAttribute("value"));
+			NewShipClass->SetForwardThrust(string_cast< float >(Child->GetAttribute("value")));
+		}
+		else if(Child->GetName() == "fuel-hold-size")
+		{
+			NewShipClass->SetFuelHoldSize(string_cast< float >(Child->GetAttribute("value")));
 		}
 		else if(Child->GetName() == "maximum-velocity")
 		{
-			NewShipClass->m_MaximumVelocity = string_cast< float >(Child->GetAttribute("value"));
+			NewShipClass->SetMaximumVelocity(string_cast< float >(Child->GetAttribute("value")));
 		}
 		else if(Child->GetName() == "model")
 		{
-			NewShipClass->m_Model = ShipClassManager->GetModelManager()->Get(Child->GetAttribute("identifier"));
+			NewShipClass->SetModel(ShipClassManager->GetModelManager()->Get(Child->GetAttribute("identifier")));
 		}
 		else if(Child->GetName() == "turn-speed")
 		{
-			NewShipClass->m_TurnSpeed = string_cast< float >(Child->GetAttribute("value"));
+			NewShipClass->SetTurnSpeed(string_cast< float >(Child->GetAttribute("value")));
 		}
 		++ChildIterator;
 	}
