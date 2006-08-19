@@ -21,7 +21,8 @@ void PlanetCommodity::SetBasePriceModifier(const float & BasePriceModifier)
 }
 
 Planet::Planet(const std::string & Identifier) :
-	m_Identifier(Identifier)
+	m_Identifier(Identifier),
+	m_AllowRefuelling(false)
 {
 }
 
@@ -37,6 +38,11 @@ Planet::~Planet(void)
 void Planet::SetName(const std::string & Name)
 {
 	m_Name = Name;
+}
+
+void Planet::SetAllowRefuelling(bool AllowRefuelling)
+{
+	m_AllowRefuelling = AllowRefuelling;
 }
 
 void Planet::SetDescription(const std::string & Description)

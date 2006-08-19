@@ -30,7 +30,9 @@ public:
 	const std::string & GetDescription(void) const;
 	float GetSize(void) const;
 	const std::vector< PlanetCommodity * > & GetCommodities(void) const;
+	bool GetAllowRefuelling(void) const;
 	void SetName(const std::string & Name);
+	void SetAllowRefuelling(bool AllowRefuelling);
 	void SetDescription(const std::string & Description);
 	void SetSize(const float & Size);
 	virtual void Draw(void) const;
@@ -40,6 +42,7 @@ private:
 	std::string m_Name;
 	std::string m_Description;
 	float m_Size;
+	bool m_AllowRefuelling;
 	std::vector< PlanetCommodity * > m_Commodities;
 };
 
@@ -71,6 +74,11 @@ inline float Planet::GetSize(void) const
 inline const std::vector< PlanetCommodity * > & Planet::GetCommodities(void) const
 {
 	return m_Commodities;
+}
+
+inline bool Planet::GetAllowRefuelling(void) const
+{
+	return m_AllowRefuelling;
 }
 
 #endif

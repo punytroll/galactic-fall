@@ -55,6 +55,7 @@ Label * g_SystemLabel(0);
 Label * g_TimeWarpLabel(0);
 Label * g_TargetLabel(0);
 Label * g_CreditsLabel(0);
+Label * g_FuelLabel(0);
 Label * g_MessageLabel(0);
 Label * g_CurrentSystemLabel(0);
 System * g_CurrentSystem;
@@ -484,6 +485,7 @@ public:
 			SelectPlanet(0);
 			g_PlayerShip->m_Velocity.set(0.0f, 0.0f);
 			g_CreditsLabel->SetString("Credits: " + to_string_cast(g_PlayerCharacter->GetCredits()));
+			g_FuelLabel->SetString("Fuel: " + to_string_cast(100.0f * g_PlayerShip->GetFuel() / g_PlayerShip->GetFuelCapacity()));
 		}
 		else if(EventSource == g_MapDialog)
 		{
@@ -540,6 +542,7 @@ void EnterSystem(System * NewSystem, System * OldSystem)
 	SelectLinkedSystem(0);
 	SelectPlanet(0);
 	g_PlayerCharacter->GetMapKnowledge()->AddExploredSystem(g_CurrentSystem);
+	g_FuelLabel->SetString("Fuel: " + to_string_cast(100.0f * g_PlayerShip->GetFuel() / g_PlayerShip->GetFuelCapacity()));
 }
 
 void SetTimeWarp(float TimeWarp)
@@ -1005,6 +1008,9 @@ int main(int argc, char **argv)
 	g_CreditsLabel = new Label(g_UserInterface.GetRootWidget());
 	g_CreditsLabel->SetForegroundColor(Color(0.7f, 0.8f, 1.0f));
 	g_CreditsLabel->SetPosition(math3d::vector2f(0.0f, 40.0f));
+	g_FuelLabel = new Label(g_UserInterface.GetRootWidget());
+	g_FuelLabel->SetForegroundColor(Color(0.7f, 0.8f, 1.0f));
+	g_FuelLabel->SetPosition(math3d::vector2f(0.0f, 60.0f));
 	g_MessageLabel = new Label(g_UserInterface.GetRootWidget());
 	g_MessageLabel->SetForegroundColor(Color(1.0f, 0.3f, 0.3f));
 	g_MessageLabel->SetPosition(math3d::vector2f(0.0f, 0.0f));
@@ -1047,6 +1053,7 @@ int main(int argc, char **argv)
 	g_PlayerCharacter->AddCredits(1000.0f);
 	g_PlayerShip = new Ship(ShuttleCraftShipClass);
 	g_PlayerShip->Refuel(g_PlayerShip->GetFuelCapacity());
+	g_FuelLabel->SetString("Fuel: " + to_string_cast(100.0f * g_PlayerShip->GetFuel() / g_PlayerShip->GetFuelCapacity()));
 	g_InputFocus = g_PlayerShip;
 	EnterSystem(g_SystemManager.Get("sol"), 0);
 	SetTimeWarp(1.0f);

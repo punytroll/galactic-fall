@@ -27,6 +27,8 @@ private:
 	Label * m_OKButtonLabel;
 	Button * m_TradeCenterButton;
 	Label * m_TradeCenterLabel;
+	Button * m_RefuelButton;
+	Label * m_RefuelButtonLabel;
 	TradeCenterDialog * m_TradeCenterDialog;
 };
 

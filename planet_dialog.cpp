@@ -1,10 +1,13 @@
 #include <GL/glut.h>
 
 #include "button.h"
+#include "character.h"
 #include "color.h"
+#include "globals.h"
 #include "label.h"
 #include "planet.h"
 #include "planet_dialog.h"
+#include "ship.h"
 #include "trade_center_dialog.h"
 
 PlanetDialog::PlanetDialog(Widget * SupWidget, Planet * Planet) :
@@ -44,6 +47,19 @@ PlanetDialog::PlanetDialog(Widget * SupWidget, Planet * Planet) :
 	m_TradeCenterLabel->SetSize(m_TradeCenterButton->GetSize());
 	m_TradeCenterLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
 	m_TradeCenterLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
+	if(m_Planet->GetAllowRefuelling() == true)
+	{
+		m_RefuelButton = new Button(this);
+		m_RefuelButton->SetPosition(math3d::vector2f(10.0f, 80.0f));
+		m_RefuelButton->SetSize(math3d::vector2f(100.0f, 20.0f));
+		m_RefuelButton->SetBackgroundColor(Color(0.3f, 0.3f, 0.3f));
+		m_RefuelButton->AddClickedListener(this);
+		m_RefuelButtonLabel = new Label(m_RefuelButton, "Refuel");
+		m_RefuelButtonLabel->SetPosition(math3d::vector2f(0.0f, 0.0f));
+		m_RefuelButtonLabel->SetSize(m_TradeCenterButton->GetSize());
+		m_RefuelButtonLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
+		m_RefuelButtonLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
+	}
 }
 
 bool PlanetDialog::OnClicked(Widget * EventSource)
@@ -56,6 +72,16 @@ bool PlanetDialog::OnClicked(Widget * EventSource)
 		}
 		
 		return true;
+	}
+	else if(EventSource == m_RefuelButton)
+	{
+		// fixed fuel price as of now: 130.0f
+		float CanBuy(g_PlayerCharacter->GetCredits() / 130.0f);
+		float Need(g_PlayerShip->GetFuelCapacity() - g_PlayerShip->GetFuel());
+		float Buy((CanBuy > Need) ? (Need) : (CanBuy));
+		
+		g_PlayerShip->Refuel(Buy);
+		g_PlayerCharacter->RemoveCredits(Buy * 130.0f);
 	}
 	else if(EventSource == m_TradeCenterButton)
 	{
