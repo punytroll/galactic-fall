@@ -24,6 +24,8 @@ public:
 	math3d::vector2f m_Velocity;
 	float m_AngularPosition;
 	// getters
+	float GetFuel(void) const;
+	float GetFuelCapacity(void) const;
 	const ShipClass * GetShipClass(void) const;
 	const math3d::vector2f & GetVelocity(void) const;
 	float GetFreeCargoHoldSize(void) const;
@@ -31,12 +33,20 @@ public:
 	const std::map< const Commodity *, float > GetCargo(void) const;
 	// modifiers
 	bool AddCargo(const Commodity * CargoCommodity, float Amount);
+	void Jump(void);
+	void Refuel(float Fuel);
 	bool RemoveCargo(const Commodity * CargoCommodity, float Amount);
 private:
 	// ship class
 	ShipClass * m_ShipClass;
 	std::map< const Commodity *, float > m_Cargo;
+	float m_Fuel;
 };
+
+inline float Ship::GetFuel(void) const
+{
+	return m_Fuel;
+}
 
 inline const ShipClass * Ship::GetShipClass(void) const
 {

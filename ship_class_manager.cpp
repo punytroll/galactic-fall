@@ -88,6 +88,10 @@ void LoadShipClassFromElement(ShipClassManager * ShipClassManager, const Element
 		{
 			NewShipClass->SetFuelHoldSize(string_cast< float >(Child->GetAttribute("value")));
 		}
+		else if(Child->GetName() == "jump-fuel")
+		{
+			NewShipClass->SetJumpFuel(string_cast< float >(Child->GetAttribute("value")));
+		}
 		else if(Child->GetName() == "maximum-velocity")
 		{
 			NewShipClass->SetMaximumVelocity(string_cast< float >(Child->GetAttribute("value")));
