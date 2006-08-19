@@ -3,9 +3,9 @@
 
 #include "commodity_manager.h"
 #include "planet.h"
+#include "string_cast.h"
 #include "system.h"
 #include "system_manager.h"
-#include "string_cast.h"
 #include "xml_puny_dom.h"
 
 SystemManager::SystemManager(CommodityManager * CommodityManager) :
@@ -96,7 +96,11 @@ void LoadSystemFromElement(SystemManager * SystemManager, const Element * System
 			{
 				Element * PlanetProperty(*PlanetPropertyIterator);
 				
-				if(PlanetProperty->GetName() == "commodity")
+				if(PlanetProperty->GetName() == "allow-refuelling")
+				{
+					NewPlanet->SetAllowRefuelling(string_cast< bool >(PlanetProperty->GetAttribute("value")));
+				}
+				else if(PlanetProperty->GetName() == "commodity")
 				{
 					Commodity * ManagedCommodity(SystemManager->GetCommodityManager()->Get(PlanetProperty->GetAttribute("identifier")));
 					
