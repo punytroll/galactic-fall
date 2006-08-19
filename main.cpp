@@ -114,15 +114,21 @@ float GetRadians(const math3d::vector2f & Vector)
 enum WantToJumpCode
 {
 	OK_TO_JUMP,
-	TOO_NEAR_TO_SYSTEM_CENTER
+	TOO_NEAR_TO_SYSTEM_CENTER,
+	NOT_ENOUGH_FUEL
 };
 
-bool WantToJump(Ship * Ship)
+int WantToJump(Ship * Ship)
 {
 	// only let the ships jump if they are more than 280 clicks from system center
 	if(Ship->GetPosition().length_squared() < 78400.0f)
 	{
 		return TOO_NEAR_TO_SYSTEM_CENTER;
+	}
+	// only let ships jump if they have enough fuel
+	if(Ship->GetFuel() < Ship->GetShipClass()->GetJumpFuel())
+	{
+		return NOT_ENOUGH_FUEL;
 	}
 	
 	return OK_TO_JUMP;
@@ -625,6 +631,7 @@ void Key(unsigned char Key, int X, int Y)
 						System * NewSystem(g_SelectedLinkedSystem);
 						
 						LeaveSystem();
+						g_PlayerShip->Jump();
 						EnterSystem(NewSystem, OldSystem);
 						
 						break;
@@ -632,6 +639,12 @@ void Key(unsigned char Key, int X, int Y)
 				case TOO_NEAR_TO_SYSTEM_CENTER:
 					{
 						SetMessage("You are too near to the system center to jump.");
+						
+						break;
+					}
+				case NOT_ENOUGH_FUEL:
+					{
+						SetMessage("You do not have enough fuel to jump.");
 						
 						break;
 					}
@@ -1033,6 +1046,7 @@ int main(int argc, char **argv)
 	g_PlayerCharacter = new Character();
 	g_PlayerCharacter->AddCredits(1000.0f);
 	g_PlayerShip = new Ship(ShuttleCraftShipClass);
+	g_PlayerShip->Refuel(g_PlayerShip->GetFuelCapacity());
 	g_InputFocus = g_PlayerShip;
 	EnterSystem(g_SystemManager.Get("sol"), 0);
 	SetTimeWarp(1.0f);

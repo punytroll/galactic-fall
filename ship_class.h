@@ -18,6 +18,7 @@ public:
 	float GetMaximumVelocity(void) const;
 	float GetCargoHoldSize(void) const;
 	float GetFuelHoldSize(void) const;
+	float GetJumpFuel(void) const;
 	// modifiers
 	void SetModel(const Model * Model);
 	void SetForwardThrust(float ForwardThrust);
@@ -25,6 +26,7 @@ public:
 	void SetMaximumVelocity(float MaximumVelocity);
 	void SetCargoHoldSize(float CargoHoldSize);
 	void SetFuelHoldSize(float FuelHoldSize);
+	void SetJumpFuel(float JumpFuel);
 private:
 	std::string m_Identifier;
 	const Model * m_Model;
@@ -33,6 +35,7 @@ private:
 	float m_MaximumVelocity;
 	float m_CargoHoldSize;
 	float m_FuelHoldSize;
+	float m_JumpFuel;
 };
 
 inline const std::string & ShipClass::GetIdentifier(void) const
@@ -70,6 +73,11 @@ inline float ShipClass::GetFuelHoldSize(void) const
 	return m_FuelHoldSize;
 }
 
+inline float ShipClass::GetJumpFuel(void) const
+{
+	return m_JumpFuel;
+}
+
 inline void ShipClass::SetModel(const Model * Model)
 {
 	m_Model = Model;
@@ -98,6 +106,11 @@ inline void ShipClass::SetCargoHoldSize(float CargoHoldSize)
 inline void ShipClass::SetFuelHoldSize(float FuelHoldSize)
 {
 	m_FuelHoldSize = FuelHoldSize;
+}
+
+inline void ShipClass::SetJumpFuel(float JumpFuel)
+{
+	m_JumpFuel = JumpFuel;
 }
 
 #endif

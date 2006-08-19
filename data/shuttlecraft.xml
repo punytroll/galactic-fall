@@ -1111,6 +1111,8 @@
 		<turn-speed value="1"/>
 		<maximum-velocity value="12"/>
 		<cargo-hold-size value="12"/>
+		<fuel-hold-size value="200"/>
+		<jump-fuel value="62"/>
 	</ship-class>
 	<model identifier="cargo_cube">
 		 <point identifier="0" name="" position-x="-0.5" position-y="0.5" position-z="-0.5" />

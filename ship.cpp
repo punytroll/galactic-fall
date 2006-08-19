@@ -5,7 +5,8 @@
 #include "ship_class.h"
 
 Ship::Ship(ShipClass * ShipClass) :
-	m_ShipClass(ShipClass)
+	m_ShipClass(ShipClass),
+	m_Fuel(0.0f)
 {
 }
 
@@ -44,6 +45,11 @@ void Ship::Move(float Seconds)
 	}
 }
 
+float Ship::GetFuelCapacity(void) const
+{
+	return m_ShipClass->GetFuelHoldSize();
+}
+
 float Ship::GetFreeCargoHoldSize(void) const
 {
 	float CargoHoldSize(m_ShipClass->GetCargoHoldSize());
@@ -79,6 +85,18 @@ bool Ship::AddCargo(const Commodity * CargoCommodity, float Amount)
 		
 		return true;
 	}
+}
+
+void Ship::Jump(void)
+{
+	assert(m_Fuel >= m_ShipClass->GetJumpFuel());
+	m_Fuel -= m_ShipClass->GetJumpFuel();
+}
+
+void Ship::Refuel(float Fuel)
+{
+	assert(m_Fuel + Fuel <= GetFuelCapacity());
+	m_Fuel += Fuel;
 }
 
 bool Ship::RemoveCargo(const Commodity * CargoCommodity, float Amount)
