@@ -518,7 +518,7 @@ void EnterSystem(System * NewSystem, System * OldSystem)
 		
 		Direction.normalize();
 		g_PlayerShip->m_Position = Direction * -300.0f;
-		g_PlayerShip->m_Velocity = Direction * g_PlayerShip->GetShipClass()->GetMaximumVelocity();
+		g_PlayerShip->m_Velocity = Direction * g_PlayerShip->GetShipClass()->GetMaximumSpeed();
 		
 		float Radians(acosf(Direction.m_V.m_A[0]));
 		
