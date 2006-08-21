@@ -15,7 +15,7 @@ public:
 	const Model * GetModel(void) const;
 	float GetForwardThrust(void) const;
 	float GetTurnSpeed(void) const;
-	float GetMaximumVelocity(void) const;
+	float GetMaximumSpeed(void) const;
 	float GetCargoHoldSize(void) const;
 	float GetFuelHoldSize(void) const;
 	float GetJumpFuel(void) const;
@@ -23,7 +23,7 @@ public:
 	void SetModel(const Model * Model);
 	void SetForwardThrust(float ForwardThrust);
 	void SetTurnSpeed(float TurnSpeed);
-	void SetMaximumVelocity(float MaximumVelocity);
+	void SetMaximumSpeed(float MaximumSpeed);
 	void SetCargoHoldSize(float CargoHoldSize);
 	void SetFuelHoldSize(float FuelHoldSize);
 	void SetJumpFuel(float JumpFuel);
@@ -32,7 +32,7 @@ private:
 	const Model * m_Model;
 	float m_ForwardThrust;
 	float m_TurnSpeed;
-	float m_MaximumVelocity;
+	float m_MaximumSpeed;
 	float m_CargoHoldSize;
 	float m_FuelHoldSize;
 	float m_JumpFuel;
@@ -58,9 +58,9 @@ inline float ShipClass::GetTurnSpeed(void) const
 	return m_TurnSpeed;
 }
 
-inline float ShipClass::GetMaximumVelocity(void) const
+inline float ShipClass::GetMaximumSpeed(void) const
 {
-	return m_MaximumVelocity;
+	return m_MaximumSpeed;
 }
 
 inline float ShipClass::GetCargoHoldSize(void) const
@@ -93,9 +93,9 @@ inline void ShipClass::SetTurnSpeed(float TurnSpeed)
 	m_TurnSpeed = TurnSpeed;
 }
 
-inline void ShipClass::SetMaximumVelocity(float MaximumVelocity)
+inline void ShipClass::SetMaximumSpeed(float MaximumSpeed)
 {
-	m_MaximumVelocity = MaximumVelocity;
+	m_MaximumSpeed = MaximumSpeed;
 }
 
 inline void ShipClass::SetCargoHoldSize(float CargoHoldSize)

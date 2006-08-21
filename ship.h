@@ -6,6 +6,7 @@
 #include <math3d/vector2f.h>
 
 #include "position.h"
+#include "ship_class.h"
 
 class Commodity;
 class ShipClass;
@@ -24,9 +25,12 @@ public:
 	math3d::vector2f m_Velocity;
 	float m_AngularPosition;
 	// getters
+	float GetForwardThrust(void) const;
 	float GetFuel(void) const;
 	float GetFuelCapacity(void) const;
+	float GetMaximumSpeed(void) const;
 	const ShipClass * GetShipClass(void) const;
+	float GetTurnSpeed(void) const;
 	const math3d::vector2f & GetVelocity(void) const;
 	float GetFreeCargoHoldSize(void) const;
 	float GetCargoAmount(const Commodity * CargoCommodity) const;
@@ -43,14 +47,29 @@ private:
 	float m_Fuel;
 };
 
+inline float Ship::GetForwardThrust(void) const
+{
+	return m_ShipClass->GetForwardThrust();
+}
+
 inline float Ship::GetFuel(void) const
 {
 	return m_Fuel;
 }
 
+inline float Ship::GetMaximumSpeed(void) const
+{
+	return m_ShipClass->GetMaximumSpeed();
+}
+
 inline const ShipClass * Ship::GetShipClass(void) const
 {
 	return m_ShipClass;
+}
+
+inline float Ship::GetTurnSpeed(void) const
+{
+	return m_ShipClass->GetTurnSpeed();
 }
 
 inline const math3d::vector2f & Ship::GetVelocity(void) const

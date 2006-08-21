@@ -2,7 +2,6 @@
 
 #include "model.h"
 #include "ship.h"
-#include "ship_class.h"
 
 Ship::Ship(ShipClass * ShipClass) :
 	m_ShipClass(ShipClass),
@@ -24,23 +23,23 @@ void Ship::Move(float Seconds)
 {
 	if(m_TurnLeft == true)
 	{
-		m_AngularPosition += m_ShipClass->GetTurnSpeed() * Seconds;
+		m_AngularPosition += GetTurnSpeed() * Seconds;
 	}
 	if(m_TurnRight == true)
 	{
-		m_AngularPosition -= m_ShipClass->GetTurnSpeed() * Seconds;
+		m_AngularPosition -= GetTurnSpeed() * Seconds;
 	}
 	m_Position += m_Velocity * Seconds;
 	if(m_Accelerate == true)
 	{
-		math3d::vector2f ForwardThrust(m_ShipClass->GetForwardThrust(), m_AngularPosition, math3d::vector2f::magnitude_angle);
+		math3d::vector2f ForwardThrust(GetForwardThrust(), m_AngularPosition, math3d::vector2f::magnitude_angle);
 		
 		m_Position += ForwardThrust * (Seconds * Seconds / 2.0f);
 		m_Velocity += ForwardThrust * Seconds;
-		if(m_Velocity.length() > m_ShipClass->GetMaximumVelocity())
+		if(m_Velocity.length() > GetMaximumSpeed())
 		{
 			m_Velocity.normalize();
-			m_Velocity.scale(m_ShipClass->GetMaximumVelocity());
+			m_Velocity.scale(GetMaximumSpeed());
 		}
 	}
 }
