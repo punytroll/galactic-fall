@@ -1,3 +1,5 @@
+#include <assert.h>
+
 #include <GL/gl.h>
 
 #include "model.h"
