@@ -15,6 +15,10 @@ Cargo::Cargo(Model * Model, const Commodity * Commodity, const math3d::vector2f 
 	m_AngularVelocity = static_cast< float >(random()) / RAND_MAX;
 }
 
+Cargo::~Cargo(void)
+{
+}
+
 void Cargo::Draw(void) const
 {
 	glPushMatrix();

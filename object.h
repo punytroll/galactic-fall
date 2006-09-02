@@ -6,6 +6,7 @@
 class Object : public Position
 {
 public:
+	virtual ~Object(void);
 	virtual void Draw(void) const = 0;
 	void SetRadialSize(float RadialSize);
 	float GetRadialSize(void) const;
