@@ -13,6 +13,7 @@ class Cargo : public Object
 {
 public:
 	Cargo(Model * Model, const Commodity * Commodity, const math3d::vector2f & Velocity);
+	virtual ~Cargo(void);
 	virtual void Draw(void) const;
 	void Move(float Seconds);
 	const Commodity * GetCommodity(void) const;

@@ -10,6 +10,10 @@ PlanetCommodity::PlanetCommodity(Commodity * Commodity) :
 {
 }
 
+PlanetCommodity::~PlanetCommodity(void)
+{
+}
+
 float PlanetCommodity::GetPrice(void) const
 {
 	return m_Commodity->GetBasePrice() * m_BasePriceModifier;

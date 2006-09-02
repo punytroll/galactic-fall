@@ -12,6 +12,7 @@ class PlanetCommodity
 {
 public:
 	PlanetCommodity(Commodity * Commodity);
+	virtual ~PlanetCommodity(void);
 	const Commodity * GetCommodity(void) const;
 	float GetPrice(void) const;
 	void SetBasePriceModifier(const float & BasePriceModifier);
