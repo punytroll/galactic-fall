@@ -158,6 +158,7 @@ bool Widget::Key(int Key, int State)
 
 bool Widget::MouseButton(int Button, int State, float X, float Y)
 {
+	// iterate all sub widgets, look for an intersection and propagate the mouse event with corrected coordinates
 	for(std::list< Widget * >::iterator SubWidgetIterator = m_SubWidgets.begin(); SubWidgetIterator != m_SubWidgets.end(); ++SubWidgetIterator)
 	{
 		const math3d::vector2f & SubWidgetPosition((*SubWidgetIterator)->GetPosition());
@@ -171,6 +172,7 @@ bool Widget::MouseButton(int Button, int State, float X, float Y)
 			}
 		}
 	}
+	// if no sub widget wanted the mouse event, propagate to our own listeners
 	for(std::list< MouseButtonListener * >::iterator MouseButtonListenerIterator = m_MouseButtonListeners.begin(); MouseButtonListenerIterator != m_MouseButtonListeners.end(); ++MouseButtonListenerIterator)
 	{
 		if((*MouseButtonListenerIterator)->OnMouseButton(this, Button, State, X, Y) == true)
