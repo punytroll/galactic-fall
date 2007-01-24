@@ -109,6 +109,7 @@ trade_center_dialog_h = \
 	$(clicked_listener_h) \
 	$(key_listener_h) \
 	$(mouse_button_listener_h) \
+	$(mouse_motion_listener_h) \
 	$(widget_h)
 
 user_interface_h = \
