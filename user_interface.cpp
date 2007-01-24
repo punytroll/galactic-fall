@@ -41,5 +41,24 @@ bool UserInterface::Key(int Key, int State)
 
 void UserInterface::MouseMotion(float X, float Y)
 {
-	m_RootWidget->MouseMotion(X, Y);
+	const math3d::vector2f & LeftTopCorner(m_RootWidget->GetPosition());
+	math3d::vector2f RightBottomCorner(LeftTopCorner + m_RootWidget->GetSize());
+	
+	if((X >= LeftTopCorner.m_V.m_A[0]) && (X < RightBottomCorner.m_V.m_A[0]) && (Y >= LeftTopCorner.m_V.m_A[1]) && (Y < RightBottomCorner.m_V.m_A[1]))
+	{
+		if(m_HoverWidget != m_RootWidget)
+		{
+			m_HoverWidget = m_RootWidget;
+			m_RootWidget->MouseEnter();
+		}
+		m_RootWidget->MouseMotion(X, Y);
+	}
+	else
+	{
+		if(m_HoverWidget == m_RootWidget)
+		{
+			m_HoverWidget = 0;
+			m_RootWidget->MouseLeave();
+		}
+	}
 }

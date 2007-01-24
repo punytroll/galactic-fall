@@ -5,13 +5,14 @@
 
 #include <math3d/vector2f.h>
 
+#include "destroy_listener.h"
+
 class Color;
-class DestroyListener;
 class KeyListener;
 class MouseButtonListener;
 class MouseMotionListener;
 
-class Widget
+class Widget : public DestroyListener
 {
 public:
 	Widget(Widget * SupWidget);
@@ -39,15 +40,27 @@ public:
 	bool MouseButton(int Button, int State, float X, float Y);
 	bool Key(int Key, int State);
 	void MouseMotion(float X, float Y);
-	// signal listeners
+	// MouseEnter may depend on the fact that m_HoverWidget on the m_SupWidget is set to this
+	// MouseEnter on the new hover widget is called after MouseLeave on the old hover widget
+	void MouseEnter(void);
+	// MouseLeave may depend on the fact that m_HoverWidget on the m_SupWidget is already set to the new widget
+	// MouseLeave on the old hover widget is called before MouseEnter on the new hover widget
+	void MouseLeave(void);
+	// add signal listeners
 	void AddDestroyListener(DestroyListener * DestroyListener);
 	void AddKeyListener(KeyListener * KeyListener);
 	void AddMouseButtonListener(MouseButtonListener * MouseButtonListener);
 	void AddMouseMotionListener(MouseMotionListener * MouseMotionListener);
+	// remove signal listeners
+	void RemoveDestroyListener(DestroyListener * DestroyListener);
 	// static manager functions
 	static std::list< Widget * > & GetDestroyedWidgets(void);
+protected:
+	virtual void OnDestroy(Widget * EventSource);
 private:
+	
 	Widget * m_SupWidget;
+	Widget * m_HoverWidget;
 	Color * m_BackgroundColor;
 	math3d::vector2f m_Position;
 	math3d::vector2f m_Size;
