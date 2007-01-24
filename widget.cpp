@@ -184,6 +184,11 @@ bool Widget::MouseButton(int Button, int State, float X, float Y)
 	return false;
 }
 
+void Widget::MouseMotion(float X, float Y)
+{
+	// sink in RootWidget for now.
+}
+
 void Widget::AddDestroyListener(DestroyListener * DestroyListener)
 {
 	m_DestroyListeners.push_back(DestroyListener);
@@ -197,4 +202,9 @@ void Widget::AddKeyListener(KeyListener * KeyListener)
 void Widget::AddMouseButtonListener(MouseButtonListener * MouseButtonListener)
 {
 	m_MouseButtonListeners.push_back(MouseButtonListener);
+}
+
+void Widget::AddMouseMotionListener(MouseMotionListener * MouseMotionListener)
+{
+	m_MouseMotionListeners.push_back(MouseMotionListener);
 }

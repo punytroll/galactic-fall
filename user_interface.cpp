@@ -38,3 +38,8 @@ bool UserInterface::Key(int Key, int State)
 {
 	return m_RootWidget->Key(Key, State);
 }
+
+void UserInterface::MouseMotion(float X, float Y)
+{
+	m_RootWidget->MouseMotion(X, Y);
+}
