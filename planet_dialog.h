@@ -21,7 +21,6 @@ protected:
 	virtual bool OnKey(Widget * EventSource, int Key, int State);
 private:
 	Planet * m_Planet;
-	Label * m_NameLabel;
 	Label * m_DescriptionLabel;
 	Button * m_OKButton;
 	Label * m_OKButtonLabel;

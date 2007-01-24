@@ -16,19 +16,24 @@ PlanetDialog::PlanetDialog(Widget * SupWidget, Planet * Planet) :
 	m_TradeCenterDialog(0)
 {
 	SetPosition(math3d::vector2f(50.0f, 50.0f));
-	SetSize(math3d::vector2f(500.0f, 300.0f));
+	SetSize(math3d::vector2f(500.0f, 330.0f));
 	SetBackgroundColor(Color(0.2f, 0.2f, 0.2f));
 	AddKeyListener(this);
-	m_NameLabel = new Label(this, m_Planet->GetName());
-	m_NameLabel->SetPosition(math3d::vector2f(10.0f, 10.0f));
-	m_NameLabel->SetSize(math3d::vector2f(100.0f, 20.0f));
+	
+	Label * TitleLabel(new Label(this, "Planet: " + m_Planet->GetName()));
+	
+	TitleLabel->SetPosition(math3d::vector2f(10.0f, 10.0f));
+	TitleLabel->SetSize(math3d::vector2f(480.0f, 20.0f));
+	TitleLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
+	TitleLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
+	TitleLabel->SetBackgroundColor(Color(0.2f, 0.2f, 0.4f));
 	m_DescriptionLabel = new Label(this, m_Planet->GetDescription());
-	m_DescriptionLabel->SetPosition(math3d::vector2f(120.0f, 10.0f));
+	m_DescriptionLabel->SetPosition(math3d::vector2f(120.0f, 40.0f));
 	m_DescriptionLabel->SetSize(math3d::vector2f(360.0f, 100.0f));
 	m_DescriptionLabel->SetWrap(true);
 	m_DescriptionLabel->SetWordWrap(true);
 	m_OKButton = new Button(this);
-	m_OKButton->SetPosition(math3d::vector2f(390.0f, 270.0f));
+	m_OKButton->SetPosition(math3d::vector2f(390.0f, 300.0f));
 	m_OKButton->SetSize(math3d::vector2f(100.0f, 20.0f));
 	m_OKButton->AddClickedListener(this);
 	m_OKButtonLabel = new Label(m_OKButton, "OK");
@@ -37,7 +42,7 @@ PlanetDialog::PlanetDialog(Widget * SupWidget, Planet * Planet) :
 	m_OKButtonLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
 	m_OKButtonLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
 	m_TradeCenterButton = new Button(this);
-	m_TradeCenterButton->SetPosition(math3d::vector2f(10.0f, 50.0f));
+	m_TradeCenterButton->SetPosition(math3d::vector2f(10.0f, 40.0f));
 	m_TradeCenterButton->SetSize(math3d::vector2f(100.0f, 20.0f));
 	m_TradeCenterButton->AddClickedListener(this);
 	m_TradeCenterLabel = new Label(m_TradeCenterButton, "Trade Center");
@@ -48,7 +53,7 @@ PlanetDialog::PlanetDialog(Widget * SupWidget, Planet * Planet) :
 	if(m_Planet->GetAllowRefuelling() == true)
 	{
 		m_RefuelButton = new Button(this);
-		m_RefuelButton->SetPosition(math3d::vector2f(10.0f, 80.0f));
+		m_RefuelButton->SetPosition(math3d::vector2f(10.0f, 70.0f));
 		m_RefuelButton->SetSize(math3d::vector2f(100.0f, 20.0f));
 		m_RefuelButton->AddClickedListener(this);
 		m_RefuelButtonLabel = new Label(m_RefuelButton, "Refuel");

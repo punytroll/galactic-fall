@@ -60,11 +60,19 @@ TradeCenterDialog::TradeCenterDialog(Widget * SupWidget, Planet * Planet) :
 	m_SelectedTradeCenterCommodity(0)
 {
 	SetPosition(math3d::vector2f(600.0f, 100.0f));
-	SetSize(math3d::vector2f(500.0f, 300.0f));
+	SetSize(math3d::vector2f(500.0f, 330.0f));
 	SetBackgroundColor(Color(0.2f, 0.2f, 0.2f));
 	AddKeyListener(this);
+	
+	Label * TitleLabel(new Label(this, "Trace Center: " + m_Planet->GetName()));
+	
+	TitleLabel->SetPosition(math3d::vector2f(10.0f, 10.0f));
+	TitleLabel->SetSize(math3d::vector2f(480.0f, 20.0f));
+	TitleLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
+	TitleLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
+	TitleLabel->SetBackgroundColor(Color(0.2f, 0.2f, 0.4f));
 	m_OKButton = new Button(this);
-	m_OKButton->SetPosition(math3d::vector2f(390.0f, 270.0f));
+	m_OKButton->SetPosition(math3d::vector2f(390.0f, 300.0f));
 	m_OKButton->SetSize(math3d::vector2f(100.0f, 20.0f));
 	m_OKButton->AddClickedListener(this);
 	m_OKButtonLabel = new Label(m_OKButton, "OK");
@@ -73,7 +81,7 @@ TradeCenterDialog::TradeCenterDialog(Widget * SupWidget, Planet * Planet) :
 	m_OKButtonLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
 	m_OKButtonLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
 	m_BuyButton = new Button(this);
-	m_BuyButton->SetPosition(math3d::vector2f(10.0f, 270.0f));
+	m_BuyButton->SetPosition(math3d::vector2f(10.0f, 300.0f));
 	m_BuyButton->SetSize(math3d::vector2f(100.0f, 20.0f));
 	m_BuyButton->AddClickedListener(this);
 	m_BuyButtonLabel = new Label(m_BuyButton, "Buy");
@@ -82,7 +90,7 @@ TradeCenterDialog::TradeCenterDialog(Widget * SupWidget, Planet * Planet) :
 	m_BuyButtonLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
 	m_BuyButtonLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
 	m_SellButton = new Button(this);
-	m_SellButton->SetPosition(math3d::vector2f(120.0f, 270.0f));
+	m_SellButton->SetPosition(math3d::vector2f(120.0f, 300.0f));
 	m_SellButton->SetSize(math3d::vector2f(100.0f, 20.0f));
 	m_SellButton->AddClickedListener(this);
 	m_SellButtonLabel = new Label(m_SellButton, "Sell");
@@ -93,7 +101,7 @@ TradeCenterDialog::TradeCenterDialog(Widget * SupWidget, Planet * Planet) :
 	
 	const std::vector< PlanetCommodity * > & PlanetCommodities(Planet->GetCommodities());
 	std::vector< PlanetCommodity * >::const_iterator PlanetCommodityIterator(PlanetCommodities.begin());
-	float Top(10.0f);
+	float Top(40.0f);
 	
 	while(PlanetCommodityIterator != PlanetCommodities.end())
 	{
