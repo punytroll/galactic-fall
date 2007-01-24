@@ -20,13 +20,21 @@ MapDialog::MapDialog(Widget * SupWidget, System * System) :
 	m_Scale(5.0f),
 	m_SelectedSystem(0)
 {
-	SetPosition(math3d::vector2f(70.0f, 500.0f));
-	SetSize(math3d::vector2f(500.0f, 500.0f));
+	SetPosition(math3d::vector2f(70.0f, 400.0f));
+	SetSize(math3d::vector2f(500.0f, 530.0f));
 	SetBackgroundColor(Color(0.2f, 0.2f, 0.2f));
 	AddKeyListener(this);
 	AddMouseButtonListener(this);
+	
+	Label * TitleLabel(new Label(this, "Map: " + m_System->GetName()));
+	
+	TitleLabel->SetPosition(math3d::vector2f(10.0f, 10.0f));
+	TitleLabel->SetSize(math3d::vector2f(480.0f, 20.0f));
+	TitleLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
+	TitleLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
+	TitleLabel->SetBackgroundColor(Color(0.2f, 0.2f, 0.4f));
 	m_OKButton = new Button(this);
-	m_OKButton->SetPosition(math3d::vector2f(390.0f, 470.0f));
+	m_OKButton->SetPosition(math3d::vector2f(390.0f, 500.0f));
 	m_OKButton->SetSize(math3d::vector2f(100.0f, 20.0f));
 	m_OKButton->AddClickedListener(this);
 	m_OKButtonLabel = new Label(m_OKButton, "OK");
@@ -41,6 +49,9 @@ void MapDialog::Draw(void) const
 	Widget::Draw();
 	
 	math3d::vector2f Middle(GetSize() / 2);
+	
+	Middle.m_V.m_A[1] += 15.0f;
+	
 	float SystemSize(5.0f);
 	
 	glPushMatrix();
@@ -183,7 +194,7 @@ bool MapDialog::OnMouseButton(Widget * EventSource, int Button, int State, float
 	else if(Button == GLUT_LEFT_BUTTON)
 	{
 		X -= GetSize().m_V.m_A[0] / 2;
-		Y -= GetSize().m_V.m_A[1] / 2;
+		Y -= 15.0f + GetSize().m_V.m_A[1] / 2;
 		
 		const std::map< std::string, System * > & Systems(g_SystemManager.GetSystems());
 		
