@@ -4,6 +4,7 @@
 #include "clicked_listener.h"
 #include "key_listener.h"
 #include "mouse_button_listener.h"
+#include "mouse_motion_listener.h"
 #include "widget.h"
 
 class Button;
@@ -11,7 +12,7 @@ class Label;
 class Planet;
 class TradeCenterCommodity;
 
-class TradeCenterDialog : public ClickedListener, public KeyListener, public MouseButtonListener, public Widget
+class TradeCenterDialog : public ClickedListener, public KeyListener, public MouseButtonListener, public MouseMotionListener, public Widget
 {
 public:
 	TradeCenterDialog(Widget * SupWidget, Planet * Planet);
@@ -19,6 +20,8 @@ protected:
 	virtual bool OnClicked(Widget * EventSource);
 	virtual bool OnKey(Widget * EventSource, int Key, int State);
 	virtual bool OnMouseButton(Widget * EventSource, int Button, int State, float X, float Y);
+	virtual void OnMouseEnter(Widget * EventSource);
+	virtual void OnMouseLeave(Widget * EventSource);
 private:
 	void UpdateTraderCredits(void);
 	void UpdateTraderFreeCargoHoldSize(void);

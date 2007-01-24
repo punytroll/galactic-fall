@@ -102,6 +102,7 @@ TradeCenterDialog::TradeCenterDialog(Widget * SupWidget, Planet * Planet) :
 		NewTradeCenterCommodity->SetPosition(math3d::vector2f(10.0f, Top));
 		NewTradeCenterCommodity->SetSize(math3d::vector2f(480.0f, 20.0f));
 		NewTradeCenterCommodity->AddMouseButtonListener(this);
+		NewTradeCenterCommodity->AddMouseMotionListener(this);
 		Top += 20.0f;
 		++PlanetCommodityIterator;
 	}
@@ -229,4 +230,24 @@ bool TradeCenterDialog::OnMouseButton(Widget * EventSource, int Button, int Stat
 	}
 	
 	return false;
+}
+
+void TradeCenterDialog::OnMouseEnter(Widget * EventSource)
+{
+	TradeCenterCommodity * EnteredTradeCenterCommodity(dynamic_cast< TradeCenterCommodity * >(EventSource));
+	
+	if((EnteredTradeCenterCommodity != 0) && (EnteredTradeCenterCommodity != m_SelectedTradeCenterCommodity))
+	{
+		EnteredTradeCenterCommodity->SetBackgroundColor(Color(0.3f, 0.2f, 0.2f));
+	}
+}
+
+void TradeCenterDialog::OnMouseLeave(Widget * EventSource)
+{
+	TradeCenterCommodity * LeftTradeCenterCommodity(dynamic_cast< TradeCenterCommodity * >(EventSource));
+	
+	if((LeftTradeCenterCommodity != 0) && (LeftTradeCenterCommodity != m_SelectedTradeCenterCommodity))
+	{
+		LeftTradeCenterCommodity->SetBackgroundColor(Color(0.2f, 0.2f, 0.2f));
+	}
 }
