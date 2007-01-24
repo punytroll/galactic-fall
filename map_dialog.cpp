@@ -29,7 +29,6 @@ MapDialog::MapDialog(Widget * SupWidget, System * System) :
 	m_OKButton = new Button(this);
 	m_OKButton->SetPosition(math3d::vector2f(390.0f, 470.0f));
 	m_OKButton->SetSize(math3d::vector2f(100.0f, 20.0f));
-	m_OKButton->SetBackgroundColor(Color(0.3f, 0.3f, 0.3f));
 	m_OKButton->AddClickedListener(this);
 	m_OKButtonLabel = new Label(m_OKButton, "OK");
 	m_OKButtonLabel->SetPosition(math3d::vector2f(0.0f, 0.0f));

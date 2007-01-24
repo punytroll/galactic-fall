@@ -30,7 +30,6 @@ PlanetDialog::PlanetDialog(Widget * SupWidget, Planet * Planet) :
 	m_OKButton = new Button(this);
 	m_OKButton->SetPosition(math3d::vector2f(390.0f, 270.0f));
 	m_OKButton->SetSize(math3d::vector2f(100.0f, 20.0f));
-	m_OKButton->SetBackgroundColor(Color(0.3f, 0.3f, 0.3f));
 	m_OKButton->AddClickedListener(this);
 	m_OKButtonLabel = new Label(m_OKButton, "OK");
 	m_OKButtonLabel->SetPosition(math3d::vector2f(0.0f, 0.0f));
@@ -40,7 +39,6 @@ PlanetDialog::PlanetDialog(Widget * SupWidget, Planet * Planet) :
 	m_TradeCenterButton = new Button(this);
 	m_TradeCenterButton->SetPosition(math3d::vector2f(10.0f, 50.0f));
 	m_TradeCenterButton->SetSize(math3d::vector2f(100.0f, 20.0f));
-	m_TradeCenterButton->SetBackgroundColor(Color(0.3f, 0.3f, 0.3f));
 	m_TradeCenterButton->AddClickedListener(this);
 	m_TradeCenterLabel = new Label(m_TradeCenterButton, "Trade Center");
 	m_TradeCenterLabel->SetPosition(math3d::vector2f(0.0f, 0.0f));
@@ -52,7 +50,6 @@ PlanetDialog::PlanetDialog(Widget * SupWidget, Planet * Planet) :
 		m_RefuelButton = new Button(this);
 		m_RefuelButton->SetPosition(math3d::vector2f(10.0f, 80.0f));
 		m_RefuelButton->SetSize(math3d::vector2f(100.0f, 20.0f));
-		m_RefuelButton->SetBackgroundColor(Color(0.3f, 0.3f, 0.3f));
 		m_RefuelButton->AddClickedListener(this);
 		m_RefuelButtonLabel = new Label(m_RefuelButton, "Refuel");
 		m_RefuelButtonLabel->SetPosition(math3d::vector2f(0.0f, 0.0f));
