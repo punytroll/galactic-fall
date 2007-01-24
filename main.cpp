@@ -486,6 +486,9 @@ public:
 			g_PlayerShip->m_Velocity.set(0.0f, 0.0f);
 			g_CreditsLabel->SetString("Credits: " + to_string_cast(g_PlayerCharacter->GetCredits()));
 			g_FuelLabel->SetString("Fuel: " + to_string_cast(100.0f * g_PlayerShip->GetFuel() / g_PlayerShip->GetFuelCapacity()));
+			g_InputFocus->m_Accelerate = false;
+			g_InputFocus->m_TurnLeft = false;
+			g_InputFocus->m_TurnRight = false;
 		}
 		else if(EventSource == g_MapDialog)
 		{
@@ -495,6 +498,9 @@ public:
 			}
 			g_MapDialog = 0;
 			g_Pause = false;
+			g_InputFocus->m_Accelerate = false;
+			g_InputFocus->m_TurnLeft = false;
+			g_InputFocus->m_TurnRight = false;
 		}
 	}
 } g_GlobalDestroyListener;
