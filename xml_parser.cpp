@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2006  Hagen Möbius
+ * Copyright (C) 2006  Hagen Mï¿½ius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,10 +20,8 @@
  * This is version 1.0.0 of the xml parser.
  * 
  * With modifications for escpae velocity.
- * · Renamed the xmlparser.h and xmlparser.cpp to xml_parser.h and xml_parser.cpp.
+ *  Renamed the xmlparser.h and xmlparser.cpp to xml_parser.h and xml_parser.cpp.
  **/
-
-#include <iostream>
 
 #include "xml_parser.h"
 
