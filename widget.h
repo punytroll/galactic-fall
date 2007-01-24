@@ -9,6 +9,7 @@ class Color;
 class DestroyListener;
 class KeyListener;
 class MouseButtonListener;
+class MouseMotionListener;
 
 class Widget
 {
@@ -37,10 +38,12 @@ public:
 	// receive input
 	bool MouseButton(int Button, int State, float X, float Y);
 	bool Key(int Key, int State);
+	void MouseMotion(float X, float Y);
 	// signal listeners
 	void AddDestroyListener(DestroyListener * DestroyListener);
 	void AddKeyListener(KeyListener * KeyListener);
 	void AddMouseButtonListener(MouseButtonListener * MouseButtonListener);
+	void AddMouseMotionListener(MouseMotionListener * MouseMotionListener);
 	// static manager functions
 	static std::list< Widget * > & GetDestroyedWidgets(void);
 private:
@@ -55,6 +58,7 @@ private:
 	std::list< DestroyListener * > m_DestroyListeners;
 	std::list< KeyListener * > m_KeyListeners;
 	std::list< MouseButtonListener * > m_MouseButtonListeners;
+	std::list< MouseMotionListener * > m_MouseMotionListeners;
 	// static manager properties
 	static std::list< Widget * > m_DestroyedWidgets;
 };
