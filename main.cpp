@@ -595,6 +595,8 @@ void Mouse(int Button, int State, int X, int Y)
 
 void MouseMotion(int X, int Y)
 {
+	g_UserInterface.MouseMotion(X, Y);
+	
 	int DeltaX(X - g_LastMotionX);
 	int DeltaY(Y - g_LastMotionY);
 	
@@ -1072,6 +1074,7 @@ int main(int argc, char **argv)
 	glutIdleFunc(Render);
 	glutMouseFunc(Mouse);
 	glutMotionFunc(MouseMotion);
+	glutPassiveMotionFunc(MouseMotion);
 	glutIgnoreKeyRepeat(0);
 	glutKeyboardFunc(Key);
 	glutKeyboardUpFunc(KeyUp);
