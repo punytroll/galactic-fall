@@ -6,6 +6,9 @@
 #include "ship.h"
 
 Ship::Ship(ShipClass * ShipClass) :
+	m_Accelerate(false),
+	m_TurnLeft(false),
+	m_TurnRight(false),
 	m_ShipClass(ShipClass),
 	m_Fuel(0.0f)
 {
