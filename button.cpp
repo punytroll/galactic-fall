@@ -9,6 +9,7 @@
 Button::Button(Widget * SupWidget) :
 	Widget(SupWidget)
 {
+	SetBackgroundColor(Color(0.3f, 0.3f, 0.3f));
 	AddMouseButtonListener(this);
 	AddMouseMotionListener(this);
 }

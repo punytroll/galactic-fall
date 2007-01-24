@@ -66,7 +66,6 @@ TradeCenterDialog::TradeCenterDialog(Widget * SupWidget, Planet * Planet) :
 	m_OKButton = new Button(this);
 	m_OKButton->SetPosition(math3d::vector2f(390.0f, 270.0f));
 	m_OKButton->SetSize(math3d::vector2f(100.0f, 20.0f));
-	m_OKButton->SetBackgroundColor(Color(0.3f, 0.3f, 0.3f));
 	m_OKButton->AddClickedListener(this);
 	m_OKButtonLabel = new Label(m_OKButton, "OK");
 	m_OKButtonLabel->SetPosition(math3d::vector2f(0.0f, 0.0f));
@@ -76,7 +75,6 @@ TradeCenterDialog::TradeCenterDialog(Widget * SupWidget, Planet * Planet) :
 	m_BuyButton = new Button(this);
 	m_BuyButton->SetPosition(math3d::vector2f(10.0f, 270.0f));
 	m_BuyButton->SetSize(math3d::vector2f(100.0f, 20.0f));
-	m_BuyButton->SetBackgroundColor(Color(0.3f, 0.3f, 0.3f));
 	m_BuyButton->AddClickedListener(this);
 	m_BuyButtonLabel = new Label(m_BuyButton, "Buy");
 	m_BuyButtonLabel->SetPosition(math3d::vector2f(0.0f, 0.0f));
@@ -86,7 +84,6 @@ TradeCenterDialog::TradeCenterDialog(Widget * SupWidget, Planet * Planet) :
 	m_SellButton = new Button(this);
 	m_SellButton->SetPosition(math3d::vector2f(120.0f, 270.0f));
 	m_SellButton->SetSize(math3d::vector2f(100.0f, 20.0f));
-	m_SellButton->SetBackgroundColor(Color(0.3f, 0.3f, 0.3f));
 	m_SellButton->AddClickedListener(this);
 	m_SellButtonLabel = new Label(m_SellButton, "Sell");
 	m_SellButtonLabel->SetPosition(math3d::vector2f(0.0f, 0.0f));
