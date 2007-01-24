@@ -11,7 +11,7 @@ class Label;
 class Planet;
 class TradeCenterDialog;
 
-class PlanetDialog : public ClickedListener, public DestroyListener, public KeyListener, public Widget
+class PlanetDialog : public ClickedListener, public KeyListener, public Widget
 {
 public:
 	PlanetDialog(Widget * SupWidget, Planet * Planet);

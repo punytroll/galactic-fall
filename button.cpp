@@ -4,11 +4,13 @@
 
 #include "button.h"
 #include "clicked_listener.h"
+#include "color.h"
 
 Button::Button(Widget * SupWidget) :
 	Widget(SupWidget)
 {
 	AddMouseButtonListener(this);
+	AddMouseMotionListener(this);
 }
 
 Button::~Button(void)
@@ -34,4 +36,14 @@ bool Button::OnMouseButton(Widget * EventSource, int Button, int State, float X,
 	}
 	
 	return false;
+}
+
+void Button::OnMouseEnter(Widget * EventSource)
+{
+	SetBackgroundColor(Color(0.4f, 0.4f, 0.4f));
+}
+
+void Button::OnMouseLeave(Widget * EventSource)
+{
+	SetBackgroundColor(Color(0.3f, 0.3f, 0.3f));
 }

@@ -100,6 +100,7 @@ bool PlanetDialog::OnClicked(Widget * EventSource)
 
 void PlanetDialog::OnDestroy(Widget * EventSource)
 {
+	Widget::OnDestroy(EventSource);
 	if(EventSource == m_TradeCenterDialog)
 	{
 		m_TradeCenterDialog = 0;

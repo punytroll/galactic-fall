@@ -14,6 +14,7 @@ public:
 	Widget * GetRootWidget(void);
 private:
 	Widget * m_RootWidget;
+	Widget * m_HoverWidget;
 };
 
 inline Widget * UserInterface::GetRootWidget(void)
