@@ -1,7 +1,6 @@
 #include <assert.h>
 
 #include <algorithm>
-#include <iostream>
 
 #include <GL/gl.h>
 

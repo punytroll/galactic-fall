@@ -1,4 +1,3 @@
-#include <iostream>
 #include <map>
 
 #include <GL/gl.h>

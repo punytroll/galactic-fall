@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include <GL/glut.h>
 
 #include "button.h"
