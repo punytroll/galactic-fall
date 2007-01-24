@@ -224,6 +224,7 @@ void Widget::MouseMotion(float X, float Y)
 		
 		m_HoverWidget = 0;
 		HoverWidget->MouseLeave();
+		HoverWidget->RemoveDestroyListener(this);
 	}
 	// after this we may call all our listeners
 	for(std::list< MouseMotionListener * >::iterator MouseMotionListenerIterator = m_MouseMotionListeners.begin(); MouseMotionListenerIterator != m_MouseMotionListeners.end(); ++MouseMotionListenerIterator)
@@ -242,6 +243,14 @@ void Widget::MouseEnter(void)
 
 void Widget::MouseLeave(void)
 {
+	if(m_HoverWidget != 0)
+	{
+		Widget * HoverWidget(m_HoverWidget);
+		
+		m_HoverWidget = 0;
+		HoverWidget->MouseLeave();
+		HoverWidget->RemoveDestroyListener(this);
+	}
 	for(std::list< MouseMotionListener * >::iterator MouseMotionListenerIterator = m_MouseMotionListeners.begin(); MouseMotionListenerIterator != m_MouseMotionListeners.end(); ++MouseMotionListenerIterator)
 	{
 		(*MouseMotionListenerIterator)->OnMouseLeave(this);
