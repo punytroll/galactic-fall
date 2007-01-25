@@ -1,5 +1,4 @@
 <widget>
-	<widget-path>/root</widget-path>
 	<foreground-color>
 		<red>1.0</red>
 		<green>0.3</green>
@@ -11,4 +10,5 @@
 		<y>0.0</y>
 	</position>
 	<visible>false</visible>
+	<widget-path>/root</widget-path>
 </widget>
