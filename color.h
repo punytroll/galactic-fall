@@ -6,6 +6,7 @@
 class Color
 {
 public:
+	Color(void);
 	Color(float Red, float Green, float Blue, float Alpha = 1.0f);
 	const math3d::vector4f & GetColor(void) const;
 	void Set(float Red, float Green, float Blue, float Alpha = 1.0f);
