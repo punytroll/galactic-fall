@@ -1,7 +1,9 @@
 #ifndef WIDGET_H
 #define WIDGET_H
 
+#include <iostream>
 #include <list>
+#include <string>
 
 #include <math3d/vector2f.h>
 
@@ -15,7 +17,7 @@ class MouseMotionListener;
 class Widget : public DestroyListener
 {
 public:
-	Widget(Widget * SupWidget);
+	Widget(Widget * SupWidget = 0, const std::string & Name = "");
 	virtual ~Widget(void);
 	virtual void Draw(void) const;
 	void Hide(void);
@@ -28,12 +30,18 @@ public:
 	void Destroy(void);
 	void SetKeyFocus(Widget * KeyFocus);
 	void GrabKeyFocus(void);
+	void SetName(const std::string & Name);
 	// getters
 	const Color & GetBackgroundColor(void) const;
 	const math3d::vector2f GetPosition(void) const;
 	const math3d::vector2f GetSize(void) const;
+	const std::string & GetName(void) const;
 	Widget * GetRootWidget(void);
 	const Widget * GetRootWidget(void) const;
+	Widget * GetSupWidget(void);
+	const Widget * GetSupWidget(void) const;
+	Widget * GetSubWidget(const std::string & Name);
+	const Widget * GetSubWidget(const std::string & Name) const;
 	Widget * GetKeyFocus(void);
 	bool IsVisible(void) const;
 	// receive input
@@ -58,7 +66,7 @@ public:
 protected:
 	virtual void OnDestroy(Widget * EventSource);
 private:
-	
+	std::string m_Name;
 	Widget * m_SupWidget;
 	Widget * m_HoverWidget;
 	Color * m_BackgroundColor;
@@ -91,6 +99,11 @@ inline const math3d::vector2f Widget::GetSize(void) const
 	return m_Size;
 }
 
+inline const std::string & Widget::GetName(void) const
+{
+	return m_Name;
+}
+
 inline std::list< Widget * > & Widget::GetDestroyedWidgets(void)
 {
 	return m_DestroyedWidgets;
@@ -118,6 +131,38 @@ inline const Widget * Widget::GetRootWidget(void) const
 	}
 	
 	return SupWidget;
+}
+
+inline Widget * Widget::GetSupWidget(void)
+{
+	return m_SupWidget;
+}
+
+inline const Widget * Widget::GetSupWidget(void) const
+{
+	return m_SupWidget;
+}
+
+inline Widget * Widget::GetSubWidget(const std::string & Name)
+{
+	for(std::list< Widget * >::iterator Iterator = m_SubWidgets.begin(); Iterator != m_SubWidgets.end(); ++Iterator)
+	{
+		if((*Iterator)->GetName() == Name)
+		{
+			return *Iterator;
+		}
+	}
+}
+
+inline const Widget * Widget::GetSubWidget(const std::string & Name) const
+{
+	for(std::list< Widget * >::const_iterator Iterator = m_SubWidgets.begin(); Iterator != m_SubWidgets.end(); ++Iterator)
+	{
+		if((*Iterator)->GetName() == Name)
+		{
+			return *Iterator;
+		}
+	}
 }
 
 inline Widget * Widget::GetKeyFocus(void)

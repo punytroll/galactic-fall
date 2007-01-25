@@ -19,6 +19,27 @@ void UserInterface::Draw(void) const
 	}
 }
 
+Widget * UserInterface::GetWidget(const std::string & Path)
+{
+	if(Path[0] != '/')
+	{
+		return 0;
+	}
+	
+	std::string::size_type Position(1);
+	Widget * Root(GetRootWidget());
+	
+	while((Root != 0) && (Position < Path.length()))
+	{
+		std::string::size_type SlashPosition(Path.find('/', Position));
+		
+		Root = Root->GetSubWidget(Path.substr(Position, SlashPosition - Position));
+		Position = ((SlashPosition == std::string::npos) ? (Path.length()) : (SlashPosition + 1));
+	}
+	
+	return Root;
+}
+
 bool UserInterface::MouseButton(int Button, int State, float X, float Y)
 {
 	const math3d::vector2f & LeftTopCorner(m_RootWidget->GetPosition());

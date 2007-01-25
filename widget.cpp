@@ -12,7 +12,8 @@
 
 std::list< Widget * > Widget::m_DestroyedWidgets;
 
-Widget::Widget(Widget * SupWidget) :
+Widget::Widget(Widget * SupWidget, const std::string & Name) :
+	m_Name(Name),
 	m_SupWidget(0),
 	m_HoverWidget(0),
 	m_BackgroundColor(0),
@@ -81,6 +82,11 @@ void Widget::SetPosition(const math3d::vector2f & Position)
 void Widget::SetSize(const math3d::vector2f & Size)
 {
 	m_Size = Size;
+}
+
+void Widget::SetName(const std::string & Name)
+{
+	m_Name = Name;
 }
 
 void Widget::SetKeyFocus(Widget * KeyFocus)
