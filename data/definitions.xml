@@ -14,11 +14,18 @@
 	<widget>
 		<string identifier="widget-path"/>
 		<vector2f identifier="position"/>
+		<boolean identifier="use-size"/>
+		<vector2f identifier="size"/>
+		<boolean identifier="use-background-color"/>
+		<color4f identifier="background-color"/>
 		<boolean identifier="visible"/>
 	</widget>
 	
 	<label>
 		<widget identifier="widget"/>
+		<boolean identifier="use-foreground-color"/>
 		<color4f identifier="foreground-color"/>
+		<u1byte identifier="horizontal-alignment"/>
+		<u1byte identifier="vertical-alignment"/>
 	</label>
 </definitions>
