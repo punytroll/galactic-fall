@@ -1,0 +1,20 @@
+<definitions>
+	<color4f>
+		<float identifier="red"/>
+		<float identifier="green"/>
+		<float identifier="blue"/>
+		<float identifier="alpha"/>
+	</color4f>
+	
+	<vector2f>
+		<float identifier="x"/>
+		<float identifier="y"/>
+	</vector2f>
+	
+	<widget>
+		<string identifier="widget-path"/>
+		<color4f identifier="foreground-color"/>
+		<vector2f identifier="position"/>
+		<boolean identifier="visible"/>
+	</widget>
+</definitions>

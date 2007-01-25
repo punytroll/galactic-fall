@@ -125,7 +125,10 @@ xml_parser_h = \
 xml_puny_dom_h = \
 	xml_puny_dom.h
 
-all: escapevelocity
+all: all-recursive escapevelocity
+
+all-recursive:
+	@$(MAKE) -C data
 
 clean:
 	$(RM) escapevelocity
