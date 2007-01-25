@@ -10,6 +10,13 @@
 #include <math3d/vector2f.h>
 #include <math3d/vector4f.h>
 
+#include <Archive.h>
+#include <BufferReader.h>
+#include <Item.h>
+#include <URI.h>
+
+#include "arxx_resources.h"
+#include "buffer_reading.h"
 #include "camera.h"
 #include "cargo.h"
 #include "character.h"
@@ -1002,39 +1009,172 @@ void SpecialKeyUp(int Key, int X, int Y)
 	}
 }
 
+Arxx::Item * GetItem(Arxx::Archive & Archive, Arxx::u4byte UniqueIdentifier)
+{
+	Arxx::Item * Item(Archive.pGetItem(UniqueIdentifier));
+	
+	if(Item == 0)
+	{
+		std::cerr << "Could not find item '" << UniqueIdentifier << "'." << std::endl;
+		
+		throw std::out_of_range("Finding the unique identifier failed.");
+	}
+	if(Item->bIsFetched() == false)
+	{
+		if(Item->bFetch() == false)
+		{
+			std::cerr << "Could not fetch data for item '" << UniqueIdentifier << "'." << std::endl;
+			
+			throw std::runtime_error("Fetching the data failed.");
+		}
+		if(Item->bIsFetched() == false)
+		{
+			std::cerr << "Could not fetch data for item '" << UniqueIdentifier << "'." << std::endl;
+			
+			throw std::runtime_error("Fetching the data failed.");
+		}
+	}
+	if(Item->bIsCompressed() == true)
+	{
+		Item->vDecompress();
+		if(Item->bIsCompressed() == true)
+		{
+			std::cerr << "Could not decompress data for item '" << UniqueIdentifier << "'." << std::endl;
+			
+			throw std::runtime_error("Decompressing the data failed.");
+		}
+	}
+	
+	return Item;
+}
+
+void ReadWidget(Arxx::BufferReader & Reader, Widget * Widget)
+{
+	std::string WidgetPath;
+	math3d::vector2f Position;
+	bool UseSize;
+	math3d::vector2f Size;
+	bool UseBackgroundColor;
+	Color BackgroundColor;
+	bool Visible;
+	
+	Reader >> WidgetPath >> Position >> UseSize >> Size >> UseBackgroundColor >> BackgroundColor >> Visible;
+	Widget->SetPosition(Position);
+	if(UseSize == true)
+	{
+		Widget->SetSize(Size);
+	}
+	if(UseBackgroundColor == true)
+	{
+		Widget->SetBackgroundColor(BackgroundColor);
+	}
+	if(Visible == false)
+	{
+		Widget->Hide();
+	}
+}
+
+void ReadLabel(Arxx::BufferReader & Reader, Label * Label)
+{
+	ReadWidget(Reader, Label);
+	
+	bool UseForegroundColor;
+	Color ForegroundColor;
+	Arxx::u1byte HorizontalAlignment;
+	Arxx::u1byte VerticalAlignment;
+	
+	Reader >> UseForegroundColor >> ForegroundColor >> HorizontalAlignment >> VerticalAlignment;
+	if(UseForegroundColor == true)
+	{
+		Label->SetForegroundColor(ForegroundColor);
+	}
+	if(HorizontalAlignment == 0)
+	{
+		Label->SetHorizontalAlignment(Label::ALIGN_LEFT);
+	}
+	else if(HorizontalAlignment == 1)
+	{
+		Label->SetHorizontalAlignment(Label::ALIGN_RIGHT);
+	}
+	else if(HorizontalAlignment == 2)
+	{
+		Label->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
+	}
+	if(VerticalAlignment == 0)
+	{
+		Label->SetVerticalAlignment(Label::ALIGN_TOP);
+	}
+	else if(VerticalAlignment == 1)
+	{
+		Label->SetVerticalAlignment(Label::ALIGN_BOTTOM);
+	}
+	else if(VerticalAlignment == 2)
+	{
+		Label->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
+	}
+}
+
+Label * ReadLabel(Arxx::Item * Item)
+{
+	if(Item->u4GetSubType() != 1)
+	{
+		std::cerr << "Item subtype for label should be '1' not '" << Item->u4GetSubType() << "'." << std::endl;
+		
+		throw std::out_of_range("Encountered unknown subtype.");
+	}
+	
+	Arxx::BufferReader Reader(*Item);
+	Label * NewLabel(new Label(g_UserInterface.GetRootWidget()));
+	
+	ReadLabel(Reader, NewLabel);
+	
+	return NewLabel;
+}
+
+Widget * ReadWidget(Arxx::Item * Item)
+{
+	if(Item->u4GetSubType() != 0)
+	{
+		std::cerr << "Item subtype for widget should be '0' not '" << Item->u4GetSubType() << "'." << std::endl;
+		
+		throw std::out_of_range("Encountered unknown subtype.");
+	}
+	
+	Arxx::BufferReader Reader(*Item);
+	Widget * NewWidget(new Widget(g_UserInterface.GetRootWidget()));
+	
+	ReadWidget(Reader, NewWidget);
+	
+	return NewWidget;
+}
+
 int main(int argc, char **argv)
 {
 	// setup the random number generator for everyday use
 	srand(time(0));
 	// ui setup
-	g_TimeWarpLabel = new Label(g_UserInterface.GetRootWidget());
-	g_TimeWarpLabel->SetForegroundColor(Color(0.7f, 0.8f, 1.0f));
-	g_TimeWarpLabel->SetPosition(math3d::vector2f(0.0f, 00.0f));
-	g_SystemLabel = new Label(g_UserInterface.GetRootWidget());
-	g_SystemLabel->SetForegroundColor(Color(0.7f, 0.8f, 1.0f));
-	g_SystemLabel->SetPosition(math3d::vector2f(0.0f, 20.0f));
-	g_CreditsLabel = new Label(g_UserInterface.GetRootWidget());
-	g_CreditsLabel->SetForegroundColor(Color(0.7f, 0.8f, 1.0f));
-	g_CreditsLabel->SetPosition(math3d::vector2f(0.0f, 40.0f));
-	g_FuelLabel = new Label(g_UserInterface.GetRootWidget());
-	g_FuelLabel->SetForegroundColor(Color(0.7f, 0.8f, 1.0f));
-	g_FuelLabel->SetPosition(math3d::vector2f(0.0f, 60.0f));
-	g_MessageLabel = new Label(g_UserInterface.GetRootWidget());
-	g_MessageLabel->SetForegroundColor(Color(1.0f, 0.3f, 0.3f));
-	g_MessageLabel->SetPosition(math3d::vector2f(0.0f, 0.0f));
-	g_MessageLabel->Hide();
-	g_RadarWidget = new Widget(g_UserInterface.GetRootWidget());
-	g_RadarWidget->SetSize(math3d::vector2f(220.0f, 240.0f));
-	g_RadarWidget->SetBackgroundColor(Color(0.0f, 0.1f, 0.17f, 0.8f));
+	Arxx::URI URI("data/data.arx");
+	Arxx::Archive Archive;
+	
+	if(Archive.bLoad(URI) == false)
+	{
+		std::cerr << "Could not find or open " << URI << "." << std::endl;
+		
+		return 1;
+	}
+	g_MessageLabel = ReadLabel(GetItem(Archive, MESSAGE_LABEL));
+	g_TimeWarpLabel = ReadLabel(GetItem(Archive, TIME_WARP_LABEL));
+	g_SystemLabel = ReadLabel(GetItem(Archive, SYSTEM_LABEL));
+	g_CreditsLabel = ReadLabel(GetItem(Archive, CREDITS_LABEL));
+	g_FuelLabel = ReadLabel(GetItem(Archive, FUEL_LABEL));
+	g_RadarWidget = ReadWidget(GetItem(Archive, RADAR_WIDGET));
+	g_MiniMapWidget = ReadWidget(GetItem(Archive, MINI_MAP_WIDGET));
 	g_TargetLabel = new Label(g_RadarWidget);
 	g_TargetLabel->SetForegroundColor(Color(0.7f, 0.8f, 1.0f));
 	g_TargetLabel->SetPosition(math3d::vector2f(0.0f, 0.0f));
 	g_TargetLabel->SetSize(math3d::vector2f(220.0f, 20.0f));
 	g_TargetLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
 	g_TargetLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
-	g_MiniMapWidget = new Widget(g_UserInterface.GetRootWidget());
-	g_MiniMapWidget->SetSize(math3d::vector2f(220.0f, 240.0f));
-	g_MiniMapWidget->SetBackgroundColor(Color(0.0f, 0.1f, 0.17f, 0.8f));
 	g_CurrentSystemLabel = new Label(g_MiniMapWidget);
 	g_CurrentSystemLabel->SetForegroundColor(Color(0.7f, 0.8, 1.0f));
 	g_CurrentSystemLabel->SetPosition(math3d::vector2f(0.0f, 0.0f));
