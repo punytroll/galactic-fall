@@ -13,6 +13,7 @@
 	
 	<widget>
 		<string identifier="widget-path"/>
+		<string identifier="name"/>
 		<vector2f identifier="position"/>
 		<boolean identifier="use-size"/>
 		<vector2f identifier="size"/>

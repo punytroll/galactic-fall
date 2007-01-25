@@ -1048,9 +1048,10 @@ Arxx::Item * GetItem(Arxx::Archive & Archive, Arxx::u4byte UniqueIdentifier)
 	return Item;
 }
 
-void ReadWidget(Arxx::BufferReader & Reader, Widget * Widget)
+void ReadWidget(Arxx::BufferReader & Reader, Widget * NewWidget)
 {
-	std::string WidgetPath;
+	std::string Path;
+	std::string Name;
 	math3d::vector2f Position;
 	bool UseSize;
 	math3d::vector2f Size;
@@ -1058,19 +1059,33 @@ void ReadWidget(Arxx::BufferReader & Reader, Widget * Widget)
 	Color BackgroundColor;
 	bool Visible;
 	
-	Reader >> WidgetPath >> Position >> UseSize >> Size >> UseBackgroundColor >> BackgroundColor >> Visible;
-	Widget->SetPosition(Position);
+	Reader >> Path >> Name >> Position >> UseSize >> Size >> UseBackgroundColor >> BackgroundColor >> Visible;
+	NewWidget->SetName(Name);
+	std::cout << "Name=" << Name << "   Path=" << Path << std::endl;
+	if((Path != "") && (NewWidget->GetSupWidget() == 0))
+	{
+		Widget * SupWidget(g_UserInterface.GetWidget(Path));
+		
+		if(SupWidget == 0)
+		{
+			std::cerr << "Could not find the widget at '" << Path << "'." << std::endl;
+			
+			throw std::runtime_error("Unknown sup widget.");
+		}
+		SupWidget->AddSubWidget(NewWidget);
+	}
+	NewWidget->SetPosition(Position);
 	if(UseSize == true)
 	{
-		Widget->SetSize(Size);
+		NewWidget->SetSize(Size);
 	}
 	if(UseBackgroundColor == true)
 	{
-		Widget->SetBackgroundColor(BackgroundColor);
+		NewWidget->SetBackgroundColor(BackgroundColor);
 	}
 	if(Visible == false)
 	{
-		Widget->Hide();
+		NewWidget->Hide();
 	}
 }
 
@@ -1124,7 +1139,7 @@ Label * ReadLabel(Arxx::Item * Item)
 	}
 	
 	Arxx::BufferReader Reader(*Item);
-	Label * NewLabel(new Label(g_UserInterface.GetRootWidget()));
+	Label * NewLabel(new Label());
 	
 	ReadLabel(Reader, NewLabel);
 	
@@ -1141,7 +1156,7 @@ Widget * ReadWidget(Arxx::Item * Item)
 	}
 	
 	Arxx::BufferReader Reader(*Item);
-	Widget * NewWidget(new Widget(g_UserInterface.GetRootWidget()));
+	Widget * NewWidget(new Widget());
 	
 	ReadWidget(Reader, NewWidget);
 	
@@ -1169,18 +1184,8 @@ int main(int argc, char **argv)
 	g_FuelLabel = ReadLabel(GetItem(Archive, FUEL_LABEL));
 	g_RadarWidget = ReadWidget(GetItem(Archive, RADAR_WIDGET));
 	g_MiniMapWidget = ReadWidget(GetItem(Archive, MINI_MAP_WIDGET));
-	g_TargetLabel = new Label(g_RadarWidget);
-	g_TargetLabel->SetForegroundColor(Color(0.7f, 0.8f, 1.0f));
-	g_TargetLabel->SetPosition(math3d::vector2f(0.0f, 0.0f));
-	g_TargetLabel->SetSize(math3d::vector2f(220.0f, 20.0f));
-	g_TargetLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
-	g_TargetLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
-	g_CurrentSystemLabel = new Label(g_MiniMapWidget);
-	g_CurrentSystemLabel->SetForegroundColor(Color(0.7f, 0.8, 1.0f));
-	g_CurrentSystemLabel->SetPosition(math3d::vector2f(0.0f, 0.0f));
-	g_CurrentSystemLabel->SetSize(math3d::vector2f(220.0f, 20.0f));
-	g_CurrentSystemLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
-	g_CurrentSystemLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
+	g_TargetLabel = ReadLabel(GetItem(Archive, TARGET_LABEL));
+	g_CurrentSystemLabel = ReadLabel(GetItem(Archive, CURRENT_SYSTEM_LABEL));
 	
 	// data reading
 	LoadModelsFromFile(&g_ModelManager, "data/shuttlecraft.xml");

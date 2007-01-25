@@ -23,7 +23,7 @@ public:
 		ALIGN_VERTICAL_CENTER
 	};
 	
-	Label(Widget * SupWidget);
+	Label(Widget * SupWidget = 0);
 	Label(Widget * SupWidget, const std::string & String);
 	~Label(void);
 	void SetString(const std::string & String);

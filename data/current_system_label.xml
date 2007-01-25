@@ -1,15 +1,15 @@
 <label>
 	<widget>
-		<widget-path>/</widget-path>
-		<name>system</name>
+		<widget-path>/mini_map</widget-path>
+		<name>current_system</name>
 		<position>
 			<x>0.0</x>
-			<y>20.0</y>
-		</position>
-		<use-size>false</use-size>
-		<size>
-			<x>0.0</x>
 			<y>0.0</y>
+		</position>
+		<use-size>true</use-size>
+		<size>
+			<x>220.0</x>
+			<y>20.0</y>
 		</size>
 		<use-background-color>false</use-background-color>
 		<background-color>
@@ -27,6 +27,6 @@
 		<blue>1.0</blue>
 		<alpha>1.0</alpha>
 	</foreground-color>
-	<horizontal-alignment>0</horizontal-alignment>
-	<vertical-alignment>0</vertical-alignment>
+	<horizontal-alignment>2</horizontal-alignment>
+	<vertical-alignment>2</vertical-alignment>
 </label>

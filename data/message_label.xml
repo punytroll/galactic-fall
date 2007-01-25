@@ -1,6 +1,7 @@
 <label>
 	<widget>
-		<widget-path>/root</widget-path>
+		<widget-path>/</widget-path>
+		<name>message</name>
 		<position>
 			<x>0.0</x>
 			<y>0.0</y>

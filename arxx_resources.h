@@ -10,5 +10,7 @@ const Arxx::u4byte CREDITS_LABEL = 103;
 const Arxx::u4byte FUEL_LABEL = 104;
 const Arxx::u4byte RADAR_WIDGET = 105;
 const Arxx::u4byte MINI_MAP_WIDGET = 106;
+const Arxx::u4byte TARGET_LABEL = 107;
+const Arxx::u4byte CURRENT_SYSTEM_LABEL = 108;
 
 #endif
