@@ -36,8 +36,12 @@ if options.definitions != None:
 # now open the out file for writing binary
 out_file = open(options.out_file, "wb")
 
+# the out() call stack
+out_call_stack = list()
+
 # the recursive output function
 def out(data_type, node):
+	out_call_stack.append(node.tagName)
 	if data_type == "string":
 		out_file.write(node.firstChild.nodeValue)
 		out_file.write(pack('B', 0))
@@ -48,13 +52,26 @@ def out(data_type, node):
 			out_file.write(pack('B', 0))
 	elif data_type == "float":
 		out_file.write(pack('f', float(node.firstChild.nodeValue)))
+	elif data_type == "u1byte":
+		out_file.write(pack('B', int(node.firstChild.nodeValue)))
+	elif data_type == "u4byte":
+		out_file.write(pack('I', long(node.firstChild.nodeValue)))
 	elif definitions.has_key(data_type) == True:
 		for part in definitions[data_type]:
 			for node_part in node.childNodes:
+				found_it = False
 				if node_part.nodeType == Node.ELEMENT_NODE:
 					if node_part.tagName == part[0]:
 						out(part[1], node_part)
+						found_it = True
 						break
+			if found_it == False:
+				stack_path = ""
+				for stack_entry in out_call_stack:
+					stack_path += "/" + stack_entry
+				print "In file '" + options.in_file + "' I found no value for '" + stack_path + "/" + part[0] + "' of type '" + part[1] + "'."
+				exit(1)
+	out_call_stack.pop()
 
 # now parse the in file
 in_document = parse(options.in_file)

@@ -1,0 +1,20 @@
+<widget>
+	<widget-path>/root</widget-path>
+	<position>
+		<x>0.0</x>
+		<y>0.0</y>
+	</position>
+	<use-size>true</use-size>
+	<size>
+		<x>220.0</x>
+		<y>240.0</y>
+	</size>
+	<visible>true</visible>
+	<use-background-color>true</use-background-color>
+	<background-color>
+		<red>0.0</red>
+		<green>0.1</green>
+		<blue>0.17</blue>
+		<alpha>0.8</alpha>
+	</background-color>
+</widget>

@@ -3,7 +3,7 @@
 		<widget-path>/root</widget-path>
 		<position>
 			<x>0.0</x>
-			<y>0.0</y>
+			<y>20.0</y>
 		</position>
 		<use-size>false</use-size>
 		<size>
@@ -17,13 +17,13 @@
 			<blue>0.0</blue>
 			<alpha>0.0</alpha>
 		</background-color>
-		<visible>false</visible>
+		<visible>true</visible>
 	</widget>
 	<use-foreground-color>true</use-foreground-color>
 	<foreground-color>
-		<red>1.0</red>
-		<green>0.3</green>
-		<blue>0.3</blue>
+		<red>0.7</red>
+		<green>0.8</green>
+		<blue>1.0</blue>
 		<alpha>1.0</alpha>
 	</foreground-color>
 	<horizontal-alignment>0</horizontal-alignment>
