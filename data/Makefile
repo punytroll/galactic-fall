@@ -8,7 +8,7 @@ data.arx: .data .data/message_label.data
 	arxtouch $@ 1
 	arxmod $@ 1 -n "User Interface" -t 0 -st 0
 	arxmod $@ 0 -a "child" 1
-	arxadd $@ --uid 100 --name "Message Label" --type 1 --subtype 0 .data/message_label.data
+	arxadd $@ --uid 100 --name "Message Label" --type 1 --subtype 1 .data/message_label.data
 	arxmod $@ 1 -a "child" 100
 
 .data:
