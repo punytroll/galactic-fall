@@ -12,9 +12,13 @@
 	</vector2f>
 	
 	<widget>
-		<color4f identifier="foreground-color"/>
+		<string identifier="widget-path"/>
 		<vector2f identifier="position"/>
 		<boolean identifier="visible"/>
-		<string identifier="widget-path"/>
 	</widget>
+	
+	<label>
+		<widget identifier="widget"/>
+		<color4f identifier="foreground-color"/>
+	</label>
 </definitions>
