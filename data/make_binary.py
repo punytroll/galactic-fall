@@ -38,17 +38,16 @@ out_file = open(options.out_file, "wb")
 
 # the recursive output function
 def out(data_type, node):
-	print data_type
 	if data_type == "string":
 		out_file.write(node.firstChild.nodeValue)
-		out_file.write(pack('>B', 0))
+		out_file.write(pack('B', 0))
 	elif data_type == "boolean":
 		if node.firstChild.nodeValue == "true":
-			out_file.write(pack('>B', 1))
+			out_file.write(pack('B', 1))
 		else:
-			out_file.write(pack('>B', 0))
+			out_file.write(pack('B', 0))
 	elif data_type == "float":
-		out_file.write(pack('>f', float(node.firstChild.nodeValue)))
+		out_file.write(pack('f', float(node.firstChild.nodeValue)))
 	elif definitions.has_key(data_type) == True:
 		for part in definitions[data_type]:
 			for node_part in node.childNodes:
