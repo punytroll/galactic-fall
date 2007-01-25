@@ -15,4 +15,4 @@ data.arx: .data .data/message_label.data
 	mkdir $@
 
 .data/message_label.data: message_label.xml
-	python make_binary.py --definitions=definitions.xml --infile=$< --outfile=$@
+	python make_binary.py --definitions=definitions.xml --in=$< --out=$@
