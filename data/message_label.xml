@@ -1,0 +1,14 @@
+<widget>
+	<widget-path>/root</widget-path>
+	<foreground-color>
+		<red>1.0</red>
+		<green>0.3</green>
+		<blue>0.3</blue>
+		<alpha>1.0</alpha>
+	</foreground-color>
+	<position>
+		<x>0.0</x>
+		<y>0.0</y>
+	</position>
+	<visible>false</visible>
+</widget>
