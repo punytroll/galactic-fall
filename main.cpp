@@ -1059,7 +1059,6 @@ void ReadWidget(Arxx::BufferReader & Reader, Widget * NewWidget)
 	
 	Reader >> Path >> Name >> Position >> UseSize >> Size >> UseBackgroundColor >> BackgroundColor >> Visible;
 	NewWidget->SetName(Name);
-	std::cout << "Name=" << Name << "   Path=" << Path << std::endl;
 	if((Path != "") && (NewWidget->GetSupWidget() == 0))
 	{
 		Widget * SupWidget(g_UserInterface.GetWidget(Path));
