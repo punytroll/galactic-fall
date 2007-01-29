@@ -1,7 +1,6 @@
 #include <map>
 
 #include <GL/gl.h>
-#include <GL/glut.h>
 
 #include "button.h"
 #include "character.h"
@@ -171,9 +170,9 @@ bool MapDialog::OnClicked(Widget * EventSource)
 	return false;
 }
 
-bool MapDialog::OnKey(Widget * EventSource, int Key, int State)
+bool MapDialog::OnKey(Widget * EventSource, int KeyCode, int State)
 {
-	if(((Key == 27) || (Key == 13) || (Key == 'm')) && (State == GLUT_DOWN))
+	if(((KeyCode == 9 /* ESCAPE */) || (KeyCode == 36 /* RETURN */) || (KeyCode == 58 /* M */)) && (State == EV_DOWN))
 	{
 		Destroy();
 	}
@@ -183,15 +182,19 @@ bool MapDialog::OnKey(Widget * EventSource, int Key, int State)
 
 bool MapDialog::OnMouseButton(Widget * EventSource, int Button, int State, float X, float Y)
 {
-	if(Button == GLUT_WHEEL_UP)
+	if((Button == 4 /* WHEEL_UP */) && (State == EV_DOWN))
 	{
 		m_Scale *= 1.1f;
+		
+		return true;
 	}
-	else if(Button == GLUT_WHEEL_DOWN)
+	else if((Button == 5 /* WHEEL_DOWN */) && (State == EV_DOWN))
 	{
 		m_Scale *= 0.9f;
+		
+		return true;
 	}
-	else if(Button == GLUT_LEFT_BUTTON)
+	else if((Button == 1 /* LEFT */) && (State == EV_UP))
 	{
 		X -= GetSize().m_V.m_A[0] / 2;
 		Y -= 15.0f + GetSize().m_V.m_A[1] / 2;
@@ -212,6 +215,8 @@ bool MapDialog::OnMouseButton(Widget * EventSource, int Button, int State, float
 				break;
 			}
 		}
+		
+		return true;
 	}
 	
 	return false;

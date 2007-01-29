@@ -1,8 +1,7 @@
-#include <GL/glut.h>
-
 #include "button.h"
 #include "clicked_listener.h"
 #include "color.h"
+#include "globals.h"
 
 Button::Button(Widget * SupWidget) :
 	Widget(SupWidget)
@@ -23,7 +22,7 @@ void Button::AddClickedListener(ClickedListener * ClickedListener)
 
 bool Button::OnMouseButton(Widget * EventSource, int Button, int State, float X, float Y)
 {
-	if((Button == GLUT_LEFT_BUTTON) && (State == GLUT_UP))
+	if((Button == 1 /* LEFT */) && (State == EV_UP))
 	{
 		for(std::list< ClickedListener * >::iterator ClickedListenerIterator = m_ClickedListeners.begin(); ClickedListenerIterator != m_ClickedListeners.end(); ++ClickedListenerIterator)
 		{

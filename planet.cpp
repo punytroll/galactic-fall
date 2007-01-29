@@ -1,5 +1,5 @@
 #include <GL/gl.h>
-#include <GL/glut.h>
+#include <GL/glu.h>
 
 #include "commodity.h"
 #include "planet.h"
@@ -64,7 +64,11 @@ void Planet::Draw(void) const
 {
 	glPushMatrix();
 	glTranslatef(m_Position.m_V.m_A[0], m_Position.m_V.m_A[1], 0.0f);
-	glutSolidSphere(m_Size / 2.0f, 40, 8);
+	
+	GLUquadric * Quadric(gluNewQuadric());
+	
+	gluSphere(Quadric, m_Size / 2.0f, 40, 8);
+	gluDeleteQuadric(Quadric);
 	glPopMatrix();
 }
 
