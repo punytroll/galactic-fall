@@ -1235,7 +1235,7 @@ void ProcessEvents(void)
 			}
 		case MotionNotify:
 			{
-				std::cout << "Motion:    x=" << Event.xbutton.x << "   y=" << Event.xbutton.y << std::endl;
+				std::cout << "Motion:         x=" << Event.xbutton.x << "   y=" << Event.xbutton.y << std::endl;
 				MouseMotion(Event.xmotion.x, Event.xmotion.y);
 				
 				break;
@@ -1256,14 +1256,14 @@ void ProcessEvents(void)
 			}
 		case KeyPress:
 			{
-				std::cout << "KeyPress:    state=" << Event.xkey.state << "   keycode=" << Event.xkey.keycode << std::endl;
+				std::cout << "KeyPress:       state=" << Event.xkey.state << "   keycode=" << Event.xkey.keycode << std::endl;
 				KeyDown(Event.xkey.keycode);
 				
 				break;
 			}
 		case KeyRelease:
 			{
-				std::cout << "KeyRelease:  state=" << Event.xkey.state << "   keycode=" << Event.xkey.keycode << std::endl;
+				std::cout << "KeyRelease:     state=" << Event.xkey.state << "   keycode=" << Event.xkey.keycode << std::endl;
 				KeyUp(Event.xkey.keycode);
 				
 				break;
