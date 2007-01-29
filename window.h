@@ -7,7 +7,7 @@
 
 class Label;
 
-class WWindow : virtual public MouseButtonListener, public MouseMotionListener, public Widget
+class WWindow : virtual public MouseButtonListener, virtual public MouseMotionListener, public Widget
 {
 public:
 	WWindow(Widget * SupWidget, const std::string & Title);

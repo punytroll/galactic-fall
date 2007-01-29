@@ -53,22 +53,13 @@ const PlanetCommodity * TradeCenterCommodity::GetPlanetCommodity(void) const
 }
 
 TradeCenterDialog::TradeCenterDialog(Widget * SupWidget, Planet * Planet) :
-	Widget(SupWidget),
+	WWindow(SupWidget, "Trade Center: " + Planet->GetName()),
 	m_Planet(Planet),
 	m_SelectedTradeCenterCommodity(0)
 {
 	SetPosition(math3d::vector2f(600.0f, 100.0f));
 	SetSize(math3d::vector2f(500.0f, 330.0f));
-	SetBackgroundColor(Color(0.2f, 0.2f, 0.2f));
 	AddKeyListener(this);
-	
-	Label * TitleLabel(new Label(this, "Trace Center: " + m_Planet->GetName()));
-	
-	TitleLabel->SetPosition(math3d::vector2f(10.0f, 10.0f));
-	TitleLabel->SetSize(math3d::vector2f(480.0f, 20.0f));
-	TitleLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
-	TitleLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
-	TitleLabel->SetBackgroundColor(Color(0.2f, 0.2f, 0.4f));
 	m_OKButton = new Button(this);
 	m_OKButton->SetPosition(math3d::vector2f(390.0f, 300.0f));
 	m_OKButton->SetSize(math3d::vector2f(100.0f, 20.0f));
@@ -218,6 +209,10 @@ bool TradeCenterDialog::OnKey(Widget * EventSource, int Key, int State)
 
 bool TradeCenterDialog::OnMouseButton(Widget * EventSource, int Button, int State, float X, float Y)
 {
+	if(WWindow::OnMouseButton(EventSource, Button, State, X, Y) == true)
+	{
+		return true;
+	}
 	if((Button == 1 /* LEFT */) && (State == EV_DOWN))
 	{
 		TradeCenterCommodity * SelectedTradeCenterCommodity(dynamic_cast< TradeCenterCommodity * >(EventSource));
@@ -240,6 +235,8 @@ bool TradeCenterDialog::OnMouseButton(Widget * EventSource, int Button, int Stat
 
 void TradeCenterDialog::OnMouseEnter(Widget * EventSource)
 {
+	WWindow::OnMouseEnter(EventSource);
+	
 	TradeCenterCommodity * EnteredTradeCenterCommodity(dynamic_cast< TradeCenterCommodity * >(EventSource));
 	
 	if((EnteredTradeCenterCommodity != 0) && (EnteredTradeCenterCommodity != m_SelectedTradeCenterCommodity))
@@ -250,6 +247,8 @@ void TradeCenterDialog::OnMouseEnter(Widget * EventSource)
 
 void TradeCenterDialog::OnMouseLeave(Widget * EventSource)
 {
+	WWindow::OnMouseLeave(EventSource);
+	
 	TradeCenterCommodity * LeftTradeCenterCommodity(dynamic_cast< TradeCenterCommodity * >(EventSource));
 	
 	if((LeftTradeCenterCommodity != 0) && (LeftTradeCenterCommodity != m_SelectedTradeCenterCommodity))

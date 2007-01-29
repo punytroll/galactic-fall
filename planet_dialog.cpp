@@ -10,22 +10,13 @@
 #include "trade_center_dialog.h"
 
 PlanetDialog::PlanetDialog(Widget * SupWidget, Planet * Planet) :
-	Widget(SupWidget),
+	WWindow(SupWidget, "Planet: " + Planet->GetName()),
 	m_Planet(Planet),
 	m_TradeCenterDialog(0)
 {
 	SetPosition(math3d::vector2f(50.0f, 50.0f));
 	SetSize(math3d::vector2f(500.0f, 330.0f));
-	SetBackgroundColor(Color(0.2f, 0.2f, 0.2f));
 	AddKeyListener(this);
-	
-	Label * TitleLabel(new Label(this, "Planet: " + m_Planet->GetName()));
-	
-	TitleLabel->SetPosition(math3d::vector2f(10.0f, 10.0f));
-	TitleLabel->SetSize(math3d::vector2f(480.0f, 20.0f));
-	TitleLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
-	TitleLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
-	TitleLabel->SetBackgroundColor(Color(0.2f, 0.2f, 0.4f));
 	m_DescriptionLabel = new Label(this, m_Planet->GetDescription());
 	m_DescriptionLabel->SetPosition(math3d::vector2f(120.0f, 40.0f));
 	m_DescriptionLabel->SetSize(math3d::vector2f(360.0f, 100.0f));
@@ -105,7 +96,7 @@ bool PlanetDialog::OnClicked(Widget * EventSource)
 
 void PlanetDialog::OnDestroy(Widget * EventSource)
 {
-	Widget::OnDestroy(EventSource);
+	WWindow::OnDestroy(EventSource);
 	if(EventSource == m_TradeCenterDialog)
 	{
 		m_TradeCenterDialog = 0;
