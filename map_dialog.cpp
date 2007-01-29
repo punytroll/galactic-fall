@@ -15,25 +15,15 @@
 #include "user_interface.h"
 
 MapDialog::MapDialog(Widget * SupWidget, System * System) :
-	Widget(SupWidget),
+	WWindow(SupWidget, "Map: " + System->GetName()),
 	m_System(System),
 	m_Scale(5.0f),
-	m_SelectedSystem(0),
-	m_Grabbed(0)
+	m_SelectedSystem(0)
 {
 	SetPosition(math3d::vector2f(70.0f, 400.0f));
 	SetSize(math3d::vector2f(500.0f, 530.0f));
-	SetBackgroundColor(Color(0.2f, 0.2f, 0.2f));
 	AddKeyListener(this);
 	AddMouseButtonListener(this);
-	m_TitleLabel = new Label(this, "Map: " + m_System->GetName());
-	m_TitleLabel->SetPosition(math3d::vector2f(10.0f, 10.0f));
-	m_TitleLabel->SetSize(math3d::vector2f(480.0f, 20.0f));
-	m_TitleLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
-	m_TitleLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
-	m_TitleLabel->SetBackgroundColor(Color(0.2f, 0.2f, 0.4f));
-	m_TitleLabel->AddMouseButtonListener(this);
-	m_TitleLabel->AddMouseMotionListener(this);
 	m_OKButton = new Button(this);
 	m_OKButton->SetPosition(math3d::vector2f(390.0f, 500.0f));
 	m_OKButton->SetSize(math3d::vector2f(100.0f, 20.0f));
@@ -47,7 +37,7 @@ MapDialog::MapDialog(Widget * SupWidget, System * System) :
 
 void MapDialog::Draw(void) const
 {
-	Widget::Draw();
+	WWindow::Draw();
 	
 	math3d::vector2f Middle(GetSize() / 2);
 	
@@ -184,6 +174,10 @@ bool MapDialog::OnKey(Widget * EventSource, int KeyCode, int State)
 
 bool MapDialog::OnMouseButton(Widget * EventSource, int Button, int State, float X, float Y)
 {
+	if(WWindow::OnMouseButton(EventSource, Button, State, X, Y) == true)
+	{
+		return true;
+	}
 	if(EventSource == this)
 	{
 		if((Button == 4 /* WHEEL_UP */) && (State == EV_DOWN))
@@ -223,33 +217,6 @@ bool MapDialog::OnMouseButton(Widget * EventSource, int Button, int State, float
 			return true;
 		}
 	}
-	else if(EventSource == m_TitleLabel)
-	{
-		if(Button == 1)
-		{
-			if(State == EV_DOWN)
-			{
-				m_GrabPosition.set(X, Y);
-				g_UserInterface.SetCaptureWidget(m_TitleLabel);
-				m_Grabbed = m_TitleLabel;
-			}
-			else
-			{
-				g_UserInterface.ReleaseCaptureWidget();
-				m_Grabbed = 0;
-			}
-			
-			return true;
-		}
-	}
 	
 	return false;
-}
-
-void MapDialog::OnMouseMotion(Widget * EventSource, float X, float Y)
-{
-	if((EventSource == m_TitleLabel) && (m_Grabbed == m_TitleLabel))
-	{
-		SetPosition(GetPosition() + math3d::vector2f(X, Y) - m_GrabPosition);
-	}
 }
