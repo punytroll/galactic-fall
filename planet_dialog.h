@@ -2,16 +2,15 @@
 #define PLANET_DIALOG_H
 
 #include "clicked_listener.h"
-#include "destroy_listener.h"
 #include "key_listener.h"
-#include "widget.h"
+#include "window.h"
 
 class Button;
 class Label;
 class Planet;
 class TradeCenterDialog;
 
-class PlanetDialog : public ClickedListener, public KeyListener, public Widget
+class PlanetDialog : public ClickedListener, public KeyListener, public WWindow
 {
 public:
 	PlanetDialog(Widget * SupWidget, Planet * Planet);

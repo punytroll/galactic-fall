@@ -5,14 +5,14 @@
 #include "key_listener.h"
 #include "mouse_button_listener.h"
 #include "mouse_motion_listener.h"
-#include "widget.h"
+#include "window.h"
 
 class Button;
 class Label;
 class Planet;
 class TradeCenterCommodity;
 
-class TradeCenterDialog : public ClickedListener, public KeyListener, public MouseButtonListener, public MouseMotionListener, public Widget
+class TradeCenterDialog : public ClickedListener, public KeyListener, virtual public MouseButtonListener, virtual public MouseMotionListener, public WWindow
 {
 public:
 	TradeCenterDialog(Widget * SupWidget, Planet * Planet);
