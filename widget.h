@@ -34,6 +34,7 @@ public:
 	// getters
 	const Color & GetBackgroundColor(void) const;
 	const math3d::vector2f GetPosition(void) const;
+	math3d::vector2f GetGlobalPosition(void) const;
 	const math3d::vector2f GetSize(void) const;
 	const std::string & GetName(void) const;
 	Widget * GetRootWidget(void);
