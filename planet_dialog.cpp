@@ -115,7 +115,7 @@ void PlanetDialog::OnDestroy(Widget * EventSource)
 
 bool PlanetDialog::OnKey(Widget * EventSource, int KeyCode, int State)
 {
-	if(((KeyCode == 9 /* ESCAPE */) || (KeyCode == 36 /* RETURN */) || (KeyCode == 46 /* L */)) && (State == EV_DOWN))
+	if(((KeyCode == 9 /* ESCAPE */) || (KeyCode == 36 /* RETURN */)) && (State == EV_DOWN))
 	{
 		Destroy();
 	}

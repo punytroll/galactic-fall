@@ -135,6 +135,10 @@ void LoadSystemFromElement(SystemManager * SystemManager, const Element * System
 				{
 					NewPlanet->SetFuelPrice(from_string_cast< float >(PlanetProperty->GetAttribute("value")));
 				}
+				else if(PlanetProperty->GetName() == "landing-fee")
+				{
+					NewPlanet->SetLandingFee(from_string_cast< float >(PlanetProperty->GetAttribute("value")));
+				}
 				++PlanetPropertyIterator;
 			}
 		}

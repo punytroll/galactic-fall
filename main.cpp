@@ -270,6 +270,8 @@ void Render(void)
 		}
 		// player ship has been updated, display new fuel
 		g_FuelLabel->SetString("Fuel: " + to_string_cast(100.0f * g_PlayerShip->GetFuel() / g_PlayerShip->GetFuelCapacity()) + "%");
+		// display credits in every cycle
+		g_CreditsLabel->SetString("Credits: " + to_string_cast(g_PlayerCharacter->GetCredits()));
 	}
 	glClear(GL_COLOR_BUFFER_BIT);
 	glViewport(0, 0, static_cast< GLsizei >(g_Width), static_cast< GLsizei >(g_Height));
@@ -498,8 +500,6 @@ public:
 			SelectLinkedSystem(0);
 			SelectPlanet(0);
 			g_PlayerShip->m_Velocity.set(0.0f, 0.0f);
-			g_CreditsLabel->SetString("Credits: " + to_string_cast(g_PlayerCharacter->GetCredits()));
-			g_FuelLabel->SetString("Fuel: " + to_string_cast(100.0f * g_PlayerShip->GetFuel() / g_PlayerShip->GetFuelCapacity()));
 			g_InputFocus->m_Accelerate = false;
 			g_InputFocus->m_TurnLeft = false;
 			g_InputFocus->m_TurnRight = false;
@@ -832,10 +832,18 @@ void KeyDown(unsigned int KeyCode)
 						// test speed (should be relative speed but planets have no speed, yet)
 						if(g_PlayerShip->GetVelocity().length_squared() <= 2.0f)
 						{
-							g_Pause = true;
-							g_PlanetDialog = new PlanetDialog(g_UserInterface.GetRootWidget(), SelectedPlanet);
-							g_PlanetDialog->GrabKeyFocus();
-							g_PlanetDialog->AddDestroyListener(&g_GlobalDestroyListener);
+							if(g_PlayerCharacter->GetCredits() >= SelectedPlanet->GetLandingFee())
+							{
+								g_PlayerCharacter->RemoveCredits(SelectedPlanet->GetLandingFee());
+								g_Pause = true;
+								g_PlanetDialog = new PlanetDialog(g_UserInterface.GetRootWidget(), SelectedPlanet);
+								g_PlanetDialog->GrabKeyFocus();
+								g_PlanetDialog->AddDestroyListener(&g_GlobalDestroyListener);
+							}
+							else
+							{
+								SetMessage("You don't have enough credits to pay the landing fee.");
+							}
 						}
 						else
 						{
@@ -1334,7 +1342,6 @@ int main(int argc, char **argv)
 	g_InputFocus = g_PlayerShip;
 	EnterSystem(g_SystemManager.Get("sol"), 0);
 	SetTimeWarp(1.0f);
-	g_CreditsLabel->SetString("Credits: " + to_string_cast(g_PlayerCharacter->GetCredits()));
 	// camera setup
 	g_Camera.SetPosition(0.0f, 0.0f, 200.0f);
 	g_Camera.SetFocus(g_PlayerShip);
