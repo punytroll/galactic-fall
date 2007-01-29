@@ -6,17 +6,33 @@
 UserInterface::UserInterface(void) :
 	m_RootWidget(new Widget(0))
 {
+	m_RootWidget->AddDestroyListener(this);
 }
 
 void UserInterface::Draw(void) const
 {
-	if(m_RootWidget->IsVisible() == true)
+	if((m_RootWidget != 0) && (m_RootWidget->IsVisible() == true))
 	{
 		glPushMatrix();
 		glTranslatef(m_RootWidget->GetPosition().m_V.m_A[0], m_RootWidget->GetPosition().m_V.m_A[1], 0.0f);
 		m_RootWidget->Draw();
 		glPopMatrix();
 	}
+}
+
+void UserInterface::SetCaptureWidget(Widget * Widget)
+{
+	if(m_CaptureWidget == 0)
+	{
+		m_CaptureWidget = Widget;
+		m_CaptureWidget->AddDestroyListener(this);
+	}
+}
+
+void UserInterface::ReleaseCaptureWidget(void)
+{
+	m_CaptureWidget->RemoveDestroyListener(this);
+	m_CaptureWidget = 0;
 }
 
 Widget * UserInterface::GetWidget(const std::string & Path)
@@ -27,7 +43,7 @@ Widget * UserInterface::GetWidget(const std::string & Path)
 	}
 	
 	std::string::size_type Position(1);
-	Widget * Root(GetRootWidget());
+	Widget * Root(m_RootWidget);
 	
 	while((Root != 0) && (Position < Path.length()))
 	{
@@ -42,16 +58,25 @@ Widget * UserInterface::GetWidget(const std::string & Path)
 
 bool UserInterface::MouseButton(int Button, int State, float X, float Y)
 {
-	const math3d::vector2f & LeftTopCorner(m_RootWidget->GetPosition());
-	math3d::vector2f RightBottomCorner(LeftTopCorner + m_RootWidget->GetSize());
-	
-	if((X >= LeftTopCorner.m_V.m_A[0]) && (X < RightBottomCorner.m_V.m_A[0]) && (Y >= LeftTopCorner.m_V.m_A[1]) && (Y < RightBottomCorner.m_V.m_A[1]))
+	if(m_CaptureWidget == 0)
 	{
-		return m_RootWidget->MouseButton(Button, State, X - LeftTopCorner.m_V.m_A[0], Y - LeftTopCorner.m_V.m_A[1]);
+		const math3d::vector2f & LeftTopCorner(m_RootWidget->GetPosition());
+		math3d::vector2f RightBottomCorner(LeftTopCorner + m_RootWidget->GetSize());
+		
+		if((X >= LeftTopCorner.m_V.m_A[0]) && (X < RightBottomCorner.m_V.m_A[0]) && (Y >= LeftTopCorner.m_V.m_A[1]) && (Y < RightBottomCorner.m_V.m_A[1]))
+		{
+			return m_RootWidget->MouseButton(Button, State, X - LeftTopCorner.m_V.m_A[0], Y - LeftTopCorner.m_V.m_A[1]);
+		}
+		else
+		{
+			return false;
+		}
 	}
 	else
 	{
-		return false;
+		math3d::vector2f TopLeftCorner(m_CaptureWidget->GetGlobalPosition());
+		
+		return m_CaptureWidget->MouseButton(Button, State, X - TopLeftCorner.m_V.m_A[0], Y - TopLeftCorner.m_V.m_A[1]);
 	}
 }
 
@@ -62,24 +87,46 @@ bool UserInterface::Key(int Key, int State)
 
 void UserInterface::MouseMotion(float X, float Y)
 {
-	const math3d::vector2f & LeftTopCorner(m_RootWidget->GetPosition());
-	math3d::vector2f RightBottomCorner(LeftTopCorner + m_RootWidget->GetSize());
-	
-	if((X >= LeftTopCorner.m_V.m_A[0]) && (X < RightBottomCorner.m_V.m_A[0]) && (Y >= LeftTopCorner.m_V.m_A[1]) && (Y < RightBottomCorner.m_V.m_A[1]))
+	if(m_CaptureWidget == 0)
 	{
-		if(m_HoverWidget != m_RootWidget)
+		const math3d::vector2f & LeftTopCorner(m_RootWidget->GetPosition());
+		math3d::vector2f RightBottomCorner(LeftTopCorner + m_RootWidget->GetSize());
+		
+		if((X >= LeftTopCorner.m_V.m_A[0]) && (X < RightBottomCorner.m_V.m_A[0]) && (Y >= LeftTopCorner.m_V.m_A[1]) && (Y < RightBottomCorner.m_V.m_A[1]))
 		{
-			m_HoverWidget = m_RootWidget;
-			m_RootWidget->MouseEnter();
+			if(m_HoverWidget != m_RootWidget)
+			{
+				m_HoverWidget = m_RootWidget;
+				m_RootWidget->MouseEnter();
+			}
+			m_RootWidget->MouseMotion(X, Y);
 		}
-		m_RootWidget->MouseMotion(X, Y);
+		else
+		{
+			if(m_HoverWidget == m_RootWidget)
+			{
+				m_HoverWidget = 0;
+				m_RootWidget->MouseLeave();
+			}
+		}
 	}
 	else
 	{
-		if(m_HoverWidget == m_RootWidget)
-		{
-			m_HoverWidget = 0;
-			m_RootWidget->MouseLeave();
-		}
+		math3d::vector2f TopLeftCorner(m_CaptureWidget->GetGlobalPosition());
+		
+		m_CaptureWidget->MouseMotion(X - TopLeftCorner.m_V.m_A[0], Y - TopLeftCorner.m_V.m_A[1]);
+	}
+}
+
+void UserInterface::OnDestroy(Widget * EventSource)
+{
+	if(EventSource == m_CaptureWidget)
+	{
+		m_CaptureWidget = 0;
+	}
+	else if(EventSource == m_RootWidget)
+	{
+		m_RootWidget = 0;
+		m_HoverWidget = 0;
 	}
 }
