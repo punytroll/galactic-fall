@@ -13,6 +13,6 @@
 
 * Add landing fees.
 
-* Add different fuel prices per planet.
+* Rename string_cast to from_string_cast.
 
 * Make fuel a normal good.

@@ -32,8 +32,10 @@ public:
 	float GetSize(void) const;
 	const std::vector< PlanetCommodity * > & GetCommodities(void) const;
 	bool GetAllowRefuelling(void) const;
+	float GetFuelPrice(void) const;
 	void SetName(const std::string & Name);
 	void SetAllowRefuelling(bool AllowRefuelling);
+	void SetFuelPrice(float FuelPrice);
 	void SetDescription(const std::string & Description);
 	void SetSize(const float & Size);
 	virtual void Draw(void) const;
@@ -44,6 +46,7 @@ private:
 	std::string m_Description;
 	float m_Size;
 	bool m_AllowRefuelling;
+	float m_FuelPrice;
 	std::vector< PlanetCommodity * > m_Commodities;
 };
 
@@ -80,6 +83,16 @@ inline const std::vector< PlanetCommodity * > & Planet::GetCommodities(void) con
 inline bool Planet::GetAllowRefuelling(void) const
 {
 	return m_AllowRefuelling;
+}
+
+inline float Planet::GetFuelPrice(void) const
+{
+	return m_FuelPrice;
+}
+
+inline void Planet::SetFuelPrice(float FuelPrice)
+{
+	m_FuelPrice = FuelPrice;
 }
 
 #endif

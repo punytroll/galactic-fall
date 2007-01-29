@@ -131,6 +131,10 @@ void LoadSystemFromElement(SystemManager * SystemManager, const Element * System
 				{
 					NewPlanet->SetSize(string_cast< float >(PlanetProperty->GetAttribute("value")));
 				}
+				else if(PlanetProperty->GetName() == "fuel-price")
+				{
+					NewPlanet->SetFuelPrice(string_cast< float >(PlanetProperty->GetAttribute("value")));
+				}
 				++PlanetPropertyIterator;
 			}
 		}
