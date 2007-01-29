@@ -7,18 +7,27 @@ class Character
 {
 public:
 	Character(void);
-	void AddCredits(const float & Credits);
-	bool RemoveCredits(const float & Credits);
+	// getters
 	const float & GetCredits(void) const;
 	MapKnowledge * GetMapKnowledge(void);
+	// setters
+	void SetCredits(float Credits);
+	// modifiers
+	void AddCredits(const float & Credits);
+	bool RemoveCredits(const float & Credits);
 private:
-	float m_Credits;
 	MapKnowledge * m_MapKnowledge;
+	float m_Credits;
 };
 
 inline const float & Character::GetCredits(void) const
 {
 	return m_Credits;
+}
+
+inline void Character::SetCredits(float Credits)
+{
+	m_Credits = Credits;
 }
 
 inline MapKnowledge * Character::GetMapKnowledge(void)
