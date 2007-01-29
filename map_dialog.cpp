@@ -7,11 +7,11 @@
 #include "color.h"
 #include "draw_text.h"
 #include "globals.h"
-#include "label.h"
 #include "map_dialog.h"
 #include "map_knowledge.h"
 #include "system.h"
 #include "system_manager.h"
+#include "title_bar.h"
 
 MapDialog::MapDialog(Widget * SupWidget, System * System) :
 	Widget(SupWidget),
@@ -25,13 +25,10 @@ MapDialog::MapDialog(Widget * SupWidget, System * System) :
 	AddKeyListener(this);
 	AddMouseButtonListener(this);
 	
-	Label * TitleLabel(new Label(this, "Map: " + m_System->GetName()));
+	TitleBar * Title(new TitleBar(this, "Map: " + m_System->GetName()));
 	
-	TitleLabel->SetPosition(math3d::vector2f(10.0f, 10.0f));
-	TitleLabel->SetSize(math3d::vector2f(480.0f, 20.0f));
-	TitleLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
-	TitleLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
-	TitleLabel->SetBackgroundColor(Color(0.2f, 0.2f, 0.4f));
+	Title->SetPosition(math3d::vector2f(10.0f, 10.0f));
+	Title->SetSize(math3d::vector2f(480.0f, 20.0f));
 	m_OKButton = new Button(this);
 	m_OKButton->SetPosition(math3d::vector2f(390.0f, 500.0f));
 	m_OKButton->SetSize(math3d::vector2f(100.0f, 20.0f));
