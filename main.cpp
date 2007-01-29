@@ -560,7 +560,7 @@ void EnterSystem(System * NewSystem, System * OldSystem)
 	SelectLinkedSystem(0);
 	SelectPlanet(0);
 	g_PlayerCharacter->GetMapKnowledge()->AddExploredSystem(g_CurrentSystem);
-	g_FuelLabel->SetString("Fuel: " + to_string_cast(100.0f * g_PlayerShip->GetFuel() / g_PlayerShip->GetFuelCapacity()));
+	g_FuelLabel->SetString("Fuel: " + to_string_cast(100.0f * g_PlayerShip->GetFuel() / g_PlayerShip->GetFuelCapacity()) + "%");
 }
 
 void SetTimeWarp(float TimeWarp)
