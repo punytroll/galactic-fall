@@ -686,6 +686,8 @@ void KeyDown(unsigned int KeyCode)
 					}
 				}
 			}
+			
+			break;
 		}
 	case 33: // Key: P
 		{
