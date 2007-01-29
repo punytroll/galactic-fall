@@ -7,8 +7,8 @@ class DOMReader : public XMLParser
 {
 public:
 	DOMReader(std::istream & Stream, Document * Document, Element ** RootElement);
-	virtual void elementStart(const std::string & ElementName, const std::map< std::string, std::string > & Attributes);
-	virtual void elementEnd(const std::string & ElementName);
+	virtual void ElementStart(const std::string & Name, const std::map< std::string, std::string > & Attributes);
+	virtual void ElementEnd(const std::string & Name);
 private:
 	Document * m_Document;
 	Element ** m_RootElement;
@@ -22,20 +22,20 @@ DOMReader::DOMReader(std::istream & Stream, Document * Document, Element ** Root
 {
 }
 
-void DOMReader::elementStart(const std::string & ElementName, const std::map< std::string, std::string > & Attributes)
+void DOMReader::ElementStart(const std::string & Name, const std::map< std::string, std::string > & Attributes)
 {
 	if(*m_RootElement == 0)
 	{
 		// we've got the root element
-		m_ElementStack.push(*m_RootElement = new Element(m_Document, 0, ElementName, Attributes));
+		m_ElementStack.push(*m_RootElement = new Element(m_Document, 0, Name, Attributes));
 	}
 	else
 	{
-		m_ElementStack.push(new Element(m_Document, m_ElementStack.top(), ElementName, Attributes));
+		m_ElementStack.push(new Element(m_Document, m_ElementStack.top(), Name, Attributes));
 	}
 }
 
-void DOMReader::elementEnd(const std::string & ElementName)
+void DOMReader::ElementEnd(const std::string & Name)
 {
 	m_ElementStack.pop();
 }
@@ -87,7 +87,7 @@ Document::Document(std::istream & Stream) :
 {
 	DOMReader DOMReader(Stream, this, &m_RootElement);
 	
-	DOMReader.parse();
+	DOMReader.Parse();
 }
 
 const Element * Document::GetRootElement(void) const
