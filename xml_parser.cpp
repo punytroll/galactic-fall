@@ -1,32 +1,7 @@
-/**
- * Copyright (C) 2006  Hagen M�ius
- * 
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-**/
-
-/**
- * This is version 1.0.0 of the xml parser.
- * 
- * With modifications for escpae velocity.
- *  Renamed the xmlparser.h and xmlparser.cpp to xml_parser.h and xml_parser.cpp.
- **/
-
 #include "xml_parser.h"
 
-XMLParser::XMLParser(std::istream & inputStream) :
-	inputStream(inputStream)
+XMLParser::XMLParser(std::istream & InputStream) :
+	m_InputStream(InputStream)
 {
 }
 
@@ -34,7 +9,7 @@ XMLParser::~XMLParser(void)
 {
 }
 
-void XMLParser::parse(void)
+void XMLParser::Parse(void)
 {
 	std::map< std::string, std::string > Attributes;
 	std::string sElementName;
@@ -47,7 +22,7 @@ void XMLParser::parse(void)
 	bool bIsEndingElement(false);
 	bool bElementEnds(false);
 	
-	while(inputStream.get(cChar))
+	while(m_InputStream.get(cChar))
 	{
 		switch(cChar)
 		{
@@ -121,16 +96,16 @@ void XMLParser::parse(void)
 				}
 				if(bIsEndingElement == true)
 				{
-					elementEnd(sElementName);
+					ElementEnd(sElementName);
 					sElementName = "";
 					bIsEndingElement = false;
 				}
 				else
 				{
-					elementStart(sElementName, Attributes);
+					ElementStart(sElementName, Attributes);
 					if(bElementEnds == true)
 					{
-						elementEnd(sElementName);
+						ElementEnd(sElementName);
 						bElementEnds = false;
 					}
 					sElementName = "";
@@ -179,10 +154,10 @@ void XMLParser::parse(void)
 	}
 }
 
-void XMLParser::elementStart(const std::string & elementName, const std::map< std::string, std::string > & attributes)
+void XMLParser::ElementStart(const std::string & Name, const std::map< std::string, std::string > & attributes)
 {
 }
 
-void XMLParser::elementEnd(const std::string & elementName)
+void XMLParser::ElementEnd(const std::string & Name)
 {
 }
