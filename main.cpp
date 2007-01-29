@@ -401,15 +401,15 @@ void Render(void)
 		for(std::list< Ship * >::const_iterator ShipIterator = Ships.begin(); ShipIterator != Ships.end(); ++ShipIterator)
 		{
 			// Ship is not an object yet
-			//~ if(*ShipIterator == g_TargetObject)
-			//~ {
-				//~ glColor3f(0.2f, 1.0f, 0.0f);
-			//~ }
+			if(*ShipIterator == g_TargetObject)
+			{
+				glColor3f(0.2f, 1.0f, 0.0f);
+			}
 			glVertex2f((*ShipIterator)->GetPosition().m_V.m_A[0], (*ShipIterator)->GetPosition().m_V.m_A[1]);
-			//~ if(*ShipIterator == g_TargetObject)
-			//~ {
-				//~ glColor3f(0.8f, 0.8f, 0.8f);
-			//~ }
+			if(*ShipIterator == g_TargetObject)
+			{
+				glColor3f(0.8f, 0.8f, 0.8f);
+			}
 		}
 		for(std::list< Cargo * >::const_iterator CargoIterator = Cargos.begin(); CargoIterator != Cargos.end(); ++CargoIterator)
 		{
@@ -481,6 +481,19 @@ void SelectCargo(Cargo * Cargo)
 	if(g_TargetObject != 0)
 	{
 		g_TargetLabel->SetString(Cargo->GetCommodity()->GetName());
+	}
+	else
+	{
+		g_TargetLabel->SetString("");
+	}
+}
+
+void SelectShip(Ship * Ship)
+{
+	g_TargetObject = Ship;
+	if(g_TargetObject != 0)
+	{
+		g_TargetLabel->SetString(Ship->GetShipClass()->GetIdentifier());
 	}
 	else
 	{
@@ -648,6 +661,42 @@ void KeyDown(unsigned int KeyCode)
 	case 24: // Key: Q
 		{
 			g_Quit = true;
+			
+			break;
+		}
+	case 27: // Key: R
+		{
+			const std::list< Ship * > & Ships(g_CurrentSystem->GetShips());
+			Ship * SelectedShip(dynamic_cast< Ship * >(g_TargetObject));
+			
+			if(SelectedShip == 0)
+			{
+				if(Ships.size() > 0)
+				{
+					SelectShip(Ships.front());
+				}
+			}
+			else
+			{
+				std::list< Ship * >::const_iterator ShipIterator(find(Ships.begin(), Ships.end(), SelectedShip));
+				
+				if(ShipIterator == Ships.end())
+				{
+					SelectShip(0);
+				}
+				else
+				{
+					++ShipIterator;
+					if(ShipIterator == Ships.end())
+					{
+						SelectShip(0);
+					}
+					else
+					{
+						SelectShip(*ShipIterator);
+					}
+				}
+			}
 			
 			break;
 		}

@@ -93,7 +93,7 @@ real_time_h = \
 
 ship_h = \
 	ship.h \
-	$(position_h) \
+	$(object_h) \
 	$(ship_class_h)
 
 ship_class_h = \

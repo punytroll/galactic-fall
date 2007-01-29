@@ -3,7 +3,8 @@
 #include "model.h"
 
 Model::Model(const std::string & Identifier) :
-	m_Identifier(Identifier)
+	m_Identifier(Identifier),
+	m_RadialSize(-1.0f)
 {
 }
 
@@ -28,9 +29,23 @@ void Model::Draw(void) const
 	glEnd();
 }
 
-const std::string & Model::GetIdentifier(void) const
+float Model::GetRadialSize(void) const
 {
-	return m_Identifier;
+	if(m_RadialSize < 0.0f)
+	{
+		for(std::vector< math3d::vector4f >::const_iterator PointInterator = m_Points.begin(); PointInterator != m_Points.end(); ++PointInterator)
+		{
+			float RadialSquare(PointInterator->length_squared());
+			
+			if(m_RadialSize < RadialSquare)
+			{
+				m_RadialSize = RadialSquare;
+			}
+		}
+		m_RadialSize = sqrt(m_RadialSize);
+	}
+	
+	return m_RadialSize;
 }
 
 std::vector< math3d::vector4f >::size_type Model::AddPoint(const math3d::vector4f & Point)

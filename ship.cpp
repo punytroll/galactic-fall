@@ -12,6 +12,7 @@ Ship::Ship(ShipClass * ShipClass) :
 	m_ShipClass(ShipClass),
 	m_Fuel(0.0f)
 {
+	SetRadialSize(m_ShipClass->GetModel()->GetRadialSize());
 }
 
 void Ship::Draw(void) const

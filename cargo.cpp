@@ -8,7 +8,7 @@ Cargo::Cargo(Model * Model, const Commodity * Commodity, const math3d::vector2f 
 	m_Commodity(Commodity),
 	m_Velocity(Velocity)
 {
-	SetRadialSize(0.867f);  // sqrt(sqr(0.5) + sqr(0.5) + sqr(0.5))
+	SetRadialSize(Model->GetRadialSize());
 	m_RotationAxis.set(static_cast< float >(random()) / RAND_MAX, static_cast< float >(random()) / RAND_MAX, static_cast< float >(random()) / RAND_MAX);
 	m_RotationAxis.normalize();
 	m_AngularPosition = static_cast< float >(random()) / RAND_MAX;
