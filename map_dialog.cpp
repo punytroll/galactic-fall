@@ -7,28 +7,33 @@
 #include "color.h"
 #include "draw_text.h"
 #include "globals.h"
+#include "label.h"
 #include "map_dialog.h"
 #include "map_knowledge.h"
 #include "system.h"
 #include "system_manager.h"
-#include "title_bar.h"
+#include "user_interface.h"
 
 MapDialog::MapDialog(Widget * SupWidget, System * System) :
 	Widget(SupWidget),
 	m_System(System),
 	m_Scale(5.0f),
-	m_SelectedSystem(0)
+	m_SelectedSystem(0),
+	m_Grabbed(0)
 {
 	SetPosition(math3d::vector2f(70.0f, 400.0f));
 	SetSize(math3d::vector2f(500.0f, 530.0f));
 	SetBackgroundColor(Color(0.2f, 0.2f, 0.2f));
 	AddKeyListener(this);
 	AddMouseButtonListener(this);
-	
-	TitleBar * Title(new TitleBar(this, "Map: " + m_System->GetName()));
-	
-	Title->SetPosition(math3d::vector2f(10.0f, 10.0f));
-	Title->SetSize(math3d::vector2f(480.0f, 20.0f));
+	m_TitleLabel = new Label(this, "Map: " + m_System->GetName());
+	m_TitleLabel->SetPosition(math3d::vector2f(10.0f, 10.0f));
+	m_TitleLabel->SetSize(math3d::vector2f(480.0f, 20.0f));
+	m_TitleLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
+	m_TitleLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
+	m_TitleLabel->SetBackgroundColor(Color(0.2f, 0.2f, 0.4f));
+	m_TitleLabel->AddMouseButtonListener(this);
+	m_TitleLabel->AddMouseMotionListener(this);
 	m_OKButton = new Button(this);
 	m_OKButton->SetPosition(math3d::vector2f(390.0f, 500.0f));
 	m_OKButton->SetSize(math3d::vector2f(100.0f, 20.0f));
@@ -179,42 +184,72 @@ bool MapDialog::OnKey(Widget * EventSource, int KeyCode, int State)
 
 bool MapDialog::OnMouseButton(Widget * EventSource, int Button, int State, float X, float Y)
 {
-	if((Button == 4 /* WHEEL_UP */) && (State == EV_DOWN))
+	if(EventSource == this)
 	{
-		m_Scale *= 1.1f;
-		
-		return true;
-	}
-	else if((Button == 5 /* WHEEL_DOWN */) && (State == EV_DOWN))
-	{
-		m_Scale *= 0.9f;
-		
-		return true;
-	}
-	else if((Button == 1 /* LEFT */) && (State == EV_UP))
-	{
-		X -= GetSize().m_V.m_A[0] / 2;
-		Y -= 15.0f + GetSize().m_V.m_A[1] / 2;
-		
-		const std::map< std::string, System * > & Systems(g_SystemManager.GetSystems());
-		
-		for(std::map< std::string, System * >::const_iterator SystemIterator = Systems.begin(); SystemIterator != Systems.end(); ++SystemIterator)
+		if((Button == 4 /* WHEEL_UP */) && (State == EV_DOWN))
 		{
-			math3d::vector2f Position(SystemIterator->second->GetPosition() - m_System->GetPosition());
+			m_Scale *= 1.1f;
 			
-			Position *= m_Scale;
-			Position.m_V.m_A[0] -= X;
-			Position.m_V.m_A[1] += Y;
-			if(Position.length_squared() < 40.0f)
-			{
-				m_SelectedSystem = SystemIterator->second;
-				
-				break;
-			}
+			return true;
 		}
-		
-		return true;
+		else if((Button == 5 /* WHEEL_DOWN */) && (State == EV_DOWN))
+		{
+			m_Scale *= 0.9f;
+			
+			return true;
+		}
+		else if((Button == 1 /* LEFT */) && (State == EV_UP))
+		{
+			X -= GetSize().m_V.m_A[0] / 2;
+			Y -= 15.0f + GetSize().m_V.m_A[1] / 2;
+			
+			const std::map< std::string, System * > & Systems(g_SystemManager.GetSystems());
+			
+			for(std::map< std::string, System * >::const_iterator SystemIterator = Systems.begin(); SystemIterator != Systems.end(); ++SystemIterator)
+			{
+				math3d::vector2f Position(SystemIterator->second->GetPosition() - m_System->GetPosition());
+				
+				Position *= m_Scale;
+				Position.m_V.m_A[0] -= X;
+				Position.m_V.m_A[1] += Y;
+				if(Position.length_squared() < 40.0f)
+				{
+					m_SelectedSystem = SystemIterator->second;
+					
+					break;
+				}
+			}
+			
+			return true;
+		}
+	}
+	else if(EventSource == m_TitleLabel)
+	{
+		if(Button == 1)
+		{
+			if(State == EV_DOWN)
+			{
+				m_GrabPosition.set(X, Y);
+				g_UserInterface.SetCaptureWidget(m_TitleLabel);
+				m_Grabbed = m_TitleLabel;
+			}
+			else
+			{
+				g_UserInterface.ReleaseCaptureWidget();
+				m_Grabbed = 0;
+			}
+			
+			return true;
+		}
 	}
 	
 	return false;
+}
+
+void MapDialog::OnMouseMotion(Widget * EventSource, float X, float Y)
+{
+	if((EventSource == m_TitleLabel) && (m_Grabbed == m_TitleLabel))
+	{
+		SetPosition(GetPosition() + math3d::vector2f(X, Y) - m_GrabPosition);
+	}
 }
