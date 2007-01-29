@@ -3,8 +3,14 @@
 
 /// DISCLAIMER: The intention of future development is to always create the more general concept of things so this file may someday be empty!
 
-#define GLUT_WHEEL_UP 3
-#define GLUT_WHEEL_DOWN 4
+#define EV_DOWN 1
+#define EV_UP 2
+
+#define EV_MOUSE_BUTTON_LEFT 1
+#define EV_MOUSE_BUTTON_RIGHT 2
+#define EV_MOUSE_BUTTON_MIDDLE 3
+#define EV_MOUSE_WHEEL_DOWN 4
+#define EV_MOUSE_WHEEL_UP 5
 
 class Character;
 class CommodityManager;

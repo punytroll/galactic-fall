@@ -176,12 +176,12 @@ clean:
 	$(RM) xml_puny_dom.o
 
 escapevelocity: buffer_reading.o button.o camera.o cargo.o character.o clicked_listener.o color.o commodity.o commodity_manager.o destroy_listener.o draw_text.o key_listener.o label.o main.o map_dialog.o map_knowledge.o model.o model_manager.o mouse_button_listener.o mouse_motion_listener.o object.o planet.o planet_dialog.o real_time.o ship.o ship_class.o ship_class_manager.o string_cast.o system.o system_manager.o trade_center_dialog.o user_interface.o widget.o xml_parser.o xml_puny_dom.o
-	$(CXX) $(LDFLAGS) `pkg-config --libs libarxx` $^ -lGL -lGLU -lglut -o $@
+	$(CXX) $(LDFLAGS) `pkg-config --libs libarxx` $^ -lGL -lGLU -o $@
 
 buffer_reading.o: buffer_reading.cpp $(buffer_reading_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags libarxx math3d` -c $< -o $@
 
-button.o: button.cpp $(button_h) $(clicked_listener_h) $(color_h)
+button.o: button.cpp $(button_h) $(clicked_listener_h) $(color_h) $(globals_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags math3d` -c $< -o $@
 
 camera.o: camera.cpp $(camera_h) $(position_h)

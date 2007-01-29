@@ -1,5 +1,3 @@
-#include <GL/glut.h>
-
 #include "button.h"
 #include "character.h"
 #include "color.h"
@@ -110,13 +108,13 @@ void PlanetDialog::OnDestroy(Widget * EventSource)
 	}
 }
 
-bool PlanetDialog::OnKey(Widget * EventSource, int Key, int State)
+bool PlanetDialog::OnKey(Widget * EventSource, int KeyCode, int State)
 {
-	if(((Key == 13) || (Key == 27) || (Key == 'l')) && (State == GLUT_DOWN))
+	if(((KeyCode == 9 /* ESCAPE */) || (KeyCode == 36 /* RETURN */) || (KeyCode == 46 /* L */)) && (State == EV_DOWN))
 	{
 		Destroy();
 	}
-	else if((Key == 't') && (State == GLUT_DOWN))
+	else if((KeyCode == 28 /* T */) && (State == EV_DOWN))
 	{
 		if(m_TradeCenterDialog == 0)
 		{

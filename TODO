@@ -1,0 +1,12 @@
+* When pressing C all cargo is ejected. But the C handler exhibits a few
+  shortcomings of the current system:
+	- We need a AddCargo() function. But cargo should be derieved from Object
+	  and thus this speciallized function should not needed.
+	- We create a new Cargo object. However the cargo object should be taken
+	  from the ship.
+	- The ship has no notion of Cargo objects only Cargo quatities. Place real
+	  objects in the ship.
+
+* Make windows movable with title handle.
+
+* Clip windows.

@@ -1,5 +1,3 @@
-#include <GL/glut.h>
-
 #include "button.h"
 #include "character.h"
 #include "commodity.h"
@@ -182,11 +180,11 @@ bool TradeCenterDialog::OnClicked(Widget * EventSource)
 
 bool TradeCenterDialog::OnKey(Widget * EventSource, int Key, int State)
 {
-	if(((Key == 13) || (Key == 27) || (Key == 't')) && (State == GLUT_DOWN))
+	if(((Key == 9 /* ESCAPE */) || (Key == 36 /* RETURN */) || (Key == 28 /* T */)) && (State == EV_DOWN))
 	{
 		Destroy();
 	}
-	else if((Key == 'b') && (m_SelectedTradeCenterCommodity != 0) && (State == GLUT_DOWN))
+	else if((Key == 56 /* B */) && (m_SelectedTradeCenterCommodity != 0) && (State == EV_DOWN))
 	{
 		float Price(m_SelectedTradeCenterCommodity->GetPlanetCommodity()->GetPrice());
 		
@@ -204,7 +202,7 @@ bool TradeCenterDialog::OnKey(Widget * EventSource, int Key, int State)
 			}
 		}
 	}
-	else if((Key == 's') && (m_SelectedTradeCenterCommodity != 0) && (State == GLUT_DOWN))
+	else if((Key == 39 /* S */) && (m_SelectedTradeCenterCommodity != 0) && (State == EV_DOWN))
 	{
 		if(g_PlayerShip->RemoveCargo(m_SelectedTradeCenterCommodity->GetPlanetCommodity()->GetCommodity(), 1.0f) == true)
 		{
@@ -220,7 +218,7 @@ bool TradeCenterDialog::OnKey(Widget * EventSource, int Key, int State)
 
 bool TradeCenterDialog::OnMouseButton(Widget * EventSource, int Button, int State, float X, float Y)
 {
-	if((Button == GLUT_LEFT_BUTTON) && (State == GLUT_DOWN))
+	if((Button == 1 /* LEFT */) && (State == EV_DOWN))
 	{
 		TradeCenterCommodity * SelectedTradeCenterCommodity(dynamic_cast< TradeCenterCommodity * >(EventSource));
 		

@@ -6,7 +6,11 @@
 #include <sstream>
 #include <vector>
 
-#include <GL/glut.h>
+#include <X11/keysym.h>
+#include <GL/glx.h>
+#include <GL/gl.h>
+#include <GL/glu.h>
+
 #include <math3d/vector2f.h>
 #include <math3d/vector4f.h>
 
@@ -69,6 +73,7 @@ System * g_CurrentSystem;
 System * g_SelectedLinkedSystem(0);
 Object * g_TargetObject(0);
 float g_TimeWarp(1.0f);
+bool g_Quit(false);
 bool g_Pause(false);
 PlanetDialog * g_PlanetDialog;
 MapDialog * g_MapDialog;
@@ -78,6 +83,9 @@ UserInterface g_UserInterface;
 double g_MessageLabelTimeout;
 Widget * g_RadarWidget(0);
 Widget * g_MiniMapWidget(0);
+Display * g_Display;
+GLXContext g_GLXContext;
+Window g_Window;
 
 void NormalizeRadians(float & Radians)
 {
@@ -414,18 +422,15 @@ void Render(void)
 		glEnd();
 		glPopAttrib();
 	}
-	glutSwapBuffers();
 }
 
-void Resize(int Width, int Height)
+void Resize(void)
 {
-	if(Height == 0)
+	if(g_Height == 0)
 	{
-		Height = 1;
+		g_Height = 1;
 	}
-	g_Width = Width;
-	g_Height = Height;
-	glViewport(0, 0, Width, Height);
+	glViewport(0, 0, static_cast< GLint >(g_Width), static_cast< GLint >(g_Height));
 	g_UserInterface.GetRootWidget()->SetSize(math3d::vector2f(g_Width, g_Height));
 	g_RadarWidget->SetPosition(math3d::vector2f(0.0f, g_Height - 240.0f));
 	g_MiniMapWidget->SetPosition(math3d::vector2f(g_Width - 220.0f, g_Height - 240.0f));
@@ -568,38 +573,48 @@ void SetTimeWarp(float TimeWarp)
 	g_TimeWarpLabel->SetString(TimeWarpString.str());
 }
 
-void Mouse(int Button, int State, int X, int Y)
+void MouseButtonDown(int MouseButton, int X, int Y)
 {
-	if(g_UserInterface.MouseButton(Button, State, X, Y) == true)
+	if(g_UserInterface.MouseButton(MouseButton, EV_DOWN, X, Y) == true)
 	{
 		return;
 	}
-	switch(Button)
+	switch(MouseButton)
 	{
-	case GLUT_WHEEL_UP:
+	case 4: // MouseButton: WHEEL_UP
 		{
 			g_Camera.ZoomIn();
 			
 			break;
 		}
-	case GLUT_WHEEL_DOWN:
+	case 5: // MouseButton: WHEEL_DOWN
 		{
 			g_Camera.ZoomOut();
 			
 			break;
 		}
-	case GLUT_MIDDLE_BUTTON:
+	case 2: // MouseButton: MIDDLE
 		{
-			if(State == GLUT_DOWN)
-			{
-				g_LastMotionX = X;
-				g_LastMotionY = Y;
-				g_MouseButton = Button;
-			}
-			else
-			{
-				g_MouseButton = -1;
-			}
+			g_LastMotionX = X;
+			g_LastMotionY = Y;
+			g_MouseButton = 2;
+			
+			break;
+		}
+	}
+}
+
+void MouseButtonUp(int MouseButton, int X, int Y)
+{
+	if(g_UserInterface.MouseButton(MouseButton, EV_UP, X, Y) == true)
+	{
+		return;
+	}
+	switch(MouseButton)
+	{
+	case 2: // MouseButton: MIDDLE
+		{
+			g_MouseButton = -1;
 			
 			break;
 		}
@@ -615,7 +630,7 @@ void MouseMotion(int X, int Y)
 	
 	g_LastMotionX = X;
 	g_LastMotionY = Y;
-	if(g_MouseButton == GLUT_MIDDLE_BUTTON)
+	if(g_MouseButton == 2) // MouseButton: MIDDLE
 	{
 		const math3d::vector3f & CameraPosition(g_Camera.GetPosition());
 		
@@ -623,21 +638,150 @@ void MouseMotion(int X, int Y)
 	}
 }
 
-void Key(unsigned char Key, int X, int Y)
+void KeyDown(unsigned int KeyCode)
 {
-	if(g_UserInterface.Key(Key, GLUT_DOWN) == true)
+	if(g_UserInterface.Key(KeyCode, EV_DOWN) == true)
 	{
 		return;
 	}
-	switch(Key)
+	switch(KeyCode)
 	{
-	case 27:
-	case 'q':
+	case 9:  // Key: ESCAPE
+	case 24: // Key: Q
 		{
-			glutSetKeyRepeat(GLUT_KEY_REPEAT_ON);
-			exit(0);
+			g_Quit = true;
+			
+			break;
 		}
-	case 'j':
+	case 28: // Key: T
+		{
+			const std::list< Cargo * > & Cargos(g_CurrentSystem->GetCargos());
+			Cargo * SelectedCargo(dynamic_cast< Cargo * >(g_TargetObject));
+			
+			if(SelectedCargo == 0)
+			{
+				if(Cargos.size() > 0)
+				{
+					SelectCargo(Cargos.front());
+				}
+			}
+			else
+			{
+				std::list< Cargo * >::const_iterator CargoIterator(find(Cargos.begin(), Cargos.end(), SelectedCargo));
+				
+				if(CargoIterator == Cargos.end())
+				{
+					SelectCargo(0);
+				}
+				else
+				{
+					++CargoIterator;
+					if(CargoIterator == Cargos.end())
+					{
+						SelectCargo(0);
+					}
+					else
+					{
+						SelectCargo(*CargoIterator);
+					}
+				}
+			}
+		}
+	case 33: // Key: P
+		{
+			const std::list< Planet * > & Planets(g_CurrentSystem->GetPlanets());
+			Planet * SelectedPlanet(dynamic_cast< Planet * >(g_TargetObject));
+			
+			if(SelectedPlanet != 0)
+			{
+				std::list< Planet * >::const_iterator PlanetIterator(find(Planets.begin(), Planets.end(), SelectedPlanet));
+				
+				if(PlanetIterator == Planets.end())
+				{
+					SelectPlanet(0);
+				}
+				else
+				{
+					++PlanetIterator;
+					if(PlanetIterator == Planets.end())
+					{
+						SelectPlanet(0);
+					}
+					else
+					{
+						SelectPlanet(*PlanetIterator);
+					}
+				}
+			}
+			else
+			{
+				if(Planets.size() > 0)
+				{
+					SelectPlanet(Planets.front());
+				}
+			}
+			
+			break;
+		}
+	case 39: // Key: S
+		{
+			Cargo * SelectedCargo(dynamic_cast< Cargo * >(g_TargetObject));
+			
+			if(SelectedCargo == 0)
+			{
+				const std::list< Cargo * > & Cargos(g_CurrentSystem->GetCargos());
+				float MinimumDistance(0.0f);
+				Cargo * MinimumCargo(0);
+				
+				for(std::list< Cargo * >::const_iterator CargoIterator = Cargos.begin(); CargoIterator != Cargos.end(); ++CargoIterator)
+				{
+					if(MinimumCargo == 0)
+					{
+						MinimumCargo = *CargoIterator;
+						MinimumDistance = (MinimumCargo->GetPosition() - g_PlayerShip->GetPosition()).length_squared();
+					}
+					else
+					{
+						float Distance(((*CargoIterator)->GetPosition() - g_PlayerShip->GetPosition()).length_squared());
+						
+						if(Distance < MinimumDistance)
+						{
+							MinimumCargo = *CargoIterator;
+							MinimumDistance = Distance;
+						}
+					}
+				}
+				if(MinimumCargo != 0)
+				{
+					SelectCargo(MinimumCargo);
+				}
+			}
+			else
+			{
+				// test distance
+				if((SelectedCargo->GetPosition() - g_PlayerShip->GetPosition()).length_squared() <= 5.0f * SelectedCargo->GetRadialSize() * SelectedCargo->GetRadialSize())
+				{
+					// test speed
+					if((g_PlayerShip->GetVelocity() - SelectedCargo->GetVelocity()).length_squared() <= 2.0f)
+					{
+						g_PlayerShip->AddCargo(SelectedCargo->GetCommodity(), 1.0f);
+						g_CurrentSystem->RemoveCargo(SelectedCargo);
+						SelectCargo(0);
+					}
+					else
+					{
+						SetMessage("Your relative velocity to the cargo is too high to scoop it up.");
+					}
+				}
+				else
+				{
+					SetMessage("You are too far away from the cargo to scoop it up.");
+				}
+			}
+			
+			break;
+		}
+	case 44: // Key: J
 		{
 			if(g_SelectedLinkedSystem != 0)
 			{
@@ -671,21 +815,7 @@ void Key(unsigned char Key, int X, int Y)
 			
 			break;
 		}
-	case 'c':
-		{
-			while(g_PlayerShip->GetCargo().size() > 0)
-			{
-				const Commodity * Commodity(g_PlayerShip->GetCargo().begin()->first);
-				Cargo * NewCargo(new Cargo(g_ModelManager.Get("cargo_cube"), Commodity, g_PlayerShip->GetVelocity() * 0.8f + math3d::vector2f(-0.5f + static_cast< float >(random()) / RAND_MAX, -0.5f + static_cast< float >(random()) / RAND_MAX))); // TODO: memory leak
-				
-				g_PlayerShip->RemoveCargo(Commodity, 1.0f);
-				NewCargo->SetPosition(g_PlayerShip->GetPosition());
-				g_CurrentSystem->AddCargo(NewCargo);
-			}
-			
-			break;
-		}
-	case 'l':
+	case 46: // Key: L
 		{
 			if(g_PlanetDialog == 0)
 			{
@@ -747,19 +877,22 @@ void Key(unsigned char Key, int X, int Y)
 			
 			break;
 		}
-	case 'm':
+	case 54: // Key: C
 		{
-			if(g_MapDialog == 0)
+			SetMessage("Jettison cargo.");
+			while(g_PlayerShip->GetCargo().size() > 0)
 			{
-				g_Pause = true;
-				g_MapDialog = new MapDialog(g_UserInterface.GetRootWidget(), g_CurrentSystem);
-				g_MapDialog->GrabKeyFocus();
-				g_MapDialog->AddDestroyListener(&g_GlobalDestroyListener);
+				const Commodity * Commodity(g_PlayerShip->GetCargo().begin()->first);
+				Cargo * NewCargo(new Cargo(g_ModelManager.Get("cargo_cube"), Commodity, g_PlayerShip->GetVelocity() * 0.8f + math3d::vector2f(-0.5f + static_cast< float >(random()) / RAND_MAX, -0.5f + static_cast< float >(random()) / RAND_MAX))); // TODO: memory leak
+				
+				g_PlayerShip->RemoveCargo(Commodity, 1.0f);
+				NewCargo->SetPosition(g_PlayerShip->GetPosition());
+				g_CurrentSystem->AddCargo(NewCargo);
 			}
 			
 			break;
 		}
-	case 'n':
+	case 57: // Key: N
 		{
 			const std::list< System * > & LinkedSystems(g_CurrentSystem->GetLinkedSystems());
 			
@@ -794,215 +927,80 @@ void Key(unsigned char Key, int X, int Y)
 			
 			break;
 		}
-	case 'p':
+	case 58: // Key: M
 		{
-			const std::list< Planet * > & Planets(g_CurrentSystem->GetPlanets());
-			Planet * SelectedPlanet(dynamic_cast< Planet * >(g_TargetObject));
-			
-			if(SelectedPlanet != 0)
+			if(g_MapDialog == 0)
 			{
-				std::list< Planet * >::const_iterator PlanetIterator(find(Planets.begin(), Planets.end(), SelectedPlanet));
-				
-				if(PlanetIterator == Planets.end())
-				{
-					SelectPlanet(0);
-				}
-				else
-				{
-					++PlanetIterator;
-					if(PlanetIterator == Planets.end())
-					{
-						SelectPlanet(0);
-					}
-					else
-					{
-						SelectPlanet(*PlanetIterator);
-					}
-				}
-			}
-			else
-			{
-				if(Planets.size() > 0)
-				{
-					SelectPlanet(Planets.front());
-				}
+				g_Pause = true;
+				g_MapDialog = new MapDialog(g_UserInterface.GetRootWidget(), g_CurrentSystem);
+				g_MapDialog->GrabKeyFocus();
+				g_MapDialog->AddDestroyListener(&g_GlobalDestroyListener);
 			}
 			
 			break;
 		}
-	case '+':
+	case 59: // Key: COMMA
 		{
 			SetTimeWarp(g_TimeWarp * 1.1f);
 			
 			break;
 		}
-	case '-':
+	case 60: // Key: PERIODE
 		{
 			SetTimeWarp(g_TimeWarp * 0.9f);
 			
 			break;
 		}
-	case ' ':
+	case 65: // Key: SPACE
 		{
 			g_Camera.SetPosition(0.0f, 0.0f);
 			
 			break;
 		}
-	case 's':
-		{
-			Cargo * SelectedCargo(dynamic_cast< Cargo * >(g_TargetObject));
-			
-			if(SelectedCargo == 0)
-			{
-				const std::list< Cargo * > & Cargos(g_CurrentSystem->GetCargos());
-				float MinimumDistance(0.0f);
-				Cargo * MinimumCargo(0);
-				
-				for(std::list< Cargo * >::const_iterator CargoIterator = Cargos.begin(); CargoIterator != Cargos.end(); ++CargoIterator)
-				{
-					if(MinimumCargo == 0)
-					{
-						MinimumCargo = *CargoIterator;
-						MinimumDistance = (MinimumCargo->GetPosition() - g_PlayerShip->GetPosition()).length_squared();
-					}
-					else
-					{
-						float Distance(((*CargoIterator)->GetPosition() - g_PlayerShip->GetPosition()).length_squared());
-						
-						if(Distance < MinimumDistance)
-						{
-							MinimumCargo = *CargoIterator;
-							MinimumDistance = Distance;
-						}
-					}
-				}
-				if(MinimumCargo != 0)
-				{
-					SelectCargo(MinimumCargo);
-				}
-			}
-			else
-			{
-				// test distance
-				if((SelectedCargo->GetPosition() - g_PlayerShip->GetPosition()).length_squared() <= 5.0f * SelectedCargo->GetRadialSize() * SelectedCargo->GetRadialSize())
-				{
-					// test speed
-					if((g_PlayerShip->GetVelocity() - SelectedCargo->GetVelocity()).length_squared() <= 2.0f)
-					{
-						g_PlayerShip->AddCargo(SelectedCargo->GetCommodity(), 1.0f);
-						g_CurrentSystem->RemoveCargo(SelectedCargo);
-						SelectCargo(0);
-					}
-					else
-					{
-						SetMessage("Your relative velocity to the cargo is too high to scoop it up.");
-					}
-				}
-				else
-				{
-					SetMessage("You are too far away from the cargo to scoop it up.");
-				}
-			}
-			
-			break;
-		}
-	case 't':
-		{
-			const std::list< Cargo * > & Cargos(g_CurrentSystem->GetCargos());
-			Cargo * SelectedCargo(dynamic_cast< Cargo * >(g_TargetObject));
-			
-			if(SelectedCargo == 0)
-			{
-				if(Cargos.size() > 0)
-				{
-					SelectCargo(Cargos.front());
-				}
-			}
-			else
-			{
-				std::list< Cargo * >::const_iterator CargoIterator(find(Cargos.begin(), Cargos.end(), SelectedCargo));
-				
-				if(CargoIterator == Cargos.end())
-				{
-					SelectCargo(0);
-				}
-				else
-				{
-					++CargoIterator;
-					if(CargoIterator == Cargos.end())
-					{
-						SelectCargo(0);
-					}
-					else
-					{
-						SelectCargo(*CargoIterator);
-					}
-				}
-			}
-		}
-	}
-}
-
-void KeyUp(unsigned char Key, int X, int Y)
-{
-	if(g_UserInterface.Key(Key, GLUT_UP) == true)
-	{
-		return;
-	}
-}
-
-void SpecialKey(int Key, int X, int Y)
-{
-	if(g_UserInterface.Key(Key + 256, GLUT_DOWN) == true)
-	{
-		return;
-	}
-	switch(Key)
-	{
-	case GLUT_KEY_LEFT:
-		{
-			g_InputFocus->m_TurnLeft = true;
-			
-			break;
-		}
-	case GLUT_KEY_RIGHT:
-		{
-			g_InputFocus->m_TurnRight = true;
-			
-			break;
-		}
-	case GLUT_KEY_UP:
+	case 98: // Key: UP
 		{
 			g_InputFocus->m_Accelerate = true;
 			
 			break;
 		}
+	case 100: // Key: LEFT
+		{
+			g_InputFocus->m_TurnLeft = true;
+			
+			break;
+		}
+	case 102: // Key: RIGHT
+		{
+			g_InputFocus->m_TurnRight = true;
+			
+			break;
+		}
 	}
 }
 
-void SpecialKeyUp(int Key, int X, int Y)
+void KeyUp(unsigned char KeyCode)
 {
-	if(g_UserInterface.Key(Key + 256, GLUT_UP) == true)
+	if(g_UserInterface.Key(KeyCode, EV_UP) == true)
 	{
 		return;
 	}
-	switch(Key)
+	switch(KeyCode)
 	{
-	case GLUT_KEY_LEFT:
+	case 98:  // Key: UP
+		{
+			g_InputFocus->m_Accelerate = false;
+			
+			break;
+		}
+	case 100: // Key: LEFT
 		{
 			g_InputFocus->m_TurnLeft = false;
 			
 			break;
 		}
-	case GLUT_KEY_RIGHT:
+	case 102: // Key: RIGHT
 		{
 			g_InputFocus->m_TurnRight = false;
-			
-			break;
-		}
-	case GLUT_KEY_UP:
-		{
-			g_InputFocus->m_Accelerate = false;
 			
 			break;
 		}
@@ -1163,6 +1161,131 @@ Widget * ReadWidget(Arxx::Item * Item)
 	return NewWidget;
 }
 
+void CreateWindow(void)
+{
+	g_Display = XOpenDisplay(0);
+	
+	int ScreenNumber(DefaultScreen(g_Display));
+	
+	g_Width = DisplayWidth(g_Display, ScreenNumber);
+	g_Height = DisplayHeight(g_Display, ScreenNumber);
+	
+	int GLXAttributes[] = { GLX_RGBA, GLX_DOUBLEBUFFER, GLX_RED_SIZE, 4, GLX_GREEN_SIZE, 4, GLX_BLUE_SIZE, 4, GLX_ALPHA_SIZE, 4, GLX_DEPTH_SIZE, 16, 0 };
+	XVisualInfo * VisualInfo(glXChooseVisual(g_Display, ScreenNumber, GLXAttributes));
+	
+	if(VisualInfo == 0)
+	{
+		std::cerr << "Sorry, could not find a suitable visualization mode." << std::endl;
+		exit(1);
+	}
+	g_GLXContext = glXCreateContext(g_Display, VisualInfo, 0, GL_TRUE);
+	
+	XSetWindowAttributes WindowAttributes;
+	
+	WindowAttributes.colormap = XCreateColormap(g_Display, RootWindow(g_Display, VisualInfo->screen), VisualInfo->visual, AllocNone);
+	WindowAttributes.border_pixel = 0;
+	WindowAttributes.event_mask = ExposureMask | ButtonPressMask | ButtonReleaseMask | StructureNotifyMask | KeyPressMask | KeyReleaseMask | PointerMotionMask;
+	WindowAttributes.override_redirect = True;
+	// create the window
+	g_Window = XCreateWindow(g_Display, RootWindow(g_Display, VisualInfo->screen), 0, 0, static_cast< unsigned int >(g_Width), static_cast< unsigned int >(g_Height), 0, VisualInfo->depth, InputOutput, VisualInfo->visual, CWBorderPixel | CWColormap | CWEventMask | CWOverrideRedirect, &WindowAttributes);
+	// show the window
+	XMapRaised(g_Display, g_Window);
+	// grab the keyboard so we get keyboard events and windowmanager can interfere
+	XGrabKeyboard(g_Display, g_Window, True, GrabModeAsync, GrabModeAsync, CurrentTime);
+	// grab the mouse, so the mouse cursor can't leave our window
+	XGrabPointer(g_Display, g_Window, True, ButtonPressMask, GrabModeAsync, GrabModeAsync, g_Window, None, CurrentTime);
+	// don't allow key repeats
+	XAutoRepeatOff(g_Display);
+	glXMakeCurrent(g_Display, g_Window, g_GLXContext);
+}
+
+void InitializeOpenGL(void)
+{
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_DEPTH_TEST);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, math3d::vector4f(1.0f, 1.0f, 1.0f, 0.0f).m_V.m_A);
+	Resize();
+}
+
+void ProcessEvents(void)
+{
+	XEvent Event;
+	
+	while(XPending(g_Display) > 0)
+	{
+		XNextEvent(g_Display, &Event);
+		switch(Event.type)
+		{
+		case ConfigureNotify:
+			{
+				if((Event.xconfigure.width != g_Width) || (Event.xconfigure.height != g_Height))
+				{
+					g_Width = Event.xconfigure.width;
+					g_Height = Event.xconfigure.height;
+					Resize();
+				}
+				
+				break;
+			}
+		case MotionNotify:
+			{
+				std::cout << "Motion:    x=" << Event.xbutton.x << "   y=" << Event.xbutton.y << std::endl;
+				MouseMotion(Event.xmotion.x, Event.xmotion.y);
+				
+				break;
+			}
+		case ButtonPress:
+			{
+				std::cout << "ButtonPress:    button=" << Event.xbutton.button << "   x=" << Event.xbutton.x << "   y=" << Event.xbutton.y << std::endl;
+				MouseButtonDown(Event.xbutton.button, Event.xbutton.x, Event.xbutton.y);
+				
+				break;
+			}
+		case ButtonRelease:
+			{
+				std::cout << "ButtonRelease:  button=" << Event.xbutton.button << "   x=" << Event.xbutton.x << "   y=" << Event.xbutton.y << std::endl;
+				MouseButtonUp(Event.xbutton.button, Event.xbutton.x, Event.xbutton.y);
+				
+				break;
+			}
+		case KeyPress:
+			{
+				std::cout << "KeyPress:    state=" << Event.xkey.state << "   keycode=" << Event.xkey.keycode << std::endl;
+				KeyDown(Event.xkey.keycode);
+				
+				break;
+			}
+		case KeyRelease:
+			{
+				std::cout << "KeyRelease:  state=" << Event.xkey.state << "   keycode=" << Event.xkey.keycode << std::endl;
+				KeyUp(Event.xkey.keycode);
+				
+				break;
+			}
+		}
+	}
+}
+
+void DestroyWindow(void)
+{
+	XAutoRepeatOn(g_Display);
+    if(g_GLXContext != 0)
+    {
+        if(glXMakeCurrent(g_Display, None, 0) == 0)
+        {
+            std::cerr << "Could not release GLX context." << std::endl;
+        }
+        glXDestroyContext(g_Display, g_GLXContext);
+        g_GLXContext = 0;
+    }
+    XCloseDisplay(g_Display);
+	g_Display = 0;
+}
+
 int main(int argc, char **argv)
 {
 	// setup the random number generator for everyday use
@@ -1216,28 +1339,25 @@ int main(int argc, char **argv)
 	g_Camera.SetFocus(g_PlayerShip);
 	g_MiniMapCamera.SetPosition(0.0f, 0.0f, 1500.0f);
 	g_MiniMapCamera.SetFocus(g_PlayerShip);
-	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
-	glutCreateWindow("Escape Velocity");
-	glutFullScreen();
-	glutDisplayFunc(Render);
-	glutReshapeFunc(Resize);
-	glutIdleFunc(Render);
-	glutMouseFunc(Mouse);
-	glutMotionFunc(MouseMotion);
-	glutPassiveMotionFunc(MouseMotion);
-	glutIgnoreKeyRepeat(0);
-	glutKeyboardFunc(Key);
-	glutKeyboardUpFunc(KeyUp);
-	glutSpecialFunc(SpecialKey);
-	glutSpecialUpFunc(SpecialKeyUp);
-	glEnable(GL_LIGHTING);
-	glEnable(GL_LIGHT0);
-	glEnable(GL_CULL_FACE);
-	glEnable(GL_DEPTH_TEST);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, math3d::vector4f(1.0f, 1.0f, 1.0f, 0.0f).m_V.m_A);
-	glutMainLoop();
+	// setting up the graphical environment
+	CreateWindow();
+	InitializeOpenGL();
+	while(g_Quit == false)
+	{
+		ProcessEvents();
+		Render();
+		glXSwapBuffers(g_Display, g_Window);
+	}
+	DestroyWindow();
+	
+	//glutMouseFunc(Mouse);
+	//glutMotionFunc(MouseMotion);
+	//glutPassiveMotionFunc(MouseMotion);
+	//glutIgnoreKeyRepeat(0);
+	//glutKeyboardFunc(Key);
+	//glutKeyboardUpFunc(KeyUp);
+	//glutSpecialFunc(SpecialKey);
+	//glutSpecialUpFunc(SpecialKeyUp);
+	//glutMainLoop();
 }
 
