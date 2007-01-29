@@ -16,10 +16,12 @@ class Character;
 class CommodityManager;
 class Ship;
 class SystemManager;
+class UserInterface;
 
 extern Character * g_PlayerCharacter;
 extern Ship * g_PlayerShip;
 extern CommodityManager g_CommodityManager;
 extern SystemManager g_SystemManager;
+extern UserInterface g_UserInterface;
 
 #endif
