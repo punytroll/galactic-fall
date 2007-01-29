@@ -76,7 +76,7 @@ void LoadCommodityFromElement(CommodityManager * CommodityManager, const Element
 		}
 		else if(CommodityProperty->GetName() == "base-price")
 		{
-			NewCommodity->SetBasePrice(string_cast< float >(CommodityProperty->GetAttribute("value")));
+			NewCommodity->SetBasePrice(from_string_cast< float >(CommodityProperty->GetAttribute("value")));
 		}
 		++CommodityPropertyIterator;
 	}
