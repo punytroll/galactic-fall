@@ -21,6 +21,7 @@ public:
 	// getters
 	Widget * GetWidget(const std::string & Path);
 	Widget * GetRootWidget(void);
+	Widget * GetCaptureWidget(void);
 	// virtual event handlers
 	virtual void OnDestroy(Widget * EventSource);
 private:
@@ -32,6 +33,11 @@ private:
 inline Widget * UserInterface::GetRootWidget(void)
 {
 	return m_RootWidget;
+}
+
+inline Widget * UserInterface::GetCaptureWidget(void)
+{
+	return m_CaptureWidget;
 }
 
 #endif
