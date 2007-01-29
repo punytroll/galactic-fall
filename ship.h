@@ -35,6 +35,10 @@ public:
 	float GetFreeCargoHoldSize(void) const;
 	float GetCargoAmount(const Commodity * CargoCommodity) const;
 	const std::map< const Commodity *, float > GetCargo(void) const;
+	// setters
+	void SetFuel(float Fuel);
+	void SetVelocity(const math3d::vector2f & Velocity);
+	void SetAngularPosition(float AngularPosition);
 	// modifiers
 	bool AddCargo(const Commodity * CargoCommodity, float Amount);
 	void Jump(void);
@@ -87,6 +91,21 @@ inline float Ship::GetCargoAmount(const Commodity * CargoCommodity) const
 inline const std::map< const Commodity *, float > Ship::GetCargo(void) const
 {
 	return m_Cargo;
+}
+
+inline void Ship::SetFuel(float Fuel)
+{
+	m_Fuel = Fuel;
+}
+
+inline void Ship::SetVelocity(const math3d::vector2f & Velocity)
+{
+	m_Velocity = Velocity;
+}
+
+inline void Ship::SetAngularPosition(float AngularPosition)
+{
+	m_AngularPosition = AngularPosition;
 }
 
 #endif

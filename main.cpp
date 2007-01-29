@@ -521,9 +521,12 @@ public:
 
 void LeaveSystem(void)
 {
-	g_CurrentSystem->ClearShips();
-	g_CurrentSystem->ClearCargos();
-	g_CurrentSystem = 0;
+	if(g_CurrentSystem != 0)
+	{
+		g_CurrentSystem->ClearShips();
+		g_CurrentSystem->ClearCargos();
+		g_CurrentSystem = 0;
+	}
 	g_CurrentSystemLabel->SetString("");
 	SelectLinkedSystem(0);
 	SelectPlanet(0);
@@ -550,12 +553,6 @@ void EnterSystem(System * NewSystem, System * OldSystem)
 		{
 			g_PlayerShip->m_AngularPosition = -Radians;
 		}
-	}
-	else
-	{
-		g_PlayerShip->m_Position.set(0.0f, 0.0f);
-		g_PlayerShip->m_Velocity.set(0.0f, 0.0f);
-		g_PlayerShip->m_AngularPosition = 0.0f;
 	}
 	g_CurrentSystem->AddShip(g_PlayerShip);
 	g_CurrentSystemLabel->SetString(g_CurrentSystem->GetName());
@@ -1327,21 +1324,28 @@ int main(int argc, char **argv)
 	LoadSystemsFromFile(&g_SystemManager, "data/universe.xml");
 	LoadSystemLinksFromFile(&g_SystemManager, "data/universe.xml");
 	
-	ShipClass * ShuttleCraftShipClass(g_ShipClassManager.Get("shuttlecraft"));
+	// initialize the player (initial load)
+	LeaveSystem();
 	
-	if(ShuttleCraftShipClass == 0)
+	ShipClass * PlayerShipClass(g_ShipClassManager.Get("shuttlecraft"));
+	
+	if(PlayerShipClass == 0)
 	{
-		std::cerr << "Loading the \"shuttlecraft\" ship-class failed." << std::endl;
+		std::cerr << "Loading the \"shuttlecraft\" ship class failed." << std::endl;
 		
 		return 1;
 	}
 	g_PlayerCharacter = new Character();
-	g_PlayerCharacter->AddCredits(1000.0f);
-	g_PlayerShip = new Ship(ShuttleCraftShipClass);
-	g_PlayerShip->Refuel(g_PlayerShip->GetFuelCapacity());
-	g_InputFocus = g_PlayerShip;
+	g_PlayerCharacter->SetCredits(1000.0f);
+	g_PlayerShip = new Ship(PlayerShipClass);
+	g_PlayerShip->SetFuel(g_PlayerShip->GetFuelCapacity());
+	g_PlayerShip->SetPosition(math3d::vector2f(0.0f, 0.0f));
+	g_PlayerShip->SetVelocity(math3d::vector2f(0.0f, 0.0f));
+	g_PlayerShip->SetAngularPosition(0.0f);
 	EnterSystem(g_SystemManager.Get("sol"), 0);
 	SetTimeWarp(1.0f);
+	// setting the input focus
+	g_InputFocus = g_PlayerShip;
 	// camera setup
 	g_Camera.SetPosition(0.0f, 0.0f, 200.0f);
 	g_Camera.SetFocus(g_PlayerShip);
