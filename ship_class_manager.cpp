@@ -104,6 +104,14 @@ void LoadShipClassFromElement(ShipClassManager * ShipClassManager, const Element
 		{
 			NewShipClass->SetTurnSpeed(string_cast< float >(Child->GetAttribute("value")));
 		}
+		else if(Child->GetName() == "forward-fuel")
+		{
+			NewShipClass->SetForwardFuel(string_cast< float >(Child->GetAttribute("value")));
+		}
+		else if(Child->GetName() == "turn-fuel")
+		{
+			NewShipClass->SetTurnFuel(string_cast< float >(Child->GetAttribute("value")));
+		}
 		++ChildIterator;
 	}
 }

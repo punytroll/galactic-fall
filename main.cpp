@@ -268,6 +268,8 @@ void Render(void)
 		{
 			(*CargoIterator)->Move(Seconds);
 		}
+		// player ship has been updated, display new fuel
+		g_FuelLabel->SetString("Fuel: " + to_string_cast(100.0f * g_PlayerShip->GetFuel() / g_PlayerShip->GetFuelCapacity()) + "%");
 	}
 	glClear(GL_COLOR_BUFFER_BIT);
 	glViewport(0, 0, static_cast< GLsizei >(g_Width), static_cast< GLsizei >(g_Height));
@@ -560,7 +562,6 @@ void EnterSystem(System * NewSystem, System * OldSystem)
 	SelectLinkedSystem(0);
 	SelectPlanet(0);
 	g_PlayerCharacter->GetMapKnowledge()->AddExploredSystem(g_CurrentSystem);
-	g_FuelLabel->SetString("Fuel: " + to_string_cast(100.0f * g_PlayerShip->GetFuel() / g_PlayerShip->GetFuelCapacity()) + "%");
 }
 
 void SetTimeWarp(float TimeWarp)
@@ -1330,7 +1331,6 @@ int main(int argc, char **argv)
 	g_PlayerCharacter->AddCredits(1000.0f);
 	g_PlayerShip = new Ship(ShuttleCraftShipClass);
 	g_PlayerShip->Refuel(g_PlayerShip->GetFuelCapacity());
-	g_FuelLabel->SetString("Fuel: " + to_string_cast(100.0f * g_PlayerShip->GetFuel() / g_PlayerShip->GetFuelCapacity()));
 	g_InputFocus = g_PlayerShip;
 	EnterSystem(g_SystemManager.Get("sol"), 0);
 	SetTimeWarp(1.0f);

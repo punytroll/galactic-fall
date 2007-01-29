@@ -28,23 +28,41 @@ void Ship::Move(float Seconds)
 {
 	if(m_TurnLeft == true)
 	{
-		m_AngularPosition += GetTurnSpeed() * Seconds;
+		float FuelConsumption(m_ShipClass->GetTurnFuel() * Seconds);
+		
+		if(m_Fuel >= FuelConsumption)
+		{
+			m_AngularPosition += GetTurnSpeed() * Seconds;
+			m_Fuel -= FuelConsumption;
+		}
 	}
 	if(m_TurnRight == true)
 	{
-		m_AngularPosition -= GetTurnSpeed() * Seconds;
+		float FuelConsumption(m_ShipClass->GetTurnFuel() * Seconds);
+		
+		if(m_Fuel >= FuelConsumption)
+		{
+			m_AngularPosition -= GetTurnSpeed() * Seconds;
+			m_Fuel -= FuelConsumption;
+		}
 	}
 	m_Position += m_Velocity * Seconds;
 	if(m_Accelerate == true)
 	{
-		math3d::vector2f ForwardThrust(GetForwardThrust(), m_AngularPosition, math3d::vector2f::magnitude_angle);
+		float FuelConsumption(m_ShipClass->GetTurnFuel() * Seconds);
 		
-		m_Position += ForwardThrust * (Seconds * Seconds / 2.0f);
-		m_Velocity += ForwardThrust * Seconds;
-		if(m_Velocity.length() > GetMaximumSpeed())
+		if(m_Fuel >= FuelConsumption)
 		{
-			m_Velocity.normalize();
-			m_Velocity.scale(GetMaximumSpeed());
+			math3d::vector2f ForwardThrust(GetForwardThrust(), m_AngularPosition, math3d::vector2f::magnitude_angle);
+			
+			m_Position += ForwardThrust * (Seconds * Seconds / 2.0f);
+			m_Velocity += ForwardThrust * Seconds;
+			if(m_Velocity.length() > GetMaximumSpeed())
+			{
+				m_Velocity.normalize();
+				m_Velocity.scale(GetMaximumSpeed());
+			}
+			m_Fuel -= FuelConsumption;
 		}
 	}
 }

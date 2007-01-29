@@ -1113,6 +1113,8 @@
 		<cargo-hold-size value="12"/>
 		<fuel-hold-size value="0.5"/>
 		<jump-fuel value="0.13"/>
+		<forward-fuel value="0.002"/>
+		<turn-fuel value="0.001"/>
 	</ship-class>
 	<model identifier="cargo_cube">
 		 <point identifier="0" name="" position-x="-0.5" position-y="0.5" position-z="-0.5" />
