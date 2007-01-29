@@ -69,6 +69,20 @@ void Widget::Draw(void) const
 	}
 }
 
+math3d::vector2f Widget::GetGlobalPosition(void) const
+{
+	const Widget * CurrentWidget(this);
+	math3d::vector2f Result(true);
+	
+	while(CurrentWidget != 0)
+	{
+		Result += CurrentWidget->GetPosition();
+		CurrentWidget = CurrentWidget->m_SupWidget;
+	}
+	
+	return Result;
+}
+
 void Widget::SetBackgroundColor(const Color & BackgroundColor)
 {
 	m_BackgroundColor = new Color(BackgroundColor);
