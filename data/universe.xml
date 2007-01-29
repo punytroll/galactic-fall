@@ -38,7 +38,7 @@
 			<commodity identifier="metal" base-price-modifier="1.08"/>
 			<commodity identifier="equipment" base-price-modifier="0.95"/>
 			<allow-refuelling value="true"/>
-			<fuel-price value="105.0f"/>
+			<fuel-price value="192.0f"/>
 			<landing-fee value="75.0f"/>
 		</planet>
 		<planet identifier="moon">
@@ -52,7 +52,7 @@
 			<commodity identifier="metal" base-price-modifier="1"/>
 			<commodity identifier="equipment" base-price-modifier="0.98"/>
 			<allow-refuelling value="true"/>
-			<fuel-price value="112.0f"/>
+			<fuel-price value="198.5f"/>
 			<landing-fee value="63.0f"/>
 		</planet>
 		<planet identifier="mars">
@@ -67,7 +67,7 @@
 			<commodity identifier="metal" base-price-modifier="0.95"/>
 			<commodity identifier="equipment" base-price-modifier="1.1"/>
 			<allow-refuelling value="true"/>
-			<fuel-price value="118.0f"/>
+			<fuel-price value="208.0f"/>
 			<landing-fee value="70.0f"/>
 		</planet>
 	</system>
@@ -85,7 +85,7 @@
 			<commodity identifier="metal" base-price-modifier="1.03"/>
 			<commodity identifier="equipment" base-price-modifier="0.89"/>
 			<allow-refuelling value="true"/>
-			<fuel-price value="98.0f"/>
+			<fuel-price value="166.3f"/>
 			<landing-fee value="54.0f"/>
 		</planet>
 	</system>
@@ -103,7 +103,7 @@
 			<commodity identifier="metal" base-price-modifier="0.98"/>
 			<commodity identifier="equipment" base-price-modifier="1.01"/>
 			<allow-refuelling value="true"/>
-			<fuel-price value="125.0f"/>
+			<fuel-price value="231.0f"/>
 			<landing-fee value="64.0f"/>
 		</planet>
 		<planet identifier="hephant">
@@ -116,6 +116,7 @@
 			<commodity identifier="metal" base-price-modifier="1.02"/>
 			<commodity identifier="equipment" base-price-modifier="1.03"/>
 			<allow-refuelling value="false"/>
+			<fuel-price value="247.0f"/>
 			<landing-fee value="40.0f"/>
 		</planet>
 	</system>
