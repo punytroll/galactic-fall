@@ -6,6 +6,7 @@
 #include "planet.h"
 #include "planet_dialog.h"
 #include "ship.h"
+#include "string_cast.h"
 #include "trade_center_dialog.h"
 
 PlanetDialog::PlanetDialog(Widget * SupWidget, Planet * Planet) :
@@ -59,6 +60,10 @@ PlanetDialog::PlanetDialog(Widget * SupWidget, Planet * Planet) :
 		m_RefuelButtonLabel->SetSize(m_TradeCenterButton->GetSize());
 		m_RefuelButtonLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
 		m_RefuelButtonLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
+		
+		Label * FuelPriceLabel = new Label(this, "Local fuel price is: " + to_string_cast(m_Planet->GetFuelPrice()) + " credits/unit.");
+		
+		FuelPriceLabel->SetPosition(math3d::vector2f(10.0f, 300.0f));
 	}
 }
 
@@ -75,13 +80,13 @@ bool PlanetDialog::OnClicked(Widget * EventSource)
 	}
 	else if(EventSource == m_RefuelButton)
 	{
-		// fixed fuel price as of now: 130.0f
-		float CanBuy(g_PlayerCharacter->GetCredits() / 130.0f);
+		float FuelPrice(m_Planet->GetFuelPrice());
+		float CanBuy(g_PlayerCharacter->GetCredits() / FuelPrice);
 		float Need(g_PlayerShip->GetFuelCapacity() - g_PlayerShip->GetFuel());
 		float Buy((CanBuy > Need) ? (Need) : (CanBuy));
 		
 		g_PlayerShip->Refuel(Buy);
-		g_PlayerCharacter->RemoveCredits(Buy * 130.0f);
+		g_PlayerCharacter->RemoveCredits(Buy * FuelPrice);
 	}
 	else if(EventSource == m_TradeCenterButton)
 	{
