@@ -69,11 +69,11 @@ void LoadModelFromElement(ModelManager * ModelManager, const Element * ModelElem
 		
 		if(Child->GetName() == "point")
 		{
-			Points[Child->GetAttribute("identifier")] = NewModel->AddPoint(math3d::vector4f(string_cast< float >(Child->GetAttribute("position-x")), string_cast< float >(Child->GetAttribute("position-y")), string_cast< float >(Child->GetAttribute("position-z")), 0.0f));
+			Points[Child->GetAttribute("identifier")] = NewModel->AddPoint(math3d::vector4f(from_string_cast< float >(Child->GetAttribute("position-x")), from_string_cast< float >(Child->GetAttribute("position-y")), from_string_cast< float >(Child->GetAttribute("position-z")), 0.0f));
 		}
 		else if(Child->GetName() == "triangle-point")
 		{
-			TrianglePoints[Child->GetAttribute("identifier")] = std::make_pair(Points[Child->GetChilds().front()->GetAttribute("point-identifier")], math3d::vector4f(string_cast< float >(Child->GetAttribute("normal-x")), string_cast< float >(Child->GetAttribute("normal-y")), string_cast< float >(Child->GetAttribute("normal-z")), 0.0f));
+			TrianglePoints[Child->GetAttribute("identifier")] = std::make_pair(Points[Child->GetChilds().front()->GetAttribute("point-identifier")], math3d::vector4f(from_string_cast< float >(Child->GetAttribute("normal-x")), from_string_cast< float >(Child->GetAttribute("normal-y")), from_string_cast< float >(Child->GetAttribute("normal-z")), 0.0f));
 		}
 		else if(Child->GetName() == "triangle")
 		{

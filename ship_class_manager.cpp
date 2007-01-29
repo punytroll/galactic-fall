@@ -78,23 +78,23 @@ void LoadShipClassFromElement(ShipClassManager * ShipClassManager, const Element
 		
 		if(Child->GetName() == "cargo-hold-size")
 		{
-			NewShipClass->SetCargoHoldSize(string_cast< float >(Child->GetAttribute("value")));
+			NewShipClass->SetCargoHoldSize(from_string_cast< float >(Child->GetAttribute("value")));
 		}
 		else if(Child->GetName() == "forward-thrust")
 		{
-			NewShipClass->SetForwardThrust(string_cast< float >(Child->GetAttribute("value")));
+			NewShipClass->SetForwardThrust(from_string_cast< float >(Child->GetAttribute("value")));
 		}
 		else if(Child->GetName() == "fuel-hold-size")
 		{
-			NewShipClass->SetFuelHoldSize(string_cast< float >(Child->GetAttribute("value")));
+			NewShipClass->SetFuelHoldSize(from_string_cast< float >(Child->GetAttribute("value")));
 		}
 		else if(Child->GetName() == "jump-fuel")
 		{
-			NewShipClass->SetJumpFuel(string_cast< float >(Child->GetAttribute("value")));
+			NewShipClass->SetJumpFuel(from_string_cast< float >(Child->GetAttribute("value")));
 		}
 		else if(Child->GetName() == "maximum-speed")
 		{
-			NewShipClass->SetMaximumSpeed(string_cast< float >(Child->GetAttribute("value")));
+			NewShipClass->SetMaximumSpeed(from_string_cast< float >(Child->GetAttribute("value")));
 		}
 		else if(Child->GetName() == "model")
 		{
@@ -102,15 +102,15 @@ void LoadShipClassFromElement(ShipClassManager * ShipClassManager, const Element
 		}
 		else if(Child->GetName() == "turn-speed")
 		{
-			NewShipClass->SetTurnSpeed(string_cast< float >(Child->GetAttribute("value")));
+			NewShipClass->SetTurnSpeed(from_string_cast< float >(Child->GetAttribute("value")));
 		}
 		else if(Child->GetName() == "forward-fuel")
 		{
-			NewShipClass->SetForwardFuel(string_cast< float >(Child->GetAttribute("value")));
+			NewShipClass->SetForwardFuel(from_string_cast< float >(Child->GetAttribute("value")));
 		}
 		else if(Child->GetName() == "turn-fuel")
 		{
-			NewShipClass->SetTurnFuel(string_cast< float >(Child->GetAttribute("value")));
+			NewShipClass->SetTurnFuel(from_string_cast< float >(Child->GetAttribute("value")));
 		}
 		++ChildIterator;
 	}

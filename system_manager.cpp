@@ -84,7 +84,7 @@ void LoadSystemFromElement(SystemManager * SystemManager, const Element * System
 		}
 		else if(SystemProperty->GetName() == "position")
 		{
-			NewSystem->SetPosition(math3d::vector2f(string_cast< float >(SystemProperty->GetAttribute("x")), string_cast< float >(SystemProperty->GetAttribute("y"))));
+			NewSystem->SetPosition(math3d::vector2f(from_string_cast< float >(SystemProperty->GetAttribute("x")), from_string_cast< float >(SystemProperty->GetAttribute("y"))));
 		}
 		else if(SystemProperty->GetName() == "planet")
 		{
@@ -98,7 +98,7 @@ void LoadSystemFromElement(SystemManager * SystemManager, const Element * System
 				
 				if(PlanetProperty->GetName() == "allow-refuelling")
 				{
-					NewPlanet->SetAllowRefuelling(string_cast< bool >(PlanetProperty->GetAttribute("value")));
+					NewPlanet->SetAllowRefuelling(from_string_cast< bool >(PlanetProperty->GetAttribute("value")));
 				}
 				else if(PlanetProperty->GetName() == "commodity")
 				{
@@ -112,7 +112,7 @@ void LoadSystemFromElement(SystemManager * SystemManager, const Element * System
 					{
 						PlanetCommodity * NewPlanetCommodity(NewPlanet->CreateCommodity(ManagedCommodity));
 						
-						NewPlanetCommodity->SetBasePriceModifier(string_cast< float >(PlanetProperty->GetAttribute("base-price-modifier")));
+						NewPlanetCommodity->SetBasePriceModifier(from_string_cast< float >(PlanetProperty->GetAttribute("base-price-modifier")));
 					}
 				}
 				else if(PlanetProperty->GetName() == "description")
@@ -125,15 +125,15 @@ void LoadSystemFromElement(SystemManager * SystemManager, const Element * System
 				}
 				else if(PlanetProperty->GetName() == "position")
 				{
-					NewPlanet->m_Position.set(string_cast< float >(PlanetProperty->GetAttribute("x")), string_cast< float >(PlanetProperty->GetAttribute("y")));
+					NewPlanet->m_Position.set(from_string_cast< float >(PlanetProperty->GetAttribute("x")), from_string_cast< float >(PlanetProperty->GetAttribute("y")));
 				}
 				else if(PlanetProperty->GetName() == "size")
 				{
-					NewPlanet->SetSize(string_cast< float >(PlanetProperty->GetAttribute("value")));
+					NewPlanet->SetSize(from_string_cast< float >(PlanetProperty->GetAttribute("value")));
 				}
 				else if(PlanetProperty->GetName() == "fuel-price")
 				{
-					NewPlanet->SetFuelPrice(string_cast< float >(PlanetProperty->GetAttribute("value")));
+					NewPlanet->SetFuelPrice(from_string_cast< float >(PlanetProperty->GetAttribute("value")));
 				}
 				++PlanetPropertyIterator;
 			}

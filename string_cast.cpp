@@ -3,7 +3,7 @@
 #include "string_cast.h"
 
 template < >
-unsigned long string_cast< unsigned long >(const std::string & String)
+unsigned long from_string_cast< unsigned long >(const std::string & String)
 {
 	std::istringstream StringStream(String);
 	unsigned long Result;
@@ -14,7 +14,7 @@ unsigned long string_cast< unsigned long >(const std::string & String)
 }
 
 template < >
-float string_cast< float >(const std::string & String)
+float from_string_cast< float >(const std::string & String)
 {
 	std::istringstream StringStream(String);
 	float Result;
@@ -25,7 +25,7 @@ float string_cast< float >(const std::string & String)
 }
 
 template < >
-bool string_cast< bool >(const std::string & String)
+bool from_string_cast< bool >(const std::string & String)
 {
 	return String == "true";
 }

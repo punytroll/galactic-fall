@@ -13,6 +13,4 @@
 
 * Add landing fees.
 
-* Rename string_cast to from_string_cast.
-
 * Make fuel a normal good.
