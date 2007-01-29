@@ -1351,14 +1351,6 @@ int main(int argc, char **argv)
 	}
 	DestroyWindow();
 	
-	//glutMouseFunc(Mouse);
-	//glutMotionFunc(MouseMotion);
-	//glutPassiveMotionFunc(MouseMotion);
-	//glutIgnoreKeyRepeat(0);
-	//glutKeyboardFunc(Key);
-	//glutKeyboardUpFunc(KeyUp);
-	//glutSpecialFunc(SpecialKey);
-	//glutSpecialUpFunc(SpecialKeyUp);
-	//glutMainLoop();
+	return 0;
 }
 
