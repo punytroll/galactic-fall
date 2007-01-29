@@ -26,6 +26,7 @@ class Planet : public Object
 public:
 	Planet(const std::string & Identifier);
 	~Planet(void);
+	// getters
 	const std::string & GetIdentifier(void) const;
 	const std::string & GetName(void) const;
 	const std::string & GetDescription(void) const;
@@ -33,9 +34,12 @@ public:
 	const std::vector< PlanetCommodity * > & GetCommodities(void) const;
 	bool GetAllowRefuelling(void) const;
 	float GetFuelPrice(void) const;
+	float GetLandingFee(void) const;
+	// setters
 	void SetName(const std::string & Name);
 	void SetAllowRefuelling(bool AllowRefuelling);
 	void SetFuelPrice(float FuelPrice);
+	void SetLandingFee(float LandingFee);
 	void SetDescription(const std::string & Description);
 	void SetSize(const float & Size);
 	virtual void Draw(void) const;
@@ -47,6 +51,7 @@ private:
 	float m_Size;
 	bool m_AllowRefuelling;
 	float m_FuelPrice;
+	float m_LandingFee;
 	std::vector< PlanetCommodity * > m_Commodities;
 };
 
@@ -90,9 +95,19 @@ inline float Planet::GetFuelPrice(void) const
 	return m_FuelPrice;
 }
 
+inline float Planet::GetLandingFee(void) const
+{
+	return m_LandingFee;
+}
+
 inline void Planet::SetFuelPrice(float FuelPrice)
 {
 	m_FuelPrice = FuelPrice;
+}
+
+inline void Planet::SetLandingFee(float LandingFee)
+{
+	m_LandingFee = LandingFee;
 }
 
 #endif
