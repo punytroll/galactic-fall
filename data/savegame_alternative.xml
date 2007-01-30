@@ -2,6 +2,11 @@
 	<system identifier="alpha_centauri"/>
 	<character>
 		<credits value="15562.7"/>
+		<map-knowledge>
+			<explored-system identifier="alpha_centauri"/>
+			<explored-system identifier="sol"/>
+			<explored-system identifier="rigel"/>
+		</map-knowledge>
 	</character>
 	<ship class-identifier="shuttlecraft">
 		<fuel value="0.240821"/>

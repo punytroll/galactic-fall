@@ -2,6 +2,9 @@
 	<system identifier="sol"/>
 	<character>
 		<credits value="1000"/>
+		<map-knowledge>
+			<explored-system identifier="sol"/>
+		</map-knowledge>
 	</character>
 	<ship class-identifier="shuttlecraft">
 		<fuel value="0.5"/>
