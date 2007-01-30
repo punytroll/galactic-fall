@@ -12,3 +12,19 @@
 * Clip windows.
 
 * Make fuel a normal good.
+
+* Rename GetCargo to GetCommodities.
+
+* Rename GetRootElement to GetDocumentElement.
+
+* Save and load MapKnowledge.
+
+* Load the commodities as well.
+
+* Save and load player environment (Camera, Zoom, TimeWarp, Targets ...)
+
+* Make loading the savegames much more robust.
+
+* Make the game more robust against missing resource files.
+
+* PlayerCharacter and PlayerShip have no defined lifetimecycle and cause memory leaks now. Specify and implement.

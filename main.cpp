@@ -1,6 +1,7 @@
 #include <errno.h>
 #include <stdlib.h>
 
+#include <fstream>
 #include <iostream>
 #include <list>
 #include <sstream>
@@ -45,6 +46,8 @@
 #include "system_manager.h"
 #include "user_interface.h"
 #include "widget.h"
+#include "xml_puny_dom.h"
+#include "xml_stream.h"
 
 int g_LastMotionX(-1);
 int g_LastMotionY(-1);
@@ -1014,6 +1017,34 @@ void KeyDown(unsigned int KeyCode)
 			
 			break;
 		}
+	case 67: // Key: F1
+		{
+			XMLStream XML(std::cout);
+			
+			XML << element << "save";
+			XML << element << "system" << attribute << "identifier" << value << g_CurrentSystem->GetIdentifier() << end;
+			XML << element << "character";
+			XML << element << "credits" << attribute << "value" << value << g_PlayerCharacter->GetCredits() << end;
+			// TODO: add map knowledge
+			XML << end;
+			XML << element << "ship" << attribute << "class-identifier" << value << g_PlayerShip->GetShipClass()->GetIdentifier();
+			XML << element << "fuel" << attribute << "value" << value << g_PlayerShip->GetFuel() << end;
+			XML << element << "position" << attribute << "x" << value << g_PlayerShip->GetPosition().m_V.m_A[0] << attribute << "y" << value << g_PlayerShip->GetPosition().m_V.m_A[1] << end;
+			XML << element << "angular-position" << attribute << "value" << value << g_PlayerShip->GetAngularPosition() << end;
+			XML << element << "velocity" << attribute << "x" << value << g_PlayerShip->GetVelocity().m_V.m_A[0] << attribute << "y" << value << g_PlayerShip->GetVelocity().m_V.m_A[1] << end;
+			XML << element << "commodities";
+			
+			const std::map< const Commodity *, float > & Commodities(g_PlayerShip->GetCargo());
+			
+			for(std::map< const Commodity *, float >::const_iterator Commodity = Commodities.begin(); Commodity != Commodities.end(); ++Commodity)
+			{
+				XML << element << "commodity" << attribute << "identifier" << value << Commodity->first->GetIdentifier() << attribute << "amount" << value << Commodity->second << end;
+			}
+			XML << end;
+			XML << end;
+			
+			break;
+		}
 	case 98: // Key: UP
 		{
 			g_InputFocus->m_Accelerate = true;
@@ -1342,8 +1373,74 @@ void DestroyWindow(void)
 	g_Display = 0;
 }
 
-int main(int argc, char **argv)
+void LoadSavegame(const std::string & LoadSavegameFileName)
 {
+	LeaveSystem();
+	
+	std::ifstream InputStream(LoadSavegameFileName.c_str());
+	Document SavegameDocument(InputStream);
+	const Element * SaveElement(SavegameDocument.GetRootElement());
+	const std::vector< Element * > & SaveChilds(SaveElement->GetChilds());
+	std::string System;
+	
+	for(std::vector< Element * >::const_iterator SaveChild = SaveChilds.begin(); SaveChild != SaveChilds.end(); ++SaveChild)
+	{
+		if((*SaveChild)->GetName() == "system")
+		{
+			System = (*SaveChild)->GetAttribute("identifier");
+		}
+		else if((*SaveChild)->GetName() == "character")
+		{
+			g_PlayerCharacter = new Character();
+			for(std::vector< Element * >::const_iterator CharacterChild = (*SaveChild)->GetChilds().begin(); CharacterChild != (*SaveChild)->GetChilds().end(); ++CharacterChild)
+			{
+				if((*CharacterChild)->GetName() == "credits")
+				{
+					g_PlayerCharacter->SetCredits(from_string_cast< float >((*CharacterChild)->GetAttribute("value")));
+				}
+			}
+		}
+		else if((*SaveChild)->GetName() == "ship")
+		{
+			g_PlayerShip = new Ship(g_ShipClassManager.Get((*SaveChild)->GetAttribute("class-identifier")));
+			for(std::vector< Element * >::const_iterator ShipChild = (*SaveChild)->GetChilds().begin(); ShipChild != (*SaveChild)->GetChilds().end(); ++ShipChild)
+			{
+				if((*ShipChild)->GetName() == "fuel")
+				{
+					g_PlayerShip->SetFuel(from_string_cast< float >((*ShipChild)->GetAttribute("value")));
+				}
+				else if((*ShipChild)->GetName() == "position")
+				{
+					g_PlayerShip->SetPosition(math3d::vector2f(from_string_cast< float >((*ShipChild)->GetAttribute("x")), from_string_cast< float >((*ShipChild)->GetAttribute("y"))));
+				}
+				else if((*ShipChild)->GetName() == "velocity")
+				{
+					g_PlayerShip->SetVelocity(math3d::vector2f(from_string_cast< float >((*ShipChild)->GetAttribute("x")), from_string_cast< float >((*ShipChild)->GetAttribute("y"))));
+				}
+				else if((*ShipChild)->GetName() == "angular-position")
+				{
+					g_PlayerShip->SetAngularPosition(from_string_cast< float >((*ShipChild)->GetAttribute("value")));
+				}
+			}
+		}
+		// TODO: read commodities
+	}
+	EnterSystem(g_SystemManager.Get(System), 0);
+}
+
+int main(int argc, char ** argv)
+{
+	std::vector< std::string > Arguments(argv, argv + argc);
+	std::string LoadSavegameFileName("data/savegame_default.xml");
+	
+	for(std::vector< std::string >::size_type Index = 0; Index < Arguments.size(); ++Index)
+	{
+		if((Arguments[Index] == "--load") && (Index + 1 < Arguments.size()))
+		{
+			LoadSavegameFileName = Arguments[++Index];
+		}
+	}
+	
 	// setup the random number generator for everyday use
 	srand(time(0));
 	// ui setup
@@ -1374,24 +1471,10 @@ int main(int argc, char **argv)
 	LoadSystemLinksFromFile(&g_SystemManager, "data/universe.xml");
 	
 	// initialize the player (initial load)
-	LeaveSystem();
+	LoadSavegame(LoadSavegameFileName);
 	
-	ShipClass * PlayerShipClass(g_ShipClassManager.Get("shuttlecraft"));
-	
-	if(PlayerShipClass == 0)
-	{
-		std::cerr << "Loading the \"shuttlecraft\" ship class failed." << std::endl;
-		
-		return 1;
-	}
-	g_PlayerCharacter = new Character();
-	g_PlayerCharacter->SetCredits(1000.0f);
-	g_PlayerShip = new Ship(PlayerShipClass);
-	g_PlayerShip->SetFuel(g_PlayerShip->GetFuelCapacity());
-	g_PlayerShip->SetPosition(math3d::vector2f(0.0f, 0.0f));
-	g_PlayerShip->SetVelocity(math3d::vector2f(0.0f, 0.0f));
-	g_PlayerShip->SetAngularPosition(0.0f);
-	EnterSystem(g_SystemManager.Get("sol"), 0);
+	// setting up the player environment
+	// TODO: read this from the savegame as well
 	SetTimeWarp(1.0f);
 	// setting the input focus
 	g_InputFocus = g_PlayerShip;
