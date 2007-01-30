@@ -1421,9 +1421,18 @@ void LoadSavegame(const std::string & LoadSavegameFileName)
 				{
 					g_PlayerShip->SetAngularPosition(from_string_cast< float >((*ShipChild)->GetAttribute("value")));
 				}
+				else if((*ShipChild)->GetName() == "commodities")
+				{
+					for(std::vector< Element * >::const_iterator CommoditiesChild = (*ShipChild)->GetChilds().begin(); CommoditiesChild != (*ShipChild)->GetChilds().end(); ++CommoditiesChild)
+					{
+						if((*CommoditiesChild)->GetName() == "commodity")
+						{
+							g_PlayerShip->SetCommodities(g_CommodityManager.Get((*CommoditiesChild)->GetAttribute("identifier")), from_string_cast< float >((*CommoditiesChild)->GetAttribute("amount")));
+						}
+					}
+				}
 			}
 		}
-		// TODO: read commodities
 	}
 	EnterSystem(g_SystemManager.Get(System), 0);
 }

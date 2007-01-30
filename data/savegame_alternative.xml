@@ -8,6 +8,9 @@
 		<position x="-253.368" y="-16.2305"/>
 		<angular-position value="6.82964"/>
 		<velocity x="10.0685" y="6.5288"/>
-		<commodities/>
+		<commodities>
+			<commodity identifier="industrial" amount="6"/>
+			<commodity identifier="metal" amount="2"/>
+		</commodities>
 	<ship>
 </save>

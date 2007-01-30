@@ -40,6 +40,7 @@ public:
 	void SetFuel(float Fuel);
 	void SetVelocity(const math3d::vector2f & Velocity);
 	void SetAngularPosition(float AngularPosition);
+	void SetCommodities(const Commodity * Commodity, float Amount);
 	// modifiers
 	bool AddCommodities(const Commodity * CargoCommodity, float Amount);
 	bool RemoveCommodities(const Commodity * CargoCommodity, float Amount);
@@ -112,6 +113,11 @@ inline void Ship::SetVelocity(const math3d::vector2f & Velocity)
 inline void Ship::SetAngularPosition(float AngularPosition)
 {
 	m_AngularPosition = AngularPosition;
+}
+
+inline void Ship::SetCommodities(const Commodity * Commodity, float Amount)
+{
+	m_Commodities[Commodity] = Amount;
 }
 
 #endif
