@@ -1025,7 +1025,15 @@ void KeyDown(unsigned int KeyCode)
 			XML << element << "system" << attribute << "identifier" << value << g_CurrentSystem->GetIdentifier() << end;
 			XML << element << "character";
 			XML << element << "credits" << attribute << "value" << value << g_PlayerCharacter->GetCredits() << end;
-			// TODO: add map knowledge
+			XML << element << "map-knowledge";
+			
+			const std::set< System * > & ExploredSystems(g_PlayerCharacter->GetMapKnowledge()->GetExploredSystems());
+			
+			for(std::set< System * >::const_iterator ExploredSystemIterator = ExploredSystems.begin(); ExploredSystemIterator != ExploredSystems.end(); ++ExploredSystemIterator)
+			{
+				XML << element << "explored-system" << attribute << "identifier" << value << (*ExploredSystemIterator)->GetIdentifier() << end;
+			}
+			XML << end;
 			XML << end;
 			XML << element << "ship" << attribute << "class-identifier" << value << g_PlayerShip->GetShipClass()->GetIdentifier();
 			XML << element << "fuel" << attribute << "value" << value << g_PlayerShip->GetFuel() << end;
@@ -1397,6 +1405,16 @@ void LoadSavegame(const std::string & LoadSavegameFileName)
 				if((*CharacterChild)->GetName() == "credits")
 				{
 					g_PlayerCharacter->SetCredits(from_string_cast< float >((*CharacterChild)->GetAttribute("value")));
+				}
+				else if((*CharacterChild)->GetName() == "map-knowledge")
+				{
+					for(std::vector< Element * >::const_iterator MapKnowledgeChild = (*CharacterChild)->GetChilds().begin(); MapKnowledgeChild != (*CharacterChild)->GetChilds().end(); ++MapKnowledgeChild)
+					{
+						if((*MapKnowledgeChild)->GetName() == "explored-system")
+						{
+							g_PlayerCharacter->GetMapKnowledge()->AddExploredSystem(g_SystemManager.Get((*MapKnowledgeChild)->GetAttribute("identifier")));
+						}
+					}
 				}
 			}
 		}
