@@ -816,7 +816,7 @@ void KeyDown(unsigned int KeyCode)
 					// test speed
 					if((g_PlayerShip->GetVelocity() - SelectedCargo->GetVelocity()).length_squared() <= 2.0f)
 					{
-						g_PlayerShip->AddCargo(SelectedCargo->GetCommodity(), 1.0f);
+						g_PlayerShip->AddCommodities(SelectedCargo->GetCommodity(), 1.0f);
 						g_CurrentSystem->RemoveCargo(SelectedCargo);
 						SelectCargo(0);
 					}
@@ -940,12 +940,12 @@ void KeyDown(unsigned int KeyCode)
 	case 54: // Key: C
 		{
 			SetMessage("Jettison cargo.");
-			while(g_PlayerShip->GetCargo().size() > 0)
+			while(g_PlayerShip->GetCommodities().size() > 0)
 			{
-				const Commodity * Commodity(g_PlayerShip->GetCargo().begin()->first);
+				const Commodity * Commodity(g_PlayerShip->GetCommodities().begin()->first);
 				Cargo * NewCargo(new Cargo(g_ModelManager.Get("cargo_cube"), Commodity, g_PlayerShip->GetVelocity() * 0.8f + math3d::vector2f(-0.5f + static_cast< float >(random()) / RAND_MAX, -0.5f + static_cast< float >(random()) / RAND_MAX))); // TODO: memory leak
 				
-				g_PlayerShip->RemoveCargo(Commodity, 1.0f);
+				g_PlayerShip->RemoveCommodities(Commodity, 1.0f);
 				NewCargo->SetPosition(g_PlayerShip->GetPosition());
 				g_CurrentSystem->AddCargo(NewCargo);
 			}
@@ -1034,7 +1034,7 @@ void KeyDown(unsigned int KeyCode)
 			XML << element << "velocity" << attribute << "x" << value << g_PlayerShip->GetVelocity().m_V.m_A[0] << attribute << "y" << value << g_PlayerShip->GetVelocity().m_V.m_A[1] << end;
 			XML << element << "commodities";
 			
-			const std::map< const Commodity *, float > & Commodities(g_PlayerShip->GetCargo());
+			const std::map< const Commodity *, float > & Commodities(g_PlayerShip->GetCommodities());
 			
 			for(std::map< const Commodity *, float >::const_iterator Commodity = Commodities.begin(); Commodity != Commodities.end(); ++Commodity)
 			{

@@ -44,7 +44,7 @@ TradeCenterCommodity::TradeCenterCommodity(Widget * SupWidget, PlanetCommodity *
 
 void TradeCenterCommodity::UpdateCharacterAmount(void)
 {
-	m_CharacterAmountLabel->SetString(to_string_cast(g_PlayerShip->GetCargoAmount(m_PlanetCommodity->GetCommodity())));
+	m_CharacterAmountLabel->SetString(to_string_cast(g_PlayerShip->GetCommodityAmount(m_PlanetCommodity->GetCommodity())));
 }
 
 const PlanetCommodity * TradeCenterCommodity::GetPlanetCommodity(void) const
@@ -139,7 +139,7 @@ bool TradeCenterDialog::OnClicked(Widget * EventSource)
 			
 			if(g_PlayerCharacter->RemoveCredits(Price) == true)
 			{
-				if(g_PlayerShip->AddCargo(m_SelectedTradeCenterCommodity->GetPlanetCommodity()->GetCommodity(), 1.0f) == false)
+				if(g_PlayerShip->AddCommodities(m_SelectedTradeCenterCommodity->GetPlanetCommodity()->GetCommodity(), 1.0f) == false)
 				{
 					g_PlayerCharacter->AddCredits(Price);
 				}
@@ -156,7 +156,7 @@ bool TradeCenterDialog::OnClicked(Widget * EventSource)
 	{
 		if(m_SelectedTradeCenterCommodity != 0)
 		{
-			if(g_PlayerShip->RemoveCargo(m_SelectedTradeCenterCommodity->GetPlanetCommodity()->GetCommodity(), 1.0f) == true)
+			if(g_PlayerShip->RemoveCommodities(m_SelectedTradeCenterCommodity->GetPlanetCommodity()->GetCommodity(), 1.0f) == true)
 			{
 				g_PlayerCharacter->AddCredits(m_SelectedTradeCenterCommodity->GetPlanetCommodity()->GetPrice());
 				m_SelectedTradeCenterCommodity->UpdateCharacterAmount();
@@ -181,7 +181,7 @@ bool TradeCenterDialog::OnKey(Widget * EventSource, int Key, int State)
 		
 		if(g_PlayerCharacter->RemoveCredits(Price) == true)
 		{
-			if(g_PlayerShip->AddCargo(m_SelectedTradeCenterCommodity->GetPlanetCommodity()->GetCommodity(), 1.0f) == false)
+			if(g_PlayerShip->AddCommodities(m_SelectedTradeCenterCommodity->GetPlanetCommodity()->GetCommodity(), 1.0f) == false)
 			{
 				g_PlayerCharacter->AddCredits(Price);
 			}
@@ -195,7 +195,7 @@ bool TradeCenterDialog::OnKey(Widget * EventSource, int Key, int State)
 	}
 	else if((Key == 39 /* S */) && (m_SelectedTradeCenterCommodity != 0) && (State == EV_DOWN))
 	{
-		if(g_PlayerShip->RemoveCargo(m_SelectedTradeCenterCommodity->GetPlanetCommodity()->GetCommodity(), 1.0f) == true)
+		if(g_PlayerShip->RemoveCommodities(m_SelectedTradeCenterCommodity->GetPlanetCommodity()->GetCommodity(), 1.0f) == true)
 		{
 			g_PlayerCharacter->AddCredits(m_SelectedTradeCenterCommodity->GetPlanetCommodity()->GetPrice());
 			m_SelectedTradeCenterCommodity->UpdateCharacterAmount();
