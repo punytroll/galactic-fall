@@ -34,21 +34,21 @@ public:
 	float GetTurnSpeed(void) const;
 	const math3d::vector2f & GetVelocity(void) const;
 	float GetFreeCargoHoldSize(void) const;
-	float GetCargoAmount(const Commodity * CargoCommodity) const;
-	const std::map< const Commodity *, float > GetCargo(void) const;
+	float GetCommodityAmount(const Commodity * CargoCommodity) const;
+	const std::map< const Commodity *, float > GetCommodities(void) const;
 	// setters
 	void SetFuel(float Fuel);
 	void SetVelocity(const math3d::vector2f & Velocity);
 	void SetAngularPosition(float AngularPosition);
 	// modifiers
-	bool AddCargo(const Commodity * CargoCommodity, float Amount);
+	bool AddCommodities(const Commodity * CargoCommodity, float Amount);
+	bool RemoveCommodities(const Commodity * CargoCommodity, float Amount);
 	void Jump(void);
 	void Refuel(float Fuel);
-	bool RemoveCargo(const Commodity * CargoCommodity, float Amount);
 private:
 	// ship class
 	ShipClass * m_ShipClass;
-	std::map< const Commodity *, float > m_Cargo;
+	std::map< const Commodity *, float > m_Commodities;
 	float m_Fuel;
 };
 
@@ -87,16 +87,16 @@ inline const math3d::vector2f & Ship::GetVelocity(void) const
 	return m_Velocity;
 }
 
-inline float Ship::GetCargoAmount(const Commodity * CargoCommodity) const
+inline float Ship::GetCommodityAmount(const Commodity * CargoCommodity) const
 {
-	std::map< const Commodity *, float >::const_iterator CargoIterator(m_Cargo.find(CargoCommodity));
+	std::map< const Commodity *, float >::const_iterator CommodityIterator(m_Commodities.find(CargoCommodity));
 	
-	return ((CargoIterator == m_Cargo.end()) ? (0) : (CargoIterator->second));
+	return ((CommodityIterator == m_Commodities.end()) ? (0) : (CommodityIterator->second));
 }
 
-inline const std::map< const Commodity *, float > Ship::GetCargo(void) const
+inline const std::map< const Commodity *, float > Ship::GetCommodities(void) const
 {
-	return m_Cargo;
+	return m_Commodities;
 }
 
 inline void Ship::SetFuel(float Fuel)

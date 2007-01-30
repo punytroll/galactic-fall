@@ -76,18 +76,18 @@ float Ship::GetFuelCapacity(void) const
 float Ship::GetFreeCargoHoldSize(void) const
 {
 	float CargoHoldSize(m_ShipClass->GetCargoHoldSize());
-	std::map< const Commodity *, float >::const_iterator CargoIterator(m_Cargo.begin());
+	std::map< const Commodity *, float >::const_iterator Commodity(m_Commodities.begin());
 	
-	while(CargoIterator != m_Cargo.end())
+	while(Commodity != m_Commodities.end())
 	{
-		CargoHoldSize -= CargoIterator->second;
-		++CargoIterator;
+		CargoHoldSize -= Commodity->second;
+		++Commodity;
 	}
 	
 	return CargoHoldSize;
 }
 
-bool Ship::AddCargo(const Commodity * CargoCommodity, float Amount)
+bool Ship::AddCommodities(const Commodity * CargoCommodity, float Amount)
 {
 	if(Amount > GetFreeCargoHoldSize())
 	{
@@ -95,19 +95,40 @@ bool Ship::AddCargo(const Commodity * CargoCommodity, float Amount)
 	}
 	else
 	{
-		std::map< const Commodity *, float >::iterator CargoIterator(m_Cargo.find(CargoCommodity));
+		std::map< const Commodity *, float >::iterator CommodityIterator(m_Commodities.find(CargoCommodity));
 		
-		if(CargoIterator == m_Cargo.end())
+		if(CommodityIterator == m_Commodities.end())
 		{
-			m_Cargo[CargoCommodity] = Amount;
+			m_Commodities[CargoCommodity] = Amount;
 		}
 		else
 		{
-			m_Cargo[CargoCommodity] += Amount;
+			CommodityIterator->second += Amount;
 		}
 		
 		return true;
 	}
+}
+
+bool Ship::RemoveCommodities(const Commodity * CargoCommodity, float Amount)
+{
+	std::map< const Commodity *, float >::iterator CommodityIterator(m_Commodities.find(CargoCommodity));
+	
+	if(CommodityIterator == m_Commodities.end())
+	{
+		return false;
+	}
+	if(CommodityIterator->second < Amount)
+	{
+		return false;
+	}
+	CommodityIterator->second -= Amount;
+	if(CommodityIterator->second == 0)
+	{
+		m_Commodities.erase(CommodityIterator);
+	}
+	
+	return true;
 }
 
 void Ship::Jump(void)
@@ -120,25 +141,4 @@ void Ship::Refuel(float Fuel)
 {
 	assert(m_Fuel + Fuel <= GetFuelCapacity());
 	m_Fuel += Fuel;
-}
-
-bool Ship::RemoveCargo(const Commodity * CargoCommodity, float Amount)
-{
-	std::map< const Commodity *, float >::iterator CargoIterator(m_Cargo.find(CargoCommodity));
-	
-	if(CargoIterator == m_Cargo.end())
-	{
-		return false;
-	}
-	if(CargoIterator->second < Amount)
-	{
-		return false;
-	}
-	CargoIterator->second -= Amount;
-	if(CargoIterator->second == 0)
-	{
-		m_Cargo.erase(CargoIterator);
-	}
-	
-	return true;
 }
