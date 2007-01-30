@@ -26,6 +26,7 @@ public:
 	float m_AngularPosition;
 	// getters
 	float GetForwardThrust(void) const;
+	float GetAngularPosition(void) const;
 	float GetFuel(void) const;
 	float GetFuelCapacity(void) const;
 	float GetMaximumSpeed(void) const;
@@ -54,6 +55,11 @@ private:
 inline float Ship::GetForwardThrust(void) const
 {
 	return m_ShipClass->GetForwardThrust();
+}
+
+inline float Ship::GetAngularPosition(void) const
+{
+	return m_AngularPosition;
 }
 
 inline float Ship::GetFuel(void) const

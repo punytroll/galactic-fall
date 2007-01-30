@@ -1,0 +1,13 @@
+<save>
+	<system identifier="sol"/>
+	<character>
+		<credits value="1000"/>
+	</character>
+	<ship class-identifier="shuttlecraft">
+		<fuel value="0.5"/>
+		<position x="0" y="0"/>
+		<angular-position value="0"/>
+		<velocity x="0" y="0"/>
+		<commodities/>
+	</ship>
+</save>
