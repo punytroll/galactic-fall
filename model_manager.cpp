@@ -97,7 +97,7 @@ void LoadModelsFromFile(ModelManager * ModelManager, const std::string & FileNam
 	}
 	
 	Document Document(FileStream);
-	const Element * RootElement(Document.GetRootElement());
+	const Element * RootElement(Document.GetDocumentElement());
 	
 	if(RootElement == 0)
 	{

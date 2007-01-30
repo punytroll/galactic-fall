@@ -83,14 +83,9 @@ const Element * Element::GetChild(std::vector< Element * >::size_type Index) con
 }
 
 Document::Document(std::istream & Stream) :
-	m_RootElement(0)
+	m_DocumentElement(0)
 {
-	DOMReader DOMReader(Stream, this, &m_RootElement);
+	DOMReader DOMReader(Stream, this, &m_DocumentElement);
 	
 	DOMReader.Parse();
-}
-
-const Element * Document::GetRootElement(void) const
-{
-	return m_RootElement;
 }

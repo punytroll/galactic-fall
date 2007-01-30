@@ -1379,7 +1379,7 @@ void LoadSavegame(const std::string & LoadSavegameFileName)
 	
 	std::ifstream InputStream(LoadSavegameFileName.c_str());
 	Document SavegameDocument(InputStream);
-	const Element * SaveElement(SavegameDocument.GetRootElement());
+	const Element * SaveElement(SavegameDocument.GetDocumentElement());
 	const std::vector< Element * > & SaveChilds(SaveElement->GetChilds());
 	std::string System;
 	

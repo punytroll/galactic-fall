@@ -30,9 +30,14 @@ class Document
 {
 public:
 	Document(std::istream & Stream);
-	const Element * GetRootElement(void) const;
+	const Element * GetDocumentElement(void) const;
 private:
-	Element * m_RootElement;
+	Element * m_DocumentElement;
 };
+
+inline const Element * Document::GetDocumentElement(void) const
+{
+	return m_DocumentElement;
+}
 
 #endif

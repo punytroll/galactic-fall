@@ -156,7 +156,7 @@ void LoadSystemsFromFile(SystemManager * SystemManager, const std::string & File
 	}
 	
 	Document Document(FileStream);
-	const Element * RootElement(Document.GetRootElement());
+	const Element * RootElement(Document.GetDocumentElement());
 	
 	if(RootElement == 0)
 	{
@@ -218,7 +218,7 @@ void LoadSystemLinksFromFile(SystemManager * SystemManager, const std::string & 
 	}
 	
 	Document Document(FileStream);
-	const Element * RootElement(Document.GetRootElement());
+	const Element * RootElement(Document.GetDocumentElement());
 	
 	if(RootElement == 0)
 	{
