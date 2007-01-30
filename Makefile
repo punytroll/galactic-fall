@@ -58,6 +58,9 @@ map_dialog_h = \
 	$(mouse_button_listener_h) \
 	$(window_h)
 
+map_knowledge_h = \
+	map_knowledge.h
+
 model_h = \
 	model.h
 
