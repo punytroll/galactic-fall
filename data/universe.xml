@@ -35,7 +35,7 @@
 			<description value="Earth is the home planet of the human race and most treasured among all allies of the Federation."/>
 			<position x="60" y="40"/>
 			<size value="100"/>
-			<color red="0.6" green="0.9" blue="1.0" alpha="1.0"/>
+			<color red="0.4" green="0.45" blue="1.0" alpha="1.0"/>
 			<commodity identifier="food" base-price-modifier="0.85"/>
 			<commodity identifier="industrial" base-price-modifier="1.08"/>
 			<commodity identifier="medical_supplies" base-price-modifier="0.9"/>
