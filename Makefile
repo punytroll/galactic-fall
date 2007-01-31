@@ -258,7 +258,7 @@ mouse_motion_listener.o: mouse_motion_listener.cpp $(mouse_motion_listener_h)
 object.o: object.cpp $(object_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags math3d` -c $< -o $@
 
-planet.o: planet.cpp $(commodity_h) $(planet_h)
+planet.o: planet.cpp $(color_h) $(commodity_h) $(planet_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags math3d` -c $< -o $@
 
 planet_dialog.o: planet_dialog.cpp $(button_h) $(character_h) $(color_h) $(globals_h) $(label_h) $(planet_h) $(planet_dialog_h) $(ship_h) $(string_cast_h) $(trade_center_dialog_h)

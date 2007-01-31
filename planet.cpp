@@ -1,6 +1,9 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 
+#include <math3d/vector4f.h>
+
+#include "color.h"
 #include "commodity.h"
 #include "planet.h"
 
@@ -26,7 +29,8 @@ void PlanetCommodity::SetBasePriceModifier(const float & BasePriceModifier)
 
 Planet::Planet(const std::string & Identifier) :
 	m_Identifier(Identifier),
-	m_AllowRefuelling(false)
+	m_AllowRefuelling(false),
+	m_Color(0)
 {
 }
 
@@ -37,6 +41,8 @@ Planet::~Planet(void)
 		delete m_Commodities.back();
 		m_Commodities.pop_back();
 	}
+	delete m_Color;
+	m_Color = 0;
 }
 
 void Planet::SetName(const std::string & Name)
@@ -60,14 +66,44 @@ void Planet::SetSize(const float & Size)
 	SetRadialSize(m_Size / 2.0f);
 }
 
+void Planet::SetColor(const Color & NewColor)
+{
+	delete m_Color;
+	m_Color = new Color(NewColor);
+}
+
 void Planet::Draw(void) const
 {
 	glPushMatrix();
 	glTranslatef(m_Position.m_V.m_A[0], m_Position.m_V.m_A[1], 0.0f);
+	if(m_Color != 0)
+	{
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, m_Color->GetColor().m_V.m_A);
+	}
+	else
+	{
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, math3d::vector4f(1.0f, 1.0f, 1.0f, 1.0f).m_V.m_A);
+	}
 	
 	GLUquadric * Quadric(gluNewQuadric());
 	
-	gluSphere(Quadric, m_Size / 2.0f, 40, 8);
+	gluSphere(Quadric, GetRadialSize(), 40, 8);
+	/* TODO: This code allows an athmosphere around the planet ... optimize and make usable via a planet property
+	glEnable(GL_BLEND);
+	MaterialColor.set(1.0f, 1.0f, 1.0f, 0.35f);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, MaterialColor.m_V.m_A);
+	gluSphere(Quadric, m_Size / 1.99f, 40, 8);
+	MaterialColor.set(1.0f, 1.0f, 1.0f, 0.3f);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, MaterialColor.m_V.m_A);
+	gluSphere(Quadric, m_Size / 1.98f, 40, 8);
+	MaterialColor.set(1.0f, 1.0f, 1.0f, 0.25f);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, MaterialColor.m_V.m_A);
+	gluSphere(Quadric, m_Size / 1.97f, 40, 8);
+	MaterialColor.set(1.0f, 1.0f, 1.0f, 0.15f);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, MaterialColor.m_V.m_A);
+	gluSphere(Quadric, m_Size / 1.95f, 40, 8);
+	glDisable(GL_BLEND);
+	*/
 	gluDeleteQuadric(Quadric);
 	glPopMatrix();
 }

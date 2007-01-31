@@ -6,6 +6,7 @@
 
 #include "object.h"
 
+class Color;
 class Commodity;
 
 class PlanetCommodity
@@ -42,6 +43,7 @@ public:
 	void SetLandingFee(float LandingFee);
 	void SetDescription(const std::string & Description);
 	void SetSize(const float & Size);
+	void SetColor(const Color & Color);
 	virtual void Draw(void) const;
 	PlanetCommodity * CreateCommodity(Commodity * Commodity);
 private:
@@ -52,6 +54,7 @@ private:
 	bool m_AllowRefuelling;
 	float m_FuelPrice;
 	float m_LandingFee;
+	Color * m_Color;
 	std::vector< PlanetCommodity * > m_Commodities;
 };
 

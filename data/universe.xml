@@ -28,13 +28,14 @@
 		<position x="0" y="0"/>
 		<star>
 			<position x="-50" y="50"/>
-			<color red="1.0" green="0.9" blue="0.6" alpha="1.0"/>
+			<color red="1.0" green="0.97" blue="0.9" alpha="0.0"/>
 		</star>
 		<planet identifier="earth">
 			<name value="Earth"/>
 			<description value="Earth is the home planet of the human race and most treasured among all allies of the Federation."/>
 			<position x="60" y="40"/>
 			<size value="100"/>
+			<color red="0.6" green="0.9" blue="1.0" alpha="1.0"/>
 			<commodity identifier="food" base-price-modifier="0.85"/>
 			<commodity identifier="industrial" base-price-modifier="1.08"/>
 			<commodity identifier="medical_supplies" base-price-modifier="0.9"/>
@@ -50,6 +51,7 @@
 			<description value="Colonizing the Moon, the only satelite of Earth was the first and biggest space habitation project issued by the human race. Because of the enormous transportation costs in the beginning of the project, building a self-sufficient infrastructure on Moon had the highest priority. Nowadays, Moon pretty much provides for its own needs."/>
 			<position x="-60" y="60"/>
 			<size value="20"/>
+			<color red="0.8" green="0.8" blue="0.8" alpha="1.0"/>
 			<commodity identifier="food" base-price-modifier="0.87"/>
 			<commodity identifier="industrial" base-price-modifier="1.05"/>
 			<commodity identifier="medical_supplies" base-price-modifier="0.98"/>
@@ -64,6 +66,7 @@
 			<description value="Having had some experiences with the colonization of Moon, Mars was nothing more than a side project to the hyperspace travelling project: necessary for testing the new findings of the research labs and easily supplied from the Moon base which of course bloomed during that time. Today Mars features a sophisticated and wealthy society mainly based on the privatized and fully automated mining fascilities spread over the uninhabited parts of the planet surface."/>
 			<position x="-500" y="-250"/>
 			<size value="80"/>
+			<color red="0.9" green="0.38" blue="0.25" alpha="1.0"/>
 			<commodity identifier="food" base-price-modifier="1.05"/>
 			<commodity identifier="industrial" base-price-modifier="1.12"/>
 			<commodity identifier="medical_supplies" base-price-modifier="0.98"/>
@@ -86,6 +89,7 @@
 			<name value="Rigel Guardian"/>
 			<position x="10" y="-20"/>
 			<size value="60"/>
+			<color red="0.8" green="0.9" blue="0.4" alpha="1.0"/>
 			<commodity identifier="food" base-price-modifier="1.12"/>
 			<commodity identifier="industrial" base-price-modifier="0.97"/>
 			<commodity identifier="medical_supplies" base-price-modifier="0.98"/>
@@ -108,6 +112,7 @@
 			<name value="Tau Prime"/>
 			<position x="-100" y="80"/>
 			<size value="120"/>
+			<color red="0.8" green="0.6" blue="1.0" alpha="1.0"/>
 			<commodity identifier="food" base-price-modifier="0.95"/>
 			<commodity identifier="industrial" base-price-modifier="1.02"/>
 			<commodity identifier="medical_supplies" base-price-modifier="1.07"/>
@@ -122,6 +127,7 @@
 			<name value="Hephant"/>
 			<position x="-200" y="60"/>
 			<size value="30"/>
+			<color red="0.8" green="0.6" blue="0.8" alpha="1.0"/>
 			<commodity identifier="food" base-price-modifier="1"/>
 			<commodity identifier="industrial" base-price-modifier="1.02"/>
 			<commodity identifier="medical_supplies" base-price-modifier="1.08"/>
