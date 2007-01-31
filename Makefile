@@ -150,9 +150,9 @@ xml_stream_h = \
 all: all-recursive escapevelocity
 
 all-recursive:
-	@$(MAKE) -C data
+	@$(MAKE) -C data all
 
-clean:
+clean: clean-recursive
 	$(RM) escapevelocity
 	$(RM) buffer_reading.o
 	$(RM) button.o
@@ -192,6 +192,9 @@ clean:
 	$(RM) xml_parser.o
 	$(RM) xml_puny_dom.o
 	$(RM) xml_stream.o
+
+clean-recursive:
+	@$(MAKE) -C data clean
 
 escapevelocity: buffer_reading.o button.o camera.o cargo.o character.o clicked_listener.o color.o commodity.o commodity_manager.o destroy_listener.o draw_text.o key_listener.o label.o main.o map_dialog.o map_knowledge.o model.o model_manager.o mouse_button_listener.o mouse_motion_listener.o object.o planet.o planet_dialog.o real_time.o ship.o ship_class.o ship_class_manager.o star.o string_cast.o system.o system_manager.o trade_center_dialog.o user_interface.o widget.o window.o xml_parser.o xml_puny_dom.o xml_stream.o
 	$(CXX) $(LDFLAGS) `pkg-config --libs libarxx` $^ -lGL -lGLU -o $@
