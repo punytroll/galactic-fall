@@ -1,5 +1,6 @@
 #include <fstream>
 
+#include "color.h"
 #include "model_manager.h"
 #include "ship_class.h"
 #include "ship_class_manager.h"
@@ -111,6 +112,10 @@ void LoadShipClassFromElement(ShipClassManager * ShipClassManager, const Element
 		else if(Child->GetName() == "turn-fuel")
 		{
 			NewShipClass->SetTurnFuel(from_string_cast< float >(Child->GetAttribute("value")));
+		}
+		else if(Child->GetName() == "color")
+		{
+			NewShipClass->SetColor(Color(from_string_cast< float >(Child->GetAttribute("red")), from_string_cast< float >(Child->GetAttribute("green")), from_string_cast< float >(Child->GetAttribute("blue")), from_string_cast< float >(Child->GetAttribute("alpha"))));
 		}
 		++ChildIterator;
 	}

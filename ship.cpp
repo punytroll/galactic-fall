@@ -2,6 +2,7 @@
 
 #include <GL/gl.h>
 
+#include "color.h"
 #include "model.h"
 #include "ship.h"
 
@@ -21,6 +22,14 @@ void Ship::Draw(void) const
 	glTranslatef(m_Position.m_V.m_A[0], m_Position.m_V.m_A[1], 0.0f);
 	glRotatef(m_AngularPosition * 180.0f / M_PI, 0.0f, 0.0f, 1.0f);
 	glRotatef(90.0f, 1.0f, 0.0f, 0.0f);
+	if(m_ShipClass->GetColor() != 0)
+	{
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, m_ShipClass->GetColor()->GetColor().m_V.m_A);
+	}
+	else
+	{
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, math3d::vector4f(1.0f, 1.0f, 1.0f, 1.0f).m_V.m_A);
+	}
 	m_ShipClass->GetModel()->Draw();
 	glPopMatrix();
 }

@@ -3,6 +3,7 @@
 
 #include <string>
 
+class Color;
 class Model;
 
 class ShipClass
@@ -10,6 +11,8 @@ class ShipClass
 public:
 	// constructor
 	ShipClass(const std::string & Identifier);
+	// destructor
+	~ShipClass(void);
 	// getters
 	const std::string & GetIdentifier(void) const;
 	const Model * GetModel(void) const;
@@ -21,6 +24,7 @@ public:
 	float GetJumpFuel(void) const;
 	float GetForwardFuel(void) const;
 	float GetTurnFuel(void) const;
+	Color * GetColor(void) const;
 	// modifiers
 	void SetModel(const Model * Model);
 	void SetForwardThrust(float ForwardThrust);
@@ -31,6 +35,7 @@ public:
 	void SetJumpFuel(float JumpFuel);
 	void SetForwardFuel(float ForwardFuel);
 	void SetTurnFuel(float TurnFuel);
+	void SetColor(const Color & Color);
 private:
 	std::string m_Identifier;
 	const Model * m_Model;
@@ -42,6 +47,7 @@ private:
 	float m_JumpFuel;
 	float m_ForwardFuel;
 	float m_TurnFuel;
+	Color * m_Color;
 };
 
 inline const std::string & ShipClass::GetIdentifier(void) const
@@ -92,6 +98,11 @@ inline float ShipClass::GetForwardFuel(void) const
 inline float ShipClass::GetTurnFuel(void) const
 {
 	return m_TurnFuel;
+}
+
+inline Color * ShipClass::GetColor(void) const
+{
+	return m_Color;
 }
 
 inline void ShipClass::SetModel(const Model * Model)
