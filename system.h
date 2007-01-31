@@ -9,6 +9,7 @@
 class Cargo;
 class Planet;
 class Ship;
+class Star;
 
 class System
 {
@@ -21,10 +22,12 @@ public:
 	const std::list< System * > GetLinkedSystems(void) const;
 	const std::list< Ship * > GetShips(void) const;
 	const std::list< Cargo * > GetCargos(void) const;
+	const Star * GetStar(void) const;
 	bool IsLinkedToSystem(const System * System) const;
 	void SetName(const std::string & Name);
 	void SetPosition(const math3d::vector2f & Position);
 	Planet * CreatePlanet(const std::string & Identifier);
+	Star * CreateStar(void);
 	void AddLinkedSystem(System * LinkedSystem);
 	void AddShip(Ship * Ship);
 	void AddCargo(Cargo * Cargo);
@@ -35,6 +38,7 @@ private:
 	std::string m_Identifier;
 	std::string m_Name;
 	math3d::vector2f m_Position;
+	Star * m_Star;
 	std::list< Planet * > m_Planets;
 	std::list< System * > m_LinkedSystems;
 	std::list< Ship * > m_Ships;
@@ -74,6 +78,11 @@ inline const std::list< Ship * > System::GetShips(void) const
 inline const std::list< Cargo * > System::GetCargos(void) const
 {
 	return m_Cargos;
+}
+
+inline const Star * System::GetStar(void) const
+{
+	return m_Star;
 }
 
 #endif

@@ -3,6 +3,7 @@
 
 #include "commodity_manager.h"
 #include "planet.h"
+#include "star.h"
 #include "string_cast.h"
 #include "system.h"
 #include "system_manager.h"
@@ -85,6 +86,25 @@ void LoadSystemFromElement(SystemManager * SystemManager, const Element * System
 		else if(SystemProperty->GetName() == "position")
 		{
 			NewSystem->SetPosition(math3d::vector2f(from_string_cast< float >(SystemProperty->GetAttribute("x")), from_string_cast< float >(SystemProperty->GetAttribute("y"))));
+		}
+		else if(SystemProperty->GetName() == "star")
+		{
+			Star * NewStar(NewSystem->CreateStar());
+			
+			if(NewStar != 0)
+			{
+				for(std::vector< Element * >::const_iterator StarChild = SystemProperty->GetChilds().begin(); StarChild != SystemProperty->GetChilds().end(); ++StarChild)
+				{
+					if((*StarChild)->GetName() == "position")
+					{
+						NewStar->SetPosition(math3d::vector2f(from_string_cast< float >((*StarChild)->GetAttribute("x")), from_string_cast< float >((*StarChild)->GetAttribute("y"))));
+					}
+					else if((*StarChild)->GetName() == "color")
+					{
+						NewStar->SetColor(Color(from_string_cast< float >((*StarChild)->GetAttribute("red")), from_string_cast< float >((*StarChild)->GetAttribute("green")), from_string_cast< float >((*StarChild)->GetAttribute("blue")), from_string_cast< float >((*StarChild)->GetAttribute("alpha"))));
+					}
+				}
+			}
 		}
 		else if(SystemProperty->GetName() == "planet")
 		{

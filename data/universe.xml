@@ -26,6 +26,10 @@
 	<system identifier="sol">
 		<name value="Sol"/>
 		<position x="0" y="0"/>
+		<star>
+			<position x="-50" y="50"/>
+			<color red="1.0" green="0.9" blue="0.6" alpha="1.0"/>
+		</star>
 		<planet identifier="earth">
 			<name value="Earth"/>
 			<description value="Earth is the home planet of the human race and most treasured among all allies of the Federation."/>
@@ -74,6 +78,10 @@
 	<system identifier="rigel">
 		<name value="Rigel"/>
 		<position x="-4" y="6"/>
+		<star>
+			<position x="20" y="50"/>
+			<color red="0.8" green="0.95" blue="1.0" alpha="1.0"/>
+		</star>
 		<planet identifier="rigel_guardian">
 			<name value="Rigel Guardian"/>
 			<position x="10" y="-20"/>
@@ -92,6 +100,10 @@
 	<system identifier="alpha_centauri">
 		<name value="Alpha Centauri"/>
 		<position x="10" y="5"/>
+		<star>
+			<position x="50" y="-50"/>
+			<color red="0.8" green="0.95" blue="1.0" alpha="1.0"/>
+		</star>
 		<planet identifier="tau_prime">
 			<name value="Tau Prime"/>
 			<position x="-100" y="80"/>
@@ -123,6 +135,10 @@
 	<system identifier="tichel">
 		<name value="Tichel"/>
 		<position x="4" y="9"/>
+		<star>
+			<position x="50" y="20"/>
+			<color red="1.0" green="1.0" blue="1.0" alpha="1.0"/>
+		</star>
 	</system>
 	<system-link>
 		<system identifier="sol"/>

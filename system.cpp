@@ -1,4 +1,5 @@
 #include "planet.h"
+#include "star.h"
 #include "system.h"
 
 System::System(const std::string & Identifier) :
@@ -34,6 +35,20 @@ Planet * System::CreatePlanet(const std::string & Identifier)
 	m_Planets.push_back(new Planet(Identifier));
 	
 	return m_Planets.back();
+}
+
+Star * System::CreateStar(void)
+{
+	if(m_Star != 0)
+	{
+		return 0;
+	}
+	else
+	{
+		m_Star = new Star();
+		
+		return m_Star;
+	}
 }
 
 void System::AddLinkedSystem(System * LinkedSystem)
