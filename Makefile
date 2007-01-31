@@ -188,6 +188,7 @@ clean:
 	$(RM) trade_center_dialog.o
 	$(RM) user_interface.o
 	$(RM) widget.o
+	$(RM) window.o
 	$(RM) xml_parser.o
 	$(RM) xml_puny_dom.o
 	$(RM) xml_stream.o
