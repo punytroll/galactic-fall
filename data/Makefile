@@ -11,6 +11,10 @@ all_data = \
 
 all: data.arx
 
+clean:
+	$(RM) -f data.arx
+	$(RM) -rf .data
+
 data.arx: .data $(all_data) Makefile
 	@$(RM) -f $@
 	arxtouch $@
