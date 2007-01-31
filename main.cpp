@@ -41,6 +41,7 @@
 #include "ship.h"
 #include "ship_class.h"
 #include "ship_class_manager.h"
+#include "star.h"
 #include "string_cast.h"
 #include "system.h"
 #include "system_manager.h"
@@ -285,7 +286,19 @@ void Render(void)
 	glLoadIdentity();
 	glClear(GL_DEPTH_BUFFER_BIT);
 	g_Camera.Draw();
-	glLightfv(GL_LIGHT0, GL_POSITION, math3d::vector4f(-50.0f, 50.0f, 100.0f, 0.0f).m_V.m_A);
+	
+	const Star * CurrentStar(g_CurrentSystem->GetStar());
+	
+	if(CurrentStar != 0)
+	{
+		glEnable(GL_LIGHT0);
+		glLightfv(GL_LIGHT0, GL_POSITION, math3d::vector4f(CurrentStar->GetPosition().m_V.m_A[0], CurrentStar->GetPosition().m_V.m_A[1], 0.0f, 0.0f).m_V.m_A);
+		glLightfv(GL_LIGHT0, GL_DIFFUSE, CurrentStar->GetColor().GetColor().m_V.m_A);
+	}
+	else
+	{
+		glDisable(GL_LIGHT0);
+	}
 	if(g_CurrentSystem != 0)
 	{
 		const std::list< Planet * > & Planets(g_CurrentSystem->GetPlanets());
@@ -364,7 +377,10 @@ void Render(void)
 		g_RadarCamera.SetPosition(0.0f, 0.0f, 4.0f * RadialSize);
 		g_RadarCamera.SetFocus(g_TargetObject);
 		g_RadarCamera.Draw();
-		glLightfv(GL_LIGHT0, GL_POSITION, math3d::vector4f(-50.0f, 50.0f, 100.0f, 0.0f).m_V.m_A);
+		if(CurrentStar != 0)
+		{
+			glLightfv(GL_LIGHT0, GL_POSITION, math3d::vector4f(CurrentStar->GetPosition().m_V.m_A[0], CurrentStar->GetPosition().m_V.m_A[1], 0.0f, 0.0f).m_V.m_A);
+		}
 		g_TargetObject->Draw();
 	}
 	// mini map
@@ -1297,12 +1313,10 @@ void CreateWindow(void)
 void InitializeOpenGL(void)
 {
 	glEnable(GL_LIGHTING);
-	glEnable(GL_LIGHT0);
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, math3d::vector4f(1.0f, 1.0f, 1.0f, 0.0f).m_V.m_A);
 	Resize();
 }
 
