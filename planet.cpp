@@ -79,6 +79,8 @@ void Planet::Draw(void) const
 	if(m_Color != 0)
 	{
 		glMaterialfv(GL_FRONT, GL_DIFFUSE, m_Color->GetColor().m_V.m_A);
+		glMaterialf(GL_FRONT, GL_SHININESS, 20.0f);
+		glMaterialfv(GL_FRONT, GL_SPECULAR, (math3d::vector4f(1.0f, 1.0f, 1.0f, 1.0f) - m_Color->GetColor()).m_V.m_A);
 	}
 	else
 	{
@@ -87,21 +89,13 @@ void Planet::Draw(void) const
 	
 	GLUquadric * Quadric(gluNewQuadric());
 	
-	gluSphere(Quadric, GetRadialSize(), 40, 8);
+	gluSphere(Quadric, GetRadialSize(), 40, 80);
 	/* TODO: This code allows an athmosphere around the planet ... optimize and make usable via a planet property
 	glEnable(GL_BLEND);
-	MaterialColor.set(1.0f, 1.0f, 1.0f, 0.35f);
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, MaterialColor.m_V.m_A);
-	gluSphere(Quadric, m_Size / 1.99f, 40, 8);
-	MaterialColor.set(1.0f, 1.0f, 1.0f, 0.3f);
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, MaterialColor.m_V.m_A);
-	gluSphere(Quadric, m_Size / 1.98f, 40, 8);
-	MaterialColor.set(1.0f, 1.0f, 1.0f, 0.25f);
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, MaterialColor.m_V.m_A);
-	gluSphere(Quadric, m_Size / 1.97f, 40, 8);
-	MaterialColor.set(1.0f, 1.0f, 1.0f, 0.15f);
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, MaterialColor.m_V.m_A);
-	gluSphere(Quadric, m_Size / 1.95f, 40, 8);
+	glMaterialf(GL_FRONT, GL_SHININESS, 0.0f);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, math3d::vector4f(1.0f, 1.0f, 1.0f, 0.35f).m_V.m_A);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, math3d::vector4f(0.0f, 0.0f, 0.0f, 1.0f).m_V.m_A);
+	gluSphere(Quadric, m_Size / 1.95f, 40, 80);
 	glDisable(GL_BLEND);
 	*/
 	gluDeleteQuadric(Quadric);
