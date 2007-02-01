@@ -21,6 +21,7 @@ bool WWindow::OnMouseButton(Widget * EventSource, int Button, int State, float X
 {
 	if(EventSource == m_TitleLabel)
 	{
+		GetSupWidget()->RaiseSubWidget(this);
 		if(Button == 1)
 		{
 			if(State == EV_DOWN)

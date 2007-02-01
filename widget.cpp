@@ -55,7 +55,7 @@ void Widget::Draw(void) const
 		glVertex2f(m_Size.m_V.m_A[0], 0.0f);
 		glEnd();
 	}
-	for(std::list< Widget * >::const_iterator SubWidgetIterator = m_SubWidgets.begin(); SubWidgetIterator != m_SubWidgets.end(); ++SubWidgetIterator)
+	for(std::list< Widget * >::const_reverse_iterator SubWidgetIterator = m_SubWidgets.rbegin(); SubWidgetIterator != m_SubWidgets.rend(); ++SubWidgetIterator)
 	{
 		Widget * SubWidget(*SubWidgetIterator);
 		
@@ -123,7 +123,7 @@ void Widget::AddSubWidget(Widget * SubWidget)
 {
 	assert(SubWidget->m_SupWidget == 0);
 	SubWidget->m_SupWidget = this;
-	m_SubWidgets.push_back(SubWidget);
+	m_SubWidgets.push_front(SubWidget);
 }
 
 void Widget::RemoveSubWidget(Widget * SubWidget)
@@ -135,6 +135,13 @@ void Widget::RemoveSubWidget(Widget * SubWidget)
 	{
 		m_KeyFocus = 0;
 	}
+}
+
+void Widget::RaiseSubWidget(Widget * SubWidget)
+{
+	assert(SubWidget->m_SupWidget == this);
+	m_SubWidgets.remove(SubWidget);
+	m_SubWidgets.push_front(SubWidget);
 }
 
 void Widget::Destroy(void)
