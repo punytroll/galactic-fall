@@ -75,7 +75,7 @@ Label * g_MessageLabel(0);
 Label * g_CurrentSystemLabel(0);
 System * g_CurrentSystem;
 System * g_SelectedLinkedSystem(0);
-Object * g_TargetObject(0);
+PhysicalObject * g_TargetObject(0);
 float g_TimeWarp(1.0f);
 bool g_Quit(false);
 bool g_Pause(false);

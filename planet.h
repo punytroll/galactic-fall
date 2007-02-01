@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "object.h"
+#include "physical_object.h"
 
 class Color;
 class Commodity;
@@ -22,7 +22,7 @@ private:
 	float m_BasePriceModifier;
 };
 
-class Planet : public Object
+class Planet : public PhysicalObject
 {
 public:
 	Planet(const std::string & Identifier);

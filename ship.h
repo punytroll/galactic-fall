@@ -5,13 +5,13 @@
 
 #include <math3d/vector2f.h>
 
-#include "object.h"
+#include "physical_object.h"
 #include "ship_class.h"
 
 class Commodity;
 class ShipClass;
 
-class Ship : public Object
+class Ship : public PhysicalObject
 {
 public:
 	Ship(ShipClass * ShipClass);
