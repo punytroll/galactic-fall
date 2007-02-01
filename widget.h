@@ -27,6 +27,7 @@ public:
 	void SetSize(const math3d::vector2f & Size);
 	void AddSubWidget(Widget * SubWidget);
 	void RemoveSubWidget(Widget * SubWidget);
+	void RaiseSubWidget(Widget * SubWidget);
 	void Destroy(void);
 	void SetKeyFocus(Widget * KeyFocus);
 	void GrabKeyFocus(void);
