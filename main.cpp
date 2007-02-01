@@ -292,7 +292,7 @@ void Render(void)
 	if(CurrentStar != 0)
 	{
 		glEnable(GL_LIGHT0);
-		glLightfv(GL_LIGHT0, GL_POSITION, math3d::vector4f(CurrentStar->GetPosition().m_V.m_A[0], CurrentStar->GetPosition().m_V.m_A[1], 0.0f, 0.0f).m_V.m_A);
+		glLightfv(GL_LIGHT0, GL_POSITION, math3d::vector4f(CurrentStar->GetPosition().m_V.m_A[0], CurrentStar->GetPosition().m_V.m_A[1], 100.0f, 0.0f).m_V.m_A);
 		glLightfv(GL_LIGHT0, GL_DIFFUSE, CurrentStar->GetColor().GetColor().m_V.m_A);
 	}
 	else
@@ -379,7 +379,7 @@ void Render(void)
 		g_RadarCamera.Draw();
 		if(CurrentStar != 0)
 		{
-			glLightfv(GL_LIGHT0, GL_POSITION, math3d::vector4f(CurrentStar->GetPosition().m_V.m_A[0], CurrentStar->GetPosition().m_V.m_A[1], 0.0f, 0.0f).m_V.m_A);
+			glLightfv(GL_LIGHT0, GL_POSITION, math3d::vector4f(CurrentStar->GetPosition().m_V.m_A[0], CurrentStar->GetPosition().m_V.m_A[1], 100.0f, 0.0f).m_V.m_A);
 		}
 		g_TargetObject->Draw();
 	}
