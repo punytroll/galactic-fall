@@ -4,12 +4,12 @@
 #include <math3d/vector2f.h>
 #include <math3d/vector3f.h>
 
-#include "object.h"
+#include "physical_object.h"
 
 class Commodity;
 class Model;
 
-class Cargo : public Object
+class Cargo : public PhysicalObject
 {
 public:
 	Cargo(Model * Model, const Commodity * Commodity, const math3d::vector2f & Velocity);

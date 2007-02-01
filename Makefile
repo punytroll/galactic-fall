@@ -17,7 +17,7 @@ camera_h = \
 
 cargo_h = \
 	cargo.h \
-	$(object_h)
+	$(physical_object_h)
 
 character_h = \
 	character.h
@@ -73,13 +73,13 @@ mouse_button_listener_h = \
 mouse_motion_listener_h = \
 	mouse_motion_listener.h
 
-object_h = \
-	object.h \
+physical_object_h = \
+	physical_object.h \
 	$(position_h)
 
 planet_h = \
 	planet.h \
-	$(object_h)
+	$(physical_object_h)
 
 planet_dialog_h = \
 	planet_dialog.h \
@@ -95,7 +95,7 @@ real_time_h = \
 
 ship_h = \
 	ship.h \
-	$(object_h) \
+	$(physical_object_h) \
 	$(ship_class_h)
 
 ship_class_h = \
@@ -174,7 +174,7 @@ clean: clean-recursive
 	$(RM) model_manager.o
 	$(RM) mouse_button_listener.o
 	$(RM) mouse_motion_listener.o
-	$(RM) object.o
+	$(RM) physical_object.o
 	$(RM) planet.o
 	$(RM) planet_dialog.o
 	$(RM) real_time.o
@@ -196,7 +196,7 @@ clean: clean-recursive
 clean-recursive:
 	@$(MAKE) -C data clean
 
-escapevelocity: buffer_reading.o button.o camera.o cargo.o character.o clicked_listener.o color.o commodity.o commodity_manager.o destroy_listener.o draw_text.o key_listener.o label.o main.o map_dialog.o map_knowledge.o model.o model_manager.o mouse_button_listener.o mouse_motion_listener.o object.o planet.o planet_dialog.o real_time.o ship.o ship_class.o ship_class_manager.o star.o string_cast.o system.o system_manager.o trade_center_dialog.o user_interface.o widget.o window.o xml_parser.o xml_puny_dom.o xml_stream.o
+escapevelocity: buffer_reading.o button.o camera.o cargo.o character.o clicked_listener.o color.o commodity.o commodity_manager.o destroy_listener.o draw_text.o key_listener.o label.o main.o map_dialog.o map_knowledge.o model.o model_manager.o mouse_button_listener.o mouse_motion_listener.o physical_object.o planet.o planet_dialog.o real_time.o ship.o ship_class.o ship_class_manager.o star.o string_cast.o system.o system_manager.o trade_center_dialog.o user_interface.o widget.o window.o xml_parser.o xml_puny_dom.o xml_stream.o
 	$(CXX) $(LDFLAGS) `pkg-config --libs libarxx` $^ -lGL -lGLU -o $@
 
 buffer_reading.o: buffer_reading.cpp $(buffer_reading_h)
@@ -259,7 +259,7 @@ mouse_button_listener.o: mouse_button_listener.cpp $(mouse_button_listener_h)
 mouse_motion_listener.o: mouse_motion_listener.cpp $(mouse_motion_listener_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-object.o: object.cpp $(object_h)
+physical_object.o: physical_object.cpp $(physical_object_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags math3d` -c $< -o $@
 
 planet.o: planet.cpp $(color_h) $(commodity_h) $(planet_h)

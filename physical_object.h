@@ -1,12 +1,12 @@
-#ifndef OBJECT_H
-#define OBJECT_H
+#ifndef PHYSICAL_OBJECT_H
+#define PHYSICAL_OBJECT_H
 
 #include "position.h"
 
-class Object : public Position
+class PhysicalObject : public Position
 {
 public:
-	virtual ~Object(void);
+	virtual ~PhysicalObject(void);
 	virtual void Draw(void) const = 0;
 	void SetRadialSize(float RadialSize);
 	float GetRadialSize(void) const;
@@ -14,7 +14,7 @@ private:
 	float m_RadialSize;
 };
 
-inline float Object::GetRadialSize(void) const
+inline float PhysicalObject::GetRadialSize(void) const
 {
 	return m_RadialSize;
 }
