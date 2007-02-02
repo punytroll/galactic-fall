@@ -156,6 +156,13 @@ XMLStream & XMLStream::operator<<(bool Value)
 	return *this;
 }
 
+XMLStream & XMLStream::operator<<(const void * Value)
+{
+	m_OutputStream << Value;
+	
+	return *this;
+}
+
 XMLStream & XMLStream::operator<<(XMLStream & (* Function)(XMLStream &))
 {
 	return Function(*this);
