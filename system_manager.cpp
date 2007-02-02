@@ -91,6 +91,7 @@ void LoadSystemFromElement(SystemManager * SystemManager, const Element * System
 		{
 			Star * NewStar(NewSystem->CreateStar());
 			
+			NewStar->SetObjectIdentifier("::system(" + NewSystem->GetIdentifier() + ")::star(" + NewSystem->GetIdentifier() + ")");
 			if(NewStar != 0)
 			{
 				for(std::vector< Element * >::const_iterator StarChild = SystemProperty->GetChilds().begin(); StarChild != SystemProperty->GetChilds().end(); ++StarChild)
@@ -112,6 +113,7 @@ void LoadSystemFromElement(SystemManager * SystemManager, const Element * System
 			const std::vector< Element * > & PlanetProperties(SystemProperty->GetChilds());
 			std::vector< Element * >::const_iterator PlanetPropertyIterator(PlanetProperties.begin());
 			
+			NewPlanet->SetObjectIdentifier("::system(" + NewSystem->GetIdentifier() + ")::planet(" + NewPlanet->GetIdentifier() + ")");
 			while(PlanetPropertyIterator != PlanetProperties.end())
 			{
 				Element * PlanetProperty(*PlanetPropertyIterator);
