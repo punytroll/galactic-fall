@@ -3,7 +3,9 @@
 
 #include <math3d/vector2f.h>
 
-class Position
+#include "object.h"
+
+class Position : public Object
 {
 public:
 	void SetPosition(const math3d::vector2f & Position);
