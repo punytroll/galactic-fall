@@ -3,7 +3,8 @@
 #include "system.h"
 
 System::System(const std::string & Identifier) :
-	m_Identifier(Identifier)
+	m_Identifier(Identifier),
+	m_Star(0)
 {
 }
 
