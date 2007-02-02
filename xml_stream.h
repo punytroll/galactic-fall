@@ -22,6 +22,7 @@ public:
 	XMLStream & operator<<(unsigned long Value);
 	XMLStream & operator<<(float Value);
 	XMLStream & operator<<(bool Value);
+	XMLStream & operator<<(const void * Value);
 	XMLStream & operator<<(XMLStream & (* Function)(XMLStream &));
 private:
 	void EndElementHeader(void);
