@@ -1069,6 +1069,15 @@ void KeyDown(unsigned int KeyCode)
 			
 			break;
 		}
+	case 68: // Key: F2
+		{
+			XMLStream Out(std::cout);
+			
+			Object::Dump(Out);
+			std::cout << std::endl;
+			
+			break;
+		}
 	case 98: // Key: UP
 		{
 			g_InputFocus->m_Accelerate = true;
