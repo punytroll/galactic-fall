@@ -26,7 +26,7 @@
 	<system identifier="sol">
 		<name value="Sol"/>
 		<position x="0" y="0"/>
-		<star>
+		<star identifier="sol">
 			<position x="-50" y="50"/>
 			<color red="1.0" green="0.97" blue="0.9" alpha="0.0"/>
 		</star>
@@ -81,7 +81,7 @@
 	<system identifier="rigel">
 		<name value="Rigel"/>
 		<position x="-4" y="6"/>
-		<star>
+		<star identifier="rigel">
 			<position x="20" y="50"/>
 			<color red="0.8" green="0.95" blue="1.0" alpha="1.0"/>
 		</star>
@@ -104,7 +104,7 @@
 	<system identifier="alpha_centauri">
 		<name value="Alpha Centauri"/>
 		<position x="10" y="5"/>
-		<star>
+		<star identifier="alpha_centauri">
 			<position x="50" y="-50"/>
 			<color red="0.8" green="0.95" blue="1.0" alpha="1.0"/>
 		</star>
@@ -141,7 +141,7 @@
 	<system identifier="tichel">
 		<name value="Tichel"/>
 		<position x="4" y="9"/>
-		<star>
+		<star identifier="tichel">
 			<position x="50" y="20"/>
 			<color red="1.0" green="1.0" blue="1.0" alpha="1.0"/>
 		</star>
