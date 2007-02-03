@@ -91,7 +91,7 @@ void LoadSystemFromElement(SystemManager * SystemManager, const Element * System
 		{
 			Star * NewStar(NewSystem->CreateStar());
 			
-			NewStar->SetObjectIdentifier("::system(" + NewSystem->GetIdentifier() + ")::star(" + NewSystem->GetIdentifier() + ")");
+			NewStar->SetObjectIdentifier("::system(" + NewSystem->GetIdentifier() + ")::star(" + SystemProperty->GetAttribute("identifier") + ")");
 			if(NewStar != 0)
 			{
 				for(std::vector< Element * >::const_iterator StarChild = SystemProperty->GetChilds().begin(); StarChild != SystemProperty->GetChilds().end(); ++StarChild)
