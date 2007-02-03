@@ -75,6 +75,7 @@ void LoadSystemFromElement(SystemManager * SystemManager, const Element * System
 	const std::vector< Element * > & SystemProperties(SystemElement->GetChilds());
 	std::vector< Element * >::const_iterator SystemPropertyIterator(SystemProperties.begin());
 	
+	NewSystem->SetObjectIdentifier("::system(" + NewSystem->GetIdentifier() + ")");
 	while(SystemPropertyIterator != SystemProperties.end())
 	{
 		Element * SystemProperty(*SystemPropertyIterator);

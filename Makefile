@@ -116,7 +116,8 @@ string_cast_h = \
 	string_cast.h
 
 system_h = \
-	system.h
+	system.h \
+	$(position_h)
 
 system_manager_h = \
 	system_manager.h
