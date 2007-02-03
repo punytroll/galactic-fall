@@ -13,11 +13,6 @@ void System::SetName(const std::string & Name)
 	m_Name = Name;
 }
 
-void System::SetPosition(const math3d::vector2f & Position)
-{
-	m_Position = Position;
-}
-
 bool System::IsLinkedToSystem(const System * LinkedSystem) const
 {
 	for(std::list< System * >::const_iterator LinkedSystemIterator = m_LinkedSystems.begin(); LinkedSystemIterator != m_LinkedSystems.end(); ++LinkedSystemIterator)
