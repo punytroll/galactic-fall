@@ -13,14 +13,20 @@ public:
 	void SetFocus(Position * Focus);
 	void SetPosition(float X, float Y);
 	void SetPosition(float X, float Y, float Z);
+	Position * GetFocus(void);
 	const Position * GetFocus(void) const;
 	const math3d::vector3f & GetPosition(void) const;
 	void ZoomIn(void);
 	void ZoomOut(void);
 private:
-	const Position * m_Focus;
+	Position * m_Focus;
 	math3d::vector3f m_Position;
 };
+
+inline Position * Camera::GetFocus(void)
+{
+	return m_Focus;
+}
 
 inline const Position * Camera::GetFocus(void) const
 {
