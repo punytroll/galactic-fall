@@ -1,4 +1,6 @@
 #include "object.h"
+#include "real_time.h"
+#include "string_cast.h"
 #include "xml_stream.h"
 
 std::set< Object * > Object::m_Objects;
@@ -25,6 +27,14 @@ void Object::SetObjectIdentifier(const std::string & ObjectIdentifier)
 	{
 		m_ObjectIdentifier = ObjectIdentifier;
 		m_IdentifiedObjects[m_ObjectIdentifier] = this;
+	}
+}
+
+void Object::GenerateObjectIdentifier(void)
+{
+	if(m_ObjectIdentifier.empty() == true)
+	{
+		SetObjectIdentifier(std::string("::") + typeid(*this).name() + "::" + to_string_cast(reinterpret_cast< void * >(this)) + "(" + to_string_cast(RealTime::GetTime()) + ")");
 	}
 }
 
