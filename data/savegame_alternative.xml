@@ -22,4 +22,8 @@
 			<commodity identifier="metal" amount="2"/>
 		</commodities>
 	<ship>
+	<camera>
+		<position x="0" y="0" z="200"/>
+		<focus object-identifier="::ship(shuttlecraft)::player_ship"/>
+	</camera>
 </save>
