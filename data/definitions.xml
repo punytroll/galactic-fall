@@ -11,6 +11,12 @@
 		<float identifier="y"/>
 	</vector2f>
 	
+	<vector3f>
+		<float identifier="x"/>
+		<float identifier="y"/>
+		<float identifier="z"/>
+	</vector3f>
+	
 	<widget>
 		<string identifier="widget-path"/>
 		<string identifier="name"/>
@@ -45,15 +51,15 @@
 	<triangle>
 		<string identifier="identifier"/>
 		<string identifier="name"/>
-		<string identifier="triangle-point-identifier"/>
-		<string identifier="triangle-point-identifier"/>
-		<string identifier="triangle-point-identifier"/>
+		<string identifier="triangle-point-1-identifier"/>
+		<string identifier="triangle-point-2-identifier"/>
+		<string identifier="triangle-point-3-identifier"/>
 	</triangle>
 	
 	<model>
 		<string identifier="identifier"/>
-		<array type="point" identifier="points"/>
-		<array type="triangle-point" identifier="triangle-points"/>
-		<array type="triangle" identifier="triangles"/>
+		<array identifier="points"/>
+		<array identifier="triangle-points"/>
+		<array identifier="triangles"/>
 	</model>
 </definitions>
