@@ -1,28 +1,4 @@
 <definitions>
-	<commodity identifier="food">
-		<name value="Food"/>
-		<base-price value="70"/>
-	</commodity>
-	<commodity identifier="industrial">
-		<name value="Industrial"/>
-		<base-price value="120"/>
-	</commodity>
-	<commodity identifier="medical_supplies">
-		<name value="Medical Supplies"/>
-		<base-price value="300"/>
-	</commodity>
-	<commodity identifier="luxury_goods">
-		<name value="Luxury Goods"/>
-		<base-price value="500"/>
-	</commodity>
-	<commodity identifier="metal">
-		<name value="Metal"/>
-		<base-price value="90"/>
-	</commodity>
-	<commodity identifier="equipment">
-		<name value="Equipment"/>
-		<base-price value="210"/>
-	</commodity>
 	<system identifier="sol">
 		<name value="Sol"/>
 		<position x="0" y="0"/>

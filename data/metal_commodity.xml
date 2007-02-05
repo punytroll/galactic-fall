@@ -1,0 +1,5 @@
+<commodity>
+	<identifier>metal</identifier>
+	<name>Metal</name>
+	<base-price>90</base-price>
+</commodity>

@@ -1448,8 +1448,12 @@ int main(int argc, char ** argv)
 	// ARX
 	ReadModel(&g_ModelManager, GetItem(Archive, CARGO_CUBE_MODEL));
 	ReadShipClass(&g_ShipClassManager, GetItem(Archive, SHUTTLE_SHIP_CLASS));
-	LoadShipClassesFromFile(&g_ShipClassManager, "data/shuttlecraft.xml");
-	LoadCommoditiesFromFile(&g_CommodityManager, "data/universe.xml");
+	ReadCommodity(&g_CommodityManager, GetItem(Archive, FOOD_COMMODITY));
+	ReadCommodity(&g_CommodityManager, GetItem(Archive, INDUSTRIAL_COMMODITY));
+	ReadCommodity(&g_CommodityManager, GetItem(Archive, MEDICAL_SUPPLIES_COMMODITY));
+	ReadCommodity(&g_CommodityManager, GetItem(Archive, LUXURY_GOODS_COMMODITY));
+	ReadCommodity(&g_CommodityManager, GetItem(Archive, METAL_COMMODITY));
+	ReadCommodity(&g_CommodityManager, GetItem(Archive, EQUIPMENT_COMMODITY));
 	LoadSystemsFromFile(&g_SystemManager, "data/universe.xml");
 	LoadSystemLinksFromFile(&g_SystemManager, "data/universe.xml");
 	

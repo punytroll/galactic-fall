@@ -1,0 +1,5 @@
+<commodity>
+	<identifier>food</identifier>
+	<name>Food</name>
+	<base-price>70</base-price>
+</commodity>
