@@ -1481,6 +1481,7 @@ void LoadSavegame(const Element * SaveElement)
 	g_CurrentSystemLabel->SetString(g_CurrentSystem->GetName());
 	SelectLinkedSystem(0);
 	SelectPlanet(0);
+	RealTime::Invalidate();
 }
 
 void LoadSavegame(const std::string & LoadSavegameFileName)
