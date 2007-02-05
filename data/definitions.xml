@@ -76,4 +76,10 @@
 		<float identifier="turn-fuel"/>
 		<color4f identifier="color"/>
 	</ship-class>
+	
+	<commodity>
+		<string identifier="identifier"/>
+		<string identifier="name"/>
+		<float identifier="base-price"/>
+	</commodity>
 </definitions>

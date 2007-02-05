@@ -9,7 +9,13 @@ all_data = \
 	.data/target_label.data \
 	.data/current_system_label.data \
 	.data/cargo_cube_model.data \
-	.data/shuttle_ship_class.data
+	.data/shuttle_ship_class.data \
+	.data/food_commodity.data \
+	.data/industrial_commodity.data \
+	.data/medical_supplies_commodity.data \
+	.data/luxury_goods_commodity.data \
+	.data/metal_commodity.data \
+	.data/equipment_commodity.data
 
 all: data.arx
 
@@ -29,8 +35,11 @@ data.arx: .data $(all_data) Makefile
 	arxmod $@ 2 -n "Models" -t 0 -st 0
 	arxmod $@ 0 -a "child" 2
 	arxtouch $@ 3
-	arxmod $@ 2 -n "Ship Classes" -t 0 -st 0
+	arxmod $@ 3 -n "Ship Classes" -t 0 -st 0
 	arxmod $@ 0 -a "child" 3
+	arxtouch $@ 4
+	arxmod $@ 4 -n "Commodities" -t 0 -st 0
+	arxmod $@ 0 -a "child" 4
 	arxadd $@ --uid 100 --name "Message Label" --type 1 --subtype 1 .data/message_label.data
 	arxmod $@ 1 -a "child" 100
 	arxadd $@ --uid 101 --name "Time Warp Label" --type 1 --subtype 1 .data/time_warp_label.data
@@ -53,6 +62,18 @@ data.arx: .data $(all_data) Makefile
 	arxmod $@ 2 -a "child" 109
 	arxadd $@ --uid 110 --name "Shuttle Ship Class" --type 3 --subtype 0 .data/shuttle_ship_class.data
 	arxmod $@ 3 -a "child" 110
+	arxadd $@ --uid 111 --name "Food Commodity" --type 4 --subtype 0 .data/food_commodity.data
+	arxmod $@ 4 -a "child" 111
+	arxadd $@ --uid 112 --name "Industrial Commodity" --type 4 --subtype 0 .data/industrial_commodity.data
+	arxmod $@ 4 -a "child" 112
+	arxadd $@ --uid 113 --name "Medical Supplies Commodity" --type 4 --subtype 0 .data/medical_supplies_commodity.data
+	arxmod $@ 4 -a "child" 113
+	arxadd $@ --uid 114 --name "Luxury Goods Commodity" --type 4 --subtype 0 .data/luxury_goods_commodity.data
+	arxmod $@ 4 -a "child" 114
+	arxadd $@ --uid 115 --name "Metal Commodity" --type 4 --subtype 0 .data/metal_commodity.data
+	arxmod $@ 4 -a "child" 115
+	arxadd $@ --uid 116 --name "Equipment Commodity" --type 4 --subtype 0 .data/equipment_commodity.data
+	arxmod $@ 4 -a "child" 116
 
 .data:
 	mkdir $@

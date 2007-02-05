@@ -1,0 +1,5 @@
+<commodity>
+	<identifier>luxury_goods</identifier>
+	<name>Luxury Goods</name>
+	<base-price>500</base-price>
+</commodity>

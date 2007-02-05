@@ -1,0 +1,5 @@
+<commodity>
+	<identifier>medical_supplies</identifier>
+	<name>Medical Supplies</name>
+	<base-price>300</base-price>
+</commodity>

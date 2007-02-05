@@ -9,6 +9,8 @@
 #include "arx_reading.h"
 #include "arxx_resources.h"
 #include "buffer_reading.h"
+#include "commodity.h"
+#include "commodity_manager.h"
 #include "globals.h"
 #include "label.h"
 #include "model.h"
@@ -57,6 +59,38 @@ Arxx::Item * GetItem(Arxx::Archive & Archive, Arxx::u4byte UniqueIdentifier)
 	}
 	
 	return Item;
+}
+
+Commodity * ReadCommodity(CommodityManager * CommodityManager, Arxx::Item * Item)
+{
+	if(Item->u4GetType() != ARX_COMMODITY_TYPE)
+	{
+		std::cerr << "Item type for commodity '" << Item->sGetName() << "' should be '" << ARX_COMMODITY_TYPE << "' not '" << Item->u4GetType() << "'." << std::endl;
+		
+		throw std::out_of_range("Encountered invalid type.");
+	}
+	
+	Arxx::BufferReader Reader(*Item);
+	std::string Identifier;
+	
+	Reader >> Identifier;
+	
+	Commodity * NewCommodity(CommodityManager->Create(Identifier));
+	
+	if(NewCommodity == 0)
+	{
+		return 0;
+	}
+	
+	std::string Name;
+	float BasePrice;
+	
+	Reader >> Name >> BasePrice;
+	
+	NewCommodity->SetName(Name);
+	NewCommodity->SetBasePrice(BasePrice);
+	
+	return NewCommodity;
 }
 
 static void ReadLabel(Arxx::BufferReader & Reader, Label * Label)
