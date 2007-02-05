@@ -43,7 +43,8 @@ out_call_stack = list()
 def out(data_type, node):
 	out_call_stack.append(node.tagName)
 	if data_type == "string":
-		out_file.write(node.firstChild.nodeValue)
+		if node.firstChild != None:
+			out_file.write(node.firstChild.nodeValue)
 		out_file.write(pack('B', 0))
 	elif data_type == "boolean":
 		if node.firstChild.nodeValue == "true":
@@ -56,6 +57,15 @@ def out(data_type, node):
 		out_file.write(pack('B', int(node.firstChild.nodeValue)))
 	elif data_type == "u4byte":
 		out_file.write(pack('I', long(node.firstChild.nodeValue)))
+	elif data_type == "array":
+		count = 0
+		for node_part in node.childNodes:
+			if node_part.nodeType == Node.ELEMENT_NODE:
+				count += 1
+		out_file.write(pack('I', long(count)))
+		for node_part in node.childNodes:
+			if node_part.nodeType == Node.ELEMENT_NODE:
+				out(node_part.tagName, node_part)
 	elif definitions.has_key(data_type) == True:
 		for part in definitions[data_type]:
 			for node_part in node.childNodes:
@@ -71,6 +81,8 @@ def out(data_type, node):
 					stack_path += "/" + stack_entry
 				print "In file '" + options.in_file + "' I found no value for '" + stack_path + "/" + part[0] + "' of type '" + part[1] + "'."
 				exit(1)
+	else:
+		print "Could not find a suitable definition for type '" + data_type + "'."
 	out_call_stack.pop()
 
 # now parse the in file
