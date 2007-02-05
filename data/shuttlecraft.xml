@@ -1105,16 +1105,4 @@
 			<triangle-point triangle-point-identifier="227" />
 		</triangle>
 	</model>
-	<ship-class identifier="shuttlecraft">
-		<model identifier="shuttlecraft"/>
-		<forward-thrust value="10"/>
-		<turn-speed value="1"/>
-		<maximum-speed value="12"/>
-		<cargo-hold-size value="12"/>
-		<fuel-hold-size value="0.5"/>
-		<jump-fuel value="0.13"/>
-		<forward-fuel value="0.015"/>
-		<turn-fuel value="0.006"/>
-		<color red="1.0" green="0.9" blue="0.1" alpha="1.0"/>
-	</ship-class>
 </definitions>

@@ -62,4 +62,18 @@
 		<array identifier="triangle-points"/>
 		<array identifier="triangles"/>
 	</model>
+	
+	<ship-class>
+		<string identifier="identifier"/>
+		<string identifier="model-identifier"/>
+		<float identifier="forward-thrust"/>
+		<float identifier="turn-speed"/>
+		<float identifier="maximum-speed"/>
+		<float identifier="cargo-hold-size"/>
+		<float identifier="fuel-hold-size"/>
+		<float identifier="jump-fuel"/>
+		<float identifier="forward-fuel"/>
+		<float identifier="turn-fuel"/>
+		<color4f identifier="color"/>
+	</ship-class>
 </definitions>
