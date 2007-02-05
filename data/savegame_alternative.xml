@@ -1,6 +1,10 @@
 <save>
 	<system identifier="alpha_centauri"/>
-	<character>
+	<player>
+		<character object-identifier="::character::player_character"/>
+		<ship object-identifier="::ship(shuttlecraft)::player_ship"/>
+	</player>
+	<character object-identifier="::character::player_character">
 		<credits value="15562.7"/>
 		<map-knowledge>
 			<explored-system identifier="alpha_centauri"/>
@@ -8,7 +12,7 @@
 			<explored-system identifier="rigel"/>
 		</map-knowledge>
 	</character>
-	<ship class-identifier="shuttlecraft">
+	<ship object-identifier="::ship(shuttlecraft)::player_ship" class-identifier="shuttlecraft">
 		<fuel value="0.240821"/>
 		<position x="-253.368" y="-16.2305"/>
 		<angular-position value="6.82964"/>

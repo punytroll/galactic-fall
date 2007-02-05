@@ -1427,6 +1427,7 @@ void LoadSavegame(const std::string & LoadSavegameFileName)
 		else if((*SaveChild)->GetName() == "character")
 		{
 			g_PlayerCharacter = new Character();
+			g_PlayerCharacter->SetObjectIdentifier((*SaveChild)->GetAttribute("object-identifier"));
 			for(std::vector< Element * >::const_iterator CharacterChild = (*SaveChild)->GetChilds().begin(); CharacterChild != (*SaveChild)->GetChilds().end(); ++CharacterChild)
 			{
 				if((*CharacterChild)->GetName() == "credits")
@@ -1448,6 +1449,7 @@ void LoadSavegame(const std::string & LoadSavegameFileName)
 		else if((*SaveChild)->GetName() == "ship")
 		{
 			g_PlayerShip = new Ship(g_ShipClassManager.Get((*SaveChild)->GetAttribute("class-identifier")));
+			g_PlayerShip->SetObjectIdentifier((*SaveChild)->GetAttribute("object-identifier"));
 			for(std::vector< Element * >::const_iterator ShipChild = (*SaveChild)->GetChilds().begin(); ShipChild != (*SaveChild)->GetChilds().end(); ++ShipChild)
 			{
 				if((*ShipChild)->GetName() == "fuel")
