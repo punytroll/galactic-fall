@@ -1408,13 +1408,8 @@ void DestroyWindow(void)
 	g_Display = 0;
 }
 
-void LoadSavegame(const std::string & LoadSavegameFileName)
+void LoadSavegame(const Element * SaveElement)
 {
-	LeaveSystem();
-	
-	std::ifstream InputStream(LoadSavegameFileName.c_str());
-	Document SavegameDocument(InputStream);
-	const Element * SaveElement(SavegameDocument.GetDocumentElement());
 	const std::vector< Element * > & SaveChilds(SaveElement->GetChilds());
 	std::string System;
 	
@@ -1481,7 +1476,19 @@ void LoadSavegame(const std::string & LoadSavegameFileName)
 			}
 		}
 	}
-	EnterSystem(g_SystemManager.Get(System), 0);
+	g_CurrentSystem = g_SystemManager.Get(System);
+	g_CurrentSystem->AddShip(g_PlayerShip);
+	g_CurrentSystemLabel->SetString(g_CurrentSystem->GetName());
+	SelectLinkedSystem(0);
+	SelectPlanet(0);
+}
+
+void LoadSavegame(const std::string & LoadSavegameFileName)
+{
+	std::ifstream InputStream(LoadSavegameFileName.c_str());
+	Document SavegameDocument(InputStream);
+	
+	LoadSavegame(SavegameDocument.GetDocumentElement());
 }
 
 int main(int argc, char ** argv)
