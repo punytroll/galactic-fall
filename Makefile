@@ -1,3 +1,6 @@
+arx_reading_h = \
+	arx_reading.h
+
 arxx_resources_h = \
 	arxx_resources.h
 
@@ -160,6 +163,7 @@ all-recursive:
 
 clean: clean-recursive
 	$(RM) escapevelocity
+	$(RM) arx_reading.o
 	$(RM) buffer_reading.o
 	$(RM) button.o
 	$(RM) camera.o
@@ -203,8 +207,11 @@ clean: clean-recursive
 clean-recursive:
 	@$(MAKE) -C data clean
 
-escapevelocity: buffer_reading.o button.o camera.o cargo.o character.o clicked_listener.o color.o commodity.o commodity_manager.o destroy_listener.o draw_text.o key_listener.o label.o main.o map_dialog.o map_knowledge.o model.o model_manager.o mouse_button_listener.o mouse_motion_listener.o object.o physical_object.o planet.o planet_dialog.o real_time.o ship.o ship_class.o ship_class_manager.o star.o string_cast.o system.o system_manager.o trade_center_dialog.o user_interface.o widget.o window.o xml_parser.o xml_puny_dom.o xml_stream.o
+escapevelocity: arx_reading.o buffer_reading.o button.o camera.o cargo.o character.o clicked_listener.o color.o commodity.o commodity_manager.o destroy_listener.o draw_text.o key_listener.o label.o main.o map_dialog.o map_knowledge.o model.o model_manager.o mouse_button_listener.o mouse_motion_listener.o object.o physical_object.o planet.o planet_dialog.o real_time.o ship.o ship_class.o ship_class_manager.o star.o string_cast.o system.o system_manager.o trade_center_dialog.o user_interface.o widget.o window.o xml_parser.o xml_puny_dom.o xml_stream.o
 	$(CXX) $(LDFLAGS) `pkg-config --libs libarxx` $^ -lGL -lGLU -o $@
+
+arx_reading.o: arx_reading.cpp $(arx_reading_h) $(arxx_resources_h) $(buffer_reading_h) $(label_h) $(model_h) $(model_manager_h) $(user_interface_h) $(widget_h)
+	$(CXX) $(CXXFLAGS) `pkg-config --cflags libarxx math3d` -c $< -o $@
 
 buffer_reading.o: buffer_reading.cpp $(buffer_reading_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags libarxx math3d` -c $< -o $@
