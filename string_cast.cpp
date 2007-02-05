@@ -50,3 +50,22 @@ std::string to_string_cast< float >(const float & Value)
 	return StringStream.str();
 }
 
+template < >
+std::string to_string_cast< double >(const double & Value)
+{
+	std::ostringstream StringStream;
+	
+	StringStream << Value;
+	
+	return StringStream.str();
+}
+
+template < >
+std::string to_string_cast< void * >(void * const & Value)
+{
+	std::ostringstream StringStream;
+	
+	StringStream << Value;
+	
+	return StringStream.str();
+}
