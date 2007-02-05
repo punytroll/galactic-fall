@@ -15,7 +15,11 @@ all_data = \
 	.data/medical_supplies_commodity.data \
 	.data/luxury_goods_commodity.data \
 	.data/metal_commodity.data \
-	.data/equipment_commodity.data
+	.data/equipment_commodity.data \
+	.data/sol_system.data \
+	.data/rigel_system.data \
+	.data/tichel_system.data \
+	.data/alpha_centauri_system.data
 
 all: data.arx
 
@@ -40,6 +44,9 @@ data.arx: .data $(all_data) Makefile
 	arxtouch $@ 4
 	arxmod $@ 4 -n "Commodities" -t 0 -st 0
 	arxmod $@ 0 -a "child" 4
+	arxtouch $@ 5
+	arxmod $@ 5 -n "Systems" -t 0 -st 0
+	arxmod $@ 0 -a "child" 5
 	arxadd $@ --uid 100 --name "Message Label" --type 1 --subtype 1 .data/message_label.data
 	arxmod $@ 1 -a "child" 100
 	arxadd $@ --uid 101 --name "Time Warp Label" --type 1 --subtype 1 .data/time_warp_label.data
@@ -74,6 +81,14 @@ data.arx: .data $(all_data) Makefile
 	arxmod $@ 4 -a "child" 115
 	arxadd $@ --uid 116 --name "Equipment Commodity" --type 4 --subtype 0 .data/equipment_commodity.data
 	arxmod $@ 4 -a "child" 116
+	arxadd $@ --uid 117 --name "Sol System" --type 5 --subtype 0 .data/sol_system.data
+	arxmod $@ 5 -a "child" 117
+	arxadd $@ --uid 118 --name "Rigel System" --type 5 --subtype 0 .data/rigel_system.data
+	arxmod $@ 5 -a "child" 118
+	arxadd $@ --uid 119 --name "Tichel System" --type 5 --subtype 0 .data/tichel_system.data
+	arxmod $@ 5 -a "child" 119
+	arxadd $@ --uid 120 --name "Alpha Centauri System" --type 5 --subtype 0 .data/alpha_centauri_system.data
+	arxmod $@ 5 -a "child" 120
 
 .data:
 	mkdir $@

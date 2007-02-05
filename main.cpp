@@ -1454,7 +1454,10 @@ int main(int argc, char ** argv)
 	ReadCommodity(&g_CommodityManager, GetItem(Archive, LUXURY_GOODS_COMMODITY));
 	ReadCommodity(&g_CommodityManager, GetItem(Archive, METAL_COMMODITY));
 	ReadCommodity(&g_CommodityManager, GetItem(Archive, EQUIPMENT_COMMODITY));
-	LoadSystemsFromFile(&g_SystemManager, "data/universe.xml");
+	ReadSystem(&g_SystemManager, GetItem(Archive, SOL_SYSTEM));
+	ReadSystem(&g_SystemManager, GetItem(Archive, RIGEL_SYSTEM));
+	ReadSystem(&g_SystemManager, GetItem(Archive, TICHEL_SYSTEM));
+	ReadSystem(&g_SystemManager, GetItem(Archive, ALPHA_CENTAURI_SYSTEM));
 	LoadSystemLinksFromFile(&g_SystemManager, "data/universe.xml");
 	
 	// initialize the player (initial load)
