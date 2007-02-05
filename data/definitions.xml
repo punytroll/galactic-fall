@@ -29,4 +29,31 @@
 		<u1byte identifier="horizontal-alignment"/>
 		<u1byte identifier="vertical-alignment"/>
 	</label>
+	
+	<point>
+		<string identifier="identifier"/>
+		<string identifier="name"/>
+		<vector3f identifier="position"/>
+	</point>
+	
+	<triangle-point>
+		<string identifier="identifier"/>
+		<vector3f identifier="normal"/>
+		<string identifier="point-identifier"/>
+	</triangle-point>
+	
+	<triangle>
+		<string identifier="identifier"/>
+		<string identifier="name"/>
+		<string identifier="triangle-point-identifier"/>
+		<string identifier="triangle-point-identifier"/>
+		<string identifier="triangle-point-identifier"/>
+	</triangle>
+	
+	<model>
+		<string identifier="identifier"/>
+		<array type="point" identifier="points"/>
+		<array type="triangle-point" identifier="triangle-points"/>
+		<array type="triangle" identifier="triangles"/>
+	</model>
 </definitions>
