@@ -791,6 +791,42 @@ void KeyDown(unsigned int KeyCode)
 			
 			break;
 		}
+	case 35: // Key: ]
+		{
+			const std::list< Planet * > & Planets(g_CurrentSystem->GetPlanets());
+			const Planet * FocusPlanet(dynamic_cast< const Planet * >(g_Camera.GetFocus()));
+			
+			if(FocusPlanet != 0)
+			{
+				std::list< Planet * >::const_iterator PlanetIterator(find(Planets.begin(), Planets.end(), FocusPlanet));
+				
+				if(PlanetIterator == Planets.end())
+				{
+					g_Camera.SetFocus(g_PlayerShip);
+				}
+				else
+				{
+					++PlanetIterator;
+					if(PlanetIterator == Planets.end())
+					{
+						g_Camera.SetFocus(g_PlayerShip);
+					}
+					else
+					{
+						g_Camera.SetFocus(*PlanetIterator);
+					}
+				}
+			}
+			else
+			{
+				if(Planets.size() > 0)
+				{
+					g_Camera.SetFocus(Planets.front());
+				}
+			}
+			
+			break;
+		}
 	case 39: // Key: S
 		{
 			Cargo * SelectedCargo(dynamic_cast< Cargo * >(g_TargetObject));
