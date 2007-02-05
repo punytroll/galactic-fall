@@ -1085,8 +1085,8 @@ void KeyDown(unsigned int KeyCode)
 			{
 				XML << element << "explored-system" << attribute << "identifier" << value << (*ExploredSystemIterator)->GetIdentifier() << end;
 			}
-			XML << end;
-			XML << end;
+			XML << end; // map-knowledge
+			XML << end; // character
 			XML << element << "ship" << attribute << "class-identifier" << value << g_PlayerShip->GetShipClass()->GetIdentifier();
 			XML << element << "fuel" << attribute << "value" << value << g_PlayerShip->GetFuel() << end;
 			XML << element << "position" << attribute << "x" << value << g_PlayerShip->GetPosition().m_V.m_A[0] << attribute << "y" << value << g_PlayerShip->GetPosition().m_V.m_A[1] << end;
@@ -1100,8 +1100,17 @@ void KeyDown(unsigned int KeyCode)
 			{
 				XML << element << "commodity" << attribute << "identifier" << value << Commodity->first->GetIdentifier() << attribute << "amount" << value << Commodity->second << end;
 			}
-			XML << end;
-			XML << end;
+			XML << end; // commodities
+			XML << end; // ship
+			XML << element << "camera";
+			XML << element << "position" << attribute << "x" << value << g_Camera.GetPosition().m_V.m_A[0] << attribute << "y" << value << g_Camera.GetPosition().m_V.m_A[1] << attribute << "z" << value << g_Camera.GetPosition().m_V.m_A[2] << end;
+			if(g_Camera.GetFocus()->GetObjectIdentifier() == "")
+			{
+				g_Camera.GetFocus()->GenerateObjectIdentifier();
+			}
+			XML << element << "focus" << attribute << "object-identifier" << value << g_Camera.GetFocus()->GetObjectIdentifier() << end;
+			XML << end; // character
+			XML << end; // save
 			
 			break;
 		}
@@ -1511,6 +1520,29 @@ void LoadSavegame(const Element * SaveElement)
 				}
 			}
 		}
+		else if((*SaveChild)->GetName() == "camera")
+		{
+			for(std::vector< Element * >::const_iterator CameraChild = (*SaveChild)->GetChilds().begin(); CameraChild != (*SaveChild)->GetChilds().end(); ++CameraChild)
+			{
+				if((*CameraChild)->GetName() == "position")
+				{
+					g_Camera.SetPosition(from_string_cast< float >((*CameraChild)->GetAttribute("x")), from_string_cast< float >((*CameraChild)->GetAttribute("y")), from_string_cast< float >((*CameraChild)->GetAttribute("z")));
+				}
+				else if((*CameraChild)->GetName() == "focus")
+				{
+					Position * FocusPosition(dynamic_cast< Position * >(Object::GetObject((*CameraChild)->GetAttribute("object-identifier"))));
+					
+					if(FocusPosition != 0)
+					{
+						g_Camera.SetFocus(FocusPosition);
+					}
+					else
+					{
+						g_Camera.SetFocus(g_PlayerShip);
+					}
+				}
+			}
+		}
 	}
 	g_CurrentSystem = g_SystemManager.Get(System);
 	g_CurrentSystem->AddShip(g_PlayerShip);
@@ -1578,9 +1610,6 @@ int main(int argc, char ** argv)
 	SetTimeWarp(1.0f);
 	// setting the input focus
 	g_InputFocus = g_PlayerShip;
-	// camera setup
-	g_Camera.SetPosition(0.0f, 0.0f, 200.0f);
-	g_Camera.SetFocus(g_PlayerShip);
 	g_MiniMapCamera.SetPosition(0.0f, 0.0f, 1500.0f);
 	g_MiniMapCamera.SetFocus(g_PlayerShip);
 	// setting up the graphical environment
