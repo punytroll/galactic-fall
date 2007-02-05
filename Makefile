@@ -20,7 +20,8 @@ cargo_h = \
 	$(physical_object_h)
 
 character_h = \
-	character.h
+	character.h \
+	$(object_h)
 
 clicked_listener_h = \
 	clicked_listener.h

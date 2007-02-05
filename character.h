@@ -1,9 +1,11 @@
 #ifndef CHARACTER_H
 #define CHARACTER_H
 
+#include "object.h"
+
 class MapKnowledge;
 
-class Character
+class Character : public Object
 {
 public:
 	Character(void);
