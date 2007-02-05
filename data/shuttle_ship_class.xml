@@ -1,0 +1,18 @@
+<ship-class>
+	<identifier>shuttlecraft</identifier>
+	<model-identifier>shuttlecraft</model-identifier>
+	<forward-thrust>10</forward-thrust>
+	<turn-speed>1</turn-speed>
+	<maximum-speed>12</maximum-speed>
+	<cargo-hold-size>12</cargo-hold-size>
+	<fuel-hold-size>0.5</fuel-hold-size>
+	<jump-fuel>0.13</jump-fuel>
+	<forward-fuel>0.015</forward-fuel>
+	<turn-fuel>0.006</turn-fuel>
+	<color>
+		<red>1.0</red>
+		<green>0.9</green>
+		<blue>0.1</blue>
+		<alpha>1.0</alpha>
+	</color>
+</ship-class>

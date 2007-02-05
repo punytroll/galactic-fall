@@ -4,6 +4,7 @@
 #include <Common.h>
 
 const Arxx::u4byte ARX_MODEL_TYPE = 2;
+const Arxx::u4byte ARX_SHIP_CLASS_TYPE = 3;
 
 const Arxx::u4byte MESSAGE_LABEL = 100;
 const Arxx::u4byte TIME_WARP_LABEL = 101;
@@ -15,5 +16,6 @@ const Arxx::u4byte MINI_MAP_WIDGET = 106;
 const Arxx::u4byte TARGET_LABEL = 107;
 const Arxx::u4byte CURRENT_SYSTEM_LABEL = 108;
 const Arxx::u4byte CARGO_CUBE_MODEL = 109;
+const Arxx::u4byte SHUTTLE_SHIP_CLASS = 110;
 
 #endif

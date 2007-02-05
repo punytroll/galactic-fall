@@ -8,7 +8,8 @@ all_data = \
 	.data/mini_map_widget.data \
 	.data/target_label.data \
 	.data/current_system_label.data \
-	.data/cargo_cube_model.data
+	.data/cargo_cube_model.data \
+	.data/shuttle_ship_class.data
 
 all: data.arx
 
@@ -27,6 +28,9 @@ data.arx: .data $(all_data) Makefile
 	arxtouch $@ 2
 	arxmod $@ 2 -n "Models" -t 0 -st 0
 	arxmod $@ 0 -a "child" 2
+	arxtouch $@ 3
+	arxmod $@ 2 -n "Ship Classes" -t 0 -st 0
+	arxmod $@ 0 -a "child" 3
 	arxadd $@ --uid 100 --name "Message Label" --type 1 --subtype 1 .data/message_label.data
 	arxmod $@ 1 -a "child" 100
 	arxadd $@ --uid 101 --name "Time Warp Label" --type 1 --subtype 1 .data/time_warp_label.data
@@ -47,6 +51,8 @@ data.arx: .data $(all_data) Makefile
 	arxmod $@ 1 -a "child" 108
 	arxadd $@ --uid 109 --name "Cargo Cube Model" --type 2 --subtype 0 .data/cargo_cube_model.data
 	arxmod $@ 2 -a "child" 109
+	arxadd $@ --uid 110 --name "Shuttle Ship Class" --type 3 --subtype 0 .data/shuttle_ship_class.data
+	arxmod $@ 3 -a "child" 110
 
 .data:
 	mkdir $@

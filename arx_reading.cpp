@@ -13,8 +13,12 @@
 #include "label.h"
 #include "model.h"
 #include "model_manager.h"
+#include "ship_class.h"
+#include "ship_class_manager.h"
 #include "user_interface.h"
 #include "widget.h"
+
+static void ReadWidget(Arxx::BufferReader & Reader, Widget * NewWidget);
 
 Arxx::Item * GetItem(Arxx::Archive & Archive, Arxx::u4byte UniqueIdentifier)
 {
@@ -55,47 +59,7 @@ Arxx::Item * GetItem(Arxx::Archive & Archive, Arxx::u4byte UniqueIdentifier)
 	return Item;
 }
 
-void ReadWidget(Arxx::BufferReader & Reader, Widget * NewWidget)
-{
-	std::string Path;
-	std::string Name;
-	math3d::vector2f Position;
-	bool UseSize;
-	math3d::vector2f Size;
-	bool UseBackgroundColor;
-	Color BackgroundColor;
-	bool Visible;
-	
-	Reader >> Path >> Name >> Position >> UseSize >> Size >> UseBackgroundColor >> BackgroundColor >> Visible;
-	NewWidget->SetName(Name);
-	if((Path != "") && (NewWidget->GetSupWidget() == 0))
-	{
-		Widget * SupWidget(g_UserInterface.GetWidget(Path));
-		
-		if(SupWidget == 0)
-		{
-			std::cerr << "Could not find the widget at '" << Path << "'." << std::endl;
-			
-			throw std::runtime_error("Unknown sup widget.");
-		}
-		SupWidget->AddSubWidget(NewWidget);
-	}
-	NewWidget->SetPosition(Position);
-	if(UseSize == true)
-	{
-		NewWidget->SetSize(Size);
-	}
-	if(UseBackgroundColor == true)
-	{
-		NewWidget->SetBackgroundColor(BackgroundColor);
-	}
-	if(Visible == false)
-	{
-		NewWidget->Hide();
-	}
-}
-
-void ReadLabel(Arxx::BufferReader & Reader, Label * Label)
+static void ReadLabel(Arxx::BufferReader & Reader, Label * Label)
 {
 	ReadWidget(Reader, Label);
 	
@@ -150,23 +114,6 @@ Label * ReadLabel(Arxx::Item * Item)
 	ReadLabel(Reader, NewLabel);
 	
 	return NewLabel;
-}
-
-Widget * ReadWidget(Arxx::Item * Item)
-{
-	if(Item->u4GetSubType() != 0)
-	{
-		std::cerr << "Item subtype for widget should be '0' not '" << Item->u4GetSubType() << "'." << std::endl;
-		
-		throw std::out_of_range("Encountered unknown subtype.");
-	}
-	
-	Arxx::BufferReader Reader(*Item);
-	Widget * NewWidget(new Widget());
-	
-	ReadWidget(Reader, NewWidget);
-	
-	return NewWidget;
 }
 
 Model * ReadModel(ModelManager * ModelManager, Arxx::Item * Item)
@@ -229,4 +176,109 @@ Model * ReadModel(ModelManager * ModelManager, Arxx::Item * Item)
 	}
 	
 	return NewModel;
+}
+
+ShipClass * ReadShipClass(ShipClassManager * ShipClassManager, Arxx::Item * Item)
+{
+	if(Item->u4GetType() != ARX_SHIP_CLASS_TYPE)
+	{
+		std::cerr << "Item type for ship class '" << Item->sGetName() << "' should be '" << ARX_SHIP_CLASS_TYPE << "' not '" << Item->u4GetType() << "'." << std::endl;
+		
+		throw std::out_of_range("Encountered invalid type.");
+	}
+	
+	Arxx::BufferReader Reader(*Item);
+	std::string Identifier;
+	
+	Reader >> Identifier;
+	
+	ShipClass * NewShipClass(ShipClassManager->Create(Identifier));
+	
+	if(NewShipClass == 0)
+	{
+		return 0;
+	}
+	
+	std::string ModelIdentifier;
+	float ForwardThrust;
+	float TurnSpeed;
+	float MaximumSpeed;
+	float CargoHoldSize;
+	float FuelHoldSize;
+	float JumpFuel;
+	float ForwardFuel;
+	float TurnFuel;
+	Color ModelColor;
+	
+	Reader >> ModelIdentifier >> ForwardThrust >> TurnSpeed >> MaximumSpeed >> CargoHoldSize >> FuelHoldSize >> JumpFuel >> ForwardFuel >> TurnFuel >> ModelColor;
+	
+	NewShipClass->SetCargoHoldSize(CargoHoldSize);
+	NewShipClass->SetForwardThrust(ForwardThrust);
+	NewShipClass->SetFuelHoldSize(FuelHoldSize);
+	NewShipClass->SetJumpFuel(JumpFuel);
+	NewShipClass->SetMaximumSpeed(MaximumSpeed);
+	NewShipClass->SetModel(ShipClassManager->GetModelManager()->Get(ModelIdentifier));
+	NewShipClass->SetTurnSpeed(TurnSpeed);
+	NewShipClass->SetForwardFuel(ForwardFuel);
+	NewShipClass->SetTurnFuel(TurnFuel);
+	NewShipClass->SetColor(ModelColor);
+	
+	return NewShipClass;
+}
+
+static void ReadWidget(Arxx::BufferReader & Reader, Widget * NewWidget)
+{
+	std::string Path;
+	std::string Name;
+	math3d::vector2f Position;
+	bool UseSize;
+	math3d::vector2f Size;
+	bool UseBackgroundColor;
+	Color BackgroundColor;
+	bool Visible;
+	
+	Reader >> Path >> Name >> Position >> UseSize >> Size >> UseBackgroundColor >> BackgroundColor >> Visible;
+	NewWidget->SetName(Name);
+	if((Path != "") && (NewWidget->GetSupWidget() == 0))
+	{
+		Widget * SupWidget(g_UserInterface.GetWidget(Path));
+		
+		if(SupWidget == 0)
+		{
+			std::cerr << "Could not find the widget at '" << Path << "'." << std::endl;
+			
+			throw std::runtime_error("Unknown sup widget.");
+		}
+		SupWidget->AddSubWidget(NewWidget);
+	}
+	NewWidget->SetPosition(Position);
+	if(UseSize == true)
+	{
+		NewWidget->SetSize(Size);
+	}
+	if(UseBackgroundColor == true)
+	{
+		NewWidget->SetBackgroundColor(BackgroundColor);
+	}
+	if(Visible == false)
+	{
+		NewWidget->Hide();
+	}
+}
+
+Widget * ReadWidget(Arxx::Item * Item)
+{
+	if(Item->u4GetSubType() != 0)
+	{
+		std::cerr << "Item subtype for widget should be '0' not '" << Item->u4GetSubType() << "'." << std::endl;
+		
+		throw std::out_of_range("Encountered unknown subtype.");
+	}
+	
+	Arxx::BufferReader Reader(*Item);
+	Widget * NewWidget(new Widget());
+	
+	ReadWidget(Reader, NewWidget);
+	
+	return NewWidget;
 }
