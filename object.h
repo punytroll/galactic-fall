@@ -17,6 +17,7 @@ public:
 	void GenerateObjectIdentifier(void);
 	const std::string & GetObjectIdentifier(void) const;
 	
+	static Object * GetObject(const std::string & ObjectIdentifier);
 	static void Dump(std::ostream & OStream);
 	static void Dump(XMLStream & XML);
 private:

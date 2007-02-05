@@ -38,6 +38,20 @@ void Object::GenerateObjectIdentifier(void)
 	}
 }
 
+Object * Object::GetObject(const std::string & ObjectIdentifier)
+{
+	std::map< std::string, Object * >::iterator ObjectIterator(m_IdentifiedObjects.find(ObjectIdentifier));
+	
+	if(ObjectIterator != m_IdentifiedObjects.end())
+	{
+		return ObjectIterator->second;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
 void Object::Dump(std::ostream & OStream)
 {
 	OStream << "Objects (Count " << m_Objects.size() << "): \n";
