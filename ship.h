@@ -36,11 +36,13 @@ public:
 	float GetFreeCargoHoldSize(void) const;
 	float GetCommodityAmount(const Commodity * CargoCommodity) const;
 	const std::map< const Commodity *, float > GetCommodities(void) const;
+	PhysicalObject * GetTarget(void);
 	// setters
 	void SetFuel(float Fuel);
 	void SetVelocity(const math3d::vector2f & Velocity);
 	void SetAngularPosition(float AngularPosition);
 	void SetCommodities(const Commodity * Commodity, float Amount);
+	void SetTarget(PhysicalObject * Target);
 	// modifiers
 	bool AddCommodities(const Commodity * CargoCommodity, float Amount);
 	bool RemoveCommodities(const Commodity * CargoCommodity, float Amount);
@@ -51,6 +53,7 @@ private:
 	ShipClass * m_ShipClass;
 	std::map< const Commodity *, float > m_Commodities;
 	float m_Fuel;
+	PhysicalObject * m_Target;
 };
 
 inline float Ship::GetForwardThrust(void) const
@@ -100,6 +103,11 @@ inline const std::map< const Commodity *, float > Ship::GetCommodities(void) con
 	return m_Commodities;
 }
 
+inline PhysicalObject * Ship::GetTarget(void)
+{
+	return m_Target;
+}
+
 inline void Ship::SetFuel(float Fuel)
 {
 	m_Fuel = Fuel;
@@ -118,6 +126,11 @@ inline void Ship::SetAngularPosition(float AngularPosition)
 inline void Ship::SetCommodities(const Commodity * Commodity, float Amount)
 {
 	m_Commodities[Commodity] = Amount;
+}
+
+inline void Ship::SetTarget(PhysicalObject * Target)
+{
+	m_Target = Target;
 }
 
 #endif

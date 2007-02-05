@@ -75,7 +75,6 @@ Label * g_MessageLabel(0);
 Label * g_CurrentSystemLabel(0);
 System * g_CurrentSystem;
 System * g_SelectedLinkedSystem(0);
-PhysicalObject * g_TargetObject(0);
 float g_TimeWarp(1.0f);
 bool g_Quit(false);
 bool g_Pause(false);
@@ -322,12 +321,12 @@ void Render(void)
 		}
 	}
 	// HUD
-	if(g_TargetObject != 0)
+	if(g_PlayerShip->GetTarget() != 0)
 	{
 		glClear(GL_DEPTH_BUFFER_BIT);
-		DrawSelection(g_TargetObject, g_TargetObject->GetRadialSize());
+		DrawSelection(g_PlayerShip->GetTarget(), g_PlayerShip->GetTarget()->GetRadialSize());
 		
-		math3d::vector2f RelativePosition(g_TargetObject->GetPosition() - g_PlayerShip->GetPosition());
+		math3d::vector2f RelativePosition(g_PlayerShip->GetTarget()->GetPosition() - g_PlayerShip->GetPosition());
 		
 		RelativePosition.normalize();
 		glPushMatrix();
@@ -362,9 +361,9 @@ void Render(void)
 	}
 	DisplayUserInterface();
 	// radar
-	if(g_TargetObject != 0)
+	if(g_PlayerShip->GetTarget() != 0)
 	{
-		float RadialSize(g_TargetObject->GetRadialSize());
+		float RadialSize(g_PlayerShip->GetTarget()->GetRadialSize());
 		float ExtendedRadialSize((5.0f / 4.0f) * RadialSize);
 		
 		glViewport(0, 0, 220, 220);
@@ -375,13 +374,13 @@ void Render(void)
 		glLoadIdentity();
 		glClear(GL_DEPTH_BUFFER_BIT);
 		g_RadarCamera.SetPosition(0.0f, 0.0f, 4.0f * RadialSize);
-		g_RadarCamera.SetFocus(g_TargetObject);
+		g_RadarCamera.SetFocus(g_PlayerShip->GetTarget());
 		g_RadarCamera.Draw();
 		if(CurrentStar != 0)
 		{
 			glLightfv(GL_LIGHT0, GL_POSITION, math3d::vector4f(CurrentStar->GetPosition().m_V.m_A[0], CurrentStar->GetPosition().m_V.m_A[1], 100.0f, 0.0f).m_V.m_A);
 		}
-		g_TargetObject->Draw();
+		g_PlayerShip->GetTarget()->Draw();
 	}
 	// mini map
 	if(g_CurrentSystem != 0)
@@ -407,12 +406,12 @@ void Render(void)
 		glColor3f(0.8f, 0.8f, 0.8f);
 		for(std::list< Planet * >::const_iterator PlanetIterator = Planets.begin(); PlanetIterator != Planets.end(); ++PlanetIterator)
 		{
-			if(*PlanetIterator == g_TargetObject)
+			if(*PlanetIterator == g_PlayerShip->GetTarget())
 			{
 				glColor3f(0.2f, 1.0f, 0.0f);
 			}
 			glVertex2f((*PlanetIterator)->GetPosition().m_V.m_A[0], (*PlanetIterator)->GetPosition().m_V.m_A[1]);
-			if(*PlanetIterator == g_TargetObject)
+			if(*PlanetIterator == g_PlayerShip->GetTarget())
 			{
 				glColor3f(0.8f, 0.8f, 0.8f);
 			}
@@ -420,24 +419,24 @@ void Render(void)
 		for(std::list< Ship * >::const_iterator ShipIterator = Ships.begin(); ShipIterator != Ships.end(); ++ShipIterator)
 		{
 			// Ship is not an object yet
-			if(*ShipIterator == g_TargetObject)
+			if(*ShipIterator == g_PlayerShip->GetTarget())
 			{
 				glColor3f(0.2f, 1.0f, 0.0f);
 			}
 			glVertex2f((*ShipIterator)->GetPosition().m_V.m_A[0], (*ShipIterator)->GetPosition().m_V.m_A[1]);
-			if(*ShipIterator == g_TargetObject)
+			if(*ShipIterator == g_PlayerShip->GetTarget())
 			{
 				glColor3f(0.8f, 0.8f, 0.8f);
 			}
 		}
 		for(std::list< Cargo * >::const_iterator CargoIterator = Cargos.begin(); CargoIterator != Cargos.end(); ++CargoIterator)
 		{
-			if(*CargoIterator == g_TargetObject)
+			if(*CargoIterator == g_PlayerShip->GetTarget())
 			{
 				glColor3f(0.2f, 1.0f, 0.0f);
 			}
 			glVertex2f((*CargoIterator)->GetPosition().m_V.m_A[0], (*CargoIterator)->GetPosition().m_V.m_A[1]);
-			if(*CargoIterator == g_TargetObject)
+			if(*CargoIterator == g_PlayerShip->GetTarget())
 			{
 				glColor3f(0.8f, 0.8f, 0.8f);
 			}
@@ -483,8 +482,8 @@ void SelectLinkedSystem(System * LinkedSystem)
 
 void SelectPlanet(Planet * Planet)
 {
-	g_TargetObject = Planet;
-	if(g_TargetObject != 0)
+	g_PlayerShip->SetTarget(Planet);
+	if(g_PlayerShip->GetTarget() != 0)
 	{
 		g_TargetLabel->SetString(Planet->GetName());
 	}
@@ -496,8 +495,8 @@ void SelectPlanet(Planet * Planet)
 
 void SelectCargo(Cargo * Cargo)
 {
-	g_TargetObject = Cargo;
-	if(g_TargetObject != 0)
+	g_PlayerShip->SetTarget(Cargo);
+	if(g_PlayerShip->GetTarget() != 0)
 	{
 		g_TargetLabel->SetString(Cargo->GetCommodity()->GetName());
 	}
@@ -509,8 +508,8 @@ void SelectCargo(Cargo * Cargo)
 
 void SelectShip(Ship * Ship)
 {
-	g_TargetObject = Ship;
-	if(g_TargetObject != 0)
+	g_PlayerShip->SetTarget(Ship);
+	if(g_PlayerShip->GetTarget() != 0)
 	{
 		g_TargetLabel->SetString(Ship->GetShipClass()->GetIdentifier());
 	}
@@ -686,7 +685,7 @@ void KeyDown(unsigned int KeyCode)
 	case 27: // Key: R
 		{
 			const std::list< Ship * > & Ships(g_CurrentSystem->GetShips());
-			Ship * SelectedShip(dynamic_cast< Ship * >(g_TargetObject));
+			Ship * SelectedShip(dynamic_cast< Ship * >(g_PlayerShip->GetTarget()));
 			
 			if(SelectedShip == 0)
 			{
@@ -722,7 +721,7 @@ void KeyDown(unsigned int KeyCode)
 	case 28: // Key: T
 		{
 			const std::list< Cargo * > & Cargos(g_CurrentSystem->GetCargos());
-			Cargo * SelectedCargo(dynamic_cast< Cargo * >(g_TargetObject));
+			Cargo * SelectedCargo(dynamic_cast< Cargo * >(g_PlayerShip->GetTarget()));
 			
 			if(SelectedCargo == 0)
 			{
@@ -758,7 +757,7 @@ void KeyDown(unsigned int KeyCode)
 	case 33: // Key: P
 		{
 			const std::list< Planet * > & Planets(g_CurrentSystem->GetPlanets());
-			Planet * SelectedPlanet(dynamic_cast< Planet * >(g_TargetObject));
+			Planet * SelectedPlanet(dynamic_cast< Planet * >(g_PlayerShip->GetTarget()));
 			
 			if(SelectedPlanet != 0)
 			{
@@ -829,7 +828,7 @@ void KeyDown(unsigned int KeyCode)
 		}
 	case 39: // Key: S
 		{
-			Cargo * SelectedCargo(dynamic_cast< Cargo * >(g_TargetObject));
+			Cargo * SelectedCargo(dynamic_cast< Cargo * >(g_PlayerShip->GetTarget()));
 			
 			if(SelectedCargo == 0)
 			{
@@ -923,7 +922,7 @@ void KeyDown(unsigned int KeyCode)
 		{
 			if(g_PlanetDialog == 0)
 			{
-				Planet * SelectedPlanet(dynamic_cast< Planet * >(g_TargetObject));
+				Planet * SelectedPlanet(dynamic_cast< Planet * >(g_PlayerShip->GetTarget()));
 				
 				if(SelectedPlanet != 0)
 				{
