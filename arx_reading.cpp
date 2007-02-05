@@ -15,8 +15,12 @@
 #include "label.h"
 #include "model.h"
 #include "model_manager.h"
+#include "planet.h"
 #include "ship_class.h"
 #include "ship_class_manager.h"
+#include "star.h"
+#include "system.h"
+#include "system_manager.h"
 #include "user_interface.h"
 #include "widget.h"
 
@@ -258,6 +262,95 @@ ShipClass * ReadShipClass(ShipClassManager * ShipClassManager, Arxx::Item * Item
 	NewShipClass->SetColor(ModelColor);
 	
 	return NewShipClass;
+}
+
+System * ReadSystem(SystemManager * SystemManager, Arxx::Item * Item)
+{
+	if(Item->u4GetType() != ARX_SYSTEM_TYPE)
+	{
+		std::cerr << "Item type for system '" << Item->sGetName() << "' should be '" << ARX_SYSTEM_TYPE << "' not '" << Item->u4GetType() << "'." << std::endl;
+		
+		throw std::out_of_range("Encountered invalid type.");
+	}
+	
+	Arxx::BufferReader Reader(*Item);
+	std::string Identifier;
+	
+	Reader >> Identifier;
+	
+	System * NewSystem(SystemManager->Create(Identifier));
+	
+	NewSystem->SetObjectIdentifier("::system(" + NewSystem->GetIdentifier() + ")");
+	
+	std::string Name;
+	math3d::vector2f Position;
+	std::string StarIdentifier;
+	math3d::vector2f StarPosition;
+	Color StarColor;
+	Arxx::u4byte PlanetCount;
+	
+	Reader >> Name >> Position >> StarIdentifier >> StarPosition >> StarColor >> PlanetCount;
+	NewSystem->SetName(Name);
+	NewSystem->SetPosition(Position);
+	
+	Star * NewStar(NewSystem->CreateStar());
+	
+	NewStar->SetObjectIdentifier("::system(" + NewSystem->GetIdentifier() + ")::star(" + StarIdentifier + ")");
+	if(NewStar == 0)
+	{
+		std::cerr << "Error with star identifier '" << StarIdentifier << "'." << std::endl;
+		
+		throw std::runtime_error("Invalid identifier");
+	}
+	NewStar->SetPosition(StarPosition);
+	NewStar->SetColor(StarColor);
+	for(Arxx::u4byte Number = 1; Number <= PlanetCount; ++Number)
+	{
+		std::string PlanetIdentifier;
+		
+		Reader >> PlanetIdentifier;
+		
+		Planet * NewPlanet(NewSystem->CreatePlanet(PlanetIdentifier));
+		
+		NewPlanet->SetObjectIdentifier("::system(" + NewSystem->GetIdentifier() + ")::planet(" + NewPlanet->GetIdentifier() + ")");
+		
+		std::string Name;
+		std::string Description;
+		math3d::vector2f PlanetPosition;
+		float Size;
+		Color PlanetColor;
+		Arxx::u4byte CommoditiesCount;
+		
+		Reader >> Name >> Description >> PlanetPosition >> Size >> PlanetColor >> CommoditiesCount;
+		NewPlanet->SetName(Name);
+		NewPlanet->SetDescription(Description);
+		NewPlanet->SetPosition(PlanetPosition);
+		NewPlanet->SetSize(Size);
+		NewPlanet->SetColor(PlanetColor);
+		for(Arxx::u4byte CommoditiesNumber = 1; CommoditiesNumber <= CommoditiesCount; ++CommoditiesNumber)
+		{
+			std::string CommodityIdentifier;
+			float BasePriceModifier;
+			
+			Reader >> CommodityIdentifier >> BasePriceModifier;
+			
+			Commodity * ManagedCommodity(SystemManager->GetCommodityManager()->Get(CommodityIdentifier));
+			PlanetCommodity * NewPlanetCommodity(NewPlanet->CreateCommodity(ManagedCommodity));
+			
+			NewPlanetCommodity->SetBasePriceModifier(BasePriceModifier);
+		}
+		
+		bool AllowRefuelling;
+		float FuelPrice;
+		float LandingFee;
+		
+		Reader >> AllowRefuelling >> FuelPrice >> LandingFee;
+		NewPlanet->SetAllowRefuelling(AllowRefuelling);
+		NewPlanet->SetFuelPrice(FuelPrice);
+		NewPlanet->SetLandingFee(LandingFee);
+	}
+	
+	return NewSystem;
 }
 
 static void ReadWidget(Arxx::BufferReader & Reader, Widget * NewWidget)

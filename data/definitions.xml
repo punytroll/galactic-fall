@@ -82,4 +82,36 @@
 		<string identifier="name"/>
 		<float identifier="base-price"/>
 	</commodity>
+	
+	<offered-commodity>
+		<string identifier="identifier"/>
+		<float identifier="base-price-modifier"/>
+	</offered-commodity>
+	
+	<star>
+		<string identifier="identifier"/>
+		<vector2f identifier="position"/>
+		<color4f identifier="color"/>
+	</star>
+	
+	<planet>
+		<string identifier="identifier"/>
+		<string identifier="name"/>
+		<string identifier="description"/>
+		<vector2f identifier="position"/>
+		<float identifier="size"/>
+		<color4f identifier="color"/>
+		<array identifier="offered-commodities"/>
+		<boolean identifier="allow-refuelling"/>
+		<float identifier="fuel-price"/>
+		<float identifier="landing-fee"/>
+	</planet>
+	
+	<system>
+		<string identifier="identifier"/>
+		<string identifier="name"/>
+		<vector2f identifier="position"/>
+		<star identifier="star"/>
+		<array identifier="planets"/>
+	</system>
 </definitions>

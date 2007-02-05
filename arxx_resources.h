@@ -6,6 +6,7 @@
 const Arxx::u4byte ARX_MODEL_TYPE = 2;
 const Arxx::u4byte ARX_SHIP_CLASS_TYPE = 3;
 const Arxx::u4byte ARX_COMMODITY_TYPE = 4;
+const Arxx::u4byte ARX_SYSTEM_TYPE = 5;
 
 const Arxx::u4byte MESSAGE_LABEL = 100;
 const Arxx::u4byte TIME_WARP_LABEL = 101;
@@ -24,5 +25,9 @@ const Arxx::u4byte MEDICAL_SUPPLIES_COMMODITY = 113;
 const Arxx::u4byte LUXURY_GOODS_COMMODITY = 114;
 const Arxx::u4byte METAL_COMMODITY = 115;
 const Arxx::u4byte EQUIPMENT_COMMODITY = 116;
+const Arxx::u4byte SOL_SYSTEM = 117;
+const Arxx::u4byte RIGEL_SYSTEM = 118;
+const Arxx::u4byte TICHEL_SYSTEM = 119;
+const Arxx::u4byte ALPHA_CENTAURI_SYSTEM = 120;
 
 #endif

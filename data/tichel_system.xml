@@ -1,0 +1,23 @@
+<system>
+	<identifier>tichel</identifier>
+	<name>Tichel</name>
+	<position>
+		<x>4</x>
+		<y>9</y>
+	</position>
+	<star>
+		<identifier>tichel</identifier>
+		<position>
+			<x>50</x>
+			<y>20</y>
+		</position>
+		<color>
+			<red>1.0</red>
+			<green>1.0</green>
+			<blue>1.0</blue>
+			<alpha>1.0</alpha>
+		</color>
+	</star>
+	<planets>
+	</planets>
+</system>
