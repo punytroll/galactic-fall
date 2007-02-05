@@ -20,8 +20,8 @@
 #include <Item.h>
 #include <URI.h>
 
+#include "arx_reading.h"
 #include "arxx_resources.h"
-#include "buffer_reading.h"
 #include "camera.h"
 #include "cargo.h"
 #include "character.h"
@@ -1173,159 +1173,6 @@ void KeyUp(unsigned char KeyCode)
 	}
 }
 
-Arxx::Item * GetItem(Arxx::Archive & Archive, Arxx::u4byte UniqueIdentifier)
-{
-	Arxx::Item * Item(Archive.pGetItem(UniqueIdentifier));
-	
-	if(Item == 0)
-	{
-		std::cerr << "Could not find item '" << UniqueIdentifier << "'." << std::endl;
-		
-		throw std::out_of_range("Finding the unique identifier failed.");
-	}
-	if(Item->bIsFetched() == false)
-	{
-		if(Item->bFetch() == false)
-		{
-			std::cerr << "Could not fetch data for item '" << UniqueIdentifier << "'." << std::endl;
-			
-			throw std::runtime_error("Fetching the data failed.");
-		}
-		if(Item->bIsFetched() == false)
-		{
-			std::cerr << "Could not fetch data for item '" << UniqueIdentifier << "'." << std::endl;
-			
-			throw std::runtime_error("Fetching the data failed.");
-		}
-	}
-	if(Item->bIsCompressed() == true)
-	{
-		Item->vDecompress();
-		if(Item->bIsCompressed() == true)
-		{
-			std::cerr << "Could not decompress data for item '" << UniqueIdentifier << "'." << std::endl;
-			
-			throw std::runtime_error("Decompressing the data failed.");
-		}
-	}
-	
-	return Item;
-}
-
-void ReadWidget(Arxx::BufferReader & Reader, Widget * NewWidget)
-{
-	std::string Path;
-	std::string Name;
-	math3d::vector2f Position;
-	bool UseSize;
-	math3d::vector2f Size;
-	bool UseBackgroundColor;
-	Color BackgroundColor;
-	bool Visible;
-	
-	Reader >> Path >> Name >> Position >> UseSize >> Size >> UseBackgroundColor >> BackgroundColor >> Visible;
-	NewWidget->SetName(Name);
-	if((Path != "") && (NewWidget->GetSupWidget() == 0))
-	{
-		Widget * SupWidget(g_UserInterface.GetWidget(Path));
-		
-		if(SupWidget == 0)
-		{
-			std::cerr << "Could not find the widget at '" << Path << "'." << std::endl;
-			
-			throw std::runtime_error("Unknown sup widget.");
-		}
-		SupWidget->AddSubWidget(NewWidget);
-	}
-	NewWidget->SetPosition(Position);
-	if(UseSize == true)
-	{
-		NewWidget->SetSize(Size);
-	}
-	if(UseBackgroundColor == true)
-	{
-		NewWidget->SetBackgroundColor(BackgroundColor);
-	}
-	if(Visible == false)
-	{
-		NewWidget->Hide();
-	}
-}
-
-void ReadLabel(Arxx::BufferReader & Reader, Label * Label)
-{
-	ReadWidget(Reader, Label);
-	
-	bool UseForegroundColor;
-	Color ForegroundColor;
-	Arxx::u1byte HorizontalAlignment;
-	Arxx::u1byte VerticalAlignment;
-	
-	Reader >> UseForegroundColor >> ForegroundColor >> HorizontalAlignment >> VerticalAlignment;
-	if(UseForegroundColor == true)
-	{
-		Label->SetForegroundColor(ForegroundColor);
-	}
-	if(HorizontalAlignment == 0)
-	{
-		Label->SetHorizontalAlignment(Label::ALIGN_LEFT);
-	}
-	else if(HorizontalAlignment == 1)
-	{
-		Label->SetHorizontalAlignment(Label::ALIGN_RIGHT);
-	}
-	else if(HorizontalAlignment == 2)
-	{
-		Label->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
-	}
-	if(VerticalAlignment == 0)
-	{
-		Label->SetVerticalAlignment(Label::ALIGN_TOP);
-	}
-	else if(VerticalAlignment == 1)
-	{
-		Label->SetVerticalAlignment(Label::ALIGN_BOTTOM);
-	}
-	else if(VerticalAlignment == 2)
-	{
-		Label->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
-	}
-}
-
-Label * ReadLabel(Arxx::Item * Item)
-{
-	if(Item->u4GetSubType() != 1)
-	{
-		std::cerr << "Item subtype for label should be '1' not '" << Item->u4GetSubType() << "'." << std::endl;
-		
-		throw std::out_of_range("Encountered unknown subtype.");
-	}
-	
-	Arxx::BufferReader Reader(*Item);
-	Label * NewLabel(new Label());
-	
-	ReadLabel(Reader, NewLabel);
-	
-	return NewLabel;
-}
-
-Widget * ReadWidget(Arxx::Item * Item)
-{
-	if(Item->u4GetSubType() != 0)
-	{
-		std::cerr << "Item subtype for widget should be '0' not '" << Item->u4GetSubType() << "'." << std::endl;
-		
-		throw std::out_of_range("Encountered unknown subtype.");
-	}
-	
-	Arxx::BufferReader Reader(*Item);
-	Widget * NewWidget(new Widget());
-	
-	ReadWidget(Reader, NewWidget);
-	
-	return NewWidget;
-}
-
 void CreateWindow(void)
 {
 	g_Display = XOpenDisplay(0);
@@ -1596,6 +1443,9 @@ int main(int argc, char ** argv)
 	g_CurrentSystemLabel = ReadLabel(GetItem(Archive, CURRENT_SYSTEM_LABEL));
 	
 	// data reading
+	// ARX
+	ReadModel(&g_ModelManager, GetItem(Archive, CARGO_CUBE_MODEL));
+	// XML
 	LoadModelsFromFile(&g_ModelManager, "data/shuttlecraft.xml");
 	LoadShipClassesFromFile(&g_ShipClassManager, "data/shuttlecraft.xml");
 	LoadCommoditiesFromFile(&g_CommodityManager, "data/universe.xml");
