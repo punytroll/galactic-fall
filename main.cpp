@@ -1442,10 +1442,9 @@ int main(int argc, char ** argv)
 	g_CurrentSystemLabel = ReadLabel(GetItem(Archive, CURRENT_SYSTEM_LABEL));
 	
 	// data reading
-	// XML
-	LoadModelsFromFile(&g_ModelManager, "data/shuttlecraft.xml");
 	// ARX
 	ReadModel(&g_ModelManager, GetItem(Archive, CARGO_CUBE_MODEL));
+	ReadModel(&g_ModelManager, GetItem(Archive, SHUTTLE_MODEL));
 	ReadShipClass(&g_ShipClassManager, GetItem(Archive, SHUTTLE_SHIP_CLASS));
 	ReadCommodity(&g_CommodityManager, GetItem(Archive, FOOD_COMMODITY));
 	ReadCommodity(&g_CommodityManager, GetItem(Archive, INDUSTRIAL_COMMODITY));
