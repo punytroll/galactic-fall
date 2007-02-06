@@ -7,6 +7,7 @@ const Arxx::u4byte ARX_MODEL_TYPE = 2;
 const Arxx::u4byte ARX_SHIP_CLASS_TYPE = 3;
 const Arxx::u4byte ARX_COMMODITY_TYPE = 4;
 const Arxx::u4byte ARX_SYSTEM_TYPE = 5;
+const Arxx::u4byte ARX_SYSTEM_LINK_TYPE = 6;
 
 const Arxx::u4byte MESSAGE_LABEL = 100;
 const Arxx::u4byte TIME_WARP_LABEL = 101;
@@ -30,5 +31,9 @@ const Arxx::u4byte RIGEL_SYSTEM = 118;
 const Arxx::u4byte TICHEL_SYSTEM = 119;
 const Arxx::u4byte ALPHA_CENTAURI_SYSTEM = 120;
 const Arxx::u4byte SHUTTLE_MODEL = 121;
+const Arxx::u4byte SOL_ALPHA_CENTAURI_SYSTEM_LINK = 122;
+const Arxx::u4byte SOL_RIGEL_SYSTEM_LINK = 122;
+const Arxx::u4byte TICHEL_ALPHA_CENTAURI_SYSTEM_LINK = 123;
+const Arxx::u4byte TICHEL_RIGEL_SYSTEM_LINK = 124;
 
 #endif

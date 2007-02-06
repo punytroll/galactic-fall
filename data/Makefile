@@ -20,7 +20,11 @@ all_data = \
 	.data/rigel_system.data \
 	.data/tichel_system.data \
 	.data/alpha_centauri_system.data \
-	.data/shuttle_model.data
+	.data/shuttle_model.data \
+	.data/sol_alpha_centauri_system_link.data \
+	.data/sol_rigel_system_link.data \
+	.data/tichel_alpha_centauri_system_link.data \
+	.data/tichel_rigel_system_link.data
 
 all: data.arx
 
@@ -50,6 +54,9 @@ data.arx: .data $(all_data) Makefile
 	arxtouch $@ 5
 	arxmod $@ 5 -n "Systems" -t 0 -st 0
 	arxmod $@ 0 -a "child" 5
+	arxtouch $@ 6
+	arxmod $@ 6 -n "System Links" -t 0 -st 0
+	arxmod $@ 0 -a "child" 6
 	arxadd $@ --uid 100 --name "Message Label" --type 1 --subtype 1 .data/message_label.data
 	arxmod $@ 1 -a "child" 100
 	arxadd $@ --uid 101 --name "Time Warp Label" --type 1 --subtype 1 .data/time_warp_label.data
@@ -94,6 +101,14 @@ data.arx: .data $(all_data) Makefile
 	arxmod $@ 5 -a "child" 120
 	arxadd $@ --uid 121 --name "Shuttle Model" --type 2 --subtype 0 .data/shuttle_model.data
 	arxmod $@ 2 -a "child" 121
+	arxadd $@ --uid 122 --name "Sol / Alpha Centauri System Link" --type 6 --subtype 0 .data/sol_alpha_centauri_system_link.data
+	arxmod $@ 6 -a "child" 122
+	arxadd $@ --uid 123 --name "Sol / Rigel System Link" --type 6 --subtype 0 .data/sol_rigel_system_link.data
+	arxmod $@ 6 -a "child" 123
+	arxadd $@ --uid 124 --name "Tichel / Alpha Centauri System Link" --type 6 --subtype 0 .data/tichel_alpha_centauri_system_link.data
+	arxmod $@ 6 -a "child" 124
+	arxadd $@ --uid 125 --name "Tichel / Rigel System Link" --type 6 --subtype 0 .data/tichel_rigel_system_link.data
+	arxmod $@ 6 -a "child" 125
 
 .data:
 	mkdir $@

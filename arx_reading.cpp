@@ -353,6 +353,34 @@ System * ReadSystem(SystemManager * SystemManager, Arxx::Item * Item)
 	return NewSystem;
 }
 
+void ReadSystemLink(SystemManager * SystemManager, Arxx::Item * Item)
+{
+	if(Item->u4GetType() != ARX_SYSTEM_LINK_TYPE)
+	{
+		std::cerr << "Item type for system '" << Item->sGetName() << "' should be '" << ARX_SYSTEM_LINK_TYPE << "' not '" << Item->u4GetType() << "'." << std::endl;
+		
+		throw std::out_of_range("Encountered invalid type.");
+	}
+	
+	Arxx::BufferReader Reader(*Item);
+	std::string System1Identifier;
+	std::string System2Identifier;
+	
+	Reader >> System1Identifier >> System2Identifier;
+	
+	System * System1(SystemManager->Get(System1Identifier));
+	System * System2(SystemManager->Get(System2Identifier));
+	
+	if((System1 == 0) || (System2 == 0))
+	{
+		std::cerr << "For system link '" << Item->sGetName() << "' both systems should be defined." << std::endl;
+		
+		throw std::out_of_range("Encountered invalid system identifier.");
+	}
+	System1->AddLinkedSystem(System2);
+	System2->AddLinkedSystem(System1);
+}
+
 static void ReadWidget(Arxx::BufferReader & Reader, Widget * NewWidget)
 {
 	std::string Path;
