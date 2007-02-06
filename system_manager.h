@@ -33,9 +33,4 @@ inline CommodityManager * SystemManager::GetCommodityManager(void)
 	return m_CommodityManager;
 }
 
-void LoadSystemFromElement(SystemManager * SystemManager, const Element * SystemElement);
-void LoadSystemsFromFile(SystemManager * SystemManager, const std::string & FileName);
-void LoadSystemLinkFromElement(SystemManager * SystemManager, const Element * SystemLinkElement);
-void LoadSystemLinksFromFile(SystemManager * SystemManager, const std::string & FileName);
-
 #endif

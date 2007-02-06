@@ -27,7 +27,4 @@ inline ModelManager * ShipClassManager::GetModelManager(void)
 	return m_ModelManager;
 }
 
-void LoadShipClassFromElement(ShipClassManager * ShipClassManager, const Element * ModelElement);
-void LoadShipClassesFromFile(ShipClassManager * ShipClassManager, const std::string & FileName);
-
 #endif
