@@ -18,7 +18,4 @@ private:
 	std::map< std::string, Commodity * > m_Commodities;
 };
 
-void LoadCommodityFromElement(CommodityManager * CommodityManager, const Element * CommodityElement);
-void LoadCommoditiesFromFile(CommodityManager * CommodityManager, const std::string & FileName);
-
 #endif
