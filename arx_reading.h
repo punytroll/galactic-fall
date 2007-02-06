@@ -21,6 +21,7 @@ Label * ReadLabel(Arxx::Item * Item);
 Model * ReadModel(ModelManager * ModelManager, Arxx::Item * Item);
 ShipClass * ReadShipClass(ShipClassManager * ShipClassManager, Arxx::Item * Item);
 System * ReadSystem(SystemManager * SystemManager, Arxx::Item * Item);
+void ReadSystemLink(SystemManager * SystemManager, Arxx::Item * Item);
 Widget * ReadWidget(Arxx::Item * Item);
 
 #endif

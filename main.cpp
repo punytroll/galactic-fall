@@ -1456,7 +1456,10 @@ int main(int argc, char ** argv)
 	ReadSystem(&g_SystemManager, GetItem(Archive, RIGEL_SYSTEM));
 	ReadSystem(&g_SystemManager, GetItem(Archive, TICHEL_SYSTEM));
 	ReadSystem(&g_SystemManager, GetItem(Archive, ALPHA_CENTAURI_SYSTEM));
-	LoadSystemLinksFromFile(&g_SystemManager, "data/universe.xml");
+	ReadSystemLink(&g_SystemManager, GetItem(Archive, SOL_ALPHA_CENTAURI_SYSTEM_LINK));
+	ReadSystemLink(&g_SystemManager, GetItem(Archive, SOL_RIGEL_SYSTEM_LINK));
+	ReadSystemLink(&g_SystemManager, GetItem(Archive, TICHEL_ALPHA_CENTAURI_SYSTEM_LINK));
+	ReadSystemLink(&g_SystemManager, GetItem(Archive, TICHEL_RIGEL_SYSTEM_LINK));
 	
 	// initialize the player (initial load)
 	LoadSavegame(LoadSavegameFileName);
