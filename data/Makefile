@@ -27,6 +27,8 @@ all: data.arx
 clean:
 	$(RM) -f data.arx
 	$(RM) -rf .data
+	$(RM) -f shuttle_model.xml
+	$(RM) -f cargo_cube_model.xml
 
 data.arx: .data $(all_data) Makefile
 	@$(RM) -f $@
@@ -100,4 +102,7 @@ data.arx: .data $(all_data) Makefile
 	python make_binary.py --definitions=definitions.xml --in=$< --out=$@
 
 shuttle_model.xml: models/shuttle_model.xml model_transform.xsl
+	xsltproc -output $@ model_transform.xsl $<
+
+cargo_cube_model.xml: models/cargo_cube_model.xml model_transform.xsl
 	xsltproc -output $@ model_transform.xsl $<
