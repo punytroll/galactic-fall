@@ -19,7 +19,8 @@ all_data = \
 	.data/sol_system.data \
 	.data/rigel_system.data \
 	.data/tichel_system.data \
-	.data/alpha_centauri_system.data
+	.data/alpha_centauri_system.data \
+	.data/shuttle_model.data
 
 all: data.arx
 
@@ -89,9 +90,14 @@ data.arx: .data $(all_data) Makefile
 	arxmod $@ 5 -a "child" 119
 	arxadd $@ --uid 120 --name "Alpha Centauri System" --type 5 --subtype 0 .data/alpha_centauri_system.data
 	arxmod $@ 5 -a "child" 120
+	arxadd $@ --uid 121 --name "Shuttle Model" --type 2 --subtype 0 .data/shuttle_model.data
+	arxmod $@ 2 -a "child" 121
 
 .data:
 	mkdir $@
 
 .data/%.data: %.xml definitions.xml make_binary.py
 	python make_binary.py --definitions=definitions.xml --in=$< --out=$@
+
+shuttle_model.xml: models/shuttle_model.xml model_transform.xsl
+	xsltproc -output $@ model_transform.xsl $<

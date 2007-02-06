@@ -29,5 +29,6 @@ const Arxx::u4byte SOL_SYSTEM = 117;
 const Arxx::u4byte RIGEL_SYSTEM = 118;
 const Arxx::u4byte TICHEL_SYSTEM = 119;
 const Arxx::u4byte ALPHA_CENTAURI_SYSTEM = 120;
+const Arxx::u4byte SHUTTLE_MODEL = 121;
 
 #endif
