@@ -14,6 +14,7 @@ Object::Object(void)
 Object::~Object(void)
 {
 	SetObjectIdentifier("");
+	m_Objects.erase(m_Objects.find(this));
 }
 
 void Object::SetObjectIdentifier(const std::string & ObjectIdentifier)
