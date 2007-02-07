@@ -870,6 +870,7 @@ void KeyDown(unsigned int KeyCode)
 						g_PlayerShip->AddCommodities(SelectedCargo->GetCommodity(), 1.0f);
 						g_CurrentSystem->RemoveCargo(SelectedCargo);
 						SelectCargo(0);
+						delete SelectedCargo;
 					}
 					else
 					{
@@ -996,6 +997,7 @@ void KeyDown(unsigned int KeyCode)
 				const Commodity * Commodity(g_PlayerShip->GetCommodities().begin()->first);
 				Cargo * NewCargo(new Cargo(g_ModelManager.Get("cargo_cube"), Commodity, g_PlayerShip->GetVelocity() * 0.8f + math3d::vector2f(-0.5f + static_cast< float >(random()) / RAND_MAX, -0.5f + static_cast< float >(random()) / RAND_MAX))); // TODO: memory leak
 				
+				NewCargo->SetObjectIdentifier("::cargo(" + Commodity->GetIdentifier() + ")::" + to_string_cast(reinterpret_cast< void * >(NewCargo)));
 				g_PlayerShip->RemoveCommodities(Commodity, 1.0f);
 				NewCargo->SetPosition(g_PlayerShip->GetPosition());
 				g_CurrentSystem->AddCargo(NewCargo);
