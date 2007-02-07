@@ -1,8 +1,8 @@
 arx_reading_h = \
 	arx_reading.h
 
-arxx_resources_h = \
-	arxx_resources.h
+arx_resources_h = \
+	arx_resources.h
 
 buffer_reading_h = \
 	buffer_reading.h \

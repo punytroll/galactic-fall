@@ -21,7 +21,7 @@
 #include <URI.h>
 
 #include "arx_reading.h"
-#include "arxx_resources.h"
+#include "arx_resources.h"
 #include "camera.h"
 #include "cargo.h"
 #include "character.h"

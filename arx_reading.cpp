@@ -7,7 +7,7 @@
 #include <math3d/vector4f.h>
 
 #include "arx_reading.h"
-#include "arxx_resources.h"
+#include "arx_resources.h"
 #include "buffer_reading.h"
 #include "commodity.h"
 #include "commodity_manager.h"
