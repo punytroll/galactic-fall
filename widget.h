@@ -154,6 +154,8 @@ inline Widget * Widget::GetSubWidget(const std::string & Name)
 			return *Iterator;
 		}
 	}
+	
+	return 0;
 }
 
 inline const Widget * Widget::GetSubWidget(const std::string & Name) const
@@ -165,6 +167,8 @@ inline const Widget * Widget::GetSubWidget(const std::string & Name) const
 			return *Iterator;
 		}
 	}
+	
+	return 0;
 }
 
 inline Widget * Widget::GetKeyFocus(void)
