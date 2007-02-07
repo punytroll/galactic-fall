@@ -74,7 +74,6 @@ Label * g_FuelLabel(0);
 Label * g_MessageLabel(0);
 Label * g_CurrentSystemLabel(0);
 System * g_CurrentSystem;
-System * g_SelectedLinkedSystem(0);
 float g_TimeWarp(1.0f);
 bool g_Quit(false);
 bool g_Pause(false);
@@ -347,7 +346,7 @@ void Render(void)
 		glPopMatrix();
 	}
 	// user interface updates
-	if((g_SelectedLinkedSystem != 0) && (WantToJump(g_PlayerShip) == OK_TO_JUMP))
+	if((g_PlayerShip->GetLinkedSystemTarget() != 0) && (WantToJump(g_PlayerShip) == OK_TO_JUMP))
 	{
 		g_SystemLabel->GetForegroundColor().Set(0.7f, 0.8f, 1.0f);
 	}
@@ -460,14 +459,14 @@ void Resize(void)
 
 void SelectLinkedSystem(System * LinkedSystem)
 {
-	g_SelectedLinkedSystem = LinkedSystem;
-	if(g_SelectedLinkedSystem != 0)
+	g_PlayerShip->SetLinkedSystemTarget(LinkedSystem);
+	if(g_PlayerShip->GetLinkedSystemTarget() != 0)
 	{
 		const std::set< System * > UnexploredSystems(g_PlayerCharacter->GetMapKnowledge()->GetUnexploredSystems());
 		
-		if(UnexploredSystems.find(g_SelectedLinkedSystem) == UnexploredSystems.end())
+		if(UnexploredSystems.find(g_PlayerShip->GetLinkedSystemTarget()) == UnexploredSystems.end())
 		{
-			g_SystemLabel->SetString(LinkedSystem->GetName());
+			g_SystemLabel->SetString(g_PlayerShip->GetLinkedSystemTarget()->GetName());
 		}
 		else
 		{
@@ -887,14 +886,14 @@ void KeyDown(unsigned int KeyCode)
 		}
 	case 44: // Key: J
 		{
-			if(g_SelectedLinkedSystem != 0)
+			if(g_PlayerShip->GetLinkedSystemTarget() != 0)
 			{
 				switch(WantToJump(g_PlayerShip))
 				{
 				case OK_TO_JUMP:
 					{
 						System * OldSystem(g_CurrentSystem);
-						System * NewSystem(g_SelectedLinkedSystem);
+						System * NewSystem(g_PlayerShip->GetLinkedSystemTarget());
 						
 						LeaveSystem();
 						g_PlayerShip->Jump();
@@ -1009,9 +1008,9 @@ void KeyDown(unsigned int KeyCode)
 		{
 			const std::list< System * > & LinkedSystems(g_CurrentSystem->GetLinkedSystems());
 			
-			if(g_SelectedLinkedSystem != 0)
+			if(g_PlayerShip->GetLinkedSystemTarget() != 0)
 			{
-				std::list< System * >::const_iterator SystemIterator(find(LinkedSystems.begin(), LinkedSystems.end(), g_SelectedLinkedSystem));
+				std::list< System * >::const_iterator SystemIterator(find(LinkedSystems.begin(), LinkedSystems.end(), g_PlayerShip->GetLinkedSystemTarget()));
 				
 				if(SystemIterator == LinkedSystems.end())
 				{
