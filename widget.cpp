@@ -289,7 +289,7 @@ void Widget::OnDestroy(Widget * EventSource)
 	{
 		m_KeyFocus = 0;
 	}
-	if(EventSource = m_HoverWidget)
+	if(EventSource == m_HoverWidget)
 	{
 		m_HoverWidget = 0;
 	}
