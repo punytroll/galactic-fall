@@ -1,5 +1,5 @@
-#ifndef ARXX_RESOURCES_H
-#define ARXX_RESOURCES_H
+#ifndef ARX_RESOURCES_H
+#define ARX_RESOURCES_H
 
 #include <Common.h>
 
@@ -32,8 +32,8 @@ const Arxx::u4byte TICHEL_SYSTEM = 119;
 const Arxx::u4byte ALPHA_CENTAURI_SYSTEM = 120;
 const Arxx::u4byte SHUTTLE_MODEL = 121;
 const Arxx::u4byte SOL_ALPHA_CENTAURI_SYSTEM_LINK = 122;
-const Arxx::u4byte SOL_RIGEL_SYSTEM_LINK = 122;
-const Arxx::u4byte TICHEL_ALPHA_CENTAURI_SYSTEM_LINK = 123;
-const Arxx::u4byte TICHEL_RIGEL_SYSTEM_LINK = 124;
+const Arxx::u4byte SOL_RIGEL_SYSTEM_LINK = 123;
+const Arxx::u4byte TICHEL_ALPHA_CENTAURI_SYSTEM_LINK = 124;
+const Arxx::u4byte TICHEL_RIGEL_SYSTEM_LINK = 125;
 
 #endif
