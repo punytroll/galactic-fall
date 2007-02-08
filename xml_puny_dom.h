@@ -16,6 +16,7 @@ public:
 	const std::string & GetName(void) const;
 	const std::map< std::string, std::string > & GetAttributes(void) const;
 	const std::string & GetAttribute(const std::string & AttributeName) const;
+	bool HasAttribute(const std::string & AttributeName) const;
 	const std::vector< Element * > & GetChilds(void) const;
 	const Element * GetChild(std::vector< Element * >::size_type Index) const;
 private:
