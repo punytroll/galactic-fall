@@ -22,6 +22,7 @@
 
 #include "arx_reading.h"
 #include "arx_resources.h"
+#include "callbacks.h"
 #include "camera.h"
 #include "cargo.h"
 #include "character.h"
@@ -82,7 +83,7 @@ MapDialog * g_MapDialog;
 int g_WidgetCollectorCountDownInitializer(10);
 int g_WidgetCollectorCountDown(g_WidgetCollectorCountDownInitializer);
 UserInterface g_UserInterface;
-double g_MessageLabelTimeout;
+std::multimap< double, Callback0< void > * > g_TimeoutNotifications;
 Widget * g_RadarWidget(0);
 Widget * g_MiniMapWidget(0);
 Display * g_Display;
@@ -174,7 +175,7 @@ void SetMessage(const std::string & Message)
 	g_MessageLabel->SetString(Message);
 	g_MessageLabel->SetPosition(math3d::vector2f((g_Width - 6 * Message.length()) / 2, 40.0f));
 	g_MessageLabel->Show();
-	g_MessageLabelTimeout = RealTime::GetTime() + 2.0;
+	g_TimeoutNotifications.insert(std::make_pair(RealTime::GetTime() + 2.0f, new MemberCallback0< void, Label >(g_MessageLabel, &Label::Hide)));
 }
 
 void DrawSelection(Position * Position, float RadialSize)
@@ -354,9 +355,17 @@ void Render(void)
 	{
 		g_SystemLabel->GetForegroundColor().Set(0.4f, 0.4f, 0.4f);
 	}
-	if(RealTime::GetTime() > g_MessageLabelTimeout)
+	
+	double StopTime(RealTime::GetTime());
+	
+	while((g_TimeoutNotifications.size() > 0) && (StopTime > g_TimeoutNotifications.begin()->first))
 	{
-		g_MessageLabel->Hide();
+		// call the notification callback object
+		(*(g_TimeoutNotifications.begin()->second))();
+		// delete the notification callback object
+		delete g_TimeoutNotifications.begin()->second;
+		// remove the notification callback from the multimap
+		g_TimeoutNotifications.erase(g_TimeoutNotifications.begin());
 	}
 	DisplayUserInterface();
 	// radar
