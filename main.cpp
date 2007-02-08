@@ -175,6 +175,7 @@ void SetMessage(const std::string & Message)
 	g_MessageLabel->SetString(Message);
 	g_MessageLabel->SetPosition(math3d::vector2f((g_Width - 6 * Message.length()) / 2, 40.0f));
 	g_MessageLabel->Show();
+	/// TODO: Make the 2.0f seconds timeout configurable via the game configuration archive.
 	g_TimeoutNotifications.insert(std::make_pair(RealTime::GetTime() + 2.0f, new MemberCallback0< void, Label >(g_MessageLabel, &Label::Hide)));
 }
 
@@ -219,6 +220,19 @@ void DrawPlanetSelection(Planet * Planet)
 	DrawSelection(Planet, Planet->GetRadialSize());
 }
 
+void CollectWidgets(void)
+{
+	std::list< Widget * > & DestroyedWidgets(Widget::GetDestroyedWidgets());
+	
+	while(DestroyedWidgets.size() > 0)
+	{
+		delete DestroyedWidgets.front();
+		DestroyedWidgets.pop_front();
+	}
+	/// TODO: Make the 5.0f seconds timeout configurable via the game configuration archive.
+	g_TimeoutNotifications.insert(std::make_pair(RealTime::GetTime() + 5.0f, new FunctionCallback0< void >(CollectWidgets)));
+}
+
 void DisplayUserInterface(void)
 {
 	glPushAttrib(GL_ENABLE_BIT);
@@ -241,17 +255,6 @@ void DisplayUserInterface(void)
 	glMatrixMode(GL_MODELVIEW);
 	glPopMatrix();
 	glPopAttrib();
-	if(--g_WidgetCollectorCountDown == 0)
-	{
-		std::list< Widget * > & DestroyedWidgets(Widget::GetDestroyedWidgets());
-		
-		while(DestroyedWidgets.size() > 0)
-		{
-			delete DestroyedWidgets.front();
-			DestroyedWidgets.pop_front();
-		}
-		g_WidgetCollectorCountDown = g_WidgetCollectorCountDownInitializer;
-	}
 }
 
 void Render(void)
@@ -1481,6 +1484,8 @@ int main(int argc, char ** argv)
 	g_InputFocus = g_PlayerShip;
 	g_MiniMapCamera.SetPosition(0.0f, 0.0f, 1500.0f);
 	g_MiniMapCamera.SetFocus(g_PlayerShip);
+	// set first timeout for widget collector, it will reinsert itself on callback
+	g_TimeoutNotifications.insert(std::make_pair(RealTime::GetTime() + 5.0f, new FunctionCallback0< void >(CollectWidgets)));
 	// setting up the graphical environment
 	CreateWindow();
 	InitializeOpenGL();
