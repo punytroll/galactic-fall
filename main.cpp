@@ -330,7 +330,7 @@ void SetMiniMapPerspective(void)
 	glLoadMatrixf(Matrix.matrix());
 }
 
-void Render(void)
+void CalculateMovements(void)
 {
 	float Seconds(CalculateTime());
 	
@@ -347,11 +347,40 @@ void Render(void)
 		{
 			(*CargoIterator)->Move(Seconds);
 		}
-		// player ship has been updated, display new fuel
-		g_FuelLabel->SetString("Fuel: " + to_string_cast(100.0f * g_PlayerShip->GetFuel() / g_PlayerShip->GetFuelCapacity()) + "%");
-		// display credits in every cycle
-		g_CreditsLabel->SetString("Credits: " + to_string_cast(g_PlayerCharacter->GetCredits()));
 	}
+}
+
+void UpdateUserInterface(void)
+{
+	// call all real time timeouts
+	double StopTime(RealTime::GetTime());
+	
+	while((g_TimeoutNotifications.size() > 0) && (StopTime > g_TimeoutNotifications.begin()->first))
+	{
+		// call the notification callback object
+		(*(g_TimeoutNotifications.begin()->second))();
+		// delete the notification callback object
+		delete g_TimeoutNotifications.begin()->second;
+		// remove the notification callback from the multimap
+		g_TimeoutNotifications.erase(g_TimeoutNotifications.begin());
+	}
+	// player ship has been updated, display new fuel
+	g_FuelLabel->SetString("Fuel: " + to_string_cast(100.0f * g_PlayerShip->GetFuel() / g_PlayerShip->GetFuelCapacity()) + "%");
+	// display credits in every cycle
+	g_CreditsLabel->SetString("Credits: " + to_string_cast(g_PlayerCharacter->GetCredits()));
+	// set system label color according to jump status
+	if((g_PlayerShip->GetLinkedSystemTarget() != 0) && (WantToJump(g_PlayerShip) == OK_TO_JUMP))
+	{
+		g_SystemLabel->GetForegroundColor().Set(0.7f, 0.8f, 1.0f);
+	}
+	else
+	{
+		g_SystemLabel->GetForegroundColor().Set(0.4f, 0.4f, 0.4f);
+	}
+}
+
+void Render(void)
+{
 	glClear(GL_COLOR_BUFFER_BIT);
 	glViewport(0, 0, static_cast< GLsizei >(g_Width), static_cast< GLsizei >(g_Height));
 	glMatrixMode(GL_PROJECTION);
@@ -420,27 +449,6 @@ void Render(void)
 		glEnd();
 		glPopAttrib();
 		glPopMatrix();
-	}
-	// user interface updates
-	if((g_PlayerShip->GetLinkedSystemTarget() != 0) && (WantToJump(g_PlayerShip) == OK_TO_JUMP))
-	{
-		g_SystemLabel->GetForegroundColor().Set(0.7f, 0.8f, 1.0f);
-	}
-	else
-	{
-		g_SystemLabel->GetForegroundColor().Set(0.4f, 0.4f, 0.4f);
-	}
-	
-	double StopTime(RealTime::GetTime());
-	
-	while((g_TimeoutNotifications.size() > 0) && (StopTime > g_TimeoutNotifications.begin()->first))
-	{
-		// call the notification callback object
-		(*(g_TimeoutNotifications.begin()->second))();
-		// delete the notification callback object
-		delete g_TimeoutNotifications.begin()->second;
-		// remove the notification callback from the multimap
-		g_TimeoutNotifications.erase(g_TimeoutNotifications.begin());
 	}
 	DisplayUserInterface();
 	// radar
@@ -558,6 +566,13 @@ void SelectLinkedSystem(System * LinkedSystem)
 	{
 		g_SystemLabel->SetString("");
 	}
+}
+
+void GameFrame(void)
+{
+	CalculateMovements();
+	UpdateUserInterface();
+	Render();
 }
 
 void SelectPlanet(Planet * Planet)
@@ -1573,7 +1588,7 @@ int main(int argc, char ** argv)
 	while(g_Quit == false)
 	{
 		ProcessEvents();
-		Render();
+		GameFrame();
 		glXSwapBuffers(g_Display, g_Window);
 	}
 	DestroyWindow();
