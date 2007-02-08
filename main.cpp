@@ -381,13 +381,11 @@ void UpdateUserInterface(void)
 
 void Render(void)
 {
-	glClear(GL_COLOR_BUFFER_BIT);
 	glViewport(0, 0, static_cast< GLsizei >(g_Width), static_cast< GLsizei >(g_Height));
 	glMatrixMode(GL_PROJECTION);
 	SetMainPerspective();
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	glClear(GL_DEPTH_BUFFER_BIT);
 	g_Camera.Draw();
 	
 	const Star * CurrentStar(g_CurrentSystem->GetStar());
@@ -402,6 +400,8 @@ void Render(void)
 	{
 		glDisable(GL_LIGHT0);
 	}
+	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_DEPTH_BUFFER_BIT);
 	if(g_CurrentSystem != 0)
 	{
 		const std::list< Planet * > & Planets(g_CurrentSystem->GetPlanets());
@@ -461,7 +461,6 @@ void Render(void)
 		SetRadarPerspective(RadialSize);
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
-		glClear(GL_DEPTH_BUFFER_BIT);
 		g_RadarCamera.SetPosition(0.0f, 0.0f, 4.0f * RadialSize);
 		g_RadarCamera.SetFocus(g_PlayerShip->GetTarget());
 		g_RadarCamera.Draw();
@@ -469,6 +468,7 @@ void Render(void)
 		{
 			glLightfv(GL_LIGHT0, GL_POSITION, math3d::vector4f(CurrentStar->GetPosition().m_V.m_A[0], CurrentStar->GetPosition().m_V.m_A[1], 100.0f, 0.0f).m_V.m_A);
 		}
+		glClear(GL_DEPTH_BUFFER_BIT);
 		g_PlayerShip->GetTarget()->Draw();
 	}
 	// mini map
@@ -479,12 +479,9 @@ void Render(void)
 		SetMiniMapPerspective();
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
-		glClear(GL_DEPTH_BUFFER_BIT);
 		g_MiniMapCamera.Draw();
-		glPushAttrib(GL_ENABLE_BIT);
 		glDisable(GL_LIGHTING);
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glClear(GL_DEPTH_BUFFER_BIT);
 		
 		const std::list< Planet * > & Planets(g_CurrentSystem->GetPlanets());
 		const std::list< Ship * > & Ships(g_CurrentSystem->GetShips());
@@ -506,7 +503,6 @@ void Render(void)
 		}
 		for(std::list< Ship * >::const_iterator ShipIterator = Ships.begin(); ShipIterator != Ships.end(); ++ShipIterator)
 		{
-			// Ship is not an object yet
 			if(*ShipIterator == g_PlayerShip->GetTarget())
 			{
 				glColor3f(0.2f, 1.0f, 0.0f);
@@ -530,7 +526,7 @@ void Render(void)
 			}
 		}
 		glEnd();
-		glPopAttrib();
+		glEnable(GL_LIGHTING);
 	}
 }
 
