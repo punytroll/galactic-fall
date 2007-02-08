@@ -21,7 +21,7 @@
 			<commodity identifier="industrial" amount="6"/>
 			<commodity identifier="metal" amount="2"/>
 		</commodities>
-	<ship>
+	</ship>
 	<camera>
 		<position x="0" y="0" z="200"/>
 		<focus object-identifier="::ship(shuttlecraft)::player_ship"/>
