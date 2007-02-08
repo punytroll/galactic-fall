@@ -80,8 +80,6 @@ bool g_Quit(false);
 bool g_Pause(false);
 PlanetDialog * g_PlanetDialog;
 MapDialog * g_MapDialog;
-int g_WidgetCollectorCountDownInitializer(10);
-int g_WidgetCollectorCountDown(g_WidgetCollectorCountDownInitializer);
 UserInterface g_UserInterface;
 std::multimap< double, Callback0< void > * > g_TimeoutNotifications;
 Widget * g_RadarWidget(0);
