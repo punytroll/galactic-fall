@@ -271,48 +271,61 @@ void CalculatePerspectiveMatrix(float FieldOfView, float Aspect, float NearClipp
 
 void SetMainPerspective(void)
 {
+	static float CalculatedForFieldOfView(0.0f);
 	static math3d::matrix4f Matrix;
 	static bool Initialized(false);
 	
-	if(Initialized == false)
+	if((Initialized == false) || (CalculatedForFieldOfView != g_Camera.GetFieldOfView()))
 	{
 		/// TODO: Make this configurable
 		/// TODO: Also consider that these values may want to change while in game.
-		const float FieldOfView(45.0f * M_PI / 360.0);
+		const float FieldOfView(g_Camera.GetFieldOfView());
 		const float NearClippingPlane(1.0f);
 		const float FarClippingPlane(1000.0f);
 		
 		CalculatePerspectiveMatrix(FieldOfView, g_Width / g_Height, NearClippingPlane, FarClippingPlane, Matrix);
 		Initialized = true;
+		CalculatedForFieldOfView = FieldOfView;
 	}
 	glLoadMatrixf(Matrix.matrix());
 }
 
 void SetRadarPerspective(float RadialSize)
 {
-	/// TODO: Make this configurable
-	float ExtendedRadialSize((5.0f / 4.0f) * RadialSize);
-	math3d::matrix4f Matrix;
+	static float CalculatedForRadialSize(0.0f);
+	static math3d::matrix4f Matrix;
+	static bool Initialized(false);
 	
-	CalculatePerspectiveMatrix(asinf(ExtendedRadialSize / sqrtf(ExtendedRadialSize * ExtendedRadialSize + 16 * RadialSize * RadialSize)), 1.0f, 1.0f, 1000.0f, Matrix);
+	/// TODO: Make this configurable
+	if((Initialized == false) || (RadialSize != CalculatedForRadialSize))
+	{
+		float ExtendedRadialSize((5.0f / 4.0f) * RadialSize);
+		
+		g_RadarCamera.SetFieldOfView(asinf(ExtendedRadialSize / sqrtf(ExtendedRadialSize * ExtendedRadialSize + 16 * RadialSize * RadialSize)));
+		CalculatePerspectiveMatrix(g_RadarCamera.GetFieldOfView(), 1.0f, 1.0f, 1000.0f, Matrix);
+		Initialized = true;
+		CalculatedForRadialSize = RadialSize;
+	}
 	glLoadMatrixf(Matrix.matrix());
 }
 
 void SetMiniMapPerspective(void)
 {
+	static float CalculatedForFieldOfView(0.0f);
 	static math3d::matrix4f Matrix;
 	static bool Initialized(false);
 	
-	if(Initialized == false)
+	if((Initialized == false) || (CalculatedForFieldOfView != g_MiniMapCamera.GetFieldOfView()))
 	{
 		/// TODO: Make this configurable
 		/// TODO: Also consider that these values may want to change while in game.
-		const float FieldOfView(45.0f * M_PI / 360.0);
+		const float FieldOfView(g_MiniMapCamera.GetFieldOfView());
 		const float NearClippingPlane(1.0f);
 		const float FarClippingPlane(10000.0f);
 		
 		CalculatePerspectiveMatrix(FieldOfView, 1.0f, NearClippingPlane, FarClippingPlane, Matrix);
 		Initialized = true;
+		CalculatedForFieldOfView = FieldOfView;
 	}
 	glLoadMatrixf(Matrix.matrix());
 }
@@ -1456,6 +1469,17 @@ void LoadSavegame(const Element * SaveElement)
 						g_Camera.SetFocus(g_PlayerShip);
 					}
 				}
+				else if((*CameraChild)->GetName() == "field-of-view")
+				{
+					if((*CameraChild)->HasAttribute("degree") == true)
+					{
+						g_Camera.SetFieldOfView(from_string_cast< float >((*CameraChild)->GetAttribute("degree")) * M_PI / 360.0f);
+					}
+					else if((*CameraChild)->HasAttribute("radians") == true)
+					{
+						g_Camera.SetFieldOfView(from_string_cast< float >((*CameraChild)->GetAttribute("radians")));
+					}
+				}
 			}
 		}
 	}
@@ -1540,6 +1564,7 @@ int main(int argc, char ** argv)
 	g_InputFocus = g_PlayerShip;
 	g_MiniMapCamera.SetPosition(0.0f, 0.0f, 1500.0f);
 	g_MiniMapCamera.SetFocus(g_PlayerShip);
+	g_MiniMapCamera.SetFieldOfView(0.392699082f);
 	// set first timeout for widget collector, it will reinsert itself on callback
 	g_TimeoutNotifications.insert(std::make_pair(RealTime::GetTime() + 5.0f, new FunctionCallback0< void >(CollectWidgets)));
 	// setting up the graphical environment
