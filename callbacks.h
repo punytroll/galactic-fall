@@ -8,6 +8,25 @@ public:
 	virtual Return operator()(void) const = 0;
 };
 
+template < typename Return >
+class FunctionCallback0 : public Callback0< Return >
+{
+public:
+	typedef Return (*Function)();
+	
+	explicit FunctionCallback0(Function Function) :
+		m_Function(Function)
+	{
+	}
+	
+	virtual Return operator()(void) const
+	{
+		return (*m_Function)();
+	}
+protected:
+	Function m_Function;
+};
+
 template < typename Return, typename Class >
 class MemberCallback0 : public Callback0< Return >
 {
