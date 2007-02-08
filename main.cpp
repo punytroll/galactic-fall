@@ -692,13 +692,13 @@ void MouseButtonDown(int MouseButton, int X, int Y)
 	{
 	case 4: // MouseButton: WHEEL_UP
 		{
-			g_Camera.ZoomIn();
+			g_Camera.MoveIn();
 			
 			break;
 		}
 	case 5: // MouseButton: WHEEL_DOWN
 		{
-			g_Camera.ZoomOut();
+			g_Camera.MoveOut();
 			
 			break;
 		}

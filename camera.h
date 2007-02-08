@@ -18,8 +18,8 @@ public:
 	const Position * GetFocus(void) const;
 	const math3d::vector3f & GetPosition(void) const;
 	float GetFieldOfView(void) const;
-	void ZoomIn(void);
-	void ZoomOut(void);
+	void MoveIn(void);
+	void MoveOut(void);
 private:
 	Position * m_Focus;
 	math3d::vector3f m_Position;
