@@ -35,12 +35,12 @@ void Camera::SetPosition(float X, float Y, float Z)
 	m_Position.m_V.m_A[2] = Z;
 }
 
-void Camera::ZoomIn(void)
+void Camera::MoveIn(void)
 {
 	m_Position.m_V.m_A[2] *= 0.95f;
 }
 
-void Camera::ZoomOut(void)
+void Camera::MoveOut(void)
 {
 	m_Position.m_V.m_A[2] *= 1.05f;
 }
