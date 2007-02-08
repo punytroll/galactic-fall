@@ -1,3 +1,5 @@
+#include <stdexcept>
+#include <iostream>
 #include <stack>
 
 #include "xml_parser.h"
@@ -37,6 +39,18 @@ void DOMReader::ElementStart(const std::string & Name, const std::map< std::stri
 
 void DOMReader::ElementEnd(const std::string & Name)
 {
+	if(m_ElementStack.size() == 0)
+	{
+		std::cerr << "Got '/" << Name << "' but stack is empty." << std::endl;
+		
+		throw std::domain_error(Name);
+	}
+	if(Name != m_ElementStack.top()->GetName())
+	{
+		std::cerr << "Got '/" << Name << "' but expected '/" << m_ElementStack.top()->GetName() << "'." << std::endl;
+		
+		throw std::domain_error(Name);
+	}
 	m_ElementStack.pop();
 }
 
