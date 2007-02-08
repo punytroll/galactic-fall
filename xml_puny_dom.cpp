@@ -86,6 +86,11 @@ const std::string & Element::GetAttribute(const std::string & AttributeName) con
 	return m_Attributes.find(AttributeName)->second;
 }
 
+bool Element::HasAttribute(const std::string & AttributeName) const
+{
+	return m_Attributes.find(AttributeName) != m_Attributes.end();
+}
+
 const std::vector< Element * > & Element::GetChilds(void) const
 {
 	return m_Childs;
