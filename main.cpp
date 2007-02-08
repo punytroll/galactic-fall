@@ -7,11 +7,10 @@
 #include <sstream>
 #include <vector>
 
-#include <X11/keysym.h>
 #include <GL/glx.h>
 #include <GL/gl.h>
-#include <GL/glu.h>
 
+#include <math3d/matrix4f.h>
 #include <math3d/vector2f.h>
 #include <math3d/vector4f.h>
 
@@ -255,6 +254,69 @@ void DisplayUserInterface(void)
 	glPopAttrib();
 }
 
+void CalculatePerspectiveMatrix(float FieldOfView, float Aspect, float NearClippingPlane, float FarClippingPlane, math3d::matrix4f & Matrix)
+{
+	float Right, Top;
+	
+	Top = NearClippingPlane * tan(FieldOfView);
+	Right = Top * Aspect;
+	
+	Matrix.m_M[1].m_A[0] = Matrix.m_M[2].m_A[0] = Matrix.m_M[3].m_A[0] = Matrix.m_M[0].m_A[1] = Matrix.m_M[2].m_A[1] = Matrix.m_M[3].m_A[1] = Matrix.m_M[0].m_A[2] = Matrix.m_M[1].m_A[2] = Matrix.m_M[0].m_A[3] = Matrix.m_M[1].m_A[3] = Matrix.m_M[3].m_A[3] = 0.0f;
+	Matrix.m_M[0].m_A[0] = NearClippingPlane / Right;
+	Matrix.m_M[1].m_A[1] = NearClippingPlane / Top;
+	Matrix.m_M[2].m_A[2] = -(FarClippingPlane + NearClippingPlane) / (FarClippingPlane - NearClippingPlane);
+	Matrix.m_M[3].m_A[2] = -(2.0f * FarClippingPlane * NearClippingPlane) / (FarClippingPlane - NearClippingPlane);
+	Matrix.m_M[2].m_A[3] = -1.0f;
+}
+
+void SetMainPerspective(void)
+{
+	static math3d::matrix4f Matrix;
+	static bool Initialized(false);
+	
+	if(Initialized == false)
+	{
+		/// TODO: Make this configurable
+		/// TODO: Also consider that these values may want to change while in game.
+		const float FieldOfView(45.0f * M_PI / 360.0);
+		const float NearClippingPlane(1.0f);
+		const float FarClippingPlane(1000.0f);
+		
+		CalculatePerspectiveMatrix(FieldOfView, g_Width / g_Height, NearClippingPlane, FarClippingPlane, Matrix);
+		Initialized = true;
+	}
+	glLoadMatrixf(Matrix.matrix());
+}
+
+void SetRadarPerspective(float RadialSize)
+{
+	/// TODO: Make this configurable
+	float ExtendedRadialSize((5.0f / 4.0f) * RadialSize);
+	math3d::matrix4f Matrix;
+	
+	CalculatePerspectiveMatrix(asinf(ExtendedRadialSize / sqrtf(ExtendedRadialSize * ExtendedRadialSize + 16 * RadialSize * RadialSize)), 1.0f, 1.0f, 1000.0f, Matrix);
+	glLoadMatrixf(Matrix.matrix());
+}
+
+void SetMiniMapPerspective(void)
+{
+	static math3d::matrix4f Matrix;
+	static bool Initialized(false);
+	
+	if(Initialized == false)
+	{
+		/// TODO: Make this configurable
+		/// TODO: Also consider that these values may want to change while in game.
+		const float FieldOfView(45.0f * M_PI / 360.0);
+		const float NearClippingPlane(1.0f);
+		const float FarClippingPlane(10000.0f);
+		
+		CalculatePerspectiveMatrix(FieldOfView, 1.0f, NearClippingPlane, FarClippingPlane, Matrix);
+		Initialized = true;
+	}
+	glLoadMatrixf(Matrix.matrix());
+}
+
 void Render(void)
 {
 	float Seconds(CalculateTime());
@@ -280,8 +342,7 @@ void Render(void)
 	glClear(GL_COLOR_BUFFER_BIT);
 	glViewport(0, 0, static_cast< GLsizei >(g_Width), static_cast< GLsizei >(g_Height));
 	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	gluPerspective(45.0f, 1.0 * g_Width / g_Height, 1, 1000);
+	SetMainPerspective();
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	glClear(GL_DEPTH_BUFFER_BIT);
@@ -373,12 +434,10 @@ void Render(void)
 	if(g_PlayerShip->GetTarget() != 0)
 	{
 		float RadialSize(g_PlayerShip->GetTarget()->GetRadialSize());
-		float ExtendedRadialSize((5.0f / 4.0f) * RadialSize);
 		
 		glViewport(0, 0, 220, 220);
 		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		gluPerspective(360.0f * asinf(ExtendedRadialSize / sqrtf(ExtendedRadialSize * ExtendedRadialSize + 16 * RadialSize * RadialSize)) / M_PI, 1.0, 1, 1000);
+		SetRadarPerspective(RadialSize);
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 		glClear(GL_DEPTH_BUFFER_BIT);
@@ -396,8 +455,7 @@ void Render(void)
 	{
 		glViewport(static_cast< GLint >(g_Width - 220.0f), 0, 220, 220);
 		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		gluPerspective(45.0f, 1.0, 1, 10000);
+		SetMiniMapPerspective();
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 		glClear(GL_DEPTH_BUFFER_BIT);
