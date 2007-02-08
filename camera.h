@@ -13,15 +13,23 @@ public:
 	void SetFocus(Position * Focus);
 	void SetPosition(float X, float Y);
 	void SetPosition(float X, float Y, float Z);
+	void SetFieldOfView(float FieldOfView);
 	Position * GetFocus(void);
 	const Position * GetFocus(void) const;
 	const math3d::vector3f & GetPosition(void) const;
+	float GetFieldOfView(void) const;
 	void ZoomIn(void);
 	void ZoomOut(void);
 private:
 	Position * m_Focus;
 	math3d::vector3f m_Position;
+	float m_FieldOfView;
 };
+
+inline void Camera::SetFieldOfView(float FieldOfView)
+{
+	m_FieldOfView = FieldOfView;
+}
 
 inline Position * Camera::GetFocus(void)
 {
@@ -36,6 +44,11 @@ inline const Position * Camera::GetFocus(void) const
 inline const math3d::vector3f & Camera::GetPosition(void) const
 {
 	return m_Position;
+}
+
+inline float Camera::GetFieldOfView(void) const
+{
+	return m_FieldOfView;
 }
 
 #endif
