@@ -1,6 +1,7 @@
 #include <GL/gl.h>
 
 #include "cargo.h"
+#include "commodity.h"
 #include "model.h"
 
 Cargo::Cargo(Model * Model, const Commodity * Commodity, const math3d::vector2f & Velocity) :
@@ -9,6 +10,7 @@ Cargo::Cargo(Model * Model, const Commodity * Commodity, const math3d::vector2f 
 	m_Velocity(Velocity)
 {
 	SetRadialSize(Model->GetRadialSize());
+	SetName(m_Commodity->GetName());
 	m_RotationAxis.set(static_cast< float >(random()) / RAND_MAX, static_cast< float >(random()) / RAND_MAX, static_cast< float >(random()) / RAND_MAX);
 	m_RotationAxis.normalize();
 	m_AngularPosition = static_cast< float >(random()) / RAND_MAX;
