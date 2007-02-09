@@ -29,7 +29,6 @@ public:
 	~Planet(void);
 	// getters
 	const std::string & GetIdentifier(void) const;
-	const std::string & GetName(void) const;
 	const std::string & GetDescription(void) const;
 	float GetSize(void) const;
 	const std::vector< PlanetCommodity * > & GetCommodities(void) const;
@@ -37,7 +36,6 @@ public:
 	float GetFuelPrice(void) const;
 	float GetLandingFee(void) const;
 	// setters
-	void SetName(const std::string & Name);
 	void SetAllowRefuelling(bool AllowRefuelling);
 	void SetFuelPrice(float FuelPrice);
 	void SetLandingFee(float LandingFee);
@@ -48,7 +46,6 @@ public:
 	PlanetCommodity * CreateCommodity(Commodity * Commodity);
 private:
 	std::string m_Identifier;
-	std::string m_Name;
 	std::string m_Description;
 	float m_Size;
 	bool m_AllowRefuelling;
@@ -66,11 +63,6 @@ inline const Commodity * PlanetCommodity::GetCommodity(void) const
 inline const std::string & Planet::GetIdentifier(void) const
 {
 	return m_Identifier;
-}
-
-inline const std::string & Planet::GetName(void) const
-{
-	return m_Name;
 }
 
 inline const std::string & Planet::GetDescription(void) const

@@ -45,11 +45,6 @@ Planet::~Planet(void)
 	m_Color = 0;
 }
 
-void Planet::SetName(const std::string & Name)
-{
-	m_Name = Name;
-}
-
 void Planet::SetAllowRefuelling(bool AllowRefuelling)
 {
 	m_AllowRefuelling = AllowRefuelling;

@@ -571,38 +571,12 @@ void GameFrame(void)
 	Render();
 }
 
-void SelectPlanet(Planet * Planet)
+void SelectPhysicalObject(PhysicalObject * Object)
 {
-	g_PlayerShip->SetTarget(Planet);
+	g_PlayerShip->SetTarget(Object);
 	if(g_PlayerShip->GetTarget() != 0)
 	{
-		g_TargetLabel->SetString(Planet->GetName());
-	}
-	else
-	{
-		g_TargetLabel->SetString("");
-	}
-}
-
-void SelectCargo(Cargo * Cargo)
-{
-	g_PlayerShip->SetTarget(Cargo);
-	if(g_PlayerShip->GetTarget() != 0)
-	{
-		g_TargetLabel->SetString(Cargo->GetCommodity()->GetName());
-	}
-	else
-	{
-		g_TargetLabel->SetString("");
-	}
-}
-
-void SelectShip(Ship * Ship)
-{
-	g_PlayerShip->SetTarget(Ship);
-	if(g_PlayerShip->GetTarget() != 0)
-	{
-		g_TargetLabel->SetString(Ship->GetShipClass()->GetIdentifier());
+		g_TargetLabel->SetString(Object->GetName());
 	}
 	else
 	{
@@ -620,7 +594,7 @@ public:
 			g_PlanetDialog = 0;
 			g_Pause = false;
 			SelectLinkedSystem(0);
-			SelectPlanet(0);
+			SelectPhysicalObject(0);
 			g_PlayerShip->m_Velocity.set(0.0f, 0.0f);
 			g_InputFocus->m_Accelerate = false;
 			g_InputFocus->m_TurnLeft = false;
@@ -651,7 +625,7 @@ void LeaveSystem(void)
 	}
 	g_CurrentSystemLabel->SetString("");
 	SelectLinkedSystem(0);
-	SelectPlanet(0);
+	SelectPhysicalObject(0);
 }
 
 void EnterSystem(System * NewSystem, System * OldSystem)
@@ -679,7 +653,7 @@ void EnterSystem(System * NewSystem, System * OldSystem)
 	g_CurrentSystem->AddShip(g_PlayerShip);
 	g_CurrentSystemLabel->SetString(g_CurrentSystem->GetName());
 	SelectLinkedSystem(0);
-	SelectPlanet(0);
+	SelectPhysicalObject(0);
 	g_PlayerCharacter->GetMapKnowledge()->AddExploredSystem(g_CurrentSystem);
 }
 
@@ -782,7 +756,7 @@ void KeyDown(unsigned int KeyCode)
 			{
 				if(Ships.size() > 0)
 				{
-					SelectShip(Ships.front());
+					SelectPhysicalObject(Ships.front());
 				}
 			}
 			else
@@ -791,18 +765,18 @@ void KeyDown(unsigned int KeyCode)
 				
 				if(ShipIterator == Ships.end())
 				{
-					SelectShip(0);
+					SelectPhysicalObject(0);
 				}
 				else
 				{
 					++ShipIterator;
 					if(ShipIterator == Ships.end())
 					{
-						SelectShip(0);
+						SelectPhysicalObject(0);
 					}
 					else
 					{
-						SelectShip(*ShipIterator);
+						SelectPhysicalObject(*ShipIterator);
 					}
 				}
 			}
@@ -818,7 +792,7 @@ void KeyDown(unsigned int KeyCode)
 			{
 				if(Cargos.size() > 0)
 				{
-					SelectCargo(Cargos.front());
+					SelectPhysicalObject(Cargos.front());
 				}
 			}
 			else
@@ -827,18 +801,18 @@ void KeyDown(unsigned int KeyCode)
 				
 				if(CargoIterator == Cargos.end())
 				{
-					SelectCargo(0);
+					SelectPhysicalObject(0);
 				}
 				else
 				{
 					++CargoIterator;
 					if(CargoIterator == Cargos.end())
 					{
-						SelectCargo(0);
+						SelectPhysicalObject(0);
 					}
 					else
 					{
-						SelectCargo(*CargoIterator);
+						SelectPhysicalObject(*CargoIterator);
 					}
 				}
 			}
@@ -856,18 +830,18 @@ void KeyDown(unsigned int KeyCode)
 				
 				if(PlanetIterator == Planets.end())
 				{
-					SelectPlanet(0);
+					SelectPhysicalObject(0);
 				}
 				else
 				{
 					++PlanetIterator;
 					if(PlanetIterator == Planets.end())
 					{
-						SelectPlanet(0);
+						SelectPhysicalObject(0);
 					}
 					else
 					{
-						SelectPlanet(*PlanetIterator);
+						SelectPhysicalObject(*PlanetIterator);
 					}
 				}
 			}
@@ -875,7 +849,7 @@ void KeyDown(unsigned int KeyCode)
 			{
 				if(Planets.size() > 0)
 				{
-					SelectPlanet(Planets.front());
+					SelectPhysicalObject(Planets.front());
 				}
 			}
 			
@@ -947,7 +921,7 @@ void KeyDown(unsigned int KeyCode)
 				}
 				if(MinimumCargo != 0)
 				{
-					SelectCargo(MinimumCargo);
+					SelectPhysicalObject(MinimumCargo);
 				}
 			}
 			else
@@ -960,7 +934,7 @@ void KeyDown(unsigned int KeyCode)
 					{
 						g_PlayerShip->AddCommodities(SelectedCargo->GetCommodity(), 1.0f);
 						g_CurrentSystem->RemoveCargo(SelectedCargo);
-						SelectCargo(0);
+						SelectPhysicalObject(0);
 						delete SelectedCargo;
 					}
 					else
@@ -1073,7 +1047,7 @@ void KeyDown(unsigned int KeyCode)
 					}
 					if(MinimumPlanet != 0)
 					{
-						SelectPlanet(MinimumPlanet);
+						SelectPhysicalObject(MinimumPlanet);
 					}
 				}
 			}
@@ -1457,6 +1431,10 @@ void LoadSavegame(const Element * SaveElement)
 						}
 					}
 				}
+				else if((*ShipChild)->GetName() == "name")
+				{
+					g_PlayerShip->SetName((*ShipChild)->GetAttribute("value"));
+				}
 			}
 		}
 		else if((*SaveChild)->GetName() == "camera")
@@ -1498,7 +1476,7 @@ void LoadSavegame(const Element * SaveElement)
 	g_CurrentSystem->AddShip(g_PlayerShip);
 	g_CurrentSystemLabel->SetString(g_CurrentSystem->GetName());
 	SelectLinkedSystem(0);
-	SelectPlanet(0);
+	SelectPhysicalObject(0);
 	RealTime::Invalidate();
 }
 
