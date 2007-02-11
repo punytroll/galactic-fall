@@ -83,6 +83,7 @@ def out(data_type, node):
 				exit(1)
 	else:
 		print "Could not find a suitable definition for type '" + data_type + "'."
+		exit(1)
 	out_call_stack.pop()
 
 # now parse the in file
