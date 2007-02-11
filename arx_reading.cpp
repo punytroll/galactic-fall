@@ -88,11 +88,13 @@ Commodity * ReadCommodity(CommodityManager * CommodityManager, Arxx::Item * Item
 	
 	std::string Name;
 	float BasePrice;
+	Color Color;
 	
-	Reader >> Name >> BasePrice;
+	Reader >> Name >> BasePrice >> Color;
 	
 	NewCommodity->SetName(Name);
 	NewCommodity->SetBasePrice(BasePrice);
+	NewCommodity->SetColor(Color);
 	
 	return NewCommodity;
 }
