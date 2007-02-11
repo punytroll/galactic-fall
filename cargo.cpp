@@ -1,6 +1,7 @@
 #include <GL/gl.h>
 
 #include "cargo.h"
+#include "color.h"
 #include "commodity.h"
 #include "model.h"
 
@@ -27,6 +28,8 @@ void Cargo::Draw(void) const
 	glTranslatef(m_Position.m_V.m_A[0], m_Position.m_V.m_A[1], 0.0f);
 	glRotatef(m_AngularPosition * 180.0f / M_PI, m_RotationAxis.m_V.m_A[0], m_RotationAxis.m_V.m_A[1], m_RotationAxis.m_V.m_A[2]);
 	glRotatef(90.0f, 1.0f, 0.0f, 0.0f);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, math3d::vector4f(0.0f, 0.0f, 0.0f, 1.0f).m_V.m_A);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, m_Commodity->GetColor()->GetColor().m_V.m_A);
 	m_Model->Draw();
 	glPopMatrix();
 }

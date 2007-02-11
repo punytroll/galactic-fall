@@ -222,7 +222,7 @@ button.o: button.cpp $(button_h) $(clicked_listener_h) $(color_h) $(globals_h)
 camera.o: camera.cpp $(camera_h) $(position_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags math3d` -c $< -o $@
 
-cargo.o: cargo.cpp $(cargo_h) $(commodity_h) $(model_h)
+cargo.o: cargo.cpp $(cargo_h) $(color_h) $(commodity_h) $(model_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags math3d` -c $< -o $@
 
 character.o: character.cpp $(character_h) $(map_knowledge_h)
@@ -234,8 +234,8 @@ clicked_listener.o: clicked_listener.cpp $(clicked_listener_h)
 color.o: color.cpp $(color_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags math3d` -c $< -o $@
 
-commodity.o: commodity.cpp $(commodity_h)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+commodity.o: commodity.cpp $(color_h) $(commodity_h)
+	$(CXX) $(CXXFLAGS) `pkg-config --cflags math3d` -c $< -o $@
 
 commodity_manager.o: commodity_manager.cpp $(commodity_h) $(commodity_manager_h) $(string_cast_h) $(xml_puny_dom_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
