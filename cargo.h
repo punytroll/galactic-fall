@@ -17,7 +17,7 @@ public:
 	virtual void Draw(void) const;
 	void Move(float Seconds);
 	const Commodity * GetCommodity(void) const;
-	const math3d::vector2f & GetVelocity(void);
+	const math3d::vector2f & GetVelocity(void) const;
 private:
 	Model * m_Model;
 	const Commodity * m_Commodity;
@@ -32,7 +32,7 @@ inline const Commodity * Cargo::GetCommodity(void) const
 	return m_Commodity;
 }
 
-inline const math3d::vector2f & Cargo::GetVelocity(void)
+inline const math3d::vector2f & Cargo::GetVelocity(void) const
 {
 	return m_Velocity;
 }
