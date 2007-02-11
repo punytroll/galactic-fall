@@ -2,4 +2,10 @@
 	<identifier>metal</identifier>
 	<name>Metal</name>
 	<base-price>90</base-price>
+	<color>
+		<red>0.56</red>
+		<green>0.72</green>
+		<blue>0.87</blue>
+		<alpha>1.0</alpha>
+	</color>
 </commodity>

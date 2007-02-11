@@ -2,4 +2,10 @@
 	<identifier>food</identifier>
 	<name>Food</name>
 	<base-price>70</base-price>
+	<color>
+		<red>0.3</red>
+		<green>0.72</green>
+		<blue>0.25</blue>
+		<alpha>1.0</alpha>
+	</color>
 </commodity>

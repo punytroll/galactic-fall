@@ -2,4 +2,10 @@
 	<identifier>medical_supplies</identifier>
 	<name>Medical Supplies</name>
 	<base-price>300</base-price>
+	<color>
+		<red>0.98</red>
+		<green>0.98</green>
+		<blue>0.98</blue>
+		<alpha>1.0</alpha>
+	</color>
 </commodity>
