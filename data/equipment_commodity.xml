@@ -2,4 +2,10 @@
 	<identifier>equipment</identifier>
 	<name>Equipment</name>
 	<base-price>210</base-price>
+	<color>
+		<red>0.95</red>
+		<green>0.68</green>
+		<blue>0.2</blue>
+		<alpha>1.0</alpha>
+	</color>
 </commodity>

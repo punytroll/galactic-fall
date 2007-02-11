@@ -81,6 +81,7 @@
 		<string identifier="identifier"/>
 		<string identifier="name"/>
 		<float identifier="base-price"/>
+		<color4f identifier="color"/>
 	</commodity>
 	
 	<offered-commodity>

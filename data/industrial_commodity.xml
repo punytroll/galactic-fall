@@ -2,4 +2,10 @@
 	<identifier>industrial</identifier>
 	<name>Industrial</name>
 	<base-price>120</base-price>
+	<color>
+		<red>0.3</red>
+		<green>0.25</green>
+		<blue>0.1</blue>
+		<alpha>1.0</alpha>
+	</color>
 </commodity>
