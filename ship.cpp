@@ -10,6 +10,8 @@ Ship::Ship(ShipClass * ShipClass) :
 	m_Accelerate(false),
 	m_TurnLeft(false),
 	m_TurnRight(false),
+	m_Velocity(true),
+	m_AngularPosition(0.0f),
 	m_ShipClass(ShipClass),
 	m_Fuel(0.0f)
 {
