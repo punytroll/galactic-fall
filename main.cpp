@@ -330,6 +330,51 @@ void SetMiniMapPerspective(void)
 	glLoadMatrixf(Matrix.matrix());
 }
 
+class RadarWidget : public Widget
+{
+public:
+	RadarWidget(void) :
+		Widget()
+	{
+	}
+	
+	virtual void Draw(void) const
+	{
+		Widget::Draw();
+		// radar
+		if(g_PlayerShip->GetTarget() != 0)
+		{
+			float RadialSize(g_PlayerShip->GetTarget()->GetRadialSize());
+			
+			glPushAttrib(GL_ENABLE_BIT | GL_VIEWPORT_BIT | GL_TRANSFORM_BIT);
+			glEnable(GL_DEPTH_TEST);
+			glDisable(GL_BLEND);
+			glViewport(0, 0, 220, 220);
+			glMatrixMode(GL_PROJECTION);
+			glPushMatrix();
+			SetRadarPerspective(RadialSize);
+			glMatrixMode(GL_MODELVIEW);
+			glPushMatrix();
+			glLoadIdentity();
+			g_RadarCamera.SetPosition(0.0f, 0.0f, 4.0f * RadialSize);
+			g_RadarCamera.SetFocus(g_PlayerShip->GetTarget());
+			g_RadarCamera.Draw();
+			if((g_CurrentSystem != 0) && (g_CurrentSystem->GetStar() != 0))
+			{
+				glEnable(GL_LIGHTING);
+				glEnable(GL_LIGHT0);
+				glLightfv(GL_LIGHT0, GL_POSITION, math3d::vector4f(g_CurrentSystem->GetStar()->GetPosition().m_V.m_A[0], g_CurrentSystem->GetStar()->GetPosition().m_V.m_A[1], 100.0f, 0.0f).m_V.m_A);
+			}
+			glClear(GL_DEPTH_BUFFER_BIT);
+			g_PlayerShip->GetTarget()->Draw();
+			glPopMatrix();
+			glMatrixMode(GL_PROJECTION);
+			glPopMatrix();
+			glPopAttrib();
+		}
+	}
+};
+
 void CalculateMovements(void)
 {
 	float Seconds(CalculateTime());
@@ -451,26 +496,6 @@ void Render(void)
 		glPopMatrix();
 	}
 	DisplayUserInterface();
-	// radar
-	if(g_PlayerShip->GetTarget() != 0)
-	{
-		float RadialSize(g_PlayerShip->GetTarget()->GetRadialSize());
-		
-		glViewport(0, 0, 220, 220);
-		glMatrixMode(GL_PROJECTION);
-		SetRadarPerspective(RadialSize);
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
-		g_RadarCamera.SetPosition(0.0f, 0.0f, 4.0f * RadialSize);
-		g_RadarCamera.SetFocus(g_PlayerShip->GetTarget());
-		g_RadarCamera.Draw();
-		if(CurrentStar != 0)
-		{
-			glLightfv(GL_LIGHT0, GL_POSITION, math3d::vector4f(CurrentStar->GetPosition().m_V.m_A[0], CurrentStar->GetPosition().m_V.m_A[1], 100.0f, 0.0f).m_V.m_A);
-		}
-		glClear(GL_DEPTH_BUFFER_BIT);
-		g_PlayerShip->GetTarget()->Draw();
-	}
 	// mini map
 	if(g_CurrentSystem != 0)
 	{
@@ -1518,7 +1543,7 @@ int main(int argc, char ** argv)
 	g_SystemLabel = ReadLabel(GetItem(Archive, SYSTEM_LABEL));
 	g_CreditsLabel = ReadLabel(GetItem(Archive, CREDITS_LABEL));
 	g_FuelLabel = ReadLabel(GetItem(Archive, FUEL_LABEL));
-	g_RadarWidget = ReadWidget(GetItem(Archive, RADAR_WIDGET));
+	g_RadarWidget = ReadWidget(GetItem(Archive, RADAR_WIDGET), new RadarWidget());
 	g_MiniMapWidget = ReadWidget(GetItem(Archive, MINI_MAP_WIDGET));
 	g_TargetLabel = ReadLabel(GetItem(Archive, TARGET_LABEL));
 	g_CurrentSystemLabel = ReadLabel(GetItem(Archive, CURRENT_SYSTEM_LABEL));
