@@ -423,7 +423,7 @@ static void ReadWidget(Arxx::BufferReader & Reader, Widget * NewWidget)
 	}
 }
 
-Widget * ReadWidget(Arxx::Item * Item)
+Widget * ReadWidget(Arxx::Item * Item, Widget * NewWidget)
 {
 	if(Item->u4GetSubType() != 0)
 	{
@@ -433,8 +433,11 @@ Widget * ReadWidget(Arxx::Item * Item)
 	}
 	
 	Arxx::BufferReader Reader(*Item);
-	Widget * NewWidget(new Widget());
 	
+	if(NewWidget == 0)
+	{
+		NewWidget = new Widget();
+	}
 	ReadWidget(Reader, NewWidget);
 	
 	return NewWidget;
