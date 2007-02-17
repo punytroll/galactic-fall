@@ -4,7 +4,7 @@ all_data = \
 	.data/system_label.data \
 	.data/credits_label.data \
 	.data/fuel_label.data \
-	.data/radar_widget.data \
+	.data/scanner_widget.data \
 	.data/mini_map_widget.data \
 	.data/target_label.data \
 	.data/current_system_label.data \
@@ -67,7 +67,7 @@ data.arx: .data $(all_data) Makefile
 	arxmod $@ 1 -a "child" 103
 	arxadd $@ --uid 104 --name "Fuel Label" --type 1 --subtype 1 .data/fuel_label.data
 	arxmod $@ 1 -a "child" 104
-	arxadd $@ --uid 105 --name "Radar Widget" --type 1 --subtype 0 .data/radar_widget.data
+	arxadd $@ --uid 105 --name "Scanner Widget" --type 1 --subtype 0 .data/scanner_widget.data
 	arxmod $@ 1 -a "child" 105
 	arxadd $@ --uid 106 --name "Mini Map Widget" --type 1 --subtype 0 .data/mini_map_widget.data
 	arxmod $@ 1 -a "child" 106

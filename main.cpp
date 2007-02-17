@@ -81,7 +81,7 @@ PlanetDialog * g_PlanetDialog;
 MapDialog * g_MapDialog;
 UserInterface g_UserInterface;
 std::multimap< double, Callback0< void > * > g_TimeoutNotifications;
-Widget * g_RadarWidget(0);
+Widget * g_ScannerWidget(0);
 Widget * g_MiniMapWidget(0);
 Display * g_Display;
 GLXContext g_GLXContext;
@@ -330,10 +330,10 @@ void SetMiniMapPerspective(void)
 	glLoadMatrixf(Matrix.matrix());
 }
 
-class RadarWidget : public Widget
+class ScannerWidget : public Widget
 {
 public:
-	RadarWidget(void) :
+	ScannerWidget(void) :
 		Widget()
 	{
 	}
@@ -585,7 +585,7 @@ void Resize(void)
 	}
 	glViewport(0, 0, static_cast< GLint >(g_Width), static_cast< GLint >(g_Height));
 	g_UserInterface.GetRootWidget()->SetSize(math3d::vector2f(g_Width, g_Height));
-	g_RadarWidget->SetPosition(math3d::vector2f(0.0f, g_Height - 240.0f));
+	g_ScannerWidget->SetPosition(math3d::vector2f(0.0f, g_Height - 240.0f));
 	g_MiniMapWidget->SetPosition(math3d::vector2f(g_Width - 220.0f, g_Height - 240.0f));
 }
 
@@ -1565,7 +1565,7 @@ int main(int argc, char ** argv)
 	g_SystemLabel = ReadLabel(GetItem(Archive, SYSTEM_LABEL));
 	g_CreditsLabel = ReadLabel(GetItem(Archive, CREDITS_LABEL));
 	g_FuelLabel = ReadLabel(GetItem(Archive, FUEL_LABEL));
-	g_RadarWidget = ReadWidget(GetItem(Archive, RADAR_WIDGET), new RadarWidget());
+	g_ScannerWidget = ReadWidget(GetItem(Archive, SCANNER_WIDGET), new ScannerWidget());
 	g_MiniMapWidget = ReadWidget(GetItem(Archive, MINI_MAP_WIDGET), new MiniMapWidget());
 	g_TargetLabel = ReadLabel(GetItem(Archive, TARGET_LABEL));
 	g_CurrentSystemLabel = ReadLabel(GetItem(Archive, CURRENT_SYSTEM_LABEL));
