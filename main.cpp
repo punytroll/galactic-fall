@@ -349,7 +349,8 @@ public:
 			glPushAttrib(GL_ENABLE_BIT | GL_VIEWPORT_BIT | GL_TRANSFORM_BIT);
 			glEnable(GL_DEPTH_TEST);
 			glDisable(GL_BLEND);
-			glViewport(0, 0, 220, 220);
+			// TODO: 0.0f is not the real value
+			glViewport(static_cast< GLint >(GetGlobalPosition().m_V.m_A[0]), static_cast< GLint >(0.0f), static_cast< GLint >(GetSize().m_V.m_A[0]), static_cast< GLint >(220.f));
 			glMatrixMode(GL_PROJECTION);
 			glPushMatrix();
 			SetRadarPerspective(RadialSize);
@@ -367,6 +368,84 @@ public:
 			}
 			glClear(GL_DEPTH_BUFFER_BIT);
 			g_PlayerShip->GetTarget()->Draw();
+			glPopMatrix();
+			glMatrixMode(GL_PROJECTION);
+			glPopMatrix();
+			glPopAttrib();
+		}
+	}
+};
+
+class MiniMapWidget : public Widget
+{
+public:
+	MiniMapWidget(void) :
+		Widget()
+	{
+	}
+	
+	virtual void Draw(void) const
+	{
+		Widget::Draw();
+		// mini map
+		if(g_CurrentSystem != 0)
+		{
+			glPushAttrib(GL_ENABLE_BIT | GL_VIEWPORT_BIT | GL_TRANSFORM_BIT);
+			glEnable(GL_DEPTH_TEST);
+			glDisable(GL_BLEND);
+			// TODO: 0.0f is not the real value
+			glViewport(static_cast< GLint >(GetGlobalPosition().m_V.m_A[0]), static_cast< GLint >(0.0f), static_cast< GLint >(GetSize().m_V.m_A[0]), static_cast< GLint >(220.0f));
+			glMatrixMode(GL_PROJECTION);
+			glPushMatrix();
+			SetMiniMapPerspective();
+			glMatrixMode(GL_MODELVIEW);
+			glPushMatrix();
+			glLoadIdentity();
+			g_MiniMapCamera.Draw();
+			
+			const std::list< Planet * > & Planets(g_CurrentSystem->GetPlanets());
+			const std::list< Ship * > & Ships(g_CurrentSystem->GetShips());
+			const std::list< Cargo * > & Cargos(g_CurrentSystem->GetCargos());
+			
+			glBegin(GL_POINTS);
+			glColor3f(0.8f, 0.8f, 0.8f);
+			for(std::list< Planet * >::const_iterator PlanetIterator = Planets.begin(); PlanetIterator != Planets.end(); ++PlanetIterator)
+			{
+				if(*PlanetIterator == g_PlayerShip->GetTarget())
+				{
+					glColor3f(0.2f, 1.0f, 0.0f);
+				}
+				glVertex2f((*PlanetIterator)->GetPosition().m_V.m_A[0], (*PlanetIterator)->GetPosition().m_V.m_A[1]);
+				if(*PlanetIterator == g_PlayerShip->GetTarget())
+				{
+					glColor3f(0.8f, 0.8f, 0.8f);
+				}
+			}
+			for(std::list< Ship * >::const_iterator ShipIterator = Ships.begin(); ShipIterator != Ships.end(); ++ShipIterator)
+			{
+				if(*ShipIterator == g_PlayerShip->GetTarget())
+				{
+					glColor3f(0.2f, 1.0f, 0.0f);
+				}
+				glVertex2f((*ShipIterator)->GetPosition().m_V.m_A[0], (*ShipIterator)->GetPosition().m_V.m_A[1]);
+				if(*ShipIterator == g_PlayerShip->GetTarget())
+				{
+					glColor3f(0.8f, 0.8f, 0.8f);
+				}
+			}
+			for(std::list< Cargo * >::const_iterator CargoIterator = Cargos.begin(); CargoIterator != Cargos.end(); ++CargoIterator)
+			{
+				if(*CargoIterator == g_PlayerShip->GetTarget())
+				{
+					glColor3f(0.2f, 1.0f, 0.0f);
+				}
+				glVertex2f((*CargoIterator)->GetPosition().m_V.m_A[0], (*CargoIterator)->GetPosition().m_V.m_A[1]);
+				if(*CargoIterator == g_PlayerShip->GetTarget())
+				{
+					glColor3f(0.8f, 0.8f, 0.8f);
+				}
+			}
+			glEnd();
 			glPopMatrix();
 			glMatrixMode(GL_PROJECTION);
 			glPopMatrix();
@@ -496,63 +575,6 @@ void Render(void)
 		glPopMatrix();
 	}
 	DisplayUserInterface();
-	// mini map
-	if(g_CurrentSystem != 0)
-	{
-		glViewport(static_cast< GLint >(g_Width - 220.0f), 0, 220, 220);
-		glMatrixMode(GL_PROJECTION);
-		SetMiniMapPerspective();
-		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
-		g_MiniMapCamera.Draw();
-		glDisable(GL_LIGHTING);
-		glClear(GL_DEPTH_BUFFER_BIT);
-		
-		const std::list< Planet * > & Planets(g_CurrentSystem->GetPlanets());
-		const std::list< Ship * > & Ships(g_CurrentSystem->GetShips());
-		const std::list< Cargo * > & Cargos(g_CurrentSystem->GetCargos());
-		
-		glBegin(GL_POINTS);
-		glColor3f(0.8f, 0.8f, 0.8f);
-		for(std::list< Planet * >::const_iterator PlanetIterator = Planets.begin(); PlanetIterator != Planets.end(); ++PlanetIterator)
-		{
-			if(*PlanetIterator == g_PlayerShip->GetTarget())
-			{
-				glColor3f(0.2f, 1.0f, 0.0f);
-			}
-			glVertex2f((*PlanetIterator)->GetPosition().m_V.m_A[0], (*PlanetIterator)->GetPosition().m_V.m_A[1]);
-			if(*PlanetIterator == g_PlayerShip->GetTarget())
-			{
-				glColor3f(0.8f, 0.8f, 0.8f);
-			}
-		}
-		for(std::list< Ship * >::const_iterator ShipIterator = Ships.begin(); ShipIterator != Ships.end(); ++ShipIterator)
-		{
-			if(*ShipIterator == g_PlayerShip->GetTarget())
-			{
-				glColor3f(0.2f, 1.0f, 0.0f);
-			}
-			glVertex2f((*ShipIterator)->GetPosition().m_V.m_A[0], (*ShipIterator)->GetPosition().m_V.m_A[1]);
-			if(*ShipIterator == g_PlayerShip->GetTarget())
-			{
-				glColor3f(0.8f, 0.8f, 0.8f);
-			}
-		}
-		for(std::list< Cargo * >::const_iterator CargoIterator = Cargos.begin(); CargoIterator != Cargos.end(); ++CargoIterator)
-		{
-			if(*CargoIterator == g_PlayerShip->GetTarget())
-			{
-				glColor3f(0.2f, 1.0f, 0.0f);
-			}
-			glVertex2f((*CargoIterator)->GetPosition().m_V.m_A[0], (*CargoIterator)->GetPosition().m_V.m_A[1]);
-			if(*CargoIterator == g_PlayerShip->GetTarget())
-			{
-				glColor3f(0.8f, 0.8f, 0.8f);
-			}
-		}
-		glEnd();
-		glEnable(GL_LIGHTING);
-	}
 }
 
 void Resize(void)
@@ -1544,7 +1566,7 @@ int main(int argc, char ** argv)
 	g_CreditsLabel = ReadLabel(GetItem(Archive, CREDITS_LABEL));
 	g_FuelLabel = ReadLabel(GetItem(Archive, FUEL_LABEL));
 	g_RadarWidget = ReadWidget(GetItem(Archive, RADAR_WIDGET), new RadarWidget());
-	g_MiniMapWidget = ReadWidget(GetItem(Archive, MINI_MAP_WIDGET));
+	g_MiniMapWidget = ReadWidget(GetItem(Archive, MINI_MAP_WIDGET), new MiniMapWidget());
 	g_TargetLabel = ReadLabel(GetItem(Archive, TARGET_LABEL));
 	g_CurrentSystemLabel = ReadLabel(GetItem(Archive, CURRENT_SYSTEM_LABEL));
 	
