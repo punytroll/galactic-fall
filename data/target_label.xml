@@ -1,6 +1,6 @@
 <label>
 	<widget>
-		<widget-path>/radar</widget-path>
+		<widget-path>/scanner</widget-path>
 		<name>target</name>
 		<position>
 			<x>0.0</x>
