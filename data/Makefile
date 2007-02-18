@@ -24,7 +24,8 @@ all_data = \
 	.data/sol_alpha_centauri_system_link.data \
 	.data/sol_rigel_system_link.data \
 	.data/tichel_alpha_centauri_system_link.data \
-	.data/tichel_rigel_system_link.data
+	.data/tichel_rigel_system_link.data \
+	.data/scanner_display_widget.data
 
 all: data.arx
 
@@ -109,6 +110,8 @@ data.arx: .data $(all_data) Makefile
 	arxmod $@ 6 -a "child" 124
 	arxadd $@ --uid 125 --name "Tichel / Rigel System Link" --type 6 --subtype 0 .data/tichel_rigel_system_link.data
 	arxmod $@ 6 -a "child" 125
+	arxadd $@ --uid 126 --name "Scanner Display Widget" --type 1 --subtype 0 .data/scanner_display_widget.data
+	arxmod $@ 1 -a "child" 126
 
 .data:
 	mkdir $@

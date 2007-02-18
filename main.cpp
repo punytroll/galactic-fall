@@ -330,10 +330,10 @@ void SetMiniMapPerspective(void)
 	glLoadMatrixf(Matrix.matrix());
 }
 
-class ScannerWidget : public Widget
+class ScannerDisplayWidget : public Widget
 {
 public:
-	ScannerWidget(void) :
+	ScannerDisplayWidget(void) :
 		Widget()
 	{
 	}
@@ -350,7 +350,7 @@ public:
 			glEnable(GL_DEPTH_TEST);
 			glDisable(GL_BLEND);
 			// TODO: 0.0f is not the real value
-			glViewport(static_cast< GLint >(GetGlobalPosition().m_V.m_A[0]), static_cast< GLint >(0.0f), static_cast< GLint >(GetSize().m_V.m_A[0]), static_cast< GLint >(220.f));
+			glViewport(static_cast< GLint >(GetGlobalPosition().m_V.m_A[0]), static_cast< GLint >(0.0f), static_cast< GLint >(GetSize().m_V.m_A[0]), static_cast< GLint >(GetSize().m_V.m_A[1]));
 			glMatrixMode(GL_PROJECTION);
 			glPushMatrix();
 			SetRadarPerspective(RadialSize);
@@ -1565,7 +1565,8 @@ int main(int argc, char ** argv)
 	g_SystemLabel = ReadLabel(GetItem(Archive, SYSTEM_LABEL));
 	g_CreditsLabel = ReadLabel(GetItem(Archive, CREDITS_LABEL));
 	g_FuelLabel = ReadLabel(GetItem(Archive, FUEL_LABEL));
-	g_ScannerWidget = ReadWidget(GetItem(Archive, SCANNER_WIDGET), new ScannerWidget());
+	g_ScannerWidget = ReadWidget(GetItem(Archive, SCANNER_WIDGET));
+	ReadWidget(GetItem(Archive, SCANNER_DISPLAY_WIDGET), new ScannerDisplayWidget());
 	g_MiniMapWidget = ReadWidget(GetItem(Archive, MINI_MAP_WIDGET), new MiniMapWidget());
 	g_TargetLabel = ReadLabel(GetItem(Archive, TARGET_LABEL));
 	g_CurrentSystemLabel = ReadLabel(GetItem(Archive, CURRENT_SYSTEM_LABEL));
