@@ -76,7 +76,7 @@ bool PlanetDialog::OnClicked(Widget * EventSource)
 		float Need(g_PlayerShip->GetFuelCapacity() - g_PlayerShip->GetFuel());
 		float Buy((CanBuy > Need) ? (Need) : (CanBuy));
 		
-		g_PlayerShip->Refuel(Buy);
+		g_PlayerShip->SetFuel(g_PlayerShip->GetFuel() + Buy);
 		g_PlayerCharacter->RemoveCredits(Buy * FuelPrice);
 	}
 	else if(EventSource == m_TradeCenterButton)
