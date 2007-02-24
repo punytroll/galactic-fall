@@ -39,6 +39,7 @@ public:
 	const std::map< const Commodity *, float > GetCommodities(void) const;
 	PhysicalObject * GetTarget(void);
 	System * GetLinkedSystemTarget(void);
+	System * GetCurrentSystem(void);
 	// setters
 	void SetFuel(float Fuel);
 	void SetVelocity(const math3d::vector2f & Velocity);
@@ -46,11 +47,10 @@ public:
 	void SetCommodities(const Commodity * Commodity, float Amount);
 	void SetTarget(PhysicalObject * Target);
 	void SetLinkedSystemTarget(System * LinkedSystem);
+	void SetCurrentSystem(System * CurrentSystem);
 	// modifiers
 	bool AddCommodities(const Commodity * CargoCommodity, float Amount);
 	bool RemoveCommodities(const Commodity * CargoCommodity, float Amount);
-	void Jump(void);
-	void Refuel(float Fuel);
 private:
 	// ship class
 	ShipClass * m_ShipClass;
@@ -58,6 +58,7 @@ private:
 	float m_Fuel;
 	PhysicalObject * m_Target;
 	System * m_LinkedSystemTarget;
+	System * m_CurrentSystem;
 };
 
 inline float Ship::GetForwardThrust(void) const
@@ -117,6 +118,11 @@ inline System * Ship::GetLinkedSystemTarget(void)
 	return m_LinkedSystemTarget;
 }
 
+inline System * Ship::GetCurrentSystem(void)
+{
+	return m_CurrentSystem;
+}
+
 inline void Ship::SetFuel(float Fuel)
 {
 	m_Fuel = Fuel;
@@ -145,6 +151,11 @@ inline void Ship::SetTarget(PhysicalObject * Target)
 inline void Ship::SetLinkedSystemTarget(System * LinkedSystem)
 {
 	m_LinkedSystemTarget = LinkedSystem;
+}
+
+inline void Ship::SetCurrentSystem(System * CurrentSystem)
+{
+	m_CurrentSystem = CurrentSystem;
 }
 
 #endif

@@ -673,6 +673,7 @@ void LeaveSystem(void)
 	g_CurrentSystemLabel->SetString("");
 	SelectLinkedSystem(0);
 	SelectPhysicalObject(0);
+	g_PlayerShip->SetCurrentSystem(0);
 }
 
 void EnterSystem(System * NewSystem, System * OldSystem)
@@ -699,6 +700,7 @@ void EnterSystem(System * NewSystem, System * OldSystem)
 	}
 	g_CurrentSystem->AddShip(g_PlayerShip);
 	g_CurrentSystemLabel->SetString(g_CurrentSystem->GetName());
+	g_PlayerShip->SetCurrentSystem(NewSystem);
 	SelectLinkedSystem(0);
 	SelectPhysicalObject(0);
 	g_PlayerCharacter->GetMapKnowledge()->AddExploredSystem(g_CurrentSystem);
@@ -1009,7 +1011,7 @@ void KeyDown(unsigned int KeyCode)
 						System * NewSystem(g_PlayerShip->GetLinkedSystemTarget());
 						
 						LeaveSystem();
-						g_PlayerShip->Jump();
+						g_PlayerShip->SetFuel(g_PlayerShip->GetFuel() - g_PlayerShip->GetShipClass()->GetJumpFuel());
 						EnterSystem(NewSystem, OldSystem);
 						
 						break;
@@ -1522,6 +1524,7 @@ void LoadSavegame(const Element * SaveElement)
 	g_CurrentSystem = g_SystemManager.Get(System);
 	g_CurrentSystem->AddShip(g_PlayerShip);
 	g_CurrentSystemLabel->SetString(g_CurrentSystem->GetName());
+	g_PlayerShip->SetCurrentSystem(g_CurrentSystem);
 	SelectLinkedSystem(0);
 	SelectPhysicalObject(0);
 	RealTime::Invalidate();

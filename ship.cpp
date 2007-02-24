@@ -142,15 +142,3 @@ bool Ship::RemoveCommodities(const Commodity * CargoCommodity, float Amount)
 	
 	return true;
 }
-
-void Ship::Jump(void)
-{
-	assert(m_Fuel >= m_ShipClass->GetJumpFuel());
-	m_Fuel -= m_ShipClass->GetJumpFuel();
-}
-
-void Ship::Refuel(float Fuel)
-{
-	assert(m_Fuel + Fuel <= GetFuelCapacity());
-	m_Fuel += Fuel;
-}
