@@ -33,6 +33,8 @@
 #include "label.h"
 #include "map_dialog.h"
 #include "map_knowledge.h"
+#include "math.h"
+#include "mind.h"
 #include "model.h"
 #include "model_manager.h"
 #include "planet.h"
@@ -42,6 +44,8 @@
 #include "ship_class.h"
 #include "ship_class_manager.h"
 #include "star.h"
+#include "state_machine.h"
+#include "states.h"
 #include "string_cast.h"
 #include "system.h"
 #include "system_manager.h"
@@ -81,51 +85,12 @@ PlanetDialog * g_PlanetDialog;
 MapDialog * g_MapDialog;
 UserInterface g_UserInterface;
 std::multimap< double, Callback0< void > * > g_TimeoutNotifications;
+std::vector< Mind * > g_Minds;
 Widget * g_ScannerWidget(0);
 Widget * g_MiniMapWidget(0);
 Display * g_Display;
 GLXContext g_GLXContext;
 Window g_Window;
-
-void NormalizeRadians(float & Radians)
-{
-	while(Radians < 0.0f)
-	{
-		Radians += 2 * M_PI;
-	}
-	while(Radians > 2 * M_PI)
-	{
-		Radians -= 2 * M_PI;
-	}
-}
-
-float NormalizedRadians(float Radians)
-{
-	while(Radians < 0.0f)
-	{
-		Radians += 2 * M_PI;
-	}
-	while(Radians > 2 * M_PI)
-	{
-		Radians -= 2 * M_PI;
-	}
-	
-	return Radians;
-}
-
-float GetRadians(const math3d::vector2f & Vector)
-{
-	float Radians(acosf(Vector.m_V.m_A[0]));
-	
-	if(Vector.m_V.m_A[1] >= 0)
-	{
-		return Radians;
-	}
-	else
-	{
-		return NormalizedRadians(-Radians);
-	}
-}
 
 enum WantToJumpCode
 {
@@ -454,6 +419,14 @@ public:
 	}
 };
 
+void CalculateMinds(void)
+{
+	for(std::vector< Mind * >::iterator MindIterator = g_Minds.begin(); MindIterator != g_Minds.end(); ++MindIterator)
+	{
+		(*MindIterator)->Update();
+	}
+}
+
 void CalculateMovements(void)
 {
 	float Seconds(CalculateTime());
@@ -613,6 +586,7 @@ void SelectLinkedSystem(System * LinkedSystem)
 
 void GameFrame(void)
 {
+	CalculateMinds();
 	CalculateMovements();
 	UpdateUserInterface();
 	Render();
@@ -676,6 +650,40 @@ void LeaveSystem(void)
 	g_PlayerShip->SetCurrentSystem(0);
 }
 
+void PopulateSystem(void)
+{
+	int NumberOfShips(random() % 4);
+	
+	std::cout << "Spawning " << NumberOfShips << " ships." << std::endl;
+	for(int ShipNumber = 1; ShipNumber <= NumberOfShips; ++ShipNumber)
+	{
+		std::cout << "  Processing ship " << ShipNumber << std::endl;
+		
+		std::stringstream IdentifierStream;
+		
+		IdentifierStream << "::system(" << g_CurrentSystem->GetIdentifier() << ")::created_at(" << RealTime::GetTime() << "[" << ShipNumber << "])::";
+		
+		Ship * NewShip(new Ship(g_ShipClassManager.Get("shuttlecraft")));
+		
+		NewShip->SetObjectIdentifier(IdentifierStream.str() + "ship(" + NewShip->GetShipClass()->GetIdentifier() + ")");
+		NewShip->SetPosition(math3d::vector2f((-0.5f + static_cast< float >(random()) / RAND_MAX) * 300.0f, (-0.5f + static_cast< float >(random()) / RAND_MAX) * 300.0f));
+		NewShip->SetFuel(NewShip->GetFuelCapacity());
+		
+		Character * NewCharacter(new Character());
+		
+		NewCharacter->SetObjectIdentifier(IdentifierStream.str() + "character(" + NewShip->GetShipClass()->GetIdentifier() + ")");
+		
+		StateMachineMind * NewMind(new StateMachineMind());
+		
+		NewMind->SetObjectIdentifier(IdentifierStream.str() + "mind(state_machine)");
+		NewMind->SetCharacter(NewCharacter);
+		NewMind->SetShip(NewShip);
+		NewMind->GetStateMachine()->SetState(new SelectSteering(NewShip, NewMind->GetStateMachine()));
+		g_Minds.push_back(NewMind);
+		g_CurrentSystem->AddShip(NewShip);
+	}
+}
+
 void EnterSystem(System * NewSystem, System * OldSystem)
 {
 	g_CurrentSystem = NewSystem;
@@ -704,6 +712,8 @@ void EnterSystem(System * NewSystem, System * OldSystem)
 	SelectLinkedSystem(0);
 	SelectPhysicalObject(0);
 	g_PlayerCharacter->GetMapKnowledge()->AddExploredSystem(g_CurrentSystem);
+	// populate the entered system with other ships
+	PopulateSystem();
 }
 
 void SetTimeWarp(float TimeWarp)
@@ -1528,6 +1538,7 @@ void LoadSavegame(const Element * SaveElement)
 	SelectLinkedSystem(0);
 	SelectPhysicalObject(0);
 	RealTime::Invalidate();
+	PopulateSystem();
 }
 
 void LoadSavegame(const std::string & LoadSavegameFileName)
