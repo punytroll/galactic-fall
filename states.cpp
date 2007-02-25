@@ -30,8 +30,8 @@ FlyOverRandomPoint::FlyOverRandomPoint(Ship * ActionTarget, StateMachine * State
 
 void FlyOverRandomPoint::Enter(void)
 {
-	m_Point.m_V.m_A[0] = (-0.5f + static_cast< float >(random()) / RAND_MAX) * 500.0f;
-	m_Point.m_V.m_A[1] = (-0.5f + static_cast< float >(random()) / RAND_MAX) * 500.0f;
+	m_Point.m_V.m_A[0] = (-0.5f + static_cast< float >(random()) / RAND_MAX) * 200.0f;
+	m_Point.m_V.m_A[1] = (-0.5f + static_cast< float >(random()) / RAND_MAX) * 200.0f;
 }
 
 void FlyOverRandomPoint::Execute(void)
@@ -43,7 +43,7 @@ void FlyOverRandomPoint::Execute(void)
 	{
 		ToDestination /= sqrt(LengthSquared);
 		
-		float HeadingOffDestination(GetActionTarget()->GetAngularPosition() - GetRadians(ToDestination));
+		float HeadingOffDestination(GetShortestRadians(GetActionTarget()->GetAngularPosition(), GetRadians(ToDestination)));
 		
 		if(HeadingOffDestination > 0.1)
 		{

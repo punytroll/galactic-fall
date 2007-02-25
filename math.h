@@ -43,4 +43,20 @@ inline float GetRadians(const math3d::vector2f & Vector)
 	}
 }
 
+inline float GetShortestRadians(float Heading1, float Heading2)
+{
+	float Off(Heading1 - Heading2);
+	
+	if(Off < -M_PI)
+	{
+		Off += 2.0f * M_PI;
+	}
+	else if(Off > M_PI)
+	{
+		Off -= 2.0f * M_PI;
+	}
+	
+	return Off;
+}
+
 #endif
