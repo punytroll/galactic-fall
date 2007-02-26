@@ -1,0 +1,18 @@
+<ship-class>
+	<identifier>transporter</identifier>
+	<model-identifier>transporter</model-identifier>
+	<forward-thrust>8</forward-thrust>
+	<turn-speed>0.8</turn-speed>
+	<maximum-speed>8.5</maximum-speed>
+	<cargo-hold-size>60</cargo-hold-size>
+	<fuel-hold-size>4</fuel-hold-size>
+	<jump-fuel>0.20</jump-fuel>
+	<forward-fuel>0.025</forward-fuel>
+	<turn-fuel>0.016</turn-fuel>
+	<color>
+		<red>0.4</red>
+		<green>0.55</green>
+		<blue>0.65</blue>
+		<alpha>1.0</alpha>
+	</color>
+</ship-class>
