@@ -62,7 +62,7 @@ void Ship::Move(float Seconds)
 	m_Position += m_Velocity * Seconds;
 	if(m_Accelerate == true)
 	{
-		float FuelConsumption(m_ShipClass->GetTurnFuel() * Seconds);
+		float FuelConsumption(m_ShipClass->GetForwardFuel() * Seconds);
 		
 		if(m_Fuel >= FuelConsumption)
 		{
