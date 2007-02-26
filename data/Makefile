@@ -25,7 +25,9 @@ all_data = \
 	.data/sol_rigel_system_link.data \
 	.data/tichel_alpha_centauri_system_link.data \
 	.data/tichel_rigel_system_link.data \
-	.data/scanner_display_widget.data
+	.data/scanner_display_widget.data \
+	.data/transporter_model.data \
+	.data/transporter_ship_class.data
 
 all: data.arx
 
@@ -112,15 +114,25 @@ data.arx: .data $(all_data) Makefile
 	arxmod $@ 6 -a "child" 125
 	arxadd $@ --uid 126 --name "Scanner Display Widget" --type 1 --subtype 0 .data/scanner_display_widget.data
 	arxmod $@ 1 -a "child" 126
+	arxadd $@ --uid 127 --name "Transporter Model" --type 2 --subtype 0 .data/transporter_model.data
+	arxmod $@ 2 -a "child" 127
+	arxadd $@ --uid 128 --name "Transporter Ship Class" --type 3 --subtype 0 .data/transporter_ship_class.data
+	arxmod $@ 3 -a "child" 128
 
 .data:
 	mkdir $@
 
-.data/%.data: %.xml definitions.xml make_binary.py
-	python make_binary.py --definitions=definitions.xml --in=$< --out=$@
+.data/%.data: %.xml definitions.xml xml_to_data.py
+	python xml_to_data.py --definitions=definitions.xml --in=$< --out=$@
 
-shuttle_model.xml: models/shuttle_model.xml model_transform.xsl
-	xsltproc -output $@ model_transform.xsl $<
+shuttle_model.xml: models/shuttle_model.xml littlem_to_xml.xsl
+	xsltproc -output $@ littlem_to_xml.xsl $<
 
-cargo_cube_model.xml: models/cargo_cube_model.xml model_transform.xsl
-	xsltproc -output $@ model_transform.xsl $<
+cargo_cube_model.xml: models/cargo_cube_model.xml littlem_to_xml.xsl
+	xsltproc -output $@ littlem_to_xml.xsl $<
+
+transporter_model.xml: models/transporter_model.xml littlem_to_xml.xsl
+	xsltproc -output $@ littlem_to_xml.xsl $<
+
+models/transporter_model.xml: models/transporter_model.raw raw_to_littlem.py
+	python raw_to_littlem.py --in=$< --out=$@ --identifier=transporter

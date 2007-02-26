@@ -36,5 +36,7 @@ const Arxx::u4byte SOL_RIGEL_SYSTEM_LINK = 123;
 const Arxx::u4byte TICHEL_ALPHA_CENTAURI_SYSTEM_LINK = 124;
 const Arxx::u4byte TICHEL_RIGEL_SYSTEM_LINK = 125;
 const Arxx::u4byte SCANNER_DISPLAY_WIDGET = 126;
+const Arxx::u4byte TRANSPORTER_MODEL = 127;
+const Arxx::u4byte TRANSPORTER_SHIP_CLASS = 128;
 
 #endif
