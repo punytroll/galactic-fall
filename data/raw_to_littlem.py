@@ -33,6 +33,10 @@ for line in in_file.readlines():
 		point_1_2_x, point_1_2_y, point_1_2_z = point_2_x - point_1_x, point_2_y - point_1_y, point_2_z - point_1_z
 		point_1_3_x, point_1_3_y, point_1_3_z = point_3_x - point_1_x, point_3_y - point_1_y, point_3_z - point_1_z
 		normal_x, normal_y, normal_z = point_1_2_y * point_1_3_z - point_1_2_z * point_1_3_y, point_1_2_z * point_1_3_x - point_1_2_x * point_1_3_z, point_1_2_x * point_1_3_y - point_1_2_y * point_1_3_x
+		normal_length = sqrt(normal_x * normal_x + normal_y * normal_y + normal_z * normal_z)
+		normal_x /= normal_length
+		normal_y /= normal_length
+		normal_z /= normal_length
 		point_1_index, point_2_index, point_3_index = len(points), len(points) + 1, len(points) + 2
 		triangle_point_1_index, triangle_point_2_index, triangle_point_3_index = len(triangle_points), len(triangle_points) + 1, len(triangle_points) + 2
 		triangle_index = len(triangles)
