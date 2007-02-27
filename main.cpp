@@ -916,36 +916,18 @@ void KeyDown(unsigned int KeyCode)
 		}
 	case 35: // Key: ]
 		{
-			const std::list< Planet * > & Planets(g_CurrentSystem->GetPlanets());
-			const Planet * FocusPlanet(dynamic_cast< const Planet * >(g_Camera.GetFocus()));
+			const std::list< Ship * > & Ships(g_CurrentSystem->GetShips());
+			const Ship * FocusShip(dynamic_cast< const Ship * >(g_Camera.GetFocus()));
 			
-			if(FocusPlanet != 0)
+			std::list< Ship * >::const_iterator ShipIterator(find(Ships.begin(), Ships.end(), FocusShip));
+			
+			if((ShipIterator == Ships.end()) || (++ShipIterator == Ships.end()))
 			{
-				std::list< Planet * >::const_iterator PlanetIterator(find(Planets.begin(), Planets.end(), FocusPlanet));
-				
-				if(PlanetIterator == Planets.end())
-				{
-					g_Camera.SetFocus(g_PlayerShip);
-				}
-				else
-				{
-					++PlanetIterator;
-					if(PlanetIterator == Planets.end())
-					{
-						g_Camera.SetFocus(g_PlayerShip);
-					}
-					else
-					{
-						g_Camera.SetFocus(*PlanetIterator);
-					}
-				}
+				g_Camera.SetFocus(Ships.front());
 			}
 			else
 			{
-				if(Planets.size() > 0)
-				{
-					g_Camera.SetFocus(Planets.front());
-				}
+				g_Camera.SetFocus(*ShipIterator);
 			}
 			
 			break;
