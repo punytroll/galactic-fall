@@ -237,10 +237,12 @@ void CalculatePerspectiveMatrix(float FieldOfView, float Aspect, float NearClipp
 void SetMainPerspective(void)
 {
 	static float CalculatedForFieldOfView(0.0f);
+	static float CalculatedForHeight(0.0f);
+	static float CalculatedForWidth(0.0f);
 	static math3d::matrix4f Matrix;
 	static bool Initialized(false);
 	
-	if((Initialized == false) || (CalculatedForFieldOfView != g_Camera.GetFieldOfView()))
+	if((Initialized == false) || (CalculatedForFieldOfView != g_Camera.GetFieldOfView()) || (CalculatedForHeight != g_Height) || (CalculatedForWidth != g_Width))
 	{
 		/// TODO: Make this configurable
 		/// TODO: Also consider that these values may want to change while in game.
@@ -251,6 +253,8 @@ void SetMainPerspective(void)
 		CalculatePerspectiveMatrix(FieldOfView, g_Width / g_Height, NearClippingPlane, FarClippingPlane, Matrix);
 		Initialized = true;
 		CalculatedForFieldOfView = FieldOfView;
+		CalculatedForHeight = g_Height;
+		CalculatedForWidth = g_Width;
 	}
 	glLoadMatrixf(Matrix.matrix());
 }
@@ -1304,17 +1308,21 @@ void CreateWindow(void)
 	WindowAttributes.colormap = XCreateColormap(g_Display, RootWindow(g_Display, VisualInfo->screen), VisualInfo->visual, AllocNone);
 	WindowAttributes.border_pixel = 0;
 	WindowAttributes.event_mask = ExposureMask | ButtonPressMask | ButtonReleaseMask | StructureNotifyMask | KeyPressMask | KeyReleaseMask | PointerMotionMask;
-	WindowAttributes.override_redirect = True;
+	//WindowAttributes.override_redirect = True;
 	// create the window
-	g_Window = XCreateWindow(g_Display, RootWindow(g_Display, VisualInfo->screen), 0, 0, static_cast< unsigned int >(g_Width), static_cast< unsigned int >(g_Height), 0, VisualInfo->depth, InputOutput, VisualInfo->visual, CWBorderPixel | CWColormap | CWEventMask | CWOverrideRedirect, &WindowAttributes);
+	g_Window = XCreateWindow(g_Display, RootWindow(g_Display, VisualInfo->screen), 0, 0, static_cast< unsigned int >(g_Width), static_cast< unsigned int >(g_Height), 0, VisualInfo->depth, InputOutput, VisualInfo->visual, CWBorderPixel | CWColormap | CWEventMask/* | CWOverrideRedirect*/, &WindowAttributes);
+	
+	Atom wmDelete = XInternAtom(g_Display, "WM_DELETE_WINDOW", True);
+	XSetWMProtocols(g_Display, g_Window, &wmDelete, 1);
+	XSetStandardProperties(g_Display, g_Window, "TITLE", "TITLE", None, NULL, 0, NULL);
 	// show the window
 	XMapRaised(g_Display, g_Window);
 	// grab the keyboard so we get keyboard events and windowmanager can interfere
-	XGrabKeyboard(g_Display, g_Window, True, GrabModeAsync, GrabModeAsync, CurrentTime);
+	//XGrabKeyboard(g_Display, g_Window, True, GrabModeAsync, GrabModeAsync, CurrentTime);
 	// grab the mouse, so the mouse cursor can't leave our window
-	XGrabPointer(g_Display, g_Window, True, ButtonPressMask, GrabModeAsync, GrabModeAsync, g_Window, None, CurrentTime);
+	//XGrabPointer(g_Display, g_Window, True, ButtonPressMask, GrabModeAsync, GrabModeAsync, g_Window, None, CurrentTime);
 	// don't allow key repeats
-	XAutoRepeatOff(g_Display);
+	//XAutoRepeatOff(g_Display);
 	glXMakeCurrent(g_Display, g_Window, g_GLXContext);
 }
 
