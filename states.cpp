@@ -17,6 +17,7 @@ void SelectSteering::Enter(void)
 void SelectSteering::Execute(void)
 {
 	GetStateMachine()->SetState(new FlyOverRandomPoint(GetActionTarget(), GetStateMachine()));
+	delete this;
 }
 
 void SelectSteering::Exit(void)
@@ -67,6 +68,7 @@ void FlyOverRandomPoint::Execute(void)
 	else
 	{
 		GetStateMachine()->SetState(new SelectSteering(GetActionTarget(), GetStateMachine()));
+		delete this;
 	}
 }
 
