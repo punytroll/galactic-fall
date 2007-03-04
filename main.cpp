@@ -177,11 +177,6 @@ void DrawSelection(Position * Position, float RadialSize)
 	glPopMatrix();
 }
 
-void DrawPlanetSelection(Planet * Planet)
-{
-	DrawSelection(Planet, Planet->GetRadialSize());
-}
-
 void CollectWidgets(void)
 {
 	std::list< Widget * > & DestroyedWidgets(Widget::GetDestroyedWidgets());
