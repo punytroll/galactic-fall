@@ -16,6 +16,8 @@ class Mind : public Object
 public:
 	void SetCharacter(Character * Character);
 	void SetShip(Ship * Ship);
+	Character * GetCharacter(void);
+	Ship * GetShip(void);
 	virtual void Update(void) = 0;
 protected:
 	/// no internal state yet
@@ -31,6 +33,16 @@ inline void Mind::SetCharacter(Character * Character)
 inline void Mind::SetShip(Ship * Ship)
 {
 	m_Ship = Ship;
+}
+
+inline Character * Mind::GetCharacter(void)
+{
+	return m_Character;
+}
+
+inline Ship * Mind::GetShip(void)
+{
+	return m_Ship;
 }
 
 class StateMachine;
