@@ -1,10 +1,12 @@
 #include <GL/gl.h>
-#include <GL/glu.h>
 
 #include <math3d/vector4f.h>
 
 #include "color.h"
 #include "commodity.h"
+#include "globals.h"
+#include "model.h"
+#include "model_manager.h"
 #include "planet.h"
 
 PlanetCommodity::PlanetCommodity(Commodity * Commodity) :
@@ -69,6 +71,7 @@ void Planet::SetColor(const Color & NewColor)
 
 void Planet::Draw(void) const
 {
+	glPushAttrib(GL_ENABLE_BIT);
 	glPushMatrix();
 	glTranslatef(m_Position.m_V.m_A[0], m_Position.m_V.m_A[1], 0.0f);
 	glMaterialf(GL_FRONT, GL_SHININESS, 20.0f);
@@ -82,20 +85,19 @@ void Planet::Draw(void) const
 		glMaterialfv(GL_FRONT, GL_DIFFUSE, math3d::vector4f(1.0f, 1.0f, 1.0f, 1.0f).m_V.m_A);
 		glMaterialfv(GL_FRONT, GL_SPECULAR, math3d::vector4f(0.0f, 0.0f, 0.0f, 1.0f).m_V.m_A);
 	}
-	
-	GLUquadric * Quadric(gluNewQuadric());
-	
-	gluSphere(Quadric, GetRadialSize(), 40, 80);
+	glEnable(GL_NORMALIZE);
+	glScalef(GetRadialSize(), GetRadialSize(), GetRadialSize());
+	g_ModelManager.Get("planet")->Draw();
 	/* TODO: This code allows an athmosphere around the planet ... optimize and make usable via a planet property
 	glEnable(GL_BLEND);
 	glMaterialf(GL_FRONT, GL_SHININESS, 0.0f);
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, math3d::vector4f(1.0f, 1.0f, 1.0f, 0.35f).m_V.m_A);
 	glMaterialfv(GL_FRONT, GL_SPECULAR, math3d::vector4f(0.0f, 0.0f, 0.0f, 1.0f).m_V.m_A);
-	gluSphere(Quadric, m_Size / 1.95f, 40, 80);
-	glDisable(GL_BLEND);
+	glScalef(1.05f, 1.05f, 1.05f);
+	g_ModelManager.Get("planet")->Draw();
 	*/
-	gluDeleteQuadric(Quadric);
 	glPopMatrix();
+	glPopAttrib();
 }
 
 PlanetCommodity * Planet::CreateCommodity(Commodity * Commodity)

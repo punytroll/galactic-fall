@@ -27,7 +27,8 @@ all_data = \
 	.data/tichel_rigel_system_link.data \
 	.data/scanner_display_widget.data \
 	.data/transporter_model.data \
-	.data/transporter_ship_class.data
+	.data/transporter_ship_class.data \
+	.data/planet_model.data
 
 all: data.arx
 
@@ -36,6 +37,10 @@ clean:
 	$(RM) -rf .data
 	$(RM) -f shuttle_model.xml
 	$(RM) -f cargo_cube_model.xml
+	$(RM) -f transporter_model.xml
+	$(RM) -f models/transporter_model.xml
+	$(RM) -f planet_model.xml
+	$(RM) -f models/planet_model.xml
 
 data.arx: .data $(all_data) Makefile
 	@$(RM) -f $@
@@ -118,6 +123,8 @@ data.arx: .data $(all_data) Makefile
 	arxmod $@ 2 -a "child" 127
 	arxadd $@ --uid 128 --name "Transporter Ship Class" --type 3 --subtype 0 .data/transporter_ship_class.data
 	arxmod $@ 3 -a "child" 128
+	arxadd $@ --uid 129 --name "Planet Model" --type 2 --subtype 0 .data/planet_model.data
+	arxmod $@ 2 -a "child" 129
 
 .data:
 	mkdir $@
@@ -134,5 +141,11 @@ cargo_cube_model.xml: models/cargo_cube_model.xml littlem_to_xml.xsl
 transporter_model.xml: models/transporter_model.xml littlem_to_xml.xsl
 	xsltproc -output $@ littlem_to_xml.xsl $<
 
+planet_model.xml: models/planet_model.xml littlem_to_xml.xsl
+	xsltproc -output $@ littlem_to_xml.xsl $<
+
 models/transporter_model.xml: models/transporter_model.raw raw_to_littlem.py
 	python raw_to_littlem.py --in=$< --out=$@ --identifier=transporter
+
+models/planet_model.xml: models/planet_model.raw raw_to_littlem.py
+	python raw_to_littlem.py --in=$< --out=$@ --identifier=planet
