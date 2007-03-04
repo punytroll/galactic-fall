@@ -1575,6 +1575,7 @@ int main(int argc, char ** argv)
 	ReadModel(&g_ModelManager, GetItem(Archive, CARGO_CUBE_MODEL));
 	ReadModel(&g_ModelManager, GetItem(Archive, SHUTTLE_MODEL));
 	ReadModel(&g_ModelManager, GetItem(Archive, TRANSPORTER_MODEL));
+	ReadModel(&g_ModelManager, GetItem(Archive, PLANET_MODEL));
 	ReadShipClass(&g_ShipClassManager, GetItem(Archive, SHUTTLE_SHIP_CLASS));
 	ReadShipClass(&g_ShipClassManager, GetItem(Archive, TRANSPORTER_SHIP_CLASS));
 	ReadCommodity(&g_CommodityManager, GetItem(Archive, FOOD_COMMODITY));

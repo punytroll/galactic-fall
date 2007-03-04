@@ -14,6 +14,7 @@
 
 class Character;
 class CommodityManager;
+class ModelManager;
 class Ship;
 class SystemManager;
 class UserInterface;
@@ -21,6 +22,7 @@ class UserInterface;
 extern Character * g_PlayerCharacter;
 extern Ship * g_PlayerShip;
 extern CommodityManager g_CommodityManager;
+extern ModelManager g_ModelManager;
 extern SystemManager g_SystemManager;
 extern UserInterface g_UserInterface;
 

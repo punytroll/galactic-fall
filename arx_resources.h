@@ -38,5 +38,6 @@ const Arxx::u4byte TICHEL_RIGEL_SYSTEM_LINK = 125;
 const Arxx::u4byte SCANNER_DISPLAY_WIDGET = 126;
 const Arxx::u4byte TRANSPORTER_MODEL = 127;
 const Arxx::u4byte TRANSPORTER_SHIP_CLASS = 128;
+const Arxx::u4byte PLANET_MODEL = 129;
 
 #endif
