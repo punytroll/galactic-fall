@@ -643,6 +643,16 @@ void LeaveSystem(void)
 		g_CurrentSystem->ClearCargos();
 		g_CurrentSystem = 0;
 	}
+	while(g_Minds.begin() != g_Minds.end())
+	{
+		Ship * Ship(g_Minds.front()->GetShip());
+		Character * Character(g_Minds.front()->GetCharacter());
+		
+		delete g_Minds.front();
+		g_Minds.erase(g_Minds.begin());
+		delete Character;
+		delete Ship;
+	}
 	g_CurrentSystemLabel->SetString("");
 	SelectLinkedSystem(0);
 	SelectPhysicalObject(0);
