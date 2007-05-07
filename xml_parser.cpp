@@ -1,3 +1,27 @@
+/**
+ * Copyright (C) 2006, 2007  Hagen Möbius
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+**/
+
+/**
+ * This is version 1.5.1 of the xml parser.
+ **/
+
+#include <iostream>
+
 #include "xml_parser.h"
 
 XMLParser::XMLParser(std::istream & InputStream) :
@@ -12,42 +36,42 @@ XMLParser::~XMLParser(void)
 void XMLParser::Parse(void)
 {
 	std::map< std::string, std::string > Attributes;
-	std::string sElementName;
-	std::string sAttributeName;
-	std::string sBuffer;
-	char cChar;
-	bool bInAttributeValue(false);
-	bool bInElementHeader(false);
-	bool bInIdentifier(false);
-	bool bIsEndingElement(false);
-	bool bElementEnds(false);
+	std::string TagName;
+	std::string AttributeName;
+	std::string Buffer;
+	char Char;
+	bool InAttributeValue(false);
+	bool InTag(false);
+	bool InIdentifier(false);
+	bool IsEndTag(false);
+	bool IsEmptyElement(false);
 	
-	while(m_InputStream.get(cChar))
+	while(m_InputStream.get(Char))
 	{
-		switch(cChar)
+		switch(Char)
 		{
 		case '\n':
 		case '\t':
 		case ' ':
 			{
-				if((bInElementHeader == false) || (bInAttributeValue == true))
+				if((InTag == false) || (InAttributeValue == true))
 				{
-					sBuffer += cChar;
+					Buffer += Char;
 				}
 				else
 				{
-					if(bInIdentifier == true)
+					if(InIdentifier == true)
 					{
-						bInIdentifier = false;
-						if(sElementName.length() == 0)
+						InIdentifier = false;
+						if(TagName.length() == 0)
 						{
-							sElementName = sBuffer;
+							TagName = Buffer;
 						}
 						else
 						{
-							sAttributeName = sBuffer;
+							AttributeName = Buffer;
 						}
-						sBuffer = "";
+						Buffer.erase();
 					}
 				}
 				
@@ -55,98 +79,104 @@ void XMLParser::Parse(void)
 			}
 		case '=':
 			{
-				if(bInIdentifier == true)
+				if(InIdentifier == true)
 				{
-					sAttributeName = sBuffer;
-					bInIdentifier = false;
-					sBuffer = "";
+					AttributeName = Buffer;
+					InIdentifier = false;
+					Buffer.erase();
 				}
 				
 				break;
 			}
 		case '"':
 			{
-				if(bInAttributeValue == false)
+				if(InAttributeValue == false)
 				{
-					bInAttributeValue = true;
+					InAttributeValue = true;
 				}
 				else
 				{
 					
-					bInAttributeValue = false;
-					Attributes[sAttributeName] = sBuffer;
-					sBuffer = "";
+					InAttributeValue = false;
+					Attributes[AttributeName] = Buffer;
+					Buffer.erase();
 				}
 				
 				break;
 			}
 		case '<':
 			{
-				bInElementHeader = true;
+				if(Buffer.empty() == false)
+				{
+					Text(Buffer);
+					Buffer.erase();
+				}
+				InTag = true;
 				
 				break;
 			}
 		case '>':
 			{
-				if(bInIdentifier == true)
+				if(InIdentifier == true)
 				{
-					sElementName = sBuffer;
-					bInIdentifier = false;
-					sBuffer = "";
+					TagName = Buffer;
+					InIdentifier = false;
+					Buffer.erase();
 				}
-				if(bIsEndingElement == true)
+				if(IsEndTag == true)
 				{
-					ElementEnd(sElementName);
-					sElementName = "";
-					bIsEndingElement = false;
+					ElementEnd(TagName);
+					TagName.erase();
+					IsEndTag = false;
 				}
 				else
 				{
-					ElementStart(sElementName, Attributes);
-					if(bElementEnds == true)
+					ElementStart(TagName, Attributes);
+					if(IsEmptyElement == true)
 					{
-						ElementEnd(sElementName);
-						bElementEnds = false;
+						ElementEnd(TagName);
+						IsEmptyElement = false;
 					}
-					sElementName = "";
+					TagName.erase();
 					Attributes.clear();
 				}
+				InTag = false;
 				
 				break;
 			}
 		case '/':
 			{
-				if((bInElementHeader == true) && (bInAttributeValue == false))
+				if((InTag == true) && (InAttributeValue == false))
 				{
-					if(bInIdentifier == true)
+					if(InIdentifier == true)
 					{
-						sElementName = sBuffer;
-						sBuffer = "";
-						bInIdentifier = false;
+						TagName = Buffer;
+						Buffer.erase();
+						InIdentifier = false;
 					}
-					if(sElementName.length() == 0)
+					if(TagName.length() == 0)
 					{
-						bIsEndingElement = true;
+						IsEndTag = true;
 					}
 					else
 					{
-						bElementEnds = true;
+						IsEmptyElement = true;
 					}
 				}
 				else
 				{
-					sBuffer += '/';
+					Buffer += '/';
 				}
 				
 				break;
 			}
 		default:
 			{
-				if((bInElementHeader == true) && (bInAttributeValue == false))
+				if((InTag == true) && (InAttributeValue == false))
 				{
-					bInIdentifier = true;
+					InIdentifier = true;
 				}
-				sBuffer += cChar;
+				Buffer += Char;
 				
 				break;
 			}
@@ -154,10 +184,14 @@ void XMLParser::Parse(void)
 	}
 }
 
-void XMLParser::ElementStart(const std::string & Name, const std::map< std::string, std::string > & attributes)
+void XMLParser::ElementStart(const std::string & TagName, const std::map< std::string, std::string > & Attributes)
 {
 }
 
-void XMLParser::ElementEnd(const std::string & Name)
+void XMLParser::ElementEnd(const std::string & TagName)
+{
+}
+
+void XMLParser::Text(const std::string & Text)
 {
 }
