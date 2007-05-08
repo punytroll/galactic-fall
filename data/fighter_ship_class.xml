@@ -1,0 +1,18 @@
+<ship-class>
+	<identifier>fighter</identifier>
+	<model-identifier>fighter</model-identifier>
+	<forward-thrust>23</forward-thrust>
+	<turn-speed>2.3</turn-speed>
+	<maximum-speed>21.2</maximum-speed>
+	<cargo-hold-size>2</cargo-hold-size>
+	<fuel-hold-size>1</fuel-hold-size>
+	<jump-fuel>0.09</jump-fuel>
+	<forward-fuel>0.012</forward-fuel>
+	<turn-fuel>0.003</turn-fuel>
+	<color>
+		<red>0.76</red>
+		<green>0.35</green>
+		<blue>0.25</blue>
+		<alpha>1.0</alpha>
+	</color>
+</ship-class>
