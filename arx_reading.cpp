@@ -257,7 +257,16 @@ ShipClass * ReadShipClass(ShipClassManager * ShipClassManager, Arxx::Item * Item
 	NewShipClass->SetFuelHoldSize(FuelHoldSize);
 	NewShipClass->SetJumpFuel(JumpFuel);
 	NewShipClass->SetMaximumSpeed(MaximumSpeed);
-	NewShipClass->SetModel(ShipClassManager->GetModelManager()->Get(ModelIdentifier));
+	
+	Model * Model(ShipClassManager->GetModelManager()->Get(ModelIdentifier));
+	
+	if(Model == 0)
+	{
+		std::cerr << "Could not find the model \"" << ModelIdentifier << "\"." << std::endl;
+		
+		throw std::out_of_range("Encountered invalid model identifier.");
+	}
+	NewShipClass->SetModel(Model);
 	NewShipClass->SetTurnSpeed(TurnSpeed);
 	NewShipClass->SetForwardFuel(ForwardFuel);
 	NewShipClass->SetTurnFuel(TurnFuel);
