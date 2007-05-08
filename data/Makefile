@@ -28,7 +28,9 @@ all_data = \
 	.data/scanner_display_widget.data \
 	.data/transporter_model.data \
 	.data/transporter_ship_class.data \
-	.data/planet_model.data
+	.data/planet_model.data \
+	.data/fighter_model.data \
+	.data/fighter_ship_class.data
 
 all: data.arx
 
@@ -41,6 +43,9 @@ clean:
 	$(RM) -f models/transporter_model.xml
 	$(RM) -f planet_model.xml
 	$(RM) -f models/planet_model.xml
+	$(RM) -f models/fighter_model.xml
+	$(RM) -f fighter_model.xml
+	$(RM) -f xml_stream.pyc
 
 data.arx: .data $(all_data) Makefile
 	@$(RM) -f $@
@@ -125,6 +130,10 @@ data.arx: .data $(all_data) Makefile
 	arxmod $@ 3 -a "child" 128
 	arxadd $@ --uid 129 --name "Planet Model" --type 2 --subtype 0 .data/planet_model.data
 	arxmod $@ 2 -a "child" 129
+	arxadd $@ --uid 130 --name "Fighter Model" --type 2 --subtype 0 .data/fighter_model.data
+	arxmod $@ 2 -a "child" 130
+	arxadd $@ --uid 131 --name "Fighter Ship Class" --type 3 --subtype 0 .data/fighter_ship_class.data
+	arxmod $@ 2 -a "child" 131
 
 .data:
 	mkdir $@
@@ -144,8 +153,14 @@ transporter_model.xml: models/transporter_model.xml littlem_to_xml.xsl
 planet_model.xml: models/planet_model.xml littlem_to_xml.xsl
 	xsltproc -output $@ littlem_to_xml.xsl $<
 
+fighter_model.xml: models/fighter_model.xml littlem_to_xml.xsl
+	xsltproc -output $@ littlem_to_xml.xsl $<
+
 models/transporter_model.xml: models/transporter_model.raw raw_to_littlem.py
 	python raw_to_littlem.py --in=$< --out=$@ --identifier=transporter
 
 models/planet_model.xml: models/planet_model.raw raw_to_littlem.py
 	python raw_to_littlem.py --in=$< --out=$@ --identifier=planet
+
+models/fighter_model.xml: models/fighter_model.raw raw_to_littlem.py
+	python raw_to_littlem.py --in=$< --out=$@ --identifier=fighter
