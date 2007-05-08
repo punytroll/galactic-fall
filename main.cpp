@@ -43,6 +43,7 @@
 #include "ship.h"
 #include "ship_class.h"
 #include "ship_class_manager.h"
+#include "shot.h"
 #include "star.h"
 #include "state_machine.h"
 #include "states.h"
@@ -434,6 +435,7 @@ void CalculateMovements(void)
 	{
 		const std::list< Ship * > Ships(g_CurrentSystem->GetShips());
 		const std::list< Cargo * > Cargos(g_CurrentSystem->GetCargos());
+		const std::list< Shot * > Shots(g_CurrentSystem->GetShots());
 		
 		for(std::list< Ship * >::const_iterator ShipIterator = Ships.begin(); ShipIterator != Ships.end(); ++ShipIterator)
 		{
@@ -442,6 +444,10 @@ void CalculateMovements(void)
 		for(std::list< Cargo * >::const_iterator CargoIterator = Cargos.begin(); CargoIterator != Cargos.end(); ++CargoIterator)
 		{
 			(*CargoIterator)->Move(Seconds);
+		}
+		for(std::list< Shot * >::const_iterator ShotIterator = Shots.begin(); ShotIterator != Shots.end(); ++ShotIterator)
+		{
+			(*ShotIterator)->Move(Seconds);
 		}
 	}
 }
@@ -503,6 +509,7 @@ void Render(void)
 		const std::list< Planet * > & Planets(g_CurrentSystem->GetPlanets());
 		const std::list< Ship * > & Ships(g_CurrentSystem->GetShips());
 		const std::list< Cargo * > & Cargos(g_CurrentSystem->GetCargos());
+		const std::list< Shot * > & Shots(g_CurrentSystem->GetShots());
 		
 		for(std::list< Planet * >::const_iterator PlanetIterator = Planets.begin(); PlanetIterator != Planets.end(); ++PlanetIterator)
 		{
@@ -518,6 +525,11 @@ void Render(void)
 		{
 			glClear(GL_DEPTH_BUFFER_BIT);
 			(*CargoIterator)->Draw();
+		}
+		for(std::list< Shot * >::const_iterator ShotIterator = Shots.begin(); ShotIterator != Shots.end(); ++ShotIterator)
+		{
+			glClear(GL_DEPTH_BUFFER_BIT);
+			(*ShotIterator)->Draw();
 		}
 	}
 	// HUD
@@ -641,6 +653,7 @@ void LeaveSystem(void)
 	{
 		g_CurrentSystem->ClearShips();
 		g_CurrentSystem->ClearCargos();
+		g_CurrentSystem->ClearShots();
 		g_CurrentSystem = 0;
 	}
 	while(g_Minds.begin() != g_Minds.end())
@@ -701,6 +714,25 @@ void PopulateSystem(void)
 		NewMind->GetStateMachine()->SetState(new SelectSteering(NewShip, NewMind->GetStateMachine()));
 		g_Minds.push_back(NewMind);
 		g_CurrentSystem->AddShip(NewShip);
+	}
+	
+	int NumberOfShots(random() % 40);
+	
+	std::cout << "Spawning " << NumberOfShots << " shots." << std::endl;
+	for(int ShotNumber = 1; ShotNumber <= NumberOfShots; ++ShotNumber)
+	{
+		std::cout << "  Processing shot " << ShotNumber << std::endl;
+		
+		std::stringstream IdentifierStream;
+		
+		IdentifierStream << "::system(" << g_CurrentSystem->GetIdentifier() << ")::created_at(" << RealTime::GetTime() << "[" << ShotNumber << "])::";
+		
+		float AngularPosition((-0.5f + static_cast< float >(random()) / RAND_MAX) * 2 * M_PI);
+		Shot * NewShot(new Shot(AngularPosition, math3d::vector2f(30.0f, AngularPosition, math3d::vector2f::magnitude_angle)));
+		
+		NewShot->SetObjectIdentifier(IdentifierStream.str() + "shot");
+		NewShot->SetPosition(math3d::vector2f((-0.5f + static_cast< float >(random()) / RAND_MAX) * 300.0f, (-0.5f + static_cast< float >(random()) / RAND_MAX) * 300.0f));
+		g_CurrentSystem->AddShot(NewShot);
 	}
 }
 

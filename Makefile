@@ -119,6 +119,10 @@ ship_class_h = \
 ship_class_manager_h = \
 	ship_class_manager.h
 
+shot_h = \
+	$(physical_object_h) \
+	shot.h
+
 star_h = \
 	star.h \
 	$(position_h)
@@ -210,6 +214,7 @@ clean: clean-recursive
 	$(RM) ship.o
 	$(RM) ship_class.o
 	$(RM) ship_class_manager.o
+	$(RM) shot.o
 	$(RM) star.o
 	$(RM) state.o
 	$(RM) state_machine.o
@@ -228,7 +233,7 @@ clean: clean-recursive
 clean-recursive:
 	@$(MAKE) -C data clean
 
-escapevelocity: arx_reading.o buffer_reading.o button.o camera.o cargo.o character.o clicked_listener.o color.o commodity.o commodity_manager.o destroy_listener.o draw_text.o key_listener.o label.o main.o map_dialog.o map_knowledge.o mind.o model.o model_manager.o mouse_button_listener.o mouse_motion_listener.o object.o physical_object.o planet.o planet_dialog.o real_time.o ship.o ship_class.o ship_class_manager.o star.o state.o state_machine.o states.o string_cast.o system.o system_manager.o trade_center_dialog.o user_interface.o widget.o window.o xml_parser.o xml_puny_dom.o xml_stream.o
+escapevelocity: arx_reading.o buffer_reading.o button.o camera.o cargo.o character.o clicked_listener.o color.o commodity.o commodity_manager.o destroy_listener.o draw_text.o key_listener.o label.o main.o map_dialog.o map_knowledge.o mind.o model.o model_manager.o mouse_button_listener.o mouse_motion_listener.o object.o physical_object.o planet.o planet_dialog.o real_time.o ship.o ship_class.o ship_class_manager.o shot.o star.o state.o state_machine.o states.o string_cast.o system.o system_manager.o trade_center_dialog.o user_interface.o widget.o window.o xml_parser.o xml_puny_dom.o xml_stream.o
 	$(CXX) $(LDFLAGS) `pkg-config --libs libarxx` $^ -lGL -o $@
 
 arx_reading.o: arx_reading.cpp $(arx_reading_h) $(arxx_resources_h) $(buffer_reading_h) $(commodity_h) $(commodity_manager_h) $(label_h) $(model_h) $(model_manager_h) $(planet_h) $(ship_class_h) $(ship_class_manager_h) $(user_interface_h) $(widget_h)
@@ -319,6 +324,9 @@ ship_class.o: ship_class.cpp $(color_h) $(ship_class_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags math3d` -c $< -o $@
 	
 ship_class_manager.o: ship_class_manager.cpp $(color_h) $(model_manager_h) $(ship_class_h) $(ship_class_manager_h) $(string_cast_h) $(xml_puny_dom_h)
+	$(CXX) $(CXXFLAGS) `pkg-config --cflags math3d` -c $< -o $@
+
+shot.o: shot.cpp $(shot_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags math3d` -c $< -o $@
 
 star.o: star.cpp $(star_h)

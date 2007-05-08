@@ -11,6 +11,7 @@
 class Cargo;
 class Planet;
 class Ship;
+class Shot;
 class Star;
 
 class System : public Position
@@ -23,6 +24,7 @@ public:
 	const std::list< System * > GetLinkedSystems(void) const;
 	const std::list< Ship * > GetShips(void) const;
 	const std::list< Cargo * > GetCargos(void) const;
+	const std::list< Shot * > GetShots(void) const;
 	const Star * GetStar(void) const;
 	bool IsLinkedToSystem(const System * System) const;
 	void SetName(const std::string & Name);
@@ -31,8 +33,10 @@ public:
 	void AddLinkedSystem(System * LinkedSystem);
 	void AddShip(Ship * Ship);
 	void AddCargo(Cargo * Cargo);
+	void AddShot(Shot * Shot);
 	void ClearShips(void);
 	void ClearCargos(void);
+	void ClearShots(void);
 	void RemoveCargo(Cargo * RemoveCargo);
 private:
 	std::string m_Identifier;
@@ -42,6 +46,7 @@ private:
 	std::list< System * > m_LinkedSystems;
 	std::list< Ship * > m_Ships;
 	std::list< Cargo * > m_Cargos;
+	std::list< Shot * > m_Shots;
 };
 
 inline const std::string & System::GetIdentifier(void) const
@@ -72,6 +77,11 @@ inline const std::list< Ship * > System::GetShips(void) const
 inline const std::list< Cargo * > System::GetCargos(void) const
 {
 	return m_Cargos;
+}
+
+inline const std::list< Shot * > System::GetShots(void) const
+{
+	return m_Shots;
 }
 
 inline const Star * System::GetStar(void) const

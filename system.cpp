@@ -62,12 +62,22 @@ void System::AddCargo(Cargo * Cargo)
 	m_Cargos.push_back(Cargo);
 }
 
+void System::AddShot(Shot * Shot)
+{
+	m_Shots.push_back(Shot);
+}
+
 void System::ClearShips(void)
 {
 	m_Ships.clear();
 }
 
 void System::ClearCargos(void)
+{
+	m_Cargos.clear();
+}
+
+void System::ClearShots(void)
 {
 	m_Cargos.clear();
 }
