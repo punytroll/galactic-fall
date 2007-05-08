@@ -2,8 +2,8 @@
 
 from math import sqrt
 from sys import exit
-from xml.dom import getDOMImplementation
 from optparse import OptionParser
+from xml_stream import attribute, element, end, value, XMLStream
 
 parser = OptionParser()
 parser.add_option("-n", "--identifier", dest="identifier", help="The identifier of the new model.")
@@ -34,6 +34,8 @@ for line in in_file.readlines():
 		point_1_3_x, point_1_3_y, point_1_3_z = point_3_x - point_1_x, point_3_y - point_1_y, point_3_z - point_1_z
 		normal_x, normal_y, normal_z = point_1_2_y * point_1_3_z - point_1_2_z * point_1_3_y, point_1_2_z * point_1_3_x - point_1_2_x * point_1_3_z, point_1_2_x * point_1_3_y - point_1_2_y * point_1_3_x
 		normal_length = sqrt(normal_x * normal_x + normal_y * normal_y + normal_z * normal_z)
+		if normal_length == 0.0:
+			continue
 		normal_x /= normal_length
 		normal_y /= normal_length
 		normal_z /= normal_length
@@ -59,6 +61,8 @@ for line in in_file.readlines():
 		normal_x /= normal_length
 		normal_y /= normal_length
 		normal_z /= normal_length
+		if normal_length == 0.0:
+			continue
 		point_1_index, point_2_index, point_3_index, point_4_index = len(points), len(points) + 1, len(points) + 2, len(points) + 3
 		triangle_point_1_index, triangle_point_2_index, triangle_point_3_index, triangle_point_4_index = len(triangle_points), len(triangle_points) + 1, len(triangle_points) + 2, len(triangle_points) + 3
 		triangle_1_index, triangle_2_index = len(triangles), len(triangles) + 1
@@ -74,41 +78,19 @@ for line in in_file.readlines():
 		triangles.append((triangle_point_1_index, triangle_point_3_index, triangle_point_4_index))
 
 # now write the output
-document = getDOMImplementation().createDocument(None, "model", None)
-model_element = document.documentElement
-if options.identifier != None and options.identifier != "":
-	model_element.setAttribute("identifier", options.identifier)
-for identifier, point in enumerate(points):
-	point_element = document.createElement("point")
-	point_element.setAttribute("identifier", str(identifier))
-	point_element.setAttribute("position-x", str(point[0]))
-	point_element.setAttribute("position-y", str(point[1]))
-	point_element.setAttribute("position-z", str(point[2]))
-	model_element.appendChild(point_element)
-for identifier, triangle_point in enumerate(triangle_points):
-	triangle_point_element = document.createElement("triangle-point")
-	triangle_point_element.setAttribute("identifier", str(identifier))
-	triangle_point_element.setAttribute("normal-x", str(triangle_point[1]))
-	triangle_point_element.setAttribute("normal-y", str(triangle_point[2]))
-	triangle_point_element.setAttribute("normal-z", str(triangle_point[3]))
-	point_element = document.createElement("point")
-	point_element.setAttribute("point-identifier", str(triangle_point[0]))
-	triangle_point_element.appendChild(point_element)
-	model_element.appendChild(triangle_point_element)
-for identifier, triangle in enumerate(triangles):
-	triangle_element = document.createElement("triangle")
-	triangle_element.setAttribute("identifier", str(identifier))
-	triangle_point_element = document.createElement("triangle-point")
-	triangle_point_element.setAttribute("triangle-point-identifier", str(triangle[0]))
-	triangle_element.appendChild(triangle_point_element)
-	triangle_point_element = document.createElement("triangle-point")
-	triangle_point_element.setAttribute("triangle-point-identifier", str(triangle[1]))
-	triangle_element.appendChild(triangle_point_element)
-	triangle_point_element = document.createElement("triangle-point")
-	triangle_point_element.setAttribute("triangle-point-identifier", str(triangle[2]))
-	triangle_element.appendChild(triangle_point_element)
-	model_element.appendChild(triangle_element)
-
-# now open the out file for writing
 out_file = open(options.out_file, "w")
-out_file.write(model_element.toprettyxml())
+xml_stream = XMLStream(out_file)
+xml_stream << element << "model"
+if options.identifier != None and options.identifier != "":
+	xml_stream << attribute << "identifier" << value << options.identifier
+for identifier, point in enumerate(points):
+	xml_stream << element << "point" << attribute << "identifier" << value << str(identifier) << attribute << "position-x" << value << str(point[0]) << attribute << "position-y" << value << str(point[1]) << attribute << "position-z" << value << str(point[2]) << end
+for identifier, triangle_point in enumerate(triangle_points):
+	xml_stream << element << "triangle-point" << attribute << "identifier" << value << str(identifier) << attribute << "normal-x" << value << str(triangle_point[1]) << attribute << "normal-y" << value << str(triangle_point[2]) << attribute << "normal-z" << value << str(triangle_point[3])
+	xml_stream << element << "point" << attribute << "point-identifier" << value << str(triangle_point[0]) << end << end
+for identifier, triangle in enumerate(triangles):
+	xml_stream << element << "triangle" << attribute << "identifier" << value << str(identifier)
+	xml_stream << element << "triangle-point" << attribute << "triangle-point-identifier" << value << str(triangle[0]) << end
+	xml_stream << element << "triangle-point" << attribute << "triangle-point-identifier" << value << str(triangle[1]) << end
+	xml_stream << element << "triangle-point" << attribute << "triangle-point-identifier" << value << str(triangle[2]) << end << end
+xml_stream << end
