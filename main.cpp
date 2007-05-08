@@ -672,7 +672,18 @@ void PopulateSystem(void)
 		
 		IdentifierStream << "::system(" << g_CurrentSystem->GetIdentifier() << ")::created_at(" << RealTime::GetTime() << "[" << ShipNumber << "])::";
 		
-		Ship * NewShip(new Ship(g_ShipClassManager.Get("transporter")));
+		std::string ShipClassIdentifier;
+		
+		if(static_cast< float >(random()) / RAND_MAX > 0.5f)
+		{
+			ShipClassIdentifier = "fighter";
+		}
+		else
+		{
+			ShipClassIdentifier = "transporter";
+		}
+		
+		Ship * NewShip(new Ship(g_ShipClassManager.Get(ShipClassIdentifier)));
 		
 		NewShip->SetObjectIdentifier(IdentifierStream.str() + "ship(" + NewShip->GetShipClass()->GetIdentifier() + ")");
 		NewShip->SetPosition(math3d::vector2f((-0.5f + static_cast< float >(random()) / RAND_MAX) * 300.0f, (-0.5f + static_cast< float >(random()) / RAND_MAX) * 300.0f));
@@ -1586,8 +1597,10 @@ int main(int argc, char ** argv)
 	ReadModel(&g_ModelManager, GetItem(Archive, SHUTTLE_MODEL));
 	ReadModel(&g_ModelManager, GetItem(Archive, TRANSPORTER_MODEL));
 	ReadModel(&g_ModelManager, GetItem(Archive, PLANET_MODEL));
+	ReadModel(&g_ModelManager, GetItem(Archive, FIGHTER_MODEL));
 	ReadShipClass(&g_ShipClassManager, GetItem(Archive, SHUTTLE_SHIP_CLASS));
 	ReadShipClass(&g_ShipClassManager, GetItem(Archive, TRANSPORTER_SHIP_CLASS));
+	ReadShipClass(&g_ShipClassManager, GetItem(Archive, FIGHTER_SHIP_CLASS));
 	ReadCommodity(&g_CommodityManager, GetItem(Archive, FOOD_COMMODITY));
 	ReadCommodity(&g_CommodityManager, GetItem(Archive, INDUSTRIAL_COMMODITY));
 	ReadCommodity(&g_CommodityManager, GetItem(Archive, MEDICAL_SUPPLIES_COMMODITY));
