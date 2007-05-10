@@ -32,6 +32,10 @@ all_data = \
 	.data/fighter_model.data \
 	.data/fighter_ship_class.data
 
+raw_to_littlem_dependencies = \
+	raw_to_littlem.py \
+	xml_stream.py
+
 all: data.arx
 
 clean:
@@ -156,11 +160,11 @@ planet_model.xml: models/planet_model.xml littlem_to_xml.xsl
 fighter_model.xml: models/fighter_model.xml littlem_to_xml.xsl
 	xsltproc -output $@ littlem_to_xml.xsl $<
 
-models/transporter_model.xml: models/transporter_model.raw raw_to_littlem.py
+models/transporter_model.xml: models/transporter_model.raw $(raw_to_littlem_dependencies)
 	python raw_to_littlem.py --in=$< --out=$@ --identifier=transporter
 
-models/planet_model.xml: models/planet_model.raw raw_to_littlem.py
+models/planet_model.xml: models/planet_model.raw $(raw_to_littlem_dependencies)
 	python raw_to_littlem.py --in=$< --out=$@ --identifier=planet
 
-models/fighter_model.xml: models/fighter_model.raw raw_to_littlem.py
+models/fighter_model.xml: models/fighter_model.raw $(raw_to_littlem_dependencies)
 	python raw_to_littlem.py --in=$< --out=$@ --identifier=fighter
