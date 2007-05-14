@@ -439,20 +439,7 @@ void CalculateMovements(void)
 		
 		for(std::list< Ship * >::const_iterator ShipIterator = Ships.begin(); ShipIterator != Ships.end(); ++ShipIterator)
 		{
-			(*ShipIterator)->Move(Seconds);
-			if(((*ShipIterator)->GetShipClass()->GetIdentifier() == "fighter") && ((*ShipIterator)->IsReadyToFire() == true))
-			{
-				std::stringstream IdentifierStream;
-				
-				IdentifierStream << "::system(" << g_CurrentSystem->GetIdentifier() << ")::created_at(" << RealTime::GetTime() << ")::";
-				
-				Shot * NewShot(new Shot((*ShipIterator)->GetAngularPosition(), (*ShipIterator)->GetVelocity() + math3d::vector2f(30.0f, (*ShipIterator)->GetAngularPosition(), math3d::vector2f::magnitude_angle)));
-				
-				NewShot->SetObjectIdentifier(IdentifierStream.str() + "shot");
-				NewShot->SetPosition((*ShipIterator)->GetPosition());
-				g_CurrentSystem->AddShot(NewShot);
-				(*ShipIterator)->ResetNextTimeToFire();
-			}
+			(*ShipIterator)->Update(Seconds);
 		}
 		for(std::list< Cargo * >::const_iterator CargoIterator = Cargos.begin(); CargoIterator != Cargos.end(); ++CargoIterator)
 		{
@@ -722,6 +709,11 @@ void PopulateSystem(void)
 		NewShip->SetObjectIdentifier(IdentifierStream.str() + "ship(" + NewShip->GetShipClass()->GetIdentifier() + ")");
 		NewShip->SetPosition(math3d::vector2f((-0.5f + static_cast< float >(random()) / RAND_MAX) * 300.0f, (-0.5f + static_cast< float >(random()) / RAND_MAX) * 300.0f));
 		NewShip->SetFuel(NewShip->GetFuelCapacity());
+		NewShip->SetCurrentSystem(g_CurrentSystem);
+		if(ShipClassIdentifier == "fighter")
+		{
+			NewShip->m_Fire = true;
+		}
 		
 		Character * NewCharacter(new Character());
 		
@@ -1226,7 +1218,7 @@ void KeyDown(unsigned int KeyCode)
 		}
 	case 65: // Key: SPACE
 		{
-			g_Camera.SetPosition(0.0f, 0.0f);
+			g_InputFocus->m_Fire = true;
 			
 			break;
 		}
@@ -1284,6 +1276,12 @@ void KeyDown(unsigned int KeyCode)
 			
 			break;
 		}
+	case 97: // Key: HOME
+		{
+			g_Camera.SetPosition(0.0f, 0.0f);
+			
+			break;
+		}
 	case 98: // Key: UP
 		{
 			g_InputFocus->m_Accelerate = true;
@@ -1313,6 +1311,12 @@ void KeyUp(unsigned char KeyCode)
 	}
 	switch(KeyCode)
 	{
+	case 65: // Key: SPACE
+		{
+			g_InputFocus->m_Fire = false;
+			
+			break;
+		}
 	case 98:  // Key: UP
 		{
 			g_InputFocus->m_Accelerate = false;
