@@ -10,6 +10,7 @@ Shot::Shot(float AngularPosition, const math3d::vector2f & Velocity) :
 	m_AngularPosition(AngularPosition),
 	m_Velocity(Velocity)
 {
+	SetRadialSize(0.54f);
 }
 
 Shot::~Shot(void)
