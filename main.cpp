@@ -435,7 +435,7 @@ void CalculateMovements(void)
 	{
 		const std::list< Ship * > Ships(g_CurrentSystem->GetShips());
 		const std::list< Cargo * > Cargos(g_CurrentSystem->GetCargos());
-		const std::list< Shot * > Shots(g_CurrentSystem->GetShots());
+		std::list< Shot * > & Shots(g_CurrentSystem->GetShots());
 		
 		for(std::list< Ship * >::const_iterator ShipIterator = Ships.begin(); ShipIterator != Ships.end(); ++ShipIterator)
 		{
@@ -445,9 +445,17 @@ void CalculateMovements(void)
 		{
 			(*CargoIterator)->Move(Seconds);
 		}
-		for(std::list< Shot * >::const_iterator ShotIterator = Shots.begin(); ShotIterator != Shots.end(); ++ShotIterator)
+		for(std::list< Shot * >::iterator ShotIterator = Shots.begin(); ShotIterator != Shots.end();)
 		{
-			(*ShotIterator)->Move(Seconds);
+			if((*ShotIterator)->Update(Seconds) == true)
+			{
+				++ShotIterator;
+			}
+			else
+			{
+				delete *ShotIterator;
+				ShotIterator = Shots.erase(ShotIterator);
+			}
 		}
 	}
 }
