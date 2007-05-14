@@ -51,6 +51,9 @@ public:
 	// modifiers
 	bool AddCommodities(const Commodity * CargoCommodity, float Amount);
 	bool RemoveCommodities(const Commodity * CargoCommodity, float Amount);
+	// shot stuff
+	bool IsReadyToFire(void);
+	void ResetNextTimeToFire(void);
 private:
 	// ship class
 	ShipClass * m_ShipClass;
@@ -59,6 +62,7 @@ private:
 	PhysicalObject * m_Target;
 	System * m_LinkedSystemTarget;
 	System * m_CurrentSystem;
+	double m_NextTimeToFire;
 };
 
 inline float Ship::GetForwardThrust(void) const
