@@ -1,16 +1,21 @@
 #include <assert.h>
 
+#include <sstream>
+
 #include <GL/gl.h>
 
 #include "color.h"
 #include "model.h"
 #include "real_time.h"
 #include "ship.h"
+#include "shot.h"
+#include "system.h"
 
 Ship::Ship(ShipClass * ShipClass) :
 	m_Accelerate(false),
 	m_TurnLeft(false),
 	m_TurnRight(false),
+	m_Fire(false),
 	m_Velocity(true),
 	m_AngularPosition(0.0f),
 	m_ShipClass(ShipClass),
@@ -39,7 +44,7 @@ void Ship::Draw(void) const
 	glPopMatrix();
 }
 
-void Ship::Move(float Seconds)
+void Ship::Update(float Seconds)
 {
 	if(m_TurnLeft == true)
 	{
@@ -78,6 +83,22 @@ void Ship::Move(float Seconds)
 				m_Velocity.scale(GetMaximumSpeed());
 			}
 			m_Fuel -= FuelConsumption;
+		}
+	}
+	if(m_Fire == true)
+	{
+		if(IsReadyToFire() == true)
+		{
+			std::stringstream IdentifierStream;
+			
+			IdentifierStream << "::system(" << GetCurrentSystem()->GetIdentifier() << ")::created_at(" << RealTime::GetTime() << ")::";
+			
+			Shot * NewShot(new Shot(GetAngularPosition(), GetVelocity() + math3d::vector2f(30.0f, GetAngularPosition(), math3d::vector2f::magnitude_angle)));
+			
+			NewShot->SetObjectIdentifier(IdentifierStream.str() + "shot");
+			NewShot->SetPosition(GetPosition());
+			GetCurrentSystem()->AddShot(NewShot);
+			ResetNextTimeToFire();
 		}
 	}
 }
@@ -152,5 +173,5 @@ bool Ship::IsReadyToFire(void)
 
 void Ship::ResetNextTimeToFire(void)
 {
-	m_NextTimeToFire = RealTime::GetTime() + 0.45;
+	m_NextTimeToFire = RealTime::GetTime() + 0.25;
 }

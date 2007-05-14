@@ -17,11 +17,12 @@ class Ship : public PhysicalObject
 public:
 	Ship(ShipClass * ShipClass);
 	void Draw(void) const;
-	void Move(float Seconds);
+	void Update(float Seconds);
 	// enabler
 	bool m_Accelerate;
 	bool m_TurnLeft;
 	bool m_TurnRight;
+	bool m_Fire;
 	// current state
 	math3d::vector2f m_Velocity;
 	float m_AngularPosition;
