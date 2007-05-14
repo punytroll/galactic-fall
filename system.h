@@ -24,7 +24,7 @@ public:
 	const std::list< System * > GetLinkedSystems(void) const;
 	const std::list< Ship * > GetShips(void) const;
 	const std::list< Cargo * > GetCargos(void) const;
-	const std::list< Shot * > GetShots(void) const;
+	std::list< Shot * > & GetShots(void);
 	const Star * GetStar(void) const;
 	bool IsLinkedToSystem(const System * System) const;
 	void SetName(const std::string & Name);
@@ -79,7 +79,7 @@ inline const std::list< Cargo * > System::GetCargos(void) const
 	return m_Cargos;
 }
 
-inline const std::list< Shot * > System::GetShots(void) const
+inline std::list< Shot * > & System::GetShots(void)
 {
 	return m_Shots;
 }

@@ -13,9 +13,10 @@ public:
 	Shot(float AngularPosition, const math3d::vector2f & Velocity);
 	virtual ~Shot(void);
 	virtual void Draw(void) const;
-	void Move(float Seconds);
+	bool Update(float Seconds);
 	const math3d::vector2f & GetVelocity(void) const;
 private:
+	double m_TimeOfDeath;
 	math3d::vector2f m_Velocity;
 	float m_AngularPosition;
 };

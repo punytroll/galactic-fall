@@ -2,9 +2,11 @@
 
 #include <math3d/vector4f.h>
 
+#include "real_time.h"
 #include "shot.h"
 
 Shot::Shot(float AngularPosition, const math3d::vector2f & Velocity) :
+	m_TimeOfDeath(RealTime::GetTime() + 2.5),
 	m_AngularPosition(AngularPosition),
 	m_Velocity(Velocity)
 {
@@ -33,7 +35,13 @@ void Shot::Draw(void) const
 	glPopAttrib();
 }
 
-void Shot::Move(float Seconds)
+bool Shot::Update(float Seconds)
 {
+	if(m_TimeOfDeath < RealTime::GetTime())
+	{
+		return false;
+	}
 	m_Position += m_Velocity * Seconds;
+	
+	return true;
 }
