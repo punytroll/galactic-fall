@@ -79,7 +79,7 @@ void System::ClearCargos(void)
 
 void System::ClearShots(void)
 {
-	m_Cargos.clear();
+	m_Shots.clear();
 }
 
 void System::RemoveCargo(Cargo * RemoveCargo)
