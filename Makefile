@@ -317,7 +317,7 @@ planet_dialog.o: planet_dialog.cpp $(button_h) $(character_h) $(color_h) $(globa
 real_time.o: real_time.cpp $(real_time_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-ship.o: ship.cpp $(color_h) $(model_h) $(ship_h)
+ship.o: ship.cpp $(color_h) $(model_h) $(real_time_h) $(ship_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags math3d` -c $< -o $@
 
 ship_class.o: ship_class.cpp $(color_h) $(ship_class_h)

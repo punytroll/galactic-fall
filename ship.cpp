@@ -4,6 +4,7 @@
 
 #include "color.h"
 #include "model.h"
+#include "real_time.h"
 #include "ship.h"
 
 Ship::Ship(ShipClass * ShipClass) :
@@ -13,7 +14,8 @@ Ship::Ship(ShipClass * ShipClass) :
 	m_Velocity(true),
 	m_AngularPosition(0.0f),
 	m_ShipClass(ShipClass),
-	m_Fuel(0.0f)
+	m_Fuel(0.0f),
+	m_NextTimeToFire(0.0)
 {
 	SetRadialSize(m_ShipClass->GetModel()->GetRadialSize());
 }
@@ -141,4 +143,14 @@ bool Ship::RemoveCommodities(const Commodity * CargoCommodity, float Amount)
 	}
 	
 	return true;
+}
+
+bool Ship::IsReadyToFire(void)
+{
+	return m_NextTimeToFire <= RealTime::GetTime();
+}
+
+void Ship::ResetNextTimeToFire(void)
+{
+	m_NextTimeToFire = RealTime::GetTime() + 0.45;
 }
