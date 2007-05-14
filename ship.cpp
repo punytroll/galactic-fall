@@ -93,7 +93,7 @@ void Ship::Update(float Seconds)
 			
 			IdentifierStream << "::system(" << GetCurrentSystem()->GetIdentifier() << ")::created_at(" << RealTime::GetTime() << ")::";
 			
-			Shot * NewShot(new Shot(GetAngularPosition(), GetVelocity() + math3d::vector2f(30.0f, GetAngularPosition(), math3d::vector2f::magnitude_angle)));
+			Shot * NewShot(new Shot(this, GetAngularPosition(), GetVelocity() + math3d::vector2f(30.0f, GetAngularPosition(), math3d::vector2f::magnitude_angle)));
 			
 			NewShot->SetObjectIdentifier(IdentifierStream.str() + "shot");
 			NewShot->SetPosition(GetPosition());

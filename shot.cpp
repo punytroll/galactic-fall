@@ -5,7 +5,8 @@
 #include "real_time.h"
 #include "shot.h"
 
-Shot::Shot(float AngularPosition, const math3d::vector2f & Velocity) :
+Shot::Shot(PhysicalObject * Shooter, float AngularPosition, const math3d::vector2f & Velocity) :
+	m_Shooter(Shooter),
 	m_TimeOfDeath(RealTime::GetTime() + 2.5),
 	m_AngularPosition(AngularPosition),
 	m_Velocity(Velocity)

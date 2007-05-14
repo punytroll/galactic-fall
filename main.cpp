@@ -447,14 +447,35 @@ void CalculateMovements(void)
 		}
 		for(std::list< Shot * >::iterator ShotIterator = Shots.begin(); ShotIterator != Shots.end();)
 		{
+			bool DeleteShot(false);
+			
 			if((*ShotIterator)->Update(Seconds) == true)
 			{
-				++ShotIterator;
+				for(std::list< Ship * >::const_iterator ShipIterator = Ships.begin(); ShipIterator != Ships.end(); ++ShipIterator)
+				{
+					if((*ShotIterator)->GetShooter() != *ShipIterator)
+					{
+						if(((*ShotIterator)->GetPosition() - (*ShipIterator)->GetPosition()).length_squared() < ((*ShotIterator)->GetRadialSize() * (*ShotIterator)->GetRadialSize() + (*ShipIterator)->GetRadialSize() * (*ShipIterator)->GetRadialSize()))
+						{
+							DeleteShot = true;
+							
+							break;
+						}
+					}
+				}
 			}
 			else
 			{
+				DeleteShot = true;
+			}
+			if(DeleteShot == true)
+			{
 				delete *ShotIterator;
 				ShotIterator = Shots.erase(ShotIterator);
+			}
+			else
+			{
+				++ShotIterator;
 			}
 		}
 	}

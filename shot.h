@@ -10,16 +10,23 @@ class Model;
 class Shot : public PhysicalObject
 {
 public:
-	Shot(float AngularPosition, const math3d::vector2f & Velocity);
+	Shot(PhysicalObject * Shooter, float AngularPosition, const math3d::vector2f & Velocity);
 	virtual ~Shot(void);
 	virtual void Draw(void) const;
 	bool Update(float Seconds);
+	const PhysicalObject * GetShooter(void) const;
 	const math3d::vector2f & GetVelocity(void) const;
 private:
+	PhysicalObject * m_Shooter;
 	double m_TimeOfDeath;
 	math3d::vector2f m_Velocity;
 	float m_AngularPosition;
 };
+
+inline const PhysicalObject * Shot::GetShooter(void) const
+{
+	return m_Shooter;
+}
 
 inline const math3d::vector2f & Shot::GetVelocity(void) const
 {
