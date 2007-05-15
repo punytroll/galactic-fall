@@ -74,70 +74,44 @@ data.arx: .data $(all_data) Makefile
 	arxtouch $@ 6
 	arxmod $@ 6 -n "System Links" -t 0 -st 0
 	arxmod $@ 0 -a "child" 6
-	arxadd $@ --uid 100 --name "Message Label" --type 1 --subtype 1 .data/message_label.data
-	arxmod $@ 1 -a "child" 100
-	arxadd $@ --uid 101 --name "Time Warp Label" --type 1 --subtype 1 .data/time_warp_label.data
-	arxmod $@ 1 -a "child" 101
-	arxadd $@ --uid 102 --name "System Label" --type 1 --subtype 1 .data/system_label.data
-	arxmod $@ 1 -a "child" 102
-	arxadd $@ --uid 103 --name "Credits Label" --type 1 --subtype 1 .data/credits_label.data
-	arxmod $@ 1 -a "child" 103
-	arxadd $@ --uid 104 --name "Fuel Label" --type 1 --subtype 1 .data/fuel_label.data
-	arxmod $@ 1 -a "child" 104
-	arxadd $@ --uid 105 --name "Scanner Widget" --type 1 --subtype 0 .data/scanner_widget.data
-	arxmod $@ 1 -a "child" 105
-	arxadd $@ --uid 106 --name "Mini Map Widget" --type 1 --subtype 0 .data/mini_map_widget.data
-	arxmod $@ 1 -a "child" 106
-	arxadd $@ --uid 107 --name "Target Label" --type 1 --subtype 1 .data/target_label.data
-	arxmod $@ 1 -a "child" 107
-	arxadd $@ --uid 108 --name "Current System Label" --type 1 --subtype 1 .data/current_system_label.data
-	arxmod $@ 1 -a "child" 108
-	arxadd $@ --uid 109 --name "Cargo Cube Model" --type 2 --subtype 0 .data/cargo_cube_model.data
-	arxmod $@ 2 -a "child" 109
-	arxadd $@ --uid 110 --name "Shuttle Ship Class" --type 3 --subtype 0 .data/shuttle_ship_class.data
-	arxmod $@ 3 -a "child" 110
-	arxadd $@ --uid 111 --name "Food Commodity" --type 4 --subtype 0 .data/food_commodity.data
-	arxmod $@ 4 -a "child" 111
-	arxadd $@ --uid 112 --name "Industrial Commodity" --type 4 --subtype 0 .data/industrial_commodity.data
-	arxmod $@ 4 -a "child" 112
-	arxadd $@ --uid 113 --name "Medical Supplies Commodity" --type 4 --subtype 0 .data/medical_supplies_commodity.data
-	arxmod $@ 4 -a "child" 113
-	arxadd $@ --uid 114 --name "Luxury Goods Commodity" --type 4 --subtype 0 .data/luxury_goods_commodity.data
-	arxmod $@ 4 -a "child" 114
-	arxadd $@ --uid 115 --name "Metal Commodity" --type 4 --subtype 0 .data/metal_commodity.data
-	arxmod $@ 4 -a "child" 115
-	arxadd $@ --uid 116 --name "Equipment Commodity" --type 4 --subtype 0 .data/equipment_commodity.data
-	arxmod $@ 4 -a "child" 116
-	arxadd $@ --uid 117 --name "Sol System" --type 5 --subtype 0 .data/sol_system.data
-	arxmod $@ 5 -a "child" 117
-	arxadd $@ --uid 118 --name "Rigel System" --type 5 --subtype 0 .data/rigel_system.data
-	arxmod $@ 5 -a "child" 118
-	arxadd $@ --uid 119 --name "Tichel System" --type 5 --subtype 0 .data/tichel_system.data
-	arxmod $@ 5 -a "child" 119
-	arxadd $@ --uid 120 --name "Alpha Centauri System" --type 5 --subtype 0 .data/alpha_centauri_system.data
-	arxmod $@ 5 -a "child" 120
-	arxadd $@ --uid 121 --name "Shuttle Model" --type 2 --subtype 0 .data/shuttle_model.data
-	arxmod $@ 2 -a "child" 121
-	arxadd $@ --uid 122 --name "Sol / Alpha Centauri System Link" --type 6 --subtype 0 .data/sol_alpha_centauri_system_link.data
-	arxmod $@ 6 -a "child" 122
-	arxadd $@ --uid 123 --name "Sol / Rigel System Link" --type 6 --subtype 0 .data/sol_rigel_system_link.data
-	arxmod $@ 6 -a "child" 123
-	arxadd $@ --uid 124 --name "Tichel / Alpha Centauri System Link" --type 6 --subtype 0 .data/tichel_alpha_centauri_system_link.data
-	arxmod $@ 6 -a "child" 124
-	arxadd $@ --uid 125 --name "Tichel / Rigel System Link" --type 6 --subtype 0 .data/tichel_rigel_system_link.data
-	arxmod $@ 6 -a "child" 125
-	arxadd $@ --uid 126 --name "Scanner Display Widget" --type 1 --subtype 0 .data/scanner_display_widget.data
-	arxmod $@ 1 -a "child" 126
-	arxadd $@ --uid 127 --name "Transporter Model" --type 2 --subtype 0 .data/transporter_model.data
-	arxmod $@ 2 -a "child" 127
-	arxadd $@ --uid 128 --name "Transporter Ship Class" --type 3 --subtype 0 .data/transporter_ship_class.data
-	arxmod $@ 3 -a "child" 128
-	arxadd $@ --uid 129 --name "Planet Model" --type 2 --subtype 0 .data/planet_model.data
-	arxmod $@ 2 -a "child" 129
-	arxadd $@ --uid 130 --name "Fighter Model" --type 2 --subtype 0 .data/fighter_model.data
-	arxmod $@ 2 -a "child" 130
-	arxadd $@ --uid 131 --name "Fighter Ship Class" --type 3 --subtype 0 .data/fighter_ship_class.data
-	arxmod $@ 2 -a "child" 131
+	@echo -e "\n\nAdding widgets ...\n"
+	arxadd $@ --uid 100 --name "Message Label" --type 1 --subtype 1 --add 1:child .data/message_label.data
+	arxadd $@ --uid 101 --name "Time Warp Label" --type 1 --subtype 1 --add 1:child .data/time_warp_label.data
+	arxadd $@ --uid 102 --name "System Label" --type 1 --subtype 1 --add 1:child .data/system_label.data
+	arxadd $@ --uid 103 --name "Credits Label" --type 1 --subtype 1 --add 1:child .data/credits_label.data
+	arxadd $@ --uid 104 --name "Fuel Label" --type 1 --subtype 1 --add 1:child .data/fuel_label.data
+	arxadd $@ --uid 105 --name "Scanner Widget" --type 1 --subtype 0 --add 1:child .data/scanner_widget.data
+	arxadd $@ --uid 106 --name "Mini Map Widget" --type 1 --subtype 0 --add 1:child .data/mini_map_widget.data
+	arxadd $@ --uid 107 --name "Target Label" --type 1 --subtype 1 --add 1:child .data/target_label.data
+	arxadd $@ --uid 108 --name "Current System Label" --type 1 --subtype 1 --add 1:child .data/current_system_label.data
+	arxadd $@ --uid 126 --name "Scanner Display Widget" --type 1 --subtype 0 --add 1:child .data/scanner_display_widget.data
+	@echo -e "\n\nAdding models ...\n"
+	arxadd $@ --uid 127 --name "Transporter Model" --type 2 --subtype 0 --add 2:child .data/transporter_model.data
+	arxadd $@ --uid 129 --name "Planet Model" --type 2 --subtype 0 --add 2:child .data/planet_model.data
+	arxadd $@ --uid 130 --name "Fighter Model" --type 2 --subtype 0 --add 2:child .data/fighter_model.data
+	arxadd $@ --uid 121 --name "Shuttle Model" --type 2 --subtype 0 --add 2:child .data/shuttle_model.data
+	arxadd $@ --uid 109 --name "Cargo Cube Model" --type 2 --subtype 0 --add 2:child .data/cargo_cube_model.data
+	@echo -e "\n\nAdding ship classes ...\n"
+	arxadd $@ --uid 131 --name "Fighter Ship Class" --type 3 --subtype 0 --add 3:child .data/fighter_ship_class.data
+	arxadd $@ --uid 110 --name "Shuttle Ship Class" --type 3 --subtype 0 --add 3:child .data/shuttle_ship_class.data
+	arxadd $@ --uid 128 --name "Transporter Ship Class" --type 3 --subtype 0 --add 3:child .data/transporter_ship_class.data
+	@echo -e "\n\nAdding commodities ...\n"
+	arxadd $@ --uid 116 --name "Equipment Commodity" --type 4 --subtype 0 --add 4:child .data/equipment_commodity.data
+	arxadd $@ --uid 111 --name "Food Commodity" --type 4 --subtype 0 --add 4:child .data/food_commodity.data
+	arxadd $@ --uid 112 --name "Industrial Commodity" --type 4 --subtype 0 --add 4:child .data/industrial_commodity.data
+	arxadd $@ --uid 114 --name "Luxury Goods Commodity" --type 4 --subtype 0 --add 4:child .data/luxury_goods_commodity.data
+	arxadd $@ --uid 113 --name "Medical Supplies Commodity" --type 4 --subtype 0 --add 4:child .data/medical_supplies_commodity.data
+	arxadd $@ --uid 115 --name "Metal Commodity" --type 4 --subtype 0 --add 4:child .data/metal_commodity.data
+	@echo -e "\n\nAdding systems ...\n"
+	arxadd $@ --uid 120 --name "Alpha Centauri System" --type 5 --subtype 0 --add 5:child .data/alpha_centauri_system.data
+	arxadd $@ --uid 118 --name "Rigel System" --type 5 --subtype 0 --add 5:child .data/rigel_system.data
+	arxadd $@ --uid 117 --name "Sol System" --type 5 --subtype 0 --subtype 0 --add 5:child .data/sol_system.data
+	arxadd $@ --uid 119 --name "Tichel System" --type 5 --subtype 0 --add 5:child .data/tichel_system.data
+	@echo -e "\n\nAdding system links ...\n"
+	arxadd $@ --uid 122 --name "Sol / Alpha Centauri System Link" --type 6 --subtype 0 --add 6:child .data/sol_alpha_centauri_system_link.data
+	arxadd $@ --uid 123 --name "Sol / Rigel System Link" --type 6 --subtype 0 --add 6:child .data/sol_rigel_system_link.data
+	arxadd $@ --uid 124 --name "Tichel / Alpha Centauri System Link" --type 6 --subtype 0 --add 6:child .data/tichel_alpha_centauri_system_link.data
+	arxadd $@ --uid 125 --name "Tichel / Rigel System Link" --type 6 --subtype 0 --add 6:child .data/tichel_rigel_system_link.data
 
 .data:
 	mkdir $@
