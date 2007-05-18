@@ -23,3 +23,15 @@ Arxx::BufferReader & operator>>(Arxx::BufferReader & BufferReader, math3d::vecto
 	
 	return BufferReader;
 }
+
+Arxx::BufferReader & operator>>(Arxx::BufferReader & BufferReader, math3d::vector3f & Vector)
+{
+	float x;
+	float y;
+	float z;
+	
+	BufferReader >> x >> y >> z;
+	Vector.set(x, y, z);
+	
+	return BufferReader;
+}

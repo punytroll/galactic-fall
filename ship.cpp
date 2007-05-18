@@ -43,12 +43,12 @@ void Ship::Draw(void) const
 	// draw acceleration visualization
 	if(m_Accelerate == true)
 	{
-		glTranslatef(-4.0f, 0.0f, 0.0f);
+		glTranslatef(m_ShipClass->GetExhaustOffset().m_V.m_A[0], m_ShipClass->GetExhaustOffset().m_V.m_A[1], m_ShipClass->GetExhaustOffset().m_V.m_A[2]);
 		glPushAttrib(GL_ENABLE_BIT);
 		glDisable(GL_LIGHTING);
 		glEnable(GL_BLEND);
 		glBegin(GL_QUADS);
-		glColor4f(1.0f, 1.0f, 1.0f, 0.1f);
+		glColor4f(1.0f, 1.0f, 1.0f, 0.4f);
 		glVertex2f(0.0f, -0.3f);
 		glVertex2f(0.0f, 0.3f);
 		glColor4f(1.0f, 1.0f, 1.0f, 0.0f);

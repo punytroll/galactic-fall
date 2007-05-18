@@ -4,6 +4,7 @@
 #include <BufferReader.h>
 #include <Item.h>
 
+#include <math3d/vector3f.h>
 #include <math3d/vector4f.h>
 
 #include "arx_reading.h"
@@ -249,8 +250,9 @@ ShipClass * ReadShipClass(ShipClassManager * ShipClassManager, Arxx::Item * Item
 	float ForwardFuel;
 	float TurnFuel;
 	Color ModelColor;
+	math3d::vector3f ExhaustOffset;
 	
-	Reader >> ModelIdentifier >> ForwardThrust >> TurnSpeed >> MaximumSpeed >> CargoHoldSize >> FuelHoldSize >> JumpFuel >> ForwardFuel >> TurnFuel >> ModelColor;
+	Reader >> ModelIdentifier >> ForwardThrust >> TurnSpeed >> MaximumSpeed >> CargoHoldSize >> FuelHoldSize >> JumpFuel >> ForwardFuel >> TurnFuel >> ModelColor >> ExhaustOffset;
 	
 	NewShipClass->SetCargoHoldSize(CargoHoldSize);
 	NewShipClass->SetForwardThrust(ForwardThrust);
@@ -271,6 +273,7 @@ ShipClass * ReadShipClass(ShipClassManager * ShipClassManager, Arxx::Item * Item
 	NewShipClass->SetForwardFuel(ForwardFuel);
 	NewShipClass->SetTurnFuel(TurnFuel);
 	NewShipClass->SetColor(ModelColor);
+	NewShipClass->SetExhaustOffset(ExhaustOffset);
 	
 	return NewShipClass;
 }
