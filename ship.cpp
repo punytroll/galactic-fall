@@ -30,7 +30,6 @@ void Ship::Draw(void) const
 	glPushMatrix();
 	glTranslatef(m_Position.m_V.m_A[0], m_Position.m_V.m_A[1], 0.0f);
 	glRotatef(m_AngularPosition * 180.0f / M_PI, 0.0f, 0.0f, 1.0f);
-	glRotatef(90.0f, 1.0f, 0.0f, 0.0f);
 	glMaterialfv(GL_FRONT, GL_SPECULAR, math3d::vector4f(0.0f, 0.0f, 0.0f, 1.0f).m_V.m_A);
 	if(m_ShipClass->GetColor() != 0)
 	{
@@ -41,6 +40,23 @@ void Ship::Draw(void) const
 		glMaterialfv(GL_FRONT, GL_DIFFUSE, math3d::vector4f(1.0f, 1.0f, 1.0f, 1.0f).m_V.m_A);
 	}
 	m_ShipClass->GetModel()->Draw();
+	// draw acceleration visualization
+	if(m_Accelerate == true)
+	{
+		glTranslatef(-4.0f, 0.0f, 0.0f);
+		glPushAttrib(GL_ENABLE_BIT);
+		glDisable(GL_LIGHTING);
+		glEnable(GL_BLEND);
+		glBegin(GL_QUADS);
+		glColor4f(1.0f, 1.0f, 1.0f, 0.1f);
+		glVertex2f(0.0f, -0.3f);
+		glVertex2f(0.0f, 0.3f);
+		glColor4f(1.0f, 1.0f, 1.0f, 0.0f);
+		glVertex2f(-20.0f, 2.0f);
+		glVertex2f(-20.0f, -2.0f);
+		glEnd();
+		glPopAttrib();
+	}
 	glPopMatrix();
 }
 

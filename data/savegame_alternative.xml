@@ -2,7 +2,7 @@
 	<system identifier="alpha_centauri"/>
 	<player>
 		<character object-identifier="::character::player_character"/>
-		<ship object-identifier="::ship(shuttlecraft)::player_ship"/>
+		<ship object-identifier="::ship(shuttle)::player_ship"/>
 	</player>
 	<character object-identifier="::character::player_character">
 		<credits value="15562.7"/>
@@ -12,7 +12,7 @@
 			<explored-system identifier="rigel"/>
 		</map-knowledge>
 	</character>
-	<ship object-identifier="::ship(shuttlecraft)::player_ship" class-identifier="shuttlecraft">
+	<ship object-identifier="::ship(shuttle)::player_ship" class-identifier="shuttle">
 		<fuel value="0.240821"/>
 		<position x="-253.368" y="-16.2305"/>
 		<angular-position value="6.82964"/>
@@ -25,7 +25,7 @@
 	</ship>
 	<camera>
 		<position x="0" y="0" z="200"/>
-		<focus object-identifier="::ship(shuttlecraft)::player_ship"/>
+		<focus object-identifier="::ship(shuttle)::player_ship"/>
 		<field-of-view radians="0.392699082"/>
 	</camera>
 </save>

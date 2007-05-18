@@ -142,3 +142,6 @@ models/planet_model.xml: models/planet_model.raw $(raw_to_littlem_dependencies)
 
 models/fighter_model.xml: models/fighter_model.raw $(raw_to_littlem_dependencies)
 	python raw_to_littlem.py --in=$< --out=$@ --identifier=fighter
+
+models/shuttle_model.xml: models/shuttle_model.raw $(raw_to_littlem_dependencies)
+	python raw_to_littlem.py --in=$< --out=$@ --identifier=shuttle
