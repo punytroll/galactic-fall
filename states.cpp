@@ -62,7 +62,7 @@ void FlyOverRandomPoint::Execute(void)
 		{
 			GetActionTarget()->m_TurnRight = false;
 			GetActionTarget()->m_TurnLeft = false;
-			GetActionTarget()->m_Accelerate = true;
+			GetActionTarget()->m_Accelerate = ((GetActionTarget()->GetVelocity() - math3d::vector2f(GetActionTarget()->GetShipClass()->GetMaximumSpeed(), GetActionTarget()->GetAngularPosition(), math3d::vector2f::magnitude_angle)).length_squared() > 0.1f);
 		}
 	}
 	else
