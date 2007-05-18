@@ -15,4 +15,9 @@
 		<blue>0.1</blue>
 		<alpha>1.0</alpha>
 	</color>
+	<exhaust-offset>
+		<x>-3</x>
+		<y>0</y>
+		<z>0</z>
+	</exhaust-offset>
 </ship-class>

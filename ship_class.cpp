@@ -4,7 +4,8 @@
 ShipClass::ShipClass(const std::string & Identifier) :
 	m_Identifier(Identifier),
 	m_CargoHoldSize(0.0f),
-	m_Color(0)
+	m_Color(0),
+	m_ExhaustOffset(true)
 {
 }
 
@@ -16,5 +17,6 @@ ShipClass::~ShipClass(void)
 
 void ShipClass::SetColor(const Color & NewColor)
 {
+	delete m_Color;
 	m_Color = new Color(NewColor);
 }

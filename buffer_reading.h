@@ -4,10 +4,12 @@
 #include <BufferReader.h>
 
 #include <math3d/vector2f.h>
+#include <math3d/vector3f.h>
 
 #include "color.h"
 
 Arxx::BufferReader & operator>>(Arxx::BufferReader & BufferReader, Color & Color);
 Arxx::BufferReader & operator>>(Arxx::BufferReader & BufferReader, math3d::vector2f & Vector);
+Arxx::BufferReader & operator>>(Arxx::BufferReader & BufferReader, math3d::vector3f & Vector);
 
 #endif
