@@ -703,7 +703,7 @@ void LeaveSystem(void)
 
 void PopulateSystem(void)
 {
-	int NumberOfShips(random() % 4);
+	int NumberOfShips(GetRandomInteger(3));
 	
 	std::cout << "Spawning " << NumberOfShips << " ships." << std::endl;
 	for(int ShipNumber = 1; ShipNumber <= NumberOfShips; ++ShipNumber)
@@ -716,7 +716,7 @@ void PopulateSystem(void)
 		
 		std::string ShipClassIdentifier;
 		
-		if(static_cast< float >(random()) / RAND_MAX > 0.5f)
+		if(GetRandomUniform() > 0.5f)
 		{
 			ShipClassIdentifier = "fighter";
 		}
@@ -728,7 +728,7 @@ void PopulateSystem(void)
 		Ship * NewShip(new Ship(g_ShipClassManager.Get(ShipClassIdentifier)));
 		
 		NewShip->SetObjectIdentifier(IdentifierStream.str() + "ship(" + NewShip->GetShipClass()->GetIdentifier() + ")");
-		NewShip->SetPosition(math3d::vector2f((-0.5f + static_cast< float >(random()) / RAND_MAX) * 300.0f, (-0.5f + static_cast< float >(random()) / RAND_MAX) * 300.0f));
+		NewShip->SetPosition(math3d::vector2f(GetRandomFloat(-200.0f, 200.0f), GetRandomFloat(-200.0f, 200.0f)));
 		NewShip->SetFuel(NewShip->GetFuelCapacity());
 		NewShip->SetCurrentSystem(g_CurrentSystem);
 		if(ShipClassIdentifier == "fighter")
@@ -1168,7 +1168,7 @@ void KeyDown(unsigned int KeyCode)
 			while(g_PlayerShip->GetCommodities().size() > 0)
 			{
 				const Commodity * Commodity(g_PlayerShip->GetCommodities().begin()->first);
-				Cargo * NewCargo(new Cargo(g_ModelManager.Get("cargo_cube"), Commodity, g_PlayerShip->GetVelocity() * 0.8f + math3d::vector2f(-0.5f + static_cast< float >(random()) / RAND_MAX, -0.5f + static_cast< float >(random()) / RAND_MAX))); // TODO: memory leak
+				Cargo * NewCargo(new Cargo(g_ModelManager.Get("cargo_cube"), Commodity, g_PlayerShip->GetVelocity() * 0.8f + math3d::vector2f(GetRandomFloat(-0.5f, 0.5f), GetRandomFloat(-0.5f, 0.5f)))); // TODO: memory leak
 				
 				NewCargo->SetObjectIdentifier("::cargo(" + Commodity->GetIdentifier() + ")::" + to_string_cast(reinterpret_cast< void * >(NewCargo)));
 				g_PlayerShip->RemoveCommodities(Commodity, 1.0f);
