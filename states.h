@@ -3,6 +3,7 @@
 
 #include "state.h"
 
+class Planet;
 class Ship;
 class StateMachine;
 
@@ -24,6 +25,17 @@ public:
 	virtual void Exit(void);
 protected:
 	math3d::vector2f m_Point;
+};
+
+class TransporterPhase1 : public State
+{
+public:
+	TransporterPhase1(Ship * ActionTarget, StateMachine * StateMachine);
+	virtual void Enter(void);
+	virtual void Execute(void);
+	virtual void Exit(void);
+private:
+	Planet * m_Planet;
 };
 
 #endif
