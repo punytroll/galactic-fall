@@ -59,4 +59,19 @@ inline float GetShortestRadians(float Heading1, float Heading2)
 	return Off;
 }
 
+inline long int GetRandomInteger(long int HighestValue)
+{
+	return random() % (HighestValue + 1);
+}
+
+inline float GetRandomUniform(void)
+{
+	return static_cast< float >(random()) / RAND_MAX;
+}
+
+inline float GetRandomFloat(float LowestValue, float HighestValue)
+{
+	return ((HighestValue - LowestValue) * GetRandomUniform()) + LowestValue;
+}
+
 #endif
