@@ -3,6 +3,7 @@
 
 #include "math.h"
 #include "planet.h"
+#include "real_time.h"
 #include "ship.h"
 #include "state_machine.h"
 #include "states.h"
@@ -85,7 +86,6 @@ void FlyOverRandomPoint::Exit(void)
 {
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // TransporterPhase1: Picks a planet, aims toward it and monitors the process of approching.     //
 //                    Will calculate when to go to the next phase, which does the braking.       //
@@ -161,9 +161,9 @@ void TransporterPhase1::Exit(void)
 {
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // TransporterPhase2: Revereses the ship and accelerates until a near stop is accomplished.      //
+//                    Will finish by setting the ship to immobile.                               //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 TransporterPhase2::TransporterPhase2(Ship * ActionTarget, StateMachine * StateMachine, Planet * Planet) :
 	State(ActionTarget, StateMachine),
@@ -204,11 +204,41 @@ void TransporterPhase2::Execute(void)
 	}
 	else
 	{
-		GetStateMachine()->SetState(new TransporterPhase1(GetActionTarget(), GetStateMachine()));
+		GetStateMachine()->SetState(new TransporterPhase3(GetActionTarget(), GetStateMachine()));
 		delete this;
 	}
 }
 
 void TransporterPhase2::Exit(void)
+{
+	GetActionTarget()->SetVelocity(math3d::vector2f(0.0f, 0.0f));
+	GetActionTarget()->m_TurnRight = false;
+	GetActionTarget()->m_TurnLeft = false;
+	GetActionTarget()->m_Accelerate = false;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// TransporterPhase3: Wait for a little time.                                                    //
+///////////////////////////////////////////////////////////////////////////////////////////////////
+TransporterPhase3::TransporterPhase3(Ship * ActionTarget, StateMachine * StateMachine) :
+	State(ActionTarget, StateMachine),
+	m_TimeToLeave(RealTime::GetTime() + GetRandomFloat(12.0f, 20.0f))
+{
+}
+
+void TransporterPhase3::Enter(void)
+{
+}
+
+void TransporterPhase3::Execute(void)
+{
+	if(RealTime::GetTime() >= m_TimeToLeave)
+	{
+		GetStateMachine()->SetState(new TransporterPhase1(GetActionTarget(), GetStateMachine()));
+		delete this;
+	}
+}
+
+void TransporterPhase3::Exit(void)
 {
 }
