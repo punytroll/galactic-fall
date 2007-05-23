@@ -119,11 +119,15 @@ void TransporterPhase1::Enter(void)
 void TransporterPhase1::Execute(void)
 {
 	math3d::vector2f ToDestination(m_Planet->GetPosition() - GetActionTarget()->GetPosition());
-	float LengthSquared(ToDestination.length_squared());
+	float DistanceSquared(ToDestination.length_squared());
+	float DistanceNeededToBrake(GetActionTarget()->GetShipClass()->GetMaximumSpeed() * ((M_PI / GetActionTarget()->GetShipClass()->GetTurnSpeed()) + ((GetActionTarget()->GetShipClass()->GetMaximumSpeed() / GetActionTarget()->GetShipClass()->GetForwardThrust()) / 2.0f)));
 	
-	if(LengthSquared > 400.0f)
+	// braking in phase 2 takes time (turning + accelerating)
+	//  - turning: the ship will fly with maximum velocity towards the target
+	//  - accelerating: the ship will fly half distance that it could with maximum velocity towards the target
+	if(DistanceSquared > DistanceNeededToBrake * DistanceNeededToBrake)
 	{
-		ToDestination /= sqrt(LengthSquared);
+		ToDestination /= sqrt(DistanceSquared);
 		
 		float HeadingOffDestination(GetShortestRadians(GetActionTarget()->GetAngularPosition(), GetRadians(ToDestination)));
 		
@@ -148,11 +152,63 @@ void TransporterPhase1::Execute(void)
 	}
 	else
 	{
-		GetStateMachine()->SetState(new TransporterPhase1(GetActionTarget(), GetStateMachine()));
+		GetStateMachine()->SetState(new TransporterPhase2(GetActionTarget(), GetStateMachine(), m_Planet));
 		delete this;
 	}
 }
 
 void TransporterPhase1::Exit(void)
+{
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// TransporterPhase2: Revereses the ship and accelerates until a near stop is accomplished.      //
+///////////////////////////////////////////////////////////////////////////////////////////////////
+TransporterPhase2::TransporterPhase2(Ship * ActionTarget, StateMachine * StateMachine, Planet * Planet) :
+	State(ActionTarget, StateMachine),
+	m_Planet(Planet)
+{
+}
+
+void TransporterPhase2::Enter(void)
+{
+}
+
+void TransporterPhase2::Execute(void)
+{
+	float SpeedSquared(GetActionTarget()->GetVelocity().length_squared());
+	
+	if(SpeedSquared > 2.0f)
+	{
+		float HeadingOffReverse(GetShortestRadians(GetActionTarget()->GetAngularPosition(), GetRadians(-(GetActionTarget()->GetVelocity().normalized()))));
+		
+		if(HeadingOffReverse > 0.1)
+		{
+			GetActionTarget()->m_TurnRight = true;
+			GetActionTarget()->m_TurnLeft = false;
+			GetActionTarget()->m_Accelerate = false;
+		}
+		else if(HeadingOffReverse < -0.1)
+		{
+			GetActionTarget()->m_TurnRight = false;
+			GetActionTarget()->m_TurnLeft = true;
+			GetActionTarget()->m_Accelerate = false;
+		}
+		else
+		{
+			GetActionTarget()->m_TurnRight = false;
+			GetActionTarget()->m_TurnLeft = false;
+			GetActionTarget()->m_Accelerate = true;
+		}
+	}
+	else
+	{
+		GetStateMachine()->SetState(new TransporterPhase1(GetActionTarget(), GetStateMachine()));
+		delete this;
+	}
+}
+
+void TransporterPhase2::Exit(void)
 {
 }
