@@ -49,4 +49,15 @@ private:
 	Planet * m_Planet;
 };
 
+class TransporterPhase3 : public State
+{
+public:
+	TransporterPhase3(Ship * ActionTarget, StateMachine * StateMachine);
+	virtual void Enter(void);
+	virtual void Execute(void);
+	virtual void Exit(void);
+private:
+	double m_TimeToLeave;
+};
+
 #endif
