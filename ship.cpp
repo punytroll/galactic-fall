@@ -107,11 +107,11 @@ void Ship::Update(float Seconds)
 		{
 			std::stringstream IdentifierStream;
 			
-			IdentifierStream << "::system(" << GetCurrentSystem()->GetIdentifier() << ")::created_at(" << RealTime::GetTime() << ")::";
+			IdentifierStream << "::system(" << GetCurrentSystem()->GetIdentifier() << ")::created_at(" << std::fixed << RealTime::GetTime() << ")::created_by(" << GetObjectIdentifier() << ")::shot";
 			
 			Shot * NewShot(new Shot(this, GetAngularPosition(), GetVelocity() + math3d::vector2f(30.0f, GetAngularPosition(), math3d::vector2f::magnitude_angle)));
 			
-			NewShot->SetObjectIdentifier(IdentifierStream.str() + "shot");
+			NewShot->SetObjectIdentifier(IdentifierStream.str());
 			NewShot->SetPosition(GetPosition());
 			GetCurrentSystem()->AddShot(NewShot);
 			ResetNextTimeToFire();

@@ -712,7 +712,7 @@ void PopulateSystem(void)
 		
 		std::stringstream IdentifierStream;
 		
-		IdentifierStream << "::system(" << g_CurrentSystem->GetIdentifier() << ")::created_at(" << RealTime::GetTime() << "[" << ShipNumber << "])::";
+		IdentifierStream << "::system(" << g_CurrentSystem->GetIdentifier() << ")::created_at(" << std::fixed << RealTime::GetTime() << "[" << ShipNumber << "])::";
 		
 		std::string ShipClassIdentifier;
 		
