@@ -1,9 +1,9 @@
 #include <iostream>
 #include <list>
 
+#include "game_time.h"
 #include "math.h"
 #include "planet.h"
-#include "real_time.h"
 #include "ship.h"
 #include "state_machine.h"
 #include "states.h"
@@ -222,7 +222,7 @@ void TransporterPhase2::Exit(void)
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 TransporterPhase3::TransporterPhase3(Ship * ActionTarget, StateMachine * StateMachine) :
 	State(ActionTarget, StateMachine),
-	m_TimeToLeave(RealTime::GetTime() + GetRandomFloat(12.0f, 20.0f))
+	m_TimeToLeave(GameTime::Get() + GetRandomFloat(12.0f, 20.0f))
 {
 }
 
@@ -232,7 +232,7 @@ void TransporterPhase3::Enter(void)
 
 void TransporterPhase3::Execute(void)
 {
-	if(RealTime::GetTime() >= m_TimeToLeave)
+	if(GameTime::Get() >= m_TimeToLeave)
 	{
 		GetStateMachine()->SetState(new TransporterPhase1(GetActionTarget(), GetStateMachine()));
 		delete this;
