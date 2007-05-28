@@ -44,6 +44,9 @@ destroy_listener_h = \
 draw_text_h = \
 	draw_text.h
 
+game_time_h = \
+	game_time.h
+
 globals_h = \
 	globals.h
 
@@ -196,8 +199,9 @@ clean: clean-recursive
 	$(RM) commodity_manager.o
 	$(RM) destroy_listener.o
 	$(RM) draw_text.o
-	$(RM) label.o
+	$(RM) game_time.o
 	$(RM) key_listener.o
+	$(RM) label.o
 	$(RM) main.o
 	$(RM) map_dialog.o
 	$(RM) map_knowledge.o
@@ -233,7 +237,7 @@ clean: clean-recursive
 clean-recursive:
 	@$(MAKE) -C data clean
 
-escapevelocity: arx_reading.o buffer_reading.o button.o camera.o cargo.o character.o clicked_listener.o color.o commodity.o commodity_manager.o destroy_listener.o draw_text.o key_listener.o label.o main.o map_dialog.o map_knowledge.o mind.o model.o model_manager.o mouse_button_listener.o mouse_motion_listener.o object.o physical_object.o planet.o planet_dialog.o real_time.o ship.o ship_class.o ship_class_manager.o shot.o star.o state.o state_machine.o states.o string_cast.o system.o system_manager.o trade_center_dialog.o user_interface.o widget.o window.o xml_parser.o xml_puny_dom.o xml_stream.o
+escapevelocity: arx_reading.o buffer_reading.o button.o camera.o cargo.o character.o clicked_listener.o color.o commodity.o commodity_manager.o destroy_listener.o draw_text.o game_time.o key_listener.o label.o main.o map_dialog.o map_knowledge.o mind.o model.o model_manager.o mouse_button_listener.o mouse_motion_listener.o object.o physical_object.o planet.o planet_dialog.o real_time.o ship.o ship_class.o ship_class_manager.o shot.o star.o state.o state_machine.o states.o string_cast.o system.o system_manager.o trade_center_dialog.o user_interface.o widget.o window.o xml_parser.o xml_puny_dom.o xml_stream.o
 	$(CXX) $(LDFLAGS) `pkg-config --libs libarxx` $^ -lGL -o $@
 
 arx_reading.o: arx_reading.cpp $(arx_reading_h) $(arxx_resources_h) $(buffer_reading_h) $(commodity_h) $(commodity_manager_h) $(label_h) $(model_h) $(model_manager_h) $(planet_h) $(ship_class_h) $(ship_class_manager_h) $(user_interface_h) $(widget_h)
@@ -272,13 +276,16 @@ destroy_listener.o: destroy_listener.cpp $(destroy_listener_h)
 draw_text.o: draw_text.cpp $(draw_text_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
+game_time.o: game_time.cpp $(game_time_h)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
 key_listener.o: key_listener.cpp $(key_listener_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 label.o: label.cpp $(label_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags math3d` -c $< -o $@
 
-main.o: main.cpp $(arxx_resources_h) $(buffer_reading_h) $(camera_h) $(cargo_h) $(character_h) $(color_h) $(commodity_h) $(commodity_manager_h) $(destroy_listener_h) $(label_h) $(map_dialog_h) $(map_knowledge_h) $(math_h) $(mind_h) $(model_h) $(model_manager_h) $(planet_h) $(planet_dialog_h) $(real_time_h) $(ship_h) $(ship_class_h) $(ship_class_manager_h) $(star_h) $(state_machine_h) $(states_h) $(string_cast_h) $(system_h) $(system_manager_h) $(user_interface_h) $(widget_h) $(xml_puny_dom_h) $(xml_stream_h)
+main.o: main.cpp $(arxx_resources_h) $(buffer_reading_h) $(camera_h) $(cargo_h) $(character_h) $(color_h) $(commodity_h) $(commodity_manager_h) $(destroy_listener_h) $(game_time_h) $(label_h) $(map_dialog_h) $(map_knowledge_h) $(math_h) $(mind_h) $(model_h) $(model_manager_h) $(planet_h) $(planet_dialog_h) $(real_time_h) $(ship_h) $(ship_class_h) $(ship_class_manager_h) $(star_h) $(state_machine_h) $(states_h) $(string_cast_h) $(system_h) $(system_manager_h) $(user_interface_h) $(widget_h) $(xml_puny_dom_h) $(xml_stream_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags libarxx math3d` -c $< -o $@
 
 map_dialog.o: map_dialog.cpp $(button_h) $(character_h) $(color_h) $(globals_h) $(label) $(map_dialog_h) $(map_knowledge_h) $(system_h) $(system_manager_h)
@@ -317,7 +324,7 @@ planet_dialog.o: planet_dialog.cpp $(button_h) $(character_h) $(color_h) $(globa
 real_time.o: real_time.cpp $(real_time_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-ship.o: ship.cpp $(color_h) $(model_h) $(real_time_h) $(ship_h) $(shot_h) $(system_h)
+ship.o: ship.cpp $(color_h) $(game_time_h) $(model_h) $(real_time_h) $(ship_h) $(shot_h) $(system_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags math3d` -c $< -o $@
 
 ship_class.o: ship_class.cpp $(color_h) $(ship_class_h)
@@ -326,7 +333,7 @@ ship_class.o: ship_class.cpp $(color_h) $(ship_class_h)
 ship_class_manager.o: ship_class_manager.cpp $(color_h) $(model_manager_h) $(ship_class_h) $(ship_class_manager_h) $(string_cast_h) $(xml_puny_dom_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags math3d` -c $< -o $@
 
-shot.o: shot.cpp $(real_time_h) $(shot_h)
+shot.o: shot.cpp $(game_time_h) $(shot_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags math3d` -c $< -o $@
 
 star.o: star.cpp $(star_h)
@@ -338,7 +345,7 @@ state.o: state.cpp $(state_h)
 state_machine.o: state_machine.cpp $(state_h) $(state_machine_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-states.o: states.cpp $(math_h) $(planet_h) $(real_time_h) $(ship_h) $(state_machine_h) $(states_h) $(system_h)
+states.o: states.cpp $(game_time_h) $(math_h) $(planet_h) $(ship_h) $(state_machine_h) $(states_h) $(system_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags math3d` -c $< -o $@
 
 string_cast.o: string_cast.cpp $(string_cast_h)

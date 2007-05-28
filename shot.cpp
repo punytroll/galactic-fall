@@ -2,12 +2,12 @@
 
 #include <math3d/vector4f.h>
 
-#include "real_time.h"
+#include "game_time.h"
 #include "shot.h"
 
 Shot::Shot(PhysicalObject * Shooter, float AngularPosition, const math3d::vector2f & Velocity) :
 	m_Shooter(Shooter),
-	m_TimeOfDeath(RealTime::GetTime() + 2.5),
+	m_TimeOfDeath(GameTime::Get() + 2.5),
 	m_AngularPosition(AngularPosition),
 	m_Velocity(Velocity)
 {
@@ -39,7 +39,7 @@ void Shot::Draw(void) const
 
 bool Shot::Update(float Seconds)
 {
-	if(m_TimeOfDeath < RealTime::GetTime())
+	if(m_TimeOfDeath < GameTime::Get())
 	{
 		return false;
 	}

@@ -5,6 +5,7 @@
 #include <GL/gl.h>
 
 #include "color.h"
+#include "game_time.h"
 #include "model.h"
 #include "real_time.h"
 #include "ship.h"
@@ -184,10 +185,10 @@ bool Ship::RemoveCommodities(const Commodity * CargoCommodity, float Amount)
 
 bool Ship::IsReadyToFire(void)
 {
-	return m_NextTimeToFire <= RealTime::GetTime();
+	return m_NextTimeToFire <= GameTime::Get();
 }
 
 void Ship::ResetNextTimeToFire(void)
 {
-	m_NextTimeToFire = RealTime::GetTime() + 0.25;
+	m_NextTimeToFire = GameTime::Get() + 0.25;
 }

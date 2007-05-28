@@ -29,6 +29,7 @@
 #include "commodity.h"
 #include "commodity_manager.h"
 #include "destroy_listener.h"
+#include "game_time.h"
 #include "globals.h"
 #include "label.h"
 #include "map_dialog.h"
@@ -61,7 +62,6 @@ int g_MouseButton(-1);
 Camera g_Camera;
 Camera g_RadarCamera;
 Camera g_MiniMapCamera;
-float g_GameTime;
 ModelManager g_ModelManager;
 ShipClassManager g_ShipClassManager(&g_ModelManager);
 CommodityManager g_CommodityManager;
@@ -123,7 +123,7 @@ float CalculateTime(void)
 	if(g_Pause == false)
 	{
 		DeltaSeconds *= g_TimeWarp;
-		g_GameTime += DeltaSeconds;
+		GameTime::Set(GameTime::Get() + DeltaSeconds);
 		
 		return DeltaSeconds;
 	}
