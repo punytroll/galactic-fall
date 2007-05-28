@@ -308,9 +308,9 @@ public:
 	{
 		Widget::Draw();
 		// radar
-		if(g_PlayerShip->GetTarget() != 0)
+		if((g_InputFocus != 0) && (g_InputFocus->GetTarget() != 0))
 		{
-			float RadialSize(g_PlayerShip->GetTarget()->GetRadialSize());
+			float RadialSize(g_InputFocus->GetTarget()->GetRadialSize());
 			
 			glPushAttrib(GL_ENABLE_BIT | GL_VIEWPORT_BIT | GL_TRANSFORM_BIT);
 			glEnable(GL_DEPTH_TEST);
@@ -324,7 +324,7 @@ public:
 			glPushMatrix();
 			glLoadIdentity();
 			g_RadarCamera.SetPosition(0.0f, 0.0f, 4.0f * RadialSize);
-			g_RadarCamera.SetFocus(g_PlayerShip->GetTarget());
+			g_RadarCamera.SetFocus(g_InputFocus->GetTarget());
 			g_RadarCamera.Draw();
 			if((g_CurrentSystem != 0) && (g_CurrentSystem->GetStar() != 0))
 			{
@@ -333,7 +333,7 @@ public:
 				glLightfv(GL_LIGHT0, GL_POSITION, math3d::vector4f(g_CurrentSystem->GetStar()->GetPosition().m_V.m_A[0], g_CurrentSystem->GetStar()->GetPosition().m_V.m_A[1], 100.0f, 0.0f).m_V.m_A);
 			}
 			glClear(GL_DEPTH_BUFFER_BIT);
-			g_PlayerShip->GetTarget()->Draw();
+			g_InputFocus->GetTarget()->Draw();
 			glPopMatrix();
 			glMatrixMode(GL_PROJECTION);
 			glPopMatrix();
@@ -354,7 +354,7 @@ public:
 	{
 		Widget::Draw();
 		// mini map
-		if(g_CurrentSystem != 0)
+		if((g_InputFocus != 0) && (g_CurrentSystem != 0))
 		{
 			glPushAttrib(GL_ENABLE_BIT | GL_VIEWPORT_BIT | GL_TRANSFORM_BIT);
 			glEnable(GL_DEPTH_TEST);
@@ -377,36 +377,36 @@ public:
 			glColor3f(0.8f, 0.8f, 0.8f);
 			for(std::list< Planet * >::const_iterator PlanetIterator = Planets.begin(); PlanetIterator != Planets.end(); ++PlanetIterator)
 			{
-				if(*PlanetIterator == g_PlayerShip->GetTarget())
+				if(*PlanetIterator == g_InputFocus->GetTarget())
 				{
 					glColor3f(0.2f, 1.0f, 0.0f);
 				}
 				glVertex2f((*PlanetIterator)->GetPosition().m_V.m_A[0], (*PlanetIterator)->GetPosition().m_V.m_A[1]);
-				if(*PlanetIterator == g_PlayerShip->GetTarget())
+				if(*PlanetIterator == g_InputFocus->GetTarget())
 				{
 					glColor3f(0.8f, 0.8f, 0.8f);
 				}
 			}
 			for(std::list< Ship * >::const_iterator ShipIterator = Ships.begin(); ShipIterator != Ships.end(); ++ShipIterator)
 			{
-				if(*ShipIterator == g_PlayerShip->GetTarget())
+				if(*ShipIterator == g_InputFocus->GetTarget())
 				{
 					glColor3f(0.2f, 1.0f, 0.0f);
 				}
 				glVertex2f((*ShipIterator)->GetPosition().m_V.m_A[0], (*ShipIterator)->GetPosition().m_V.m_A[1]);
-				if(*ShipIterator == g_PlayerShip->GetTarget())
+				if(*ShipIterator == g_InputFocus->GetTarget())
 				{
 					glColor3f(0.8f, 0.8f, 0.8f);
 				}
 			}
 			for(std::list< Cargo * >::const_iterator CargoIterator = Cargos.begin(); CargoIterator != Cargos.end(); ++CargoIterator)
 			{
-				if(*CargoIterator == g_PlayerShip->GetTarget())
+				if(*CargoIterator == g_InputFocus->GetTarget())
 				{
 					glColor3f(0.2f, 1.0f, 0.0f);
 				}
 				glVertex2f((*CargoIterator)->GetPosition().m_V.m_A[0], (*CargoIterator)->GetPosition().m_V.m_A[1]);
-				if(*CargoIterator == g_PlayerShip->GetTarget())
+				if(*CargoIterator == g_InputFocus->GetTarget())
 				{
 					glColor3f(0.8f, 0.8f, 0.8f);
 				}
@@ -522,20 +522,23 @@ void UpdateUserInterface(void)
 		// remove the notification callback from the multimap
 		g_TimeoutNotifications.erase(g_TimeoutNotifications.begin());
 	}
-	// display fuel
-	g_FuelLabel->SetString("Fuel: " + to_string_cast(100.0f * g_InputFocus->GetFuel() / g_InputFocus->GetFuelCapacity()) + "%");
-	// display hull
-	g_HullLabel->SetString("Hull: " + to_string_cast(g_InputFocus->GetHull(), 2));
-	// display credits in every cycle
-	g_CreditsLabel->SetString("Credits: " + to_string_cast(g_PlayerCharacter->GetCredits()));
-	// set system label color according to jump status
-	if((g_InputFocus->GetLinkedSystemTarget() != 0) && (WantToJump(g_InputFocus) == OK_TO_JUMP))
+	if(g_InputFocus != 0)
 	{
-		g_SystemLabel->GetForegroundColor().Set(0.7f, 0.8f, 1.0f);
-	}
-	else
-	{
-		g_SystemLabel->GetForegroundColor().Set(0.4f, 0.4f, 0.4f);
+		// display fuel
+		g_FuelLabel->SetString("Fuel: " + to_string_cast(100.0f * g_InputFocus->GetFuel() / g_InputFocus->GetFuelCapacity()) + "%");
+		// display hull
+		g_HullLabel->SetString("Hull: " + to_string_cast(g_InputFocus->GetHull(), 2));
+		// display credits in every cycle
+		g_CreditsLabel->SetString("Credits: " + to_string_cast(g_PlayerCharacter->GetCredits()));
+		// set system label color according to jump status
+		if((g_InputFocus->GetLinkedSystemTarget() != 0) && (WantToJump(g_InputFocus) == OK_TO_JUMP))
+		{
+			g_SystemLabel->GetForegroundColor().Set(0.7f, 0.8f, 1.0f);
+		}
+		else
+		{
+			g_SystemLabel->GetForegroundColor().Set(0.4f, 0.4f, 0.4f);
+		}
 	}
 }
 
@@ -591,18 +594,18 @@ void Render(void)
 		}
 	}
 	// HUD
-	if(g_PlayerShip->GetTarget() != 0)
+	if((g_InputFocus != 0) && (g_InputFocus->GetTarget() != 0))
 	{
 		glClear(GL_DEPTH_BUFFER_BIT);
-		DrawSelection(g_PlayerShip->GetTarget(), g_PlayerShip->GetTarget()->GetRadialSize());
+		DrawSelection(g_InputFocus->GetTarget(), g_InputFocus->GetTarget()->GetRadialSize());
 		
-		math3d::vector2f RelativePosition(g_PlayerShip->GetTarget()->GetPosition() - g_PlayerShip->GetPosition());
+		math3d::vector2f RelativePosition(g_InputFocus->GetTarget()->GetPosition() - g_InputFocus->GetPosition());
 		
 		RelativePosition.normalize();
 		glPushMatrix();
 		glPushAttrib(GL_LIGHTING_BIT);
 		glDisable(GL_LIGHTING);
-		glTranslatef(g_PlayerShip->GetPosition().m_V.m_A[0], g_PlayerShip->GetPosition().m_V.m_A[1], 0.0f);
+		glTranslatef(g_InputFocus->GetPosition().m_V.m_A[0], g_InputFocus->GetPosition().m_V.m_A[1], 0.0f);
 		glRotatef(GetRadians(RelativePosition) * 180.0f / M_PI, 0.0f, 0.0f, 1.0f);
 		glColor3f(0.0f, 0.5f, 0.5f);
 		glBegin(GL_LINES);
@@ -1626,11 +1629,14 @@ void LoadSavegame(const Element * SaveElement)
 		}
 	}
 	g_CurrentSystem = g_SystemManager.Get(System);
-	g_CurrentSystem->AddShip(g_PlayerShip);
 	g_CurrentSystemLabel->SetString(g_CurrentSystem->GetName());
-	g_PlayerShip->SetCurrentSystem(g_CurrentSystem);
-	SelectLinkedSystem(0);
-	SelectPhysicalObject(0);
+	if(g_PlayerShip != 0)
+	{
+		g_CurrentSystem->AddShip(g_PlayerShip);
+		g_PlayerShip->SetCurrentSystem(g_CurrentSystem);
+		SelectLinkedSystem(0);
+		SelectPhysicalObject(0);
+	}
 	RealTime::Invalidate();
 	PopulateSystem();
 }
@@ -1714,7 +1720,10 @@ int main(int argc, char ** argv)
 	// setting the input focus
 	g_InputFocus = g_PlayerShip;
 	g_MiniMapCamera.SetPosition(0.0f, 0.0f, 1500.0f);
-	g_MiniMapCamera.SetFocus(g_PlayerShip);
+	if(g_InputFocus != 0)
+	{
+		g_MiniMapCamera.SetFocus(g_InputFocus);
+	}
 	g_MiniMapCamera.SetFieldOfView(0.392699082f);
 	// set first timeout for widget collector, it will reinsert itself on callback
 	g_TimeoutNotifications.insert(std::make_pair(RealTime::GetTime() + 5.0f, new FunctionCallback0< void >(CollectWidgets)));
