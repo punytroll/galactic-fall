@@ -419,6 +419,27 @@ public:
 	}
 };
 
+void RemoveShipFromSystem(System * System, std::list< Ship * >::iterator ShipIterator)
+{
+	for(std::vector< Mind * >::iterator MindIterator = g_Minds.begin(); MindIterator != g_Minds.end(); ++MindIterator)
+	{
+		if((*MindIterator)->GetShip() == *ShipIterator)
+		{
+			delete (*MindIterator)->GetCharacter();
+			delete *MindIterator;
+			g_Minds.erase(MindIterator);
+			
+			break;
+		}
+	}
+	if(g_InputFocus->GetTarget() == *ShipIterator)
+	{
+		g_InputFocus->SetTarget(0);
+	}
+	delete *ShipIterator;
+	System->GetShips().erase(ShipIterator);
+}
+
 void CalculateMinds(void)
 {
 	for(std::vector< Mind * >::iterator MindIterator = g_Minds.begin(); MindIterator != g_Minds.end(); ++MindIterator)
@@ -433,11 +454,11 @@ void CalculateMovements(void)
 	
 	if(g_CurrentSystem != 0)
 	{
-		const std::list< Ship * > Ships(g_CurrentSystem->GetShips());
+		std::list< Ship * > & Ships(g_CurrentSystem->GetShips());
 		const std::list< Cargo * > Cargos(g_CurrentSystem->GetCargos());
 		std::list< Shot * > & Shots(g_CurrentSystem->GetShots());
 		
-		for(std::list< Ship * >::const_iterator ShipIterator = Ships.begin(); ShipIterator != Ships.end(); ++ShipIterator)
+		for(std::list< Ship * >::iterator ShipIterator = Ships.begin(); ShipIterator != Ships.end(); ++ShipIterator)
 		{
 			(*ShipIterator)->Update(Seconds);
 		}
@@ -451,13 +472,17 @@ void CalculateMovements(void)
 			
 			if((*ShotIterator)->Update(Seconds) == true)
 			{
-				for(std::list< Ship * >::const_iterator ShipIterator = Ships.begin(); ShipIterator != Ships.end(); ++ShipIterator)
+				for(std::list< Ship * >::iterator ShipIterator = Ships.begin(); ShipIterator != Ships.end(); ++ShipIterator)
 				{
 					if((*ShotIterator)->GetShooter() != *ShipIterator)
 					{
 						if(((*ShotIterator)->GetPosition() - (*ShipIterator)->GetPosition()).length_squared() < ((*ShotIterator)->GetRadialSize() * (*ShotIterator)->GetRadialSize() + (*ShipIterator)->GetRadialSize() * (*ShipIterator)->GetRadialSize()))
 						{
 							(*ShipIterator)->SetHull((*ShipIterator)->GetHull() - (*ShotIterator)->GetDamage());
+							if((*ShipIterator)->GetHull() <= 0.0f)
+							{
+								RemoveShipFromSystem(g_CurrentSystem, ShipIterator);
+							}
 							DeleteShot = true;
 							
 							break;
