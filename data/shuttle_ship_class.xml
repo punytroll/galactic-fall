@@ -9,6 +9,7 @@
 	<jump-fuel>0.13</jump-fuel>
 	<forward-fuel>0.015</forward-fuel>
 	<turn-fuel>0.006</turn-fuel>
+	<hull>100</hull>
 	<color>
 		<red>1.0</red>
 		<green>0.9</green>

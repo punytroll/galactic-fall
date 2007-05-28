@@ -74,6 +74,7 @@
 		<float identifier="jump-fuel"/>
 		<float identifier="forward-fuel"/>
 		<float identifier="turn-fuel"/>
+		<float identifier="hull"/>
 		<color4f identifier="color"/>
 		<vector3f identifier="exhaust-offset"/>
 	</ship-class>

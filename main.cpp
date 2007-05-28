@@ -457,6 +457,7 @@ void CalculateMovements(void)
 					{
 						if(((*ShotIterator)->GetPosition() - (*ShipIterator)->GetPosition()).length_squared() < ((*ShotIterator)->GetRadialSize() * (*ShotIterator)->GetRadialSize() + (*ShipIterator)->GetRadialSize() * (*ShipIterator)->GetRadialSize()))
 						{
+							(*ShipIterator)->SetHull((*ShipIterator)->GetHull() - (*ShotIterator)->GetDamage());
 							DeleteShot = true;
 							
 							break;

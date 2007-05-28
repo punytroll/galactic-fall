@@ -26,6 +26,7 @@ public:
 	float GetJumpFuel(void) const;
 	float GetForwardFuel(void) const;
 	float GetTurnFuel(void) const;
+	float GetHull(void) const;
 	Color * GetColor(void) const;
 	const math3d::vector3f & GetExhaustOffset(void) const;
 	// modifiers
@@ -38,6 +39,7 @@ public:
 	void SetJumpFuel(float JumpFuel);
 	void SetForwardFuel(float ForwardFuel);
 	void SetTurnFuel(float TurnFuel);
+	void SetHull(float Hull);
 	void SetColor(const Color & Color);
 	void SetExhaustOffset(const math3d::vector3f & ExhaustOffset);
 private:
@@ -51,6 +53,7 @@ private:
 	float m_JumpFuel;
 	float m_ForwardFuel;
 	float m_TurnFuel;
+	float m_Hull;
 	Color * m_Color;
 	math3d::vector3f m_ExhaustOffset;
 };
@@ -103,6 +106,11 @@ inline float ShipClass::GetForwardFuel(void) const
 inline float ShipClass::GetTurnFuel(void) const
 {
 	return m_TurnFuel;
+}
+
+inline float ShipClass::GetHull(void) const
+{
+	return m_Hull;
 }
 
 inline Color * ShipClass::GetColor(void) const
@@ -158,6 +166,11 @@ inline void ShipClass::SetForwardFuel(float ForwardFuel)
 inline void ShipClass::SetTurnFuel(float TurnFuel)
 {
 	m_TurnFuel = TurnFuel;
+}
+
+inline void ShipClass::SetHull(float Hull)
+{
+	m_Hull = Hull;
 }
 
 inline void ShipClass::SetExhaustOffset(const math3d::vector3f & ExhaustOffset)
