@@ -420,7 +420,7 @@ public:
 	}
 };
 
-void RemoveShipFromSystem(System * System, std::list< Ship * >::iterator ShipIterator)
+void DeleteShipFromSystem(System * System, std::list< Ship * >::iterator ShipIterator)
 {
 	for(std::vector< Mind * >::iterator MindIterator = g_Minds.begin(); MindIterator != g_Minds.end(); ++MindIterator)
 	{
@@ -433,9 +433,13 @@ void RemoveShipFromSystem(System * System, std::list< Ship * >::iterator ShipIte
 			break;
 		}
 	}
-	if(g_InputFocus->GetTarget() == *ShipIterator)
+	if((g_InputFocus != 0) && (g_InputFocus->GetTarget() == *ShipIterator))
 	{
 		g_InputFocus->SetTarget(0);
+	}
+	if(*ShipIterator == g_Camera.GetFocus())
+	{
+		g_Camera.SetFocus(0);
 	}
 	delete *ShipIterator;
 	System->GetShips().erase(ShipIterator);
@@ -482,7 +486,15 @@ void CalculateMovements(void)
 							(*ShipIterator)->SetHull((*ShipIterator)->GetHull() - (*ShotIterator)->GetDamage());
 							if((*ShipIterator)->GetHull() <= 0.0f)
 							{
-								RemoveShipFromSystem(g_CurrentSystem, ShipIterator);
+								if(*ShipIterator == g_PlayerShip)
+								{
+									g_PlayerShip = 0;
+								}
+								if(*ShipIterator == g_InputFocus)
+								{
+									g_InputFocus = 0;
+								}
+								DeleteShipFromSystem(g_CurrentSystem, ShipIterator);
 							}
 							DeleteShot = true;
 							
@@ -1271,7 +1283,10 @@ void KeyDown(unsigned int KeyCode)
 		}
 	case 65: // Key: SPACE
 		{
-			g_InputFocus->m_Fire = true;
+			if(g_InputFocus != 0)
+			{
+				g_InputFocus->m_Fire = true;
+			}
 			
 			break;
 		}
@@ -1337,19 +1352,28 @@ void KeyDown(unsigned int KeyCode)
 		}
 	case 98: // Key: UP
 		{
-			g_InputFocus->m_Accelerate = true;
+			if(g_InputFocus != 0)
+			{
+				g_InputFocus->m_Accelerate = true;
+			}
 			
 			break;
 		}
 	case 100: // Key: LEFT
 		{
-			g_InputFocus->m_TurnLeft = true;
+			if(g_InputFocus != 0)
+			{
+				g_InputFocus->m_TurnLeft = true;
+			}
 			
 			break;
 		}
 	case 102: // Key: RIGHT
 		{
-			g_InputFocus->m_TurnRight = true;
+			if(g_InputFocus != 0)
+			{
+				g_InputFocus->m_TurnRight = true;
+			}
 			
 			break;
 		}
@@ -1366,25 +1390,37 @@ void KeyUp(unsigned char KeyCode)
 	{
 	case 65: // Key: SPACE
 		{
-			g_InputFocus->m_Fire = false;
+			if(g_InputFocus != 0)
+			{
+				g_InputFocus->m_Fire = false;
+			}
 			
 			break;
 		}
 	case 98:  // Key: UP
 		{
-			g_InputFocus->m_Accelerate = false;
+			if(g_InputFocus != 0)
+			{
+				g_InputFocus->m_Accelerate = false;
+			}
 			
 			break;
 		}
 	case 100: // Key: LEFT
 		{
-			g_InputFocus->m_TurnLeft = false;
+			if(g_InputFocus != 0)
+			{
+				g_InputFocus->m_TurnLeft = false;
+			}
 			
 			break;
 		}
 	case 102: // Key: RIGHT
 		{
-			g_InputFocus->m_TurnRight = false;
+			if(g_InputFocus != 0)
+			{
+				g_InputFocus->m_TurnRight = false;
+			}
 			
 			break;
 		}
