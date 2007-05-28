@@ -76,6 +76,7 @@ Label * g_TimeWarpLabel(0);
 Label * g_TargetLabel(0);
 Label * g_CreditsLabel(0);
 Label * g_FuelLabel(0);
+Label * g_HullLabel(0);
 Label * g_MessageLabel(0);
 Label * g_CurrentSystemLabel(0);
 System * g_CurrentSystem;
@@ -521,12 +522,14 @@ void UpdateUserInterface(void)
 		// remove the notification callback from the multimap
 		g_TimeoutNotifications.erase(g_TimeoutNotifications.begin());
 	}
-	// player ship has been updated, display new fuel
-	g_FuelLabel->SetString("Fuel: " + to_string_cast(100.0f * g_PlayerShip->GetFuel() / g_PlayerShip->GetFuelCapacity()) + "%");
+	// display fuel
+	g_FuelLabel->SetString("Fuel: " + to_string_cast(100.0f * g_InputFocus->GetFuel() / g_InputFocus->GetFuelCapacity()) + "%");
+	// display hull
+	g_HullLabel->SetString("Hull: " + to_string_cast(g_InputFocus->GetHull(), 2));
 	// display credits in every cycle
 	g_CreditsLabel->SetString("Credits: " + to_string_cast(g_PlayerCharacter->GetCredits()));
 	// set system label color according to jump status
-	if((g_PlayerShip->GetLinkedSystemTarget() != 0) && (WantToJump(g_PlayerShip) == OK_TO_JUMP))
+	if((g_InputFocus->GetLinkedSystemTarget() != 0) && (WantToJump(g_InputFocus) == OK_TO_JUMP))
 	{
 		g_SystemLabel->GetForegroundColor().Set(0.7f, 0.8f, 1.0f);
 	}
@@ -1670,6 +1673,7 @@ int main(int argc, char ** argv)
 	g_SystemLabel = ReadLabel(GetItem(Archive, SYSTEM_LABEL));
 	g_CreditsLabel = ReadLabel(GetItem(Archive, CREDITS_LABEL));
 	g_FuelLabel = ReadLabel(GetItem(Archive, FUEL_LABEL));
+	g_HullLabel = ReadLabel(GetItem(Archive, HULL_LABEL));
 	g_ScannerWidget = ReadWidget(GetItem(Archive, SCANNER_WIDGET));
 	ReadWidget(GetItem(Archive, SCANNER_DISPLAY_WIDGET), new ScannerDisplayWidget());
 	g_MiniMapWidget = ReadWidget(GetItem(Archive, MINI_MAP_WIDGET), new MiniMapWidget());

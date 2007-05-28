@@ -1,0 +1,32 @@
+<label>
+	<widget>
+		<widget-path>/</widget-path>
+		<name>hull</name>
+		<position>
+			<x>0.0</x>
+			<y>80.0</y>
+		</position>
+		<use-size>false</use-size>
+		<size>
+			<x>0.0</x>
+			<y>0.0</y>
+		</size>
+		<use-background-color>false</use-background-color>
+		<background-color>
+			<red>0.0</red>
+			<green>0.0</green>
+			<blue>0.0</blue>
+			<alpha>0.0</alpha>
+		</background-color>
+		<visible>true</visible>
+	</widget>
+	<use-foreground-color>true</use-foreground-color>
+	<foreground-color>
+		<red>0.7</red>
+		<green>0.8</green>
+		<blue>1.0</blue>
+		<alpha>1.0</alpha>
+	</foreground-color>
+	<horizontal-alignment>0</horizontal-alignment>
+	<vertical-alignment>0</vertical-alignment>
+</label>

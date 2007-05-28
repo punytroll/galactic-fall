@@ -17,7 +17,7 @@
 **/
 
 /**
- * This is version 1.0.1 of the string cast.
+ * This is version 1.1.0 of the string cast.
  **/
 
 #ifndef STRING_CAST_H
@@ -30,5 +30,8 @@ Type from_string_cast(const std::string & String);
 
 template < typename Type >
 std::string to_string_cast(const Type & Value);
+
+template < typename Type >
+std::string to_string_cast(const Type & Value, int Precision);
 
 #endif

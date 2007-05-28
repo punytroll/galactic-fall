@@ -41,5 +41,6 @@ const Arxx::u4byte TRANSPORTER_SHIP_CLASS = 128;
 const Arxx::u4byte PLANET_MODEL = 129;
 const Arxx::u4byte FIGHTER_MODEL = 130;
 const Arxx::u4byte FIGHTER_SHIP_CLASS = 131;
+const Arxx::u4byte HULL_LABEL = 132;
 
 #endif
