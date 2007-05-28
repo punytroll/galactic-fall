@@ -30,7 +30,8 @@ all_data = \
 	.data/transporter_ship_class.data \
 	.data/planet_model.data \
 	.data/fighter_model.data \
-	.data/fighter_ship_class.data
+	.data/fighter_ship_class.data \
+	.data/hull_label.data
 
 raw_to_littlem_dependencies = \
 	raw_to_littlem.py \
@@ -80,6 +81,7 @@ data.arx: .data $(all_data) Makefile
 	arxadd $@ --uid 102 --name "System Label" --type 1 --subtype 1 --add 1:child .data/system_label.data
 	arxadd $@ --uid 103 --name "Credits Label" --type 1 --subtype 1 --add 1:child .data/credits_label.data
 	arxadd $@ --uid 104 --name "Fuel Label" --type 1 --subtype 1 --add 1:child .data/fuel_label.data
+	arxadd $@ --uid 132 --name "Hull Label" --type 1 --subtype 1 --add 1:child .data/hull_label.data
 	arxadd $@ --uid 105 --name "Scanner Widget" --type 1 --subtype 0 --add 1:child .data/scanner_widget.data
 	arxadd $@ --uid 106 --name "Mini Map Widget" --type 1 --subtype 0 --add 1:child .data/mini_map_widget.data
 	arxadd $@ --uid 107 --name "Target Label" --type 1 --subtype 1 --add 1:child .data/target_label.data

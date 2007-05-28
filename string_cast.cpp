@@ -17,9 +17,10 @@
 **/
 
 /**
- * This is version 1.0.1 of the string cast.
+ * This is version 1.1.0 of the string cast.
  **/
 
+#include <iomanip>
 #include <sstream>
 
 #include "string_cast.h"
@@ -101,6 +102,26 @@ std::string to_string_cast< float >(const float & Value)
 	std::ostringstream StringStream;
 	
 	StringStream << Value;
+	
+	return StringStream.str();
+}
+
+template < >
+std::string to_string_cast(const float & Value, int Precision)
+{
+	std::ostringstream StringStream;
+	
+	StringStream << std::fixed << std::setprecision(Precision) << Value;
+	
+	return StringStream.str();
+}
+
+template < >
+std::string to_string_cast(const double & Value, int Precision)
+{
+	std::ostringstream StringStream;
+	
+	StringStream << std::fixed << std::setprecision(Precision) << Value;
 	
 	return StringStream.str();
 }
