@@ -9,7 +9,8 @@ Shot::Shot(PhysicalObject * Shooter, float AngularPosition, const math3d::vector
 	m_Shooter(Shooter),
 	m_TimeOfDeath(GameTime::Get() + 2.5),
 	m_AngularPosition(AngularPosition),
-	m_Velocity(Velocity)
+	m_Velocity(Velocity),
+	m_Damage(12.0f)
 {
 	SetRadialSize(0.54f);
 }

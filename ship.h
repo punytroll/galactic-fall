@@ -30,6 +30,7 @@ public:
 	float GetForwardThrust(void) const;
 	float GetAngularPosition(void) const;
 	float GetFuel(void) const;
+	float GetHull(void) const;
 	float GetFuelCapacity(void) const;
 	float GetMaximumSpeed(void) const;
 	const ShipClass * GetShipClass(void) const;
@@ -43,6 +44,7 @@ public:
 	System * GetCurrentSystem(void);
 	// setters
 	void SetFuel(float Fuel);
+	void SetHull(float Hull);
 	void SetVelocity(const math3d::vector2f & Velocity);
 	void SetAngularPosition(float AngularPosition);
 	void SetCommodities(const Commodity * Commodity, float Amount);
@@ -60,6 +62,7 @@ private:
 	ShipClass * m_ShipClass;
 	std::map< const Commodity *, float > m_Commodities;
 	float m_Fuel;
+	float m_Hull;
 	PhysicalObject * m_Target;
 	System * m_LinkedSystemTarget;
 	System * m_CurrentSystem;
@@ -79,6 +82,11 @@ inline float Ship::GetAngularPosition(void) const
 inline float Ship::GetFuel(void) const
 {
 	return m_Fuel;
+}
+
+inline float Ship::GetHull(void) const
+{
+	return m_Hull;
 }
 
 inline float Ship::GetMaximumSpeed(void) const
@@ -131,6 +139,11 @@ inline System * Ship::GetCurrentSystem(void)
 inline void Ship::SetFuel(float Fuel)
 {
 	m_Fuel = Fuel;
+}
+
+inline void Ship::SetHull(float Hull)
+{
+	m_Hull = Hull;
 }
 
 inline void Ship::SetVelocity(const math3d::vector2f & Velocity)

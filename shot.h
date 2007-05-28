@@ -16,11 +16,13 @@ public:
 	bool Update(float Seconds);
 	const PhysicalObject * GetShooter(void) const;
 	const math3d::vector2f & GetVelocity(void) const;
+	float GetDamage(void) const;
 private:
 	PhysicalObject * m_Shooter;
 	double m_TimeOfDeath;
 	math3d::vector2f m_Velocity;
 	float m_AngularPosition;
+	float m_Damage;
 };
 
 inline const PhysicalObject * Shot::GetShooter(void) const
@@ -31,6 +33,11 @@ inline const PhysicalObject * Shot::GetShooter(void) const
 inline const math3d::vector2f & Shot::GetVelocity(void) const
 {
 	return m_Velocity;
+}
+
+inline float Shot::GetDamage(void) const
+{
+	return m_Damage;
 }
 
 #endif

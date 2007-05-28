@@ -249,10 +249,11 @@ ShipClass * ReadShipClass(ShipClassManager * ShipClassManager, Arxx::Item * Item
 	float JumpFuel;
 	float ForwardFuel;
 	float TurnFuel;
+	float Hull;
 	Color ModelColor;
 	math3d::vector3f ExhaustOffset;
 	
-	Reader >> ModelIdentifier >> ForwardThrust >> TurnSpeed >> MaximumSpeed >> CargoHoldSize >> FuelHoldSize >> JumpFuel >> ForwardFuel >> TurnFuel >> ModelColor >> ExhaustOffset;
+	Reader >> ModelIdentifier >> ForwardThrust >> TurnSpeed >> MaximumSpeed >> CargoHoldSize >> FuelHoldSize >> JumpFuel >> ForwardFuel >> TurnFuel >> Hull >> ModelColor >> ExhaustOffset;
 	
 	NewShipClass->SetCargoHoldSize(CargoHoldSize);
 	NewShipClass->SetForwardThrust(ForwardThrust);
@@ -272,6 +273,7 @@ ShipClass * ReadShipClass(ShipClassManager * ShipClassManager, Arxx::Item * Item
 	NewShipClass->SetTurnSpeed(TurnSpeed);
 	NewShipClass->SetForwardFuel(ForwardFuel);
 	NewShipClass->SetTurnFuel(TurnFuel);
+	NewShipClass->SetHull(Hull);
 	NewShipClass->SetColor(ModelColor);
 	NewShipClass->SetExhaustOffset(ExhaustOffset);
 	
