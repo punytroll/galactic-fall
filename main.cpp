@@ -537,7 +537,7 @@ void UpdateUserInterface(void)
 	if(g_InputFocus != 0)
 	{
 		// display fuel
-		g_FuelLabel->SetString("Fuel: " + to_string_cast(100.0f * g_InputFocus->GetFuel() / g_InputFocus->GetFuelCapacity()) + "%");
+		g_FuelLabel->SetString("Fuel: " + to_string_cast(100.0f * g_InputFocus->GetFuel() / g_InputFocus->GetFuelCapacity(), 2) + "%");
 		// display hull
 		g_HullLabel->SetString("Hull: " + to_string_cast(g_InputFocus->GetHull(), 2));
 		// display credits in every cycle
