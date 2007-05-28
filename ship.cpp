@@ -22,6 +22,7 @@ Ship::Ship(ShipClass * ShipClass) :
 	m_ShipClass(ShipClass),
 	m_Fuel(0.0f),
 	m_Hull(m_ShipClass->GetHull()),
+	m_Target(0),
 	m_NextTimeToFire(0.0)
 {
 	SetRadialSize(m_ShipClass->GetModel()->GetRadialSize());
