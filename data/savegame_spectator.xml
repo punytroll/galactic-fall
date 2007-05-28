@@ -1,0 +1,7 @@
+<save>
+	<system identifier="sol"/>
+	<camera>
+		<position x="0" y="0" z="200"/>
+		<field-of-view degree="45"/>
+	</camera>
+</save>
