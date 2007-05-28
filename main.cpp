@@ -1377,6 +1377,22 @@ void KeyDown(unsigned int KeyCode)
 			
 			break;
 		}
+	case 105: // Key: PAGE DOWN
+		{
+			std::list< Ship * > & Ships(g_CurrentSystem->GetShips());
+			std::list< Ship * >::const_iterator ShipIterator(find(Ships.begin(), Ships.end(), g_InputFocus));
+			
+			if((ShipIterator == Ships.end()) || (++ShipIterator == Ships.end()))
+			{
+				g_InputFocus = Ships.front();
+				g_Camera.SetFocus(Ships.front());
+			}
+			else
+			{
+				g_InputFocus = *ShipIterator;
+				g_Camera.SetFocus(*ShipIterator);
+			}
+		}
 	}
 }
 
