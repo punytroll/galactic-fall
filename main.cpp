@@ -87,7 +87,8 @@ PlanetDialog * g_PlanetDialog;
 MapDialog * g_MapDialog;
 UserInterface g_UserInterface;
 std::multimap< double, Callback0< void > * > g_TimeoutNotifications;
-std::vector< Mind * > g_Minds;
+std::list< Mind * > g_ActiveMinds;
+std::list< Mind * > g_SuspendedMinds;
 Widget * g_ScannerWidget(0);
 Widget * g_MiniMapWidget(0);
 Display * g_Display;
@@ -422,13 +423,13 @@ public:
 
 void DeleteShipFromSystem(System * System, std::list< Ship * >::iterator ShipIterator)
 {
-	for(std::vector< Mind * >::iterator MindIterator = g_Minds.begin(); MindIterator != g_Minds.end(); ++MindIterator)
+	for(std::list< Mind * >::iterator MindIterator = g_ActiveMinds.begin(); MindIterator != g_ActiveMinds.end(); ++MindIterator)
 	{
 		if((*MindIterator)->GetShip() == *ShipIterator)
 		{
 			delete (*MindIterator)->GetCharacter();
 			delete *MindIterator;
-			g_Minds.erase(MindIterator);
+			g_ActiveMinds.erase(MindIterator);
 			
 			break;
 		}
@@ -447,7 +448,7 @@ void DeleteShipFromSystem(System * System, std::list< Ship * >::iterator ShipIte
 
 void CalculateMinds(void)
 {
-	for(std::vector< Mind * >::iterator MindIterator = g_Minds.begin(); MindIterator != g_Minds.end(); ++MindIterator)
+	for(std::list< Mind * >::iterator MindIterator = g_ActiveMinds.begin(); MindIterator != g_ActiveMinds.end(); ++MindIterator)
 	{
 		(*MindIterator)->Update();
 	}
@@ -678,8 +679,8 @@ void GameFrame(void)
 
 void SelectPhysicalObject(PhysicalObject * Object)
 {
-	g_PlayerShip->SetTarget(Object);
-	if(g_PlayerShip->GetTarget() != 0)
+	g_InputFocus->SetTarget(Object);
+	if(g_InputFocus->GetTarget() != 0)
 	{
 		g_TargetLabel->SetString(Object->GetName());
 	}
@@ -729,13 +730,13 @@ void LeaveSystem(void)
 		g_CurrentSystem->ClearShots();
 		g_CurrentSystem = 0;
 	}
-	while(g_Minds.begin() != g_Minds.end())
+	while(g_ActiveMinds.begin() != g_ActiveMinds.end())
 	{
-		Ship * Ship(g_Minds.front()->GetShip());
-		Character * Character(g_Minds.front()->GetCharacter());
+		Ship * Ship(g_ActiveMinds.front()->GetShip());
+		Character * Character(g_ActiveMinds.front()->GetCharacter());
 		
-		delete g_Minds.front();
-		g_Minds.erase(g_Minds.begin());
+		delete g_ActiveMinds.front();
+		g_ActiveMinds.erase(g_ActiveMinds.begin());
 		delete Character;
 		delete Ship;
 	}
@@ -790,7 +791,7 @@ void PopulateSystem(void)
 		NewMind->SetCharacter(NewCharacter);
 		NewMind->SetShip(NewShip);
 		NewMind->GetStateMachine()->SetState(new SelectSteering(NewShip, NewMind->GetStateMachine()));
-		g_Minds.push_back(NewMind);
+		g_ActiveMinds.push_back(NewMind);
 		g_CurrentSystem->AddShip(NewShip);
 	}
 }
@@ -992,7 +993,7 @@ void KeyDown(unsigned int KeyCode)
 	case 33: // Key: P
 		{
 			const std::list< Planet * > & Planets(g_CurrentSystem->GetPlanets());
-			Planet * SelectedPlanet(dynamic_cast< Planet * >(g_PlayerShip->GetTarget()));
+			Planet * SelectedPlanet(dynamic_cast< Planet * >(g_InputFocus->GetTarget()));
 			
 			if(SelectedPlanet != 0)
 			{
@@ -1379,6 +1380,17 @@ void KeyDown(unsigned int KeyCode)
 		}
 	case 105: // Key: PAGE DOWN
 		{
+			for(std::list< Mind * >::iterator MindIterator = g_SuspendedMinds.begin(); MindIterator != g_SuspendedMinds.end(); ++MindIterator)
+			{
+				if((*MindIterator)->GetShip() == g_InputFocus)
+				{
+					g_SuspendedMinds.erase(MindIterator);
+					g_ActiveMinds.push_back(*MindIterator);
+					
+					break;
+				}
+			}
+			
 			std::list< Ship * > & Ships(g_CurrentSystem->GetShips());
 			std::list< Ship * >::const_iterator ShipIterator(find(Ships.begin(), Ships.end(), g_InputFocus));
 			
@@ -1391,6 +1403,16 @@ void KeyDown(unsigned int KeyCode)
 			{
 				g_InputFocus = *ShipIterator;
 				g_Camera.SetFocus(*ShipIterator);
+			}
+			for(std::list< Mind * >::iterator MindIterator = g_ActiveMinds.begin(); MindIterator != g_ActiveMinds.end(); ++MindIterator)
+			{
+				if((*MindIterator)->GetShip() == g_InputFocus)
+				{
+					g_ActiveMinds.erase(MindIterator);
+					g_SuspendedMinds.push_back(*MindIterator);
+					
+					break;
+				}
 			}
 		}
 	}
