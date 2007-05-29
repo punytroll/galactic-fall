@@ -926,7 +926,7 @@ void KeyDown(unsigned int KeyCode)
 	case 27: // Key: R
 		{
 			const std::list< Ship * > & Ships(g_CurrentSystem->GetShips());
-			Ship * SelectedShip(dynamic_cast< Ship * >(g_PlayerShip->GetTarget()));
+			Ship * SelectedShip(dynamic_cast< Ship * >(g_InputFocus->GetTarget()));
 			
 			if(SelectedShip == 0)
 			{
@@ -962,7 +962,7 @@ void KeyDown(unsigned int KeyCode)
 	case 28: // Key: T
 		{
 			const std::list< Cargo * > & Cargos(g_CurrentSystem->GetCargos());
-			Cargo * SelectedCargo(dynamic_cast< Cargo * >(g_PlayerShip->GetTarget()));
+			Cargo * SelectedCargo(dynamic_cast< Cargo * >(g_InputFocus->GetTarget()));
 			
 			if(SelectedCargo == 0)
 			{
@@ -1000,7 +1000,14 @@ void KeyDown(unsigned int KeyCode)
 			const std::list< Planet * > & Planets(g_CurrentSystem->GetPlanets());
 			Planet * SelectedPlanet(dynamic_cast< Planet * >(g_InputFocus->GetTarget()));
 			
-			if(SelectedPlanet != 0)
+			if(SelectedPlanet == 0)
+			{
+				if(Planets.size() > 0)
+				{
+					SelectPhysicalObject(Planets.front());
+				}
+			}
+			else
 			{
 				std::list< Planet * >::const_iterator PlanetIterator(find(Planets.begin(), Planets.end(), SelectedPlanet));
 				
@@ -1019,13 +1026,6 @@ void KeyDown(unsigned int KeyCode)
 					{
 						SelectPhysicalObject(*PlanetIterator);
 					}
-				}
-			}
-			else
-			{
-				if(Planets.size() > 0)
-				{
-					SelectPhysicalObject(Planets.front());
 				}
 			}
 			
