@@ -839,7 +839,7 @@ void SetTimeWarp(float TimeWarp)
 	
 	std::stringstream TimeWarpString;
 	
-	TimeWarpString << "Time Warp: " << g_TimeWarp;
+	TimeWarpString << "Time Warp: " << to_string_cast(g_TimeWarp, 2);
 	g_TimeWarpLabel->SetString(TimeWarpString.str());
 }
 
