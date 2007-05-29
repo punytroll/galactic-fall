@@ -18,6 +18,7 @@ public:
 	void SetShip(Ship * Ship);
 	Character * GetCharacter(void);
 	Ship * GetShip(void);
+	const Ship * GetShip(void) const;
 	virtual void Update(void) = 0;
 protected:
 	/// no internal state yet
@@ -44,6 +45,27 @@ inline Ship * Mind::GetShip(void)
 {
 	return m_Ship;
 }
+
+inline const Ship * Mind::GetShip(void) const
+{
+	return m_Ship;
+}
+
+class MindWithShip : public std::unary_function< Ship *, bool >
+{
+public:
+	explicit MindWithShip(const Ship * Ship) :
+		m_Ship(Ship)
+	{
+	}
+	
+	bool operator()(const Mind * Mind) const
+	{
+		return m_Ship == Mind->GetShip();
+	}
+private:
+	const Ship * m_Ship;
+};
 
 class StateMachine;
 
