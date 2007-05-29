@@ -1,5 +1,6 @@
 <save>
 	<system identifier="sol"/>
+	<time-warp value="1"/>
 	<player>
 		<character object-identifier="::character::player_character"/>
 		<ship object-identifier="::ship(shuttle)::player_ship"/>

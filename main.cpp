@@ -1302,6 +1302,7 @@ void KeyDown(unsigned int KeyCode)
 			
 			XML << element << "save";
 			XML << element << "system" << attribute << "identifier" << value << g_CurrentSystem->GetIdentifier() << end;
+			XML << element << "time-warp" << attribute << "value" << value << to_string_cast(g_TimeWarp) << end;
 			XML << element << "character";
 			XML << element << "credits" << attribute << "value" << value << g_PlayerCharacter->GetCredits() << end;
 			XML << element << "map-knowledge";
@@ -1336,7 +1337,7 @@ void KeyDown(unsigned int KeyCode)
 				g_Camera.GetFocus()->GenerateObjectIdentifier();
 			}
 			XML << element << "focus" << attribute << "object-identifier" << value << g_Camera.GetFocus()->GetObjectIdentifier() << end;
-			XML << end; // character
+			XML << end; // camera
 			XML << end; // save
 			
 			break;
@@ -1617,6 +1618,10 @@ void LoadSavegame(const Element * SaveElement)
 		{
 			System = (*SaveChild)->GetAttribute("identifier");
 		}
+		else if((*SaveChild)->GetName() == "time-warp")
+		{
+			SetTimeWarp(from_string_cast< float >((*SaveChild)->GetAttribute("value")));
+		}
 		else if((*SaveChild)->GetName() == "character")
 		{
 			g_PlayerCharacter = new Character();
@@ -1834,8 +1839,6 @@ int main(int argc, char ** argv)
 	}
 	
 	// setting up the player environment
-	// TODO: read this from the savegame as well
-	SetTimeWarp(1.0f);
 	g_MiniMapCamera.SetPosition(0.0f, 0.0f, 1500.0f);
 	if(g_InputFocus != 0)
 	{
