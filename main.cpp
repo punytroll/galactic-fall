@@ -1603,6 +1603,11 @@ void DestroyWindow(void)
 
 void LoadSavegame(const Element * SaveElement)
 {
+	if(SaveElement->GetName() != "save")
+	{
+		throw std::runtime_error("The savegame is not rooted at a \"save\" element.");
+	}
+	
 	const std::vector< Element * > & SaveChilds(SaveElement->GetChilds());
 	std::string System;
 	
@@ -1724,12 +1729,40 @@ void LoadSavegame(const Element * SaveElement)
 	PopulateSystem();
 }
 
-void LoadSavegame(const std::string & LoadSavegameFileName)
+bool LoadSavegame(const std::string & LoadSavegameFileName)
 {
 	std::ifstream InputStream(LoadSavegameFileName.c_str());
+	
+	if(InputStream == false)
+	{
+		std::cerr << "The savegame file \"" << LoadSavegameFileName << "\" does not exist or is not readable." << std::endl;
+		
+		return false;
+	}
+	
 	Document SavegameDocument(InputStream);
 	
-	LoadSavegame(SavegameDocument.GetDocumentElement());
+	if(SavegameDocument.GetDocumentElement() == 0)
+	{
+		std::cerr << "The file \"" << LoadSavegameFileName << "\" does not seem to be parsable." << std::endl;
+		
+		return false;
+	}
+	else
+	{
+		try
+		{
+			LoadSavegame(SavegameDocument.GetDocumentElement());
+		}
+		catch(std::runtime_error & Exception)
+		{
+			std::cerr << "The file \"" << LoadSavegameFileName << "\" contains invalid data:\n\t" << Exception.what() << std::endl;
+			
+			return false;
+		}
+		
+		return true;
+	}
 }
 
 int main(int argc, char ** argv)
@@ -1739,9 +1772,9 @@ int main(int argc, char ** argv)
 	
 	for(std::vector< std::string >::size_type Index = 0; Index < Arguments.size(); ++Index)
 	{
-		if((Arguments[Index] == "--load") && (Index + 1 < Arguments.size()))
+		if((Arguments[Index].substr(0, 6) == "--load") && (Arguments[Index].length() > 7))
 		{
-			LoadSavegameFileName = Arguments[++Index];
+			LoadSavegameFileName = Arguments[Index].substr(7);
 		}
 	}
 	
@@ -1795,7 +1828,10 @@ int main(int argc, char ** argv)
 	ReadSystemLink(&g_SystemManager, GetItem(Archive, TICHEL_RIGEL_SYSTEM_LINK));
 	
 	// initialize the player (initial load)
-	LoadSavegame(LoadSavegameFileName);
+	if(LoadSavegame(LoadSavegameFileName) == false)
+	{
+		return 1;
+	}
 	
 	// setting up the player environment
 	// TODO: read this from the savegame as well

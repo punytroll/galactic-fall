@@ -1,0 +1,4 @@
+Parameters:
+
+--load=<file>
+	Will load the savegame that is available in <file>.
