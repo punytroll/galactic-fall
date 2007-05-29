@@ -1302,7 +1302,7 @@ void KeyDown(unsigned int KeyCode)
 			
 			XML << element << "save";
 			XML << element << "system" << attribute << "identifier" << value << g_CurrentSystem->GetIdentifier() << end;
-			XML << element << "time-warp" << attribute << "value" << value << to_string_cast(g_TimeWarp) << end;
+			XML << element << "time-warp" << attribute << "value" << value << g_TimeWarp << end;
 			XML << element << "character";
 			XML << element << "credits" << attribute << "value" << value << g_PlayerCharacter->GetCredits() << end;
 			XML << element << "map-knowledge";
@@ -1315,8 +1315,9 @@ void KeyDown(unsigned int KeyCode)
 			}
 			XML << end; // map-knowledge
 			XML << end; // character
-			XML << element << "ship" << attribute << "class-identifier" << value << g_PlayerShip->GetShipClass()->GetIdentifier();
+			XML << element << "ship" << attribute << "class-identifier" << value << g_PlayerShip->GetShipClass()->GetIdentifier() << attribute << "object-identifier" << value << g_PlayerShip->GetObjectIdentifier();
 			XML << element << "fuel" << attribute << "value" << value << g_PlayerShip->GetFuel() << end;
+			XML << element << "hull" << attribute << "value" << value << g_PlayerShip->GetHull() << end;
 			XML << element << "position" << attribute << "x" << value << g_PlayerShip->GetPosition().m_V.m_A[0] << attribute << "y" << value << g_PlayerShip->GetPosition().m_V.m_A[1] << end;
 			XML << element << "angular-position" << attribute << "value" << value << g_PlayerShip->GetAngularPosition() << end;
 			XML << element << "velocity" << attribute << "x" << value << g_PlayerShip->GetVelocity().m_V.m_A[0] << attribute << "y" << value << g_PlayerShip->GetVelocity().m_V.m_A[1] << end;
@@ -1337,6 +1338,7 @@ void KeyDown(unsigned int KeyCode)
 				g_Camera.GetFocus()->GenerateObjectIdentifier();
 			}
 			XML << element << "focus" << attribute << "object-identifier" << value << g_Camera.GetFocus()->GetObjectIdentifier() << end;
+			XML << element << "field-of-view" << attribute << "radians" << value << g_Camera.GetFieldOfView() << end;
 			XML << end; // camera
 			XML << end; // save
 			
@@ -1653,6 +1655,10 @@ void LoadSavegame(const Element * SaveElement)
 				if((*ShipChild)->GetName() == "fuel")
 				{
 					g_PlayerShip->SetFuel(from_string_cast< float >((*ShipChild)->GetAttribute("value")));
+				}
+				else if((*ShipChild)->GetName() == "hull")
+				{
+					g_PlayerShip->SetHull(from_string_cast< float >((*ShipChild)->GetAttribute("value")));
 				}
 				else if((*ShipChild)->GetName() == "position")
 				{
