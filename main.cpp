@@ -1713,6 +1713,10 @@ void LoadSavegame(const Element * SaveElement)
 	{
 		g_CurrentSystem->AddShip(g_PlayerShip);
 		g_PlayerShip->SetCurrentSystem(g_CurrentSystem);
+	}
+	g_InputFocus = g_PlayerShip;
+	if(g_InputFocus != 0)
+	{
 		SelectLinkedSystem(0);
 		SelectPhysicalObject(0);
 	}
@@ -1796,8 +1800,6 @@ int main(int argc, char ** argv)
 	// setting up the player environment
 	// TODO: read this from the savegame as well
 	SetTimeWarp(1.0f);
-	// setting the input focus
-	g_InputFocus = g_PlayerShip;
 	g_MiniMapCamera.SetPosition(0.0f, 0.0f, 1500.0f);
 	if(g_InputFocus != 0)
 	{
