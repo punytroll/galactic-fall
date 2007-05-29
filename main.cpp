@@ -423,16 +423,21 @@ public:
 
 void DeleteShipFromSystem(System * System, std::list< Ship * >::iterator ShipIterator)
 {
-	for(std::list< Mind * >::iterator MindIterator = g_ActiveMinds.begin(); MindIterator != g_ActiveMinds.end(); ++MindIterator)
+	std::list< Mind * >::iterator MindIterator;
+	
+	MindIterator = std::find_if(g_ActiveMinds.begin(), g_ActiveMinds.end(), MindWithShip(*ShipIterator));
+	if(MindIterator != g_ActiveMinds.end())
 	{
-		if((*MindIterator)->GetShip() == *ShipIterator)
-		{
-			delete (*MindIterator)->GetCharacter();
-			delete *MindIterator;
-			g_ActiveMinds.erase(MindIterator);
-			
-			break;
-		}
+		delete (*MindIterator)->GetCharacter();
+		delete *MindIterator;
+		g_ActiveMinds.erase(MindIterator);
+	}
+	MindIterator = std::find_if(g_SuspendedMinds.begin(), g_SuspendedMinds.end(), MindWithShip(*ShipIterator));
+	if(MindIterator != g_SuspendedMinds.end())
+	{
+		delete (*MindIterator)->GetCharacter();
+		delete *MindIterator;
+		g_SuspendedMinds.erase(MindIterator);
 	}
 	if((g_InputFocus != 0) && (g_InputFocus->GetTarget() == *ShipIterator))
 	{
