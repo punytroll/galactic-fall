@@ -1,5 +1,6 @@
 <save>
 	<system identifier="alpha_centauri"/>
+	<time-warp value="0.85"/>
 	<player>
 		<character object-identifier="::character::player_character"/>
 		<ship object-identifier="::ship(shuttle)::player_ship"/>
