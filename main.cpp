@@ -925,34 +925,37 @@ void KeyDown(unsigned int KeyCode)
 		}
 	case 27: // Key: R
 		{
-			const std::list< Ship * > & Ships(g_CurrentSystem->GetShips());
-			Ship * SelectedShip(dynamic_cast< Ship * >(g_InputFocus->GetTarget()));
-			
-			if(SelectedShip == 0)
+			if(g_InputFocus != 0)
 			{
-				if(Ships.size() > 0)
-				{
-					SelectPhysicalObject(Ships.front());
-				}
-			}
-			else
-			{
-				std::list< Ship * >::const_iterator ShipIterator(find(Ships.begin(), Ships.end(), SelectedShip));
+				const std::list< Ship * > & Ships(g_CurrentSystem->GetShips());
+				Ship * SelectedShip(dynamic_cast< Ship * >(g_InputFocus->GetTarget()));
 				
-				if(ShipIterator == Ships.end())
+				if(SelectedShip == 0)
 				{
-					SelectPhysicalObject(0);
+					if(Ships.size() > 0)
+					{
+						SelectPhysicalObject(Ships.front());
+					}
 				}
 				else
 				{
-					++ShipIterator;
+					std::list< Ship * >::const_iterator ShipIterator(find(Ships.begin(), Ships.end(), SelectedShip));
+					
 					if(ShipIterator == Ships.end())
 					{
 						SelectPhysicalObject(0);
 					}
 					else
 					{
-						SelectPhysicalObject(*ShipIterator);
+						++ShipIterator;
+						if(ShipIterator == Ships.end())
+						{
+							SelectPhysicalObject(0);
+						}
+						else
+						{
+							SelectPhysicalObject(*ShipIterator);
+						}
 					}
 				}
 			}
@@ -961,34 +964,37 @@ void KeyDown(unsigned int KeyCode)
 		}
 	case 28: // Key: T
 		{
-			const std::list< Cargo * > & Cargos(g_CurrentSystem->GetCargos());
-			Cargo * SelectedCargo(dynamic_cast< Cargo * >(g_InputFocus->GetTarget()));
-			
-			if(SelectedCargo == 0)
+			if(g_InputFocus != 0)
 			{
-				if(Cargos.size() > 0)
-				{
-					SelectPhysicalObject(Cargos.front());
-				}
-			}
-			else
-			{
-				std::list< Cargo * >::const_iterator CargoIterator(find(Cargos.begin(), Cargos.end(), SelectedCargo));
+				const std::list< Cargo * > & Cargos(g_CurrentSystem->GetCargos());
+				Cargo * SelectedCargo(dynamic_cast< Cargo * >(g_InputFocus->GetTarget()));
 				
-				if(CargoIterator == Cargos.end())
+				if(SelectedCargo == 0)
 				{
-					SelectPhysicalObject(0);
+					if(Cargos.size() > 0)
+					{
+						SelectPhysicalObject(Cargos.front());
+					}
 				}
 				else
 				{
-					++CargoIterator;
+					std::list< Cargo * >::const_iterator CargoIterator(find(Cargos.begin(), Cargos.end(), SelectedCargo));
+					
 					if(CargoIterator == Cargos.end())
 					{
 						SelectPhysicalObject(0);
 					}
 					else
 					{
-						SelectPhysicalObject(*CargoIterator);
+						++CargoIterator;
+						if(CargoIterator == Cargos.end())
+						{
+							SelectPhysicalObject(0);
+						}
+						else
+						{
+							SelectPhysicalObject(*CargoIterator);
+						}
 					}
 				}
 			}
@@ -997,34 +1003,37 @@ void KeyDown(unsigned int KeyCode)
 		}
 	case 33: // Key: P
 		{
-			const std::list< Planet * > & Planets(g_CurrentSystem->GetPlanets());
-			Planet * SelectedPlanet(dynamic_cast< Planet * >(g_InputFocus->GetTarget()));
-			
-			if(SelectedPlanet == 0)
+			if(g_InputFocus != 0)
 			{
-				if(Planets.size() > 0)
-				{
-					SelectPhysicalObject(Planets.front());
-				}
-			}
-			else
-			{
-				std::list< Planet * >::const_iterator PlanetIterator(find(Planets.begin(), Planets.end(), SelectedPlanet));
+				const std::list< Planet * > & Planets(g_CurrentSystem->GetPlanets());
+				Planet * SelectedPlanet(dynamic_cast< Planet * >(g_InputFocus->GetTarget()));
 				
-				if(PlanetIterator == Planets.end())
+				if(SelectedPlanet == 0)
 				{
-					SelectPhysicalObject(0);
+					if(Planets.size() > 0)
+					{
+						SelectPhysicalObject(Planets.front());
+					}
 				}
 				else
 				{
-					++PlanetIterator;
+					std::list< Planet * >::const_iterator PlanetIterator(find(Planets.begin(), Planets.end(), SelectedPlanet));
+					
 					if(PlanetIterator == Planets.end())
 					{
 						SelectPhysicalObject(0);
 					}
 					else
 					{
-						SelectPhysicalObject(*PlanetIterator);
+						++PlanetIterator;
+						if(PlanetIterator == Planets.end())
+						{
+							SelectPhysicalObject(0);
+						}
+						else
+						{
+							SelectPhysicalObject(*PlanetIterator);
+						}
 					}
 				}
 			}
@@ -1051,58 +1060,61 @@ void KeyDown(unsigned int KeyCode)
 		}
 	case 39: // Key: S
 		{
-			Cargo * SelectedCargo(dynamic_cast< Cargo * >(g_PlayerShip->GetTarget()));
-			
-			if(SelectedCargo == 0)
+			if(g_InputFocus != 0)
 			{
-				const std::list< Cargo * > & Cargos(g_CurrentSystem->GetCargos());
-				float MinimumDistance(0.0f);
-				Cargo * MinimumCargo(0);
+				Cargo * SelectedCargo(dynamic_cast< Cargo * >(g_InputFocus->GetTarget()));
 				
-				for(std::list< Cargo * >::const_iterator CargoIterator = Cargos.begin(); CargoIterator != Cargos.end(); ++CargoIterator)
+				if(SelectedCargo == 0)
 				{
-					if(MinimumCargo == 0)
+					const std::list< Cargo * > & Cargos(g_CurrentSystem->GetCargos());
+					float MinimumDistance(0.0f);
+					Cargo * MinimumCargo(0);
+					
+					for(std::list< Cargo * >::const_iterator CargoIterator = Cargos.begin(); CargoIterator != Cargos.end(); ++CargoIterator)
 					{
-						MinimumCargo = *CargoIterator;
-						MinimumDistance = (MinimumCargo->GetPosition() - g_PlayerShip->GetPosition()).length_squared();
-					}
-					else
-					{
-						float Distance(((*CargoIterator)->GetPosition() - g_PlayerShip->GetPosition()).length_squared());
-						
-						if(Distance < MinimumDistance)
+						if(MinimumCargo == 0)
 						{
 							MinimumCargo = *CargoIterator;
-							MinimumDistance = Distance;
+							MinimumDistance = (MinimumCargo->GetPosition() - g_InputFocus->GetPosition()).length_squared();
+						}
+						else
+						{
+							float Distance(((*CargoIterator)->GetPosition() - g_InputFocus->GetPosition()).length_squared());
+							
+							if(Distance < MinimumDistance)
+							{
+								MinimumCargo = *CargoIterator;
+								MinimumDistance = Distance;
+							}
 						}
 					}
-				}
-				if(MinimumCargo != 0)
-				{
-					SelectPhysicalObject(MinimumCargo);
-				}
-			}
-			else
-			{
-				// test distance
-				if((SelectedCargo->GetPosition() - g_PlayerShip->GetPosition()).length_squared() <= 5.0f * SelectedCargo->GetRadialSize() * SelectedCargo->GetRadialSize())
-				{
-					// test speed
-					if((g_PlayerShip->GetVelocity() - SelectedCargo->GetVelocity()).length_squared() <= 2.0f)
+					if(MinimumCargo != 0)
 					{
-						g_PlayerShip->AddCommodities(SelectedCargo->GetCommodity(), 1.0f);
-						g_CurrentSystem->RemoveCargo(SelectedCargo);
-						SelectPhysicalObject(0);
-						delete SelectedCargo;
-					}
-					else
-					{
-						SetMessage("Your relative velocity to the cargo is too high to scoop it up.");
+						SelectPhysicalObject(MinimumCargo);
 					}
 				}
 				else
 				{
-					SetMessage("You are too far away from the cargo to scoop it up.");
+					// test distance
+					if((SelectedCargo->GetPosition() - g_InputFocus->GetPosition()).length_squared() <= 5.0f * SelectedCargo->GetRadialSize() * SelectedCargo->GetRadialSize())
+					{
+						// test speed
+						if((g_InputFocus->GetVelocity() - SelectedCargo->GetVelocity()).length_squared() <= 2.0f)
+						{
+							g_InputFocus->AddCommodities(SelectedCargo->GetCommodity(), 1.0f);
+							g_CurrentSystem->RemoveCargo(SelectedCargo);
+							SelectPhysicalObject(0);
+							delete SelectedCargo;
+						}
+						else
+						{
+							SetMessage("Your relative velocity to the cargo is too high to scoop it up.");
+						}
+					}
+					else
+					{
+						SetMessage("You are too far away from the cargo to scoop it up.");
+					}
 				}
 			}
 			
@@ -1110,33 +1122,40 @@ void KeyDown(unsigned int KeyCode)
 		}
 	case 44: // Key: J
 		{
-			if(g_PlayerShip->GetLinkedSystemTarget() != 0)
+			if(g_InputFocus != 0)
 			{
-				switch(WantToJump(g_PlayerShip))
+				if(g_InputFocus->GetLinkedSystemTarget() != 0)
 				{
-				case OK_TO_JUMP:
+					switch(WantToJump(g_InputFocus))
 					{
-						System * OldSystem(g_CurrentSystem);
-						System * NewSystem(g_PlayerShip->GetLinkedSystemTarget());
-						
-						LeaveSystem();
-						g_PlayerShip->SetFuel(g_PlayerShip->GetFuel() - g_PlayerShip->GetShipClass()->GetJumpFuel());
-						EnterSystem(NewSystem, OldSystem);
-						
-						break;
+					case OK_TO_JUMP:
+						{
+							System * OldSystem(g_CurrentSystem);
+							System * NewSystem(g_InputFocus->GetLinkedSystemTarget());
+							
+							LeaveSystem();
+							g_InputFocus->SetFuel(g_InputFocus->GetFuel() - g_InputFocus->GetShipClass()->GetJumpFuel());
+							EnterSystem(NewSystem, OldSystem);
+							
+							break;
+						}
+					case TOO_NEAR_TO_SYSTEM_CENTER:
+						{
+							SetMessage("You are too near to the system center to jump.");
+							
+							break;
+						}
+					case NOT_ENOUGH_FUEL:
+						{
+							SetMessage("You do not have enough fuel to jump.");
+							
+							break;
+						}
 					}
-				case TOO_NEAR_TO_SYSTEM_CENTER:
-					{
-						SetMessage("You are too near to the system center to jump.");
-						
-						break;
-					}
-				case NOT_ENOUGH_FUEL:
-					{
-						SetMessage("You do not have enough fuel to jump.");
-						
-						break;
-					}
+				}
+				else
+				{
+					SetMessage("No system selected to jump to.");
 				}
 			}
 			
@@ -1144,17 +1163,17 @@ void KeyDown(unsigned int KeyCode)
 		}
 	case 46: // Key: L
 		{
-			if(g_PlanetDialog == 0)
+			if(g_InputFocus != 0)
 			{
-				Planet * SelectedPlanet(dynamic_cast< Planet * >(g_PlayerShip->GetTarget()));
+				Planet * SelectedPlanet(dynamic_cast< Planet * >(g_InputFocus->GetTarget()));
 				
 				if(SelectedPlanet != 0)
 				{
 					// test distance
-					if((SelectedPlanet->GetPosition() - g_PlayerShip->GetPosition()).length_squared() <= SelectedPlanet->GetSize() * SelectedPlanet->GetSize())
+					if((SelectedPlanet->GetPosition() - g_InputFocus->GetPosition()).length_squared() <= SelectedPlanet->GetSize() * SelectedPlanet->GetSize())
 					{
 						// test speed (should be relative speed but planets have no speed, yet)
-						if(g_PlayerShip->GetVelocity().length_squared() <= 2.0f)
+						if(g_InputFocus->GetVelocity().length_squared() <= 2.0f)
 						{
 							if(g_PlayerCharacter->GetCredits() >= SelectedPlanet->GetLandingFee())
 							{
@@ -1190,11 +1209,11 @@ void KeyDown(unsigned int KeyCode)
 						if(MinimumPlanet == 0)
 						{
 							MinimumPlanet = *PlanetIterator;
-							MinimumDistance = (MinimumPlanet->GetPosition() - g_PlayerShip->GetPosition()).length_squared();
+							MinimumDistance = (MinimumPlanet->GetPosition() - g_InputFocus->GetPosition()).length_squared();
 						}
 						else
 						{
-							float Distance(((*PlanetIterator)->GetPosition() - g_PlayerShip->GetPosition()).length_squared());
+							float Distance(((*PlanetIterator)->GetPosition() - g_InputFocus->GetPosition()).length_squared());
 							
 							if(Distance < MinimumDistance)
 							{
@@ -1214,50 +1233,56 @@ void KeyDown(unsigned int KeyCode)
 		}
 	case 54: // Key: C
 		{
-			SetMessage("Jettison cargo.");
-			while(g_PlayerShip->GetCommodities().size() > 0)
+			if(g_InputFocus != 0)
 			{
-				const Commodity * Commodity(g_PlayerShip->GetCommodities().begin()->first);
-				Cargo * NewCargo(new Cargo(g_ModelManager.Get("cargo_cube"), Commodity, g_PlayerShip->GetVelocity() * 0.8f + math3d::vector2f(GetRandomFloat(-0.5f, 0.5f), GetRandomFloat(-0.5f, 0.5f)))); // TODO: memory leak
-				
-				NewCargo->SetObjectIdentifier("::cargo(" + Commodity->GetIdentifier() + ")::" + to_string_cast(reinterpret_cast< void * >(NewCargo)));
-				g_PlayerShip->RemoveCommodities(Commodity, 1.0f);
-				NewCargo->SetPosition(g_PlayerShip->GetPosition());
-				g_CurrentSystem->AddCargo(NewCargo);
+				SetMessage("Jettison cargo.");
+				while(g_InputFocus->GetCommodities().size() > 0)
+				{
+					const Commodity * Commodity(g_InputFocus->GetCommodities().begin()->first);
+					Cargo * NewCargo(new Cargo(g_ModelManager.Get("cargo_cube"), Commodity, g_InputFocus->GetVelocity() * 0.8f + math3d::vector2f(GetRandomFloat(-0.5f, 0.5f), GetRandomFloat(-0.5f, 0.5f)))); // TODO: memory leak
+					
+					NewCargo->SetObjectIdentifier("::cargo(" + Commodity->GetIdentifier() + ")::" + to_string_cast(reinterpret_cast< void * >(NewCargo)));
+					g_InputFocus->RemoveCommodities(Commodity, 1.0f);
+					NewCargo->SetPosition(g_InputFocus->GetPosition());
+					g_CurrentSystem->AddCargo(NewCargo);
+				}
 			}
 			
 			break;
 		}
 	case 57: // Key: N
 		{
-			const std::list< System * > & LinkedSystems(g_CurrentSystem->GetLinkedSystems());
-			
-			if(g_PlayerShip->GetLinkedSystemTarget() != 0)
+			if(g_InputFocus != 0)
 			{
-				std::list< System * >::const_iterator SystemIterator(find(LinkedSystems.begin(), LinkedSystems.end(), g_PlayerShip->GetLinkedSystemTarget()));
+				const std::list< System * > & LinkedSystems(g_CurrentSystem->GetLinkedSystems());
 				
-				if(SystemIterator == LinkedSystems.end())
+				if(g_InputFocus->GetLinkedSystemTarget() != 0)
 				{
-					SelectLinkedSystem(0);
-				}
-				else
-				{
-					++SystemIterator;
+					std::list< System * >::const_iterator SystemIterator(find(LinkedSystems.begin(), LinkedSystems.end(), g_InputFocus->GetLinkedSystemTarget()));
+					
 					if(SystemIterator == LinkedSystems.end())
 					{
 						SelectLinkedSystem(0);
 					}
 					else
 					{
-						SelectLinkedSystem(*SystemIterator);
+						++SystemIterator;
+						if(SystemIterator == LinkedSystems.end())
+						{
+							SelectLinkedSystem(0);
+						}
+						else
+						{
+							SelectLinkedSystem(*SystemIterator);
+						}
 					}
 				}
-			}
-			else
-			{
-				if(LinkedSystems.size() > 0)
+				else
 				{
-					SelectLinkedSystem(LinkedSystems.front());
+					if(LinkedSystems.size() > 0)
+					{
+						SelectLinkedSystem(LinkedSystems.front());
+					}
 				}
 			}
 			
@@ -1283,7 +1308,7 @@ void KeyDown(unsigned int KeyCode)
 		}
 	case 60: // Key: PERIODE
 		{
-			SetTimeWarp(g_TimeWarp * 0.9f);
+			SetTimeWarp(g_TimeWarp / 1.1f);
 			
 			break;
 		}
@@ -1388,15 +1413,13 @@ void KeyDown(unsigned int KeyCode)
 		}
 	case 105: // Key: PAGE DOWN
 		{
-			for(std::list< Mind * >::iterator MindIterator = g_SuspendedMinds.begin(); MindIterator != g_SuspendedMinds.end(); ++MindIterator)
+			std::list< Mind * >::iterator MindIterator;
+			
+			MindIterator = std::find_if(g_SuspendedMinds.begin(), g_SuspendedMinds.end(), MindWithShip(g_InputFocus));
+			if(MindIterator != g_SuspendedMinds.end())
 			{
-				if((*MindIterator)->GetShip() == g_InputFocus)
-				{
-					g_SuspendedMinds.erase(MindIterator);
-					g_ActiveMinds.push_back(*MindIterator);
-					
-					break;
-				}
+				g_SuspendedMinds.erase(MindIterator);
+				g_ActiveMinds.push_back(*MindIterator);
 			}
 			
 			std::list< Ship * > & Ships(g_CurrentSystem->GetShips());
@@ -1412,15 +1435,11 @@ void KeyDown(unsigned int KeyCode)
 				g_InputFocus = *ShipIterator;
 				g_Camera.SetFocus(*ShipIterator);
 			}
-			for(std::list< Mind * >::iterator MindIterator = g_ActiveMinds.begin(); MindIterator != g_ActiveMinds.end(); ++MindIterator)
+			MindIterator = std::find_if(g_ActiveMinds.begin(), g_ActiveMinds.end(), MindWithShip(g_InputFocus));
+			if(MindIterator != g_ActiveMinds.end())
 			{
-				if((*MindIterator)->GetShip() == g_InputFocus)
-				{
-					g_ActiveMinds.erase(MindIterator);
-					g_SuspendedMinds.push_back(*MindIterator);
-					
-					break;
-				}
+				g_ActiveMinds.erase(MindIterator);
+				g_SuspendedMinds.push_back(*MindIterator);
 			}
 		}
 	}
