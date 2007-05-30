@@ -853,8 +853,6 @@ void EnterSystem(System * NewSystem, System * OldSystem)
 	SelectLinkedSystem(0);
 	SelectPhysicalObject(0);
 	g_PlayerCharacter->GetMapKnowledge()->AddExploredSystem(g_CurrentSystem);
-	// populate the entered system with other ships
-	PopulateSystem();
 }
 
 void SetTimeWarp(float TimeWarp)
@@ -1160,6 +1158,7 @@ void KeyDown(unsigned int KeyCode)
 							LeaveSystem();
 							g_InputFocus->SetFuel(g_InputFocus->GetFuel() - g_InputFocus->GetShipClass()->GetJumpFuel());
 							EnterSystem(NewSystem, OldSystem);
+							PopulateSystem();
 							
 							break;
 						}
