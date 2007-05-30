@@ -95,11 +95,14 @@ Display * g_Display;
 GLXContext g_GLXContext;
 Window g_Window;
 
-enum WantToJumpCode
+enum WantReturnCode
 {
-	OK_TO_JUMP,
-	TOO_NEAR_TO_SYSTEM_CENTER,
-	NOT_ENOUGH_FUEL
+	OK,
+	NOT_ENOUGH_CREDITS,
+	NOT_ENOUGH_FUEL,
+	TOO_FAR_AWAY,
+	TOO_FAST,
+	TOO_NEAR_TO_SYSTEM_CENTER
 };
 
 int WantToJump(Ship * Ship)
@@ -115,7 +118,28 @@ int WantToJump(Ship * Ship)
 		return NOT_ENOUGH_FUEL;
 	}
 	
-	return OK_TO_JUMP;
+	return OK;
+}
+
+int WantToLand(Ship * Ship, Planet * Planet)
+{
+	// test distance
+	if((Planet->GetPosition() - Ship->GetPosition()).length_squared() > Planet->GetSize() * Planet->GetSize())
+	{
+		return TOO_FAR_AWAY;
+	}
+	// test speed (should be relative speed but planets have no speed, yet)
+	if(Ship->GetVelocity().length_squared() > 2.0f)
+	{
+		return TOO_FAST;
+	}
+	// test credits
+	if(g_PlayerCharacter->GetCredits() < Planet->GetLandingFee())
+	{
+		return NOT_ENOUGH_CREDITS;
+	}
+	
+	return OK;
 }
 
 float CalculateTime(void)
@@ -549,7 +573,7 @@ void UpdateUserInterface(void)
 		// display credits in every cycle
 		g_CreditsLabel->SetString("Credits: " + to_string_cast(g_PlayerCharacter->GetCredits()));
 		// set system label color according to jump status
-		if((g_InputFocus->GetLinkedSystemTarget() != 0) && (WantToJump(g_InputFocus) == OK_TO_JUMP))
+		if((g_InputFocus->GetLinkedSystemTarget() != 0) && (WantToJump(g_InputFocus) == OK))
 		{
 			g_SystemLabel->GetForegroundColor().Set(0.7f, 0.8f, 1.0f);
 		}
@@ -1128,7 +1152,7 @@ void KeyDown(unsigned int KeyCode)
 				{
 					switch(WantToJump(g_InputFocus))
 					{
-					case OK_TO_JUMP:
+					case OK:
 						{
 							System * OldSystem(g_CurrentSystem);
 							System * NewSystem(g_InputFocus->GetLinkedSystemTarget());
@@ -1169,33 +1193,37 @@ void KeyDown(unsigned int KeyCode)
 				
 				if(SelectedPlanet != 0)
 				{
-					// test distance
-					if((SelectedPlanet->GetPosition() - g_InputFocus->GetPosition()).length_squared() <= SelectedPlanet->GetSize() * SelectedPlanet->GetSize())
+					switch(WantToLand(g_InputFocus, SelectedPlanet))
 					{
-						// test speed (should be relative speed but planets have no speed, yet)
-						if(g_InputFocus->GetVelocity().length_squared() <= 2.0f)
+					case OK:
 						{
-							if(g_PlayerCharacter->GetCredits() >= SelectedPlanet->GetLandingFee())
-							{
-								g_PlayerCharacter->RemoveCredits(SelectedPlanet->GetLandingFee());
-								g_Pause = true;
-								g_PlanetDialog = new PlanetDialog(g_UserInterface.GetRootWidget(), SelectedPlanet);
-								g_PlanetDialog->GrabKeyFocus();
-								g_PlanetDialog->AddDestroyListener(&g_GlobalDestroyListener);
-							}
-							else
-							{
-								SetMessage("You don't have enough credits to pay the landing fee.");
-							}
+							// TODO: change to current character
+							g_PlayerCharacter->RemoveCredits(SelectedPlanet->GetLandingFee());
+							g_Pause = true;
+							g_PlanetDialog = new PlanetDialog(g_UserInterface.GetRootWidget(), SelectedPlanet);
+							g_PlanetDialog->GrabKeyFocus();
+							g_PlanetDialog->AddDestroyListener(&g_GlobalDestroyListener);
+							
+							break;
 						}
-						else
+					case TOO_FAR_AWAY:
+						{
+							SetMessage("You are too far away from the planet to land.");
+							
+							break;
+						}
+					case TOO_FAST:
 						{
 							SetMessage("You are too fast to land on the planet.");
+							
+							break;
 						}
-					}
-					else
-					{
-						SetMessage("You are too far away from the planet to land.");
+					case NOT_ENOUGH_CREDITS:
+						{
+							SetMessage("You don't have enough credits to pay the landing fee.");
+							
+							break;
+						}
 					}
 				}
 				else
