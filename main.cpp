@@ -730,7 +730,7 @@ public:
 			g_Pause = false;
 			SelectLinkedSystem(0);
 			SelectPhysicalObject(0);
-			g_PlayerShip->m_Velocity.set(0.0f, 0.0f);
+			g_InputFocus->m_Velocity.set(0.0f, 0.0f);
 			g_InputFocus->m_Accelerate = false;
 			g_InputFocus->m_TurnLeft = false;
 			g_InputFocus->m_TurnRight = false;
