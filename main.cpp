@@ -69,6 +69,7 @@ SystemManager g_SystemManager(&g_CommodityManager);
 Character * g_PlayerCharacter(0);
 Ship * g_PlayerShip(0);
 Ship * g_InputFocus(0);
+Ship * g_OutputFocus(0);
 float g_Width(0.0f);
 float g_Height(0.0f);
 Label * g_SystemLabel(0);
@@ -333,9 +334,9 @@ public:
 	{
 		Widget::Draw();
 		// radar
-		if((g_InputFocus != 0) && (g_InputFocus->GetTarget() != 0))
+		if((g_OutputFocus != 0) && (g_OutputFocus->GetTarget() != 0))
 		{
-			float RadialSize(g_InputFocus->GetTarget()->GetRadialSize());
+			float RadialSize(g_OutputFocus->GetTarget()->GetRadialSize());
 			
 			glPushAttrib(GL_ENABLE_BIT | GL_VIEWPORT_BIT | GL_TRANSFORM_BIT);
 			glEnable(GL_DEPTH_TEST);
@@ -349,7 +350,7 @@ public:
 			glPushMatrix();
 			glLoadIdentity();
 			g_RadarCamera.SetPosition(0.0f, 0.0f, 4.0f * RadialSize);
-			g_RadarCamera.SetFocus(g_InputFocus->GetTarget());
+			g_RadarCamera.SetFocus(g_OutputFocus->GetTarget());
 			g_RadarCamera.Draw();
 			if((g_CurrentSystem != 0) && (g_CurrentSystem->GetStar() != 0))
 			{
@@ -358,7 +359,7 @@ public:
 				glLightfv(GL_LIGHT0, GL_POSITION, math3d::vector4f(g_CurrentSystem->GetStar()->GetPosition().m_V.m_A[0], g_CurrentSystem->GetStar()->GetPosition().m_V.m_A[1], 100.0f, 0.0f).m_V.m_A);
 			}
 			glClear(GL_DEPTH_BUFFER_BIT);
-			g_InputFocus->GetTarget()->Draw();
+			g_OutputFocus->GetTarget()->Draw();
 			glPopMatrix();
 			glMatrixMode(GL_PROJECTION);
 			glPopMatrix();
@@ -379,7 +380,7 @@ public:
 	{
 		Widget::Draw();
 		// mini map
-		if((g_InputFocus != 0) && (g_CurrentSystem != 0))
+		if((g_OutputFocus != 0) && (g_CurrentSystem != 0))
 		{
 			glPushAttrib(GL_ENABLE_BIT | GL_VIEWPORT_BIT | GL_TRANSFORM_BIT);
 			glEnable(GL_DEPTH_TEST);
@@ -402,36 +403,36 @@ public:
 			glColor3f(0.8f, 0.8f, 0.8f);
 			for(std::list< Planet * >::const_iterator PlanetIterator = Planets.begin(); PlanetIterator != Planets.end(); ++PlanetIterator)
 			{
-				if(*PlanetIterator == g_InputFocus->GetTarget())
+				if(*PlanetIterator == g_OutputFocus->GetTarget())
 				{
 					glColor3f(0.2f, 1.0f, 0.0f);
 				}
 				glVertex2f((*PlanetIterator)->GetPosition().m_V.m_A[0], (*PlanetIterator)->GetPosition().m_V.m_A[1]);
-				if(*PlanetIterator == g_InputFocus->GetTarget())
+				if(*PlanetIterator == g_OutputFocus->GetTarget())
 				{
 					glColor3f(0.8f, 0.8f, 0.8f);
 				}
 			}
 			for(std::list< Ship * >::const_iterator ShipIterator = Ships.begin(); ShipIterator != Ships.end(); ++ShipIterator)
 			{
-				if(*ShipIterator == g_InputFocus->GetTarget())
+				if(*ShipIterator == g_OutputFocus->GetTarget())
 				{
 					glColor3f(0.2f, 1.0f, 0.0f);
 				}
 				glVertex2f((*ShipIterator)->GetPosition().m_V.m_A[0], (*ShipIterator)->GetPosition().m_V.m_A[1]);
-				if(*ShipIterator == g_InputFocus->GetTarget())
+				if(*ShipIterator == g_OutputFocus->GetTarget())
 				{
 					glColor3f(0.8f, 0.8f, 0.8f);
 				}
 			}
 			for(std::list< Cargo * >::const_iterator CargoIterator = Cargos.begin(); CargoIterator != Cargos.end(); ++CargoIterator)
 			{
-				if(*CargoIterator == g_InputFocus->GetTarget())
+				if(*CargoIterator == g_OutputFocus->GetTarget())
 				{
 					glColor3f(0.2f, 1.0f, 0.0f);
 				}
 				glVertex2f((*CargoIterator)->GetPosition().m_V.m_A[0], (*CargoIterator)->GetPosition().m_V.m_A[1]);
-				if(*CargoIterator == g_InputFocus->GetTarget())
+				if(*CargoIterator == g_OutputFocus->GetTarget())
 				{
 					glColor3f(0.8f, 0.8f, 0.8f);
 				}
@@ -462,6 +463,10 @@ void DeleteShipFromSystem(System * System, std::list< Ship * >::iterator ShipIte
 		delete (*MindIterator)->GetCharacter();
 		delete *MindIterator;
 		g_SuspendedMinds.erase(MindIterator);
+	}
+	if((g_OutputFocus != 0) && (g_OutputFocus->GetTarget() == *ShipIterator))
+	{
+		g_OutputFocus->SetTarget(0);
 	}
 	if((g_InputFocus != 0) && (g_InputFocus->GetTarget() == *ShipIterator))
 	{
@@ -564,16 +569,16 @@ void UpdateUserInterface(void)
 		// remove the notification callback from the multimap
 		g_TimeoutNotifications.erase(g_TimeoutNotifications.begin());
 	}
-	if(g_InputFocus != 0)
+	if(g_OutputFocus != 0)
 	{
 		// display fuel
-		g_FuelLabel->SetString("Fuel: " + to_string_cast(100.0f * g_InputFocus->GetFuel() / g_InputFocus->GetFuelCapacity(), 2) + "%");
+		g_FuelLabel->SetString("Fuel: " + to_string_cast(100.0f * g_OutputFocus->GetFuel() / g_OutputFocus->GetFuelCapacity(), 2) + "%");
 		// display hull
-		g_HullLabel->SetString("Hull: " + to_string_cast(g_InputFocus->GetHull(), 2));
+		g_HullLabel->SetString("Hull: " + to_string_cast(g_OutputFocus->GetHull(), 2));
 		// display credits in every cycle
 		g_CreditsLabel->SetString("Credits: " + to_string_cast(g_PlayerCharacter->GetCredits()));
 		// set system label color according to jump status
-		if((g_InputFocus->GetLinkedSystemTarget() != 0) && (WantToJump(g_InputFocus) == OK))
+		if((g_OutputFocus->GetLinkedSystemTarget() != 0) && (WantToJump(g_OutputFocus) == OK))
 		{
 			g_SystemLabel->GetForegroundColor().Set(0.7f, 0.8f, 1.0f);
 		}
@@ -636,18 +641,18 @@ void Render(void)
 		}
 	}
 	// HUD
-	if((g_InputFocus != 0) && (g_InputFocus->GetTarget() != 0))
+	if((g_OutputFocus != 0) && (g_OutputFocus->GetTarget() != 0))
 	{
 		glClear(GL_DEPTH_BUFFER_BIT);
-		DrawSelection(g_InputFocus->GetTarget(), g_InputFocus->GetTarget()->GetRadialSize());
+		DrawSelection(g_OutputFocus->GetTarget(), g_OutputFocus->GetTarget()->GetRadialSize());
 		
-		math3d::vector2f RelativePosition(g_InputFocus->GetTarget()->GetPosition() - g_InputFocus->GetPosition());
+		math3d::vector2f RelativePosition(g_OutputFocus->GetTarget()->GetPosition() - g_OutputFocus->GetPosition());
 		
 		RelativePosition.normalize();
 		glPushMatrix();
 		glPushAttrib(GL_LIGHTING_BIT);
 		glDisable(GL_LIGHTING);
-		glTranslatef(g_InputFocus->GetPosition().m_V.m_A[0], g_InputFocus->GetPosition().m_V.m_A[1], 0.0f);
+		glTranslatef(g_OutputFocus->GetPosition().m_V.m_A[0], g_OutputFocus->GetPosition().m_V.m_A[1], 0.0f);
 		glRotatef(GetRadians(RelativePosition) * 180.0f / M_PI, 0.0f, 0.0f, 1.0f);
 		glColor3f(0.0f, 0.5f, 0.5f);
 		glBegin(GL_LINES);
@@ -709,9 +714,9 @@ void GameFrame(void)
 void SelectPhysicalObject(PhysicalObject * Object)
 {
 	g_InputFocus->SetTarget(Object);
-	if(g_InputFocus->GetTarget() != 0)
+	if(g_OutputFocus->GetTarget() != 0)
 	{
-		g_TargetLabel->SetString(Object->GetName());
+		g_TargetLabel->SetString(g_OutputFocus->GetTarget()->GetName());
 	}
 	else
 	{
@@ -1455,11 +1460,13 @@ void KeyDown(unsigned int KeyCode)
 			if((ShipIterator == Ships.end()) || (++ShipIterator == Ships.end()))
 			{
 				g_InputFocus = Ships.front();
+				// g_OutputFocus = Ships.front();
 				g_Camera.SetFocus(Ships.front());
 			}
 			else
 			{
 				g_InputFocus = *ShipIterator;
+				// g_OutputFocus = *ShipIterator;
 				g_Camera.SetFocus(*ShipIterator);
 			}
 			MindIterator = std::find_if(g_ActiveMinds.begin(), g_ActiveMinds.end(), MindWithShip(g_InputFocus));
@@ -1778,6 +1785,7 @@ void LoadSavegame(const Element * SaveElement)
 		g_PlayerShip->SetCurrentSystem(g_CurrentSystem);
 	}
 	g_InputFocus = g_PlayerShip;
+	g_OutputFocus = g_PlayerShip;
 	if(g_InputFocus != 0)
 	{
 		SelectLinkedSystem(0);
