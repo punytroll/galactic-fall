@@ -2,8 +2,9 @@
 #include "map_knowledge.h"
 
 Character::Character(void) :
+	m_Credits(0.0f),
 	m_MapKnowledge(new MapKnowledge()),
-	m_Credits(0.0f)
+	m_Ship(0)
 {
 }
 

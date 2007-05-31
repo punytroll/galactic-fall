@@ -15,15 +15,12 @@ class Mind : public Object
 {
 public:
 	void SetCharacter(Character * Character);
-	void SetShip(Ship * Ship);
 	Character * GetCharacter(void);
-	Ship * GetShip(void);
-	const Ship * GetShip(void) const;
+	const Character * GetCharacter(void) const;
 	virtual void Update(void) = 0;
 protected:
 	/// no internal state yet
 	Character * m_Character;
-	Ship * m_Ship;
 };
 
 inline void Mind::SetCharacter(Character * Character)
@@ -31,38 +28,21 @@ inline void Mind::SetCharacter(Character * Character)
 	m_Character = Character;
 }
 
-inline void Mind::SetShip(Ship * Ship)
-{
-	m_Ship = Ship;
-}
-
 inline Character * Mind::GetCharacter(void)
 {
 	return m_Character;
 }
 
-inline Ship * Mind::GetShip(void)
+inline const Character * Mind::GetCharacter(void) const
 {
-	return m_Ship;
-}
-
-inline const Ship * Mind::GetShip(void) const
-{
-	return m_Ship;
+	return m_Character;
 }
 
 class MindWithShip : public std::unary_function< Ship *, bool >
 {
 public:
-	explicit MindWithShip(const Ship * Ship) :
-		m_Ship(Ship)
-	{
-	}
-	
-	bool operator()(const Mind * Mind) const
-	{
-		return m_Ship == Mind->GetShip();
-	}
+	explicit MindWithShip(const Ship * Ship);
+	bool operator()(const Mind * Mind) const;
 private:
 	const Ship * m_Ship;
 };
