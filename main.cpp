@@ -1773,6 +1773,7 @@ void LoadSavegame(const Element * SaveElement)
 	g_CurrentSystemLabel->SetString(g_CurrentSystem->GetName());
 	if(g_PlayerShip != 0)
 	{
+		g_PlayerCharacter->SetShip(g_PlayerShip);
 		g_CurrentSystem->AddShip(g_PlayerShip);
 		g_PlayerShip->SetCurrentSystem(g_CurrentSystem);
 	}
