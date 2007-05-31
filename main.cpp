@@ -761,8 +761,8 @@ void LeaveSystem(void)
 	}
 	while(g_ActiveMinds.begin() != g_ActiveMinds.end())
 	{
-		Ship * Ship(g_ActiveMinds.front()->GetShip());
 		Character * Character(g_ActiveMinds.front()->GetCharacter());
+		Ship * Ship(Character->GetShip());
 		
 		delete g_ActiveMinds.front();
 		g_ActiveMinds.erase(g_ActiveMinds.begin());
@@ -813,12 +813,12 @@ void PopulateSystem(void)
 		Character * NewCharacter(new Character());
 		
 		NewCharacter->SetObjectIdentifier(IdentifierStream.str() + "character(" + NewShip->GetShipClass()->GetIdentifier() + ")");
+		NewCharacter->SetShip(NewShip);
 		
 		StateMachineMind * NewMind(new StateMachineMind());
 		
 		NewMind->SetObjectIdentifier(IdentifierStream.str() + "mind(state_machine)");
 		NewMind->SetCharacter(NewCharacter);
-		NewMind->SetShip(NewShip);
 		NewMind->GetStateMachine()->SetState(new SelectSteering(NewShip, NewMind->GetStateMachine()));
 		g_ActiveMinds.push_back(NewMind);
 		g_CurrentSystem->AddShip(NewShip);
