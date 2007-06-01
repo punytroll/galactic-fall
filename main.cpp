@@ -1835,19 +1835,30 @@ int main(int argc, char ** argv)
 {
 	std::vector< std::string > Arguments(argv, argv + argc);
 	std::string LoadSavegameFileName("data/savegame_default.xml");
+	std::string DataFileName("data/data.arx");
 	
 	for(std::vector< std::string >::size_type Index = 0; Index < Arguments.size(); ++Index)
 	{
-		if((Arguments[Index].substr(0, 6) == "--load") && (Arguments[Index].length() > 7))
+		if(Arguments[Index].substr(0, 6) == "--load")
 		{
-			LoadSavegameFileName = Arguments[Index].substr(7);
+			if(Arguments[Index].length() > 7)
+			{
+				LoadSavegameFileName = Arguments[Index].substr(7);
+			}
+		}
+		else if(Arguments[Index].substr(0, 6) == "--data")
+		{
+			if(Arguments[Index].length() > 7)
+			{
+				DataFileName = Arguments[Index].substr(7);
+			}
 		}
 	}
 	
 	// setup the random number generator for everyday use
 	srand(time(0));
 	// ui setup
-	Arxx::URI URI("data/data.arx");
+	Arxx::URI URI(DataFileName);
 	Arxx::Archive Archive;
 	
 	if(Archive.bLoad(URI) == false)
