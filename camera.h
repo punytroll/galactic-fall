@@ -9,7 +9,7 @@ class Camera
 {
 public:
 	Camera(void);
-	void Draw(void);
+	void Draw(void) const;
 	void SetFocus(Position * Focus);
 	void SetPosition(float X, float Y);
 	void SetPosition(float X, float Y, float Z);
