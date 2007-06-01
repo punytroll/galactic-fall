@@ -1460,13 +1460,13 @@ void KeyDown(unsigned int KeyCode)
 			if((ShipIterator == Ships.end()) || (++ShipIterator == Ships.end()))
 			{
 				g_InputFocus = Ships.front();
-				// g_OutputFocus = Ships.front();
+				g_OutputFocus = Ships.front();
 				g_Camera.SetFocus(Ships.front());
 			}
 			else
 			{
 				g_InputFocus = *ShipIterator;
-				// g_OutputFocus = *ShipIterator;
+				g_OutputFocus = *ShipIterator;
 				g_Camera.SetFocus(*ShipIterator);
 			}
 			MindIterator = std::find_if(g_ActiveMinds.begin(), g_ActiveMinds.end(), MindWithShip(g_InputFocus));
@@ -1856,42 +1856,42 @@ int main(int argc, char ** argv)
 		
 		return 1;
 	}
-	g_MessageLabel = ReadLabel(GetItem(Archive, MESSAGE_LABEL));
-	g_TimeWarpLabel = ReadLabel(GetItem(Archive, TIME_WARP_LABEL));
-	g_SystemLabel = ReadLabel(GetItem(Archive, SYSTEM_LABEL));
-	g_CreditsLabel = ReadLabel(GetItem(Archive, CREDITS_LABEL));
-	g_FuelLabel = ReadLabel(GetItem(Archive, FUEL_LABEL));
-	g_HullLabel = ReadLabel(GetItem(Archive, HULL_LABEL));
-	g_ScannerWidget = ReadWidget(GetItem(Archive, SCANNER_WIDGET));
-	ReadWidget(GetItem(Archive, SCANNER_DISPLAY_WIDGET), new ScannerDisplayWidget());
-	g_MiniMapWidget = ReadWidget(GetItem(Archive, MINI_MAP_WIDGET), new MiniMapWidget());
-	g_TargetLabel = ReadLabel(GetItem(Archive, TARGET_LABEL));
-	g_CurrentSystemLabel = ReadLabel(GetItem(Archive, CURRENT_SYSTEM_LABEL));
+	g_CreditsLabel = ReadLabel(GetItem(Archive, LABEL_CREDITS));
+	g_FuelLabel = ReadLabel(GetItem(Archive, LABEL_FUEL));
+	g_HullLabel = ReadLabel(GetItem(Archive, LABEL_HULL));
+	g_MessageLabel = ReadLabel(GetItem(Archive, LABEL_MESSAGE));
+	g_SystemLabel = ReadLabel(GetItem(Archive, LABEL_SYSTEM));
+	g_TimeWarpLabel = ReadLabel(GetItem(Archive, LABEL_TIME_WARP));
+	g_MiniMapWidget = ReadWidget(GetItem(Archive, WIDGET_MINI_MAP), new MiniMapWidget());
+		g_CurrentSystemLabel = ReadLabel(GetItem(Archive, LABEL_CURRENT_SYSTEM));
+	g_ScannerWidget = ReadWidget(GetItem(Archive, WIDGET_SCANNER));
+		g_TargetLabel = ReadLabel(GetItem(Archive, LABEL_TARGET));
+		ReadWidget(GetItem(Archive, WIDGET_SCANNER_DISPLAY), new ScannerDisplayWidget());
 	
 	// data reading
 	// ARX
-	ReadModel(&g_ModelManager, GetItem(Archive, CARGO_CUBE_MODEL));
-	ReadModel(&g_ModelManager, GetItem(Archive, SHUTTLE_MODEL));
-	ReadModel(&g_ModelManager, GetItem(Archive, TRANSPORTER_MODEL));
-	ReadModel(&g_ModelManager, GetItem(Archive, PLANET_MODEL));
-	ReadModel(&g_ModelManager, GetItem(Archive, FIGHTER_MODEL));
-	ReadShipClass(&g_ShipClassManager, GetItem(Archive, SHUTTLE_SHIP_CLASS));
-	ReadShipClass(&g_ShipClassManager, GetItem(Archive, TRANSPORTER_SHIP_CLASS));
-	ReadShipClass(&g_ShipClassManager, GetItem(Archive, FIGHTER_SHIP_CLASS));
-	ReadCommodity(&g_CommodityManager, GetItem(Archive, FOOD_COMMODITY));
-	ReadCommodity(&g_CommodityManager, GetItem(Archive, INDUSTRIAL_COMMODITY));
-	ReadCommodity(&g_CommodityManager, GetItem(Archive, MEDICAL_SUPPLIES_COMMODITY));
-	ReadCommodity(&g_CommodityManager, GetItem(Archive, LUXURY_GOODS_COMMODITY));
-	ReadCommodity(&g_CommodityManager, GetItem(Archive, METAL_COMMODITY));
-	ReadCommodity(&g_CommodityManager, GetItem(Archive, EQUIPMENT_COMMODITY));
-	ReadSystem(&g_SystemManager, GetItem(Archive, SOL_SYSTEM));
-	ReadSystem(&g_SystemManager, GetItem(Archive, RIGEL_SYSTEM));
-	ReadSystem(&g_SystemManager, GetItem(Archive, TICHEL_SYSTEM));
-	ReadSystem(&g_SystemManager, GetItem(Archive, ALPHA_CENTAURI_SYSTEM));
-	ReadSystemLink(&g_SystemManager, GetItem(Archive, SOL_ALPHA_CENTAURI_SYSTEM_LINK));
-	ReadSystemLink(&g_SystemManager, GetItem(Archive, SOL_RIGEL_SYSTEM_LINK));
-	ReadSystemLink(&g_SystemManager, GetItem(Archive, TICHEL_ALPHA_CENTAURI_SYSTEM_LINK));
-	ReadSystemLink(&g_SystemManager, GetItem(Archive, TICHEL_RIGEL_SYSTEM_LINK));
+	ReadCommodity(&g_CommodityManager, GetItem(Archive, COMMODITY_EQUIPMENT));
+	ReadCommodity(&g_CommodityManager, GetItem(Archive, COMMODITY_FOOD));
+	ReadCommodity(&g_CommodityManager, GetItem(Archive, COMMODITY_INDUSTRIAL));
+	ReadCommodity(&g_CommodityManager, GetItem(Archive, COMMODITY_LUXURY_GOODS));
+	ReadCommodity(&g_CommodityManager, GetItem(Archive, COMMODITY_MEDICAL_SUPPLIES));
+	ReadCommodity(&g_CommodityManager, GetItem(Archive, COMMODITY_METAL));
+	ReadModel(&g_ModelManager, GetItem(Archive, MODEL_CARGO_CUBE));
+	ReadModel(&g_ModelManager, GetItem(Archive, MODEL_FIGHTER));
+	ReadModel(&g_ModelManager, GetItem(Archive, MODEL_PLANET));
+	ReadModel(&g_ModelManager, GetItem(Archive, MODEL_SHUTTLE));
+	ReadModel(&g_ModelManager, GetItem(Archive, MODEL_TRANSPORTER));
+	ReadShipClass(&g_ShipClassManager, GetItem(Archive, SHIP_CLASS_FIGHTER));
+	ReadShipClass(&g_ShipClassManager, GetItem(Archive, SHIP_CLASS_SHUTTLE));
+	ReadShipClass(&g_ShipClassManager, GetItem(Archive, SHIP_CLASS_TRANSPORTER));
+	ReadSystem(&g_SystemManager, GetItem(Archive, SYSTEM_ALPHA_CENTAURI));
+	ReadSystem(&g_SystemManager, GetItem(Archive, SYSTEM_SOL));
+	ReadSystem(&g_SystemManager, GetItem(Archive, SYSTEM_RIGEL));
+	ReadSystem(&g_SystemManager, GetItem(Archive, SYSTEM_TICHEL));
+	ReadSystemLink(&g_SystemManager, GetItem(Archive, SYSTEM_LINK_ALPHA_CENTAURI_SOL));
+	ReadSystemLink(&g_SystemManager, GetItem(Archive, SYSTEM_LINK_ALPHA_CENTAURI_TICHEL));
+	ReadSystemLink(&g_SystemManager, GetItem(Archive, SYSTEM_LINK_RIGEL_SOL));
+	ReadSystemLink(&g_SystemManager, GetItem(Archive, SYSTEM_LINK_RIGEL_TICHEL));
 	
 	// initialize the player (initial load)
 	if(LoadSavegame(LoadSavegameFileName) == false)
