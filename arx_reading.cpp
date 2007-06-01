@@ -26,7 +26,46 @@
 #include "user_interface.h"
 #include "widget.h"
 
+static Arxx::Item * Resolve(Arxx::Reference & Reference);
+
+static void ReadCommodity(CommodityManager * CommodityManager, Arxx::Reference & Reference);
+static void ReadModel(ModelManager * ModelManager, Arxx::Reference & Reference);
+static void ReadShipClass(ShipClassManager * ShipClassManager, Arxx::Reference & Reference);
+static void ReadSystem(SystemManager * SystemManager, Arxx::Reference & Reference);
+static void ReadSystemLink(SystemManager * SystemManager, Arxx::Reference & Reference);
+
 static void ReadWidget(Arxx::BufferReader & Reader, Widget * NewWidget);
+
+static Arxx::Item * Resolve(Arxx::Reference & Reference)
+{
+	Arxx::Item * Item(Reference.pGetItem());
+	
+	if(Item == 0)
+	{
+		throw std::runtime_error("The unique identifier '" + to_string_cast(Reference.u4GetUniqueID()) + "' is referenced but could not be resolved.");
+	}
+	if(Item->bIsFetched() == false)
+	{
+		if(Item->bFetch() == false)
+		{
+			throw std::runtime_error("Could not fetch data for item '" + Item->sGetName() + "' [" + to_string_cast(Item->u4GetUniqueID()) + "].");
+		}
+		if(Item->bIsFetched() == false)
+		{
+			throw std::runtime_error("Could not fetch data for item '" + Item->sGetName() + "' [" + to_string_cast(Item->u4GetUniqueID()) + "].");
+		}
+	}
+	if(Item->bIsCompressed() == true)
+	{
+		Item->vDecompress();
+		if(Item->bIsCompressed() == true)
+		{
+			throw std::runtime_error("Could not decompress data for item '" + Item->sGetName() + "' [" + to_string_cast(Item->u4GetUniqueID()) + "].");
+		}
+	}
+	
+	return Item;
+}
 
 Arxx::Item * GetItem(Arxx::Archive & Archive, Arxx::u4byte UniqueIdentifier)
 {
@@ -59,8 +98,125 @@ Arxx::Item * GetItem(Arxx::Archive & Archive, Arxx::u4byte UniqueIdentifier)
 	return Item;
 }
 
-Commodity * ReadCommodity(CommodityManager * CommodityManager, Arxx::Item * Item)
+void ReadCommodities(Arxx::Archive & Archive, CommodityManager * Manager)
 {
+	Arxx::Item * Directory(Archive.GetItem("/Commodities"));
+	
+	if(Directory == 0)
+	{
+		throw std::runtime_error("Could not find an item at the path '/Commodities'.");
+	}
+	if(Directory->GetStructure().bHasRelation("child") == false)
+	{
+		throw std::runtime_error("The directory '/Commodities' does not contain a 'child' relation.");
+	}
+	
+	Arxx::Structure::Relation & Relation(Directory->GetStructure().GetRelation("child"));
+	Arxx::Structure::Relation::iterator CommodityIterator(Relation.begin());
+	
+	while(CommodityIterator != Relation.end())
+	{
+		ReadCommodity(Manager, *CommodityIterator);
+		++CommodityIterator;
+	}
+}
+
+void ReadModels(Arxx::Archive & Archive, ModelManager * Manager)
+{
+	Arxx::Item * Directory(Archive.GetItem("/Models"));
+	
+	if(Directory == 0)
+	{
+		throw std::runtime_error("Could not find an item at the path '/Models'.");
+	}
+	if(Directory->GetStructure().bHasRelation("child") == false)
+	{
+		throw std::runtime_error("The directory '/Models' does not contain a 'child' relation.");
+	}
+	
+	Arxx::Structure::Relation & Relation(Directory->GetStructure().GetRelation("child"));
+	Arxx::Structure::Relation::iterator Iterator(Relation.begin());
+	
+	while(Iterator != Relation.end())
+	{
+		ReadModel(Manager, *Iterator);
+		++Iterator;
+	}
+}
+
+void ReadShipClasses(Arxx::Archive & Archive, ShipClassManager * Manager)
+{
+	Arxx::Item * Directory(Archive.GetItem("/Ship Classes"));
+	
+	if(Directory == 0)
+	{
+		throw std::runtime_error("Could not find an item at the path '/Ship Classes'.");
+	}
+	if(Directory->GetStructure().bHasRelation("child") == false)
+	{
+		throw std::runtime_error("The directory '/Ship Classes' does not contain a 'child' relation.");
+	}
+	
+	Arxx::Structure::Relation & Relation(Directory->GetStructure().GetRelation("child"));
+	Arxx::Structure::Relation::iterator Iterator(Relation.begin());
+	
+	while(Iterator != Relation.end())
+	{
+		ReadShipClass(Manager, *Iterator);
+		++Iterator;
+	}
+}
+
+void ReadSystems(Arxx::Archive & Archive, SystemManager * Manager)
+{
+	Arxx::Item * Directory(Archive.GetItem("/Systems"));
+	
+	if(Directory == 0)
+	{
+		throw std::runtime_error("Could not find an item at the path '/Systems'.");
+	}
+	if(Directory->GetStructure().bHasRelation("child") == false)
+	{
+		throw std::runtime_error("The directory '/Systems' does not contain a 'child' relation.");
+	}
+	
+	Arxx::Structure::Relation & Relation(Directory->GetStructure().GetRelation("child"));
+	Arxx::Structure::Relation::iterator Iterator(Relation.begin());
+	
+	while(Iterator != Relation.end())
+	{
+		ReadSystem(Manager, *Iterator);
+		++Iterator;
+	}
+}
+
+void ReadSystemLinks(Arxx::Archive & Archive, SystemManager * Manager)
+{
+	Arxx::Item * Directory(Archive.GetItem("/System Links"));
+	
+	if(Directory == 0)
+	{
+		throw std::runtime_error("Could not find an item at the path '/System Links'.");
+	}
+	if(Directory->GetStructure().bHasRelation("child") == false)
+	{
+		throw std::runtime_error("The directory '/System Links' does not contain a 'child' relation.");
+	}
+	
+	Arxx::Structure::Relation & Relation(Directory->GetStructure().GetRelation("child"));
+	Arxx::Structure::Relation::iterator Iterator(Relation.begin());
+	
+	while(Iterator != Relation.end())
+	{
+		ReadSystemLink(Manager, *Iterator);
+		++Iterator;
+	}
+}
+
+static void ReadCommodity(CommodityManager * CommodityManager, Arxx::Reference & Reference)
+{
+	Arxx::Item * Item(Resolve(Reference));
+	
 	if(Item->u4GetType() != ARX_TYPE_COMMODITY)
 	{
 		throw std::runtime_error("Item type for commodity '" + Item->sGetName() + "' should be '" + to_string_cast(ARX_TYPE_COMMODITY) + "' not '" + to_string_cast(Item->u4GetType()) + "'.");
@@ -79,7 +235,7 @@ Commodity * ReadCommodity(CommodityManager * CommodityManager, Arxx::Item * Item
 	
 	if(NewCommodity == 0)
 	{
-		return 0;
+		throw std::runtime_error("Could not create commodity '" + Identifier + "'.");
 	}
 	
 	std::string Name;
@@ -91,8 +247,6 @@ Commodity * ReadCommodity(CommodityManager * CommodityManager, Arxx::Item * Item
 	NewCommodity->SetName(Name);
 	NewCommodity->SetBasePrice(BasePrice);
 	NewCommodity->SetColor(Color);
-	
-	return NewCommodity;
 }
 
 static void ReadLabel(Arxx::BufferReader & Reader, Label * Label)
@@ -150,8 +304,10 @@ Label * ReadLabel(Arxx::Item * Item)
 	return NewLabel;
 }
 
-Model * ReadModel(ModelManager * ModelManager, Arxx::Item * Item)
+static void ReadModel(ModelManager * ModelManager, Arxx::Reference & Reference)
 {
+	Arxx::Item * Item(Resolve(Reference));
+	
 	if(Item->u4GetType() != ARX_TYPE_MODEL)
 	{
 		throw std::runtime_error("Item type for model '" + Item->sGetName() + "' should be '" + to_string_cast(ARX_TYPE_MODEL) + "' not '" + to_string_cast(Item->u4GetType()) + "'.");
@@ -167,6 +323,12 @@ Model * ReadModel(ModelManager * ModelManager, Arxx::Item * Item)
 	Reader >> Identifier;
 	
 	Model * NewModel(ModelManager->Create(Identifier));
+	
+	if(NewModel == 0)
+	{
+		throw std::runtime_error("Could not create model '" + Identifier + "'.");
+	}
+	
 	std::map< std::string, std::vector< math3d::vector4f >::size_type > Points;
 	Arxx::u4byte Count;
 	
@@ -210,12 +372,12 @@ Model * ReadModel(ModelManager * ModelManager, Arxx::Item * Item)
 		Reader >> TriangleIdentifier >> TriangleName >> TrianglePoint1Identifier >> TrianglePoint2Identifier >> TrianglePoint3Identifier;
 		NewModel->AddTriangle(TrianglePoints[TrianglePoint1Identifier].first, TrianglePoints[TrianglePoint1Identifier].second, TrianglePoints[TrianglePoint2Identifier].first, TrianglePoints[TrianglePoint2Identifier].second, TrianglePoints[TrianglePoint3Identifier].first, TrianglePoints[TrianglePoint3Identifier].second);
 	}
-	
-	return NewModel;
 }
 
-ShipClass * ReadShipClass(ShipClassManager * ShipClassManager, Arxx::Item * Item)
+static void ReadShipClass(ShipClassManager * ShipClassManager, Arxx::Reference & Reference)
 {
+	Arxx::Item * Item(Resolve(Reference));
+	
 	if(Item->u4GetType() != ARX_TYPE_SHIP_CLASS)
 	{
 		throw std::runtime_error("Item type for ship class '" + Item->sGetName() + "' should be '" + to_string_cast(ARX_TYPE_SHIP_CLASS) + "' not '" + to_string_cast(Item->u4GetType()) + "'.");
@@ -234,7 +396,7 @@ ShipClass * ReadShipClass(ShipClassManager * ShipClassManager, Arxx::Item * Item
 	
 	if(NewShipClass == 0)
 	{
-		return 0;
+		throw std::runtime_error("Could not create ship class '" + Identifier + "'.");
 	}
 	
 	std::string ModelIdentifier;
@@ -271,12 +433,12 @@ ShipClass * ReadShipClass(ShipClassManager * ShipClassManager, Arxx::Item * Item
 	NewShipClass->SetHull(Hull);
 	NewShipClass->SetColor(ModelColor);
 	NewShipClass->SetExhaustOffset(ExhaustOffset);
-	
-	return NewShipClass;
 }
 
-System * ReadSystem(SystemManager * SystemManager, Arxx::Item * Item)
+static void ReadSystem(SystemManager * SystemManager, Arxx::Reference & Reference)
 {
+	Arxx::Item * Item(Resolve(Reference));
+	
 	if(Item->u4GetType() != ARX_TYPE_SYSTEM)
 	{
 		throw std::runtime_error("Item type for system '" + Item->sGetName() + "' should be '" + to_string_cast(ARX_TYPE_SYSTEM) + "' not '" + to_string_cast(Item->u4GetType()) + "'.");
@@ -356,12 +518,12 @@ System * ReadSystem(SystemManager * SystemManager, Arxx::Item * Item)
 		NewPlanet->SetFuelPrice(FuelPrice);
 		NewPlanet->SetLandingFee(LandingFee);
 	}
-	
-	return NewSystem;
 }
 
-void ReadSystemLink(SystemManager * SystemManager, Arxx::Item * Item)
+static void ReadSystemLink(SystemManager * SystemManager, Arxx::Reference & Reference)
 {
+	Arxx::Item * Item(Resolve(Reference));
+	
 	if(Item->u4GetType() != ARX_TYPE_SYSTEM_LINK)
 	{
 		throw std::runtime_error("Item type for system link '" + Item->sGetName() + "' should be '" + to_string_cast(ARX_TYPE_SYSTEM_LINK) + "' not '" + to_string_cast(Item->u4GetType()) + "'.");

@@ -16,12 +16,13 @@ class Widget;
 
 Arxx::Item * GetItem(Arxx::Archive & Archive, Arxx::u4byte UniqueIdentifier);
 
-Commodity * ReadCommodity(CommodityManager * CommodityManager, Arxx::Item * Item);
+void ReadCommodities(Arxx::Archive & Archive, CommodityManager * Manager);
+void ReadModels(Arxx::Archive & Archive, ModelManager * Manager);
+void ReadShipClasses(Arxx::Archive & Archive, ShipClassManager * Manager);
+void ReadSystems(Arxx::Archive & Archive, SystemManager * Manager);
+void ReadSystemLinks(Arxx::Archive & Archive, SystemManager * Manager);
+
 Label * ReadLabel(Arxx::Item * Item);
-Model * ReadModel(ModelManager * ModelManager, Arxx::Item * Item);
-ShipClass * ReadShipClass(ShipClassManager * ShipClassManager, Arxx::Item * Item);
-System * ReadSystem(SystemManager * SystemManager, Arxx::Item * Item);
-void ReadSystemLink(SystemManager * SystemManager, Arxx::Item * Item);
 Widget * ReadWidget(Arxx::Item * Item, Widget * Widget = 0);
 
 #endif
