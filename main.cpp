@@ -1881,28 +1881,11 @@ int main(int argc, char ** argv)
 	
 	// data reading
 	// ARX
-	ReadCommodity(&g_CommodityManager, GetItem(Archive, COMMODITY_EQUIPMENT));
-	ReadCommodity(&g_CommodityManager, GetItem(Archive, COMMODITY_FOOD));
-	ReadCommodity(&g_CommodityManager, GetItem(Archive, COMMODITY_INDUSTRIAL));
-	ReadCommodity(&g_CommodityManager, GetItem(Archive, COMMODITY_LUXURY_GOODS));
-	ReadCommodity(&g_CommodityManager, GetItem(Archive, COMMODITY_MEDICAL_SUPPLIES));
-	ReadCommodity(&g_CommodityManager, GetItem(Archive, COMMODITY_METAL));
-	ReadModel(&g_ModelManager, GetItem(Archive, MODEL_CARGO_CUBE));
-	ReadModel(&g_ModelManager, GetItem(Archive, MODEL_FIGHTER));
-	ReadModel(&g_ModelManager, GetItem(Archive, MODEL_PLANET));
-	ReadModel(&g_ModelManager, GetItem(Archive, MODEL_SHUTTLE));
-	ReadModel(&g_ModelManager, GetItem(Archive, MODEL_TRANSPORTER));
-	ReadShipClass(&g_ShipClassManager, GetItem(Archive, SHIP_CLASS_FIGHTER));
-	ReadShipClass(&g_ShipClassManager, GetItem(Archive, SHIP_CLASS_SHUTTLE));
-	ReadShipClass(&g_ShipClassManager, GetItem(Archive, SHIP_CLASS_TRANSPORTER));
-	ReadSystem(&g_SystemManager, GetItem(Archive, SYSTEM_ALPHA_CENTAURI));
-	ReadSystem(&g_SystemManager, GetItem(Archive, SYSTEM_SOL));
-	ReadSystem(&g_SystemManager, GetItem(Archive, SYSTEM_RIGEL));
-	ReadSystem(&g_SystemManager, GetItem(Archive, SYSTEM_TICHEL));
-	ReadSystemLink(&g_SystemManager, GetItem(Archive, SYSTEM_LINK_ALPHA_CENTAURI_SOL));
-	ReadSystemLink(&g_SystemManager, GetItem(Archive, SYSTEM_LINK_ALPHA_CENTAURI_TICHEL));
-	ReadSystemLink(&g_SystemManager, GetItem(Archive, SYSTEM_LINK_RIGEL_SOL));
-	ReadSystemLink(&g_SystemManager, GetItem(Archive, SYSTEM_LINK_RIGEL_TICHEL));
+	ReadCommodities(Archive, &g_CommodityManager);
+	ReadModels(Archive, &g_ModelManager);
+	ReadShipClasses(Archive, &g_ShipClassManager);
+	ReadSystems(Archive, &g_SystemManager);
+	ReadSystemLinks(Archive, &g_SystemManager);
 	
 	// initialize the player (initial load)
 	if(LoadSavegame(LoadSavegameFileName) == false)
