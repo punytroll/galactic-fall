@@ -20,6 +20,7 @@
 #include "ship_class.h"
 #include "ship_class_manager.h"
 #include "star.h"
+#include "string_cast.h"
 #include "system.h"
 #include "system_manager.h"
 #include "user_interface.h"
@@ -33,23 +34,17 @@ Arxx::Item * GetItem(Arxx::Archive & Archive, Arxx::u4byte UniqueIdentifier)
 	
 	if(Item == 0)
 	{
-		std::cerr << "Could not find item '" << UniqueIdentifier << "'." << std::endl;
-		
-		throw std::out_of_range("Finding the unique identifier failed.");
+		throw std::runtime_error("Could not find item '" + to_string_cast(UniqueIdentifier) + "'.");
 	}
 	if(Item->bIsFetched() == false)
 	{
 		if(Item->bFetch() == false)
 		{
-			std::cerr << "Could not fetch data for item '" << UniqueIdentifier << "'." << std::endl;
-			
-			throw std::runtime_error("Fetching the data failed.");
+			throw std::runtime_error("Could not fetch data for item '" + to_string_cast(UniqueIdentifier) + "'.");
 		}
 		if(Item->bIsFetched() == false)
 		{
-			std::cerr << "Could not fetch data for item '" << UniqueIdentifier << "'." << std::endl;
-			
-			throw std::runtime_error("Fetching the data failed.");
+			throw std::runtime_error("Could not fetch data for item '" + to_string_cast(UniqueIdentifier) + "'.");
 		}
 	}
 	if(Item->bIsCompressed() == true)
@@ -57,9 +52,7 @@ Arxx::Item * GetItem(Arxx::Archive & Archive, Arxx::u4byte UniqueIdentifier)
 		Item->vDecompress();
 		if(Item->bIsCompressed() == true)
 		{
-			std::cerr << "Could not decompress data for item '" << UniqueIdentifier << "'." << std::endl;
-			
-			throw std::runtime_error("Decompressing the data failed.");
+			throw std::runtime_error("Could not decompress data for item '" + to_string_cast(UniqueIdentifier) + "'.");
 		}
 	}
 	
@@ -68,11 +61,13 @@ Arxx::Item * GetItem(Arxx::Archive & Archive, Arxx::u4byte UniqueIdentifier)
 
 Commodity * ReadCommodity(CommodityManager * CommodityManager, Arxx::Item * Item)
 {
-	if(Item->u4GetType() != ARX_COMMODITY_TYPE)
+	if(Item->u4GetType() != ARX_TYPE_COMMODITY)
 	{
-		std::cerr << "Item type for commodity '" << Item->sGetName() << "' should be '" << ARX_COMMODITY_TYPE << "' not '" << Item->u4GetType() << "'." << std::endl;
-		
-		throw std::out_of_range("Encountered invalid type.");
+		throw std::runtime_error("Item type for commodity '" + Item->sGetName() + "' should be '" + to_string_cast(ARX_TYPE_COMMODITY) + "' not '" + to_string_cast(Item->u4GetType()) + "'.");
+	}
+	if(Item->u4GetSubType() != 0)
+	{
+		throw std::runtime_error("Item sub type for commodity '" + Item->sGetName() + "' should be '0' not '" + to_string_cast(Item->u4GetSubType()) + "'.");
 	}
 	
 	Arxx::BufferReader Reader(*Item);
@@ -142,11 +137,9 @@ static void ReadLabel(Arxx::BufferReader & Reader, Label * Label)
 
 Label * ReadLabel(Arxx::Item * Item)
 {
-	if(Item->u4GetSubType() != 1)
+	if(Item->u4GetType() != ARX_TYPE_WIDGET)
 	{
-		std::cerr << "Item subtype for label should be '1' not '" << Item->u4GetSubType() << "'." << std::endl;
-		
-		throw std::out_of_range("Encountered unknown subtype.");
+		throw std::runtime_error("Item type for widget should be '" + to_string_cast(ARX_TYPE_WIDGET) + "' not '" + to_string_cast(Item->u4GetType()) + "'.");
 	}
 	
 	Arxx::BufferReader Reader(*Item);
@@ -159,11 +152,13 @@ Label * ReadLabel(Arxx::Item * Item)
 
 Model * ReadModel(ModelManager * ModelManager, Arxx::Item * Item)
 {
-	if(Item->u4GetType() != ARX_MODEL_TYPE)
+	if(Item->u4GetType() != ARX_TYPE_MODEL)
 	{
-		std::cerr << "Item type for model '" << Item->sGetName() << "' should be '" << ARX_MODEL_TYPE << "' not '" << Item->u4GetType() << "'." << std::endl;
-		
-		throw std::out_of_range("Encountered invalid type.");
+		throw std::runtime_error("Item type for model '" + Item->sGetName() + "' should be '" + to_string_cast(ARX_TYPE_MODEL) + "' not '" + to_string_cast(Item->u4GetType()) + "'.");
+	}
+	if(Item->u4GetSubType() != 0)
+	{
+		throw std::runtime_error("Item sub type for model '" + Item->sGetName() + "' should be '0' not '" + to_string_cast(Item->u4GetSubType()) + "'.");
 	}
 	
 	Arxx::BufferReader Reader(*Item);
@@ -221,11 +216,13 @@ Model * ReadModel(ModelManager * ModelManager, Arxx::Item * Item)
 
 ShipClass * ReadShipClass(ShipClassManager * ShipClassManager, Arxx::Item * Item)
 {
-	if(Item->u4GetType() != ARX_SHIP_CLASS_TYPE)
+	if(Item->u4GetType() != ARX_TYPE_SHIP_CLASS)
 	{
-		std::cerr << "Item type for ship class '" << Item->sGetName() << "' should be '" << ARX_SHIP_CLASS_TYPE << "' not '" << Item->u4GetType() << "'." << std::endl;
-		
-		throw std::out_of_range("Encountered invalid type.");
+		throw std::runtime_error("Item type for ship class '" + Item->sGetName() + "' should be '" + to_string_cast(ARX_TYPE_SHIP_CLASS) + "' not '" + to_string_cast(Item->u4GetType()) + "'.");
+	}
+	if(Item->u4GetSubType() != 0)
+	{
+		throw std::runtime_error("Item sub type for ship class '" + Item->sGetName() + "' should be '0' not '" + to_string_cast(Item->u4GetSubType()) + "'.");
 	}
 	
 	Arxx::BufferReader Reader(*Item);
@@ -265,9 +262,7 @@ ShipClass * ReadShipClass(ShipClassManager * ShipClassManager, Arxx::Item * Item
 	
 	if(Model == 0)
 	{
-		std::cerr << "Could not find the model \"" << ModelIdentifier << "\"." << std::endl;
-		
-		throw std::out_of_range("Encountered invalid model identifier.");
+		throw std::runtime_error("For the ship class '" + Item->sGetName() + " could not find the model '" + ModelIdentifier + "'.");
 	}
 	NewShipClass->SetModel(Model);
 	NewShipClass->SetTurnSpeed(TurnSpeed);
@@ -282,11 +277,13 @@ ShipClass * ReadShipClass(ShipClassManager * ShipClassManager, Arxx::Item * Item
 
 System * ReadSystem(SystemManager * SystemManager, Arxx::Item * Item)
 {
-	if(Item->u4GetType() != ARX_SYSTEM_TYPE)
+	if(Item->u4GetType() != ARX_TYPE_SYSTEM)
 	{
-		std::cerr << "Item type for system '" << Item->sGetName() << "' should be '" << ARX_SYSTEM_TYPE << "' not '" << Item->u4GetType() << "'." << std::endl;
-		
-		throw std::out_of_range("Encountered invalid type.");
+		throw std::runtime_error("Item type for system '" + Item->sGetName() + "' should be '" + to_string_cast(ARX_TYPE_SYSTEM) + "' not '" + to_string_cast(Item->u4GetType()) + "'.");
+	}
+	if(Item->u4GetSubType() != 0)
+	{
+		throw std::runtime_error("Item sub type for system '" + Item->sGetName() + "' should be '0' not '" + to_string_cast(Item->u4GetSubType()) + "'.");
 	}
 	
 	Arxx::BufferReader Reader(*Item);
@@ -312,12 +309,6 @@ System * ReadSystem(SystemManager * SystemManager, Arxx::Item * Item)
 	Star * NewStar(NewSystem->CreateStar());
 	
 	NewStar->SetObjectIdentifier("::system(" + NewSystem->GetIdentifier() + ")::star(" + StarIdentifier + ")");
-	if(NewStar == 0)
-	{
-		std::cerr << "Error with star identifier '" << StarIdentifier << "'." << std::endl;
-		
-		throw std::runtime_error("Invalid identifier");
-	}
 	NewStar->SetPosition(StarPosition);
 	NewStar->SetColor(StarColor);
 	for(Arxx::u4byte Number = 1; Number <= PlanetCount; ++Number)
@@ -371,11 +362,13 @@ System * ReadSystem(SystemManager * SystemManager, Arxx::Item * Item)
 
 void ReadSystemLink(SystemManager * SystemManager, Arxx::Item * Item)
 {
-	if(Item->u4GetType() != ARX_SYSTEM_LINK_TYPE)
+	if(Item->u4GetType() != ARX_TYPE_SYSTEM_LINK)
 	{
-		std::cerr << "Item type for system '" << Item->sGetName() << "' should be '" << ARX_SYSTEM_LINK_TYPE << "' not '" << Item->u4GetType() << "'." << std::endl;
-		
-		throw std::out_of_range("Encountered invalid type.");
+		throw std::runtime_error("Item type for system link '" + Item->sGetName() + "' should be '" + to_string_cast(ARX_TYPE_SYSTEM_LINK) + "' not '" + to_string_cast(Item->u4GetType()) + "'.");
+	}
+	if(Item->u4GetSubType() != 0)
+	{
+		throw std::runtime_error("Item sub type for system link '" + Item->sGetName() + "' should be '0' not '" + to_string_cast(Item->u4GetSubType()) + "'.");
 	}
 	
 	Arxx::BufferReader Reader(*Item);
@@ -387,11 +380,13 @@ void ReadSystemLink(SystemManager * SystemManager, Arxx::Item * Item)
 	System * System1(SystemManager->Get(System1Identifier));
 	System * System2(SystemManager->Get(System2Identifier));
 	
-	if((System1 == 0) || (System2 == 0))
+	if(System1 == 0)
 	{
-		std::cerr << "For system link '" << Item->sGetName() << "' both systems should be defined." << std::endl;
-		
-		throw std::out_of_range("Encountered invalid system identifier.");
+		throw std::runtime_error("For the system link '" + Item->sGetName() + "' the first system '" + System1Identifier + "' must be defined.");
+	}		
+	if(System2 == 0)
+	{
+		throw std::runtime_error("For the system link '" + Item->sGetName() + "' the second system '" + System2Identifier + "' must be defined.");
 	}
 	System1->AddLinkedSystem(System2);
 	System2->AddLinkedSystem(System1);
@@ -416,9 +411,7 @@ static void ReadWidget(Arxx::BufferReader & Reader, Widget * NewWidget)
 		
 		if(SupWidget == 0)
 		{
-			std::cerr << "Could not find the widget at '" << Path << "'." << std::endl;
-			
-			throw std::runtime_error("Unknown sup widget.");
+			throw std::runtime_error("For widget '" + Name + "' could not find the superior widget at path '" + Path + "'.");
 		}
 		SupWidget->AddSubWidget(NewWidget);
 	}
@@ -439,11 +432,9 @@ static void ReadWidget(Arxx::BufferReader & Reader, Widget * NewWidget)
 
 Widget * ReadWidget(Arxx::Item * Item, Widget * NewWidget)
 {
-	if(Item->u4GetSubType() != 0)
+	if(Item->u4GetType() != ARX_TYPE_WIDGET)
 	{
-		std::cerr << "Item subtype for widget should be '0' not '" << Item->u4GetSubType() << "'." << std::endl;
-		
-		throw std::out_of_range("Encountered unknown subtype.");
+		throw std::runtime_error("Item type for widget should be '" + to_string_cast(ARX_TYPE_WIDGET) + "' not '" + to_string_cast(Item->u4GetType()) + "'.");
 	}
 	
 	Arxx::BufferReader Reader(*Item);
