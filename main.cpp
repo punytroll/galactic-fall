@@ -38,6 +38,7 @@
 #include "mind.h"
 #include "model.h"
 #include "model_manager.h"
+#include "perspective.h"
 #include "planet.h"
 #include "planet_dialog.h"
 #include "real_time.h"
@@ -60,8 +61,6 @@ int g_LastMotionX(-1);
 int g_LastMotionY(-1);
 int g_MouseButton(-1);
 Camera g_Camera;
-Camera g_RadarCamera;
-Camera g_MiniMapCamera;
 ModelManager g_ModelManager;
 ShipClassManager g_ShipClassManager(&g_ModelManager);
 CommodityManager g_CommodityManager;
@@ -95,6 +94,7 @@ Widget * g_MiniMapWidget(0);
 Display * g_Display;
 GLXContext g_GLXContext;
 Window g_Window;
+Perspective g_MainPerspective;
 
 enum WantReturnCode
 {
@@ -242,101 +242,26 @@ void DisplayUserInterface(void)
 	glPopAttrib();
 }
 
-void CalculatePerspectiveMatrix(float FieldOfView, float Aspect, float NearClippingPlane, float FarClippingPlane, math3d::matrix4f & Matrix)
-{
-	float Right, Top;
-	
-	Top = NearClippingPlane * tan(FieldOfView);
-	Right = Top * Aspect;
-	
-	Matrix.m_M[1].m_A[0] = Matrix.m_M[2].m_A[0] = Matrix.m_M[3].m_A[0] = Matrix.m_M[0].m_A[1] = Matrix.m_M[2].m_A[1] = Matrix.m_M[3].m_A[1] = Matrix.m_M[0].m_A[2] = Matrix.m_M[1].m_A[2] = Matrix.m_M[0].m_A[3] = Matrix.m_M[1].m_A[3] = Matrix.m_M[3].m_A[3] = 0.0f;
-	Matrix.m_M[0].m_A[0] = NearClippingPlane / Right;
-	Matrix.m_M[1].m_A[1] = NearClippingPlane / Top;
-	Matrix.m_M[2].m_A[2] = -(FarClippingPlane + NearClippingPlane) / (FarClippingPlane - NearClippingPlane);
-	Matrix.m_M[3].m_A[2] = -(2.0f * FarClippingPlane * NearClippingPlane) / (FarClippingPlane - NearClippingPlane);
-	Matrix.m_M[2].m_A[3] = -1.0f;
-}
-
-void SetMainPerspective(void)
-{
-	static float CalculatedForFieldOfView(0.0f);
-	static float CalculatedForHeight(0.0f);
-	static float CalculatedForWidth(0.0f);
-	static math3d::matrix4f Matrix;
-	static bool Initialized(false);
-	
-	if((Initialized == false) || (CalculatedForFieldOfView != g_Camera.GetFieldOfView()) || (CalculatedForHeight != g_Height) || (CalculatedForWidth != g_Width))
-	{
-		/// TODO: Make this configurable
-		/// TODO: Also consider that these values may want to change while in game.
-		const float FieldOfView(g_Camera.GetFieldOfView());
-		const float NearClippingPlane(1.0f);
-		const float FarClippingPlane(1000.0f);
-		
-		CalculatePerspectiveMatrix(FieldOfView, g_Width / g_Height, NearClippingPlane, FarClippingPlane, Matrix);
-		Initialized = true;
-		CalculatedForFieldOfView = FieldOfView;
-		CalculatedForHeight = g_Height;
-		CalculatedForWidth = g_Width;
-	}
-	glLoadMatrixf(Matrix.matrix());
-}
-
-void SetRadarPerspective(float RadialSize)
-{
-	static float CalculatedForRadialSize(0.0f);
-	static math3d::matrix4f Matrix;
-	static bool Initialized(false);
-	
-	/// TODO: Make this configurable
-	if((Initialized == false) || (RadialSize != CalculatedForRadialSize))
-	{
-		float ExtendedRadialSize((5.0f / 4.0f) * RadialSize);
-		
-		g_RadarCamera.SetFieldOfView(asinf(ExtendedRadialSize / sqrtf(ExtendedRadialSize * ExtendedRadialSize + 16 * RadialSize * RadialSize)));
-		CalculatePerspectiveMatrix(g_RadarCamera.GetFieldOfView(), 1.0f, 1.0f, 1000.0f, Matrix);
-		Initialized = true;
-		CalculatedForRadialSize = RadialSize;
-	}
-	glLoadMatrixf(Matrix.matrix());
-}
-
-void SetMiniMapPerspective(void)
-{
-	static float CalculatedForFieldOfView(0.0f);
-	static math3d::matrix4f Matrix;
-	static bool Initialized(false);
-	
-	if((Initialized == false) || (CalculatedForFieldOfView != g_MiniMapCamera.GetFieldOfView()))
-	{
-		/// TODO: Make this configurable
-		/// TODO: Also consider that these values may want to change while in game.
-		const float FieldOfView(g_MiniMapCamera.GetFieldOfView());
-		const float NearClippingPlane(1.0f);
-		const float FarClippingPlane(10000.0f);
-		
-		CalculatePerspectiveMatrix(FieldOfView, 1.0f, NearClippingPlane, FarClippingPlane, Matrix);
-		Initialized = true;
-		CalculatedForFieldOfView = FieldOfView;
-	}
-	glLoadMatrixf(Matrix.matrix());
-}
-
 class ScannerDisplayWidget : public Widget
 {
 public:
 	ScannerDisplayWidget(void) :
 		Widget()
 	{
+		m_Perspective.SetAspect(1.0f);
+		m_Perspective.SetNearClippingPlane(1.0f);
+		m_Perspective.SetFarClippingPlane(1000.0f);
 	}
 	
 	virtual void Draw(void) const
 	{
 		Widget::Draw();
-		// radar
+		// scanner
 		if((g_OutputFocus != 0) && (g_OutputFocus->GetTarget() != 0))
 		{
 			float RadialSize(g_OutputFocus->GetTarget()->GetRadialSize());
+			float ExtendedRadialSize((5.0f / 4.0f) * RadialSize);
+			float FieldOfView(asinf(ExtendedRadialSize / sqrtf(ExtendedRadialSize * ExtendedRadialSize + 16 * RadialSize * RadialSize)));
 			
 			glPushAttrib(GL_ENABLE_BIT | GL_VIEWPORT_BIT | GL_TRANSFORM_BIT);
 			glEnable(GL_DEPTH_TEST);
@@ -345,13 +270,15 @@ public:
 			glViewport(static_cast< GLint >(GetGlobalPosition().m_V.m_A[0]), static_cast< GLint >(0.0f), static_cast< GLint >(GetSize().m_V.m_A[0]), static_cast< GLint >(GetSize().m_V.m_A[1]));
 			glMatrixMode(GL_PROJECTION);
 			glPushMatrix();
-			SetRadarPerspective(RadialSize);
+			m_Perspective.SetFieldOfView(FieldOfView);
+			m_Perspective.Draw();
 			glMatrixMode(GL_MODELVIEW);
 			glPushMatrix();
 			glLoadIdentity();
-			g_RadarCamera.SetPosition(0.0f, 0.0f, 4.0f * RadialSize);
-			g_RadarCamera.SetFocus(g_OutputFocus->GetTarget());
-			g_RadarCamera.Draw();
+			m_Camera.SetFieldOfView(FieldOfView);
+			m_Camera.SetPosition(0.0f, 0.0f, 4.0f * RadialSize);
+			m_Camera.SetFocus(g_OutputFocus->GetTarget());
+			m_Camera.Draw();
 			if((g_CurrentSystem != 0) && (g_CurrentSystem->GetStar() != 0))
 			{
 				glEnable(GL_LIGHTING);
@@ -366,6 +293,9 @@ public:
 			glPopAttrib();
 		}
 	}
+private:
+	mutable Camera m_Camera;
+	mutable Perspective m_Perspective;
 };
 
 class MiniMapWidget : public Widget
@@ -374,13 +304,24 @@ public:
 	MiniMapWidget(void) :
 		Widget()
 	{
+		m_Camera.SetFieldOfView(0.392699082f);
+		m_Camera.SetPosition(0.0f, 0.0f, 1500.0f);
+		m_Perspective.SetAspect(1.0f);
+		m_Perspective.SetFieldOfView(0.392699082f);
+		m_Perspective.SetNearClippingPlane(1.0f);
+		m_Perspective.SetFarClippingPlane(10000.0f);
+	}
+	
+	Camera * GetCamera(void)
+	{
+		return &m_Camera;
 	}
 	
 	virtual void Draw(void) const
 	{
 		Widget::Draw();
 		// mini map
-		if((g_OutputFocus != 0) && (g_CurrentSystem != 0))
+		if((g_OutputFocus != 0) && (g_OutputFocus->GetCurrentSystem() != 0))
 		{
 			glPushAttrib(GL_ENABLE_BIT | GL_VIEWPORT_BIT | GL_TRANSFORM_BIT);
 			glEnable(GL_DEPTH_TEST);
@@ -389,15 +330,15 @@ public:
 			glViewport(static_cast< GLint >(GetGlobalPosition().m_V.m_A[0]), static_cast< GLint >(0.0f), static_cast< GLint >(GetSize().m_V.m_A[0]), static_cast< GLint >(220.0f));
 			glMatrixMode(GL_PROJECTION);
 			glPushMatrix();
-			SetMiniMapPerspective();
+			m_Perspective.Draw();
 			glMatrixMode(GL_MODELVIEW);
 			glPushMatrix();
 			glLoadIdentity();
-			g_MiniMapCamera.Draw();
+			m_Camera.Draw();
 			
-			const std::list< Planet * > & Planets(g_CurrentSystem->GetPlanets());
-			const std::list< Ship * > & Ships(g_CurrentSystem->GetShips());
-			const std::list< Cargo * > & Cargos(g_CurrentSystem->GetCargos());
+			const std::list< Planet * > & Planets(g_OutputFocus->GetCurrentSystem()->GetPlanets());
+			const std::list< Ship * > & Ships(g_OutputFocus->GetCurrentSystem()->GetShips());
+			const std::list< Cargo * > & Cargos(g_OutputFocus->GetCurrentSystem()->GetCargos());
 			
 			glBegin(GL_POINTS);
 			glColor3f(0.8f, 0.8f, 0.8f);
@@ -444,6 +385,9 @@ public:
 			glPopAttrib();
 		}
 	}
+private:
+	Camera m_Camera;
+	Perspective m_Perspective;
 };
 
 void DeleteShipFromSystem(System * System, std::list< Ship * >::iterator ShipIterator)
@@ -593,7 +537,7 @@ void Render(void)
 {
 	glViewport(0, 0, static_cast< GLsizei >(g_Width), static_cast< GLsizei >(g_Height));
 	glMatrixMode(GL_PROJECTION);
-	SetMainPerspective();
+	g_MainPerspective.Draw();
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	g_Camera.Draw();
@@ -676,6 +620,7 @@ void Resize(void)
 		g_Height = 1;
 	}
 	glViewport(0, 0, static_cast< GLint >(g_Width), static_cast< GLint >(g_Height));
+	g_MainPerspective.SetAspect(g_Width / g_Height);
 	g_UserInterface.GetRootWidget()->SetSize(math3d::vector2f(g_Width, g_Height));
 	g_ScannerWidget->SetPosition(math3d::vector2f(0.0f, g_Height - 240.0f));
 	g_MiniMapWidget->SetPosition(math3d::vector2f(g_Width - 220.0f, g_Height - 240.0f));
@@ -1772,6 +1717,7 @@ void LoadSavegame(const Element * SaveElement)
 					{
 						g_Camera.SetFieldOfView(from_string_cast< float >((*CameraChild)->GetAttribute("radians")));
 					}
+					g_MainPerspective.SetFieldOfView(g_Camera.GetFieldOfView());
 				}
 			}
 		}
@@ -1887,6 +1833,8 @@ int main(int argc, char ** argv)
 	ReadSystems(Archive, &g_SystemManager);
 	ReadSystemLinks(Archive, &g_SystemManager);
 	
+	g_MainPerspective.SetNearClippingPlane(1.0f);
+	g_MainPerspective.SetFarClippingPlane(1000.f);
 	// initialize the player (initial load)
 	if(LoadSavegame(LoadSavegameFileName) == false)
 	{
@@ -1894,12 +1842,10 @@ int main(int argc, char ** argv)
 	}
 	
 	// setting up the player environment
-	g_MiniMapCamera.SetPosition(0.0f, 0.0f, 1500.0f);
 	if(g_InputFocus != 0)
 	{
-		g_MiniMapCamera.SetFocus(g_InputFocus);
+		dynamic_cast< MiniMapWidget * >(g_MiniMapWidget)->GetCamera()->SetFocus(g_InputFocus);
 	}
-	g_MiniMapCamera.SetFieldOfView(0.392699082f);
 	// set first timeout for widget collector, it will reinsert itself on callback
 	g_TimeoutNotifications.insert(std::make_pair(RealTime::GetTime() + 5.0f, new FunctionCallback0< void >(CollectWidgets)));
 	// setting up the graphical environment

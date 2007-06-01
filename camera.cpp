@@ -8,7 +8,7 @@ Camera::Camera(void) :
 {
 }
 
-void Camera::Draw(void)
+void Camera::Draw(void) const
 {
 	glTranslatef(-m_Position.m_V.m_A[0], -m_Position.m_V.m_A[1], -m_Position.m_V.m_A[2]);
 	if(m_Focus != 0)
