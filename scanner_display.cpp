@@ -2,12 +2,12 @@
 
 #include <math3d/vector4f.h>
 
-#include "scanner_display_widget.h"
+#include "scanner_display.h"
 #include "ship.h"
 #include "star.h"
 #include "system.h"
 
-ScannerDisplayWidget::ScannerDisplayWidget(void) :
+ScannerDisplay::ScannerDisplay(void) :
 	Widget(),
 	m_Focus(0)
 {
@@ -16,7 +16,7 @@ ScannerDisplayWidget::ScannerDisplayWidget(void) :
 	m_Perspective.SetFarClippingPlane(1000.0f);
 }
 
-void ScannerDisplayWidget::Draw(void) const
+void ScannerDisplay::Draw(void) const
 {
 	Widget::Draw();
 	// scanner
@@ -57,7 +57,7 @@ void ScannerDisplayWidget::Draw(void) const
 	}
 }
 
-void ScannerDisplayWidget::ScannerDisplayWidget::SetFocus(Ship * Focus)
+void ScannerDisplay::SetFocus(Ship * Focus)
 {
 	m_Focus = Focus;
 }

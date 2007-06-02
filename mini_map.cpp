@@ -1,12 +1,12 @@
 #include <GL/gl.h>
 
 #include "cargo.h"
-#include "mini_map_widget.h"
+#include "mini_map.h"
 #include "planet.h"
 #include "ship.h"
 #include "system.h"
 
-MiniMapWidget::MiniMapWidget(void) :
+MiniMap::MiniMap(void) :
 	Widget(),
 	m_Focus(0)
 {
@@ -18,13 +18,13 @@ MiniMapWidget::MiniMapWidget(void) :
 	m_Perspective.SetFarClippingPlane(10000.0f);
 }
 
-void MiniMapWidget::SetFocus(Ship * Focus)
+void MiniMap::SetFocus(Ship * Focus)
 {
 	m_Focus = Focus;
 	m_Camera.SetFocus(Focus);
 }
 
-void MiniMapWidget::Draw(void) const
+void MiniMap::Draw(void) const
 {
 	Widget::Draw();
 	// mini map

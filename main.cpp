@@ -36,14 +36,14 @@
 #include "map_knowledge.h"
 #include "math.h"
 #include "mind.h"
-#include "mini_map_widget.h"
+#include "mini_map.h"
 #include "model.h"
 #include "model_manager.h"
 #include "perspective.h"
 #include "planet.h"
 #include "planet_dialog.h"
 #include "real_time.h"
-#include "scanner_display_widget.h"
+#include "scanner_display.h"
 #include "ship.h"
 #include "ship_class.h"
 #include "ship_class_manager.h"
@@ -91,9 +91,9 @@ UserInterface g_UserInterface;
 std::multimap< double, Callback0< void > * > g_TimeoutNotifications;
 std::list< Mind * > g_ActiveMinds;
 std::list< Mind * > g_SuspendedMinds;
-Widget * g_ScannerWidget(0);
-Widget * g_MiniMapWidget(0);
-Widget * g_ScannerDisplayWidget(0);
+Widget * g_Scanner(0);
+MiniMap * g_MiniMap(0);
+ScannerDisplay * g_ScannerDisplay(0);
 Display * g_Display;
 GLXContext g_GLXContext;
 Window g_Window;
@@ -477,8 +477,8 @@ void Resize(void)
 	glViewport(0, 0, static_cast< GLint >(g_Width), static_cast< GLint >(g_Height));
 	g_MainPerspective.SetAspect(g_Width / g_Height);
 	g_UserInterface.GetRootWidget()->SetSize(math3d::vector2f(g_Width, g_Height));
-	g_ScannerWidget->SetPosition(math3d::vector2f(0.0f, g_Height - 240.0f));
-	g_MiniMapWidget->SetPosition(math3d::vector2f(g_Width - 220.0f, g_Height - 240.0f));
+	g_Scanner->SetPosition(math3d::vector2f(0.0f, g_Height - 240.0f));
+	g_MiniMap->SetPosition(math3d::vector2f(g_Width - 220.0f, g_Height - 240.0f));
 }
 
 void SelectLinkedSystem(System * LinkedSystem)
@@ -1269,8 +1269,8 @@ void KeyDown(unsigned int KeyCode)
 				g_OutputFocus = *ShipIterator;
 				g_Camera.SetFocus(*ShipIterator);
 			}
-			dynamic_cast< MiniMapWidget * >(g_MiniMapWidget)->SetFocus(g_OutputFocus);
-			dynamic_cast< ScannerDisplayWidget * >(g_ScannerDisplayWidget)->SetFocus(g_OutputFocus);
+			g_MiniMap->SetFocus(g_OutputFocus);
+			g_ScannerDisplay->SetFocus(g_OutputFocus);
 			MindIterator = std::find_if(g_ActiveMinds.begin(), g_ActiveMinds.end(), MindWithShip(g_InputFocus));
 			if(MindIterator != g_ActiveMinds.end())
 			{
@@ -1670,25 +1670,25 @@ int main(int argc, char ** argv)
 		
 		return 1;
 	}
-	g_CreditsLabel = ReadLabel(GetItem(Archive, LABEL_CREDITS));
-	g_FuelLabel = ReadLabel(GetItem(Archive, LABEL_FUEL));
-	g_HullLabel = ReadLabel(GetItem(Archive, LABEL_HULL));
-	g_MessageLabel = ReadLabel(GetItem(Archive, LABEL_MESSAGE));
-	g_SystemLabel = ReadLabel(GetItem(Archive, LABEL_SYSTEM));
-	g_TimeWarpLabel = ReadLabel(GetItem(Archive, LABEL_TIME_WARP));
-	g_MiniMapWidget = ReadWidget(GetItem(Archive, WIDGET_MINI_MAP), new MiniMapWidget());
-		g_CurrentSystemLabel = ReadLabel(GetItem(Archive, LABEL_CURRENT_SYSTEM));
-	g_ScannerWidget = ReadWidget(GetItem(Archive, WIDGET_SCANNER));
-		g_TargetLabel = ReadLabel(GetItem(Archive, LABEL_TARGET));
-		g_ScannerDisplayWidget = ReadWidget(GetItem(Archive, WIDGET_SCANNER_DISPLAY), new ScannerDisplayWidget());
-	
 	// data reading
-	// ARX
 	ReadCommodities(Archive, &g_CommodityManager);
 	ReadModels(Archive, &g_ModelManager);
 	ReadShipClasses(Archive, &g_ShipClassManager);
 	ReadSystems(Archive, &g_SystemManager);
 	ReadSystemLinks(Archive, &g_SystemManager);
+	ReadUserInterface(Archive, &g_UserInterface);
+	
+	g_CreditsLabel = dynamic_cast< Label * >(g_UserInterface.GetWidget("/credits"));
+	g_FuelLabel = dynamic_cast< Label * >(g_UserInterface.GetWidget("/fuel"));
+	g_HullLabel = dynamic_cast< Label * >(g_UserInterface.GetWidget("/hull"));
+	g_MessageLabel = dynamic_cast< Label * >(g_UserInterface.GetWidget("/message"));
+	g_SystemLabel = dynamic_cast< Label * >(g_UserInterface.GetWidget("/system"));
+	g_TimeWarpLabel = dynamic_cast< Label * >(g_UserInterface.GetWidget("/time_warp"));
+	g_MiniMap = dynamic_cast< MiniMap * >(g_UserInterface.GetWidget("/mini_map"));
+		g_CurrentSystemLabel = dynamic_cast< Label * >(g_UserInterface.GetWidget("/mini_map/current_system"));
+	g_Scanner = g_UserInterface.GetWidget("/scanner");
+		g_TargetLabel = dynamic_cast< Label * >(g_UserInterface.GetWidget("/scanner/target"));
+		g_ScannerDisplay = dynamic_cast< ScannerDisplay * >(g_UserInterface.GetWidget("/scanner/display"));
 	
 	g_MainPerspective.SetNearClippingPlane(1.0f);
 	g_MainPerspective.SetFarClippingPlane(1000.f);
@@ -1701,8 +1701,8 @@ int main(int argc, char ** argv)
 	// setting up the player environment
 	if(g_OutputFocus != 0)
 	{
-		dynamic_cast< MiniMapWidget * >(g_MiniMapWidget)->SetFocus(g_OutputFocus);
-		dynamic_cast< ScannerDisplayWidget * >(g_ScannerDisplayWidget)->SetFocus(g_OutputFocus);
+		g_MiniMap->SetFocus(g_OutputFocus);
+		g_ScannerDisplay->SetFocus(g_OutputFocus);
 	}
 	// set first timeout for widget collector, it will reinsert itself on callback
 	g_TimeoutNotifications.insert(std::make_pair(RealTime::GetTime() + 5.0f, new FunctionCallback0< void >(CollectWidgets)));

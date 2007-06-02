@@ -84,9 +84,9 @@ data.arx: .data $(all_data) Makefile
 	arxadd $@ --uid 102 --name "System" --type 1 --subtype 1 --add 1:child .data/label_system.data
 	arxadd $@ --uid 107 --name "Target" --type 1 --subtype 1 --add 1:child .data/label_target.data
 	arxadd $@ --uid 101 --name "Time Warp" --type 1 --subtype 1 --add 1:child .data/label_time_warp.data
-	arxadd $@ --uid 106 --name "Mini Map" --type 1 --subtype 0 --add 1:child .data/widget_mini_map.data
+	arxadd $@ --uid 106 --name "Mini Map" --type 1 --subtype 2 --add 1:child .data/widget_mini_map.data
 	arxadd $@ --uid 105 --name "Scanner" --type 1 --subtype 0 --add 1:child .data/widget_scanner.data
-	arxadd $@ --uid 126 --name "Scanner Display Widget" --type 1 --subtype 0 --add 1:child .data/widget_scanner_display.data
+	arxadd $@ --uid 126 --name "Scanner Display" --type 1 --subtype 3 --add 1:child .data/widget_scanner_display.data
 	@echo -e "\n\nAdding ship classes ...\n"
 	arxadd $@ --uid 131 --name "Fighter" --type 3 --subtype 0 --add 3:child .data/ship_class_fighter.data
 	arxadd $@ --uid 110 --name "Shuttle" --type 3 --subtype 0 --add 3:child .data/ship_class_shuttle.data

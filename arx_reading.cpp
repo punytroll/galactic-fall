@@ -14,9 +14,11 @@
 #include "commodity_manager.h"
 #include "globals.h"
 #include "label.h"
+#include "mini_map.h"
 #include "model.h"
 #include "model_manager.h"
 #include "planet.h"
+#include "scanner_display.h"
 #include "ship_class.h"
 #include "ship_class_manager.h"
 #include "star.h"
@@ -33,8 +35,11 @@ static void ReadModel(ModelManager * ModelManager, Arxx::Reference & Reference);
 static void ReadShipClass(ShipClassManager * ShipClassManager, Arxx::Reference & Reference);
 static void ReadSystem(SystemManager * SystemManager, Arxx::Reference & Reference);
 static void ReadSystemLink(SystemManager * SystemManager, Arxx::Reference & Reference);
-
-static void ReadWidget(Arxx::BufferReader & Reader, Widget * NewWidget);
+static void ReadWidget(UserInterface * UserInterface, Arxx::Reference & Reference);
+static void ReadWidgetLabel(Arxx::BufferReader & Reader, Label * ReadLabel);
+static void ReadWidgetMiniMap(Arxx::BufferReader & Reader, MiniMap * ReadMiniMap);
+static void ReadWidgetScannerDisplay(Arxx::BufferReader & Reader, ScannerDisplay * ReadScannerDisplay);
+static void ReadWidgetWidget(Arxx::BufferReader & Reader, Widget * ReadWidget);
 
 static Arxx::Item * Resolve(Arxx::Reference & Reference)
 {
@@ -61,37 +66,6 @@ static Arxx::Item * Resolve(Arxx::Reference & Reference)
 		if(Item->bIsCompressed() == true)
 		{
 			throw std::runtime_error("Could not decompress data for item '" + Item->sGetName() + "' [" + to_string_cast(Item->u4GetUniqueID()) + "].");
-		}
-	}
-	
-	return Item;
-}
-
-Arxx::Item * GetItem(Arxx::Archive & Archive, Arxx::u4byte UniqueIdentifier)
-{
-	Arxx::Item * Item(Archive.pGetItem(UniqueIdentifier));
-	
-	if(Item == 0)
-	{
-		throw std::runtime_error("Could not find item '" + to_string_cast(UniqueIdentifier) + "'.");
-	}
-	if(Item->bIsFetched() == false)
-	{
-		if(Item->bFetch() == false)
-		{
-			throw std::runtime_error("Could not fetch data for item '" + to_string_cast(UniqueIdentifier) + "'.");
-		}
-		if(Item->bIsFetched() == false)
-		{
-			throw std::runtime_error("Could not fetch data for item '" + to_string_cast(UniqueIdentifier) + "'.");
-		}
-	}
-	if(Item->bIsCompressed() == true)
-	{
-		Item->vDecompress();
-		if(Item->bIsCompressed() == true)
-		{
-			throw std::runtime_error("Could not decompress data for item '" + to_string_cast(UniqueIdentifier) + "'.");
 		}
 	}
 	
@@ -213,6 +187,29 @@ void ReadSystemLinks(Arxx::Archive & Archive, SystemManager * Manager)
 	}
 }
 
+void ReadUserInterface(Arxx::Archive & Archive, UserInterface * UserInterface)
+{
+	Arxx::Item * Directory(Archive.GetItem("/User Interface"));
+	
+	if(Directory == 0)
+	{
+		throw std::runtime_error("Could not find an item at the path '/User Interface'.");
+	}
+	if(Directory->GetStructure().bHasRelation("child") == false)
+	{
+		throw std::runtime_error("The directory '/User Interface' does not contain a 'child' relation.");
+	}
+	
+	Arxx::Structure::Relation & Relation(Directory->GetStructure().GetRelation("child"));
+	Arxx::Structure::Relation::iterator Iterator(Relation.begin());
+	
+	while(Iterator != Relation.end())
+	{
+		ReadWidget(UserInterface, *Iterator);
+		++Iterator;
+	}
+}
+
 static void ReadCommodity(CommodityManager * CommodityManager, Arxx::Reference & Reference)
 {
 	Arxx::Item * Item(Resolve(Reference));
@@ -247,61 +244,6 @@ static void ReadCommodity(CommodityManager * CommodityManager, Arxx::Reference &
 	NewCommodity->SetName(Name);
 	NewCommodity->SetBasePrice(BasePrice);
 	NewCommodity->SetColor(Color);
-}
-
-static void ReadLabel(Arxx::BufferReader & Reader, Label * Label)
-{
-	ReadWidget(Reader, Label);
-	
-	bool UseForegroundColor;
-	Color ForegroundColor;
-	Arxx::u1byte HorizontalAlignment;
-	Arxx::u1byte VerticalAlignment;
-	
-	Reader >> UseForegroundColor >> ForegroundColor >> HorizontalAlignment >> VerticalAlignment;
-	if(UseForegroundColor == true)
-	{
-		Label->SetForegroundColor(ForegroundColor);
-	}
-	if(HorizontalAlignment == 0)
-	{
-		Label->SetHorizontalAlignment(Label::ALIGN_LEFT);
-	}
-	else if(HorizontalAlignment == 1)
-	{
-		Label->SetHorizontalAlignment(Label::ALIGN_RIGHT);
-	}
-	else if(HorizontalAlignment == 2)
-	{
-		Label->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
-	}
-	if(VerticalAlignment == 0)
-	{
-		Label->SetVerticalAlignment(Label::ALIGN_TOP);
-	}
-	else if(VerticalAlignment == 1)
-	{
-		Label->SetVerticalAlignment(Label::ALIGN_BOTTOM);
-	}
-	else if(VerticalAlignment == 2)
-	{
-		Label->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
-	}
-}
-
-Label * ReadLabel(Arxx::Item * Item)
-{
-	if(Item->u4GetType() != ARX_TYPE_WIDGET)
-	{
-		throw std::runtime_error("Item type for widget should be '" + to_string_cast(ARX_TYPE_WIDGET) + "' not '" + to_string_cast(Item->u4GetType()) + "'.");
-	}
-	
-	Arxx::BufferReader Reader(*Item);
-	Label * NewLabel(new Label());
-	
-	ReadLabel(Reader, NewLabel);
-	
-	return NewLabel;
 }
 
 static void ReadModel(ModelManager * ModelManager, Arxx::Reference & Reference)
@@ -554,7 +496,108 @@ static void ReadSystemLink(SystemManager * SystemManager, Arxx::Reference & Refe
 	System2->AddLinkedSystem(System1);
 }
 
-static void ReadWidget(Arxx::BufferReader & Reader, Widget * NewWidget)
+static void ReadWidget(UserInterface * UserInterface, Arxx::Reference & Reference)
+{
+	Arxx::Item * Item(Resolve(Reference));
+	
+	if(Item->u4GetType() != ARX_TYPE_WIDGET)
+	{
+		throw std::runtime_error("Item type for widget '" + Item->sGetName() + "' should be '" + to_string_cast(ARX_TYPE_WIDGET) + "' not '" + to_string_cast(Item->u4GetType()) + "'.");
+	}
+	
+	Arxx::BufferReader Reader(*Item);
+	
+	switch(Item->u4GetSubType())
+	{
+	case ARX_TYPE_WIDGET_SUB_TYPE_LABEL:
+		{
+			Label * NewLabel(new Label());
+			
+			ReadWidgetWidget(Reader, NewLabel);
+			ReadWidgetLabel(Reader, NewLabel);
+			
+			break;
+		}
+	case ARX_TYPE_WIDGET_SUB_TYPE_MINI_MAP:
+		{
+			MiniMap * NewMiniMap(new MiniMap());
+			
+			ReadWidgetWidget(Reader, NewMiniMap);
+			ReadWidgetMiniMap(Reader, NewMiniMap);
+			
+			break;
+		}
+	case ARX_TYPE_WIDGET_SUB_TYPE_SCANNER_DISPLAY:
+		{
+			ScannerDisplay * NewScannerDisplay(new ScannerDisplay());
+			
+			ReadWidgetWidget(Reader, NewScannerDisplay);
+			ReadWidgetScannerDisplay(Reader, NewScannerDisplay);
+			
+			break;
+		}
+	case ARX_TYPE_WIDGET_SUB_TYPE_WIDGET:
+		{
+			Widget * NewWidget(new Widget());
+			
+			ReadWidgetWidget(Reader, NewWidget);
+			
+			break;
+		}
+	default:
+		{
+			throw std::runtime_error("Unknown item sub type for widget '" + Item->sGetName() + "' which is '" + to_string_cast(Item->u4GetSubType()) + "'.");
+		}
+	}
+}
+
+static void ReadWidgetLabel(Arxx::BufferReader & Reader, Label * ReadLabel)
+{
+	bool UseForegroundColor;
+	Color ForegroundColor;
+	Arxx::u1byte HorizontalAlignment;
+	Arxx::u1byte VerticalAlignment;
+	
+	Reader >> UseForegroundColor >> ForegroundColor >> HorizontalAlignment >> VerticalAlignment;
+	if(UseForegroundColor == true)
+	{
+		ReadLabel->SetForegroundColor(ForegroundColor);
+	}
+	if(HorizontalAlignment == 0)
+	{
+		ReadLabel->SetHorizontalAlignment(Label::ALIGN_LEFT);
+	}
+	else if(HorizontalAlignment == 1)
+	{
+		ReadLabel->SetHorizontalAlignment(Label::ALIGN_RIGHT);
+	}
+	else if(HorizontalAlignment == 2)
+	{
+		ReadLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
+	}
+	if(VerticalAlignment == 0)
+	{
+		ReadLabel->SetVerticalAlignment(Label::ALIGN_TOP);
+	}
+	else if(VerticalAlignment == 1)
+	{
+		ReadLabel->SetVerticalAlignment(Label::ALIGN_BOTTOM);
+	}
+	else if(VerticalAlignment == 2)
+	{
+		ReadLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
+	}
+}
+
+static void ReadWidgetMiniMap(Arxx::BufferReader & Reader, MiniMap * ReadMiniMap)
+{
+}
+
+static void ReadWidgetScannerDisplay(Arxx::BufferReader & Reader, ScannerDisplay * ReadScannerDisplay)
+{
+}
+
+static void ReadWidgetWidget(Arxx::BufferReader & Reader, Widget * ReadWidget)
 {
 	std::string Path;
 	std::string Name;
@@ -566,8 +609,8 @@ static void ReadWidget(Arxx::BufferReader & Reader, Widget * NewWidget)
 	bool Visible;
 	
 	Reader >> Path >> Name >> Position >> UseSize >> Size >> UseBackgroundColor >> BackgroundColor >> Visible;
-	NewWidget->SetName(Name);
-	if((Path != "") && (NewWidget->GetSupWidget() == 0))
+	ReadWidget->SetName(Name);
+	if((Path != "") && (ReadWidget->GetSupWidget() == 0))
 	{
 		Widget * SupWidget(g_UserInterface.GetWidget(Path));
 		
@@ -575,37 +618,19 @@ static void ReadWidget(Arxx::BufferReader & Reader, Widget * NewWidget)
 		{
 			throw std::runtime_error("For widget '" + Name + "' could not find the superior widget at path '" + Path + "'.");
 		}
-		SupWidget->AddSubWidget(NewWidget);
+		SupWidget->AddSubWidget(ReadWidget);
 	}
-	NewWidget->SetPosition(Position);
+	ReadWidget->SetPosition(Position);
 	if(UseSize == true)
 	{
-		NewWidget->SetSize(Size);
+		ReadWidget->SetSize(Size);
 	}
 	if(UseBackgroundColor == true)
 	{
-		NewWidget->SetBackgroundColor(BackgroundColor);
+		ReadWidget->SetBackgroundColor(BackgroundColor);
 	}
 	if(Visible == false)
 	{
-		NewWidget->Hide();
+		ReadWidget->Hide();
 	}
-}
-
-Widget * ReadWidget(Arxx::Item * Item, Widget * NewWidget)
-{
-	if(Item->u4GetType() != ARX_TYPE_WIDGET)
-	{
-		throw std::runtime_error("Item type for widget should be '" + to_string_cast(ARX_TYPE_WIDGET) + "' not '" + to_string_cast(Item->u4GetType()) + "'.");
-	}
-	
-	Arxx::BufferReader Reader(*Item);
-	
-	if(NewWidget == 0)
-	{
-		NewWidget = new Widget();
-	}
-	ReadWidget(Reader, NewWidget);
-	
-	return NewWidget;
 }

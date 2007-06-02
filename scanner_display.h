@@ -1,5 +1,5 @@
-#ifndef SCANNER_DISPLAY_WIDGET_H
-#define SCANNER_DISPLAY_WIDGET_H
+#ifndef SCANNER_DISPLAY_H
+#define SCANNER_DISPLAY_H
 
 #include "camera.h"
 #include "perspective.h"
@@ -7,10 +7,10 @@
 
 class Ship;
 
-class ScannerDisplayWidget : public Widget
+class ScannerDisplay : public Widget
 {
 public:
-	ScannerDisplayWidget(void);
+	ScannerDisplay(void);
 	// setters
 	void SetFocus(Ship * Ship);
 	// actors
