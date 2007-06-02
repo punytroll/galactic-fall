@@ -75,8 +75,8 @@ mind_h = \
 	mind.h \
 	$(object_h)
 
-mini_map_widget_h = \
-	mini_map_widget.h \
+mini_map_h = \
+	mini_map.h \
 	$(camera_h) \
 	$(perspective_h) \
 	$(widget_h)
@@ -120,8 +120,8 @@ position_h = \
 real_time_h = \
 	real_time.h
 
-scanner_display_widget_h = \
-	scanner_display_widget.h \
+scanner_display_h = \
+	scanner_display.h \
 	$(camera_h) \
 	$(perspective_h) \
 	$(widget_h)
@@ -221,7 +221,7 @@ clean: clean-recursive
 	$(RM) map_dialog.o
 	$(RM) map_knowledge.o
 	$(RM) mind.o
-	$(RM) mini_map_widget.o
+	$(RM) mini_map.o
 	$(RM) model.o
 	$(RM) model_manager.o
 	$(RM) mouse_button_listener.o
@@ -232,7 +232,7 @@ clean: clean-recursive
 	$(RM) planet.o
 	$(RM) planet_dialog.o
 	$(RM) real_time.o
-	$(RM) scanner_display_widget.o
+	$(RM) scanner_display.o
 	$(RM) ship.o
 	$(RM) ship_class.o
 	$(RM) ship_class_manager.o
@@ -258,7 +258,7 @@ clean-recursive:
 install:
 	@echo -e "This project is not installable yet. Please run \"./escapevelocity\" from the top directory."
 
-escapevelocity: arx_reading.o buffer_reading.o button.o camera.o cargo.o character.o clicked_listener.o color.o commodity.o commodity_manager.o destroy_listener.o draw_text.o game_time.o key_listener.o label.o main.o map_dialog.o map_knowledge.o mini_map_widget.o mind.o model.o model_manager.o mouse_button_listener.o mouse_motion_listener.o object.o perspective.o physical_object.o planet.o planet_dialog.o real_time.o scanner_display_widget.o ship.o ship_class.o ship_class_manager.o shot.o star.o state.o state_machine.o states.o string_cast.o system.o system_manager.o trade_center_dialog.o user_interface.o widget.o window.o xml_parser.o xml_puny_dom.o xml_stream.o
+escapevelocity: arx_reading.o buffer_reading.o button.o camera.o cargo.o character.o clicked_listener.o color.o commodity.o commodity_manager.o destroy_listener.o draw_text.o game_time.o key_listener.o label.o main.o map_dialog.o map_knowledge.o mini_map.o mind.o model.o model_manager.o mouse_button_listener.o mouse_motion_listener.o object.o perspective.o physical_object.o planet.o planet_dialog.o real_time.o scanner_display.o ship.o ship_class.o ship_class_manager.o shot.o star.o state.o state_machine.o states.o string_cast.o system.o system_manager.o trade_center_dialog.o user_interface.o widget.o window.o xml_parser.o xml_puny_dom.o xml_stream.o
 	$(CXX) $(LDFLAGS) `pkg-config --libs libarxx` $^ -lGL -o $@
 
 arx_reading.o: arx_reading.cpp $(arx_reading_h) $(arx_resources_h) $(buffer_reading_h) $(commodity_h) $(commodity_manager_h) $(label_h) $(model_h) $(model_manager_h) $(planet_h) $(ship_class_h) $(ship_class_manager_h) $(user_interface_h) $(widget_h)
@@ -306,7 +306,7 @@ key_listener.o: key_listener.cpp $(key_listener_h)
 label.o: label.cpp $(label_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags math3d` -c $< -o $@
 
-main.o: main.cpp $(arx_resources_h) $(arx_reading_h) $(camera_h) $(cargo_h) $(character_h) $(color_h) $(commodity_h) $(commodity_manager_h) $(destroy_listener_h) $(game_time_h) $(label_h) $(map_dialog_h) $(map_knowledge_h) $(math_h) $(mind_h) $(mini_map_widget_h) $(model_h) $(model_manager_h) $(perspective_h) $(planet_h) $(planet_dialog_h) $(real_time_h) $(scanner_display_widget_h) $(ship_h) $(ship_class_h) $(ship_class_manager_h) $(star_h) $(state_machine_h) $(states_h) $(string_cast_h) $(system_h) $(system_manager_h) $(user_interface_h) $(widget_h) $(xml_puny_dom_h) $(xml_stream_h)
+main.o: main.cpp $(arx_resources_h) $(arx_reading_h) $(camera_h) $(cargo_h) $(character_h) $(color_h) $(commodity_h) $(commodity_manager_h) $(destroy_listener_h) $(game_time_h) $(label_h) $(map_dialog_h) $(map_knowledge_h) $(math_h) $(mind_h) $(mini_map_h) $(model_h) $(model_manager_h) $(perspective_h) $(planet_h) $(planet_dialog_h) $(real_time_h) $(scanner_display_h) $(ship_h) $(ship_class_h) $(ship_class_manager_h) $(star_h) $(state_machine_h) $(states_h) $(string_cast_h) $(system_h) $(system_manager_h) $(user_interface_h) $(widget_h) $(xml_puny_dom_h) $(xml_stream_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags libarxx math3d` -c $< -o $@
 
 map_dialog.o: map_dialog.cpp $(button_h) $(character_h) $(color_h) $(globals_h) $(label) $(map_dialog_h) $(map_knowledge_h) $(system_h) $(system_manager_h)
@@ -318,7 +318,7 @@ map_knowledge.o: map_knowledge.cpp $(map_knowledge_h) $(system.h)
 mind.o: mind.cpp $(character_h) $(mind_h) $(state_machine_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-mini_map_widget.o: mini_map_widget.cpp $(cargo_h) $(mini_map_widget_h) $(planet_h) $(ship_h) $(system_h)
+mini_map.o: mini_map.cpp $(cargo_h) $(mini_map_h) $(planet_h) $(ship_h) $(system_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags math3d` -c $< -o $@
 
 model.o: model.cpp $(model_h)
@@ -351,7 +351,7 @@ planet_dialog.o: planet_dialog.cpp $(button_h) $(character_h) $(color_h) $(globa
 real_time.o: real_time.cpp $(real_time_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-scanner_display_widget.o: scanner_display_widget.cpp $(scanner_display_widget_h) $(ship_h) $(star_h) $(system.h)
+scanner_display.o: scanner_display.cpp $(scanner_display_h) $(ship_h) $(star_h) $(system.h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags math3d` -c $< -o $@
 
 ship.o: ship.cpp $(color_h) $(game_time_h) $(model_h) $(real_time_h) $(ship_h) $(shot_h) $(system_h)
