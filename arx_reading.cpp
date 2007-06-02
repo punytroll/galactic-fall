@@ -10,9 +10,9 @@
 #include "arx_reading.h"
 #include "arx_resources.h"
 #include "buffer_reading.h"
+#include "callbacks.h"
 #include "commodity.h"
 #include "commodity_manager.h"
-#include "globals.h"
 #include "label.h"
 #include "mini_map.h"
 #include "model.h"
@@ -39,7 +39,7 @@ static void ReadWidget(UserInterface * UserInterface, Arxx::Reference & Referenc
 static void ReadWidgetLabel(Arxx::BufferReader & Reader, Label * ReadLabel);
 static void ReadWidgetMiniMap(Arxx::BufferReader & Reader, MiniMap * ReadMiniMap);
 static void ReadWidgetScannerDisplay(Arxx::BufferReader & Reader, ScannerDisplay * ReadScannerDisplay);
-static void ReadWidgetWidget(Arxx::BufferReader & Reader, Widget * ReadWidget);
+static void ReadWidgetWidget(Arxx::BufferReader & Reader, UserInterface * UserInterface, Widget * ReadWidget);
 
 static Arxx::Item * Resolve(Arxx::Reference & Reference)
 {
@@ -72,17 +72,17 @@ static Arxx::Item * Resolve(Arxx::Reference & Reference)
 	return Item;
 }
 
-void ReadCommodities(Arxx::Archive & Archive, CommodityManager * Manager)
+void ReadItems(Arxx::Archive & Archive, const std::string & Path, const Callback1< void, Arxx::Reference & > & Reader)
 {
-	Arxx::Item * Directory(Archive.GetItem("/Commodities"));
+	Arxx::Item * Directory(Archive.GetItem(Path));
 	
 	if(Directory == 0)
 	{
-		throw std::runtime_error("Could not find an item at the path '/Commodities'.");
+		throw std::runtime_error("Could not find an item at the path '" + Path + "'.");
 	}
 	if(Directory->GetStructure().bHasRelation("child") == false)
 	{
-		throw std::runtime_error("The directory '/Commodities' does not contain a 'child' relation.");
+		throw std::runtime_error("The directory '" + Path + "' does not contain a 'child' relation.");
 	}
 	
 	Arxx::Structure::Relation & Relation(Directory->GetStructure().GetRelation("child"));
@@ -90,124 +90,39 @@ void ReadCommodities(Arxx::Archive & Archive, CommodityManager * Manager)
 	
 	while(CommodityIterator != Relation.end())
 	{
-		ReadCommodity(Manager, *CommodityIterator);
+		Reader(*CommodityIterator);
 		++CommodityIterator;
 	}
 }
 
+void ReadCommodities(Arxx::Archive & Archive, CommodityManager * Manager)
+{
+	ReadItems(Archive, "/Commodities", Argument1Binder1< void, CommodityManager *, Arxx::Reference & >(FunctionCallback2< void, CommodityManager *, Arxx::Reference & >(ReadCommodity), Manager));
+}
+
 void ReadModels(Arxx::Archive & Archive, ModelManager * Manager)
 {
-	Arxx::Item * Directory(Archive.GetItem("/Models"));
-	
-	if(Directory == 0)
-	{
-		throw std::runtime_error("Could not find an item at the path '/Models'.");
-	}
-	if(Directory->GetStructure().bHasRelation("child") == false)
-	{
-		throw std::runtime_error("The directory '/Models' does not contain a 'child' relation.");
-	}
-	
-	Arxx::Structure::Relation & Relation(Directory->GetStructure().GetRelation("child"));
-	Arxx::Structure::Relation::iterator Iterator(Relation.begin());
-	
-	while(Iterator != Relation.end())
-	{
-		ReadModel(Manager, *Iterator);
-		++Iterator;
-	}
+	ReadItems(Archive, "/Models", Argument1Binder1< void, ModelManager *, Arxx::Reference & >(FunctionCallback2< void, ModelManager *, Arxx::Reference & >(ReadModel), Manager));
 }
 
 void ReadShipClasses(Arxx::Archive & Archive, ShipClassManager * Manager)
 {
-	Arxx::Item * Directory(Archive.GetItem("/Ship Classes"));
-	
-	if(Directory == 0)
-	{
-		throw std::runtime_error("Could not find an item at the path '/Ship Classes'.");
-	}
-	if(Directory->GetStructure().bHasRelation("child") == false)
-	{
-		throw std::runtime_error("The directory '/Ship Classes' does not contain a 'child' relation.");
-	}
-	
-	Arxx::Structure::Relation & Relation(Directory->GetStructure().GetRelation("child"));
-	Arxx::Structure::Relation::iterator Iterator(Relation.begin());
-	
-	while(Iterator != Relation.end())
-	{
-		ReadShipClass(Manager, *Iterator);
-		++Iterator;
-	}
+	ReadItems(Archive, "/Ship Classes", Argument1Binder1< void, ShipClassManager *, Arxx::Reference & >(FunctionCallback2< void, ShipClassManager *, Arxx::Reference & >(ReadShipClass), Manager));
 }
 
 void ReadSystems(Arxx::Archive & Archive, SystemManager * Manager)
 {
-	Arxx::Item * Directory(Archive.GetItem("/Systems"));
-	
-	if(Directory == 0)
-	{
-		throw std::runtime_error("Could not find an item at the path '/Systems'.");
-	}
-	if(Directory->GetStructure().bHasRelation("child") == false)
-	{
-		throw std::runtime_error("The directory '/Systems' does not contain a 'child' relation.");
-	}
-	
-	Arxx::Structure::Relation & Relation(Directory->GetStructure().GetRelation("child"));
-	Arxx::Structure::Relation::iterator Iterator(Relation.begin());
-	
-	while(Iterator != Relation.end())
-	{
-		ReadSystem(Manager, *Iterator);
-		++Iterator;
-	}
+	ReadItems(Archive, "/Systems", Argument1Binder1< void, SystemManager *, Arxx::Reference & >(FunctionCallback2< void, SystemManager *, Arxx::Reference & >(ReadSystem), Manager));
 }
 
 void ReadSystemLinks(Arxx::Archive & Archive, SystemManager * Manager)
 {
-	Arxx::Item * Directory(Archive.GetItem("/System Links"));
-	
-	if(Directory == 0)
-	{
-		throw std::runtime_error("Could not find an item at the path '/System Links'.");
-	}
-	if(Directory->GetStructure().bHasRelation("child") == false)
-	{
-		throw std::runtime_error("The directory '/System Links' does not contain a 'child' relation.");
-	}
-	
-	Arxx::Structure::Relation & Relation(Directory->GetStructure().GetRelation("child"));
-	Arxx::Structure::Relation::iterator Iterator(Relation.begin());
-	
-	while(Iterator != Relation.end())
-	{
-		ReadSystemLink(Manager, *Iterator);
-		++Iterator;
-	}
+	ReadItems(Archive, "/System Links", Argument1Binder1< void, SystemManager *, Arxx::Reference & >(FunctionCallback2< void, SystemManager *, Arxx::Reference & >(ReadSystemLink), Manager));
 }
 
-void ReadUserInterface(Arxx::Archive & Archive, UserInterface * UserInterface)
+void ReadUserInterface(Arxx::Archive & Archive, UserInterface * Manager)
 {
-	Arxx::Item * Directory(Archive.GetItem("/User Interface"));
-	
-	if(Directory == 0)
-	{
-		throw std::runtime_error("Could not find an item at the path '/User Interface'.");
-	}
-	if(Directory->GetStructure().bHasRelation("child") == false)
-	{
-		throw std::runtime_error("The directory '/User Interface' does not contain a 'child' relation.");
-	}
-	
-	Arxx::Structure::Relation & Relation(Directory->GetStructure().GetRelation("child"));
-	Arxx::Structure::Relation::iterator Iterator(Relation.begin());
-	
-	while(Iterator != Relation.end())
-	{
-		ReadWidget(UserInterface, *Iterator);
-		++Iterator;
-	}
+	ReadItems(Archive, "/User Interface", Argument1Binder1< void, UserInterface *, Arxx::Reference & >(FunctionCallback2< void, UserInterface *, Arxx::Reference & >(ReadWidget), Manager));
 }
 
 static void ReadCommodity(CommodityManager * CommodityManager, Arxx::Reference & Reference)
@@ -513,7 +428,7 @@ static void ReadWidget(UserInterface * UserInterface, Arxx::Reference & Referenc
 		{
 			Label * NewLabel(new Label());
 			
-			ReadWidgetWidget(Reader, NewLabel);
+			ReadWidgetWidget(Reader, UserInterface, NewLabel);
 			ReadWidgetLabel(Reader, NewLabel);
 			
 			break;
@@ -522,7 +437,7 @@ static void ReadWidget(UserInterface * UserInterface, Arxx::Reference & Referenc
 		{
 			MiniMap * NewMiniMap(new MiniMap());
 			
-			ReadWidgetWidget(Reader, NewMiniMap);
+			ReadWidgetWidget(Reader, UserInterface, NewMiniMap);
 			ReadWidgetMiniMap(Reader, NewMiniMap);
 			
 			break;
@@ -531,7 +446,7 @@ static void ReadWidget(UserInterface * UserInterface, Arxx::Reference & Referenc
 		{
 			ScannerDisplay * NewScannerDisplay(new ScannerDisplay());
 			
-			ReadWidgetWidget(Reader, NewScannerDisplay);
+			ReadWidgetWidget(Reader, UserInterface, NewScannerDisplay);
 			ReadWidgetScannerDisplay(Reader, NewScannerDisplay);
 			
 			break;
@@ -540,7 +455,7 @@ static void ReadWidget(UserInterface * UserInterface, Arxx::Reference & Referenc
 		{
 			Widget * NewWidget(new Widget());
 			
-			ReadWidgetWidget(Reader, NewWidget);
+			ReadWidgetWidget(Reader, UserInterface, NewWidget);
 			
 			break;
 		}
@@ -597,7 +512,7 @@ static void ReadWidgetScannerDisplay(Arxx::BufferReader & Reader, ScannerDisplay
 {
 }
 
-static void ReadWidgetWidget(Arxx::BufferReader & Reader, Widget * ReadWidget)
+static void ReadWidgetWidget(Arxx::BufferReader & Reader, UserInterface * UserInterface, Widget * ReadWidget)
 {
 	std::string Path;
 	std::string Name;
@@ -612,7 +527,7 @@ static void ReadWidgetWidget(Arxx::BufferReader & Reader, Widget * ReadWidget)
 	ReadWidget->SetName(Name);
 	if((Path != "") && (ReadWidget->GetSupWidget() == 0))
 	{
-		Widget * SupWidget(g_UserInterface.GetWidget(Path));
+		Widget * SupWidget(UserInterface->GetWidget(Path));
 		
 		if(SupWidget == 0)
 		{
