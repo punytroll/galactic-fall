@@ -36,12 +36,14 @@
 #include "map_knowledge.h"
 #include "math.h"
 #include "mind.h"
+#include "mini_map_widget.h"
 #include "model.h"
 #include "model_manager.h"
 #include "perspective.h"
 #include "planet.h"
 #include "planet_dialog.h"
 #include "real_time.h"
+#include "scanner_display_widget.h"
 #include "ship.h"
 #include "ship_class.h"
 #include "ship_class_manager.h"
@@ -91,6 +93,7 @@ std::list< Mind * > g_ActiveMinds;
 std::list< Mind * > g_SuspendedMinds;
 Widget * g_ScannerWidget(0);
 Widget * g_MiniMapWidget(0);
+Widget * g_ScannerDisplayWidget(0);
 Display * g_Display;
 GLXContext g_GLXContext;
 Window g_Window;
@@ -241,154 +244,6 @@ void DisplayUserInterface(void)
 	glPopMatrix();
 	glPopAttrib();
 }
-
-class ScannerDisplayWidget : public Widget
-{
-public:
-	ScannerDisplayWidget(void) :
-		Widget()
-	{
-		m_Perspective.SetAspect(1.0f);
-		m_Perspective.SetNearClippingPlane(1.0f);
-		m_Perspective.SetFarClippingPlane(1000.0f);
-	}
-	
-	virtual void Draw(void) const
-	{
-		Widget::Draw();
-		// scanner
-		if((g_OutputFocus != 0) && (g_OutputFocus->GetTarget() != 0))
-		{
-			float RadialSize(g_OutputFocus->GetTarget()->GetRadialSize());
-			float ExtendedRadialSize((5.0f / 4.0f) * RadialSize);
-			float FieldOfView(asinf(ExtendedRadialSize / sqrtf(ExtendedRadialSize * ExtendedRadialSize + 16 * RadialSize * RadialSize)));
-			
-			glPushAttrib(GL_ENABLE_BIT | GL_VIEWPORT_BIT | GL_TRANSFORM_BIT);
-			glEnable(GL_DEPTH_TEST);
-			glDisable(GL_BLEND);
-			// TODO: 0.0f is not the real value
-			glViewport(static_cast< GLint >(GetGlobalPosition().m_V.m_A[0]), static_cast< GLint >(0.0f), static_cast< GLint >(GetSize().m_V.m_A[0]), static_cast< GLint >(GetSize().m_V.m_A[1]));
-			glMatrixMode(GL_PROJECTION);
-			glPushMatrix();
-			m_Perspective.SetFieldOfView(FieldOfView);
-			m_Perspective.Draw();
-			glMatrixMode(GL_MODELVIEW);
-			glPushMatrix();
-			glLoadIdentity();
-			m_Camera.SetFieldOfView(FieldOfView);
-			m_Camera.SetPosition(0.0f, 0.0f, 4.0f * RadialSize);
-			m_Camera.SetFocus(g_OutputFocus->GetTarget());
-			m_Camera.Draw();
-			if((g_CurrentSystem != 0) && (g_CurrentSystem->GetStar() != 0))
-			{
-				glEnable(GL_LIGHTING);
-				glEnable(GL_LIGHT0);
-				glLightfv(GL_LIGHT0, GL_POSITION, math3d::vector4f(g_CurrentSystem->GetStar()->GetPosition().m_V.m_A[0], g_CurrentSystem->GetStar()->GetPosition().m_V.m_A[1], 100.0f, 0.0f).m_V.m_A);
-			}
-			glClear(GL_DEPTH_BUFFER_BIT);
-			g_OutputFocus->GetTarget()->Draw();
-			glPopMatrix();
-			glMatrixMode(GL_PROJECTION);
-			glPopMatrix();
-			glPopAttrib();
-		}
-	}
-private:
-	mutable Camera m_Camera;
-	mutable Perspective m_Perspective;
-};
-
-class MiniMapWidget : public Widget
-{
-public:
-	MiniMapWidget(void) :
-		Widget()
-	{
-		m_Camera.SetFieldOfView(0.392699082f);
-		m_Camera.SetPosition(0.0f, 0.0f, 1500.0f);
-		m_Perspective.SetAspect(1.0f);
-		m_Perspective.SetFieldOfView(0.392699082f);
-		m_Perspective.SetNearClippingPlane(1.0f);
-		m_Perspective.SetFarClippingPlane(10000.0f);
-	}
-	
-	Camera * GetCamera(void)
-	{
-		return &m_Camera;
-	}
-	
-	virtual void Draw(void) const
-	{
-		Widget::Draw();
-		// mini map
-		if((g_OutputFocus != 0) && (g_OutputFocus->GetCurrentSystem() != 0))
-		{
-			glPushAttrib(GL_ENABLE_BIT | GL_VIEWPORT_BIT | GL_TRANSFORM_BIT);
-			glEnable(GL_DEPTH_TEST);
-			glDisable(GL_BLEND);
-			// TODO: 0.0f is not the real value
-			glViewport(static_cast< GLint >(GetGlobalPosition().m_V.m_A[0]), static_cast< GLint >(0.0f), static_cast< GLint >(GetSize().m_V.m_A[0]), static_cast< GLint >(220.0f));
-			glMatrixMode(GL_PROJECTION);
-			glPushMatrix();
-			m_Perspective.Draw();
-			glMatrixMode(GL_MODELVIEW);
-			glPushMatrix();
-			glLoadIdentity();
-			m_Camera.Draw();
-			
-			const std::list< Planet * > & Planets(g_OutputFocus->GetCurrentSystem()->GetPlanets());
-			const std::list< Ship * > & Ships(g_OutputFocus->GetCurrentSystem()->GetShips());
-			const std::list< Cargo * > & Cargos(g_OutputFocus->GetCurrentSystem()->GetCargos());
-			
-			glBegin(GL_POINTS);
-			glColor3f(0.8f, 0.8f, 0.8f);
-			for(std::list< Planet * >::const_iterator PlanetIterator = Planets.begin(); PlanetIterator != Planets.end(); ++PlanetIterator)
-			{
-				if(*PlanetIterator == g_OutputFocus->GetTarget())
-				{
-					glColor3f(0.2f, 1.0f, 0.0f);
-				}
-				glVertex2f((*PlanetIterator)->GetPosition().m_V.m_A[0], (*PlanetIterator)->GetPosition().m_V.m_A[1]);
-				if(*PlanetIterator == g_OutputFocus->GetTarget())
-				{
-					glColor3f(0.8f, 0.8f, 0.8f);
-				}
-			}
-			for(std::list< Ship * >::const_iterator ShipIterator = Ships.begin(); ShipIterator != Ships.end(); ++ShipIterator)
-			{
-				if(*ShipIterator == g_OutputFocus->GetTarget())
-				{
-					glColor3f(0.2f, 1.0f, 0.0f);
-				}
-				glVertex2f((*ShipIterator)->GetPosition().m_V.m_A[0], (*ShipIterator)->GetPosition().m_V.m_A[1]);
-				if(*ShipIterator == g_OutputFocus->GetTarget())
-				{
-					glColor3f(0.8f, 0.8f, 0.8f);
-				}
-			}
-			for(std::list< Cargo * >::const_iterator CargoIterator = Cargos.begin(); CargoIterator != Cargos.end(); ++CargoIterator)
-			{
-				if(*CargoIterator == g_OutputFocus->GetTarget())
-				{
-					glColor3f(0.2f, 1.0f, 0.0f);
-				}
-				glVertex2f((*CargoIterator)->GetPosition().m_V.m_A[0], (*CargoIterator)->GetPosition().m_V.m_A[1]);
-				if(*CargoIterator == g_OutputFocus->GetTarget())
-				{
-					glColor3f(0.8f, 0.8f, 0.8f);
-				}
-			}
-			glEnd();
-			glPopMatrix();
-			glMatrixMode(GL_PROJECTION);
-			glPopMatrix();
-			glPopAttrib();
-		}
-	}
-private:
-	Camera m_Camera;
-	Perspective m_Perspective;
-};
 
 void DeleteShipFromSystem(System * System, std::list< Ship * >::iterator ShipIterator)
 {
@@ -1414,6 +1269,8 @@ void KeyDown(unsigned int KeyCode)
 				g_OutputFocus = *ShipIterator;
 				g_Camera.SetFocus(*ShipIterator);
 			}
+			dynamic_cast< MiniMapWidget * >(g_MiniMapWidget)->SetFocus(g_OutputFocus);
+			dynamic_cast< ScannerDisplayWidget * >(g_ScannerDisplayWidget)->SetFocus(g_OutputFocus);
 			MindIterator = std::find_if(g_ActiveMinds.begin(), g_ActiveMinds.end(), MindWithShip(g_InputFocus));
 			if(MindIterator != g_ActiveMinds.end())
 			{
@@ -1823,7 +1680,7 @@ int main(int argc, char ** argv)
 		g_CurrentSystemLabel = ReadLabel(GetItem(Archive, LABEL_CURRENT_SYSTEM));
 	g_ScannerWidget = ReadWidget(GetItem(Archive, WIDGET_SCANNER));
 		g_TargetLabel = ReadLabel(GetItem(Archive, LABEL_TARGET));
-		ReadWidget(GetItem(Archive, WIDGET_SCANNER_DISPLAY), new ScannerDisplayWidget());
+		g_ScannerDisplayWidget = ReadWidget(GetItem(Archive, WIDGET_SCANNER_DISPLAY), new ScannerDisplayWidget());
 	
 	// data reading
 	// ARX
@@ -1842,9 +1699,10 @@ int main(int argc, char ** argv)
 	}
 	
 	// setting up the player environment
-	if(g_InputFocus != 0)
+	if(g_OutputFocus != 0)
 	{
-		dynamic_cast< MiniMapWidget * >(g_MiniMapWidget)->GetCamera()->SetFocus(g_InputFocus);
+		dynamic_cast< MiniMapWidget * >(g_MiniMapWidget)->SetFocus(g_OutputFocus);
+		dynamic_cast< ScannerDisplayWidget * >(g_ScannerDisplayWidget)->SetFocus(g_OutputFocus);
 	}
 	// set first timeout for widget collector, it will reinsert itself on callback
 	g_TimeoutNotifications.insert(std::make_pair(RealTime::GetTime() + 5.0f, new FunctionCallback0< void >(CollectWidgets)));
