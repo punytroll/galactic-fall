@@ -18,11 +18,12 @@ public:
 	Ship(ShipClass * ShipClass);
 	void Draw(void) const;
 	void Update(float Seconds);
-	// enabler
+	// controls
 	bool m_Accelerate;
 	bool m_TurnLeft;
 	bool m_TurnRight;
 	bool m_Fire;
+	bool m_Jump;
 	// current state
 	math3d::vector2f m_Velocity;
 	float m_AngularPosition;

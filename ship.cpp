@@ -17,12 +17,15 @@ Ship::Ship(ShipClass * ShipClass) :
 	m_TurnLeft(false),
 	m_TurnRight(false),
 	m_Fire(false),
+	m_Jump(false),
 	m_Velocity(true),
 	m_AngularPosition(0.0f),
 	m_ShipClass(ShipClass),
 	m_Fuel(0.0f),
 	m_Hull(m_ShipClass->GetHull()),
 	m_Target(0),
+	m_LinkedSystemTarget(0),
+	m_CurrentSystem(0),
 	m_NextTimeToFire(0.0)
 {
 	SetRadialSize(m_ShipClass->GetModel()->GetRadialSize());
@@ -65,59 +68,74 @@ void Ship::Draw(void) const
 
 void Ship::Update(float Seconds)
 {
-	if(m_TurnLeft == true)
+	if(m_Jump == true)
 	{
-		float FuelConsumption(m_ShipClass->GetTurnFuel() * Seconds);
-		
-		if(m_Fuel >= FuelConsumption)
+		if(GetLinkedSystemTarget() != 0)
 		{
-			m_AngularPosition += GetTurnSpeed() * Seconds;
-			m_Fuel -= FuelConsumption;
+			GetCurrentSystem()->RemoveShip(this);
+			SetFuel(GetFuel() - GetShipClass()->GetJumpFuel());
+			GetLinkedSystemTarget()->AddShip(this);
+			SetCurrentSystem(GetLinkedSystemTarget());
+			SetLinkedSystemTarget(0);
+			m_Jump = false;
 		}
 	}
-	if(m_TurnRight == true)
+	else
 	{
-		float FuelConsumption(m_ShipClass->GetTurnFuel() * Seconds);
-		
-		if(m_Fuel >= FuelConsumption)
+		if(m_TurnLeft == true)
 		{
-			m_AngularPosition -= GetTurnSpeed() * Seconds;
-			m_Fuel -= FuelConsumption;
-		}
-	}
-	m_Position += m_Velocity * Seconds;
-	if(m_Accelerate == true)
-	{
-		float FuelConsumption(m_ShipClass->GetForwardFuel() * Seconds);
-		
-		if(m_Fuel >= FuelConsumption)
-		{
-			math3d::vector2f ForwardThrust(GetForwardThrust(), m_AngularPosition, math3d::vector2f::magnitude_angle);
+			float FuelConsumption(m_ShipClass->GetTurnFuel() * Seconds);
 			
-			m_Position += ForwardThrust * (Seconds * Seconds / 2.0f);
-			m_Velocity += ForwardThrust * Seconds;
-			if(m_Velocity.length() > GetMaximumSpeed())
+			if(m_Fuel >= FuelConsumption)
 			{
-				m_Velocity.normalize();
-				m_Velocity.scale(GetMaximumSpeed());
+				m_AngularPosition += GetTurnSpeed() * Seconds;
+				m_Fuel -= FuelConsumption;
 			}
-			m_Fuel -= FuelConsumption;
 		}
-	}
-	if(m_Fire == true)
-	{
-		if(IsReadyToFire() == true)
+		if(m_TurnRight == true)
 		{
-			std::stringstream IdentifierStream;
+			float FuelConsumption(m_ShipClass->GetTurnFuel() * Seconds);
 			
-			IdentifierStream << "::system(" << GetCurrentSystem()->GetIdentifier() << ")::created_at(" << std::fixed << RealTime::GetTime() << ")::created_by(" << GetObjectIdentifier() << ")::shot";
+			if(m_Fuel >= FuelConsumption)
+			{
+				m_AngularPosition -= GetTurnSpeed() * Seconds;
+				m_Fuel -= FuelConsumption;
+			}
+		}
+		m_Position += m_Velocity * Seconds;
+		if(m_Accelerate == true)
+		{
+			float FuelConsumption(m_ShipClass->GetForwardFuel() * Seconds);
 			
-			Shot * NewShot(new Shot(this, GetAngularPosition(), GetVelocity() + math3d::vector2f(30.0f, GetAngularPosition(), math3d::vector2f::magnitude_angle)));
-			
-			NewShot->SetObjectIdentifier(IdentifierStream.str());
-			NewShot->SetPosition(GetPosition());
-			GetCurrentSystem()->AddShot(NewShot);
-			ResetNextTimeToFire();
+			if(m_Fuel >= FuelConsumption)
+			{
+				math3d::vector2f ForwardThrust(GetForwardThrust(), m_AngularPosition, math3d::vector2f::magnitude_angle);
+				
+				m_Position += ForwardThrust * (Seconds * Seconds / 2.0f);
+				m_Velocity += ForwardThrust * Seconds;
+				if(m_Velocity.length() > GetMaximumSpeed())
+				{
+					m_Velocity.normalize();
+					m_Velocity.scale(GetMaximumSpeed());
+				}
+				m_Fuel -= FuelConsumption;
+			}
+		}
+		if(m_Fire == true)
+		{
+			if(IsReadyToFire() == true)
+			{
+				std::stringstream IdentifierStream;
+				
+				IdentifierStream << "::system(" << GetCurrentSystem()->GetIdentifier() << ")::created_at(" << std::fixed << RealTime::GetTime() << ")::created_by(" << GetObjectIdentifier() << ")::shot";
+				
+				Shot * NewShot(new Shot(this, GetAngularPosition(), GetVelocity() + math3d::vector2f(30.0f, GetAngularPosition(), math3d::vector2f::magnitude_angle)));
+				
+				NewShot->SetObjectIdentifier(IdentifierStream.str());
+				NewShot->SetPosition(GetPosition());
+				GetCurrentSystem()->AddShot(NewShot);
+				ResetNextTimeToFire();
+			}
 		}
 	}
 }
