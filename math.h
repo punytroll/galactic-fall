@@ -74,4 +74,9 @@ inline float GetRandomFloat(float LowestValue, float HighestValue)
 	return ((HighestValue - LowestValue) * GetRandomUniform()) + LowestValue;
 }
 
+inline long int GetRandomBoolean(float Probability = 0.5f)
+{
+	return GetRandomUniform() <= Probability;
+}
+
 #endif
