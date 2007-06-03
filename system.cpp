@@ -82,12 +82,22 @@ void System::ClearShots(void)
 	m_Shots.clear();
 }
 
-void System::RemoveCargo(Cargo * RemoveCargo)
+void System::RemoveCargo(Cargo * Remove)
 {
-	std::list< Cargo * >::iterator CargoIterator(find(m_Cargos.begin(), m_Cargos.end(), RemoveCargo));
+	std::list< Cargo * >::iterator Iterator(find(m_Cargos.begin(), m_Cargos.end(), Remove));
 	
-	if(CargoIterator != m_Cargos.end())
+	if(Iterator != m_Cargos.end())
 	{
-		m_Cargos.erase(CargoIterator);
+		m_Cargos.erase(Iterator);
+	}
+}
+
+void System::RemoveShip(Ship * Remove)
+{
+	std::list< Ship * >::iterator Iterator(find(m_Ships.begin(), m_Ships.end(), Remove));
+	
+	if(Iterator != m_Ships.end())
+	{
+		m_Ships.erase(Iterator);
 	}
 }
