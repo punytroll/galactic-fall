@@ -38,6 +38,7 @@ public:
 	void ClearCargos(void);
 	void ClearShots(void);
 	void RemoveCargo(Cargo * RemoveCargo);
+	void RemoveShip(Ship * RemoveShip);
 private:
 	std::string m_Identifier;
 	std::string m_Name;
