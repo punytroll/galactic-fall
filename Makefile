@@ -279,7 +279,7 @@ camera.o: camera.cpp $(camera_h) $(position_h)
 cargo.o: cargo.cpp $(cargo_h) $(color_h) $(commodity_h) $(model_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags math3d` -c $< -o $@
 
-character.o: character.cpp $(character_h) $(map_knowledge_h)
+character.o: character.cpp $(character_h) $(map_knowledge_h) $(mind_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 clicked_listener.o: clicked_listener.cpp $(clicked_listener_h)
