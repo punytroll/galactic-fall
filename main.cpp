@@ -26,6 +26,7 @@
 #include "cargo.h"
 #include "character.h"
 #include "color.h"
+#include "command_mind.h"
 #include "commodity.h"
 #include "commodity_manager.h"
 #include "destroy_listener.h"
@@ -67,6 +68,7 @@ ModelManager g_ModelManager;
 ShipClassManager g_ShipClassManager(&g_ModelManager);
 CommodityManager g_CommodityManager;
 SystemManager g_SystemManager(&g_CommodityManager);
+CommandMind * g_InputMind(0);
 Character * g_PlayerCharacter(0);
 Ship * g_PlayerShip(0);
 Ship * g_InputFocus(0);
@@ -100,6 +102,8 @@ Perspective g_MainPerspective;
 enum WantReturnCode
 {
 	OK,
+	NO_JUMP_TARGET,
+	NO_LAND_TARGET,
 	NOT_ENOUGH_CREDITS,
 	NOT_ENOUGH_FUEL,
 	TOO_FAR_AWAY,
@@ -107,8 +111,12 @@ enum WantReturnCode
 	TOO_NEAR_TO_SYSTEM_CENTER
 };
 
-int WantToJump(Ship * Ship)
+int WantToJump(Ship * Ship, System * System)
 {
+	if(System == 0)
+	{
+		return NO_JUMP_TARGET;
+	}
 	// only let the ships jump if they are more than 280 clicks from system center
 	if(Ship->GetPosition().length_squared() < 78400.0f)
 	{
@@ -125,6 +133,10 @@ int WantToJump(Ship * Ship)
 
 int WantToLand(Ship * Ship, Planet * Planet)
 {
+	if(Planet == 0)
+	{
+		return NO_LAND_TARGET;
+	}
 	// test distance
 	if((Planet->GetPosition() - Ship->GetPosition()).length_squared() > Planet->GetSize() * Planet->GetSize())
 	{
@@ -417,16 +429,45 @@ void UpdateUserInterface(void)
 	}
 	if(g_OutputFocus != 0)
 	{
+		// display the name of the target
+		if(g_OutputFocus->GetTarget() != 0)
+		{
+			g_TargetLabel->SetString(g_OutputFocus->GetTarget()->GetName());
+		}
+		else
+		{
+			g_TargetLabel->SetString("");
+		}
+		// display the name of the linked system
+		if(g_OutputFocus->GetLinkedSystemTarget() != 0)
+		{
+			// TODO: Remove g_PlayerCharacter reference
+			const std::set< System * > UnexploredSystems(g_PlayerCharacter->GetMapKnowledge()->GetUnexploredSystems());
+			
+			if(UnexploredSystems.find(g_OutputFocus->GetLinkedSystemTarget()) == UnexploredSystems.end())
+			{
+				g_SystemLabel->SetString(g_OutputFocus->GetLinkedSystemTarget()->GetName());
+			}
+			else
+			{
+				g_SystemLabel->SetString("Unknown System");
+			}
+		}
+		else
+		{
+			g_SystemLabel->SetString("");
+		}
 		// display fuel
 		g_FuelLabel->SetString("Fuel: " + to_string_cast(100.0f * g_OutputFocus->GetFuel() / g_OutputFocus->GetFuelCapacity(), 2) + "%");
 		// display hull
 		g_HullLabel->SetString("Hull: " + to_string_cast(g_OutputFocus->GetHull(), 2));
 		// display credits in every cycle
+		// TODO: Remove g_PlayerCharacter reference
 		g_CreditsLabel->SetString("Credits: " + to_string_cast(g_PlayerCharacter->GetCredits()));
 		// display the current system
 		g_CurrentSystemLabel->SetString(g_OutputFocus->GetCurrentSystem()->GetName());
 		// set system label color according to jump status
-		if((g_OutputFocus->GetLinkedSystemTarget() != 0) && (WantToJump(g_OutputFocus) == OK))
+		if(WantToJump(g_OutputFocus, g_OutputFocus->GetLinkedSystemTarget()) == OK)
 		{
 			g_SystemLabel->GetForegroundColor().Set(0.7f, 0.8f, 1.0f);
 		}
@@ -533,23 +574,6 @@ void Resize(void)
 void SelectLinkedSystem(System * LinkedSystem)
 {
 	g_PlayerShip->SetLinkedSystemTarget(LinkedSystem);
-	if(g_PlayerShip->GetLinkedSystemTarget() != 0)
-	{
-		const std::set< System * > UnexploredSystems(g_PlayerCharacter->GetMapKnowledge()->GetUnexploredSystems());
-		
-		if(UnexploredSystems.find(g_PlayerShip->GetLinkedSystemTarget()) == UnexploredSystems.end())
-		{
-			g_SystemLabel->SetString(g_PlayerShip->GetLinkedSystemTarget()->GetName());
-		}
-		else
-		{
-			g_SystemLabel->SetString("Unknown System");
-		}
-	}
-	else
-	{
-		g_SystemLabel->SetString("");
-	}
 }
 
 void GameFrame(void)
@@ -565,14 +589,6 @@ void GameFrame(void)
 void SelectPhysicalObject(PhysicalObject * Object)
 {
 	g_InputFocus->SetTarget(Object);
-	if(g_OutputFocus->GetTarget() != 0)
-	{
-		g_TargetLabel->SetString(g_OutputFocus->GetTarget()->GetName());
-	}
-	else
-	{
-		g_TargetLabel->SetString("");
-	}
 }
 
 class GlobalDestroyListener : public DestroyListener
@@ -765,119 +781,38 @@ void KeyDown(unsigned int KeyCode)
 			
 			break;
 		}
-	case 27: // Key: R
+	case 26: // Key: E
 		{
-			if(g_InputFocus != 0)
+			if(g_InputMind != 0)
 			{
-				const std::list< Ship * > & Ships(g_CurrentSystem->GetShips());
-				Ship * SelectedShip(dynamic_cast< Ship * >(g_InputFocus->GetTarget()));
-				
-				if(SelectedShip == 0)
-				{
-					if(Ships.size() > 0)
-					{
-						SelectPhysicalObject(Ships.front());
-					}
-				}
-				else
-				{
-					std::list< Ship * >::const_iterator ShipIterator(find(Ships.begin(), Ships.end(), SelectedShip));
-					
-					if(ShipIterator == Ships.end())
-					{
-						SelectPhysicalObject(0);
-					}
-					else
-					{
-						++ShipIterator;
-						if(ShipIterator == Ships.end())
-						{
-							SelectPhysicalObject(0);
-						}
-						else
-						{
-							SelectPhysicalObject(*ShipIterator);
-						}
-					}
-				}
+				g_InputMind->TargetPreviousShip();
 			}
 			
 			break;
 		}
-	case 28: // Key: T
+	case 27: // Key: R
 		{
-			if(g_InputFocus != 0)
+			if(g_InputMind != 0)
 			{
-				const std::list< Cargo * > & Cargos(g_CurrentSystem->GetCargos());
-				Cargo * SelectedCargo(dynamic_cast< Cargo * >(g_InputFocus->GetTarget()));
-				
-				if(SelectedCargo == 0)
-				{
-					if(Cargos.size() > 0)
-					{
-						SelectPhysicalObject(Cargos.front());
-					}
-				}
-				else
-				{
-					std::list< Cargo * >::const_iterator CargoIterator(find(Cargos.begin(), Cargos.end(), SelectedCargo));
-					
-					if(CargoIterator == Cargos.end())
-					{
-						SelectPhysicalObject(0);
-					}
-					else
-					{
-						++CargoIterator;
-						if(CargoIterator == Cargos.end())
-						{
-							SelectPhysicalObject(0);
-						}
-						else
-						{
-							SelectPhysicalObject(*CargoIterator);
-						}
-					}
-				}
+				g_InputMind->TargetNextShip();
+			}
+			
+			break;
+		}
+	case 32: // Key: O
+		{
+			if(g_InputMind != 0)
+			{
+				g_InputMind->TargetPreviousPlanet();
 			}
 			
 			break;
 		}
 	case 33: // Key: P
 		{
-			if(g_InputFocus != 0)
+			if(g_InputMind != 0)
 			{
-				const std::list< Planet * > & Planets(g_CurrentSystem->GetPlanets());
-				Planet * SelectedPlanet(dynamic_cast< Planet * >(g_InputFocus->GetTarget()));
-				
-				if(SelectedPlanet == 0)
-				{
-					if(Planets.size() > 0)
-					{
-						SelectPhysicalObject(Planets.front());
-					}
-				}
-				else
-				{
-					std::list< Planet * >::const_iterator PlanetIterator(find(Planets.begin(), Planets.end(), SelectedPlanet));
-					
-					if(PlanetIterator == Planets.end())
-					{
-						SelectPhysicalObject(0);
-					}
-					else
-					{
-						++PlanetIterator;
-						if(PlanetIterator == Planets.end())
-						{
-							SelectPhysicalObject(0);
-						}
-						else
-						{
-							SelectPhysicalObject(*PlanetIterator);
-						}
-					}
-				}
+				g_InputMind->TargetNextPlanet();
 			}
 			
 			break;
@@ -962,37 +897,57 @@ void KeyDown(unsigned int KeyCode)
 			
 			break;
 		}
+	case 40: // Key: D
+		{
+			if(g_InputMind != 0)
+			{
+				g_InputMind->TargetPreviousCargo();
+			}
+			
+			break;
+		}
+	case 41: // Key: F
+		{
+			if(g_InputMind != 0)
+			{
+				g_InputMind->TargetNextCargo();
+			}
+			
+			break;
+		}
 	case 44: // Key: J
 		{
-			if(g_InputFocus != 0)
+			if(g_InputMind != 0)
 			{
-				if(g_InputFocus->GetLinkedSystemTarget() != 0)
+				switch(WantToJump(g_InputMind->GetCharacter()->GetShip(), g_InputMind->GetCharacter()->GetShip()->GetLinkedSystemTarget()))
 				{
-					switch(WantToJump(g_InputFocus))
+				case OK:
 					{
-					case OK:
+						if(g_InputMind != 0)
 						{
-							g_InputFocus->m_Jump = true;
-							
-							break;
+							g_InputMind->Jump();
 						}
-					case TOO_NEAR_TO_SYSTEM_CENTER:
-						{
-							SetMessage("You are too near to the system center to jump.");
-							
-							break;
-						}
-					case NOT_ENOUGH_FUEL:
-						{
-							SetMessage("You do not have enough fuel to jump.");
-							
-							break;
-						}
+						
+						break;
 					}
-				}
-				else
-				{
-					SetMessage("No system selected to jump to.");
+				case TOO_NEAR_TO_SYSTEM_CENTER:
+					{
+						SetMessage("You are too near to the system center to jump.");
+						
+						break;
+					}
+				case NOT_ENOUGH_FUEL:
+					{
+						SetMessage("You do not have enough fuel to jump.");
+						
+						break;
+					}
+				case NO_JUMP_TARGET:
+					{
+						SetMessage("No system selected to jump to.");
+						
+						break;
+					}
 				}
 			}
 			
@@ -1004,68 +959,67 @@ void KeyDown(unsigned int KeyCode)
 			{
 				Planet * SelectedPlanet(dynamic_cast< Planet * >(g_InputFocus->GetTarget()));
 				
-				if(SelectedPlanet != 0)
+				switch(WantToLand(g_InputFocus, SelectedPlanet))
 				{
-					switch(WantToLand(g_InputFocus, SelectedPlanet))
+				case OK:
 					{
-					case OK:
-						{
-							// TODO: change to current character
-							g_PlayerCharacter->RemoveCredits(SelectedPlanet->GetLandingFee());
-							g_Pause = true;
-							g_PlanetDialog = new PlanetDialog(g_UserInterface.GetRootWidget(), SelectedPlanet);
-							g_PlanetDialog->GrabKeyFocus();
-							g_PlanetDialog->AddDestroyListener(&g_GlobalDestroyListener);
-							
-							break;
-						}
-					case TOO_FAR_AWAY:
-						{
-							SetMessage("You are too far away from the planet to land.");
-							
-							break;
-						}
-					case TOO_FAST:
-						{
-							SetMessage("You are too fast to land on the planet.");
-							
-							break;
-						}
-					case NOT_ENOUGH_CREDITS:
-						{
-							SetMessage("You don't have enough credits to pay the landing fee.");
-							
-							break;
-						}
+						// TODO: change to current character
+						g_PlayerCharacter->RemoveCredits(SelectedPlanet->GetLandingFee());
+						g_Pause = true;
+						g_PlanetDialog = new PlanetDialog(g_UserInterface.GetRootWidget(), SelectedPlanet);
+						g_PlanetDialog->GrabKeyFocus();
+						g_PlanetDialog->AddDestroyListener(&g_GlobalDestroyListener);
+						
+						break;
 					}
-				}
-				else
-				{
-					const std::list< Planet * > & Planets(g_CurrentSystem->GetPlanets());
-					float MinimumDistance(0.0f);
-					Planet * MinimumPlanet(0);
-					
-					for(std::list< Planet * >::const_iterator PlanetIterator = Planets.begin(); PlanetIterator != Planets.end(); ++PlanetIterator)
+				case NO_LAND_TARGET:
 					{
-						if(MinimumPlanet == 0)
+						const std::list< Planet * > & Planets(g_CurrentSystem->GetPlanets());
+						float MinimumDistance(0.0f);
+						Planet * MinimumPlanet(0);
+						
+						for(std::list< Planet * >::const_iterator PlanetIterator = Planets.begin(); PlanetIterator != Planets.end(); ++PlanetIterator)
 						{
-							MinimumPlanet = *PlanetIterator;
-							MinimumDistance = (MinimumPlanet->GetPosition() - g_InputFocus->GetPosition()).length_squared();
-						}
-						else
-						{
-							float Distance(((*PlanetIterator)->GetPosition() - g_InputFocus->GetPosition()).length_squared());
-							
-							if(Distance < MinimumDistance)
+							if(MinimumPlanet == 0)
 							{
 								MinimumPlanet = *PlanetIterator;
-								MinimumDistance = Distance;
+								MinimumDistance = (MinimumPlanet->GetPosition() - g_InputFocus->GetPosition()).length_squared();
+							}
+							else
+							{
+								float Distance(((*PlanetIterator)->GetPosition() - g_InputFocus->GetPosition()).length_squared());
+								
+								if(Distance < MinimumDistance)
+								{
+									MinimumPlanet = *PlanetIterator;
+									MinimumDistance = Distance;
+								}
 							}
 						}
+						if(MinimumPlanet != 0)
+						{
+							SelectPhysicalObject(MinimumPlanet);
+						}
+						
+						break;
 					}
-					if(MinimumPlanet != 0)
+				case NOT_ENOUGH_CREDITS:
 					{
-						SelectPhysicalObject(MinimumPlanet);
+						SetMessage("You don't have enough credits to pay the landing fee.");
+						
+						break;
+					}
+				case TOO_FAR_AWAY:
+					{
+						SetMessage("You are too far away from the planet to land.");
+						
+						break;
+					}
+				case TOO_FAST:
+					{
+						SetMessage("You are too fast to land on the planet.");
+						
+						break;
 					}
 				}
 			}
@@ -1093,38 +1047,9 @@ void KeyDown(unsigned int KeyCode)
 		}
 	case 57: // Key: N
 		{
-			if(g_InputFocus != 0)
+			if(g_InputMind != 0)
 			{
-				const std::list< System * > & LinkedSystems(g_CurrentSystem->GetLinkedSystems());
-				
-				if(g_InputFocus->GetLinkedSystemTarget() != 0)
-				{
-					std::list< System * >::const_iterator SystemIterator(find(LinkedSystems.begin(), LinkedSystems.end(), g_InputFocus->GetLinkedSystemTarget()));
-					
-					if(SystemIterator == LinkedSystems.end())
-					{
-						SelectLinkedSystem(0);
-					}
-					else
-					{
-						++SystemIterator;
-						if(SystemIterator == LinkedSystems.end())
-						{
-							SelectLinkedSystem(0);
-						}
-						else
-						{
-							SelectLinkedSystem(*SystemIterator);
-						}
-					}
-				}
-				else
-				{
-					if(LinkedSystems.size() > 0)
-					{
-						SelectLinkedSystem(LinkedSystems.front());
-					}
-				}
+				g_InputMind->SelectNextLinkedSystem();
 			}
 			
 			break;
@@ -1155,9 +1080,9 @@ void KeyDown(unsigned int KeyCode)
 		}
 	case 65: // Key: SPACE
 		{
-			if(g_InputFocus != 0)
+			if(g_InputMind != 0)
 			{
-				g_InputFocus->m_Fire = true;
+				g_InputMind->EnableFire();
 			}
 			
 			break;
@@ -1227,27 +1152,27 @@ void KeyDown(unsigned int KeyCode)
 		}
 	case 98: // Key: UP
 		{
-			if(g_InputFocus != 0)
+			if(g_InputMind != 0)
 			{
-				g_InputFocus->m_Accelerate = true;
+				g_InputMind->EnableAccelerate();
 			}
 			
 			break;
 		}
 	case 100: // Key: LEFT
 		{
-			if(g_InputFocus != 0)
+			if(g_InputMind != 0)
 			{
-				g_InputFocus->m_TurnLeft = true;
+				g_InputMind->EnableTurnLeft();
 			}
 			
 			break;
 		}
 	case 102: // Key: RIGHT
 		{
-			if(g_InputFocus != 0)
+			if(g_InputMind != 0)
 			{
-				g_InputFocus->m_TurnRight = true;
+				g_InputMind->EnableTurnRight();
 			}
 			
 			break;
@@ -1265,36 +1190,36 @@ void KeyUp(unsigned char KeyCode)
 	{
 	case 65: // Key: SPACE
 		{
-			if(g_InputFocus != 0)
+			if(g_InputMind != 0)
 			{
-				g_InputFocus->m_Fire = false;
+				g_InputMind->DisableFire();
 			}
 			
 			break;
 		}
 	case 98:  // Key: UP
 		{
-			if(g_InputFocus != 0)
+			if(g_InputMind != 0)
 			{
-				g_InputFocus->m_Accelerate = false;
+				g_InputMind->DisableAccelerate();
 			}
 			
 			break;
 		}
 	case 100: // Key: LEFT
 		{
-			if(g_InputFocus != 0)
+			if(g_InputMind != 0)
 			{
-				g_InputFocus->m_TurnLeft = false;
+				g_InputMind->DisableTurnLeft();
 			}
 			
 			break;
 		}
 	case 102: // Key: RIGHT
 		{
-			if(g_InputFocus != 0)
+			if(g_InputMind != 0)
 			{
-				g_InputFocus->m_TurnRight = false;
+				g_InputMind->DisableTurnRight();
 			}
 			
 			break;
@@ -1455,7 +1380,10 @@ void LoadSavegame(const Element * SaveElement)
 		}
 		else if((*SaveChild)->GetName() == "character")
 		{
+			g_InputMind = new CommandMind();
 			g_PlayerCharacter = new Character();
+			g_PlayerCharacter->PossessByMind(g_InputMind);
+			g_InputMind->SetCharacter(g_PlayerCharacter);
 			g_PlayerCharacter->SetObjectIdentifier((*SaveChild)->GetAttribute("object-identifier"));
 			for(std::vector< Element * >::const_iterator CharacterChild = (*SaveChild)->GetChilds().begin(); CharacterChild != (*SaveChild)->GetChilds().end(); ++CharacterChild)
 			{

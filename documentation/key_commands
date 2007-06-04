@@ -8,12 +8,20 @@ On key down:
 9 (ESCAPE), 24 (Q)
 	Quits the application immediately.
 
+26 (E)
+	Selects the previous ship in the system or the last one if no ship was selected or deselects any ship if the first one was selected.
+	Acts upon the input focus.
+
 27 (R)
 	Selects the next ship in the system or the first one if no ship was selected or deselects any ship if the last one was selected.
 	Acts upon the input focus.
 
 28 (T)
 	Selects the next cargo in the system or the first one if no cargo was selected or deselects any cargo if the last one was selected.
+	Acts upon the input focus.
+
+32 (O)
+	Selects the previous planet in the system or the last one if no planet was selected or deselects any planet if the first one was selected.
 	Acts upon the input focus.
 
 33 (P)
@@ -78,6 +86,3 @@ On key down:
 102 (ARROW RIGHT)
 	Turns the controlled ship to the right.
 	Acts upon the input focus.
-
-105 (PAGE DOWN)
-	Moves the input focus to the next ship in the system or to the first ship, if the last ship was the input focus.
