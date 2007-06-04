@@ -58,10 +58,15 @@ public:
 	// shot stuff
 	bool IsReadyToFire(void);
 	void ResetNextTimeToFire(void);
+	// manifest
+	void AddObject(Object * Object);
+	void RemoveObject(Object * Object);
+	std::set< Object * > & GetManifest(void);
 private:
 	// ship class
 	ShipClass * m_ShipClass;
 	std::map< const Commodity *, float > m_Commodities;
+	std::set< Object * > m_Manifest;
 	float m_Fuel;
 	float m_Hull;
 	PhysicalObject * m_Target;
@@ -175,6 +180,26 @@ inline void Ship::SetLinkedSystemTarget(System * LinkedSystem)
 inline void Ship::SetCurrentSystem(System * CurrentSystem)
 {
 	m_CurrentSystem = CurrentSystem;
+}
+
+inline void Ship::AddObject(Object * Add)
+{
+	m_Manifest.insert(Add);
+}
+
+inline void Ship::RemoveObject(Object * Remove)
+{
+	std::set< Object * >::iterator ManifestIterator(m_Manifest.find(Remove));
+	
+	if(ManifestIterator != m_Manifest.end())
+	{
+		m_Manifest.erase(ManifestIterator);
+	}
+}
+
+inline std::set< Object * > & Ship::GetManifest(void)
+{
+	return m_Manifest;
 }
 
 #endif
