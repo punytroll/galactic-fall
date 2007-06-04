@@ -318,7 +318,7 @@ map_dialog.o: map_dialog.cpp $(button_h) $(character_h) $(color_h) $(globals_h) 
 map_knowledge.o: map_knowledge.cpp $(map_knowledge_h) $(system.h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags math3d` -c $< -o $@
 
-mind.o: mind.cpp $(character_h) $(mind_h) $(state_machine_h)
+mind.o: mind.cpp $(mind_h) $(state_machine_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 mini_map.o: mini_map.cpp $(cargo_h) $(mini_map_h) $(planet_h) $(ship_h) $(system_h)
