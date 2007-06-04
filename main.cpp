@@ -243,6 +243,39 @@ void DisplayUserInterface(void)
 	glPopAttrib();
 }
 
+void RemoveShipFromSystem(System * System, std::list< Ship * >::iterator ShipIterator)
+{
+	// basically this functions only does the last call
+	// all other stuff should be changed to references, so it is done automatically
+	Ship * Ship(*ShipIterator);
+	
+	if(g_OutputFocus == Ship)
+	{
+		g_OutputFocus = 0;
+	}
+	if(g_InputFocus == Ship)
+	{
+		g_InputFocus = 0;
+	}
+	if(g_PlayerShip == Ship)
+	{
+		g_PlayerShip = 0;
+	}
+	if((g_OutputFocus != 0) && (g_OutputFocus->GetTarget() == Ship))
+	{
+		g_OutputFocus->SetTarget(0);
+	}
+	if((g_InputFocus != 0) && (g_InputFocus->GetTarget() == Ship))
+	{
+		g_InputFocus->SetTarget(0);
+	}
+	if(Ship == g_Camera.GetFocus())
+	{
+		g_Camera.SetFocus(0);
+	}
+	System->GetShips().erase(ShipIterator);
+}
+
 void DeleteShip(Ship * Ship)
 {
 	std::set< Object * > & Manifest(Ship->GetManifest());
@@ -273,27 +306,7 @@ void DeleteShip(Ship * Ship)
 			delete ManifestObject;
 		}
 	}
-	if((g_OutputFocus != 0) && (g_OutputFocus->GetTarget() == Ship))
-	{
-		g_OutputFocus->SetTarget(0);
-	}
-	if((g_InputFocus != 0) && (g_InputFocus->GetTarget() == Ship))
-	{
-		g_InputFocus->SetTarget(0);
-	}
-	if(Ship == g_Camera.GetFocus())
-	{
-		g_Camera.SetFocus(0);
-	}
 	delete Ship;
-}
-
-void DeleteShipFromSystem(System * System, std::list< Ship * >::iterator ShipIterator)
-{
-	Ship * Ship(*ShipIterator);
-	
-	System->GetShips().erase(ShipIterator);
-	DeleteShip(Ship);
 }
 
 void CalculateCharacters(void)
@@ -322,9 +335,17 @@ void CalculateMovements(System * System)
 			NextShipIterator = ShipIterator;
 			++NextShipIterator;
 			(*ShipIterator)->Update(Seconds);
-			if((*ShipIterator == g_OutputFocus) && ((*ShipIterator)->GetCurrentSystem() != g_CurrentSystem))
+			if((*ShipIterator)->GetCurrentSystem() != System)
 			{
-				g_CurrentSystem = (*ShipIterator)->GetCurrentSystem();
+				if(*ShipIterator == g_OutputFocus)
+				{
+					g_CurrentSystem = (*ShipIterator)->GetCurrentSystem();
+				}
+				else
+				{
+					// TODO: maybe delete the ship
+					//       keep a set of permanent ships
+				}
 			}
 			ShipIterator = NextShipIterator;
 		}
@@ -344,22 +365,17 @@ void CalculateMovements(System * System)
 			{
 				for(std::list< Ship * >::iterator ShipIterator = Ships.begin(); ShipIterator != Ships.end(); ++ShipIterator)
 				{
-					if((*ShotIterator)->GetShooter() != *ShipIterator)
+					Ship * Ship(*ShipIterator);
+					
+					if((*ShotIterator)->GetShooter() != Ship)
 					{
-						if(((*ShotIterator)->GetPosition() - (*ShipIterator)->GetPosition()).length_squared() < ((*ShotIterator)->GetRadialSize() * (*ShotIterator)->GetRadialSize() + (*ShipIterator)->GetRadialSize() * (*ShipIterator)->GetRadialSize()))
+						if(((*ShotIterator)->GetPosition() - Ship->GetPosition()).length_squared() < ((*ShotIterator)->GetRadialSize() * (*ShotIterator)->GetRadialSize() + Ship->GetRadialSize() * Ship->GetRadialSize()))
 						{
-							(*ShipIterator)->SetHull((*ShipIterator)->GetHull() - (*ShotIterator)->GetDamage());
-							if((*ShipIterator)->GetHull() <= 0.0f)
+							Ship->SetHull(Ship->GetHull() - (*ShotIterator)->GetDamage());
+							if(Ship->GetHull() <= 0.0f)
 							{
-								if(*ShipIterator == g_PlayerShip)
-								{
-									g_PlayerShip = 0;
-								}
-								if(*ShipIterator == g_InputFocus)
-								{
-									g_InputFocus = 0;
-								}
-								DeleteShipFromSystem(System, ShipIterator);
+								RemoveShipFromSystem(System, ShipIterator);
+								DeleteShip(Ship);
 							}
 							DeleteShot = true;
 							
@@ -596,7 +612,10 @@ void EmptySystem(System * System)
 	{
 		while(System->GetShips().empty() == false)
 		{
-			DeleteShipFromSystem(System, System->GetShips().begin());
+			Ship * Ship(*System->GetShips().begin());
+			
+			RemoveShipFromSystem(System, System->GetShips().begin());
+			DeleteShip(Ship);
 		}
 		System->ClearCargos();
 		System->ClearShots();
