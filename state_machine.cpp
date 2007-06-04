@@ -7,6 +7,12 @@ StateMachine::StateMachine(void) :
 {
 }
 
+StateMachine::~StateMachine(void)
+{
+	delete m_GlobalState;
+	delete m_State;
+}
+
 void StateMachine::SetGlobalState(State * State)
 {
 	if(m_GlobalState != 0)
