@@ -77,6 +77,7 @@ void Ship::Update(float Seconds)
 			GetLinkedSystemTarget()->AddShip(this);
 			SetCurrentSystem(GetLinkedSystemTarget());
 			SetLinkedSystemTarget(0);
+			SetTarget(0);
 			m_Jump = false;
 		}
 	}
