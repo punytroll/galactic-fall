@@ -4,7 +4,6 @@
 #include "object.h"
 
 class Character;
-class Ship;
 
 /**
  * A Mind is the aggregation of the internal state of a character.
@@ -37,15 +36,6 @@ inline const Character * Mind::GetCharacter(void) const
 {
 	return m_Character;
 }
-
-class MindWithShip : public std::unary_function< Ship *, bool >
-{
-public:
-	explicit MindWithShip(const Ship * Ship);
-	bool operator()(const Mind * Mind) const;
-private:
-	const Ship * m_Ship;
-};
 
 class StateMachine;
 
