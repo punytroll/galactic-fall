@@ -306,14 +306,14 @@ void CalculateCharacters(void)
 	}
 }
 
-void CalculateMovements(void)
+void CalculateMovements(System * System)
 {
 	float Seconds(CalculateTime());
 	
-	if(g_CurrentSystem != 0)
+	if(System != 0)
 	{
 		// TODO: it is unclear, which Ships to update really.
-		std::list< Ship * > & Ships(g_CurrentSystem->GetShips());
+		std::list< Ship * > & Ships(System->GetShips());
 		std::list< Ship * >::iterator ShipIterator(Ships.begin());
 		std::list< Ship * >::iterator NextShipIterator(Ships.begin());
 		
@@ -322,11 +322,15 @@ void CalculateMovements(void)
 			NextShipIterator = ShipIterator;
 			++NextShipIterator;
 			(*ShipIterator)->Update(Seconds);
+			if((*ShipIterator == g_OutputFocus) && ((*ShipIterator)->GetCurrentSystem() != g_CurrentSystem))
+			{
+				g_CurrentSystem = (*ShipIterator)->GetCurrentSystem();
+			}
 			ShipIterator = NextShipIterator;
 		}
 		
-		const std::list< Cargo * > Cargos(g_CurrentSystem->GetCargos());
-		std::list< Shot * > & Shots(g_CurrentSystem->GetShots());
+		const std::list< Cargo * > Cargos(System->GetCargos());
+		std::list< Shot * > & Shots(System->GetShots());
 		
 		for(std::list< Cargo * >::const_iterator CargoIterator = Cargos.begin(); CargoIterator != Cargos.end(); ++CargoIterator)
 		{
@@ -355,7 +359,7 @@ void CalculateMovements(void)
 								{
 									g_InputFocus = 0;
 								}
-								DeleteShipFromSystem(g_CurrentSystem, ShipIterator);
+								DeleteShipFromSystem(System, ShipIterator);
 							}
 							DeleteShot = true;
 							
@@ -417,7 +421,7 @@ void UpdateUserInterface(void)
 	}
 }
 
-void Render(void)
+void Render(System * System)
 {
 	glViewport(0, 0, static_cast< GLsizei >(g_Width), static_cast< GLsizei >(g_Height));
 	glMatrixMode(GL_PROJECTION);
@@ -426,7 +430,7 @@ void Render(void)
 	glLoadIdentity();
 	g_Camera.Draw();
 	
-	const Star * CurrentStar(g_CurrentSystem->GetStar());
+	const Star * CurrentStar(System->GetStar());
 	
 	if(CurrentStar != 0)
 	{
@@ -440,12 +444,12 @@ void Render(void)
 	}
 	glClear(GL_COLOR_BUFFER_BIT);
 	glClear(GL_DEPTH_BUFFER_BIT);
-	if(g_CurrentSystem != 0)
+	if(System != 0)
 	{
-		const std::list< Planet * > & Planets(g_CurrentSystem->GetPlanets());
-		const std::list< Ship * > & Ships(g_CurrentSystem->GetShips());
-		const std::list< Cargo * > & Cargos(g_CurrentSystem->GetCargos());
-		const std::list< Shot * > & Shots(g_CurrentSystem->GetShots());
+		const std::list< Planet * > & Planets(System->GetPlanets());
+		const std::list< Ship * > & Ships(System->GetShips());
+		const std::list< Cargo * > & Cargos(System->GetCargos());
+		const std::list< Shot * > & Shots(System->GetShots());
 		
 		for(std::list< Planet * >::const_iterator PlanetIterator = Planets.begin(); PlanetIterator != Planets.end(); ++PlanetIterator)
 		{
@@ -534,10 +538,12 @@ void SelectLinkedSystem(System * LinkedSystem)
 
 void GameFrame(void)
 {
+	System * CurrentSystem(g_CurrentSystem);
+	
 	CalculateCharacters();
-	CalculateMovements();
+	CalculateMovements(CurrentSystem);
 	UpdateUserInterface();
-	Render();
+	Render(CurrentSystem);
 }
 
 void SelectPhysicalObject(PhysicalObject * Object)
@@ -597,15 +603,6 @@ void EmptySystem(System * System)
 	}
 }
 
-void LeaveSystem(void)
-{
-	g_CurrentSystem = 0;
-	EmptySystem(g_CurrentSystem);
-	SelectLinkedSystem(0);
-	SelectPhysicalObject(0);
-	g_PlayerShip->SetCurrentSystem(0);
-}
-
 void PopulateSystem(void)
 {
 	int NumberOfShips(GetRandomInteger(5));
@@ -657,35 +654,6 @@ void PopulateSystem(void)
 		
 		g_CurrentSystem->AddShip(NewShip);
 	}
-}
-
-void EnterSystem(System * NewSystem, System * OldSystem)
-{
-	g_CurrentSystem = NewSystem;
-	if(OldSystem != 0)
-	{
-		math3d::vector2f Direction(NewSystem->GetPosition() - OldSystem->GetPosition());
-		
-		Direction.normalize();
-		g_PlayerShip->m_Position = Direction * -300.0f;
-		g_PlayerShip->m_Velocity = Direction * g_PlayerShip->GetShipClass()->GetMaximumSpeed();
-		
-		float Radians(acosf(Direction.m_V.m_A[0]));
-		
-		if(Direction.m_V.m_A[1] >= 0)
-		{
-			g_PlayerShip->m_AngularPosition = Radians;
-		}
-		else
-		{
-			g_PlayerShip->m_AngularPosition = -Radians;
-		}
-	}
-	g_CurrentSystem->AddShip(g_PlayerShip);
-	g_PlayerShip->SetCurrentSystem(NewSystem);
-	SelectLinkedSystem(0);
-	SelectPhysicalObject(0);
-	g_PlayerCharacter->GetMapKnowledge()->AddExploredSystem(g_CurrentSystem);
 }
 
 void SetTimeWarp(float TimeWarp)
@@ -1570,6 +1538,7 @@ void LoadSavegame(const Element * SaveElement)
 	if(g_PlayerShip != 0)
 	{
 		g_PlayerCharacter->SetShip(g_PlayerShip);
+		g_PlayerShip->AddObject(g_PlayerCharacter);
 		g_CurrentSystem->AddShip(g_PlayerShip);
 		g_PlayerShip->SetCurrentSystem(g_CurrentSystem);
 	}
