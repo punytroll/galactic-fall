@@ -18,6 +18,7 @@ public:
 	void DisableTurnRight(void);
 	void EnableFire(void);
 	void DisableFire(void);
+	void JettisonCargo(void);
 	void Jump(void);
 	void SelectNextLinkedSystem(void);
 	void TargetPreviousCargo(void);

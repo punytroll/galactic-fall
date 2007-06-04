@@ -4,15 +4,20 @@
 
 #include <GL/gl.h>
 
+#include "cargo.h"
 #include "character.h"
 #include "color.h"
+#include "commodity.h"
 #include "game_time.h"
+#include "globals.h"
 #include "map_knowledge.h"
 #include "math.h"
 #include "model.h"
+#include "model_manager.h"
 #include "real_time.h"
 #include "ship.h"
 #include "shot.h"
+#include "string_cast.h"
 #include "system.h"
 
 Ship::Ship(ShipClass * ShipClass) :
@@ -21,6 +26,7 @@ Ship::Ship(ShipClass * ShipClass) :
 	m_TurnRight(false),
 	m_Fire(false),
 	m_Jump(false),
+	m_Jettison(false),
 	m_Velocity(true),
 	m_AngularPosition(0.0f),
 	m_ShipClass(ShipClass),
@@ -163,6 +169,20 @@ void Ship::Update(float Seconds)
 				GetCurrentSystem()->AddShot(NewShot);
 				ResetNextTimeToFire();
 			}
+		}
+		if(m_Jettison == true)
+		{
+			while(GetCommodities().size() > 0)
+			{
+				const Commodity * Commodity(GetCommodities().begin()->first);
+				Cargo * NewCargo(new Cargo(g_ModelManager.Get("cargo_cube"), Commodity, GetVelocity() * 0.8f + math3d::vector2f(GetRandomFloat(-0.5f, 0.5f), GetRandomFloat(-0.5f, 0.5f))));
+				
+				NewCargo->SetObjectIdentifier("::cargo(" + Commodity->GetIdentifier() + ")::" + to_string_cast(reinterpret_cast< void * >(NewCargo)));
+				RemoveCommodities(Commodity, 1.0f);
+				NewCargo->SetPosition(GetPosition());
+				GetCurrentSystem()->AddCargo(NewCargo);
+			}
+			m_Jettison = false;
 		}
 	}
 }

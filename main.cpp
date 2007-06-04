@@ -1031,16 +1031,7 @@ void KeyDown(unsigned int KeyCode)
 			if(g_InputFocus != 0)
 			{
 				SetMessage("Jettison cargo.");
-				while(g_InputFocus->GetCommodities().size() > 0)
-				{
-					const Commodity * Commodity(g_InputFocus->GetCommodities().begin()->first);
-					Cargo * NewCargo(new Cargo(g_ModelManager.Get("cargo_cube"), Commodity, g_InputFocus->GetVelocity() * 0.8f + math3d::vector2f(GetRandomFloat(-0.5f, 0.5f), GetRandomFloat(-0.5f, 0.5f)))); // TODO: memory leak
-					
-					NewCargo->SetObjectIdentifier("::cargo(" + Commodity->GetIdentifier() + ")::" + to_string_cast(reinterpret_cast< void * >(NewCargo)));
-					g_InputFocus->RemoveCommodities(Commodity, 1.0f);
-					NewCargo->SetPosition(g_InputFocus->GetPosition());
-					g_CurrentSystem->AddCargo(NewCargo);
-				}
+				g_InputMind->JettisonCargo();
 			}
 			
 			break;
