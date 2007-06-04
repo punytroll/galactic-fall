@@ -70,7 +70,7 @@ void Ship::Update(float Seconds)
 {
 	if(m_Jump == true)
 	{
-		if((GetShipClass()->GetJumpFuel() > GetFuel()) && (GetLinkedSystemTarget() != 0))
+		if((GetFuel() >= GetShipClass()->GetJumpFuel()) && (GetLinkedSystemTarget() != 0))
 		{
 			GetCurrentSystem()->RemoveShip(this);
 			SetFuel(GetFuel() - GetShipClass()->GetJumpFuel());
