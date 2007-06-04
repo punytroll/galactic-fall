@@ -89,8 +89,6 @@ PlanetDialog * g_PlanetDialog;
 MapDialog * g_MapDialog;
 UserInterface g_UserInterface;
 std::multimap< double, Callback0< void > * > g_TimeoutNotifications;
-std::list< Mind * > g_ActiveMinds;
-std::list< Mind * > g_SuspendedMinds;
 Widget * g_Scanner(0);
 MiniMap * g_MiniMap(0);
 ScannerDisplay * g_ScannerDisplay(0);
@@ -314,14 +312,22 @@ void CalculateMovements(void)
 	
 	if(g_CurrentSystem != 0)
 	{
+		// TODO: it is unclear, which Ships to update really.
 		std::list< Ship * > & Ships(g_CurrentSystem->GetShips());
+		std::list< Ship * >::iterator ShipIterator(Ships.begin());
+		std::list< Ship * >::iterator NextShipIterator(Ships.begin());
+		
+		while(ShipIterator != Ships.end())
+		{
+			NextShipIterator = ShipIterator;
+			++NextShipIterator;
+			(*ShipIterator)->Update(Seconds);
+			ShipIterator = NextShipIterator;
+		}
+		
 		const std::list< Cargo * > Cargos(g_CurrentSystem->GetCargos());
 		std::list< Shot * > & Shots(g_CurrentSystem->GetShots());
 		
-		for(std::list< Ship * >::iterator ShipIterator = Ships.begin(); ShipIterator != Ships.end(); ++ShipIterator)
-		{
-			(*ShipIterator)->Update(Seconds);
-		}
 		for(std::list< Cargo * >::const_iterator CargoIterator = Cargos.begin(); CargoIterator != Cargos.end(); ++CargoIterator)
 		{
 			(*CargoIterator)->Move(Seconds);
@@ -397,6 +403,8 @@ void UpdateUserInterface(void)
 		g_HullLabel->SetString("Hull: " + to_string_cast(g_OutputFocus->GetHull(), 2));
 		// display credits in every cycle
 		g_CreditsLabel->SetString("Credits: " + to_string_cast(g_PlayerCharacter->GetCredits()));
+		// display the current system
+		g_CurrentSystemLabel->SetString(g_OutputFocus->GetCurrentSystem()->GetName());
 		// set system label color according to jump status
 		if((g_OutputFocus->GetLinkedSystemTarget() != 0) && (WantToJump(g_OutputFocus) == OK))
 		{
@@ -576,26 +584,23 @@ public:
 	}
 } g_GlobalDestroyListener;
 
+void EmptySystem(System * System)
+{
+	if(System != 0)
+	{
+		while(System->GetShips().empty() == false)
+		{
+			DeleteShipFromSystem(System, System->GetShips().begin());
+		}
+		System->ClearCargos();
+		System->ClearShots();
+	}
+}
+
 void LeaveSystem(void)
 {
-	if(g_CurrentSystem != 0)
-	{
-		g_CurrentSystem->ClearShips();
-		g_CurrentSystem->ClearCargos();
-		g_CurrentSystem->ClearShots();
-		g_CurrentSystem = 0;
-	}
-	while(g_ActiveMinds.begin() != g_ActiveMinds.end())
-	{
-		Character * Character(g_ActiveMinds.front()->GetCharacter());
-		Ship * Ship(Character->GetShip());
-		
-		delete g_ActiveMinds.front();
-		g_ActiveMinds.erase(g_ActiveMinds.begin());
-		delete Character;
-		delete Ship;
-	}
-	g_CurrentSystemLabel->SetString("");
+	g_CurrentSystem = 0;
+	EmptySystem(g_CurrentSystem);
 	SelectLinkedSystem(0);
 	SelectPhysicalObject(0);
 	g_PlayerShip->SetCurrentSystem(0);
@@ -603,7 +608,7 @@ void LeaveSystem(void)
 
 void PopulateSystem(void)
 {
-	int NumberOfShips(GetRandomInteger(3));
+	int NumberOfShips(GetRandomInteger(5));
 	
 	std::cout << "Spawning " << NumberOfShips << " ships." << std::endl;
 	for(int ShipNumber = 1; ShipNumber <= NumberOfShips; ++ShipNumber)
@@ -650,7 +655,6 @@ void PopulateSystem(void)
 		NewCharacter->PossessByMind(NewMind);
 		NewShip->AddObject(NewCharacter);
 		
-		g_ActiveMinds.push_back(NewMind);
 		g_CurrentSystem->AddShip(NewShip);
 	}
 }
@@ -678,7 +682,6 @@ void EnterSystem(System * NewSystem, System * OldSystem)
 		}
 	}
 	g_CurrentSystem->AddShip(g_PlayerShip);
-	g_CurrentSystemLabel->SetString(g_CurrentSystem->GetName());
 	g_PlayerShip->SetCurrentSystem(NewSystem);
 	SelectLinkedSystem(0);
 	SelectPhysicalObject(0);
@@ -982,13 +985,7 @@ void KeyDown(unsigned int KeyCode)
 					{
 					case OK:
 						{
-							System * OldSystem(g_CurrentSystem);
-							System * NewSystem(g_InputFocus->GetLinkedSystemTarget());
-							
-							LeaveSystem();
-							g_InputFocus->SetFuel(g_InputFocus->GetFuel() - g_InputFocus->GetShipClass()->GetJumpFuel());
-							EnterSystem(NewSystem, OldSystem);
-							PopulateSystem();
+							g_InputFocus->m_Jump = true;
 							
 							break;
 						}
@@ -1267,41 +1264,6 @@ void KeyDown(unsigned int KeyCode)
 			}
 			
 			break;
-		}
-	case 105: // Key: PAGE DOWN
-		{
-			std::list< Mind * >::iterator MindIterator;
-			
-			MindIterator = std::find_if(g_SuspendedMinds.begin(), g_SuspendedMinds.end(), MindWithShip(g_InputFocus));
-			if(MindIterator != g_SuspendedMinds.end())
-			{
-				g_SuspendedMinds.erase(MindIterator);
-				g_ActiveMinds.push_back(*MindIterator);
-			}
-			
-			std::list< Ship * > & Ships(g_CurrentSystem->GetShips());
-			std::list< Ship * >::const_iterator ShipIterator(find(Ships.begin(), Ships.end(), g_InputFocus));
-			
-			if((ShipIterator == Ships.end()) || (++ShipIterator == Ships.end()))
-			{
-				g_InputFocus = Ships.front();
-				g_OutputFocus = Ships.front();
-				g_Camera.SetFocus(Ships.front());
-			}
-			else
-			{
-				g_InputFocus = *ShipIterator;
-				g_OutputFocus = *ShipIterator;
-				g_Camera.SetFocus(*ShipIterator);
-			}
-			g_MiniMap->SetFocus(g_OutputFocus);
-			g_ScannerDisplay->SetFocus(g_OutputFocus);
-			MindIterator = std::find_if(g_ActiveMinds.begin(), g_ActiveMinds.end(), MindWithShip(g_InputFocus));
-			if(MindIterator != g_ActiveMinds.end())
-			{
-				g_ActiveMinds.erase(MindIterator);
-				g_SuspendedMinds.push_back(*MindIterator);
-			}
 		}
 	}
 }
@@ -1605,7 +1567,6 @@ void LoadSavegame(const Element * SaveElement)
 		}
 	}
 	g_CurrentSystem = g_SystemManager.Get(System);
-	g_CurrentSystemLabel->SetString(g_CurrentSystem->GetName());
 	if(g_PlayerShip != 0)
 	{
 		g_PlayerCharacter->SetShip(g_PlayerShip);

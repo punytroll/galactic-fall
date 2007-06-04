@@ -6,6 +6,7 @@
 class Planet;
 class Ship;
 class StateMachine;
+class System;
 
 class SelectSteering : public State
 {
@@ -58,6 +59,17 @@ public:
 	virtual void Exit(void);
 private:
 	double m_TimeToLeave;
+};
+
+class TransporterPhase4 : public State
+{
+public:
+	TransporterPhase4(Ship * ActionTarget, StateMachine * StateMachine);
+	virtual void Enter(void);
+	virtual void Execute(void);
+	virtual void Exit(void);
+private:
+	math3d::vector2f m_JumpPoint;
 };
 
 #endif

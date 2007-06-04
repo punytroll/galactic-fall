@@ -112,7 +112,8 @@ void TransporterPhase1::Enter(void)
 	}
 	else
 	{
-		// TODO: goto leave the system
+		GetStateMachine()->SetState(new TransporterPhase4(GetActionTarget(), GetStateMachine()));
+		delete this;
 	}
 }
 
@@ -219,6 +220,7 @@ void TransporterPhase2::Exit(void)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // TransporterPhase3: Wait for a little time.                                                    //
+//                    Decide, what to do next.                                                   //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 TransporterPhase3::TransporterPhase3(Ship * ActionTarget, StateMachine * StateMachine) :
 	State(ActionTarget, StateMachine),
@@ -234,11 +236,91 @@ void TransporterPhase3::Execute(void)
 {
 	if(GameTime::Get() >= m_TimeToLeave)
 	{
-		GetStateMachine()->SetState(new TransporterPhase1(GetActionTarget(), GetStateMachine()));
-		delete this;
+		if(GetRandomBoolean() == true)
+		{
+			GetStateMachine()->SetState(new TransporterPhase1(GetActionTarget(), GetStateMachine()));
+			delete this;
+		}
+		else
+		{
+			GetStateMachine()->SetState(new TransporterPhase4(GetActionTarget(), GetStateMachine()));
+			delete this;
+		}
 	}
 }
 
 void TransporterPhase3::Exit(void)
+{
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// TransporterPhase4: Decide on a system to jump to. Fly away from system center to jump. Jump.  //
+///////////////////////////////////////////////////////////////////////////////////////////////////
+TransporterPhase4::TransporterPhase4(Ship * ActionTarget, StateMachine * StateMachine) :
+	State(ActionTarget, StateMachine)
+{
+}
+
+void TransporterPhase4::Enter(void)
+{
+	const std::list< System * > & Systems(GetActionTarget()->GetCurrentSystem()->GetLinkedSystems());
+	
+	if(Systems.size() != 0)
+	{
+		std::list< System * >::const_iterator SystemIterator(Systems.begin());
+		
+		for(std::list< System * >::size_type Choice = GetRandomInteger(Systems.size() - 1); Choice > 0; --Choice)
+		{
+			++SystemIterator;
+		}
+		GetActionTarget()->SetLinkedSystemTarget(*SystemIterator);
+		
+		// TODO: the 280.0f is a constant from main.cpp
+		m_JumpPoint = GetActionTarget()->GetPosition() + (((*SystemIterator)->GetPosition() - GetActionTarget()->GetCurrentSystem()->GetPosition()).normalize() * 280.0f * GetRandomFloat(1.0f, 1.2f));
+	}
+	else
+	{
+		GetStateMachine()->SetState(new FlyOverRandomPoint(GetActionTarget(), GetStateMachine()));
+		delete this;
+	}
+}
+
+void TransporterPhase4::Execute(void)
+{
+	math3d::vector2f ToDestination(m_JumpPoint - GetActionTarget()->GetPosition());
+	float LengthSquared(ToDestination.length_squared());
+	
+	if(LengthSquared > 400.0f)
+	{
+		ToDestination /= sqrt(LengthSquared);
+		
+		float HeadingOffDestination(GetShortestRadians(GetActionTarget()->GetAngularPosition(), GetRadians(ToDestination)));
+		
+		if(HeadingOffDestination > 0.1)
+		{
+			GetActionTarget()->m_TurnRight = true;
+			GetActionTarget()->m_TurnLeft = false;
+			GetActionTarget()->m_Accelerate = false;
+		}
+		else if(HeadingOffDestination < -0.1)
+		{
+			GetActionTarget()->m_TurnRight = false;
+			GetActionTarget()->m_TurnLeft = true;
+			GetActionTarget()->m_Accelerate = false;
+		}
+		else
+		{
+			GetActionTarget()->m_TurnRight = false;
+			GetActionTarget()->m_TurnLeft = false;
+			GetActionTarget()->m_Accelerate = ((GetActionTarget()->GetVelocity() - math3d::vector2f(GetActionTarget()->GetShipClass()->GetMaximumSpeed(), GetActionTarget()->GetAngularPosition(), math3d::vector2f::magnitude_angle)).length_squared() > 0.1f);
+		}
+	}
+	else
+	{
+		GetActionTarget()->m_Jump = true;
+	}
+}
+
+void TransporterPhase4::Exit(void)
 {
 }
