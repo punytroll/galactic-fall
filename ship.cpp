@@ -4,8 +4,11 @@
 
 #include <GL/gl.h>
 
+#include "character.h"
 #include "color.h"
 #include "game_time.h"
+#include "map_knowledge.h"
+#include "math.h"
 #include "model.h"
 #include "real_time.h"
 #include "ship.h"
@@ -72,10 +75,33 @@ void Ship::Update(float Seconds)
 	{
 		if((GetFuel() >= GetShipClass()->GetJumpFuel()) && (GetLinkedSystemTarget() != 0))
 		{
-			GetCurrentSystem()->RemoveShip(this);
+			System * OldSystem(GetCurrentSystem());
+			System * NewSystem(GetLinkedSystemTarget());
+			
+			// remove the ship from the old system
+			OldSystem->RemoveShip(this);
+			SetCurrentSystem(0);
 			SetFuel(GetFuel() - GetShipClass()->GetJumpFuel());
-			GetLinkedSystemTarget()->AddShip(this);
+			
+			// set the ship's position according to the old system
+			math3d::vector2f Direction(NewSystem->GetPosition() - OldSystem->GetPosition());
+			
+			Direction.normalize();
+			m_Position = Direction * -300.0f;
+			m_Velocity = Direction * GetShipClass()->GetMaximumSpeed();
+			m_AngularPosition = GetRadians(Direction);
+			// set up the ship in the new system
 			SetCurrentSystem(GetLinkedSystemTarget());
+			NewSystem->AddShip(this);
+			for(std::set< Object * >::iterator ManifestIterator = m_Manifest.begin(); ManifestIterator != m_Manifest.end(); ++ManifestIterator)
+			{
+				Character * ManifestCharacter(dynamic_cast< Character * >(*ManifestIterator));
+				
+				if(ManifestCharacter != 0)
+				{
+					ManifestCharacter->GetMapKnowledge()->AddExploredSystem(NewSystem);
+				}
+			}
 			SetLinkedSystemTarget(0);
 			SetTarget(0);
 			m_Jump = false;
