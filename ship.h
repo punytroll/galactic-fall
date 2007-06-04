@@ -23,6 +23,7 @@ public:
 	bool m_TurnLeft;
 	bool m_TurnRight;
 	bool m_Fire;
+	bool m_Jettison;
 	bool m_Jump;
 	// current state
 	math3d::vector2f m_Velocity;

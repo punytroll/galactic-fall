@@ -74,6 +74,14 @@ void CommandMind::DisableFire(void)
 	}
 }
 
+void CommandMind::JettisonCargo(void)
+{
+	if((GetCharacter() != 0) && (GetCharacter()->GetShip() != 0))
+	{
+		GetCharacter()->GetShip()->m_Jettison = true;
+	}
+}
+
 void CommandMind::Jump(void)
 {
 	if((GetCharacter() != 0) && (GetCharacter()->GetShip() != 0))
