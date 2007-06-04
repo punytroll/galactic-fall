@@ -245,45 +245,66 @@ void DisplayUserInterface(void)
 	glPopAttrib();
 }
 
-void DeleteShipFromSystem(System * System, std::list< Ship * >::iterator ShipIterator)
+void DeleteShip(Ship * Ship)
 {
-	std::list< Mind * >::iterator MindIterator;
+	std::set< Object * > & Manifest(Ship->GetManifest());
 	
-	MindIterator = std::find_if(g_ActiveMinds.begin(), g_ActiveMinds.end(), MindWithShip(*ShipIterator));
-	if(MindIterator != g_ActiveMinds.end())
+	while(Manifest.empty() == false)
 	{
-		delete (*MindIterator)->GetCharacter();
-		delete *MindIterator;
-		g_ActiveMinds.erase(MindIterator);
+		Object * ManifestObject(*(Manifest.begin()));
+		
+		Ship->RemoveObject(ManifestObject);
+		
+		Character * ManifestCharacter(dynamic_cast< Character * >(ManifestObject));
+		
+		if(ManifestCharacter != 0)
+		{
+			Mind * ManifestCharacterMind;
+			
+			while((ManifestCharacterMind = ManifestCharacter->ReleaseMind()) != 0)
+			{
+				// TODO: don't delete it if it is the input focus mind
+				delete ManifestCharacterMind;
+			}
+			delete ManifestCharacter;
+		}
+		else
+		{
+			std::cerr << "Unknown object type for object '" << ManifestObject->GetObjectIdentifier() << "' in ship '" << Ship->GetObjectIdentifier() << "'." << std::endl;
+			
+			delete ManifestObject;
+		}
 	}
-	MindIterator = std::find_if(g_SuspendedMinds.begin(), g_SuspendedMinds.end(), MindWithShip(*ShipIterator));
-	if(MindIterator != g_SuspendedMinds.end())
-	{
-		delete (*MindIterator)->GetCharacter();
-		delete *MindIterator;
-		g_SuspendedMinds.erase(MindIterator);
-	}
-	if((g_OutputFocus != 0) && (g_OutputFocus->GetTarget() == *ShipIterator))
+	if((g_OutputFocus != 0) && (g_OutputFocus->GetTarget() == Ship))
 	{
 		g_OutputFocus->SetTarget(0);
 	}
-	if((g_InputFocus != 0) && (g_InputFocus->GetTarget() == *ShipIterator))
+	if((g_InputFocus != 0) && (g_InputFocus->GetTarget() == Ship))
 	{
 		g_InputFocus->SetTarget(0);
 	}
-	if(*ShipIterator == g_Camera.GetFocus())
+	if(Ship == g_Camera.GetFocus())
 	{
 		g_Camera.SetFocus(0);
 	}
-	delete *ShipIterator;
-	System->GetShips().erase(ShipIterator);
+	delete Ship;
 }
 
-void CalculateMinds(void)
+void DeleteShipFromSystem(System * System, std::list< Ship * >::iterator ShipIterator)
 {
-	for(std::list< Mind * >::iterator MindIterator = g_ActiveMinds.begin(); MindIterator != g_ActiveMinds.end(); ++MindIterator)
+	Ship * Ship(*ShipIterator);
+	
+	System->GetShips().erase(ShipIterator);
+	DeleteShip(Ship);
+}
+
+void CalculateCharacters(void)
+{
+	std::set< Character * > & Characters(Character::GetCharacters());
+	
+	for(std::set< Character * >::iterator CharacterIterator = Characters.begin(); CharacterIterator != Characters.end(); ++CharacterIterator)
 	{
-		(*MindIterator)->Update();
+		(*CharacterIterator)->Update();
 	}
 }
 
@@ -505,7 +526,7 @@ void SelectLinkedSystem(System * LinkedSystem)
 
 void GameFrame(void)
 {
-	CalculateMinds();
+	CalculateCharacters();
 	CalculateMovements();
 	UpdateUserInterface();
 	Render();
@@ -625,6 +646,10 @@ void PopulateSystem(void)
 		NewMind->SetObjectIdentifier(IdentifierStream.str() + "mind(state_machine)");
 		NewMind->SetCharacter(NewCharacter);
 		NewMind->GetStateMachine()->SetState(new SelectSteering(NewShip, NewMind->GetStateMachine()));
+		
+		NewCharacter->PossessByMind(NewMind);
+		NewShip->AddObject(NewCharacter);
+		
 		g_ActiveMinds.push_back(NewMind);
 		g_CurrentSystem->AddShip(NewShip);
 	}
