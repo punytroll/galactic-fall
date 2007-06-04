@@ -318,6 +318,8 @@ void TransporterPhase4::Execute(void)
 	else
 	{
 		GetActionTarget()->m_Jump = true;
+		GetStateMachine()->SetState(new SelectSteering(GetActionTarget(), GetStateMachine()));
+		delete this;
 	}
 }
 
