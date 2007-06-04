@@ -19,7 +19,7 @@ Character::~Character(void)
 
 void Character::Update(void)
 {
-	if(m_Minds.size() > 0)
+	if(m_Minds.empty() == false)
 	{
 		m_Minds.top()->Update();
 	}
@@ -51,9 +51,13 @@ void Character::PossessByMind(Mind * Mind)
 
 Mind * Character::ReleaseMind(void)
 {
-	Mind * Result(m_Minds.top());
+	Mind * Result(0);
 	
-	m_Minds.pop();
+	if(m_Minds.empty() == false)
+	{
+		Result = m_Minds.top();
+		m_Minds.pop();
+	}
 	
 	return Result;
 }
