@@ -76,7 +76,7 @@ void CommandMind::DisableFire(void)
 	GetCharacter()->GetShip()->m_Fire = false;
 }
 
-void CommandMind::JettisonCargo(void)
+void CommandMind::Jettison(void)
 {
 	assert(GetCharacter() != 0);
 	assert(GetCharacter()->GetShip() != 0);
@@ -90,6 +90,14 @@ void CommandMind::Jump(void)
 	assert(GetCharacter()->GetShip() != 0);
 	
 	GetCharacter()->GetShip()->m_Jump = true;
+}
+
+void CommandMind::Scoop(void)
+{
+	assert(GetCharacter() != 0);
+	assert(GetCharacter()->GetShip() != 0);
+	
+	GetCharacter()->GetShip()->m_Scoop = true;
 }
 
 void CommandMind::SelectNextLinkedSystem(void)
@@ -158,6 +166,36 @@ void CommandMind::TargetPreviousCargo(void)
 			GetCharacter()->GetShip()->SetTarget(*CargoIterator);
 		}
 	}
+}
+
+void CommandMind::TargetNearestCargo(void)
+{
+	assert(GetCharacter() != 0);
+	assert(GetCharacter()->GetShip() != 0);
+	
+	const std::list< Cargo * > & Cargos(GetCharacter()->GetShip()->GetCurrentSystem()->GetCargos());
+	float MinimumDistance(0.0f);
+	Cargo * MinimumCargo(0);
+	
+	for(std::list< Cargo * >::const_iterator CargoIterator = Cargos.begin(); CargoIterator != Cargos.end(); ++CargoIterator)
+	{
+		if(MinimumCargo == 0)
+		{
+			MinimumCargo = *CargoIterator;
+			MinimumDistance = (MinimumCargo->GetPosition() - GetCharacter()->GetShip()->GetPosition()).length_squared();
+		}
+		else
+		{
+			float Distance(((*CargoIterator)->GetPosition() - GetCharacter()->GetShip()->GetPosition()).length_squared());
+			
+			if(Distance < MinimumDistance)
+			{
+				MinimumCargo = *CargoIterator;
+				MinimumDistance = Distance;
+			}
+		}
+	}
+	GetCharacter()->GetShip()->SetTarget(MinimumCargo);
 }
 
 void CommandMind::TargetNextCargo(void)

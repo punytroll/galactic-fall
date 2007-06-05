@@ -27,6 +27,7 @@ Ship::Ship(ShipClass * ShipClass) :
 	m_Fire(false),
 	m_Jump(false),
 	m_Jettison(false),
+	m_Scoop(false),
 	m_Velocity(true),
 	m_AngularPosition(0.0f),
 	m_ShipClass(ShipClass),
@@ -183,6 +184,19 @@ void Ship::Update(float Seconds)
 				GetCurrentSystem()->AddCargo(NewCargo);
 			}
 			m_Jettison = false;
+		}
+		if(m_Scoop == true)
+		{
+			Cargo * SelectedCargo(dynamic_cast< Cargo * >(GetTarget()));
+			
+			if(SelectedCargo != 0)
+			{
+				AddCommodities(SelectedCargo->GetCommodity(), 1.0f);
+				GetCurrentSystem()->RemoveCargo(SelectedCargo);
+				SetTarget(0);
+				delete SelectedCargo;
+			}
+			m_Scoop = false;
 		}
 	}
 }
