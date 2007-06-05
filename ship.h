@@ -25,6 +25,7 @@ public:
 	bool m_Fire;
 	bool m_Jettison;
 	bool m_Jump;
+	bool m_Scoop;
 	// current state
 	math3d::vector2f m_Velocity;
 	float m_AngularPosition;

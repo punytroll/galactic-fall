@@ -18,10 +18,12 @@ public:
 	void DisableTurnRight(void);
 	void EnableFire(void);
 	void DisableFire(void);
-	void JettisonCargo(void);
+	void Jettison(void);
 	void Jump(void);
+	void Scoop(void);
 	void SelectNextLinkedSystem(void);
 	void TargetPreviousCargo(void);
+	void TargetNearestCargo(void);
 	void TargetNextCargo(void);
 	void TargetPreviousPlanet(void);
 	void TargetNextPlanet(void);

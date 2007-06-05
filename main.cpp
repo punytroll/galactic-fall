@@ -104,10 +104,12 @@ enum WantReturnCode
 	OK,
 	NO_JUMP_TARGET,
 	NO_LAND_TARGET,
+	NO_SCOOP_TARGET,
 	NOT_ENOUGH_CREDITS,
 	NOT_ENOUGH_FUEL,
 	TOO_FAR_AWAY,
 	TOO_FAST,
+	TOO_HIGH_RELATIVE_VELOCITY,
 	TOO_NEAR_TO_SYSTEM_CENTER
 };
 
@@ -151,6 +153,26 @@ int WantToLand(Ship * Ship, Planet * Planet)
 	if(g_PlayerCharacter->GetCredits() < Planet->GetLandingFee())
 	{
 		return NOT_ENOUGH_CREDITS;
+	}
+	
+	return OK;
+}
+
+int WantToScoop(Ship * Ship, Cargo * Cargo)
+{
+	if(Cargo == 0)
+	{
+		return NO_SCOOP_TARGET;
+	}
+	// test distance
+	if((Cargo->GetPosition() - Ship->GetPosition()).length_squared() > 5.0f * Cargo->GetRadialSize() * Cargo->GetRadialSize())
+	{
+		return TOO_FAR_AWAY;
+	}
+	// test speed
+	if((Ship->GetVelocity() - Cargo->GetVelocity()).length_squared() > 2.0f)
+	{
+		return TOO_HIGH_RELATIVE_VELOCITY;
 	}
 	
 	return OK;
@@ -837,60 +859,33 @@ void KeyDown(unsigned int KeyCode)
 		}
 	case 39: // Key: S
 		{
-			if(g_InputFocus != 0)
+			if(g_InputMind != 0)
 			{
-				Cargo * SelectedCargo(dynamic_cast< Cargo * >(g_InputFocus->GetTarget()));
-				
-				if(SelectedCargo == 0)
+				switch(WantToScoop(g_InputMind->GetCharacter()->GetShip(), dynamic_cast< Cargo * >(g_InputMind->GetCharacter()->GetShip()->GetTarget())))
 				{
-					const std::list< Cargo * > & Cargos(g_CurrentSystem->GetCargos());
-					float MinimumDistance(0.0f);
-					Cargo * MinimumCargo(0);
-					
-					for(std::list< Cargo * >::const_iterator CargoIterator = Cargos.begin(); CargoIterator != Cargos.end(); ++CargoIterator)
+				case OK:
 					{
-						if(MinimumCargo == 0)
-						{
-							MinimumCargo = *CargoIterator;
-							MinimumDistance = (MinimumCargo->GetPosition() - g_InputFocus->GetPosition()).length_squared();
-						}
-						else
-						{
-							float Distance(((*CargoIterator)->GetPosition() - g_InputFocus->GetPosition()).length_squared());
-							
-							if(Distance < MinimumDistance)
-							{
-								MinimumCargo = *CargoIterator;
-								MinimumDistance = Distance;
-							}
-						}
+						g_InputMind->Scoop();
+						
+						break;
 					}
-					if(MinimumCargo != 0)
+				case NO_SCOOP_TARGET:
 					{
-						SelectPhysicalObject(MinimumCargo);
+						g_InputMind->TargetNearestCargo();
+						
+						break;
 					}
-				}
-				else
-				{
-					// test distance
-					if((SelectedCargo->GetPosition() - g_InputFocus->GetPosition()).length_squared() <= 5.0f * SelectedCargo->GetRadialSize() * SelectedCargo->GetRadialSize())
-					{
-						// test speed
-						if((g_InputFocus->GetVelocity() - SelectedCargo->GetVelocity()).length_squared() <= 2.0f)
-						{
-							g_InputFocus->AddCommodities(SelectedCargo->GetCommodity(), 1.0f);
-							g_CurrentSystem->RemoveCargo(SelectedCargo);
-							SelectPhysicalObject(0);
-							delete SelectedCargo;
-						}
-						else
-						{
-							SetMessage("Your relative velocity to the cargo is too high to scoop it up.");
-						}
-					}
-					else
+				case TOO_FAR_AWAY:
 					{
 						SetMessage("You are too far away from the cargo to scoop it up.");
+						
+						break;
+					}
+				case TOO_HIGH_RELATIVE_VELOCITY:
+					{
+						SetMessage("Your relative velocity to the cargo is too high to scoop it up.");
+						
+						break;
 					}
 				}
 			}
@@ -1031,7 +1026,7 @@ void KeyDown(unsigned int KeyCode)
 			if(g_InputFocus != 0)
 			{
 				SetMessage("Jettison cargo.");
-				g_InputMind->JettisonCargo();
+				g_InputMind->Jettison();
 			}
 			
 			break;
