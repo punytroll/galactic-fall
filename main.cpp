@@ -1482,11 +1482,6 @@ void LoadSavegame(const Element * SaveElement)
 	}
 	g_InputFocus = g_PlayerShip;
 	g_OutputFocus = g_PlayerShip;
-	if(g_InputFocus != 0)
-	{
-		SelectLinkedSystem(0);
-		SelectPhysicalObject(0);
-	}
 	RealTime::Invalidate();
 	PopulateSystem();
 }
