@@ -133,7 +133,7 @@ int WantToJump(Ship * Ship, System * System)
 	return OK;
 }
 
-int WantToLand(Ship * Ship, Planet * Planet)
+int WantToLand(Character * Character, Ship * Ship, Planet * Planet)
 {
 	if(Planet == 0)
 	{
@@ -150,7 +150,7 @@ int WantToLand(Ship * Ship, Planet * Planet)
 		return TOO_FAST;
 	}
 	// test credits
-	if(g_PlayerCharacter->GetCredits() < Planet->GetLandingFee())
+	if(Character->GetCredits() < Planet->GetLandingFee())
 	{
 		return NOT_ENOUGH_CREDITS;
 	}
@@ -950,16 +950,16 @@ void KeyDown(unsigned int KeyCode)
 		}
 	case 46: // Key: L
 		{
-			if(g_InputFocus != 0)
+			if(g_InputMind != 0)
 			{
-				Planet * SelectedPlanet(dynamic_cast< Planet * >(g_InputFocus->GetTarget()));
+				Planet * SelectedPlanet(dynamic_cast< Planet * >(g_InputMind->GetCharacter()->GetShip()->GetTarget()));
 				
-				switch(WantToLand(g_InputFocus, SelectedPlanet))
+				switch(WantToLand(g_InputMind->GetCharacter(), g_InputMind->GetCharacter()->GetShip(), SelectedPlanet))
 				{
 				case OK:
 					{
 						// TODO: change to current character
-						g_PlayerCharacter->RemoveCredits(SelectedPlanet->GetLandingFee());
+						g_InputMind->GetCharacter()->RemoveCredits(SelectedPlanet->GetLandingFee());
 						g_Pause = true;
 						g_PlanetDialog = new PlanetDialog(g_UserInterface.GetRootWidget(), SelectedPlanet);
 						g_PlanetDialog->GrabKeyFocus();
