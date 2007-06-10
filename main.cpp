@@ -69,8 +69,7 @@ ShipClassManager g_ShipClassManager(&g_ModelManager);
 CommodityManager g_CommodityManager;
 SystemManager g_SystemManager(&g_CommodityManager);
 CommandMind * g_InputMind(0);
-Character * g_PlayerCharacter(0);
-Ship * g_PlayerShip(0);
+Mind * g_OutputMind(0);
 Ship * g_InputFocus(0);
 Ship * g_OutputFocus(0);
 float g_Width(0.0f);
@@ -291,10 +290,6 @@ void RemoveShipFromSystem(System * System, std::list< Ship * >::iterator ShipIte
 	{
 		g_InputFocus = 0;
 	}
-	if(g_PlayerShip == Ship)
-	{
-		g_PlayerShip = 0;
-	}
 	if((g_OutputFocus != 0) && (g_OutputFocus->GetTarget() == Ship))
 	{
 		g_OutputFocus->SetTarget(0);
@@ -449,26 +444,26 @@ void UpdateUserInterface(void)
 		// remove the notification callback from the multimap
 		g_TimeoutNotifications.erase(g_TimeoutNotifications.begin());
 	}
-	if(g_OutputFocus != 0)
+	if((g_OutputMind != 0) && (g_OutputMind->GetCharacter() != 0) && (g_OutputMind->GetCharacter()->GetShip() != 0))
 	{
 		// display the name of the target
-		if(g_OutputFocus->GetTarget() != 0)
+		if(g_OutputMind->GetCharacter()->GetShip()->GetTarget() != 0)
 		{
-			g_TargetLabel->SetString(g_OutputFocus->GetTarget()->GetName());
+			g_TargetLabel->SetString(g_OutputMind->GetCharacter()->GetShip()->GetTarget()->GetName());
 		}
 		else
 		{
 			g_TargetLabel->SetString("");
 		}
 		// display the name of the linked system
-		if(g_OutputFocus->GetLinkedSystemTarget() != 0)
+		if(g_OutputMind->GetCharacter()->GetShip()->GetLinkedSystemTarget() != 0)
 		{
 			// TODO: Remove g_PlayerCharacter reference
-			const std::set< System * > UnexploredSystems(g_PlayerCharacter->GetMapKnowledge()->GetUnexploredSystems());
+			const std::set< System * > UnexploredSystems(g_OutputMind->GetCharacter()->GetMapKnowledge()->GetUnexploredSystems());
 			
-			if(UnexploredSystems.find(g_OutputFocus->GetLinkedSystemTarget()) == UnexploredSystems.end())
+			if(UnexploredSystems.find(g_OutputMind->GetCharacter()->GetShip()->GetLinkedSystemTarget()) == UnexploredSystems.end())
 			{
-				g_SystemLabel->SetString(g_OutputFocus->GetLinkedSystemTarget()->GetName());
+				g_SystemLabel->SetString(g_OutputMind->GetCharacter()->GetShip()->GetLinkedSystemTarget()->GetName());
 			}
 			else
 			{
@@ -480,16 +475,16 @@ void UpdateUserInterface(void)
 			g_SystemLabel->SetString("");
 		}
 		// display fuel
-		g_FuelLabel->SetString("Fuel: " + to_string_cast(100.0f * g_OutputFocus->GetFuel() / g_OutputFocus->GetFuelCapacity(), 2) + "%");
+		g_FuelLabel->SetString("Fuel: " + to_string_cast(100.0f * g_OutputMind->GetCharacter()->GetShip()->GetFuel() / g_OutputMind->GetCharacter()->GetShip()->GetFuelCapacity(), 2) + "%");
 		// display hull
-		g_HullLabel->SetString("Hull: " + to_string_cast(g_OutputFocus->GetHull(), 2));
+		g_HullLabel->SetString("Hull: " + to_string_cast(g_OutputMind->GetCharacter()->GetShip()->GetHull(), 2));
 		// display credits in every cycle
 		// TODO: Remove g_PlayerCharacter reference
-		g_CreditsLabel->SetString("Credits: " + to_string_cast(g_PlayerCharacter->GetCredits()));
+		g_CreditsLabel->SetString("Credits: " + to_string_cast(g_OutputMind->GetCharacter()->GetCredits()));
 		// display the current system
-		g_CurrentSystemLabel->SetString(g_OutputFocus->GetCurrentSystem()->GetName());
+		g_CurrentSystemLabel->SetString(g_OutputMind->GetCharacter()->GetShip()->GetCurrentSystem()->GetName());
 		// set system label color according to jump status
-		if(WantToJump(g_OutputFocus, g_OutputFocus->GetLinkedSystemTarget()) == OK)
+		if(WantToJump(g_OutputMind->GetCharacter()->GetShip(), g_OutputMind->GetCharacter()->GetShip()->GetLinkedSystemTarget()) == OK)
 		{
 			g_SystemLabel->GetForegroundColor().Set(0.7f, 0.8f, 1.0f);
 		}
@@ -593,11 +588,6 @@ void Resize(void)
 	g_MiniMap->SetPosition(math3d::vector2f(g_Width - 220.0f, g_Height - 240.0f));
 }
 
-void SelectLinkedSystem(System * LinkedSystem)
-{
-	g_PlayerShip->SetLinkedSystemTarget(LinkedSystem);
-}
-
 void GameFrame(void)
 {
 	System * CurrentSystem(g_CurrentSystem);
@@ -606,11 +596,6 @@ void GameFrame(void)
 	CalculateMovements(CurrentSystem);
 	UpdateUserInterface();
 	Render(CurrentSystem);
-}
-
-void SelectPhysicalObject(PhysicalObject * Object)
-{
-	g_InputFocus->SetTarget(Object);
 }
 
 class GlobalDestroyListener : public DestroyListener
@@ -622,8 +607,8 @@ public:
 		{
 			g_PlanetDialog = 0;
 			g_Pause = false;
-			SelectLinkedSystem(0);
-			SelectPhysicalObject(0);
+			g_InputMind->SelectLinkedSystem(0);
+			g_InputMind->TargetPhysicalObject(0);
 			g_InputFocus->m_Velocity.set(0.0f, 0.0f);
 			g_InputFocus->m_Accelerate = false;
 			g_InputFocus->m_TurnLeft = false;
@@ -633,7 +618,7 @@ public:
 		{
 			if(g_CurrentSystem->IsLinkedToSystem(g_MapDialog->GetSelectedSystem()) == true)
 			{
-				SelectLinkedSystem(g_MapDialog->GetSelectedSystem());
+				g_InputMind->SelectLinkedSystem(g_MapDialog->GetSelectedSystem());
 			}
 			g_MapDialog = 0;
 			g_Pause = false;
@@ -961,7 +946,7 @@ void KeyDown(unsigned int KeyCode)
 						// TODO: change to current character
 						g_InputMind->GetCharacter()->RemoveCredits(SelectedPlanet->GetLandingFee());
 						g_Pause = true;
-						g_PlanetDialog = new PlanetDialog(g_UserInterface.GetRootWidget(), SelectedPlanet);
+						g_PlanetDialog = new PlanetDialog(g_UserInterface.GetRootWidget(), SelectedPlanet, g_InputMind->GetCharacter());
 						g_PlanetDialog->GrabKeyFocus();
 						g_PlanetDialog->AddDestroyListener(&g_GlobalDestroyListener);
 						
@@ -1020,7 +1005,7 @@ void KeyDown(unsigned int KeyCode)
 			if(g_MapDialog == 0)
 			{
 				g_Pause = true;
-				g_MapDialog = new MapDialog(g_UserInterface.GetRootWidget(), g_CurrentSystem);
+				g_MapDialog = new MapDialog(g_UserInterface.GetRootWidget(), g_OutputMind->GetCharacter()->GetShip()->GetCurrentSystem(), g_OutputMind->GetCharacter());
 				g_MapDialog->GrabKeyFocus();
 				g_MapDialog->AddDestroyListener(&g_GlobalDestroyListener);
 			}
@@ -1056,10 +1041,10 @@ void KeyDown(unsigned int KeyCode)
 			XML << element << "system" << attribute << "identifier" << value << g_CurrentSystem->GetIdentifier() << end;
 			XML << element << "time-warp" << attribute << "value" << value << g_TimeWarp << end;
 			XML << element << "character";
-			XML << element << "credits" << attribute << "value" << value << g_PlayerCharacter->GetCredits() << end;
+			XML << element << "credits" << attribute << "value" << value << g_InputMind->GetCharacter()->GetCredits() << end;
 			XML << element << "map-knowledge";
 			
-			const std::set< System * > & ExploredSystems(g_PlayerCharacter->GetMapKnowledge()->GetExploredSystems());
+			const std::set< System * > & ExploredSystems(g_InputMind->GetCharacter()->GetMapKnowledge()->GetExploredSystems());
 			
 			for(std::set< System * >::const_iterator ExploredSystemIterator = ExploredSystems.begin(); ExploredSystemIterator != ExploredSystems.end(); ++ExploredSystemIterator)
 			{
@@ -1067,15 +1052,18 @@ void KeyDown(unsigned int KeyCode)
 			}
 			XML << end; // map-knowledge
 			XML << end; // character
-			XML << element << "ship" << attribute << "class-identifier" << value << g_PlayerShip->GetShipClass()->GetIdentifier() << attribute << "object-identifier" << value << g_PlayerShip->GetObjectIdentifier();
-			XML << element << "fuel" << attribute << "value" << value << g_PlayerShip->GetFuel() << end;
-			XML << element << "hull" << attribute << "value" << value << g_PlayerShip->GetHull() << end;
-			XML << element << "position" << attribute << "x" << value << g_PlayerShip->GetPosition().m_V.m_A[0] << attribute << "y" << value << g_PlayerShip->GetPosition().m_V.m_A[1] << end;
-			XML << element << "angular-position" << attribute << "value" << value << g_PlayerShip->GetAngularPosition() << end;
-			XML << element << "velocity" << attribute << "x" << value << g_PlayerShip->GetVelocity().m_V.m_A[0] << attribute << "y" << value << g_PlayerShip->GetVelocity().m_V.m_A[1] << end;
+			
+			Ship * Ship(g_InputMind->GetCharacter()->GetShip());
+			
+			XML << element << "ship" << attribute << "class-identifier" << value << Ship->GetShipClass()->GetIdentifier() << attribute << "object-identifier" << value << Ship->GetObjectIdentifier();
+			XML << element << "fuel" << attribute << "value" << value << Ship->GetFuel() << end;
+			XML << element << "hull" << attribute << "value" << value << Ship->GetHull() << end;
+			XML << element << "position" << attribute << "x" << value << Ship->GetPosition().m_V.m_A[0] << attribute << "y" << value << Ship->GetPosition().m_V.m_A[1] << end;
+			XML << element << "angular-position" << attribute << "value" << value << Ship->GetAngularPosition() << end;
+			XML << element << "velocity" << attribute << "x" << value << Ship->GetVelocity().m_V.m_A[0] << attribute << "y" << value << Ship->GetVelocity().m_V.m_A[1] << end;
 			XML << element << "commodities";
 			
-			const std::map< const Commodity *, float > & Commodities(g_PlayerShip->GetCommodities());
+			const std::map< const Commodity *, float > & Commodities(Ship->GetCommodities());
 			
 			for(std::map< const Commodity *, float >::const_iterator Commodity = Commodities.begin(); Commodity != Commodities.end(); ++Commodity)
 			{
@@ -1328,6 +1316,8 @@ void LoadSavegame(const Element * SaveElement)
 	
 	const std::vector< Element * > & SaveChilds(SaveElement->GetChilds());
 	std::string System;
+	Character * PlayerCharacter(0);
+	Ship * PlayerShip(0);
 	
 	for(std::vector< Element * >::const_iterator SaveChild = SaveChilds.begin(); SaveChild != SaveChilds.end(); ++SaveChild)
 	{
@@ -1341,16 +1331,17 @@ void LoadSavegame(const Element * SaveElement)
 		}
 		else if((*SaveChild)->GetName() == "character")
 		{
-			g_InputMind = new CommandMind();
-			g_PlayerCharacter = new Character();
-			g_PlayerCharacter->PossessByMind(g_InputMind);
-			g_InputMind->SetCharacter(g_PlayerCharacter);
-			g_PlayerCharacter->SetObjectIdentifier((*SaveChild)->GetAttribute("object-identifier"));
+			PlayerCharacter = new Character();
+			PlayerCharacter->SetObjectIdentifier((*SaveChild)->GetAttribute("object-identifier"));
+			g_OutputMind = g_InputMind = new CommandMind();
+			PlayerCharacter->PossessByMind(g_InputMind);
+			g_InputMind->SetCharacter(PlayerCharacter);
+			g_OutputMind->SetCharacter(PlayerCharacter);
 			for(std::vector< Element * >::const_iterator CharacterChild = (*SaveChild)->GetChilds().begin(); CharacterChild != (*SaveChild)->GetChilds().end(); ++CharacterChild)
 			{
 				if((*CharacterChild)->GetName() == "credits")
 				{
-					g_PlayerCharacter->SetCredits(from_string_cast< float >((*CharacterChild)->GetAttribute("value")));
+					PlayerCharacter->SetCredits(from_string_cast< float >((*CharacterChild)->GetAttribute("value")));
 				}
 				else if((*CharacterChild)->GetName() == "map-knowledge")
 				{
@@ -1358,7 +1349,7 @@ void LoadSavegame(const Element * SaveElement)
 					{
 						if((*MapKnowledgeChild)->GetName() == "explored-system")
 						{
-							g_PlayerCharacter->GetMapKnowledge()->AddExploredSystem(g_SystemManager.Get((*MapKnowledgeChild)->GetAttribute("identifier")));
+							PlayerCharacter->GetMapKnowledge()->AddExploredSystem(g_SystemManager.Get((*MapKnowledgeChild)->GetAttribute("identifier")));
 						}
 					}
 				}
@@ -1366,29 +1357,29 @@ void LoadSavegame(const Element * SaveElement)
 		}
 		else if((*SaveChild)->GetName() == "ship")
 		{
-			g_PlayerShip = new Ship(g_ShipClassManager.Get((*SaveChild)->GetAttribute("class-identifier")));
-			g_PlayerShip->SetObjectIdentifier((*SaveChild)->GetAttribute("object-identifier"));
+			PlayerShip = new Ship(g_ShipClassManager.Get((*SaveChild)->GetAttribute("class-identifier")));
+			PlayerShip->SetObjectIdentifier((*SaveChild)->GetAttribute("object-identifier"));
 			for(std::vector< Element * >::const_iterator ShipChild = (*SaveChild)->GetChilds().begin(); ShipChild != (*SaveChild)->GetChilds().end(); ++ShipChild)
 			{
 				if((*ShipChild)->GetName() == "fuel")
 				{
-					g_PlayerShip->SetFuel(from_string_cast< float >((*ShipChild)->GetAttribute("value")));
+					PlayerShip->SetFuel(from_string_cast< float >((*ShipChild)->GetAttribute("value")));
 				}
 				else if((*ShipChild)->GetName() == "hull")
 				{
-					g_PlayerShip->SetHull(from_string_cast< float >((*ShipChild)->GetAttribute("value")));
+					PlayerShip->SetHull(from_string_cast< float >((*ShipChild)->GetAttribute("value")));
 				}
 				else if((*ShipChild)->GetName() == "position")
 				{
-					g_PlayerShip->SetPosition(math3d::vector2f(from_string_cast< float >((*ShipChild)->GetAttribute("x")), from_string_cast< float >((*ShipChild)->GetAttribute("y"))));
+					PlayerShip->SetPosition(math3d::vector2f(from_string_cast< float >((*ShipChild)->GetAttribute("x")), from_string_cast< float >((*ShipChild)->GetAttribute("y"))));
 				}
 				else if((*ShipChild)->GetName() == "velocity")
 				{
-					g_PlayerShip->SetVelocity(math3d::vector2f(from_string_cast< float >((*ShipChild)->GetAttribute("x")), from_string_cast< float >((*ShipChild)->GetAttribute("y"))));
+					PlayerShip->SetVelocity(math3d::vector2f(from_string_cast< float >((*ShipChild)->GetAttribute("x")), from_string_cast< float >((*ShipChild)->GetAttribute("y"))));
 				}
 				else if((*ShipChild)->GetName() == "angular-position")
 				{
-					g_PlayerShip->SetAngularPosition(from_string_cast< float >((*ShipChild)->GetAttribute("value")));
+					PlayerShip->SetAngularPosition(from_string_cast< float >((*ShipChild)->GetAttribute("value")));
 				}
 				else if((*ShipChild)->GetName() == "commodities")
 				{
@@ -1396,13 +1387,13 @@ void LoadSavegame(const Element * SaveElement)
 					{
 						if((*CommoditiesChild)->GetName() == "commodity")
 						{
-							g_PlayerShip->SetCommodities(g_CommodityManager.Get((*CommoditiesChild)->GetAttribute("identifier")), from_string_cast< float >((*CommoditiesChild)->GetAttribute("amount")));
+							PlayerShip->SetCommodities(g_CommodityManager.Get((*CommoditiesChild)->GetAttribute("identifier")), from_string_cast< float >((*CommoditiesChild)->GetAttribute("amount")));
 						}
 					}
 				}
 				else if((*ShipChild)->GetName() == "name")
 				{
-					g_PlayerShip->SetName((*ShipChild)->GetAttribute("value"));
+					PlayerShip->SetName((*ShipChild)->GetAttribute("value"));
 				}
 			}
 		}
@@ -1424,7 +1415,7 @@ void LoadSavegame(const Element * SaveElement)
 					}
 					else
 					{
-						g_Camera.SetFocus(g_PlayerShip);
+						g_Camera.SetFocus(PlayerShip);
 					}
 				}
 				else if((*CameraChild)->GetName() == "field-of-view")
@@ -1443,15 +1434,15 @@ void LoadSavegame(const Element * SaveElement)
 		}
 	}
 	g_CurrentSystem = g_SystemManager.Get(System);
-	if(g_PlayerShip != 0)
+	if(PlayerShip != 0)
 	{
-		g_PlayerCharacter->SetShip(g_PlayerShip);
-		g_PlayerShip->AddObject(g_PlayerCharacter);
-		g_CurrentSystem->AddShip(g_PlayerShip);
-		g_PlayerShip->SetCurrentSystem(g_CurrentSystem);
+		PlayerCharacter->SetShip(PlayerShip);
+		PlayerShip->AddObject(PlayerCharacter);
+		g_CurrentSystem->AddShip(PlayerShip);
+		PlayerShip->SetCurrentSystem(g_CurrentSystem);
 	}
-	g_InputFocus = g_PlayerShip;
-	g_OutputFocus = g_PlayerShip;
+	g_InputFocus = PlayerShip;
+	g_OutputFocus = PlayerShip;
 	RealTime::Invalidate();
 	PopulateSystem();
 }

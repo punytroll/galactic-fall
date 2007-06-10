@@ -6,6 +6,7 @@
 #include "window.h"
 
 class Button;
+class Character;
 class Label;
 class Planet;
 class TradeCenterDialog;
@@ -13,13 +14,14 @@ class TradeCenterDialog;
 class PlanetDialog : public ClickedListener, public KeyListener, public WWindow
 {
 public:
-	PlanetDialog(Widget * SupWidget, Planet * Planet);
+	PlanetDialog(Widget * SupWidget, Planet * Planet, Character * Character);
 protected:
 	virtual bool OnClicked(Widget * EventSource);
 	virtual void OnDestroy(Widget * EventSource);
 	virtual bool OnKey(Widget * EventSource, int Key, int State);
 private:
 	Planet * m_Planet;
+	Character * m_Character;
 	Label * m_DescriptionLabel;
 	Button * m_OKButton;
 	Label * m_OKButtonLabel;

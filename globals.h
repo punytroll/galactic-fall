@@ -12,15 +12,11 @@
 #define EV_MOUSE_WHEEL_DOWN 4
 #define EV_MOUSE_WHEEL_UP 5
 
-class Character;
 class CommodityManager;
 class ModelManager;
-class Ship;
 class SystemManager;
 class UserInterface;
 
-extern Character * g_PlayerCharacter;
-extern Ship * g_PlayerShip;
 extern CommodityManager g_CommodityManager;
 extern ModelManager g_ModelManager;
 extern SystemManager g_SystemManager;

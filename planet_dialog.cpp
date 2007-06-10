@@ -9,9 +9,10 @@
 #include "string_cast.h"
 #include "trade_center_dialog.h"
 
-PlanetDialog::PlanetDialog(Widget * SupWidget, Planet * Planet) :
+PlanetDialog::PlanetDialog(Widget * SupWidget, Planet * Planet, Character * Character) :
 	WWindow(SupWidget, "Planet: " + Planet->GetName()),
 	m_Planet(Planet),
+	m_Character(Character),
 	m_TradeCenterDialog(0)
 {
 	SetPosition(math3d::vector2f(50.0f, 50.0f));
@@ -72,18 +73,18 @@ bool PlanetDialog::OnClicked(Widget * EventSource)
 	else if(EventSource == m_RefuelButton)
 	{
 		float FuelPrice(m_Planet->GetFuelPrice());
-		float CanBuy(g_PlayerCharacter->GetCredits() / FuelPrice);
-		float Need(g_PlayerShip->GetFuelCapacity() - g_PlayerShip->GetFuel());
+		float CanBuy(m_Character->GetCredits() / FuelPrice);
+		float Need(m_Character->GetShip()->GetFuelCapacity() - m_Character->GetShip()->GetFuel());
 		float Buy((CanBuy > Need) ? (Need) : (CanBuy));
 		
-		g_PlayerShip->SetFuel(g_PlayerShip->GetFuel() + Buy);
-		g_PlayerCharacter->RemoveCredits(Buy * FuelPrice);
+		m_Character->GetShip()->SetFuel(m_Character->GetShip()->GetFuel() + Buy);
+		m_Character->RemoveCredits(Buy * FuelPrice);
 	}
 	else if(EventSource == m_TradeCenterButton)
 	{
 		if(m_TradeCenterDialog == 0)
 		{
-			m_TradeCenterDialog = new TradeCenterDialog(GetRootWidget(), m_Planet);
+			m_TradeCenterDialog = new TradeCenterDialog(GetRootWidget(), m_Planet, m_Character);
 			m_TradeCenterDialog->GrabKeyFocus();
 			m_TradeCenterDialog->AddDestroyListener(this);
 		}
@@ -114,7 +115,7 @@ bool PlanetDialog::OnKey(Widget * EventSource, int KeyCode, int State)
 	{
 		if(m_TradeCenterDialog == 0)
 		{
-			m_TradeCenterDialog = new TradeCenterDialog(GetRootWidget(), m_Planet);
+			m_TradeCenterDialog = new TradeCenterDialog(GetRootWidget(), m_Planet, m_Character);
 			m_TradeCenterDialog->GrabKeyFocus();
 			m_TradeCenterDialog->AddDestroyListener(this);
 		}

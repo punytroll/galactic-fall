@@ -7,13 +7,14 @@
 #include "window.h"
 
 class Button;
+class Character;
 class Label;
 class System;
 
 class MapDialog : public ClickedListener, public KeyListener, virtual public MouseButtonListener, public WWindow
 {
 public:
-	MapDialog(Widget * SupWidget, System * System);
+	MapDialog(Widget * SupWidget, System * System, Character * Character);
 	virtual void Draw(void) const;
 	System * GetSelectedSystem(void);
 protected:
@@ -23,6 +24,7 @@ protected:
 private:
 	void DrawSystem(const System * DrawSystem) const;
 	System * m_System;
+	Character * m_Character;
 	Button * m_OKButton;
 	Label * m_OKButtonLabel;
 	float m_Scale;
