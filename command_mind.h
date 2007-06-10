@@ -26,6 +26,7 @@ public:
 	void TargetNearestCargo(void);
 	void TargetNextCargo(void);
 	void TargetPreviousPlanet(void);
+	void TargetNearestPlanet(void);
 	void TargetNextPlanet(void);
 	void TargetPreviousShip(void);
 	void TargetNextShip(void);

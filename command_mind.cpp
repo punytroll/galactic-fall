@@ -267,6 +267,33 @@ void CommandMind::TargetPreviousPlanet(void)
 	}
 }
 
+void CommandMind::TargetNearestPlanet(void)
+{
+	const std::list< Planet * > & Planets(GetCharacter()->GetShip()->GetCurrentSystem()->GetPlanets());
+	float MinimumDistance(0.0f);
+	Planet * MinimumPlanet(0);
+	
+	for(std::list< Planet * >::const_iterator PlanetIterator = Planets.begin(); PlanetIterator != Planets.end(); ++PlanetIterator)
+	{
+		if(MinimumPlanet == 0)
+		{
+			MinimumPlanet = *PlanetIterator;
+			MinimumDistance = (MinimumPlanet->GetPosition() - GetCharacter()->GetShip()->GetPosition()).length_squared();
+		}
+		else
+		{
+			float Distance(((*PlanetIterator)->GetPosition() - GetCharacter()->GetShip()->GetPosition()).length_squared());
+			
+			if(Distance < MinimumDistance)
+			{
+				MinimumPlanet = *PlanetIterator;
+				MinimumDistance = Distance;
+			}
+		}
+	}
+	GetCharacter()->GetShip()->SetTarget(MinimumPlanet);
+}
+
 void CommandMind::TargetNextPlanet(void)
 {
 	assert(GetCharacter() != 0);
