@@ -969,32 +969,7 @@ void KeyDown(unsigned int KeyCode)
 					}
 				case NO_LAND_TARGET:
 					{
-						const std::list< Planet * > & Planets(g_CurrentSystem->GetPlanets());
-						float MinimumDistance(0.0f);
-						Planet * MinimumPlanet(0);
-						
-						for(std::list< Planet * >::const_iterator PlanetIterator = Planets.begin(); PlanetIterator != Planets.end(); ++PlanetIterator)
-						{
-							if(MinimumPlanet == 0)
-							{
-								MinimumPlanet = *PlanetIterator;
-								MinimumDistance = (MinimumPlanet->GetPosition() - g_InputFocus->GetPosition()).length_squared();
-							}
-							else
-							{
-								float Distance(((*PlanetIterator)->GetPosition() - g_InputFocus->GetPosition()).length_squared());
-								
-								if(Distance < MinimumDistance)
-								{
-									MinimumPlanet = *PlanetIterator;
-									MinimumDistance = Distance;
-								}
-							}
-						}
-						if(MinimumPlanet != 0)
-						{
-							SelectPhysicalObject(MinimumPlanet);
-						}
+						g_InputMind->TargetNearestPlanet();
 						
 						break;
 					}
