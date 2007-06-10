@@ -3,6 +3,9 @@
 
 #include "mind.h"
 
+class PhysicalObject;
+class System;
+
 /** The name CommandMind results from the fact that this mind can be controlled via commands. **/
 class CommandMind : public Mind
 {
@@ -21,6 +24,7 @@ public:
 	void Jettison(void);
 	void Jump(void);
 	void Scoop(void);
+	void SelectLinkedSystem(System * LinkedSystem);
 	void SelectNextLinkedSystem(void);
 	void TargetPreviousCargo(void);
 	void TargetNearestCargo(void);
@@ -30,6 +34,7 @@ public:
 	void TargetNextPlanet(void);
 	void TargetPreviousShip(void);
 	void TargetNextShip(void);
+	void TargetPhysicalObject(PhysicalObject * PhysicalObject);
 };
 
 #endif

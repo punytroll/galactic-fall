@@ -11,17 +11,19 @@
 class TradeCenterCommodity : public Widget
 {
 public:
-	TradeCenterCommodity(Widget * SupWidget, PlanetCommodity * PlanetCommodity);
+	TradeCenterCommodity(Widget * SupWidget, PlanetCommodity * PlanetCommodity, Ship * Ship);
 	void UpdateCharacterAmount(void);
 	const PlanetCommodity * GetPlanetCommodity(void) const;
 private:
 	PlanetCommodity * m_PlanetCommodity;
+	Ship * m_Ship;
 	Label * m_CharacterAmountLabel;
 };
 
-TradeCenterCommodity::TradeCenterCommodity(Widget * SupWidget, PlanetCommodity * PlanetCommodity) :
+TradeCenterCommodity::TradeCenterCommodity(Widget * SupWidget, PlanetCommodity * PlanetCommodity, Ship * Ship) :
 	Widget(SupWidget),
-	m_PlanetCommodity(PlanetCommodity)
+	m_PlanetCommodity(PlanetCommodity),
+	m_Ship(Ship)
 {
 	Label * CommodityNameLabel(new Label(this, PlanetCommodity->GetCommodity()->GetName()));
 	
@@ -44,7 +46,7 @@ TradeCenterCommodity::TradeCenterCommodity(Widget * SupWidget, PlanetCommodity *
 
 void TradeCenterCommodity::UpdateCharacterAmount(void)
 {
-	m_CharacterAmountLabel->SetString(to_string_cast(g_PlayerShip->GetCommodityAmount(m_PlanetCommodity->GetCommodity())));
+	m_CharacterAmountLabel->SetString(to_string_cast(m_Ship->GetCommodityAmount(m_PlanetCommodity->GetCommodity())));
 }
 
 const PlanetCommodity * TradeCenterCommodity::GetPlanetCommodity(void) const
@@ -52,9 +54,10 @@ const PlanetCommodity * TradeCenterCommodity::GetPlanetCommodity(void) const
 	return m_PlanetCommodity;
 }
 
-TradeCenterDialog::TradeCenterDialog(Widget * SupWidget, Planet * Planet) :
+TradeCenterDialog::TradeCenterDialog(Widget * SupWidget, Planet * Planet, Character * Character) :
 	WWindow(SupWidget, "Trade Center: " + Planet->GetName()),
 	m_Planet(Planet),
+	m_Character(Character),
 	m_SelectedTradeCenterCommodity(0)
 {
 	SetPosition(math3d::vector2f(600.0f, 100.0f));
@@ -94,7 +97,7 @@ TradeCenterDialog::TradeCenterDialog(Widget * SupWidget, Planet * Planet) :
 	
 	while(PlanetCommodityIterator != PlanetCommodities.end())
 	{
-		TradeCenterCommodity * NewTradeCenterCommodity(new TradeCenterCommodity(this, *PlanetCommodityIterator));
+		TradeCenterCommodity * NewTradeCenterCommodity(new TradeCenterCommodity(this, *PlanetCommodityIterator, m_Character->GetShip()));
 		
 		NewTradeCenterCommodity->SetPosition(math3d::vector2f(10.0f, Top));
 		NewTradeCenterCommodity->SetSize(math3d::vector2f(480.0f, 20.0f));
@@ -115,12 +118,12 @@ TradeCenterDialog::TradeCenterDialog(Widget * SupWidget, Planet * Planet) :
 
 void TradeCenterDialog::UpdateTraderCredits(void)
 {
-	m_TraderCreditsLabel->SetString("Credits: " + to_string_cast(g_PlayerCharacter->GetCredits()));
+	m_TraderCreditsLabel->SetString("Credits: " + to_string_cast(m_Character->GetCredits()));
 }
 
 void TradeCenterDialog::UpdateTraderFreeCargoHoldSize(void)
 {
-	m_TraderFreeCargoHoldSizeLabel->SetString("Free Cargo Hold: " + to_string_cast(g_PlayerShip->GetFreeCargoHoldSize()));
+	m_TraderFreeCargoHoldSizeLabel->SetString("Free Cargo Hold: " + to_string_cast(m_Character->GetShip()->GetFreeCargoHoldSize()));
 }
 
 bool TradeCenterDialog::OnClicked(Widget * EventSource)
@@ -137,11 +140,11 @@ bool TradeCenterDialog::OnClicked(Widget * EventSource)
 		{
 			float Price(m_SelectedTradeCenterCommodity->GetPlanetCommodity()->GetPrice());
 			
-			if(g_PlayerCharacter->RemoveCredits(Price) == true)
+			if(m_Character->RemoveCredits(Price) == true)
 			{
-				if(g_PlayerShip->AddCommodities(m_SelectedTradeCenterCommodity->GetPlanetCommodity()->GetCommodity(), 1.0f) == false)
+				if(m_Character->GetShip()->AddCommodities(m_SelectedTradeCenterCommodity->GetPlanetCommodity()->GetCommodity(), 1.0f) == false)
 				{
-					g_PlayerCharacter->AddCredits(Price);
+					m_Character->AddCredits(Price);
 				}
 				else
 				{
@@ -156,9 +159,9 @@ bool TradeCenterDialog::OnClicked(Widget * EventSource)
 	{
 		if(m_SelectedTradeCenterCommodity != 0)
 		{
-			if(g_PlayerShip->RemoveCommodities(m_SelectedTradeCenterCommodity->GetPlanetCommodity()->GetCommodity(), 1.0f) == true)
+			if(m_Character->GetShip()->RemoveCommodities(m_SelectedTradeCenterCommodity->GetPlanetCommodity()->GetCommodity(), 1.0f) == true)
 			{
-				g_PlayerCharacter->AddCredits(m_SelectedTradeCenterCommodity->GetPlanetCommodity()->GetPrice());
+				m_Character->AddCredits(m_SelectedTradeCenterCommodity->GetPlanetCommodity()->GetPrice());
 				m_SelectedTradeCenterCommodity->UpdateCharacterAmount();
 				UpdateTraderCredits();
 				UpdateTraderFreeCargoHoldSize();
@@ -179,11 +182,11 @@ bool TradeCenterDialog::OnKey(Widget * EventSource, int Key, int State)
 	{
 		float Price(m_SelectedTradeCenterCommodity->GetPlanetCommodity()->GetPrice());
 		
-		if(g_PlayerCharacter->RemoveCredits(Price) == true)
+		if(m_Character->RemoveCredits(Price) == true)
 		{
-			if(g_PlayerShip->AddCommodities(m_SelectedTradeCenterCommodity->GetPlanetCommodity()->GetCommodity(), 1.0f) == false)
+			if(m_Character->GetShip()->AddCommodities(m_SelectedTradeCenterCommodity->GetPlanetCommodity()->GetCommodity(), 1.0f) == false)
 			{
-				g_PlayerCharacter->AddCredits(Price);
+				m_Character->AddCredits(Price);
 			}
 			else
 			{
@@ -195,9 +198,9 @@ bool TradeCenterDialog::OnKey(Widget * EventSource, int Key, int State)
 	}
 	else if((Key == 39 /* S */) && (m_SelectedTradeCenterCommodity != 0) && (State == EV_DOWN))
 	{
-		if(g_PlayerShip->RemoveCommodities(m_SelectedTradeCenterCommodity->GetPlanetCommodity()->GetCommodity(), 1.0f) == true)
+		if(m_Character->GetShip()->RemoveCommodities(m_SelectedTradeCenterCommodity->GetPlanetCommodity()->GetCommodity(), 1.0f) == true)
 		{
-			g_PlayerCharacter->AddCredits(m_SelectedTradeCenterCommodity->GetPlanetCommodity()->GetPrice());
+			m_Character->AddCredits(m_SelectedTradeCenterCommodity->GetPlanetCommodity()->GetPrice());
 			m_SelectedTradeCenterCommodity->UpdateCharacterAmount();
 			UpdateTraderCredits();
 			UpdateTraderFreeCargoHoldSize();

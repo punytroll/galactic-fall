@@ -100,6 +100,14 @@ void CommandMind::Scoop(void)
 	GetCharacter()->GetShip()->m_Scoop = true;
 }
 
+void CommandMind::SelectLinkedSystem(System * LinkedSystem)
+{
+	assert(GetCharacter() != 0);
+	assert(GetCharacter()->GetShip() != 0);
+	
+	GetCharacter()->GetShip()->SetLinkedSystemTarget(0);
+}
+
 void CommandMind::SelectNextLinkedSystem(void)
 {
 	assert(GetCharacter() != 0);
@@ -399,4 +407,12 @@ void CommandMind::TargetPreviousShip(void)
 			GetCharacter()->GetShip()->SetTarget(*ShipIterator);
 		}
 	}
+}
+
+void CommandMind::TargetPhysicalObject(PhysicalObject * PhysicalObject)
+{
+	assert(GetCharacter() != 0);
+	assert(GetCharacter()->GetShip() != 0);
+	
+	GetCharacter()->GetShip()->SetTarget(PhysicalObject);
 }

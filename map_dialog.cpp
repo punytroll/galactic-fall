@@ -14,9 +14,10 @@
 #include "system_manager.h"
 #include "user_interface.h"
 
-MapDialog::MapDialog(Widget * SupWidget, System * System) :
+MapDialog::MapDialog(Widget * SupWidget, System * System, Character * Character) :
 	WWindow(SupWidget, "Map: " + System->GetName()),
 	m_System(System),
+	m_Character(Character),
 	m_Scale(5.0f),
 	m_SelectedSystem(0)
 {
@@ -49,7 +50,7 @@ void MapDialog::Draw(void) const
 	glTranslatef(Middle.m_V.m_A[0], Middle.m_V.m_A[1], 0.0f);
 	glScalef(1.0f, -1.0f, 1.0f);
 	
-	const std::set< System * > & UnexploredSystems(g_PlayerCharacter->GetMapKnowledge()->GetUnexploredSystems());
+	const std::set< System * > & UnexploredSystems(m_Character->GetMapKnowledge()->GetUnexploredSystems());
 	
 	for(std::set< System * >::const_iterator UnexploredSystemIterator = UnexploredSystems.begin(); UnexploredSystemIterator != UnexploredSystems.end(); ++UnexploredSystemIterator)
 	{
@@ -87,7 +88,7 @@ void MapDialog::Draw(void) const
 		glPopMatrix();
 	}
 	
-	const std::set< System * > & ExploredSystems(g_PlayerCharacter->GetMapKnowledge()->GetExploredSystems());
+	const std::set< System * > & ExploredSystems(m_Character->GetMapKnowledge()->GetExploredSystems());
 	
 	for(std::set< System * >::const_iterator ExploredSystemIterator = ExploredSystems.begin(); ExploredSystemIterator != ExploredSystems.end(); ++ExploredSystemIterator)
 	{
