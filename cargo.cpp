@@ -5,11 +5,11 @@
 #include "commodity.h"
 #include "model.h"
 
-Cargo::Cargo(Model * Model, const Commodity * Commodity, const math3d::vector2f & Velocity) :
+Cargo::Cargo(Model * Model, const Commodity * Commodity) :
 	m_Model(Model),
 	m_Commodity(Commodity),
 	m_Hull(20.0f),
-	m_Velocity(Velocity)
+	m_Velocity(true)
 {
 	SetRadialSize(Model->GetRadialSize());
 	SetName(m_Commodity->GetName());

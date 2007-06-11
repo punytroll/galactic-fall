@@ -12,7 +12,7 @@ class Model;
 class Cargo : public PhysicalObject
 {
 public:
-	Cargo(Model * Model, const Commodity * Commodity, const math3d::vector2f & Velocity);
+	Cargo(Model * Model, const Commodity * Commodity);
 	virtual ~Cargo(void);
 	// modifiers
 	virtual void Draw(void) const;
@@ -23,6 +23,7 @@ public:
 	const math3d::vector2f & GetVelocity(void) const;
 	// setters
 	void SetHull(float Hull);
+	void SetVelocity(const math3d::vector2f & Velocity);
 private:
 	Model * m_Model;
 	const Commodity * m_Commodity;
@@ -31,6 +32,8 @@ private:
 	float m_AngularPosition;
 	math3d::vector3f m_RotationAxis;
 	float m_AngularVelocity;
+	// no copy constructor
+	Cargo(const Cargo & Cargo);
 };
 
 inline const Commodity * Cargo::GetCommodity(void) const
@@ -51,6 +54,11 @@ inline const math3d::vector2f & Cargo::GetVelocity(void) const
 inline void Cargo::SetHull(float Hull)
 {
 	m_Hull = Hull;
+}
+
+inline void Cargo::SetVelocity(const math3d::vector2f & Velocity)
+{
+	m_Velocity = Velocity;
 }
 
 #endif
