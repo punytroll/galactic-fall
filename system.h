@@ -23,7 +23,7 @@ public:
 	const std::list< Planet * > GetPlanets(void) const;
 	const std::list< System * > GetLinkedSystems(void) const;
 	std::list< Ship * > & GetShips(void);
-	const std::list< Cargo * > GetCargos(void) const;
+	std::list< Cargo * > & GetCargos(void);
 	std::list< Shot * > & GetShots(void);
 	const Star * GetStar(void) const;
 	bool IsLinkedToSystem(const System * System) const;
@@ -75,7 +75,7 @@ inline std::list< Ship * > & System::GetShips(void)
 	return m_Ships;
 }
 
-inline const std::list< Cargo * > System::GetCargos(void) const
+inline std::list< Cargo * > & System::GetCargos(void)
 {
 	return m_Cargos;
 }
