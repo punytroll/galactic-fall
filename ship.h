@@ -62,8 +62,8 @@ public:
 	bool IsReadyToFire(void);
 	void ResetNextTimeToFire(void);
 	// manifest
-	void AddObject(Object * Object);
-	void RemoveObject(Object * Object);
+	bool AddObject(Object * Add);
+	bool RemoveObject(Object * Remove);
 	std::set< Object * > & GetManifest(void);
 private:
 	// ship class
@@ -185,18 +185,26 @@ inline void Ship::SetCurrentSystem(System * CurrentSystem)
 	m_CurrentSystem = CurrentSystem;
 }
 
-inline void Ship::AddObject(Object * Add)
+inline bool Ship::AddObject(Object * Add)
 {
 	m_Manifest.insert(Add);
+	
+	return true;
 }
 
-inline void Ship::RemoveObject(Object * Remove)
+inline bool Ship::RemoveObject(Object * Remove)
 {
 	std::set< Object * >::iterator ManifestIterator(m_Manifest.find(Remove));
 	
 	if(ManifestIterator != m_Manifest.end())
 	{
 		m_Manifest.erase(ManifestIterator);
+		
+		return true;
+	}
+	else
+	{
+		return false;
 	}
 }
 
