@@ -70,8 +70,6 @@ CommodityManager g_CommodityManager;
 SystemManager g_SystemManager(&g_CommodityManager);
 CommandMind * g_InputMind(0);
 Mind * g_OutputMind(0);
-Ship * g_InputFocus(0);
-Ship * g_OutputFocus(0);
 float g_Width(0.0f);
 float g_Height(0.0f);
 Label * g_SystemLabel(0);
@@ -282,22 +280,6 @@ void RemoveShipFromSystem(System * System, std::list< Ship * >::iterator ShipIte
 	// all other stuff should be changed to references, so it is done automatically
 	Ship * Ship(*ShipIterator);
 	
-	if(g_OutputFocus == Ship)
-	{
-		g_OutputFocus = 0;
-	}
-	if(g_InputFocus == Ship)
-	{
-		g_InputFocus = 0;
-	}
-	if((g_OutputFocus != 0) && (g_OutputFocus->GetTarget() == Ship))
-	{
-		g_OutputFocus->SetTarget(0);
-	}
-	if((g_InputFocus != 0) && (g_InputFocus->GetTarget() == Ship))
-	{
-		g_InputFocus->SetTarget(0);
-	}
 	if(Ship == g_Camera.GetFocus())
 	{
 		g_Camera.SetFocus(0);
@@ -366,7 +348,7 @@ void CalculateMovements(System * System)
 			(*ShipIterator)->Update(Seconds);
 			if((*ShipIterator)->GetCurrentSystem() != System)
 			{
-				if(*ShipIterator == g_OutputFocus)
+				if(*ShipIterator == g_OutputMind->GetCharacter()->GetShip())
 				{
 					g_CurrentSystem = (*ShipIterator)->GetCurrentSystem();
 				}
@@ -547,18 +529,18 @@ void Render(System * System)
 		}
 	}
 	// HUD
-	if((g_OutputFocus != 0) && (g_OutputFocus->GetTarget() != 0))
+	if((g_OutputMind != 0) && (g_OutputMind->GetCharacter() != 0) && (g_OutputMind->GetCharacter()->GetShip() != 0) && (g_OutputMind->GetCharacter()->GetShip()->GetTarget() != 0))
 	{
 		glClear(GL_DEPTH_BUFFER_BIT);
-		DrawSelection(g_OutputFocus->GetTarget(), g_OutputFocus->GetTarget()->GetRadialSize());
+		DrawSelection(g_OutputMind->GetCharacter()->GetShip()->GetTarget(), g_OutputMind->GetCharacter()->GetShip()->GetTarget()->GetRadialSize());
 		
-		math3d::vector2f RelativePosition(g_OutputFocus->GetTarget()->GetPosition() - g_OutputFocus->GetPosition());
+		math3d::vector2f RelativePosition(g_OutputMind->GetCharacter()->GetShip()->GetTarget()->GetPosition() - g_OutputMind->GetCharacter()->GetShip()->GetPosition());
 		
 		RelativePosition.normalize();
 		glPushMatrix();
 		glPushAttrib(GL_LIGHTING_BIT);
 		glDisable(GL_LIGHTING);
-		glTranslatef(g_OutputFocus->GetPosition().m_V.m_A[0], g_OutputFocus->GetPosition().m_V.m_A[1], 0.0f);
+		glTranslatef(g_OutputMind->GetCharacter()->GetShip()->GetPosition().m_V.m_A[0], g_OutputMind->GetCharacter()->GetShip()->GetPosition().m_V.m_A[1], 0.0f);
 		glRotatef(GetRadians(RelativePosition) * 180.0f / M_PI, 0.0f, 0.0f, 1.0f);
 		glColor3f(0.0f, 0.5f, 0.5f);
 		glBegin(GL_LINES);
@@ -616,9 +598,6 @@ public:
 			}
 			g_MapDialog = 0;
 			g_Pause = false;
-			g_InputFocus->m_Accelerate = false;
-			g_InputFocus->m_TurnLeft = false;
-			g_InputFocus->m_TurnRight = false;
 		}
 	}
 } g_GlobalDestroyListener;
@@ -977,7 +956,7 @@ void KeyDown(unsigned int KeyCode)
 		}
 	case 54: // Key: C
 		{
-			if(g_InputFocus != 0)
+			if(g_InputMind != 0)
 			{
 				SetMessage("Jettison cargo.");
 				g_InputMind->Jettison();
@@ -1002,6 +981,9 @@ void KeyDown(unsigned int KeyCode)
 				g_MapDialog = new MapDialog(g_UserInterface.GetRootWidget(), g_OutputMind->GetCharacter()->GetShip()->GetCurrentSystem(), g_OutputMind->GetCharacter());
 				g_MapDialog->GrabKeyFocus();
 				g_MapDialog->AddDestroyListener(&g_GlobalDestroyListener);
+				g_InputMind->DisableAccelerate();
+				g_InputMind->DisableTurnLeft();
+				g_InputMind->DisableTurnRight();
 			}
 			
 			break;
@@ -1435,8 +1417,6 @@ void LoadSavegame(const Element * SaveElement)
 		g_CurrentSystem->AddShip(PlayerShip);
 		PlayerShip->SetCurrentSystem(g_CurrentSystem);
 	}
-	g_InputFocus = PlayerShip;
-	g_OutputFocus = PlayerShip;
 	RealTime::Invalidate();
 	PopulateSystem();
 }
@@ -1542,10 +1522,10 @@ int main(int argc, char ** argv)
 	}
 	
 	// setting up the player environment
-	if(g_OutputFocus != 0)
+	if((g_OutputMind != 0) && (g_OutputMind->GetCharacter() != 0) && (g_OutputMind->GetCharacter()->GetShip() != 0))
 	{
-		g_MiniMap->SetFocus(g_OutputFocus);
-		g_ScannerDisplay->SetFocus(g_OutputFocus);
+		g_MiniMap->SetFocus(g_OutputMind->GetCharacter()->GetShip());
+		g_ScannerDisplay->SetFocus(g_OutputMind->GetCharacter()->GetShip());
 	}
 	// set first timeout for widget collector, it will reinsert itself on callback
 	g_TimeoutNotifications.insert(std::make_pair(RealTime::GetTime() + 5.0f, new FunctionCallback0< void >(CollectWidgets)));
