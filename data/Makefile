@@ -37,7 +37,18 @@ raw_to_littlem_dependencies = \
 	raw_to_littlem.py \
 	xml_stream.py
 
-all: data.arx
+all: check-dependencies data.arx
+
+check-dependencies:
+	@if [ x`which arxtouch` = x -o x`which arxmod` = x -o x`which arxadd` = x ]; then \
+	    echo -e "\nYour system is missing the arxtools suite.\nYou will need to install this package on your system\nor download it from http://libarxx.sourceforge.net and install it.\n"; false; \
+	fi
+	@if [ x`which python` = x ]; then \
+	    echo -e "\nYour system is missing the python interpreter.\nIn order to build the data file you will need to install it on your system.\n"; false; \
+	fi
+	@if [ x`which xsltproc` = x ]; then \
+	    echo -e "\nYour system is missing the xsltproc program.\nTo build the data file you will need to install it on your system.\n"; false; \
+	fi
 
 clean:
 	$(RM) -rf .data
@@ -147,3 +158,5 @@ models/shuttle.xml: models/shuttle.raw $(raw_to_littlem_dependencies)
 
 models/transporter.xml: models/transporter.raw $(raw_to_littlem_dependencies)
 	python raw_to_littlem.py --in=$< --out=$@ --identifier=transporter
+
+.PHONY: check-dependencies
