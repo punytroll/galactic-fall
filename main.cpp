@@ -440,7 +440,6 @@ void UpdateUserInterface(void)
 		// display the name of the linked system
 		if(g_OutputMind->GetCharacter()->GetShip()->GetLinkedSystemTarget() != 0)
 		{
-			// TODO: Remove g_PlayerCharacter reference
 			const std::set< System * > UnexploredSystems(g_OutputMind->GetCharacter()->GetMapKnowledge()->GetUnexploredSystems());
 			
 			if(UnexploredSystems.find(g_OutputMind->GetCharacter()->GetShip()->GetLinkedSystemTarget()) == UnexploredSystems.end())
@@ -461,7 +460,6 @@ void UpdateUserInterface(void)
 		// display hull
 		g_HullLabel->SetString("Hull: " + to_string_cast(g_OutputMind->GetCharacter()->GetShip()->GetHull(), 2));
 		// display credits in every cycle
-		// TODO: Remove g_PlayerCharacter reference
 		g_CreditsLabel->SetString("Credits: " + to_string_cast(g_OutputMind->GetCharacter()->GetCredits()));
 		// display the current system
 		g_CurrentSystemLabel->SetString(g_OutputMind->GetCharacter()->GetShip()->GetCurrentSystem()->GetName());
