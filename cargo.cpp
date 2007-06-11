@@ -8,6 +8,7 @@
 Cargo::Cargo(Model * Model, const Commodity * Commodity, const math3d::vector2f & Velocity) :
 	m_Model(Model),
 	m_Commodity(Commodity),
+	m_Hull(20.0f),
 	m_Velocity(Velocity)
 {
 	SetRadialSize(Model->GetRadialSize());
