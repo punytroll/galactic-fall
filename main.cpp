@@ -274,6 +274,27 @@ void DisplayUserInterface(void)
 	glPopAttrib();
 }
 
+void RemoveCargoFromSystem(System * System, std::list< Cargo * >::iterator CargoIterator)
+{
+	// basically this functions only does the last call
+	// all other stuff should be changed to references, so it is done automatically
+	Cargo * Cargo(*CargoIterator);
+	
+	if(Cargo == g_Camera.GetFocus())
+	{
+		g_Camera.SetFocus(0);
+	}
+	if((g_OutputMind != 0) && (g_OutputMind->GetCharacter() != 0) && (g_OutputMind->GetCharacter()->GetShip() != 0) && (g_OutputMind->GetCharacter()->GetShip()->GetTarget() == Cargo))
+	{
+		g_OutputMind->GetCharacter()->GetShip()->SetTarget(0);
+	}
+	if((g_InputMind != 0) && (g_InputMind->GetCharacter() != 0) && (g_InputMind->GetCharacter()->GetShip() != 0) && (g_InputMind->GetCharacter()->GetShip()->GetTarget() == Cargo))
+	{
+		g_InputMind->GetCharacter()->GetShip()->SetTarget(0);
+	}
+	System->GetCargos().erase(CargoIterator);
+}
+
 void RemoveShipFromSystem(System * System, std::list< Ship * >::iterator ShipIterator)
 {
 	// basically this functions only does the last call
@@ -284,7 +305,20 @@ void RemoveShipFromSystem(System * System, std::list< Ship * >::iterator ShipIte
 	{
 		g_Camera.SetFocus(0);
 	}
+	if((g_OutputMind != 0) && (g_OutputMind->GetCharacter() != 0) && (g_OutputMind->GetCharacter()->GetShip() != 0) && (g_OutputMind->GetCharacter()->GetShip()->GetTarget() == Ship))
+	{
+		g_OutputMind->GetCharacter()->GetShip()->SetTarget(0);
+	}
+	if((g_InputMind != 0) && (g_InputMind->GetCharacter() != 0) && (g_InputMind->GetCharacter()->GetShip() != 0) && (g_InputMind->GetCharacter()->GetShip()->GetTarget() == Ship))
+	{
+		g_InputMind->GetCharacter()->GetShip()->SetTarget(0);
+	}
 	System->GetShips().erase(ShipIterator);
+}
+
+void DeleteCargo(Cargo * Cargo)
+{
+	delete Cargo;
 }
 
 void DeleteShip(Ship * Ship)
@@ -361,7 +395,7 @@ void CalculateMovements(System * System)
 			ShipIterator = NextShipIterator;
 		}
 		
-		const std::list< Cargo * > Cargos(System->GetCargos());
+		std::list< Cargo * > & Cargos(System->GetCargos());
 		std::list< Shot * > & Shots(System->GetShots());
 		
 		for(std::list< Cargo * >::const_iterator CargoIterator = Cargos.begin(); CargoIterator != Cargos.end(); ++CargoIterator)
@@ -387,6 +421,26 @@ void CalculateMovements(System * System)
 							{
 								RemoveShipFromSystem(System, ShipIterator);
 								DeleteShip(Ship);
+							}
+							DeleteShot = true;
+							
+							break;
+						}
+					}
+				}
+				if(DeleteShot == false)
+				{
+					for(std::list< Cargo * >::iterator CargoIterator = Cargos.begin(); CargoIterator != Cargos.end(); ++CargoIterator)
+					{
+						Cargo * Cargo(*CargoIterator);
+						
+						if(((*ShotIterator)->GetPosition() - Cargo->GetPosition()).length_squared() < ((*ShotIterator)->GetRadialSize() * (*ShotIterator)->GetRadialSize() + Cargo->GetRadialSize() * Cargo->GetRadialSize()))
+						{
+							Cargo->SetHull(Cargo->GetHull() - (*ShotIterator)->GetDamage());
+							if(Cargo->GetHull() <= 0.0f)
+							{
+								RemoveCargoFromSystem(System, CargoIterator);
+								DeleteCargo(Cargo);
 							}
 							DeleteShot = true;
 							
