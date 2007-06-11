@@ -187,11 +187,12 @@ void Ship::Update(float Seconds)
 			while(GetCommodities().size() > 0)
 			{
 				const Commodity * Commodity(GetCommodities().begin()->first);
-				Cargo * NewCargo(new Cargo(g_ModelManager.Get("cargo_cube"), Commodity, GetVelocity() * 0.8f + math3d::vector2f(GetRandomFloat(-0.5f, 0.5f), GetRandomFloat(-0.5f, 0.5f))));
+				Cargo * NewCargo(new Cargo(g_ModelManager.Get("cargo_cube"), Commodity));
 				
 				NewCargo->SetObjectIdentifier("::cargo(" + Commodity->GetIdentifier() + ")::" + to_string_cast(reinterpret_cast< void * >(NewCargo)));
 				RemoveCommodities(Commodity, 1.0f);
 				NewCargo->SetPosition(GetPosition());
+				NewCargo->SetVelocity(GetVelocity() * 0.8f + math3d::vector2f(GetRandomFloat(-0.5f, 0.5f), GetRandomFloat(-0.5f, 0.5f)));
 				GetCurrentSystem()->AddCargo(NewCargo);
 			}
 			m_Jettison = false;
