@@ -123,6 +123,7 @@ void Ship::Update(float Seconds)
 		m_Accelerate = false;
 		m_TurnLeft = false;
 		m_TurnRight = false;
+		m_Land = false;
 	}
 	else
 	{
