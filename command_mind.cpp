@@ -92,6 +92,14 @@ void CommandMind::Jump(void)
 	GetCharacter()->GetShip()->m_Jump = true;
 }
 
+void CommandMind::Land(void)
+{
+	assert(GetCharacter() != 0);
+	assert(GetCharacter()->GetShip() != 0);
+	
+	GetCharacter()->GetShip()->m_Land = true;
+}
+
 void CommandMind::Scoop(void)
 {
 	assert(GetCharacter() != 0);

@@ -27,6 +27,7 @@ Ship::Ship(ShipClass * ShipClass) :
 	m_Fire(false),
 	m_Jump(false),
 	m_Jettison(false),
+	m_Land(false),
 	m_Scoop(false),
 	m_Velocity(true),
 	m_AngularPosition(0.0f),
@@ -113,6 +114,15 @@ void Ship::Update(float Seconds)
 			SetTarget(0);
 			m_Jump = false;
 		}
+	}
+	else if(m_Land == true)
+	{
+		SetLinkedSystemTarget(0);
+		SetTarget(0);
+		m_Velocity.set(0.0f, 0.0f);
+		m_Accelerate = false;
+		m_TurnLeft = false;
+		m_TurnRight = false;
 	}
 	else
 	{

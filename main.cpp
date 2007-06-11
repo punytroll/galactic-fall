@@ -607,12 +607,6 @@ public:
 		{
 			g_PlanetDialog = 0;
 			g_Pause = false;
-			g_InputMind->SelectLinkedSystem(0);
-			g_InputMind->TargetPhysicalObject(0);
-			g_InputFocus->m_Velocity.set(0.0f, 0.0f);
-			g_InputFocus->m_Accelerate = false;
-			g_InputFocus->m_TurnLeft = false;
-			g_InputFocus->m_TurnRight = false;
 		}
 		else if(EventSource == g_MapDialog)
 		{
@@ -943,8 +937,8 @@ void KeyDown(unsigned int KeyCode)
 				{
 				case OK:
 					{
-						// TODO: change to current character
 						g_InputMind->GetCharacter()->RemoveCredits(SelectedPlanet->GetLandingFee());
+						g_InputMind->Land();
 						g_Pause = true;
 						g_PlanetDialog = new PlanetDialog(g_UserInterface.GetRootWidget(), SelectedPlanet, g_InputMind->GetCharacter());
 						g_PlanetDialog->GrabKeyFocus();

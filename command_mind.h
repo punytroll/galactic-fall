@@ -23,6 +23,7 @@ public:
 	void DisableFire(void);
 	void Jettison(void);
 	void Jump(void);
+	void Land(void);
 	void Scoop(void);
 	void SelectLinkedSystem(System * LinkedSystem);
 	void SelectNextLinkedSystem(void);
