@@ -18,7 +18,4 @@ private:
 	std::map< std::string, Model * > m_Models;
 };
 
-void LoadModelFromElement(ModelManager * ModelManager, const Element * ModelElement);
-void LoadModelsFromFile(ModelManager * ModelManager, const std::string & FileName);
-
 #endif
