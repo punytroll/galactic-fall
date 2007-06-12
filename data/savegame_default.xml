@@ -16,7 +16,7 @@
 		<position x="0" y="0"/>
 		<angular-position value="0"/>
 		<velocity x="0" y="0"/>
-		<commodities/>
+		<manifest/>
 		<name value="Stargazer Alpha 1-0"/>
 	</ship>
 	<camera>

@@ -1089,17 +1089,21 @@ void KeyDown(unsigned int KeyCode)
 			XML << element << "position" << attribute << "x" << value << Ship->GetPosition().m_V.m_A[0] << attribute << "y" << value << Ship->GetPosition().m_V.m_A[1] << end;
 			XML << element << "angular-position" << attribute << "value" << value << Ship->GetAngularPosition() << end;
 			XML << element << "velocity" << attribute << "x" << value << Ship->GetVelocity().m_V.m_A[0] << attribute << "y" << value << Ship->GetVelocity().m_V.m_A[1] << end;
-			/** TODO: save manifest
-			XML << element << "commodities";
+			XML << element << "manifest";
 			
-			const std::map< const Commodity *, float > & Commodities(Ship->GetCommodities());
+			std::set< Object * >::const_iterator ManifestIterator(Ship->GetManifest().begin());
 			
-			for(std::map< const Commodity *, float >::const_iterator Commodity = Commodities.begin(); Commodity != Commodities.end(); ++Commodity)
+			while(ManifestIterator != Ship->GetManifest().end())
 			{
-				XML << element << "commodity" << attribute << "identifier" << value << Commodity->first->GetIdentifier() << attribute << "amount" << value << Commodity->second << end;
+				Cargo * TheCargo(dynamic_cast< Cargo * >(*ManifestIterator));
+				
+				if(TheCargo != 0)
+				{
+					XML << element << "cargo" << attribute << "commodity-identifier" << value << TheCargo->GetCommodity()->GetIdentifier() << end;
+				}
+				++ManifestIterator;
 			}
-			XML << end; // commodities
-			**/
+			XML << end; // manifest
 			XML << end; // ship
 			XML << element << "camera";
 			XML << element << "position" << attribute << "x" << value << g_Camera.GetPosition().m_V.m_A[0] << attribute << "y" << value << g_Camera.GetPosition().m_V.m_A[1] << attribute << "z" << value << g_Camera.GetPosition().m_V.m_A[2] << end;
@@ -1411,21 +1415,23 @@ void LoadSavegame(const Element * SaveElement)
 				{
 					PlayerShip->SetAngularPosition(from_string_cast< float >((*ShipChild)->GetAttribute("value")));
 				}
-				/** TODO: load manifest
-				else if((*ShipChild)->GetName() == "commodities")
+				else if((*ShipChild)->GetName() == "manifest")
 				{
-					for(std::vector< Element * >::const_iterator CommoditiesChild = (*ShipChild)->GetChilds().begin(); CommoditiesChild != (*ShipChild)->GetChilds().end(); ++CommoditiesChild)
+					for(std::vector< Element * >::const_iterator ManifestChild = (*ShipChild)->GetChilds().begin(); ManifestChild != (*ShipChild)->GetChilds().end(); ++ManifestChild)
 					{
-						if((*CommoditiesChild)->GetName() == "commodity")
+						if((*ManifestChild)->GetName() == "cargo")
 						{
-							PlayerShip->SetCommodities(g_CommodityManager.Get((*CommoditiesChild)->GetAttribute("identifier")), from_string_cast< float >((*CommoditiesChild)->GetAttribute("amount")));
+							PlayerShip->AddObject(new Cargo(g_ModelManager.Get("cargo_cube"), g_CommodityManager.Get((*ManifestChild)->GetAttribute("commodity-identifier"))));
 						}
 					}
 				}
-				**/
 				else if((*ShipChild)->GetName() == "name")
 				{
 					PlayerShip->SetName((*ShipChild)->GetAttribute("value"));
+				}
+				else
+				{
+					throw std::runtime_error("The \"ship\" element \"" + (*SaveChild)->GetAttribute("object-identifier") + "\" contains an unidentified child element \"" + (*ShipChild)->GetName() + "\".");
 				}
 			}
 		}
