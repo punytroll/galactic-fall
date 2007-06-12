@@ -419,6 +419,24 @@ void CalculateMovements(System * System)
 							Ship->SetHull(Ship->GetHull() - (*ShotIterator)->GetDamage());
 							if(Ship->GetHull() <= 0.0f)
 							{
+								std::set< Object * >::iterator ManifestIterator;
+								std::set< Object * >::iterator NextIterator((*ShipIterator)->GetManifest().begin());
+								
+								while(NextIterator != (*ShipIterator)->GetManifest().end())
+								{
+									ManifestIterator = NextIterator;
+									++NextIterator;
+									
+									Cargo * TheCargo(dynamic_cast< Cargo * >(*ManifestIterator));
+									
+									if(TheCargo != 0)
+									{
+										(*ShipIterator)->GetManifest().erase(ManifestIterator);
+										TheCargo->SetPosition((*ShipIterator)->GetPosition());
+										TheCargo->SetVelocity((*ShipIterator)->GetVelocity() * 0.8f + math3d::vector2f(GetRandomFloat(-0.5f, 0.5f), GetRandomFloat(-0.5f, 0.5f)));
+										(*ShipIterator)->GetCurrentSystem()->AddCargo(TheCargo);
+									}
+								}
 								RemoveShipFromSystem(System, ShipIterator);
 								DeleteShip(Ship);
 							}
