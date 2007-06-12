@@ -2,6 +2,7 @@
 	<identifier>metal</identifier>
 	<name>Metal</name>
 	<base-price>90</base-price>
+	<model-identifier>cargo_cube</model-identifier>
 	<color>
 		<red>0.56</red>
 		<green>0.72</green>

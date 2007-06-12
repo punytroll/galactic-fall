@@ -2,6 +2,7 @@
 	<identifier>food</identifier>
 	<name>Food</name>
 	<base-price>70</base-price>
+	<model-identifier>cargo_cube</model-identifier>
 	<color>
 		<red>0.3</red>
 		<green>0.72</green>

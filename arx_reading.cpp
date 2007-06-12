@@ -13,6 +13,7 @@
 #include "callbacks.h"
 #include "commodity.h"
 #include "commodity_manager.h"
+#include "globals.h"
 #include "label.h"
 #include "mini_map.h"
 #include "model.h"
@@ -152,12 +153,21 @@ static void ReadCommodity(CommodityManager * CommodityManager, Arxx::Reference &
 	
 	std::string Name;
 	float BasePrice;
+	std::string ModelIdentifier;
 	Color Color;
 	
-	Reader >> Name >> BasePrice >> Color;
+	Reader >> Name >> BasePrice >> ModelIdentifier >> Color;
 	
 	NewCommodity->SetName(Name);
 	NewCommodity->SetBasePrice(BasePrice);
+	
+	Model * Model(g_ModelManager.Get(ModelIdentifier));
+	
+	if(Model == 0)
+	{
+		throw std::runtime_error("For the commodity '" + Name + "' could not find the model '" + ModelIdentifier + "'.");
+	}
+	NewCommodity->SetModel(Model);
 	NewCommodity->SetColor(Color);
 }
 
