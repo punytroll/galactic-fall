@@ -126,6 +126,34 @@ void TradeCenterDialog::UpdateTraderFreeCargoHoldSize(void)
 	m_TraderFreeCargoHoldSizeLabel->SetString("Free Cargo Hold: " + to_string_cast(m_Character->GetShip()->GetFreeCargoHoldSize()));
 }
 
+void TradeCenterDialog::Buy(const PlanetCommodity * PlanetCommodity)
+{
+	float Price(PlanetCommodity->GetPrice());
+	
+	if(m_Character->RemoveCredits(Price) == true)
+	{
+		if(m_Character->GetShip()->AddCommodities(PlanetCommodity->GetCommodity(), 1.0f) == false)
+		{
+			m_Character->AddCredits(Price);
+		}
+		else
+		{
+			UpdateTraderCredits();
+			UpdateTraderFreeCargoHoldSize();
+		}
+	}
+}
+
+void TradeCenterDialog::Sell(const PlanetCommodity * PlanetCommodity)
+{
+	if(m_Character->GetShip()->RemoveCommodities(PlanetCommodity->GetCommodity(), 1.0f) == true)
+	{
+		m_Character->AddCredits(PlanetCommodity->GetPrice());
+		UpdateTraderCredits();
+		UpdateTraderFreeCargoHoldSize();
+	}
+}
+
 bool TradeCenterDialog::OnClicked(Widget * EventSource)
 {
 	if(EventSource == m_OKButton)
@@ -138,34 +166,16 @@ bool TradeCenterDialog::OnClicked(Widget * EventSource)
 	{
 		if(m_SelectedTradeCenterCommodity != 0)
 		{
-			float Price(m_SelectedTradeCenterCommodity->GetPlanetCommodity()->GetPrice());
-			
-			if(m_Character->RemoveCredits(Price) == true)
-			{
-				if(m_Character->GetShip()->AddCommodities(m_SelectedTradeCenterCommodity->GetPlanetCommodity()->GetCommodity(), 1.0f) == false)
-				{
-					m_Character->AddCredits(Price);
-				}
-				else
-				{
-					m_SelectedTradeCenterCommodity->UpdateCharacterAmount();
-					UpdateTraderCredits();
-					UpdateTraderFreeCargoHoldSize();
-				}
-			}
+			Buy(m_SelectedTradeCenterCommodity->GetPlanetCommodity());
+			m_SelectedTradeCenterCommodity->UpdateCharacterAmount();
 		}
 	}
 	else if(EventSource == m_SellButton)
 	{
 		if(m_SelectedTradeCenterCommodity != 0)
 		{
-			if(m_Character->GetShip()->RemoveCommodities(m_SelectedTradeCenterCommodity->GetPlanetCommodity()->GetCommodity(), 1.0f) == true)
-			{
-				m_Character->AddCredits(m_SelectedTradeCenterCommodity->GetPlanetCommodity()->GetPrice());
-				m_SelectedTradeCenterCommodity->UpdateCharacterAmount();
-				UpdateTraderCredits();
-				UpdateTraderFreeCargoHoldSize();
-			}
+			Sell(m_SelectedTradeCenterCommodity->GetPlanetCommodity());
+			m_SelectedTradeCenterCommodity->UpdateCharacterAmount();
 		}
 	}
 	
@@ -180,31 +190,13 @@ bool TradeCenterDialog::OnKey(Widget * EventSource, int Key, int State)
 	}
 	else if((Key == 56 /* B */) && (m_SelectedTradeCenterCommodity != 0) && (State == EV_DOWN))
 	{
-		float Price(m_SelectedTradeCenterCommodity->GetPlanetCommodity()->GetPrice());
-		
-		if(m_Character->RemoveCredits(Price) == true)
-		{
-			if(m_Character->GetShip()->AddCommodities(m_SelectedTradeCenterCommodity->GetPlanetCommodity()->GetCommodity(), 1.0f) == false)
-			{
-				m_Character->AddCredits(Price);
-			}
-			else
-			{
-				m_SelectedTradeCenterCommodity->UpdateCharacterAmount();
-				UpdateTraderCredits();
-				UpdateTraderFreeCargoHoldSize();
-			}
-		}
+		Buy(m_SelectedTradeCenterCommodity->GetPlanetCommodity());
+		m_SelectedTradeCenterCommodity->UpdateCharacterAmount();
 	}
 	else if((Key == 39 /* S */) && (m_SelectedTradeCenterCommodity != 0) && (State == EV_DOWN))
 	{
-		if(m_Character->GetShip()->RemoveCommodities(m_SelectedTradeCenterCommodity->GetPlanetCommodity()->GetCommodity(), 1.0f) == true)
-		{
-			m_Character->AddCredits(m_SelectedTradeCenterCommodity->GetPlanetCommodity()->GetPrice());
-			m_SelectedTradeCenterCommodity->UpdateCharacterAmount();
-			UpdateTraderCredits();
-			UpdateTraderFreeCargoHoldSize();
-		}
+		Sell(m_SelectedTradeCenterCommodity->GetPlanetCommodity());
+		m_SelectedTradeCenterCommodity->UpdateCharacterAmount();
 	}
 	
 	return true;

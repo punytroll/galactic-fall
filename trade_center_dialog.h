@@ -24,6 +24,8 @@ protected:
 	virtual void OnMouseEnter(Widget * EventSource);
 	virtual void OnMouseLeave(Widget * EventSource);
 private:
+	void Buy(const PlanetCommodity * PlanetCommodity);
+	void Sell(const PlanetCommodity * PlanetCommodity);
 	void UpdateTraderCredits(void);
 	void UpdateTraderFreeCargoHoldSize(void);
 	Planet * m_Planet;
