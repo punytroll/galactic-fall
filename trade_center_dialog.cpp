@@ -4,7 +4,6 @@
 #include "commodity.h"
 #include "globals.h"
 #include "label.h"
-#include "model_manager.h"
 #include "planet.h"
 #include "ship.h"
 #include "string_cast.h"
@@ -134,7 +133,7 @@ void TradeCenterDialog::Buy(const PlanetCommodity * PlanetCommodity)
 	
 	if(m_Character->RemoveCredits(Price) == true)
 	{
-		if(m_Character->GetShip()->AddObject(new Cargo(g_ModelManager.Get("cargo_cube"), PlanetCommodity->GetCommodity())) == false)
+		if(m_Character->GetShip()->AddObject(new Cargo(PlanetCommodity->GetCommodity())) == false)
 		{
 			m_Character->AddCredits(Price);
 		}

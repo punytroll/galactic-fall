@@ -2,6 +2,7 @@
 	<identifier>luxury_goods</identifier>
 	<name>Luxury Goods</name>
 	<base-price>500</base-price>
+	<model-identifier>cargo_cube</model-identifier>
 	<color>
 		<red>0.85</red>
 		<green>0.72</green>

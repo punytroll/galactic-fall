@@ -1439,7 +1439,7 @@ void LoadSavegame(const Element * SaveElement)
 					{
 						if((*ManifestChild)->GetName() == "cargo")
 						{
-							PlayerShip->AddObject(new Cargo(g_ModelManager.Get("cargo_cube"), g_CommodityManager.Get((*ManifestChild)->GetAttribute("commodity-identifier"))));
+							PlayerShip->AddObject(new Cargo(g_CommodityManager.Get((*ManifestChild)->GetAttribute("commodity-identifier"))));
 						}
 					}
 				}
@@ -1574,8 +1574,8 @@ int main(int argc, char ** argv)
 		return 1;
 	}
 	// data reading
-	ReadCommodities(Archive, &g_CommodityManager);
 	ReadModels(Archive, &g_ModelManager);
+	ReadCommodities(Archive, &g_CommodityManager);
 	ReadShipClasses(Archive, &g_ShipClassManager);
 	ReadSystems(Archive, &g_SystemManager);
 	ReadSystemLinks(Archive, &g_SystemManager);

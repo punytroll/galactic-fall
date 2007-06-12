@@ -2,6 +2,7 @@
 	<identifier>industrial</identifier>
 	<name>Industrial</name>
 	<base-price>120</base-price>
+	<model-identifier>cargo_cube</model-identifier>
 	<color>
 		<red>0.3</red>
 		<green>0.25</green>

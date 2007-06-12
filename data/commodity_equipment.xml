@@ -2,6 +2,7 @@
 	<identifier>equipment</identifier>
 	<name>Equipment</name>
 	<base-price>210</base-price>
+	<model-identifier>cargo_cube</model-identifier>
 	<color>
 		<red>0.95</red>
 		<green>0.68</green>

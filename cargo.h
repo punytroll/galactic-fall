@@ -12,7 +12,7 @@ class Model;
 class Cargo : public PhysicalObject
 {
 public:
-	Cargo(Model * Model, const Commodity * Commodity);
+	Cargo(const Commodity * Commodity);
 	virtual ~Cargo(void);
 	// modifiers
 	virtual void Draw(void) const;
@@ -25,7 +25,6 @@ public:
 	void SetHull(float Hull);
 	void SetVelocity(const math3d::vector2f & Velocity);
 private:
-	Model * m_Model;
 	const Commodity * m_Commodity;
 	float m_Hull;
 	math3d::vector2f m_Velocity;

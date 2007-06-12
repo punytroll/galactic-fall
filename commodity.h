@@ -4,35 +4,31 @@
 #include <string>
 
 class Color;
+class Model;
 
 class Commodity
 {
 public:
 	Commodity(const std::string & Identifier);
 	~Commodity(void);
-	const std::string & GetIdentifier(void) const;
-	const std::string & GetName(void) const;
+	// getters
 	float GetBasePrice(void) const;
-	void SetName(const std::string & Name);
-	void SetBasePrice(float BasePrice);
 	const Color * GetColor(void) const;
+	const std::string & GetIdentifier(void) const;
+	const Model * GetModel(void) const;
+	const std::string & GetName(void) const;
+	// setters
+	void SetBasePrice(float BasePrice);
 	void SetColor(const Color & Color);
+	void SetModel(const Model * Model);
+	void SetName(const std::string & Name);
 private:
-	std::string m_Identifier;
-	std::string m_Name;
 	float m_BasePrice;
 	Color * m_Color;
+	std::string m_Identifier;
+	std::string m_Name;
+	const Model * m_Model;
 };
-
-inline const std::string & Commodity::GetIdentifier(void) const
-{
-	return m_Identifier;
-}
-
-inline const std::string & Commodity::GetName(void) const
-{
-	return m_Name;
-}
 
 inline float Commodity::GetBasePrice(void) const
 {
@@ -42,6 +38,36 @@ inline float Commodity::GetBasePrice(void) const
 inline const Color * Commodity::GetColor(void) const
 {
 	return m_Color;
+}
+
+inline const std::string & Commodity::GetIdentifier(void) const
+{
+	return m_Identifier;
+}
+
+inline const Model * Commodity::GetModel(void) const
+{
+	return m_Model;
+}
+
+inline const std::string & Commodity::GetName(void) const
+{
+	return m_Name;
+}
+
+inline void Commodity::SetBasePrice(float BasePrice)
+{
+	m_BasePrice = BasePrice;
+}
+
+inline void Commodity::SetModel(const Model * Model)
+{
+	m_Model = Model;
+}
+
+inline void Commodity::SetName(const std::string & Name)
+{
+	m_Name = Name;
 }
 
 #endif
