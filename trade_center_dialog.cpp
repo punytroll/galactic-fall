@@ -1,8 +1,10 @@
 #include "button.h"
+#include "cargo.h"
 #include "character.h"
 #include "commodity.h"
 #include "globals.h"
 #include "label.h"
+#include "model_manager.h"
 #include "planet.h"
 #include "ship.h"
 #include "string_cast.h"
@@ -132,7 +134,7 @@ void TradeCenterDialog::Buy(const PlanetCommodity * PlanetCommodity)
 	
 	if(m_Character->RemoveCredits(Price) == true)
 	{
-		if(m_Character->GetShip()->AddCommodities(PlanetCommodity->GetCommodity(), 1.0f) == false)
+		if(m_Character->GetShip()->AddObject(new Cargo(g_ModelManager.Get("cargo_cube"), PlanetCommodity->GetCommodity())) == false)
 		{
 			m_Character->AddCredits(Price);
 		}
@@ -146,11 +148,22 @@ void TradeCenterDialog::Buy(const PlanetCommodity * PlanetCommodity)
 
 void TradeCenterDialog::Sell(const PlanetCommodity * PlanetCommodity)
 {
-	if(m_Character->GetShip()->RemoveCommodities(PlanetCommodity->GetCommodity(), 1.0f) == true)
+	std::set< Object * > & Manifest(m_Character->GetShip()->GetManifest());
+	std::set< Object * >::iterator ManifestIterator(Manifest.begin());
+	
+	while(ManifestIterator != Manifest.end())
 	{
-		m_Character->AddCredits(PlanetCommodity->GetPrice());
-		UpdateTraderCredits();
-		UpdateTraderFreeCargoHoldSize();
+		Cargo * TheCargo(dynamic_cast< Cargo * >(*ManifestIterator));
+		
+		if(TheCargo != 0)
+		{
+			Manifest.erase(ManifestIterator);
+			m_Character->AddCredits(PlanetCommodity->GetPrice());
+			UpdateTraderCredits();
+			UpdateTraderFreeCargoHoldSize();
+			
+			break;
+		}
 	}
 }
 

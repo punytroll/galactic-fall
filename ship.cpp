@@ -184,16 +184,23 @@ void Ship::Update(float Seconds)
 		}
 		if(m_Jettison == true)
 		{
-			while(GetCommodities().size() > 0)
+			std::set< Object * >::iterator ManifestIterator;
+			std::set< Object * >::iterator NextIterator(GetManifest().begin());
+			
+			while(NextIterator != GetManifest().end())
 			{
-				const Commodity * Commodity(GetCommodities().begin()->first);
-				Cargo * NewCargo(new Cargo(g_ModelManager.Get("cargo_cube"), Commodity));
+				ManifestIterator = NextIterator;
+				++NextIterator;
 				
-				NewCargo->SetObjectIdentifier("::cargo(" + Commodity->GetIdentifier() + ")::" + to_string_cast(reinterpret_cast< void * >(NewCargo)));
-				RemoveCommodities(Commodity, 1.0f);
-				NewCargo->SetPosition(GetPosition());
-				NewCargo->SetVelocity(GetVelocity() * 0.8f + math3d::vector2f(GetRandomFloat(-0.5f, 0.5f), GetRandomFloat(-0.5f, 0.5f)));
-				GetCurrentSystem()->AddCargo(NewCargo);
+				Cargo * TheCargo(dynamic_cast< Cargo * >(*ManifestIterator));
+				
+				if(TheCargo != 0)
+				{
+					GetManifest().erase(ManifestIterator);
+					TheCargo->SetPosition(GetPosition());
+					TheCargo->SetVelocity(GetVelocity() * 0.8f + math3d::vector2f(GetRandomFloat(-0.5f, 0.5f), GetRandomFloat(-0.5f, 0.5f)));
+					GetCurrentSystem()->AddCargo(TheCargo);
+				}
 			}
 			m_Jettison = false;
 		}
@@ -203,10 +210,11 @@ void Ship::Update(float Seconds)
 			
 			if(SelectedCargo != 0)
 			{
-				AddCommodities(SelectedCargo->GetCommodity(), 1.0f);
-				GetCurrentSystem()->RemoveCargo(SelectedCargo);
-				SetTarget(0);
-				delete SelectedCargo;
+				if(AddObject(SelectedCargo) == true)
+				{
+					GetCurrentSystem()->RemoveCargo(SelectedCargo);
+					SetTarget(0);
+				}
 			}
 			m_Scoop = false;
 		}
@@ -221,57 +229,51 @@ float Ship::GetFuelCapacity(void) const
 float Ship::GetFreeCargoHoldSize(void) const
 {
 	float CargoHoldSize(m_ShipClass->GetCargoHoldSize());
-	std::map< const Commodity *, float >::const_iterator Commodity(m_Commodities.begin());
+	std::set< Object * >::const_iterator ManifestIterator(GetManifest().begin());
 	
-	while(Commodity != m_Commodities.end())
+	while(ManifestIterator != GetManifest().end())
 	{
-		CargoHoldSize -= Commodity->second;
-		++Commodity;
+		if(dynamic_cast< Cargo * >(*ManifestIterator) != 0)
+		{
+			CargoHoldSize -= 1.0f;
+		}
+		++ManifestIterator;
 	}
 	
 	return CargoHoldSize;
 }
 
-bool Ship::AddCommodities(const Commodity * CargoCommodity, float Amount)
+float Ship::GetCommodityAmount(const Commodity * CargoCommodity) const
 {
-	if(Amount > GetFreeCargoHoldSize())
+	float Amount(0.0f);
+	std::set< Object * >::const_iterator ManifestIterator(GetManifest().begin());
+	
+	while(ManifestIterator != GetManifest().end())
 	{
-		return false;
-	}
-	else
-	{
-		std::map< const Commodity *, float >::iterator CommodityIterator(m_Commodities.find(CargoCommodity));
+		Cargo * TheCargo(dynamic_cast< Cargo * >(*ManifestIterator));
 		
-		if(CommodityIterator == m_Commodities.end())
+		if((TheCargo != 0) && (TheCargo->GetCommodity() == CargoCommodity))
 		{
-			m_Commodities[CargoCommodity] = Amount;
+			Amount += 1.0f;
 		}
-		else
-		{
-			CommodityIterator->second += Amount;
-		}
-		
-		return true;
+		++ManifestIterator;
 	}
+	
+	return Amount;
 }
 
-bool Ship::RemoveCommodities(const Commodity * CargoCommodity, float Amount)
+bool Ship::AddObject(Object * Add)
 {
-	std::map< const Commodity *, float >::iterator CommodityIterator(m_Commodities.find(CargoCommodity));
+	Cargo * TheCargo(dynamic_cast< Cargo * >(Add));
 	
-	if(CommodityIterator == m_Commodities.end())
+	if(TheCargo != 0)
 	{
-		return false;
+		if(GetFreeCargoHoldSize() < 1.0f)
+		{
+			return false;
+		}
 	}
-	if(CommodityIterator->second < Amount)
-	{
-		return false;
-	}
-	CommodityIterator->second -= Amount;
-	if(CommodityIterator->second == 0)
-	{
-		m_Commodities.erase(CommodityIterator);
-	}
+	m_Manifest.insert(Add);
 	
 	return true;
 }

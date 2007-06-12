@@ -42,7 +42,6 @@ public:
 	const math3d::vector2f & GetVelocity(void) const;
 	float GetFreeCargoHoldSize(void) const;
 	float GetCommodityAmount(const Commodity * CargoCommodity) const;
-	const std::map< const Commodity *, float > GetCommodities(void) const;
 	PhysicalObject * GetTarget(void);
 	System * GetLinkedSystemTarget(void);
 	System * GetCurrentSystem(void);
@@ -51,13 +50,9 @@ public:
 	void SetHull(float Hull);
 	void SetVelocity(const math3d::vector2f & Velocity);
 	void SetAngularPosition(float AngularPosition);
-	void SetCommodities(const Commodity * Commodity, float Amount);
 	void SetTarget(PhysicalObject * Target);
 	void SetLinkedSystemTarget(System * LinkedSystem);
 	void SetCurrentSystem(System * CurrentSystem);
-	// modifiers
-	bool AddCommodities(const Commodity * CargoCommodity, float Amount);
-	bool RemoveCommodities(const Commodity * CargoCommodity, float Amount);
 	// shot stuff
 	bool IsReadyToFire(void);
 	void ResetNextTimeToFire(void);
@@ -65,10 +60,10 @@ public:
 	bool AddObject(Object * Add);
 	bool RemoveObject(Object * Remove);
 	std::set< Object * > & GetManifest(void);
+	const std::set< Object * > & GetManifest(void) const;
 private:
 	// ship class
 	ShipClass * m_ShipClass;
-	std::map< const Commodity *, float > m_Commodities;
 	std::set< Object * > m_Manifest;
 	float m_Fuel;
 	float m_Hull;
@@ -118,18 +113,6 @@ inline const math3d::vector2f & Ship::GetVelocity(void) const
 	return m_Velocity;
 }
 
-inline float Ship::GetCommodityAmount(const Commodity * CargoCommodity) const
-{
-	std::map< const Commodity *, float >::const_iterator CommodityIterator(m_Commodities.find(CargoCommodity));
-	
-	return ((CommodityIterator == m_Commodities.end()) ? (0) : (CommodityIterator->second));
-}
-
-inline const std::map< const Commodity *, float > Ship::GetCommodities(void) const
-{
-	return m_Commodities;
-}
-
 inline PhysicalObject * Ship::GetTarget(void)
 {
 	return m_Target;
@@ -165,11 +148,6 @@ inline void Ship::SetAngularPosition(float AngularPosition)
 	m_AngularPosition = AngularPosition;
 }
 
-inline void Ship::SetCommodities(const Commodity * Commodity, float Amount)
-{
-	m_Commodities[Commodity] = Amount;
-}
-
 inline void Ship::SetTarget(PhysicalObject * Target)
 {
 	m_Target = Target;
@@ -183,13 +161,6 @@ inline void Ship::SetLinkedSystemTarget(System * LinkedSystem)
 inline void Ship::SetCurrentSystem(System * CurrentSystem)
 {
 	m_CurrentSystem = CurrentSystem;
-}
-
-inline bool Ship::AddObject(Object * Add)
-{
-	m_Manifest.insert(Add);
-	
-	return true;
 }
 
 inline bool Ship::RemoveObject(Object * Remove)
@@ -209,6 +180,11 @@ inline bool Ship::RemoveObject(Object * Remove)
 }
 
 inline std::set< Object * > & Ship::GetManifest(void)
+{
+	return m_Manifest;
+}
+
+inline const std::set< Object * > & Ship::GetManifest(void) const
 {
 	return m_Manifest;
 }

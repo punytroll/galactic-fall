@@ -1089,6 +1089,7 @@ void KeyDown(unsigned int KeyCode)
 			XML << element << "position" << attribute << "x" << value << Ship->GetPosition().m_V.m_A[0] << attribute << "y" << value << Ship->GetPosition().m_V.m_A[1] << end;
 			XML << element << "angular-position" << attribute << "value" << value << Ship->GetAngularPosition() << end;
 			XML << element << "velocity" << attribute << "x" << value << Ship->GetVelocity().m_V.m_A[0] << attribute << "y" << value << Ship->GetVelocity().m_V.m_A[1] << end;
+			/** TODO: save manifest
 			XML << element << "commodities";
 			
 			const std::map< const Commodity *, float > & Commodities(Ship->GetCommodities());
@@ -1098,6 +1099,7 @@ void KeyDown(unsigned int KeyCode)
 				XML << element << "commodity" << attribute << "identifier" << value << Commodity->first->GetIdentifier() << attribute << "amount" << value << Commodity->second << end;
 			}
 			XML << end; // commodities
+			**/
 			XML << end; // ship
 			XML << element << "camera";
 			XML << element << "position" << attribute << "x" << value << g_Camera.GetPosition().m_V.m_A[0] << attribute << "y" << value << g_Camera.GetPosition().m_V.m_A[1] << attribute << "z" << value << g_Camera.GetPosition().m_V.m_A[2] << end;
@@ -1409,6 +1411,7 @@ void LoadSavegame(const Element * SaveElement)
 				{
 					PlayerShip->SetAngularPosition(from_string_cast< float >((*ShipChild)->GetAttribute("value")));
 				}
+				/** TODO: load manifest
 				else if((*ShipChild)->GetName() == "commodities")
 				{
 					for(std::vector< Element * >::const_iterator CommoditiesChild = (*ShipChild)->GetChilds().begin(); CommoditiesChild != (*ShipChild)->GetChilds().end(); ++CommoditiesChild)
@@ -1419,6 +1422,7 @@ void LoadSavegame(const Element * SaveElement)
 						}
 					}
 				}
+				**/
 				else if((*ShipChild)->GetName() == "name")
 				{
 					PlayerShip->SetName((*ShipChild)->GetAttribute("value"));
