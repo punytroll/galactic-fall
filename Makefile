@@ -398,7 +398,7 @@ system.o: system.cpp $(planet_h) $(star_h) $(system_h)
 system_manager.o: system_manager.cpp $(commodity_manager_h) $(planet_h) $(star_h) $(string_cast_h) $(system_h) $(system_manager_h) $(xml_puny_dom_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags math3d` -c $< -o $@
 
-trade_center_dialog.o: trade_center_dialog.cpp $(button_h) $(character_h) $(commodity_h) $(globals_h) $(label_h) $(planet_h) $(ship_h) $(trade_center_dialog_h)
+trade_center_dialog.o: trade_center_dialog.cpp $(button_h) $(cargo_h) $(character_h) $(commodity_h) $(globals_h) $(model_manager_h) $(label_h) $(planet_h) $(ship_h) $(trade_center_dialog_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags math3d` -c $< -o $@
 
 user_interface.o: user_interface.cpp $(user_interface_h) $(widget_h)
