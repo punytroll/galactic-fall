@@ -88,6 +88,7 @@ PlanetDialog * g_PlanetDialog;
 MapDialog * g_MapDialog;
 UserInterface g_UserInterface;
 std::multimap< double, Callback0< void > * > g_TimeoutNotifications;
+std::multimap< double, Callback0< void > * >::iterator g_MessageTimeoutIterator;
 Widget * g_Scanner(0);
 MiniMap * g_MiniMap(0);
 ScannerDisplay * g_ScannerDisplay(0);
@@ -192,13 +193,23 @@ float CalculateTime(void)
 	}
 }
 
+void HideMessage(void)
+{
+	g_MessageLabel->Hide();
+	g_MessageTimeoutIterator = g_TimeoutNotifications.end();
+}
+
 void SetMessage(const std::string & Message)
 {
 	g_MessageLabel->SetString(Message);
 	g_MessageLabel->SetPosition(math3d::vector2f((g_Width - 6 * Message.length()) / 2, 40.0f));
 	g_MessageLabel->Show();
 	/// TODO: Make the 2.0f seconds timeout configurable via the game configuration archive.
-	g_TimeoutNotifications.insert(std::make_pair(RealTime::GetTime() + 2.0f, new MemberCallback0< void, Label >(g_MessageLabel, &Label::Hide)));
+	if(g_MessageTimeoutIterator != g_TimeoutNotifications.end())
+	{
+		g_TimeoutNotifications.erase(g_MessageTimeoutIterator);
+	}
+	g_MessageTimeoutIterator = g_TimeoutNotifications.insert(std::make_pair(RealTime::GetTime() + 2.0f, new FunctionCallback0< void >(HideMessage)));
 }
 
 void DrawSelection(Position * Position, float RadialSize)
@@ -1608,6 +1619,7 @@ int main(int argc, char ** argv)
 		g_ScannerDisplay->SetFocus(g_OutputMind->GetCharacter()->GetShip());
 	}
 	// set first timeout for widget collector, it will reinsert itself on callback
+	g_MessageTimeoutIterator = g_TimeoutNotifications.end();
 	g_TimeoutNotifications.insert(std::make_pair(RealTime::GetTime() + 5.0f, new FunctionCallback0< void >(CollectWidgets)));
 	// setting up the graphical environment
 	CreateWindow();
