@@ -204,8 +204,7 @@ xml_stream_h = \
 
 all: all-recursive escapevelocity
 
-all-recursive:
-	@$(MAKE) -C data all
+all-recursive: data
 
 clean: clean-recursive
 	$(RM) escapevelocity
@@ -262,6 +261,9 @@ clean: clean-recursive
 
 clean-recursive:
 	@$(MAKE) -C data clean
+
+data:
+	@$(MAKE) -C data all
 
 install:
 	@echo -e "This project is not installable yet. Please run \"./escapevelocity\" from the top directory."
@@ -418,3 +420,5 @@ xml_puny_dom.o: xml_puny_dom.cpp $(xml_parser_h) $(xml_puny_dom_h)
 
 xml_stream.o: xml_stream.cpp $(xml_stream_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+.PHONY: data
