@@ -507,6 +507,7 @@ void CalculateMovements(System * System)
 			}
 			if(DeleteShot == true)
 			{
+				// replace with calls to DeleteShot() and RemoveShotFromSystem()
 				delete *ShotIterator;
 				ShotIterator = Shots.erase(ShotIterator);
 			}
