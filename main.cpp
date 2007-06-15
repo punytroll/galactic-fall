@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <errno.h>
 #include <stdlib.h>
 
@@ -87,6 +88,8 @@ bool g_Pause(false);
 PlanetDialog * g_PlanetDialog;
 MapDialog * g_MapDialog;
 UserInterface g_UserInterface;
+std::multimap< double, Callback0< void > * > g_GameTimeTimeoutNotifications;
+std::multimap< double, Callback0< void > * >::iterator g_SpawnShipTimeoutIterator;
 std::multimap< double, Callback0< void > * > g_RealTimeTimeoutNotifications;
 std::multimap< double, Callback0< void > * >::iterator g_MessageTimeoutIterator;
 Widget * g_Scanner(0);
@@ -393,11 +396,7 @@ void CalculateMovements(System * System)
 			(*ShipIterator)->Update(Seconds);
 			if((*ShipIterator)->GetCurrentSystem() != System)
 			{
-				if(*ShipIterator == g_OutputMind->GetCharacter()->GetShip())
-				{
-					g_CurrentSystem = (*ShipIterator)->GetCurrentSystem();
-				}
-				else
+				if(*ShipIterator != g_OutputMind->GetCharacter()->GetShip())
 				{
 					// TODO: maybe delete the ship
 					//       keep a set of permanent ships
@@ -495,7 +494,23 @@ void CalculateMovements(System * System)
 	}
 }
 
-void UpdateUserInterface(void)
+void ProcessGameTimeTimeouts(void)
+{
+	// call all game time timeouts
+	double StopGameTime(GameTime::Get());
+	
+	while((g_GameTimeTimeoutNotifications.size() > 0) && (StopGameTime > g_GameTimeTimeoutNotifications.begin()->first))
+	{
+		// call the notification callback object
+		(*(g_GameTimeTimeoutNotifications.begin()->second))();
+		// delete the notification callback object
+		delete g_GameTimeTimeoutNotifications.begin()->second;
+		// remove the notification callback from the multimap
+		g_GameTimeTimeoutNotifications.erase(g_GameTimeTimeoutNotifications.begin());
+	}
+}
+
+void ProcessRealTimeTimeouts(void)
 {
 	// call all real time timeouts
 	double StopTime(RealTime::GetTime());
@@ -509,6 +524,10 @@ void UpdateUserInterface(void)
 		// remove the notification callback from the multimap
 		g_RealTimeTimeoutNotifications.erase(g_RealTimeTimeoutNotifications.begin());
 	}
+}
+
+void UpdateUserInterface(void)
+{
 	if((g_OutputMind != 0) && (g_OutputMind->GetCharacter() != 0) && (g_OutputMind->GetCharacter()->GetShip() != 0))
 	{
 		// display the name of the target
@@ -651,16 +670,6 @@ void Resize(void)
 	g_MiniMap->SetPosition(math3d::vector2f(g_Width - 220.0f, g_Height - 240.0f));
 }
 
-void GameFrame(void)
-{
-	System * CurrentSystem(g_CurrentSystem);
-	
-	CalculateCharacters();
-	CalculateMovements(CurrentSystem);
-	UpdateUserInterface();
-	Render(CurrentSystem);
-}
-
 class GlobalDestroyListener : public DestroyListener
 {
 public:
@@ -738,6 +747,16 @@ void SpawnShip(System * System, const std::string & IdentifierPrefix)
 	System->AddShip(NewShip);
 }
 
+void SpawnShipOnTimeout(System * SpawnInSystem)
+{
+	std::stringstream IdentifierPrefix;
+	
+	IdentifierPrefix << "::system(" << SpawnInSystem->GetIdentifier() << ")::created_at_game_time(" << std::fixed << GameTime::Get() << ")";
+	
+	SpawnShip(SpawnInSystem, IdentifierPrefix.str());
+	g_SpawnShipTimeoutIterator = g_GameTimeTimeoutNotifications.insert(std::make_pair(GameTime::Get() + GetRandomFloatFromExponentialDistribution(30.0f), new Argument1Binder0< void, System * >(new FunctionCallback1< void, System * >(SpawnShipOnTimeout), SpawnInSystem)));
+}
+
 void PopulateSystem(System * System)
 {
 	int NumberOfShips(GetRandomInteger(5));
@@ -749,6 +768,39 @@ void PopulateSystem(System * System)
 		IdentifierPrefix << "::system(" << System->GetIdentifier() << ")::created_at(" << std::fixed << RealTime::GetTime() << "[" << ShipNumber << "])";
 		
 		SpawnShip(System, IdentifierPrefix.str());
+	}
+}
+
+void OnOutputFocusEnterSystem(System * EnterSystem)
+{
+	assert(g_SpawnShipTimeoutIterator == g_GameTimeTimeoutNotifications.end());
+	g_SpawnShipTimeoutIterator = g_GameTimeTimeoutNotifications.insert(std::make_pair(GameTime::Get() + GetRandomFloatFromExponentialDistribution(30.0f), new Argument1Binder0< void, System * >(new FunctionCallback1< void, System * >(SpawnShipOnTimeout), EnterSystem)));
+}
+
+void OnOutputFocusLeaveSystem(System * System)
+{
+	if(g_SpawnShipTimeoutIterator != g_GameTimeTimeoutNotifications.end())
+	{
+		delete g_SpawnShipTimeoutIterator->second;
+		g_GameTimeTimeoutNotifications.erase(g_SpawnShipTimeoutIterator);
+	}
+}
+
+void GameFrame(void)
+{
+	System * CurrentSystem(g_CurrentSystem);
+	
+	ProcessGameTimeTimeouts();
+	ProcessRealTimeTimeouts();
+	CalculateCharacters();
+	CalculateMovements(CurrentSystem);
+	UpdateUserInterface();
+	Render(CurrentSystem);
+	if(g_OutputMind->GetCharacter()->GetShip()->GetCurrentSystem() != g_CurrentSystem)
+	{
+		OnOutputFocusLeaveSystem(g_CurrentSystem);
+		g_CurrentSystem = g_OutputMind->GetCharacter()->GetShip()->GetCurrentSystem();
+		OnOutputFocusEnterSystem(g_CurrentSystem);
 	}
 }
 
@@ -1510,6 +1562,7 @@ void LoadSavegame(const Element * SaveElement)
 		}
 	}
 	g_CurrentSystem = g_SystemManager.Get(System);
+	OnOutputFocusEnterSystem(g_CurrentSystem);
 	if(PlayerShip != 0)
 	{
 		PlayerCharacter->SetShip(PlayerShip);
@@ -1559,6 +1612,15 @@ bool LoadSavegame(const std::string & LoadSavegameFileName)
 
 int main(int argc, char ** argv)
 {
+	// setup the random number generator for everyday use
+	srand(time(0));
+	// static initialization of data independent globals
+	g_MainPerspective.SetNearClippingPlane(1.0f);
+	g_MainPerspective.SetFarClippingPlane(1000.f);
+	g_MessageTimeoutIterator = g_RealTimeTimeoutNotifications.end();
+	g_SpawnShipTimeoutIterator = g_GameTimeTimeoutNotifications.end();
+	
+	// parse command line
 	std::vector< std::string > Arguments(argv, argv + argc);
 	std::string LoadSavegameFileName("data/savegame_default.xml");
 	std::string DataFileName("data/data.arx");
@@ -1581,8 +1643,6 @@ int main(int argc, char ** argv)
 		}
 	}
 	
-	// setup the random number generator for everyday use
-	srand(time(0));
 	// ui setup
 	Arxx::URI URI(DataFileName);
 	Arxx::Archive Archive;
@@ -1613,8 +1673,6 @@ int main(int argc, char ** argv)
 		g_TargetLabel = dynamic_cast< Label * >(g_UserInterface.GetWidget("/scanner/target"));
 		g_ScannerDisplay = dynamic_cast< ScannerDisplay * >(g_UserInterface.GetWidget("/scanner/display"));
 	
-	g_MainPerspective.SetNearClippingPlane(1.0f);
-	g_MainPerspective.SetFarClippingPlane(1000.f);
 	// initialize the player (initial load)
 	if(LoadSavegame(LoadSavegameFileName) == false)
 	{
@@ -1628,7 +1686,6 @@ int main(int argc, char ** argv)
 		g_ScannerDisplay->SetFocus(g_OutputMind->GetCharacter()->GetShip());
 	}
 	// set first timeout for widget collector, it will reinsert itself on callback
-	g_MessageTimeoutIterator = g_RealTimeTimeoutNotifications.end();
 	g_RealTimeTimeoutNotifications.insert(std::make_pair(RealTime::GetTime() + 5.0f, new FunctionCallback0< void >(CollectWidgets)));
 	// setting up the graphical environment
 	CreateWindow();
