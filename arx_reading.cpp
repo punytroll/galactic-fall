@@ -98,32 +98,32 @@ void ReadItems(Arxx::Archive & Archive, const std::string & Path, const Callback
 
 void ReadCommodities(Arxx::Archive & Archive, CommodityManager * Manager)
 {
-	ReadItems(Archive, "/Commodities", Argument1Binder1< void, CommodityManager *, Arxx::Reference & >(FunctionCallback2< void, CommodityManager *, Arxx::Reference & >(ReadCommodity), Manager));
+	ReadItems(Archive, "/Commodities", Argument1Binder1< void, CommodityManager *, Arxx::Reference & >(new FunctionCallback2< void, CommodityManager *, Arxx::Reference & >(ReadCommodity), Manager));
 }
 
 void ReadModels(Arxx::Archive & Archive, ModelManager * Manager)
 {
-	ReadItems(Archive, "/Models", Argument1Binder1< void, ModelManager *, Arxx::Reference & >(FunctionCallback2< void, ModelManager *, Arxx::Reference & >(ReadModel), Manager));
+	ReadItems(Archive, "/Models", Argument1Binder1< void, ModelManager *, Arxx::Reference & >(new FunctionCallback2< void, ModelManager *, Arxx::Reference & >(ReadModel), Manager));
 }
 
 void ReadShipClasses(Arxx::Archive & Archive, ShipClassManager * Manager)
 {
-	ReadItems(Archive, "/Ship Classes", Argument1Binder1< void, ShipClassManager *, Arxx::Reference & >(FunctionCallback2< void, ShipClassManager *, Arxx::Reference & >(ReadShipClass), Manager));
+	ReadItems(Archive, "/Ship Classes", Argument1Binder1< void, ShipClassManager *, Arxx::Reference & >(new FunctionCallback2< void, ShipClassManager *, Arxx::Reference & >(ReadShipClass), Manager));
 }
 
 void ReadSystems(Arxx::Archive & Archive, SystemManager * Manager)
 {
-	ReadItems(Archive, "/Systems", Argument1Binder1< void, SystemManager *, Arxx::Reference & >(FunctionCallback2< void, SystemManager *, Arxx::Reference & >(ReadSystem), Manager));
+	ReadItems(Archive, "/Systems", Argument1Binder1< void, SystemManager *, Arxx::Reference & >(new FunctionCallback2< void, SystemManager *, Arxx::Reference & >(ReadSystem), Manager));
 }
 
 void ReadSystemLinks(Arxx::Archive & Archive, SystemManager * Manager)
 {
-	ReadItems(Archive, "/System Links", Argument1Binder1< void, SystemManager *, Arxx::Reference & >(FunctionCallback2< void, SystemManager *, Arxx::Reference & >(ReadSystemLink), Manager));
+	ReadItems(Archive, "/System Links", Argument1Binder1< void, SystemManager *, Arxx::Reference & >(new FunctionCallback2< void, SystemManager *, Arxx::Reference & >(ReadSystemLink), Manager));
 }
 
 void ReadUserInterface(Arxx::Archive & Archive, UserInterface * Manager)
 {
-	ReadItems(Archive, "/User Interface", Argument1Binder1< void, UserInterface *, Arxx::Reference & >(FunctionCallback2< void, UserInterface *, Arxx::Reference & >(ReadWidget), Manager));
+	ReadItems(Archive, "/User Interface", Argument1Binder1< void, UserInterface *, Arxx::Reference & >(new FunctionCallback2< void, UserInterface *, Arxx::Reference & >(ReadWidget), Manager));
 }
 
 static void ReadCommodity(CommodityManager * CommodityManager, Arxx::Reference & Reference)

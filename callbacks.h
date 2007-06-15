@@ -100,22 +100,51 @@ protected:
 	Function m_Function;
 };
 
-template < typename Return, typename Type1, typename Type2 >
-class Argument1Binder1 : public Callback1< Return, Type2 >
+template < typename Return, typename Type1 >
+class Argument1Binder0 : public Callback0< Return >
 {
 public:
-	explicit Argument1Binder1(const Callback2< Return, Type1, Type2 > & Callback, Type1 BoundArgument1) :
+	explicit Argument1Binder0(Callback1< Return, Type1 > * Callback, Type1 BoundArgument1) :
 		m_Callback(Callback),
 		m_BoundArgument1(BoundArgument1)
 	{
 	}
 	
-	virtual Return operator()(Type2 Argument2) const
+	~Argument1Binder0(void)
 	{
-		return m_Callback(m_BoundArgument1, Argument2);
+		delete m_Callback;
+	}
+	
+	virtual Return operator()(void) const
+	{
+		return (*m_Callback)(m_BoundArgument1);
 	}
 protected:
-	const Callback2< Return, Type1, Type2 > & m_Callback;
+	Callback1< Return, Type1 > * m_Callback;
+	Type1 m_BoundArgument1;
+};
+
+template < typename Return, typename Type1, typename Type2 >
+class Argument1Binder1 : public Callback1< Return, Type2 >
+{
+public:
+	explicit Argument1Binder1(Callback2< Return, Type1, Type2 > * Callback, Type1 BoundArgument1) :
+		m_Callback(Callback),
+		m_BoundArgument1(BoundArgument1)
+	{
+	}
+	
+	~Argument1Binder1(void)
+	{
+		delete m_Callback;
+	}
+	
+	virtual Return operator()(Type2 Argument2) const
+	{
+		return (*m_Callback)(m_BoundArgument1, Argument2);
+	}
+protected:
+	Callback2< Return, Type1, Type2 > * m_Callback;
 	Type1 m_BoundArgument1;
 };
 
