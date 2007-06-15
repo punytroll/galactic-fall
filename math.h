@@ -79,4 +79,9 @@ inline long int GetRandomBoolean(float Probability = 0.5f)
 	return GetRandomUniform() <= Probability;
 }
 
+inline float GetRandomFloatFromExponentialDistribution(float Interval)
+{
+	return Interval * -log(GetRandomUniform());
+}
+
 #endif
