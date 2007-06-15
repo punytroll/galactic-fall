@@ -785,7 +785,7 @@ void SpawnShipOnTimeout(System * SpawnInSystem)
 	IdentifierPrefix << "::system(" << SpawnInSystem->GetIdentifier() << ")::created_at_game_time(" << std::fixed << GameTime::Get() << ")";
 	
 	SpawnShip(SpawnInSystem, IdentifierPrefix.str());
-	g_SpawnShipTimeoutIterator = g_GameTimeTimeoutNotifications.insert(std::make_pair(GameTime::Get() + GetRandomFloatFromExponentialDistribution(30.0f), new Argument1Binder0< void, System * >(new FunctionCallback1< void, System * >(SpawnShipOnTimeout), SpawnInSystem)));
+	g_SpawnShipTimeoutIterator = g_GameTimeTimeoutNotifications.insert(std::make_pair(GameTime::Get() + GetRandomFloatFromExponentialDistribution(30.0f), Bind1(Function(SpawnShipOnTimeout), SpawnInSystem)));
 }
 
 void PopulateSystem(System * System)
@@ -805,7 +805,7 @@ void PopulateSystem(System * System)
 void OnOutputFocusEnterSystem(System * EnterSystem)
 {
 	assert(g_SpawnShipTimeoutIterator == g_GameTimeTimeoutNotifications.end());
-	g_SpawnShipTimeoutIterator = g_GameTimeTimeoutNotifications.insert(std::make_pair(GameTime::Get() + GetRandomFloatFromExponentialDistribution(30.0f), new Argument1Binder0< void, System * >(new FunctionCallback1< void, System * >(SpawnShipOnTimeout), EnterSystem)));
+	g_SpawnShipTimeoutIterator = g_GameTimeTimeoutNotifications.insert(std::make_pair(GameTime::Get() + GetRandomFloatFromExponentialDistribution(30.0f), Bind1(Function(SpawnShipOnTimeout), EnterSystem)));
 }
 
 void OnOutputFocusLeaveSystem(System * System)
@@ -1720,7 +1720,7 @@ int main(int argc, char ** argv)
 		g_ScannerDisplay->SetFocus(g_OutputMind->GetCharacter()->GetShip());
 	}
 	// set first timeout for widget collector, it will reinsert itself on callback
-	g_RealTimeTimeoutNotifications.insert(std::make_pair(RealTime::GetTime() + 5.0f, new FunctionCallback0< void >(CollectWidgets)));
+	g_RealTimeTimeoutNotifications.insert(std::make_pair(RealTime::GetTime() + 5.0f, Function(CollectWidgets)));
 	// setting up the graphical environment
 	CreateWindow();
 	InitializeOpenGL();
