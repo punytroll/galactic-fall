@@ -330,6 +330,25 @@ void RemoveShipFromSystem(System * System, std::list< Ship * >::iterator ShipIte
 	System->GetShips().erase(ShipIterator);
 }
 
+void RemoveShotFromSystem(System * System, std::list< Shot * >::iterator ShotIterator)
+{
+	Shot * Shot(*ShotIterator);
+	
+	if(Shot == g_Camera.GetFocus())
+	{
+		g_Camera.SetFocus(0);
+	}
+	if((g_OutputMind != 0) && (g_OutputMind->GetCharacter() != 0) && (g_OutputMind->GetCharacter()->GetShip() != 0) && (g_OutputMind->GetCharacter()->GetShip()->GetTarget() == Shot))
+	{
+		g_OutputMind->GetCharacter()->GetShip()->SetTarget(0);
+	}
+	if((g_InputMind != 0) && (g_InputMind->GetCharacter() != 0) && (g_InputMind->GetCharacter()->GetShip() != 0) && (g_InputMind->GetCharacter()->GetShip()->GetTarget() == Shot))
+	{
+		g_InputMind->GetCharacter()->GetShip()->SetTarget(0);
+	}
+	System->GetShots().erase(ShotIterator);
+}
+
 void DeleteCargo(Cargo * Cargo)
 {
 	delete Cargo;
@@ -366,6 +385,11 @@ void DeleteShip(Ship * Ship)
 		}
 	}
 	delete Ship;
+}
+
+void DeleteShot(Shot * Shot)
+{
+	delete Shot;
 }
 
 void CalculateCharacters(void)
@@ -704,7 +728,13 @@ void EmptySystem(System * System)
 			DeleteShip(Ship);
 		}
 		System->ClearCargos();
-		System->ClearShots();
+		while(System->GetShots().empty() == false)
+		{
+			Shot * Shot(*System->GetShots().begin());
+			
+			RemoveShotFromSystem(System, System->GetShots().begin());
+			DeleteShot(Shot);
+		}
 	}
 }
 
