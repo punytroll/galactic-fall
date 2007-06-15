@@ -148,4 +148,34 @@ protected:
 	Type1 m_BoundArgument1;
 };
 
+template < typename Return >
+FunctionCallback0< Return > * Function(Return (*Function)())
+{
+	return new FunctionCallback0< Return >(Function);
+}
+
+template < typename Return, typename Type1 >
+FunctionCallback1< Return, Type1 > * Function(Return (*Function)(Type1))
+{
+	return new FunctionCallback1< Return, Type1 >(Function);
+}
+
+template < typename Return, typename Type1, typename Type2 >
+FunctionCallback2< Return, Type1, Type2 > * Function(Return (*Function)(Type1, Type2))
+{
+	return new FunctionCallback2< Return, Type1, Type2 >(Function);
+}
+
+template < typename Return, typename Type1 >
+Argument1Binder0< Return, Type1 > * Bind1(Callback1< Return, Type1 > * Callback, Type1 BoundArgument1)
+{
+	return new Argument1Binder0< Return, Type1 >(Callback, BoundArgument1);
+}
+
+template < typename Return, typename Type1, typename Type2 >
+Argument1Binder1< Return, Type1, Type2 > * Bind1(Callback2< Return, Type1, Type2 > * Callback, Type1 BoundArgument1)
+{
+	return new Argument1Binder1< Return, Type1, Type2 >(Callback, BoundArgument1);
+}
+
 #endif
