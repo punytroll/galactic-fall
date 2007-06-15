@@ -10,46 +10,51 @@ On key down:
 
 26 (E)
 	Selects the previous ship in the system or the last one if no ship was selected or deselects any ship if the first one was selected.
-	Acts upon the input focus.
+	Acts upon InputMind.Character.Ship.
 
 27 (R)
 	Selects the next ship in the system or the first one if no ship was selected or deselects any ship if the last one was selected.
-	Acts upon the input focus.
+	Acts upon InputMind.Character.Ship.
 
 28 (T)
 	Selects the next cargo in the system or the first one if no cargo was selected or deselects any cargo if the last one was selected.
-	Acts upon the input focus.
+	Acts upon InputMind.Character.Ship.
 
 32 (O)
 	Selects the previous planet in the system or the last one if no planet was selected or deselects any planet if the first one was selected.
-	Acts upon the input focus.
+	Acts upon InputMind.Character.Ship.
 
 33 (P)
 	Selects the next planet in the system or the first one if no planet was selected or deselects any planet if the last one was selected.
-	Acts upon the input focus.
+	Acts upon InputMind.Character.Ship.
 
 35 (CLOSING BRACKET)
 	Moves the camera focus to the next ship or to the first one if the last ship was focused.
 	Acts upon the camera focus.
+
 39 (S)
 	Selects the cargo that is nearest to the input focus, if no cargo is selected. Otherwise tries to scoop up the selected cargo. This requires very close proximity and very small relative velocity.
-	Acts upon the input focus.
+	Acts upon InputMind.Character.Ship.
 
 44 (J)
 	Tries to initiate a hyperspace jump to the selected linked system. This requires a certain distance from the system center and enough fuel to perform the actual jump.
-	Acts upon the input focus.
+	Acts upon InputMind.Character.Ship.
 
 46 (L)
 	Selects the planet that is nearest to the input focus, if no planet is selected. Otherwise tries to land on the selected planet. This requires small distance, small relative velocity and enough credits to afford the planet's landing fee.
-	Acts upon the input focus.
+	Acts upon InputMind.Character.Ship.
+
+50 (LEFT SHIFT)
+	Spawn a new ship.
+	Acts upon InputMind.Character.Ship.CurrentSystem.
 
 54 (C)
 	Jettisons all cargo.
-	Acts upon the input focus.
+	Acts upon InputMind.Character.Ship.
 
 57 (N)
 	Selects the next linked system of the system or the first one if no linked system was selected or deselects any linked system if the last one was selected.
-	Acts upon the input focus.
+	Acts upon InputMind.Character.Ship.
 
 58 (M)
 	Opens the map dialog.
@@ -63,7 +68,7 @@ On key down:
 
 65 (SPACE)
 	Turns on firing mode of the controlled ship.
-	Acts upon the input focus.
+	Acts upon InputMind.Character.Ship.
 
 67 (F1)
 	Dumps a savegame to standard out.
@@ -77,12 +82,12 @@ On key down:
 
 98 (ARROW UP)
 	Turns on thrusters of the controlled ship.
-	Acts upon the input focus.
+	Acts upon InputMind.Character.Ship.
 
 100 (ARROW LEFT)
 	Turns the controlled ship to the left.
-	Acts upon the input focus.
+	Acts upon InputMind.Character.Ship.
 
 102 (ARROW RIGHT)
 	Turns the controlled ship to the right.
-	Acts upon the input focus.
+	Acts upon InputMind.Character.Ship.
