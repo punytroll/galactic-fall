@@ -421,7 +421,7 @@ void CalculateMovements(System * System)
 			Ship->Update(Seconds);
 			if(Ship->GetCurrentSystem() != System)
 			{
-				if(Ship != g_OutputMind->GetCharacter()->GetShip())
+				if((g_OutputMind == 0) || (g_OutputMind->GetCharacter() == 0) || (g_OutputMind->GetCharacter()->GetShip() != Ship))
 				{
 					RemoveShipFromSystem(Ship->GetCurrentSystem(), std::find(Ship->GetCurrentSystem()->GetShips().begin(), Ship->GetCurrentSystem()->GetShips().end(), Ship));
 					DeleteShip(Ship);
@@ -828,7 +828,7 @@ void GameFrame(void)
 	CalculateMovements(CurrentSystem);
 	UpdateUserInterface();
 	Render(CurrentSystem);
-	if(g_OutputMind->GetCharacter()->GetShip()->GetCurrentSystem() != g_CurrentSystem)
+	if((g_OutputMind != 0) && (g_OutputMind->GetCharacter() != 0) && (g_OutputMind->GetCharacter()->GetShip() != 0) && (g_OutputMind->GetCharacter()->GetShip()->GetCurrentSystem() != g_CurrentSystem))
 	{
 		OnOutputFocusLeaveSystem(g_CurrentSystem);
 		g_CurrentSystem = g_OutputMind->GetCharacter()->GetShip()->GetCurrentSystem();
