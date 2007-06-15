@@ -387,22 +387,22 @@ void CalculateMovements(System * System)
 		// TODO: it is unclear, which Ships to update really.
 		std::list< Ship * > & Ships(System->GetShips());
 		std::list< Ship * >::iterator ShipIterator(Ships.begin());
-		std::list< Ship * >::iterator NextShipIterator(Ships.begin());
 		
 		while(ShipIterator != Ships.end())
 		{
-			NextShipIterator = ShipIterator;
-			++NextShipIterator;
-			(*ShipIterator)->Update(Seconds);
-			if((*ShipIterator)->GetCurrentSystem() != System)
+			Ship * Ship(*ShipIterator);
+			
+			// increment up here because Update() might invalidate the iterator
+			++ShipIterator;
+			Ship->Update(Seconds);
+			if(Ship->GetCurrentSystem() != System)
 			{
-				if(*ShipIterator != g_OutputMind->GetCharacter()->GetShip())
+				if(Ship != g_OutputMind->GetCharacter()->GetShip())
 				{
-					// TODO: maybe delete the ship
-					//       keep a set of permanent ships
+					RemoveShipFromSystem(Ship->GetCurrentSystem(), std::find(Ship->GetCurrentSystem()->GetShips().begin(), Ship->GetCurrentSystem()->GetShips().end(), Ship));
+					DeleteShip(Ship);
 				}
 			}
-			ShipIterator = NextShipIterator;
 		}
 		
 		std::list< Cargo * > & Cargos(System->GetCargos());
