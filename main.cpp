@@ -699,56 +699,56 @@ void EmptySystem(System * System)
 	}
 }
 
-void PopulateSystem(void)
+void SpawnShip(System * System, const std::string & IdentifierPrefix)
+{
+	std::string ShipClassIdentifier;
+	
+	if(GetRandomUniform() > 0.5f)
+	{
+		ShipClassIdentifier = "fighter";
+	}
+	else
+	{
+		ShipClassIdentifier = "transporter";
+	}
+	
+	Ship * NewShip(new Ship(g_ShipClassManager.Get(ShipClassIdentifier)));
+	
+	NewShip->SetObjectIdentifier(IdentifierPrefix + "::ship(" + NewShip->GetShipClass()->GetIdentifier() + ")");
+	NewShip->SetPosition(math3d::vector2f(GetRandomFloat(-200.0f, 200.0f), GetRandomFloat(-200.0f, 200.0f)));
+	NewShip->SetFuel(NewShip->GetFuelCapacity());
+	NewShip->SetCurrentSystem(System);
+	if(ShipClassIdentifier == "fighter")
+	{
+		NewShip->m_Fire = true;
+	}
+	
+	Character * NewCharacter(new Character());
+	
+	NewCharacter->SetObjectIdentifier(IdentifierPrefix + "::character(" + NewShip->GetShipClass()->GetIdentifier() + ")");
+	NewCharacter->SetShip(NewShip);
+	
+	StateMachineMind * NewMind(new StateMachineMind());
+	
+	NewMind->SetObjectIdentifier(IdentifierPrefix + "::mind(state_machine)");
+	NewMind->SetCharacter(NewCharacter);
+	NewMind->GetStateMachine()->SetState(new SelectSteering(NewShip, NewMind->GetStateMachine()));
+	NewCharacter->PossessByMind(NewMind);
+	NewShip->AddObject(NewCharacter);
+	System->AddShip(NewShip);
+}
+
+void PopulateSystem(System * System)
 {
 	int NumberOfShips(GetRandomInteger(5));
 	
-	std::cout << "Spawning " << NumberOfShips << " ships." << std::endl;
 	for(int ShipNumber = 1; ShipNumber <= NumberOfShips; ++ShipNumber)
 	{
-		std::cout << "  Processing ship " << ShipNumber << std::endl;
+		std::stringstream IdentifierPrefix;
 		
-		std::stringstream IdentifierStream;
+		IdentifierPrefix << "::system(" << System->GetIdentifier() << ")::created_at(" << std::fixed << RealTime::GetTime() << "[" << ShipNumber << "])";
 		
-		IdentifierStream << "::system(" << g_CurrentSystem->GetIdentifier() << ")::created_at(" << std::fixed << RealTime::GetTime() << "[" << ShipNumber << "])::";
-		
-		std::string ShipClassIdentifier;
-		
-		if(GetRandomUniform() > 0.5f)
-		{
-			ShipClassIdentifier = "fighter";
-		}
-		else
-		{
-			ShipClassIdentifier = "transporter";
-		}
-		
-		Ship * NewShip(new Ship(g_ShipClassManager.Get(ShipClassIdentifier)));
-		
-		NewShip->SetObjectIdentifier(IdentifierStream.str() + "ship(" + NewShip->GetShipClass()->GetIdentifier() + ")");
-		NewShip->SetPosition(math3d::vector2f(GetRandomFloat(-200.0f, 200.0f), GetRandomFloat(-200.0f, 200.0f)));
-		NewShip->SetFuel(NewShip->GetFuelCapacity());
-		NewShip->SetCurrentSystem(g_CurrentSystem);
-		if(ShipClassIdentifier == "fighter")
-		{
-			NewShip->m_Fire = true;
-		}
-		
-		Character * NewCharacter(new Character());
-		
-		NewCharacter->SetObjectIdentifier(IdentifierStream.str() + "character(" + NewShip->GetShipClass()->GetIdentifier() + ")");
-		NewCharacter->SetShip(NewShip);
-		
-		StateMachineMind * NewMind(new StateMachineMind());
-		
-		NewMind->SetObjectIdentifier(IdentifierStream.str() + "mind(state_machine)");
-		NewMind->SetCharacter(NewCharacter);
-		NewMind->GetStateMachine()->SetState(new SelectSteering(NewShip, NewMind->GetStateMachine()));
-		
-		NewCharacter->PossessByMind(NewMind);
-		NewShip->AddObject(NewCharacter);
-		
-		g_CurrentSystem->AddShip(NewShip);
+		SpawnShip(System, IdentifierPrefix.str());
 	}
 }
 
@@ -1032,6 +1032,15 @@ void KeyDown(unsigned int KeyCode)
 					}
 				}
 			}
+			
+			break;
+		}
+	case 50: // Key: RIGHT SHIFT
+		{
+			std::stringstream IdentifierPrefix;
+			
+			IdentifierPrefix << "::system(" << g_CurrentSystem->GetIdentifier() << ")::created_at(" << std::fixed << RealTime::GetTime() << ")";
+			SpawnShip(g_InputMind->GetCharacter()->GetShip()->GetCurrentSystem(), IdentifierPrefix.str());
 			
 			break;
 		}
@@ -1509,7 +1518,7 @@ void LoadSavegame(const Element * SaveElement)
 		PlayerShip->SetCurrentSystem(g_CurrentSystem);
 	}
 	RealTime::Invalidate();
-	PopulateSystem();
+	PopulateSystem(g_CurrentSystem);
 }
 
 bool LoadSavegame(const std::string & LoadSavegameFileName)
