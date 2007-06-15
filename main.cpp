@@ -783,6 +783,7 @@ void OnOutputFocusLeaveSystem(System * System)
 	{
 		delete g_SpawnShipTimeoutIterator->second;
 		g_GameTimeTimeoutNotifications.erase(g_SpawnShipTimeoutIterator);
+		g_SpawnShipTimeoutIterator = g_GameTimeTimeoutNotifications.end();
 	}
 }
 
@@ -801,6 +802,8 @@ void GameFrame(void)
 		OnOutputFocusLeaveSystem(g_CurrentSystem);
 		g_CurrentSystem = g_OutputMind->GetCharacter()->GetShip()->GetCurrentSystem();
 		OnOutputFocusEnterSystem(g_CurrentSystem);
+		EmptySystem(CurrentSystem);
+		PopulateSystem(g_CurrentSystem);
 	}
 }
 
