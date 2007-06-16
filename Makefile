@@ -202,9 +202,9 @@ xml_puny_dom_h = \
 xml_stream_h = \
 	xml_stream.h
 
-all: all-recursive galactic-fall
+all: all-recursive
 
-all-recursive: data
+all-recursive: data binary
 
 clean: clean-recursive
 	$(RM) galactic-fall
@@ -262,8 +262,27 @@ clean: clean-recursive
 clean-recursive:
 	@$(MAKE) -C data clean
 
+binary: check-dependencies galactic-fall
+
 data:
 	@$(MAKE) -C data all
+
+check-dependencies:
+	@if [ x`which pkg-config` = x ]; then \
+	    echo -e "\nYour system is missing the \"pkg-config\" tool.\nThis tool is needed and you will need to install it in order to build the program.\n"; false; \
+	fi
+	@if ! pkg-config --exists libarxx; then \
+	    echo -e "\nYour system is missing the \"libarxx\" library.\nYou can get this library from \"http://libarxx.sourceforge.net\"./\n"; false; \
+	fi
+	@if ! pkg-config --atleast-version=0.7.5 libarxx; then \
+	    echo -e "\nThe library \"libarxx\" that is installed on your system is too old.\nYou have: Version `pkg-config --modversion libarxx`\nYou need: Version 0.7.5\nYou can get the most recent library from \"http://libarxx.sourceforge.net\"./\n"; false; \
+	fi
+	@if ! pkg-config --exists math3d; then \
+	    echo -e "\nYour system is missing the \"math3d\" library.\nYou can get this library from the subversion repository at \"http://water-wheel.dyndns.org/subversion/math3d/\".\n"; false; \
+	fi
+	@if ! pkg-config --atleast-version=0.5 math3d; then \
+	    echo -e "\nThe library \"math3d\" that is installed on your system is too old.\nYou have: Version `pkg-config --modversion math3d`\nYou need: Version 0.5\nYou can get the most recent library from the subversion repository at \"http://water-wheel.dyndns.org/subversion/math3d/\".\n"; false; \
+	fi
 
 install:
 	@echo -e "This project is not installable yet. Please run \"./galactic-fall\" from the top directory."
