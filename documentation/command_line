@@ -2,3 +2,5 @@ Parameters:
 
 --load=<file>
 	Will load the savegame that is available in <file>.
+--data=<file>
+	Tells galactic-fall which file contains the game data.
