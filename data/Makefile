@@ -59,9 +59,10 @@ clean:
 	$(RM) -f model_planet.xml
 	$(RM) -f model_shuttle.xml
 	$(RM) -f model_transporter.xml
-	$(RM) -f models/model_fighter.xml
-	$(RM) -f models/model_planet.xml
-	$(RM) -f models/model_transporter.xml
+	$(RM) -f models/fighter.xml
+	$(RM) -f models/planet.xml
+	$(RM) -f models/shuttle.xml
+	$(RM) -f models/transporter.xml
 
 data.arx: .data $(all_data) Makefile
 	@$(RM) -f $@
