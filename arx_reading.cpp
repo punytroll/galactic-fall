@@ -390,7 +390,7 @@ static void ReadSystem(SystemManager * SystemManager, Arxx::Reference & Referenc
 			
 			Reader >> CommodityIdentifier >> BasePriceModifier;
 			
-			Commodity * ManagedCommodity(SystemManager->GetCommodityManager()->Get(CommodityIdentifier));
+			Commodity * ManagedCommodity(g_CommodityManager.Get(CommodityIdentifier));
 			PlanetCommodity * NewPlanetCommodity(NewPlanet->CreateCommodity(ManagedCommodity));
 			
 			NewPlanetCommodity->SetBasePriceModifier(BasePriceModifier);
