@@ -87,7 +87,7 @@ Camera g_Camera;
 ModelManager g_ModelManager;
 ShipClassManager g_ShipClassManager(&g_ModelManager);
 CommodityManager g_CommodityManager;
-SystemManager g_SystemManager(&g_CommodityManager);
+SystemManager g_SystemManager;
 CommandMind * g_InputMind(0);
 Mind * g_OutputMind(0);
 float g_Width(0.0f);

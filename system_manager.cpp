@@ -20,16 +20,10 @@
 #include <fstream>
 #include <iostream>
 
-#include "commodity_manager.h"
-#include "planet.h"
-#include "star.h"
-#include "string_cast.h"
 #include "system.h"
 #include "system_manager.h"
-#include "xml_puny_dom.h"
 
-SystemManager::SystemManager(CommodityManager * CommodityManager) :
-	m_CommodityManager(CommodityManager)
+SystemManager::SystemManager(void)
 {
 }
 
@@ -37,7 +31,7 @@ SystemManager::~SystemManager(void)
 {
 	while(m_Systems.size() > 0)
 	{
-		Destroy(m_Systems.begin()->first);
+		Destroy(m_Systems.begin());
 	}
 }
 
@@ -77,7 +71,12 @@ void SystemManager::Destroy(const std::string & Identifier)
 	
 	if(SystemIterator != m_Systems.end())
 	{
-		delete SystemIterator->second;
-		m_Systems.erase(SystemIterator);
+		Destroy(SystemIterator);
 	}
+}
+
+void SystemManager::Destroy(std::map< std::string, System * >::iterator SystemIterator)
+{
+	delete SystemIterator->second;
+	m_Systems.erase(SystemIterator);
 }
