@@ -1364,7 +1364,7 @@ void CreateWindow(void)
 	
 	Atom wmDelete = XInternAtom(g_Display, "WM_DELETE_WINDOW", True);
 	XSetWMProtocols(g_Display, g_Window, &wmDelete, 1);
-	XSetStandardProperties(g_Display, g_Window, "escapevelocity 0.2", "TITLE", None, NULL, 0, NULL);
+	XSetStandardProperties(g_Display, g_Window, "galactic-fall 0.2", "TITLE", None, NULL, 0, NULL);
 	// show the window
 	XMapRaised(g_Display, g_Window);
 	// grab the keyboard so we get keyboard events and windowmanager can interfere
