@@ -26,11 +26,13 @@
 #include "ship.h"
 #include "state_machine.h"
 #include "states.h"
+#include "string_cast.h"
 #include "system.h"
 
 SelectSteering::SelectSteering(Ship * ActionTarget, StateMachine * StateMachine) :
 	State(ActionTarget, StateMachine)
 {
+	SetObjectIdentifier("::select_steering::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
 }
 
 void SelectSteering::Enter(void)
@@ -57,6 +59,7 @@ void SelectSteering::Exit(void)
 FlyOverRandomPoint::FlyOverRandomPoint(Ship * ActionTarget, StateMachine * StateMachine) :
 	State(ActionTarget, StateMachine)
 {
+	SetObjectIdentifier("::fly_over_random_point::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
 }
 
 void FlyOverRandomPoint::Enter(void)
@@ -113,6 +116,7 @@ TransporterPhase1::TransporterPhase1(Ship * ActionTarget, StateMachine * StateMa
 	State(ActionTarget, StateMachine),
 	m_Planet(0)
 {
+	SetObjectIdentifier("::transporter_phase_1::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
 }
 
 void TransporterPhase1::Enter(void)
@@ -189,6 +193,7 @@ TransporterPhase2::TransporterPhase2(Ship * ActionTarget, StateMachine * StateMa
 	State(ActionTarget, StateMachine),
 	m_Planet(Planet)
 {
+	SetObjectIdentifier("::transporter_phase_2::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
 }
 
 void TransporterPhase2::Enter(void)
@@ -245,6 +250,7 @@ TransporterPhase3::TransporterPhase3(Ship * ActionTarget, StateMachine * StateMa
 	State(ActionTarget, StateMachine),
 	m_TimeToLeave(GameTime::Get() + GetRandomFloat(12.0f, 20.0f))
 {
+	SetObjectIdentifier("::transporter_phase_3::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
 }
 
 void TransporterPhase3::Enter(void)
@@ -278,6 +284,7 @@ void TransporterPhase3::Exit(void)
 TransporterPhase4::TransporterPhase4(Ship * ActionTarget, StateMachine * StateMachine) :
 	State(ActionTarget, StateMachine)
 {
+	SetObjectIdentifier("::transporter_phase_4::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
 }
 
 void TransporterPhase4::Enter(void)
