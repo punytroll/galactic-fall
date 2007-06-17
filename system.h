@@ -37,6 +37,7 @@ class System : public Position
 {
 public:
 	System(const std::string & Identifier);
+	~System(void);
 	const std::string & GetIdentifier(void) const;
 	const std::string & GetName(void) const;
 	const std::list< Planet * > GetPlanets(void) const;

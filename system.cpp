@@ -27,6 +27,16 @@ System::System(const std::string & Identifier) :
 {
 }
 
+System::~System(void)
+{
+	while(m_Planets.size() > 0)
+	{
+		delete m_Planets.front();
+		m_Planets.erase(m_Planets.begin());
+	}
+	delete m_Star;
+}
+
 void System::SetName(const std::string & Name)
 {
 	m_Name = Name;
