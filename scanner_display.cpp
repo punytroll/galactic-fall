@@ -39,7 +39,7 @@ void ScannerDisplay::Draw(void) const
 {
 	Widget::Draw();
 	// scanner
-	if((m_Focus != 0) && (m_Focus->GetTarget() != 0))
+	if((m_Focus != 0) && (m_Focus->GetTarget().IsValid() == true))
 	{
 		float RadialSize(m_Focus->GetTarget()->GetRadialSize());
 		float ExtendedRadialSize((5.0f / 4.0f) * RadialSize);
@@ -59,7 +59,7 @@ void ScannerDisplay::Draw(void) const
 		glLoadIdentity();
 		m_Camera.SetFieldOfView(FieldOfView);
 		m_Camera.SetPosition(0.0f, 0.0f, 4.0f * RadialSize);
-		m_Camera.SetFocus(m_Focus->GetTarget());
+		m_Camera.SetFocus(m_Focus->GetTarget().Get());
 		m_Camera.Draw();
 		if((m_Focus->GetCurrentSystem() != 0) && (m_Focus->GetCurrentSystem()->GetStar() != 0))
 		{

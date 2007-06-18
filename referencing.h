@@ -75,9 +75,13 @@ template < typename Type >
 class Reference
 {
 public:
-	Reference(void) :
+	template < typename SomeType >
+	friend class Reference;
+
+	Reference(int Value = 0) :
 		m_Core(0)
 	{
+		assert(Value == 0);
 	}
 	
 	Reference(Type & Object) :
@@ -86,7 +90,8 @@ public:
 		m_Core->Reference();
 	}
 	
-	Reference(const Reference< Type > & Reference) :
+	template < typename OtherType >
+	Reference(const Reference< OtherType > & Reference) :
 		m_Core(Reference.m_Core)
 	{
 		if(m_Core != 0)
@@ -104,19 +109,22 @@ public:
 	{
 		Cleanup();
 		m_Core = Reference.m_Core;
-		m_Core->Reference();
+		if(m_Core != 0)
+		{
+			m_Core->Reference();
+		}
 		
 		return *this;
 	}
 	
 	Type * operator->(void)
 	{
-		return m_Core->Get();
+		return reinterpret_cast< Type * >((m_Core == 0) ? (0) : (m_Core->Get()));
 	}
 	
 	const Type * operator->(void) const
 	{
-		return m_Core->Get();
+		return reinterpret_cast< Type * >((m_Core == 0) ? (0) : (m_Core->Get()));
 	}
 	
 	bool IsValid(void) const

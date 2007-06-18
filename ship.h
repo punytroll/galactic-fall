@@ -61,7 +61,7 @@ public:
 	const math3d::vector2f & GetVelocity(void) const;
 	float GetFreeCargoHoldSize(void) const;
 	float GetCommodityAmount(const Commodity * CargoCommodity) const;
-	PhysicalObject * GetTarget(void);
+	Reference< PhysicalObject > & GetTarget(void);
 	System * GetLinkedSystemTarget(void);
 	System * GetCurrentSystem(void);
 	// setters
@@ -69,7 +69,7 @@ public:
 	void SetHull(float Hull);
 	void SetVelocity(const math3d::vector2f & Velocity);
 	void SetAngularPosition(float AngularPosition);
-	void SetTarget(PhysicalObject * Target);
+	void SetTarget(Reference< PhysicalObject > Target);
 	void SetLinkedSystemTarget(System * LinkedSystem);
 	void SetCurrentSystem(System * CurrentSystem);
 	// shot stuff
@@ -86,7 +86,7 @@ private:
 	std::set< Object * > m_Manifest;
 	float m_Fuel;
 	float m_Hull;
-	PhysicalObject * m_Target;
+	Reference< PhysicalObject > m_Target;
 	System * m_LinkedSystemTarget;
 	System * m_CurrentSystem;
 	double m_NextTimeToFire;
@@ -132,7 +132,7 @@ inline const math3d::vector2f & Ship::GetVelocity(void) const
 	return m_Velocity;
 }
 
-inline PhysicalObject * Ship::GetTarget(void)
+inline Reference< PhysicalObject > & Ship::GetTarget(void)
 {
 	return m_Target;
 }
@@ -167,7 +167,7 @@ inline void Ship::SetAngularPosition(float AngularPosition)
 	m_AngularPosition = AngularPosition;
 }
 
-inline void Ship::SetTarget(PhysicalObject * Target)
+inline void Ship::SetTarget(Reference< PhysicalObject > Target)
 {
 	m_Target = Target;
 }
