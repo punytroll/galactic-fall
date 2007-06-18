@@ -84,6 +84,10 @@ On key down:
 	Turns on thrusters of the controlled ship.
 	Acts upon InputMind.Character.Ship.
 
+99 (PAGE UP)
+	Cycles the output mind backward through the set of characters in the game or to no output if the first one was selected.
+	Only works with no input mind set.
+
 100 (ARROW LEFT)
 	Turns the controlled ship to the left.
 	Acts upon InputMind.Character.Ship.
@@ -91,3 +95,7 @@ On key down:
 102 (ARROW RIGHT)
 	Turns the controlled ship to the right.
 	Acts upon InputMind.Character.Ship.
+
+105 (PAGE DOWN)
+	Cycles the output mind forward through the set of characters in the game or to no output if the last one was selected.
+	Only works with no input mind set.
