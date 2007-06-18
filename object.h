@@ -36,18 +36,25 @@ public:
 	virtual ~Object(void);
 	void SetObjectIdentifier(const std::string & ObjectIdentifier);
 	void GenerateObjectIdentifier(void);
+	// getters
+	const Reference< Object > & GetReference(void) const;
 	const std::string & GetObjectIdentifier(void) const;
 	
 	static Object * GetObject(const std::string & ObjectIdentifier);
 	static void Dump(std::ostream & OStream);
 	static void Dump(XMLStream & XML);
 private:
-	Reference< Object > m_Self;
+	Reference< Object > m_Reference;
 	std::string m_ObjectIdentifier;
 	
 	static std::set< Object * > m_Objects;
 	static std::map< std::string, Object * > m_IdentifiedObjects;
 };
+
+inline const Reference< Object > & Object::GetReference(void) const
+{
+	return m_Reference;
+}
 
 inline const std::string & Object::GetObjectIdentifier(void) const
 {
