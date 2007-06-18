@@ -4,3 +4,5 @@ Parameters:
 	Will load the savegame that is available in <file>.
 --data=<file>
 	Tells galactic-fall which file contains the game data.
+--echo-events
+	Turns on printing of X events like mouse and keyboard events.

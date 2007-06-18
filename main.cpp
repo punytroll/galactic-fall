@@ -118,6 +118,7 @@ Display * g_Display;
 GLXContext g_GLXContext;
 Window g_Window;
 Perspective g_MainPerspective;
+bool g_EchoEvents(false);
 
 enum WantReturnCode
 {
@@ -1380,35 +1381,50 @@ void ProcessEvents(void)
 			}
 		case MotionNotify:
 			{
-				//~ std::cout << "Motion:         x=" << Event.xbutton.x << "   y=" << Event.xbutton.y << std::endl;
+				if(g_EchoEvents == true)
+				{
+					std::cout << "Motion:         x=" << Event.xbutton.x << "   y=" << Event.xbutton.y << std::endl;
+				}
 				MouseMotion(Event.xmotion.x, Event.xmotion.y);
 				
 				break;
 			}
 		case ButtonPress:
 			{
-				//~ std::cout << "ButtonPress:    button=" << Event.xbutton.button << "   x=" << Event.xbutton.x << "   y=" << Event.xbutton.y << std::endl;
+				if(g_EchoEvents == true)
+				{
+					std::cout << "ButtonPress:    button=" << Event.xbutton.button << "   x=" << Event.xbutton.x << "   y=" << Event.xbutton.y << std::endl;
+				}
 				MouseButtonDown(Event.xbutton.button, Event.xbutton.x, Event.xbutton.y);
 				
 				break;
 			}
 		case ButtonRelease:
 			{
-				//~ std::cout << "ButtonRelease:  button=" << Event.xbutton.button << "   x=" << Event.xbutton.x << "   y=" << Event.xbutton.y << std::endl;
+				if(g_EchoEvents == true)
+				{
+					std::cout << "ButtonRelease:  button=" << Event.xbutton.button << "   x=" << Event.xbutton.x << "   y=" << Event.xbutton.y << std::endl;
+				}
 				MouseButtonUp(Event.xbutton.button, Event.xbutton.x, Event.xbutton.y);
 				
 				break;
 			}
 		case KeyPress:
 			{
-				//~ std::cout << "KeyPress:       state=" << Event.xkey.state << "   keycode=" << Event.xkey.keycode << std::endl;
+				if(g_EchoEvents == true)
+				{
+					std::cout << "KeyPress:       state=" << Event.xkey.state << "   keycode=" << Event.xkey.keycode << std::endl;
+				}
 				KeyDown(Event.xkey.keycode);
 				
 				break;
 			}
 		case KeyRelease:
 			{
-				//~ std::cout << "KeyRelease:     state=" << Event.xkey.state << "   keycode=" << Event.xkey.keycode << std::endl;
+				if(g_EchoEvents == true)
+				{
+					std::cout << "KeyRelease:     state=" << Event.xkey.state << "   keycode=" << Event.xkey.keycode << std::endl;
+				}
 				KeyUp(Event.xkey.keycode);
 				
 				break;
@@ -1644,6 +1660,10 @@ int main(int argc, char ** argv)
 			{
 				DataFileName = Arguments[Index].substr(7);
 			}
+		}
+		else if(Arguments[Index] == "--echo-events")
+		{
+			g_EchoEvents = true;
 		}
 	}
 	
