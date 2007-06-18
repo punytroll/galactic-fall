@@ -70,36 +70,36 @@ void MiniMap::Draw(void) const
 		glColor3f(0.8f, 0.8f, 0.8f);
 		for(std::list< Planet * >::const_iterator PlanetIterator = Planets.begin(); PlanetIterator != Planets.end(); ++PlanetIterator)
 		{
-			if(*PlanetIterator == m_Focus->GetTarget())
+			if(*PlanetIterator == m_Focus->GetTarget().Get())
 			{
 				glColor3f(0.2f, 1.0f, 0.0f);
 			}
 			glVertex2f((*PlanetIterator)->GetPosition().m_V.m_A[0], (*PlanetIterator)->GetPosition().m_V.m_A[1]);
-			if(*PlanetIterator == m_Focus->GetTarget())
+			if(*PlanetIterator == m_Focus->GetTarget().Get())
 			{
 				glColor3f(0.8f, 0.8f, 0.8f);
 			}
 		}
 		for(std::list< Ship * >::const_iterator ShipIterator = Ships.begin(); ShipIterator != Ships.end(); ++ShipIterator)
 		{
-			if(*ShipIterator == m_Focus->GetTarget())
+			if(*ShipIterator == m_Focus->GetTarget().Get())
 			{
 				glColor3f(0.2f, 1.0f, 0.0f);
 			}
 			glVertex2f((*ShipIterator)->GetPosition().m_V.m_A[0], (*ShipIterator)->GetPosition().m_V.m_A[1]);
-			if(*ShipIterator == m_Focus->GetTarget())
+			if(*ShipIterator == m_Focus->GetTarget().Get())
 			{
 				glColor3f(0.8f, 0.8f, 0.8f);
 			}
 		}
 		for(std::list< Cargo * >::const_iterator CargoIterator = Cargos.begin(); CargoIterator != Cargos.end(); ++CargoIterator)
 		{
-			if(*CargoIterator == m_Focus->GetTarget())
+			if(*CargoIterator == m_Focus->GetTarget().Get())
 			{
 				glColor3f(0.2f, 1.0f, 0.0f);
 			}
 			glVertex2f((*CargoIterator)->GetPosition().m_V.m_A[0], (*CargoIterator)->GetPosition().m_V.m_A[1]);
-			if(*CargoIterator == m_Focus->GetTarget())
+			if(*CargoIterator == m_Focus->GetTarget().Get())
 			{
 				glColor3f(0.8f, 0.8f, 0.8f);
 			}

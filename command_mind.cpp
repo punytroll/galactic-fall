@@ -178,13 +178,13 @@ void CommandMind::TargetPreviousCargo(void)
 	assert(GetCharacter()->GetShip() != 0);
 	
 	const std::list< Cargo * > & Cargos(GetCharacter()->GetShip()->GetCurrentSystem()->GetCargos());
-	Cargo * SelectedCargo(dynamic_cast< Cargo * >(GetCharacter()->GetShip()->GetTarget()));
+	Cargo * SelectedCargo(dynamic_cast< Cargo * >(GetCharacter()->GetShip()->GetTarget().Get()));
 	
 	if(SelectedCargo == 0)
 	{
 		if(Cargos.size() > 0)
 		{
-			GetCharacter()->GetShip()->SetTarget(Cargos.back());
+			GetCharacter()->GetShip()->SetTarget(Cargos.back()->GetReference());
 		}
 	}
 	else
@@ -198,7 +198,7 @@ void CommandMind::TargetPreviousCargo(void)
 		else
 		{
 			--CargoIterator;
-			GetCharacter()->GetShip()->SetTarget(*CargoIterator);
+			GetCharacter()->GetShip()->SetTarget((*CargoIterator)->GetReference());
 		}
 	}
 }
@@ -230,7 +230,14 @@ void CommandMind::TargetNearestCargo(void)
 			}
 		}
 	}
-	GetCharacter()->GetShip()->SetTarget(MinimumCargo);
+	if(MinimumCargo != 0)
+	{
+		GetCharacter()->GetShip()->SetTarget(MinimumCargo->GetReference());
+	}
+	else
+	{
+		GetCharacter()->GetShip()->SetTarget(0);
+	}
 }
 
 void CommandMind::TargetNextCargo(void)
@@ -239,13 +246,13 @@ void CommandMind::TargetNextCargo(void)
 	assert(GetCharacter()->GetShip() != 0);
 	
 	const std::list< Cargo * > & Cargos(GetCharacter()->GetShip()->GetCurrentSystem()->GetCargos());
-	Cargo * SelectedCargo(dynamic_cast< Cargo * >(GetCharacter()->GetShip()->GetTarget()));
+	Cargo * SelectedCargo(dynamic_cast< Cargo * >(GetCharacter()->GetShip()->GetTarget().Get()));
 	
 	if(SelectedCargo == 0)
 	{
 		if(Cargos.size() > 0)
 		{
-			GetCharacter()->GetShip()->SetTarget(Cargos.front());
+			GetCharacter()->GetShip()->SetTarget(Cargos.front()->GetReference());
 		}
 	}
 	else
@@ -265,7 +272,7 @@ void CommandMind::TargetNextCargo(void)
 			}
 			else
 			{
-				GetCharacter()->GetShip()->SetTarget(*CargoIterator);
+				GetCharacter()->GetShip()->SetTarget((*CargoIterator)->GetReference());
 			}
 		}
 	}
@@ -277,13 +284,13 @@ void CommandMind::TargetPreviousPlanet(void)
 	assert(GetCharacter()->GetShip() != 0);
 	
 	const std::list< Planet * > & Planets(GetCharacter()->GetShip()->GetCurrentSystem()->GetPlanets());
-	Planet * SelectedPlanet(dynamic_cast< Planet * >(GetCharacter()->GetShip()->GetTarget()));
+	Planet * SelectedPlanet(dynamic_cast< Planet * >(GetCharacter()->GetShip()->GetTarget().Get()));
 	
 	if(SelectedPlanet == 0)
 	{
 		if(Planets.size() > 0)
 		{
-			GetCharacter()->GetShip()->SetTarget(Planets.back());
+			GetCharacter()->GetShip()->SetTarget(Planets.back()->GetReference());
 		}
 	}
 	else
@@ -297,7 +304,7 @@ void CommandMind::TargetPreviousPlanet(void)
 		else
 		{
 			--PlanetIterator;
-			GetCharacter()->GetShip()->SetTarget(*PlanetIterator);
+			GetCharacter()->GetShip()->SetTarget((*PlanetIterator)->GetReference());
 		}
 	}
 }
@@ -326,7 +333,14 @@ void CommandMind::TargetNearestPlanet(void)
 			}
 		}
 	}
-	GetCharacter()->GetShip()->SetTarget(MinimumPlanet);
+	if(MinimumPlanet != 0)
+	{
+		GetCharacter()->GetShip()->SetTarget(MinimumPlanet->GetReference());
+	}
+	else
+	{
+		GetCharacter()->GetShip()->SetTarget(0);
+	}
 }
 
 void CommandMind::TargetNextPlanet(void)
@@ -335,13 +349,13 @@ void CommandMind::TargetNextPlanet(void)
 	assert(GetCharacter()->GetShip() != 0);
 	
 	const std::list< Planet * > & Planets(GetCharacter()->GetShip()->GetCurrentSystem()->GetPlanets());
-	Planet * SelectedPlanet(dynamic_cast< Planet * >(GetCharacter()->GetShip()->GetTarget()));
+	Planet * SelectedPlanet(dynamic_cast< Planet * >(GetCharacter()->GetShip()->GetTarget().Get()));
 	
 	if(SelectedPlanet == 0)
 	{
 		if(Planets.size() > 0)
 		{
-			GetCharacter()->GetShip()->SetTarget(Planets.front());
+			GetCharacter()->GetShip()->SetTarget(Planets.front()->GetReference());
 		}
 	}
 	else
@@ -361,7 +375,7 @@ void CommandMind::TargetNextPlanet(void)
 			}
 			else
 			{
-				GetCharacter()->GetShip()->SetTarget(*PlanetIterator);
+				GetCharacter()->GetShip()->SetTarget((*PlanetIterator)->GetReference());
 			}
 		}
 	}
@@ -373,13 +387,13 @@ void CommandMind::TargetNextShip(void)
 	assert(GetCharacter()->GetShip() != 0);
 	
 	const std::list< Ship * > & Ships(GetCharacter()->GetShip()->GetCurrentSystem()->GetShips());
-	Ship * SelectedShip(dynamic_cast< Ship * >(GetCharacter()->GetShip()->GetTarget()));
+	Ship * SelectedShip(dynamic_cast< Ship * >(GetCharacter()->GetShip()->GetTarget().Get()));
 	
 	if(SelectedShip == 0)
 	{
 		if(Ships.size() > 0)
 		{
-			GetCharacter()->GetShip()->SetTarget(Ships.front());
+			GetCharacter()->GetShip()->SetTarget(Ships.front()->GetReference());
 		}
 	}
 	else
@@ -399,7 +413,7 @@ void CommandMind::TargetNextShip(void)
 			}
 			else
 			{
-				GetCharacter()->GetShip()->SetTarget(*ShipIterator);
+				GetCharacter()->GetShip()->SetTarget((*ShipIterator)->GetReference());
 			}
 		}
 	}
@@ -411,13 +425,13 @@ void CommandMind::TargetPreviousShip(void)
 	assert(GetCharacter()->GetShip() != 0);
 	
 	const std::list< Ship * > & Ships(GetCharacter()->GetShip()->GetCurrentSystem()->GetShips());
-	Ship * SelectedShip(dynamic_cast< Ship * >(GetCharacter()->GetShip()->GetTarget()));
+	Ship * SelectedShip(dynamic_cast< Ship * >(GetCharacter()->GetShip()->GetTarget().Get()));
 	
 	if(SelectedShip == 0)
 	{
 		if(Ships.size() > 0)
 		{
-			GetCharacter()->GetShip()->SetTarget(Ships.back());
+			GetCharacter()->GetShip()->SetTarget(Ships.back()->GetReference());
 		}
 	}
 	else
@@ -431,12 +445,12 @@ void CommandMind::TargetPreviousShip(void)
 		else
 		{
 			--ShipIterator;
-			GetCharacter()->GetShip()->SetTarget(*ShipIterator);
+			GetCharacter()->GetShip()->SetTarget((*ShipIterator)->GetReference());
 		}
 	}
 }
 
-void CommandMind::TargetPhysicalObject(PhysicalObject * PhysicalObject)
+void CommandMind::TargetPhysicalObject(Reference< PhysicalObject > & PhysicalObject)
 {
 	assert(GetCharacter() != 0);
 	assert(GetCharacter()->GetShip() != 0);

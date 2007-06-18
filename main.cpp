@@ -317,14 +317,6 @@ void RemoveCargoFromSystem(System * System, std::list< Cargo * >::iterator Cargo
 	{
 		g_Camera.SetFocus(0);
 	}
-	if((g_OutputMind != 0) && (g_OutputMind->GetCharacter() != 0) && (g_OutputMind->GetCharacter()->GetShip() != 0) && (g_OutputMind->GetCharacter()->GetShip()->GetTarget() == Cargo))
-	{
-		g_OutputMind->GetCharacter()->GetShip()->SetTarget(0);
-	}
-	if((g_InputMind != 0) && (g_InputMind->GetCharacter() != 0) && (g_InputMind->GetCharacter()->GetShip() != 0) && (g_InputMind->GetCharacter()->GetShip()->GetTarget() == Cargo))
-	{
-		g_InputMind->GetCharacter()->GetShip()->SetTarget(0);
-	}
 	System->GetCargos().erase(CargoIterator);
 }
 
@@ -338,14 +330,6 @@ void RemoveShipFromSystem(System * System, std::list< Ship * >::iterator ShipIte
 	{
 		g_Camera.SetFocus(0);
 	}
-	if((g_OutputMind != 0) && (g_OutputMind->GetCharacter() != 0) && (g_OutputMind->GetCharacter()->GetShip() != 0) && (g_OutputMind->GetCharacter()->GetShip()->GetTarget() == Ship))
-	{
-		g_OutputMind->GetCharacter()->GetShip()->SetTarget(0);
-	}
-	if((g_InputMind != 0) && (g_InputMind->GetCharacter() != 0) && (g_InputMind->GetCharacter()->GetShip() != 0) && (g_InputMind->GetCharacter()->GetShip()->GetTarget() == Ship))
-	{
-		g_InputMind->GetCharacter()->GetShip()->SetTarget(0);
-	}
 	System->GetShips().erase(ShipIterator);
 }
 
@@ -356,14 +340,6 @@ void RemoveShotFromSystem(System * System, std::list< Shot * >::iterator ShotIte
 	if(Shot == g_Camera.GetFocus())
 	{
 		g_Camera.SetFocus(0);
-	}
-	if((g_OutputMind != 0) && (g_OutputMind->GetCharacter() != 0) && (g_OutputMind->GetCharacter()->GetShip() != 0) && (g_OutputMind->GetCharacter()->GetShip()->GetTarget() == Shot))
-	{
-		g_OutputMind->GetCharacter()->GetShip()->SetTarget(0);
-	}
-	if((g_InputMind != 0) && (g_InputMind->GetCharacter() != 0) && (g_InputMind->GetCharacter()->GetShip() != 0) && (g_InputMind->GetCharacter()->GetShip()->GetTarget() == Shot))
-	{
-		g_InputMind->GetCharacter()->GetShip()->SetTarget(0);
 	}
 	System->GetShots().erase(ShotIterator);
 }
@@ -575,7 +551,7 @@ void UpdateUserInterface(void)
 	if((g_OutputMind != 0) && (g_OutputMind->GetCharacter() != 0) && (g_OutputMind->GetCharacter()->GetShip() != 0))
 	{
 		// display the name of the target
-		if(g_OutputMind->GetCharacter()->GetShip()->GetTarget() != 0)
+		if(g_OutputMind->GetCharacter()->GetShip()->GetTarget().IsValid() == true)
 		{
 			g_TargetLabel->SetString(g_OutputMind->GetCharacter()->GetShip()->GetTarget()->GetName());
 		}
@@ -673,10 +649,10 @@ void Render(System * System)
 		}
 	}
 	// HUD
-	if((g_OutputMind != 0) && (g_OutputMind->GetCharacter() != 0) && (g_OutputMind->GetCharacter()->GetShip() != 0) && (g_OutputMind->GetCharacter()->GetShip()->GetTarget() != 0))
+	if((g_OutputMind != 0) && (g_OutputMind->GetCharacter() != 0) && (g_OutputMind->GetCharacter()->GetShip() != 0) && (g_OutputMind->GetCharacter()->GetShip()->GetTarget().IsValid() == true))
 	{
 		glClear(GL_DEPTH_BUFFER_BIT);
-		DrawSelection(g_OutputMind->GetCharacter()->GetShip()->GetTarget(), g_OutputMind->GetCharacter()->GetShip()->GetTarget()->GetRadialSize());
+		DrawSelection(g_OutputMind->GetCharacter()->GetShip()->GetTarget().Get(), g_OutputMind->GetCharacter()->GetShip()->GetTarget()->GetRadialSize());
 		
 		math3d::vector2f RelativePosition(g_OutputMind->GetCharacter()->GetShip()->GetTarget()->GetPosition() - g_OutputMind->GetCharacter()->GetShip()->GetPosition());
 		
@@ -1005,7 +981,7 @@ void KeyDown(unsigned int KeyCode)
 		{
 			if(g_InputMind != 0)
 			{
-				switch(WantToScoop(g_InputMind->GetCharacter()->GetShip(), dynamic_cast< Cargo * >(g_InputMind->GetCharacter()->GetShip()->GetTarget())))
+				switch(WantToScoop(g_InputMind->GetCharacter()->GetShip(), dynamic_cast< Cargo * >(g_InputMind->GetCharacter()->GetShip()->GetTarget().Get())))
 				{
 				case OK:
 					{
@@ -1096,7 +1072,7 @@ void KeyDown(unsigned int KeyCode)
 		{
 			if(g_InputMind != 0)
 			{
-				Planet * SelectedPlanet(dynamic_cast< Planet * >(g_InputMind->GetCharacter()->GetShip()->GetTarget()));
+				Planet * SelectedPlanet(dynamic_cast< Planet * >(g_InputMind->GetCharacter()->GetShip()->GetTarget().Get()));
 				
 				switch(WantToLand(g_InputMind->GetCharacter(), g_InputMind->GetCharacter()->GetShip(), SelectedPlanet))
 				{

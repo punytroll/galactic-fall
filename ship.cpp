@@ -53,7 +53,6 @@ Ship::Ship(ShipClass * ShipClass) :
 	m_ShipClass(ShipClass),
 	m_Fuel(0.0f),
 	m_Hull(m_ShipClass->GetHull()),
-	m_Target(0),
 	m_LinkedSystemTarget(0),
 	m_CurrentSystem(0),
 	m_NextTimeToFire(0.0)
@@ -225,7 +224,7 @@ void Ship::Update(float Seconds)
 		}
 		if(m_Scoop == true)
 		{
-			Cargo * SelectedCargo(dynamic_cast< Cargo * >(GetTarget()));
+			Cargo * SelectedCargo(dynamic_cast< Cargo * >(GetTarget().Get()));
 			
 			if(SelectedCargo != 0)
 			{
