@@ -1134,13 +1134,13 @@ void KeyDown(unsigned int KeyCode)
 		}
 	case 59: // Key: COMMA
 		{
-			SetTimeWarp(g_TimeWarp * 1.1f);
+			SetTimeWarp(g_TimeWarp / 1.1f);
 			
 			break;
 		}
 	case 60: // Key: PERIODE
 		{
-			SetTimeWarp(g_TimeWarp / 1.1f);
+			SetTimeWarp(g_TimeWarp * 1.1f);
 			
 			break;
 		}
@@ -1532,7 +1532,7 @@ void LoadSavegame(const Element * SaveElement)
 				}
 			}
 		}
-		else if((*SaveChild)->GetName() == "camera")
+		else if((*SaveChild)->GetName() == "main-camera")
 		{
 			for(std::vector< Element * >::const_iterator CameraChild = (*SaveChild)->GetChilds().begin(); CameraChild != (*SaveChild)->GetChilds().end(); ++CameraChild)
 			{
@@ -1544,14 +1544,11 @@ void LoadSavegame(const Element * SaveElement)
 				{
 					Position * FocusPosition(dynamic_cast< Position * >(Object::GetObject((*CameraChild)->GetAttribute("object-identifier"))));
 					
-					if(FocusPosition != 0)
+					if(FocusPosition == 0)
 					{
-						g_Camera.SetFocus(FocusPosition->GetReference());
+						throw std::runtime_error("The \"main-camera\" element focusses an object with a non-existing identifier \"" + (*CameraChild)->GetAttribute("object-identifier") + "\".");
 					}
-					else
-					{
-						g_Camera.SetFocus(PlayerShip->GetReference());
-					}
+					g_Camera.SetFocus(FocusPosition->GetReference());
 				}
 				else if((*CameraChild)->GetName() == "field-of-view")
 				{
