@@ -115,8 +115,7 @@ void FlyOverRandomPoint::Exit(void)
 //                    Will calculate when to go to the next phase, which does the braking.       //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 TransporterPhase1::TransporterPhase1(Ship * ActionTarget, StateMachine * StateMachine) :
-	State(ActionTarget, StateMachine),
-	m_Planet(0)
+	State(ActionTarget, StateMachine)
 {
 	SetObjectIdentifier("::transporter_phase_1::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
 }
@@ -133,7 +132,7 @@ void TransporterPhase1::Enter(void)
 		{
 			++PlanetIterator;
 		}
-		m_Planet = *PlanetIterator;
+		GetActionTarget()->SetTarget((*PlanetIterator)->GetReference());
 	}
 	else
 	{
@@ -144,7 +143,7 @@ void TransporterPhase1::Enter(void)
 
 void TransporterPhase1::Execute(void)
 {
-	math3d::vector2f ToDestination(m_Planet->GetPosition() - GetActionTarget()->GetPosition());
+	math3d::vector2f ToDestination(GetActionTarget()->GetTarget()->GetPosition() - GetActionTarget()->GetPosition());
 	float DistanceSquared(ToDestination.length_squared());
 	float DistanceNeededToBrake(GetActionTarget()->GetShipClass()->GetMaximumSpeed() * ((M_PI / GetActionTarget()->GetShipClass()->GetTurnSpeed()) + ((GetActionTarget()->GetShipClass()->GetMaximumSpeed() / GetActionTarget()->GetShipClass()->GetForwardThrust()) / 2.0f)));
 	
@@ -178,7 +177,7 @@ void TransporterPhase1::Execute(void)
 	}
 	else
 	{
-		GetStateMachine()->SetState(new TransporterPhase2(GetActionTarget(), GetStateMachine(), m_Planet));
+		GetStateMachine()->SetState(new TransporterPhase2(GetActionTarget(), GetStateMachine()));
 		delete this;
 	}
 }
@@ -191,9 +190,8 @@ void TransporterPhase1::Exit(void)
 // TransporterPhase2: Revereses the ship and accelerates until a near stop is accomplished.      //
 //                    Will finish by setting the ship to immobile.                               //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-TransporterPhase2::TransporterPhase2(Ship * ActionTarget, StateMachine * StateMachine, Planet * Planet) :
-	State(ActionTarget, StateMachine),
-	m_Planet(Planet)
+TransporterPhase2::TransporterPhase2(Ship * ActionTarget, StateMachine * StateMachine) :
+	State(ActionTarget, StateMachine)
 {
 	SetObjectIdentifier("::transporter_phase_2::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
 }
