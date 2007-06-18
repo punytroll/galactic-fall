@@ -39,7 +39,7 @@ MiniMap::MiniMap(void) :
 void MiniMap::SetOwner(Reference< Ship > Owner)
 {
 	m_Owner = Owner;
-	m_Camera.SetFocus(Owner.Get());
+	m_Camera.SetFocus(Owner);
 }
 
 void MiniMap::Draw(void) const

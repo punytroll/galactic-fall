@@ -58,7 +58,7 @@ void ScannerDisplay::Draw(void) const
 		glLoadIdentity();
 		m_Camera.SetFieldOfView(FieldOfView);
 		m_Camera.SetPosition(0.0f, 0.0f, 4.0f * RadialSize);
-		m_Camera.SetFocus(m_Owner->GetTarget().Get());
+		m_Camera.SetFocus(m_Owner->GetTarget());
 		m_Camera.Draw();
 		if((m_Owner->GetCurrentSystem() != 0) && (m_Owner->GetCurrentSystem()->GetStar() != 0))
 		{

@@ -309,38 +309,16 @@ void DisplayUserInterface(void)
 
 void RemoveCargoFromSystem(System * System, std::list< Cargo * >::iterator CargoIterator)
 {
-	// basically this functions only does the last call
-	// all other stuff should be changed to references, so it is done automatically
-	Cargo * Cargo(*CargoIterator);
-	
-	if(Cargo == g_Camera.GetFocus())
-	{
-		g_Camera.SetFocus(0);
-	}
 	System->GetCargos().erase(CargoIterator);
 }
 
 void RemoveShipFromSystem(System * System, std::list< Ship * >::iterator ShipIterator)
 {
-	// basically this functions only does the last call
-	// all other stuff should be changed to references, so it is done automatically
-	Ship * Ship(*ShipIterator);
-	
-	if(Ship == g_Camera.GetFocus())
-	{
-		g_Camera.SetFocus(0);
-	}
 	System->GetShips().erase(ShipIterator);
 }
 
 void RemoveShotFromSystem(System * System, std::list< Shot * >::iterator ShotIterator)
 {
-	Shot * Shot(*ShotIterator);
-	
-	if(Shot == g_Camera.GetFocus())
-	{
-		g_Camera.SetFocus(0);
-	}
 	System->GetShots().erase(ShotIterator);
 }
 
@@ -959,17 +937,17 @@ void KeyDown(unsigned int KeyCode)
 	case 35: // Key: ]
 		{
 			const std::list< Ship * > & Ships(g_CurrentSystem->GetShips());
-			const Ship * FocusShip(dynamic_cast< const Ship * >(g_Camera.GetFocus()));
+			const Ship * FocusShip(dynamic_cast< const Ship * >(g_Camera.GetFocus().Get()));
 			
 			std::list< Ship * >::const_iterator ShipIterator(find(Ships.begin(), Ships.end(), FocusShip));
 			
 			if((ShipIterator == Ships.end()) || (++ShipIterator == Ships.end()))
 			{
-				g_Camera.SetFocus(Ships.front());
+				g_Camera.SetFocus(Ships.front()->GetReference());
 			}
 			else
 			{
-				g_Camera.SetFocus(*ShipIterator);
+				g_Camera.SetFocus((*ShipIterator)->GetReference());
 			}
 			
 			break;
@@ -1568,11 +1546,11 @@ void LoadSavegame(const Element * SaveElement)
 					
 					if(FocusPosition != 0)
 					{
-						g_Camera.SetFocus(FocusPosition);
+						g_Camera.SetFocus(FocusPosition->GetReference());
 					}
 					else
 					{
-						g_Camera.SetFocus(PlayerShip);
+						g_Camera.SetFocus(PlayerShip->GetReference());
 					}
 				}
 				else if((*CameraChild)->GetName() == "field-of-view")
