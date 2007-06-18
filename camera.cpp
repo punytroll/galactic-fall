@@ -30,13 +30,13 @@ Camera::Camera(void) :
 void Camera::Draw(void) const
 {
 	glTranslatef(-m_Position.m_V.m_A[0], -m_Position.m_V.m_A[1], -m_Position.m_V.m_A[2]);
-	if(m_Focus != 0)
+	if(m_Focus == true)
 	{
 		glTranslatef(-m_Focus->m_Position.m_V.m_A[0], -m_Focus->m_Position.m_V.m_A[1], 0.0f);
 	}
 }
 
-void Camera::SetFocus(Position * Focus)
+void Camera::SetFocus(Reference< Position > Focus)
 {
 	m_Focus = Focus;
 }

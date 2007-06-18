@@ -22,6 +22,8 @@
 
 #include <math3d/vector3f.h>
 
+#include "referencing.h"
+
 class Position;
 
 class Camera
@@ -29,18 +31,18 @@ class Camera
 public:
 	Camera(void);
 	void Draw(void) const;
-	void SetFocus(Position * Focus);
+	void SetFocus(Reference< Position > Focus);
 	void SetPosition(float X, float Y);
 	void SetPosition(float X, float Y, float Z);
 	void SetFieldOfView(float FieldOfView);
-	Position * GetFocus(void);
-	const Position * GetFocus(void) const;
+	Reference< Position > & GetFocus(void);
+	const Reference< Position > & GetFocus(void) const;
 	const math3d::vector3f & GetPosition(void) const;
 	float GetFieldOfView(void) const;
 	void MoveIn(void);
 	void MoveOut(void);
 private:
-	Position * m_Focus;
+	Reference< Position > m_Focus;
 	math3d::vector3f m_Position;
 	float m_FieldOfView;
 };
@@ -50,12 +52,12 @@ inline void Camera::SetFieldOfView(float FieldOfView)
 	m_FieldOfView = FieldOfView;
 }
 
-inline Position * Camera::GetFocus(void)
+inline Reference< Position > & Camera::GetFocus(void)
 {
 	return m_Focus;
 }
 
-inline const Position * Camera::GetFocus(void) const
+inline const Reference< Position > & Camera::GetFocus(void) const
 {
 	return m_Focus;
 }
