@@ -98,7 +98,47 @@ public:
 	virtual void Enter(void);
 	virtual void Execute(void);
 	virtual void Exit(void);
+};
+
+class MonitorFuel : public State
+{
+public:
+	MonitorFuel(Ship * ActionTarget, StateMachine * StateMachine);
+	virtual void Enter(void);
+	virtual void Execute(void);
+	virtual void Exit(void);
+	void SetRefueled(void);
 private:
+	bool m_Refueling;
+};
+
+class RefuelPhase1 : public State
+{
+public:
+	RefuelPhase1(Ship * ActionTarget, StateMachine * StateMachine);
+	virtual void Enter(void);
+	virtual void Execute(void);
+	virtual void Exit(void);
+};
+
+class RefuelPhase2 : public State
+{
+public:
+	RefuelPhase2(Ship * ActionTarget, StateMachine * StateMachine);
+	virtual void Enter(void);
+	virtual void Execute(void);
+	virtual void Exit(void);
+};
+
+class RefuelPhase3 : public State
+{
+public:
+	RefuelPhase3(Ship * ActionTarget, StateMachine * StateMachine);
+	virtual void Enter(void);
+	virtual void Execute(void);
+	virtual void Exit(void);
+private:
+	double m_TimeToLeave;
 };
 
 #endif

@@ -764,6 +764,7 @@ void SpawnShip(System * System, const std::string & IdentifierPrefix)
 	NewMind->SetObjectIdentifier(IdentifierPrefix + "::mind(state_machine)");
 	NewMind->SetCharacter(NewCharacter);
 	NewMind->GetStateMachine()->SetState(new SelectSteering(NewShip, NewMind->GetStateMachine()));
+	NewMind->GetStateMachine()->SetGlobalState(new MonitorFuel(NewShip, NewMind->GetStateMachine()));
 	NewCharacter->PossessByMind(NewMind);
 	NewShip->AddObject(NewCharacter);
 	System->AddShip(NewShip);
