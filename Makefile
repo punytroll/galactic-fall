@@ -101,7 +101,8 @@ mouse_motion_listener_h = \
 	mouse_motion_listener.h
 
 object_h = \
-	object.h
+	object.h \
+	$(referencing_h)
 
 perspective_h = \
 	perspective.h
@@ -126,6 +127,9 @@ position_h = \
 
 real_time_h = \
 	real_time.h
+
+referencing_h = \
+	referencing.h
 
 scanner_display_h = \
 	scanner_display.h \

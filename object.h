@@ -25,6 +25,8 @@
 #include <set>
 #include <string>
 
+#include "referencing.h"
+
 class XMLStream;
 
 class Object
@@ -40,6 +42,7 @@ public:
 	static void Dump(std::ostream & OStream);
 	static void Dump(XMLStream & XML);
 private:
+	Reference< Object > m_Self;
 	std::string m_ObjectIdentifier;
 	
 	static std::set< Object * > m_Objects;

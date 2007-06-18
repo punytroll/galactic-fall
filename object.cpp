@@ -25,13 +25,15 @@
 std::set< Object * > Object::m_Objects;
 std::map< std::string, Object * > Object::m_IdentifiedObjects;
 
-Object::Object(void)
+Object::Object(void) :
+	m_Self(*this)
 {
 	m_Objects.insert(this);
 }
 
 Object::~Object(void)
 {
+	m_Self.Invalidate();
 	SetObjectIdentifier("");
 	m_Objects.erase(m_Objects.find(this));
 }
