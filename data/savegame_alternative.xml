@@ -14,7 +14,8 @@
 		</map-knowledge>
 	</character>
 	<ship object-identifier="::ship(shuttle)::player_ship" class-identifier="shuttle">
-		<fuel value="0.240821"/>
+		<fuel value="0.04"/>
+		<hull value="13.8"/>
 		<position x="-253.368" y="-16.2305"/>
 		<angular-position value="6.82964"/>
 		<velocity x="10.0685" y="6.5288"/>
