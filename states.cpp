@@ -229,6 +229,7 @@ void TransporterPhase2::Execute(void)
 	}
 	else
 	{
+		GetActionTarget()->m_Land = true;
 		GetStateMachine()->SetState(new TransporterPhase3(GetActionTarget(), GetStateMachine()));
 		delete this;
 	}
@@ -236,10 +237,6 @@ void TransporterPhase2::Execute(void)
 
 void TransporterPhase2::Exit(void)
 {
-	GetActionTarget()->SetVelocity(math3d::vector2f(0.0f, 0.0f));
-	GetActionTarget()->m_TurnRight = false;
-	GetActionTarget()->m_TurnLeft = false;
-	GetActionTarget()->m_Accelerate = false;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
