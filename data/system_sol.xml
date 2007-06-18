@@ -5,6 +5,7 @@
 		<x>0</x>
 		<y>0</y>
 	</position>
+	<traffic-density>0.05</traffic-density>
 	<star>
 		<identifier>sol</identifier>
 		<position>

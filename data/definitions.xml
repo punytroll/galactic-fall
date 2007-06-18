@@ -115,6 +115,7 @@
 		<string identifier="identifier"/>
 		<string identifier="name"/>
 		<vector2f identifier="position"/>
+		<float identifier="traffic-density"/>
 		<star identifier="star"/>
 		<array identifier="planets"/>
 	</system>

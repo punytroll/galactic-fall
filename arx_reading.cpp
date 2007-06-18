@@ -346,14 +346,16 @@ static void ReadSystem(SystemManager * SystemManager, Arxx::Reference & Referenc
 	
 	std::string Name;
 	math3d::vector2f Position;
+	float TrafficDensity;
 	std::string StarIdentifier;
 	math3d::vector2f StarPosition;
 	Color StarColor;
 	Arxx::u4byte PlanetCount;
 	
-	Reader >> Name >> Position >> StarIdentifier >> StarPosition >> StarColor >> PlanetCount;
+	Reader >> Name >> Position >> TrafficDensity >> StarIdentifier >> StarPosition >> StarColor >> PlanetCount;
 	NewSystem->SetName(Name);
 	NewSystem->SetPosition(Position);
+	NewSystem->SetTrafficDensity(TrafficDensity);
 	
 	Star * NewStar(NewSystem->CreateStar());
 	
