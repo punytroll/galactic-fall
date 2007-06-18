@@ -753,10 +753,6 @@ void SpawnShip(System * System, const std::string & IdentifierPrefix)
 	NewShip->SetPosition(math3d::vector2f(GetRandomFloat(-200.0f, 200.0f), GetRandomFloat(-200.0f, 200.0f)));
 	NewShip->SetFuel(NewShip->GetFuelCapacity());
 	NewShip->SetCurrentSystem(System);
-	if(ShipClassIdentifier == "fighter")
-	{
-		NewShip->m_Fire = true;
-	}
 	
 	Character * NewCharacter(new Character());
 	
