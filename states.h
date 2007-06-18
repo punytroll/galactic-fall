@@ -54,19 +54,15 @@ public:
 	virtual void Enter(void);
 	virtual void Execute(void);
 	virtual void Exit(void);
-private:
-	Planet * m_Planet;
 };
 
 class TransporterPhase2 : public State
 {
 public:
-	TransporterPhase2(Ship * ActionTarget, StateMachine * StateMachine, Planet * Planet);
+	TransporterPhase2(Ship * ActionTarget, StateMachine * StateMachine);
 	virtual void Enter(void);
 	virtual void Execute(void);
 	virtual void Exit(void);
-private:
-	Planet * m_Planet;
 };
 
 class TransporterPhase3 : public State
