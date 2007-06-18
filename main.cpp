@@ -88,7 +88,7 @@ ModelManager g_ModelManager;
 ShipClassManager g_ShipClassManager(&g_ModelManager);
 CommodityManager g_CommodityManager;
 SystemManager g_SystemManager;
-CommandMind * g_InputMind(0);
+Reference< CommandMind > g_InputMind;
 Reference< Mind > g_OutputMind;
 float g_Width(0.0f);
 float g_Height(0.0f);
@@ -925,7 +925,7 @@ void KeyDown(unsigned int KeyCode)
 		}
 	case 26: // Key: E
 		{
-			if(g_InputMind != 0)
+			if(g_InputMind == true)
 			{
 				g_InputMind->TargetPreviousShip();
 			}
@@ -934,7 +934,7 @@ void KeyDown(unsigned int KeyCode)
 		}
 	case 27: // Key: R
 		{
-			if(g_InputMind != 0)
+			if(g_InputMind == true)
 			{
 				g_InputMind->TargetNextShip();
 			}
@@ -943,7 +943,7 @@ void KeyDown(unsigned int KeyCode)
 		}
 	case 32: // Key: O
 		{
-			if(g_InputMind != 0)
+			if(g_InputMind == true)
 			{
 				g_InputMind->TargetPreviousPlanet();
 			}
@@ -952,7 +952,7 @@ void KeyDown(unsigned int KeyCode)
 		}
 	case 33: // Key: P
 		{
-			if(g_InputMind != 0)
+			if(g_InputMind == true)
 			{
 				g_InputMind->TargetNextPlanet();
 			}
@@ -979,7 +979,7 @@ void KeyDown(unsigned int KeyCode)
 		}
 	case 39: // Key: S
 		{
-			if(g_InputMind != 0)
+			if(g_InputMind == true)
 			{
 				switch(WantToScoop(g_InputMind->GetCharacter()->GetShip(), dynamic_cast< Cargo * >(g_InputMind->GetCharacter()->GetShip()->GetTarget().Get())))
 				{
@@ -1014,7 +1014,7 @@ void KeyDown(unsigned int KeyCode)
 		}
 	case 40: // Key: D
 		{
-			if(g_InputMind != 0)
+			if(g_InputMind == true)
 			{
 				g_InputMind->TargetPreviousCargo();
 			}
@@ -1023,7 +1023,7 @@ void KeyDown(unsigned int KeyCode)
 		}
 	case 41: // Key: F
 		{
-			if(g_InputMind != 0)
+			if(g_InputMind == true)
 			{
 				g_InputMind->TargetNextCargo();
 			}
@@ -1032,16 +1032,13 @@ void KeyDown(unsigned int KeyCode)
 		}
 	case 44: // Key: J
 		{
-			if(g_InputMind != 0)
+			if(g_InputMind == true)
 			{
 				switch(WantToJump(g_InputMind->GetCharacter()->GetShip(), g_InputMind->GetCharacter()->GetShip()->GetLinkedSystemTarget()))
 				{
 				case OK:
 					{
-						if(g_InputMind != 0)
-						{
-							g_InputMind->Jump();
-						}
+						g_InputMind->Jump();
 						
 						break;
 					}
@@ -1070,7 +1067,7 @@ void KeyDown(unsigned int KeyCode)
 		}
 	case 46: // Key: L
 		{
-			if(g_InputMind != 0)
+			if(g_InputMind == true)
 			{
 				Planet * SelectedPlanet(dynamic_cast< Planet * >(g_InputMind->GetCharacter()->GetShip()->GetTarget().Get()));
 				
@@ -1127,7 +1124,7 @@ void KeyDown(unsigned int KeyCode)
 		}
 	case 54: // Key: C
 		{
-			if(g_InputMind != 0)
+			if(g_InputMind == true)
 			{
 				SetMessage("Jettison cargo.");
 				g_InputMind->Jettison();
@@ -1137,7 +1134,7 @@ void KeyDown(unsigned int KeyCode)
 		}
 	case 57: // Key: N
 		{
-			if(g_InputMind != 0)
+			if(g_InputMind == true)
 			{
 				g_InputMind->SelectNextLinkedSystem();
 			}
@@ -1146,7 +1143,7 @@ void KeyDown(unsigned int KeyCode)
 		}
 	case 58: // Key: M
 		{
-			if(g_MapDialog == 0)
+			if((g_MapDialog == 0) && (g_OutputMind == true))
 			{
 				g_Pause = true;
 				g_MapDialog = new MapDialog(g_UserInterface.GetRootWidget(), g_OutputMind->GetCharacter()->GetShip()->GetCurrentSystem(), g_OutputMind->GetCharacter());
@@ -1173,7 +1170,7 @@ void KeyDown(unsigned int KeyCode)
 		}
 	case 65: // Key: SPACE
 		{
-			if(g_InputMind != 0)
+			if(g_InputMind == true)
 			{
 				g_InputMind->EnableFire();
 			}
@@ -1254,7 +1251,7 @@ void KeyDown(unsigned int KeyCode)
 		}
 	case 98: // Key: UP
 		{
-			if(g_InputMind != 0)
+			if(g_InputMind == true)
 			{
 				g_InputMind->EnableAccelerate();
 			}
@@ -1263,7 +1260,7 @@ void KeyDown(unsigned int KeyCode)
 		}
 	case 100: // Key: LEFT
 		{
-			if(g_InputMind != 0)
+			if(g_InputMind == true)
 			{
 				g_InputMind->EnableTurnLeft();
 			}
@@ -1272,7 +1269,7 @@ void KeyDown(unsigned int KeyCode)
 		}
 	case 102: // Key: RIGHT
 		{
-			if(g_InputMind != 0)
+			if(g_InputMind == true)
 			{
 				g_InputMind->EnableTurnRight();
 			}
@@ -1292,7 +1289,7 @@ void KeyUp(unsigned char KeyCode)
 	{
 	case 65: // Key: SPACE
 		{
-			if(g_InputMind != 0)
+			if(g_InputMind == true)
 			{
 				g_InputMind->DisableFire();
 			}
@@ -1301,7 +1298,7 @@ void KeyUp(unsigned char KeyCode)
 		}
 	case 98:  // Key: UP
 		{
-			if(g_InputMind != 0)
+			if(g_InputMind == true)
 			{
 				g_InputMind->DisableAccelerate();
 			}
@@ -1310,7 +1307,7 @@ void KeyUp(unsigned char KeyCode)
 		}
 	case 100: // Key: LEFT
 		{
-			if(g_InputMind != 0)
+			if(g_InputMind == true)
 			{
 				g_InputMind->DisableTurnLeft();
 			}
@@ -1319,7 +1316,7 @@ void KeyUp(unsigned char KeyCode)
 		}
 	case 102: // Key: RIGHT
 		{
-			if(g_InputMind != 0)
+			if(g_InputMind == true)
 			{
 				g_InputMind->DisableTurnRight();
 			}
@@ -1486,10 +1483,13 @@ void LoadSavegame(const Element * SaveElement)
 		{
 			PlayerCharacter = new Character();
 			PlayerCharacter->SetObjectIdentifier((*SaveChild)->GetAttribute("object-identifier"));
-			g_InputMind = new CommandMind();
-			g_OutputMind = g_InputMind->GetReference();
+			
+			CommandMind * PlayerMind(new CommandMind());
+			
+			g_InputMind = PlayerMind->GetReference();
+			g_OutputMind = PlayerMind->GetReference();
 			g_InputMind->SetObjectIdentifier("::input_mind_and_output_mind");
-			PlayerCharacter->PossessByMind(g_InputMind);
+			PlayerCharacter->PossessByMind(g_InputMind.Get());
 			g_InputMind->SetCharacter(PlayerCharacter);
 			g_OutputMind->SetCharacter(PlayerCharacter);
 			for(std::vector< Element * >::const_iterator CharacterChild = (*SaveChild)->GetChilds().begin(); CharacterChild != (*SaveChild)->GetChilds().end(); ++CharacterChild)
