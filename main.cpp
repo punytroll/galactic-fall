@@ -1107,12 +1107,12 @@ void KeyDown(unsigned int KeyCode)
 			
 			break;
 		}
-	case 50: // Key: RIGHT SHIFT
+	case 50: // Key: LEFT SHIFT
 		{
 			std::stringstream IdentifierPrefix;
 			
 			IdentifierPrefix << "::system(" << g_CurrentSystem->GetIdentifier() << ")::created_at(" << std::fixed << RealTime::GetTime() << ")";
-			SpawnShip(g_InputMind->GetCharacter()->GetShip()->GetCurrentSystem(), IdentifierPrefix.str());
+			SpawnShip(g_CurrentSystem, IdentifierPrefix.str());
 			
 			break;
 		}
