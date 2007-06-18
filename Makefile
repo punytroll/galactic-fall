@@ -135,6 +135,7 @@ scanner_display_h = \
 	scanner_display.h \
 	$(camera_h) \
 	$(perspective_h) \
+	$(referencing_h) \
 	$(widget_h)
 
 ship_h = \

@@ -28,7 +28,7 @@
 
 ScannerDisplay::ScannerDisplay(void) :
 	Widget(),
-	m_Focus(0)
+	m_Owner(0)
 {
 	m_Perspective.SetAspect(1.0f);
 	m_Perspective.SetNearClippingPlane(1.0f);
@@ -39,9 +39,9 @@ void ScannerDisplay::Draw(void) const
 {
 	Widget::Draw();
 	// scanner
-	if((m_Focus != 0) && (m_Focus->GetTarget() == true))
+	if((m_Owner != 0) && (m_Owner->GetTarget() == true))
 	{
-		float RadialSize(m_Focus->GetTarget()->GetRadialSize());
+		float RadialSize(m_Owner->GetTarget()->GetRadialSize());
 		float ExtendedRadialSize((5.0f / 4.0f) * RadialSize);
 		float FieldOfView(asinf(ExtendedRadialSize / sqrtf(ExtendedRadialSize * ExtendedRadialSize + 16 * RadialSize * RadialSize)));
 		
@@ -59,24 +59,19 @@ void ScannerDisplay::Draw(void) const
 		glLoadIdentity();
 		m_Camera.SetFieldOfView(FieldOfView);
 		m_Camera.SetPosition(0.0f, 0.0f, 4.0f * RadialSize);
-		m_Camera.SetFocus(m_Focus->GetTarget().Get());
+		m_Camera.SetFocus(m_Owner->GetTarget().Get());
 		m_Camera.Draw();
-		if((m_Focus->GetCurrentSystem() != 0) && (m_Focus->GetCurrentSystem()->GetStar() != 0))
+		if((m_Owner->GetCurrentSystem() != 0) && (m_Owner->GetCurrentSystem()->GetStar() != 0))
 		{
 			glEnable(GL_LIGHTING);
 			glEnable(GL_LIGHT0);
-			glLightfv(GL_LIGHT0, GL_POSITION, math3d::vector4f(m_Focus->GetCurrentSystem()->GetStar()->GetPosition().m_V.m_A[0], m_Focus->GetCurrentSystem()->GetStar()->GetPosition().m_V.m_A[1], 100.0f, 0.0f).m_V.m_A);
+			glLightfv(GL_LIGHT0, GL_POSITION, math3d::vector4f(m_Owner->GetCurrentSystem()->GetStar()->GetPosition().m_V.m_A[0], m_Owner->GetCurrentSystem()->GetStar()->GetPosition().m_V.m_A[1], 100.0f, 0.0f).m_V.m_A);
 		}
 		glClear(GL_DEPTH_BUFFER_BIT);
-		m_Focus->GetTarget()->Draw();
+		m_Owner->GetTarget()->Draw();
 		glPopMatrix();
 		glMatrixMode(GL_PROJECTION);
 		glPopMatrix();
 		glPopAttrib();
 	}
-}
-
-void ScannerDisplay::SetFocus(Ship * Focus)
-{
-	m_Focus = Focus;
 }
