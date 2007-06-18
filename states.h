@@ -91,4 +91,14 @@ private:
 	math3d::vector2f m_JumpPoint;
 };
 
+class Fight : public State
+{
+public:
+	Fight(Ship * ActionTarget, StateMachine * StateMachine);
+	virtual void Enter(void);
+	virtual void Execute(void);
+	virtual void Exit(void);
+private:
+};
+
 #endif
