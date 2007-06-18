@@ -22,6 +22,7 @@
 
 #include "camera.h"
 #include "perspective.h"
+#include "referencing.h"
 #include "widget.h"
 
 class Ship;
@@ -30,10 +31,10 @@ class MiniMap : public Widget
 {
 public:
 	MiniMap(void);
-	void SetFocus(Ship * Ship);
+	void SetOwner(Reference< Ship > Owner);
 	virtual void Draw(void) const;
 private:
-	Ship * m_Focus;
+	Reference< Ship > m_Owner;
 	Camera m_Camera;
 	Perspective m_Perspective;
 };
