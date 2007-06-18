@@ -62,8 +62,10 @@ public:
 	float GetFreeCargoHoldSize(void) const;
 	float GetCommodityAmount(const Commodity * CargoCommodity) const;
 	Reference< PhysicalObject > & GetTarget(void);
+	const Reference< PhysicalObject > & GetTarget(void) const;
 	System * GetLinkedSystemTarget(void);
 	System * GetCurrentSystem(void);
+	const System * GetCurrentSystem(void) const;
 	// setters
 	void SetFuel(float Fuel);
 	void SetHull(float Hull);
@@ -137,12 +139,22 @@ inline Reference< PhysicalObject > & Ship::GetTarget(void)
 	return m_Target;
 }
 
+inline const Reference< PhysicalObject > & Ship::GetTarget(void) const
+{
+	return m_Target;
+}
+
 inline System * Ship::GetLinkedSystemTarget(void)
 {
 	return m_LinkedSystemTarget;
 }
 
 inline System * Ship::GetCurrentSystem(void)
+{
+	return m_CurrentSystem;
+}
+
+inline const System * Ship::GetCurrentSystem(void) const
 {
 	return m_CurrentSystem;
 }
