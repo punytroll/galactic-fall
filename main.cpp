@@ -1714,7 +1714,7 @@ int main(int argc, char ** argv)
 	if((g_OutputMind == true) && (g_OutputMind->GetCharacter() != 0) && (g_OutputMind->GetCharacter()->GetShip() != 0))
 	{
 		g_MiniMap->SetFocus(g_OutputMind->GetCharacter()->GetShip());
-		g_ScannerDisplay->SetFocus(g_OutputMind->GetCharacter()->GetShip());
+		g_ScannerDisplay->SetOwner(g_OutputMind->GetCharacter()->GetShip()->GetReference());
 	}
 	// set first timeout for widget collector, it will reinsert itself on callback
 	g_RealTimeTimeoutNotifications.insert(std::make_pair(RealTime::GetTime() + 5.0f, Function(CollectWidgets)));

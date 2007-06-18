@@ -22,6 +22,7 @@
 
 #include "camera.h"
 #include "perspective.h"
+#include "referencing.h"
 #include "widget.h"
 
 class Ship;
@@ -31,13 +32,18 @@ class ScannerDisplay : public Widget
 public:
 	ScannerDisplay(void);
 	// setters
-	void SetFocus(Ship * Ship);
+	void SetOwner(Reference< Ship > Owner);
 	// actors
 	virtual void Draw(void) const;
 private:
-	Ship * m_Focus;
+	mutable Reference< Ship > m_Owner;
 	mutable Camera m_Camera;
 	mutable Perspective m_Perspective;
 };
+
+inline void ScannerDisplay::SetOwner(Reference< Ship > Owner)
+{
+	m_Owner = Owner;
+}
 
 #endif
