@@ -578,7 +578,7 @@ void UpdateUserInterface(void)
 			g_SystemLabel->SetString("");
 		}
 		// display fuel
-		g_FuelLabel->SetString("Fuel: " + to_string_cast(100.0f * g_OutputMind->GetCharacter()->GetShip()->GetFuel() / g_OutputMind->GetCharacter()->GetShip()->GetFuelCapacity(), 2) + "%");
+		g_FuelLabel->SetString("Fuel: " + to_string_cast(g_OutputMind->GetCharacter()->GetShip()->GetFuel(), 2));
 		// display hull
 		g_HullLabel->SetString("Hull: " + to_string_cast(g_OutputMind->GetCharacter()->GetShip()->GetHull(), 2));
 		// display credits in every cycle
@@ -1074,6 +1074,7 @@ void KeyDown(unsigned int KeyCode)
 					{
 						g_InputMind->GetCharacter()->RemoveCredits(SelectedPlanet->GetLandingFee());
 						g_InputMind->Land();
+						g_InputMind->GetCharacter()->GetShip()->SetHull(g_InputMind->GetCharacter()->GetShip()->GetShipClass()->GetHull());
 						g_Pause = true;
 						g_PlanetDialog = new PlanetDialog(g_UserInterface.GetRootWidget(), SelectedPlanet, g_InputMind->GetCharacter());
 						g_PlanetDialog->GrabKeyFocus();
