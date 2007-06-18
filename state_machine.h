@@ -29,10 +29,22 @@ public:
 	~StateMachine(void);
 	void SetGlobalState(State * State);
 	void SetState(State * State);
+	State * GetGlobalState(void);
+	State * GetState(void);
 	void Update(void);
 private:
 	State * m_State;
 	State * m_GlobalState;
 };
+
+inline State * StateMachine::GetGlobalState(void)
+{
+	return m_GlobalState;
+}
+
+inline State * StateMachine::GetState(void)
+{
+	return m_State;
+}
 
 #endif
