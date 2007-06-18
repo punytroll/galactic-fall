@@ -27,8 +27,7 @@
 #include "system.h"
 
 ScannerDisplay::ScannerDisplay(void) :
-	Widget(),
-	m_Owner(0)
+	Widget()
 {
 	m_Perspective.SetAspect(1.0f);
 	m_Perspective.SetNearClippingPlane(1.0f);
