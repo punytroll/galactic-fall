@@ -89,7 +89,7 @@ ShipClassManager g_ShipClassManager(&g_ModelManager);
 CommodityManager g_CommodityManager;
 SystemManager g_SystemManager;
 CommandMind * g_InputMind(0);
-Mind * g_OutputMind(0);
+Reference< Mind > g_OutputMind;
 float g_Width(0.0f);
 float g_Height(0.0f);
 Label * g_SystemLabel(0);
@@ -367,7 +367,6 @@ void DeleteShip(Ship * Ship)
 			
 			while((ManifestCharacterMind = ManifestCharacter->ReleaseMind()) != 0)
 			{
-				// TODO: don't delete it if it is the input focus mind
 				delete ManifestCharacterMind;
 			}
 			delete ManifestCharacter;
@@ -416,7 +415,8 @@ void CalculateMovements(System * System)
 			Ship->Update(Seconds);
 			if(Ship->GetCurrentSystem() != System)
 			{
-				if((g_OutputMind == 0) || (g_OutputMind->GetCharacter() == 0) || (g_OutputMind->GetCharacter()->GetShip() != Ship))
+				// if another ship jumps out of the system ... remove it
+				if((g_OutputMind == false) || (g_OutputMind->GetCharacter() == 0) || (g_OutputMind->GetCharacter()->GetShip() != Ship))
 				{
 					RemoveShipFromSystem(Ship->GetCurrentSystem(), std::find(Ship->GetCurrentSystem()->GetShips().begin(), Ship->GetCurrentSystem()->GetShips().end(), Ship));
 					DeleteShip(Ship);
@@ -548,10 +548,10 @@ void ProcessRealTimeTimeouts(void)
 
 void UpdateUserInterface(void)
 {
-	if((g_OutputMind != 0) && (g_OutputMind->GetCharacter() != 0) && (g_OutputMind->GetCharacter()->GetShip() != 0))
+	if((g_OutputMind == true) && (g_OutputMind->GetCharacter() != 0) && (g_OutputMind->GetCharacter()->GetShip() != 0))
 	{
 		// display the name of the target
-		if(g_OutputMind->GetCharacter()->GetShip()->GetTarget().IsValid() == true)
+		if(g_OutputMind->GetCharacter()->GetShip()->GetTarget() == true)
 		{
 			g_TargetLabel->SetString(g_OutputMind->GetCharacter()->GetShip()->GetTarget()->GetName());
 		}
@@ -649,7 +649,7 @@ void Render(System * System)
 		}
 	}
 	// HUD
-	if((g_OutputMind != 0) && (g_OutputMind->GetCharacter() != 0) && (g_OutputMind->GetCharacter()->GetShip() != 0) && (g_OutputMind->GetCharacter()->GetShip()->GetTarget().IsValid() == true))
+	if((g_OutputMind == true) && (g_OutputMind->GetCharacter() != 0) && (g_OutputMind->GetCharacter()->GetShip() != 0) && (g_OutputMind->GetCharacter()->GetShip()->GetTarget() == true))
 	{
 		glClear(GL_DEPTH_BUFFER_BIT);
 		DrawSelection(g_OutputMind->GetCharacter()->GetShip()->GetTarget().Get(), g_OutputMind->GetCharacter()->GetShip()->GetTarget()->GetRadialSize());
@@ -823,7 +823,7 @@ void GameFrame(void)
 	CalculateMovements(CurrentSystem);
 	UpdateUserInterface();
 	Render(CurrentSystem);
-	if((g_OutputMind != 0) && (g_OutputMind->GetCharacter() != 0) && (g_OutputMind->GetCharacter()->GetShip() != 0) && (g_OutputMind->GetCharacter()->GetShip()->GetCurrentSystem() != g_CurrentSystem))
+	if((g_OutputMind == true) && (g_OutputMind->GetCharacter() != 0) && (g_OutputMind->GetCharacter()->GetShip() != 0) && (g_OutputMind->GetCharacter()->GetShip()->GetCurrentSystem() != g_CurrentSystem))
 	{
 		OnOutputFocusLeaveSystem(g_CurrentSystem);
 		g_CurrentSystem = g_OutputMind->GetCharacter()->GetShip()->GetCurrentSystem();
@@ -1407,35 +1407,35 @@ void ProcessEvents(void)
 			}
 		case MotionNotify:
 			{
-				std::cout << "Motion:         x=" << Event.xbutton.x << "   y=" << Event.xbutton.y << std::endl;
+				//~ std::cout << "Motion:         x=" << Event.xbutton.x << "   y=" << Event.xbutton.y << std::endl;
 				MouseMotion(Event.xmotion.x, Event.xmotion.y);
 				
 				break;
 			}
 		case ButtonPress:
 			{
-				std::cout << "ButtonPress:    button=" << Event.xbutton.button << "   x=" << Event.xbutton.x << "   y=" << Event.xbutton.y << std::endl;
+				//~ std::cout << "ButtonPress:    button=" << Event.xbutton.button << "   x=" << Event.xbutton.x << "   y=" << Event.xbutton.y << std::endl;
 				MouseButtonDown(Event.xbutton.button, Event.xbutton.x, Event.xbutton.y);
 				
 				break;
 			}
 		case ButtonRelease:
 			{
-				std::cout << "ButtonRelease:  button=" << Event.xbutton.button << "   x=" << Event.xbutton.x << "   y=" << Event.xbutton.y << std::endl;
+				//~ std::cout << "ButtonRelease:  button=" << Event.xbutton.button << "   x=" << Event.xbutton.x << "   y=" << Event.xbutton.y << std::endl;
 				MouseButtonUp(Event.xbutton.button, Event.xbutton.x, Event.xbutton.y);
 				
 				break;
 			}
 		case KeyPress:
 			{
-				std::cout << "KeyPress:       state=" << Event.xkey.state << "   keycode=" << Event.xkey.keycode << std::endl;
+				//~ std::cout << "KeyPress:       state=" << Event.xkey.state << "   keycode=" << Event.xkey.keycode << std::endl;
 				KeyDown(Event.xkey.keycode);
 				
 				break;
 			}
 		case KeyRelease:
 			{
-				std::cout << "KeyRelease:     state=" << Event.xkey.state << "   keycode=" << Event.xkey.keycode << std::endl;
+				//~ std::cout << "KeyRelease:     state=" << Event.xkey.state << "   keycode=" << Event.xkey.keycode << std::endl;
 				KeyUp(Event.xkey.keycode);
 				
 				break;
@@ -1486,7 +1486,9 @@ void LoadSavegame(const Element * SaveElement)
 		{
 			PlayerCharacter = new Character();
 			PlayerCharacter->SetObjectIdentifier((*SaveChild)->GetAttribute("object-identifier"));
-			g_OutputMind = g_InputMind = new CommandMind();
+			g_InputMind = new CommandMind();
+			g_OutputMind = g_InputMind->GetReference();
+			g_InputMind->SetObjectIdentifier("::input_mind_and_output_mind");
 			PlayerCharacter->PossessByMind(g_InputMind);
 			g_InputMind->SetCharacter(PlayerCharacter);
 			g_OutputMind->SetCharacter(PlayerCharacter);
@@ -1709,7 +1711,7 @@ int main(int argc, char ** argv)
 	}
 	
 	// setting up the player environment
-	if((g_OutputMind != 0) && (g_OutputMind->GetCharacter() != 0) && (g_OutputMind->GetCharacter()->GetShip() != 0))
+	if((g_OutputMind == true) && (g_OutputMind->GetCharacter() != 0) && (g_OutputMind->GetCharacter()->GetShip() != 0))
 	{
 		g_MiniMap->SetFocus(g_OutputMind->GetCharacter()->GetShip());
 		g_ScannerDisplay->SetFocus(g_OutputMind->GetCharacter()->GetShip());
