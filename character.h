@@ -56,20 +56,12 @@ public:
 	// mind managemant
 	void PossessByMind(Mind * Mind);
 	Mind * ReleaseMind(void);
+	Mind * GetActiveMind(void);
 private:
 	std::stack< Mind * > m_Minds;
 	float m_Credits;
 	MapKnowledge * m_MapKnowledge;
 	Ship * m_Ship;
-};
-
-class CharacterWithShip : public std::unary_function< Ship *, bool >
-{
-public:
-	explicit CharacterWithShip(const Ship * Ship);
-	bool operator()(const Character * Character) const;
-private:
-	const Ship * m_Ship;
 };
 
 inline std::set< Character * > & Character::GetCharacters(void)
@@ -105,6 +97,18 @@ inline void Character::SetCredits(float Credits)
 inline void Character::SetShip(Ship * Ship)
 {
 	m_Ship = Ship;
+}
+
+inline Mind * Character::GetActiveMind(void)
+{
+	if(m_Minds.empty() == false)
+	{
+		return m_Minds.top();
+	}
+	else
+	{
+		return 0;
+	}
 }
 
 #endif

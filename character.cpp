@@ -80,13 +80,3 @@ Mind * Character::ReleaseMind(void)
 	
 	return Result;
 }
-
-CharacterWithShip::CharacterWithShip(const Ship * Ship) :
-	m_Ship(Ship)
-{
-}
-	
-bool CharacterWithShip::operator()(const Character * Character) const
-{
-	return m_Ship == Character->GetShip();
-}
