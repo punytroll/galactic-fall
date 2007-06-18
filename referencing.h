@@ -127,11 +127,6 @@ public:
 		return reinterpret_cast< Type * >((m_Core == 0) ? (0) : (m_Core->Get()));
 	}
 	
-	bool IsValid(void) const
-	{
-		return ((m_Core == 0) ? (false) : (m_Core->IsValid()));
-	}
-	
 	void Invalidate(void)
 	{
 		m_Core->Invalidate();
@@ -145,6 +140,11 @@ public:
 	const Type * Get(void) const
 	{
 		return reinterpret_cast< Type * >((m_Core == 0) ? (0) : (m_Core->Get()));
+	}
+	
+	operator bool(void) const
+	{
+		return ((m_Core == 0) ? (false) : (m_Core->IsValid()));
 	}
 private:
 	void Cleanup(void)

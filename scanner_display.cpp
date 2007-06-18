@@ -39,7 +39,7 @@ void ScannerDisplay::Draw(void) const
 {
 	Widget::Draw();
 	// scanner
-	if((m_Focus != 0) && (m_Focus->GetTarget().IsValid() == true))
+	if((m_Focus != 0) && (m_Focus->GetTarget() == true))
 	{
 		float RadialSize(m_Focus->GetTarget()->GetRadialSize());
 		float ExtendedRadialSize((5.0f / 4.0f) * RadialSize);
