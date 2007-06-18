@@ -102,12 +102,12 @@ public:
 	
 	~Reference(void)
 	{
-		Cleanup();
+		Clear();
 	}
 	
 	Reference< Type > & operator=(const Reference< Type > & Reference)
 	{
-		Cleanup();
+		Clear();
 		m_Core = Reference.m_Core;
 		if(m_Core != 0)
 		{
@@ -119,17 +119,30 @@ public:
 	
 	Type * operator->(void)
 	{
-		return reinterpret_cast< Type * >((m_Core == 0) ? (0) : (m_Core->Get()));
+		return Get();
 	}
 	
 	const Type * operator->(void) const
 	{
-		return reinterpret_cast< Type * >((m_Core == 0) ? (0) : (m_Core->Get()));
+		return Get();
 	}
 	
 	void Invalidate(void)
 	{
 		m_Core->Invalidate();
+	}
+	
+	void Clear(void)
+	{
+		if(m_Core != 0)
+		{
+			m_Core->Release();
+			if(m_Core->GetReferenceCount() == 0)
+			{
+				delete m_Core;
+			}
+			m_Core = 0;
+		}
 	}
 	
 	Type * Get(void)
@@ -147,19 +160,6 @@ public:
 		return ((m_Core == 0) ? (false) : (m_Core->IsValid()));
 	}
 private:
-	void Cleanup(void)
-	{
-		if(m_Core != 0)
-		{
-			m_Core->Release();
-			if(m_Core->GetReferenceCount() == 0)
-			{
-				delete m_Core;
-			}
-			m_Core = 0;
-		}
-	}
-	
 	Core * m_Core;
 };
 

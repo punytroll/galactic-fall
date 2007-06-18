@@ -529,6 +529,13 @@ void UpdateUserInterface(void)
 {
 	if((g_OutputMind == true) && (g_OutputMind->GetCharacter() != 0) && (g_OutputMind->GetCharacter()->GetShip() != 0))
 	{
+		g_TargetLabel->Show();
+		g_SystemLabel->Show();
+		g_FuelLabel->Show();
+		g_HullLabel->Show();
+		g_CreditsLabel->Show();
+		g_MiniMap->Show();
+		g_Scanner->Show();
 		// display the name of the target
 		if(g_OutputMind->GetCharacter()->GetShip()->GetTarget() == true)
 		{
@@ -573,6 +580,16 @@ void UpdateUserInterface(void)
 		{
 			g_SystemLabel->GetForegroundColor().Set(0.4f, 0.4f, 0.4f);
 		}
+	}
+	else
+	{
+		g_TargetLabel->Hide();
+		g_SystemLabel->Hide();
+		g_FuelLabel->Hide();
+		g_HullLabel->Hide();
+		g_CreditsLabel->Hide();
+		g_MiniMap->Hide();
+		g_Scanner->Hide();
 	}
 }
 
@@ -1235,6 +1252,38 @@ void KeyDown(unsigned int KeyCode)
 			
 			break;
 		}
+	case 99: // Key: PAGE UP
+		{
+			if(g_InputMind == false)
+			{
+				std::set< Character * > Characters(Character::GetCharacters());
+				
+				if(g_OutputMind == false)
+				{
+					if(Characters.empty() == false)
+					{
+						g_OutputMind = (*(Characters.rbegin()))->GetActiveMind()->GetReference();
+					}
+				}
+				else
+				{
+					std::set< Character * >::iterator CharacterIterator(Characters.find(g_OutputMind->GetCharacter()));
+					
+					assert(CharacterIterator != Characters.end());
+					if(CharacterIterator == Characters.begin())
+					{
+						g_OutputMind.Clear();
+					}
+					else
+					{
+						--CharacterIterator;
+						g_OutputMind = (*CharacterIterator)->GetActiveMind()->GetReference();
+					}
+				}
+			}
+			
+			break;
+		}
 	case 100: // Key: LEFT
 		{
 			if(g_InputMind == true)
@@ -1249,6 +1298,38 @@ void KeyDown(unsigned int KeyCode)
 			if(g_InputMind == true)
 			{
 				g_InputMind->EnableTurnRight();
+			}
+			
+			break;
+		}
+	case 105: // Key: PAGE DOWN
+		{
+			if(g_InputMind == false)
+			{
+				std::set< Character * > Characters(Character::GetCharacters());
+				
+				if(g_OutputMind == false)
+				{
+					if(Characters.empty() == false)
+					{
+						g_OutputMind = (*(Characters.begin()))->GetActiveMind()->GetReference();
+					}
+				}
+				else
+				{
+					std::set< Character * >::iterator CharacterIterator(Characters.find(g_OutputMind->GetCharacter()));
+					
+					assert(CharacterIterator != Characters.end());
+					++CharacterIterator;
+					if(CharacterIterator == Characters.end())
+					{
+						g_OutputMind.Clear();
+					}
+					else
+					{
+						g_OutputMind = (*CharacterIterator)->GetActiveMind()->GetReference();
+					}
+				}
 			}
 			
 			break;
