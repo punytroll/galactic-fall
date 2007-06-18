@@ -61,9 +61,14 @@ public:
 	void ClearShots(void);
 	void RemoveCargo(Cargo * RemoveCargo);
 	void RemoveShip(Ship * RemoveShip);
+	// setters
+	void SetTrafficDensity(float TrafficDensity);
+	// getters
+	float GetTrafficDensity(void) const;
 private:
 	std::string m_Identifier;
 	std::string m_Name;
+	float m_TrafficDensity;
 	Star * m_Star;
 	std::list< Planet * > m_Planets;
 	std::list< System * > m_LinkedSystems;
@@ -120,6 +125,16 @@ inline std::list< Shot * > & System::GetShots(void)
 inline const Star * System::GetStar(void) const
 {
 	return m_Star;
+}
+
+inline void System::SetTrafficDensity(float TrafficDensity)
+{
+	m_TrafficDensity = TrafficDensity;
+}
+
+inline float System::GetTrafficDensity(void) const
+{
+	return m_TrafficDensity;
 }
 
 #endif

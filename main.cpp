@@ -773,7 +773,7 @@ void SpawnShipOnTimeout(System * SpawnInSystem)
 	IdentifierPrefix << "::system(" << SpawnInSystem->GetIdentifier() << ")::created_at_game_time(" << std::fixed << GameTime::Get() << ")";
 	
 	SpawnShip(SpawnInSystem, IdentifierPrefix.str());
-	g_SpawnShipTimeoutIterator = g_GameTimeTimeoutNotifications.insert(std::make_pair(GameTime::Get() + GetRandomFloatFromExponentialDistribution(30.0f), Bind1(Function(SpawnShipOnTimeout), SpawnInSystem)));
+	g_SpawnShipTimeoutIterator = g_GameTimeTimeoutNotifications.insert(std::make_pair(GameTime::Get() + GetRandomFloatFromExponentialDistribution(1.0f / SpawnInSystem->GetTrafficDensity()), Bind1(Function(SpawnShipOnTimeout), SpawnInSystem)));
 }
 
 void PopulateSystem(System * System)
@@ -793,7 +793,7 @@ void PopulateSystem(System * System)
 void OnOutputFocusEnterSystem(System * EnterSystem)
 {
 	assert(g_SpawnShipTimeoutIterator == g_GameTimeTimeoutNotifications.end());
-	g_SpawnShipTimeoutIterator = g_GameTimeTimeoutNotifications.insert(std::make_pair(GameTime::Get() + GetRandomFloatFromExponentialDistribution(30.0f), Bind1(Function(SpawnShipOnTimeout), EnterSystem)));
+	g_SpawnShipTimeoutIterator = g_GameTimeTimeoutNotifications.insert(std::make_pair(GameTime::Get() + GetRandomFloatFromExponentialDistribution(1.0f / EnterSystem->GetTrafficDensity()), Bind1(Function(SpawnShipOnTimeout), EnterSystem)));
 }
 
 void OnOutputFocusLeaveSystem(System * System)

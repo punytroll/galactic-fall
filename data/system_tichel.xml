@@ -5,6 +5,7 @@
 		<x>4</x>
 		<y>9</y>
 	</position>
+	<traffic-density>0.005</traffic-density>
 	<star>
 		<identifier>tichel</identifier>
 		<position>

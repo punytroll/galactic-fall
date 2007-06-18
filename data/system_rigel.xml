@@ -5,6 +5,7 @@
 		<x>-4</x>
 		<y>6</y>
 	</position>
+	<traffic-density>0.01</traffic-density>
 	<star>
 		<identifier>rigel</identifier>
 		<position>

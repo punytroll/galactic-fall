@@ -17,12 +17,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include <float.h>
+
 #include "planet.h"
 #include "star.h"
 #include "system.h"
 
 System::System(const std::string & Identifier) :
 	m_Identifier(Identifier),
+	m_TrafficDensity(FLT_MAX),
 	m_Star(0)
 {
 }
