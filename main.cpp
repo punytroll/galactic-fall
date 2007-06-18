@@ -1713,7 +1713,7 @@ int main(int argc, char ** argv)
 	// setting up the player environment
 	if((g_OutputMind == true) && (g_OutputMind->GetCharacter() != 0) && (g_OutputMind->GetCharacter()->GetShip() != 0))
 	{
-		g_MiniMap->SetFocus(g_OutputMind->GetCharacter()->GetShip());
+		g_MiniMap->SetOwner(g_OutputMind->GetCharacter()->GetShip()->GetReference());
 		g_ScannerDisplay->SetOwner(g_OutputMind->GetCharacter()->GetShip()->GetReference());
 	}
 	// set first timeout for widget collector, it will reinsert itself on callback

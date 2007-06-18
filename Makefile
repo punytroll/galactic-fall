@@ -86,6 +86,7 @@ mini_map_h = \
 	mini_map.h \
 	$(camera_h) \
 	$(perspective_h) \
+	$(referencing_h) \
 	$(widget_h)
 
 model_h = \
