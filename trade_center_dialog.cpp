@@ -173,7 +173,7 @@ void TradeCenterDialog::Sell(const PlanetCommodity * PlanetCommodity)
 	{
 		Cargo * TheCargo(dynamic_cast< Cargo * >(*ManifestIterator));
 		
-		if(TheCargo != 0)
+		if((TheCargo != 0) && (TheCargo->GetCommodity() == PlanetCommodity->GetCommodity()))
 		{
 			Manifest.erase(ManifestIterator);
 			m_Character->AddCredits(PlanetCommodity->GetPrice());
