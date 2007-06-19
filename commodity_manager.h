@@ -30,11 +30,17 @@ class CommodityManager
 {
 public:
 	~CommodityManager(void);
+	const std::map< std::string, Commodity * > & GetCommodities(void) const;
 	Commodity * Get(const std::string & Identifier);
 	Commodity * Create(const std::string & Identifier);
 	void Destroy(const std::string & Identifier);
 private:
 	std::map< std::string, Commodity * > m_Commodities;
 };
+
+inline const std::map< std::string, Commodity * > & CommodityManager::GetCommodities(void) const
+{
+	return m_Commodities;
+}
 
 #endif
