@@ -756,6 +756,37 @@ void SpawnShip(System * System, const std::string & IdentifierPrefix)
 	
 	NewCharacter->SetObjectIdentifier(IdentifierPrefix + "::character(" + NewShip->GetShipClass()->GetIdentifier() + ")");
 	NewCharacter->GetMapKnowledge()->AddExploredSystem(System);
+	if(ShipClassIdentifier == "fighter")
+	{
+		NewCharacter->SetCredits(GetRandomFloat(50.0f, 250.0f));
+	}
+	else if(ShipClassIdentifier == "transporter")
+	{
+		NewCharacter->SetCredits(GetRandomFloatFromExponentialDistribution(2300.0f));
+		for(int NumberOfCommodities = static_cast< int >(GetRandomFloatFromExponentialDistribution(2)); NumberOfCommodities > 0; --NumberOfCommodities)
+		{
+			int AmountOfCargo(static_cast< int >(GetRandomFloatFromExponentialDistribution(NewShip->GetShipClass()->GetCargoHoldSize() / 2)));
+			
+			if(AmountOfCargo <= NewShip->GetFreeCargoHoldSize())
+			{
+				const std::map< std::string, Commodity * > & Commodities(g_CommodityManager.GetCommodities());
+				std::map< std::string, Commodity * >::const_iterator CommodityIterator(Commodities.begin());
+				
+				for(std::map< std::string, Commodity * >::size_type Choice = GetRandomInteger(Commodities.size() - 1); Choice > 0; --Choice)
+				{
+					++CommodityIterator;
+				}
+				while(AmountOfCargo > 0)
+				{
+					Cargo * NewCargo(new Cargo(CommodityIterator->second));
+					
+					NewCargo->SetObjectIdentifier(IdentifierPrefix + "::cargo(" + CommodityIterator->second->GetIdentifier() + ")::(" + to_string_cast(NumberOfCommodities) + "|" + to_string_cast(AmountOfCargo) + ")");
+					NewShip->AddObject(NewCargo);
+					--AmountOfCargo;
+				}
+			}
+		}
+	}
 	NewCharacter->SetShip(NewShip);
 	
 	StateMachineMind * NewMind(new StateMachineMind());
