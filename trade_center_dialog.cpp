@@ -24,6 +24,7 @@
 #include "globals.h"
 #include "label.h"
 #include "planet.h"
+#include "real_time.h"
 #include "ship.h"
 #include "string_cast.h"
 #include "trade_center_dialog.h"
@@ -152,8 +153,12 @@ void TradeCenterDialog::Buy(const PlanetCommodity * PlanetCommodity)
 	
 	if(m_Character->RemoveCredits(Price) == true)
 	{
-		if(m_Character->GetShip()->AddObject(new Cargo(PlanetCommodity->GetCommodity())) == false)
+		Cargo * NewCargo(new Cargo(PlanetCommodity->GetCommodity()));
+		
+		NewCargo->SetObjectIdentifier(m_Planet->GetObjectIdentifier() + "::created_at(" + to_string_cast(RealTime::GetTime(), 6) + ")::bought_by(" + m_Character->GetObjectIdentifier() + ")::commodity(" + NewCargo->GetCommodity()->GetIdentifier() + ")::cargo");
+		if(m_Character->GetShip()->AddObject(NewCargo) == false)
 		{
+			delete NewCargo;
 			m_Character->AddCredits(Price);
 		}
 		else
@@ -176,6 +181,7 @@ void TradeCenterDialog::Sell(const PlanetCommodity * PlanetCommodity)
 		if((TheCargo != 0) && (TheCargo->GetCommodity() == PlanetCommodity->GetCommodity()))
 		{
 			Manifest.erase(ManifestIterator);
+			delete TheCargo;
 			m_Character->AddCredits(PlanetCommodity->GetPrice());
 			UpdateTraderCredits();
 			UpdateTraderFreeCargoHoldSize();
