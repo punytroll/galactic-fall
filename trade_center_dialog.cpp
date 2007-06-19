@@ -182,6 +182,7 @@ void TradeCenterDialog::Sell(const PlanetCommodity * PlanetCommodity)
 			
 			break;
 		}
+		++ManifestIterator;
 	}
 }
 
