@@ -56,11 +56,6 @@ public:
 	void AddShip(Ship * Ship);
 	void AddCargo(Cargo * Cargo);
 	void AddShot(Shot * Shot);
-	void ClearShips(void);
-	void ClearCargos(void);
-	void ClearShots(void);
-	void RemoveCargo(Cargo * RemoveCargo);
-	void RemoveShip(Ship * RemoveShip);
 	// setters
 	void SetTrafficDensity(float TrafficDensity);
 	// getters

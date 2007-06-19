@@ -726,7 +726,13 @@ void EmptySystem(System * System)
 			RemoveShipFromSystem(System, System->GetShips().begin());
 			DeleteShip(Ship);
 		}
-		System->ClearCargos();
+		while(System->GetCargos().empty() == false)
+		{
+			Cargo * Cargo(*System->GetCargos().begin());
+			
+			RemoveCargoFromSystem(System, System->GetCargos().begin());
+			DeleteCargo(Cargo);
+		}
 		while(System->GetShots().empty() == false)
 		{
 			Shot * Shot(*System->GetShots().begin());
