@@ -2,7 +2,7 @@
 	<system identifier="sol"/>
 	<time-warp value="4.23"/>
 	<main-camera>
-		<position x="0" y="0" z="200"/>
+		<position x="0" y="0" z="440"/>
 		<field-of-view degree="45"/>
 	</main-camera>
 </save>
