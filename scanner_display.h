@@ -31,6 +31,8 @@ class ScannerDisplay : public Widget
 {
 public:
 	ScannerDisplay(void);
+	// getters
+	const Reference< Ship > & GetOwner(void) const;
 	// setters
 	void SetOwner(Reference< Ship > Owner);
 	// actors
@@ -40,6 +42,11 @@ private:
 	mutable Camera m_Camera;
 	mutable Perspective m_Perspective;
 };
+
+inline const Reference< Ship > & ScannerDisplay::GetOwner(void) const
+{
+	return m_Owner;
+}
 
 inline void ScannerDisplay::SetOwner(Reference< Ship > Owner)
 {
