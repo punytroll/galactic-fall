@@ -1143,9 +1143,12 @@ void KeyDown(unsigned int KeyCode)
 				g_MapDialog = new MapDialog(g_UserInterface.GetRootWidget(), g_OutputMind->GetCharacter()->GetShip()->GetCurrentSystem(), g_OutputMind->GetCharacter());
 				g_MapDialog->GrabKeyFocus();
 				g_MapDialog->AddDestroyListener(&g_GlobalDestroyListener);
-				g_InputMind->DisableAccelerate();
-				g_InputMind->DisableTurnLeft();
-				g_InputMind->DisableTurnRight();
+				if(g_InputMind == true)
+				{
+					g_InputMind->DisableAccelerate();
+					g_InputMind->DisableTurnLeft();
+					g_InputMind->DisableTurnRight();
+				}
 			}
 			
 			break;
