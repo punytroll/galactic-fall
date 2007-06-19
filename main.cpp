@@ -339,6 +339,7 @@ void DeleteShip(Ship * Ship)
 		Ship->RemoveObject(ManifestObject);
 		
 		Character * ManifestCharacter(dynamic_cast< Character * >(ManifestObject));
+		Cargo * ManifestCargo(dynamic_cast< Cargo * >(ManifestObject));
 		
 		if(ManifestCharacter != 0)
 		{
@@ -349,6 +350,10 @@ void DeleteShip(Ship * Ship)
 				delete ManifestCharacterMind;
 			}
 			delete ManifestCharacter;
+		}
+		else if(ManifestCargo != 0)
+		{
+			delete ManifestCargo;
 		}
 		else
 		{
