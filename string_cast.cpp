@@ -17,7 +17,7 @@
 **/
 
 /**
- * This is version 1.1.0 of the string cast.
+ * This is version 1.1.1 of the string cast.
  **/
 
 #include <iomanip>
@@ -84,6 +84,16 @@ template < >
 bool from_string_cast< bool >(const std::string & String)
 {
 	return String == "true";
+}
+
+template < >
+std::string to_string_cast< int >(const int & Value)
+{
+	std::ostringstream StringStream;
+	
+	StringStream << Value;
+	
+	return StringStream.str();
 }
 
 template < >
