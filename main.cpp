@@ -753,6 +753,7 @@ void SpawnShip(System * System, const std::string & IdentifierPrefix)
 	Character * NewCharacter(new Character());
 	
 	NewCharacter->SetObjectIdentifier(IdentifierPrefix + "::character(" + NewShip->GetShipClass()->GetIdentifier() + ")");
+	NewCharacter->GetMapKnowledge()->AddExploredSystem(System);
 	NewCharacter->SetShip(NewShip);
 	
 	StateMachineMind * NewMind(new StateMachineMind());
