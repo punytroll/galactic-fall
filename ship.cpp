@@ -105,7 +105,7 @@ void Ship::Update(float Seconds)
 			System * NewSystem(GetLinkedSystemTarget());
 			
 			// remove the ship from the old system
-			OldSystem->RemoveShip(this);
+			OldSystem->GetShips().erase(std::find(OldSystem->GetShips().begin(), OldSystem->GetShips().end(), this));
 			SetCurrentSystem(0);
 			SetFuel(GetFuel() - GetShipClass()->GetJumpFuel());
 			
@@ -230,7 +230,7 @@ void Ship::Update(float Seconds)
 			{
 				if(AddObject(SelectedCargo) == true)
 				{
-					GetCurrentSystem()->RemoveCargo(SelectedCargo);
+					GetCurrentSystem()->GetCargos().erase(std::find(GetCurrentSystem()->GetCargos().begin(), GetCurrentSystem()->GetCargos().end(), SelectedCargo));
 					SetTarget(0);
 				}
 			}
