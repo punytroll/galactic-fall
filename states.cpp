@@ -410,7 +410,7 @@ void Fight::Execute(void)
 			GetMind()->GetCharacter()->GetShip()->m_TurnRight = false;
 			GetMind()->GetCharacter()->GetShip()->m_TurnLeft = false;
 			GetMind()->GetCharacter()->GetShip()->m_Accelerate = ((GetMind()->GetCharacter()->GetShip()->GetVelocity() - math3d::vector2f(GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetMaximumSpeed(), GetMind()->GetCharacter()->GetShip()->GetAngularPosition(), math3d::vector2f::magnitude_angle)).length_squared() > 0.1f);
-			if(Length < 400.0f)
+			if(Length < 150.0f)
 			{
 				GetMind()->GetCharacter()->GetShip()->m_Fire = true;
 			}
