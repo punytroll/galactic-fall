@@ -798,6 +798,11 @@ void SpawnShip(System * System, const std::string & IdentifierPrefix)
 			}
 		}
 	}
+	if(GetRandomBoolean(0.2) == true)
+	{
+		NewShip->SetHull(GetRandomFloat(0.1f * NewShip->GetShipClass()->GetHull(), 0.9f * NewShip->GetShipClass()->GetHull()));
+	}
+	NewShip->SetFuel(GetRandomFloat(0.1f * NewShip->GetShipClass()->GetFuelHoldSize(), 0.8f * NewShip->GetShipClass()->GetFuelHoldSize()));
 	NewCharacter->SetShip(NewShip);
 	
 	StateMachineMind * NewMind(new StateMachineMind());
