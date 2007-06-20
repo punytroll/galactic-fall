@@ -231,9 +231,20 @@ void TransporterPhase2::Execute(void)
 	}
 	else
 	{
-		GetMind()->GetCharacter()->GetShip()->m_Land = true;
-		GetMind()->GetStateMachine()->SetState(new TransporterPhase3(GetMind()));
-		delete this;
+		Reference< Planet > Planet(GetMind()->GetCharacter()->GetShip()->GetTarget());
+		
+		if(GetMind()->GetCharacter()->GetCredits() >= Planet->GetLandingFee())
+		{
+			GetMind()->GetCharacter()->RemoveCredits(Planet->GetLandingFee());
+			GetMind()->GetCharacter()->GetShip()->m_Land = true;
+			GetMind()->GetStateMachine()->SetState(new TransporterPhase3(GetMind()));
+			delete this;
+		}
+		else
+		{
+			GetMind()->GetStateMachine()->SetState(new SelectSteering(GetMind()));
+			delete this;
+		}
 	}
 }
 
@@ -584,9 +595,19 @@ void RefuelPhase2::Execute(void)
 	}
 	else
 	{
-		GetMind()->GetCharacter()->GetShip()->m_Land = true;
-		GetMind()->GetStateMachine()->SetState(new RefuelPhase3(GetMind()));
-		delete this;
+		Reference< Planet > Planet(GetMind()->GetCharacter()->GetShip()->GetTarget());
+		
+		if(GetMind()->GetCharacter()->GetCredits() >= Planet->GetLandingFee())
+		{
+			GetMind()->GetCharacter()->RemoveCredits(Planet->GetLandingFee());
+			GetMind()->GetCharacter()->GetShip()->m_Land = true;
+			GetMind()->GetStateMachine()->SetState(new RefuelPhase3(GetMind()));
+			delete this;
+		}
+		else
+		{
+			// self destruct in dispair.
+		}
 	}
 }
 
