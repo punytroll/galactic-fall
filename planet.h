@@ -35,11 +35,17 @@ public:
 	virtual ~PlanetCommodity(void);
 	const Commodity * GetCommodity(void) const;
 	float GetPrice(void) const;
-	void SetBasePriceModifier(const float & BasePriceModifier);
+	void SetBasePriceModifier(float BasePriceModifier);
+	float GetBasePriceModifier(void) const;
 private:
 	Commodity * m_Commodity;
 	float m_BasePriceModifier;
 };
+
+inline float PlanetCommodity::GetBasePriceModifier(void) const
+{
+	return m_BasePriceModifier;
+}
 
 class Planet : public PhysicalObject
 {
