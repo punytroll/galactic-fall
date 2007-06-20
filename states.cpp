@@ -463,6 +463,10 @@ void MonitorFuel::SetRefueled(void)
 	m_Refueling = false;
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// RefuelPhase1: Select a planet to land upon and fly towards it.                                //
+//               Abort approch when near enough.                                                 //
+///////////////////////////////////////////////////////////////////////////////////////////////////
 RefuelPhase1::RefuelPhase1(StateMachineMind * Mind) :
 	State(Mind)
 {
@@ -551,7 +555,6 @@ void RefuelPhase1::Exit(void)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // RefuelPhase2: Revereses the ship and accelerates until a near stop is accomplished.           //
-//               Will finish by setting the ship to immobile.                                    //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 RefuelPhase2::RefuelPhase2(StateMachineMind * Mind) :
 	State(Mind)
@@ -592,25 +595,22 @@ void RefuelPhase2::Execute(void)
 	}
 	else
 	{
-		GetMind()->GetStateMachine()->SetState(new RefuelPhase3(GetMind()));
+		GetMind()->GetCharacter()->GetShip()->m_Land = true;
+		GetMind()->GetStateMachine()->SetState(new RefuelPhase3(GetMind(), GetMind()->GetCharacter()->GetShip()->GetTarget()));
 		delete this;
 	}
 }
 
 void RefuelPhase2::Exit(void)
 {
-	GetMind()->GetCharacter()->GetShip()->SetVelocity(math3d::vector2f(0.0f, 0.0f));
-	GetMind()->GetCharacter()->GetShip()->m_TurnRight = false;
-	GetMind()->GetCharacter()->GetShip()->m_TurnLeft = false;
-	GetMind()->GetCharacter()->GetShip()->m_Accelerate = false;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-// RefuelPhase3: Wait for a little time.                                                         //
-//               Decide, what to do next.                                                        //
+// RefuelPhase3: Refuel. Wait for a little time.                                                 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-RefuelPhase3::RefuelPhase3(StateMachineMind * Mind) :
+RefuelPhase3::RefuelPhase3(StateMachineMind * Mind, Reference< Planet > Planet) :
 	State(Mind),
+	m_Planet(Planet),
 	m_TimeToLeave(GameTime::Get() + GetRandomFloat(2.0f, 5.0f))
 {
 	SetObjectIdentifier("::refuel_phase_3::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
@@ -618,6 +618,18 @@ RefuelPhase3::RefuelPhase3(StateMachineMind * Mind) :
 
 void RefuelPhase3::Enter(void)
 {
+	float FuelPrice(m_Planet->GetFuelPrice());
+	float CanBuy(GetMind()->GetCharacter()->GetCredits() / FuelPrice);
+	float Need(GetMind()->GetCharacter()->GetShip()->GetFuelCapacity() - GetMind()->GetCharacter()->GetShip()->GetFuel());
+	float Buy((CanBuy > Need) ? (Need) : (CanBuy));
+	
+	GetMind()->GetCharacter()->GetShip()->SetFuel(GetMind()->GetCharacter()->GetShip()->GetFuel() + Buy);
+	GetMind()->GetCharacter()->RemoveCredits(Buy * FuelPrice);
+	
+	MonitorFuel * GlobalState(dynamic_cast< MonitorFuel * >(GetMind()->GetStateMachine()->GetGlobalState()));
+	
+	assert(GlobalState != 0);
+	GlobalState->SetRefueled();
 }
 
 void RefuelPhase3::Execute(void)
@@ -631,10 +643,4 @@ void RefuelPhase3::Execute(void)
 
 void RefuelPhase3::Exit(void)
 {
-	GetMind()->GetCharacter()->GetShip()->SetFuel(GetMind()->GetCharacter()->GetShip()->GetFuelCapacity());
-	
-	MonitorFuel * GlobalState(dynamic_cast< MonitorFuel * >(GetMind()->GetStateMachine()->GetGlobalState()));
-	
-	assert(GlobalState != 0);
-	GlobalState->SetRefueled();
 }
