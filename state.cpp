@@ -19,8 +19,7 @@
 
 #include "state.h"
 
-State::State(Ship * ActionTarget, StateMachine * StateMachine) :
-	m_ActionTarget(ActionTarget),
-	m_StateMachine(StateMachine)
+State::State(StateMachineMind * Mind) :
+	m_Mind(Mind)
 {
 }
