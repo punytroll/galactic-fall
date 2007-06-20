@@ -303,5 +303,5 @@ bool Ship::IsReadyToFire(void)
 
 void Ship::ResetNextTimeToFire(void)
 {
-	m_NextTimeToFire = GameTime::Get() + 0.25;
+	m_NextTimeToFire = GameTime::Get() + 0.63;
 }
