@@ -359,7 +359,7 @@ static void ReadSystem(SystemManager * SystemManager, Arxx::Reference & Referenc
 	
 	Star * NewStar(NewSystem->CreateStar());
 	
-	NewStar->SetObjectIdentifier("::system(" + NewSystem->GetIdentifier() + ")::star(" + StarIdentifier + ")");
+	NewStar->SetObjectIdentifier("::star(" + StarIdentifier + ")::in_system(" + NewSystem->GetIdentifier() + ")");
 	NewStar->SetPosition(StarPosition);
 	NewStar->SetColor(StarColor);
 	for(Arxx::u4byte Number = 1; Number <= PlanetCount; ++Number)
@@ -370,7 +370,7 @@ static void ReadSystem(SystemManager * SystemManager, Arxx::Reference & Referenc
 		
 		Planet * NewPlanet(NewSystem->CreatePlanet(PlanetIdentifier));
 		
-		NewPlanet->SetObjectIdentifier("::system(" + NewSystem->GetIdentifier() + ")::planet(" + NewPlanet->GetIdentifier() + ")");
+		NewPlanet->SetObjectIdentifier("::planet(" + NewPlanet->GetIdentifier() + ")::in_system(" + NewSystem->GetIdentifier() + ")");
 		
 		std::string Name;
 		std::string Description;
