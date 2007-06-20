@@ -18,6 +18,7 @@
 **/
 
 #include <assert.h>
+#include <float.h>
 
 #include <iostream>
 #include <list>
@@ -464,7 +465,7 @@ void MonitorFuel::SetRefueled(void)
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-// RefuelPhase1: Select a planet to land upon and fly towards it.                                //
+// RefuelPhase1: Select the nearest planet and fly towards it.                                   //
 //               Abort approch when near enough.                                                 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 RefuelPhase1::RefuelPhase1(StateMachineMind * Mind) :
@@ -476,25 +477,17 @@ RefuelPhase1::RefuelPhase1(StateMachineMind * Mind) :
 void RefuelPhase1::Enter(void)
 {
 	const std::list< Planet * > & Planets(GetMind()->GetCharacter()->GetShip()->GetCurrentSystem()->GetPlanets());
-	float MinimumDistance(0.0f);
+	float MinimumDistance(FLT_MAX);
 	Planet * NearestPlanet(0);
 	
 	for(std::list< Planet * >::const_iterator PlanetIterator = Planets.begin(); PlanetIterator != Planets.end(); ++PlanetIterator)
 	{
-		if(NearestPlanet == 0)
+		float Distance(((*PlanetIterator)->GetPosition() - GetMind()->GetCharacter()->GetShip()->GetPosition()).length_squared());
+		
+		if(Distance < MinimumDistance)
 		{
 			NearestPlanet = *PlanetIterator;
-			MinimumDistance = (NearestPlanet->GetPosition() - GetMind()->GetCharacter()->GetShip()->GetPosition()).length_squared();
-		}
-		else
-		{
-			float Distance(((*PlanetIterator)->GetPosition() - GetMind()->GetCharacter()->GetShip()->GetPosition()).length_squared());
-			
-			if(Distance < MinimumDistance)
-			{
-				NearestPlanet = *PlanetIterator;
-				MinimumDistance = Distance;
-			}
+			MinimumDistance = Distance;
 		}
 	}
 	if(NearestPlanet != 0)
