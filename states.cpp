@@ -606,6 +606,8 @@ void RefuelPhase2::Execute(void)
 		}
 		else
 		{
+			// TODO: this line ensures that ships keep drifting in space if they have no chance of refueling
+			GetMind()->GetCharacter()->GetShip()->m_Accelerate = false;
 			// self destruct in dispair.
 		}
 	}
