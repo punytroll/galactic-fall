@@ -33,7 +33,6 @@
 #include "math.h"
 #include "model.h"
 #include "model_manager.h"
-#include "real_time.h"
 #include "ship.h"
 #include "shot.h"
 #include "string_cast.h"
@@ -190,7 +189,7 @@ void Ship::Update(float Seconds)
 			{
 				std::stringstream IdentifierStream;
 				
-				IdentifierStream << "::system(" << GetCurrentSystem()->GetIdentifier() << ")::created_at(" << std::fixed << RealTime::GetTime() << ")::created_by(" << GetObjectIdentifier() << ")::shot";
+				IdentifierStream << "::shot::created_at_game_time(" << to_string_cast(GameTime::Get(), 2) << ")::created_by(" << GetObjectIdentifier() << ")::in_system(" << GetCurrentSystem()->GetIdentifier() << ")";
 				
 				Shot * NewShot(new Shot(this, GetAngularPosition(), GetVelocity() + math3d::vector2f(30.0f, GetAngularPosition(), math3d::vector2f::magnitude_angle)));
 				

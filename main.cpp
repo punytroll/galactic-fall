@@ -743,7 +743,7 @@ void EmptySystem(System * System)
 	}
 }
 
-void SpawnShip(System * System, const std::string & IdentifierPrefix)
+void SpawnShip(System * System, const std::string & IdentifierSuffix)
 {
 	std::string ShipClassIdentifier;
 	
@@ -758,14 +758,14 @@ void SpawnShip(System * System, const std::string & IdentifierPrefix)
 	
 	Ship * NewShip(new Ship(g_ShipClassManager.Get(ShipClassIdentifier)));
 	
-	NewShip->SetObjectIdentifier(IdentifierPrefix + "::ship(" + NewShip->GetShipClass()->GetIdentifier() + ")");
+	NewShip->SetObjectIdentifier("::ship(" + NewShip->GetShipClass()->GetIdentifier() + ")" + IdentifierSuffix);
 	NewShip->SetPosition(math3d::vector2f(GetRandomFloat(-200.0f, 200.0f), GetRandomFloat(-200.0f, 200.0f)));
 	NewShip->SetFuel(NewShip->GetFuelCapacity());
 	NewShip->SetCurrentSystem(System);
 	
 	Character * NewCharacter(new Character());
 	
-	NewCharacter->SetObjectIdentifier(IdentifierPrefix + "::character(" + NewShip->GetShipClass()->GetIdentifier() + ")");
+	NewCharacter->SetObjectIdentifier("::character(" + NewShip->GetShipClass()->GetIdentifier() + ")" + IdentifierSuffix);
 	NewCharacter->GetMapKnowledge()->AddExploredSystem(System);
 	if(ShipClassIdentifier == "fighter")
 	{
@@ -791,7 +791,7 @@ void SpawnShip(System * System, const std::string & IdentifierPrefix)
 				{
 					Cargo * NewCargo(new Cargo(CommodityIterator->second));
 					
-					NewCargo->SetObjectIdentifier(IdentifierPrefix + "::cargo(" + CommodityIterator->second->GetIdentifier() + ")::(" + to_string_cast(NumberOfCommodities) + "|" + to_string_cast(AmountOfCargo) + ")");
+					NewCargo->SetObjectIdentifier("::cargo(" + CommodityIterator->second->GetIdentifier() + ")::(" + to_string_cast(NumberOfCommodities) + "|" + to_string_cast(AmountOfCargo) + ")" + IdentifierSuffix);
 					NewShip->AddObject(NewCargo);
 					--AmountOfCargo;
 				}
@@ -807,7 +807,7 @@ void SpawnShip(System * System, const std::string & IdentifierPrefix)
 	
 	StateMachineMind * NewMind(new StateMachineMind());
 	
-	NewMind->SetObjectIdentifier(IdentifierPrefix + "::mind(state_machine)");
+	NewMind->SetObjectIdentifier("::mind(state_machine)" + IdentifierSuffix);
 	NewMind->SetCharacter(NewCharacter);
 	NewMind->GetStateMachine()->SetState(new SelectSteering(NewMind));
 	NewMind->GetStateMachine()->SetGlobalState(new MonitorFuel(NewMind));
@@ -818,11 +818,11 @@ void SpawnShip(System * System, const std::string & IdentifierPrefix)
 
 void SpawnShipOnTimeout(System * SpawnInSystem)
 {
-	std::stringstream IdentifierPrefix;
+	std::stringstream IdentifierSuffix;
 	
-	IdentifierPrefix << "::system(" << SpawnInSystem->GetIdentifier() << ")::created_at_game_time(" << std::fixed << GameTime::Get() << ")";
+	IdentifierSuffix << "::created_at_game_time(" << std::fixed << GameTime::Get() << ")::in_system(" << SpawnInSystem->GetIdentifier() << ")";
 	
-	SpawnShip(SpawnInSystem, IdentifierPrefix.str());
+	SpawnShip(SpawnInSystem, IdentifierSuffix.str());
 	g_SpawnShipTimeoutIterator = g_GameTimeTimeoutNotifications.insert(std::make_pair(GameTime::Get() + GetRandomFloatFromExponentialDistribution(1.0f / SpawnInSystem->GetTrafficDensity()), Bind1(Function(SpawnShipOnTimeout), SpawnInSystem)));
 }
 
@@ -832,11 +832,11 @@ void PopulateSystem(System * System)
 	
 	for(int ShipNumber = 1; ShipNumber <= NumberOfShips; ++ShipNumber)
 	{
-		std::stringstream IdentifierPrefix;
+		std::stringstream IdentifierSuffix;
 		
-		IdentifierPrefix << "::system(" << System->GetIdentifier() << ")::created_at(" << std::fixed << RealTime::GetTime() << "[" << ShipNumber << "])";
+		IdentifierSuffix << "::created_at_real_time(" << std::fixed << RealTime::GetTime() << "[" << ShipNumber << "])::in_system(" << System->GetIdentifier() << ")";
 		
-		SpawnShip(System, IdentifierPrefix.str());
+		SpawnShip(System, IdentifierSuffix.str());
 	}
 }
 
