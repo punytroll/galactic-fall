@@ -126,12 +126,11 @@ public:
 class RefuelPhase3 : public State
 {
 public:
-	RefuelPhase3(StateMachineMind * Mind, Reference< Planet > Planet);
+	RefuelPhase3(StateMachineMind * Mind);
 	virtual void Enter(void);
 	virtual void Execute(void);
 	virtual void Exit(void);
 private:
-	Reference< Planet > m_Planet;
 	double m_TimeToLeave;
 };
 

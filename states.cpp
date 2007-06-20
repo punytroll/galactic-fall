@@ -191,7 +191,6 @@ void TransporterPhase1::Exit(void)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // TransporterPhase2: Revereses the ship and accelerates until a near stop is accomplished.      //
-//                    Will finish by setting the ship to immobile.                               //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 TransporterPhase2::TransporterPhase2(StateMachineMind * Mind) :
 	State(Mind)
@@ -589,7 +588,7 @@ void RefuelPhase2::Execute(void)
 	else
 	{
 		GetMind()->GetCharacter()->GetShip()->m_Land = true;
-		GetMind()->GetStateMachine()->SetState(new RefuelPhase3(GetMind(), GetMind()->GetCharacter()->GetShip()->GetTarget()));
+		GetMind()->GetStateMachine()->SetState(new RefuelPhase3(GetMind()));
 		delete this;
 	}
 }
@@ -599,11 +598,11 @@ void RefuelPhase2::Exit(void)
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-// RefuelPhase3: Refuel. Wait for a little time.                                                 //
+// RefuelPhase3: Wait for a little time.                                                         //
+//               Decide, what to do next.                                                        //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-RefuelPhase3::RefuelPhase3(StateMachineMind * Mind, Reference< Planet > Planet) :
+RefuelPhase3::RefuelPhase3(StateMachineMind * Mind) :
 	State(Mind),
-	m_Planet(Planet),
 	m_TimeToLeave(GameTime::Get() + GetRandomFloat(2.0f, 5.0f))
 {
 	SetObjectIdentifier("::refuel_phase_3::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
@@ -611,18 +610,6 @@ RefuelPhase3::RefuelPhase3(StateMachineMind * Mind, Reference< Planet > Planet) 
 
 void RefuelPhase3::Enter(void)
 {
-	float FuelPrice(m_Planet->GetFuelPrice());
-	float CanBuy(GetMind()->GetCharacter()->GetCredits() / FuelPrice);
-	float Need(GetMind()->GetCharacter()->GetShip()->GetFuelCapacity() - GetMind()->GetCharacter()->GetShip()->GetFuel());
-	float Buy((CanBuy > Need) ? (Need) : (CanBuy));
-	
-	GetMind()->GetCharacter()->GetShip()->SetFuel(GetMind()->GetCharacter()->GetShip()->GetFuel() + Buy);
-	GetMind()->GetCharacter()->RemoveCredits(Buy * FuelPrice);
-	
-	MonitorFuel * GlobalState(dynamic_cast< MonitorFuel * >(GetMind()->GetStateMachine()->GetGlobalState()));
-	
-	assert(GlobalState != 0);
-	GlobalState->SetRefueled();
 }
 
 void RefuelPhase3::Execute(void)
@@ -636,4 +623,10 @@ void RefuelPhase3::Execute(void)
 
 void RefuelPhase3::Exit(void)
 {
+	GetMind()->GetCharacter()->GetShip()->SetFuel(GetMind()->GetCharacter()->GetShip()->GetFuelCapacity());
+	
+	MonitorFuel * GlobalState(dynamic_cast< MonitorFuel * >(GetMind()->GetStateMachine()->GetGlobalState()));
+	
+	assert(GlobalState != 0);
+	GlobalState->SetRefueled();
 }
