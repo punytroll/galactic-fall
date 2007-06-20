@@ -386,36 +386,33 @@ void Fight::Execute(void)
 	if(GetMind()->GetCharacter()->GetShip()->GetTarget() == true)
 	{
 		math3d::vector2f ToDestination(GetMind()->GetCharacter()->GetShip()->GetTarget()->GetPosition() - GetMind()->GetCharacter()->GetShip()->GetPosition());
-		float LengthSquared(ToDestination.length_squared());
+		float Length(ToDestination.length());
 		
-		if(LengthSquared > 400.0f)
+		ToDestination /= Length;
+		
+		float HeadingOffDestination(GetShortestRadians(GetMind()->GetCharacter()->GetShip()->GetAngularPosition(), GetRadians(ToDestination)));
+		
+		GetMind()->GetCharacter()->GetShip()->m_Fire = false;
+		if(HeadingOffDestination > 0.1)
 		{
-			ToDestination /= sqrt(LengthSquared);
-			
-			float HeadingOffDestination(GetShortestRadians(GetMind()->GetCharacter()->GetShip()->GetAngularPosition(), GetRadians(ToDestination)));
-			
-			GetMind()->GetCharacter()->GetShip()->m_Fire = false;
-			if(HeadingOffDestination > 0.1)
+			GetMind()->GetCharacter()->GetShip()->m_TurnRight = true;
+			GetMind()->GetCharacter()->GetShip()->m_TurnLeft = false;
+			GetMind()->GetCharacter()->GetShip()->m_Accelerate = false;
+		}
+		else if(HeadingOffDestination < -0.1)
+		{
+			GetMind()->GetCharacter()->GetShip()->m_TurnRight = false;
+			GetMind()->GetCharacter()->GetShip()->m_TurnLeft = true;
+			GetMind()->GetCharacter()->GetShip()->m_Accelerate = false;
+		}
+		else
+		{
+			GetMind()->GetCharacter()->GetShip()->m_TurnRight = false;
+			GetMind()->GetCharacter()->GetShip()->m_TurnLeft = false;
+			GetMind()->GetCharacter()->GetShip()->m_Accelerate = ((GetMind()->GetCharacter()->GetShip()->GetVelocity() - math3d::vector2f(GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetMaximumSpeed(), GetMind()->GetCharacter()->GetShip()->GetAngularPosition(), math3d::vector2f::magnitude_angle)).length_squared() > 0.1f);
+			if(Length < 400.0f)
 			{
-				GetMind()->GetCharacter()->GetShip()->m_TurnRight = true;
-				GetMind()->GetCharacter()->GetShip()->m_TurnLeft = false;
-				GetMind()->GetCharacter()->GetShip()->m_Accelerate = false;
-			}
-			else if(HeadingOffDestination < -0.1)
-			{
-				GetMind()->GetCharacter()->GetShip()->m_TurnRight = false;
-				GetMind()->GetCharacter()->GetShip()->m_TurnLeft = true;
-				GetMind()->GetCharacter()->GetShip()->m_Accelerate = false;
-			}
-			else
-			{
-				GetMind()->GetCharacter()->GetShip()->m_TurnRight = false;
-				GetMind()->GetCharacter()->GetShip()->m_TurnLeft = false;
-				GetMind()->GetCharacter()->GetShip()->m_Accelerate = ((GetMind()->GetCharacter()->GetShip()->GetVelocity() - math3d::vector2f(GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetMaximumSpeed(), GetMind()->GetCharacter()->GetShip()->GetAngularPosition(), math3d::vector2f::magnitude_angle)).length_squared() > 0.1f);
-				if(LengthSquared < 16000.0f)
-				{
-					GetMind()->GetCharacter()->GetShip()->m_Fire = true;
-				}
+				GetMind()->GetCharacter()->GetShip()->m_Fire = true;
 			}
 		}
 	}
@@ -598,8 +595,8 @@ void RefuelPhase2::Exit(void)
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-// RefuelPhase3: Wait for a little time.                                                         //
-//               Decide, what to do next.                                                        //
+// RefuelPhase3: Refuel.                                                                         //
+//               Wait for a little time and decide, what to do next.                                //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 RefuelPhase3::RefuelPhase3(StateMachineMind * Mind) :
 	State(Mind),
@@ -610,6 +607,12 @@ RefuelPhase3::RefuelPhase3(StateMachineMind * Mind) :
 
 void RefuelPhase3::Enter(void)
 {
+	GetMind()->GetCharacter()->GetShip()->SetFuel(GetMind()->GetCharacter()->GetShip()->GetFuelCapacity());
+	
+	MonitorFuel * GlobalState(dynamic_cast< MonitorFuel * >(GetMind()->GetStateMachine()->GetGlobalState()));
+	
+	assert(GlobalState != 0);
+	GlobalState->SetRefueled();
 }
 
 void RefuelPhase3::Execute(void)
@@ -623,10 +626,4 @@ void RefuelPhase3::Execute(void)
 
 void RefuelPhase3::Exit(void)
 {
-	GetMind()->GetCharacter()->GetShip()->SetFuel(GetMind()->GetCharacter()->GetShip()->GetFuelCapacity());
-	
-	MonitorFuel * GlobalState(dynamic_cast< MonitorFuel * >(GetMind()->GetStateMachine()->GetGlobalState()));
-	
-	assert(GlobalState != 0);
-	GlobalState->SetRefueled();
 }
