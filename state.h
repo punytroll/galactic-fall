@@ -22,33 +22,25 @@
 
 #include "object.h"
 
-class Ship;
-class StateMachine;
+class StateMachineMind;
 
 class State : public Object
 {
 public:
-	State(Ship * ActionTarget, StateMachine * StateMachine);
+	State(StateMachineMind * StateMachineMind);
 	// progress in the handling of the state
 	virtual void Enter(void) = 0;
 	virtual void Execute(void) = 0;
 	virtual void Exit(void) = 0;
 	// getters
-	Ship * GetActionTarget(void);
-	StateMachine * GetStateMachine(void);
+	StateMachineMind * GetMind(void);
 private:
-	Ship * m_ActionTarget;
-	StateMachine * m_StateMachine;
+	StateMachineMind * m_Mind;
 };
 
-inline Ship * State::GetActionTarget(void)
+inline StateMachineMind * State::GetMind(void)
 {
-	return m_ActionTarget;
-}
-
-inline StateMachine * State::GetStateMachine(void)
-{
-	return m_StateMachine;
+	return m_Mind;
 }
 
 #endif

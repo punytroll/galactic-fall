@@ -22,15 +22,12 @@
 
 #include "state.h"
 
-class Planet;
-class Ship;
-class StateMachine;
-class System;
+class StateMachineMind;
 
 class SelectSteering : public State
 {
 public:
-	SelectSteering(Ship * ActionTarget, StateMachine * StateMachine);
+	SelectSteering(StateMachineMind * Mind);
 	virtual void Enter(void);
 	virtual void Execute(void);
 	virtual void Exit(void);
@@ -39,7 +36,7 @@ public:
 class FlyOverRandomPoint : public State
 {
 public:
-	FlyOverRandomPoint(Ship * ActionTarget, StateMachine * StateMachine);
+	FlyOverRandomPoint(StateMachineMind * Mind);
 	virtual void Enter(void);
 	virtual void Execute(void);
 	virtual void Exit(void);
@@ -50,7 +47,7 @@ protected:
 class TransporterPhase1 : public State
 {
 public:
-	TransporterPhase1(Ship * ActionTarget, StateMachine * StateMachine);
+	TransporterPhase1(StateMachineMind * Mind);
 	virtual void Enter(void);
 	virtual void Execute(void);
 	virtual void Exit(void);
@@ -59,7 +56,7 @@ public:
 class TransporterPhase2 : public State
 {
 public:
-	TransporterPhase2(Ship * ActionTarget, StateMachine * StateMachine);
+	TransporterPhase2(StateMachineMind * Mind);
 	virtual void Enter(void);
 	virtual void Execute(void);
 	virtual void Exit(void);
@@ -68,7 +65,7 @@ public:
 class TransporterPhase3 : public State
 {
 public:
-	TransporterPhase3(Ship * ActionTarget, StateMachine * StateMachine);
+	TransporterPhase3(StateMachineMind * Mind);
 	virtual void Enter(void);
 	virtual void Execute(void);
 	virtual void Exit(void);
@@ -79,7 +76,7 @@ private:
 class TransporterPhase4 : public State
 {
 public:
-	TransporterPhase4(Ship * ActionTarget, StateMachine * StateMachine);
+	TransporterPhase4(StateMachineMind * Mind);
 	virtual void Enter(void);
 	virtual void Execute(void);
 	virtual void Exit(void);
@@ -90,7 +87,7 @@ private:
 class Fight : public State
 {
 public:
-	Fight(Ship * ActionTarget, StateMachine * StateMachine);
+	Fight(StateMachineMind * Mind);
 	virtual void Enter(void);
 	virtual void Execute(void);
 	virtual void Exit(void);
@@ -99,7 +96,7 @@ public:
 class MonitorFuel : public State
 {
 public:
-	MonitorFuel(Ship * ActionTarget, StateMachine * StateMachine);
+	MonitorFuel(StateMachineMind * Mind);
 	virtual void Enter(void);
 	virtual void Execute(void);
 	virtual void Exit(void);
@@ -111,7 +108,7 @@ private:
 class RefuelPhase1 : public State
 {
 public:
-	RefuelPhase1(Ship * ActionTarget, StateMachine * StateMachine);
+	RefuelPhase1(StateMachineMind * Mind);
 	virtual void Enter(void);
 	virtual void Execute(void);
 	virtual void Exit(void);
@@ -120,7 +117,7 @@ public:
 class RefuelPhase2 : public State
 {
 public:
-	RefuelPhase2(Ship * ActionTarget, StateMachine * StateMachine);
+	RefuelPhase2(StateMachineMind * Mind);
 	virtual void Enter(void);
 	virtual void Execute(void);
 	virtual void Exit(void);
@@ -129,7 +126,7 @@ public:
 class RefuelPhase3 : public State
 {
 public:
-	RefuelPhase3(Ship * ActionTarget, StateMachine * StateMachine);
+	RefuelPhase3(StateMachineMind * Mind);
 	virtual void Enter(void);
 	virtual void Execute(void);
 	virtual void Exit(void);
