@@ -413,7 +413,7 @@ state.o: state.cpp $(state_h)
 state_machine.o: state_machine.cpp $(state_h) $(state_machine_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-states.o: states.cpp $(character_h) $(game_time_h) $(math_h) $(mind_h) $(planet_h) $(ship_h) $(state_machine_h) $(states_h) $(string_cast_h) $(system_h)
+states.o: states.cpp $(cargo_h) $(character_h) $(commodity) $(game_time_h) $(math_h) $(mind_h) $(planet_h) $(ship_h) $(state_machine_h) $(states_h) $(string_cast_h) $(system_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags math3d` -c $< -o $@
 
 string_cast.o: string_cast.cpp $(string_cast_h)
