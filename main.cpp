@@ -1680,6 +1680,17 @@ void LoadSavegame(const Element * SaveElement)
 						{
 							PlayerShip->AddObject(new Cargo(g_CommodityManager.Get((*ManifestChild)->GetAttribute("commodity-identifier"))));
 						}
+						else if((*ManifestChild)->GetName() == "weapon")
+						{
+							Weapon * NewWeapon(new Weapon(g_WeaponClassManager->Get((*ManifestChild)->GetAttribute("class-identifier"))));
+							
+							NewWeapon->SetObjectIdentifier((*ManifestChild)->GetAttribute("object-identifier"));
+							PlayerShip->AddObject(NewWeapon);
+						}
+						else
+						{
+							throw std::runtime_error("The \"manifest\" element of the \"ship\" element \"" + (*SaveChild)->GetAttribute("object-identifier") + "\" contains a child element \"" + (*ShipChild)->GetName() + "\" which could not be handled.");
+						}
 					}
 				}
 				else if((*ShipChild)->GetName() == "name")
