@@ -1030,6 +1030,15 @@ void KeyDown(unsigned int KeyCode)
 			
 			break;
 		}
+	case 38: // Key: A
+		{
+			if(g_InputMind == true)
+			{
+				g_InputMind->TargetNearestCargo();
+			}
+			
+			break;
+		}
 	case 39: // Key: S
 		{
 			if(g_InputMind == true)
