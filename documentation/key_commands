@@ -31,7 +31,10 @@ On key down:
 35 (CLOSING BRACKET)
 	Moves the camera focus to the next ship or to the first one if the last ship was focused.
 	Acts upon the camera focus.
-
+38 (A)
+	Selected the cargo that is nearest to the input focus.
+	Acts upon InputMind.Character.Ship.
+	
 39 (S)
 	Selects the cargo that is nearest to the input focus, if no cargo is selected. Otherwise tries to scoop up the selected cargo. This requires very close proximity and very small relative velocity.
 	Acts upon InputMind.Character.Ship.
