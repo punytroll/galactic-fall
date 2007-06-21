@@ -46,6 +46,8 @@
 #include "system.h"
 #include "system_manager.h"
 #include "user_interface.h"
+#include "weapon_class.h"
+#include "weapon_class_manager.h"
 #include "widget.h"
 
 static Arxx::Item * Resolve(Arxx::Reference & Reference);
@@ -55,6 +57,7 @@ static void ReadModel(ModelManager * ModelManager, Arxx::Reference & Reference);
 static void ReadShipClass(ShipClassManager * ShipClassManager, Arxx::Reference & Reference);
 static void ReadSystem(SystemManager * SystemManager, Arxx::Reference & Reference);
 static void ReadSystemLink(SystemManager * SystemManager, Arxx::Reference & Reference);
+static void ReadWeaponClass(WeaponClassManager * WeaponClassManager, Arxx::Reference & Reference);
 static void ReadWidget(UserInterface * UserInterface, Arxx::Reference & Reference);
 static void ReadWidgetLabel(Arxx::BufferReader & Reader, Label * ReadLabel);
 static void ReadWidgetMiniMap(Arxx::BufferReader & Reader, MiniMap * ReadMiniMap);
@@ -144,6 +147,11 @@ void ReadSystemLinks(Arxx::Archive & Archive, SystemManager * Manager)
 void ReadUserInterface(Arxx::Archive & Archive, UserInterface * Manager)
 {
 	ReadItems(Archive, "/User Interface", Bind1(Function(ReadWidget), Manager));
+}
+
+void ReadWeaponClasses(Arxx::Archive & Archive, WeaponClassManager * Manager)
+{
+	ReadItems(Archive, "/Weapon Classes", Bind1(Function(ReadWeaponClass), Manager));
 }
 
 static void ReadCommodity(CommodityManager * CommodityManager, Arxx::Reference & Reference)
@@ -307,7 +315,7 @@ static void ReadShipClass(ShipClassManager * ShipClassManager, Arxx::Reference &
 	NewShipClass->SetJumpFuel(JumpFuel);
 	NewShipClass->SetMaximumSpeed(MaximumSpeed);
 	
-	Model * Model(ShipClassManager->GetModelManager()->Get(ModelIdentifier));
+	Model * Model(g_ModelManager.Get(ModelIdentifier));
 	
 	if(Model == 0)
 	{
@@ -441,6 +449,45 @@ static void ReadSystemLink(SystemManager * SystemManager, Arxx::Reference & Refe
 	}
 	System1->AddLinkedSystem(System2);
 	System2->AddLinkedSystem(System1);
+}
+
+static void ReadWeaponClass(WeaponClassManager * WeaponClassManager, Arxx::Reference & Reference)
+{
+	Arxx::Item * Item(Resolve(Reference));
+	
+	if(Item->u4GetType() != ARX_TYPE_WEAPON_CLASS)
+	{
+		throw std::runtime_error("Item type for weapon class '" + Item->sGetName() + "' should be '" + to_string_cast(ARX_TYPE_WEAPON_CLASS) + "' not '" + to_string_cast(Item->u4GetType()) + "'.");
+	}
+	if(Item->u4GetSubType() != 0)
+	{
+		throw std::runtime_error("Item sub type for weapon class '" + Item->sGetName() + "' should be '0' not '" + to_string_cast(Item->u4GetSubType()) + "'.");
+	}
+	
+	Arxx::BufferReader Reader(*Item);
+	std::string Identifier;
+	
+	Reader >> Identifier;
+	
+	WeaponClass * NewWeaponClass(WeaponClassManager->Create(Identifier));
+	
+	if(NewWeaponClass == 0)
+	{
+		throw std::runtime_error("Could not create weapon class '" + Identifier + "'.");
+	}
+	
+	float ReloadTime;
+	float ParticleExitSpeed;
+	float ParticleDamage;
+	float ParticleLifeTime;
+	Color ParticleColor;
+	
+	Reader >> ReloadTime >> ParticleExitSpeed >> ParticleDamage >> ParticleLifeTime >> ParticleColor;
+	NewWeaponClass->SetReloadTime(ReloadTime);
+	NewWeaponClass->SetParticleExitSpeed(ParticleExitSpeed);
+	NewWeaponClass->SetParticleDamage(ParticleDamage);
+	NewWeaponClass->SetParticleLifeTime(ParticleLifeTime);
+	NewWeaponClass->SetParticleColor(ParticleColor);
 }
 
 static void ReadWidget(UserInterface * UserInterface, Arxx::Reference & Reference)

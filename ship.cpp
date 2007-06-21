@@ -37,6 +37,7 @@
 #include "shot.h"
 #include "string_cast.h"
 #include "system.h"
+#include "weapon.h"
 
 Ship::Ship(ShipClass * ShipClass) :
 	m_Accelerate(false),
@@ -53,8 +54,7 @@ Ship::Ship(ShipClass * ShipClass) :
 	m_Fuel(0.0f),
 	m_Hull(m_ShipClass->GetHull()),
 	m_LinkedSystemTarget(0),
-	m_CurrentSystem(0),
-	m_NextTimeToFire(0.0)
+	m_CurrentSystem(0)
 {
 	SetRadialSize(m_ShipClass->GetModel()->GetRadialSize());
 }
@@ -144,6 +144,10 @@ void Ship::Update(float Seconds)
 	}
 	else
 	{
+		for(std::vector< Weapon * >::size_type WeaponIndex = 0; WeaponIndex < m_Weapons.size(); ++WeaponIndex)
+		{
+			m_Weapons[WeaponIndex]->Update(Seconds, m_Fire);
+		}
 		if(m_TurnLeft == true)
 		{
 			float FuelConsumption(m_ShipClass->GetTurnFuel() * Seconds);
@@ -181,22 +185,6 @@ void Ship::Update(float Seconds)
 					m_Velocity.scale(GetMaximumSpeed());
 				}
 				m_Fuel -= FuelConsumption;
-			}
-		}
-		if(m_Fire == true)
-		{
-			if(IsReadyToFire() == true)
-			{
-				std::stringstream IdentifierStream;
-				
-				IdentifierStream << "::shot::created_at_game_time(" << to_string_cast(GameTime::Get(), 2) << ")::created_by(" << GetObjectIdentifier() << ")::in_system(" << GetCurrentSystem()->GetIdentifier() << ")";
-				
-				Shot * NewShot(new Shot(this, GetAngularPosition(), GetVelocity() + math3d::vector2f(30.0f, GetAngularPosition(), math3d::vector2f::magnitude_angle)));
-				
-				NewShot->SetObjectIdentifier(IdentifierStream.str());
-				NewShot->SetPosition(GetPosition());
-				GetCurrentSystem()->AddShot(NewShot);
-				ResetNextTimeToFire();
 			}
 		}
 		if(m_Jettison == true)
@@ -290,17 +278,38 @@ bool Ship::AddObject(Object * Add)
 			return false;
 		}
 	}
+	
+	Weapon * TheWeapon(dynamic_cast< Weapon * >(Add));
+	
+	if(TheWeapon != 0)
+	{
+		m_Weapons.push_back(TheWeapon);
+		TheWeapon->SetShip(this);
+	}
 	m_Manifest.insert(Add);
 	
 	return true;
 }
 
-bool Ship::IsReadyToFire(void)
+bool Ship::RemoveObject(Object * Remove)
 {
-	return m_NextTimeToFire <= GameTime::Get();
-}
-
-void Ship::ResetNextTimeToFire(void)
-{
-	m_NextTimeToFire = GameTime::Get() + 0.63;
+	std::set< Object * >::iterator ManifestIterator(m_Manifest.find(Remove));
+	
+	if(ManifestIterator != m_Manifest.end())
+	{
+		Weapon * TheWeapon(dynamic_cast< Weapon * >(Remove));
+		
+		if(TheWeapon != 0)
+		{
+			TheWeapon->SetShip(0);
+			m_Weapons.erase(std::find(m_Weapons.begin(), m_Weapons.end(), TheWeapon));
+		}
+		m_Manifest.erase(ManifestIterator);
+		
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }

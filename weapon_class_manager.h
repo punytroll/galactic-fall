@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006  Hagen Möbius
+ * Copyright (C) 2007  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,21 +17,23 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef ARX_RESOURCES_H
-#define ARX_RESOURCES_H
+#ifndef WEAPON_CLASS_MANAGER_H
+#define WEAPON_CLASS_MANAGER_H
 
-#include <Common.h>
+#include <map>
+#include <string>
 
-const Arxx::u4byte ARX_TYPE_WIDGET = 1;
-const Arxx::u4byte ARX_TYPE_WIDGET_SUB_TYPE_LABEL = 1;
-const Arxx::u4byte ARX_TYPE_WIDGET_SUB_TYPE_MINI_MAP = 2;
-const Arxx::u4byte ARX_TYPE_WIDGET_SUB_TYPE_SCANNER_DISPLAY = 3;
-const Arxx::u4byte ARX_TYPE_WIDGET_SUB_TYPE_WIDGET = 0;
-const Arxx::u4byte ARX_TYPE_MODEL = 2;
-const Arxx::u4byte ARX_TYPE_SHIP_CLASS = 3;
-const Arxx::u4byte ARX_TYPE_COMMODITY = 4;
-const Arxx::u4byte ARX_TYPE_SYSTEM = 5;
-const Arxx::u4byte ARX_TYPE_SYSTEM_LINK = 6;
-const Arxx::u4byte ARX_TYPE_WEAPON_CLASS = 7;
+class WeaponClass;
+
+class WeaponClassManager
+{
+public:
+	~WeaponClassManager(void);
+	WeaponClass * Get(const std::string & Identifier);
+	WeaponClass * Create(const std::string & Identifier);
+	void Destroy(const std::string & Identifier);
+private:
+	std::map< std::string, WeaponClass * > m_WeaponClasses;
+};
 
 #endif

@@ -76,6 +76,9 @@
 #include "system.h"
 #include "system_manager.h"
 #include "user_interface.h"
+#include "weapon.h"
+#include "weapon_class.h"
+#include "weapon_class_manager.h"
 #include "widget.h"
 #include "xml_puny_dom.h"
 #include "xml_stream.h"
@@ -85,9 +88,10 @@ int g_LastMotionY(-1);
 int g_MouseButton(-1);
 Camera g_Camera;
 ModelManager g_ModelManager;
-ShipClassManager g_ShipClassManager(&g_ModelManager);
+ShipClassManager g_ShipClassManager;
 CommodityManager g_CommodityManager;
 SystemManager g_SystemManager;
+WeaponClassManager * g_WeaponClassManager;
 Reference< CommandMind > g_InputMind;
 Reference< Mind > g_OutputMind;
 float g_Width(0.0f);
@@ -340,6 +344,7 @@ void DeleteShip(Ship * Ship)
 		
 		Character * ManifestCharacter(dynamic_cast< Character * >(ManifestObject));
 		Cargo * ManifestCargo(dynamic_cast< Cargo * >(ManifestObject));
+		Weapon * ManifestWeapon(dynamic_cast< Weapon * >(ManifestObject));
 		
 		if(ManifestCharacter != 0)
 		{
@@ -351,9 +356,9 @@ void DeleteShip(Ship * Ship)
 			}
 			delete ManifestCharacter;
 		}
-		else if(ManifestCargo != 0)
+		else if((ManifestCargo != 0) || (ManifestWeapon != 0))
 		{
-			delete ManifestCargo;
+			delete ManifestObject;
 		}
 		else
 		{
@@ -770,6 +775,11 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix)
 	if(ShipClassIdentifier == "fighter")
 	{
 		NewCharacter->SetCredits(GetRandomFloat(50.0f, 250.0f));
+		
+		Weapon * NewWeapon(new Weapon(g_WeaponClassManager->Get("light_laser")));
+		
+		NewWeapon->SetObjectIdentifier("::weapon(" + NewWeapon->GetWeaponClass()->GetIdentifier() + ")::created_for(" + NewShip->GetObjectIdentifier() + ")" + IdentifierSuffix);
+		NewShip->AddObject(NewWeapon);
 	}
 	else if(ShipClassIdentifier == "transporter")
 	{
@@ -1773,6 +1783,7 @@ int main(int argc, char ** argv)
 	g_MainPerspective.SetFarClippingPlane(1000.f);
 	g_MessageTimeoutIterator = g_RealTimeTimeoutNotifications.end();
 	g_SpawnShipTimeoutIterator = g_GameTimeTimeoutNotifications.end();
+	g_WeaponClassManager = new WeaponClassManager();
 	
 	// parse command line
 	std::vector< std::string > Arguments(argv, argv + argc);
@@ -1818,6 +1829,7 @@ int main(int argc, char ** argv)
 	ReadSystems(Archive, &g_SystemManager);
 	ReadSystemLinks(Archive, &g_SystemManager);
 	ReadUserInterface(Archive, &g_UserInterface);
+	ReadWeaponClasses(Archive, g_WeaponClassManager);
 	
 	g_CreditsLabel = dynamic_cast< Label * >(g_UserInterface.GetWidget("/credits"));
 	g_FuelLabel = dynamic_cast< Label * >(g_UserInterface.GetWidget("/fuel"));
