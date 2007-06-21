@@ -1,0 +1,15 @@
+<weapon-class>
+	<identifier>medium_laser</identifier>
+	<reload-time>0.85</reload-time>
+	<particle>
+		<exit-speed>26</exit-speed>
+		<damage>28</damage>
+		<life-time>2.9</life-time>
+		<color>
+			<red>0.2</red>
+			<green>0.2</green>
+			<blue>0.8</blue>
+			<alpha>0.8</alpha>
+		</color>
+	</particle>
+</weapon-class>

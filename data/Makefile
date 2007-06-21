@@ -30,6 +30,7 @@ all_data = \
 	.data/system_link_rigel_sol.data \
 	.data/system_link_rigel_tichel.data \
 	.data/weapon_class_light_laser.data \
+	.data/weapon_class_medium_laser.data \
 	.data/widget_mini_map.data \
 	.data/widget_scanner.data \
 	.data/widget_scanner_display.data
@@ -106,6 +107,7 @@ data.arx: .data $(all_data) Makefile
 	arxadd $@ --uid 126 --name "Scanner Display" --type 1 --subtype 3 --add 1:child .data/widget_scanner_display.data
 	@echo -e "\n\nAdding weapon classes ...\n"
 	arxadd $@ --name "Light Laser" --type 7 --subtype 0 --add 7:child .data/weapon_class_light_laser.data
+	arxadd $@ --name "Medium Laser" --type 7 --subtype 0 --add 7:child .data/weapon_class_medium_laser.data
 	@echo -e "\n\nAdding ship classes ...\n"
 	arxadd $@ --uid 131 --name "Fighter" --type 3 --subtype 0 --add 3:child .data/ship_class_fighter.data
 	arxadd $@ --uid 110 --name "Shuttle" --type 3 --subtype 0 --add 3:child .data/ship_class_shuttle.data
