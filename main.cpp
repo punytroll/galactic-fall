@@ -776,7 +776,7 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix)
 		NewCharacter->SetCredits(GetRandomFloatFromExponentialDistribution(2300.0f));
 		for(int NumberOfCommodities = static_cast< int >(GetRandomFloatFromExponentialDistribution(2)); NumberOfCommodities > 0; --NumberOfCommodities)
 		{
-			int AmountOfCargo(static_cast< int >(GetRandomFloatFromExponentialDistribution(NewShip->GetShipClass()->GetCargoHoldSize() / 2)));
+			int AmountOfCargo(GetRandomIntegerFromExponentialDistribution(NewShip->GetShipClass()->GetCargoHoldSize() / 2));
 			
 			if(AmountOfCargo <= NewShip->GetFreeCargoHoldSize())
 			{
