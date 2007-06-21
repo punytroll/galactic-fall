@@ -93,7 +93,7 @@ inline float GetRandomFloat(float LowestValue, float HighestValue)
 	return ((HighestValue - LowestValue) * GetRandomUniform()) + LowestValue;
 }
 
-inline long int GetRandomBoolean(float Probability = 0.5f)
+inline bool GetRandomBoolean(float Probability = 0.5f)
 {
 	return GetRandomUniform() <= Probability;
 }
@@ -101,6 +101,11 @@ inline long int GetRandomBoolean(float Probability = 0.5f)
 inline float GetRandomFloatFromExponentialDistribution(float Interval)
 {
 	return Interval * -log(GetRandomUniform());
+}
+
+inline int GetRandomIntegerFromExponentialDistribution(float Interval)
+{
+	return static_cast< int >(GetRandomFloatFromExponentialDistribution(Interval));
 }
 
 #endif
