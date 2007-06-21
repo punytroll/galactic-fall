@@ -21,15 +21,18 @@
 
 #include <math3d/vector4f.h>
 
+#include "color.h"
 #include "game_time.h"
 #include "shot.h"
+#include "weapon_class.h"
 
-Shot::Shot(PhysicalObject * Shooter, float AngularPosition, const math3d::vector2f & Velocity) :
-	m_Shooter(Shooter),
-	m_TimeOfDeath(GameTime::Get() + 2.5),
-	m_AngularPosition(AngularPosition),
-	m_Velocity(Velocity),
-	m_Damage(12.0f)
+Shot::Shot(const WeaponClass * WeaponClass) :
+	m_WeaponClass(WeaponClass),
+	m_Shooter(0),
+	m_AngularPosition(0.0f),
+	m_Velocity(true),
+	m_TimeOfDeath(GameTime::Get() + WeaponClass->GetParticleLifeTime()),
+	m_Damage(WeaponClass->GetParticleDamage())
 {
 	SetRadialSize(0.54f);
 }
@@ -44,7 +47,7 @@ void Shot::Draw(void) const
 	glPushMatrix();
 	glTranslatef(m_Position.m_V.m_A[0], m_Position.m_V.m_A[1], 0.0f);
 	glRotatef(m_AngularPosition * 180.0f / M_PI, 0.0f, 0.0f, 1.0f);
-	glColor4fv(math3d::vector4f(0.8f, 0.2f, 0.2f, 0.8f).m_V.m_A);
+	glColor4fv(m_WeaponClass->GetParticleColor()->GetColor().m_V.m_A);
 	glDisable(GL_LIGHTING);
 	glEnable(GL_BLEND);
 	glBegin(GL_QUADS);

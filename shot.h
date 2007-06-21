@@ -25,18 +25,24 @@
 #include "physical_object.h"
 
 class Model;
+class WeaponClass;
 
 class Shot : public PhysicalObject
 {
 public:
-	Shot(PhysicalObject * Shooter, float AngularPosition, const math3d::vector2f & Velocity);
+	Shot(const WeaponClass * WeaponClass);
 	virtual ~Shot(void);
 	virtual void Draw(void) const;
 	bool Update(float Seconds);
 	const PhysicalObject * GetShooter(void) const;
 	const math3d::vector2f & GetVelocity(void) const;
 	float GetDamage(void) const;
+	// setters
+	void SetAngularPosition(float AngularPosition);
+	void SetShooter(PhysicalObject * Shooter);
+	void SetVelocity(const math3d::vector2f & Velocity);
 private:
+	const WeaponClass * m_WeaponClass;
 	PhysicalObject * m_Shooter;
 	double m_TimeOfDeath;
 	math3d::vector2f m_Velocity;
@@ -57,6 +63,21 @@ inline const math3d::vector2f & Shot::GetVelocity(void) const
 inline float Shot::GetDamage(void) const
 {
 	return m_Damage;
+}
+
+inline void Shot::SetAngularPosition(float AngularPosition)
+{
+	m_AngularPosition = AngularPosition;
+}
+
+inline void Shot::SetShooter(PhysicalObject * Shooter)
+{
+	m_Shooter = Shooter;
+}
+
+inline void Shot::SetVelocity(const math3d::vector2f & Velocity)
+{
+	m_Velocity = Velocity;
 }
 
 #endif
