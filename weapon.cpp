@@ -25,6 +25,7 @@
 #include "string_cast.h"
 #include "system.h"
 #include "weapon.h"
+#include "weapon_class.h"
 
 Weapon::Weapon(WeaponClass * WeaponClass) :
 	m_WeaponClass(WeaponClass),
@@ -40,11 +41,14 @@ void Weapon::Update(float Seconds, bool Fire)
 		
 		IdentifierStream << "::shot::created_at_game_time(" << to_string_cast(GameTime::Get(), 2) << ")::created_by(" << GetShip()->GetObjectIdentifier() << ")::in_system(" << GetShip()->GetCurrentSystem()->GetIdentifier() << ")";
 		
-		Shot * NewShot(new Shot(GetShip(), GetShip()->GetAngularPosition(), GetShip()->GetVelocity() + math3d::vector2f(30.0f, GetShip()->GetAngularPosition(), math3d::vector2f::magnitude_angle)));
+		Shot * NewShot(new Shot(GetWeaponClass()));
 		
 		NewShot->SetObjectIdentifier(IdentifierStream.str());
+		NewShot->SetShooter(GetShip());
 		NewShot->SetPosition(GetShip()->GetPosition());
+		NewShot->SetAngularPosition(GetShip()->GetAngularPosition());
+		NewShot->SetVelocity(GetShip()->GetVelocity() + math3d::vector2f(GetWeaponClass()->GetParticleExitSpeed(), GetShip()->GetAngularPosition(), math3d::vector2f::magnitude_angle));
 		GetShip()->GetCurrentSystem()->AddShot(NewShot);
-		m_NextTimeToFire = GameTime::Get() + 0.63;
+		m_NextTimeToFire = GameTime::Get() + GetWeaponClass()->GetReloadTime();
 	}
 }

@@ -414,7 +414,7 @@ ship_class.o: ship_class.cpp $(color_h) $(ship_class_h)
 ship_class_manager.o: ship_class_manager.cpp $(ship_class_h) $(ship_class_manager_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags math3d` -c $< -o $@
 
-shot.o: shot.cpp $(game_time_h) $(shot_h)
+shot.o: shot.cpp $(color_h) $(game_time_h) $(shot_h) $(weapon_class_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags math3d` -c $< -o $@
 
 star.o: star.cpp $(star_h)
@@ -444,7 +444,7 @@ trade_center_dialog.o: trade_center_dialog.cpp $(button_h) $(cargo_h) $(characte
 user_interface.o: user_interface.cpp $(user_interface_h) $(widget_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags math3d` -c $< -o $@
 
-weapon.o: weapon.cpp $(game_time_h) $(ship_h) $(shot_h) $(string_cast_h) $(system_h) $(weapon_h)
+weapon.o: weapon.cpp $(game_time_h) $(ship_h) $(shot_h) $(string_cast_h) $(system_h) $(weapon_h) $(weapon_class_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags math3d` -c $< -o $@
 
 weapon_class.o: weapon_class.cpp $(color_h) $(weapon_class_h)
