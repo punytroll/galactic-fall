@@ -1241,7 +1241,7 @@ void KeyDown(unsigned int KeyCode)
 			XML << element << "save";
 			XML << element << "system" << attribute << "identifier" << value << g_CurrentSystem->GetIdentifier() << end;
 			XML << element << "time-warp" << attribute << "value" << value << g_TimeWarp << end;
-			XML << element << "character";
+			XML << element << "character" << attribute << "object-identifier" << value << g_InputMind->GetCharacter()->GetObjectIdentifier();
 			XML << element << "credits" << attribute << "value" << value << g_InputMind->GetCharacter()->GetCredits() << end;
 			XML << element << "map-knowledge";
 			
@@ -1269,16 +1269,22 @@ void KeyDown(unsigned int KeyCode)
 			while(ManifestIterator != Ship->GetManifest().end())
 			{
 				Cargo * TheCargo(dynamic_cast< Cargo * >(*ManifestIterator));
+				Weapon * TheWeapon(dynamic_cast< Weapon * >(*ManifestIterator));
 				
 				if(TheCargo != 0)
 				{
 					XML << element << "cargo" << attribute << "commodity-identifier" << value << TheCargo->GetCommodity()->GetIdentifier() << end;
 				}
+				else if(TheWeapon != 0)
+				{
+					XML << element << "weapon" << attribute << "object-identifier" << value << TheWeapon->GetObjectIdentifier() << attribute << "class-identifier" << value << TheWeapon->GetWeaponClass()->GetIdentifier() << end;
+				}
 				++ManifestIterator;
 			}
 			XML << end; // manifest
+			XML << element << "name" << attribute << "value" << value << Ship->GetName() << end;
 			XML << end; // ship
-			XML << element << "camera";
+			XML << element << "main-camera";
 			XML << element << "position" << attribute << "x" << value << g_Camera.GetPosition().m_V.m_A[0] << attribute << "y" << value << g_Camera.GetPosition().m_V.m_A[1] << attribute << "z" << value << g_Camera.GetPosition().m_V.m_A[2] << end;
 			if(g_Camera.GetFocus()->GetObjectIdentifier() == "")
 			{
