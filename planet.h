@@ -42,6 +42,11 @@ private:
 	float m_BasePriceModifier;
 };
 
+inline void PlanetCommodity::SetBasePriceModifier(float BasePriceModifier)
+{
+	m_BasePriceModifier = BasePriceModifier;
+}
+
 inline float PlanetCommodity::GetBasePriceModifier(void) const
 {
 	return m_BasePriceModifier;

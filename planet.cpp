@@ -43,11 +43,6 @@ float PlanetCommodity::GetPrice(void) const
 	return m_Commodity->GetBasePrice() * m_BasePriceModifier;
 }
 
-void PlanetCommodity::SetBasePriceModifier(const float & BasePriceModifier)
-{
-	m_BasePriceModifier = BasePriceModifier;
-}
-
 Planet::Planet(const std::string & Identifier) :
 	m_Identifier(Identifier),
 	m_AllowRefuelling(false),
