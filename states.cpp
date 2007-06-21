@@ -23,7 +23,9 @@
 #include <iostream>
 #include <list>
 
+#include "cargo.h"
 #include "character.h"
+#include "commodity.h"
 #include "game_time.h"
 #include "math.h"
 #include "mind.h"
@@ -265,6 +267,93 @@ TransporterPhase3::TransporterPhase3(StateMachineMind * Mind) :
 
 void TransporterPhase3::Enter(void)
 {
+	// ATTENTION: the target is only valid because this Enter() function is called before the setting of m_Land is processed in the ship which invalidates the ship's target
+	Reference< Planet > Planet(GetMind()->GetCharacter()->GetShip()->GetTarget());
+	
+	// build a lookup map for commodities
+	std::map< const Commodity *, PlanetCommodity * > Commodities;
+	std::vector< PlanetCommodity * > BuyCommodities;
+	
+	{
+		const std::vector< PlanetCommodity * > & PlanetCommodities(Planet->GetCommodities());
+		
+		for(std::vector< PlanetCommodity * >::size_type Index = 0; Index < PlanetCommodities.size(); ++Index)
+		{
+			Commodities[PlanetCommodities[Index]->GetCommodity()] = PlanetCommodities[Index];
+			if(PlanetCommodities[Index]->GetBasePriceModifier() < 1.0f)
+			{
+				BuyCommodities.push_back(PlanetCommodities[Index]);
+			}
+		}
+	}
+	if(Commodities.empty() == false)
+	{
+		std::set< Object * > & Manifest(GetMind()->GetCharacter()->GetShip()->GetManifest());
+		std::set< Object * >::iterator ManifestIterator(Manifest.begin());
+		std::map< const Commodity *, PlanetCommodity * >::iterator PlanetCommodityIterator(Commodities.begin());
+		
+		// first sell stuff ... but only stuff with base price modifier above 1
+		while(ManifestIterator != Manifest.end())
+		{
+			Cargo * TheCargo(dynamic_cast< Cargo * >(*ManifestIterator));
+			
+			if(TheCargo != 0)
+			{
+				// update the planet commodity cache, hoping it will be right more than once
+				if(PlanetCommodityIterator == Commodities.end())
+				{
+					PlanetCommodityIterator = Commodities.find(TheCargo->GetCommodity());
+				}
+				else
+				{
+					if(PlanetCommodityIterator->first != TheCargo->GetCommodity())
+					{
+						PlanetCommodityIterator = Commodities.find(TheCargo->GetCommodity());
+					}
+				}
+				// work with the cached planet commodity
+				if((PlanetCommodityIterator != Commodities.end()) && (PlanetCommodityIterator->second->GetBasePriceModifier() > 1.0))
+				{
+					std::set< Object * >::iterator SaveIterator(ManifestIterator);
+					
+					++SaveIterator;
+					Manifest.erase(ManifestIterator);
+					ManifestIterator = SaveIterator;
+					delete TheCargo;
+					GetMind()->GetCharacter()->AddCredits(PlanetCommodityIterator->second->GetPrice());
+					
+					continue;
+				}
+			}
+			++ManifestIterator;
+		}
+		// second buy stuff ... but only stuff with base price modifier below 1
+		if(BuyCommodities.empty() == false)
+		{
+			for(int NumberOfCommoditiesToBuy = GetRandomIntegerFromExponentialDistribution(2); NumberOfCommoditiesToBuy > 0; --NumberOfCommoditiesToBuy)
+			{
+				PlanetCommodity * CommodityToBuy(BuyCommodities[GetRandomInteger(BuyCommodities.size() - 1)]);
+				
+				for(int NumberOfCargosToBuy = GetRandomIntegerFromExponentialDistribution(GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetCargoHoldSize() / 2); NumberOfCargosToBuy > 0; --NumberOfCargosToBuy)
+				{
+					// TODO: the 400.0f is a safety margin for landing fees and fuel
+					if((GetMind()->GetCharacter()->GetShip()->GetFreeCargoHoldSize() >= 1.0f) && (GetMind()->GetCharacter()->GetCredits() - 400.0f >= CommodityToBuy->GetPrice()))
+					{
+						GetMind()->GetCharacter()->RemoveCredits(CommodityToBuy->GetPrice());
+						
+						Cargo * NewCargo(new Cargo(CommodityToBuy->GetCommodity()));
+						
+						NewCargo->SetObjectIdentifier("::cargo(" + NewCargo->GetCommodity()->GetIdentifier() + ")::buy_index(" + to_string_cast(NumberOfCommoditiesToBuy) + "|" + to_string_cast(NumberOfCargosToBuy) + ")::bought_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::bought_by(" + GetMind()->GetObjectIdentifier() + ")::bought_on(" + Planet->GetObjectIdentifier() + ")");
+						GetMind()->GetCharacter()->GetShip()->AddObject(NewCargo);
+					}
+					else
+					{
+						break;
+					}
+				}
+			}
+		}
+	}
 }
 
 void TransporterPhase3::Execute(void)
