@@ -124,4 +124,17 @@
 		<string identifier="system-1-identifier"/>
 		<string identifier="system-2-identifier"/>
 	</system-link>
+	
+	<weapon-class>
+		<string identifier="identifier"/>
+		<float identifier="reload-time"/>
+		<particle identifier="particle"/>
+	</weapon-class>
+	
+	<particle>
+		<float identifier="exit-speed"/>
+		<float identifier="damage"/>
+		<float identifier="life-time"/>
+		<color4f identifier="color"/>
+	</particle>
 </definitions>

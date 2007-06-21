@@ -1,0 +1,15 @@
+<weapon-class>
+	<identifier>light_laser</identifier>
+	<reload-time>0.63</reload-time>
+	<particle>
+		<exit-speed>30</exit-speed>
+		<damage>12</damage>
+		<life-time>2.5</life-time>
+		<color>
+			<red>0.8</red>
+			<green>0.2</green>
+			<blue>0.2</blue>
+			<alpha>0.8</alpha>
+		</color>
+	</particle>
+</weapon-class>

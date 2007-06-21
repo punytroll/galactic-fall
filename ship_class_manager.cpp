@@ -17,19 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include <fstream>
-
-#include "color.h"
-#include "model_manager.h"
 #include "ship_class.h"
 #include "ship_class_manager.h"
-#include "string_cast.h"
-#include "xml_puny_dom.h"
-
-ShipClassManager::ShipClassManager(ModelManager * ModelManager) :
-	m_ModelManager(ModelManager)
-{
-}
 
 ShipClassManager::~ShipClassManager(void)
 {

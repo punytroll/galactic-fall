@@ -21,6 +21,7 @@
 #define SHIP_H
 
 #include <map>
+#include <vector>
 
 #include <math3d/vector2f.h>
 
@@ -30,6 +31,7 @@
 class Commodity;
 class ShipClass;
 class System;
+class Weapon;
 
 class Ship : public PhysicalObject
 {
@@ -74,9 +76,6 @@ public:
 	void SetTarget(Reference< PhysicalObject > Target);
 	void SetLinkedSystemTarget(System * LinkedSystem);
 	void SetCurrentSystem(System * CurrentSystem);
-	// shot stuff
-	bool IsReadyToFire(void);
-	void ResetNextTimeToFire(void);
 	// manifest
 	bool AddObject(Object * Add);
 	bool RemoveObject(Object * Remove);
@@ -86,12 +85,12 @@ private:
 	// ship class
 	ShipClass * m_ShipClass;
 	std::set< Object * > m_Manifest;
+	std::vector< Weapon * > m_Weapons;
 	float m_Fuel;
 	float m_Hull;
 	Reference< PhysicalObject > m_Target;
 	System * m_LinkedSystemTarget;
 	System * m_CurrentSystem;
-	double m_NextTimeToFire;
 };
 
 inline float Ship::GetForwardThrust(void) const
@@ -192,22 +191,6 @@ inline void Ship::SetLinkedSystemTarget(System * LinkedSystem)
 inline void Ship::SetCurrentSystem(System * CurrentSystem)
 {
 	m_CurrentSystem = CurrentSystem;
-}
-
-inline bool Ship::RemoveObject(Object * Remove)
-{
-	std::set< Object * >::iterator ManifestIterator(m_Manifest.find(Remove));
-	
-	if(ManifestIterator != m_Manifest.end())
-	{
-		m_Manifest.erase(ManifestIterator);
-		
-		return true;
-	}
-	else
-	{
-		return false;
-	}
 }
 
 inline std::set< Object * > & Ship::GetManifest(void)

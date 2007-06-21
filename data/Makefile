@@ -29,6 +29,7 @@ all_data = \
 	.data/system_link_alpha_centauri_tichel.data \
 	.data/system_link_rigel_sol.data \
 	.data/system_link_rigel_tichel.data \
+	.data/weapon_class_light_laser.data \
 	.data/widget_mini_map.data \
 	.data/widget_scanner.data \
 	.data/widget_scanner_display.data
@@ -66,6 +67,7 @@ clean:
 
 data.arx: .data $(all_data) Makefile
 	@$(RM) -f $@
+	@echo -e "\n\nPreparing directory structure ...\n"
 	arxtouch $@
 	arxtouch $@ 0
 	arxmod $@ 0 -n "Root" -t 0 -st 0 -root
@@ -87,6 +89,9 @@ data.arx: .data $(all_data) Makefile
 	arxtouch $@ 6
 	arxmod $@ 6 -n "System Links" -t 0 -st 0
 	arxmod $@ 0 -a "child" 6
+	arxtouch $@ 7
+	arxmod $@ 7 -n "Weapon Classes" -t 0 -st 0
+	arxmod $@ 0 -a "child" 7
 	@echo -e "\n\nAdding widgets ...\n"
 	arxadd $@ --uid 103 --name "Credits" --type 1 --subtype 1 --add 1:child .data/label_credits.data
 	arxadd $@ --uid 108 --name "Current System" --type 1 --subtype 1 --add 1:child .data/label_current_system.data
@@ -99,6 +104,8 @@ data.arx: .data $(all_data) Makefile
 	arxadd $@ --uid 106 --name "Mini Map" --type 1 --subtype 2 --add 1:child .data/widget_mini_map.data
 	arxadd $@ --uid 105 --name "Scanner" --type 1 --subtype 0 --add 1:child .data/widget_scanner.data
 	arxadd $@ --uid 126 --name "Scanner Display" --type 1 --subtype 3 --add 1:child .data/widget_scanner_display.data
+	@echo -e "\n\nAdding weapon classes ...\n"
+	arxadd $@ --name "Light Laser" --type 7 --subtype 0 --add 7:child .data/weapon_class_light_laser.data
 	@echo -e "\n\nAdding ship classes ...\n"
 	arxadd $@ --uid 131 --name "Fighter" --type 3 --subtype 0 --add 3:child .data/ship_class_fighter.data
 	arxadd $@ --uid 110 --name "Shuttle" --type 3 --subtype 0 --add 3:child .data/ship_class_shuttle.data

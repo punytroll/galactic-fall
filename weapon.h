@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006  Hagen Möbius
+ * Copyright (C) 2007  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,21 +17,43 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef ARX_RESOURCES_H
-#define ARX_RESOURCES_H
+#ifndef WEAPON_H
+#define WEAPON_H
 
-#include <Common.h>
+#include "object.h"
 
-const Arxx::u4byte ARX_TYPE_WIDGET = 1;
-const Arxx::u4byte ARX_TYPE_WIDGET_SUB_TYPE_LABEL = 1;
-const Arxx::u4byte ARX_TYPE_WIDGET_SUB_TYPE_MINI_MAP = 2;
-const Arxx::u4byte ARX_TYPE_WIDGET_SUB_TYPE_SCANNER_DISPLAY = 3;
-const Arxx::u4byte ARX_TYPE_WIDGET_SUB_TYPE_WIDGET = 0;
-const Arxx::u4byte ARX_TYPE_MODEL = 2;
-const Arxx::u4byte ARX_TYPE_SHIP_CLASS = 3;
-const Arxx::u4byte ARX_TYPE_COMMODITY = 4;
-const Arxx::u4byte ARX_TYPE_SYSTEM = 5;
-const Arxx::u4byte ARX_TYPE_SYSTEM_LINK = 6;
-const Arxx::u4byte ARX_TYPE_WEAPON_CLASS = 7;
+class Ship;
+class WeaponClass;
+
+class Weapon : public Object
+{
+public:
+	Weapon(WeaponClass * WeaponClass);
+	void Update(float Seconds, bool Fire);
+	// getters
+	const WeaponClass * GetWeaponClass(void) const;
+	Ship * GetShip(void);
+	// setters
+	void SetShip(Ship * Ship);
+private:
+	WeaponClass * m_WeaponClass;
+	Ship * m_Ship;
+	double m_NextTimeToFire;
+};
+
+inline const WeaponClass * Weapon::GetWeaponClass(void) const
+{
+	return m_WeaponClass;
+}
+
+inline Ship * Weapon::GetShip(void)
+{
+	return m_Ship;
+}
+
+inline void Weapon::SetShip(Ship * Ship)
+{
+	m_Ship = Ship;
+}
 
 #endif
