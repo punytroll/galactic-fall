@@ -494,6 +494,7 @@ static void ReadWeaponClass(WeaponClassManager * WeaponClassManager, Arxx::Refer
 		throw std::runtime_error("Could not create weapon class '" + Identifier + "'.");
 	}
 	
+	std::string SlotType;
 	float ReloadTime;
 	float ParticleExitSpeed;
 	float ParticleDamage;
@@ -501,7 +502,8 @@ static void ReadWeaponClass(WeaponClassManager * WeaponClassManager, Arxx::Refer
 	std::string ParticleModelIdentifier;
 	Color ParticleColor;
 	
-	Reader >> ReloadTime >> ParticleExitSpeed >> ParticleDamage >> ParticleLifeTime >> ParticleModelIdentifier >> ParticleColor;
+	Reader >> SlotType >> ReloadTime >> ParticleExitSpeed >> ParticleDamage >> ParticleLifeTime >> ParticleModelIdentifier >> ParticleColor;
+	NewWeaponClass->SetSlotType(SlotType);
 	NewWeaponClass->SetReloadTime(ReloadTime);
 	NewWeaponClass->SetParticleExitSpeed(ParticleExitSpeed);
 	NewWeaponClass->SetParticleDamage(ParticleDamage);

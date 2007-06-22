@@ -409,7 +409,7 @@ real_time.o: real_time.cpp $(real_time_h)
 scanner_display.o: scanner_display.cpp $(scanner_display_h) $(ship_h) $(star_h) $(system.h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags math3d` -c $< -o $@
 
-ship.o: ship.cpp $(cargo_h) $(character_h) $(color_h) $(commodity_h) $(game_time_h) $(globals_h) $(map_knowledge_h) $(math_h) $(model_h) $(model_manager_h) $(ship_h) $(shot_h) $(slot_h) $(string_cast_h) $(system_h) $(weapon_h)
+ship.o: ship.cpp $(cargo_h) $(character_h) $(color_h) $(commodity_h) $(game_time_h) $(globals_h) $(map_knowledge_h) $(math_h) $(model_h) $(model_manager_h) $(ship_h) $(shot_h) $(slot_h) $(string_cast_h) $(system_h) $(weapon_h) $(weapon_class_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags math3d` -c $< -o $@
 
 ship_class.o: ship_class.cpp $(color_h) $(ship_class_h) $(slot_h)

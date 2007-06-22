@@ -40,6 +40,7 @@ public:
 	float GetParticleLifeTime(void) const;
 	const Model * GetParticleModel(void) const;
 	const Color * GetParticleColor(void) const;
+	const std::string & GetSlotType(void) const;
 	// modifiers
 	void SetReloadTime(float ReloadTime);
 	void SetParticleExitSpeed(float ParticleExitSpeed);
@@ -47,8 +48,10 @@ public:
 	void SetParticleLifeTime(float ParticleLifeTime);
 	void SetParticleModel(const Model * ParticleModel);
 	void SetParticleColor(const Color & ParticleColor);
+	void SetSlotType(const std::string & SlotType);
 private:
 	std::string m_Identifier;
+	std::string m_SlotType;
 	float m_ReloadTime;
 	float m_ParticleExitSpeed;
 	float m_ParticleDamage;
@@ -92,6 +95,11 @@ inline const Color * WeaponClass::GetParticleColor(void) const
 	return m_ParticleColor;
 }
 
+inline const std::string & WeaponClass::GetSlotType(void) const
+{
+	return m_SlotType;
+}
+
 inline void WeaponClass::SetReloadTime(float ReloadTime)
 {
 	m_ReloadTime = ReloadTime;
@@ -115,6 +123,11 @@ inline void WeaponClass::SetParticleLifeTime(float ParticleLifeTime)
 inline void WeaponClass::SetParticleModel(const Model * ParticleModel)
 {
 	m_ParticleModel = ParticleModel;
+}
+
+inline void WeaponClass::SetSlotType(const std::string & SlotType)
+{
+	m_SlotType = SlotType;
 }
 
 #endif

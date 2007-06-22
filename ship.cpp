@@ -39,6 +39,7 @@
 #include "string_cast.h"
 #include "system.h"
 #include "weapon.h"
+#include "weapon_class.h"
 
 Ship::Ship(ShipClass * ShipClass) :
 	m_Accelerate(false),
@@ -304,7 +305,7 @@ bool Ship::Mount(Object * Object, Slot * Slot)
 	{
 		Weapon * TheWeapon(dynamic_cast< Weapon * >(Object));
 		
-		if(TheWeapon != 0)
+		if((TheWeapon != 0) && (TheWeapon->GetWeaponClass()->GetSlotType() == Slot->GetType()))
 		{
 			Slot->SetMountedObject(Object);
 			TheWeapon->SetSlot(Slot);
