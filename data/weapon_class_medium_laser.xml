@@ -5,6 +5,7 @@
 		<exit-speed>26</exit-speed>
 		<damage>28</damage>
 		<life-time>2.9</life-time>
+		<model-identifier>laser_shot</model-identifier>
 		<color>
 			<red>0.2</red>
 			<green>0.2</green>

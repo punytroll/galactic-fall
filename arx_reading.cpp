@@ -480,13 +480,22 @@ static void ReadWeaponClass(WeaponClassManager * WeaponClassManager, Arxx::Refer
 	float ParticleExitSpeed;
 	float ParticleDamage;
 	float ParticleLifeTime;
+	std::string ParticleModelIdentifier;
 	Color ParticleColor;
 	
-	Reader >> ReloadTime >> ParticleExitSpeed >> ParticleDamage >> ParticleLifeTime >> ParticleColor;
+	Reader >> ReloadTime >> ParticleExitSpeed >> ParticleDamage >> ParticleLifeTime >> ParticleModelIdentifier >> ParticleColor;
 	NewWeaponClass->SetReloadTime(ReloadTime);
 	NewWeaponClass->SetParticleExitSpeed(ParticleExitSpeed);
 	NewWeaponClass->SetParticleDamage(ParticleDamage);
 	NewWeaponClass->SetParticleLifeTime(ParticleLifeTime);
+	
+	Model * ParticleModel(g_ModelManager.Get(ParticleModelIdentifier));
+	
+	if(ParticleModel == 0)
+	{
+		throw std::runtime_error("For the weapon class '" + Item->sGetName() + " could not find the particle model '" + ParticleModelIdentifier + "'.");
+	}
+	NewWeaponClass->SetParticleModel(ParticleModel);
 	NewWeaponClass->SetParticleColor(ParticleColor);
 }
 

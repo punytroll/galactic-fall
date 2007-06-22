@@ -23,6 +23,7 @@
 
 #include "color.h"
 #include "game_time.h"
+#include "model.h"
 #include "shot.h"
 #include "weapon_class.h"
 
@@ -50,12 +51,7 @@ void Shot::Draw(void) const
 	glColor4fv(m_WeaponClass->GetParticleColor()->GetColor().m_V.m_A);
 	glDisable(GL_LIGHTING);
 	glEnable(GL_BLEND);
-	glBegin(GL_QUADS);
-	glVertex2f(-0.5f, -0.2f);
-	glVertex2f(0.5f, -0.2f);
-	glVertex2f(0.5f, 0.2f);
-	glVertex2f(-0.5f, 0.2f);
-	glEnd();
+	m_WeaponClass->GetParticleModel()->Draw();
 	glPopMatrix();
 	glPopAttrib();
 }
