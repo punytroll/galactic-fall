@@ -779,6 +779,7 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix)
 		Weapon * NewWeapon(new Weapon(g_WeaponClassManager->Get("light_laser")));
 		
 		NewWeapon->SetObjectIdentifier("::weapon(" + NewWeapon->GetWeaponClass()->GetIdentifier() + ")::created_for(" + NewShip->GetObjectIdentifier() + ")" + IdentifierSuffix);
+		NewWeapon->SetPosition(math3d::vector2f(3.0f, 0.0f));
 		NewShip->AddObject(NewWeapon);
 	}
 	else if(ShipClassIdentifier == "transporter")

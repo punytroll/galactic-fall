@@ -35,12 +35,14 @@ public:
 	Ship * GetShip(void);
 	// setters
 	void SetFire(bool Fire);
+	void SetPosition(const math3d::vector2f & Position);
 	void SetShip(Ship * Ship);
 private:
 	WeaponClass * m_WeaponClass;
 	Ship * m_Ship;
 	bool m_Fire;
 	double m_NextTimeToFire;
+	math3d::vector2f m_Position;
 };
 
 inline const WeaponClass * Weapon::GetWeaponClass(void) const
@@ -56,6 +58,11 @@ inline Ship * Weapon::GetShip(void)
 inline void Weapon::SetFire(bool Fire)
 {
 	m_Fire = Fire;
+}
+
+inline void Weapon::SetPosition(const math3d::vector2f & Position)
+{
+	m_Position = Position;
 }
 
 inline void Weapon::SetShip(Ship * Ship)
