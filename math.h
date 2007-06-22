@@ -20,7 +20,7 @@
 #ifndef MATH_H
 #define MATH_H
 
-#include <math3d/vector2f.h>
+#include "math/vector2f.h"
 
 inline void NormalizeRadians(float & Radians)
 {
@@ -48,7 +48,7 @@ inline float NormalizedRadians(float Radians)
 	return Radians;
 }
 
-inline float GetRadians(const math3d::vector2f & Vector)
+inline float GetRadians(const Vector2f & Vector)
 {
 	float Radians(acosf(Vector.m_V.m_A[0]));
 	

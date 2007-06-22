@@ -20,9 +20,8 @@
 #ifndef CARGO_H
 #define CARGO_H
 
-#include <math3d/vector2f.h>
-#include <math3d/vector3f.h>
-
+#include "math/vector2f.h"
+#include "math/vector3f.h"
 #include "physical_object.h"
 
 class Commodity;
@@ -39,16 +38,16 @@ public:
 	// getters
 	const Commodity * GetCommodity(void) const;
 	float GetHull(void) const;
-	const math3d::vector2f & GetVelocity(void) const;
+	const Vector2f & GetVelocity(void) const;
 	// setters
 	void SetHull(float Hull);
-	void SetVelocity(const math3d::vector2f & Velocity);
+	void SetVelocity(const Vector2f & Velocity);
 private:
 	const Commodity * m_Commodity;
 	float m_Hull;
-	math3d::vector2f m_Velocity;
+	Vector2f m_Velocity;
 	float m_AngularPosition;
-	math3d::vector3f m_RotationAxis;
+	Vector3f m_RotationAxis;
 	float m_AngularVelocity;
 	// no copy constructor
 	Cargo(const Cargo & Cargo);
@@ -64,7 +63,7 @@ inline float Cargo::GetHull(void) const
 	return m_Hull;
 }
 
-inline const math3d::vector2f & Cargo::GetVelocity(void) const
+inline const Vector2f & Cargo::GetVelocity(void) const
 {
 	return m_Velocity;
 }
@@ -74,7 +73,7 @@ inline void Cargo::SetHull(float Hull)
 	m_Hull = Hull;
 }
 
-inline void Cargo::SetVelocity(const math3d::vector2f & Velocity)
+inline void Cargo::SetVelocity(const Vector2f & Velocity)
 {
 	m_Velocity = Velocity;
 }

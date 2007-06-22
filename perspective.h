@@ -20,7 +20,7 @@
 #ifndef PERSPECTIVE_H
 #define PERSPECTIVE_H
 
-#include <math3d/matrix4f.h>
+#include "math/matrix4f.h"
 
 class Perspective
 {
@@ -38,7 +38,7 @@ private:
 	float m_FieldOfView;
 	float m_NearClippingPlane;
 	float m_FarClippingPlane;
-	mutable math3d::matrix4f m_Matrix;
+	mutable Matrix4f m_Matrix;
 };
 
 inline void Perspective::SetAspect(float Aspect)

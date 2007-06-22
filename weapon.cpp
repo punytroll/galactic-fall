@@ -50,11 +50,11 @@ void Weapon::Update(float Seconds)
 		NewShot->SetObjectIdentifier(IdentifierStream.str());
 		NewShot->SetShooter(GetShip());
 		
-		const math3d::vector3f & SlotPosition(GetSlot()->GetPosition());
+		const Vector3f & SlotPosition(GetSlot()->GetPosition());
 		
-		NewShot->SetPosition(GetShip()->GetPosition() + math3d::vector2f(SlotPosition.m_V.m_A[0], SlotPosition.m_V.m_A[1]).turned(GetShip()->GetAngularPosition()));
+		NewShot->SetPosition(GetShip()->GetPosition() + Vector2f(SlotPosition.m_V.m_A[0], SlotPosition.m_V.m_A[1]).Turned(GetShip()->GetAngularPosition()));
 		NewShot->SetAngularPosition(GetShip()->GetAngularPosition());
-		NewShot->SetVelocity(GetShip()->GetVelocity() + math3d::vector2f(GetWeaponClass()->GetParticleExitSpeed(), GetShip()->GetAngularPosition(), math3d::vector2f::magnitude_angle));
+		NewShot->SetVelocity(GetShip()->GetVelocity() + Vector2f(GetWeaponClass()->GetParticleExitSpeed(), GetShip()->GetAngularPosition(), Vector2f::InitializeMagnitudeAngle));
 		GetShip()->GetCurrentSystem()->AddShot(NewShot);
 		m_NextTimeToFire = GameTime::Get() + GetWeaponClass()->GetReloadTime();
 	}

@@ -41,7 +41,7 @@ public:
 	virtual void Execute(void);
 	virtual void Exit(void);
 protected:
-	math3d::vector2f m_Point;
+	Vector2f m_Point;
 };
 
 class TransporterPhase1 : public State
@@ -81,7 +81,7 @@ public:
 	virtual void Execute(void);
 	virtual void Exit(void);
 private:
-	math3d::vector2f m_JumpPoint;
+	Vector2f m_JumpPoint;
 };
 
 class Fight : public State

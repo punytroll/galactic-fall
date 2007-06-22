@@ -23,8 +23,8 @@
 #include <map>
 #include <vector>
 
-#include <math3d/vector2f.h>
 
+#include "math/vector2f.h"
 #include "physical_object.h"
 #include "ship_class.h"
 
@@ -48,7 +48,6 @@ public:
 	bool m_Land;
 	bool m_Scoop;
 	// current state
-	math3d::vector2f m_Velocity;
 	float m_AngularPosition;
 	// getters
 	float GetForwardThrust(void) const;
@@ -59,7 +58,7 @@ public:
 	float GetMaximumSpeed(void) const;
 	const ShipClass * GetShipClass(void) const;
 	float GetTurnSpeed(void) const;
-	const math3d::vector2f & GetVelocity(void) const;
+	const Vector2f & GetVelocity(void) const;
 	float GetFreeCargoHoldSize(void) const;
 	float GetCommodityAmount(const Commodity * CargoCommodity) const;
 	Reference< PhysicalObject > & GetTarget(void);
@@ -72,7 +71,7 @@ public:
 	void SetFire(bool Fire);
 	void SetFuel(float Fuel);
 	void SetHull(float Hull);
-	void SetVelocity(const math3d::vector2f & Velocity);
+	void SetVelocity(const Vector2f & Velocity);
 	void SetAngularPosition(float AngularPosition);
 	void SetTarget(Reference< PhysicalObject > Target);
 	void SetLinkedSystemTarget(System * LinkedSystem);
@@ -96,6 +95,7 @@ private:
 	Reference< PhysicalObject > m_Target;
 	System * m_LinkedSystemTarget;
 	System * m_CurrentSystem;
+	Vector2f m_Velocity;
 };
 
 inline float Ship::GetForwardThrust(void) const
@@ -133,7 +133,7 @@ inline float Ship::GetTurnSpeed(void) const
 	return m_ShipClass->GetTurnSpeed();
 }
 
-inline const math3d::vector2f & Ship::GetVelocity(void) const
+inline const Vector2f & Ship::GetVelocity(void) const
 {
 	return m_Velocity;
 }
@@ -178,7 +178,7 @@ inline void Ship::SetHull(float Hull)
 	m_Hull = Hull;
 }
 
-inline void Ship::SetVelocity(const math3d::vector2f & Velocity)
+inline void Ship::SetVelocity(const Vector2f & Velocity)
 {
 	m_Velocity = Velocity;
 }

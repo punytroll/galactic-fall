@@ -22,7 +22,7 @@
 
 #include <string>
 
-#include <math3d/vector3f.h>
+#include "math/vector3f.h"
 
 class Object;
 
@@ -32,15 +32,15 @@ public:
 	Slot(void);
 	// getters
 	const Object * GetMountedObject(void) const;
-	const math3d::vector3f & GetPosition(void) const;
+	const Vector3f & GetPosition(void) const;
 	const std::string & GetType(void) const;
 	// setters
 	void SetMountedObject(Object * MountedObject);
-	void SetPosition(const math3d::vector3f & Position);
+	void SetPosition(const Vector3f & Position);
 	void SetType(const std::string & Type);
 private:
 	Object * m_MountedObject;
-	math3d::vector3f m_Position;
+	Vector3f m_Position;
 	std::string m_Type;
 };
 
@@ -49,7 +49,7 @@ inline const Object * Slot::GetMountedObject(void) const
 	return m_MountedObject;
 }
 
-inline const math3d::vector3f & Slot::GetPosition(void) const
+inline const Vector3f & Slot::GetPosition(void) const
 {
 	return m_Position;
 }
@@ -64,7 +64,7 @@ inline void Slot::SetMountedObject(Object * MountedObject)
 	m_MountedObject = MountedObject;
 }
 
-inline void Slot::SetPosition(const math3d::vector3f & Position)
+inline void Slot::SetPosition(const Vector3f & Position)
 {
 	m_Position = Position;
 }

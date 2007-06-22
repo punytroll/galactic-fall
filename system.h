@@ -23,8 +23,6 @@
 #include <list>
 #include <string>
 
-#include <math3d/vector2f.h>
-
 #include "position.h"
 
 class Cargo;

@@ -20,24 +20,23 @@
 #ifndef POSITION_H
 #define POSITION_H
 
-#include <math3d/vector2f.h>
-
 #include "object.h"
+#include "math/vector2f.h"
 
 class Position : public Object
 {
 public:
-	void SetPosition(const math3d::vector2f & Position);
-	const math3d::vector2f & GetPosition(void) const;
-	math3d::vector2f m_Position;
+	void SetPosition(const Vector2f & Position);
+	const Vector2f & GetPosition(void) const;
+	Vector2f m_Position;
 };
 
-inline void Position::SetPosition(const math3d::vector2f & Position)
+inline void Position::SetPosition(const Vector2f & Position)
 {
 	m_Position = Position;
 }
 
-inline const math3d::vector2f & Position::GetPosition(void) const
+inline const Vector2f & Position::GetPosition(void) const
 {
 	return m_Position;
 }

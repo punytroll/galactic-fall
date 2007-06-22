@@ -20,8 +20,7 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#include <math3d/vector3f.h>
-
+#include "math/vector3f.h"
 #include "referencing.h"
 
 class Position;
@@ -37,13 +36,13 @@ public:
 	void SetFieldOfView(float FieldOfView);
 	Reference< Position > & GetFocus(void);
 	const Reference< Position > & GetFocus(void) const;
-	const math3d::vector3f & GetPosition(void) const;
+	const Vector3f & GetPosition(void) const;
 	float GetFieldOfView(void) const;
 	void MoveIn(void);
 	void MoveOut(void);
 private:
 	Reference< Position > m_Focus;
-	math3d::vector3f m_Position;
+	Vector3f m_Position;
 	float m_FieldOfView;
 };
 
@@ -62,7 +61,7 @@ inline const Reference< Position > & Camera::GetFocus(void) const
 	return m_Focus;
 }
 
-inline const math3d::vector3f & Camera::GetPosition(void) const
+inline const Vector3f & Camera::GetPosition(void) const
 {
 	return m_Position;
 }

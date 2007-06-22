@@ -32,25 +32,25 @@ Arxx::BufferReader & operator>>(Arxx::BufferReader & BufferReader, Color & Color
 	return BufferReader;
 }
 
-Arxx::BufferReader & operator>>(Arxx::BufferReader & BufferReader, math3d::vector2f & Vector)
+Arxx::BufferReader & operator>>(Arxx::BufferReader & BufferReader, Vector2f & Vector)
 {
 	float x;
 	float y;
 	
 	BufferReader >> x >> y;
-	Vector.set(x, y);
+	Vector.Set(x, y);
 	
 	return BufferReader;
 }
 
-Arxx::BufferReader & operator>>(Arxx::BufferReader & BufferReader, math3d::vector3f & Vector)
+Arxx::BufferReader & operator>>(Arxx::BufferReader & BufferReader, Vector3f & Vector)
 {
 	float x;
 	float y;
 	float z;
 	
 	BufferReader >> x >> y >> z;
-	Vector.set(x, y, z);
+	Vector.Set(x, y, z);
 	
 	return BufferReader;
 }

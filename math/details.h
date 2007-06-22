@@ -1,6 +1,6 @@
 /**
- * galactic-fall
- * Copyright (C) 2006  Hagen MÃ¶bius
+ * algebra
+ * Copyright (C) 2007  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,24 +17,27 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef WINDOW_H
-#define WINDOW_H
+/**
+ * This is part of version 0.9.0 of algebra.
+ **/
 
-#include "mouse_button_listener.h"
-#include "mouse_motion_listener.h"
-#include "widget.h"
+#ifndef ALGEBRA_DETAILS_H
+#define ALGEBRA_DETAILS_H
 
-class Label;
+typedef float vector4float __attribute__ ((vector_size(16)));
 
-class WWindow : virtual public MouseButtonListener, virtual public MouseMotionListener, public Widget
+union Array4f
 {
-public:
-	WWindow(Widget * SupWidget, const std::string & Title);
-	virtual bool OnMouseButton(Widget * EventSource, int Button, int State, float X, float Y);
-	virtual void OnMouseMotion(Widget * EventSource, float X, float Y);
-private:
-	Label * m_TitleLabel;
-	Vector2f m_GrabPosition;
+	vector4float m_V;
+	float m_A[4];
+};
+
+typedef float vector2float __attribute__ ((vector_size(8)));
+
+union Array2f
+{
+	vector2float m_V;
+	float m_A[2];
 };
 
 #endif

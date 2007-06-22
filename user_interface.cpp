@@ -79,8 +79,8 @@ bool UserInterface::MouseButton(int Button, int State, float X, float Y)
 {
 	if(m_CaptureWidget == 0)
 	{
-		const math3d::vector2f & LeftTopCorner(m_RootWidget->GetPosition());
-		math3d::vector2f RightBottomCorner(LeftTopCorner + m_RootWidget->GetSize());
+		const Vector2f & LeftTopCorner(m_RootWidget->GetPosition());
+		Vector2f RightBottomCorner(LeftTopCorner + m_RootWidget->GetSize());
 		
 		if((X >= LeftTopCorner.m_V.m_A[0]) && (X < RightBottomCorner.m_V.m_A[0]) && (Y >= LeftTopCorner.m_V.m_A[1]) && (Y < RightBottomCorner.m_V.m_A[1]))
 		{
@@ -93,7 +93,7 @@ bool UserInterface::MouseButton(int Button, int State, float X, float Y)
 	}
 	else
 	{
-		math3d::vector2f TopLeftCorner(m_CaptureWidget->GetGlobalPosition());
+		Vector2f TopLeftCorner(m_CaptureWidget->GetGlobalPosition());
 		
 		return m_CaptureWidget->MouseButton(Button, State, X - TopLeftCorner.m_V.m_A[0], Y - TopLeftCorner.m_V.m_A[1]);
 	}
@@ -108,8 +108,8 @@ void UserInterface::MouseMotion(float X, float Y)
 {
 	if(m_CaptureWidget == 0)
 	{
-		const math3d::vector2f & LeftTopCorner(m_RootWidget->GetPosition());
-		math3d::vector2f RightBottomCorner(LeftTopCorner + m_RootWidget->GetSize());
+		const Vector2f & LeftTopCorner(m_RootWidget->GetPosition());
+		Vector2f RightBottomCorner(LeftTopCorner + m_RootWidget->GetSize());
 		
 		if((X >= LeftTopCorner.m_V.m_A[0]) && (X < RightBottomCorner.m_V.m_A[0]) && (Y >= LeftTopCorner.m_V.m_A[1]) && (Y < RightBottomCorner.m_V.m_A[1]))
 		{
@@ -131,7 +131,7 @@ void UserInterface::MouseMotion(float X, float Y)
 	}
 	else
 	{
-		math3d::vector2f TopLeftCorner(m_CaptureWidget->GetGlobalPosition());
+		Vector2f TopLeftCorner(m_CaptureWidget->GetGlobalPosition());
 		
 		m_CaptureWidget->MouseMotion(X - TopLeftCorner.m_V.m_A[0], Y - TopLeftCorner.m_V.m_A[1]);
 	}
