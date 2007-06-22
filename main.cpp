@@ -781,6 +781,13 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix)
 		NewWeapon->SetObjectIdentifier("::weapon(" + NewWeapon->GetWeaponClass()->GetIdentifier() + ")::created_for(" + NewShip->GetObjectIdentifier() + ")" + IdentifierSuffix);
 		NewWeapon->SetPosition(math3d::vector2f(3.0f, 0.0f));
 		NewShip->AddObject(NewWeapon);
+		
+		const std::vector< Slot * > & ShipSlots(NewShip->GetSlots());
+		
+		if(ShipSlots.size() > 0)
+		{
+			NewShip->Mount(NewWeapon, ShipSlots.front());
+		}
 	}
 	else if(ShipClassIdentifier == "transporter")
 	{

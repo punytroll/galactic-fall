@@ -35,6 +35,7 @@
 #include "model_manager.h"
 #include "ship.h"
 #include "shot.h"
+#include "slot.h"
 #include "string_cast.h"
 #include "system.h"
 #include "weapon.h"
@@ -56,6 +57,16 @@ Ship::Ship(ShipClass * ShipClass) :
 	m_CurrentSystem(0)
 {
 	SetRadialSize(m_ShipClass->GetModel()->GetRadialSize());
+	
+	const std::vector< Slot * > & ShipClassSlots(GetShipClass()->GetSlots());
+	
+	for(std::vector< Slot * >::size_type SlotNumber = 0; SlotNumber < ShipClassSlots.size(); ++SlotNumber)
+	{
+		Slot * NewSlot(CreateSlot());
+		
+		NewSlot->SetType(ShipClassSlots[SlotNumber]->GetType());
+		NewSlot->SetPosition(ShipClassSlots[SlotNumber]->GetPosition());
+	}
 }
 
 void Ship::Draw(void) const
@@ -145,7 +156,11 @@ void Ship::Update(float Seconds)
 	{
 		for(std::vector< Weapon * >::size_type WeaponIndex = 0; WeaponIndex < m_Weapons.size(); ++WeaponIndex)
 		{
-			m_Weapons[WeaponIndex]->Update(Seconds);
+			// only fire mounted weapons
+			if(m_Weapons[WeaponIndex]->GetSlot() != 0)
+			{
+				m_Weapons[WeaponIndex]->Update(Seconds);
+			}
 		}
 		if(m_TurnLeft == true)
 		{
@@ -271,6 +286,35 @@ void Ship::SetFire(bool Fire)
 	for(std::vector< Weapon * >::size_type WeaponIndex = 0; WeaponIndex < m_Weapons.size(); ++WeaponIndex)
 	{
 		m_Weapons[WeaponIndex]->SetFire(Fire);
+	}
+}
+
+Slot * Ship::CreateSlot(void)
+{
+	Slot * NewSlot(new Slot());
+	
+	m_Slots.push_back(NewSlot);
+	
+	return NewSlot;
+}
+
+bool Ship::Mount(Object * Object, Slot * Slot)
+{
+	if((m_Manifest.find(Object) != m_Manifest.end()) && (std::find(m_Slots.begin(), m_Slots.end(), Slot) != m_Slots.end()))
+	{
+		Weapon * TheWeapon(dynamic_cast< Weapon * >(Object));
+		
+		if(TheWeapon != 0)
+		{
+			Slot->SetMountedObject(Object);
+			TheWeapon->SetSlot(Slot);
+			
+			return true;
+		}
+	}
+	else
+	{
+		return false;
 	}
 }
 

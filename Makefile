@@ -154,6 +154,9 @@ shot_h = \
 	$(physical_object_h) \
 	shot.h
 
+slot_h = \
+	slot.h
+
 star_h = \
 	star.h \
 	$(position_h)
@@ -260,6 +263,7 @@ clean: clean-recursive
 	$(RM) ship_class.o
 	$(RM) ship_class_manager.o
 	$(RM) shot.o
+	$(RM) slot.o
 	$(RM) star.o
 	$(RM) state.o
 	$(RM) state_machine.o
@@ -306,10 +310,10 @@ check-dependencies:
 install:
 	@echo -e "This project is not installable yet. Please run \"./galactic-fall\" from the top directory."
 
-galactic-fall: arx_reading.o buffer_reading.o button.o camera.o cargo.o character.o clicked_listener.o color.o command_mind.o commodity.o commodity_manager.o destroy_listener.o draw_text.o game_time.o key_listener.o label.o main.o map_dialog.o map_knowledge.o mini_map.o mind.o model.o model_manager.o mouse_button_listener.o mouse_motion_listener.o object.o perspective.o physical_object.o planet.o planet_dialog.o real_time.o scanner_display.o ship.o ship_class.o ship_class_manager.o shot.o star.o state.o state_machine.o states.o string_cast.o system.o system_manager.o trade_center_dialog.o user_interface.o weapon.o weapon_class.o weapon_class_manager.o widget.o window.o xml_parser.o xml_puny_dom.o xml_stream.o
+galactic-fall: arx_reading.o buffer_reading.o button.o camera.o cargo.o character.o clicked_listener.o color.o command_mind.o commodity.o commodity_manager.o destroy_listener.o draw_text.o game_time.o key_listener.o label.o main.o map_dialog.o map_knowledge.o mini_map.o mind.o model.o model_manager.o mouse_button_listener.o mouse_motion_listener.o object.o perspective.o physical_object.o planet.o planet_dialog.o real_time.o scanner_display.o ship.o ship_class.o ship_class_manager.o shot.o slot.o star.o state.o state_machine.o states.o string_cast.o system.o system_manager.o trade_center_dialog.o user_interface.o weapon.o weapon_class.o weapon_class_manager.o widget.o window.o xml_parser.o xml_puny_dom.o xml_stream.o
 	$(CXX) $(LDFLAGS) `pkg-config --libs libarxx` $^ -lGL -o $@
 
-arx_reading.o: arx_reading.cpp $(arx_reading_h) $(arx_resources_h) $(buffer_reading_h) $(callbacks_h) $(commodity_h) $(commodity_manager_h) $(label_h) $(model_h) $(model_manager_h) $(planet_h) $(ship_class_h) $(ship_class_manager_h) $(system_h) $(system_manager_h) $(user_interface_h) $(weapon_class_h) $(weapon_class_manager_h) $(widget_h)
+arx_reading.o: arx_reading.cpp $(arx_reading_h) $(arx_resources_h) $(buffer_reading_h) $(callbacks_h) $(commodity_h) $(commodity_manager_h) $(label_h) $(model_h) $(model_manager_h) $(planet_h) $(ship_class_h) $(ship_class_manager_h) $(slot_h) $(system_h) $(system_manager_h) $(user_interface_h) $(weapon_class_h) $(weapon_class_manager_h) $(widget_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags libarxx math3d` -c $< -o $@
 
 buffer_reading.o: buffer_reading.cpp $(buffer_reading_h)
@@ -405,16 +409,19 @@ real_time.o: real_time.cpp $(real_time_h)
 scanner_display.o: scanner_display.cpp $(scanner_display_h) $(ship_h) $(star_h) $(system.h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags math3d` -c $< -o $@
 
-ship.o: ship.cpp $(cargo_h) $(character_h) $(color_h) $(commodity_h) $(game_time_h) $(globals_h) $(map_knowledge_h) $(math_h) $(model_h) $(model_manager_h) $(ship_h) $(shot_h) $(string_cast_h) $(system_h) $(weapon_h)
+ship.o: ship.cpp $(cargo_h) $(character_h) $(color_h) $(commodity_h) $(game_time_h) $(globals_h) $(map_knowledge_h) $(math_h) $(model_h) $(model_manager_h) $(ship_h) $(shot_h) $(slot_h) $(string_cast_h) $(system_h) $(weapon_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags math3d` -c $< -o $@
 
-ship_class.o: ship_class.cpp $(color_h) $(ship_class_h)
+ship_class.o: ship_class.cpp $(color_h) $(ship_class_h) $(slot_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags math3d` -c $< -o $@
 	
 ship_class_manager.o: ship_class_manager.cpp $(ship_class_h) $(ship_class_manager_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags math3d` -c $< -o $@
 
 shot.o: shot.cpp $(color_h) $(game_time_h) $(model_h) $(shot_h) $(weapon_class_h)
+	$(CXX) $(CXXFLAGS) `pkg-config --cflags math3d` -c $< -o $@
+
+slot.o: slot.cpp $(slot_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags math3d` -c $< -o $@
 
 star.o: star.cpp $(star_h)

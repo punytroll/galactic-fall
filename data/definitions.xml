@@ -77,6 +77,7 @@
 		<float identifier="hull"/>
 		<color4f identifier="color"/>
 		<vector3f identifier="exhaust-offset"/>
+		<array identifier="slots"/>
 	</ship-class>
 	
 	<commodity>
@@ -91,6 +92,11 @@
 		<string identifier="identifier"/>
 		<float identifier="base-price-modifier"/>
 	</offered-commodity>
+	
+	<slot>
+		<string identifier="type"/>
+		<vector3f identifier="position"/>
+	</slot>
 	
 	<star>
 		<string identifier="identifier"/>
