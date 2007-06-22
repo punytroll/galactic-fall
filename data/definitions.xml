@@ -133,6 +133,7 @@
 	
 	<weapon-class>
 		<string identifier="identifier"/>
+		<string identifier="slot-type"/>
 		<float identifier="reload-time"/>
 		<particle identifier="particle"/>
 	</weapon-class>
