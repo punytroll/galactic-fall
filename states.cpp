@@ -492,7 +492,7 @@ void Fight::Execute(void)
 		
 		float HeadingOffDestination(GetShortestRadians(GetMind()->GetCharacter()->GetShip()->GetAngularPosition(), GetRadians(ToDestination)));
 		
-		GetMind()->GetCharacter()->GetShip()->m_Fire = false;
+		GetMind()->GetCharacter()->GetShip()->SetFire(false);
 		if(HeadingOffDestination > 0.1)
 		{
 			GetMind()->GetCharacter()->GetShip()->m_TurnRight = true;
@@ -512,7 +512,7 @@ void Fight::Execute(void)
 			GetMind()->GetCharacter()->GetShip()->m_Accelerate = ((GetMind()->GetCharacter()->GetShip()->GetVelocity() - math3d::vector2f(GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetMaximumSpeed(), GetMind()->GetCharacter()->GetShip()->GetAngularPosition(), math3d::vector2f::magnitude_angle)).length_squared() > 0.1f);
 			if(Length < 150.0f)
 			{
-				GetMind()->GetCharacter()->GetShip()->m_Fire = true;
+				GetMind()->GetCharacter()->GetShip()->SetFire(true);
 			}
 		}
 	}
@@ -525,7 +525,7 @@ void Fight::Execute(void)
 
 void Fight::Exit(void)
 {
-	GetMind()->GetCharacter()->GetShip()->m_Fire = false;
+	GetMind()->GetCharacter()->GetShip()->SetFire(false);
 }
 
 MonitorFuel::MonitorFuel(StateMachineMind * Mind) :

@@ -29,15 +29,17 @@ class Weapon : public Object
 {
 public:
 	Weapon(WeaponClass * WeaponClass);
-	void Update(float Seconds, bool Fire);
+	void Update(float Seconds);
 	// getters
 	const WeaponClass * GetWeaponClass(void) const;
 	Ship * GetShip(void);
 	// setters
+	void SetFire(bool Fire);
 	void SetShip(Ship * Ship);
 private:
 	WeaponClass * m_WeaponClass;
 	Ship * m_Ship;
+	bool m_Fire;
 	double m_NextTimeToFire;
 };
 
@@ -49,6 +51,11 @@ inline const WeaponClass * Weapon::GetWeaponClass(void) const
 inline Ship * Weapon::GetShip(void)
 {
 	return m_Ship;
+}
+
+inline void Weapon::SetFire(bool Fire)
+{
+	m_Fire = Fire;
 }
 
 inline void Weapon::SetShip(Ship * Ship)

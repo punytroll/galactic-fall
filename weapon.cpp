@@ -29,13 +29,14 @@
 
 Weapon::Weapon(WeaponClass * WeaponClass) :
 	m_WeaponClass(WeaponClass),
+	m_Fire(false),
 	m_NextTimeToFire(0.0)
 {
 }
 
-void Weapon::Update(float Seconds, bool Fire)
+void Weapon::Update(float Seconds)
 {
-	if((Fire == true) && (m_NextTimeToFire <= GameTime::Get()))
+	if((m_Fire == true) && (m_NextTimeToFire <= GameTime::Get()))
 	{
 		std::stringstream IdentifierStream;
 		
