@@ -1,0 +1,28 @@
+<model identifier="laser_shot">
+	 <point identifier="0" name="" position-x="-0.5" position-y="-0.2" position-z="0" />
+	 <point identifier="1" name="" position-x="0.5" position-y="-0.2" position-z="0" />
+	 <point identifier="2" name="" position-x="0.5" position-y="0.2" position-z="0" />
+	 <point identifier="3" name="" position-x="-0.5" position-y="0.2" position-z="0" />
+	 <triangle-point identifier="0" normal-x="0" normal-y="0" normal-z="1" >
+		<point point-identifier="0" />
+	 </triangle-point>
+	 <triangle-point identifier="1" normal-x="0" normal-y="0" normal-z="1" >
+		<point point-identifier="1" />
+	 </triangle-point>
+	 <triangle-point identifier="2" normal-x="0" normal-y="0" normal-z="1" >
+		<point point-identifier="2" />
+	 </triangle-point>
+	 <triangle-point identifier="3" normal-x="0" normal-y="0" normal-z="1" >
+		<point point-identifier="3" />
+	 </triangle-point>
+	 <triangle identifier="0" name="" >
+		<triangle-point triangle-point-identifier="0" />
+		<triangle-point triangle-point-identifier="1" />
+		<triangle-point triangle-point-identifier="2" />
+	 </triangle>
+	 <triangle identifier="1" name="" >
+		<triangle-point triangle-point-identifier="0" />
+		<triangle-point triangle-point-identifier="2" />
+		<triangle-point triangle-point-identifier="3" />
+	 </triangle>
+</model>

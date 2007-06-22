@@ -135,6 +135,7 @@
 		<float identifier="exit-speed"/>
 		<float identifier="damage"/>
 		<float identifier="life-time"/>
+		<string identifier="model-identifier"/>
 		<color4f identifier="color"/>
 	</particle>
 </definitions>

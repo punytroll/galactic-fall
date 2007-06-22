@@ -15,6 +15,7 @@ all_data = \
 	.data/label_time_warp.data \
 	.data/model_cargo_cube.data \
 	.data/model_fighter.data \
+	.data/model_laser_shot.data \
 	.data/model_planet.data \
 	.data/model_shuttle.data \
 	.data/model_transporter.data \
@@ -58,6 +59,7 @@ clean:
 	$(RM) -f xml_stream.pyc
 	$(RM) -f model_cargo_cube.xml
 	$(RM) -f model_fighter.xml
+	$(RM) -f model_laser_shot.xml
 	$(RM) -f model_planet.xml
 	$(RM) -f model_shuttle.xml
 	$(RM) -f model_transporter.xml
@@ -132,6 +134,7 @@ data.arx: .data $(all_data) Makefile
 	@echo -e "\n\nAdding models ...\n"
 	arxadd $@ --uid 109 --name "Cargo Cube" --type 2 --subtype 0 --add 2:child .data/model_cargo_cube.data
 	arxadd $@ --uid 130 --name "Fighter" --type 2 --subtype 0 --add 2:child .data/model_fighter.data
+	arxadd $@ --name "Laser Shot" --type 2 --subtype 0 --add 2:child .data/model_laser_shot.data
 	arxadd $@ --uid 129 --name "Planet" --type 2 --subtype 0 --add 2:child .data/model_planet.data
 	arxadd $@ --uid 121 --name "Shuttle" --type 2 --subtype 0 --add 2:child .data/model_shuttle.data
 	arxadd $@ --uid 127 --name "Transporter" --type 2 --subtype 0 --add 2:child .data/model_transporter.data
@@ -146,6 +149,9 @@ model_cargo_cube.xml: models/cargo_cube.xml littlem_to_xml.xsl
 	xsltproc -output $@ littlem_to_xml.xsl $<
 
 model_fighter.xml: models/fighter.xml littlem_to_xml.xsl
+	xsltproc -output $@ littlem_to_xml.xsl $<
+
+model_laser_shot.xml: models/laser_shot.xml littlem_to_xml.xsl
 	xsltproc -output $@ littlem_to_xml.xsl $<
 
 model_planet.xml: models/planet.xml littlem_to_xml.xsl

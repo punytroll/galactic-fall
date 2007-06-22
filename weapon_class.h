@@ -23,6 +23,7 @@
 #include <string>
 
 class Color;
+class Model;
 
 class WeaponClass
 {
@@ -37,12 +38,14 @@ public:
 	float GetParticleExitSpeed(void) const;
 	float GetParticleDamage(void) const;
 	float GetParticleLifeTime(void) const;
+	const Model * GetParticleModel(void) const;
 	const Color * GetParticleColor(void) const;
 	// modifiers
 	void SetReloadTime(float ReloadTime);
 	void SetParticleExitSpeed(float ParticleExitSpeed);
 	void SetParticleDamage(float ParticleDamage);
 	void SetParticleLifeTime(float ParticleLifeTime);
+	void SetParticleModel(const Model * ParticleModel);
 	void SetParticleColor(const Color & ParticleColor);
 private:
 	std::string m_Identifier;
@@ -50,6 +53,7 @@ private:
 	float m_ParticleExitSpeed;
 	float m_ParticleDamage;
 	float m_ParticleLifeTime;
+	const Model * m_ParticleModel;
 	Color * m_ParticleColor;
 };
 
@@ -78,6 +82,11 @@ inline float WeaponClass::GetParticleLifeTime(void) const
 	return m_ParticleLifeTime;
 }
 
+inline const Model * WeaponClass::GetParticleModel(void) const
+{
+	return m_ParticleModel;
+}
+
 inline const Color * WeaponClass::GetParticleColor(void) const
 {
 	return m_ParticleColor;
@@ -101,6 +110,11 @@ inline void WeaponClass::SetParticleDamage(float ParticleDamage)
 inline void WeaponClass::SetParticleLifeTime(float ParticleLifeTime)
 {
 	m_ParticleLifeTime = ParticleLifeTime;
+}
+
+inline void WeaponClass::SetParticleModel(const Model * ParticleModel)
+{
+	m_ParticleModel = ParticleModel;
 }
 
 #endif

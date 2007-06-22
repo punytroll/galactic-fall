@@ -414,7 +414,7 @@ ship_class.o: ship_class.cpp $(color_h) $(ship_class_h)
 ship_class_manager.o: ship_class_manager.cpp $(ship_class_h) $(ship_class_manager_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags math3d` -c $< -o $@
 
-shot.o: shot.cpp $(color_h) $(game_time_h) $(shot_h) $(weapon_class_h)
+shot.o: shot.cpp $(color_h) $(game_time_h) $(model_h) $(shot_h) $(weapon_class_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags math3d` -c $< -o $@
 
 star.o: star.cpp $(star_h)
