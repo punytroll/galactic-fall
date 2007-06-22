@@ -28,9 +28,9 @@
 Shot::Shot(const WeaponClass * WeaponClass) :
 	m_WeaponClass(WeaponClass),
 	m_Shooter(0),
-	m_AngularPosition(0.0f),
-	m_Velocity(true),
 	m_TimeOfDeath(GameTime::Get() + WeaponClass->GetParticleLifeTime()),
+	m_Velocity(true),
+	m_AngularPosition(0.0f),
 	m_Damage(WeaponClass->GetParticleDamage())
 {
 	SetRadialSize(0.54f);
