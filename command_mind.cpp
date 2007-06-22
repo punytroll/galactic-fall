@@ -84,7 +84,7 @@ void CommandMind::EnableFire(void)
 	assert(GetCharacter() != 0);
 	assert(GetCharacter()->GetShip() != 0);
 	
-	GetCharacter()->GetShip()->m_Fire = true;
+	GetCharacter()->GetShip()->SetFire(true);
 }
 
 void CommandMind::DisableFire(void)
@@ -92,7 +92,7 @@ void CommandMind::DisableFire(void)
 	assert(GetCharacter() != 0);
 	assert(GetCharacter()->GetShip() != 0);
 	
-	GetCharacter()->GetShip()->m_Fire = false;
+	GetCharacter()->GetShip()->SetFire(false);
 }
 
 void CommandMind::Jettison(void)

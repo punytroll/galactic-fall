@@ -43,7 +43,6 @@ public:
 	bool m_Accelerate;
 	bool m_TurnLeft;
 	bool m_TurnRight;
-	bool m_Fire;
 	bool m_Jettison;
 	bool m_Jump;
 	bool m_Land;
@@ -69,6 +68,7 @@ public:
 	System * GetCurrentSystem(void);
 	const System * GetCurrentSystem(void) const;
 	// setters
+	void SetFire(bool Fire);
 	void SetFuel(float Fuel);
 	void SetHull(float Hull);
 	void SetVelocity(const math3d::vector2f & Velocity);

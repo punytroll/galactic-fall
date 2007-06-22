@@ -43,7 +43,6 @@ Ship::Ship(ShipClass * ShipClass) :
 	m_Accelerate(false),
 	m_TurnLeft(false),
 	m_TurnRight(false),
-	m_Fire(false),
 	m_Jump(false),
 	m_Jettison(false),
 	m_Land(false),
@@ -146,7 +145,7 @@ void Ship::Update(float Seconds)
 	{
 		for(std::vector< Weapon * >::size_type WeaponIndex = 0; WeaponIndex < m_Weapons.size(); ++WeaponIndex)
 		{
-			m_Weapons[WeaponIndex]->Update(Seconds, m_Fire);
+			m_Weapons[WeaponIndex]->Update(Seconds);
 		}
 		if(m_TurnLeft == true)
 		{
@@ -265,6 +264,14 @@ float Ship::GetCommodityAmount(const Commodity * CargoCommodity) const
 	}
 	
 	return Amount;
+}
+
+void Ship::SetFire(bool Fire)
+{
+	for(std::vector< Weapon * >::size_type WeaponIndex = 0; WeaponIndex < m_Weapons.size(); ++WeaponIndex)
+	{
+		m_Weapons[WeaponIndex]->SetFire(Fire);
+	}
 }
 
 bool Ship::AddObject(Object * Add)
