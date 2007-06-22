@@ -22,6 +22,7 @@
 #include "game_time.h"
 #include "ship.h"
 #include "shot.h"
+#include "slot.h"
 #include "string_cast.h"
 #include "system.h"
 #include "weapon.h"
@@ -32,8 +33,7 @@ Weapon::Weapon(WeaponClass * WeaponClass) :
 	m_Ship(0),
 	m_Slot(0),
 	m_Fire(false),
-	m_NextTimeToFire(0.0),
-	m_Position(true)
+	m_NextTimeToFire(0.0)
 {
 }
 
@@ -49,7 +49,10 @@ void Weapon::Update(float Seconds)
 		
 		NewShot->SetObjectIdentifier(IdentifierStream.str());
 		NewShot->SetShooter(GetShip());
-		NewShot->SetPosition(GetShip()->GetPosition() + m_Position.turned(GetShip()->GetAngularPosition()));
+		
+		const math3d::vector3f & SlotPosition(GetSlot()->GetPosition());
+		
+		NewShot->SetPosition(GetShip()->GetPosition() + math3d::vector2f(SlotPosition.m_V.m_A[0], SlotPosition.m_V.m_A[1]).turned(GetShip()->GetAngularPosition()));
 		NewShot->SetAngularPosition(GetShip()->GetAngularPosition());
 		NewShot->SetVelocity(GetShip()->GetVelocity() + math3d::vector2f(GetWeaponClass()->GetParticleExitSpeed(), GetShip()->GetAngularPosition(), math3d::vector2f::magnitude_angle));
 		GetShip()->GetCurrentSystem()->AddShot(NewShot);
