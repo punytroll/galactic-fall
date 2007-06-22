@@ -23,7 +23,7 @@
 #include <string>
 #include <vector>
 
-#include <math3d/vector3f.h>
+#include "math/vector3f.h"
 
 class Color;
 class Model;
@@ -49,7 +49,7 @@ public:
 	float GetTurnFuel(void) const;
 	float GetHull(void) const;
 	Color * GetColor(void) const;
-	const math3d::vector3f & GetExhaustOffset(void) const;
+	const Vector3f & GetExhaustOffset(void) const;
 	const std::vector< Slot * > & GetSlots(void) const;
 	// setters
 	void SetModel(const Model * Model);
@@ -63,7 +63,7 @@ public:
 	void SetTurnFuel(float TurnFuel);
 	void SetHull(float Hull);
 	void SetColor(const Color & Color);
-	void SetExhaustOffset(const math3d::vector3f & ExhaustOffset);
+	void SetExhaustOffset(const Vector3f & ExhaustOffset);
 	// modifiers
 	Slot * CreateSlot(void);
 private:
@@ -79,7 +79,7 @@ private:
 	float m_TurnFuel;
 	float m_Hull;
 	Color * m_Color;
-	math3d::vector3f m_ExhaustOffset;
+	Vector3f m_ExhaustOffset;
 	std::vector< Slot * > m_Slots;
 };
 
@@ -143,7 +143,7 @@ inline Color * ShipClass::GetColor(void) const
 	return m_Color;
 }
 
-inline const math3d::vector3f & ShipClass::GetExhaustOffset(void) const
+inline const Vector3f & ShipClass::GetExhaustOffset(void) const
 {
 	return m_ExhaustOffset;
 }
@@ -203,7 +203,7 @@ inline void ShipClass::SetHull(float Hull)
 	m_Hull = Hull;
 }
 
-inline void ShipClass::SetExhaustOffset(const math3d::vector3f & ExhaustOffset)
+inline void ShipClass::SetExhaustOffset(const Vector3f & ExhaustOffset)
 {
 	m_ExhaustOffset = ExhaustOffset;
 }

@@ -19,8 +19,6 @@
 
 #include <GL/gl.h>
 
-#include <math3d/vector4f.h>
-
 #include "scanner_display.h"
 #include "ship.h"
 #include "star.h"
@@ -64,7 +62,7 @@ void ScannerDisplay::Draw(void) const
 		{
 			glEnable(GL_LIGHTING);
 			glEnable(GL_LIGHT0);
-			glLightfv(GL_LIGHT0, GL_POSITION, math3d::vector4f(m_Owner->GetCurrentSystem()->GetStar()->GetPosition().m_V.m_A[0], m_Owner->GetCurrentSystem()->GetStar()->GetPosition().m_V.m_A[1], 100.0f, 0.0f).m_V.m_A);
+			glLightfv(GL_LIGHT0, GL_POSITION, Vector4f(m_Owner->GetCurrentSystem()->GetStar()->GetPosition().m_V.m_A[0], m_Owner->GetCurrentSystem()->GetStar()->GetPosition().m_V.m_A[1], 100.0f, 0.0f).m_V.m_A);
 		}
 		glClear(GL_DEPTH_BUFFER_BIT);
 		m_Owner->GetTarget()->Draw();

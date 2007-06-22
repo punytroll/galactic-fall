@@ -75,14 +75,14 @@ void Ship::Draw(void) const
 	glPushMatrix();
 	glTranslatef(m_Position.m_V.m_A[0], m_Position.m_V.m_A[1], 0.0f);
 	glRotatef(m_AngularPosition * 180.0f / M_PI, 0.0f, 0.0f, 1.0f);
-	glMaterialfv(GL_FRONT, GL_SPECULAR, math3d::vector4f(0.0f, 0.0f, 0.0f, 1.0f).m_V.m_A);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, Vector4f(0.0f, 0.0f, 0.0f, 1.0f).m_V.m_A);
 	if(m_ShipClass->GetColor() != 0)
 	{
 		glMaterialfv(GL_FRONT, GL_DIFFUSE, m_ShipClass->GetColor()->GetColor().m_V.m_A);
 	}
 	else
 	{
-		glMaterialfv(GL_FRONT, GL_DIFFUSE, math3d::vector4f(1.0f, 1.0f, 1.0f, 1.0f).m_V.m_A);
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, Vector4f(1.0f, 1.0f, 1.0f, 1.0f).m_V.m_A);
 	}
 	m_ShipClass->GetModel()->Draw();
 	// draw acceleration visualization
@@ -120,9 +120,9 @@ void Ship::Update(float Seconds)
 			SetFuel(GetFuel() - GetShipClass()->GetJumpFuel());
 			
 			// set the ship's position according to the old system
-			math3d::vector2f Direction(NewSystem->GetPosition() - OldSystem->GetPosition());
+			Vector2f Direction(NewSystem->GetPosition() - OldSystem->GetPosition());
 			
-			Direction.normalize();
+			Direction.Normalize();
 			m_Position = Direction * -300.0f;
 			m_Velocity = Direction * GetShipClass()->GetMaximumSpeed();
 			m_AngularPosition = GetRadians(Direction);
@@ -147,7 +147,7 @@ void Ship::Update(float Seconds)
 	{
 		SetLinkedSystemTarget(0);
 		SetTarget(0);
-		m_Velocity.set(0.0f, 0.0f);
+		m_Velocity.Set(0.0f, 0.0f);
 		m_Accelerate = false;
 		m_TurnLeft = false;
 		m_TurnRight = false;
@@ -190,14 +190,14 @@ void Ship::Update(float Seconds)
 			
 			if(m_Fuel >= FuelConsumption)
 			{
-				math3d::vector2f ForwardThrust(GetForwardThrust(), m_AngularPosition, math3d::vector2f::magnitude_angle);
+				Vector2f ForwardThrust(GetForwardThrust(), m_AngularPosition, Vector2f::InitializeMagnitudeAngle);
 				
 				m_Position += ForwardThrust * (Seconds * Seconds / 2.0f);
 				m_Velocity += ForwardThrust * Seconds;
-				if(m_Velocity.length() > GetMaximumSpeed())
+				if(m_Velocity.Length() > GetMaximumSpeed())
 				{
-					m_Velocity.normalize();
-					m_Velocity.scale(GetMaximumSpeed());
+					m_Velocity.Normalize();
+					m_Velocity.Scale(GetMaximumSpeed());
 				}
 				m_Fuel -= FuelConsumption;
 			}
@@ -218,7 +218,7 @@ void Ship::Update(float Seconds)
 				{
 					GetManifest().erase(ManifestIterator);
 					TheCargo->SetPosition(GetPosition());
-					TheCargo->SetVelocity(GetVelocity() * 0.8f + math3d::vector2f(GetRandomFloat(-0.5f, 0.5f), GetRandomFloat(-0.5f, 0.5f)));
+					TheCargo->SetVelocity(GetVelocity() * 0.8f + Vector2f(GetRandomFloat(-0.5f, 0.5f), GetRandomFloat(-0.5f, 0.5f)));
 					GetCurrentSystem()->AddCargo(TheCargo);
 				}
 			}

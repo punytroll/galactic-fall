@@ -24,9 +24,8 @@
 #include <list>
 #include <string>
 
-#include <math3d/vector2f.h>
-
 #include "destroy_listener.h"
+#include "math/vector2f.h"
 
 class Color;
 class KeyListener;
@@ -42,8 +41,8 @@ public:
 	void Hide(void);
 	void Show(void);
 	void SetBackgroundColor(const Color & BackgroundColor);
-	void SetPosition(const math3d::vector2f & Position);
-	void SetSize(const math3d::vector2f & Size);
+	void SetPosition(const Vector2f & Position);
+	void SetSize(const Vector2f & Size);
 	void AddSubWidget(Widget * SubWidget);
 	void RemoveSubWidget(Widget * SubWidget);
 	void RaiseSubWidget(Widget * SubWidget);
@@ -53,9 +52,9 @@ public:
 	void SetName(const std::string & Name);
 	// getters
 	const Color & GetBackgroundColor(void) const;
-	const math3d::vector2f GetPosition(void) const;
-	math3d::vector2f GetGlobalPosition(void) const;
-	const math3d::vector2f GetSize(void) const;
+	const Vector2f & GetPosition(void) const;
+	Vector2f GetGlobalPosition(void) const;
+	const Vector2f & GetSize(void) const;
 	const std::string & GetName(void) const;
 	Widget * GetRootWidget(void);
 	const Widget * GetRootWidget(void) const;
@@ -91,8 +90,8 @@ private:
 	Widget * m_SupWidget;
 	Widget * m_HoverWidget;
 	Color * m_BackgroundColor;
-	math3d::vector2f m_Position;
-	math3d::vector2f m_Size;
+	Vector2f m_Position;
+	Vector2f m_Size;
 	std::list< Widget * > m_SubWidgets;
 	bool m_Visible;
 	Widget * m_KeyFocus;
@@ -110,12 +109,12 @@ inline const Color & Widget::GetBackgroundColor(void) const
 	return *m_BackgroundColor;
 }
 
-inline const math3d::vector2f Widget::GetPosition(void) const
+inline const Vector2f & Widget::GetPosition(void) const
 {
 	return m_Position;
 }
 
-inline const math3d::vector2f Widget::GetSize(void) const
+inline const Vector2f & Widget::GetSize(void) const
 {
 	return m_Size;
 }

@@ -30,10 +30,6 @@
 #include <GL/glx.h>
 #include <GL/gl.h>
 
-#include <math3d/matrix4f.h>
-#include <math3d/vector2f.h>
-#include <math3d/vector4f.h>
-
 #include <Archive.h>
 #include <BufferReader.h>
 #include <Item.h>
@@ -145,7 +141,7 @@ int WantToJump(Ship * Ship, System * System)
 		return NO_JUMP_TARGET;
 	}
 	// only let the ships jump if they are more than 280 clicks from system center
-	if(Ship->GetPosition().length_squared() < 78400.0f)
+	if(Ship->GetPosition().SquaredLength() < 78400.0f)
 	{
 		return TOO_NEAR_TO_SYSTEM_CENTER;
 	}
@@ -165,12 +161,12 @@ int WantToLand(Character * Character, Ship * Ship, Planet * Planet)
 		return NO_LAND_TARGET;
 	}
 	// test distance
-	if((Planet->GetPosition() - Ship->GetPosition()).length_squared() > Planet->GetSize() * Planet->GetSize())
+	if((Planet->GetPosition() - Ship->GetPosition()).SquaredLength() > Planet->GetSize() * Planet->GetSize())
 	{
 		return TOO_FAR_AWAY;
 	}
 	// test speed (should be relative speed but planets have no speed, yet)
-	if(Ship->GetVelocity().length_squared() > 2.0f)
+	if(Ship->GetVelocity().SquaredLength() > 2.0f)
 	{
 		return TOO_FAST;
 	}
@@ -190,12 +186,12 @@ int WantToScoop(Ship * Ship, Cargo * Cargo)
 		return NO_SCOOP_TARGET;
 	}
 	// test distance
-	if((Cargo->GetPosition() - Ship->GetPosition()).length_squared() > 5.0f * Cargo->GetRadialSize() * Cargo->GetRadialSize())
+	if((Cargo->GetPosition() - Ship->GetPosition()).SquaredLength() > 5.0f * Cargo->GetRadialSize() * Cargo->GetRadialSize())
 	{
 		return TOO_FAR_AWAY;
 	}
 	// test speed
-	if((Ship->GetVelocity() - Cargo->GetVelocity()).length_squared() > 2.0f)
+	if((Ship->GetVelocity() - Cargo->GetVelocity()).SquaredLength() > 2.0f)
 	{
 		return TOO_HIGH_RELATIVE_VELOCITY;
 	}
@@ -229,7 +225,7 @@ void HideMessage(void)
 void SetMessage(const std::string & Message)
 {
 	g_MessageLabel->SetString(Message);
-	g_MessageLabel->SetPosition(math3d::vector2f((g_Width - 6 * Message.length()) / 2, 40.0f));
+	g_MessageLabel->SetPosition(Vector2f((g_Width - 6 * Message.length()) / 2, 40.0f));
 	g_MessageLabel->Show();
 	/// TODO: Make the 2.0f seconds timeout configurable via the game configuration archive.
 	if(g_MessageTimeoutIterator != g_RealTimeTimeoutNotifications.end())
@@ -432,7 +428,7 @@ void CalculateMovements(System * System)
 					
 					if((*ShotIterator)->GetShooter() != Ship)
 					{
-						if(((*ShotIterator)->GetPosition() - Ship->GetPosition()).length_squared() < ((*ShotIterator)->GetRadialSize() * (*ShotIterator)->GetRadialSize() + Ship->GetRadialSize() * Ship->GetRadialSize()))
+						if(((*ShotIterator)->GetPosition() - Ship->GetPosition()).SquaredLength() < ((*ShotIterator)->GetRadialSize() * (*ShotIterator)->GetRadialSize() + Ship->GetRadialSize() * Ship->GetRadialSize()))
 						{
 							Ship->SetHull(Ship->GetHull() - (*ShotIterator)->GetDamage());
 							if(Ship->GetHull() <= 0.0f)
@@ -451,7 +447,7 @@ void CalculateMovements(System * System)
 									{
 										(*ShipIterator)->GetManifest().erase(ManifestIterator);
 										TheCargo->SetPosition((*ShipIterator)->GetPosition());
-										TheCargo->SetVelocity((*ShipIterator)->GetVelocity() * 0.8f + math3d::vector2f(GetRandomFloat(-0.5f, 0.5f), GetRandomFloat(-0.5f, 0.5f)));
+										TheCargo->SetVelocity((*ShipIterator)->GetVelocity() * 0.8f + Vector2f(GetRandomFloat(-0.5f, 0.5f), GetRandomFloat(-0.5f, 0.5f)));
 										(*ShipIterator)->GetCurrentSystem()->AddCargo(TheCargo);
 									}
 								}
@@ -470,7 +466,7 @@ void CalculateMovements(System * System)
 					{
 						Cargo * Cargo(*CargoIterator);
 						
-						if(((*ShotIterator)->GetPosition() - Cargo->GetPosition()).length_squared() < ((*ShotIterator)->GetRadialSize() * (*ShotIterator)->GetRadialSize() + Cargo->GetRadialSize() * Cargo->GetRadialSize()))
+						if(((*ShotIterator)->GetPosition() - Cargo->GetPosition()).SquaredLength() < ((*ShotIterator)->GetRadialSize() * (*ShotIterator)->GetRadialSize() + Cargo->GetRadialSize() * Cargo->GetRadialSize()))
 						{
 							Cargo->SetHull(Cargo->GetHull() - (*ShotIterator)->GetDamage());
 							if(Cargo->GetHull() <= 0.0f)
@@ -619,7 +615,7 @@ void Render(System * System)
 	if(CurrentStar != 0)
 	{
 		glEnable(GL_LIGHT0);
-		glLightfv(GL_LIGHT0, GL_POSITION, math3d::vector4f(CurrentStar->GetPosition().m_V.m_A[0], CurrentStar->GetPosition().m_V.m_A[1], 100.0f, 0.0f).m_V.m_A);
+		glLightfv(GL_LIGHT0, GL_POSITION, Vector4f(CurrentStar->GetPosition().m_V.m_A[0], CurrentStar->GetPosition().m_V.m_A[1], 100.0f, 0.0f).m_V.m_A);
 		glLightfv(GL_LIGHT0, GL_DIFFUSE, CurrentStar->GetColor().GetColor().m_V.m_A);
 	}
 	else
@@ -662,9 +658,9 @@ void Render(System * System)
 		glClear(GL_DEPTH_BUFFER_BIT);
 		DrawSelection(g_OutputMind->GetCharacter()->GetShip()->GetTarget().Get(), g_OutputMind->GetCharacter()->GetShip()->GetTarget()->GetRadialSize());
 		
-		math3d::vector2f RelativePosition(g_OutputMind->GetCharacter()->GetShip()->GetTarget()->GetPosition() - g_OutputMind->GetCharacter()->GetShip()->GetPosition());
+		Vector2f RelativePosition(g_OutputMind->GetCharacter()->GetShip()->GetTarget()->GetPosition() - g_OutputMind->GetCharacter()->GetShip()->GetPosition());
 		
-		RelativePosition.normalize();
+		RelativePosition.Normalize();
 		glPushMatrix();
 		glPushAttrib(GL_LIGHTING_BIT);
 		glDisable(GL_LIGHTING);
@@ -693,9 +689,9 @@ void Resize(void)
 	}
 	glViewport(0, 0, static_cast< GLint >(g_Width), static_cast< GLint >(g_Height));
 	g_MainPerspective.SetAspect(g_Width / g_Height);
-	g_UserInterface.GetRootWidget()->SetSize(math3d::vector2f(g_Width, g_Height));
-	g_Scanner->SetPosition(math3d::vector2f(0.0f, g_Height - 240.0f));
-	g_MiniMap->SetPosition(math3d::vector2f(g_Width - 220.0f, g_Height - 240.0f));
+	g_UserInterface.GetRootWidget()->SetSize(Vector2f(g_Width, g_Height));
+	g_Scanner->SetPosition(Vector2f(0.0f, g_Height - 240.0f));
+	g_MiniMap->SetPosition(Vector2f(g_Width - 220.0f, g_Height - 240.0f));
 }
 
 class GlobalDestroyListener : public DestroyListener
@@ -764,7 +760,7 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix)
 	Ship * NewShip(new Ship(g_ShipClassManager.Get(ShipClassIdentifier)));
 	
 	NewShip->SetObjectIdentifier("::ship(" + NewShip->GetShipClass()->GetIdentifier() + ")" + IdentifierSuffix);
-	NewShip->SetPosition(math3d::vector2f(GetRandomFloat(-200.0f, 200.0f), GetRandomFloat(-200.0f, 200.0f)));
+	NewShip->SetPosition(Vector2f(GetRandomFloat(-200.0f, 200.0f), GetRandomFloat(-200.0f, 200.0f)));
 	NewShip->SetFuel(NewShip->GetFuelCapacity());
 	NewShip->SetCurrentSystem(System);
 	
@@ -962,7 +958,7 @@ void MouseMotion(int X, int Y)
 	g_LastMotionY = Y;
 	if(g_MouseButton == 2) // MouseButton: MIDDLE
 	{
-		const math3d::vector3f & CameraPosition(g_Camera.GetPosition());
+		const Vector3f & CameraPosition(g_Camera.GetPosition());
 		
 		g_Camera.SetPosition(CameraPosition.m_V.m_A[0] - static_cast< float >(DeltaX) * 0.0008f * CameraPosition.m_V.m_A[2], CameraPosition.m_V.m_A[1] + static_cast< float >(DeltaY) * 0.0008f * CameraPosition.m_V.m_A[2]);
 	}
@@ -1514,7 +1510,7 @@ void CreateWindow(void)
 void InitializeOpenGL(void)
 {
 	// TODO: Make configurable via data.arx
-	math3d::vector4f GlobalAmbientLightColor(0.0f, 0.0f, 0.0f, 0.0f);
+	Vector4f GlobalAmbientLightColor(0.0f, 0.0f, 0.0f, 0.0f);
 	
 	glEnable(GL_LIGHTING);
 	glEnable(GL_CULL_FACE);
@@ -1684,11 +1680,11 @@ void LoadSavegame(const Element * SaveElement)
 				}
 				else if((*ShipChild)->GetName() == "position")
 				{
-					PlayerShip->SetPosition(math3d::vector2f(from_string_cast< float >((*ShipChild)->GetAttribute("x")), from_string_cast< float >((*ShipChild)->GetAttribute("y"))));
+					PlayerShip->SetPosition(Vector2f(from_string_cast< float >((*ShipChild)->GetAttribute("x")), from_string_cast< float >((*ShipChild)->GetAttribute("y"))));
 				}
 				else if((*ShipChild)->GetName() == "velocity")
 				{
-					PlayerShip->SetVelocity(math3d::vector2f(from_string_cast< float >((*ShipChild)->GetAttribute("x")), from_string_cast< float >((*ShipChild)->GetAttribute("y"))));
+					PlayerShip->SetVelocity(Vector2f(from_string_cast< float >((*ShipChild)->GetAttribute("x")), from_string_cast< float >((*ShipChild)->GetAttribute("y"))));
 				}
 				else if((*ShipChild)->GetName() == "angular-position")
 				{

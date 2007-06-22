@@ -30,5 +30,5 @@ Color::Color(float Red, float Green, float Blue, float Alpha) :
 
 void Color::Set(float Red, float Green, float Blue, float Alpha)
 {
-	m_Color.set(Red, Green, Blue, Alpha);
+	m_Color.Set(Red, Green, Blue, Alpha);
 }

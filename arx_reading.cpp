@@ -23,9 +23,6 @@
 #include <BufferReader.h>
 #include <Item.h>
 
-#include <math3d/vector3f.h>
-#include <math3d/vector4f.h>
-
 #include "arx_reading.h"
 #include "arx_resources.h"
 #include "buffer_reading.h"
@@ -225,7 +222,7 @@ static void ReadModel(ModelManager * ModelManager, Arxx::Reference & Reference)
 		throw std::runtime_error("Could not create model '" + Identifier + "'.");
 	}
 	
-	std::map< std::string, std::vector< math3d::vector4f >::size_type > Points;
+	std::map< std::string, std::vector< Vector4f >::size_type > Points;
 	Arxx::u4byte Count;
 	
 	Reader >> Count;
@@ -238,10 +235,10 @@ static void ReadModel(ModelManager * ModelManager, Arxx::Reference & Reference)
 		float Z;
 		
 		Reader >> PointIdentifier >> PointName >> X >> Y >> Z;
-		Points[PointIdentifier] = NewModel->AddPoint(math3d::vector4f(X, Y, Z, 0.0f));
+		Points[PointIdentifier] = NewModel->AddPoint(Vector4f(X, Y, Z, 0.0f));
 	}
 	
-	std::map< std::string, std::pair< std::vector< math3d::vector4f >::size_type, math3d::vector4f > > TrianglePoints;
+	std::map< std::string, std::pair< std::vector< Vector4f >::size_type, Vector4f > > TrianglePoints;
 	
 	Reader >> Count;
 	for(Arxx::u4byte Number = 1; Number <= Count; ++Number)
@@ -253,7 +250,7 @@ static void ReadModel(ModelManager * ModelManager, Arxx::Reference & Reference)
 		float NormalZ;
 		
 		Reader >> TrianglePointIdentifier >> NormalX >> NormalY >> NormalZ >> PointIdentifier;
-		TrianglePoints[TrianglePointIdentifier] = std::make_pair(Points[PointIdentifier], math3d::vector4f(NormalX, NormalY, NormalZ, 0.0f));
+		TrianglePoints[TrianglePointIdentifier] = std::make_pair(Points[PointIdentifier], Vector4f(NormalX, NormalY, NormalZ, 0.0f));
 	}
 	
 	Reader >> Count;
@@ -306,7 +303,7 @@ static void ReadShipClass(ShipClassManager * ShipClassManager, Arxx::Reference &
 	float TurnFuel;
 	float Hull;
 	Color ModelColor;
-	math3d::vector3f ExhaustOffset;
+	Vector3f ExhaustOffset;
 	Arxx::u4byte SlotCount;
 	
 	Reader >> ModelIdentifier >> ForwardThrust >> TurnSpeed >> MaximumSpeed >> CargoHoldSize >> FuelHoldSize >> JumpFuel >> ForwardFuel >> TurnFuel >> Hull >> ModelColor >> ExhaustOffset >> SlotCount;
@@ -340,7 +337,7 @@ static void ReadShipClass(ShipClassManager * ShipClassManager, Arxx::Reference &
 		}
 		
 		std::string Type;
-		math3d::vector3f Position;
+		Vector3f Position;
 		
 		Reader >> Type >> Position;
 		NewSlot->SetType(Type);
@@ -371,10 +368,10 @@ static void ReadSystem(SystemManager * SystemManager, Arxx::Reference & Referenc
 	NewSystem->SetObjectIdentifier("::system(" + NewSystem->GetIdentifier() + ")");
 	
 	std::string Name;
-	math3d::vector2f Position;
+	Vector2f Position;
 	float TrafficDensity;
 	std::string StarIdentifier;
-	math3d::vector2f StarPosition;
+	Vector2f StarPosition;
 	Color StarColor;
 	Arxx::u4byte PlanetCount;
 	
@@ -400,7 +397,7 @@ static void ReadSystem(SystemManager * SystemManager, Arxx::Reference & Referenc
 		
 		std::string Name;
 		std::string Description;
-		math3d::vector2f PlanetPosition;
+		Vector2f PlanetPosition;
 		float Size;
 		Color PlanetColor;
 		Arxx::u4byte CommoditiesCount;
@@ -624,9 +621,9 @@ static void ReadWidgetWidget(Arxx::BufferReader & Reader, UserInterface * UserIn
 {
 	std::string Path;
 	std::string Name;
-	math3d::vector2f Position;
+	Vector2f Position;
 	bool UseSize;
-	math3d::vector2f Size;
+	Vector2f Size;
 	bool UseBackgroundColor;
 	Color BackgroundColor;
 	bool Visible;

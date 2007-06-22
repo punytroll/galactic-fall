@@ -20,8 +20,7 @@
 #ifndef SHOT_H
 #define SHOT_H
 
-#include <math3d/vector2f.h>
-
+#include "math/vector2f.h"
 #include "physical_object.h"
 
 class Model;
@@ -35,17 +34,17 @@ public:
 	virtual void Draw(void) const;
 	bool Update(float Seconds);
 	const PhysicalObject * GetShooter(void) const;
-	const math3d::vector2f & GetVelocity(void) const;
+	const Vector2f & GetVelocity(void) const;
 	float GetDamage(void) const;
 	// setters
 	void SetAngularPosition(float AngularPosition);
 	void SetShooter(PhysicalObject * Shooter);
-	void SetVelocity(const math3d::vector2f & Velocity);
+	void SetVelocity(const Vector2f & Velocity);
 private:
 	const WeaponClass * m_WeaponClass;
 	PhysicalObject * m_Shooter;
 	double m_TimeOfDeath;
-	math3d::vector2f m_Velocity;
+	Vector2f m_Velocity;
 	float m_AngularPosition;
 	float m_Damage;
 };
@@ -55,7 +54,7 @@ inline const PhysicalObject * Shot::GetShooter(void) const
 	return m_Shooter;
 }
 
-inline const math3d::vector2f & Shot::GetVelocity(void) const
+inline const Vector2f & Shot::GetVelocity(void) const
 {
 	return m_Velocity;
 }
@@ -75,7 +74,7 @@ inline void Shot::SetShooter(PhysicalObject * Shooter)
 	m_Shooter = Shooter;
 }
 
-inline void Shot::SetVelocity(const math3d::vector2f & Velocity)
+inline void Shot::SetVelocity(const Vector2f & Velocity)
 {
 	m_Velocity = Velocity;
 }

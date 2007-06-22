@@ -52,9 +52,9 @@ float Model::GetRadialSize(void) const
 {
 	if(m_RadialSize < 0.0f)
 	{
-		for(std::vector< math3d::vector4f >::const_iterator PointInterator = m_Points.begin(); PointInterator != m_Points.end(); ++PointInterator)
+		for(std::vector< Vector4f >::const_iterator PointInterator = m_Points.begin(); PointInterator != m_Points.end(); ++PointInterator)
 		{
-			float RadialSquare(PointInterator->length_squared());
+			float RadialSquare(PointInterator->SquaredLength());
 			
 			if(m_RadialSize < RadialSquare)
 			{
@@ -67,7 +67,7 @@ float Model::GetRadialSize(void) const
 	return m_RadialSize;
 }
 
-std::vector< math3d::vector4f >::size_type Model::AddPoint(const math3d::vector4f & Point)
+std::vector< Vector4f >::size_type Model::AddPoint(const Vector4f & Point)
 {
 	m_Points.push_back(Point);
 	
@@ -81,7 +81,7 @@ std::vector< Model::Triangle >::size_type Model::AddTriangle(const Model::Triang
 	return m_Triangles.size() - 1;
 }
 
-std::vector< Model::Triangle >::size_type Model::AddTriangle(std::vector< math3d::vector4f >::size_type Point1Index, const math3d::vector4f & Point1Normal, std::vector< math3d::vector4f >::size_type Point2Index, const math3d::vector4f & Point2Normal, std::vector< math3d::vector4f >::size_type Point3Index, const math3d::vector4f & Point3Normal)
+std::vector< Model::Triangle >::size_type Model::AddTriangle(std::vector< Vector4f >::size_type Point1Index, const Vector4f & Point1Normal, std::vector< Vector4f >::size_type Point2Index, const Vector4f & Point2Normal, std::vector< Vector4f >::size_type Point3Index, const Vector4f & Point3Normal)
 {
 	m_Triangles.push_back(Triangle());
 	m_Triangles.back().Points[0] = Point1Index;

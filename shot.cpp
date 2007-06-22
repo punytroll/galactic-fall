@@ -19,8 +19,6 @@
 
 #include <GL/gl.h>
 
-#include <math3d/vector4f.h>
-
 #include "color.h"
 #include "game_time.h"
 #include "model.h"

@@ -88,10 +88,10 @@ void Widget::Draw(void) const
 	}
 }
 
-math3d::vector2f Widget::GetGlobalPosition(void) const
+Vector2f Widget::GetGlobalPosition(void) const
 {
 	const Widget * CurrentWidget(this);
-	math3d::vector2f Result(true);
+	Vector2f Result(true);
 	
 	while(CurrentWidget != 0)
 	{
@@ -107,12 +107,12 @@ void Widget::SetBackgroundColor(const Color & BackgroundColor)
 	m_BackgroundColor = new Color(BackgroundColor);
 }
 
-void Widget::SetPosition(const math3d::vector2f & Position)
+void Widget::SetPosition(const Vector2f & Position)
 {
 	m_Position = Position;
 }
 
-void Widget::SetSize(const math3d::vector2f & Size)
+void Widget::SetSize(const Vector2f & Size)
 {
 	m_Size = Size;
 }
@@ -207,8 +207,8 @@ bool Widget::MouseButton(int Button, int State, float X, float Y)
 	// iterate all sub widgets, look for an intersection and propagate the mouse event with corrected coordinates
 	for(std::list< Widget * >::iterator SubWidgetIterator = m_SubWidgets.begin(); SubWidgetIterator != m_SubWidgets.end(); ++SubWidgetIterator)
 	{
-		const math3d::vector2f & SubWidgetPosition((*SubWidgetIterator)->GetPosition());
-		const math3d::vector2f & SubWidgetSize((*SubWidgetIterator)->GetSize());
+		const Vector2f & SubWidgetPosition((*SubWidgetIterator)->GetPosition());
+		const Vector2f & SubWidgetSize((*SubWidgetIterator)->GetSize());
 		
 		if((X >= SubWidgetPosition.m_V.m_A[0]) && (X < SubWidgetPosition.m_V.m_A[0] + SubWidgetSize.m_V.m_A[0]) && (Y >= SubWidgetPosition.m_V.m_A[1]) && (Y < SubWidgetPosition.m_V.m_A[1] + SubWidgetSize.m_V.m_A[1]))
 		{
@@ -237,8 +237,8 @@ void Widget::MouseMotion(float X, float Y)
 	// iterate all sub widgets, look for an intersection and propagate the mouse event with corrected coordinates
 	while(SubWidgetIterator != m_SubWidgets.end())
 	{
-		const math3d::vector2f & LeftTopCorner((*SubWidgetIterator)->GetPosition());
-		math3d::vector2f RightBottomCorner(LeftTopCorner + (*SubWidgetIterator)->GetSize());
+		const Vector2f & LeftTopCorner((*SubWidgetIterator)->GetPosition());
+		Vector2f RightBottomCorner(LeftTopCorner + (*SubWidgetIterator)->GetSize());
 		
 		if((X >= LeftTopCorner.m_V.m_A[0]) && (X < RightBottomCorner.m_V.m_A[0]) && (Y >= LeftTopCorner.m_V.m_A[1]) && (Y < RightBottomCorner.m_V.m_A[1]))
 		{

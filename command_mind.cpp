@@ -217,11 +217,11 @@ void CommandMind::TargetNearestCargo(void)
 		if(MinimumCargo == 0)
 		{
 			MinimumCargo = *CargoIterator;
-			MinimumDistance = (MinimumCargo->GetPosition() - GetCharacter()->GetShip()->GetPosition()).length_squared();
+			MinimumDistance = (MinimumCargo->GetPosition() - GetCharacter()->GetShip()->GetPosition()).SquaredLength();
 		}
 		else
 		{
-			float Distance(((*CargoIterator)->GetPosition() - GetCharacter()->GetShip()->GetPosition()).length_squared());
+			float Distance(((*CargoIterator)->GetPosition() - GetCharacter()->GetShip()->GetPosition()).SquaredLength());
 			
 			if(Distance < MinimumDistance)
 			{
@@ -320,11 +320,11 @@ void CommandMind::TargetNearestPlanet(void)
 		if(MinimumPlanet == 0)
 		{
 			MinimumPlanet = *PlanetIterator;
-			MinimumDistance = (MinimumPlanet->GetPosition() - GetCharacter()->GetShip()->GetPosition()).length_squared();
+			MinimumDistance = (MinimumPlanet->GetPosition() - GetCharacter()->GetShip()->GetPosition()).SquaredLength();
 		}
 		else
 		{
-			float Distance(((*PlanetIterator)->GetPosition() - GetCharacter()->GetShip()->GetPosition()).length_squared());
+			float Distance(((*PlanetIterator)->GetPosition() - GetCharacter()->GetShip()->GetPosition()).SquaredLength());
 			
 			if(Distance < MinimumDistance)
 			{

@@ -40,16 +40,16 @@ MapDialog::MapDialog(Widget * SupWidget, System * System, Character * Character)
 	m_Scale(5.0f),
 	m_SelectedSystem(0)
 {
-	SetPosition(math3d::vector2f(70.0f, 400.0f));
-	SetSize(math3d::vector2f(500.0f, 530.0f));
+	SetPosition(Vector2f(70.0f, 400.0f));
+	SetSize(Vector2f(500.0f, 530.0f));
 	AddKeyListener(this);
 	AddMouseButtonListener(this);
 	m_OKButton = new Button(this);
-	m_OKButton->SetPosition(math3d::vector2f(390.0f, 500.0f));
-	m_OKButton->SetSize(math3d::vector2f(100.0f, 20.0f));
+	m_OKButton->SetPosition(Vector2f(390.0f, 500.0f));
+	m_OKButton->SetSize(Vector2f(100.0f, 20.0f));
 	m_OKButton->AddClickedListener(this);
 	m_OKButtonLabel = new Label(m_OKButton, "OK");
-	m_OKButtonLabel->SetPosition(math3d::vector2f(0.0f, 0.0f));
+	m_OKButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
 	m_OKButtonLabel->SetSize(m_OKButton->GetSize());
 	m_OKButtonLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
 	m_OKButtonLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
@@ -59,7 +59,7 @@ void MapDialog::Draw(void) const
 {
 	WWindow::Draw();
 	
-	math3d::vector2f Middle(GetSize() / 2);
+	Vector2f Middle(GetSize() / 2);
 	
 	Middle.m_V.m_A[1] += 15.0f;
 	
@@ -73,7 +73,7 @@ void MapDialog::Draw(void) const
 	
 	for(std::set< System * >::const_iterator UnexploredSystemIterator = UnexploredSystems.begin(); UnexploredSystemIterator != UnexploredSystems.end(); ++UnexploredSystemIterator)
 	{
-		math3d::vector2f Position((*UnexploredSystemIterator)->GetPosition() - m_System->GetPosition());
+		Vector2f Position((*UnexploredSystemIterator)->GetPosition() - m_System->GetPosition());
 		
 		Position *= m_Scale;
 		glPushMatrix();
@@ -111,7 +111,7 @@ void MapDialog::Draw(void) const
 	
 	for(std::set< System * >::const_iterator ExploredSystemIterator = ExploredSystems.begin(); ExploredSystemIterator != ExploredSystems.end(); ++ExploredSystemIterator)
 	{
-		math3d::vector2f Position((*ExploredSystemIterator)->GetPosition() - m_System->GetPosition());
+		Vector2f Position((*ExploredSystemIterator)->GetPosition() - m_System->GetPosition());
 		
 		Position *= m_Scale;
 		glPushMatrix();
@@ -221,12 +221,12 @@ bool MapDialog::OnMouseButton(Widget * EventSource, int Button, int State, float
 			
 			for(std::map< std::string, System * >::const_iterator SystemIterator = Systems.begin(); SystemIterator != Systems.end(); ++SystemIterator)
 			{
-				math3d::vector2f Position(SystemIterator->second->GetPosition() - m_System->GetPosition());
+				Vector2f Position(SystemIterator->second->GetPosition() - m_System->GetPosition());
 				
 				Position *= m_Scale;
 				Position.m_V.m_A[0] -= X;
 				Position.m_V.m_A[1] += Y;
-				if(Position.length_squared() < 40.0f)
+				if(Position.SquaredLength() < 40.0f)
 				{
 					m_SelectedSystem = SystemIterator->second;
 					

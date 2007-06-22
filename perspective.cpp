@@ -21,7 +21,7 @@
 
 #include "perspective.h"
 
-static void CalculatePerspectiveMatrix(float FieldOfView, float Aspect, float NearClippingPlane, float FarClippingPlane, math3d::matrix4f & Matrix)
+static void CalculatePerspectiveMatrix(float FieldOfView, float Aspect, float NearClippingPlane, float FarClippingPlane, Matrix4f & Matrix)
 {
 	float Right, Top;
 	
@@ -53,5 +53,5 @@ void Perspective::Draw(void) const
 		CalculatePerspectiveMatrix(m_FieldOfView, m_Aspect, m_NearClippingPlane, m_FarClippingPlane, m_Matrix);
 		m_Initialized = true;
 	}
-	glLoadMatrixf(m_Matrix.matrix());
+	glLoadMatrixf(m_Matrix.Matrix());
 }

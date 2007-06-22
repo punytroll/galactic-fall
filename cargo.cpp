@@ -31,8 +31,8 @@ Cargo::Cargo(const Commodity * Commodity) :
 {
 	SetRadialSize(m_Commodity->GetModel()->GetRadialSize());
 	SetName(m_Commodity->GetName());
-	m_RotationAxis.set(static_cast< float >(random()) / RAND_MAX, static_cast< float >(random()) / RAND_MAX, static_cast< float >(random()) / RAND_MAX);
-	m_RotationAxis.normalize();
+	m_RotationAxis.Set(static_cast< float >(random()) / RAND_MAX, static_cast< float >(random()) / RAND_MAX, static_cast< float >(random()) / RAND_MAX);
+	m_RotationAxis.Normalize();
 	m_AngularPosition = static_cast< float >(random()) / RAND_MAX;
 	m_AngularVelocity = static_cast< float >(random()) / RAND_MAX;
 }
@@ -46,7 +46,7 @@ void Cargo::Draw(void) const
 	glPushMatrix();
 	glTranslatef(m_Position.m_V.m_A[0], m_Position.m_V.m_A[1], 0.0f);
 	glRotatef(m_AngularPosition * 180.0f / M_PI, m_RotationAxis.m_V.m_A[0], m_RotationAxis.m_V.m_A[1], m_RotationAxis.m_V.m_A[2]);
-	glMaterialfv(GL_FRONT, GL_SPECULAR, math3d::vector4f(0.0f, 0.0f, 0.0f, 1.0f).m_V.m_A);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, Vector4f(0.0f, 0.0f, 0.0f, 1.0f).m_V.m_A);
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, m_Commodity->GetColor()->GetColor().m_V.m_A);
 	m_Commodity->GetModel()->Draw();
 	glPopMatrix();

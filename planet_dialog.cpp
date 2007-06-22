@@ -34,47 +34,47 @@ PlanetDialog::PlanetDialog(Widget * SupWidget, Planet * Planet, Character * Char
 	m_Character(Character),
 	m_TradeCenterDialog(0)
 {
-	SetPosition(math3d::vector2f(50.0f, 50.0f));
-	SetSize(math3d::vector2f(500.0f, 330.0f));
+	SetPosition(Vector2f(50.0f, 50.0f));
+	SetSize(Vector2f(500.0f, 330.0f));
 	AddKeyListener(this);
 	m_DescriptionLabel = new Label(this, m_Planet->GetDescription());
-	m_DescriptionLabel->SetPosition(math3d::vector2f(120.0f, 40.0f));
-	m_DescriptionLabel->SetSize(math3d::vector2f(360.0f, 100.0f));
+	m_DescriptionLabel->SetPosition(Vector2f(120.0f, 40.0f));
+	m_DescriptionLabel->SetSize(Vector2f(360.0f, 100.0f));
 	m_DescriptionLabel->SetWrap(true);
 	m_DescriptionLabel->SetWordWrap(true);
 	m_OKButton = new Button(this);
-	m_OKButton->SetPosition(math3d::vector2f(390.0f, 300.0f));
-	m_OKButton->SetSize(math3d::vector2f(100.0f, 20.0f));
+	m_OKButton->SetPosition(Vector2f(390.0f, 300.0f));
+	m_OKButton->SetSize(Vector2f(100.0f, 20.0f));
 	m_OKButton->AddClickedListener(this);
 	m_OKButtonLabel = new Label(m_OKButton, "OK");
-	m_OKButtonLabel->SetPosition(math3d::vector2f(0.0f, 0.0f));
+	m_OKButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
 	m_OKButtonLabel->SetSize(m_OKButton->GetSize());
 	m_OKButtonLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
 	m_OKButtonLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
 	m_TradeCenterButton = new Button(this);
-	m_TradeCenterButton->SetPosition(math3d::vector2f(10.0f, 40.0f));
-	m_TradeCenterButton->SetSize(math3d::vector2f(100.0f, 20.0f));
+	m_TradeCenterButton->SetPosition(Vector2f(10.0f, 40.0f));
+	m_TradeCenterButton->SetSize(Vector2f(100.0f, 20.0f));
 	m_TradeCenterButton->AddClickedListener(this);
 	m_TradeCenterLabel = new Label(m_TradeCenterButton, "Trade Center");
-	m_TradeCenterLabel->SetPosition(math3d::vector2f(0.0f, 0.0f));
+	m_TradeCenterLabel->SetPosition(Vector2f(0.0f, 0.0f));
 	m_TradeCenterLabel->SetSize(m_TradeCenterButton->GetSize());
 	m_TradeCenterLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
 	m_TradeCenterLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
 	if(m_Planet->GetAllowRefuelling() == true)
 	{
 		m_RefuelButton = new Button(this);
-		m_RefuelButton->SetPosition(math3d::vector2f(10.0f, 70.0f));
-		m_RefuelButton->SetSize(math3d::vector2f(100.0f, 20.0f));
+		m_RefuelButton->SetPosition(Vector2f(10.0f, 70.0f));
+		m_RefuelButton->SetSize(Vector2f(100.0f, 20.0f));
 		m_RefuelButton->AddClickedListener(this);
 		m_RefuelButtonLabel = new Label(m_RefuelButton, "Refuel");
-		m_RefuelButtonLabel->SetPosition(math3d::vector2f(0.0f, 0.0f));
+		m_RefuelButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
 		m_RefuelButtonLabel->SetSize(m_TradeCenterButton->GetSize());
 		m_RefuelButtonLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
 		m_RefuelButtonLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
 		
 		Label * FuelPriceLabel = new Label(this, "Local fuel price is: " + to_string_cast(m_Planet->GetFuelPrice()) + " credits/unit.");
 		
-		FuelPriceLabel->SetPosition(math3d::vector2f(10.0f, 300.0f));
+		FuelPriceLabel->SetPosition(Vector2f(10.0f, 300.0f));
 	}
 }
 

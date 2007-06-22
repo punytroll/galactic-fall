@@ -27,8 +27,8 @@ WWindow::WWindow(Widget * SupWidget, const std::string & Title) :
 {
 	SetBackgroundColor(Color(0.2f, 0.2f, 0.2f));
 	m_TitleLabel = new Label(this, Title);
-	m_TitleLabel->SetPosition(math3d::vector2f(10.0f, 10.0f));
-	m_TitleLabel->SetSize(math3d::vector2f(480.0f, 20.0f));
+	m_TitleLabel->SetPosition(Vector2f(10.0f, 10.0f));
+	m_TitleLabel->SetSize(Vector2f(480.0f, 20.0f));
 	m_TitleLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
 	m_TitleLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
 	m_TitleLabel->SetBackgroundColor(Color(0.2f, 0.2f, 0.4f));
@@ -45,7 +45,7 @@ bool WWindow::OnMouseButton(Widget * EventSource, int Button, int State, float X
 		{
 			if(State == EV_DOWN)
 			{
-				m_GrabPosition.set(X, Y);
+				m_GrabPosition.Set(X, Y);
 				g_UserInterface.SetCaptureWidget(m_TitleLabel);
 			}
 			else
@@ -64,6 +64,6 @@ void WWindow::OnMouseMotion(Widget * EventSource, float X, float Y)
 {
 	if((EventSource == m_TitleLabel) && (g_UserInterface.GetCaptureWidget() == m_TitleLabel))
 	{
-		SetPosition(GetPosition() + math3d::vector2f(X, Y) - m_GrabPosition);
+		SetPosition(GetPosition() + Vector2f(X, Y) - m_GrabPosition);
 	}
 }

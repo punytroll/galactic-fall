@@ -22,13 +22,12 @@
 
 #include <BufferReader.h>
 
-#include <math3d/vector2f.h>
-#include <math3d/vector3f.h>
-
 #include "color.h"
+#include "math/vector2f.h"
+#include "math/vector3f.h"
 
 Arxx::BufferReader & operator>>(Arxx::BufferReader & BufferReader, Color & Color);
-Arxx::BufferReader & operator>>(Arxx::BufferReader & BufferReader, math3d::vector2f & Vector);
-Arxx::BufferReader & operator>>(Arxx::BufferReader & BufferReader, math3d::vector3f & Vector);
+Arxx::BufferReader & operator>>(Arxx::BufferReader & BufferReader, Vector2f & Vector);
+Arxx::BufferReader & operator>>(Arxx::BufferReader & BufferReader, Vector3f & Vector);
 
 #endif

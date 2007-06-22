@@ -19,8 +19,6 @@
 
 #include <GL/gl.h>
 
-#include <math3d/vector4f.h>
-
 #include "color.h"
 #include "commodity.h"
 #include "globals.h"
@@ -92,12 +90,12 @@ void Planet::Draw(void) const
 	if(m_Color != 0)
 	{
 		glMaterialfv(GL_FRONT, GL_DIFFUSE, m_Color->GetColor().m_V.m_A);
-		glMaterialfv(GL_FRONT, GL_SPECULAR, (math3d::vector4f(1.0f, 1.0f, 1.0f, 1.0f) - m_Color->GetColor()).m_V.m_A);
+		glMaterialfv(GL_FRONT, GL_SPECULAR, (Vector4f(1.0f, 1.0f, 1.0f, 1.0f) - m_Color->GetColor()).m_V.m_A);
 	}
 	else
 	{
-		glMaterialfv(GL_FRONT, GL_DIFFUSE, math3d::vector4f(1.0f, 1.0f, 1.0f, 1.0f).m_V.m_A);
-		glMaterialfv(GL_FRONT, GL_SPECULAR, math3d::vector4f(0.0f, 0.0f, 0.0f, 1.0f).m_V.m_A);
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, Vector4f(1.0f, 1.0f, 1.0f, 1.0f).m_V.m_A);
+		glMaterialfv(GL_FRONT, GL_SPECULAR, Vector4f(0.0f, 0.0f, 0.0f, 1.0f).m_V.m_A);
 	}
 	glEnable(GL_NORMALIZE);
 	glScalef(GetRadialSize(), GetRadialSize(), GetRadialSize());
@@ -105,8 +103,8 @@ void Planet::Draw(void) const
 	/* TODO: This code allows an athmosphere around the planet ... optimize and make usable via a planet property
 	glEnable(GL_BLEND);
 	glMaterialf(GL_FRONT, GL_SHININESS, 0.0f);
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, math3d::vector4f(1.0f, 1.0f, 1.0f, 0.35f).m_V.m_A);
-	glMaterialfv(GL_FRONT, GL_SPECULAR, math3d::vector4f(0.0f, 0.0f, 0.0f, 1.0f).m_V.m_A);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, Vector4f(1.0f, 1.0f, 1.0f, 0.35f).m_V.m_A);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, Vector4f(0.0f, 0.0f, 0.0f, 1.0f).m_V.m_A);
 	glScalef(1.05f, 1.05f, 1.05f);
 	g_ModelManager.Get("planet")->Draw();
 	*/
