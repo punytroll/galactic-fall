@@ -30,7 +30,8 @@
 Weapon::Weapon(WeaponClass * WeaponClass) :
 	m_WeaponClass(WeaponClass),
 	m_Fire(false),
-	m_NextTimeToFire(0.0)
+	m_NextTimeToFire(0.0),
+	m_Position(true)
 {
 }
 
@@ -46,7 +47,7 @@ void Weapon::Update(float Seconds)
 		
 		NewShot->SetObjectIdentifier(IdentifierStream.str());
 		NewShot->SetShooter(GetShip());
-		NewShot->SetPosition(GetShip()->GetPosition());
+		NewShot->SetPosition(GetShip()->GetPosition() + m_Position.turned(GetShip()->GetAngularPosition()));
 		NewShot->SetAngularPosition(GetShip()->GetAngularPosition());
 		NewShot->SetVelocity(GetShip()->GetVelocity() + math3d::vector2f(GetWeaponClass()->GetParticleExitSpeed(), GetShip()->GetAngularPosition(), math3d::vector2f::magnitude_angle));
 		GetShip()->GetCurrentSystem()->AddShot(NewShot);
