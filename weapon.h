@@ -23,6 +23,7 @@
 #include "object.h"
 
 class Ship;
+class Slot;
 class WeaponClass;
 
 class Weapon : public Object
@@ -33,13 +34,16 @@ public:
 	// getters
 	const WeaponClass * GetWeaponClass(void) const;
 	Ship * GetShip(void);
+	Slot * GetSlot(void);
 	// setters
 	void SetFire(bool Fire);
 	void SetPosition(const math3d::vector2f & Position);
 	void SetShip(Ship * Ship);
+	void SetSlot(Slot * Slot);
 private:
 	WeaponClass * m_WeaponClass;
 	Ship * m_Ship;
+	Slot * m_Slot;
 	bool m_Fire;
 	double m_NextTimeToFire;
 	math3d::vector2f m_Position;
@@ -55,6 +59,11 @@ inline Ship * Weapon::GetShip(void)
 	return m_Ship;
 }
 
+inline Slot * Weapon::GetSlot(void)
+{
+	return m_Slot;
+}
+
 inline void Weapon::SetFire(bool Fire)
 {
 	m_Fire = Fire;
@@ -68,6 +77,11 @@ inline void Weapon::SetPosition(const math3d::vector2f & Position)
 inline void Weapon::SetShip(Ship * Ship)
 {
 	m_Ship = Ship;
+}
+
+inline void Weapon::SetSlot(Slot * Slot)
+{
+	m_Slot = Slot;
 }
 
 #endif

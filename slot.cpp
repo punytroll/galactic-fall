@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006  Hagen Möbius
+ * Copyright (C) 2007  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,35 +17,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include "color.h"
-#include "ship_class.h"
 #include "slot.h"
 
-ShipClass::ShipClass(const std::string & Identifier) :
-	m_Identifier(Identifier),
-	m_CargoHoldSize(0.0f),
-	m_Color(0),
-	m_ExhaustOffset(true)
+Slot::Slot(void) :
+	m_MountedObject(0)
 {
-}
-
-ShipClass::~ShipClass(void)
-{
-	delete m_Color;
-	m_Color = 0;
-}
-
-void ShipClass::SetColor(const Color & NewColor)
-{
-	delete m_Color;
-	m_Color = new Color(NewColor);
-}
-
-Slot * ShipClass::CreateSlot(void)
-{
-	Slot * NewSlot(new Slot());
-	
-	m_Slots.push_back(NewSlot);
-	
-	return NewSlot;
 }

@@ -21,4 +21,14 @@
 		<y>0</y>
 		<z>0</z>
 	</exhaust-offset>
+	<slots>
+		<slot>
+			<type>medium_weapon</type>
+			<position>
+				<x>9</x>
+				<y>0</y>
+				<z>0</z>
+			</position>
+		</slot>
+	</slots>
 </ship-class>

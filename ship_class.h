@@ -21,11 +21,13 @@
 #define SHIP_CLASS_H
 
 #include <string>
+#include <vector>
 
 #include <math3d/vector3f.h>
 
 class Color;
 class Model;
+class Slot;
 
 class ShipClass
 {
@@ -48,7 +50,8 @@ public:
 	float GetHull(void) const;
 	Color * GetColor(void) const;
 	const math3d::vector3f & GetExhaustOffset(void) const;
-	// modifiers
+	const std::vector< Slot * > & GetSlots(void) const;
+	// setters
 	void SetModel(const Model * Model);
 	void SetForwardThrust(float ForwardThrust);
 	void SetTurnSpeed(float TurnSpeed);
@@ -61,6 +64,8 @@ public:
 	void SetHull(float Hull);
 	void SetColor(const Color & Color);
 	void SetExhaustOffset(const math3d::vector3f & ExhaustOffset);
+	// modifiers
+	Slot * CreateSlot(void);
 private:
 	std::string m_Identifier;
 	const Model * m_Model;
@@ -75,6 +80,7 @@ private:
 	float m_Hull;
 	Color * m_Color;
 	math3d::vector3f m_ExhaustOffset;
+	std::vector< Slot * > m_Slots;
 };
 
 inline const std::string & ShipClass::GetIdentifier(void) const
@@ -140,6 +146,11 @@ inline Color * ShipClass::GetColor(void) const
 inline const math3d::vector3f & ShipClass::GetExhaustOffset(void) const
 {
 	return m_ExhaustOffset;
+}
+
+inline const std::vector< Slot * > & ShipClass::GetSlots(void) const
+{
+	return m_Slots;
 }
 
 inline void ShipClass::SetModel(const Model * Model)

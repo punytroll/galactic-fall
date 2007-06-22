@@ -29,6 +29,8 @@
 
 Weapon::Weapon(WeaponClass * WeaponClass) :
 	m_WeaponClass(WeaponClass),
+	m_Ship(0),
+	m_Slot(0),
 	m_Fire(false),
 	m_NextTimeToFire(0.0),
 	m_Position(true)

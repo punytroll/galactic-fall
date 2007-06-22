@@ -41,6 +41,7 @@
 #include "scanner_display.h"
 #include "ship_class.h"
 #include "ship_class_manager.h"
+#include "slot.h"
 #include "star.h"
 #include "string_cast.h"
 #include "system.h"
@@ -306,8 +307,9 @@ static void ReadShipClass(ShipClassManager * ShipClassManager, Arxx::Reference &
 	float Hull;
 	Color ModelColor;
 	math3d::vector3f ExhaustOffset;
+	Arxx::u4byte SlotCount;
 	
-	Reader >> ModelIdentifier >> ForwardThrust >> TurnSpeed >> MaximumSpeed >> CargoHoldSize >> FuelHoldSize >> JumpFuel >> ForwardFuel >> TurnFuel >> Hull >> ModelColor >> ExhaustOffset;
+	Reader >> ModelIdentifier >> ForwardThrust >> TurnSpeed >> MaximumSpeed >> CargoHoldSize >> FuelHoldSize >> JumpFuel >> ForwardFuel >> TurnFuel >> Hull >> ModelColor >> ExhaustOffset >> SlotCount;
 	
 	NewShipClass->SetCargoHoldSize(CargoHoldSize);
 	NewShipClass->SetForwardThrust(ForwardThrust);
@@ -328,6 +330,22 @@ static void ReadShipClass(ShipClassManager * ShipClassManager, Arxx::Reference &
 	NewShipClass->SetHull(Hull);
 	NewShipClass->SetColor(ModelColor);
 	NewShipClass->SetExhaustOffset(ExhaustOffset);
+	for(Arxx::u4byte SlotNumber = 1; SlotNumber <= SlotCount; ++SlotNumber)
+	{
+		Slot * NewSlot(NewShipClass->CreateSlot());
+		
+		if(NewSlot == 0)
+		{
+			throw std::runtime_error("Could not create slot '" + to_string_cast(SlotNumber) + "' for ship class '" + Identifier + "'.");
+		}
+		
+		std::string Type;
+		math3d::vector3f Position;
+		
+		Reader >> Type >> Position;
+		NewSlot->SetType(Type);
+		NewSlot->SetPosition(Position);
+	}
 }
 
 static void ReadSystem(SystemManager * SystemManager, Arxx::Reference & Reference)
