@@ -24,6 +24,10 @@ template < typename Return >
 class Callback0
 {
 public:
+	virtual ~Callback0(void)
+	{
+	}
+	
 	virtual Return operator()(void) const = 0;
 };
 
@@ -31,6 +35,10 @@ template < typename Return, typename Type1 >
 class Callback1
 {
 public:
+	virtual ~Callback1(void)
+	{
+	}
+	
 	virtual Return operator()(Type1 Argument1) const = 0;
 };
 
@@ -38,6 +46,10 @@ template < typename Return, typename Type1, typename Type2 >
 class Callback2
 {
 public:
+	virtual ~Callback2(void)
+	{
+	}
+	
 	virtual Return operator()(Type1 Argument1, Type2 Argument2) const = 0;
 };
 
@@ -49,6 +61,10 @@ public:
 	
 	explicit FunctionCallback0(Function Function) :
 		m_Function(Function)
+	{
+	}
+	
+	virtual ~FunctionCallback0(void)
 	{
 	}
 	
@@ -71,6 +87,10 @@ public:
 	{
 	}
 	
+	virtual ~FunctionCallback1(void)
+	{
+	}
+	
 	virtual Return operator()(Type1 Argument1) const
 	{
 		return (*m_Function)(Argument1);
@@ -87,6 +107,10 @@ public:
 	
 	explicit FunctionCallback2(Function Function) :
 		m_Function(Function)
+	{
+	}
+	
+	virtual ~FunctionCallback2(void)
 	{
 	}
 	
@@ -110,6 +134,10 @@ public:
 	{
 	}
 	
+	virtual ~MemberCallback0(void)
+	{
+	}
+	
 	virtual Return operator()(void) const
 	{
 		return (m_Object->*(this->m_Function))();
@@ -129,7 +157,7 @@ public:
 	{
 	}
 	
-	~Argument1Binder0(void)
+	virtual ~Argument1Binder0(void)
 	{
 		delete m_Callback;
 	}
@@ -153,7 +181,7 @@ public:
 	{
 	}
 	
-	~Argument1Binder1(void)
+	virtual ~Argument1Binder1(void)
 	{
 		delete m_Callback;
 	}

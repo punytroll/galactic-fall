@@ -45,17 +45,17 @@ Ship::Ship(ShipClass * ShipClass) :
 	m_Accelerate(false),
 	m_TurnLeft(false),
 	m_TurnRight(false),
-	m_Jump(false),
 	m_Jettison(false),
+	m_Jump(false),
 	m_Land(false),
 	m_Scoop(false),
-	m_Velocity(true),
 	m_AngularPosition(0.0f),
 	m_ShipClass(ShipClass),
 	m_Fuel(0.0f),
 	m_Hull(m_ShipClass->GetHull()),
 	m_LinkedSystemTarget(0),
-	m_CurrentSystem(0)
+	m_CurrentSystem(0),
+	m_Velocity(true)
 {
 	SetRadialSize(m_ShipClass->GetModel()->GetRadialSize());
 	
@@ -313,10 +313,8 @@ bool Ship::Mount(Object * Object, Slot * Slot)
 			return true;
 		}
 	}
-	else
-	{
-		return false;
-	}
+	
+	return false;
 }
 
 bool Ship::AddObject(Object * Add)
