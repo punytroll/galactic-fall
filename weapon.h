@@ -37,7 +37,6 @@ public:
 	Slot * GetSlot(void);
 	// setters
 	void SetFire(bool Fire);
-	void SetPosition(const math3d::vector2f & Position);
 	void SetShip(Ship * Ship);
 	void SetSlot(Slot * Slot);
 private:
@@ -46,7 +45,6 @@ private:
 	Slot * m_Slot;
 	bool m_Fire;
 	double m_NextTimeToFire;
-	math3d::vector2f m_Position;
 };
 
 inline const WeaponClass * Weapon::GetWeaponClass(void) const
@@ -67,11 +65,6 @@ inline Slot * Weapon::GetSlot(void)
 inline void Weapon::SetFire(bool Fire)
 {
 	m_Fire = Fire;
-}
-
-inline void Weapon::SetPosition(const math3d::vector2f & Position)
-{
-	m_Position = Position;
 }
 
 inline void Weapon::SetShip(Ship * Ship)

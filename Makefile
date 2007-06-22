@@ -451,7 +451,7 @@ trade_center_dialog.o: trade_center_dialog.cpp $(button_h) $(cargo_h) $(characte
 user_interface.o: user_interface.cpp $(user_interface_h) $(widget_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags math3d` -c $< -o $@
 
-weapon.o: weapon.cpp $(game_time_h) $(ship_h) $(shot_h) $(string_cast_h) $(system_h) $(weapon_h) $(weapon_class_h)
+weapon.o: weapon.cpp $(game_time_h) $(ship_h) $(shot_h) $(slot_h) $(string_cast_h) $(system_h) $(weapon_h) $(weapon_class_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags math3d` -c $< -o $@
 
 weapon_class.o: weapon_class.cpp $(color_h) $(weapon_class_h)
