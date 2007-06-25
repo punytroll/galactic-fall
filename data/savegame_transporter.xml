@@ -19,7 +19,7 @@
 		<angular-position value="-2.1"/>
 		<velocity x="0" y="0"/>
 		<manifest>
-			<weapon object-identifier="::weapon(medium_laser)::ship(::ship(shuttle)::player_ship)" class-identifier="medium_laser"/>
+			<weapon object-identifier="::weapon(medium_laser)::ship(::ship(shuttle)::player_ship)" class-identifier="medium_laser" mounted-on="front_gun"/>
 		</manifest>
 		<name value="Stargazer Beta 1-3"/>
 	</ship>

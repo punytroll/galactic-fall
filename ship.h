@@ -23,7 +23,6 @@
 #include <map>
 #include <vector>
 
-
 #include "math/vector2f.h"
 #include "physical_object.h"
 #include "ship_class.h"
@@ -66,7 +65,7 @@ public:
 	System * GetLinkedSystemTarget(void);
 	System * GetCurrentSystem(void);
 	const System * GetCurrentSystem(void) const;
-	const std::vector< Slot * > & GetSlots(void) const;
+	const std::map< std::string, Slot * > & GetSlots(void) const;
 	// setters
 	void SetFire(bool Fire);
 	void SetFuel(float Fuel);
@@ -77,8 +76,8 @@ public:
 	void SetLinkedSystemTarget(System * LinkedSystem);
 	void SetCurrentSystem(System * CurrentSystem);
 	// modifiers
-	Slot * CreateSlot(void);
-	bool Mount(Object * Object, Slot * Slot);
+	Slot * CreateSlot(const std::string & SlotIdentifier);
+	bool Mount(Object * Object, const std::string & SlotIdentifier);
 	// manifest
 	bool AddObject(Object * Add);
 	bool RemoveObject(Object * Remove);
@@ -87,7 +86,7 @@ public:
 private:
 	// ship class
 	ShipClass * m_ShipClass;
-	std::vector< Slot * > m_Slots;
+	std::map< std::string, Slot * > m_Slots;
 	std::set< Object * > m_Manifest;
 	std::vector< Weapon * > m_Weapons;
 	float m_Fuel;
@@ -163,7 +162,7 @@ inline const System * Ship::GetCurrentSystem(void) const
 	return m_CurrentSystem;
 }
 
-inline const std::vector< Slot * > & Ship::GetSlots(void) const
+inline const std::map< std::string, Slot * > & Ship::GetSlots(void) const
 {
 	return m_Slots;
 }

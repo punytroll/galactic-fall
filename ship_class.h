@@ -20,8 +20,8 @@
 #ifndef SHIP_CLASS_H
 #define SHIP_CLASS_H
 
+#include <map>
 #include <string>
-#include <vector>
 
 #include "math/vector3f.h"
 
@@ -50,7 +50,7 @@ public:
 	float GetHull(void) const;
 	Color * GetColor(void) const;
 	const Vector3f & GetExhaustOffset(void) const;
-	const std::vector< Slot * > & GetSlots(void) const;
+	const std::map< std::string, Slot * > & GetSlots(void) const;
 	// setters
 	void SetModel(const Model * Model);
 	void SetForwardThrust(float ForwardThrust);
@@ -65,7 +65,7 @@ public:
 	void SetColor(const Color & Color);
 	void SetExhaustOffset(const Vector3f & ExhaustOffset);
 	// modifiers
-	Slot * CreateSlot(void);
+	Slot * CreateSlot(const std::string & SlotIdentifier);
 private:
 	std::string m_Identifier;
 	const Model * m_Model;
@@ -80,7 +80,7 @@ private:
 	float m_Hull;
 	Color * m_Color;
 	Vector3f m_ExhaustOffset;
-	std::vector< Slot * > m_Slots;
+	std::map< std::string, Slot * > m_Slots;
 };
 
 inline const std::string & ShipClass::GetIdentifier(void) const
@@ -148,7 +148,7 @@ inline const Vector3f & ShipClass::GetExhaustOffset(void) const
 	return m_ExhaustOffset;
 }
 
-inline const std::vector< Slot * > & ShipClass::GetSlots(void) const
+inline const std::map< std::string, Slot * > & ShipClass::GetSlots(void) const
 {
 	return m_Slots;
 }

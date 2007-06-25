@@ -65,6 +65,7 @@
 #include "ship_class.h"
 #include "ship_class_manager.h"
 #include "shot.h"
+#include "slot.h"
 #include "star.h"
 #include "state_machine.h"
 #include "states.h"
@@ -843,13 +844,7 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix)
 		
 		NewWeapon->SetObjectIdentifier("::weapon(" + NewWeapon->GetWeaponClass()->GetIdentifier() + ")::created_for(" + NewShip->GetObjectIdentifier() + ")" + IdentifierSuffix);
 		NewShip->AddObject(NewWeapon);
-		
-		const std::vector< Slot * > & ShipSlots(NewShip->GetSlots());
-		
-		if(ShipSlots.size() > 0)
-		{
-			NewShip->Mount(NewWeapon, ShipSlots.front());
-		}
+		NewShip->Mount(NewWeapon, "front_gun");
 	}
 	else if(ShipClassIdentifier == "transporter")
 	{
@@ -1362,7 +1357,12 @@ void KeyDown(unsigned int KeyCode)
 				}
 				else if(TheWeapon != 0)
 				{
-					XML << element << "weapon" << attribute << "object-identifier" << value << TheWeapon->GetObjectIdentifier() << attribute << "class-identifier" << value << TheWeapon->GetWeaponClass()->GetIdentifier() << end;
+					XML << element << "weapon" << attribute << "object-identifier" << value << TheWeapon->GetObjectIdentifier() << attribute << "class-identifier" << value << TheWeapon->GetWeaponClass()->GetIdentifier();
+					if(TheWeapon->GetSlot() != 0)
+					{
+						XML << attribute << "mounted-on" << value << TheWeapon->GetSlot()->GetIdentifier();
+					}
+					XML << end;
 				}
 				++ManifestIterator;
 			}
@@ -1777,6 +1777,10 @@ void LoadSavegame(const Element * SaveElement)
 							
 							NewWeapon->SetObjectIdentifier((*ManifestChild)->GetAttribute("object-identifier"));
 							PlayerShip->AddObject(NewWeapon);
+							if((*ManifestChild)->HasAttribute("mounted-on") == true)
+							{
+								PlayerShip->Mount(NewWeapon, (*ManifestChild)->GetAttribute("mounted-on"));
+							}
 						}
 						else
 						{
