@@ -780,6 +780,13 @@ void EmptySystem(System * System)
 {
 	if(System != 0)
 	{
+		while(g_ParticleSystems.empty() == false)
+		{
+			ParticleSystem * ParticleSystem(g_ParticleSystems.front());
+			
+			g_ParticleSystems.erase(g_ParticleSystems.begin());
+			DeleteParticleSystem(ParticleSystem);
+		}
 		while(System->GetShips().empty() == false)
 		{
 			Ship * Ship(*System->GetShips().begin());
