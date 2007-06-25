@@ -129,6 +129,9 @@ object_h = \
 	object.h \
 	$(referencing_h)
 
+particle_systems_h = \
+	particle_systems.h
+
 perspective_h = \
 	perspective.h \
 	$(math_vector4f_h)
@@ -284,6 +287,7 @@ clean: clean-recursive
 	$(RM) mouse_button_listener.o
 	$(RM) mouse_motion_listener.o
 	$(RM) object.o
+	$(RM) particle_systems.o
 	$(RM) perspective.o
 	$(RM) physical_object.o
 	$(RM) planet.o
@@ -335,7 +339,7 @@ check-dependencies:
 install:
 	@echo -e "This project is not installable yet. Please run \"./galactic-fall\" from the top directory."
 
-galactic-fall: arx_reading.o buffer_reading.o button.o camera.o cargo.o character.o clicked_listener.o color.o command_mind.o commodity.o commodity_manager.o destroy_listener.o draw_text.o game_time.o key_listener.o label.o main.o map_dialog.o map_knowledge.o mini_map.o mind.o model.o model_manager.o mouse_button_listener.o mouse_motion_listener.o object.o perspective.o physical_object.o planet.o planet_dialog.o real_time.o scanner_display.o ship.o ship_class.o ship_class_manager.o shot.o slot.o star.o state.o state_machine.o states.o string_cast.o system.o system_manager.o trade_center_dialog.o user_interface.o weapon.o weapon_class.o weapon_class_manager.o widget.o window.o xml_parser.o xml_puny_dom.o xml_stream.o
+galactic-fall: arx_reading.o buffer_reading.o button.o camera.o cargo.o character.o clicked_listener.o color.o command_mind.o commodity.o commodity_manager.o destroy_listener.o draw_text.o game_time.o key_listener.o label.o main.o map_dialog.o map_knowledge.o mini_map.o mind.o model.o model_manager.o mouse_button_listener.o mouse_motion_listener.o object.o particle_systems.o perspective.o physical_object.o planet.o planet_dialog.o real_time.o scanner_display.o ship.o ship_class.o ship_class_manager.o shot.o slot.o star.o state.o state_machine.o states.o string_cast.o system.o system_manager.o trade_center_dialog.o user_interface.o weapon.o weapon_class.o weapon_class_manager.o widget.o window.o xml_parser.o xml_puny_dom.o xml_stream.o
 	$(CXX) $(LDFLAGS) `pkg-config --libs libarxx` $^ -lGL -o $@
 
 arx_reading.o: arx_reading.cpp $(arx_reading_h) $(arx_resources_h) $(buffer_reading_h) $(callbacks_h) $(commodity_h) $(commodity_manager_h) $(label_h) $(model_h) $(model_manager_h) $(planet_h) $(ship_class_h) $(ship_class_manager_h) $(slot_h) $(system_h) $(system_manager_h) $(user_interface_h) $(weapon_class_h) $(weapon_class_manager_h) $(widget_h)
@@ -414,6 +418,9 @@ mouse_motion_listener.o: mouse_motion_listener.cpp $(mouse_motion_listener_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 object.o: object.cpp $(object_h) $(real_time_h) $(string_cast_h) $(xml_stream_h)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+particle_systems.o: particle_systems.cpp $(color_h) $(game_time_h) $(math_h) $(particle_systems_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 perspective.o: perspective.cpp $(perspective_h)

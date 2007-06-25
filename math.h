@@ -20,6 +20,8 @@
 #ifndef MATH_H
 #define MATH_H
 
+#include <stdlib.h>
+
 #include "math/vector2f.h"
 
 inline void NormalizeRadians(float & Radians)
@@ -106,6 +108,16 @@ inline float GetRandomFloatFromExponentialDistribution(float Interval)
 inline int GetRandomIntegerFromExponentialDistribution(float Interval)
 {
 	return static_cast< int >(GetRandomFloatFromExponentialDistribution(Interval));
+}
+
+inline double GetRandomUniformDouble(void)
+{
+	return static_cast< double >(random()) / RAND_MAX;
+}
+
+inline double GetRandomDouble(double LowestValue, double HighestValue)
+{
+	return ((HighestValue - LowestValue) * GetRandomUniformDouble()) + LowestValue;
 }
 
 #endif

@@ -19,7 +19,6 @@
 
 #include <assert.h>
 #include <errno.h>
-#include <stdlib.h>
 
 #include <fstream>
 #include <iostream>
@@ -56,6 +55,7 @@
 #include "mini_map.h"
 #include "model.h"
 #include "model_manager.h"
+#include "particle_systems.h"
 #include "perspective.h"
 #include "planet.h"
 #include "planet_dialog.h"
@@ -119,6 +119,7 @@ GLXContext g_GLXContext;
 Window g_Window;
 Perspective g_MainPerspective;
 bool g_EchoEvents(false);
+std::vector< ParticleSystem * > g_ParticleSystems;
 
 enum WantReturnCode
 {
@@ -381,6 +382,29 @@ void CalculateCharacters(void)
 	}
 }
 
+ParticleSystem * CreateParticleSystem(const std::string & ParticleSystemClassIdentifier)
+{
+	ParticleSystem * NewParticleSystem(0);
+	
+	if(ParticleSystemClassIdentifier == "Hit")
+	{
+		NewParticleSystem = new ParticleSystemHit();
+		g_ParticleSystems.push_back(NewParticleSystem);
+	}
+	else
+	{
+		NewParticleSystem = new ParticleSystemExplosion();
+		g_ParticleSystems.push_back(NewParticleSystem);
+	}
+	
+	return NewParticleSystem;
+}
+
+void DeleteParticleSystem(ParticleSystem * ParticleSystem)
+{
+	delete ParticleSystem;
+}
+
 void CalculateMovements(System * System)
 {
 	float Seconds(CalculateTime());
@@ -430,9 +454,18 @@ void CalculateMovements(System * System)
 					{
 						if(((*ShotIterator)->GetPosition() - Ship->GetPosition()).SquaredLength() < ((*ShotIterator)->GetRadialSize() * (*ShotIterator)->GetRadialSize() + Ship->GetRadialSize() * Ship->GetRadialSize()))
 						{
+							ParticleSystem * NewHitParticleSystem(CreateParticleSystem("Hit"));
+							
+							NewHitParticleSystem->SetPosition((*ShotIterator)->GetPosition());
+							NewHitParticleSystem->SetVelocity(((*ShotIterator)->GetVelocity() * 0.2f) + (Ship->GetVelocity() * 0.8f));
 							Ship->SetHull(Ship->GetHull() - (*ShotIterator)->GetDamage());
 							if(Ship->GetHull() <= 0.0f)
 							{
+								ParticleSystem * NewExplosionParticleSystem(CreateParticleSystem("Explosion"));
+								
+								NewExplosionParticleSystem->SetPosition(Ship->GetPosition());
+								NewExplosionParticleSystem->SetVelocity(Ship->GetVelocity() * 0.5f);
+								
 								std::set< Object * >::iterator ManifestIterator;
 								std::set< Object * >::iterator NextIterator((*ShipIterator)->GetManifest().begin());
 								
@@ -494,6 +527,21 @@ void CalculateMovements(System * System)
 			else
 			{
 				++ShotIterator;
+			}
+		}
+		
+		std::vector< ParticleSystem * >::iterator ParticleSystemIterator(g_ParticleSystems.begin());
+		
+		while(ParticleSystemIterator != g_ParticleSystems.end())
+		{
+			if((*ParticleSystemIterator)->Update(Seconds) == false)
+			{
+				DeleteParticleSystem(*ParticleSystemIterator);
+				ParticleSystemIterator = g_ParticleSystems.erase(ParticleSystemIterator);
+			}
+			else
+			{
+				++ParticleSystemIterator;
 			}
 		}
 	}
@@ -650,6 +698,10 @@ void Render(System * System)
 		{
 			glClear(GL_DEPTH_BUFFER_BIT);
 			(*ShotIterator)->Draw();
+		}
+		for(std::vector< ParticleSystem * >::iterator ParticleSystemIterator = g_ParticleSystems.begin(); ParticleSystemIterator != g_ParticleSystems.end(); ++ParticleSystemIterator)
+		{
+			(*ParticleSystemIterator)->Draw();
 		}
 	}
 	// HUD
@@ -1234,6 +1286,12 @@ void KeyDown(unsigned int KeyCode)
 	case 60: // Key: PERIODE
 		{
 			SetTimeWarp(g_TimeWarp * 1.1f);
+			
+			break;
+		}
+	case 61: // Key: SLASH
+		{
+			SetTimeWarp(1.0f);
 			
 			break;
 		}
