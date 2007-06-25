@@ -26,7 +26,7 @@ class ParticleSystem
 {
 public:
 	virtual bool Update(float Seconds) = 0;
-	virtual void Draw(void) = 0;
+	void Draw(void);
 	// setters
 	void SetPosition(const Vector2f & Position);
 	void SetVelocity(const Vector2f & Velocity);
@@ -36,6 +36,7 @@ protected:
 	{
 		Vector2f m_Position;
 		Vector2f m_Velocity;
+		Color m_Color;
 		double m_TimeOfDeath;
 	};
 	
@@ -65,7 +66,6 @@ class ParticleSystemHit : public ParticleSystem
 public:
 	ParticleSystemHit(void);
 	virtual bool Update(float Seconds);
-	virtual void Draw(void);
 };
 
 class ParticleSystemExplosion : public ParticleSystem
@@ -73,7 +73,6 @@ class ParticleSystemExplosion : public ParticleSystem
 public:
 	ParticleSystemExplosion(void);
 	virtual bool Update(float Seconds);
-	virtual void Draw(void);
 };
 
 #endif
