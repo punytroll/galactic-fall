@@ -24,6 +24,23 @@
 #include "math.h"
 #include "particle_systems.h"
 
+void ParticleSystem::Draw(void)
+{
+	glPushMatrix();
+	glTranslatef(m_Position.m_V.m_A[0], m_Position.m_V.m_A[1], 0.0f);
+	glPushAttrib(GL_ENABLE_BIT);
+	glDisable(GL_LIGHTING);
+	glBegin(GL_POINTS);
+	for(std::list< Particle >::iterator ParticleIterator = m_Particles.begin(); ParticleIterator != m_Particles.end(); ++ParticleIterator)
+	{
+		glColor4fv(ParticleIterator->m_Color.GetColor().m_V.m_A);
+		glVertex2fv(ParticleIterator->m_Position.m_V.m_A);
+	}
+	glEnd();
+	glPopAttrib();
+	glPopMatrix();
+}
+
 ParticleSystemHit::ParticleSystemHit(void)
 {
 	SetTimeOfDeath(GameTime::Get() + 3.0);
@@ -34,6 +51,7 @@ ParticleSystemHit::ParticleSystemHit(void)
 		NewParticle.m_Position.Set(0.0f, 0.0f);
 		NewParticle.m_Velocity = Vector2f(GetRandomFloat(0.0f, 0.5f) + GetRandomFloatFromExponentialDistribution(1.0f), GetRandomFloat(0.0f, 2 * M_PI), Vector2f::InitializeMagnitudeAngle);
 		NewParticle.m_TimeOfDeath = GameTime::Get() + GetRandomDouble(0.3f, 0.8f);
+		NewParticle.m_Color = Color(0.5f, 0.4f, 0.5f, 1.0f);
 		m_Particles.push_back(NewParticle);
 	}
 }
@@ -67,23 +85,6 @@ bool ParticleSystemHit::Update(float Seconds)
 	}
 }
 
-void ParticleSystemHit::Draw(void)
-{
-	glPushMatrix();
-	glTranslatef(m_Position.m_V.m_A[0], m_Position.m_V.m_A[1], 0.0f);
-	glPushAttrib(GL_ENABLE_BIT);
-	glDisable(GL_LIGHTING);
-	glColor4fv(Color(0.5f, 0.4f, 0.5f, 1.0f).GetColor().m_V.m_A);
-	glBegin(GL_POINTS);
-	for(std::list< Particle >::iterator ParticleIterator = m_Particles.begin(); ParticleIterator != m_Particles.end(); ++ParticleIterator)
-	{
-		glVertex2fv(ParticleIterator->m_Position.m_V.m_A);
-	}
-	glEnd();
-	glPopAttrib();
-	glPopMatrix();
-}
-
 ParticleSystemExplosion::ParticleSystemExplosion(void)
 {
 	SetTimeOfDeath(GameTime::Get() + 3.0);
@@ -94,6 +95,7 @@ ParticleSystemExplosion::ParticleSystemExplosion(void)
 		NewParticle.m_Position.Set(0.0f, 0.0f);
 		NewParticle.m_Velocity = Vector2f(GetRandomFloat(0.0f, 2.5f) + GetRandomFloatFromExponentialDistribution(2.0f), GetRandomFloat(0.0f, 2 * M_PI), Vector2f::InitializeMagnitudeAngle);
 		NewParticle.m_TimeOfDeath = GameTime::Get() + GetRandomDouble(1.0f, 1.6f);
+		NewParticle.m_Color = Color(0.6f, 0.3f, 0.1f, 1.0f);
 		m_Particles.push_back(NewParticle);
 	}
 }
@@ -125,21 +127,4 @@ bool ParticleSystemExplosion::Update(float Seconds)
 		
 		return true;
 	}
-}
-
-void ParticleSystemExplosion::Draw(void)
-{
-	glPushMatrix();
-	glTranslatef(m_Position.m_V.m_A[0], m_Position.m_V.m_A[1], 0.0f);
-	glPushAttrib(GL_ENABLE_BIT);
-	glDisable(GL_LIGHTING);
-	glColor4fv(Color(0.6f, 0.3f, 0.1f, 1.0f).GetColor().m_V.m_A);
-	glBegin(GL_POINTS);
-	for(std::list< Particle >::iterator ParticleIterator = m_Particles.begin(); ParticleIterator != m_Particles.end(); ++ParticleIterator)
-	{
-		glVertex2fv(ParticleIterator->m_Position.m_V.m_A);
-	}
-	glEnd();
-	glPopAttrib();
-	glPopMatrix();
 }
