@@ -19,7 +19,8 @@
 
 #include "slot.h"
 
-Slot::Slot(void) :
+Slot::Slot(const std::string & Identifier) :
+	m_Identifier(Identifier),
 	m_MountedObject(0)
 {
 }

@@ -23,6 +23,7 @@
 	</exhaust-offset>
 	<slots>
 		<slot>
+			<identifier>starboard_gun</identifier>
 			<type>light_weapon</type>
 			<position>
 				<x>4.2</x>
@@ -31,6 +32,7 @@
 			</position>
 		</slot>
 		<slot>
+			<identifier>backboard_gun</identifier>
 			<type>light_weapon</type>
 			<position>
 				<x>4.2</x>

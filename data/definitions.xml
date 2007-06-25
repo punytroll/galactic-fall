@@ -94,6 +94,7 @@
 	</offered-commodity>
 	
 	<slot>
+		<string identifier="identifier"/>
 		<string identifier="type"/>
 		<vector3f identifier="position"/>
 	</slot>

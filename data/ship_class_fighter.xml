@@ -23,6 +23,7 @@
 	</exhaust-offset>
 	<slots>
 		<slot>
+			<identifier>front_gun</identifier>
 			<type>light_weapon</type>
 			<position>
 				<x>3</x>

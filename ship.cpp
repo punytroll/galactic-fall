@@ -59,14 +59,14 @@ Ship::Ship(ShipClass * ShipClass) :
 {
 	SetRadialSize(m_ShipClass->GetModel()->GetRadialSize());
 	
-	const std::vector< Slot * > & ShipClassSlots(GetShipClass()->GetSlots());
+	const std::map< std::string, Slot * > & ShipClassSlots(GetShipClass()->GetSlots());
 	
-	for(std::vector< Slot * >::size_type SlotNumber = 0; SlotNumber < ShipClassSlots.size(); ++SlotNumber)
+	for(std::map< std::string, Slot * >::const_iterator SlotIterator = ShipClassSlots.begin(); SlotIterator != ShipClassSlots.end(); ++SlotIterator)
 	{
-		Slot * NewSlot(CreateSlot());
+		Slot * NewSlot(CreateSlot(SlotIterator->first));
 		
-		NewSlot->SetType(ShipClassSlots[SlotNumber]->GetType());
-		NewSlot->SetPosition(ShipClassSlots[SlotNumber]->GetPosition());
+		NewSlot->SetType(SlotIterator->second->GetType());
+		NewSlot->SetPosition(SlotIterator->second->GetPosition());
 	}
 }
 
@@ -290,25 +290,34 @@ void Ship::SetFire(bool Fire)
 	}
 }
 
-Slot * Ship::CreateSlot(void)
+Slot * Ship::CreateSlot(const std::string & SlotIdentifier)
 {
-	Slot * NewSlot(new Slot());
-	
-	m_Slots.push_back(NewSlot);
-	
-	return NewSlot;
+	if(m_Slots.find(SlotIdentifier) == m_Slots.end())
+	{
+		Slot * NewSlot(new Slot(SlotIdentifier));
+		
+		m_Slots[SlotIdentifier] = NewSlot;
+		
+		return NewSlot;
+	}
+	else
+	{
+		return 0;
+	}
 }
 
-bool Ship::Mount(Object * Object, Slot * Slot)
+bool Ship::Mount(Object * Object, const std::string & SlotIdentifier)
 {
-	if((m_Manifest.find(Object) != m_Manifest.end()) && (std::find(m_Slots.begin(), m_Slots.end(), Slot) != m_Slots.end()))
+	std::map< std::string, Slot * >::iterator SlotIterator(m_Slots.find(SlotIdentifier));
+	
+	if((m_Manifest.find(Object) != m_Manifest.end()) && (SlotIterator != m_Slots.end()))
 	{
 		Weapon * TheWeapon(dynamic_cast< Weapon * >(Object));
 		
-		if((TheWeapon != 0) && (TheWeapon->GetWeaponClass()->GetSlotType() == Slot->GetType()))
+		if((TheWeapon != 0) && (TheWeapon->GetWeaponClass()->GetSlotType() == SlotIterator->second->GetType()))
 		{
-			Slot->SetMountedObject(Object);
-			TheWeapon->SetSlot(Slot);
+			SlotIterator->second->SetMountedObject(Object);
+			TheWeapon->SetSlot(SlotIterator->second);
 			
 			return true;
 		}

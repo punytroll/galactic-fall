@@ -29,8 +29,9 @@ class Object;
 class Slot
 {
 public:
-	Slot(void);
+	Slot(const std::string & Identifier);
 	// getters
+	const std::string & GetIdentifier(void) const;
 	const Object * GetMountedObject(void) const;
 	const Vector3f & GetPosition(void) const;
 	const std::string & GetType(void) const;
@@ -39,10 +40,16 @@ public:
 	void SetPosition(const Vector3f & Position);
 	void SetType(const std::string & Type);
 private:
+	std::string m_Identifier;
 	Object * m_MountedObject;
 	Vector3f m_Position;
 	std::string m_Type;
 };
+
+inline const std::string & Slot::GetIdentifier(void) const
+{
+	return m_Identifier;
+}
 
 inline const Object * Slot::GetMountedObject(void) const
 {

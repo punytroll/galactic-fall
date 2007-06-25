@@ -329,19 +329,23 @@ static void ReadShipClass(ShipClassManager * ShipClassManager, Arxx::Reference &
 	NewShipClass->SetExhaustOffset(ExhaustOffset);
 	for(Arxx::u4byte SlotNumber = 1; SlotNumber <= SlotCount; ++SlotNumber)
 	{
-		Slot * NewSlot(NewShipClass->CreateSlot());
+		std::string SlotIdentifier;
+		
+		Reader >> SlotIdentifier;
+		
+		Slot * NewSlot(NewShipClass->CreateSlot(SlotIdentifier));
 		
 		if(NewSlot == 0)
 		{
-			throw std::runtime_error("Could not create slot '" + to_string_cast(SlotNumber) + "' for ship class '" + Identifier + "'.");
+			throw std::runtime_error("Could not create slot '" + SlotIdentifier + "' for ship class '" + Identifier + "'.");
 		}
 		
-		std::string Type;
-		Vector3f Position;
+		std::string SlotType;
+		Vector3f SlotPosition;
 		
-		Reader >> Type >> Position;
-		NewSlot->SetType(Type);
-		NewSlot->SetPosition(Position);
+		Reader >> SlotType >> SlotPosition;
+		NewSlot->SetType(SlotType);
+		NewSlot->SetPosition(SlotPosition);
 	}
 }
 

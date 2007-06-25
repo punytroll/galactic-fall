@@ -28,7 +28,7 @@
 			<cargo commodity-identifier="industrial"/>
 			<cargo commodity-identifier="metal"/>
 			<cargo commodity-identifier="metal"/>
-			<weapon object-identifier="::weapon(light_laser)::ship(::ship(shuttle)::player_ship)" class-identifier="light_laser"/>
+			<weapon object-identifier="::weapon(light_laser)::ship(::ship(shuttle)::player_ship)" class-identifier="light_laser" mounted-on="starboard_gun"/>
 		</manifest>
 		<name value="Freelancer 4"/>
 	</ship>
