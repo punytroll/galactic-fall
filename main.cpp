@@ -386,7 +386,7 @@ ParticleSystem * CreateParticleSystem(const std::string & ParticleSystemClassIde
 {
 	ParticleSystem * NewParticleSystem(0);
 	
-	if(ParticleSystemClassIdentifier == "Hit")
+	if(ParticleSystemClassIdentifier == "hit")
 	{
 		NewParticleSystem = new ParticleSystemHit();
 		g_ParticleSystems.push_back(NewParticleSystem);
@@ -454,14 +454,14 @@ void CalculateMovements(System * System)
 					{
 						if(((*ShotIterator)->GetPosition() - Ship->GetPosition()).SquaredLength() < ((*ShotIterator)->GetRadialSize() * (*ShotIterator)->GetRadialSize() + Ship->GetRadialSize() * Ship->GetRadialSize()))
 						{
-							ParticleSystem * NewHitParticleSystem(CreateParticleSystem("Hit"));
+							ParticleSystem * NewHitParticleSystem(CreateParticleSystem("hit"));
 							
 							NewHitParticleSystem->SetPosition((*ShotIterator)->GetPosition());
 							NewHitParticleSystem->SetVelocity(((*ShotIterator)->GetVelocity() * 0.2f) + (Ship->GetVelocity() * 0.8f));
 							Ship->SetHull(Ship->GetHull() - (*ShotIterator)->GetDamage());
 							if(Ship->GetHull() <= 0.0f)
 							{
-								ParticleSystem * NewExplosionParticleSystem(CreateParticleSystem("Explosion"));
+								ParticleSystem * NewExplosionParticleSystem(CreateParticleSystem("explosion"));
 								
 								NewExplosionParticleSystem->SetPosition(Ship->GetPosition());
 								NewExplosionParticleSystem->SetVelocity(Ship->GetVelocity() * 0.5f);
@@ -501,9 +501,17 @@ void CalculateMovements(System * System)
 						
 						if(((*ShotIterator)->GetPosition() - Cargo->GetPosition()).SquaredLength() < ((*ShotIterator)->GetRadialSize() * (*ShotIterator)->GetRadialSize() + Cargo->GetRadialSize() * Cargo->GetRadialSize()))
 						{
+							ParticleSystem * NewHitParticleSystem(CreateParticleSystem("hit"));
+							
+							NewHitParticleSystem->SetPosition((*ShotIterator)->GetPosition());
+							NewHitParticleSystem->SetVelocity(((*ShotIterator)->GetVelocity() * 0.4f) + (Cargo->GetVelocity() * 0.6f));
 							Cargo->SetHull(Cargo->GetHull() - (*ShotIterator)->GetDamage());
 							if(Cargo->GetHull() <= 0.0f)
 							{
+								ParticleSystem * NewHitParticleSystem(CreateParticleSystem("hit"));
+								
+								NewHitParticleSystem->SetPosition(Cargo->GetPosition());
+								NewHitParticleSystem->SetVelocity(Cargo->GetVelocity() * 0.5f);
 								RemoveCargoFromSystem(System, CargoIterator);
 								DeleteCargo(Cargo);
 							}
