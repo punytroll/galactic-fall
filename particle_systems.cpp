@@ -47,6 +47,9 @@ bool ParticleSystem::Update(float Seconds)
 					if(GameTime::Get() >= ParticleIterator->m_TimeOfDeath)
 					{
 						ParticleIterator = m_Particles.erase(ParticleIterator);
+						Forward = false;
+						
+						break;
 					}
 				}
 				else if(*ScriptLine == "move")
