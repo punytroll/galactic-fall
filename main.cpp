@@ -683,12 +683,12 @@ void Render(System * System)
 	glClear(GL_DEPTH_BUFFER_BIT);
 	if(System != 0)
 	{
-		const std::list< Planet * > & Planets(System->GetPlanets());
+		const std::vector< Planet * > & Planets(System->GetPlanets());
 		const std::list< Ship * > & Ships(System->GetShips());
 		const std::list< Cargo * > & Cargos(System->GetCargos());
 		const std::list< Shot * > & Shots(System->GetShots());
 		
-		for(std::list< Planet * >::const_iterator PlanetIterator = Planets.begin(); PlanetIterator != Planets.end(); ++PlanetIterator)
+		for(std::vector< Planet * >::const_iterator PlanetIterator = Planets.begin(); PlanetIterator != Planets.end(); ++PlanetIterator)
 		{
 			glClear(GL_DEPTH_BUFFER_BIT);
 			(*PlanetIterator)->Draw();
@@ -1974,6 +1974,12 @@ int main(int argc, char ** argv)
 		glXSwapBuffers(g_Display, g_Window);
 	}
 	DestroyWindow();
+	delete g_Galaxy;
+	
+	XMLStream Out(std::cout);
+	
+	Object::Dump(Out);
+	std::cout << std::endl;
 	
 	return 0;
 }

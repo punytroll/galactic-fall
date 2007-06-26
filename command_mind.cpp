@@ -283,7 +283,7 @@ void CommandMind::TargetPreviousPlanet(void)
 	assert(GetCharacter() != 0);
 	assert(GetCharacter()->GetShip() != 0);
 	
-	const std::list< Planet * > & Planets(GetCharacter()->GetShip()->GetCurrentSystem()->GetPlanets());
+	const std::vector< Planet * > & Planets(GetCharacter()->GetShip()->GetCurrentSystem()->GetPlanets());
 	Planet * SelectedPlanet(dynamic_cast< Planet * >(GetCharacter()->GetShip()->GetTarget().Get()));
 	
 	if(SelectedPlanet == 0)
@@ -295,7 +295,7 @@ void CommandMind::TargetPreviousPlanet(void)
 	}
 	else
 	{
-		std::list< Planet * >::const_iterator PlanetIterator(find(Planets.begin(), Planets.end(), SelectedPlanet));
+		std::vector< Planet * >::const_iterator PlanetIterator(find(Planets.begin(), Planets.end(), SelectedPlanet));
 		
 		if(PlanetIterator == Planets.begin())
 		{
@@ -311,11 +311,11 @@ void CommandMind::TargetPreviousPlanet(void)
 
 void CommandMind::TargetNearestPlanet(void)
 {
-	const std::list< Planet * > & Planets(GetCharacter()->GetShip()->GetCurrentSystem()->GetPlanets());
+	const std::vector< Planet * > & Planets(GetCharacter()->GetShip()->GetCurrentSystem()->GetPlanets());
 	float MinimumDistance(0.0f);
 	Planet * MinimumPlanet(0);
 	
-	for(std::list< Planet * >::const_iterator PlanetIterator = Planets.begin(); PlanetIterator != Planets.end(); ++PlanetIterator)
+	for(std::vector< Planet * >::const_iterator PlanetIterator = Planets.begin(); PlanetIterator != Planets.end(); ++PlanetIterator)
 	{
 		if(MinimumPlanet == 0)
 		{
@@ -348,7 +348,7 @@ void CommandMind::TargetNextPlanet(void)
 	assert(GetCharacter() != 0);
 	assert(GetCharacter()->GetShip() != 0);
 	
-	const std::list< Planet * > & Planets(GetCharacter()->GetShip()->GetCurrentSystem()->GetPlanets());
+	const std::vector< Planet * > & Planets(GetCharacter()->GetShip()->GetCurrentSystem()->GetPlanets());
 	Planet * SelectedPlanet(dynamic_cast< Planet * >(GetCharacter()->GetShip()->GetTarget().Get()));
 	
 	if(SelectedPlanet == 0)
@@ -360,7 +360,7 @@ void CommandMind::TargetNextPlanet(void)
 	}
 	else
 	{
-		std::list< Planet * >::const_iterator PlanetIterator(find(Planets.begin(), Planets.end(), SelectedPlanet));
+		std::vector< Planet * >::const_iterator PlanetIterator(find(Planets.begin(), Planets.end(), SelectedPlanet));
 		
 		if(PlanetIterator == Planets.end())
 		{
