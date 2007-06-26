@@ -24,6 +24,46 @@
 #include "math.h"
 #include "particle_systems.h"
 
+bool ParticleSystem::Update(float Seconds)
+{
+	if(GameTime::Get() >= m_TimeOfDeath)
+	{
+		return false;
+	}
+	else
+	{
+		m_Position += m_Velocity * Seconds;
+		
+		std::list< ParticleSystem::Particle >::iterator ParticleIterator(m_Particles.begin());
+		
+		while(ParticleIterator != m_Particles.end())
+		{
+			bool Forward(true);
+			
+			for(std::vector< std::string >::const_iterator ScriptLine = m_ParticleScript.begin(); ScriptLine != m_ParticleScript.end(); ++ScriptLine)
+			{
+				if(*ScriptLine == "kill-old")
+				{
+					if(GameTime::Get() >= ParticleIterator->m_TimeOfDeath)
+					{
+						ParticleIterator = m_Particles.erase(ParticleIterator);
+					}
+				}
+				else if(*ScriptLine == "move")
+				{
+					ParticleIterator->m_Position += ParticleIterator->m_Velocity * Seconds;
+				}
+			}
+			if(Forward == true)
+			{
+				++ParticleIterator;
+			}
+		}
+		
+		return true;
+	}
+}
+
 void ParticleSystem::Draw(void)
 {
 	glPushMatrix();
@@ -54,35 +94,8 @@ ParticleSystemHit::ParticleSystemHit(void)
 		NewParticle.m_Color = Color(GetRandomFloat(0.35f, 0.65f), GetRandomFloat(0.3f, 0.5f), GetRandomFloat(0.35f, 0.65f), 1.0f);
 		m_Particles.push_back(NewParticle);
 	}
-}
-
-bool ParticleSystemHit::Update(float Seconds)
-{
-	if(GameTime::Get() >= m_TimeOfDeath)
-	{
-		return false;
-	}
-	else
-	{
-		m_Position += m_Velocity * Seconds;
-		
-		std::list< Particle >::iterator ParticleIterator(m_Particles.begin());
-		
-		while(ParticleIterator != m_Particles.end())
-		{
-			if(GameTime::Get() >= ParticleIterator->m_TimeOfDeath)
-			{
-				ParticleIterator = m_Particles.erase(ParticleIterator);
-			}
-			else
-			{
-				ParticleIterator->m_Position += ParticleIterator->m_Velocity * Seconds;
-				++ParticleIterator;
-			}
-		}
-		
-		return true;
-	}
+	m_ParticleScript.push_back("kill-old");
+	m_ParticleScript.push_back("move");
 }
 
 ParticleSystemExplosion::ParticleSystemExplosion(void)
@@ -98,33 +111,6 @@ ParticleSystemExplosion::ParticleSystemExplosion(void)
 		NewParticle.m_Color = Color(GetRandomFloat(0.4f, 0.8f), GetRandomFloat(0.2f, 0.4f), GetRandomFloat(0.05f, 0.15f), 1.0f);
 		m_Particles.push_back(NewParticle);
 	}
-}
-
-bool ParticleSystemExplosion::Update(float Seconds)
-{
-	if(GameTime::Get() >= m_TimeOfDeath)
-	{
-		return false;
-	}
-	else
-	{
-		m_Position += m_Velocity * Seconds;
-		
-		std::list< Particle >::iterator ParticleIterator(m_Particles.begin());
-		
-		while(ParticleIterator != m_Particles.end())
-		{
-			if(GameTime::Get() >= ParticleIterator->m_TimeOfDeath)
-			{
-				ParticleIterator = m_Particles.erase(ParticleIterator);
-			}
-			else
-			{
-				ParticleIterator->m_Position += ParticleIterator->m_Velocity * Seconds;
-				++ParticleIterator;
-			}
-		}
-		
-		return true;
-	}
+	m_ParticleScript.push_back("kill-old");
+	m_ParticleScript.push_back("move");
 }
