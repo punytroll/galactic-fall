@@ -481,7 +481,7 @@ void CalculateMovements(System * System)
 									{
 										(*ShipIterator)->GetManifest().erase(ManifestIterator);
 										TheCargo->SetPosition((*ShipIterator)->GetPosition());
-										TheCargo->SetVelocity((*ShipIterator)->GetVelocity() * 0.8f + Vector2f(GetRandomFloat(-0.5f, 0.5f), GetRandomFloat(-0.5f, 0.5f)));
+										TheCargo->SetVelocity((*ShipIterator)->GetVelocity() * 0.8f + Vector2f(GetRandomFloat(0.1f, 1.2f), GetRandomFloat(0.0f, 2 * M_PI), Vector2f::InitializeMagnitudeAngle));
 										(*ShipIterator)->GetCurrentSystem()->AddCargo(TheCargo);
 									}
 								}

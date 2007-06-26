@@ -51,7 +51,7 @@ ParticleSystemHit::ParticleSystemHit(void)
 		NewParticle.m_Position.Set(0.0f, 0.0f);
 		NewParticle.m_Velocity = Vector2f(GetRandomFloat(0.0f, 0.5f) + GetRandomFloatFromExponentialDistribution(1.0f), GetRandomFloat(0.0f, 2 * M_PI), Vector2f::InitializeMagnitudeAngle);
 		NewParticle.m_TimeOfDeath = GameTime::Get() + GetRandomDouble(0.3f, 0.8f);
-		NewParticle.m_Color = Color(0.5f, 0.4f, 0.5f, 1.0f);
+		NewParticle.m_Color = Color(GetRandomFloat(0.35f, 0.65f), GetRandomFloat(0.3f, 0.5f), GetRandomFloat(0.35f, 0.65f), 1.0f);
 		m_Particles.push_back(NewParticle);
 	}
 }
@@ -95,7 +95,7 @@ ParticleSystemExplosion::ParticleSystemExplosion(void)
 		NewParticle.m_Position.Set(0.0f, 0.0f);
 		NewParticle.m_Velocity = Vector2f(GetRandomFloat(0.0f, 2.5f) + GetRandomFloatFromExponentialDistribution(2.0f), GetRandomFloat(0.0f, 2 * M_PI), Vector2f::InitializeMagnitudeAngle);
 		NewParticle.m_TimeOfDeath = GameTime::Get() + GetRandomDouble(1.0f, 1.6f);
-		NewParticle.m_Color = Color(0.6f, 0.3f, 0.1f, 1.0f);
+		NewParticle.m_Color = Color(GetRandomFloat(0.4f, 0.8f), GetRandomFloat(0.2f, 0.4f), GetRandomFloat(0.05f, 0.15f), 1.0f);
 		m_Particles.push_back(NewParticle);
 	}
 }
