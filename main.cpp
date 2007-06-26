@@ -693,15 +693,15 @@ void Render(System * System)
 			glClear(GL_DEPTH_BUFFER_BIT);
 			(*PlanetIterator)->Draw();
 		}
-		for(std::list< Ship * >::const_iterator ShipIterator = Ships.begin(); ShipIterator != Ships.end(); ++ShipIterator)
-		{
-			glClear(GL_DEPTH_BUFFER_BIT);
-			(*ShipIterator)->Draw();
-		}
 		for(std::list< Cargo * >::const_iterator CargoIterator = Cargos.begin(); CargoIterator != Cargos.end(); ++CargoIterator)
 		{
 			glClear(GL_DEPTH_BUFFER_BIT);
 			(*CargoIterator)->Draw();
+		}
+		for(std::list< Ship * >::const_iterator ShipIterator = Ships.begin(); ShipIterator != Ships.end(); ++ShipIterator)
+		{
+			glClear(GL_DEPTH_BUFFER_BIT);
+			(*ShipIterator)->Draw();
 		}
 		for(std::list< Shot * >::const_iterator ShotIterator = Shots.begin(); ShotIterator != Shots.end(); ++ShotIterator)
 		{
