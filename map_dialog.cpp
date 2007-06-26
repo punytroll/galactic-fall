@@ -25,12 +25,12 @@
 #include "character.h"
 #include "color.h"
 #include "draw_text.h"
+#include "galaxy.h"
 #include "globals.h"
 #include "label.h"
 #include "map_dialog.h"
 #include "map_knowledge.h"
 #include "system.h"
-#include "system_manager.h"
 #include "user_interface.h"
 
 MapDialog::MapDialog(Widget * SupWidget, System * System, Character * Character) :
@@ -217,7 +217,7 @@ bool MapDialog::OnMouseButton(Widget * EventSource, int Button, int State, float
 			X -= GetSize().m_V.m_A[0] / 2;
 			Y -= 15.0f + GetSize().m_V.m_A[1] / 2;
 			
-			const std::map< std::string, System * > & Systems(g_SystemManager.GetSystems());
+			const std::map< std::string, System * > & Systems(g_Galaxy->GetSystems());
 			
 			for(std::map< std::string, System * >::const_iterator SystemIterator = Systems.begin(); SystemIterator != Systems.end(); ++SystemIterator)
 			{

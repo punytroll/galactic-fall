@@ -57,6 +57,10 @@ destroy_listener_h = \
 draw_text_h = \
 	draw_text.h
 
+galaxy_h = \
+	galaxy.h \
+	$(object_h)
+
 game_time_h = \
 	game_time.h
 
@@ -211,9 +215,6 @@ system_h = \
 	system.h \
 	$(position_h)
 
-system_manager_h = \
-	system_manager.h
-
 trade_center_dialog_h = \
 	trade_center_dialog.h \
 	$(clicked_listener_h) \
@@ -275,6 +276,7 @@ clean: clean-recursive
 	$(RM) destroy_listener.o
 	$(RM) draw_text.o
 	$(RM) game_time.o
+	$(RM) galaxy.o
 	$(RM) key_listener.o
 	$(RM) label.o
 	$(RM) main.o
@@ -305,7 +307,6 @@ clean: clean-recursive
 	$(RM) states.o
 	$(RM) string_cast.o
 	$(RM) system.o
-	$(RM) system_manager.o
 	$(RM) trade_center_dialog.o
 	$(RM) user_interface.o
 	$(RM) weapon.o
@@ -339,10 +340,10 @@ check-dependencies:
 install:
 	@echo -e "This project is not installable yet. Please run \"./galactic-fall\" from the top directory."
 
-galactic-fall: arx_reading.o buffer_reading.o button.o camera.o cargo.o character.o clicked_listener.o color.o command_mind.o commodity.o commodity_manager.o destroy_listener.o draw_text.o game_time.o key_listener.o label.o main.o map_dialog.o map_knowledge.o mini_map.o mind.o model.o model_manager.o mouse_button_listener.o mouse_motion_listener.o object.o particle_systems.o perspective.o physical_object.o planet.o planet_dialog.o real_time.o scanner_display.o ship.o ship_class.o ship_class_manager.o shot.o slot.o star.o state.o state_machine.o states.o string_cast.o system.o system_manager.o trade_center_dialog.o user_interface.o weapon.o weapon_class.o weapon_class_manager.o widget.o window.o xml_parser.o xml_puny_dom.o xml_stream.o
+galactic-fall: arx_reading.o buffer_reading.o button.o camera.o cargo.o character.o clicked_listener.o color.o command_mind.o commodity.o commodity_manager.o destroy_listener.o draw_text.o galaxy.o game_time.o key_listener.o label.o main.o map_dialog.o map_knowledge.o mini_map.o mind.o model.o model_manager.o mouse_button_listener.o mouse_motion_listener.o object.o particle_systems.o perspective.o physical_object.o planet.o planet_dialog.o real_time.o scanner_display.o ship.o ship_class.o ship_class_manager.o shot.o slot.o star.o state.o state_machine.o states.o string_cast.o system.o trade_center_dialog.o user_interface.o weapon.o weapon_class.o weapon_class_manager.o widget.o window.o xml_parser.o xml_puny_dom.o xml_stream.o
 	$(CXX) $(LDFLAGS) `pkg-config --libs libarxx` $^ -lGL -o $@
 
-arx_reading.o: arx_reading.cpp $(arx_reading_h) $(arx_resources_h) $(buffer_reading_h) $(callbacks_h) $(commodity_h) $(commodity_manager_h) $(label_h) $(model_h) $(model_manager_h) $(planet_h) $(ship_class_h) $(ship_class_manager_h) $(slot_h) $(system_h) $(system_manager_h) $(user_interface_h) $(weapon_class_h) $(weapon_class_manager_h) $(widget_h)
+arx_reading.o: arx_reading.cpp $(arx_reading_h) $(arx_resources_h) $(buffer_reading_h) $(callbacks_h) $(commodity_h) $(commodity_manager_h) $(galaxy_h) $(label_h) $(model_h) $(model_manager_h) $(planet_h) $(ship_class_h) $(ship_class_manager_h) $(slot_h) $(system_h) $(user_interface_h) $(weapon_class_h) $(weapon_class_manager_h) $(widget_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags libarxx` -c $< -o $@
 
 buffer_reading.o: buffer_reading.cpp $(buffer_reading_h)
@@ -381,6 +382,9 @@ destroy_listener.o: destroy_listener.cpp $(destroy_listener_h)
 draw_text.o: draw_text.cpp $(draw_text_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
+galaxy.o: galaxy.cpp $(galaxy_h) $(system_h)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
 game_time.o: game_time.cpp $(game_time_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
@@ -390,10 +394,10 @@ key_listener.o: key_listener.cpp $(key_listener_h)
 label.o: label.cpp $(label_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-main.o: main.cpp $(arx_resources_h) $(arx_reading_h) $(callbacks_h) $(camera_h) $(cargo_h) $(character_h) $(color_h) $(command_mind_h) $(commodity_h) $(commodity_manager_h) $(destroy_listener_h) $(game_time_h) $(label_h) $(map_dialog_h) $(map_knowledge_h) $(math_h) $(mind_h) $(mini_map_h) $(model_h) $(model_manager_h) $(particle_systems_h) $(perspective_h) $(planet_h) $(planet_dialog_h) $(real_time_h) $(scanner_display_h) $(ship_h) $(ship_class_h) $(ship_class_manager_h) $(shot_h) $(slot_h) $(star_h) $(state_machine_h) $(states_h) $(string_cast_h) $(system_h) $(system_manager_h) $(user_interface_h) $(weapon_h) $(weapon_class_h) $(weapon_class_manager_h) $(widget_h) $(xml_puny_dom_h) $(xml_stream_h)
+main.o: main.cpp $(arx_resources_h) $(arx_reading_h) $(callbacks_h) $(camera_h) $(cargo_h) $(character_h) $(color_h) $(command_mind_h) $(commodity_h) $(commodity_manager_h) $(destroy_listener_h) $(galaxy_h) $(game_time_h) $(label_h) $(map_dialog_h) $(map_knowledge_h) $(math_h) $(mind_h) $(mini_map_h) $(model_h) $(model_manager_h) $(particle_systems_h) $(perspective_h) $(planet_h) $(planet_dialog_h) $(real_time_h) $(scanner_display_h) $(ship_h) $(ship_class_h) $(ship_class_manager_h) $(shot_h) $(slot_h) $(star_h) $(state_machine_h) $(states_h) $(string_cast_h) $(system_h) $(user_interface_h) $(weapon_h) $(weapon_class_h) $(weapon_class_manager_h) $(widget_h) $(xml_puny_dom_h) $(xml_stream_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags libarxx` -c $< -o $@
 
-map_dialog.o: map_dialog.cpp $(button_h) $(character_h) $(color_h) $(globals_h) $(label) $(map_dialog_h) $(map_knowledge_h) $(system_h) $(system_manager_h)
+map_dialog.o: map_dialog.cpp $(button_h) $(character_h) $(color_h) $(galaxy_h) $(globals_h) $(label) $(map_dialog_h) $(map_knowledge_h) $(system_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 map_knowledge.o: map_knowledge.cpp $(map_knowledge_h) $(system.h)
@@ -472,9 +476,6 @@ string_cast.o: string_cast.cpp $(string_cast_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 system.o: system.cpp $(planet_h) $(star_h) $(system_h)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-
-system_manager.o: system_manager.cpp $(system_h) $(system_manager_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 trade_center_dialog.o: trade_center_dialog.cpp $(button_h) $(cargo_h) $(character_h) $(commodity_h) $(model_manager_h) $(label_h) $(planet_h) $(real_time_h) $(ship_h) $(trade_center_dialog_h)
