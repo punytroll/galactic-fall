@@ -26,14 +26,26 @@ std::set< Object * > Object::m_Objects;
 std::map< std::string, Object * > Object::m_IdentifiedObjects;
 
 Object::Object(void) :
-	m_Reference(*this)
+	m_Reference(*this),
+	m_Container(0)
 {
 	m_Objects.insert(this);
 }
 
 Object::~Object(void)
 {
+	// invalidate reference first, so no one accesses this object
 	m_Reference.Invalidate();
+	// remove from object hierarchy
+	if(m_Container != 0)
+	{
+		m_Container->RemoveContent(this);
+	}
+	// now delete and remove all content objects
+	while(m_Content.empty() == false)
+	{
+		delete *(m_Content.begin());
+	}
 	SetObjectIdentifier("");
 	m_Objects.erase(m_Objects.find(this));
 }
@@ -58,6 +70,71 @@ void Object::GenerateObjectIdentifier(void)
 	{
 		SetObjectIdentifier(std::string("::") + typeid(*this).name() + "::" + to_string_cast(reinterpret_cast< void * >(this)) + "(" + to_string_cast(RealTime::GetTime()) + ")");
 	}
+}
+
+bool Object::AddContent(Object * Content)
+{
+	assert(Content != 0);
+	
+	std::pair< std::set< Object * >::iterator, bool > InsertionResult(m_Content.insert(Content));
+	
+	if(InsertionResult.second == true)
+	{
+		Content->m_Container = this;
+		if(OnAddContent(Content) == false)
+		{
+			Content->m_Container = 0;
+			m_Content.erase(InsertionResult.first);
+			
+			return false;
+		}
+		else
+		{
+			return true;
+		}
+	}
+	else
+	{
+		return false;
+	}
+}
+
+bool Object::RemoveContent(Object * Content)
+{
+	assert(Content != 0);
+	
+	std::set< Object * >::iterator ContentIterator(m_Content.find(Content));
+	
+	if(ContentIterator != m_Content.end())
+	{
+		Content->m_Container = 0;
+		m_Content.erase(ContentIterator);
+		if(OnRemoveContent(Content) == false)
+		{
+			Content->m_Container = this;
+			m_Content.insert(Content);
+			
+			return false;
+		}
+		else
+		{
+			return true;
+		}
+	}
+	else
+	{
+		return false;
+	}
+}
+
+bool Object::OnAddContent(Object * Content)
+{
+	return true;
+}
+
+bool Object::OnRemoveContent(Object * Content)
+{
+	return true;
 }
 
 Object * Object::GetObject(const std::string & ObjectIdentifier)

@@ -34,31 +34,41 @@ class Object
 public:
 	Object(void);
 	virtual ~Object(void);
+	// setters
 	void SetObjectIdentifier(const std::string & ObjectIdentifier);
-	void GenerateObjectIdentifier(void);
 	// getters
-	const Reference< Object > & GetReference(void) const;
 	const std::string & GetObjectIdentifier(void) const;
+	const Reference< Object > & GetReference(void) const;
+	// modifiers
+	bool AddContent(Object * Content);
+	bool RemoveContent(Object * Content);
+	void GenerateObjectIdentifier(void);
 	
+	// static methods
 	static Object * GetObject(const std::string & ObjectIdentifier);
 	static void Dump(std::ostream & OStream);
 	static void Dump(XMLStream & XML);
+protected:
+	virtual bool OnAddContent(Object * Content);
+	virtual bool OnRemoveContent(Object * Content);
 private:
-	Reference< Object > m_Reference;
 	std::string m_ObjectIdentifier;
+	Reference< Object > m_Reference;
+	Object * m_Container;
+	std::set< Object * > m_Content;
 	
 	static std::set< Object * > m_Objects;
 	static std::map< std::string, Object * > m_IdentifiedObjects;
 };
 
-inline const Reference< Object > & Object::GetReference(void) const
-{
-	return m_Reference;
-}
-
 inline const std::string & Object::GetObjectIdentifier(void) const
 {
 	return m_ObjectIdentifier;
+}
+
+inline const Reference< Object > & Object::GetReference(void) const
+{
+	return m_Reference;
 }
 
 #endif
