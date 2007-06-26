@@ -29,6 +29,7 @@
 #include "callbacks.h"
 #include "commodity.h"
 #include "commodity_manager.h"
+#include "galaxy.h"
 #include "globals.h"
 #include "label.h"
 #include "mini_map.h"
@@ -42,7 +43,6 @@
 #include "star.h"
 #include "string_cast.h"
 #include "system.h"
-#include "system_manager.h"
 #include "user_interface.h"
 #include "weapon_class.h"
 #include "weapon_class_manager.h"
@@ -53,8 +53,8 @@ static Arxx::Item * Resolve(Arxx::Reference & Reference);
 static void ReadCommodity(CommodityManager * CommodityManager, Arxx::Reference & Reference);
 static void ReadModel(ModelManager * ModelManager, Arxx::Reference & Reference);
 static void ReadShipClass(ShipClassManager * ShipClassManager, Arxx::Reference & Reference);
-static void ReadSystem(SystemManager * SystemManager, Arxx::Reference & Reference);
-static void ReadSystemLink(SystemManager * SystemManager, Arxx::Reference & Reference);
+static void ReadSystem(Galaxy * Galaxy, Arxx::Reference & Reference);
+static void ReadSystemLink(Galaxy * Galaxy, Arxx::Reference & Reference);
 static void ReadWeaponClass(WeaponClassManager * WeaponClassManager, Arxx::Reference & Reference);
 static void ReadWidget(UserInterface * UserInterface, Arxx::Reference & Reference);
 static void ReadWidgetLabel(Arxx::BufferReader & Reader, Label * ReadLabel);
@@ -132,14 +132,14 @@ void ReadShipClasses(Arxx::Archive & Archive, ShipClassManager * Manager)
 	ReadItems(Archive, "/Ship Classes", Bind1(Function(ReadShipClass), Manager));
 }
 
-void ReadSystems(Arxx::Archive & Archive, SystemManager * Manager)
+void ReadSystems(Arxx::Archive & Archive, Galaxy * Galaxy)
 {
-	ReadItems(Archive, "/Systems", Bind1(Function(ReadSystem), Manager));
+	ReadItems(Archive, "/Systems", Bind1(Function(ReadSystem), Galaxy));
 }
 
-void ReadSystemLinks(Arxx::Archive & Archive, SystemManager * Manager)
+void ReadSystemLinks(Arxx::Archive & Archive, Galaxy * Galaxy)
 {
-	ReadItems(Archive, "/System Links", Bind1(Function(ReadSystemLink), Manager));
+	ReadItems(Archive, "/System Links", Bind1(Function(ReadSystemLink), Galaxy));
 }
 
 void ReadUserInterface(Arxx::Archive & Archive, UserInterface * Manager)
@@ -349,7 +349,7 @@ static void ReadShipClass(ShipClassManager * ShipClassManager, Arxx::Reference &
 	}
 }
 
-static void ReadSystem(SystemManager * SystemManager, Arxx::Reference & Reference)
+static void ReadSystem(Galaxy * Galaxy, Arxx::Reference & Reference)
 {
 	Arxx::Item * Item(Resolve(Reference));
 	
@@ -367,7 +367,7 @@ static void ReadSystem(SystemManager * SystemManager, Arxx::Reference & Referenc
 	
 	Reader >> Identifier;
 	
-	System * NewSystem(SystemManager->Create(Identifier));
+	System * NewSystem(new System(Identifier));
 	
 	NewSystem->SetObjectIdentifier("::system(" + NewSystem->GetIdentifier() + ")");
 	
@@ -435,9 +435,10 @@ static void ReadSystem(SystemManager * SystemManager, Arxx::Reference & Referenc
 		Reader >> LandingFee;
 		NewPlanet->SetLandingFee(LandingFee);
 	}
+	Galaxy->AddContent(NewSystem);
 }
 
-static void ReadSystemLink(SystemManager * SystemManager, Arxx::Reference & Reference)
+static void ReadSystemLink(Galaxy * Galaxy, Arxx::Reference & Reference)
 {
 	Arxx::Item * Item(Resolve(Reference));
 	
@@ -456,8 +457,8 @@ static void ReadSystemLink(SystemManager * SystemManager, Arxx::Reference & Refe
 	
 	Reader >> System1Identifier >> System2Identifier;
 	
-	System * System1(SystemManager->Get(System1Identifier));
-	System * System2(SystemManager->Get(System2Identifier));
+	System * System1(Galaxy->GetSystem(System1Identifier));
+	System * System2(Galaxy->GetSystem(System2Identifier));
 	
 	if(System1 == 0)
 	{

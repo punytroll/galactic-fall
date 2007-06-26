@@ -45,6 +45,7 @@
 #include "commodity.h"
 #include "commodity_manager.h"
 #include "destroy_listener.h"
+#include "galaxy.h"
 #include "game_time.h"
 #include "globals.h"
 #include "label.h"
@@ -71,7 +72,6 @@
 #include "states.h"
 #include "string_cast.h"
 #include "system.h"
-#include "system_manager.h"
 #include "user_interface.h"
 #include "weapon.h"
 #include "weapon_class.h"
@@ -87,7 +87,6 @@ Camera g_Camera;
 ModelManager g_ModelManager;
 ShipClassManager g_ShipClassManager;
 CommodityManager g_CommodityManager;
-SystemManager g_SystemManager;
 WeaponClassManager * g_WeaponClassManager;
 Reference< CommandMind > g_InputMind;
 Reference< Mind > g_OutputMind;
@@ -121,6 +120,7 @@ Window g_Window;
 Perspective g_MainPerspective;
 bool g_EchoEvents(false);
 std::vector< ParticleSystem * > g_ParticleSystems;
+Galaxy * g_Galaxy;
 
 enum WantReturnCode
 {
@@ -1731,7 +1731,7 @@ void LoadSavegame(const Element * SaveElement)
 					{
 						if((*MapKnowledgeChild)->GetName() == "explored-system")
 						{
-							PlayerCharacter->GetMapKnowledge()->AddExploredSystem(g_SystemManager.Get((*MapKnowledgeChild)->GetAttribute("identifier")));
+							PlayerCharacter->GetMapKnowledge()->AddExploredSystem(g_Galaxy->GetSystem((*MapKnowledgeChild)->GetAttribute("identifier")));
 						}
 					}
 				}
@@ -1831,7 +1831,7 @@ void LoadSavegame(const Element * SaveElement)
 			}
 		}
 	}
-	g_CurrentSystem = g_SystemManager.Get(System);
+	g_CurrentSystem = g_Galaxy->GetSystem(System);
 	OnOutputFocusEnterSystem(g_CurrentSystem);
 	if(PlayerShip != 0)
 	{
@@ -1890,6 +1890,7 @@ int main(int argc, char ** argv)
 	g_MessageTimeoutIterator = g_RealTimeTimeoutNotifications.end();
 	g_SpawnShipTimeoutIterator = g_GameTimeTimeoutNotifications.end();
 	g_WeaponClassManager = new WeaponClassManager();
+	g_Galaxy = new Galaxy();
 	
 	// parse command line
 	std::vector< std::string > Arguments(argv, argv + argc);
@@ -1932,8 +1933,8 @@ int main(int argc, char ** argv)
 	ReadModels(Archive, &g_ModelManager);
 	ReadCommodities(Archive, &g_CommodityManager);
 	ReadShipClasses(Archive, &g_ShipClassManager);
-	ReadSystems(Archive, &g_SystemManager);
-	ReadSystemLinks(Archive, &g_SystemManager);
+	ReadSystems(Archive, g_Galaxy);
+	ReadSystemLinks(Archive, g_Galaxy);
 	ReadUserInterface(Archive, &g_UserInterface);
 	ReadWeaponClasses(Archive, g_WeaponClassManager);
 	

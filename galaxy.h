@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006  Hagen Möbius
+ * Copyright (C) 2007  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,29 +17,30 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef SYSTEM_MANAGER_H
-#define SYSTEM_MANAGER_H
+#ifndef GALAXY_H
+#define GALAXY_H
 
 #include <map>
 #include <string>
 
+#include "object.h"
+
 class System;
 
-class SystemManager
+class Galaxy : public Object
 {
 public:
-	SystemManager();
-	~SystemManager(void);
+	// getters
+	System * GetSystem(const std::string & SystemIdentifier);
 	const std::map< std::string, System * > & GetSystems(void) const;
-	System * Get(const std::string & Identifier);
-	System * Create(const std::string & Identifier);
-	void Destroy(const std::string & Identifier);
+protected:
+	virtual bool OnAddContent(Object * Content);
+	virtual bool OnRemoveContent(Object * Content);
 private:
-	void Destroy(std::map< std::string, System * >::iterator SystemIterator);
 	std::map< std::string, System * > m_Systems;
 };
 
-inline const std::map< std::string, System * > & SystemManager::GetSystems(void) const
+inline const std::map< std::string, System * > & Galaxy::GetSystems(void) const
 {
 	return m_Systems;
 }
