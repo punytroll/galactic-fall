@@ -21,11 +21,13 @@
 #define PARTICLE_SYSTEMS_H
 
 #include <list>
+#include <string>
+#include <vector>
 
 class ParticleSystem
 {
 public:
-	virtual bool Update(float Seconds) = 0;
+	bool Update(float Seconds);
 	void Draw(void);
 	// setters
 	void SetPosition(const Vector2f & Position);
@@ -44,6 +46,7 @@ protected:
 	Vector2f m_Velocity;
 	double m_TimeOfDeath;
 	std::list< Particle > m_Particles;
+	std::vector< std::string > m_ParticleScript;
 };
 
 inline void ParticleSystem::SetPosition(const Vector2f & Position)
@@ -65,14 +68,12 @@ class ParticleSystemHit : public ParticleSystem
 {
 public:
 	ParticleSystemHit(void);
-	virtual bool Update(float Seconds);
 };
 
 class ParticleSystemExplosion : public ParticleSystem
 {
 public:
 	ParticleSystemExplosion(void);
-	virtual bool Update(float Seconds);
 };
 
 #endif
