@@ -22,6 +22,7 @@
 
 #include <list>
 #include <string>
+#include <vector>
 
 #include "position.h"
 
@@ -35,10 +36,9 @@ class System : public Position
 {
 public:
 	System(const std::string & Identifier);
-	~System(void);
 	const std::string & GetIdentifier(void) const;
 	const std::string & GetName(void) const;
-	const std::list< Planet * > & GetPlanets(void) const;
+	const std::vector< Planet * > & GetPlanets(void) const;
 	const std::list< Ship * > & GetShips(void) const;
 	const std::list< Cargo * > & GetCargos(void) const;
 	const std::list< System * > GetLinkedSystems(void) const;
@@ -48,8 +48,6 @@ public:
 	const Star * GetStar(void) const;
 	bool IsLinkedToSystem(const System * System) const;
 	void SetName(const std::string & Name);
-	Planet * CreatePlanet(const std::string & Identifier);
-	Star * CreateStar(void);
 	void AddLinkedSystem(System * LinkedSystem);
 	void AddShip(Ship * Ship);
 	void AddCargo(Cargo * Cargo);
@@ -58,12 +56,15 @@ public:
 	void SetTrafficDensity(float TrafficDensity);
 	// getters
 	float GetTrafficDensity(void) const;
+protected:
+	virtual bool OnAddContent(Object * Content);
+	virtual bool OnRemoveContent(Object * Content);
 private:
 	std::string m_Identifier;
 	std::string m_Name;
 	float m_TrafficDensity;
 	Star * m_Star;
-	std::list< Planet * > m_Planets;
+	std::vector< Planet * > m_Planets;
 	std::list< System * > m_LinkedSystems;
 	std::list< Ship * > m_Ships;
 	std::list< Cargo * > m_Cargos;
@@ -80,7 +81,7 @@ inline const std::string & System::GetName(void) const
 	return m_Name;
 }
 
-inline const std::list< Planet * > & System::GetPlanets(void) const
+inline const std::vector< Planet * > & System::GetPlanets(void) const
 {
 	return m_Planets;
 }

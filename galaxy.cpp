@@ -38,11 +38,7 @@ bool Galaxy::OnAddContent(Object * Content)
 {
 	System * TheSystem(dynamic_cast< System * >(Content));
 	
-	if(TheSystem == 0)
-	{
-		return Object::OnAddContent(Content);
-	}
-	else
+	if(TheSystem != 0)
 	{
 		if(m_Systems.find(TheSystem->GetIdentifier()) == m_Systems.end())
 		{
@@ -52,27 +48,19 @@ bool Galaxy::OnAddContent(Object * Content)
 				
 				return true;
 			}
-			else
-			{
-				return false;
-			}
 		}
-		else
-		{
-			return false;
-		}
+		
+		return false;
 	}
+	
+	return Object::OnAddContent(Content);
 }
 
 bool Galaxy::OnRemoveContent(Object * Content)
 {
 	System * TheSystem(dynamic_cast< System * >(Content));
 	
-	if(TheSystem == 0)
-	{
-		return Object::OnRemoveContent(Content);
-	}
-	else
+	if(TheSystem != 0)
 	{
 		std::map< std::string, System * >::iterator SystemIterator(m_Systems.find(TheSystem->GetIdentifier()));
 		
@@ -84,14 +72,10 @@ bool Galaxy::OnRemoveContent(Object * Content)
 				
 				return true;
 			}
-			else
-			{
-				return false;
-			}
 		}
-		else
-		{
-			return false;
-		}
+		
+		return false;
 	}
+	
+	return Object::OnRemoveContent(Content);
 }

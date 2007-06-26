@@ -384,18 +384,22 @@ static void ReadSystem(Galaxy * Galaxy, Arxx::Reference & Reference)
 	NewSystem->SetPosition(Position);
 	NewSystem->SetTrafficDensity(TrafficDensity);
 	
-	Star * NewStar(NewSystem->CreateStar());
+	Star * NewStar(new Star());
 	
 	NewStar->SetObjectIdentifier("::star(" + StarIdentifier + ")::in_system(" + NewSystem->GetIdentifier() + ")");
 	NewStar->SetPosition(StarPosition);
 	NewStar->SetColor(StarColor);
+	if(NewSystem->AddContent(NewStar) == false)
+	{
+		throw std::runtime_error("Could not add star '" + StarIdentifier + "' to system '" + Identifier + "'.");
+	}
 	for(Arxx::u4byte Number = 1; Number <= PlanetCount; ++Number)
 	{
 		std::string PlanetIdentifier;
 		
 		Reader >> PlanetIdentifier;
 		
-		Planet * NewPlanet(NewSystem->CreatePlanet(PlanetIdentifier));
+		Planet * NewPlanet(new Planet(PlanetIdentifier));
 		
 		NewPlanet->SetObjectIdentifier("::planet(" + NewPlanet->GetIdentifier() + ")::in_system(" + NewSystem->GetIdentifier() + ")");
 		
@@ -430,12 +434,20 @@ static void ReadSystem(Galaxy * Galaxy, Arxx::Reference & Reference)
 			
 			NewPlanetCommodity->SetBasePriceModifier(BasePriceModifier);
 		}
+		
 		float LandingFee;
 		
 		Reader >> LandingFee;
 		NewPlanet->SetLandingFee(LandingFee);
+		if(NewSystem->AddContent(NewPlanet) == false)
+		{
+			throw std::runtime_error("Could not add planet '" + PlanetIdentifier + "' to system '" + Identifier + "'.");
+		}
 	}
-	Galaxy->AddContent(NewSystem);
+	if(Galaxy->AddContent(NewSystem) == false)
+	{
+		throw std::runtime_error("Could not add system '" + Identifier + "' to galaxy.");
+	}
 }
 
 static void ReadSystemLink(Galaxy * Galaxy, Arxx::Reference & Reference)

@@ -61,13 +61,13 @@ void MiniMap::Draw(void) const
 		glLoadIdentity();
 		m_Camera.Draw();
 		
-		const std::list< Planet * > & Planets(m_Owner->GetCurrentSystem()->GetPlanets());
+		const std::vector< Planet * > & Planets(m_Owner->GetCurrentSystem()->GetPlanets());
 		const std::list< Ship * > & Ships(m_Owner->GetCurrentSystem()->GetShips());
 		const std::list< Cargo * > & Cargos(m_Owner->GetCurrentSystem()->GetCargos());
 		
 		glBegin(GL_POINTS);
 		glColor3f(0.8f, 0.8f, 0.8f);
-		for(std::list< Planet * >::const_iterator PlanetIterator = Planets.begin(); PlanetIterator != Planets.end(); ++PlanetIterator)
+		for(std::vector< Planet * >::const_iterator PlanetIterator = Planets.begin(); PlanetIterator != Planets.end(); ++PlanetIterator)
 		{
 			if(*PlanetIterator == m_Owner->GetTarget().Get())
 			{

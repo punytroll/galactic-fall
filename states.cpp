@@ -127,17 +127,11 @@ TransporterPhase1::TransporterPhase1(StateMachineMind * Mind) :
 
 void TransporterPhase1::Enter(void)
 {
-	const std::list< Planet * > & Planets(GetMind()->GetCharacter()->GetShip()->GetCurrentSystem()->GetPlanets());
+	const std::vector< Planet * > & Planets(GetMind()->GetCharacter()->GetShip()->GetCurrentSystem()->GetPlanets());
 	
 	if(Planets.size() != 0)
 	{
-		std::list< Planet * >::const_iterator PlanetIterator(Planets.begin());
-		
-		for(std::list< Planet * >::size_type Choice = GetRandomInteger(Planets.size() - 1); Choice > 0; --Choice)
-		{
-			++PlanetIterator;
-		}
-		GetMind()->GetCharacter()->GetShip()->SetTarget((*PlanetIterator)->GetReference());
+		GetMind()->GetCharacter()->GetShip()->SetTarget((*(Planets.begin() + GetRandomInteger(Planets.size() - 1)))->GetReference());
 	}
 	else
 	{
@@ -572,11 +566,11 @@ RefuelPhase1::RefuelPhase1(StateMachineMind * Mind) :
 
 void RefuelPhase1::Enter(void)
 {
-	const std::list< Planet * > & Planets(GetMind()->GetCharacter()->GetShip()->GetCurrentSystem()->GetPlanets());
+	const std::vector< Planet * > & Planets(GetMind()->GetCharacter()->GetShip()->GetCurrentSystem()->GetPlanets());
 	float MinimumDistance(FLT_MAX);
 	Planet * NearestPlanet(0);
 	
-	for(std::list< Planet * >::const_iterator PlanetIterator = Planets.begin(); PlanetIterator != Planets.end(); ++PlanetIterator)
+	for(std::vector< Planet * >::const_iterator PlanetIterator = Planets.begin(); PlanetIterator != Planets.end(); ++PlanetIterator)
 	{
 		float Distance(((*PlanetIterator)->GetPosition() - GetMind()->GetCharacter()->GetShip()->GetPosition()).SquaredLength());
 		

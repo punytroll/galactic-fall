@@ -30,16 +30,6 @@ System::System(const std::string & Identifier) :
 {
 }
 
-System::~System(void)
-{
-	while(m_Planets.size() > 0)
-	{
-		delete m_Planets.front();
-		m_Planets.erase(m_Planets.begin());
-	}
-	delete m_Star;
-}
-
 void System::SetName(const std::string & Name)
 {
 	m_Name = Name;
@@ -58,25 +48,89 @@ bool System::IsLinkedToSystem(const System * LinkedSystem) const
 	return false;
 }
 
-Planet * System::CreatePlanet(const std::string & Identifier)
+bool System::OnAddContent(Object * Content)
 {
-	m_Planets.push_back(new Planet(Identifier));
+	Planet * ThePlanet(dynamic_cast< Planet * >(Content));
 	
-	return m_Planets.back();
+	if(ThePlanet != 0)
+	{
+		for(std::vector< Planet *>::const_iterator PlanetIterator = m_Planets.begin(); PlanetIterator != m_Planets.end(); ++PlanetIterator)
+		{
+			if((*PlanetIterator)->GetIdentifier() == ThePlanet->GetIdentifier())
+			{
+				return false;
+			}
+		}
+		if(Position::OnAddContent(Content) == true)
+		{
+			m_Planets.push_back(ThePlanet);
+			
+			return true;
+		}
+		
+		return false;
+	}
+	
+	Star * TheStar(dynamic_cast< Star * >(Content));
+	
+	if(TheStar != 0)
+	{
+		if(m_Star == 0)
+		{
+			if(Position::OnAddContent(Content) == true)
+			{
+				m_Star = TheStar;
+				
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	return Position::OnAddContent(Content);
 }
 
-Star * System::CreateStar(void)
+bool System::OnRemoveContent(Object * Content)
 {
-	if(m_Star != 0)
+	Planet * ThePlanet(dynamic_cast< Planet * >(Content));
+	
+	if(ThePlanet != 0)
 	{
-		return 0;
-	}
-	else
-	{
-		m_Star = new Star();
+		for(std::vector< Planet *>::iterator PlanetIterator = m_Planets.begin(); PlanetIterator != m_Planets.end(); ++PlanetIterator)
+		{
+			if((*PlanetIterator)->GetIdentifier() == ThePlanet->GetIdentifier())
+			{
+				if(Position::OnAddContent(Content) == true)
+				{
+					m_Planets.erase(PlanetIterator);
+					
+					return true;
+				}
+			}
+		}
 		
-		return m_Star;
+		return false;
 	}
+	
+	Star * TheStar(dynamic_cast< Star * >(Content));
+	
+	if(TheStar != 0)
+	{
+		if(m_Star != 0)
+		{
+			if(Position::OnAddContent(Content) == true)
+			{
+				m_Star = 0;
+				
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	return Position::OnAddContent(Content);
 }
 
 void System::AddLinkedSystem(System * LinkedSystem)
