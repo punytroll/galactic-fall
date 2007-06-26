@@ -420,18 +420,19 @@ static void ReadSystem(SystemManager * SystemManager, Arxx::Reference & Referenc
 			Reader >> CommodityIdentifier >> BasePriceModifier;
 			
 			Commodity * ManagedCommodity(g_CommodityManager.Get(CommodityIdentifier));
+			
+			if(ManagedCommodity == 0)
+			{
+				throw std::runtime_error("Could not find commodity '" + CommodityIdentifier + "' for planet '" + PlanetIdentifier + "' in system '" + Identifier + "'.");
+			}
+			
 			PlanetCommodity * NewPlanetCommodity(NewPlanet->CreateCommodity(ManagedCommodity));
 			
 			NewPlanetCommodity->SetBasePriceModifier(BasePriceModifier);
 		}
-		
-		bool AllowRefuelling;
-		float FuelPrice;
 		float LandingFee;
 		
-		Reader >> AllowRefuelling >> FuelPrice >> LandingFee;
-		NewPlanet->SetAllowRefuelling(AllowRefuelling);
-		NewPlanet->SetFuelPrice(FuelPrice);
+		Reader >> LandingFee;
 		NewPlanet->SetLandingFee(LandingFee);
 	}
 }

@@ -43,7 +43,6 @@ float PlanetCommodity::GetPrice(void) const
 
 Planet::Planet(const std::string & Identifier) :
 	m_Identifier(Identifier),
-	m_AllowRefuelling(false),
 	m_Color(0)
 {
 }
@@ -57,11 +56,6 @@ Planet::~Planet(void)
 	}
 	delete m_Color;
 	m_Color = 0;
-}
-
-void Planet::SetAllowRefuelling(bool AllowRefuelling)
-{
-	m_AllowRefuelling = AllowRefuelling;
 }
 
 void Planet::SetDescription(const std::string & Description)

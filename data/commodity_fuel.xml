@@ -1,0 +1,12 @@
+<commodity>
+	<identifier>fuel</identifier>
+	<name>Fuel</name>
+	<base-price>200</base-price>
+	<model-identifier>cargo_cube</model-identifier>
+	<color>
+		<red>0.25</red>
+		<green>0.13</green>
+		<blue>0.6</blue>
+		<alpha>1.0</alpha>
+	</color>
+</commodity>

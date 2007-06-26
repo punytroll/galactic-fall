@@ -722,18 +722,27 @@ void RefuelPhase3::Enter(void)
 	// ATTENTION: the target is only valid because this Enter() function is called before the setting of m_Land is processed in the ship which invalidates the ship's target
 	Reference< Planet > Planet(GetMind()->GetCharacter()->GetShip()->GetTarget());
 	
-	float FuelPrice(Planet->GetFuelPrice());
-	float CanBuy(GetMind()->GetCharacter()->GetCredits() / FuelPrice);
-	float Need(GetMind()->GetCharacter()->GetShip()->GetFuelCapacity() - GetMind()->GetCharacter()->GetShip()->GetFuel());
-	float Buy((CanBuy > Need) ? (Need) : (CanBuy));
+	const std::vector< PlanetCommodity * > & PlanetCommodities(Planet->GetCommodities());
 	
-	GetMind()->GetCharacter()->GetShip()->SetFuel(GetMind()->GetCharacter()->GetShip()->GetFuel() + Buy);
-	GetMind()->GetCharacter()->RemoveCredits(Buy * FuelPrice);
-	
-	MonitorFuel * GlobalState(dynamic_cast< MonitorFuel * >(GetMind()->GetStateMachine()->GetGlobalState()));
-	
-	assert(GlobalState != 0);
-	GlobalState->SetRefueled();
+	for(std::vector< PlanetCommodity * >::const_iterator PlanetCommodityIterator = PlanetCommodities.begin(); PlanetCommodityIterator != PlanetCommodities.end(); ++PlanetCommodityIterator)
+	{
+		if((*PlanetCommodityIterator)->GetCommodity()->GetIdentifier() == "fuel")
+		{
+			float FuelPrice((*PlanetCommodityIterator)->GetPrice());
+			float CanBuy(GetMind()->GetCharacter()->GetCredits() / FuelPrice);
+			float Need(GetMind()->GetCharacter()->GetShip()->GetFuelCapacity() - GetMind()->GetCharacter()->GetShip()->GetFuel());
+			float Buy((CanBuy > Need) ? (Need) : (CanBuy));
+			
+			GetMind()->GetCharacter()->GetShip()->SetFuel(GetMind()->GetCharacter()->GetShip()->GetFuel() + Buy);
+			GetMind()->GetCharacter()->RemoveCredits(Buy * FuelPrice);
+			
+			MonitorFuel * GlobalState(dynamic_cast< MonitorFuel * >(GetMind()->GetStateMachine()->GetGlobalState()));
+			
+			assert(GlobalState != 0);
+			GlobalState->SetRefueled();
+			break;
+		}
+	}
 }
 
 void RefuelPhase3::Execute(void)
