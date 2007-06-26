@@ -60,9 +60,11 @@
 					<identifier>equipment</identifier>
 					<base-price-modifier>1.01</base-price-modifier>
 				</offered-commodity>
+				<offered-commodity>
+					<identifier>fuel</identifier>
+					<base-price-modifier>1.155</base-price-modifier>
+				</offered-commodity>
 			</offered-commodities>
-			<allow-refuelling>true</allow-refuelling>
-			<fuel-price>231.0</fuel-price>
 			<landing-fee>64.0</landing-fee>
 		</planet>
 		<planet>
@@ -102,8 +104,6 @@
 					<base-price-modifier>1.03</base-price-modifier>
 				</offered-commodity>
 			</offered-commodities>
-			<allow-refuelling>false</allow-refuelling>
-			<fuel-price>247.0</fuel-price>
 			<landing-fee>40.0</landing-fee>
 		</planet>
 	</planets>

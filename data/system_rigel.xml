@@ -60,9 +60,11 @@
 					<identifier>equipment</identifier>
 					<base-price-modifier>0.89</base-price-modifier>
 				</offered-commodity>
+				<offered-commodity>
+					<identifier>fuel</identifier>
+					<base-price-modifier>0.83</base-price-modifier>
+				</offered-commodity>
 			</offered-commodities>
-			<allow-refuelling>true</allow-refuelling>
-			<fuel-price>166.3</fuel-price>
 			<landing-fee>54.0</landing-fee>
 		</planet>
 	</planets>

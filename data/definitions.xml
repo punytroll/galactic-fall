@@ -113,8 +113,6 @@
 		<float identifier="size"/>
 		<color4f identifier="color"/>
 		<array identifier="offered-commodities"/>
-		<boolean identifier="allow-refuelling"/>
-		<float identifier="fuel-price"/>
 		<float identifier="landing-fee"/>
 	</planet>
 	

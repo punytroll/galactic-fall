@@ -1,6 +1,7 @@
 all_data = \
 	.data/commodity_equipment.data \
 	.data/commodity_food.data \
+	.data/commodity_fuel.data \
 	.data/commodity_industrial.data \
 	.data/commodity_luxury_goods.data \
 	.data/commodity_medical_supplies.data \
@@ -117,6 +118,7 @@ data.arx: .data $(all_data) Makefile
 	@echo -e "\n\nAdding commodities ...\n"
 	arxadd $@ --uid 116 --name "Equipment" --type 4 --subtype 0 --add 4:child .data/commodity_equipment.data
 	arxadd $@ --uid 111 --name "Food" --type 4 --subtype 0 --add 4:child .data/commodity_food.data
+	arxadd $@ --name "Fuel" --type 4 --subtype 0 --add 4:child .data/commodity_fuel.data
 	arxadd $@ --uid 112 --name "Industrial" --type 4 --subtype 0 --add 4:child .data/commodity_industrial.data
 	arxadd $@ --uid 114 --name "Luxury Goods" --type 4 --subtype 0 --add 4:child .data/commodity_luxury_goods.data
 	arxadd $@ --uid 113 --name "Medical Supplies" --type 4 --subtype 0 --add 4:child .data/commodity_medical_supplies.data

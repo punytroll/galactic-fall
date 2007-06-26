@@ -20,6 +20,7 @@
 #include "button.h"
 #include "character.h"
 #include "color.h"
+#include "commodity.h"
 #include "globals.h"
 #include "label.h"
 #include "planet.h"
@@ -60,21 +61,29 @@ PlanetDialog::PlanetDialog(Widget * SupWidget, Planet * Planet, Character * Char
 	m_TradeCenterLabel->SetSize(m_TradeCenterButton->GetSize());
 	m_TradeCenterLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
 	m_TradeCenterLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
-	if(m_Planet->GetAllowRefuelling() == true)
+	
+	const std::vector< PlanetCommodity * > & PlanetCommodities(m_Planet->GetCommodities());
+	
+	for(std::vector< PlanetCommodity * >::const_iterator PlanetCommodityIterator = PlanetCommodities.begin(); PlanetCommodityIterator != PlanetCommodities.end(); ++PlanetCommodityIterator)
 	{
-		m_RefuelButton = new Button(this);
-		m_RefuelButton->SetPosition(Vector2f(10.0f, 70.0f));
-		m_RefuelButton->SetSize(Vector2f(100.0f, 20.0f));
-		m_RefuelButton->AddClickedListener(this);
-		m_RefuelButtonLabel = new Label(m_RefuelButton, "Refuel");
-		m_RefuelButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
-		m_RefuelButtonLabel->SetSize(m_TradeCenterButton->GetSize());
-		m_RefuelButtonLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
-		m_RefuelButtonLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
-		
-		Label * FuelPriceLabel = new Label(this, "Local fuel price is: " + to_string_cast(m_Planet->GetFuelPrice()) + " credits/unit.");
-		
-		FuelPriceLabel->SetPosition(Vector2f(10.0f, 300.0f));
+		if((*PlanetCommodityIterator)->GetCommodity()->GetIdentifier() == "fuel")
+		{
+			m_RefuelButton = new Button(this);
+			m_RefuelButton->SetPosition(Vector2f(10.0f, 70.0f));
+			m_RefuelButton->SetSize(Vector2f(100.0f, 20.0f));
+			m_RefuelButton->AddClickedListener(this);
+			m_RefuelButtonLabel = new Label(m_RefuelButton, "Refuel");
+			m_RefuelButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
+			m_RefuelButtonLabel->SetSize(m_TradeCenterButton->GetSize());
+			m_RefuelButtonLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
+			m_RefuelButtonLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
+			
+			Label * FuelPriceLabel = new Label(this, "Local fuel price is: " + to_string_cast((*PlanetCommodityIterator)->GetPrice()) + " credits/unit.");
+			
+			FuelPriceLabel->SetPosition(Vector2f(10.0f, 300.0f));
+			
+			break;
+		}
 	}
 }
 
@@ -91,13 +100,23 @@ bool PlanetDialog::OnClicked(Widget * EventSource)
 	}
 	else if(EventSource == m_RefuelButton)
 	{
-		float FuelPrice(m_Planet->GetFuelPrice());
-		float CanBuy(m_Character->GetCredits() / FuelPrice);
-		float Need(m_Character->GetShip()->GetFuelCapacity() - m_Character->GetShip()->GetFuel());
-		float Buy((CanBuy > Need) ? (Need) : (CanBuy));
+		const std::vector< PlanetCommodity * > & PlanetCommodities(m_Planet->GetCommodities());
 		
-		m_Character->GetShip()->SetFuel(m_Character->GetShip()->GetFuel() + Buy);
-		m_Character->RemoveCredits(Buy * FuelPrice);
+		for(std::vector< PlanetCommodity * >::const_iterator PlanetCommodityIterator = PlanetCommodities.begin(); PlanetCommodityIterator != PlanetCommodities.end(); ++PlanetCommodityIterator)
+		{
+			if((*PlanetCommodityIterator)->GetCommodity()->GetIdentifier() == "fuel")
+			{
+				float FuelPrice((*PlanetCommodityIterator)->GetPrice());
+				float CanBuy(m_Character->GetCredits() / FuelPrice);
+				float Need(m_Character->GetShip()->GetFuelCapacity() - m_Character->GetShip()->GetFuel());
+				float Buy((CanBuy > Need) ? (Need) : (CanBuy));
+				
+				m_Character->GetShip()->SetFuel(m_Character->GetShip()->GetFuel() + Buy);
+				m_Character->RemoveCredits(Buy * FuelPrice);
+				
+				break;
+			}
+		}
 	}
 	else if(EventSource == m_TradeCenterButton)
 	{

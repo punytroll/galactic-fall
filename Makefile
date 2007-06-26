@@ -432,7 +432,7 @@ physical_object.o: physical_object.cpp $(physical_object_h)
 planet.o: planet.cpp $(color_h) $(commodity_h) $(globals_h) $(model_h) $(model_manager_h) $(planet_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-planet_dialog.o: planet_dialog.cpp $(button_h) $(character_h) $(color_h) $(globals_h) $(label_h) $(planet_h) $(planet_dialog_h) $(ship_h) $(string_cast_h) $(trade_center_dialog_h)
+planet_dialog.o: planet_dialog.cpp $(button_h) $(character_h) $(color_h) $(commodity_h) $(globals_h) $(label_h) $(planet_h) $(planet_dialog_h) $(ship_h) $(string_cast_h) $(trade_center_dialog_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 real_time.o: real_time.cpp $(real_time_h)
