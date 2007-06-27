@@ -475,7 +475,7 @@ states.o: states.cpp $(cargo_h) $(character_h) $(commodity) $(game_time_h) $(mat
 string_cast.o: string_cast.cpp $(string_cast_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-system.o: system.cpp $(planet_h) $(ship_h) $(star_h) $(system_h)
+system.o: system.cpp $(cargo_h) $(planet_h) $(ship_h) $(shot_h) $(star_h) $(system_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 trade_center_dialog.o: trade_center_dialog.cpp $(button_h) $(cargo_h) $(character_h) $(commodity_h) $(model_manager_h) $(label_h) $(planet_h) $(real_time_h) $(ship_h) $(trade_center_dialog_h)

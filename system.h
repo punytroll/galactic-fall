@@ -44,14 +44,10 @@ public:
 	const std::list< Ship * > & GetShips(void) const;
 	const std::list< Shot * > & GetShots(void) const;
 	const std::list< System * > GetLinkedSystems(void) const;
-	std::list< Cargo * > & GetCargos(void);
-	std::list< Shot * > & GetShots(void);
 	const Star * GetStar(void) const;
 	bool IsLinkedToSystem(const System * System) const;
 	void SetName(const std::string & Name);
 	void AddLinkedSystem(System * LinkedSystem);
-	void AddCargo(Cargo * Cargo);
-	void AddShot(Shot * Shot);
 	// setters
 	void SetTrafficDensity(float TrafficDensity);
 	// getters
@@ -104,16 +100,6 @@ inline const std::list< Shot * > & System::GetShots(void) const
 inline const std::list< System * > System::GetLinkedSystems(void) const
 {
 	return m_LinkedSystems;
-}
-
-inline std::list< Cargo * > & System::GetCargos(void)
-{
-	return m_Cargos;
-}
-
-inline std::list< Shot * > & System::GetShots(void)
-{
-	return m_Shots;
 }
 
 inline const Star * System::GetStar(void) const

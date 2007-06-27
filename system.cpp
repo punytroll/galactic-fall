@@ -19,8 +19,10 @@
 
 #include <float.h>
 
+#include "cargo.h"
 #include "planet.h"
 #include "ship.h"
+#include "shot.h"
 #include "star.h"
 #include "system.h"
 
@@ -58,6 +60,20 @@ bool System::IsLinkedToSystem(const System * LinkedSystem) const
 
 bool System::OnAddContent(Object * Content)
 {
+	Shot * TheShot(dynamic_cast< Shot * >(Content));
+	
+	if(TheShot != 0)
+	{
+		if(Position::OnAddContent(Content) == true)
+		{
+			m_Shots.push_back(TheShot);
+			
+			return true;
+		}
+		
+		return false;
+	}
+	
 	Ship * TheShip(dynamic_cast< Ship * >(Content));
 	
 	if(TheShip != 0)
@@ -65,6 +81,20 @@ bool System::OnAddContent(Object * Content)
 		if(Position::OnAddContent(Content) == true)
 		{
 			m_Ships.push_back(TheShip);
+			
+			return true;
+		}
+		
+		return false;
+	}
+	
+	Cargo * TheCargo(dynamic_cast< Cargo * >(Content));
+	
+	if(TheCargo != 0)
+	{
+		if(Position::OnAddContent(Content) == true)
+		{
+			m_Cargos.push_back(TheCargo);
 			
 			return true;
 		}
@@ -115,6 +145,25 @@ bool System::OnAddContent(Object * Content)
 
 bool System::OnRemoveContent(Object * Content)
 {
+	Shot * TheShot(dynamic_cast< Shot * >(Content));
+	
+	if(TheShot != 0)
+	{
+		std::list< Shot * >::iterator ShotIterator(std::find(m_Shots.begin(), m_Shots.end(), TheShot));
+		
+		if(ShotIterator != m_Shots.end())
+		{
+			if(Position::OnAddContent(Content) == true)
+			{
+				m_Shots.erase(ShotIterator);
+				
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
 	Ship * TheShip(dynamic_cast< Ship * >(Content));
 	
 	if(TheShip != 0)
@@ -126,6 +175,25 @@ bool System::OnRemoveContent(Object * Content)
 			if(Position::OnAddContent(Content) == true)
 			{
 				m_Ships.erase(ShipIterator);
+				
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	Cargo * TheCargo(dynamic_cast< Cargo * >(Content));
+	
+	if(TheCargo != 0)
+	{
+		std::list< Cargo * >::iterator CargoIterator(std::find(m_Cargos.begin(), m_Cargos.end(), TheCargo));
+		
+		if(CargoIterator != m_Cargos.end())
+		{
+			if(Position::OnAddContent(Content) == true)
+			{
+				m_Cargos.erase(CargoIterator);
 				
 				return true;
 			}
@@ -177,14 +245,4 @@ bool System::OnRemoveContent(Object * Content)
 void System::AddLinkedSystem(System * LinkedSystem)
 {
 	m_LinkedSystems.push_back(LinkedSystem);
-}
-
-void System::AddCargo(Cargo * Cargo)
-{
-	m_Cargos.push_back(Cargo);
-}
-
-void System::AddShot(Shot * Shot)
-{
-	m_Shots.push_back(Shot);
 }
