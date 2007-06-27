@@ -836,7 +836,7 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix)
 	NewMind->SetCharacter(NewCharacter);
 	NewMind->GetStateMachine()->SetState(new SelectSteering(NewMind));
 	NewMind->GetStateMachine()->SetGlobalState(new MonitorFuel(NewMind));
-	NewCharacter->PossessByMind(NewMind);
+	NewCharacter->AddContent(NewMind);
 	NewShip->AddContent(NewCharacter);
 	System->AddContent(NewShip);
 }
@@ -987,6 +987,15 @@ void KeyDown(unsigned int KeyCode)
 	case 9:  // Key: ESCAPE
 		{
 			g_Quit = true;
+			
+			break;
+		}
+	case 22: // Key: BACKSPACE
+		{
+			if(g_InputMind == true)
+			{
+				DeleteShip(g_InputMind->GetCharacter()->GetShip());
+			}
 			
 			break;
 		}
@@ -1672,7 +1681,7 @@ void LoadSavegame(const Element * SaveElement)
 			g_InputMind = PlayerMind->GetReference();
 			g_OutputMind = PlayerMind->GetReference();
 			g_InputMind->SetObjectIdentifier("::input_mind_and_output_mind");
-			PlayerCharacter->PossessByMind(g_InputMind.Get());
+			PlayerCharacter->AddContent(g_InputMind.Get());
 			g_InputMind->SetCharacter(PlayerCharacter);
 			g_OutputMind->SetCharacter(PlayerCharacter);
 			for(std::vector< Element * >::const_iterator CharacterChild = (*SaveChild)->GetChilds().begin(); CharacterChild != (*SaveChild)->GetChilds().end(); ++CharacterChild)

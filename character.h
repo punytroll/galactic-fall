@@ -20,8 +20,8 @@
 #ifndef CHARACTER_H
 #define CHARACTER_H
 
+#include <deque>
 #include <set>
-#include <stack>
 
 #include "object.h"
 
@@ -44,6 +44,7 @@ public:
 	// getters
 	float GetCredits(void);
 	MapKnowledge * GetMapKnowledge(void);
+	Mind * GetActiveMind(void);
 	Ship * GetShip(void);
 	const Ship * GetShip(void) const;
 	// setters
@@ -53,12 +54,11 @@ public:
 	void Update(void);
 	void AddCredits(const float & Credits);
 	bool RemoveCredits(const float & Credits);
-	// mind managemant
-	void PossessByMind(Mind * Mind);
-	Mind * ReleaseMind(void);
-	Mind * GetActiveMind(void);
+protected:
+	virtual bool OnAddContent(Object * Content);
+	virtual bool OnRemoveContent(Object * Content);
 private:
-	std::stack< Mind * > m_Minds;
+	std::deque< Mind * > m_Minds;
 	float m_Credits;
 	MapKnowledge * m_MapKnowledge;
 	Ship * m_Ship;
@@ -103,7 +103,7 @@ inline Mind * Character::GetActiveMind(void)
 {
 	if(m_Minds.empty() == false)
 	{
-		return m_Minds.top();
+		return m_Minds.front();
 	}
 	else
 	{
