@@ -64,7 +64,7 @@ bool Galaxy::OnRemoveContent(Object * Content)
 	{
 		std::map< std::string, System * >::iterator SystemIterator(m_Systems.find(TheSystem->GetIdentifier()));
 		
-		if(SystemIterator == m_Systems.end())
+		if(SystemIterator != m_Systems.end())
 		{
 			if(Object::OnRemoveContent(Content) == true)
 			{
