@@ -20,6 +20,7 @@
 #include <float.h>
 
 #include "planet.h"
+#include "ship.h"
 #include "star.h"
 #include "system.h"
 
@@ -28,6 +29,13 @@ System::System(const std::string & Identifier) :
 	m_TrafficDensity(FLT_MAX),
 	m_Star(0)
 {
+}
+
+System::~System(void)
+{
+	assert(m_Star == 0);
+	assert(m_Planets.empty() == true);
+	assert(m_Ships.empty() == true);
 }
 
 void System::SetName(const std::string & Name)
@@ -50,6 +58,20 @@ bool System::IsLinkedToSystem(const System * LinkedSystem) const
 
 bool System::OnAddContent(Object * Content)
 {
+	Ship * TheShip(dynamic_cast< Ship * >(Content));
+	
+	if(TheShip != 0)
+	{
+		if(Position::OnAddContent(Content) == true)
+		{
+			m_Ships.push_back(TheShip);
+			
+			return true;
+		}
+		
+		return false;
+	}
+	
 	Planet * ThePlanet(dynamic_cast< Planet * >(Content));
 	
 	if(ThePlanet != 0)
@@ -93,6 +115,25 @@ bool System::OnAddContent(Object * Content)
 
 bool System::OnRemoveContent(Object * Content)
 {
+	Ship * TheShip(dynamic_cast< Ship * >(Content));
+	
+	if(TheShip != 0)
+	{
+		std::list< Ship * >::iterator ShipIterator(std::find(m_Ships.begin(), m_Ships.end(), TheShip));
+		
+		if(ShipIterator != m_Ships.end())
+		{
+			if(Position::OnAddContent(Content) == true)
+			{
+				m_Ships.erase(ShipIterator);
+				
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
 	Planet * ThePlanet(dynamic_cast< Planet * >(Content));
 	
 	if(ThePlanet != 0)
@@ -136,11 +177,6 @@ bool System::OnRemoveContent(Object * Content)
 void System::AddLinkedSystem(System * LinkedSystem)
 {
 	m_LinkedSystems.push_back(LinkedSystem);
-}
-
-void System::AddShip(Ship * Ship)
-{
-	m_Ships.push_back(Ship);
 }
 
 void System::AddCargo(Cargo * Cargo)

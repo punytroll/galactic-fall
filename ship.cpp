@@ -115,7 +115,7 @@ void Ship::Update(float Seconds)
 			System * NewSystem(GetLinkedSystemTarget());
 			
 			// remove the ship from the old system
-			OldSystem->GetShips().erase(std::find(OldSystem->GetShips().begin(), OldSystem->GetShips().end(), this));
+			OldSystem->RemoveContent(this);
 			SetCurrentSystem(0);
 			SetFuel(GetFuel() - GetShipClass()->GetJumpFuel());
 			
@@ -128,7 +128,7 @@ void Ship::Update(float Seconds)
 			m_AngularPosition = GetRadians(Direction);
 			// set up the ship in the new system
 			SetCurrentSystem(GetLinkedSystemTarget());
-			NewSystem->AddShip(this);
+			NewSystem->AddContent(this);
 			for(std::set< Object * >::iterator ManifestIterator = m_Manifest.begin(); ManifestIterator != m_Manifest.end(); ++ManifestIterator)
 			{
 				Character * ManifestCharacter(dynamic_cast< Character * >(*ManifestIterator));
