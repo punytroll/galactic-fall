@@ -40,7 +40,7 @@ void Character::Update(void)
 {
 	if(m_Minds.empty() == false)
 	{
-		m_Minds.top()->Update();
+		m_Minds.front()->Update();
 	}
 }
 
@@ -63,20 +63,43 @@ bool Character::RemoveCredits(const float & Credits)
 	}
 }
 
-void Character::PossessByMind(Mind * Mind)
+bool Character::OnAddContent(Object * Content)
 {
-	m_Minds.push(Mind);
-}
-
-Mind * Character::ReleaseMind(void)
-{
-	Mind * Result(0);
+	Mind * TheMind(dynamic_cast< Mind * >(Content));
 	
-	if(m_Minds.empty() == false)
+	if(TheMind != 0)
 	{
-		Result = m_Minds.top();
-		m_Minds.pop();
+		if(Object::OnAddContent(Content) == true)
+		{
+			m_Minds.push_front(TheMind);
+			
+			return true;
+		}
 	}
 	
-	return Result;
+	return false;
+}
+
+bool Character::OnRemoveContent(Object * Content)
+{
+	Mind * TheMind(dynamic_cast< Mind * >(Content));
+	
+	if(TheMind != 0)
+	{
+		std::deque< Mind * >::iterator MindIterator(std::find(m_Minds.begin(), m_Minds.end(), TheMind));
+		
+		if(MindIterator != m_Minds.end())
+		{
+			if(Object::OnRemoveContent(Content) == true)
+			{
+				m_Minds.erase(MindIterator);
+				
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	return Object::OnRemoveContent(Content);
 }
