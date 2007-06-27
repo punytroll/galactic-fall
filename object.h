@@ -37,6 +37,9 @@ public:
 	// setters
 	void SetObjectIdentifier(const std::string & ObjectIdentifier);
 	// getters
+	Object * GetContainer(void);
+	const Object * GetContainer(void) const;
+	const std::set< Object * > & GetContent(void) const;
 	const std::string & GetObjectIdentifier(void) const;
 	const Reference< Object > & GetReference(void) const;
 	// modifiers
@@ -60,6 +63,21 @@ private:
 	static std::set< Object * > m_Objects;
 	static std::map< std::string, Object * > m_IdentifiedObjects;
 };
+
+inline Object * Object::GetContainer(void)
+{
+	return m_Container;
+}
+
+inline const Object * Object::GetContainer(void) const
+{
+	return m_Container;
+}
+
+inline const std::set< Object * > & Object::GetContent(void) const
+{
+	return m_Content;
+}
 
 inline const std::string & Object::GetObjectIdentifier(void) const
 {
