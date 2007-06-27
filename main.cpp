@@ -1898,6 +1898,7 @@ int main(int argc, char ** argv)
 	g_SpawnShipTimeoutIterator = g_GameTimeTimeoutNotifications.end();
 	g_WeaponClassManager = new WeaponClassManager();
 	g_Galaxy = new Galaxy();
+	g_Galaxy->SetObjectIdentifier("::galaxy");
 	
 	// parse command line
 	std::vector< std::string > Arguments(argv, argv + argc);
