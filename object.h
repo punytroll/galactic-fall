@@ -43,6 +43,7 @@ public:
 	const std::string & GetObjectIdentifier(void) const;
 	const Reference< Object > & GetReference(void) const;
 	// modifiers
+	void Destroy(void);
 	bool AddContent(Object * Content);
 	bool RemoveContent(Object * Content);
 	void GenerateObjectIdentifier(void);

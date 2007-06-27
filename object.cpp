@@ -17,6 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include <stdexcept>
+
 #include "object.h"
 #include "real_time.h"
 #include "string_cast.h"
@@ -34,18 +36,11 @@ Object::Object(void) :
 
 Object::~Object(void)
 {
+	// make some object hierarchy integrity checks first
+	assert(m_Container == 0);
+	assert(m_Content.empty() == true);
 	// invalidate reference first, so no one accesses this object
 	m_Reference.Invalidate();
-	// remove from object hierarchy
-	if(m_Container != 0)
-	{
-		m_Container->RemoveContent(this);
-	}
-	// now delete and remove all content objects
-	while(m_Content.empty() == false)
-	{
-		delete *(m_Content.begin());
-	}
 	SetObjectIdentifier("");
 	m_Objects.erase(m_Objects.find(this));
 }
@@ -69,6 +64,27 @@ void Object::GenerateObjectIdentifier(void)
 	if(m_ObjectIdentifier.empty() == true)
 	{
 		SetObjectIdentifier(std::string("::") + typeid(*this).name() + "::" + to_string_cast(reinterpret_cast< void * >(this)) + "(" + to_string_cast(RealTime::GetTime()) + ")");
+	}
+}
+
+void Object::Destroy(void)
+{
+	// remove from object hierarchy
+	if(m_Container != 0)
+	{
+		if(m_Container->RemoveContent(this) == false)
+		{
+			throw std::runtime_error("RemoveContent() must not fail during Destroy()");
+		}
+	}
+	// now delete and remove all content objects
+	while(m_Content.empty() == false)
+	{
+		// save the pointer to Content because Destroy() will remove it from m_Content
+		Object * Content(*(m_Content.begin()));
+		
+		Content->Destroy();
+		delete Content;
 	}
 }
 
@@ -168,6 +184,16 @@ void Object::Dump(std::ostream & OStream)
 	OStream << std::endl;
 }
 
+void DumpObjectHierarchy(XMLStream & XML, Object * Conatiner)
+{
+	XML << element << "object" << attribute << "type-name" << value << typeid(*Conatiner).name() << attribute << "identifier" << value << Conatiner->GetObjectIdentifier();
+	for(std::set< Object * >::const_iterator ObjectIterator = Conatiner->GetContent().begin(); ObjectIterator != Conatiner->GetContent().end(); ++ObjectIterator)
+	{
+		DumpObjectHierarchy(XML, *ObjectIterator);
+	}
+	XML << end;
+}
+
 void Object::Dump(XMLStream & XML)
 {
 	XML << element << "object-report";
@@ -181,6 +207,15 @@ void Object::Dump(XMLStream & XML)
 	for(std::map< std::string, Object * >::const_iterator ObjectIterator = m_IdentifiedObjects.begin(); ObjectIterator != m_IdentifiedObjects.end(); ++ObjectIterator)
 	{
 		XML << element << "object" << attribute << "address" << value << ObjectIterator->second << attribute << "identifier" << value << ObjectIterator->first << attribute << "type-name" << value << typeid(*(ObjectIterator->second)).name() << end;
+	}
+	XML << end;
+	XML << element << "object-hierarchy";
+	for(std::set< Object * >::const_iterator ObjectIterator = m_Objects.begin(); ObjectIterator != m_Objects.end(); ++ObjectIterator)
+	{
+		if((*ObjectIterator)->GetContainer() == 0)
+		{
+			DumpObjectHierarchy(XML, *ObjectIterator);
+		}
 	}
 	XML << end;
 	XML << end;
