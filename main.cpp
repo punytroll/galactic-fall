@@ -119,6 +119,7 @@ GLXContext g_GLXContext;
 Window g_Window;
 Perspective g_MainPerspective;
 bool g_EchoEvents(false);
+bool g_DumpEndReport(false);
 std::vector< ParticleSystem * > g_ParticleSystems;
 Galaxy * g_Galaxy;
 
@@ -1035,8 +1036,14 @@ void KeyDown(unsigned int KeyCode)
 	switch(KeyCode)
 	{
 	case 9:  // Key: ESCAPE
+		{
+			g_Quit = true;
+			
+			break;
+		}
 	case 24: // Key: Q
 		{
+			g_DumpEndReport = true;
 			g_Quit = true;
 			
 			break;
@@ -1974,12 +1981,15 @@ int main(int argc, char ** argv)
 		glXSwapBuffers(g_Display, g_Window);
 	}
 	DestroyWindow();
+	g_Galaxy->Destroy();
 	delete g_Galaxy;
-	
-	XMLStream Out(std::cout);
-	
-	Object::Dump(Out);
-	std::cout << std::endl;
+	if(g_DumpEndReport == true)
+	{
+		XMLStream Out(std::cout);
+		
+		Object::Dump(Out);
+		std::cout << std::endl;
+	}
 	
 	return 0;
 }
