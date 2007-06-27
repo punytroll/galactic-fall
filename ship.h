@@ -78,16 +78,13 @@ public:
 	// modifiers
 	Slot * CreateSlot(const std::string & SlotIdentifier);
 	bool Mount(Object * Object, const std::string & SlotIdentifier);
-	// manifest
-	bool AddObject(Object * Add);
-	bool RemoveObject(Object * Remove);
-	std::set< Object * > & GetManifest(void);
-	const std::set< Object * > & GetManifest(void) const;
+protected:
+	virtual bool OnAddContent(Object * Content);
+	virtual bool OnRemoveContent(Object * Content);
 private:
 	// ship class
 	ShipClass * m_ShipClass;
 	std::map< std::string, Slot * > m_Slots;
-	std::set< Object * > m_Manifest;
 	std::vector< Weapon * > m_Weapons;
 	float m_Fuel;
 	float m_Hull;
@@ -200,16 +197,6 @@ inline void Ship::SetLinkedSystemTarget(System * LinkedSystem)
 inline void Ship::SetCurrentSystem(System * CurrentSystem)
 {
 	m_CurrentSystem = CurrentSystem;
-}
-
-inline std::set< Object * > & Ship::GetManifest(void)
-{
-	return m_Manifest;
-}
-
-inline const std::set< Object * > & Ship::GetManifest(void) const
-{
-	return m_Manifest;
 }
 
 #endif

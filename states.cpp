@@ -282,8 +282,8 @@ void TransporterPhase3::Enter(void)
 	}
 	if(Commodities.empty() == false)
 	{
-		std::set< Object * > & Manifest(GetMind()->GetCharacter()->GetShip()->GetManifest());
-		std::set< Object * >::iterator ManifestIterator(Manifest.begin());
+		const std::set< Object * > & Manifest(GetMind()->GetCharacter()->GetShip()->GetContent());
+		std::set< Object * >::const_iterator ManifestIterator(Manifest.begin());
 		std::map< const Commodity *, PlanetCommodity * >::iterator PlanetCommodityIterator(Commodities.begin());
 		
 		// first sell stuff ... but only stuff with base price modifier above 1
@@ -311,7 +311,7 @@ void TransporterPhase3::Enter(void)
 					std::set< Object * >::iterator SaveIterator(ManifestIterator);
 					
 					++SaveIterator;
-					Manifest.erase(ManifestIterator);
+					GetMind()->GetCharacter()->GetShip()->RemoveContent(*ManifestIterator);
 					ManifestIterator = SaveIterator;
 					delete TheCargo;
 					GetMind()->GetCharacter()->AddCredits(PlanetCommodityIterator->second->GetPrice());
@@ -338,7 +338,7 @@ void TransporterPhase3::Enter(void)
 						Cargo * NewCargo(new Cargo(CommodityToBuy->GetCommodity()));
 						
 						NewCargo->SetObjectIdentifier("::cargo(" + NewCargo->GetCommodity()->GetIdentifier() + ")::buy_index(" + to_string_cast(NumberOfCommoditiesToBuy) + "|" + to_string_cast(NumberOfCargosToBuy) + ")::bought_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::bought_by(" + GetMind()->GetObjectIdentifier() + ")::bought_on(" + Planet->GetObjectIdentifier() + ")");
-						GetMind()->GetCharacter()->GetShip()->AddObject(NewCargo);
+						GetMind()->GetCharacter()->GetShip()->AddContent(NewCargo);
 					}
 					else
 					{

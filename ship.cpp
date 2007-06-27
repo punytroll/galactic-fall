@@ -129,7 +129,7 @@ void Ship::Update(float Seconds)
 			// set up the ship in the new system
 			SetCurrentSystem(GetLinkedSystemTarget());
 			NewSystem->AddContent(this);
-			for(std::set< Object * >::iterator ManifestIterator = m_Manifest.begin(); ManifestIterator != m_Manifest.end(); ++ManifestIterator)
+			for(std::set< Object * >::iterator ManifestIterator = GetContent().begin(); ManifestIterator != GetContent().end(); ++ManifestIterator)
 			{
 				Character * ManifestCharacter(dynamic_cast< Character * >(*ManifestIterator));
 				
@@ -204,10 +204,10 @@ void Ship::Update(float Seconds)
 		}
 		if(m_Jettison == true)
 		{
-			std::set< Object * >::iterator ManifestIterator;
-			std::set< Object * >::iterator NextIterator(GetManifest().begin());
+			std::set< Object * >::const_iterator ManifestIterator;
+			std::set< Object * >::const_iterator NextIterator(GetContent().begin());
 			
-			while(NextIterator != GetManifest().end())
+			while(NextIterator != GetContent().end())
 			{
 				ManifestIterator = NextIterator;
 				++NextIterator;
@@ -216,7 +216,7 @@ void Ship::Update(float Seconds)
 				
 				if(TheCargo != 0)
 				{
-					GetManifest().erase(ManifestIterator);
+					RemoveContent(TheCargo);
 					TheCargo->SetPosition(GetPosition());
 					TheCargo->SetVelocity(GetVelocity() * 0.8f + Vector2f(GetRandomFloat(-0.5f, 0.5f), GetRandomFloat(-0.5f, 0.5f)));
 					GetCurrentSystem()->AddContent(TheCargo);
@@ -230,10 +230,16 @@ void Ship::Update(float Seconds)
 			
 			if(SelectedCargo != 0)
 			{
-				if(AddObject(SelectedCargo) == true)
+				if(GetCurrentSystem()->RemoveContent(SelectedCargo) == true)
 				{
-					GetCurrentSystem()->RemoveContent(SelectedCargo);
-					SetTarget(0);
+					if(AddContent(SelectedCargo) == true)
+					{
+						SetTarget(0);
+					}
+					else
+					{
+						GetCurrentSystem()->AddContent(SelectedCargo);
+					}
 				}
 			}
 			m_Scoop = false;
@@ -249,9 +255,9 @@ float Ship::GetFuelCapacity(void) const
 float Ship::GetFreeCargoHoldSize(void) const
 {
 	float CargoHoldSize(m_ShipClass->GetCargoHoldSize());
-	std::set< Object * >::const_iterator ManifestIterator(GetManifest().begin());
+	std::set< Object * >::const_iterator ManifestIterator(GetContent().begin());
 	
-	while(ManifestIterator != GetManifest().end())
+	while(ManifestIterator != GetContent().end())
 	{
 		if(dynamic_cast< Cargo * >(*ManifestIterator) != 0)
 		{
@@ -266,9 +272,9 @@ float Ship::GetFreeCargoHoldSize(void) const
 float Ship::GetCommodityAmount(const Commodity * CargoCommodity) const
 {
 	float Amount(0.0f);
-	std::set< Object * >::const_iterator ManifestIterator(GetManifest().begin());
+	std::set< Object * >::const_iterator ManifestIterator(GetContent().begin());
 	
-	while(ManifestIterator != GetManifest().end())
+	while(ManifestIterator != GetContent().end())
 	{
 		Cargo * TheCargo(dynamic_cast< Cargo * >(*ManifestIterator));
 		
@@ -310,7 +316,7 @@ bool Ship::Mount(Object * Object, const std::string & SlotIdentifier)
 {
 	std::map< std::string, Slot * >::iterator SlotIterator(m_Slots.find(SlotIdentifier));
 	
-	if((m_Manifest.find(Object) != m_Manifest.end()) && (SlotIterator != m_Slots.end()))
+	if((GetContent().find(Object) != GetContent().end()) && (SlotIterator != m_Slots.end()))
 	{
 		Weapon * TheWeapon(dynamic_cast< Weapon * >(Object));
 		
@@ -326,49 +332,59 @@ bool Ship::Mount(Object * Object, const std::string & SlotIdentifier)
 	return false;
 }
 
-bool Ship::AddObject(Object * Add)
+bool Ship::OnAddContent(Object * Content)
 {
-	Cargo * TheCargo(dynamic_cast< Cargo * >(Add));
+	Cargo * TheCargo(dynamic_cast< Cargo * >(Content));
 	
 	if(TheCargo != 0)
 	{
-		if(GetFreeCargoHoldSize() < 1.0f)
+		if(GetFreeCargoHoldSize() >= 1.0f)
 		{
-			return false;
+			return PhysicalObject::OnAddContent(Content);
 		}
+		
+		return false;
 	}
 	
-	Weapon * TheWeapon(dynamic_cast< Weapon * >(Add));
+	Weapon * TheWeapon(dynamic_cast< Weapon * >(Content));
 	
 	if(TheWeapon != 0)
 	{
-		m_Weapons.push_back(TheWeapon);
-		TheWeapon->SetShip(this);
-	}
-	m_Manifest.insert(Add);
-	
-	return true;
-}
-
-bool Ship::RemoveObject(Object * Remove)
-{
-	std::set< Object * >::iterator ManifestIterator(m_Manifest.find(Remove));
-	
-	if(ManifestIterator != m_Manifest.end())
-	{
-		Weapon * TheWeapon(dynamic_cast< Weapon * >(Remove));
-		
-		if(TheWeapon != 0)
+		if(PhysicalObject::OnAddContent(Content) == true)
 		{
-			TheWeapon->SetShip(0);
-			m_Weapons.erase(std::find(m_Weapons.begin(), m_Weapons.end(), TheWeapon));
+			m_Weapons.push_back(TheWeapon);
+			TheWeapon->SetShip(this);
+			
+			return true;
 		}
-		m_Manifest.erase(ManifestIterator);
 		
-		return true;
-	}
-	else
-	{
 		return false;
 	}
+	
+	return PhysicalObject::OnAddContent(Content);
+}
+
+bool Ship::OnRemoveContent(Object * Content)
+{
+	Weapon * TheWeapon(dynamic_cast< Weapon * >(Content));
+	
+	if(TheWeapon != 0)
+	{
+		std::vector< Weapon * >::iterator WeaponIterator(std::find(m_Weapons.begin(), m_Weapons.end(), TheWeapon));
+		
+		if(WeaponIterator != m_Weapons.end())
+		{
+			if(PhysicalObject::OnRemoveContent(Content) == true)
+			{
+				TheWeapon->SetShip(0);
+				m_Weapons.erase(WeaponIterator);
+				
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	return PhysicalObject::OnRemoveContent(Content);
 }
