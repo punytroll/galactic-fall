@@ -156,7 +156,7 @@ void TradeCenterDialog::Buy(const PlanetCommodity * PlanetCommodity)
 		Cargo * NewCargo(new Cargo(PlanetCommodity->GetCommodity()));
 		
 		NewCargo->SetObjectIdentifier(m_Planet->GetObjectIdentifier() + "::created_at(" + to_string_cast(RealTime::GetTime(), 6) + ")::bought_by(" + m_Character->GetObjectIdentifier() + ")::commodity(" + NewCargo->GetCommodity()->GetIdentifier() + ")::cargo");
-		if(m_Character->GetShip()->AddObject(NewCargo) == false)
+		if(m_Character->GetShip()->AddContent(NewCargo) == false)
 		{
 			delete NewCargo;
 			m_Character->AddCredits(Price);
@@ -171,8 +171,8 @@ void TradeCenterDialog::Buy(const PlanetCommodity * PlanetCommodity)
 
 void TradeCenterDialog::Sell(const PlanetCommodity * PlanetCommodity)
 {
-	std::set< Object * > & Manifest(m_Character->GetShip()->GetManifest());
-	std::set< Object * >::iterator ManifestIterator(Manifest.begin());
+	const std::set< Object * > & Manifest(m_Character->GetShip()->GetContent());
+	std::set< Object * >::const_iterator ManifestIterator(Manifest.begin());
 	
 	while(ManifestIterator != Manifest.end())
 	{
@@ -180,7 +180,7 @@ void TradeCenterDialog::Sell(const PlanetCommodity * PlanetCommodity)
 		
 		if((TheCargo != 0) && (TheCargo->GetCommodity() == PlanetCommodity->GetCommodity()))
 		{
-			Manifest.erase(ManifestIterator);
+			m_Character->GetShip()->RemoveContent(*ManifestIterator);
 			delete TheCargo;
 			m_Character->AddCredits(PlanetCommodity->GetPrice());
 			UpdateTraderCredits();

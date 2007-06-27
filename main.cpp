@@ -319,39 +319,6 @@ void DeleteCargo(Cargo * Cargo)
 
 void DeleteShip(Ship * Ship)
 {
-	std::set< Object * > & Manifest(Ship->GetManifest());
-	
-	while(Manifest.empty() == false)
-	{
-		Object * ManifestObject(*(Manifest.begin()));
-		
-		Ship->RemoveObject(ManifestObject);
-		
-		Character * ManifestCharacter(dynamic_cast< Character * >(ManifestObject));
-		Cargo * ManifestCargo(dynamic_cast< Cargo * >(ManifestObject));
-		Weapon * ManifestWeapon(dynamic_cast< Weapon * >(ManifestObject));
-		
-		if(ManifestCharacter != 0)
-		{
-			Mind * ManifestCharacterMind;
-			
-			while((ManifestCharacterMind = ManifestCharacter->ReleaseMind()) != 0)
-			{
-				delete ManifestCharacterMind;
-			}
-			delete ManifestCharacter;
-		}
-		else if((ManifestCargo != 0) || (ManifestWeapon != 0))
-		{
-			delete ManifestObject;
-		}
-		else
-		{
-			std::cerr << "Unknown object type for object '" << ManifestObject->GetObjectIdentifier() << "' in ship '" << Ship->GetObjectIdentifier() << "'." << std::endl;
-			
-			delete ManifestObject;
-		}
-	}
 	Ship->Destroy();
 	delete Ship;
 }
@@ -448,28 +415,28 @@ void CalculateMovements(System * System)
 			{
 				for(std::list< Ship * >::const_iterator ShipIterator = Ships.begin(); ShipIterator != Ships.end(); ++ShipIterator)
 				{
-					Ship * Ship(*ShipIterator);
+					Ship * TheShip(*ShipIterator);
 					
-					if(TheShot->GetShooter() != Ship)
+					if(TheShot->GetShooter() != TheShip)
 					{
-						if((TheShot->GetPosition() - Ship->GetPosition()).SquaredLength() < (TheShot->GetRadialSize() * TheShot->GetRadialSize() + Ship->GetRadialSize() * Ship->GetRadialSize()))
+						if((TheShot->GetPosition() - TheShip->GetPosition()).SquaredLength() < (TheShot->GetRadialSize() * TheShot->GetRadialSize() + TheShip->GetRadialSize() * TheShip->GetRadialSize()))
 						{
 							ParticleSystem * NewHitParticleSystem(CreateParticleSystem("hit"));
 							
 							NewHitParticleSystem->SetPosition(TheShot->GetPosition());
-							NewHitParticleSystem->SetVelocity((TheShot->GetVelocity() * 0.2f) + (Ship->GetVelocity() * 0.8f));
-							Ship->SetHull(Ship->GetHull() - TheShot->GetDamage());
-							if(Ship->GetHull() <= 0.0f)
+							NewHitParticleSystem->SetVelocity((TheShot->GetVelocity() * 0.2f) + (TheShip->GetVelocity() * 0.8f));
+							TheShip->SetHull(TheShip->GetHull() - TheShot->GetDamage());
+							if(TheShip->GetHull() <= 0.0f)
 							{
 								ParticleSystem * NewExplosionParticleSystem(CreateParticleSystem("explosion"));
 								
-								NewExplosionParticleSystem->SetPosition(Ship->GetPosition());
-								NewExplosionParticleSystem->SetVelocity(Ship->GetVelocity() * 0.5f);
+								NewExplosionParticleSystem->SetPosition(TheShip->GetPosition());
+								NewExplosionParticleSystem->SetVelocity(TheShip->GetVelocity() * 0.5f);
 								
-								std::set< Object * >::iterator ManifestIterator;
-								std::set< Object * >::iterator NextIterator((*ShipIterator)->GetManifest().begin());
+								std::set< Object * >::const_iterator ManifestIterator;
+								std::set< Object * >::const_iterator NextIterator(TheShip->GetContent().begin());
 								
-								while(NextIterator != (*ShipIterator)->GetManifest().end())
+								while(NextIterator != TheShip->GetContent().end())
 								{
 									ManifestIterator = NextIterator;
 									++NextIterator;
@@ -478,13 +445,13 @@ void CalculateMovements(System * System)
 									
 									if(TheCargo != 0)
 									{
-										(*ShipIterator)->GetManifest().erase(ManifestIterator);
-										TheCargo->SetPosition((*ShipIterator)->GetPosition());
-										TheCargo->SetVelocity((*ShipIterator)->GetVelocity() * 0.8f + Vector2f(GetRandomFloat(0.1f, 1.2f), GetRandomFloat(0.0f, 2 * M_PI), Vector2f::InitializeMagnitudeAngle));
-										(*ShipIterator)->GetCurrentSystem()->AddContent(TheCargo);
+										TheShip->RemoveContent(TheCargo);
+										TheCargo->SetPosition(TheShip->GetPosition());
+										TheCargo->SetVelocity(TheShip->GetVelocity() * 0.8f + Vector2f(GetRandomFloat(0.1f, 1.2f), GetRandomFloat(0.0f, 2 * M_PI), Vector2f::InitializeMagnitudeAngle));
+										TheShip->GetCurrentSystem()->AddContent(TheCargo);
 									}
 								}
-								DeleteShip(Ship);
+								DeleteShip(TheShip);
 							}
 							DeleteShot(TheShot);
 							TheShot = 0;
@@ -826,7 +793,7 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix)
 		Weapon * NewWeapon(new Weapon(g_WeaponClassManager->Get("light_laser")));
 		
 		NewWeapon->SetObjectIdentifier("::weapon(" + NewWeapon->GetWeaponClass()->GetIdentifier() + ")::created_for(" + NewShip->GetObjectIdentifier() + ")" + IdentifierSuffix);
-		NewShip->AddObject(NewWeapon);
+		NewShip->AddContent(NewWeapon);
 		NewShip->Mount(NewWeapon, "front_gun");
 	}
 	else if(ShipClassIdentifier == "transporter")
@@ -850,7 +817,7 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix)
 					Cargo * NewCargo(new Cargo(CommodityIterator->second));
 					
 					NewCargo->SetObjectIdentifier("::cargo(" + CommodityIterator->second->GetIdentifier() + ")::(" + to_string_cast(NumberOfCommodities) + "|" + to_string_cast(AmountOfCargo) + ")" + IdentifierSuffix);
-					NewShip->AddObject(NewCargo);
+					NewShip->AddContent(NewCargo);
 					--AmountOfCargo;
 				}
 			}
@@ -870,7 +837,7 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix)
 	NewMind->GetStateMachine()->SetState(new SelectSteering(NewMind));
 	NewMind->GetStateMachine()->SetGlobalState(new MonitorFuel(NewMind));
 	NewCharacter->PossessByMind(NewMind);
-	NewShip->AddObject(NewCharacter);
+	NewShip->AddContent(NewCharacter);
 	System->AddContent(NewShip);
 }
 
@@ -1333,9 +1300,9 @@ void KeyDown(unsigned int KeyCode)
 			XML << element << "velocity" << attribute << "x" << value << Ship->GetVelocity().m_V.m_A[0] << attribute << "y" << value << Ship->GetVelocity().m_V.m_A[1] << end;
 			XML << element << "manifest";
 			
-			std::set< Object * >::const_iterator ManifestIterator(Ship->GetManifest().begin());
+			std::set< Object * >::const_iterator ManifestIterator(Ship->GetContent().begin());
 			
-			while(ManifestIterator != Ship->GetManifest().end())
+			while(ManifestIterator != Ship->GetContent().end())
 			{
 				Cargo * TheCargo(dynamic_cast< Cargo * >(*ManifestIterator));
 				Weapon * TheWeapon(dynamic_cast< Weapon * >(*ManifestIterator));
@@ -1758,14 +1725,14 @@ void LoadSavegame(const Element * SaveElement)
 					{
 						if((*ManifestChild)->GetName() == "cargo")
 						{
-							PlayerShip->AddObject(new Cargo(g_CommodityManager.Get((*ManifestChild)->GetAttribute("commodity-identifier"))));
+							PlayerShip->AddContent(new Cargo(g_CommodityManager.Get((*ManifestChild)->GetAttribute("commodity-identifier"))));
 						}
 						else if((*ManifestChild)->GetName() == "weapon")
 						{
 							Weapon * NewWeapon(new Weapon(g_WeaponClassManager->Get((*ManifestChild)->GetAttribute("class-identifier"))));
 							
 							NewWeapon->SetObjectIdentifier((*ManifestChild)->GetAttribute("object-identifier"));
-							PlayerShip->AddObject(NewWeapon);
+							PlayerShip->AddContent(NewWeapon);
 							if((*ManifestChild)->HasAttribute("mounted-on") == true)
 							{
 								PlayerShip->Mount(NewWeapon, (*ManifestChild)->GetAttribute("mounted-on"));
@@ -1825,7 +1792,7 @@ void LoadSavegame(const Element * SaveElement)
 	if(PlayerShip != 0)
 	{
 		PlayerCharacter->SetShip(PlayerShip);
-		PlayerShip->AddObject(PlayerCharacter);
+		PlayerShip->AddContent(PlayerCharacter);
 		g_CurrentSystem->AddContent(PlayerShip);
 		PlayerShip->SetCurrentSystem(g_CurrentSystem);
 	}
