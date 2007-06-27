@@ -36,20 +36,20 @@ class System : public Position
 {
 public:
 	System(const std::string & Identifier);
+	virtual ~System(void);
 	const std::string & GetIdentifier(void) const;
 	const std::string & GetName(void) const;
+	const std::list< Cargo * > & GetCargos(void) const;
 	const std::vector< Planet * > & GetPlanets(void) const;
 	const std::list< Ship * > & GetShips(void) const;
-	const std::list< Cargo * > & GetCargos(void) const;
+	const std::list< Shot * > & GetShots(void) const;
 	const std::list< System * > GetLinkedSystems(void) const;
-	std::list< Ship * > & GetShips(void);
 	std::list< Cargo * > & GetCargos(void);
 	std::list< Shot * > & GetShots(void);
 	const Star * GetStar(void) const;
 	bool IsLinkedToSystem(const System * System) const;
 	void SetName(const std::string & Name);
 	void AddLinkedSystem(System * LinkedSystem);
-	void AddShip(Ship * Ship);
 	void AddCargo(Cargo * Cargo);
 	void AddShot(Shot * Shot);
 	// setters
@@ -81,6 +81,11 @@ inline const std::string & System::GetName(void) const
 	return m_Name;
 }
 
+inline const std::list< Cargo * > & System::GetCargos(void) const
+{
+	return m_Cargos;
+}
+
 inline const std::vector< Planet * > & System::GetPlanets(void) const
 {
 	return m_Planets;
@@ -91,19 +96,14 @@ inline const std::list< Ship * > & System::GetShips(void) const
 	return m_Ships;
 }
 
-inline const std::list< Cargo * > & System::GetCargos(void) const
+inline const std::list< Shot * > & System::GetShots(void) const
 {
-	return m_Cargos;
+	return m_Shots;
 }
 
 inline const std::list< System * > System::GetLinkedSystems(void) const
 {
 	return m_LinkedSystems;
-}
-
-inline std::list< Ship * > & System::GetShips(void)
-{
-	return m_Ships;
 }
 
 inline std::list< Cargo * > & System::GetCargos(void)

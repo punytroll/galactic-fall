@@ -316,11 +316,6 @@ void RemoveCargoFromSystem(System * System, std::list< Cargo * >::iterator Cargo
 	System->GetCargos().erase(CargoIterator);
 }
 
-void RemoveShipFromSystem(System * System, std::list< Ship * >::iterator ShipIterator)
-{
-	System->GetShips().erase(ShipIterator);
-}
-
 void RemoveShotFromSystem(System * System, std::list< Shot * >::iterator ShotIterator)
 {
 	System->GetShots().erase(ShotIterator);
@@ -366,6 +361,7 @@ void DeleteShip(Ship * Ship)
 			delete ManifestObject;
 		}
 	}
+	Ship->Destroy();
 	delete Ship;
 }
 
@@ -414,8 +410,8 @@ void CalculateMovements(System * System)
 	if(System != 0)
 	{
 		// TODO: it is unclear, which Ships to update really.
-		std::list< Ship * > & Ships(System->GetShips());
-		std::list< Ship * >::iterator ShipIterator(Ships.begin());
+		const std::list< Ship * > & Ships(System->GetShips());
+		std::list< Ship * >::const_iterator ShipIterator(Ships.begin());
 		
 		while(ShipIterator != Ships.end())
 		{
@@ -429,26 +425,27 @@ void CalculateMovements(System * System)
 				// if another ship jumps out of the system ... remove it
 				if((g_OutputMind == false) || (g_OutputMind->GetCharacter() == 0) || (g_OutputMind->GetCharacter()->GetShip() != Ship))
 				{
-					RemoveShipFromSystem(Ship->GetCurrentSystem(), std::find(Ship->GetCurrentSystem()->GetShips().begin(), Ship->GetCurrentSystem()->GetShips().end(), Ship));
 					DeleteShip(Ship);
 				}
 			}
 		}
 		
 		std::list< Cargo * > & Cargos(System->GetCargos());
-		std::list< Shot * > & Shots(System->GetShots());
 		
 		for(std::list< Cargo * >::const_iterator CargoIterator = Cargos.begin(); CargoIterator != Cargos.end(); ++CargoIterator)
 		{
 			(*CargoIterator)->Move(Seconds);
 		}
+		
+		std::list< Shot * > & Shots(System->GetShots());
+		
 		for(std::list< Shot * >::iterator ShotIterator = Shots.begin(); ShotIterator != Shots.end();)
 		{
 			bool DeleteShot(false);
 			
 			if((*ShotIterator)->Update(Seconds) == true)
 			{
-				for(std::list< Ship * >::iterator ShipIterator = Ships.begin(); ShipIterator != Ships.end(); ++ShipIterator)
+				for(std::list< Ship * >::const_iterator ShipIterator = Ships.begin(); ShipIterator != Ships.end(); ++ShipIterator)
 				{
 					Ship * Ship(*ShipIterator);
 					
@@ -486,7 +483,6 @@ void CalculateMovements(System * System)
 										(*ShipIterator)->GetCurrentSystem()->AddCargo(TheCargo);
 									}
 								}
-								RemoveShipFromSystem(System, ShipIterator);
 								DeleteShip(Ship);
 							}
 							DeleteShot = true;
@@ -793,7 +789,6 @@ void EmptySystem(System * System)
 		{
 			Ship * Ship(*System->GetShips().begin());
 			
-			RemoveShipFromSystem(System, System->GetShips().begin());
 			DeleteShip(Ship);
 		}
 		while(System->GetCargos().empty() == false)
@@ -889,7 +884,7 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix)
 	NewMind->GetStateMachine()->SetGlobalState(new MonitorFuel(NewMind));
 	NewCharacter->PossessByMind(NewMind);
 	NewShip->AddObject(NewCharacter);
-	System->AddShip(NewShip);
+	System->AddContent(NewShip);
 }
 
 void SpawnShipOnTimeout(System * SpawnInSystem)
@@ -1844,7 +1839,7 @@ void LoadSavegame(const Element * SaveElement)
 	{
 		PlayerCharacter->SetShip(PlayerShip);
 		PlayerShip->AddObject(PlayerCharacter);
-		g_CurrentSystem->AddShip(PlayerShip);
+		g_CurrentSystem->AddContent(PlayerShip);
 		PlayerShip->SetCurrentSystem(g_CurrentSystem);
 	}
 	RealTime::Invalidate();
