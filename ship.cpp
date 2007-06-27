@@ -219,7 +219,7 @@ void Ship::Update(float Seconds)
 					GetManifest().erase(ManifestIterator);
 					TheCargo->SetPosition(GetPosition());
 					TheCargo->SetVelocity(GetVelocity() * 0.8f + Vector2f(GetRandomFloat(-0.5f, 0.5f), GetRandomFloat(-0.5f, 0.5f)));
-					GetCurrentSystem()->AddCargo(TheCargo);
+					GetCurrentSystem()->AddContent(TheCargo);
 				}
 			}
 			m_Jettison = false;
@@ -232,7 +232,7 @@ void Ship::Update(float Seconds)
 			{
 				if(AddObject(SelectedCargo) == true)
 				{
-					GetCurrentSystem()->GetCargos().erase(std::find(GetCurrentSystem()->GetCargos().begin(), GetCurrentSystem()->GetCargos().end(), SelectedCargo));
+					GetCurrentSystem()->RemoveContent(SelectedCargo);
 					SetTarget(0);
 				}
 			}
