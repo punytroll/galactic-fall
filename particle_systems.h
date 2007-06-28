@@ -27,6 +27,7 @@
 class ParticleSystem
 {
 public:
+	ParticleSystem(void);
 	bool Update(float Seconds);
 	void Draw(void);
 	// setters
@@ -40,6 +41,7 @@ protected:
 		Vector2f m_Velocity;
 		Color m_Color;
 		double m_TimeOfDeath;
+		float m_Size;
 	};
 	
 	Vector2f m_Position;
