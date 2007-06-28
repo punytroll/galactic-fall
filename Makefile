@@ -102,7 +102,7 @@ math_matrix3f_h = \
 	$(math_details_h)
 
 math_vector2f_h = \
-	math/vector3f.h \
+	math/vector2f.h \
 	$(math_details_h)
 
 math_vector3f_h = \
