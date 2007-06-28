@@ -24,17 +24,26 @@
 #include "mouse_motion_listener.h"
 #include "widget.h"
 
+class Border;
 class Label;
 
 class WWindow : virtual public MouseButtonListener, virtual public MouseMotionListener, public Widget
 {
 public:
 	WWindow(Widget * SupWidget, const std::string & Title);
+	// getters
+	Border * GetBorder(void);
 	virtual bool OnMouseButton(Widget * EventSource, int Button, int State, float X, float Y);
 	virtual void OnMouseMotion(Widget * EventSource, float X, float Y);
 private:
+	Border * m_Border;
 	Label * m_TitleLabel;
 	Vector2f m_GrabPosition;
 };
+
+inline Border * WWindow::GetBorder(void)
+{
+	return m_Border;
+}
 
 #endif

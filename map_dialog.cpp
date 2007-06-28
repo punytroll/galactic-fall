@@ -21,6 +21,7 @@
 
 #include <GL/gl.h>
 
+#include "border.h"
 #include "button.h"
 #include "character.h"
 #include "color.h"
@@ -42,6 +43,7 @@ MapDialog::MapDialog(Widget * SupWidget, System * System, Character * Character)
 {
 	SetPosition(Vector2f(70.0f, 400.0f));
 	SetSize(Vector2f(500.0f, 530.0f));
+	GetBorder()->SetSize(Vector2f(500.0f, 530.0f));
 	AddKeyListener(this);
 	AddMouseButtonListener(this);
 	m_OKButton = new Button(this);

@@ -17,6 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include "border.h"
 #include "button.h"
 #include "cargo.h"
 #include "character.h"
@@ -83,6 +84,7 @@ TradeCenterDialog::TradeCenterDialog(Widget * SupWidget, Planet * Planet, Charac
 {
 	SetPosition(Vector2f(600.0f, 100.0f));
 	SetSize(Vector2f(500.0f, 330.0f));
+	GetBorder()->SetSize(Vector2f(500.0f, 330.0f));
 	AddKeyListener(this);
 	m_OKButton = new Button(this);
 	m_OKButton->SetPosition(Vector2f(390.0f, 300.0f));
