@@ -31,6 +31,11 @@ On key down:
 35 (CLOSING BRACKET)
 	Moves the camera focus to the next ship or to the first one if the last ship was focused.
 	Acts upon the camera focus.
+
+37 (LEFT CONTROL)
+	Spawn a new fighter ship.
+	Acts upon InputMind.Character.Ship.CurrentSystem.
+
 38 (A)
 	Selected the cargo that is nearest to the input focus.
 	Acts upon InputMind.Character.Ship.
