@@ -217,6 +217,11 @@ public:
 	{
 		return m_V.m_A[Index];
 	}
+	
+	float & operator[](int Index)
+	{
+		return m_V.m_A[Index];
+	}
 };
 
 #endif
