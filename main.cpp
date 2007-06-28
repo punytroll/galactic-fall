@@ -762,17 +762,18 @@ void EmptySystem(System * System)
 	}
 }
 
-void SpawnShip(System * System, const std::string & IdentifierSuffix)
+void SpawnShip(System * System, const std::string & IdentifierSuffix, std::string ShipClassIdentifier = "")
 {
-	std::string ShipClassIdentifier;
-	
-	if(GetRandomUniform() > 0.5f)
+	if(ShipClassIdentifier == "")
 	{
-		ShipClassIdentifier = "fighter";
-	}
-	else
-	{
-		ShipClassIdentifier = "transporter";
+		if(GetRandomUniform() > 0.5f)
+		{
+			ShipClassIdentifier = "fighter";
+		}
+		else
+		{
+			ShipClassIdentifier = "transporter";
+		}
 	}
 	
 	Ship * NewShip(new Ship(g_ShipClassManager.Get(ShipClassIdentifier)));
@@ -1057,6 +1058,15 @@ void KeyDown(unsigned int KeyCode)
 			{
 				g_Camera.SetFocus((*ShipIterator)->GetReference());
 			}
+			
+			break;
+		}
+	case 37: // Key: LEFT CONTROL
+		{
+			std::stringstream IdentifierPrefix;
+			
+			IdentifierPrefix << "::system(" << g_CurrentSystem->GetIdentifier() << ")::created_at(" << std::fixed << RealTime::GetTime() << ")";
+			SpawnShip(g_CurrentSystem, IdentifierPrefix.str(), "fighter");
 			
 			break;
 		}
