@@ -80,6 +80,12 @@ inline float GetShortestRadians(float Heading1, float Heading2)
 	return Off;
 }
 
+template < typename Type >
+inline Type Clamp(Type Value, Type Minimum, Type Maximum)
+{
+	return ((Value < Minimum) ? (Minimum) : ((Value > Maximum) ? (Maximum) : (Value)));
+}
+
 inline long int GetRandomInteger(long int HighestValue)
 {
 	return random() % (HighestValue + 1);
