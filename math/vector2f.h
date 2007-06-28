@@ -212,6 +212,11 @@ public:
 		
 		return Vector2f((CosAngle * m_V.m_A[0]) + (-SinAngle * m_V.m_A[1]), (SinAngle * m_V.m_A[0]) + (CosAngle * m_V.m_A[1]));
 	}
+	
+	float operator[](int Index) const
+	{
+		return m_V.m_A[Index];
+	}
 };
 
 #endif
