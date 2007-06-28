@@ -17,6 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include "border.h"
 #include "globals.h"
 #include "label.h"
 #include "user_interface.h"
@@ -26,6 +27,11 @@ WWindow::WWindow(Widget * SupWidget, const std::string & Title) :
 	Widget(SupWidget)
 {
 	SetBackgroundColor(Color(0.2f, 0.2f, 0.2f));
+	m_Border = new Border(this);
+	m_Border->SetPosition(Vector2f(0.0f, 0.0f));
+	m_Border->SetSize(Vector2f(20.0f, 20.0f));
+	m_Border->SetWidth(1.0f);
+	m_Border->SetForegroundColor(Color(0.4f, 0.4f, 0.4f));
 	m_TitleLabel = new Label(this, Title);
 	m_TitleLabel->SetPosition(Vector2f(10.0f, 10.0f));
 	m_TitleLabel->SetSize(Vector2f(480.0f, 20.0f));

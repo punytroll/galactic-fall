@@ -4,6 +4,11 @@ arx_reading_h = \
 arx_resources_h = \
 	arx_resources.h
 
+border_h = \
+	border.h \
+	$(color_h) \
+	$(widget_h)
+
 buffer_reading_h = \
 	buffer_reading.h \
 	$(color_h) \
@@ -263,6 +268,7 @@ all-recursive: data binary
 clean: clean-recursive
 	$(RM) galactic-fall
 	$(RM) arx_reading.o
+	$(RM) border.o
 	$(RM) buffer_reading.o
 	$(RM) button.o
 	$(RM) camera.o
@@ -340,11 +346,14 @@ check-dependencies:
 install:
 	@echo -e "This project is not installable yet. Please run \"./galactic-fall\" from the top directory."
 
-galactic-fall: arx_reading.o buffer_reading.o button.o camera.o cargo.o character.o clicked_listener.o color.o command_mind.o commodity.o commodity_manager.o destroy_listener.o draw_text.o galaxy.o game_time.o key_listener.o label.o main.o map_dialog.o map_knowledge.o mini_map.o mind.o model.o model_manager.o mouse_button_listener.o mouse_motion_listener.o object.o particle_systems.o perspective.o physical_object.o planet.o planet_dialog.o real_time.o scanner_display.o ship.o ship_class.o ship_class_manager.o shot.o slot.o star.o state.o state_machine.o states.o string_cast.o system.o trade_center_dialog.o user_interface.o weapon.o weapon_class.o weapon_class_manager.o widget.o window.o xml_parser.o xml_puny_dom.o xml_stream.o
+galactic-fall: arx_reading.o border.o buffer_reading.o button.o camera.o cargo.o character.o clicked_listener.o color.o command_mind.o commodity.o commodity_manager.o destroy_listener.o draw_text.o galaxy.o game_time.o key_listener.o label.o main.o map_dialog.o map_knowledge.o mini_map.o mind.o model.o model_manager.o mouse_button_listener.o mouse_motion_listener.o object.o particle_systems.o perspective.o physical_object.o planet.o planet_dialog.o real_time.o scanner_display.o ship.o ship_class.o ship_class_manager.o shot.o slot.o star.o state.o state_machine.o states.o string_cast.o system.o trade_center_dialog.o user_interface.o weapon.o weapon_class.o weapon_class_manager.o widget.o window.o xml_parser.o xml_puny_dom.o xml_stream.o
 	$(CXX) $(LDFLAGS) `pkg-config --libs libarxx` $^ -lGL -o $@
 
 arx_reading.o: arx_reading.cpp $(arx_reading_h) $(arx_resources_h) $(buffer_reading_h) $(callbacks_h) $(commodity_h) $(commodity_manager_h) $(galaxy_h) $(label_h) $(model_h) $(model_manager_h) $(planet_h) $(ship_class_h) $(ship_class_manager_h) $(slot_h) $(system_h) $(user_interface_h) $(weapon_class_h) $(weapon_class_manager_h) $(widget_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags libarxx` -c $< -o $@
+
+border.o: border.cpp $(border_h)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 buffer_reading.o: buffer_reading.cpp $(buffer_reading_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags libarxx` -c $< -o $@
@@ -397,7 +406,7 @@ label.o: label.cpp $(label_h)
 main.o: main.cpp $(arx_resources_h) $(arx_reading_h) $(callbacks_h) $(camera_h) $(cargo_h) $(character_h) $(color_h) $(command_mind_h) $(commodity_h) $(commodity_manager_h) $(destroy_listener_h) $(galaxy_h) $(game_time_h) $(label_h) $(map_dialog_h) $(map_knowledge_h) $(math_h) $(mind_h) $(mini_map_h) $(model_h) $(model_manager_h) $(particle_systems_h) $(perspective_h) $(planet_h) $(planet_dialog_h) $(real_time_h) $(scanner_display_h) $(ship_h) $(ship_class_h) $(ship_class_manager_h) $(shot_h) $(slot_h) $(star_h) $(state_machine_h) $(states_h) $(string_cast_h) $(system_h) $(user_interface_h) $(weapon_h) $(weapon_class_h) $(weapon_class_manager_h) $(widget_h) $(xml_puny_dom_h) $(xml_stream_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags libarxx` -c $< -o $@
 
-map_dialog.o: map_dialog.cpp $(button_h) $(character_h) $(color_h) $(galaxy_h) $(globals_h) $(label) $(map_dialog_h) $(map_knowledge_h) $(system_h)
+map_dialog.o: map_dialog.cpp $(border_h) $(button_h) $(character_h) $(color_h) $(galaxy_h) $(globals_h) $(label) $(map_dialog_h) $(map_knowledge_h) $(system_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 map_knowledge.o: map_knowledge.cpp $(map_knowledge_h) $(system.h)
@@ -436,7 +445,7 @@ physical_object.o: physical_object.cpp $(physical_object_h)
 planet.o: planet.cpp $(color_h) $(commodity_h) $(globals_h) $(model_h) $(model_manager_h) $(planet_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-planet_dialog.o: planet_dialog.cpp $(button_h) $(character_h) $(color_h) $(commodity_h) $(globals_h) $(label_h) $(planet_h) $(planet_dialog_h) $(ship_h) $(string_cast_h) $(trade_center_dialog_h)
+planet_dialog.o: planet_dialog.cpp $(border_h) $(button_h) $(character_h) $(color_h) $(commodity_h) $(globals_h) $(label_h) $(planet_h) $(planet_dialog_h) $(ship_h) $(string_cast_h) $(trade_center_dialog_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 real_time.o: real_time.cpp $(real_time_h)
@@ -478,7 +487,7 @@ string_cast.o: string_cast.cpp $(string_cast_h)
 system.o: system.cpp $(cargo_h) $(planet_h) $(ship_h) $(shot_h) $(star_h) $(system_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-trade_center_dialog.o: trade_center_dialog.cpp $(button_h) $(cargo_h) $(character_h) $(commodity_h) $(model_manager_h) $(label_h) $(planet_h) $(real_time_h) $(ship_h) $(trade_center_dialog_h)
+trade_center_dialog.o: trade_center_dialog.cpp $(border_h) $(button_h) $(cargo_h) $(character_h) $(commodity_h) $(model_manager_h) $(label_h) $(planet_h) $(real_time_h) $(ship_h) $(trade_center_dialog_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 user_interface.o: user_interface.cpp $(user_interface_h) $(widget_h)
@@ -496,7 +505,7 @@ weapon_class_manager.o: weapon_class_manager.cpp $(weapon_class_h) $(weapon_clas
 widget.o: widget.cpp $(color_h) $(key_listener_h) $(mouse_button_listener_h) $(mouse_motion_listener_h) $(widget_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-window.o: window.cpp $(globals_h) $(label_h) $(user_interface_h) $(window_h)
+window.o: window.cpp $(border_h) $(globals_h) $(label_h) $(user_interface_h) $(window_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 xml_parser.o: xml_parser.cpp $(xml_parser_h)
