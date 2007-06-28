@@ -310,22 +310,10 @@ void DisplayUserInterface(void)
 	glPopAttrib();
 }
 
-void DeleteCargo(Cargo * Cargo)
+void DeleteObject(Object * Object)
 {
-	Cargo->Destroy();
-	delete Cargo;
-}
-
-void DeleteShip(Ship * Ship)
-{
-	Ship->Destroy();
-	delete Ship;
-}
-
-void DeleteShot(Shot * Shot)
-{
-	Shot->Destroy();
-	delete Shot;
+	Object->Destroy();
+	delete Object;
 }
 
 void CalculateCharacters(void)
@@ -383,7 +371,7 @@ void CalculateMovements(System * System)
 				// if another ship jumps out of the system ... remove it
 				if((g_OutputMind == false) || (g_OutputMind->GetCharacter() == 0) || (g_OutputMind->GetCharacter()->GetShip() != Ship))
 				{
-					DeleteShip(Ship);
+					DeleteObject(Ship);
 				}
 			}
 		}
@@ -407,7 +395,7 @@ void CalculateMovements(System * System)
 			
 			if((*ShotIterator)->Update(Seconds) == false)
 			{
-				DeleteShot(TheShot);
+				DeleteObject(TheShot);
 				TheShot = 0;
 			}
 			if(TheShot != 0)
@@ -450,9 +438,9 @@ void CalculateMovements(System * System)
 										TheShip->GetCurrentSystem()->AddContent(TheCargo);
 									}
 								}
-								DeleteShip(TheShip);
+								DeleteObject(TheShip);
 							}
-							DeleteShot(TheShot);
+							DeleteObject(TheShot);
 							TheShot = 0;
 							
 							break;
@@ -464,24 +452,24 @@ void CalculateMovements(System * System)
 			{
 				for(std::list< Cargo * >::const_iterator CargoIterator = Cargos.begin(); CargoIterator != Cargos.end(); ++CargoIterator)
 				{
-					Cargo * Cargo(*CargoIterator);
+					Cargo * TheCargo(*CargoIterator);
 					
-					if((TheShot->GetPosition() - Cargo->GetPosition()).SquaredLength() < (TheShot->GetRadialSize() * TheShot->GetRadialSize() + Cargo->GetRadialSize() * Cargo->GetRadialSize()))
+					if((TheShot->GetPosition() - TheCargo->GetPosition()).SquaredLength() < (TheShot->GetRadialSize() * TheShot->GetRadialSize() + TheCargo->GetRadialSize() * TheCargo->GetRadialSize()))
 					{
 						ParticleSystem * NewHitParticleSystem(CreateParticleSystem("hit"));
 						
 						NewHitParticleSystem->SetPosition(TheShot->GetPosition());
-						NewHitParticleSystem->SetVelocity((TheShot->GetVelocity() * 0.4f) + (Cargo->GetVelocity() * 0.6f));
-						Cargo->SetHull(Cargo->GetHull() - TheShot->GetDamage());
-						if(Cargo->GetHull() <= 0.0f)
+						NewHitParticleSystem->SetVelocity((TheShot->GetVelocity() * 0.4f) + (TheCargo->GetVelocity() * 0.6f));
+						TheCargo->SetHull(TheCargo->GetHull() - TheShot->GetDamage());
+						if(TheCargo->GetHull() <= 0.0f)
 						{
 							ParticleSystem * NewHitParticleSystem(CreateParticleSystem("hit"));
 							
-							NewHitParticleSystem->SetPosition(Cargo->GetPosition());
-							NewHitParticleSystem->SetVelocity(Cargo->GetVelocity() * 0.5f);
-							DeleteCargo(Cargo);
+							NewHitParticleSystem->SetPosition(TheCargo->GetPosition());
+							NewHitParticleSystem->SetVelocity(TheCargo->GetVelocity() * 0.5f);
+							DeleteObject(TheCargo);
 						}
-						DeleteShot(TheShot);
+						DeleteObject(TheShot);
 						TheShot = 0;
 						
 						break;
@@ -740,21 +728,15 @@ void EmptySystem(System * System)
 		}
 		while(System->GetShips().empty() == false)
 		{
-			Ship * Ship(*System->GetShips().begin());
-			
-			DeleteShip(Ship);
+			DeleteObject(System->GetShips().front());
 		}
 		while(System->GetCargos().empty() == false)
 		{
-			Cargo * Cargo(*System->GetCargos().begin());
-			
-			DeleteCargo(Cargo);
+			DeleteObject(System->GetCargos().front());
 		}
 		while(System->GetShots().empty() == false)
 		{
-			Shot * Shot(*System->GetShots().begin());
-			
-			DeleteShot(Shot);
+			DeleteObject(System->GetShots().front());
 		}
 	}
 }
@@ -992,7 +974,7 @@ void KeyDown(unsigned int KeyCode)
 		{
 			if(g_InputMind == true)
 			{
-				DeleteShip(g_InputMind->GetCharacter()->GetShip());
+				DeleteObject(g_InputMind->GetCharacter()->GetShip());
 			}
 			
 			break;
