@@ -1874,7 +1874,7 @@ int main(int argc, char ** argv)
 		}
 	}
 	
-	// ui setup
+	// try loading the game data archive
 	Arxx::URI URI(DataFileName);
 	Arxx::Archive Archive;
 	
@@ -1884,7 +1884,7 @@ int main(int argc, char ** argv)
 		
 		return 1;
 	}
-	// data reading
+	// read the data from the archive
 	ReadModels(Archive, &g_ModelManager);
 	ReadCommodities(Archive, &g_CommodityManager);
 	ReadShipClasses(Archive, &g_ShipClassManager);
@@ -1893,6 +1893,7 @@ int main(int argc, char ** argv)
 	ReadUserInterface(Archive, &g_UserInterface);
 	ReadWeaponClasses(Archive, g_WeaponClassManager);
 	
+	// setup the global variables for the user interface
 	g_CreditsLabel = dynamic_cast< Label * >(g_UserInterface.GetWidget("/credits"));
 	g_FuelLabel = dynamic_cast< Label * >(g_UserInterface.GetWidget("/fuel"));
 	g_HullLabel = dynamic_cast< Label * >(g_UserInterface.GetWidget("/hull"));
@@ -1905,7 +1906,7 @@ int main(int argc, char ** argv)
 		g_TargetLabel = dynamic_cast< Label * >(g_UserInterface.GetWidget("/scanner/target"));
 		g_ScannerDisplay = dynamic_cast< ScannerDisplay * >(g_UserInterface.GetWidget("/scanner/display"));
 	
-	// initialize the player (initial load)
+	// load the specified savegame
 	if(LoadSavegame(LoadSavegameFileName) == false)
 	{
 		return 1;
@@ -1922,15 +1923,18 @@ int main(int argc, char ** argv)
 	// setting up the graphical environment
 	CreateWindow();
 	InitializeOpenGL();
+	// main loop
 	while(g_Quit == false)
 	{
 		ProcessEvents();
 		GameFrame();
 		glXSwapBuffers(g_Display, g_Window);
 	}
+	// cleanup
 	DestroyWindow();
 	g_Galaxy->Destroy();
 	delete g_Galaxy;
+	// if requested print some final debugging information
 	if(g_DumpEndReport == true)
 	{
 		XMLStream Out(std::cout);
