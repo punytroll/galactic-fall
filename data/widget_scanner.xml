@@ -3,7 +3,7 @@
 	<name>scanner</name>
 	<position>
 		<x>0.0</x>
-		<y>0.0</y>
+		<y>784.0</y>
 	</position>
 	<use-size>true</use-size>
 	<size>
@@ -18,4 +18,8 @@
 		<blue>0.17</blue>
 		<alpha>0.8</alpha>
 	</background-color>
+	<anchor-bottom>true</anchor-bottom>
+	<anchor-left>true</anchor-left>
+	<anchor-right>false</anchor-right>
+	<anchor-top>false</anchor-top>
 </widget>

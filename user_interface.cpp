@@ -25,6 +25,7 @@
 UserInterface::UserInterface(void) :
 	m_RootWidget(new Widget(0))
 {
+	m_RootWidget->SetSize(Vector2f(1280.0f, 1024.0f));
 	m_RootWidget->AddDestroyListener(this);
 }
 

@@ -159,11 +159,25 @@ void Widget::SetSize(const Vector2f & Size)
 		
 		if(SubWidget->GetAnchorRight() == true)
 		{
-			SubWidgetNewSize[0] -= Offset[0];
+			if(SubWidget->GetAnchorLeft() == true)
+			{
+				SubWidgetNewSize[0] -= Offset[0];
+			}
+			else
+			{
+				SubWidgetNewPosition[0] -= Offset[0];
+			}
 		}
 		if(SubWidget->GetAnchorBottom() == true)
 		{
-			SubWidgetNewSize[1] -= Offset[1];
+			if(SubWidget->GetAnchorTop() == true)
+			{
+				SubWidgetNewSize[1] -= Offset[1];
+			}
+			else
+			{
+				SubWidgetNewPosition[1] -= Offset[1];
+			}
 		}
 		SubWidget->SetPosition(SubWidgetNewPosition);
 		SubWidget->SetSize(SubWidgetNewSize);

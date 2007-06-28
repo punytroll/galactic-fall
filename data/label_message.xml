@@ -4,12 +4,12 @@
 		<name>message</name>
 		<position>
 			<x>0.0</x>
-			<y>0.0</y>
+			<y>40.0</y>
 		</position>
-		<use-size>false</use-size>
+		<use-size>true</use-size>
 		<size>
-			<x>0.0</x>
-			<y>0.0</y>
+			<x>1280.0</x>
+			<y>12.0</y>
 		</size>
 		<use-background-color>false</use-background-color>
 		<background-color>
@@ -19,6 +19,10 @@
 			<alpha>0.0</alpha>
 		</background-color>
 		<visible>false</visible>
+		<anchor-bottom>false</anchor-bottom>
+		<anchor-left>true</anchor-left>
+		<anchor-right>true</anchor-right>
+		<anchor-top>true</anchor-top>
 	</widget>
 	<use-foreground-color>true</use-foreground-color>
 	<foreground-color>
@@ -27,6 +31,6 @@
 		<blue>0.3</blue>
 		<alpha>1.0</alpha>
 	</foreground-color>
-	<horizontal-alignment>0</horizontal-alignment>
+	<horizontal-alignment>2</horizontal-alignment>
 	<vertical-alignment>0</vertical-alignment>
 </label>
