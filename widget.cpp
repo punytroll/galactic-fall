@@ -36,7 +36,13 @@ Widget::Widget(Widget * SupWidget, const std::string & Name) :
 	m_SupWidget(0),
 	m_HoverWidget(0),
 	m_BackgroundColor(0),
+	m_Position(true),
+	m_Size(true),
 	m_Visible(true),
+	m_AnchorBottom(false),
+	m_AnchorLeft(true),
+	m_AnchorRight(false),
+	m_AnchorTop(true),
 	m_KeyFocus(0)
 {
 	if(SupWidget != 0)
@@ -109,12 +115,60 @@ void Widget::SetBackgroundColor(const Color & BackgroundColor)
 
 void Widget::SetPosition(const Vector2f & Position)
 {
+	Vector2f Offset(GetPosition() - Position);
+	
 	m_Position = Position;
+	
+	std::list< Widget * >::iterator SubWidgetIterator(m_SubWidgets.begin());
+	
+	// iterate through the list of sub widgets and correct widget positions and sizes
+	while(SubWidgetIterator != m_SubWidgets.end())
+	{
+		Widget * SubWidget(*SubWidgetIterator);
+		Vector2f SubWidgetNewPosition(SubWidget->GetPosition());
+		Vector2f SubWidgetNewSize(SubWidget->GetSize());
+		
+		if(SubWidget->GetAnchorLeft() == false)
+		{
+			SubWidgetNewPosition[0] += Offset[0];
+		}
+		if(SubWidget->GetAnchorTop() == false)
+		{
+			SubWidgetNewPosition[1] += Offset[1];
+		}
+		SubWidget->SetPosition(SubWidgetNewPosition);
+		SubWidget->SetSize(SubWidgetNewSize);
+		++SubWidgetIterator;
+	}
 }
 
 void Widget::SetSize(const Vector2f & Size)
 {
+	Vector2f Offset(GetSize() - Size);
+	
 	m_Size = Size;
+	
+	std::list< Widget * >::iterator SubWidgetIterator(m_SubWidgets.begin());
+	
+	// iterate through the list of sub widgets and correct widget positions and sizes
+	while(SubWidgetIterator != m_SubWidgets.end())
+	{
+		Widget * SubWidget(*SubWidgetIterator);
+		Vector2f SubWidgetNewPosition(SubWidget->GetPosition());
+		Vector2f SubWidgetNewSize(SubWidget->GetSize());
+		
+		if(SubWidget->GetAnchorRight() == true)
+		{
+			SubWidgetNewSize[0] -= Offset[0];
+		}
+		if(SubWidget->GetAnchorBottom() == true)
+		{
+			SubWidgetNewSize[1] -= Offset[1];
+		}
+		SubWidget->SetPosition(SubWidgetNewPosition);
+		SubWidget->SetSize(SubWidgetNewSize);
+		++SubWidgetIterator;
+	}
 }
 
 void Widget::SetName(const std::string & Name)

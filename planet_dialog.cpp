@@ -38,7 +38,6 @@ PlanetDialog::PlanetDialog(Widget * SupWidget, Planet * Planet, Character * Char
 {
 	SetPosition(Vector2f(50.0f, 50.0f));
 	SetSize(Vector2f(500.0f, 330.0f));
-	GetBorder()->SetSize(Vector2f(500.0f, 330.0f));
 	AddKeyListener(this);
 	m_DescriptionLabel = new Label(this, m_Planet->GetDescription());
 	m_DescriptionLabel->SetPosition(Vector2f(120.0f, 40.0f));

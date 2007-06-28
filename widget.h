@@ -51,6 +51,10 @@ public:
 	void GrabKeyFocus(void);
 	void SetName(const std::string & Name);
 	// getters
+	bool GetAnchorBottom(void) const;
+	bool GetAnchorLeft(void) const;
+	bool GetAnchorRight(void) const;
+	bool GetAnchorTop(void) const;
 	const Color & GetBackgroundColor(void) const;
 	const Vector2f & GetPosition(void) const;
 	Vector2f GetGlobalPosition(void) const;
@@ -64,6 +68,11 @@ public:
 	const Widget * GetSubWidget(const std::string & Name) const;
 	Widget * GetKeyFocus(void);
 	bool IsVisible(void) const;
+	// setters
+	void SetAnchorBottom(bool AnchorBottom);
+	void SetAnchorLeft(bool AnchorLeft);
+	void SetAnchorRight(bool AnchorRight);
+	void SetAnchorTop(bool AnchorTop);
 	// receive input
 	bool MouseButton(int Button, int State, float X, float Y);
 	bool Key(int Key, int State);
@@ -94,6 +103,10 @@ private:
 	Vector2f m_Size;
 	std::list< Widget * > m_SubWidgets;
 	bool m_Visible;
+	bool m_AnchorBottom;
+	bool m_AnchorLeft;
+	bool m_AnchorRight;
+	bool m_AnchorTop;
 	Widget * m_KeyFocus;
 	// listeners
 	std::list< DestroyListener * > m_DestroyListeners;
@@ -103,6 +116,26 @@ private:
 	// static manager properties
 	static std::list< Widget * > m_DestroyedWidgets;
 };
+
+inline bool Widget::GetAnchorBottom(void) const
+{
+	return m_AnchorBottom;
+}
+
+inline bool Widget::GetAnchorLeft(void) const
+{
+	return m_AnchorLeft;
+}
+
+inline bool Widget::GetAnchorRight(void) const
+{
+	return m_AnchorRight;
+}
+
+inline bool Widget::GetAnchorTop(void) const
+{
+	return m_AnchorTop;
+}
 
 inline const Color & Widget::GetBackgroundColor(void) const
 {
@@ -197,6 +230,26 @@ inline Widget * Widget::GetKeyFocus(void)
 inline bool Widget::IsVisible(void) const
 {
 	return m_Visible;
+}
+
+inline void Widget::SetAnchorBottom(bool AnchorBottom)
+{
+	m_AnchorBottom = AnchorBottom;
+}
+
+inline void Widget::SetAnchorLeft(bool AnchorLeft)
+{
+	m_AnchorLeft = AnchorLeft;
+}
+
+inline void Widget::SetAnchorRight(bool AnchorRight)
+{
+	m_AnchorRight = AnchorRight;
+}
+
+inline void Widget::SetAnchorTop(bool AnchorTop)
+{
+	m_AnchorTop = AnchorTop;
 }
 
 #endif
