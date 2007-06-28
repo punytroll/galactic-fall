@@ -19,6 +19,10 @@
 			<alpha>0.0</alpha>
 		</background-color>
 		<visible>true</visible>
+		<anchor-bottom>false</anchor-bottom>
+		<anchor-left>true</anchor-left>
+		<anchor-right>true</anchor-right>
+		<anchor-top>true</anchor-top>
 	</widget>
 	<use-foreground-color>true</use-foreground-color>
 	<foreground-color>

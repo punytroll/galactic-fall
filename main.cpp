@@ -228,7 +228,6 @@ void HideMessage(void)
 void SetMessage(const std::string & Message)
 {
 	g_MessageLabel->SetString(Message);
-	g_MessageLabel->SetPosition(Vector2f((g_Width - 6 * Message.length()) / 2, 40.0f));
 	g_MessageLabel->Show();
 	/// TODO: Make the 2.0f seconds timeout configurable via the game configuration archive.
 	if(g_MessageTimeoutIterator != g_RealTimeTimeoutNotifications.end())
@@ -704,8 +703,6 @@ void Resize(void)
 	glViewport(0, 0, static_cast< GLint >(g_Width), static_cast< GLint >(g_Height));
 	g_MainPerspective.SetAspect(g_Width / g_Height);
 	g_UserInterface.GetRootWidget()->SetSize(Vector2f(g_Width, g_Height));
-	g_Scanner->SetPosition(Vector2f(0.0f, g_Height - 240.0f));
-	g_MiniMap->SetPosition(Vector2f(g_Width - 220.0f, g_Height - 240.0f));
 }
 
 class GlobalDestroyListener : public DestroyListener

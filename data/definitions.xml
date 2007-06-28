@@ -26,6 +26,10 @@
 		<boolean identifier="use-background-color"/>
 		<color4f identifier="background-color"/>
 		<boolean identifier="visible"/>
+		<boolean identifier="anchor-bottom"/>
+		<boolean identifier="anchor-left"/>
+		<boolean identifier="anchor-right"/>
+		<boolean identifier="anchor-top"/>
 	</widget>
 	
 	<label>

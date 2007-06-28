@@ -18,4 +18,8 @@
 		<blue>0.17</blue>
 		<alpha>0.8</alpha>
 	</background-color>
+	<anchor-bottom>false</anchor-bottom>
+	<anchor-left>true</anchor-left>
+	<anchor-right>false</anchor-right>
+	<anchor-top>true</anchor-top>
 </widget>

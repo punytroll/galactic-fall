@@ -645,8 +645,12 @@ static void ReadWidgetWidget(Arxx::BufferReader & Reader, UserInterface * UserIn
 	bool UseBackgroundColor;
 	Color BackgroundColor;
 	bool Visible;
+	bool AnchorBottom;
+	bool AnchorLeft;
+	bool AnchorRight;
+	bool AnchorTop;
 	
-	Reader >> Path >> Name >> Position >> UseSize >> Size >> UseBackgroundColor >> BackgroundColor >> Visible;
+	Reader >> Path >> Name >> Position >> UseSize >> Size >> UseBackgroundColor >> BackgroundColor >> Visible >> AnchorBottom >> AnchorLeft >> AnchorRight >> AnchorTop;
 	ReadWidget->SetName(Name);
 	if((Path != "") && (ReadWidget->GetSupWidget() == 0))
 	{
@@ -671,4 +675,8 @@ static void ReadWidgetWidget(Arxx::BufferReader & Reader, UserInterface * UserIn
 	{
 		ReadWidget->Hide();
 	}
+	ReadWidget->SetAnchorBottom(AnchorBottom);
+	ReadWidget->SetAnchorLeft(AnchorLeft);
+	ReadWidget->SetAnchorRight(AnchorRight);
+	ReadWidget->SetAnchorTop(AnchorTop);
 }
