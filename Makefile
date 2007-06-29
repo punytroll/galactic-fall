@@ -119,6 +119,9 @@ math_vector3f_h = \
 	$(math_details_h) \
 	$(math_matrix3f_h)
 
+math_vector4d_h = \
+	math/vector4d.h
+
 math_vector4f_h = \
 	math/vector4f.h \
 	$(math_details_h) \
