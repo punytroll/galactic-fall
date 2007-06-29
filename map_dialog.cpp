@@ -66,6 +66,12 @@ void MapDialog::Draw(void) const
 	
 	float SystemSize(5.0f);
 	
+	glPushAttrib(GL_ENABLE_BIT);
+	/// TODO: somehow clipping doesn't work here
+	glDisable(GL_CLIP_PLANE0);
+	glDisable(GL_CLIP_PLANE1);
+	glDisable(GL_CLIP_PLANE2);
+	glDisable(GL_CLIP_PLANE3);
 	glPushMatrix();
 	glTranslatef(Middle.m_V.m_A[0], Middle.m_V.m_A[1], 0.0f);
 	glScalef(1.0f, -1.0f, 1.0f);
@@ -169,6 +175,7 @@ void MapDialog::Draw(void) const
 		glPopMatrix();
 	}
 	glPopMatrix();
+	glPopAttrib();
 }
 
 bool MapDialog::OnClicked(Widget * EventSource)

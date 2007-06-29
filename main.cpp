@@ -302,6 +302,10 @@ void DisplayUserInterface(void)
 	glLoadIdentity();
 	glScalef(1.0f, -1.0f, 1.0f);
 	glTranslatef(0.0f, -g_Height, 0.0f);
+	glEnable(GL_CLIP_PLANE0);
+	glEnable(GL_CLIP_PLANE1);
+	glEnable(GL_CLIP_PLANE2);
+	glEnable(GL_CLIP_PLANE3);
 	g_UserInterface.Draw();
 	glMatrixMode(GL_PROJECTION);
 	glPopMatrix();

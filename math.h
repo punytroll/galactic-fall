@@ -23,6 +23,8 @@
 #include <stdlib.h>
 
 #include "math/vector2f.h"
+#include "math/vector3f.h"
+#include "math/vector4d.h"
 
 inline void NormalizeRadians(float & Radians)
 {
@@ -124,6 +126,11 @@ inline double GetRandomUniformDouble(void)
 inline double GetRandomDouble(double LowestValue, double HighestValue)
 {
 	return ((HighestValue - LowestValue) * GetRandomUniformDouble()) + LowestValue;
+}
+
+inline Vector4d GetPlaneEquation(const Vector3f & Point1, const Vector3f & Point2, const Vector3f & Point3)
+{
+	return Vector4d(Point1[1] * (Point2[2] - Point3[2]) + Point2[1] * (Point3[2] - Point1[2]) + Point3[1] * (Point1[2] - Point2[2]), Point1[2] * (Point2[0] - Point3[0]) + Point2[2] * (Point3[0] - Point1[0]) + Point3[2] * (Point1[0] - Point2[0]), Point1[0] * (Point2[1] - Point3[1]) + Point2[0] * (Point3[1] - Point1[1]) + Point3[0] * (Point1[1] - Point2[1]), -(Point1[0] * (Point2[1] * Point3[2] - Point3[1] * Point2[2]) + Point2[0] * (Point3[1] * Point1[2] - Point1[1] * Point3[2]) + Point3[0] * (Point1[1] * Point2[2] - Point2[1] * Point1[2])));
 }
 
 #endif

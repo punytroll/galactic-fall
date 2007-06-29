@@ -6,10 +6,10 @@
 			<x>0.0</x>
 			<y>80.0</y>
 		</position>
-		<use-size>false</use-size>
+		<use-size>true</use-size>
 		<size>
-			<x>0.0</x>
-			<y>0.0</y>
+			<x>200.0</x>
+			<y>20.0</y>
 		</size>
 		<use-background-color>false</use-background-color>
 		<background-color>

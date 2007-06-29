@@ -22,6 +22,7 @@
 
 #include <iostream>
 #include <list>
+#include <stack>
 #include <string>
 
 #include "destroy_listener.h"
@@ -94,6 +95,9 @@ public:
 	static std::list< Widget * > & GetDestroyedWidgets(void);
 protected:
 	virtual void OnDestroy(Widget * EventSource);
+	static void PushClippingRectangle(const Vector2f & Position, const Vector2f & Size);
+	static void PopClippingRectangle(void);
+	static void DrawClippingRectangle(void);
 private:
 	std::string m_Name;
 	Widget * m_SupWidget;
@@ -115,6 +119,7 @@ private:
 	std::list< MouseMotionListener * > m_MouseMotionListeners;
 	// static manager properties
 	static std::list< Widget * > m_DestroyedWidgets;
+	static std::stack< std::pair< Vector2f, Vector2f > > m_ClippingRectangles;
 };
 
 inline bool Widget::GetAnchorBottom(void) const

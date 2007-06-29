@@ -49,10 +49,14 @@ void MiniMap::Draw(void) const
 	if((m_Owner == true) && (m_Owner->GetCurrentSystem() != 0))
 	{
 		glPushAttrib(GL_ENABLE_BIT | GL_VIEWPORT_BIT | GL_TRANSFORM_BIT);
+		// clipping is performed by the viewport
+		glDisable(GL_CLIP_PLANE0);
+		glDisable(GL_CLIP_PLANE1);
+		glDisable(GL_CLIP_PLANE2);
+		glDisable(GL_CLIP_PLANE3);
 		glEnable(GL_DEPTH_TEST);
 		glDisable(GL_BLEND);
-		// TODO: 0.0f is not the real value
-		glViewport(static_cast< GLint >(GetGlobalPosition().m_V.m_A[0]), static_cast< GLint >(0.0f), static_cast< GLint >(GetSize().m_V.m_A[0]), static_cast< GLint >(220.0f));
+		glViewport(static_cast< GLint >(GetGlobalPosition().m_V.m_A[0]), static_cast< GLint >(GetRootWidget()->GetSize()[1] - GetGlobalPosition()[1] - GetSize()[1]), static_cast< GLint >(GetSize().m_V.m_A[0]), static_cast< GLint >(220.0f));
 		glMatrixMode(GL_PROJECTION);
 		glPushMatrix();
 		m_Perspective.Draw();
