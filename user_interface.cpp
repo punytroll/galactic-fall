@@ -51,8 +51,11 @@ void UserInterface::SetCaptureWidget(Widget * Widget)
 
 void UserInterface::ReleaseCaptureWidget(void)
 {
-	m_CaptureWidget->RemoveDestroyListener(this);
-	m_CaptureWidget = 0;
+	if(m_CaptureWidget != 0)
+	{
+		m_CaptureWidget->RemoveDestroyListener(this);
+		m_CaptureWidget = 0;
+	}
 }
 
 Widget * UserInterface::GetWidget(const std::string & Path)
