@@ -101,6 +101,15 @@ math_matrix3f_h = \
 	math/matrix3f.h \
 	$(math_details_h)
 
+math_matrix4f_h = \
+	math/matrix4f.h \
+	$(math_details_h) \
+	$(math_quaternion_h)
+
+math_quaternion_h = \
+	math/quaternion.h
+	$(math_details_h)
+
 math_vector2f_h = \
 	math/vector2f.h \
 	$(math_details_h)
@@ -109,6 +118,11 @@ math_vector3f_h = \
 	math/vector3f.h \
 	$(math_details_h) \
 	$(math_matrix3f_h)
+
+math_vector4f_h = \
+	math/vector4f.h \
+	$(math_details_h) \
+	$(math_quaternion_h)
 
 mind_h = \
 	mind.h \
