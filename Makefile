@@ -92,7 +92,9 @@ map_knowledge_h = \
 
 math_h = \
 	math.h \
-	$(math_vector2f_h)
+	$(math_vector2f_h) \
+	$(math_vector3f_h) \
+	$(math_vector4d_h)
 
 math_details_h = \
 	math/details.h
@@ -519,7 +521,7 @@ weapon_class.o: weapon_class.cpp $(color_h) $(weapon_class_h)
 weapon_class_manager.o: weapon_class_manager.cpp $(weapon_class_h) $(weapon_class_manager_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-widget.o: widget.cpp $(color_h) $(key_listener_h) $(mouse_button_listener_h) $(mouse_motion_listener_h) $(widget_h)
+widget.o: widget.cpp $(color_h) $(key_listener_h) $(math_h) $(mouse_button_listener_h) $(mouse_motion_listener_h) $(widget_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 window.o: window.cpp $(border_h) $(globals_h) $(label_h) $(user_interface_h) $(window_h)

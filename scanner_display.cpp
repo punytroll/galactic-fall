@@ -43,6 +43,11 @@ void ScannerDisplay::Draw(void) const
 		float FieldOfView(asinf(ExtendedRadialSize / sqrtf(ExtendedRadialSize * ExtendedRadialSize + 16 * RadialSize * RadialSize)));
 		
 		glPushAttrib(GL_ENABLE_BIT | GL_VIEWPORT_BIT | GL_TRANSFORM_BIT);
+		// clipping is performed by the viewport
+		glDisable(GL_CLIP_PLANE0);
+		glDisable(GL_CLIP_PLANE1);
+		glDisable(GL_CLIP_PLANE2);
+		glDisable(GL_CLIP_PLANE3);
 		glEnable(GL_DEPTH_TEST);
 		glDisable(GL_BLEND);
 		glViewport(static_cast< GLint >(GetGlobalPosition()[0]), static_cast< GLint >(GetRootWidget()->GetSize()[1] - GetGlobalPosition()[1] - GetSize()[1]), static_cast< GLint >(GetSize()[0]), static_cast< GLint >(GetSize()[1]));
