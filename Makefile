@@ -107,7 +107,7 @@ math_matrix4f_h = \
 	$(math_quaternion_h)
 
 math_quaternion_h = \
-	math/quaternion.h
+	math/quaternion.h \
 	$(math_details_h)
 
 math_vector2f_h = \
