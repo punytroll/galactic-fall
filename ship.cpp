@@ -43,8 +43,6 @@
 
 Ship::Ship(ShipClass * ShipClass) :
 	m_Accelerate(false),
-	m_TurnLeft(false),
-	m_TurnRight(false),
 	m_Jettison(false),
 	m_Jump(false),
 	m_Land(false),
@@ -53,6 +51,8 @@ Ship::Ship(ShipClass * ShipClass) :
 	m_ShipClass(ShipClass),
 	m_Fuel(0.0f),
 	m_Hull(m_ShipClass->GetHull()),
+	m_TurnLeft(0.0f),
+	m_TurnRight(0.0f),
 	m_LinkedSystemTarget(0),
 	m_CurrentSystem(0),
 	m_Velocity(true)
@@ -149,8 +149,8 @@ void Ship::Update(float Seconds)
 		SetTarget(0);
 		m_Velocity.Set(0.0f, 0.0f);
 		m_Accelerate = false;
-		m_TurnLeft = false;
-		m_TurnRight = false;
+		m_TurnLeft = 0.0f;
+		m_TurnRight = 0.0f;
 		m_Land = false;
 	}
 	else
@@ -163,23 +163,23 @@ void Ship::Update(float Seconds)
 				m_Weapons[WeaponIndex]->Update(Seconds);
 			}
 		}
-		if(m_TurnLeft == true)
+		if(m_TurnLeft > 0.0f)
 		{
-			float FuelConsumption(m_ShipClass->GetTurnFuel() * Seconds);
+			float FuelConsumption(m_ShipClass->GetTurnFuel() * Seconds * m_TurnLeft);
 			
 			if(m_Fuel >= FuelConsumption)
 			{
-				m_AngularPosition += GetTurnSpeed() * Seconds;
+				m_AngularPosition += GetTurnSpeed() * Seconds * m_TurnLeft;
 				m_Fuel -= FuelConsumption;
 			}
 		}
-		if(m_TurnRight == true)
+		if(m_TurnRight > 0.0f)
 		{
-			float FuelConsumption(m_ShipClass->GetTurnFuel() * Seconds);
+			float FuelConsumption(m_ShipClass->GetTurnFuel() * Seconds * m_TurnRight);
 			
 			if(m_Fuel >= FuelConsumption)
 			{
-				m_AngularPosition -= GetTurnSpeed() * Seconds;
+				m_AngularPosition -= GetTurnSpeed() * Seconds * m_TurnRight;
 				m_Fuel -= FuelConsumption;
 			}
 		}
