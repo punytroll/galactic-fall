@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 0.9.0 of algebra.
+ * This is part of version 1.1.0 of algebra.
  **/
 
 #ifndef ALGEBRA_MATRIX4F_H

@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 0.9.0 of algebra.
+ * This is part of version 1.1.0 of algebra.
  **/
 
 #ifndef ALGEBRA_VECTOR4F_H
@@ -186,6 +186,16 @@ public:
 		m_V.m_A[3] = Result.m_V.m_A[0];
 		
 		return *this;
+	}
+	
+	float operator[](int Index) const
+	{
+		return m_V.m_A[Index];
+	}
+	
+	float & operator[](int Index)
+	{
+		return m_V.m_A[Index];
 	}
 };
 
