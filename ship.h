@@ -40,8 +40,6 @@ public:
 	void Update(float Seconds);
 	// controls
 	bool m_Accelerate;
-	bool m_TurnLeft;
-	bool m_TurnRight;
 	bool m_Jettison;
 	bool m_Jump;
 	bool m_Land;
@@ -70,6 +68,8 @@ public:
 	void SetFire(bool Fire);
 	void SetFuel(float Fuel);
 	void SetHull(float Hull);
+	void SetTurnLeft(float TurnLeft);
+	void SetTurnRight(float TurnRight);
 	void SetVelocity(const Vector2f & Velocity);
 	void SetAngularPosition(float AngularPosition);
 	void SetTarget(Reference< PhysicalObject > Target);
@@ -88,6 +88,8 @@ private:
 	std::vector< Weapon * > m_Weapons;
 	float m_Fuel;
 	float m_Hull;
+	float m_TurnLeft;
+	float m_TurnRight;
 	Reference< PhysicalObject > m_Target;
 	System * m_LinkedSystemTarget;
 	System * m_CurrentSystem;
@@ -172,6 +174,18 @@ inline void Ship::SetFuel(float Fuel)
 inline void Ship::SetHull(float Hull)
 {
 	m_Hull = Hull;
+}
+
+inline void Ship::SetTurnLeft(float TurnLeft)
+{
+	assert((TurnLeft >= 0.0f) && (TurnLeft <= 1.0f));
+	m_TurnLeft = TurnLeft;
+}
+
+inline void Ship::SetTurnRight(float TurnRight)
+{
+	assert((TurnRight >= 0.0f) && (TurnRight <= 1.0f));
+	m_TurnRight = TurnRight;
 }
 
 inline void Ship::SetVelocity(const Vector2f & Velocity)

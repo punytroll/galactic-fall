@@ -52,7 +52,7 @@ void CommandMind::EnableTurnLeft(void)
 	assert(GetCharacter() != 0);
 	assert(GetCharacter()->GetShip() != 0);
 	
-	GetCharacter()->GetShip()->m_TurnLeft = true;
+	GetCharacter()->GetShip()->SetTurnLeft(1.0f);
 }
 
 void CommandMind::DisableTurnLeft(void)
@@ -60,7 +60,7 @@ void CommandMind::DisableTurnLeft(void)
 	assert(GetCharacter() != 0);
 	assert(GetCharacter()->GetShip() != 0);
 	
-	GetCharacter()->GetShip()->m_TurnLeft = false;
+	GetCharacter()->GetShip()->SetTurnLeft(0.0f);
 }
 
 void CommandMind::EnableTurnRight(void)
@@ -68,7 +68,7 @@ void CommandMind::EnableTurnRight(void)
 	assert(GetCharacter() != 0);
 	assert(GetCharacter()->GetShip() != 0);
 	
-	GetCharacter()->GetShip()->m_TurnRight = true;
+	GetCharacter()->GetShip()->SetTurnRight(1.0f);
 }
 
 void CommandMind::DisableTurnRight(void)
@@ -76,7 +76,7 @@ void CommandMind::DisableTurnRight(void)
 	assert(GetCharacter() != 0);
 	assert(GetCharacter()->GetShip() != 0);
 	
-	GetCharacter()->GetShip()->m_TurnRight = false;
+	GetCharacter()->GetShip()->SetTurnRight(0.0f);
 }
 
 void CommandMind::EnableFire(void)
