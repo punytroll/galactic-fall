@@ -32,10 +32,13 @@ class Color;
 class KeyListener;
 class MouseButtonListener;
 class MouseMotionListener;
+class UserInterface;
 
 class Widget : public DestroyListener
 {
 public:
+	friend class UserInterface;
+	
 	Widget(Widget * SupWidget = 0, const std::string & Name = "");
 	virtual ~Widget(void);
 	virtual void Draw(void) const;
