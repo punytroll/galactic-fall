@@ -44,6 +44,7 @@ public:
 	// getters
 	float GetCredits(void);
 	MapKnowledge * GetMapKnowledge(void);
+	const MapKnowledge * GetMapKnowledge(void) const;
 	Mind * GetActiveMind(void);
 	Ship * GetShip(void);
 	const Ship * GetShip(void) const;
@@ -75,6 +76,11 @@ inline float Character::GetCredits(void)
 }
 
 inline MapKnowledge * Character::GetMapKnowledge(void)
+{
+	return m_MapKnowledge;
+}
+
+inline const MapKnowledge * Character::GetMapKnowledge(void) const
 {
 	return m_MapKnowledge;
 }
