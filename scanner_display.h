@@ -20,28 +20,24 @@
 #ifndef SCANNER_DISPLAY_H
 #define SCANNER_DISPLAY_H
 
-#include "camera.h"
-#include "perspective.h"
 #include "referencing.h"
-#include "widget.h"
+#include "viewport.h"
 
 class Ship;
 
-class ScannerDisplay : public Widget
+class ScannerDisplay : public Viewport
 {
 public:
-	ScannerDisplay(void);
+	ScannerDisplay(Widget * SupWidget = 0);
 	// getters
 	const Reference< Ship > & GetOwner(void) const;
 	// setters
 	void SetOwner(Reference< Ship > Owner);
 	// actors
 	void Update(void);
-	virtual void Draw(void) const;
+	virtual void DrawInViewport(void) const;
 private:
 	Reference< Ship > m_Owner;
-	Camera m_Camera;
-	Perspective m_Perspective;
 };
 
 inline const Reference< Ship > & ScannerDisplay::GetOwner(void) const

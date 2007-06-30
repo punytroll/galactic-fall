@@ -24,12 +24,12 @@
 #include "star.h"
 #include "system.h"
 
-ScannerDisplay::ScannerDisplay(void) :
-	Widget()
+ScannerDisplay::ScannerDisplay(Widget * SupWidget) :
+	Viewport(SupWidget)
 {
-	m_Perspective.SetAspect(1.0f);
-	m_Perspective.SetNearClippingPlane(1.0f);
-	m_Perspective.SetFarClippingPlane(1000.0f);
+	GetPerspective()->SetAspect(1.0f);
+	GetPerspective()->SetNearClippingPlane(1.0f);
+	GetPerspective()->SetFarClippingPlane(1000.0f);
 }
 
 void ScannerDisplay::Update(void)
@@ -40,33 +40,15 @@ void ScannerDisplay::Update(void)
 		float ExtendedRadialSize((5.0f / 4.0f) * RadialSize);
 		float FieldOfView(asinf(ExtendedRadialSize / sqrtf(ExtendedRadialSize * ExtendedRadialSize + 16 * RadialSize * RadialSize)));
 		
-		m_Perspective.SetFieldOfView(FieldOfView);
-		m_Camera.SetFieldOfView(FieldOfView);
-		m_Camera.SetPosition(0.0f, 0.0f, 4.0f * RadialSize);
-		m_Camera.SetFocus(m_Owner->GetTarget());
+		GetPerspective()->SetFieldOfView(FieldOfView);
+		GetCamera()->SetFieldOfView(FieldOfView);
+		GetCamera()->SetPosition(0.0f, 0.0f, 4.0f * RadialSize);
+		GetCamera()->SetFocus(m_Owner->GetTarget());
 	}
 }
 
-void ScannerDisplay::Draw(void) const
+void ScannerDisplay::DrawInViewport(void) const
 {
-	Widget::Draw();
-	glPushAttrib(GL_ENABLE_BIT | GL_VIEWPORT_BIT | GL_TRANSFORM_BIT);
-	// clipping is performed by the viewport
-	glDisable(GL_CLIP_PLANE0);
-	glDisable(GL_CLIP_PLANE1);
-	glDisable(GL_CLIP_PLANE2);
-	glDisable(GL_CLIP_PLANE3);
-	glEnable(GL_DEPTH_TEST);
-	glDisable(GL_BLEND);
-	glViewport(static_cast< GLint >(GetGlobalPosition()[0]), static_cast< GLint >(GetRootWidget()->GetSize()[1] - GetGlobalPosition()[1] - GetSize()[1]), static_cast< GLint >(GetSize()[0]), static_cast< GLint >(GetSize()[1]));
-	glMatrixMode(GL_PROJECTION);
-	glPushMatrix();
-	m_Perspective.Draw();
-	glMatrixMode(GL_MODELVIEW);
-	glPushMatrix();
-	glLoadIdentity();
-	m_Camera.Draw();
-	glClear(GL_DEPTH_BUFFER_BIT);
 	// draw scanner
 	if((m_Owner == true) && (m_Owner->GetTarget() == true))
 	{
@@ -80,8 +62,4 @@ void ScannerDisplay::Draw(void) const
 		m_Owner->GetTarget()->Draw();
 		glPopAttrib();
 	}
-	glPopMatrix();
-	glMatrixMode(GL_PROJECTION);
-	glPopMatrix();
-	glPopAttrib();
 }
