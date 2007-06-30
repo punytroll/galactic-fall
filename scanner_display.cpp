@@ -50,36 +50,38 @@ void ScannerDisplay::Update(void)
 void ScannerDisplay::Draw(void) const
 {
 	Widget::Draw();
-	// scanner
+	glPushAttrib(GL_ENABLE_BIT | GL_VIEWPORT_BIT | GL_TRANSFORM_BIT);
+	// clipping is performed by the viewport
+	glDisable(GL_CLIP_PLANE0);
+	glDisable(GL_CLIP_PLANE1);
+	glDisable(GL_CLIP_PLANE2);
+	glDisable(GL_CLIP_PLANE3);
+	glEnable(GL_DEPTH_TEST);
+	glDisable(GL_BLEND);
+	glViewport(static_cast< GLint >(GetGlobalPosition()[0]), static_cast< GLint >(GetRootWidget()->GetSize()[1] - GetGlobalPosition()[1] - GetSize()[1]), static_cast< GLint >(GetSize()[0]), static_cast< GLint >(GetSize()[1]));
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+	m_Perspective.Draw();
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+	glLoadIdentity();
+	m_Camera.Draw();
+	glClear(GL_DEPTH_BUFFER_BIT);
+	// draw scanner
 	if((m_Owner == true) && (m_Owner->GetTarget() == true))
 	{
-		glPushAttrib(GL_ENABLE_BIT | GL_VIEWPORT_BIT | GL_TRANSFORM_BIT);
-		// clipping is performed by the viewport
-		glDisable(GL_CLIP_PLANE0);
-		glDisable(GL_CLIP_PLANE1);
-		glDisable(GL_CLIP_PLANE2);
-		glDisable(GL_CLIP_PLANE3);
-		glEnable(GL_DEPTH_TEST);
-		glDisable(GL_BLEND);
-		glViewport(static_cast< GLint >(GetGlobalPosition()[0]), static_cast< GLint >(GetRootWidget()->GetSize()[1] - GetGlobalPosition()[1] - GetSize()[1]), static_cast< GLint >(GetSize()[0]), static_cast< GLint >(GetSize()[1]));
-		glMatrixMode(GL_PROJECTION);
-		glPushMatrix();
-		m_Perspective.Draw();
-		glMatrixMode(GL_MODELVIEW);
-		glPushMatrix();
-		glLoadIdentity();
-		m_Camera.Draw();
+		glPushAttrib(GL_ENABLE_BIT);
 		if((m_Owner->GetCurrentSystem() != 0) && (m_Owner->GetCurrentSystem()->GetStar() != 0))
 		{
 			glEnable(GL_LIGHTING);
 			glEnable(GL_LIGHT0);
 			glLightfv(GL_LIGHT0, GL_POSITION, Vector4f(m_Owner->GetCurrentSystem()->GetStar()->GetPosition()[0], m_Owner->GetCurrentSystem()->GetStar()->GetPosition()[1], 100.0f, 0.0f).m_V.m_A);
 		}
-		glClear(GL_DEPTH_BUFFER_BIT);
 		m_Owner->GetTarget()->Draw();
-		glPopMatrix();
-		glMatrixMode(GL_PROJECTION);
-		glPopMatrix();
 		glPopAttrib();
 	}
+	glPopMatrix();
+	glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
+	glPopAttrib();
 }
