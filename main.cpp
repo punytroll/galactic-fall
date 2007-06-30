@@ -53,7 +53,7 @@
 #include "map_knowledge.h"
 #include "math.h"
 #include "mind.h"
-#include "mini_map.h"
+#include "mini_map_display.h"
 #include "model.h"
 #include "model_manager.h"
 #include "particle_systems.h"
@@ -111,8 +111,9 @@ std::multimap< double, Callback0< void > * > g_GameTimeTimeoutNotifications;
 std::multimap< double, Callback0< void > * >::iterator g_SpawnShipTimeoutIterator;
 std::multimap< double, Callback0< void > * > g_RealTimeTimeoutNotifications;
 std::multimap< double, Callback0< void > * >::iterator g_MessageTimeoutIterator;
+Widget * g_MiniMap(0);
 Widget * g_Scanner(0);
-MiniMap * g_MiniMap(0);
+MiniMapDisplay * g_MiniMapDisplay(0);
 ScannerDisplay * g_ScannerDisplay(0);
 Display * g_Display;
 GLXContext g_GLXContext;
@@ -541,7 +542,7 @@ void UpdateUserInterface(void)
 		g_FuelLabel->Show();
 		g_HullLabel->Show();
 		g_CreditsLabel->Show();
-		g_MiniMap->Show();
+		g_MiniMapDisplay->Show();
 		g_Scanner->Show();
 		// display the name of the target
 		if(g_OutputMind->GetCharacter()->GetShip()->GetTarget() == true)
@@ -589,7 +590,7 @@ void UpdateUserInterface(void)
 		}
 		g_ScannerDisplay->SetOwner(g_OutputMind->GetCharacter()->GetShip()->GetReference());
 		g_ScannerDisplay->Update();
-		g_MiniMap->SetOwner(g_OutputMind->GetCharacter()->GetShip()->GetReference());
+		g_MiniMapDisplay->SetOwner(g_OutputMind->GetCharacter()->GetShip()->GetReference());
 	}
 	else
 	{
@@ -1905,11 +1906,26 @@ int main(int argc, char ** argv)
 	g_MessageLabel = dynamic_cast< Label * >(g_UserInterface.GetWidget("/message"));
 	g_SystemLabel = dynamic_cast< Label * >(g_UserInterface.GetWidget("/system"));
 	g_TimeWarpLabel = dynamic_cast< Label * >(g_UserInterface.GetWidget("/time_warp"));
-	g_MiniMap = dynamic_cast< MiniMap * >(g_UserInterface.GetWidget("/mini_map"));
+	g_MiniMap = dynamic_cast< Widget * >(g_UserInterface.GetWidget("/mini_map"));
 		g_CurrentSystemLabel = dynamic_cast< Label * >(g_UserInterface.GetWidget("/mini_map/current_system"));
+		g_MiniMapDisplay = dynamic_cast< MiniMapDisplay * >(g_UserInterface.GetWidget("/mini_map/display"));
 	g_Scanner = g_UserInterface.GetWidget("/scanner");
 		g_TargetLabel = dynamic_cast< Label * >(g_UserInterface.GetWidget("/scanner/target"));
 		g_ScannerDisplay = dynamic_cast< ScannerDisplay * >(g_UserInterface.GetWidget("/scanner/display"));
+	
+	// sanity asserts
+	assert(g_CreditsLabel != 0);
+	assert(g_FuelLabel != 0);
+	assert(g_HullLabel != 0);
+	assert(g_MessageLabel != 0);
+	assert(g_SystemLabel != 0);
+	assert(g_TimeWarpLabel != 0);
+	assert(g_MiniMap != 0);
+	assert(g_CurrentSystemLabel != 0);
+	assert(g_MiniMapDisplay != 0);
+	assert(g_Scanner != 0);
+	assert(g_TargetLabel != 0);
+	assert(g_ScannerDisplay != 0);
 	
 	// load the specified savegame
 	if(LoadSavegame(LoadSavegameFileName) == false)
@@ -1920,7 +1936,7 @@ int main(int argc, char ** argv)
 	// setting up the player environment
 	if((g_OutputMind == true) && (g_OutputMind->GetCharacter() != 0) && (g_OutputMind->GetCharacter()->GetShip() != 0))
 	{
-		g_MiniMap->SetOwner(g_OutputMind->GetCharacter()->GetShip()->GetReference());
+		g_MiniMapDisplay->SetOwner(g_OutputMind->GetCharacter()->GetShip()->GetReference());
 		g_ScannerDisplay->SetOwner(g_OutputMind->GetCharacter()->GetShip()->GetReference());
 	}
 	// set first timeout for widget collector, it will reinsert itself on callback

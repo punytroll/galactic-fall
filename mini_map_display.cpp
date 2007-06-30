@@ -20,12 +20,12 @@
 #include <GL/gl.h>
 
 #include "cargo.h"
-#include "mini_map.h"
+#include "mini_map_display.h"
 #include "planet.h"
 #include "ship.h"
 #include "system.h"
 
-MiniMap::MiniMap(Widget * SupWidget) :
+MiniMapDisplay::MiniMapDisplay(Widget * SupWidget) :
 	Viewport(SupWidget)
 {
 	GetCamera()->SetFieldOfView(0.392699082f);
@@ -36,13 +36,13 @@ MiniMap::MiniMap(Widget * SupWidget) :
 	GetPerspective()->SetFarClippingPlane(10000.0f);
 }
 
-void MiniMap::SetOwner(Reference< Ship > Owner)
+void MiniMapDisplay::SetOwner(Reference< Ship > Owner)
 {
 	m_Owner = Owner;
 	GetCamera()->SetFocus(Owner);
 }
 
-void MiniMap::DrawInViewport(void) const
+void MiniMapDisplay::DrawInViewport(void) const
 {
 	// draw mini map
 	if((m_Owner == true) && (m_Owner->GetCurrentSystem() != 0))

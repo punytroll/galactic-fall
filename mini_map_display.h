@@ -17,18 +17,18 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef MINI_MAP_H
-#define MINI_MAP_H
+#ifndef MINI_MAP_DISPLAY_H
+#define MINI_MAP_DISPLAY_H
 
 #include "referencing.h"
 #include "viewport.h"
 
 class Ship;
 
-class MiniMap : public Viewport
+class MiniMapDisplay : public Viewport
 {
 public:
-	MiniMap(Widget * SupWidget = 0);
+	MiniMapDisplay(Widget * SupWidget = 0);
 	void SetOwner(Reference< Ship > Owner);
 	virtual void DrawInViewport(void) const;
 private:

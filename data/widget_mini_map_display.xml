@@ -1,22 +1,22 @@
 <widget>
-	<widget-path>/scanner</widget-path>
+	<widget-path>/mini_map</widget-path>
 	<name>display</name>
 	<position>
-		<x>0.0</x>
-		<y>20.0</y>
+		<x>0</x>
+		<y>20</y>
 	</position>
 	<use-size>true</use-size>
 	<size>
-		<x>220.0</x>
-		<y>220.0</y>
+		<x>220</x>
+		<y>220</y>
 	</size>
 	<visible>true</visible>
 	<use-background-color>false</use-background-color>
 	<background-color>
-		<red>0.0</red>
-		<green>0.1</green>
-		<blue>0.17</blue>
-		<alpha>0.8</alpha>
+		<red>0</red>
+		<green>0</green>
+		<blue>0</blue>
+		<alpha>0</alpha>
 	</background-color>
 	<anchor-bottom>true</anchor-bottom>
 	<anchor-left>true</anchor-left>
