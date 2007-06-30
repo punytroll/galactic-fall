@@ -32,16 +32,27 @@ ScannerDisplay::ScannerDisplay(void) :
 	m_Perspective.SetFarClippingPlane(1000.0f);
 }
 
-void ScannerDisplay::Draw(void) const
+void ScannerDisplay::Update(void)
 {
-	Widget::Draw();
-	// scanner
-	if((m_Owner != 0) && (m_Owner->GetTarget() == true))
+	if((m_Owner == true) && (m_Owner->GetTarget() == true))
 	{
 		float RadialSize(m_Owner->GetTarget()->GetRadialSize());
 		float ExtendedRadialSize((5.0f / 4.0f) * RadialSize);
 		float FieldOfView(asinf(ExtendedRadialSize / sqrtf(ExtendedRadialSize * ExtendedRadialSize + 16 * RadialSize * RadialSize)));
 		
+		m_Perspective.SetFieldOfView(FieldOfView);
+		m_Camera.SetFieldOfView(FieldOfView);
+		m_Camera.SetPosition(0.0f, 0.0f, 4.0f * RadialSize);
+		m_Camera.SetFocus(m_Owner->GetTarget());
+	}
+}
+
+void ScannerDisplay::Draw(void) const
+{
+	Widget::Draw();
+	// scanner
+	if((m_Owner == true) && (m_Owner->GetTarget() == true))
+	{
 		glPushAttrib(GL_ENABLE_BIT | GL_VIEWPORT_BIT | GL_TRANSFORM_BIT);
 		// clipping is performed by the viewport
 		glDisable(GL_CLIP_PLANE0);
@@ -53,14 +64,10 @@ void ScannerDisplay::Draw(void) const
 		glViewport(static_cast< GLint >(GetGlobalPosition()[0]), static_cast< GLint >(GetRootWidget()->GetSize()[1] - GetGlobalPosition()[1] - GetSize()[1]), static_cast< GLint >(GetSize()[0]), static_cast< GLint >(GetSize()[1]));
 		glMatrixMode(GL_PROJECTION);
 		glPushMatrix();
-		m_Perspective.SetFieldOfView(FieldOfView);
 		m_Perspective.Draw();
 		glMatrixMode(GL_MODELVIEW);
 		glPushMatrix();
 		glLoadIdentity();
-		m_Camera.SetFieldOfView(FieldOfView);
-		m_Camera.SetPosition(0.0f, 0.0f, 4.0f * RadialSize);
-		m_Camera.SetFocus(m_Owner->GetTarget());
 		m_Camera.Draw();
 		if((m_Owner->GetCurrentSystem() != 0) && (m_Owner->GetCurrentSystem()->GetStar() != 0))
 		{

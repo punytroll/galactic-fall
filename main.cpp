@@ -588,6 +588,7 @@ void UpdateUserInterface(void)
 			g_SystemLabel->GetForegroundColor().Set(0.4f, 0.4f, 0.4f);
 		}
 		g_ScannerDisplay->SetOwner(g_OutputMind->GetCharacter()->GetShip()->GetReference());
+		g_ScannerDisplay->Update();
 		g_MiniMap->SetOwner(g_OutputMind->GetCharacter()->GetShip()->GetReference());
 	}
 	else
