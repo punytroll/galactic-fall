@@ -5,8 +5,16 @@ The number is the actual key code that is bound. In paranthesis a description of
 
 On key down:
 
-9 (ESCAPE), 24 (Q)
+9 (ESCAPE)
 	Quits the application immediately.
+
+22 (BACKSPACE)
+	Will delete the ship that belongs to the input mind.
+	Acts upon InputMind.Character.Ship.
+
+24 (Q)
+	Quits the application immediately.
+	Before exiting the application a final object report is dumped to the console. It can be used to debug dangling objects without a container.
 
 26 (E)
 	Selects the previous ship in the system or the last one if no ship was selected or deselects any ship if the first one was selected.
