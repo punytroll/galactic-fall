@@ -82,20 +82,25 @@ void Widget::Draw(void) const
 		glVertex2f(m_Size.m_V.m_A[0], 0.0f);
 		glEnd();
 	}
-	for(std::list< Widget * >::const_reverse_iterator SubWidgetIterator = m_SubWidgets.rbegin(); SubWidgetIterator != m_SubWidgets.rend(); ++SubWidgetIterator)
+	if(m_SubWidgets.empty() == false)
 	{
-		Widget * SubWidget(*SubWidgetIterator);
-		
-		if(SubWidget->IsVisible() == true)
+		for(std::list< Widget * >::const_reverse_iterator SubWidgetIterator = m_SubWidgets.rbegin(); SubWidgetIterator != m_SubWidgets.rend(); ++SubWidgetIterator)
 		{
-			glPushMatrix();
-			PushClippingRectangle(SubWidget->GetPosition(), SubWidget->GetSize());
-			glTranslatef(SubWidget->m_Position.m_V.m_A[0], SubWidget->m_Position.m_V.m_A[1], 0.0f);
-			DrawClippingRectangle();
-			SubWidget->Draw();
-			PopClippingRectangle();
-			glPopMatrix();
+			Widget * SubWidget(*SubWidgetIterator);
+			
+			if(SubWidget->IsVisible() == true)
+			{
+				glPushMatrix();
+				PushClippingRectangle(SubWidget->GetPosition(), SubWidget->GetSize());
+				glTranslatef(SubWidget->m_Position.m_V.m_A[0], SubWidget->m_Position.m_V.m_A[1], 0.0f);
+				DrawClippingRectangle();
+				SubWidget->Draw();
+				PopClippingRectangle();
+				glPopMatrix();
+			}
 		}
+		// restore the clipping rectangle for this widget
+		DrawClippingRectangle();
 	}
 }
 
@@ -470,12 +475,13 @@ void Widget::PopClippingRectangle(void)
 
 void Widget::DrawClippingRectangle(void)
 {
-	// left
-	glClipPlane(GL_CLIP_PLANE0, GetPlaneEquation(Vector3f(m_ClippingRectangles.top().first[0], 0.0f, 0.0f), Vector3f(m_ClippingRectangles.top().first[0], 1.0f, 0.0f), Vector3f(m_ClippingRectangles.top().first[0], 0.5f, 1.0f)).m_V);
-	// top
-	glClipPlane(GL_CLIP_PLANE1, GetPlaneEquation(Vector3f(0.0f, m_ClippingRectangles.top().first[1], 0.0f), Vector3f(1.0f, m_ClippingRectangles.top().first[1], 0.0f), Vector3f(0.5f, m_ClippingRectangles.top().first[1], -1.0f)).m_V);
-	// right
-	glClipPlane(GL_CLIP_PLANE2, GetPlaneEquation(Vector3f(m_ClippingRectangles.top().second[0], 0.0f, 0.0f), Vector3f(m_ClippingRectangles.top().second[0], 1.0f, 0.0f), Vector3f(m_ClippingRectangles.top().second[0], 0.5f, -1.0f)).m_V);
-	// bottom
-	glClipPlane(GL_CLIP_PLANE3, GetPlaneEquation(Vector3f(0.0f, m_ClippingRectangles.top().second[1], 0.0f), Vector3f(1.0f, m_ClippingRectangles.top().second[1], 0.0f), Vector3f(0.5f, m_ClippingRectangles.top().second[1], 1.0f)).m_V);
+	double LeftPlane[4] = { 1.0, 0.0, 0.0, -m_ClippingRectangles.top().first[0] };
+	double TopPlane[4] = { 0.0, 1.0, 0.0, -m_ClippingRectangles.top().first[1] };
+	double RightPlane[4] = { -1.0, 0.0, 0.0, m_ClippingRectangles.top().second[0] };
+	double BottomPlane[4] = { 0.0, -1.0, 0.0, m_ClippingRectangles.top().second[1] };
+	
+	glClipPlane(GL_CLIP_PLANE0, LeftPlane);
+	glClipPlane(GL_CLIP_PLANE1, TopPlane);
+	glClipPlane(GL_CLIP_PLANE2, RightPlane);
+	glClipPlane(GL_CLIP_PLANE3, BottomPlane);
 }

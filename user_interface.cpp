@@ -34,7 +34,9 @@ void UserInterface::Draw(void) const
 	if((m_RootWidget != 0) && (m_RootWidget->IsVisible() == true))
 	{
 		glPushMatrix();
+		Widget::PushClippingRectangle(m_RootWidget->GetPosition(), m_RootWidget->GetSize());
 		glTranslatef(m_RootWidget->GetPosition().m_V.m_A[0], m_RootWidget->GetPosition().m_V.m_A[1], 0.0f);
+		Widget::DrawClippingRectangle();
 		m_RootWidget->Draw();
 		glPopMatrix();
 	}
