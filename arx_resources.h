@@ -24,7 +24,7 @@
 
 const Arxx::u4byte ARX_TYPE_WIDGET = 1;
 const Arxx::u4byte ARX_TYPE_WIDGET_SUB_TYPE_LABEL = 1;
-const Arxx::u4byte ARX_TYPE_WIDGET_SUB_TYPE_MINI_MAP = 2;
+const Arxx::u4byte ARX_TYPE_WIDGET_SUB_TYPE_MINI_MAP_DISPLAY = 2;
 const Arxx::u4byte ARX_TYPE_WIDGET_SUB_TYPE_SCANNER_DISPLAY = 3;
 const Arxx::u4byte ARX_TYPE_WIDGET_SUB_TYPE_WIDGET = 0;
 const Arxx::u4byte ARX_TYPE_MODEL = 2;

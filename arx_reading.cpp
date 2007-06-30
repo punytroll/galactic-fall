@@ -32,7 +32,7 @@
 #include "galaxy.h"
 #include "globals.h"
 #include "label.h"
-#include "mini_map.h"
+#include "mini_map_display.h"
 #include "model.h"
 #include "model_manager.h"
 #include "planet.h"
@@ -58,7 +58,7 @@ static void ReadSystemLink(Galaxy * Galaxy, Arxx::Reference & Reference);
 static void ReadWeaponClass(WeaponClassManager * WeaponClassManager, Arxx::Reference & Reference);
 static void ReadWidget(UserInterface * UserInterface, Arxx::Reference & Reference);
 static void ReadWidgetLabel(Arxx::BufferReader & Reader, Label * ReadLabel);
-static void ReadWidgetMiniMap(Arxx::BufferReader & Reader, MiniMap * ReadMiniMap);
+static void ReadWidgetMiniMapDisplay(Arxx::BufferReader & Reader, MiniMapDisplay * ReadMiniMapDisplay);
 static void ReadWidgetScannerDisplay(Arxx::BufferReader & Reader, ScannerDisplay * ReadScannerDisplay);
 static void ReadWidgetWidget(Arxx::BufferReader & Reader, UserInterface * UserInterface, Widget * ReadWidget);
 
@@ -556,12 +556,12 @@ static void ReadWidget(UserInterface * UserInterface, Arxx::Reference & Referenc
 			
 			break;
 		}
-	case ARX_TYPE_WIDGET_SUB_TYPE_MINI_MAP:
+	case ARX_TYPE_WIDGET_SUB_TYPE_MINI_MAP_DISPLAY:
 		{
-			MiniMap * NewMiniMap(new MiniMap());
+			MiniMapDisplay * NewMiniMapDisplay(new MiniMapDisplay());
 			
-			ReadWidgetWidget(Reader, UserInterface, NewMiniMap);
-			ReadWidgetMiniMap(Reader, NewMiniMap);
+			ReadWidgetWidget(Reader, UserInterface, NewMiniMapDisplay);
+			ReadWidgetMiniMapDisplay(Reader, NewMiniMapDisplay);
 			
 			break;
 		}
@@ -627,7 +627,7 @@ static void ReadWidgetLabel(Arxx::BufferReader & Reader, Label * ReadLabel)
 	}
 }
 
-static void ReadWidgetMiniMap(Arxx::BufferReader & Reader, MiniMap * ReadMiniMap)
+static void ReadWidgetMiniMapDisplay(Arxx::BufferReader & Reader, MiniMapDisplay * ReadMiniMapDisplay)
 {
 }
 

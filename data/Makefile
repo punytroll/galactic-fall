@@ -34,6 +34,7 @@ all_data = \
 	.data/weapon_class_light_laser.data \
 	.data/weapon_class_medium_laser.data \
 	.data/widget_mini_map.data \
+	.data/widget_mini_map_display.data \
 	.data/widget_scanner.data \
 	.data/widget_scanner_display.data
 
@@ -105,7 +106,8 @@ data.arx: .data $(all_data) Makefile
 	arxadd $@ --uid 102 --name "System" --type 1 --subtype 1 --add 1:child .data/label_system.data
 	arxadd $@ --uid 107 --name "Target" --type 1 --subtype 1 --add 1:child .data/label_target.data
 	arxadd $@ --uid 101 --name "Time Warp" --type 1 --subtype 1 --add 1:child .data/label_time_warp.data
-	arxadd $@ --uid 106 --name "Mini Map" --type 1 --subtype 2 --add 1:child .data/widget_mini_map.data
+	arxadd $@ --uid 106 --name "Mini Map" --type 1 --subtype 0 --add 1:child .data/widget_mini_map.data
+	arxadd $@ --name "Mini Map Display" --type 1 --subtype 2 --add 1:child .data/widget_mini_map_display.data
 	arxadd $@ --uid 105 --name "Scanner" --type 1 --subtype 0 --add 1:child .data/widget_scanner.data
 	arxadd $@ --uid 126 --name "Scanner Display" --type 1 --subtype 3 --add 1:child .data/widget_scanner_display.data
 	@echo -e "\n\nAdding weapon classes ...\n"
