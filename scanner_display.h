@@ -36,11 +36,12 @@ public:
 	// setters
 	void SetOwner(Reference< Ship > Owner);
 	// actors
+	void Update(void);
 	virtual void Draw(void) const;
 private:
-	mutable Reference< Ship > m_Owner;
-	mutable Camera m_Camera;
-	mutable Perspective m_Perspective;
+	Reference< Ship > m_Owner;
+	Camera m_Camera;
+	Perspective m_Perspective;
 };
 
 inline const Reference< Ship > & ScannerDisplay::GetOwner(void) const
