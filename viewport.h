@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006  Hagen Möbius
+ * Copyright (C) 2007  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,22 +17,36 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef MINI_MAP_H
-#define MINI_MAP_H
+#ifndef VIEWPORT_H
+#define VIEWPORT_H
 
-#include "referencing.h"
-#include "viewport.h"
+#include "camera.h"
+#include "perspective.h"
+#include "widget.h"
 
-class Ship;
-
-class MiniMap : public Viewport
+class Viewport : public Widget
 {
 public:
-	MiniMap(Widget * SupWidget = 0);
-	void SetOwner(Reference< Ship > Owner);
-	virtual void DrawInViewport(void) const;
+	Viewport(Widget * SupWidget = 0);
+	// getters
+	Camera * GetCamera(void);
+	Perspective * GetPerspective(void);
+	// actors
+	virtual void DrawInViewport(void) const = 0;
 private:
-	Reference< Ship > m_Owner;
+	virtual void Draw(void) const;
+	Camera m_Camera;
+	Perspective m_Perspective;
 };
+
+inline Camera * Viewport::GetCamera(void)
+{
+	return &m_Camera;
+}
+
+inline Perspective * Viewport::GetPerspective(void)
+{
+	return &m_Perspective;
+}
 
 #endif

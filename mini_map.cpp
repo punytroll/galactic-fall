@@ -25,43 +25,25 @@
 #include "ship.h"
 #include "system.h"
 
-MiniMap::MiniMap(void) :
-	Widget()
+MiniMap::MiniMap(Widget * SupWidget) :
+	Viewport(SupWidget)
 {
-	m_Camera.SetFieldOfView(0.392699082f);
-	m_Camera.SetPosition(0.0f, 0.0f, 1500.0f);
-	m_Perspective.SetAspect(1.0f);
-	m_Perspective.SetFieldOfView(0.392699082f);
-	m_Perspective.SetNearClippingPlane(1.0f);
-	m_Perspective.SetFarClippingPlane(10000.0f);
+	GetCamera()->SetFieldOfView(0.392699082f);
+	GetCamera()->SetPosition(0.0f, 0.0f, 1500.0f);
+	GetPerspective()->SetAspect(1.0f);
+	GetPerspective()->SetFieldOfView(0.392699082f);
+	GetPerspective()->SetNearClippingPlane(1.0f);
+	GetPerspective()->SetFarClippingPlane(10000.0f);
 }
 
 void MiniMap::SetOwner(Reference< Ship > Owner)
 {
 	m_Owner = Owner;
-	m_Camera.SetFocus(Owner);
+	GetCamera()->SetFocus(Owner);
 }
 
-void MiniMap::Draw(void) const
+void MiniMap::DrawInViewport(void) const
 {
-	Widget::Draw();
-	glPushAttrib(GL_ENABLE_BIT | GL_VIEWPORT_BIT | GL_TRANSFORM_BIT);
-	// clipping is performed by the viewport
-	glDisable(GL_CLIP_PLANE0);
-	glDisable(GL_CLIP_PLANE1);
-	glDisable(GL_CLIP_PLANE2);
-	glDisable(GL_CLIP_PLANE3);
-	glEnable(GL_DEPTH_TEST);
-	glDisable(GL_BLEND);
-	glViewport(static_cast< GLint >(GetGlobalPosition()[0]), static_cast< GLint >(GetRootWidget()->GetSize()[1] - GetGlobalPosition()[1] - GetSize()[1]), static_cast< GLint >(GetSize()[0]), static_cast< GLint >(GetSize()[1]));
-	glMatrixMode(GL_PROJECTION);
-	glPushMatrix();
-	m_Perspective.Draw();
-	glMatrixMode(GL_MODELVIEW);
-	glPushMatrix();
-	glLoadIdentity();
-	m_Camera.Draw();
-	glClear(GL_DEPTH_BUFFER_BIT);
 	// draw mini map
 	if((m_Owner == true) && (m_Owner->GetCurrentSystem() != 0))
 	{
@@ -110,8 +92,4 @@ void MiniMap::Draw(void) const
 		}
 		glEnd();
 	}
-	glPopMatrix();
-	glMatrixMode(GL_PROJECTION);
-	glPopMatrix();
-	glPopAttrib();
 }

@@ -135,8 +135,6 @@ mind_h = \
 
 mini_map_h = \
 	mini_map.h \
-	$(camera_h) \
-	$(perspective_h) \
 	$(referencing_h) \
 	$(widget_h)
 
@@ -191,10 +189,8 @@ referencing_h = \
 
 scanner_display_h = \
 	scanner_display.h \
-	$(camera_h) \
-	$(perspective_h) \
 	$(referencing_h) \
-	$(widget_h)
+	$(viewport_h)
 
 ship_h = \
 	ship.h \
@@ -249,6 +245,12 @@ trade_center_dialog_h = \
 
 user_interface_h = \
 	user_interface.h
+
+viewport_h = \
+	viewport.h \
+	$(camera_h) \
+	$(perspective_h) \
+	$(widget_h)
 
 weapon_h = \
 	weapon.h \
@@ -334,6 +336,7 @@ clean: clean-recursive
 	$(RM) system.o
 	$(RM) trade_center_dialog.o
 	$(RM) user_interface.o
+	$(RM) viewport.o
 	$(RM) weapon.o
 	$(RM) weapon_class.o
 	$(RM) weapon_class_manager.o
@@ -365,10 +368,10 @@ check-dependencies:
 install:
 	@echo -e "This project is not installable yet. Please run \"./galactic-fall\" from the top directory."
 
-galactic-fall: arx_reading.o border.o buffer_reading.o button.o camera.o cargo.o character.o clicked_listener.o color.o command_mind.o commodity.o commodity_manager.o destroy_listener.o draw_text.o galaxy.o game_time.o key_listener.o label.o main.o map_dialog.o map_knowledge.o mini_map.o mind.o model.o model_manager.o mouse_button_listener.o mouse_motion_listener.o object.o particle_systems.o perspective.o physical_object.o planet.o planet_dialog.o real_time.o scanner_display.o ship.o ship_class.o ship_class_manager.o shot.o slot.o star.o state.o state_machine.o states.o string_cast.o system.o trade_center_dialog.o user_interface.o weapon.o weapon_class.o weapon_class_manager.o widget.o window.o xml_parser.o xml_puny_dom.o xml_stream.o
+galactic-fall: arx_reading.o border.o buffer_reading.o button.o camera.o cargo.o character.o clicked_listener.o color.o command_mind.o commodity.o commodity_manager.o destroy_listener.o draw_text.o galaxy.o game_time.o key_listener.o label.o main.o map_dialog.o map_knowledge.o mini_map.o mind.o model.o model_manager.o mouse_button_listener.o mouse_motion_listener.o object.o particle_systems.o perspective.o physical_object.o planet.o planet_dialog.o real_time.o scanner_display.o ship.o ship_class.o ship_class_manager.o shot.o slot.o star.o state.o state_machine.o states.o string_cast.o system.o trade_center_dialog.o user_interface.o viewport.o weapon.o weapon_class.o weapon_class_manager.o widget.o window.o xml_parser.o xml_puny_dom.o xml_stream.o
 	$(CXX) $(LDFLAGS) `pkg-config --libs libarxx` $^ -lGL -o $@
 
-arx_reading.o: arx_reading.cpp $(arx_reading_h) $(arx_resources_h) $(buffer_reading_h) $(callbacks_h) $(commodity_h) $(commodity_manager_h) $(galaxy_h) $(label_h) $(model_h) $(model_manager_h) $(planet_h) $(ship_class_h) $(ship_class_manager_h) $(slot_h) $(system_h) $(user_interface_h) $(weapon_class_h) $(weapon_class_manager_h) $(widget_h)
+arx_reading.o: arx_reading.cpp $(arx_reading_h) $(arx_resources_h) $(buffer_reading_h) $(callbacks_h) $(commodity_h) $(commodity_manager_h) $(galaxy_h) $(label_h) $(mini_map_h) $(model_h) $(model_manager_h) $(planet_h) $(scanner_display_h) $(ship_class_h) $(ship_class_manager_h) $(slot_h) $(system_h) $(user_interface_h) $(weapon_class_h) $(weapon_class_manager_h) $(widget_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags libarxx` -c $< -o $@
 
 border.o: border.cpp $(border_h)
@@ -510,6 +513,9 @@ trade_center_dialog.o: trade_center_dialog.cpp $(border_h) $(button_h) $(cargo_h
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 user_interface.o: user_interface.cpp $(user_interface_h) $(widget_h)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+viewport.o: viewport.cpp $(viewport_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 weapon.o: weapon.cpp $(game_time_h) $(ship_h) $(shot_h) $(slot_h) $(string_cast_h) $(system_h) $(weapon_h) $(weapon_class_h)
