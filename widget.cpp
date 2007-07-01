@@ -120,7 +120,14 @@ Vector2f Widget::GetGlobalPosition(void) const
 
 void Widget::SetBackgroundColor(const Color & BackgroundColor)
 {
+	delete m_BackgroundColor;
 	m_BackgroundColor = new Color(BackgroundColor);
+}
+
+void Widget::UnsetBackgroundColor(void)
+{
+	delete m_BackgroundColor;
+	m_BackgroundColor = 0;
 }
 
 void Widget::SetPosition(const Vector2f & Position)
