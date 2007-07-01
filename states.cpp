@@ -100,7 +100,7 @@ void FlyOverRandomPoint::Execute(void)
 		else
 		{
 			GetMind()->GetCharacter()->GetShip()->SetTurnRight(0.0f);
-			GetMind()->GetCharacter()->GetShip()->SetTurnLeft(1.0f);
+			GetMind()->GetCharacter()->GetShip()->SetTurnLeft(0.0f);
 			GetMind()->GetCharacter()->GetShip()->m_Accelerate = ((GetMind()->GetCharacter()->GetShip()->GetVelocity() - Vector2f(GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetMaximumSpeed(), GetMind()->GetCharacter()->GetShip()->GetAngularPosition(), Vector2f::InitializeMagnitudeAngle)).SquaredLength() > 0.1f);
 		}
 	}
