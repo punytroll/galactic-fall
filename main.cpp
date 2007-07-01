@@ -711,9 +711,9 @@ public:
 		}
 		else if(EventSource == g_MapDialog)
 		{
-			if(g_CurrentSystem->IsLinkedToSystem(g_MapDialog->GetSelectedSystem().Get()) == true)
+			if(g_CurrentSystem->IsLinkedToSystem(g_MapDialog->GetSelectedSystem()) == true)
 			{
-				g_InputMind->SelectLinkedSystem(g_MapDialog->GetSelectedSystem().Get());
+				g_InputMind->SelectLinkedSystem(g_MapDialog->GetSelectedSystem());
 			}
 			g_MapDialog = 0;
 			g_Pause = false;
@@ -1234,7 +1234,7 @@ void KeyDown(unsigned int KeyCode)
 			if((g_MapDialog == 0) && (g_OutputMind == true))
 			{
 				g_Pause = true;
-				g_MapDialog = new MapDialog(g_UserInterface.GetRootWidget(), g_OutputMind->GetCharacter()->GetShip()->GetCurrentSystem()->GetReference(), g_OutputMind->GetCharacter()->GetReference());
+				g_MapDialog = new MapDialog(g_UserInterface.GetRootWidget(), g_OutputMind->GetCharacter()->GetShip()->GetCurrentSystem(), g_OutputMind->GetCharacter());
 				g_MapDialog->GrabKeyFocus();
 				g_MapDialog->AddDestroyListener(&g_GlobalDestroyListener);
 				if(g_InputMind == true)

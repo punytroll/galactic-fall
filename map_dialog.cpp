@@ -32,7 +32,7 @@
 #include "map_knowledge.h"
 #include "system.h"
 
-MapDialog::MapDialog(Widget * SupWidget, const Reference< System > & System, const Reference< Character > & Character) :
+MapDialog::MapDialog(Widget * SupWidget, System * System, Character * Character) :
 	WWindow(SupWidget, "Map: " + System->GetName()),
 	m_System(System),
 	m_Character(Character),
@@ -78,11 +78,11 @@ void MapDialog::Draw(void) const
 		Position *= m_Scale;
 		glPushMatrix();
 		glTranslatef(Position.m_V.m_A[0], Position.m_V.m_A[1], 0.0f);
-		if(*UnexploredSystemIterator == m_SelectedSystem.Get())
+		if(*UnexploredSystemIterator == m_SelectedSystem)
 		{
 			glColor3f(0.0f, 1.0f, 0.0f);
 		}
-		else if(*UnexploredSystemIterator == m_System.Get())
+		else if(*UnexploredSystemIterator == m_System)
 		{
 			glColor3f(0.8f, 0.8f, 0.0f);
 		}
@@ -136,11 +136,11 @@ void MapDialog::Draw(void) const
 			glVertex2fv((((*LinkedSystemIterator)->GetPosition() - (*ExploredSystemIterator)->GetPosition()) * m_Scale).m_V.m_A);
 			glEnd();
 		}
-		if(*ExploredSystemIterator == m_SelectedSystem.Get())
+		if(*ExploredSystemIterator == m_SelectedSystem)
 		{
 			glColor3f(0.0f, 1.0f, 0.0f);
 		}
-		else if(*ExploredSystemIterator == m_System.Get())
+		else if(*ExploredSystemIterator == m_System)
 		{
 			glColor3f(0.8f, 0.8f, 0.0f);
 		}
@@ -229,7 +229,7 @@ bool MapDialog::OnMouseButton(Widget * EventSource, int Button, int State, float
 				Position.m_V.m_A[1] += Y;
 				if(Position.SquaredLength() < 40.0f)
 				{
-					m_SelectedSystem = SystemIterator->second->GetReference();
+					m_SelectedSystem = SystemIterator->second;
 					
 					break;
 				}
