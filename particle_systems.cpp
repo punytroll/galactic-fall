@@ -160,7 +160,7 @@ ParticleSystemHit::ParticleSystemHit(void)
 		NewParticle.m_Velocity = Vector2f(GetRandomFloat(0.0f, 0.5f) + GetRandomFloatFromExponentialDistribution(1.0f), GetRandomFloat(0.0f, 2 * M_PI), Vector2f::InitializeMagnitudeAngle);
 		NewParticle.m_TimeOfDeath = GameTime::Get() + GetRandomDouble(0.3f, 0.8f);
 		NewParticle.m_Color = Color(GetRandomFloat(0.4f, 0.5f), GetRandomFloat(0.35f, 0.45f), GetRandomFloat(0.35f, 0.65f), 0.3f);
-		NewParticle.m_Size = 0.5f;
+		NewParticle.m_Size = GetRandomFloat(0.25f, 0.4f);
 		m_Particles.push_back(NewParticle);
 	}
 	m_ParticleScript.push_back("kill-old");
