@@ -38,6 +38,7 @@ void UserInterface::Draw(void) const
 		glTranslatef(m_RootWidget->GetPosition().m_V.m_A[0], m_RootWidget->GetPosition().m_V.m_A[1], 0.0f);
 		Widget::DrawClippingRectangle();
 		m_RootWidget->Draw();
+		Widget::PopClippingRectangle();
 		glPopMatrix();
 	}
 }
