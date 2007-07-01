@@ -254,7 +254,7 @@ bool TradeCenterDialog::OnMouseButton(Widget * EventSource, int Button, int Stat
 		{
 			if(m_SelectedTradeCenterCommodity != 0)
 			{
-				m_SelectedTradeCenterCommodity->SetBackgroundColor(Color(0.2f, 0.2f, 0.2f));
+				m_SelectedTradeCenterCommodity->UnsetBackgroundColor();
 			}
 			m_SelectedTradeCenterCommodity = SelectedTradeCenterCommodity;
 			SelectedTradeCenterCommodity->SetBackgroundColor(Color(0.4f, 0.1f, 0.1f));
@@ -286,6 +286,6 @@ void TradeCenterDialog::OnMouseLeave(Widget * EventSource)
 	
 	if((LeftTradeCenterCommodity != 0) && (LeftTradeCenterCommodity != m_SelectedTradeCenterCommodity))
 	{
-		LeftTradeCenterCommodity->SetBackgroundColor(Color(0.2f, 0.2f, 0.2f));
+		LeftTradeCenterCommodity->UnsetBackgroundColor();
 	}
 }

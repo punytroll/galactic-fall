@@ -45,6 +45,7 @@ public:
 	void Hide(void);
 	void Show(void);
 	void SetBackgroundColor(const Color & BackgroundColor);
+	void UnsetBackgroundColor(void);
 	void SetPosition(const Vector2f & Position);
 	void SetSize(const Vector2f & Size);
 	void AddSubWidget(Widget * SubWidget);
