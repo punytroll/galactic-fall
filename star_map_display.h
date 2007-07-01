@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006  Hagen Möbius
+ * Copyright (C) 2007  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,36 +17,34 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef MAP_DIALOG_H
-#define MAP_DIALOG_H
+#ifndef STAR_MAP_DISPLAY_H
+#define STAR_MAP_DISPLAY_H
 
-#include "clicked_listener.h"
-#include "key_listener.h"
-#include "window.h"
+#include "mouse_button_listener.h"
+#include "widget.h"
 
-class Button;
 class Character;
-class Label;
-class StarMapDisplay;
 class System;
 
-class MapDialog : public ClickedListener, public KeyListener, public WWindow
+class StarMapDisplay : virtual public MouseButtonListener, public Widget
 {
 public:
-	MapDialog(Widget * SupWidget, System * System, Character * Character);
-	StarMapDisplay * GetStarMapDisplay(void);
+	StarMapDisplay(Widget * SupWidget, System * System, Character * Character);
+	virtual void Draw(void) const;
+	System * GetSelectedSystem(void);
 protected:
-	virtual bool OnClicked(Widget * EventSource);
-	virtual bool OnKey(Widget * EventSource, int Key, int State);
+	virtual bool OnMouseButton(Widget * EventSource, int Button, int State, float X, float Y);
 private:
-	Button * m_OKButton;
-	Label * m_OKButtonLabel;
-	StarMapDisplay * m_StarMapDisplay;
+	System * m_System;
+	System * m_SelectedSystem;
+	Character * m_Character;
+	float m_Scale;
 };
 
-inline StarMapDisplay * MapDialog::GetStarMapDisplay(void)
+inline System * StarMapDisplay::GetSelectedSystem(void)
 {
-	return m_StarMapDisplay;
+	return m_SelectedSystem;
 }
 
 #endif
+

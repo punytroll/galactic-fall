@@ -68,6 +68,7 @@
 #include "shot.h"
 #include "slot.h"
 #include "star.h"
+#include "star_map_display.h"
 #include "state_machine.h"
 #include "states.h"
 #include "string_cast.h"
@@ -711,9 +712,9 @@ public:
 		}
 		else if(EventSource == g_MapDialog)
 		{
-			if((g_InputMind == true) && (g_CurrentSystem->IsLinkedToSystem(g_MapDialog->GetSelectedSystem()) == true))
+			if((g_InputMind == true) && (g_CurrentSystem->IsLinkedToSystem(g_MapDialog->GetStarMapDisplay()->GetSelectedSystem()) == true))
 			{
-				g_InputMind->SelectLinkedSystem(g_MapDialog->GetSelectedSystem());
+				g_InputMind->SelectLinkedSystem(g_MapDialog->GetStarMapDisplay()->GetSelectedSystem());
 			}
 			g_MapDialog = 0;
 			g_Pause = false;
