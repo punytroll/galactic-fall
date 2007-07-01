@@ -56,19 +56,19 @@ check-dependencies:
 	fi
 
 clean:
-	$(RM) -rf .data
-	$(RM) -f data.arx
-	$(RM) -f xml_stream.pyc
-	$(RM) -f model_cargo_cube.xml
-	$(RM) -f model_fighter.xml
-	$(RM) -f model_laser_shot.xml
-	$(RM) -f model_planet.xml
-	$(RM) -f model_shuttle.xml
-	$(RM) -f model_transporter.xml
-	$(RM) -f models/fighter.xml
-	$(RM) -f models/planet.xml
-	$(RM) -f models/shuttle.xml
-	$(RM) -f models/transporter.xml
+	$(RM) -r .data
+	$(RM) data.arx
+	$(RM) xml_stream.pyc
+	$(RM) model_cargo_cube.xml
+	$(RM) model_fighter.xml
+	$(RM) model_laser_shot.xml
+	$(RM) model_planet.xml
+	$(RM) model_shuttle.xml
+	$(RM) model_transporter.xml
+	$(RM) models/fighter.xml
+	$(RM) models/planet.xml
+	$(RM) models/shuttle.xml
+	$(RM) models/transporter.xml
 
 data.arx: .data $(all_data) Makefile
 	@$(RM) -f $@
