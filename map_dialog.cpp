@@ -21,7 +21,6 @@
 
 #include <GL/gl.h>
 
-#include "border.h"
 #include "button.h"
 #include "character.h"
 #include "color.h"
@@ -32,7 +31,6 @@
 #include "map_dialog.h"
 #include "map_knowledge.h"
 #include "system.h"
-#include "user_interface.h"
 
 MapDialog::MapDialog(Widget * SupWidget, const Reference< System > & System, const Reference< Character > & Character) :
 	WWindow(SupWidget, "Map: " + System->GetName()),
