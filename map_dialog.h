@@ -33,23 +33,23 @@ class System;
 class MapDialog : public ClickedListener, public KeyListener, virtual public MouseButtonListener, public WWindow
 {
 public:
-	MapDialog(Widget * SupWidget, const Reference< System > & System, const Reference< Character > & Character);
+	MapDialog(Widget * SupWidget, System * System, Character * Character);
 	virtual void Draw(void) const;
-	Reference< System > & GetSelectedSystem(void);
+	System * GetSelectedSystem(void);
 protected:
 	virtual bool OnClicked(Widget * EventSource);
 	virtual bool OnKey(Widget * EventSource, int Key, int State);
 	virtual bool OnMouseButton(Widget * EventSource, int Button, int State, float X, float Y);
 private:
-	Reference< System > m_System;
-	Reference< System > m_SelectedSystem;
-	Reference< Character > m_Character;
+	System * m_System;
+	System * m_SelectedSystem;
+	Character * m_Character;
 	Button * m_OKButton;
 	Label * m_OKButtonLabel;
 	float m_Scale;
 };
 
-inline Reference< System > & MapDialog::GetSelectedSystem(void)
+inline System * MapDialog::GetSelectedSystem(void)
 {
 	return m_SelectedSystem;
 }
