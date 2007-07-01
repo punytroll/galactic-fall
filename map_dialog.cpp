@@ -47,6 +47,7 @@ MapDialog::MapDialog(Widget * SupWidget, System * System, Character * Character)
 	m_StarMapDisplay = new StarMapDisplay(this, System, Character);
 	m_StarMapDisplay->SetPosition(Vector2f(10.0f, 40.0f));
 	m_StarMapDisplay->SetSize(Vector2f(480.0f, 450.0f));
+	m_StarMapDisplay->SetBackgroundColor(Color(0.15f, 0.15f, 0.15f, 1.0f));
 }
 
 bool MapDialog::OnClicked(Widget * EventSource)
