@@ -21,12 +21,13 @@
 #define STAR_MAP_DISPLAY_H
 
 #include "mouse_button_listener.h"
+#include "mouse_motion_listener.h"
 #include "widget.h"
 
 class Character;
 class System;
 
-class StarMapDisplay : virtual public MouseButtonListener, public Widget
+class StarMapDisplay : virtual public MouseButtonListener, virtual public MouseMotionListener, public Widget
 {
 public:
 	StarMapDisplay(Widget * SupWidget, System * System, Character * Character);
@@ -34,11 +35,14 @@ public:
 	System * GetSelectedSystem(void);
 protected:
 	virtual bool OnMouseButton(Widget * EventSource, int Button, int State, float X, float Y);
+	virtual void OnMouseMotion(Widget * EventSource, float X, float Y);
 private:
+	Character * m_Character;
 	System * m_System;
 	System * m_SelectedSystem;
-	Character * m_Character;
 	float m_Scale;
+	Vector2f m_GrabPosition;
+	Vector2f m_OffsetPosition;
 };
 
 inline System * StarMapDisplay::GetSelectedSystem(void)

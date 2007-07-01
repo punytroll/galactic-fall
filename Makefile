@@ -220,6 +220,7 @@ star_h = \
 star_map_display_h = \
 	star_map_display.h \
 	$(mouse_button_listener_h) \
+	$(mouse_motion_listener_h) \
 	$(widget_h)
 
 state_h = \
@@ -499,7 +500,7 @@ slot.o: slot.cpp $(slot_h)
 star.o: star.cpp $(star_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-star_map_display.o: star_map_display.cpp $(character_h) $(draw_text_h) $(galaxy_h) $(globals_h) $(map_knowledge_h) $(star_map_display_h) $(system_h)
+star_map_display.o: star_map_display.cpp $(character_h) $(draw_text_h) $(galaxy_h) $(globals_h) $(map_knowledge_h) $(star_map_display_h) $(system_h) $(user_interface_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 state.o: state.cpp $(state_h)

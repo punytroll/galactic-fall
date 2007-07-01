@@ -28,15 +28,18 @@
 #include "map_knowledge.h"
 #include "star_map_display.h"
 #include "system.h"
+#include "user_interface.h"
 
 StarMapDisplay::StarMapDisplay(Widget * SupWidget, System * System, Character * Character) :
 	Widget(SupWidget, "Map: " + System->GetName()),
-	m_System(System),
 	m_Character(Character),
+	m_System(System),
+	m_SelectedSystem(0),
 	m_Scale(5.0f),
-	m_SelectedSystem(0)
+	m_OffsetPosition(true)
 {
 	AddMouseButtonListener(this);
+	AddMouseMotionListener(this);
 }
 
 void StarMapDisplay::Draw(void) const
@@ -46,6 +49,7 @@ void StarMapDisplay::Draw(void) const
 	Vector2f Middle(GetSize() / 2);
 	
 	Middle.m_V.m_A[1] += 15.0f;
+	Middle += m_OffsetPosition;
 	
 	float SystemSize(5.0f);
 	
@@ -196,7 +200,30 @@ bool StarMapDisplay::OnMouseButton(Widget * EventSource, int Button, int State, 
 			
 			return true;
 		}
+		else if(Button == 2 /* MIDDLE */)
+		{
+			if(State == EV_DOWN)
+			{
+				m_GrabPosition.Set(X, Y);
+				g_UserInterface.SetCaptureWidget(this);
+			}
+			else
+			{
+				g_UserInterface.ReleaseCaptureWidget();
+			}
+			
+			return true;
+		}
 	}
 	
 	return false;
+}
+
+void StarMapDisplay::OnMouseMotion(Widget * EventSource, float X, float Y)
+{
+	if((EventSource == this) && (g_UserInterface.GetCaptureWidget() == this))
+	{
+		m_OffsetPosition += (Vector2f(X, Y) - m_GrabPosition);
+		m_GrabPosition = Vector2f(X, Y);
+	}
 }
