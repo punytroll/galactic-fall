@@ -481,7 +481,11 @@ void Fight::Execute(void)
 	{
 		Vector2f ToDestination(GetMind()->GetCharacter()->GetShip()->GetTarget()->GetPosition() - GetMind()->GetCharacter()->GetShip()->GetPosition());
 		float Length(ToDestination.Length());
+		// TODO: shot speed
+		float SecondsForShot(Length / 30.0f);
 		
+		ToDestination -= GetMind()->GetCharacter()->GetShip()->GetVelocity() * SecondsForShot;
+		Length = ToDestination.Length();
 		ToDestination /= Length;
 		
 		float HeadingOffDestination(GetShortestRadians(GetMind()->GetCharacter()->GetShip()->GetAngularPosition(), GetRadians(ToDestination)));
