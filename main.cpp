@@ -711,7 +711,7 @@ public:
 		}
 		else if(EventSource == g_MapDialog)
 		{
-			if(g_CurrentSystem->IsLinkedToSystem(g_MapDialog->GetSelectedSystem()) == true)
+			if((g_InputMind == true) && (g_CurrentSystem->IsLinkedToSystem(g_MapDialog->GetSelectedSystem()) == true))
 			{
 				g_InputMind->SelectLinkedSystem(g_MapDialog->GetSelectedSystem());
 			}

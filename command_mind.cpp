@@ -132,7 +132,7 @@ void CommandMind::SelectLinkedSystem(System * LinkedSystem)
 	assert(GetCharacter() != 0);
 	assert(GetCharacter()->GetShip() != 0);
 	
-	GetCharacter()->GetShip()->SetLinkedSystemTarget(0);
+	GetCharacter()->GetShip()->SetLinkedSystemTarget(LinkedSystem);
 }
 
 void CommandMind::SelectNextLinkedSystem(void)
