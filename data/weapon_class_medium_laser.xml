@@ -14,10 +14,4 @@
 			<alpha>0.8</alpha>
 		</color>
 	</particle>
-	<orientation>
-		<w>1</w>
-		<x>0</x>
-		<y>0</y>
-		<z>0</z>
-	</orientation>
 </weapon-class>

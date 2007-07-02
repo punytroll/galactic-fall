@@ -22,7 +22,6 @@
 
 #include <string>
 
-#include "math/quaternion.h"
 #include "math/vector3f.h"
 
 class Object;
@@ -34,18 +33,15 @@ public:
 	// getters
 	const std::string & GetIdentifier(void) const;
 	const Object * GetMountedObject(void) const;
-	const Quaternion & GetOrientation(void) const;
 	const Vector3f & GetPosition(void) const;
 	const std::string & GetType(void) const;
 	// setters
 	void SetMountedObject(Object * MountedObject);
-	void SetOrientation(const Quaternion & Orientation);
 	void SetPosition(const Vector3f & Position);
 	void SetType(const std::string & Type);
 private:
 	std::string m_Identifier;
 	Object * m_MountedObject;
-	Quaternion m_Orientation;
 	Vector3f m_Position;
 	std::string m_Type;
 };
@@ -58,11 +54,6 @@ inline const std::string & Slot::GetIdentifier(void) const
 inline const Object * Slot::GetMountedObject(void) const
 {
 	return m_MountedObject;
-}
-
-inline const Quaternion & Slot::GetOrientation(void) const
-{
-	return m_Orientation;
 }
 
 inline const Vector3f & Slot::GetPosition(void) const
@@ -78,11 +69,6 @@ inline const std::string & Slot::GetType(void) const
 inline void Slot::SetMountedObject(Object * MountedObject)
 {
 	m_MountedObject = MountedObject;
-}
-
-inline void Slot::SetOrientation(const Quaternion & Orientation)
-{
-	m_Orientation = Orientation;
 }
 
 inline void Slot::SetPosition(const Vector3f & Position)

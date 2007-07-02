@@ -342,12 +342,10 @@ static void ReadShipClass(ShipClassManager * ShipClassManager, Arxx::Reference &
 		
 		std::string SlotType;
 		Vector3f SlotPosition;
-		Quaternion SlotOrientation;
 		
-		Reader >> SlotType >> SlotPosition >> SlotOrientation;
+		Reader >> SlotType >> SlotPosition;
 		NewSlot->SetType(SlotType);
 		NewSlot->SetPosition(SlotPosition);
-		NewSlot->SetOrientation(SlotOrientation);
 	}
 }
 
@@ -518,9 +516,8 @@ static void ReadWeaponClass(WeaponClassManager * WeaponClassManager, Arxx::Refer
 	float ParticleLifeTime;
 	std::string ParticleModelIdentifier;
 	Color ParticleColor;
-	Quaternion Orientation;
 	
-	Reader >> SlotType >> ReloadTime >> ParticleExitSpeed >> ParticleDamage >> ParticleLifeTime >> ParticleModelIdentifier >> ParticleColor >> Orientation;
+	Reader >> SlotType >> ReloadTime >> ParticleExitSpeed >> ParticleDamage >> ParticleLifeTime >> ParticleModelIdentifier >> ParticleColor;
 	NewWeaponClass->SetSlotType(SlotType);
 	NewWeaponClass->SetReloadTime(ReloadTime);
 	NewWeaponClass->SetParticleExitSpeed(ParticleExitSpeed);
@@ -535,7 +532,6 @@ static void ReadWeaponClass(WeaponClassManager * WeaponClassManager, Arxx::Refer
 	}
 	NewWeaponClass->SetParticleModel(ParticleModel);
 	NewWeaponClass->SetParticleColor(ParticleColor);
-	NewWeaponClass->SetOrientation(Orientation);
 }
 
 static void ReadWidget(UserInterface * UserInterface, Arxx::Reference & Reference)
