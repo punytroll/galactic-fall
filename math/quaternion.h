@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 1.1.2 of algebra.
+ * This is part of version 1.1.5 of algebra.
  **/
 
 #ifndef ALGEBRA_QUATERNION_H
@@ -82,6 +82,15 @@ public:
 	{
 		m_V.m_A[0] = 1.0f;
 		m_V.m_A[1] = m_V.m_A[2] = m_V.m_A[3] = 0.0f;
+	}
+	
+	Quaternion & Conjugate(void)
+	{
+		m_V.m_A[1] = -m_V.m_A[1];
+		m_V.m_A[2] = -m_V.m_A[2];
+		m_V.m_A[3] = -m_V.m_A[3];
+		
+		return *this;
 	}
 	
 	Quaternion Conjugated(void) const
@@ -167,10 +176,10 @@ public:
 		//     pz qw - py qx + px qy + pw qz
 		// ]
 		return Quaternion(
-			Other.m_V.m_A[0] * m_V.m_A[0] - Other.m_V.m_A[1] * m_V.m_A[1] - Other.m_V.m_A[2] * m_V.m_A[2] - Other.m_V.m_A[3] * m_V.m_A[3],
-			Other.m_V.m_A[1] * m_V.m_A[0] + Other.m_V.m_A[0] * m_V.m_A[1] - Other.m_V.m_A[3] * m_V.m_A[2] + Other.m_V.m_A[2] * m_V.m_A[3],
-			Other.m_V.m_A[2] * m_V.m_A[0] + Other.m_V.m_A[3] * m_V.m_A[1] + Other.m_V.m_A[0] * m_V.m_A[2] - Other.m_V.m_A[1] * m_V.m_A[3],
-			Other.m_V.m_A[3] * m_V.m_A[0] - Other.m_V.m_A[2] * m_V.m_A[1] + Other.m_V.m_A[1] * m_V.m_A[2] + Other.m_V.m_A[0] * m_V.m_A[3]
+			m_V.m_A[0] * Other.m_V.m_A[0] - m_V.m_A[1] * Other.m_V.m_A[1] - m_V.m_A[2] * Other.m_V.m_A[2] - m_V.m_A[3] * Other.m_V.m_A[3],
+			m_V.m_A[1] * Other.m_V.m_A[0] + m_V.m_A[0] * Other.m_V.m_A[1] - m_V.m_A[3] * Other.m_V.m_A[2] + m_V.m_A[2] * Other.m_V.m_A[3],
+			m_V.m_A[2] * Other.m_V.m_A[0] + m_V.m_A[3] * Other.m_V.m_A[1] + m_V.m_A[0] * Other.m_V.m_A[2] - m_V.m_A[1] * Other.m_V.m_A[3],
+			m_V.m_A[3] * Other.m_V.m_A[0] - m_V.m_A[2] * Other.m_V.m_A[1] + m_V.m_A[1] * Other.m_V.m_A[2] + m_V.m_A[0] * Other.m_V.m_A[3]
 		);
 	}
 	
