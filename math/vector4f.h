@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 1.1.2 of algebra.
+ * This is part of version 1.1.5 of algebra.
  **/
 
 #ifndef ALGEBRA_VECTOR4F_H
@@ -176,9 +176,7 @@ public:
 	
 	Vector4f & operator*=(const Quaternion & AQuaternion)
 	{
-		Quaternion Conjugate(AQuaternion.Conjugated());
-		Quaternion Vector(m_V.m_A[3], m_V.m_A[0], m_V.m_A[1], m_V.m_A[2]);
-		Quaternion Result(AQuaternion * Vector * Conjugate);
+		Quaternion Result(AQuaternion * Quaternion(m_V.m_A[3], m_V.m_A[0], m_V.m_A[1], m_V.m_A[2]) * AQuaternion.Conjugated());
 		
 		m_V.m_A[0] = Result.m_V.m_A[1];
 		m_V.m_A[1] = Result.m_V.m_A[2];
