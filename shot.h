@@ -33,9 +33,11 @@ public:
 	virtual ~Shot(void);
 	virtual void Draw(void) const;
 	bool Update(float Seconds);
+	// getters
+	float GetAngularPosition(void) const;
+	float GetDamage(void) const;
 	const PhysicalObject * GetShooter(void) const;
 	const Vector2f & GetVelocity(void) const;
-	float GetDamage(void) const;
 	// setters
 	void SetAngularPosition(float AngularPosition);
 	void SetShooter(PhysicalObject * Shooter);
@@ -49,6 +51,16 @@ private:
 	float m_Damage;
 };
 
+inline float Shot::GetAngularPosition(void) const
+{
+	return m_AngularPosition;
+}
+
+inline float Shot::GetDamage(void) const
+{
+	return m_Damage;
+}
+
 inline const PhysicalObject * Shot::GetShooter(void) const
 {
 	return m_Shooter;
@@ -57,11 +69,6 @@ inline const PhysicalObject * Shot::GetShooter(void) const
 inline const Vector2f & Shot::GetVelocity(void) const
 {
 	return m_Velocity;
-}
-
-inline float Shot::GetDamage(void) const
-{
-	return m_Damage;
 }
 
 inline void Shot::SetAngularPosition(float AngularPosition)
