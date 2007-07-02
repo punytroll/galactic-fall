@@ -22,8 +22,6 @@
 
 #include <string>
 
-#include "math/quaternion.h"
-
 class Color;
 class Model;
 
@@ -36,7 +34,6 @@ public:
 	~WeaponClass(void);
 	// getters
 	const std::string & GetIdentifier(void) const;
-	const Quaternion & GetOrientation(void) const;
 	float GetReloadTime(void) const;
 	float GetParticleExitSpeed(void) const;
 	float GetParticleDamage(void) const;
@@ -46,7 +43,6 @@ public:
 	const std::string & GetSlotType(void) const;
 	// modifiers
 	void SetReloadTime(float ReloadTime);
-	void SetOrientation(const Quaternion & Orientation);
 	void SetParticleExitSpeed(float ParticleExitSpeed);
 	void SetParticleDamage(float ParticleDamage);
 	void SetParticleLifeTime(float ParticleLifeTime);
@@ -62,17 +58,11 @@ private:
 	float m_ParticleLifeTime;
 	const Model * m_ParticleModel;
 	Color * m_ParticleColor;
-	Quaternion m_Orientation;
 };
 
 inline const std::string & WeaponClass::GetIdentifier(void) const
 {
 	return m_Identifier;
-}
-
-inline const Quaternion & WeaponClass::GetOrientation(void) const
-{
-	return m_Orientation;
 }
 
 inline float WeaponClass::GetReloadTime(void) const
@@ -108,11 +98,6 @@ inline const Color * WeaponClass::GetParticleColor(void) const
 inline const std::string & WeaponClass::GetSlotType(void) const
 {
 	return m_SlotType;
-}
-
-inline void WeaponClass::SetOrientation(const Quaternion & Orientation)
-{
-	m_Orientation = Orientation;
 }
 
 inline void WeaponClass::SetReloadTime(float ReloadTime)
