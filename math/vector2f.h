@@ -1,6 +1,6 @@
 /**
  * algebra
- * Copyright (C) 2007  Hagen Möbius
+ * Copyright (C) 2007  Hagen MÃ¶bius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 1.1.0 of algebra.
+ * This is part of version 1.1.2 of algebra.
  **/
 
 #ifndef ALGEBRA_VECTOR2F_H
