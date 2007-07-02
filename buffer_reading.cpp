@@ -32,6 +32,19 @@ Arxx::BufferReader & operator>>(Arxx::BufferReader & BufferReader, Color & Color
 	return BufferReader;
 }
 
+Arxx::BufferReader & operator>>(Arxx::BufferReader & BufferReader, Quaternion & Quaternion)
+{
+	float W;
+	float X;
+	float Y;
+	float Z;
+	
+	BufferReader >> W >> X >> Y >> Z;
+	Quaternion.Set(W, X, Y, Z);
+	
+	return BufferReader;
+}
+
 Arxx::BufferReader & operator>>(Arxx::BufferReader & BufferReader, Vector2f & Vector)
 {
 	float x;
