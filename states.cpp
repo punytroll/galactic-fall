@@ -54,7 +54,14 @@ void SelectSteering::Execute(void)
 	}
 	else
 	{
-		GetMind()->GetStateMachine()->SetState(new Fight(GetMind()));
+		if(GetRandomBoolean() == true)
+		{
+			GetMind()->GetStateMachine()->SetState(new Fight(GetMind()));
+		}
+		else
+		{
+			GetMind()->GetStateMachine()->SetState(new ShootFarthestCargo(GetMind()));
+		}
 	}
 	delete this;
 }
@@ -446,6 +453,9 @@ void TransporterPhase4::Exit(void)
 {
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// Fight: Selects a random fighter and attacks it.                                               //
+///////////////////////////////////////////////////////////////////////////////////////////////////
 Fight::Fight(StateMachineMind * Mind) :
 	State(Mind)
 {
@@ -516,12 +526,100 @@ void Fight::Execute(void)
 	}
 	else
 	{
-		GetMind()->GetStateMachine()->SetState(new Fight(GetMind()));
+		GetMind()->GetStateMachine()->SetState(new SelectSteering(GetMind()));
 		delete this;
 	}
 }
 
 void Fight::Exit(void)
+{
+	GetMind()->GetCharacter()->GetShip()->SetFire(false);
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// ShootFarthestCargo: Selects the cargo that is most remote from the system center.             //
+//                     Attacks it.                                                               //
+///////////////////////////////////////////////////////////////////////////////////////////////////
+ShootFarthestCargo::ShootFarthestCargo(StateMachineMind * Mind) :
+	State(Mind)
+{
+	SetObjectIdentifier("::shoot_farthest_cargo::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
+}
+
+void ShootFarthestCargo::Enter(void)
+{
+	const std::list< Cargo * > & Cargos(GetMind()->GetCharacter()->GetShip()->GetCurrentSystem()->GetCargos());
+	float MaximumDistance(FLT_MIN);
+	Cargo * FarthestCargo(0);
+	
+	for(std::list< Cargo * >::const_iterator CargoIterator = Cargos.begin(); CargoIterator != Cargos.end(); ++CargoIterator)
+	{
+		float Distance((*CargoIterator)->GetPosition().SquaredLength());
+		
+		if(Distance > MaximumDistance)
+		{
+			FarthestCargo = *CargoIterator;
+			MaximumDistance = Distance;
+		}
+	}
+	if(FarthestCargo != 0)
+	{
+		GetMind()->GetCharacter()->GetShip()->SetTarget(FarthestCargo->GetReference());
+	}
+	else
+	{
+		GetMind()->GetStateMachine()->SetState(new SelectSteering(GetMind()));
+		delete this;
+	}
+}
+
+void ShootFarthestCargo::Execute(void)
+{
+	if(GetMind()->GetCharacter()->GetShip()->GetTarget() == true)
+	{
+		Vector2f ToDestination(GetMind()->GetCharacter()->GetShip()->GetTarget()->GetPosition() - GetMind()->GetCharacter()->GetShip()->GetPosition());
+		float Length(ToDestination.Length());
+		// TODO: shot speed
+		float SecondsForShot(Length / 30.0f);
+		
+		ToDestination -= GetMind()->GetCharacter()->GetShip()->GetVelocity() * SecondsForShot;
+		Length = ToDestination.Length();
+		ToDestination /= Length;
+		
+		float HeadingOffDestination(GetShortestRadians(GetMind()->GetCharacter()->GetShip()->GetAngularPosition(), GetRadians(ToDestination)));
+		
+		GetMind()->GetCharacter()->GetShip()->SetFire(false);
+		if(HeadingOffDestination > 0.1)
+		{
+			GetMind()->GetCharacter()->GetShip()->SetTurnRight(1.0f);
+			GetMind()->GetCharacter()->GetShip()->SetTurnLeft(0.0f);
+			GetMind()->GetCharacter()->GetShip()->m_Accelerate = false;
+		}
+		else if(HeadingOffDestination < -0.1)
+		{
+			GetMind()->GetCharacter()->GetShip()->SetTurnRight(0.0f);
+			GetMind()->GetCharacter()->GetShip()->SetTurnLeft(1.0f);
+			GetMind()->GetCharacter()->GetShip()->m_Accelerate = false;
+		}
+		else
+		{
+			GetMind()->GetCharacter()->GetShip()->SetTurnRight(0.0f);
+			GetMind()->GetCharacter()->GetShip()->SetTurnLeft(0.0f);
+			GetMind()->GetCharacter()->GetShip()->m_Accelerate = ((GetMind()->GetCharacter()->GetShip()->GetVelocity() - Vector2f(GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetMaximumSpeed(), GetMind()->GetCharacter()->GetShip()->GetAngularPosition(), Vector2f::InitializeMagnitudeAngle)).SquaredLength() > 0.1f);
+			if(Length < 150.0f)
+			{
+				GetMind()->GetCharacter()->GetShip()->SetFire(true);
+			}
+		}
+	}
+	else
+	{
+		GetMind()->GetStateMachine()->SetState(new SelectSteering(GetMind()));
+		delete this;
+	}
+}
+
+void ShootFarthestCargo::Exit(void)
 {
 	GetMind()->GetCharacter()->GetShip()->SetFire(false);
 }
