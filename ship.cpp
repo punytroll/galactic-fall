@@ -67,6 +67,7 @@ Ship::Ship(ShipClass * ShipClass) :
 		
 		NewSlot->SetType(SlotIterator->second->GetType());
 		NewSlot->SetPosition(SlotIterator->second->GetPosition());
+		NewSlot->SetOrientation(SlotIterator->second->GetOrientation());
 	}
 }
 

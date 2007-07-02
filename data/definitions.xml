@@ -1,10 +1,18 @@
 <definitions>
+	
 	<color4f>
 		<float identifier="red"/>
 		<float identifier="green"/>
 		<float identifier="blue"/>
 		<float identifier="alpha"/>
 	</color4f>
+	
+	<quaternion>
+		<float identifier="w"/>
+		<float identifier="x"/>
+		<float identifier="y"/>
+		<float identifier="z"/>
+	</quaternion>
 	
 	<vector2f>
 		<float identifier="x"/>
@@ -101,6 +109,7 @@
 		<string identifier="identifier"/>
 		<string identifier="type"/>
 		<vector3f identifier="position"/>
+		<quaternion identifier="orientation"/>
 	</slot>
 	
 	<star>
@@ -139,6 +148,7 @@
 		<string identifier="slot-type"/>
 		<float identifier="reload-time"/>
 		<particle identifier="particle"/>
+		<quaternion identifier="orientation"/>
 	</weapon-class>
 	
 	<particle>

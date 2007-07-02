@@ -30,6 +30,12 @@
 				<y>0</y>
 				<z>0</z>
 			</position>
+			<orientation>
+				<w>0.7071</w>
+				<x>0.7071</x>
+				<y>0</y>
+				<z>0</z>
+			</orientation>
 		</slot>
 	</slots>
 </ship-class>

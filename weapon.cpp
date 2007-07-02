@@ -20,6 +20,9 @@
 #include <sstream>
 
 #include "game_time.h"
+#include "math.h"
+#include "math/quaternion.h"
+#include "math/vector4f.h"
 #include "ship.h"
 #include "shot.h"
 #include "slot.h"
@@ -53,8 +56,13 @@ void Weapon::Update(float Seconds)
 		const Vector3f & SlotPosition(GetSlot()->GetPosition());
 		
 		NewShot->SetPosition(GetShip()->GetPosition() + Vector2f(SlotPosition.m_V.m_A[0], SlotPosition.m_V.m_A[1]).Turned(GetShip()->GetAngularPosition()));
-		NewShot->SetAngularPosition(GetShip()->GetAngularPosition());
-		NewShot->SetVelocity(GetShip()->GetVelocity() + Vector2f(GetWeaponClass()->GetParticleExitSpeed(), GetShip()->GetAngularPosition(), Vector2f::InitializeMagnitudeAngle));
+		
+		Vector4f Direction(1.0f, 0.0f, 0.0f, 0.0f);
+		
+		Direction *= GetSlot()->GetOrientation();
+		Direction *= m_WeaponClass->GetOrientation();
+		NewShot->SetAngularPosition(GetShip()->GetAngularPosition() + GetRadians(Vector2f(Direction[0], Direction[1])));
+		NewShot->SetVelocity(GetShip()->GetVelocity() + Vector2f(GetWeaponClass()->GetParticleExitSpeed(), NewShot->GetAngularPosition(), Vector2f::InitializeMagnitudeAngle));
 		GetShip()->GetCurrentSystem()->AddContent(NewShot);
 		m_NextTimeToFire = GameTime::Get() + GetWeaponClass()->GetReloadTime();
 	}
