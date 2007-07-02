@@ -1,6 +1,6 @@
 /**
  * algebra
- * Copyright (C) 2007  Hagen Möbius
+ * Copyright (C) 2007  Hagen MÃ¶bius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 1.1.0 of algebra.
+ * This is part of version 1.1.2 of algebra.
  **/
 
 #ifndef ALGEBRA_QUATERNION_H
@@ -194,6 +194,24 @@ public:
 		m_V.m_A[3] = Z;
 		
 		return *this;
+	}
+	
+	void Set(float W, float X, float Y, float Z)
+	{
+		m_V.m_A[0] = W;
+		m_V.m_A[1] = X;
+		m_V.m_A[2] = Y;
+		m_V.m_A[3] = Z;
+	}
+	
+	float operator[](int Index) const
+	{
+		return m_V.m_A[Index];
+	}
+	
+	float & operator[](int Index)
+	{
+		return m_V.m_A[Index];
 	}
 };
 
