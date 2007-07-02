@@ -12,6 +12,7 @@ border_h = \
 buffer_reading_h = \
 	buffer_reading.h \
 	$(color_h) \
+	$(math_quaternion_h) \
 	$(math_vector2f_h) \
 	$(math_vector3f_h)
 
