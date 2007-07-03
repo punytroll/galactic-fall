@@ -60,7 +60,7 @@ public:
 	bool GetAnchorLeft(void) const;
 	bool GetAnchorRight(void) const;
 	bool GetAnchorTop(void) const;
-	const Color & GetBackgroundColor(void) const;
+	const Color * GetBackgroundColor(void) const;
 	const Vector2f & GetPosition(void) const;
 	Vector2f GetGlobalPosition(void) const;
 	const Vector2f & GetSize(void) const;
@@ -71,6 +71,7 @@ public:
 	const Widget * GetSupWidget(void) const;
 	Widget * GetSubWidget(const std::string & Name);
 	const Widget * GetSubWidget(const std::string & Name) const;
+	const std::list< Widget * > & GetSubWidgets(void) const;
 	Widget * GetKeyFocus(void);
 	bool IsVisible(void) const;
 	// setters
@@ -146,9 +147,9 @@ inline bool Widget::GetAnchorTop(void) const
 	return m_AnchorTop;
 }
 
-inline const Color & Widget::GetBackgroundColor(void) const
+inline const Color * Widget::GetBackgroundColor(void) const
 {
-	return *m_BackgroundColor;
+	return m_BackgroundColor;
 }
 
 inline const Vector2f & Widget::GetPosition(void) const
@@ -229,6 +230,11 @@ inline const Widget * Widget::GetSubWidget(const std::string & Name) const
 	}
 	
 	return 0;
+}
+
+inline const std::list< Widget * > & Widget::GetSubWidgets(void) const
+{
+	return m_SubWidgets;
 }
 
 inline Widget * Widget::GetKeyFocus(void)
