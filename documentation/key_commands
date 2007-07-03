@@ -9,8 +9,8 @@ On key down:
 	Quits the application immediately.
 
 22 (BACKSPACE)
-	Will delete the ship that belongs to the input mind.
-	Acts upon InputMind.Character.Ship.
+	Will delete the ship that belongs to the input mind. If no input mind is selected the ship that belongs to the output mind will be deleted.
+	Acts upon InputMind.Character.Ship or OutputMind.Character.Ship.
 
 24 (Q)
 	Quits the application immediately.

@@ -983,6 +983,10 @@ void KeyDown(unsigned int KeyCode)
 			{
 				DeleteObject(g_InputMind->GetCharacter()->GetShip());
 			}
+			else if(g_OutputMind == true)
+			{
+				DeleteObject(g_OutputMind->GetCharacter()->GetShip());
+			}
 			
 			break;
 		}
