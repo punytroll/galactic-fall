@@ -454,7 +454,7 @@ void TransporterPhase4::Exit(void)
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-// Fight: Selects a random fighter and attacks it.                                               //
+// Fight: Selects a random fighter or drifting transporter and attacks it.                       //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 Fight::Fight(StateMachineMind * Mind) :
 	State(Mind)
@@ -465,18 +465,18 @@ Fight::Fight(StateMachineMind * Mind) :
 void Fight::Enter(void)
 {
 	const std::list< Ship * > & Ships(GetMind()->GetCharacter()->GetShip()->GetCurrentSystem()->GetShips());
-	std::vector< Ship * > Fighters;
+	std::vector< Ship * > AttackPossibilities;
 	
 	for(std::list< Ship * >::const_iterator ShipIterator = Ships.begin(); ShipIterator != Ships.end(); ++ShipIterator)
 	{
-		if(((*ShipIterator)->GetShipClass()->GetIdentifier() == "fighter") && (*ShipIterator != GetMind()->GetCharacter()->GetShip()))
+		if((*ShipIterator != GetMind()->GetCharacter()->GetShip()) && (((*ShipIterator)->GetShipClass()->GetIdentifier() == "fighter") || (((*ShipIterator)->GetShipClass()->GetIdentifier() == "transporter") && ((*ShipIterator)->GetFuel() < 0.0001))))
 		{
-			Fighters.push_back(*ShipIterator);
+			AttackPossibilities.push_back(*ShipIterator);
 		}
 	}
-	if(Fighters.size() > 0)
+	if(AttackPossibilities.size() > 0)
 	{
-		GetMind()->GetCharacter()->GetShip()->SetTarget(Fighters[GetRandomInteger(Fighters.size() - 1)]->GetReference());
+		GetMind()->GetCharacter()->GetShip()->SetTarget(AttackPossibilities[GetRandomInteger(AttackPossibilities.size() - 1)]->GetReference());
 	}
 	else
 	{
@@ -518,7 +518,7 @@ void Fight::Execute(void)
 			GetMind()->GetCharacter()->GetShip()->SetTurnRight(0.0f);
 			GetMind()->GetCharacter()->GetShip()->SetTurnLeft(0.0f);
 			GetMind()->GetCharacter()->GetShip()->m_Accelerate = ((GetMind()->GetCharacter()->GetShip()->GetVelocity() - Vector2f(GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetMaximumSpeed(), GetMind()->GetCharacter()->GetShip()->GetAngularPosition(), Vector2f::InitializeMagnitudeAngle)).SquaredLength() > 0.1f);
-			if(Length < 150.0f)
+			if(Length < 50.0f)
 			{
 				GetMind()->GetCharacter()->GetShip()->SetFire(true);
 			}
@@ -606,7 +606,7 @@ void ShootFarthestCargo::Execute(void)
 			GetMind()->GetCharacter()->GetShip()->SetTurnRight(0.0f);
 			GetMind()->GetCharacter()->GetShip()->SetTurnLeft(0.0f);
 			GetMind()->GetCharacter()->GetShip()->m_Accelerate = ((GetMind()->GetCharacter()->GetShip()->GetVelocity() - Vector2f(GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetMaximumSpeed(), GetMind()->GetCharacter()->GetShip()->GetAngularPosition(), Vector2f::InitializeMagnitudeAngle)).SquaredLength() > 0.1f);
-			if(Length < 150.0f)
+			if(Length < 50.0f)
 			{
 				GetMind()->GetCharacter()->GetShip()->SetFire(true);
 			}
@@ -793,6 +793,8 @@ void RefuelPhase2::Execute(void)
 		{
 			// TODO: this line ensures that ships keep drifting in space if they have no chance of refueling
 			GetMind()->GetCharacter()->GetShip()->m_Accelerate = false;
+			// to ensure they are attacked by fighters
+			GetMind()->GetCharacter()->GetShip()->SetFuel(0.0);
 			// self destruct in dispair.
 		}
 	}
