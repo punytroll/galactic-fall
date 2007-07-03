@@ -543,7 +543,7 @@ void UpdateUserInterface(void)
 		g_FuelLabel->Show();
 		g_HullLabel->Show();
 		g_CreditsLabel->Show();
-		g_MiniMapDisplay->Show();
+		g_MiniMap->Show();
 		g_Scanner->Show();
 		// display the name of the target
 		if(g_OutputMind->GetCharacter()->GetShip()->GetTarget() == true)
