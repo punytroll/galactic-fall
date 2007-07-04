@@ -434,45 +434,17 @@ void Widget::RemoveDestroyListener(DestroyListener * DestroyListenerToRemove)
 
 void Widget::PushClippingRectangle(const Vector2f & Position, const Vector2f & Size)
 {
-	float Left(0.0f);
-	float Top(0.0f);
-	float Width(Size[0]);
-	float Height(Size[1]);
+	Vector2f LeftTop(true);
+	Vector2f RightBottom(Size);
 	
 	if(m_ClippingRectangles.empty() == false)
 	{
-		if(Position[0] >= m_ClippingRectangles.top().second[0])
-		{
-			Width = 0.0f;
-		}
-		else
-		{
-			if(Position[0] + Size[0] >= m_ClippingRectangles.top().second[0])
-			{
-				Width = m_ClippingRectangles.top().second[0] - Position[0];
-			}
-		}
-		if(Position[1] >= m_ClippingRectangles.top().second[1])
-		{
-			Height = 0.0f;
-		}
-		else
-		{
-			if(Position[1] + Size[1] >= m_ClippingRectangles.top().second[1])
-			{
-				Height = m_ClippingRectangles.top().second[1] - Position[1];
-			}
-		}
+		LeftTop[0] = std::max(0.0f, m_ClippingRectangles.top().first[0] - Position[0]);
+		LeftTop[1] = std::max(0.0f, m_ClippingRectangles.top().first[1] - Position[1]);
+		RightBottom[0] = std::min(RightBottom[0], m_ClippingRectangles.top().second[0] - Position[0]);
+		RightBottom[1] = std::min(RightBottom[1], m_ClippingRectangles.top().second[1] - Position[1]);
 	}
-	if(Position[0] < 0.0f)
-	{
-		Left = -Position[0];
-	}
-	if(Position[1] < 0.0f)
-	{
-		Top = -Position[1];
-	}
-	m_ClippingRectangles.push(std::make_pair(Vector2f(Left, Top), Vector2f(Width, Height)));
+	m_ClippingRectangles.push(std::make_pair(LeftTop, RightBottom));
 }
 
 void Widget::PopClippingRectangle(void)
