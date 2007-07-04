@@ -49,16 +49,16 @@ TradeCenterCommodity::TradeCenterCommodity(Widget * SupWidget, PlanetCommodity *
 	Label * CommodityNameLabel(new Label(this, PlanetCommodity->GetCommodity()->GetName()));
 	
 	CommodityNameLabel->SetPosition(Vector2f(10.0f, 0.0f));
-	CommodityNameLabel->SetSize(Vector2f(340.0f, 20.0f));
+	CommodityNameLabel->SetSize(Vector2f(310.0f, 20.0f));
 	CommodityNameLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
 	m_CharacterAmountLabel = new Label(this, "");
-	m_CharacterAmountLabel->SetPosition(Vector2f(360.0f, 0.0f));
+	m_CharacterAmountLabel->SetPosition(Vector2f(330.0f, 0.0f));
 	m_CharacterAmountLabel->SetSize(Vector2f(50.0f, 20.0f));
 	m_CharacterAmountLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
 	
 	Label * CommodityPriceLabel(new Label(this, to_string_cast(PlanetCommodity->GetPrice())));
 	
-	CommodityPriceLabel->SetPosition(Vector2f(420.0f, 0.0f));
+	CommodityPriceLabel->SetPosition(Vector2f(390.0f, 0.0f));
 	CommodityPriceLabel->SetSize(Vector2f(50.0f, 20.0f));
 	CommodityPriceLabel->SetHorizontalAlignment(Label::ALIGN_RIGHT);
 	CommodityPriceLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
@@ -111,27 +111,43 @@ TradeCenterDialog::TradeCenterDialog(Widget * SupWidget, Planet * Planet, Charac
 	m_SellButtonLabel->SetSize(m_SellButton->GetSize());
 	m_SellButtonLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
 	m_SellButtonLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
+	m_CommodityList = new Widget(this);
+	m_CommodityList->SetPosition(Vector2f(10.0f, 40.0f));
+	m_CommodityList->SetSize(Vector2f(480.0f, 150.0f));
+	m_CommodityList->SetBackgroundColor(Color(0.23f, 0.23f, 0.23f, 1.0f));
+	m_CommodityListItems = new Widget(m_CommodityList);
+	m_CommodityListItems->SetPosition(Vector2f(0.0f, 0.0f));
+	m_CommodityListItems->SetBackgroundColor(Color(0.15f, 0.15f, 0.15f, 1.0f));
 	
 	const std::vector< PlanetCommodity * > & PlanetCommodities(Planet->GetCommodities());
 	std::vector< PlanetCommodity * >::const_iterator PlanetCommodityIterator(PlanetCommodities.begin());
-	float Top(40.0f);
+	float Top(5.0f);
 	
 	while(PlanetCommodityIterator != PlanetCommodities.end())
 	{
-		TradeCenterCommodity * NewTradeCenterCommodity(new TradeCenterCommodity(this, *PlanetCommodityIterator, m_Character->GetShip()));
+		TradeCenterCommodity * NewTradeCenterCommodity(new TradeCenterCommodity(m_CommodityListItems, *PlanetCommodityIterator, m_Character->GetShip()));
 		
-		NewTradeCenterCommodity->SetPosition(Vector2f(10.0f, Top));
-		NewTradeCenterCommodity->SetSize(Vector2f(480.0f, 20.0f));
+		NewTradeCenterCommodity->SetPosition(Vector2f(5.0f, Top));
+		NewTradeCenterCommodity->SetSize(Vector2f(450.0f, 20.0f));
 		NewTradeCenterCommodity->AddMouseButtonListener(this);
 		NewTradeCenterCommodity->AddMouseMotionListener(this);
-		Top += 20.0f;
+		Top += 25.0f;
 		++PlanetCommodityIterator;
 	}
+	m_CommodityListItems->SetSize(Vector2f(460.0f, Top));
+	m_UpButton = new Button(this);
+	m_UpButton->SetPosition(Vector2f(470.0f, 40.0f));
+	m_UpButton->SetSize(Vector2f(20.0f, 20.0f));
+	m_UpButton->AddClickedListener(this);
+	m_DownButton = new Button(this);
+	m_DownButton->SetPosition(Vector2f(470.0f, 170.0f));
+	m_DownButton->SetSize(Vector2f(20.0f, 20.0f));
+	m_DownButton->AddClickedListener(this);
 	m_TraderCreditsLabel = new Label(this, "");
-	m_TraderCreditsLabel->SetPosition(Vector2f(10.0f, Top + 20.0f));
+	m_TraderCreditsLabel->SetPosition(Vector2f(10.0f, 240.0f));
 	m_TraderCreditsLabel->SetSize(Vector2f(200.0f, 20.0f));
 	m_TraderFreeCargoHoldSizeLabel = new Label(this, "");
-	m_TraderFreeCargoHoldSizeLabel->SetPosition(Vector2f(10.0f, Top + 40.0f));
+	m_TraderFreeCargoHoldSizeLabel->SetPosition(Vector2f(10.0f, 260.0f));
 	m_TraderFreeCargoHoldSizeLabel->SetSize(Vector2f(200.0f, 20.0f));
 	UpdateTraderCredits();
 	UpdateTraderFreeCargoHoldSize();
@@ -214,6 +230,27 @@ bool TradeCenterDialog::OnClicked(Widget * EventSource)
 		{
 			Sell(m_SelectedTradeCenterCommodity->GetPlanetCommodity());
 			m_SelectedTradeCenterCommodity->UpdateCharacterAmount();
+		}
+	}
+	else if(EventSource == m_UpButton)
+	{
+		Vector2f Position(m_CommodityListItems->GetPosition());
+		
+		if(Position[1] < 0.0f)
+		{
+			Position[1] = std::min(0.0f, Position[1] + 10.0f);
+			m_CommodityListItems->SetPosition(Position);
+		}
+	}
+	else if(EventSource == m_DownButton)
+	{
+		Vector2f Position(m_CommodityListItems->GetPosition());
+		const Vector2f & Size(m_CommodityListItems->GetSize());
+		
+		if(Position[1] + Size[1] > m_CommodityList->GetSize()[1])
+		{
+			Position[1] -= std::min(10.f, Position[1] + Size[1] - m_CommodityList->GetSize()[1]);
+			m_CommodityListItems->SetPosition(Position);
 		}
 	}
 	
