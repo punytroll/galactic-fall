@@ -55,6 +55,10 @@ private:
 	Label * m_BuyButtonLabel;
 	Button * m_SellButton;
 	Label * m_SellButtonLabel;
+	Widget * m_CommodityList;
+	Widget * m_CommodityListItems;
+	Button * m_DownButton;
+	Button * m_UpButton;
 	Label * m_TraderCreditsLabel;
 	Label * m_TraderFreeCargoHoldSizeLabel;
 	TradeCenterCommodity * m_SelectedTradeCenterCommodity;
