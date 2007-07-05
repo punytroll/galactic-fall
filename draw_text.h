@@ -22,7 +22,8 @@
 
 #include <string>
 
+void InitializeFonts(void);
+void DeinitializeFonts(void);
 void DrawText(const std::string & String);
-void DrawTextWithoutTranslation(const std::string & String);
 
 #endif

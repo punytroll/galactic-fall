@@ -151,9 +151,12 @@ void StarMapDisplay::Draw(void) const
 		glVertex2f(SystemSize * 0.5f, -SystemSize * 0.866f);
 		glVertex2f(SystemSize * 0.866f, -SystemSize * 0.5f);
 		glEnd();
+		glPushMatrix();
+		glScalef(1.0f, -1.0f, 1.0f);
+		glTranslatef(0.0f, 12.0f, 0.0f);
 		glColor3f(1.0f, 1.0f, 1.0f);
-		glTranslatef(0.0f, -12.0f - SystemSize * 2.0f, 0.0f);
-		DrawTextWithoutTranslation((*ExploredSystemIterator)->GetName());
+		DrawText((*ExploredSystemIterator)->GetName());
+		glPopMatrix();
 		glPopMatrix();
 	}
 	glPopMatrix();

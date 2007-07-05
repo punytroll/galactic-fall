@@ -123,22 +123,80 @@ const GLubyte g_Letters[][12] =
 	{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x10, 0xA8, 0x40, 0x00, 0x00, 0x00, 0x00 }  // 94 => '~'
 };
 
-void DrawText(const std::string & String)
+GLuint g_FontTexture;
+
+void InitializeFonts(void)
 {
+	glViewport(0, 0, 128, 64);
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+	glLoadIdentity();
+	glOrtho(0.0, 128.0, 0.0, 64.0, -1, 1);
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+	glLoadIdentity();
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	glRasterPos2f(0.0f, 12.0f);
-	for(std::string::size_type I = 0; I < String.length(); ++I)
+	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+	for(unsigned int CharacterIndex = 0; CharacterIndex < CHARACTERS; ++CharacterIndex)
 	{
-		glBitmap(6, 12, 0, 0, 6, 0, g_Letters[String[I] - CHARACTEROFFSET]);
+		glRasterPos2i((CharacterIndex % (128 / 6)) * 6, 64 - (CharacterIndex / (128 / 6) + 1) * 12);
+		glBitmap(6, 12, 0, 0, 0, 0, g_Letters[CharacterIndex]);
 	}
+	
+	GLubyte * FontTextureData(new GLubyte[128 * 64 * 4]);
+	
+	glReadPixels(0, 0, 128, 64, GL_RGBA, GL_UNSIGNED_BYTE, FontTextureData);
+	for(unsigned int Row = 0; Row < 64; ++Row)
+	{
+		for(unsigned int Column = 0; Column < 128; ++Column)
+		{
+			if((FontTextureData[(Row * 128 + Column) * 4 + 0] == 0x00) && (FontTextureData[(Row * 128 + Column) * 4 + 1] == 0x00) && (FontTextureData[(Row * 128 + Column) * 4 + 2] == 0x00))
+			{
+				FontTextureData[(Row * 128 + Column) * 4 + 3] = 0x00;
+			}
+		}
+	}
+	glGenTextures(1, &g_FontTexture);
+	glBindTexture(GL_TEXTURE_2D, g_FontTexture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 128, 64, 0, GL_RGBA, GL_UNSIGNED_BYTE, FontTextureData);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	delete FontTextureData;
+	glPopMatrix();
+	glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
 }
 
-void DrawTextWithoutTranslation(const std::string & String)
+void DeinitializeFonts(void)
 {
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-	glRasterPos2f(0.0f, 0.0f);
-	for(std::string::size_type I = 0; I < String.length(); ++I)
+	glDeleteTextures(1, &g_FontTexture);
+}
+
+void DrawText(const std::string & String)
+{
+	const float CharacterWidth(6.0f / 128.0f);
+	const float CharacterHeight(12.0f / 64.0f);
+	const unsigned int CharactersPerLine(128 / 6);
+	
+	glPushAttrib(GL_ENABLE_BIT);
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, g_FontTexture);
+	glBegin(GL_QUADS);
+	for(std::string::size_type StringIndex = 0; StringIndex < String.length(); ++StringIndex)
 	{
-		glBitmap(6, 12, 0, 0, 6, 0, g_Letters[String[I] - CHARACTEROFFSET]);
+		unsigned int CharacterIndex(String[StringIndex] - CHARACTEROFFSET);
+		
+		glTexCoord2f((CharacterIndex % CharactersPerLine) * CharacterWidth, 1.0f - (CharacterHeight * static_cast< unsigned int >(CharacterIndex / CharactersPerLine + 1)));
+		glVertex2f(6.0f * StringIndex, 12.0f);
+		glTexCoord2f((CharacterIndex % CharactersPerLine + 1) * CharacterWidth, 1.0f - (CharacterHeight * static_cast< unsigned int >(CharacterIndex / CharactersPerLine + 1)));
+		glVertex2f(6.0f * StringIndex + 6.0f, 12.0f);
+		glTexCoord2f((CharacterIndex % CharactersPerLine + 1) * CharacterWidth, 1.0f - (CharacterHeight * static_cast< unsigned int >(CharacterIndex / CharactersPerLine)));
+		glVertex2f(6.0f * StringIndex + 6.0f, 0.0f);
+		glTexCoord2f((CharacterIndex % CharactersPerLine) * CharacterWidth, 1.0f - (CharacterHeight * static_cast< unsigned int >(CharacterIndex / CharactersPerLine)));
+		glVertex2f(6.0f * StringIndex, 0.0f);
 	}
+	glEnd();
+	glPopAttrib();
 }
