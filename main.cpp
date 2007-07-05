@@ -45,6 +45,7 @@
 #include "commodity.h"
 #include "commodity_manager.h"
 #include "destroy_listener.h"
+#include "draw_text.h"
 #include "galaxy.h"
 #include "game_time.h"
 #include "globals.h"
@@ -1547,6 +1548,8 @@ void CreateWindow(void)
 
 void InitializeOpenGL(void)
 {
+	InitializeFonts();
+	
 	// TODO: Make configurable via data.arx
 	Vector4f GlobalAmbientLightColor(0.0f, 0.0f, 0.0f, 0.0f);
 	
@@ -1557,6 +1560,11 @@ void InitializeOpenGL(void)
 	glLoadIdentity();
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, GlobalAmbientLightColor.m_V.m_A);
 	Resize();
+}
+
+void DeinitializeOpenGL(void)
+{
+	DeinitializeFonts();
 }
 
 void ProcessEvents(void)
@@ -1957,6 +1965,7 @@ int main(int argc, char ** argv)
 		glXSwapBuffers(g_Display, g_Window);
 	}
 	// cleanup
+	DeinitializeOpenGL();
 	DestroyWindow();
 	g_Galaxy->Destroy();
 	delete g_Galaxy;
