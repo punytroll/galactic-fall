@@ -56,7 +56,14 @@ def out(data_type, node):
 	elif data_type == "u1byte":
 		out_file.write(pack('B', int(node.firstChild.nodeValue)))
 	elif data_type == "u4byte":
-		out_file.write(pack('I', long(node.firstChild.nodeValue)))
+		try:
+			out_file.write(pack('I', long(node.firstChild.nodeValue)))
+		except ValueError:
+			stack_path = ""
+			for stack_entry in out_call_stack:
+				stack_path += "/" + stack_entry
+			print "In file '" + options.in_file + "' I found an invalid value '" + node.firstChild.nodeValue + "' for '" + stack_path + "' of type '" + data_type + "'."
+			exit(1)
 	elif data_type == "array":
 		count = 0
 		for node_part in node.childNodes:
