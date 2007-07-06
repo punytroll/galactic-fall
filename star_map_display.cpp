@@ -48,7 +48,6 @@ void StarMapDisplay::Draw(void) const
 	
 	Vector2f Middle(GetSize() / 2);
 	
-	Middle.m_V.m_A[1] += 15.0f;
 	Middle += m_OffsetPosition;
 	
 	float SystemSize(5.0f);
@@ -182,7 +181,7 @@ bool StarMapDisplay::OnMouseButton(Widget * EventSource, int Button, int State, 
 		else if((Button == 1 /* LEFT */) && (State == EV_UP))
 		{
 			X -= GetSize().m_V.m_A[0] / 2;
-			Y -= 15.0f + GetSize().m_V.m_A[1] / 2;
+			Y -= GetSize().m_V.m_A[1] / 2;
 			
 			const std::map< std::string, System * > & Systems(g_Galaxy->GetSystems());
 			
@@ -191,8 +190,8 @@ bool StarMapDisplay::OnMouseButton(Widget * EventSource, int Button, int State, 
 				Vector2f Position(SystemIterator->second->GetPosition() - m_System->GetPosition());
 				
 				Position *= m_Scale;
-				Position.m_V.m_A[0] -= X;
-				Position.m_V.m_A[1] += Y;
+				Position.m_V.m_A[0] -= X - m_OffsetPosition[0];
+				Position.m_V.m_A[1] += Y - m_OffsetPosition[1];
 				if(Position.SquaredLength() < 40.0f)
 				{
 					m_SelectedSystem = SystemIterator->second;
