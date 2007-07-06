@@ -165,7 +165,7 @@ void TradeCenterDialog::UpdateTraderFreeCargoHoldSize(void)
 
 void TradeCenterDialog::Buy(const PlanetCommodity * PlanetCommodity)
 {
-	float Price(PlanetCommodity->GetPrice());
+	u4byte Price(PlanetCommodity->GetPrice());
 	
 	if(m_Character->RemoveCredits(Price) == true)
 	{

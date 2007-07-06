@@ -24,6 +24,7 @@
 #include <set>
 
 #include "object.h"
+#include "type_definitions.h"
 
 class MapKnowledge;
 class Mind;
@@ -42,25 +43,25 @@ public:
 	Character(void);
 	virtual ~Character(void);
 	// getters
-	float GetCredits(void);
+	u4byte GetCredits(void);
 	MapKnowledge * GetMapKnowledge(void);
 	const MapKnowledge * GetMapKnowledge(void) const;
 	Mind * GetActiveMind(void);
 	Ship * GetShip(void);
 	const Ship * GetShip(void) const;
 	// setters
-	void SetCredits(float Credits);
+	void SetCredits(u4byte Credits);
 	void SetShip(Ship * Ship);
 	// modifiers
 	void Update(void);
-	void AddCredits(const float & Credits);
-	bool RemoveCredits(const float & Credits);
+	void AddCredits(u4byte Credits);
+	bool RemoveCredits(u4byte Credits);
 protected:
 	virtual bool OnAddContent(Object * Content);
 	virtual bool OnRemoveContent(Object * Content);
 private:
 	std::deque< Mind * > m_Minds;
-	float m_Credits;
+	u4byte m_Credits;
 	MapKnowledge * m_MapKnowledge;
 	Ship * m_Ship;
 };
@@ -70,7 +71,7 @@ inline std::set< Character * > & Character::GetCharacters(void)
 	return m_Characters;
 }
 
-inline float Character::GetCredits(void)
+inline u4byte Character::GetCredits(void)
 {
 	return m_Credits;
 }
@@ -95,7 +96,7 @@ inline const Ship * Character::GetShip(void) const
 	return m_Ship;
 }
 
-inline void Character::SetCredits(float Credits)
+inline void Character::SetCredits(u4byte Credits)
 {
 	m_Credits = Credits;
 }

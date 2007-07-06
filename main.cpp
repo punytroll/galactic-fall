@@ -776,7 +776,7 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 	NewCharacter->GetMapKnowledge()->AddExploredSystem(System);
 	if(ShipClassIdentifier == "fighter")
 	{
-		NewCharacter->SetCredits(GetRandomFloat(50.0f, 250.0f));
+		NewCharacter->SetCredits(GetRandomU4Byte(50, 250));
 		
 		Weapon * NewWeapon(new Weapon(g_WeaponClassManager->Get("light_laser")));
 		
@@ -786,7 +786,7 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 	}
 	else if(ShipClassIdentifier == "transporter")
 	{
-		NewCharacter->SetCredits(GetRandomFloatFromExponentialDistribution(2300.0f));
+		NewCharacter->SetCredits(GetRandomU4Byte(500, 2500));
 		for(int NumberOfCommodities = static_cast< int >(GetRandomFloatFromExponentialDistribution(2)); NumberOfCommodities > 0; --NumberOfCommodities)
 		{
 			int AmountOfCargo(GetRandomIntegerFromExponentialDistribution(NewShip->GetShipClass()->GetCargoHoldSize() / 2));
@@ -1696,7 +1696,7 @@ void LoadSavegame(const Element * SaveElement)
 			{
 				if((*CharacterChild)->GetName() == "credits")
 				{
-					PlayerCharacter->SetCredits(from_string_cast< float >((*CharacterChild)->GetAttribute("value")));
+					PlayerCharacter->SetCredits(from_string_cast< u4byte >((*CharacterChild)->GetAttribute("value")));
 				}
 				else if((*CharacterChild)->GetName() == "map-knowledge")
 				{

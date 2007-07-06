@@ -24,6 +24,7 @@
 #include <vector>
 
 #include "physical_object.h"
+#include "type_definitions.h"
 
 class Color;
 class Commodity;
@@ -34,7 +35,7 @@ public:
 	PlanetCommodity(Commodity * Commodity);
 	virtual ~PlanetCommodity(void);
 	const Commodity * GetCommodity(void) const;
-	float GetPrice(void) const;
+	u4byte GetPrice(void) const;
 	void SetBasePriceModifier(float BasePriceModifier);
 	float GetBasePriceModifier(void) const;
 private:
@@ -62,7 +63,7 @@ public:
 	const std::string & GetDescription(void) const;
 	float GetSize(void) const;
 	const std::vector< PlanetCommodity * > & GetCommodities(void) const;
-	float GetLandingFee(void) const;
+	u4byte GetLandingFee(void) const;
 	// setters
 	void SetLandingFee(float LandingFee);
 	void SetDescription(const std::string & Description);
@@ -104,9 +105,9 @@ inline const std::vector< PlanetCommodity * > & Planet::GetCommodities(void) con
 	return m_Commodities;
 }
 
-inline float Planet::GetLandingFee(void) const
+inline u4byte Planet::GetLandingFee(void) const
 {
-	return m_LandingFee;
+	return static_cast< u4byte >(m_LandingFee);
 }
 
 inline void Planet::SetLandingFee(float LandingFee)

@@ -24,7 +24,7 @@
 std::set< Character * > Character::m_Characters;
 
 Character::Character(void) :
-	m_Credits(0.0f),
+	m_Credits(0),
 	m_MapKnowledge(new MapKnowledge()),
 	m_Ship(0)
 {
@@ -44,12 +44,12 @@ void Character::Update(void)
 	}
 }
 
-void Character::AddCredits(const float & Credits)
+void Character::AddCredits(u4byte Credits)
 {
 	m_Credits += Credits;
 }
 
-bool Character::RemoveCredits(const float & Credits)
+bool Character::RemoveCredits(u4byte Credits)
 {
 	if(m_Credits < Credits)
 	{

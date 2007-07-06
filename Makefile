@@ -38,7 +38,8 @@ cargo_h = \
 
 character_h = \
 	character.h \
-	$(object_h)
+	$(object_h) \
+	$(type_definitions_h)
 
 clicked_listener_h = \
 	clicked_listener.h
@@ -94,7 +95,8 @@ math_h = \
 	math.h \
 	$(math_vector2f_h) \
 	$(math_vector3f_h) \
-	$(math_vector4d_h)
+	$(math_vector4d_h) \
+	$(type_definitions_h)
 
 math_details_h = \
 	math/details.h
@@ -168,7 +170,8 @@ physical_object_h = \
 
 planet_h = \
 	planet.h \
-	$(physical_object_h)
+	$(physical_object_h) \
+	$(type_definitions_h)
 
 planet_dialog_h = \
 	planet_dialog.h \
@@ -248,6 +251,9 @@ trade_center_dialog_h = \
 	$(mouse_button_listener_h) \
 	$(mouse_motion_listener_h) \
 	$(window_h)
+
+type_definitions_h = \
+	type_definitions.h
 
 user_interface_h = \
 	user_interface.h
