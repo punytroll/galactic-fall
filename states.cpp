@@ -826,13 +826,13 @@ void RefuelPhase3::Enter(void)
 	{
 		if((*PlanetCommodityIterator)->GetCommodity()->GetIdentifier() == "fuel")
 		{
-			float FuelPrice((*PlanetCommodityIterator)->GetPrice());
+			u4byte FuelPrice((*PlanetCommodityIterator)->GetPrice());
 			float CanBuy(GetMind()->GetCharacter()->GetCredits() / FuelPrice);
 			float Need(GetMind()->GetCharacter()->GetShip()->GetFuelCapacity() - GetMind()->GetCharacter()->GetShip()->GetFuel());
 			float Buy((CanBuy > Need) ? (Need) : (CanBuy));
 			
 			GetMind()->GetCharacter()->GetShip()->SetFuel(GetMind()->GetCharacter()->GetShip()->GetFuel() + Buy);
-			GetMind()->GetCharacter()->RemoveCredits(Buy * FuelPrice);
+			GetMind()->GetCharacter()->RemoveCredits(static_cast< u4byte >(Buy * FuelPrice));
 			
 			MonitorFuel * GlobalState(dynamic_cast< MonitorFuel * >(GetMind()->GetStateMachine()->GetGlobalState()));
 			

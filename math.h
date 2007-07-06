@@ -20,11 +20,13 @@
 #ifndef MATH_H
 #define MATH_H
 
+#include <assert.h>
 #include <stdlib.h>
 
 #include "math/vector2f.h"
 #include "math/vector3f.h"
 #include "math/vector4d.h"
+#include "type_definitions.h"
 
 inline void NormalizeRadians(float & Radians)
 {
@@ -93,6 +95,13 @@ inline long int GetRandomInteger(long int HighestValue)
 	return random() % (HighestValue + 1);
 }
 
+inline u4byte GetRandomU4Byte(u4byte LowestValue, u4byte HighestValue)
+{
+	assert(LowestValue <= HighestValue);
+	
+	return LowestValue + (random() % (HighestValue - LowestValue + 1));
+}
+
 inline float GetRandomUniform(void)
 {
 	return static_cast< float >(random()) / RAND_MAX;
@@ -100,6 +109,8 @@ inline float GetRandomUniform(void)
 
 inline float GetRandomFloat(float LowestValue, float HighestValue)
 {
+	assert(LowestValue <= HighestValue);
+	
 	return ((HighestValue - LowestValue) * GetRandomUniform()) + LowestValue;
 }
 
@@ -125,6 +136,8 @@ inline double GetRandomUniformDouble(void)
 
 inline double GetRandomDouble(double LowestValue, double HighestValue)
 {
+	assert(LowestValue <= HighestValue);
+	
 	return ((HighestValue - LowestValue) * GetRandomUniformDouble()) + LowestValue;
 }
 

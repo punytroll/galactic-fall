@@ -36,9 +36,9 @@ PlanetCommodity::~PlanetCommodity(void)
 {
 }
 
-float PlanetCommodity::GetPrice(void) const
+u4byte PlanetCommodity::GetPrice(void) const
 {
-	return m_Commodity->GetBasePrice() * m_BasePriceModifier;
+	return static_cast< u4byte >(m_Commodity->GetBasePrice() * m_BasePriceModifier);
 }
 
 Planet::Planet(const std::string & Identifier) :

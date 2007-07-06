@@ -107,13 +107,13 @@ bool PlanetDialog::OnClicked(Widget * EventSource)
 		{
 			if((*PlanetCommodityIterator)->GetCommodity()->GetIdentifier() == "fuel")
 			{
-				float FuelPrice((*PlanetCommodityIterator)->GetPrice());
+				u4byte FuelPrice((*PlanetCommodityIterator)->GetPrice());
 				float CanBuy(m_Character->GetCredits() / FuelPrice);
 				float Need(m_Character->GetShip()->GetFuelCapacity() - m_Character->GetShip()->GetFuel());
 				float Buy((CanBuy > Need) ? (Need) : (CanBuy));
 				
 				m_Character->GetShip()->SetFuel(m_Character->GetShip()->GetFuel() + Buy);
-				m_Character->RemoveCredits(Buy * FuelPrice);
+				m_Character->RemoveCredits(static_cast< u4byte >(Buy * FuelPrice));
 				
 				break;
 			}

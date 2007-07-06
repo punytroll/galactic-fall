@@ -17,7 +17,7 @@
 **/
 
 /**
- * This is version 1.2.1 of the xml stream.
+ * This is version 1.2.2 of the xml stream.
  **/
 
 #include "xml_stream.h"
@@ -168,6 +168,17 @@ XMLStream & XMLStream::operator<<(const char * Value)
 }
 
 XMLStream & XMLStream::operator<<(int Value)
+{
+	if(m_InElementName == true)
+	{
+		m_ElementName << Value;
+	}
+	m_OutputStream << Value;
+	
+	return *this;
+}
+
+XMLStream & XMLStream::operator<<(unsigned int Value)
 {
 	if(m_InElementName == true)
 	{
