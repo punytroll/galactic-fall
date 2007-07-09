@@ -43,6 +43,7 @@ public:
 	void Jettison(void);
 	void Jump(void);
 	void Land(void);
+	void Refuel(void);
 	void Scoop(void);
 	void SelectLinkedSystem(System * LinkedSystem);
 	void SelectNextLinkedSystem(void);

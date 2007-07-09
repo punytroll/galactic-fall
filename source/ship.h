@@ -68,6 +68,7 @@ public:
 	void SetFire(bool Fire);
 	void SetFuel(float Fuel);
 	void SetHull(float Hull);
+	void SetRefuel(bool Refuel);
 	void SetTurnLeft(float TurnLeft);
 	void SetTurnRight(float TurnRight);
 	void SetVelocity(const Vector2f & Velocity);
@@ -88,6 +89,7 @@ private:
 	std::vector< Weapon * > m_Weapons;
 	float m_Fuel;
 	float m_Hull;
+	bool m_Refuel;
 	float m_TurnLeft;
 	float m_TurnRight;
 	Reference< PhysicalObject > m_Target;
@@ -174,6 +176,11 @@ inline void Ship::SetFuel(float Fuel)
 inline void Ship::SetHull(float Hull)
 {
 	m_Hull = Hull;
+}
+
+inline void Ship::SetRefuel(bool Refuel)
+{
+	m_Refuel = Refuel;
 }
 
 inline void Ship::SetTurnLeft(float TurnLeft)

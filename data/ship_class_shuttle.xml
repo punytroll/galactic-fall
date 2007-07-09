@@ -5,10 +5,10 @@
 	<turn-speed>1</turn-speed>
 	<maximum-speed>12</maximum-speed>
 	<cargo-hold-size>12</cargo-hold-size>
-	<fuel-hold-size>0.5</fuel-hold-size>
-	<jump-fuel>0.13</jump-fuel>
-	<forward-fuel>0.015</forward-fuel>
-	<turn-fuel>0.006</turn-fuel>
+	<fuel-hold-size>1</fuel-hold-size>
+	<jump-fuel>0.25</jump-fuel>
+	<forward-fuel>0.025</forward-fuel>
+	<turn-fuel>0.010</turn-fuel>
 	<hull>100</hull>
 	<color>
 		<red>1.0</red>

@@ -119,6 +119,14 @@ void CommandMind::Land(void)
 	GetCharacter()->GetShip()->m_Land = true;
 }
 
+void CommandMind::Refuel(void)
+{
+	assert(GetCharacter() != 0);
+	assert(GetCharacter()->GetShip() != 0);
+	
+	GetCharacter()->GetShip()->SetRefuel(true);
+}
+
 void CommandMind::Scoop(void)
 {
 	assert(GetCharacter() != 0);

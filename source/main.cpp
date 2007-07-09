@@ -991,6 +991,15 @@ void KeyDown(unsigned int KeyCode)
 			
 			break;
 		}
+	case 23: // Key: TABULATOR
+		{
+			if(g_InputMind == true)
+			{
+				g_InputMind->Refuel();
+			}
+			
+			break;
+		}
 	case 24: // Key: Q
 		{
 			g_DumpEndReport = true;
