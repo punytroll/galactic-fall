@@ -358,18 +358,6 @@ bool Ship::Mount(Object * Object, const std::string & SlotIdentifier)
 
 bool Ship::OnAddContent(Object * Content)
 {
-	Cargo * TheCargo(dynamic_cast< Cargo * >(Content));
-	
-	if(TheCargo != 0)
-	{
-		if(GetFreeCargoHoldSize() >= 1.0f)
-		{
-			return PhysicalObject::OnAddContent(Content);
-		}
-		
-		return false;
-	}
-	
 	Weapon * TheWeapon(dynamic_cast< Weapon * >(Content));
 	
 	if(TheWeapon != 0)
