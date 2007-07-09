@@ -43,6 +43,7 @@
 
 Ship::Ship(ShipClass * ShipClass) :
 	m_Accelerate(false),
+	m_Accelerating(false),
 	m_Jettison(false),
 	m_Jump(false),
 	m_Land(false),
@@ -87,7 +88,7 @@ void Ship::Draw(void) const
 	}
 	m_ShipClass->GetModel()->Draw();
 	// draw acceleration visualization
-	if(m_Accelerate == true)
+	if(m_Accelerating == true)
 	{
 		glTranslatef(m_ShipClass->GetExhaustOffset().m_V.m_A[0], m_ShipClass->GetExhaustOffset().m_V.m_A[1], m_ShipClass->GetExhaustOffset().m_V.m_A[2]);
 		glPushAttrib(GL_ENABLE_BIT);
@@ -205,6 +206,7 @@ void Ship::Update(float Seconds)
 			}
 		}
 		m_Position += m_Velocity * Seconds;
+		m_Accelerating = false;
 		if(m_Accelerate == true)
 		{
 			float FuelConsumption(m_ShipClass->GetForwardFuel() * Seconds);
@@ -221,6 +223,7 @@ void Ship::Update(float Seconds)
 					m_Velocity.Scale(GetMaximumSpeed());
 				}
 				m_Fuel -= FuelConsumption;
+				m_Accelerating = true;
 			}
 		}
 		if(m_Jettison == true)

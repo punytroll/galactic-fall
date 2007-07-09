@@ -96,19 +96,19 @@ void FlyOverRandomPoint::Execute(void)
 		{
 			GetMind()->GetCharacter()->GetShip()->SetTurnRight(1.0f);
 			GetMind()->GetCharacter()->GetShip()->SetTurnLeft(0.0f);
-			GetMind()->GetCharacter()->GetShip()->m_Accelerate = false;
+			GetMind()->GetCharacter()->GetShip()->SetAccelerate(false);
 		}
 		else if(HeadingOffDestination < -0.1)
 		{
 			GetMind()->GetCharacter()->GetShip()->SetTurnRight(0.0f);
 			GetMind()->GetCharacter()->GetShip()->SetTurnLeft(1.0f);
-			GetMind()->GetCharacter()->GetShip()->m_Accelerate = false;
+			GetMind()->GetCharacter()->GetShip()->SetAccelerate(false);
 		}
 		else
 		{
 			GetMind()->GetCharacter()->GetShip()->SetTurnRight(0.0f);
 			GetMind()->GetCharacter()->GetShip()->SetTurnLeft(0.0f);
-			GetMind()->GetCharacter()->GetShip()->m_Accelerate = ((GetMind()->GetCharacter()->GetShip()->GetVelocity() - Vector2f(GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetMaximumSpeed(), GetMind()->GetCharacter()->GetShip()->GetAngularPosition(), Vector2f::InitializeMagnitudeAngle)).SquaredLength() > 0.1f);
+			GetMind()->GetCharacter()->GetShip()->SetAccelerate((GetMind()->GetCharacter()->GetShip()->GetVelocity() - Vector2f(GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetMaximumSpeed(), GetMind()->GetCharacter()->GetShip()->GetAngularPosition(), Vector2f::InitializeMagnitudeAngle)).SquaredLength() > 0.1f);
 		}
 	}
 	else
@@ -166,19 +166,19 @@ void TransporterPhase1::Execute(void)
 		{
 			GetMind()->GetCharacter()->GetShip()->SetTurnRight(1.0f);
 			GetMind()->GetCharacter()->GetShip()->SetTurnLeft(0.0f);
-			GetMind()->GetCharacter()->GetShip()->m_Accelerate = false;
+			GetMind()->GetCharacter()->GetShip()->SetAccelerate(false);
 		}
 		else if(HeadingOffDestination < -0.1)
 		{
 			GetMind()->GetCharacter()->GetShip()->SetTurnRight(0.0f);
 			GetMind()->GetCharacter()->GetShip()->SetTurnLeft(1.0f);
-			GetMind()->GetCharacter()->GetShip()->m_Accelerate = false;
+			GetMind()->GetCharacter()->GetShip()->SetAccelerate(false);
 		}
 		else
 		{
 			GetMind()->GetCharacter()->GetShip()->SetTurnRight(0.0f);
 			GetMind()->GetCharacter()->GetShip()->SetTurnLeft(0.0f);
-			GetMind()->GetCharacter()->GetShip()->m_Accelerate = ((GetMind()->GetCharacter()->GetShip()->GetVelocity() - Vector2f(GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetMaximumSpeed(), GetMind()->GetCharacter()->GetShip()->GetAngularPosition(), Vector2f::InitializeMagnitudeAngle)).SquaredLength() > 0.1f);
+			GetMind()->GetCharacter()->GetShip()->SetAccelerate((GetMind()->GetCharacter()->GetShip()->GetVelocity() - Vector2f(GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetMaximumSpeed(), GetMind()->GetCharacter()->GetShip()->GetAngularPosition(), Vector2f::InitializeMagnitudeAngle)).SquaredLength() > 0.1f);
 		}
 	}
 	else
@@ -217,19 +217,19 @@ void TransporterPhase2::Execute(void)
 		{
 			GetMind()->GetCharacter()->GetShip()->SetTurnRight(1.0f);
 			GetMind()->GetCharacter()->GetShip()->SetTurnLeft(0.0f);
-			GetMind()->GetCharacter()->GetShip()->m_Accelerate = false;
+			GetMind()->GetCharacter()->GetShip()->SetAccelerate(false);
 		}
 		else if(HeadingOffReverse < -0.1)
 		{
 			GetMind()->GetCharacter()->GetShip()->SetTurnRight(0.0f);
 			GetMind()->GetCharacter()->GetShip()->SetTurnLeft(1.0f);
-			GetMind()->GetCharacter()->GetShip()->m_Accelerate = false;
+			GetMind()->GetCharacter()->GetShip()->SetAccelerate(false);
 		}
 		else
 		{
 			GetMind()->GetCharacter()->GetShip()->SetTurnRight(0.0f);
 			GetMind()->GetCharacter()->GetShip()->SetTurnLeft(0.0f);
-			GetMind()->GetCharacter()->GetShip()->m_Accelerate = true;
+			GetMind()->GetCharacter()->GetShip()->SetAccelerate(true);
 		}
 	}
 	else
@@ -426,19 +426,19 @@ void TransporterPhase4::Execute(void)
 		{
 			GetMind()->GetCharacter()->GetShip()->SetTurnRight(1.0f);
 			GetMind()->GetCharacter()->GetShip()->SetTurnLeft(0.0f);
-			GetMind()->GetCharacter()->GetShip()->m_Accelerate = false;
+			GetMind()->GetCharacter()->GetShip()->SetAccelerate(false);
 		}
 		else if(HeadingOffDestination < -0.1)
 		{
 			GetMind()->GetCharacter()->GetShip()->SetTurnRight(0.0f);
 			GetMind()->GetCharacter()->GetShip()->SetTurnLeft(1.0f);
-			GetMind()->GetCharacter()->GetShip()->m_Accelerate = false;
+			GetMind()->GetCharacter()->GetShip()->SetAccelerate(false);
 		}
 		else
 		{
 			GetMind()->GetCharacter()->GetShip()->SetTurnRight(0.0f);
 			GetMind()->GetCharacter()->GetShip()->SetTurnLeft(0.0f);
-			GetMind()->GetCharacter()->GetShip()->m_Accelerate = ((GetMind()->GetCharacter()->GetShip()->GetVelocity() - Vector2f(GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetMaximumSpeed(), GetMind()->GetCharacter()->GetShip()->GetAngularPosition(), Vector2f::InitializeMagnitudeAngle)).SquaredLength() > 0.1f);
+			GetMind()->GetCharacter()->GetShip()->SetAccelerate((GetMind()->GetCharacter()->GetShip()->GetVelocity() - Vector2f(GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetMaximumSpeed(), GetMind()->GetCharacter()->GetShip()->GetAngularPosition(), Vector2f::InitializeMagnitudeAngle)).SquaredLength() > 0.1f);
 		}
 	}
 	else
@@ -505,19 +505,19 @@ void Fight::Execute(void)
 		{
 			GetMind()->GetCharacter()->GetShip()->SetTurnRight(1.0f);
 			GetMind()->GetCharacter()->GetShip()->SetTurnLeft(0.0f);
-			GetMind()->GetCharacter()->GetShip()->m_Accelerate = false;
+			GetMind()->GetCharacter()->GetShip()->SetAccelerate(false);
 		}
 		else if(HeadingOffDestination < -0.1)
 		{
 			GetMind()->GetCharacter()->GetShip()->SetTurnRight(0.0f);
 			GetMind()->GetCharacter()->GetShip()->SetTurnLeft(1.0f);
-			GetMind()->GetCharacter()->GetShip()->m_Accelerate = false;
+			GetMind()->GetCharacter()->GetShip()->SetAccelerate(false);
 		}
 		else
 		{
 			GetMind()->GetCharacter()->GetShip()->SetTurnRight(0.0f);
 			GetMind()->GetCharacter()->GetShip()->SetTurnLeft(0.0f);
-			GetMind()->GetCharacter()->GetShip()->m_Accelerate = ((GetMind()->GetCharacter()->GetShip()->GetVelocity() - Vector2f(GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetMaximumSpeed(), GetMind()->GetCharacter()->GetShip()->GetAngularPosition(), Vector2f::InitializeMagnitudeAngle)).SquaredLength() > 0.1f);
+			GetMind()->GetCharacter()->GetShip()->SetAccelerate((GetMind()->GetCharacter()->GetShip()->GetVelocity() - Vector2f(GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetMaximumSpeed(), GetMind()->GetCharacter()->GetShip()->GetAngularPosition(), Vector2f::InitializeMagnitudeAngle)).SquaredLength() > 0.1f);
 			if(Length < 50.0f)
 			{
 				GetMind()->GetCharacter()->GetShip()->SetFire(true);
@@ -593,19 +593,19 @@ void ShootFarthestCargo::Execute(void)
 		{
 			GetMind()->GetCharacter()->GetShip()->SetTurnRight(1.0f);
 			GetMind()->GetCharacter()->GetShip()->SetTurnLeft(0.0f);
-			GetMind()->GetCharacter()->GetShip()->m_Accelerate = false;
+			GetMind()->GetCharacter()->GetShip()->SetAccelerate(false);
 		}
 		else if(HeadingOffDestination < -0.1)
 		{
 			GetMind()->GetCharacter()->GetShip()->SetTurnRight(0.0f);
 			GetMind()->GetCharacter()->GetShip()->SetTurnLeft(1.0f);
-			GetMind()->GetCharacter()->GetShip()->m_Accelerate = false;
+			GetMind()->GetCharacter()->GetShip()->SetAccelerate(false);
 		}
 		else
 		{
 			GetMind()->GetCharacter()->GetShip()->SetTurnRight(0.0f);
 			GetMind()->GetCharacter()->GetShip()->SetTurnLeft(0.0f);
-			GetMind()->GetCharacter()->GetShip()->m_Accelerate = ((GetMind()->GetCharacter()->GetShip()->GetVelocity() - Vector2f(GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetMaximumSpeed(), GetMind()->GetCharacter()->GetShip()->GetAngularPosition(), Vector2f::InitializeMagnitudeAngle)).SquaredLength() > 0.1f);
+			GetMind()->GetCharacter()->GetShip()->SetAccelerate((GetMind()->GetCharacter()->GetShip()->GetVelocity() - Vector2f(GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetMaximumSpeed(), GetMind()->GetCharacter()->GetShip()->GetAngularPosition(), Vector2f::InitializeMagnitudeAngle)).SquaredLength() > 0.1f);
 			if(Length < 50.0f)
 			{
 				GetMind()->GetCharacter()->GetShip()->SetFire(true);
@@ -712,19 +712,19 @@ void RefuelPhase1::Execute(void)
 		{
 			GetMind()->GetCharacter()->GetShip()->SetTurnRight(1.0f);
 			GetMind()->GetCharacter()->GetShip()->SetTurnLeft(0.0f);
-			GetMind()->GetCharacter()->GetShip()->m_Accelerate = false;
+			GetMind()->GetCharacter()->GetShip()->SetAccelerate(false);
 		}
 		else if(HeadingOffDestination < -0.1)
 		{
 			GetMind()->GetCharacter()->GetShip()->SetTurnRight(0.0f);
 			GetMind()->GetCharacter()->GetShip()->SetTurnLeft(1.0f);
-			GetMind()->GetCharacter()->GetShip()->m_Accelerate = false;
+			GetMind()->GetCharacter()->GetShip()->SetAccelerate(false);
 		}
 		else
 		{
 			GetMind()->GetCharacter()->GetShip()->SetTurnRight(0.0f);
 			GetMind()->GetCharacter()->GetShip()->SetTurnLeft(0.0f);
-			GetMind()->GetCharacter()->GetShip()->m_Accelerate = ((GetMind()->GetCharacter()->GetShip()->GetVelocity() - Vector2f(GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetMaximumSpeed(), GetMind()->GetCharacter()->GetShip()->GetAngularPosition(), Vector2f::InitializeMagnitudeAngle)).SquaredLength() > 0.1f);
+			GetMind()->GetCharacter()->GetShip()->SetAccelerate((GetMind()->GetCharacter()->GetShip()->GetVelocity() - Vector2f(GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetMaximumSpeed(), GetMind()->GetCharacter()->GetShip()->GetAngularPosition(), Vector2f::InitializeMagnitudeAngle)).SquaredLength() > 0.1f);
 		}
 	}
 	else
@@ -763,19 +763,19 @@ void RefuelPhase2::Execute(void)
 		{
 			GetMind()->GetCharacter()->GetShip()->SetTurnRight(1.0f);
 			GetMind()->GetCharacter()->GetShip()->SetTurnLeft(0.0f);
-			GetMind()->GetCharacter()->GetShip()->m_Accelerate = false;
+			GetMind()->GetCharacter()->GetShip()->SetAccelerate(false);
 		}
 		else if(HeadingOffReverse < -0.1)
 		{
 			GetMind()->GetCharacter()->GetShip()->SetTurnRight(0.0f);
 			GetMind()->GetCharacter()->GetShip()->SetTurnLeft(1.0f);
-			GetMind()->GetCharacter()->GetShip()->m_Accelerate = false;
+			GetMind()->GetCharacter()->GetShip()->SetAccelerate(false);
 		}
 		else
 		{
 			GetMind()->GetCharacter()->GetShip()->SetTurnRight(0.0f);
 			GetMind()->GetCharacter()->GetShip()->SetTurnLeft(0.0f);
-			GetMind()->GetCharacter()->GetShip()->m_Accelerate = true;
+			GetMind()->GetCharacter()->GetShip()->SetAccelerate(true);
 		}
 	}
 	else
@@ -792,7 +792,7 @@ void RefuelPhase2::Execute(void)
 		else
 		{
 			// TODO: this line ensures that ships keep drifting in space if they have no chance of refueling
-			GetMind()->GetCharacter()->GetShip()->m_Accelerate = false;
+			GetMind()->GetCharacter()->GetShip()->SetAccelerate(false);
 			// to ensure they are attacked by fighters
 			GetMind()->GetCharacter()->GetShip()->SetFuel(0.0);
 			// self destruct in dispair.

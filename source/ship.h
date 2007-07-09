@@ -39,7 +39,6 @@ public:
 	void Draw(void) const;
 	void Update(float Seconds);
 	// controls
-	bool m_Accelerate;
 	bool m_Jettison;
 	bool m_Jump;
 	bool m_Land;
@@ -65,6 +64,7 @@ public:
 	const System * GetCurrentSystem(void) const;
 	const std::map< std::string, Slot * > & GetSlots(void) const;
 	// setters
+	void SetAccelerate(bool Accelerate);
 	void SetFire(bool Fire);
 	void SetFuel(float Fuel);
 	void SetHull(float Hull);
@@ -87,6 +87,8 @@ private:
 	ShipClass * m_ShipClass;
 	std::map< std::string, Slot * > m_Slots;
 	std::vector< Weapon * > m_Weapons;
+	bool m_Accelerate;
+	bool m_Accelerating;
 	float m_Fuel;
 	float m_Hull;
 	bool m_Refuel;
@@ -166,6 +168,11 @@ inline const System * Ship::GetCurrentSystem(void) const
 inline const std::map< std::string, Slot * > & Ship::GetSlots(void) const
 {
 	return m_Slots;
+}
+
+inline void Ship::SetAccelerate(bool Accelerate)
+{
+	m_Accelerate = Accelerate;
 }
 
 inline void Ship::SetFuel(float Fuel)
