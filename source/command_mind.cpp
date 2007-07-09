@@ -36,7 +36,7 @@ void CommandMind::EnableAccelerate(void)
 	assert(GetCharacter() != 0);
 	assert(GetCharacter()->GetShip() != 0);
 	
-	GetCharacter()->GetShip()->m_Accelerate = true;
+	GetCharacter()->GetShip()->SetAccelerate(true);
 }
 
 void CommandMind::DisableAccelerate(void)
@@ -44,7 +44,7 @@ void CommandMind::DisableAccelerate(void)
 	assert(GetCharacter() != 0);
 	assert(GetCharacter()->GetShip() != 0);
 	
-	GetCharacter()->GetShip()->m_Accelerate = false;
+	GetCharacter()->GetShip()->SetAccelerate(false);
 }
 
 void CommandMind::EnableTurnLeft(void)
