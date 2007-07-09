@@ -169,18 +169,18 @@ void TradeCenterDialog::Buy(const PlanetCommodity * PlanetCommodity)
 	
 	if(m_Character->RemoveCredits(Price) == true)
 	{
-		Cargo * NewCargo(new Cargo(PlanetCommodity->GetCommodity()));
-		
-		NewCargo->SetObjectIdentifier(m_Planet->GetObjectIdentifier() + "::created_at(" + to_string_cast(RealTime::GetTime(), 6) + ")::bought_by(" + m_Character->GetObjectIdentifier() + ")::commodity(" + NewCargo->GetCommodity()->GetIdentifier() + ")::cargo");
-		if(m_Character->GetShip()->AddContent(NewCargo) == false)
+		if(m_Character->GetShip()->GetFreeCargoHoldSize() >= 1.0f)
 		{
-			delete NewCargo;
-			m_Character->AddCredits(Price);
+			Cargo * NewCargo(new Cargo(PlanetCommodity->GetCommodity()));
+			
+			NewCargo->SetObjectIdentifier(m_Planet->GetObjectIdentifier() + "::created_at(" + to_string_cast(RealTime::GetTime(), 6) + ")::bought_by(" + m_Character->GetObjectIdentifier() + ")::commodity(" + NewCargo->GetCommodity()->GetIdentifier() + ")::cargo");
+			m_Character->GetShip()->AddContent(NewCargo);
+			UpdateTraderCredits();
+			UpdateTraderFreeCargoHoldSize();
 		}
 		else
 		{
-			UpdateTraderCredits();
-			UpdateTraderFreeCargoHoldSize();
+			m_Character->AddCredits(Price);
 		}
 	}
 }
