@@ -46,6 +46,7 @@ Ship::Ship(ShipClass * ShipClass) :
 	m_Jettison(false),
 	m_Jump(false),
 	m_Land(false),
+	m_Refuel(false),
 	m_Scoop(false),
 	m_AngularPosition(0.0f),
 	m_ShipClass(ShipClass),
@@ -162,6 +163,26 @@ void Ship::Update(float Seconds)
 			{
 				m_Weapons[WeaponIndex]->Update(Seconds);
 			}
+		}
+		if(m_Refuel == true)
+		{
+			std::set< Object * >::const_iterator ContentIterator(GetContent().begin());
+			
+			while(ContentIterator != GetContent().end())
+			{
+				Cargo * TheCargo(dynamic_cast< Cargo * >(*ContentIterator));
+				
+				if((TheCargo != 0) && (TheCargo->GetCommodity()->GetIdentifier() == "fuel"))
+				{
+					m_Fuel = Clamp(m_Fuel + 1.0f, 0.0f, GetFuelCapacity());
+					TheCargo->Destroy();
+					delete TheCargo;
+					
+					break;
+				}
+				++ContentIterator;
+			}
+			m_Refuel = false;
 		}
 		if(m_TurnLeft > 0.0f)
 		{
