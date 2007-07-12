@@ -118,6 +118,7 @@ TradeCenterDialog::TradeCenterDialog(Widget * SupWidget, Planet * Planet, Charac
 	m_CommodityListItems = new Widget(m_CommodityList);
 	m_CommodityListItems->SetPosition(Vector2f(0.0f, 0.0f));
 	m_CommodityListItems->SetBackgroundColor(Color(0.15f, 0.15f, 0.15f, 1.0f));
+	m_CommodityListItems->AddMouseButtonListener(this);
 	
 	const std::vector< PlanetCommodity * > & PlanetCommodities(Planet->GetCommodities());
 	std::vector< PlanetCommodity * >::const_iterator PlanetCommodityIterator(PlanetCommodities.begin());
@@ -298,6 +299,31 @@ bool TradeCenterDialog::OnMouseButton(Widget * EventSource, int Button, int Stat
 			
 			return true;
 		}
+	}
+	else if((Button == 4 /* WHEEL_UP */) && (State == EV_DOWN))
+	{
+		Vector2f Position(m_CommodityListItems->GetPosition());
+		
+		if(Position[1] < 0.0f)
+		{
+			Position[1] = std::min(0.0f, Position[1] + 5.0f);
+			m_CommodityListItems->SetPosition(Position);
+		}
+		
+		return true;
+	}
+	else if((Button == 5 /* WHEEL_DOWN */) && (State == EV_DOWN))
+	{
+		Vector2f Position(m_CommodityListItems->GetPosition());
+		const Vector2f & Size(m_CommodityListItems->GetSize());
+		
+		if(Position[1] + Size[1] > m_CommodityList->GetSize()[1])
+		{
+			Position[1] -= std::min(5.f, Position[1] + Size[1] - m_CommodityList->GetSize()[1]);
+			m_CommodityListItems->SetPosition(Position);
+		}
+		
+		return true;
 	}
 	
 	return false;
