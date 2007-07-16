@@ -9,6 +9,6 @@
 		<blue>0.5</blue>
 		<alpha>1.0</alpha>
 	</color>
-	<object-type>cargo</object-type>
+	<object-type>commodity</object-type>
 	<object-class>luxury_goods</object-class>
 </commodity-class>

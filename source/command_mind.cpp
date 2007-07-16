@@ -19,9 +19,9 @@
 
 #include <assert.h>
 
-#include "cargo.h"
 #include "character.h"
 #include "command_mind.h"
+#include "commodity.h"
 #include "planet.h"
 #include "ship.h"
 #include "system.h"
@@ -185,28 +185,28 @@ void CommandMind::TargetPreviousCargo(void)
 	assert(GetCharacter() != 0);
 	assert(GetCharacter()->GetShip() != 0);
 	
-	const std::list< Cargo * > & Cargos(GetCharacter()->GetShip()->GetCurrentSystem()->GetCargos());
-	Cargo * SelectedCargo(dynamic_cast< Cargo * >(GetCharacter()->GetShip()->GetTarget().Get()));
+	const std::list< Commodity * > & Commodities(GetCharacter()->GetShip()->GetCurrentSystem()->GetCommodities());
+	Commodity * SelectedCommodity(dynamic_cast< Commodity * >(GetCharacter()->GetShip()->GetTarget().Get()));
 	
-	if(SelectedCargo == 0)
+	if(SelectedCommodity == 0)
 	{
-		if(Cargos.size() > 0)
+		if(Commodities.size() > 0)
 		{
-			GetCharacter()->GetShip()->SetTarget(Cargos.back()->GetReference());
+			GetCharacter()->GetShip()->SetTarget(Commodities.back()->GetReference());
 		}
 	}
 	else
 	{
-		std::list< Cargo * >::const_iterator CargoIterator(find(Cargos.begin(), Cargos.end(), SelectedCargo));
+		std::list< Commodity * >::const_iterator CommodityIterator(find(Commodities.begin(), Commodities.end(), SelectedCommodity));
 		
-		if(CargoIterator == Cargos.begin())
+		if(CommodityIterator == Commodities.begin())
 		{
 			GetCharacter()->GetShip()->SetTarget(0);
 		}
 		else
 		{
-			--CargoIterator;
-			GetCharacter()->GetShip()->SetTarget((*CargoIterator)->GetReference());
+			--CommodityIterator;
+			GetCharacter()->GetShip()->SetTarget((*CommodityIterator)->GetReference());
 		}
 	}
 }
@@ -216,24 +216,24 @@ void CommandMind::TargetNearestCargo(void)
 	assert(GetCharacter() != 0);
 	assert(GetCharacter()->GetShip() != 0);
 	
-	const std::list< Cargo * > & Cargos(GetCharacter()->GetShip()->GetCurrentSystem()->GetCargos());
+	const std::list< Commodity * > & Commodities(GetCharacter()->GetShip()->GetCurrentSystem()->GetCommodities());
 	float MinimumDistance(0.0f);
-	Cargo * MinimumCargo(0);
+	Commodity * MinimumCargo(0);
 	
-	for(std::list< Cargo * >::const_iterator CargoIterator = Cargos.begin(); CargoIterator != Cargos.end(); ++CargoIterator)
+	for(std::list< Commodity * >::const_iterator CommodityIterator = Commodities.begin(); CommodityIterator != Commodities.end(); ++CommodityIterator)
 	{
 		if(MinimumCargo == 0)
 		{
-			MinimumCargo = *CargoIterator;
+			MinimumCargo = *CommodityIterator;
 			MinimumDistance = (MinimumCargo->GetPosition() - GetCharacter()->GetShip()->GetPosition()).SquaredLength();
 		}
 		else
 		{
-			float Distance(((*CargoIterator)->GetPosition() - GetCharacter()->GetShip()->GetPosition()).SquaredLength());
+			float Distance(((*CommodityIterator)->GetPosition() - GetCharacter()->GetShip()->GetPosition()).SquaredLength());
 			
 			if(Distance < MinimumDistance)
 			{
-				MinimumCargo = *CargoIterator;
+				MinimumCargo = *CommodityIterator;
 				MinimumDistance = Distance;
 			}
 		}
@@ -253,34 +253,34 @@ void CommandMind::TargetNextCargo(void)
 	assert(GetCharacter() != 0);
 	assert(GetCharacter()->GetShip() != 0);
 	
-	const std::list< Cargo * > & Cargos(GetCharacter()->GetShip()->GetCurrentSystem()->GetCargos());
-	Cargo * SelectedCargo(dynamic_cast< Cargo * >(GetCharacter()->GetShip()->GetTarget().Get()));
+	const std::list< Commodity * > & Commodities(GetCharacter()->GetShip()->GetCurrentSystem()->GetCommodities());
+	Commodity * SelectedCommodity(dynamic_cast< Commodity * >(GetCharacter()->GetShip()->GetTarget().Get()));
 	
-	if(SelectedCargo == 0)
+	if(SelectedCommodity == 0)
 	{
-		if(Cargos.size() > 0)
+		if(Commodities.size() > 0)
 		{
-			GetCharacter()->GetShip()->SetTarget(Cargos.front()->GetReference());
+			GetCharacter()->GetShip()->SetTarget(Commodities.front()->GetReference());
 		}
 	}
 	else
 	{
-		std::list< Cargo * >::const_iterator CargoIterator(find(Cargos.begin(), Cargos.end(), SelectedCargo));
+		std::list< Commodity * >::const_iterator CommodityIterator(find(Commodities.begin(), Commodities.end(), SelectedCommodity));
 		
-		if(CargoIterator == Cargos.end())
+		if(CommodityIterator == Commodities.end())
 		{
 			GetCharacter()->GetShip()->SetTarget(0);
 		}
 		else
 		{
-			++CargoIterator;
-			if(CargoIterator == Cargos.end())
+			++CommodityIterator;
+			if(CommodityIterator == Commodities.end())
 			{
 				GetCharacter()->GetShip()->SetTarget(0);
 			}
 			else
 			{
-				GetCharacter()->GetShip()->SetTarget((*CargoIterator)->GetReference());
+				GetCharacter()->GetShip()->SetTarget((*CommodityIterator)->GetReference());
 			}
 		}
 	}

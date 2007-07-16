@@ -18,8 +18,8 @@
 **/
 
 #include "button.h"
-#include "cargo.h"
 #include "character.h"
+#include "commodity.h"
 #include "commodity_class.h"
 #include "globals.h"
 #include "label.h"
@@ -198,13 +198,13 @@ void TradeCenterDialog::Sell(const PlanetCommodityClass * PlanetCommodityClass)
 	{
 		Object * ContentObject(0);
 		
-		if(PlanetCommodityClass->GetCommodityClass()->GetObjectType() == "cargo")
+		if(PlanetCommodityClass->GetCommodityClass()->GetObjectType() == "commodity")
 		{
-			Cargo * ContentCargo(dynamic_cast< Cargo * >(*ContentIterator));
+			Commodity * ContentCommodity(dynamic_cast< Commodity * >(*ContentIterator));
 			
-			if((ContentCargo != 0) && (ContentCargo->GetCommodityClass()->GetIdentifier() == PlanetCommodityClass->GetCommodityClass()->GetObjectClass()))
+			if((ContentCommodity != 0) && (ContentCommodity->GetCommodityClass()->GetIdentifier() == PlanetCommodityClass->GetCommodityClass()->GetObjectClass()))
 			{
-				ContentObject = ContentCargo;
+				ContentObject = ContentCommodity;
 			}
 		}
 		else if(PlanetCommodityClass->GetCommodityClass()->GetObjectType() == "weapon")

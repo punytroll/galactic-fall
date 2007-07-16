@@ -17,8 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef CARGO_H
-#define CARGO_H
+#ifndef COMMODITY_H
+#define COMMODITY_H
 
 #include "math/vector2f.h"
 #include "math/vector3f.h"
@@ -27,11 +27,11 @@
 class CommodityClass;
 class Model;
 
-class Cargo : public PhysicalObject
+class Commodity : public PhysicalObject
 {
 public:
-	Cargo(const CommodityClass * CommodityClass);
-	virtual ~Cargo(void);
+	Commodity(const CommodityClass * CommodityClass);
+	virtual ~Commodity(void);
 	// modifiers
 	virtual void Draw(void) const;
 	void Move(float Seconds);
@@ -50,30 +50,30 @@ private:
 	Vector3f m_RotationAxis;
 	float m_AngularVelocity;
 	// no copy constructor
-	Cargo(const Cargo & Cargo);
+	Commodity(const Commodity & Commodity);
 };
 
-inline const CommodityClass * Cargo::GetCommodityClass(void) const
+inline const CommodityClass * Commodity::GetCommodityClass(void) const
 {
 	return m_CommodityClass;
 }
 
-inline float Cargo::GetHull(void) const
+inline float Commodity::GetHull(void) const
 {
 	return m_Hull;
 }
 
-inline const Vector2f & Cargo::GetVelocity(void) const
+inline const Vector2f & Commodity::GetVelocity(void) const
 {
 	return m_Velocity;
 }
 
-inline void Cargo::SetHull(float Hull)
+inline void Commodity::SetHull(float Hull)
 {
 	m_Hull = Hull;
 }
 
-inline void Cargo::SetVelocity(const Vector2f & Velocity)
+inline void Commodity::SetVelocity(const Vector2f & Velocity)
 {
 	m_Velocity = Velocity;
 }

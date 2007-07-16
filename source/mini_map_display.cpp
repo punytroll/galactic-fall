@@ -19,7 +19,7 @@
 
 #include <GL/gl.h>
 
-#include "cargo.h"
+#include "commodity.h"
 #include "mini_map_display.h"
 #include "planet.h"
 #include "ship.h"
@@ -50,7 +50,7 @@ void MiniMapDisplay::DrawInViewport(void) const
 		
 		const std::vector< Planet * > & Planets(m_Owner->GetCurrentSystem()->GetPlanets());
 		const std::list< Ship * > & Ships(m_Owner->GetCurrentSystem()->GetShips());
-		const std::list< Cargo * > & Cargos(m_Owner->GetCurrentSystem()->GetCargos());
+		const std::list< Commodity * > & Commodities(m_Owner->GetCurrentSystem()->GetCommodities());
 		
 		glBegin(GL_POINTS);
 		glColor3f(0.8f, 0.8f, 0.8f);
@@ -78,14 +78,14 @@ void MiniMapDisplay::DrawInViewport(void) const
 				glColor3f(0.8f, 0.8f, 0.8f);
 			}
 		}
-		for(std::list< Cargo * >::const_iterator CargoIterator = Cargos.begin(); CargoIterator != Cargos.end(); ++CargoIterator)
+		for(std::list< Commodity * >::const_iterator CommodityIterator = Commodities.begin(); CommodityIterator != Commodities.end(); ++CommodityIterator)
 		{
-			if(*CargoIterator == m_Owner->GetTarget().Get())
+			if(*CommodityIterator == m_Owner->GetTarget().Get())
 			{
 				glColor3f(0.2f, 1.0f, 0.0f);
 			}
-			glVertex2f((*CargoIterator)->GetPosition().m_V.m_A[0], (*CargoIterator)->GetPosition().m_V.m_A[1]);
-			if(*CargoIterator == m_Owner->GetTarget().Get())
+			glVertex2f((*CommodityIterator)->GetPosition().m_V.m_A[0], (*CommodityIterator)->GetPosition().m_V.m_A[1]);
+			if(*CommodityIterator == m_Owner->GetTarget().Get())
 			{
 				glColor3f(0.8f, 0.8f, 0.8f);
 			}
