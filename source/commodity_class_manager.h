@@ -17,23 +17,30 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include "color.h"
-#include "commodity.h"
+#ifndef COMMODITY_CLASS_MANAGER_H
+#define COMMODITY_CLASS_MANAGER_H
 
-Commodity::Commodity(const std::string & Identifier) :
-	m_Color(0),
-	m_Identifier(Identifier),
-	m_Model(0)
+#include <map>
+#include <string>
+
+class Element;
+class CommodityClass;
+
+class CommodityClassManager
 {
+public:
+	~CommodityClassManager(void);
+	const std::map< std::string, CommodityClass * > & GetCommodityClasses(void) const;
+	const CommodityClass * Get(const std::string & Identifier) const;
+	CommodityClass * Create(const std::string & Identifier);
+	void Destroy(const std::string & Identifier);
+private:
+	std::map< std::string, CommodityClass * > m_CommodityClasses;
+};
+
+inline const std::map< std::string, CommodityClass * > & CommodityClassManager::GetCommodityClasses(void) const
+{
+	return m_CommodityClasses;
 }
 
-Commodity::~Commodity(void)
-{
-	delete m_Color;
-	m_Color = 0;
-}
-
-void Commodity::SetColor(const Color & NewColor)
-{
-	m_Color = new Color(NewColor);
-}
+#endif

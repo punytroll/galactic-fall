@@ -27,28 +27,28 @@
 #include "type_definitions.h"
 
 class Color;
-class Commodity;
+class CommodityClass;
 
-class PlanetCommodity
+class PlanetCommodityClass
 {
 public:
-	PlanetCommodity(const Commodity * Commodity);
-	virtual ~PlanetCommodity(void);
-	const Commodity * GetCommodity(void) const;
+	PlanetCommodityClass(const CommodityClass * CommodityClass);
+	virtual ~PlanetCommodityClass(void);
+	const CommodityClass * GetCommodityClass(void) const;
 	u4byte GetPrice(void) const;
 	void SetBasePriceModifier(float BasePriceModifier);
 	float GetBasePriceModifier(void) const;
 private:
-	const Commodity * m_Commodity;
+	const CommodityClass * m_CommodityClass;
 	float m_BasePriceModifier;
 };
 
-inline void PlanetCommodity::SetBasePriceModifier(float BasePriceModifier)
+inline void PlanetCommodityClass::SetBasePriceModifier(float BasePriceModifier)
 {
 	m_BasePriceModifier = BasePriceModifier;
 }
 
-inline float PlanetCommodity::GetBasePriceModifier(void) const
+inline float PlanetCommodityClass::GetBasePriceModifier(void) const
 {
 	return m_BasePriceModifier;
 }
@@ -62,7 +62,7 @@ public:
 	const std::string & GetIdentifier(void) const;
 	const std::string & GetDescription(void) const;
 	float GetSize(void) const;
-	const std::vector< PlanetCommodity * > & GetCommodities(void) const;
+	const std::vector< PlanetCommodityClass * > & GetCommodityClasses(void) const;
 	u4byte GetLandingFee(void) const;
 	// setters
 	void SetLandingFee(float LandingFee);
@@ -70,19 +70,19 @@ public:
 	void SetSize(const float & Size);
 	void SetColor(const Color & Color);
 	virtual void Draw(void) const;
-	PlanetCommodity * CreateCommodity(const Commodity * Commodity);
+	PlanetCommodityClass * CreateCommodityClass(const CommodityClass * Commodity);
 private:
 	std::string m_Identifier;
 	std::string m_Description;
 	float m_Size;
 	float m_LandingFee;
 	Color * m_Color;
-	std::vector< PlanetCommodity * > m_Commodities;
+	std::vector< PlanetCommodityClass * > m_CommodityClasses;
 };
 
-inline const Commodity * PlanetCommodity::GetCommodity(void) const
+inline const CommodityClass * PlanetCommodityClass::GetCommodityClass(void) const
 {
-	return m_Commodity;
+	return m_CommodityClass;
 }
 
 inline const std::string & Planet::GetIdentifier(void) const
@@ -100,9 +100,9 @@ inline float Planet::GetSize(void) const
 	return m_Size;
 }
 
-inline const std::vector< PlanetCommodity * > & Planet::GetCommodities(void) const
+inline const std::vector< PlanetCommodityClass * > & Planet::GetCommodityClasses(void) const
 {
-	return m_Commodities;
+	return m_CommodityClasses;
 }
 
 inline u4byte Planet::GetLandingFee(void) const

@@ -42,8 +42,8 @@
 #include "character.h"
 #include "color.h"
 #include "command_mind.h"
-#include "commodity.h"
-#include "commodity_manager.h"
+#include "commodity_class.h"
+#include "commodity_class_manager.h"
 #include "destroy_listener.h"
 #include "draw_text.h"
 #include "galaxy.h"
@@ -88,7 +88,7 @@ int g_MouseButton(-1);
 Camera g_Camera;
 ModelManager g_ModelManager;
 ShipClassManager g_ShipClassManager;
-CommodityManager g_CommodityManager;
+CommodityClassManager g_CommodityClassManager;
 WeaponClassManager * g_WeaponClassManager;
 Reference< CommandMind > g_InputMind;
 Reference< Mind > g_OutputMind;
@@ -793,10 +793,10 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 			
 			if(AmountOfCargo <= NewShip->GetFreeCargoHoldSize())
 			{
-				const std::map< std::string, Commodity * > & Commodities(g_CommodityManager.GetCommodities());
-				std::map< std::string, Commodity * >::const_iterator CommodityIterator(Commodities.begin());
+				const std::map< std::string, CommodityClass * > & CommodityClasses(g_CommodityClassManager.GetCommodityClasses());
+				std::map< std::string, CommodityClass * >::const_iterator CommodityIterator(CommodityClasses.begin());
 				
-				for(std::map< std::string, Commodity * >::size_type Choice = GetRandomInteger(Commodities.size() - 1); Choice > 0; --Choice)
+				for(std::map< std::string, CommodityClass * >::size_type Choice = GetRandomInteger(CommodityClasses.size() - 1); Choice > 0; --Choice)
 				{
 					++CommodityIterator;
 				}
@@ -1328,7 +1328,7 @@ void KeyDown(unsigned int KeyCode)
 				
 				if(TheCargo != 0)
 				{
-					XML << element << "cargo" << attribute << "commodity-identifier" << value << TheCargo->GetCommodity()->GetIdentifier() << end;
+					XML << element << "cargo" << attribute << "commodity-identifier" << value << TheCargo->GetCommodityClass()->GetIdentifier() << end;
 				}
 				else if(TheWeapon != 0)
 				{
@@ -1751,7 +1751,7 @@ void LoadSavegame(const Element * SaveElement)
 					{
 						if((*ManifestChild)->GetName() == "cargo")
 						{
-							PlayerShip->AddContent(new Cargo(g_CommodityManager.Get((*ManifestChild)->GetAttribute("commodity-identifier"))));
+							PlayerShip->AddContent(new Cargo(g_CommodityClassManager.Get((*ManifestChild)->GetAttribute("commodity-identifier"))));
 						}
 						else if((*ManifestChild)->GetName() == "weapon")
 						{
@@ -1914,7 +1914,7 @@ int main(int argc, char ** argv)
 	}
 	// read the data from the archive
 	ReadModels(Archive, &g_ModelManager);
-	ReadCommodities(Archive, &g_CommodityManager);
+	ReadCommodityClasses(Archive, &g_CommodityClassManager);
 	ReadShipClasses(Archive, &g_ShipClassManager);
 	ReadSystems(Archive, g_Galaxy);
 	ReadSystemLinks(Archive, g_Galaxy);

@@ -20,25 +20,25 @@
 #include <GL/gl.h>
 
 #include "color.h"
-#include "commodity.h"
+#include "commodity_class.h"
 #include "globals.h"
 #include "model.h"
 #include "model_manager.h"
 #include "planet.h"
 
-PlanetCommodity::PlanetCommodity(const Commodity * Commodity) :
-	m_Commodity(Commodity),
+PlanetCommodityClass::PlanetCommodityClass(const CommodityClass * CommodityClass) :
+	m_CommodityClass(CommodityClass),
 	m_BasePriceModifier(1.0f)
 {
 }
 
-PlanetCommodity::~PlanetCommodity(void)
+PlanetCommodityClass::~PlanetCommodityClass(void)
 {
 }
 
-u4byte PlanetCommodity::GetPrice(void) const
+u4byte PlanetCommodityClass::GetPrice(void) const
 {
-	return static_cast< u4byte >(m_Commodity->GetBasePrice() * m_BasePriceModifier);
+	return static_cast< u4byte >(m_CommodityClass->GetBasePrice() * m_BasePriceModifier);
 }
 
 Planet::Planet(const std::string & Identifier) :
@@ -49,10 +49,10 @@ Planet::Planet(const std::string & Identifier) :
 
 Planet::~Planet(void)
 {
-	while(m_Commodities.size() > 0)
+	while(m_CommodityClasses.size() > 0)
 	{
-		delete m_Commodities.back();
-		m_Commodities.pop_back();
+		delete m_CommodityClasses.back();
+		m_CommodityClasses.pop_back();
 	}
 	delete m_Color;
 	m_Color = 0;
@@ -106,10 +106,10 @@ void Planet::Draw(void) const
 	glPopAttrib();
 }
 
-PlanetCommodity * Planet::CreateCommodity(const Commodity * Commodity)
+PlanetCommodityClass * Planet::CreateCommodityClass(const CommodityClass * CommodityClass)
 {
 	/// @todo check whether the commodity already exists
-	m_Commodities.push_back(new PlanetCommodity(Commodity));
+	m_CommodityClasses.push_back(new PlanetCommodityClass(CommodityClass));
 	
-	return m_Commodities.back();
+	return m_CommodityClasses.back();
 }
