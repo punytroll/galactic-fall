@@ -26,6 +26,7 @@
 #include "math/vector2f.h"
 #include "physical_object.h"
 #include "ship_class.h"
+#include "type_definitions.h"
 
 class CommodityClass;
 class ShipClass;
@@ -56,7 +57,7 @@ public:
 	float GetTurnSpeed(void) const;
 	const Vector2f & GetVelocity(void) const;
 	float GetFreeCargoHoldSize(void) const;
-	float GetCommodityAmount(const CommodityClass * CargoCommodityClass) const;
+	unsigned_numeric GetContentAmount(const std::string & Type, const std::string & Class) const;
 	Reference< PhysicalObject > & GetTarget(void);
 	const Reference< PhysicalObject > & GetTarget(void) const;
 	System * GetLinkedSystemTarget(void);

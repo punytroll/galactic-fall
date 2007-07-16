@@ -293,20 +293,32 @@ float Ship::GetFreeCargoHoldSize(void) const
 	return CargoHoldSize;
 }
 
-float Ship::GetCommodityAmount(const CommodityClass * CargoCommodityClass) const
+unsigned_numeric Ship::GetContentAmount(const std::string & Type, const std::string & Class) const
 {
-	float Amount(0.0f);
-	std::set< Object * >::const_iterator ManifestIterator(GetContent().begin());
+	unsigned_numeric Amount(0);
+	std::set< Object * >::const_iterator ContentIterator(GetContent().begin());
 	
-	while(ManifestIterator != GetContent().end())
+	while(ContentIterator != GetContent().end())
 	{
-		Cargo * TheCargo(dynamic_cast< Cargo * >(*ManifestIterator));
-		
-		if((TheCargo != 0) && (TheCargo->GetCommodityClass() == CargoCommodityClass))
+		if(Type == "cargo")
 		{
-			Amount += 1.0f;
+			Cargo * TheCargo(dynamic_cast< Cargo * >(*ContentIterator));
+			
+			if((TheCargo != 0) && (TheCargo->GetCommodityClass()->GetIdentifier() == Class))
+			{
+				Amount += 1;
+			}
 		}
-		++ManifestIterator;
+		else if(Type == "weapon")
+		{
+			Weapon * TheWeapon(dynamic_cast< Weapon * >(*ContentIterator));
+			
+			if((TheWeapon != 0) && (TheWeapon->GetWeaponClass()->GetIdentifier() == Class))
+			{
+				Amount += 1;
+			}
+		}
+		++ContentIterator;
 	}
 	
 	return Amount;

@@ -23,5 +23,6 @@
 #include <stdint.h>
 
 typedef uint32_t u4byte;
+typedef unsigned long int unsigned_numeric;
 
 #endif

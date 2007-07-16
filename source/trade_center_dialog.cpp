@@ -68,7 +68,7 @@ TradeCenterCommodityClass::TradeCenterCommodityClass(Widget * SupWidget, PlanetC
 
 void TradeCenterCommodityClass::UpdateCharacterAmount(void)
 {
-	m_CharacterAmountLabel->SetString(to_string_cast(m_Ship->GetCommodityAmount(m_PlanetCommodity->GetCommodityClass())));
+	m_CharacterAmountLabel->SetString(to_string_cast(m_Ship->GetContentAmount(m_PlanetCommodity->GetCommodityClass()->GetObjectType(), m_PlanetCommodity->GetCommodityClass()->GetObjectClass())));
 }
 
 const PlanetCommodityClass * TradeCenterCommodityClass::GetPlanetCommodity(void) const

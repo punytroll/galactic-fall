@@ -205,7 +205,8 @@ ship_h = \
 	ship.h \
 	$(math_vector2f_h) \
 	$(physical_object_h) \
-	$(ship_class_h)
+	$(ship_class_h) \
+	$(type_definitions_h)
 
 ship_class_h = \
 	ship_class.h \
