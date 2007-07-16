@@ -465,7 +465,7 @@ string_cast.o: string_cast.cpp $(string_cast_h)
 system.o: system.cpp $(cargo_h) $(planet_h) $(ship_h) $(shot_h) $(star_h) $(system_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-trade_center_dialog.o: trade_center_dialog.cpp $(button_h) $(cargo_h) $(character_h) $(commodity_class_h) $(model_manager_h) $(label_h) $(object_factory_h) $(planet_h) $(real_time_h) $(ship_h) $(trade_center_dialog_h)
+trade_center_dialog.o: trade_center_dialog.cpp $(button_h) $(cargo_h) $(character_h) $(commodity_class_h) $(model_manager_h) $(label_h) $(object_factory_h) $(planet_h) $(real_time_h) $(ship_h) $(trade_center_dialog_h) $(weapon_h) $(weapon_class_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 user_interface.o: user_interface.cpp $(user_interface_h) $(widget_h)
