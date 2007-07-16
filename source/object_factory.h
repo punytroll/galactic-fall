@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006  Hagen Möbius
+ * Copyright (C) 2007  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,30 +17,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef GLOBALS_H
-#define GLOBALS_H
+#ifndef OBJECT_FACTORY_H
+#define OBJECT_FACTORY_H
 
-/// DISCLAIMER: The intention of future development is to always create the more general concept of things so this file may someday be empty!
+#include <string>
 
-#define EV_DOWN 1
-#define EV_UP 2
+class Object;
 
-#define EV_MOUSE_BUTTON_LEFT 1
-#define EV_MOUSE_BUTTON_RIGHT 2
-#define EV_MOUSE_BUTTON_MIDDLE 3
-#define EV_MOUSE_WHEEL_DOWN 4
-#define EV_MOUSE_WHEEL_UP 5
-
-class CommodityClassManager;
-class Galaxy;
-class ModelManager;
-class ObjectFactory;
-class UserInterface;
-
-extern CommodityClassManager g_CommodityClassManager;
-extern Galaxy * g_Galaxy;
-extern ModelManager g_ModelManager;
-extern ObjectFactory * g_ObjectFactory;
-extern UserInterface g_UserInterface;
+class ObjectFactory
+{
+public:
+	Object * Create(const std::string & Type, const std::string & Class);
+};
 
 #endif
