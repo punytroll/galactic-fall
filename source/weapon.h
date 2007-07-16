@@ -29,7 +29,7 @@ class WeaponClass;
 class Weapon : public Object
 {
 public:
-	Weapon(WeaponClass * WeaponClass);
+	Weapon(const WeaponClass * WeaponClass);
 	void Update(float Seconds);
 	// getters
 	const WeaponClass * GetWeaponClass(void) const;
@@ -40,7 +40,7 @@ public:
 	void SetShip(Ship * Ship);
 	void SetSlot(Slot * Slot);
 private:
-	WeaponClass * m_WeaponClass;
+	const WeaponClass * m_WeaponClass;
 	Ship * m_Ship;
 	Slot * m_Slot;
 	bool m_Fire;

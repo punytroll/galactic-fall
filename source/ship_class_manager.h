@@ -29,7 +29,7 @@ class ShipClassManager
 {
 public:
 	~ShipClassManager(void);
-	ShipClass * Get(const std::string & Identifier);
+	const ShipClass * Get(const std::string & Identifier) const;
 	ShipClass * Create(const std::string & Identifier);
 	void Destroy(const std::string & Identifier);
 private:

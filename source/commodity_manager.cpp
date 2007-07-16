@@ -32,9 +32,9 @@ CommodityManager::~CommodityManager(void)
 	}
 }
 
-Commodity * CommodityManager::Get(const std::string & Identifier)
+const Commodity * CommodityManager::Get(const std::string & Identifier) const
 {
-	std::map< std::string, Commodity * >::iterator CommodityIterator(m_Commodities.find(Identifier));
+	std::map< std::string, Commodity * >::const_iterator CommodityIterator(m_Commodities.find(Identifier));
 	
 	if(CommodityIterator == m_Commodities.end())
 	{

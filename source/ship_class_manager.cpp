@@ -28,9 +28,9 @@ ShipClassManager::~ShipClassManager(void)
 	}
 }
 
-ShipClass * ShipClassManager::Get(const std::string & Identifier)
+const ShipClass * ShipClassManager::Get(const std::string & Identifier) const
 {
-	std::map< std::string, ShipClass * >::iterator ShipClassIterator(m_ShipClasses.find(Identifier));
+	std::map< std::string, ShipClass * >::const_iterator ShipClassIterator(m_ShipClasses.find(Identifier));
 	
 	if(ShipClassIterator == m_ShipClasses.end())
 	{

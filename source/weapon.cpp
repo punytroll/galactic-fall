@@ -28,7 +28,7 @@
 #include "weapon.h"
 #include "weapon_class.h"
 
-Weapon::Weapon(WeaponClass * WeaponClass) :
+Weapon::Weapon(const WeaponClass * WeaponClass) :
 	m_WeaponClass(WeaponClass),
 	m_Ship(0),
 	m_Slot(0),

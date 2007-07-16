@@ -31,7 +31,7 @@ class CommodityManager
 public:
 	~CommodityManager(void);
 	const std::map< std::string, Commodity * > & GetCommodities(void) const;
-	Commodity * Get(const std::string & Identifier);
+	const Commodity * Get(const std::string & Identifier) const;
 	Commodity * Create(const std::string & Identifier);
 	void Destroy(const std::string & Identifier);
 private:

@@ -26,7 +26,7 @@
 #include "model_manager.h"
 #include "planet.h"
 
-PlanetCommodity::PlanetCommodity(Commodity * Commodity) :
+PlanetCommodity::PlanetCommodity(const Commodity * Commodity) :
 	m_Commodity(Commodity),
 	m_BasePriceModifier(1.0f)
 {
@@ -106,7 +106,7 @@ void Planet::Draw(void) const
 	glPopAttrib();
 }
 
-PlanetCommodity * Planet::CreateCommodity(Commodity * Commodity)
+PlanetCommodity * Planet::CreateCommodity(const Commodity * Commodity)
 {
 	/// @todo check whether the commodity already exists
 	m_Commodities.push_back(new PlanetCommodity(Commodity));
