@@ -3,7 +3,6 @@ all: all-recursive
 all-recursive: data source
 
 clean: clean-recursive
-	$(RM) galactic-fall
 
 clean-recursive:
 	@$(MAKE) -C data clean
