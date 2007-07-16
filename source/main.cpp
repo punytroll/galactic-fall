@@ -57,6 +57,7 @@
 #include "mini_map_display.h"
 #include "model.h"
 #include "model_manager.h"
+#include "object_factory.h"
 #include "particle_systems.h"
 #include "perspective.h"
 #include "planet.h"
@@ -87,6 +88,7 @@ int g_LastMotionY(-1);
 int g_MouseButton(-1);
 Camera g_Camera;
 ModelManager g_ModelManager;
+ObjectFactory * g_ObjectFactory;
 ShipClassManager g_ShipClassManager;
 CommodityClassManager g_CommodityClassManager;
 WeaponClassManager * g_WeaponClassManager;
@@ -1874,6 +1876,7 @@ int main(int argc, char ** argv)
 	g_WeaponClassManager = new WeaponClassManager();
 	g_Galaxy = new Galaxy();
 	g_Galaxy->SetObjectIdentifier("::galaxy");
+	g_ObjectFactory = new ObjectFactory();
 	
 	// parse command line
 	std::vector< std::string > Arguments(argv, argv + argc);

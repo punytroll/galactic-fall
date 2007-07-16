@@ -160,6 +160,9 @@ object_h = \
 	object.h \
 	$(referencing_h)
 
+object_factory_h = \
+	object_factory.h
+
 particle_systems_h = \
 	particle_systems.h
 
@@ -371,7 +374,7 @@ key_listener.o: key_listener.cpp $(key_listener_h)
 label.o: label.cpp $(label_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-main.o: main.cpp $(arx_resources_h) $(arx_reading_h) $(callbacks_h) $(camera_h) $(cargo_h) $(character_h) $(color_h) $(command_mind_h) $(commodity_class_h) $(commodity_class_manager_h) $(destroy_listener_h) $(galaxy_h) $(game_time_h) $(label_h) $(map_dialog_h) $(map_knowledge_h) $(math_h) $(mind_h) $(mini_map_display_h) $(model_h) $(model_manager_h) $(particle_systems_h) $(perspective_h) $(planet_h) $(planet_dialog_h) $(real_time_h) $(scanner_display_h) $(ship_h) $(ship_class_h) $(ship_class_manager_h) $(shot_h) $(slot_h) $(star_h) $(star_map_display_h) $(state_machine_h) $(states_h) $(string_cast_h) $(system_h) $(user_interface_h) $(weapon_h) $(weapon_class_h) $(weapon_class_manager_h) $(widget_h) $(xml_puny_dom_h) $(xml_stream_h)
+main.o: main.cpp $(arx_resources_h) $(arx_reading_h) $(callbacks_h) $(camera_h) $(cargo_h) $(character_h) $(color_h) $(command_mind_h) $(commodity_class_h) $(commodity_class_manager_h) $(destroy_listener_h) $(galaxy_h) $(game_time_h) $(label_h) $(map_dialog_h) $(map_knowledge_h) $(math_h) $(mind_h) $(mini_map_display_h) $(model_h) $(model_manager_h) $(object_factory_h) $(particle_systems_h) $(perspective_h) $(planet_h) $(planet_dialog_h) $(real_time_h) $(scanner_display_h) $(ship_h) $(ship_class_h) $(ship_class_manager_h) $(shot_h) $(slot_h) $(star_h) $(star_map_display_h) $(state_machine_h) $(states_h) $(string_cast_h) $(system_h) $(user_interface_h) $(weapon_h) $(weapon_class_h) $(weapon_class_manager_h) $(widget_h) $(xml_puny_dom_h) $(xml_stream_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags libarxx` -c $< -o $@
 
 map_dialog.o: map_dialog.cpp $(button_h) $(globals_h) $(label) $(map_dialog_h) $(star_map_display_h) $(system_h)
@@ -399,6 +402,9 @@ mouse_motion_listener.o: mouse_motion_listener.cpp $(mouse_motion_listener_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 object.o: object.cpp $(object_h) $(real_time_h) $(string_cast_h) $(xml_stream_h)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+object_factory.o: object_factory.cpp $(cargo_h) $(commodity_class_manager_h) $(globals_h) $(object_factory_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 particle_systems.o: particle_systems.cpp $(color_h) $(game_time_h) $(math_h) $(particle_systems_h)
@@ -458,7 +464,7 @@ string_cast.o: string_cast.cpp $(string_cast_h)
 system.o: system.cpp $(cargo_h) $(planet_h) $(ship_h) $(shot_h) $(star_h) $(system_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-trade_center_dialog.o: trade_center_dialog.cpp $(button_h) $(cargo_h) $(character_h) $(commodity_class_h) $(model_manager_h) $(label_h) $(planet_h) $(real_time_h) $(ship_h) $(trade_center_dialog_h)
+trade_center_dialog.o: trade_center_dialog.cpp $(button_h) $(cargo_h) $(character_h) $(commodity_class_h) $(model_manager_h) $(label_h) $(object_factory_h) $(planet_h) $(real_time_h) $(ship_h) $(trade_center_dialog_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 user_interface.o: user_interface.cpp $(user_interface_h) $(widget_h)

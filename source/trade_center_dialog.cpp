@@ -23,6 +23,7 @@
 #include "commodity_class.h"
 #include "globals.h"
 #include "label.h"
+#include "object_factory.h"
 #include "planet.h"
 #include "real_time.h"
 #include "ship.h"
@@ -172,9 +173,9 @@ void TradeCenterDialog::Buy(const PlanetCommodityClass * PlanetCommodityClass)
 	{
 		if(m_Character->GetShip()->GetFreeCargoHoldSize() >= 1.0f)
 		{
-			Cargo * NewCargo(new Cargo(PlanetCommodityClass->GetCommodityClass()));
+			Object * NewCargo(g_ObjectFactory->Create("cargo", PlanetCommodityClass->GetCommodityClass()->GetIdentifier()));
 			
-			NewCargo->SetObjectIdentifier(m_Planet->GetObjectIdentifier() + "::created_at(" + to_string_cast(RealTime::GetTime(), 6) + ")::bought_by(" + m_Character->GetObjectIdentifier() + ")::commodity(" + NewCargo->GetCommodityClass()->GetIdentifier() + ")::cargo");
+			NewCargo->SetObjectIdentifier("::cargo::created_on(" + m_Planet->GetObjectIdentifier() + ")::created_at(" + to_string_cast(RealTime::GetTime(), 6) + ")::bought_by(" + m_Character->GetObjectIdentifier() + ")::commodity_class(" + PlanetCommodityClass->GetCommodityClass()->GetIdentifier() + ")");
 			m_Character->GetShip()->AddContent(NewCargo);
 			UpdateTraderCredits();
 			UpdateTraderFreeCargoHoldSize();
