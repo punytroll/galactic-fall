@@ -29,6 +29,8 @@
 #include "ship.h"
 #include "string_cast.h"
 #include "trade_center_dialog.h"
+#include "weapon.h"
+#include "weapon_class.h"
 
 class TradeCenterCommodityClass : public Widget
 {
@@ -189,24 +191,42 @@ void TradeCenterDialog::Buy(const PlanetCommodityClass * PlanetCommodityClass)
 
 void TradeCenterDialog::Sell(const PlanetCommodityClass * PlanetCommodityClass)
 {
-	const std::set< Object * > & Manifest(m_Character->GetShip()->GetContent());
-	std::set< Object * >::const_iterator ManifestIterator(Manifest.begin());
+	const std::set< Object * > & Content(m_Character->GetShip()->GetContent());
+	std::set< Object * >::const_iterator ContentIterator(Content.begin());
 	
-	while(ManifestIterator != Manifest.end())
+	while(ContentIterator != Content.end())
 	{
-		Cargo * TheCargo(dynamic_cast< Cargo * >(*ManifestIterator));
+		Object * ContentObject(0);
 		
-		if((TheCargo != 0) && (TheCargo->GetCommodityClass() == PlanetCommodityClass->GetCommodityClass()))
+		if(PlanetCommodityClass->GetCommodityClass()->GetObjectType() == "cargo")
 		{
-			m_Character->GetShip()->RemoveContent(*ManifestIterator);
-			delete TheCargo;
+			Cargo * ContentCargo(dynamic_cast< Cargo * >(*ContentIterator));
+			
+			if((ContentCargo != 0) && (ContentCargo->GetCommodityClass()->GetIdentifier() == PlanetCommodityClass->GetCommodityClass()->GetObjectClass()))
+			{
+				ContentObject = ContentCargo;
+			}
+		}
+		else if(PlanetCommodityClass->GetCommodityClass()->GetObjectType() == "weapon")
+		{
+			Weapon * ContentWeapon(dynamic_cast< Weapon * >(*ContentIterator));
+			
+			if((ContentWeapon != 0) && (ContentWeapon->GetWeaponClass()->GetIdentifier() == PlanetCommodityClass->GetCommodityClass()->GetObjectClass()))
+			{
+				ContentObject = ContentWeapon;
+			}
+		}
+		if(ContentObject != 0)
+		{
+			m_Character->GetShip()->RemoveContent(ContentObject);
+			delete ContentObject;
 			m_Character->AddCredits(PlanetCommodityClass->GetPrice());
 			UpdateTraderCredits();
 			UpdateTraderFreeCargoHoldSize();
 			
 			break;
 		}
-		++ManifestIterator;
+		++ContentIterator;
 	}
 }
 
