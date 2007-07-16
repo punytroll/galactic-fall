@@ -84,18 +84,18 @@
 		<array identifier="slots"/>
 	</ship-class>
 	
-	<commodity>
+	<commodity-class>
 		<string identifier="identifier"/>
 		<string identifier="name"/>
 		<float identifier="base-price"/>
 		<string identifier="model-identifier"/>
 		<color4f identifier="color"/>
-	</commodity>
+	</commodity-class>
 	
-	<offered-commodity>
+	<offered-commodity-class>
 		<string identifier="identifier"/>
 		<float identifier="base-price-modifier"/>
-	</offered-commodity>
+	</offered-commodity-class>
 	
 	<slot>
 		<string identifier="identifier"/>
@@ -116,7 +116,7 @@
 		<vector2f identifier="position"/>
 		<float identifier="size"/>
 		<color4f identifier="color"/>
-		<array identifier="offered-commodities"/>
+		<array identifier="offered-commodity-classes"/>
 		<float identifier="landing-fee"/>
 	</planet>
 	

@@ -1,4 +1,4 @@
-<commodity>
+<commodity-class>
 	<identifier>medical_supplies</identifier>
 	<name>Medical Supplies</name>
 	<base-price>300</base-price>
@@ -9,4 +9,4 @@
 		<blue>0.98</blue>
 		<alpha>1.0</alpha>
 	</color>
-</commodity>
+</commodity-class>

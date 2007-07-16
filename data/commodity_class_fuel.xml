@@ -1,4 +1,4 @@
-<commodity>
+<commodity-class>
 	<identifier>fuel</identifier>
 	<name>Fuel</name>
 	<base-price>200</base-price>
@@ -9,4 +9,4 @@
 		<blue>0.6</blue>
 		<alpha>1.0</alpha>
 	</color>
-</commodity>
+</commodity-class>
