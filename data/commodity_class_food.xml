@@ -9,4 +9,6 @@
 		<blue>0.25</blue>
 		<alpha>1.0</alpha>
 	</color>
+	<object-type>cargo</object-type>
+	<object-class>food</object-class>
 </commodity-class>

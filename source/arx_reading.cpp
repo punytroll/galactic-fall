@@ -181,8 +181,10 @@ static void ReadCommodityClass(CommodityClassManager * CommodityClassManager, Ar
 	float BasePrice;
 	std::string ModelIdentifier;
 	Color Color;
+	std::string ObjectType;
+	std::string ObjectClass;
 	
-	Reader >> Name >> BasePrice >> ModelIdentifier >> Color;
+	Reader >> Name >> BasePrice >> ModelIdentifier >> Color >> ObjectType >> ObjectClass;
 	
 	NewCommodityClass->SetName(Name);
 	NewCommodityClass->SetBasePrice(BasePrice);
@@ -195,6 +197,8 @@ static void ReadCommodityClass(CommodityClassManager * CommodityClassManager, Ar
 	}
 	NewCommodityClass->SetModel(Model);
 	NewCommodityClass->SetColor(Color);
+	NewCommodityClass->SetObjectType(ObjectType);
+	NewCommodityClass->SetObjectClass(ObjectClass);
 }
 
 static void ReadModel(ModelManager * ModelManager, Arxx::Reference & Reference)
