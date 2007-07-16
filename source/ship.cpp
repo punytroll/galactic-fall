@@ -23,9 +23,9 @@
 
 #include <GL/gl.h>
 
-#include "cargo.h"
 #include "character.h"
 #include "color.h"
+#include "commodity.h"
 #include "commodity_class.h"
 #include "game_time.h"
 #include "globals.h"
@@ -171,13 +171,13 @@ void Ship::Update(float Seconds)
 			
 			while(ContentIterator != GetContent().end())
 			{
-				Cargo * TheCargo(dynamic_cast< Cargo * >(*ContentIterator));
+				Commodity * TheCommodity(dynamic_cast< Commodity * >(*ContentIterator));
 				
-				if((TheCargo != 0) && (TheCargo->GetCommodityClass()->GetIdentifier() == "fuel"))
+				if((TheCommodity != 0) && (TheCommodity->GetCommodityClass()->GetIdentifier() == "fuel"))
 				{
 					m_Fuel = Clamp(m_Fuel + 1.0f, 0.0f, GetFuelCapacity());
-					TheCargo->Destroy();
-					delete TheCargo;
+					TheCommodity->Destroy();
+					delete TheCommodity;
 					
 					break;
 				}
@@ -236,33 +236,33 @@ void Ship::Update(float Seconds)
 				ManifestIterator = NextIterator;
 				++NextIterator;
 				
-				Cargo * TheCargo(dynamic_cast< Cargo * >(*ManifestIterator));
+				Commodity * TheCommodity(dynamic_cast< Commodity * >(*ManifestIterator));
 				
-				if(TheCargo != 0)
+				if(TheCommodity != 0)
 				{
-					RemoveContent(TheCargo);
-					TheCargo->SetPosition(GetPosition());
-					TheCargo->SetVelocity(GetVelocity() * 0.8f + Vector2f(GetRandomFloat(-0.5f, 0.5f), GetRandomFloat(-0.5f, 0.5f)));
-					GetCurrentSystem()->AddContent(TheCargo);
+					RemoveContent(TheCommodity);
+					TheCommodity->SetPosition(GetPosition());
+					TheCommodity->SetVelocity(GetVelocity() * 0.8f + Vector2f(GetRandomFloat(-0.5f, 0.5f), GetRandomFloat(-0.5f, 0.5f)));
+					GetCurrentSystem()->AddContent(TheCommodity);
 				}
 			}
 			m_Jettison = false;
 		}
 		if(m_Scoop == true)
 		{
-			Cargo * SelectedCargo(dynamic_cast< Cargo * >(GetTarget().Get()));
+			Commodity * SelectedCommodity(dynamic_cast< Commodity * >(GetTarget().Get()));
 			
-			if(SelectedCargo != 0)
+			if(SelectedCommodity != 0)
 			{
-				if(GetCurrentSystem()->RemoveContent(SelectedCargo) == true)
+				if(GetCurrentSystem()->RemoveContent(SelectedCommodity) == true)
 				{
-					if(AddContent(SelectedCargo) == true)
+					if(AddContent(SelectedCommodity) == true)
 					{
 						SetTarget(0);
 					}
 					else
 					{
-						GetCurrentSystem()->AddContent(SelectedCargo);
+						GetCurrentSystem()->AddContent(SelectedCommodity);
 					}
 				}
 			}
@@ -283,7 +283,7 @@ float Ship::GetFreeCargoHoldSize(void) const
 	
 	while(ManifestIterator != GetContent().end())
 	{
-		if(dynamic_cast< Cargo * >(*ManifestIterator) != 0)
+		if(dynamic_cast< Commodity * >(*ManifestIterator) != 0)
 		{
 			CargoHoldSize -= 1.0f;
 		}
@@ -300,11 +300,11 @@ unsigned_numeric Ship::GetContentAmount(const std::string & Type, const std::str
 	
 	while(ContentIterator != GetContent().end())
 	{
-		if(Type == "cargo")
+		if(Type == "commodity")
 		{
-			Cargo * TheCargo(dynamic_cast< Cargo * >(*ContentIterator));
+			Commodity * TheCommodity(dynamic_cast< Commodity * >(*ContentIterator));
 			
-			if((TheCargo != 0) && (TheCargo->GetCommodityClass()->GetIdentifier() == Class))
+			if((TheCommodity != 0) && (TheCommodity->GetCommodityClass()->GetIdentifier() == Class))
 			{
 				Amount += 1;
 			}

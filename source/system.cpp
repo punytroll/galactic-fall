@@ -19,7 +19,7 @@
 
 #include <float.h>
 
-#include "cargo.h"
+#include "commodity.h"
 #include "planet.h"
 #include "ship.h"
 #include "shot.h"
@@ -88,13 +88,13 @@ bool System::OnAddContent(Object * Content)
 		return false;
 	}
 	
-	Cargo * TheCargo(dynamic_cast< Cargo * >(Content));
+	Commodity * TheCommodity(dynamic_cast< Commodity * >(Content));
 	
-	if(TheCargo != 0)
+	if(TheCommodity != 0)
 	{
 		if(Position::OnAddContent(Content) == true)
 		{
-			m_Cargos.push_back(TheCargo);
+			m_Commodities.push_back(TheCommodity);
 			
 			return true;
 		}
@@ -183,17 +183,17 @@ bool System::OnRemoveContent(Object * Content)
 		return false;
 	}
 	
-	Cargo * TheCargo(dynamic_cast< Cargo * >(Content));
+	Commodity * TheCommodity(dynamic_cast< Commodity * >(Content));
 	
-	if(TheCargo != 0)
+	if(TheCommodity != 0)
 	{
-		std::list< Cargo * >::iterator CargoIterator(std::find(m_Cargos.begin(), m_Cargos.end(), TheCargo));
+		std::list< Commodity * >::iterator CommodityIterator(std::find(m_Commodities.begin(), m_Commodities.end(), TheCommodity));
 		
-		if(CargoIterator != m_Cargos.end())
+		if(CommodityIterator != m_Commodities.end())
 		{
 			if(Position::OnAddContent(Content) == true)
 			{
-				m_Cargos.erase(CargoIterator);
+				m_Commodities.erase(CommodityIterator);
 				
 				return true;
 			}

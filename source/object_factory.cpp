@@ -19,7 +19,7 @@
 
 #include <stdexcept>
 
-#include "cargo.h"
+#include "commodity.h"
 #include "commodity_class_manager.h"
 #include "globals.h"
 #include "object_factory.h"
@@ -28,7 +28,7 @@
 
 Object * ObjectFactory::Create(const std::string & Type, const std::string & Class)
 {
-	if(Type == "cargo")
+	if(Type == "commodity")
 	{
 		const CommodityClass * CommodityClass(g_CommodityClassManager.Get(Class));
 		
@@ -37,7 +37,7 @@ Object * ObjectFactory::Create(const std::string & Type, const std::string & Cla
 			throw std::runtime_error("Unknown object class '" + Class + "' for object type '" + Type + "'.");
 		}
 		
-		return new Cargo(CommodityClass);
+		return new Commodity(CommodityClass);
 	}
 	else if(Type == "weapon")
 	{

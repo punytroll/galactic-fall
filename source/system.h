@@ -26,7 +26,7 @@
 
 #include "position.h"
 
-class Cargo;
+class Commodity;
 class Planet;
 class Ship;
 class Shot;
@@ -39,7 +39,7 @@ public:
 	virtual ~System(void);
 	const std::string & GetIdentifier(void) const;
 	const std::string & GetName(void) const;
-	const std::list< Cargo * > & GetCargos(void) const;
+	const std::list< Commodity * > & GetCommodities(void) const;
 	const std::vector< Planet * > & GetPlanets(void) const;
 	const std::list< Ship * > & GetShips(void) const;
 	const std::list< Shot * > & GetShots(void) const;
@@ -63,7 +63,7 @@ private:
 	std::vector< Planet * > m_Planets;
 	std::list< System * > m_LinkedSystems;
 	std::list< Ship * > m_Ships;
-	std::list< Cargo * > m_Cargos;
+	std::list< Commodity * > m_Commodities;
 	std::list< Shot * > m_Shots;
 };
 
@@ -77,9 +77,9 @@ inline const std::string & System::GetName(void) const
 	return m_Name;
 }
 
-inline const std::list< Cargo * > & System::GetCargos(void) const
+inline const std::list< Commodity * > & System::GetCommodities(void) const
 {
-	return m_Cargos;
+	return m_Commodities;
 }
 
 inline const std::vector< Planet * > & System::GetPlanets(void) const

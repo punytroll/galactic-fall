@@ -19,12 +19,12 @@
 
 #include <GL/gl.h>
 
-#include "cargo.h"
 #include "color.h"
+#include "commodity.h"
 #include "commodity_class.h"
 #include "model.h"
 
-Cargo::Cargo(const CommodityClass * CommodityClass) :
+Commodity::Commodity(const CommodityClass * CommodityClass) :
 	m_CommodityClass(CommodityClass),
 	m_Hull(20.0f),
 	m_Velocity(true)
@@ -37,11 +37,11 @@ Cargo::Cargo(const CommodityClass * CommodityClass) :
 	m_AngularVelocity = static_cast< float >(random()) / RAND_MAX;
 }
 
-Cargo::~Cargo(void)
+Commodity::~Commodity(void)
 {
 }
 
-void Cargo::Draw(void) const
+void Commodity::Draw(void) const
 {
 	glPushMatrix();
 	glTranslatef(m_Position.m_V.m_A[0], m_Position.m_V.m_A[1], 0.0f);
@@ -52,7 +52,7 @@ void Cargo::Draw(void) const
 	glPopMatrix();
 }
 
-void Cargo::Move(float Seconds)
+void Commodity::Move(float Seconds)
 {
 	m_Position += m_Velocity * Seconds;
 	m_AngularPosition += m_AngularVelocity * Seconds;

@@ -38,11 +38,11 @@
 #include "arx_resources.h"
 #include "callbacks.h"
 #include "camera.h"
-#include "cargo.h"
 #include "character.h"
 #include "color.h"
 #include "command_mind.h"
 #include "commodity_class.h"
+#include "commodity.h"
 #include "commodity_class_manager.h"
 #include "destroy_listener.h"
 #include "draw_text.h"
@@ -187,19 +187,19 @@ int WantToLand(Character * Character, Ship * Ship, Planet * Planet)
 	return OK;
 }
 
-int WantToScoop(Ship * Ship, Cargo * Cargo)
+int WantToScoop(Ship * Ship, Commodity * Commodity)
 {
-	if(Cargo == 0)
+	if(Commodity == 0)
 	{
 		return NO_SCOOP_TARGET;
 	}
 	// test distance
-	if((Cargo->GetPosition() - Ship->GetPosition()).SquaredLength() > 5.0f * Cargo->GetRadialSize() * Cargo->GetRadialSize())
+	if((Commodity->GetPosition() - Ship->GetPosition()).SquaredLength() > 5.0f * Commodity->GetRadialSize() * Commodity->GetRadialSize())
 	{
 		return TOO_FAR_AWAY;
 	}
 	// test speed
-	if((Ship->GetVelocity() - Cargo->GetVelocity()).SquaredLength() > 2.0f)
+	if((Ship->GetVelocity() - Commodity->GetVelocity()).SquaredLength() > 2.0f)
 	{
 		return TOO_HIGH_RELATIVE_VELOCITY;
 	}
@@ -385,11 +385,11 @@ void CalculateMovements(System * System)
 			}
 		}
 		
-		const std::list< Cargo * > & Cargos(System->GetCargos());
+		const std::list< Commodity * > & Commodities(System->GetCommodities());
 		
-		for(std::list< Cargo * >::const_iterator CargoIterator = Cargos.begin(); CargoIterator != Cargos.end(); ++CargoIterator)
+		for(std::list< Commodity * >::const_iterator CommodityIterator = Commodities.begin(); CommodityIterator != Commodities.end(); ++CommodityIterator)
 		{
-			(*CargoIterator)->Move(Seconds);
+			(*CommodityIterator)->Move(Seconds);
 		}
 		
 		const std::list< Shot * > & Shots(System->GetShots());
@@ -437,14 +437,14 @@ void CalculateMovements(System * System)
 									ManifestIterator = NextIterator;
 									++NextIterator;
 									
-									Cargo * TheCargo(dynamic_cast< Cargo * >(*ManifestIterator));
+									Commodity * TheCommodity(dynamic_cast< Commodity * >(*ManifestIterator));
 									
-									if(TheCargo != 0)
+									if(TheCommodity != 0)
 									{
-										TheShip->RemoveContent(TheCargo);
-										TheCargo->SetPosition(TheShip->GetPosition());
-										TheCargo->SetVelocity(TheShip->GetVelocity() * 0.8f + Vector2f(GetRandomFloat(0.1f, 1.2f), GetRandomFloat(0.0f, 2 * M_PI), Vector2f::InitializeMagnitudeAngle));
-										TheShip->GetCurrentSystem()->AddContent(TheCargo);
+										TheShip->RemoveContent(TheCommodity);
+										TheCommodity->SetPosition(TheShip->GetPosition());
+										TheCommodity->SetVelocity(TheShip->GetVelocity() * 0.8f + Vector2f(GetRandomFloat(0.1f, 1.2f), GetRandomFloat(0.0f, 2 * M_PI), Vector2f::InitializeMagnitudeAngle));
+										TheShip->GetCurrentSystem()->AddContent(TheCommodity);
 									}
 								}
 								DeleteObject(TheShip);
@@ -459,24 +459,24 @@ void CalculateMovements(System * System)
 			}
 			if(TheShot != 0)
 			{
-				for(std::list< Cargo * >::const_iterator CargoIterator = Cargos.begin(); CargoIterator != Cargos.end(); ++CargoIterator)
+				for(std::list< Commodity * >::const_iterator CommodityIterator = Commodities.begin(); CommodityIterator != Commodities.end(); ++CommodityIterator)
 				{
-					Cargo * TheCargo(*CargoIterator);
+					Commodity * TheCommodity(*CommodityIterator);
 					
-					if((TheShot->GetPosition() - TheCargo->GetPosition()).SquaredLength() < (TheShot->GetRadialSize() * TheShot->GetRadialSize() + TheCargo->GetRadialSize() * TheCargo->GetRadialSize()))
+					if((TheShot->GetPosition() - TheCommodity->GetPosition()).SquaredLength() < (TheShot->GetRadialSize() * TheShot->GetRadialSize() + TheCommodity->GetRadialSize() * TheCommodity->GetRadialSize()))
 					{
 						ParticleSystem * NewHitParticleSystem(CreateParticleSystem("hit"));
 						
 						NewHitParticleSystem->SetPosition(TheShot->GetPosition());
-						NewHitParticleSystem->SetVelocity((TheShot->GetVelocity() * 0.4f) + (TheCargo->GetVelocity() * 0.6f));
-						TheCargo->SetHull(TheCargo->GetHull() - TheShot->GetDamage());
-						if(TheCargo->GetHull() <= 0.0f)
+						NewHitParticleSystem->SetVelocity((TheShot->GetVelocity() * 0.4f) + (TheCommodity->GetVelocity() * 0.6f));
+						TheCommodity->SetHull(TheCommodity->GetHull() - TheShot->GetDamage());
+						if(TheCommodity->GetHull() <= 0.0f)
 						{
 							ParticleSystem * NewHitParticleSystem(CreateParticleSystem("hit"));
 							
-							NewHitParticleSystem->SetPosition(TheCargo->GetPosition());
-							NewHitParticleSystem->SetVelocity(TheCargo->GetVelocity() * 0.5f);
-							DeleteObject(TheCargo);
+							NewHitParticleSystem->SetPosition(TheCommodity->GetPosition());
+							NewHitParticleSystem->SetVelocity(TheCommodity->GetVelocity() * 0.5f);
+							DeleteObject(TheCommodity);
 						}
 						DeleteObject(TheShot);
 						TheShot = 0;
@@ -635,7 +635,7 @@ void Render(System * System)
 	{
 		const std::vector< Planet * > & Planets(System->GetPlanets());
 		const std::list< Ship * > & Ships(System->GetShips());
-		const std::list< Cargo * > & Cargos(System->GetCargos());
+		const std::list< Commodity * > & Commodities(System->GetCommodities());
 		const std::list< Shot * > & Shots(System->GetShots());
 		
 		for(std::vector< Planet * >::const_iterator PlanetIterator = Planets.begin(); PlanetIterator != Planets.end(); ++PlanetIterator)
@@ -643,10 +643,10 @@ void Render(System * System)
 			glClear(GL_DEPTH_BUFFER_BIT);
 			(*PlanetIterator)->Draw();
 		}
-		for(std::list< Cargo * >::const_iterator CargoIterator = Cargos.begin(); CargoIterator != Cargos.end(); ++CargoIterator)
+		for(std::list< Commodity * >::const_iterator CommodityIterator = Commodities.begin(); CommodityIterator != Commodities.end(); ++CommodityIterator)
 		{
 			glClear(GL_DEPTH_BUFFER_BIT);
-			(*CargoIterator)->Draw();
+			(*CommodityIterator)->Draw();
 		}
 		for(std::list< Ship * >::const_iterator ShipIterator = Ships.begin(); ShipIterator != Ships.end(); ++ShipIterator)
 		{
@@ -740,9 +740,9 @@ void EmptySystem(System * System)
 		{
 			DeleteObject(System->GetShips().front());
 		}
-		while(System->GetCargos().empty() == false)
+		while(System->GetCommodities().empty() == false)
 		{
-			DeleteObject(System->GetCargos().front());
+			DeleteObject(System->GetCommodities().front());
 		}
 		while(System->GetShots().empty() == false)
 		{
@@ -789,6 +789,7 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 	else if(ShipClassIdentifier == "transporter")
 	{
 		NewCharacter->SetCredits(GetRandomU4Byte(500, 2500));
+		/// @todo update to commodity classes
 		for(int NumberOfCommodities = static_cast< int >(GetRandomFloatFromExponentialDistribution(2)); NumberOfCommodities > 0; --NumberOfCommodities)
 		{
 			int AmountOfCargo(GetRandomIntegerFromExponentialDistribution(NewShip->GetShipClass()->GetCargoHoldSize() / 2));
@@ -796,18 +797,18 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 			if(AmountOfCargo <= NewShip->GetFreeCargoHoldSize())
 			{
 				const std::map< std::string, CommodityClass * > & CommodityClasses(g_CommodityClassManager.GetCommodityClasses());
-				std::map< std::string, CommodityClass * >::const_iterator CommodityIterator(CommodityClasses.begin());
+				std::map< std::string, CommodityClass * >::const_iterator CommodityClassIterator(CommodityClasses.begin());
 				
 				for(std::map< std::string, CommodityClass * >::size_type Choice = GetRandomInteger(CommodityClasses.size() - 1); Choice > 0; --Choice)
 				{
-					++CommodityIterator;
+					++CommodityClassIterator;
 				}
 				while(AmountOfCargo > 0)
 				{
-					Cargo * NewCargo(new Cargo(CommodityIterator->second));
+					Commodity * NewCommodity(new Commodity(CommodityClassIterator->second));
 					
-					NewCargo->SetObjectIdentifier("::cargo(" + CommodityIterator->second->GetIdentifier() + ")::(" + to_string_cast(NumberOfCommodities) + "|" + to_string_cast(AmountOfCargo) + ")" + IdentifierSuffix);
-					NewShip->AddContent(NewCargo);
+					NewCommodity->SetObjectIdentifier("::commodity(" + CommodityClassIterator->second->GetIdentifier() + ")::(" + to_string_cast(NumberOfCommodities) + "|" + to_string_cast(AmountOfCargo) + ")" + IdentifierSuffix);
+					NewShip->AddContent(NewCommodity);
 					--AmountOfCargo;
 				}
 			}
@@ -1085,7 +1086,7 @@ void KeyDown(unsigned int KeyCode)
 		{
 			if(g_InputMind == true)
 			{
-				switch(WantToScoop(g_InputMind->GetCharacter()->GetShip(), dynamic_cast< Cargo * >(g_InputMind->GetCharacter()->GetShip()->GetTarget().Get())))
+				switch(WantToScoop(g_InputMind->GetCharacter()->GetShip(), dynamic_cast< Commodity * >(g_InputMind->GetCharacter()->GetShip()->GetTarget().Get())))
 				{
 				case OK:
 					{
@@ -1325,12 +1326,12 @@ void KeyDown(unsigned int KeyCode)
 			
 			while(ManifestIterator != Ship->GetContent().end())
 			{
-				Cargo * TheCargo(dynamic_cast< Cargo * >(*ManifestIterator));
+				Commodity * TheCommodity(dynamic_cast< Commodity * >(*ManifestIterator));
 				Weapon * TheWeapon(dynamic_cast< Weapon * >(*ManifestIterator));
 				
-				if(TheCargo != 0)
+				if(TheCommodity != 0)
 				{
-					XML << element << "cargo" << attribute << "commodity-identifier" << value << TheCargo->GetCommodityClass()->GetIdentifier() << end;
+					XML << element << "commodity" << attribute << "commodity-identifier" << value << TheCommodity->GetCommodityClass()->GetIdentifier() << end;
 				}
 				else if(TheWeapon != 0)
 				{
@@ -1751,9 +1752,9 @@ void LoadSavegame(const Element * SaveElement)
 				{
 					for(std::vector< Element * >::const_iterator ManifestChild = (*ShipChild)->GetChilds().begin(); ManifestChild != (*ShipChild)->GetChilds().end(); ++ManifestChild)
 					{
-						if((*ManifestChild)->GetName() == "cargo")
+						if((*ManifestChild)->GetName() == "commodity")
 						{
-							PlayerShip->AddContent(new Cargo(g_CommodityClassManager.Get((*ManifestChild)->GetAttribute("commodity-identifier"))));
+							PlayerShip->AddContent(new Commodity(g_CommodityClassManager.Get((*ManifestChild)->GetAttribute("commodity-identifier"))));
 						}
 						else if((*ManifestChild)->GetName() == "weapon")
 						{

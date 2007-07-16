@@ -23,8 +23,8 @@
 #include <iostream>
 #include <list>
 
-#include "cargo.h"
 #include "character.h"
+#include "commodity.h"
 #include "commodity_class.h"
 #include "game_time.h"
 #include "math.h"
@@ -272,55 +272,56 @@ void TransporterPhase3::Enter(void)
 	Reference< Planet > Planet(GetMind()->GetCharacter()->GetShip()->GetTarget());
 	
 	// build a lookup map for commodities
-	std::map< const CommodityClass *, PlanetCommodityClass * > Commodities;
-	std::vector< PlanetCommodityClass * > BuyCommodities;
+	std::map< const CommodityClass *, PlanetCommodityClass * > CommodityClasses;
+	std::vector< PlanetCommodityClass * > BuyCommodityClasses;
 	
 	{
-		const std::vector< PlanetCommodityClass * > & PlanetCommodities(Planet->GetCommodityClasses());
+		const std::vector< PlanetCommodityClass * > & PlanetCommodityClasses(Planet->GetCommodityClasses());
 		
-		for(std::vector< PlanetCommodityClass * >::size_type Index = 0; Index < PlanetCommodities.size(); ++Index)
+		for(std::vector< PlanetCommodityClass * >::size_type Index = 0; Index < PlanetCommodityClasses.size(); ++Index)
 		{
-			Commodities[PlanetCommodities[Index]->GetCommodityClass()] = PlanetCommodities[Index];
-			if(PlanetCommodities[Index]->GetBasePriceModifier() < 1.0f)
+			CommodityClasses[PlanetCommodityClasses[Index]->GetCommodityClass()] = PlanetCommodityClasses[Index];
+			if(PlanetCommodityClasses[Index]->GetBasePriceModifier() < 1.0f)
 			{
-				BuyCommodities.push_back(PlanetCommodities[Index]);
+				BuyCommodityClasses.push_back(PlanetCommodityClasses[Index]);
 			}
 		}
 	}
-	if(Commodities.empty() == false)
+	if(CommodityClasses.empty() == false)
 	{
+		/// @todo upgrade to commodity classes
 		const std::set< Object * > & Manifest(GetMind()->GetCharacter()->GetShip()->GetContent());
 		std::set< Object * >::const_iterator ManifestIterator(Manifest.begin());
-		std::map< const CommodityClass *, PlanetCommodityClass * >::iterator PlanetCommodityIterator(Commodities.begin());
+		std::map< const CommodityClass *, PlanetCommodityClass * >::iterator PlanetCommodityIterator(CommodityClasses.begin());
 		
 		// first sell stuff ... but only stuff with base price modifier above 1
 		while(ManifestIterator != Manifest.end())
 		{
-			Cargo * TheCargo(dynamic_cast< Cargo * >(*ManifestIterator));
+			Commodity * TheCommodity(dynamic_cast< Commodity * >(*ManifestIterator));
 			
-			if(TheCargo != 0)
+			if(TheCommodity != 0)
 			{
 				// update the planet commodity cache, hoping it will be right more than once
-				if(PlanetCommodityIterator == Commodities.end())
+				if(PlanetCommodityIterator == CommodityClasses.end())
 				{
-					PlanetCommodityIterator = Commodities.find(TheCargo->GetCommodityClass());
+					PlanetCommodityIterator = CommodityClasses.find(TheCommodity->GetCommodityClass());
 				}
 				else
 				{
-					if(PlanetCommodityIterator->first != TheCargo->GetCommodityClass())
+					if(PlanetCommodityIterator->first != TheCommodity->GetCommodityClass())
 					{
-						PlanetCommodityIterator = Commodities.find(TheCargo->GetCommodityClass());
+						PlanetCommodityIterator = CommodityClasses.find(TheCommodity->GetCommodityClass());
 					}
 				}
 				// work with the cached planet commodity
-				if((PlanetCommodityIterator != Commodities.end()) && (PlanetCommodityIterator->second->GetBasePriceModifier() > 1.0))
+				if((PlanetCommodityIterator != CommodityClasses.end()) && (PlanetCommodityIterator->second->GetBasePriceModifier() > 1.0))
 				{
 					std::set< Object * >::iterator SaveIterator(ManifestIterator);
 					
 					++SaveIterator;
 					GetMind()->GetCharacter()->GetShip()->RemoveContent(*ManifestIterator);
 					ManifestIterator = SaveIterator;
-					delete TheCargo;
+					delete TheCommodity;
 					GetMind()->GetCharacter()->AddCredits(PlanetCommodityIterator->second->GetPrice());
 					
 					continue;
@@ -329,11 +330,11 @@ void TransporterPhase3::Enter(void)
 			++ManifestIterator;
 		}
 		// second buy stuff ... but only stuff with base price modifier below 1
-		if(BuyCommodities.empty() == false)
+		if(BuyCommodityClasses.empty() == false)
 		{
 			for(int NumberOfCommoditiesToBuy = GetRandomIntegerFromExponentialDistribution(2); NumberOfCommoditiesToBuy > 0; --NumberOfCommoditiesToBuy)
 			{
-				PlanetCommodityClass * CommodityToBuy(BuyCommodities[GetRandomInteger(BuyCommodities.size() - 1)]);
+				PlanetCommodityClass * CommodityToBuy(BuyCommodityClasses[GetRandomInteger(BuyCommodityClasses.size() - 1)]);
 				
 				for(int NumberOfCargosToBuy = GetRandomIntegerFromExponentialDistribution(GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetCargoHoldSize() / 2); NumberOfCargosToBuy > 0; --NumberOfCargosToBuy)
 				{
@@ -342,10 +343,10 @@ void TransporterPhase3::Enter(void)
 					{
 						GetMind()->GetCharacter()->RemoveCredits(CommodityToBuy->GetPrice());
 						
-						Cargo * NewCargo(new Cargo(CommodityToBuy->GetCommodityClass()));
+						Commodity * NewCommodity(new Commodity(CommodityToBuy->GetCommodityClass()));
 						
-						NewCargo->SetObjectIdentifier("::cargo(" + NewCargo->GetCommodityClass()->GetIdentifier() + ")::buy_index(" + to_string_cast(NumberOfCommoditiesToBuy) + "|" + to_string_cast(NumberOfCargosToBuy) + ")::bought_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::bought_by(" + GetMind()->GetObjectIdentifier() + ")::bought_on(" + Planet->GetObjectIdentifier() + ")");
-						GetMind()->GetCharacter()->GetShip()->AddContent(NewCargo);
+						NewCommodity->SetObjectIdentifier("::commodity(" + NewCommodity->GetCommodityClass()->GetIdentifier() + ")::buy_index(" + to_string_cast(NumberOfCommoditiesToBuy) + "|" + to_string_cast(NumberOfCargosToBuy) + ")::bought_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::bought_by(" + GetMind()->GetObjectIdentifier() + ")::bought_on(" + Planet->GetObjectIdentifier() + ")");
+						GetMind()->GetCharacter()->GetShip()->AddContent(NewCommodity);
 					}
 					else
 					{
@@ -548,23 +549,23 @@ ShootFarthestCargo::ShootFarthestCargo(StateMachineMind * Mind) :
 
 void ShootFarthestCargo::Enter(void)
 {
-	const std::list< Cargo * > & Cargos(GetMind()->GetCharacter()->GetShip()->GetCurrentSystem()->GetCargos());
+	const std::list< Commodity * > & Commodities(GetMind()->GetCharacter()->GetShip()->GetCurrentSystem()->GetCommodities());
 	float MaximumDistance(FLT_MIN);
-	Cargo * FarthestCargo(0);
+	Commodity * FarthestCommodity(0);
 	
-	for(std::list< Cargo * >::const_iterator CargoIterator = Cargos.begin(); CargoIterator != Cargos.end(); ++CargoIterator)
+	for(std::list< Commodity * >::const_iterator CommodityIterator = Commodities.begin(); CommodityIterator != Commodities.end(); ++CommodityIterator)
 	{
-		float Distance((*CargoIterator)->GetPosition().SquaredLength());
+		float Distance((*CommodityIterator)->GetPosition().SquaredLength());
 		
 		if(Distance > MaximumDistance)
 		{
-			FarthestCargo = *CargoIterator;
+			FarthestCommodity = *CommodityIterator;
 			MaximumDistance = Distance;
 		}
 	}
-	if(FarthestCargo != 0)
+	if(FarthestCommodity != 0)
 	{
-		GetMind()->GetCharacter()->GetShip()->SetTarget(FarthestCargo->GetReference());
+		GetMind()->GetCharacter()->GetShip()->SetTarget(FarthestCommodity->GetReference());
 	}
 	else
 	{
