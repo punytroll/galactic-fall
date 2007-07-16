@@ -23,6 +23,8 @@
 #include "commodity_class_manager.h"
 #include "globals.h"
 #include "object_factory.h"
+#include "weapon.h"
+#include "weapon_class_manager.h"
 
 Object * ObjectFactory::Create(const std::string & Type, const std::string & Class)
 {
@@ -36,6 +38,17 @@ Object * ObjectFactory::Create(const std::string & Type, const std::string & Cla
 		}
 		
 		return new Cargo(CommodityClass);
+	}
+	else if(Type == "weapon")
+	{
+		const WeaponClass * WeaponClass(g_WeaponClassManager->Get(Class));
+		
+		if(WeaponClass == 0)
+		{
+			throw std::runtime_error("Unknown object class '" + Class + "' for object type '" + Type + "'.");
+		}
+		
+		return new Weapon(WeaponClass);
 	}
 	else
 	{

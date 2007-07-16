@@ -64,6 +64,14 @@
 					<identifier>fuel</identifier>
 					<base-price-modifier>0.83</base-price-modifier>
 				</offered-commodity-class>
+				<offered-commodity-class>
+					<identifier>light_laser</identifier>
+					<base-price-modifier>1.02</base-price-modifier>
+				</offered-commodity-class>
+				<offered-commodity-class>
+					<identifier>medium_laser</identifier>
+					<base-price-modifier>1.02</base-price-modifier>
+				</offered-commodity-class>
 			</offered-commodity-classes>
 			<landing-fee>54.0</landing-fee>
 		</planet>

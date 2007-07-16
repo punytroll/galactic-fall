@@ -36,11 +36,13 @@ class Galaxy;
 class ModelManager;
 class ObjectFactory;
 class UserInterface;
+class WeaponClassManager;
 
 extern CommodityClassManager g_CommodityClassManager;
 extern Galaxy * g_Galaxy;
 extern ModelManager g_ModelManager;
 extern ObjectFactory * g_ObjectFactory;
 extern UserInterface g_UserInterface;
+extern WeaponClassManager * g_WeaponClassManager;
 
 #endif
