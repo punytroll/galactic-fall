@@ -20,7 +20,7 @@
 #include "button.h"
 #include "character.h"
 #include "color.h"
-#include "commodity.h"
+#include "commodity_class.h"
 #include "globals.h"
 #include "label.h"
 #include "planet.h"
@@ -62,11 +62,11 @@ PlanetDialog::PlanetDialog(Widget * SupWidget, Planet * Planet, Character * Char
 	m_TradeCenterLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
 	m_TradeCenterLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
 	
-	const std::vector< PlanetCommodity * > & PlanetCommodities(m_Planet->GetCommodities());
+	const std::vector< PlanetCommodityClass * > & PlanetCommodityClasses(m_Planet->GetCommodityClasses());
 	
-	for(std::vector< PlanetCommodity * >::const_iterator PlanetCommodityIterator = PlanetCommodities.begin(); PlanetCommodityIterator != PlanetCommodities.end(); ++PlanetCommodityIterator)
+	for(std::vector< PlanetCommodityClass * >::const_iterator PlanetCommodityClassIterator = PlanetCommodityClasses.begin(); PlanetCommodityClassIterator != PlanetCommodityClasses.end(); ++PlanetCommodityClassIterator)
 	{
-		if((*PlanetCommodityIterator)->GetCommodity()->GetIdentifier() == "fuel")
+		if((*PlanetCommodityClassIterator)->GetCommodityClass()->GetIdentifier() == "fuel")
 		{
 			m_RefuelButton = new Button(this);
 			m_RefuelButton->SetPosition(Vector2f(10.0f, 70.0f));
@@ -78,7 +78,7 @@ PlanetDialog::PlanetDialog(Widget * SupWidget, Planet * Planet, Character * Char
 			m_RefuelButtonLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
 			m_RefuelButtonLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
 			
-			Label * FuelPriceLabel = new Label(this, "Local fuel price is: " + to_string_cast((*PlanetCommodityIterator)->GetPrice()) + " credits/unit.");
+			Label * FuelPriceLabel = new Label(this, "Local fuel price is: " + to_string_cast((*PlanetCommodityClassIterator)->GetPrice()) + " credits/unit.");
 			
 			FuelPriceLabel->SetPosition(Vector2f(10.0f, 300.0f));
 			FuelPriceLabel->SetSize(Vector2f(300.0f, 20.0f));
@@ -101,13 +101,13 @@ bool PlanetDialog::OnClicked(Widget * EventSource)
 	}
 	else if(EventSource == m_RefuelButton)
 	{
-		const std::vector< PlanetCommodity * > & PlanetCommodities(m_Planet->GetCommodities());
+		const std::vector< PlanetCommodityClass * > & PlanetCommodityClasses(m_Planet->GetCommodityClasses());
 		
-		for(std::vector< PlanetCommodity * >::const_iterator PlanetCommodityIterator = PlanetCommodities.begin(); PlanetCommodityIterator != PlanetCommodities.end(); ++PlanetCommodityIterator)
+		for(std::vector< PlanetCommodityClass * >::const_iterator PlanetCommodityClassIterator = PlanetCommodityClasses.begin(); PlanetCommodityClassIterator != PlanetCommodityClasses.end(); ++PlanetCommodityClassIterator)
 		{
-			if((*PlanetCommodityIterator)->GetCommodity()->GetIdentifier() == "fuel")
+			if((*PlanetCommodityClassIterator)->GetCommodityClass()->GetIdentifier() == "fuel")
 			{
-				u4byte FuelPrice((*PlanetCommodityIterator)->GetPrice());
+				u4byte FuelPrice((*PlanetCommodityClassIterator)->GetPrice());
 				float CanBuy(m_Character->GetCredits() / FuelPrice);
 				float Need(m_Character->GetShip()->GetFuelCapacity() - m_Character->GetShip()->GetFuel());
 				float Buy((CanBuy > Need) ? (Need) : (CanBuy));

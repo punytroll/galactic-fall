@@ -25,7 +25,7 @@
 
 #include "cargo.h"
 #include "character.h"
-#include "commodity.h"
+#include "commodity_class.h"
 #include "game_time.h"
 #include "math.h"
 #include "mind.h"
@@ -272,15 +272,15 @@ void TransporterPhase3::Enter(void)
 	Reference< Planet > Planet(GetMind()->GetCharacter()->GetShip()->GetTarget());
 	
 	// build a lookup map for commodities
-	std::map< const Commodity *, PlanetCommodity * > Commodities;
-	std::vector< PlanetCommodity * > BuyCommodities;
+	std::map< const CommodityClass *, PlanetCommodityClass * > Commodities;
+	std::vector< PlanetCommodityClass * > BuyCommodities;
 	
 	{
-		const std::vector< PlanetCommodity * > & PlanetCommodities(Planet->GetCommodities());
+		const std::vector< PlanetCommodityClass * > & PlanetCommodities(Planet->GetCommodityClasses());
 		
-		for(std::vector< PlanetCommodity * >::size_type Index = 0; Index < PlanetCommodities.size(); ++Index)
+		for(std::vector< PlanetCommodityClass * >::size_type Index = 0; Index < PlanetCommodities.size(); ++Index)
 		{
-			Commodities[PlanetCommodities[Index]->GetCommodity()] = PlanetCommodities[Index];
+			Commodities[PlanetCommodities[Index]->GetCommodityClass()] = PlanetCommodities[Index];
 			if(PlanetCommodities[Index]->GetBasePriceModifier() < 1.0f)
 			{
 				BuyCommodities.push_back(PlanetCommodities[Index]);
@@ -291,7 +291,7 @@ void TransporterPhase3::Enter(void)
 	{
 		const std::set< Object * > & Manifest(GetMind()->GetCharacter()->GetShip()->GetContent());
 		std::set< Object * >::const_iterator ManifestIterator(Manifest.begin());
-		std::map< const Commodity *, PlanetCommodity * >::iterator PlanetCommodityIterator(Commodities.begin());
+		std::map< const CommodityClass *, PlanetCommodityClass * >::iterator PlanetCommodityIterator(Commodities.begin());
 		
 		// first sell stuff ... but only stuff with base price modifier above 1
 		while(ManifestIterator != Manifest.end())
@@ -303,13 +303,13 @@ void TransporterPhase3::Enter(void)
 				// update the planet commodity cache, hoping it will be right more than once
 				if(PlanetCommodityIterator == Commodities.end())
 				{
-					PlanetCommodityIterator = Commodities.find(TheCargo->GetCommodity());
+					PlanetCommodityIterator = Commodities.find(TheCargo->GetCommodityClass());
 				}
 				else
 				{
-					if(PlanetCommodityIterator->first != TheCargo->GetCommodity())
+					if(PlanetCommodityIterator->first != TheCargo->GetCommodityClass())
 					{
-						PlanetCommodityIterator = Commodities.find(TheCargo->GetCommodity());
+						PlanetCommodityIterator = Commodities.find(TheCargo->GetCommodityClass());
 					}
 				}
 				// work with the cached planet commodity
@@ -333,7 +333,7 @@ void TransporterPhase3::Enter(void)
 		{
 			for(int NumberOfCommoditiesToBuy = GetRandomIntegerFromExponentialDistribution(2); NumberOfCommoditiesToBuy > 0; --NumberOfCommoditiesToBuy)
 			{
-				PlanetCommodity * CommodityToBuy(BuyCommodities[GetRandomInteger(BuyCommodities.size() - 1)]);
+				PlanetCommodityClass * CommodityToBuy(BuyCommodities[GetRandomInteger(BuyCommodities.size() - 1)]);
 				
 				for(int NumberOfCargosToBuy = GetRandomIntegerFromExponentialDistribution(GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetCargoHoldSize() / 2); NumberOfCargosToBuy > 0; --NumberOfCargosToBuy)
 				{
@@ -342,9 +342,9 @@ void TransporterPhase3::Enter(void)
 					{
 						GetMind()->GetCharacter()->RemoveCredits(CommodityToBuy->GetPrice());
 						
-						Cargo * NewCargo(new Cargo(CommodityToBuy->GetCommodity()));
+						Cargo * NewCargo(new Cargo(CommodityToBuy->GetCommodityClass()));
 						
-						NewCargo->SetObjectIdentifier("::cargo(" + NewCargo->GetCommodity()->GetIdentifier() + ")::buy_index(" + to_string_cast(NumberOfCommoditiesToBuy) + "|" + to_string_cast(NumberOfCargosToBuy) + ")::bought_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::bought_by(" + GetMind()->GetObjectIdentifier() + ")::bought_on(" + Planet->GetObjectIdentifier() + ")");
+						NewCargo->SetObjectIdentifier("::cargo(" + NewCargo->GetCommodityClass()->GetIdentifier() + ")::buy_index(" + to_string_cast(NumberOfCommoditiesToBuy) + "|" + to_string_cast(NumberOfCargosToBuy) + ")::bought_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::bought_by(" + GetMind()->GetObjectIdentifier() + ")::bought_on(" + Planet->GetObjectIdentifier() + ")");
 						GetMind()->GetCharacter()->GetShip()->AddContent(NewCargo);
 					}
 					else
@@ -820,11 +820,11 @@ void RefuelPhase3::Enter(void)
 	// ATTENTION: the target is only valid because this Enter() function is called before the setting of m_Land is processed in the ship which invalidates the ship's target
 	Reference< Planet > Planet(GetMind()->GetCharacter()->GetShip()->GetTarget());
 	
-	const std::vector< PlanetCommodity * > & PlanetCommodities(Planet->GetCommodities());
+	const std::vector< PlanetCommodityClass * > & PlanetCommodities(Planet->GetCommodityClasses());
 	
-	for(std::vector< PlanetCommodity * >::const_iterator PlanetCommodityIterator = PlanetCommodities.begin(); PlanetCommodityIterator != PlanetCommodities.end(); ++PlanetCommodityIterator)
+	for(std::vector< PlanetCommodityClass * >::const_iterator PlanetCommodityIterator = PlanetCommodities.begin(); PlanetCommodityIterator != PlanetCommodities.end(); ++PlanetCommodityIterator)
 	{
-		if((*PlanetCommodityIterator)->GetCommodity()->GetIdentifier() == "fuel")
+		if((*PlanetCommodityIterator)->GetCommodityClass()->GetIdentifier() == "fuel")
 		{
 			u4byte FuelPrice((*PlanetCommodityIterator)->GetPrice());
 			float CanBuy(GetMind()->GetCharacter()->GetCredits() / FuelPrice);

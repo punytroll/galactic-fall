@@ -27,8 +27,8 @@
 #include "arx_resources.h"
 #include "buffer_reading.h"
 #include "callbacks.h"
-#include "commodity.h"
-#include "commodity_manager.h"
+#include "commodity_class.h"
+#include "commodity_class_manager.h"
 #include "galaxy.h"
 #include "globals.h"
 #include "label.h"
@@ -50,7 +50,7 @@
 
 static Arxx::Item * Resolve(Arxx::Reference & Reference);
 
-static void ReadCommodity(CommodityManager * CommodityManager, Arxx::Reference & Reference);
+static void ReadCommodityClass(CommodityClassManager * CommodityClassManager, Arxx::Reference & Reference);
 static void ReadModel(ModelManager * ModelManager, Arxx::Reference & Reference);
 static void ReadShipClass(ShipClassManager * ShipClassManager, Arxx::Reference & Reference);
 static void ReadSystem(Galaxy * Galaxy, Arxx::Reference & Reference);
@@ -117,9 +117,9 @@ void ReadItems(Arxx::Archive & Archive, const std::string & Path, const Callback
 	delete Reader;
 }
 
-void ReadCommodities(Arxx::Archive & Archive, CommodityManager * Manager)
+void ReadCommodityClasses(Arxx::Archive & Archive, CommodityClassManager * Manager)
 {
-	ReadItems(Archive, "/Commodities", Bind1(Function(ReadCommodity), Manager));
+	ReadItems(Archive, "/Commodities", Bind1(Function(ReadCommodityClass), Manager));
 }
 
 void ReadModels(Arxx::Archive & Archive, ModelManager * Manager)
@@ -152,7 +152,7 @@ void ReadWeaponClasses(Arxx::Archive & Archive, WeaponClassManager * Manager)
 	ReadItems(Archive, "/Weapon Classes", Bind1(Function(ReadWeaponClass), Manager));
 }
 
-static void ReadCommodity(CommodityManager * CommodityManager, Arxx::Reference & Reference)
+static void ReadCommodityClass(CommodityClassManager * CommodityClassManager, Arxx::Reference & Reference)
 {
 	Arxx::Item * Item(Resolve(Reference));
 	
@@ -170,9 +170,9 @@ static void ReadCommodity(CommodityManager * CommodityManager, Arxx::Reference &
 	
 	Reader >> Identifier;
 	
-	Commodity * NewCommodity(CommodityManager->Create(Identifier));
+	CommodityClass * NewCommodityClass(CommodityClassManager->Create(Identifier));
 	
-	if(NewCommodity == 0)
+	if(NewCommodityClass == 0)
 	{
 		throw std::runtime_error("Could not create commodity '" + Identifier + "'.");
 	}
@@ -184,8 +184,8 @@ static void ReadCommodity(CommodityManager * CommodityManager, Arxx::Reference &
 	
 	Reader >> Name >> BasePrice >> ModelIdentifier >> Color;
 	
-	NewCommodity->SetName(Name);
-	NewCommodity->SetBasePrice(BasePrice);
+	NewCommodityClass->SetName(Name);
+	NewCommodityClass->SetBasePrice(BasePrice);
 	
 	Model * Model(g_ModelManager.Get(ModelIdentifier));
 	
@@ -193,8 +193,8 @@ static void ReadCommodity(CommodityManager * CommodityManager, Arxx::Reference &
 	{
 		throw std::runtime_error("For the commodity '" + Name + "' could not find the model '" + ModelIdentifier + "'.");
 	}
-	NewCommodity->SetModel(Model);
-	NewCommodity->SetColor(Color);
+	NewCommodityClass->SetModel(Model);
+	NewCommodityClass->SetColor(Color);
 }
 
 static void ReadModel(ModelManager * ModelManager, Arxx::Reference & Reference)
@@ -418,21 +418,21 @@ static void ReadSystem(Galaxy * Galaxy, Arxx::Reference & Reference)
 		NewPlanet->SetColor(PlanetColor);
 		for(Arxx::u4byte CommoditiesNumber = 1; CommoditiesNumber <= CommoditiesCount; ++CommoditiesNumber)
 		{
-			std::string CommodityIdentifier;
+			std::string CommodityClassIdentifier;
 			float BasePriceModifier;
 			
-			Reader >> CommodityIdentifier >> BasePriceModifier;
+			Reader >> CommodityClassIdentifier >> BasePriceModifier;
 			
-			const Commodity * ManagedCommodity(g_CommodityManager.Get(CommodityIdentifier));
+			const CommodityClass * ManagedCommodityClass(g_CommodityClassManager.Get(CommodityClassIdentifier));
 			
-			if(ManagedCommodity == 0)
+			if(ManagedCommodityClass == 0)
 			{
-				throw std::runtime_error("Could not find commodity '" + CommodityIdentifier + "' for planet '" + PlanetIdentifier + "' in system '" + Identifier + "'.");
+				throw std::runtime_error("Could not find commodity '" + CommodityClassIdentifier + "' for planet '" + PlanetIdentifier + "' in system '" + Identifier + "'.");
 			}
 			
-			PlanetCommodity * NewPlanetCommodity(NewPlanet->CreateCommodity(ManagedCommodity));
+			PlanetCommodityClass * NewPlanetCommodityClass(NewPlanet->CreateCommodityClass(ManagedCommodityClass));
 			
-			NewPlanetCommodity->SetBasePriceModifier(BasePriceModifier);
+			NewPlanetCommodityClass->SetBasePriceModifier(BasePriceModifier);
 		}
 		
 		float LandingFee;

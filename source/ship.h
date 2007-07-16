@@ -27,7 +27,7 @@
 #include "physical_object.h"
 #include "ship_class.h"
 
-class Commodity;
+class CommodityClass;
 class ShipClass;
 class System;
 class Weapon;
@@ -56,7 +56,7 @@ public:
 	float GetTurnSpeed(void) const;
 	const Vector2f & GetVelocity(void) const;
 	float GetFreeCargoHoldSize(void) const;
-	float GetCommodityAmount(const Commodity * CargoCommodity) const;
+	float GetCommodityAmount(const CommodityClass * CargoCommodityClass) const;
 	Reference< PhysicalObject > & GetTarget(void);
 	const Reference< PhysicalObject > & GetTarget(void) const;
 	System * GetLinkedSystemTarget(void);

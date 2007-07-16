@@ -17,19 +17,19 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef COMMODITY_H
-#define COMMODITY_H
+#ifndef COMMODITY_CLASS_H
+#define COMMODITY_CLASS_H
 
 #include <string>
 
 class Color;
 class Model;
 
-class Commodity
+class CommodityClass
 {
 public:
-	Commodity(const std::string & Identifier);
-	~Commodity(void);
+	CommodityClass(const std::string & Identifier);
+	~CommodityClass(void);
 	// getters
 	float GetBasePrice(void) const;
 	const Color * GetColor(void) const;
@@ -49,42 +49,42 @@ private:
 	const Model * m_Model;
 };
 
-inline float Commodity::GetBasePrice(void) const
+inline float CommodityClass::GetBasePrice(void) const
 {
 	return m_BasePrice;
 }
 
-inline const Color * Commodity::GetColor(void) const
+inline const Color * CommodityClass::GetColor(void) const
 {
 	return m_Color;
 }
 
-inline const std::string & Commodity::GetIdentifier(void) const
+inline const std::string & CommodityClass::GetIdentifier(void) const
 {
 	return m_Identifier;
 }
 
-inline const Model * Commodity::GetModel(void) const
+inline const Model * CommodityClass::GetModel(void) const
 {
 	return m_Model;
 }
 
-inline const std::string & Commodity::GetName(void) const
+inline const std::string & CommodityClass::GetName(void) const
 {
 	return m_Name;
 }
 
-inline void Commodity::SetBasePrice(float BasePrice)
+inline void CommodityClass::SetBasePrice(float BasePrice)
 {
 	m_BasePrice = BasePrice;
 }
 
-inline void Commodity::SetModel(const Model * Model)
+inline void CommodityClass::SetModel(const Model * Model)
 {
 	m_Model = Model;
 }
 
-inline void Commodity::SetName(const std::string & Name)
+inline void CommodityClass::SetName(const std::string & Name)
 {
 	m_Name = Name;
 }

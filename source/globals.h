@@ -31,12 +31,12 @@
 #define EV_MOUSE_WHEEL_DOWN 4
 #define EV_MOUSE_WHEEL_UP 5
 
-class CommodityManager;
+class CommodityClassManager;
 class Galaxy;
 class ModelManager;
 class UserInterface;
 
-extern CommodityManager g_CommodityManager;
+extern CommodityClassManager g_CommodityClassManager;
 extern Galaxy * g_Galaxy;
 extern ModelManager g_ModelManager;
 extern UserInterface g_UserInterface;

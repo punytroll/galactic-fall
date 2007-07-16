@@ -26,7 +26,7 @@
 #include "cargo.h"
 #include "character.h"
 #include "color.h"
-#include "commodity.h"
+#include "commodity_class.h"
 #include "game_time.h"
 #include "globals.h"
 #include "map_knowledge.h"
@@ -173,7 +173,7 @@ void Ship::Update(float Seconds)
 			{
 				Cargo * TheCargo(dynamic_cast< Cargo * >(*ContentIterator));
 				
-				if((TheCargo != 0) && (TheCargo->GetCommodity()->GetIdentifier() == "fuel"))
+				if((TheCargo != 0) && (TheCargo->GetCommodityClass()->GetIdentifier() == "fuel"))
 				{
 					m_Fuel = Clamp(m_Fuel + 1.0f, 0.0f, GetFuelCapacity());
 					TheCargo->Destroy();
@@ -293,7 +293,7 @@ float Ship::GetFreeCargoHoldSize(void) const
 	return CargoHoldSize;
 }
 
-float Ship::GetCommodityAmount(const Commodity * CargoCommodity) const
+float Ship::GetCommodityAmount(const CommodityClass * CargoCommodityClass) const
 {
 	float Amount(0.0f);
 	std::set< Object * >::const_iterator ManifestIterator(GetContent().begin());
@@ -302,7 +302,7 @@ float Ship::GetCommodityAmount(const Commodity * CargoCommodity) const
 	{
 		Cargo * TheCargo(dynamic_cast< Cargo * >(*ManifestIterator));
 		
-		if((TheCargo != 0) && (TheCargo->GetCommodity() == CargoCommodity))
+		if((TheCargo != 0) && (TheCargo->GetCommodityClass() == CargoCommodityClass))
 		{
 			Amount += 1.0f;
 		}

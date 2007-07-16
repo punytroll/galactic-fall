@@ -20,7 +20,7 @@
 #include "button.h"
 #include "cargo.h"
 #include "character.h"
-#include "commodity.h"
+#include "commodity_class.h"
 #include "globals.h"
 #include "label.h"
 #include "planet.h"
@@ -29,24 +29,24 @@
 #include "string_cast.h"
 #include "trade_center_dialog.h"
 
-class TradeCenterCommodity : public Widget
+class TradeCenterCommodityClass : public Widget
 {
 public:
-	TradeCenterCommodity(Widget * SupWidget, PlanetCommodity * PlanetCommodity, Ship * Ship);
+	TradeCenterCommodityClass(Widget * SupWidget, PlanetCommodityClass * PlanetCommodityClass, Ship * Ship);
 	void UpdateCharacterAmount(void);
-	const PlanetCommodity * GetPlanetCommodity(void) const;
+	const PlanetCommodityClass * GetPlanetCommodity(void) const;
 private:
-	PlanetCommodity * m_PlanetCommodity;
+	PlanetCommodityClass * m_PlanetCommodity;
 	Ship * m_Ship;
 	Label * m_CharacterAmountLabel;
 };
 
-TradeCenterCommodity::TradeCenterCommodity(Widget * SupWidget, PlanetCommodity * PlanetCommodity, Ship * Ship) :
+TradeCenterCommodityClass::TradeCenterCommodityClass(Widget * SupWidget, PlanetCommodityClass * PlanetCommodityClass, Ship * Ship) :
 	Widget(SupWidget),
-	m_PlanetCommodity(PlanetCommodity),
+	m_PlanetCommodity(PlanetCommodityClass),
 	m_Ship(Ship)
 {
-	Label * CommodityNameLabel(new Label(this, PlanetCommodity->GetCommodity()->GetName()));
+	Label * CommodityNameLabel(new Label(this, PlanetCommodityClass->GetCommodityClass()->GetName()));
 	
 	CommodityNameLabel->SetPosition(Vector2f(10.0f, 0.0f));
 	CommodityNameLabel->SetSize(Vector2f(310.0f, 20.0f));
@@ -56,7 +56,7 @@ TradeCenterCommodity::TradeCenterCommodity(Widget * SupWidget, PlanetCommodity *
 	m_CharacterAmountLabel->SetSize(Vector2f(50.0f, 20.0f));
 	m_CharacterAmountLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
 	
-	Label * CommodityPriceLabel(new Label(this, to_string_cast(PlanetCommodity->GetPrice())));
+	Label * CommodityPriceLabel(new Label(this, to_string_cast(PlanetCommodityClass->GetPrice())));
 	
 	CommodityPriceLabel->SetPosition(Vector2f(390.0f, 0.0f));
 	CommodityPriceLabel->SetSize(Vector2f(50.0f, 20.0f));
@@ -65,12 +65,12 @@ TradeCenterCommodity::TradeCenterCommodity(Widget * SupWidget, PlanetCommodity *
 	UpdateCharacterAmount();
 }
 
-void TradeCenterCommodity::UpdateCharacterAmount(void)
+void TradeCenterCommodityClass::UpdateCharacterAmount(void)
 {
-	m_CharacterAmountLabel->SetString(to_string_cast(m_Ship->GetCommodityAmount(m_PlanetCommodity->GetCommodity())));
+	m_CharacterAmountLabel->SetString(to_string_cast(m_Ship->GetCommodityAmount(m_PlanetCommodity->GetCommodityClass())));
 }
 
-const PlanetCommodity * TradeCenterCommodity::GetPlanetCommodity(void) const
+const PlanetCommodityClass * TradeCenterCommodityClass::GetPlanetCommodity(void) const
 {
 	return m_PlanetCommodity;
 }
@@ -79,7 +79,7 @@ TradeCenterDialog::TradeCenterDialog(Widget * SupWidget, Planet * Planet, Charac
 	WWindow(SupWidget, "Trade Center: " + Planet->GetName()),
 	m_Planet(Planet),
 	m_Character(Character),
-	m_SelectedTradeCenterCommodity(0)
+	m_SelectedTradeCenterCommodityClass(0)
 {
 	SetPosition(Vector2f(600.0f, 100.0f));
 	SetSize(Vector2f(500.0f, 330.0f));
@@ -120,20 +120,20 @@ TradeCenterDialog::TradeCenterDialog(Widget * SupWidget, Planet * Planet, Charac
 	m_CommodityListItems->SetBackgroundColor(Color(0.15f, 0.15f, 0.15f, 1.0f));
 	m_CommodityListItems->AddMouseButtonListener(this);
 	
-	const std::vector< PlanetCommodity * > & PlanetCommodities(Planet->GetCommodities());
-	std::vector< PlanetCommodity * >::const_iterator PlanetCommodityIterator(PlanetCommodities.begin());
+	const std::vector< PlanetCommodityClass * > & PlanetCommodityClasses(Planet->GetCommodityClasses());
+	std::vector< PlanetCommodityClass * >::const_iterator PlanetCommodityClassIterator(PlanetCommodityClasses.begin());
 	float Top(5.0f);
 	
-	while(PlanetCommodityIterator != PlanetCommodities.end())
+	while(PlanetCommodityClassIterator != PlanetCommodityClasses.end())
 	{
-		TradeCenterCommodity * NewTradeCenterCommodity(new TradeCenterCommodity(m_CommodityListItems, *PlanetCommodityIterator, m_Character->GetShip()));
+		TradeCenterCommodityClass * NewTradeCenterCommodity(new TradeCenterCommodityClass(m_CommodityListItems, *PlanetCommodityClassIterator, m_Character->GetShip()));
 		
 		NewTradeCenterCommodity->SetPosition(Vector2f(5.0f, Top));
 		NewTradeCenterCommodity->SetSize(Vector2f(450.0f, 20.0f));
 		NewTradeCenterCommodity->AddMouseButtonListener(this);
 		NewTradeCenterCommodity->AddMouseMotionListener(this);
 		Top += 25.0f;
-		++PlanetCommodityIterator;
+		++PlanetCommodityClassIterator;
 	}
 	m_CommodityListItems->SetSize(Vector2f(460.0f, Top));
 	m_UpButton = new Button(this);
@@ -164,17 +164,17 @@ void TradeCenterDialog::UpdateTraderFreeCargoHoldSize(void)
 	m_TraderFreeCargoHoldSizeLabel->SetString("Free Cargo Hold: " + to_string_cast(m_Character->GetShip()->GetFreeCargoHoldSize()));
 }
 
-void TradeCenterDialog::Buy(const PlanetCommodity * PlanetCommodity)
+void TradeCenterDialog::Buy(const PlanetCommodityClass * PlanetCommodityClass)
 {
-	u4byte Price(PlanetCommodity->GetPrice());
+	u4byte Price(PlanetCommodityClass->GetPrice());
 	
 	if(m_Character->RemoveCredits(Price) == true)
 	{
 		if(m_Character->GetShip()->GetFreeCargoHoldSize() >= 1.0f)
 		{
-			Cargo * NewCargo(new Cargo(PlanetCommodity->GetCommodity()));
+			Cargo * NewCargo(new Cargo(PlanetCommodityClass->GetCommodityClass()));
 			
-			NewCargo->SetObjectIdentifier(m_Planet->GetObjectIdentifier() + "::created_at(" + to_string_cast(RealTime::GetTime(), 6) + ")::bought_by(" + m_Character->GetObjectIdentifier() + ")::commodity(" + NewCargo->GetCommodity()->GetIdentifier() + ")::cargo");
+			NewCargo->SetObjectIdentifier(m_Planet->GetObjectIdentifier() + "::created_at(" + to_string_cast(RealTime::GetTime(), 6) + ")::bought_by(" + m_Character->GetObjectIdentifier() + ")::commodity(" + NewCargo->GetCommodityClass()->GetIdentifier() + ")::cargo");
 			m_Character->GetShip()->AddContent(NewCargo);
 			UpdateTraderCredits();
 			UpdateTraderFreeCargoHoldSize();
@@ -186,7 +186,7 @@ void TradeCenterDialog::Buy(const PlanetCommodity * PlanetCommodity)
 	}
 }
 
-void TradeCenterDialog::Sell(const PlanetCommodity * PlanetCommodity)
+void TradeCenterDialog::Sell(const PlanetCommodityClass * PlanetCommodityClass)
 {
 	const std::set< Object * > & Manifest(m_Character->GetShip()->GetContent());
 	std::set< Object * >::const_iterator ManifestIterator(Manifest.begin());
@@ -195,11 +195,11 @@ void TradeCenterDialog::Sell(const PlanetCommodity * PlanetCommodity)
 	{
 		Cargo * TheCargo(dynamic_cast< Cargo * >(*ManifestIterator));
 		
-		if((TheCargo != 0) && (TheCargo->GetCommodity() == PlanetCommodity->GetCommodity()))
+		if((TheCargo != 0) && (TheCargo->GetCommodityClass() == PlanetCommodityClass->GetCommodityClass()))
 		{
 			m_Character->GetShip()->RemoveContent(*ManifestIterator);
 			delete TheCargo;
-			m_Character->AddCredits(PlanetCommodity->GetPrice());
+			m_Character->AddCredits(PlanetCommodityClass->GetPrice());
 			UpdateTraderCredits();
 			UpdateTraderFreeCargoHoldSize();
 			
@@ -219,18 +219,18 @@ bool TradeCenterDialog::OnClicked(Widget * EventSource)
 	}
 	else if(EventSource == m_BuyButton)
 	{
-		if(m_SelectedTradeCenterCommodity != 0)
+		if(m_SelectedTradeCenterCommodityClass != 0)
 		{
-			Buy(m_SelectedTradeCenterCommodity->GetPlanetCommodity());
-			m_SelectedTradeCenterCommodity->UpdateCharacterAmount();
+			Buy(m_SelectedTradeCenterCommodityClass->GetPlanetCommodity());
+			m_SelectedTradeCenterCommodityClass->UpdateCharacterAmount();
 		}
 	}
 	else if(EventSource == m_SellButton)
 	{
-		if(m_SelectedTradeCenterCommodity != 0)
+		if(m_SelectedTradeCenterCommodityClass != 0)
 		{
-			Sell(m_SelectedTradeCenterCommodity->GetPlanetCommodity());
-			m_SelectedTradeCenterCommodity->UpdateCharacterAmount();
+			Sell(m_SelectedTradeCenterCommodityClass->GetPlanetCommodity());
+			m_SelectedTradeCenterCommodityClass->UpdateCharacterAmount();
 		}
 	}
 	else if(EventSource == m_UpButton)
@@ -264,15 +264,15 @@ bool TradeCenterDialog::OnKey(Widget * EventSource, int Key, int State)
 	{
 		Destroy();
 	}
-	else if((Key == 56 /* B */) && (m_SelectedTradeCenterCommodity != 0) && (State == EV_DOWN))
+	else if((Key == 56 /* B */) && (m_SelectedTradeCenterCommodityClass != 0) && (State == EV_DOWN))
 	{
-		Buy(m_SelectedTradeCenterCommodity->GetPlanetCommodity());
-		m_SelectedTradeCenterCommodity->UpdateCharacterAmount();
+		Buy(m_SelectedTradeCenterCommodityClass->GetPlanetCommodity());
+		m_SelectedTradeCenterCommodityClass->UpdateCharacterAmount();
 	}
-	else if((Key == 39 /* S */) && (m_SelectedTradeCenterCommodity != 0) && (State == EV_DOWN))
+	else if((Key == 39 /* S */) && (m_SelectedTradeCenterCommodityClass != 0) && (State == EV_DOWN))
 	{
-		Sell(m_SelectedTradeCenterCommodity->GetPlanetCommodity());
-		m_SelectedTradeCenterCommodity->UpdateCharacterAmount();
+		Sell(m_SelectedTradeCenterCommodityClass->GetPlanetCommodity());
+		m_SelectedTradeCenterCommodityClass->UpdateCharacterAmount();
 	}
 	
 	return true;
@@ -286,15 +286,15 @@ bool TradeCenterDialog::OnMouseButton(Widget * EventSource, int Button, int Stat
 	}
 	if((Button == 1 /* LEFT */) && (State == EV_DOWN))
 	{
-		TradeCenterCommodity * SelectedTradeCenterCommodity(dynamic_cast< TradeCenterCommodity * >(EventSource));
+		TradeCenterCommodityClass * SelectedTradeCenterCommodity(dynamic_cast< TradeCenterCommodityClass * >(EventSource));
 		
 		if(SelectedTradeCenterCommodity != 0)
 		{
-			if(m_SelectedTradeCenterCommodity != 0)
+			if(m_SelectedTradeCenterCommodityClass != 0)
 			{
-				m_SelectedTradeCenterCommodity->UnsetBackgroundColor();
+				m_SelectedTradeCenterCommodityClass->UnsetBackgroundColor();
 			}
-			m_SelectedTradeCenterCommodity = SelectedTradeCenterCommodity;
+			m_SelectedTradeCenterCommodityClass = SelectedTradeCenterCommodity;
 			SelectedTradeCenterCommodity->SetBackgroundColor(Color(0.4f, 0.1f, 0.1f));
 			
 			return true;
@@ -333,9 +333,9 @@ void TradeCenterDialog::OnMouseEnter(Widget * EventSource)
 {
 	WWindow::OnMouseEnter(EventSource);
 	
-	TradeCenterCommodity * EnteredTradeCenterCommodity(dynamic_cast< TradeCenterCommodity * >(EventSource));
+	TradeCenterCommodityClass * EnteredTradeCenterCommodity(dynamic_cast< TradeCenterCommodityClass * >(EventSource));
 	
-	if((EnteredTradeCenterCommodity != 0) && (EnteredTradeCenterCommodity != m_SelectedTradeCenterCommodity))
+	if((EnteredTradeCenterCommodity != 0) && (EnteredTradeCenterCommodity != m_SelectedTradeCenterCommodityClass))
 	{
 		EnteredTradeCenterCommodity->SetBackgroundColor(Color(0.3f, 0.2f, 0.2f));
 	}
@@ -345,9 +345,9 @@ void TradeCenterDialog::OnMouseLeave(Widget * EventSource)
 {
 	WWindow::OnMouseLeave(EventSource);
 	
-	TradeCenterCommodity * LeftTradeCenterCommodity(dynamic_cast< TradeCenterCommodity * >(EventSource));
+	TradeCenterCommodityClass * LeftTradeCenterCommodity(dynamic_cast< TradeCenterCommodityClass * >(EventSource));
 	
-	if((LeftTradeCenterCommodity != 0) && (LeftTradeCenterCommodity != m_SelectedTradeCenterCommodity))
+	if((LeftTradeCenterCommodity != 0) && (LeftTradeCenterCommodity != m_SelectedTradeCenterCommodityClass))
 	{
 		LeftTradeCenterCommodity->UnsetBackgroundColor();
 	}
