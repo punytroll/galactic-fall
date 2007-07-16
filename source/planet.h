@@ -32,14 +32,14 @@ class Commodity;
 class PlanetCommodity
 {
 public:
-	PlanetCommodity(Commodity * Commodity);
+	PlanetCommodity(const Commodity * Commodity);
 	virtual ~PlanetCommodity(void);
 	const Commodity * GetCommodity(void) const;
 	u4byte GetPrice(void) const;
 	void SetBasePriceModifier(float BasePriceModifier);
 	float GetBasePriceModifier(void) const;
 private:
-	Commodity * m_Commodity;
+	const Commodity * m_Commodity;
 	float m_BasePriceModifier;
 };
 
@@ -70,7 +70,7 @@ public:
 	void SetSize(const float & Size);
 	void SetColor(const Color & Color);
 	virtual void Draw(void) const;
-	PlanetCommodity * CreateCommodity(Commodity * Commodity);
+	PlanetCommodity * CreateCommodity(const Commodity * Commodity);
 private:
 	std::string m_Identifier;
 	std::string m_Description;

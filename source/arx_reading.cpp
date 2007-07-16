@@ -423,7 +423,7 @@ static void ReadSystem(Galaxy * Galaxy, Arxx::Reference & Reference)
 			
 			Reader >> CommodityIdentifier >> BasePriceModifier;
 			
-			Commodity * ManagedCommodity(g_CommodityManager.Get(CommodityIdentifier));
+			const Commodity * ManagedCommodity(g_CommodityManager.Get(CommodityIdentifier));
 			
 			if(ManagedCommodity == 0)
 			{

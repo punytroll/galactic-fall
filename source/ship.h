@@ -35,7 +35,7 @@ class Weapon;
 class Ship : public PhysicalObject
 {
 public:
-	Ship(ShipClass * ShipClass);
+	Ship(const ShipClass * ShipClass);
 	void Draw(void) const;
 	void Update(float Seconds);
 	// controls
@@ -84,7 +84,7 @@ protected:
 	virtual bool OnRemoveContent(Object * Content);
 private:
 	// ship class
-	ShipClass * m_ShipClass;
+	const ShipClass * m_ShipClass;
 	std::map< std::string, Slot * > m_Slots;
 	std::vector< Weapon * > m_Weapons;
 	bool m_Accelerate;

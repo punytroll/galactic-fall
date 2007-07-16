@@ -41,7 +41,7 @@
 #include "weapon.h"
 #include "weapon_class.h"
 
-Ship::Ship(ShipClass * ShipClass) :
+Ship::Ship(const ShipClass * ShipClass) :
 	m_Accelerate(false),
 	m_Accelerating(false),
 	m_Jettison(false),

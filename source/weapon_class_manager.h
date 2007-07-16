@@ -29,7 +29,7 @@ class WeaponClassManager
 {
 public:
 	~WeaponClassManager(void);
-	WeaponClass * Get(const std::string & Identifier);
+	const WeaponClass * Get(const std::string & Identifier) const;
 	WeaponClass * Create(const std::string & Identifier);
 	void Destroy(const std::string & Identifier);
 private:

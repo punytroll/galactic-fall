@@ -28,9 +28,9 @@ WeaponClassManager::~WeaponClassManager(void)
 	}
 }
 
-WeaponClass * WeaponClassManager::Get(const std::string & Identifier)
+const WeaponClass * WeaponClassManager::Get(const std::string & Identifier) const
 {
-	std::map< std::string, WeaponClass * >::iterator WeaponClassIterator(m_WeaponClasses.find(Identifier));
+	std::map< std::string, WeaponClass * >::const_iterator WeaponClassIterator(m_WeaponClasses.find(Identifier));
 	
 	if(WeaponClassIterator == m_WeaponClasses.end())
 	{
