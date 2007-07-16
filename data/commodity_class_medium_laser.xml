@@ -1,0 +1,14 @@
+<commodity-class>
+	<identifier>medium_laser</identifier>
+	<name>Medium Laser</name>
+	<base-price>4200</base-price>
+	<model-identifier>cargo_cube</model-identifier>
+	<color>
+		<red>0.35</red>
+		<green>0.68</green>
+		<blue>0.65</blue>
+		<alpha>1.0</alpha>
+	</color>
+	<object-type>weapon</object-type>
+	<object-class>medium_laser</object-class>
+</commodity-class>
