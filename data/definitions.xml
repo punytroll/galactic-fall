@@ -90,6 +90,8 @@
 		<float identifier="base-price"/>
 		<string identifier="model-identifier"/>
 		<color4f identifier="color"/>
+		<string identifier="object-type"/>
+		<string identifier="object-class"/>
 	</commodity-class>
 	
 	<offered-commodity-class>

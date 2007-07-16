@@ -173,9 +173,9 @@ void TradeCenterDialog::Buy(const PlanetCommodityClass * PlanetCommodityClass)
 	{
 		if(m_Character->GetShip()->GetFreeCargoHoldSize() >= 1.0f)
 		{
-			Object * NewCargo(g_ObjectFactory->Create("cargo", PlanetCommodityClass->GetCommodityClass()->GetIdentifier()));
+			Object * NewCargo(g_ObjectFactory->Create(PlanetCommodityClass->GetCommodityClass()->GetObjectType(), PlanetCommodityClass->GetCommodityClass()->GetObjectClass()));
 			
-			NewCargo->SetObjectIdentifier("::cargo::created_on(" + m_Planet->GetObjectIdentifier() + ")::created_at(" + to_string_cast(RealTime::GetTime(), 6) + ")::bought_by(" + m_Character->GetObjectIdentifier() + ")::commodity_class(" + PlanetCommodityClass->GetCommodityClass()->GetIdentifier() + ")");
+			NewCargo->SetObjectIdentifier("::" + PlanetCommodityClass->GetCommodityClass()->GetObjectType() + "(" + PlanetCommodityClass->GetCommodityClass()->GetObjectClass() + ")::created_on(" + m_Planet->GetObjectIdentifier() + ")::created_at(" + to_string_cast(RealTime::GetTime(), 6) + ")::bought_by(" + m_Character->GetObjectIdentifier() + ")::commodity_class(" + PlanetCommodityClass->GetCommodityClass()->GetIdentifier() + ")");
 			m_Character->GetShip()->AddContent(NewCargo);
 			UpdateTraderCredits();
 			UpdateTraderFreeCargoHoldSize();

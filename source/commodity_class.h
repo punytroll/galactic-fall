@@ -36,17 +36,23 @@ public:
 	const std::string & GetIdentifier(void) const;
 	const Model * GetModel(void) const;
 	const std::string & GetName(void) const;
+	const std::string & GetObjectClass(void) const;
+	const std::string & GetObjectType(void) const;
 	// setters
 	void SetBasePrice(float BasePrice);
 	void SetColor(const Color & Color);
 	void SetModel(const Model * Model);
 	void SetName(const std::string & Name);
+	void SetObjectClass(const std::string & ObjectClass);
+	void SetObjectType(const std::string & ObjectType);
 private:
 	float m_BasePrice;
 	Color * m_Color;
 	std::string m_Identifier;
 	std::string m_Name;
 	const Model * m_Model;
+	std::string m_ObjectClass;
+	std::string m_ObjectType;
 };
 
 inline float CommodityClass::GetBasePrice(void) const
@@ -74,6 +80,16 @@ inline const std::string & CommodityClass::GetName(void) const
 	return m_Name;
 }
 
+inline const std::string & CommodityClass::GetObjectClass(void) const
+{
+	return m_ObjectClass;
+}
+
+inline const std::string & CommodityClass::GetObjectType(void) const
+{
+	return m_ObjectType;
+}
+
 inline void CommodityClass::SetBasePrice(float BasePrice)
 {
 	m_BasePrice = BasePrice;
@@ -87,6 +103,16 @@ inline void CommodityClass::SetModel(const Model * Model)
 inline void CommodityClass::SetName(const std::string & Name)
 {
 	m_Name = Name;
+}
+
+inline void CommodityClass::SetObjectClass(const std::string & ObjectClass)
+{
+	m_ObjectClass = ObjectClass;
+}
+
+inline void CommodityClass::SetObjectType(const std::string & ObjectType)
+{
+	m_ObjectType = ObjectType;
 }
 
 #endif

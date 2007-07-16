@@ -9,4 +9,6 @@
 		<blue>0.98</blue>
 		<alpha>1.0</alpha>
 	</color>
+	<object-type>cargo</object-type>
+	<object-class>medical_supplies</object-class>
 </commodity-class>
