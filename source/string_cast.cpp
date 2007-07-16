@@ -17,7 +17,7 @@
 **/
 
 /**
- * This is version 1.1.1 of the string cast.
+ * This is version 1.1.5 of the string cast.
  **/
 
 #include <iomanip>
@@ -98,6 +98,16 @@ std::string to_string_cast< int >(const int & Value)
 
 template < >
 std::string to_string_cast< unsigned int >(const unsigned int & Value)
+{
+	std::ostringstream StringStream;
+	
+	StringStream << Value;
+	
+	return StringStream.str();
+}
+
+template < >
+std::string to_string_cast< unsigned long int >(const unsigned long int & Value)
 {
 	std::ostringstream StringStream;
 	
