@@ -490,7 +490,7 @@ state.o: state.cpp $(state_h)
 state_machine.o: state_machine.cpp $(state_h) $(state_machine_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-states.o: states.cpp $(asset_class_h) $(character_h) $(commodity_h) $(game_time_h) $(math_h) $(mind_h) $(planet_h) $(ship_h) $(state_machine_h) $(states_h) $(string_cast_h) $(system_h)
+states.o: states.cpp $(asset_class_h) $(character_h) $(commodity_h) $(commodity_class_h) $(game_time_h) $(globals_h) $(math_h) $(mind_h) $(object_factory_h) $(planet_h) $(ship_h) $(state_machine_h) $(states_h) $(string_cast_h) $(system_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 string_cast.o: string_cast.cpp $(string_cast_h)
