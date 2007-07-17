@@ -21,7 +21,7 @@
 #define ARX_READING_H
 
 class Archive;
-class CommodityClassManager;
+class AssetClassManager;
 class Galaxy;
 class Item;
 class ModelManager;
@@ -31,7 +31,7 @@ class WeaponClassManager;
 
 Arxx::Item * GetItem(Arxx::Archive & Archive, Arxx::u4byte UniqueIdentifier);
 
-void ReadCommodityClasses(Arxx::Archive & Archive, CommodityClassManager * Manager);
+void ReadAssetClasses(Arxx::Archive & Archive, AssetClassManager * Manager);
 void ReadModels(Arxx::Archive & Archive, ModelManager * Manager);
 void ReadShipClasses(Arxx::Archive & Archive, ShipClassManager * Manager);
 void ReadSystems(Arxx::Archive & Archive, Galaxy * Galaxy);

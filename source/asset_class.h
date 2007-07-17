@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006  Hagen Möbius
+ * Copyright (C) 2007  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,19 +17,19 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef COMMODITY_CLASS_H
-#define COMMODITY_CLASS_H
+#ifndef ASSET_CLASS_H
+#define ASSET_CLASS_H
 
 #include <string>
 
 class Color;
 class Model;
 
-class CommodityClass
+class AssetClass
 {
 public:
-	CommodityClass(const std::string & Identifier);
-	~CommodityClass(void);
+	AssetClass(const std::string & Identifier);
+	~AssetClass(void);
 	// getters
 	float GetBasePrice(void) const;
 	const Color * GetColor(void) const;
@@ -55,62 +55,62 @@ private:
 	std::string m_ObjectType;
 };
 
-inline float CommodityClass::GetBasePrice(void) const
+inline float AssetClass::GetBasePrice(void) const
 {
 	return m_BasePrice;
 }
 
-inline const Color * CommodityClass::GetColor(void) const
+inline const Color * AssetClass::GetColor(void) const
 {
 	return m_Color;
 }
 
-inline const std::string & CommodityClass::GetIdentifier(void) const
+inline const std::string & AssetClass::GetIdentifier(void) const
 {
 	return m_Identifier;
 }
 
-inline const Model * CommodityClass::GetModel(void) const
+inline const Model * AssetClass::GetModel(void) const
 {
 	return m_Model;
 }
 
-inline const std::string & CommodityClass::GetName(void) const
+inline const std::string & AssetClass::GetName(void) const
 {
 	return m_Name;
 }
 
-inline const std::string & CommodityClass::GetObjectClass(void) const
+inline const std::string & AssetClass::GetObjectClass(void) const
 {
 	return m_ObjectClass;
 }
 
-inline const std::string & CommodityClass::GetObjectType(void) const
+inline const std::string & AssetClass::GetObjectType(void) const
 {
 	return m_ObjectType;
 }
 
-inline void CommodityClass::SetBasePrice(float BasePrice)
+inline void AssetClass::SetBasePrice(float BasePrice)
 {
 	m_BasePrice = BasePrice;
 }
 
-inline void CommodityClass::SetModel(const Model * Model)
+inline void AssetClass::SetModel(const Model * Model)
 {
 	m_Model = Model;
 }
 
-inline void CommodityClass::SetName(const std::string & Name)
+inline void AssetClass::SetName(const std::string & Name)
 {
 	m_Name = Name;
 }
 
-inline void CommodityClass::SetObjectClass(const std::string & ObjectClass)
+inline void AssetClass::SetObjectClass(const std::string & ObjectClass)
 {
 	m_ObjectClass = ObjectClass;
 }
 
-inline void CommodityClass::SetObjectType(const std::string & ObjectType)
+inline void AssetClass::SetObjectType(const std::string & ObjectType)
 {
 	m_ObjectType = ObjectType;
 }

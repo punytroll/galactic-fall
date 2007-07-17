@@ -19,8 +19,8 @@
 
 #include <stdexcept>
 
+#include "asset_class_manager.h"
 #include "commodity.h"
-#include "commodity_class_manager.h"
 #include "globals.h"
 #include "object_factory.h"
 #include "weapon.h"
@@ -30,14 +30,14 @@ Object * ObjectFactory::Create(const std::string & Type, const std::string & Cla
 {
 	if(Type == "commodity")
 	{
-		const CommodityClass * CommodityClass(g_CommodityClassManager.Get(Class));
+		const AssetClass * AssetClass(g_AssetClassManager->Get(Class));
 		
-		if(CommodityClass == 0)
+		if(AssetClass == 0)
 		{
 			throw std::runtime_error("Unknown object class '" + Class + "' for object type '" + Type + "'.");
 		}
 		
-		return new Commodity(CommodityClass);
+		return new Commodity(AssetClass);
 	}
 	else if(Type == "weapon")
 	{

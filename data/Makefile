@@ -1,13 +1,13 @@
 all_data = \
-	.data/commodity_class_equipment.data \
-	.data/commodity_class_food.data \
-	.data/commodity_class_fuel.data \
-	.data/commodity_class_industrial.data \
-	.data/commodity_class_light_laser.data \
-	.data/commodity_class_luxury_goods.data \
-	.data/commodity_class_medical_supplies.data \
-	.data/commodity_class_medium_laser.data \
-	.data/commodity_class_metal.data \
+	.data/asset_class_equipment.data \
+	.data/asset_class_food.data \
+	.data/asset_class_fuel.data \
+	.data/asset_class_industrial.data \
+	.data/asset_class_light_laser.data \
+	.data/asset_class_luxury_goods.data \
+	.data/asset_class_medical_supplies.data \
+	.data/asset_class_medium_laser.data \
+	.data/asset_class_metal.data \
 	.data/label_credits.data \
 	.data/label_current_system.data \
 	.data/label_fuel.data \
@@ -88,7 +88,7 @@ data.arx: .data $(all_data) Makefile
 	arxmod $@ 3 -n "Ship Classes" -t 0 -st 0
 	arxmod $@ 0 -a "child" 3
 	arxtouch $@ 4
-	arxmod $@ 4 -n "Commodities" -t 0 -st 0
+	arxmod $@ 4 -n "Asset Classes" -t 0 -st 0
 	arxmod $@ 0 -a "child" 4
 	arxtouch $@ 5
 	arxmod $@ 5 -n "Systems" -t 0 -st 0
@@ -119,16 +119,16 @@ data.arx: .data $(all_data) Makefile
 	arxadd $@ --uid 131 --name "Fighter" --type 3 --subtype 0 --add 3:child .data/ship_class_fighter.data
 	arxadd $@ --uid 110 --name "Shuttle" --type 3 --subtype 0 --add 3:child .data/ship_class_shuttle.data
 	arxadd $@ --uid 128 --name "Transporter" --type 3 --subtype 0 --add 3:child .data/ship_class_transporter.data
-	@echo -e "\n\nAdding commodity classes ...\n"
-	arxadd $@ --uid 116 --name "Equipment" --type 4 --subtype 0 --add 4:child .data/commodity_class_equipment.data
-	arxadd $@ --uid 111 --name "Food" --type 4 --subtype 0 --add 4:child .data/commodity_class_food.data
-	arxadd $@ --name "Fuel" --type 4 --subtype 0 --add 4:child .data/commodity_class_fuel.data
-	arxadd $@ --uid 112 --name "Industrial" --type 4 --subtype 0 --add 4:child .data/commodity_class_industrial.data
-	arxadd $@ --name "Light Laser" --type 4 --subtype 0 --add 4:child .data/commodity_class_light_laser.data
-	arxadd $@ --uid 114 --name "Luxury Goods" --type 4 --subtype 0 --add 4:child .data/commodity_class_luxury_goods.data
-	arxadd $@ --uid 113 --name "Medical Supplies" --type 4 --subtype 0 --add 4:child .data/commodity_class_medical_supplies.data
-	arxadd $@ --name "Medium Laser" --type 4 --subtype 0 --add 4:child .data/commodity_class_medium_laser.data
-	arxadd $@ --uid 115 --name "Metal" --type 4 --subtype 0 --add 4:child .data/commodity_class_metal.data
+	@echo -e "\n\nAdding asset classes ...\n"
+	arxadd $@ --uid 116 --name "Equipment" --type 4 --subtype 0 --add 4:child .data/asset_class_equipment.data
+	arxadd $@ --uid 111 --name "Food" --type 4 --subtype 0 --add 4:child .data/asset_class_food.data
+	arxadd $@ --name "Fuel" --type 4 --subtype 0 --add 4:child .data/asset_class_fuel.data
+	arxadd $@ --uid 112 --name "Industrial" --type 4 --subtype 0 --add 4:child .data/asset_class_industrial.data
+	arxadd $@ --name "Light Laser" --type 4 --subtype 0 --add 4:child .data/asset_class_light_laser.data
+	arxadd $@ --uid 114 --name "Luxury Goods" --type 4 --subtype 0 --add 4:child .data/asset_class_luxury_goods.data
+	arxadd $@ --uid 113 --name "Medical Supplies" --type 4 --subtype 0 --add 4:child .data/asset_class_medical_supplies.data
+	arxadd $@ --name "Medium Laser" --type 4 --subtype 0 --add 4:child .data/asset_class_medium_laser.data
+	arxadd $@ --uid 115 --name "Metal" --type 4 --subtype 0 --add 4:child .data/asset_class_metal.data
 	@echo -e "\n\nAdding systems ...\n"
 	arxadd $@ --uid 120 --name "Alpha Centauri" --type 5 --subtype 0 --add 5:child .data/system_alpha_centauri.data
 	arxadd $@ --uid 118 --name "Rigel" --type 5 --subtype 0 --add 5:child .data/system_rigel.data

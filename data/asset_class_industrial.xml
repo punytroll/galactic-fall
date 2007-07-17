@@ -1,4 +1,4 @@
-<commodity-class>
+<asset-class>
 	<identifier>industrial</identifier>
 	<name>Industrial</name>
 	<base-price>120</base-price>
@@ -11,4 +11,4 @@
 	</color>
 	<object-type>commodity</object-type>
 	<object-class>industrial</object-class>
-</commodity-class>
+</asset-class>

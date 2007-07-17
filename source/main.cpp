@@ -36,14 +36,14 @@
 
 #include "arx_reading.h"
 #include "arx_resources.h"
+#include "asset_class.h"
+#include "asset_class_manager.h"
 #include "callbacks.h"
 #include "camera.h"
 #include "character.h"
 #include "color.h"
 #include "command_mind.h"
-#include "commodity_class.h"
 #include "commodity.h"
-#include "commodity_class_manager.h"
 #include "destroy_listener.h"
 #include "draw_text.h"
 #include "galaxy.h"
@@ -90,7 +90,7 @@ Camera g_Camera;
 ModelManager g_ModelManager;
 ObjectFactory * g_ObjectFactory;
 ShipClassManager g_ShipClassManager;
-CommodityClassManager g_CommodityClassManager;
+AssetClassManager * g_AssetClassManager;
 WeaponClassManager * g_WeaponClassManager;
 Reference< CommandMind > g_InputMind;
 Reference< Mind > g_OutputMind;
@@ -796,18 +796,18 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 			
 			if(AmountOfCargo <= NewShip->GetFreeCargoHoldSize())
 			{
-				const std::map< std::string, CommodityClass * > & CommodityClasses(g_CommodityClassManager.GetCommodityClasses());
-				std::map< std::string, CommodityClass * >::const_iterator CommodityClassIterator(CommodityClasses.begin());
+				const std::map< std::string, AssetClass * > & AssetClasses(g_AssetClassManager->GetAssetClasses());
+				std::map< std::string, AssetClass * >::const_iterator AssetClassIterator(AssetClasses.begin());
 				
-				for(std::map< std::string, CommodityClass * >::size_type Choice = GetRandomInteger(CommodityClasses.size() - 1); Choice > 0; --Choice)
+				for(std::map< std::string, AssetClass * >::size_type Choice = GetRandomInteger(AssetClasses.size() - 1); Choice > 0; --Choice)
 				{
-					++CommodityClassIterator;
+					++AssetClassIterator;
 				}
 				while(AmountOfCargo > 0)
 				{
-					Commodity * NewCommodity(new Commodity(CommodityClassIterator->second));
+					Commodity * NewCommodity(new Commodity(AssetClassIterator->second));
 					
-					NewCommodity->SetObjectIdentifier("::commodity(" + CommodityClassIterator->second->GetIdentifier() + ")::(" + to_string_cast(NumberOfCommodities) + "|" + to_string_cast(AmountOfCargo) + ")" + IdentifierSuffix);
+					NewCommodity->SetObjectIdentifier("::commodity(" + AssetClassIterator->second->GetIdentifier() + ")::(" + to_string_cast(NumberOfCommodities) + "|" + to_string_cast(AmountOfCargo) + ")" + IdentifierSuffix);
 					NewShip->AddContent(NewCommodity);
 					--AmountOfCargo;
 				}
@@ -1331,7 +1331,7 @@ void KeyDown(unsigned int KeyCode)
 				
 				if(TheCommodity != 0)
 				{
-					XML << element << "commodity" << attribute << "commodity-identifier" << value << TheCommodity->GetCommodityClass()->GetIdentifier() << end;
+					XML << element << "commodity" << attribute << "commodity-identifier" << value << TheCommodity->GetAssetClass()->GetIdentifier() << end;
 				}
 				else if(TheWeapon != 0)
 				{
@@ -1754,7 +1754,7 @@ void LoadSavegame(const Element * SaveElement)
 					{
 						if((*ManifestChild)->GetName() == "commodity")
 						{
-							PlayerShip->AddContent(new Commodity(g_CommodityClassManager.Get((*ManifestChild)->GetAttribute("commodity-identifier"))));
+							PlayerShip->AddContent(new Commodity(g_AssetClassManager->Get((*ManifestChild)->GetAttribute("class-identifier"))));
 						}
 						else if((*ManifestChild)->GetName() == "weapon")
 						{
@@ -1769,7 +1769,7 @@ void LoadSavegame(const Element * SaveElement)
 						}
 						else
 						{
-							throw std::runtime_error("The \"manifest\" element of the \"ship\" element \"" + (*SaveChild)->GetAttribute("object-identifier") + "\" contains a child element \"" + (*ShipChild)->GetName() + "\" which could not be handled.");
+							throw std::runtime_error("The \"manifest\" element of the \"ship\" element \"" + (*SaveChild)->GetAttribute("object-identifier") + "\" contains a child element \"" + (*ManifestChild)->GetName() + "\" which could not be handled.");
 						}
 					}
 				}
@@ -1874,6 +1874,7 @@ int main(int argc, char ** argv)
 	g_MainPerspective.SetFarClippingPlane(1000.f);
 	g_MessageTimeoutIterator = g_RealTimeTimeoutNotifications.end();
 	g_SpawnShipTimeoutIterator = g_GameTimeTimeoutNotifications.end();
+	g_AssetClassManager = new AssetClassManager();
 	g_WeaponClassManager = new WeaponClassManager();
 	g_Galaxy = new Galaxy();
 	g_Galaxy->SetObjectIdentifier("::galaxy");
@@ -1916,9 +1917,10 @@ int main(int argc, char ** argv)
 		
 		return 1;
 	}
+	
 	// read the data from the archive
 	ReadModels(Archive, &g_ModelManager);
-	ReadCommodityClasses(Archive, &g_CommodityClassManager);
+	ReadAssetClasses(Archive, g_AssetClassManager);
 	ReadShipClasses(Archive, &g_ShipClassManager);
 	ReadSystems(Archive, g_Galaxy);
 	ReadSystemLinks(Archive, g_Galaxy);

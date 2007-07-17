@@ -20,14 +20,14 @@
 		<angular-position value="6.82964"/>
 		<velocity x="10.0685" y="6.5288"/>
 		<manifest>
-			<cargo commodity-identifier="industrial"/>
-			<cargo commodity-identifier="industrial"/>
-			<cargo commodity-identifier="industrial"/>
-			<cargo commodity-identifier="industrial"/>
-			<cargo commodity-identifier="industrial"/>
-			<cargo commodity-identifier="industrial"/>
-			<cargo commodity-identifier="metal"/>
-			<cargo commodity-identifier="metal"/>
+			<commodity class-identifier="industrial"/>
+			<commodity class-identifier="industrial"/>
+			<commodity class-identifier="industrial"/>
+			<commodity class-identifier="industrial"/>
+			<commodity class-identifier="industrial"/>
+			<commodity class-identifier="industrial"/>
+			<commodity class-identifier="metal"/>
+			<commodity class-identifier="metal"/>
 			<weapon object-identifier="::weapon(light_laser)::ship(::ship(shuttle)::player_ship)" class-identifier="light_laser" mounted-on="starboard_gun"/>
 		</manifest>
 		<name value="Freelancer 4"/>

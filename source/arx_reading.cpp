@@ -25,10 +25,10 @@
 
 #include "arx_reading.h"
 #include "arx_resources.h"
+#include "asset_class.h"
+#include "asset_class_manager.h"
 #include "buffer_reading.h"
 #include "callbacks.h"
-#include "commodity_class.h"
-#include "commodity_class_manager.h"
 #include "galaxy.h"
 #include "globals.h"
 #include "label.h"
@@ -50,7 +50,7 @@
 
 static Arxx::Item * Resolve(Arxx::Reference & Reference);
 
-static void ReadCommodityClass(CommodityClassManager * CommodityClassManager, Arxx::Reference & Reference);
+static void ReadAssetClass(AssetClassManager * AssetClassManager, Arxx::Reference & Reference);
 static void ReadModel(ModelManager * ModelManager, Arxx::Reference & Reference);
 static void ReadShipClass(ShipClassManager * ShipClassManager, Arxx::Reference & Reference);
 static void ReadSystem(Galaxy * Galaxy, Arxx::Reference & Reference);
@@ -117,9 +117,9 @@ void ReadItems(Arxx::Archive & Archive, const std::string & Path, const Callback
 	delete Reader;
 }
 
-void ReadCommodityClasses(Arxx::Archive & Archive, CommodityClassManager * Manager)
+void ReadAssetClasses(Arxx::Archive & Archive, AssetClassManager * Manager)
 {
-	ReadItems(Archive, "/Commodities", Bind1(Function(ReadCommodityClass), Manager));
+	ReadItems(Archive, "/Asset Classes", Bind1(Function(ReadAssetClass), Manager));
 }
 
 void ReadModels(Arxx::Archive & Archive, ModelManager * Manager)
@@ -152,17 +152,17 @@ void ReadWeaponClasses(Arxx::Archive & Archive, WeaponClassManager * Manager)
 	ReadItems(Archive, "/Weapon Classes", Bind1(Function(ReadWeaponClass), Manager));
 }
 
-static void ReadCommodityClass(CommodityClassManager * CommodityClassManager, Arxx::Reference & Reference)
+static void ReadAssetClass(AssetClassManager * AssetClassManager, Arxx::Reference & Reference)
 {
 	Arxx::Item * Item(Resolve(Reference));
 	
-	if(Item->u4GetType() != ARX_TYPE_COMMODITY)
+	if(Item->u4GetType() != ARX_TYPE_ASSET_CLASS)
 	{
-		throw std::runtime_error("Item type for commodity '" + Item->sGetName() + "' should be '" + to_string_cast(ARX_TYPE_COMMODITY) + "' not '" + to_string_cast(Item->u4GetType()) + "'.");
+		throw std::runtime_error("Item type for asset '" + Item->sGetName() + "' should be '" + to_string_cast(ARX_TYPE_ASSET_CLASS) + "' not '" + to_string_cast(Item->u4GetType()) + "'.");
 	}
 	if(Item->u4GetSubType() != 0)
 	{
-		throw std::runtime_error("Item sub type for commodity '" + Item->sGetName() + "' should be '0' not '" + to_string_cast(Item->u4GetSubType()) + "'.");
+		throw std::runtime_error("Item sub type for asset '" + Item->sGetName() + "' should be '0' not '" + to_string_cast(Item->u4GetSubType()) + "'.");
 	}
 	
 	Arxx::BufferReader Reader(*Item);
@@ -170,11 +170,11 @@ static void ReadCommodityClass(CommodityClassManager * CommodityClassManager, Ar
 	
 	Reader >> Identifier;
 	
-	CommodityClass * NewCommodityClass(CommodityClassManager->Create(Identifier));
+	AssetClass * NewAssetClass(AssetClassManager->Create(Identifier));
 	
-	if(NewCommodityClass == 0)
+	if(NewAssetClass == 0)
 	{
-		throw std::runtime_error("Could not create commodity '" + Identifier + "'.");
+		throw std::runtime_error("Could not create asset '" + Identifier + "'.");
 	}
 	
 	std::string Name;
@@ -186,19 +186,19 @@ static void ReadCommodityClass(CommodityClassManager * CommodityClassManager, Ar
 	
 	Reader >> Name >> BasePrice >> ModelIdentifier >> Color >> ObjectType >> ObjectClass;
 	
-	NewCommodityClass->SetName(Name);
-	NewCommodityClass->SetBasePrice(BasePrice);
+	NewAssetClass->SetName(Name);
+	NewAssetClass->SetBasePrice(BasePrice);
 	
 	Model * Model(g_ModelManager.Get(ModelIdentifier));
 	
 	if(Model == 0)
 	{
-		throw std::runtime_error("For the commodity '" + Name + "' could not find the model '" + ModelIdentifier + "'.");
+		throw std::runtime_error("For the asset class '" + Name + "' could not find the model '" + ModelIdentifier + "'.");
 	}
-	NewCommodityClass->SetModel(Model);
-	NewCommodityClass->SetColor(Color);
-	NewCommodityClass->SetObjectType(ObjectType);
-	NewCommodityClass->SetObjectClass(ObjectClass);
+	NewAssetClass->SetModel(Model);
+	NewAssetClass->SetColor(Color);
+	NewAssetClass->SetObjectType(ObjectType);
+	NewAssetClass->SetObjectClass(ObjectClass);
 }
 
 static void ReadModel(ModelManager * ModelManager, Arxx::Reference & Reference)
@@ -412,31 +412,31 @@ static void ReadSystem(Galaxy * Galaxy, Arxx::Reference & Reference)
 		Vector2f PlanetPosition;
 		float Size;
 		Color PlanetColor;
-		Arxx::u4byte CommoditiesCount;
+		Arxx::u4byte OfferedAssetsCount;
 		
-		Reader >> Name >> Description >> PlanetPosition >> Size >> PlanetColor >> CommoditiesCount;
+		Reader >> Name >> Description >> PlanetPosition >> Size >> PlanetColor >> OfferedAssetsCount;
 		NewPlanet->SetName(Name);
 		NewPlanet->SetDescription(Description);
 		NewPlanet->SetPosition(PlanetPosition);
 		NewPlanet->SetSize(Size);
 		NewPlanet->SetColor(PlanetColor);
-		for(Arxx::u4byte CommoditiesNumber = 1; CommoditiesNumber <= CommoditiesCount; ++CommoditiesNumber)
+		for(Arxx::u4byte OfferedAssetNumber = 1; OfferedAssetNumber <= OfferedAssetsCount; ++OfferedAssetNumber)
 		{
-			std::string CommodityClassIdentifier;
+			std::string AssetClassIdentifier;
 			float BasePriceModifier;
 			
-			Reader >> CommodityClassIdentifier >> BasePriceModifier;
+			Reader >> AssetClassIdentifier >> BasePriceModifier;
 			
-			const CommodityClass * ManagedCommodityClass(g_CommodityClassManager.Get(CommodityClassIdentifier));
+			const AssetClass * ManagedAssetClass(g_AssetClassManager->Get(AssetClassIdentifier));
 			
-			if(ManagedCommodityClass == 0)
+			if(ManagedAssetClass == 0)
 			{
-				throw std::runtime_error("Could not find commodity '" + CommodityClassIdentifier + "' for planet '" + PlanetIdentifier + "' in system '" + Identifier + "'.");
+				throw std::runtime_error("Could not find asset class '" + AssetClassIdentifier + "' for planet '" + PlanetIdentifier + "' in system '" + Identifier + "'.");
 			}
 			
-			PlanetCommodityClass * NewPlanetCommodityClass(NewPlanet->CreateCommodityClass(ManagedCommodityClass));
+			PlanetAssetClass * NewPlanetAssetClass(NewPlanet->CreatePlanetAssetClass(ManagedAssetClass));
 			
-			NewPlanetCommodityClass->SetBasePriceModifier(BasePriceModifier);
+			NewPlanetAssetClass->SetBasePriceModifier(BasePriceModifier);
 		}
 		
 		float LandingFee;
