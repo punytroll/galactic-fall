@@ -26,9 +26,12 @@
 #include "asset_class.h"
 #include "character.h"
 #include "commodity.h"
+#include "commodity_class.h"
 #include "game_time.h"
+#include "globals.h"
 #include "math.h"
 #include "mind.h"
+#include "object_factory.h"
 #include "planet.h"
 #include "ship.h"
 #include "state_machine.h"
@@ -268,66 +271,58 @@ TransporterPhase3::TransporterPhase3(StateMachineMind * Mind) :
 
 void TransporterPhase3::Enter(void)
 {
-	/** @todo make it work
 	// ATTENTION: the target is only valid because this Enter() function is called before the setting of m_Land is processed in the ship which invalidates the ship's target
 	Reference< Planet > Planet(GetMind()->GetCharacter()->GetShip()->GetTarget());
 	
 	// build a lookup map for asset classes
-	std::map< const AssetClass *, PlanetAssetClass * > AssetClasses;
+	std::map< std::string, PlanetAssetClass * > PlanetAssetClasses;
 	std::vector< PlanetAssetClass * > BuyPlanetAssetClasses;
 	
 	{
-		const std::vector< PlanetAssetClass * > & PlanetAssetClasses(Planet->GetPlanetAssetClasses());
+		const std::vector< PlanetAssetClass * > & OfferedPlanetAssetClasses(Planet->GetPlanetAssetClasses());
 		
-		for(std::vector< PlanetAssetClass * >::size_type Index = 0; Index < PlanetAssetClasses.size(); ++Index)
+		for(std::vector< PlanetAssetClass * >::size_type Index = 0; Index < OfferedPlanetAssetClasses.size(); ++Index)
 		{
-			AssetClasses[PlanetAssetClasses[Index]->GetAssetClass()] = PlanetAssetClasses[Index];
-			if(PlanetAssetClasses[Index]->GetBasePriceModifier() < 1.0f)
+			PlanetAssetClasses[OfferedPlanetAssetClasses[Index]->GetAssetClass()->GetIdentifier()] = OfferedPlanetAssetClasses[Index];
+			if(OfferedPlanetAssetClasses[Index]->GetBasePriceModifier() < 1.0f)
 			{
-				BuyPlanetAssetClasses.push_back(PlanetAssetClasses[Index]);
+				BuyPlanetAssetClasses.push_back(OfferedPlanetAssetClasses[Index]);
 			}
 		}
 	}
-	if(AssetClasses.empty() == false)
+	if(PlanetAssetClasses.empty() == false)
 	{
-		const std::set< Object * > & Manifest(GetMind()->GetCharacter()->GetShip()->GetContent());
-		std::set< Object * >::const_iterator ManifestIterator(Manifest.begin());
-		std::map< const AssetClass *, PlanetAssetClass * >::iterator AssetClassIterator(AssetClasses.begin());
+		const std::set< Object * > & Content(GetMind()->GetCharacter()->GetShip()->GetContent());
+		std::set< Object * >::const_iterator ContentIterator(Content.begin());
+		std::map< std::string, PlanetAssetClass * >::iterator PlanetAssetClassIterator(PlanetAssetClasses.end());
 		
-		// first sell stuff ... but only stuff with base price modifier above 1
-		while(ManifestIterator != Manifest.end())
+		// first sell commodities ... but only those with base price modifier above 1
+		while(ContentIterator != Content.end())
 		{
-			Commodity * TheCommodity(dynamic_cast< Commodity * >(*ManifestIterator));
+			Commodity * SellCommodity(dynamic_cast< Commodity * >(*ContentIterator));
 			
-			if(TheCommodity != 0)
+			if(SellCommodity != 0)
 			{
 				// update the asset class cache, hoping it will be right more than once
-				if(AssetClassIterator == AssetClasses.end())
+				if((PlanetAssetClassIterator == PlanetAssetClasses.end()) || (PlanetAssetClassIterator->first != SellCommodity->GetCommodityClass()->GetIdentifier()))
 				{
-					AssetClassIterator = AssetClasses.find(TheCommodity->GetAssetClass());
-				}
-				else
-				{
-					if(AssetClassIterator->first != TheCommodity->GetAssetClass())
-					{
-						AssetClassIterator = AssetClasses.find(TheCommodity->GetAssetClass());
-					}
+					PlanetAssetClassIterator = PlanetAssetClasses.find(SellCommodity->GetCommodityClass()->GetIdentifier());
 				}
 				// work with the cached asset class
-				if((AssetClassIterator != AssetClasses.end()) && (AssetClassIterator->second->GetBasePriceModifier() > 1.0))
+				if((PlanetAssetClassIterator != PlanetAssetClasses.end()) && (PlanetAssetClassIterator->second->GetBasePriceModifier() > 1.0))
 				{
-					std::set< Object * >::iterator SaveIterator(ManifestIterator);
+					std::set< Object * >::iterator SaveIterator(ContentIterator);
 					
 					++SaveIterator;
-					GetMind()->GetCharacter()->GetShip()->RemoveContent(*ManifestIterator);
-					ManifestIterator = SaveIterator;
-					delete TheCommodity;
-					GetMind()->GetCharacter()->AddCredits(AssetClassIterator->second->GetPrice());
+					GetMind()->GetCharacter()->GetShip()->RemoveContent(SellCommodity);
+					ContentIterator = SaveIterator;
+					delete SellCommodity;
+					GetMind()->GetCharacter()->AddCredits(PlanetAssetClassIterator->second->GetPrice());
 					
 					continue;
 				}
 			}
-			++ManifestIterator;
+			++ContentIterator;
 		}
 		// second buy stuff ... but only stuff with base price modifier below 1
 		if(BuyPlanetAssetClasses.empty() == false)
@@ -343,9 +338,9 @@ void TransporterPhase3::Enter(void)
 					{
 						GetMind()->GetCharacter()->RemoveCredits(PlanetAssetClassToBuy->GetPrice());
 						
-						Commodity * NewCommodity(new Commodity(PlanetAssetClassToBuy->GetAssetClass()));
+						Object * NewCommodity(g_ObjectFactory->Create(PlanetAssetClassToBuy->GetAssetClass()->GetObjectType(), PlanetAssetClassToBuy->GetAssetClass()->GetObjectClass()));
 						
-						NewCommodity->SetObjectIdentifier("::commodity(" + NewCommodity->GetAssetClass()->GetIdentifier() + ")::buy_index(" + to_string_cast(NumberOfPlanetAssetClassesToBuy) + "|" + to_string_cast(NumberOfAssetsToBuy) + ")::bought_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::bought_by(" + GetMind()->GetObjectIdentifier() + ")::bought_on(" + Planet->GetObjectIdentifier() + ")");
+						NewCommodity->SetObjectIdentifier("::" + PlanetAssetClassToBuy->GetAssetClass()->GetObjectType() + "(" + PlanetAssetClassToBuy->GetAssetClass()->GetObjectClass() + ")::buy_index(" + to_string_cast(NumberOfPlanetAssetClassesToBuy) + "|" + to_string_cast(NumberOfAssetsToBuy) + ")::bought_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::bought_by(" + GetMind()->GetObjectIdentifier() + ")::bought_on(" + Planet->GetObjectIdentifier() + ")");
 						GetMind()->GetCharacter()->GetShip()->AddContent(NewCommodity);
 					}
 					else
@@ -356,7 +351,6 @@ void TransporterPhase3::Enter(void)
 			}
 		}
 	}
-	**/
 }
 
 void TransporterPhase3::Execute(void)
