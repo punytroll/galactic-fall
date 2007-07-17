@@ -2,13 +2,6 @@
 	<identifier>industrial</identifier>
 	<name>Industrial</name>
 	<base-price>120</base-price>
-	<model-identifier>cargo_cube</model-identifier>
-	<color>
-		<red>0.3</red>
-		<green>0.25</green>
-		<blue>0.1</blue>
-		<alpha>1.0</alpha>
-	</color>
 	<object-type>commodity</object-type>
 	<object-class>industrial</object-class>
 </asset-class>

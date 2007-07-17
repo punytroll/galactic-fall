@@ -17,12 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include <fstream>
-
 #include "model.h"
 #include "model_manager.h"
-#include "string_cast.h"
-#include "xml_puny_dom.h"
 
 ModelManager::~ModelManager(void)
 {

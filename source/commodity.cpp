@@ -19,18 +19,18 @@
 
 #include <GL/gl.h>
 
-#include "asset_class.h"
 #include "color.h"
 #include "commodity.h"
+#include "commodity_class.h"
 #include "model.h"
 
-Commodity::Commodity(const AssetClass * AssetClass) :
-	m_AssetClass(AssetClass),
+Commodity::Commodity(const CommodityClass * CommodityClass) :
+	m_CommodityClass(CommodityClass),
 	m_Hull(20.0f),
 	m_Velocity(true)
 {
-	SetRadialSize(m_AssetClass->GetModel()->GetRadialSize());
-	SetName(m_AssetClass->GetName());
+	SetRadialSize(m_CommodityClass->GetModel()->GetRadialSize());
+	SetName(m_CommodityClass->GetName());
 	m_RotationAxis.Set(static_cast< float >(random()) / RAND_MAX, static_cast< float >(random()) / RAND_MAX, static_cast< float >(random()) / RAND_MAX);
 	m_RotationAxis.Normalize();
 	m_AngularPosition = static_cast< float >(random()) / RAND_MAX;
@@ -47,8 +47,8 @@ void Commodity::Draw(void) const
 	glTranslatef(m_Position.m_V.m_A[0], m_Position.m_V.m_A[1], 0.0f);
 	glRotatef(m_AngularPosition * 180.0f / M_PI, m_RotationAxis.m_V.m_A[0], m_RotationAxis.m_V.m_A[1], m_RotationAxis.m_V.m_A[2]);
 	glMaterialfv(GL_FRONT, GL_SPECULAR, Vector4f(0.0f, 0.0f, 0.0f, 1.0f).m_V.m_A);
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, m_AssetClass->GetColor()->GetColor().m_V.m_A);
-	m_AssetClass->GetModel()->Draw();
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, m_CommodityClass->GetColor()->GetColor().m_V.m_A);
+	m_CommodityClass->GetModel()->Draw();
 	glPopMatrix();
 }
 

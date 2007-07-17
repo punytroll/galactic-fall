@@ -22,6 +22,7 @@
 
 class Archive;
 class AssetClassManager;
+class CommodityClassManager;
 class Galaxy;
 class Item;
 class ModelManager;
@@ -32,6 +33,7 @@ class WeaponClassManager;
 Arxx::Item * GetItem(Arxx::Archive & Archive, Arxx::u4byte UniqueIdentifier);
 
 void ReadAssetClasses(Arxx::Archive & Archive, AssetClassManager * Manager);
+void ReadCommodityClasses(Arxx::Archive & Archive, CommodityClassManager * Manger);
 void ReadModels(Arxx::Archive & Archive, ModelManager * Manager);
 void ReadShipClasses(Arxx::Archive & Archive, ShipClassManager * Manager);
 void ReadSystems(Arxx::Archive & Archive, Galaxy * Galaxy);

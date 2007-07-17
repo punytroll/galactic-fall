@@ -1,0 +1,11 @@
+<commodity-class>
+	<identifier>metal</identifier>
+	<name>Metal</name>
+	<model-identifier>cargo_cube</model-identifier>
+	<color>
+		<red>0.56</red>
+		<green>0.72</green>
+		<blue>0.87</blue>
+		<alpha>1.0</alpha>
+	</color>
+</commodity-class>

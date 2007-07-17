@@ -32,25 +32,19 @@ public:
 	~AssetClass(void);
 	// getters
 	float GetBasePrice(void) const;
-	const Color * GetColor(void) const;
 	const std::string & GetIdentifier(void) const;
-	const Model * GetModel(void) const;
 	const std::string & GetName(void) const;
 	const std::string & GetObjectClass(void) const;
 	const std::string & GetObjectType(void) const;
 	// setters
 	void SetBasePrice(float BasePrice);
-	void SetColor(const Color & Color);
-	void SetModel(const Model * Model);
 	void SetName(const std::string & Name);
 	void SetObjectClass(const std::string & ObjectClass);
 	void SetObjectType(const std::string & ObjectType);
 private:
 	float m_BasePrice;
-	Color * m_Color;
 	std::string m_Identifier;
 	std::string m_Name;
-	const Model * m_Model;
 	std::string m_ObjectClass;
 	std::string m_ObjectType;
 };
@@ -60,19 +54,9 @@ inline float AssetClass::GetBasePrice(void) const
 	return m_BasePrice;
 }
 
-inline const Color * AssetClass::GetColor(void) const
-{
-	return m_Color;
-}
-
 inline const std::string & AssetClass::GetIdentifier(void) const
 {
 	return m_Identifier;
-}
-
-inline const Model * AssetClass::GetModel(void) const
-{
-	return m_Model;
 }
 
 inline const std::string & AssetClass::GetName(void) const
@@ -93,11 +77,6 @@ inline const std::string & AssetClass::GetObjectType(void) const
 inline void AssetClass::SetBasePrice(float BasePrice)
 {
 	m_BasePrice = BasePrice;
-}
-
-inline void AssetClass::SetModel(const Model * Model)
-{
-	m_Model = Model;
 }
 
 inline void AssetClass::SetName(const std::string & Name)

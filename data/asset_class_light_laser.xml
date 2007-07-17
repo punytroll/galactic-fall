@@ -2,13 +2,6 @@
 	<identifier>light_laser</identifier>
 	<name>Light Laser</name>
 	<base-price>2800</base-price>
-	<model-identifier>cargo_cube</model-identifier>
-	<color>
-		<red>0.35</red>
-		<green>0.78</green>
-		<blue>0.45</blue>
-		<alpha>1.0</alpha>
-	</color>
 	<object-type>weapon</object-type>
 	<object-class>light_laser</object-class>
 </asset-class>

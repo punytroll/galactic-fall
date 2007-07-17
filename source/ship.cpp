@@ -23,10 +23,10 @@
 
 #include <GL/gl.h>
 
-#include "asset_class.h"
 #include "character.h"
 #include "color.h"
 #include "commodity.h"
+#include "commodity_class.h"
 #include "game_time.h"
 #include "globals.h"
 #include "map_knowledge.h"
@@ -173,7 +173,7 @@ void Ship::Update(float Seconds)
 			{
 				Commodity * TheCommodity(dynamic_cast< Commodity * >(*ContentIterator));
 				
-				if((TheCommodity != 0) && (TheCommodity->GetAssetClass()->GetIdentifier() == "fuel"))
+				if((TheCommodity != 0) && (TheCommodity->GetCommodityClass()->GetIdentifier() == "fuel"))
 				{
 					m_Fuel = Clamp(m_Fuel + 1.0f, 0.0f, GetFuelCapacity());
 					TheCommodity->Destroy();
@@ -304,7 +304,7 @@ unsigned_numeric Ship::GetContentAmount(const std::string & Type, const std::str
 		{
 			Commodity * TheCommodity(dynamic_cast< Commodity * >(*ContentIterator));
 			
-			if((TheCommodity != 0) && (TheCommodity->GetAssetClass()->GetIdentifier() == Class))
+			if((TheCommodity != 0) && (TheCommodity->GetCommodityClass()->GetIdentifier() == Class))
 			{
 				Amount += 1;
 			}

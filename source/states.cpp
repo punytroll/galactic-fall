@@ -268,6 +268,7 @@ TransporterPhase3::TransporterPhase3(StateMachineMind * Mind) :
 
 void TransporterPhase3::Enter(void)
 {
+	/** @todo make it work
 	// ATTENTION: the target is only valid because this Enter() function is called before the setting of m_Land is processed in the ship which invalidates the ship's target
 	Reference< Planet > Planet(GetMind()->GetCharacter()->GetShip()->GetTarget());
 	
@@ -355,6 +356,7 @@ void TransporterPhase3::Enter(void)
 			}
 		}
 	}
+	**/
 }
 
 void TransporterPhase3::Execute(void)

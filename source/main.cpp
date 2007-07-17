@@ -44,6 +44,8 @@
 #include "color.h"
 #include "command_mind.h"
 #include "commodity.h"
+#include "commodity_class.h"
+#include "commodity_class_manager.h"
 #include "destroy_listener.h"
 #include "draw_text.h"
 #include "galaxy.h"
@@ -91,6 +93,7 @@ ModelManager g_ModelManager;
 ObjectFactory * g_ObjectFactory;
 ShipClassManager g_ShipClassManager;
 AssetClassManager * g_AssetClassManager;
+CommodityClassManager * g_CommodityClassManager;
 WeaponClassManager * g_WeaponClassManager;
 Reference< CommandMind > g_InputMind;
 Reference< Mind > g_OutputMind;
@@ -790,11 +793,11 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 	{
 		NewCharacter->SetCredits(GetRandomU4Byte(500, 2500));
 		/// @todo update to commodity classes
-		for(int NumberOfCommodities = static_cast< int >(GetRandomFloatFromExponentialDistribution(2)); NumberOfCommodities > 0; --NumberOfCommodities)
+		for(int NumberOfAssetClasses = static_cast< int >(GetRandomFloatFromExponentialDistribution(2)); NumberOfAssetClasses > 0; --NumberOfAssetClasses)
 		{
-			int AmountOfCargo(GetRandomIntegerFromExponentialDistribution(NewShip->GetShipClass()->GetCargoHoldSize() / 2));
+			int AmountOfAssets(GetRandomIntegerFromExponentialDistribution(NewShip->GetShipClass()->GetCargoHoldSize() / 2));
 			
-			if(AmountOfCargo <= NewShip->GetFreeCargoHoldSize())
+			if(AmountOfAssets <= NewShip->GetFreeCargoHoldSize())
 			{
 				const std::map< std::string, AssetClass * > & AssetClasses(g_AssetClassManager->GetAssetClasses());
 				std::map< std::string, AssetClass * >::const_iterator AssetClassIterator(AssetClasses.begin());
@@ -803,13 +806,13 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 				{
 					++AssetClassIterator;
 				}
-				while(AmountOfCargo > 0)
+				while(AmountOfAssets > 0)
 				{
-					Commodity * NewCommodity(new Commodity(AssetClassIterator->second));
+					Object * NewCommodity(g_ObjectFactory->Create(AssetClassIterator->second->GetObjectType(), AssetClassIterator->second->GetObjectClass()));
 					
-					NewCommodity->SetObjectIdentifier("::commodity(" + AssetClassIterator->second->GetIdentifier() + ")::(" + to_string_cast(NumberOfCommodities) + "|" + to_string_cast(AmountOfCargo) + ")" + IdentifierSuffix);
+					NewCommodity->SetObjectIdentifier("::commodity(" + AssetClassIterator->second->GetIdentifier() + ")::(" + to_string_cast(NumberOfAssetClasses) + "|" + to_string_cast(AmountOfAssets) + ")" + IdentifierSuffix);
 					NewShip->AddContent(NewCommodity);
-					--AmountOfCargo;
+					--AmountOfAssets;
 				}
 			}
 		}
@@ -1331,7 +1334,7 @@ void KeyDown(unsigned int KeyCode)
 				
 				if(TheCommodity != 0)
 				{
-					XML << element << "commodity" << attribute << "commodity-identifier" << value << TheCommodity->GetAssetClass()->GetIdentifier() << end;
+					XML << element << "commodity" << attribute << "class-identifier" << value << TheCommodity->GetCommodityClass()->GetIdentifier() << end;
 				}
 				else if(TheWeapon != 0)
 				{
@@ -1754,7 +1757,7 @@ void LoadSavegame(const Element * SaveElement)
 					{
 						if((*ManifestChild)->GetName() == "commodity")
 						{
-							PlayerShip->AddContent(new Commodity(g_AssetClassManager->Get((*ManifestChild)->GetAttribute("class-identifier"))));
+							PlayerShip->AddContent(g_ObjectFactory->Create((*ManifestChild)->GetName(), (*ManifestChild)->GetAttribute("class-identifier")));
 						}
 						else if((*ManifestChild)->GetName() == "weapon")
 						{
@@ -1875,6 +1878,7 @@ int main(int argc, char ** argv)
 	g_MessageTimeoutIterator = g_RealTimeTimeoutNotifications.end();
 	g_SpawnShipTimeoutIterator = g_GameTimeTimeoutNotifications.end();
 	g_AssetClassManager = new AssetClassManager();
+	g_CommodityClassManager = new CommodityClassManager();
 	g_WeaponClassManager = new WeaponClassManager();
 	g_Galaxy = new Galaxy();
 	g_Galaxy->SetObjectIdentifier("::galaxy");
@@ -1921,6 +1925,7 @@ int main(int argc, char ** argv)
 	// read the data from the archive
 	ReadModels(Archive, &g_ModelManager);
 	ReadAssetClasses(Archive, g_AssetClassManager);
+	ReadCommodityClasses(Archive, g_CommodityClassManager);
 	ReadShipClasses(Archive, &g_ShipClassManager);
 	ReadSystems(Archive, g_Galaxy);
 	ReadSystemLinks(Archive, g_Galaxy);

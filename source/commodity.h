@@ -24,26 +24,26 @@
 #include "math/vector3f.h"
 #include "physical_object.h"
 
-class AssetClass;
+class CommodityClass;
 class Model;
 
 class Commodity : public PhysicalObject
 {
 public:
-	Commodity(const AssetClass * AssetClass);
+	Commodity(const CommodityClass * CommodityClass);
 	virtual ~Commodity(void);
 	// modifiers
 	virtual void Draw(void) const;
 	void Move(float Seconds);
 	// getters
-	const AssetClass * GetAssetClass(void) const;
+	const CommodityClass * GetCommodityClass(void) const;
 	float GetHull(void) const;
 	const Vector2f & GetVelocity(void) const;
 	// setters
 	void SetHull(float Hull);
 	void SetVelocity(const Vector2f & Velocity);
 private:
-	const AssetClass * m_AssetClass;
+	const CommodityClass * m_CommodityClass;
 	float m_Hull;
 	Vector2f m_Velocity;
 	float m_AngularPosition;
@@ -53,9 +53,9 @@ private:
 	Commodity(const Commodity & Commodity);
 };
 
-inline const AssetClass * Commodity::GetAssetClass(void) const
+inline const CommodityClass * Commodity::GetCommodityClass(void) const
 {
-	return m_AssetClass;
+	return m_CommodityClass;
 }
 
 inline float Commodity::GetHull(void) const

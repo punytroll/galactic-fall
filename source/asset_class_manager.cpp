@@ -17,12 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include <fstream>
-
 #include "asset_class.h"
 #include "asset_class_manager.h"
-#include "string_cast.h"
-#include "xml_puny_dom.h"
 
 AssetClassManager::~AssetClassManager(void)
 {

@@ -1,0 +1,11 @@
+<commodity-class>
+	<identifier>luxury_goods</identifier>
+	<name>Luxury Goods</name>
+	<model-identifier>cargo_cube</model-identifier>
+	<color>
+		<red>0.85</red>
+		<green>0.72</green>
+		<blue>0.5</blue>
+		<alpha>1.0</alpha>
+	</color>
+</commodity-class>

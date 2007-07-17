@@ -32,6 +32,7 @@
 #define EV_MOUSE_WHEEL_UP 5
 
 class AssetClassManager;
+class CommodityClassManager;
 class Galaxy;
 class ModelManager;
 class ObjectFactory;
@@ -39,6 +40,7 @@ class UserInterface;
 class WeaponClassManager;
 
 extern AssetClassManager * g_AssetClassManager;
+extern CommodityClassManager * g_CommodityClassManager;
 extern Galaxy * g_Galaxy;
 extern ModelManager g_ModelManager;
 extern ObjectFactory * g_ObjectFactory;
