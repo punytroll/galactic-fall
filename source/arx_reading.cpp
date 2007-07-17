@@ -29,6 +29,8 @@
 #include "asset_class_manager.h"
 #include "buffer_reading.h"
 #include "callbacks.h"
+#include "commodity_class.h"
+#include "commodity_class_manager.h"
 #include "galaxy.h"
 #include "globals.h"
 #include "label.h"
@@ -51,6 +53,7 @@
 static Arxx::Item * Resolve(Arxx::Reference & Reference);
 
 static void ReadAssetClass(AssetClassManager * AssetClassManager, Arxx::Reference & Reference);
+static void ReadCommodityClass(CommodityClassManager * CommodityClassManager, Arxx::Reference & Reference);
 static void ReadModel(ModelManager * ModelManager, Arxx::Reference & Reference);
 static void ReadShipClass(ShipClassManager * ShipClassManager, Arxx::Reference & Reference);
 static void ReadSystem(Galaxy * Galaxy, Arxx::Reference & Reference);
@@ -122,6 +125,11 @@ void ReadAssetClasses(Arxx::Archive & Archive, AssetClassManager * Manager)
 	ReadItems(Archive, "/Asset Classes", Bind1(Function(ReadAssetClass), Manager));
 }
 
+void ReadCommodityClasses(Arxx::Archive & Archive, CommodityClassManager * Manager)
+{
+	ReadItems(Archive, "/Commodity Classes", Bind1(Function(ReadCommodityClass), Manager));
+}
+
 void ReadModels(Arxx::Archive & Archive, ModelManager * Manager)
 {
 	ReadItems(Archive, "/Models", Bind1(Function(ReadModel), Manager));
@@ -158,11 +166,11 @@ static void ReadAssetClass(AssetClassManager * AssetClassManager, Arxx::Referenc
 	
 	if(Item->u4GetType() != ARX_TYPE_ASSET_CLASS)
 	{
-		throw std::runtime_error("Item type for asset '" + Item->sGetName() + "' should be '" + to_string_cast(ARX_TYPE_ASSET_CLASS) + "' not '" + to_string_cast(Item->u4GetType()) + "'.");
+		throw std::runtime_error("Item type for asset class '" + Item->sGetName() + "' should be '" + to_string_cast(ARX_TYPE_ASSET_CLASS) + "' not '" + to_string_cast(Item->u4GetType()) + "'.");
 	}
 	if(Item->u4GetSubType() != 0)
 	{
-		throw std::runtime_error("Item sub type for asset '" + Item->sGetName() + "' should be '0' not '" + to_string_cast(Item->u4GetSubType()) + "'.");
+		throw std::runtime_error("Item sub type for asset class '" + Item->sGetName() + "' should be '0' not '" + to_string_cast(Item->u4GetSubType()) + "'.");
 	}
 	
 	Arxx::BufferReader Reader(*Item);
@@ -174,7 +182,45 @@ static void ReadAssetClass(AssetClassManager * AssetClassManager, Arxx::Referenc
 	
 	if(NewAssetClass == 0)
 	{
-		throw std::runtime_error("Could not create asset '" + Identifier + "'.");
+		throw std::runtime_error("Could not create asset class '" + Identifier + "'.");
+	}
+	
+	std::string Name;
+	float BasePrice;
+	std::string ObjectType;
+	std::string ObjectClass;
+	
+	Reader >> Name >> BasePrice >> ObjectType >> ObjectClass;
+	
+	NewAssetClass->SetName(Name);
+	NewAssetClass->SetBasePrice(BasePrice);
+	NewAssetClass->SetObjectType(ObjectType);
+	NewAssetClass->SetObjectClass(ObjectClass);
+}
+
+static void ReadCommodityClass(CommodityClassManager * CommodityClassManager, Arxx::Reference & Reference)
+{
+	Arxx::Item * Item(Resolve(Reference));
+	
+	if(Item->u4GetType() != ARX_TYPE_COMMODITY_CLASS)
+	{
+		throw std::runtime_error("Item type for commodity class '" + Item->sGetName() + "' should be '" + to_string_cast(ARX_TYPE_COMMODITY_CLASS) + "' not '" + to_string_cast(Item->u4GetType()) + "'.");
+	}
+	if(Item->u4GetSubType() != 0)
+	{
+		throw std::runtime_error("Item sub type for commodity class '" + Item->sGetName() + "' should be '0' not '" + to_string_cast(Item->u4GetSubType()) + "'.");
+	}
+	
+	Arxx::BufferReader Reader(*Item);
+	std::string Identifier;
+	
+	Reader >> Identifier;
+	
+	CommodityClass * NewCommodityClass(CommodityClassManager->Create(Identifier));
+	
+	if(NewCommodityClass == 0)
+	{
+		throw std::runtime_error("Could not create commodity class '" + Identifier + "'.");
 	}
 	
 	std::string Name;
@@ -184,21 +230,18 @@ static void ReadAssetClass(AssetClassManager * AssetClassManager, Arxx::Referenc
 	std::string ObjectType;
 	std::string ObjectClass;
 	
-	Reader >> Name >> BasePrice >> ModelIdentifier >> Color >> ObjectType >> ObjectClass;
+	Reader >> Name >> ModelIdentifier >> Color;
 	
-	NewAssetClass->SetName(Name);
-	NewAssetClass->SetBasePrice(BasePrice);
+	NewCommodityClass->SetName(Name);
 	
 	Model * Model(g_ModelManager.Get(ModelIdentifier));
 	
 	if(Model == 0)
 	{
-		throw std::runtime_error("For the asset class '" + Name + "' could not find the model '" + ModelIdentifier + "'.");
+		throw std::runtime_error("For the commodity class '" + Name + "' could not find the model '" + ModelIdentifier + "'.");
 	}
-	NewAssetClass->SetModel(Model);
-	NewAssetClass->SetColor(Color);
-	NewAssetClass->SetObjectType(ObjectType);
-	NewAssetClass->SetObjectClass(ObjectClass);
+	NewCommodityClass->SetModel(Model);
+	NewCommodityClass->SetColor(Color);
 }
 
 static void ReadModel(ModelManager * ModelManager, Arxx::Reference & Reference)

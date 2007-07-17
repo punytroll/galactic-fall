@@ -21,6 +21,7 @@
 #include "button.h"
 #include "character.h"
 #include "commodity.h"
+#include "commodity_class.h"
 #include "globals.h"
 #include "label.h"
 #include "object_factory.h"
@@ -202,7 +203,7 @@ void TradeCenterDialog::Sell(const PlanetAssetClass * PlanetAssetClass)
 		{
 			Commodity * ContentCommodity(dynamic_cast< Commodity * >(*ContentIterator));
 			
-			if((ContentCommodity != 0) && (ContentCommodity->GetAssetClass()->GetIdentifier() == PlanetAssetClass->GetAssetClass()->GetObjectClass()))
+			if((ContentCommodity != 0) && (ContentCommodity->GetCommodityClass()->GetIdentifier() == PlanetAssetClass->GetAssetClass()->GetObjectClass()))
 			{
 				ContentObject = ContentCommodity;
 			}

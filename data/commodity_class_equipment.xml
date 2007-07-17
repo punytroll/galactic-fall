@@ -1,0 +1,11 @@
+<commodity-class>
+	<identifier>equipment</identifier>
+	<name>Equipment</name>
+	<model-identifier>cargo_cube</model-identifier>
+	<color>
+		<red>0.95</red>
+		<green>0.68</green>
+		<blue>0.2</blue>
+		<alpha>1.0</alpha>
+	</color>
+</commodity-class>

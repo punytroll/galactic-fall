@@ -1,0 +1,11 @@
+<commodity-class>
+	<identifier>medical_supplies</identifier>
+	<name>Medical Supplies</name>
+	<model-identifier>cargo_cube</model-identifier>
+	<color>
+		<red>0.98</red>
+		<green>0.98</green>
+		<blue>0.98</blue>
+		<alpha>1.0</alpha>
+	</color>
+</commodity-class>

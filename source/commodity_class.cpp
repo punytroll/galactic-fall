@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006  Hagen Möbius
+ * Copyright (C) 2007  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,22 +17,23 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef ARX_RESOURCES_H
-#define ARX_RESOURCES_H
+#include "color.h"
+#include "commodity_class.h"
 
-#include <Common.h>
+CommodityClass::CommodityClass(const std::string & Identifier) :
+	m_Color(0),
+	m_Identifier(Identifier),
+	m_Model(0)
+{
+}
 
-const Arxx::u4byte ARX_TYPE_ASSET_CLASS = 4;
-const Arxx::u4byte ARX_TYPE_COMMODITY_CLASS = 8;
-const Arxx::u4byte ARX_TYPE_WIDGET = 1;
-const Arxx::u4byte ARX_TYPE_WIDGET_SUB_TYPE_LABEL = 1;
-const Arxx::u4byte ARX_TYPE_WIDGET_SUB_TYPE_MINI_MAP_DISPLAY = 2;
-const Arxx::u4byte ARX_TYPE_WIDGET_SUB_TYPE_SCANNER_DISPLAY = 3;
-const Arxx::u4byte ARX_TYPE_WIDGET_SUB_TYPE_WIDGET = 0;
-const Arxx::u4byte ARX_TYPE_MODEL = 2;
-const Arxx::u4byte ARX_TYPE_SHIP_CLASS = 3;
-const Arxx::u4byte ARX_TYPE_SYSTEM = 5;
-const Arxx::u4byte ARX_TYPE_SYSTEM_LINK = 6;
-const Arxx::u4byte ARX_TYPE_WEAPON_CLASS = 7;
+CommodityClass::~CommodityClass(void)
+{
+	delete m_Color;
+	m_Color = 0;
+}
 
-#endif
+void CommodityClass::SetColor(const Color & NewColor)
+{
+	m_Color = new Color(NewColor);
+}
