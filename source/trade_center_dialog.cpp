@@ -17,10 +17,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include "asset_class.h"
 #include "button.h"
 #include "character.h"
 #include "commodity.h"
-#include "commodity_class.h"
 #include "globals.h"
 #include "label.h"
 #include "object_factory.h"
@@ -32,57 +32,57 @@
 #include "weapon.h"
 #include "weapon_class.h"
 
-class TradeCenterCommodityClass : public Widget
+class TradeCenterAssetClass : public Widget
 {
 public:
-	TradeCenterCommodityClass(Widget * SupWidget, PlanetCommodityClass * PlanetCommodityClass, Ship * Ship);
+	TradeCenterAssetClass(Widget * SupWidget, PlanetAssetClass * PlanetAssetClass, Ship * Ship);
 	void UpdateCharacterAmount(void);
-	const PlanetCommodityClass * GetPlanetCommodity(void) const;
+	const PlanetAssetClass * GetPlanetAssetClass(void) const;
 private:
-	PlanetCommodityClass * m_PlanetCommodity;
+	PlanetAssetClass * m_PlanetAssetClass;
 	Ship * m_Ship;
 	Label * m_CharacterAmountLabel;
 };
 
-TradeCenterCommodityClass::TradeCenterCommodityClass(Widget * SupWidget, PlanetCommodityClass * PlanetCommodityClass, Ship * Ship) :
+TradeCenterAssetClass::TradeCenterAssetClass(Widget * SupWidget, PlanetAssetClass * PlanetAssetClass, Ship * Ship) :
 	Widget(SupWidget),
-	m_PlanetCommodity(PlanetCommodityClass),
+	m_PlanetAssetClass(PlanetAssetClass),
 	m_Ship(Ship)
 {
-	Label * CommodityNameLabel(new Label(this, PlanetCommodityClass->GetCommodityClass()->GetName()));
+	Label * PlanetAssetClassNameLabel(new Label(this, PlanetAssetClass->GetAssetClass()->GetName()));
 	
-	CommodityNameLabel->SetPosition(Vector2f(10.0f, 0.0f));
-	CommodityNameLabel->SetSize(Vector2f(310.0f, 20.0f));
-	CommodityNameLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
+	PlanetAssetClassNameLabel->SetPosition(Vector2f(10.0f, 0.0f));
+	PlanetAssetClassNameLabel->SetSize(Vector2f(310.0f, 20.0f));
+	PlanetAssetClassNameLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
 	m_CharacterAmountLabel = new Label(this, "");
 	m_CharacterAmountLabel->SetPosition(Vector2f(330.0f, 0.0f));
 	m_CharacterAmountLabel->SetSize(Vector2f(50.0f, 20.0f));
 	m_CharacterAmountLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
 	
-	Label * CommodityPriceLabel(new Label(this, to_string_cast(PlanetCommodityClass->GetPrice())));
+	Label * PlanetAssetClassPriceLabel(new Label(this, to_string_cast(PlanetAssetClass->GetPrice())));
 	
-	CommodityPriceLabel->SetPosition(Vector2f(390.0f, 0.0f));
-	CommodityPriceLabel->SetSize(Vector2f(50.0f, 20.0f));
-	CommodityPriceLabel->SetHorizontalAlignment(Label::ALIGN_RIGHT);
-	CommodityPriceLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
+	PlanetAssetClassPriceLabel->SetPosition(Vector2f(390.0f, 0.0f));
+	PlanetAssetClassPriceLabel->SetSize(Vector2f(50.0f, 20.0f));
+	PlanetAssetClassPriceLabel->SetHorizontalAlignment(Label::ALIGN_RIGHT);
+	PlanetAssetClassPriceLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
 	UpdateCharacterAmount();
 }
 
-void TradeCenterCommodityClass::UpdateCharacterAmount(void)
+void TradeCenterAssetClass::UpdateCharacterAmount(void)
 {
-	m_CharacterAmountLabel->SetString(to_string_cast(m_Ship->GetContentAmount(m_PlanetCommodity->GetCommodityClass()->GetObjectType(), m_PlanetCommodity->GetCommodityClass()->GetObjectClass())));
+	m_CharacterAmountLabel->SetString(to_string_cast(m_Ship->GetContentAmount(m_PlanetAssetClass->GetAssetClass()->GetObjectType(), m_PlanetAssetClass->GetAssetClass()->GetObjectClass())));
 }
 
-const PlanetCommodityClass * TradeCenterCommodityClass::GetPlanetCommodity(void) const
+const PlanetAssetClass * TradeCenterAssetClass::GetPlanetAssetClass(void) const
 {
-	return m_PlanetCommodity;
+	return m_PlanetAssetClass;
 }
 
 TradeCenterDialog::TradeCenterDialog(Widget * SupWidget, Planet * Planet, Character * Character) :
 	WWindow(SupWidget, "Trade Center: " + Planet->GetName()),
 	m_Planet(Planet),
 	m_Character(Character),
-	m_SelectedTradeCenterCommodityClass(0)
+	m_SelectedTradeCenterAssetClass(0)
 {
 	SetPosition(Vector2f(600.0f, 100.0f));
 	SetSize(Vector2f(500.0f, 330.0f));
@@ -114,31 +114,31 @@ TradeCenterDialog::TradeCenterDialog(Widget * SupWidget, Planet * Planet, Charac
 	m_SellButtonLabel->SetSize(m_SellButton->GetSize());
 	m_SellButtonLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
 	m_SellButtonLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
-	m_CommodityList = new Widget(this);
-	m_CommodityList->SetPosition(Vector2f(10.0f, 40.0f));
-	m_CommodityList->SetSize(Vector2f(480.0f, 150.0f));
-	m_CommodityList->SetBackgroundColor(Color(0.23f, 0.23f, 0.23f, 1.0f));
-	m_CommodityListItems = new Widget(m_CommodityList);
-	m_CommodityListItems->SetPosition(Vector2f(0.0f, 0.0f));
-	m_CommodityListItems->SetBackgroundColor(Color(0.15f, 0.15f, 0.15f, 1.0f));
-	m_CommodityListItems->AddMouseButtonListener(this);
+	m_AssetClassList = new Widget(this);
+	m_AssetClassList->SetPosition(Vector2f(10.0f, 40.0f));
+	m_AssetClassList->SetSize(Vector2f(480.0f, 150.0f));
+	m_AssetClassList->SetBackgroundColor(Color(0.23f, 0.23f, 0.23f, 1.0f));
+	m_AssetClassListItems = new Widget(m_AssetClassList);
+	m_AssetClassListItems->SetPosition(Vector2f(0.0f, 0.0f));
+	m_AssetClassListItems->SetBackgroundColor(Color(0.15f, 0.15f, 0.15f, 1.0f));
+	m_AssetClassListItems->AddMouseButtonListener(this);
 	
-	const std::vector< PlanetCommodityClass * > & PlanetCommodityClasses(Planet->GetCommodityClasses());
-	std::vector< PlanetCommodityClass * >::const_iterator PlanetCommodityClassIterator(PlanetCommodityClasses.begin());
+	const std::vector< PlanetAssetClass * > & PlanetAssetClasses(Planet->GetPlanetAssetClasses());
+	std::vector< PlanetAssetClass * >::const_iterator PlanetAssetClassIterator(PlanetAssetClasses.begin());
 	float Top(5.0f);
 	
-	while(PlanetCommodityClassIterator != PlanetCommodityClasses.end())
+	while(PlanetAssetClassIterator != PlanetAssetClasses.end())
 	{
-		TradeCenterCommodityClass * NewTradeCenterCommodity(new TradeCenterCommodityClass(m_CommodityListItems, *PlanetCommodityClassIterator, m_Character->GetShip()));
+		TradeCenterAssetClass * NewTradeCenterAssetClass(new TradeCenterAssetClass(m_AssetClassListItems, *PlanetAssetClassIterator, m_Character->GetShip()));
 		
-		NewTradeCenterCommodity->SetPosition(Vector2f(5.0f, Top));
-		NewTradeCenterCommodity->SetSize(Vector2f(450.0f, 20.0f));
-		NewTradeCenterCommodity->AddMouseButtonListener(this);
-		NewTradeCenterCommodity->AddMouseMotionListener(this);
+		NewTradeCenterAssetClass->SetPosition(Vector2f(5.0f, Top));
+		NewTradeCenterAssetClass->SetSize(Vector2f(450.0f, 20.0f));
+		NewTradeCenterAssetClass->AddMouseButtonListener(this);
+		NewTradeCenterAssetClass->AddMouseMotionListener(this);
 		Top += 25.0f;
-		++PlanetCommodityClassIterator;
+		++PlanetAssetClassIterator;
 	}
-	m_CommodityListItems->SetSize(Vector2f(460.0f, Top));
+	m_AssetClassListItems->SetSize(Vector2f(460.0f, Top));
 	m_UpButton = new Button(this);
 	m_UpButton->SetPosition(Vector2f(470.0f, 40.0f));
 	m_UpButton->SetSize(Vector2f(20.0f, 20.0f));
@@ -167,17 +167,17 @@ void TradeCenterDialog::UpdateTraderFreeCargoHoldSize(void)
 	m_TraderFreeCargoHoldSizeLabel->SetString("Free Cargo Hold: " + to_string_cast(m_Character->GetShip()->GetFreeCargoHoldSize()));
 }
 
-void TradeCenterDialog::Buy(const PlanetCommodityClass * PlanetCommodityClass)
+void TradeCenterDialog::Buy(const PlanetAssetClass * PlanetAssetClass)
 {
-	u4byte Price(PlanetCommodityClass->GetPrice());
+	u4byte Price(PlanetAssetClass->GetPrice());
 	
 	if(m_Character->RemoveCredits(Price) == true)
 	{
 		if(m_Character->GetShip()->GetFreeCargoHoldSize() >= 1.0f)
 		{
-			Object * NewCargo(g_ObjectFactory->Create(PlanetCommodityClass->GetCommodityClass()->GetObjectType(), PlanetCommodityClass->GetCommodityClass()->GetObjectClass()));
+			Object * NewCargo(g_ObjectFactory->Create(PlanetAssetClass->GetAssetClass()->GetObjectType(), PlanetAssetClass->GetAssetClass()->GetObjectClass()));
 			
-			NewCargo->SetObjectIdentifier("::" + PlanetCommodityClass->GetCommodityClass()->GetObjectType() + "(" + PlanetCommodityClass->GetCommodityClass()->GetObjectClass() + ")::created_on(" + m_Planet->GetObjectIdentifier() + ")::created_at(" + to_string_cast(RealTime::GetTime(), 6) + ")::bought_by(" + m_Character->GetObjectIdentifier() + ")::commodity_class(" + PlanetCommodityClass->GetCommodityClass()->GetIdentifier() + ")");
+			NewCargo->SetObjectIdentifier("::" + PlanetAssetClass->GetAssetClass()->GetObjectType() + "(" + PlanetAssetClass->GetAssetClass()->GetObjectClass() + ")::created_on(" + m_Planet->GetObjectIdentifier() + ")::created_at(" + to_string_cast(RealTime::GetTime(), 6) + ")::bought_by(" + m_Character->GetObjectIdentifier() + ")::commodity_class(" + PlanetAssetClass->GetAssetClass()->GetIdentifier() + ")");
 			m_Character->GetShip()->AddContent(NewCargo);
 			UpdateTraderCredits();
 			UpdateTraderFreeCargoHoldSize();
@@ -189,7 +189,7 @@ void TradeCenterDialog::Buy(const PlanetCommodityClass * PlanetCommodityClass)
 	}
 }
 
-void TradeCenterDialog::Sell(const PlanetCommodityClass * PlanetCommodityClass)
+void TradeCenterDialog::Sell(const PlanetAssetClass * PlanetAssetClass)
 {
 	const std::set< Object * > & Content(m_Character->GetShip()->GetContent());
 	std::set< Object * >::const_iterator ContentIterator(Content.begin());
@@ -198,20 +198,20 @@ void TradeCenterDialog::Sell(const PlanetCommodityClass * PlanetCommodityClass)
 	{
 		Object * ContentObject(0);
 		
-		if(PlanetCommodityClass->GetCommodityClass()->GetObjectType() == "commodity")
+		if(PlanetAssetClass->GetAssetClass()->GetObjectType() == "commodity")
 		{
 			Commodity * ContentCommodity(dynamic_cast< Commodity * >(*ContentIterator));
 			
-			if((ContentCommodity != 0) && (ContentCommodity->GetCommodityClass()->GetIdentifier() == PlanetCommodityClass->GetCommodityClass()->GetObjectClass()))
+			if((ContentCommodity != 0) && (ContentCommodity->GetAssetClass()->GetIdentifier() == PlanetAssetClass->GetAssetClass()->GetObjectClass()))
 			{
 				ContentObject = ContentCommodity;
 			}
 		}
-		else if(PlanetCommodityClass->GetCommodityClass()->GetObjectType() == "weapon")
+		else if(PlanetAssetClass->GetAssetClass()->GetObjectType() == "weapon")
 		{
 			Weapon * ContentWeapon(dynamic_cast< Weapon * >(*ContentIterator));
 			
-			if((ContentWeapon != 0) && (ContentWeapon->GetWeaponClass()->GetIdentifier() == PlanetCommodityClass->GetCommodityClass()->GetObjectClass()))
+			if((ContentWeapon != 0) && (ContentWeapon->GetWeaponClass()->GetIdentifier() == PlanetAssetClass->GetAssetClass()->GetObjectClass()))
 			{
 				ContentObject = ContentWeapon;
 			}
@@ -220,7 +220,7 @@ void TradeCenterDialog::Sell(const PlanetCommodityClass * PlanetCommodityClass)
 		{
 			m_Character->GetShip()->RemoveContent(ContentObject);
 			delete ContentObject;
-			m_Character->AddCredits(PlanetCommodityClass->GetPrice());
+			m_Character->AddCredits(PlanetAssetClass->GetPrice());
 			UpdateTraderCredits();
 			UpdateTraderFreeCargoHoldSize();
 			
@@ -240,39 +240,39 @@ bool TradeCenterDialog::OnClicked(Widget * EventSource)
 	}
 	else if(EventSource == m_BuyButton)
 	{
-		if(m_SelectedTradeCenterCommodityClass != 0)
+		if(m_SelectedTradeCenterAssetClass != 0)
 		{
-			Buy(m_SelectedTradeCenterCommodityClass->GetPlanetCommodity());
-			m_SelectedTradeCenterCommodityClass->UpdateCharacterAmount();
+			Buy(m_SelectedTradeCenterAssetClass->GetPlanetAssetClass());
+			m_SelectedTradeCenterAssetClass->UpdateCharacterAmount();
 		}
 	}
 	else if(EventSource == m_SellButton)
 	{
-		if(m_SelectedTradeCenterCommodityClass != 0)
+		if(m_SelectedTradeCenterAssetClass != 0)
 		{
-			Sell(m_SelectedTradeCenterCommodityClass->GetPlanetCommodity());
-			m_SelectedTradeCenterCommodityClass->UpdateCharacterAmount();
+			Sell(m_SelectedTradeCenterAssetClass->GetPlanetAssetClass());
+			m_SelectedTradeCenterAssetClass->UpdateCharacterAmount();
 		}
 	}
 	else if(EventSource == m_UpButton)
 	{
-		Vector2f Position(m_CommodityListItems->GetPosition());
+		Vector2f Position(m_AssetClassListItems->GetPosition());
 		
 		if(Position[1] < 0.0f)
 		{
 			Position[1] = std::min(0.0f, Position[1] + 10.0f);
-			m_CommodityListItems->SetPosition(Position);
+			m_AssetClassListItems->SetPosition(Position);
 		}
 	}
 	else if(EventSource == m_DownButton)
 	{
-		Vector2f Position(m_CommodityListItems->GetPosition());
-		const Vector2f & Size(m_CommodityListItems->GetSize());
+		Vector2f Position(m_AssetClassListItems->GetPosition());
+		const Vector2f & Size(m_AssetClassListItems->GetSize());
 		
-		if(Position[1] + Size[1] > m_CommodityList->GetSize()[1])
+		if(Position[1] + Size[1] > m_AssetClassList->GetSize()[1])
 		{
-			Position[1] -= std::min(10.f, Position[1] + Size[1] - m_CommodityList->GetSize()[1]);
-			m_CommodityListItems->SetPosition(Position);
+			Position[1] -= std::min(10.f, Position[1] + Size[1] - m_AssetClassList->GetSize()[1]);
+			m_AssetClassListItems->SetPosition(Position);
 		}
 	}
 	
@@ -285,15 +285,15 @@ bool TradeCenterDialog::OnKey(Widget * EventSource, int Key, int State)
 	{
 		Destroy();
 	}
-	else if((Key == 56 /* B */) && (m_SelectedTradeCenterCommodityClass != 0) && (State == EV_DOWN))
+	else if((Key == 56 /* B */) && (m_SelectedTradeCenterAssetClass != 0) && (State == EV_DOWN))
 	{
-		Buy(m_SelectedTradeCenterCommodityClass->GetPlanetCommodity());
-		m_SelectedTradeCenterCommodityClass->UpdateCharacterAmount();
+		Buy(m_SelectedTradeCenterAssetClass->GetPlanetAssetClass());
+		m_SelectedTradeCenterAssetClass->UpdateCharacterAmount();
 	}
-	else if((Key == 39 /* S */) && (m_SelectedTradeCenterCommodityClass != 0) && (State == EV_DOWN))
+	else if((Key == 39 /* S */) && (m_SelectedTradeCenterAssetClass != 0) && (State == EV_DOWN))
 	{
-		Sell(m_SelectedTradeCenterCommodityClass->GetPlanetCommodity());
-		m_SelectedTradeCenterCommodityClass->UpdateCharacterAmount();
+		Sell(m_SelectedTradeCenterAssetClass->GetPlanetAssetClass());
+		m_SelectedTradeCenterAssetClass->UpdateCharacterAmount();
 	}
 	
 	return true;
@@ -307,41 +307,41 @@ bool TradeCenterDialog::OnMouseButton(Widget * EventSource, int Button, int Stat
 	}
 	if((Button == 1 /* LEFT */) && (State == EV_DOWN))
 	{
-		TradeCenterCommodityClass * SelectedTradeCenterCommodity(dynamic_cast< TradeCenterCommodityClass * >(EventSource));
+		TradeCenterAssetClass * SelectedTradeCenterAssetClass(dynamic_cast< TradeCenterAssetClass * >(EventSource));
 		
-		if(SelectedTradeCenterCommodity != 0)
+		if(SelectedTradeCenterAssetClass != 0)
 		{
-			if(m_SelectedTradeCenterCommodityClass != 0)
+			if(m_SelectedTradeCenterAssetClass != 0)
 			{
-				m_SelectedTradeCenterCommodityClass->UnsetBackgroundColor();
+				m_SelectedTradeCenterAssetClass->UnsetBackgroundColor();
 			}
-			m_SelectedTradeCenterCommodityClass = SelectedTradeCenterCommodity;
-			SelectedTradeCenterCommodity->SetBackgroundColor(Color(0.4f, 0.1f, 0.1f));
+			m_SelectedTradeCenterAssetClass = SelectedTradeCenterAssetClass;
+			SelectedTradeCenterAssetClass->SetBackgroundColor(Color(0.4f, 0.1f, 0.1f));
 			
 			return true;
 		}
 	}
 	else if((Button == 4 /* WHEEL_UP */) && (State == EV_DOWN))
 	{
-		Vector2f Position(m_CommodityListItems->GetPosition());
+		Vector2f Position(m_AssetClassListItems->GetPosition());
 		
 		if(Position[1] < 0.0f)
 		{
 			Position[1] = std::min(0.0f, Position[1] + 5.0f);
-			m_CommodityListItems->SetPosition(Position);
+			m_AssetClassListItems->SetPosition(Position);
 		}
 		
 		return true;
 	}
 	else if((Button == 5 /* WHEEL_DOWN */) && (State == EV_DOWN))
 	{
-		Vector2f Position(m_CommodityListItems->GetPosition());
-		const Vector2f & Size(m_CommodityListItems->GetSize());
+		Vector2f Position(m_AssetClassListItems->GetPosition());
+		const Vector2f & Size(m_AssetClassListItems->GetSize());
 		
-		if(Position[1] + Size[1] > m_CommodityList->GetSize()[1])
+		if(Position[1] + Size[1] > m_AssetClassList->GetSize()[1])
 		{
-			Position[1] -= std::min(5.f, Position[1] + Size[1] - m_CommodityList->GetSize()[1]);
-			m_CommodityListItems->SetPosition(Position);
+			Position[1] -= std::min(5.f, Position[1] + Size[1] - m_AssetClassList->GetSize()[1]);
+			m_AssetClassListItems->SetPosition(Position);
 		}
 		
 		return true;
@@ -354,11 +354,11 @@ void TradeCenterDialog::OnMouseEnter(Widget * EventSource)
 {
 	WWindow::OnMouseEnter(EventSource);
 	
-	TradeCenterCommodityClass * EnteredTradeCenterCommodity(dynamic_cast< TradeCenterCommodityClass * >(EventSource));
+	TradeCenterAssetClass * EnteredTradeCenterAssetClass(dynamic_cast< TradeCenterAssetClass * >(EventSource));
 	
-	if((EnteredTradeCenterCommodity != 0) && (EnteredTradeCenterCommodity != m_SelectedTradeCenterCommodityClass))
+	if((EnteredTradeCenterAssetClass != 0) && (EnteredTradeCenterAssetClass != m_SelectedTradeCenterAssetClass))
 	{
-		EnteredTradeCenterCommodity->SetBackgroundColor(Color(0.3f, 0.2f, 0.2f));
+		EnteredTradeCenterAssetClass->SetBackgroundColor(Color(0.3f, 0.2f, 0.2f));
 	}
 }
 
@@ -366,10 +366,10 @@ void TradeCenterDialog::OnMouseLeave(Widget * EventSource)
 {
 	WWindow::OnMouseLeave(EventSource);
 	
-	TradeCenterCommodityClass * LeftTradeCenterCommodity(dynamic_cast< TradeCenterCommodityClass * >(EventSource));
+	TradeCenterAssetClass * LeftTradeCenterAssetClass(dynamic_cast< TradeCenterAssetClass * >(EventSource));
 	
-	if((LeftTradeCenterCommodity != 0) && (LeftTradeCenterCommodity != m_SelectedTradeCenterCommodityClass))
+	if((LeftTradeCenterAssetClass != 0) && (LeftTradeCenterAssetClass != m_SelectedTradeCenterAssetClass))
 	{
-		LeftTradeCenterCommodity->UnsetBackgroundColor();
+		LeftTradeCenterAssetClass->UnsetBackgroundColor();
 	}
 }

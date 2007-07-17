@@ -1,4 +1,4 @@
-<commodity-class>
+<asset-class>
 	<identifier>luxury_goods</identifier>
 	<name>Luxury Goods</name>
 	<base-price>500</base-price>
@@ -11,4 +11,4 @@
 	</color>
 	<object-type>commodity</object-type>
 	<object-class>luxury_goods</object-class>
-</commodity-class>
+</asset-class>

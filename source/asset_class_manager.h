@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006  Hagen Möbius
+ * Copyright (C) 2007  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,23 +17,30 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include "color.h"
-#include "commodity_class.h"
+#ifndef ASSET_CLASS_MANAGER_H
+#define ASSET_CLASS_MANAGER_H
 
-CommodityClass::CommodityClass(const std::string & Identifier) :
-	m_Color(0),
-	m_Identifier(Identifier),
-	m_Model(0)
+#include <map>
+#include <string>
+
+class Element;
+class AssetClass;
+
+class AssetClassManager
 {
+public:
+	~AssetClassManager(void);
+	const std::map< std::string, AssetClass * > & GetAssetClasses(void) const;
+	const AssetClass * Get(const std::string & Identifier) const;
+	AssetClass * Create(const std::string & Identifier);
+	void Destroy(const std::string & Identifier);
+private:
+	std::map< std::string, AssetClass * > m_AssetClasses;
+};
+
+inline const std::map< std::string, AssetClass * > & AssetClassManager::GetAssetClasses(void) const
+{
+	return m_AssetClasses;
 }
 
-CommodityClass::~CommodityClass(void)
-{
-	delete m_Color;
-	m_Color = 0;
-}
-
-void CommodityClass::SetColor(const Color & NewColor)
-{
-	m_Color = new Color(NewColor);
-}
+#endif

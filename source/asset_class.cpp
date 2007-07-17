@@ -17,30 +17,23 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef COMMODITY_CLASS_MANAGER_H
-#define COMMODITY_CLASS_MANAGER_H
+#include "color.h"
+#include "asset_class.h"
 
-#include <map>
-#include <string>
-
-class Element;
-class CommodityClass;
-
-class CommodityClassManager
+AssetClass::AssetClass(const std::string & Identifier) :
+	m_Color(0),
+	m_Identifier(Identifier),
+	m_Model(0)
 {
-public:
-	~CommodityClassManager(void);
-	const std::map< std::string, CommodityClass * > & GetCommodityClasses(void) const;
-	const CommodityClass * Get(const std::string & Identifier) const;
-	CommodityClass * Create(const std::string & Identifier);
-	void Destroy(const std::string & Identifier);
-private:
-	std::map< std::string, CommodityClass * > m_CommodityClasses;
-};
-
-inline const std::map< std::string, CommodityClass * > & CommodityClassManager::GetCommodityClasses(void) const
-{
-	return m_CommodityClasses;
 }
 
-#endif
+AssetClass::~AssetClass(void)
+{
+	delete m_Color;
+	m_Color = 0;
+}
+
+void AssetClass::SetColor(const Color & NewColor)
+{
+	m_Color = new Color(NewColor);
+}

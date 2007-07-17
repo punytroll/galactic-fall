@@ -1,4 +1,4 @@
-<commodity-class>
+<asset-class>
 	<identifier>medical_supplies</identifier>
 	<name>Medical Supplies</name>
 	<base-price>300</base-price>
@@ -11,4 +11,4 @@
 	</color>
 	<object-type>commodity</object-type>
 	<object-class>medical_supplies</object-class>
-</commodity-class>
+</asset-class>

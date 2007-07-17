@@ -35,44 +35,44 @@
 				<blue>0.4</blue>
 				<alpha>1.0</alpha>
 			</color>
-			<offered-commodity-classes>
-				<offered-commodity-class>
+			<offered-asset-classes>
+				<offered-asset-class>
 					<identifier>food</identifier>
 					<base-price-modifier>1.12</base-price-modifier>
-				</offered-commodity-class>
-				<offered-commodity-class>
+				</offered-asset-class>
+				<offered-asset-class>
 					<identifier>industrial</identifier>
 					<base-price-modifier>0.97</base-price-modifier>
-				</offered-commodity-class>
-				<offered-commodity-class>
+				</offered-asset-class>
+				<offered-asset-class>
 					<identifier>medical_supplies</identifier>
 					<base-price-modifier>0.98</base-price-modifier>
-				</offered-commodity-class>
-				<offered-commodity-class>
+				</offered-asset-class>
+				<offered-asset-class>
 					<identifier>luxury_goods</identifier>
 					<base-price-modifier>1.02</base-price-modifier>
-				</offered-commodity-class>
-				<offered-commodity-class>
+				</offered-asset-class>
+				<offered-asset-class>
 					<identifier>metal</identifier>
 					<base-price-modifier>1.03</base-price-modifier>
-				</offered-commodity-class>
-				<offered-commodity-class>
+				</offered-asset-class>
+				<offered-asset-class>
 					<identifier>equipment</identifier>
 					<base-price-modifier>0.89</base-price-modifier>
-				</offered-commodity-class>
-				<offered-commodity-class>
+				</offered-asset-class>
+				<offered-asset-class>
 					<identifier>fuel</identifier>
 					<base-price-modifier>0.83</base-price-modifier>
-				</offered-commodity-class>
-				<offered-commodity-class>
+				</offered-asset-class>
+				<offered-asset-class>
 					<identifier>light_laser</identifier>
 					<base-price-modifier>1.02</base-price-modifier>
-				</offered-commodity-class>
-				<offered-commodity-class>
+				</offered-asset-class>
+				<offered-asset-class>
 					<identifier>medium_laser</identifier>
 					<base-price-modifier>1.02</base-price-modifier>
-				</offered-commodity-class>
-			</offered-commodity-classes>
+				</offered-asset-class>
+			</offered-asset-classes>
 			<landing-fee>54.0</landing-fee>
 		</planet>
 	</planets>

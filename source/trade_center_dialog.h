@@ -30,7 +30,7 @@ class Button;
 class Character;
 class Label;
 class Planet;
-class TradeCenterCommodityClass;
+class TradeCenterAssetClass;
 
 class TradeCenterDialog : public ClickedListener, public KeyListener, virtual public MouseButtonListener, virtual public MouseMotionListener, public WWindow
 {
@@ -43,8 +43,8 @@ protected:
 	virtual void OnMouseEnter(Widget * EventSource);
 	virtual void OnMouseLeave(Widget * EventSource);
 private:
-	void Buy(const PlanetCommodityClass * PlanetCommodityClass);
-	void Sell(const PlanetCommodityClass * PlanetCommodityClass);
+	void Buy(const PlanetAssetClass * PlanetAssetClass);
+	void Sell(const PlanetAssetClass * PlanetAssetClass);
 	void UpdateTraderCredits(void);
 	void UpdateTraderFreeCargoHoldSize(void);
 	Planet * m_Planet;
@@ -55,13 +55,13 @@ private:
 	Label * m_BuyButtonLabel;
 	Button * m_SellButton;
 	Label * m_SellButtonLabel;
-	Widget * m_CommodityList;
-	Widget * m_CommodityListItems;
+	Widget * m_AssetClassList;
+	Widget * m_AssetClassListItems;
 	Button * m_DownButton;
 	Button * m_UpButton;
 	Label * m_TraderCreditsLabel;
 	Label * m_TraderFreeCargoHoldSizeLabel;
-	TradeCenterCommodityClass * m_SelectedTradeCenterCommodityClass;
+	TradeCenterAssetClass * m_SelectedTradeCenterAssetClass;
 };
 
 #endif

@@ -1,4 +1,4 @@
-<commodity-class>
+<asset-class>
 	<identifier>light_laser</identifier>
 	<name>Light Laser</name>
 	<base-price>2800</base-price>
@@ -11,4 +11,4 @@
 	</color>
 	<object-type>weapon</object-type>
 	<object-class>light_laser</object-class>
-</commodity-class>
+</asset-class>

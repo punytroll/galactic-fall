@@ -35,44 +35,44 @@
 				<blue>1.0</blue>
 				<alpha>1.0</alpha>
 			</color>
-			<offered-commodity-classes>
-				<offered-commodity-class>
+			<offered-asset-classes>
+				<offered-asset-class>
 					<identifier>food</identifier>
 					<base-price-modifier>0.85</base-price-modifier>
-				</offered-commodity-class>
-				<offered-commodity-class>
+				</offered-asset-class>
+				<offered-asset-class>
 					<identifier>industrial</identifier>
 					<base-price-modifier>1.08</base-price-modifier>
-				</offered-commodity-class>
-				<offered-commodity-class>
+				</offered-asset-class>
+				<offered-asset-class>
 					<identifier>medical_supplies</identifier>
 					<base-price-modifier>0.9</base-price-modifier>
-				</offered-commodity-class>
-				<offered-commodity-class>
+				</offered-asset-class>
+				<offered-asset-class>
 					<identifier>luxury_goods</identifier>
 					<base-price-modifier>0.91</base-price-modifier>
-				</offered-commodity-class>
-				<offered-commodity-class>
+				</offered-asset-class>
+				<offered-asset-class>
 					<identifier>metal</identifier>
 					<base-price-modifier>1.08</base-price-modifier>
-				</offered-commodity-class>
-				<offered-commodity-class>
+				</offered-asset-class>
+				<offered-asset-class>
 					<identifier>equipment</identifier>
 					<base-price-modifier>0.95</base-price-modifier>
-				</offered-commodity-class>
-				<offered-commodity-class>
+				</offered-asset-class>
+				<offered-asset-class>
 					<identifier>fuel</identifier>
 					<base-price-modifier>0.96</base-price-modifier>
-				</offered-commodity-class>
-				<offered-commodity-class>
+				</offered-asset-class>
+				<offered-asset-class>
 					<identifier>light_laser</identifier>
 					<base-price-modifier>0.89</base-price-modifier>
-				</offered-commodity-class>
-				<offered-commodity-class>
+				</offered-asset-class>
+				<offered-asset-class>
 					<identifier>medium_laser</identifier>
 					<base-price-modifier>0.91</base-price-modifier>
-				</offered-commodity-class>
-			</offered-commodity-classes>
+				</offered-asset-class>
+			</offered-asset-classes>
 			<landing-fee>75.0</landing-fee>
 		</planet>
 		<planet>
@@ -90,32 +90,32 @@
 				<blue>0.8</blue>
 				<alpha>1.0</alpha>
 			</color>
-			<offered-commodity-classes>
-				<offered-commodity-class>
+			<offered-asset-classes>
+				<offered-asset-class>
 					<identifier>food</identifier>
 					<base-price-modifier>0.87</base-price-modifier>
-				</offered-commodity-class>
-				<offered-commodity-class>
+				</offered-asset-class>
+				<offered-asset-class>
 					<identifier>industrial</identifier>
 					<base-price-modifier>1.05</base-price-modifier>
-				</offered-commodity-class>
-				<offered-commodity-class>
+				</offered-asset-class>
+				<offered-asset-class>
 					<identifier>medical_supplies</identifier>
 					<base-price-modifier>0.98</base-price-modifier>
-				</offered-commodity-class>
-				<offered-commodity-class>
+				</offered-asset-class>
+				<offered-asset-class>
 					<identifier>metal</identifier>
 					<base-price-modifier>1</base-price-modifier>
-				</offered-commodity-class>
-				<offered-commodity-class>
+				</offered-asset-class>
+				<offered-asset-class>
 					<identifier>equipment</identifier>
 					<base-price-modifier>0.98</base-price-modifier>
-				</offered-commodity-class>
-				<offered-commodity-class>
+				</offered-asset-class>
+				<offered-asset-class>
 					<identifier>fuel</identifier>
 					<base-price-modifier>0.99</base-price-modifier>
-				</offered-commodity-class>
-			</offered-commodity-classes>
+				</offered-asset-class>
+			</offered-asset-classes>
 			<landing-fee>63.0</landing-fee>
 		</planet>
 		<planet>
@@ -133,36 +133,36 @@
 				<blue>0.25</blue>
 				<alpha>1.0</alpha>
 			</color>
-			<offered-commodity-classes>
-				<offered-commodity-class>
+			<offered-asset-classes>
+				<offered-asset-class>
 					<identifier>food</identifier>
 					<base-price-modifier>1.05</base-price-modifier>
-				</offered-commodity-class>
-				<offered-commodity-class>
+				</offered-asset-class>
+				<offered-asset-class>
 					<identifier>industrial</identifier>
 					<base-price-modifier>1.12</base-price-modifier>
-				</offered-commodity-class>
-				<offered-commodity-class>
+				</offered-asset-class>
+				<offered-asset-class>
 					<identifier>medical_supplies</identifier>
 					<base-price-modifier>0.98</base-price-modifier>
-				</offered-commodity-class>
-				<offered-commodity-class>
+				</offered-asset-class>
+				<offered-asset-class>
 					<identifier>luxury_goods</identifier>
 					<base-price-modifier>0.98</base-price-modifier>
-				</offered-commodity-class>
-				<offered-commodity-class>
+				</offered-asset-class>
+				<offered-asset-class>
 					<identifier>metal</identifier>
 					<base-price-modifier>0.95</base-price-modifier>
-				</offered-commodity-class>
-				<offered-commodity-class>
+				</offered-asset-class>
+				<offered-asset-class>
 					<identifier>equipment</identifier>
 					<base-price-modifier>1.1</base-price-modifier>
-				</offered-commodity-class>
-				<offered-commodity-class>
+				</offered-asset-class>
+				<offered-asset-class>
 					<identifier>fuel</identifier>
 					<base-price-modifier>1.04</base-price-modifier>
-				</offered-commodity-class>
-			</offered-commodity-classes>
+				</offered-asset-class>
+			</offered-asset-classes>
 			<landing-fee>70.0</landing-fee>
 		</planet>
 	</planets>
