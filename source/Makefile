@@ -1,5 +1,6 @@
-SOURCE_FILES=$(wildcard *.cpp)
-OBJECT_FILES=$(patsubst %.cpp,%.o,$(SOURCE_FILES))
+SOURCE_FILES = $(wildcard *.cpp)
+OBJECT_FILES = $(patsubst %.cpp,%.o,$(SOURCE_FILES))
+HEADER_DEPENDENCIES = $(foreach HEADER_FILE, $(wildcard *.h), $(HEADER_FILE) '$($(patsubst %.h,%_h,$(HEADER_FILE)))')
 
 arx_reading_h = \
 	arx_reading.h
@@ -307,7 +308,7 @@ xml_puny_dom_h = \
 xml_stream_h = \
 	xml_stream.h
 
-all: check-dependencies binary
+all: check-dependencies check-consistency binary
 
 clean:
 	$(RM) binary
@@ -323,6 +324,27 @@ check-dependencies:
 	@if ! pkg-config --atleast-version=0.7.8 libarxx; then \
 		echo -e "\nThe library \"libarxx\" that is installed on your system is too old.\nYou have: Version `pkg-config --modversion libarxx`\nYou need: Version 0.7.8\nYou can get the most recent library from \"http://libarxx.sourceforge.net\"./\n"; false; \
 	fi
+
+check-consistency:
+	@HEADER_FILE=; \
+	for HEADER_DEPENDENCY in $(HEADER_DEPENDENCIES); do \
+	    if [ -z $${HEADER_FILE} ]; then \
+		HEADER_FILE=$${HEADER_DEPENDENCY}; \
+	    else \
+		if [ -z "$${HEADER_DEPENDENCY}" ]; then \
+		    echo -e "\nThe build system contains no dependency specification for the header file '"$${HEADER_FILE}"'.\n"; \
+		    exit 1; \
+		else \
+		    for HEADER_FILE_DEPENDENCY in $${HEADER_DEPENDENCY}; do \
+			if [ ! -f $${HEADER_FILE_DEPENDENCY} ]; then \
+			    echo -e "\nThe build system contains a reference to the non-existent file '"$${HEADER_FILE_DEPENDENCY}"' for the header file '"$${HEADER_FILE}"'.\n"; \
+			    exit 1; \
+			fi; \
+		    done; \
+		fi; \
+		HEADER_FILE=; \
+	    fi \
+	done
 
 binary: $(OBJECT_FILES)
 	$(CXX) $(LDFLAGS) `pkg-config --libs libarxx` $^ -lGL -o $@
