@@ -241,7 +241,7 @@ static void ReadCommodityClass(CommodityClassManager * CommodityClassManager, Ar
 	}
 	NewCommodityClass->SetModel(Model);
 	NewCommodityClass->SetColor(Color);
-	NewCommodityClass->SetSpaceRequirement(SpaceRequirement);
+	NewCommodityClass->SetSpaceRequirement(static_cast< unsigned_numeric >(1000 * SpaceRequirement));
 }
 
 static void ReadModel(ModelManager * ModelManager, Arxx::Reference & Reference)
@@ -359,7 +359,7 @@ static void ReadShipClass(ShipClassManager * ShipClassManager, Arxx::Reference &
 	NewShipClass->SetFuelHoldSize(FuelHoldSize);
 	NewShipClass->SetJumpFuel(JumpFuel);
 	NewShipClass->SetMaximumSpeed(MaximumSpeed);
-	NewShipClass->SetMaximumAvailableSpace(MaximumAvailableSpace);
+	NewShipClass->SetMaximumAvailableSpace(static_cast< unsigned_numeric >(1000 * MaximumAvailableSpace));
 	
 	Model * Model(g_ModelManager.Get(ModelIdentifier));
 	
@@ -570,7 +570,7 @@ static void ReadWeaponClass(WeaponClassManager * WeaponClassManager, Arxx::Refer
 	NewWeaponClass->SetName(Name);
 	NewWeaponClass->SetSlotType(SlotType);
 	NewWeaponClass->SetReloadTime(ReloadTime);
-	NewWeaponClass->SetSpaceRequirement(SpaceRequirement);
+	NewWeaponClass->SetSpaceRequirement(static_cast< unsigned_numeric >(1000 * SpaceRequirement));
 	NewWeaponClass->SetParticleExitSpeed(ParticleExitSpeed);
 	NewWeaponClass->SetParticleDamage(ParticleDamage);
 	NewWeaponClass->SetParticleLifeTime(ParticleLifeTime);

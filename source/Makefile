@@ -63,7 +63,8 @@ commodity_h = \
 	$(physical_object_h)
 
 commodity_class_h = \
-	commodity_class.h
+	commodity_class.h \
+	$(type_definitions_h)
 
 commodity_class_manager_h = \
 	commodity_class_manager.h
@@ -179,7 +180,8 @@ perspective_h = \
 
 physical_object_h = \
 	physical_object.h \
-	$(position_h)
+	$(position_h) \
+	$(type_definitions_h)
 
 planet_h = \
 	planet.h \
@@ -217,7 +219,8 @@ ship_h = \
 
 ship_class_h = \
 	ship_class.h \
-	$(math_vector3f_h)
+	$(math_vector3f_h) \
+	$(type_definitions_h)
 
 ship_class_manager_h = \
 	ship_class_manager.h
@@ -283,7 +286,8 @@ weapon_h = \
 	$(physical_object_h)
 
 weapon_class_h = \
-	weapon_class.h
+	weapon_class.h \
+	$(type_definitions_h)
 
 weapon_class_manager_h = \
 	weapon_class_manager.h

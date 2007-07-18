@@ -22,6 +22,8 @@
 
 #include <string>
 
+#include "type_definitions.h"
+
 class Color;
 class Model;
 
@@ -35,18 +37,18 @@ public:
 	const std::string & GetIdentifier(void) const;
 	const Model * GetModel(void) const;
 	const std::string & GetName(void) const;
-	float GetSpaceRequirement(void) const;
+	unsigned_numeric GetSpaceRequirement(void) const;
 	// setters
 	void SetColor(const Color & Color);
 	void SetModel(const Model * Model);
 	void SetName(const std::string & Name);
-	void SetSpaceRequirement(float SpaceRequirement);
+	void SetSpaceRequirement(unsigned_numeric SpaceRequirement);
 private:
 	std::string m_Identifier;
 	std::string m_Name;
 	const Model * m_Model;
 	Color * m_Color;
-	float m_SpaceRequirement;
+	unsigned_numeric m_SpaceRequirement;
 };
 
 inline const Color * CommodityClass::GetColor(void) const
@@ -69,7 +71,7 @@ inline const std::string & CommodityClass::GetName(void) const
 	return m_Name;
 }
 
-inline float CommodityClass::GetSpaceRequirement(void) const
+inline unsigned_numeric CommodityClass::GetSpaceRequirement(void) const
 {
 	return m_SpaceRequirement;
 }
@@ -84,7 +86,7 @@ inline void CommodityClass::SetName(const std::string & Name)
 	m_Name = Name;
 }
 
-inline void CommodityClass::SetSpaceRequirement(float SpaceRequirement)
+inline void CommodityClass::SetSpaceRequirement(unsigned_numeric SpaceRequirement)
 {
 	m_SpaceRequirement = SpaceRequirement;
 }

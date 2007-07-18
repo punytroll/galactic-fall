@@ -24,6 +24,7 @@
 #include <string>
 
 #include "math/vector3f.h"
+#include "type_definitions.h"
 
 class Color;
 class Model;
@@ -42,7 +43,7 @@ public:
 	float GetForwardThrust(void) const;
 	float GetTurnSpeed(void) const;
 	float GetMaximumSpeed(void) const;
-	float GetMaximumAvailableSpace(void) const;
+	unsigned_numeric GetMaximumAvailableSpace(void) const;
 	float GetFuelHoldSize(void) const;
 	float GetJumpFuel(void) const;
 	float GetForwardFuel(void) const;
@@ -56,7 +57,7 @@ public:
 	void SetForwardThrust(float ForwardThrust);
 	void SetTurnSpeed(float TurnSpeed);
 	void SetMaximumSpeed(float MaximumSpeed);
-	void SetMaximumAvailableSpace(float MaximumAvailableSpace);
+	void SetMaximumAvailableSpace(unsigned_numeric MaximumAvailableSpace);
 	void SetFuelHoldSize(float FuelHoldSize);
 	void SetJumpFuel(float JumpFuel);
 	void SetForwardFuel(float ForwardFuel);
@@ -72,7 +73,7 @@ private:
 	float m_ForwardThrust;
 	float m_TurnSpeed;
 	float m_MaximumSpeed;
-	float m_MaximumAvailableSpace;
+	unsigned_numeric m_MaximumAvailableSpace;
 	float m_FuelHoldSize;
 	float m_JumpFuel;
 	float m_ForwardFuel;
@@ -108,7 +109,7 @@ inline float ShipClass::GetMaximumSpeed(void) const
 	return m_MaximumSpeed;
 }
 
-inline float ShipClass::GetMaximumAvailableSpace(void) const
+inline unsigned_numeric ShipClass::GetMaximumAvailableSpace(void) const
 {
 	return m_MaximumAvailableSpace;
 }
@@ -173,7 +174,7 @@ inline void ShipClass::SetMaximumSpeed(float MaximumSpeed)
 	m_MaximumSpeed = MaximumSpeed;
 }
 
-inline void ShipClass::SetMaximumAvailableSpace(float MaximumAvailableSpace)
+inline void ShipClass::SetMaximumAvailableSpace(unsigned_numeric MaximumAvailableSpace)
 {
 	m_MaximumAvailableSpace = MaximumAvailableSpace;
 }

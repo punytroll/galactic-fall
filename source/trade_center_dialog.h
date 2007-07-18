@@ -46,7 +46,7 @@ private:
 	void Buy(const PlanetAssetClass * PlanetAssetClass);
 	void Sell(const PlanetAssetClass * PlanetAssetClass);
 	void UpdateTraderCredits(void);
-	void UpdateTraderFreeCargoHoldSize(void);
+	void UpdateTraderAvailableSpace(void);
 	Planet * m_Planet;
 	Character * m_Character;
 	Button * m_OKButton;
@@ -60,7 +60,7 @@ private:
 	Button * m_DownButton;
 	Button * m_UpButton;
 	Label * m_TraderCreditsLabel;
-	Label * m_TraderFreeCargoHoldSizeLabel;
+	Label * m_TraderAvailableSpaceLabel;
 	TradeCenterAssetClass * m_SelectedTradeCenterAssetClass;
 };
 

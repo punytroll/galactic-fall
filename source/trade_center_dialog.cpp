@@ -151,11 +151,11 @@ TradeCenterDialog::TradeCenterDialog(Widget * SupWidget, Planet * Planet, Charac
 	m_TraderCreditsLabel = new Label(this, "");
 	m_TraderCreditsLabel->SetPosition(Vector2f(10.0f, 240.0f));
 	m_TraderCreditsLabel->SetSize(Vector2f(200.0f, 20.0f));
-	m_TraderFreeCargoHoldSizeLabel = new Label(this, "");
-	m_TraderFreeCargoHoldSizeLabel->SetPosition(Vector2f(10.0f, 260.0f));
-	m_TraderFreeCargoHoldSizeLabel->SetSize(Vector2f(200.0f, 20.0f));
+	m_TraderAvailableSpaceLabel = new Label(this, "");
+	m_TraderAvailableSpaceLabel->SetPosition(Vector2f(10.0f, 260.0f));
+	m_TraderAvailableSpaceLabel->SetSize(Vector2f(200.0f, 20.0f));
 	UpdateTraderCredits();
-	UpdateTraderFreeCargoHoldSize();
+	UpdateTraderAvailableSpace();
 }
 
 void TradeCenterDialog::UpdateTraderCredits(void)
@@ -163,9 +163,9 @@ void TradeCenterDialog::UpdateTraderCredits(void)
 	m_TraderCreditsLabel->SetString("Credits: " + to_string_cast(m_Character->GetCredits()));
 }
 
-void TradeCenterDialog::UpdateTraderFreeCargoHoldSize(void)
+void TradeCenterDialog::UpdateTraderAvailableSpace(void)
 {
-	m_TraderFreeCargoHoldSizeLabel->SetString("Free Cargo Hold: " + to_string_cast(m_Character->GetShip()->GetAvailableSpace(), 20));
+	m_TraderAvailableSpaceLabel->SetString("Available Space: " + to_string_cast(0.001 * m_Character->GetShip()->GetAvailableSpace(), 3));
 }
 
 void TradeCenterDialog::Buy(const PlanetAssetClass * PlanetAssetClass)
@@ -181,7 +181,7 @@ void TradeCenterDialog::Buy(const PlanetAssetClass * PlanetAssetClass)
 			NewCargo->SetObjectIdentifier("::" + PlanetAssetClass->GetAssetClass()->GetObjectType() + "(" + PlanetAssetClass->GetAssetClass()->GetObjectClass() + ")::created_on(" + m_Planet->GetObjectIdentifier() + ")::created_at(" + to_string_cast(RealTime::GetTime(), 6) + ")::bought_by(" + m_Character->GetObjectIdentifier() + ")::commodity_class(" + PlanetAssetClass->GetAssetClass()->GetIdentifier() + ")");
 			m_Character->GetShip()->AddContent(NewCargo);
 			UpdateTraderCredits();
-			UpdateTraderFreeCargoHoldSize();
+			UpdateTraderAvailableSpace();
 		}
 		else
 		{
@@ -223,7 +223,7 @@ void TradeCenterDialog::Sell(const PlanetAssetClass * PlanetAssetClass)
 			delete ContentObject;
 			m_Character->AddCredits(PlanetAssetClass->GetPrice());
 			UpdateTraderCredits();
-			UpdateTraderFreeCargoHoldSize();
+			UpdateTraderAvailableSpace();
 			
 			break;
 		}
