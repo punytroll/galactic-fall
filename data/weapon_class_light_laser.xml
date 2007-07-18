@@ -1,7 +1,9 @@
 <weapon-class>
 	<identifier>light_laser</identifier>
+	<name>Light Laser</name>
 	<slot-type>light_weapon</slot-type>
 	<reload-time>0.63</reload-time>
+	<space-requirement>0.3</space-requirement>
 	<particle>
 		<exit-speed>30</exit-speed>
 		<damage>12</damage>

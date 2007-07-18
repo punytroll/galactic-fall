@@ -20,13 +20,15 @@
 #include <stdexcept>
 
 #include "commodity.h"
+#include "commodity_class.h"
 #include "commodity_class_manager.h"
 #include "globals.h"
 #include "object_factory.h"
 #include "weapon.h"
+#include "weapon_class.h"
 #include "weapon_class_manager.h"
 
-Object * ObjectFactory::Create(const std::string & Type, const std::string & Class)
+Object * ObjectFactory::Create(const std::string & Type, const std::string & Class) const
 {
 	if(Type == "commodity")
 	{
@@ -52,6 +54,36 @@ Object * ObjectFactory::Create(const std::string & Type, const std::string & Cla
 	}
 	else
 	{
-		throw std::runtime_error("Unknown object type '" + Type + "'.");
+		throw std::runtime_error("Unknown object type '" + Type + "' (for object class '" + Class + "').");
+	}
+}
+
+float ObjectFactory::GetSpaceRequirement(const std::string & Type, const std::string & Class) const
+{
+	if(Type == "commodity")
+	{
+		const CommodityClass * CommodityClass(g_CommodityClassManager->Get(Class));
+		
+		if(CommodityClass == 0)
+		{
+			throw std::runtime_error("Unknown object class '" + Class + "' for object type '" + Type + "'.");
+		}
+		
+		return CommodityClass->GetSpaceRequirement();
+	}
+	else if(Type == "weapon")
+	{
+		const WeaponClass * WeaponClass(g_WeaponClassManager->Get(Class));
+		
+		if(WeaponClass == 0)
+		{
+			throw std::runtime_error("Unknown object class '" + Class + "' for object type '" + Type + "'.");
+		}
+		
+		return WeaponClass->GetSpaceRequirement();
+	}
+	else
+	{
+		throw std::runtime_error("Unknown object type '" + Type + "' (for object class '" + Class + "').");
 	}
 }

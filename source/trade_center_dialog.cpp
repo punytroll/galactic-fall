@@ -165,7 +165,7 @@ void TradeCenterDialog::UpdateTraderCredits(void)
 
 void TradeCenterDialog::UpdateTraderFreeCargoHoldSize(void)
 {
-	m_TraderFreeCargoHoldSizeLabel->SetString("Free Cargo Hold: " + to_string_cast(m_Character->GetShip()->GetFreeCargoHoldSize()));
+	m_TraderFreeCargoHoldSizeLabel->SetString("Free Cargo Hold: " + to_string_cast(m_Character->GetShip()->GetAvailableSpace(), 20));
 }
 
 void TradeCenterDialog::Buy(const PlanetAssetClass * PlanetAssetClass)
@@ -174,7 +174,7 @@ void TradeCenterDialog::Buy(const PlanetAssetClass * PlanetAssetClass)
 	
 	if(m_Character->RemoveCredits(Price) == true)
 	{
-		if(m_Character->GetShip()->GetFreeCargoHoldSize() >= 1.0f)
+		if(m_Character->GetShip()->GetAvailableSpace() >= g_ObjectFactory->GetSpaceRequirement(PlanetAssetClass->GetAssetClass()->GetObjectType(), PlanetAssetClass->GetAssetClass()->GetObjectClass()))
 		{
 			Object * NewCargo(g_ObjectFactory->Create(PlanetAssetClass->GetAssetClass()->GetObjectType(), PlanetAssetClass->GetAssetClass()->GetObjectClass()));
 			

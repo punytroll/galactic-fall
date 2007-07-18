@@ -276,21 +276,25 @@ float Ship::GetFuelCapacity(void) const
 	return m_ShipClass->GetFuelHoldSize();
 }
 
-float Ship::GetFreeCargoHoldSize(void) const
+float Ship::GetAvailableSpace(void) const
 {
-	float CargoHoldSize(m_ShipClass->GetCargoHoldSize());
+	float AvailableSpace(m_ShipClass->GetMaximumAvailableSpace());
 	std::set< Object * >::const_iterator ManifestIterator(GetContent().begin());
 	
 	while(ManifestIterator != GetContent().end())
 	{
 		if(dynamic_cast< Commodity * >(*ManifestIterator) != 0)
 		{
-			CargoHoldSize -= 1.0f;
+			AvailableSpace -= dynamic_cast< Commodity * >(*ManifestIterator)->GetSpaceRequirement();
+		}
+		else if(dynamic_cast< Weapon * >(*ManifestIterator) != 0)
+		{
+			AvailableSpace -= dynamic_cast< Weapon * >(*ManifestIterator)->GetSpaceRequirement();
 		}
 		++ManifestIterator;
 	}
 	
-	return CargoHoldSize;
+	return AvailableSpace;
 }
 
 unsigned_numeric Ship::GetContentAmount(const std::string & Type, const std::string & Class) const

@@ -42,7 +42,7 @@ public:
 	float GetForwardThrust(void) const;
 	float GetTurnSpeed(void) const;
 	float GetMaximumSpeed(void) const;
-	float GetCargoHoldSize(void) const;
+	float GetMaximumAvailableSpace(void) const;
 	float GetFuelHoldSize(void) const;
 	float GetJumpFuel(void) const;
 	float GetForwardFuel(void) const;
@@ -56,7 +56,7 @@ public:
 	void SetForwardThrust(float ForwardThrust);
 	void SetTurnSpeed(float TurnSpeed);
 	void SetMaximumSpeed(float MaximumSpeed);
-	void SetCargoHoldSize(float CargoHoldSize);
+	void SetMaximumAvailableSpace(float MaximumAvailableSpace);
 	void SetFuelHoldSize(float FuelHoldSize);
 	void SetJumpFuel(float JumpFuel);
 	void SetForwardFuel(float ForwardFuel);
@@ -72,7 +72,7 @@ private:
 	float m_ForwardThrust;
 	float m_TurnSpeed;
 	float m_MaximumSpeed;
-	float m_CargoHoldSize;
+	float m_MaximumAvailableSpace;
 	float m_FuelHoldSize;
 	float m_JumpFuel;
 	float m_ForwardFuel;
@@ -108,9 +108,9 @@ inline float ShipClass::GetMaximumSpeed(void) const
 	return m_MaximumSpeed;
 }
 
-inline float ShipClass::GetCargoHoldSize(void) const
+inline float ShipClass::GetMaximumAvailableSpace(void) const
 {
-	return m_CargoHoldSize;
+	return m_MaximumAvailableSpace;
 }
 
 inline float ShipClass::GetFuelHoldSize(void) const
@@ -173,9 +173,9 @@ inline void ShipClass::SetMaximumSpeed(float MaximumSpeed)
 	m_MaximumSpeed = MaximumSpeed;
 }
 
-inline void ShipClass::SetCargoHoldSize(float CargoHoldSize)
+inline void ShipClass::SetMaximumAvailableSpace(float MaximumAvailableSpace)
 {
-	m_CargoHoldSize = CargoHoldSize;
+	m_MaximumAvailableSpace = MaximumAvailableSpace;
 }
 
 inline void ShipClass::SetFuelHoldSize(float FuelHoldSize)
