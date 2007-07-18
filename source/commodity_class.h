@@ -35,15 +35,18 @@ public:
 	const std::string & GetIdentifier(void) const;
 	const Model * GetModel(void) const;
 	const std::string & GetName(void) const;
+	float GetSpaceRequirement(void) const;
 	// setters
 	void SetColor(const Color & Color);
 	void SetModel(const Model * Model);
 	void SetName(const std::string & Name);
+	void SetSpaceRequirement(float SpaceRequirement);
 private:
 	std::string m_Identifier;
 	std::string m_Name;
 	const Model * m_Model;
 	Color * m_Color;
+	float m_SpaceRequirement;
 };
 
 inline const Color * CommodityClass::GetColor(void) const
@@ -66,6 +69,11 @@ inline const std::string & CommodityClass::GetName(void) const
 	return m_Name;
 }
 
+inline float CommodityClass::GetSpaceRequirement(void) const
+{
+	return m_SpaceRequirement;
+}
+
 inline void CommodityClass::SetModel(const Model * Model)
 {
 	m_Model = Model;
@@ -74,6 +82,11 @@ inline void CommodityClass::SetModel(const Model * Model)
 inline void CommodityClass::SetName(const std::string & Name)
 {
 	m_Name = Name;
+}
+
+inline void CommodityClass::SetSpaceRequirement(float SpaceRequirement)
+{
+	m_SpaceRequirement = SpaceRequirement;
 }
 
 #endif

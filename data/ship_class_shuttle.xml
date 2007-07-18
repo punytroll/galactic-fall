@@ -4,7 +4,7 @@
 	<forward-thrust>10</forward-thrust>
 	<turn-speed>1</turn-speed>
 	<maximum-speed>12</maximum-speed>
-	<cargo-hold-size>12</cargo-hold-size>
+	<maximum-available-space>12</maximum-available-space>
 	<fuel-hold-size>1</fuel-hold-size>
 	<jump-fuel>0.25</jump-fuel>
 	<forward-fuel>0.025</forward-fuel>

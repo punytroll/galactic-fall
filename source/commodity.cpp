@@ -29,8 +29,9 @@ Commodity::Commodity(const CommodityClass * CommodityClass) :
 	m_Hull(20.0f),
 	m_Velocity(true)
 {
-	SetRadialSize(m_CommodityClass->GetModel()->GetRadialSize());
 	SetName(m_CommodityClass->GetName());
+	SetRadialSize(m_CommodityClass->GetModel()->GetRadialSize());
+	SetSpaceRequirement(m_CommodityClass->GetSpaceRequirement());
 	m_RotationAxis.Set(static_cast< float >(random()) / RAND_MAX, static_cast< float >(random()) / RAND_MAX, static_cast< float >(random()) / RAND_MAX);
 	m_RotationAxis.Normalize();
 	m_AngularPosition = static_cast< float >(random()) / RAND_MAX;

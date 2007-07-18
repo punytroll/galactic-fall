@@ -795,9 +795,9 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 		/// @todo update to commodity classes
 		for(int NumberOfAssetClasses = static_cast< int >(GetRandomFloatFromExponentialDistribution(2)); NumberOfAssetClasses > 0; --NumberOfAssetClasses)
 		{
-			int AmountOfAssets(GetRandomIntegerFromExponentialDistribution(NewShip->GetShipClass()->GetCargoHoldSize() / 2));
+			int AmountOfAssets(GetRandomIntegerFromExponentialDistribution(NewShip->GetShipClass()->GetMaximumAvailableSpace() / 2));
 			
-			if(AmountOfAssets <= NewShip->GetFreeCargoHoldSize())
+			if(AmountOfAssets <= NewShip->GetAvailableSpace())
 			{
 				const std::map< std::string, AssetClass * > & AssetClasses(g_AssetClassManager->GetAssetClasses());
 				std::map< std::string, AssetClass * >::const_iterator AssetClassIterator(AssetClasses.begin());
@@ -810,7 +810,7 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 				{
 					Object * NewCommodity(g_ObjectFactory->Create(AssetClassIterator->second->GetObjectType(), AssetClassIterator->second->GetObjectClass()));
 					
-					NewCommodity->SetObjectIdentifier("::commodity(" + AssetClassIterator->second->GetIdentifier() + ")::(" + to_string_cast(NumberOfAssetClasses) + "|" + to_string_cast(AmountOfAssets) + ")" + IdentifierSuffix);
+					NewCommodity->SetObjectIdentifier("::" + AssetClassIterator->second->GetObjectType() + "(" + AssetClassIterator->second->GetIdentifier() + ")::(" + to_string_cast(NumberOfAssetClasses) + "|" + to_string_cast(AmountOfAssets) + ")" + IdentifierSuffix);
 					NewShip->AddContent(NewCommodity);
 					--AmountOfAssets;
 				}

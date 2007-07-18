@@ -331,10 +331,10 @@ void TransporterPhase3::Enter(void)
 			{
 				PlanetAssetClass * PlanetAssetClassToBuy(BuyPlanetAssetClasses[GetRandomInteger(BuyPlanetAssetClasses.size() - 1)]);
 				
-				for(int NumberOfAssetsToBuy = GetRandomIntegerFromExponentialDistribution(GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetCargoHoldSize() / 2); NumberOfAssetsToBuy > 0; --NumberOfAssetsToBuy)
+				for(int NumberOfAssetsToBuy = GetRandomIntegerFromExponentialDistribution(GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetMaximumAvailableSpace() / 2); NumberOfAssetsToBuy > 0; --NumberOfAssetsToBuy)
 				{
 					// TODO: the 400.0f is a safety margin for landing fees and fuel
-					if((GetMind()->GetCharacter()->GetShip()->GetFreeCargoHoldSize() >= 1.0f) && (GetMind()->GetCharacter()->GetCredits() - 400.0f >= PlanetAssetClassToBuy->GetPrice()))
+					if((GetMind()->GetCharacter()->GetShip()->GetAvailableSpace() >= 1.0f) && (GetMind()->GetCharacter()->GetCredits() - 400.0f >= PlanetAssetClassToBuy->GetPrice()))
 					{
 						GetMind()->GetCharacter()->RemoveCredits(PlanetAssetClassToBuy->GetPrice());
 						

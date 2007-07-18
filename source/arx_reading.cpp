@@ -227,10 +227,9 @@ static void ReadCommodityClass(CommodityClassManager * CommodityClassManager, Ar
 	float BasePrice;
 	std::string ModelIdentifier;
 	Color Color;
-	std::string ObjectType;
-	std::string ObjectClass;
+	float SpaceRequirement;
 	
-	Reader >> Name >> ModelIdentifier >> Color;
+	Reader >> Name >> ModelIdentifier >> Color >> SpaceRequirement;
 	
 	NewCommodityClass->SetName(Name);
 	
@@ -242,6 +241,7 @@ static void ReadCommodityClass(CommodityClassManager * CommodityClassManager, Ar
 	}
 	NewCommodityClass->SetModel(Model);
 	NewCommodityClass->SetColor(Color);
+	NewCommodityClass->SetSpaceRequirement(SpaceRequirement);
 }
 
 static void ReadModel(ModelManager * ModelManager, Arxx::Reference & Reference)
@@ -343,7 +343,7 @@ static void ReadShipClass(ShipClassManager * ShipClassManager, Arxx::Reference &
 	float ForwardThrust;
 	float TurnSpeed;
 	float MaximumSpeed;
-	float CargoHoldSize;
+	float MaximumAvailableSpace;
 	float FuelHoldSize;
 	float JumpFuel;
 	float ForwardFuel;
@@ -353,13 +353,13 @@ static void ReadShipClass(ShipClassManager * ShipClassManager, Arxx::Reference &
 	Vector3f ExhaustOffset;
 	Arxx::u4byte SlotCount;
 	
-	Reader >> ModelIdentifier >> ForwardThrust >> TurnSpeed >> MaximumSpeed >> CargoHoldSize >> FuelHoldSize >> JumpFuel >> ForwardFuel >> TurnFuel >> Hull >> ModelColor >> ExhaustOffset >> SlotCount;
+	Reader >> ModelIdentifier >> ForwardThrust >> TurnSpeed >> MaximumSpeed >> MaximumAvailableSpace >> FuelHoldSize >> JumpFuel >> ForwardFuel >> TurnFuel >> Hull >> ModelColor >> ExhaustOffset >> SlotCount;
 	
-	NewShipClass->SetCargoHoldSize(CargoHoldSize);
 	NewShipClass->SetForwardThrust(ForwardThrust);
 	NewShipClass->SetFuelHoldSize(FuelHoldSize);
 	NewShipClass->SetJumpFuel(JumpFuel);
 	NewShipClass->SetMaximumSpeed(MaximumSpeed);
+	NewShipClass->SetMaximumAvailableSpace(MaximumAvailableSpace);
 	
 	Model * Model(g_ModelManager.Get(ModelIdentifier));
 	
@@ -556,17 +556,21 @@ static void ReadWeaponClass(WeaponClassManager * WeaponClassManager, Arxx::Refer
 		throw std::runtime_error("Could not create weapon class '" + Identifier + "'.");
 	}
 	
+	std::string Name;
 	std::string SlotType;
 	float ReloadTime;
+	float SpaceRequirement;
 	float ParticleExitSpeed;
 	float ParticleDamage;
 	float ParticleLifeTime;
 	std::string ParticleModelIdentifier;
 	Color ParticleColor;
 	
-	Reader >> SlotType >> ReloadTime >> ParticleExitSpeed >> ParticleDamage >> ParticleLifeTime >> ParticleModelIdentifier >> ParticleColor;
+	Reader >> Name >> SlotType >> ReloadTime >> SpaceRequirement >> ParticleExitSpeed >> ParticleDamage >> ParticleLifeTime >> ParticleModelIdentifier >> ParticleColor;
+	NewWeaponClass->SetName(Name);
 	NewWeaponClass->SetSlotType(SlotType);
 	NewWeaponClass->SetReloadTime(ReloadTime);
+	NewWeaponClass->SetSpaceRequirement(SpaceRequirement);
 	NewWeaponClass->SetParticleExitSpeed(ParticleExitSpeed);
 	NewWeaponClass->SetParticleDamage(ParticleDamage);
 	NewWeaponClass->SetParticleLifeTime(ParticleLifeTime);

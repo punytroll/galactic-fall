@@ -34,6 +34,7 @@ public:
 	~WeaponClass(void);
 	// getters
 	const std::string & GetIdentifier(void) const;
+	const std::string & GetName(void) const;
 	float GetReloadTime(void) const;
 	float GetParticleExitSpeed(void) const;
 	float GetParticleDamage(void) const;
@@ -41,7 +42,9 @@ public:
 	const Model * GetParticleModel(void) const;
 	const Color * GetParticleColor(void) const;
 	const std::string & GetSlotType(void) const;
-	// modifiers
+	float GetSpaceRequirement(void) const;
+	// setters
+	void SetName(const std::string & Name);
 	void SetReloadTime(float ReloadTime);
 	void SetParticleExitSpeed(float ParticleExitSpeed);
 	void SetParticleDamage(float ParticleDamage);
@@ -49,8 +52,10 @@ public:
 	void SetParticleModel(const Model * ParticleModel);
 	void SetParticleColor(const Color & ParticleColor);
 	void SetSlotType(const std::string & SlotType);
+	void SetSpaceRequirement(float SpaceRequirement);
 private:
 	std::string m_Identifier;
+	std::string m_Name;
 	std::string m_SlotType;
 	float m_ReloadTime;
 	float m_ParticleExitSpeed;
@@ -58,11 +63,17 @@ private:
 	float m_ParticleLifeTime;
 	const Model * m_ParticleModel;
 	Color * m_ParticleColor;
+	float m_SpaceRequirement;
 };
 
 inline const std::string & WeaponClass::GetIdentifier(void) const
 {
 	return m_Identifier;
+}
+
+inline const std::string & WeaponClass::GetName(void) const
+{
+	return m_Name;
 }
 
 inline float WeaponClass::GetReloadTime(void) const
@@ -100,6 +111,16 @@ inline const std::string & WeaponClass::GetSlotType(void) const
 	return m_SlotType;
 }
 
+inline float WeaponClass::GetSpaceRequirement(void) const
+{
+	return m_SpaceRequirement;
+}
+
+inline void WeaponClass::SetName(const std::string & Name)
+{
+	m_Name = Name;
+}
+
 inline void WeaponClass::SetReloadTime(float ReloadTime)
 {
 	m_ReloadTime = ReloadTime;
@@ -128,6 +149,11 @@ inline void WeaponClass::SetParticleModel(const Model * ParticleModel)
 inline void WeaponClass::SetSlotType(const std::string & SlotType)
 {
 	m_SlotType = SlotType;
+}
+
+inline void WeaponClass::SetSpaceRequirement(float SpaceRequirement)
+{
+	m_SpaceRequirement = SpaceRequirement;
 }
 
 #endif

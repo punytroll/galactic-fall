@@ -20,17 +20,18 @@
 #ifndef WEAPON_H
 #define WEAPON_H
 
-#include "object.h"
+#include "physical_object.h"
 
 class Ship;
 class Slot;
 class WeaponClass;
 
-class Weapon : public Object
+class Weapon : public PhysicalObject
 {
 public:
 	Weapon(const WeaponClass * WeaponClass);
 	void Update(float Seconds);
+	virtual void Draw(void) const;
 	// getters
 	const WeaponClass * GetWeaponClass(void) const;
 	Ship * GetShip(void);

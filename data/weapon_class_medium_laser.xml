@@ -1,7 +1,9 @@
 <weapon-class>
 	<identifier>medium_laser</identifier>
+	<name>Medium Laser</name>
 	<slot-type>medium_weapon</slot-type>
 	<reload-time>0.85</reload-time>
+	<space-requirement>0.5</space-requirement>
 	<particle>
 		<exit-speed>26</exit-speed>
 		<damage>28</damage>

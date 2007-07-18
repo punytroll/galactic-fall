@@ -35,6 +35,8 @@ Weapon::Weapon(const WeaponClass * WeaponClass) :
 	m_Fire(false),
 	m_NextTimeToFire(0.0)
 {
+	SetName(m_WeaponClass->GetName());
+	SetSpaceRequirement(m_WeaponClass->GetSpaceRequirement());
 }
 
 void Weapon::Update(float Seconds)
@@ -58,4 +60,8 @@ void Weapon::Update(float Seconds)
 		GetShip()->GetCurrentSystem()->AddContent(NewShot);
 		m_NextTimeToFire = GameTime::Get() + GetWeaponClass()->GetReloadTime();
 	}
+}
+
+void Weapon::Draw(void) const
+{
 }

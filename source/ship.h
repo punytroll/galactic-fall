@@ -56,7 +56,7 @@ public:
 	const ShipClass * GetShipClass(void) const;
 	float GetTurnSpeed(void) const;
 	const Vector2f & GetVelocity(void) const;
-	float GetFreeCargoHoldSize(void) const;
+	float GetAvailableSpace(void) const;
 	unsigned_numeric GetContentAmount(const std::string & Type, const std::string & Class) const;
 	Reference< PhysicalObject > & GetTarget(void);
 	const Reference< PhysicalObject > & GetTarget(void) const;

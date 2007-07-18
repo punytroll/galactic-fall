@@ -27,13 +27,18 @@ class PhysicalObject : public Position
 public:
 	virtual ~PhysicalObject(void);
 	virtual void Draw(void) const = 0;
+	// getters
 	const std::string & GetName(void) const;
+	float GetRadialSize(void) const;
+	float GetSpaceRequirement(void) const;
+	// setters
 	void SetName(const std::string & Name);
 	void SetRadialSize(float RadialSize);
-	float GetRadialSize(void) const;
+	void SetSpaceRequirement(float SpaceRequirement);
 private:
 	std::string m_Name;
 	float m_RadialSize;
+	float m_SpaceRequirement;
 };
 
 inline const std::string & PhysicalObject::GetName(void) const
@@ -41,14 +46,29 @@ inline const std::string & PhysicalObject::GetName(void) const
 	return m_Name;
 }
 
+inline float PhysicalObject::GetRadialSize(void) const
+{
+	return m_RadialSize;
+}
+
+inline float PhysicalObject::GetSpaceRequirement(void) const
+{
+	return m_SpaceRequirement;
+}
+
 inline void PhysicalObject::SetName(const std::string & Name)
 {
 	m_Name = Name;
 }
 
-inline float PhysicalObject::GetRadialSize(void) const
+inline void PhysicalObject::SetRadialSize(float RadialSize)
 {
-	return m_RadialSize;
+	m_RadialSize = RadialSize;
+}
+
+inline void PhysicalObject::SetSpaceRequirement(float SpaceRequirement)
+{
+	m_SpaceRequirement = SpaceRequirement;
 }
 
 #endif
