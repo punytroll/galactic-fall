@@ -34,15 +34,12 @@ public:
 	virtual void Draw(void) const;
 	// getters
 	const WeaponClass * GetWeaponClass(void) const;
-	Ship * GetShip(void);
 	Slot * GetSlot(void);
 	// setters
 	void SetFire(bool Fire);
-	void SetShip(Ship * Ship);
 	void SetSlot(Slot * Slot);
 private:
 	const WeaponClass * m_WeaponClass;
-	Ship * m_Ship;
 	Slot * m_Slot;
 	bool m_Fire;
 	double m_NextTimeToFire;
@@ -53,11 +50,6 @@ inline const WeaponClass * Weapon::GetWeaponClass(void) const
 	return m_WeaponClass;
 }
 
-inline Ship * Weapon::GetShip(void)
-{
-	return m_Ship;
-}
-
 inline Slot * Weapon::GetSlot(void)
 {
 	return m_Slot;
@@ -66,11 +58,6 @@ inline Slot * Weapon::GetSlot(void)
 inline void Weapon::SetFire(bool Fire)
 {
 	m_Fire = Fire;
-}
-
-inline void Weapon::SetShip(Ship * Ship)
-{
-	m_Ship = Ship;
 }
 
 inline void Weapon::SetSlot(Slot * Slot)

@@ -30,7 +30,6 @@
 
 Weapon::Weapon(const WeaponClass * WeaponClass) :
 	m_WeaponClass(WeaponClass),
-	m_Ship(0),
 	m_Slot(0),
 	m_Fire(false),
 	m_NextTimeToFire(0.0)
@@ -43,21 +42,25 @@ void Weapon::Update(float Seconds)
 {
 	if((m_Fire == true) && (m_NextTimeToFire <= GameTime::Get()))
 	{
+		Ship * TheShip(dynamic_cast< Ship * >(GetContainer()));
+		
+		assert(TheShip != 0);
+		
 		std::stringstream IdentifierStream;
 		
-		IdentifierStream << "::shot::created_at_game_time(" << to_string_cast(GameTime::Get(), 2) << ")::created_by(" << GetShip()->GetObjectIdentifier() << ")::in_system(" << GetShip()->GetCurrentSystem()->GetIdentifier() << ")";
+		IdentifierStream << "::shot::created_at_game_time(" << to_string_cast(GameTime::Get(), 2) << ")::created_by(" << GetContainer()->GetObjectIdentifier() << ")::in_system(" << TheShip->GetCurrentSystem()->GetIdentifier() << ")";
 		
 		Shot * NewShot(new Shot(GetWeaponClass()));
 		
 		NewShot->SetObjectIdentifier(IdentifierStream.str());
-		NewShot->SetShooter(GetShip());
+		NewShot->SetShooter(TheShip);
 		
 		const Vector3f & SlotPosition(GetSlot()->GetPosition());
 		
-		NewShot->SetPosition(GetShip()->GetPosition() + Vector2f(SlotPosition.m_V.m_A[0], SlotPosition.m_V.m_A[1]).Turned(GetShip()->GetAngularPosition()));
-		NewShot->SetAngularPosition(GetShip()->GetAngularPosition());
-		NewShot->SetVelocity(GetShip()->GetVelocity() + Vector2f(GetWeaponClass()->GetParticleExitSpeed(), GetShip()->GetAngularPosition(), Vector2f::InitializeMagnitudeAngle));
-		GetShip()->GetCurrentSystem()->AddContent(NewShot);
+		NewShot->SetPosition(TheShip->GetPosition() + Vector2f(SlotPosition.m_V.m_A[0], SlotPosition.m_V.m_A[1]).Turned(TheShip->GetAngularPosition()));
+		NewShot->SetAngularPosition(TheShip->GetAngularPosition());
+		NewShot->SetVelocity(TheShip->GetVelocity() + Vector2f(GetWeaponClass()->GetParticleExitSpeed(), TheShip->GetAngularPosition(), Vector2f::InitializeMagnitudeAngle));
+		TheShip->GetCurrentSystem()->AddContent(NewShot);
 		m_NextTimeToFire = GameTime::Get() + GetWeaponClass()->GetReloadTime();
 	}
 }
