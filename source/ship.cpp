@@ -335,9 +335,15 @@ unsigned_numeric Ship::GetContentAmount(const std::string & Type, const std::str
 
 void Ship::SetFire(bool Fire)
 {
-	for(std::vector< Weapon * >::size_type WeaponIndex = 0; WeaponIndex < m_Weapons.size(); ++WeaponIndex)
+	for(std::map< std::string, Slot * >::iterator SlotIterator = m_Slots.begin(); SlotIterator != m_Slots.end(); ++SlotIterator)
 	{
-		m_Weapons[WeaponIndex]->SetFire(Fire);
+		// only set firing on *mounted* *weapons*
+		Weapon * TheWeapon(dynamic_cast< Weapon * >(SlotIterator->second->GetMountedObject().Get()));
+		
+		if(TheWeapon != 0)
+		{
+			TheWeapon->SetFire(Fire);
+		}
 	}
 }
 
@@ -375,49 +381,4 @@ bool Ship::Mount(Object * Object, const std::string & SlotIdentifier)
 	}
 	
 	return false;
-}
-
-bool Ship::OnAddContent(Object * Content)
-{
-	Weapon * TheWeapon(dynamic_cast< Weapon * >(Content));
-	
-	if(TheWeapon != 0)
-	{
-		if(PhysicalObject::OnAddContent(Content) == true)
-		{
-			m_Weapons.push_back(TheWeapon);
-			TheWeapon->SetShip(this);
-			
-			return true;
-		}
-		
-		return false;
-	}
-	
-	return PhysicalObject::OnAddContent(Content);
-}
-
-bool Ship::OnRemoveContent(Object * Content)
-{
-	Weapon * TheWeapon(dynamic_cast< Weapon * >(Content));
-	
-	if(TheWeapon != 0)
-	{
-		std::vector< Weapon * >::iterator WeaponIterator(std::find(m_Weapons.begin(), m_Weapons.end(), TheWeapon));
-		
-		if(WeaponIterator != m_Weapons.end())
-		{
-			if(PhysicalObject::OnRemoveContent(Content) == true)
-			{
-				TheWeapon->SetShip(0);
-				m_Weapons.erase(WeaponIterator);
-				
-				return true;
-			}
-		}
-		
-		return false;
-	}
-	
-	return PhysicalObject::OnRemoveContent(Content);
 }

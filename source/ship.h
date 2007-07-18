@@ -80,14 +80,10 @@ public:
 	// modifiers
 	Slot * CreateSlot(const std::string & SlotIdentifier);
 	bool Mount(Object * Object, const std::string & SlotIdentifier);
-protected:
-	virtual bool OnAddContent(Object * Content);
-	virtual bool OnRemoveContent(Object * Content);
 private:
 	// ship class
 	const ShipClass * m_ShipClass;
 	std::map< std::string, Slot * > m_Slots;
-	std::vector< Weapon * > m_Weapons;
 	bool m_Accelerate;
 	bool m_Accelerating;
 	float m_Fuel;
