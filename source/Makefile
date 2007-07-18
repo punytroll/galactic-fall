@@ -232,7 +232,8 @@ shot_h = \
 
 slot_h = \
 	slot.h \
-	$(math_vector3f_h)
+	$(math_vector3f_h) \
+	$(referencing_h)
 
 star_h = \
 	star.h \
