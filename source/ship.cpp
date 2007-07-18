@@ -157,12 +157,14 @@ void Ship::Update(float Seconds)
 	}
 	else
 	{
-		for(std::vector< Weapon * >::size_type WeaponIndex = 0; WeaponIndex < m_Weapons.size(); ++WeaponIndex)
+		for(std::map< std::string, Slot * >::iterator SlotIterator = m_Slots.begin(); SlotIterator != m_Slots.end(); ++SlotIterator)
 		{
-			// only fire mounted weapons
-			if(m_Weapons[WeaponIndex]->GetSlot() != 0)
+			// only update *mounted* *weapons*
+			Weapon * TheWeapon(dynamic_cast< Weapon * >(SlotIterator->second->GetMountedObject().Get()));
+			
+			if(TheWeapon != 0)
 			{
-				m_Weapons[WeaponIndex]->Update(Seconds);
+				TheWeapon->Update(Seconds);
 			}
 		}
 		if(m_Refuel == true)
@@ -289,7 +291,10 @@ float Ship::GetAvailableSpace(void) const
 		}
 		else if(dynamic_cast< Weapon * >(*ManifestIterator) != 0)
 		{
-			AvailableSpace -= dynamic_cast< Weapon * >(*ManifestIterator)->GetSpaceRequirement();
+			if(dynamic_cast< Weapon * >(*ManifestIterator)->GetSlot() == 0)
+			{
+				AvailableSpace -= dynamic_cast< Weapon * >(*ManifestIterator)->GetSpaceRequirement();
+			}
 		}
 		++ManifestIterator;
 	}
@@ -362,7 +367,7 @@ bool Ship::Mount(Object * Object, const std::string & SlotIdentifier)
 		
 		if((TheWeapon != 0) && (TheWeapon->GetWeaponClass()->GetSlotType() == SlotIterator->second->GetType()))
 		{
-			SlotIterator->second->SetMountedObject(Object);
+			SlotIterator->second->SetMountedObject(TheWeapon->GetReference());
 			TheWeapon->SetSlot(SlotIterator->second);
 			
 			return true;
