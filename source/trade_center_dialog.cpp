@@ -212,7 +212,7 @@ void TradeCenterDialog::Sell(const PlanetAssetClass * PlanetAssetClass)
 		{
 			Weapon * ContentWeapon(dynamic_cast< Weapon * >(*ContentIterator));
 			
-			if((ContentWeapon != 0) && (ContentWeapon->GetWeaponClass()->GetIdentifier() == PlanetAssetClass->GetAssetClass()->GetObjectClass()))
+			if((ContentWeapon != 0) && (ContentWeapon->GetSlot() == 0) && (ContentWeapon->GetWeaponClass()->GetIdentifier() == PlanetAssetClass->GetAssetClass()->GetObjectClass()))
 			{
 				ContentObject = ContentWeapon;
 			}

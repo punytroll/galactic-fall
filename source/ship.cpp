@@ -322,7 +322,7 @@ unsigned_numeric Ship::GetContentAmount(const std::string & Type, const std::str
 		{
 			Weapon * TheWeapon(dynamic_cast< Weapon * >(*ContentIterator));
 			
-			if((TheWeapon != 0) && (TheWeapon->GetWeaponClass()->GetIdentifier() == Class))
+			if((TheWeapon != 0) && (TheWeapon->GetSlot() == 0) && (TheWeapon->GetWeaponClass()->GetIdentifier() == Class))
 			{
 				Amount += 1;
 			}
