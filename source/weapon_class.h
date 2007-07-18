@@ -22,6 +22,8 @@
 
 #include <string>
 
+#include "type_definitions.h"
+
 class Color;
 class Model;
 
@@ -42,7 +44,7 @@ public:
 	const Model * GetParticleModel(void) const;
 	const Color * GetParticleColor(void) const;
 	const std::string & GetSlotType(void) const;
-	float GetSpaceRequirement(void) const;
+	unsigned_numeric GetSpaceRequirement(void) const;
 	// setters
 	void SetName(const std::string & Name);
 	void SetReloadTime(float ReloadTime);
@@ -52,7 +54,7 @@ public:
 	void SetParticleModel(const Model * ParticleModel);
 	void SetParticleColor(const Color & ParticleColor);
 	void SetSlotType(const std::string & SlotType);
-	void SetSpaceRequirement(float SpaceRequirement);
+	void SetSpaceRequirement(unsigned_numeric SpaceRequirement);
 private:
 	std::string m_Identifier;
 	std::string m_Name;
@@ -63,7 +65,7 @@ private:
 	float m_ParticleLifeTime;
 	const Model * m_ParticleModel;
 	Color * m_ParticleColor;
-	float m_SpaceRequirement;
+	unsigned_numeric m_SpaceRequirement;
 };
 
 inline const std::string & WeaponClass::GetIdentifier(void) const
@@ -111,7 +113,7 @@ inline const std::string & WeaponClass::GetSlotType(void) const
 	return m_SlotType;
 }
 
-inline float WeaponClass::GetSpaceRequirement(void) const
+inline unsigned_numeric WeaponClass::GetSpaceRequirement(void) const
 {
 	return m_SpaceRequirement;
 }
@@ -151,7 +153,7 @@ inline void WeaponClass::SetSlotType(const std::string & SlotType)
 	m_SlotType = SlotType;
 }
 
-inline void WeaponClass::SetSpaceRequirement(float SpaceRequirement)
+inline void WeaponClass::SetSpaceRequirement(unsigned_numeric SpaceRequirement)
 {
 	m_SpaceRequirement = SpaceRequirement;
 }

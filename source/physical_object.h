@@ -21,6 +21,7 @@
 #define PHYSICAL_OBJECT_H
 
 #include "position.h"
+#include "type_definitions.h"
 
 class PhysicalObject : public Position
 {
@@ -30,15 +31,15 @@ public:
 	// getters
 	const std::string & GetName(void) const;
 	float GetRadialSize(void) const;
-	float GetSpaceRequirement(void) const;
+	unsigned_numeric GetSpaceRequirement(void) const;
 	// setters
 	void SetName(const std::string & Name);
 	void SetRadialSize(float RadialSize);
-	void SetSpaceRequirement(float SpaceRequirement);
+	void SetSpaceRequirement(unsigned_numeric SpaceRequirement);
 private:
 	std::string m_Name;
 	float m_RadialSize;
-	float m_SpaceRequirement;
+	unsigned_numeric m_SpaceRequirement;
 };
 
 inline const std::string & PhysicalObject::GetName(void) const
@@ -51,7 +52,7 @@ inline float PhysicalObject::GetRadialSize(void) const
 	return m_RadialSize;
 }
 
-inline float PhysicalObject::GetSpaceRequirement(void) const
+inline unsigned_numeric PhysicalObject::GetSpaceRequirement(void) const
 {
 	return m_SpaceRequirement;
 }
@@ -66,7 +67,7 @@ inline void PhysicalObject::SetRadialSize(float RadialSize)
 	m_RadialSize = RadialSize;
 }
 
-inline void PhysicalObject::SetSpaceRequirement(float SpaceRequirement)
+inline void PhysicalObject::SetSpaceRequirement(unsigned_numeric SpaceRequirement)
 {
 	m_SpaceRequirement = SpaceRequirement;
 }
