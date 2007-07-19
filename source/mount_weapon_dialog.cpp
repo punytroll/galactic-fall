@@ -300,7 +300,14 @@ MountWeaponDialog::MountWeaponDialog(Widget * SupWidget, Ship * Ship) :
 void MountWeaponDialog::RebuildWeaponList(void)
 {
 	// empty the weapon list first
-	m_SelectedWeaponListItem = 0;
+	// save the selected weapon so we can reselect it if it is available after the rebuild
+	Weapon * SelectedWeapon(0);
+	
+	if(m_SelectedWeaponListItem != 0)
+	{
+		SelectedWeapon = m_SelectedWeaponListItem->GetWeapon();
+		m_SelectedWeaponListItem = 0;
+	}
 	while(m_WeaponList->GetSubWidgets().empty() == false)
 	{
 		m_WeaponList->GetSubWidgets().front()->Destroy();
@@ -321,6 +328,11 @@ void MountWeaponDialog::RebuildWeaponList(void)
 			NewWeaponListItem->SetPosition(Vector2f(5.0f, Top));
 			NewWeaponListItem->SetSize(Vector2f(190.0f, 50.0f));
 			NewWeaponListItem->AddMouseButtonListener(this);
+			if(ContentWeapon == SelectedWeapon)
+			{
+				m_SelectedWeaponListItem = NewWeaponListItem;
+				m_SelectedWeaponListItem->SetSelected(true);
+			}
 			Top += 55.0f;
 		}
 	}
