@@ -29,6 +29,7 @@
 class Color;
 class Model;
 class Slot;
+class SlotClass;
 
 class ShipClass
 {
@@ -66,7 +67,7 @@ public:
 	void SetColor(const Color & Color);
 	void SetExhaustOffset(const Vector3f & ExhaustOffset);
 	// modifiers
-	Slot * CreateSlot(const std::string & SlotIdentifier);
+	Slot * CreateSlot(const SlotClass * SlotClass, const std::string & SlotIdentifier);
 private:
 	std::string m_Identifier;
 	const Model * m_Model;

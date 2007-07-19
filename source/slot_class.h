@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006  Hagen Möbius
+ * Copyright (C) 2007  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,23 +17,39 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef ARX_RESOURCES_H
-#define ARX_RESOURCES_H
+#ifndef SLOT_CLASS_H
+#define SLOT_CLASS_H
 
-#include <Common.h>
+#include <string>
 
-const Arxx::u4byte ARX_TYPE_ASSET_CLASS = 4;
-const Arxx::u4byte ARX_TYPE_COMMODITY_CLASS = 8;
-const Arxx::u4byte ARX_TYPE_WIDGET = 1;
-const Arxx::u4byte ARX_TYPE_WIDGET_SUB_TYPE_LABEL = 1;
-const Arxx::u4byte ARX_TYPE_WIDGET_SUB_TYPE_MINI_MAP_DISPLAY = 2;
-const Arxx::u4byte ARX_TYPE_WIDGET_SUB_TYPE_SCANNER_DISPLAY = 3;
-const Arxx::u4byte ARX_TYPE_WIDGET_SUB_TYPE_WIDGET = 0;
-const Arxx::u4byte ARX_TYPE_MODEL = 2;
-const Arxx::u4byte ARX_TYPE_SHIP_CLASS = 3;
-const Arxx::u4byte ARX_TYPE_SLOT_CLASS = 9;
-const Arxx::u4byte ARX_TYPE_SYSTEM = 5;
-const Arxx::u4byte ARX_TYPE_SYSTEM_LINK = 6;
-const Arxx::u4byte ARX_TYPE_WEAPON_CLASS = 7;
+class SlotClass
+{
+public:
+	SlotClass(const std::string & Identifier);
+	~SlotClass(void);
+	// getters
+	const std::string & GetIdentifier(void) const;
+	const std::string & GetName(void) const;
+	// setters
+	void SetName(const std::string & Name);
+private:
+	std::string m_Identifier;
+	std::string m_Name;
+};
+
+inline const std::string & SlotClass::GetIdentifier(void) const
+{
+	return m_Identifier;
+}
+
+inline const std::string & SlotClass::GetName(void) const
+{
+	return m_Name;
+}
+
+inline void SlotClass::SetName(const std::string & Name)
+{
+	m_Name = Name;
+}
 
 #endif

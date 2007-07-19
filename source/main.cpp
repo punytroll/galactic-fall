@@ -72,6 +72,7 @@
 #include "ship_class_manager.h"
 #include "shot.h"
 #include "slot.h"
+#include "slot_class_manager.h"
 #include "star.h"
 #include "star_map_display.h"
 #include "state_machine.h"
@@ -95,6 +96,7 @@ ObjectFactory * g_ObjectFactory;
 ShipClassManager g_ShipClassManager;
 AssetClassManager * g_AssetClassManager;
 CommodityClassManager * g_CommodityClassManager;
+SlotClassManager * g_SlotClassManager;
 WeaponClassManager * g_WeaponClassManager;
 Reference< CommandMind > g_InputMind;
 Reference< Mind > g_OutputMind;
@@ -1896,6 +1898,7 @@ int main(int argc, char ** argv)
 	g_SpawnShipTimeoutIterator = g_GameTimeTimeoutNotifications.end();
 	g_AssetClassManager = new AssetClassManager();
 	g_CommodityClassManager = new CommodityClassManager();
+	g_SlotClassManager = new SlotClassManager();
 	g_WeaponClassManager = new WeaponClassManager();
 	g_Galaxy = new Galaxy();
 	g_Galaxy->SetObjectIdentifier("::galaxy");
@@ -1943,6 +1946,7 @@ int main(int argc, char ** argv)
 	ReadModels(Archive, &g_ModelManager);
 	ReadAssetClasses(Archive, g_AssetClassManager);
 	ReadCommodityClasses(Archive, g_CommodityClassManager);
+	ReadSlotClasses(Archive, g_SlotClassManager);
 	ReadShipClasses(Archive, &g_ShipClassManager);
 	ReadSystems(Archive, g_Galaxy);
 	ReadSystemLinks(Archive, g_Galaxy);

@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006  Hagen Möbius
+ * Copyright (C) 2007  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,23 +17,29 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef ARX_RESOURCES_H
-#define ARX_RESOURCES_H
+#ifndef SLOT_CLASS_MANAGER_H
+#define SLOT_CLASS_MANAGER_H
 
-#include <Common.h>
+#include <map>
+#include <string>
 
-const Arxx::u4byte ARX_TYPE_ASSET_CLASS = 4;
-const Arxx::u4byte ARX_TYPE_COMMODITY_CLASS = 8;
-const Arxx::u4byte ARX_TYPE_WIDGET = 1;
-const Arxx::u4byte ARX_TYPE_WIDGET_SUB_TYPE_LABEL = 1;
-const Arxx::u4byte ARX_TYPE_WIDGET_SUB_TYPE_MINI_MAP_DISPLAY = 2;
-const Arxx::u4byte ARX_TYPE_WIDGET_SUB_TYPE_SCANNER_DISPLAY = 3;
-const Arxx::u4byte ARX_TYPE_WIDGET_SUB_TYPE_WIDGET = 0;
-const Arxx::u4byte ARX_TYPE_MODEL = 2;
-const Arxx::u4byte ARX_TYPE_SHIP_CLASS = 3;
-const Arxx::u4byte ARX_TYPE_SLOT_CLASS = 9;
-const Arxx::u4byte ARX_TYPE_SYSTEM = 5;
-const Arxx::u4byte ARX_TYPE_SYSTEM_LINK = 6;
-const Arxx::u4byte ARX_TYPE_WEAPON_CLASS = 7;
+class SlotClass;
+
+class SlotClassManager
+{
+public:
+	~SlotClassManager(void);
+	const std::map< std::string, SlotClass * > & GetSlotClasses(void) const;
+	const SlotClass * Get(const std::string & Identifier) const;
+	SlotClass * Create(const std::string & Identifier);
+	void Destroy(const std::string & Identifier);
+private:
+	std::map< std::string, SlotClass * > m_SlotClasses;
+};
+
+inline const std::map< std::string, SlotClass * > & SlotClassManager::GetSlotClasses(void) const
+{
+	return m_SlotClasses;
+}
 
 #endif

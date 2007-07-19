@@ -41,11 +41,11 @@ void ShipClass::SetColor(const Color & NewColor)
 	m_Color = new Color(NewColor);
 }
 
-Slot * ShipClass::CreateSlot(const std::string & SlotIdentifier)
+Slot * ShipClass::CreateSlot(const SlotClass * SlotClass, const std::string & SlotIdentifier)
 {
 	if(m_Slots.find(SlotIdentifier) == m_Slots.end())
 	{
-		Slot * NewSlot(new Slot(SlotIdentifier));
+		Slot * NewSlot(new Slot(SlotClass, SlotIdentifier));
 		
 		m_Slots[SlotIdentifier] = NewSlot;
 		

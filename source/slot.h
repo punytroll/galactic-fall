@@ -27,29 +27,29 @@
 #include "referencing.h"
 
 class PhysicalObject;
+class SlotClass;
 
 class Slot
 {
 public:
-	Slot(const std::string & Identifier);
+	Slot(const SlotClass * SlotClass, const std::string & Identifier);
 	// getters
 	const std::string & GetIdentifier(void) const;
 	const Reference< PhysicalObject > & GetMountedObject(void) const;
 	Reference< PhysicalObject > & GetMountedObject(void);
 	const Quaternion & GetOrientation(void) const;
 	const Vector3f & GetPosition(void) const;
-	const std::string & GetClassIdentifier(void) const;
+	const SlotClass * GetSlotClass(void) const;
 	// setters
 	void SetMountedObject(Reference< PhysicalObject > MountedObject);
 	void SetOrientation(const Quaternion & Orientation);
 	void SetPosition(const Vector3f & Position);
-	void SetClassIdentifier(const std::string & ClassIdentifier);
 private:
+	const SlotClass * m_SlotClass;
 	std::string m_Identifier;
 	Reference< PhysicalObject > m_MountedObject;
 	Quaternion m_Orientation;
 	Vector3f m_Position;
-	std::string m_ClassIdentifier;
 };
 
 inline const std::string & Slot::GetIdentifier(void) const
@@ -77,9 +77,9 @@ inline const Vector3f & Slot::GetPosition(void) const
 	return m_Position;
 }
 
-inline const std::string & Slot::GetClassIdentifier(void) const
+inline const SlotClass * Slot::GetSlotClass(void) const
 {
-	return m_ClassIdentifier;
+	return m_SlotClass;
 }
 
 inline void Slot::SetMountedObject(Reference< PhysicalObject > MountedObject)
@@ -95,11 +95,6 @@ inline void Slot::SetOrientation(const Quaternion & Orientation)
 inline void Slot::SetPosition(const Vector3f & Position)
 {
 	m_Position = Position;
-}
-
-inline void Slot::SetClassIdentifier(const std::string & ClassIdentifier)
-{
-	m_ClassIdentifier = ClassIdentifier;
 }
 
 #endif

@@ -32,6 +32,8 @@ all_data = \
 	.data/ship_class_shuttle.data \
 	.data/ship_class_transporter.data \
 	.data/ship_class_fighter.data \
+	.data/slot_class_light_weapon.data \
+	.data/slot_class_medium_weapon.data \
 	.data/system_alpha_centauri.data \
 	.data/system_rigel.data \
 	.data/system_sol.data \
@@ -109,6 +111,9 @@ data.arx: .data $(all_data) Makefile
 	arxtouch $@ 8
 	arxmod $@ 8 -n "Commodity Classes" -t 0 -st 0
 	arxmod $@ 0 -a "child" 8
+	arxtouch $@ 9
+	arxmod $@ 9 -n "Slot Classes" -t 0 -st 0
+	arxmod $@ 0 -a "child" 9
 	@echo -e "\n\nAdding widgets ...\n"
 	arxadd $@ --uid 103 --name "Credits" --type 1 --subtype 1 --add 1:child .data/label_credits.data
 	arxadd $@ --uid 108 --name "Current System" --type 1 --subtype 1 --add 1:child .data/label_current_system.data
@@ -122,6 +127,9 @@ data.arx: .data $(all_data) Makefile
 	arxadd $@ --name "Mini Map Display" --type 1 --subtype 2 --add 1:child .data/widget_mini_map_display.data
 	arxadd $@ --uid 105 --name "Scanner" --type 1 --subtype 0 --add 1:child .data/widget_scanner.data
 	arxadd $@ --uid 126 --name "Scanner Display" --type 1 --subtype 3 --add 1:child .data/widget_scanner_display.data
+	@echo -e "\n\nAdding slot classes ...\n"
+	arxadd $@ --name "Light Weapon" --type 9 --subtype 0 --add 9:child .data/slot_class_light_weapon.data
+	arxadd $@ --name "Medium Weapon" --type 9 --subtype 0 --add 9:child .data/slot_class_medium_weapon.data
 	@echo -e "\n\nAdding weapon classes ...\n"
 	arxadd $@ --name "Light Laser" --type 7 --subtype 0 --add 7:child .data/weapon_class_light_laser.data
 	arxadd $@ --name "Medium Laser" --type 7 --subtype 0 --add 7:child .data/weapon_class_medium_laser.data

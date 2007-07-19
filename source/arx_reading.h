@@ -27,6 +27,7 @@ class Galaxy;
 class Item;
 class ModelManager;
 class ShipClassManager;
+class SlotClassManager;
 class UserInterface;
 class WeaponClassManager;
 
@@ -36,6 +37,7 @@ void ReadAssetClasses(Arxx::Archive & Archive, AssetClassManager * Manager);
 void ReadCommodityClasses(Arxx::Archive & Archive, CommodityClassManager * Manger);
 void ReadModels(Arxx::Archive & Archive, ModelManager * Manager);
 void ReadShipClasses(Arxx::Archive & Archive, ShipClassManager * Manager);
+void ReadSlotClasses(Arxx::Archive & Archive, SlotClassManager * Manager);
 void ReadSystems(Arxx::Archive & Archive, Galaxy * Galaxy);
 void ReadSystemLinks(Arxx::Archive & Archive, Galaxy * Galaxy);
 void ReadUserInterface(Arxx::Archive & Archive, UserInterface * UserInterface);

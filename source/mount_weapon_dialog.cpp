@@ -24,6 +24,8 @@
 #include "mount_weapon_dialog.h"
 #include "ship.h"
 #include "slot.h"
+#include "slot_class.h"
+#include "slot_class_manager.h"
 #include "weapon.h"
 #include "weapon_class.h"
 
@@ -97,11 +99,13 @@ void SlotListItem::Update(void)
 	
 	if(MountedObject != 0)
 	{
+		m_TypeOrWeaponLabel->SetForegroundColor(Color(0.6f, 0.8f, 0.6f, 1.0f));
 		m_TypeOrWeaponLabel->SetString(MountedObject->GetName());
 	}
 	else
 	{
-		m_TypeOrWeaponLabel->SetString(m_Slot->GetClassIdentifier());
+		m_TypeOrWeaponLabel->SetForegroundColor(Color(0.8f, 0.6f, 0.6f, 1.0f));
+		m_TypeOrWeaponLabel->SetString(m_Slot->GetSlotClass()->GetName());
 	}
 }
 
@@ -162,7 +166,7 @@ WeaponListItem::WeaponListItem(Widget * SupWidget, Weapon * Weapon) :
 	NameLabel->SetAnchorRight(true);
 	NameLabel->SetAnchorTop(true);
 	
-	Label * SlotTypeLabel(new Label(this, Weapon->GetWeaponClass()->GetSlotClassIdentifier()));
+	Label * SlotTypeLabel(new Label(this, g_SlotClassManager->Get(Weapon->GetWeaponClass()->GetSlotClassIdentifier())->GetName()));
 	
 	SlotTypeLabel->SetPosition(Vector2f(25.0f, 25.0f));
 	SlotTypeLabel->SetSize(Vector2f(70.0f, 20.0f));

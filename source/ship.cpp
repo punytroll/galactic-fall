@@ -36,6 +36,7 @@
 #include "ship.h"
 #include "shot.h"
 #include "slot.h"
+#include "slot_class.h"
 #include "string_cast.h"
 #include "system.h"
 #include "weapon.h"
@@ -65,9 +66,8 @@ Ship::Ship(const ShipClass * ShipClass) :
 	
 	for(std::map< std::string, Slot * >::const_iterator SlotIterator = ShipClassSlots.begin(); SlotIterator != ShipClassSlots.end(); ++SlotIterator)
 	{
-		Slot * NewSlot(CreateSlot(SlotIterator->first));
+		Slot * NewSlot(CreateSlot(SlotIterator->second->GetSlotClass(), SlotIterator->first));
 		
-		NewSlot->SetClassIdentifier(SlotIterator->second->GetClassIdentifier());
 		NewSlot->SetPosition(SlotIterator->second->GetPosition());
 		NewSlot->SetOrientation(SlotIterator->second->GetOrientation());
 	}
@@ -348,11 +348,11 @@ void Ship::SetFire(bool Fire)
 	}
 }
 
-Slot * Ship::CreateSlot(const std::string & SlotIdentifier)
+Slot * Ship::CreateSlot(const SlotClass * SlotClass, const std::string & SlotIdentifier)
 {
 	if(m_Slots.find(SlotIdentifier) == m_Slots.end())
 	{
-		Slot * NewSlot(new Slot(SlotIdentifier));
+		Slot * NewSlot(new Slot(SlotClass, SlotIdentifier));
 		
 		m_Slots[SlotIdentifier] = NewSlot;
 		
@@ -372,7 +372,7 @@ bool Ship::Mount(Object * Object, const std::string & SlotIdentifier)
 	{
 		Weapon * TheWeapon(dynamic_cast< Weapon * >(Object));
 		
-		if((TheWeapon != 0) && (TheWeapon->GetWeaponClass()->GetSlotClassIdentifier() == SlotIterator->second->GetClassIdentifier()))
+		if((TheWeapon != 0) && (TheWeapon->GetWeaponClass()->GetSlotClassIdentifier() == SlotIterator->second->GetSlotClass()->GetIdentifier()))
 		{
 			SlotIterator->second->SetMountedObject(TheWeapon->GetReference());
 			TheWeapon->SetSlot(SlotIterator->second);

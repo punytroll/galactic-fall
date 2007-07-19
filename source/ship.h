@@ -30,6 +30,7 @@
 
 class CommodityClass;
 class ShipClass;
+class SlotClass;
 class System;
 class Weapon;
 
@@ -76,7 +77,7 @@ public:
 	void SetLinkedSystemTarget(System * LinkedSystem);
 	void SetCurrentSystem(System * CurrentSystem);
 	// modifiers
-	Slot * CreateSlot(const std::string & SlotIdentifier);
+	Slot * CreateSlot(const SlotClass * SlotClass, const std::string & SlotIdentifier);
 	bool Mount(Object * Object, const std::string & SlotIdentifier);
 	bool Unmount(const std::string & SlotIdentifier);
 private:
