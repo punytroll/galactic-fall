@@ -17,9 +17,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include <iostream>
 #include <sstream>
 
 #include "game_time.h"
+#include "math.h"
+#include "math/quaternion.h"
+#include "math/vector4f.h"
 #include "ship.h"
 #include "shot.h"
 #include "slot.h"
@@ -36,6 +40,7 @@ Weapon::Weapon(const WeaponClass * WeaponClass) :
 {
 	SetName(m_WeaponClass->GetName());
 	SetSpaceRequirement(m_WeaponClass->GetSpaceRequirement());
+	SetOrientation(m_WeaponClass->GetOrientation());
 }
 
 void Weapon::Update(float Seconds)
@@ -58,8 +63,19 @@ void Weapon::Update(float Seconds)
 		const Vector3f & SlotPosition(GetSlot()->GetPosition());
 		
 		NewShot->SetPosition(TheShip->GetPosition() + Vector2f(SlotPosition.m_V.m_A[0], SlotPosition.m_V.m_A[1]).Turned(TheShip->GetAngularPosition()));
-		NewShot->SetAngularPosition(TheShip->GetAngularPosition());
-		NewShot->SetVelocity(TheShip->GetVelocity() + Vector2f(GetWeaponClass()->GetParticleExitSpeed(), TheShip->GetAngularPosition(), Vector2f::InitializeMagnitudeAngle));
+		
+		Quaternion ShipOrientation(Vector4f(0.0f, 1.0f, 0.0f, 0.0f).m_V, TheShip->GetAngularPosition());
+		Quaternion SlotOrientation(GetSlot()->GetOrientation());
+		Quaternion WeaponOrientation(GetOrientation());
+		Quaternion OrientationModifier(ShipOrientation * SlotOrientation * WeaponOrientation);
+		Vector4f ShotDirection(1.0f, 0.0f, 0.0f, 0.0f);
+		
+		ShotDirection *= OrientationModifier;
+		
+		float ShotAngularPosition(GetRadians(Vector2f(ShotDirection[0], -ShotDirection[2])));
+		std::cout << "Ship's Angular Position: " << TheShip->GetAngularPosition() << std::endl << "ShipOrientation = (" << ShipOrientation[0] << ", " << ShipOrientation[1] << ", " << ShipOrientation[2] << ", " << ShipOrientation[3] << ")" << std::endl << "OrientationModifier = (" << OrientationModifier[0] << ", " << OrientationModifier[1] << ", " << OrientationModifier[2] << ", " << OrientationModifier[3] << ")" << std::endl << "ShotDirection = (" << ShotDirection[0] << ", " << ShotDirection[1] << ", " << ShotDirection[2] << ", " << ShotDirection[3] << ")" << std::endl << "ShotAngularPosition = " << ShotAngularPosition << std::endl << "-----------------------------" << std::endl;
+		NewShot->SetAngularPosition(ShotAngularPosition);
+		NewShot->SetVelocity(TheShip->GetVelocity() + Vector2f(GetWeaponClass()->GetParticleExitSpeed(), ShotAngularPosition, Vector2f::InitializeMagnitudeAngle));
 		TheShip->GetCurrentSystem()->AddContent(NewShot);
 		m_NextTimeToFire = GameTime::Get() + GetWeaponClass()->GetReloadTime();
 	}

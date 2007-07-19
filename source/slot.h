@@ -22,6 +22,7 @@
 
 #include <string>
 
+#include "math/quaternion.h"
 #include "math/vector3f.h"
 #include "referencing.h"
 
@@ -35,15 +36,18 @@ public:
 	const std::string & GetIdentifier(void) const;
 	const Reference< PhysicalObject > & GetMountedObject(void) const;
 	Reference< PhysicalObject > & GetMountedObject(void);
+	const Quaternion & GetOrientation(void) const;
 	const Vector3f & GetPosition(void) const;
 	const std::string & GetType(void) const;
 	// setters
 	void SetMountedObject(Reference< PhysicalObject > MountedObject);
+	void SetOrientation(const Quaternion & Orientation);
 	void SetPosition(const Vector3f & Position);
 	void SetType(const std::string & Type);
 private:
 	std::string m_Identifier;
 	Reference< PhysicalObject > m_MountedObject;
+	Quaternion m_Orientation;
 	Vector3f m_Position;
 	std::string m_Type;
 };
@@ -63,6 +67,11 @@ inline Reference< PhysicalObject > & Slot::GetMountedObject(void)
 	return m_MountedObject;
 }
 
+inline const Quaternion & Slot::GetOrientation(void) const
+{
+	return m_Orientation;
+}
+
 inline const Vector3f & Slot::GetPosition(void) const
 {
 	return m_Position;
@@ -76,6 +85,11 @@ inline const std::string & Slot::GetType(void) const
 inline void Slot::SetMountedObject(Reference< PhysicalObject > MountedObject)
 {
 	m_MountedObject = MountedObject;
+}
+
+inline void Slot::SetOrientation(const Quaternion & Orientation)
+{
+	m_Orientation = Orientation;
 }
 
 inline void Slot::SetPosition(const Vector3f & Position)

@@ -44,8 +44,6 @@ public:
 	bool m_Jump;
 	bool m_Land;
 	bool m_Scoop;
-	// current state
-	float m_AngularPosition;
 	// getters
 	float GetForwardThrust(void) const;
 	float GetAngularPosition(void) const;
@@ -95,6 +93,7 @@ private:
 	System * m_LinkedSystemTarget;
 	System * m_CurrentSystem;
 	Vector2f m_Velocity;
+	float m_AngularPosition;
 };
 
 inline float Ship::GetForwardThrust(void) const

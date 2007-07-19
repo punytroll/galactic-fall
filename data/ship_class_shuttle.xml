@@ -30,6 +30,12 @@
 				<y>-1.2</y>
 				<z>0</z>
 			</position>
+			<orientation>
+				<w>0.5</w>
+				<x>0.5</x>
+				<y>-0.5</y>
+				<z>0.5</z>
+			</orientation>
 		</slot>
 		<slot>
 			<identifier>backboard_gun</identifier>
@@ -39,6 +45,12 @@
 				<y>1.2</y>
 				<z>0</z>
 			</position>
+			<orientation>
+				<w>0.5</w>
+				<x>-0.5</x>
+				<y>0.5</y>
+				<z>0.5</z>
+			</orientation>
 		</slot>
 	</slots>
 </ship-class>

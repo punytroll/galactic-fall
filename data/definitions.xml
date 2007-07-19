@@ -14,6 +14,13 @@
 		<float identifier="space-requirement"/>
 	</commodity-class>
 	
+	<quaternion>
+		<float identifier="w"/>
+		<float identifier="x"/>
+		<float identifier="y"/>
+		<float identifier="z"/>
+	</quaternion>
+	
 	<vector2f>
 		<float identifier="x"/>
 		<float identifier="y"/>
@@ -109,6 +116,7 @@
 		<string identifier="identifier"/>
 		<string identifier="type"/>
 		<vector3f identifier="position"/>
+		<quaternion identifier="orientation"/>
 	</slot>
 	
 	<star>
@@ -146,6 +154,7 @@
 		<string identifier="identifier"/>
 		<string identifier="name"/>
 		<string identifier="slot-type"/>
+		<quaternion identifier="orientation"/>
 		<float identifier="reload-time"/>
 		<float identifier="space-requirement"/>
 		<particle identifier="particle"/>
