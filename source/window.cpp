@@ -56,11 +56,11 @@ bool WWindow::OnMouseButton(Widget * EventSource, int Button, int State, float X
 			if(State == EV_DOWN)
 			{
 				m_GrabPosition.Set(X, Y);
-				g_UserInterface.SetCaptureWidget(m_TitleLabel);
+				g_UserInterface->SetCaptureWidget(m_TitleLabel);
 			}
 			else
 			{
-				g_UserInterface.ReleaseCaptureWidget();
+				g_UserInterface->ReleaseCaptureWidget();
 			}
 			
 			return true;
@@ -72,7 +72,7 @@ bool WWindow::OnMouseButton(Widget * EventSource, int Button, int State, float X
 
 void WWindow::OnMouseMotion(Widget * EventSource, float X, float Y)
 {
-	if((EventSource == m_TitleLabel) && (g_UserInterface.GetCaptureWidget() == m_TitleLabel))
+	if((EventSource == m_TitleLabel) && (g_UserInterface->GetCaptureWidget() == m_TitleLabel))
 	{
 		SetPosition(GetPosition() + Vector2f(X, Y) - m_GrabPosition);
 	}

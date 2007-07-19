@@ -207,11 +207,11 @@ bool StarMapDisplay::OnMouseButton(Widget * EventSource, int Button, int State, 
 			if(State == EV_DOWN)
 			{
 				m_GrabPosition.Set(X, Y);
-				g_UserInterface.SetCaptureWidget(this);
+				g_UserInterface->SetCaptureWidget(this);
 			}
 			else
 			{
-				g_UserInterface.ReleaseCaptureWidget();
+				g_UserInterface->ReleaseCaptureWidget();
 			}
 			
 			return true;
@@ -223,7 +223,7 @@ bool StarMapDisplay::OnMouseButton(Widget * EventSource, int Button, int State, 
 
 void StarMapDisplay::OnMouseMotion(Widget * EventSource, float X, float Y)
 {
-	if((EventSource == this) && (g_UserInterface.GetCaptureWidget() == this))
+	if((EventSource == this) && (g_UserInterface->GetCaptureWidget() == this))
 	{
 		m_OffsetPosition += (Vector2f(X, Y) - m_GrabPosition);
 		m_GrabPosition = Vector2f(X, Y);

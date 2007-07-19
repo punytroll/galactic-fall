@@ -36,6 +36,7 @@ class CommodityClassManager;
 class Galaxy;
 class ModelManager;
 class ObjectFactory;
+class ShipClassManager;
 class SlotClassManager;
 class UserInterface;
 class WeaponClassManager;
@@ -43,10 +44,11 @@ class WeaponClassManager;
 extern AssetClassManager * g_AssetClassManager;
 extern CommodityClassManager * g_CommodityClassManager;
 extern Galaxy * g_Galaxy;
-extern ModelManager g_ModelManager;
+extern ModelManager * g_ModelManager;
 extern ObjectFactory * g_ObjectFactory;
+extern ShipClassManager * g_ShipClassManager;
 extern SlotClassManager * g_SlotClassManager;
-extern UserInterface g_UserInterface;
+extern UserInterface * g_UserInterface;
 extern WeaponClassManager * g_WeaponClassManager;
 
 #endif
