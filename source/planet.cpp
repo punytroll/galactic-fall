@@ -93,7 +93,7 @@ void Planet::Draw(void) const
 	}
 	glEnable(GL_NORMALIZE);
 	glScalef(GetRadialSize(), GetRadialSize(), GetRadialSize());
-	g_ModelManager.Get("planet")->Draw();
+	g_ModelManager->Get("planet")->Draw();
 	/* TODO: This code allows an athmosphere around the planet ... optimize and make usable via a planet property
 	glEnable(GL_BLEND);
 	glMaterialf(GL_FRONT, GL_SHININESS, 0.0f);

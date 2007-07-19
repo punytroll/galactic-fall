@@ -87,17 +87,21 @@
 #include "xml_puny_dom.h"
 #include "xml_stream.h"
 
+// these objects are exported via globals.h
+AssetClassManager * g_AssetClassManager;
+CommodityClassManager * g_CommodityClassManager;
+Galaxy * g_Galaxy;
+ModelManager * g_ModelManager;
+ObjectFactory * g_ObjectFactory;
+ShipClassManager * g_ShipClassManager;
+SlotClassManager * g_SlotClassManager;
+WeaponClassManager * g_WeaponClassManager;
+UserInterface * g_UserInterface;
+
 int g_LastMotionX(-1);
 int g_LastMotionY(-1);
 int g_MouseButton(-1);
 Camera g_Camera;
-ModelManager g_ModelManager;
-ObjectFactory * g_ObjectFactory;
-ShipClassManager g_ShipClassManager;
-AssetClassManager * g_AssetClassManager;
-CommodityClassManager * g_CommodityClassManager;
-SlotClassManager * g_SlotClassManager;
-WeaponClassManager * g_WeaponClassManager;
 Reference< CommandMind > g_InputMind;
 Reference< Mind > g_OutputMind;
 float g_Width(0.0f);
@@ -117,7 +121,6 @@ bool g_Pause(false);
 PlanetDialog * g_PlanetDialog(0);
 MapDialog * g_MapDialog(0);
 MountWeaponDialog * g_MountWeaponDialog(0);
-UserInterface g_UserInterface;
 std::multimap< double, Callback0< void > * > g_GameTimeTimeoutNotifications;
 std::multimap< double, Callback0< void > * >::iterator g_SpawnShipTimeoutIterator;
 std::multimap< double, Callback0< void > * > g_RealTimeTimeoutNotifications;
@@ -133,7 +136,6 @@ Perspective g_MainPerspective;
 bool g_EchoEvents(false);
 bool g_DumpEndReport(false);
 std::vector< ParticleSystem * > g_ParticleSystems;
-Galaxy * g_Galaxy;
 
 enum WantReturnCode
 {
@@ -318,7 +320,7 @@ void DisplayUserInterface(void)
 	glEnable(GL_CLIP_PLANE1);
 	glEnable(GL_CLIP_PLANE2);
 	glEnable(GL_CLIP_PLANE3);
-	g_UserInterface.Draw();
+	g_UserInterface->Draw();
 	glMatrixMode(GL_PROJECTION);
 	glPopMatrix();
 	glMatrixMode(GL_MODELVIEW);
@@ -707,7 +709,7 @@ void Resize(void)
 	}
 	glViewport(0, 0, static_cast< GLint >(g_Width), static_cast< GLint >(g_Height));
 	g_MainPerspective.SetAspect(g_Width / g_Height);
-	g_UserInterface.GetRootWidget()->SetSize(Vector2f(g_Width, g_Height));
+	g_UserInterface->GetRootWidget()->SetSize(Vector2f(g_Width, g_Height));
 }
 
 class GlobalDestroyListener : public DestroyListener
@@ -776,7 +778,7 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 		}
 	}
 	
-	Ship * NewShip(new Ship(g_ShipClassManager.Get(ShipClassIdentifier)));
+	Ship * NewShip(new Ship(g_ShipClassManager->Get(ShipClassIdentifier)));
 	
 	NewShip->SetObjectIdentifier("::ship(" + NewShip->GetShipClass()->GetIdentifier() + ")" + IdentifierSuffix);
 	NewShip->SetPosition(Vector2f(GetRandomFloat(-200.0f, 200.0f), GetRandomFloat(-200.0f, 200.0f)));
@@ -915,7 +917,7 @@ void SetTimeWarp(float TimeWarp)
 
 void MouseButtonDown(int MouseButton, int X, int Y)
 {
-	if(g_UserInterface.MouseButton(MouseButton, EV_DOWN, X, Y) == true)
+	if(g_UserInterface->MouseButton(MouseButton, EV_DOWN, X, Y) == true)
 	{
 		return;
 	}
@@ -946,7 +948,7 @@ void MouseButtonDown(int MouseButton, int X, int Y)
 
 void MouseButtonUp(int MouseButton, int X, int Y)
 {
-	if(g_UserInterface.MouseButton(MouseButton, EV_UP, X, Y) == true)
+	if(g_UserInterface->MouseButton(MouseButton, EV_UP, X, Y) == true)
 	{
 		return;
 	}
@@ -963,7 +965,7 @@ void MouseButtonUp(int MouseButton, int X, int Y)
 
 void MouseMotion(int X, int Y)
 {
-	g_UserInterface.MouseMotion(X, Y);
+	g_UserInterface->MouseMotion(X, Y);
 	
 	int DeltaX(X - g_LastMotionX);
 	int DeltaY(Y - g_LastMotionY);
@@ -980,7 +982,7 @@ void MouseMotion(int X, int Y)
 
 void KeyDown(unsigned int KeyCode)
 {
-	if(g_UserInterface.Key(KeyCode, EV_DOWN) == true)
+	if(g_UserInterface->Key(KeyCode, EV_DOWN) == true)
 	{
 		return;
 	}
@@ -1025,7 +1027,7 @@ void KeyDown(unsigned int KeyCode)
 		{
 			if((g_MountWeaponDialog == 0) && (g_OutputMind == true))
 			{
-				g_MountWeaponDialog = new MountWeaponDialog(g_UserInterface.GetRootWidget(), g_OutputMind->GetCharacter()->GetShip());
+				g_MountWeaponDialog = new MountWeaponDialog(g_UserInterface->GetRootWidget(), g_OutputMind->GetCharacter()->GetShip());
 				g_MountWeaponDialog->GrabKeyFocus();
 				g_MountWeaponDialog->AddDestroyListener(&g_GlobalDestroyListener);
 			}
@@ -1206,7 +1208,7 @@ void KeyDown(unsigned int KeyCode)
 						g_InputMind->Land();
 						g_InputMind->GetCharacter()->GetShip()->SetHull(g_InputMind->GetCharacter()->GetShip()->GetShipClass()->GetHull());
 						g_Pause = true;
-						g_PlanetDialog = new PlanetDialog(g_UserInterface.GetRootWidget(), SelectedPlanet, g_InputMind->GetCharacter());
+						g_PlanetDialog = new PlanetDialog(g_UserInterface->GetRootWidget(), SelectedPlanet, g_InputMind->GetCharacter());
 						g_PlanetDialog->GrabKeyFocus();
 						g_PlanetDialog->AddDestroyListener(&g_GlobalDestroyListener);
 						
@@ -1274,7 +1276,7 @@ void KeyDown(unsigned int KeyCode)
 			if((g_MapDialog == 0) && (g_OutputMind == true))
 			{
 				g_Pause = true;
-				g_MapDialog = new MapDialog(g_UserInterface.GetRootWidget(), g_OutputMind->GetCharacter()->GetShip()->GetCurrentSystem(), g_OutputMind->GetCharacter());
+				g_MapDialog = new MapDialog(g_UserInterface->GetRootWidget(), g_OutputMind->GetCharacter()->GetShip()->GetCurrentSystem(), g_OutputMind->GetCharacter());
 				g_MapDialog->GrabKeyFocus();
 				g_MapDialog->AddDestroyListener(&g_GlobalDestroyListener);
 				if(g_InputMind == true)
@@ -1493,7 +1495,7 @@ void KeyDown(unsigned int KeyCode)
 
 void KeyUp(unsigned char KeyCode)
 {
-	if(g_UserInterface.Key(KeyCode, EV_UP) == true)
+	if(g_UserInterface->Key(KeyCode, EV_UP) == true)
 	{
 		return;
 	}
@@ -1746,7 +1748,7 @@ void LoadSavegame(const Element * SaveElement)
 		}
 		else if((*SaveChild)->GetName() == "ship")
 		{
-			PlayerShip = new Ship(g_ShipClassManager.Get((*SaveChild)->GetAttribute("class-identifier")));
+			PlayerShip = new Ship(g_ShipClassManager->Get((*SaveChild)->GetAttribute("class-identifier")));
 			PlayerShip->SetObjectIdentifier((*SaveChild)->GetAttribute("object-identifier"));
 			for(std::vector< Element * >::const_iterator ShipChild = (*SaveChild)->GetChilds().begin(); ShipChild != (*SaveChild)->GetChilds().end(); ++ShipChild)
 			{
@@ -1898,11 +1900,14 @@ int main(int argc, char ** argv)
 	g_SpawnShipTimeoutIterator = g_GameTimeTimeoutNotifications.end();
 	g_AssetClassManager = new AssetClassManager();
 	g_CommodityClassManager = new CommodityClassManager();
-	g_SlotClassManager = new SlotClassManager();
-	g_WeaponClassManager = new WeaponClassManager();
 	g_Galaxy = new Galaxy();
 	g_Galaxy->SetObjectIdentifier("::galaxy");
+	g_ModelManager = new ModelManager();
 	g_ObjectFactory = new ObjectFactory();
+	g_ShipClassManager = new ShipClassManager();
+	g_SlotClassManager = new SlotClassManager();
+	g_WeaponClassManager = new WeaponClassManager();
+	g_UserInterface = new UserInterface();
 	
 	// parse command line
 	std::vector< std::string > Arguments(argv, argv + argc);
@@ -1943,29 +1948,29 @@ int main(int argc, char ** argv)
 	}
 	
 	// read the data from the archive
-	ReadModels(Archive, &g_ModelManager);
+	ReadModels(Archive, g_ModelManager);
 	ReadAssetClasses(Archive, g_AssetClassManager);
 	ReadCommodityClasses(Archive, g_CommodityClassManager);
 	ReadSlotClasses(Archive, g_SlotClassManager);
-	ReadShipClasses(Archive, &g_ShipClassManager);
+	ReadShipClasses(Archive, g_ShipClassManager);
 	ReadSystems(Archive, g_Galaxy);
 	ReadSystemLinks(Archive, g_Galaxy);
-	ReadUserInterface(Archive, &g_UserInterface);
+	ReadUserInterface(Archive, g_UserInterface);
 	ReadWeaponClasses(Archive, g_WeaponClassManager);
 	
 	// setup the global variables for the user interface
-	g_CreditsLabel = dynamic_cast< Label * >(g_UserInterface.GetWidget("/credits"));
-	g_FuelLabel = dynamic_cast< Label * >(g_UserInterface.GetWidget("/fuel"));
-	g_HullLabel = dynamic_cast< Label * >(g_UserInterface.GetWidget("/hull"));
-	g_MessageLabel = dynamic_cast< Label * >(g_UserInterface.GetWidget("/message"));
-	g_SystemLabel = dynamic_cast< Label * >(g_UserInterface.GetWidget("/system"));
-	g_TimeWarpLabel = dynamic_cast< Label * >(g_UserInterface.GetWidget("/time_warp"));
-	g_MiniMap = dynamic_cast< Widget * >(g_UserInterface.GetWidget("/mini_map"));
-		g_CurrentSystemLabel = dynamic_cast< Label * >(g_UserInterface.GetWidget("/mini_map/current_system"));
-		g_MiniMapDisplay = dynamic_cast< MiniMapDisplay * >(g_UserInterface.GetWidget("/mini_map/display"));
-	g_Scanner = g_UserInterface.GetWidget("/scanner");
-		g_TargetLabel = dynamic_cast< Label * >(g_UserInterface.GetWidget("/scanner/target"));
-		g_ScannerDisplay = dynamic_cast< ScannerDisplay * >(g_UserInterface.GetWidget("/scanner/display"));
+	g_CreditsLabel = dynamic_cast< Label * >(g_UserInterface->GetWidget("/credits"));
+	g_FuelLabel = dynamic_cast< Label * >(g_UserInterface->GetWidget("/fuel"));
+	g_HullLabel = dynamic_cast< Label * >(g_UserInterface->GetWidget("/hull"));
+	g_MessageLabel = dynamic_cast< Label * >(g_UserInterface->GetWidget("/message"));
+	g_SystemLabel = dynamic_cast< Label * >(g_UserInterface->GetWidget("/system"));
+	g_TimeWarpLabel = dynamic_cast< Label * >(g_UserInterface->GetWidget("/time_warp"));
+	g_MiniMap = dynamic_cast< Widget * >(g_UserInterface->GetWidget("/mini_map"));
+		g_CurrentSystemLabel = dynamic_cast< Label * >(g_UserInterface->GetWidget("/mini_map/current_system"));
+		g_MiniMapDisplay = dynamic_cast< MiniMapDisplay * >(g_UserInterface->GetWidget("/mini_map/display"));
+	g_Scanner = g_UserInterface->GetWidget("/scanner");
+		g_TargetLabel = dynamic_cast< Label * >(g_UserInterface->GetWidget("/scanner/target"));
+		g_ScannerDisplay = dynamic_cast< ScannerDisplay * >(g_UserInterface->GetWidget("/scanner/display"));
 	
 	// sanity asserts
 	assert(g_CreditsLabel != 0);
