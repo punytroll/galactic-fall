@@ -23,7 +23,6 @@
 #include <map>
 #include <string>
 
-class Element;
 class AssetClass;
 
 class AssetClassManager
