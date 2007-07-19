@@ -1,4 +1,6 @@
 <definitions>
+	<accepted-slot-class is="string"/>
+	
 	<color4f>
 		<float identifier="red"/>
 		<float identifier="green"/>
@@ -123,6 +125,7 @@
 	<slot-class>
 		<string identifier="identifier"/>
 		<string identifier="name"/>
+		<array identifier="accepted-slot-classes"/>
 	</slot-class>
 	
 	<star>

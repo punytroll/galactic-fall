@@ -440,10 +440,17 @@ static void ReadSlotClass(SlotClassManager * SlotClassManager, Arxx::Reference &
 	}
 	
 	std::string Name;
+	Arxx::u4byte AcceptedSlotClassIdentifierCount;
 	
-	Reader >> Name;
-	
+	Reader >> Name >> AcceptedSlotClassIdentifierCount;
 	NewSlotClass->SetName(Name);
+	for(Arxx::u4byte AcceptedSlotClassIdentifierNumber = 1; AcceptedSlotClassIdentifierNumber <= AcceptedSlotClassIdentifierCount; ++AcceptedSlotClassIdentifierNumber)
+	{
+		std::string AcceptedSlotClassIdentifier;
+		
+		Reader >> AcceptedSlotClassIdentifier;
+		NewSlotClass->AddAcceptedSlotClassIdentifier(AcceptedSlotClassIdentifier);
+	}
 }
 
 static void ReadSystem(Galaxy * Galaxy, Arxx::Reference & Reference)
