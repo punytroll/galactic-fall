@@ -1,5 +1,14 @@
 <definitions>
+	
 	<accepted-slot-class is="string"/>
+	
+	<asset-class>
+		<string identifier="identifier"/>
+		<string identifier="name"/>
+		<float identifier="base-price"/>
+		<string identifier="object-type"/>
+		<string identifier="object-class"/>
+	</asset-class>
 	
 	<color4f>
 		<float identifier="red"/>
@@ -16,39 +25,6 @@
 		<float identifier="space-requirement"/>
 	</commodity-class>
 	
-	<quaternion>
-		<float identifier="w"/>
-		<float identifier="x"/>
-		<float identifier="y"/>
-		<float identifier="z"/>
-	</quaternion>
-	
-	<vector2f>
-		<float identifier="x"/>
-		<float identifier="y"/>
-	</vector2f>
-	
-	<vector3f>
-		<float identifier="x"/>
-		<float identifier="y"/>
-		<float identifier="z"/>
-	</vector3f>
-	
-	<widget>
-		<string identifier="widget-path"/>
-		<string identifier="name"/>
-		<vector2f identifier="position"/>
-		<boolean identifier="use-size"/>
-		<vector2f identifier="size"/>
-		<boolean identifier="use-background-color"/>
-		<color4f identifier="background-color"/>
-		<boolean identifier="visible"/>
-		<boolean identifier="anchor-bottom"/>
-		<boolean identifier="anchor-left"/>
-		<boolean identifier="anchor-right"/>
-		<boolean identifier="anchor-top"/>
-	</widget>
-	
 	<label>
 		<widget identifier="widget"/>
 		<boolean identifier="use-foreground-color"/>
@@ -57,32 +33,49 @@
 		<u1byte identifier="vertical-alignment"/>
 	</label>
 	
-	<point>
-		<string identifier="identifier"/>
-		<string identifier="name"/>
-		<vector3f identifier="position"/>
-	</point>
-	
-	<triangle-point>
-		<string identifier="identifier"/>
-		<vector3f identifier="normal"/>
-		<string identifier="point-identifier"/>
-	</triangle-point>
-	
-	<triangle>
-		<string identifier="identifier"/>
-		<string identifier="name"/>
-		<string identifier="triangle-point-1-identifier"/>
-		<string identifier="triangle-point-2-identifier"/>
-		<string identifier="triangle-point-3-identifier"/>
-	</triangle>
-	
 	<model>
 		<string identifier="identifier"/>
 		<array identifier="points"/>
 		<array identifier="triangle-points"/>
 		<array identifier="triangles"/>
 	</model>
+	
+	<offered-asset-class>
+		<string identifier="identifier"/>
+		<float identifier="base-price-modifier"/>
+	</offered-asset-class>
+	
+	<particle>
+		<float identifier="exit-speed"/>
+		<float identifier="damage"/>
+		<float identifier="life-time"/>
+		<string identifier="model-identifier"/>
+		<color4f identifier="color"/>
+	</particle>
+	
+	<planet>
+		<string identifier="identifier"/>
+		<string identifier="name"/>
+		<string identifier="description"/>
+		<vector2f identifier="position"/>
+		<float identifier="size"/>
+		<color4f identifier="color"/>
+		<array identifier="offered-asset-classes"/>
+		<float identifier="landing-fee"/>
+	</planet>
+	
+	<point>
+		<string identifier="identifier"/>
+		<string identifier="name"/>
+		<vector3f identifier="position"/>
+	</point>
+	
+	<quaternion>
+		<float identifier="w"/>
+		<float identifier="x"/>
+		<float identifier="y"/>
+		<float identifier="z"/>
+	</quaternion>
 	
 	<ship-class>
 		<string identifier="identifier"/>
@@ -100,19 +93,6 @@
 		<vector3f identifier="exhaust-offset"/>
 		<array identifier="slots"/>
 	</ship-class>
-	
-	<asset-class>
-		<string identifier="identifier"/>
-		<string identifier="name"/>
-		<float identifier="base-price"/>
-		<string identifier="object-type"/>
-		<string identifier="object-class"/>
-	</asset-class>
-	
-	<offered-asset-class>
-		<string identifier="identifier"/>
-		<float identifier="base-price-modifier"/>
-	</offered-asset-class>
 	
 	<slot>
 		<string identifier="identifier"/>
@@ -134,17 +114,6 @@
 		<color4f identifier="color"/>
 	</star>
 	
-	<planet>
-		<string identifier="identifier"/>
-		<string identifier="name"/>
-		<string identifier="description"/>
-		<vector2f identifier="position"/>
-		<float identifier="size"/>
-		<color4f identifier="color"/>
-		<array identifier="offered-asset-classes"/>
-		<float identifier="landing-fee"/>
-	</planet>
-	
 	<system>
 		<string identifier="identifier"/>
 		<string identifier="name"/>
@@ -159,6 +128,31 @@
 		<string identifier="system-2-identifier"/>
 	</system-link>
 	
+	<triangle>
+		<string identifier="identifier"/>
+		<string identifier="name"/>
+		<string identifier="triangle-point-1-identifier"/>
+		<string identifier="triangle-point-2-identifier"/>
+		<string identifier="triangle-point-3-identifier"/>
+	</triangle>
+	
+	<triangle-point>
+		<string identifier="identifier"/>
+		<vector3f identifier="normal"/>
+		<string identifier="point-identifier"/>
+	</triangle-point>
+	
+	<vector2f>
+		<float identifier="x"/>
+		<float identifier="y"/>
+	</vector2f>
+	
+	<vector3f>
+		<float identifier="x"/>
+		<float identifier="y"/>
+		<float identifier="z"/>
+	</vector3f>
+	
 	<weapon-class>
 		<string identifier="identifier"/>
 		<string identifier="name"/>
@@ -169,11 +163,19 @@
 		<particle identifier="particle"/>
 	</weapon-class>
 	
-	<particle>
-		<float identifier="exit-speed"/>
-		<float identifier="damage"/>
-		<float identifier="life-time"/>
-		<string identifier="model-identifier"/>
-		<color4f identifier="color"/>
-	</particle>
+	<widget>
+		<string identifier="widget-path"/>
+		<string identifier="name"/>
+		<vector2f identifier="position"/>
+		<boolean identifier="use-size"/>
+		<vector2f identifier="size"/>
+		<boolean identifier="use-background-color"/>
+		<color4f identifier="background-color"/>
+		<boolean identifier="visible"/>
+		<boolean identifier="anchor-bottom"/>
+		<boolean identifier="anchor-left"/>
+		<boolean identifier="anchor-right"/>
+		<boolean identifier="anchor-top"/>
+	</widget>
+	
 </definitions>
