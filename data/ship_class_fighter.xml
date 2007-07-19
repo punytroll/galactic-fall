@@ -25,6 +25,7 @@
 		<slot>
 			<identifier>front_gun</identifier>
 			<class-identifier>light_weapon</class-identifier>
+			<name>Front Gun</name>
 			<position>
 				<x>3</x>
 				<y>0</y>
