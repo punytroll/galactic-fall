@@ -20,6 +20,7 @@
 #ifndef SLOT_CLASS_H
 #define SLOT_CLASS_H
 
+#include <set>
 #include <string>
 
 class SlotClass
@@ -30,11 +31,15 @@ public:
 	// getters
 	const std::string & GetIdentifier(void) const;
 	const std::string & GetName(void) const;
+	bool AcceptsSlotClassIdentifier(const std::string & SlotClassIdentifier) const;
 	// setters
 	void SetName(const std::string & Name);
+	// modifiers
+	void AddAcceptedSlotClassIdentifier(const std::string & SlotClassIdentifier);
 private:
 	std::string m_Identifier;
 	std::string m_Name;
+	std::set< std::string > m_AcceptedSlotClassIdentifiers;
 };
 
 inline const std::string & SlotClass::GetIdentifier(void) const
@@ -47,9 +52,19 @@ inline const std::string & SlotClass::GetName(void) const
 	return m_Name;
 }
 
+inline bool SlotClass::AcceptsSlotClassIdentifier(const std::string & SlotClassIdentifier) const
+{
+	return m_AcceptedSlotClassIdentifiers.find(SlotClassIdentifier) != m_AcceptedSlotClassIdentifiers.end();
+}
+
 inline void SlotClass::SetName(const std::string & Name)
 {
 	m_Name = Name;
+}
+
+inline void SlotClass::AddAcceptedSlotClassIdentifier(const std::string & SlotClassIdentifier)
+{
+	m_AcceptedSlotClassIdentifiers.insert(SlotClassIdentifier);
 }
 
 #endif

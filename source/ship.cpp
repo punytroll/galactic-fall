@@ -373,7 +373,7 @@ bool Ship::Mount(Object * Object, const std::string & SlotIdentifier)
 	{
 		Weapon * TheWeapon(dynamic_cast< Weapon * >(Object));
 		
-		if((TheWeapon != 0) && (TheWeapon->GetWeaponClass()->GetSlotClassIdentifier() == SlotIterator->second->GetSlotClass()->GetIdentifier()))
+		if((TheWeapon != 0) && (SlotIterator->second->GetSlotClass()->AcceptsSlotClassIdentifier(TheWeapon->GetWeaponClass()->GetSlotClassIdentifier()) == true))
 		{
 			SlotIterator->second->SetMountedObject(TheWeapon->GetReference());
 			TheWeapon->SetSlot(SlotIterator->second);

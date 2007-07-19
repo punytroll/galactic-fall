@@ -1,4 +1,8 @@
 <slot-class>
 	<identifier>medium_weapon</identifier>
 	<name>Medium Weapon</name>
+	<accepted-slot-classes>
+		<accepted-slot-class>medium_weapon</accepted-slot-class>
+		<accepted-slot-class>light_weapon</accepted-slot-class>
+	</accepted-slot-classes>
 </slot-class>
