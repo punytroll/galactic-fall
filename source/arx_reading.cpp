@@ -42,6 +42,8 @@
 #include "ship_class.h"
 #include "ship_class_manager.h"
 #include "slot.h"
+#include "slot_class.h"
+#include "slot_class_manager.h"
 #include "star.h"
 #include "string_cast.h"
 #include "system.h"
@@ -56,6 +58,7 @@ static void ReadAssetClass(AssetClassManager * AssetClassManager, Arxx::Referenc
 static void ReadCommodityClass(CommodityClassManager * CommodityClassManager, Arxx::Reference & Reference);
 static void ReadModel(ModelManager * ModelManager, Arxx::Reference & Reference);
 static void ReadShipClass(ShipClassManager * ShipClassManager, Arxx::Reference & Reference);
+static void ReadSlotClass(SlotClassManager * SlotClassManager, Arxx::Reference & Reference);
 static void ReadSystem(Galaxy * Galaxy, Arxx::Reference & Reference);
 static void ReadSystemLink(Galaxy * Galaxy, Arxx::Reference & Reference);
 static void ReadWeaponClass(WeaponClassManager * WeaponClassManager, Arxx::Reference & Reference);
@@ -138,6 +141,11 @@ void ReadModels(Arxx::Archive & Archive, ModelManager * Manager)
 void ReadShipClasses(Arxx::Archive & Archive, ShipClassManager * Manager)
 {
 	ReadItems(Archive, "/Ship Classes", Bind1(Function(ReadShipClass), Manager));
+}
+
+void ReadSlotClasses(Arxx::Archive & Archive, SlotClassManager * Manager)
+{
+	ReadItems(Archive, "/Slot Classes", Bind1(Function(ReadSlotClass), Manager));
 }
 
 void ReadSystems(Arxx::Archive & Archive, Galaxy * Galaxy)
@@ -377,25 +385,63 @@ static void ReadShipClass(ShipClassManager * ShipClassManager, Arxx::Reference &
 	for(Arxx::u4byte SlotNumber = 1; SlotNumber <= SlotCount; ++SlotNumber)
 	{
 		std::string SlotIdentifier;
+		std::string SlotClassIdentifier;
 		
-		Reader >> SlotIdentifier;
+		Reader >> SlotIdentifier >> SlotClassIdentifier;
 		
-		Slot * NewSlot(NewShipClass->CreateSlot(SlotIdentifier));
+		const SlotClass * SlotClass(g_SlotClassManager->Get(SlotClassIdentifier));
+		
+		if(SlotClass == 0)
+		{
+			throw std::runtime_error("Could not get slot class '" + SlotClassIdentifier + "' for slot '" + SlotIdentifier + "' of ship class '" + Identifier + "'.");
+		}
+		
+		Slot * NewSlot(NewShipClass->CreateSlot(SlotClass, SlotIdentifier));
 		
 		if(NewSlot == 0)
 		{
 			throw std::runtime_error("Could not create slot '" + SlotIdentifier + "' for ship class '" + Identifier + "'.");
 		}
 		
-		std::string SlotClassIdentifier;
 		Vector3f SlotPosition;
 		Quaternion SlotOrientation;
 		
-		Reader >> SlotClassIdentifier >> SlotPosition >> SlotOrientation;
-		NewSlot->SetClassIdentifier(SlotClassIdentifier);
+		Reader >> SlotPosition >> SlotOrientation;
 		NewSlot->SetPosition(SlotPosition);
 		NewSlot->SetOrientation(SlotOrientation);
 	}
+}
+
+static void ReadSlotClass(SlotClassManager * SlotClassManager, Arxx::Reference & Reference)
+{
+	Arxx::Item * Item(Resolve(Reference));
+	
+	if(Item->u4GetType() != ARX_TYPE_SLOT_CLASS)
+	{
+		throw std::runtime_error("Item type for slot class '" + Item->sGetName() + "' should be '" + to_string_cast(ARX_TYPE_SLOT_CLASS) + "' not '" + to_string_cast(Item->u4GetType()) + "'.");
+	}
+	if(Item->u4GetSubType() != 0)
+	{
+		throw std::runtime_error("Item sub type for slot class '" + Item->sGetName() + "' should be '0' not '" + to_string_cast(Item->u4GetSubType()) + "'.");
+	}
+	
+	Arxx::BufferReader Reader(*Item);
+	std::string Identifier;
+	
+	Reader >> Identifier;
+	
+	SlotClass * NewSlotClass(SlotClassManager->Create(Identifier));
+	
+	if(NewSlotClass == 0)
+	{
+		throw std::runtime_error("Could not create slot class '" + Identifier + "'.");
+	}
+	
+	std::string Name;
+	
+	Reader >> Name;
+	
+	NewSlotClass->SetName(Name);
 }
 
 static void ReadSystem(Galaxy * Galaxy, Arxx::Reference & Reference)

@@ -19,7 +19,8 @@
 
 #include "slot.h"
 
-Slot::Slot(const std::string & Identifier) :
+Slot::Slot(const SlotClass * SlotClass, const std::string & Identifier) :
+	m_SlotClass(SlotClass),
 	m_Identifier(Identifier),
 	m_MountedObject(0)
 {

@@ -119,6 +119,11 @@
 		<quaternion identifier="orientation"/>
 	</slot>
 	
+	<slot-class>
+		<string identifier="identifier"/>
+		<string identifier="name"/>
+	</slot-class>
+	
 	<star>
 		<string identifier="identifier"/>
 		<vector2f identifier="position"/>
