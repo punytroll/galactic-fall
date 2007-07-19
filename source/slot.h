@@ -37,16 +37,19 @@ public:
 	const std::string & GetIdentifier(void) const;
 	const Reference< PhysicalObject > & GetMountedObject(void) const;
 	Reference< PhysicalObject > & GetMountedObject(void);
+	const std::string & GetName(void) const;
 	const Quaternion & GetOrientation(void) const;
 	const Vector3f & GetPosition(void) const;
 	const SlotClass * GetSlotClass(void) const;
 	// setters
 	void SetMountedObject(Reference< PhysicalObject > MountedObject);
+	void SetName(const std::string & Name);
 	void SetOrientation(const Quaternion & Orientation);
 	void SetPosition(const Vector3f & Position);
 private:
 	const SlotClass * m_SlotClass;
 	std::string m_Identifier;
+	std::string m_Name;
 	Reference< PhysicalObject > m_MountedObject;
 	Quaternion m_Orientation;
 	Vector3f m_Position;
@@ -67,6 +70,11 @@ inline Reference< PhysicalObject > & Slot::GetMountedObject(void)
 	return m_MountedObject;
 }
 
+inline const std::string & Slot::GetName(void) const
+{
+	return m_Name;
+}
+
 inline const Quaternion & Slot::GetOrientation(void) const
 {
 	return m_Orientation;
@@ -85,6 +93,11 @@ inline const SlotClass * Slot::GetSlotClass(void) const
 inline void Slot::SetMountedObject(Reference< PhysicalObject > MountedObject)
 {
 	m_MountedObject = MountedObject;
+}
+
+inline void Slot::SetName(const std::string & Name)
+{
+	m_Name = Name;
 }
 
 inline void Slot::SetOrientation(const Quaternion & Orientation)

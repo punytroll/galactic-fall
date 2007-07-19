@@ -115,6 +115,7 @@
 	<slot>
 		<string identifier="identifier"/>
 		<string identifier="class-identifier"/>
+		<string identifier="name"/>
 		<vector3f identifier="position"/>
 		<quaternion identifier="orientation"/>
 	</slot>

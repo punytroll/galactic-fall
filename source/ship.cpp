@@ -68,6 +68,7 @@ Ship::Ship(const ShipClass * ShipClass) :
 	{
 		Slot * NewSlot(CreateSlot(SlotIterator->second->GetSlotClass(), SlotIterator->first));
 		
+		NewSlot->SetName(SlotIterator->second->GetName());
 		NewSlot->SetPosition(SlotIterator->second->GetPosition());
 		NewSlot->SetOrientation(SlotIterator->second->GetOrientation());
 	}

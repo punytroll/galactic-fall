@@ -403,10 +403,12 @@ static void ReadShipClass(ShipClassManager * ShipClassManager, Arxx::Reference &
 			throw std::runtime_error("Could not create slot '" + SlotIdentifier + "' for ship class '" + Identifier + "'.");
 		}
 		
+		std::string Name;
 		Vector3f SlotPosition;
 		Quaternion SlotOrientation;
 		
-		Reader >> SlotPosition >> SlotOrientation;
+		Reader >> Name >> SlotPosition >> SlotOrientation;
+		NewSlot->SetName(Name);
 		NewSlot->SetPosition(SlotPosition);
 		NewSlot->SetOrientation(SlotOrientation);
 	}

@@ -75,7 +75,7 @@ SlotListItem::SlotListItem(Widget * SupWidget, Slot * Slot) :
 	// set to arbitrary design size
 	SetSize(Vector2f(100.0f, 100.0f));
 	
-	Label * IdentifierLabel(new Label(this, Slot->GetIdentifier()));
+	Label * IdentifierLabel(new Label(this, Slot->GetName()));
 	
 	IdentifierLabel->SetPosition(Vector2f(5.0f, 5.0f));
 	IdentifierLabel->SetSize(Vector2f(90.0f, 20.0f));
