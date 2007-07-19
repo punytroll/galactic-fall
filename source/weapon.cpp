@@ -17,8 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include <iostream>
 #include <sstream>
+#include <stdexcept>
 
 #include "game_time.h"
 #include "math.h"
@@ -64,16 +64,18 @@ void Weapon::Update(float Seconds)
 		
 		NewShot->SetPosition(TheShip->GetPosition() + Vector2f(SlotPosition.m_V.m_A[0], SlotPosition.m_V.m_A[1]).Turned(TheShip->GetAngularPosition()));
 		
-		Quaternion ShipOrientation(Vector4f(0.0f, 1.0f, 0.0f, 0.0f).m_V, TheShip->GetAngularPosition());
-		Quaternion SlotOrientation(GetSlot()->GetOrientation());
-		Quaternion WeaponOrientation(GetOrientation());
-		Quaternion OrientationModifier(ShipOrientation * SlotOrientation * WeaponOrientation);
 		Vector4f ShotDirection(1.0f, 0.0f, 0.0f, 0.0f);
 		
-		ShotDirection *= OrientationModifier;
+		ShotDirection *= GetOrientation();
+		ShotDirection *= GetSlot()->GetOrientation();
+		ShotDirection *= Quaternion(TheShip->GetAngularPosition(), Quaternion::InitializeRotationY);
+		if(ShotDirection[1] != 0)
+		{
+			throw std::runtime_error("ShotDirection contains invalid Z-coordinate " + to_string_cast(ShotDirection[1]) + ".");
+		}
 		
 		float ShotAngularPosition(GetRadians(Vector2f(ShotDirection[0], -ShotDirection[2])));
-		std::cout << "Ship's Angular Position: " << TheShip->GetAngularPosition() << std::endl << "ShipOrientation = (" << ShipOrientation[0] << ", " << ShipOrientation[1] << ", " << ShipOrientation[2] << ", " << ShipOrientation[3] << ")" << std::endl << "OrientationModifier = (" << OrientationModifier[0] << ", " << OrientationModifier[1] << ", " << OrientationModifier[2] << ", " << OrientationModifier[3] << ")" << std::endl << "ShotDirection = (" << ShotDirection[0] << ", " << ShotDirection[1] << ", " << ShotDirection[2] << ", " << ShotDirection[3] << ")" << std::endl << "ShotAngularPosition = " << ShotAngularPosition << std::endl << "-----------------------------" << std::endl;
+		
 		NewShot->SetAngularPosition(ShotAngularPosition);
 		NewShot->SetVelocity(TheShip->GetVelocity() + Vector2f(GetWeaponClass()->GetParticleExitSpeed(), ShotAngularPosition, Vector2f::InitializeMagnitudeAngle));
 		TheShip->GetCurrentSystem()->AddContent(NewShot);
