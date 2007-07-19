@@ -798,20 +798,20 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 	else if(ShipClassIdentifier == "transporter")
 	{
 		NewCharacter->SetCredits(GetRandomU4Byte(500, 2500));
-		/// @todo update to commodity classes
 		for(int NumberOfAssetClasses = static_cast< int >(GetRandomFloatFromExponentialDistribution(2)); NumberOfAssetClasses > 0; --NumberOfAssetClasses)
 		{
-			int AmountOfAssets(GetRandomIntegerFromExponentialDistribution(NewShip->GetShipClass()->GetMaximumAvailableSpace() / 2));
+			const std::map< std::string, AssetClass * > & AssetClasses(g_AssetClassManager->GetAssetClasses());
+			std::map< std::string, AssetClass * >::const_iterator AssetClassIterator(AssetClasses.begin());
+			
+			for(std::map< std::string, AssetClass * >::size_type Choice = GetRandomInteger(AssetClasses.size() - 1); Choice > 0; --Choice)
+			{
+				++AssetClassIterator;
+			}
+			
+			int AmountOfAssets(GetRandomIntegerFromExponentialDistribution(NewShip->GetShipClass()->GetMaximumAvailableSpace() / g_ObjectFactory->GetSpaceRequirement(AssetClassIterator->second->GetObjectType(), AssetClassIterator->second->GetObjectClass())));
 			
 			if(AmountOfAssets <= NewShip->GetAvailableSpace())
 			{
-				const std::map< std::string, AssetClass * > & AssetClasses(g_AssetClassManager->GetAssetClasses());
-				std::map< std::string, AssetClass * >::const_iterator AssetClassIterator(AssetClasses.begin());
-				
-				for(std::map< std::string, AssetClass * >::size_type Choice = GetRandomInteger(AssetClasses.size() - 1); Choice > 0; --Choice)
-				{
-					++AssetClassIterator;
-				}
 				while(AmountOfAssets > 0)
 				{
 					Object * NewCommodity(g_ObjectFactory->Create(AssetClassIterator->second->GetObjectType(), AssetClassIterator->second->GetObjectClass()));
