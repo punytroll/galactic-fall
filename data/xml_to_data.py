@@ -3,6 +3,7 @@
 from pprint import pprint
 from struct import pack
 from sys import exit
+from types import ListType, StringTypes
 from xml.dom.minidom import Node, parse
 from optparse import OptionParser
 
@@ -27,11 +28,14 @@ if options.definitions != None:
 	definitions_element = definitions_document.documentElement
 	for definition_element in definitions_element.childNodes:
 		if definition_element.nodeType == Node.ELEMENT_NODE and definitions.has_key(definition_element.tagName) == False:
-			definition = list()
-			for part_element in definition_element.childNodes:
-				if part_element.nodeType == Node.ELEMENT_NODE and part_element.attributes.has_key("identifier") == True:
-					definition.append((part_element.attributes.get("identifier").nodeValue, part_element.tagName))
-			definitions[definition_element.tagName] = definition
+			if definition_element.attributes.has_key("is") == True:
+				definitions[definition_element.tagName] = definition_element.attributes.get("is").nodeValue
+			else:
+				definition = list()
+				for part_element in definition_element.childNodes:
+					if part_element.nodeType == Node.ELEMENT_NODE and part_element.attributes.has_key("identifier") == True:
+						definition.append((part_element.attributes.get("identifier").nodeValue, part_element.tagName))
+				definitions[definition_element.tagName] = definition
 
 # now open the out file for writing binary
 out_file = open(options.out_file, "wb")
@@ -74,20 +78,23 @@ def out(data_type, node):
 			if node_part.nodeType == Node.ELEMENT_NODE:
 				out(node_part.tagName, node_part)
 	elif definitions.has_key(data_type) == True:
-		for part in definitions[data_type]:
-			for node_part in node.childNodes:
-				found_it = False
-				if node_part.nodeType == Node.ELEMENT_NODE:
-					if node_part.tagName == part[0]:
-						out(part[1], node_part)
-						found_it = True
-						break
-			if found_it == False:
-				stack_path = ""
-				for stack_entry in out_call_stack:
-					stack_path += "/" + stack_entry
-				print "In file '" + options.in_file + "' I found no value for '" + stack_path + "/" + part[0] + "' of type '" + part[1] + "'."
-				exit(1)
+		if isinstance(definitions[data_type], ListType):
+			for part in definitions[data_type]:
+				for node_part in node.childNodes:
+					found_it = False
+					if node_part.nodeType == Node.ELEMENT_NODE:
+						if node_part.tagName == part[0]:
+							out(part[1], node_part)
+							found_it = True
+							break
+				if found_it == False:
+					stack_path = ""
+					for stack_entry in out_call_stack:
+						stack_path += "/" + stack_entry
+					print "In file '" + options.in_file + "' I found no value for '" + stack_path + "/" + part[0] + "' of type '" + part[1] + "'."
+					exit(1)
+		elif isinstance(definitions[data_type], StringTypes):
+			out(definitions[data_type], node)
 	else:
 		print "Could not find a suitable definition for type '" + data_type + "'."
 		exit(1)
