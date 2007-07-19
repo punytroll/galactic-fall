@@ -20,6 +20,10 @@ On key down:
 	Quits the application immediately.
 	Before exiting the application a final object report is dumped to the console. It can be used to debug dangling objects without a container.
 
+25 (W)
+	Opens the "Mount Weapon" dialog where you can mount or unmount the ships weapons.
+	Acts upon OutputMind.Character.Ship.
+
 26 (E)
 	Selects the previous ship in the system or the last one if no ship was selected or deselects any ship if the first one was selected.
 	Acts upon InputMind.Character.Ship.

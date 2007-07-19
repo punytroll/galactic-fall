@@ -78,6 +78,7 @@ public:
 	// modifiers
 	Slot * CreateSlot(const std::string & SlotIdentifier);
 	bool Mount(Object * Object, const std::string & SlotIdentifier);
+	bool Unmount(const std::string & SlotIdentifier);
 private:
 	// ship class
 	const ShipClass * m_ShipClass;
