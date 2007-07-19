@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 1.1.6 of algebra.
+ * This is part of version 1.1.7 of algebra.
  **/
 
 #ifndef ALGEBRA_QUATERNION_H
@@ -156,12 +156,12 @@ public:
 		return *this *= Quaternion(Radians, InitializeRotationX);
 	}
 	
-	Quaternion &  RotateY(float Radians)
+	Quaternion & RotateY(float Radians)
 	{
 		return *this *= Quaternion(Radians, InitializeRotationY);
 	}
 	
-	Quaternion &  RotateZ(float Radians)
+	Quaternion & RotateZ(float Radians)
 	{
 		return *this *= Quaternion(Radians, InitializeRotationZ);
 	}
