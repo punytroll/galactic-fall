@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 1.1.5 of algebra.
+ * This is part of version 1.1.6 of algebra.
  **/
 
 #ifndef ALGEBRA_QUATERNION_H
@@ -132,7 +132,7 @@ public:
 		float SinusRadians(sin(Radians));
 		
 		m_V.m_A[0] = cos(Radians);
-		if(Radians > 0.0f)
+		if(Radians != 0.0f)
 		{
 			m_V.m_A[1] = Axis.m_A[0] * SinusRadians;
 			m_V.m_A[2] = Axis.m_A[1] * SinusRadians;

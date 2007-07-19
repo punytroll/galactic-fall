@@ -2,6 +2,12 @@
 	<identifier>medium_laser</identifier>
 	<name>Medium Laser</name>
 	<slot-type>medium_weapon</slot-type>
+	<orientation>
+		<w>0.7071</w>
+		<x>0</x>
+		<y>0</y>
+		<z>-0.7071</z>
+	</orientation>
 	<reload-time>0.85</reload-time>
 	<space-requirement>0.5</space-requirement>
 	<particle>

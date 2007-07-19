@@ -22,6 +22,7 @@
 
 #include <string>
 
+#include "math/quaternion.h"
 #include "type_definitions.h"
 
 class Color;
@@ -37,28 +38,31 @@ public:
 	// getters
 	const std::string & GetIdentifier(void) const;
 	const std::string & GetName(void) const;
-	float GetReloadTime(void) const;
+	const Quaternion & GetOrientation(void) const;
 	float GetParticleExitSpeed(void) const;
 	float GetParticleDamage(void) const;
 	float GetParticleLifeTime(void) const;
 	const Model * GetParticleModel(void) const;
 	const Color * GetParticleColor(void) const;
+	float GetReloadTime(void) const;
 	const std::string & GetSlotType(void) const;
 	unsigned_numeric GetSpaceRequirement(void) const;
 	// setters
 	void SetName(const std::string & Name);
-	void SetReloadTime(float ReloadTime);
+	void SetOrientation(const Quaternion & Orientation);
 	void SetParticleExitSpeed(float ParticleExitSpeed);
 	void SetParticleDamage(float ParticleDamage);
 	void SetParticleLifeTime(float ParticleLifeTime);
 	void SetParticleModel(const Model * ParticleModel);
 	void SetParticleColor(const Color & ParticleColor);
+	void SetReloadTime(float ReloadTime);
 	void SetSlotType(const std::string & SlotType);
 	void SetSpaceRequirement(unsigned_numeric SpaceRequirement);
 private:
 	std::string m_Identifier;
 	std::string m_Name;
 	std::string m_SlotType;
+	Quaternion m_Orientation;
 	float m_ReloadTime;
 	float m_ParticleExitSpeed;
 	float m_ParticleDamage;
@@ -78,9 +82,9 @@ inline const std::string & WeaponClass::GetName(void) const
 	return m_Name;
 }
 
-inline float WeaponClass::GetReloadTime(void) const
+inline const Quaternion & WeaponClass::GetOrientation(void) const
 {
-	return m_ReloadTime;
+	return m_Orientation;
 }
 
 inline float WeaponClass::GetParticleExitSpeed(void) const
@@ -108,6 +112,11 @@ inline const Color * WeaponClass::GetParticleColor(void) const
 	return m_ParticleColor;
 }
 
+inline float WeaponClass::GetReloadTime(void) const
+{
+	return m_ReloadTime;
+}
+
 inline const std::string & WeaponClass::GetSlotType(void) const
 {
 	return m_SlotType;
@@ -123,9 +132,9 @@ inline void WeaponClass::SetName(const std::string & Name)
 	m_Name = Name;
 }
 
-inline void WeaponClass::SetReloadTime(float ReloadTime)
+inline void WeaponClass::SetOrientation(const Quaternion & Orientation)
 {
-	m_ReloadTime = ReloadTime;
+	m_Orientation = Orientation;
 }
 
 inline void WeaponClass::SetParticleExitSpeed(float ParticleExitSpeed)
@@ -146,6 +155,11 @@ inline void WeaponClass::SetParticleLifeTime(float ParticleLifeTime)
 inline void WeaponClass::SetParticleModel(const Model * ParticleModel)
 {
 	m_ParticleModel = ParticleModel;
+}
+
+inline void WeaponClass::SetReloadTime(float ReloadTime)
+{
+	m_ReloadTime = ReloadTime;
 }
 
 inline void WeaponClass::SetSlotType(const std::string & SlotType)

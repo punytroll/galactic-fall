@@ -389,10 +389,12 @@ static void ReadShipClass(ShipClassManager * ShipClassManager, Arxx::Reference &
 		
 		std::string SlotType;
 		Vector3f SlotPosition;
+		Quaternion SlotOrientation;
 		
-		Reader >> SlotType >> SlotPosition;
+		Reader >> SlotType >> SlotPosition >> SlotOrientation;
 		NewSlot->SetType(SlotType);
 		NewSlot->SetPosition(SlotPosition);
+		NewSlot->SetOrientation(SlotOrientation);
 	}
 }
 
@@ -558,6 +560,7 @@ static void ReadWeaponClass(WeaponClassManager * WeaponClassManager, Arxx::Refer
 	
 	std::string Name;
 	std::string SlotType;
+	Quaternion Orientation;
 	float ReloadTime;
 	float SpaceRequirement;
 	float ParticleExitSpeed;
@@ -566,9 +569,10 @@ static void ReadWeaponClass(WeaponClassManager * WeaponClassManager, Arxx::Refer
 	std::string ParticleModelIdentifier;
 	Color ParticleColor;
 	
-	Reader >> Name >> SlotType >> ReloadTime >> SpaceRequirement >> ParticleExitSpeed >> ParticleDamage >> ParticleLifeTime >> ParticleModelIdentifier >> ParticleColor;
+	Reader >> Name >> SlotType >> Orientation >> ReloadTime >> SpaceRequirement >> ParticleExitSpeed >> ParticleDamage >> ParticleLifeTime >> ParticleModelIdentifier >> ParticleColor;
 	NewWeaponClass->SetName(Name);
 	NewWeaponClass->SetSlotType(SlotType);
+	NewWeaponClass->SetOrientation(Orientation);
 	NewWeaponClass->SetReloadTime(ReloadTime);
 	NewWeaponClass->SetSpaceRequirement(static_cast< unsigned_numeric >(1000 * SpaceRequirement));
 	NewWeaponClass->SetParticleExitSpeed(ParticleExitSpeed);
