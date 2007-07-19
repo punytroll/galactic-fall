@@ -1,7 +1,7 @@
 <weapon-class>
 	<identifier>light_laser</identifier>
 	<name>Light Laser</name>
-	<slot-type>light_weapon</slot-type>
+	<slot-class-identifier>light_weapon</slot-class-identifier>
 	<orientation>
 		<w>0.7071067812</w>
 		<x>0</x>

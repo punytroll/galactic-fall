@@ -1,7 +1,7 @@
 <weapon-class>
 	<identifier>medium_laser</identifier>
 	<name>Medium Laser</name>
-	<slot-type>medium_weapon</slot-type>
+	<slot-class-identifier>medium_weapon</slot-class-identifier>
 	<orientation>
 		<w>0.7071067812</w>
 		<x>0</x>

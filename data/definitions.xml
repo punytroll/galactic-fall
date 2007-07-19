@@ -114,7 +114,7 @@
 	
 	<slot>
 		<string identifier="identifier"/>
-		<string identifier="type"/>
+		<string identifier="class-identifier"/>
 		<vector3f identifier="position"/>
 		<quaternion identifier="orientation"/>
 	</slot>
@@ -153,7 +153,7 @@
 	<weapon-class>
 		<string identifier="identifier"/>
 		<string identifier="name"/>
-		<string identifier="slot-type"/>
+		<string identifier="slot-class-identifier"/>
 		<quaternion identifier="orientation"/>
 		<float identifier="reload-time"/>
 		<float identifier="space-requirement"/>
