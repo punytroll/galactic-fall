@@ -59,6 +59,7 @@
 #include "mini_map_display.h"
 #include "model.h"
 #include "model_manager.h"
+#include "mount_weapon_dialog.h"
 #include "object_factory.h"
 #include "particle_systems.h"
 #include "perspective.h"
@@ -111,8 +112,9 @@ System * g_CurrentSystem;
 float g_TimeWarp(1.0f);
 bool g_Quit(false);
 bool g_Pause(false);
-PlanetDialog * g_PlanetDialog;
-MapDialog * g_MapDialog;
+PlanetDialog * g_PlanetDialog(0);
+MapDialog * g_MapDialog(0);
+MountWeaponDialog * g_MountWeaponDialog(0);
 UserInterface g_UserInterface;
 std::multimap< double, Callback0< void > * > g_GameTimeTimeoutNotifications;
 std::multimap< double, Callback0< void > * >::iterator g_SpawnShipTimeoutIterator;
@@ -725,6 +727,10 @@ public:
 			g_MapDialog = 0;
 			g_Pause = false;
 		}
+		else if(EventSource == g_MountWeaponDialog)
+		{
+			g_MountWeaponDialog = 0;
+		}
 	}
 } g_GlobalDestroyListener;
 
@@ -1010,6 +1016,17 @@ void KeyDown(unsigned int KeyCode)
 		{
 			g_DumpEndReport = true;
 			g_Quit = true;
+			
+			break;
+		}
+	case 25: // Key: W
+		{
+			if((g_MountWeaponDialog == 0) && (g_OutputMind == true))
+			{
+				g_MountWeaponDialog = new MountWeaponDialog(g_UserInterface.GetRootWidget(), g_OutputMind->GetCharacter()->GetShip());
+				g_MountWeaponDialog->GrabKeyFocus();
+				g_MountWeaponDialog->AddDestroyListener(&g_GlobalDestroyListener);
+			}
 			
 			break;
 		}

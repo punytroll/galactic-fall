@@ -383,3 +383,23 @@ bool Ship::Mount(Object * Object, const std::string & SlotIdentifier)
 	
 	return false;
 }
+
+bool Ship::Unmount(const std::string & SlotIdentifier)
+{
+	std::map< std::string, Slot * >::iterator SlotIterator(m_Slots.find(SlotIdentifier));
+	
+	if(SlotIterator != m_Slots.end())
+	{
+		Weapon * TheWeapon(dynamic_cast< Weapon * >(SlotIterator->second->GetMountedObject().Get()));
+		
+		if(TheWeapon != 0)
+		{
+			SlotIterator->second->SetMountedObject(0);
+			TheWeapon->SetSlot(0);
+			
+			return true;
+		}
+	}
+	
+	return false;
+}
