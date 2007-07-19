@@ -31,10 +31,10 @@
 				<z>0</z>
 			</position>
 			<orientation>
-				<w>0.7071</w>
+				<w>0.7071067812</w>
 				<x>0</x>
 				<y>0</y>
-				<z>0.7071</z>
+				<z>0.7071067812</z>
 			</orientation>
 		</slot>
 	</slots>
