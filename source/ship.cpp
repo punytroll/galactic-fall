@@ -67,7 +67,7 @@ Ship::Ship(const ShipClass * ShipClass) :
 	{
 		Slot * NewSlot(CreateSlot(SlotIterator->first));
 		
-		NewSlot->SetType(SlotIterator->second->GetType());
+		NewSlot->SetClassIdentifier(SlotIterator->second->GetClassIdentifier());
 		NewSlot->SetPosition(SlotIterator->second->GetPosition());
 		NewSlot->SetOrientation(SlotIterator->second->GetOrientation());
 	}
@@ -372,7 +372,7 @@ bool Ship::Mount(Object * Object, const std::string & SlotIdentifier)
 	{
 		Weapon * TheWeapon(dynamic_cast< Weapon * >(Object));
 		
-		if((TheWeapon != 0) && (TheWeapon->GetWeaponClass()->GetSlotType() == SlotIterator->second->GetType()))
+		if((TheWeapon != 0) && (TheWeapon->GetWeaponClass()->GetSlotClassIdentifier() == SlotIterator->second->GetClassIdentifier()))
 		{
 			SlotIterator->second->SetMountedObject(TheWeapon->GetReference());
 			TheWeapon->SetSlot(SlotIterator->second);

@@ -45,7 +45,7 @@ public:
 	const Model * GetParticleModel(void) const;
 	const Color * GetParticleColor(void) const;
 	float GetReloadTime(void) const;
-	const std::string & GetSlotType(void) const;
+	const std::string & GetSlotClassIdentifier(void) const;
 	unsigned_numeric GetSpaceRequirement(void) const;
 	// setters
 	void SetName(const std::string & Name);
@@ -56,12 +56,12 @@ public:
 	void SetParticleModel(const Model * ParticleModel);
 	void SetParticleColor(const Color & ParticleColor);
 	void SetReloadTime(float ReloadTime);
-	void SetSlotType(const std::string & SlotType);
+	void SetSlotClassIdentifier(const std::string & SlotClassIdentifier);
 	void SetSpaceRequirement(unsigned_numeric SpaceRequirement);
 private:
 	std::string m_Identifier;
 	std::string m_Name;
-	std::string m_SlotType;
+	std::string m_SlotClassIdentifier;
 	Quaternion m_Orientation;
 	float m_ReloadTime;
 	float m_ParticleExitSpeed;
@@ -117,9 +117,9 @@ inline float WeaponClass::GetReloadTime(void) const
 	return m_ReloadTime;
 }
 
-inline const std::string & WeaponClass::GetSlotType(void) const
+inline const std::string & WeaponClass::GetSlotClassIdentifier(void) const
 {
-	return m_SlotType;
+	return m_SlotClassIdentifier;
 }
 
 inline unsigned_numeric WeaponClass::GetSpaceRequirement(void) const
@@ -162,9 +162,9 @@ inline void WeaponClass::SetReloadTime(float ReloadTime)
 	m_ReloadTime = ReloadTime;
 }
 
-inline void WeaponClass::SetSlotType(const std::string & SlotType)
+inline void WeaponClass::SetSlotClassIdentifier(const std::string & SlotClassIdentifier)
 {
-	m_SlotType = SlotType;
+	m_SlotClassIdentifier = SlotClassIdentifier;
 }
 
 inline void WeaponClass::SetSpaceRequirement(unsigned_numeric SpaceRequirement)

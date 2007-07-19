@@ -24,7 +24,7 @@
 	<slots>
 		<slot>
 			<identifier>starboard_gun</identifier>
-			<type>light_weapon</type>
+			<class-identifier>light_weapon</class-identifier>
 			<position>
 				<x>4.2</x>
 				<y>-1.2</y>
@@ -39,7 +39,7 @@
 		</slot>
 		<slot>
 			<identifier>backboard_gun</identifier>
-			<type>light_weapon</type>
+			<class-identifier>light_weapon</class-identifier>
 			<position>
 				<x>4.2</x>
 				<y>1.2</y>

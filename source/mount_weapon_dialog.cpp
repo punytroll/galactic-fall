@@ -101,7 +101,7 @@ void SlotListItem::Update(void)
 	}
 	else
 	{
-		m_TypeOrWeaponLabel->SetString(m_Slot->GetType());
+		m_TypeOrWeaponLabel->SetString(m_Slot->GetClassIdentifier());
 	}
 }
 
@@ -162,7 +162,7 @@ WeaponListItem::WeaponListItem(Widget * SupWidget, Weapon * Weapon) :
 	NameLabel->SetAnchorRight(true);
 	NameLabel->SetAnchorTop(true);
 	
-	Label * SlotTypeLabel(new Label(this, Weapon->GetWeaponClass()->GetSlotType()));
+	Label * SlotTypeLabel(new Label(this, Weapon->GetWeaponClass()->GetSlotClassIdentifier()));
 	
 	SlotTypeLabel->SetPosition(Vector2f(25.0f, 25.0f));
 	SlotTypeLabel->SetSize(Vector2f(70.0f, 20.0f));

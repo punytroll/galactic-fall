@@ -387,12 +387,12 @@ static void ReadShipClass(ShipClassManager * ShipClassManager, Arxx::Reference &
 			throw std::runtime_error("Could not create slot '" + SlotIdentifier + "' for ship class '" + Identifier + "'.");
 		}
 		
-		std::string SlotType;
+		std::string SlotClassIdentifier;
 		Vector3f SlotPosition;
 		Quaternion SlotOrientation;
 		
-		Reader >> SlotType >> SlotPosition >> SlotOrientation;
-		NewSlot->SetType(SlotType);
+		Reader >> SlotClassIdentifier >> SlotPosition >> SlotOrientation;
+		NewSlot->SetClassIdentifier(SlotClassIdentifier);
 		NewSlot->SetPosition(SlotPosition);
 		NewSlot->SetOrientation(SlotOrientation);
 	}
@@ -559,7 +559,7 @@ static void ReadWeaponClass(WeaponClassManager * WeaponClassManager, Arxx::Refer
 	}
 	
 	std::string Name;
-	std::string SlotType;
+	std::string SlotClassIdentifier;
 	Quaternion Orientation;
 	float ReloadTime;
 	float SpaceRequirement;
@@ -569,9 +569,9 @@ static void ReadWeaponClass(WeaponClassManager * WeaponClassManager, Arxx::Refer
 	std::string ParticleModelIdentifier;
 	Color ParticleColor;
 	
-	Reader >> Name >> SlotType >> Orientation >> ReloadTime >> SpaceRequirement >> ParticleExitSpeed >> ParticleDamage >> ParticleLifeTime >> ParticleModelIdentifier >> ParticleColor;
+	Reader >> Name >> SlotClassIdentifier >> Orientation >> ReloadTime >> SpaceRequirement >> ParticleExitSpeed >> ParticleDamage >> ParticleLifeTime >> ParticleModelIdentifier >> ParticleColor;
 	NewWeaponClass->SetName(Name);
-	NewWeaponClass->SetSlotType(SlotType);
+	NewWeaponClass->SetSlotClassIdentifier(SlotClassIdentifier);
 	NewWeaponClass->SetOrientation(Orientation);
 	NewWeaponClass->SetReloadTime(ReloadTime);
 	NewWeaponClass->SetSpaceRequirement(static_cast< unsigned_numeric >(1000 * SpaceRequirement));
