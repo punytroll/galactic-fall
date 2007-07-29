@@ -43,22 +43,22 @@
 #include "weapon_class.h"
 
 Ship::Ship(const ShipClass * ShipClass) :
-	m_Accelerate(false),
-	m_Accelerating(false),
 	m_Jettison(false),
 	m_Jump(false),
 	m_Land(false),
-	m_Refuel(false),
 	m_Scoop(false),
-	m_AngularPosition(0.0f),
 	m_ShipClass(ShipClass),
+	m_Accelerate(false),
+	m_Accelerating(false),
 	m_Fuel(0.0f),
 	m_Hull(m_ShipClass->GetHull()),
+	m_Refuel(false),
 	m_TurnLeft(0.0f),
 	m_TurnRight(0.0f),
 	m_LinkedSystemTarget(0),
 	m_CurrentSystem(0),
-	m_Velocity(true)
+	m_Velocity(true),
+	m_AngularPosition(0.0f)
 {
 	SetRadialSize(m_ShipClass->GetModel()->GetRadialSize());
 	
