@@ -44,10 +44,10 @@ public:
 	void SetName(const std::string & Name);
 	void SetSpaceRequirement(unsigned_numeric SpaceRequirement);
 private:
-	std::string m_Identifier;
-	std::string m_Name;
-	const Model * m_Model;
 	Color * m_Color;
+	std::string m_Identifier;
+	const Model * m_Model;
+	std::string m_Name;
 	unsigned_numeric m_SpaceRequirement;
 };
 

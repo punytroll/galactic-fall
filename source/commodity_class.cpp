@@ -23,7 +23,8 @@
 CommodityClass::CommodityClass(const std::string & Identifier) :
 	m_Color(0),
 	m_Identifier(Identifier),
-	m_Model(0)
+	m_Model(0),
+	m_SpaceRequirement(0)
 {
 }
 
