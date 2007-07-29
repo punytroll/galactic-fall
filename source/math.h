@@ -28,6 +28,8 @@
 #include "math/vector4d.h"
 #include "type_definitions.h"
 
+const float g_Epsilon(0.01f);
+
 inline void NormalizeRadians(float & Radians)
 {
 	while(Radians < 0.0f)

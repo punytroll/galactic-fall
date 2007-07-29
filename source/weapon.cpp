@@ -69,7 +69,7 @@ void Weapon::Update(float Seconds)
 		ShotDirection *= GetOrientation();
 		ShotDirection *= GetSlot()->GetOrientation();
 		ShotDirection *= Quaternion(TheShip->GetAngularPosition(), Quaternion::InitializeRotationY);
-		if(ShotDirection[1] != 0)
+		if(fabsf(ShotDirection[1]) > g_Epsilon)
 		{
 			throw std::runtime_error("ShotDirection contains invalid Z-coordinate " + to_string_cast(ShotDirection[1]) + ".");
 		}
