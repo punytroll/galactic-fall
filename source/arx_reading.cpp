@@ -232,7 +232,6 @@ static void ReadCommodityClass(CommodityClassManager * CommodityClassManager, Ar
 	}
 	
 	std::string Name;
-	float BasePrice;
 	std::string ModelIdentifier;
 	Color Color;
 	float SpaceRequirement;
