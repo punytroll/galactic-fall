@@ -24,7 +24,7 @@
 #define CHARACTERS 95
 #define CHARACTEROFFSET 32
 
-const GLubyte g_Letters[][12] = 
+const GLubyte g_Letters[CHARACTERS][12] = 
 {
 	{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }, // 00 => ' '
 	{ 0x00, 0x00, 0x00, 0x20, 0x00, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x00 }, // 01 => '!'
@@ -123,6 +123,7 @@ const GLubyte g_Letters[][12] =
 	{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x10, 0xA8, 0x40, 0x00, 0x00, 0x00, 0x00 }  // 94 => '~'
 };
 
+float g_TextureCoords[CHARACTERS][4];
 GLuint g_FontTexture;
 
 void InitializeFonts(void)
@@ -167,6 +168,18 @@ void InitializeFonts(void)
 	glPopMatrix();
 	glMatrixMode(GL_PROJECTION);
 	glPopMatrix();
+	
+	const float CharacterWidth(6.0f / 128.0f);
+	const float CharacterHeight(12.0f / 64.0f);
+	const unsigned int CharactersPerLine(128 / 6);
+	
+	for(unsigned int CharacterIndex = 0; CharacterIndex < CHARACTERS; ++CharacterIndex)
+	{
+		g_TextureCoords[CharacterIndex][0] = (CharacterIndex % CharactersPerLine) * CharacterWidth;
+		g_TextureCoords[CharacterIndex][1] = 1.0f - (CharacterHeight * static_cast< unsigned int >(CharacterIndex / CharactersPerLine + 1));
+		g_TextureCoords[CharacterIndex][2] = (CharacterIndex % CharactersPerLine + 1) * CharacterWidth;
+		g_TextureCoords[CharacterIndex][3] = 1.0f - (CharacterHeight * static_cast< unsigned int >(CharacterIndex / CharactersPerLine));
+	}
 }
 
 void DeinitializeFonts(void)
@@ -176,10 +189,6 @@ void DeinitializeFonts(void)
 
 void DrawText(const std::string & String)
 {
-	const float CharacterWidth(6.0f / 128.0f);
-	const float CharacterHeight(12.0f / 64.0f);
-	const unsigned int CharactersPerLine(128 / 6);
-	
 	glPushAttrib(GL_ENABLE_BIT);
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, g_FontTexture);
@@ -188,13 +197,13 @@ void DrawText(const std::string & String)
 	{
 		unsigned int CharacterIndex(String[StringIndex] - CHARACTEROFFSET);
 		
-		glTexCoord2f((CharacterIndex % CharactersPerLine) * CharacterWidth, 1.0f - (CharacterHeight * static_cast< unsigned int >(CharacterIndex / CharactersPerLine + 1)));
+		glTexCoord2f(g_TextureCoords[CharacterIndex][0], g_TextureCoords[CharacterIndex][1]);
 		glVertex2f(6.0f * StringIndex, 12.0f);
-		glTexCoord2f((CharacterIndex % CharactersPerLine + 1) * CharacterWidth, 1.0f - (CharacterHeight * static_cast< unsigned int >(CharacterIndex / CharactersPerLine + 1)));
+		glTexCoord2f(g_TextureCoords[CharacterIndex][2], g_TextureCoords[CharacterIndex][1]);
 		glVertex2f(6.0f * StringIndex + 6.0f, 12.0f);
-		glTexCoord2f((CharacterIndex % CharactersPerLine + 1) * CharacterWidth, 1.0f - (CharacterHeight * static_cast< unsigned int >(CharacterIndex / CharactersPerLine)));
+		glTexCoord2f(g_TextureCoords[CharacterIndex][2], g_TextureCoords[CharacterIndex][3]);
 		glVertex2f(6.0f * StringIndex + 6.0f, 0.0f);
-		glTexCoord2f((CharacterIndex % CharactersPerLine) * CharacterWidth, 1.0f - (CharacterHeight * static_cast< unsigned int >(CharacterIndex / CharactersPerLine)));
+		glTexCoord2f(g_TextureCoords[CharacterIndex][0], g_TextureCoords[CharacterIndex][3]);
 		glVertex2f(6.0f * StringIndex, 0.0f);
 	}
 	glEnd();
