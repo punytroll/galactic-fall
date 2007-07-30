@@ -123,7 +123,7 @@ const GLubyte g_Letters[CHARACTERS][12] =
 	{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x10, 0xA8, 0x40, 0x00, 0x00, 0x00, 0x00 }  // 94 => '~'
 };
 
-float g_TextureCoords[CHARACTERS][4];
+GLuint g_CharacterCallLists(0);
 GLuint g_FontTexture;
 
 void InitializeFonts(void)
@@ -169,22 +169,34 @@ void InitializeFonts(void)
 	glMatrixMode(GL_PROJECTION);
 	glPopMatrix();
 	
+	// now build the call lists
 	const float CharacterWidth(6.0f / 128.0f);
 	const float CharacterHeight(12.0f / 64.0f);
 	const unsigned int CharactersPerLine(128 / 6);
 	
+	g_CharacterCallLists = glGenLists(CHARACTERS);
 	for(unsigned int CharacterIndex = 0; CharacterIndex < CHARACTERS; ++CharacterIndex)
 	{
-		g_TextureCoords[CharacterIndex][0] = (CharacterIndex % CharactersPerLine) * CharacterWidth;
-		g_TextureCoords[CharacterIndex][1] = 1.0f - (CharacterHeight * static_cast< unsigned int >(CharacterIndex / CharactersPerLine + 1));
-		g_TextureCoords[CharacterIndex][2] = (CharacterIndex % CharactersPerLine + 1) * CharacterWidth;
-		g_TextureCoords[CharacterIndex][3] = 1.0f - (CharacterHeight * static_cast< unsigned int >(CharacterIndex / CharactersPerLine));
+		glNewList(g_CharacterCallLists + CharacterIndex, GL_COMPILE);
+		glBegin(GL_QUADS);
+		glTexCoord2f((CharacterIndex % CharactersPerLine) * CharacterWidth, 1.0f - (CharacterHeight * static_cast< unsigned int >(CharacterIndex / CharactersPerLine + 1)));
+		glVertex2f(0.0f, 12.0f);
+		glTexCoord2f((CharacterIndex % CharactersPerLine + 1) * CharacterWidth, 1.0f - (CharacterHeight * static_cast< unsigned int >(CharacterIndex / CharactersPerLine + 1)));
+		glVertex2f(6.0f, 12.0f);
+		glTexCoord2f((CharacterIndex % CharactersPerLine + 1) * CharacterWidth, 1.0f - (CharacterHeight * static_cast< unsigned int >(CharacterIndex / CharactersPerLine)));
+		glVertex2f(6.0f, 0.0f);
+		glTexCoord2f((CharacterIndex % CharactersPerLine) * CharacterWidth, 1.0f - (CharacterHeight * static_cast< unsigned int >(CharacterIndex / CharactersPerLine)));
+		glVertex2f(0.0f, 0.0f);
+		glEnd();
+		glTranslatef(6.0f, 0.0f, 0.0f);
+		glEndList();
 	}
 }
 
 void DeinitializeFonts(void)
 {
 	glDeleteTextures(1, &g_FontTexture);
+	glDeleteLists(g_CharacterCallLists, CHARACTERS);
 }
 
 void DrawText(const std::string & String)
@@ -192,20 +204,7 @@ void DrawText(const std::string & String)
 	glPushAttrib(GL_ENABLE_BIT);
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, g_FontTexture);
-	glBegin(GL_QUADS);
-	for(std::string::size_type StringIndex = 0; StringIndex < String.length(); ++StringIndex)
-	{
-		unsigned int CharacterIndex(String[StringIndex] - CHARACTEROFFSET);
-		
-		glTexCoord2f(g_TextureCoords[CharacterIndex][0], g_TextureCoords[CharacterIndex][1]);
-		glVertex2f(6.0f * StringIndex, 12.0f);
-		glTexCoord2f(g_TextureCoords[CharacterIndex][2], g_TextureCoords[CharacterIndex][1]);
-		glVertex2f(6.0f * StringIndex + 6.0f, 12.0f);
-		glTexCoord2f(g_TextureCoords[CharacterIndex][2], g_TextureCoords[CharacterIndex][3]);
-		glVertex2f(6.0f * StringIndex + 6.0f, 0.0f);
-		glTexCoord2f(g_TextureCoords[CharacterIndex][0], g_TextureCoords[CharacterIndex][3]);
-		glVertex2f(6.0f * StringIndex, 0.0f);
-	}
-	glEnd();
+	glListBase(g_CharacterCallLists - CHARACTEROFFSET);
+	glCallLists(String.length(), GL_UNSIGNED_BYTE, String.c_str());
 	glPopAttrib();
 }
