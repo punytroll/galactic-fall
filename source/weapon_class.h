@@ -23,6 +23,7 @@
 #include <string>
 
 #include "math/quaternion.h"
+#include "math/vector3f.h"
 #include "type_definitions.h"
 
 class Color;
@@ -37,8 +38,11 @@ public:
 	~WeaponClass(void);
 	// getters
 	const std::string & GetIdentifier(void) const;
+	const Model * GetModel(void) const;
+	const Color * GetModelColor(void) const;
 	const std::string & GetName(void) const;
 	const Quaternion & GetOrientation(void) const;
+	const Vector3f & GetParticleExitPosition(void) const;
 	float GetParticleExitSpeed(void) const;
 	float GetParticleDamage(void) const;
 	float GetParticleLifeTime(void) const;
@@ -48,8 +52,11 @@ public:
 	const std::string & GetSlotClassIdentifier(void) const;
 	unsigned_numeric GetSpaceRequirement(void) const;
 	// setters
+	void SetModel(const Model * Model);
+	void SetModelColor(const Color & ModelColor);
 	void SetName(const std::string & Name);
 	void SetOrientation(const Quaternion & Orientation);
+	void SetParticleExitPosition(const Vector3f & ParticleExitPosition);
 	void SetParticleExitSpeed(float ParticleExitSpeed);
 	void SetParticleDamage(float ParticleDamage);
 	void SetParticleLifeTime(float ParticleLifeTime);
@@ -60,10 +67,13 @@ public:
 	void SetSpaceRequirement(unsigned_numeric SpaceRequirement);
 private:
 	std::string m_Identifier;
+	const Model * m_Model;
+	Color * m_ModelColor;
 	std::string m_Name;
 	std::string m_SlotClassIdentifier;
 	Quaternion m_Orientation;
 	float m_ReloadTime;
+	Vector3f m_ParticleExitPosition;
 	float m_ParticleExitSpeed;
 	float m_ParticleDamage;
 	float m_ParticleLifeTime;
@@ -72,14 +82,29 @@ private:
 	unsigned_numeric m_SpaceRequirement;
 };
 
+inline const Color * WeaponClass::GetModelColor(void) const
+{
+	return m_ModelColor;
+}
+
 inline const std::string & WeaponClass::GetIdentifier(void) const
 {
 	return m_Identifier;
 }
 
+inline const Model * WeaponClass::GetModel(void) const
+{
+	return m_Model;
+}
+
 inline const std::string & WeaponClass::GetName(void) const
 {
 	return m_Name;
+}
+
+inline const Vector3f & WeaponClass::GetParticleExitPosition(void) const
+{
+	return m_ParticleExitPosition;
 }
 
 inline const Quaternion & WeaponClass::GetOrientation(void) const
@@ -127,6 +152,11 @@ inline unsigned_numeric WeaponClass::GetSpaceRequirement(void) const
 	return m_SpaceRequirement;
 }
 
+inline void WeaponClass::SetModel(const Model * Model)
+{
+	m_Model = Model;
+}
+
 inline void WeaponClass::SetName(const std::string & Name)
 {
 	m_Name = Name;
@@ -135,6 +165,11 @@ inline void WeaponClass::SetName(const std::string & Name)
 inline void WeaponClass::SetOrientation(const Quaternion & Orientation)
 {
 	m_Orientation = Orientation;
+}
+
+inline void WeaponClass::SetParticleExitPosition(const Vector3f & ParticleExitPosition)
+{
+	m_ParticleExitPosition = ParticleExitPosition;
 }
 
 inline void WeaponClass::SetParticleExitSpeed(float ParticleExitSpeed)

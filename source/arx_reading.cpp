@@ -613,22 +613,35 @@ static void ReadWeaponClass(WeaponClassManager * WeaponClassManager, Arxx::Refer
 	}
 	
 	std::string Name;
+	std::string ModelIdentifier;
+	Color ModelColor;
 	std::string SlotClassIdentifier;
 	Quaternion Orientation;
 	float ReloadTime;
 	float SpaceRequirement;
+	Vector3f ParticleExitPosition;
 	float ParticleExitSpeed;
 	float ParticleDamage;
 	float ParticleLifeTime;
 	std::string ParticleModelIdentifier;
 	Color ParticleColor;
 	
-	Reader >> Name >> SlotClassIdentifier >> Orientation >> ReloadTime >> SpaceRequirement >> ParticleExitSpeed >> ParticleDamage >> ParticleLifeTime >> ParticleModelIdentifier >> ParticleColor;
+	Reader >> Name >> ModelColor >> ModelIdentifier >> SlotClassIdentifier >> Orientation >> ReloadTime >> SpaceRequirement >> ParticleExitPosition >> ParticleExitSpeed >> ParticleDamage >> ParticleLifeTime >> ParticleModelIdentifier >> ParticleColor;
 	NewWeaponClass->SetName(Name);
+	
+	Model * WeaponClassModel(g_ModelManager->Get(ModelIdentifier));
+	
+	if(WeaponClassModel == 0)
+	{
+		throw std::runtime_error("For the weapon class '" + Item->sGetName() + " could not find the model '" + ModelIdentifier + "'.");
+	}
+	NewWeaponClass->SetModel(WeaponClassModel);
+	NewWeaponClass->SetModelColor(ModelColor);
 	NewWeaponClass->SetSlotClassIdentifier(SlotClassIdentifier);
 	NewWeaponClass->SetOrientation(Orientation);
 	NewWeaponClass->SetReloadTime(ReloadTime);
 	NewWeaponClass->SetSpaceRequirement(static_cast< unsigned_numeric >(1000 * SpaceRequirement));
+	NewWeaponClass->SetParticleExitPosition(ParticleExitPosition);
 	NewWeaponClass->SetParticleExitSpeed(ParticleExitSpeed);
 	NewWeaponClass->SetParticleDamage(ParticleDamage);
 	NewWeaponClass->SetParticleLifeTime(ParticleLifeTime);

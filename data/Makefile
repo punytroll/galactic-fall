@@ -26,6 +26,7 @@ all_data = \
 	.data/model_cargo_cube.data \
 	.data/model_fighter.data \
 	.data/model_laser_shot.data \
+	.data/model_light_laser.data \
 	.data/model_planet.data \
 	.data/model_shuttle.data \
 	.data/model_transporter.data \
@@ -169,6 +170,7 @@ data.arx: .data $(all_data) Makefile
 	arxadd $@ --uid 109 --name "Cargo Cube" --type 2 --subtype 0 --add 2:child .data/model_cargo_cube.data
 	arxadd $@ --uid 130 --name "Fighter" --type 2 --subtype 0 --add 2:child .data/model_fighter.data
 	arxadd $@ --name "Laser Shot" --type 2 --subtype 0 --add 2:child .data/model_laser_shot.data
+	arxadd $@ --name "Light Laser" --type 2 --subtype 0 --add 2:child .data/model_light_laser.data
 	arxadd $@ --uid 129 --name "Planet" --type 2 --subtype 0 --add 2:child .data/model_planet.data
 	arxadd $@ --uid 121 --name "Shuttle" --type 2 --subtype 0 --add 2:child .data/model_shuttle.data
 	arxadd $@ --uid 127 --name "Transporter" --type 2 --subtype 0 --add 2:child .data/model_transporter.data
@@ -188,6 +190,9 @@ model_fighter.xml: models/fighter.xml littlem_to_xml.xsl
 model_laser_shot.xml: models/laser_shot.xml littlem_to_xml.xsl
 	xsltproc -output $@ littlem_to_xml.xsl $<
 
+model_light_laser.xml: models/light_laser.xml littlem_to_xml.xsl
+	xsltproc -output $@ littlem_to_xml.xsl $<
+
 model_planet.xml: models/planet.xml littlem_to_xml.xsl
 	xsltproc -output $@ littlem_to_xml.xsl $<
 
@@ -199,6 +204,9 @@ model_transporter.xml: models/transporter.xml littlem_to_xml.xsl
 
 models/fighter.xml: models/fighter.raw $(raw_to_littlem_dependencies)
 	python raw_to_littlem.py --in=$< --out=$@ --identifier=fighter
+
+models/light_laser.xml: models/light_laser.raw $(raw_to_littlem_dependencies)
+	python raw_to_littlem.py --in=$< --out=$@ --identifier=light_laser
 
 models/planet.xml: models/planet.raw $(raw_to_littlem_dependencies)
 	python raw_to_littlem.py --in=$< --out=$@ --identifier=planet

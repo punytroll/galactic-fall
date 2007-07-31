@@ -1,6 +1,13 @@
 <weapon-class>
 	<identifier>light_laser</identifier>
 	<name>Light Laser</name>
+	<model-color>
+		<red>0.5</red>
+		<green>0.5</green>
+		<blue>0.5</blue>
+		<alpha>1</alpha>
+	</model-color>
+	<model-identifier>light_laser</model-identifier>
 	<slot-class-identifier>light_weapon</slot-class-identifier>
 	<orientation>
 		<w>0.7071067812</w>
@@ -11,6 +18,11 @@
 	<reload-time>0.63</reload-time>
 	<space-requirement>0.3</space-requirement>
 	<particle>
+		<exit-position>
+			<x>0.8</x>
+			<y>0</y>
+			<z>0.08</z>
+		</exit-position>
 		<exit-speed>30</exit-speed>
 		<damage>12</damage>
 		<life-time>2.5</life-time>
