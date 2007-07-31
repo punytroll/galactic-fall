@@ -27,9 +27,9 @@
 			<class-identifier>medium_weapon</class-identifier>
 			<name>Front Gun</name>
 			<position>
-				<x>9</x>
+				<x>7.1</x>
 				<y>0</y>
-				<z>0</z>
+				<z>0.9</z>
 			</position>
 			<orientation>
 				<w>0.7071067812</w>
