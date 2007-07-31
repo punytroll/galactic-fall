@@ -36,6 +36,7 @@ public:
 	// getters
 	const Quaternion & GetOrientation(void) const;
 	Slot * GetSlot(void);
+	const Slot * GetSlot(void) const;
 	const WeaponClass * GetWeaponClass(void) const;
 	// setters
 	void SetFire(bool Fire);
@@ -55,6 +56,11 @@ inline const Quaternion & Weapon::GetOrientation(void) const
 }
 
 inline Slot * Weapon::GetSlot(void)
+{
+	return m_Slot;
+}
+
+inline const Slot * Weapon::GetSlot(void) const
 {
 	return m_Slot;
 }
