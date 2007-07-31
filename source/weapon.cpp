@@ -20,10 +20,15 @@
 #include <sstream>
 #include <stdexcept>
 
+#include <GL/gl.h>
+
+#include "color.h"
 #include "game_time.h"
 #include "math.h"
+#include "math/matrix4f.h"
 #include "math/quaternion.h"
 #include "math/vector4f.h"
+#include "model.h"
 #include "ship.h"
 #include "shot.h"
 #include "slot.h"
@@ -85,4 +90,28 @@ void Weapon::Update(float Seconds)
 
 void Weapon::Draw(void) const
 {
+	// the OpenGL context is positioned at the containers origin and rotated according to the conatiners orientation
+	if(GetWeaponClass()->GetModel() != 0)
+	{
+		glMaterialfv(GL_FRONT, GL_SPECULAR, Vector4f(0.0f, 0.0f, 0.0f, 1.0f).m_V.m_A);
+		if(GetWeaponClass()->GetModelColor() != 0)
+		{
+			glMaterialfv(GL_FRONT, GL_DIFFUSE, GetWeaponClass()->GetModelColor()->GetColor().m_V.m_A);
+		}
+		else
+		{
+			glMaterialfv(GL_FRONT, GL_DIFFUSE, Vector4f(1.0f, 1.0f, 1.0f, 1.0f).m_V.m_A);
+		}
+		
+		const Vector3f & SlotPosition(GetSlot()->GetPosition());
+		
+		glPushMatrix();
+		glTranslatef(SlotPosition[0], SlotPosition[1], SlotPosition[2]);
+		
+		Quaternion WeaponOrientation(GetSlot()->GetOrientation() * GetOrientation());
+		
+		glMultMatrixf(Matrix4f(WeaponOrientation).Transpose().Matrix());
+		GetWeaponClass()->GetModel()->Draw();
+		glPopMatrix();
+	}
 }

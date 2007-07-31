@@ -46,6 +46,7 @@
 	</offered-asset-class>
 	
 	<particle>
+		<vector3f identifier="exit-position"/>
 		<float identifier="exit-speed"/>
 		<float identifier="damage"/>
 		<float identifier="life-time"/>
@@ -156,6 +157,8 @@
 	<weapon-class>
 		<string identifier="identifier"/>
 		<string identifier="name"/>
+		<color4f identifier="model-color"/>
+		<string identifier="model-identifier"/>
 		<string identifier="slot-class-identifier"/>
 		<quaternion identifier="orientation"/>
 		<float identifier="reload-time"/>

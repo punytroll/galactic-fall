@@ -304,6 +304,7 @@ weapon_h = \
 weapon_class_h = \
 	weapon_class.h \
 	$(math_quaternion_h) \
+	$(math_vector3f_h) \
 	$(type_definitions_h)
 
 weapon_class_manager_h = \
@@ -538,7 +539,7 @@ user_interface.o: user_interface.cpp $(user_interface_h) $(widget_h)
 viewport.o: viewport.cpp $(viewport_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-weapon.o: weapon.cpp $(game_time_h) $(math_quaternion_h) $(math_vector4f_h) $(ship_h) $(shot_h) $(slot_h) $(string_cast_h) $(system_h) $(weapon_h) $(weapon_class_h)
+weapon.o: weapon.cpp $(color_h) $(game_time_h) $(math_matrix4f_h) $(math_quaternion_h) $(math_vector4f_h) $(model_h) $(ship_h) $(shot_h) $(slot_h) $(string_cast_h) $(system_h) $(weapon_h) $(weapon_class_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 weapon_class.o: weapon_class.cpp $(color_h) $(weapon_class_h)

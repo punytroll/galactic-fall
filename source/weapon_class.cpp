@@ -24,6 +24,8 @@
 
 WeaponClass::WeaponClass(const std::string & Identifier) :
 	m_Identifier(Identifier),
+	m_Model(0),
+	m_ModelColor(0),
 	m_ReloadTime(FLT_MAX),
 	m_ParticleExitSpeed(0.0f),
 	m_ParticleDamage(0.0f),
@@ -34,8 +36,16 @@ WeaponClass::WeaponClass(const std::string & Identifier) :
 
 WeaponClass::~WeaponClass(void)
 {
+	delete m_ModelColor;
+	m_ModelColor = 0;
 	delete m_ParticleColor;
 	m_ParticleColor = 0;
+}
+
+void WeaponClass::SetModelColor(const Color & ModelColor)
+{
+	delete m_ModelColor;
+	m_ModelColor = new Color(ModelColor);
 }
 
 void WeaponClass::SetParticleColor(const Color & ParticleColor)

@@ -80,15 +80,26 @@ void Ship::Draw(void) const
 	glTranslatef(m_Position.m_V.m_A[0], m_Position.m_V.m_A[1], 0.0f);
 	glRotatef(m_AngularPosition * 180.0f / M_PI, 0.0f, 0.0f, 1.0f);
 	glMaterialfv(GL_FRONT, GL_SPECULAR, Vector4f(0.0f, 0.0f, 0.0f, 1.0f).m_V.m_A);
-	if(m_ShipClass->GetColor() != 0)
+	if(GetShipClass()->GetColor() != 0)
 	{
-		glMaterialfv(GL_FRONT, GL_DIFFUSE, m_ShipClass->GetColor()->GetColor().m_V.m_A);
+		glMaterialfv(GL_FRONT, GL_DIFFUSE, GetShipClass()->GetColor()->GetColor().m_V.m_A);
 	}
 	else
 	{
 		glMaterialfv(GL_FRONT, GL_DIFFUSE, Vector4f(1.0f, 1.0f, 1.0f, 1.0f).m_V.m_A);
 	}
-	m_ShipClass->GetModel()->Draw();
+	GetShipClass()->GetModel()->Draw();
+	// draw weapons
+	for(std::map< std::string, Slot * >::const_iterator SlotIterator = m_Slots.begin(); SlotIterator != m_Slots.end(); ++SlotIterator)
+	{
+		// only draw *mounted* *weapons*
+		const Weapon * TheWeapon(dynamic_cast< const Weapon * >(SlotIterator->second->GetMountedObject().Get()));
+		
+		if(TheWeapon != 0)
+		{
+			TheWeapon->Draw();
+		}
+	}
 	// draw acceleration visualization
 	if(m_Accelerating == true)
 	{
