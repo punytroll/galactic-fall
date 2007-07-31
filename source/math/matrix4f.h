@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 1.1.7 of algebra.
+ * This is part of version 1.2.0 of algebra.
  **/
 
 #ifndef ALGEBRA_MATRIX4F_H
@@ -69,6 +69,34 @@ public:
 	const float * Matrix(void) const
 	{
 		return reinterpret_cast< const float * >(m_M);
+	}
+	
+	Matrix4f & Transpose(void)
+	{
+		float Temporary;
+		
+		Temporary = m_M[0].m_A[1];
+		m_M[0].m_A[1] = m_M[1].m_A[0];
+		m_M[1].m_A[0] = Temporary;
+		Temporary = m_M[0].m_A[2];
+		m_M[0].m_A[2] = m_M[2].m_A[0];
+		m_M[2].m_A[0] = Temporary;
+		Temporary = m_M[0].m_A[3];
+		m_M[0].m_A[3] = m_M[3].m_A[0];
+		m_M[3].m_A[0] = Temporary;
+		
+		Temporary = m_M[1].m_A[2];
+		m_M[1].m_A[2] = m_M[2].m_A[1];
+		m_M[2].m_A[1] = Temporary;
+		Temporary = m_M[1].m_A[3];
+		m_M[1].m_A[3] = m_M[3].m_A[1];
+		m_M[3].m_A[1] = Temporary;
+		
+		Temporary = m_M[2].m_A[3];
+		m_M[2].m_A[3] = m_M[3].m_A[2];
+		m_M[3].m_A[2] = Temporary;
+		
+		return *this;
 	}
 };
 
