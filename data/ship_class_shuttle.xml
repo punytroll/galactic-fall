@@ -27,8 +27,8 @@
 			<class-identifier>light_weapon</class-identifier>
 			<name>Starboard Gun</name>
 			<position>
-				<x>4.2</x>
-				<y>-1.2</y>
+				<x>3.0</x>
+				<y>-1.44</y>
 				<z>0</z>
 			</position>
 			<orientation>
@@ -43,8 +43,8 @@
 			<class-identifier>light_weapon</class-identifier>
 			<name>Backboard Gun</name>
 			<position>
-				<x>4.2</x>
-				<y>1.2</y>
+				<x>3.0</x>
+				<y>1.44</y>
 				<z>0</z>
 			</position>
 			<orientation>
