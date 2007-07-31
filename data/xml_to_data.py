@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 
+from os import remove
 from pprint import pprint
 from struct import pack
 from sys import exit
@@ -67,7 +68,7 @@ def out(data_type, node):
 			for stack_entry in out_call_stack:
 				stack_path += "/" + stack_entry
 			print "In file '" + options.in_file + "' I found an invalid value '" + node.firstChild.nodeValue + "' for '" + stack_path + "' of type '" + data_type + "'."
-			exit(1)
+			raise Exception()
 	elif data_type == "array":
 		count = 0
 		for node_part in node.childNodes:
@@ -92,16 +93,21 @@ def out(data_type, node):
 					for stack_entry in out_call_stack:
 						stack_path += "/" + stack_entry
 					print "In file '" + options.in_file + "' I found no value for '" + stack_path + "/" + part[0] + "' of type '" + part[1] + "'."
-					exit(1)
+					raise Exception()
 		elif isinstance(definitions[data_type], StringTypes):
 			out(definitions[data_type], node)
 	else:
 		print "Could not find a suitable definition for type '" + data_type + "'."
-		exit(1)
+		raise Exception()
 	out_call_stack.pop()
 
 # now parse the in file
 in_document = parse(options.in_file)
 in_element = in_document.documentElement
 if in_element.nodeType == Node.ELEMENT_NODE:
-	out(in_element.tagName, in_element)
+	try:
+		out(in_element.tagName, in_element)
+	except Exception:
+		out_file.close()
+		remove(options.out_file)
+		exit(1)
