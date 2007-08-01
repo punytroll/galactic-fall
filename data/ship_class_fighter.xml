@@ -27,9 +27,9 @@
 			<class-identifier>light_weapon</class-identifier>
 			<name>Front Gun</name>
 			<position>
-				<x>3</x>
+				<x>2.5</x>
 				<y>0</y>
-				<z>0</z>
+				<z>-0.3</z>
 			</position>
 			<orientation>
 				<w>0</w>
