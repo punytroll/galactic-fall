@@ -65,10 +65,26 @@ void Weapon::Update(float Seconds)
 		NewShot->SetObjectIdentifier(IdentifierStream.str());
 		NewShot->SetShooter(TheShip);
 		
+		// calculating the shot's position in the world coordinate system
+		const Vector3f & ParticleExitPosition(GetWeaponClass()->GetParticleExitPosition());
 		const Vector3f & SlotPosition(GetSlot()->GetPosition());
+		const Vector2f & ShipPosition(TheShip->GetPosition());
+		Vector4f ShotPosition(true);
 		
-		NewShot->SetPosition(TheShip->GetPosition() + Vector2f(SlotPosition.m_V.m_A[0], SlotPosition.m_V.m_A[1]).Turned(TheShip->GetAngularPosition()));
+		ShotPosition[0] += ParticleExitPosition[0];
+		ShotPosition[1] += ParticleExitPosition[1];
+		ShotPosition[2] += ParticleExitPosition[2];
+		ShotPosition *= GetOrientation();
+		ShotPosition *= GetSlot()->GetOrientation();
+		ShotPosition[0] += SlotPosition[0];
+		ShotPosition[1] += SlotPosition[1];
+		ShotPosition[2] += SlotPosition[2];
+		ShotPosition *= Quaternion(TheShip->GetAngularPosition(), Quaternion::InitializeRotationZ);
+		ShotPosition[0] += ShipPosition[0];
+		ShotPosition[1] += ShipPosition[1];
+		NewShot->SetPosition(Vector2f(ShotPosition[0], ShotPosition[1]));
 		
+		// calculating the shot's angular position in world coordinate system
 		Vector4f ShotDirection(1.0f, 0.0f, 0.0f, 0.0f);
 		
 		ShotDirection *= GetOrientation();
