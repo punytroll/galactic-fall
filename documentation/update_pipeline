@@ -1,0 +1,22 @@
+Update Pipeline for Online Games:
+- reading from network
+- three independent processes:
+	- input-commands originating in network (from message dequeuing to setting values in Device objects)
+	- user input (from key or mouse input up to setting values in Device objects / queuing data for the server packet)
+- server data output
+- update game logic
+- update physics
+- draw
+
+Reading from network is always running in a back thread. Synchronization with the game is done via thread-safe queues (either locking or, prefereable, lock-free).
+Since only one socket is feasable there is no need for synchronization inside the network layer. Also sending data is relatively slow and the thread is often in IO-waiting state.
+Decoding a network message and putting the inlined data into Message objects can be done highly parallel in worker threads. Now consider the different kinds of network messages.
+
+Update Pipeline for Offline Games:
+- artificial intelligence (from mind update including the dequeuing of feedback messages to setting values in Device objects)
+- user input (from key or mouse input up to setting values in Device objects / queuing data for the server packet)
+- update game logic (applying values from Devices to actual actions: setting actions in the physics engine, modifying object structure (creating and deleting objects, adding and removing objects))
+- update physics
+- draw (draw registered render phases, draw final render phase, phases may depend on one another (avoid cycles))
+
+To allow parallel processing in physics a regional partition of the object space is necessary including overlap handling. The regional partitioning should consider not only positions and dimensions of the objects but also "change volumes"
