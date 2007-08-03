@@ -791,7 +791,7 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 	NewCharacter->GetMapKnowledge()->AddExploredSystem(System);
 	if(ShipClassIdentifier == "fighter")
 	{
-		NewCharacter->SetCredits(GetRandomU4Byte(50, 250));
+		NewCharacter->SetCredits(200 + GetRandomU4Byte(50, 250));
 		
 		Weapon * NewWeapon(new Weapon(g_WeaponClassManager->Get("light_laser")));
 		
