@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 1.2.0 of algebra.
+ * This is part of version 1.2.2 of algebra.
  **/
 
 #ifndef ALGEBRA_VECTOR4D_H
@@ -76,5 +76,10 @@ public:
 		return m_V[Index];
 	}
 };
+
+inline Vector4d operator*(double Scalar, const Vector4d & Vector)
+{
+	return Vector4d(Scalar * Vector[0], Scalar * Vector[1], Scalar * Vector[2], Scalar * Vector[3]);
+}
 
 #endif

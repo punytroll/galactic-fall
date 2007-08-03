@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 1.2.0 of algebra.
+ * This is part of version 1.2.2 of algebra.
  **/
 
 #ifndef ALGEBRA_VECTOR2F_H
@@ -223,5 +223,10 @@ public:
 		return m_V.m_A[Index];
 	}
 };
+
+inline Vector2f operator*(float Scalar, const Vector2f & Vector)
+{
+	return Vector2f(Scalar * Vector[0], Scalar * Vector[1]);
+}
 
 #endif
