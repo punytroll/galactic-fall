@@ -24,8 +24,7 @@ class RealTime
 {
 public:
 	static void Invalidate(void);
-	static double GetTime(void);
-	static double GetInterval(void);
+	static double Get(void);
 private:
 	static bool m_Valid;
 	static double m_Time;

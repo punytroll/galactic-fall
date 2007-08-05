@@ -66,6 +66,7 @@
 #include "planet.h"
 #include "planet_dialog.h"
 #include "real_time.h"
+#include "save_game_dialog.h"
 #include "scanner_display.h"
 #include "ship.h"
 #include "ship_class.h"
@@ -122,6 +123,7 @@ bool g_Pause(false);
 PlanetDialog * g_PlanetDialog(0);
 MapDialog * g_MapDialog(0);
 MountWeaponDialog * g_MountWeaponDialog(0);
+SaveGameDialog * g_SaveGameDialog(0);
 TimeoutNotificationManager * g_GameTimeTimeoutNotifications;
 TimeoutNotification g_SpawnShipTimeoutNotification;
 TimeoutNotificationManager * g_RealTimeTimeoutNotifications;
@@ -219,8 +221,13 @@ int WantToScoop(Ship * Ship, Commodity * Commodity)
 
 float CalculateTime(void)
 {
-	double DeltaSeconds(RealTime::GetInterval());
+	static double LastTime(RealTime::Get());
 	
+	RealTime::Invalidate();
+	
+	double DeltaSeconds(RealTime::Get() - LastTime);
+	
+	LastTime = RealTime::Get();
 	if(g_Pause == false)
 	{
 		DeltaSeconds *= g_TimeWarp;
@@ -248,7 +255,7 @@ void SetMessage(const std::string & Message)
 	{
 		g_MessageTimeoutNotification.Dismiss();
 	}
-	g_MessageTimeoutNotification = g_RealTimeTimeoutNotifications->Add(RealTime::GetTime() + 2.0f, new FunctionCallback0< void >(HideMessage));
+	g_MessageTimeoutNotification = g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 2.0f, new FunctionCallback0< void >(HideMessage));
 }
 
 void DrawSelection(Position * Position, float RadialSize)
@@ -297,7 +304,7 @@ void CollectWidgets(void)
 		DestroyedWidgets.pop_front();
 	}
 	/// TODO: Make the 5.0f seconds timeout configurable via the game configuration archive.
-	g_RealTimeTimeoutNotifications->Add(RealTime::GetTime() + 5.0f, new FunctionCallback0< void >(CollectWidgets));
+	g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 5.0f, new FunctionCallback0< void >(CollectWidgets));
 }
 
 void DisplayUserInterface(void)
@@ -703,6 +710,11 @@ public:
 		{
 			g_MountWeaponDialog = 0;
 		}
+		else if(EventSource == g_SaveGameDialog)
+		{
+			g_SaveGameDialog = 0;
+			g_Pause = false;
+		}
 	}
 } g_GlobalDestroyListener;
 
@@ -831,7 +843,7 @@ void PopulateSystem(System * System)
 	{
 		std::stringstream IdentifierSuffix;
 		
-		IdentifierSuffix << "::created_at_real_time(" << std::fixed << RealTime::GetTime() << "[" << ShipNumber << "])::in_system(" << System->GetIdentifier() << ")";
+		IdentifierSuffix << "::created_at_game_time(" << std::fixed << GameTime::Get() << "[" << ShipNumber << "])::in_system(" << System->GetIdentifier() << ")";
 		
 		SpawnShip(System, IdentifierSuffix.str());
 	}
@@ -856,7 +868,7 @@ void GameFrame(void)
 	System * CurrentSystem(g_CurrentSystem);
 	
 	g_GameTimeTimeoutNotifications->Process(GameTime::Get());
-	g_RealTimeTimeoutNotifications->Process(RealTime::GetTime());
+	g_RealTimeTimeoutNotifications->Process(RealTime::Get());
 	CalculateCharacters();
 	CalculateMovements(CurrentSystem);
 	UpdateUserInterface();
@@ -944,6 +956,74 @@ void MouseMotion(int X, int Y)
 		
 		g_Camera.SetPosition(CameraPosition.m_V.m_A[0] - static_cast< float >(DeltaX) * 0.0008f * CameraPosition.m_V.m_A[2], CameraPosition.m_V.m_A[1] + static_cast< float >(DeltaY) * 0.0008f * CameraPosition.m_V.m_A[2]);
 	}
+}
+
+void SaveGame(std::ostream & OStream)
+{
+	XMLStream XML(OStream);
+	
+	XML << element << "save";
+	XML << element << "system" << attribute << "identifier" << value << g_CurrentSystem->GetIdentifier() << end;
+	XML << element << "time-warp" << attribute << "value" << value << g_TimeWarp << end;
+	XML << element << "character" << attribute << "object-identifier" << value << g_InputMind->GetCharacter()->GetObjectIdentifier();
+	XML << element << "credits" << attribute << "value" << value << g_InputMind->GetCharacter()->GetCredits() << end;
+	XML << element << "map-knowledge";
+	
+	const std::set< System * > & ExploredSystems(g_InputMind->GetCharacter()->GetMapKnowledge()->GetExploredSystems());
+	
+	for(std::set< System * >::const_iterator ExploredSystemIterator = ExploredSystems.begin(); ExploredSystemIterator != ExploredSystems.end(); ++ExploredSystemIterator)
+	{
+		XML << element << "explored-system" << attribute << "identifier" << value << (*ExploredSystemIterator)->GetIdentifier() << end;
+	}
+	XML << end; // map-knowledge
+	XML << end; // character
+	
+	Ship * Ship(g_InputMind->GetCharacter()->GetShip());
+	
+	XML << element << "ship" << attribute << "class-identifier" << value << Ship->GetShipClass()->GetIdentifier() << attribute << "object-identifier" << value << Ship->GetObjectIdentifier();
+	XML << element << "fuel" << attribute << "value" << value << Ship->GetFuel() << end;
+	XML << element << "hull" << attribute << "value" << value << Ship->GetHull() << end;
+	XML << element << "position" << attribute << "x" << value << Ship->GetPosition().m_V.m_A[0] << attribute << "y" << value << Ship->GetPosition().m_V.m_A[1] << end;
+	XML << element << "angular-position" << attribute << "value" << value << Ship->GetAngularPosition() << end;
+	XML << element << "velocity" << attribute << "x" << value << Ship->GetVelocity().m_V.m_A[0] << attribute << "y" << value << Ship->GetVelocity().m_V.m_A[1] << end;
+	XML << element << "manifest";
+	
+	std::set< Object * >::const_iterator ManifestIterator(Ship->GetContent().begin());
+	
+	while(ManifestIterator != Ship->GetContent().end())
+	{
+		Commodity * TheCommodity(dynamic_cast< Commodity * >(*ManifestIterator));
+		Weapon * TheWeapon(dynamic_cast< Weapon * >(*ManifestIterator));
+		
+		if(TheCommodity != 0)
+		{
+			XML << element << "commodity" << attribute << "class-identifier" << value << TheCommodity->GetCommodityClass()->GetIdentifier() << end;
+		}
+		else if(TheWeapon != 0)
+		{
+			XML << element << "weapon" << attribute << "object-identifier" << value << TheWeapon->GetObjectIdentifier() << attribute << "class-identifier" << value << TheWeapon->GetWeaponClass()->GetIdentifier();
+			if(TheWeapon->GetSlot() != 0)
+			{
+				XML << attribute << "mounted-on" << value << TheWeapon->GetSlot()->GetIdentifier();
+			}
+			XML << end;
+		}
+		++ManifestIterator;
+	}
+	XML << end; // manifest
+	XML << element << "name" << attribute << "value" << value << Ship->GetName() << end;
+	XML << end; // ship
+	XML << element << "main-camera";
+	XML << element << "position" << attribute << "x" << value << g_Camera.GetPosition().m_V.m_A[0] << attribute << "y" << value << g_Camera.GetPosition().m_V.m_A[1] << attribute << "z" << value << g_Camera.GetPosition().m_V.m_A[2] << end;
+	if(g_Camera.GetFocus()->GetObjectIdentifier() == "")
+	{
+		g_Camera.GetFocus()->GenerateObjectIdentifier();
+	}
+	XML << element << "focus" << attribute << "object-identifier" << value << g_Camera.GetFocus()->GetObjectIdentifier() << end;
+	XML << element << "field-of-view" << attribute << "radians" << value << g_Camera.GetFieldOfView() << end;
+	XML << end; // camera
+	XML << end; // save
+	OStream << std::endl;
 }
 
 void KeyDown(unsigned int KeyCode)
@@ -1058,7 +1138,7 @@ void KeyDown(unsigned int KeyCode)
 		{
 			std::stringstream IdentifierPrefix;
 			
-			IdentifierPrefix << "::system(" << g_CurrentSystem->GetIdentifier() << ")::created_at(" << std::fixed << RealTime::GetTime() << ")";
+			IdentifierPrefix << "::system(" << g_CurrentSystem->GetIdentifier() << ")::created_at_game_time(" << std::fixed << GameTime::Get() << ")";
 			SpawnShip(g_CurrentSystem, IdentifierPrefix.str(), "fighter");
 			
 			break;
@@ -1213,7 +1293,7 @@ void KeyDown(unsigned int KeyCode)
 		{
 			std::stringstream IdentifierPrefix;
 			
-			IdentifierPrefix << "::system(" << g_CurrentSystem->GetIdentifier() << ")::created_at(" << std::fixed << RealTime::GetTime() << ")";
+			IdentifierPrefix << "::system(" << g_CurrentSystem->GetIdentifier() << ")::created_at_game_time(" << std::fixed << GameTime::Get() << ")";
 			SpawnShip(g_CurrentSystem, IdentifierPrefix.str());
 			
 			break;
@@ -1284,69 +1364,13 @@ void KeyDown(unsigned int KeyCode)
 		}
 	case 67: // Key: F1
 		{
-			XMLStream XML(std::cout);
-			
-			XML << element << "save";
-			XML << element << "system" << attribute << "identifier" << value << g_CurrentSystem->GetIdentifier() << end;
-			XML << element << "time-warp" << attribute << "value" << value << g_TimeWarp << end;
-			XML << element << "character" << attribute << "object-identifier" << value << g_InputMind->GetCharacter()->GetObjectIdentifier();
-			XML << element << "credits" << attribute << "value" << value << g_InputMind->GetCharacter()->GetCredits() << end;
-			XML << element << "map-knowledge";
-			
-			const std::set< System * > & ExploredSystems(g_InputMind->GetCharacter()->GetMapKnowledge()->GetExploredSystems());
-			
-			for(std::set< System * >::const_iterator ExploredSystemIterator = ExploredSystems.begin(); ExploredSystemIterator != ExploredSystems.end(); ++ExploredSystemIterator)
+			if(g_SaveGameDialog == 0)
 			{
-				XML << element << "explored-system" << attribute << "identifier" << value << (*ExploredSystemIterator)->GetIdentifier() << end;
+				g_Pause = true;
+				g_SaveGameDialog = new SaveGameDialog(g_UserInterface->GetRootWidget(), Function(SaveGame));
+				g_SaveGameDialog->GrabKeyFocus();
+				g_SaveGameDialog->AddDestroyListener(&g_GlobalDestroyListener);
 			}
-			XML << end; // map-knowledge
-			XML << end; // character
-			
-			Ship * Ship(g_InputMind->GetCharacter()->GetShip());
-			
-			XML << element << "ship" << attribute << "class-identifier" << value << Ship->GetShipClass()->GetIdentifier() << attribute << "object-identifier" << value << Ship->GetObjectIdentifier();
-			XML << element << "fuel" << attribute << "value" << value << Ship->GetFuel() << end;
-			XML << element << "hull" << attribute << "value" << value << Ship->GetHull() << end;
-			XML << element << "position" << attribute << "x" << value << Ship->GetPosition().m_V.m_A[0] << attribute << "y" << value << Ship->GetPosition().m_V.m_A[1] << end;
-			XML << element << "angular-position" << attribute << "value" << value << Ship->GetAngularPosition() << end;
-			XML << element << "velocity" << attribute << "x" << value << Ship->GetVelocity().m_V.m_A[0] << attribute << "y" << value << Ship->GetVelocity().m_V.m_A[1] << end;
-			XML << element << "manifest";
-			
-			std::set< Object * >::const_iterator ManifestIterator(Ship->GetContent().begin());
-			
-			while(ManifestIterator != Ship->GetContent().end())
-			{
-				Commodity * TheCommodity(dynamic_cast< Commodity * >(*ManifestIterator));
-				Weapon * TheWeapon(dynamic_cast< Weapon * >(*ManifestIterator));
-				
-				if(TheCommodity != 0)
-				{
-					XML << element << "commodity" << attribute << "class-identifier" << value << TheCommodity->GetCommodityClass()->GetIdentifier() << end;
-				}
-				else if(TheWeapon != 0)
-				{
-					XML << element << "weapon" << attribute << "object-identifier" << value << TheWeapon->GetObjectIdentifier() << attribute << "class-identifier" << value << TheWeapon->GetWeaponClass()->GetIdentifier();
-					if(TheWeapon->GetSlot() != 0)
-					{
-						XML << attribute << "mounted-on" << value << TheWeapon->GetSlot()->GetIdentifier();
-					}
-					XML << end;
-				}
-				++ManifestIterator;
-			}
-			XML << end; // manifest
-			XML << element << "name" << attribute << "value" << value << Ship->GetName() << end;
-			XML << end; // ship
-			XML << element << "main-camera";
-			XML << element << "position" << attribute << "x" << value << g_Camera.GetPosition().m_V.m_A[0] << attribute << "y" << value << g_Camera.GetPosition().m_V.m_A[1] << attribute << "z" << value << g_Camera.GetPosition().m_V.m_A[2] << end;
-			if(g_Camera.GetFocus()->GetObjectIdentifier() == "")
-			{
-				g_Camera.GetFocus()->GenerateObjectIdentifier();
-			}
-			XML << element << "focus" << attribute << "object-identifier" << value << g_Camera.GetFocus()->GetObjectIdentifier() << end;
-			XML << element << "field-of-view" << attribute << "radians" << value << g_Camera.GetFieldOfView() << end;
-			XML << end; // camera
-			XML << end; // save
 			
 			break;
 		}
@@ -1965,7 +1989,7 @@ int main(int argc, char ** argv)
 		g_ScannerDisplay->SetOwner(g_OutputMind->GetCharacter()->GetShip()->GetReference());
 	}
 	// set first timeout for widget collector, it will reinsert itself on callback
-	g_RealTimeTimeoutNotifications->Add(RealTime::GetTime() + 5.0f, Function(CollectWidgets));
+	g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 5.0f, Function(CollectWidgets));
 	// setting up the graphical environment
 	CreateWindow();
 	InitializeOpenGL();

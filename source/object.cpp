@@ -63,7 +63,7 @@ void Object::GenerateObjectIdentifier(void)
 {
 	if(m_ObjectIdentifier.empty() == true)
 	{
-		SetObjectIdentifier(std::string("::") + typeid(*this).name() + "::" + to_string_cast(reinterpret_cast< void * >(this)) + "(" + to_string_cast(RealTime::GetTime()) + ")");
+		SetObjectIdentifier(std::string("::") + typeid(*this).name() + "::" + to_string_cast(reinterpret_cast< void * >(this)) + "(" + to_string_cast(RealTime::Get()) + ")");
 	}
 }
 
