@@ -125,4 +125,5 @@ bool SaveGameDialog::OnKey(Widget * EventSource, int KeyCode, int State)
 
 bool SaveGameDialog::OnMouseButton(Widget * EventSource, int Button, int State, float X, float Y)
 {
+	return WWindow::OnMouseButton(EventSource, Button, State, X, Y);
 }
