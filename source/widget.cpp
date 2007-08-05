@@ -132,31 +132,7 @@ void Widget::UnsetBackgroundColor(void)
 
 void Widget::SetPosition(const Vector2f & Position)
 {
-	Vector2f Offset(GetPosition() - Position);
-	
 	m_Position = Position;
-	
-	std::list< Widget * >::iterator SubWidgetIterator(m_SubWidgets.begin());
-	
-	// iterate through the list of sub widgets and correct widget positions and sizes
-	while(SubWidgetIterator != m_SubWidgets.end())
-	{
-		Widget * SubWidget(*SubWidgetIterator);
-		Vector2f SubWidgetNewPosition(SubWidget->GetPosition());
-		Vector2f SubWidgetNewSize(SubWidget->GetSize());
-		
-		if(SubWidget->GetAnchorLeft() == false)
-		{
-			SubWidgetNewPosition[0] += Offset[0];
-		}
-		if(SubWidget->GetAnchorTop() == false)
-		{
-			SubWidgetNewPosition[1] += Offset[1];
-		}
-		SubWidget->SetPosition(SubWidgetNewPosition);
-		SubWidget->SetSize(SubWidgetNewSize);
-		++SubWidgetIterator;
-	}
 }
 
 void Widget::SetSize(const Vector2f & Size)
