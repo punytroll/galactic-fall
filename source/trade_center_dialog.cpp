@@ -22,11 +22,11 @@
 #include "character.h"
 #include "commodity.h"
 #include "commodity_class.h"
+#include "game_time.h"
 #include "globals.h"
 #include "label.h"
 #include "object_factory.h"
 #include "planet.h"
-#include "real_time.h"
 #include "ship.h"
 #include "string_cast.h"
 #include "trade_center_dialog.h"
@@ -178,7 +178,7 @@ void TradeCenterDialog::Buy(const PlanetAssetClass * PlanetAssetClass)
 		{
 			Object * NewCargo(g_ObjectFactory->Create(PlanetAssetClass->GetAssetClass()->GetObjectType(), PlanetAssetClass->GetAssetClass()->GetObjectClass()));
 			
-			NewCargo->SetObjectIdentifier("::" + PlanetAssetClass->GetAssetClass()->GetObjectType() + "(" + PlanetAssetClass->GetAssetClass()->GetObjectClass() + ")::created_on(" + m_Planet->GetObjectIdentifier() + ")::created_at(" + to_string_cast(RealTime::GetTime(), 6) + ")::bought_by(" + m_Character->GetObjectIdentifier() + ")::commodity_class(" + PlanetAssetClass->GetAssetClass()->GetIdentifier() + ")");
+			NewCargo->SetObjectIdentifier("::" + PlanetAssetClass->GetAssetClass()->GetObjectType() + "(" + PlanetAssetClass->GetAssetClass()->GetObjectClass() + ")::created_on(" + m_Planet->GetObjectIdentifier() + ")::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::bought_by(" + m_Character->GetObjectIdentifier() + ")::commodity_class(" + PlanetAssetClass->GetAssetClass()->GetIdentifier() + ")");
 			m_Character->GetShip()->AddContent(NewCargo);
 			UpdateTraderCredits();
 			UpdateTraderAvailableSpace();
