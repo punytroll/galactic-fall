@@ -79,6 +79,7 @@
 #include "states.h"
 #include "string_cast.h"
 #include "system.h"
+#include "timeout_notifications.h"
 #include "user_interface.h"
 #include "weapon.h"
 #include "weapon_class.h"
@@ -121,10 +122,10 @@ bool g_Pause(false);
 PlanetDialog * g_PlanetDialog(0);
 MapDialog * g_MapDialog(0);
 MountWeaponDialog * g_MountWeaponDialog(0);
-std::multimap< double, Callback0< void > * > g_GameTimeTimeoutNotifications;
-std::multimap< double, Callback0< void > * >::iterator g_SpawnShipTimeoutIterator;
-std::multimap< double, Callback0< void > * > g_RealTimeTimeoutNotifications;
-std::multimap< double, Callback0< void > * >::iterator g_MessageTimeoutIterator;
+TimeoutNotificationManager * g_GameTimeTimeoutNotifications;
+TimeoutNotification g_SpawnShipTimeoutNotification;
+TimeoutNotificationManager * g_RealTimeTimeoutNotifications;
+TimeoutNotification g_MessageTimeoutNotification;
 Widget * g_MiniMap(0);
 Widget * g_Scanner(0);
 MiniMapDisplay * g_MiniMapDisplay(0);
@@ -236,7 +237,6 @@ float CalculateTime(void)
 void HideMessage(void)
 {
 	g_MessageLabel->Hide();
-	g_MessageTimeoutIterator = g_RealTimeTimeoutNotifications.end();
 }
 
 void SetMessage(const std::string & Message)
@@ -244,11 +244,11 @@ void SetMessage(const std::string & Message)
 	g_MessageLabel->SetString(Message);
 	g_MessageLabel->Show();
 	/// TODO: Make the 2.0f seconds timeout configurable via the game configuration archive.
-	if(g_MessageTimeoutIterator != g_RealTimeTimeoutNotifications.end())
+	if(g_MessageTimeoutNotification.IsValid() == true)
 	{
-		g_RealTimeTimeoutNotifications.erase(g_MessageTimeoutIterator);
+		g_MessageTimeoutNotification.Dismiss();
 	}
-	g_MessageTimeoutIterator = g_RealTimeTimeoutNotifications.insert(std::make_pair(RealTime::GetTime() + 2.0f, new FunctionCallback0< void >(HideMessage)));
+	g_MessageTimeoutNotification = g_RealTimeTimeoutNotifications->Add(RealTime::GetTime() + 2.0f, new FunctionCallback0< void >(HideMessage));
 }
 
 void DrawSelection(Position * Position, float RadialSize)
@@ -297,7 +297,7 @@ void CollectWidgets(void)
 		DestroyedWidgets.pop_front();
 	}
 	/// TODO: Make the 5.0f seconds timeout configurable via the game configuration archive.
-	g_RealTimeTimeoutNotifications.insert(std::make_pair(RealTime::GetTime() + 5.0f, new FunctionCallback0< void >(CollectWidgets)));
+	g_RealTimeTimeoutNotifications->Add(RealTime::GetTime() + 5.0f, new FunctionCallback0< void >(CollectWidgets));
 }
 
 void DisplayUserInterface(void)
@@ -511,38 +511,6 @@ void CalculateMovements(System * System)
 				++ParticleSystemIterator;
 			}
 		}
-	}
-}
-
-void ProcessGameTimeTimeouts(void)
-{
-	// call all game time timeouts
-	double StopGameTime(GameTime::Get());
-	
-	while((g_GameTimeTimeoutNotifications.size() > 0) && (StopGameTime > g_GameTimeTimeoutNotifications.begin()->first))
-	{
-		// call the notification callback object
-		(*(g_GameTimeTimeoutNotifications.begin()->second))();
-		// delete the notification callback object
-		delete g_GameTimeTimeoutNotifications.begin()->second;
-		// remove the notification callback from the multimap
-		g_GameTimeTimeoutNotifications.erase(g_GameTimeTimeoutNotifications.begin());
-	}
-}
-
-void ProcessRealTimeTimeouts(void)
-{
-	// call all real time timeouts
-	double StopTime(RealTime::GetTime());
-	
-	while((g_RealTimeTimeoutNotifications.size() > 0) && (StopTime > g_RealTimeTimeoutNotifications.begin()->first))
-	{
-		// call the notification callback object
-		(*(g_RealTimeTimeoutNotifications.begin()->second))();
-		// delete the notification callback object
-		delete g_RealTimeTimeoutNotifications.begin()->second;
-		// remove the notification callback from the multimap
-		g_RealTimeTimeoutNotifications.erase(g_RealTimeTimeoutNotifications.begin());
 	}
 }
 
@@ -852,7 +820,7 @@ void SpawnShipOnTimeout(System * SpawnInSystem)
 	IdentifierSuffix << "::created_at_game_time(" << std::fixed << GameTime::Get() << ")::in_system(" << SpawnInSystem->GetIdentifier() << ")";
 	
 	SpawnShip(SpawnInSystem, IdentifierSuffix.str());
-	g_SpawnShipTimeoutIterator = g_GameTimeTimeoutNotifications.insert(std::make_pair(GameTime::Get() + GetRandomFloatFromExponentialDistribution(1.0f / SpawnInSystem->GetTrafficDensity()), Bind1(Function(SpawnShipOnTimeout), SpawnInSystem)));
+	g_SpawnShipTimeoutNotification = g_GameTimeTimeoutNotifications->Add(GameTime::Get() + GetRandomFloatFromExponentialDistribution(1.0f / SpawnInSystem->GetTrafficDensity()), Bind1(Function(SpawnShipOnTimeout), SpawnInSystem));
 }
 
 void PopulateSystem(System * System)
@@ -871,17 +839,15 @@ void PopulateSystem(System * System)
 
 void OnOutputFocusEnterSystem(System * EnterSystem)
 {
-	assert(g_SpawnShipTimeoutIterator == g_GameTimeTimeoutNotifications.end());
-	g_SpawnShipTimeoutIterator = g_GameTimeTimeoutNotifications.insert(std::make_pair(GameTime::Get() + GetRandomFloatFromExponentialDistribution(1.0f / EnterSystem->GetTrafficDensity()), Bind1(Function(SpawnShipOnTimeout), EnterSystem)));
+	assert(g_SpawnShipTimeoutNotification.IsValid() == false);
+	g_SpawnShipTimeoutNotification = g_GameTimeTimeoutNotifications->Add(GameTime::Get() + GetRandomFloatFromExponentialDistribution(1.0f / EnterSystem->GetTrafficDensity()), Bind1(Function(SpawnShipOnTimeout), EnterSystem));
 }
 
 void OnOutputFocusLeaveSystem(System * System)
 {
-	if(g_SpawnShipTimeoutIterator != g_GameTimeTimeoutNotifications.end())
+	if(g_SpawnShipTimeoutNotification.IsValid() == true)
 	{
-		delete g_SpawnShipTimeoutIterator->second;
-		g_GameTimeTimeoutNotifications.erase(g_SpawnShipTimeoutIterator);
-		g_SpawnShipTimeoutIterator = g_GameTimeTimeoutNotifications.end();
+		g_SpawnShipTimeoutNotification.Dismiss();
 	}
 }
 
@@ -889,8 +855,8 @@ void GameFrame(void)
 {
 	System * CurrentSystem(g_CurrentSystem);
 	
-	ProcessGameTimeTimeouts();
-	ProcessRealTimeTimeouts();
+	g_GameTimeTimeoutNotifications->Process(GameTime::Get());
+	g_RealTimeTimeoutNotifications->Process(RealTime::GetTime());
 	CalculateCharacters();
 	CalculateMovements(CurrentSystem);
 	UpdateUserInterface();
@@ -1896,8 +1862,6 @@ int main(int argc, char ** argv)
 	// static initialization of data independent globals
 	g_MainPerspective.SetNearClippingPlane(1.0f);
 	g_MainPerspective.SetFarClippingPlane(1000.f);
-	g_MessageTimeoutIterator = g_RealTimeTimeoutNotifications.end();
-	g_SpawnShipTimeoutIterator = g_GameTimeTimeoutNotifications.end();
 	g_AssetClassManager = new AssetClassManager();
 	g_CommodityClassManager = new CommodityClassManager();
 	g_Galaxy = new Galaxy();
@@ -1908,6 +1872,8 @@ int main(int argc, char ** argv)
 	g_SlotClassManager = new SlotClassManager();
 	g_WeaponClassManager = new WeaponClassManager();
 	g_UserInterface = new UserInterface();
+	g_GameTimeTimeoutNotifications = new TimeoutNotificationManager();
+	g_RealTimeTimeoutNotifications = new TimeoutNotificationManager();
 	
 	// parse command line
 	std::vector< std::string > Arguments(argv, argv + argc);
@@ -1999,7 +1965,7 @@ int main(int argc, char ** argv)
 		g_ScannerDisplay->SetOwner(g_OutputMind->GetCharacter()->GetShip()->GetReference());
 	}
 	// set first timeout for widget collector, it will reinsert itself on callback
-	g_RealTimeTimeoutNotifications.insert(std::make_pair(RealTime::GetTime() + 5.0f, Function(CollectWidgets)));
+	g_RealTimeTimeoutNotifications->Add(RealTime::GetTime() + 5.0f, Function(CollectWidgets));
 	// setting up the graphical environment
 	CreateWindow();
 	InitializeOpenGL();
@@ -2023,6 +1989,8 @@ int main(int argc, char ** argv)
 		Object::Dump(Out);
 		std::cout << std::endl;
 	}
+	delete g_GameTimeTimeoutNotifications;
+	delete g_RealTimeTimeoutNotifications;
 	
 	return 0;
 }
