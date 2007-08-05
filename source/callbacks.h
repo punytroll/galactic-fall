@@ -123,18 +123,18 @@ protected:
 };
 
 template < typename Return, typename Class >
-class MemberCallback0 : public Callback0< Return >
+class MethodCallback0 : public Callback0< Return >
 {
 public:
 	typedef Return (Class::*Function)();
 	
-	explicit MemberCallback0(Class * Object, Function Function) :
+	explicit MethodCallback0(Class * Object, Function Function) :
 		m_Object(Object),
 		m_Function(Function)
 	{
 	}
 	
-	virtual ~MemberCallback0(void)
+	virtual ~MethodCallback0(void)
 	{
 	}
 	
@@ -211,6 +211,12 @@ template < typename Return, typename Type1, typename Type2 >
 FunctionCallback2< Return, Type1, Type2 > * Function(Return (*Function)(Type1, Type2))
 {
 	return new FunctionCallback2< Return, Type1, Type2 >(Function);
+}
+
+template < typename Return, typename Class >
+MethodCallback0< Return, Class > * Method(Class * Object, Return (Class::*Function)())
+{
+	return new MethodCallback0< Return, Class >(Object, Function);
 }
 
 template < typename Return, typename Type1 >
