@@ -40,6 +40,7 @@ class ShipClassManager;
 class SlotClassManager;
 class UserInterface;
 class WeaponClassManager;
+class TimeoutNotificationManager;
 
 extern AssetClassManager * g_AssetClassManager;
 extern CommodityClassManager * g_CommodityClassManager;
@@ -50,5 +51,7 @@ extern ShipClassManager * g_ShipClassManager;
 extern SlotClassManager * g_SlotClassManager;
 extern UserInterface * g_UserInterface;
 extern WeaponClassManager * g_WeaponClassManager;
+extern TimeoutNotificationManager * g_GameTimeTimeoutNotifications;
+extern TimeoutNotificationManager * g_RealTimeTimeoutNotifications;
 
 #endif
