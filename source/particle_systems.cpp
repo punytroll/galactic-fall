@@ -75,45 +75,53 @@ ParticleSystem::ParticleSystem(void)
 
 bool ParticleSystem::Update(float Seconds)
 {
-	if(GameTime::Get() >= m_TimeOfDeath)
+	for(std::vector< std::string >::const_iterator ScriptLine = m_SystemScript.begin(); ScriptLine != m_SystemScript.end(); ++ScriptLine)
 	{
-		return false;
-	}
-	else
-	{
-		m_Position += m_Velocity * Seconds;
-		
-		std::list< ParticleSystem::Particle >::iterator ParticleIterator(m_Particles.begin());
-		
-		while(ParticleIterator != m_Particles.end())
+		if(*ScriptLine == "kill-old")
 		{
-			bool Forward(true);
-			
-			for(std::vector< std::string >::const_iterator ScriptLine = m_ParticleScript.begin(); ScriptLine != m_ParticleScript.end(); ++ScriptLine)
+			if(GameTime::Get() >= m_TimeOfDeath)
 			{
-				if(*ScriptLine == "kill-old")
-				{
-					if(GameTime::Get() >= ParticleIterator->m_TimeOfDeath)
-					{
-						ParticleIterator = m_Particles.erase(ParticleIterator);
-						Forward = false;
-						
-						break;
-					}
-				}
-				else if(*ScriptLine == "move")
-				{
-					ParticleIterator->m_Position += ParticleIterator->m_Velocity * Seconds;
-				}
-			}
-			if(Forward == true)
-			{
-				++ParticleIterator;
+				return false;
 			}
 		}
-		
-		return true;
+		else if(*ScriptLine == "move")
+		{
+			m_Position += m_Velocity * Seconds;
+		}
+		else if(*ScriptLine == "update-particles")
+		{
+			std::list< ParticleSystem::Particle >::iterator ParticleIterator(m_Particles.begin());
+			
+			while(ParticleIterator != m_Particles.end())
+			{
+				bool Forward(true);
+				
+				for(std::vector< std::string >::const_iterator ScriptLine = m_ParticleScript.begin(); ScriptLine != m_ParticleScript.end(); ++ScriptLine)
+				{
+					if(*ScriptLine == "kill-old")
+					{
+						if(GameTime::Get() >= ParticleIterator->m_TimeOfDeath)
+						{
+							ParticleIterator = m_Particles.erase(ParticleIterator);
+							Forward = false;
+							
+							break;
+						}
+					}
+					else if(*ScriptLine == "move")
+					{
+						ParticleIterator->m_Position += ParticleIterator->m_Velocity * Seconds;
+					}
+				}
+				if(Forward == true)
+				{
+					++ParticleIterator;
+				}
+			}
+		}
 	}
+	
+	return true;
 }
 
 void ParticleSystem::Draw(void)
@@ -163,6 +171,9 @@ ParticleSystemHit::ParticleSystemHit(void)
 		NewParticle.m_Size = GetRandomFloat(0.25f, 0.4f);
 		m_Particles.push_back(NewParticle);
 	}
+	m_SystemScript.push_back("kill-old");
+	m_SystemScript.push_back("move");
+	m_SystemScript.push_back("update-particles");
 	m_ParticleScript.push_back("kill-old");
 	m_ParticleScript.push_back("move");
 }
@@ -201,6 +212,9 @@ ParticleSystemExplosion::ParticleSystemExplosion(void)
 	BigFlashParticle.m_Color = Color(0.9f, GetRandomFloat(0.9f, 1.0f), GetRandomFloat(0.95f, 1.0f), 0.3f);
 	BigFlashParticle.m_Size = 200.0f;
 	m_Particles.push_back(BigFlashParticle);
+	m_SystemScript.push_back("kill-old");
+	m_SystemScript.push_back("move");
+	m_SystemScript.push_back("update-particles");
 	m_ParticleScript.push_back("kill-old");
 	m_ParticleScript.push_back("move");
 }
