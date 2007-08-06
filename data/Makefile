@@ -57,8 +57,14 @@ raw_to_littlem_dependencies = \
 all: check-dependencies data.arx
 
 check-dependencies:
+	@if [ x`which pkg-config` = x ]; then \
+		echo -e "\nYour system is missing the \"pkg-config\" tool.\nThis tool is needed and you will need to install it in order to build the program.\n"; false; \
+	fi
+	@if ! pkg-config --atleast-version=0.5.0 arxtools; then \
+		echo -e "\nThe tool suite \"arxtools\" that is installed on your system is too old.\nYou have: Version `pkg-config --modversion arxtools`\nYou need: Version 0.5.0\nYou can get the most recent library from \"http://libarxx.sourceforge.net\"./\n"; false; \
+	fi
 	@if [ x`which arxtouch` = x -o x`which arxmod` = x -o x`which arxadd` = x ]; then \
-	    echo -e "\nYour system is missing the arxtools suite.\nYou will need to install this package on your system\nor download it from http://libarxx.sourceforge.net and install it.\n"; false; \
+	    echo -e "\nYour system is missing parts of the arxtools suite.\nYou will need to install the tools \"arxtouch\", \"arxmod\" and \"arxadd\" on your system.\n"; false; \
 	fi
 	@if [ x`which python` = x ]; then \
 	    echo -e "\nYour system is missing the python interpreter.\nIn order to build the data file you will need to install it on your system.\n"; false; \
