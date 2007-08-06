@@ -48,6 +48,7 @@ protected:
 	Vector2f m_Velocity;
 	double m_TimeOfDeath;
 	std::list< Particle > m_Particles;
+	std::vector< std::string > m_SystemScript;
 	std::vector< std::string > m_ParticleScript;
 };
 
