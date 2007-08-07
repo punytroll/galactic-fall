@@ -39,7 +39,9 @@ protected:
 	virtual bool OnKey(Widget * EventSource, const KeyEventInformation & KeyEventInformation);
 	virtual bool OnMouseButton(Widget * EventSource, int Button, int State, float X, float Y);
 private:
+	void ShowErrorMessage(const std::string & ErrorMessage);
 	void HideErrorMessage(void);
+	bool Save(void);
 	Callback1< void, std::ostream & > * m_SaveGameCallback;
 	Button * m_CancelButton;
 	Button * m_OKButton;
