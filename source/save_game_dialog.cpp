@@ -20,6 +20,7 @@
 #include <fstream>
 
 #include "button.h"
+#include "file_handling.h"
 #include "globals.h"
 #include "key_event_information.h"
 #include "label.h"
@@ -76,43 +77,69 @@ SaveGameDialog::SaveGameDialog(Widget * SupWidget, Callback1< void, std::ostream
 	m_FileNameLabel->GrabKeyFocus();
 }
 
+void SaveGameDialog::ShowErrorMessage(const std::string & ErrorMessage)
+{
+	if(m_ErrorMessageTimeoutNotification.IsValid() == true)
+	{
+		m_ErrorMessageTimeoutNotification.Dismiss();
+	}
+	m_ErrorMessage->Show();
+	m_ErrorMessage->SetString(ErrorMessage);
+	m_ErrorMessageTimeoutNotification = g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 2.0f, Method(this, &SaveGameDialog::HideErrorMessage));
+}
+
 void SaveGameDialog::HideErrorMessage(void)
 {
 	m_ErrorMessage->Hide();
+}
+
+bool SaveGameDialog::Save(void)
+{
+	std::string Path(getenv("HOME"));
+	
+	if(IsExistingDirectory(Path) == false)
+	{
+		ShowErrorMessage("Is not an existing directory: \"" + Path + "\".");
+		
+		return false;
+	}
+	Path += "/.galactic-fall/";
+	if(IsExistingDirectory(Path) == false)
+	{
+		ShowErrorMessage("Is not an existing directory: \"" + Path + "\".");
+		
+		return false;
+	}
+	Path += m_FileNameLabel->GetString() + ".xml";
+	/// @todo check Path (doesn't exist, if exists overwrite if it's a file?)
+	
+	std::ofstream OFStream;
+	
+	OFStream.open(Path.c_str());
+	if(OFStream == false)
+	{
+		ShowErrorMessage("Could not create or write \"" + Path + "\".");
+		
+		return false;
+	}
+	else
+	{
+		(*m_SaveGameCallback)(OFStream);
+		
+		return true;
+	}
 }
 
 bool SaveGameDialog::OnClicked(Widget * EventSource)
 {
 	if(EventSource == m_OKButton)
 	{
-		std::string Path(getenv("HOME"));
-		
-		/// @todo check Path (exists and is directory)
-		Path += "/.galactic-fall";
-		/// @todo check Path (exists and is directory)
-		Path += "/" + m_FileNameLabel->GetString() + ".xml";
-		/// @todo check Path (doesn't exist, if exists overwrite if it's a file?)
-		
-		std::ofstream OFStream;
-		
-		OFStream.open(Path.c_str());
-		if(OFStream == false)
+		if(Save() == true)
 		{
-			if(m_ErrorMessageTimeoutNotification.IsValid() == true)
-			{
-				m_ErrorMessageTimeoutNotification.Dismiss();
-			}
-			m_ErrorMessage->Show();
-			m_ErrorMessage->SetString("Could not create or write \"" + Path + "\".");
-			m_ErrorMessageTimeoutNotification = g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 2.0f, Method(this, &SaveGameDialog::HideErrorMessage));
-		}
-		else
-		{
-			(*m_SaveGameCallback)(OFStream);
 			Destroy();
+			
+			return true;
 		}
-		
-		return true;
 	}
 	if(EventSource == m_CancelButton)
 	{
@@ -126,7 +153,7 @@ bool SaveGameDialog::OnClicked(Widget * EventSource)
 
 bool SaveGameDialog::OnKey(Widget * EventSource, const KeyEventInformation & KeyEventInformation)
 {
-	if(((KeyEventInformation.GetKeyCode() == 9 /* ESCAPE */) || (KeyEventInformation.GetKeyCode() == 36 /* RETURN */)) && (KeyEventInformation.IsDown() == true))
+	if((KeyEventInformation.GetKeyCode() == 9 /* ESCAPE */) && (KeyEventInformation.IsDown() == true))
 	{
 		Destroy();
 	}
@@ -143,10 +170,6 @@ bool SaveGameDialog::OnKey(Widget * EventSource, const KeyEventInformation & Key
 		{
 			m_FileNameLabel->SetString(m_FileNameLabel->GetString() + KeyEventInformation.GetString());
 		}
-	}
-	else if((KeyEventInformation.GetKeyCode() == 58 /* M */) && (KeyEventInformation.IsDown() == true))
-	{
-		Destroy();
 	}
 	// eat all other input
 	return true;

@@ -75,6 +75,9 @@ destroy_listener_h = \
 draw_text_h = \
 	draw_text.h
 
+file_handling_h = \
+	file_handling.h
+
 galaxy_h = \
 	galaxy.h \
 	$(object_h)
@@ -432,6 +435,9 @@ destroy_listener.o: destroy_listener.cpp $(destroy_listener_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 draw_text.o: draw_text.cpp $(draw_text_h)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+file_handling.o: file_handling.cpp $(file_handling_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 galaxy.o: galaxy.cpp $(galaxy_h) $(system_h)
