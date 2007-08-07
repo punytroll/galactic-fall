@@ -24,6 +24,7 @@
 #include "commodity_class.h"
 #include "game_time.h"
 #include "globals.h"
+#include "key_event_information.h"
 #include "label.h"
 #include "object_factory.h"
 #include "planet.h"
@@ -280,18 +281,18 @@ bool TradeCenterDialog::OnClicked(Widget * EventSource)
 	return false;
 }
 
-bool TradeCenterDialog::OnKey(Widget * EventSource, int Key, int State)
+bool TradeCenterDialog::OnKey(Widget * EventSource, const KeyEventInformation & KeyEventInformation)
 {
-	if(((Key == 9 /* ESCAPE */) || (Key == 36 /* RETURN */) || (Key == 28 /* T */)) && (State == EV_DOWN))
+	if(((KeyEventInformation.GetKeyCode() == 9 /* ESCAPE */) || (KeyEventInformation.GetKeyCode() == 36 /* RETURN */) || (KeyEventInformation.GetKeyCode() == 28 /* T */)) && (KeyEventInformation.IsDown() == true))
 	{
 		Destroy();
 	}
-	else if((Key == 56 /* B */) && (m_SelectedTradeCenterAssetClass != 0) && (State == EV_DOWN))
+	else if((KeyEventInformation.GetKeyCode() == 56 /* B */) && (m_SelectedTradeCenterAssetClass != 0) && (KeyEventInformation.IsDown() == true))
 	{
 		Buy(m_SelectedTradeCenterAssetClass->GetPlanetAssetClass());
 		m_SelectedTradeCenterAssetClass->UpdateCharacterAmount();
 	}
-	else if((Key == 39 /* S */) && (m_SelectedTradeCenterAssetClass != 0) && (State == EV_DOWN))
+	else if((KeyEventInformation.GetKeyCode() == 39 /* S */) && (m_SelectedTradeCenterAssetClass != 0) && (KeyEventInformation.IsDown() == true))
 	{
 		Sell(m_SelectedTradeCenterAssetClass->GetPlanetAssetClass());
 		m_SelectedTradeCenterAssetClass->UpdateCharacterAmount();

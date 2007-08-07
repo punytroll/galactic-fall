@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006  Hagen Möbius
+ * Copyright (C) 2007  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,17 +17,41 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef KEY_LISTENER_H
-#define KEY_LISTENER_H
+#include <X11/Xutil.h>
 
-class KeyEventInformation;
-class Widget;
+#include "key_event_information.h"
 
-class KeyListener
+KeyEventInformation::KeyEventInformation(XKeyEvent & KeyEvent) :
+	m_KeyEvent(KeyEvent),
+	m_LookupStringPerformed(false)
 {
-public:
-	virtual ~KeyListener(void);
-	virtual bool OnKey(Widget * EventSource, const KeyEventInformation & KeyEventInformation);
-};
+}
 
-#endif
+void KeyEventInformation::PerformStringLookup(void) const
+{
+	char String[10];
+	
+	XLookupString(&m_KeyEvent, String, 10, &m_KeySymbol, NULL);
+	m_String = String;
+	m_LookupStringPerformed = true;
+}
+
+const std::string & KeyEventInformation::GetString(void) const
+{
+	if(m_LookupStringPerformed == false)
+	{
+		PerformStringLookup();
+	}
+	
+	return m_String;
+}
+
+KeySym KeyEventInformation::GetKeySymbol(void) const
+{
+	if(m_LookupStringPerformed == false)
+	{
+		PerformStringLookup();
+	}
+	
+	return m_KeySymbol;
+}

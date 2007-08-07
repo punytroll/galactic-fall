@@ -38,7 +38,7 @@ public:
 	TradeCenterDialog(Widget * SupWidget, Planet * Planet, Character * Character);
 protected:
 	virtual bool OnClicked(Widget * EventSource);
-	virtual bool OnKey(Widget * EventSource, int Key, int State);
+	virtual bool OnKey(Widget * EventSource, const KeyEventInformation & KeyEventInformation);
 	virtual bool OnMouseButton(Widget * EventSource, int Button, int State, float X, float Y);
 	virtual void OnMouseEnter(Widget * EventSource);
 	virtual void OnMouseLeave(Widget * EventSource);

@@ -106,9 +106,9 @@ bool UserInterface::MouseButton(int Button, int State, float X, float Y)
 	}
 }
 
-bool UserInterface::Key(int Key, int State)
+bool UserInterface::Key(const KeyEventInformation & KeyEventInformation)
 {
-	return m_RootWidget->Key(Key, State);
+	return m_RootWidget->Key(KeyEventInformation);
 }
 
 void UserInterface::MouseMotion(float X, float Y)

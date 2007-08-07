@@ -23,6 +23,7 @@
 
 #include "button.h"
 #include "globals.h"
+#include "key_event_information.h"
 #include "label.h"
 #include "map_dialog.h"
 #include "star_map_display.h"
@@ -62,9 +63,9 @@ bool MapDialog::OnClicked(Widget * EventSource)
 	return false;
 }
 
-bool MapDialog::OnKey(Widget * EventSource, int KeyCode, int State)
+bool MapDialog::OnKey(Widget * EventSource, const KeyEventInformation & KeyEventInformation)
 {
-	if(((KeyCode == 9 /* ESCAPE */) || (KeyCode == 36 /* RETURN */) || (KeyCode == 58 /* M */)) && (State == EV_DOWN))
+	if(((KeyEventInformation.GetKeyCode() == 9 /* ESCAPE */) || (KeyEventInformation.GetKeyCode() == 36 /* RETURN */) || (KeyEventInformation.GetKeyCode() == 58 /* M */)) && (KeyEventInformation.IsDown() == true))
 	{
 		Destroy();
 	}

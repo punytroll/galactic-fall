@@ -23,7 +23,7 @@ KeyListener::~KeyListener(void)
 {
 }
 
-bool KeyListener::OnKey(Widget * EventSource, int Key, int State)
+bool KeyListener::OnKey(Widget * EventSource, const KeyEventInformation & KeyEventInformation)
 {
 	return false;
 }

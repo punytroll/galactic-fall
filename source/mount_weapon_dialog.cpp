@@ -20,6 +20,7 @@
 #include "button.h"
 #include "color.h"
 #include "globals.h"
+#include "key_event_information.h"
 #include "label.h"
 #include "mount_weapon_dialog.h"
 #include "ship.h"
@@ -368,9 +369,9 @@ bool MountWeaponDialog::OnClicked(Widget * EventSource)
 	return false;
 }
 
-bool MountWeaponDialog::OnKey(Widget * EventSource, int KeyCode, int State)
+bool MountWeaponDialog::OnKey(Widget * EventSource, const KeyEventInformation & KeyEventInformation)
 {
-	if(((KeyCode == 9 /* ESCAPE */) || (KeyCode == 36 /* RETURN */) || (KeyCode == 25 /* W */)) && (State == EV_DOWN))
+	if(((KeyEventInformation.GetKeyCode() == 9 /* ESCAPE */) || (KeyEventInformation.GetKeyCode() == 36 /* RETURN */) || (KeyEventInformation.GetKeyCode() == 25 /* W */)) && (KeyEventInformation.IsDown() == true))
 	{
 		Destroy();
 	}

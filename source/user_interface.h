@@ -24,6 +24,7 @@
 
 #include "destroy_listener.h"
 
+class KeyEventInformation;
 class Widget;
 
 class UserInterface : public DestroyListener
@@ -32,7 +33,7 @@ public:
 	UserInterface(void);
 	void Draw(void) const;
 	bool MouseButton(int Button, int State, float X, float Y);
-	bool Key(int Key, int State);
+	bool Key(const KeyEventInformation & KeyEventInformation);
 	void MouseMotion(float X, float Y);
 	// setters
 	void SetCaptureWidget(Widget * Widget);

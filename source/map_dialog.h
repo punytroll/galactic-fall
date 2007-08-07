@@ -37,7 +37,7 @@ public:
 	StarMapDisplay * GetStarMapDisplay(void);
 protected:
 	virtual bool OnClicked(Widget * EventSource);
-	virtual bool OnKey(Widget * EventSource, int Key, int State);
+	virtual bool OnKey(Widget * EventSource, const KeyEventInformation & KeyEventInformation);
 private:
 	Button * m_OKButton;
 	Label * m_OKButtonLabel;

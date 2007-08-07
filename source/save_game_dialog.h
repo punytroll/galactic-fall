@@ -36,7 +36,7 @@ public:
 	SaveGameDialog(Widget * SupWidget, Callback1< void, std::ostream & > * SaveGameCallback);
 protected:
 	virtual bool OnClicked(Widget * EventSource);
-	virtual bool OnKey(Widget * EventSource, int Key, int State);
+	virtual bool OnKey(Widget * EventSource, const KeyEventInformation & KeyEventInformation);
 	virtual bool OnMouseButton(Widget * EventSource, int Button, int State, float X, float Y);
 private:
 	void HideErrorMessage(void);
@@ -45,6 +45,7 @@ private:
 	Button * m_OKButton;
 	Label * m_ErrorMessage;
 	TimeoutNotification m_ErrorMessageTimeoutNotification;
+	Label * m_FileNameLabel;
 };
 
 #endif
