@@ -51,6 +51,7 @@
 #include "galaxy.h"
 #include "game_time.h"
 #include "globals.h"
+#include "key_event_information.h"
 #include "label.h"
 #include "map_dialog.h"
 #include "map_knowledge.h"
@@ -1026,161 +1027,200 @@ void SaveGame(std::ostream & OStream)
 	OStream << std::endl;
 }
 
-void KeyDown(unsigned int KeyCode)
+void KeyEvent(const KeyEventInformation & KeyEventInformation)
 {
-	if(g_UserInterface->Key(KeyCode, EV_DOWN) == true)
+	if(g_UserInterface->Key(KeyEventInformation) == true)
 	{
 		return;
 	}
-	switch(KeyCode)
+	switch(KeyEventInformation.GetKeyCode())
 	{
 	case 9:  // Key: ESCAPE
 		{
-			g_Quit = true;
+			if(KeyEventInformation.IsDown() == true)
+			{
+				g_Quit = true;
+			}
 			
 			break;
 		}
 	case 22: // Key: BACKSPACE
 		{
-			if(g_InputMind == true)
+			if(KeyEventInformation.IsDown() == true)
 			{
-				DeleteObject(g_InputMind->GetCharacter()->GetShip());
-			}
-			else if(g_OutputMind == true)
-			{
-				DeleteObject(g_OutputMind->GetCharacter()->GetShip());
+				if(g_InputMind == true)
+				{
+					DeleteObject(g_InputMind->GetCharacter()->GetShip());
+				}
+				else if(g_OutputMind == true)
+				{
+					DeleteObject(g_OutputMind->GetCharacter()->GetShip());
+				}
 			}
 			
 			break;
 		}
 	case 23: // Key: TABULATOR
 		{
-			if(g_InputMind == true)
+			if(KeyEventInformation.IsDown() == true)
 			{
-				g_InputMind->Refuel();
+				if(g_InputMind == true)
+				{
+					g_InputMind->Refuel();
+				}
 			}
 			
 			break;
 		}
 	case 24: // Key: Q
 		{
-			g_DumpEndReport = true;
-			g_Quit = true;
+			if(KeyEventInformation.IsDown() == true)
+			{
+				g_DumpEndReport = true;
+				g_Quit = true;
+			}
 			
 			break;
 		}
 	case 25: // Key: W
 		{
-			if((g_MountWeaponDialog == 0) && (g_OutputMind == true))
+			if(KeyEventInformation.IsDown() == true)
 			{
-				g_MountWeaponDialog = new MountWeaponDialog(g_UserInterface->GetRootWidget(), g_OutputMind->GetCharacter()->GetShip());
-				g_MountWeaponDialog->GrabKeyFocus();
-				g_MountWeaponDialog->AddDestroyListener(&g_GlobalDestroyListener);
+				if((g_MountWeaponDialog == 0) && (g_OutputMind == true))
+				{
+					g_MountWeaponDialog = new MountWeaponDialog(g_UserInterface->GetRootWidget(), g_OutputMind->GetCharacter()->GetShip());
+					g_MountWeaponDialog->GrabKeyFocus();
+					g_MountWeaponDialog->AddDestroyListener(&g_GlobalDestroyListener);
+				}
 			}
 			
 			break;
 		}
 	case 26: // Key: E
 		{
-			if(g_InputMind == true)
+			if(KeyEventInformation.IsDown() == true)
 			{
-				g_InputMind->TargetPreviousShip();
+				if(g_InputMind == true)
+				{
+					g_InputMind->TargetPreviousShip();
+				}
 			}
 			
 			break;
 		}
 	case 27: // Key: R
 		{
-			if(g_InputMind == true)
+			if(KeyEventInformation.IsDown() == true)
 			{
-				g_InputMind->TargetNextShip();
+				if(g_InputMind == true)
+				{
+					g_InputMind->TargetNextShip();
+				}
 			}
 			
 			break;
 		}
 	case 32: // Key: O
 		{
-			if(g_InputMind == true)
+			if(KeyEventInformation.IsDown() == true)
 			{
-				g_InputMind->TargetPreviousPlanet();
+				if(g_InputMind == true)
+				{
+					g_InputMind->TargetPreviousPlanet();
+				}
 			}
 			
 			break;
 		}
 	case 33: // Key: P
 		{
-			if(g_InputMind == true)
+			if(KeyEventInformation.IsDown() == true)
 			{
-				g_InputMind->TargetNextPlanet();
+				if(g_InputMind == true)
+				{
+					g_InputMind->TargetNextPlanet();
+				}
 			}
 			
 			break;
 		}
 	case 35: // Key: ]
 		{
-			const std::list< Ship * > & Ships(g_CurrentSystem->GetShips());
-			const Ship * FocusShip(dynamic_cast< const Ship * >(g_Camera.GetFocus().Get()));
-			
-			std::list< Ship * >::const_iterator ShipIterator(find(Ships.begin(), Ships.end(), FocusShip));
-			
-			if((ShipIterator == Ships.end()) || (++ShipIterator == Ships.end()))
+			if(KeyEventInformation.IsDown() == true)
 			{
-				g_Camera.SetFocus(Ships.front()->GetReference());
-			}
-			else
-			{
-				g_Camera.SetFocus((*ShipIterator)->GetReference());
+				const std::list< Ship * > & Ships(g_CurrentSystem->GetShips());
+				const Ship * FocusShip(dynamic_cast< const Ship * >(g_Camera.GetFocus().Get()));
+				
+				std::list< Ship * >::const_iterator ShipIterator(find(Ships.begin(), Ships.end(), FocusShip));
+				
+				if((ShipIterator == Ships.end()) || (++ShipIterator == Ships.end()))
+				{
+					g_Camera.SetFocus(Ships.front()->GetReference());
+				}
+				else
+				{
+					g_Camera.SetFocus((*ShipIterator)->GetReference());
+				}
 			}
 			
 			break;
 		}
 	case 37: // Key: LEFT CONTROL
 		{
-			std::stringstream IdentifierPrefix;
-			
-			IdentifierPrefix << "::system(" << g_CurrentSystem->GetIdentifier() << ")::created_at_game_time(" << std::fixed << GameTime::Get() << ")";
-			SpawnShip(g_CurrentSystem, IdentifierPrefix.str(), "fighter");
+			if(KeyEventInformation.IsDown() == true)
+			{
+				std::stringstream IdentifierPrefix;
+				
+				IdentifierPrefix << "::system(" << g_CurrentSystem->GetIdentifier() << ")::created_at_game_time(" << std::fixed << GameTime::Get() << ")";
+				SpawnShip(g_CurrentSystem, IdentifierPrefix.str(), "fighter");
+			}
 			
 			break;
 		}
 	case 38: // Key: A
 		{
-			if(g_InputMind == true)
+			if(KeyEventInformation.IsDown() == true)
 			{
-				g_InputMind->TargetNearestCargo();
+				if(g_InputMind == true)
+				{
+					g_InputMind->TargetNearestCargo();
+				}
 			}
 			
 			break;
 		}
 	case 39: // Key: S
 		{
-			if(g_InputMind == true)
+			if(KeyEventInformation.IsDown() == true)
 			{
-				switch(WantToScoop(g_InputMind->GetCharacter()->GetShip(), dynamic_cast< Commodity * >(g_InputMind->GetCharacter()->GetShip()->GetTarget().Get())))
+				if(g_InputMind == true)
 				{
-				case OK:
+					switch(WantToScoop(g_InputMind->GetCharacter()->GetShip(), dynamic_cast< Commodity * >(g_InputMind->GetCharacter()->GetShip()->GetTarget().Get())))
 					{
-						g_InputMind->Scoop();
-						
-						break;
-					}
-				case NO_SCOOP_TARGET:
-					{
-						g_InputMind->TargetNearestCargo();
-						
-						break;
-					}
-				case TOO_FAR_AWAY:
-					{
-						SetMessage("You are too far away from the cargo to scoop it up.");
-						
-						break;
-					}
-				case TOO_HIGH_RELATIVE_VELOCITY:
-					{
-						SetMessage("Your relative velocity to the cargo is too high to scoop it up.");
-						
-						break;
+					case OK:
+						{
+							g_InputMind->Scoop();
+							
+							break;
+						}
+					case NO_SCOOP_TARGET:
+						{
+							g_InputMind->TargetNearestCargo();
+							
+							break;
+						}
+					case TOO_FAR_AWAY:
+						{
+							SetMessage("You are too far away from the cargo to scoop it up.");
+							
+							break;
+						}
+					case TOO_HIGH_RELATIVE_VELOCITY:
+						{
+							SetMessage("Your relative velocity to the cargo is too high to scoop it up.");
+							
+							break;
+						}
 					}
 				}
 			}
@@ -1189,51 +1229,60 @@ void KeyDown(unsigned int KeyCode)
 		}
 	case 40: // Key: D
 		{
-			if(g_InputMind == true)
+			if(KeyEventInformation.IsDown() == true)
 			{
-				g_InputMind->TargetPreviousCargo();
+				if(g_InputMind == true)
+				{
+					g_InputMind->TargetPreviousCargo();
+				}
 			}
 			
 			break;
 		}
 	case 41: // Key: F
 		{
-			if(g_InputMind == true)
+			if(KeyEventInformation.IsDown() == true)
 			{
-				g_InputMind->TargetNextCargo();
+				if(g_InputMind == true)
+				{
+					g_InputMind->TargetNextCargo();
+				}
 			}
 			
 			break;
 		}
 	case 44: // Key: J
 		{
-			if(g_InputMind == true)
+			if(KeyEventInformation.IsDown() == true)
 			{
-				switch(WantToJump(g_InputMind->GetCharacter()->GetShip(), g_InputMind->GetCharacter()->GetShip()->GetLinkedSystemTarget()))
+				if(g_InputMind == true)
 				{
-				case OK:
+					switch(WantToJump(g_InputMind->GetCharacter()->GetShip(), g_InputMind->GetCharacter()->GetShip()->GetLinkedSystemTarget()))
 					{
-						g_InputMind->Jump();
-						
-						break;
-					}
-				case TOO_NEAR_TO_SYSTEM_CENTER:
-					{
-						SetMessage("You are too near to the system center to jump.");
-						
-						break;
-					}
-				case NOT_ENOUGH_FUEL:
-					{
-						SetMessage("You do not have enough fuel to jump.");
-						
-						break;
-					}
-				case NO_JUMP_TARGET:
-					{
-						SetMessage("No system selected to jump to.");
-						
-						break;
+					case OK:
+						{
+							g_InputMind->Jump();
+							
+							break;
+						}
+					case TOO_NEAR_TO_SYSTEM_CENTER:
+						{
+							SetMessage("You are too near to the system center to jump.");
+							
+							break;
+						}
+					case NOT_ENOUGH_FUEL:
+						{
+							SetMessage("You do not have enough fuel to jump.");
+							
+							break;
+						}
+					case NO_JUMP_TARGET:
+						{
+							SetMessage("No system selected to jump to.");
+							
+							break;
+						}
 					}
 				}
 			}
@@ -1242,47 +1291,50 @@ void KeyDown(unsigned int KeyCode)
 		}
 	case 46: // Key: L
 		{
-			if(g_InputMind == true)
+			if(KeyEventInformation.IsDown() == true)
 			{
-				Planet * SelectedPlanet(dynamic_cast< Planet * >(g_InputMind->GetCharacter()->GetShip()->GetTarget().Get()));
-				
-				switch(WantToLand(g_InputMind->GetCharacter(), g_InputMind->GetCharacter()->GetShip(), SelectedPlanet))
+				if(g_InputMind == true)
 				{
-				case OK:
+					Planet * SelectedPlanet(dynamic_cast< Planet * >(g_InputMind->GetCharacter()->GetShip()->GetTarget().Get()));
+					
+					switch(WantToLand(g_InputMind->GetCharacter(), g_InputMind->GetCharacter()->GetShip(), SelectedPlanet))
 					{
-						g_InputMind->GetCharacter()->RemoveCredits(SelectedPlanet->GetLandingFee());
-						g_InputMind->Land();
-						g_InputMind->GetCharacter()->GetShip()->SetHull(g_InputMind->GetCharacter()->GetShip()->GetShipClass()->GetHull());
-						g_Pause = true;
-						g_PlanetDialog = new PlanetDialog(g_UserInterface->GetRootWidget(), SelectedPlanet, g_InputMind->GetCharacter());
-						g_PlanetDialog->GrabKeyFocus();
-						g_PlanetDialog->AddDestroyListener(&g_GlobalDestroyListener);
-						
-						break;
-					}
-				case NO_LAND_TARGET:
-					{
-						g_InputMind->TargetNearestPlanet();
-						
-						break;
-					}
-				case NOT_ENOUGH_CREDITS:
-					{
-						SetMessage("You don't have enough credits to pay the landing fee.");
-						
-						break;
-					}
-				case TOO_FAR_AWAY:
-					{
-						SetMessage("You are too far away from the planet to land.");
-						
-						break;
-					}
-				case TOO_FAST:
-					{
-						SetMessage("You are too fast to land on the planet.");
-						
-						break;
+					case OK:
+						{
+							g_InputMind->GetCharacter()->RemoveCredits(SelectedPlanet->GetLandingFee());
+							g_InputMind->Land();
+							g_InputMind->GetCharacter()->GetShip()->SetHull(g_InputMind->GetCharacter()->GetShip()->GetShipClass()->GetHull());
+							g_Pause = true;
+							g_PlanetDialog = new PlanetDialog(g_UserInterface->GetRootWidget(), SelectedPlanet, g_InputMind->GetCharacter());
+							g_PlanetDialog->GrabKeyFocus();
+							g_PlanetDialog->AddDestroyListener(&g_GlobalDestroyListener);
+							
+							break;
+						}
+					case NO_LAND_TARGET:
+						{
+							g_InputMind->TargetNearestPlanet();
+							
+							break;
+						}
+					case NOT_ENOUGH_CREDITS:
+						{
+							SetMessage("You don't have enough credits to pay the landing fee.");
+							
+							break;
+						}
+					case TOO_FAR_AWAY:
+						{
+							SetMessage("You are too far away from the planet to land.");
+							
+							break;
+						}
+					case TOO_FAST:
+						{
+							SetMessage("You are too fast to land on the planet.");
+							
+							break;
+						}
 					}
 				}
 			}
@@ -1291,45 +1343,57 @@ void KeyDown(unsigned int KeyCode)
 		}
 	case 50: // Key: LEFT SHIFT
 		{
-			std::stringstream IdentifierPrefix;
-			
-			IdentifierPrefix << "::system(" << g_CurrentSystem->GetIdentifier() << ")::created_at_game_time(" << std::fixed << GameTime::Get() << ")";
-			SpawnShip(g_CurrentSystem, IdentifierPrefix.str());
+			if(KeyEventInformation.IsDown() == true)
+			{
+				std::stringstream IdentifierPrefix;
+				
+				IdentifierPrefix << "::system(" << g_CurrentSystem->GetIdentifier() << ")::created_at_game_time(" << std::fixed << GameTime::Get() << ")";
+				SpawnShip(g_CurrentSystem, IdentifierPrefix.str());
+			}
 			
 			break;
 		}
 	case 54: // Key: C
 		{
-			if(g_InputMind == true)
+			if(KeyEventInformation.IsDown() == true)
 			{
-				SetMessage("Jettison cargo.");
-				g_InputMind->Jettison();
+				if(g_InputMind == true)
+				{
+					SetMessage("Jettison cargo.");
+					g_InputMind->Jettison();
+				}
 			}
 			
 			break;
 		}
 	case 57: // Key: N
 		{
-			if(g_InputMind == true)
+			if(KeyEventInformation.IsDown() == true)
 			{
-				g_InputMind->SelectNextLinkedSystem();
+				if(g_InputMind == true)
+				{
+					g_InputMind->SelectNextLinkedSystem();
+				}
 			}
 			
 			break;
 		}
 	case 58: // Key: M
 		{
-			if((g_MapDialog == 0) && (g_OutputMind == true))
+			if(KeyEventInformation.IsDown() == true)
 			{
-				g_Pause = true;
-				g_MapDialog = new MapDialog(g_UserInterface->GetRootWidget(), g_OutputMind->GetCharacter()->GetShip()->GetCurrentSystem(), g_OutputMind->GetCharacter());
-				g_MapDialog->GrabKeyFocus();
-				g_MapDialog->AddDestroyListener(&g_GlobalDestroyListener);
-				if(g_InputMind == true)
+				if((g_MapDialog == 0) && (g_OutputMind == true))
 				{
-					g_InputMind->DisableAccelerate();
-					g_InputMind->DisableTurnLeft();
-					g_InputMind->DisableTurnRight();
+					g_Pause = true;
+					g_MapDialog = new MapDialog(g_UserInterface->GetRootWidget(), g_OutputMind->GetCharacter()->GetShip()->GetCurrentSystem(), g_OutputMind->GetCharacter());
+					g_MapDialog->GrabKeyFocus();
+					g_MapDialog->AddDestroyListener(&g_GlobalDestroyListener);
+					if(g_InputMind == true)
+					{
+						g_InputMind->DisableAccelerate();
+						g_InputMind->DisableTurnLeft();
+						g_InputMind->DisableTurnRight();
+					}
 				}
 			}
 			
@@ -1337,93 +1401,134 @@ void KeyDown(unsigned int KeyCode)
 		}
 	case 59: // Key: COMMA
 		{
-			SetTimeWarp(g_TimeWarp / 1.1f);
+			if(KeyEventInformation.IsDown() == true)
+			{
+				SetTimeWarp(g_TimeWarp / 1.1f);
+			}
 			
 			break;
 		}
 	case 60: // Key: PERIODE
 		{
-			SetTimeWarp(g_TimeWarp * 1.1f);
+			if(KeyEventInformation.IsDown() == true)
+			{
+				SetTimeWarp(g_TimeWarp * 1.1f);
+			}
 			
 			break;
 		}
 	case 61: // Key: SLASH
 		{
-			SetTimeWarp(1.0f);
+			if(KeyEventInformation.IsDown() == true)
+			{
+				SetTimeWarp(1.0f);
+			}
 			
 			break;
 		}
 	case 65: // Key: SPACE
 		{
-			if(g_InputMind == true)
+			if(KeyEventInformation.IsDown() == true)
 			{
-				g_InputMind->EnableFire();
+				if(g_InputMind == true)
+				{
+					g_InputMind->EnableFire();
+				}
+			}
+			else
+			{
+				if(g_InputMind == true)
+				{
+					g_InputMind->DisableFire();
+				}
 			}
 			
 			break;
 		}
 	case 67: // Key: F1
 		{
-			if(g_SaveGameDialog == 0)
+			if(KeyEventInformation.IsDown() == true)
 			{
-				g_Pause = true;
-				g_SaveGameDialog = new SaveGameDialog(g_UserInterface->GetRootWidget(), Function(SaveGame));
-				g_SaveGameDialog->GrabKeyFocus();
-				g_SaveGameDialog->AddDestroyListener(&g_GlobalDestroyListener);
+				if(g_SaveGameDialog == 0)
+				{
+					g_Pause = true;
+					g_SaveGameDialog = new SaveGameDialog(g_UserInterface->GetRootWidget(), Function(SaveGame));
+					g_SaveGameDialog->GrabKeyFocus();
+					g_SaveGameDialog->AddDestroyListener(&g_GlobalDestroyListener);
+				}
 			}
 			
 			break;
 		}
 	case 68: // Key: F2
 		{
-			XMLStream Out(std::cout);
-			
-			Object::Dump(Out);
-			std::cout << std::endl;
+			if(KeyEventInformation.IsDown() == true)
+			{
+				XMLStream Out(std::cout);
+				
+				Object::Dump(Out);
+				std::cout << std::endl;
+			}
 			
 			break;
 		}
 	case 97: // Key: HOME
 		{
-			g_Camera.SetPosition(0.0f, 0.0f);
+			if(KeyEventInformation.IsDown() == true)
+			{
+				g_Camera.SetPosition(0.0f, 0.0f);
+			}
 			
 			break;
 		}
 	case 98: // Key: UP
 		{
-			if(g_InputMind == true)
+			if(KeyEventInformation.IsDown() == true)
 			{
-				g_InputMind->EnableAccelerate();
+				if(g_InputMind == true)
+				{
+					g_InputMind->EnableAccelerate();
+				}
+			}
+			else
+			{
+				if(g_InputMind == true)
+				{
+					g_InputMind->DisableAccelerate();
+				}
 			}
 			
 			break;
 		}
 	case 99: // Key: PAGE UP
 		{
-			if(g_InputMind == false)
+			if(KeyEventInformation.IsDown() == true)
 			{
-				std::set< Character * > Characters(Character::GetCharacters());
-				
-				if(g_OutputMind == false)
+				if(g_InputMind == false)
 				{
-					if(Characters.empty() == false)
-					{
-						g_OutputMind = (*(Characters.rbegin()))->GetActiveMind()->GetReference();
-					}
-				}
-				else
-				{
-					std::set< Character * >::iterator CharacterIterator(Characters.find(g_OutputMind->GetCharacter()));
+					std::set< Character * > Characters(Character::GetCharacters());
 					
-					assert(CharacterIterator != Characters.end());
-					if(CharacterIterator == Characters.begin())
+					if(g_OutputMind == false)
 					{
-						g_OutputMind.Clear();
+						if(Characters.empty() == false)
+						{
+							g_OutputMind = (*(Characters.rbegin()))->GetActiveMind()->GetReference();
+						}
 					}
 					else
 					{
-						--CharacterIterator;
-						g_OutputMind = (*CharacterIterator)->GetActiveMind()->GetReference();
+						std::set< Character * >::iterator CharacterIterator(Characters.find(g_OutputMind->GetCharacter()));
+						
+						assert(CharacterIterator != Characters.end());
+						if(CharacterIterator == Characters.begin())
+						{
+							g_OutputMind.Clear();
+						}
+						else
+						{
+							--CharacterIterator;
+							g_OutputMind = (*CharacterIterator)->GetActiveMind()->GetReference();
+						}
 					}
 				}
 			}
@@ -1432,97 +1537,73 @@ void KeyDown(unsigned int KeyCode)
 		}
 	case 100: // Key: LEFT
 		{
-			if(g_InputMind == true)
+			if(KeyEventInformation.IsDown() == true)
 			{
-				g_InputMind->EnableTurnLeft();
+				if(g_InputMind == true)
+				{
+					g_InputMind->EnableTurnLeft();
+				}
+			}
+			else
+			{
+				if(g_InputMind == true)
+				{
+					g_InputMind->DisableTurnLeft();
+				}
 			}
 			
 			break;
 		}
 	case 102: // Key: RIGHT
 		{
-			if(g_InputMind == true)
+			if(KeyEventInformation.IsDown() == true)
 			{
-				g_InputMind->EnableTurnRight();
+				if(g_InputMind == true)
+				{
+					g_InputMind->EnableTurnRight();
+				}
+			}
+			else
+			{
+				if(g_InputMind == true)
+				{
+					g_InputMind->DisableTurnRight();
+				}
 			}
 			
 			break;
 		}
 	case 105: // Key: PAGE DOWN
 		{
-			if(g_InputMind == false)
+			if(KeyEventInformation.IsDown() == true)
 			{
-				std::set< Character * > Characters(Character::GetCharacters());
-				
-				if(g_OutputMind == false)
+				if(g_InputMind == false)
 				{
-					if(Characters.empty() == false)
-					{
-						g_OutputMind = (*(Characters.begin()))->GetActiveMind()->GetReference();
-					}
-				}
-				else
-				{
-					std::set< Character * >::iterator CharacterIterator(Characters.find(g_OutputMind->GetCharacter()));
+					std::set< Character * > Characters(Character::GetCharacters());
 					
-					assert(CharacterIterator != Characters.end());
-					++CharacterIterator;
-					if(CharacterIterator == Characters.end())
+					if(g_OutputMind == false)
 					{
-						g_OutputMind.Clear();
+						if(Characters.empty() == false)
+						{
+							g_OutputMind = (*(Characters.begin()))->GetActiveMind()->GetReference();
+						}
 					}
 					else
 					{
-						g_OutputMind = (*CharacterIterator)->GetActiveMind()->GetReference();
+						std::set< Character * >::iterator CharacterIterator(Characters.find(g_OutputMind->GetCharacter()));
+						
+						assert(CharacterIterator != Characters.end());
+						++CharacterIterator;
+						if(CharacterIterator == Characters.end())
+						{
+							g_OutputMind.Clear();
+						}
+						else
+						{
+							g_OutputMind = (*CharacterIterator)->GetActiveMind()->GetReference();
+						}
 					}
 				}
-			}
-			
-			break;
-		}
-	}
-}
-
-void KeyUp(unsigned char KeyCode)
-{
-	if(g_UserInterface->Key(KeyCode, EV_UP) == true)
-	{
-		return;
-	}
-	switch(KeyCode)
-	{
-	case 65: // Key: SPACE
-		{
-			if(g_InputMind == true)
-			{
-				g_InputMind->DisableFire();
-			}
-			
-			break;
-		}
-	case 98:  // Key: UP
-		{
-			if(g_InputMind == true)
-			{
-				g_InputMind->DisableAccelerate();
-			}
-			
-			break;
-		}
-	case 100: // Key: LEFT
-		{
-			if(g_InputMind == true)
-			{
-				g_InputMind->DisableTurnLeft();
-			}
-			
-			break;
-		}
-	case 102: // Key: RIGHT
-		{
-			if(g_InputMind == true)
-			{
-				g_InputMind->DisableTurnRight();
 			}
 			
 			break;
@@ -1644,22 +1725,15 @@ void ProcessEvents(void)
 				break;
 			}
 		case KeyPress:
-			{
-				if(g_EchoEvents == true)
-				{
-					std::cout << "KeyPress:       state=" << Event.xkey.state << "   keycode=" << Event.xkey.keycode << std::endl;
-				}
-				KeyDown(Event.xkey.keycode);
-				
-				break;
-			}
 		case KeyRelease:
 			{
+				KeyEventInformation KeyEventInformation(Event.xkey);
+				
 				if(g_EchoEvents == true)
 				{
-					std::cout << "KeyRelease:     state=" << Event.xkey.state << "   keycode=" << Event.xkey.keycode << std::endl;
+					std::cout << "KeyEvent:       state=" << Event.xkey.state << "   keycode=" << KeyEventInformation.GetKeyCode() << "   string=" << KeyEventInformation.GetString() << "  [length=" << KeyEventInformation.GetString().length() << "]   keysym=" << KeyEventInformation.GetKeySymbol() << std::endl;
 				}
-				KeyUp(Event.xkey.keycode);
+				KeyEvent(KeyEventInformation);
 				
 				break;
 			}

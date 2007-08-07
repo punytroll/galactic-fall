@@ -243,18 +243,18 @@ void Widget::Destroy(void)
 	m_DestroyedWidgets.push_back(this);
 }
 
-bool Widget::Key(int Key, int State)
+bool Widget::Key(const KeyEventInformation & KeyEventInformation)
 {
 	if(m_KeyFocus != 0)
 	{
-		if(m_KeyFocus->Key(Key, State) == true)
+		if(m_KeyFocus->Key(KeyEventInformation) == true)
 		{
 			return true;
 		}
 	}
 	for(std::list< KeyListener * >::iterator KeyListenerIterator = m_KeyListeners.begin(); KeyListenerIterator != m_KeyListeners.end(); ++KeyListenerIterator)
 	{
-		if((*KeyListenerIterator)->OnKey(this, Key, State) == true)
+		if((*KeyListenerIterator)->OnKey(this, KeyEventInformation) == true)
 		{
 			return true;
 		}

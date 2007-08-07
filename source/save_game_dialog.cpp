@@ -21,6 +21,7 @@
 
 #include "button.h"
 #include "globals.h"
+#include "key_event_information.h"
 #include "label.h"
 #include "real_time.h"
 #include "save_game_dialog.h"
@@ -64,6 +65,15 @@ SaveGameDialog::SaveGameDialog(Widget * SupWidget, Callback1< void, std::ostream
 	m_ErrorMessage->SetAnchorTop(false);
 	m_ErrorMessage->SetWrap(true);
 	m_ErrorMessage->SetWordWrap(true);
+	m_FileNameLabel = new Label(this);
+	m_FileNameLabel->SetPosition(Vector2f(10.0f, 70.0f));
+	m_FileNameLabel->SetSize(Vector2f(280.0f, 20.0f));
+	m_FileNameLabel->SetForegroundColor(Color(1.0f, 1.0f, 0.5f, 1.0f));
+	m_FileNameLabel->SetBackgroundColor(Color(0.1f, 0.1f, 0.1f, 1.0f));
+	m_FileNameLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
+	m_FileNameLabel->SetAnchorRight(true);
+	m_FileNameLabel->AddKeyListener(this);
+	m_FileNameLabel->GrabKeyFocus();
 }
 
 void SaveGameDialog::HideErrorMessage(void)
@@ -80,7 +90,8 @@ bool SaveGameDialog::OnClicked(Widget * EventSource)
 		/// @todo check Path (exists and is directory)
 		Path += "/.galactic-fall";
 		/// @todo check Path (exists and is directory)
-		Path += "/save_game.xml";
+		Path += "/" + m_FileNameLabel->GetString() + ".xml";
+		/// @todo check Path (doesn't exist, if exists overwrite if it's a file?)
 		
 		std::ofstream OFStream;
 		
@@ -113,9 +124,27 @@ bool SaveGameDialog::OnClicked(Widget * EventSource)
 	return false;
 }
 
-bool SaveGameDialog::OnKey(Widget * EventSource, int KeyCode, int State)
+bool SaveGameDialog::OnKey(Widget * EventSource, const KeyEventInformation & KeyEventInformation)
 {
-	if(((KeyCode == 9 /* ESCAPE */) || (KeyCode == 36 /* RETURN */) || (KeyCode == 58 /* M */)) && (State == EV_DOWN))
+	if(((KeyEventInformation.GetKeyCode() == 9 /* ESCAPE */) || (KeyEventInformation.GetKeyCode() == 36 /* RETURN */)) && (KeyEventInformation.IsDown() == true))
+	{
+		Destroy();
+	}
+	else if(EventSource == m_FileNameLabel)
+	{
+		if((KeyEventInformation.GetKeyCode() == 22 /* BACKSPACE */) && (KeyEventInformation.IsDown() == true))
+		{
+			if(m_FileNameLabel->GetString().length() > 0)
+			{
+				m_FileNameLabel->SetString(m_FileNameLabel->GetString().substr(0, m_FileNameLabel->GetString().length() - 1));
+			}
+		}
+		else if((KeyEventInformation.GetString().empty() == false) && (KeyEventInformation.IsDown() == true))
+		{
+			m_FileNameLabel->SetString(m_FileNameLabel->GetString() + KeyEventInformation.GetString());
+		}
+	}
+	else if((KeyEventInformation.GetKeyCode() == 58 /* M */) && (KeyEventInformation.IsDown() == true))
 	{
 		Destroy();
 	}

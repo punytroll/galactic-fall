@@ -22,6 +22,7 @@
 #include "character.h"
 #include "color.h"
 #include "globals.h"
+#include "key_event_information.h"
 #include "label.h"
 #include "planet.h"
 #include "planet_dialog.h"
@@ -144,13 +145,13 @@ void PlanetDialog::OnDestroy(Widget * EventSource)
 	}
 }
 
-bool PlanetDialog::OnKey(Widget * EventSource, int KeyCode, int State)
+bool PlanetDialog::OnKey(Widget * EventSource, const KeyEventInformation & KeyEventInformation)
 {
-	if(((KeyCode == 9 /* ESCAPE */) || (KeyCode == 36 /* RETURN */)) && (State == EV_DOWN))
+	if(((KeyEventInformation.GetKeyCode() == 9 /* ESCAPE */) || (KeyEventInformation.GetKeyCode() == 36 /* RETURN */)) && (KeyEventInformation.IsDown() == true))
 	{
 		Destroy();
 	}
-	else if((KeyCode == 28 /* T */) && (State == EV_DOWN))
+	else if((KeyEventInformation.GetKeyCode() == 28 /* T */) && (KeyEventInformation.IsDown() == true))
 	{
 		if(m_TradeCenterDialog == 0)
 		{

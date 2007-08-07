@@ -37,7 +37,7 @@ public:
 protected:
 	virtual bool OnClicked(Widget * EventSource);
 	virtual void OnDestroy(Widget * EventSource);
-	virtual bool OnKey(Widget * EventSource, int Key, int State);
+	virtual bool OnKey(Widget * EventSource, const KeyEventInformation & KeyEventInformation);
 private:
 	Planet * m_Planet;
 	Character * m_Character;

@@ -36,7 +36,7 @@ public:
 	MountWeaponDialog(Widget * SupWidget, Ship * Ship);
 protected:
 	virtual bool OnClicked(Widget * EventSource);
-	virtual bool OnKey(Widget * EventSource, int Key, int State);
+	virtual bool OnKey(Widget * EventSource, const KeyEventInformation & KeyEventInformation);
 	virtual bool OnMouseButton(Widget * EventSource, int Button, int State, float X, float Y);
 private:
 	void RebuildWeaponList(void);

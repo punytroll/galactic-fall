@@ -29,6 +29,7 @@
 #include "math/vector2f.h"
 
 class Color;
+class KeyEventInformation;
 class KeyListener;
 class MouseButtonListener;
 class MouseMotionListener;
@@ -81,7 +82,7 @@ public:
 	void SetAnchorTop(bool AnchorTop);
 	// receive input
 	bool MouseButton(int Button, int State, float X, float Y);
-	bool Key(int Key, int State);
+	bool Key(const KeyEventInformation & KeyEventInformation);
 	void MouseMotion(float X, float Y);
 	// MouseEnter may depend on the fact that m_HoverWidget on the m_SupWidget is set to this
 	// MouseEnter on the new hover widget is called after MouseLeave on the old hover widget
