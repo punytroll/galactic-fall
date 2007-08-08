@@ -21,6 +21,11 @@
 
 #include "file_handling.h"
 
+bool CreateDirectory(const std::string & Path)
+{
+	return mkdir(Path.c_str(), 0777) == 0;
+}
+
 bool IsExistingDirectory(const std::string & Path)
 {
 	struct stat Stat;

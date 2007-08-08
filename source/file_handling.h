@@ -23,5 +23,6 @@
 #include <string>
 
 bool IsExistingDirectory(const std::string & Path);
+bool CreateDirectory(const std::string & Path);
 
 #endif
