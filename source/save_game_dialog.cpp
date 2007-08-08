@@ -106,9 +106,12 @@ bool SaveGameDialog::Save(void)
 	Path += "/.galactic-fall/";
 	if(IsExistingDirectory(Path) == false)
 	{
-		ShowErrorMessage("Is not an existing directory: \"" + Path + "\".");
-		
-		return false;
+		if(CreateDirectory(Path) == false)
+		{
+			ShowErrorMessage("Could not create the directory: \"" + Path + "\".");
+			
+			return false;
+		}
 	}
 	Path += m_FileNameLabel->GetString() + ".xml";
 	/// @todo check Path (doesn't exist, if exists overwrite if it's a file?)
@@ -164,6 +167,16 @@ bool SaveGameDialog::OnKey(Widget * EventSource, const KeyEventInformation & Key
 			if(m_FileNameLabel->GetString().length() > 0)
 			{
 				m_FileNameLabel->SetString(m_FileNameLabel->GetString().substr(0, m_FileNameLabel->GetString().length() - 1));
+			}
+		}
+		else if((KeyEventInformation.GetKeyCode() == 36 /* RETURN */) && (KeyEventInformation.IsDown() == true))
+		{
+			if(m_FileNameLabel->GetString().length() > 0)
+			{
+				if(Save() == true)
+				{
+					Destroy();
+				}
 			}
 		}
 		else if((KeyEventInformation.GetString().empty() == false) && (KeyEventInformation.IsDown() == true))
