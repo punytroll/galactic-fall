@@ -294,6 +294,10 @@ timeout_notifications_h = \
 	timeout_notifications.h \
 	$(callbacks_h)
 
+timing_dialog_h = \
+	timing_dialog.h \
+	$(window_h)
+
 trade_center_dialog_h = \
 	trade_center_dialog.h \
 	$(clicked_listener_h) \
@@ -455,7 +459,7 @@ key_listener.o: key_listener.cpp $(key_listener_h)
 label.o: label.cpp $(label_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-main.o: main.cpp $(arx_resources_h) $(arx_reading_h) $(asset_class_h) $(asset_class_manager_h) $(callbacks_h) $(camera_h) $(commodity_h) $(character_h) $(color_h) $(command_mind_h) $(destroy_listener_h) $(galaxy_h) $(game_time_h) $(key_event_information_h) $(label_h) $(map_dialog_h) $(map_knowledge_h) $(math_h) $(mind_h) $(mini_map_display_h) $(model_h) $(model_manager_h) $(mount_weapon_dialog_h) $(object_factory_h) $(particle_systems_h) $(perspective_h) $(planet_h) $(planet_dialog_h) $(real_time_h) $(save_game_dialog_h) $(scanner_display_h) $(ship_h) $(ship_class_h) $(ship_class_manager_h) $(shot_h) $(slot_h) $(slot_class_manager_h) $(star_h) $(star_map_display_h) $(state_machine_h) $(states_h) $(string_cast_h) $(system_h) $(timeout_notifications_h) $(user_interface_h) $(weapon_h) $(weapon_class_h) $(weapon_class_manager_h) $(widget_h) $(xml_puny_dom_h) $(xml_stream_h)
+main.o: main.cpp $(arx_resources_h) $(arx_reading_h) $(asset_class_h) $(asset_class_manager_h) $(callbacks_h) $(camera_h) $(commodity_h) $(character_h) $(color_h) $(command_mind_h) $(destroy_listener_h) $(galaxy_h) $(game_time_h) $(key_event_information_h) $(label_h) $(map_dialog_h) $(map_knowledge_h) $(math_h) $(mind_h) $(mini_map_display_h) $(model_h) $(model_manager_h) $(mount_weapon_dialog_h) $(object_factory_h) $(particle_systems_h) $(perspective_h) $(planet_h) $(planet_dialog_h) $(real_time_h) $(save_game_dialog_h) $(scanner_display_h) $(ship_h) $(ship_class_h) $(ship_class_manager_h) $(shot_h) $(slot_h) $(slot_class_manager_h) $(star_h) $(star_map_display_h) $(state_machine_h) $(states_h) $(string_cast_h) $(system_h) $(timeout_notifications_h) $(timing_dialog_h) $(user_interface_h) $(weapon_h) $(weapon_class_h) $(weapon_class_manager_h) $(widget_h) $(xml_puny_dom_h) $(xml_stream_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags libarxx` -c $< -o $@
 
 map_dialog.o: map_dialog.cpp $(button_h) $(globals_h) $(key_event_information_h) $(label) $(map_dialog_h) $(star_map_display_h) $(system_h)
@@ -558,6 +562,9 @@ system.o: system.cpp $(commodity_h) $(planet_h) $(ship_h) $(shot_h) $(star_h) $(
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 timeout_notifications.o: timeout_notifications.cpp $(timeout_notifications_h) $(type_definitions_h)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+timing_dialog.o: timing_dialog.cpp $(label_h) $(string_cast_h) $(timing_dialog_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 trade_center_dialog.o: trade_center_dialog.cpp $(asset_class_h) $(button_h) $(commodity_h) $(commodity_class_h) $(character_h) $(game_time_h) $(key_event_information_h) $(model_manager_h) $(label_h) $(object_factory_h) $(planet_h) $(ship_h) $(trade_center_dialog_h) $(weapon_h) $(weapon_class_h)
