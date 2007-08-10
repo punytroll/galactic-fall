@@ -82,6 +82,7 @@
 #include "string_cast.h"
 #include "system.h"
 #include "timeout_notifications.h"
+#include "timing_dialog.h"
 #include "user_interface.h"
 #include "weapon.h"
 #include "weapon_class.h"
@@ -89,6 +90,68 @@
 #include "widget.h"
 #include "xml_puny_dom.h"
 #include "xml_stream.h"
+
+class SystemStatistics
+{
+public:
+	// setters
+	void SetFramesPerSecond(float FramesPerSecond)
+	{
+		m_FramesPerSecond = FramesPerSecond;
+	}
+	
+	void SetAISecondsPerFrame(float AISecondsPerFrame)
+	{
+		m_AISecondsPerFrame = AISecondsPerFrame;
+	}
+	
+	void SetGraphicsSecondsPerFrame(float GraphicsSecondsPerFrame)
+	{
+		m_GraphicsSecondsPerFrame = GraphicsSecondsPerFrame;
+	}
+	
+	void SetPhysicsSecondsPerFrame(float PhysicsSecondsPerFrame)
+	{
+		m_PhysicsSecondsPerFrame = PhysicsSecondsPerFrame;
+	}
+	
+	void SetTotalSecondsPerFrame(float TotalSecondsPerFrame)
+	{
+		m_TotalSecondsPerFrame = TotalSecondsPerFrame;
+	}
+	
+	// getters
+	float GetFramesPerSecond(void) const
+	{
+		return m_FramesPerSecond;
+	}
+	
+	float GetAISecondsPerFrame(void) const
+	{
+		return m_AISecondsPerFrame;
+	}
+	
+	float GetGraphicsSecondsPerFrame(void) const
+	{
+		return m_GraphicsSecondsPerFrame;
+	}
+	
+	float GetPhysicsSecondsPerFrame(void) const
+	{
+		return m_PhysicsSecondsPerFrame;
+	}
+	
+	float GetTotalSecondsPerFrame(void) const
+	{
+		return m_TotalSecondsPerFrame;
+	}
+private:
+	float m_FramesPerSecond;
+	float m_AISecondsPerFrame;
+	float m_GraphicsSecondsPerFrame;
+	float m_PhysicsSecondsPerFrame;
+	float m_TotalSecondsPerFrame;
+};
 
 // these objects are exported via globals.h
 AssetClassManager * g_AssetClassManager;
@@ -125,6 +188,7 @@ PlanetDialog * g_PlanetDialog(0);
 MapDialog * g_MapDialog(0);
 MountWeaponDialog * g_MountWeaponDialog(0);
 SaveGameDialog * g_SaveGameDialog(0);
+TimingDialog * g_TimingDialog(0);
 TimeoutNotificationManager * g_GameTimeTimeoutNotifications;
 TimeoutNotification g_SpawnShipTimeoutNotification;
 TimeoutNotificationManager * g_RealTimeTimeoutNotifications;
@@ -140,6 +204,7 @@ Perspective g_MainPerspective;
 bool g_EchoEvents(false);
 bool g_DumpEndReport(false);
 std::vector< ParticleSystem * > g_ParticleSystems;
+SystemStatistics * g_SystemStatistics;
 
 enum WantReturnCode
 {
@@ -524,6 +589,14 @@ void CalculateMovements(System * System)
 
 void UpdateUserInterface(void)
 {
+	if(g_TimingDialog != 0)
+	{
+		g_TimingDialog->UpdateFramesPerSecond(g_SystemStatistics->GetFramesPerSecond());
+		g_TimingDialog->UpdateAISecondsPerFrame(g_SystemStatistics->GetAISecondsPerFrame());
+		g_TimingDialog->UpdateGraphicsSecondsPerFrame(g_SystemStatistics->GetGraphicsSecondsPerFrame());
+		g_TimingDialog->UpdatePhysicsSecondsPerFrame(g_SystemStatistics->GetPhysicsSecondsPerFrame());
+		g_TimingDialog->UpdateTotalSecondsPerFrame(g_SystemStatistics->GetTotalSecondsPerFrame());
+	}
 	if((g_OutputMind == true) && (g_OutputMind->GetCharacter() != 0) && (g_OutputMind->GetCharacter()->GetShip() != 0))
 	{
 		g_TargetLabel->Show();
@@ -866,14 +939,42 @@ void OnOutputFocusLeaveSystem(System * System)
 
 void GameFrame(void)
 {
+	RealTime::Invalidate();
+	
+	double FrameTimeBegin(RealTime::Get());
+	
 	System * CurrentSystem(g_CurrentSystem);
 	
 	g_GameTimeTimeoutNotifications->Process(GameTime::Get());
 	g_RealTimeTimeoutNotifications->Process(RealTime::Get());
+	RealTime::Invalidate();
+	
+	double AITimeBegin(RealTime::Get());
+	
 	CalculateCharacters();
+	RealTime::Invalidate();
+	
+	double AITimeEnd(RealTime::Get());
+	double AITimeDelta(AITimeEnd - AITimeBegin);
+	double PhysicsTimeBegin(RealTime::Get());
+	
 	CalculateMovements(CurrentSystem);
+	RealTime::Invalidate();
+	
+	double PhysicsTimeEnd(RealTime::Get());
+	double PhysicsTimeDelta(PhysicsTimeEnd - PhysicsTimeBegin);
+	
 	UpdateUserInterface();
+	RealTime::Invalidate();
+	
+	double GraphicsTimeBegin(RealTime::Get());
+	
 	Render(CurrentSystem);
+	RealTime::Invalidate();
+	
+	double GraphicsTimeEnd(RealTime::Get());
+	double GraphicsTimeDelta(GraphicsTimeEnd - GraphicsTimeBegin);
+	
 	if((g_OutputMind == true) && (g_OutputMind->GetCharacter() != 0) && (g_OutputMind->GetCharacter()->GetShip() != 0) && (g_OutputMind->GetCharacter()->GetShip()->GetCurrentSystem() != g_CurrentSystem))
 	{
 		OnOutputFocusLeaveSystem(g_CurrentSystem);
@@ -882,6 +983,16 @@ void GameFrame(void)
 		EmptySystem(CurrentSystem);
 		PopulateSystem(g_CurrentSystem);
 	}
+	RealTime::Invalidate();
+	
+	double FrameTimeEnd(RealTime::Get());
+	double FrameTimeDelta(FrameTimeEnd - FrameTimeBegin);
+	
+	g_SystemStatistics->SetFramesPerSecond(1.0f / FrameTimeDelta);
+	g_SystemStatistics->SetAISecondsPerFrame(AITimeDelta);
+	g_SystemStatistics->SetGraphicsSecondsPerFrame(GraphicsTimeDelta);
+	g_SystemStatistics->SetPhysicsSecondsPerFrame(PhysicsTimeDelta);
+	g_SystemStatistics->SetTotalSecondsPerFrame(FrameTimeDelta);
 }
 
 void SetTimeWarp(float TimeWarp)
@@ -1472,6 +1583,23 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 			
 			break;
 		}
+	case 96: // Key: F12
+		{
+			if(KeyEventInformation.IsDown() == true)
+			{
+				if(g_TimingDialog == 0)
+				{
+					g_TimingDialog = new TimingDialog(g_UserInterface->GetRootWidget());
+				}
+				else
+				{
+					g_TimingDialog->Destroy();
+					g_TimingDialog = 0;
+				}
+			}
+			
+			break;
+		}
 	case 97: // Key: HOME
 		{
 			if(KeyEventInformation.IsDown() == true)
@@ -1972,6 +2100,7 @@ int main(int argc, char ** argv)
 	g_UserInterface = new UserInterface();
 	g_GameTimeTimeoutNotifications = new TimeoutNotificationManager();
 	g_RealTimeTimeoutNotifications = new TimeoutNotificationManager();
+	g_SystemStatistics= new SystemStatistics();
 	
 	// parse command line
 	std::vector< std::string > Arguments(argv, argv + argc);

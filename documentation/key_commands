@@ -104,6 +104,9 @@ On key down:
 68 (F2)
 	Dumps an object report to standard out.
 
+96 (F12)
+	Toggles showing a dialog which displays timing information about the currently running simulation.
+
 97 (HOME)
 	Returns the camera to offset (0, 0) above the camera focus or the system center if no object is focused.
 
