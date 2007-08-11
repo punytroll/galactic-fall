@@ -24,6 +24,9 @@
 #include <string>
 #include <vector>
 
+#include "color.h"
+#include "math/vector2f.h"
+
 class ParticleSystem
 {
 public:

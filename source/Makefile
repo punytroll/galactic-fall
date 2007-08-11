@@ -88,6 +88,9 @@ game_time_h = \
 globals_h = \
 	globals.h
 
+graphics_engine_h = \
+	graphics_engine.h
+
 key_event_information_h = \
 	key_event_information.h
 
@@ -185,7 +188,9 @@ object_factory_h = \
 	object_factory.h
 
 particle_systems_h = \
-	particle_systems.h
+	particle_systems.h \
+	$(color_h) \
+	$(math_vector2f_h)
 
 perspective_h = \
 	perspective.h \
@@ -448,6 +453,9 @@ galaxy.o: galaxy.cpp $(galaxy_h) $(system_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 game_time.o: game_time.cpp $(game_time_h)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+graphics_engine.o: graphics_engine.cpp $(graphics_engine_h) $(particle_systems_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 key_event_information.o: key_event_information.cpp $(key_event_information_h)
