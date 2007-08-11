@@ -51,6 +51,7 @@
 #include "galaxy.h"
 #include "game_time.h"
 #include "globals.h"
+#include "graphics_engine.h"
 #include "key_event_information.h"
 #include "label.h"
 #include "map_dialog.h"
@@ -157,6 +158,7 @@ private:
 AssetClassManager * g_AssetClassManager;
 CommodityClassManager * g_CommodityClassManager;
 Galaxy * g_Galaxy;
+Graphics::Engine * g_GraphicsEngine(0);
 ModelManager * g_ModelManager;
 ObjectFactory * g_ObjectFactory;
 ShipClassManager * g_ShipClassManager;
@@ -203,7 +205,6 @@ Window g_Window;
 Perspective g_MainPerspective;
 bool g_EchoEvents(false);
 bool g_DumpEndReport(false);
-std::vector< ParticleSystem * > g_ParticleSystems;
 SystemStatistics * g_SystemStatistics;
 
 enum WantReturnCode
@@ -424,12 +425,12 @@ ParticleSystem * CreateParticleSystem(const std::string & ParticleSystemClassIde
 	if(ParticleSystemClassIdentifier == "hit")
 	{
 		NewParticleSystem = new ParticleSystemHit();
-		g_ParticleSystems.push_back(NewParticleSystem);
+		g_GraphicsEngine->AddParticleSystem(NewParticleSystem);
 	}
 	else
 	{
 		NewParticleSystem = new ParticleSystemExplosion();
-		g_ParticleSystems.push_back(NewParticleSystem);
+		g_GraphicsEngine->AddParticleSystem(NewParticleSystem);
 	}
 	
 	return NewParticleSystem;
@@ -444,6 +445,7 @@ void CalculateMovements(System * System)
 {
 	float Seconds(CalculateTime());
 	
+	g_GraphicsEngine->Update(Seconds);
 	if(System != 0)
 	{
 		// TODO: it is unclear, which Ships to update really.
@@ -568,21 +570,6 @@ void CalculateMovements(System * System)
 				}
 			}
 			ShotIterator = NextIterator;
-		}
-		
-		std::vector< ParticleSystem * >::iterator ParticleSystemIterator(g_ParticleSystems.begin());
-		
-		while(ParticleSystemIterator != g_ParticleSystems.end())
-		{
-			if((*ParticleSystemIterator)->Update(Seconds) == false)
-			{
-				DeleteParticleSystem(*ParticleSystemIterator);
-				ParticleSystemIterator = g_ParticleSystems.erase(ParticleSystemIterator);
-			}
-			else
-			{
-				++ParticleSystemIterator;
-			}
 		}
 	}
 }
@@ -716,11 +703,8 @@ void Render(System * System)
 			glClear(GL_DEPTH_BUFFER_BIT);
 			(*ShotIterator)->Draw();
 		}
-		for(std::vector< ParticleSystem * >::iterator ParticleSystemIterator = g_ParticleSystems.begin(); ParticleSystemIterator != g_ParticleSystems.end(); ++ParticleSystemIterator)
-		{
-			(*ParticleSystemIterator)->Draw();
-		}
 	}
+	g_GraphicsEngine->Render();
 	// HUD
 	if((g_OutputMind == true) && (g_OutputMind->GetCharacter() != 0) && (g_OutputMind->GetCharacter()->GetShip() != 0) && (g_OutputMind->GetCharacter()->GetShip()->GetTarget() == true))
 	{
@@ -796,13 +780,6 @@ void EmptySystem(System * System)
 {
 	if(System != 0)
 	{
-		while(g_ParticleSystems.empty() == false)
-		{
-			ParticleSystem * ParticleSystem(g_ParticleSystems.front());
-			
-			g_ParticleSystems.erase(g_ParticleSystems.begin());
-			DeleteParticleSystem(ParticleSystem);
-		}
 		while(System->GetShips().empty() == false)
 		{
 			DeleteObject(System->GetShips().front());
@@ -816,6 +793,7 @@ void EmptySystem(System * System)
 			DeleteObject(System->GetShots().front());
 		}
 	}
+	g_GraphicsEngine->Clear();
 }
 
 void SpawnShip(System * System, const std::string & IdentifierSuffix, std::string ShipClassIdentifier = "")
@@ -2092,6 +2070,7 @@ int main(int argc, char ** argv)
 	g_CommodityClassManager = new CommodityClassManager();
 	g_Galaxy = new Galaxy();
 	g_Galaxy->SetObjectIdentifier("::galaxy");
+	g_GraphicsEngine = new Graphics::Engine();
 	g_ModelManager = new ModelManager();
 	g_ObjectFactory = new ObjectFactory();
 	g_ShipClassManager = new ShipClassManager();
