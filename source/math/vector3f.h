@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 1.2.2 of algebra.
+ * This is part of version 1.2.3 of algebra.
  **/
 
 #ifndef ALGEBRA_VECTOR3F_H
@@ -70,17 +70,17 @@ public:
 		operator/=(Length());
 	}
 	
-	Vector3f operator+(const Vector3f & Other)
+	Vector3f operator+(const Vector3f & Other) const
 	{
 		return Vector3f(m_V.m_A[0] + Other.m_V.m_A[0], m_V.m_A[1] + Other.m_V.m_A[1], m_V.m_A[2] + Other.m_V.m_A[2]);
 	}
 	
-	Vector3f operator-(const Vector3f & Other)
+	Vector3f operator-(const Vector3f & Other) const
 	{
 		return Vector3f(m_V.m_A[0] - Other.m_V.m_A[0], m_V.m_A[1] - Other.m_V.m_A[1], m_V.m_A[2] - Other.m_V.m_A[2]);
 	}
 	
-	Vector3f operator*(const float & Scalar)
+	Vector3f operator*(const float & Scalar) const
 	{
 		return Vector3f(Scalar * m_V.m_A[0], Scalar * m_V.m_A[1], Scalar * m_V.m_A[2]);
 	}
