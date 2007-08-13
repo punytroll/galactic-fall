@@ -52,6 +52,7 @@
 #include "game_time.h"
 #include "globals.h"
 #include "graphics_engine.h"
+#include "graphics_particle_systems.h"
 #include "key_event_information.h"
 #include "label.h"
 #include "map_dialog.h"
@@ -63,7 +64,6 @@
 #include "model_manager.h"
 #include "mount_weapon_dialog.h"
 #include "object_factory.h"
-#include "particle_systems.h"
 #include "perspective.h"
 #include "planet.h"
 #include "planet_dialog.h"
@@ -418,25 +418,25 @@ void CalculateCharacters(void)
 	}
 }
 
-ParticleSystem * CreateParticleSystem(const std::string & ParticleSystemClassIdentifier)
+Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSystemClassIdentifier)
 {
-	ParticleSystem * NewParticleSystem(0);
+	Graphics::ParticleSystem * NewParticleSystem(0);
 	
 	if(ParticleSystemClassIdentifier == "hit")
 	{
-		NewParticleSystem = new ParticleSystemHit();
+		NewParticleSystem = new Graphics::ParticleSystemHit();
 		g_GraphicsEngine->AddParticleSystem(NewParticleSystem);
 	}
 	else
 	{
-		NewParticleSystem = new ParticleSystemExplosion();
+		NewParticleSystem = new Graphics::ParticleSystemExplosion();
 		g_GraphicsEngine->AddParticleSystem(NewParticleSystem);
 	}
 	
 	return NewParticleSystem;
 }
 
-void DeleteParticleSystem(ParticleSystem * ParticleSystem)
+void DeleteParticleSystem(Graphics::ParticleSystem * ParticleSystem)
 {
 	delete ParticleSystem;
 }
@@ -501,14 +501,14 @@ void CalculateMovements(System * System)
 					{
 						if((TheShot->GetPosition() - TheShip->GetPosition()).SquaredLength() < (TheShot->GetRadialSize() * TheShot->GetRadialSize() + TheShip->GetRadialSize() * TheShip->GetRadialSize()))
 						{
-							ParticleSystem * NewHitParticleSystem(CreateParticleSystem("hit"));
+							Graphics::ParticleSystem * NewHitParticleSystem(CreateParticleSystem("hit"));
 							
 							NewHitParticleSystem->SetPosition(TheShot->GetPosition());
 							NewHitParticleSystem->SetVelocity((TheShot->GetVelocity() * 0.2f) + (TheShip->GetVelocity() * 0.8f));
 							TheShip->SetHull(TheShip->GetHull() - TheShot->GetDamage());
 							if(TheShip->GetHull() <= 0.0f)
 							{
-								ParticleSystem * NewExplosionParticleSystem(CreateParticleSystem("explosion"));
+								Graphics::ParticleSystem * NewExplosionParticleSystem(CreateParticleSystem("explosion"));
 								
 								NewExplosionParticleSystem->SetPosition(TheShip->GetPosition());
 								NewExplosionParticleSystem->SetVelocity(TheShip->GetVelocity() * 0.5f);
@@ -549,14 +549,14 @@ void CalculateMovements(System * System)
 					
 					if((TheShot->GetPosition() - TheCommodity->GetPosition()).SquaredLength() < (TheShot->GetRadialSize() * TheShot->GetRadialSize() + TheCommodity->GetRadialSize() * TheCommodity->GetRadialSize()))
 					{
-						ParticleSystem * NewHitParticleSystem(CreateParticleSystem("hit"));
+						Graphics::ParticleSystem * NewHitParticleSystem(CreateParticleSystem("hit"));
 						
 						NewHitParticleSystem->SetPosition(TheShot->GetPosition());
 						NewHitParticleSystem->SetVelocity((TheShot->GetVelocity() * 0.4f) + (TheCommodity->GetVelocity() * 0.6f));
 						TheCommodity->SetHull(TheCommodity->GetHull() - TheShot->GetDamage());
 						if(TheCommodity->GetHull() <= 0.0f)
 						{
-							ParticleSystem * NewHitParticleSystem(CreateParticleSystem("hit"));
+							Graphics::ParticleSystem * NewHitParticleSystem(CreateParticleSystem("hit"));
 							
 							NewHitParticleSystem->SetPosition(TheCommodity->GetPosition());
 							NewHitParticleSystem->SetVelocity(TheCommodity->GetVelocity() * 0.5f);

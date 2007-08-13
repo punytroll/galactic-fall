@@ -22,19 +22,19 @@
 
 #include <vector>
 
-class ParticleSystem;
-
 namespace Graphics
 {
+	class ParticleSystem;
+	
 	class Engine
 	{
 	public:
 		void Clear(void);
 		void Update(float Seconds);
 		void Render(void);
-		void AddParticleSystem(ParticleSystem * ParticleSystem);
+		void AddParticleSystem(Graphics::ParticleSystem * ParticleSystem);
 	private:
-		std::vector< ParticleSystem * > m_ParticleSystems;
+		std::vector< Graphics::ParticleSystem * > m_ParticleSystems;
 	};
 }
 
