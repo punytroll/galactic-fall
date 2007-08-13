@@ -18,11 +18,11 @@
 **/
 
 #include "graphics_engine.h"
-#include "particle_systems.h"
+#include "graphics_particle_systems.h"
 
 void Graphics::Engine::Update(float Seconds)
 {
-	std::vector< ParticleSystem * >::iterator ParticleSystemIterator(m_ParticleSystems.begin());
+	std::vector< Graphics::ParticleSystem * >::iterator ParticleSystemIterator(m_ParticleSystems.begin());
 	
 	while(ParticleSystemIterator != m_ParticleSystems.end())
 	{
@@ -40,7 +40,7 @@ void Graphics::Engine::Update(float Seconds)
 
 void Graphics::Engine::Render(void)
 {
-	for(std::vector< ParticleSystem * >::iterator ParticleSystemIterator = m_ParticleSystems.begin(); ParticleSystemIterator != m_ParticleSystems.end(); ++ParticleSystemIterator)
+	for(std::vector< Graphics::ParticleSystem * >::iterator ParticleSystemIterator = m_ParticleSystems.begin(); ParticleSystemIterator != m_ParticleSystems.end(); ++ParticleSystemIterator)
 	{
 		(*ParticleSystemIterator)->Draw();
 	}

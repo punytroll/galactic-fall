@@ -21,8 +21,8 @@
 
 #include "color.h"
 #include "game_time.h"
+#include "graphics_particle_systems.h"
 #include "math.h"
-#include "particle_systems.h"
 
 GLubyte g_ParticleTextureData[4096] = 
 	{
@@ -61,7 +61,7 @@ GLubyte g_ParticleTextureData[4096] =
 	};
 GLuint g_ParticleTexture(0);
 
-ParticleSystem::ParticleSystem(void)
+Graphics::ParticleSystem::ParticleSystem(void)
 {
 	if(g_ParticleTexture == 0)
 	{
@@ -73,7 +73,7 @@ ParticleSystem::ParticleSystem(void)
 	}
 }
 
-bool ParticleSystem::Update(float Seconds)
+bool Graphics::ParticleSystem::Update(float Seconds)
 {
 	for(std::vector< std::string >::const_iterator ScriptLine = m_SystemScript.begin(); ScriptLine != m_SystemScript.end(); ++ScriptLine)
 	{
@@ -90,7 +90,7 @@ bool ParticleSystem::Update(float Seconds)
 		}
 		else if(*ScriptLine == "update-particles")
 		{
-			std::list< ParticleSystem::Particle >::iterator ParticleIterator(m_Particles.begin());
+			std::list< Graphics::ParticleSystem::Particle >::iterator ParticleIterator(m_Particles.begin());
 			
 			while(ParticleIterator != m_Particles.end())
 			{
@@ -124,7 +124,7 @@ bool ParticleSystem::Update(float Seconds)
 	return true;
 }
 
-void ParticleSystem::Draw(void)
+void Graphics::ParticleSystem::Draw(void)
 {
 	glPushMatrix();
 	glTranslatef(m_Position.m_V.m_A[0], m_Position.m_V.m_A[1], 0.0f);
@@ -136,7 +136,7 @@ void ParticleSystem::Draw(void)
 	glBindTexture(GL_TEXTURE_2D, g_ParticleTexture);
 	glEnable(GL_TEXTURE_2D);
 	glBegin(GL_QUADS);
-	for(std::list< Particle >::iterator ParticleIterator = m_Particles.begin(); ParticleIterator != m_Particles.end(); ++ParticleIterator)
+	for(std::list< Graphics::ParticleSystem::Particle >::iterator ParticleIterator = m_Particles.begin(); ParticleIterator != m_Particles.end(); ++ParticleIterator)
 	{
 		glColor4fv(ParticleIterator->m_Color.GetColor().m_V.m_A);
 		
@@ -157,12 +157,12 @@ void ParticleSystem::Draw(void)
 	glPopMatrix();
 }
 
-ParticleSystemHit::ParticleSystemHit(void)
+Graphics::ParticleSystemHit::ParticleSystemHit(void)
 {
 	SetTimeOfDeath(GameTime::Get() + 3.0);
 	for(int Index = 0; Index < 30; ++Index)
 	{
-		Particle NewParticle;
+		Graphics::ParticleSystem::Particle NewParticle;
 		
 		NewParticle.m_Position.Set(0.0f, 0.0f);
 		NewParticle.m_Velocity = Vector2f(GetRandomFloat(0.0f, 0.5f) + GetRandomFloatFromExponentialDistribution(1.0f), GetRandomFloat(0.0f, 2 * M_PI), Vector2f::InitializeMagnitudeAngle);
@@ -178,12 +178,12 @@ ParticleSystemHit::ParticleSystemHit(void)
 	m_ParticleScript.push_back("move");
 }
 
-ParticleSystemExplosion::ParticleSystemExplosion(void)
+Graphics::ParticleSystemExplosion::ParticleSystemExplosion(void)
 {
 	SetTimeOfDeath(GameTime::Get() + 3.0);
 	for(int Index = 0; Index < 500; ++Index)
 	{
-		Particle NewParticle;
+		Graphics::ParticleSystem::Particle NewParticle;
 		
 		NewParticle.m_Position.Set(0.0f, 0.0f);
 		NewParticle.m_Velocity = Vector2f(GetRandomFloat(0.0f, 2.5f) + GetRandomFloatFromExponentialDistribution(2.0f), GetRandomFloat(0.0f, 2 * M_PI), Vector2f::InitializeMagnitudeAngle);
@@ -194,7 +194,7 @@ ParticleSystemExplosion::ParticleSystemExplosion(void)
 	}
 	for(int Index = 0; Index < 5; ++Index)
 	{
-		Particle FlashParticle;
+		Graphics::ParticleSystem::Particle FlashParticle;
 		
 		FlashParticle.m_Position = Vector2f(GetRandomFloat(0.0f, 6.0f), GetRandomFloat(0.0f, 2 * M_PI), Vector2f::InitializeMagnitudeAngle);
 		FlashParticle.m_Velocity.Set(0.0f, 0.0f);
@@ -204,7 +204,7 @@ ParticleSystemExplosion::ParticleSystemExplosion(void)
 		m_Particles.push_back(FlashParticle);
 	}
 	
-	Particle BigFlashParticle;
+	Graphics::ParticleSystem::Particle BigFlashParticle;
 	
 	BigFlashParticle.m_Position = Vector2f(GetRandomFloat(0.0f, 6.0f), GetRandomFloat(0.0f, 2 * M_PI), Vector2f::InitializeMagnitudeAngle);
 	BigFlashParticle.m_Velocity.Set(0.0f, 0.0f);
