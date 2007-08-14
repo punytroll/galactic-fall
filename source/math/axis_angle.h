@@ -21,23 +21,45 @@
  * This is part of version 1.3.0 of algebra.
  **/
 
-#ifndef ALGEBRA_DETAILS_H
-#define ALGEBRA_DETAILS_H
+#ifndef ALGEBRA_AXIS_ANGLE_H
+#define ALGEBRA_AXIS_ANGLE_H
 
-typedef float vector4float __attribute__ ((vector_size(16)));
+#include "details.h"
 
-union Array4f
+class AxisAngle
 {
-	vector4float m_V;
-	float m_A[4];
-};
-
-typedef float vector2float __attribute__ ((vector_size(8)));
-
-union Array2f
-{
-	vector2float m_V;
-	float m_A[2];
+public:
+	Array4f m_V;
+	
+	AxisAngle(void)
+	{
+	}
+	
+	AxisAngle(float X, float Y, float Z, float Angle)
+	{
+		m_V.m_A[0] = X;
+		m_V.m_A[1] = Y;
+		m_V.m_A[2] = Z;
+		m_V.m_A[3] = Angle;
+	}
+	
+	void Set(float X, float Y, float Z, float Angle)
+	{
+		m_V.m_A[0] = X;
+		m_V.m_A[1] = Y;
+		m_V.m_A[2] = Z;
+		m_V.m_A[3] = Angle;
+	}
+	
+	float operator[](int Index) const
+	{
+		return m_V.m_A[Index];
+	}
+	
+	float & operator[](int Index)
+	{
+		return m_V.m_A[Index];
+	}
 };
 
 #endif

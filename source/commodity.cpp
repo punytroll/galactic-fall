@@ -22,20 +22,23 @@
 #include "color.h"
 #include "commodity.h"
 #include "commodity_class.h"
+#include "math/matrix4f.h"
 #include "model.h"
 
 Commodity::Commodity(const CommodityClass * CommodityClass) :
 	m_CommodityClass(CommodityClass),
 	m_Hull(20.0f),
-	m_Velocity(true)
+	m_Velocity(true),
+	m_AngularPosition(true)
 {
 	SetName(m_CommodityClass->GetName());
 	SetRadialSize(m_CommodityClass->GetModel()->GetRadialSize());
 	SetSpaceRequirement(m_CommodityClass->GetSpaceRequirement());
-	m_RotationAxis.Set(static_cast< float >(random()) / RAND_MAX, static_cast< float >(random()) / RAND_MAX, static_cast< float >(random()) / RAND_MAX);
-	m_RotationAxis.Normalize();
-	m_AngularPosition = static_cast< float >(random()) / RAND_MAX;
-	m_AngularVelocity = static_cast< float >(random()) / RAND_MAX;
+	
+	Vector3f RotationAxis(static_cast< float >(random()) / RAND_MAX, static_cast< float >(random()) / RAND_MAX, static_cast< float >(random()) / RAND_MAX);
+	
+	RotationAxis.Normalize();
+	m_AngularVelocity.Set(RotationAxis[0], RotationAxis[1], RotationAxis[2], static_cast< float >(random()) / RAND_MAX);
 }
 
 Commodity::~Commodity(void)
@@ -46,7 +49,7 @@ void Commodity::Draw(void) const
 {
 	glPushMatrix();
 	glTranslatef(m_Position.m_V.m_A[0], m_Position.m_V.m_A[1], 0.0f);
-	glRotatef(m_AngularPosition * 180.0f / M_PI, m_RotationAxis.m_V.m_A[0], m_RotationAxis.m_V.m_A[1], m_RotationAxis.m_V.m_A[2]);
+	glMultMatrixf(Matrix4f(m_AngularPosition).Transpose().Matrix());
 	glMaterialfv(GL_FRONT, GL_SPECULAR, Vector4f(0.0f, 0.0f, 0.0f, 1.0f).m_V.m_A);
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, m_CommodityClass->GetColor()->GetColor().m_V.m_A);
 	m_CommodityClass->GetModel()->Draw();
@@ -56,5 +59,5 @@ void Commodity::Draw(void) const
 void Commodity::Move(float Seconds)
 {
 	m_Position += m_Velocity * Seconds;
-	m_AngularPosition += m_AngularVelocity * Seconds;
+	m_AngularPosition *= Quaternion(Vector4f(m_AngularVelocity[0], m_AngularVelocity[1], m_AngularVelocity[2], 0.0f).m_V, m_AngularVelocity[3] * Seconds);
 }

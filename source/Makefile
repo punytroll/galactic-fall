@@ -58,7 +58,8 @@ command_mind_h = \
 
 commodity_h = \
 	commodity.h \
-	$(math_vector2f_h) \
+	$(math_axis_angle_h) \
+	$(math_quaterion_h) \
 	$(math_vector3f_h) \
 	$(physical_object_h)
 
@@ -122,6 +123,10 @@ math_h = \
 	$(math_vector3f_h) \
 	$(math_vector4d_h) \
 	$(type_definitions_h)
+
+math_axis_angle_h = \
+	math/axis_angle.h \
+	$(math_details_h)
 
 math_details_h = \
 	math/details.h
@@ -432,7 +437,7 @@ color.o: color.cpp $(color_h)
 command_mind.o: command_mind.cpp $(commodity_h) $(character_h) $(command_mind_h) $(planet_h) $(ship_h) $(system_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-commodity.o: commodity.cpp $(commodity_h) $(color_h) $(commodity_class_h) $(model_h)
+commodity.o: commodity.cpp $(commodity_h) $(color_h) $(commodity_class_h) $(math_matrix4f_h) $(model_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 commodity_class.o: commodity_class.cpp $(color_h) $(commodity_class_h)

@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 1.2.5 of algebra.
+ * This is part of version 1.3.0 of algebra.
  **/
 
 #ifndef ALGEBRA_MATRIX3F_H

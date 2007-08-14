@@ -20,7 +20,8 @@
 #ifndef COMMODITY_H
 #define COMMODITY_H
 
-#include "math/vector2f.h"
+#include "math/axis_angle.h"
+#include "math/quaternion.h"
 #include "math/vector3f.h"
 #include "physical_object.h"
 
@@ -46,9 +47,8 @@ private:
 	const CommodityClass * m_CommodityClass;
 	float m_Hull;
 	Vector3f m_Velocity;
-	float m_AngularPosition;
-	Vector3f m_RotationAxis;
-	float m_AngularVelocity;
+	Quaternion m_AngularPosition;
+	AxisAngle m_AngularVelocity;
 	// no copy constructor
 	Commodity(const Commodity & Commodity);
 };
