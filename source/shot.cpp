@@ -21,6 +21,7 @@
 
 #include "color.h"
 #include "game_time.h"
+#include "math/matrix4f.h"
 #include "model.h"
 #include "shot.h"
 #include "weapon_class.h"
@@ -45,7 +46,7 @@ void Shot::Draw(void) const
 	glPushAttrib(GL_ENABLE_BIT);
 	glPushMatrix();
 	glTranslatef(m_Position.m_V.m_A[0], m_Position.m_V.m_A[1], 0.0f);
-	glRotatef(m_AngularPosition * 180.0f / M_PI, 0.0f, 0.0f, 1.0f);
+	glMultMatrixf(Matrix4f(GetAngularPosition()).Transpose().Matrix());
 	glColor4fv(m_WeaponClass->GetParticleColor()->GetColor().m_V.m_A);
 	glDisable(GL_LIGHTING);
 	glEnable(GL_BLEND);

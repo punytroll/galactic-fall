@@ -69,22 +69,17 @@ void Weapon::Update(float Seconds)
 		const Vector3f & ParticleExitPosition(GetWeaponClass()->GetParticleExitPosition());
 		const Vector3f & SlotPosition(GetSlot()->GetPosition());
 		const Vector3f & ShipPosition(TheShip->GetPosition());
-		Vector4f ShotPosition(true);
+		Vector3f ShotPosition(true);
 		
-		ShotPosition[0] += ParticleExitPosition[0];
-		ShotPosition[1] += ParticleExitPosition[1];
-		ShotPosition[2] += ParticleExitPosition[2];
+		ShotPosition += ParticleExitPosition;
 		ShotPosition *= GetOrientation();
 		ShotPosition *= GetSlot()->GetOrientation();
-		ShotPosition[0] += SlotPosition[0];
-		ShotPosition[1] += SlotPosition[1];
-		ShotPosition[2] += SlotPosition[2];
+		ShotPosition += SlotPosition;
 		ShotPosition *= Quaternion(TheShip->GetAngularPosition(), Quaternion::InitializeRotationZ);
-		ShotPosition[0] += ShipPosition[0];
-		ShotPosition[1] += ShipPosition[1];
-		ShotPosition[2] += ShipPosition[2];
-		NewShot->SetPosition(Vector3f(ShotPosition[0], ShotPosition[1], ShotPosition[2]));
+		ShotPosition += ShipPosition;
+		NewShot->SetPosition(ShotPosition);
 		
+		/// @todo There are some very confusing mappings down here ... RotationY, RotationZ, (0, -2) .... all that stuff
 		// calculating the shot's angular position in world coordinate system
 		Vector4f ShotDirection(1.0f, 0.0f, 0.0f, 0.0f);
 		
@@ -96,12 +91,14 @@ void Weapon::Update(float Seconds)
 			throw std::runtime_error("ShotDirection contains invalid Z-coordinate " + to_string_cast(ShotDirection[1]) + ".");
 		}
 		
-		float ShotAngularPosition(GetRadians(Vector2f(ShotDirection[0], -ShotDirection[2])));
+		Quaternion ShotAngularPosition(GetRadians(Vector2f(ShotDirection[0], -ShotDirection[2])), Quaternion::InitializeRotationZ);
 		
 		NewShot->SetAngularPosition(ShotAngularPosition);
 		
-		Vector2f ParticleVelocity(GetWeaponClass()->GetParticleExitSpeed(), ShotAngularPosition, Vector2f::InitializeMagnitudeAngle);
+		// calculate the shot's velocity
+		Vector3f ParticleVelocity(GetWeaponClass()->GetParticleExitSpeed(), 0.0f, 0.0f);
 		
+		ParticleVelocity *= ShotAngularPosition;
 		NewShot->SetVelocity(TheShip->GetVelocity() + Vector3f(ParticleVelocity[0], ParticleVelocity[1], 0.0f));
 		TheShip->GetCurrentSystem()->AddContent(NewShot);
 		m_NextTimeToFire = GameTime::Get() + GetWeaponClass()->GetReloadTime();
@@ -128,8 +125,9 @@ void Weapon::Draw(void) const
 		glPushMatrix();
 		glTranslatef(SlotPosition[0], SlotPosition[1], SlotPosition[2]);
 		
-		Quaternion WeaponOrientation(GetSlot()->GetOrientation() * GetOrientation());
+		Quaternion WeaponOrientation(GetSlot()->GetOrientation());
 		
+		WeaponOrientation *= GetOrientation();
 		glMultMatrixf(Matrix4f(WeaponOrientation).Transpose().Matrix());
 		GetWeaponClass()->GetModel()->Draw();
 		glPopMatrix();

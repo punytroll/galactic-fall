@@ -59,7 +59,7 @@ command_mind_h = \
 commodity_h = \
 	commodity.h \
 	$(math_axis_angle_h) \
-	$(math_quaterion_h) \
+	$(math_quaternion_h) \
 	$(math_vector3f_h) \
 	$(physical_object_h)
 
@@ -258,6 +258,7 @@ ship_class_manager_h = \
 
 shot_h = \
 	shot.h \
+	$(math_quaternion_h) \
 	$(math_vector3f_h) \
 	$(physical_object_h)
 
@@ -542,7 +543,7 @@ ship_class.o: ship_class.cpp $(color_h) $(ship_class_h) $(slot_h)
 ship_class_manager.o: ship_class_manager.cpp $(ship_class_h) $(ship_class_manager_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-shot.o: shot.cpp $(color_h) $(game_time_h) $(model_h) $(shot_h) $(weapon_class_h)
+shot.o: shot.cpp $(color_h) $(game_time_h) $(math_matrix4f_h) $(model_h) $(shot_h) $(weapon_class_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 slot.o: slot.cpp $(slot_h)
