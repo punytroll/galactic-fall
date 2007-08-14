@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 1.3.0 of algebra.
+ * This is part of version 1.3.1 of algebra.
  **/
 
 #ifndef ALGEBRA_VECTOR3F_H
@@ -26,6 +26,7 @@
 
 #include "details.h"
 #include "matrix3f.h"
+#include "quaternion.h"
 
 class Vector3f
 {
@@ -169,6 +170,17 @@ public:
 		m_V.m_A[0] = Float1;
 		m_V.m_A[1] = Float2;
 		m_V.m_A[2] = Float3;
+		
+		return *this;
+	}
+	
+	Vector3f & operator*=(const Quaternion & AQuaternion)
+	{
+		Quaternion Result(AQuaternion * Quaternion(0.0f, m_V.m_A[0], m_V.m_A[1], m_V.m_A[2]) * AQuaternion.Conjugated());
+		
+		m_V.m_A[0] = Result.m_V.m_A[1];
+		m_V.m_A[1] = Result.m_V.m_A[2];
+		m_V.m_A[2] = Result.m_V.m_A[3];
 		
 		return *this;
 	}
