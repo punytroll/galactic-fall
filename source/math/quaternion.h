@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 1.2.3 of algebra.
+ * This is part of version 1.2.4 of algebra.
  **/
 
 #ifndef ALGEBRA_QUATERNION_H

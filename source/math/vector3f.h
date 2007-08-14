@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 1.2.3 of algebra.
+ * This is part of version 1.2.4 of algebra.
  **/
 
 #ifndef ALGEBRA_VECTOR3F_H
@@ -60,9 +60,14 @@ public:
 		m_V.m_A[2] = Float3;
 	}
 	
-	float Length(void)
+	float Length(void) const
 	{
 		return sqrtf(m_V.m_A[0] * m_V.m_A[0] + m_V.m_A[1] * m_V.m_A[1] + m_V.m_A[2] * m_V.m_A[2]);
+	}
+	
+	float SquaredLength(void) const
+	{
+		return m_V.m_A[0] * m_V.m_A[0] + m_V.m_A[1] * m_V.m_A[1] + m_V.m_A[2] * m_V.m_A[2];
 	}
 	
 	void Normalize(void)
