@@ -484,13 +484,13 @@ static void ReadSystem(Galaxy * Galaxy, Arxx::Reference & Reference)
 	
 	Reader >> Name >> Position >> TrafficDensity >> StarIdentifier >> StarPosition >> StarColor >> PlanetCount;
 	NewSystem->SetName(Name);
-	NewSystem->SetPosition(Position);
+	NewSystem->SetPosition(Vector3f(Position[0], Position[1], 0.0f));
 	NewSystem->SetTrafficDensity(TrafficDensity);
 	
 	Star * NewStar(new Star());
 	
 	NewStar->SetObjectIdentifier("::star(" + StarIdentifier + ")::in_system(" + NewSystem->GetIdentifier() + ")");
-	NewStar->SetPosition(StarPosition);
+	NewStar->SetPosition(Vector3f(StarPosition[0], StarPosition[1], 0.0f));
 	NewStar->SetColor(StarColor);
 	if(NewSystem->AddContent(NewStar) == false)
 	{
@@ -516,7 +516,7 @@ static void ReadSystem(Galaxy * Galaxy, Arxx::Reference & Reference)
 		Reader >> Name >> Description >> PlanetPosition >> Size >> PlanetColor >> OfferedAssetsCount;
 		NewPlanet->SetName(Name);
 		NewPlanet->SetDescription(Description);
-		NewPlanet->SetPosition(PlanetPosition);
+		NewPlanet->SetPosition(Vector3f(PlanetPosition[0], PlanetPosition[1], 0.0f));
 		NewPlanet->SetSize(Size);
 		NewPlanet->SetColor(PlanetColor);
 		for(Arxx::u4byte OfferedAssetNumber = 1; OfferedAssetNumber <= OfferedAssetsCount; ++OfferedAssetNumber)

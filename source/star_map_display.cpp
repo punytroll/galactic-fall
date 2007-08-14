@@ -61,7 +61,7 @@ void StarMapDisplay::Draw(void) const
 	
 	for(std::set< System * >::const_iterator UnexploredSystemIterator = UnexploredSystems.begin(); UnexploredSystemIterator != UnexploredSystems.end(); ++UnexploredSystemIterator)
 	{
-		Vector2f Position((*UnexploredSystemIterator)->GetPosition() - m_System->GetPosition());
+		Vector3f Position((*UnexploredSystemIterator)->GetPosition() - m_System->GetPosition());
 		
 		Position *= m_Scale;
 		glPushMatrix();
@@ -99,7 +99,7 @@ void StarMapDisplay::Draw(void) const
 	
 	for(std::set< System * >::const_iterator ExploredSystemIterator = ExploredSystems.begin(); ExploredSystemIterator != ExploredSystems.end(); ++ExploredSystemIterator)
 	{
-		Vector2f Position((*ExploredSystemIterator)->GetPosition() - m_System->GetPosition());
+		Vector3f Position((*ExploredSystemIterator)->GetPosition() - m_System->GetPosition());
 		
 		Position *= m_Scale;
 		glPushMatrix();
@@ -187,7 +187,7 @@ bool StarMapDisplay::OnMouseButton(Widget * EventSource, int Button, int State, 
 			
 			for(std::map< std::string, System * >::const_iterator SystemIterator = Systems.begin(); SystemIterator != Systems.end(); ++SystemIterator)
 			{
-				Vector2f Position(SystemIterator->second->GetPosition() - m_System->GetPosition());
+				Vector3f Position(SystemIterator->second->GetPosition() - m_System->GetPosition());
 				
 				Position *= m_Scale;
 				Position.m_V.m_A[0] -= X - m_OffsetPosition[0];

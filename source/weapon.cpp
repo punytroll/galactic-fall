@@ -68,7 +68,7 @@ void Weapon::Update(float Seconds)
 		// calculating the shot's position in the world coordinate system
 		const Vector3f & ParticleExitPosition(GetWeaponClass()->GetParticleExitPosition());
 		const Vector3f & SlotPosition(GetSlot()->GetPosition());
-		const Vector2f & ShipPosition(TheShip->GetPosition());
+		const Vector3f & ShipPosition(TheShip->GetPosition());
 		Vector4f ShotPosition(true);
 		
 		ShotPosition[0] += ParticleExitPosition[0];
@@ -82,7 +82,8 @@ void Weapon::Update(float Seconds)
 		ShotPosition *= Quaternion(TheShip->GetAngularPosition(), Quaternion::InitializeRotationZ);
 		ShotPosition[0] += ShipPosition[0];
 		ShotPosition[1] += ShipPosition[1];
-		NewShot->SetPosition(Vector2f(ShotPosition[0], ShotPosition[1]));
+		ShotPosition[2] += ShipPosition[2];
+		NewShot->SetPosition(Vector3f(ShotPosition[0], ShotPosition[1], ShotPosition[2]));
 		
 		// calculating the shot's angular position in world coordinate system
 		Vector4f ShotDirection(1.0f, 0.0f, 0.0f, 0.0f);
@@ -98,7 +99,10 @@ void Weapon::Update(float Seconds)
 		float ShotAngularPosition(GetRadians(Vector2f(ShotDirection[0], -ShotDirection[2])));
 		
 		NewShot->SetAngularPosition(ShotAngularPosition);
-		NewShot->SetVelocity(TheShip->GetVelocity() + Vector2f(GetWeaponClass()->GetParticleExitSpeed(), ShotAngularPosition, Vector2f::InitializeMagnitudeAngle));
+		
+		Vector2f ParticleVelocity(GetWeaponClass()->GetParticleExitSpeed(), ShotAngularPosition, Vector2f::InitializeMagnitudeAngle);
+		
+		NewShot->SetVelocity(TheShip->GetVelocity() + Vector3f(ParticleVelocity[0], ParticleVelocity[1], 0.0f));
 		TheShip->GetCurrentSystem()->AddContent(NewShot);
 		m_NextTimeToFire = GameTime::Get() + GetWeaponClass()->GetReloadTime();
 	}

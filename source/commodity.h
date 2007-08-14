@@ -38,14 +38,14 @@ public:
 	// getters
 	const CommodityClass * GetCommodityClass(void) const;
 	float GetHull(void) const;
-	const Vector2f & GetVelocity(void) const;
+	const Vector3f & GetVelocity(void) const;
 	// setters
 	void SetHull(float Hull);
-	void SetVelocity(const Vector2f & Velocity);
+	void SetVelocity(const Vector3f & Velocity);
 private:
 	const CommodityClass * m_CommodityClass;
 	float m_Hull;
-	Vector2f m_Velocity;
+	Vector3f m_Velocity;
 	float m_AngularPosition;
 	Vector3f m_RotationAxis;
 	float m_AngularVelocity;
@@ -63,7 +63,7 @@ inline float Commodity::GetHull(void) const
 	return m_Hull;
 }
 
-inline const Vector2f & Commodity::GetVelocity(void) const
+inline const Vector3f & Commodity::GetVelocity(void) const
 {
 	return m_Velocity;
 }
@@ -73,7 +73,7 @@ inline void Commodity::SetHull(float Hull)
 	m_Hull = Hull;
 }
 
-inline void Commodity::SetVelocity(const Vector2f & Velocity)
+inline void Commodity::SetVelocity(const Vector3f & Velocity)
 {
 	m_Velocity = Velocity;
 }

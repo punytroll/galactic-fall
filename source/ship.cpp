@@ -135,12 +135,12 @@ void Ship::Update(float Seconds)
 			SetFuel(GetFuel() - GetShipClass()->GetJumpFuel());
 			
 			// set the ship's position according to the old system
-			Vector2f Direction(NewSystem->GetPosition() - OldSystem->GetPosition());
+			Vector3f Direction(NewSystem->GetPosition() - OldSystem->GetPosition());
 			
 			Direction.Normalize();
 			m_Position = Direction * -300.0f;
 			m_Velocity = Direction * GetShipClass()->GetMaximumSpeed();
-			m_AngularPosition = GetRadians(Direction);
+			m_AngularPosition = GetRadians(Vector2f(Direction[0], Direction[1]));
 			// set up the ship in the new system
 			SetCurrentSystem(GetLinkedSystemTarget());
 			NewSystem->AddContent(this);
@@ -162,7 +162,7 @@ void Ship::Update(float Seconds)
 	{
 		SetLinkedSystemTarget(0);
 		SetTarget(0);
-		m_Velocity.Set(0.0f, 0.0f);
+		m_Velocity.Set(0.0f, 0.0f, 0.0f);
 		m_Accelerate = false;
 		m_TurnLeft = 0.0f;
 		m_TurnRight = 0.0f;
@@ -230,12 +230,14 @@ void Ship::Update(float Seconds)
 			{
 				Vector2f ForwardThrust(GetForwardThrust(), m_AngularPosition, Vector2f::InitializeMagnitudeAngle);
 				
-				m_Position += ForwardThrust * (Seconds * Seconds / 2.0f);
-				m_Velocity += ForwardThrust * Seconds;
+				ForwardThrust *= Seconds;
+				m_Velocity += Vector3f(ForwardThrust[0], ForwardThrust[1], 0.0f);
+				ForwardThrust *= 0.5f * Seconds;
+				m_Position += Vector3f(ForwardThrust[0], ForwardThrust[1], 0.0f);
 				if(m_Velocity.Length() > GetMaximumSpeed())
 				{
 					m_Velocity.Normalize();
-					m_Velocity.Scale(GetMaximumSpeed());
+					m_Velocity *= GetMaximumSpeed();
 				}
 				m_Fuel -= FuelConsumption;
 				m_Accelerating = true;
@@ -257,7 +259,7 @@ void Ship::Update(float Seconds)
 				{
 					RemoveContent(TheCommodity);
 					TheCommodity->SetPosition(GetPosition());
-					TheCommodity->SetVelocity(GetVelocity() * 0.8f + Vector2f(GetRandomFloat(-0.5f, 0.5f), GetRandomFloat(-0.5f, 0.5f)));
+					TheCommodity->SetVelocity(GetVelocity() * 0.8f + Vector3f(GetRandomFloat(-0.5f, 0.5f), GetRandomFloat(-0.5f, 0.5f), 0.0f));
 					GetCurrentSystem()->AddContent(TheCommodity);
 				}
 			}

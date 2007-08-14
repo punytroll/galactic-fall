@@ -21,22 +21,22 @@
 #define POSITION_H
 
 #include "object.h"
-#include "math/vector2f.h"
+#include "math/vector3f.h"
 
 class Position : public Object
 {
 public:
-	void SetPosition(const Vector2f & Position);
-	const Vector2f & GetPosition(void) const;
-	Vector2f m_Position;
+	void SetPosition(const Vector3f & Position);
+	const Vector3f & GetPosition(void) const;
+	Vector3f m_Position;
 };
 
-inline void Position::SetPosition(const Vector2f & Position)
+inline void Position::SetPosition(const Vector3f & Position)
 {
 	m_Position = Position;
 }
 
-inline const Vector2f & Position::GetPosition(void) const
+inline const Vector3f & Position::GetPosition(void) const
 {
 	return m_Position;
 }
