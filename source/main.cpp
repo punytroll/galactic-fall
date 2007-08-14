@@ -527,7 +527,10 @@ void CalculateMovements(System * System)
 									{
 										TheShip->RemoveContent(TheCommodity);
 										TheCommodity->SetPosition(TheShip->GetPosition());
-										TheCommodity->SetVelocity(TheShip->GetVelocity() * 0.8f + Vector2f(GetRandomFloat(0.1f, 1.2f), GetRandomFloat(0.0f, 2 * M_PI), Vector2f::InitializeMagnitudeAngle));
+										
+										Vector2f VelocityPart(GetRandomFloat(0.1f, 1.2f), GetRandomFloat(0.0f, 2 * M_PI), Vector2f::InitializeMagnitudeAngle);
+										
+										TheCommodity->SetVelocity(TheShip->GetVelocity() * 0.8f + Vector3f(VelocityPart[0], VelocityPart[1], 0.0f));
 										TheShip->GetCurrentSystem()->AddContent(TheCommodity);
 									}
 								}
@@ -711,14 +714,14 @@ void Render(System * System)
 		glClear(GL_DEPTH_BUFFER_BIT);
 		DrawSelection(g_OutputMind->GetCharacter()->GetShip()->GetTarget().Get(), g_OutputMind->GetCharacter()->GetShip()->GetTarget()->GetRadialSize());
 		
-		Vector2f RelativePosition(g_OutputMind->GetCharacter()->GetShip()->GetTarget()->GetPosition() - g_OutputMind->GetCharacter()->GetShip()->GetPosition());
+		Vector3f RelativePosition(g_OutputMind->GetCharacter()->GetShip()->GetTarget()->GetPosition() - g_OutputMind->GetCharacter()->GetShip()->GetPosition());
 		
 		RelativePosition.Normalize();
 		glPushMatrix();
 		glPushAttrib(GL_LIGHTING_BIT);
 		glDisable(GL_LIGHTING);
 		glTranslatef(g_OutputMind->GetCharacter()->GetShip()->GetPosition().m_V.m_A[0], g_OutputMind->GetCharacter()->GetShip()->GetPosition().m_V.m_A[1], 0.0f);
-		glRotatef(GetRadians(RelativePosition) * 180.0f / M_PI, 0.0f, 0.0f, 1.0f);
+		glRotatef(GetRadians(Vector2f(RelativePosition[0], RelativePosition[1])) * 180.0f / M_PI, 0.0f, 0.0f, 1.0f);
 		glColor3f(0.0f, 0.5f, 0.5f);
 		glBegin(GL_LINES);
 		glVertex2f(20.0f, 0.0f);
@@ -813,7 +816,7 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 	Ship * NewShip(new Ship(g_ShipClassManager->Get(ShipClassIdentifier)));
 	
 	NewShip->SetObjectIdentifier("::ship(" + NewShip->GetShipClass()->GetIdentifier() + ")" + IdentifierSuffix);
-	NewShip->SetPosition(Vector2f(GetRandomFloat(-200.0f, 200.0f), GetRandomFloat(-200.0f, 200.0f)));
+	NewShip->SetPosition(Vector3f(GetRandomFloat(-200.0f, 200.0f), GetRandomFloat(-200.0f, 200.0f), 0.0f));
 	NewShip->SetFuel(NewShip->GetFuelCapacity());
 	NewShip->SetCurrentSystem(System);
 	
@@ -1932,11 +1935,11 @@ void LoadSavegame(const Element * SaveElement)
 				}
 				else if((*ShipChild)->GetName() == "position")
 				{
-					PlayerShip->SetPosition(Vector2f(from_string_cast< float >((*ShipChild)->GetAttribute("x")), from_string_cast< float >((*ShipChild)->GetAttribute("y"))));
+					PlayerShip->SetPosition(Vector3f(from_string_cast< float >((*ShipChild)->GetAttribute("x")), from_string_cast< float >((*ShipChild)->GetAttribute("y")), 0.0f));
 				}
 				else if((*ShipChild)->GetName() == "velocity")
 				{
-					PlayerShip->SetVelocity(Vector2f(from_string_cast< float >((*ShipChild)->GetAttribute("x")), from_string_cast< float >((*ShipChild)->GetAttribute("y"))));
+					PlayerShip->SetVelocity(Vector3f(from_string_cast< float >((*ShipChild)->GetAttribute("x")), from_string_cast< float >((*ShipChild)->GetAttribute("y")), 0.0f));
 				}
 				else if((*ShipChild)->GetName() == "angular-position")
 				{

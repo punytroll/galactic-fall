@@ -54,7 +54,7 @@ public:
 	float GetMaximumSpeed(void) const;
 	const ShipClass * GetShipClass(void) const;
 	float GetTurnSpeed(void) const;
-	const Vector2f & GetVelocity(void) const;
+	const Vector3f & GetVelocity(void) const;
 	float GetAvailableSpace(void) const;
 	unsigned_numeric GetContentAmount(const std::string & Type, const std::string & Class) const;
 	Reference< PhysicalObject > & GetTarget(void);
@@ -71,7 +71,7 @@ public:
 	void SetRefuel(bool Refuel);
 	void SetTurnLeft(float TurnLeft);
 	void SetTurnRight(float TurnRight);
-	void SetVelocity(const Vector2f & Velocity);
+	void SetVelocity(const Vector3f & Velocity);
 	void SetAngularPosition(float AngularPosition);
 	void SetTarget(Reference< PhysicalObject > Target);
 	void SetLinkedSystemTarget(System * LinkedSystem);
@@ -94,7 +94,7 @@ private:
 	Reference< PhysicalObject > m_Target;
 	System * m_LinkedSystemTarget;
 	System * m_CurrentSystem;
-	Vector2f m_Velocity;
+	Vector3f m_Velocity;
 	float m_AngularPosition;
 };
 
@@ -133,7 +133,7 @@ inline float Ship::GetTurnSpeed(void) const
 	return m_ShipClass->GetTurnSpeed();
 }
 
-inline const Vector2f & Ship::GetVelocity(void) const
+inline const Vector3f & Ship::GetVelocity(void) const
 {
 	return m_Velocity;
 }
@@ -200,7 +200,7 @@ inline void Ship::SetTurnRight(float TurnRight)
 	m_TurnRight = TurnRight;
 }
 
-inline void Ship::SetVelocity(const Vector2f & Velocity)
+inline void Ship::SetVelocity(const Vector3f & Velocity)
 {
 	m_Velocity = Velocity;
 }

@@ -140,7 +140,7 @@ void Graphics::ParticleSystem::Draw(void)
 	{
 		glColor4fv(ParticleIterator->m_Color.GetColor().m_V.m_A);
 		
-		Vector2f & Position(ParticleIterator->m_Position);
+		Vector3f & Position(ParticleIterator->m_Position);
 		
 		// TODO: billboarding
 		glTexCoord2f(0.0f, 0.0f);
@@ -164,8 +164,11 @@ Graphics::ParticleSystemHit::ParticleSystemHit(void)
 	{
 		Graphics::ParticleSystem::Particle NewParticle;
 		
-		NewParticle.m_Position.Set(0.0f, 0.0f);
-		NewParticle.m_Velocity = Vector2f(GetRandomFloat(0.0f, 0.5f) + GetRandomFloatFromExponentialDistribution(1.0f), GetRandomFloat(0.0f, 2 * M_PI), Vector2f::InitializeMagnitudeAngle);
+		NewParticle.m_Position.Set(0.0f, 0.0f, 0.0f);
+		
+		Vector2f Velocity(GetRandomFloat(0.0f, 0.5f) + GetRandomFloatFromExponentialDistribution(1.0f), GetRandomFloat(0.0f, 2 * M_PI), Vector2f::InitializeMagnitudeAngle);
+		
+		NewParticle.m_Velocity = Vector3f(Velocity[0], Velocity[1], 0.0f);
 		NewParticle.m_TimeOfDeath = GameTime::Get() + GetRandomDouble(0.3f, 0.8f);
 		NewParticle.m_Color = Color(GetRandomFloat(0.4f, 0.5f), GetRandomFloat(0.35f, 0.45f), GetRandomFloat(0.35f, 0.65f), 0.3f);
 		NewParticle.m_Size = GetRandomFloat(0.25f, 0.4f);
@@ -185,8 +188,11 @@ Graphics::ParticleSystemExplosion::ParticleSystemExplosion(void)
 	{
 		Graphics::ParticleSystem::Particle NewParticle;
 		
-		NewParticle.m_Position.Set(0.0f, 0.0f);
-		NewParticle.m_Velocity = Vector2f(GetRandomFloat(0.0f, 2.5f) + GetRandomFloatFromExponentialDistribution(2.0f), GetRandomFloat(0.0f, 2 * M_PI), Vector2f::InitializeMagnitudeAngle);
+		NewParticle.m_Position.Set(0.0f, 0.0f, 0.0f);
+		
+		Vector2f Velocity(GetRandomFloat(0.0f, 2.5f) + GetRandomFloatFromExponentialDistribution(2.0f), GetRandomFloat(0.0f, 2 * M_PI), Vector2f::InitializeMagnitudeAngle);
+		
+		NewParticle.m_Velocity = Vector3f(Velocity[0], Velocity[1], 0.0f);
 		NewParticle.m_TimeOfDeath = GameTime::Get() + GetRandomDouble(1.0f, 2.5f);
 		NewParticle.m_Color = Color(GetRandomFloat(0.4f, 0.8f), GetRandomFloat(0.2f, 0.4f), GetRandomFloat(0.05f, 0.15f), 0.5f);
 		NewParticle.m_Size = 1.0f;
@@ -196,8 +202,10 @@ Graphics::ParticleSystemExplosion::ParticleSystemExplosion(void)
 	{
 		Graphics::ParticleSystem::Particle FlashParticle;
 		
-		FlashParticle.m_Position = Vector2f(GetRandomFloat(0.0f, 6.0f), GetRandomFloat(0.0f, 2 * M_PI), Vector2f::InitializeMagnitudeAngle);
-		FlashParticle.m_Velocity.Set(0.0f, 0.0f);
+		Vector2f Position(GetRandomFloat(0.0f, 6.0f), GetRandomFloat(0.0f, 2 * M_PI), Vector2f::InitializeMagnitudeAngle);
+		
+		FlashParticle.m_Position = Vector3f(Position[0], Position[1], 0.0f);
+		FlashParticle.m_Velocity.Set(0.0f, 0.0f, 0.0f);
 		FlashParticle.m_TimeOfDeath = GameTime::Get() + GetRandomDouble(0.1f, 0.22f);
 		FlashParticle.m_Color = Color(0.9f, GetRandomFloat(0.9f, 1.0f), GetRandomFloat(0.95f, 1.0f), 0.15f);
 		FlashParticle.m_Size = 20.0f;
@@ -206,8 +214,10 @@ Graphics::ParticleSystemExplosion::ParticleSystemExplosion(void)
 	
 	Graphics::ParticleSystem::Particle BigFlashParticle;
 	
-	BigFlashParticle.m_Position = Vector2f(GetRandomFloat(0.0f, 6.0f), GetRandomFloat(0.0f, 2 * M_PI), Vector2f::InitializeMagnitudeAngle);
-	BigFlashParticle.m_Velocity.Set(0.0f, 0.0f);
+	Vector2f Position(GetRandomFloat(0.0f, 6.0f), GetRandomFloat(0.0f, 2 * M_PI), Vector2f::InitializeMagnitudeAngle);
+	
+	BigFlashParticle.m_Position = Vector3f(Position[0], Position[1], 0.0f);
+	BigFlashParticle.m_Velocity.Set(0.0f, 0.0f, 0.0f);
 	BigFlashParticle.m_TimeOfDeath = GameTime::Get() + GetRandomDouble(0.1f, 0.15f);
 	BigFlashParticle.m_Color = Color(0.9f, GetRandomFloat(0.9f, 1.0f), GetRandomFloat(0.95f, 1.0f), 0.3f);
 	BigFlashParticle.m_Size = 200.0f;

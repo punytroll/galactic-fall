@@ -214,7 +214,7 @@ planet_dialog_h = \
 
 position_h = \
 	position.h \
-	$(math_vector2f_h) \
+	$(math_vector3f_h) \
 	$(object_h)
 
 real_time_h = \
@@ -253,7 +253,7 @@ ship_class_manager_h = \
 
 shot_h = \
 	shot.h \
-	$(math_vector2f_h) \
+	$(math_vector3f_h) \
 	$(physical_object_h)
 
 slot_h = \
@@ -286,6 +286,7 @@ state_machine_h = \
 
 states_h = \
 	states.h \
+	$(math_vector3f_h) \
 	$(state_h)
 
 string_cast_h = \

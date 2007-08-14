@@ -20,6 +20,7 @@
 #ifndef STATES_H
 #define STATES_H
 
+#include "math/vector3f.h"
 #include "state.h"
 
 class StateMachineMind;
@@ -41,7 +42,7 @@ public:
 	virtual void Execute(void);
 	virtual void Exit(void);
 protected:
-	Vector2f m_Point;
+	Vector3f m_Point;
 };
 
 class TransporterPhase1 : public State
@@ -81,7 +82,7 @@ public:
 	virtual void Execute(void);
 	virtual void Exit(void);
 private:
-	Vector2f m_JumpPoint;
+	Vector3f m_JumpPoint;
 };
 
 class Fight : public State

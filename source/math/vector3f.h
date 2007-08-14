@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 1.2.4 of algebra.
+ * This is part of version 1.2.5 of algebra.
  **/
 
 #ifndef ALGEBRA_VECTOR3F_H
@@ -70,9 +70,9 @@ public:
 		return m_V.m_A[0] * m_V.m_A[0] + m_V.m_A[1] * m_V.m_A[1] + m_V.m_A[2] * m_V.m_A[2];
 	}
 	
-	void Normalize(void)
+	Vector3f & Normalize(void)
 	{
-		operator/=(Length());
+		return operator/=(Length());
 	}
 	
 	Vector3f operator+(const Vector3f & Other) const

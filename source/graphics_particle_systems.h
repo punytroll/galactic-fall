@@ -25,7 +25,7 @@
 #include <vector>
 
 #include "color.h"
-#include "math/vector2f.h"
+#include "math/vector3f.h"
 
 namespace Graphics
 {
@@ -36,21 +36,21 @@ namespace Graphics
 		bool Update(float Seconds);
 		void Draw(void);
 		// setters
-		void SetPosition(const Vector2f & Position);
-		void SetVelocity(const Vector2f & Velocity);
+		void SetPosition(const Vector3f & Position);
+		void SetVelocity(const Vector3f & Velocity);
 		void SetTimeOfDeath(double TimeOfDeath);
 	protected:
 		struct Particle
 		{
-			Vector2f m_Position;
-			Vector2f m_Velocity;
+			Vector3f m_Position;
+			Vector3f m_Velocity;
 			Color m_Color;
 			double m_TimeOfDeath;
 			float m_Size;
 		};
 		
-		Vector2f m_Position;
-		Vector2f m_Velocity;
+		Vector3f m_Position;
+		Vector3f m_Velocity;
 		double m_TimeOfDeath;
 		std::list< Graphics::ParticleSystem::Particle > m_Particles;
 		std::vector< std::string > m_SystemScript;
@@ -70,12 +70,12 @@ namespace Graphics
 	};
 }
 
-inline void Graphics::ParticleSystem::SetPosition(const Vector2f & Position)
+inline void Graphics::ParticleSystem::SetPosition(const Vector3f & Position)
 {
 	m_Position = Position;
 }
 
-inline void Graphics::ParticleSystem::SetVelocity(const Vector2f & Velocity)
+inline void Graphics::ParticleSystem::SetVelocity(const Vector3f & Velocity)
 {
 	m_Velocity = Velocity;
 }
