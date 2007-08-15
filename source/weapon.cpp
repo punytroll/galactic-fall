@@ -79,19 +79,19 @@ void Weapon::Update(float Seconds)
 		ShotPosition += ShipPosition;
 		NewShot->SetPosition(ShotPosition);
 		
-		/// @todo We turn a vector by quaternions to get some angle in the x-y-plane to calculate a quaternion for a rotation around the z-axis ...simplify!
+		/// @todo There are some very confusing mappings down here ... RotationY, RotationZ, (0, -2) .... all that stuff
 		// calculating the shot's angular position in world coordinate system
 		Vector4f ShotDirection(1.0f, 0.0f, 0.0f, 0.0f);
 		
 		ShotDirection *= GetOrientation();
 		ShotDirection *= GetSlot()->GetOrientation();
-		ShotDirection *= Quaternion(TheShip->GetAngularPosition(), Quaternion::InitializeRotationZ);
-		if(fabsf(ShotDirection[2]) > g_Epsilon)
+		ShotDirection *= Quaternion(TheShip->GetAngularPosition(), Quaternion::InitializeRotationY);
+		if(fabsf(ShotDirection[1]) > g_Epsilon)
 		{
-			throw std::runtime_error("ShotDirection contains invalid Z-coordinate " + to_string_cast(ShotDirection[2]) + ".");
+			throw std::runtime_error("ShotDirection contains invalid Z-coordinate " + to_string_cast(ShotDirection[1]) + ".");
 		}
 		
-		Quaternion ShotAngularPosition(GetRadians(Vector2f(ShotDirection[0], ShotDirection[1])), Quaternion::InitializeRotationZ);
+		Quaternion ShotAngularPosition(GetRadians(Vector2f(ShotDirection[0], -ShotDirection[2])), Quaternion::InitializeRotationZ);
 		
 		NewShot->SetAngularPosition(ShotAngularPosition);
 		
