@@ -520,7 +520,7 @@ model.o: model.cpp $(model_h)
 model_manager.o: model_manager.cpp $(model_h) $(model_manager_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-mount_weapon_dialog.o: mount_weapon_dialog.cpp $(button_h) $(color_h) $(globals_h) $(key_event_information_h) $(label_h) $(mount_weapon_dialog_h) $(ship_h) $(slot_h) $(slot_class_h) $(slot_class_manager_h) $(weapon_h) $(weapon_class_h)
+mount_weapon_dialog.o: mount_weapon_dialog.cpp $(button_h) $(color_h) $(globals_h) $(key_event_information_h) $(label_h) $(mount_weapon_dialog_h) $(scroll_box_h) $(ship_h) $(slot_h) $(slot_class_h) $(slot_class_manager_h) $(weapon_h) $(weapon_class_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 mouse_button_listener.o: mouse_button_listener.cpp $(mouse_button_listener_h)

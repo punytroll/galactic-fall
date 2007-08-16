@@ -23,6 +23,7 @@
 #include "key_event_information.h"
 #include "label.h"
 #include "mount_weapon_dialog.h"
+#include "scroll_box.h"
 #include "ship.h"
 #include "slot.h"
 #include "slot_class.h"
@@ -232,25 +233,24 @@ MountWeaponDialog::MountWeaponDialog(Widget * SupWidget, Ship * Ship) :
 	SlotListLabel->SetSize(Vector2f(200.0f, 20.0f));
 	SlotListLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
 	SlotListLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
-	
-	Widget * SlotList(new Widget(this));
-	
-	SlotList->SetPosition(Vector2f(10.0f, 70.0f));
-	SlotList->SetSize(Vector2f(200.0f, 320.0f));
-	SlotList->SetBackgroundColor(Color(0.15f, 0.15f, 0.15f, 1.0f));
+	m_SlotScrollBox = new ScrollBox(this);
+	m_SlotScrollBox->SetPosition(Vector2f(10.0f, 70.0f));
+	m_SlotScrollBox->SetSize(Vector2f(200.0f, 320.0f));
+	m_SlotScrollBox->SetHorizontalScrollBarVisible(false);
 	
 	float Top(5.0f);
 	const std::map< std::string, Slot * > & Slots(m_Ship->GetSlots());
 	
 	for(std::map< std::string, Slot * >::const_iterator SlotIterator = Slots.begin(); SlotIterator != Slots.end(); ++SlotIterator)
 	{
-		SlotListItem * NewSlotListItem(new SlotListItem(SlotList, SlotIterator->second));
+		SlotListItem * NewSlotListItem(new SlotListItem(m_SlotScrollBox->GetContent(), SlotIterator->second));
 		
 		NewSlotListItem->SetPosition(Vector2f(5.0f, Top));
-		NewSlotListItem->SetSize(Vector2f(190.0f, 50.0f));
+		NewSlotListItem->SetSize(Vector2f(170.0f, 50.0f));
 		NewSlotListItem->AddMouseButtonListener(this);
 		Top += 55.0f;
 	}
+	m_SlotScrollBox->GetContent()->SetSize(Vector2f(180.0f, std::max(Top, m_SlotScrollBox->GetView()->GetSize()[1])));
 	
 	Label * WeaponListLabel(new Label(this, "Weapons"));
 	
@@ -258,10 +258,10 @@ MountWeaponDialog::MountWeaponDialog(Widget * SupWidget, Ship * Ship) :
 	WeaponListLabel->SetSize(Vector2f(200.0f, 20.0f));
 	WeaponListLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
 	WeaponListLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
-	m_WeaponList = new Widget(this);
-	m_WeaponList->SetPosition(Vector2f(390.0f, 70.0f));
-	m_WeaponList->SetSize(Vector2f(200.0f, 320.0f));
-	m_WeaponList->SetBackgroundColor(Color(0.15f, 0.15f, 0.15f, 1.0f));
+	m_WeaponScrollBox = new ScrollBox(this);
+	m_WeaponScrollBox->SetPosition(Vector2f(390.0f, 70.0f));
+	m_WeaponScrollBox->SetSize(Vector2f(200.0f, 320.0f));
+	m_WeaponScrollBox->SetHorizontalScrollBarVisible(false);
 	m_MountButton = new Button(this);
 	m_MountButton->SetPosition(Vector2f(220.0f, 110.0f));
 	m_MountButton->SetSize(Vector2f(160.0f, 20.0f));
@@ -309,9 +309,9 @@ void MountWeaponDialog::RebuildWeaponList(void)
 		SelectedWeapon = m_SelectedWeaponListItem->GetWeapon();
 		m_SelectedWeaponListItem = 0;
 	}
-	while(m_WeaponList->GetSubWidgets().empty() == false)
+	while(m_WeaponScrollBox->GetContent()->GetSubWidgets().empty() == false)
 	{
-		m_WeaponList->GetSubWidgets().front()->Destroy();
+		m_WeaponScrollBox->GetContent()->GetSubWidgets().front()->Destroy();
 	}
 	
 	// now fill the weapon list
@@ -324,10 +324,10 @@ void MountWeaponDialog::RebuildWeaponList(void)
 		
 		if((ContentWeapon != 0) && (ContentWeapon->GetSlot() == 0))
 		{
-			WeaponListItem * NewWeaponListItem(new WeaponListItem(m_WeaponList, ContentWeapon));
+			WeaponListItem * NewWeaponListItem(new WeaponListItem(m_WeaponScrollBox->GetContent(), ContentWeapon));
 			
 			NewWeaponListItem->SetPosition(Vector2f(5.0f, Top));
-			NewWeaponListItem->SetSize(Vector2f(190.0f, 50.0f));
+			NewWeaponListItem->SetSize(Vector2f(170.0f, 50.0f));
 			NewWeaponListItem->AddMouseButtonListener(this);
 			if(ContentWeapon == SelectedWeapon)
 			{
@@ -337,6 +337,7 @@ void MountWeaponDialog::RebuildWeaponList(void)
 			Top += 55.0f;
 		}
 	}
+	m_WeaponScrollBox->GetContent()->SetSize(Vector2f(180.0f, std::max(Top, m_WeaponScrollBox->GetView()->GetSize()[1])));
 }
 
 bool MountWeaponDialog::OnClicked(Widget * EventSource)

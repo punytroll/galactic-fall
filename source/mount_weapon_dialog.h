@@ -26,6 +26,7 @@
 #include "window.h"
 
 class Button;
+class ScrollBox;
 class Ship;
 class SlotListItem;
 class WeaponListItem;
@@ -44,7 +45,8 @@ private:
 	Button * m_OKButton;
 	Button * m_MountButton;
 	Button * m_UnmountButton;
-	Widget * m_WeaponList;
+	ScrollBox * m_SlotScrollBox;
+	ScrollBox * m_WeaponScrollBox;
 	SlotListItem * m_SelectedSlotListItem;
 	WeaponListItem * m_SelectedWeaponListItem;
 };
