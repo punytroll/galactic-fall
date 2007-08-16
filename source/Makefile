@@ -613,7 +613,7 @@ timeout_notifications.o: timeout_notifications.cpp $(timeout_notifications_h) $(
 timing_dialog.o: timing_dialog.cpp $(label_h) $(string_cast_h) $(timing_dialog_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-trade_center_dialog.o: trade_center_dialog.cpp $(asset_class_h) $(button_h) $(commodity_h) $(commodity_class_h) $(character_h) $(game_time_h) $(key_event_information_h) $(model_manager_h) $(label_h) $(object_factory_h) $(planet_h) $(ship_h) $(trade_center_dialog_h) $(weapon_h) $(weapon_class_h)
+trade_center_dialog.o: trade_center_dialog.cpp $(asset_class_h) $(button_h) $(commodity_h) $(commodity_class_h) $(character_h) $(game_time_h) $(key_event_information_h) $(model_manager_h) $(label_h) $(object_factory_h) $(planet_h) $(scroll_bar_h) $(scroll_box_h) $(ship_h) $(trade_center_dialog_h) $(weapon_h) $(weapon_class_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 user_interface.o: user_interface.cpp $(user_interface_h) $(widget_h)

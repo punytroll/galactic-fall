@@ -30,6 +30,7 @@ class Button;
 class Character;
 class Label;
 class Planet;
+class ScrollBox;
 class TradeCenterAssetClass;
 
 class TradeCenterDialog : public ClickedListener, public KeyListener, virtual public MouseButtonListener, virtual public MouseMotionListener, public WWindow
@@ -55,10 +56,7 @@ private:
 	Label * m_BuyButtonLabel;
 	Button * m_SellButton;
 	Label * m_SellButtonLabel;
-	Widget * m_AssetClassList;
-	Widget * m_AssetClassListItems;
-	Button * m_DownButton;
-	Button * m_UpButton;
+	ScrollBox * m_AssetClassScrollBox;
 	Label * m_TraderCreditsLabel;
 	Label * m_TraderAvailableSpaceLabel;
 	TradeCenterAssetClass * m_SelectedTradeCenterAssetClass;
