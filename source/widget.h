@@ -43,8 +43,6 @@ public:
 	Widget(Widget * SupWidget = 0, const std::string & Name = "");
 	virtual ~Widget(void);
 	virtual void Draw(void) const;
-	void Hide(void);
-	void Show(void);
 	void SetBackgroundColor(const Color & BackgroundColor);
 	void UnsetBackgroundColor(void);
 	void SetPosition(const Vector2f & Position);
@@ -80,6 +78,7 @@ public:
 	void SetAnchorLeft(bool AnchorLeft);
 	void SetAnchorRight(bool AnchorRight);
 	void SetAnchorTop(bool AnchorTop);
+	void SetVisible(bool Visible);
 	// receive input
 	bool MouseButton(int Button, int State, float X, float Y);
 	bool Key(const KeyEventInformation & KeyEventInformation);
@@ -266,6 +265,11 @@ inline void Widget::SetAnchorRight(bool AnchorRight)
 inline void Widget::SetAnchorTop(bool AnchorTop)
 {
 	m_AnchorTop = AnchorTop;
+}
+
+inline void Widget::SetVisible(bool Visible)
+{
+	m_Visible = Visible;
 }
 
 #endif

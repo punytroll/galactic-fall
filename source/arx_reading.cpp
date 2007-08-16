@@ -793,10 +793,7 @@ static void ReadWidgetWidget(Arxx::BufferReader & Reader, UserInterface * UserIn
 	{
 		ReadWidget->SetBackgroundColor(BackgroundColor);
 	}
-	if(Visible == false)
-	{
-		ReadWidget->Hide();
-	}
+	ReadWidget->SetVisible(Visible);
 	ReadWidget->SetAnchorBottom(AnchorBottom);
 	ReadWidget->SetAnchorLeft(AnchorLeft);
 	ReadWidget->SetAnchorRight(AnchorRight);

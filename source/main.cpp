@@ -310,13 +310,13 @@ float CalculateTime(void)
 
 void HideMessage(void)
 {
-	g_MessageLabel->Hide();
+	g_MessageLabel->SetVisible(false);
 }
 
 void SetMessage(const std::string & Message)
 {
 	g_MessageLabel->SetString(Message);
-	g_MessageLabel->Show();
+	g_MessageLabel->SetVisible(true);
 	/// TODO: Make the 2.0f seconds timeout configurable via the game configuration archive.
 	if(g_MessageTimeoutNotification.IsValid() == true)
 	{
@@ -584,13 +584,13 @@ void UpdateUserInterface(void)
 	}
 	if((g_OutputMind == true) && (g_OutputMind->GetCharacter() != 0) && (g_OutputMind->GetCharacter()->GetShip() != 0))
 	{
-		g_TargetLabel->Show();
-		g_SystemLabel->Show();
-		g_FuelLabel->Show();
-		g_HullLabel->Show();
-		g_CreditsLabel->Show();
-		g_MiniMap->Show();
-		g_Scanner->Show();
+		g_TargetLabel->SetVisible(true);
+		g_SystemLabel->SetVisible(true);
+		g_FuelLabel->SetVisible(true);
+		g_HullLabel->SetVisible(true);
+		g_CreditsLabel->SetVisible(true);
+		g_MiniMap->SetVisible(true);
+		g_Scanner->SetVisible(true);
 		// display the name of the target
 		if(g_OutputMind->GetCharacter()->GetShip()->GetTarget() == true)
 		{
@@ -641,13 +641,13 @@ void UpdateUserInterface(void)
 	}
 	else
 	{
-		g_TargetLabel->Hide();
-		g_SystemLabel->Hide();
-		g_FuelLabel->Hide();
-		g_HullLabel->Hide();
-		g_CreditsLabel->Hide();
-		g_MiniMap->Hide();
-		g_Scanner->Hide();
+		g_TargetLabel->SetVisible(false);
+		g_SystemLabel->SetVisible(false);
+		g_FuelLabel->SetVisible(false);
+		g_HullLabel->SetVisible(false);
+		g_CreditsLabel->SetVisible(false);
+		g_MiniMap->SetVisible(false);
+		g_Scanner->SetVisible(false);
 	}
 }
 
