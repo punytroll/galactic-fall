@@ -49,6 +49,9 @@ public:
 	void SetMinimumPosition(float MinimumPosition);
 	void SetMaximumPosition(float MaximumPosition);
 	void SetStepSize(float StepSize);
+	// modifiers
+	void StepLess(void);
+	void StepMore(void);
 protected:
 	virtual bool OnClicked(Widget * EventSource);
 private:
@@ -81,7 +84,6 @@ inline float ScrollBar::GetStepSize(void) const
 	return m_StepSize;
 }
 
-
 inline void ScrollBar::SetMinimumPosition(float MinimumPosition)
 {
 	m_MinimumPosition = MinimumPosition;
@@ -95,6 +97,16 @@ inline void ScrollBar::SetMaximumPosition(float MaximumPosition)
 inline void ScrollBar::SetStepSize(float StepSize)
 {
 	m_StepSize = StepSize;
+}
+
+inline void ScrollBar::StepLess(void)
+{
+	SetCurrentPosition(GetCurrentPosition() - GetStepSize());
+}
+
+inline void ScrollBar::StepMore(void)
+{
+	SetCurrentPosition(GetCurrentPosition() + GetStepSize());
 }
 
 #endif
