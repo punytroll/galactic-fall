@@ -28,6 +28,8 @@
 #include "label.h"
 #include "object_factory.h"
 #include "planet.h"
+#include "scroll_bar.h"
+#include "scroll_box.h"
 #include "ship.h"
 #include "string_cast.h"
 #include "trade_center_dialog.h"
@@ -116,14 +118,11 @@ TradeCenterDialog::TradeCenterDialog(Widget * SupWidget, Planet * Planet, Charac
 	m_SellButtonLabel->SetSize(m_SellButton->GetSize());
 	m_SellButtonLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
 	m_SellButtonLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
-	m_AssetClassList = new Widget(this);
-	m_AssetClassList->SetPosition(Vector2f(10.0f, 40.0f));
-	m_AssetClassList->SetSize(Vector2f(480.0f, 150.0f));
-	m_AssetClassList->SetBackgroundColor(Color(0.23f, 0.23f, 0.23f, 1.0f));
-	m_AssetClassListItems = new Widget(m_AssetClassList);
-	m_AssetClassListItems->SetPosition(Vector2f(0.0f, 0.0f));
-	m_AssetClassListItems->SetBackgroundColor(Color(0.15f, 0.15f, 0.15f, 1.0f));
-	m_AssetClassListItems->AddMouseButtonListener(this);
+	m_AssetClassScrollBox = new ScrollBox(this);
+	m_AssetClassScrollBox->SetPosition(Vector2f(10.0f, 40.0f));
+	m_AssetClassScrollBox->SetSize(Vector2f(480.0f, 150.0f));
+	m_AssetClassScrollBox->SetHorizontalScrollBarVisible(false);
+	m_AssetClassScrollBox->AddMouseButtonListener(this);
 	
 	const std::vector< PlanetAssetClass * > & PlanetAssetClasses(Planet->GetPlanetAssetClasses());
 	std::vector< PlanetAssetClass * >::const_iterator PlanetAssetClassIterator(PlanetAssetClasses.begin());
@@ -131,7 +130,7 @@ TradeCenterDialog::TradeCenterDialog(Widget * SupWidget, Planet * Planet, Charac
 	
 	while(PlanetAssetClassIterator != PlanetAssetClasses.end())
 	{
-		TradeCenterAssetClass * NewTradeCenterAssetClass(new TradeCenterAssetClass(m_AssetClassListItems, *PlanetAssetClassIterator, m_Character->GetShip()));
+		TradeCenterAssetClass * NewTradeCenterAssetClass(new TradeCenterAssetClass(m_AssetClassScrollBox->GetContent(), *PlanetAssetClassIterator, m_Character->GetShip()));
 		
 		NewTradeCenterAssetClass->SetPosition(Vector2f(5.0f, Top));
 		NewTradeCenterAssetClass->SetSize(Vector2f(450.0f, 20.0f));
@@ -140,15 +139,7 @@ TradeCenterDialog::TradeCenterDialog(Widget * SupWidget, Planet * Planet, Charac
 		Top += 25.0f;
 		++PlanetAssetClassIterator;
 	}
-	m_AssetClassListItems->SetSize(Vector2f(460.0f, Top));
-	m_UpButton = new Button(this);
-	m_UpButton->SetPosition(Vector2f(470.0f, 40.0f));
-	m_UpButton->SetSize(Vector2f(20.0f, 20.0f));
-	m_UpButton->AddClickedListener(this);
-	m_DownButton = new Button(this);
-	m_DownButton->SetPosition(Vector2f(470.0f, 170.0f));
-	m_DownButton->SetSize(Vector2f(20.0f, 20.0f));
-	m_DownButton->AddClickedListener(this);
+	m_AssetClassScrollBox->GetContent()->SetSize(Vector2f(460.0f, Top));
 	m_TraderCreditsLabel = new Label(this, "");
 	m_TraderCreditsLabel->SetPosition(Vector2f(10.0f, 240.0f));
 	m_TraderCreditsLabel->SetSize(Vector2f(200.0f, 20.0f));
@@ -256,27 +247,6 @@ bool TradeCenterDialog::OnClicked(Widget * EventSource)
 			m_SelectedTradeCenterAssetClass->UpdateCharacterAmount();
 		}
 	}
-	else if(EventSource == m_UpButton)
-	{
-		Vector2f Position(m_AssetClassListItems->GetPosition());
-		
-		if(Position[1] < 0.0f)
-		{
-			Position[1] = std::min(0.0f, Position[1] + 10.0f);
-			m_AssetClassListItems->SetPosition(Position);
-		}
-	}
-	else if(EventSource == m_DownButton)
-	{
-		Vector2f Position(m_AssetClassListItems->GetPosition());
-		const Vector2f & Size(m_AssetClassListItems->GetSize());
-		
-		if(Position[1] + Size[1] > m_AssetClassList->GetSize()[1])
-		{
-			Position[1] -= std::min(10.f, Position[1] + Size[1] - m_AssetClassList->GetSize()[1]);
-			m_AssetClassListItems->SetPosition(Position);
-		}
-	}
 	
 	return false;
 }
@@ -325,26 +295,13 @@ bool TradeCenterDialog::OnMouseButton(Widget * EventSource, int Button, int Stat
 	}
 	else if((Button == 4 /* WHEEL_UP */) && (State == EV_DOWN))
 	{
-		Vector2f Position(m_AssetClassListItems->GetPosition());
-		
-		if(Position[1] < 0.0f)
-		{
-			Position[1] = std::min(0.0f, Position[1] + 5.0f);
-			m_AssetClassListItems->SetPosition(Position);
-		}
+		m_AssetClassScrollBox->GetVerticalScrollBar()->StepLess();
 		
 		return true;
 	}
 	else if((Button == 5 /* WHEEL_DOWN */) && (State == EV_DOWN))
 	{
-		Vector2f Position(m_AssetClassListItems->GetPosition());
-		const Vector2f & Size(m_AssetClassListItems->GetSize());
-		
-		if(Position[1] + Size[1] > m_AssetClassList->GetSize()[1])
-		{
-			Position[1] -= std::min(5.f, Position[1] + Size[1] - m_AssetClassList->GetSize()[1]);
-			m_AssetClassListItems->SetPosition(Position);
-		}
+		m_AssetClassScrollBox->GetVerticalScrollBar()->StepMore();
 		
 		return true;
 	}
