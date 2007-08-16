@@ -25,18 +25,18 @@
 #include <vector>
 
 #include "color.h"
+#include "graphics_node.h"
 #include "math/vector3f.h"
 
 namespace Graphics
 {
-	class ParticleSystem
+	class ParticleSystem : public Graphics::Node
 	{
 	public:
 		ParticleSystem(void);
 		bool Update(float Seconds);
 		void Draw(void);
 		// setters
-		void SetPosition(const Vector3f & Position);
 		void SetVelocity(const Vector3f & Velocity);
 		void SetTimeOfDeath(double TimeOfDeath);
 	protected:
@@ -49,7 +49,6 @@ namespace Graphics
 			float m_Size;
 		};
 		
-		Vector3f m_Position;
 		Vector3f m_Velocity;
 		double m_TimeOfDeath;
 		std::list< Graphics::ParticleSystem::Particle > m_Particles;
@@ -68,11 +67,6 @@ namespace Graphics
 	public:
 		ParticleSystemExplosion(void);
 	};
-}
-
-inline void Graphics::ParticleSystem::SetPosition(const Vector3f & Position)
-{
-	m_Position = Position;
 }
 
 inline void Graphics::ParticleSystem::SetVelocity(const Vector3f & Velocity)

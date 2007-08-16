@@ -18,46 +18,69 @@
 **/
 
 #include "graphics_engine.h"
+#include "graphics_node.h"
 #include "graphics_particle_systems.h"
 
 void Graphics::Engine::Update(float Seconds)
 {
-	std::vector< Graphics::ParticleSystem * >::iterator ParticleSystemIterator(m_ParticleSystems.begin());
+	std::vector< Graphics::ParticleSystem * >::size_type ParticleSystemIndex(0);
 	
-	while(ParticleSystemIterator != m_ParticleSystems.end())
+	while(ParticleSystemIndex < m_ParticleSystems.size())
 	{
-		if((*ParticleSystemIterator)->Update(Seconds) == false)
+		if(m_ParticleSystems[ParticleSystemIndex]->Update(Seconds) == false)
 		{
-			delete *ParticleSystemIterator;
-			ParticleSystemIterator = m_ParticleSystems.erase(ParticleSystemIterator);
+			Graphics::ParticleSystem * ParticleSystem(m_ParticleSystems[ParticleSystemIndex]);
+			
+			RemoveNode(ParticleSystem);
+			delete ParticleSystem;
 		}
 		else
 		{
-			++ParticleSystemIterator;
+			++ParticleSystemIndex;
 		}
 	}
 }
 
 void Graphics::Engine::Render(void)
 {
-	for(std::vector< Graphics::ParticleSystem * >::iterator ParticleSystemIterator = m_ParticleSystems.begin(); ParticleSystemIterator != m_ParticleSystems.end(); ++ParticleSystemIterator)
+	for(std::vector< Graphics::Node * >::iterator NodeIterator = m_Nodes.begin(); NodeIterator != m_Nodes.end(); ++NodeIterator)
 	{
-		(*ParticleSystemIterator)->Draw();
+		(*NodeIterator)->Draw();
 	}
 }
 
-void Graphics::Engine::AddParticleSystem(ParticleSystem * ParticleSystem)
+void Graphics::Engine::AddNode(Graphics::Node * Node)
 {
-	m_ParticleSystems.push_back(ParticleSystem);
+	m_Nodes.push_back(Node);
+	
+	Graphics::ParticleSystem * ParticleSystem(dynamic_cast< Graphics::ParticleSystem * >(Node));
+	
+	if(ParticleSystem != 0)
+	{
+		m_ParticleSystems.push_back(ParticleSystem);
+	}
+}
+
+void Graphics::Engine::RemoveNode(Graphics::Node * Node)
+{
+	m_Nodes.erase(std::find(m_Nodes.begin(), m_Nodes.end(), Node));
+	
+	Graphics::ParticleSystem * ParticleSystem(dynamic_cast< Graphics::ParticleSystem * >(Node));
+	
+	if(ParticleSystem != 0)
+	{
+		m_ParticleSystems.erase(std::find(m_ParticleSystems.begin(), m_ParticleSystems.end(), ParticleSystem));
+	}
 }
 
 void Graphics::Engine::Clear(void)
 {
-	while(m_ParticleSystems.empty() == false)
+	while(m_Nodes.empty() == false)
 	{
-		ParticleSystem * ParticleSystem(m_ParticleSystems.front());
+		Graphics::Node * Node(m_Nodes.front());
 		
-		m_ParticleSystems.erase(m_ParticleSystems.begin());
-		delete ParticleSystem;
+		m_Nodes.erase(m_Nodes.begin());
+		delete Node;
 	}
+	m_ParticleSystems.clear();
 }
