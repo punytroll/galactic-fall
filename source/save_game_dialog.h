@@ -29,6 +29,7 @@
 
 class Button;
 class Label;
+class ScrollBox;
 
 class SaveGameDialog : public ClickedListener, public KeyListener, virtual public MouseButtonListener, public WWindow
 {
@@ -48,6 +49,7 @@ private:
 	Label * m_ErrorMessage;
 	TimeoutNotification m_ErrorMessageTimeoutNotification;
 	Label * m_FileNameLabel;
+	ScrollBox * m_FileScrollBox;
 };
 
 #endif
