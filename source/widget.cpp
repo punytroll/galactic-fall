@@ -60,16 +60,6 @@ Widget::~Widget(void)
 	delete m_BackgroundColor;
 }
 
-void Widget::Hide(void)
-{
-	m_Visible = false;
-}
-
-void Widget::Show(void)
-{
-	m_Visible = true;
-}
-
 void Widget::Draw(void) const
 {
 	if(m_BackgroundColor != 0)
