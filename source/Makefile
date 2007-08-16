@@ -92,9 +92,15 @@ globals_h = \
 graphics_engine_h = \
 	graphics_engine.h
 
+graphics_node_h = \
+	graphics_node.h \
+	$(math_quaternion_h) \
+	$(math_vector3f_h)
+
 graphics_particle_systems_h = \
 	graphics_particle_systems.h \
 	$(color_h) \
+	$(graphics_node_h) \
 	$(math_vector2f_h)
 
 key_event_information_h = \
@@ -462,7 +468,10 @@ galaxy.o: galaxy.cpp $(galaxy_h) $(system_h)
 game_time.o: game_time.cpp $(game_time_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-graphics_engine.o: graphics_engine.cpp $(graphics_engine_h) $(graphics_particle_systems_h)
+graphics_engine.o: graphics_engine.cpp $(graphics_engine_h) $(graphics_node_h) $(graphics_particle_systems_h)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+graphics_node.o: graphics_node.cpp $(graphics_node_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 graphics_particle_systems.o: graphics_particle_systems.cpp $(color_h) $(game_time_h) $(graphics_particle_systems_h) $(math_h)

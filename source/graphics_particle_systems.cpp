@@ -86,7 +86,7 @@ bool Graphics::ParticleSystem::Update(float Seconds)
 		}
 		else if(*ScriptLine == "move")
 		{
-			m_Position += m_Velocity * Seconds;
+			SetPosition(GetPosition() + Seconds * m_Velocity);
 		}
 		else if(*ScriptLine == "update-particles")
 		{
@@ -127,7 +127,7 @@ bool Graphics::ParticleSystem::Update(float Seconds)
 void Graphics::ParticleSystem::Draw(void)
 {
 	glPushMatrix();
-	glTranslatef(m_Position.m_V.m_A[0], m_Position.m_V.m_A[1], 0.0f);
+	glTranslatef(GetPosition()[0], GetPosition()[1], 0.0f);
 	glPushAttrib(GL_ENABLE_BIT);
 	glDisable(GL_LIGHTING);
 	glDisable(GL_DEPTH_TEST);

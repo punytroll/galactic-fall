@@ -425,20 +425,15 @@ Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSyst
 	if(ParticleSystemClassIdentifier == "hit")
 	{
 		NewParticleSystem = new Graphics::ParticleSystemHit();
-		g_GraphicsEngine->AddParticleSystem(NewParticleSystem);
+		g_GraphicsEngine->AddNode(NewParticleSystem);
 	}
 	else
 	{
 		NewParticleSystem = new Graphics::ParticleSystemExplosion();
-		g_GraphicsEngine->AddParticleSystem(NewParticleSystem);
+		g_GraphicsEngine->AddNode(NewParticleSystem);
 	}
 	
 	return NewParticleSystem;
-}
-
-void DeleteParticleSystem(Graphics::ParticleSystem * ParticleSystem)
-{
-	delete ParticleSystem;
 }
 
 void CalculateMovements(System * System)

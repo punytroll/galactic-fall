@@ -24,6 +24,7 @@
 
 namespace Graphics
 {
+	class Node;
 	class ParticleSystem;
 	
 	class Engine
@@ -32,8 +33,10 @@ namespace Graphics
 		void Clear(void);
 		void Update(float Seconds);
 		void Render(void);
-		void AddParticleSystem(Graphics::ParticleSystem * ParticleSystem);
+		void AddNode(Graphics::Node * Node);
+		void RemoveNode(Graphics::Node * Node);
 	private:
+		std::vector< Graphics::Node * > m_Nodes;
 		std::vector< Graphics::ParticleSystem * > m_ParticleSystems;
 	};
 }
