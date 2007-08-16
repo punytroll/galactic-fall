@@ -26,13 +26,14 @@
 #include "label.h"
 #include "real_time.h"
 #include "save_game_dialog.h"
+#include "scroll_box.h"
 
 SaveGameDialog::SaveGameDialog(Widget * SupWidget, Callback1< void, std::ostream & > * SaveGameCallback) :
 	WWindow(SupWidget, "Save Game"),
 	m_SaveGameCallback(SaveGameCallback)
 {
 	SetPosition(Vector2f(120.0f, 200.0f));
-	SetSize(Vector2f(300.0f, 200.0f));
+	SetSize(Vector2f(300.0f, 300.0f));
 	AddKeyListener(this);
 	AddMouseButtonListener(this);
 	m_OKButton = new Button(this);
@@ -75,6 +76,13 @@ SaveGameDialog::SaveGameDialog(Widget * SupWidget, Callback1< void, std::ostream
 	m_FileNameLabel->SetAnchorRight(true);
 	m_FileNameLabel->AddKeyListener(this);
 	m_FileNameLabel->GrabKeyFocus();
+	m_FileScrollBox = new ScrollBox(this);
+	m_FileScrollBox->SetPosition(Vector2f(10.0f, 100.0f));
+	m_FileScrollBox->SetSize(Vector2f(280.0f, 190.0));
+	m_FileScrollBox->SetAnchorBottom(true);
+	m_FileScrollBox->SetAnchorRight(true);
+	m_FileScrollBox->SetAnchorTop(false);
+	m_FileScrollBox->SetHorizontalScrollBarVisible(false);
 }
 
 void SaveGameDialog::ShowErrorMessage(const std::string & ErrorMessage)
@@ -83,14 +91,14 @@ void SaveGameDialog::ShowErrorMessage(const std::string & ErrorMessage)
 	{
 		m_ErrorMessageTimeoutNotification.Dismiss();
 	}
-	m_ErrorMessage->Show();
+	m_ErrorMessage->SetVisible(true);
 	m_ErrorMessage->SetString(ErrorMessage);
 	m_ErrorMessageTimeoutNotification = g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 2.0f, Method(this, &SaveGameDialog::HideErrorMessage));
 }
 
 void SaveGameDialog::HideErrorMessage(void)
 {
-	m_ErrorMessage->Hide();
+	m_ErrorMessage->SetVisible(false);
 }
 
 bool SaveGameDialog::Save(void)

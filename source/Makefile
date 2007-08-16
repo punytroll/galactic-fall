@@ -247,6 +247,19 @@ scanner_display_h = \
 	$(referencing_h) \
 	$(viewport_h)
 
+scroll_bar_h = \
+	scroll_bar.h \
+	$(clicked_listener_h) \
+	$(widget_h)
+
+scroll_box_h = \
+	scroll_box.h \
+	$(scroll_position_changed_listener_h) \
+	$(widget_h)
+
+scroll_position_changed_listener_h = \
+	scroll_position_changed_listener.h \
+
 ship_h = \
 	ship.h \
 	$(math_vector2f_h) \
@@ -537,10 +550,19 @@ planet_dialog.o: planet_dialog.cpp $(asset_class_h) $(button_h) $(character_h) $
 real_time.o: real_time.cpp $(real_time_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-save_game_dialog.o: save_game_dialog.cpp $(button_h) $(globals_h) $(key_event_information_h) $(label_h) $(real_time_h) $(save_game_dialog_h)
+save_game_dialog.o: save_game_dialog.cpp $(button_h) $(globals_h) $(key_event_information_h) $(label_h) $(real_time_h) $(save_game_dialog_h) $(scroll_box_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 scanner_display.o: scanner_display.cpp $(scanner_display_h) $(ship_h) $(star_h) $(system.h)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+scroll_bar.o: scroll_bar.cpp $(button_h) $(color_h) $(scroll_bar_h) $(scroll_position_changed_listener_h)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+scroll_box.o: scroll_box.cpp $(color_h) $(scroll_box_h)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+scroll_position_changed_listener.o: scroll_position_changed_listener.cpp $(scroll_position_changed_listener_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 ship.o: ship.cpp $(commodity_h) $(character_h) $(color_h) $(commodity_class_h) $(game_time_h) $(globals_h) $(map_knowledge_h) $(math_h) $(model_h) $(model_manager_h) $(ship_h) $(shot_h) $(slot_h) $(slot_class_h) $(string_cast_h) $(system_h) $(weapon_h) $(weapon_class_h)
