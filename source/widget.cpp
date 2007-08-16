@@ -261,7 +261,7 @@ bool Widget::MouseButton(int Button, int State, float X, float Y)
 		const Vector2f & SubWidgetPosition((*SubWidgetIterator)->GetPosition());
 		const Vector2f & SubWidgetSize((*SubWidgetIterator)->GetSize());
 		
-		if((X >= SubWidgetPosition.m_V.m_A[0]) && (X < SubWidgetPosition.m_V.m_A[0] + SubWidgetSize.m_V.m_A[0]) && (Y >= SubWidgetPosition.m_V.m_A[1]) && (Y < SubWidgetPosition.m_V.m_A[1] + SubWidgetSize.m_V.m_A[1]))
+		if(((*SubWidgetIterator)->IsVisible() == true) && (X >= SubWidgetPosition.m_V.m_A[0]) && (X < SubWidgetPosition.m_V.m_A[0] + SubWidgetSize.m_V.m_A[0]) && (Y >= SubWidgetPosition.m_V.m_A[1]) && (Y < SubWidgetPosition.m_V.m_A[1] + SubWidgetSize.m_V.m_A[1]))
 		{
 			if((*SubWidgetIterator)->MouseButton(Button, State, X - SubWidgetPosition.m_V.m_A[0], Y - SubWidgetPosition.m_V.m_A[1]) == true)
 			{
@@ -291,7 +291,7 @@ void Widget::MouseMotion(float X, float Y)
 		const Vector2f & LeftTopCorner((*SubWidgetIterator)->GetPosition());
 		Vector2f RightBottomCorner(LeftTopCorner + (*SubWidgetIterator)->GetSize());
 		
-		if((X >= LeftTopCorner.m_V.m_A[0]) && (X < RightBottomCorner.m_V.m_A[0]) && (Y >= LeftTopCorner.m_V.m_A[1]) && (Y < RightBottomCorner.m_V.m_A[1]))
+		if(((*SubWidgetIterator)->IsVisible() == true) && (X >= LeftTopCorner.m_V.m_A[0]) && (X < RightBottomCorner.m_V.m_A[0]) && (Y >= LeftTopCorner.m_V.m_A[1]) && (Y < RightBottomCorner.m_V.m_A[1]))
 		{
 			if(m_HoverWidget != *SubWidgetIterator)
 			{
