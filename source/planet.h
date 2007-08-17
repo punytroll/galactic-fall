@@ -60,6 +60,7 @@ public:
 	~Planet(void);
 	// getters
 	const std::string & GetIdentifier(void) const;
+	const Color & GetColor(void) const;
 	const std::string & GetDescription(void) const;
 	float GetSize(void) const;
 	const std::vector< PlanetAssetClass * > & GetPlanetAssetClasses(void) const;
@@ -88,6 +89,11 @@ inline const AssetClass * PlanetAssetClass::GetAssetClass(void) const
 inline const std::string & Planet::GetIdentifier(void) const
 {
 	return m_Identifier;
+}
+
+inline const Color & Planet::GetColor(void) const
+{
+	return *m_Color;
 }
 
 inline const std::string & Planet::GetDescription(void) const
