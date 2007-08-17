@@ -52,6 +52,7 @@
 #include "game_time.h"
 #include "globals.h"
 #include "graphics_engine.h"
+#include "graphics_model_object.h"
 #include "graphics_particle_systems.h"
 #include "key_event_information.h"
 #include "label.h"
@@ -676,16 +677,10 @@ void Render(System * System)
 	glClear(GL_DEPTH_BUFFER_BIT);
 	if(System != 0)
 	{
-		const std::vector< Planet * > & Planets(System->GetPlanets());
 		const std::list< Ship * > & Ships(System->GetShips());
 		const std::list< Commodity * > & Commodities(System->GetCommodities());
 		const std::list< Shot * > & Shots(System->GetShots());
 		
-		for(std::vector< Planet * >::const_iterator PlanetIterator = Planets.begin(); PlanetIterator != Planets.end(); ++PlanetIterator)
-		{
-			glClear(GL_DEPTH_BUFFER_BIT);
-			(*PlanetIterator)->Draw();
-		}
 		for(std::list< Commodity * >::const_iterator CommodityIterator = Commodities.begin(); CommodityIterator != Commodities.end(); ++CommodityIterator)
 		{
 			glClear(GL_DEPTH_BUFFER_BIT);
@@ -791,7 +786,6 @@ void EmptySystem(System * System)
 			DeleteObject(System->GetShots().front());
 		}
 	}
-	g_GraphicsEngine->Clear();
 }
 
 void SpawnShip(System * System, const std::string & IdentifierSuffix, std::string ShipClassIdentifier = "")
@@ -903,6 +897,21 @@ void OnOutputFocusEnterSystem(System * EnterSystem)
 {
 	assert(g_SpawnShipTimeoutNotification.IsValid() == false);
 	g_SpawnShipTimeoutNotification = g_GameTimeTimeoutNotifications->Add(GameTime::Get() + GetRandomFloatFromExponentialDistribution(1.0f / EnterSystem->GetTrafficDensity()), Bind1(Function(SpawnShipOnTimeout), EnterSystem));
+	// build the static setup of the scene
+	const std::vector< Planet * > & Planets(EnterSystem->GetPlanets());
+	
+	for(std::vector< Planet * >::const_iterator PlanetIterator = Planets.begin(); PlanetIterator != Planets.end(); ++PlanetIterator)
+	{
+		Graphics::ModelObject * ModelObject(new Graphics::ModelObject());
+		
+		ModelObject->SetColor((*PlanetIterator)->GetColor());
+		ModelObject->SetModel(g_ModelManager->Get("planet"));
+		ModelObject->SetNormalize(true);
+		ModelObject->SetPosition((*PlanetIterator)->GetPosition());
+		ModelObject->SetOrientation(Quaternion(true));
+		ModelObject->SetScale((*PlanetIterator)->GetRadialSize());
+		g_GraphicsEngine->AddNode(ModelObject);
+	}
 }
 
 void OnOutputFocusLeaveSystem(System * System)
@@ -911,6 +920,8 @@ void OnOutputFocusLeaveSystem(System * System)
 	{
 		g_SpawnShipTimeoutNotification.Dismiss();
 	}
+	// clear scene
+	g_GraphicsEngine->Clear();
 }
 
 void GameFrame(void)
