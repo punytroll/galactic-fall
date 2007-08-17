@@ -42,9 +42,15 @@ class UserInterface;
 class WeaponClassManager;
 class TimeoutNotificationManager;
 
+namespace Graphics
+{
+	class Engine;
+}
+
 extern AssetClassManager * g_AssetClassManager;
 extern CommodityClassManager * g_CommodityClassManager;
 extern Galaxy * g_Galaxy;
+extern Graphics::Engine * g_GraphicsEngine;
 extern ModelManager * g_ModelManager;
 extern ObjectFactory * g_ObjectFactory;
 extern ShipClassManager * g_ShipClassManager;
