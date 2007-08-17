@@ -66,6 +66,8 @@ bool ScrollBox::OnScrollPositionChanged(Widget * EventSource)
 		{
 			m_Content->SetPosition(Vector2f(m_Content->GetPosition()[0], m_VerticalScrollBar->GetCurrentPosition() * (ViewSize - ContentSize)));
 		}
+		
+		return true;
 	}
 	else if(EventSource == m_HorizontalScrollBar)
 	{
@@ -76,7 +78,11 @@ bool ScrollBox::OnScrollPositionChanged(Widget * EventSource)
 		{
 			m_Content->SetPosition(Vector2f(m_HorizontalScrollBar->GetCurrentPosition() * (ViewSize - ContentSize), m_Content->GetPosition()[1]));
 		}
+		
+		return true;
 	}
+	
+	return false;
 }
 
 void ScrollBox::SetHorizontalScrollBarVisible(bool Visible)

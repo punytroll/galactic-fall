@@ -136,6 +136,8 @@ TimeoutNotification & TimeoutNotification::operator=(const TimeoutNotification &
 	{
 		m_Core->Reference();
 	}
+	
+	return *this;
 }
 
 bool TimeoutNotification::IsValid(void) const
