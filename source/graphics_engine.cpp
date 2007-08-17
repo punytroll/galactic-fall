@@ -45,7 +45,7 @@ void Graphics::Engine::Render(void)
 {
 	for(std::vector< Graphics::Node * >::iterator NodeIterator = m_Nodes.begin(); NodeIterator != m_Nodes.end(); ++NodeIterator)
 	{
-		(*NodeIterator)->Draw();
+		(*NodeIterator)->Render();
 	}
 }
 
