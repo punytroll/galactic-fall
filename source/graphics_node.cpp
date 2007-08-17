@@ -63,7 +63,7 @@ void Graphics::Node::Clear(void)
 {
 	while(m_Content.empty() == false)
 	{
-		Node * Content(m_Content.front());
+		Graphics::Node * Content(m_Content.front());
 		
 		Content->SetContainer(0);
 		delete Content;
