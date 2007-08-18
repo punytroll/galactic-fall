@@ -1,7 +1,7 @@
 from math import sqrt
 from optparse import OptionParser
 from struct import pack
-from sys import stderr, stdout
+from sys import exit, stderr, stdout
 from xml.dom.minidom import Node, parse
 
 parser = OptionParser()
