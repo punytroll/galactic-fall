@@ -675,6 +675,7 @@ void Render(System * System)
 	}
 	glClear(GL_COLOR_BUFFER_BIT);
 	glClear(GL_DEPTH_BUFFER_BIT);
+	g_GraphicsEngine->Render();
 	if(System != 0)
 	{
 		const std::list< Ship * > & Ships(System->GetShips());
@@ -697,7 +698,6 @@ void Render(System * System)
 			(*ShotIterator)->Draw();
 		}
 	}
-	g_GraphicsEngine->Render();
 	// HUD
 	if((g_OutputMind == true) && (g_OutputMind->GetCharacter() != 0) && (g_OutputMind->GetCharacter()->GetShip() != 0) && (g_OutputMind->GetCharacter()->GetShip()->GetTarget() == true))
 	{
