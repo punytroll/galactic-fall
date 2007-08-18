@@ -51,8 +51,8 @@ all_data = \
 	.data/widget_scanner_display.data
 
 raw_to_littlem_dependencies = \
-	raw_to_littlem.py \
-	xml_stream.py
+	tools/raw_to_littlem.py \
+	tools/xml_stream.py
 
 all: check-dependencies data.arx
 
@@ -185,8 +185,8 @@ data.arx: .data $(all_data) Makefile
 .data:
 	mkdir $@
 
-.data/%.data: %.xml definitions.xml xml_to_data.py
-	python xml_to_data.py --definitions=definitions.xml --in=$< --out=$@
+.data/%.data: %.xml definitions.xml tools/xml_to_data.py
+	python tools/xml_to_data.py --definitions=definitions.xml --in=$< --out=$@
 
 model_cargo_cube.xml: models/cargo_cube.xml littlem_to_xml.xsl
 	xsltproc -output $@ littlem_to_xml.xsl $<
@@ -210,18 +210,18 @@ model_transporter.xml: models/transporter.xml littlem_to_xml.xsl
 	xsltproc -output $@ littlem_to_xml.xsl $<
 
 models/fighter.xml: models/fighter.raw $(raw_to_littlem_dependencies)
-	python raw_to_littlem.py --in=$< --out=$@ --identifier=fighter
+	python tools/raw_to_littlem.py --in=$< --out=$@ --identifier=fighter
 
 models/light_laser.xml: models/light_laser.raw $(raw_to_littlem_dependencies)
-	python raw_to_littlem.py --in=$< --out=$@ --identifier=light_laser
+	python tools/raw_to_littlem.py --in=$< --out=$@ --identifier=light_laser
 
 models/planet.xml: models/planet.raw $(raw_to_littlem_dependencies)
-	python raw_to_littlem.py --in=$< --out=$@ --identifier=planet
+	python tools/raw_to_littlem.py --in=$< --out=$@ --identifier=planet
 
 models/shuttle.xml: models/shuttle.raw $(raw_to_littlem_dependencies)
-	python raw_to_littlem.py --in=$< --out=$@ --identifier=shuttle
+	python tools/raw_to_littlem.py --in=$< --out=$@ --identifier=shuttle
 
 models/transporter.xml: models/transporter.raw $(raw_to_littlem_dependencies)
-	python raw_to_littlem.py --in=$< --out=$@ --identifier=transporter
+	python tools/raw_to_littlem.py --in=$< --out=$@ --identifier=transporter
 
 .PHONY: check-dependencies
