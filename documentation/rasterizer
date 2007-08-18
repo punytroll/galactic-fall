@@ -1,0 +1,32 @@
+pixels_x:
+	Anzahl der Pixel des erstellten Bildes in X-Richtung.
+
+pixels_y:
+	Anzahl der Pixel des erstellten Bildes in Y-Richtung.
+
+sample:
+	Stellt einen berechneten Farbpunkt dar.
+
+sub_pixels:
+	Anzahl der Samples in eine Richtung pro Pixel.
+
+samples_x:
+	Gesamtanzahl der Samples in X-Richtung für das gesamte Bild. (pixels_x * sub_pixels)
+
+samples_y:
+	Gesamtanzahl der Samples in Y-Richtung für das gesamte Bild. (pixels_y * sub_pixels)
+
+file format:
+	width: 4 byte unsigned integer in network byte order (big endian)
+	height: 4 byte unsigned integer in network byte order (big endian)
+	format: 4 byte unsigned integer in network byte order (big endian)
+		format = 1: RGBA
+			red: 1 byte
+			green: 1 byte
+			blue: 1 byte
+			alpha: 1 byte
+		format = 2: RGB
+			red: 1 byte
+			green: 1 byte
+			blue: 1 byte
+	content: width * height in format
