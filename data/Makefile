@@ -208,16 +208,13 @@ data.arx: .data $(all_data) Makefile
 .data/%.data: %.xml $(definitions_xml) $(xml_to_data_py)
 	python tools/xml_to_data.py --definitions=tools/definitions.xml --in=$< --out=$@
 
-.data/texture_%.data: texture_%.tex
-	cp $< $@
+.data/texture_%.data: textures/%.vg $(rasterize_py)
+	python tools/rasterize.py --in=$< --out=$@ --sub-pixels=3 --dimensions=32x32
 
 model_%.xml: models/%.xml $(littlem_to_xml_xsl)
 	xsltproc -output $@ tools/littlem_to_xml.xsl $<
 
 models/%.xml: models/%.raw $(raw_to_littlem_py)
 	python tools/raw_to_littlem.py --in=$< --out=$@ --identifier=$(subst models/,,$(subst .xml,,$@))
-
-texture_%.tex: textures/%.vg $(rasterize_py)
-	python tools/rasterize.py --in=$< --out=$@ --dimensions=32x32
 
 .PHONY: check-dependencies
