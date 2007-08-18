@@ -43,6 +43,7 @@ all_data = \
 	.data/system_link_alpha_centauri_tichel.data \
 	.data/system_link_rigel_sol.data \
 	.data/system_link_rigel_tichel.data \
+	.data/texture_particle.data \
 	.data/weapon_class_light_laser.data \
 	.data/weapon_class_medium_laser.data \
 	.data/widget_mini_map.data \
@@ -55,6 +56,9 @@ definitions_xml = \
 
 littlem_to_xml_xsl = \
 	tools/littlem_to_xml.xsl
+
+rasterize_py = \
+	tools/rasterize.py
 
 raw_to_littlem_py = \
 	tools/raw_to_littlem.py \
@@ -132,6 +136,9 @@ data.arx: .data $(all_data) Makefile
 	arxtouch $@ 9
 	arxmod $@ 9 -n "Slot Classes" -t 0 -st 0
 	arxmod $@ 0 -a "child" 9
+	arxtouch $@ a
+	arxmod $@ a -n "Textures" -t 0 -st 0
+	arxmod $@ 0 -a "child" a
 	@echo -e "\n\nAdding widgets ...\n"
 	@echo -e "\nThe widgets will be read in uid order, so assign proper uids so that superior widgets are read before sub widgets.\n"
 	arxadd $@ --uid 103 --name "Credits" --type 1 --subtype 1 --add "/User Interface" .data/label_credits.data
@@ -192,6 +199,8 @@ data.arx: .data $(all_data) Makefile
 	arxadd $@ --name "Planet" --type 2 --subtype 0 --add "/Models" .data/model_planet.data
 	arxadd $@ --name "Shuttle" --type 2 --subtype 0 --add "/Models" .data/model_shuttle.data
 	arxadd $@ --name "Transporter" --type 2 --subtype 0 --add "/Models" .data/model_transporter.data
+	@echo -e "\n\nAdding textures ...\n"
+	arxadd $@ --name "Particle" --type a --subtype 0 --add "/Textures" .data/texture_particle.data
 
 .data:
 	mkdir $@
@@ -199,10 +208,16 @@ data.arx: .data $(all_data) Makefile
 .data/%.data: %.xml $(definitions_xml) $(xml_to_data_py)
 	python tools/xml_to_data.py --definitions=tools/definitions.xml --in=$< --out=$@
 
+.data/texture_%.data: texture_%.tex
+	cp $< $@
+
 model_%.xml: models/%.xml $(littlem_to_xml_xsl)
 	xsltproc -output $@ tools/littlem_to_xml.xsl $<
 
 models/%.xml: models/%.raw $(raw_to_littlem_py)
 	python tools/raw_to_littlem.py --in=$< --out=$@ --identifier=$(subst models/,,$(subst .xml,,$@))
+
+texture_%.tex: textures/%.vg $(rasterize_py)
+	python tools/rasterize.py --in=$< --out=$@ --dimensions=32x32
 
 .PHONY: check-dependencies
