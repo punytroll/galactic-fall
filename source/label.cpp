@@ -94,26 +94,29 @@ void Label::Draw(void) const
 	}
 	else
 	{
-		std::string::size_type CharacterWidth(static_cast< std::string::size_type >(Width / 6.0f));
+		std::string::size_type LabelWidthInCharacters(static_cast< std::string::size_type >(Width / 6.0f));
 		std::string::size_type Length(0);
 		std::string::size_type Start(0);
 		std::vector< std::pair< std::string::size_type, std::string::size_type > > Lines;
 		
 		while(Start < m_String.length())
 		{
-			Length = CharacterWidth;
-			while((m_String[Start + Length] != ' ') && (m_WordWrap == true) && (Start + Length < m_String.length()))
+			// set the length of the line string to the label width and count downwards
+			Length = LabelWidthInCharacters;
+			// only look for a separator if we want to wrap at word boundaries and this is not the last line, else just wrap
+			if((m_WordWrap == true) && (Start + Length < m_String.length()))
 			{
-				--Length;
+				while((Length > 0) && (m_String[Start + Length] != ' '))
+				{
+					--Length;
+				}
 			}
-			if(Start + Length >= m_String.length())
+			// if no separator could be found then just wrap at the label width
+			if(Length == 0)
 			{
-				Lines.push_back(std::make_pair(Start, m_String.length() - Start));
+				Length = LabelWidthInCharacters;
 			}
-			else
-			{
-				Lines.push_back(std::make_pair(Start, Length));
-			}
+			Lines.push_back(std::make_pair(Start, std::min(m_String.length() - Start, Length)));
 			Start += Length + 1;
 		}
 		for(std::vector< std::pair< std::string::size_type, std::string::size_type > >::size_type Line = 0; Line < Lines.size(); ++Line)
