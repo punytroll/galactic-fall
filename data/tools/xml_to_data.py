@@ -2,11 +2,15 @@
 
 from os import remove
 from pprint import pprint
+from shutil import copyfileobj
 from struct import pack
 from sys import exit
 from types import ListType, StringTypes
 from xml.dom.minidom import Node, parse
 from optparse import OptionParser
+
+class ConvertException(Exception):
+	pass
 
 parser = OptionParser()
 parser.add_option("-d", "--definitions", dest="definitions", help="Load the definitions from the file.")
@@ -68,7 +72,7 @@ def out(data_type, node):
 			for stack_entry in out_call_stack:
 				stack_path += "/" + stack_entry
 			print "In file '" + options.in_file + "' I found an invalid value '" + node.firstChild.nodeValue + "' for '" + stack_path + "' of type '" + data_type + "'."
-			raise Exception()
+			raise ConvertException()
 	elif data_type == "array":
 		count = 0
 		for node_part in node.childNodes:
@@ -78,6 +82,17 @@ def out(data_type, node):
 		for node_part in node.childNodes:
 			if node_part.nodeType == Node.ELEMENT_NODE:
 				out(node_part.tagName, node_part)
+	elif data_type == "file":
+		inline_file_name = node.firstChild.nodeValue
+		try:
+			inline_file = open(inline_file_name, "rb")
+			copyfileobj(inline_file, out_file)
+		except IOError:
+			stack_path = ""
+			for stack_entry in out_call_stack:
+				stack_path += "/" + stack_entry
+			print "Couldn't open the file '" + inline_file_name + "' for '" + stack_path + "'."
+			raise ConvertException()
 	elif definitions.has_key(data_type) == True:
 		if isinstance(definitions[data_type], ListType):
 			for part in definitions[data_type]:
@@ -93,12 +108,12 @@ def out(data_type, node):
 					for stack_entry in out_call_stack:
 						stack_path += "/" + stack_entry
 					print "In file '" + options.in_file + "' I found no value for '" + stack_path + "/" + part[0] + "' of type '" + part[1] + "'."
-					raise Exception()
+					raise ConvertException()
 		elif isinstance(definitions[data_type], StringTypes):
 			out(definitions[data_type], node)
 	else:
 		print "Could not find a suitable definition for type '" + data_type + "'."
-		raise Exception()
+		raise ConvertException()
 	out_call_stack.pop()
 
 # now parse the in file
@@ -107,7 +122,7 @@ in_element = in_document.documentElement
 if in_element.nodeType == Node.ELEMENT_NODE:
 	try:
 		out(in_element.tagName, in_element)
-	except Exception:
+	except ConvertException:
 		out_file.close()
 		remove(options.out_file)
 		exit(1)
