@@ -25,6 +25,13 @@ elif format == 2: # RGB one byte each
 else:
 	print "Unknown format '" + str(format) + "'."
 	sys.exit(1)
+aspect = float(dimension_x) / float(dimension_y)
+if aspect > 1:
+	x = 1.0
+	y = 1.0 / aspect
+else:
+	x = 1.0 * aspect
+	y = 1.0
 
 try:
     from OpenGL import GL
@@ -64,19 +71,18 @@ class GLWidget(QtOpenGL.QGLWidget):
 		GL.glBindTexture(GL.GL_TEXTURE_2D, self.__texture)
 		GL.glBegin(GL.GL_QUADS)
 		GL.glTexCoord(0.0, 0.0)
-		GL.glVertex(-1.0, 1.0, 0.0)
+		GL.glVertex(-x, y, 0.0)
 		GL.glTexCoord(1.0, 0.0)
-		GL.glVertex(1.0, 1.0, 0.0)
+		GL.glVertex(x, y, 0.0)
 		GL.glTexCoord(1.0, 1.0)
-		GL.glVertex(1.0, -1.0, 0.0)
+		GL.glVertex(x, -y, 0.0)
 		GL.glTexCoord(0.0, 1.0)
-		GL.glVertex(-1.0, -1.0, 0.0)
+		GL.glVertex(-x, -y, 0.0)
 		GL.glEnd()
 
 	def resizeGL(self, width, height):
 		side = min(width, height)
 		GL.glViewport((width - side) / 2, (height - side) / 2, side, side)
-
 		GL.glMatrixMode(GL.GL_PROJECTION)
 		GL.glLoadIdentity()
 		GL.glOrtho(-1.2, +1.2, +1.2, -1.2, 4.0, 15.0)
