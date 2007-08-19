@@ -102,6 +102,7 @@ clean:
 	$(RM) models/planet.xml
 	$(RM) models/shuttle.xml
 	$(RM) models/transporter.xml
+	$(RM) textures/particle.tex
 
 data.arx: .data $(all_data) Makefile
 	@$(RM) -f $@
@@ -208,13 +209,15 @@ data.arx: .data $(all_data) Makefile
 .data/%.data: %.xml $(definitions_xml) $(xml_to_data_py)
 	python tools/xml_to_data.py --definitions=tools/definitions.xml --in=$< --out=$@
 
-.data/texture_%.data: textures/%.vg $(rasterize_py)
-	python tools/rasterize.py --in=$< --out=$@ --sub-pixels=3 --dimensions=32x32
-
 model_%.xml: models/%.xml $(littlem_to_xml_xsl)
 	xsltproc -output $@ tools/littlem_to_xml.xsl $<
 
 models/%.xml: models/%.raw $(raw_to_littlem_py)
 	python tools/raw_to_littlem.py --in=$< --out=$@ --identifier=$(subst models/,,$(subst .xml,,$@))
+
+textures/%.tex: textures/%.vg $(rasterize_py)
+	python tools/rasterize.py --in=$< --out=$@ --sub-pixels=3 --dimensions=32x32
+
+texture_particle.xml: textures/particle.tex
 
 .PHONY: check-dependencies

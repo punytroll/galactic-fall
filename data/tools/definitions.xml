@@ -129,6 +129,11 @@
 		<string identifier="system-2-identifier"/>
 	</system-link>
 	
+	<texture>
+		<string identifier="identifier"/>
+		<file identifier="tex-file"/>
+	</texture>
+	
 	<triangle>
 		<string identifier="identifier"/>
 		<string identifier="name"/>
