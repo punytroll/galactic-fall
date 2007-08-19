@@ -218,6 +218,6 @@ models/%.xml: models/%.raw $(raw_to_littlem_py)
 textures/%.tex: textures/%.vg $(rasterize_py)
 	python tools/rasterize.py --in=$< --out=$@ --sub-pixels=3 --dimensions=32x32
 
-texture_particle.xml: textures/particle.tex
+.data/texture_particle.data: textures/particle.tex
 
 .PHONY: check-dependencies
