@@ -34,6 +34,7 @@ const Arxx::u4byte ARX_TYPE_SHIP_CLASS = 3;
 const Arxx::u4byte ARX_TYPE_SLOT_CLASS = 9;
 const Arxx::u4byte ARX_TYPE_SYSTEM = 5;
 const Arxx::u4byte ARX_TYPE_SYSTEM_LINK = 6;
+const Arxx::u4byte ARX_TYPE_TEXTURE = 10;
 const Arxx::u4byte ARX_TYPE_WEAPON_CLASS = 7;
 
 #endif

@@ -24,14 +24,16 @@ class Archive;
 class AssetClassManager;
 class CommodityClassManager;
 class Galaxy;
-class Item;
 class ModelManager;
 class ShipClassManager;
 class SlotClassManager;
 class UserInterface;
 class WeaponClassManager;
 
-Arxx::Item * GetItem(Arxx::Archive & Archive, Arxx::u4byte UniqueIdentifier);
+namespace Graphics
+{
+	class TextureManager;
+}
 
 void ReadAssetClasses(Arxx::Archive & Archive, AssetClassManager * Manager);
 void ReadCommodityClasses(Arxx::Archive & Archive, CommodityClassManager * Manger);
@@ -40,6 +42,7 @@ void ReadShipClasses(Arxx::Archive & Archive, ShipClassManager * Manager);
 void ReadSlotClasses(Arxx::Archive & Archive, SlotClassManager * Manager);
 void ReadSystems(Arxx::Archive & Archive, Galaxy * Galaxy);
 void ReadSystemLinks(Arxx::Archive & Archive, Galaxy * Galaxy);
+void ReadTextures(Arxx::Archive & Archive, Graphics::TextureManager * Manager);
 void ReadUserInterface(Arxx::Archive & Archive, UserInterface * UserInterface);
 void ReadWeaponClasses(Arxx::Archive & Archive, WeaponClassManager * Manager);
 

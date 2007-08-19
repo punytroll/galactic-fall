@@ -45,6 +45,7 @@ class TimeoutNotificationManager;
 namespace Graphics
 {
 	class Engine;
+	class TextureManager;
 }
 
 extern AssetClassManager * g_AssetClassManager;
@@ -55,6 +56,7 @@ extern ModelManager * g_ModelManager;
 extern ObjectFactory * g_ObjectFactory;
 extern ShipClassManager * g_ShipClassManager;
 extern SlotClassManager * g_SlotClassManager;
+extern Graphics::TextureManager * g_TextureManager;
 extern UserInterface * g_UserInterface;
 extern WeaponClassManager * g_WeaponClassManager;
 extern TimeoutNotificationManager * g_GameTimeTimeoutNotifications;

@@ -17,6 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include <arpa/inet.h>
+
 #include <iostream>
 
 #include <Archive.h>
@@ -33,6 +35,8 @@
 #include "commodity_class_manager.h"
 #include "galaxy.h"
 #include "globals.h"
+#include "graphics_texture.h"
+#include "graphics_texture_manager.h"
 #include "label.h"
 #include "mini_map_display.h"
 #include "model.h"
@@ -61,6 +65,7 @@ static void ReadShipClass(ShipClassManager * ShipClassManager, Arxx::Reference &
 static void ReadSlotClass(SlotClassManager * SlotClassManager, Arxx::Reference & Reference);
 static void ReadSystem(Galaxy * Galaxy, Arxx::Reference & Reference);
 static void ReadSystemLink(Galaxy * Galaxy, Arxx::Reference & Reference);
+static void ReadTexture(Graphics::TextureManager * TextureManager, Arxx::Reference & Reference);
 static void ReadWeaponClass(WeaponClassManager * WeaponClassManager, Arxx::Reference & Reference);
 static void ReadWidget(UserInterface * UserInterface, Arxx::Reference & Reference);
 static void ReadWidgetLabel(Arxx::BufferReader & Reader, Label * ReadLabel);
@@ -156,6 +161,11 @@ void ReadSystems(Arxx::Archive & Archive, Galaxy * Galaxy)
 void ReadSystemLinks(Arxx::Archive & Archive, Galaxy * Galaxy)
 {
 	ReadItems(Archive, "/System Links", Bind1(Function(ReadSystemLink), Galaxy));
+}
+
+void ReadTextures(Arxx::Archive & Archive, Graphics::TextureManager * Manager)
+{
+	ReadItems(Archive, "/Textures", Bind1(Function(ReadTexture), Manager));
 }
 
 void ReadUserInterface(Arxx::Archive & Archive, UserInterface * Manager)
@@ -585,6 +595,39 @@ static void ReadSystemLink(Galaxy * Galaxy, Arxx::Reference & Reference)
 	}
 	System1->AddLinkedSystem(System2);
 	System2->AddLinkedSystem(System1);
+}
+
+static void ReadTexture(Graphics::TextureManager * TextureManager, Arxx::Reference & Reference)
+{
+	Arxx::Item * Item(Resolve(Reference));
+	
+	if(Item->u4GetType() != ARX_TYPE_TEXTURE)
+	{
+		throw std::runtime_error("Item type for texture '" + Item->sGetName() + "' should be '" + to_string_cast(ARX_TYPE_TEXTURE) + "' not '" + to_string_cast(Item->u4GetType()) + "'.");
+	}
+	if(Item->u4GetSubType() != 0)
+	{
+		throw std::runtime_error("Item sub type for texture '" + Item->sGetName() + "' should be '0' not '" + to_string_cast(Item->u4GetSubType()) + "'.");
+	}
+	
+	Arxx::BufferReader Reader(*Item);
+	std::string Identifier;
+	Arxx::u4byte Width;
+	Arxx::u4byte Height;
+	Arxx::u4byte Format;
+	
+	Reader >> Identifier >> Width >> Height >> Format;
+	Width = ntohl(Width);
+	Height = ntohl(Height);
+	Format = ntohl(Format);
+	
+	Graphics::Texture * Texture(g_TextureManager->Create(Identifier));
+	
+	if(Texture == 0)
+	{
+		throw std::runtime_error("Could not create texture '" + Identifier + "'.");
+	}
+	Texture->SetData(Width, Height, Format, Reader.GetBuffer().GetBegin() + Reader.stGetPosition());
 }
 
 static void ReadWeaponClass(WeaponClassManager * WeaponClassManager, Arxx::Reference & Reference)
