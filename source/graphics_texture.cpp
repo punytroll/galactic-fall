@@ -29,6 +29,15 @@ Graphics::Texture::Texture(const std::string & Identifier) :
 {
 }
 
+Graphics::Texture::~Texture(void)
+{
+	if(m_Texture != 0)
+	{
+		glDeleteTextures(1, &m_Texture);
+		m_Texture == 0;
+	}
+}
+
 void Graphics::Texture::SetData(unsigned_numeric Width, unsigned_numeric Height, unsigned_numeric Format, const unsigned char * Data)
 {
 	assert(m_Texture == 0);

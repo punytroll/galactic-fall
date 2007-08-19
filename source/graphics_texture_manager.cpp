@@ -20,6 +20,14 @@
 #include "graphics_texture.h"
 #include "graphics_texture_manager.h"
 
+Graphics::TextureManager::~TextureManager(void)
+{
+	while(m_Managed.empty() == false)
+	{
+		Destroy(m_Managed.begin()->first);
+	}
+}
+
 const Graphics::Texture* Graphics::TextureManager::Get(const std::string & Identifier) const
 {
 	std::map< std::string, Graphics::Texture * >::const_iterator ManagedIterator(m_Managed.find(Identifier));
@@ -47,5 +55,16 @@ Graphics::Texture * Graphics::TextureManager::Create(const std::string & Identif
 		m_Managed[Managed->GetIdentifier()] = Managed;
 		
 		return Managed;
+	}
+}
+
+void Graphics::TextureManager::Destroy(const std::string & Identifier)
+{
+	std::map< std::string, Graphics::Texture * >::iterator ManagedIterator(m_Managed.find(Identifier));
+	
+	if(ManagedIterator != m_Managed.end())
+	{
+		delete ManagedIterator->second;
+		m_Managed.erase(ManagedIterator);
 	}
 }
