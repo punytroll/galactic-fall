@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 1.3.1 of algebra.
+ * This is part of version 1.3.2 of algebra.
  **/
 
 #ifndef ALGEBRA_VECTOR2F_H
@@ -221,6 +221,11 @@ public:
 	float & operator[](int Index)
 	{
 		return m_V.m_A[Index];
+	}
+	
+	bool operator==(const Vector2f & Other) const
+	{
+		return (m_V.m_A[0] == Other.m_V.m_A[0]) && (m_V.m_A[1] == Other.m_V.m_A[1]);
 	}
 };
 
