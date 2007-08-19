@@ -218,6 +218,7 @@ enum WantReturnCode
 	NO_SCOOP_TARGET,
 	NOT_ENOUGH_CREDITS,
 	NOT_ENOUGH_FUEL,
+	NOT_ENOUGH_SPACE,
 	TOO_FAR_AWAY,
 	TOO_FAST,
 	TOO_HIGH_RELATIVE_VELOCITY,
@@ -284,6 +285,11 @@ int WantToScoop(Ship * Ship, Commodity * Commodity)
 	if((Ship->GetVelocity() - Commodity->GetVelocity()).SquaredLength() > 2.0f)
 	{
 		return TOO_HIGH_RELATIVE_VELOCITY;
+	}
+	// test cargo hold size on the ship
+	if(Ship->GetAvailableSpace() < 1.0f)
+	{
+		return NOT_ENOUGH_SPACE;
 	}
 	
 	return OK;
@@ -1306,6 +1312,12 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 					case NO_SCOOP_TARGET:
 						{
 							g_InputMind->TargetNearestCargo();
+							
+							break;
+						}
+					case NOT_ENOUGH_SPACE:
+						{
+							SetMessage("Your cargo hold has not enough spare space to accomodate this item.");
 							
 							break;
 						}
