@@ -36,6 +36,7 @@ namespace Graphics
 		 * @brief The default constructor.
 		 **/
 		Texture(const std::string & Identifier);
+		~Texture(void);
 		// getters
 		const std::string & GetIdentifier(void) const;
 		// setters
