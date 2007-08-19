@@ -54,6 +54,7 @@
 #include "graphics_engine.h"
 #include "graphics_model_object.h"
 #include "graphics_particle_systems.h"
+#include "graphics_texture_manager.h"
 #include "key_event_information.h"
 #include "label.h"
 #include "map_dialog.h"
@@ -156,16 +157,17 @@ private:
 };
 
 // these objects are exported via globals.h
-AssetClassManager * g_AssetClassManager;
-CommodityClassManager * g_CommodityClassManager;
-Galaxy * g_Galaxy;
+AssetClassManager * g_AssetClassManager(0);
+CommodityClassManager * g_CommodityClassManager(0);
+Galaxy * g_Galaxy(0);
 Graphics::Engine * g_GraphicsEngine(0);
-ModelManager * g_ModelManager;
-ObjectFactory * g_ObjectFactory;
-ShipClassManager * g_ShipClassManager;
-SlotClassManager * g_SlotClassManager;
-WeaponClassManager * g_WeaponClassManager;
-UserInterface * g_UserInterface;
+ModelManager * g_ModelManager(0);
+ObjectFactory * g_ObjectFactory(0);
+ShipClassManager * g_ShipClassManager(0);
+SlotClassManager * g_SlotClassManager(0);
+Graphics::TextureManager * g_TextureManager(0);
+UserInterface * g_UserInterface(0);
+WeaponClassManager * g_WeaponClassManager(0);
 
 int g_LastMotionX(-1);
 int g_LastMotionY(-1);
@@ -2084,8 +2086,9 @@ int main(int argc, char ** argv)
 	g_ObjectFactory = new ObjectFactory();
 	g_ShipClassManager = new ShipClassManager();
 	g_SlotClassManager = new SlotClassManager();
-	g_WeaponClassManager = new WeaponClassManager();
+	g_TextureManager = new Graphics::TextureManager();
 	g_UserInterface = new UserInterface();
+	g_WeaponClassManager = new WeaponClassManager();
 	g_GameTimeTimeoutNotifications = new TimeoutNotificationManager();
 	g_RealTimeTimeoutNotifications = new TimeoutNotificationManager();
 	g_SystemStatistics= new SystemStatistics();
@@ -2184,6 +2187,8 @@ int main(int argc, char ** argv)
 	// setting up the graphical environment
 	CreateWindow();
 	InitializeOpenGL();
+	// since reading the textures already creates them we have to do this after initializing OpenGL
+	ReadTextures(Archive, g_TextureManager);
 	// main loop
 	while(g_Quit == false)
 	{
