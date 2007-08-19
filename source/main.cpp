@@ -2209,8 +2209,19 @@ int main(int argc, char ** argv)
 		Object::Dump(Out);
 		std::cout << std::endl;
 	}
+	delete g_AssetClassManager;
+	delete g_CommodityClassManager;
 	delete g_GameTimeTimeoutNotifications;
+	delete g_GraphicsEngine;
+	delete g_ModelManager;
+	delete g_ObjectFactory;
 	delete g_RealTimeTimeoutNotifications;
+	delete g_ShipClassManager;
+	delete g_SlotClassManager;
+	delete g_SystemStatistics;
+	delete g_TextureManager;
+	delete g_UserInterface;
+	delete g_WeaponClassManager;
 	
 	return 0;
 }
