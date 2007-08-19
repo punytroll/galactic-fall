@@ -127,6 +127,12 @@ void Widget::SetPosition(const Vector2f & Position)
 
 void Widget::SetSize(const Vector2f & Size)
 {
+	// early bailing out if this is a no-op
+	if(Size == m_Size)
+	{
+		return;
+	}
+	
 	Vector2f Offset(GetSize() - Size);
 	
 	m_Size = Size;
