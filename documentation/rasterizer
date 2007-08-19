@@ -30,3 +30,6 @@ file format:
 			green: 1 byte
 			blue: 1 byte
 	content: width * height in format
+
+transparency:
+	Although the rasterizer works with transparency internally the output will contain correct alpha values for opacity.
