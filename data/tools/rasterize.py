@@ -180,6 +180,6 @@ for row in range(pixels_y):
 		color.red = int(color.red * 255)
 		color.green = int(color.green * 255)
 		color.blue = int(color.blue * 255)
-		color.transparency = int(color.transparency * 255)
+		color.transparency = 255 - int(color.transparency * 255)
 		out_file.write(pack('BBBB', color.red, color.green, color.blue, color.transparency))
 out_file.close()
