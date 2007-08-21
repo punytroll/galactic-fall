@@ -20,8 +20,16 @@
 #ifndef PHYSICAL_OBJECT_H
 #define PHYSICAL_OBJECT_H
 
+#include <map>
+#include <vector>
+
 #include "position.h"
 #include "type_definitions.h"
+
+namespace Graphics
+{
+	class Node;
+}
 
 class PhysicalObject : public Position
 {
@@ -36,10 +44,16 @@ public:
 	void SetName(const std::string & Name);
 	void SetRadialSize(float RadialSize);
 	void SetSpaceRequirement(unsigned_numeric SpaceRequirement);
+	// modifiers
+	void AddVisualization(Graphics::Node * Visualization);
+	static void RemoveVisualizations(Graphics::Node * Visualization);
+	void RemoveVisualization(Graphics::Node * Visualization);
 private:
+	static std::map< Graphics::Node *, PhysicalObject * > m_VisualizationBackReferences;
 	std::string m_Name;
 	float m_RadialSize;
 	unsigned_numeric m_SpaceRequirement;
+	std::vector< Graphics::Node * > m_Visualizations;
 };
 
 inline const std::string & PhysicalObject::GetName(void) const
@@ -70,6 +84,28 @@ inline void PhysicalObject::SetRadialSize(float RadialSize)
 inline void PhysicalObject::SetSpaceRequirement(unsigned_numeric SpaceRequirement)
 {
 	m_SpaceRequirement = SpaceRequirement;
+}
+
+inline void PhysicalObject::AddVisualization(Graphics::Node * Visualization)
+{
+	m_VisualizationBackReferences[Visualization] = this;
+	m_Visualizations.push_back(Visualization);
+}
+
+inline void PhysicalObject::RemoveVisualizations(Graphics::Node * Visualization)
+{
+	std::map< Graphics::Node *, PhysicalObject * >::iterator Iterator(m_VisualizationBackReferences.find(Visualization));
+	
+	if(Iterator != m_VisualizationBackReferences.end())
+	{
+		Iterator->second->RemoveVisualization(Visualization);
+		m_VisualizationBackReferences.erase(Iterator);
+	}
+}
+
+inline void PhysicalObject::RemoveVisualization(Graphics::Node * Visualization)
+{
+	m_Visualizations.erase(std::find(m_Visualizations.begin(), m_Visualizations.end(), Visualization));
 }
 
 #endif

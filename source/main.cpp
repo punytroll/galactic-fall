@@ -923,6 +923,7 @@ void OnOutputFocusEnterSystem(System * EnterSystem)
 		ModelObject->SetPosition((*PlanetIterator)->GetPosition());
 		ModelObject->SetOrientation(Quaternion(true));
 		ModelObject->SetScale((*PlanetIterator)->GetRadialSize());
+		(*PlanetIterator)->AddVisualization(ModelObject);
 		g_MainScene->AddNode(ModelObject);
 	}
 }
@@ -940,6 +941,7 @@ void OnOutputFocusLeaveSystem(System * System)
 
 void OnGraphicsNodeDestroy(Graphics::Node * Node)
 {
+	PhysicalObject::RemoveVisualizations(Node);
 	delete Node;
 }
 
