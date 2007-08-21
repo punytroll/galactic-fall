@@ -17,10 +17,23 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include "graphics_node.h"
 #include "physical_object.h"
 
 std::map< Graphics::Node *, PhysicalObject * > PhysicalObject::m_VisualizationBackReferences;
 
 PhysicalObject::~PhysicalObject(void)
 {
+	while(m_Visualizations.empty() == false)
+	{
+		std::map< Graphics::Node *, PhysicalObject * >::iterator VisualizationBackReferenceIterator(m_VisualizationBackReferences.find(m_Visualizations.back()));
+		
+		if(VisualizationBackReferenceIterator != m_VisualizationBackReferences.end())
+		{
+			m_VisualizationBackReferences.erase(VisualizationBackReferenceIterator);
+		}
+		m_Visualizations.back()->Remove();
+		m_Visualizations.back()->Destroy();
+		m_Visualizations.pop_back();
+	}
 }
