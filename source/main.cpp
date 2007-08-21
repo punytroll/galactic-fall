@@ -54,6 +54,7 @@
 #include "graphics_engine.h"
 #include "graphics_model_object.h"
 #include "graphics_particle_systems.h"
+#include "graphics_scene.h"
 #include "graphics_texture_manager.h"
 #include "key_event_information.h"
 #include "label.h"
@@ -161,6 +162,7 @@ AssetClassManager * g_AssetClassManager(0);
 CommodityClassManager * g_CommodityClassManager(0);
 Galaxy * g_Galaxy(0);
 Graphics::Engine * g_GraphicsEngine(0);
+Graphics::Scene * g_MainScene(0);
 ModelManager * g_ModelManager(0);
 ObjectFactory * g_ObjectFactory(0);
 ShipClassManager * g_ShipClassManager(0);
@@ -439,7 +441,7 @@ Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSyst
 	{
 		NewParticleSystem = new Graphics::ParticleSystemExplosion();
 	}
-	g_GraphicsEngine->AddNode(NewParticleSystem);
+	g_MainScene->AddNode(NewParticleSystem);
 	
 	return NewParticleSystem;
 }
@@ -448,7 +450,7 @@ void CalculateMovements(System * System)
 {
 	float Seconds(CalculateTime());
 	
-	g_GraphicsEngine->Update(Seconds);
+	g_MainScene->Update(Seconds);
 	if(System != 0)
 	{
 		// TODO: it is unclear, which Ships to update really.
@@ -682,7 +684,7 @@ void Render(System * System)
 	}
 	glClear(GL_COLOR_BUFFER_BIT);
 	glClear(GL_DEPTH_BUFFER_BIT);
-	g_GraphicsEngine->Render();
+	g_MainScene->Render();
 	if(System != 0)
 	{
 		const std::list< Ship * > & Ships(System->GetShips());
@@ -903,8 +905,12 @@ void PopulateSystem(System * System)
 void OnOutputFocusEnterSystem(System * EnterSystem)
 {
 	assert(g_SpawnShipTimeoutNotification.IsValid() == false);
+	assert(g_MainScene == 0);
 	g_SpawnShipTimeoutNotification = g_GameTimeTimeoutNotifications->Add(GameTime::Get() + GetRandomFloatFromExponentialDistribution(1.0f / EnterSystem->GetTrafficDensity()), Bind1(Function(SpawnShipOnTimeout), EnterSystem));
 	// build the static setup of the scene
+	g_MainScene = new Graphics::Scene();
+	g_GraphicsEngine->AddScene(g_MainScene);
+	
 	const std::vector< Planet * > & Planets(EnterSystem->GetPlanets());
 	
 	for(std::vector< Planet * >::const_iterator PlanetIterator = Planets.begin(); PlanetIterator != Planets.end(); ++PlanetIterator)
@@ -917,7 +923,7 @@ void OnOutputFocusEnterSystem(System * EnterSystem)
 		ModelObject->SetPosition((*PlanetIterator)->GetPosition());
 		ModelObject->SetOrientation(Quaternion(true));
 		ModelObject->SetScale((*PlanetIterator)->GetRadialSize());
-		g_GraphicsEngine->AddNode(ModelObject);
+		g_MainScene->AddNode(ModelObject);
 	}
 }
 
@@ -928,7 +934,13 @@ void OnOutputFocusLeaveSystem(System * System)
 		g_SpawnShipTimeoutNotification.Dismiss();
 	}
 	// clear scene
-	g_GraphicsEngine->Clear();
+	g_GraphicsEngine->RemoveScene(g_MainScene);
+	g_MainScene->Destroy();
+}
+
+void OnGraphicsNodeDestroy(Graphics::Node * Node)
+{
+	delete Node;
 }
 
 void GameFrame(void)
@@ -2093,6 +2105,8 @@ int main(int argc, char ** argv)
 	g_Galaxy = new Galaxy();
 	g_Galaxy->SetObjectIdentifier("::galaxy");
 	g_GraphicsEngine = new Graphics::Engine();
+	g_GraphicsEngine->SetOnDestroyCallback(Function(OnGraphicsNodeDestroy));
+	g_MainScene = 0;
 	g_ModelManager = new ModelManager();
 	g_ObjectFactory = new ObjectFactory();
 	g_ShipClassManager = new ShipClassManager();
@@ -2208,6 +2222,8 @@ int main(int argc, char ** argv)
 		glXSwapBuffers(g_Display, g_Window);
 	}
 	// cleanup
+	OnOutputFocusLeaveSystem(g_CurrentSystem);
+	EmptySystem(g_CurrentSystem);
 	DeinitializeOpenGL();
 	DestroyWindow();
 	g_Galaxy->Destroy();

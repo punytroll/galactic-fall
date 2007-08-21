@@ -15,22 +15,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-**/
+ **/
 
-#include <algorithm>
+#ifndef GRAPHICS_SCENE_H
+#define GRAPHICS_SCENE_H
 
-#include "graphics_engine.h"
-#include "graphics_scene.h"
+#include "graphics_node.h"
 
-void Graphics::Engine::AddScene(Graphics::Scene * Scene)
+namespace Graphics
 {
-	assert(Scene->GetEngine() == 0);
-	m_Scenes.push_back(Scene);
-	Scene->SetEngine(this);
+	class Scene : public Graphics::Node
+	{
+	public:
+		void Update(float Seconds);
+	private:
+		void Update(Graphics::Node * Node, float Seconds);
+	};
 }
 
-void Graphics::Engine::RemoveScene(Graphics::Scene * Scene)
-{
-	assert(Scene->GetEngine() == this);
-	m_Scenes.erase(std::find(m_Scenes.begin(), m_Scenes.end(), Scene));
-}
+#endif
