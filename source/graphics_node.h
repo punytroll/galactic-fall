@@ -20,6 +20,8 @@
 #ifndef GRAPHICS_NODE_H
 #define GRAPHICS_NODE_H
 
+#include <assert.h>
+
 #include <vector>
 
 #include "math/quaternion.h"
@@ -71,6 +73,8 @@ namespace Graphics
 		 * @brief Removes a node from the container.
 		 **/
 		void RemoveNode(Graphics::Node * Content);
+		
+		void Remove(void);
 		
 		Graphics::Node * GetContainer(void);
 		const Graphics::Node * GetContainer(void) const;
@@ -125,6 +129,12 @@ inline const Quaternion & Graphics::Node::GetOrientation(void) const
 inline const Vector3f & Graphics::Node::GetPosition(void) const
 {
 	return m_Position;
+}
+
+inline void Graphics::Node::Remove(void)
+{
+	assert(GetContainer() != 0);
+	m_Container->RemoveNode(this);
 }
 
 inline void Graphics::Node::SetOrientation(const Quaternion & Orientation)
