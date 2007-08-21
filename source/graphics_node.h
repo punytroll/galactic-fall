@@ -27,8 +27,11 @@
 
 namespace Graphics
 {
+	class Engine;
+	
 	class Node
 	{
+		friend class Graphics::Engine;
 	public:
 		/**
 		 * @brief The default constructor.
@@ -37,10 +40,13 @@ namespace Graphics
 		
 		/**
 		 * @brief The destoructor for a graphics node object.
-		 * 
-		 * The destructor will also delete all content nodes.
 		 **/
 		virtual ~Node(void);
+		
+		/**
+		 * @brief Destroys the node and all of its content.
+		 **/
+		void Destroy(void);
 		
 		/**
 		 * @brief Recursive operation to render all nodes.
@@ -58,25 +64,18 @@ namespace Graphics
 		
 		/**
 		 * @brief Adds a content node to @em this node.
-		 * 
-		 * Using this function will move the memory management responsibility for the @a Content node to @em this node.
 		 **/
 		void AddNode(Graphics::Node * Content);
 		
 		/**
 		 * @brief Removes a node from the container.
-		 * 
-		 * Using this function the memory management responsibility for the @a Content node is transported to the caller.
 		 **/
 		void RemoveNode(Graphics::Node * Content);
 		
-		/**
-		 * @brief Deletes all content nodes.
-		 **/
-		void Clear(void);
-		
 		Graphics::Node * GetContainer(void);
 		const Graphics::Node * GetContainer(void) const;
+		std::vector< Graphics::Node * > & GetContent(void);
+		Graphics::Engine * GetEngine(void);
 		const Quaternion & GetOrientation(void) const;
 		const Vector3f & GetPosition(void) const;
 		void SetOrientation(const Quaternion & Orientation);
@@ -87,10 +86,12 @@ namespace Graphics
 		 * 
 		 * This function is only used internally, which is, why it is private.
 		 **/
-		void SetContainer(Node * Container);
+		void SetContainer(Graphics::Node * Container);
+		void SetEngine(Graphics::Engine * Engine);
 		
-		Node * m_Container;
+		Graphics::Node * m_Container;
 		std::vector< Graphics::Node * > m_Content;
+		Graphics::Engine * m_Engine;
 		Quaternion m_Orientation;
 		Vector3f m_Position;
 	};
@@ -104,6 +105,16 @@ inline Graphics::Node * Graphics::Node::GetContainer(void)
 inline const Graphics::Node * Graphics::Node::GetContainer(void) const
 {
 	return m_Container;
+}
+
+inline std::vector< Graphics::Node * > & Graphics::Node::GetContent(void)
+{
+	return m_Content;
+}
+
+inline Graphics::Engine * Graphics::Node::GetEngine(void)
+{
+	return m_Engine;
 }
 
 inline const Quaternion & Graphics::Node::GetOrientation(void) const
@@ -129,6 +140,11 @@ inline void Graphics::Node::SetPosition(const Vector3f & Position)
 inline void Graphics::Node::SetContainer(Graphics::Node * Container)
 {
 	m_Container = Container;
+}
+
+inline void Graphics::Node::SetEngine(Graphics::Engine * Engine)
+{
+	m_Engine = Engine;
 }
 
 #endif

@@ -20,25 +20,54 @@
 #ifndef GRAPHICS_ENGINE_H
 #define GRAPHICS_ENGINE_H
 
+#include <assert.h>
+
 #include <vector>
+
+#include "callbacks.h"
 
 namespace Graphics
 {
 	class Node;
-	class ParticleSystem;
+	class Scene;
 	
 	class Engine
 	{
 	public:
-		void Clear(void);
-		void Update(float Seconds);
-		void Render(void);
-		void AddNode(Graphics::Node * Node);
-		void RemoveNode(Graphics::Node * Node);
+		void AddScene(Graphics::Scene * Scene);
+		void RemoveScene(Graphics::Scene * Scene);
+		void SetOnDestroyCallback(Callback1< void, Graphics::Node * > * Callback);
+		void UnsetOnDestroyCallback(void);
+		void OnDestroy(Graphics::Node * Node);
+		Callback1< void, Graphics::Node * > * GetOnDestroyCallback(void);
 	private:
-		std::vector< Graphics::Node * > m_Nodes;
-		std::vector< Graphics::ParticleSystem * > m_ParticleSystems;
+		std::vector< Graphics::Scene * > m_Scenes;
+		Callback1< void, Graphics::Node * > * m_OnDestroyCallback;
 	};
+}
+
+inline void Graphics::Engine::SetOnDestroyCallback(Callback1< void, Graphics::Node * > * Callback)
+{
+	assert(m_OnDestroyCallback == 0);
+	m_OnDestroyCallback = Callback;
+}
+
+inline void Graphics::Engine::UnsetOnDestroyCallback(void)
+{
+	m_OnDestroyCallback = 0;
+}
+
+inline void Graphics::Engine::OnDestroy(Graphics::Node * Node)
+{
+	if(m_OnDestroyCallback != 0)
+	{
+		(*m_OnDestroyCallback)(Node);
+	}
+}
+
+inline Callback1< void, Graphics::Node * > * Graphics::Engine::GetOnDestroyCallback(void)
+{
+	return m_OnDestroyCallback;
 }
 
 #endif

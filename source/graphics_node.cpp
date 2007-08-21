@@ -17,23 +17,23 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include <assert.h>
+
 #include <algorithm>
 
+#include "graphics_engine.h"
 #include "graphics_node.h"
 
 Graphics::Node::Node(void) :
-	m_Container(0)
+	m_Container(0),
+	m_Engine(0)
 {
 }
 
 Graphics::Node::~Node(void)
 {
-	if(m_Container != 0)
-	{
-		m_Container->RemoveNode(this);
-		m_Container = 0;
-	}
-	Clear();
+	assert(m_Container == 0);
+	assert(m_Content.empty() == true);
 }
 
 void Graphics::Node::Render(void)
@@ -51,21 +51,30 @@ void Graphics::Node::Draw(void)
 
 void Graphics::Node::AddNode(Graphics::Node * Content)
 {
+	assert(Content->GetContainer() == 0);
+	assert(GetEngine() != 0);
+	assert(Content->GetEngine() == 0);
+	Content->SetEngine(GetEngine());
+	Content->SetContainer(this);
 	m_Content.push_back(Content);
 }
 
 void Graphics::Node::RemoveNode(Graphics::Node * Content)
 {
+	assert(Content->GetContainer() == this);
 	m_Content.erase(std::find(m_Content.begin(), m_Content.end(), Content));
+	Content->SetContainer(0);
 }
 
-void Graphics::Node::Clear(void)
+void Graphics::Node::Destroy(void)
 {
+	assert(GetContainer() == 0);
 	while(m_Content.empty() == false)
 	{
-		Graphics::Node * Content(m_Content.front());
+		Graphics::Node * Content(m_Content.back());
 		
-		Content->SetContainer(0);
-		delete Content;
+		RemoveNode(Content);
+		Content->Destroy();
 	}
+	GetEngine()->OnDestroy(this);
 }
