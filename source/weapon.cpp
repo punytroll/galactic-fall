@@ -24,6 +24,8 @@
 
 #include "color.h"
 #include "game_time.h"
+#include "globals.h"
+#include "graphics_model_object.h"
 #include "math.h"
 #include "math/matrix4f.h"
 #include "math/quaternion.h"
@@ -102,6 +104,19 @@ void Weapon::Update(float Seconds)
 		NewShot->SetVelocity(TheShip->GetVelocity() + Vector3f(ParticleVelocity[0], ParticleVelocity[1], 0.0f));
 		TheShip->GetCurrentSystem()->AddContent(NewShot);
 		m_NextTimeToFire = GameTime::Get() + GetWeaponClass()->GetReloadTime();
+		
+		// visualization
+		Graphics::ModelObject * ModelObject(new Graphics::ModelObject());
+		
+		ModelObject->SetColor(*(NewShot->GetWeaponClass()->GetParticleColor()));
+		ModelObject->SetModel(NewShot->GetWeaponClass()->GetParticleModel());
+		ModelObject->SetPosition(NewShot->GetPosition());
+		ModelObject->SetOrientation(NewShot->GetAngularPosition());
+		ModelObject->SetBlending(true);
+		ModelObject->SetLighting(false);
+		ModelObject->SetClearDepthBuffer(true);
+		NewShot->AddVisualization(ModelObject);
+		g_ShotLayer->AddNode(ModelObject);
 	}
 }
 

@@ -164,6 +164,7 @@ Galaxy * g_Galaxy(0);
 Graphics::Engine * g_GraphicsEngine(0);
 Graphics::Scene * g_MainScene(0);
 Graphics::Node * g_PlanetLayer(0);
+Graphics::Node * g_ShotLayer(0);
 Graphics::Node * g_ParticleSystemsLayer(0);
 ModelManager * g_ModelManager(0);
 ObjectFactory * g_ObjectFactory(0);
@@ -498,6 +499,18 @@ void CalculateMovements(System * System)
 				DeleteObject(TheShot);
 				TheShot = 0;
 			}
+			else
+			{
+				// update visualizations
+				std::vector< Graphics::Node * > & Visualizations(TheShot->GetVisualizations());
+				
+				for(std::vector< Graphics::Node * >::iterator VisualizationIterator = Visualizations.begin(); VisualizationIterator != Visualizations.end(); ++VisualizationIterator)
+				{
+					(*VisualizationIterator)->SetPosition(TheShot->GetPosition());
+					(*VisualizationIterator)->SetOrientation(TheShot->GetAngularPosition());
+				}
+			}
+			// test for collisions with ships
 			if(TheShot != 0)
 			{
 				for(std::list< Ship * >::const_iterator ShipIterator = Ships.begin(); ShipIterator != Ships.end(); ++ShipIterator)
@@ -686,12 +699,15 @@ void Render(System * System)
 	}
 	glClear(GL_COLOR_BUFFER_BIT);
 	glClear(GL_DEPTH_BUFFER_BIT);
+	// disable lighting by default, nodes have to activate it if they want it
+	glDisable(GL_LIGHTING);
 	g_MainScene->Render();
+	// now enable it for the rest
+	glEnable(GL_LIGHTING);
 	if(System != 0)
 	{
 		const std::list< Ship * > & Ships(System->GetShips());
 		const std::list< Commodity * > & Commodities(System->GetCommodities());
-		const std::list< Shot * > & Shots(System->GetShots());
 		
 		for(std::list< Commodity * >::const_iterator CommodityIterator = Commodities.begin(); CommodityIterator != Commodities.end(); ++CommodityIterator)
 		{
@@ -702,11 +718,6 @@ void Render(System * System)
 		{
 			glClear(GL_DEPTH_BUFFER_BIT);
 			(*ShipIterator)->Draw();
-		}
-		for(std::list< Shot * >::const_iterator ShotIterator = Shots.begin(); ShotIterator != Shots.end(); ++ShotIterator)
-		{
-			glClear(GL_DEPTH_BUFFER_BIT);
-			(*ShotIterator)->Draw();
 		}
 	}
 	// HUD
@@ -913,8 +924,10 @@ void OnOutputFocusEnterSystem(System * EnterSystem)
 	g_MainScene = new Graphics::Scene();
 	g_GraphicsEngine->AddScene(g_MainScene);
 	g_PlanetLayer = new Graphics::Node();
+	g_ShotLayer = new Graphics::Node();
 	g_ParticleSystemsLayer = new Graphics::Node();
 	g_MainScene->AddNode(g_PlanetLayer);
+	g_MainScene->AddNode(g_ShotLayer);
 	g_MainScene->AddNode(g_ParticleSystemsLayer);
 	
 	const std::vector< Planet * > & Planets(EnterSystem->GetPlanets());
@@ -929,6 +942,7 @@ void OnOutputFocusEnterSystem(System * EnterSystem)
 		ModelObject->SetPosition((*PlanetIterator)->GetPosition());
 		ModelObject->SetOrientation(Quaternion(true));
 		ModelObject->SetScale((*PlanetIterator)->GetRadialSize());
+		ModelObject->SetLighting(true);
 		(*PlanetIterator)->AddVisualization(ModelObject);
 		g_PlanetLayer->AddNode(ModelObject);
 	}
@@ -954,6 +968,10 @@ void OnGraphicsNodeDestroy(Graphics::Node * Node)
 	else if(Node == g_ParticleSystemsLayer)
 	{
 		g_ParticleSystemsLayer = 0;
+	}
+	else if(Node == g_ShotLayer)
+	{
+		g_ShotLayer = 0;
 	}
 	else if(Node == g_MainScene)
 	{

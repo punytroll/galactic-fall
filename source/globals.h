@@ -45,6 +45,7 @@ class TimeoutNotificationManager;
 namespace Graphics
 {
 	class Engine;
+	class Node;
 	class TextureManager;
 }
 
@@ -52,6 +53,7 @@ extern AssetClassManager * g_AssetClassManager;
 extern CommodityClassManager * g_CommodityClassManager;
 extern Galaxy * g_Galaxy;
 extern Graphics::Engine * g_GraphicsEngine;
+extern Graphics::Node * g_ShotLayer;
 extern ModelManager * g_ModelManager;
 extern ObjectFactory * g_ObjectFactory;
 extern ShipClassManager * g_ShipClassManager;

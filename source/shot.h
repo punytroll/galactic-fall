@@ -39,6 +39,7 @@ public:
 	float GetDamage(void) const;
 	const PhysicalObject * GetShooter(void) const;
 	const Vector3f & GetVelocity(void) const;
+	const WeaponClass * GetWeaponClass(void) const;
 	// setters
 	void SetAngularPosition(const Quaternion & AngularPosition);
 	void SetShooter(PhysicalObject * Shooter);
@@ -70,6 +71,11 @@ inline const PhysicalObject * Shot::GetShooter(void) const
 inline const Vector3f & Shot::GetVelocity(void) const
 {
 	return m_Velocity;
+}
+
+inline const WeaponClass * Shot::GetWeaponClass(void) const
+{
+	return m_WeaponClass;
 }
 
 inline void Shot::SetAngularPosition(const Quaternion & AngularPosition)
