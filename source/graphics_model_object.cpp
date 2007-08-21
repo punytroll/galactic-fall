@@ -25,7 +25,10 @@
 #include "model.h"
 
 Graphics::ModelObject::ModelObject(void) :
+	m_Blending(false),
+	m_ClearDepthBuffer(false),
 	m_Color(0),
+	m_Lighting(false),
 	m_Model(0),
 	m_Normalize(false),
 	m_Scale(1.0f)
@@ -41,10 +44,25 @@ void Graphics::ModelObject::Draw(void)
 {
 	if(m_Model != 0)
 	{
-		if(m_Normalize == true)
+		if(m_ClearDepthBuffer == true)
+		{
+			glClear(GL_DEPTH_BUFFER_BIT);
+		}
+		if((m_Normalize || m_Blending || m_Lighting) == true)
 		{
 			glPushAttrib(GL_ENABLE_BIT);
+		}
+		if(m_Normalize == true)
+		{
 			glEnable(GL_NORMALIZE);
+		}
+		if(m_Blending == true)
+		{
+			glEnable(GL_BLEND);
+		}
+		if(m_Lighting == true)
+		{
+			glEnable(GL_LIGHTING);
 		}
 		glPushMatrix();
 		glTranslatef(GetPosition()[0], GetPosition()[1], GetPosition()[2]);
@@ -53,20 +71,30 @@ void Graphics::ModelObject::Draw(void)
 		{
 			glScalef(m_Scale, m_Scale, m_Scale);
 		}
-		glMaterialf(GL_FRONT, GL_SHININESS, 20.0f);
-		if(m_Color != 0)
+		if(m_Lighting == true)
 		{
-			glMaterialfv(GL_FRONT, GL_DIFFUSE, m_Color->GetColor().m_V.m_A);
-			glMaterialfv(GL_FRONT, GL_SPECULAR, (Vector4f(1.0f, 1.0f, 1.0f, 1.0f) - m_Color->GetColor()).m_V.m_A);
+			glMaterialf(GL_FRONT, GL_SHININESS, 20.0f);
+			if(m_Color != 0)
+			{
+				glMaterialfv(GL_FRONT, GL_DIFFUSE, m_Color->GetColor().m_V.m_A);
+				glMaterialfv(GL_FRONT, GL_SPECULAR, (Vector4f(1.0f, 1.0f, 1.0f, 1.0f) - m_Color->GetColor()).m_V.m_A);
+			}
+			else
+			{
+				glMaterialfv(GL_FRONT, GL_DIFFUSE, Vector4f(1.0f, 1.0f, 1.0f, 1.0f).m_V.m_A);
+				glMaterialfv(GL_FRONT, GL_SPECULAR, Vector4f(0.0f, 0.0f, 0.0f, 1.0f).m_V.m_A);
+			}
 		}
 		else
 		{
-			glMaterialfv(GL_FRONT, GL_DIFFUSE, Vector4f(1.0f, 1.0f, 1.0f, 1.0f).m_V.m_A);
-			glMaterialfv(GL_FRONT, GL_SPECULAR, Vector4f(0.0f, 0.0f, 0.0f, 1.0f).m_V.m_A);
+			if(m_Color != 0)
+			{
+				glColor4fv(m_Color->GetColor().m_V.m_A);
+			}
 		}
 		m_Model->Draw();
 		glPopMatrix();
-		if(m_Normalize == true)
+		if((m_Normalize || m_Blending || m_Lighting) == true)
 		{
 			glPopAttrib();
 		}

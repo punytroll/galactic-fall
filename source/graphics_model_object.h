@@ -50,9 +50,24 @@ namespace Graphics
 		virtual void Draw(void);
 		
 		/**
-		 * @brief Set the color with which to draw this object.
+		 * @brief Set whether blending should be enabled for @em this node.
+		 **/
+		void SetBlending(bool Blending);
+		
+		/**
+		 * @brief Set whether drawing this node will clear the depth buffer.
+		 **/
+		void SetClearDepthBuffer(bool ClearDepthBuffer);
+		
+		/**
+		 * @brief Set the color with which to draw @em this object.
 		 **/
 		void SetColor(const Color & Color);
+		
+		/**
+		 * @brief Set whether lighting is enabled for @em this object.
+		 **/
+		void SetLighting(bool Lighting);
 		
 		/**
 		 * @brief Set the model to draw at this object.
@@ -71,11 +86,29 @@ namespace Graphics
 		 **/
 		void SetScale(float Scale);
 	private:
+		bool m_Blending;
+		bool m_ClearDepthBuffer;
 		Color * m_Color;
+		bool m_Lighting;
 		const Model * m_Model;
 		bool m_Normalize;
 		float m_Scale;
 	};
+}
+
+inline void Graphics::ModelObject::SetBlending(bool Blending)
+{
+	m_Blending = Blending;
+}
+
+inline void Graphics::ModelObject::SetClearDepthBuffer(bool ClearDepthBuffer)
+{
+	m_ClearDepthBuffer = ClearDepthBuffer;
+}
+
+inline void Graphics::ModelObject::SetLighting(bool Lighting)
+{
+	m_Lighting = Lighting;
 }
 
 inline void Graphics::ModelObject::SetModel(const Model * Model)

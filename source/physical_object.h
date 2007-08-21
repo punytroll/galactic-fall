@@ -40,6 +40,7 @@ public:
 	const std::string & GetName(void) const;
 	float GetRadialSize(void) const;
 	unsigned_numeric GetSpaceRequirement(void) const;
+	std::vector< Graphics::Node * > & GetVisualizations(void);
 	// setters
 	void SetName(const std::string & Name);
 	void SetRadialSize(float RadialSize);
@@ -69,6 +70,11 @@ inline float PhysicalObject::GetRadialSize(void) const
 inline unsigned_numeric PhysicalObject::GetSpaceRequirement(void) const
 {
 	return m_SpaceRequirement;
+}
+
+inline std::vector< Graphics::Node * > & PhysicalObject::GetVisualizations(void)
+{
+	return m_Visualizations;
 }
 
 inline void PhysicalObject::SetName(const std::string & Name)
