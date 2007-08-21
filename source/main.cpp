@@ -163,6 +163,8 @@ CommodityClassManager * g_CommodityClassManager(0);
 Galaxy * g_Galaxy(0);
 Graphics::Engine * g_GraphicsEngine(0);
 Graphics::Scene * g_MainScene(0);
+Graphics::Node * g_PlanetLayer(0);
+Graphics::Node * g_ParticleSystemsLayer(0);
 ModelManager * g_ModelManager(0);
 ObjectFactory * g_ObjectFactory(0);
 ShipClassManager * g_ShipClassManager(0);
@@ -441,7 +443,7 @@ Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSyst
 	{
 		NewParticleSystem = new Graphics::ParticleSystemExplosion();
 	}
-	g_MainScene->AddNode(NewParticleSystem);
+	g_ParticleSystemsLayer->AddNode(NewParticleSystem);
 	
 	return NewParticleSystem;
 }
@@ -910,6 +912,10 @@ void OnOutputFocusEnterSystem(System * EnterSystem)
 	// build the static setup of the scene
 	g_MainScene = new Graphics::Scene();
 	g_GraphicsEngine->AddScene(g_MainScene);
+	g_PlanetLayer = new Graphics::Node();
+	g_ParticleSystemsLayer = new Graphics::Node();
+	g_MainScene->AddNode(g_PlanetLayer);
+	g_MainScene->AddNode(g_ParticleSystemsLayer);
 	
 	const std::vector< Planet * > & Planets(EnterSystem->GetPlanets());
 	
@@ -924,7 +930,7 @@ void OnOutputFocusEnterSystem(System * EnterSystem)
 		ModelObject->SetOrientation(Quaternion(true));
 		ModelObject->SetScale((*PlanetIterator)->GetRadialSize());
 		(*PlanetIterator)->AddVisualization(ModelObject);
-		g_MainScene->AddNode(ModelObject);
+		g_PlanetLayer->AddNode(ModelObject);
 	}
 }
 
@@ -941,7 +947,18 @@ void OnOutputFocusLeaveSystem(System * System)
 
 void OnGraphicsNodeDestroy(Graphics::Node * Node)
 {
-	PhysicalObject::RemoveVisualizations(Node);
+	if(Node == g_PlanetLayer)
+	{
+		g_PlanetLayer = 0;
+	}
+	else if(Node == g_ParticleSystemsLayer)
+	{
+		g_ParticleSystemsLayer = 0;
+	}
+	else
+	{
+		PhysicalObject::RemoveVisualizations(Node);
+	}
 	delete Node;
 }
 
