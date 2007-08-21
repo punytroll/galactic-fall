@@ -434,13 +434,12 @@ Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSyst
 	if(ParticleSystemClassIdentifier == "hit")
 	{
 		NewParticleSystem = new Graphics::ParticleSystemHit();
-		g_GraphicsEngine->AddNode(NewParticleSystem);
 	}
 	else
 	{
 		NewParticleSystem = new Graphics::ParticleSystemExplosion();
-		g_GraphicsEngine->AddNode(NewParticleSystem);
 	}
+	g_GraphicsEngine->AddNode(NewParticleSystem);
 	
 	return NewParticleSystem;
 }
