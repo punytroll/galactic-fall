@@ -565,7 +565,7 @@ object_factory.o: object_factory.cpp $(commodity_h) $(commodity_class_h) $(commo
 perspective.o: perspective.cpp $(perspective_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-physical_object.o: physical_object.cpp $(physical_object_h)
+physical_object.o: physical_object.cpp $(graphics_node_h) $(physical_object_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 planet.o: planet.cpp $(color_h) $(asset_class_h) $(globals_h) $(model_h) $(model_manager_h) $(planet_h)
