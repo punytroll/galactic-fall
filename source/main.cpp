@@ -955,6 +955,10 @@ void OnGraphicsNodeDestroy(Graphics::Node * Node)
 	{
 		g_ParticleSystemsLayer = 0;
 	}
+	else if(Node == g_MainScene)
+	{
+		g_MainScene = 0;
+	}
 	else
 	{
 		PhysicalObject::RemoveVisualizations(Node);
