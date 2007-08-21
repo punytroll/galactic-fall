@@ -19,6 +19,8 @@
 
 #include "physical_object.h"
 
+std::map< Graphics::Node *, PhysicalObject * > PhysicalObject::m_VisualizationBackReferences;
+
 PhysicalObject::~PhysicalObject(void)
 {
 }
