@@ -163,6 +163,7 @@ CommodityClassManager * g_CommodityClassManager(0);
 Galaxy * g_Galaxy(0);
 Graphics::Engine * g_GraphicsEngine(0);
 Graphics::Scene * g_MainScene(0);
+Graphics::Node * g_CommodityLayer(0);
 Graphics::Node * g_PlanetLayer(0);
 Graphics::Node * g_ShotLayer(0);
 Graphics::Node * g_ParticleSystemsLayer(0);
@@ -482,6 +483,14 @@ void CalculateMovements(System * System)
 		for(std::list< Commodity * >::const_iterator CommodityIterator = Commodities.begin(); CommodityIterator != Commodities.end(); ++CommodityIterator)
 		{
 			(*CommodityIterator)->Move(Seconds);
+			// update visualizations
+			std::vector< Graphics::Node * > & Visualizations((*CommodityIterator)->GetVisualizations());
+			
+			for(std::vector< Graphics::Node * >::iterator VisualizationIterator = Visualizations.begin(); VisualizationIterator != Visualizations.end(); ++VisualizationIterator)
+			{
+				(*VisualizationIterator)->SetPosition((*CommodityIterator)->GetPosition());
+				(*VisualizationIterator)->SetOrientation((*CommodityIterator)->GetAngularPosition());
+			}
 		}
 		
 		const std::list< Shot * > & Shots(System->GetShots());
@@ -552,6 +561,18 @@ void CalculateMovements(System * System)
 										
 										TheCommodity->SetVelocity(TheShip->GetVelocity() * 0.8f + Vector3f(VelocityPart[0], VelocityPart[1], 0.0f));
 										TheShip->GetCurrentSystem()->AddContent(TheCommodity);
+										
+										// add visualization of the commodity
+										Graphics::ModelObject * ModelObject(new Graphics::ModelObject());
+										
+										ModelObject->SetColor(*(TheCommodity->GetCommodityClass()->GetColor()));
+										ModelObject->SetModel(TheCommodity->GetCommodityClass()->GetModel());
+										ModelObject->SetPosition(TheCommodity->GetPosition());
+										ModelObject->SetOrientation(TheCommodity->GetAngularPosition());
+										ModelObject->SetLighting(true);
+										ModelObject->SetClearDepthBuffer(true);
+										TheCommodity->AddVisualization(ModelObject);
+										g_CommodityLayer->AddNode(ModelObject);
 									}
 								}
 								DeleteObject(TheShip);
@@ -707,13 +728,7 @@ void Render(System * System)
 	if(System != 0)
 	{
 		const std::list< Ship * > & Ships(System->GetShips());
-		const std::list< Commodity * > & Commodities(System->GetCommodities());
 		
-		for(std::list< Commodity * >::const_iterator CommodityIterator = Commodities.begin(); CommodityIterator != Commodities.end(); ++CommodityIterator)
-		{
-			glClear(GL_DEPTH_BUFFER_BIT);
-			(*CommodityIterator)->Draw();
-		}
 		for(std::list< Ship * >::const_iterator ShipIterator = Ships.begin(); ShipIterator != Ships.end(); ++ShipIterator)
 		{
 			glClear(GL_DEPTH_BUFFER_BIT);
@@ -923,10 +938,12 @@ void OnOutputFocusEnterSystem(System * EnterSystem)
 	// build the static setup of the scene
 	g_MainScene = new Graphics::Scene();
 	g_GraphicsEngine->AddScene(g_MainScene);
+	g_CommodityLayer = new Graphics::Node();
+	g_ParticleSystemsLayer = new Graphics::Node();
 	g_PlanetLayer = new Graphics::Node();
 	g_ShotLayer = new Graphics::Node();
-	g_ParticleSystemsLayer = new Graphics::Node();
 	g_MainScene->AddNode(g_PlanetLayer);
+	g_MainScene->AddNode(g_CommodityLayer);
 	g_MainScene->AddNode(g_ShotLayer);
 	g_MainScene->AddNode(g_ParticleSystemsLayer);
 	
@@ -961,13 +978,17 @@ void OnOutputFocusLeaveSystem(System * System)
 
 void OnGraphicsNodeDestroy(Graphics::Node * Node)
 {
-	if(Node == g_PlanetLayer)
+	if(Node == g_CommodityLayer)
 	{
-		g_PlanetLayer = 0;
+		g_CommodityLayer = 0;
 	}
 	else if(Node == g_ParticleSystemsLayer)
 	{
 		g_ParticleSystemsLayer = 0;
+	}
+	else if(Node == g_PlanetLayer)
+	{
+		g_PlanetLayer = 0;
 	}
 	else if(Node == g_ShotLayer)
 	{

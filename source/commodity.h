@@ -37,6 +37,7 @@ public:
 	virtual void Draw(void) const;
 	void Move(float Seconds);
 	// getters
+	const Quaternion & GetAngularPosition(void) const;
 	const CommodityClass * GetCommodityClass(void) const;
 	float GetHull(void) const;
 	const Vector3f & GetVelocity(void) const;
@@ -52,6 +53,11 @@ private:
 	// no copy constructor
 	Commodity(const Commodity & Commodity);
 };
+
+inline const Quaternion & Commodity::GetAngularPosition(void) const
+{
+	return m_AngularPosition;
+}
 
 inline const CommodityClass * Commodity::GetCommodityClass(void) const
 {

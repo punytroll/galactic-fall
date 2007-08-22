@@ -51,17 +51,18 @@ namespace Graphics
 
 extern AssetClassManager * g_AssetClassManager;
 extern CommodityClassManager * g_CommodityClassManager;
+extern Graphics::Node * g_CommodityLayer;
 extern Galaxy * g_Galaxy;
+extern TimeoutNotificationManager * g_GameTimeTimeoutNotifications;
 extern Graphics::Engine * g_GraphicsEngine;
-extern Graphics::Node * g_ShotLayer;
 extern ModelManager * g_ModelManager;
 extern ObjectFactory * g_ObjectFactory;
+extern TimeoutNotificationManager * g_RealTimeTimeoutNotifications;
 extern ShipClassManager * g_ShipClassManager;
+extern Graphics::Node * g_ShotLayer;
 extern SlotClassManager * g_SlotClassManager;
 extern Graphics::TextureManager * g_TextureManager;
 extern UserInterface * g_UserInterface;
 extern WeaponClassManager * g_WeaponClassManager;
-extern TimeoutNotificationManager * g_GameTimeTimeoutNotifications;
-extern TimeoutNotificationManager * g_RealTimeTimeoutNotifications;
 
 #endif
