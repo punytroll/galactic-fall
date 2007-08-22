@@ -29,6 +29,7 @@
 #include "commodity_class.h"
 #include "game_time.h"
 #include "globals.h"
+#include "graphics_model_object.h"
 #include "map_knowledge.h"
 #include "math.h"
 #include "model.h"
@@ -261,6 +262,18 @@ void Ship::Update(float Seconds)
 					TheCommodity->SetPosition(GetPosition());
 					TheCommodity->SetVelocity(GetVelocity() * 0.8f + Vector3f(GetRandomFloat(-0.5f, 0.5f), GetRandomFloat(-0.5f, 0.5f), 0.0f));
 					GetCurrentSystem()->AddContent(TheCommodity);
+					
+					// add visualization
+					Graphics::ModelObject * ModelObject(new Graphics::ModelObject());
+					
+					ModelObject->SetColor(*(TheCommodity->GetCommodityClass()->GetColor()));
+					ModelObject->SetModel(TheCommodity->GetCommodityClass()->GetModel());
+					ModelObject->SetPosition(TheCommodity->GetPosition());
+					ModelObject->SetOrientation(TheCommodity->GetAngularPosition());
+					ModelObject->SetLighting(true);
+					ModelObject->SetClearDepthBuffer(true);
+					TheCommodity->AddVisualization(ModelObject);
+					g_CommodityLayer->AddNode(ModelObject);
 				}
 			}
 			m_Jettison = false;
