@@ -843,6 +843,11 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 	
 	NewShip->SetObjectIdentifier("::ship(" + NewShip->GetShipClass()->GetIdentifier() + ")" + IdentifierSuffix);
 	NewShip->SetPosition(Vector3f(GetRandomFloat(-200.0f, 200.0f), GetRandomFloat(-200.0f, 200.0f), 0.0f));
+	NewShip->SetAngularPosition(GetRandomFloat(0.0f, 2.0f * M_PI));
+	
+	Vector2f Velocity(GetRandomFloat(0.0f, NewShip->GetShipClass()->GetMaximumSpeed()), GetRandomFloat(NewShip->GetAngularPosition() - 0.1f, NewShip->GetAngularPosition() - 0.1f), Vector2f::InitializeMagnitudeAngle);
+	
+	NewShip->SetVelocity(Vector3f(Velocity[0], Velocity[1], 0.0f));
 	NewShip->SetFuel(NewShip->GetFuelCapacity());
 	NewShip->SetCurrentSystem(System);
 	
