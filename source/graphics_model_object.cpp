@@ -25,13 +25,13 @@
 #include "model.h"
 
 Graphics::ModelObject::ModelObject(void) :
-	m_Blending(false),
 	m_ClearDepthBuffer(false),
 	m_Color(0),
-	m_Lighting(false),
 	m_Model(0),
 	m_Normalize(false),
-	m_Scale(1.0f)
+	m_Scale(1.0f),
+	m_UseBlending(false),
+	m_UseLighting(false)
 {
 }
 
@@ -48,7 +48,7 @@ void Graphics::ModelObject::Draw(void)
 		{
 			glClear(GL_DEPTH_BUFFER_BIT);
 		}
-		if((m_Normalize || m_Blending || m_Lighting) == true)
+		if((m_Normalize || m_UseBlending || m_UseLighting) == true)
 		{
 			glPushAttrib(GL_ENABLE_BIT);
 		}
@@ -56,11 +56,11 @@ void Graphics::ModelObject::Draw(void)
 		{
 			glEnable(GL_NORMALIZE);
 		}
-		if(m_Blending == true)
+		if(m_UseBlending == true)
 		{
 			glEnable(GL_BLEND);
 		}
-		if(m_Lighting == true)
+		if(m_UseLighting == true)
 		{
 			glEnable(GL_LIGHTING);
 		}
@@ -71,7 +71,7 @@ void Graphics::ModelObject::Draw(void)
 		{
 			glScalef(m_Scale, m_Scale, m_Scale);
 		}
-		if(m_Lighting == true)
+		if(m_UseLighting == true)
 		{
 			glMaterialf(GL_FRONT, GL_SHININESS, 20.0f);
 			if(m_Color != 0)
@@ -94,7 +94,7 @@ void Graphics::ModelObject::Draw(void)
 		}
 		m_Model->Draw();
 		glPopMatrix();
-		if((m_Normalize || m_Blending || m_Lighting) == true)
+		if((m_Normalize || m_UseBlending || m_UseLighting) == true)
 		{
 			glPopAttrib();
 		}
