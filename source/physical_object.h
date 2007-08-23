@@ -105,13 +105,14 @@ inline void PhysicalObject::RemoveVisualizations(Graphics::Node * Visualization)
 	if(Iterator != m_VisualizationBackReferences.end())
 	{
 		Iterator->second->RemoveVisualization(Visualization);
-		m_VisualizationBackReferences.erase(Iterator);
+		// `Iterator` is invalid now
 	}
 }
 
 inline void PhysicalObject::RemoveVisualization(Graphics::Node * Visualization)
 {
 	m_Visualizations.erase(std::find(m_Visualizations.begin(), m_Visualizations.end(), Visualization));
+	m_VisualizationBackReferences.erase(m_VisualizationBackReferences.find(Visualization));
 }
 
 #endif
