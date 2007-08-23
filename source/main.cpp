@@ -165,6 +165,7 @@ Graphics::Engine * g_GraphicsEngine(0);
 Graphics::Scene * g_MainScene(0);
 Graphics::Node * g_CommodityLayer(0);
 Graphics::Node * g_PlanetLayer(0);
+Graphics::Node * g_ShipLayer(0);
 Graphics::Node * g_ShotLayer(0);
 Graphics::Node * g_ParticleSystemsLayer(0);
 ModelManager * g_ModelManager(0);
@@ -474,6 +475,18 @@ void CalculateMovements(System * System)
 				if((g_OutputMind == false) || (g_OutputMind->GetCharacter() == 0) || (g_OutputMind->GetCharacter()->GetShip() != Ship))
 				{
 					DeleteObject(Ship);
+					Ship = 0;
+				}
+			}
+			if(Ship != 0)
+			{
+				// update visualizations
+				std::vector< Graphics::Node * > & Visualizations(Ship->GetVisualizations());
+				
+				for(std::vector< Graphics::Node * >::iterator VisualizationIterator = Visualizations.begin(); VisualizationIterator != Visualizations.end(); ++VisualizationIterator)
+				{
+					(*VisualizationIterator)->SetPosition(Ship->GetPosition());
+					(*VisualizationIterator)->SetOrientation(Quaternion(Ship->GetAngularPosition(), Quaternion::InitializeRotationZ));
 				}
 			}
 		}
@@ -723,18 +736,6 @@ void Render(System * System)
 	// disable lighting by default, nodes have to activate it if they want it
 	glDisable(GL_LIGHTING);
 	g_MainScene->Render();
-	// now enable it for the rest
-	glEnable(GL_LIGHTING);
-	if(System != 0)
-	{
-		const std::list< Ship * > & Ships(System->GetShips());
-		
-		for(std::list< Ship * >::const_iterator ShipIterator = Ships.begin(); ShipIterator != Ships.end(); ++ShipIterator)
-		{
-			glClear(GL_DEPTH_BUFFER_BIT);
-			(*ShipIterator)->Draw();
-		}
-	}
 	// HUD
 	if((g_OutputMind == true) && (g_OutputMind->GetCharacter() != 0) && (g_OutputMind->GetCharacter()->GetShip() != 0) && (g_OutputMind->GetCharacter()->GetShip()->GetTarget() == true))
 	{
@@ -909,6 +910,18 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 	NewCharacter->AddContent(NewMind);
 	NewShip->AddContent(NewCharacter);
 	System->AddContent(NewShip);
+	
+	// add visualization
+	Graphics::ModelObject * Visualization(new Graphics::ModelObject());
+	
+	Visualization->SetClearDepthBuffer(true);
+	Visualization->SetDiffuseColor(*(NewShip->GetShipClass()->GetColor()));
+	Visualization->SetModel(NewShip->GetShipClass()->GetModel());
+	Visualization->SetUseLighting(true);
+	Visualization->SetPosition(NewShip->GetPosition());
+	Visualization->SetOrientation(Quaternion(NewShip->GetAngularPosition(), Quaternion::InitializeRotationZ));
+	NewShip->AddVisualization(Visualization);
+	g_ShipLayer->AddNode(Visualization);
 }
 
 void SpawnShipOnTimeout(System * SpawnInSystem)
@@ -946,10 +959,12 @@ void OnOutputFocusEnterSystem(System * EnterSystem)
 	g_CommodityLayer = new Graphics::Node();
 	g_ParticleSystemsLayer = new Graphics::Node();
 	g_PlanetLayer = new Graphics::Node();
+	g_ShipLayer = new Graphics::Node();
 	g_ShotLayer = new Graphics::Node();
 	g_MainScene->AddNode(g_PlanetLayer);
 	g_MainScene->AddNode(g_CommodityLayer);
 	g_MainScene->AddNode(g_ShotLayer);
+	g_MainScene->AddNode(g_ShipLayer);
 	g_MainScene->AddNode(g_ParticleSystemsLayer);
 	
 	const std::vector< Planet * > & Planets(EnterSystem->GetPlanets());
@@ -999,6 +1014,10 @@ void OnGraphicsNodeDestroy(Graphics::Node * Node)
 	else if(Node == g_PlanetLayer)
 	{
 		g_PlanetLayer = 0;
+	}
+	else if(Node == g_ShipLayer)
+	{
+		g_ShipLayer = 0;
 	}
 	else if(Node == g_ShotLayer)
 	{
@@ -2124,6 +2143,18 @@ void LoadSavegame(const Element * SaveElement)
 		PlayerShip->AddContent(PlayerCharacter);
 		g_CurrentSystem->AddContent(PlayerShip);
 		PlayerShip->SetCurrentSystem(g_CurrentSystem);
+		
+		// add visualization
+		Graphics::ModelObject * Visualization(new Graphics::ModelObject());
+		
+		Visualization->SetClearDepthBuffer(true);
+		Visualization->SetDiffuseColor(*(PlayerShip->GetShipClass()->GetColor()));
+		Visualization->SetModel(PlayerShip->GetShipClass()->GetModel());
+		Visualization->SetUseLighting(true);
+		Visualization->SetPosition(PlayerShip->GetPosition());
+		Visualization->SetOrientation(Quaternion(PlayerShip->GetAngularPosition(), Quaternion::InitializeRotationZ));
+		PlayerShip->AddVisualization(Visualization);
+		g_ShipLayer->AddNode(Visualization);
 	}
 	RealTime::Invalidate();
 	PopulateSystem(g_CurrentSystem);
