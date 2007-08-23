@@ -266,7 +266,7 @@ void Ship::Update(float Seconds)
 					// add visualization
 					Graphics::ModelObject * ModelObject(new Graphics::ModelObject());
 					
-					ModelObject->SetColor(*(TheCommodity->GetCommodityClass()->GetColor()));
+					ModelObject->SetDiffuseColor(*(TheCommodity->GetCommodityClass()->GetColor()));
 					ModelObject->SetModel(TheCommodity->GetCommodityClass()->GetModel());
 					ModelObject->SetPosition(TheCommodity->GetPosition());
 					ModelObject->SetOrientation(TheCommodity->GetAngularPosition());

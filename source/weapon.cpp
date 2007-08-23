@@ -108,7 +108,7 @@ void Weapon::Update(float Seconds)
 		// visualization
 		Graphics::ModelObject * ModelObject(new Graphics::ModelObject());
 		
-		ModelObject->SetColor(*(NewShot->GetWeaponClass()->GetParticleColor()));
+		ModelObject->SetDiffuseColor(*(NewShot->GetWeaponClass()->GetParticleColor()));
 		ModelObject->SetModel(NewShot->GetWeaponClass()->GetParticleModel());
 		ModelObject->SetPosition(NewShot->GetPosition());
 		ModelObject->SetOrientation(NewShot->GetAngularPosition());
