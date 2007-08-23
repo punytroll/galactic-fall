@@ -34,7 +34,7 @@ Graphics::Texture::~Texture(void)
 	if(m_Texture != 0)
 	{
 		glDeleteTextures(1, &m_Texture);
-		m_Texture == 0;
+		m_Texture = 0;
 	}
 }
 
