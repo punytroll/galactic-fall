@@ -569,7 +569,7 @@ void CalculateMovements(System * System)
 										ModelObject->SetModel(TheCommodity->GetCommodityClass()->GetModel());
 										ModelObject->SetPosition(TheCommodity->GetPosition());
 										ModelObject->SetOrientation(TheCommodity->GetAngularPosition());
-										ModelObject->SetLighting(true);
+										ModelObject->SetUseLighting(true);
 										ModelObject->SetClearDepthBuffer(true);
 										TheCommodity->AddVisualization(ModelObject);
 										g_CommodityLayer->AddNode(ModelObject);
@@ -964,7 +964,7 @@ void OnOutputFocusEnterSystem(System * EnterSystem)
 		ModelObject->SetPosition((*PlanetIterator)->GetPosition());
 		ModelObject->SetOrientation(Quaternion(true));
 		ModelObject->SetScale((*PlanetIterator)->GetRadialSize());
-		ModelObject->SetLighting(true);
+		ModelObject->SetUseLighting(true);
 		(*PlanetIterator)->AddVisualization(ModelObject);
 		g_PlanetLayer->AddNode(ModelObject);
 	}

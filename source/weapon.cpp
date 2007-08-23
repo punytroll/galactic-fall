@@ -112,8 +112,8 @@ void Weapon::Update(float Seconds)
 		ModelObject->SetModel(NewShot->GetWeaponClass()->GetParticleModel());
 		ModelObject->SetPosition(NewShot->GetPosition());
 		ModelObject->SetOrientation(NewShot->GetAngularPosition());
-		ModelObject->SetBlending(true);
-		ModelObject->SetLighting(false);
+		ModelObject->SetUseBlending(true);
+		ModelObject->SetUseLighting(false);
 		ModelObject->SetClearDepthBuffer(true);
 		NewShot->AddVisualization(ModelObject);
 		g_ShotLayer->AddNode(ModelObject);

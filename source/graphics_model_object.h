@@ -50,11 +50,6 @@ namespace Graphics
 		virtual void Draw(void);
 		
 		/**
-		 * @brief Set whether blending should be enabled for @em this node.
-		 **/
-		void SetBlending(bool Blending);
-		
-		/**
 		 * @brief Set whether drawing this node will clear the depth buffer.
 		 **/
 		void SetClearDepthBuffer(bool ClearDepthBuffer);
@@ -63,11 +58,6 @@ namespace Graphics
 		 * @brief Set the color with which to draw @em this object.
 		 **/
 		void SetColor(const Color & Color);
-		
-		/**
-		 * @brief Set whether lighting is enabled for @em this object.
-		 **/
-		void SetLighting(bool Lighting);
 		
 		/**
 		 * @brief Set the model to draw at this object.
@@ -85,30 +75,30 @@ namespace Graphics
 		 * @brief Set the scale at which to draw at this object.
 		 **/
 		void SetScale(float Scale);
+		
+		/**
+		 * @brief Set whether blending should be enabled for @em this node.
+		 **/
+		void SetUseBlending(bool UseBlending);
+		
+		/**
+		 * @brief Set whether lighting is enabled for @em this object.
+		 **/
+		void SetUseLighting(bool UseLighting);
 	private:
-		bool m_Blending;
 		bool m_ClearDepthBuffer;
 		Color * m_Color;
-		bool m_Lighting;
 		const Model * m_Model;
 		bool m_Normalize;
 		float m_Scale;
+		bool m_UseBlending;
+		bool m_UseLighting;
 	};
-}
-
-inline void Graphics::ModelObject::SetBlending(bool Blending)
-{
-	m_Blending = Blending;
 }
 
 inline void Graphics::ModelObject::SetClearDepthBuffer(bool ClearDepthBuffer)
 {
 	m_ClearDepthBuffer = ClearDepthBuffer;
-}
-
-inline void Graphics::ModelObject::SetLighting(bool Lighting)
-{
-	m_Lighting = Lighting;
 }
 
 inline void Graphics::ModelObject::SetModel(const Model * Model)
@@ -124,6 +114,16 @@ inline void Graphics::ModelObject::SetNormalize(bool Normalize)
 inline void Graphics::ModelObject::SetScale(float Scale)
 {
 	m_Scale = Scale;
+}
+
+inline void Graphics::ModelObject::SetUseBlending(bool UseBlending)
+{
+	m_UseBlending = UseBlending;
+}
+
+inline void Graphics::ModelObject::SetUseLighting(bool UseLighting)
+{
+	m_UseLighting = UseLighting;
 }
 
 #endif
