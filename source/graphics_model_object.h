@@ -57,7 +57,7 @@ namespace Graphics
 		/**
 		 * @brief Set the color with which to draw @em this object.
 		 **/
-		void SetColor(const Color & Color);
+		void SetDiffuseColor(const Color & DiffuseColor);
 		
 		/**
 		 * @brief Set the model to draw at this object.
@@ -87,7 +87,7 @@ namespace Graphics
 		void SetUseLighting(bool UseLighting);
 	private:
 		bool m_ClearDepthBuffer;
-		Color * m_Color;
+		Color * m_DiffuseColor;
 		const Model * m_Model;
 		bool m_Normalize;
 		float m_Scale;

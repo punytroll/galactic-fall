@@ -565,7 +565,7 @@ void CalculateMovements(System * System)
 										// add visualization of the commodity
 										Graphics::ModelObject * ModelObject(new Graphics::ModelObject());
 										
-										ModelObject->SetColor(*(TheCommodity->GetCommodityClass()->GetColor()));
+										ModelObject->SetDiffuseColor(*(TheCommodity->GetCommodityClass()->GetColor()));
 										ModelObject->SetModel(TheCommodity->GetCommodityClass()->GetModel());
 										ModelObject->SetPosition(TheCommodity->GetPosition());
 										ModelObject->SetOrientation(TheCommodity->GetAngularPosition());
@@ -958,7 +958,7 @@ void OnOutputFocusEnterSystem(System * EnterSystem)
 	{
 		Graphics::ModelObject * ModelObject(new Graphics::ModelObject());
 		
-		ModelObject->SetColor((*PlanetIterator)->GetColor());
+		ModelObject->SetDiffuseColor((*PlanetIterator)->GetColor());
 		ModelObject->SetModel(g_ModelManager->Get("planet"));
 		ModelObject->SetNormalize(true);
 		ModelObject->SetPosition((*PlanetIterator)->GetPosition());
