@@ -959,6 +959,11 @@ void OnOutputFocusEnterSystem(System * EnterSystem)
 		Graphics::ModelObject * ModelObject(new Graphics::ModelObject());
 		
 		ModelObject->SetDiffuseColor((*PlanetIterator)->GetColor());
+		
+		Vector4f SpecularColor(Vector4f(1.0f, 1.0f, 1.0f, 1.0f) - (*PlanetIterator)->GetColor().GetColor());
+		
+		ModelObject->SetSpecularColor(Color(SpecularColor[0], SpecularColor[1], SpecularColor[2], SpecularColor[3]));
+		ModelObject->SetShininess(20.0f);
 		ModelObject->SetModel(g_ModelManager->Get("planet"));
 		ModelObject->SetNormalize(true);
 		ModelObject->SetPosition((*PlanetIterator)->GetPosition());
