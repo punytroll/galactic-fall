@@ -30,6 +30,8 @@ Graphics::ModelObject::ModelObject(void) :
 	m_Model(0),
 	m_Normalize(false),
 	m_Scale(1.0f),
+	m_Shininess(0.0f),
+	m_SpecularColor(0),
 	m_UseBlending(false),
 	m_UseLighting(false)
 {
@@ -38,6 +40,7 @@ Graphics::ModelObject::ModelObject(void) :
 Graphics::ModelObject::~ModelObject(void)
 {
 	delete m_DiffuseColor;
+	delete m_SpecularColor;
 }
 
 void Graphics::ModelObject::Draw(void)
@@ -73,15 +76,22 @@ void Graphics::ModelObject::Draw(void)
 		}
 		if(m_UseLighting == true)
 		{
-			glMaterialf(GL_FRONT, GL_SHININESS, 20.0f);
 			if(m_DiffuseColor != 0)
 			{
 				glMaterialfv(GL_FRONT, GL_DIFFUSE, m_DiffuseColor->GetColor().m_V.m_A);
-				glMaterialfv(GL_FRONT, GL_SPECULAR, (Vector4f(1.0f, 1.0f, 1.0f, 1.0f) - m_DiffuseColor->GetColor()).m_V.m_A);
 			}
 			else
 			{
 				glMaterialfv(GL_FRONT, GL_DIFFUSE, Vector4f(1.0f, 1.0f, 1.0f, 1.0f).m_V.m_A);
+			}
+			if(m_SpecularColor != 0)
+			{
+				glMaterialf(GL_FRONT, GL_SHININESS, m_Shininess);
+				glMaterialfv(GL_FRONT, GL_SPECULAR, m_SpecularColor->GetColor().m_V.m_A);
+			}
+			else
+			{
+				glMaterialf(GL_FRONT, GL_SHININESS, 0.0f);
 				glMaterialfv(GL_FRONT, GL_SPECULAR, Vector4f(0.0f, 0.0f, 0.0f, 1.0f).m_V.m_A);
 			}
 		}
@@ -105,4 +115,10 @@ void Graphics::ModelObject::SetDiffuseColor(const Color & DiffuseColor)
 {
 	delete m_DiffuseColor;
 	m_DiffuseColor = new Color(DiffuseColor);
+}
+
+void Graphics::ModelObject::SetSpecularColor(const Color & SpecularColor)
+{
+	delete m_SpecularColor;
+	m_SpecularColor = new Color(SpecularColor);
 }

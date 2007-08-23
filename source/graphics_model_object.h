@@ -77,6 +77,16 @@ namespace Graphics
 		void SetScale(float Scale);
 		
 		/**
+		 * @brief Set the shininess which to draw @em this object.
+		 **/
+		void SetShininess(float Shininess);
+		
+		/**
+		 * @brief Set the specular color with which to draw @em this object.
+		 **/
+		void SetSpecularColor(const Color & SpecularColor);
+		
+		/**
 		 * @brief Set whether blending should be enabled for @em this node.
 		 **/
 		void SetUseBlending(bool UseBlending);
@@ -91,6 +101,8 @@ namespace Graphics
 		const Model * m_Model;
 		bool m_Normalize;
 		float m_Scale;
+		float m_Shininess;
+		Color * m_SpecularColor;
 		bool m_UseBlending;
 		bool m_UseLighting;
 	};
@@ -114,6 +126,11 @@ inline void Graphics::ModelObject::SetNormalize(bool Normalize)
 inline void Graphics::ModelObject::SetScale(float Scale)
 {
 	m_Scale = Scale;
+}
+
+inline void Graphics::ModelObject::SetShininess(float Shininess)
+{
+	m_Shininess = Shininess;
 }
 
 inline void Graphics::ModelObject::SetUseBlending(bool UseBlending)
