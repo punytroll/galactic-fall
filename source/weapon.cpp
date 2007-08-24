@@ -115,7 +115,7 @@ void Weapon::Update(float Seconds)
 		ModelObject->SetUseBlending(true);
 		ModelObject->SetUseLighting(false);
 		ModelObject->SetClearDepthBuffer(true);
-		NewShot->AddVisualization(ModelObject);
+		NewShot->SetVisualization(ModelObject);
 		g_ShotLayer->AddNode(ModelObject);
 	}
 }
