@@ -250,7 +250,7 @@ static void ReadCommodityClass(CommodityClassManager * CommodityClassManager, Ar
 	
 	NewCommodityClass->SetName(Name);
 	
-	Model * Model(g_ModelManager->Get(ModelIdentifier));
+	const Model * Model(g_ModelManager->Get(ModelIdentifier));
 	
 	if(Model == 0)
 	{
@@ -378,7 +378,7 @@ static void ReadShipClass(ShipClassManager * ShipClassManager, Arxx::Reference &
 	NewShipClass->SetMaximumSpeed(MaximumSpeed);
 	NewShipClass->SetMaximumAvailableSpace(static_cast< unsigned_numeric >(1000 * MaximumAvailableSpace));
 	
-	Model * Model(g_ModelManager->Get(ModelIdentifier));
+	const Model * Model(g_ModelManager->Get(ModelIdentifier));
 	
 	if(Model == 0)
 	{
@@ -672,7 +672,7 @@ static void ReadWeaponClass(WeaponClassManager * WeaponClassManager, Arxx::Refer
 	Reader >> Name >> ModelColor >> ModelIdentifier >> SlotClassIdentifier >> Orientation >> ReloadTime >> SpaceRequirement >> ParticleExitPosition >> ParticleExitSpeed >> ParticleDamage >> ParticleLifeTime >> ParticleModelIdentifier >> ParticleColor;
 	NewWeaponClass->SetName(Name);
 	
-	Model * WeaponClassModel(g_ModelManager->Get(ModelIdentifier));
+	const Model * WeaponClassModel(g_ModelManager->Get(ModelIdentifier));
 	
 	if(WeaponClassModel == 0)
 	{
@@ -689,7 +689,7 @@ static void ReadWeaponClass(WeaponClassManager * WeaponClassManager, Arxx::Refer
 	NewWeaponClass->SetParticleDamage(ParticleDamage);
 	NewWeaponClass->SetParticleLifeTime(ParticleLifeTime);
 	
-	Model * ParticleModel(g_ModelManager->Get(ParticleModelIdentifier));
+	const Model * ParticleModel(g_ModelManager->Get(ParticleModelIdentifier));
 	
 	if(ParticleModel == 0)
 	{

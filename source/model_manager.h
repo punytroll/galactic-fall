@@ -23,14 +23,13 @@
 #include <map>
 #include <string>
 
-class Element;
 class Model;
 
 class ModelManager
 {
 public:
 	~ModelManager(void);
-	Model * Get(const std::string & Identifier);
+	const Model * Get(const std::string & Identifier) const;
 	Model * Create(const std::string & Identifier);
 	void Destroy(const std::string & Identifier);
 private:
