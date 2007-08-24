@@ -556,7 +556,7 @@ mouse_button_listener.o: mouse_button_listener.cpp $(mouse_button_listener_h)
 mouse_motion_listener.o: mouse_motion_listener.cpp $(mouse_motion_listener_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-object.o: object.cpp $(object_h) $(real_time_h) $(string_cast_h) $(xml_stream_h)
+object.o: object.cpp $(graphics_node_h) $(object_h) $(real_time_h) $(string_cast_h) $(xml_stream_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 object_factory.o: object_factory.cpp $(commodity_h) $(commodity_class_h) $(commodity_class_manager_h) $(globals_h) $(object_factory_h) $(weapon_h) $(weapon_class_h) $(weapon_class_manager_h)
@@ -565,7 +565,7 @@ object_factory.o: object_factory.cpp $(commodity_h) $(commodity_class_h) $(commo
 perspective.o: perspective.cpp $(perspective_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-physical_object.o: physical_object.cpp $(graphics_node_h) $(physical_object_h)
+physical_object.o: physical_object.cpp $(physical_object_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 planet.o: planet.cpp $(color_h) $(asset_class_h) $(globals_h) $(model_h) $(model_manager_h) $(planet_h)

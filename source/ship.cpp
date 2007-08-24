@@ -272,7 +272,7 @@ void Ship::Update(float Seconds)
 					ModelObject->SetOrientation(TheCommodity->GetAngularPosition());
 					ModelObject->SetUseLighting(true);
 					ModelObject->SetClearDepthBuffer(true);
-					TheCommodity->AddVisualization(ModelObject);
+					TheCommodity->SetVisualization(ModelObject);
 					g_CommodityLayer->AddNode(ModelObject);
 				}
 			}

@@ -480,14 +480,9 @@ void CalculateMovements(System * System)
 			}
 			if(Ship != 0)
 			{
-				// update visualizations
-				std::vector< Graphics::Node * > & Visualizations(Ship->GetVisualizations());
-				
-				for(std::vector< Graphics::Node * >::iterator VisualizationIterator = Visualizations.begin(); VisualizationIterator != Visualizations.end(); ++VisualizationIterator)
-				{
-					(*VisualizationIterator)->SetPosition(Ship->GetPosition());
-					(*VisualizationIterator)->SetOrientation(Quaternion(Ship->GetAngularPosition(), Quaternion::InitializeRotationZ));
-				}
+				// update visualization
+				Ship->GetVisualization()->SetPosition(Ship->GetPosition());
+				Ship->GetVisualization()->SetOrientation(Quaternion(Ship->GetAngularPosition(), Quaternion::InitializeRotationZ));
 			}
 		}
 		
@@ -495,15 +490,12 @@ void CalculateMovements(System * System)
 		
 		for(std::list< Commodity * >::const_iterator CommodityIterator = Commodities.begin(); CommodityIterator != Commodities.end(); ++CommodityIterator)
 		{
-			(*CommodityIterator)->Move(Seconds);
-			// update visualizations
-			std::vector< Graphics::Node * > & Visualizations((*CommodityIterator)->GetVisualizations());
+			Commodity * Commodity(*CommodityIterator);
 			
-			for(std::vector< Graphics::Node * >::iterator VisualizationIterator = Visualizations.begin(); VisualizationIterator != Visualizations.end(); ++VisualizationIterator)
-			{
-				(*VisualizationIterator)->SetPosition((*CommodityIterator)->GetPosition());
-				(*VisualizationIterator)->SetOrientation((*CommodityIterator)->GetAngularPosition());
-			}
+			Commodity->Move(Seconds);
+			// update visualization
+			Commodity->GetVisualization()->SetPosition(Commodity->GetPosition());
+			Commodity->GetVisualization()->SetOrientation(Commodity->GetAngularPosition());
 		}
 		
 		const std::list< Shot * > & Shots(System->GetShots());
@@ -523,14 +515,9 @@ void CalculateMovements(System * System)
 			}
 			else
 			{
-				// update visualizations
-				std::vector< Graphics::Node * > & Visualizations(TheShot->GetVisualizations());
-				
-				for(std::vector< Graphics::Node * >::iterator VisualizationIterator = Visualizations.begin(); VisualizationIterator != Visualizations.end(); ++VisualizationIterator)
-				{
-					(*VisualizationIterator)->SetPosition(TheShot->GetPosition());
-					(*VisualizationIterator)->SetOrientation(TheShot->GetAngularPosition());
-				}
+				// update visualization
+				TheShot->GetVisualization()->SetPosition(TheShot->GetPosition());
+				TheShot->GetVisualization()->SetOrientation(TheShot->GetAngularPosition());
 			}
 			// test for collisions with ships
 			if(TheShot != 0)
@@ -584,7 +571,7 @@ void CalculateMovements(System * System)
 										ModelObject->SetOrientation(TheCommodity->GetAngularPosition());
 										ModelObject->SetUseLighting(true);
 										ModelObject->SetClearDepthBuffer(true);
-										TheCommodity->AddVisualization(ModelObject);
+										TheCommodity->SetVisualization(ModelObject);
 										g_CommodityLayer->AddNode(ModelObject);
 									}
 								}
@@ -920,7 +907,7 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 	Visualization->SetUseLighting(true);
 	Visualization->SetPosition(NewShip->GetPosition());
 	Visualization->SetOrientation(Quaternion(NewShip->GetAngularPosition(), Quaternion::InitializeRotationZ));
-	NewShip->AddVisualization(Visualization);
+	NewShip->SetVisualization(Visualization);
 	g_ShipLayer->AddNode(Visualization);
 }
 
@@ -985,7 +972,7 @@ void OnOutputFocusEnterSystem(System * EnterSystem)
 		ModelObject->SetOrientation(Quaternion(true));
 		ModelObject->SetScale((*PlanetIterator)->GetRadialSize());
 		ModelObject->SetUseLighting(true);
-		(*PlanetIterator)->AddVisualization(ModelObject);
+		(*PlanetIterator)->SetVisualization(ModelObject);
 		g_PlanetLayer->AddNode(ModelObject);
 	}
 }
@@ -1029,7 +1016,13 @@ void OnGraphicsNodeDestroy(Graphics::Node * Node)
 	}
 	else
 	{
-		PhysicalObject::RemoveVisualizations(Node);
+		Object * TheObject(Object::GetObject(Node));
+		
+		if(TheObject != 0)
+		{
+			assert(TheObject->GetVisualization() == Node);
+			TheObject->UnsetVisualization();
+		}
 	}
 	delete Node;
 }
@@ -2153,7 +2146,7 @@ void LoadSavegame(const Element * SaveElement)
 		Visualization->SetUseLighting(true);
 		Visualization->SetPosition(PlayerShip->GetPosition());
 		Visualization->SetOrientation(Quaternion(PlayerShip->GetAngularPosition(), Quaternion::InitializeRotationZ));
-		PlayerShip->AddVisualization(Visualization);
+		PlayerShip->SetVisualization(Visualization);
 		g_ShipLayer->AddNode(Visualization);
 	}
 	RealTime::Invalidate();
