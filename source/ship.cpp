@@ -40,6 +40,7 @@
 #include "slot_class.h"
 #include "string_cast.h"
 #include "system.h"
+#include "visualizations.h"
 #include "weapon.h"
 #include "weapon_class.h"
 
@@ -262,18 +263,7 @@ void Ship::Update(float Seconds)
 					TheCommodity->SetPosition(GetPosition());
 					TheCommodity->SetVelocity(GetVelocity() * 0.8f + Vector3f(GetRandomFloat(-0.5f, 0.5f), GetRandomFloat(-0.5f, 0.5f), 0.0f));
 					GetCurrentSystem()->AddContent(TheCommodity);
-					
-					// add visualization
-					Graphics::ModelObject * ModelObject(new Graphics::ModelObject());
-					
-					ModelObject->SetDiffuseColor(*(TheCommodity->GetCommodityClass()->GetColor()));
-					ModelObject->SetModel(TheCommodity->GetCommodityClass()->GetModel());
-					ModelObject->SetPosition(TheCommodity->GetPosition());
-					ModelObject->SetOrientation(TheCommodity->GetAngularPosition());
-					ModelObject->SetUseLighting(true);
-					ModelObject->SetClearDepthBuffer(true);
-					TheCommodity->SetVisualization(ModelObject);
-					g_CommodityLayer->AddNode(ModelObject);
+					VisualizeCommodity(TheCommodity, g_CommodityLayer);
 				}
 			}
 			m_Jettison = false;

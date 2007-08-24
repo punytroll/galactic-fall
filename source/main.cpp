@@ -88,6 +88,7 @@
 #include "timeout_notifications.h"
 #include "timing_dialog.h"
 #include "user_interface.h"
+#include "visualizations.h"
 #include "weapon.h"
 #include "weapon_class.h"
 #include "weapon_class_manager.h"
@@ -561,18 +562,8 @@ void CalculateMovements(System * System)
 										
 										TheCommodity->SetVelocity(TheShip->GetVelocity() * 0.8f + Vector3f(VelocityPart[0], VelocityPart[1], 0.0f));
 										TheShip->GetCurrentSystem()->AddContent(TheCommodity);
-										
 										// add visualization of the commodity
-										Graphics::ModelObject * ModelObject(new Graphics::ModelObject());
-										
-										ModelObject->SetDiffuseColor(*(TheCommodity->GetCommodityClass()->GetColor()));
-										ModelObject->SetModel(TheCommodity->GetCommodityClass()->GetModel());
-										ModelObject->SetPosition(TheCommodity->GetPosition());
-										ModelObject->SetOrientation(TheCommodity->GetAngularPosition());
-										ModelObject->SetUseLighting(true);
-										ModelObject->SetClearDepthBuffer(true);
-										TheCommodity->SetVisualization(ModelObject);
-										g_CommodityLayer->AddNode(ModelObject);
+										VisualizeCommodity(TheCommodity, g_CommodityLayer);
 									}
 								}
 								DeleteObject(TheShip);
@@ -897,18 +888,8 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 	NewCharacter->AddContent(NewMind);
 	NewShip->AddContent(NewCharacter);
 	System->AddContent(NewShip);
-	
 	// add visualization
-	Graphics::ModelObject * Visualization(new Graphics::ModelObject());
-	
-	Visualization->SetClearDepthBuffer(true);
-	Visualization->SetDiffuseColor(*(NewShip->GetShipClass()->GetColor()));
-	Visualization->SetModel(NewShip->GetShipClass()->GetModel());
-	Visualization->SetUseLighting(true);
-	Visualization->SetPosition(NewShip->GetPosition());
-	Visualization->SetOrientation(Quaternion(NewShip->GetAngularPosition(), Quaternion::InitializeRotationZ));
-	NewShip->SetVisualization(Visualization);
-	g_ShipLayer->AddNode(Visualization);
+	VisualizeShip(NewShip, g_ShipLayer);
 }
 
 void SpawnShipOnTimeout(System * SpawnInSystem)
@@ -958,22 +939,8 @@ void OnOutputFocusEnterSystem(System * EnterSystem)
 	
 	for(std::vector< Planet * >::const_iterator PlanetIterator = Planets.begin(); PlanetIterator != Planets.end(); ++PlanetIterator)
 	{
-		Graphics::ModelObject * ModelObject(new Graphics::ModelObject());
-		
-		ModelObject->SetDiffuseColor((*PlanetIterator)->GetColor());
-		
-		Vector4f SpecularColor(Vector4f(1.0f, 1.0f, 1.0f, 1.0f) - (*PlanetIterator)->GetColor().GetColor());
-		
-		ModelObject->SetSpecularColor(Color(SpecularColor[0], SpecularColor[1], SpecularColor[2], SpecularColor[3]));
-		ModelObject->SetShininess(20.0f);
-		ModelObject->SetModel(g_ModelManager->Get("planet"));
-		ModelObject->SetNormalize(true);
-		ModelObject->SetPosition((*PlanetIterator)->GetPosition());
-		ModelObject->SetOrientation(Quaternion(true));
-		ModelObject->SetScale((*PlanetIterator)->GetRadialSize());
-		ModelObject->SetUseLighting(true);
-		(*PlanetIterator)->SetVisualization(ModelObject);
-		g_PlanetLayer->AddNode(ModelObject);
+		// add visualization
+		VisualizePlanet(*PlanetIterator, g_PlanetLayer);
 	}
 }
 
@@ -2136,18 +2103,8 @@ void LoadSavegame(const Element * SaveElement)
 		PlayerShip->AddContent(PlayerCharacter);
 		g_CurrentSystem->AddContent(PlayerShip);
 		PlayerShip->SetCurrentSystem(g_CurrentSystem);
-		
 		// add visualization
-		Graphics::ModelObject * Visualization(new Graphics::ModelObject());
-		
-		Visualization->SetClearDepthBuffer(true);
-		Visualization->SetDiffuseColor(*(PlayerShip->GetShipClass()->GetColor()));
-		Visualization->SetModel(PlayerShip->GetShipClass()->GetModel());
-		Visualization->SetUseLighting(true);
-		Visualization->SetPosition(PlayerShip->GetPosition());
-		Visualization->SetOrientation(Quaternion(PlayerShip->GetAngularPosition(), Quaternion::InitializeRotationZ));
-		PlayerShip->SetVisualization(Visualization);
-		g_ShipLayer->AddNode(Visualization);
+		VisualizeShip(PlayerShip, g_ShipLayer);
 	}
 	RealTime::Invalidate();
 	PopulateSystem(g_CurrentSystem);
