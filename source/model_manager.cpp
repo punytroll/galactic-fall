@@ -28,9 +28,9 @@ ModelManager::~ModelManager(void)
 	}
 }
 
-Model * ModelManager::Get(const std::string & Identifier)
+const Model * ModelManager::Get(const std::string & Identifier) const
 {
-	std::map< std::string, Model * >::iterator ModelIterator(m_Models.find(Identifier));
+	std::map< std::string, Model * >::const_iterator ModelIterator(m_Models.find(Identifier));
 	
 	if(ModelIterator == m_Models.end())
 	{
