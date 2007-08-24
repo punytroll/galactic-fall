@@ -19,7 +19,27 @@ if options.out_file == None:
 	print "Set the file to write the littlem form to with '--out'."
 	exit(1)
 
-points = list()
+class PointManager:
+	class Point:
+		def __init__(self, x, y, z):
+			self.x = x
+			self.y = y
+			self.z = z
+	
+	def __init__(self):
+		self.__points = list()
+	
+	def add(self, x, y, z):
+		for (index, point) in enumerate(self.__points):
+			if point.x == x and point.y == y and point.z == z:
+				return index
+		self.__points.append(PointManager.Point(x, y, z))
+		return len(self.__points) - 1
+	
+	def get_points(self):
+		return self.__points
+
+points = PointManager()
 triangle_points = list()
 triangles = list()
 
@@ -39,12 +59,11 @@ for line in in_file.readlines():
 		normal_x /= normal_length
 		normal_y /= normal_length
 		normal_z /= normal_length
-		point_1_index, point_2_index, point_3_index = len(points), len(points) + 1, len(points) + 2
+		point_1_index = points.add(point_1_x, point_1_y, point_1_z)
+		point_2_index = points.add(point_2_x, point_2_y, point_2_z)
+		point_3_index = points.add(point_3_x, point_3_y, point_3_z)
 		triangle_point_1_index, triangle_point_2_index, triangle_point_3_index = len(triangle_points), len(triangle_points) + 1, len(triangle_points) + 2
 		triangle_index = len(triangles)
-		points.append((point_1_x, point_1_y, point_1_z))
-		points.append((point_2_x, point_2_y, point_2_z))
-		points.append((point_3_x, point_3_y, point_3_z))
 		triangle_points.append((point_1_index, normal_x, normal_y, normal_z))
 		triangle_points.append((point_2_index, normal_x, normal_y, normal_z))
 		triangle_points.append((point_3_index, normal_x, normal_y, normal_z))
@@ -63,13 +82,12 @@ for line in in_file.readlines():
 		normal_z /= normal_length
 		if normal_length == 0.0:
 			continue
-		point_1_index, point_2_index, point_3_index, point_4_index = len(points), len(points) + 1, len(points) + 2, len(points) + 3
+		point_1_index = points.add(point_1_x, point_1_y, point_1_z)
+		point_2_index = points.add(point_2_x, point_2_y, point_2_z)
+		point_3_index = points.add(point_3_x, point_3_y, point_3_z)
+		point_4_index = points.add(point_4_x, point_4_y, point_4_z)
 		triangle_point_1_index, triangle_point_2_index, triangle_point_3_index, triangle_point_4_index = len(triangle_points), len(triangle_points) + 1, len(triangle_points) + 2, len(triangle_points) + 3
 		triangle_1_index, triangle_2_index = len(triangles), len(triangles) + 1
-		points.append((point_1_x, point_1_y, point_1_z))
-		points.append((point_2_x, point_2_y, point_2_z))
-		points.append((point_3_x, point_3_y, point_3_z))
-		points.append((point_4_x, point_4_y, point_4_z))
 		triangle_points.append((point_1_index, normal_x, normal_y, normal_z))
 		triangle_points.append((point_2_index, normal_x, normal_y, normal_z))
 		triangle_points.append((point_3_index, normal_x, normal_y, normal_z))
@@ -83,8 +101,8 @@ xml_stream = XMLStream(out_file)
 xml_stream << element << "model"
 if options.identifier != None and options.identifier != "":
 	xml_stream << attribute << "identifier" << value << options.identifier
-for identifier, point in enumerate(points):
-	xml_stream << element << "point" << attribute << "identifier" << value << str(identifier) << attribute << "position-x" << value << str(point[0]) << attribute << "position-y" << value << str(point[1]) << attribute << "position-z" << value << str(point[2]) << end
+for identifier, point in enumerate(points.get_points()):
+	xml_stream << element << "point" << attribute << "identifier" << value << str(identifier) << attribute << "position-x" << value << str(point.x) << attribute << "position-y" << value << str(point.y) << attribute << "position-z" << value << str(point.z) << end
 for identifier, triangle_point in enumerate(triangle_points):
 	xml_stream << element << "triangle-point" << attribute << "identifier" << value << str(identifier) << attribute << "normal-x" << value << str(triangle_point[1]) << attribute << "normal-y" << value << str(triangle_point[2]) << attribute << "normal-z" << value << str(triangle_point[3])
 	xml_stream << element << "point" << attribute << "point-identifier" << value << str(triangle_point[0]) << end << end
