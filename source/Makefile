@@ -1,3 +1,5 @@
+-include ../configuration
+
 SOURCE_FILES = $(wildcard *.cpp)
 OBJECT_FILES = $(patsubst %.cpp,%.o,$(SOURCE_FILES))
 HEADER_DEPENDENCIES = $(foreach HEADER_FILE, $(wildcard *.h), $(HEADER_FILE) '$($(patsubst %.h,%_h,$(HEADER_FILE)))')
