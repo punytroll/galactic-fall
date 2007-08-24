@@ -38,6 +38,7 @@
 #include "system.h"
 #include "weapon.h"
 #include "weapon_class.h"
+#include "visualizations.h"
 
 Weapon::Weapon(const WeaponClass * WeaponClass) :
 	m_WeaponClass(WeaponClass),
@@ -104,19 +105,8 @@ void Weapon::Update(float Seconds)
 		NewShot->SetVelocity(TheShip->GetVelocity() + Vector3f(ParticleVelocity[0], ParticleVelocity[1], 0.0f));
 		TheShip->GetCurrentSystem()->AddContent(NewShot);
 		m_NextTimeToFire = GameTime::Get() + GetWeaponClass()->GetReloadTime();
-		
-		// visualization
-		Graphics::ModelObject * ModelObject(new Graphics::ModelObject());
-		
-		ModelObject->SetDiffuseColor(*(NewShot->GetWeaponClass()->GetParticleColor()));
-		ModelObject->SetModel(NewShot->GetWeaponClass()->GetParticleModel());
-		ModelObject->SetPosition(NewShot->GetPosition());
-		ModelObject->SetOrientation(NewShot->GetAngularPosition());
-		ModelObject->SetUseBlending(true);
-		ModelObject->SetUseLighting(false);
-		ModelObject->SetClearDepthBuffer(true);
-		NewShot->SetVisualization(ModelObject);
-		g_ShotLayer->AddNode(ModelObject);
+		// add visualization
+		VisualizeShot(NewShot, g_ShotLayer);
 	}
 }
 
