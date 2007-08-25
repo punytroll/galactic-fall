@@ -19,29 +19,96 @@ if options.out_file == None:
 	print "Set the file to write the littlem form to with '--out'."
 	exit(1)
 
-class PointManager:
-	class Point:
-		def __init__(self, x, y, z):
-			self.x = x
-			self.y = y
-			self.z = z
+class Point:
+	def __init__(self, identifier, x, y, z):
+		self.identifier = identifier
+		self.x = x
+		self.y = y
+		self.z = z
+		self.triangle_points = list()
 	
+	def add_triangle_point(self, triangle_point):
+		self.triangle_points.append(triangle_point)
+
+class Vector:
+	@staticmethod
+	def create_from_to(point_1, point_2):
+		return Vector(point_2.x - point_1.x, point_2.y - point_1.y, point_2.z - point_1.z)
+	
+	def __init__(self, x, y, z):
+		self.x = x
+		self.y = y
+		self.z = z
+	
+	def cross(self, other):
+		return Vector(self.y * other.z - self.z * other.y, self.z * other.x - self.x * other.z, self.x * other.y - self.y * other.x)
+	
+	def length(self):
+		return sqrt(self.x * self.x + self.y * self.y + self.z * self.z)
+	
+	def normalize(self):
+		length = self.length()
+		self.x /= length
+		self.y /= length
+		self.z /= length
+		return self
+
+class TrianglePoint:
+	def __init__(self, identifier, point, normal):
+		self.identifier = identifier
+		self.point = point
+		self.point.add_triangle_point(self)
+		self.normal = normal
+
+class Triangle:
+	def __init__(self, identifier, triangle_point_1, triangle_point_2, triangle_point_3):
+		self.identifier = identifier
+		self.triangle_point_1 = triangle_point_1
+		self.triangle_point_2 = triangle_point_2
+		self.triangle_point_3 = triangle_point_3
+
+class PointManager:
 	def __init__(self):
 		self.__points = list()
 	
 	def add(self, x, y, z):
 		for (index, point) in enumerate(self.__points):
 			if point.x == x and point.y == y and point.z == z:
-				return index
-		self.__points.append(PointManager.Point(x, y, z))
-		return len(self.__points) - 1
+				return point
+		point = Point(len(self.__points), x, y, z)
+		self.__points.append(point)
+		return point
 	
 	def get_points(self):
 		return self.__points
 
+class TrianglePointManager:
+	def __init__(self):
+		self.__triangle_points = list()
+	
+	def add(self, point, normal):
+		triangle_point = TrianglePoint(len(self.__triangle_points), point, normal)
+		self.__triangle_points.append(triangle_point)
+		return triangle_point
+	
+	def get_triangle_points(self):
+		return self.__triangle_points
+
+class TriangleManager:
+	def __init__(self):
+		self.__triangles = list()
+	
+	def add(self, triangle_point_1, triangle_point_2, triangle_point_3):
+		triangle = Triangle(len(self.__triangles), triangle_point_1, triangle_point_2, triangle_point_3)
+		self.__triangles.append(triangle)
+		return triangle
+	
+	def get_triangles(self):
+		return self.__triangles
+
 points = PointManager()
-triangle_points = list()
-triangles = list()
+triangle_points = TrianglePointManager()
+triangles = TriangleManager()
 
 in_file = open(options.in_file, "rb")
 
@@ -50,50 +117,36 @@ for line in in_file.readlines():
 	# we may have a triangle with 3 points
 	if len(splitted) == 9:
 		point_1_x, point_1_y, point_1_z, point_2_x, point_2_y, point_2_z, point_3_x, point_3_y, point_3_z = splitted
-		point_1_2_x, point_1_2_y, point_1_2_z = point_2_x - point_1_x, point_2_y - point_1_y, point_2_z - point_1_z
-		point_1_3_x, point_1_3_y, point_1_3_z = point_3_x - point_1_x, point_3_y - point_1_y, point_3_z - point_1_z
-		normal_x, normal_y, normal_z = point_1_2_y * point_1_3_z - point_1_2_z * point_1_3_y, point_1_2_z * point_1_3_x - point_1_2_x * point_1_3_z, point_1_2_x * point_1_3_y - point_1_2_y * point_1_3_x
-		normal_length = sqrt(normal_x * normal_x + normal_y * normal_y + normal_z * normal_z)
-		if normal_length == 0.0:
-			continue
-		normal_x /= normal_length
-		normal_y /= normal_length
-		normal_z /= normal_length
-		point_1_index = points.add(point_1_x, point_1_y, point_1_z)
-		point_2_index = points.add(point_2_x, point_2_y, point_2_z)
-		point_3_index = points.add(point_3_x, point_3_y, point_3_z)
-		triangle_point_1_index, triangle_point_2_index, triangle_point_3_index = len(triangle_points), len(triangle_points) + 1, len(triangle_points) + 2
-		triangle_index = len(triangles)
-		triangle_points.append((point_1_index, normal_x, normal_y, normal_z))
-		triangle_points.append((point_2_index, normal_x, normal_y, normal_z))
-		triangle_points.append((point_3_index, normal_x, normal_y, normal_z))
-		triangles.append((triangle_point_1_index, triangle_point_2_index, triangle_point_3_index))
+		point_1 = points.add(point_1_x, point_1_y, point_1_z)
+		point_2 = points.add(point_2_x, point_2_y, point_2_z)
+		point_3 = points.add(point_3_x, point_3_y, point_3_z)
+		vector_1_2 = Vector.create_from_to(point_1, point_2)
+		vector_1_3 = Vector.create_from_to(point_1, point_3)
+		normal = vector_1_2.cross(vector_1_3)
+		normal.normalize()
+		triangle_point_1 = triangle_points.add(point_1, normal)
+		triangle_point_2 = triangle_points.add(point_2, normal)
+		triangle_point_3 = triangle_points.add(point_3, normal)
+		triangles.add(triangle_point_1, triangle_point_2, triangle_point_3)
 	# we may also have a quad with 4 points
 	elif len(splitted) == 12:
 		# point 1 and 3 are shared
 		point_1_x, point_1_y, point_1_z, point_2_x, point_2_y, point_2_z, point_3_x, point_3_y, point_3_z, point_4_x, point_4_y, point_4_z = splitted
+		point_1 = points.add(point_1_x, point_1_y, point_1_z)
+		point_2 = points.add(point_2_x, point_2_y, point_2_z)
+		point_3 = points.add(point_3_x, point_3_y, point_3_z)
+		point_4 = points.add(point_4_x, point_4_y, point_4_z)
 		# the normal can be calculated from three points only
-		point_1_2_x, point_1_2_y, point_1_2_z = point_2_x - point_1_x, point_2_y - point_1_y, point_2_z - point_1_z
-		point_1_3_x, point_1_3_y, point_1_3_z = point_3_x - point_1_x, point_3_y - point_1_y, point_3_z - point_1_z
-		normal_x, normal_y, normal_z = point_1_2_y * point_1_3_z - point_1_2_z * point_1_3_y, point_1_2_z * point_1_3_x - point_1_2_x * point_1_3_z, point_1_2_x * point_1_3_y - point_1_2_y * point_1_3_x
-		normal_length = sqrt(normal_x * normal_x + normal_y * normal_y + normal_z * normal_z)
-		normal_x /= normal_length
-		normal_y /= normal_length
-		normal_z /= normal_length
-		if normal_length == 0.0:
-			continue
-		point_1_index = points.add(point_1_x, point_1_y, point_1_z)
-		point_2_index = points.add(point_2_x, point_2_y, point_2_z)
-		point_3_index = points.add(point_3_x, point_3_y, point_3_z)
-		point_4_index = points.add(point_4_x, point_4_y, point_4_z)
-		triangle_point_1_index, triangle_point_2_index, triangle_point_3_index, triangle_point_4_index = len(triangle_points), len(triangle_points) + 1, len(triangle_points) + 2, len(triangle_points) + 3
-		triangle_1_index, triangle_2_index = len(triangles), len(triangles) + 1
-		triangle_points.append((point_1_index, normal_x, normal_y, normal_z))
-		triangle_points.append((point_2_index, normal_x, normal_y, normal_z))
-		triangle_points.append((point_3_index, normal_x, normal_y, normal_z))
-		triangle_points.append((point_4_index, normal_x, normal_y, normal_z))
-		triangles.append((triangle_point_1_index, triangle_point_2_index, triangle_point_3_index))
-		triangles.append((triangle_point_1_index, triangle_point_3_index, triangle_point_4_index))
+		vector_1_2 = Vector.create_from_to(point_1, point_2)
+		vector_1_3 = Vector.create_from_to(point_1, point_3)
+		normal = vector_1_2.cross(vector_1_3)
+		normal.normalize()
+		triangle_point_1 = triangle_points.add(point_1, normal)
+		triangle_point_2 = triangle_points.add(point_2, normal)
+		triangle_point_3 = triangle_points.add(point_3, normal)
+		triangle_point_4 = triangle_points.add(point_4, normal)
+		triangles.add(triangle_point_1, triangle_point_2, triangle_point_3)
+		triangles.add(triangle_point_1, triangle_point_3, triangle_point_4)
 
 # now write the output
 out_file = open(options.out_file, "w")
@@ -101,14 +154,14 @@ xml_stream = XMLStream(out_file)
 xml_stream << element << "model"
 if options.identifier != None and options.identifier != "":
 	xml_stream << attribute << "identifier" << value << options.identifier
-for identifier, point in enumerate(points.get_points()):
-	xml_stream << element << "point" << attribute << "identifier" << value << str(identifier) << attribute << "position-x" << value << str(point.x) << attribute << "position-y" << value << str(point.y) << attribute << "position-z" << value << str(point.z) << end
-for identifier, triangle_point in enumerate(triangle_points):
-	xml_stream << element << "triangle-point" << attribute << "identifier" << value << str(identifier) << attribute << "normal-x" << value << str(triangle_point[1]) << attribute << "normal-y" << value << str(triangle_point[2]) << attribute << "normal-z" << value << str(triangle_point[3])
-	xml_stream << element << "point" << attribute << "point-identifier" << value << str(triangle_point[0]) << end << end
-for identifier, triangle in enumerate(triangles):
-	xml_stream << element << "triangle" << attribute << "identifier" << value << str(identifier)
-	xml_stream << element << "triangle-point" << attribute << "triangle-point-identifier" << value << str(triangle[0]) << end
-	xml_stream << element << "triangle-point" << attribute << "triangle-point-identifier" << value << str(triangle[1]) << end
-	xml_stream << element << "triangle-point" << attribute << "triangle-point-identifier" << value << str(triangle[2]) << end << end
+for point in points.get_points():
+	xml_stream << element << "point" << attribute << "identifier" << value << str(point.identifier) << attribute << "position-x" << value << str(point.x) << attribute << "position-y" << value << str(point.y) << attribute << "position-z" << value << str(point.z) << end
+for triangle_point in triangle_points.get_triangle_points():
+	xml_stream << element << "triangle-point" << attribute << "identifier" << value << str(triangle_point.identifier) << attribute << "normal-x" << value << str(triangle_point.normal.x) << attribute << "normal-y" << value << str(triangle_point.normal.y) << attribute << "normal-z" << value << str(triangle_point.normal.z)
+	xml_stream << element << "point" << attribute << "point-identifier" << value << str(triangle_point.point.identifier) << end << end
+for triangle in triangles.get_triangles():
+	xml_stream << element << "triangle" << attribute << "identifier" << value << str(triangle.identifier)
+	xml_stream << element << "triangle-point" << attribute << "triangle-point-identifier" << value << str(triangle.triangle_point_1.identifier) << end
+	xml_stream << element << "triangle-point" << attribute << "triangle-point-identifier" << value << str(triangle.triangle_point_2.identifier) << end
+	xml_stream << element << "triangle-point" << attribute << "triangle-point-identifier" << value << str(triangle.triangle_point_3.identifier) << end << end
 xml_stream << end
