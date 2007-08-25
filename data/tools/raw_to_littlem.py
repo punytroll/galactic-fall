@@ -6,9 +6,10 @@ from optparse import OptionParser
 from xml_stream import attribute, element, end, value, XMLStream
 
 parser = OptionParser()
-parser.add_option("-n", "--identifier", dest="identifier", help="The identifier of the new model.")
-parser.add_option("-i", "--in", dest="in_file", help="The file to convert from raw to littlem form.")
-parser.add_option("-o", "--out", dest="out_file", help="The file to put the littlem form into.")
+parser.add_option("-n", "--identifier", dest = "identifier", help = "The identifier of the new model.")
+parser.add_option("-i", "--in", dest = "in_file", help = "The file to convert from raw to littlem form.")
+parser.add_option("-o", "--out", dest = "out_file", help = "The file to put the littlem form into.")
+parser.add_option("-s", "--smooth", action = "store_true", default = False, dest = "smooth", help = "Set this option if you want the normals to smooth the surface.")
 
 # read the options and validate
 (options, args) = parser.parse_args()
@@ -52,6 +53,12 @@ class Vector:
 		self.y /= length
 		self.z /= length
 		return self
+	
+	def __iadd__(self, other):
+		self.x += other.x
+		self.y += other.y
+		self.z += other.z
+		return self
 
 class TrianglePoint:
 	def __init__(self, identifier, point, normal):
@@ -59,52 +66,87 @@ class TrianglePoint:
 		self.point = point
 		self.point.add_triangle_point(self)
 		self.normal = normal
+		self.triangles = list()
+	
+	def add_triangle(self, triangle):
+		self.triangles.append(triangle)
+	
+	def remove_triangle(self, triangle):
+		self.triangles.remove(triangle)
 
 class Triangle:
 	def __init__(self, identifier, triangle_point_1, triangle_point_2, triangle_point_3):
 		self.identifier = identifier
 		self.triangle_point_1 = triangle_point_1
+		self.triangle_point_1.add_triangle(self)
 		self.triangle_point_2 = triangle_point_2
+		self.triangle_point_2.add_triangle(self)
 		self.triangle_point_3 = triangle_point_3
+		self.triangle_point_3.add_triangle(self)
+	
+	def exchange_triangle_point(self, old_triangle_point, new_triangle_point):
+		if self.triangle_point_1 == old_triangle_point:
+			self.triangle_point_1.remove_triangle(self)
+			self.triangle_point_1 = new_triangle_point
+			self.triangle_point_1.add_triangle(self)
+		elif self.triangle_point_2 == old_triangle_point:
+			self.triangle_point_2.remove_triangle(self)
+			self.triangle_point_2 = new_triangle_point
+			self.triangle_point_2.add_triangle(self)
+		elif self.triangle_point_3 == old_triangle_point:
+			self.triangle_point_3.remove_triangle(self)
+			self.triangle_point_3 = new_triangle_point
+			self.triangle_point_3.add_triangle(self)
+		else:
+			raise Exception()
 
 class PointManager:
 	def __init__(self):
-		self.__points = list()
+		self.__points = dict()
 	
 	def add(self, x, y, z):
-		for (index, point) in enumerate(self.__points):
+		for point in self.__points.values():
 			if point.x == x and point.y == y and point.z == z:
 				return point
 		point = Point(len(self.__points), x, y, z)
-		self.__points.append(point)
+		self.__points[point.identifier] = point
 		return point
 	
+	def remove(self, identifier):
+		del self.__points[identifier]
+	
 	def get_points(self):
-		return self.__points
+		return self.__points.values()
 
 class TrianglePointManager:
 	def __init__(self):
-		self.__triangle_points = list()
+		self.__triangle_points = dict()
 	
 	def add(self, point, normal):
 		triangle_point = TrianglePoint(len(self.__triangle_points), point, normal)
-		self.__triangle_points.append(triangle_point)
+		self.__triangle_points[triangle_point.identifier] = triangle_point
 		return triangle_point
 	
+	def remove(self, identifier):
+		del self.__triangle_points[identifier]
+	
 	def get_triangle_points(self):
-		return self.__triangle_points
+		return self.__triangle_points.values()
 
 class TriangleManager:
 	def __init__(self):
-		self.__triangles = list()
+		self.__triangles = dict()
 	
 	def add(self, triangle_point_1, triangle_point_2, triangle_point_3):
 		triangle = Triangle(len(self.__triangles), triangle_point_1, triangle_point_2, triangle_point_3)
-		self.__triangles.append(triangle)
+		self.__triangles[triangle.identifier] = triangle
 		return triangle
 	
+	def remove(self, identifier):
+		del self.__triangles[identifier]
+	
 	def get_triangles(self):
-		return self.__triangles
+		return self.__triangles.values()
 
 points = PointManager()
 triangle_points = TrianglePointManager()
@@ -144,9 +186,27 @@ for line in in_file.readlines():
 		triangle_point_1 = triangle_points.add(point_1, normal)
 		triangle_point_2 = triangle_points.add(point_2, normal)
 		triangle_point_3 = triangle_points.add(point_3, normal)
-		triangle_point_4 = triangle_points.add(point_4, normal)
+		triangle_point_4 = triangle_points.add(point_1, normal)
+		triangle_point_5 = triangle_points.add(point_3, normal)
+		triangle_point_6 = triangle_points.add(point_4, normal)
 		triangles.add(triangle_point_1, triangle_point_2, triangle_point_3)
-		triangles.add(triangle_point_1, triangle_point_3, triangle_point_4)
+		triangles.add(triangle_point_4, triangle_point_5, triangle_point_6)
+
+# now apply the smoothing
+if options.smooth == True:
+	for point in points.get_points():
+		if len(point.triangle_points) > 1:
+			# calculate the new normal as the average normal from all connected triangle points
+			new_normal = Vector(0.0, 0.0, 0.0)
+			for triangle_point in point.triangle_points:
+				for i in range(len(triangle_point.triangles)):
+					new_normal += triangle_point.normal
+			new_normal.normalize()
+			new_triangle_point = triangle_points.add(point, new_normal)
+			for triangle_point in point.triangle_points:
+				if triangle_point != new_triangle_point:
+					for triangle in triangle_point.triangles:
+						triangle.exchange_triangle_point(triangle_point, new_triangle_point)
 
 # now write the output
 out_file = open(options.out_file, "w")
@@ -157,8 +217,9 @@ if options.identifier != None and options.identifier != "":
 for point in points.get_points():
 	xml_stream << element << "point" << attribute << "identifier" << value << str(point.identifier) << attribute << "position-x" << value << str(point.x) << attribute << "position-y" << value << str(point.y) << attribute << "position-z" << value << str(point.z) << end
 for triangle_point in triangle_points.get_triangle_points():
-	xml_stream << element << "triangle-point" << attribute << "identifier" << value << str(triangle_point.identifier) << attribute << "normal-x" << value << str(triangle_point.normal.x) << attribute << "normal-y" << value << str(triangle_point.normal.y) << attribute << "normal-z" << value << str(triangle_point.normal.z)
-	xml_stream << element << "point" << attribute << "point-identifier" << value << str(triangle_point.point.identifier) << end << end
+	if len(triangle_point.triangles) > 0:
+		xml_stream << element << "triangle-point" << attribute << "identifier" << value << str(triangle_point.identifier) << attribute << "normal-x" << value << str(triangle_point.normal.x) << attribute << "normal-y" << value << str(triangle_point.normal.y) << attribute << "normal-z" << value << str(triangle_point.normal.z)
+		xml_stream << element << "point" << attribute << "point-identifier" << value << str(triangle_point.point.identifier) << end << end
 for triangle in triangles.get_triangles():
 	xml_stream << element << "triangle" << attribute << "identifier" << value << str(triangle.identifier)
 	xml_stream << element << "triangle-point" << attribute << "triangle-point-identifier" << value << str(triangle.triangle_point_1.identifier) << end
