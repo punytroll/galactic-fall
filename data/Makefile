@@ -51,6 +51,11 @@ all_data = \
 	.data/widget_scanner.data \
 	.data/widget_scanner_display.data
 
+smooth_models = \
+	fighter \
+	planet \
+	shuttle
+
 definitions_xml = \
 	tools/definitions.xml
 
@@ -213,7 +218,7 @@ model_%.xml: models/%.xml $(littlem_to_xml_xsl)
 	xsltproc -output $@ tools/littlem_to_xml.xsl $<
 
 models/%.xml: models/%.raw $(raw_to_littlem_py)
-	python tools/raw_to_littlem.py --in=$< --out=$@ --identifier=$(subst models/,,$(subst .xml,,$@))
+	python tools/raw_to_littlem.py --in=$< --out=$@ --identifier=$(subst models/,,$(subst .xml,,$@)) $(subst $(subst models/,,$(subst .xml,,$@)),--smooth,$(findstring $(subst models/,,$(subst .xml,,$@)),$(smooth_models)))
 
 textures/%.tex: textures/%.vg $(rasterize_py)
 	python tools/rasterize.py --in=$< --out=$@ --sub-pixels=3 --dimensions=32x32
