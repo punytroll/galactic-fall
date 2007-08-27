@@ -49,17 +49,5 @@ void ScannerDisplay::Update(void)
 
 void ScannerDisplay::DrawInViewport(void) const
 {
-	// draw scanner
-	if((m_Owner == true) && (m_Owner->GetTarget() == true))
-	{
-		glPushAttrib(GL_ENABLE_BIT);
-		if((m_Owner->GetCurrentSystem() != 0) && (m_Owner->GetCurrentSystem()->GetStar() != 0))
-		{
-			glEnable(GL_LIGHTING);
-			glEnable(GL_LIGHT0);
-			glLightfv(GL_LIGHT0, GL_POSITION, Vector4f(m_Owner->GetCurrentSystem()->GetStar()->GetPosition()[0], m_Owner->GetCurrentSystem()->GetStar()->GetPosition()[1], 100.0f, 0.0f).m_V.m_A);
-		}
-		m_Owner->GetTarget()->Draw();
-		glPopAttrib();
-	}
+	/// @todo draw scanner
 }
