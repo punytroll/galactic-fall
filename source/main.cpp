@@ -479,7 +479,7 @@ void CalculateMovements(System * System)
 					Ship = 0;
 				}
 			}
-			if(Ship != 0)
+			if((Ship != 0) && (Ship->GetVisualization() != 0))
 			{
 				// update visualization
 				Ship->GetVisualization()->SetPosition(Ship->GetPosition());
@@ -935,12 +935,19 @@ void OnOutputFocusEnterSystem(System * EnterSystem)
 	g_MainScene->AddNode(g_ShipLayer);
 	g_MainScene->AddNode(g_ParticleSystemsLayer);
 	
+	// add visualizations for all objects in the system
 	const std::vector< Planet * > & Planets(EnterSystem->GetPlanets());
 	
 	for(std::vector< Planet * >::const_iterator PlanetIterator = Planets.begin(); PlanetIterator != Planets.end(); ++PlanetIterator)
 	{
-		// add visualization
 		VisualizePlanet(*PlanetIterator, g_PlanetLayer);
+	}
+	
+	const std::list< Ship * > & Ships(EnterSystem->GetShips());
+	
+	for(std::list< Ship * >::const_iterator ShipIterator = Ships.begin(); ShipIterator != Ships.end(); ++ShipIterator)
+	{
+		VisualizeShip(*ShipIterator, g_ShipLayer);
 	}
 }
 
