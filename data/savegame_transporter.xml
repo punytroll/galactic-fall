@@ -16,7 +16,7 @@
 		<fuel value="3.84"/>
 		<hull value="229.44"/>
 		<position x="20.0f" y="34.0f"/>
-		<angular-position value="-2.1"/>
+		<angular-position w="0.497571" x="0" y="0" z="-0.867423"/>
 		<velocity x="0" y="0"/>
 		<manifest>
 			<weapon object-identifier="::weapon(medium_laser)::ship(::ship(shuttle)::player_ship)" class-identifier="medium_laser" mounted-on="front_gun"/>
