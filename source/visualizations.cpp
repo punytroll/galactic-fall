@@ -71,7 +71,7 @@ void VisualizeShip(Ship * Ship, Graphics::Node * Container)
 	Visualization->SetClearDepthBuffer(true);
 	Visualization->SetDiffuseColor(*(Ship->GetShipClass()->GetColor()));
 	Visualization->SetModel(Ship->GetShipClass()->GetModel());
-	Visualization->SetOrientation(Quaternion(Ship->GetAngularPosition(), Quaternion::InitializeRotationZ));
+	Visualization->SetOrientation(Ship->GetAngularPosition());
 	Visualization->SetPosition(Ship->GetPosition());
 	Visualization->SetShininess(40.0f);
 	Visualization->SetSpecularColor(Color(0.45f, 0.45f, 0.45f, 1.0f));

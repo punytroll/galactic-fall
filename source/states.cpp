@@ -93,7 +93,11 @@ void FlyOverRandomPoint::Execute(void)
 	{
 		ToDestination /= sqrt(LengthSquared);
 		
-		float HeadingOffDestination(GetShortestRadians(GetMind()->GetCharacter()->GetShip()->GetAngularPosition(), GetRadians(Vector2f(ToDestination[0], ToDestination[1]))));
+		Vector3f Direction(1.0f, 0.0f, 0.0f);
+		
+		Direction *= GetMind()->GetCharacter()->GetShip()->GetAngularPosition();
+		
+		float HeadingOffDestination(GetShortestRadians(GetRadians(Vector2f(Direction[0], Direction[1])), GetRadians(Vector2f(ToDestination[0], ToDestination[1]))));
 		
 		if(HeadingOffDestination > 0.1)
 		{
@@ -112,9 +116,10 @@ void FlyOverRandomPoint::Execute(void)
 			GetMind()->GetCharacter()->GetShip()->SetTurnRight(0.0f);
 			GetMind()->GetCharacter()->GetShip()->SetTurnLeft(0.0f);
 			
-			Vector2f MaximumVelocity(GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetMaximumSpeed(), GetMind()->GetCharacter()->GetShip()->GetAngularPosition(), Vector2f::InitializeMagnitudeAngle);
+			Vector3f MaximumVelocity(GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetMaximumSpeed(), 0.0f, 0.0f);
 			
-			GetMind()->GetCharacter()->GetShip()->SetAccelerate((Vector3f(MaximumVelocity[0], MaximumVelocity[1], 0.0f) - GetMind()->GetCharacter()->GetShip()->GetVelocity()).SquaredLength() > 0.1f);
+			MaximumVelocity *= GetMind()->GetCharacter()->GetShip()->GetAngularPosition();
+			GetMind()->GetCharacter()->GetShip()->SetAccelerate((MaximumVelocity - GetMind()->GetCharacter()->GetShip()->GetVelocity()).SquaredLength() > 0.1f);
 		}
 	}
 	else
@@ -166,7 +171,11 @@ void TransporterPhase1::Execute(void)
 	{
 		ToDestination /= sqrt(DistanceSquared);
 		
-		float HeadingOffDestination(GetShortestRadians(GetMind()->GetCharacter()->GetShip()->GetAngularPosition(), GetRadians(Vector2f(ToDestination[0], ToDestination[1]))));
+		Vector3f Direction(1.0f, 0.0f, 0.0f);
+		
+		Direction *= GetMind()->GetCharacter()->GetShip()->GetAngularPosition();
+		
+		float HeadingOffDestination(GetShortestRadians(GetRadians(Vector2f(Direction[0], Direction[1])), GetRadians(Vector2f(ToDestination[0], ToDestination[1]))));
 		
 		if(HeadingOffDestination > 0.1)
 		{
@@ -185,9 +194,10 @@ void TransporterPhase1::Execute(void)
 			GetMind()->GetCharacter()->GetShip()->SetTurnRight(0.0f);
 			GetMind()->GetCharacter()->GetShip()->SetTurnLeft(0.0f);
 			
-			Vector2f MaximumVelocity(GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetMaximumSpeed(), GetMind()->GetCharacter()->GetShip()->GetAngularPosition(), Vector2f::InitializeMagnitudeAngle);
+			Vector3f MaximumVelocity(GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetMaximumSpeed(), 0.0f, 0.0f);
 			
-			GetMind()->GetCharacter()->GetShip()->SetAccelerate((Vector3f(MaximumVelocity[0], MaximumVelocity[1], 0.0f) - GetMind()->GetCharacter()->GetShip()->GetVelocity()).SquaredLength() > 0.1f);
+			MaximumVelocity *= GetMind()->GetCharacter()->GetShip()->GetAngularPosition();
+			GetMind()->GetCharacter()->GetShip()->SetAccelerate((MaximumVelocity - GetMind()->GetCharacter()->GetShip()->GetVelocity()).SquaredLength() > 0.1f);
 		}
 	}
 	else
@@ -221,8 +231,11 @@ void TransporterPhase2::Execute(void)
 	if(SpeedSquared > 2.0f)
 	{
 		Vector3f Velocity(-GetMind()->GetCharacter()->GetShip()->GetVelocity());
+		Vector3f Direction(1.0f, 0.0f, 0.0f);
 		
-		float HeadingOffReverse(GetShortestRadians(GetMind()->GetCharacter()->GetShip()->GetAngularPosition(), GetRadians(Vector2f(Velocity[0], Velocity[1]).Normalized())));
+		Direction *= GetMind()->GetCharacter()->GetShip()->GetAngularPosition();
+		
+		float HeadingOffReverse(GetShortestRadians(GetRadians(Vector2f(Direction[0], Direction[1])), GetRadians(Vector2f(Velocity[0], Velocity[1]).Normalized())));
 		
 		if(HeadingOffReverse > 0.1)
 		{
@@ -424,7 +437,11 @@ void TransporterPhase4::Execute(void)
 	{
 		ToDestination /= sqrt(LengthSquared);
 		
-		float HeadingOffDestination(GetShortestRadians(GetMind()->GetCharacter()->GetShip()->GetAngularPosition(), GetRadians(Vector2f(ToDestination[0], ToDestination[1]))));
+		Vector3f Direction(1.0f, 0.0f, 0.0f);
+		
+		Direction *= GetMind()->GetCharacter()->GetShip()->GetAngularPosition();
+		
+		float HeadingOffDestination(GetShortestRadians(GetRadians(Vector2f(Direction[0], Direction[1])), GetRadians(Vector2f(ToDestination[0], ToDestination[1]))));
 		
 		if(HeadingOffDestination > 0.1)
 		{
@@ -443,9 +460,10 @@ void TransporterPhase4::Execute(void)
 			GetMind()->GetCharacter()->GetShip()->SetTurnRight(0.0f);
 			GetMind()->GetCharacter()->GetShip()->SetTurnLeft(0.0f);
 			
-			Vector2f MaximumVelocity(GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetMaximumSpeed(), GetMind()->GetCharacter()->GetShip()->GetAngularPosition(), Vector2f::InitializeMagnitudeAngle);
+			Vector3f MaximumVelocity(GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetMaximumSpeed(), 0.0f, 0.0f);
 			
-			GetMind()->GetCharacter()->GetShip()->SetAccelerate((Vector3f(MaximumVelocity[0], MaximumVelocity[1], 0.0f) - GetMind()->GetCharacter()->GetShip()->GetVelocity()).SquaredLength() > 0.1f);
+			MaximumVelocity *= GetMind()->GetCharacter()->GetShip()->GetAngularPosition();
+			GetMind()->GetCharacter()->GetShip()->SetAccelerate((MaximumVelocity - GetMind()->GetCharacter()->GetShip()->GetVelocity()).SquaredLength() > 0.1f);
 		}
 	}
 	else
@@ -505,7 +523,11 @@ void Fight::Execute(void)
 		Length = ToDestination.Length();
 		ToDestination /= Length;
 		
-		float HeadingOffDestination(GetShortestRadians(GetMind()->GetCharacter()->GetShip()->GetAngularPosition(), GetRadians(Vector2f(ToDestination[0], ToDestination[1]))));
+		Vector3f Direction(1.0f, 0.0f, 0.0f);
+		
+		Direction *= GetMind()->GetCharacter()->GetShip()->GetAngularPosition();
+		
+		float HeadingOffDestination(GetShortestRadians(GetRadians(Vector2f(Direction[0], Direction[1])), GetRadians(Vector2f(ToDestination[0], ToDestination[1]))));
 		
 		GetMind()->GetCharacter()->GetShip()->SetFire(false);
 		if(HeadingOffDestination > 0.1)
@@ -525,9 +547,10 @@ void Fight::Execute(void)
 			GetMind()->GetCharacter()->GetShip()->SetTurnRight(0.0f);
 			GetMind()->GetCharacter()->GetShip()->SetTurnLeft(0.0f);
 			
-			Vector2f MaximumVelocity(GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetMaximumSpeed(), GetMind()->GetCharacter()->GetShip()->GetAngularPosition(), Vector2f::InitializeMagnitudeAngle);
+			Vector3f MaximumVelocity(GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetMaximumSpeed(), 0.0f, 0.0f);
 			
-			GetMind()->GetCharacter()->GetShip()->SetAccelerate((Vector3f(MaximumVelocity[0], MaximumVelocity[1], 0.0f) - GetMind()->GetCharacter()->GetShip()->GetVelocity()).SquaredLength() > 0.1f);
+			MaximumVelocity *= GetMind()->GetCharacter()->GetShip()->GetAngularPosition();
+			GetMind()->GetCharacter()->GetShip()->SetAccelerate((MaximumVelocity - GetMind()->GetCharacter()->GetShip()->GetVelocity()).SquaredLength() > 0.1f);
 			if(Length < 50.0f)
 			{
 				GetMind()->GetCharacter()->GetShip()->SetFire(true);
@@ -596,7 +619,11 @@ void ShootFarthestCargo::Execute(void)
 		Length = ToDestination.Length();
 		ToDestination /= Length;
 		
-		float HeadingOffDestination(GetShortestRadians(GetMind()->GetCharacter()->GetShip()->GetAngularPosition(), GetRadians(Vector2f(ToDestination[0], ToDestination[1]))));
+		Vector3f Direction(1.0f, 0.0f, 0.0f);
+		
+		Direction *= GetMind()->GetCharacter()->GetShip()->GetAngularPosition();
+		
+		float HeadingOffDestination(GetShortestRadians(GetRadians(Vector2f(Direction[0], Direction[1])), GetRadians(Vector2f(ToDestination[0], ToDestination[1]))));
 		
 		GetMind()->GetCharacter()->GetShip()->SetFire(false);
 		if(HeadingOffDestination > 0.1)
@@ -616,9 +643,10 @@ void ShootFarthestCargo::Execute(void)
 			GetMind()->GetCharacter()->GetShip()->SetTurnRight(0.0f);
 			GetMind()->GetCharacter()->GetShip()->SetTurnLeft(0.0f);
 			
-			Vector2f MaximumVelocity(GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetMaximumSpeed(), GetMind()->GetCharacter()->GetShip()->GetAngularPosition(), Vector2f::InitializeMagnitudeAngle);
+			Vector3f MaximumVelocity(GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetMaximumSpeed(), 0.0f, 0.0f);
 			
-			GetMind()->GetCharacter()->GetShip()->SetAccelerate((Vector3f(MaximumVelocity[0], MaximumVelocity[1], 0.0f) - GetMind()->GetCharacter()->GetShip()->GetVelocity()).SquaredLength() > 0.1f);
+			MaximumVelocity *= GetMind()->GetCharacter()->GetShip()->GetAngularPosition();
+			GetMind()->GetCharacter()->GetShip()->SetAccelerate((MaximumVelocity - GetMind()->GetCharacter()->GetShip()->GetVelocity()).SquaredLength() > 0.1f);
 			if(Length < 50.0f)
 			{
 				GetMind()->GetCharacter()->GetShip()->SetFire(true);
@@ -719,7 +747,11 @@ void RefuelPhase1::Execute(void)
 	{
 		ToDestination /= sqrt(DistanceSquared);
 		
-		float HeadingOffDestination(GetShortestRadians(GetMind()->GetCharacter()->GetShip()->GetAngularPosition(), GetRadians(Vector2f(ToDestination[0], ToDestination[1]))));
+		Vector3f Direction(1.0f, 0.0f, 0.0f);
+		
+		Direction *= GetMind()->GetCharacter()->GetShip()->GetAngularPosition();
+		
+		float HeadingOffDestination(GetShortestRadians(GetRadians(Vector2f(Direction[0], Direction[1])), GetRadians(Vector2f(ToDestination[0], ToDestination[1]))));
 		
 		if(HeadingOffDestination > 0.1)
 		{
@@ -738,9 +770,10 @@ void RefuelPhase1::Execute(void)
 			GetMind()->GetCharacter()->GetShip()->SetTurnRight(0.0f);
 			GetMind()->GetCharacter()->GetShip()->SetTurnLeft(0.0f);
 			
-			Vector2f MaximumVelocity(GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetMaximumSpeed(), GetMind()->GetCharacter()->GetShip()->GetAngularPosition(), Vector2f::InitializeMagnitudeAngle);
+			Vector3f MaximumVelocity(GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetMaximumSpeed(), 0.0f, 0.0f);
 			
-			GetMind()->GetCharacter()->GetShip()->SetAccelerate((Vector3f(MaximumVelocity[0], MaximumVelocity[1], 0.0f) - GetMind()->GetCharacter()->GetShip()->GetVelocity()).SquaredLength() > 0.1f);
+			MaximumVelocity *= GetMind()->GetCharacter()->GetShip()->GetAngularPosition();
+			GetMind()->GetCharacter()->GetShip()->SetAccelerate((MaximumVelocity - GetMind()->GetCharacter()->GetShip()->GetVelocity()).SquaredLength() > 0.1f);
 		}
 	}
 	else
@@ -774,7 +807,11 @@ void RefuelPhase2::Execute(void)
 	if(SpeedSquared > 2.0f)
 	{
 		Vector3f Velocity(-GetMind()->GetCharacter()->GetShip()->GetVelocity());
-		float HeadingOffReverse(GetShortestRadians(GetMind()->GetCharacter()->GetShip()->GetAngularPosition(), GetRadians(Vector2f(Velocity[0], Velocity[1]).Normalized())));
+		Vector3f Direction(1.0f, 0.0f, 0.0f);
+		
+		Direction *= GetMind()->GetCharacter()->GetShip()->GetAngularPosition();
+		
+		float HeadingOffReverse(GetShortestRadians(GetRadians(Vector2f(Direction[0], Direction[1])), GetRadians(Vector2f(Velocity[0], Velocity[1]).Normalized())));
 		
 		if(HeadingOffReverse > 0.1)
 		{

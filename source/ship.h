@@ -47,7 +47,7 @@ public:
 	bool m_Scoop;
 	// getters
 	float GetForwardThrust(void) const;
-	float GetAngularPosition(void) const;
+	const Quaternion & GetAngularPosition(void) const;
 	float GetFuel(void) const;
 	float GetHull(void) const;
 	float GetFuelCapacity(void) const;
@@ -65,6 +65,7 @@ public:
 	const std::map< std::string, Slot * > & GetSlots(void) const;
 	// setters
 	void SetAccelerate(bool Accelerate);
+	void SetAngularPosition(const Quaternion & AngularPosition);
 	void SetFire(bool Fire);
 	void SetFuel(float Fuel);
 	void SetHull(float Hull);
@@ -72,7 +73,6 @@ public:
 	void SetTurnLeft(float TurnLeft);
 	void SetTurnRight(float TurnRight);
 	void SetVelocity(const Vector3f & Velocity);
-	void SetAngularPosition(float AngularPosition);
 	void SetTarget(Reference< PhysicalObject > Target);
 	void SetLinkedSystemTarget(System * LinkedSystem);
 	void SetCurrentSystem(System * CurrentSystem);
@@ -95,7 +95,7 @@ private:
 	System * m_LinkedSystemTarget;
 	System * m_CurrentSystem;
 	Vector3f m_Velocity;
-	float m_AngularPosition;
+	Quaternion m_AngularPosition;
 };
 
 inline float Ship::GetForwardThrust(void) const
@@ -103,7 +103,7 @@ inline float Ship::GetForwardThrust(void) const
 	return m_ShipClass->GetForwardThrust();
 }
 
-inline float Ship::GetAngularPosition(void) const
+inline const Quaternion & Ship::GetAngularPosition(void) const
 {
 	return m_AngularPosition;
 }
@@ -205,7 +205,7 @@ inline void Ship::SetVelocity(const Vector3f & Velocity)
 	m_Velocity = Velocity;
 }
 
-inline void Ship::SetAngularPosition(float AngularPosition)
+inline void Ship::SetAngularPosition(const Quaternion & AngularPosition)
 {
 	m_AngularPosition = AngularPosition;
 }

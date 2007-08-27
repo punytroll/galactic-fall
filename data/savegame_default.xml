@@ -14,7 +14,7 @@
 	<ship object-identifier="::ship(shuttle)::player_ship" class-identifier="shuttle">
 		<fuel value="1"/>
 		<position x="0" y="0"/>
-		<angular-position value="0"/>
+		<angular-position w="1" x="0" y="0" z="0"/>
 		<velocity x="0" y="0"/>
 		<manifest/>
 		<name value="Stargazer Alpha 1-0"/>

@@ -483,7 +483,7 @@ void CalculateMovements(System * System)
 			{
 				// update visualization
 				Ship->GetVisualization()->SetPosition(Ship->GetPosition());
-				Ship->GetVisualization()->SetOrientation(Quaternion(Ship->GetAngularPosition(), Quaternion::InitializeRotationZ));
+				Ship->GetVisualization()->SetOrientation(Ship->GetAngularPosition());
 			}
 		}
 		
@@ -822,9 +822,9 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 	
 	NewShip->SetObjectIdentifier("::ship(" + NewShip->GetShipClass()->GetIdentifier() + ")" + IdentifierSuffix);
 	NewShip->SetPosition(Vector3f(GetRandomFloat(-200.0f, 200.0f), GetRandomFloat(-200.0f, 200.0f), 0.0f));
-	NewShip->SetAngularPosition(GetRandomFloat(0.0f, 2.0f * M_PI));
+	NewShip->SetAngularPosition(Quaternion(GetRandomFloat(0.0f, 2.0f * M_PI), Quaternion::InitializeRotationZ));
 	
-	Vector2f Velocity(GetRandomFloat(0.0f, NewShip->GetShipClass()->GetMaximumSpeed()), GetRandomFloat(NewShip->GetAngularPosition() - 0.1f, NewShip->GetAngularPosition() - 0.1f), Vector2f::InitializeMagnitudeAngle);
+	Vector2f Velocity(GetRandomFloat(0.0f, NewShip->GetShipClass()->GetMaximumSpeed()), GetRandomFloat(0.0f, 2.0f * M_PI), Vector2f::InitializeMagnitudeAngle);
 	
 	NewShip->SetVelocity(Vector3f(Velocity[0], Velocity[1], 0.0f));
 	NewShip->SetFuel(NewShip->GetFuelCapacity());
@@ -1153,7 +1153,7 @@ void SaveGame(std::ostream & OStream)
 	XML << element << "fuel" << attribute << "value" << value << Ship->GetFuel() << end;
 	XML << element << "hull" << attribute << "value" << value << Ship->GetHull() << end;
 	XML << element << "position" << attribute << "x" << value << Ship->GetPosition().m_V.m_A[0] << attribute << "y" << value << Ship->GetPosition().m_V.m_A[1] << end;
-	XML << element << "angular-position" << attribute << "value" << value << Ship->GetAngularPosition() << end;
+	XML << element << "angular-position" << attribute << "w" << value << Ship->GetAngularPosition()[0] << attribute << "x" << Ship->GetAngularPosition()[1] << attribute << "y" << Ship->GetAngularPosition()[2] << attribute << "z" << Ship->GetAngularPosition()[3] << end;
 	XML << element << "velocity" << attribute << "x" << value << Ship->GetVelocity().m_V.m_A[0] << attribute << "y" << value << Ship->GetVelocity().m_V.m_A[1] << end;
 	XML << element << "manifest";
 	
@@ -2025,7 +2025,7 @@ void LoadSavegame(const Element * SaveElement)
 				}
 				else if((*ShipChild)->GetName() == "angular-position")
 				{
-					PlayerShip->SetAngularPosition(from_string_cast< float >((*ShipChild)->GetAttribute("value")));
+					PlayerShip->SetAngularPosition(Quaternion(from_string_cast< float >((*ShipChild)->GetAttribute("w")), from_string_cast< float >((*ShipChild)->GetAttribute("x")), from_string_cast< float >((*ShipChild)->GetAttribute("y")), from_string_cast< float >((*ShipChild)->GetAttribute("z"))));
 				}
 				else if((*ShipChild)->GetName() == "manifest")
 				{

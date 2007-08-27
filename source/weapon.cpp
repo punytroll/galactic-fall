@@ -78,14 +78,14 @@ void Weapon::Update(float Seconds)
 		ShotPosition *= GetOrientation();
 		ShotPosition *= GetSlot()->GetOrientation();
 		ShotPosition += SlotPosition;
-		ShotPosition *= Quaternion(TheShip->GetAngularPosition(), Quaternion::InitializeRotationZ);
+		ShotPosition *= TheShip->GetAngularPosition();
 		ShotPosition += ShipPosition;
 		NewShot->SetPosition(ShotPosition);
 		
 		// calculating the shot's angular position in world coordinate system
 		Quaternion ShotAngularPosition(true);
 		
-		ShotAngularPosition *= Quaternion(TheShip->GetAngularPosition(), Quaternion::InitializeRotationZ);
+		ShotAngularPosition *= TheShip->GetAngularPosition();
 		ShotAngularPosition *= GetSlot()->GetOrientation();
 		ShotAngularPosition *= GetOrientation();
 		NewShot->SetAngularPosition(ShotAngularPosition);

@@ -32,6 +32,7 @@
 #include "graphics_model_object.h"
 #include "map_knowledge.h"
 #include "math.h"
+#include "math/matrix4f.h"
 #include "model.h"
 #include "model_manager.h"
 #include "ship.h"
@@ -60,7 +61,7 @@ Ship::Ship(const ShipClass * ShipClass) :
 	m_LinkedSystemTarget(0),
 	m_CurrentSystem(0),
 	m_Velocity(true),
-	m_AngularPosition(0.0f)
+	m_AngularPosition(true)
 {
 	SetRadialSize(m_ShipClass->GetModel()->GetRadialSize());
 	
@@ -80,7 +81,7 @@ void Ship::Draw(void) const
 {
 	glPushMatrix();
 	glTranslatef(m_Position.m_V.m_A[0], m_Position.m_V.m_A[1], 0.0f);
-	glRotatef(m_AngularPosition * 180.0f / M_PI, 0.0f, 0.0f, 1.0f);
+	glMultMatrixf(Matrix4f(GetAngularPosition()).Transpose().Matrix());
 	glMaterialfv(GL_FRONT, GL_SPECULAR, Vector4f(0.0f, 0.0f, 0.0f, 1.0f).m_V.m_A);
 	if(GetShipClass()->GetColor() != 0)
 	{
@@ -142,7 +143,7 @@ void Ship::Update(float Seconds)
 			Direction.Normalize();
 			m_Position = Direction * -300.0f;
 			m_Velocity = Direction * GetShipClass()->GetMaximumSpeed();
-			m_AngularPosition = GetRadians(Vector2f(Direction[0], Direction[1]));
+			m_AngularPosition = Quaternion(GetRadians(Vector2f(Direction[0], Direction[1])), Quaternion::InitializeRotationZ);
 			// set up the ship in the new system
 			SetCurrentSystem(GetLinkedSystemTarget());
 			NewSystem->AddContent(this);
@@ -208,7 +209,7 @@ void Ship::Update(float Seconds)
 			
 			if(m_Fuel >= FuelConsumption)
 			{
-				m_AngularPosition += GetTurnSpeed() * Seconds * m_TurnLeft;
+				m_AngularPosition *= Quaternion(GetTurnSpeed() * Seconds * m_TurnLeft, Quaternion::InitializeRotationZ);
 				m_Fuel -= FuelConsumption;
 			}
 		}
@@ -218,7 +219,7 @@ void Ship::Update(float Seconds)
 			
 			if(m_Fuel >= FuelConsumption)
 			{
-				m_AngularPosition -= GetTurnSpeed() * Seconds * m_TurnRight;
+				m_AngularPosition *= Quaternion(-GetTurnSpeed() * Seconds * m_TurnRight, Quaternion::InitializeRotationZ);
 				m_Fuel -= FuelConsumption;
 			}
 		}
@@ -230,8 +231,9 @@ void Ship::Update(float Seconds)
 			
 			if(m_Fuel >= FuelConsumption)
 			{
-				Vector2f ForwardThrust(GetForwardThrust(), m_AngularPosition, Vector2f::InitializeMagnitudeAngle);
+				Vector3f ForwardThrust(GetForwardThrust(), 0.0f, 0.0f);
 				
+				ForwardThrust *= m_AngularPosition;
 				ForwardThrust *= Seconds;
 				m_Velocity += Vector3f(ForwardThrust[0], ForwardThrust[1], 0.0f);
 				ForwardThrust *= 0.5f * Seconds;
