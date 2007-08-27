@@ -103,32 +103,3 @@ void Weapon::Update(float Seconds)
 		VisualizeShot(NewShot, g_ShotLayer);
 	}
 }
-
-void Weapon::Draw(void) const
-{
-	// the OpenGL context is positioned at the containers origin and rotated according to the conatiners orientation
-	if(GetWeaponClass()->GetModel() != 0)
-	{
-		glMaterialfv(GL_FRONT, GL_SPECULAR, Vector4f(0.0f, 0.0f, 0.0f, 1.0f).m_V.m_A);
-		if(GetWeaponClass()->GetModelColor() != 0)
-		{
-			glMaterialfv(GL_FRONT, GL_DIFFUSE, GetWeaponClass()->GetModelColor()->GetColor().m_V.m_A);
-		}
-		else
-		{
-			glMaterialfv(GL_FRONT, GL_DIFFUSE, Vector4f(1.0f, 1.0f, 1.0f, 1.0f).m_V.m_A);
-		}
-		
-		const Vector3f & SlotPosition(GetSlot()->GetPosition());
-		
-		glPushMatrix();
-		glTranslatef(SlotPosition[0], SlotPosition[1], SlotPosition[2]);
-		
-		Quaternion WeaponOrientation(GetSlot()->GetOrientation());
-		
-		WeaponOrientation *= GetOrientation();
-		glMultMatrixf(Matrix4f(WeaponOrientation).Transpose().Matrix());
-		GetWeaponClass()->GetModel()->Draw();
-		glPopMatrix();
-	}
-}

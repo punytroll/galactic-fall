@@ -30,7 +30,6 @@ class PhysicalObject : public Position
 {
 public:
 	virtual ~PhysicalObject(void);
-	virtual void Draw(void) const = 0;
 	// getters
 	const std::string & GetName(void) const;
 	float GetRadialSize(void) const;

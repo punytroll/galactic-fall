@@ -70,7 +70,6 @@ public:
 	void SetDescription(const std::string & Description);
 	void SetSize(const float & Size);
 	void SetColor(const Color & Color);
-	virtual void Draw(void) const;
 	PlanetAssetClass * CreatePlanetAssetClass(const AssetClass * AssetClass);
 private:
 	std::string m_Identifier;

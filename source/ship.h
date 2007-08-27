@@ -38,7 +38,6 @@ class Ship : public PhysicalObject
 {
 public:
 	Ship(const ShipClass * ShipClass);
-	void Draw(void) const;
 	void Update(float Seconds);
 	// controls
 	bool m_Jettison;

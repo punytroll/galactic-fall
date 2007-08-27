@@ -75,37 +75,6 @@ void Planet::SetColor(const Color & NewColor)
 	m_Color = new Color(NewColor);
 }
 
-void Planet::Draw(void) const
-{
-	glPushAttrib(GL_ENABLE_BIT);
-	glPushMatrix();
-	glTranslatef(m_Position.m_V.m_A[0], m_Position.m_V.m_A[1], 0.0f);
-	glMaterialf(GL_FRONT, GL_SHININESS, 20.0f);
-	if(m_Color != 0)
-	{
-		glMaterialfv(GL_FRONT, GL_DIFFUSE, m_Color->GetColor().m_V.m_A);
-		glMaterialfv(GL_FRONT, GL_SPECULAR, (Vector4f(1.0f, 1.0f, 1.0f, 1.0f) - m_Color->GetColor()).m_V.m_A);
-	}
-	else
-	{
-		glMaterialfv(GL_FRONT, GL_DIFFUSE, Vector4f(1.0f, 1.0f, 1.0f, 1.0f).m_V.m_A);
-		glMaterialfv(GL_FRONT, GL_SPECULAR, Vector4f(0.0f, 0.0f, 0.0f, 1.0f).m_V.m_A);
-	}
-	glEnable(GL_NORMALIZE);
-	glScalef(GetRadialSize(), GetRadialSize(), GetRadialSize());
-	g_ModelManager->Get("planet")->Draw();
-	/* TODO: This code allows an athmosphere around the planet ... optimize and make usable via a planet property
-	glEnable(GL_BLEND);
-	glMaterialf(GL_FRONT, GL_SHININESS, 0.0f);
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, Vector4f(1.0f, 1.0f, 1.0f, 0.35f).m_V.m_A);
-	glMaterialfv(GL_FRONT, GL_SPECULAR, Vector4f(0.0f, 0.0f, 0.0f, 1.0f).m_V.m_A);
-	glScalef(1.05f, 1.05f, 1.05f);
-	g_ModelManager.Get("planet")->Draw();
-	*/
-	glPopMatrix();
-	glPopAttrib();
-}
-
 PlanetAssetClass * Planet::CreatePlanetAssetClass(const AssetClass * AssetClass)
 {
 	/// @todo check whether the planet asset class already exists

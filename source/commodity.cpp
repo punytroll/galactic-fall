@@ -45,17 +45,6 @@ Commodity::~Commodity(void)
 {
 }
 
-void Commodity::Draw(void) const
-{
-	glPushMatrix();
-	glTranslatef(m_Position.m_V.m_A[0], m_Position.m_V.m_A[1], 0.0f);
-	glMultMatrixf(Matrix4f(m_AngularPosition).Transpose().Matrix());
-	glMaterialfv(GL_FRONT, GL_SPECULAR, Vector4f(0.0f, 0.0f, 0.0f, 1.0f).m_V.m_A);
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, m_CommodityClass->GetColor()->GetColor().m_V.m_A);
-	m_CommodityClass->GetModel()->Draw();
-	glPopMatrix();
-}
-
 void Commodity::Move(float Seconds)
 {
 	m_Position += m_Velocity * Seconds;

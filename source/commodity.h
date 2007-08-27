@@ -34,7 +34,6 @@ public:
 	Commodity(const CommodityClass * CommodityClass);
 	virtual ~Commodity(void);
 	// modifiers
-	virtual void Draw(void) const;
 	void Move(float Seconds);
 	// getters
 	const Quaternion & GetAngularPosition(void) const;
