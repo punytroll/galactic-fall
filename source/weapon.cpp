@@ -82,20 +82,12 @@ void Weapon::Update(float Seconds)
 		ShotPosition += ShipPosition;
 		NewShot->SetPosition(ShotPosition);
 		
-		/// @todo There are some very confusing mappings down here ... RotationY, RotationZ, (0, -2) .... all that stuff
 		// calculating the shot's angular position in world coordinate system
-		Vector4f ShotDirection(1.0f, 0.0f, 0.0f, 0.0f);
+		Quaternion ShotAngularPosition(true);
 		
-		ShotDirection *= GetOrientation();
-		ShotDirection *= GetSlot()->GetOrientation();
-		ShotDirection *= Quaternion(TheShip->GetAngularPosition(), Quaternion::InitializeRotationY);
-		if(fabsf(ShotDirection[1]) > g_Epsilon)
-		{
-			throw std::runtime_error("ShotDirection contains invalid Z-coordinate " + to_string_cast(ShotDirection[1]) + ".");
-		}
-		
-		Quaternion ShotAngularPosition(GetRadians(Vector2f(ShotDirection[0], -ShotDirection[2])), Quaternion::InitializeRotationZ);
-		
+		ShotAngularPosition *= Quaternion(TheShip->GetAngularPosition(), Quaternion::InitializeRotationZ);
+		ShotAngularPosition *= GetSlot()->GetOrientation();
+		ShotAngularPosition *= GetOrientation();
 		NewShot->SetAngularPosition(ShotAngularPosition);
 		
 		// calculate the shot's velocity

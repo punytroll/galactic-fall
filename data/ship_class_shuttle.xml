@@ -35,7 +35,7 @@
 				<w>0.5</w>
 				<x>0.5</x>
 				<y>-0.5</y>
-				<z>0.5</z>
+				<z>-0.5</z>
 			</orientation>
 		</slot>
 		<slot>
@@ -50,7 +50,7 @@
 			<orientation>
 				<w>0.5</w>
 				<x>-0.5</x>
-				<y>0.5</y>
+				<y>-0.5</y>
 				<z>0.5</z>
 			</orientation>
 		</slot>

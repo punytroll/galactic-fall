@@ -33,9 +33,9 @@
 			</position>
 			<orientation>
 				<w>0</w>
-				<x>-0.7071067812</x>
-				<y>0.7071067812</y>
-				<z>0</z>
+				<x>0.7071067812</x>
+				<y>0</y>
+				<z>-0.7071067812</z>
 			</orientation>
 		</slot>
 	</slots>

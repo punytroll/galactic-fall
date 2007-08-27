@@ -34,8 +34,8 @@
 			<orientation>
 				<w>0.7071067812</w>
 				<x>0</x>
-				<y>0</y>
-				<z>0.7071067812</z>
+				<y>-0.7071067812</y>
+				<z>0</z>
 			</orientation>
 		</slot>
 	</slots>
