@@ -42,6 +42,7 @@
 
 Weapon::Weapon(const WeaponClass * WeaponClass) :
 	m_WeaponClass(WeaponClass),
+	m_Orientation(true),
 	m_Slot(0),
 	m_Fire(false),
 	m_NextTimeToFire(0.0)
@@ -49,6 +50,7 @@ Weapon::Weapon(const WeaponClass * WeaponClass) :
 	SetName(m_WeaponClass->GetName());
 	SetSpaceRequirement(m_WeaponClass->GetSpaceRequirement());
 	SetOrientation(m_WeaponClass->GetOrientation());
+	SetPosition(Vector3f(0.0f, 0.0f, 0.0f));
 }
 
 void Weapon::Update(float Seconds)

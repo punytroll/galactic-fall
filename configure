@@ -2,6 +2,7 @@
 
 if [ "$1" = "--help" ]; then
 	echo "CXXFLAGS = "
+	echo "LDFLAGS = "
 	exit 1
 fi
 
@@ -18,6 +19,10 @@ for option in "$@"; do
 	
 	CXXFLAGS=*)
 		echo "CXXFLAGS = `echo $option | sed -e s/^CXXFLAGS=//`" >> configuration
+		;;
+	
+	LDFLAGS=*)
+		echo "LDFLAGS = `echo $option | sed -e s/^LDFLAGS=//`" >> configuration
 		;;
 	
 	esac

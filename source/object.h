@@ -108,6 +108,8 @@ inline Graphics::Node * Object::GetVisualization(void)
 
 inline void Object::SetVisualization(Graphics::Node * Visualization)
 {
+	assert(Visualization != 0);
+	
 	m_VisualizationBackReferences[Visualization] = this;
 	m_Visualization = Visualization;
 }

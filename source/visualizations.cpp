@@ -26,11 +26,27 @@
 #include "planet.h"
 #include "ship.h"
 #include "shot.h"
+#include "slot.h"
 #include "visualizations.h"
+#include "weapon.h"
 #include "weapon_class.h"
+
+void UnvisualizeObject(Object * Object)
+{
+	assert(Object != 0);
+	assert(Object->GetVisualization() != 0);
+	
+	Object->UnsetVisualization();
+	Object->GetVisualization()->Remove();
+	Object->GetVisualization()->Destroy();
+}
 
 void VisualizeCommodity(Commodity * Commodity, Graphics::Node * Container)
 {
+	assert(Commodity != 0);
+	assert(Commodity->GetVisualization() == 0);
+	assert(Container != 0);
+	
 	Graphics::ModelObject * Visualization(new Graphics::ModelObject());
 	
 	Visualization->SetClearDepthBuffer(true);
@@ -47,6 +63,10 @@ void VisualizeCommodity(Commodity * Commodity, Graphics::Node * Container)
 
 void VisualizePlanet(Planet * Planet, Graphics::Node * Container)
 {
+	assert(Planet != 0);
+	assert(Planet->GetVisualization() == 0);
+	assert(Container != 0);
+	
 	Graphics::ModelObject * Visualization(new Graphics::ModelObject());
 	
 	Visualization->SetDiffuseColor(Planet->GetColor());
@@ -66,6 +86,10 @@ void VisualizePlanet(Planet * Planet, Graphics::Node * Container)
 
 void VisualizeShip(Ship * Ship, Graphics::Node * Container)
 {
+	assert(Ship != 0);
+	assert(Ship->GetVisualization() == 0);
+	assert(Container != 0);
+	
 	Graphics::ModelObject * Visualization(new Graphics::ModelObject());
 	
 	Visualization->SetClearDepthBuffer(true);
@@ -80,10 +104,26 @@ void VisualizeShip(Ship * Ship, Graphics::Node * Container)
 	Ship->SetVisualization(Visualization);
 	// add to the scene
 	Container->AddNode(Visualization);
+	// add weapon visualizations
+	const std::map< std::string, Slot * > & Slots(Ship->GetSlots());
+	
+	for(std::map< std::string, Slot * >::const_iterator SlotIterator = Slots.begin(); SlotIterator != Slots.end(); ++SlotIterator)
+	{
+		Weapon * MountedWeapon(dynamic_cast< Weapon * >(SlotIterator->second->GetMountedObject().Get()));
+		
+		if(MountedWeapon != 0)
+		{
+			VisualizeWeapon(MountedWeapon, Visualization);
+		}
+	}
 }
 
 void VisualizeShot(Shot * Shot, Graphics::Node * Container)
 {
+	assert(Shot != 0);
+	assert(Shot->GetVisualization() == 0);
+	assert(Container != 0);
+	
 	Graphics::ModelObject * Visualization(new Graphics::ModelObject());
 	
 	Visualization->SetClearDepthBuffer(true);
@@ -94,6 +134,24 @@ void VisualizeShot(Shot * Shot, Graphics::Node * Container)
 	Visualization->SetUseBlending(true);
 	Visualization->SetUseLighting(false);
 	Shot->SetVisualization(Visualization);
+	// add to the scene
+	Container->AddNode(Visualization);
+}
+
+void VisualizeWeapon(Weapon * Weapon, Graphics::Node * Container)
+{
+	assert(Weapon != 0);
+	assert(Weapon->GetVisualization() == 0);
+	assert(Container != 0);
+	
+	Graphics::ModelObject * Visualization(new Graphics::ModelObject());
+	
+	Visualization->SetDiffuseColor(*(Weapon->GetWeaponClass()->GetModelColor()));
+	Visualization->SetModel(Weapon->GetWeaponClass()->GetModel());
+	Visualization->SetOrientation(Weapon->GetSlot()->GetOrientation() * Weapon->GetOrientation());
+	Visualization->SetPosition(Weapon->GetPosition() + Weapon->GetSlot()->GetPosition());
+	Visualization->SetUseLighting(true);
+	Weapon->SetVisualization(Visualization);
 	// add to the scene
 	Container->AddNode(Visualization);
 }

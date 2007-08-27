@@ -21,12 +21,17 @@
 
 #include <algorithm>
 
+#include <GL/gl.h>
+
 #include "graphics_engine.h"
 #include "graphics_node.h"
+#include "math/matrix4f.h"
 
 Graphics::Node::Node(void) :
 	m_Container(0),
-	m_Engine(0)
+	m_Engine(0),
+	m_Orientation(1.0f, 0.0f, 0.0f, 0.0f),
+	m_Position(0.0f, 0.0f, 0.0f)
 {
 }
 
@@ -38,14 +43,24 @@ Graphics::Node::~Node(void)
 
 void Graphics::Node::Render(void)
 {
+	Begin();
 	Draw();
 	for(std::vector< Graphics::Node * >::iterator ContentIterator = m_Content.begin(); ContentIterator != m_Content.end(); ++ContentIterator)
 	{
 		(*ContentIterator)->Render();
 	}
+	End();
+}
+
+void Graphics::Node::Begin(void)
+{
 }
 
 void Graphics::Node::Draw(void)
+{
+}
+
+void Graphics::Node::End(void)
 {
 }
 

@@ -21,18 +21,22 @@
 #define VISUALIZATIONS_H
 
 class Commodity;
+class Object;
 class Planet;
 class Ship;
 class Shot;
+class Weapon;
 
 namespace Graphics
 {
 	class Node;
 }
 
+void UnvisualizeObject(Object * Object);
 void VisualizeCommodity(Commodity * Commodity, Graphics::Node * Container);
 void VisualizePlanet(Planet * Planet, Graphics::Node * Container);
 void VisualizeShip(Ship * Ship, Graphics::Node * Container);
 void VisualizeShot(Shot * Shot, Graphics::Node * Container);
+void VisualizeWeapon(Weapon * Weapon, Graphics::Node * Container);
 
 #endif

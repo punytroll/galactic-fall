@@ -507,7 +507,7 @@ graphics_engine.o: graphics_engine.cpp $(graphics_engine_h) $(graphics_scene_h)
 graphics_model_object.o: graphics_model_object.cpp $(color_h) $(graphics_model_object_h) $(math_matrix4f_h) $(model_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-graphics_node.o: graphics_node.cpp $(graphics_engine_h) $(graphics_node_h)
+graphics_node.o: graphics_node.cpp $(graphics_engine_h) $(graphics_node_h) $(math_matrix4f_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 graphics_particle_systems.o: graphics_particle_systems.cpp $(color_h) $(game_time_h) $(globals_h) $(graphics_particle_systems_h) $(graphics_texture_h) $(graphics_texture_manager_h) $(math_h)
@@ -654,7 +654,7 @@ user_interface.o: user_interface.cpp $(user_interface_h) $(widget_h)
 viewport.o: viewport.cpp $(viewport_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-visualizations.o: visualizations.cpp $(color_h) $(commodity_h) $(commodity_class_h) $(globals_h) $(graphics_model_object_h) $(model_manager_h) $(planet_h) $(ship_h) $(shot_h) $(visualizations_h) $(weapon_class_h)
+visualizations.o: visualizations.cpp $(color_h) $(commodity_h) $(commodity_class_h) $(globals_h) $(graphics_model_object_h) $(model_manager_h) $(planet_h) $(ship_h) $(shot_h) $(visualizations_h) $(weapon_h) $(weapon_class_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 weapon.o: weapon.cpp $(color_h) $(game_time_h) $(globals_h) $(graphics_model_object_h) $(math_matrix4f_h) $(math_quaternion_h) $(math_vector4f_h) $(model_h) $(ship_h) $(shot_h) $(slot_h) $(string_cast_h) $(system_h) $(visualizations_h) $(weapon_h) $(weapon_class_h)

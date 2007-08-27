@@ -43,6 +43,17 @@ Graphics::ModelObject::~ModelObject(void)
 	delete m_SpecularColor;
 }
 
+void Graphics::ModelObject::Begin(void)
+{
+	glPushMatrix();
+	glTranslatef(GetPosition()[0], GetPosition()[1], GetPosition()[2]);
+	glMultMatrixf(Matrix4f(GetOrientation()).Transpose().Matrix());
+	if(m_Scale != 1.0f)
+	{
+		glScalef(m_Scale, m_Scale, m_Scale);
+	}
+}
+
 void Graphics::ModelObject::Draw(void)
 {
 	if(m_Model != 0)
@@ -66,13 +77,6 @@ void Graphics::ModelObject::Draw(void)
 		if(m_UseLighting == true)
 		{
 			glEnable(GL_LIGHTING);
-		}
-		glPushMatrix();
-		glTranslatef(GetPosition()[0], GetPosition()[1], GetPosition()[2]);
-		glMultMatrixf(Matrix4f(GetOrientation()).Transpose().Matrix());
-		if(m_Scale != 1.0f)
-		{
-			glScalef(m_Scale, m_Scale, m_Scale);
 		}
 		if(m_UseLighting == true)
 		{
@@ -103,12 +107,16 @@ void Graphics::ModelObject::Draw(void)
 			}
 		}
 		m_Model->Draw();
-		glPopMatrix();
 		if((m_Normalize || m_UseBlending || m_UseLighting) == true)
 		{
 			glPopAttrib();
 		}
 	}
+}
+
+void Graphics::ModelObject::End(void)
+{
+	glPopMatrix();
 }
 
 void Graphics::ModelObject::SetDiffuseColor(const Color & DiffuseColor)
