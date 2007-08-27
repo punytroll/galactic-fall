@@ -395,6 +395,10 @@ bool Ship::Mount(Object * Object, const std::string & SlotIdentifier)
 		{
 			SlotIterator->second->SetMountedObject(TheWeapon->GetReference());
 			TheWeapon->SetSlot(SlotIterator->second);
+			if(GetVisualization() != 0)
+			{
+				VisualizeWeapon(TheWeapon, GetVisualization());
+			}
 			
 			return true;
 		}
@@ -415,6 +419,10 @@ bool Ship::Unmount(const std::string & SlotIdentifier)
 		{
 			SlotIterator->second->SetMountedObject(0);
 			TheWeapon->SetSlot(0);
+			if(TheWeapon->GetVisualization() != 0)
+			{
+				UnvisualizeObject(TheWeapon);
+			}
 			
 			return true;
 		}
