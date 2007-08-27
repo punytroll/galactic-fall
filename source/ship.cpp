@@ -77,52 +77,6 @@ Ship::Ship(const ShipClass * ShipClass) :
 	}
 }
 
-void Ship::Draw(void) const
-{
-	glPushMatrix();
-	glTranslatef(m_Position.m_V.m_A[0], m_Position.m_V.m_A[1], 0.0f);
-	glMultMatrixf(Matrix4f(GetAngularPosition()).Transpose().Matrix());
-	glMaterialfv(GL_FRONT, GL_SPECULAR, Vector4f(0.0f, 0.0f, 0.0f, 1.0f).m_V.m_A);
-	if(GetShipClass()->GetColor() != 0)
-	{
-		glMaterialfv(GL_FRONT, GL_DIFFUSE, GetShipClass()->GetColor()->GetColor().m_V.m_A);
-	}
-	else
-	{
-		glMaterialfv(GL_FRONT, GL_DIFFUSE, Vector4f(1.0f, 1.0f, 1.0f, 1.0f).m_V.m_A);
-	}
-	GetShipClass()->GetModel()->Draw();
-	// draw weapons
-	for(std::map< std::string, Slot * >::const_iterator SlotIterator = m_Slots.begin(); SlotIterator != m_Slots.end(); ++SlotIterator)
-	{
-		// only draw *mounted* *weapons*
-		const Weapon * TheWeapon(dynamic_cast< const Weapon * >(SlotIterator->second->GetMountedObject().Get()));
-		
-		if(TheWeapon != 0)
-		{
-			TheWeapon->Draw();
-		}
-	}
-	// draw acceleration visualization
-	if(m_Accelerating == true)
-	{
-		glTranslatef(m_ShipClass->GetExhaustOffset().m_V.m_A[0], m_ShipClass->GetExhaustOffset().m_V.m_A[1], m_ShipClass->GetExhaustOffset().m_V.m_A[2]);
-		glPushAttrib(GL_ENABLE_BIT);
-		glDisable(GL_LIGHTING);
-		glEnable(GL_BLEND);
-		glBegin(GL_QUADS);
-		glColor4f(1.0f, 1.0f, 1.0f, 0.4f);
-		glVertex2f(0.0f, -0.3f);
-		glVertex2f(0.0f, 0.3f);
-		glColor4f(1.0f, 1.0f, 1.0f, 0.0f);
-		glVertex2f(-20.0f, 2.0f);
-		glVertex2f(-20.0f, -2.0f);
-		glEnd();
-		glPopAttrib();
-	}
-	glPopMatrix();
-}
-
 void Ship::Update(float Seconds)
 {
 	if(m_Jump == true)

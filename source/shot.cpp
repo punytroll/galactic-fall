@@ -41,20 +41,6 @@ Shot::~Shot(void)
 {
 }
 
-void Shot::Draw(void) const
-{
-	glPushAttrib(GL_ENABLE_BIT);
-	glPushMatrix();
-	glTranslatef(m_Position.m_V.m_A[0], m_Position.m_V.m_A[1], 0.0f);
-	glMultMatrixf(Matrix4f(GetAngularPosition()).Transpose().Matrix());
-	glColor4fv(m_WeaponClass->GetParticleColor()->GetColor().m_V.m_A);
-	glDisable(GL_LIGHTING);
-	glEnable(GL_BLEND);
-	m_WeaponClass->GetParticleModel()->Draw();
-	glPopMatrix();
-	glPopAttrib();
-}
-
 bool Shot::Update(float Seconds)
 {
 	if(m_TimeOfDeath < GameTime::Get())

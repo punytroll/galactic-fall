@@ -32,7 +32,6 @@ class Shot : public PhysicalObject
 public:
 	Shot(const WeaponClass * WeaponClass);
 	virtual ~Shot(void);
-	virtual void Draw(void) const;
 	bool Update(float Seconds);
 	// getters
 	const Quaternion & GetAngularPosition(void) const;

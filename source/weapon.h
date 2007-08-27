@@ -32,7 +32,6 @@ class Weapon : public PhysicalObject
 public:
 	Weapon(const WeaponClass * WeaponClass);
 	void Update(float Seconds);
-	virtual void Draw(void) const;
 	// getters
 	const Quaternion & GetOrientation(void) const;
 	Slot * GetSlot(void);
