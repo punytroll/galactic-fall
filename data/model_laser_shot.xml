@@ -2,7 +2,7 @@
 	<identifier>laser_shot</identifier>
 	<mesh-parts>
 		<mesh-part>
-			<identifier>laser_shot</identifier>
+			<part-identifier>laser_shot</part-identifier>
 			<mesh-identifier>laser_shot</mesh-identifier>
 		</mesh-part>
 	</mesh-parts>

@@ -24,12 +24,12 @@ all_data = \
 	.data/label_target.data \
 	.data/label_time_warp.data \
 	.data/mesh_cargo_cube.data \
-	.data/mesh_fighter.data \
+	.data/mesh_fighter_hull.data \
 	.data/mesh_laser_shot.data \
 	.data/mesh_light_laser.data \
 	.data/mesh_planet.data \
-	.data/mesh_shuttle.data \
-	.data/mesh_transporter.data \
+	.data/mesh_shuttle_hull.data \
+	.data/mesh_transporter_hull.data \
 	.data/model_cargo_cube.data \
 	.data/model_fighter.data \
 	.data/model_laser_shot.data \
@@ -207,14 +207,6 @@ data.arx: .data $(all_data) Makefile
 	arxadd $@ --name "Alpha Centauri / Tichel" --type 6 --subtype 0 --add "/System Links" .data/system_link_alpha_centauri_tichel.data
 	arxadd $@ --name "Rigel / Sol" --type 6 --subtype 0 --add "/System Links" .data/system_link_rigel_sol.data
 	arxadd $@ --name "Rigel / Tichel" --type 6 --subtype 0 --add "/System Links" .data/system_link_rigel_tichel.data
-	@echo -e "\n\nAdding meshes ...\n"
-	arxadd $@ --name "Cargo Cube" --type 2 --subtype 0 --add "/Meshes" .data/mesh_cargo_cube.data
-	arxadd $@ --name "Fighter Hull" --type 2 --subtype 0 --add "/Meshes" .data/mesh_fighter.data
-	arxadd $@ --name "Laser Shot" --type 2 --subtype 0 --add "/Meshes" .data/mesh_laser_shot.data
-	arxadd $@ --name "Light Laser" --type 2 --subtype 0 --add "/Meshes" .data/mesh_light_laser.data
-	arxadd $@ --name "Planet" --type 2 --subtype 0 --add "/Meshes" .data/mesh_planet.data
-	arxadd $@ --name "Shuttle Hull" --type 2 --subtype 0 --add "/Meshes" .data/mesh_shuttle.data
-	arxadd $@ --name "Transporter Hull" --type 2 --subtype 0 --add "/Meshes" .data/mesh_transporter.data
 	@echo -e "\n\nAdding models ...\n"
 	arxadd $@ --name "Cargo Cube" --type b --subtype 0 --add "/Models" .data/model_cargo_cube.data
 	arxadd $@ --name "Fighter" --type b --subtype 0 --add "/Models" .data/model_fighter.data
@@ -223,6 +215,14 @@ data.arx: .data $(all_data) Makefile
 	arxadd $@ --name "Planet" --type b --subtype 0 --add "/Models" .data/model_planet.data
 	arxadd $@ --name "Shuttle" --type b --subtype 0 --add "/Models" .data/model_shuttle.data
 	arxadd $@ --name "Transporter" --type b --subtype 0 --add "/Models" .data/model_transporter.data
+	@echo -e "\n\nAdding meshes ...\n"
+	arxadd $@ --name "Cargo Cube" --type 2 --subtype 0 --add "/Meshes" .data/mesh_cargo_cube.data
+	arxadd $@ --name "Fighter Hull" --type 2 --subtype 0 --add "/Meshes" .data/mesh_fighter_hull.data
+	arxadd $@ --name "Laser Shot" --type 2 --subtype 0 --add "/Meshes" .data/mesh_laser_shot.data
+	arxadd $@ --name "Light Laser" --type 2 --subtype 0 --add "/Meshes" .data/mesh_light_laser.data
+	arxadd $@ --name "Planet" --type 2 --subtype 0 --add "/Meshes" .data/mesh_planet.data
+	arxadd $@ --name "Shuttle Hull" --type 2 --subtype 0 --add "/Meshes" .data/mesh_shuttle_hull.data
+	arxadd $@ --name "Transporter Hull" --type 2 --subtype 0 --add "/Meshes" .data/mesh_transporter_hull.data
 	@echo -e "\n\nAdding textures ...\n"
 	arxadd $@ --name "Particle" --type a --subtype 0 --add "/Textures" .data/texture_particle.data
 
