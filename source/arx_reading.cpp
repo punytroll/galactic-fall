@@ -58,20 +58,20 @@
 
 static Arxx::Item * Resolve(Arxx::Reference & Reference);
 
-static void ReadAssetClass(AssetClassManager * AssetClassManager, Arxx::Reference & Reference);
-static void ReadCommodityClass(CommodityClassManager * CommodityClassManager, Arxx::Reference & Reference);
-static void ReadModel(ModelManager * ModelManager, Arxx::Reference & Reference);
-static void ReadShipClass(ShipClassManager * ShipClassManager, Arxx::Reference & Reference);
-static void ReadSlotClass(SlotClassManager * SlotClassManager, Arxx::Reference & Reference);
-static void ReadSystem(Galaxy * Galaxy, Arxx::Reference & Reference);
-static void ReadSystemLink(Galaxy * Galaxy, Arxx::Reference & Reference);
-static void ReadTexture(Graphics::TextureManager * TextureManager, Arxx::Reference & Reference);
-static void ReadWeaponClass(WeaponClassManager * WeaponClassManager, Arxx::Reference & Reference);
-static void ReadWidget(UserInterface * UserInterface, Arxx::Reference & Reference);
+static void ReadAssetClass(Arxx::Reference & Reference);
+static void ReadCommodityClass(Arxx::Reference & Reference);
+static void ReadModel(Arxx::Reference & Reference);
+static void ReadShipClass(Arxx::Reference & Reference);
+static void ReadSlotClass(Arxx::Reference & Reference);
+static void ReadSystem(Arxx::Reference & Reference);
+static void ReadSystemLink(Arxx::Reference & Reference);
+static void ReadTexture(Arxx::Reference & Reference);
+static void ReadWeaponClass(Arxx::Reference & Reference);
+static void ReadWidget(Arxx::Reference & Reference);
 static void ReadWidgetLabel(Arxx::BufferReader & Reader, Label * ReadLabel);
 static void ReadWidgetMiniMapDisplay(Arxx::BufferReader & Reader, MiniMapDisplay * ReadMiniMapDisplay);
 static void ReadWidgetScannerDisplay(Arxx::BufferReader & Reader, ScannerDisplay * ReadScannerDisplay);
-static void ReadWidgetWidget(Arxx::BufferReader & Reader, UserInterface * UserInterface, Widget * ReadWidget);
+static void ReadWidgetWidget(Arxx::BufferReader & Reader, Widget * ReadWidget);
 
 static Arxx::Item * Resolve(Arxx::Reference & Reference)
 {
@@ -128,57 +128,57 @@ void ReadItems(Arxx::Archive & Archive, const std::string & Path, const Callback
 	delete Reader;
 }
 
-void ReadAssetClasses(Arxx::Archive & Archive, AssetClassManager * Manager)
+void ReadAssetClasses(Arxx::Archive & Archive)
 {
-	ReadItems(Archive, "/Asset Classes", Bind1(Function(ReadAssetClass), Manager));
+	ReadItems(Archive, "/Asset Classes", Function(ReadAssetClass));
 }
 
-void ReadCommodityClasses(Arxx::Archive & Archive, CommodityClassManager * Manager)
+void ReadCommodityClasses(Arxx::Archive & Archive)
 {
-	ReadItems(Archive, "/Commodity Classes", Bind1(Function(ReadCommodityClass), Manager));
+	ReadItems(Archive, "/Commodity Classes", Function(ReadCommodityClass));
 }
 
-void ReadModels(Arxx::Archive & Archive, ModelManager * Manager)
+void ReadModels(Arxx::Archive & Archive)
 {
-	ReadItems(Archive, "/Models", Bind1(Function(ReadModel), Manager));
+	ReadItems(Archive, "/Models", Function(ReadModel));
 }
 
-void ReadShipClasses(Arxx::Archive & Archive, ShipClassManager * Manager)
+void ReadShipClasses(Arxx::Archive & Archive)
 {
-	ReadItems(Archive, "/Ship Classes", Bind1(Function(ReadShipClass), Manager));
+	ReadItems(Archive, "/Ship Classes", Function(ReadShipClass));
 }
 
-void ReadSlotClasses(Arxx::Archive & Archive, SlotClassManager * Manager)
+void ReadSlotClasses(Arxx::Archive & Archive)
 {
-	ReadItems(Archive, "/Slot Classes", Bind1(Function(ReadSlotClass), Manager));
+	ReadItems(Archive, "/Slot Classes", Function(ReadSlotClass));
 }
 
-void ReadSystems(Arxx::Archive & Archive, Galaxy * Galaxy)
+void ReadSystems(Arxx::Archive & Archive)
 {
-	ReadItems(Archive, "/Systems", Bind1(Function(ReadSystem), Galaxy));
+	ReadItems(Archive, "/Systems", Function(ReadSystem));
 }
 
-void ReadSystemLinks(Arxx::Archive & Archive, Galaxy * Galaxy)
+void ReadSystemLinks(Arxx::Archive & Archive)
 {
-	ReadItems(Archive, "/System Links", Bind1(Function(ReadSystemLink), Galaxy));
+	ReadItems(Archive, "/System Links", Function(ReadSystemLink));
 }
 
-void ReadTextures(Arxx::Archive & Archive, Graphics::TextureManager * Manager)
+void ReadTextures(Arxx::Archive & Archive)
 {
-	ReadItems(Archive, "/Textures", Bind1(Function(ReadTexture), Manager));
+	ReadItems(Archive, "/Textures", Function(ReadTexture));
 }
 
-void ReadUserInterface(Arxx::Archive & Archive, UserInterface * Manager)
+void ReadUserInterface(Arxx::Archive & Archive)
 {
-	ReadItems(Archive, "/User Interface", Bind1(Function(ReadWidget), Manager));
+	ReadItems(Archive, "/User Interface", Function(ReadWidget));
 }
 
-void ReadWeaponClasses(Arxx::Archive & Archive, WeaponClassManager * Manager)
+void ReadWeaponClasses(Arxx::Archive & Archive)
 {
-	ReadItems(Archive, "/Weapon Classes", Bind1(Function(ReadWeaponClass), Manager));
+	ReadItems(Archive, "/Weapon Classes", Function(ReadWeaponClass));
 }
 
-static void ReadAssetClass(AssetClassManager * AssetClassManager, Arxx::Reference & Reference)
+static void ReadAssetClass(Arxx::Reference & Reference)
 {
 	Arxx::Item * Item(Resolve(Reference));
 	
@@ -196,7 +196,7 @@ static void ReadAssetClass(AssetClassManager * AssetClassManager, Arxx::Referenc
 	
 	Reader >> Identifier;
 	
-	AssetClass * NewAssetClass(AssetClassManager->Create(Identifier));
+	AssetClass * NewAssetClass(g_AssetClassManager->Create(Identifier));
 	
 	if(NewAssetClass == 0)
 	{
@@ -216,7 +216,7 @@ static void ReadAssetClass(AssetClassManager * AssetClassManager, Arxx::Referenc
 	NewAssetClass->SetObjectClass(ObjectClass);
 }
 
-static void ReadCommodityClass(CommodityClassManager * CommodityClassManager, Arxx::Reference & Reference)
+static void ReadCommodityClass(Arxx::Reference & Reference)
 {
 	Arxx::Item * Item(Resolve(Reference));
 	
@@ -234,7 +234,7 @@ static void ReadCommodityClass(CommodityClassManager * CommodityClassManager, Ar
 	
 	Reader >> Identifier;
 	
-	CommodityClass * NewCommodityClass(CommodityClassManager->Create(Identifier));
+	CommodityClass * NewCommodityClass(g_CommodityClassManager->Create(Identifier));
 	
 	if(NewCommodityClass == 0)
 	{
@@ -261,7 +261,7 @@ static void ReadCommodityClass(CommodityClassManager * CommodityClassManager, Ar
 	NewCommodityClass->SetSpaceRequirement(static_cast< unsigned_numeric >(1000 * SpaceRequirement));
 }
 
-static void ReadModel(ModelManager * ModelManager, Arxx::Reference & Reference)
+static void ReadModel(Arxx::Reference & Reference)
 {
 	Arxx::Item * Item(Resolve(Reference));
 	
@@ -279,7 +279,7 @@ static void ReadModel(ModelManager * ModelManager, Arxx::Reference & Reference)
 	
 	Reader >> Identifier;
 	
-	Model * NewModel(ModelManager->Create(Identifier));
+	Model * NewModel(g_ModelManager->Create(Identifier));
 	
 	if(NewModel == 0)
 	{
@@ -331,7 +331,7 @@ static void ReadModel(ModelManager * ModelManager, Arxx::Reference & Reference)
 	}
 }
 
-static void ReadShipClass(ShipClassManager * ShipClassManager, Arxx::Reference & Reference)
+static void ReadShipClass(Arxx::Reference & Reference)
 {
 	Arxx::Item * Item(Resolve(Reference));
 	
@@ -349,7 +349,7 @@ static void ReadShipClass(ShipClassManager * ShipClassManager, Arxx::Reference &
 	
 	Reader >> Identifier;
 	
-	ShipClass * NewShipClass(ShipClassManager->Create(Identifier));
+	ShipClass * NewShipClass(g_ShipClassManager->Create(Identifier));
 	
 	if(NewShipClass == 0)
 	{
@@ -423,7 +423,7 @@ static void ReadShipClass(ShipClassManager * ShipClassManager, Arxx::Reference &
 	}
 }
 
-static void ReadSlotClass(SlotClassManager * SlotClassManager, Arxx::Reference & Reference)
+static void ReadSlotClass(Arxx::Reference & Reference)
 {
 	Arxx::Item * Item(Resolve(Reference));
 	
@@ -441,7 +441,7 @@ static void ReadSlotClass(SlotClassManager * SlotClassManager, Arxx::Reference &
 	
 	Reader >> Identifier;
 	
-	SlotClass * NewSlotClass(SlotClassManager->Create(Identifier));
+	SlotClass * NewSlotClass(g_SlotClassManager->Create(Identifier));
 	
 	if(NewSlotClass == 0)
 	{
@@ -462,7 +462,7 @@ static void ReadSlotClass(SlotClassManager * SlotClassManager, Arxx::Reference &
 	}
 }
 
-static void ReadSystem(Galaxy * Galaxy, Arxx::Reference & Reference)
+static void ReadSystem(Arxx::Reference & Reference)
 {
 	Arxx::Item * Item(Resolve(Reference));
 	
@@ -557,13 +557,13 @@ static void ReadSystem(Galaxy * Galaxy, Arxx::Reference & Reference)
 			throw std::runtime_error("Could not add planet '" + PlanetIdentifier + "' to system '" + Identifier + "'.");
 		}
 	}
-	if(Galaxy->AddContent(NewSystem) == false)
+	if(g_Galaxy->AddContent(NewSystem) == false)
 	{
 		throw std::runtime_error("Could not add system '" + Identifier + "' to galaxy.");
 	}
 }
 
-static void ReadSystemLink(Galaxy * Galaxy, Arxx::Reference & Reference)
+static void ReadSystemLink(Arxx::Reference & Reference)
 {
 	Arxx::Item * Item(Resolve(Reference));
 	
@@ -582,8 +582,8 @@ static void ReadSystemLink(Galaxy * Galaxy, Arxx::Reference & Reference)
 	
 	Reader >> System1Identifier >> System2Identifier;
 	
-	System * System1(Galaxy->GetSystem(System1Identifier));
-	System * System2(Galaxy->GetSystem(System2Identifier));
+	System * System1(g_Galaxy->GetSystem(System1Identifier));
+	System * System2(g_Galaxy->GetSystem(System2Identifier));
 	
 	if(System1 == 0)
 	{
@@ -597,7 +597,7 @@ static void ReadSystemLink(Galaxy * Galaxy, Arxx::Reference & Reference)
 	System2->AddLinkedSystem(System1);
 }
 
-static void ReadTexture(Graphics::TextureManager * TextureManager, Arxx::Reference & Reference)
+static void ReadTexture(Arxx::Reference & Reference)
 {
 	Arxx::Item * Item(Resolve(Reference));
 	
@@ -630,7 +630,7 @@ static void ReadTexture(Graphics::TextureManager * TextureManager, Arxx::Referen
 	Texture->SetData(Width, Height, Format, Reader.GetBuffer().GetBegin() + Reader.stGetPosition());
 }
 
-static void ReadWeaponClass(WeaponClassManager * WeaponClassManager, Arxx::Reference & Reference)
+static void ReadWeaponClass(Arxx::Reference & Reference)
 {
 	Arxx::Item * Item(Resolve(Reference));
 	
@@ -648,7 +648,7 @@ static void ReadWeaponClass(WeaponClassManager * WeaponClassManager, Arxx::Refer
 	
 	Reader >> Identifier;
 	
-	WeaponClass * NewWeaponClass(WeaponClassManager->Create(Identifier));
+	WeaponClass * NewWeaponClass(g_WeaponClassManager->Create(Identifier));
 	
 	if(NewWeaponClass == 0)
 	{
@@ -699,7 +699,7 @@ static void ReadWeaponClass(WeaponClassManager * WeaponClassManager, Arxx::Refer
 	NewWeaponClass->SetParticleColor(ParticleColor);
 }
 
-static void ReadWidget(UserInterface * UserInterface, Arxx::Reference & Reference)
+static void ReadWidget(Arxx::Reference & Reference)
 {
 	Arxx::Item * Item(Resolve(Reference));
 	
@@ -716,7 +716,7 @@ static void ReadWidget(UserInterface * UserInterface, Arxx::Reference & Referenc
 		{
 			Label * NewLabel(new Label());
 			
-			ReadWidgetWidget(Reader, UserInterface, NewLabel);
+			ReadWidgetWidget(Reader, NewLabel);
 			ReadWidgetLabel(Reader, NewLabel);
 			
 			break;
@@ -725,7 +725,7 @@ static void ReadWidget(UserInterface * UserInterface, Arxx::Reference & Referenc
 		{
 			MiniMapDisplay * NewMiniMapDisplay(new MiniMapDisplay());
 			
-			ReadWidgetWidget(Reader, UserInterface, NewMiniMapDisplay);
+			ReadWidgetWidget(Reader, NewMiniMapDisplay);
 			ReadWidgetMiniMapDisplay(Reader, NewMiniMapDisplay);
 			
 			break;
@@ -734,7 +734,7 @@ static void ReadWidget(UserInterface * UserInterface, Arxx::Reference & Referenc
 		{
 			ScannerDisplay * NewScannerDisplay(new ScannerDisplay());
 			
-			ReadWidgetWidget(Reader, UserInterface, NewScannerDisplay);
+			ReadWidgetWidget(Reader, NewScannerDisplay);
 			ReadWidgetScannerDisplay(Reader, NewScannerDisplay);
 			
 			break;
@@ -743,7 +743,7 @@ static void ReadWidget(UserInterface * UserInterface, Arxx::Reference & Referenc
 		{
 			Widget * NewWidget(new Widget());
 			
-			ReadWidgetWidget(Reader, UserInterface, NewWidget);
+			ReadWidgetWidget(Reader, NewWidget);
 			
 			break;
 		}
@@ -800,7 +800,7 @@ static void ReadWidgetScannerDisplay(Arxx::BufferReader & Reader, ScannerDisplay
 {
 }
 
-static void ReadWidgetWidget(Arxx::BufferReader & Reader, UserInterface * UserInterface, Widget * ReadWidget)
+static void ReadWidgetWidget(Arxx::BufferReader & Reader, Widget * ReadWidget)
 {
 	std::string Path;
 	std::string Name;
@@ -819,7 +819,7 @@ static void ReadWidgetWidget(Arxx::BufferReader & Reader, UserInterface * UserIn
 	ReadWidget->SetName(Name);
 	if((Path != "") && (ReadWidget->GetSupWidget() == 0))
 	{
-		Widget * SupWidget(UserInterface->GetWidget(Path));
+		Widget * SupWidget(g_UserInterface->GetWidget(Path));
 		
 		if(SupWidget == 0)
 		{
