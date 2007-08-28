@@ -17,13 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include <GL/gl.h>
-
 #include "asset_class.h"
 #include "color.h"
-#include "globals.h"
-#include "model.h"
-#include "model_manager.h"
 #include "planet.h"
 
 PlanetAssetClass::PlanetAssetClass(const AssetClass * AssetClass) :

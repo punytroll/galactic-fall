@@ -27,7 +27,11 @@
 #include "type_definitions.h"
 
 class Color;
-class Model;
+
+namespace Graphics
+{
+	class Model;
+}
 
 class WeaponClass
 {
@@ -38,7 +42,7 @@ public:
 	~WeaponClass(void);
 	// getters
 	const std::string & GetIdentifier(void) const;
-	const Model * GetModel(void) const;
+	const Graphics::Model * GetModel(void) const;
 	const Color * GetModelColor(void) const;
 	const std::string & GetName(void) const;
 	const Quaternion & GetOrientation(void) const;
@@ -46,13 +50,13 @@ public:
 	float GetParticleExitSpeed(void) const;
 	float GetParticleDamage(void) const;
 	float GetParticleLifeTime(void) const;
-	const Model * GetParticleModel(void) const;
+	const Graphics::Model * GetParticleModel(void) const;
 	const Color * GetParticleColor(void) const;
 	float GetReloadTime(void) const;
 	const std::string & GetSlotClassIdentifier(void) const;
 	unsigned_numeric GetSpaceRequirement(void) const;
 	// setters
-	void SetModel(const Model * Model);
+	void SetModel(const Graphics::Model * Model);
 	void SetModelColor(const Color & ModelColor);
 	void SetName(const std::string & Name);
 	void SetOrientation(const Quaternion & Orientation);
@@ -60,14 +64,14 @@ public:
 	void SetParticleExitSpeed(float ParticleExitSpeed);
 	void SetParticleDamage(float ParticleDamage);
 	void SetParticleLifeTime(float ParticleLifeTime);
-	void SetParticleModel(const Model * ParticleModel);
+	void SetParticleModel(const Graphics::Model * ParticleModel);
 	void SetParticleColor(const Color & ParticleColor);
 	void SetReloadTime(float ReloadTime);
 	void SetSlotClassIdentifier(const std::string & SlotClassIdentifier);
 	void SetSpaceRequirement(unsigned_numeric SpaceRequirement);
 private:
 	std::string m_Identifier;
-	const Model * m_Model;
+	const Graphics::Model * m_Model;
 	Color * m_ModelColor;
 	std::string m_Name;
 	std::string m_SlotClassIdentifier;
@@ -77,7 +81,7 @@ private:
 	float m_ParticleExitSpeed;
 	float m_ParticleDamage;
 	float m_ParticleLifeTime;
-	const Model * m_ParticleModel;
+	const Graphics::Model * m_ParticleModel;
 	Color * m_ParticleColor;
 	unsigned_numeric m_SpaceRequirement;
 };
@@ -92,7 +96,7 @@ inline const std::string & WeaponClass::GetIdentifier(void) const
 	return m_Identifier;
 }
 
-inline const Model * WeaponClass::GetModel(void) const
+inline const Graphics::Model * WeaponClass::GetModel(void) const
 {
 	return m_Model;
 }
@@ -127,7 +131,7 @@ inline float WeaponClass::GetParticleLifeTime(void) const
 	return m_ParticleLifeTime;
 }
 
-inline const Model * WeaponClass::GetParticleModel(void) const
+inline const Graphics::Model * WeaponClass::GetParticleModel(void) const
 {
 	return m_ParticleModel;
 }
@@ -152,7 +156,7 @@ inline unsigned_numeric WeaponClass::GetSpaceRequirement(void) const
 	return m_SpaceRequirement;
 }
 
-inline void WeaponClass::SetModel(const Model * Model)
+inline void WeaponClass::SetModel(const Graphics::Model * Model)
 {
 	m_Model = Model;
 }
@@ -187,7 +191,7 @@ inline void WeaponClass::SetParticleLifeTime(float ParticleLifeTime)
 	m_ParticleLifeTime = ParticleLifeTime;
 }
 
-inline void WeaponClass::SetParticleModel(const Model * ParticleModel)
+inline void WeaponClass::SetParticleModel(const Graphics::Model * ParticleModel)
 {
 	m_ParticleModel = ParticleModel;
 }

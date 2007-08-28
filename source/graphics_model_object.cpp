@@ -20,9 +20,9 @@
 #include <GL/gl.h>
 
 #include "color.h"
+#include "graphics_model.h"
 #include "graphics_model_object.h"
 #include "math/matrix4f.h"
-#include "model.h"
 
 Graphics::ModelObject::ModelObject(void) :
 	m_ClearDepthBuffer(false),

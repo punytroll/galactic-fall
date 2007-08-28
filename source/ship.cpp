@@ -17,29 +17,19 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include <assert.h>
-
-#include <sstream>
-
-#include <GL/gl.h>
-
 #include "character.h"
 #include "color.h"
 #include "commodity.h"
 #include "commodity_class.h"
 #include "game_time.h"
 #include "globals.h"
-#include "graphics_model_object.h"
+#include "graphics_model.h"
 #include "map_knowledge.h"
 #include "math.h"
-#include "math/matrix4f.h"
-#include "model.h"
-#include "model_manager.h"
 #include "ship.h"
 #include "shot.h"
 #include "slot.h"
 #include "slot_class.h"
-#include "string_cast.h"
 #include "system.h"
 #include "visualizations.h"
 #include "weapon.h"

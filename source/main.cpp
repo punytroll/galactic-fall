@@ -52,6 +52,8 @@
 #include "game_time.h"
 #include "globals.h"
 #include "graphics_engine.h"
+#include "graphics_model.h"
+#include "graphics_model_manager.h"
 #include "graphics_model_object.h"
 #include "graphics_particle_systems.h"
 #include "graphics_scene.h"
@@ -63,8 +65,6 @@
 #include "math.h"
 #include "mind.h"
 #include "mini_map_display.h"
-#include "model.h"
-#include "model_manager.h"
 #include "mount_weapon_dialog.h"
 #include "object_factory.h"
 #include "perspective.h"
@@ -169,7 +169,7 @@ Graphics::Node * g_PlanetLayer(0);
 Graphics::Node * g_ShipLayer(0);
 Graphics::Node * g_ShotLayer(0);
 Graphics::Node * g_ParticleSystemsLayer(0);
-ModelManager * g_ModelManager(0);
+Graphics::ModelManager * g_ModelManager(0);
 ObjectFactory * g_ObjectFactory(0);
 ShipClassManager * g_ShipClassManager(0);
 SlotClassManager * g_SlotClassManager(0);
@@ -2167,7 +2167,7 @@ int main(int argc, char ** argv)
 	g_GraphicsEngine = new Graphics::Engine();
 	g_GraphicsEngine->SetOnDestroyCallback(Function(OnGraphicsNodeDestroy));
 	g_MainScene = 0;
-	g_ModelManager = new ModelManager();
+	g_ModelManager = new Graphics::ModelManager();
 	g_ObjectFactory = new ObjectFactory();
 	g_ShipClassManager = new ShipClassManager();
 	g_SlotClassManager = new SlotClassManager();

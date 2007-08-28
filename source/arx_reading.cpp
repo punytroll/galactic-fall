@@ -35,12 +35,12 @@
 #include "commodity_class_manager.h"
 #include "galaxy.h"
 #include "globals.h"
+#include "graphics_model.h"
+#include "graphics_model_manager.h"
 #include "graphics_texture.h"
 #include "graphics_texture_manager.h"
 #include "label.h"
 #include "mini_map_display.h"
-#include "model.h"
-#include "model_manager.h"
 #include "planet.h"
 #include "scanner_display.h"
 #include "ship_class.h"
@@ -250,7 +250,7 @@ static void ReadCommodityClass(Arxx::Reference & Reference)
 	
 	NewCommodityClass->SetName(Name);
 	
-	const Model * Model(g_ModelManager->Get(ModelIdentifier));
+	const Graphics::Model * Model(g_ModelManager->Get(ModelIdentifier));
 	
 	if(Model == 0)
 	{
@@ -279,7 +279,7 @@ static void ReadModel(Arxx::Reference & Reference)
 	
 	Reader >> Identifier;
 	
-	Model * NewModel(g_ModelManager->Create(Identifier));
+	Graphics::Model * NewModel(g_ModelManager->Create(Identifier));
 	
 	if(NewModel == 0)
 	{
@@ -378,7 +378,7 @@ static void ReadShipClass(Arxx::Reference & Reference)
 	NewShipClass->SetMaximumSpeed(MaximumSpeed);
 	NewShipClass->SetMaximumAvailableSpace(static_cast< unsigned_numeric >(1000 * MaximumAvailableSpace));
 	
-	const Model * Model(g_ModelManager->Get(ModelIdentifier));
+	const Graphics::Model * Model(g_ModelManager->Get(ModelIdentifier));
 	
 	if(Model == 0)
 	{
@@ -672,7 +672,7 @@ static void ReadWeaponClass(Arxx::Reference & Reference)
 	Reader >> Name >> ModelColor >> ModelIdentifier >> SlotClassIdentifier >> Orientation >> ReloadTime >> SpaceRequirement >> ParticleExitPosition >> ParticleExitSpeed >> ParticleDamage >> ParticleLifeTime >> ParticleModelIdentifier >> ParticleColor;
 	NewWeaponClass->SetName(Name);
 	
-	const Model * WeaponClassModel(g_ModelManager->Get(ModelIdentifier));
+	const Graphics::Model * WeaponClassModel(g_ModelManager->Get(ModelIdentifier));
 	
 	if(WeaponClassModel == 0)
 	{
@@ -689,7 +689,7 @@ static void ReadWeaponClass(Arxx::Reference & Reference)
 	NewWeaponClass->SetParticleDamage(ParticleDamage);
 	NewWeaponClass->SetParticleLifeTime(ParticleLifeTime);
 	
-	const Model * ParticleModel(g_ModelManager->Get(ParticleModelIdentifier));
+	const Graphics::Model * ParticleModel(g_ModelManager->Get(ParticleModelIdentifier));
 	
 	if(ParticleModel == 0)
 	{

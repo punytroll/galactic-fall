@@ -17,20 +17,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include <sstream>
-#include <stdexcept>
+#include <assert.h>
 
-#include <GL/gl.h>
+#include <sstream>
 
 #include "color.h"
 #include "game_time.h"
 #include "globals.h"
-#include "graphics_model_object.h"
 #include "math.h"
-#include "math/matrix4f.h"
 #include "math/quaternion.h"
-#include "math/vector4f.h"
-#include "model.h"
 #include "ship.h"
 #include "shot.h"
 #include "slot.h"

@@ -19,24 +19,24 @@
 
 #include <GL/gl.h>
 
-#include "model.h"
+#include "graphics_model.h"
 
-Model::Model(const std::string & Identifier) :
+Graphics::Model::Model(const std::string & Identifier) :
 	m_Identifier(Identifier),
 	m_RadialSize(-1.0f)
 {
 }
 
-void Model::Clear(void)
+void Graphics::Model::Clear(void)
 {
 	m_Points.clear();
 	m_Triangles.clear();
 }
 
-void Model::Draw(void) const
+void Graphics::Model::Draw(void) const
 {
 	glBegin(GL_TRIANGLES);
-	for(std::vector< Model::Triangle >::size_type Triangle = 0; Triangle < m_Triangles.size(); ++Triangle)
+	for(std::vector< Graphics::Model::Triangle >::size_type Triangle = 0; Triangle < m_Triangles.size(); ++Triangle)
 	{
 		glNormal3fv(m_Triangles[Triangle].Normals[0].m_V.m_A);
 		glVertex3fv(m_Points[m_Triangles[Triangle].Points[0]].m_V.m_A);
@@ -48,7 +48,7 @@ void Model::Draw(void) const
 	glEnd();
 }
 
-float Model::GetRadialSize(void) const
+float Graphics::Model::GetRadialSize(void) const
 {
 	if(m_RadialSize < 0.0f)
 	{
@@ -67,21 +67,21 @@ float Model::GetRadialSize(void) const
 	return m_RadialSize;
 }
 
-std::vector< Vector4f >::size_type Model::AddPoint(const Vector4f & Point)
+std::vector< Vector4f >::size_type Graphics::Model::AddPoint(const Vector4f & Point)
 {
 	m_Points.push_back(Point);
 	
 	return m_Points.size() - 1;
 }
 
-std::vector< Model::Triangle >::size_type Model::AddTriangle(const Model::Triangle & Triangle)
+std::vector< Graphics::Model::Triangle >::size_type Graphics::Model::AddTriangle(const Graphics::Model::Triangle & Triangle)
 {
 	m_Triangles.push_back(Triangle);
 	
 	return m_Triangles.size() - 1;
 }
 
-std::vector< Model::Triangle >::size_type Model::AddTriangle(std::vector< Vector4f >::size_type Point1Index, const Vector4f & Point1Normal, std::vector< Vector4f >::size_type Point2Index, const Vector4f & Point2Normal, std::vector< Vector4f >::size_type Point3Index, const Vector4f & Point3Normal)
+std::vector< Graphics::Model::Triangle >::size_type Graphics::Model::AddTriangle(std::vector< Vector4f >::size_type Point1Index, const Vector4f & Point1Normal, std::vector< Vector4f >::size_type Point2Index, const Vector4f & Point2Normal, std::vector< Vector4f >::size_type Point3Index, const Vector4f & Point3Normal)
 {
 	m_Triangles.push_back(Triangle());
 	m_Triangles.back().Points[0] = Point1Index;
