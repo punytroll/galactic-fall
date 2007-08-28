@@ -21,29 +21,16 @@
 #define ARX_READING_H
 
 class Archive;
-class AssetClassManager;
-class CommodityClassManager;
-class Galaxy;
-class ModelManager;
-class ShipClassManager;
-class SlotClassManager;
-class UserInterface;
-class WeaponClassManager;
 
-namespace Graphics
-{
-	class TextureManager;
-}
-
-void ReadAssetClasses(Arxx::Archive & Archive, AssetClassManager * Manager);
-void ReadCommodityClasses(Arxx::Archive & Archive, CommodityClassManager * Manger);
-void ReadModels(Arxx::Archive & Archive, ModelManager * Manager);
-void ReadShipClasses(Arxx::Archive & Archive, ShipClassManager * Manager);
-void ReadSlotClasses(Arxx::Archive & Archive, SlotClassManager * Manager);
-void ReadSystems(Arxx::Archive & Archive, Galaxy * Galaxy);
-void ReadSystemLinks(Arxx::Archive & Archive, Galaxy * Galaxy);
-void ReadTextures(Arxx::Archive & Archive, Graphics::TextureManager * Manager);
-void ReadUserInterface(Arxx::Archive & Archive, UserInterface * UserInterface);
-void ReadWeaponClasses(Arxx::Archive & Archive, WeaponClassManager * Manager);
+void ReadAssetClasses(Arxx::Archive & Archive);
+void ReadCommodityClasses(Arxx::Archive & Archive);
+void ReadModels(Arxx::Archive & Archive);
+void ReadShipClasses(Arxx::Archive & Archive);
+void ReadSlotClasses(Arxx::Archive & Archive);
+void ReadSystems(Arxx::Archive & Archive);
+void ReadSystemLinks(Arxx::Archive & Archive);
+void ReadTextures(Arxx::Archive & Archive);
+void ReadUserInterface(Arxx::Archive & Archive);
+void ReadWeaponClasses(Arxx::Archive & Archive);
 
 #endif

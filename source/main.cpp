@@ -2217,15 +2217,15 @@ int main(int argc, char ** argv)
 	}
 	
 	// read the data from the archive
-	ReadModels(Archive, g_ModelManager);
-	ReadAssetClasses(Archive, g_AssetClassManager);
-	ReadCommodityClasses(Archive, g_CommodityClassManager);
-	ReadSlotClasses(Archive, g_SlotClassManager);
-	ReadShipClasses(Archive, g_ShipClassManager);
-	ReadSystems(Archive, g_Galaxy);
-	ReadSystemLinks(Archive, g_Galaxy);
-	ReadUserInterface(Archive, g_UserInterface);
-	ReadWeaponClasses(Archive, g_WeaponClassManager);
+	ReadModels(Archive);
+	ReadAssetClasses(Archive);
+	ReadCommodityClasses(Archive);
+	ReadSlotClasses(Archive);
+	ReadShipClasses(Archive);
+	ReadSystems(Archive);
+	ReadSystemLinks(Archive);
+	ReadUserInterface(Archive);
+	ReadWeaponClasses(Archive);
 	
 	// setup the global variables for the user interface
 	g_CreditsLabel = dynamic_cast< Label * >(g_UserInterface->GetWidget("/credits"));
@@ -2273,7 +2273,7 @@ int main(int argc, char ** argv)
 	CreateWindow();
 	InitializeOpenGL();
 	// since reading the textures already creates them we have to do this after initializing OpenGL
-	ReadTextures(Archive, g_TextureManager);
+	ReadTextures(Archive);
 	// main loop
 	while(g_Quit == false)
 	{
