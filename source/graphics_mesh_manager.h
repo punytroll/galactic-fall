@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006  Hagen Möbius
+ * Copyright (C) 2007  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,21 +17,26 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef ARX_READING_H
-#define ARX_READING_H
+#ifndef MESH_MANAGER_H
+#define MESH_MANAGER_H
 
-class Archive;
+#include <map>
+#include <string>
 
-void ReadAssetClasses(Arxx::Archive & Archive);
-void ReadCommodityClasses(Arxx::Archive & Archive);
-void ReadMeshes(Arxx::Archive & Archive);
-void ReadModels(Arxx::Archive & Archive);
-void ReadShipClasses(Arxx::Archive & Archive);
-void ReadSlotClasses(Arxx::Archive & Archive);
-void ReadSystems(Arxx::Archive & Archive);
-void ReadSystemLinks(Arxx::Archive & Archive);
-void ReadTextures(Arxx::Archive & Archive);
-void ReadUserInterface(Arxx::Archive & Archive);
-void ReadWeaponClasses(Arxx::Archive & Archive);
+namespace Graphics
+{
+	class Mesh;
+
+	class MeshManager
+	{
+	public:
+		~MeshManager(void);
+		const Graphics::Mesh * Get(const std::string & Identifier) const;
+		Graphics::Mesh * Create(const std::string & Identifier);
+		void Destroy(const std::string & Identifier);
+	private:
+		std::map< std::string, Graphics::Mesh * > m_Managed;
+	};
+}
 
 #endif

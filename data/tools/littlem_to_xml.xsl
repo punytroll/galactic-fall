@@ -1,7 +1,7 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
-<xsl:template match="/model">
-	<model>
+<xsl:template match="/mesh">
+	<mesh>
 		<identifier><xsl:value-of select="@identifier"/></identifier>
 		<points>
 			<xsl:apply-templates select="point"/>
@@ -12,10 +12,10 @@
 		<triangles>
 			<xsl:apply-templates select="triangle"/>
 		</triangles>
-	</model>
+	</mesh>
 </xsl:template>
 
-<xsl:template match="/model/point">
+<xsl:template match="/mesh/point">
 	<point>
 		<identifier><xsl:value-of select="@identifier"/></identifier>
 		<name><xsl:value-of select="@name"/></name>
@@ -27,7 +27,7 @@
 	</point>
 </xsl:template>
 
-<xsl:template match="/model/triangle-point">
+<xsl:template match="/mesh/triangle-point">
 	<triangle-point>
 		<identifier><xsl:value-of select="@identifier"/></identifier>
 		<normal>
@@ -39,7 +39,7 @@
 	</triangle-point>
 </xsl:template>
 
-<xsl:template match="/model/triangle">
+<xsl:template match="/mesh/triangle">
 	<triangle>
 		<identifier><xsl:value-of select="@identifier"/></identifier>
 		<name><xsl:value-of select="@name"/></name>

@@ -1,0 +1,9 @@
+<model>
+	<identifier>fighter</identifier>
+	<mesh-parts>
+		<mesh-part>
+			<identifier>hull</identifier>
+			<mesh-identifier>fighter</mesh-identifier>
+		</mesh-part>
+	</mesh-parts>
+</model>

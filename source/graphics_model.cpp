@@ -17,8 +17,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include <assert.h>
+
 #include <GL/gl.h>
 
+#include "graphics_mesh.h"
 #include "graphics_model.h"
 
 Graphics::Model::Model(const std::string & Identifier) :
@@ -27,69 +30,27 @@ Graphics::Model::Model(const std::string & Identifier) :
 {
 }
 
-void Graphics::Model::Clear(void)
-{
-	m_Points.clear();
-	m_Triangles.clear();
-}
-
-void Graphics::Model::Draw(void) const
-{
-	glBegin(GL_TRIANGLES);
-	for(std::vector< Graphics::Model::Triangle >::size_type Triangle = 0; Triangle < m_Triangles.size(); ++Triangle)
-	{
-		glNormal3fv(m_Triangles[Triangle].Normals[0].m_V.m_A);
-		glVertex3fv(m_Points[m_Triangles[Triangle].Points[0]].m_V.m_A);
-		glNormal3fv(m_Triangles[Triangle].Normals[1].m_V.m_A);
-		glVertex3fv(m_Points[m_Triangles[Triangle].Points[1]].m_V.m_A);
-		glNormal3fv(m_Triangles[Triangle].Normals[2].m_V.m_A);
-		glVertex3fv(m_Points[m_Triangles[Triangle].Points[2]].m_V.m_A);
-	}
-	glEnd();
-}
-
 float Graphics::Model::GetRadialSize(void) const
 {
 	if(m_RadialSize < 0.0f)
 	{
-		for(std::vector< Vector4f >::const_iterator PointInterator = m_Points.begin(); PointInterator != m_Points.end(); ++PointInterator)
+		for(std::map< std::string, const Graphics::Mesh * >::const_iterator MeshIterator = m_Meshes.begin(); MeshIterator != m_Meshes.end(); ++MeshIterator)
 		{
-			float RadialSquare(PointInterator->SquaredLength());
+			float RadialSize(MeshIterator->second->GetRadialSize());
 			
-			if(m_RadialSize < RadialSquare)
+			if(m_RadialSize < RadialSize)
 			{
-				m_RadialSize = RadialSquare;
+				m_RadialSize = RadialSize;
 			}
 		}
-		m_RadialSize = sqrt(m_RadialSize);
 	}
 	
 	return m_RadialSize;
 }
 
-std::vector< Vector4f >::size_type Graphics::Model::AddPoint(const Vector4f & Point)
+void Graphics::Model::AddMesh(const std::string & MeshIdentifier, const Graphics::Mesh * Mesh)
 {
-	m_Points.push_back(Point);
+	assert(m_Meshes.find(MeshIdentifier) == m_Meshes.end());
 	
-	return m_Points.size() - 1;
-}
-
-std::vector< Graphics::Model::Triangle >::size_type Graphics::Model::AddTriangle(const Graphics::Model::Triangle & Triangle)
-{
-	m_Triangles.push_back(Triangle);
-	
-	return m_Triangles.size() - 1;
-}
-
-std::vector< Graphics::Model::Triangle >::size_type Graphics::Model::AddTriangle(std::vector< Vector4f >::size_type Point1Index, const Vector4f & Point1Normal, std::vector< Vector4f >::size_type Point2Index, const Vector4f & Point2Normal, std::vector< Vector4f >::size_type Point3Index, const Vector4f & Point3Normal)
-{
-	m_Triangles.push_back(Triangle());
-	m_Triangles.back().Points[0] = Point1Index;
-	m_Triangles.back().Normals[0] = Point1Normal;
-	m_Triangles.back().Points[1] = Point2Index;
-	m_Triangles.back().Normals[1] = Point2Normal;
-	m_Triangles.back().Points[2] = Point3Index;
-	m_Triangles.back().Normals[2] = Point3Normal;
-	
-	return m_Triangles.size() - 1;
+	m_Meshes[MeshIdentifier] = Mesh;
 }

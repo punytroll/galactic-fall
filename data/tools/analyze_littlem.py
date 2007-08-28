@@ -13,12 +13,12 @@ if options.in_file == None:
 	print "Set the raw file to convert with '--in'."
 	exit(1)
 
-def analyze(model_element):
-	print "identifier: " + model_element.attributes.get("identifier").nodeValue
+def analyze(mesh_element):
+	print "identifier: " + mesh_element.attributes.get("identifier").nodeValue
 	number_of_points = 0
 	number_of_triangle_points = 0
 	number_of_triangles = 0
-	for element in model_element.childNodes:
+	for element in mesh_element.childNodes:
 		if element.nodeType == Node.ELEMENT_NODE:
 			if element.tagName == "point":
 				number_of_points += 1
@@ -32,6 +32,6 @@ def analyze(model_element):
 
 # now parse the in_file
 in_document = parse(options.in_file)
-model_element = in_document.documentElement
-if model_element.nodeType == Node.ELEMENT_NODE:
-	analyze(model_element)
+mesh_element = in_document.documentElement
+if mesh_element.nodeType == Node.ELEMENT_NODE:
+	analyze(mesh_element)
