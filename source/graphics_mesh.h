@@ -17,39 +17,42 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef GRAPHICS_MODEL_H
-#define GRAPHICS_MODEL_H
+#ifndef GRAPHICS_MESH_H
+#define GRAPHICS_MESH_H
 
-#include <map>
+#include <vector>
 #include <string>
+
+#include "math/vector4f.h"
 
 namespace Graphics
 {
-	class Mesh;
-	
-	class Model
+	class Mesh
 	{
 	public:
-		Model(const std::string & Identifier);
+		struct Triangle
+		{
+			std::vector< Vector4f >::size_type Points[3];
+			Vector4f Normals[3];
+		};
+		
+		Mesh(const std::string & Identifier);
+		void Draw(void) const;
 		const std::string & GetIdentifier(void) const;
-		const std::map< std::string, const Graphics::Mesh * > & GetMeshes(void) const;
 		float GetRadialSize(void) const;
-		void AddMesh(const std::string & MeshIdentifier, const Graphics::Mesh * Mesh);
+		std::vector< Vector4f >::size_type AddPoint(const Vector4f & Point);
+		std::vector< Graphics::Mesh::Triangle >::size_type AddTriangle(std::vector< Vector4f >::size_type Point1Index, const Vector4f & Point1Normal, std::vector< Vector4f >::size_type Point2Index, const Vector4f & Point2Normal, std::vector< Vector4f >::size_type Point3Index, const Vector4f & Point3Normal);
 	private:
 		std::string m_Identifier;
-		std::map< std::string, const Graphics::Mesh * > m_Meshes;
+		std::vector< Vector4f > m_Points;
+		std::vector< Graphics::Mesh::Triangle > m_Triangles;
 		mutable float m_RadialSize;
 	};
 }
 
-inline const std::string & Graphics::Model::GetIdentifier(void) const
+inline const std::string & Graphics::Mesh::GetIdentifier(void) const
 {
 	return m_Identifier;
-}
-
-inline const std::map< std::string, const Graphics::Mesh * > & Graphics::Model::GetMeshes(void) const
-{
-	return m_Meshes;
 }
 
 #endif

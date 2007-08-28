@@ -6,7 +6,7 @@ from optparse import OptionParser
 from xml_stream import attribute, element, end, value, XMLStream
 
 parser = OptionParser()
-parser.add_option("-n", "--identifier", dest = "identifier", help = "The identifier of the new model.")
+parser.add_option("-n", "--identifier", dest = "identifier", help = "The identifier of the new mesh.")
 parser.add_option("-i", "--in", dest = "in_file", help = "The file to convert from raw to littlem form.")
 parser.add_option("-o", "--out", dest = "out_file", help = "The file to put the littlem form into.")
 parser.add_option("-s", "--smooth", action = "store_true", default = False, dest = "smooth", help = "Set this option if you want the normals to smooth the surface.")
@@ -211,7 +211,7 @@ if options.smooth == True:
 # now write the output
 out_file = open(options.out_file, "w")
 xml_stream = XMLStream(out_file)
-xml_stream << element << "model"
+xml_stream << element << "mesh"
 if options.identifier != None and options.identifier != "":
 	xml_stream << attribute << "identifier" << value << options.identifier
 for point in points.get_points():

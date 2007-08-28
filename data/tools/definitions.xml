@@ -33,11 +33,21 @@
 		<u1byte identifier="vertical-alignment"/>
 	</label>
 	
-	<model>
+	<mesh>
 		<string identifier="identifier"/>
 		<array identifier="points"/>
 		<array identifier="triangle-points"/>
 		<array identifier="triangles"/>
+	</mesh>
+	
+	<mesh-part>
+		<string identifier="identifier"/>
+		<string identifier="mesh-identifier"/>
+	</mesh-part>
+	
+	<model>
+		<string identifier="identifier"/>
+		<array identifier="mesh-parts"/>
 	</model>
 	
 	<offered-asset-class>

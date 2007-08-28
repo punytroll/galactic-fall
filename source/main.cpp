@@ -52,6 +52,7 @@
 #include "game_time.h"
 #include "globals.h"
 #include "graphics_engine.h"
+#include "graphics_mesh_manager.h"
 #include "graphics_model.h"
 #include "graphics_model_manager.h"
 #include "graphics_model_object.h"
@@ -169,6 +170,7 @@ Graphics::Node * g_PlanetLayer(0);
 Graphics::Node * g_ShipLayer(0);
 Graphics::Node * g_ShotLayer(0);
 Graphics::Node * g_ParticleSystemsLayer(0);
+Graphics::MeshManager * g_MeshManager(0);
 Graphics::ModelManager * g_ModelManager(0);
 ObjectFactory * g_ObjectFactory(0);
 ShipClassManager * g_ShipClassManager(0);
@@ -2167,6 +2169,7 @@ int main(int argc, char ** argv)
 	g_GraphicsEngine = new Graphics::Engine();
 	g_GraphicsEngine->SetOnDestroyCallback(Function(OnGraphicsNodeDestroy));
 	g_MainScene = 0;
+	g_MeshManager = new Graphics::MeshManager();
 	g_ModelManager = new Graphics::ModelManager();
 	g_ObjectFactory = new ObjectFactory();
 	g_ShipClassManager = new ShipClassManager();
@@ -2217,6 +2220,7 @@ int main(int argc, char ** argv)
 	}
 	
 	// read the data from the archive
+	ReadMeshes(Archive);
 	ReadModels(Archive);
 	ReadAssetClasses(Archive);
 	ReadCommodityClasses(Archive);

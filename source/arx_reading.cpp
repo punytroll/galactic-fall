@@ -35,6 +35,8 @@
 #include "commodity_class_manager.h"
 #include "galaxy.h"
 #include "globals.h"
+#include "graphics_mesh.h"
+#include "graphics_mesh_manager.h"
 #include "graphics_model.h"
 #include "graphics_model_manager.h"
 #include "graphics_texture.h"
@@ -60,6 +62,7 @@ static Arxx::Item * Resolve(Arxx::Reference & Reference);
 
 static void ReadAssetClass(Arxx::Reference & Reference);
 static void ReadCommodityClass(Arxx::Reference & Reference);
+static void ReadMesh(Arxx::Reference & Reference);
 static void ReadModel(Arxx::Reference & Reference);
 static void ReadShipClass(Arxx::Reference & Reference);
 static void ReadSlotClass(Arxx::Reference & Reference);
@@ -136,6 +139,11 @@ void ReadAssetClasses(Arxx::Archive & Archive)
 void ReadCommodityClasses(Arxx::Archive & Archive)
 {
 	ReadItems(Archive, "/Commodity Classes", Function(ReadCommodityClass));
+}
+
+void ReadMeshes(Arxx::Archive & Archive)
+{
+	ReadItems(Archive, "/Meshes", Function(ReadMesh));
 }
 
 void ReadModels(Arxx::Archive & Archive)
@@ -261,17 +269,17 @@ static void ReadCommodityClass(Arxx::Reference & Reference)
 	NewCommodityClass->SetSpaceRequirement(static_cast< unsigned_numeric >(1000 * SpaceRequirement));
 }
 
-static void ReadModel(Arxx::Reference & Reference)
+static void ReadMesh(Arxx::Reference & Reference)
 {
 	Arxx::Item * Item(Resolve(Reference));
 	
-	if(Item->u4GetType() != ARX_TYPE_MODEL)
+	if(Item->u4GetType() != ARX_TYPE_MESH)
 	{
-		throw std::runtime_error("Item type for model '" + Item->sGetName() + "' should be '" + to_string_cast(ARX_TYPE_MODEL) + "' not '" + to_string_cast(Item->u4GetType()) + "'.");
+		throw std::runtime_error("Item type for mesh '" + Item->sGetName() + "' should be '" + to_string_cast(ARX_TYPE_MESH) + "' not '" + to_string_cast(Item->u4GetType()) + "'.");
 	}
 	if(Item->u4GetSubType() != 0)
 	{
-		throw std::runtime_error("Item sub type for model '" + Item->sGetName() + "' should be '0' not '" + to_string_cast(Item->u4GetSubType()) + "'.");
+		throw std::runtime_error("Item sub type for mesh '" + Item->sGetName() + "' should be '0' not '" + to_string_cast(Item->u4GetSubType()) + "'.");
 	}
 	
 	Arxx::BufferReader Reader(*Item);
@@ -279,9 +287,9 @@ static void ReadModel(Arxx::Reference & Reference)
 	
 	Reader >> Identifier;
 	
-	Graphics::Model * NewModel(g_ModelManager->Create(Identifier));
+	Graphics::Mesh * NewMesh(g_MeshManager->Create(Identifier));
 	
-	if(NewModel == 0)
+	if(NewMesh == 0)
 	{
 		throw std::runtime_error("Could not create model '" + Identifier + "'.");
 	}
@@ -299,7 +307,7 @@ static void ReadModel(Arxx::Reference & Reference)
 		float Z;
 		
 		Reader >> PointIdentifier >> PointName >> X >> Y >> Z;
-		Points[PointIdentifier] = NewModel->AddPoint(Vector4f(X, Y, Z, 0.0f));
+		Points[PointIdentifier] = NewMesh->AddPoint(Vector4f(X, Y, Z, 0.0f));
 	}
 	
 	std::map< std::string, std::pair< std::vector< Vector4f >::size_type, Vector4f > > TrianglePoints;
@@ -327,7 +335,52 @@ static void ReadModel(Arxx::Reference & Reference)
 		std::string TrianglePoint3Identifier;
 		
 		Reader >> TriangleIdentifier >> TriangleName >> TrianglePoint1Identifier >> TrianglePoint2Identifier >> TrianglePoint3Identifier;
-		NewModel->AddTriangle(TrianglePoints[TrianglePoint1Identifier].first, TrianglePoints[TrianglePoint1Identifier].second, TrianglePoints[TrianglePoint2Identifier].first, TrianglePoints[TrianglePoint2Identifier].second, TrianglePoints[TrianglePoint3Identifier].first, TrianglePoints[TrianglePoint3Identifier].second);
+		NewMesh->AddTriangle(TrianglePoints[TrianglePoint1Identifier].first, TrianglePoints[TrianglePoint1Identifier].second, TrianglePoints[TrianglePoint2Identifier].first, TrianglePoints[TrianglePoint2Identifier].second, TrianglePoints[TrianglePoint3Identifier].first, TrianglePoints[TrianglePoint3Identifier].second);
+	}
+}
+
+static void ReadModel(Arxx::Reference & Reference)
+{
+	Arxx::Item * Item(Resolve(Reference));
+	
+	if(Item->u4GetType() != ARX_TYPE_MODEL)
+	{
+		throw std::runtime_error("Item type for model '" + Item->sGetName() + "' should be '" + to_string_cast(ARX_TYPE_MODEL) + "' not '" + to_string_cast(Item->u4GetType()) + "'.");
+	}
+	if(Item->u4GetSubType() != 0)
+	{
+		throw std::runtime_error("Item sub type for model '" + Item->sGetName() + "' should be '0' not '" + to_string_cast(Item->u4GetSubType()) + "'.");
+	}
+	
+	Arxx::BufferReader Reader(*Item);
+	std::string Identifier;
+	
+	Reader >> Identifier;
+	
+	Graphics::Model * NewModel(g_ModelManager->Create(Identifier));
+	
+	if(NewModel == 0)
+	{
+		throw std::runtime_error("Could not create model '" + Identifier + "'.");
+	}
+	
+	Arxx::u4byte Count;
+	
+	Reader >> Count;
+	for(Arxx::u4byte Number = 1; Number <= Count; ++Number)
+	{
+		std::string PartIdentifier;
+		std::string MeshIdentifier;
+		
+		Reader >> PartIdentifier >> MeshIdentifier;
+		
+		const Graphics::Mesh * Mesh(g_MeshManager->Get(MeshIdentifier));
+		
+		if(Mesh == 0)
+		{
+			throw std::runtime_error("For model '" + Identifier + "' could not find the mesh '" + MeshIdentifier + "' for part '" + PartIdentifier + "'.");
+		}
+		NewModel->AddMesh(PartIdentifier, Mesh);
 	}
 }
 

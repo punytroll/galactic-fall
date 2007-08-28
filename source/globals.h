@@ -44,6 +44,7 @@ class TimeoutNotificationManager;
 namespace Graphics
 {
 	class Engine;
+	class MeshManager;
 	class ModelManager;
 	class Node;
 	class TextureManager;
@@ -55,6 +56,7 @@ extern Graphics::Node * g_CommodityLayer;
 extern Galaxy * g_Galaxy;
 extern TimeoutNotificationManager * g_GameTimeTimeoutNotifications;
 extern Graphics::Engine * g_GraphicsEngine;
+extern Graphics::MeshManager * g_MeshManager;
 extern Graphics::ModelManager * g_ModelManager;
 extern ObjectFactory * g_ObjectFactory;
 extern TimeoutNotificationManager * g_RealTimeTimeoutNotifications;

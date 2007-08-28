@@ -20,6 +20,7 @@
 #include <GL/gl.h>
 
 #include "color.h"
+#include "graphics_mesh.h"
 #include "graphics_model.h"
 #include "graphics_model_object.h"
 #include "math/matrix4f.h"
@@ -106,7 +107,13 @@ void Graphics::ModelObject::Draw(void)
 				glColor4fv(m_DiffuseColor->GetColor().m_V.m_A);
 			}
 		}
-		m_Model->Draw();
+		
+		const std::map< std::string, const Graphics::Mesh * > & Meshes(m_Model->GetMeshes());
+		
+		for(std::map< std::string, const Graphics::Mesh * >::const_iterator MeshIterator = Meshes.begin(); MeshIterator != Meshes.end(); ++MeshIterator)
+		{
+			MeshIterator->second->Draw();
+		}
 		if((m_Normalize || m_UseBlending || m_UseLighting) == true)
 		{
 			glPopAttrib();

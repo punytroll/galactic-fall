@@ -1,0 +1,9 @@
+<model>
+	<identifier>planet</identifier>
+	<mesh-parts>
+		<mesh-part>
+			<identifier>planet</identifier>
+			<mesh-identifier>planet</mesh-identifier>
+		</mesh-part>
+	</mesh-parts>
+</model>

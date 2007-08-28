@@ -1,4 +1,4 @@
-<model identifier="cargo_cube">
+<mesh identifier="cargo_cube">
 	 <point identifier="0" name="" position-x="-0.5" position-y="0.5" position-z="-0.5" />
 	 <point identifier="1" name="" position-x="0.5" position-y="0.5" position-z="-0.5" />
 	 <point identifier="2" name="" position-x="0.5" position-y="0.5" position-z="0.5" />
@@ -175,4 +175,4 @@
 		<triangle-point triangle-point-identifier="34" />
 		<triangle-point triangle-point-identifier="35" />
 	 </triangle>
-</model>
+</mesh>

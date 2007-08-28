@@ -1,0 +1,9 @@
+<model>
+	<identifier>cargo_cube</identifier>
+	<mesh-parts>
+		<mesh-part>
+			<identifier>cargo_cube</identifier>
+			<mesh-identifier>cargo_cube</mesh-identifier>
+		</mesh-part>
+	</mesh-parts>
+</model>

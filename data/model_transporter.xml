@@ -1,0 +1,9 @@
+<model>
+	<identifier>transporter</identifier>
+	<mesh-parts>
+		<mesh-part>
+			<identifier>hull</identifier>
+			<mesh-identifier>transporter</mesh-identifier>
+		</mesh-part>
+	</mesh-parts>
+</model>

@@ -23,6 +23,13 @@ all_data = \
 	.data/label_system.data \
 	.data/label_target.data \
 	.data/label_time_warp.data \
+	.data/mesh_cargo_cube.data \
+	.data/mesh_fighter.data \
+	.data/mesh_laser_shot.data \
+	.data/mesh_light_laser.data \
+	.data/mesh_planet.data \
+	.data/mesh_shuttle.data \
+	.data/mesh_transporter.data \
 	.data/model_cargo_cube.data \
 	.data/model_fighter.data \
 	.data/model_laser_shot.data \
@@ -51,7 +58,7 @@ all_data = \
 	.data/widget_scanner.data \
 	.data/widget_scanner_display.data
 
-smooth_models = \
+smooth_meshes = \
 	fighter \
 	planet \
 	shuttle
@@ -94,19 +101,19 @@ check-dependencies:
 clean:
 	$(RM) -r .data
 	$(RM) data.arx
-	$(RM) xml_stream.pyc
-	$(RM) model_cargo_cube.xml
-	$(RM) model_fighter.xml
-	$(RM) model_laser_shot.xml
-	$(RM) model_light_laser.xml
-	$(RM) model_planet.xml
-	$(RM) model_shuttle.xml
-	$(RM) model_transporter.xml
-	$(RM) models/fighter.xml
-	$(RM) models/light_laser.xml
-	$(RM) models/planet.xml
-	$(RM) models/shuttle.xml
-	$(RM) models/transporter.xml
+	$(RM) tools/xml_stream.pyc
+	$(RM) mesh_cargo_cube.xml
+	$(RM) mesh_fighter.xml
+	$(RM) mesh_laser_shot.xml
+	$(RM) mesh_light_laser.xml
+	$(RM) mesh_planet.xml
+	$(RM) mesh_shuttle.xml
+	$(RM) mesh_transporter.xml
+	$(RM) meshes/fighter.xml
+	$(RM) meshes/light_laser.xml
+	$(RM) meshes/planet.xml
+	$(RM) meshes/shuttle.xml
+	$(RM) meshes/transporter.xml
 	$(RM) textures/particle.tex
 
 data.arx: .data $(all_data) Makefile
@@ -119,7 +126,7 @@ data.arx: .data $(all_data) Makefile
 	arxmod $@ 1 -n "User Interface" -t 0 -st 0
 	arxmod $@ 0 -a "child" 1
 	arxtouch $@ 2
-	arxmod $@ 2 -n "Models" -t 0 -st 0
+	arxmod $@ 2 -n "Meshes" -t 0 -st 0
 	arxmod $@ 0 -a "child" 2
 	arxtouch $@ 3
 	arxmod $@ 3 -n "Ship Classes" -t 0 -st 0
@@ -145,6 +152,9 @@ data.arx: .data $(all_data) Makefile
 	arxtouch $@ a
 	arxmod $@ a -n "Textures" -t 0 -st 0
 	arxmod $@ 0 -a "child" a
+	arxtouch $@ b
+	arxmod $@ b -n "Models" -t 0 -st 0
+	arxmod $@ 0 -a "child" b
 	@echo -e "\n\nAdding widgets ...\n"
 	@echo -e "\nThe widgets will be read in uid order, so assign proper uids so that superior widgets are read before sub widgets.\n"
 	arxadd $@ --uid 103 --name "Credits" --type 1 --subtype 1 --add "/User Interface" .data/label_credits.data
@@ -197,14 +207,22 @@ data.arx: .data $(all_data) Makefile
 	arxadd $@ --name "Alpha Centauri / Tichel" --type 6 --subtype 0 --add "/System Links" .data/system_link_alpha_centauri_tichel.data
 	arxadd $@ --name "Rigel / Sol" --type 6 --subtype 0 --add "/System Links" .data/system_link_rigel_sol.data
 	arxadd $@ --name "Rigel / Tichel" --type 6 --subtype 0 --add "/System Links" .data/system_link_rigel_tichel.data
+	@echo -e "\n\nAdding meshes ...\n"
+	arxadd $@ --name "Cargo Cube" --type 2 --subtype 0 --add "/Meshes" .data/mesh_cargo_cube.data
+	arxadd $@ --name "Fighter Hull" --type 2 --subtype 0 --add "/Meshes" .data/mesh_fighter.data
+	arxadd $@ --name "Laser Shot" --type 2 --subtype 0 --add "/Meshes" .data/mesh_laser_shot.data
+	arxadd $@ --name "Light Laser" --type 2 --subtype 0 --add "/Meshes" .data/mesh_light_laser.data
+	arxadd $@ --name "Planet" --type 2 --subtype 0 --add "/Meshes" .data/mesh_planet.data
+	arxadd $@ --name "Shuttle Hull" --type 2 --subtype 0 --add "/Meshes" .data/mesh_shuttle.data
+	arxadd $@ --name "Transporter Hull" --type 2 --subtype 0 --add "/Meshes" .data/mesh_transporter.data
 	@echo -e "\n\nAdding models ...\n"
-	arxadd $@ --name "Cargo Cube" --type 2 --subtype 0 --add "/Models" .data/model_cargo_cube.data
-	arxadd $@ --name "Fighter" --type 2 --subtype 0 --add "/Models" .data/model_fighter.data
-	arxadd $@ --name "Laser Shot" --type 2 --subtype 0 --add "/Models" .data/model_laser_shot.data
-	arxadd $@ --name "Light Laser" --type 2 --subtype 0 --add "/Models" .data/model_light_laser.data
-	arxadd $@ --name "Planet" --type 2 --subtype 0 --add "/Models" .data/model_planet.data
-	arxadd $@ --name "Shuttle" --type 2 --subtype 0 --add "/Models" .data/model_shuttle.data
-	arxadd $@ --name "Transporter" --type 2 --subtype 0 --add "/Models" .data/model_transporter.data
+	arxadd $@ --name "Cargo Cube" --type b --subtype 0 --add "/Models" .data/model_cargo_cube.data
+	arxadd $@ --name "Fighter" --type b --subtype 0 --add "/Models" .data/model_fighter.data
+	arxadd $@ --name "Laser Shot" --type b --subtype 0 --add "/Models" .data/model_laser_shot.data
+	arxadd $@ --name "Light Laser" --type b --subtype 0 --add "/Models" .data/model_light_laser.data
+	arxadd $@ --name "Planet" --type b --subtype 0 --add "/Models" .data/model_planet.data
+	arxadd $@ --name "Shuttle" --type b --subtype 0 --add "/Models" .data/model_shuttle.data
+	arxadd $@ --name "Transporter" --type b --subtype 0 --add "/Models" .data/model_transporter.data
 	@echo -e "\n\nAdding textures ...\n"
 	arxadd $@ --name "Particle" --type a --subtype 0 --add "/Textures" .data/texture_particle.data
 
@@ -214,11 +232,11 @@ data.arx: .data $(all_data) Makefile
 .data/%.data: %.xml $(definitions_xml) $(xml_to_data_py)
 	python tools/xml_to_data.py --definitions=tools/definitions.xml --in=$< --out=$@
 
-model_%.xml: models/%.xml $(littlem_to_xml_xsl)
+mesh_%.xml: meshes/%.xml $(littlem_to_xml_xsl)
 	xsltproc -output $@ tools/littlem_to_xml.xsl $<
 
-models/%.xml: models/%.raw $(raw_to_littlem_py)
-	python tools/raw_to_littlem.py --in=$< --out=$@ --identifier=$(subst models/,,$(subst .xml,,$@)) $(subst $(subst models/,,$(subst .xml,,$@)),--smooth,$(findstring $(subst models/,,$(subst .xml,,$@)),$(smooth_models)))
+meshes/%.xml: meshes/%.raw $(raw_to_littlem_py)
+	python tools/raw_to_littlem.py --in=$< --out=$@ --identifier=$(subst meshes/,,$(subst .xml,,$@)) $(subst $(subst meshes/,,$(subst .xml,,$@)),--smooth,$(findstring $(subst meshes/,,$(subst .xml,,$@)),$(smooth_meshes)))
 
 textures/%.tex: textures/%.vg $(rasterize_py)
 	python tools/rasterize.py --in=$< --out=$@ --sub-pixels=3 --dimensions=32x32
