@@ -37,7 +37,6 @@ function subtract
 	local IFS=" "
 	result=""
 	for word in $1; do
-		echo $word
 		for test_word in $2; do
 			if [ "${word}" = "${test_word}" ]; then
 				continue 2
