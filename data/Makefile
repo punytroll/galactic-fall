@@ -24,6 +24,7 @@ all_data = \
 	.data/label_target.data \
 	.data/label_time_warp.data \
 	.data/mesh_cargo_cube.data \
+	.data/mesh_fighter_cockpit.data \
 	.data/mesh_fighter_hull.data \
 	.data/mesh_laser_shot.data \
 	.data/mesh_light_laser.data \
@@ -59,9 +60,9 @@ all_data = \
 	.data/widget_scanner_display.data
 
 smooth_meshes = \
-	fighter \
+	fighter_cockpit \
 	planet \
-	shuttle
+	shuttle_hull
 
 definitions_xml = \
 	tools/definitions.xml
@@ -217,6 +218,7 @@ data.arx: .data $(all_data) Makefile
 	arxadd $@ --name "Transporter" --type b --subtype 0 --add "/Models" .data/model_transporter.data
 	@echo -e "\n\nAdding meshes ...\n"
 	arxadd $@ --name "Cargo Cube" --type 2 --subtype 0 --add "/Meshes" .data/mesh_cargo_cube.data
+	arxadd $@ --name "Fighter Cockpit" --type 2 --subtype 0 --add "/Meshes" .data/mesh_fighter_cockpit.data
 	arxadd $@ --name "Fighter Hull" --type 2 --subtype 0 --add "/Meshes" .data/mesh_fighter_hull.data
 	arxadd $@ --name "Laser Shot" --type 2 --subtype 0 --add "/Meshes" .data/mesh_laser_shot.data
 	arxadd $@ --name "Light Laser" --type 2 --subtype 0 --add "/Meshes" .data/mesh_light_laser.data

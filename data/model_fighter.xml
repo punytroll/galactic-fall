@@ -5,5 +5,9 @@
 			<part-identifier>hull</part-identifier>
 			<mesh-identifier>fighter_hull</mesh-identifier>
 		</mesh-part>
+		<mesh-part>
+			<part-identifier>cockpit</part-identifier>
+			<mesh-identifier>fighter_cockpit</mesh-identifier>
+		</mesh-part>
 	</mesh-parts>
 </model>
