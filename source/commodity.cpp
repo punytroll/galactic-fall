@@ -17,13 +17,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include <GL/gl.h>
-
 #include "color.h"
 #include "commodity.h"
 #include "commodity_class.h"
-#include "math/matrix4f.h"
-#include "model.h"
+#include "graphics_model.h"
 
 Commodity::Commodity(const CommodityClass * CommodityClass) :
 	m_CommodityClass(CommodityClass),

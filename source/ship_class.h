@@ -27,9 +27,13 @@
 #include "type_definitions.h"
 
 class Color;
-class Model;
 class Slot;
 class SlotClass;
+
+namespace Graphics
+{
+	class Model;
+}
 
 class ShipClass
 {
@@ -40,7 +44,7 @@ public:
 	~ShipClass(void);
 	// getters
 	const std::string & GetIdentifier(void) const;
-	const Model * GetModel(void) const;
+	const Graphics::Model * GetModel(void) const;
 	float GetForwardThrust(void) const;
 	float GetTurnSpeed(void) const;
 	float GetMaximumSpeed(void) const;
@@ -54,7 +58,7 @@ public:
 	const Vector3f & GetExhaustOffset(void) const;
 	const std::map< std::string, Slot * > & GetSlots(void) const;
 	// setters
-	void SetModel(const Model * Model);
+	void SetModel(const Graphics::Model * Model);
 	void SetForwardThrust(float ForwardThrust);
 	void SetTurnSpeed(float TurnSpeed);
 	void SetMaximumSpeed(float MaximumSpeed);
@@ -70,7 +74,7 @@ public:
 	Slot * CreateSlot(const SlotClass * SlotClass, const std::string & SlotIdentifier);
 private:
 	std::string m_Identifier;
-	const Model * m_Model;
+	const Graphics::Model * m_Model;
 	float m_ForwardThrust;
 	float m_TurnSpeed;
 	float m_MaximumSpeed;
@@ -90,7 +94,7 @@ inline const std::string & ShipClass::GetIdentifier(void) const
 	return m_Identifier;
 }
 
-inline const Model * ShipClass::GetModel(void) const
+inline const Graphics::Model * ShipClass::GetModel(void) const
 {
 	return m_Model;
 }
@@ -155,7 +159,7 @@ inline const std::map< std::string, Slot * > & ShipClass::GetSlots(void) const
 	return m_Slots;
 }
 
-inline void ShipClass::SetModel(const Model * Model)
+inline void ShipClass::SetModel(const Graphics::Model * Model)
 {
 	m_Model = Model;
 }

@@ -25,7 +25,11 @@
 #include "type_definitions.h"
 
 class Color;
-class Model;
+
+namespace Graphics
+{
+	class Model;
+}
 
 class CommodityClass
 {
@@ -35,18 +39,18 @@ public:
 	// getters
 	const Color * GetColor(void) const;
 	const std::string & GetIdentifier(void) const;
-	const Model * GetModel(void) const;
+	const Graphics::Model * GetModel(void) const;
 	const std::string & GetName(void) const;
 	unsigned_numeric GetSpaceRequirement(void) const;
 	// setters
 	void SetColor(const Color & Color);
-	void SetModel(const Model * Model);
+	void SetModel(const Graphics::Model * Model);
 	void SetName(const std::string & Name);
 	void SetSpaceRequirement(unsigned_numeric SpaceRequirement);
 private:
 	Color * m_Color;
 	std::string m_Identifier;
-	const Model * m_Model;
+	const Graphics::Model * m_Model;
 	std::string m_Name;
 	unsigned_numeric m_SpaceRequirement;
 };
@@ -61,7 +65,7 @@ inline const std::string & CommodityClass::GetIdentifier(void) const
 	return m_Identifier;
 }
 
-inline const Model * CommodityClass::GetModel(void) const
+inline const Graphics::Model * CommodityClass::GetModel(void) const
 {
 	return m_Model;
 }
@@ -76,7 +80,7 @@ inline unsigned_numeric CommodityClass::GetSpaceRequirement(void) const
 	return m_SpaceRequirement;
 }
 
-inline void CommodityClass::SetModel(const Model * Model)
+inline void CommodityClass::SetModel(const Graphics::Model * Model)
 {
 	m_Model = Model;
 }

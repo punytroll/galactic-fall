@@ -23,17 +23,20 @@
 #include <map>
 #include <string>
 
-class Model;
-
-class ModelManager
+namespace Graphics
 {
-public:
-	~ModelManager(void);
-	const Model * Get(const std::string & Identifier) const;
-	Model * Create(const std::string & Identifier);
-	void Destroy(const std::string & Identifier);
-private:
-	std::map< std::string, Model * > m_Models;
-};
+	class Model;
+
+	class ModelManager
+	{
+	public:
+		~ModelManager(void);
+		const Graphics::Model * Get(const std::string & Identifier) const;
+		Graphics::Model * Create(const std::string & Identifier);
+		void Destroy(const std::string & Identifier);
+	private:
+		std::map< std::string, Graphics::Model * > m_Models;
+	};
+}
 
 #endif

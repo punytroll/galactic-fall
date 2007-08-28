@@ -17,10 +17,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include "model.h"
-#include "model_manager.h"
+#include "graphics_model.h"
+#include "graphics_model_manager.h"
 
-ModelManager::~ModelManager(void)
+Graphics::ModelManager::~ModelManager(void)
 {
 	while(m_Models.size() > 0)
 	{
@@ -28,9 +28,9 @@ ModelManager::~ModelManager(void)
 	}
 }
 
-const Model * ModelManager::Get(const std::string & Identifier) const
+const Graphics::Model * Graphics::ModelManager::Get(const std::string & Identifier) const
 {
-	std::map< std::string, Model * >::const_iterator ModelIterator(m_Models.find(Identifier));
+	std::map< std::string, Graphics::Model * >::const_iterator ModelIterator(m_Models.find(Identifier));
 	
 	if(ModelIterator == m_Models.end())
 	{
@@ -42,7 +42,7 @@ const Model * ModelManager::Get(const std::string & Identifier) const
 	}
 }
 
-Model * ModelManager::Create(const std::string & Identifier)
+Graphics::Model * Graphics::ModelManager::Create(const std::string & Identifier)
 {
 	if(m_Models.find(Identifier) != m_Models.end())
 	{
@@ -50,7 +50,7 @@ Model * ModelManager::Create(const std::string & Identifier)
 	}
 	else
 	{
-		Model * NewModel(new Model(Identifier));
+		Model * NewModel(new Graphics::Model(Identifier));
 		
 		m_Models[NewModel->GetIdentifier()] = NewModel;
 		
@@ -58,9 +58,9 @@ Model * ModelManager::Create(const std::string & Identifier)
 	}
 }
 
-void ModelManager::Destroy(const std::string & Identifier)
+void Graphics::ModelManager::Destroy(const std::string & Identifier)
 {
-	std::map< std::string, Model * >::iterator ModelIterator(m_Models.find(Identifier));
+	std::map< std::string, Graphics::Model * >::iterator ModelIterator(m_Models.find(Identifier));
 	
 	if(ModelIterator != m_Models.end())
 	{
