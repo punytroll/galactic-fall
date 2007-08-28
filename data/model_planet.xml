@@ -2,7 +2,7 @@
 	<identifier>planet</identifier>
 	<mesh-parts>
 		<mesh-part>
-			<identifier>planet</identifier>
+			<part-identifier>planet</part-identifier>
 			<mesh-identifier>planet</mesh-identifier>
 		</mesh-part>
 	</mesh-parts>

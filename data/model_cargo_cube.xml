@@ -2,7 +2,7 @@
 	<identifier>cargo_cube</identifier>
 	<mesh-parts>
 		<mesh-part>
-			<identifier>cargo_cube</identifier>
+			<part-identifier>cargo_cube</part-identifier>
 			<mesh-identifier>cargo_cube</mesh-identifier>
 		</mesh-part>
 	</mesh-parts>

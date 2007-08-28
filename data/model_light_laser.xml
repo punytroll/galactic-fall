@@ -2,7 +2,7 @@
 	<identifier>light_laser</identifier>
 	<mesh-parts>
 		<mesh-part>
-			<identifier>light_laser</identifier>
+			<part-identifier>light_laser</part-identifier>
 			<mesh-identifier>light_laser</mesh-identifier>
 		</mesh-part>
 	</mesh-parts>

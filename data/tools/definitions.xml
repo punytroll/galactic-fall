@@ -41,7 +41,7 @@
 	</mesh>
 	
 	<mesh-part>
-		<string identifier="identifier"/>
+		<string identifier="part-identifier"/>
 		<string identifier="mesh-identifier"/>
 	</mesh-part>
 	
