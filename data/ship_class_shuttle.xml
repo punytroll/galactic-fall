@@ -1,6 +1,26 @@
 <ship-class>
 	<identifier>shuttle</identifier>
 	<model-identifier>shuttle</model-identifier>
+	<visualization>
+		<visualization-part>
+			<part-identifier>hull</part-identifier>
+			<material>
+				<diffuse-color>
+					<red>1.0</red>
+					<green>0.9</green>
+					<blue>0.1</blue>
+					<alpha>1.0</alpha>
+				</diffuse-color>
+				<specular-color>
+					<red>0.45</red>
+					<green>0.45</green>
+					<blue>0.45</blue>
+					<alpha>1</alpha>
+				</specular-color>
+				<shininess>40</shininess>
+			</material>
+		</visualization-part>
+	</visualization>
 	<forward-thrust>10</forward-thrust>
 	<turn-speed>1</turn-speed>
 	<maximum-speed>12</maximum-speed>
@@ -10,12 +30,6 @@
 	<forward-fuel>0.025</forward-fuel>
 	<turn-fuel>0.010</turn-fuel>
 	<hull>100</hull>
-	<color>
-		<red>1.0</red>
-		<green>0.9</green>
-		<blue>0.1</blue>
-		<alpha>1.0</alpha>
-	</color>
 	<exhaust-offset>
 		<x>-3</x>
 		<y>0</y>

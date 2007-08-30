@@ -33,6 +33,12 @@
 		<u1byte identifier="vertical-alignment"/>
 	</label>
 	
+	<material>
+		<color4f identifier="diffuse-color"/>
+		<color4f identifier="specular-color"/>
+		<float identifier="shininess"/>
+	</material>
+	
 	<mesh>
 		<string identifier="identifier"/>
 		<array identifier="points"/>
@@ -91,6 +97,7 @@
 	<ship-class>
 		<string identifier="identifier"/>
 		<string identifier="model-identifier"/>
+		<array identifier="visualization"/>
 		<float identifier="forward-thrust"/>
 		<float identifier="turn-speed"/>
 		<float identifier="maximum-speed"/>
@@ -100,7 +107,6 @@
 		<float identifier="forward-fuel"/>
 		<float identifier="turn-fuel"/>
 		<float identifier="hull"/>
-		<color4f identifier="color"/>
 		<vector3f identifier="exhaust-offset"/>
 		<array identifier="slots"/>
 	</ship-class>
@@ -168,6 +174,11 @@
 		<float identifier="y"/>
 		<float identifier="z"/>
 	</vector3f>
+	
+	<visualization-part>
+		<string identifier="part-identifier"/>
+		<material identifier="material"/>
+	</visualization-part>
 	
 	<weapon-class>
 		<string identifier="identifier"/>

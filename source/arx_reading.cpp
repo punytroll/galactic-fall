@@ -35,6 +35,7 @@
 #include "commodity_class_manager.h"
 #include "galaxy.h"
 #include "globals.h"
+#include "graphics_material.h"
 #include "graphics_mesh.h"
 #include "graphics_mesh_manager.h"
 #include "graphics_model.h"
@@ -410,6 +411,40 @@ static void ReadShipClass(Arxx::Reference & Reference)
 	}
 	
 	std::string ModelIdentifier;
+	
+	Reader >> ModelIdentifier;
+	
+	const Graphics::Model * Model(g_ModelManager->Get(ModelIdentifier));
+	
+	if(Model == 0)
+	{
+		throw std::runtime_error("For the ship class '" + Item->sGetName() + " could not find the model '" + ModelIdentifier + "'.");
+	}
+	NewShipClass->SetModel(Model);
+	
+	Arxx::u4byte VisualizationCount;
+	
+	Reader >> VisualizationCount;
+	for(Arxx::u4byte VisualizationNumber = 1; VisualizationNumber <= VisualizationCount; ++VisualizationNumber)
+	{
+		std::string PartIdentifier;
+		Color PartDiffuseColor;
+		Color PartSpecularColor;
+		float PartShininess;
+		
+		Reader >> PartIdentifier >> PartDiffuseColor >> PartSpecularColor >> PartShininess;
+		
+		Graphics::Material * PartMaterial(new Graphics::Material());
+		
+		PartMaterial->SetDiffuseColor(PartDiffuseColor);
+		PartMaterial->SetSpecularColor(PartSpecularColor);
+		PartMaterial->SetShininess(PartShininess);
+		if(NewShipClass->AddPartMaterial(PartIdentifier, PartMaterial) == false)
+		{
+			throw std::runtime_error("For the ship class '" + Identifier + "' could not add the material for part '" + PartIdentifier + "'.");
+		}
+	}
+	
 	float ForwardThrust;
 	float TurnSpeed;
 	float MaximumSpeed;
@@ -419,30 +454,19 @@ static void ReadShipClass(Arxx::Reference & Reference)
 	float ForwardFuel;
 	float TurnFuel;
 	float Hull;
-	Color ModelColor;
 	Vector3f ExhaustOffset;
 	Arxx::u4byte SlotCount;
 	
-	Reader >> ModelIdentifier >> ForwardThrust >> TurnSpeed >> MaximumSpeed >> MaximumAvailableSpace >> FuelHoldSize >> JumpFuel >> ForwardFuel >> TurnFuel >> Hull >> ModelColor >> ExhaustOffset >> SlotCount;
-	
+	Reader >> ForwardThrust >> TurnSpeed >> MaximumSpeed >> MaximumAvailableSpace >> FuelHoldSize >> JumpFuel >> ForwardFuel >> TurnFuel >> Hull >> ExhaustOffset >> SlotCount;
 	NewShipClass->SetForwardThrust(ForwardThrust);
 	NewShipClass->SetFuelHoldSize(FuelHoldSize);
 	NewShipClass->SetJumpFuel(JumpFuel);
 	NewShipClass->SetMaximumSpeed(MaximumSpeed);
 	NewShipClass->SetMaximumAvailableSpace(static_cast< unsigned_numeric >(1000 * MaximumAvailableSpace));
-	
-	const Graphics::Model * Model(g_ModelManager->Get(ModelIdentifier));
-	
-	if(Model == 0)
-	{
-		throw std::runtime_error("For the ship class '" + Item->sGetName() + " could not find the model '" + ModelIdentifier + "'.");
-	}
-	NewShipClass->SetModel(Model);
 	NewShipClass->SetTurnSpeed(TurnSpeed);
 	NewShipClass->SetForwardFuel(ForwardFuel);
 	NewShipClass->SetTurnFuel(TurnFuel);
 	NewShipClass->SetHull(Hull);
-	NewShipClass->SetColor(ModelColor);
 	NewShipClass->SetExhaustOffset(ExhaustOffset);
 	for(Arxx::u4byte SlotNumber = 1; SlotNumber <= SlotCount; ++SlotNumber)
 	{

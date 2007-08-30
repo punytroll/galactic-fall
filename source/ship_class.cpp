@@ -18,6 +18,7 @@
 **/
 
 #include "color.h"
+#include "graphics_material.h"
 #include "ship_class.h"
 #include "slot.h"
 
@@ -33,12 +34,31 @@ ShipClass::~ShipClass(void)
 {
 	delete m_Color;
 	m_Color = 0;
+	while(m_PartMaterials.empty() == false)
+	{
+		delete m_PartMaterials.begin()->second;
+		m_PartMaterials.erase(m_PartMaterials.begin());
+	}
 }
 
 void ShipClass::SetColor(const Color & NewColor)
 {
 	delete m_Color;
 	m_Color = new Color(NewColor);
+}
+
+bool ShipClass::AddPartMaterial(const std::string & PartIdentifier, Graphics::Material * PartMaterial)
+{
+	if(m_PartMaterials.find(PartIdentifier) == m_PartMaterials.end())
+	{
+		m_PartMaterials[PartIdentifier] = PartMaterial;
+		
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 Slot * ShipClass::CreateSlot(const SlotClass * SlotClass, const std::string & SlotIdentifier)

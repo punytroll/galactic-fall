@@ -32,6 +32,7 @@ class SlotClass;
 
 namespace Graphics
 {
+	class Material;
 	class Model;
 }
 
@@ -56,6 +57,7 @@ public:
 	float GetHull(void) const;
 	Color * GetColor(void) const;
 	const Vector3f & GetExhaustOffset(void) const;
+	const std::map< std::string, Graphics::Material * > & GetPartMaterials(void) const;
 	const std::map< std::string, Slot * > & GetSlots(void) const;
 	// setters
 	void SetModel(const Graphics::Model * Model);
@@ -71,6 +73,7 @@ public:
 	void SetColor(const Color & Color);
 	void SetExhaustOffset(const Vector3f & ExhaustOffset);
 	// modifiers
+	bool AddPartMaterial(const std::string & Identifier, Graphics::Material * PartMaterial);
 	Slot * CreateSlot(const SlotClass * SlotClass, const std::string & SlotIdentifier);
 private:
 	std::string m_Identifier;
@@ -87,6 +90,7 @@ private:
 	Color * m_Color;
 	Vector3f m_ExhaustOffset;
 	std::map< std::string, Slot * > m_Slots;
+	std::map< std::string, Graphics::Material * > m_PartMaterials;
 };
 
 inline const std::string & ShipClass::GetIdentifier(void) const
@@ -152,6 +156,11 @@ inline Color * ShipClass::GetColor(void) const
 inline const Vector3f & ShipClass::GetExhaustOffset(void) const
 {
 	return m_ExhaustOffset;
+}
+
+inline const std::map< std::string, Graphics::Material * > & ShipClass::GetPartMaterials(void) const
+{
+	return m_PartMaterials;
 }
 
 inline const std::map< std::string, Slot * > & ShipClass::GetSlots(void) const

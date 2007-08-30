@@ -95,6 +95,9 @@ graphics_engine_h = \
 	graphics_engine.h \
 	$(callbacks_h)
 
+graphics_material_h = \
+	graphics_material.h
+
 graphics_mesh_h = \
 	graphics_mesh.h \
 	$(math_vector4f_h)
@@ -450,7 +453,7 @@ check-consistency:
 binary: $(OBJECT_FILES)
 	$(CXX) $(LDFLAGS) `pkg-config --libs libarxx` $^ -lGL -o $@
 
-arx_reading.o: arx_reading.cpp $(arx_reading_h) $(arx_resources_h) $(asset_class_h) $(asset_class_manager_h) $(buffer_reading_h) $(callbacks_h) $(commodity_class_h) $(commodity_class_manager_h) $(galaxy_h) $(globals_h) $(graphics_mesh_h) $(graphics_mesh_manager_h) $(graphics_model_h) $(graphics_model_manager_h) $(graphics_texture_h) $(graphics_texture_manager_h) $(label_h) $(mini_map_display_h) $(planet_h) $(scanner_display_h) $(ship_class_h) $(ship_class_manager_h) $(slot_h) $(star_h) $(string_cast_h) $(system_h) $(user_interface_h) $(weapon_class_h) $(weapon_class_manager_h) $(widget_h)
+arx_reading.o: arx_reading.cpp $(arx_reading_h) $(arx_resources_h) $(asset_class_h) $(asset_class_manager_h) $(buffer_reading_h) $(callbacks_h) $(commodity_class_h) $(commodity_class_manager_h) $(galaxy_h) $(globals_h) $(graphics_material_h) $(graphics_mesh_h) $(graphics_mesh_manager_h) $(graphics_model_h) $(graphics_model_manager_h) $(graphics_texture_h) $(graphics_texture_manager_h) $(label_h) $(mini_map_display_h) $(planet_h) $(scanner_display_h) $(ship_class_h) $(ship_class_manager_h) $(slot_h) $(star_h) $(string_cast_h) $(system_h) $(user_interface_h) $(weapon_class_h) $(weapon_class_manager_h) $(widget_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags libarxx` -c $< -o $@
 
 asset_class.o: asset_class.cpp $(asset_class_h)
@@ -508,6 +511,9 @@ game_time.o: game_time.cpp $(game_time_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 graphics_engine.o: graphics_engine.cpp $(graphics_engine_h) $(graphics_scene_h)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+graphics_material.o: graphics_material.cpp $(color_h) $(graphics_material_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 graphics_mesh.o: graphics_mesh.cpp $(graphics_mesh_h)
@@ -612,7 +618,7 @@ scroll_position_changed_listener.o: scroll_position_changed_listener.cpp $(scrol
 ship.o: ship.cpp $(commodity_h) $(character_h) $(color_h) $(commodity_class_h) $(game_time_h) $(globals_h) $(graphics_model_h) $(map_knowledge_h) $(math_h) $(ship_h) $(shot_h) $(slot_h) $(slot_class_h) $(system_h) $(visualizations_h) $(weapon_h) $(weapon_class_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-ship_class.o: ship_class.cpp $(color_h) $(ship_class_h) $(slot_h)
+ship_class.o: ship_class.cpp $(color_h) $(graphics_material_h) $(ship_class_h) $(slot_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 	
 ship_class_manager.o: ship_class_manager.cpp $(ship_class_h) $(ship_class_manager_h)
@@ -666,7 +672,7 @@ user_interface.o: user_interface.cpp $(user_interface_h) $(widget_h)
 viewport.o: viewport.cpp $(viewport_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-visualizations.o: visualizations.cpp $(color_h) $(commodity_h) $(commodity_class_h) $(globals_h) $(graphics_model_object_h) $(graphics_model_manager_h) $(planet_h) $(ship_h) $(shot_h) $(visualizations_h) $(weapon_h) $(weapon_class_h)
+visualizations.o: visualizations.cpp $(color_h) $(commodity_h) $(commodity_class_h) $(globals_h) $(graphics_material_h) $(graphics_model_h) $(graphics_model_object_h) $(graphics_model_manager_h) $(planet_h) $(ship_h) $(shot_h) $(visualizations_h) $(weapon_h) $(weapon_class_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 weapon.o: weapon.cpp $(color_h) $(game_time_h) $(globals_h) $(math_quaternion_h) $(ship_h) $(shot_h) $(slot_h) $(string_cast_h) $(system_h) $(visualizations_h) $(weapon_h) $(weapon_class_h)

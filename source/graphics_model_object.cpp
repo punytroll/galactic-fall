@@ -20,6 +20,7 @@
 #include <GL/gl.h>
 
 #include "color.h"
+#include "graphics_material.h"
 #include "graphics_mesh.h"
 #include "graphics_model.h"
 #include "graphics_model_object.h"
@@ -27,12 +28,9 @@
 
 Graphics::ModelObject::ModelObject(void) :
 	m_ClearDepthBuffer(false),
-	m_DiffuseColor(0),
 	m_Model(0),
 	m_Normalize(false),
 	m_Scale(1.0f),
-	m_Shininess(0.0f),
-	m_SpecularColor(0),
 	m_UseBlending(false),
 	m_UseLighting(false)
 {
@@ -40,8 +38,11 @@ Graphics::ModelObject::ModelObject(void) :
 
 Graphics::ModelObject::~ModelObject(void)
 {
-	delete m_DiffuseColor;
-	delete m_SpecularColor;
+	while(m_Materials.empty() == false)
+	{
+		delete m_Materials.begin()->second;
+		m_Materials.erase(m_Materials.begin());
+	}
 }
 
 void Graphics::ModelObject::Begin(void)
@@ -79,39 +80,51 @@ void Graphics::ModelObject::Draw(void)
 		{
 			glEnable(GL_LIGHTING);
 		}
-		if(m_UseLighting == true)
-		{
-			if(m_DiffuseColor != 0)
-			{
-				glMaterialfv(GL_FRONT, GL_DIFFUSE, m_DiffuseColor->GetColor().m_V.m_A);
-			}
-			else
-			{
-				glMaterialfv(GL_FRONT, GL_DIFFUSE, Vector4f(1.0f, 1.0f, 1.0f, 1.0f).m_V.m_A);
-			}
-			if(m_SpecularColor != 0)
-			{
-				glMaterialf(GL_FRONT, GL_SHININESS, m_Shininess);
-				glMaterialfv(GL_FRONT, GL_SPECULAR, m_SpecularColor->GetColor().m_V.m_A);
-			}
-			else
-			{
-				glMaterialf(GL_FRONT, GL_SHININESS, 0.0f);
-				glMaterialfv(GL_FRONT, GL_SPECULAR, Vector4f(0.0f, 0.0f, 0.0f, 1.0f).m_V.m_A);
-			}
-		}
-		else
-		{
-			if(m_DiffuseColor != 0)
-			{
-				glColor4fv(m_DiffuseColor->GetColor().m_V.m_A);
-			}
-		}
 		
 		const std::map< std::string, const Graphics::Mesh * > & Meshes(m_Model->GetMeshes());
 		
 		for(std::map< std::string, const Graphics::Mesh * >::const_iterator MeshIterator = Meshes.begin(); MeshIterator != Meshes.end(); ++MeshIterator)
 		{
+			std::map< std::string, Graphics::Material * >::const_iterator MaterialIterator(m_Materials.find(MeshIterator->first));
+			
+			if(m_UseLighting == true)
+			{
+				if(MaterialIterator == m_Materials.end())
+				{
+					// if no material is set for this mesh
+					glMaterialfv(GL_FRONT, GL_DIFFUSE, Vector4f(1.0f, 1.0f, 1.0f, 1.0f).m_V.m_A);
+					glMaterialf(GL_FRONT, GL_SHININESS, 0.0f);
+					glMaterialfv(GL_FRONT, GL_SPECULAR, Vector4f(0.0f, 0.0f, 0.0f, 1.0f).m_V.m_A);
+				}
+				else
+				{
+					if(MaterialIterator->second->GetDiffuseColor() != 0)
+					{
+						glMaterialfv(GL_FRONT, GL_DIFFUSE, MaterialIterator->second->GetDiffuseColor()->GetColor().m_V.m_A);
+					}
+					else
+					{
+						glMaterialfv(GL_FRONT, GL_DIFFUSE, Vector4f(1.0f, 1.0f, 1.0f, 1.0f).m_V.m_A);
+					}
+					if(MaterialIterator->second->GetSpecularColor() != 0)
+					{
+						glMaterialf(GL_FRONT, GL_SHININESS, MaterialIterator->second->GetShininess());
+						glMaterialfv(GL_FRONT, GL_SPECULAR, MaterialIterator->second->GetSpecularColor()->GetColor().m_V.m_A);
+					}
+					else
+					{
+						glMaterialf(GL_FRONT, GL_SHININESS, 0.0f);
+						glMaterialfv(GL_FRONT, GL_SPECULAR, Vector4f(0.0f, 0.0f, 0.0f, 1.0f).m_V.m_A);
+					}
+				}
+			}
+			else
+			{
+				if((MaterialIterator != m_Materials.end()) && (MaterialIterator->second->GetDiffuseColor() != 0))
+				{
+					glColor4fv(MaterialIterator->second->GetDiffuseColor()->GetColor().m_V.m_A);
+				}
+			}
 			MeshIterator->second->Draw();
 		}
 		if((m_Normalize || m_UseBlending || m_UseLighting) == true)
@@ -126,14 +139,16 @@ void Graphics::ModelObject::End(void)
 	glPopMatrix();
 }
 
-void Graphics::ModelObject::SetDiffuseColor(const Color & DiffuseColor)
+bool Graphics::ModelObject::AddMaterial(const std::string & MeshName, Graphics::Material * Material)
 {
-	delete m_DiffuseColor;
-	m_DiffuseColor = new Color(DiffuseColor);
-}
-
-void Graphics::ModelObject::SetSpecularColor(const Color & SpecularColor)
-{
-	delete m_SpecularColor;
-	m_SpecularColor = new Color(SpecularColor);
+	if(m_Materials.find(MeshName) == m_Materials.end())
+	{
+		m_Materials[MeshName] = Material;
+		
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
