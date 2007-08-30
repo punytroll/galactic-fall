@@ -25,26 +25,22 @@
 ShipClass::ShipClass(const std::string & Identifier) :
 	m_Identifier(Identifier),
 	m_MaximumAvailableSpace(0),
-	m_Color(0),
 	m_ExhaustOffset(true)
 {
 }
 
 ShipClass::~ShipClass(void)
 {
-	delete m_Color;
-	m_Color = 0;
 	while(m_PartMaterials.empty() == false)
 	{
 		delete m_PartMaterials.begin()->second;
 		m_PartMaterials.erase(m_PartMaterials.begin());
 	}
-}
-
-void ShipClass::SetColor(const Color & NewColor)
-{
-	delete m_Color;
-	m_Color = new Color(NewColor);
+	while(m_Slots.empty() == false)
+	{
+		delete m_Slots.begin()->second;
+		m_Slots.erase(m_Slots.begin());
+	}
 }
 
 bool ShipClass::AddPartMaterial(const std::string & PartIdentifier, Graphics::Material * PartMaterial)
@@ -61,18 +57,16 @@ bool ShipClass::AddPartMaterial(const std::string & PartIdentifier, Graphics::Ma
 	}
 }
 
-Slot * ShipClass::CreateSlot(const SlotClass * SlotClass, const std::string & SlotIdentifier)
+bool ShipClass::AddSlot(const std::string & SlotIdentifier, Slot * Slot)
 {
 	if(m_Slots.find(SlotIdentifier) == m_Slots.end())
 	{
-		Slot * NewSlot(new Slot(SlotClass, SlotIdentifier));
+		m_Slots[SlotIdentifier] = Slot;
 		
-		m_Slots[SlotIdentifier] = NewSlot;
-		
-		return NewSlot;
+		return true;
 	}
 	else
 	{
-		return 0;
+		return false;
 	}
 }

@@ -482,21 +482,21 @@ static void ReadShipClass(Arxx::Reference & Reference)
 			throw std::runtime_error("Could not get slot class '" + SlotClassIdentifier + "' for slot '" + SlotIdentifier + "' of ship class '" + Identifier + "'.");
 		}
 		
-		Slot * NewSlot(NewShipClass->CreateSlot(SlotClass, SlotIdentifier));
-		
-		if(NewSlot == 0)
-		{
-			throw std::runtime_error("Could not create slot '" + SlotIdentifier + "' for ship class '" + Identifier + "'.");
-		}
-		
 		std::string Name;
 		Vector3f SlotPosition;
 		Quaternion SlotOrientation;
 		
 		Reader >> Name >> SlotPosition >> SlotOrientation;
+		
+		Slot * NewSlot(new Slot(SlotClass, SlotIdentifier));
+		
 		NewSlot->SetName(Name);
 		NewSlot->SetPosition(SlotPosition);
 		NewSlot->SetOrientation(SlotOrientation);
+		if(NewShipClass->AddSlot(SlotIdentifier, NewSlot) == false)
+		{
+			throw std::runtime_error("Could not add slot '" + SlotIdentifier + "' to ship class '" + Identifier + "'.");
+		}
 	}
 }
 
