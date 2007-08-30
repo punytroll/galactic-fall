@@ -26,9 +26,7 @@
 #include "math/vector3f.h"
 #include "type_definitions.h"
 
-class Color;
 class Slot;
-class SlotClass;
 
 namespace Graphics
 {
@@ -55,7 +53,6 @@ public:
 	float GetForwardFuel(void) const;
 	float GetTurnFuel(void) const;
 	float GetHull(void) const;
-	Color * GetColor(void) const;
 	const Vector3f & GetExhaustOffset(void) const;
 	const std::map< std::string, Graphics::Material * > & GetPartMaterials(void) const;
 	const std::map< std::string, Slot * > & GetSlots(void) const;
@@ -70,11 +67,18 @@ public:
 	void SetForwardFuel(float ForwardFuel);
 	void SetTurnFuel(float TurnFuel);
 	void SetHull(float Hull);
-	void SetColor(const Color & Color);
 	void SetExhaustOffset(const Vector3f & ExhaustOffset);
+	
 	// modifiers
+	/**
+	 * @note Passes memory management responsibility for @a PartMaterial to the ship class.
+	 **/
 	bool AddPartMaterial(const std::string & Identifier, Graphics::Material * PartMaterial);
-	Slot * CreateSlot(const SlotClass * SlotClass, const std::string & SlotIdentifier);
+	
+	/**
+	 * @note Passes memory management responsibility for @a Slot to the ship class.
+	 **/
+	bool AddSlot(const std::string & SlotIdentifier, Slot * Slot);
 private:
 	std::string m_Identifier;
 	const Graphics::Model * m_Model;
@@ -87,7 +91,6 @@ private:
 	float m_ForwardFuel;
 	float m_TurnFuel;
 	float m_Hull;
-	Color * m_Color;
 	Vector3f m_ExhaustOffset;
 	std::map< std::string, Slot * > m_Slots;
 	std::map< std::string, Graphics::Material * > m_PartMaterials;
@@ -146,11 +149,6 @@ inline float ShipClass::GetTurnFuel(void) const
 inline float ShipClass::GetHull(void) const
 {
 	return m_Hull;
-}
-
-inline Color * ShipClass::GetColor(void) const
-{
-	return m_Color;
 }
 
 inline const Vector3f & ShipClass::GetExhaustOffset(void) const
