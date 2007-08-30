@@ -23,10 +23,12 @@
 #include "graphics_node.h"
 
 class Color;
-class Model;
 
 namespace Graphics
 {
+	class Material;
+	class Model;
+	
 	class ModelObject : public Graphics::Node
 	{
 	public:
@@ -59,14 +61,9 @@ namespace Graphics
 		void SetClearDepthBuffer(bool ClearDepthBuffer);
 		
 		/**
-		 * @brief Set the color with which to draw @em this object.
-		 **/
-		void SetDiffuseColor(const Color & DiffuseColor);
-		
-		/**
 		 * @brief Set the model to draw at this object.
 		 **/
-		void SetModel(const Model * Model);
+		void SetModel(const Graphics::Model * Model);
 		
 		/**
 		 * @brief Enables or disables the normalization of the model normals.
@@ -81,16 +78,6 @@ namespace Graphics
 		void SetScale(float Scale);
 		
 		/**
-		 * @brief Set the shininess which to draw @em this object.
-		 **/
-		void SetShininess(float Shininess);
-		
-		/**
-		 * @brief Set the specular color with which to draw @em this object.
-		 **/
-		void SetSpecularColor(const Color & SpecularColor);
-		
-		/**
 		 * @brief Set whether blending should be enabled for @em this node.
 		 **/
 		void SetUseBlending(bool UseBlending);
@@ -99,16 +86,21 @@ namespace Graphics
 		 * @brief Set whether lighting is enabled for @em this object.
 		 **/
 		void SetUseLighting(bool UseLighting);
+		
+		/**
+		 * @brief Adds a material for a specific mesh of the model.
+		 * 
+		 * This functions passes ownership of the @a Material to the ModelObject instance.
+		 **/
+		bool AddMaterial(const std::string & MeshIdentifier, Graphics::Material * Material);
 	private:
 		bool m_ClearDepthBuffer;
-		Color * m_DiffuseColor;
-		const Model * m_Model;
+		const Graphics::Model * m_Model;
 		bool m_Normalize;
 		float m_Scale;
-		float m_Shininess;
-		Color * m_SpecularColor;
 		bool m_UseBlending;
 		bool m_UseLighting;
+		std::map< std::string, Graphics::Material * > m_Materials;
 	};
 }
 
@@ -117,7 +109,7 @@ inline void Graphics::ModelObject::SetClearDepthBuffer(bool ClearDepthBuffer)
 	m_ClearDepthBuffer = ClearDepthBuffer;
 }
 
-inline void Graphics::ModelObject::SetModel(const Model * Model)
+inline void Graphics::ModelObject::SetModel(const Graphics::Model * Model)
 {
 	m_Model = Model;
 }
@@ -130,11 +122,6 @@ inline void Graphics::ModelObject::SetNormalize(bool Normalize)
 inline void Graphics::ModelObject::SetScale(float Scale)
 {
 	m_Scale = Scale;
-}
-
-inline void Graphics::ModelObject::SetShininess(float Shininess)
-{
-	m_Shininess = Shininess;
 }
 
 inline void Graphics::ModelObject::SetUseBlending(bool UseBlending)

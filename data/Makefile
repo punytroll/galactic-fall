@@ -61,6 +61,7 @@ all_data = \
 
 smooth_meshes = \
 	fighter_cockpit \
+	fighter_hull \
 	planet \
 	shuttle_hull
 
