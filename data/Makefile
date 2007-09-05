@@ -1,3 +1,13 @@
+root = ..
+
+-include $(root)/configuration
+
+data_arx = \
+	.data \
+	$(data_location_configuration) \
+	Makefile \
+	$(subst internal,$(all_data),$(subst external,,$(data_location)))
+
 all_data = \
 	.data/asset_class_equipment.data \
 	.data/asset_class_food.data \
@@ -81,7 +91,7 @@ raw_to_littlem_py = \
 xml_to_data_py = \
 	tools/xml_to_data.py
 
-all: check-dependencies data.arx
+all: check-dependencies $(all_data) data.arx
 
 check-dependencies:
 	@if [ x`which pkg-config` = x ]; then \
@@ -118,9 +128,10 @@ clean:
 	$(RM) meshes/transporter.xml
 	$(RM) textures/particle.tex
 
-data.arx: .data $(all_data) Makefile
+data.arx: $(data_arx)
 	@$(RM) -f $@
-	@echo -e "\n\nPreparing directory structure ...\n"
+	@echo -e "\n\nData location is set to: $(data_location)\n"
+	@echo -e "\nPreparing directory structure ...\n"
 	arxtouch $@
 	arxtouch $@ 0
 	arxmod $@ 0 -n "Root" -t 0 -st 0 -root
@@ -159,75 +170,75 @@ data.arx: .data $(all_data) Makefile
 	arxmod $@ 0 -a "child" b
 	@echo -e "\n\nAdding widgets ...\n"
 	@echo -e "\nThe widgets will be read in uid order, so assign proper uids so that superior widgets are read before sub widgets.\n"
-	arxadd $@ --uid 103 --name "Credits" --type 1 --subtype 1 --add "/User Interface" .data/label_credits.data
-	arxadd $@ --uid 108 --name "Current System" --type 1 --subtype 1 --add "/User Interface" .data/label_current_system.data
-	arxadd $@ --uid 104 --name "Fuel" --type 1 --subtype 1 --add "/User Interface" .data/label_fuel.data
-	arxadd $@ --uid 132 --name "Hull" --type 1 --subtype 1 --add "/User Interface" .data/label_hull.data
-	arxadd $@ --uid 100 --name "Message" --type 1 --subtype 1 --add "/User Interface" .data/label_message.data
-	arxadd $@ --uid 102 --name "System" --type 1 --subtype 1 --add "/User Interface" .data/label_system.data
-	arxadd $@ --uid 107 --name "Target" --type 1 --subtype 1 --add "/User Interface" .data/label_target.data
-	arxadd $@ --uid 101 --name "Time Warp" --type 1 --subtype 1 --add "/User Interface" .data/label_time_warp.data
-	arxadd $@ --uid 106 --name "Mini Map" --type 1 --subtype 0 --add "/User Interface" .data/widget_mini_map.data
-	arxadd $@ --uid 109 --name "Mini Map Display" --type 1 --subtype 2 --add "/User Interface" .data/widget_mini_map_display.data
-	arxadd $@ --uid 105 --name "Scanner" --type 1 --subtype 0 --add "/User Interface" .data/widget_scanner.data
-	arxadd $@ --uid 126 --name "Scanner Display" --type 1 --subtype 3 --add "/User Interface" .data/widget_scanner_display.data
+	arxadd $@ --$(data_location) --uid 103 --name "Credits" --type 1 --subtype 1 --add "/User Interface" .data/label_credits.data
+	arxadd $@ --$(data_location) --uid 108 --name "Current System" --type 1 --subtype 1 --add "/User Interface" .data/label_current_system.data
+	arxadd $@ --$(data_location) --uid 104 --name "Fuel" --type 1 --subtype 1 --add "/User Interface" .data/label_fuel.data
+	arxadd $@ --$(data_location) --uid 132 --name "Hull" --type 1 --subtype 1 --add "/User Interface" .data/label_hull.data
+	arxadd $@ --$(data_location) --uid 100 --name "Message" --type 1 --subtype 1 --add "/User Interface" .data/label_message.data
+	arxadd $@ --$(data_location) --uid 102 --name "System" --type 1 --subtype 1 --add "/User Interface" .data/label_system.data
+	arxadd $@ --$(data_location) --uid 107 --name "Target" --type 1 --subtype 1 --add "/User Interface" .data/label_target.data
+	arxadd $@ --$(data_location) --uid 101 --name "Time Warp" --type 1 --subtype 1 --add "/User Interface" .data/label_time_warp.data
+	arxadd $@ --$(data_location) --uid 106 --name "Mini Map" --type 1 --subtype 0 --add "/User Interface" .data/widget_mini_map.data
+	arxadd $@ --$(data_location) --uid 109 --name "Mini Map Display" --type 1 --subtype 2 --add "/User Interface" .data/widget_mini_map_display.data
+	arxadd $@ --$(data_location) --uid 105 --name "Scanner" --type 1 --subtype 0 --add "/User Interface" .data/widget_scanner.data
+	arxadd $@ --$(data_location) --uid 126 --name "Scanner Display" --type 1 --subtype 3 --add "/User Interface" .data/widget_scanner_display.data
 	@echo -e "\n\nAdding slot classes ...\n"
-	arxadd $@ --name "Light Weapon" --type 9 --subtype 0 --add "/Slot Classes" .data/slot_class_light_weapon.data
-	arxadd $@ --name "Medium Weapon" --type 9 --subtype 0 --add "/Slot Classes" .data/slot_class_medium_weapon.data
+	arxadd $@ --$(data_location) --name "Light Weapon" --type 9 --subtype 0 --add "/Slot Classes" .data/slot_class_light_weapon.data
+	arxadd $@ --$(data_location) --name "Medium Weapon" --type 9 --subtype 0 --add "/Slot Classes" .data/slot_class_medium_weapon.data
 	@echo -e "\n\nAdding weapon classes ...\n"
-	arxadd $@ --name "Light Laser" --type 7 --subtype 0 --add "/Weapon Classes" .data/weapon_class_light_laser.data
-	arxadd $@ --name "Medium Laser" --type 7 --subtype 0 --add "/Weapon Classes" .data/weapon_class_medium_laser.data
+	arxadd $@ --$(data_location) --name "Light Laser" --type 7 --subtype 0 --add "/Weapon Classes" .data/weapon_class_light_laser.data
+	arxadd $@ --$(data_location) --name "Medium Laser" --type 7 --subtype 0 --add "/Weapon Classes" .data/weapon_class_medium_laser.data
 	@echo -e "\n\nAdding ship classes ...\n"
-	arxadd $@ --name "Fighter" --type 3 --subtype 0 --add "/Ship Classes" .data/ship_class_fighter.data
-	arxadd $@ --name "Shuttle" --type 3 --subtype 0 --add "/Ship Classes" .data/ship_class_shuttle.data
-	arxadd $@ --name "Transporter" --type 3 --subtype 0 --add "/Ship Classes" .data/ship_class_transporter.data
+	arxadd $@ --$(data_location) --name "Fighter" --type 3 --subtype 0 --add "/Ship Classes" .data/ship_class_fighter.data
+	arxadd $@ --$(data_location) --name "Shuttle" --type 3 --subtype 0 --add "/Ship Classes" .data/ship_class_shuttle.data
+	arxadd $@ --$(data_location) --name "Transporter" --type 3 --subtype 0 --add "/Ship Classes" .data/ship_class_transporter.data
 	@echo -e "\n\nAdding asset classes ...\n"
-	arxadd $@ --name "Equipment" --type 4 --subtype 0 --add "/Asset Classes" .data/asset_class_equipment.data
-	arxadd $@ --name "Food" --type 4 --subtype 0 --add "/Asset Classes" .data/asset_class_food.data
-	arxadd $@ --name "Fuel" --type 4 --subtype 0 --add "/Asset Classes" .data/asset_class_fuel.data
-	arxadd $@ --name "Industrial" --type 4 --subtype 0 --add "/Asset Classes" .data/asset_class_industrial.data
-	arxadd $@ --name "Light Laser" --type 4 --subtype 0 --add "/Asset Classes" .data/asset_class_light_laser.data
-	arxadd $@ --name "Luxury Goods" --type 4 --subtype 0 --add "/Asset Classes" .data/asset_class_luxury_goods.data
-	arxadd $@ --name "Medical Supplies" --type 4 --subtype 0 --add "/Asset Classes" .data/asset_class_medical_supplies.data
-	arxadd $@ --name "Medium Laser" --type 4 --subtype 0 --add "/Asset Classes" .data/asset_class_medium_laser.data
-	arxadd $@ --name "Metal" --type 4 --subtype 0 --add "/Asset Classes" .data/asset_class_metal.data
+	arxadd $@ --$(data_location) --name "Equipment" --type 4 --subtype 0 --add "/Asset Classes" .data/asset_class_equipment.data
+	arxadd $@ --$(data_location) --name "Food" --type 4 --subtype 0 --add "/Asset Classes" .data/asset_class_food.data
+	arxadd $@ --$(data_location) --name "Fuel" --type 4 --subtype 0 --add "/Asset Classes" .data/asset_class_fuel.data
+	arxadd $@ --$(data_location) --name "Industrial" --type 4 --subtype 0 --add "/Asset Classes" .data/asset_class_industrial.data
+	arxadd $@ --$(data_location) --name "Light Laser" --type 4 --subtype 0 --add "/Asset Classes" .data/asset_class_light_laser.data
+	arxadd $@ --$(data_location) --name "Luxury Goods" --type 4 --subtype 0 --add "/Asset Classes" .data/asset_class_luxury_goods.data
+	arxadd $@ --$(data_location) --name "Medical Supplies" --type 4 --subtype 0 --add "/Asset Classes" .data/asset_class_medical_supplies.data
+	arxadd $@ --$(data_location) --name "Medium Laser" --type 4 --subtype 0 --add "/Asset Classes" .data/asset_class_medium_laser.data
+	arxadd $@ --$(data_location) --name "Metal" --type 4 --subtype 0 --add "/Asset Classes" .data/asset_class_metal.data
 	@echo -e "\n\nAdding commodity classes ...\n"
-	arxadd $@ --name "Equipment" --type 8 --subtype 0 --add "/Commodity Classes" .data/commodity_class_equipment.data
-	arxadd $@ --name "Food" --type 8 --subtype 0 --add "/Commodity Classes" .data/commodity_class_food.data
-	arxadd $@ --name "Fuel" --type 8 --subtype 0 --add "/Commodity Classes" .data/commodity_class_fuel.data
-	arxadd $@ --name "Industrial" --type 8 --subtype 0 --add "/Commodity Classes" .data/commodity_class_industrial.data
-	arxadd $@ --name "Luxury Goods" --type 8 --subtype 0 --add "/Commodity Classes" .data/commodity_class_luxury_goods.data
-	arxadd $@ --name "Medical Supplies" --type 8 --subtype 0 --add "/Commodity Classes" .data/commodity_class_medical_supplies.data
-	arxadd $@ --name "Metal" --type 8 --subtype 0 --add "/Commodity Classes" .data/commodity_class_metal.data
+	arxadd $@ --$(data_location) --name "Equipment" --type 8 --subtype 0 --add "/Commodity Classes" .data/commodity_class_equipment.data
+	arxadd $@ --$(data_location) --name "Food" --type 8 --subtype 0 --add "/Commodity Classes" .data/commodity_class_food.data
+	arxadd $@ --$(data_location) --name "Fuel" --type 8 --subtype 0 --add "/Commodity Classes" .data/commodity_class_fuel.data
+	arxadd $@ --$(data_location) --name "Industrial" --type 8 --subtype 0 --add "/Commodity Classes" .data/commodity_class_industrial.data
+	arxadd $@ --$(data_location) --name "Luxury Goods" --type 8 --subtype 0 --add "/Commodity Classes" .data/commodity_class_luxury_goods.data
+	arxadd $@ --$(data_location) --name "Medical Supplies" --type 8 --subtype 0 --add "/Commodity Classes" .data/commodity_class_medical_supplies.data
+	arxadd $@ --$(data_location) --name "Metal" --type 8 --subtype 0 --add "/Commodity Classes" .data/commodity_class_metal.data
 	@echo -e "\n\nAdding systems ...\n"
-	arxadd $@ --name "Alpha Centauri" --type 5 --subtype 0 --add "/Systems" .data/system_alpha_centauri.data
-	arxadd $@ --name "Rigel" --type 5 --subtype 0 --add "/Systems" .data/system_rigel.data
-	arxadd $@ --name "Sol" --type 5 --subtype 0 --subtype 0 --add "/Systems" .data/system_sol.data
-	arxadd $@ --name "Tichel" --type 5 --subtype 0 --add "/Systems" .data/system_tichel.data
+	arxadd $@ --$(data_location) --name "Alpha Centauri" --type 5 --subtype 0 --add "/Systems" .data/system_alpha_centauri.data
+	arxadd $@ --$(data_location) --name "Rigel" --type 5 --subtype 0 --add "/Systems" .data/system_rigel.data
+	arxadd $@ --$(data_location) --name "Sol" --type 5 --subtype 0 --subtype 0 --add "/Systems" .data/system_sol.data
+	arxadd $@ --$(data_location) --name "Tichel" --type 5 --subtype 0 --add "/Systems" .data/system_tichel.data
 	@echo -e "\n\nAdding system links ...\n"
-	arxadd $@ --name "Alpha Centauri / Sol" --type 6 --subtype 0 --add "/System Links" .data/system_link_alpha_centauri_sol.data
-	arxadd $@ --name "Alpha Centauri / Tichel" --type 6 --subtype 0 --add "/System Links" .data/system_link_alpha_centauri_tichel.data
-	arxadd $@ --name "Rigel / Sol" --type 6 --subtype 0 --add "/System Links" .data/system_link_rigel_sol.data
-	arxadd $@ --name "Rigel / Tichel" --type 6 --subtype 0 --add "/System Links" .data/system_link_rigel_tichel.data
+	arxadd $@ --$(data_location) --name "Alpha Centauri / Sol" --type 6 --subtype 0 --add "/System Links" .data/system_link_alpha_centauri_sol.data
+	arxadd $@ --$(data_location) --name "Alpha Centauri / Tichel" --type 6 --subtype 0 --add "/System Links" .data/system_link_alpha_centauri_tichel.data
+	arxadd $@ --$(data_location) --name "Rigel / Sol" --type 6 --subtype 0 --add "/System Links" .data/system_link_rigel_sol.data
+	arxadd $@ --$(data_location) --name "Rigel / Tichel" --type 6 --subtype 0 --add "/System Links" .data/system_link_rigel_tichel.data
 	@echo -e "\n\nAdding models ...\n"
-	arxadd $@ --name "Cargo Cube" --type b --subtype 0 --add "/Models" .data/model_cargo_cube.data
-	arxadd $@ --name "Fighter" --type b --subtype 0 --add "/Models" .data/model_fighter.data
-	arxadd $@ --name "Laser Shot" --type b --subtype 0 --add "/Models" .data/model_laser_shot.data
-	arxadd $@ --name "Light Laser" --type b --subtype 0 --add "/Models" .data/model_light_laser.data
-	arxadd $@ --name "Planet" --type b --subtype 0 --add "/Models" .data/model_planet.data
-	arxadd $@ --name "Shuttle" --type b --subtype 0 --add "/Models" .data/model_shuttle.data
-	arxadd $@ --name "Transporter" --type b --subtype 0 --add "/Models" .data/model_transporter.data
+	arxadd $@ --$(data_location) --name "Cargo Cube" --type b --subtype 0 --add "/Models" .data/model_cargo_cube.data
+	arxadd $@ --$(data_location) --name "Fighter" --type b --subtype 0 --add "/Models" .data/model_fighter.data
+	arxadd $@ --$(data_location) --name "Laser Shot" --type b --subtype 0 --add "/Models" .data/model_laser_shot.data
+	arxadd $@ --$(data_location) --name "Light Laser" --type b --subtype 0 --add "/Models" .data/model_light_laser.data
+	arxadd $@ --$(data_location) --name "Planet" --type b --subtype 0 --add "/Models" .data/model_planet.data
+	arxadd $@ --$(data_location) --name "Shuttle" --type b --subtype 0 --add "/Models" .data/model_shuttle.data
+	arxadd $@ --$(data_location) --name "Transporter" --type b --subtype 0 --add "/Models" .data/model_transporter.data
 	@echo -e "\n\nAdding meshes ...\n"
-	arxadd $@ --name "Cargo Cube" --type 2 --subtype 0 --add "/Meshes" .data/mesh_cargo_cube.data
-	arxadd $@ --name "Fighter Cockpit" --type 2 --subtype 0 --add "/Meshes" .data/mesh_fighter_cockpit.data
-	arxadd $@ --name "Fighter Hull" --type 2 --subtype 0 --add "/Meshes" .data/mesh_fighter_hull.data
-	arxadd $@ --name "Laser Shot" --type 2 --subtype 0 --add "/Meshes" .data/mesh_laser_shot.data
-	arxadd $@ --name "Light Laser" --type 2 --subtype 0 --add "/Meshes" .data/mesh_light_laser.data
-	arxadd $@ --name "Planet" --type 2 --subtype 0 --add "/Meshes" .data/mesh_planet.data
-	arxadd $@ --name "Shuttle Hull" --type 2 --subtype 0 --add "/Meshes" .data/mesh_shuttle_hull.data
-	arxadd $@ --name "Transporter Hull" --type 2 --subtype 0 --add "/Meshes" .data/mesh_transporter_hull.data
+	arxadd $@ --$(data_location) --name "Cargo Cube" --type 2 --subtype 0 --add "/Meshes" .data/mesh_cargo_cube.data
+	arxadd $@ --$(data_location) --name "Fighter Cockpit" --type 2 --subtype 0 --add "/Meshes" .data/mesh_fighter_cockpit.data
+	arxadd $@ --$(data_location) --name "Fighter Hull" --type 2 --subtype 0 --add "/Meshes" .data/mesh_fighter_hull.data
+	arxadd $@ --$(data_location) --name "Laser Shot" --type 2 --subtype 0 --add "/Meshes" .data/mesh_laser_shot.data
+	arxadd $@ --$(data_location) --name "Light Laser" --type 2 --subtype 0 --add "/Meshes" .data/mesh_light_laser.data
+	arxadd $@ --$(data_location) --name "Planet" --type 2 --subtype 0 --add "/Meshes" .data/mesh_planet.data
+	arxadd $@ --$(data_location) --name "Shuttle Hull" --type 2 --subtype 0 --add "/Meshes" .data/mesh_shuttle_hull.data
+	arxadd $@ --$(data_location) --name "Transporter Hull" --type 2 --subtype 0 --add "/Meshes" .data/mesh_transporter_hull.data
 	@echo -e "\n\nAdding textures ...\n"
-	arxadd $@ --name "Particle" --type a --subtype 0 --add "/Textures" .data/texture_particle.data
+	arxadd $@ --$(data_location) --name "Particle" --type a --subtype 0 --add "/Textures" .data/texture_particle.data
 
 .data:
 	mkdir $@

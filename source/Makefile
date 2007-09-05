@@ -149,6 +149,9 @@ label_h = \
 	$(color_h) \
 	$(widget_h)
 
+local_file_data_channel_h = \
+	local_file_data_channel.h
+
 map_dialog_h = \
 	map_dialog.h \
 	$(clicked_listener_h) \
@@ -559,7 +562,10 @@ key_listener.o: key_listener.cpp $(key_listener_h)
 label.o: label.cpp $(label_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-main.o: main.cpp $(arx_resources_h) $(arx_reading_h) $(asset_class_h) $(asset_class_manager_h) $(callbacks_h) $(camera_h) $(commodity_h) $(character_h) $(color_h) $(command_mind_h) $(destroy_listener_h) $(galaxy_h) $(game_time_h) $(graphics_engine_h) $(graphics_model_h) $(graphics_model_manager_h) $(graphics_model_object_h) $(graphics_particle_systems_h) $(graphics_scene_h) $(graphics_texture_manager_h) $(key_event_information_h) $(label_h) $(map_dialog_h) $(map_knowledge_h) $(math_h) $(mind_h) $(mini_map_display_h) $(mount_weapon_dialog_h) $(object_factory_h) $(perspective_h) $(planet_h) $(planet_dialog_h) $(real_time_h) $(save_game_dialog_h) $(scanner_display_h) $(ship_h) $(ship_class_h) $(ship_class_manager_h) $(shot_h) $(slot_h) $(slot_class_manager_h) $(star_h) $(star_map_display_h) $(state_machine_h) $(states_h) $(string_cast_h) $(system_h) $(timeout_notifications_h) $(timing_dialog_h) $(user_interface_h) $(visualizations_h) $(weapon_h) $(weapon_class_h) $(weapon_class_manager_h) $(widget_h) $(xml_puny_dom_h) $(xml_stream_h)
+local_file_data_channel.o: local_file_data_channel.cpp $(local_file_data_channel_h)
+	$(CXX) $(CXXFLAGS) `pkg-config --cflags libarxx` -c $< -o $@
+
+main.o: main.cpp $(arx_resources_h) $(arx_reading_h) $(asset_class_h) $(asset_class_manager_h) $(callbacks_h) $(camera_h) $(commodity_h) $(character_h) $(color_h) $(command_mind_h) $(destroy_listener_h) $(galaxy_h) $(game_time_h) $(graphics_engine_h) $(graphics_model_h) $(graphics_model_manager_h) $(graphics_model_object_h) $(graphics_particle_systems_h) $(graphics_scene_h) $(graphics_texture_manager_h) $(key_event_information_h) $(label_h) $(local_file_data_channel_h) $(map_dialog_h) $(map_knowledge_h) $(math_h) $(mind_h) $(mini_map_display_h) $(mount_weapon_dialog_h) $(object_factory_h) $(perspective_h) $(planet_h) $(planet_dialog_h) $(real_time_h) $(save_game_dialog_h) $(scanner_display_h) $(ship_h) $(ship_class_h) $(ship_class_manager_h) $(shot_h) $(slot_h) $(slot_class_manager_h) $(star_h) $(star_map_display_h) $(state_machine_h) $(states_h) $(string_cast_h) $(system_h) $(timeout_notifications_h) $(timing_dialog_h) $(user_interface_h) $(visualizations_h) $(weapon_h) $(weapon_class_h) $(weapon_class_manager_h) $(widget_h) $(xml_puny_dom_h) $(xml_stream_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags libarxx` -c $< -o $@
 
 map_dialog.o: map_dialog.cpp $(button_h) $(globals_h) $(key_event_information_h) $(label) $(map_dialog_h) $(star_map_display_h) $(system_h)
