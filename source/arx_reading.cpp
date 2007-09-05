@@ -89,11 +89,11 @@ static Arxx::Item * Resolve(Arxx::Reference & Reference)
 	{
 		if(Item->bFetch() == false)
 		{
-			throw std::runtime_error("Could not fetch data for item '" + Item->sGetName() + "' [" + to_string_cast(Item->u4GetUniqueID()) + "].");
+			throw std::runtime_error("Could not fetch data for item '" + Item->sGetName() + "' [" + to_string_cast(Item->u4GetUniqueID()) + "] from URI '" + Item->GetURI().sGetURI() + "'.");
 		}
 		if(Item->bIsFetched() == false)
 		{
-			throw std::runtime_error("Could not fetch data for item '" + Item->sGetName() + "' [" + to_string_cast(Item->u4GetUniqueID()) + "].");
+			throw std::runtime_error("Could not fetch data for item '" + Item->sGetName() + "' [" + to_string_cast(Item->u4GetUniqueID()) + "] from URI '" + Item->GetURI().sGetURI() + "'.");
 		}
 	}
 	if(Item->bIsCompressed() == true)

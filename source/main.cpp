@@ -31,6 +31,7 @@
 
 #include <Archive.h>
 #include <BufferReader.h>
+#include <DataRepository.h>
 #include <Item.h>
 #include <URI.h>
 
@@ -61,6 +62,7 @@
 #include "graphics_texture_manager.h"
 #include "key_event_information.h"
 #include "label.h"
+#include "local_file_data_channel.h"
 #include "map_dialog.h"
 #include "map_knowledge.h"
 #include "math.h"
@@ -2209,6 +2211,14 @@ int main(int argc, char ** argv)
 	}
 	
 	// try loading the game data archive
+	std::string DataDirectory(DataFileName.substr(0, DataFileName.rfind('/')) + '/');
+	LocalFileDataChannel LocalFileDataChannel("file:", DataDirectory);
+	
+	if(Arxx::Repository.bRegisterDataChannel(&LocalFileDataChannel) == false)
+	{
+		throw std::runtime_error("Could not register local file data channel.");
+	}
+	
 	Arxx::URI URI(DataFileName);
 	Arxx::Archive Archive;
 	
@@ -2313,6 +2323,10 @@ int main(int argc, char ** argv)
 	delete g_TextureManager;
 	delete g_UserInterface;
 	delete g_WeaponClassManager;
+	if(Arxx::Repository.bUnregisterDataChannel(&LocalFileDataChannel) == false)
+	{
+		throw std::runtime_error("Could not unregister the local file data channel.");
+	}
 	
 	return 0;
 }
