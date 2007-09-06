@@ -441,15 +441,71 @@ void CalculateCharacters(void)
 
 Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSystemClassIdentifier)
 {
-	Graphics::ParticleSystem * NewParticleSystem(0);
+	Graphics::ParticleSystem * NewParticleSystem(new Graphics::ParticleSystem());
 	
 	if(ParticleSystemClassIdentifier == "hit")
 	{
-		NewParticleSystem = new Graphics::ParticleSystemHit();
+		NewParticleSystem->SetTimeOfDeath(GameTime::Get() + 3.0);
+		for(int Index = 0; Index < 30; ++Index)
+		{
+			Graphics::ParticleSystem::Particle Particle;
+			Vector2f Velocity(GetRandomFloat(0.0f, 0.5f) + GetRandomFloatFromExponentialDistribution(1.0f), GetRandomFloat(0.0f, 2 * M_PI), Vector2f::InitializeMagnitudeAngle);
+			
+			Particle.m_Position.Set(0.0f, 0.0f, 0.0f);
+			Particle.m_Velocity.Set(Velocity[0], Velocity[1], 0.0f);
+			Particle.m_TimeOfDeath = GameTime::Get() + GetRandomDouble(0.3f, 0.8f);
+			Particle.m_Color.Set(GetRandomFloat(0.4f, 0.5f), GetRandomFloat(0.35f, 0.45f), GetRandomFloat(0.35f, 0.65f), 0.3f);
+			Particle.m_Size = GetRandomFloat(0.25f, 0.4f);
+			NewParticleSystem->AddParticle(Particle);
+		}
+		NewParticleSystem->AddSystemScriptLine("kill-old");
+		NewParticleSystem->AddSystemScriptLine("move");
+		NewParticleSystem->AddSystemScriptLine("update-particles");
+		NewParticleSystem->AddParticleScriptLine("kill-old");
+		NewParticleSystem->AddParticleScriptLine("move");
 	}
 	else
 	{
-		NewParticleSystem = new Graphics::ParticleSystemExplosion();
+		NewParticleSystem->SetTimeOfDeath(GameTime::Get() + 3.0);
+		for(int Index = 0; Index < 500; ++Index)
+		{
+			Graphics::ParticleSystem::Particle Particle;
+			Vector2f Velocity(GetRandomFloat(0.0f, 2.5f) + GetRandomFloatFromExponentialDistribution(2.0f), GetRandomFloat(0.0f, 2 * M_PI), Vector2f::InitializeMagnitudeAngle);
+			
+			Particle.m_Velocity.Set(Velocity[0], Velocity[1], 0.0f);
+			Particle.m_Position.Set(0.0f, 0.0f, 0.0f);
+			Particle.m_TimeOfDeath = GameTime::Get() + GetRandomDouble(1.0f, 2.5f);
+			Particle.m_Color.Set(GetRandomFloat(0.4f, 0.8f), GetRandomFloat(0.2f, 0.4f), GetRandomFloat(0.05f, 0.15f), 0.5f);
+			Particle.m_Size = 1.0f;
+			NewParticleSystem->AddParticle(Particle);
+		}
+		for(int Index = 0; Index < 5; ++Index)
+		{
+			Graphics::ParticleSystem::Particle Particle;
+			Vector2f Position(GetRandomFloat(0.0f, 6.0f), GetRandomFloat(0.0f, 2 * M_PI), Vector2f::InitializeMagnitudeAngle);
+			
+			Particle.m_Position.Set(Position[0], Position[1], 0.0f);
+			Particle.m_Velocity.Set(0.0f, 0.0f, 0.0f);
+			Particle.m_TimeOfDeath = GameTime::Get() + GetRandomDouble(0.1f, 0.22f);
+			Particle.m_Color.Set(0.9f, GetRandomFloat(0.9f, 1.0f), GetRandomFloat(0.95f, 1.0f), 0.15f);
+			Particle.m_Size = 20.0f;
+			NewParticleSystem->AddParticle(Particle);
+		}
+		
+		Graphics::ParticleSystem::Particle Particle;
+		Vector2f Position(GetRandomFloat(0.0f, 6.0f), GetRandomFloat(0.0f, 2 * M_PI), Vector2f::InitializeMagnitudeAngle);
+		
+		Particle.m_Position.Set(Position[0], Position[1], 0.0f);
+		Particle.m_Velocity.Set(0.0f, 0.0f, 0.0f);
+		Particle.m_TimeOfDeath = GameTime::Get() + GetRandomDouble(0.1f, 0.15f);
+		Particle.m_Color.Set(0.9f, GetRandomFloat(0.9f, 1.0f), GetRandomFloat(0.95f, 1.0f), 0.3f);
+		Particle.m_Size = 200.0f;
+		NewParticleSystem->AddParticle(Particle);
+		NewParticleSystem->AddSystemScriptLine("kill-old");
+		NewParticleSystem->AddSystemScriptLine("move");
+		NewParticleSystem->AddSystemScriptLine("update-particles");
+		NewParticleSystem->AddParticleScriptLine("kill-old");
+		NewParticleSystem->AddParticleScriptLine("move");
 	}
 	g_ParticleSystemsLayer->AddNode(NewParticleSystem);
 	

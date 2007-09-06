@@ -59,18 +59,6 @@ namespace Graphics
 		std::vector< std::string > m_SystemScript;
 		std::vector< std::string > m_ParticleScript;
 	};
-
-	class ParticleSystemHit : public Graphics::ParticleSystem
-	{
-	public:
-		ParticleSystemHit(void);
-	};
-
-	class ParticleSystemExplosion : public Graphics::ParticleSystem
-	{
-	public:
-		ParticleSystemExplosion(void);
-	};
 }
 
 inline void Graphics::ParticleSystem::SetVelocity(const Vector3f & Velocity)
