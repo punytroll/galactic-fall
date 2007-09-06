@@ -2276,9 +2276,9 @@ int main(int argc, char ** argv)
 	}
 	
 	Arxx::URI URI(DataFileName);
-	Arxx::Archive Archive;
+	Arxx::Archive * Archive(new Arxx::Archive());
 	
-	if(Archive.bLoad(URI) == false)
+	if(Archive->bLoad(URI) == false)
 	{
 		std::cerr << "Could not find or open " << URI << "." << std::endl;
 		
@@ -2286,16 +2286,16 @@ int main(int argc, char ** argv)
 	}
 	
 	// read the data from the archive
-	ReadMeshes(Archive);
-	ReadModels(Archive);
-	ReadAssetClasses(Archive);
-	ReadCommodityClasses(Archive);
-	ReadSlotClasses(Archive);
-	ReadShipClasses(Archive);
-	ReadSystems(Archive);
-	ReadSystemLinks(Archive);
-	ReadUserInterface(Archive);
-	ReadWeaponClasses(Archive);
+	ReadMeshes(*Archive);
+	ReadModels(*Archive);
+	ReadAssetClasses(*Archive);
+	ReadCommodityClasses(*Archive);
+	ReadSlotClasses(*Archive);
+	ReadShipClasses(*Archive);
+	ReadSystems(*Archive);
+	ReadSystemLinks(*Archive);
+	ReadUserInterface(*Archive);
+	ReadWeaponClasses(*Archive);
 	
 	// setup the global variables for the user interface
 	g_CreditsLabel = dynamic_cast< Label * >(g_UserInterface->GetWidget("/credits"));
@@ -2330,7 +2330,7 @@ int main(int argc, char ** argv)
 	CreateWindow();
 	InitializeOpenGL();
 	// since reading the textures already creates them we have to do this after initializing OpenGL
-	ReadTextures(Archive);
+	ReadTextures(*Archive);
 	
 	// load the specified savegame
 	if(LoadSavegame(LoadSavegameFileName) == false)
@@ -2379,6 +2379,7 @@ int main(int argc, char ** argv)
 	delete g_TextureManager;
 	delete g_UserInterface;
 	delete g_WeaponClassManager;
+	delete Archive;
 	if(Arxx::Repository.bUnregisterDataChannel(&LocalFileDataChannel) == false)
 	{
 		throw std::runtime_error("Could not unregister the local file data channel.");
