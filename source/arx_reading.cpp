@@ -455,9 +455,10 @@ static void ReadShipClass(Arxx::Reference & Reference)
 	float TurnFuel;
 	float Hull;
 	Vector3f ExhaustOffset;
+	float ExhaustRadius;
 	Arxx::u4byte SlotCount;
 	
-	Reader >> ForwardThrust >> TurnSpeed >> MaximumSpeed >> MaximumAvailableSpace >> FuelHoldSize >> JumpFuel >> ForwardFuel >> TurnFuel >> Hull >> ExhaustOffset >> SlotCount;
+	Reader >> ForwardThrust >> TurnSpeed >> MaximumSpeed >> MaximumAvailableSpace >> FuelHoldSize >> JumpFuel >> ForwardFuel >> TurnFuel >> Hull >> ExhaustOffset >> ExhaustRadius >> SlotCount;
 	NewShipClass->SetForwardThrust(ForwardThrust);
 	NewShipClass->SetFuelHoldSize(FuelHoldSize);
 	NewShipClass->SetJumpFuel(JumpFuel);
@@ -468,6 +469,7 @@ static void ReadShipClass(Arxx::Reference & Reference)
 	NewShipClass->SetTurnFuel(TurnFuel);
 	NewShipClass->SetHull(Hull);
 	NewShipClass->SetExhaustOffset(ExhaustOffset);
+	NewShipClass->SetExhaustRadius(ExhaustRadius);
 	for(Arxx::u4byte SlotNumber = 1; SlotNumber <= SlotCount; ++SlotNumber)
 	{
 		std::string SlotIdentifier;

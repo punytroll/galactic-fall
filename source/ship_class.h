@@ -54,6 +54,7 @@ public:
 	float GetTurnFuel(void) const;
 	float GetHull(void) const;
 	const Vector3f & GetExhaustOffset(void) const;
+	float GetExhaustRadius(void) const;
 	const std::map< std::string, Graphics::Material * > & GetPartMaterials(void) const;
 	const std::map< std::string, Slot * > & GetSlots(void) const;
 	// setters
@@ -68,6 +69,7 @@ public:
 	void SetTurnFuel(float TurnFuel);
 	void SetHull(float Hull);
 	void SetExhaustOffset(const Vector3f & ExhaustOffset);
+	void SetExhaustRadius(float ExhaustRadius);
 	
 	// modifiers
 	/**
@@ -92,6 +94,7 @@ private:
 	float m_TurnFuel;
 	float m_Hull;
 	Vector3f m_ExhaustOffset;
+	float m_ExhaustRadius;
 	std::map< std::string, Slot * > m_Slots;
 	std::map< std::string, Graphics::Material * > m_PartMaterials;
 };
@@ -154,6 +157,11 @@ inline float ShipClass::GetHull(void) const
 inline const Vector3f & ShipClass::GetExhaustOffset(void) const
 {
 	return m_ExhaustOffset;
+}
+
+inline float ShipClass::GetExhaustRadius(void) const
+{
+	return m_ExhaustRadius;
 }
 
 inline const std::map< std::string, Graphics::Material * > & ShipClass::GetPartMaterials(void) const
@@ -219,6 +227,11 @@ inline void ShipClass::SetHull(float Hull)
 inline void ShipClass::SetExhaustOffset(const Vector3f & ExhaustOffset)
 {
 	m_ExhaustOffset = ExhaustOffset;
+}
+
+inline void ShipClass::SetExhaustRadius(float ExhaustRadius)
+{
+	m_ExhaustRadius = ExhaustRadius;
 }
 
 #endif

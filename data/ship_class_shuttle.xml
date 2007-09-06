@@ -35,6 +35,7 @@
 		<y>0</y>
 		<z>0</z>
 	</exhaust-offset>
+	<exhaust-radius>0.5</exhaust-radius>
 	<slots>
 		<slot>
 			<identifier>starboard_gun</identifier>

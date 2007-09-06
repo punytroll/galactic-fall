@@ -25,6 +25,7 @@
 #include "graphics_model.h"
 #include "graphics_model_manager.h"
 #include "graphics_model_object.h"
+#include "graphics_particle_systems.h"
 #include "planet.h"
 #include "ship.h"
 #include "shot.h"
@@ -94,6 +95,7 @@ void VisualizeShip(Ship * Ship, Graphics::Node * Container)
 {
 	assert(Ship != 0);
 	assert(Ship->GetVisualization() == 0);
+	assert(Ship->GetEngineGlowParticleSystem() == false);
 	assert(Container != 0);
 	
 	Graphics::ModelObject * Visualization(new Graphics::ModelObject());
@@ -114,6 +116,7 @@ void VisualizeShip(Ship * Ship, Graphics::Node * Container)
 	Ship->SetVisualization(Visualization);
 	// add to the scene
 	Container->AddNode(Visualization);
+	
 	// add weapon visualizations
 	const std::map< std::string, Slot * > & Slots(Ship->GetSlots());
 	
@@ -126,6 +129,19 @@ void VisualizeShip(Ship * Ship, Graphics::Node * Container)
 			VisualizeWeapon(MountedWeapon, Visualization);
 		}
 	}
+	
+	// add engine glow particle system
+	Graphics::ParticleSystem * EngineGlowParticleSystem(new Graphics::ParticleSystem());
+	
+	EngineGlowParticleSystem->AddSystemScriptLine("update-particles");
+	EngineGlowParticleSystem->AddParticleScriptLine("kill-old");
+	EngineGlowParticleSystem->AddParticleScriptLine("move");
+	EngineGlowParticleSystem->SetPosition(Vector3f(Ship->GetShipClass()->GetExhaustOffset()));
+	
+	Reference< Graphics::ParticleSystem > EngineGlowParticleSystemReference(*EngineGlowParticleSystem);
+	
+	Ship->SetEngineGlowParticleSystem(EngineGlowParticleSystemReference);
+	Visualization->AddNode(EngineGlowParticleSystem);
 }
 
 void VisualizeShot(Shot * Shot, Graphics::Node * Container)

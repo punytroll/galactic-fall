@@ -2268,19 +2268,6 @@ int main(int argc, char ** argv)
 	assert(g_Scanner != 0);
 	assert(g_TargetLabel != 0);
 	assert(g_ScannerDisplay != 0);
-	
-	// load the specified savegame
-	if(LoadSavegame(LoadSavegameFileName) == false)
-	{
-		return 1;
-	}
-	
-	// setting up the player environment
-	if((g_OutputMind == true) && (g_OutputMind->GetCharacter() != 0) && (g_OutputMind->GetCharacter()->GetShip() != 0))
-	{
-		g_MiniMapDisplay->SetOwner(g_OutputMind->GetCharacter()->GetShip()->GetReference());
-		g_ScannerDisplay->SetOwner(g_OutputMind->GetCharacter()->GetShip()->GetReference());
-	}
 	// set first timeout for widget collector, it will reinsert itself on callback
 	g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 5.0f, Function(CollectWidgets));
 	// setting up the graphical environment
@@ -2288,6 +2275,19 @@ int main(int argc, char ** argv)
 	InitializeOpenGL();
 	// since reading the textures already creates them we have to do this after initializing OpenGL
 	ReadTextures(Archive);
+	
+	// load the specified savegame
+	if(LoadSavegame(LoadSavegameFileName) == false)
+	{
+		return 1;
+	}
+	// setting up the player environment
+	if((g_OutputMind == true) && (g_OutputMind->GetCharacter() != 0) && (g_OutputMind->GetCharacter()->GetShip() != 0))
+	{
+		g_MiniMapDisplay->SetOwner(g_OutputMind->GetCharacter()->GetShip()->GetReference());
+		g_ScannerDisplay->SetOwner(g_OutputMind->GetCharacter()->GetShip()->GetReference());
+	}
+	
 	// main loop
 	while(g_Quit == false)
 	{
