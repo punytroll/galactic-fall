@@ -25,7 +25,7 @@
 #include "graphics_model.h"
 #include "graphics_model_manager.h"
 #include "graphics_model_object.h"
-#include "graphics_particle_systems.h"
+#include "graphics_particle_system.h"
 #include "planet.h"
 #include "ship.h"
 #include "shot.h"

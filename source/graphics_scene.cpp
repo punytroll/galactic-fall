@@ -17,7 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 
-#include "graphics_particle_systems.h"
+#include "graphics_particle_system.h"
 #include "graphics_scene.h"
 
 void Graphics::Scene::Update(float Seconds)

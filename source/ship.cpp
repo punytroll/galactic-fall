@@ -24,7 +24,7 @@
 #include "game_time.h"
 #include "globals.h"
 #include "graphics_model.h"
-#include "graphics_particle_systems.h"
+#include "graphics_particle_system.h"
 #include "map_knowledge.h"
 #include "math.h"
 #include "ship.h"
