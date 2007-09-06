@@ -3,12 +3,12 @@ root = ..
 -include $(root)/configuration
 
 data_arx = \
-	.data \
 	$(data_location_configuration) \
 	Makefile \
 	$(subst internal,$(all_data),$(subst external,,$(data_location)))
 
 all_data = \
+	.data \
 	.data/asset_class_equipment.data \
 	.data/asset_class_food.data \
 	.data/asset_class_fuel.data \
