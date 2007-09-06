@@ -24,7 +24,7 @@
 #include "color.h"
 #include "game_time.h"
 #include "globals.h"
-#include "graphics_particle_systems.h"
+#include "graphics_particle_system.h"
 #include "graphics_texture.h"
 #include "graphics_texture_manager.h"
 #include "math.h"

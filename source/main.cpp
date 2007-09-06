@@ -57,7 +57,7 @@
 #include "graphics_model.h"
 #include "graphics_model_manager.h"
 #include "graphics_model_object.h"
-#include "graphics_particle_systems.h"
+#include "graphics_particle_system.h"
 #include "graphics_scene.h"
 #include "graphics_texture_manager.h"
 #include "key_event_information.h"
