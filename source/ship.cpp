@@ -24,6 +24,7 @@
 #include "game_time.h"
 #include "globals.h"
 #include "graphics_model.h"
+#include "graphics_particle_systems.h"
 #include "map_knowledge.h"
 #include "math.h"
 #include "ship.h"
@@ -42,7 +43,6 @@ Ship::Ship(const ShipClass * ShipClass) :
 	m_Scoop(false),
 	m_ShipClass(ShipClass),
 	m_Accelerate(false),
-	m_Accelerating(false),
 	m_Fuel(0.0f),
 	m_Hull(m_ShipClass->GetHull()),
 	m_Refuel(false),
@@ -168,7 +168,6 @@ void Ship::Update(float Seconds)
 			}
 		}
 		m_Position += m_Velocity * Seconds;
-		m_Accelerating = false;
 		if(m_Accelerate == true)
 		{
 			float FuelConsumption(m_ShipClass->GetForwardFuel() * Seconds);
@@ -188,7 +187,33 @@ void Ship::Update(float Seconds)
 					m_Velocity *= GetMaximumSpeed();
 				}
 				m_Fuel -= FuelConsumption;
-				m_Accelerating = true;
+				if(m_EngineGlowParticleSystem == true)
+				{
+					for(int I = 0; I < 4; ++I)
+					{
+						Graphics::ParticleSystem::Particle Particle;
+						
+						Particle.m_TimeOfDeath = GameTime::Get() + GetRandomFloat(0.5f, 0.9f);
+						Particle.m_Color = Color(GetRandomFloat(0.8f, 1.0f), GetRandomFloat(0.7f, 0.8f), 0.5f, 0.08f);
+						
+						float X;
+						float Y;
+						float VelocityFactor;
+						
+						do
+						{
+							X = GetRandomFloat(-1.0f, 1.0f);
+							Y = GetRandomFloat(-1.0f, 1.0f);
+						} while(X * X + Y * Y >= 1.0f);
+						VelocityFactor = 1 - X * X - Y * Y;
+						X *= GetShipClass()->GetExhaustRadius();
+						Y *= GetShipClass()->GetExhaustRadius();
+						Particle.m_Position = Vector3f(0.0f, X, Y);
+						Particle.m_Velocity = Vector3f(GetRandomFloat(-0.3f * VelocityFactor, 0.0f), 0.0f, 0.0f);
+						Particle.m_Size = 0.2f;
+						m_EngineGlowParticleSystem->AddParticle(Particle);
+					}
+				}
 			}
 		}
 		if(m_Jettison == true)

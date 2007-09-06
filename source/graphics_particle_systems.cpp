@@ -17,6 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include <stdexcept>
+
 #include <GL/gl.h>
 
 #include "color.h"
@@ -34,6 +36,7 @@ Graphics::ParticleSystem::ParticleSystem(void)
 	if(g_ParticleTexture == 0)
 	{
 		g_ParticleTexture = g_TextureManager->Get("particle");
+		assert(g_ParticleTexture != 0);
 	}
 }
 
@@ -76,12 +79,20 @@ bool Graphics::ParticleSystem::Update(float Seconds)
 					{
 						ParticleIterator->m_Position += ParticleIterator->m_Velocity * Seconds;
 					}
+					else
+					{
+						throw std::runtime_error("Unknown particle command '" + *ScriptLine + "'.");
+					}
 				}
 				if(Forward == true)
 				{
 					++ParticleIterator;
 				}
 			}
+		}
+		else
+		{
+			throw std::runtime_error("Unknown particle system command '" + *ScriptLine + "'.");
 		}
 	}
 	
@@ -91,7 +102,7 @@ bool Graphics::ParticleSystem::Update(float Seconds)
 void Graphics::ParticleSystem::Draw(void)
 {
 	glPushMatrix();
-	glTranslatef(GetPosition()[0], GetPosition()[1], 0.0f);
+	glTranslatef(GetPosition()[0], GetPosition()[1], GetPosition()[2]);
 	glPushAttrib(GL_ENABLE_BIT);
 	glDisable(GL_LIGHTING);
 	glDisable(GL_DEPTH_TEST);
@@ -108,17 +119,32 @@ void Graphics::ParticleSystem::Draw(void)
 		
 		// TODO: billboarding
 		glTexCoord2f(0.0f, 0.0f);
-		glVertex2f(Position.m_V.m_A[0] - ParticleIterator->m_Size, Position.m_V.m_A[1] - ParticleIterator->m_Size);
+		glVertex3f(Position[0] - ParticleIterator->m_Size, Position[1] - ParticleIterator->m_Size, Position[2]);
 		glTexCoord2f(1.0f, 0.0f);
-		glVertex2f(Position.m_V.m_A[0] + ParticleIterator->m_Size, Position.m_V.m_A[1] - ParticleIterator->m_Size);
+		glVertex3f(Position[0] + ParticleIterator->m_Size, Position[1] - ParticleIterator->m_Size, Position[2]);
 		glTexCoord2f(1.0f, 1.0f);
-		glVertex2f(Position.m_V.m_A[0] + ParticleIterator->m_Size, Position.m_V.m_A[1] + ParticleIterator->m_Size);
+		glVertex3f(Position[0] + ParticleIterator->m_Size, Position[1] + ParticleIterator->m_Size, Position[2]);
 		glTexCoord2f(0.0f, 1.0f);
-		glVertex2f(Position.m_V.m_A[0] - ParticleIterator->m_Size, Position.m_V.m_A[1] + ParticleIterator->m_Size);
+		glVertex3f(Position[0] - ParticleIterator->m_Size, Position[1] + ParticleIterator->m_Size, Position[2]);
 	}
 	glEnd();
 	glPopAttrib();
 	glPopMatrix();
+}
+
+void Graphics::ParticleSystem::AddParticle(const Graphics::ParticleSystem::Particle & Particle)
+{
+	m_Particles.push_back(Particle);
+}
+
+void Graphics::ParticleSystem::AddSystemScriptLine(const std::string & SystemScriptLine)
+{
+	m_SystemScript.push_back(SystemScriptLine);
+}
+
+void Graphics::ParticleSystem::AddParticleScriptLine(const std::string & ParticleScriptLine)
+{
+	m_ParticleScript.push_back(ParticleScriptLine);
 }
 
 Graphics::ParticleSystemHit::ParticleSystemHit(void)

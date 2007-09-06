@@ -33,13 +33,6 @@ namespace Graphics
 	class ParticleSystem : public Graphics::Node
 	{
 	public:
-		ParticleSystem(void);
-		bool Update(float Seconds);
-		void Draw(void);
-		// setters
-		void SetVelocity(const Vector3f & Velocity);
-		void SetTimeOfDeath(double TimeOfDeath);
-	protected:
 		struct Particle
 		{
 			Vector3f m_Position;
@@ -49,6 +42,17 @@ namespace Graphics
 			float m_Size;
 		};
 		
+		ParticleSystem(void);
+		bool Update(float Seconds);
+		void Draw(void);
+		// setters
+		void SetVelocity(const Vector3f & Velocity);
+		void SetTimeOfDeath(double TimeOfDeath);
+		// modifiers
+		void AddParticle(const Graphics::ParticleSystem::Particle & Particle);
+		void AddSystemScriptLine(const std::string & SystemScriptLine);
+		void AddParticleScriptLine(const std::string & ParticleScriptLine);
+	protected:
 		Vector3f m_Velocity;
 		double m_TimeOfDeath;
 		std::list< Graphics::ParticleSystem::Particle > m_Particles;

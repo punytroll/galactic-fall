@@ -31,10 +31,11 @@
 	<turn-fuel>0.016</turn-fuel>
 	<hull>236</hull>
 	<exhaust-offset>
-		<x>0</x>
+		<x>-4.79</x>
 		<y>0</y>
 		<z>0</z>
 	</exhaust-offset>
+	<exhaust-radius>0.7</exhaust-radius>
 	<slots>
 		<slot>
 			<identifier>front_gun</identifier>

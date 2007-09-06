@@ -108,6 +108,7 @@
 		<float identifier="turn-fuel"/>
 		<float identifier="hull"/>
 		<vector3f identifier="exhaust-offset"/>
+		<float identifier="exhaust-radius"/>
 		<array identifier="slots"/>
 	</ship-class>
 	

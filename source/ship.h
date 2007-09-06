@@ -34,6 +34,11 @@ class SlotClass;
 class System;
 class Weapon;
 
+namespace Graphics
+{
+	class ParticleSystem;
+}
+
 class Ship : public PhysicalObject
 {
 public:
@@ -45,6 +50,7 @@ public:
 	bool m_Land;
 	bool m_Scoop;
 	// getters
+	Reference< Graphics::ParticleSystem > & GetEngineGlowParticleSystem(void);
 	float GetForwardThrust(void) const;
 	const Quaternion & GetAngularPosition(void) const;
 	float GetFuel(void) const;
@@ -65,6 +71,7 @@ public:
 	// setters
 	void SetAccelerate(bool Accelerate);
 	void SetAngularPosition(const Quaternion & AngularPosition);
+	void SetEngineGlowParticleSystem(Reference< Graphics::ParticleSystem > & EngineGlowParticleSystem);
 	void SetFire(bool Fire);
 	void SetFuel(float Fuel);
 	void SetHull(float Hull);
@@ -84,7 +91,6 @@ private:
 	const ShipClass * m_ShipClass;
 	std::map< std::string, Slot * > m_Slots;
 	bool m_Accelerate;
-	bool m_Accelerating;
 	float m_Fuel;
 	float m_Hull;
 	bool m_Refuel;
@@ -95,7 +101,13 @@ private:
 	System * m_CurrentSystem;
 	Vector3f m_Velocity;
 	Quaternion m_AngularPosition;
+	Reference< Graphics::ParticleSystem > m_EngineGlowParticleSystem;
 };
+
+inline Reference< Graphics::ParticleSystem > & Ship::GetEngineGlowParticleSystem(void)
+{
+	return m_EngineGlowParticleSystem;
+}
 
 inline float Ship::GetForwardThrust(void) const
 {
@@ -170,6 +182,11 @@ inline const std::map< std::string, Slot * > & Ship::GetSlots(void) const
 inline void Ship::SetAccelerate(bool Accelerate)
 {
 	m_Accelerate = Accelerate;
+}
+
+inline void Ship::SetEngineGlowParticleSystem(Reference< Graphics::ParticleSystem > & EngineGlowParticleSystem)
+{
+	m_EngineGlowParticleSystem = EngineGlowParticleSystem;
 }
 
 inline void Ship::SetFuel(float Fuel)
