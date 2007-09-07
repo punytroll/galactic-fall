@@ -221,6 +221,7 @@ Perspective g_MainPerspective;
 bool g_EchoEvents(false);
 bool g_DumpEndReport(false);
 SystemStatistics * g_SystemStatistics;
+std::map< Graphics::Node *, Reference< Graphics::Node > > g_VisualizationReferences;
 
 enum WantReturnCode
 {
@@ -439,13 +440,13 @@ void CalculateCharacters(void)
 	}
 }
 
-Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSystemClassIdentifier)
+Reference< Graphics::ParticleSystem > CreateParticleSystem(const std::string & ParticleSystemClassIdentifier)
 {
-	Graphics::ParticleSystem * NewParticleSystem(new Graphics::ParticleSystem());
+	Graphics::ParticleSystem * ParticleSystem(new Graphics::ParticleSystem());
 	
 	if(ParticleSystemClassIdentifier == "hit")
 	{
-		NewParticleSystem->SetTimeOfDeath(GameTime::Get() + 3.0);
+		ParticleSystem->SetTimeOfDeath(GameTime::Get() + 3.0);
 		for(int Index = 0; Index < 30; ++Index)
 		{
 			Graphics::ParticleSystem::Particle Particle;
@@ -456,17 +457,17 @@ Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSyst
 			Particle.m_TimeOfDeath = GameTime::Get() + GetRandomDouble(0.3f, 0.8f);
 			Particle.m_Color.Set(GetRandomFloat(0.4f, 0.5f), GetRandomFloat(0.35f, 0.45f), GetRandomFloat(0.35f, 0.65f), 0.3f);
 			Particle.m_Size = GetRandomFloat(0.25f, 0.4f);
-			NewParticleSystem->AddParticle(Particle);
+			ParticleSystem->AddParticle(Particle);
 		}
-		NewParticleSystem->AddSystemScriptLine("kill-old");
-		NewParticleSystem->AddSystemScriptLine("move");
-		NewParticleSystem->AddSystemScriptLine("update-particles");
-		NewParticleSystem->AddParticleScriptLine("kill-old");
-		NewParticleSystem->AddParticleScriptLine("move");
+		ParticleSystem->AddSystemScriptLine("kill-old");
+		ParticleSystem->AddSystemScriptLine("move");
+		ParticleSystem->AddSystemScriptLine("update-particles");
+		ParticleSystem->AddParticleScriptLine("kill-old");
+		ParticleSystem->AddParticleScriptLine("move");
 	}
-	else
+	else if(ParticleSystemClassIdentifier == "explosion")
 	{
-		NewParticleSystem->SetTimeOfDeath(GameTime::Get() + 3.0);
+		ParticleSystem->SetTimeOfDeath(GameTime::Get() + 3.0);
 		for(int Index = 0; Index < 500; ++Index)
 		{
 			Graphics::ParticleSystem::Particle Particle;
@@ -477,7 +478,7 @@ Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSyst
 			Particle.m_TimeOfDeath = GameTime::Get() + GetRandomDouble(1.0f, 2.5f);
 			Particle.m_Color.Set(GetRandomFloat(0.4f, 0.8f), GetRandomFloat(0.2f, 0.4f), GetRandomFloat(0.05f, 0.15f), 0.5f);
 			Particle.m_Size = 1.0f;
-			NewParticleSystem->AddParticle(Particle);
+			ParticleSystem->AddParticle(Particle);
 		}
 		for(int Index = 0; Index < 5; ++Index)
 		{
@@ -489,7 +490,7 @@ Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSyst
 			Particle.m_TimeOfDeath = GameTime::Get() + GetRandomDouble(0.1f, 0.22f);
 			Particle.m_Color.Set(0.9f, GetRandomFloat(0.9f, 1.0f), GetRandomFloat(0.95f, 1.0f), 0.15f);
 			Particle.m_Size = 20.0f;
-			NewParticleSystem->AddParticle(Particle);
+			ParticleSystem->AddParticle(Particle);
 		}
 		
 		Graphics::ParticleSystem::Particle Particle;
@@ -500,16 +501,25 @@ Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSyst
 		Particle.m_TimeOfDeath = GameTime::Get() + GetRandomDouble(0.1f, 0.15f);
 		Particle.m_Color.Set(0.9f, GetRandomFloat(0.9f, 1.0f), GetRandomFloat(0.95f, 1.0f), 0.3f);
 		Particle.m_Size = 200.0f;
-		NewParticleSystem->AddParticle(Particle);
-		NewParticleSystem->AddSystemScriptLine("kill-old");
-		NewParticleSystem->AddSystemScriptLine("move");
-		NewParticleSystem->AddSystemScriptLine("update-particles");
-		NewParticleSystem->AddParticleScriptLine("kill-old");
-		NewParticleSystem->AddParticleScriptLine("move");
+		ParticleSystem->AddParticle(Particle);
+		ParticleSystem->AddSystemScriptLine("kill-old");
+		ParticleSystem->AddSystemScriptLine("move");
+		ParticleSystem->AddSystemScriptLine("update-particles");
+		ParticleSystem->AddParticleScriptLine("kill-old");
+		ParticleSystem->AddParticleScriptLine("move");
 	}
-	g_ParticleSystemsLayer->AddNode(NewParticleSystem);
+	else if(ParticleSystemClassIdentifier == "engine_glow")
+	{
+		ParticleSystem->AddSystemScriptLine("update-particles");
+		ParticleSystem->AddParticleScriptLine("kill-old");
+		ParticleSystem->AddParticleScriptLine("move");
+	}
 	
-	return NewParticleSystem;
+	Reference< Graphics::Node > ParticleSystemReference(*ParticleSystem);
+	
+	g_VisualizationReferences[ParticleSystem] = ParticleSystemReference;
+	
+	return ParticleSystemReference;
 }
 
 void CalculateMovements(System * System)
@@ -591,17 +601,19 @@ void CalculateMovements(System * System)
 					{
 						if((TheShot->GetPosition() - TheShip->GetPosition()).SquaredLength() < (TheShot->GetRadialSize() * TheShot->GetRadialSize() + TheShip->GetRadialSize() * TheShip->GetRadialSize()))
 						{
-							Graphics::ParticleSystem * NewHitParticleSystem(CreateParticleSystem("hit"));
+							Reference< Graphics::ParticleSystem > NewHitParticleSystem(CreateParticleSystem("hit"));
 							
 							NewHitParticleSystem->SetPosition(TheShot->GetPosition());
 							NewHitParticleSystem->SetVelocity((TheShot->GetVelocity() * 0.2f) + (TheShip->GetVelocity() * 0.8f));
+							g_ParticleSystemsLayer->AddNode(NewHitParticleSystem.Get());
 							TheShip->SetHull(TheShip->GetHull() - TheShot->GetDamage());
 							if(TheShip->GetHull() <= 0.0f)
 							{
-								Graphics::ParticleSystem * NewExplosionParticleSystem(CreateParticleSystem("explosion"));
+								Reference< Graphics::ParticleSystem > NewExplosionParticleSystem(CreateParticleSystem("explosion"));
 								
 								NewExplosionParticleSystem->SetPosition(TheShip->GetPosition());
 								NewExplosionParticleSystem->SetVelocity(TheShip->GetVelocity() * 0.5f);
+								g_ParticleSystemsLayer->AddNode(NewExplosionParticleSystem.Get());
 								
 								std::set< Object * >::const_iterator ManifestIterator;
 								std::set< Object * >::const_iterator NextIterator(TheShip->GetContent().begin());
@@ -644,17 +656,19 @@ void CalculateMovements(System * System)
 					
 					if((TheShot->GetPosition() - TheCommodity->GetPosition()).SquaredLength() < (TheShot->GetRadialSize() * TheShot->GetRadialSize() + TheCommodity->GetRadialSize() * TheCommodity->GetRadialSize()))
 					{
-						Graphics::ParticleSystem * NewHitParticleSystem(CreateParticleSystem("hit"));
+						Reference< Graphics::ParticleSystem > NewHitParticleSystem(CreateParticleSystem("hit"));
 						
 						NewHitParticleSystem->SetPosition(TheShot->GetPosition());
 						NewHitParticleSystem->SetVelocity((TheShot->GetVelocity() * 0.4f) + (TheCommodity->GetVelocity() * 0.6f));
+						g_ParticleSystemsLayer->AddNode(NewHitParticleSystem.Get());
 						TheCommodity->SetHull(TheCommodity->GetHull() - TheShot->GetDamage());
 						if(TheCommodity->GetHull() <= 0.0f)
 						{
-							Graphics::ParticleSystem * NewHitParticleSystem(CreateParticleSystem("hit"));
+							Reference< Graphics::ParticleSystem > NewHitParticleSystem(CreateParticleSystem("hit"));
 							
 							NewHitParticleSystem->SetPosition(TheCommodity->GetPosition());
 							NewHitParticleSystem->SetVelocity(TheCommodity->GetVelocity() * 0.5f);
+							g_ParticleSystemsLayer->AddNode(NewHitParticleSystem.Get());
 							DeleteObject(TheCommodity);
 						}
 						DeleteObject(TheShot);
@@ -1058,6 +1072,15 @@ void OnGraphicsNodeDestroy(Graphics::Node * Node)
 			TheObject->UnsetVisualization();
 		}
 	}
+	
+	std::map< Graphics::Node *, Reference< Graphics::Node > >::iterator VisualizationReferenceIterator(g_VisualizationReferences.find(Node));
+	
+	if(VisualizationReferenceIterator != g_VisualizationReferences.end())
+	{
+		VisualizationReferenceIterator->second.Invalidate();
+		g_VisualizationReferences.erase(VisualizationReferenceIterator);
+	}
+	
 	delete Node;
 }
 

@@ -34,6 +34,8 @@
 #include "weapon.h"
 #include "weapon_class.h"
 
+Reference< Graphics::ParticleSystem > CreateParticleSystem(const std::string & ParticleSystemClassIdentifier);
+
 void UnvisualizeObject(Object * Object)
 {
 	assert(Object != 0);
@@ -131,17 +133,11 @@ void VisualizeShip(Ship * Ship, Graphics::Node * Container)
 	}
 	
 	// add engine glow particle system
-	Graphics::ParticleSystem * EngineGlowParticleSystem(new Graphics::ParticleSystem());
+	Reference< Graphics::ParticleSystem > EngineGlowParticleSystem(CreateParticleSystem("engine_glow"));
 	
-	EngineGlowParticleSystem->AddSystemScriptLine("update-particles");
-	EngineGlowParticleSystem->AddParticleScriptLine("kill-old");
-	EngineGlowParticleSystem->AddParticleScriptLine("move");
 	EngineGlowParticleSystem->SetPosition(Vector3f(Ship->GetShipClass()->GetExhaustOffset()));
-	
-	Reference< Graphics::ParticleSystem > EngineGlowParticleSystemReference(*EngineGlowParticleSystem);
-	
-	Ship->SetEngineGlowParticleSystem(EngineGlowParticleSystemReference);
-	Visualization->AddNode(EngineGlowParticleSystem);
+	Ship->SetEngineGlowParticleSystem(EngineGlowParticleSystem);
+	Visualization->AddNode(EngineGlowParticleSystem.Get());
 }
 
 void VisualizeShot(Shot * Shot, Graphics::Node * Container)
