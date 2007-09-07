@@ -514,6 +514,10 @@ Reference< Graphics::ParticleSystem > CreateParticleSystem(const std::string & P
 		ParticleSystem->AddParticleScriptLine("kill-old");
 		ParticleSystem->AddParticleScriptLine("move");
 	}
+	else
+	{
+		throw std::runtime_error("Could not create a paricle system with the class identifier'" + ParticleSystemClassIdentifier + "'.");
+	}
 	
 	Reference< Graphics::Node > ParticleSystemReference(*ParticleSystem);
 	
