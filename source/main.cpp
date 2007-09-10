@@ -235,7 +235,7 @@ enum WantReturnCode
 	TOO_FAR_AWAY,
 	TOO_FAST,
 	TOO_HIGH_RELATIVE_VELOCITY,
-	TOO_NEAR_TO_SYSTEM_CENTER
+	TOO_NEAR_TO_STELLAR_OBJECT
 };
 
 int WantToJump(Ship * Ship, System * System)
@@ -244,10 +244,15 @@ int WantToJump(Ship * Ship, System * System)
 	{
 		return NO_JUMP_TARGET;
 	}
-	// only let the ships jump if they are more than 280 clicks from system center
-	if(Ship->GetPosition().SquaredLength() < 78400.0f)
+	// only let the ship jump if it is not near any other stellar object
+	const std::vector< Planet * > & Planets(Ship->GetCurrentSystem()->GetPlanets());
+	
+	for(std::vector< Planet * >::const_iterator PlanetIterator = Planets.begin(); PlanetIterator != Planets.end(); ++PlanetIterator)
 	{
-		return TOO_NEAR_TO_SYSTEM_CENTER;
+		if((Ship->GetPosition() - (*PlanetIterator)->GetPosition()).SquaredLength() < 4 * (*PlanetIterator)->GetSize() * (*PlanetIterator)->GetSize())
+		{
+			return TOO_NEAR_TO_STELLAR_OBJECT;
+		}
 	}
 	// only let ships jump if they have enough fuel
 	if(Ship->GetFuel() < Ship->GetShipClass()->GetJumpFuel())
@@ -1533,9 +1538,9 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 							
 							break;
 						}
-					case TOO_NEAR_TO_SYSTEM_CENTER:
+					case TOO_NEAR_TO_STELLAR_OBJECT:
 						{
-							SetMessage("You are too near to the system center to jump.");
+							SetMessage("You are too near to a stellar object to jump.");
 							
 							break;
 						}
