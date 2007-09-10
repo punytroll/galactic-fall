@@ -50,6 +50,21 @@ namespace Graphics
 	class TextureManager;
 }
 
+enum WantReturnCode
+{
+	OK,
+	NO_JUMP_TARGET,
+	NO_LAND_TARGET,
+	NO_SCOOP_TARGET,
+	NOT_ENOUGH_CREDITS,
+	NOT_ENOUGH_FUEL,
+	NOT_ENOUGH_SPACE,
+	TOO_FAR_AWAY,
+	TOO_FAST,
+	TOO_HIGH_RELATIVE_VELOCITY,
+	TOO_NEAR_TO_STELLAR_OBJECT
+};
+
 extern AssetClassManager * g_AssetClassManager;
 extern CommodityClassManager * g_CommodityClassManager;
 extern Graphics::Node * g_CommodityLayer;

@@ -82,7 +82,7 @@ public:
 	virtual void Execute(void);
 	virtual void Exit(void);
 private:
-	Vector3f m_JumpPoint;
+	Vector3f m_JumpDirection;
 };
 
 class Fight : public State

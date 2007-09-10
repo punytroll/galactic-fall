@@ -22,6 +22,7 @@
 
 #include <iostream>
 #include <list>
+#include <stdexcept>
 
 #include "asset_class.h"
 #include "character.h"
@@ -38,6 +39,8 @@
 #include "states.h"
 #include "string_cast.h"
 #include "system.h"
+
+int WantToJump(Ship * Ship, System * System);
 
 SelectSteering::SelectSteering(StateMachineMind * Mind) :
 	State(Mind)
@@ -417,9 +420,7 @@ void TransporterPhase4::Enter(void)
 			++SystemIterator;
 		}
 		GetMind()->GetCharacter()->GetShip()->SetLinkedSystemTarget(*SystemIterator);
-		
-		// TODO: the 280.0f is a constant from main.cpp
-		m_JumpPoint = GetMind()->GetCharacter()->GetShip()->GetPosition() + (((*SystemIterator)->GetPosition() - GetMind()->GetCharacter()->GetShip()->GetCurrentSystem()->GetPosition()).Normalize() * 280.0f * GetRandomFloat(1.0f, 1.2f));
+		m_JumpDirection = ((*SystemIterator)->GetPosition() - GetMind()->GetCharacter()->GetShip()->GetCurrentSystem()->GetPosition()).Normalize();
 	}
 	else
 	{
@@ -430,47 +431,60 @@ void TransporterPhase4::Enter(void)
 
 void TransporterPhase4::Execute(void)
 {
-	Vector3f ToDestination(m_JumpPoint - GetMind()->GetCharacter()->GetShip()->GetPosition());
-	float LengthSquared(ToDestination.SquaredLength());
-	
-	if(LengthSquared > 400.0f)
+	switch(WantToJump(GetMind()->GetCharacter()->GetShip(), GetMind()->GetCharacter()->GetShip()->GetLinkedSystemTarget()))
 	{
-		ToDestination /= sqrt(LengthSquared);
-		
-		Vector3f Direction(1.0f, 0.0f, 0.0f);
-		
-		Direction *= GetMind()->GetCharacter()->GetShip()->GetAngularPosition();
-		
-		float HeadingOffDestination(GetShortestRadians(GetRadians(Vector2f(Direction[0], Direction[1])), GetRadians(Vector2f(ToDestination[0], ToDestination[1]))));
-		
-		if(HeadingOffDestination > 0.1)
+	case NOT_ENOUGH_FUEL:
 		{
-			GetMind()->GetCharacter()->GetShip()->SetTurnRight(1.0f);
-			GetMind()->GetCharacter()->GetShip()->SetTurnLeft(0.0f);
-			GetMind()->GetCharacter()->GetShip()->SetAccelerate(false);
-		}
-		else if(HeadingOffDestination < -0.1)
-		{
-			GetMind()->GetCharacter()->GetShip()->SetTurnRight(0.0f);
-			GetMind()->GetCharacter()->GetShip()->SetTurnLeft(1.0f);
-			GetMind()->GetCharacter()->GetShip()->SetAccelerate(false);
-		}
-		else
-		{
-			GetMind()->GetCharacter()->GetShip()->SetTurnRight(0.0f);
-			GetMind()->GetCharacter()->GetShip()->SetTurnLeft(0.0f);
+			GetMind()->GetStateMachine()->SetState(new SelectSteering(GetMind()));
+			delete this;
 			
-			Vector3f MaximumVelocity(GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetMaximumSpeed(), 0.0f, 0.0f);
-			
-			MaximumVelocity *= GetMind()->GetCharacter()->GetShip()->GetAngularPosition();
-			GetMind()->GetCharacter()->GetShip()->SetAccelerate((MaximumVelocity - GetMind()->GetCharacter()->GetShip()->GetVelocity()).SquaredLength() > 0.1f);
+			break;
 		}
-	}
-	else
-	{
-		GetMind()->GetCharacter()->GetShip()->m_Jump = true;
-		GetMind()->GetStateMachine()->SetState(new SelectSteering(GetMind()));
-		delete this;
+	case OK:
+		{
+			GetMind()->GetCharacter()->GetShip()->m_Jump = true;
+			GetMind()->GetStateMachine()->SetState(new SelectSteering(GetMind()));
+			delete this;
+			
+			break;
+		}
+	case TOO_NEAR_TO_STELLAR_OBJECT:
+		{
+			Vector3f Direction(1.0f, 0.0f, 0.0f);
+			
+			Direction *= GetMind()->GetCharacter()->GetShip()->GetAngularPosition();
+			
+			float HeadingOffDestination(GetShortestRadians(GetRadians(Vector2f(Direction[0], Direction[1])), GetRadians(Vector2f(m_JumpDirection[0], m_JumpDirection[1]))));
+			
+			if(HeadingOffDestination > 0.1)
+			{
+				GetMind()->GetCharacter()->GetShip()->SetTurnRight(1.0f);
+				GetMind()->GetCharacter()->GetShip()->SetTurnLeft(0.0f);
+				GetMind()->GetCharacter()->GetShip()->SetAccelerate(false);
+			}
+			else if(HeadingOffDestination < -0.1)
+			{
+				GetMind()->GetCharacter()->GetShip()->SetTurnRight(0.0f);
+				GetMind()->GetCharacter()->GetShip()->SetTurnLeft(1.0f);
+				GetMind()->GetCharacter()->GetShip()->SetAccelerate(false);
+			}
+			else
+			{
+				GetMind()->GetCharacter()->GetShip()->SetTurnRight(0.0f);
+				GetMind()->GetCharacter()->GetShip()->SetTurnLeft(0.0f);
+				
+				Vector3f MaximumVelocity(GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetMaximumSpeed(), 0.0f, 0.0f);
+				
+				MaximumVelocity *= GetMind()->GetCharacter()->GetShip()->GetAngularPosition();
+				GetMind()->GetCharacter()->GetShip()->SetAccelerate((MaximumVelocity - GetMind()->GetCharacter()->GetShip()->GetVelocity()).SquaredLength() > 0.1f);
+			}
+			
+			break;
+		}
+	default:
+		{
+			throw std::runtime_error("Unhandled WantToJump return code.");
+		}
 	}
 }
 
