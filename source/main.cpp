@@ -1237,7 +1237,7 @@ void SaveGame(std::ostream & OStream)
 	XML << element << "fuel" << attribute << "value" << value << Ship->GetFuel() << end;
 	XML << element << "hull" << attribute << "value" << value << Ship->GetHull() << end;
 	XML << element << "position" << attribute << "x" << value << Ship->GetPosition().m_V.m_A[0] << attribute << "y" << value << Ship->GetPosition().m_V.m_A[1] << end;
-	XML << element << "angular-position" << attribute << "w" << value << Ship->GetAngularPosition()[0] << attribute << "x" << Ship->GetAngularPosition()[1] << attribute << "y" << Ship->GetAngularPosition()[2] << attribute << "z" << Ship->GetAngularPosition()[3] << end;
+	XML << element << "angular-position" << attribute << "w" << value << Ship->GetAngularPosition()[0] << attribute << "x" << value << Ship->GetAngularPosition()[1] << attribute << "y" << value << Ship->GetAngularPosition()[2] << attribute << "z" << value << Ship->GetAngularPosition()[3] << end;
 	XML << element << "velocity" << attribute << "x" << value << Ship->GetVelocity().m_V.m_A[0] << attribute << "y" << value << Ship->GetVelocity().m_V.m_A[1] << end;
 	XML << element << "manifest";
 	
