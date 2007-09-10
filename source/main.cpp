@@ -223,21 +223,6 @@ bool g_DumpEndReport(false);
 SystemStatistics * g_SystemStatistics;
 std::map< Graphics::Node *, Reference< Graphics::Node > > g_VisualizationReferences;
 
-enum WantReturnCode
-{
-	OK,
-	NO_JUMP_TARGET,
-	NO_LAND_TARGET,
-	NO_SCOOP_TARGET,
-	NOT_ENOUGH_CREDITS,
-	NOT_ENOUGH_FUEL,
-	NOT_ENOUGH_SPACE,
-	TOO_FAR_AWAY,
-	TOO_FAST,
-	TOO_HIGH_RELATIVE_VELOCITY,
-	TOO_NEAR_TO_STELLAR_OBJECT
-};
-
 int WantToJump(Ship * Ship, System * System)
 {
 	if(System == 0)
