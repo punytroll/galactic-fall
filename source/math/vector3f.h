@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 1.3.2 of algebra.
+ * This is part of version 1.3.4 of algebra.
  **/
 
 #ifndef ALGEBRA_VECTOR3F_H
@@ -76,6 +76,11 @@ public:
 		return operator/=(Length());
 	}
 	
+	Vector3f Normalized(void) const
+	{
+		return *this / Length();
+	}
+	
 	Vector3f operator+(const Vector3f & Other) const
 	{
 		return Vector3f(m_V.m_A[0] + Other.m_V.m_A[0], m_V.m_A[1] + Other.m_V.m_A[1], m_V.m_A[2] + Other.m_V.m_A[2]);
@@ -85,10 +90,25 @@ public:
 	{
 		return Vector3f(m_V.m_A[0] - Other.m_V.m_A[0], m_V.m_A[1] - Other.m_V.m_A[1], m_V.m_A[2] - Other.m_V.m_A[2]);
 	}
+
+	Vector3f operator+(void) const
+	{
+		return *this;
+	}
 	
-	Vector3f operator*(const float & Scalar) const
+	Vector3f operator-(void) const
+	{
+		return Vector3f(-m_V.m_A[0], -m_V.m_A[1], -m_V.m_A[2]);
+	}
+	
+	Vector3f operator*(float Scalar) const
 	{
 		return Vector3f(Scalar * m_V.m_A[0], Scalar * m_V.m_A[1], Scalar * m_V.m_A[2]);
+	}
+	
+	Vector3f operator/(float Scalar) const
+	{
+		return Vector3f(m_V.m_A[0] / Scalar, m_V.m_A[1] / Scalar, m_V.m_A[2] / Scalar);
 	}
 	
 	Vector3f operator%(const Vector3f & Other)
@@ -139,16 +159,6 @@ public:
 		m_V.m_A[2] /= Scalar;
 		
 		return *this;
-	}
-
-	Vector3f operator+(void) const
-	{
-		return *this;
-	}
-	
-	Vector3f operator-(void) const
-	{
-		return Vector3f(-m_V.m_A[0], -m_V.m_A[1], -m_V.m_A[2]);
 	}
 	
 	float Dot(const Vector3f & Other) const
