@@ -21,7 +21,7 @@
 			</material>
 		</visualization-part>
 	</visualization>
-	<forward-thrust>8</forward-thrust>
+	<forward-thrust>4</forward-thrust>
 	<turn-speed>0.8</turn-speed>
 	<maximum-speed>8.5</maximum-speed>
 	<maximum-available-space>60</maximum-available-space>
