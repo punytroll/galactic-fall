@@ -26,7 +26,6 @@
 WWindow::WWindow(Widget * SupWidget, const std::string & Title) :
 	Widget(SupWidget)
 {
-	SetSize(Vector2f(100.0f, 100.0f));
 	SetBackgroundColor(Color(0.2f, 0.2f, 0.2f));
 	m_Border = new Border(this);
 	m_Border->SetPosition(Vector2f(0.0f, 0.0f));
@@ -44,6 +43,16 @@ WWindow::WWindow(Widget * SupWidget, const std::string & Title) :
 	m_TitleLabel->SetBackgroundColor(Color(0.2f, 0.2f, 0.4f));
 	m_TitleLabel->AddMouseButtonListener(this);
 	m_TitleLabel->AddMouseMotionListener(this);
+	m_ResizeDragBox = new Widget(this);
+	m_ResizeDragBox->SetPosition(Vector2f(GetSize()[0] - 12.0f, GetSize()[1] - 12.0f));
+	m_ResizeDragBox->SetSize(Vector2f(10.0f, 10.0f));
+	m_ResizeDragBox->SetAnchorBottom(true);
+	m_ResizeDragBox->SetAnchorLeft(false);
+	m_ResizeDragBox->SetAnchorRight(true);
+	m_ResizeDragBox->SetAnchorTop(false);
+	m_ResizeDragBox->SetBackgroundColor(Color(0.4f, 0.4f, 0.4f));
+	m_ResizeDragBox->AddMouseButtonListener(this);
+	m_ResizeDragBox->AddMouseMotionListener(this);
 }
 
 bool WWindow::OnMouseButton(Widget * EventSource, int Button, int State, float X, float Y)
@@ -66,6 +75,24 @@ bool WWindow::OnMouseButton(Widget * EventSource, int Button, int State, float X
 			return true;
 		}
 	}
+	else if(EventSource == m_ResizeDragBox)
+	{
+		GetSupWidget()->RaiseSubWidget(this);
+		if(Button == 1)
+		{
+			if(State == EV_DOWN)
+			{
+				m_GrabPosition.Set(X, Y);
+				g_UserInterface->SetCaptureWidget(m_ResizeDragBox);
+			}
+			else
+			{
+				g_UserInterface->ReleaseCaptureWidget();
+			}
+			
+			return true;
+		}
+	}
 	
 	return false;
 }
@@ -75,5 +102,9 @@ void WWindow::OnMouseMotion(Widget * EventSource, float X, float Y)
 	if((EventSource == m_TitleLabel) && (g_UserInterface->GetCaptureWidget() == m_TitleLabel))
 	{
 		SetPosition(GetPosition() + Vector2f(X, Y) - m_GrabPosition);
+	}
+	if((EventSource == m_ResizeDragBox) && (g_UserInterface->GetCaptureWidget() == m_ResizeDragBox))
+	{
+		SetSize(GetSize() + Vector2f(X, Y) - m_GrabPosition);
 	}
 }
