@@ -38,6 +38,7 @@ public:
 private:
 	Border * m_Border;
 	Label * m_TitleLabel;
+	Widget * m_ResizeDragBox;
 	Vector2f m_GrabPosition;
 };
 
