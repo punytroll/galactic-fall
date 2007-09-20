@@ -28,9 +28,81 @@
 #include "save_game_dialog.h"
 #include "scroll_box.h"
 
+class DirectoryEntryItem : public MouseMotionListener, public Widget
+{
+public:
+	DirectoryEntryItem(Widget * SupWidget, const std::string & Caption);
+	void Update(void);
+	// getters
+	const std::string & GetCaption(void) const;
+	bool GetSelected(void) const;
+	// setters
+	void SetSelected(bool Selected);
+protected:
+	virtual void OnMouseEnter(Widget * EventSource);
+	virtual void OnMouseLeave(Widget * EventSource);
+private:
+	bool m_Selected;
+	Label * m_CaptionLabel;
+};
+
+DirectoryEntryItem::DirectoryEntryItem(Widget * SupWidget, const std::string & Caption) :
+	Widget(SupWidget),
+	m_Selected(false)
+{
+	AddMouseMotionListener(this);
+	m_CaptionLabel = new Label(this, Caption);
+	m_CaptionLabel->SetPosition(Vector2f(5.0f, 0.0f));
+	m_CaptionLabel->SetSize(Vector2f(GetSize()[0] - 10.0f, 20.0f));
+	m_CaptionLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
+	m_CaptionLabel->SetAnchorLeft(true);
+	m_CaptionLabel->SetAnchorRight(true);
+	m_CaptionLabel->SetAnchorTop(true);
+}
+
+const std::string & DirectoryEntryItem::GetCaption(void) const
+{
+	return m_CaptionLabel->GetString();
+}
+
+bool DirectoryEntryItem::GetSelected(void) const
+{
+	return m_Selected;
+}
+
+void DirectoryEntryItem::SetSelected(bool Selected)
+{
+	m_Selected = Selected;
+	if(m_Selected == false)
+	{
+		UnsetBackgroundColor();
+	}
+	else
+	{
+		SetBackgroundColor(Color(0.4f, 0.1f, 0.1f));
+	}
+}
+
+void DirectoryEntryItem::OnMouseEnter(Widget * EventSource)
+{
+	if(GetSelected() == false)
+	{
+		SetBackgroundColor(Color(0.3f, 0.2f, 0.2f));
+	}
+}
+
+void DirectoryEntryItem::OnMouseLeave(Widget * EventSource)
+{
+	if(GetSelected() == false)
+	{
+		UnsetBackgroundColor();
+	}
+}
+
 SaveGameDialog::SaveGameDialog(Widget * SupWidget, Callback1< void, std::ostream & > * SaveGameCallback) :
 	WWindow(SupWidget, "Save Game"),
-	m_SaveGameCallback(SaveGameCallback)
+	m_SaveGameCallback(SaveGameCallback),
+	m_SelectedDirectoryEntryItem(0)
 {
 	SetPosition(Vector2f(120.0f, 200.0f));
 	SetSize(Vector2f(300.0f, 300.0f));
@@ -81,8 +153,44 @@ SaveGameDialog::SaveGameDialog(Widget * SupWidget, Callback1< void, std::ostream
 	m_FileScrollBox->SetSize(Vector2f(280.0f, 190.0));
 	m_FileScrollBox->SetAnchorBottom(true);
 	m_FileScrollBox->SetAnchorRight(true);
-	m_FileScrollBox->SetAnchorTop(false);
+	m_FileScrollBox->SetAnchorTop(true);
 	m_FileScrollBox->SetHorizontalScrollBarVisible(false);
+	
+	std::string Path(getenv("HOME"));
+	
+	if(IsExistingDirectory(Path) == false)
+	{
+		ShowErrorMessage("Is not an existing directory: \"" + Path + "\".");
+		
+		return;
+	}
+	Path += "/.galactic-fall/";
+	if(IsExistingDirectory(Path) == false)
+	{
+		if(CreateDirectory(Path) == false)
+		{
+			ShowErrorMessage("Could not create the directory: \"" + Path + "\".");
+			
+			return;
+		}
+	}
+	
+	float Top(5.0f);
+	std::vector< std::string > Entries(GetDirectoryEntries(Path));
+	
+	for(std::vector< std::string >::iterator EntryIterator = Entries.begin(); EntryIterator != Entries.end(); ++EntryIterator)
+	{
+		DirectoryEntryItem * EntryLabel(new DirectoryEntryItem(m_FileScrollBox->GetContent(), EntryIterator->substr(0, EntryIterator->rfind(".xml"))));
+		
+		EntryLabel->SetPosition(Vector2f(5.0f, Top));
+		EntryLabel->SetSize(Vector2f(-10.0f, 20.0f));
+		EntryLabel->SetAnchorRight(true);
+		EntryLabel->AddMouseButtonListener(this);
+		Top += 25.0f;
+	}
+	m_FileScrollBox->GetContent()->SetSize(Vector2f(m_FileScrollBox->GetView()->GetSize()[0], std::max(Top, m_FileScrollBox->GetView()->GetSize()[1])));
+	m_FileScrollBox->GetContent()->SetAnchorBottom(true);
+	m_FileScrollBox->GetContent()->SetAnchorRight(true);
 }
 
 void SaveGameDialog::ShowErrorMessage(const std::string & ErrorMessage)
@@ -198,5 +306,27 @@ bool SaveGameDialog::OnKey(Widget * EventSource, const KeyEventInformation & Key
 
 bool SaveGameDialog::OnMouseButton(Widget * EventSource, int Button, int State, float X, float Y)
 {
-	return WWindow::OnMouseButton(EventSource, Button, State, X, Y);
+	if(WWindow::OnMouseButton(EventSource, Button, State, X, Y) == true)
+	{
+		return true;
+	}
+	if((Button == 1 /* LEFT */) && (State == EV_DOWN))
+	{
+		DirectoryEntryItem * SelectedDirectoryEntryItem(dynamic_cast< DirectoryEntryItem * >(EventSource));
+		
+		if(SelectedDirectoryEntryItem != 0)
+		{
+			if(m_SelectedDirectoryEntryItem != 0)
+			{
+				m_SelectedDirectoryEntryItem->SetSelected(false);
+			}
+			m_SelectedDirectoryEntryItem = SelectedDirectoryEntryItem;
+			m_SelectedDirectoryEntryItem->SetSelected(true);
+			m_FileNameLabel->SetString(m_SelectedDirectoryEntryItem->GetCaption());
+			
+			return true;
+		}
+	}
+	
+	return false;
 }
