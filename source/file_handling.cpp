@@ -17,6 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include <dirent.h>
 #include <sys/stat.h>
 
 #include "file_handling.h"
@@ -24,6 +25,32 @@
 bool CreateDirectory(const std::string & Path)
 {
 	return mkdir(Path.c_str(), 0777) == 0;
+}
+
+std::vector< std::string > GetDirectoryEntries(const std::string & Path)
+{
+	std::vector< std::string > Entries;
+	DIR * Directory(opendir(Path.c_str()));
+	
+	if(Directory != 0)
+	{
+		while(true)
+		{
+			dirent * DirectoryEntry(readdir(Directory));
+			
+			if(DirectoryEntry == 0)
+			{
+				break;
+			}
+			if((std::string(".") != DirectoryEntry->d_name) && (std::string("..") != DirectoryEntry->d_name))
+			{
+				Entries.push_back(DirectoryEntry->d_name);
+			}
+		}
+		closedir(Directory);
+	}
+	
+	return Entries;
 }
 
 bool IsExistingDirectory(const std::string & Path)

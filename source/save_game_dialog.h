@@ -28,6 +28,7 @@
 #include "window.h"
 
 class Button;
+class DirectoryEntryItem;
 class Label;
 class ScrollBox;
 
@@ -50,6 +51,7 @@ private:
 	TimeoutNotification m_ErrorMessageTimeoutNotification;
 	Label * m_FileNameLabel;
 	ScrollBox * m_FileScrollBox;
+	DirectoryEntryItem * m_SelectedDirectoryEntryItem;
 };
 
 #endif

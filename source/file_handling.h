@@ -21,8 +21,10 @@
 #define FILE_HANDLING_H
 
 #include <string>
+#include <vector>
 
 bool IsExistingDirectory(const std::string & Path);
+std::vector< std::string > GetDirectoryEntries(const std::string & Path);
 bool CreateDirectory(const std::string & Path);
 
 #endif
