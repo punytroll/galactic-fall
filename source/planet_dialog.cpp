@@ -44,10 +44,15 @@ PlanetDialog::PlanetDialog(Widget * SupWidget, Planet * Planet, Character * Char
 	m_DescriptionLabel->SetSize(Vector2f(360.0f, 100.0f));
 	m_DescriptionLabel->SetWrap(true);
 	m_DescriptionLabel->SetWordWrap(true);
+	m_DescriptionLabel->SetAnchorRight(true);
 	m_OKButton = new Button(this);
 	m_OKButton->SetPosition(Vector2f(390.0f, 300.0f));
 	m_OKButton->SetSize(Vector2f(100.0f, 20.0f));
 	m_OKButton->AddClickedListener(this);
+	m_OKButton->SetAnchorBottom(true);
+	m_OKButton->SetAnchorLeft(false);
+	m_OKButton->SetAnchorRight(true);
+	m_OKButton->SetAnchorTop(false);
 	m_OKButtonLabel = new Label(m_OKButton, "OK");
 	m_OKButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
 	m_OKButtonLabel->SetSize(m_OKButton->GetSize());
@@ -83,6 +88,8 @@ PlanetDialog::PlanetDialog(Widget * SupWidget, Planet * Planet, Character * Char
 			
 			FuelPriceLabel->SetPosition(Vector2f(10.0f, 300.0f));
 			FuelPriceLabel->SetSize(Vector2f(300.0f, 20.0f));
+			FuelPriceLabel->SetAnchorTop(false);
+			FuelPriceLabel->SetAnchorBottom(true);
 			
 			break;
 		}
