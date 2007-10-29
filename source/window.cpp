@@ -44,13 +44,13 @@ WWindow::WWindow(Widget * SupWidget, const std::string & Title) :
 	m_TitleLabel->AddMouseButtonListener(this);
 	m_TitleLabel->AddMouseMotionListener(this);
 	m_ResizeDragBox = new Widget(this);
-	m_ResizeDragBox->SetPosition(Vector2f(GetSize()[0] - 12.0f, GetSize()[1] - 12.0f));
-	m_ResizeDragBox->SetSize(Vector2f(10.0f, 10.0f));
+	m_ResizeDragBox->SetPosition(Vector2f(GetSize()[0] - 9.0f, GetSize()[1] - 9.0f));
+	m_ResizeDragBox->SetSize(Vector2f(7.0f, 7.0f));
 	m_ResizeDragBox->SetAnchorBottom(true);
 	m_ResizeDragBox->SetAnchorLeft(false);
 	m_ResizeDragBox->SetAnchorRight(true);
 	m_ResizeDragBox->SetAnchorTop(false);
-	m_ResizeDragBox->SetBackgroundColor(Color(0.4f, 0.4f, 0.4f));
+	m_ResizeDragBox->SetBackgroundColor(Color(0.2f, 0.2f, 0.4f));
 	m_ResizeDragBox->AddMouseButtonListener(this);
 	m_ResizeDragBox->AddMouseMotionListener(this);
 }
