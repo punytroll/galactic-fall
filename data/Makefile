@@ -109,6 +109,9 @@ check-dependencies:
 	@if [ x`which xsltproc` = x ]; then \
 	    echo -e "\nYour system is missing the xsltproc program.\nTo build the data file you will need to install it on your system.\n"; false; \
 	fi
+	@if [ x$(data_location) = x ]; then \
+		echo -e "\nThe \"data_location\" configuration is missing.\nPlease run the configure script in the top level directory.\n"; false; \
+	fi
 
 clean:
 	$(RM) -r .data
