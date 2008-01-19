@@ -29,6 +29,7 @@
 #include "math/vector2f.h"
 
 class Color;
+class DimensionListener;
 class KeyEventInformation;
 class KeyListener;
 class MouseButtonListener;
@@ -91,11 +92,13 @@ public:
 	void MouseLeave(void);
 	// add signal listeners
 	void AddDestroyListener(DestroyListener * DestroyListener);
+	void AddDimensionListener(DimensionListener * DimensionListener);
 	void AddKeyListener(KeyListener * KeyListener);
 	void AddMouseButtonListener(MouseButtonListener * MouseButtonListener);
 	void AddMouseMotionListener(MouseMotionListener * MouseMotionListener);
 	// remove signal listeners
 	void RemoveDestroyListener(DestroyListener * DestroyListener);
+	void RemoveDimensionListener(DimensionListener * DimensionListener);
 	// static manager functions
 	static std::list< Widget * > & GetDestroyedWidgets(void);
 protected:
@@ -119,6 +122,7 @@ private:
 	Widget * m_KeyFocus;
 	// listeners
 	std::list< DestroyListener * > m_DestroyListeners;
+	std::list< DimensionListener * > m_DimensionListeners;
 	std::list< KeyListener * > m_KeyListeners;
 	std::list< MouseButtonListener * > m_MouseButtonListeners;
 	std::list< MouseMotionListener * > m_MouseMotionListeners;
