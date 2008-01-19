@@ -24,6 +24,7 @@
 ScrollBox::ScrollBox(Widget * SupWidget) :
 	Widget(SupWidget)
 {
+	AddDimensionListener(this);
 	m_View = new Widget(this);
 	m_View->SetPosition(Vector2f(0.0f, 0.0f));
 	m_View->SetSize(Vector2f(GetSize()[0] - 20.0f, GetSize()[1] - 20.0f));
@@ -53,6 +54,27 @@ ScrollBox::ScrollBox(Widget * SupWidget) :
 
 ScrollBox::~ScrollBox(void)
 {
+}
+
+void ScrollBox::OnSizeChanged(Widget * EventSource)
+{
+	if(EventSource == this)
+	{
+		const std::list< Widget * > & ContentWidgets(GetContent()->GetSubWidgets());
+		float Bottom(0.0f);
+		float Right(0.0f);
+		
+		for(std::list< Widget * >::const_iterator ContentWidgetIterator = ContentWidgets.begin(); ContentWidgetIterator != ContentWidgets.end(); ++ContentWidgetIterator)
+		{
+			Bottom = std::max(Bottom, (*ContentWidgetIterator)->GetPosition()[1] + (*ContentWidgetIterator)->GetSize()[1]);
+			Right = std::max(Right, (*ContentWidgetIterator)->GetPosition()[0] + (*ContentWidgetIterator)->GetSize()[0]);
+		}
+		// add padding at the bottom and the right
+		/// @todo This has to leave eventually since it is not general.
+		Bottom += 5.0f;
+		Right += 5.0f;
+		GetContent()->SetSize(Vector2f(std::max(Right, GetView()->GetSize()[0]), std::max(Bottom, GetView()->GetSize()[1])));
+	}
 }
 
 bool ScrollBox::OnScrollPositionChanged(Widget * EventSource)
