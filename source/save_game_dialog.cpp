@@ -183,14 +183,12 @@ SaveGameDialog::SaveGameDialog(Widget * SupWidget, Callback1< void, std::ostream
 		DirectoryEntryItem * EntryLabel(new DirectoryEntryItem(m_FileScrollBox->GetContent(), EntryIterator->substr(0, EntryIterator->rfind(".xml"))));
 		
 		EntryLabel->SetPosition(Vector2f(5.0f, Top));
-		EntryLabel->SetSize(Vector2f(-10.0f, 20.0f));
+		EntryLabel->SetSize(Vector2f(m_FileScrollBox->GetContent()->GetSize()[0] - 10.0f, 20.0f));
 		EntryLabel->SetAnchorRight(true);
 		EntryLabel->AddMouseButtonListener(this);
 		Top += 25.0f;
 	}
 	m_FileScrollBox->GetContent()->SetSize(Vector2f(m_FileScrollBox->GetView()->GetSize()[0], std::max(Top, m_FileScrollBox->GetView()->GetSize()[1])));
-	m_FileScrollBox->GetContent()->SetAnchorBottom(true);
-	m_FileScrollBox->GetContent()->SetAnchorRight(true);
 }
 
 void SaveGameDialog::ShowErrorMessage(const std::string & ErrorMessage)

@@ -94,6 +94,10 @@ TradeCenterDialog::TradeCenterDialog(Widget * SupWidget, Planet * Planet, Charac
 	m_OKButton = new Button(this);
 	m_OKButton->SetPosition(Vector2f(390.0f, 300.0f));
 	m_OKButton->SetSize(Vector2f(100.0f, 20.0f));
+	m_OKButton->SetAnchorBottom(true);
+	m_OKButton->SetAnchorLeft(false);
+	m_OKButton->SetAnchorRight(true);
+	m_OKButton->SetAnchorTop(false);
 	m_OKButton->AddClickedListener(this);
 	m_OKButtonLabel = new Label(m_OKButton, "OK");
 	m_OKButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
@@ -103,6 +107,8 @@ TradeCenterDialog::TradeCenterDialog(Widget * SupWidget, Planet * Planet, Charac
 	m_BuyButton = new Button(this);
 	m_BuyButton->SetPosition(Vector2f(10.0f, 300.0f));
 	m_BuyButton->SetSize(Vector2f(100.0f, 20.0f));
+	m_BuyButton->SetAnchorBottom(true);
+	m_BuyButton->SetAnchorTop(false);
 	m_BuyButton->AddClickedListener(this);
 	m_BuyButtonLabel = new Label(m_BuyButton, "Buy");
 	m_BuyButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
@@ -112,6 +118,8 @@ TradeCenterDialog::TradeCenterDialog(Widget * SupWidget, Planet * Planet, Charac
 	m_SellButton = new Button(this);
 	m_SellButton->SetPosition(Vector2f(120.0f, 300.0f));
 	m_SellButton->SetSize(Vector2f(100.0f, 20.0f));
+	m_SellButton->SetAnchorBottom(true);
+	m_SellButton->SetAnchorTop(false);
 	m_SellButton->AddClickedListener(this);
 	m_SellButtonLabel = new Label(m_SellButton, "Sell");
 	m_SellButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
@@ -122,6 +130,8 @@ TradeCenterDialog::TradeCenterDialog(Widget * SupWidget, Planet * Planet, Charac
 	m_AssetClassScrollBox->SetPosition(Vector2f(10.0f, 40.0f));
 	m_AssetClassScrollBox->SetSize(Vector2f(480.0f, 150.0f));
 	m_AssetClassScrollBox->SetHorizontalScrollBarVisible(false);
+	m_AssetClassScrollBox->SetAnchorRight(true);
+	m_AssetClassScrollBox->SetAnchorBottom(true);
 	m_AssetClassScrollBox->AddMouseButtonListener(this);
 	
 	const std::vector< PlanetAssetClass * > & PlanetAssetClasses(Planet->GetPlanetAssetClasses());
@@ -133,7 +143,8 @@ TradeCenterDialog::TradeCenterDialog(Widget * SupWidget, Planet * Planet, Charac
 		TradeCenterAssetClass * NewTradeCenterAssetClass(new TradeCenterAssetClass(m_AssetClassScrollBox->GetContent(), *PlanetAssetClassIterator, m_Character->GetShip()));
 		
 		NewTradeCenterAssetClass->SetPosition(Vector2f(5.0f, Top));
-		NewTradeCenterAssetClass->SetSize(Vector2f(450.0f, 20.0f));
+		NewTradeCenterAssetClass->SetSize(Vector2f(m_AssetClassScrollBox->GetContent()->GetSize()[0] - 10.0f, 20.0f));
+		NewTradeCenterAssetClass->SetAnchorRight(true);
 		NewTradeCenterAssetClass->AddMouseButtonListener(this);
 		NewTradeCenterAssetClass->AddMouseMotionListener(this);
 		Top += 25.0f;
@@ -143,9 +154,13 @@ TradeCenterDialog::TradeCenterDialog(Widget * SupWidget, Planet * Planet, Charac
 	m_TraderCreditsLabel = new Label(this, "");
 	m_TraderCreditsLabel->SetPosition(Vector2f(10.0f, 240.0f));
 	m_TraderCreditsLabel->SetSize(Vector2f(200.0f, 20.0f));
+	m_TraderCreditsLabel->SetAnchorBottom(true);
+	m_TraderCreditsLabel->SetAnchorTop(false);
 	m_TraderAvailableSpaceLabel = new Label(this, "");
 	m_TraderAvailableSpaceLabel->SetPosition(Vector2f(10.0f, 260.0f));
 	m_TraderAvailableSpaceLabel->SetSize(Vector2f(200.0f, 20.0f));
+	m_TraderAvailableSpaceLabel->SetAnchorBottom(true);
+	m_TraderAvailableSpaceLabel->SetAnchorTop(false);
 	UpdateTraderCredits();
 	UpdateTraderAvailableSpace();
 }
