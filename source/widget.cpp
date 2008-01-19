@@ -24,6 +24,7 @@
 #include <GL/gl.h>
 
 #include "color.h"
+#include "dimension_listener.h"
 #include "key_listener.h"
 #include "math.h"
 #include "mouse_button_listener.h"
@@ -123,6 +124,10 @@ void Widget::UnsetBackgroundColor(void)
 void Widget::SetPosition(const Vector2f & Position)
 {
 	m_Position = Position;
+	for(std::list< DimensionListener * >::iterator DimensionListenerIterator = m_DimensionListeners.begin(); DimensionListenerIterator != m_DimensionListeners.end(); ++DimensionListenerIterator)
+	{
+		(*DimensionListenerIterator)->OnPositionChanged(this);
+	}
 }
 
 void Widget::SetSize(const Vector2f & Size)
@@ -171,6 +176,10 @@ void Widget::SetSize(const Vector2f & Size)
 		SubWidget->SetPosition(SubWidgetNewPosition);
 		SubWidget->SetSize(SubWidgetNewSize);
 		++SubWidgetIterator;
+	}
+	for(std::list< DimensionListener * >::iterator DimensionListenerIterator = m_DimensionListeners.begin(); DimensionListenerIterator != m_DimensionListeners.end(); ++DimensionListenerIterator)
+	{
+		(*DimensionListenerIterator)->OnSizeChanged(this);
 	}
 }
 
@@ -376,6 +385,11 @@ void Widget::AddDestroyListener(DestroyListener * DestroyListener)
 	m_DestroyListeners.push_back(DestroyListener);
 }
 
+void Widget::AddDimensionListener(DimensionListener * DimensionListener)
+{
+	m_DimensionListeners.push_back(DimensionListener);
+}
+
 void Widget::AddKeyListener(KeyListener * KeyListener)
 {
 	m_KeyListeners.push_back(KeyListener);
@@ -398,6 +412,19 @@ void Widget::RemoveDestroyListener(DestroyListener * DestroyListenerToRemove)
 		if(*DestroyListenerIterator == DestroyListenerToRemove)
 		{
 			m_DestroyListeners.erase(DestroyListenerIterator);
+			
+			return;
+		}
+	}
+}
+
+void Widget::RemoveDimensionListener(DimensionListener * DimensionListenerToRemove)
+{
+	for(std::list< DimensionListener * >::iterator DimensionListenerIterator = m_DimensionListeners.begin(); DimensionListenerIterator != m_DimensionListeners.end(); ++DimensionListenerIterator)
+	{
+		if(*DimensionListenerIterator == DimensionListenerToRemove)
+		{
+			m_DimensionListeners.erase(DimensionListenerIterator);
 			
 			return;
 		}

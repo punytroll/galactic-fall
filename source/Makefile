@@ -77,6 +77,9 @@ commodity_class_manager_h = \
 destroy_listener_h = \
 	destroy_listener.h
 
+dimension_listener_h = \
+	dimension_listener.h
+
 draw_text_h = \
 	draw_text.h
 
@@ -285,6 +288,7 @@ scroll_bar_h = \
 
 scroll_box_h = \
 	scroll_box.h \
+	$(dimension_listener_h) \
 	$(scroll_position_changed_listener_h) \
 	$(widget_h)
 
@@ -505,6 +509,9 @@ commodity_class_manager.o: commodity_class_manager.cpp $(commodity_class_h) $(co
 destroy_listener.o: destroy_listener.cpp $(destroy_listener_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
+dimension_listener.o: dimension_listener.cpp $(dimension_listener_h)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
 draw_text.o: draw_text.cpp $(draw_text_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
@@ -694,7 +701,7 @@ weapon_class.o: weapon_class.cpp $(color_h) $(weapon_class_h)
 weapon_class_manager.o: weapon_class_manager.cpp $(weapon_class_h) $(weapon_class_manager_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-widget.o: widget.cpp $(color_h) $(key_listener_h) $(math_h) $(mouse_button_listener_h) $(mouse_motion_listener_h) $(widget_h)
+widget.o: widget.cpp $(color_h) $(dimension_listener_h) $(key_listener_h) $(math_h) $(mouse_button_listener_h) $(mouse_motion_listener_h) $(widget_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 window.o: window.cpp $(border_h) $(globals_h) $(label_h) $(user_interface_h) $(window_h)
