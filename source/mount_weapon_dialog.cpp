@@ -237,6 +237,7 @@ MountWeaponDialog::MountWeaponDialog(Widget * SupWidget, Ship * Ship) :
 	m_SlotScrollBox->SetPosition(Vector2f(10.0f, 70.0f));
 	m_SlotScrollBox->SetSize(Vector2f(200.0f, 320.0f));
 	m_SlotScrollBox->SetHorizontalScrollBarVisible(false);
+	m_SlotScrollBox->SetAnchorBottom(true);
 	
 	float Top(5.0f);
 	const std::map< std::string, Slot * > & Slots(m_Ship->GetSlots());
@@ -246,7 +247,8 @@ MountWeaponDialog::MountWeaponDialog(Widget * SupWidget, Ship * Ship) :
 		SlotListItem * NewSlotListItem(new SlotListItem(m_SlotScrollBox->GetContent(), SlotIterator->second));
 		
 		NewSlotListItem->SetPosition(Vector2f(5.0f, Top));
-		NewSlotListItem->SetSize(Vector2f(170.0f, 50.0f));
+		NewSlotListItem->SetSize(Vector2f(m_SlotScrollBox->GetContent()->GetSize()[0] - 10.0f, 50.0f));
+		NewSlotListItem->SetAnchorRight(true);
 		NewSlotListItem->AddMouseButtonListener(this);
 		Top += 55.0f;
 	}
@@ -262,6 +264,7 @@ MountWeaponDialog::MountWeaponDialog(Widget * SupWidget, Ship * Ship) :
 	m_WeaponScrollBox->SetPosition(Vector2f(390.0f, 70.0f));
 	m_WeaponScrollBox->SetSize(Vector2f(200.0f, 320.0f));
 	m_WeaponScrollBox->SetHorizontalScrollBarVisible(false);
+	m_WeaponScrollBox->SetAnchorBottom(true);
 	m_MountButton = new Button(this);
 	m_MountButton->SetPosition(Vector2f(220.0f, 110.0f));
 	m_MountButton->SetSize(Vector2f(160.0f, 20.0f));
@@ -288,6 +291,8 @@ MountWeaponDialog::MountWeaponDialog(Widget * SupWidget, Ship * Ship) :
 	m_OKButton->SetPosition(Vector2f(220.0f, 370.0f));
 	m_OKButton->SetSize(Vector2f(160.0f, 20.0f));
 	m_OKButton->AddClickedListener(this);
+	m_OKButton->SetAnchorBottom(true);
+	m_OKButton->SetAnchorTop(false);
 	
 	Label * OKButtonLabel(new Label(m_OKButton, "OK"));
 	
@@ -327,7 +332,8 @@ void MountWeaponDialog::RebuildWeaponList(void)
 			WeaponListItem * NewWeaponListItem(new WeaponListItem(m_WeaponScrollBox->GetContent(), ContentWeapon));
 			
 			NewWeaponListItem->SetPosition(Vector2f(5.0f, Top));
-			NewWeaponListItem->SetSize(Vector2f(170.0f, 50.0f));
+			NewWeaponListItem->SetSize(Vector2f(m_WeaponScrollBox->GetContent()->GetSize()[0] - 10.0f, 50.0f));
+			NewWeaponListItem->SetAnchorRight(true);
 			NewWeaponListItem->AddMouseButtonListener(this);
 			if(ContentWeapon == SelectedWeapon)
 			{
