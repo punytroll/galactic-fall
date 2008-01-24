@@ -56,19 +56,25 @@ TradeCenterAssetClass::TradeCenterAssetClass(Widget * SupWidget, PlanetAssetClas
 	Label * PlanetAssetClassNameLabel(new Label(this, PlanetAssetClass->GetAssetClass()->GetName()));
 	
 	PlanetAssetClassNameLabel->SetPosition(Vector2f(10.0f, 0.0f));
-	PlanetAssetClassNameLabel->SetSize(Vector2f(310.0f, 20.0f));
+	PlanetAssetClassNameLabel->SetSize(Vector2f(0.0f, 20.0f));
 	PlanetAssetClassNameLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
+	PlanetAssetClassNameLabel->SetAnchorRight(true);
 	m_CharacterAmountLabel = new Label(this, "");
-	m_CharacterAmountLabel->SetPosition(Vector2f(330.0f, 0.0f));
+	m_CharacterAmountLabel->SetPosition(Vector2f(-110.0f, 0.0f));
 	m_CharacterAmountLabel->SetSize(Vector2f(50.0f, 20.0f));
+	m_CharacterAmountLabel->SetHorizontalAlignment(Label::ALIGN_RIGHT);
 	m_CharacterAmountLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
+	m_CharacterAmountLabel->SetAnchorLeft(false);
+	m_CharacterAmountLabel->SetAnchorRight(true);
 	
 	Label * PlanetAssetClassPriceLabel(new Label(this, to_string_cast(PlanetAssetClass->GetPrice())));
 	
-	PlanetAssetClassPriceLabel->SetPosition(Vector2f(390.0f, 0.0f));
+	PlanetAssetClassPriceLabel->SetPosition(Vector2f(-60.0f, 0.0f));
 	PlanetAssetClassPriceLabel->SetSize(Vector2f(50.0f, 20.0f));
 	PlanetAssetClassPriceLabel->SetHorizontalAlignment(Label::ALIGN_RIGHT);
 	PlanetAssetClassPriceLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
+	PlanetAssetClassPriceLabel->SetAnchorLeft(false);
+	PlanetAssetClassPriceLabel->SetAnchorRight(true);
 	UpdateCharacterAmount();
 }
 
