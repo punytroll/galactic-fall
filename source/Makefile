@@ -220,6 +220,7 @@ mini_map_display_h = \
 mount_weapon_dialog_h = \
 	mount_weapon_dialog.h \
 	$(clicked_listener_h) \
+	$(dimension_listener_h) \
 	$(key_listener_h) \
 	$(mouse_button_listener_h) \
 	$(window_h)

@@ -21,6 +21,7 @@
 #define MOUNT_WEAPON_DIALOG_H
 
 #include "clicked_listener.h"
+#include "dimension_listener.h"
 #include "key_listener.h"
 #include "mouse_button_listener.h"
 #include "window.h"
@@ -31,7 +32,7 @@ class Ship;
 class SlotListItem;
 class WeaponListItem;
 
-class MountWeaponDialog : public ClickedListener, public KeyListener, virtual public MouseButtonListener, public WWindow
+class MountWeaponDialog : public ClickedListener, public DimensionListener, public KeyListener, virtual public MouseButtonListener, public WWindow
 {
 public:
 	MountWeaponDialog(Widget * SupWidget, Ship * Ship);
@@ -39,6 +40,7 @@ protected:
 	virtual bool OnClicked(Widget * EventSource);
 	virtual bool OnKey(Widget * EventSource, const KeyEventInformation & KeyEventInformation);
 	virtual bool OnMouseButton(Widget * EventSource, int Button, int State, float X, float Y);
+	virtual void OnSizeChanged(Widget * EventSource);
 private:
 	void RebuildWeaponList(void);
 	Ship * m_Ship;
@@ -49,6 +51,9 @@ private:
 	ScrollBox * m_WeaponScrollBox;
 	SlotListItem * m_SelectedSlotListItem;
 	WeaponListItem * m_SelectedWeaponListItem;
+	Widget * m_LeftPane;
+	Widget * m_CenterPane;
+	Widget * m_RightPane;
 };
 
 #endif
