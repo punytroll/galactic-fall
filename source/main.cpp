@@ -516,154 +516,120 @@ Reference< Graphics::ParticleSystem > CreateParticleSystem(const std::string & P
 	return ParticleSystemReference;
 }
 
-void CalculateMovements(System * System)
+void CalculateMovements(System * System, float Seconds)
 {
-	float Seconds(CalculateTime());
+	assert(System != 0);
 	
-	g_MainScene->Update(Seconds);
-	if(System != 0)
+	// TODO: it is unclear, which Ships to update really.
+	const std::list< Ship * > & Ships(System->GetShips());
+	std::list< Ship * >::const_iterator ShipIterator(Ships.begin());
+	
+	while(ShipIterator != Ships.end())
 	{
-		// TODO: it is unclear, which Ships to update really.
-		const std::list< Ship * > & Ships(System->GetShips());
-		std::list< Ship * >::const_iterator ShipIterator(Ships.begin());
+		Ship * Ship(*ShipIterator);
 		
-		while(ShipIterator != Ships.end())
+		// increment up here because Update() might invalidate the iterator
+		++ShipIterator;
+		Ship->Update(Seconds);
+		if(Ship->GetCurrentSystem() != System)
 		{
-			Ship * Ship(*ShipIterator);
-			
-			// increment up here because Update() might invalidate the iterator
-			++ShipIterator;
-			Ship->Update(Seconds);
-			if(Ship->GetCurrentSystem() != System)
+			// if another ship jumps out of the system ... remove it
+			if((g_OutputMind == false) || (g_OutputMind->GetCharacter() == 0) || (g_OutputMind->GetCharacter()->GetShip() != Ship))
 			{
-				// if another ship jumps out of the system ... remove it
-				if((g_OutputMind == false) || (g_OutputMind->GetCharacter() == 0) || (g_OutputMind->GetCharacter()->GetShip() != Ship))
-				{
-					DeleteObject(Ship);
-					Ship = 0;
-				}
-			}
-			if((Ship != 0) && (Ship->GetVisualization() != 0))
-			{
-				// update visualization
-				Ship->GetVisualization()->SetPosition(Ship->GetPosition());
-				Ship->GetVisualization()->SetOrientation(Ship->GetAngularPosition());
+				DeleteObject(Ship);
+				Ship = 0;
 			}
 		}
-		
-		const std::list< Commodity * > & Commodities(System->GetCommodities());
-		
-		for(std::list< Commodity * >::const_iterator CommodityIterator = Commodities.begin(); CommodityIterator != Commodities.end(); ++CommodityIterator)
+		if((Ship != 0) && (Ship->GetVisualization() != 0))
 		{
-			Commodity * Commodity(*CommodityIterator);
-			
-			Commodity->Move(Seconds);
 			// update visualization
-			Commodity->GetVisualization()->SetPosition(Commodity->GetPosition());
-			Commodity->GetVisualization()->SetOrientation(Commodity->GetAngularPosition());
+			Ship->GetVisualization()->SetPosition(Ship->GetPosition());
+			Ship->GetVisualization()->SetOrientation(Ship->GetAngularPosition());
 		}
+	}
+	
+	const std::list< Commodity * > & Commodities(System->GetCommodities());
+	
+	for(std::list< Commodity * >::const_iterator CommodityIterator = Commodities.begin(); CommodityIterator != Commodities.end(); ++CommodityIterator)
+	{
+		Commodity * Commodity(*CommodityIterator);
 		
-		const std::list< Shot * > & Shots(System->GetShots());
-		std::list< Shot * >::const_iterator ShotIterator(Shots.begin());
+		Commodity->Move(Seconds);
+		// update visualization
+		Commodity->GetVisualization()->SetPosition(Commodity->GetPosition());
+		Commodity->GetVisualization()->SetOrientation(Commodity->GetAngularPosition());
+	}
+	
+	const std::list< Shot * > & Shots(System->GetShots());
+	std::list< Shot * >::const_iterator ShotIterator(Shots.begin());
+	
+	while(ShotIterator != Shots.end())
+	{
+		Shot * TheShot(*ShotIterator);
+		std::list< Shot * >::const_iterator NextIterator(ShotIterator);
 		
-		while(ShotIterator != Shots.end())
+		++NextIterator;
+		
+		if((*ShotIterator)->Update(Seconds) == false)
 		{
-			Shot * TheShot(*ShotIterator);
-			std::list< Shot * >::const_iterator NextIterator(ShotIterator);
-			
-			++NextIterator;
-			
-			if((*ShotIterator)->Update(Seconds) == false)
+			DeleteObject(TheShot);
+			TheShot = 0;
+		}
+		else
+		{
+			// update visualization
+			TheShot->GetVisualization()->SetPosition(TheShot->GetPosition());
+			TheShot->GetVisualization()->SetOrientation(TheShot->GetAngularPosition());
+		}
+		// test for collisions with ships
+		if(TheShot != 0)
+		{
+			for(std::list< Ship * >::const_iterator ShipIterator = Ships.begin(); ShipIterator != Ships.end(); ++ShipIterator)
 			{
-				DeleteObject(TheShot);
-				TheShot = 0;
-			}
-			else
-			{
-				// update visualization
-				TheShot->GetVisualization()->SetPosition(TheShot->GetPosition());
-				TheShot->GetVisualization()->SetOrientation(TheShot->GetAngularPosition());
-			}
-			// test for collisions with ships
-			if(TheShot != 0)
-			{
-				for(std::list< Ship * >::const_iterator ShipIterator = Ships.begin(); ShipIterator != Ships.end(); ++ShipIterator)
+				Ship * TheShip(*ShipIterator);
+				
+				if(TheShot->GetShooter() != TheShip)
 				{
-					Ship * TheShip(*ShipIterator);
-					
-					if(TheShot->GetShooter() != TheShip)
-					{
-						if((TheShot->GetPosition() - TheShip->GetPosition()).SquaredLength() < (TheShot->GetRadialSize() * TheShot->GetRadialSize() + TheShip->GetRadialSize() * TheShip->GetRadialSize()))
-						{
-							Reference< Graphics::ParticleSystem > NewHitParticleSystem(CreateParticleSystem("hit"));
-							
-							NewHitParticleSystem->SetPosition(TheShot->GetPosition());
-							NewHitParticleSystem->SetVelocity((TheShot->GetVelocity() * 0.2f) + (TheShip->GetVelocity() * 0.8f));
-							g_ParticleSystemsLayer->AddNode(NewHitParticleSystem.Get());
-							TheShip->SetHull(TheShip->GetHull() - TheShot->GetDamage());
-							if(TheShip->GetHull() <= 0.0f)
-							{
-								Reference< Graphics::ParticleSystem > NewExplosionParticleSystem(CreateParticleSystem("explosion"));
-								
-								NewExplosionParticleSystem->SetPosition(TheShip->GetPosition());
-								NewExplosionParticleSystem->SetVelocity(TheShip->GetVelocity() * 0.5f);
-								g_ParticleSystemsLayer->AddNode(NewExplosionParticleSystem.Get());
-								
-								std::set< Object * >::const_iterator ManifestIterator;
-								std::set< Object * >::const_iterator NextIterator(TheShip->GetContent().begin());
-								
-								while(NextIterator != TheShip->GetContent().end())
-								{
-									ManifestIterator = NextIterator;
-									++NextIterator;
-									
-									Commodity * TheCommodity(dynamic_cast< Commodity * >(*ManifestIterator));
-									
-									if(TheCommodity != 0)
-									{
-										TheShip->RemoveContent(TheCommodity);
-										TheCommodity->SetPosition(TheShip->GetPosition());
-										
-										Vector2f VelocityPart(GetRandomFloat(0.1f, 1.2f), GetRandomFloat(0.0f, 2 * M_PI), Vector2f::InitializeMagnitudeAngle);
-										
-										TheCommodity->SetVelocity(TheShip->GetVelocity() * 0.8f + Vector3f(VelocityPart[0], VelocityPart[1], 0.0f));
-										TheShip->GetCurrentSystem()->AddContent(TheCommodity);
-										// add visualization of the commodity
-										VisualizeCommodity(TheCommodity, g_CommodityLayer);
-									}
-								}
-								DeleteObject(TheShip);
-							}
-							DeleteObject(TheShot);
-							TheShot = 0;
-							
-							break;
-						}
-					}
-				}
-			}
-			if(TheShot != 0)
-			{
-				for(std::list< Commodity * >::const_iterator CommodityIterator = Commodities.begin(); CommodityIterator != Commodities.end(); ++CommodityIterator)
-				{
-					Commodity * TheCommodity(*CommodityIterator);
-					
-					if((TheShot->GetPosition() - TheCommodity->GetPosition()).SquaredLength() < (TheShot->GetRadialSize() * TheShot->GetRadialSize() + TheCommodity->GetRadialSize() * TheCommodity->GetRadialSize()))
+					if((TheShot->GetPosition() - TheShip->GetPosition()).SquaredLength() < (TheShot->GetRadialSize() * TheShot->GetRadialSize() + TheShip->GetRadialSize() * TheShip->GetRadialSize()))
 					{
 						Reference< Graphics::ParticleSystem > NewHitParticleSystem(CreateParticleSystem("hit"));
 						
 						NewHitParticleSystem->SetPosition(TheShot->GetPosition());
-						NewHitParticleSystem->SetVelocity((TheShot->GetVelocity() * 0.4f) + (TheCommodity->GetVelocity() * 0.6f));
+						NewHitParticleSystem->SetVelocity((TheShot->GetVelocity() * 0.2f) + (TheShip->GetVelocity() * 0.8f));
 						g_ParticleSystemsLayer->AddNode(NewHitParticleSystem.Get());
-						TheCommodity->SetHull(TheCommodity->GetHull() - TheShot->GetDamage());
-						if(TheCommodity->GetHull() <= 0.0f)
+						TheShip->SetHull(TheShip->GetHull() - TheShot->GetDamage());
+						if(TheShip->GetHull() <= 0.0f)
 						{
-							Reference< Graphics::ParticleSystem > NewHitParticleSystem(CreateParticleSystem("hit"));
+							Reference< Graphics::ParticleSystem > NewExplosionParticleSystem(CreateParticleSystem("explosion"));
 							
-							NewHitParticleSystem->SetPosition(TheCommodity->GetPosition());
-							NewHitParticleSystem->SetVelocity(TheCommodity->GetVelocity() * 0.5f);
-							g_ParticleSystemsLayer->AddNode(NewHitParticleSystem.Get());
-							DeleteObject(TheCommodity);
+							NewExplosionParticleSystem->SetPosition(TheShip->GetPosition());
+							NewExplosionParticleSystem->SetVelocity(TheShip->GetVelocity() * 0.5f);
+							g_ParticleSystemsLayer->AddNode(NewExplosionParticleSystem.Get());
+							
+							std::set< Object * >::const_iterator ManifestIterator;
+							std::set< Object * >::const_iterator NextIterator(TheShip->GetContent().begin());
+							
+							while(NextIterator != TheShip->GetContent().end())
+							{
+								ManifestIterator = NextIterator;
+								++NextIterator;
+								
+								Commodity * TheCommodity(dynamic_cast< Commodity * >(*ManifestIterator));
+								
+								if(TheCommodity != 0)
+								{
+									TheShip->RemoveContent(TheCommodity);
+									TheCommodity->SetPosition(TheShip->GetPosition());
+									
+									Vector2f VelocityPart(GetRandomFloat(0.1f, 1.2f), GetRandomFloat(0.0f, 2 * M_PI), Vector2f::InitializeMagnitudeAngle);
+									
+									TheCommodity->SetVelocity(TheShip->GetVelocity() * 0.8f + Vector3f(VelocityPart[0], VelocityPart[1], 0.0f));
+									TheShip->GetCurrentSystem()->AddContent(TheCommodity);
+									// add visualization of the commodity
+									VisualizeCommodity(TheCommodity, g_CommodityLayer);
+								}
+							}
+							DeleteObject(TheShip);
 						}
 						DeleteObject(TheShot);
 						TheShot = 0;
@@ -672,8 +638,38 @@ void CalculateMovements(System * System)
 					}
 				}
 			}
-			ShotIterator = NextIterator;
 		}
+		if(TheShot != 0)
+		{
+			for(std::list< Commodity * >::const_iterator CommodityIterator = Commodities.begin(); CommodityIterator != Commodities.end(); ++CommodityIterator)
+			{
+				Commodity * TheCommodity(*CommodityIterator);
+				
+				if((TheShot->GetPosition() - TheCommodity->GetPosition()).SquaredLength() < (TheShot->GetRadialSize() * TheShot->GetRadialSize() + TheCommodity->GetRadialSize() * TheCommodity->GetRadialSize()))
+				{
+					Reference< Graphics::ParticleSystem > NewHitParticleSystem(CreateParticleSystem("hit"));
+					
+					NewHitParticleSystem->SetPosition(TheShot->GetPosition());
+					NewHitParticleSystem->SetVelocity((TheShot->GetVelocity() * 0.4f) + (TheCommodity->GetVelocity() * 0.6f));
+					g_ParticleSystemsLayer->AddNode(NewHitParticleSystem.Get());
+					TheCommodity->SetHull(TheCommodity->GetHull() - TheShot->GetDamage());
+					if(TheCommodity->GetHull() <= 0.0f)
+					{
+						Reference< Graphics::ParticleSystem > NewHitParticleSystem(CreateParticleSystem("hit"));
+						
+						NewHitParticleSystem->SetPosition(TheCommodity->GetPosition());
+						NewHitParticleSystem->SetVelocity(TheCommodity->GetVelocity() * 0.5f);
+						g_ParticleSystemsLayer->AddNode(NewHitParticleSystem.Get());
+						DeleteObject(TheCommodity);
+					}
+					DeleteObject(TheShot);
+					TheShot = 0;
+					
+					break;
+				}
+			}
+		}
+		ShotIterator = NextIterator;
 	}
 }
 
@@ -756,7 +752,7 @@ void UpdateUserInterface(void)
 	}
 }
 
-void Render(System * System)
+void PrepareGraphicalOutput(void)
 {
 	glViewport(0, 0, static_cast< GLsizei >(g_Width), static_cast< GLsizei >(g_Height));
 	glMatrixMode(GL_PROJECTION);
@@ -764,6 +760,13 @@ void Render(System * System)
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	g_Camera.Draw();
+	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_DEPTH_BUFFER_BIT);
+}
+
+void RenderSystem(System * System)
+{
+	assert(System != 0);
 	
 	const Star * CurrentStar(System->GetStar());
 	
@@ -777,8 +780,6 @@ void Render(System * System)
 	{
 		glDisable(GL_LIGHT0);
 	}
-	glClear(GL_COLOR_BUFFER_BIT);
-	glClear(GL_DEPTH_BUFFER_BIT);
 	// disable lighting by default, nodes have to activate it if they want it
 	glDisable(GL_LIGHTING);
 	g_MainScene->Render();
@@ -808,7 +809,6 @@ void Render(System * System)
 		glPopAttrib();
 		glPopMatrix();
 	}
-	DisplayUserInterface();
 }
 
 void Resize(void)
@@ -1021,6 +1021,8 @@ void OnOutputFocusEnterSystem(System * EnterSystem)
 
 void OnOutputFocusLeaveSystem(System * System)
 {
+	assert(g_OutputMind == true);
+	assert(System != 0);
 	if(g_SpawnShipTimeoutNotification.IsValid() == true)
 	{
 		g_SpawnShipTimeoutNotification.Dismiss();
@@ -1098,8 +1100,16 @@ void GameFrame(void)
 	double AITimeEnd(RealTime::Get());
 	double AITimeDelta(AITimeEnd - AITimeBegin);
 	double PhysicsTimeBegin(RealTime::Get());
+	float Seconds(CalculateTime());
 	
-	CalculateMovements(CurrentSystem);
+	if(g_MainScene != 0)
+	{
+		g_MainScene->Update(Seconds);
+	}
+	if(CurrentSystem != 0)
+	{
+		CalculateMovements(CurrentSystem, Seconds);
+	}
 	RealTime::Invalidate();
 	
 	double PhysicsTimeEnd(RealTime::Get());
@@ -1110,7 +1120,12 @@ void GameFrame(void)
 	
 	double GraphicsTimeBegin(RealTime::Get());
 	
-	Render(CurrentSystem);
+	PrepareGraphicalOutput();
+	if(CurrentSystem != 0)
+	{
+		RenderSystem(CurrentSystem);
+	}
+	DisplayUserInterface();
 	RealTime::Invalidate();
 	
 	double GraphicsTimeEnd(RealTime::Get());
@@ -1731,6 +1746,20 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 				
 				Object::Dump(Out);
 				std::cout << std::endl;
+			}
+			
+			break;
+		}
+	case 95: // Key: F11
+		{
+			if(KeyEventInformation.IsDown() == true)
+			{
+				OnOutputFocusLeaveSystem(g_CurrentSystem);
+				EmptySystem(g_CurrentSystem);
+				g_Galaxy->Destroy();
+				delete g_Galaxy;
+				g_Galaxy = 0;
+				g_CurrentSystem = 0;
 			}
 			
 			break;
@@ -2374,12 +2403,18 @@ int main(int argc, char ** argv)
 		glXSwapBuffers(g_Display, g_Window);
 	}
 	// cleanup
-	OnOutputFocusLeaveSystem(g_CurrentSystem);
-	EmptySystem(g_CurrentSystem);
+	if(g_CurrentSystem != 0)
+	{
+		OnOutputFocusLeaveSystem(g_CurrentSystem);
+		EmptySystem(g_CurrentSystem);
+	}
 	DeinitializeOpenGL();
 	DestroyWindow();
-	g_Galaxy->Destroy();
-	delete g_Galaxy;
+	if(g_Galaxy != 0)
+	{
+		g_Galaxy->Destroy();
+		delete g_Galaxy;
+	}
 	// if requested print some final debugging information
 	if(g_DumpEndReport == true)
 	{
