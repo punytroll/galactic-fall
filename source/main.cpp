@@ -834,7 +834,7 @@ public:
 		}
 		else if(EventSource == g_MapDialog)
 		{
-			if((g_InputMind == true) && (g_CurrentSystem->IsLinkedToSystem(g_MapDialog->GetStarMapDisplay()->GetSelectedSystem()) == true))
+			if((g_InputMind == true) && (g_InputMind->GetCharacter() != 0) && (g_InputMind->GetCharacter()->GetShip() != 0) && (g_InputMind->GetCharacter()->GetShip()->GetCurrentSystem()->IsLinkedToSystem(g_MapDialog->GetStarMapDisplay()->GetSelectedSystem()) == true))
 			{
 				g_InputMind->SelectLinkedSystem(g_MapDialog->GetStarMapDisplay()->GetSelectedSystem());
 			}
@@ -1213,10 +1213,15 @@ void MouseMotion(int X, int Y)
 
 void SaveGame(std::ostream & OStream)
 {
+	assert(g_InputMind == true);
+	assert(g_InputMind->GetCharacter() != 0);
+	assert(g_InputMind->GetCharacter()->GetShip() != 0);
+	assert(g_InputMind->GetCharacter()->GetShip()->GetCurrentSystem() != 0);
+	
 	XMLStream XML(OStream);
 	
 	XML << element << "save";
-	XML << element << "system" << attribute << "identifier" << value << g_CurrentSystem->GetIdentifier() << end;
+	XML << element << "system" << attribute << "identifier" << value << g_InputMind->GetCharacter()->GetShip()->GetCurrentSystem()->GetIdentifier() << end;
 	XML << element << "time-warp" << attribute << "value" << value << g_TimeWarp << end;
 	XML << element << "character" << attribute << "object-identifier" << value << g_InputMind->GetCharacter()->GetObjectIdentifier();
 	XML << element << "credits" << attribute << "value" << value << g_InputMind->GetCharacter()->GetCredits() << end;
