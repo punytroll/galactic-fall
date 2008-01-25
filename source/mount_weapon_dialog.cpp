@@ -223,21 +223,26 @@ MountWeaponDialog::MountWeaponDialog(Widget * SupWidget, Ship * Ship) :
 	m_SelectedSlotListItem(0),
 	m_SelectedWeaponListItem(0)
 {
-	SetPosition(Vector2f(70.0f, 400.0f));
-	SetSize(Vector2f(600.0f, 400.0f));
+	AddDimensionListener(this);
 	AddKeyListener(this);
+	m_LeftPane = new Widget(this);
+	m_LeftPane->SetPosition(Vector2f(10.0f, 40.0f));
+	m_LeftPane->SetSize(Vector2f(200.0f, GetSize()[1] - 50.0f));
+	m_LeftPane->SetAnchorBottom(true);
 	
-	Label * SlotListLabel(new Label(this, "Slots"));
+	Label * SlotListLabel(new Label(m_LeftPane, "Slots"));
 	
-	SlotListLabel->SetPosition(Vector2f(10.0f, 40.0f));
-	SlotListLabel->SetSize(Vector2f(200.0f, 20.0f));
+	SlotListLabel->SetPosition(Vector2f(0.0f, 0.0f));
+	SlotListLabel->SetSize(Vector2f(m_LeftPane->GetSize()[0], 20.0f));
 	SlotListLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
 	SlotListLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
-	m_SlotScrollBox = new ScrollBox(this);
-	m_SlotScrollBox->SetPosition(Vector2f(10.0f, 70.0f));
-	m_SlotScrollBox->SetSize(Vector2f(200.0f, 320.0f));
+	SlotListLabel->SetAnchorRight(true);
+	m_SlotScrollBox = new ScrollBox(m_LeftPane);
+	m_SlotScrollBox->SetPosition(Vector2f(0.0f, 30.0f));
+	m_SlotScrollBox->SetSize(Vector2f(m_LeftPane->GetSize()[0], m_LeftPane->GetSize()[1] - 30.0f));
 	m_SlotScrollBox->SetHorizontalScrollBarVisible(false);
 	m_SlotScrollBox->SetAnchorBottom(true);
+	m_SlotScrollBox->SetAnchorRight(true);
 	
 	float Top(5.0f);
 	const std::map< std::string, Slot * > & Slots(m_Ship->GetSlots());
@@ -253,22 +258,16 @@ MountWeaponDialog::MountWeaponDialog(Widget * SupWidget, Ship * Ship) :
 		Top += 55.0f;
 	}
 	m_SlotScrollBox->GetContent()->SetSize(Vector2f(180.0f, std::max(Top, m_SlotScrollBox->GetView()->GetSize()[1])));
-	
-	Label * WeaponListLabel(new Label(this, "Weapons"));
-	
-	WeaponListLabel->SetPosition(Vector2f(390.0f, 40.0f));
-	WeaponListLabel->SetSize(Vector2f(200.0f, 20.0f));
-	WeaponListLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
-	WeaponListLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
-	m_WeaponScrollBox = new ScrollBox(this);
-	m_WeaponScrollBox->SetPosition(Vector2f(390.0f, 70.0f));
-	m_WeaponScrollBox->SetSize(Vector2f(200.0f, 320.0f));
-	m_WeaponScrollBox->SetHorizontalScrollBarVisible(false);
-	m_WeaponScrollBox->SetAnchorBottom(true);
-	m_MountButton = new Button(this);
-	m_MountButton->SetPosition(Vector2f(220.0f, 110.0f));
-	m_MountButton->SetSize(Vector2f(160.0f, 20.0f));
+	// center pane
+	m_CenterPane = new Widget(this);
+	m_CenterPane->SetPosition(Vector2f(10.0f + m_LeftPane->GetSize()[0] + 10.0f, 70.0f));
+	m_CenterPane->SetSize(Vector2f(160.0f, GetSize()[1] - 80.0f));
+	m_CenterPane->SetAnchorBottom(true);
+	m_MountButton = new Button(m_CenterPane);
+	m_MountButton->SetPosition(Vector2f(0.0f, 40.0f));
+	m_MountButton->SetSize(Vector2f(m_CenterPane->GetSize()[0], 20.0f));
 	m_MountButton->AddClickedListener(this);
+	m_MountButton->SetAnchorRight(true);
 	
 	Label * MountButtonLabel(new Label(m_MountButton, "Mount"));
 	
@@ -276,10 +275,11 @@ MountWeaponDialog::MountWeaponDialog(Widget * SupWidget, Ship * Ship) :
 	MountButtonLabel->SetSize(Vector2f(m_MountButton->GetSize()));
 	MountButtonLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
 	MountButtonLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
-	m_UnmountButton = new Button(this);
-	m_UnmountButton->SetPosition(Vector2f(220.0f, 140.0f));
-	m_UnmountButton->SetSize(Vector2f(160.0f, 20.0f));
+	m_UnmountButton = new Button(m_CenterPane);
+	m_UnmountButton->SetPosition(Vector2f(0.0f, 70.0f));
+	m_UnmountButton->SetSize(Vector2f(m_CenterPane->GetSize()[0], 20.0f));
 	m_UnmountButton->AddClickedListener(this);
+	m_UnmountButton->SetAnchorRight(true);
 	
 	Label * UnmountButtonLabel(new Label(m_UnmountButton, "Unmount"));
 	
@@ -287,11 +287,12 @@ MountWeaponDialog::MountWeaponDialog(Widget * SupWidget, Ship * Ship) :
 	UnmountButtonLabel->SetSize(Vector2f(m_UnmountButton->GetSize()));
 	UnmountButtonLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
 	UnmountButtonLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
-	m_OKButton = new Button(this);
-	m_OKButton->SetPosition(Vector2f(220.0f, 370.0f));
-	m_OKButton->SetSize(Vector2f(160.0f, 20.0f));
+	m_OKButton = new Button(m_CenterPane);
+	m_OKButton->SetPosition(Vector2f(0.0f, m_CenterPane->GetSize()[1] - 30.0f));
+	m_OKButton->SetSize(Vector2f(m_CenterPane->GetSize()[0], 20.0f));
 	m_OKButton->AddClickedListener(this);
 	m_OKButton->SetAnchorBottom(true);
+	m_OKButton->SetAnchorRight(true);
 	m_OKButton->SetAnchorTop(false);
 	
 	Label * OKButtonLabel(new Label(m_OKButton, "OK"));
@@ -300,7 +301,28 @@ MountWeaponDialog::MountWeaponDialog(Widget * SupWidget, Ship * Ship) :
 	OKButtonLabel->SetSize(Vector2f(m_OKButton->GetSize()));
 	OKButtonLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
 	OKButtonLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
+	// right pane
+	m_RightPane = new Widget(this);
+	m_RightPane->SetPosition(Vector2f(10.0f + m_LeftPane->GetSize()[0] + 10.0f + m_CenterPane->GetSize()[0] + 10.0f, 40.0f));
+	m_RightPane->SetSize(Vector2f(200.0f, GetSize()[1] - 50.0f));
+	m_RightPane->SetAnchorBottom(true);
+	
+	Label * WeaponListLabel(new Label(m_RightPane, "Weapons"));
+	
+	WeaponListLabel->SetPosition(Vector2f(0.0f, 0.0f));
+	WeaponListLabel->SetSize(Vector2f(m_RightPane->GetSize()[0], 20.0f));
+	WeaponListLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
+	WeaponListLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
+	WeaponListLabel->SetAnchorRight(true);
+	m_WeaponScrollBox = new ScrollBox(m_RightPane);
+	m_WeaponScrollBox->SetPosition(Vector2f(0.0f, 30.0f));
+	m_WeaponScrollBox->SetSize(Vector2f(m_RightPane->GetSize()[0], m_RightPane->GetSize()[1] - 30.0f));
+	m_WeaponScrollBox->SetHorizontalScrollBarVisible(false);
+	m_WeaponScrollBox->SetAnchorBottom(true);
+	m_WeaponScrollBox->SetAnchorRight(true);
 	RebuildWeaponList();
+	SetPosition(Vector2f(70.0f, 400.0f));
+	SetSize(Vector2f(600.0f, 400.0f));
 }
 
 void MountWeaponDialog::RebuildWeaponList(void)
@@ -423,4 +445,18 @@ bool MountWeaponDialog::OnMouseButton(Widget * EventSource, int Button, int Stat
 	}
 	
 	return false;
+}
+
+void MountWeaponDialog::OnSizeChanged(Widget * EventSource)
+{
+	float AvailableWidth(GetSize()[0]);
+	
+	// substract 10.0f for each border: left of left, between left and center, between center and right, right of right
+	AvailableWidth -= 10.0f + 10.0f + 10.0f + 10.0f;
+	AvailableWidth -= m_CenterPane->GetSize()[0];
+	AvailableWidth /= 2.0f;
+	m_LeftPane->SetSize(Vector2f(AvailableWidth, m_LeftPane->GetSize()[1]));
+	m_CenterPane->SetPosition(Vector2f(10.0f + m_LeftPane->GetSize()[0] + 10.0f, m_CenterPane->GetPosition()[1]));
+	m_RightPane->SetSize(Vector2f(AvailableWidth, m_RightPane->GetSize()[1]));
+	m_RightPane->SetPosition(Vector2f(10.0f + m_LeftPane->GetSize()[0] + 10.0f + m_CenterPane->GetSize()[0] + 10.0f, m_RightPane->GetPosition()[1]));
 }
