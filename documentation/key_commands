@@ -104,6 +104,9 @@ On key down:
 68 (F2)
 	Dumps an object report to standard out.
 
+95 (F11)
+	Purges the game. This key removes all game content from memory and effectively puts the game in an out-of-game mode.
+
 96 (F12)
 	Toggles showing a dialog which displays timing information about the currently running simulation.
 
