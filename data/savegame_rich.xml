@@ -1,22 +1,26 @@
 <save>
-	<system identifier="sol"/>
+	<current-system identifier="sol"/>
 	<time-warp value="1"/>
-	<player>
+	<input-mind object-identifier="::player_mind"/>
+	<output-mind object-identifier="::player_mind"/>
+	<mind class="command-mind" object-identifier="::player_mind">
 		<character object-identifier="::character::player_character"/>
-		<ship object-identifier="::ship(shuttle)::player_ship"/>
-	</player>
+	</mind>
 	<character object-identifier="::character::player_character">
-		<credits value="100000"/>
+		<ship object-identifier="::ship(shuttle)::player_ship"/>
+		<credits value="1000000"/>
 		<map-knowledge>
 			<explored-system identifier="sol"/>
 		</map-knowledge>
 	</character>
-	<ship object-identifier="::ship(shuttle)::player_ship" class-identifier="shuttle">
+	<ship class-identifier="shuttle" object-identifier="::ship(shuttle)::player_ship">
+		<system identifier="sol"/>
 		<fuel value="1"/>
+		<hull value="100"/>
 		<position x="0" y="0"/>
 		<angular-position w="1" x="0" y="0" z="0"/>
 		<velocity x="0" y="0"/>
-		<manifest/>
+		<content/>
 		<name value="Stargazer Alpha 1-0"/>
 	</ship>
 	<main-camera>

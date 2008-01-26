@@ -1,26 +1,29 @@
 <save>
-	<system identifier="rigel"/>
+	<current-system identifier="rigel"/>
 	<time-warp value="1"/>
-	<player>
+	<input-mind object-identifier="::player_mind"/>
+	<output-mind object-identifier="::player_mind"/>
+	<mind class="command-mind" object-identifier="::player_mind">
 		<character object-identifier="::character::player_character"/>
-		<ship object-identifier="::ship(transporter)::player_ship"/>
-	</player>
+	</mind>
 	<character object-identifier="::character::player_character">
+		<ship object-identifier="::ship(transporter)::player_ship"/>
 		<credits value="12953"/>
 		<map-knowledge>
 			<explored-system identifier="sol"/>
 			<explored-system identifier="rigel"/>
 		</map-knowledge>
 	</character>
-	<ship object-identifier="::ship(transporter)::player_ship" class-identifier="transporter">
+	<ship class-identifier="transporter" object-identifier="::ship(transporter)::player_ship">
+		<system identifier="rigel"/>
 		<fuel value="3.84"/>
 		<hull value="229.44"/>
 		<position x="20.0f" y="34.0f"/>
 		<angular-position w="0.497571" x="0" y="0" z="-0.867423"/>
 		<velocity x="0" y="0"/>
-		<manifest>
-			<weapon object-identifier="::weapon(medium_laser)::ship(::ship(shuttle)::player_ship)" class-identifier="medium_laser" mounted-on="front_gun"/>
-		</manifest>
+		<content>
+			<weapon object-identifier="::weapon(medium_laser)::ship(::ship(transporter)::player_ship)" class-identifier="medium_laser" mounted-on="front_gun"/>
+		</content>
 		<name value="Stargazer Beta 1-3"/>
 	</ship>
 	<main-camera>
