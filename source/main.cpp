@@ -2115,7 +2115,7 @@ void DestroyWindow(void)
 	g_Display = 0;
 }
 
-void LoadSavegame(const Element * SaveElement)
+void LoadGameFromElement(const Element * SaveElement)
 {
 	if(SaveElement->GetName() != "save")
 	{
@@ -2365,22 +2365,22 @@ void LoadSavegame(const Element * SaveElement)
 	PopulateSystem(g_CurrentSystem);
 }
 
-bool LoadSavegame(const std::string & LoadSavegameFileName)
+bool LoadGame(const std::string & FileName)
 {
-	std::ifstream InputStream(LoadSavegameFileName.c_str());
+	std::ifstream InputStream(FileName.c_str());
 	
 	if(InputStream == false)
 	{
-		std::cerr << "The savegame file \"" << LoadSavegameFileName << "\" does not exist or is not readable." << std::endl;
+		std::cerr << "The savegame file \"" << FileName << "\" does not exist or is not readable." << std::endl;
 		
 		return false;
 	}
 	
-	Document SavegameDocument(InputStream);
+	Document Document(InputStream);
 	
-	if(SavegameDocument.GetDocumentElement() == 0)
+	if(Document.GetDocumentElement() == 0)
 	{
-		std::cerr << "The file \"" << LoadSavegameFileName << "\" does not seem to be parsable." << std::endl;
+		std::cerr << "The file \"" << FileName << "\" does not seem to be parsable." << std::endl;
 		
 		return false;
 	}
@@ -2388,11 +2388,11 @@ bool LoadSavegame(const std::string & LoadSavegameFileName)
 	{
 		try
 		{
-			LoadSavegame(SavegameDocument.GetDocumentElement());
+			LoadGameFromElement(Document.GetDocumentElement());
 		}
 		catch(std::runtime_error & Exception)
 		{
-			std::cerr << "The file \"" << LoadSavegameFileName << "\" contains invalid data:\n\t" << Exception.what() << std::endl;
+			std::cerr << "The file \"" << FileName << "\" contains invalid data:\n\t" << Exception.what() << std::endl;
 			
 			return false;
 		}
@@ -2524,7 +2524,7 @@ int main(int argc, char ** argv)
 	ReadSystemLinks(*Archive);
 	
 	// load the specified savegame
-	if(LoadSavegame(LoadSavegameFileName) == false)
+	if(LoadGame(LoadSavegameFileName) == false)
 	{
 		return 1;
 	}
