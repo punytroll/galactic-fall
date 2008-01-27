@@ -2410,8 +2410,7 @@ int main(int argc, char ** argv)
 	g_MainPerspective.SetFarClippingPlane(1000.f);
 	g_AssetClassManager = new AssetClassManager();
 	g_CommodityClassManager = new CommodityClassManager();
-	g_Galaxy = new Galaxy();
-	g_Galaxy->SetObjectIdentifier("::galaxy");
+	g_Galaxy = 0;
 	g_GraphicsEngine = new Graphics::Engine();
 	g_GraphicsEngine->SetOnDestroyCallback(Function(OnGraphicsNodeDestroy));
 	g_MainScene = 0;
@@ -2480,8 +2479,6 @@ int main(int argc, char ** argv)
 	ReadCommodityClasses(*Archive);
 	ReadSlotClasses(*Archive);
 	ReadShipClasses(*Archive);
-	ReadSystems(*Archive);
-	ReadSystemLinks(*Archive);
 	ReadUserInterface(*Archive);
 	ReadWeaponClasses(*Archive);
 	
@@ -2519,6 +2516,12 @@ int main(int argc, char ** argv)
 	InitializeOpenGL();
 	// since reading the textures already creates them we have to do this after initializing OpenGL
 	ReadTextures(*Archive);
+	
+	// setup the game world
+	g_Galaxy = new Galaxy();
+	g_Galaxy->SetObjectIdentifier("::galaxy");
+	ReadSystems(*Archive);
+	ReadSystemLinks(*Archive);
 	
 	// load the specified savegame
 	if(LoadSavegame(LoadSavegameFileName) == false)
