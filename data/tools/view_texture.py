@@ -96,6 +96,10 @@ class Window(QtGui.QWidget):
 		main_layout.addWidget(self.__opengl_widget)
 		self.setLayout(main_layout)
 		self.setWindowTitle("Texture Viewer")
+	
+	def keyPressEvent(self, event):
+		if event.key() == QtCore.Qt.Key_Escape:
+			sys.exit(0)
 
 if __name__ == '__main__':
 	application = QtGui.QApplication(sys.argv)
