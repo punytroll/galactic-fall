@@ -249,7 +249,7 @@ int WantToJump(Ship * Ship, System * System)
 	return OK;
 }
 
-int WantToLand(Character * Character, Ship * Ship, Planet * Planet)
+int WantToLand(const Character * Character, const Ship * Ship, const Planet * Planet)
 {
 	if(Planet == 0)
 	{
@@ -274,7 +274,7 @@ int WantToLand(Character * Character, Ship * Ship, Planet * Planet)
 	return OK;
 }
 
-int WantToScoop(Ship * Ship, Commodity * Commodity)
+int WantToScoop(const Ship * Ship, const Commodity * Commodity)
 {
 	if(Commodity == 0)
 	{
@@ -338,7 +338,7 @@ void SetMessage(const std::string & Message)
 	g_MessageTimeoutNotification = g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 2.0f, new FunctionCallback0< void >(HideMessage));
 }
 
-void DrawSelection(Position * Position, float RadialSize)
+void DrawSelection(const Position * Position, float RadialSize)
 {
 	static const float OuterFactor(0.9f);
 	static const float InnerFactor(1.1f);
@@ -1519,7 +1519,7 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 			{
 				if(g_InputMind == true)
 				{
-					switch(WantToScoop(g_InputMind->GetCharacter()->GetShip(), dynamic_cast< Commodity * >(g_InputMind->GetCharacter()->GetShip()->GetTarget().Get())))
+					switch(WantToScoop(g_InputMind->GetCharacter()->GetShip(), dynamic_cast< const Commodity * >(g_InputMind->GetCharacter()->GetShip()->GetTarget().Get())))
 					{
 					case OK:
 						{
@@ -1625,7 +1625,7 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 			{
 				if(g_InputMind == true)
 				{
-					Planet * SelectedPlanet(dynamic_cast< Planet * >(g_InputMind->GetCharacter()->GetShip()->GetTarget().Get()));
+					const Planet * SelectedPlanet(dynamic_cast< const Planet * >(g_InputMind->GetCharacter()->GetShip()->GetTarget().Get()));
 					
 					switch(WantToLand(g_InputMind->GetCharacter(), g_InputMind->GetCharacter()->GetShip(), SelectedPlanet))
 					{
@@ -1635,7 +1635,7 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 							g_InputMind->Land();
 							g_InputMind->GetCharacter()->GetShip()->SetHull(g_InputMind->GetCharacter()->GetShip()->GetShipClass()->GetHull());
 							g_Pause = true;
-							g_PlanetDialog = new PlanetDialog(g_UserInterface->GetRootWidget(), SelectedPlanet, g_InputMind->GetCharacter());
+							g_PlanetDialog = new PlanetDialog(g_UserInterface->GetRootWidget(), const_cast< Planet * >(SelectedPlanet), g_InputMind->GetCharacter());
 							g_PlanetDialog->GrabKeyFocus();
 							g_PlanetDialog->AddDestroyListener(&g_GlobalDestroyListener);
 							

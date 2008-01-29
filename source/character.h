@@ -43,7 +43,7 @@ public:
 	Character(void);
 	virtual ~Character(void);
 	// getters
-	u4byte GetCredits(void);
+	u4byte GetCredits(void) const;
 	MapKnowledge * GetMapKnowledge(void);
 	const MapKnowledge * GetMapKnowledge(void) const;
 	Mind * GetActiveMind(void);
@@ -71,7 +71,7 @@ inline std::set< Character * > & Character::GetCharacters(void)
 	return m_Characters;
 }
 
-inline u4byte Character::GetCredits(void)
+inline u4byte Character::GetCredits(void) const
 {
 	return m_Credits;
 }

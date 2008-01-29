@@ -62,7 +62,6 @@ public:
 	const Vector3f & GetVelocity(void) const;
 	float GetAvailableSpace(void) const;
 	unsigned_numeric GetContentAmount(const std::string & Type, const std::string & Class) const;
-	Reference< PhysicalObject > & GetTarget(void);
 	const Reference< PhysicalObject > & GetTarget(void) const;
 	System * GetLinkedSystemTarget(void);
 	System * GetCurrentSystem(void);
@@ -147,11 +146,6 @@ inline float Ship::GetTurnSpeed(void) const
 inline const Vector3f & Ship::GetVelocity(void) const
 {
 	return m_Velocity;
-}
-
-inline Reference< PhysicalObject > & Ship::GetTarget(void)
-{
-	return m_Target;
 }
 
 inline const Reference< PhysicalObject > & Ship::GetTarget(void) const
