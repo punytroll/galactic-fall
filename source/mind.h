@@ -75,4 +75,27 @@ inline StateMachine * StateMachineMind::GetStateMachine(void)
 	return m_StateMachine;
 }
 
+class Goal;
+
+class GoalMind : public Mind
+{
+public:
+	GoalMind(void);
+	virtual ~GoalMind(void);
+	// getters
+	Goal * GetGoal(void) const;
+	// actors
+	virtual void Update(void);
+protected:
+	virtual bool OnAddContent(Object * Content);
+	virtual bool OnRemoveContent(Object * Content);
+private:
+	Goal * m_Goal;
+};
+
+inline Goal * GoalMind::GetGoal(void) const
+{
+	return m_Goal;
+}
+
 #endif

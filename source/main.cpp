@@ -52,6 +52,7 @@
 #include "galaxy.h"
 #include "game_time.h"
 #include "globals.h"
+#include "goals.h"
 #include "graphics_engine.h"
 #include "graphics_mesh_manager.h"
 #include "graphics_model.h"
@@ -954,14 +955,25 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 	}
 	NewShip->SetFuel(GetRandomFloat(0.1f * NewShip->GetShipClass()->GetFuelHoldSize(), 0.8f * NewShip->GetShipClass()->GetFuelHoldSize()));
 	NewCharacter->SetShip(NewShip);
-	
-	StateMachineMind * NewMind(new StateMachineMind());
-	
-	NewMind->SetObjectIdentifier("::mind(state_machine)" + IdentifierSuffix);
-	NewMind->SetCharacter(NewCharacter);
-	NewMind->GetStateMachine()->SetState(new SelectSteering(NewMind));
-	NewMind->GetStateMachine()->SetGlobalState(new MonitorFuel(NewMind));
-	NewCharacter->AddContent(NewMind);
+	if(ShipClassIdentifier == "transporter")
+	{
+		StateMachineMind * NewMind(new StateMachineMind());
+		
+		NewMind->SetObjectIdentifier("::mind(state_machine)" + IdentifierSuffix);
+		NewMind->SetCharacter(NewCharacter);
+		NewMind->GetStateMachine()->SetState(new SelectSteering(NewMind));
+		NewMind->GetStateMachine()->SetGlobalState(new MonitorFuel(NewMind));
+		NewCharacter->AddContent(NewMind);
+	}
+	else
+	{
+		GoalMind * NewMind(new GoalMind());
+		
+		NewMind->SetObjectIdentifier("::mind(goal)" + IdentifierSuffix);
+		NewMind->SetCharacter(NewCharacter);
+		NewMind->AddContent(new FlyOverRandomPointGoal(NewMind));
+		NewCharacter->AddContent(NewMind);
+	}
 	NewShip->AddContent(NewCharacter);
 	System->AddContent(NewShip);
 	// add visualization

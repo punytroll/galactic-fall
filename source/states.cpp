@@ -42,7 +42,7 @@
 
 int WantToJump(Ship * Ship, System * System);
 
-bool FlyTo(Ship * Ship, const Vector3f & Direction)
+static bool FlyTo(Ship * Ship, const Vector3f & Direction)
 {
 	Vector3f LocalizedDirection(Direction);
 	
