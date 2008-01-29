@@ -589,7 +589,7 @@ void CalculateMovements(System * System, float Seconds)
 			{
 				Ship * TheShip(*ShipIterator);
 				
-				if(TheShot->GetShooter() != TheShip)
+				if((TheShot->GetShooter() == true) && (TheShot->GetShooter().Get() != TheShip))
 				{
 					if((TheShot->GetPosition() - TheShip->GetPosition()).SquaredLength() < (TheShot->GetRadialSize() * TheShot->GetRadialSize() + TheShip->GetRadialSize() * TheShip->GetRadialSize()))
 					{

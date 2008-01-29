@@ -63,7 +63,7 @@ void Weapon::Update(float Seconds)
 		Shot * NewShot(new Shot(GetWeaponClass()));
 		
 		NewShot->SetObjectIdentifier(IdentifierStream.str());
-		NewShot->SetShooter(TheShip);
+		NewShot->SetShooter(TheShip->GetReference());
 		
 		// calculating the shot's position in the world coordinate system
 		const Vector3f & ParticleExitPosition(GetWeaponClass()->GetParticleExitPosition());

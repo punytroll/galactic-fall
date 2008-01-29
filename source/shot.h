@@ -36,16 +36,16 @@ public:
 	// getters
 	const Quaternion & GetAngularPosition(void) const;
 	float GetDamage(void) const;
-	const PhysicalObject * GetShooter(void) const;
+	const Reference< PhysicalObject > & GetShooter(void) const;
 	const Vector3f & GetVelocity(void) const;
 	const WeaponClass * GetWeaponClass(void) const;
 	// setters
 	void SetAngularPosition(const Quaternion & AngularPosition);
-	void SetShooter(PhysicalObject * Shooter);
+	void SetShooter(Reference< PhysicalObject > Shooter);
 	void SetVelocity(const Vector3f & Velocity);
 private:
 	const WeaponClass * m_WeaponClass;
-	PhysicalObject * m_Shooter;
+	Reference< PhysicalObject > m_Shooter;
 	double m_TimeOfDeath;
 	Vector3f m_Velocity;
 	Quaternion m_AngularPosition;
@@ -62,7 +62,7 @@ inline float Shot::GetDamage(void) const
 	return m_Damage;
 }
 
-inline const PhysicalObject * Shot::GetShooter(void) const
+inline const Reference< PhysicalObject > & Shot::GetShooter(void) const
 {
 	return m_Shooter;
 }
@@ -82,7 +82,7 @@ inline void Shot::SetAngularPosition(const Quaternion & AngularPosition)
 	m_AngularPosition = AngularPosition;
 }
 
-inline void Shot::SetShooter(PhysicalObject * Shooter)
+inline void Shot::SetShooter(Reference< PhysicalObject > Shooter)
 {
 	m_Shooter = Shooter;
 }
