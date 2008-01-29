@@ -245,11 +245,16 @@ void Ship::Update(float Seconds)
 			
 			if(SelectedCommodity != 0)
 			{
+				// the following is a typical occasion of bad practise: a transaction would be great here
 				if(GetCurrentSystem()->RemoveContent(SelectedCommodity) == true)
 				{
 					if(AddContent(SelectedCommodity) == true)
 					{
 						SetTarget(0);
+						if(SelectedCommodity->GetVisualization() != 0)
+						{
+							UnvisualizeObject(SelectedCommodity);
+						}
 					}
 					else
 					{
