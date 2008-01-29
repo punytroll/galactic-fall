@@ -39,11 +39,13 @@ Reference< Graphics::ParticleSystem > CreateParticleSystem(const std::string & P
 void UnvisualizeObject(Object * Object)
 {
 	assert(Object != 0);
-	assert(Object->GetVisualization() != 0);
 	
+	Graphics::Node * Visualization(Object->GetVisualization());
+	
+	assert(Visualization != 0);
 	Object->UnsetVisualization();
-	Object->GetVisualization()->Remove();
-	Object->GetVisualization()->Destroy();
+	Visualization->Remove();
+	Visualization->Destroy();
 }
 
 void VisualizeCommodity(Commodity * Commodity, Graphics::Node * Container)
