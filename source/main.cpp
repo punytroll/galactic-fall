@@ -130,6 +130,11 @@ public:
 		m_TotalSecondsPerFrame = TotalSecondsPerFrame;
 	}
 	
+	void SetTotalSecondsPerFrameProcessing(float TotalSecondsPerFrameProcessing)
+	{
+		m_TotalSecondsPerFrameProcessing = TotalSecondsPerFrameProcessing;
+	}
+	
 	// getters
 	float GetFramesPerSecond(void) const
 	{
@@ -155,12 +160,18 @@ public:
 	{
 		return m_TotalSecondsPerFrame;
 	}
+	
+	float GetTotalSecondsPerFrameProcessing(void) const
+	{
+		return m_TotalSecondsPerFrameProcessing;
+	}
 private:
 	float m_FramesPerSecond;
 	float m_AISecondsPerFrame;
 	float m_GraphicsSecondsPerFrame;
 	float m_PhysicsSecondsPerFrame;
 	float m_TotalSecondsPerFrame;
+	float m_TotalSecondsPerFrameProcessing;
 };
 
 // these objects are exported via globals.h
@@ -685,6 +696,7 @@ void UpdateUserInterface(void)
 		g_TimingDialog->UpdateGraphicsSecondsPerFrame(g_SystemStatistics->GetGraphicsSecondsPerFrame());
 		g_TimingDialog->UpdatePhysicsSecondsPerFrame(g_SystemStatistics->GetPhysicsSecondsPerFrame());
 		g_TimingDialog->UpdateTotalSecondsPerFrame(g_SystemStatistics->GetTotalSecondsPerFrame());
+		g_TimingDialog->UpdateTotalSecondsPerFrameProcessing(g_SystemStatistics->GetTotalSecondsPerFrameProcessing());
 	}
 	if(g_Galaxy != 0)
 	{
@@ -1150,8 +1162,14 @@ void GameFrame(void)
 {
 	RealTime::Invalidate();
 	
-	double FrameTimeBegin(RealTime::Get());
+	static double FrameTimeBegin(RealTime::Get());
+	double FrameTimeEnd(RealTime::Get());
+	double FrameTimeDelta(FrameTimeEnd - FrameTimeBegin);
 	
+	// now set the next begin time to the current end time
+	FrameTimeBegin = FrameTimeEnd;
+	
+	double FrameProcessingTimeBegin(RealTime::Get());
 	System * CurrentSystem(g_CurrentSystem);
 	
 	g_GameTimeTimeoutNotifications->Process(GameTime::Get());
@@ -1212,14 +1230,15 @@ void GameFrame(void)
 	}
 	RealTime::Invalidate();
 	
-	double FrameTimeEnd(RealTime::Get());
-	double FrameTimeDelta(FrameTimeEnd - FrameTimeBegin);
+	double FrameProcessingTimeEnd(RealTime::Get());
+	double FrameProcessingTimeDelta(FrameProcessingTimeEnd - FrameProcessingTimeBegin);
 	
 	g_SystemStatistics->SetFramesPerSecond(1.0f / FrameTimeDelta);
 	g_SystemStatistics->SetAISecondsPerFrame(AITimeDelta);
 	g_SystemStatistics->SetGraphicsSecondsPerFrame(GraphicsTimeDelta);
 	g_SystemStatistics->SetPhysicsSecondsPerFrame(PhysicsTimeDelta);
 	g_SystemStatistics->SetTotalSecondsPerFrame(FrameTimeDelta);
+	g_SystemStatistics->SetTotalSecondsPerFrameProcessing(FrameProcessingTimeDelta);
 }
 
 void SetTimeWarp(float TimeWarp)

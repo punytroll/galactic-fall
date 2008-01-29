@@ -33,12 +33,14 @@ public:
 	void UpdateGraphicsSecondsPerFrame(float GraphicsSecondsPerFrame);
 	void UpdatePhysicsSecondsPerFrame(float PhysicsSecondsPerFrame);
 	void UpdateTotalSecondsPerFrame(float TotalSecondsPerFrame);
+	void UpdateTotalSecondsPerFrameProcessing(float TotalSecondsPerFrameProcessing);
 private:
 	Label * m_FramesPerSecondLabel;
 	Label * m_AISecondsPerFrameLabel;
 	Label * m_GraphicsSecondsPerFrameLabel;
 	Label * m_PhysicsSecondsPerFrameLabel;
 	Label * m_TotalSecondsPerFrameLabel;
+	Label * m_TotalSecondsPerFrameProcessingLabel;
 };
 
 #endif
