@@ -17,6 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include <arpa/inet.h>
 #include <assert.h>
 #include <errno.h>
 
@@ -221,6 +222,7 @@ Window g_Window;
 Perspective g_MainPerspective;
 bool g_EchoEvents(false);
 bool g_DumpEndReport(false);
+bool g_TakeScreenShot(false);
 SystemStatistics * g_SystemStatistics;
 std::map< Graphics::Node *, Reference< Graphics::Node > > g_VisualizationReferences;
 
@@ -1100,6 +1102,50 @@ void OnGraphicsNodeDestroy(Graphics::Node * Node)
 	delete Node;
 }
 
+void TakeScreenShot(void)
+{
+	GLubyte * ScreenshotData(new GLubyte[static_cast< GLsizei >(g_Width) * static_cast< GLsizei >(g_Height) * 3]);
+	
+	// store the read buffer and change it to the front buffer so we get what we see
+	glPushAttrib(GL_PIXEL_MODE_BIT);
+	glReadBuffer(GL_FRONT);
+	// now read the bits
+	glReadPixels(0, 0, static_cast< GLsizei >(g_Width), static_cast< GLsizei >(g_Height), GL_RGB, GL_UNSIGNED_BYTE, ScreenshotData);
+	// revert the read buffer
+	glPopAttrib();
+	
+	// prepare the file name by getting a string with the current datetime in the format: YYYYMMDD-HHMMSS
+	time_t RawTime(time(0));
+	struct tm Time;
+	
+	localtime_r(&RawTime, &Time);
+	
+	char DateTime[16];
+	
+	strftime(DateTime, 16, "%Y%m%d-%H%M%S", &Time);
+	
+	std::string FileName;
+	
+	FileName += "screenshot-";
+	FileName += DateTime;
+	FileName += ".tex";
+	
+	std::ofstream OutputFileStream(FileName.c_str());
+	
+	if(OutputFileStream)
+	{
+		uint32_t Value;
+		
+		Value = htonl(static_cast< GLsizei >(g_Width));
+		OutputFileStream.write(reinterpret_cast< const char * >(&Value), 4);
+		Value = htonl(static_cast< GLsizei >(g_Height));
+		OutputFileStream.write(reinterpret_cast< const char * >(&Value), 4);
+		Value = htonl(2); // this is the tex image data format 2: RGB
+		OutputFileStream.write(reinterpret_cast< const char * >(&Value), 4);
+		OutputFileStream.write(reinterpret_cast< const char * >(ScreenshotData), static_cast< GLsizei >(g_Width) * static_cast< GLsizei >(g_Height) * 3);
+	}
+}
+
 void GameFrame(void)
 {
 	RealTime::Invalidate();
@@ -1151,6 +1197,11 @@ void GameFrame(void)
 	double GraphicsTimeEnd(RealTime::Get());
 	double GraphicsTimeDelta(GraphicsTimeEnd - GraphicsTimeBegin);
 	
+	if(g_TakeScreenShot == true)
+	{
+		TakeScreenShot();
+		g_TakeScreenShot = false;
+	}
 	if((g_OutputMind == true) && (g_OutputMind->GetCharacter() != 0) && (g_OutputMind->GetCharacter()->GetShip() != 0) && (g_OutputMind->GetCharacter()->GetShip()->GetCurrentSystem() != g_CurrentSystem))
 	{
 		OnOutputFocusLeaveSystem(g_CurrentSystem);
@@ -1798,6 +1849,15 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 				
 				Object::Dump(Out);
 				std::cout << std::endl;
+			}
+			
+			break;
+		}
+	case 76: // Key: F10
+		{
+			if(KeyEventInformation.IsDown() == True)
+			{
+				g_TakeScreenShot = true;
 			}
 			
 			break;
