@@ -241,7 +241,7 @@ void Ship::Update(float Seconds)
 		}
 		if(m_Scoop == true)
 		{
-			Commodity * SelectedCommodity(dynamic_cast< Commodity * >(GetTarget().Get()));
+			Commodity * SelectedCommodity(dynamic_cast< Commodity * >(m_Target.Get()));
 			
 			if(SelectedCommodity != 0)
 			{
