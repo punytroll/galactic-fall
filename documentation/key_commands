@@ -104,6 +104,9 @@ On key down:
 68 (F2)
 	Dumps an object report to standard out.
 
+76 (F10)
+	Takes a screenshot and saves it in the current directory under the file name screenshot-YYYYMMDD-HHMMSS.tex.
+
 95 (F11)
 	Purges the game. This key removes all game content from memory and effectively puts the game in an out-of-game mode.
 
