@@ -34,8 +34,10 @@ public:
 	System * GetSystem(const std::string & SystemIdentifier);
 	const std::map< std::string, System * > & GetSystems(void) const;
 protected:
-	virtual bool OnAddContent(Object * Content);
-	virtual bool OnRemoveContent(Object * Content);
+	virtual bool IsAddingAllowed(Object * Content);
+	virtual bool IsRemovingAllowed(Object * Content);
+	virtual void OnContentAdded(Object * Content);
+	virtual void OnContentRemoved(Object * Content);
 private:
 	std::map< std::string, System * > m_Systems;
 };

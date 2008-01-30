@@ -58,50 +58,8 @@ bool System::IsLinkedToSystem(const System * LinkedSystem) const
 	return false;
 }
 
-bool System::OnAddContent(Object * Content)
+bool System::IsAddingAllowed(Object * Content)
 {
-	Shot * TheShot(dynamic_cast< Shot * >(Content));
-	
-	if(TheShot != 0)
-	{
-		if(Position::OnAddContent(Content) == true)
-		{
-			m_Shots.push_back(TheShot);
-			
-			return true;
-		}
-		
-		return false;
-	}
-	
-	Ship * TheShip(dynamic_cast< Ship * >(Content));
-	
-	if(TheShip != 0)
-	{
-		if(Position::OnAddContent(Content) == true)
-		{
-			m_Ships.push_back(TheShip);
-			
-			return true;
-		}
-		
-		return false;
-	}
-	
-	Commodity * TheCommodity(dynamic_cast< Commodity * >(Content));
-	
-	if(TheCommodity != 0)
-	{
-		if(Position::OnAddContent(Content) == true)
-		{
-			m_Commodities.push_back(TheCommodity);
-			
-			return true;
-		}
-		
-		return false;
-	}
-	
 	Planet * ThePlanet(dynamic_cast< Planet * >(Content));
 	
 	if(ThePlanet != 0)
@@ -113,37 +71,78 @@ bool System::OnAddContent(Object * Content)
 				return false;
 			}
 		}
-		if(Position::OnAddContent(Content) == true)
-		{
-			m_Planets.push_back(ThePlanet);
-			
-			return true;
-		}
-		
-		return false;
 	}
 	
 	Star * TheStar(dynamic_cast< Star * >(Content));
 	
 	if(TheStar != 0)
 	{
-		if(m_Star == 0)
-		{
-			if(Position::OnAddContent(Content) == true)
-			{
-				m_Star = TheStar;
-				
-				return true;
-			}
-		}
-		
-		return false;
+		return m_Star == 0;
 	}
 	
-	return Position::OnAddContent(Content);
+	return (dynamic_cast< Shot * >(Content) != 0) || (dynamic_cast< Ship * >(Content) != 0) || (dynamic_cast< Commodity * >(Content) != 0) || (Position::IsAddingAllowed(Content) == true);
 }
 
-bool System::OnRemoveContent(Object * Content)
+bool System::IsRemovingAllowed(Object * Content)
+{
+	return Position::IsRemovingAllowed(Content);
+}
+
+void System::OnContentAdded(Object * Content)
+{
+	Position::OnContentAdded(Content);
+	
+	Shot * TheShot(dynamic_cast< Shot * >(Content));
+	
+	if(TheShot != 0)
+	{
+		m_Shots.push_back(TheShot);
+		return;
+	}
+	
+	Ship * TheShip(dynamic_cast< Ship * >(Content));
+	
+	if(TheShip != 0)
+	{
+		m_Ships.push_back(TheShip);
+		return;
+	}
+	
+	Commodity * TheCommodity(dynamic_cast< Commodity * >(Content));
+	
+	if(TheCommodity != 0)
+	{
+		m_Commodities.push_back(TheCommodity);
+		return;
+	}
+	
+	Planet * ThePlanet(dynamic_cast< Planet * >(Content));
+	
+	if(ThePlanet != 0)
+	{
+		for(std::vector< Planet *>::const_iterator PlanetIterator = m_Planets.begin(); PlanetIterator != m_Planets.end(); ++PlanetIterator)
+		{
+			if((*PlanetIterator)->GetIdentifier() == ThePlanet->GetIdentifier())
+			{
+				assert(false);
+			}
+		}
+		m_Planets.push_back(ThePlanet);
+		return;
+	}
+	
+	Star * TheStar(dynamic_cast< Star * >(Content));
+	
+	if(TheStar != 0)
+	{
+		assert(m_Star == 0);
+		m_Star = TheStar;
+		return;
+	}
+	assert(false);
+}
+
+void System::OnContentRemoved(Object * Content)
 {
 	Shot * TheShot(dynamic_cast< Shot * >(Content));
 	
@@ -151,17 +150,8 @@ bool System::OnRemoveContent(Object * Content)
 	{
 		std::list< Shot * >::iterator ShotIterator(std::find(m_Shots.begin(), m_Shots.end(), TheShot));
 		
-		if(ShotIterator != m_Shots.end())
-		{
-			if(Position::OnAddContent(Content) == true)
-			{
-				m_Shots.erase(ShotIterator);
-				
-				return true;
-			}
-		}
-		
-		return false;
+		assert(ShotIterator != m_Shots.end());
+		m_Shots.erase(ShotIterator);
 	}
 	
 	Ship * TheShip(dynamic_cast< Ship * >(Content));
@@ -170,17 +160,8 @@ bool System::OnRemoveContent(Object * Content)
 	{
 		std::list< Ship * >::iterator ShipIterator(std::find(m_Ships.begin(), m_Ships.end(), TheShip));
 		
-		if(ShipIterator != m_Ships.end())
-		{
-			if(Position::OnAddContent(Content) == true)
-			{
-				m_Ships.erase(ShipIterator);
-				
-				return true;
-			}
-		}
-		
-		return false;
+		assert(ShipIterator != m_Ships.end());
+		m_Ships.erase(ShipIterator);
 	}
 	
 	Commodity * TheCommodity(dynamic_cast< Commodity * >(Content));
@@ -189,17 +170,8 @@ bool System::OnRemoveContent(Object * Content)
 	{
 		std::list< Commodity * >::iterator CommodityIterator(std::find(m_Commodities.begin(), m_Commodities.end(), TheCommodity));
 		
-		if(CommodityIterator != m_Commodities.end())
-		{
-			if(Position::OnAddContent(Content) == true)
-			{
-				m_Commodities.erase(CommodityIterator);
-				
-				return true;
-			}
-		}
-		
-		return false;
+		assert(CommodityIterator != m_Commodities.end());
+		m_Commodities.erase(CommodityIterator);
 	}
 	
 	Planet * ThePlanet(dynamic_cast< Planet * >(Content));
@@ -210,36 +182,21 @@ bool System::OnRemoveContent(Object * Content)
 		{
 			if((*PlanetIterator)->GetIdentifier() == ThePlanet->GetIdentifier())
 			{
-				if(Position::OnAddContent(Content) == true)
-				{
-					m_Planets.erase(PlanetIterator);
-					
-					return true;
-				}
+				m_Planets.erase(PlanetIterator);
+				
+				break;
 			}
 		}
-		
-		return false;
 	}
 	
 	Star * TheStar(dynamic_cast< Star * >(Content));
 	
 	if(TheStar != 0)
 	{
-		if(m_Star != 0)
-		{
-			if(Position::OnAddContent(Content) == true)
-			{
-				m_Star = 0;
-				
-				return true;
-			}
-		}
-		
-		return false;
+		assert(m_Star == TheStar);
+		m_Star = 0;
 	}
-	
-	return Position::OnAddContent(Content);
+	Position::OnContentRemoved(Content);
 }
 
 void System::AddLinkedSystem(System * LinkedSystem)

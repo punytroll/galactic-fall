@@ -62,38 +62,33 @@ void GoalMind::Update(void)
 	m_Goal->Process();
 }
 
-bool GoalMind::OnAddContent(Object * Content)
+bool GoalMind::IsAddingAllowed(Object * Content)
 {
-	Goal * TheGoal(dynamic_cast< Goal * >(Content));
-	
-	if((TheGoal != 0) && (m_Goal == 0))
-	{
-		if(Object::OnAddContent(TheGoal) == true)
-		{
-			m_Goal = TheGoal;
-			
-			return true;
-		}
-	}
-	
-	return false;
+	return (dynamic_cast< Goal * >(Content) != 0) && (m_Goal == 0);
 }
 
-bool GoalMind::OnRemoveContent(Object * Content)
+bool GoalMind::IsRemovingAllowed(Object * Content)
+{
+	return Mind::IsRemovingAllowed(Content);
+}
+
+void GoalMind::OnContentAdded(Object * Content)
+{
+	Mind::OnContentAdded(Content);
+	
+	Goal * TheGoal(dynamic_cast< Goal * >(Content));
+	
+	assert(TheGoal != 0);
+	assert(m_Goal == 0);
+	m_Goal = TheGoal;
+}
+
+void GoalMind::OnContentRemoved(Object * Content)
 {
 	Goal * TheGoal(dynamic_cast< Goal * >(Content));
 	
-	if((TheGoal != 0) && (m_Goal == TheGoal))
-	{
-		if(Object::OnRemoveContent(TheGoal) == true)
-		{
-			m_Goal = 0;
-			
-			return true;
-		}
-		
-		return false;
-	}
-	
-	return Object::OnRemoveContent(Content);
+	assert(TheGoal != 0);
+	assert(m_Goal == TheGoal);
+	m_Goal = 0;
+	Mind::OnContentRemoved(Content);
 }

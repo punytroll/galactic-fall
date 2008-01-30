@@ -57,8 +57,10 @@ public:
 	void AddCredits(u4byte Credits);
 	bool RemoveCredits(u4byte Credits);
 protected:
-	virtual bool OnAddContent(Object * Content);
-	virtual bool OnRemoveContent(Object * Content);
+	virtual bool IsAddingAllowed(Object * Content);
+	virtual bool IsRemovingAllowed(Object * Content);
+	virtual void OnContentAdded(Object * Content);
+	virtual void OnContentRemoved(Object * Content);
 private:
 	std::deque< Mind * > m_Minds;
 	u4byte m_Credits;

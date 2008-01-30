@@ -63,43 +63,35 @@ bool Character::RemoveCredits(u4byte Credits)
 	}
 }
 
-bool Character::OnAddContent(Object * Content)
+bool Character::IsAddingAllowed(Object * Content)
 {
-	Mind * TheMind(dynamic_cast< Mind * >(Content));
-	
-	if(TheMind != 0)
-	{
-		if(Object::OnAddContent(Content) == true)
-		{
-			m_Minds.push_front(TheMind);
-			
-			return true;
-		}
-	}
-	
-	return false;
+	return dynamic_cast< Mind * >(Content) != 0;
 }
 
-bool Character::OnRemoveContent(Object * Content)
+bool Character::IsRemovingAllowed(Object * Content)
+{
+	return Object::IsRemovingAllowed(Content);
+}
+
+void Character::OnContentAdded(Object * Content)
+{
+	Object::OnContentAdded(Content);
+	
+	Mind * TheMind(dynamic_cast< Mind * >(Content));
+	
+	assert(TheMind != 0);
+	m_Minds.push_front(TheMind);
+}
+
+void Character::OnContentRemoved(Object * Content)
 {
 	Mind * TheMind(dynamic_cast< Mind * >(Content));
 	
-	if(TheMind != 0)
-	{
-		std::deque< Mind * >::iterator MindIterator(std::find(m_Minds.begin(), m_Minds.end(), TheMind));
-		
-		if(MindIterator != m_Minds.end())
-		{
-			if(Object::OnRemoveContent(Content) == true)
-			{
-				m_Minds.erase(MindIterator);
-				
-				return true;
-			}
-		}
-		
-		return false;
-	}
+	assert(TheMind != 0);
 	
-	return Object::OnRemoveContent(Content);
+	std::deque< Mind * >::iterator MindIterator(std::find(m_Minds.begin(), m_Minds.end(), TheMind));
+	
+	assert(MindIterator != m_Minds.end());
+	m_Minds.erase(MindIterator);
+	Object::OnContentRemoved(Content);
 }
