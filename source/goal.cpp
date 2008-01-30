@@ -72,37 +72,38 @@ void Goal::ProcessSubGoals(void)
 	}
 }
 
-bool Goal::OnAddContent(Object * Content)
+bool Goal::IsAddingAllowed(Object * Content)
 {
-	Goal * TheGoal(dynamic_cast< Goal * >(Content));
-	
-	if(TheGoal != 0)
-	{
-		if(Object::OnAddContent(Content) == true)
-		{
-			m_SubGoals.push_front(TheGoal);
-			
-			return true;
-		}
-	}
-	
-	return false;
+	return dynamic_cast< Goal * >(Content) != 0;
 }
 
-bool Goal::OnRemoveContent(Object * Content)
+bool Goal::IsRemovingAllowed(Object * Content)
+{
+	return Object::IsRemovingAllowed(Content);
+}
+
+void Goal::OnContentAdded(Object * Content)
+{
+	Object::OnContentAdded(Content);
+	
+	Goal * TheGoal(dynamic_cast< Goal * >(Content));
+	
+	assert(TheGoal != 0);
+	m_SubGoals.push_front(TheGoal);
+}
+
+void Goal::OnContentRemoved(Object * Content)
 {
 	Goal * TheGoal(dynamic_cast< Goal * >(Content));
 	
-	if(TheGoal != 0)
-	{
-		std::deque< Goal * >::iterator Iterator(std::find(m_SubGoals.begin(), m_SubGoals.end(), TheGoal));
-		
-		if(Iterator != m_SubGoals.end())
-		{
-			delete *Iterator;
-			m_SubGoals.erase(Iterator);
-		}
-	}
+	assert(TheGoal != 0);
 	
-	return Object::OnRemoveContent(Content);
+	std::deque< Goal * >::iterator SubGoalIterator(std::find(m_SubGoals.begin(), m_SubGoals.end(), TheGoal));
+	
+	assert(SubGoalIterator != m_SubGoals.end());
+	m_SubGoals.erase(SubGoalIterator);
+	Object::OnContentRemoved(Content);
+	// since the goal isn't referred to anywhere else we destroy and delete it here
+	TheGoal->Destroy();
+	delete TheGoal;
 }

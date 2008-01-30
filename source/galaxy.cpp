@@ -34,48 +34,45 @@ System * Galaxy::GetSystem(const std::string & SystemIdentifier)
 	}
 }
 
-bool Galaxy::OnAddContent(Object * Content)
+bool Galaxy::IsAddingAllowed(Object * Content)
 {
 	System * TheSystem(dynamic_cast< System * >(Content));
 	
 	if(TheSystem != 0)
 	{
-		if(m_Systems.find(TheSystem->GetIdentifier()) == m_Systems.end())
-		{
-			if(Object::OnAddContent(Content) == true)
-			{
-				m_Systems[TheSystem->GetIdentifier()] = TheSystem;
-				
-				return true;
-			}
-		}
-		
+		return m_Systems.find(TheSystem->GetIdentifier()) == m_Systems.end();
+	}
+	else
+	{
 		return false;
 	}
-	
-	return Object::OnAddContent(Content);
 }
 
-bool Galaxy::OnRemoveContent(Object * Content)
+bool Galaxy::IsRemovingAllowed(Object * Content)
+{
+	return Object::IsRemovingAllowed(Content);
+}
+
+void Galaxy::OnContentAdded(Object * Content)
+{
+	Object::OnContentAdded(Content);
+	
+	System * TheSystem(dynamic_cast< System * >(Content));
+	
+	assert(TheSystem != 0);
+	assert(m_Systems.find(TheSystem->GetIdentifier()) == m_Systems.end());
+	m_Systems[TheSystem->GetIdentifier()] = TheSystem;
+}
+
+void Galaxy::OnContentRemoved(Object * Content)
 {
 	System * TheSystem(dynamic_cast< System * >(Content));
 	
-	if(TheSystem != 0)
-	{
-		std::map< std::string, System * >::iterator SystemIterator(m_Systems.find(TheSystem->GetIdentifier()));
-		
-		if(SystemIterator != m_Systems.end())
-		{
-			if(Object::OnRemoveContent(Content) == true)
-			{
-				m_Systems.erase(SystemIterator);
-				
-				return true;
-			}
-		}
-		
-		return false;
-	}
+	assert(TheSystem != 0);
 	
-	return Object::OnRemoveContent(Content);
+	std::map< std::string, System * >::iterator SystemIterator(m_Systems.find(TheSystem->GetIdentifier()));
+	
+	assert(SystemIterator != m_Systems.end());
+	m_Systems.erase(SystemIterator);
+	Object::OnContentRemoved(Content);
 }

@@ -62,8 +62,10 @@ public:
 	static void Dump(XMLStream & XML);
 	static Object * GetObject(Graphics::Node * Visualization);
 protected:
-	virtual bool OnAddContent(Object * Content);
-	virtual bool OnRemoveContent(Object * Content);
+	virtual bool IsAddingAllowed(Object * Content);
+	virtual bool IsRemovingAllowed(Object * Content);
+	virtual void OnContentAdded(Object * Content);
+	virtual void OnContentRemoved(Object * Content);
 private:
 	std::string m_ObjectIdentifier;
 	Reference< Object > m_Reference;

@@ -103,66 +103,64 @@ void Object::Destroy(void)
 bool Object::AddContent(Object * Content)
 {
 	assert(Content != 0);
-	
-	std::pair< std::set< Object * >::iterator, bool > InsertionResult(m_Content.insert(Content));
-	
-	if(InsertionResult.second == true)
+	assert(Content->m_Container == 0);
+	if(IsAddingAllowed(Content) == true)
 	{
-		Content->m_Container = this;
-		if(OnAddContent(Content) == false)
+		std::pair< std::set< Object * >::iterator, bool > InsertionResult(m_Content.insert(Content));
+		
+		if(InsertionResult.second == true)
 		{
-			Content->m_Container = 0;
-			m_Content.erase(InsertionResult.first);
+			Content->m_Container = this;
+			OnContentAdded(Content);
 			
-			return false;
-		}
-		else
-		{
 			return true;
 		}
 	}
-	else
-	{
-		return false;
-	}
+	
+	return false;
 }
 
 bool Object::RemoveContent(Object * Content)
 {
 	assert(Content != 0);
-	
-	std::set< Object * >::iterator ContentIterator(m_Content.find(Content));
-	
-	if(ContentIterator != m_Content.end())
+	assert(Content->m_Container == this);
+	if(IsRemovingAllowed(Content) == true)
 	{
-		Content->m_Container = 0;
-		m_Content.erase(ContentIterator);
-		if(OnRemoveContent(Content) == false)
+		std::set< Object * >::iterator ContentIterator(m_Content.find(Content));
+		
+		if(ContentIterator != m_Content.end())
 		{
-			Content->m_Container = this;
-			m_Content.insert(Content);
+			Content->m_Container = 0;
+			m_Content.erase(ContentIterator);
+			OnContentRemoved(Content);
 			
-			return false;
-		}
-		else
-		{
 			return true;
 		}
 	}
-	else
-	{
-		return false;
-	}
+	
+	return false;
 }
 
-bool Object::OnAddContent(Object * Content)
+bool Object::IsAddingAllowed(Object * Content)
 {
+	//standard implementation always allows adding
 	return true;
 }
 
-bool Object::OnRemoveContent(Object * Content)
+bool Object::IsRemovingAllowed(Object * Content)
 {
+	// standard implementation always allows removing
 	return true;
+}
+
+void Object::OnContentAdded(Object * Content)
+{
+	// intentionally left empty
+}
+
+void Object::OnContentRemoved(Object * Content)
+{
+	// intentionally left empty
 }
 
 Object * Object::GetObject(const std::string & ObjectIdentifier)
