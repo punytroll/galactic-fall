@@ -17,6 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include <list>
+
 #include "character.h"
 #include "game_time.h"
 #include "goals.h"
@@ -24,6 +26,7 @@
 #include "mind.h"
 #include "ship.h"
 #include "string_cast.h"
+#include "system.h"
 
 static bool FlyTo(Ship * Ship, const Vector3f & Direction)
 {
@@ -56,21 +59,22 @@ static bool FlyTo(Ship * Ship, const Vector3f & Direction)
 	}
 }
 
-FlyOverRandomPointGoal::FlyOverRandomPointGoal(GoalMind * GoalMind) :
+GoalFlyOverRandomPoint::GoalFlyOverRandomPoint(GoalMind * GoalMind) :
 	Goal(GoalMind)
 {
 	SetObjectIdentifier("::goal(fly_over_random_point)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
 }
 
-void FlyOverRandomPointGoal::Activate(void)
+void GoalFlyOverRandomPoint::Activate(void)
 {
 	SetState(Goal::ACTIVE);
-	
 	m_Point.Set(GetRandomFloat(-200.0f, 200.0f), GetRandomFloat(-200.0f, 200.0f), 0.0f);
 }
 
-void FlyOverRandomPointGoal::Process(void)
+void GoalFlyOverRandomPoint::Process(void)
 {
+	assert(GetState() == Goal::ACTIVE);
+	
 	Vector3f ToDestination(m_Point - GetMind()->GetCharacter()->GetShip()->GetPosition());
 	float LengthSquared(ToDestination.SquaredLength());
 	
@@ -85,6 +89,182 @@ void FlyOverRandomPointGoal::Process(void)
 	}
 }
 
-void FlyOverRandomPointGoal::Terminate(void)
+void GoalFlyOverRandomPoint::Terminate(void)
 {
+}
+
+GoalFighterThink::GoalFighterThink(GoalMind * GoalMind) :
+	Goal(GoalMind)
+{
+	SetObjectIdentifier("::goal(fighter_think)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
+}
+
+void GoalFighterThink::Activate(void)
+{
+	assert(GetSubGoals().empty() == true);
+	AddContent(new GoalFightFighter(GetMind()));
+	SetState(Goal::ACTIVE);
+}
+
+void GoalFighterThink::Process(void)
+{
+	assert(GetState() == Goal::ACTIVE);
+	assert(GetSubGoals().empty() == false);
+	
+	Goal * SubGoal(GetSubGoals().front());
+	
+	if(SubGoal->GetState() == Goal::INACTIVE)
+	{
+		SubGoal->Activate();
+	}
+	assert(SubGoal->GetState() == Goal::ACTIVE);
+	SubGoal->Process();
+	if(SubGoal->GetState() == Goal::COMPLETED)
+	{
+		SubGoal->Terminate();
+		SubGoal->Activate();
+	}
+	else if(SubGoal->GetState() == Goal::FAILED)
+	{
+		SubGoal->Terminate();
+		RemoveContent(SubGoal);
+		SubGoal->Destroy();
+		delete SubGoal;
+		AddContent(new GoalFlyOverRandomPoint(GetMind()));
+	}
+}
+
+void GoalFighterThink::Terminate(void)
+{
+}
+
+GoalFightFighter::GoalFightFighter(GoalMind * GoalMind) :
+	Goal(GoalMind)
+{
+	SetObjectIdentifier("::goal(fight_fighter)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
+}
+
+void GoalFightFighter::Activate(void)
+{
+	AddContent(new GoalDestroyTarget(GetMind()));
+	if((GetMind()->GetCharacter()->GetShip()->GetTarget() == false) || (dynamic_cast< const Ship * >(GetMind()->GetCharacter()->GetShip()->GetTarget().Get())->GetShipClass()->GetIdentifier() != "fighter"))
+	{
+		AddContent(new GoalSelectFighter(GetMind()));
+	}
+	SetState(Goal::ACTIVE);
+}
+
+void GoalFightFighter::Process(void)
+{
+	assert(GetState() == Goal::ACTIVE);
+	assert(GetSubGoals().empty() == false);
+	
+	Goal * SubGoal(GetSubGoals().front());
+	
+	if(SubGoal->GetState() == Goal::INACTIVE)
+	{
+		SubGoal->Activate();
+	}
+	assert(SubGoal->GetState() == Goal::ACTIVE);
+	SubGoal->Process();
+	if(SubGoal->GetState() == Goal::COMPLETED)
+	{
+		SubGoal->Terminate();
+		RemoveContent(SubGoal);
+		SubGoal->Destroy();
+		delete SubGoal;
+		if(GetSubGoals().empty() == true)
+		{
+			SetState(Goal::COMPLETED);
+		}
+	}
+	else if(SubGoal->GetState() == Goal::FAILED)
+	{
+		SubGoal->Terminate();
+		SetState(Goal::FAILED);
+	}
+}
+
+void GoalFightFighter::Terminate(void)
+{
+}
+
+GoalSelectFighter::GoalSelectFighter(GoalMind * GoalMind) :
+	Goal(GoalMind)
+{
+	SetObjectIdentifier("::goal(select_fighter)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
+}
+
+void GoalSelectFighter::Activate(void)
+{
+	SetState(Goal::ACTIVE);
+}
+
+void GoalSelectFighter::Process(void)
+{
+	assert(GetState() == Goal::ACTIVE);
+	const std::list< Ship * > & Ships(GetMind()->GetCharacter()->GetShip()->GetCurrentSystem()->GetShips());
+	std::vector< Ship * > AttackPossibilities;
+	
+	for(std::list< Ship * >::const_iterator ShipIterator = Ships.begin(); ShipIterator != Ships.end(); ++ShipIterator)
+	{
+		if((*ShipIterator != GetMind()->GetCharacter()->GetShip()) && ((*ShipIterator)->GetShipClass()->GetIdentifier() == "fighter"))
+		{
+			AttackPossibilities.push_back(*ShipIterator);
+		}
+	}
+	if(AttackPossibilities.size() > 0)
+	{
+		GetMind()->GetCharacter()->GetShip()->SetTarget(AttackPossibilities[GetRandomInteger(AttackPossibilities.size() - 1)]->GetReference());
+		SetState(Goal::COMPLETED);
+	}
+	else
+	{
+		SetState(Goal::FAILED);
+	}
+}
+
+void GoalSelectFighter::Terminate(void)
+{
+}
+
+GoalDestroyTarget::GoalDestroyTarget(GoalMind * GoalMind) :
+	Goal(GoalMind)
+{
+	SetObjectIdentifier("::goal(destroy_target)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
+}
+
+void GoalDestroyTarget::Activate(void)
+{
+	SetState(Goal::ACTIVE);
+}
+
+void GoalDestroyTarget::Process(void)
+{
+	assert(GetState() == Goal::ACTIVE);
+	if(GetMind()->GetCharacter()->GetShip()->GetTarget() == true)
+	{
+		Vector3f ToDestination(GetMind()->GetCharacter()->GetShip()->GetTarget()->GetPosition() - GetMind()->GetCharacter()->GetShip()->GetPosition());
+		float Length(ToDestination.Length());
+		// TODO: shot speed
+		float SecondsForShot(Length / 30.0f);
+		
+		ToDestination -= GetMind()->GetCharacter()->GetShip()->GetVelocity() * SecondsForShot;
+		Length = ToDestination.Length();
+		ToDestination /= Length;
+		
+		bool Fire(false);
+		
+		Fire = FlyTo(GetMind()->GetCharacter()->GetShip(), ToDestination);
+		GetMind()->GetCharacter()->GetShip()->SetFire(Fire && Length < 50.0f);
+	}
+	else
+	{
+		SetState(Goal::COMPLETED);
+	}
+}
+
+void GoalDestroyTarget::Terminate(void)
+{
+	GetMind()->GetCharacter()->GetShip()->SetFire(false);
 }

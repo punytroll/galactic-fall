@@ -42,13 +42,15 @@ public:
 	// getters
 	GoalMind * GetMind(void) const;
 	const int GetState(void) const;
+	std::deque< Goal * > & GetSubGoals(void);
+	const std::deque< Goal * > & GetSubGoals(void) const;
+	// actors
 	virtual void Activate(void);
 	virtual void Process(void);
 	virtual void Terminate(void);
 protected:
 	// setters
 	void SetState(int State);
-	void ProcessSubGoals(void);
 	virtual bool IsAddingAllowed(Object * Content);
 	virtual bool IsRemovingAllowed(Object * Content);
 	virtual void OnContentAdded(Object * Content);
@@ -67,6 +69,16 @@ inline GoalMind * Goal::GetMind(void) const
 inline const int Goal::GetState(void) const
 {
 	return m_State;
+}
+
+inline std::deque< Goal * > & Goal::GetSubGoals(void)
+{
+	return m_SubGoals;
+}
+
+inline const std::deque< Goal * > & Goal::GetSubGoals(void) const
+{
+	return m_SubGoals;
 }
 
 inline void Goal::SetState(int State)
