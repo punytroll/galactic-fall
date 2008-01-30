@@ -23,15 +23,51 @@
 #include "goal.h"
 #include "math/vector3f.h"
 
-class FlyOverRandomPointGoal : public Goal
+class GoalFlyOverRandomPoint : public Goal
 {
 public:
-	FlyOverRandomPointGoal(GoalMind * GoalMind);
+	GoalFlyOverRandomPoint(GoalMind * GoalMind);
 	virtual void Activate(void);
 	virtual void Process(void);
 	virtual void Terminate(void);
 private:
 	Vector3f m_Point;
+};
+
+class GoalFighterThink : public Goal
+{
+public:
+	GoalFighterThink(GoalMind * GoalMind);
+	virtual void Activate(void);
+	virtual void Process(void);
+	virtual void Terminate(void);
+};
+
+class GoalFightFighter : public Goal
+{
+public:
+	GoalFightFighter(GoalMind * GoalMind);
+	virtual void Activate(void);
+	virtual void Process(void);
+	virtual void Terminate(void);
+};
+
+class GoalSelectFighter : public Goal
+{
+public:
+	GoalSelectFighter(GoalMind * GoalMind);
+	virtual void Activate(void);
+	virtual void Process(void);
+	virtual void Terminate(void);
+};
+
+class GoalDestroyTarget : public Goal
+{
+public:
+	GoalDestroyTarget(GoalMind * GoalMind);
+	virtual void Activate(void);
+	virtual void Process(void);
+	virtual void Terminate(void);
 };
 
 #endif

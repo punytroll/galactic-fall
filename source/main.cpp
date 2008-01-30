@@ -985,7 +985,7 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 		
 		NewMind->SetObjectIdentifier("::mind(goal)" + IdentifierSuffix);
 		NewMind->SetCharacter(NewCharacter);
-		NewMind->AddContent(new FlyOverRandomPointGoal(NewMind));
+		NewMind->AddContent(new GoalFighterThink(NewMind));
 		NewCharacter->AddContent(NewMind);
 	}
 	NewShip->AddContent(NewCharacter);

@@ -41,37 +41,6 @@ void Goal::Terminate(void)
 {
 }
 
-void Goal::ProcessSubGoals(void)
-{
-	bool Done(false);
-	
-	while(Done == false)
-	{
-		if(m_SubGoals.empty() == true)
-		{
-			m_State = Goal::COMPLETED;
-			Done = true;
-		}
-		else
-		{
-			if(m_SubGoals.front()->GetState() == Goal::INACTIVE)
-			{
-				m_SubGoals.front()->Activate();
-			}
-			if(m_SubGoals.front()->GetState() == Goal::ACTIVE)
-			{
-				m_SubGoals.front()->Process();
-				Done = true;
-			}
-			if((m_SubGoals.front()->GetState() == Goal::COMPLETED) || (m_SubGoals.front()->GetState() == Goal::FAILED))
-			{
-				m_SubGoals.front()->Terminate();
-				RemoveContent(m_SubGoals.front());
-			}
-		}
-	}
-}
-
 bool Goal::IsAddingAllowed(Object * Content)
 {
 	return dynamic_cast< Goal * >(Content) != 0;
@@ -103,7 +72,4 @@ void Goal::OnContentRemoved(Object * Content)
 	assert(SubGoalIterator != m_SubGoals.end());
 	m_SubGoals.erase(SubGoalIterator);
 	Object::OnContentRemoved(Content);
-	// since the goal isn't referred to anywhere else we destroy and delete it here
-	TheGoal->Destroy();
-	delete TheGoal;
 }
