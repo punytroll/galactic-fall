@@ -58,6 +58,7 @@
 #include "graphics_texture_manager.h"
 #include "key_event_information.h"
 #include "label.h"
+#include "load_game_dialog.h"
 #include "map_dialog.h"
 #include "map_knowledge.h"
 #include "math.h"
@@ -210,6 +211,7 @@ bool g_Pause(false);
 PlanetDialog * g_PlanetDialog(0);
 MapDialog * g_MapDialog(0);
 MountWeaponDialog * g_MountWeaponDialog(0);
+LoadGameDialog * g_LoadGameDialog(0);
 SaveGameDialog * g_SaveGameDialog(0);
 TimingDialog * g_TimingDialog(0);
 TimeoutNotificationManager * g_GameTimeTimeoutNotifications;
@@ -867,6 +869,11 @@ public:
 			g_SaveGameDialog = 0;
 			g_Pause = false;
 		}
+		else if(EventSource == g_LoadGameDialog)
+		{
+			g_LoadGameDialog = 0;
+			g_Pause = false;
+		}
 	}
 } g_GlobalDestroyListener;
 
@@ -1012,7 +1019,7 @@ void PopulateSystem(System * System)
 	}
 }
 
-void OnOutputFocusEnterSystem(System * EnterSystem)
+void OnOutputEnterSystem(System * EnterSystem)
 {
 	assert(g_SpawnShipTimeoutNotification.IsValid() == false);
 	assert(g_MainScene == 0);
@@ -1047,9 +1054,8 @@ void OnOutputFocusEnterSystem(System * EnterSystem)
 	}
 }
 
-void OnOutputFocusLeaveSystem(System * System)
+void OnOutputLeaveSystem(System * System)
 {
-	assert(g_OutputMind == true);
 	assert(System != 0);
 	if(g_SpawnShipTimeoutNotification.IsValid() == true)
 	{
@@ -1216,9 +1222,9 @@ void GameFrame(void)
 	}
 	if((g_OutputMind == true) && (g_OutputMind->GetCharacter() != 0) && (g_OutputMind->GetCharacter()->GetShip() != 0) && (g_OutputMind->GetCharacter()->GetShip()->GetCurrentSystem() != g_CurrentSystem))
 	{
-		OnOutputFocusLeaveSystem(g_CurrentSystem);
+		OnOutputLeaveSystem(g_CurrentSystem);
 		g_CurrentSystem = g_OutputMind->GetCharacter()->GetShip()->GetCurrentSystem();
-		OnOutputFocusEnterSystem(g_CurrentSystem);
+		OnOutputEnterSystem(g_CurrentSystem);
 		EmptySystem(CurrentSystem);
 		PopulateSystem(g_CurrentSystem);
 	}
@@ -1308,6 +1314,325 @@ void MouseMotion(int X, int Y)
 		
 		g_Camera.SetPosition(CameraPosition.m_V.m_A[0] - static_cast< float >(DeltaX) * 0.0008f * CameraPosition.m_V.m_A[2], CameraPosition.m_V.m_A[1] + static_cast< float >(DeltaY) * 0.0008f * CameraPosition.m_V.m_A[2]);
 	}
+}
+
+void PurgeGame(void)
+{
+	if(g_CurrentSystem != 0)
+	{
+		OnOutputLeaveSystem(g_CurrentSystem);
+		EmptySystem(g_CurrentSystem);
+	}
+	if(g_Galaxy != 0)
+	{
+		g_Galaxy->Destroy();
+		delete g_Galaxy;
+	}
+	g_CurrentSystem = 0;
+	g_Galaxy = 0;
+}
+
+void LoadGameFromElement(const Element * SaveElement)
+{
+	if(SaveElement->GetName() != "save")
+	{
+		throw std::runtime_error("The savegame is not rooted at a \"save\" element.");
+	}
+	
+	const std::vector< Element * > & SaveChilds(SaveElement->GetChilds());
+	std::string CurrentSystem;
+	std::string InputMindObjectIdentifier;
+	std::string OutputMindObjectIdentifier;
+	
+	// setup the game world
+	PurgeGame();
+	g_Galaxy = new Galaxy();
+	g_Galaxy->SetObjectIdentifier("::galaxy");
+	g_ResourceReader->ReadSystems();
+	g_ResourceReader->ReadSystemLinks();
+	for(std::vector< Element * >::const_iterator SaveChild = SaveChilds.begin(); SaveChild != SaveChilds.end(); ++SaveChild)
+	{
+		if((*SaveChild)->GetName() == "current-system")
+		{
+			CurrentSystem = (*SaveChild)->GetAttribute("identifier");
+		}
+		else if((*SaveChild)->GetName() == "time-warp")
+		{
+			SetTimeWarp(from_string_cast< float >((*SaveChild)->GetAttribute("value")));
+		}
+		else if((*SaveChild)->GetName() == "input-mind")
+		{
+			InputMindObjectIdentifier = (*SaveChild)->GetAttribute("object-identifier");
+		}
+		else if((*SaveChild)->GetName() == "output-mind")
+		{
+			OutputMindObjectIdentifier = (*SaveChild)->GetAttribute("object-identifier");
+		}
+		else if((*SaveChild)->GetName() == "mind")
+		{
+			Mind * NewMind(0);
+			
+			if((*SaveChild)->GetAttribute("class") == "command-mind")
+			{
+				NewMind = new CommandMind();
+			}
+			else
+			{
+				throw std::runtime_error("The \"mind\" element \"" + (*SaveChild)->GetAttribute("object-identifier") + "\" contains an unidentified class attribute \"" + (*SaveChild)->GetAttribute("class") + "\".");
+			}
+			NewMind->SetObjectIdentifier((*SaveChild)->GetAttribute("object-identifier"));
+			for(std::vector< Element * >::const_iterator MindChild = (*SaveChild)->GetChilds().begin(); MindChild != (*SaveChild)->GetChilds().end(); ++MindChild)
+			{
+				if((*MindChild)->GetName() == "character")
+				{
+					// on second pass
+				}
+				else
+				{
+					throw std::runtime_error("The \"mind\" element \"" + (*SaveChild)->GetAttribute("object-identifier") + "\" contains an unidentified child element \"" + (*MindChild)->GetName() + "\".");
+				}
+			}
+		}
+		else if((*SaveChild)->GetName() == "character")
+		{
+			Character * TheCharacter(new Character());
+			
+			TheCharacter->SetObjectIdentifier((*SaveChild)->GetAttribute("object-identifier"));
+			for(std::vector< Element * >::const_iterator CharacterChild = (*SaveChild)->GetChilds().begin(); CharacterChild != (*SaveChild)->GetChilds().end(); ++CharacterChild)
+			{
+				if((*CharacterChild)->GetName() == "credits")
+				{
+					TheCharacter->SetCredits(from_string_cast< u4byte >((*CharacterChild)->GetAttribute("value")));
+				}
+				else if((*CharacterChild)->GetName() == "map-knowledge")
+				{
+					for(std::vector< Element * >::const_iterator MapKnowledgeChild = (*CharacterChild)->GetChilds().begin(); MapKnowledgeChild != (*CharacterChild)->GetChilds().end(); ++MapKnowledgeChild)
+					{
+						if((*MapKnowledgeChild)->GetName() == "explored-system")
+						{
+							TheCharacter->GetMapKnowledge()->AddExploredSystem(g_Galaxy->GetSystem((*MapKnowledgeChild)->GetAttribute("identifier")));
+						}
+					}
+				}
+				else if((*CharacterChild)->GetName() == "ship")
+				{
+					// in second pass
+				}
+				else
+				{
+					throw std::runtime_error("The \"character\" element \"" + (*SaveChild)->GetAttribute("object-identifier") + "\" contains an unidentified child element \"" + (*CharacterChild)->GetName() + "\".");
+				}
+			}
+		}
+		else if((*SaveChild)->GetName() == "ship")
+		{
+			Ship * TheShip(new Ship(g_ShipClassManager->Get((*SaveChild)->GetAttribute("class-identifier"))));
+			
+			TheShip->SetObjectIdentifier((*SaveChild)->GetAttribute("object-identifier"));
+			for(std::vector< Element * >::const_iterator ShipChild = (*SaveChild)->GetChilds().begin(); ShipChild != (*SaveChild)->GetChilds().end(); ++ShipChild)
+			{
+				if((*ShipChild)->GetName() == "fuel")
+				{
+					TheShip->SetFuel(from_string_cast< float >((*ShipChild)->GetAttribute("value")));
+				}
+				else if((*ShipChild)->GetName() == "hull")
+				{
+					TheShip->SetHull(from_string_cast< float >((*ShipChild)->GetAttribute("value")));
+				}
+				else if((*ShipChild)->GetName() == "position")
+				{
+					TheShip->SetPosition(Vector3f(from_string_cast< float >((*ShipChild)->GetAttribute("x")), from_string_cast< float >((*ShipChild)->GetAttribute("y")), 0.0f));
+				}
+				else if((*ShipChild)->GetName() == "velocity")
+				{
+					TheShip->SetVelocity(Vector3f(from_string_cast< float >((*ShipChild)->GetAttribute("x")), from_string_cast< float >((*ShipChild)->GetAttribute("y")), 0.0f));
+				}
+				else if((*ShipChild)->GetName() == "angular-position")
+				{
+					TheShip->SetAngularPosition(Quaternion(from_string_cast< float >((*ShipChild)->GetAttribute("w")), from_string_cast< float >((*ShipChild)->GetAttribute("x")), from_string_cast< float >((*ShipChild)->GetAttribute("y")), from_string_cast< float >((*ShipChild)->GetAttribute("z"))));
+				}
+				else if((*ShipChild)->GetName() == "content")
+				{
+					for(std::vector< Element * >::const_iterator ContentChild = (*ShipChild)->GetChilds().begin(); ContentChild != (*ShipChild)->GetChilds().end(); ++ContentChild)
+					{
+						if((*ContentChild)->GetName() == "commodity")
+						{
+							TheShip->AddContent(g_ObjectFactory->Create((*ContentChild)->GetName(), (*ContentChild)->GetAttribute("class-identifier")));
+						}
+						else if((*ContentChild)->GetName() == "weapon")
+						{
+							Weapon * NewWeapon(new Weapon(g_WeaponClassManager->Get((*ContentChild)->GetAttribute("class-identifier"))));
+							
+							NewWeapon->SetObjectIdentifier((*ContentChild)->GetAttribute("object-identifier"));
+							TheShip->AddContent(NewWeapon);
+							if((*ContentChild)->HasAttribute("mounted-on") == true)
+							{
+								TheShip->Mount(NewWeapon, (*ContentChild)->GetAttribute("mounted-on"));
+							}
+						}
+						else
+						{
+							throw std::runtime_error("The \"content\" element of the \"ship\" element \"" + (*SaveChild)->GetAttribute("object-identifier") + "\" contains a child element \"" + (*ContentChild)->GetName() + "\" which could not be handled.");
+						}
+					}
+				}
+				else if((*ShipChild)->GetName() == "name")
+				{
+					TheShip->SetName((*ShipChild)->GetAttribute("value"));
+				}
+				else if((*ShipChild)->GetName() == "system")
+				{
+					System * TheSystem(g_Galaxy->GetSystem((*ShipChild)->GetAttribute("identifier")));
+					
+					TheSystem->AddContent(TheShip);
+					TheShip->SetCurrentSystem(TheSystem);
+				}
+				else
+				{
+					throw std::runtime_error("The \"ship\" element \"" + (*SaveChild)->GetAttribute("object-identifier") + "\" contains an unidentified child element \"" + (*ShipChild)->GetName() + "\".");
+				}
+			}
+		}
+		else if((*SaveChild)->GetName() == "main-camera")
+		{
+			for(std::vector< Element * >::const_iterator CameraChild = (*SaveChild)->GetChilds().begin(); CameraChild != (*SaveChild)->GetChilds().end(); ++CameraChild)
+			{
+				if((*CameraChild)->GetName() == "position")
+				{
+					g_Camera.SetPosition(from_string_cast< float >((*CameraChild)->GetAttribute("x")), from_string_cast< float >((*CameraChild)->GetAttribute("y")), from_string_cast< float >((*CameraChild)->GetAttribute("z")));
+				}
+				else if((*CameraChild)->GetName() == "focus")
+				{
+					Position * FocusPosition(dynamic_cast< Position * >(Object::GetObject((*CameraChild)->GetAttribute("object-identifier"))));
+					
+					if(FocusPosition == 0)
+					{
+						throw std::runtime_error("The \"main-camera\" element focusses an object with a non-existing identifier \"" + (*CameraChild)->GetAttribute("object-identifier") + "\".");
+					}
+					g_Camera.SetFocus(FocusPosition->GetReference());
+				}
+				else if((*CameraChild)->GetName() == "field-of-view")
+				{
+					if((*CameraChild)->HasAttribute("degree") == true)
+					{
+						g_Camera.SetFieldOfView(from_string_cast< float >((*CameraChild)->GetAttribute("degree")) * M_PI / 360.0f);
+					}
+					else if((*CameraChild)->HasAttribute("radians") == true)
+					{
+						g_Camera.SetFieldOfView(from_string_cast< float >((*CameraChild)->GetAttribute("radians")));
+					}
+					g_MainPerspective.SetFieldOfView(g_Camera.GetFieldOfView());
+				}
+				else
+				{
+					throw std::runtime_error("The \"main-camera\" element contains an unidentified child element \"" + (*CameraChild)->GetName() + "\".");
+				}
+			}
+		}
+		else
+		{
+			throw std::runtime_error("The \"save\" element contains an unidentified child element \"" + (*SaveChild)->GetName() + "\".");
+		}
+	}
+	// in the second pass we do a fast skip over the childs to resolve any object references
+	// no errors except resolving errors will be displayed
+	// here, all th dynamic_casts are done
+	// at the moment this also resolves back references/containments
+	/// @todo The back references/containments should be dealt with by save the galaxy's structure recursively
+	for(std::vector< Element * >::const_iterator SaveChild = SaveChilds.begin(); SaveChild != SaveChilds.end(); ++SaveChild)
+	{
+		if((*SaveChild)->GetName() == "mind")
+		{
+			Mind * TheMind(dynamic_cast< Mind * >(Object::GetObject((*SaveChild)->GetAttribute("object-identifier"))));
+			
+			for(std::vector< Element * >::const_iterator MindChild = (*SaveChild)->GetChilds().begin(); MindChild != (*SaveChild)->GetChilds().end(); ++MindChild)
+			{
+				if((*MindChild)->GetName() == "character")
+				{
+					Character * TheCharacter(dynamic_cast< Character * >(Object::GetObject((*MindChild)->GetAttribute("object-identifier"))));
+					
+					TheMind->SetCharacter(TheCharacter);
+					TheCharacter->AddContent(TheMind);
+				}
+			}
+		}
+		else if((*SaveChild)->GetName() == "character")
+		{
+			Character * TheCharacter(dynamic_cast< Character * >(Object::GetObject((*SaveChild)->GetAttribute("object-identifier"))));
+			
+			for(std::vector< Element * >::const_iterator CharacterChild = (*SaveChild)->GetChilds().begin(); CharacterChild != (*SaveChild)->GetChilds().end(); ++CharacterChild)
+			{
+				if((*CharacterChild)->GetName() == "ship")
+				{
+					Ship * TheShip(dynamic_cast< Ship * >(Object::GetObject((*CharacterChild)->GetAttribute("object-identifier"))));
+					
+					TheCharacter->SetShip(TheShip);
+					TheShip->AddContent(TheCharacter);
+				}
+			}
+		}
+	}
+	assert(CurrentSystem.empty() == false);
+	g_CurrentSystem = g_Galaxy->GetSystem(CurrentSystem);
+	assert(g_CurrentSystem != 0);
+	if(InputMindObjectIdentifier.empty() == false)
+	{
+		g_InputMind = Object::GetObject(InputMindObjectIdentifier)->GetReference();
+	}
+	if(OutputMindObjectIdentifier.empty() == false)
+	{
+		g_OutputMind = Object::GetObject(OutputMindObjectIdentifier)->GetReference();
+	}
+	OnOutputEnterSystem(g_CurrentSystem);
+	RealTime::Invalidate();
+	PopulateSystem(g_CurrentSystem);
+	// setting up the player environment
+	if((g_OutputMind == true) && (g_OutputMind->GetCharacter() != 0) && (g_OutputMind->GetCharacter()->GetShip() != 0))
+	{
+		g_MiniMapDisplay->SetOwner(g_OutputMind->GetCharacter()->GetShip()->GetReference());
+		g_ScannerDisplay->SetOwner(g_OutputMind->GetCharacter()->GetShip()->GetReference());
+	}
+}
+
+bool LoadGameFromInputStream(std::istream & InputStream)
+{
+	Document Document(InputStream);
+	
+	if(Document.GetDocumentElement() == 0)
+	{
+		std::cerr << "The game file does not seem to be parsable." << std::endl;
+		
+		return false;
+	}
+	else
+	{
+		try
+		{
+			LoadGameFromElement(Document.GetDocumentElement());
+		}
+		catch(std::runtime_error & Exception)
+		{
+			std::cerr << "The game file contains invalid data:\n\t" << Exception.what() << std::endl;
+			
+			return false;
+		}
+		
+		return true;
+	}
+}
+
+bool LoadGameFromFileName(const std::string & FileName)
+{
+	std::ifstream InputFileStream(FileName.c_str());
+	
+	if(InputFileStream == false)
+	{
+		std::cerr << "The savegame file \"" << FileName << "\" does not exist or is not readable." << std::endl;
+		
+		return false;
+	}
+	
+	return LoadGameFromInputStream(InputFileStream);
 }
 
 void SaveGame(std::ostream & OStream)
@@ -1413,25 +1738,6 @@ void SaveGame(std::ostream & OStream)
 	XML << end; // camera
 	XML << end; // save
 	OStream << std::endl;
-}
-
-void PurgeGame(void)
-{
-	if(g_OutputMind == true)
-	{
-		OnOutputFocusLeaveSystem(g_CurrentSystem);
-	}
-	if(g_CurrentSystem != 0)
-	{
-		EmptySystem(g_CurrentSystem);
-	}
-	if(g_Galaxy != 0)
-	{
-		g_Galaxy->Destroy();
-		delete g_Galaxy;
-	}
-	g_CurrentSystem = 0;
-	g_Galaxy = 0;
 }
 
 void KeyEvent(const KeyEventInformation & KeyEventInformation)
@@ -1877,6 +2183,21 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
+				if(g_LoadGameDialog == 0)
+				{
+					g_Pause = true;
+					g_LoadGameDialog = new LoadGameDialog(g_UserInterface->GetRootWidget(), Function(LoadGameFromInputStream));
+					g_LoadGameDialog->GrabKeyFocus();
+					g_LoadGameDialog->AddDestroyListener(&g_GlobalDestroyListener);
+				}
+			}
+			
+			break;
+		}
+	case 75: // Key: F9
+		{
+			if(KeyEventInformation.IsDown() == true)
+			{
 				XMLStream Out(std::cout);
 				
 				Object::Dump(Out);
@@ -2205,304 +2526,6 @@ void DestroyWindow(void)
 	g_Display = 0;
 }
 
-void LoadGameFromElement(const Element * SaveElement)
-{
-	if(SaveElement->GetName() != "save")
-	{
-		throw std::runtime_error("The savegame is not rooted at a \"save\" element.");
-	}
-	
-	const std::vector< Element * > & SaveChilds(SaveElement->GetChilds());
-	std::string CurrentSystem;
-	std::string InputMindObjectIdentifier;
-	std::string OutputMindObjectIdentifier;
-	
-	// setup the game world
-	PurgeGame();
-	g_Galaxy = new Galaxy();
-	g_Galaxy->SetObjectIdentifier("::galaxy");
-	g_ResourceReader->ReadSystems();
-	g_ResourceReader->ReadSystemLinks();
-	for(std::vector< Element * >::const_iterator SaveChild = SaveChilds.begin(); SaveChild != SaveChilds.end(); ++SaveChild)
-	{
-		if((*SaveChild)->GetName() == "current-system")
-		{
-			CurrentSystem = (*SaveChild)->GetAttribute("identifier");
-		}
-		else if((*SaveChild)->GetName() == "time-warp")
-		{
-			SetTimeWarp(from_string_cast< float >((*SaveChild)->GetAttribute("value")));
-		}
-		else if((*SaveChild)->GetName() == "input-mind")
-		{
-			InputMindObjectIdentifier = (*SaveChild)->GetAttribute("object-identifier");
-		}
-		else if((*SaveChild)->GetName() == "output-mind")
-		{
-			OutputMindObjectIdentifier = (*SaveChild)->GetAttribute("object-identifier");
-		}
-		else if((*SaveChild)->GetName() == "mind")
-		{
-			Mind * NewMind(0);
-			
-			if((*SaveChild)->GetAttribute("class") == "command-mind")
-			{
-				NewMind = new CommandMind();
-			}
-			else
-			{
-				throw std::runtime_error("The \"mind\" element \"" + (*SaveChild)->GetAttribute("object-identifier") + "\" contains an unidentified class attribute \"" + (*SaveChild)->GetAttribute("class") + "\".");
-			}
-			NewMind->SetObjectIdentifier((*SaveChild)->GetAttribute("object-identifier"));
-			for(std::vector< Element * >::const_iterator MindChild = (*SaveChild)->GetChilds().begin(); MindChild != (*SaveChild)->GetChilds().end(); ++MindChild)
-			{
-				if((*MindChild)->GetName() == "character")
-				{
-					// on second pass
-				}
-				else
-				{
-					throw std::runtime_error("The \"mind\" element \"" + (*SaveChild)->GetAttribute("object-identifier") + "\" contains an unidentified child element \"" + (*MindChild)->GetName() + "\".");
-				}
-			}
-		}
-		else if((*SaveChild)->GetName() == "character")
-		{
-			Character * TheCharacter(new Character());
-			
-			TheCharacter->SetObjectIdentifier((*SaveChild)->GetAttribute("object-identifier"));
-			for(std::vector< Element * >::const_iterator CharacterChild = (*SaveChild)->GetChilds().begin(); CharacterChild != (*SaveChild)->GetChilds().end(); ++CharacterChild)
-			{
-				if((*CharacterChild)->GetName() == "credits")
-				{
-					TheCharacter->SetCredits(from_string_cast< u4byte >((*CharacterChild)->GetAttribute("value")));
-				}
-				else if((*CharacterChild)->GetName() == "map-knowledge")
-				{
-					for(std::vector< Element * >::const_iterator MapKnowledgeChild = (*CharacterChild)->GetChilds().begin(); MapKnowledgeChild != (*CharacterChild)->GetChilds().end(); ++MapKnowledgeChild)
-					{
-						if((*MapKnowledgeChild)->GetName() == "explored-system")
-						{
-							TheCharacter->GetMapKnowledge()->AddExploredSystem(g_Galaxy->GetSystem((*MapKnowledgeChild)->GetAttribute("identifier")));
-						}
-					}
-				}
-				else if((*CharacterChild)->GetName() == "ship")
-				{
-					// in second pass
-				}
-				else
-				{
-					throw std::runtime_error("The \"character\" element \"" + (*SaveChild)->GetAttribute("object-identifier") + "\" contains an unidentified child element \"" + (*CharacterChild)->GetName() + "\".");
-				}
-			}
-		}
-		else if((*SaveChild)->GetName() == "ship")
-		{
-			Ship * TheShip(new Ship(g_ShipClassManager->Get((*SaveChild)->GetAttribute("class-identifier"))));
-			
-			TheShip->SetObjectIdentifier((*SaveChild)->GetAttribute("object-identifier"));
-			for(std::vector< Element * >::const_iterator ShipChild = (*SaveChild)->GetChilds().begin(); ShipChild != (*SaveChild)->GetChilds().end(); ++ShipChild)
-			{
-				if((*ShipChild)->GetName() == "fuel")
-				{
-					TheShip->SetFuel(from_string_cast< float >((*ShipChild)->GetAttribute("value")));
-				}
-				else if((*ShipChild)->GetName() == "hull")
-				{
-					TheShip->SetHull(from_string_cast< float >((*ShipChild)->GetAttribute("value")));
-				}
-				else if((*ShipChild)->GetName() == "position")
-				{
-					TheShip->SetPosition(Vector3f(from_string_cast< float >((*ShipChild)->GetAttribute("x")), from_string_cast< float >((*ShipChild)->GetAttribute("y")), 0.0f));
-				}
-				else if((*ShipChild)->GetName() == "velocity")
-				{
-					TheShip->SetVelocity(Vector3f(from_string_cast< float >((*ShipChild)->GetAttribute("x")), from_string_cast< float >((*ShipChild)->GetAttribute("y")), 0.0f));
-				}
-				else if((*ShipChild)->GetName() == "angular-position")
-				{
-					TheShip->SetAngularPosition(Quaternion(from_string_cast< float >((*ShipChild)->GetAttribute("w")), from_string_cast< float >((*ShipChild)->GetAttribute("x")), from_string_cast< float >((*ShipChild)->GetAttribute("y")), from_string_cast< float >((*ShipChild)->GetAttribute("z"))));
-				}
-				else if((*ShipChild)->GetName() == "content")
-				{
-					for(std::vector< Element * >::const_iterator ContentChild = (*ShipChild)->GetChilds().begin(); ContentChild != (*ShipChild)->GetChilds().end(); ++ContentChild)
-					{
-						if((*ContentChild)->GetName() == "commodity")
-						{
-							TheShip->AddContent(g_ObjectFactory->Create((*ContentChild)->GetName(), (*ContentChild)->GetAttribute("class-identifier")));
-						}
-						else if((*ContentChild)->GetName() == "weapon")
-						{
-							Weapon * NewWeapon(new Weapon(g_WeaponClassManager->Get((*ContentChild)->GetAttribute("class-identifier"))));
-							
-							NewWeapon->SetObjectIdentifier((*ContentChild)->GetAttribute("object-identifier"));
-							TheShip->AddContent(NewWeapon);
-							if((*ContentChild)->HasAttribute("mounted-on") == true)
-							{
-								TheShip->Mount(NewWeapon, (*ContentChild)->GetAttribute("mounted-on"));
-							}
-						}
-						else
-						{
-							throw std::runtime_error("The \"content\" element of the \"ship\" element \"" + (*SaveChild)->GetAttribute("object-identifier") + "\" contains a child element \"" + (*ContentChild)->GetName() + "\" which could not be handled.");
-						}
-					}
-				}
-				else if((*ShipChild)->GetName() == "name")
-				{
-					TheShip->SetName((*ShipChild)->GetAttribute("value"));
-				}
-				else if((*ShipChild)->GetName() == "system")
-				{
-					System * TheSystem(g_Galaxy->GetSystem((*ShipChild)->GetAttribute("identifier")));
-					
-					TheSystem->AddContent(TheShip);
-					TheShip->SetCurrentSystem(TheSystem);
-				}
-				else
-				{
-					throw std::runtime_error("The \"ship\" element \"" + (*SaveChild)->GetAttribute("object-identifier") + "\" contains an unidentified child element \"" + (*ShipChild)->GetName() + "\".");
-				}
-			}
-		}
-		else if((*SaveChild)->GetName() == "main-camera")
-		{
-			for(std::vector< Element * >::const_iterator CameraChild = (*SaveChild)->GetChilds().begin(); CameraChild != (*SaveChild)->GetChilds().end(); ++CameraChild)
-			{
-				if((*CameraChild)->GetName() == "position")
-				{
-					g_Camera.SetPosition(from_string_cast< float >((*CameraChild)->GetAttribute("x")), from_string_cast< float >((*CameraChild)->GetAttribute("y")), from_string_cast< float >((*CameraChild)->GetAttribute("z")));
-				}
-				else if((*CameraChild)->GetName() == "focus")
-				{
-					Position * FocusPosition(dynamic_cast< Position * >(Object::GetObject((*CameraChild)->GetAttribute("object-identifier"))));
-					
-					if(FocusPosition == 0)
-					{
-						throw std::runtime_error("The \"main-camera\" element focusses an object with a non-existing identifier \"" + (*CameraChild)->GetAttribute("object-identifier") + "\".");
-					}
-					g_Camera.SetFocus(FocusPosition->GetReference());
-				}
-				else if((*CameraChild)->GetName() == "field-of-view")
-				{
-					if((*CameraChild)->HasAttribute("degree") == true)
-					{
-						g_Camera.SetFieldOfView(from_string_cast< float >((*CameraChild)->GetAttribute("degree")) * M_PI / 360.0f);
-					}
-					else if((*CameraChild)->HasAttribute("radians") == true)
-					{
-						g_Camera.SetFieldOfView(from_string_cast< float >((*CameraChild)->GetAttribute("radians")));
-					}
-					g_MainPerspective.SetFieldOfView(g_Camera.GetFieldOfView());
-				}
-				else
-				{
-					throw std::runtime_error("The \"main-camera\" element contains an unidentified child element \"" + (*CameraChild)->GetName() + "\".");
-				}
-			}
-		}
-		else
-		{
-			throw std::runtime_error("The \"save\" element contains an unidentified child element \"" + (*SaveChild)->GetName() + "\".");
-		}
-	}
-	// in the second pass we do a fast skip over the childs to resolve any object references
-	// no errors except resolving errors will be displayed
-	// here, all th dynamic_casts are done
-	// at the moment this also resolves back references/containments
-	/// @todo The back references/containments should be dealt with by save the galaxy's structure recursively
-	for(std::vector< Element * >::const_iterator SaveChild = SaveChilds.begin(); SaveChild != SaveChilds.end(); ++SaveChild)
-	{
-		if((*SaveChild)->GetName() == "mind")
-		{
-			Mind * TheMind(dynamic_cast< Mind * >(Object::GetObject((*SaveChild)->GetAttribute("object-identifier"))));
-			
-			for(std::vector< Element * >::const_iterator MindChild = (*SaveChild)->GetChilds().begin(); MindChild != (*SaveChild)->GetChilds().end(); ++MindChild)
-			{
-				if((*MindChild)->GetName() == "character")
-				{
-					Character * TheCharacter(dynamic_cast< Character * >(Object::GetObject((*MindChild)->GetAttribute("object-identifier"))));
-					
-					TheMind->SetCharacter(TheCharacter);
-					TheCharacter->AddContent(TheMind);
-				}
-			}
-		}
-		else if((*SaveChild)->GetName() == "character")
-		{
-			Character * TheCharacter(dynamic_cast< Character * >(Object::GetObject((*SaveChild)->GetAttribute("object-identifier"))));
-			
-			for(std::vector< Element * >::const_iterator CharacterChild = (*SaveChild)->GetChilds().begin(); CharacterChild != (*SaveChild)->GetChilds().end(); ++CharacterChild)
-			{
-				if((*CharacterChild)->GetName() == "ship")
-				{
-					Ship * TheShip(dynamic_cast< Ship * >(Object::GetObject((*CharacterChild)->GetAttribute("object-identifier"))));
-					
-					TheCharacter->SetShip(TheShip);
-					TheShip->AddContent(TheCharacter);
-				}
-			}
-		}
-	}
-	assert(CurrentSystem.empty() == false);
-	g_CurrentSystem = g_Galaxy->GetSystem(CurrentSystem);
-	assert(g_CurrentSystem != 0);
-	if(InputMindObjectIdentifier.empty() == false)
-	{
-		g_InputMind = Object::GetObject(InputMindObjectIdentifier)->GetReference();
-	}
-	if(OutputMindObjectIdentifier.empty() == false)
-	{
-		g_OutputMind = Object::GetObject(OutputMindObjectIdentifier)->GetReference();
-	}
-	OnOutputFocusEnterSystem(g_CurrentSystem);
-	RealTime::Invalidate();
-	PopulateSystem(g_CurrentSystem);
-	// setting up the player environment
-	if((g_OutputMind == true) && (g_OutputMind->GetCharacter() != 0) && (g_OutputMind->GetCharacter()->GetShip() != 0))
-	{
-		g_MiniMapDisplay->SetOwner(g_OutputMind->GetCharacter()->GetShip()->GetReference());
-		g_ScannerDisplay->SetOwner(g_OutputMind->GetCharacter()->GetShip()->GetReference());
-	}
-}
-
-bool LoadGame(const std::string & FileName)
-{
-	std::ifstream InputStream(FileName.c_str());
-	
-	if(InputStream == false)
-	{
-		std::cerr << "The savegame file \"" << FileName << "\" does not exist or is not readable." << std::endl;
-		
-		return false;
-	}
-	
-	Document Document(InputStream);
-	
-	if(Document.GetDocumentElement() == 0)
-	{
-		std::cerr << "The file \"" << FileName << "\" does not seem to be parsable." << std::endl;
-		
-		return false;
-	}
-	else
-	{
-		try
-		{
-			LoadGameFromElement(Document.GetDocumentElement());
-		}
-		catch(std::runtime_error & Exception)
-		{
-			std::cerr << "The file \"" << FileName << "\" contains invalid data:\n\t" << Exception.what() << std::endl;
-			
-			return false;
-		}
-		
-		return true;
-	}
-}
-
 int main(int argc, char ** argv)
 {
 	// setup the random number generator for everyday use
@@ -2608,7 +2631,7 @@ int main(int argc, char ** argv)
 	g_ResourceReader->ReadTextures();
 	
 	// load the specified savegame
-	if(LoadGame(LoadSavegameFileName) == false)
+	if(LoadGameFromFileName(LoadSavegameFileName) == false)
 	{
 		return 1;
 	}
