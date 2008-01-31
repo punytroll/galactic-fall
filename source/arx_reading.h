@@ -20,18 +20,33 @@
 #ifndef ARX_READING_H
 #define ARX_READING_H
 
-class Archive;
+namespace Arxx
+{
+	class Archive;
+}
 
-void ReadAssetClasses(Arxx::Archive & Archive);
-void ReadCommodityClasses(Arxx::Archive & Archive);
-void ReadMeshes(Arxx::Archive & Archive);
-void ReadModels(Arxx::Archive & Archive);
-void ReadShipClasses(Arxx::Archive & Archive);
-void ReadSlotClasses(Arxx::Archive & Archive);
-void ReadSystems(Arxx::Archive & Archive);
-void ReadSystemLinks(Arxx::Archive & Archive);
-void ReadTextures(Arxx::Archive & Archive);
-void ReadUserInterface(Arxx::Archive & Archive);
-void ReadWeaponClasses(Arxx::Archive & Archive);
+class LocalFileDataChannel;
+
+class ResourceReader
+{
+public:
+	ResourceReader(const std::string & DataDirectoryPath);
+	~ResourceReader(void);
+	bool LoadArchive(const std::string & Path);
+	void ReadAssetClasses(void);
+	void ReadCommodityClasses(void);
+	void ReadMeshes(void);
+	void ReadModels(void);
+	void ReadShipClasses(void);
+	void ReadSlotClasses(void);
+	void ReadSystems(void);
+	void ReadSystemLinks(void);
+	void ReadTextures(void);
+	void ReadUserInterface(void);
+	void ReadWeaponClasses(void);
+private:
+	LocalFileDataChannel * m_LocalFileDataChannel;
+	Arxx::Archive * m_Archive;
+};
 
 #endif

@@ -22,7 +22,7 @@
 #include <iostream>
 
 #include <Archive.h>
-#include <BufferReader.h>
+#include <DataRepository.h>
 #include <Item.h>
 
 #include "arx_reading.h"
@@ -43,6 +43,7 @@
 #include "graphics_texture.h"
 #include "graphics_texture_manager.h"
 #include "label.h"
+#include "local_file_data_channel.h"
 #include "mini_map_display.h"
 #include "planet.h"
 #include "scanner_display.h"
@@ -108,9 +109,9 @@ static Arxx::Item * Resolve(Arxx::Reference & Reference)
 	return Item;
 }
 
-void ReadItems(Arxx::Archive & Archive, const std::string & Path, const Callback1< void, Arxx::Reference & > * Reader)
+void ReadItems(Arxx::Archive * Archive, const std::string & Path, const Callback1< void, Arxx::Reference & > * Reader)
 {
-	Arxx::Item * Directory(Archive.GetItem(Path));
+	Arxx::Item * Directory(Archive->GetItem(Path));
 	
 	if(Directory == 0)
 	{
@@ -132,59 +133,98 @@ void ReadItems(Arxx::Archive & Archive, const std::string & Path, const Callback
 	delete Reader;
 }
 
-void ReadAssetClasses(Arxx::Archive & Archive)
+ResourceReader::ResourceReader(const std::string & DataDirectoryPath) :
+	m_LocalFileDataChannel(new LocalFileDataChannel("file:", DataDirectoryPath)),
+	m_Archive(0)
 {
-	ReadItems(Archive, "/Asset Classes", Function(ReadAssetClass));
+	if(Arxx::Repository.bRegisterDataChannel(m_LocalFileDataChannel) == false)
+	{
+		throw std::runtime_error("Could not register local file data channel.");
+	}
 }
 
-void ReadCommodityClasses(Arxx::Archive & Archive)
+ResourceReader::~ResourceReader(void)
 {
-	ReadItems(Archive, "/Commodity Classes", Function(ReadCommodityClass));
+	if(Arxx::Repository.bUnregisterDataChannel(m_LocalFileDataChannel) == false)
+	{
+		throw std::runtime_error("Could not unregister the local file data channel.");
+	}
+	delete m_LocalFileDataChannel;
+	m_LocalFileDataChannel = 0;
+	delete m_Archive;
+	m_Archive = 0;
 }
 
-void ReadMeshes(Arxx::Archive & Archive)
+bool ResourceReader::LoadArchive(const std::string & ArchivePath)
 {
-	ReadItems(Archive, "/Meshes", Function(ReadMesh));
+	assert(m_Archive == 0);
+	m_Archive = new Arxx::Archive();
+	
+	Arxx::URI URI(ArchivePath);
+	
+	if(m_Archive->bLoad(URI) == false)
+	{
+		std::cerr << "Could not find or open " << URI << "." << std::endl;
+		
+		return false;
+	}
+	
+	return true;
 }
 
-void ReadModels(Arxx::Archive & Archive)
+void ResourceReader::ReadAssetClasses(void)
 {
-	ReadItems(Archive, "/Models", Function(ReadModel));
+	ReadItems(m_Archive, "/Asset Classes", Function(ReadAssetClass));
 }
 
-void ReadShipClasses(Arxx::Archive & Archive)
+void ResourceReader::ReadCommodityClasses(void)
 {
-	ReadItems(Archive, "/Ship Classes", Function(ReadShipClass));
+	ReadItems(m_Archive, "/Commodity Classes", Function(ReadCommodityClass));
 }
 
-void ReadSlotClasses(Arxx::Archive & Archive)
+void ResourceReader::ReadMeshes(void)
 {
-	ReadItems(Archive, "/Slot Classes", Function(ReadSlotClass));
+	ReadItems(m_Archive, "/Meshes", Function(ReadMesh));
 }
 
-void ReadSystems(Arxx::Archive & Archive)
+void ResourceReader::ReadModels(void)
 {
-	ReadItems(Archive, "/Systems", Function(ReadSystem));
+	ReadItems(m_Archive, "/Models", Function(ReadModel));
 }
 
-void ReadSystemLinks(Arxx::Archive & Archive)
+void ResourceReader::ReadShipClasses(void)
 {
-	ReadItems(Archive, "/System Links", Function(ReadSystemLink));
+	ReadItems(m_Archive, "/Ship Classes", Function(ReadShipClass));
 }
 
-void ReadTextures(Arxx::Archive & Archive)
+void ResourceReader::ReadSlotClasses(void)
 {
-	ReadItems(Archive, "/Textures", Function(ReadTexture));
+	ReadItems(m_Archive, "/Slot Classes", Function(ReadSlotClass));
 }
 
-void ReadUserInterface(Arxx::Archive & Archive)
+void ResourceReader::ReadSystems(void)
 {
-	ReadItems(Archive, "/User Interface", Function(ReadWidget));
+	ReadItems(m_Archive, "/Systems", Function(ReadSystem));
 }
 
-void ReadWeaponClasses(Arxx::Archive & Archive)
+void ResourceReader::ReadSystemLinks(void)
 {
-	ReadItems(Archive, "/Weapon Classes", Function(ReadWeaponClass));
+	ReadItems(m_Archive, "/System Links", Function(ReadSystemLink));
+}
+
+void ResourceReader::ReadTextures(void)
+{
+	ReadItems(m_Archive, "/Textures", Function(ReadTexture));
+}
+
+void ResourceReader::ReadUserInterface(void)
+{
+	ReadItems(m_Archive, "/User Interface", Function(ReadWidget));
+}
+
+void ResourceReader::ReadWeaponClasses(void)
+{
+	ReadItems(m_Archive, "/Weapon Classes", Function(ReadWeaponClass));
 }
 
 static void ReadAssetClass(Arxx::Reference & Reference)

@@ -25,19 +25,13 @@
 #include <iostream>
 #include <list>
 #include <sstream>
+#include <stdexcept>
 #include <vector>
 
 #include <GL/glx.h>
 #include <GL/gl.h>
 
-#include <Archive.h>
-#include <BufferReader.h>
-#include <DataRepository.h>
-#include <Item.h>
-#include <URI.h>
-
 #include "arx_reading.h"
-#include "arx_resources.h"
 #include "asset_class.h"
 #include "asset_class_manager.h"
 #include "callbacks.h"
@@ -64,7 +58,6 @@
 #include "graphics_texture_manager.h"
 #include "key_event_information.h"
 #include "label.h"
-#include "local_file_data_channel.h"
 #include "map_dialog.h"
 #include "map_knowledge.h"
 #include "math.h"
@@ -236,6 +229,7 @@ bool g_DumpEndReport(false);
 bool g_TakeScreenShot(false);
 SystemStatistics * g_SystemStatistics;
 std::map< Graphics::Node *, Reference< Graphics::Node > > g_VisualizationReferences;
+ResourceReader * g_ResourceReader(0);
 
 int WantToJump(Ship * Ship, System * System)
 {
@@ -2515,7 +2509,7 @@ int main(int argc, char ** argv)
 	g_WeaponClassManager = new WeaponClassManager();
 	g_GameTimeTimeoutNotifications = new TimeoutNotificationManager();
 	g_RealTimeTimeoutNotifications = new TimeoutNotificationManager();
-	g_SystemStatistics= new SystemStatistics();
+	g_SystemStatistics = new SystemStatistics();
 	
 	// parse command line
 	std::vector< std::string > Arguments(argv, argv + argc);
@@ -2545,33 +2539,21 @@ int main(int argc, char ** argv)
 	}
 	
 	// try loading the game data archive
-	std::string DataDirectory(DataFileName.substr(0, DataFileName.rfind('/')) + '/');
-	LocalFileDataChannel LocalFileDataChannel("file:", DataDirectory);
-	
-	if(Arxx::Repository.bRegisterDataChannel(&LocalFileDataChannel) == false)
+	g_ResourceReader = new ResourceReader(DataFileName.substr(0, DataFileName.rfind('/')) + '/');
+	if(g_ResourceReader->LoadArchive(DataFileName) == false)
 	{
-		throw std::runtime_error("Could not register local file data channel.");
-	}
-	
-	Arxx::URI URI(DataFileName);
-	Arxx::Archive * Archive(new Arxx::Archive());
-	
-	if(Archive->bLoad(URI) == false)
-	{
-		std::cerr << "Could not find or open " << URI << "." << std::endl;
-		
 		return 1;
 	}
 	
 	// read the data from the archive
-	ReadMeshes(*Archive);
-	ReadModels(*Archive);
-	ReadAssetClasses(*Archive);
-	ReadCommodityClasses(*Archive);
-	ReadSlotClasses(*Archive);
-	ReadShipClasses(*Archive);
-	ReadUserInterface(*Archive);
-	ReadWeaponClasses(*Archive);
+	g_ResourceReader->ReadMeshes();
+	g_ResourceReader->ReadModels();
+	g_ResourceReader->ReadAssetClasses();
+	g_ResourceReader->ReadCommodityClasses();
+	g_ResourceReader->ReadSlotClasses();
+	g_ResourceReader->ReadShipClasses();
+	g_ResourceReader->ReadUserInterface();
+	g_ResourceReader->ReadWeaponClasses();
 	
 	// setup the global variables for the user interface
 	g_CreditsLabel = dynamic_cast< Label * >(g_UserInterface->GetWidget("/credits"));
@@ -2606,13 +2588,13 @@ int main(int argc, char ** argv)
 	CreateWindow();
 	InitializeOpenGL();
 	// since reading the textures already creates them we have to do this after initializing OpenGL
-	ReadTextures(*Archive);
+	g_ResourceReader->ReadTextures();
 	
 	// setup the game world
 	g_Galaxy = new Galaxy();
 	g_Galaxy->SetObjectIdentifier("::galaxy");
-	ReadSystems(*Archive);
-	ReadSystemLinks(*Archive);
+	g_ResourceReader->ReadSystems();
+	g_ResourceReader->ReadSystemLinks();
 	
 	// load the specified savegame
 	if(LoadGame(LoadSavegameFileName) == false)
@@ -2670,11 +2652,7 @@ int main(int argc, char ** argv)
 	delete g_TextureManager;
 	delete g_UserInterface;
 	delete g_WeaponClassManager;
-	delete Archive;
-	if(Arxx::Repository.bUnregisterDataChannel(&LocalFileDataChannel) == false)
-	{
-		throw std::runtime_error("Could not unregister the local file data channel.");
-	}
+	delete g_ResourceReader;
 	
 	return 0;
 }
