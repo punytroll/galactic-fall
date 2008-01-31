@@ -1415,6 +1415,25 @@ void SaveGame(std::ostream & OStream)
 	OStream << std::endl;
 }
 
+void PurgeGame(void)
+{
+	if(g_OutputMind == true)
+	{
+		OnOutputFocusLeaveSystem(g_CurrentSystem);
+	}
+	if(g_CurrentSystem != 0)
+	{
+		EmptySystem(g_CurrentSystem);
+	}
+	if(g_Galaxy != 0)
+	{
+		g_Galaxy->Destroy();
+		delete g_Galaxy;
+	}
+	g_CurrentSystem = 0;
+	g_Galaxy = 0;
+}
+
 void KeyEvent(const KeyEventInformation & KeyEventInformation)
 {
 	if(g_UserInterface->Key(KeyEventInformation) == true)
@@ -1879,21 +1898,7 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				if(g_OutputMind == true)
-				{
-					OnOutputFocusLeaveSystem(g_CurrentSystem);
-				}
-				if(g_CurrentSystem != 0)
-				{
-					EmptySystem(g_CurrentSystem);
-				}
-				if(g_Galaxy != 0)
-				{
-					g_Galaxy->Destroy();
-					delete g_Galaxy;
-				}
-				g_Galaxy = 0;
-				g_CurrentSystem = 0;
+				PurgeGame();
 			}
 			
 			break;
@@ -2212,6 +2217,12 @@ void LoadGameFromElement(const Element * SaveElement)
 	std::string InputMindObjectIdentifier;
 	std::string OutputMindObjectIdentifier;
 	
+	// setup the game world
+	PurgeGame();
+	g_Galaxy = new Galaxy();
+	g_Galaxy->SetObjectIdentifier("::galaxy");
+	g_ResourceReader->ReadSystems();
+	g_ResourceReader->ReadSystemLinks();
 	for(std::vector< Element * >::const_iterator SaveChild = SaveChilds.begin(); SaveChild != SaveChilds.end(); ++SaveChild)
 	{
 		if((*SaveChild)->GetName() == "current-system")
@@ -2448,6 +2459,12 @@ void LoadGameFromElement(const Element * SaveElement)
 	OnOutputFocusEnterSystem(g_CurrentSystem);
 	RealTime::Invalidate();
 	PopulateSystem(g_CurrentSystem);
+	// setting up the player environment
+	if((g_OutputMind == true) && (g_OutputMind->GetCharacter() != 0) && (g_OutputMind->GetCharacter()->GetShip() != 0))
+	{
+		g_MiniMapDisplay->SetOwner(g_OutputMind->GetCharacter()->GetShip()->GetReference());
+		g_ScannerDisplay->SetOwner(g_OutputMind->GetCharacter()->GetShip()->GetReference());
+	}
 }
 
 bool LoadGame(const std::string & FileName)
@@ -2590,22 +2607,10 @@ int main(int argc, char ** argv)
 	// since reading the textures already creates them we have to do this after initializing OpenGL
 	g_ResourceReader->ReadTextures();
 	
-	// setup the game world
-	g_Galaxy = new Galaxy();
-	g_Galaxy->SetObjectIdentifier("::galaxy");
-	g_ResourceReader->ReadSystems();
-	g_ResourceReader->ReadSystemLinks();
-	
 	// load the specified savegame
 	if(LoadGame(LoadSavegameFileName) == false)
 	{
 		return 1;
-	}
-	// setting up the player environment
-	if((g_OutputMind == true) && (g_OutputMind->GetCharacter() != 0) && (g_OutputMind->GetCharacter()->GetShip() != 0))
-	{
-		g_MiniMapDisplay->SetOwner(g_OutputMind->GetCharacter()->GetShip()->GetReference());
-		g_ScannerDisplay->SetOwner(g_OutputMind->GetCharacter()->GetShip()->GetReference());
 	}
 	
 	// main loop
@@ -2616,21 +2621,9 @@ int main(int argc, char ** argv)
 		glXSwapBuffers(g_Display, g_Window);
 	}
 	// cleanup
-	if(g_OutputMind == true)
-	{
-		OnOutputFocusLeaveSystem(g_CurrentSystem);
-	}
-	if(g_CurrentSystem != 0)
-	{
-		EmptySystem(g_CurrentSystem);
-	}
+	PurgeGame();
 	DeinitializeOpenGL();
 	DestroyWindow();
-	if(g_Galaxy != 0)
-	{
-		g_Galaxy->Destroy();
-		delete g_Galaxy;
-	}
 	// if requested print some final debugging information
 	if(g_DumpEndReport == true)
 	{
