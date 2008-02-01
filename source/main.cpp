@@ -910,7 +910,7 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 		}
 	}
 	
-	Ship * NewShip(new Ship(g_ShipClassManager->Get(ShipClassIdentifier)));
+	Ship * NewShip(dynamic_cast< Ship * >(g_ObjectFactory->Create("ship", ShipClassIdentifier)));
 	
 	NewShip->SetObjectIdentifier("::ship(" + NewShip->GetShipClass()->GetIdentifier() + ")" + IdentifierSuffix);
 	NewShip->SetPosition(Vector3f(GetRandomFloat(-200.0f, 200.0f), GetRandomFloat(-200.0f, 200.0f), 0.0f));
@@ -1425,7 +1425,7 @@ void LoadGameFromElement(const Element * SaveElement)
 		}
 		else if((*SaveChild)->GetName() == "ship")
 		{
-			Ship * TheShip(new Ship(g_ShipClassManager->Get((*SaveChild)->GetAttribute("class-identifier"))));
+			Ship * TheShip(dynamic_cast< Ship * >(g_ObjectFactory->Create((*SaveChild)->GetName(), (*SaveChild)->GetAttribute("class-identifier"))));
 			
 			TheShip->SetObjectIdentifier((*SaveChild)->GetAttribute("object-identifier"));
 			for(std::vector< Element * >::const_iterator ShipChild = (*SaveChild)->GetChilds().begin(); ShipChild != (*SaveChild)->GetChilds().end(); ++ShipChild)
@@ -1460,7 +1460,7 @@ void LoadGameFromElement(const Element * SaveElement)
 						}
 						else if((*ContentChild)->GetName() == "weapon")
 						{
-							Weapon * NewWeapon(new Weapon(g_WeaponClassManager->Get((*ContentChild)->GetAttribute("class-identifier"))));
+							Weapon * NewWeapon(dynamic_cast< Weapon * >(g_ObjectFactory->Create((*ContentChild)->GetName(), (*ContentChild)->GetAttribute("class-identifier"))));
 							
 							NewWeapon->SetObjectIdentifier((*ContentChild)->GetAttribute("object-identifier"));
 							TheShip->AddContent(NewWeapon);

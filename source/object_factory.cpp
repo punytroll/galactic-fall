@@ -24,6 +24,8 @@
 #include "commodity_class_manager.h"
 #include "globals.h"
 #include "object_factory.h"
+#include "ship.h"
+#include "ship_class_manager.h"
 #include "weapon.h"
 #include "weapon_class.h"
 #include "weapon_class_manager.h"
@@ -36,10 +38,21 @@ Object * ObjectFactory::Create(const std::string & Type, const std::string & Cla
 		
 		if(CommodityClass == 0)
 		{
-			throw std::runtime_error("Unknown object class '" + Class + "' for object type '" + Type + "'.");
+			throw std::runtime_error("Create: Unknown object class '" + Class + "' for object type '" + Type + "'.");
 		}
 		
 		return new Commodity(CommodityClass);
+	}
+	else if(Type == "ship")
+	{
+		const ShipClass * ShipClass(g_ShipClassManager->Get(Class));
+		
+		if(ShipClass == 0)
+		{
+			throw std::runtime_error("Create: Unknown object class '" + Class + "' for object type '" + Type + "'.");
+		}
+		
+		return new Ship(ShipClass);
 	}
 	else if(Type == "weapon")
 	{
@@ -47,14 +60,14 @@ Object * ObjectFactory::Create(const std::string & Type, const std::string & Cla
 		
 		if(WeaponClass == 0)
 		{
-			throw std::runtime_error("Unknown object class '" + Class + "' for object type '" + Type + "'.");
+			throw std::runtime_error("Create: Unknown object class '" + Class + "' for object type '" + Type + "'.");
 		}
 		
 		return new Weapon(WeaponClass);
 	}
 	else
 	{
-		throw std::runtime_error("Unknown object type '" + Type + "' (for object class '" + Class + "').");
+		throw std::runtime_error("Create: Unknown object type '" + Type + "' (for object class '" + Class + "').");
 	}
 }
 
@@ -66,7 +79,7 @@ float ObjectFactory::GetSpaceRequirement(const std::string & Type, const std::st
 		
 		if(CommodityClass == 0)
 		{
-			throw std::runtime_error("Unknown object class '" + Class + "' for object type '" + Type + "'.");
+			throw std::runtime_error("SpaceRequirement: Unknown object class '" + Class + "' for object type '" + Type + "'.");
 		}
 		
 		return CommodityClass->GetSpaceRequirement();
@@ -77,13 +90,13 @@ float ObjectFactory::GetSpaceRequirement(const std::string & Type, const std::st
 		
 		if(WeaponClass == 0)
 		{
-			throw std::runtime_error("Unknown object class '" + Class + "' for object type '" + Type + "'.");
+			throw std::runtime_error("SpaceRequirement: Unknown object class '" + Class + "' for object type '" + Type + "'.");
 		}
 		
 		return WeaponClass->GetSpaceRequirement();
 	}
 	else
 	{
-		throw std::runtime_error("Unknown object type '" + Type + "' (for object class '" + Class + "').");
+		throw std::runtime_error("SpaceRequirement: Unknown object type '" + Type + "' (for object class '" + Class + "').");
 	}
 }
