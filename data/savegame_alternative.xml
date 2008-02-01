@@ -23,14 +23,14 @@
 		<angular-position w="-0.962905" x="0" y="0" z="-0.26984"/>
 		<velocity x="10.0685" y="6.5288"/>
 		<content>
-			<commodity class-identifier="industrial"/>
-			<commodity class-identifier="industrial"/>
-			<commodity class-identifier="industrial"/>
-			<commodity class-identifier="industrial"/>
-			<commodity class-identifier="industrial"/>
-			<commodity class-identifier="industrial"/>
-			<commodity class-identifier="metal"/>
-			<commodity class-identifier="metal"/>
+			<commodity class-identifier="industrial" object-identifier="::asset(industrial)::commodity(industrial)::1"/>
+			<commodity class-identifier="industrial" object-identifier="::asset(industrial)::commodity(industrial)::2"/>
+			<commodity class-identifier="industrial" object-identifier="::asset(industrial)::commodity(industrial)::3"/>
+			<commodity class-identifier="industrial" object-identifier="::asset(industrial)::commodity(industrial)::4"/>
+			<commodity class-identifier="industrial" object-identifier="::asset(industrial)::commodity(industrial)::5"/>
+			<commodity class-identifier="industrial" object-identifier="::asset(industrial)::commodity(industrial)::6"/>
+			<commodity class-identifier="metal" object-identifier="::asset(metal)::commodity(metal)::1"/>
+			<commodity class-identifier="metal" object-identifier="::asset(metal)::commodity(metal)::2"/>
 			<weapon object-identifier="::weapon(light_laser)::ship(::ship(shuttle)::player_ship)" class-identifier="light_laser" mounted-on="starboard_gun"/>
 		</content>
 		<name value="Freelancer 4"/>

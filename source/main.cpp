@@ -1456,7 +1456,10 @@ void LoadGameFromElement(const Element * SaveElement)
 					{
 						if((*ContentChild)->GetName() == "commodity")
 						{
-							TheShip->AddContent(g_ObjectFactory->Create((*ContentChild)->GetName(), (*ContentChild)->GetAttribute("class-identifier")));
+							Object * NewCommodity(g_ObjectFactory->Create((*ContentChild)->GetName(), (*ContentChild)->GetAttribute("class-identifier")));
+							
+							NewCommodity->SetObjectIdentifier((*ContentChild)->GetAttribute("object-identifier"));
+							TheShip->AddContent(NewCommodity);
 						}
 						else if((*ContentChild)->GetName() == "weapon")
 						{
@@ -1703,11 +1706,11 @@ void SaveGame(std::ostream & OStream)
 					
 					if(TheCommodity != 0)
 					{
-						XML << element << "commodity" << attribute << "class-identifier" << value << TheCommodity->GetCommodityClass()->GetIdentifier() << end;
+						XML << element << "commodity" << attribute << "class-identifier" << value << TheCommodity->GetCommodityClass()->GetIdentifier() << attribute << "object-identifier" << value << TheCommodity->GetObjectIdentifier() << end;
 					}
 					else if(TheWeapon != 0)
 					{
-						XML << element << "weapon" << attribute << "object-identifier" << value << TheWeapon->GetObjectIdentifier() << attribute << "class-identifier" << value << TheWeapon->GetWeaponClass()->GetIdentifier();
+						XML << element << "weapon" << attribute << "class-identifier" << value << TheWeapon->GetWeaponClass()->GetIdentifier() << attribute << "object-identifier" << value << TheWeapon->GetObjectIdentifier();
 						if(TheWeapon->GetSlot() != 0)
 						{
 							XML << attribute << "mounted-on" << value << TheWeapon->GetSlot()->GetIdentifier();
