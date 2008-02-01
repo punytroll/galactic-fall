@@ -23,6 +23,21 @@
 #include "goal.h"
 #include "math/vector3f.h"
 
+class GoalFlyInDirection : public Goal
+{
+public:
+	GoalFlyInDirection(GoalMind * GoalMind);
+	// getters
+	bool GetFacesDirection(void) const;
+	// setters
+	void SetDirection(const Vector3f & Direction);
+	virtual void Activate(void);
+	virtual void Process(void);
+private:
+	Vector3f m_Direction;
+	bool m_FacesDirection;
+};
+
 class GoalFlyOverRandomPoint : public Goal
 {
 public:
@@ -32,6 +47,7 @@ public:
 	virtual void Terminate(void);
 private:
 	Vector3f m_Point;
+	GoalFlyInDirection * m_FlyInDirection;
 };
 
 class GoalFighterThink : public Goal
@@ -40,7 +56,6 @@ public:
 	GoalFighterThink(GoalMind * GoalMind);
 	virtual void Activate(void);
 	virtual void Process(void);
-	virtual void Terminate(void);
 };
 
 class GoalFightFighter : public Goal
@@ -49,7 +64,6 @@ public:
 	GoalFightFighter(GoalMind * GoalMind);
 	virtual void Activate(void);
 	virtual void Process(void);
-	virtual void Terminate(void);
 };
 
 class GoalSelectFighter : public Goal
@@ -58,7 +72,6 @@ public:
 	GoalSelectFighter(GoalMind * GoalMind);
 	virtual void Activate(void);
 	virtual void Process(void);
-	virtual void Terminate(void);
 };
 
 class GoalDestroyTarget : public Goal
@@ -68,6 +81,8 @@ public:
 	virtual void Activate(void);
 	virtual void Process(void);
 	virtual void Terminate(void);
+private:
+	GoalFlyInDirection * m_FlyInDirection;
 };
 
 #endif
