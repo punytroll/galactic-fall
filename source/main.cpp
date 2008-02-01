@@ -930,7 +930,7 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 	{
 		NewCharacter->SetCredits(200 + GetRandomU4Byte(50, 250));
 		
-		Weapon * NewWeapon(new Weapon(g_WeaponClassManager->Get("light_laser")));
+		Weapon * NewWeapon(dynamic_cast< Weapon * >(g_ObjectFactory->Create("weapon", "light_laser")));
 		
 		NewWeapon->SetObjectIdentifier("::weapon(" + NewWeapon->GetWeaponClass()->GetIdentifier() + ")::created_for(" + NewShip->GetObjectIdentifier() + ")" + IdentifierSuffix);
 		NewShip->AddContent(NewWeapon);
