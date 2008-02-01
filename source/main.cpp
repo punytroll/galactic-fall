@@ -1114,6 +1114,20 @@ void OnGraphicsNodeDestroy(Graphics::Node * Node)
 	delete Node;
 }
 
+std::string MakeTimeStampedFileName(const std::string & Name, const std::string & Extension)
+{
+	time_t RawTime(time(0));
+	struct tm Time;
+	
+	localtime_r(&RawTime, &Time);
+	
+	char DateTime[16];
+	
+	strftime(DateTime, 16, "%Y%m%d-%H%M%S", &Time);
+	
+	return Name + '-' + DateTime + '.' + Extension;
+}
+
 void TakeScreenShot(void)
 {
 	GLubyte * ScreenshotData(new GLubyte[static_cast< GLsizei >(g_Width) * static_cast< GLsizei >(g_Height) * 3]);
@@ -1126,23 +1140,8 @@ void TakeScreenShot(void)
 	// revert the read buffer
 	glPopAttrib();
 	
-	// prepare the file name by getting a string with the current datetime in the format: YYYYMMDD-HHMMSS
-	time_t RawTime(time(0));
-	struct tm Time;
-	
-	localtime_r(&RawTime, &Time);
-	
-	char DateTime[16];
-	
-	strftime(DateTime, 16, "%Y%m%d-%H%M%S", &Time);
-	
-	std::string FileName;
-	
-	FileName += "screenshot-";
-	FileName += DateTime;
-	FileName += ".tex";
-	
-	std::ofstream OutputFileStream(FileName.c_str());
+	// the file name with the current datetime in the format YYYYMMDD-HHMMSS
+	std::ofstream OutputFileStream(MakeTimeStampedFileName("screenshot", "tex").c_str());
 	
 	if(OutputFileStream)
 	{
@@ -2198,10 +2197,11 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				XMLStream Out(std::cout);
+				std::ofstream OutputFileStream(MakeTimeStampedFileName("object-report", "xml").c_str());
+				XMLStream Out(OutputFileStream);
 				
 				Object::Dump(Out);
-				std::cout << std::endl;
+				OutputFileStream << std::endl;
 			}
 			
 			break;
