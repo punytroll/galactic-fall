@@ -258,6 +258,7 @@ MountWeaponDialog::MountWeaponDialog(Widget * SupWidget, Ship * Ship) :
 		Top += 55.0f;
 	}
 	m_SlotScrollBox->GetContent()->SetSize(Vector2f(180.0f, std::max(Top, m_SlotScrollBox->GetView()->GetSize()[1])));
+	m_SlotScrollBox->GetContent()->SetAnchorRight(true);
 	// center pane
 	m_CenterPane = new Widget(this);
 	m_CenterPane->SetPosition(Vector2f(10.0f + m_LeftPane->GetSize()[0] + 10.0f, 70.0f));
@@ -366,6 +367,7 @@ void MountWeaponDialog::RebuildWeaponList(void)
 		}
 	}
 	m_WeaponScrollBox->GetContent()->SetSize(Vector2f(180.0f, std::max(Top, m_WeaponScrollBox->GetView()->GetSize()[1])));
+	m_WeaponScrollBox->GetContent()->SetAnchorRight(true);
 }
 
 bool MountWeaponDialog::OnClicked(Widget * EventSource)

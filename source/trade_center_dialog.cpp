@@ -157,6 +157,7 @@ TradeCenterDialog::TradeCenterDialog(Widget * SupWidget, Planet * Planet, Charac
 		++PlanetAssetClassIterator;
 	}
 	m_AssetClassScrollBox->GetContent()->SetSize(Vector2f(460.0f, Top));
+	m_AssetClassScrollBox->GetContent()->SetAnchorRight(true);
 	m_TraderCreditsLabel = new Label(this, "");
 	m_TraderCreditsLabel->SetPosition(Vector2f(10.0f, 240.0f));
 	m_TraderCreditsLabel->SetSize(Vector2f(200.0f, 20.0f));
