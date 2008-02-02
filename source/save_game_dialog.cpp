@@ -189,6 +189,7 @@ SaveGameDialog::SaveGameDialog(Widget * SupWidget, Callback1< void, std::ostream
 		Top += 25.0f;
 	}
 	m_FileScrollBox->GetContent()->SetSize(Vector2f(m_FileScrollBox->GetView()->GetSize()[0], std::max(Top, m_FileScrollBox->GetView()->GetSize()[1])));
+	m_FileScrollBox->GetContent()->SetAnchorRight(true);
 }
 
 void SaveGameDialog::ShowErrorMessage(const std::string & ErrorMessage)

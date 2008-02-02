@@ -137,6 +137,7 @@ LoadGameDialog::LoadGameDialog(Widget * SupWidget, Callback1< bool, std::istream
 		Top += 25.0f;
 	}
 	m_FileScrollBox->GetContent()->SetSize(Vector2f(m_FileScrollBox->GetView()->GetSize()[0], std::max(Top, m_FileScrollBox->GetView()->GetSize()[1])));
+	m_FileScrollBox->GetContent()->SetAnchorRight(true);
 }
 
 void LoadGameDialog::ShowErrorMessage(const std::string & ErrorMessage)
