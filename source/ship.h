@@ -50,37 +50,37 @@ public:
 	bool m_Land;
 	bool m_Scoop;
 	// getters
-	Reference< Graphics::ParticleSystem > & GetEngineGlowParticleSystem(void);
-	float GetForwardThrust(void) const;
 	const Quaternion & GetAngularPosition(void) const;
-	float GetFuel(void) const;
-	float GetHull(void) const;
-	float GetFuelCapacity(void) const;
-	float GetMaximumSpeed(void) const;
-	const ShipClass * GetShipClass(void) const;
-	float GetTurnSpeed(void) const;
-	const Vector3f & GetVelocity(void) const;
 	float GetAvailableSpace(void) const;
 	unsigned_numeric GetContentAmount(const std::string & Type, const std::string & Class) const;
-	const Reference< PhysicalObject > & GetTarget(void) const;
-	System * GetLinkedSystemTarget(void);
 	System * GetCurrentSystem(void);
 	const System * GetCurrentSystem(void) const;
+	Reference< Graphics::ParticleSystem > & GetEngineGlowParticleSystem(void);
+	float GetForwardThrust(void) const;
+	float GetFuel(void) const;
+	float GetFuelCapacity(void) const;
+	float GetHull(void) const;
+	System * GetLinkedSystemTarget(void);
+	float GetMaximumSpeed(void) const;
+	const ShipClass * GetShipClass(void) const;
 	const std::map< std::string, Slot * > & GetSlots(void) const;
+	const Reference< PhysicalObject > & GetTarget(void) const;
+	float GetTurnSpeed(void) const;
+	const Vector3f & GetVelocity(void) const;
 	// setters
 	void SetAccelerate(bool Accelerate);
 	void SetAngularPosition(const Quaternion & AngularPosition);
+	void SetCurrentSystem(System * CurrentSystem);
 	void SetEngineGlowParticleSystem(Reference< Graphics::ParticleSystem > & EngineGlowParticleSystem);
 	void SetFire(bool Fire);
 	void SetFuel(float Fuel);
 	void SetHull(float Hull);
+	void SetLinkedSystemTarget(System * LinkedSystem);
 	void SetRefuel(bool Refuel);
+	void SetTarget(Reference< PhysicalObject > Target);
 	void SetTurnLeft(float TurnLeft);
 	void SetTurnRight(float TurnRight);
 	void SetVelocity(const Vector3f & Velocity);
-	void SetTarget(Reference< PhysicalObject > Target);
-	void SetLinkedSystemTarget(System * LinkedSystem);
-	void SetCurrentSystem(System * CurrentSystem);
 	// modifiers
 	Slot * CreateSlot(const SlotClass * SlotClass, const std::string & SlotIdentifier);
 	bool Mount(Object * Object, const std::string & SlotIdentifier);
@@ -103,59 +103,9 @@ private:
 	Reference< Graphics::ParticleSystem > m_EngineGlowParticleSystem;
 };
 
-inline Reference< Graphics::ParticleSystem > & Ship::GetEngineGlowParticleSystem(void)
-{
-	return m_EngineGlowParticleSystem;
-}
-
-inline float Ship::GetForwardThrust(void) const
-{
-	return m_ShipClass->GetForwardThrust();
-}
-
 inline const Quaternion & Ship::GetAngularPosition(void) const
 {
 	return m_AngularPosition;
-}
-
-inline float Ship::GetFuel(void) const
-{
-	return m_Fuel;
-}
-
-inline float Ship::GetHull(void) const
-{
-	return m_Hull;
-}
-
-inline float Ship::GetMaximumSpeed(void) const
-{
-	return m_ShipClass->GetMaximumSpeed();
-}
-
-inline const ShipClass * Ship::GetShipClass(void) const
-{
-	return m_ShipClass;
-}
-
-inline float Ship::GetTurnSpeed(void) const
-{
-	return m_ShipClass->GetTurnSpeed();
-}
-
-inline const Vector3f & Ship::GetVelocity(void) const
-{
-	return m_Velocity;
-}
-
-inline const Reference< PhysicalObject > & Ship::GetTarget(void) const
-{
-	return m_Target;
-}
-
-inline System * Ship::GetLinkedSystemTarget(void)
-{
-	return m_LinkedSystemTarget;
 }
 
 inline System * Ship::GetCurrentSystem(void)
@@ -168,14 +118,74 @@ inline const System * Ship::GetCurrentSystem(void) const
 	return m_CurrentSystem;
 }
 
+inline Reference< Graphics::ParticleSystem > & Ship::GetEngineGlowParticleSystem(void)
+{
+	return m_EngineGlowParticleSystem;
+}
+
+inline float Ship::GetForwardThrust(void) const
+{
+	return m_ShipClass->GetForwardThrust();
+}
+
+inline float Ship::GetFuel(void) const
+{
+	return m_Fuel;
+}
+
+inline float Ship::GetHull(void) const
+{
+	return m_Hull;
+}
+
+inline System * Ship::GetLinkedSystemTarget(void)
+{
+	return m_LinkedSystemTarget;
+}
+
+inline float Ship::GetMaximumSpeed(void) const
+{
+	return m_ShipClass->GetMaximumSpeed();
+}
+
+inline const ShipClass * Ship::GetShipClass(void) const
+{
+	return m_ShipClass;
+}
+
 inline const std::map< std::string, Slot * > & Ship::GetSlots(void) const
 {
 	return m_Slots;
 }
 
+inline const Reference< PhysicalObject > & Ship::GetTarget(void) const
+{
+	return m_Target;
+}
+
+inline float Ship::GetTurnSpeed(void) const
+{
+	return m_ShipClass->GetTurnSpeed();
+}
+
+inline const Vector3f & Ship::GetVelocity(void) const
+{
+	return m_Velocity;
+}
+
 inline void Ship::SetAccelerate(bool Accelerate)
 {
 	m_Accelerate = Accelerate;
+}
+
+inline void Ship::SetAngularPosition(const Quaternion & AngularPosition)
+{
+	m_AngularPosition = AngularPosition;
+}
+
+inline void Ship::SetCurrentSystem(System * CurrentSystem)
+{
+	m_CurrentSystem = CurrentSystem;
 }
 
 inline void Ship::SetEngineGlowParticleSystem(Reference< Graphics::ParticleSystem > & EngineGlowParticleSystem)
@@ -193,9 +203,19 @@ inline void Ship::SetHull(float Hull)
 	m_Hull = Hull;
 }
 
+inline void Ship::SetLinkedSystemTarget(System * LinkedSystem)
+{
+	m_LinkedSystemTarget = LinkedSystem;
+}
+
 inline void Ship::SetRefuel(bool Refuel)
 {
 	m_Refuel = Refuel;
+}
+
+inline void Ship::SetTarget(Reference< PhysicalObject > Target)
+{
+	m_Target = Target;
 }
 
 inline void Ship::SetTurnLeft(float TurnLeft)
@@ -213,26 +233,6 @@ inline void Ship::SetTurnRight(float TurnRight)
 inline void Ship::SetVelocity(const Vector3f & Velocity)
 {
 	m_Velocity = Velocity;
-}
-
-inline void Ship::SetAngularPosition(const Quaternion & AngularPosition)
-{
-	m_AngularPosition = AngularPosition;
-}
-
-inline void Ship::SetTarget(Reference< PhysicalObject > Target)
-{
-	m_Target = Target;
-}
-
-inline void Ship::SetLinkedSystemTarget(System * LinkedSystem)
-{
-	m_LinkedSystemTarget = LinkedSystem;
-}
-
-inline void Ship::SetCurrentSystem(System * CurrentSystem)
-{
-	m_CurrentSystem = CurrentSystem;
 }
 
 #endif
