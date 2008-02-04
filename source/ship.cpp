@@ -41,17 +41,17 @@ Ship::Ship(const ShipClass * ShipClass) :
 	m_Jump(false),
 	m_Land(false),
 	m_Scoop(false),
-	m_ShipClass(ShipClass),
 	m_Accelerate(false),
+	m_AngularPosition(true),
+	m_CurrentSystem(0),
 	m_Fuel(0.0f),
 	m_Hull(m_ShipClass->GetHull()),
+	m_LinkedSystemTarget(0),
 	m_Refuel(false),
 	m_TurnLeft(0.0f),
 	m_TurnRight(0.0f),
-	m_LinkedSystemTarget(0),
-	m_CurrentSystem(0),
-	m_Velocity(true),
-	m_AngularPosition(true)
+	m_ShipClass(ShipClass),
+	m_Velocity(true)
 {
 	SetRadialSize(m_ShipClass->GetModel()->GetRadialSize());
 	
@@ -64,6 +64,80 @@ Ship::Ship(const ShipClass * ShipClass) :
 		NewSlot->SetName(SlotIterator->second->GetName());
 		NewSlot->SetPosition(SlotIterator->second->GetPosition());
 		NewSlot->SetOrientation(SlotIterator->second->GetOrientation());
+	}
+}
+
+float Ship::GetAvailableSpace(void) const
+{
+	float AvailableSpace(m_ShipClass->GetMaximumAvailableSpace());
+	std::set< Object * >::const_iterator ManifestIterator(GetContent().begin());
+	
+	while(ManifestIterator != GetContent().end())
+	{
+		if(dynamic_cast< Commodity * >(*ManifestIterator) != 0)
+		{
+			AvailableSpace -= dynamic_cast< Commodity * >(*ManifestIterator)->GetSpaceRequirement();
+		}
+		else if(dynamic_cast< Weapon * >(*ManifestIterator) != 0)
+		{
+			if(dynamic_cast< Weapon * >(*ManifestIterator)->GetSlot() == 0)
+			{
+				AvailableSpace -= dynamic_cast< Weapon * >(*ManifestIterator)->GetSpaceRequirement();
+			}
+		}
+		++ManifestIterator;
+	}
+	
+	return AvailableSpace;
+}
+
+unsigned_numeric Ship::GetContentAmount(const std::string & Type, const std::string & Class) const
+{
+	unsigned_numeric Amount(0);
+	std::set< Object * >::const_iterator ContentIterator(GetContent().begin());
+	
+	while(ContentIterator != GetContent().end())
+	{
+		if(Type == "commodity")
+		{
+			Commodity * TheCommodity(dynamic_cast< Commodity * >(*ContentIterator));
+			
+			if((TheCommodity != 0) && (TheCommodity->GetCommodityClass()->GetIdentifier() == Class))
+			{
+				Amount += 1;
+			}
+		}
+		else if(Type == "weapon")
+		{
+			Weapon * TheWeapon(dynamic_cast< Weapon * >(*ContentIterator));
+			
+			if((TheWeapon != 0) && (TheWeapon->GetSlot() == 0) && (TheWeapon->GetWeaponClass()->GetIdentifier() == Class))
+			{
+				Amount += 1;
+			}
+		}
+		++ContentIterator;
+	}
+	
+	return Amount;
+}
+
+float Ship::GetFuelCapacity(void) const
+{
+	return m_ShipClass->GetFuelHoldSize();
+}
+
+void Ship::SetFire(bool Fire)
+{
+	for(std::map< std::string, Slot * >::iterator SlotIterator = m_Slots.begin(); SlotIterator != m_Slots.end(); ++SlotIterator)
+	{
+		// only set firing on *mounted* *weapons*
+		Weapon * TheWeapon(dynamic_cast< Weapon * >(SlotIterator->second->GetMountedObject().Get()));
+		
+		if(TheWeapon != 0)
+		{
+			TheWeapon->SetFire(Fire);
+		}
 	}
 }
 
@@ -263,80 +337,6 @@ void Ship::Update(float Seconds)
 				}
 			}
 			m_Scoop = false;
-		}
-	}
-}
-
-float Ship::GetFuelCapacity(void) const
-{
-	return m_ShipClass->GetFuelHoldSize();
-}
-
-float Ship::GetAvailableSpace(void) const
-{
-	float AvailableSpace(m_ShipClass->GetMaximumAvailableSpace());
-	std::set< Object * >::const_iterator ManifestIterator(GetContent().begin());
-	
-	while(ManifestIterator != GetContent().end())
-	{
-		if(dynamic_cast< Commodity * >(*ManifestIterator) != 0)
-		{
-			AvailableSpace -= dynamic_cast< Commodity * >(*ManifestIterator)->GetSpaceRequirement();
-		}
-		else if(dynamic_cast< Weapon * >(*ManifestIterator) != 0)
-		{
-			if(dynamic_cast< Weapon * >(*ManifestIterator)->GetSlot() == 0)
-			{
-				AvailableSpace -= dynamic_cast< Weapon * >(*ManifestIterator)->GetSpaceRequirement();
-			}
-		}
-		++ManifestIterator;
-	}
-	
-	return AvailableSpace;
-}
-
-unsigned_numeric Ship::GetContentAmount(const std::string & Type, const std::string & Class) const
-{
-	unsigned_numeric Amount(0);
-	std::set< Object * >::const_iterator ContentIterator(GetContent().begin());
-	
-	while(ContentIterator != GetContent().end())
-	{
-		if(Type == "commodity")
-		{
-			Commodity * TheCommodity(dynamic_cast< Commodity * >(*ContentIterator));
-			
-			if((TheCommodity != 0) && (TheCommodity->GetCommodityClass()->GetIdentifier() == Class))
-			{
-				Amount += 1;
-			}
-		}
-		else if(Type == "weapon")
-		{
-			Weapon * TheWeapon(dynamic_cast< Weapon * >(*ContentIterator));
-			
-			if((TheWeapon != 0) && (TheWeapon->GetSlot() == 0) && (TheWeapon->GetWeaponClass()->GetIdentifier() == Class))
-			{
-				Amount += 1;
-			}
-		}
-		++ContentIterator;
-	}
-	
-	return Amount;
-}
-
-void Ship::SetFire(bool Fire)
-{
-	for(std::map< std::string, Slot * >::iterator SlotIterator = m_Slots.begin(); SlotIterator != m_Slots.end(); ++SlotIterator)
-	{
-		// only set firing on *mounted* *weapons*
-		Weapon * TheWeapon(dynamic_cast< Weapon * >(SlotIterator->second->GetMountedObject().Get()));
-		
-		if(TheWeapon != 0)
-		{
-			TheWeapon->SetFire(Fire);
 		}
 	}
 }

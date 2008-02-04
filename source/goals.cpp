@@ -51,6 +51,7 @@ void GoalFlyInDirection::SetDirection(const Vector3f & Direction)
 
 void GoalFlyInDirection::Activate(void)
 {
+	assert(GetSubGoals().empty() == true);
 	SetState(Goal::ACTIVE);
 }
 
@@ -95,11 +96,12 @@ GoalFlyOverRandomPoint::GoalFlyOverRandomPoint(GoalMind * GoalMind) :
 
 void GoalFlyOverRandomPoint::Activate(void)
 {
-	SetState(Goal::ACTIVE);
+	assert(GetSubGoals().empty() == true);
 	m_FlyInDirection = new GoalFlyInDirection(GetMind());
 	AddContent(m_FlyInDirection);
 	m_FlyInDirection->Activate();
 	m_Point.Set(GetRandomFloat(-200.0f, 200.0f), GetRandomFloat(-200.0f, 200.0f), 0.0f);
+	SetState(Goal::ACTIVE);
 }
 
 void GoalFlyOverRandomPoint::Process(void)
@@ -190,6 +192,7 @@ GoalFightFighter::GoalFightFighter(GoalMind * GoalMind) :
 
 void GoalFightFighter::Activate(void)
 {
+	assert(GetSubGoals().empty() == true);
 	AddContent(new GoalDestroyTarget(GetMind()));
 	if((GetMind()->GetCharacter()->GetShip()->GetTarget() == false) || (dynamic_cast< const Ship * >(GetMind()->GetCharacter()->GetShip()->GetTarget().Get())->GetShipClass()->GetIdentifier() != "fighter"))
 	{
@@ -249,6 +252,7 @@ GoalSelectFighter::GoalSelectFighter(GoalMind * GoalMind) :
 
 void GoalSelectFighter::Activate(void)
 {
+	assert(GetSubGoals().empty() == true);
 	SetState(Goal::ACTIVE);
 }
 
@@ -287,10 +291,11 @@ GoalDestroyTarget::GoalDestroyTarget(GoalMind * GoalMind) :
 
 void GoalDestroyTarget::Activate(void)
 {
-	SetState(Goal::ACTIVE);
+	assert(GetSubGoals().empty() == true);
 	m_FlyInDirection = new GoalFlyInDirection(GetMind());
 	AddContent(m_FlyInDirection);
 	m_FlyInDirection->Activate();
+	SetState(Goal::ACTIVE);
 }
 
 void GoalDestroyTarget::Process(void)
