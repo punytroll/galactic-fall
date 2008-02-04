@@ -19,8 +19,9 @@
 
 #include "goal.h"
 
-Goal::Goal(GoalMind * GoalMind) :
+Goal::Goal(GoalMind * GoalMind, const std::string & Name) :
 	m_GoalMind(GoalMind),
+	m_Name(Name),
 	m_State(Goal::INACTIVE)
 {
 }

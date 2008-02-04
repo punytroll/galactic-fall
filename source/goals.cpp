@@ -28,8 +28,11 @@
 #include "string_cast.h"
 #include "system.h"
 
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// GoalFlyInDirection                                                                            //
+///////////////////////////////////////////////////////////////////////////////////////////////////
 GoalFlyInDirection::GoalFlyInDirection(GoalMind * GoalMind) :
-	Goal(GoalMind),
+	Goal(GoalMind, "fly_in_direction"),
 	m_Direction(true),
 	m_FacesDirection(false)
 {
@@ -81,8 +84,11 @@ void GoalFlyInDirection::Process(void)
 	}
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// GoalFlyOverRandomPoint                                                                        //
+///////////////////////////////////////////////////////////////////////////////////////////////////
 GoalFlyOverRandomPoint::GoalFlyOverRandomPoint(GoalMind * GoalMind) :
-	Goal(GoalMind)
+	Goal(GoalMind, "fly_over_random_point")
 {
 	SetObjectIdentifier("::goal(fly_over_random_point)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
 }
@@ -120,8 +126,11 @@ void GoalFlyOverRandomPoint::Terminate(void)
 	m_FlyInDirection->Terminate();
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// GoalFighterThink                                                                              //
+///////////////////////////////////////////////////////////////////////////////////////////////////
 GoalFighterThink::GoalFighterThink(GoalMind * GoalMind) :
-	Goal(GoalMind)
+	Goal(GoalMind, "fighter_think")
 {
 	SetObjectIdentifier("::goal(fighter_think)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
 }
@@ -148,24 +157,33 @@ void GoalFighterThink::Process(void)
 	SubGoal->Process();
 	if(SubGoal->GetState() == Goal::COMPLETED)
 	{
+		// terminate and remove sub goal
 		SubGoal->Terminate();
 		RemoveContent(SubGoal);
+		// other actions may depend on the SubGoal variable
+		SetState(Goal::INACTIVE);
+		// now destroy the SubGoal
 		SubGoal->Destroy();
 		delete SubGoal;
-		Activate();
 	}
 	else if(SubGoal->GetState() == Goal::FAILED)
 	{
+		// terminate and remove sub goal
 		SubGoal->Terminate();
 		RemoveContent(SubGoal);
+		// other actions may depend on the SubGoal variable
+		AddContent(new GoalFlyOverRandomPoint(GetMind()));
+		// now destroy the SubGoal
 		SubGoal->Destroy();
 		delete SubGoal;
-		AddContent(new GoalFlyOverRandomPoint(GetMind()));
 	}
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// GoalFightFighter                                                                              //
+///////////////////////////////////////////////////////////////////////////////////////////////////
 GoalFightFighter::GoalFightFighter(GoalMind * GoalMind) :
-	Goal(GoalMind)
+	Goal(GoalMind, "fight_fighter")
 {
 	SetObjectIdentifier("::goal(fight_fighter)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
 }
@@ -195,24 +213,36 @@ void GoalFightFighter::Process(void)
 	SubGoal->Process();
 	if(SubGoal->GetState() == Goal::COMPLETED)
 	{
+		// terminate and remove sub goal
 		SubGoal->Terminate();
 		RemoveContent(SubGoal);
-		SubGoal->Destroy();
-		delete SubGoal;
-		if(GetSubGoals().empty() == true)
+		// other actions may depend on the SubGoal variable
+		if(SubGoal->GetName() == "destroy_target")
 		{
 			SetState(Goal::COMPLETED);
 		}
+		// now destroy the SubGoal
+		SubGoal->Destroy();
+		delete SubGoal;
 	}
 	else if(SubGoal->GetState() == Goal::FAILED)
 	{
+		// terminate and remove sub goal
 		SubGoal->Terminate();
+		RemoveContent(SubGoal);
+		// other actions may depend on the SubGoal variable
 		SetState(Goal::FAILED);
+		// now destroy the SubGoal
+		SubGoal->Destroy();
+		delete SubGoal;
 	}
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// GoalSelectFighter                                                                             //
+///////////////////////////////////////////////////////////////////////////////////////////////////
 GoalSelectFighter::GoalSelectFighter(GoalMind * GoalMind) :
-	Goal(GoalMind)
+	Goal(GoalMind, "select_fighter")
 {
 	SetObjectIdentifier("::goal(select_fighter)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
 }
@@ -246,8 +276,11 @@ void GoalSelectFighter::Process(void)
 	}
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// GoalDestroyTarget                                                                             //
+///////////////////////////////////////////////////////////////////////////////////////////////////
 GoalDestroyTarget::GoalDestroyTarget(GoalMind * GoalMind) :
-	Goal(GoalMind)
+	Goal(GoalMind, "destroy_target")
 {
 	SetObjectIdentifier("::goal(destroy_target)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
 }

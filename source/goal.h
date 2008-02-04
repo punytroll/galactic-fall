@@ -37,10 +37,11 @@ public:
 		FAILED
 	};
 	
-	Goal(GoalMind * GoalMind);
+	Goal(GoalMind * GoalMind, const std::string & Name);
 	~Goal(void);
 	// getters
 	GoalMind * GetMind(void) const;
+	const std::string & GetName(void) const;
 	const int GetState(void) const;
 	std::deque< Goal * > & GetSubGoals(void);
 	const std::deque< Goal * > & GetSubGoals(void) const;
@@ -57,6 +58,7 @@ protected:
 	virtual void OnContentRemoved(Object * Content);
 private:
 	GoalMind * m_GoalMind;
+	std::string m_Name;
 	int m_State;
 	std::deque< Goal * > m_SubGoals;
 };
@@ -64,6 +66,11 @@ private:
 inline GoalMind * Goal::GetMind(void) const
 {
 	return m_GoalMind;
+}
+
+inline const std::string & Goal::GetName(void) const
+{
+	return m_Name;
 }
 
 inline const int Goal::GetState(void) const
