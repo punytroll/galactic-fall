@@ -33,6 +33,8 @@ Character::Character(void) :
 
 Character::~Character(void)
 {
+	delete m_MapKnowledge;
+	m_MapKnowledge = 0;
 	m_Characters.erase(m_Characters.find(this));
 }
 
