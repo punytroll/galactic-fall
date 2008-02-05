@@ -45,19 +45,19 @@ public:
 	// virtual event handlers
 	virtual void OnDestroy(Widget * EventSource);
 private:
-	Widget * m_RootWidget;
-	Widget * m_HoverWidget;
 	Widget * m_CaptureWidget;
+	Widget * m_HoverWidget;
+	Widget * m_RootWidget;
 };
-
-inline Widget * UserInterface::GetRootWidget(void)
-{
-	return m_RootWidget;
-}
 
 inline Widget * UserInterface::GetCaptureWidget(void)
 {
 	return m_CaptureWidget;
+}
+
+inline Widget * UserInterface::GetRootWidget(void)
+{
+	return m_RootWidget;
 }
 
 #endif

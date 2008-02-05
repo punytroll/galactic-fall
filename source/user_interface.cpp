@@ -23,6 +23,8 @@
 #include "widget.h"
 
 UserInterface::UserInterface(void) :
+	m_CaptureWidget(0),
+	m_HoverWidget(0),
 	m_RootWidget(new Widget(0))
 {
 	m_RootWidget->SetSize(Vector2f(1280.0f, 1024.0f));

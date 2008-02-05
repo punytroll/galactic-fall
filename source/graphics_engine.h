@@ -34,6 +34,7 @@ namespace Graphics
 	class Engine
 	{
 	public:
+		Engine(void);
 		void AddScene(Graphics::Scene * Scene);
 		void RemoveScene(Graphics::Scene * Scene);
 		void SetOnDestroyCallback(Callback1< void, Graphics::Node * > * Callback);

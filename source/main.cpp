@@ -2412,6 +2412,7 @@ void CreateWindow(void)
 	g_Window = XCreateWindow(g_Display, RootWindow(g_Display, VisualInfo->screen), 0, 0, static_cast< unsigned int >(g_Width), static_cast< unsigned int >(g_Height), 0, VisualInfo->depth, InputOutput, VisualInfo->visual, CWBorderPixel | CWColormap | CWEventMask/* | CWOverrideRedirect*/, &WindowAttributes);
 	
 	Atom wmDelete = XInternAtom(g_Display, "WM_DELETE_WINDOW", True);
+	
 	XSetWMProtocols(g_Display, g_Window, &wmDelete, 1);
 	XSetStandardProperties(g_Display, g_Window, "galactic-fall 0.2", "TITLE", None, NULL, 0, NULL);
 	// show the window
@@ -2422,6 +2423,7 @@ void CreateWindow(void)
 	//XGrabPointer(g_Display, g_Window, True, ButtonPressMask, GrabModeAsync, GrabModeAsync, g_Window, None, CurrentTime);
 	// don't allow key repeats
 	//XAutoRepeatOff(g_Display);
+	XFree(VisualInfo);
 	glXMakeCurrent(g_Display, g_Window, g_GLXContext);
 }
 
