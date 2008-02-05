@@ -17,6 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include <assert.h>
+
 #include <stdexcept>
 #include <iostream>
 #include <stack>
@@ -85,6 +87,25 @@ Element::Element(Document * Document, Element * Parent, const std::string & Name
 	}
 }
 
+Element::~Element(void)
+{
+	// delete it from the parent's child vector
+	if(m_Parent != 0)
+	{
+		std::vector< Element * >::iterator ParentsChildIterator(std::find(m_Parent->m_Childs.begin(), m_Parent->m_Childs.end(), this));
+		
+		assert(ParentsChildIterator != m_Parent->m_Childs.end());
+		m_Parent->m_Childs.erase(ParentsChildIterator);
+		m_Parent = 0;
+	}
+	while(m_Childs.empty() == false)
+	{
+		// erasing the child from the m_Childs vector will happen in the childs destructor
+		delete m_Childs.front();
+	}
+	m_Document = 0;
+}
+
 const std::string & Element::GetName(void) const
 {
 	return m_Name;
@@ -126,4 +147,10 @@ Document::Document(std::istream & Stream) :
 	DOMReader DOMReader(Stream, this, &m_DocumentElement);
 	
 	DOMReader.Parse();
+}
+
+Document::~Document(void)
+{
+	delete m_DocumentElement;
+	m_DocumentElement = 0;
 }

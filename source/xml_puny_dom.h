@@ -31,6 +31,7 @@ class Element
 {
 public:
 	Element(Document * Document, Element * Parent, const std::string & Name, const std::map< std::string, std::string > & Attributes);
+	~Element(void);
 	const Element * GetParent(void) const;
 	const std::string & GetName(void) const;
 	const std::map< std::string, std::string > & GetAttributes(void) const;
@@ -50,6 +51,7 @@ class Document
 {
 public:
 	Document(std::istream & Stream);
+	~Document(void);
 	const Element * GetDocumentElement(void) const;
 private:
 	Element * m_DocumentElement;
