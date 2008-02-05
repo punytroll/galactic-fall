@@ -188,6 +188,28 @@ Graphics::TextureManager * g_TextureManager(0);
 UserInterface * g_UserInterface(0);
 WeaponClassManager * g_WeaponClassManager(0);
 
+// global widget pointers
+Label * g_CreditsLabel(0);
+Label * g_CurrentSystemLabel(0);
+Label * g_FuelLabel(0);
+Label * g_HullLabel(0);
+Label * g_MessageLabel(0);
+Widget * g_MiniMap(0);
+MiniMapDisplay * g_MiniMapDisplay(0);
+Widget * g_Scanner(0);
+ScannerDisplay * g_ScannerDisplay(0);
+Label * g_SystemLabel(0);
+Label * g_TargetLabel(0);
+Label * g_TimeWarpLabel(0);
+
+// global dialog pointers
+PlanetDialog * g_PlanetDialog(0);
+MapDialog * g_MapDialog(0);
+MountWeaponDialog * g_MountWeaponDialog(0);
+LoadGameDialog * g_LoadGameDialog(0);
+SaveGameDialog * g_SaveGameDialog(0);
+TimingDialog * g_TimingDialog(0);
+
 int g_LastMotionX(-1);
 int g_LastMotionY(-1);
 int g_MouseButton(-1);
@@ -196,32 +218,14 @@ Reference< CommandMind > g_InputMind;
 Reference< Mind > g_OutputMind;
 float g_Width(0.0f);
 float g_Height(0.0f);
-Label * g_SystemLabel(0);
-Label * g_TimeWarpLabel(0);
-Label * g_TargetLabel(0);
-Label * g_CreditsLabel(0);
-Label * g_FuelLabel(0);
-Label * g_HullLabel(0);
-Label * g_MessageLabel(0);
-Label * g_CurrentSystemLabel(0);
 System * g_CurrentSystem;
 float g_TimeWarp(1.0f);
 bool g_Quit(false);
 bool g_Pause(false);
-PlanetDialog * g_PlanetDialog(0);
-MapDialog * g_MapDialog(0);
-MountWeaponDialog * g_MountWeaponDialog(0);
-LoadGameDialog * g_LoadGameDialog(0);
-SaveGameDialog * g_SaveGameDialog(0);
-TimingDialog * g_TimingDialog(0);
 TimeoutNotificationManager * g_GameTimeTimeoutNotifications;
 TimeoutNotification g_SpawnShipTimeoutNotification;
 TimeoutNotificationManager * g_RealTimeTimeoutNotifications;
 TimeoutNotification g_MessageTimeoutNotification;
-Widget * g_MiniMap(0);
-Widget * g_Scanner(0);
-MiniMapDisplay * g_MiniMapDisplay(0);
-ScannerDisplay * g_ScannerDisplay(0);
 Display * g_Display;
 GLXContext g_GLXContext;
 Window g_Window;
@@ -389,11 +393,66 @@ void CollectWidgets(void)
 	
 	while(DestroyedWidgets.size() > 0)
 	{
-		delete DestroyedWidgets.front();
+		Widget * DestroyedWidget(DestroyedWidgets.front());
+		
+		if(DestroyedWidget == g_CreditsLabel)
+		{
+			g_CreditsLabel = 0;
+		}
+		else if(DestroyedWidget == g_CurrentSystemLabel)
+		{
+			g_CurrentSystemLabel = 0;
+		}
+		else if(DestroyedWidget == g_HullLabel)
+		{
+			g_HullLabel = 0;
+		}
+		else if(DestroyedWidget == g_FuelLabel)
+		{
+			g_FuelLabel = 0;
+		}
+		else if(DestroyedWidget == g_MessageLabel)
+		{
+			g_MessageLabel = 0;
+		}
+		else if(DestroyedWidget == g_MiniMap)
+		{
+			g_MiniMap = 0;
+		}
+		else if(DestroyedWidget == g_MiniMapDisplay)
+		{
+			g_MiniMapDisplay = 0;
+		}
+		else if(DestroyedWidget == g_Scanner)
+		{
+			g_Scanner = 0;
+		}
+		else if(DestroyedWidget == g_ScannerDisplay)
+		{
+			g_ScannerDisplay = 0;
+		}
+		else if(DestroyedWidget == g_SystemLabel)
+		{
+			g_SystemLabel = 0;
+		}
+		else if(DestroyedWidget == g_TargetLabel)
+		{
+			g_TargetLabel = 0;
+		}
+		else if(DestroyedWidget == g_TimeWarpLabel)
+		{
+			g_TimeWarpLabel = 0;
+		}
+		delete DestroyedWidget;
 		DestroyedWidgets.pop_front();
 	}
+}
+
+void CollectWidgetsRecurrent(void)
+{
+	CollectWidgets();
 	/// TODO: Make the 5.0f seconds timeout configurable via the game configuration archive.
-	g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 5.0f, new FunctionCallback0< void >(CollectWidgets));
+	g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 5.0f, new FunctionCallback0< void >(CollectWidgetsRecurrent));
 }
 
 void DisplayUserInterface(void)
@@ -1141,7 +1200,8 @@ void TakeScreenShot(void)
 	glPopAttrib();
 	
 	// the file name with the current datetime in the format YYYYMMDD-HHMMSS
-	std::ofstream OutputFileStream(MakeTimeStampedFileName("screenshot", "tex").c_str());
+	std::string FileName(MakeTimeStampedFileName("screenshot", "tex"));
+	std::ofstream OutputFileStream(FileName.c_str());
 	
 	if(OutputFileStream)
 	{
@@ -1154,6 +1214,7 @@ void TakeScreenShot(void)
 		Value = htonl(2); // this is the tex image data format 2: RGB
 		OutputFileStream.write(reinterpret_cast< const char * >(&Value), 4);
 		OutputFileStream.write(reinterpret_cast< const char * >(ScreenshotData), static_cast< GLsizei >(g_Width) * static_cast< GLsizei >(g_Height) * 3);
+		SetMessage("Screenshot written to file \"" + FileName + "\".");
 	}
 }
 
@@ -2200,11 +2261,13 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				std::ofstream OutputFileStream(MakeTimeStampedFileName("object-report", "xml").c_str());
+				std::string FileName(MakeTimeStampedFileName("object-report", "xml"));
+				std::ofstream OutputFileStream(FileName.c_str());
 				XMLStream Out(OutputFileStream);
 				
 				Object::Dump(Out);
 				OutputFileStream << std::endl;
+				SetMessage("Object report written to file \"" + FileName + "\".");
 			}
 			
 			break;
@@ -2628,7 +2691,7 @@ int main(int argc, char ** argv)
 	assert(g_TargetLabel != 0);
 	assert(g_ScannerDisplay != 0);
 	// set first timeout for widget collector, it will reinsert itself on callback
-	g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 5.0f, Function(CollectWidgets));
+	g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 5.0f, Function(CollectWidgetsRecurrent));
 	// setting up the graphical environment
 	CreateWindow();
 	InitializeOpenGL();
@@ -2664,6 +2727,7 @@ int main(int argc, char ** argv)
 	delete g_CommodityClassManager;
 	delete g_GameTimeTimeoutNotifications;
 	delete g_GraphicsEngine;
+	delete g_MeshManager;
 	delete g_ModelManager;
 	delete g_ObjectFactory;
 	delete g_RealTimeTimeoutNotifications;
@@ -2674,6 +2738,7 @@ int main(int argc, char ** argv)
 	delete g_UserInterface;
 	delete g_WeaponClassManager;
 	delete g_ResourceReader;
+	CollectWidgets();
 	
 	return 0;
 }
