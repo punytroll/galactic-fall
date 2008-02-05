@@ -31,6 +31,7 @@ class UserInterface : public DestroyListener
 {
 public:
 	UserInterface(void);
+	virtual ~UserInterface(void);
 	void Draw(void) const;
 	bool MouseButton(int Button, int State, float X, float Y);
 	bool Key(const KeyEventInformation & KeyEventInformation);
