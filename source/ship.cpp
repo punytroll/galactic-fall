@@ -45,14 +45,15 @@ Ship::Ship(const ShipClass * ShipClass) :
 	m_AngularPosition(true),
 	m_CurrentSystem(0),
 	m_Fuel(0.0f),
-	m_Hull(m_ShipClass->GetHull()),
+	m_Hull(0.0f),
 	m_LinkedSystemTarget(0),
 	m_Refuel(false),
+	m_ShipClass(ShipClass),
 	m_TurnLeft(0.0f),
 	m_TurnRight(0.0f),
-	m_ShipClass(ShipClass),
 	m_Velocity(true)
 {
+	SetHull(m_ShipClass->GetHull());
 	SetRadialSize(m_ShipClass->GetModel()->GetRadialSize());
 	
 	const std::map< std::string, Slot * > & ShipClassSlots(GetShipClass()->GetSlots());
@@ -64,6 +65,15 @@ Ship::Ship(const ShipClass * ShipClass) :
 		NewSlot->SetName(SlotIterator->second->GetName());
 		NewSlot->SetPosition(SlotIterator->second->GetPosition());
 		NewSlot->SetOrientation(SlotIterator->second->GetOrientation());
+	}
+}
+
+Ship::~Ship(void)
+{
+	while(m_Slots.empty() == false)
+	{
+		delete m_Slots.begin()->second;
+		m_Slots.erase(m_Slots.begin());
 	}
 }
 

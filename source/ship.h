@@ -43,6 +43,7 @@ class Ship : public PhysicalObject
 {
 public:
 	Ship(const ShipClass * ShipClass);
+	virtual ~Ship(void);
 	void Update(float Seconds);
 	// controls
 	bool m_Jettison;
@@ -87,20 +88,20 @@ public:
 	bool Unmount(const std::string & SlotIdentifier);
 private:
 	// ship class
-	const ShipClass * m_ShipClass;
-	std::map< std::string, Slot * > m_Slots;
 	bool m_Accelerate;
+	Quaternion m_AngularPosition;
+	System * m_CurrentSystem;
+	Reference< Graphics::ParticleSystem > m_EngineGlowParticleSystem;
 	float m_Fuel;
 	float m_Hull;
+	System * m_LinkedSystemTarget;
 	bool m_Refuel;
+	const ShipClass * m_ShipClass;
+	std::map< std::string, Slot * > m_Slots;
+	Reference< PhysicalObject > m_Target;
 	float m_TurnLeft;
 	float m_TurnRight;
-	Reference< PhysicalObject > m_Target;
-	System * m_LinkedSystemTarget;
-	System * m_CurrentSystem;
 	Vector3f m_Velocity;
-	Quaternion m_AngularPosition;
-	Reference< Graphics::ParticleSystem > m_EngineGlowParticleSystem;
 };
 
 inline const Quaternion & Ship::GetAngularPosition(void) const
