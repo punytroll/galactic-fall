@@ -31,6 +31,12 @@ UserInterface::UserInterface(void) :
 	m_RootWidget->AddDestroyListener(this);
 }
 
+UserInterface::~UserInterface(void)
+{
+	m_RootWidget->Destroy();
+	m_RootWidget = 0;
+}
+
 void UserInterface::Draw(void) const
 {
 	if((m_RootWidget != 0) && (m_RootWidget->IsVisible() == true))
