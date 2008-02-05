@@ -348,7 +348,7 @@ void SetMessage(const std::string & Message)
 	{
 		g_MessageTimeoutNotification.Dismiss();
 	}
-	g_MessageTimeoutNotification = g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 2.0f, new FunctionCallback0< void >(HideMessage));
+	g_MessageTimeoutNotification = g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 2.0f, Function(HideMessage));
 }
 
 void DrawSelection(const Position * Position, float RadialSize)
@@ -452,7 +452,7 @@ void CollectWidgetsRecurrent(void)
 {
 	CollectWidgets();
 	/// TODO: Make the 5.0f seconds timeout configurable via the game configuration archive.
-	g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 5.0f, new FunctionCallback0< void >(CollectWidgetsRecurrent));
+	g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 5.0f, Function(CollectWidgetsRecurrent));
 }
 
 void DisplayUserInterface(void)
@@ -2590,6 +2590,8 @@ void DestroyWindow(void)
         glXDestroyContext(g_Display, g_GLXContext);
         g_GLXContext = 0;
     }
+	XDestroyWindow(g_Display, g_Window);
+	g_Window = 0;
     XCloseDisplay(g_Display);
 	g_Display = 0;
 }
@@ -2599,13 +2601,15 @@ int main(int argc, char ** argv)
 	// setup the random number generator for everyday use
 	srand(time(0));
 	// static initialization of data independent globals
+	Callback1< void, Graphics::Node * > * OnGraphicsNodeDestroyCallback(Function(OnGraphicsNodeDestroy));
+	
 	g_MainPerspective.SetNearClippingPlane(1.0f);
 	g_MainPerspective.SetFarClippingPlane(1000.f);
 	g_AssetClassManager = new AssetClassManager();
 	g_CommodityClassManager = new CommodityClassManager();
 	g_Galaxy = 0;
 	g_GraphicsEngine = new Graphics::Engine();
-	g_GraphicsEngine->SetOnDestroyCallback(Function(OnGraphicsNodeDestroy));
+	g_GraphicsEngine->SetOnDestroyCallback(OnGraphicsNodeDestroyCallback);
 	g_MainScene = 0;
 	g_MeshManager = new Graphics::MeshManager();
 	g_ModelManager = new Graphics::ModelManager();
@@ -2738,6 +2742,7 @@ int main(int argc, char ** argv)
 	delete g_UserInterface;
 	delete g_WeaponClassManager;
 	delete g_ResourceReader;
+	delete OnGraphicsNodeDestroyCallback;
 	CollectWidgets();
 	
 	return 0;
