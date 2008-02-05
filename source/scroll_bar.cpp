@@ -23,7 +23,8 @@
 #include "scroll_position_changed_listener.h"
 
 ScrollBar::ScrollBar(Widget * SupWidget, ScrollBar::Alignment Alignment) :
-	Widget(SupWidget)
+	Widget(SupWidget),
+	m_CurrentPosition(0.0f)
 {
 	SetBackgroundColor(Color(0.23f, 0.23f, 0.23f, 1.0f));
 	m_LessButton = new Button(this);
