@@ -17,13 +17,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include <float.h>
+
 #include <list>
 
+#include "asset_class.h"
 #include "character.h"
 #include "game_time.h"
 #include "goals.h"
 #include "math.h"
 #include "mind.h"
+#include "planet.h"
 #include "ship.h"
 #include "string_cast.h"
 #include "system.h"
@@ -151,6 +155,12 @@ void GoalFighterThink::Process(void)
 	
 	Goal * SubGoal(GetSubGoals().front());
 	
+	if((SubGoal->GetName() != "refuel") && (GetMind()->GetCharacter()->GetShip()->GetFuel() / GetMind()->GetCharacter()->GetShip()->GetFuelCapacity() < 0.25f))
+	{
+		AddContent(new GoalRefuel(GetMind()));
+		// replace the cached front SubGoal with the new one
+		SubGoal = GetSubGoals().front();
+	}
 	if(SubGoal->GetState() == Goal::INACTIVE)
 	{
 		SubGoal->Activate();
@@ -163,7 +173,11 @@ void GoalFighterThink::Process(void)
 		SubGoal->Terminate();
 		RemoveContent(SubGoal);
 		// other actions may depend on the SubGoal variable
-		SetState(Goal::INACTIVE);
+		if(SubGoal->GetName() != "refuel")
+		{
+			assert(GetSubGoals().empty() == true);
+			SetState(Goal::INACTIVE);
+		}
 		// now destroy the SubGoal
 		SubGoal->Destroy();
 		delete SubGoal;
@@ -174,7 +188,11 @@ void GoalFighterThink::Process(void)
 		SubGoal->Terminate();
 		RemoveContent(SubGoal);
 		// other actions may depend on the SubGoal variable
-		AddContent(new GoalFlyOverRandomPoint(GetMind()));
+		// if a refuel fails, just do what you did before
+		if(SubGoal->GetName() != "refuel")
+		{
+			AddContent(new GoalFlyOverRandomPoint(GetMind()));
+		}
 		// now destroy the SubGoal
 		SubGoal->Destroy();
 		delete SubGoal;
@@ -327,4 +345,355 @@ void GoalDestroyTarget::Terminate(void)
 {
 	GetMind()->GetCharacter()->GetShip()->SetFire(false);
 	m_FlyInDirection->Terminate();
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// GoalRefuel                                                                                    //
+///////////////////////////////////////////////////////////////////////////////////////////////////
+GoalRefuel::GoalRefuel(GoalMind * GoalMind) :
+	Goal(GoalMind, "refuel")
+{
+	SetObjectIdentifier("::goal(refuel)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
+}
+
+void GoalRefuel::Activate(void)
+{
+	assert(GetSubGoals().empty() == true);
+	AddContent(new GoalWait(GetMind(), GetRandomFloat(2.0f, 5.0f)));
+	AddContent(new GoalBuyFuel(GetMind()));
+	AddContent(new GoalLandOnPlanet(GetMind()));
+	AddContent(new GoalStopAtTarget(GetMind()));
+	AddContent(new GoalSelectNearestPlanet(GetMind()));
+	SetState(Goal::ACTIVE);
+}
+
+void GoalRefuel::Process(void)
+{
+	assert(GetState() == Goal::ACTIVE);
+	assert(GetSubGoals().empty() == false);
+	
+	Goal * SubGoal(GetSubGoals().front());
+	
+	if(SubGoal->GetState() == Goal::INACTIVE)
+	{
+		SubGoal->Activate();
+	}
+	assert(SubGoal->GetState() == Goal::ACTIVE);
+	SubGoal->Process();
+	if(SubGoal->GetState() == Goal::COMPLETED)
+	{
+		// terminate and remove sub goal
+		SubGoal->Terminate();
+		RemoveContent(SubGoal);
+		// other actions may depend on the SubGoal variable
+		if(SubGoal->GetName() == "select_nearest_planet")
+		{
+			m_PlanetToRefuelOn = const_cast< Planet * >(dynamic_cast< const Planet * >(GetMind()->GetCharacter()->GetShip()->GetTarget().Get()));
+		}
+		if(SubGoal->GetName() == "land_on_planet")
+		{
+			assert(GetSubGoals().empty() == false);
+			
+			GoalBuyFuel * NextSubGoal(dynamic_cast< GoalBuyFuel * >(GetSubGoals().front()));
+			
+			assert(NextSubGoal != 0);
+			NextSubGoal->SetPlanet(m_PlanetToRefuelOn);
+		}
+		if(SubGoal->GetName() == "wait")
+		{
+			SetState(Goal::COMPLETED);
+		}
+		// now destroy the SubGoal
+		SubGoal->Destroy();
+		delete SubGoal;
+	}
+	else if(SubGoal->GetState() == Goal::FAILED)
+	{
+		// terminate and remove sub goal
+		SubGoal->Terminate();
+		RemoveContent(SubGoal);
+		// other actions may depend on the SubGoal variable
+		SetState(Goal::FAILED);
+		// now destroy the SubGoal
+		SubGoal->Destroy();
+		delete SubGoal;
+	}
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// GoalSelectNearestPlanet                                                                       //
+///////////////////////////////////////////////////////////////////////////////////////////////////
+GoalSelectNearestPlanet::GoalSelectNearestPlanet(GoalMind * GoalMind) :
+	Goal(GoalMind, "select_nearest_planet")
+{
+	SetObjectIdentifier("::goal(select_nearest_planet)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
+}
+
+void GoalSelectNearestPlanet::Activate(void)
+{
+	assert(GetSubGoals().empty() == true);
+	SetState(Goal::ACTIVE);
+}
+
+void GoalSelectNearestPlanet::Process(void)
+{
+	assert(GetState() == Goal::ACTIVE);
+	
+	const std::vector< Planet * > & Planets(GetMind()->GetCharacter()->GetShip()->GetCurrentSystem()->GetPlanets());
+	float MinimumDistance(FLT_MAX);
+	Planet * NearestPlanet(0);
+	
+	for(std::vector< Planet * >::const_iterator PlanetIterator = Planets.begin(); PlanetIterator != Planets.end(); ++PlanetIterator)
+	{
+		float Distance(((*PlanetIterator)->GetPosition() - GetMind()->GetCharacter()->GetShip()->GetPosition()).SquaredLength());
+		
+		if(Distance < MinimumDistance)
+		{
+			NearestPlanet = *PlanetIterator;
+			MinimumDistance = Distance;
+		}
+	}
+	if(NearestPlanet != 0)
+	{
+		GetMind()->GetCharacter()->GetShip()->SetTarget(NearestPlanet->GetReference());
+		SetState(Goal::COMPLETED);
+	}
+	else
+	{
+		SetState(Goal::FAILED);
+	}
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// GoalStopAtTarget                                                                              //
+///////////////////////////////////////////////////////////////////////////////////////////////////
+GoalStopAtTarget::GoalStopAtTarget(GoalMind * GoalMind) :
+	Goal(GoalMind, "stop_at_target")
+{
+	SetObjectIdentifier("::goal(stop_at_target)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
+}
+
+void GoalStopAtTarget::Activate(void)
+{
+	assert(GetSubGoals().empty() == true);
+	AddContent(new GoalFullStop(GetMind()));
+	AddContent(new GoalApproachTarget(GetMind()));
+	SetState(Goal::ACTIVE);
+}
+
+void GoalStopAtTarget::Process(void)
+{
+	assert(GetState() == Goal::ACTIVE);
+	assert(GetSubGoals().empty() == false);
+	
+	Goal * SubGoal(GetSubGoals().front());
+	
+	if(SubGoal->GetState() == Goal::INACTIVE)
+	{
+		SubGoal->Activate();
+	}
+	assert(SubGoal->GetState() == Goal::ACTIVE);
+	SubGoal->Process();
+	if(SubGoal->GetState() == Goal::COMPLETED)
+	{
+		// terminate and remove sub goal
+		SubGoal->Terminate();
+		RemoveContent(SubGoal);
+		// other actions may depend on the SubGoal variable
+		if(SubGoal->GetName() == "full_stop")
+		{
+			SetState(Goal::COMPLETED);
+		}
+		// now destroy the SubGoal
+		SubGoal->Destroy();
+		delete SubGoal;
+	}
+	else if(SubGoal->GetState() == Goal::FAILED)
+	{
+		// terminate and remove sub goal
+		SubGoal->Terminate();
+		RemoveContent(SubGoal);
+		// other actions may depend on the SubGoal variable
+		SetState(Goal::FAILED);
+		// now destroy the SubGoal
+		SubGoal->Destroy();
+		delete SubGoal;
+	}
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// GoalLandOnPlanet                                                                              //
+///////////////////////////////////////////////////////////////////////////////////////////////////
+GoalLandOnPlanet::GoalLandOnPlanet(GoalMind * GoalMind) :
+	Goal(GoalMind, "land_on_planet")
+{
+	SetObjectIdentifier("::goal(land_on_planet)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
+}
+
+void GoalLandOnPlanet::Activate(void)
+{
+	assert(GetSubGoals().empty() == true);
+	SetState(Goal::ACTIVE);
+}
+
+void GoalLandOnPlanet::Process(void)
+{
+	assert(GetState() == Goal::ACTIVE);
+	GetMind()->GetCharacter()->GetShip()->m_Land = true;
+	SetState(Goal::COMPLETED);
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// GoalBuyFuel                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////
+GoalBuyFuel::GoalBuyFuel(GoalMind * GoalMind) :
+	Goal(GoalMind, "buy_fuel")
+{
+	SetObjectIdentifier("::goal(buy_fuel)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
+}
+
+void GoalBuyFuel::Activate(void)
+{
+	assert(GetSubGoals().empty() == true);
+	SetState(Goal::ACTIVE);
+}
+
+void GoalBuyFuel::Process(void)
+{
+	assert(GetState() == Goal::ACTIVE);
+	
+	const std::vector< PlanetAssetClass * > & PlanetAssetClasses(m_Planet->GetPlanetAssetClasses());
+	
+	for(std::vector< PlanetAssetClass * >::const_iterator PlanetAssetClassIterator = PlanetAssetClasses.begin(); PlanetAssetClassIterator != PlanetAssetClasses.end(); ++PlanetAssetClassIterator)
+	{
+		if((*PlanetAssetClassIterator)->GetAssetClass()->GetIdentifier() == "fuel")
+		{
+			u4byte FuelPrice((*PlanetAssetClassIterator)->GetPrice());
+			float CanBuy(GetMind()->GetCharacter()->GetCredits() / FuelPrice);
+			float Need(GetMind()->GetCharacter()->GetShip()->GetFuelCapacity() - GetMind()->GetCharacter()->GetShip()->GetFuel());
+			float Buy((CanBuy > Need) ? (Need) : (CanBuy));
+			
+			GetMind()->GetCharacter()->GetShip()->SetFuel(GetMind()->GetCharacter()->GetShip()->GetFuel() + Buy);
+			GetMind()->GetCharacter()->RemoveCredits(static_cast< u4byte >(Buy * FuelPrice));
+			SetState(Goal::COMPLETED);
+		}
+		else
+		{
+			SetState(Goal::FAILED);
+		}
+	}
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// GoalApproachTarget                                                                            //
+///////////////////////////////////////////////////////////////////////////////////////////////////
+GoalApproachTarget::GoalApproachTarget(GoalMind * GoalMind) :
+	Goal(GoalMind, "approach_target")
+{
+	SetObjectIdentifier("::goal(approach_target)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
+}
+
+void GoalApproachTarget::Activate(void)
+{
+	assert(GetSubGoals().empty() == true);
+	m_FlyInDirection = new GoalFlyInDirection(GetMind());
+	AddContent(m_FlyInDirection);
+	m_FlyInDirection->Activate();
+	SetState(Goal::ACTIVE);
+}
+
+void GoalApproachTarget::Process(void)
+{
+	assert(GetState() == Goal::ACTIVE);
+	
+	Vector3f ToDestination(GetMind()->GetCharacter()->GetShip()->GetTarget()->GetPosition() - GetMind()->GetCharacter()->GetShip()->GetPosition());
+	float DistanceSquared(ToDestination.SquaredLength());
+	float DistanceNeededToBrake(GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetMaximumSpeed() * ((M_PI / GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetTurnSpeed()) + ((GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetMaximumSpeed() / GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetForwardThrust()) / 2.0f)));
+	
+	// braking to do a full stop takes time (turning + accelerating)
+	//  - turning: the ship will fly with maximum velocity towards the target
+	//  - accelerating: the ship will fly half distance that it could with maximum velocity towards the target
+	if(DistanceSquared > DistanceNeededToBrake * DistanceNeededToBrake)
+	{
+		m_FlyInDirection->SetDirection(ToDestination / sqrt(DistanceSquared));
+		assert(GetSubGoals().size() == 1);
+		assert(GetSubGoals().front()->GetState() == Goal::ACTIVE);
+		GetSubGoals().front()->Process();
+	}
+	else
+	{
+		SetState(Goal::COMPLETED);
+	}
+}
+
+void GoalApproachTarget::Terminate(void)
+{
+	m_FlyInDirection->Terminate();
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// GoalFullStop                                                                                  //
+///////////////////////////////////////////////////////////////////////////////////////////////////
+GoalFullStop::GoalFullStop(GoalMind * GoalMind) :
+	Goal(GoalMind, "full_stop")
+{
+	SetObjectIdentifier("::goal(full_stop)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
+}
+
+void GoalFullStop::Activate(void)
+{
+	assert(GetSubGoals().empty() == true);
+	m_FlyInDirection = new GoalFlyInDirection(GetMind());
+	AddContent(m_FlyInDirection);
+	m_FlyInDirection->Activate();
+	SetState(Goal::ACTIVE);
+}
+
+void GoalFullStop::Process(void)
+{
+	assert(GetState() == Goal::ACTIVE);
+	
+	float SpeedSquared(GetMind()->GetCharacter()->GetShip()->GetVelocity().SquaredLength());
+	
+	if(SpeedSquared > 2.0f)
+	{
+		m_FlyInDirection->SetDirection(-GetMind()->GetCharacter()->GetShip()->GetVelocity().Normalized());
+		assert(GetSubGoals().size() == 1);
+		assert(GetSubGoals().front()->GetState() == Goal::ACTIVE);
+		GetSubGoals().front()->Process();
+	}
+	else
+	{
+		SetState(Goal::COMPLETED);
+	}
+}
+
+void GoalFullStop::Terminate(void)
+{
+	m_FlyInDirection->Terminate();
+	GetMind()->GetCharacter()->GetShip()->SetAccelerate(false);
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// GoalWait                                                                                      //
+///////////////////////////////////////////////////////////////////////////////////////////////////
+GoalWait::GoalWait(GoalMind * GoalMind, float Seconds) :
+	Goal(GoalMind, "wait"),
+	m_SecondsToWait(Seconds)
+{
+	SetObjectIdentifier("::goal(wait)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")::seconds_to_wait(" + to_string_cast(m_SecondsToWait, 6) + ")");
+}
+void GoalWait::Activate(void)
+{
+	assert(GetSubGoals().empty() == true);
+	m_TimeToLeave = GameTime::Get() + m_SecondsToWait;
+	SetState(Goal::ACTIVE);
+}
+
+void GoalWait::Process(void)
+{
+	if(GameTime::Get() >= m_TimeToLeave)
+	{
+		SetState(Goal::COMPLETED);
+	}
 }

@@ -23,6 +23,8 @@
 #include "goal.h"
 #include "math/vector3f.h"
 
+class Planet;
+
 class GoalFlyInDirection : public Goal
 {
 public:
@@ -84,5 +86,91 @@ public:
 private:
 	GoalFlyInDirection * m_FlyInDirection;
 };
+
+class GoalRefuel : public Goal
+{
+public:
+	GoalRefuel(GoalMind * GoalMind);
+	virtual void Activate(void);
+	virtual void Process(void);
+private:
+	Planet * m_PlanetToRefuelOn;
+};
+
+class GoalSelectNearestPlanet : public Goal
+{
+public:
+	GoalSelectNearestPlanet(GoalMind * GoalMind);
+	virtual void Activate(void);
+	virtual void Process(void);
+};
+
+class GoalStopAtTarget : public Goal
+{
+public:
+	GoalStopAtTarget(GoalMind * GoalMind);
+	virtual void Activate(void);
+	virtual void Process(void);
+};
+
+class GoalLandOnPlanet : public Goal
+{
+public:
+	GoalLandOnPlanet(GoalMind * GoalMind);
+	virtual void Activate(void);
+	virtual void Process(void);
+};
+
+class GoalBuyFuel : public Goal
+{
+public:
+	GoalBuyFuel(GoalMind * GoalMind);
+	// setters
+	void SetPlanet(Planet * Planet);
+	virtual void Activate(void);
+	virtual void Process(void);
+private:
+	Planet * m_Planet;
+};
+
+class GoalApproachTarget : public Goal
+{
+public:
+	GoalApproachTarget(GoalMind * GoalMind);
+	virtual void Activate(void);
+	virtual void Process(void);
+	virtual void Terminate(void);
+private:
+	GoalFlyInDirection * m_FlyInDirection;
+};
+
+class GoalFullStop : public Goal
+{
+public:
+	GoalFullStop(GoalMind * GoalMind);
+	virtual void Activate(void);
+	virtual void Process(void);
+	virtual void Terminate(void);
+private:
+	GoalFlyInDirection * m_FlyInDirection;
+};
+
+class GoalWait : public Goal
+{
+public:
+	GoalWait(GoalMind * GoalMind, float Seconds);
+	virtual void Activate(void);
+	virtual void Process(void);
+private:
+	float m_SecondsToWait;
+	float m_TimeToLeave;
+};
+
+// inline implementations for all goals
+
+inline void GoalBuyFuel::SetPlanet(Planet * Planet)
+{
+	m_Planet = Planet;
+}
 
 #endif
