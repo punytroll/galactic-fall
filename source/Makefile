@@ -225,6 +225,10 @@ math_vector4f_h = \
 	$(math_details_h) \
 	$(math_quaternion_h)
 
+message_h = \
+	message.h \
+	$(referencing_h)
+
 mind_h = \
 	mind.h \
 	$(object_h)
@@ -503,7 +507,7 @@ button.o: button.cpp $(button_h) $(clicked_listener_h) $(color_h) $(globals_h)
 camera.o: camera.cpp $(camera_h) $(position_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-character.o: character.cpp $(character_h) $(map_knowledge_h) $(mind_h)
+character.o: character.cpp $(character_h) $(map_knowledge_h) $(message_h) $(mind_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 clicked_listener.o: clicked_listener.cpp $(clicked_listener_h)
@@ -512,7 +516,7 @@ clicked_listener.o: clicked_listener.cpp $(clicked_listener_h)
 color.o: color.cpp $(color_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-command_mind.o: command_mind.cpp $(commodity_h) $(character_h) $(command_mind_h) $(planet_h) $(ship_h) $(system_h)
+command_mind.o: command_mind.cpp $(commodity_h) $(character_h) $(command_mind_h) $(message_h) $(planet_h) $(ship_h) $(system_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 commodity.o: commodity.cpp $(commodity_h) $(color_h) $(commodity_class_h) $(graphics_model_h)
@@ -599,13 +603,16 @@ load_game_dialog.o: load_game_dialog.cpp $(button_h) $(globals_h) $(key_event_in
 local_file_data_channel.o: local_file_data_channel.cpp $(local_file_data_channel_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags libarxx` -c $< -o $@
 
-main.o: main.cpp $(arx_reading_h) $(asset_class_h) $(asset_class_manager_h) $(callbacks_h) $(camera_h) $(commodity_h) $(character_h) $(color_h) $(command_mind_h) $(destroy_listener_h) $(galaxy_h) $(game_time_h) $(goals_h) $(graphics_engine_h) $(graphics_model_h) $(graphics_model_manager_h) $(graphics_model_object_h) $(graphics_particle_system_h) $(graphics_scene_h) $(graphics_texture_manager_h) $(key_event_information_h) $(label_h) $(load_game_dialog_h) $(map_dialog_h) $(map_knowledge_h) $(math_h) $(mind_h) $(mini_map_display_h) $(mount_weapon_dialog_h) $(object_factory_h) $(perspective_h) $(planet_h) $(planet_dialog_h) $(real_time_h) $(save_game_dialog_h) $(scanner_display_h) $(ship_h) $(ship_class_h) $(ship_class_manager_h) $(shot_h) $(slot_h) $(slot_class_manager_h) $(star_h) $(star_map_display_h) $(state_machine_h) $(states_h) $(string_cast_h) $(system_h) $(timeout_notifications_h) $(timing_dialog_h) $(user_interface_h) $(visualizations_h) $(weapon_h) $(weapon_class_h) $(weapon_class_manager_h) $(widget_h) $(xml_puny_dom_h) $(xml_stream_h)
+main.o: main.cpp $(arx_reading_h) $(asset_class_h) $(asset_class_manager_h) $(callbacks_h) $(camera_h) $(commodity_h) $(character_h) $(color_h) $(command_mind_h) $(destroy_listener_h) $(galaxy_h) $(game_time_h) $(goals_h) $(graphics_engine_h) $(graphics_model_h) $(graphics_model_manager_h) $(graphics_model_object_h) $(graphics_particle_system_h) $(graphics_scene_h) $(graphics_texture_manager_h) $(key_event_information_h) $(label_h) $(load_game_dialog_h) $(map_dialog_h) $(map_knowledge_h) $(math_h) $(message_h) $(mind_h) $(mini_map_display_h) $(mount_weapon_dialog_h) $(object_factory_h) $(perspective_h) $(planet_h) $(planet_dialog_h) $(real_time_h) $(save_game_dialog_h) $(scanner_display_h) $(ship_h) $(ship_class_h) $(ship_class_manager_h) $(shot_h) $(slot_h) $(slot_class_manager_h) $(star_h) $(star_map_display_h) $(state_machine_h) $(states_h) $(string_cast_h) $(system_h) $(timeout_notifications_h) $(timing_dialog_h) $(user_interface_h) $(visualizations_h) $(weapon_h) $(weapon_class_h) $(weapon_class_manager_h) $(widget_h) $(xml_puny_dom_h) $(xml_stream_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 map_dialog.o: map_dialog.cpp $(button_h) $(globals_h) $(key_event_information_h) $(label) $(map_dialog_h) $(star_map_display_h) $(system_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 map_knowledge.o: map_knowledge.cpp $(map_knowledge_h) $(system.h)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+message.o: message.cpp $(message_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 mind.o: mind.cpp $(goal_h) $(mind_h) $(state_machine_h)
@@ -623,7 +630,7 @@ mouse_button_listener.o: mouse_button_listener.cpp $(mouse_button_listener_h)
 mouse_motion_listener.o: mouse_motion_listener.cpp $(mouse_motion_listener_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-object.o: object.cpp $(graphics_node_h) $(object_h) $(real_time_h) $(string_cast_h) $(xml_stream_h)
+object.o: object.cpp $(graphics_node_h) $(message_h) $(object_h) $(real_time_h) $(string_cast_h) $(xml_stream_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 object_factory.o: object_factory.cpp $(commodity_h) $(commodity_class_h) $(commodity_class_manager_h) $(globals_h) $(object_factory_h) $(ship_h) $(ship_class_manager_h) $(weapon_h) $(weapon_class_h) $(weapon_class_manager_h)

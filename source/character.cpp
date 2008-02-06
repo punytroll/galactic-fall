@@ -19,6 +19,7 @@
 
 #include "character.h"
 #include "map_knowledge.h"
+#include "message.h"
 #include "mind.h"
 
 std::set< Character * > Character::m_Characters;
@@ -29,6 +30,7 @@ Character::Character(void) :
 	m_Ship(0)
 {
 	m_Characters.insert(this);
+	SetAcceptMessages(true);
 }
 
 Character::~Character(void)
@@ -40,6 +42,19 @@ Character::~Character(void)
 
 void Character::Update(void)
 {
+	// forward messages to the active mind
+	Message * Message(0);
+	
+	// take responsibility for the popped message
+	while((Message = PopMessage()) != 0)
+	{
+		if(m_Minds.empty() == false)
+		{
+			m_Minds.front()->HandleMessage(Message);
+		}
+		delete Message;
+	}
+	// let the mind act
 	if(m_Minds.empty() == false)
 	{
 		m_Minds.front()->Update();

@@ -29,6 +29,7 @@ class System;
 class CommandMind : public Mind
 {
 public:
+	virtual void HandleMessage(Message * Message);
 	virtual void Update(void);
 	
 	// commands

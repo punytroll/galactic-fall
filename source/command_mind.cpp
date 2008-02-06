@@ -26,6 +26,11 @@
 #include "ship.h"
 #include "system.h"
 
+void CommandMind::HandleMessage(Message * Message)
+{
+	// intentionally left empty
+}
+
 void CommandMind::Update(void)
 {
 	// intentionally left empty
