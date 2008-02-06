@@ -23,6 +23,7 @@
 #include "object.h"
 
 class Character;
+class Message;
 
 /**
  * A Mind is the aggregation of the internal state of a character.
@@ -33,8 +34,11 @@ class Mind : public Object
 {
 public:
 	void SetCharacter(Character * Character);
+	// getters
 	Character * GetCharacter(void);
 	const Character * GetCharacter(void) const;
+	// actors
+	virtual void HandleMessage(Message * Message) = 0;
 	virtual void Update(void) = 0;
 protected:
 	/// no internal state yet
@@ -63,9 +67,11 @@ class StateMachineMind : public Mind
 public:
 	StateMachineMind(void);
 	~StateMachineMind(void);
-	virtual void Update(void);
 	// getters
 	StateMachine * GetStateMachine(void);
+	// actors
+	virtual void HandleMessage(Message * Message);
+	virtual void Update(void);
 private:
 	StateMachine * m_StateMachine;
 };
@@ -85,6 +91,7 @@ public:
 	// getters
 	Goal * GetGoal(void) const;
 	// actors
+	virtual void HandleMessage(Message * Message);
 	virtual void Update(void);
 protected:
 	virtual bool IsAddingAllowed(Object * Content);

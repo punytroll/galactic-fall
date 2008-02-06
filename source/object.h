@@ -20,6 +20,7 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 
+#include <deque>
 #include <map>
 #include <ostream>
 #include <set>
@@ -27,6 +28,7 @@
 
 #include "referencing.h"
 
+class Message;
 class XMLStream;
 
 namespace Graphics
@@ -40,6 +42,7 @@ public:
 	Object(void);
 	virtual ~Object(void);
 	// setters
+	void SetAcceptMessages(bool AcceptMessages);
 	void SetObjectIdentifier(const std::string & ObjectIdentifier);
 	// getters
 	Object * GetContainer(void);
@@ -50,6 +53,8 @@ public:
 	Graphics::Node * GetVisualization(void);
 	// modifiers
 	void Destroy(void);
+	Message * PopMessage(void);
+	void PushMessage(Message * Message);
 	bool AddContent(Object * Content);
 	bool RemoveContent(Object * Content);
 	void GenerateObjectIdentifier(void);
@@ -67,6 +72,7 @@ protected:
 	virtual void OnContentAdded(Object * Content);
 	virtual void OnContentRemoved(Object * Content);
 private:
+	std::deque< Message * > * m_Messages;
 	std::string m_ObjectIdentifier;
 	Reference< Object > m_Reference;
 	Object * m_Container;

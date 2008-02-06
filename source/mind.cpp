@@ -34,6 +34,11 @@ StateMachineMind::~StateMachineMind(void)
 	m_StateMachine = 0;
 }
 
+void StateMachineMind::HandleMessage(Message * Message)
+{
+	assert(false);
+}
+
 void StateMachineMind::Update(void)
 {
 	m_StateMachine->Update();
@@ -46,6 +51,11 @@ GoalMind::GoalMind(void) :
 
 GoalMind::~GoalMind(void)
 {
+}
+
+void GoalMind::HandleMessage(Message * Message)
+{
+	assert(false);
 }
 
 void GoalMind::Update(void)

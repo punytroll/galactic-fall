@@ -20,6 +20,7 @@
 #include <stdexcept>
 
 #include "graphics_node.h"
+#include "message.h"
 #include "object.h"
 #include "real_time.h"
 #include "string_cast.h"
@@ -30,6 +31,7 @@ std::map< std::string, Object * > Object::m_IdentifiedObjects;
 std::map< Graphics::Node *, Object * > Object::m_VisualizationBackReferences;
 
 Object::Object(void) :
+	m_Messages(0),
 	m_Reference(*this),
 	m_Container(0),
 	m_Visualization(0)
@@ -47,6 +49,31 @@ Object::~Object(void)
 	m_Reference.Invalidate();
 	SetObjectIdentifier("");
 	m_Objects.erase(m_Objects.find(this));
+}
+
+void Object::SetAcceptMessages(bool AcceptMessages)
+{
+	// ask for no-op
+	if(AcceptMessages != (m_Messages != 0))
+	{
+		if(AcceptMessages == true)
+		{
+			assert(m_Messages == 0);
+			m_Messages = new std::deque< Message * >();
+		}
+		else
+		{
+			assert(m_Messages != 0);
+			// this object has the responsibility for the Messages in the queue
+			while(m_Messages->empty() == false)
+			{
+				delete m_Messages->front();
+				m_Messages->pop_front();
+			}
+			delete m_Messages;
+			m_Messages = 0;
+		}
+	}
 }
 
 void Object::SetObjectIdentifier(const std::string & ObjectIdentifier)
@@ -98,6 +125,31 @@ void Object::Destroy(void)
 		Content->Destroy();
 		delete Content;
 	}
+}
+
+Message * Object::PopMessage(void)
+{
+	assert(m_Messages != 0);
+	if(m_Messages->empty() == true)
+	{
+		return 0;
+	}
+	else
+	{
+		// this will pass responsibility to the caller
+		Message * Message(m_Messages->front());
+		
+		m_Messages->pop_front();
+		
+		return Message;
+	}
+}
+
+void Object::PushMessage(Message * Message)
+{
+	assert(m_Messages != 0);
+	// taking over responsibility for Message
+	m_Messages->push_back(Message);
 }
 
 bool Object::AddContent(Object * Content)
