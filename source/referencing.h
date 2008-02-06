@@ -90,6 +90,15 @@ public:
 		m_Core->Reference();
 	}
 	
+	Reference(const Reference< Type > & Reference) :
+		m_Core(Reference.m_Core)
+	{
+		if(m_Core != 0)
+		{
+			m_Core->Reference();
+		}
+	}
+	
 	template < typename OtherType >
 	Reference(const Reference< OtherType > & Reference) :
 		m_Core(Reference.m_Core)
