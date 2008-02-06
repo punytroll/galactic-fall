@@ -231,6 +231,7 @@ GLXContext g_GLXContext;
 Window g_Window;
 Perspective g_MainPerspective;
 bool g_EchoEvents(false);
+bool g_EchoResizes(false);
 bool g_DumpEndReport(false);
 bool g_TakeScreenShot(false);
 SystemStatistics * g_SystemStatistics;
@@ -891,6 +892,10 @@ void RenderSystem(System * System)
 
 void Resize(void)
 {
+	if(g_EchoResizes == true)
+	{
+		std::cout << "Resize:         width = " << g_Width << " height = " << g_Height << std::endl;
+	}
 	if(g_Height == 0)
 	{
 		g_Height = 1;
@@ -2647,6 +2652,10 @@ int main(int argc, char ** argv)
 		else if(Arguments[Index] == "--echo-events")
 		{
 			g_EchoEvents = true;
+		}
+		else if(Arguments[Index] == "--echo-resizes")
+		{
+			g_EchoResizes = true;
 		}
 	}
 	
