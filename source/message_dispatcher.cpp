@@ -50,5 +50,5 @@ void MessageDispatcher::DispatchMessages(void)
 		}
 		m_MessageQueue.pop_front();
 	}
-	g_SystemStatistics->SetDispatchedMessagesPerFrame(DispatchedMessages);
+	g_SystemStatistics->SetDispatchedMessagesThisFrame(DispatchedMessages);
 }

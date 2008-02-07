@@ -678,14 +678,7 @@ void UpdateUserInterface(void)
 {
 	if(g_TimingDialog != 0)
 	{
-		g_TimingDialog->UpdateFramesPerSecond(g_SystemStatistics->GetFramesPerSecond());
-		g_TimingDialog->UpdateMessagingSecondsPerFrame(g_SystemStatistics->GetMessagingSecondsPerFrame());
-		g_TimingDialog->UpdateDispatchedMessagesPerFrame(g_SystemStatistics->GetDispatchedMessagesPerFrame());
-		g_TimingDialog->UpdateAISecondsPerFrame(g_SystemStatistics->GetAISecondsPerFrame());
-		g_TimingDialog->UpdateGraphicsSecondsPerFrame(g_SystemStatistics->GetGraphicsSecondsPerFrame());
-		g_TimingDialog->UpdatePhysicsSecondsPerFrame(g_SystemStatistics->GetPhysicsSecondsPerFrame());
-		g_TimingDialog->UpdateTotalSecondsPerFrame(g_SystemStatistics->GetTotalSecondsPerFrame());
-		g_TimingDialog->UpdateTotalSecondsPerFrameProcessing(g_SystemStatistics->GetTotalSecondsPerFrameProcessing());
+		g_TimingDialog->Update();
 	}
 	if(g_Galaxy != 0)
 	{
@@ -1238,12 +1231,12 @@ void GameFrame(void)
 	double FrameProcessingTimeEnd(RealTime::Get());
 	double FrameProcessingTimeDelta(FrameProcessingTimeEnd - FrameProcessingTimeBegin);
 	
-	g_SystemStatistics->SetMessagingSecondsPerFrame(MessagingTimeDelta);
-	g_SystemStatistics->SetAISecondsPerFrame(AITimeDelta);
-	g_SystemStatistics->SetGraphicsSecondsPerFrame(GraphicsTimeDelta);
-	g_SystemStatistics->SetPhysicsSecondsPerFrame(PhysicsTimeDelta);
-	g_SystemStatistics->SetTotalSecondsPerFrame(FrameTimeDelta);
-	g_SystemStatistics->SetTotalSecondsPerFrameProcessing(FrameProcessingTimeDelta);
+	g_SystemStatistics->SetAISecondsThisFrame(AITimeDelta);
+	g_SystemStatistics->SetGraphicsSecondsThisFrame(GraphicsTimeDelta);
+	g_SystemStatistics->SetFrameToFrameSecondsThisFrame(FrameTimeDelta);
+	g_SystemStatistics->SetMessagingSecondsThisFrame(MessagingTimeDelta);
+	g_SystemStatistics->SetPhysicsSecondsThisFrame(PhysicsTimeDelta);
+	g_SystemStatistics->SetProcessingSecondsThisFrame(FrameProcessingTimeDelta);
 }
 
 void SetTimeWarp(float TimeWarp)
