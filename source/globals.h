@@ -37,9 +37,10 @@ class Galaxy;
 class ObjectFactory;
 class ShipClassManager;
 class SlotClassManager;
+class SystemStatistics;
 class UserInterface;
-class WeaponClassManager;
 class TimeoutNotificationManager;
+class WeaponClassManager;
 
 namespace Graphics
 {
@@ -78,6 +79,7 @@ extern TimeoutNotificationManager * g_RealTimeTimeoutNotifications;
 extern ShipClassManager * g_ShipClassManager;
 extern Graphics::Node * g_ShotLayer;
 extern SlotClassManager * g_SlotClassManager;
+extern SystemStatistics * g_SystemStatistics;
 extern Graphics::TextureManager * g_TextureManager;
 extern UserInterface * g_UserInterface;
 extern WeaponClassManager * g_WeaponClassManager;

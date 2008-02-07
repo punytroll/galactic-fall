@@ -62,6 +62,8 @@
 #include "map_dialog.h"
 #include "map_knowledge.h"
 #include "math.h"
+#include "message.h"
+#include "message_dispatcher.h"
 #include "mind.h"
 #include "mini_map_display.h"
 #include "mount_weapon_dialog.h"
@@ -84,6 +86,7 @@
 #include "states.h"
 #include "string_cast.h"
 #include "system.h"
+#include "system_statistics.h"
 #include "timeout_notifications.h"
 #include "timing_dialog.h"
 #include "user_interface.h"
@@ -94,79 +97,6 @@
 #include "widget.h"
 #include "xml_puny_dom.h"
 #include "xml_stream.h"
-
-class SystemStatistics
-{
-public:
-	// setters
-	void SetFramesPerSecond(float FramesPerSecond)
-	{
-		m_FramesPerSecond = FramesPerSecond;
-	}
-	
-	void SetAISecondsPerFrame(float AISecondsPerFrame)
-	{
-		m_AISecondsPerFrame = AISecondsPerFrame;
-	}
-	
-	void SetGraphicsSecondsPerFrame(float GraphicsSecondsPerFrame)
-	{
-		m_GraphicsSecondsPerFrame = GraphicsSecondsPerFrame;
-	}
-	
-	void SetPhysicsSecondsPerFrame(float PhysicsSecondsPerFrame)
-	{
-		m_PhysicsSecondsPerFrame = PhysicsSecondsPerFrame;
-	}
-	
-	void SetTotalSecondsPerFrame(float TotalSecondsPerFrame)
-	{
-		m_TotalSecondsPerFrame = TotalSecondsPerFrame;
-	}
-	
-	void SetTotalSecondsPerFrameProcessing(float TotalSecondsPerFrameProcessing)
-	{
-		m_TotalSecondsPerFrameProcessing = TotalSecondsPerFrameProcessing;
-	}
-	
-	// getters
-	float GetFramesPerSecond(void) const
-	{
-		return m_FramesPerSecond;
-	}
-	
-	float GetAISecondsPerFrame(void) const
-	{
-		return m_AISecondsPerFrame;
-	}
-	
-	float GetGraphicsSecondsPerFrame(void) const
-	{
-		return m_GraphicsSecondsPerFrame;
-	}
-	
-	float GetPhysicsSecondsPerFrame(void) const
-	{
-		return m_PhysicsSecondsPerFrame;
-	}
-	
-	float GetTotalSecondsPerFrame(void) const
-	{
-		return m_TotalSecondsPerFrame;
-	}
-	
-	float GetTotalSecondsPerFrameProcessing(void) const
-	{
-		return m_TotalSecondsPerFrameProcessing;
-	}
-private:
-	float m_FramesPerSecond;
-	float m_AISecondsPerFrame;
-	float m_GraphicsSecondsPerFrame;
-	float m_PhysicsSecondsPerFrame;
-	float m_TotalSecondsPerFrame;
-	float m_TotalSecondsPerFrameProcessing;
-};
 
 // these objects are exported via globals.h
 AssetClassManager * g_AssetClassManager(0);
@@ -181,10 +111,12 @@ Graphics::Node * g_ShotLayer(0);
 Graphics::Node * g_ParticleSystemsLayer(0);
 Graphics::MeshManager * g_MeshManager(0);
 Graphics::ModelManager * g_ModelManager(0);
+Graphics::TextureManager * g_TextureManager(0);
+MessageDispatcher * g_MessageDispatcher(0);
 ObjectFactory * g_ObjectFactory(0);
 ShipClassManager * g_ShipClassManager(0);
 SlotClassManager * g_SlotClassManager(0);
-Graphics::TextureManager * g_TextureManager(0);
+SystemStatistics * g_SystemStatistics(0);
 UserInterface * g_UserInterface(0);
 WeaponClassManager * g_WeaponClassManager(0);
 
@@ -234,7 +166,6 @@ bool g_EchoEvents(false);
 bool g_EchoResizes(false);
 bool g_DumpEndReport(false);
 bool g_TakeScreenShot(false);
-SystemStatistics * g_SystemStatistics;
 std::map< Graphics::Node *, Reference< Graphics::Node > > g_VisualizationReferences;
 ResourceReader * g_ResourceReader(0);
 
@@ -748,6 +679,8 @@ void UpdateUserInterface(void)
 	if(g_TimingDialog != 0)
 	{
 		g_TimingDialog->UpdateFramesPerSecond(g_SystemStatistics->GetFramesPerSecond());
+		g_TimingDialog->UpdateMessagingSecondsPerFrame(g_SystemStatistics->GetMessagingSecondsPerFrame());
+		g_TimingDialog->UpdateDispatchedMessagesPerFrame(g_SystemStatistics->GetDispatchedMessagesPerFrame());
 		g_TimingDialog->UpdateAISecondsPerFrame(g_SystemStatistics->GetAISecondsPerFrame());
 		g_TimingDialog->UpdateGraphicsSecondsPerFrame(g_SystemStatistics->GetGraphicsSecondsPerFrame());
 		g_TimingDialog->UpdatePhysicsSecondsPerFrame(g_SystemStatistics->GetPhysicsSecondsPerFrame());
@@ -1241,6 +1174,13 @@ void GameFrame(void)
 	g_RealTimeTimeoutNotifications->Process(RealTime::Get());
 	RealTime::Invalidate();
 	
+	double MessagingTimeBegin(RealTime::Get());
+	
+	g_MessageDispatcher->DispatchMessages();
+	RealTime::Invalidate();
+	
+	double MessagingTimeEnd(RealTime::Get());
+	double MessagingTimeDelta(MessagingTimeEnd - MessagingTimeBegin);
 	double AITimeBegin(RealTime::Get());
 	
 	CalculateCharacters();
@@ -1298,7 +1238,7 @@ void GameFrame(void)
 	double FrameProcessingTimeEnd(RealTime::Get());
 	double FrameProcessingTimeDelta(FrameProcessingTimeEnd - FrameProcessingTimeBegin);
 	
-	g_SystemStatistics->SetFramesPerSecond(1.0f / FrameTimeDelta);
+	g_SystemStatistics->SetMessagingSecondsPerFrame(MessagingTimeDelta);
 	g_SystemStatistics->SetAISecondsPerFrame(AITimeDelta);
 	g_SystemStatistics->SetGraphicsSecondsPerFrame(GraphicsTimeDelta);
 	g_SystemStatistics->SetPhysicsSecondsPerFrame(PhysicsTimeDelta);
@@ -2617,6 +2557,7 @@ int main(int argc, char ** argv)
 	g_GraphicsEngine->SetOnDestroyCallback(OnGraphicsNodeDestroyCallback);
 	g_MainScene = 0;
 	g_MeshManager = new Graphics::MeshManager();
+	g_MessageDispatcher = new MessageDispatcher();
 	g_ModelManager = new Graphics::ModelManager();
 	g_ObjectFactory = new ObjectFactory();
 	g_ShipClassManager = new ShipClassManager();
@@ -2741,6 +2682,7 @@ int main(int argc, char ** argv)
 	delete g_GameTimeTimeoutNotifications;
 	delete g_GraphicsEngine;
 	delete g_MeshManager;
+	delete g_MessageDispatcher;
 	delete g_ModelManager;
 	delete g_ObjectFactory;
 	delete g_RealTimeTimeoutNotifications;

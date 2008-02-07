@@ -20,6 +20,7 @@
 #ifndef TIMING_DIALOG_H
 #define TIMING_DIALOG_H
 
+#include "type_definitions.h"
 #include "window.h"
 
 class Label;
@@ -29,15 +30,19 @@ class TimingDialog : public WWindow
 public:
 	TimingDialog(Widget * SupWidget);
 	void UpdateFramesPerSecond(float FramesPerSecond);
+	void UpdateMessagingSecondsPerFrame(float MessagingSecondsPerFrame);
+	void UpdateDispatchedMessagesPerFrame(u4byte DispatchedMessagesPerFrame);
 	void UpdateAISecondsPerFrame(float AISecondsPerFrame);
 	void UpdateGraphicsSecondsPerFrame(float GraphicsSecondsPerFrame);
 	void UpdatePhysicsSecondsPerFrame(float PhysicsSecondsPerFrame);
 	void UpdateTotalSecondsPerFrame(float TotalSecondsPerFrame);
 	void UpdateTotalSecondsPerFrameProcessing(float TotalSecondsPerFrameProcessing);
 private:
-	Label * m_FramesPerSecondLabel;
 	Label * m_AISecondsPerFrameLabel;
+	Label * m_DispatchedMessagesPerFrameLabel;
+	Label * m_FramesPerSecondLabel;
 	Label * m_GraphicsSecondsPerFrameLabel;
+	Label * m_MessagingSecondsPerFrameLabel;
 	Label * m_PhysicsSecondsPerFrameLabel;
 	Label * m_TotalSecondsPerFrameLabel;
 	Label * m_TotalSecondsPerFrameProcessingLabel;
