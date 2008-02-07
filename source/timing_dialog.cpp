@@ -80,6 +80,24 @@ TimingDialog::TimingDialog(Widget * SupWidget) :
 	m_GraphicsSecondsPerFrameLabel->SetPosition(Vector2f(240.0f, 140.0f));
 	m_GraphicsSecondsPerFrameLabel->SetSize(Vector2f(70.0f, 20.0f));
 	m_GraphicsSecondsPerFrameLabel->SetHorizontalAlignment(Label::ALIGN_RIGHT);
+	
+	Label * MessagingSecondsPerFrameCaptionLabel(new Label(this, "Messaging Seconds per Frame:"));
+	
+	MessagingSecondsPerFrameCaptionLabel->SetPosition(Vector2f(10.0f, 160.0f));
+	MessagingSecondsPerFrameCaptionLabel->SetSize(Vector2f(220.0f, 20.0f));
+	m_MessagingSecondsPerFrameLabel = new Label(this, "0");
+	m_MessagingSecondsPerFrameLabel->SetPosition(Vector2f(240.0f, 160.0f));
+	m_MessagingSecondsPerFrameLabel->SetSize(Vector2f(70.0f, 20.0f));
+	m_MessagingSecondsPerFrameLabel->SetHorizontalAlignment(Label::ALIGN_RIGHT);
+	
+	Label * DispatchedMessagesPerFrameCaptionLabel(new Label(this, "Dispatched messages per Frame:"));
+	
+	DispatchedMessagesPerFrameCaptionLabel->SetPosition(Vector2f(10.0f, 180.0f));
+	DispatchedMessagesPerFrameCaptionLabel->SetSize(Vector2f(220.0f, 20.0f));
+	m_DispatchedMessagesPerFrameLabel = new Label(this, "0");
+	m_DispatchedMessagesPerFrameLabel->SetPosition(Vector2f(240.0f, 180.0f));
+	m_DispatchedMessagesPerFrameLabel->SetSize(Vector2f(70.0f, 20.0f));
+	m_DispatchedMessagesPerFrameLabel->SetHorizontalAlignment(Label::ALIGN_RIGHT);
 }
 
 void TimingDialog::UpdateFramesPerSecond(float FramesPerSecond)
@@ -92,9 +110,19 @@ void TimingDialog::UpdateAISecondsPerFrame(float AISecondsPerFrame)
 	m_AISecondsPerFrameLabel->SetString(to_string_cast(AISecondsPerFrame * 1000, 2) + " ms");
 }
 
+void TimingDialog::UpdateDispatchedMessagesPerFrame(u4byte DispatchedMessagesPerFrame)
+{
+	m_DispatchedMessagesPerFrameLabel->SetString(to_string_cast(DispatchedMessagesPerFrame));
+}
+
 void TimingDialog::UpdateGraphicsSecondsPerFrame(float GraphicsSecondsPerFrame)
 {
 	m_GraphicsSecondsPerFrameLabel->SetString(to_string_cast(GraphicsSecondsPerFrame * 1000, 2) + " ms");
+}
+
+void TimingDialog::UpdateMessagingSecondsPerFrame(float MessagingSecondsPerFrame)
+{
+	m_MessagingSecondsPerFrameLabel->SetString(to_string_cast(MessagingSecondsPerFrame * 1000, 2) + " ms");
 }
 
 void TimingDialog::UpdatePhysicsSecondsPerFrame(float PhysicsSecondsPerFrame)

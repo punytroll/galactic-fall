@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2008  Hagen Möbius
+ * Copyright (C) 2008  Aram Altschudjian
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,11 +17,38 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include "message.h"
+#include <assert.h>
 
-Message::Message(const std::string & TypeIdentifier, Reference< Object > Sender, Reference< Object > Receiver) :
-	m_Receiver(Receiver),
-	m_Sender(Sender),
-	m_TypeIdentifier(TypeIdentifier)
+#include "globals.h"
+#include "message.h"
+#include "message_dispatcher.h"
+#include "object.h"
+#include "referencing.h"
+#include "system_statistics.h"
+
+MessageDispatcher::~MessageDispatcher(void)
 {
+	assert(m_MessageQueue.empty() == true);
+}
+
+void MessageDispatcher::DispatchMessages(void)
+{
+	u4byte DispatchedMessages(0);
+	
+	while(m_MessageQueue.empty() == false)
+	{
+		Reference< Object > Receiver(m_MessageQueue.front()->GetReceiver());
+		
+		if(Receiver == true)
+		{
+			Receiver->PushMessage(m_MessageQueue.front());
+			++DispatchedMessages;
+		}
+		else
+		{
+			delete m_MessageQueue.front();
+		}
+		m_MessageQueue.pop_front();
+	}
+	g_SystemStatistics->SetDispatchedMessagesPerFrame(DispatchedMessages);
 }

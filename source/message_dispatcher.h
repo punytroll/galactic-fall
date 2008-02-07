@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2008  Hagen Möbius
+ * Copyright (C) 2008  Aram Altschudjian
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,42 +17,27 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef MESSAGE_H
-#define MESSAGE_H
+#ifndef MESSAGE_DISPATCHER_H
+#define MESSAGE_DISPATCHER_H
 
-#include <string>
+#include <deque>
 
-#include "referencing.h"
+class Message;
 
-class Object;
-
-class Message
+class MessageDispatcher
 {
 public:
-	Message(const std::string & TypeIdentifier, Reference< Object > Sender, Reference< Object > Receiver);
-	// getters
-	const Reference< Object > & GetReceiver(void) const;
-	const Reference< Object > & GetSender(void) const;
-	const std::string & GetTypeIdentifier(void) const;
+	~MessageDispatcher(void);
+	// modifiers
+	void DispatchMessages(void);
+	void PushMessage(Message * Message);
 private:
-	Reference< Object > m_Receiver;
-	Reference< Object > m_Sender;
-	std::string m_TypeIdentifier;
+	std::deque< Message * > m_MessageQueue;
 };
 
-inline const Reference< Object > & Message::GetReceiver(void) const
+inline void MessageDispatcher::PushMessage(Message * Message)
 {
-	return m_Receiver;
-}
-
-inline const Reference< Object > & Message::GetSender(void) const
-{
-	return m_Sender;
-}
-
-inline const std::string & Message::GetTypeIdentifier(void) const
-{
-	return m_TypeIdentifier;
+	m_MessageQueue.push_back(Message);
 }
 
 #endif
