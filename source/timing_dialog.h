@@ -29,23 +29,16 @@ class TimingDialog : public WWindow
 {
 public:
 	TimingDialog(Widget * SupWidget);
-	void UpdateFramesPerSecond(float FramesPerSecond);
-	void UpdateMessagingSecondsPerFrame(float MessagingSecondsPerFrame);
-	void UpdateDispatchedMessagesPerFrame(u4byte DispatchedMessagesPerFrame);
-	void UpdateAISecondsPerFrame(float AISecondsPerFrame);
-	void UpdateGraphicsSecondsPerFrame(float GraphicsSecondsPerFrame);
-	void UpdatePhysicsSecondsPerFrame(float PhysicsSecondsPerFrame);
-	void UpdateTotalSecondsPerFrame(float TotalSecondsPerFrame);
-	void UpdateTotalSecondsPerFrameProcessing(float TotalSecondsPerFrameProcessing);
+	void Update(void);
 private:
-	Label * m_AISecondsPerFrameLabel;
-	Label * m_DispatchedMessagesPerFrameLabel;
+	Label * m_AISecondsThisFrameLabel;
+	Label * m_DispatchedMessagesThisFrameLabel;
 	Label * m_FramesPerSecondLabel;
-	Label * m_GraphicsSecondsPerFrameLabel;
-	Label * m_MessagingSecondsPerFrameLabel;
-	Label * m_PhysicsSecondsPerFrameLabel;
-	Label * m_TotalSecondsPerFrameLabel;
-	Label * m_TotalSecondsPerFrameProcessingLabel;
+	Label * m_FrameToFrameSecondsThisFrameLabel;
+	Label * m_GraphicsSecondsThisFrameLabel;
+	Label * m_MessagingSecondsThisFrameLabel;
+	Label * m_PhysicsSecondsThisFrameLabel;
+	Label * m_ProcessingSecondsThisFrameLabel;
 };
 
 #endif

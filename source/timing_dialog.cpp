@@ -17,8 +17,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include "globals.h"
 #include "label.h"
 #include "string_cast.h"
+#include "system_statistics.h"
 #include "timing_dialog.h"
 
 TimingDialog::TimingDialog(Widget * SupWidget) :
@@ -36,106 +38,78 @@ TimingDialog::TimingDialog(Widget * SupWidget) :
 	m_FramesPerSecondLabel->SetSize(Vector2f(70.0f, 20.0f));
 	m_FramesPerSecondLabel->SetHorizontalAlignment(Label::ALIGN_RIGHT);
 	
-	Label * TotalSecondsPerFrameCaptionLabel(new Label(this, "Total Seconds per Frame:"));
+	Label * FrameToFrameSecondsThisFrameCaptionLabel(new Label(this, "Seconds from Frame to Frame:"));
 	
-	TotalSecondsPerFrameCaptionLabel->SetPosition(Vector2f(10.0f, 60.0f));
-	TotalSecondsPerFrameCaptionLabel->SetSize(Vector2f(220.0f, 20.0f));
-	m_TotalSecondsPerFrameLabel = new Label(this, "0");
-	m_TotalSecondsPerFrameLabel->SetPosition(Vector2f(240.0f, 60.0f));
-	m_TotalSecondsPerFrameLabel->SetSize(Vector2f(70.0f, 20.0f));
-	m_TotalSecondsPerFrameLabel->SetHorizontalAlignment(Label::ALIGN_RIGHT);
+	FrameToFrameSecondsThisFrameCaptionLabel->SetPosition(Vector2f(10.0f, 60.0f));
+	FrameToFrameSecondsThisFrameCaptionLabel->SetSize(Vector2f(220.0f, 20.0f));
+	m_FrameToFrameSecondsThisFrameLabel = new Label(this, "0");
+	m_FrameToFrameSecondsThisFrameLabel->SetPosition(Vector2f(240.0f, 60.0f));
+	m_FrameToFrameSecondsThisFrameLabel->SetSize(Vector2f(70.0f, 20.0f));
+	m_FrameToFrameSecondsThisFrameLabel->SetHorizontalAlignment(Label::ALIGN_RIGHT);
 	
-	Label * TotalSecondsPerFrameProcessingCaptionLabel(new Label(this, "Total Seconds per Frame Processing:"));
+	Label * ProcessingSecondsThisFrameCaptionLabel(new Label(this, "Processing Seconds this Frame:"));
 	
-	TotalSecondsPerFrameProcessingCaptionLabel->SetPosition(Vector2f(10.0f, 80.0f));
-	TotalSecondsPerFrameProcessingCaptionLabel->SetSize(Vector2f(220.0f, 20.0f));
-	m_TotalSecondsPerFrameProcessingLabel = new Label(this, "0");
-	m_TotalSecondsPerFrameProcessingLabel->SetPosition(Vector2f(240.0f, 80.0f));
-	m_TotalSecondsPerFrameProcessingLabel->SetSize(Vector2f(70.0f, 20.0f));
-	m_TotalSecondsPerFrameProcessingLabel->SetHorizontalAlignment(Label::ALIGN_RIGHT);
+	ProcessingSecondsThisFrameCaptionLabel->SetPosition(Vector2f(10.0f, 80.0f));
+	ProcessingSecondsThisFrameCaptionLabel->SetSize(Vector2f(220.0f, 20.0f));
+	m_ProcessingSecondsThisFrameLabel = new Label(this, "0");
+	m_ProcessingSecondsThisFrameLabel->SetPosition(Vector2f(240.0f, 80.0f));
+	m_ProcessingSecondsThisFrameLabel->SetSize(Vector2f(70.0f, 20.0f));
+	m_ProcessingSecondsThisFrameLabel->SetHorizontalAlignment(Label::ALIGN_RIGHT);
 	
-	Label * AISecondsPerFrameCaptionLabel(new Label(this, "AI Seconds per Frame:"));
+	Label * AISecondsThisFrameCaptionLabel(new Label(this, "AI Seconds this Frame:"));
 	
-	AISecondsPerFrameCaptionLabel->SetPosition(Vector2f(10.0f, 100.0f));
-	AISecondsPerFrameCaptionLabel->SetSize(Vector2f(220.0f, 20.0f));
-	m_AISecondsPerFrameLabel = new Label(this, "0");
-	m_AISecondsPerFrameLabel->SetPosition(Vector2f(240.0f, 100.0f));
-	m_AISecondsPerFrameLabel->SetSize(Vector2f(70.0f, 20.0f));
-	m_AISecondsPerFrameLabel->SetHorizontalAlignment(Label::ALIGN_RIGHT);
+	AISecondsThisFrameCaptionLabel->SetPosition(Vector2f(10.0f, 100.0f));
+	AISecondsThisFrameCaptionLabel->SetSize(Vector2f(220.0f, 20.0f));
+	m_AISecondsThisFrameLabel = new Label(this, "0");
+	m_AISecondsThisFrameLabel->SetPosition(Vector2f(240.0f, 100.0f));
+	m_AISecondsThisFrameLabel->SetSize(Vector2f(70.0f, 20.0f));
+	m_AISecondsThisFrameLabel->SetHorizontalAlignment(Label::ALIGN_RIGHT);
 	
-	Label * PhysicsSecondsPerFrameCaptionLabel(new Label(this, "Physics Seconds per Frame:"));
+	Label * PhysicsSecondsThisFrameCaptionLabel(new Label(this, "Physics Seconds this Frame:"));
 	
-	PhysicsSecondsPerFrameCaptionLabel->SetPosition(Vector2f(10.0f, 120.0f));
-	PhysicsSecondsPerFrameCaptionLabel->SetSize(Vector2f(220.0f, 20.0f));
-	m_PhysicsSecondsPerFrameLabel = new Label(this, "0");
-	m_PhysicsSecondsPerFrameLabel->SetPosition(Vector2f(240.0f, 120.0f));
-	m_PhysicsSecondsPerFrameLabel->SetSize(Vector2f(70.0f, 20.0f));
-	m_PhysicsSecondsPerFrameLabel->SetHorizontalAlignment(Label::ALIGN_RIGHT);
+	PhysicsSecondsThisFrameCaptionLabel->SetPosition(Vector2f(10.0f, 120.0f));
+	PhysicsSecondsThisFrameCaptionLabel->SetSize(Vector2f(220.0f, 20.0f));
+	m_PhysicsSecondsThisFrameLabel = new Label(this, "0");
+	m_PhysicsSecondsThisFrameLabel->SetPosition(Vector2f(240.0f, 120.0f));
+	m_PhysicsSecondsThisFrameLabel->SetSize(Vector2f(70.0f, 20.0f));
+	m_PhysicsSecondsThisFrameLabel->SetHorizontalAlignment(Label::ALIGN_RIGHT);
 	
-	Label * GraphicsSecondsPerFrameCaptionLabel(new Label(this, "Graphics Seconds per Frame:"));
+	Label * GraphicsSecondsThisFrameCaptionLabel(new Label(this, "Graphics Seconds this Frame:"));
 	
-	GraphicsSecondsPerFrameCaptionLabel->SetPosition(Vector2f(10.0f, 140.0f));
-	GraphicsSecondsPerFrameCaptionLabel->SetSize(Vector2f(220.0f, 20.0f));
-	m_GraphicsSecondsPerFrameLabel = new Label(this, "0");
-	m_GraphicsSecondsPerFrameLabel->SetPosition(Vector2f(240.0f, 140.0f));
-	m_GraphicsSecondsPerFrameLabel->SetSize(Vector2f(70.0f, 20.0f));
-	m_GraphicsSecondsPerFrameLabel->SetHorizontalAlignment(Label::ALIGN_RIGHT);
+	GraphicsSecondsThisFrameCaptionLabel->SetPosition(Vector2f(10.0f, 140.0f));
+	GraphicsSecondsThisFrameCaptionLabel->SetSize(Vector2f(220.0f, 20.0f));
+	m_GraphicsSecondsThisFrameLabel = new Label(this, "0");
+	m_GraphicsSecondsThisFrameLabel->SetPosition(Vector2f(240.0f, 140.0f));
+	m_GraphicsSecondsThisFrameLabel->SetSize(Vector2f(70.0f, 20.0f));
+	m_GraphicsSecondsThisFrameLabel->SetHorizontalAlignment(Label::ALIGN_RIGHT);
 	
-	Label * MessagingSecondsPerFrameCaptionLabel(new Label(this, "Messaging Seconds per Frame:"));
+	Label * MessagingSecondsThisFrameCaptionLabel(new Label(this, "Messaging Seconds this Frame:"));
 	
-	MessagingSecondsPerFrameCaptionLabel->SetPosition(Vector2f(10.0f, 160.0f));
-	MessagingSecondsPerFrameCaptionLabel->SetSize(Vector2f(220.0f, 20.0f));
-	m_MessagingSecondsPerFrameLabel = new Label(this, "0");
-	m_MessagingSecondsPerFrameLabel->SetPosition(Vector2f(240.0f, 160.0f));
-	m_MessagingSecondsPerFrameLabel->SetSize(Vector2f(70.0f, 20.0f));
-	m_MessagingSecondsPerFrameLabel->SetHorizontalAlignment(Label::ALIGN_RIGHT);
+	MessagingSecondsThisFrameCaptionLabel->SetPosition(Vector2f(10.0f, 160.0f));
+	MessagingSecondsThisFrameCaptionLabel->SetSize(Vector2f(220.0f, 20.0f));
+	m_MessagingSecondsThisFrameLabel = new Label(this, "0");
+	m_MessagingSecondsThisFrameLabel->SetPosition(Vector2f(240.0f, 160.0f));
+	m_MessagingSecondsThisFrameLabel->SetSize(Vector2f(70.0f, 20.0f));
+	m_MessagingSecondsThisFrameLabel->SetHorizontalAlignment(Label::ALIGN_RIGHT);
 	
-	Label * DispatchedMessagesPerFrameCaptionLabel(new Label(this, "Dispatched messages per Frame:"));
+	Label * DispatchedMessagesThisFrameCaptionLabel(new Label(this, "Dispatched messages this Frame:"));
 	
-	DispatchedMessagesPerFrameCaptionLabel->SetPosition(Vector2f(10.0f, 180.0f));
-	DispatchedMessagesPerFrameCaptionLabel->SetSize(Vector2f(220.0f, 20.0f));
-	m_DispatchedMessagesPerFrameLabel = new Label(this, "0");
-	m_DispatchedMessagesPerFrameLabel->SetPosition(Vector2f(240.0f, 180.0f));
-	m_DispatchedMessagesPerFrameLabel->SetSize(Vector2f(70.0f, 20.0f));
-	m_DispatchedMessagesPerFrameLabel->SetHorizontalAlignment(Label::ALIGN_RIGHT);
+	DispatchedMessagesThisFrameCaptionLabel->SetPosition(Vector2f(10.0f, 180.0f));
+	DispatchedMessagesThisFrameCaptionLabel->SetSize(Vector2f(220.0f, 20.0f));
+	m_DispatchedMessagesThisFrameLabel = new Label(this, "0");
+	m_DispatchedMessagesThisFrameLabel->SetPosition(Vector2f(240.0f, 180.0f));
+	m_DispatchedMessagesThisFrameLabel->SetSize(Vector2f(70.0f, 20.0f));
+	m_DispatchedMessagesThisFrameLabel->SetHorizontalAlignment(Label::ALIGN_RIGHT);
 }
 
-void TimingDialog::UpdateFramesPerSecond(float FramesPerSecond)
+void TimingDialog::Update(void)
 {
-	m_FramesPerSecondLabel->SetString(to_string_cast(FramesPerSecond, 2));
-}
-
-void TimingDialog::UpdateAISecondsPerFrame(float AISecondsPerFrame)
-{
-	m_AISecondsPerFrameLabel->SetString(to_string_cast(AISecondsPerFrame * 1000, 2) + " ms");
-}
-
-void TimingDialog::UpdateDispatchedMessagesPerFrame(u4byte DispatchedMessagesPerFrame)
-{
-	m_DispatchedMessagesPerFrameLabel->SetString(to_string_cast(DispatchedMessagesPerFrame));
-}
-
-void TimingDialog::UpdateGraphicsSecondsPerFrame(float GraphicsSecondsPerFrame)
-{
-	m_GraphicsSecondsPerFrameLabel->SetString(to_string_cast(GraphicsSecondsPerFrame * 1000, 2) + " ms");
-}
-
-void TimingDialog::UpdateMessagingSecondsPerFrame(float MessagingSecondsPerFrame)
-{
-	m_MessagingSecondsPerFrameLabel->SetString(to_string_cast(MessagingSecondsPerFrame * 1000, 2) + " ms");
-}
-
-void TimingDialog::UpdatePhysicsSecondsPerFrame(float PhysicsSecondsPerFrame)
-{
-	m_PhysicsSecondsPerFrameLabel->SetString(to_string_cast(PhysicsSecondsPerFrame * 1000, 2) + " ms");
-}
-
-void TimingDialog::UpdateTotalSecondsPerFrame(float TotalSecondsPerFrame)
-{
-	m_TotalSecondsPerFrameLabel->SetString(to_string_cast(TotalSecondsPerFrame * 1000, 2) + " ms");
-}
-
-void TimingDialog::UpdateTotalSecondsPerFrameProcessing(float TotalSecondsPerFrameProcessing)
-{
-	m_TotalSecondsPerFrameProcessingLabel->SetString(to_string_cast(TotalSecondsPerFrameProcessing * 1000, 2) + " ms");
+	m_AISecondsThisFrameLabel->SetString(to_string_cast(g_SystemStatistics->GetAISecondsThisFrame() * 1000, 2) + " ms");
+	m_DispatchedMessagesThisFrameLabel->SetString(to_string_cast(g_SystemStatistics->GetDispatchedMessagesThisFrame()));
+	m_FramesPerSecondLabel->SetString(to_string_cast(g_SystemStatistics->GetFramesPerSecond(), 2));
+	m_FrameToFrameSecondsThisFrameLabel->SetString(to_string_cast(g_SystemStatistics->GetFrameToFrameSecondsThisFrame() * 1000, 2) + " ms");
+	m_GraphicsSecondsThisFrameLabel->SetString(to_string_cast(g_SystemStatistics->GetGraphicsSecondsThisFrame() * 1000, 2) + " ms");
+	m_MessagingSecondsThisFrameLabel->SetString(to_string_cast(g_SystemStatistics->GetMessagingSecondsThisFrame() * 1000, 2) + " ms");
+	m_PhysicsSecondsThisFrameLabel->SetString(to_string_cast(g_SystemStatistics->GetPhysicsSecondsThisFrame() * 1000, 2) + " ms");
+	m_ProcessingSecondsThisFrameLabel->SetString(to_string_cast(g_SystemStatistics->GetProcessingSecondsThisFrame() * 1000, 2) + " ms");
 }

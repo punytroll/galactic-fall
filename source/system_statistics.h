@@ -25,92 +25,108 @@
 class SystemStatistics
 {
 public:
-	// setters
-	void SetAISecondsPerFrame(float AISecondsPerFrame)
-	{
-		m_AISecondsPerFrame = AISecondsPerFrame;
-	}
-	
-	void SetDispatchedMessagesPerFrame(u4byte DispatchedMessagesPerFrame)
-	{
-		m_DispatchedMessagesPerFrame = DispatchedMessagesPerFrame;
-	}
-	
-	void SetGraphicsSecondsPerFrame(float GraphicsSecondsPerFrame)
-	{
-		m_GraphicsSecondsPerFrame = GraphicsSecondsPerFrame;
-	}
-	
-	void SetMessagingSecondsPerFrame(float MessagingSecondsPerFrame)
-	{
-		m_MessageSecondsPerFrame = MessagingSecondsPerFrame;
-	}
-	
-	void SetPhysicsSecondsPerFrame(float PhysicsSecondsPerFrame)
-	{
-		m_PhysicsSecondsPerFrame = PhysicsSecondsPerFrame;
-	}
-	
-	void SetTotalSecondsPerFrame(float TotalSecondsPerFrame)
-	{
-		m_TotalSecondsPerFrame = TotalSecondsPerFrame;
-		m_FramesPerSecond = 1.0f / TotalSecondsPerFrame;
-	}
-	
-	void SetTotalSecondsPerFrameProcessing(float TotalSecondsPerFrameProcessing)
-	{
-		m_TotalSecondsPerFrameProcessing = TotalSecondsPerFrameProcessing;
-	}
-	
 	// getters
-	float GetFramesPerSecond(void) const
-	{
-		return m_FramesPerSecond;
-	}
-	
-	float GetAISecondsPerFrame(void) const
-	{
-		return m_AISecondsPerFrame;
-	}
-	
-	u4byte GetDispatchedMessagesPerFrame(void) const
-	{
-		return m_DispatchedMessagesPerFrame;
-	}
-	
-	float GetGraphicsSecondsPerFrame(void) const
-	{
-		return m_GraphicsSecondsPerFrame;
-	}
-	
-	float GetMessagingSecondsPerFrame(void) const
-	{
-		return m_MessageSecondsPerFrame;
-	}
-	
-	float GetPhysicsSecondsPerFrame(void) const
-	{
-		return m_PhysicsSecondsPerFrame;
-	}
-	
-	float GetTotalSecondsPerFrame(void) const
-	{
-		return m_TotalSecondsPerFrame;
-	}
-	
-	float GetTotalSecondsPerFrameProcessing(void) const
-	{
-		return m_TotalSecondsPerFrameProcessing;
-	}
+	float GetAISecondsThisFrame(void) const;
+	u4byte GetDispatchedMessagesThisFrame(void) const;
+	float GetFramesPerSecond(void) const;
+	float GetFrameToFrameSecondsThisFrame(void) const;
+	float GetGraphicsSecondsThisFrame(void) const;
+	float GetMessagingSecondsThisFrame(void) const;
+	float GetPhysicsSecondsThisFrame(void) const;
+	float GetProcessingSecondsThisFrame(void) const;
+	// setters
+	void SetAISecondsThisFrame(float AISecondsThisFrame);
+	void SetDispatchedMessagesThisFrame(u4byte DispatchedMessagesThisFrame);
+	void SetFrameToFrameSecondsThisFrame(float FrameToFrameSecondsThisFrame);
+	void SetGraphicsSecondsThisFrame(float GraphicsSecondsThisFrame);
+	void SetMessagingSecondsThisFrame(float MessagingSecondsThisFrame);
+	void SetPhysicsSecondsThisFrame(float PhysicsSecondsThisFrame);
+	void SetProcessingSecondsThisFrame(float ProcessingSecondsThisFrame);
 private:
+	float m_AISecondsThisFrame;
+	u4byte m_DispatchedMessagesThisFrame;
 	float m_FramesPerSecond;
-	float m_AISecondsPerFrame;
-	u4byte m_DispatchedMessagesPerFrame;
-	float m_GraphicsSecondsPerFrame;
-	float m_MessageSecondsPerFrame;
-	float m_PhysicsSecondsPerFrame;
-	float m_TotalSecondsPerFrame;
-	float m_TotalSecondsPerFrameProcessing;
+	float m_FrameToFrameSecondsThisFrame;
+	float m_GraphicsSecondsThisFrame;
+	float m_MessageSecondsThisFrame;
+	float m_PhysicsSecondsThisFrame;
+	float m_ProcessingSecondsThisFrame;
 };
+
+inline float SystemStatistics::GetAISecondsThisFrame(void) const
+{
+	return m_AISecondsThisFrame;
+}
+
+inline u4byte SystemStatistics::GetDispatchedMessagesThisFrame(void) const
+{
+	return m_DispatchedMessagesThisFrame;
+}
+
+inline float SystemStatistics::GetFramesPerSecond(void) const
+{
+	return m_FramesPerSecond;
+}
+
+inline float SystemStatistics::GetFrameToFrameSecondsThisFrame(void) const
+{
+	return m_FrameToFrameSecondsThisFrame;
+}
+
+inline float SystemStatistics::GetGraphicsSecondsThisFrame(void) const
+{
+	return m_GraphicsSecondsThisFrame;
+}
+
+inline float SystemStatistics::GetMessagingSecondsThisFrame(void) const
+{
+	return m_MessageSecondsThisFrame;
+}
+
+inline float SystemStatistics::GetPhysicsSecondsThisFrame(void) const
+{
+	return m_PhysicsSecondsThisFrame;
+}
+
+inline float SystemStatistics::GetProcessingSecondsThisFrame(void) const
+{
+	return m_ProcessingSecondsThisFrame;
+}
+
+inline void SystemStatistics::SetAISecondsThisFrame(float AISecondsThisFrame)
+{
+	m_AISecondsThisFrame = AISecondsThisFrame;
+}
+
+inline void SystemStatistics::SetDispatchedMessagesThisFrame(u4byte DispatchedMessagesThisFrame)
+{
+	m_DispatchedMessagesThisFrame = DispatchedMessagesThisFrame;
+}
+
+inline void SystemStatistics::SetFrameToFrameSecondsThisFrame(float FrameToFrameSecondsThisFrame)
+{
+	m_FrameToFrameSecondsThisFrame = FrameToFrameSecondsThisFrame;
+	m_FramesPerSecond = 1.0f / FrameToFrameSecondsThisFrame;
+}
+
+inline void SystemStatistics::SetGraphicsSecondsThisFrame(float GraphicsSecondsThisFrame)
+{
+	m_GraphicsSecondsThisFrame = GraphicsSecondsThisFrame;
+}
+
+inline void SystemStatistics::SetMessagingSecondsThisFrame(float MessagingSecondsThisFrame)
+{
+	m_MessageSecondsThisFrame = MessagingSecondsThisFrame;
+}
+
+inline void SystemStatistics::SetPhysicsSecondsThisFrame(float PhysicsSecondsThisFrame)
+{
+	m_PhysicsSecondsThisFrame = PhysicsSecondsThisFrame;
+}
+
+inline void SystemStatistics::SetProcessingSecondsThisFrame(float ProcessingSecondsThisFrame)
+{
+	m_ProcessingSecondsThisFrame = ProcessingSecondsThisFrame;
+}
 
 #endif
