@@ -60,10 +60,34 @@ public:
 	virtual void Process(void);
 };
 
-class GoalFightFighter : public Goal
+class GoalFightSomeTarget : public Goal
 {
 public:
-	GoalFightFighter(GoalMind * GoalMind);
+	GoalFightSomeTarget(GoalMind * GoalMind);
+	virtual void Activate(void);
+	virtual void Process(void);
+};
+
+class GoalSelectFightableTarget : public Goal
+{
+public:
+	GoalSelectFightableTarget(GoalMind * GoalMind);
+	virtual void Activate(void);
+	virtual void Process(void);
+};
+
+class GoalSelectMeasuredCargo : public Goal
+{
+public:
+	GoalSelectMeasuredCargo(GoalMind * GoalMind);
+	virtual void Activate(void);
+	virtual void Process(void);
+};
+
+class GoalSelectStrandedShip : public Goal
+{
+public:
+	GoalSelectStrandedShip(GoalMind * GoalMind);
 	virtual void Activate(void);
 	virtual void Process(void);
 };

@@ -23,6 +23,7 @@
 
 #include "asset_class.h"
 #include "character.h"
+#include "commodity.h"
 #include "game_time.h"
 #include "goals.h"
 #include "math.h"
@@ -144,7 +145,7 @@ GoalFighterThink::GoalFighterThink(GoalMind * GoalMind) :
 void GoalFighterThink::Activate(void)
 {
 	assert(GetSubGoals().empty() == true);
-	AddContent(new GoalFightFighter(GetMind()));
+	AddContent(new GoalFightSomeTarget(GetMind()));
 	SetState(Goal::ACTIVE);
 }
 
@@ -200,26 +201,23 @@ void GoalFighterThink::Process(void)
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-// GoalFightFighter                                                                              //
+// GoalFightSomeTarget                                                                           //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-GoalFightFighter::GoalFightFighter(GoalMind * GoalMind) :
-	Goal(GoalMind, "fight_fighter")
+GoalFightSomeTarget::GoalFightSomeTarget(GoalMind * GoalMind) :
+	Goal(GoalMind, "fight_some_target")
 {
-	SetObjectIdentifier("::goal(fight_fighter)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
+	SetObjectIdentifier("::goal(fight_some_target)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
 }
 
-void GoalFightFighter::Activate(void)
+void GoalFightSomeTarget::Activate(void)
 {
 	assert(GetSubGoals().empty() == true);
 	AddContent(new GoalDestroyTarget(GetMind()));
-	if((GetMind()->GetCharacter()->GetShip()->GetTarget() == false) || (dynamic_cast< const Ship * >(GetMind()->GetCharacter()->GetShip()->GetTarget().Get())->GetShipClass()->GetIdentifier() != "fighter"))
-	{
-		AddContent(new GoalSelectFighter(GetMind()));
-	}
+	AddContent(new GoalSelectFightableTarget(GetMind()));
 	SetState(Goal::ACTIVE);
 }
 
-void GoalFightFighter::Process(void)
+void GoalFightSomeTarget::Process(void)
 {
 	assert(GetState() == Goal::ACTIVE);
 	assert(GetSubGoals().empty() == false);
@@ -260,6 +258,152 @@ void GoalFightFighter::Process(void)
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
+// GoalSelectFightableTarget                                                                     //
+///////////////////////////////////////////////////////////////////////////////////////////////////
+GoalSelectFightableTarget::GoalSelectFightableTarget(GoalMind * GoalMind) :
+	Goal(GoalMind, "select_fightable_target")
+{
+	SetObjectIdentifier("::goal(select_fightable_target)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
+}
+
+void GoalSelectFightableTarget::Activate(void)
+{
+	assert(GetSubGoals().empty() == true);
+	AddContent(new GoalSelectFighter(GetMind()));
+	AddContent(new GoalSelectStrandedShip(GetMind()));
+	AddContent(new GoalSelectMeasuredCargo(GetMind()));
+	SetState(Goal::ACTIVE);
+}
+
+void GoalSelectFightableTarget::Process(void)
+{
+	assert(GetState() == Goal::ACTIVE);
+	assert(GetSubGoals().empty() == false);
+	
+	Goal * SubGoal(GetSubGoals().front());
+	
+	if(SubGoal->GetState() == Goal::INACTIVE)
+	{
+		SubGoal->Activate();
+	}
+	assert(SubGoal->GetState() == Goal::ACTIVE);
+	SubGoal->Process();
+	if(SubGoal->GetState() == Goal::COMPLETED)
+	{
+		// terminate and remove sub goal
+		SubGoal->Terminate();
+		RemoveContent(SubGoal);
+		// other actions may depend on the SubGoal variable
+		// if one subgoal succeeds the goal has done its job
+		SetState(Goal::COMPLETED);
+		// now destroy the SubGoal
+		SubGoal->Destroy();
+		delete SubGoal;
+	}
+	else if(SubGoal->GetState() == Goal::FAILED)
+	{
+		// terminate and remove sub goal
+		SubGoal->Terminate();
+		RemoveContent(SubGoal);
+		// other actions may depend on the SubGoal variable
+		// if no subgoal succeeded, this goal has failed
+		if(GetSubGoals().empty() == true)
+		{
+			SetState(Goal::FAILED);
+		}
+		// now destroy the SubGoal
+		SubGoal->Destroy();
+		delete SubGoal;
+	}
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// GoalSelectMeasuredCargo                                                                       //
+///////////////////////////////////////////////////////////////////////////////////////////////////
+GoalSelectMeasuredCargo::GoalSelectMeasuredCargo(GoalMind * GoalMind) :
+	Goal(GoalMind, "select_measured_cargo")
+{
+	SetObjectIdentifier("::goal(select_measured_cargo)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
+}
+
+void GoalSelectMeasuredCargo::Activate(void)
+{
+	assert(GetSubGoals().empty() == true);
+	SetState(Goal::ACTIVE);
+}
+
+void GoalSelectMeasuredCargo::Process(void)
+{
+	assert(GetState() == Goal::ACTIVE);
+	
+	const std::list< Commodity * > & Commodities(GetMind()->GetCharacter()->GetShip()->GetCurrentSystem()->GetCommodities());
+	float MinimumCost(FLT_MAX);
+	Commodity * MinimumCostCommodity(0);
+	
+	for(std::list< Commodity * >::const_iterator CommodityIterator = Commodities.begin(); CommodityIterator != Commodities.end(); ++CommodityIterator)
+	{
+		// what this formula does is effectively calculating the distance of the cargo from a point that is twice a much away from the system center as the ship
+		// Why is this sensible? Because fighters will prefer cargo that is on "their" side of the system and is farther away from the system center than they are.
+		float Cost(((*CommodityIterator)->GetPosition() - 2.0f * GetMind()->GetCharacter()->GetShip()->GetPosition()).SquaredLength());
+		
+		if(Cost < MinimumCost)
+		{
+			MinimumCostCommodity = *CommodityIterator;
+			MinimumCost = Cost;
+		}
+	}
+	if(MinimumCostCommodity != 0)
+	{
+		GetMind()->GetCharacter()->GetShip()->SetTarget(MinimumCostCommodity->GetReference());
+		SetState(Goal::COMPLETED);
+	}
+	else
+	{
+		SetState(Goal::FAILED);
+	}
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// GoalSelectStrandedShip                                                                        //
+///////////////////////////////////////////////////////////////////////////////////////////////////
+GoalSelectStrandedShip::GoalSelectStrandedShip(GoalMind * GoalMind) :
+	Goal(GoalMind, "select_stranded_ship")
+{
+	SetObjectIdentifier("::goal(select_stranded_ship)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
+}
+
+void GoalSelectStrandedShip::Activate(void)
+{
+	assert(GetSubGoals().empty() == true);
+	SetState(Goal::ACTIVE);
+}
+
+void GoalSelectStrandedShip::Process(void)
+{
+	assert(GetState() == Goal::ACTIVE);
+	
+	const std::list< Ship * > & Ships(GetMind()->GetCharacter()->GetShip()->GetCurrentSystem()->GetShips());
+	std::vector< Ship * > AttackPossibilities;
+	
+	for(std::list< Ship * >::const_iterator ShipIterator = Ships.begin(); ShipIterator != Ships.end(); ++ShipIterator)
+	{
+		if((*ShipIterator != GetMind()->GetCharacter()->GetShip()) && ((*ShipIterator)->GetFuel() < 0.01))
+		{
+			AttackPossibilities.push_back(*ShipIterator);
+		}
+	}
+	if(AttackPossibilities.size() > 0)
+	{
+		GetMind()->GetCharacter()->GetShip()->SetTarget(AttackPossibilities[GetRandomInteger(AttackPossibilities.size() - 1)]->GetReference());
+		SetState(Goal::COMPLETED);
+	}
+	else
+	{
+		SetState(Goal::FAILED);
+	}
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
 // GoalSelectFighter                                                                             //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 GoalSelectFighter::GoalSelectFighter(GoalMind * GoalMind) :
@@ -277,6 +421,7 @@ void GoalSelectFighter::Activate(void)
 void GoalSelectFighter::Process(void)
 {
 	assert(GetState() == Goal::ACTIVE);
+	
 	const std::list< Ship * > & Ships(GetMind()->GetCharacter()->GetShip()->GetCurrentSystem()->GetShips());
 	std::vector< Ship * > AttackPossibilities;
 	
