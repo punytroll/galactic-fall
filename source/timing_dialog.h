@@ -39,6 +39,9 @@ private:
 	Label * m_MessagingSecondsThisFrameLabel;
 	Label * m_PhysicsSecondsThisFrameLabel;
 	Label * m_ProcessingSecondsThisFrameLabel;
+	Label * m_CommoditiesInCurrentSystemThisFrameLabel;
+	Label * m_ShipsInCurrentSystemThisFrameLabel;
+	Label * m_ShotsInCurrentSystemThisFrameLabel;
 };
 
 #endif

@@ -27,6 +27,7 @@ class SystemStatistics
 public:
 	// getters
 	float GetAISecondsThisFrame(void) const;
+	u4byte GetCommoditiesInCurrentSystemThisFrame(void) const;
 	u4byte GetDispatchedMessagesThisFrame(void) const;
 	float GetFramesPerSecond(void) const;
 	float GetFrameToFrameSecondsThisFrame(void) const;
@@ -34,16 +35,22 @@ public:
 	float GetMessagingSecondsThisFrame(void) const;
 	float GetPhysicsSecondsThisFrame(void) const;
 	float GetProcessingSecondsThisFrame(void) const;
+	u4byte GetShipsInCurrentSystemThisFrame(void) const;
+	u4byte GetShotsInCurrentSystemThisFrame(void) const;
 	// setters
 	void SetAISecondsThisFrame(float AISecondsThisFrame);
+	void SetCommoditiesInCurrentSystemThisFrame(u4byte CommoditiesInCurrentSystemThisFrame);
 	void SetDispatchedMessagesThisFrame(u4byte DispatchedMessagesThisFrame);
 	void SetFrameToFrameSecondsThisFrame(float FrameToFrameSecondsThisFrame);
 	void SetGraphicsSecondsThisFrame(float GraphicsSecondsThisFrame);
 	void SetMessagingSecondsThisFrame(float MessagingSecondsThisFrame);
 	void SetPhysicsSecondsThisFrame(float PhysicsSecondsThisFrame);
 	void SetProcessingSecondsThisFrame(float ProcessingSecondsThisFrame);
+	void SetShipsInCurrentSystemThisFrame(u4byte ShipsInCurrentSystemThisFrame);
+	void SetShotsInCurrentSystemThisFrame(u4byte ShotsInCurrentSystemThisFrame);
 private:
 	float m_AISecondsThisFrame;
+	u4byte m_CommoditiesInCurrentSystemThisFrame;
 	u4byte m_DispatchedMessagesThisFrame;
 	float m_FramesPerSecond;
 	float m_FrameToFrameSecondsThisFrame;
@@ -51,11 +58,18 @@ private:
 	float m_MessageSecondsThisFrame;
 	float m_PhysicsSecondsThisFrame;
 	float m_ProcessingSecondsThisFrame;
+	u4byte m_ShipsInCurrentSystemThisFrame;
+	u4byte m_ShotsInCurrentSystemThisFrame;
 };
 
 inline float SystemStatistics::GetAISecondsThisFrame(void) const
 {
 	return m_AISecondsThisFrame;
+}
+
+inline u4byte SystemStatistics::GetCommoditiesInCurrentSystemThisFrame(void) const
+{
+	return m_CommoditiesInCurrentSystemThisFrame;
 }
 
 inline u4byte SystemStatistics::GetDispatchedMessagesThisFrame(void) const
@@ -93,9 +107,24 @@ inline float SystemStatistics::GetProcessingSecondsThisFrame(void) const
 	return m_ProcessingSecondsThisFrame;
 }
 
+inline u4byte SystemStatistics::GetShipsInCurrentSystemThisFrame(void) const
+{
+	return m_ShipsInCurrentSystemThisFrame;
+}
+
+inline u4byte SystemStatistics::GetShotsInCurrentSystemThisFrame(void) const
+{
+	return m_ShotsInCurrentSystemThisFrame;
+}
+
 inline void SystemStatistics::SetAISecondsThisFrame(float AISecondsThisFrame)
 {
 	m_AISecondsThisFrame = AISecondsThisFrame;
+}
+
+inline void SystemStatistics::SetCommoditiesInCurrentSystemThisFrame(u4byte CommoditiesInCurrentSystemThisFrame)
+{
+	m_CommoditiesInCurrentSystemThisFrame = CommoditiesInCurrentSystemThisFrame;
 }
 
 inline void SystemStatistics::SetDispatchedMessagesThisFrame(u4byte DispatchedMessagesThisFrame)
@@ -127,6 +156,16 @@ inline void SystemStatistics::SetPhysicsSecondsThisFrame(float PhysicsSecondsThi
 inline void SystemStatistics::SetProcessingSecondsThisFrame(float ProcessingSecondsThisFrame)
 {
 	m_ProcessingSecondsThisFrame = ProcessingSecondsThisFrame;
+}
+
+inline void SystemStatistics::SetShipsInCurrentSystemThisFrame(u4byte ShipsInCurrentSystemThisFrame)
+{
+	m_ShipsInCurrentSystemThisFrame = ShipsInCurrentSystemThisFrame;
+}
+
+inline void SystemStatistics::SetShotsInCurrentSystemThisFrame(u4byte ShotsInCurrentSystemThisFrame)
+{
+	m_ShotsInCurrentSystemThisFrame = ShotsInCurrentSystemThisFrame;
 }
 
 #endif

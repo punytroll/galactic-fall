@@ -525,6 +525,7 @@ void CalculateMovements(System * System, float Seconds)
 	const std::list< Ship * > & Ships(System->GetShips());
 	std::list< Ship * >::const_iterator ShipIterator(Ships.begin());
 	
+	g_SystemStatistics->SetShipsInCurrentSystemThisFrame(Ships.size());
 	while(ShipIterator != Ships.end())
 	{
 		Ship * Ship(*ShipIterator);
@@ -551,6 +552,7 @@ void CalculateMovements(System * System, float Seconds)
 	
 	const std::list< Commodity * > & Commodities(System->GetCommodities());
 	
+	g_SystemStatistics->SetCommoditiesInCurrentSystemThisFrame(Commodities.size());
 	for(std::list< Commodity * >::const_iterator CommodityIterator = Commodities.begin(); CommodityIterator != Commodities.end(); ++CommodityIterator)
 	{
 		Commodity * Commodity(*CommodityIterator);
@@ -564,6 +566,7 @@ void CalculateMovements(System * System, float Seconds)
 	const std::list< Shot * > & Shots(System->GetShots());
 	std::list< Shot * >::const_iterator ShotIterator(Shots.begin());
 	
+	g_SystemStatistics->SetShotsInCurrentSystemThisFrame(Shots.size());
 	while(ShotIterator != Shots.end())
 	{
 		Shot * TheShot(*ShotIterator);
