@@ -450,7 +450,7 @@ void Fight::Enter(void)
 
 void Fight::Execute(void)
 {
-	if(GetMind()->GetCharacter()->GetShip()->GetTarget() == true)
+	if(GetMind()->GetCharacter()->GetShip()->GetTarget().IsValid() == true)
 	{
 		Vector3f ToDestination(GetMind()->GetCharacter()->GetShip()->GetTarget()->GetPosition() - GetMind()->GetCharacter()->GetShip()->GetPosition());
 		float Length(ToDestination.Length());
@@ -517,7 +517,7 @@ void ShootFarthestCargo::Enter(void)
 
 void ShootFarthestCargo::Execute(void)
 {
-	if(GetMind()->GetCharacter()->GetShip()->GetTarget() == true)
+	if(GetMind()->GetCharacter()->GetShip()->GetTarget().IsValid() == true)
 	{
 		Vector3f ToDestination(GetMind()->GetCharacter()->GetShip()->GetTarget()->GetPosition() - GetMind()->GetCharacter()->GetShip()->GetPosition());
 		float Length(ToDestination.Length());

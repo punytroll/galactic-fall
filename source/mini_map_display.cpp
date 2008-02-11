@@ -45,7 +45,7 @@ void MiniMapDisplay::SetOwner(Reference< Ship > Owner)
 void MiniMapDisplay::DrawInViewport(void) const
 {
 	// draw mini map
-	if((m_Owner == true) && (m_Owner->GetCurrentSystem() != 0))
+	if((m_Owner.IsValid() == true) && (m_Owner->GetCurrentSystem() != 0))
 	{
 		
 		const std::vector< Planet * > & Planets(m_Owner->GetCurrentSystem()->GetPlanets());

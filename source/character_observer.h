@@ -28,13 +28,12 @@ class CharacterObserver
 {
 public:
 	CharacterObserver(void);
+	~CharacterObserver(void);
 	// getters
 	Reference< Character > & GetObservedCharacter(void);
 	const Reference< Character > & GetObservedCharacter(void) const;
 	// setters
 	void SetObservedCharacter(Reference< Character > ObservedCharacter);
-	// modifiers
-	void ClearObservedCharacter(void);
 private:
 	Reference< Character > m_ObservedCharacter;
 };
@@ -47,16 +46,6 @@ inline Reference< Character > & CharacterObserver::GetObservedCharacter(void)
 inline const Reference< Character > & CharacterObserver::GetObservedCharacter(void) const
 {
 	return m_ObservedCharacter;
-}
-
-inline void CharacterObserver::SetObservedCharacter(Reference< Character > ObservedCharacter)
-{
-	m_ObservedCharacter = ObservedCharacter;
-}
-
-inline void CharacterObserver::ClearObservedCharacter(void)
-{
-	m_ObservedCharacter.Clear();
 }
 
 #endif

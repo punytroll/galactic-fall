@@ -30,7 +30,7 @@ Camera::Camera(void) :
 void Camera::Draw(void) const
 {
 	glTranslatef(-m_Position.m_V.m_A[0], -m_Position.m_V.m_A[1], -m_Position.m_V.m_A[2]);
-	if(m_Focus == true)
+	if(m_Focus.IsValid() == true)
 	{
 		glTranslatef(-m_Focus->m_Position.m_V.m_A[0], -m_Focus->m_Position.m_V.m_A[1], 0.0f);
 	}

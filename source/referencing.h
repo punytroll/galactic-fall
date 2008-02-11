@@ -164,7 +164,7 @@ public:
 		return reinterpret_cast< Type * >((m_Core == 0) ? (0) : (m_Core->Get()));
 	}
 	
-	operator bool(void) const
+	bool IsValid(void) const
 	{
 		return ((m_Core == 0) ? (false) : (m_Core->IsValid()));
 	}

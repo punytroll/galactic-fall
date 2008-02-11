@@ -380,7 +380,7 @@ bool MountWeaponDialog::OnClicked(Widget * EventSource)
 	}
 	else if(EventSource == m_MountButton)
 	{
-		if((m_SelectedSlotListItem != 0) && (m_SelectedWeaponListItem != 0) && (m_SelectedSlotListItem->GetSlot()->GetMountedObject() == false))
+		if((m_SelectedSlotListItem != 0) && (m_SelectedWeaponListItem != 0) && (m_SelectedSlotListItem->GetSlot()->GetMountedObject().IsValid() == false))
 		{
 			m_Ship->Mount(m_SelectedWeaponListItem->GetWeapon(), m_SelectedSlotListItem->GetSlot()->GetIdentifier());
 			m_SelectedSlotListItem->Update();
@@ -389,7 +389,7 @@ bool MountWeaponDialog::OnClicked(Widget * EventSource)
 	}
 	else if(EventSource == m_UnmountButton)
 	{
-		if((m_SelectedSlotListItem != 0) && (m_SelectedSlotListItem->GetSlot()->GetMountedObject() == true))
+		if((m_SelectedSlotListItem != 0) && (m_SelectedSlotListItem->GetSlot()->GetMountedObject().IsValid() == true))
 		{
 			m_Ship->Unmount(m_SelectedSlotListItem->GetSlot()->GetIdentifier());
 			m_SelectedSlotListItem->Update();

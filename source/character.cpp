@@ -66,6 +66,11 @@ void Character::AddCredits(u4byte Credits)
 	m_Credits += Credits;
 }
 
+void Character::AddObserver(CharacterObserver * CharacterObserver)
+{
+	m_Observers.insert(CharacterObserver);
+}
+
 bool Character::RemoveCredits(u4byte Credits)
 {
 	if(m_Credits < Credits)
@@ -78,6 +83,11 @@ bool Character::RemoveCredits(u4byte Credits)
 		
 		return true;
 	}
+}
+
+void Character::RemoveObserver(CharacterObserver * CharacterObserver)
+{
+	m_Observers.erase(m_Observers.find(CharacterObserver));
 }
 
 bool Character::IsAddingAllowed(Object * Content)

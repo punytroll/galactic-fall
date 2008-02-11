@@ -34,7 +34,7 @@ ScannerDisplay::ScannerDisplay(Widget * SupWidget) :
 
 void ScannerDisplay::Update(void)
 {
-	if((m_Owner == true) && (m_Owner->GetTarget() == true))
+	if((m_Owner.IsValid() == true) && (m_Owner->GetTarget().IsValid() == true))
 	{
 		float RadialSize(m_Owner->GetTarget()->GetRadialSize());
 		float ExtendedRadialSize((5.0f / 4.0f) * RadialSize);

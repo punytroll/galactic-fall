@@ -39,7 +39,7 @@ void MessageDispatcher::DispatchMessages(void)
 	{
 		Reference< Object > Receiver(m_MessageQueue.front()->GetReceiver());
 		
-		if(Receiver == true)
+		if(Receiver.IsValid() == true)
 		{
 			Receiver->PushMessage(m_MessageQueue.front());
 			++DispatchedMessages;
