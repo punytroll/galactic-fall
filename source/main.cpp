@@ -37,6 +37,7 @@
 #include "callbacks.h"
 #include "camera.h"
 #include "character.h"
+#include "character_observer.h"
 #include "color.h"
 #include "command_mind.h"
 #include "commodity.h"
@@ -147,7 +148,7 @@ int g_LastMotionY(-1);
 int g_MouseButton(-1);
 Camera g_Camera;
 Reference< CommandMind > g_InputMind;
-Reference< Mind > g_OutputMind;
+CharacterObserver * g_CharacterObserver;
 float g_Width(0.0f);
 float g_Height(0.0f);
 System * g_CurrentSystem;
@@ -536,7 +537,7 @@ void CalculateMovements(System * System, float Seconds)
 		if(Ship->GetCurrentSystem() != System)
 		{
 			// if another ship jumps out of the system ... remove it
-			if((g_OutputMind == false) || (g_OutputMind->GetCharacter() == 0) || (g_OutputMind->GetCharacter()->GetShip() != Ship))
+			if((g_CharacterObserver->GetObservedCharacter() == false) || (g_CharacterObserver->GetObservedCharacter()->GetShip() != Ship))
 			{
 				DeleteObject(Ship);
 				Ship = 0;
@@ -691,7 +692,7 @@ void UpdateUserInterface(void)
 	{
 		g_TimeWarpLabel->SetVisible(false);
 	}
-	if((g_OutputMind == true) && (g_OutputMind->GetCharacter() != 0) && (g_OutputMind->GetCharacter()->GetShip() != 0))
+	if((g_CharacterObserver->GetObservedCharacter() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0))
 	{
 		g_TargetLabel->SetVisible(true);
 		g_SystemLabel->SetVisible(true);
@@ -701,22 +702,22 @@ void UpdateUserInterface(void)
 		g_MiniMap->SetVisible(true);
 		g_Scanner->SetVisible(true);
 		// display the name of the target
-		if(g_OutputMind->GetCharacter()->GetShip()->GetTarget() == true)
+		if(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget() == true)
 		{
-			g_TargetLabel->SetString(g_OutputMind->GetCharacter()->GetShip()->GetTarget()->GetName());
+			g_TargetLabel->SetString(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget()->GetName());
 		}
 		else
 		{
 			g_TargetLabel->SetString("");
 		}
 		// display the name of the linked system
-		if(g_OutputMind->GetCharacter()->GetShip()->GetLinkedSystemTarget() != 0)
+		if(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetLinkedSystemTarget() != 0)
 		{
-			const std::set< System * > UnexploredSystems(g_OutputMind->GetCharacter()->GetMapKnowledge()->GetUnexploredSystems());
+			const std::set< System * > UnexploredSystems(g_CharacterObserver->GetObservedCharacter()->GetMapKnowledge()->GetUnexploredSystems());
 			
-			if(UnexploredSystems.find(g_OutputMind->GetCharacter()->GetShip()->GetLinkedSystemTarget()) == UnexploredSystems.end())
+			if(UnexploredSystems.find(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetLinkedSystemTarget()) == UnexploredSystems.end())
 			{
-				g_SystemLabel->SetString(g_OutputMind->GetCharacter()->GetShip()->GetLinkedSystemTarget()->GetName());
+				g_SystemLabel->SetString(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetLinkedSystemTarget()->GetName());
 			}
 			else
 			{
@@ -728,15 +729,15 @@ void UpdateUserInterface(void)
 			g_SystemLabel->SetString("");
 		}
 		// display fuel
-		g_FuelLabel->SetString("Fuel: " + to_string_cast(g_OutputMind->GetCharacter()->GetShip()->GetFuel(), 2));
+		g_FuelLabel->SetString("Fuel: " + to_string_cast(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetFuel(), 2));
 		// display hull
-		g_HullLabel->SetString("Hull: " + to_string_cast(g_OutputMind->GetCharacter()->GetShip()->GetHull(), 2));
+		g_HullLabel->SetString("Hull: " + to_string_cast(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetHull(), 2));
 		// display credits in every cycle
-		g_CreditsLabel->SetString("Credits: " + to_string_cast(g_OutputMind->GetCharacter()->GetCredits()));
+		g_CreditsLabel->SetString("Credits: " + to_string_cast(g_CharacterObserver->GetObservedCharacter()->GetCredits()));
 		// display the current system
-		g_CurrentSystemLabel->SetString(g_OutputMind->GetCharacter()->GetShip()->GetCurrentSystem()->GetName());
+		g_CurrentSystemLabel->SetString(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetCurrentSystem()->GetName());
 		// set system label color according to jump status
-		if(WantToJump(g_OutputMind->GetCharacter()->GetShip(), g_OutputMind->GetCharacter()->GetShip()->GetLinkedSystemTarget()) == OK)
+		if(WantToJump(g_CharacterObserver->GetObservedCharacter()->GetShip(), g_CharacterObserver->GetObservedCharacter()->GetShip()->GetLinkedSystemTarget()) == OK)
 		{
 			g_SystemLabel->GetForegroundColor().Set(0.7f, 0.8f, 1.0f);
 		}
@@ -744,9 +745,9 @@ void UpdateUserInterface(void)
 		{
 			g_SystemLabel->GetForegroundColor().Set(0.4f, 0.4f, 0.4f);
 		}
-		g_ScannerDisplay->SetOwner(g_OutputMind->GetCharacter()->GetShip()->GetReference());
+		g_ScannerDisplay->SetOwner(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetReference());
 		g_ScannerDisplay->Update();
-		g_MiniMapDisplay->SetOwner(g_OutputMind->GetCharacter()->GetShip()->GetReference());
+		g_MiniMapDisplay->SetOwner(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetReference());
 	}
 	else
 	{
@@ -792,18 +793,18 @@ void RenderSystem(System * System)
 	glDisable(GL_LIGHTING);
 	g_MainScene->Render();
 	// HUD
-	if((g_OutputMind == true) && (g_OutputMind->GetCharacter() != 0) && (g_OutputMind->GetCharacter()->GetShip() != 0) && (g_OutputMind->GetCharacter()->GetShip()->GetTarget() == true))
+	if((g_CharacterObserver->GetObservedCharacter() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0) && (g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget() == true))
 	{
 		glClear(GL_DEPTH_BUFFER_BIT);
-		DrawSelection(g_OutputMind->GetCharacter()->GetShip()->GetTarget().Get(), g_OutputMind->GetCharacter()->GetShip()->GetTarget()->GetRadialSize());
+		DrawSelection(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget().Get(), g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget()->GetRadialSize());
 		
-		Vector3f RelativePosition(g_OutputMind->GetCharacter()->GetShip()->GetTarget()->GetPosition() - g_OutputMind->GetCharacter()->GetShip()->GetPosition());
+		Vector3f RelativePosition(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget()->GetPosition() - g_CharacterObserver->GetObservedCharacter()->GetShip()->GetPosition());
 		
 		RelativePosition.Normalize();
 		glPushMatrix();
 		glPushAttrib(GL_LIGHTING_BIT);
 		glDisable(GL_LIGHTING);
-		glTranslatef(g_OutputMind->GetCharacter()->GetShip()->GetPosition().m_V.m_A[0], g_OutputMind->GetCharacter()->GetShip()->GetPosition().m_V.m_A[1], 0.0f);
+		glTranslatef(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetPosition().m_V.m_A[0], g_CharacterObserver->GetObservedCharacter()->GetShip()->GetPosition().m_V.m_A[1], 0.0f);
 		glRotatef(GetRadians(Vector2f(RelativePosition[0], RelativePosition[1])) * 180.0f / M_PI, 0.0f, 0.0f, 1.0f);
 		glColor3f(0.0f, 0.5f, 0.5f);
 		glBegin(GL_LINES);
@@ -1221,10 +1222,10 @@ void GameFrame(void)
 		TakeScreenShot();
 		g_TakeScreenShot = false;
 	}
-	if((g_OutputMind == true) && (g_OutputMind->GetCharacter() != 0) && (g_OutputMind->GetCharacter()->GetShip() != 0) && (g_OutputMind->GetCharacter()->GetShip()->GetCurrentSystem() != g_CurrentSystem))
+	if((g_CharacterObserver->GetObservedCharacter() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0) && (g_CharacterObserver->GetObservedCharacter()->GetShip()->GetCurrentSystem() != g_CurrentSystem))
 	{
 		OnOutputLeaveSystem(g_CurrentSystem);
-		g_CurrentSystem = g_OutputMind->GetCharacter()->GetShip()->GetCurrentSystem();
+		g_CurrentSystem = g_CharacterObserver->GetObservedCharacter()->GetShip()->GetCurrentSystem();
 		OnOutputEnterSystem(g_CurrentSystem);
 		EmptySystem(CurrentSystem);
 		PopulateSystem(g_CurrentSystem);
@@ -1343,7 +1344,7 @@ void LoadGameFromElement(const Element * SaveElement)
 	const std::vector< Element * > & SaveChilds(SaveElement->GetChilds());
 	std::string CurrentSystem;
 	std::string InputMindObjectIdentifier;
-	std::string OutputMindObjectIdentifier;
+	std::string ObservedCharacterObjectIdentifier;
 	
 	// setup the game world
 	PurgeGame();
@@ -1365,9 +1366,9 @@ void LoadGameFromElement(const Element * SaveElement)
 		{
 			InputMindObjectIdentifier = (*SaveChild)->GetAttribute("object-identifier");
 		}
-		else if((*SaveChild)->GetName() == "output-mind")
+		else if((*SaveChild)->GetName() == "observed-character")
 		{
-			OutputMindObjectIdentifier = (*SaveChild)->GetAttribute("object-identifier");
+			ObservedCharacterObjectIdentifier = (*SaveChild)->GetAttribute("object-identifier");
 		}
 		else if((*SaveChild)->GetName() == "mind")
 		{
@@ -1583,18 +1584,18 @@ void LoadGameFromElement(const Element * SaveElement)
 	{
 		g_InputMind = Object::GetObject(InputMindObjectIdentifier)->GetReference();
 	}
-	if(OutputMindObjectIdentifier.empty() == false)
+	if(ObservedCharacterObjectIdentifier.empty() == false)
 	{
-		g_OutputMind = Object::GetObject(OutputMindObjectIdentifier)->GetReference();
+		g_CharacterObserver->SetObservedCharacter(Object::GetObject(ObservedCharacterObjectIdentifier)->GetReference());
 	}
 	OnOutputEnterSystem(g_CurrentSystem);
 	RealTime::Invalidate();
 	PopulateSystem(g_CurrentSystem);
 	// setting up the player environment
-	if((g_OutputMind == true) && (g_OutputMind->GetCharacter() != 0) && (g_OutputMind->GetCharacter()->GetShip() != 0))
+	if((g_CharacterObserver->GetObservedCharacter() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0))
 	{
-		g_MiniMapDisplay->SetOwner(g_OutputMind->GetCharacter()->GetShip()->GetReference());
-		g_ScannerDisplay->SetOwner(g_OutputMind->GetCharacter()->GetShip()->GetReference());
+		g_MiniMapDisplay->SetOwner(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetReference());
+		g_ScannerDisplay->SetOwner(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetReference());
 	}
 }
 
@@ -1654,9 +1655,9 @@ void SaveGame(std::ostream & OStream)
 	{
 		XML << element << "input-mind" << attribute << "object-identifier" << value << g_InputMind->GetObjectIdentifier() << end;
 	}
-	if(g_OutputMind == true)
+	if(g_CharacterObserver->GetObservedCharacter() == true)
 	{
-		XML << element << "output-mind" << attribute << "object-identifier" << value << g_OutputMind->GetObjectIdentifier() << end;
+		XML << element << "observed-character" << attribute << "object-identifier" << value << g_CharacterObserver->GetObservedCharacter()->GetObjectIdentifier() << end;
 	}
 	if(g_InputMind == true)
 	{
@@ -1769,9 +1770,9 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 				{
 					DeleteObject(g_InputMind->GetCharacter()->GetShip());
 				}
-				else if(g_OutputMind == true)
+				else if(g_CharacterObserver->GetObservedCharacter() == true)
 				{
-					DeleteObject(g_OutputMind->GetCharacter()->GetShip());
+					DeleteObject(g_CharacterObserver->GetObservedCharacter()->GetShip());
 				}
 			}
 			
@@ -1803,9 +1804,9 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				if((g_MountWeaponDialog == 0) && (g_OutputMind == true))
+				if((g_MountWeaponDialog == 0) && (g_CharacterObserver->GetObservedCharacter() == true))
 				{
-					g_MountWeaponDialog = new MountWeaponDialog(g_UserInterface->GetRootWidget(), g_OutputMind->GetCharacter()->GetShip());
+					g_MountWeaponDialog = new MountWeaponDialog(g_UserInterface->GetRootWidget(), g_CharacterObserver->GetObservedCharacter()->GetShip());
 					g_MountWeaponDialog->GrabKeyFocus();
 					g_MountWeaponDialog->AddDestroyListener(&g_GlobalDestroyListener);
 				}
@@ -2105,10 +2106,10 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				if((g_MapDialog == 0) && (g_OutputMind == true))
+				if((g_MapDialog == 0) && (g_CharacterObserver->GetObservedCharacter() == true))
 				{
 					g_Pause = true;
-					g_MapDialog = new MapDialog(g_UserInterface->GetRootWidget(), g_OutputMind->GetCharacter()->GetShip()->GetCurrentSystem(), g_OutputMind->GetCharacter());
+					g_MapDialog = new MapDialog(g_UserInterface->GetRootWidget(), g_CharacterObserver->GetObservedCharacter()->GetShip()->GetCurrentSystem(), g_CharacterObserver->GetObservedCharacter().Get());
 					g_MapDialog->GrabKeyFocus();
 					g_MapDialog->AddDestroyListener(&g_GlobalDestroyListener);
 					if(g_InputMind == true)
@@ -2284,26 +2285,26 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 				{
 					std::set< Character * > Characters(Character::GetCharacters());
 					
-					if(g_OutputMind == false)
+					if(g_CharacterObserver->GetObservedCharacter() == false)
 					{
 						if(Characters.empty() == false)
 						{
-							g_OutputMind = (*(Characters.rbegin()))->GetActiveMind()->GetReference();
+							g_CharacterObserver->SetObservedCharacter((*(Characters.rbegin()))->GetReference());
 						}
 					}
 					else
 					{
-						std::set< Character * >::iterator CharacterIterator(Characters.find(g_OutputMind->GetCharacter()));
+						std::set< Character * >::iterator CharacterIterator(Characters.find(g_CharacterObserver->GetObservedCharacter().Get()));
 						
 						assert(CharacterIterator != Characters.end());
 						if(CharacterIterator == Characters.begin())
 						{
-							g_OutputMind.Clear();
+							g_CharacterObserver->ClearObservedCharacter();
 						}
 						else
 						{
 							--CharacterIterator;
-							g_OutputMind = (*CharacterIterator)->GetActiveMind()->GetReference();
+							g_CharacterObserver->SetObservedCharacter((*CharacterIterator)->GetReference());
 						}
 					}
 				}
@@ -2357,26 +2358,26 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 				{
 					std::set< Character * > Characters(Character::GetCharacters());
 					
-					if(g_OutputMind == false)
+					if(g_CharacterObserver->GetObservedCharacter() == false)
 					{
 						if(Characters.empty() == false)
 						{
-							g_OutputMind = (*(Characters.begin()))->GetActiveMind()->GetReference();
+							g_CharacterObserver->SetObservedCharacter((*(Characters.begin()))->GetReference());
 						}
 					}
 					else
 					{
-						std::set< Character * >::iterator CharacterIterator(Characters.find(g_OutputMind->GetCharacter()));
+						std::set< Character * >::iterator CharacterIterator(Characters.find(g_CharacterObserver->GetObservedCharacter().Get()));
 						
 						assert(CharacterIterator != Characters.end());
 						++CharacterIterator;
 						if(CharacterIterator == Characters.end())
 						{
-							g_OutputMind.Clear();
+							g_CharacterObserver->ClearObservedCharacter();
 						}
 						else
 						{
-							g_OutputMind = (*CharacterIterator)->GetActiveMind()->GetReference();
+							g_CharacterObserver->SetObservedCharacter((*CharacterIterator)->GetReference());
 						}
 					}
 				}
@@ -2564,6 +2565,7 @@ int main(int argc, char ** argv)
 	g_GameTimeTimeoutNotifications = new TimeoutNotificationManager();
 	g_RealTimeTimeoutNotifications = new TimeoutNotificationManager();
 	g_SystemStatistics = new SystemStatistics();
+	g_CharacterObserver = new CharacterObserver();
 	
 	// parse command line
 	std::vector< std::string > Arguments(argv, argv + argc);
@@ -2674,6 +2676,7 @@ int main(int argc, char ** argv)
 		std::cout << std::endl;
 	}
 	delete g_AssetClassManager;
+	delete g_CharacterObserver;
 	delete g_CommodityClassManager;
 	delete g_GameTimeTimeoutNotifications;
 	delete g_GraphicsEngine;
