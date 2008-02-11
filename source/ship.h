@@ -62,6 +62,7 @@ public:
 	float GetFuelCapacity(void) const;
 	float GetHull(void) const;
 	System * GetLinkedSystemTarget(void);
+	const System * GetLinkedSystemTarget(void) const;
 	float GetMaximumSpeed(void) const;
 	const ShipClass * GetShipClass(void) const;
 	const std::map< std::string, Slot * > & GetSlots(void) const;
@@ -140,6 +141,11 @@ inline float Ship::GetHull(void) const
 }
 
 inline System * Ship::GetLinkedSystemTarget(void)
+{
+	return m_LinkedSystemTarget;
+}
+
+inline const System * Ship::GetLinkedSystemTarget(void) const
 {
 	return m_LinkedSystemTarget;
 }
