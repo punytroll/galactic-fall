@@ -49,6 +49,9 @@ character_h = \
 	$(object_h) \
 	$(type_definitions_h)
 
+character_observer_h = \
+	character_observer.h
+
 clicked_listener_h = \
 	clicked_listener.h
 
@@ -516,6 +519,9 @@ camera.o: camera.cpp $(camera_h) $(position_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 character.o: character.cpp $(character_h) $(map_knowledge_h) $(message_h) $(mind_h)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+character_observer.o: character_observer.cpp $(character_observer_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 clicked_listener.o: clicked_listener.cpp $(clicked_listener_h)
