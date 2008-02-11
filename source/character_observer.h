@@ -28,12 +28,14 @@ class CharacterObserver
 {
 public:
 	CharacterObserver(void);
-	~CharacterObserver(void);
+	virtual ~CharacterObserver(void);
 	// getters
 	Reference< Character > & GetObservedCharacter(void);
 	const Reference< Character > & GetObservedCharacter(void) const;
 	// setters
 	void SetObservedCharacter(Reference< Character > ObservedCharacter);
+	// modifiers
+	virtual void HandleMessage(Message * Message);
 private:
 	Reference< Character > m_ObservedCharacter;
 };

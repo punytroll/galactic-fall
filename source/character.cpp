@@ -18,6 +18,7 @@
 **/
 
 #include "character.h"
+#include "character_observer.h"
 #include "map_knowledge.h"
 #include "message.h"
 #include "mind.h"
@@ -42,12 +43,19 @@ Character::~Character(void)
 
 void Character::Update(void)
 {
-	// forward messages to the active mind
+	// forward all messages in the message queue
 	Message * Message(0);
 	
 	// take responsibility for the popped message
 	while((Message = PopMessage()) != 0)
 	{
+		// forward message to all registered CharacterObservers
+		for(std::set< CharacterObserver * >::iterator ObserverIterator = m_Observers.begin(); ObserverIterator != m_Observers.end(); ++ObserverIterator)
+		{
+			// we would like to push the messages because handling them brings us into another subsystem, but the delete down there is a stopper
+			(*ObserverIterator)->HandleMessage(Message);
+		}
+		// forward message to the active mind
 		if(m_Minds.empty() == false)
 		{
 			m_Minds.front()->HandleMessage(Message);

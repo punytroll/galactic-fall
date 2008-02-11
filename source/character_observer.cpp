@@ -19,6 +19,7 @@
 
 #include "character.h"
 #include "character_observer.h"
+#include "message.h"
 
 CharacterObserver::CharacterObserver(void)
 {
@@ -43,4 +44,9 @@ void CharacterObserver::SetObservedCharacter(Reference< Character > ObservedChar
 	{
 		m_ObservedCharacter->AddObserver(this);
 	}
+}
+
+void CharacterObserver::HandleMessage(Message * Message)
+{
+	// silently ignore the message
 }

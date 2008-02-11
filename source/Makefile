@@ -518,10 +518,10 @@ button.o: button.cpp $(button_h) $(clicked_listener_h) $(color_h) $(globals_h)
 camera.o: camera.cpp $(camera_h) $(position_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-character.o: character.cpp $(character_h) $(map_knowledge_h) $(message_h) $(mind_h)
+character.o: character.cpp $(character_h) $(character_observer_h) $(map_knowledge_h) $(message_h) $(mind_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-character_observer.o: character_observer.cpp $(character_h) $(character_observer_h)
+character_observer.o: character_observer.cpp $(character_h) $(character_observer_h) $(message_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 clicked_listener.o: clicked_listener.cpp $(clicked_listener_h)
