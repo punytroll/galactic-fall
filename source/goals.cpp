@@ -464,7 +464,7 @@ void GoalDestroyTarget::Activate(void)
 void GoalDestroyTarget::Process(void)
 {
 	assert(GetState() == Goal::ACTIVE);
-	if(GetMind()->GetCharacter()->GetShip()->GetTarget() == true)
+	if(GetMind()->GetCharacter()->GetShip()->GetTarget().IsValid() == true)
 	{
 		Vector3f ToDestination(GetMind()->GetCharacter()->GetShip()->GetTarget()->GetPosition() - GetMind()->GetCharacter()->GetShip()->GetPosition());
 		float Length(ToDestination.Length());

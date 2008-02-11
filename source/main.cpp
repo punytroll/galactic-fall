@@ -167,6 +167,9 @@ bool g_EchoEvents(false);
 bool g_EchoResizes(false);
 bool g_DumpEndReport(false);
 bool g_TakeScreenShot(false);
+// This map holds the References to the Graphics::Nodes that have no 1:1 connection to an Object BUT have to be referenced in the Game subsystem
+// 1. Objects with a 1:1 connection to a Graphics::Node have the m_Vizualization member and a static resolver GetObject(Graphics:Node *)
+// 2. Graphics::Nodes without any reference in the Game sub system are without relevance here
 std::map< Graphics::Node *, Reference< Graphics::Node > > g_VisualizationReferences;
 ResourceReader * g_ResourceReader(0);
 
@@ -537,7 +540,7 @@ void CalculateMovements(System * System, float Seconds)
 		if(Ship->GetCurrentSystem() != System)
 		{
 			// if another ship jumps out of the system ... remove it
-			if((g_CharacterObserver->GetObservedCharacter() == false) || (g_CharacterObserver->GetObservedCharacter()->GetShip() != Ship))
+			if((g_CharacterObserver->GetObservedCharacter().IsValid() == false) || (g_CharacterObserver->GetObservedCharacter()->GetShip() != Ship))
 			{
 				DeleteObject(Ship);
 				Ship = 0;
@@ -593,7 +596,7 @@ void CalculateMovements(System * System, float Seconds)
 			{
 				Ship * TheShip(*ShipIterator);
 				
-				if((TheShot->GetShooter() == true) && (TheShot->GetShooter().Get() != TheShip))
+				if((TheShot->GetShooter().IsValid() == true) && (TheShot->GetShooter().Get() != TheShip))
 				{
 					if((TheShot->GetPosition() - TheShip->GetPosition()).SquaredLength() < (TheShot->GetRadialSize() * TheShot->GetRadialSize() + TheShip->GetRadialSize() * TheShip->GetRadialSize()))
 					{
@@ -692,7 +695,7 @@ void UpdateUserInterface(void)
 	{
 		g_TimeWarpLabel->SetVisible(false);
 	}
-	if((g_CharacterObserver->GetObservedCharacter() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0))
+	if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0))
 	{
 		g_TargetLabel->SetVisible(true);
 		g_SystemLabel->SetVisible(true);
@@ -702,7 +705,7 @@ void UpdateUserInterface(void)
 		g_MiniMap->SetVisible(true);
 		g_Scanner->SetVisible(true);
 		// display the name of the target
-		if(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget() == true)
+		if(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget().IsValid() == true)
 		{
 			g_TargetLabel->SetString(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget()->GetName());
 		}
@@ -793,7 +796,7 @@ void RenderSystem(System * System)
 	glDisable(GL_LIGHTING);
 	g_MainScene->Render();
 	// HUD
-	if((g_CharacterObserver->GetObservedCharacter() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0) && (g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget() == true))
+	if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0) && (g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget().IsValid() == true))
 	{
 		glClear(GL_DEPTH_BUFFER_BIT);
 		DrawSelection(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget().Get(), g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget()->GetRadialSize());
@@ -847,7 +850,7 @@ public:
 		}
 		else if(EventSource == g_MapDialog)
 		{
-			if((g_InputMind == true) && (g_InputMind->GetCharacter() != 0) && (g_InputMind->GetCharacter()->GetShip() != 0) && (g_InputMind->GetCharacter()->GetShip()->GetCurrentSystem()->IsLinkedToSystem(g_MapDialog->GetStarMapDisplay()->GetSelectedSystem()) == true))
+			if((g_InputMind.IsValid() == true) && (g_InputMind->GetCharacter() != 0) && (g_InputMind->GetCharacter()->GetShip() != 0) && (g_InputMind->GetCharacter()->GetShip()->GetCurrentSystem()->IsLinkedToSystem(g_MapDialog->GetStarMapDisplay()->GetSelectedSystem()) == true))
 			{
 				g_InputMind->SelectLinkedSystem(g_MapDialog->GetStarMapDisplay()->GetSelectedSystem());
 			}
@@ -1222,7 +1225,7 @@ void GameFrame(void)
 		TakeScreenShot();
 		g_TakeScreenShot = false;
 	}
-	if((g_CharacterObserver->GetObservedCharacter() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0) && (g_CharacterObserver->GetObservedCharacter()->GetShip()->GetCurrentSystem() != g_CurrentSystem))
+	if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0) && (g_CharacterObserver->GetObservedCharacter()->GetShip()->GetCurrentSystem() != g_CurrentSystem))
 	{
 		OnOutputLeaveSystem(g_CurrentSystem);
 		g_CurrentSystem = g_CharacterObserver->GetObservedCharacter()->GetShip()->GetCurrentSystem();
@@ -1592,7 +1595,7 @@ void LoadGameFromElement(const Element * SaveElement)
 	RealTime::Invalidate();
 	PopulateSystem(g_CurrentSystem);
 	// setting up the player environment
-	if((g_CharacterObserver->GetObservedCharacter() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0))
+	if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0))
 	{
 		g_MiniMapDisplay->SetOwner(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetReference());
 		g_ScannerDisplay->SetOwner(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetReference());
@@ -1651,15 +1654,15 @@ void SaveGame(std::ostream & OStream)
 		XML << element << "current-system" << attribute << "identifier" << value << g_CurrentSystem->GetIdentifier() << end;
 	}
 	XML << element << "time-warp" << attribute << "value" << value << g_TimeWarp << end;
-	if(g_InputMind == true)
+	if(g_InputMind.IsValid() == true)
 	{
 		XML << element << "input-mind" << attribute << "object-identifier" << value << g_InputMind->GetObjectIdentifier() << end;
 	}
-	if(g_CharacterObserver->GetObservedCharacter() == true)
+	if(g_CharacterObserver->GetObservedCharacter().IsValid() == true)
 	{
 		XML << element << "observed-character" << attribute << "object-identifier" << value << g_CharacterObserver->GetObservedCharacter()->GetObjectIdentifier() << end;
 	}
-	if(g_InputMind == true)
+	if(g_InputMind.IsValid() == true)
 	{
 		// save the input mind
 		XML << element << "mind" << attribute << "class" << value << "command-mind" << attribute << "object-identifier" << value << g_InputMind->GetObjectIdentifier();
@@ -1731,7 +1734,7 @@ void SaveGame(std::ostream & OStream)
 	// save main camera properties
 	XML << element << "main-camera";
 	XML << element << "position" << attribute << "x" << value << g_Camera.GetPosition().m_V.m_A[0] << attribute << "y" << value << g_Camera.GetPosition().m_V.m_A[1] << attribute << "z" << value << g_Camera.GetPosition().m_V.m_A[2] << end;
-	if(g_Camera.GetFocus() != 0)
+	if(g_Camera.GetFocus().IsValid() != 0)
 	{
 		if(g_Camera.GetFocus()->GetObjectIdentifier() == "")
 		{
@@ -1766,11 +1769,11 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				if(g_InputMind == true)
+				if(g_InputMind.IsValid() == true)
 				{
 					DeleteObject(g_InputMind->GetCharacter()->GetShip());
 				}
-				else if(g_CharacterObserver->GetObservedCharacter() == true)
+				else if(g_CharacterObserver->GetObservedCharacter().IsValid() == true)
 				{
 					DeleteObject(g_CharacterObserver->GetObservedCharacter()->GetShip());
 				}
@@ -1782,7 +1785,7 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				if(g_InputMind == true)
+				if(g_InputMind.IsValid() == true)
 				{
 					g_InputMind->Refuel();
 				}
@@ -1804,7 +1807,7 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				if((g_MountWeaponDialog == 0) && (g_CharacterObserver->GetObservedCharacter() == true))
+				if((g_MountWeaponDialog == 0) && (g_CharacterObserver->GetObservedCharacter().IsValid() == true))
 				{
 					g_MountWeaponDialog = new MountWeaponDialog(g_UserInterface->GetRootWidget(), g_CharacterObserver->GetObservedCharacter()->GetShip());
 					g_MountWeaponDialog->GrabKeyFocus();
@@ -1818,7 +1821,7 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				if(g_InputMind == true)
+				if(g_InputMind.IsValid() == true)
 				{
 					g_InputMind->TargetPreviousShip();
 				}
@@ -1830,7 +1833,7 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				if(g_InputMind == true)
+				if(g_InputMind.IsValid() == true)
 				{
 					g_InputMind->TargetNextShip();
 				}
@@ -1842,7 +1845,7 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				if(g_InputMind == true)
+				if(g_InputMind.IsValid() == true)
 				{
 					g_InputMind->TargetPreviousPlanet();
 				}
@@ -1854,7 +1857,7 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				if(g_InputMind == true)
+				if(g_InputMind.IsValid() == true)
 				{
 					g_InputMind->TargetNextPlanet();
 				}
@@ -1899,7 +1902,7 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				if(g_InputMind == true)
+				if(g_InputMind.IsValid() == true)
 				{
 					g_InputMind->TargetNearestCargo();
 				}
@@ -1911,7 +1914,7 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				if(g_InputMind == true)
+				if(g_InputMind.IsValid() == true)
 				{
 					switch(WantToScoop(g_InputMind->GetCharacter()->GetShip(), dynamic_cast< const Commodity * >(g_InputMind->GetCharacter()->GetShip()->GetTarget().Get())))
 					{
@@ -1955,7 +1958,7 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				if(g_InputMind == true)
+				if(g_InputMind.IsValid() == true)
 				{
 					g_InputMind->TargetPreviousCargo();
 				}
@@ -1967,7 +1970,7 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				if(g_InputMind == true)
+				if(g_InputMind.IsValid() == true)
 				{
 					g_InputMind->TargetNextCargo();
 				}
@@ -1979,7 +1982,7 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				if(g_InputMind == true)
+				if(g_InputMind.IsValid() == true)
 				{
 					switch(WantToJump(g_InputMind->GetCharacter()->GetShip(), g_InputMind->GetCharacter()->GetShip()->GetLinkedSystemTarget()))
 					{
@@ -2017,7 +2020,7 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				if(g_InputMind == true)
+				if(g_InputMind.IsValid() == true)
 				{
 					const Planet * SelectedPlanet(dynamic_cast< const Planet * >(g_InputMind->GetCharacter()->GetShip()->GetTarget().Get()));
 					
@@ -2081,7 +2084,7 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				if(g_InputMind == true)
+				if(g_InputMind.IsValid() == true)
 				{
 					SetMessage("Jettison cargo.");
 					g_InputMind->Jettison();
@@ -2094,7 +2097,7 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				if(g_InputMind == true)
+				if(g_InputMind.IsValid() == true)
 				{
 					g_InputMind->SelectNextLinkedSystem();
 				}
@@ -2106,13 +2109,13 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				if((g_MapDialog == 0) && (g_CharacterObserver->GetObservedCharacter() == true))
+				if((g_MapDialog == 0) && (g_CharacterObserver->GetObservedCharacter().IsValid() == true))
 				{
 					g_Pause = true;
 					g_MapDialog = new MapDialog(g_UserInterface->GetRootWidget(), g_CharacterObserver->GetObservedCharacter()->GetShip()->GetCurrentSystem(), g_CharacterObserver->GetObservedCharacter().Get());
 					g_MapDialog->GrabKeyFocus();
 					g_MapDialog->AddDestroyListener(&g_GlobalDestroyListener);
-					if(g_InputMind == true)
+					if(g_InputMind.IsValid() == true)
 					{
 						g_InputMind->DisableAccelerate();
 						g_InputMind->DisableTurnLeft();
@@ -2154,14 +2157,14 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				if(g_InputMind == true)
+				if(g_InputMind.IsValid() == true)
 				{
 					g_InputMind->EnableFire();
 				}
 			}
 			else
 			{
-				if(g_InputMind == true)
+				if(g_InputMind.IsValid() == true)
 				{
 					g_InputMind->DisableFire();
 				}
@@ -2262,14 +2265,14 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				if(g_InputMind == true)
+				if(g_InputMind.IsValid() == true)
 				{
 					g_InputMind->EnableAccelerate();
 				}
 			}
 			else
 			{
-				if(g_InputMind == true)
+				if(g_InputMind.IsValid() == true)
 				{
 					g_InputMind->DisableAccelerate();
 				}
@@ -2281,11 +2284,11 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				if(g_InputMind == false)
+				if(g_InputMind.IsValid() == false)
 				{
 					std::set< Character * > Characters(Character::GetCharacters());
 					
-					if(g_CharacterObserver->GetObservedCharacter() == false)
+					if(g_CharacterObserver->GetObservedCharacter().IsValid() == false)
 					{
 						if(Characters.empty() == false)
 						{
@@ -2299,7 +2302,7 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 						assert(CharacterIterator != Characters.end());
 						if(CharacterIterator == Characters.begin())
 						{
-							g_CharacterObserver->ClearObservedCharacter();
+							g_CharacterObserver->SetObservedCharacter(Reference< Character >());
 						}
 						else
 						{
@@ -2316,14 +2319,14 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				if(g_InputMind == true)
+				if(g_InputMind.IsValid() == true)
 				{
 					g_InputMind->EnableTurnLeft();
 				}
 			}
 			else
 			{
-				if(g_InputMind == true)
+				if(g_InputMind.IsValid() == true)
 				{
 					g_InputMind->DisableTurnLeft();
 				}
@@ -2335,14 +2338,14 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				if(g_InputMind == true)
+				if(g_InputMind.IsValid() == true)
 				{
 					g_InputMind->EnableTurnRight();
 				}
 			}
 			else
 			{
-				if(g_InputMind == true)
+				if(g_InputMind.IsValid() == true)
 				{
 					g_InputMind->DisableTurnRight();
 				}
@@ -2354,11 +2357,11 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				if(g_InputMind == false)
+				if(g_InputMind.IsValid() == false)
 				{
 					std::set< Character * > Characters(Character::GetCharacters());
 					
-					if(g_CharacterObserver->GetObservedCharacter() == false)
+					if(g_CharacterObserver->GetObservedCharacter().IsValid() == false)
 					{
 						if(Characters.empty() == false)
 						{
@@ -2373,7 +2376,7 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 						++CharacterIterator;
 						if(CharacterIterator == Characters.end())
 						{
-							g_CharacterObserver->ClearObservedCharacter();
+							g_CharacterObserver->SetObservedCharacter(Reference< Character >());
 						}
 						else
 						{

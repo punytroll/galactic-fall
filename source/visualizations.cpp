@@ -99,7 +99,7 @@ void VisualizeShip(Ship * Ship, Graphics::Node * Container)
 {
 	assert(Ship != 0);
 	assert(Ship->GetVisualization() == 0);
-	assert(Ship->GetEngineGlowParticleSystem() == false);
+	assert(Ship->GetEngineGlowParticleSystem().IsValid() == false);
 	assert(Container != 0);
 	
 	Graphics::ModelObject * Visualization(new Graphics::ModelObject());

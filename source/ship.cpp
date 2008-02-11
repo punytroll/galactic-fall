@@ -271,7 +271,7 @@ void Ship::Update(float Seconds)
 					m_Velocity *= GetMaximumSpeed();
 				}
 				m_Fuel -= FuelConsumption;
-				if(m_EngineGlowParticleSystem == true)
+				if(m_EngineGlowParticleSystem.IsValid() == true)
 				{
 					for(int I = 0; I < 4; ++I)
 					{

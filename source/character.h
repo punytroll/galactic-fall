@@ -26,6 +26,7 @@
 #include "object.h"
 #include "type_definitions.h"
 
+class CharacterObserver;
 class MapKnowledge;
 class Mind;
 class Ship;
@@ -55,7 +56,9 @@ public:
 	// modifiers
 	void Update(void);
 	void AddCredits(u4byte Credits);
+	void AddObserver(CharacterObserver * Reference);
 	bool RemoveCredits(u4byte Credits);
+	void RemoveObserver(CharacterObserver * Reference);
 protected:
 	virtual bool IsAddingAllowed(Object * Content);
 	virtual bool IsRemovingAllowed(Object * Content);
@@ -63,6 +66,7 @@ protected:
 	virtual void OnContentRemoved(Object * Content);
 private:
 	std::deque< Mind * > m_Minds;
+	std::set< CharacterObserver * > m_Observers;
 	u4byte m_Credits;
 	MapKnowledge * m_MapKnowledge;
 	Ship * m_Ship;
