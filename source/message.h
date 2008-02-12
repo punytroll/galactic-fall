@@ -31,7 +31,9 @@ class Message
 public:
 	Message(const std::string & TypeIdentifier, Reference< Object > Sender, Reference< Object > Receiver);
 	// getters
+	Reference< Object > & GetReceiver(void);
 	const Reference< Object > & GetReceiver(void) const;
+	Reference< Object > & GetSender(void);
 	const Reference< Object > & GetSender(void) const;
 	const std::string & GetTypeIdentifier(void) const;
 private:
@@ -40,9 +42,19 @@ private:
 	std::string m_TypeIdentifier;
 };
 
+inline Reference< Object > & Message::GetReceiver(void)
+{
+	return m_Receiver;
+}
+
 inline const Reference< Object > & Message::GetReceiver(void) const
 {
 	return m_Receiver;
+}
+
+inline Reference< Object > & Message::GetSender(void)
+{
+	return m_Sender;
 }
 
 inline const Reference< Object > & Message::GetSender(void) const
