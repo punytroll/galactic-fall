@@ -66,6 +66,7 @@ public:
 	float GetMaximumSpeed(void) const;
 	const ShipClass * GetShipClass(void) const;
 	const std::map< std::string, Slot * > & GetSlots(void) const;
+	Reference< PhysicalObject > & GetTarget(void);
 	const Reference< PhysicalObject > & GetTarget(void) const;
 	float GetTurnSpeed(void) const;
 	const Vector3f & GetVelocity(void) const;
@@ -163,6 +164,11 @@ inline const ShipClass * Ship::GetShipClass(void) const
 inline const std::map< std::string, Slot * > & Ship::GetSlots(void) const
 {
 	return m_Slots;
+}
+
+inline Reference< PhysicalObject > & Ship::GetTarget(void)
+{
+	return m_Target;
 }
 
 inline const Reference< PhysicalObject > & Ship::GetTarget(void) const
