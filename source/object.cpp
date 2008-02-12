@@ -28,13 +28,11 @@
 
 std::set< Object * > Object::m_Objects;
 std::map< std::string, Object * > Object::m_IdentifiedObjects;
-std::map< Graphics::Node *, Object * > Object::m_VisualizationBackReferences;
 
 Object::Object(void) :
 	m_Messages(0),
 	m_Reference(*this),
-	m_Container(0),
-	m_Visualization(0)
+	m_Container(0)
 {
 	m_Objects.insert(this);
 }
@@ -43,7 +41,7 @@ Object::~Object(void)
 {
 	// make some object hierarchy integrity checks first
 	assert(m_Container == 0);
-	assert(m_Visualization == 0);
+	assert(m_Visualization.IsValid() == false);
 	assert(m_Content.empty() == true);
 	// invalidate reference first, so no one accesses this object
 	m_Reference.Invalidate();
@@ -108,9 +106,9 @@ void Object::Destroy(void)
 			throw std::runtime_error("RemoveContent() must not fail during Destroy()");
 		}
 	}
-	if(m_Visualization != 0)
+	if(m_Visualization.IsValid() == true)
 	{
-		Graphics::Node * Visualization(GetVisualization());
+		Reference< Graphics::Node > Visualization(GetVisualization());
 		
 		UnsetVisualization();
 		Visualization->Remove();
