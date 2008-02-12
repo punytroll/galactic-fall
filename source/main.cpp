@@ -546,9 +546,9 @@ void CalculateMovements(System * System, float Seconds)
 				Ship = 0;
 			}
 		}
-		if((Ship != 0) && (Ship->GetVisualization() != 0))
+		// update the ship's visualization
+		if((Ship != 0) && (Ship->GetVisualization().IsValid() == true))
 		{
-			// update visualization
 			Ship->GetVisualization()->SetPosition(Ship->GetPosition());
 			Ship->GetVisualization()->SetOrientation(Ship->GetAngularPosition());
 		}
@@ -1089,16 +1089,6 @@ void OnGraphicsNodeDestroy(Graphics::Node * Node)
 	{
 		g_MainScene = 0;
 	}
-	else
-	{
-		Object * TheObject(Object::GetObject(Node));
-		
-		if(TheObject != 0)
-		{
-			assert(TheObject->GetVisualization() == Node);
-			TheObject->UnsetVisualization();
-		}
-	}
 	
 	std::map< Graphics::Node *, Reference< Graphics::Node > >::iterator VisualizationReferenceIterator(g_VisualizationReferences.find(Node));
 	
@@ -1107,7 +1097,6 @@ void OnGraphicsNodeDestroy(Graphics::Node * Node)
 		VisualizationReferenceIterator->second.Invalidate();
 		g_VisualizationReferences.erase(VisualizationReferenceIterator);
 	}
-	
 	delete Node;
 }
 

@@ -34,24 +34,26 @@
 #include "weapon.h"
 #include "weapon_class.h"
 
+extern std::map< Graphics::Node *, Reference< Graphics::Node > > g_VisualizationReferences;
+
 Reference< Graphics::ParticleSystem > CreateParticleSystem(const std::string & ParticleSystemClassIdentifier);
 
 void UnvisualizeObject(Object * Object)
 {
 	assert(Object != 0);
 	
-	Graphics::Node * Visualization(Object->GetVisualization());
+	Reference< Graphics::Node > VisualizationReference(Object->GetVisualization());
 	
-	assert(Visualization != 0);
+	assert(VisualizationReference.IsValid() == true);
 	Object->UnsetVisualization();
-	Visualization->Remove();
-	Visualization->Destroy();
+	VisualizationReference->Remove();
+	VisualizationReference->Destroy();
 }
 
 void VisualizeCommodity(Commodity * Commodity, Graphics::Node * Container)
 {
 	assert(Commodity != 0);
-	assert(Commodity->GetVisualization() == 0);
+	assert(Commodity->GetVisualization().IsValid() == false);
 	assert(Container != 0);
 	
 	Graphics::ModelObject * Visualization(new Graphics::ModelObject());
@@ -64,8 +66,14 @@ void VisualizeCommodity(Commodity * Commodity, Graphics::Node * Container)
 	Visualization->SetOrientation(Commodity->GetAngularPosition());
 	Visualization->SetPosition(Commodity->GetPosition());
 	Visualization->SetUseLighting(true);
+	
+	// create the Reference
+	Reference< Graphics::Node > VisualizationReference(*Visualization);
+	
+	// add it to the global container
+	g_VisualizationReferences[Visualization] = VisualizationReference;
 	// set as the object's visualization
-	Commodity->SetVisualization(Visualization);
+	Commodity->SetVisualization(VisualizationReference);
 	// add to the scene
 	Container->AddNode(Visualization);
 }
@@ -73,7 +81,7 @@ void VisualizeCommodity(Commodity * Commodity, Graphics::Node * Container)
 void VisualizePlanet(Planet * Planet, Graphics::Node * Container)
 {
 	assert(Planet != 0);
-	assert(Planet->GetVisualization() == 0);
+	assert(Planet->GetVisualization().IsValid() == false);
 	assert(Container != 0);
 	
 	Graphics::ModelObject * Visualization(new Graphics::ModelObject());
@@ -89,8 +97,14 @@ void VisualizePlanet(Planet * Planet, Graphics::Node * Container)
 	Visualization->SetPosition(Planet->GetPosition());
 	Visualization->SetScale(Planet->GetRadialSize());
 	Visualization->SetUseLighting(true);
+	
+	// create the Reference
+	Reference< Graphics::Node > VisualizationReference(*Visualization);
+	
+	// add it to the global container
+	g_VisualizationReferences[Visualization] = VisualizationReference;
 	// set as the object's visualization
-	Planet->SetVisualization(Visualization);
+	Planet->SetVisualization(VisualizationReference);
 	// add to the scene
 	Container->AddNode(Visualization);
 }
@@ -98,7 +112,7 @@ void VisualizePlanet(Planet * Planet, Graphics::Node * Container)
 void VisualizeShip(Ship * Ship, Graphics::Node * Container)
 {
 	assert(Ship != 0);
-	assert(Ship->GetVisualization() == 0);
+	assert(Ship->GetVisualization().IsValid() == false);
 	assert(Ship->GetEngineGlowParticleSystem().IsValid() == false);
 	assert(Container != 0);
 	
@@ -116,8 +130,14 @@ void VisualizeShip(Ship * Ship, Graphics::Node * Container)
 	Visualization->SetOrientation(Ship->GetAngularPosition());
 	Visualization->SetPosition(Ship->GetPosition());
 	Visualization->SetUseLighting(true);
+	
+	// create the Reference
+	Reference< Graphics::Node > VisualizationReference(*Visualization);
+	
+	// add it to the global container
+	g_VisualizationReferences[Visualization] = VisualizationReference;
 	// set as the object's visualization
-	Ship->SetVisualization(Visualization);
+	Ship->SetVisualization(VisualizationReference);
 	// add to the scene
 	Container->AddNode(Visualization);
 	
@@ -145,7 +165,7 @@ void VisualizeShip(Ship * Ship, Graphics::Node * Container)
 void VisualizeShot(Shot * Shot, Graphics::Node * Container)
 {
 	assert(Shot != 0);
-	assert(Shot->GetVisualization() == 0);
+	assert(Shot->GetVisualization().IsValid() == false);
 	assert(Container != 0);
 	
 	Graphics::ModelObject * Visualization(new Graphics::ModelObject());
@@ -159,7 +179,14 @@ void VisualizeShot(Shot * Shot, Graphics::Node * Container)
 	Visualization->SetPosition(Shot->GetPosition());
 	Visualization->SetUseBlending(true);
 	Visualization->SetUseLighting(false);
-	Shot->SetVisualization(Visualization);
+	
+	// create the Reference
+	Reference< Graphics::Node > VisualizationReference(*Visualization);
+	
+	// add it to the global container
+	g_VisualizationReferences[Visualization] = VisualizationReference;
+	// set as the object's visualization
+	Shot->SetVisualization(VisualizationReference);
 	// add to the scene
 	Container->AddNode(Visualization);
 }
@@ -167,7 +194,7 @@ void VisualizeShot(Shot * Shot, Graphics::Node * Container)
 void VisualizeWeapon(Weapon * Weapon, Graphics::Node * Container)
 {
 	assert(Weapon != 0);
-	assert(Weapon->GetVisualization() == 0);
+	assert(Weapon->GetVisualization().IsValid() == false);
 	assert(Container != 0);
 	
 	Graphics::ModelObject * Visualization(new Graphics::ModelObject());
@@ -179,7 +206,14 @@ void VisualizeWeapon(Weapon * Weapon, Graphics::Node * Container)
 	Visualization->SetOrientation(Weapon->GetSlot()->GetOrientation() * Weapon->GetOrientation());
 	Visualization->SetPosition(Weapon->GetPosition() + Weapon->GetSlot()->GetPosition());
 	Visualization->SetUseLighting(true);
-	Weapon->SetVisualization(Visualization);
+	
+	// create the Reference
+	Reference< Graphics::Node > VisualizationReference(*Visualization);
+	
+	// add it to the global container
+	g_VisualizationReferences[Visualization] = VisualizationReference;
+	// set as the object's visualization
+	Weapon->SetVisualization(VisualizationReference);
 	// add to the scene
 	Container->AddNode(Visualization);
 }

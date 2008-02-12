@@ -335,7 +335,7 @@ void Ship::Update(float Seconds)
 					if(AddContent(SelectedCommodity) == true)
 					{
 						SetTarget(0);
-						if(SelectedCommodity->GetVisualization() != 0)
+						if(SelectedCommodity->GetVisualization().IsValid() == true)
 						{
 							UnvisualizeObject(SelectedCommodity);
 						}
@@ -379,9 +379,9 @@ bool Ship::Mount(Object * Object, const std::string & SlotIdentifier)
 		{
 			SlotIterator->second->SetMountedObject(TheWeapon->GetReference());
 			TheWeapon->SetSlot(SlotIterator->second);
-			if(GetVisualization() != 0)
+			if(GetVisualization().IsValid() == true)
 			{
-				VisualizeWeapon(TheWeapon, GetVisualization());
+				VisualizeWeapon(TheWeapon, GetVisualization().Get());
 			}
 			
 			return true;
@@ -403,7 +403,7 @@ bool Ship::Unmount(const std::string & SlotIdentifier)
 		{
 			SlotIterator->second->SetMountedObject(0);
 			TheWeapon->SetSlot(0);
-			if(TheWeapon->GetVisualization() != 0)
+			if(TheWeapon->GetVisualization().IsValid() != 0)
 			{
 				UnvisualizeObject(TheWeapon);
 			}

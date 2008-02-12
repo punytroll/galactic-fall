@@ -50,7 +50,7 @@ public:
 	const std::set< Object * > & GetContent(void) const;
 	const std::string & GetObjectIdentifier(void) const;
 	const Reference< Object > & GetReference(void) const;
-	Graphics::Node * GetVisualization(void);
+	Reference< Graphics::Node > & GetVisualization(void);
 	// modifiers
 	void Destroy(void);
 	Message * PopMessage(void);
@@ -58,14 +58,13 @@ public:
 	bool AddContent(Object * Content);
 	bool RemoveContent(Object * Content);
 	void GenerateObjectIdentifier(void);
-	void SetVisualization(Graphics::Node * Visualization);
+	void SetVisualization(Reference< Graphics::Node > & Visualization);
 	void UnsetVisualization(void);
 	
 	// static methods
 	static Object * GetObject(const std::string & ObjectIdentifier);
 	static void Dump(std::ostream & OStream);
 	static void Dump(XMLStream & XML);
-	static Object * GetObject(Graphics::Node * Visualization);
 protected:
 	virtual bool IsAddingAllowed(Object * Content);
 	virtual bool IsRemovingAllowed(Object * Content);
@@ -77,11 +76,10 @@ private:
 	Reference< Object > m_Reference;
 	Object * m_Container;
 	std::set< Object * > m_Content;
-	Graphics::Node * m_Visualization;
+	Reference< Graphics::Node > m_Visualization;
 	
 	static std::set< Object * > m_Objects;
 	static std::map< std::string, Object * > m_IdentifiedObjects;
-	static std::map< Graphics::Node *, Object * > m_VisualizationBackReferences;
 };
 
 inline Object * Object::GetContainer(void)
@@ -109,41 +107,22 @@ inline const Reference< Object > & Object::GetReference(void) const
 	return m_Reference;
 }
 
-inline Graphics::Node * Object::GetVisualization(void)
+inline Reference< Graphics::Node > & Object::GetVisualization(void)
 {
 	return m_Visualization;
 }
 
-inline void Object::SetVisualization(Graphics::Node * Visualization)
+inline void Object::SetVisualization(Reference< Graphics::Node > & Visualization)
 {
-	assert(Visualization != 0);
-	
-	m_VisualizationBackReferences[Visualization] = this;
+	assert(Visualization.IsValid() == true);
+	assert(m_Visualization.IsValid() == false);
 	m_Visualization = Visualization;
-}
-
-inline Object * Object::GetObject(Graphics::Node * Visualization)
-{
-	std::map< Graphics::Node *, Object * >::iterator VisualizationBackReferenceIterator(m_VisualizationBackReferences.find(Visualization));
-	
-	if(VisualizationBackReferenceIterator != m_VisualizationBackReferences.end())
-	{
-		return VisualizationBackReferenceIterator->second;
-	}
-	else
-	{
-		return 0;
-	}
 }
 
 inline void Object::UnsetVisualization(void)
 {
-	assert(m_Visualization != 0);
-	
-	Graphics::Node * Visualization(m_Visualization);
-	
-	m_Visualization = 0;
-	m_VisualizationBackReferences.erase(m_VisualizationBackReferences.find(Visualization));
+	assert(m_Visualization.IsValid() == true);
+	m_Visualization.Clear();
 }
 
 #endif
