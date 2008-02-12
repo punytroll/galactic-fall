@@ -183,6 +183,7 @@ void VisualizeShip(Ship * Ship, Graphics::Node * Container)
 	Graphics::ParticleSystem * EngineGlowParticleSystem(CreateParticleSystem("engine_glow"));
 	Reference< Graphics::ParticleSystem > EngineGlowParticleSystemReference(VisualizeParticleSystem(EngineGlowParticleSystem, Visualization));
 	
+	EngineGlowParticleSystem->SetPosition(Vector3f(Ship->GetShipClass()->GetExhaustOffset()));
 	Ship->SetEngineGlowParticleSystem(EngineGlowParticleSystemReference);
 }
 
