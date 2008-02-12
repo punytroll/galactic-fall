@@ -27,7 +27,7 @@ TimingDialog::TimingDialog(Widget * SupWidget) :
 	WWindow(SupWidget, "Timing Information")
 {
 	SetPosition(Vector2f(300.0f, 300.0f));
-	SetSize(Vector2f(350.0f, 300.0f));
+	SetSize(Vector2f(350.0f, 400.0f));
 	
 	Label * FramesPerSecondCaptionLabel(new Label(this, "Frames per Second:"));
 	
@@ -160,6 +160,30 @@ TimingDialog::TimingDialog(Widget * SupWidget) :
 	m_ShotsInCurrentSystemThisFrameLabel->SetAnchorLeft(false);
 	m_ShotsInCurrentSystemThisFrameLabel->SetAnchorRight(true);
 	m_ShotsInCurrentSystemThisFrameLabel->SetHorizontalAlignment(Label::ALIGN_RIGHT);
+	
+	Label * ParticleSystemsThisFrameCaptionLabel(new Label(this, "Particle systems this Frame:"));
+	
+	ParticleSystemsThisFrameCaptionLabel->SetPosition(Vector2f(10.0f, 260.0f));
+	ParticleSystemsThisFrameCaptionLabel->SetSize(Vector2f(GetSize()[0] - 100.0f, 20.0f));
+	ParticleSystemsThisFrameCaptionLabel->SetAnchorRight(true);
+	m_ParticleSystemsThisFrameLabel = new Label(this, "0");
+	m_ParticleSystemsThisFrameLabel->SetPosition(Vector2f(GetSize()[0] - 80.0f, 260.0f));
+	m_ParticleSystemsThisFrameLabel->SetSize(Vector2f(70.0f, 20.0f));
+	m_ParticleSystemsThisFrameLabel->SetAnchorLeft(false);
+	m_ParticleSystemsThisFrameLabel->SetAnchorRight(true);
+	m_ParticleSystemsThisFrameLabel->SetHorizontalAlignment(Label::ALIGN_RIGHT);
+	
+	Label * ParticlesThisFrameCaptionLabel(new Label(this, "Particles this Frame:"));
+	
+	ParticlesThisFrameCaptionLabel->SetPosition(Vector2f(10.0f, 280.0f));
+	ParticlesThisFrameCaptionLabel->SetSize(Vector2f(GetSize()[0] - 100.0f, 20.0f));
+	ParticlesThisFrameCaptionLabel->SetAnchorRight(true);
+	m_ParticlesThisFrameLabel = new Label(this, "0");
+	m_ParticlesThisFrameLabel->SetPosition(Vector2f(GetSize()[0] - 80.0f, 280.0f));
+	m_ParticlesThisFrameLabel->SetSize(Vector2f(70.0f, 20.0f));
+	m_ParticlesThisFrameLabel->SetAnchorLeft(false);
+	m_ParticlesThisFrameLabel->SetAnchorRight(true);
+	m_ParticlesThisFrameLabel->SetHorizontalAlignment(Label::ALIGN_RIGHT);
 }
 
 void TimingDialog::Update(void)
@@ -171,6 +195,8 @@ void TimingDialog::Update(void)
 	m_FrameToFrameSecondsThisFrameLabel->SetString(to_string_cast(g_SystemStatistics->GetFrameToFrameSecondsThisFrame() * 1000, 2) + " ms");
 	m_GraphicsSecondsThisFrameLabel->SetString(to_string_cast(g_SystemStatistics->GetGraphicsSecondsThisFrame() * 1000, 2) + " ms");
 	m_MessagingSecondsThisFrameLabel->SetString(to_string_cast(g_SystemStatistics->GetMessagingSecondsThisFrame() * 1000, 2) + " ms");
+	m_ParticleSystemsThisFrameLabel->SetString(to_string_cast(g_SystemStatistics->GetParticleSystemsThisFrame()));
+	m_ParticlesThisFrameLabel->SetString(to_string_cast(g_SystemStatistics->GetParticlesThisFrame()));
 	m_PhysicsSecondsThisFrameLabel->SetString(to_string_cast(g_SystemStatistics->GetPhysicsSecondsThisFrame() * 1000, 2) + " ms");
 	m_ProcessingSecondsThisFrameLabel->SetString(to_string_cast(g_SystemStatistics->GetProcessingSecondsThisFrame() * 1000, 2) + " ms");
 	m_ShipsInCurrentSystemThisFrameLabel->SetString(to_string_cast(g_SystemStatistics->GetShipsInCurrentSystemThisFrame()));

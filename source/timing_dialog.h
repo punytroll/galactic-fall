@@ -32,14 +32,16 @@ public:
 	void Update(void);
 private:
 	Label * m_AISecondsThisFrameLabel;
+	Label * m_CommoditiesInCurrentSystemThisFrameLabel;
 	Label * m_DispatchedMessagesThisFrameLabel;
 	Label * m_FramesPerSecondLabel;
 	Label * m_FrameToFrameSecondsThisFrameLabel;
 	Label * m_GraphicsSecondsThisFrameLabel;
 	Label * m_MessagingSecondsThisFrameLabel;
+	Label * m_ParticleSystemsThisFrameLabel;
+	Label * m_ParticlesThisFrameLabel;
 	Label * m_PhysicsSecondsThisFrameLabel;
 	Label * m_ProcessingSecondsThisFrameLabel;
-	Label * m_CommoditiesInCurrentSystemThisFrameLabel;
 	Label * m_ShipsInCurrentSystemThisFrameLabel;
 	Label * m_ShotsInCurrentSystemThisFrameLabel;
 };
