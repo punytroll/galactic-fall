@@ -32,8 +32,10 @@ namespace Graphics
 	class Node;
 }
 
+void InvalidateVisualizationReference(Graphics::Node * Node);
 void UnvisualizeObject(Object * Object);
 void VisualizeCommodity(Commodity * Commodity, Graphics::Node * Container);
+Reference< Graphics::Node > & VisualizeParticleSystem(Graphics::Node * ParticleSystem, Graphics::Node * Container);
 void VisualizePlanet(Planet * Planet, Graphics::Node * Container);
 void VisualizeShip(Ship * Ship, Graphics::Node * Container);
 void VisualizeShot(Shot * Shot, Graphics::Node * Container);
