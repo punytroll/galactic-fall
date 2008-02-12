@@ -679,6 +679,9 @@ void UpdateUserInterface(void)
 	{
 		g_TimingDialog->Update();
 	}
+	// reset the incremental counters
+	g_SystemStatistics->SetParticleSystemsThisFrame(0);
+	g_SystemStatistics->SetParticlesThisFrame(0);
 	if(g_Galaxy != 0)
 	{
 		g_TimeWarpLabel->SetVisible(true);

@@ -33,6 +33,8 @@ public:
 	float GetFrameToFrameSecondsThisFrame(void) const;
 	float GetGraphicsSecondsThisFrame(void) const;
 	float GetMessagingSecondsThisFrame(void) const;
+	u4byte GetParticleSystemsThisFrame(void) const;
+	u4byte GetParticlesThisFrame(void) const;
 	float GetPhysicsSecondsThisFrame(void) const;
 	float GetProcessingSecondsThisFrame(void) const;
 	u4byte GetShipsInCurrentSystemThisFrame(void) const;
@@ -44,6 +46,8 @@ public:
 	void SetFrameToFrameSecondsThisFrame(float FrameToFrameSecondsThisFrame);
 	void SetGraphicsSecondsThisFrame(float GraphicsSecondsThisFrame);
 	void SetMessagingSecondsThisFrame(float MessagingSecondsThisFrame);
+	void SetParticleSystemsThisFrame(u4byte ParticleSystemsThisFrame);
+	void SetParticlesThisFrame(u4byte ParticlesThisFrame);
 	void SetPhysicsSecondsThisFrame(float PhysicsSecondsThisFrame);
 	void SetProcessingSecondsThisFrame(float ProcessingSecondsThisFrame);
 	void SetShipsInCurrentSystemThisFrame(u4byte ShipsInCurrentSystemThisFrame);
@@ -56,6 +60,8 @@ private:
 	float m_FrameToFrameSecondsThisFrame;
 	float m_GraphicsSecondsThisFrame;
 	float m_MessageSecondsThisFrame;
+	u4byte m_ParticleSystemsThisFrame;
+	u4byte m_ParticlesThisFrame;
 	float m_PhysicsSecondsThisFrame;
 	float m_ProcessingSecondsThisFrame;
 	u4byte m_ShipsInCurrentSystemThisFrame;
@@ -95,6 +101,16 @@ inline float SystemStatistics::GetGraphicsSecondsThisFrame(void) const
 inline float SystemStatistics::GetMessagingSecondsThisFrame(void) const
 {
 	return m_MessageSecondsThisFrame;
+}
+
+inline u4byte SystemStatistics::GetParticleSystemsThisFrame(void) const
+{
+	return m_ParticleSystemsThisFrame;
+}
+
+inline u4byte SystemStatistics::GetParticlesThisFrame(void) const
+{
+	return m_ParticlesThisFrame;
 }
 
 inline float SystemStatistics::GetPhysicsSecondsThisFrame(void) const
@@ -146,6 +162,16 @@ inline void SystemStatistics::SetGraphicsSecondsThisFrame(float GraphicsSecondsT
 inline void SystemStatistics::SetMessagingSecondsThisFrame(float MessagingSecondsThisFrame)
 {
 	m_MessageSecondsThisFrame = MessagingSecondsThisFrame;
+}
+
+inline void SystemStatistics::SetParticleSystemsThisFrame(u4byte ParticleSystemsThisFrame)
+{
+	m_ParticleSystemsThisFrame = ParticleSystemsThisFrame;
+}
+
+inline void SystemStatistics::SetParticlesThisFrame(u4byte ParticlesThisFrame)
+{
+	m_ParticlesThisFrame = ParticlesThisFrame;
 }
 
 inline void SystemStatistics::SetPhysicsSecondsThisFrame(float PhysicsSecondsThisFrame)

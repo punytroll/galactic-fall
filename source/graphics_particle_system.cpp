@@ -28,6 +28,7 @@
 #include "graphics_texture.h"
 #include "graphics_texture_manager.h"
 #include "math.h"
+#include "system_statistics.h"
 
 const Graphics::Texture * g_ParticleTexture(0);
 
@@ -42,6 +43,7 @@ Graphics::ParticleSystem::ParticleSystem(void)
 
 bool Graphics::ParticleSystem::Update(float Seconds)
 {
+	g_SystemStatistics->SetParticleSystemsThisFrame(g_SystemStatistics->GetParticleSystemsThisFrame() + 1);
 	for(std::vector< std::string >::const_iterator ScriptLine = m_SystemScript.begin(); ScriptLine != m_SystemScript.end(); ++ScriptLine)
 	{
 		if(*ScriptLine == "kill-old")
@@ -57,6 +59,8 @@ bool Graphics::ParticleSystem::Update(float Seconds)
 		}
 		else if(*ScriptLine == "update-particles")
 		{
+			g_SystemStatistics->SetParticlesThisFrame(g_SystemStatistics->GetParticlesThisFrame() + m_Particles.size());
+			
 			std::list< Graphics::ParticleSystem::Particle >::iterator ParticleIterator(m_Particles.begin());
 			
 			while(ParticleIterator != m_Particles.end())
