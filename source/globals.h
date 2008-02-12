@@ -34,6 +34,7 @@
 class AssetClassManager;
 class CommodityClassManager;
 class Galaxy;
+class MessageDispatcher;
 class ObjectFactory;
 class ShipClassManager;
 class SlotClassManager;
@@ -73,6 +74,7 @@ extern Galaxy * g_Galaxy;
 extern TimeoutNotificationManager * g_GameTimeTimeoutNotifications;
 extern Graphics::Engine * g_GraphicsEngine;
 extern Graphics::MeshManager * g_MeshManager;
+extern MessageDispatcher * g_MessageDispatcher;
 extern Graphics::ModelManager * g_ModelManager;
 extern ObjectFactory * g_ObjectFactory;
 extern TimeoutNotificationManager * g_RealTimeTimeoutNotifications;
