@@ -167,10 +167,6 @@ bool g_EchoEvents(false);
 bool g_EchoResizes(false);
 bool g_DumpEndReport(false);
 bool g_TakeScreenShot(false);
-// This map holds the References to the Graphics::Nodes that have no 1:1 connection to an Object BUT have to be referenced in the Game subsystem
-// 1. Objects with a 1:1 connection to a Graphics::Node have the m_Vizualization member and a static resolver GetObject(Graphics:Node *)
-// 2. Graphics::Nodes without any reference in the Game sub system are without relevance here
-std::map< Graphics::Node *, Reference< Graphics::Node > > g_VisualizationReferences;
 ResourceReader * g_ResourceReader(0);
 
 int WantToJump(Ship * Ship, System * System)
@@ -435,7 +431,7 @@ void CalculateCharacters(void)
 	}
 }
 
-Reference< Graphics::ParticleSystem > CreateParticleSystem(const std::string & ParticleSystemClassIdentifier)
+Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSystemClassIdentifier)
 {
 	Graphics::ParticleSystem * ParticleSystem(new Graphics::ParticleSystem());
 	
@@ -514,11 +510,7 @@ Reference< Graphics::ParticleSystem > CreateParticleSystem(const std::string & P
 		throw std::runtime_error("Could not create a paricle system with the class identifier'" + ParticleSystemClassIdentifier + "'.");
 	}
 	
-	Reference< Graphics::Node > ParticleSystemReference(*ParticleSystem);
-	
-	g_VisualizationReferences[ParticleSystem] = ParticleSystemReference;
-	
-	return ParticleSystemReference;
+	return ParticleSystem;
 }
 
 void CalculateMovements(System * System, float Seconds)
@@ -600,19 +592,19 @@ void CalculateMovements(System * System, float Seconds)
 				{
 					if((TheShot->GetPosition() - TheShip->GetPosition()).SquaredLength() < (TheShot->GetRadialSize() * TheShot->GetRadialSize() + TheShip->GetRadialSize() * TheShip->GetRadialSize()))
 					{
-						Reference< Graphics::ParticleSystem > NewHitParticleSystem(CreateParticleSystem("hit"));
+						Graphics::ParticleSystem * NewHitParticleSystem(CreateParticleSystem("hit"));
 						
 						NewHitParticleSystem->SetPosition(TheShot->GetPosition());
 						NewHitParticleSystem->SetVelocity((TheShot->GetVelocity() * 0.2f) + (TheShip->GetVelocity() * 0.8f));
-						g_ParticleSystemsLayer->AddNode(NewHitParticleSystem.Get());
+						VisualizeParticleSystem(NewHitParticleSystem, g_ParticleSystemsLayer);
 						TheShip->SetHull(TheShip->GetHull() - TheShot->GetDamage());
 						if(TheShip->GetHull() <= 0.0f)
 						{
-							Reference< Graphics::ParticleSystem > NewExplosionParticleSystem(CreateParticleSystem("explosion"));
+							Graphics::ParticleSystem * NewExplosionParticleSystem(CreateParticleSystem("explosion"));
 							
 							NewExplosionParticleSystem->SetPosition(TheShip->GetPosition());
 							NewExplosionParticleSystem->SetVelocity(TheShip->GetVelocity() * 0.5f);
-							g_ParticleSystemsLayer->AddNode(NewExplosionParticleSystem.Get());
+							VisualizeParticleSystem(NewExplosionParticleSystem, g_ParticleSystemsLayer);
 							
 							std::set< Object * >::const_iterator ManifestIterator;
 							std::set< Object * >::const_iterator NextIterator(TheShip->GetContent().begin());
@@ -655,19 +647,19 @@ void CalculateMovements(System * System, float Seconds)
 				
 				if((TheShot->GetPosition() - TheCommodity->GetPosition()).SquaredLength() < (TheShot->GetRadialSize() * TheShot->GetRadialSize() + TheCommodity->GetRadialSize() * TheCommodity->GetRadialSize()))
 				{
-					Reference< Graphics::ParticleSystem > NewHitParticleSystem(CreateParticleSystem("hit"));
+					Graphics::ParticleSystem * NewHitParticleSystem(CreateParticleSystem("hit"));
 					
 					NewHitParticleSystem->SetPosition(TheShot->GetPosition());
 					NewHitParticleSystem->SetVelocity((TheShot->GetVelocity() * 0.4f) + (TheCommodity->GetVelocity() * 0.6f));
-					g_ParticleSystemsLayer->AddNode(NewHitParticleSystem.Get());
+					VisualizeParticleSystem(NewHitParticleSystem, g_ParticleSystemsLayer);
 					TheCommodity->SetHull(TheCommodity->GetHull() - TheShot->GetDamage());
 					if(TheCommodity->GetHull() <= 0.0f)
 					{
-						Reference< Graphics::ParticleSystem > NewHitParticleSystem(CreateParticleSystem("hit"));
+						Graphics::ParticleSystem * NewHitParticleSystem(CreateParticleSystem("hit"));
 						
 						NewHitParticleSystem->SetPosition(TheCommodity->GetPosition());
 						NewHitParticleSystem->SetVelocity(TheCommodity->GetVelocity() * 0.5f);
-						g_ParticleSystemsLayer->AddNode(NewHitParticleSystem.Get());
+						VisualizeParticleSystem(NewHitParticleSystem, g_ParticleSystemsLayer);
 						DeleteObject(TheCommodity);
 					}
 					DeleteObject(TheShot);
@@ -1089,14 +1081,7 @@ void OnGraphicsNodeDestroy(Graphics::Node * Node)
 	{
 		g_MainScene = 0;
 	}
-	
-	std::map< Graphics::Node *, Reference< Graphics::Node > >::iterator VisualizationReferenceIterator(g_VisualizationReferences.find(Node));
-	
-	if(VisualizationReferenceIterator != g_VisualizationReferences.end())
-	{
-		VisualizationReferenceIterator->second.Invalidate();
-		g_VisualizationReferences.erase(VisualizationReferenceIterator);
-	}
+	InvalidateVisualizationReference(Node);
 	delete Node;
 }
 
