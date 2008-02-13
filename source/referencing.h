@@ -168,6 +168,11 @@ public:
 	{
 		return ((m_Core == 0) ? (false) : (m_Core->IsValid()));
 	}
+	
+	bool operator!=(const Reference< Type > & Other) const
+	{
+		return m_Core != Other.m_Core;
+	}
 private:
 	Core * m_Core;
 };
