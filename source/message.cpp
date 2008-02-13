@@ -25,3 +25,7 @@ Message::Message(const std::string & TypeIdentifier, Reference< Object > Sender,
 	m_TypeIdentifier(TypeIdentifier)
 {
 }
+
+Message::~Message(void)
+{
+}
