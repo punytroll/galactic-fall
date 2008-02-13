@@ -65,6 +65,7 @@
 #include "math.h"
 #include "message.h"
 #include "message_dispatcher.h"
+#include "messages.h"
 #include "mind.h"
 #include "mini_map_display.h"
 #include "mount_weapon_dialog.h"
@@ -598,6 +599,19 @@ void CalculateMovements(System * System, float Seconds)
 						NewHitParticleSystem->SetVelocity((TheShot->GetVelocity() * 0.2f) + (TheShip->GetVelocity() * 0.8f));
 						VisualizeParticleSystem(NewHitParticleSystem, g_ParticleSystemsLayer);
 						TheShip->SetHull(TheShip->GetHull() - TheShot->GetDamage());
+						
+						// send message to all characters on the hit ship
+						const std::set< Object * > & ShipContent(TheShip->GetContent());
+						
+						for(std::set< Object * >::iterator ContentIterator = ShipContent.begin(); ContentIterator != ShipContent.end(); ++ContentIterator)
+						{
+							Character * TheCharacter(dynamic_cast< Character * >(*ContentIterator));
+							
+							if(TheCharacter != 0)
+							{
+								g_MessageDispatcher->PushMessage(new ThreatMessage(TheCharacter->GetReference(), TheShot->GetShooter(), TheShot->GetDamage()));
+							}
+						}
 						if(TheShip->GetHull() <= 0.0f)
 						{
 							Graphics::ParticleSystem * NewExplosionParticleSystem(CreateParticleSystem("explosion"));

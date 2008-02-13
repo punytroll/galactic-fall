@@ -27,11 +27,14 @@
 #include "game_time.h"
 #include "goals.h"
 #include "math.h"
+#include "message.h"
+#include "messages.h"
 #include "mind.h"
 #include "planet.h"
 #include "ship.h"
 #include "string_cast.h"
 #include "system.h"
+#include "threat.h"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // GoalFlyInDirection                                                                            //
@@ -149,6 +152,20 @@ void GoalFighterThink::Activate(void)
 	SetState(Goal::ACTIVE);
 }
 
+bool GoalFighterThink::OnMessageReceived(Message * Message)
+{
+	if(Message->GetTypeIdentifier() == "threat")
+	{
+		ThreatMessage * TheThreatMessage(dynamic_cast< ThreatMessage * >(Message));
+		
+		GetMind()->GetCharacter()->GetThreat()->ModifyThreat(TheThreatMessage->GetSender(), TheThreatMessage->GetDeltaThreat());
+		
+		return true;
+	}
+	
+	return false;
+}
+
 void GoalFighterThink::Process(void)
 {
 	assert(GetState() == Goal::ACTIVE);
@@ -221,6 +238,13 @@ void GoalFightSomeTarget::Process(void)
 {
 	assert(GetState() == Goal::ACTIVE);
 	assert(GetSubGoals().empty() == false);
+	
+	const Reference< Object > * ObjectWithHighestThreat(GetMind()->GetCharacter()->GetThreat()->GetObjectWithHighestThreat());
+	
+	if(ObjectWithHighestThreat != 0)
+	{
+		GetMind()->GetCharacter()->GetShip()->SetTarget(*ObjectWithHighestThreat);
+	}
 	
 	Goal * SubGoal(GetSubGoals().front());
 	
