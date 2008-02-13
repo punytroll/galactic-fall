@@ -22,13 +22,15 @@
 #include "map_knowledge.h"
 #include "message.h"
 #include "mind.h"
+#include "threat.h"
 
 std::set< Character * > Character::m_Characters;
 
 Character::Character(void) :
 	m_Credits(0),
 	m_MapKnowledge(new MapKnowledge()),
-	m_Ship(0)
+	m_Ship(0),
+	m_Threat(new Threat())
 {
 	m_Characters.insert(this);
 	SetAcceptMessages(true);
@@ -38,6 +40,8 @@ Character::~Character(void)
 {
 	delete m_MapKnowledge;
 	m_MapKnowledge = 0;
+	delete m_Threat;
+	m_Threat = 0;
 	m_Characters.erase(m_Characters.find(this));
 }
 

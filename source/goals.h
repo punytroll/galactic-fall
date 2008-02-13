@@ -57,6 +57,7 @@ class GoalFighterThink : public Goal
 public:
 	GoalFighterThink(GoalMind * GoalMind);
 	virtual void Activate(void);
+	virtual bool OnMessageReceived(Message * Message);
 	virtual void Process(void);
 };
 

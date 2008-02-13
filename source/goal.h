@@ -47,8 +47,11 @@ public:
 	const std::deque< Goal * > & GetSubGoals(void) const;
 	// actors
 	virtual void Activate(void);
+	virtual bool OnMessageReceived(Message * Message); 
 	virtual void Process(void);
 	virtual void Terminate(void);
+	// modifiers
+	bool HandleMessage(Message * Message);
 protected:
 	// setters
 	void SetState(int State);

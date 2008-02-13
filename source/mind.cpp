@@ -17,8 +17,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include <iostream>
-
 #include "goal.h"
 #include "mind.h"
 #include "state_machine.h"
@@ -36,7 +34,7 @@ StateMachineMind::~StateMachineMind(void)
 
 void StateMachineMind::HandleMessage(Message * Message)
 {
-	assert(false);
+	// ignore messages
 }
 
 void StateMachineMind::Update(void)
@@ -55,7 +53,7 @@ GoalMind::~GoalMind(void)
 
 void GoalMind::HandleMessage(Message * Message)
 {
-	assert(false);
+	m_Goal->HandleMessage(Message);
 }
 
 void GoalMind::Update(void)

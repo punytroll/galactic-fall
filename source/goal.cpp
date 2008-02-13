@@ -34,12 +34,29 @@ void Goal::Activate(void)
 {
 }
 
+bool Goal::OnMessageReceived(Message * Message)
+{
+	return false;
+}
+
 void Goal::Process(void)
 {
 }
 
 void Goal::Terminate(void)
 {
+}
+
+bool Goal::HandleMessage(Message * Message)
+{
+	if((m_SubGoals.size() != 0) && (m_SubGoals.front()->GetState() == Goal::ACTIVE) && (m_SubGoals.front()->HandleMessage(Message) == true))
+	{
+		return true;
+	}
+	else
+	{
+		return OnMessageReceived(Message);
+	}
 }
 
 bool Goal::IsAddingAllowed(Object * Content)

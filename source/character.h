@@ -30,6 +30,7 @@ class CharacterObserver;
 class MapKnowledge;
 class Mind;
 class Ship;
+class Threat;
 
 class Character : public Object
 {
@@ -44,12 +45,14 @@ public:
 	Character(void);
 	virtual ~Character(void);
 	// getters
+	Mind * GetActiveMind(void);
 	u4byte GetCredits(void) const;
 	MapKnowledge * GetMapKnowledge(void);
 	const MapKnowledge * GetMapKnowledge(void) const;
-	Mind * GetActiveMind(void);
 	Ship * GetShip(void);
 	const Ship * GetShip(void) const;
+	Threat * GetThreat(void);
+	const Threat * GetThreat(void) const;
 	// setters
 	void SetCredits(u4byte Credits);
 	void SetShip(Ship * Ship);
@@ -70,7 +73,20 @@ private:
 	u4byte m_Credits;
 	MapKnowledge * m_MapKnowledge;
 	Ship * m_Ship;
+	Threat * m_Threat;
 };
+
+inline Mind * Character::GetActiveMind(void)
+{
+	if(m_Minds.empty() == false)
+	{
+		return m_Minds.front();
+	}
+	else
+	{
+		return 0;
+	}
+}
 
 inline std::set< Character * > & Character::GetCharacters(void)
 {
@@ -102,6 +118,16 @@ inline const Ship * Character::GetShip(void) const
 	return m_Ship;
 }
 
+inline Threat * Character::GetThreat(void)
+{
+	return m_Threat;
+}
+
+inline const Threat * Character::GetThreat(void) const
+{
+	return m_Threat;
+}
+
 inline void Character::SetCredits(u4byte Credits)
 {
 	m_Credits = Credits;
@@ -110,18 +136,6 @@ inline void Character::SetCredits(u4byte Credits)
 inline void Character::SetShip(Ship * Ship)
 {
 	m_Ship = Ship;
-}
-
-inline Mind * Character::GetActiveMind(void)
-{
-	if(m_Minds.empty() == false)
-	{
-		return m_Minds.front();
-	}
-	else
-	{
-		return 0;
-	}
 }
 
 #endif
