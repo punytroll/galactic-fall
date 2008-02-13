@@ -30,6 +30,7 @@ class Message
 {
 public:
 	Message(const std::string & TypeIdentifier, Reference< Object > Sender, Reference< Object > Receiver);
+	virtual ~Message(void);
 	// getters
 	Reference< Object > & GetReceiver(void);
 	const Reference< Object > & GetReceiver(void) const;
