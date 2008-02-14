@@ -30,6 +30,22 @@ Goal::~Goal(void)
 {
 }
 
+bool Goal::HasSubGoal(const std::string & Name) const
+{
+	std::deque< Goal * >::const_iterator SubGoalIterator(m_SubGoals.begin());
+	
+	while(SubGoalIterator != m_SubGoals.end())
+	{
+		if((*SubGoalIterator)->GetName() == Name)
+		{
+			return true;
+		}
+		++SubGoalIterator;
+	}
+	
+	return false;
+}
+
 void Goal::Activate(void)
 {
 }
