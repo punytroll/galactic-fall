@@ -170,15 +170,13 @@ void GoalFighterThink::Process(void)
 {
 	assert(GetState() == Goal::ACTIVE);
 	assert(GetSubGoals().empty() == false);
+	if((HasSubGoal("refuel") == false) && (GetMind()->GetCharacter()->GetShip()->GetFuel() / GetMind()->GetCharacter()->GetShip()->GetFuelCapacity() < 0.25f))
+	{
+		AddContent(new GoalRefuel(GetMind()));
+	}
 	
 	Goal * SubGoal(GetSubGoals().front());
 	
-	if((SubGoal->GetName() != "refuel") && (GetMind()->GetCharacter()->GetShip()->GetFuel() / GetMind()->GetCharacter()->GetShip()->GetFuelCapacity() < 0.25f))
-	{
-		AddContent(new GoalRefuel(GetMind()));
-		// replace the cached front SubGoal with the new one
-		SubGoal = GetSubGoals().front();
-	}
 	if(SubGoal->GetState() == Goal::INACTIVE)
 	{
 		SubGoal->Activate();

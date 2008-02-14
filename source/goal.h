@@ -45,6 +45,7 @@ public:
 	const int GetState(void) const;
 	std::deque< Goal * > & GetSubGoals(void);
 	const std::deque< Goal * > & GetSubGoals(void) const;
+	bool HasSubGoal(const std::string & Name) const;
 	// actors
 	virtual void Activate(void);
 	virtual bool OnMessageReceived(Message * Message); 
