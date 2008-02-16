@@ -1145,6 +1145,7 @@ void TakeScreenShot(void)
 		OutputFileStream.write(reinterpret_cast< const char * >(ScreenshotData), static_cast< GLsizei >(g_Width) * static_cast< GLsizei >(g_Height) * 3);
 		SetMessage("Screenshot written to file \"" + FileName + "\".");
 	}
+	delete[] ScreenshotData;
 }
 
 void GameFrame(void)
