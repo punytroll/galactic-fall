@@ -43,6 +43,13 @@ Object::~Object(void)
 	assert(m_Container == 0);
 	assert(m_Visualization.IsValid() == false);
 	assert(m_Content.empty() == true);
+	// messages
+	if(m_Messages != 0)
+	{
+		assert(m_Messages->size() == 0);
+		delete m_Messages;
+		m_Messages = 0;
+	}
 	// invalidate reference first, so no one accesses this object
 	m_Reference.Invalidate();
 	SetObjectIdentifier("");
