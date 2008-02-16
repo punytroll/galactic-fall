@@ -50,7 +50,7 @@ void Threat::ModifyThreat(const Reference< Object > & ThreateningObject, float D
 {
 	std::deque< std::pair< Reference< Object >, float > >::iterator ThreatIterator(m_Threats.begin());
 	
-	while((ThreatIterator->first != ThreateningObject) && (ThreatIterator != m_Threats.end()))
+	while((ThreatIterator != m_Threats.end()) && (ThreatIterator->first != ThreateningObject))
 	{
 		if(ThreatIterator->first.IsValid() == true)
 		{
