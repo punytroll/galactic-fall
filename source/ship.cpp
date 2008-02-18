@@ -27,6 +27,8 @@
 #include "graphics_particle_system.h"
 #include "map_knowledge.h"
 #include "math.h"
+#include "message.h"
+#include "message_dispatcher.h"
 #include "planet.h"
 #include "ship.h"
 #include "shot.h"
@@ -236,7 +238,7 @@ void Ship::Update(float Seconds)
 				
 				if((TheCommodity != 0) && (TheCommodity->GetCommodityClass()->GetIdentifier() == "fuel"))
 				{
-					m_Fuel = Clamp(m_Fuel + 1.0f, 0.0f, GetFuelCapacity());
+					SetFuel(Clamp(GetFuel() + 1.0f, 0.0f, GetFuelCapacity()));
 					TheCommodity->Destroy();
 					delete TheCommodity;
 					
@@ -250,20 +252,20 @@ void Ship::Update(float Seconds)
 		{
 			float FuelConsumption(m_ShipClass->GetTurnFuel() * Seconds * m_TurnLeft);
 			
-			if(m_Fuel >= FuelConsumption)
+			if(GetFuel() >= FuelConsumption)
 			{
 				m_AngularPosition *= Quaternion(GetTurnSpeed() * Seconds * m_TurnLeft, Quaternion::InitializeRotationZ);
-				m_Fuel -= FuelConsumption;
+				SetFuel(GetFuel() - FuelConsumption);
 			}
 		}
 		if(m_TurnRight > 0.0f)
 		{
 			float FuelConsumption(m_ShipClass->GetTurnFuel() * Seconds * m_TurnRight);
 			
-			if(m_Fuel >= FuelConsumption)
+			if(GetFuel() >= FuelConsumption)
 			{
 				m_AngularPosition *= Quaternion(-GetTurnSpeed() * Seconds * m_TurnRight, Quaternion::InitializeRotationZ);
-				m_Fuel -= FuelConsumption;
+				SetFuel(GetFuel() - FuelConsumption);
 			}
 		}
 		m_Position += m_Velocity * Seconds;
@@ -271,7 +273,7 @@ void Ship::Update(float Seconds)
 		{
 			float FuelConsumption(m_ShipClass->GetForwardFuel() * Seconds);
 			
-			if(m_Fuel >= FuelConsumption)
+			if(GetFuel() >= FuelConsumption)
 			{
 				Vector3f ForwardThrust(GetForwardThrust(), 0.0f, 0.0f);
 				
@@ -285,7 +287,7 @@ void Ship::Update(float Seconds)
 					m_Velocity.Normalize();
 					m_Velocity *= GetMaximumSpeed();
 				}
-				m_Fuel -= FuelConsumption;
+				SetFuel(GetFuel() - FuelConsumption);
 				if(m_EngineGlowParticleSystem.IsValid() == true)
 				{
 					for(int I = 0; I < 4; ++I)
@@ -428,4 +430,50 @@ bool Ship::Unmount(const std::string & SlotIdentifier)
 	}
 	
 	return false;
+}
+
+void Ship::SetFuel(float Fuel)
+{
+	float FuelThreshold(GetShipClass()->GetFuelHoldSize() * 0.2);
+	bool FuelLow((Fuel < FuelThreshold) && (GetFuel() > FuelThreshold));
+	
+	m_Fuel = Fuel;
+	if(FuelLow == true)
+	{
+		// send message to all characters on the ship
+		const std::set< Object * > & ShipContent(GetContent());
+		
+		for(std::set< Object * >::iterator ContentIterator = ShipContent.begin(); ContentIterator != ShipContent.end(); ++ContentIterator)
+		{
+			Character * TheCharacter(dynamic_cast< Character * >(*ContentIterator));
+			
+			if(TheCharacter != 0)
+			{
+				g_MessageDispatcher->PushMessage(new Message("fuel_low", GetReference(), TheCharacter->GetReference()));
+			}
+		}
+	}
+}
+
+void Ship::SetHull(float Hull)
+{
+	float HullThreshold(GetShipClass()->GetHull() * 0.33);
+	bool HullLow((Hull < HullThreshold) && (GetHull() > HullThreshold));
+	
+	m_Hull = Hull;
+	if(HullLow == true)
+	{
+		// send message to all characters on the ship
+		const std::set< Object * > & ShipContent(GetContent());
+		
+		for(std::set< Object * >::iterator ContentIterator = ShipContent.begin(); ContentIterator != ShipContent.end(); ++ContentIterator)
+		{
+			Character * TheCharacter(dynamic_cast< Character * >(*ContentIterator));
+			
+			if(TheCharacter != 0)
+			{
+				g_MessageDispatcher->PushMessage(new Message("hull_low", GetReference(), TheCharacter->GetReference()));
+			}
+		}
+	}
 }

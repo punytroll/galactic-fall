@@ -20,7 +20,7 @@
 #include "messages.h"
 
 ThreatMessage::ThreatMessage(Reference< Object > Sender, Reference< Object > Receiver, float DeltaThreat) :
-	Message("threat", Receiver, Sender),
+	Message("threat", Sender, Receiver),
 	m_DeltaThreat(DeltaThreat)
 {
 }

@@ -609,7 +609,7 @@ void CalculateMovements(System * System, float Seconds)
 							
 							if(TheCharacter != 0)
 							{
-								g_MessageDispatcher->PushMessage(new ThreatMessage(TheCharacter->GetReference(), TheShot->GetShooter(), TheShot->GetDamage()));
+								g_MessageDispatcher->PushMessage(new ThreatMessage(TheShot->GetShooter(), TheCharacter->GetReference(), TheShot->GetDamage()));
 							}
 						}
 						if(TheShip->GetHull() <= 0.0f)
