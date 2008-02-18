@@ -669,7 +669,7 @@ perspective.o: perspective.cpp $(perspective_h)
 physical_object.o: physical_object.cpp $(physical_object_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-planet.o: planet.cpp $(color_h) $(asset_class_h) $(planet_h)
+planet.o: planet.cpp $(asset_class_h) $(color_h) $(planet_h) $(ship_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 planet_dialog.o: planet_dialog.cpp $(asset_class_h) $(button_h) $(character_h) $(color_h) $(globals_h) $(key_event_information_h) $(label_h) $(planet_h) $(planet_dialog_h) $(ship_h) $(string_cast_h) $(trade_center_dialog_h)
@@ -693,7 +693,7 @@ scroll_box.o: scroll_box.cpp $(color_h) $(scroll_box_h)
 scroll_position_changed_listener.o: scroll_position_changed_listener.cpp $(scroll_position_changed_listener_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-ship.o: ship.cpp $(commodity_h) $(character_h) $(color_h) $(commodity_class_h) $(game_time_h) $(globals_h) $(graphics_model_h) $(graphics_particle_system_h) $(map_knowledge_h) $(math_h) $(ship_h) $(shot_h) $(slot_h) $(slot_class_h) $(system_h) $(visualizations_h) $(weapon_h) $(weapon_class_h)
+ship.o: ship.cpp $(commodity_h) $(character_h) $(color_h) $(commodity_class_h) $(game_time_h) $(globals_h) $(graphics_model_h) $(graphics_particle_system_h) $(map_knowledge_h) $(math_h) $(planet_h) $(ship_h) $(shot_h) $(slot_h) $(slot_class_h) $(system_h) $(visualizations_h) $(weapon_h) $(weapon_class_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 ship_class.o: ship_class.cpp $(color_h) $(graphics_material_h) $(ship_class_h) $(slot_h)

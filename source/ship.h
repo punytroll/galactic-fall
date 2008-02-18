@@ -80,6 +80,7 @@ public:
 	void SetHull(float Hull);
 	void SetLinkedSystemTarget(System * LinkedSystem);
 	void SetRefuel(bool Refuel);
+	void SetTakeOff(bool TakeOff);
 	void SetTarget(Reference< PhysicalObject > Target);
 	void SetTurnLeft(float TurnLeft);
 	void SetTurnRight(float TurnRight);
@@ -100,6 +101,7 @@ private:
 	bool m_Refuel;
 	const ShipClass * m_ShipClass;
 	std::map< std::string, Slot * > m_Slots;
+	bool m_TakeOff;
 	Reference< PhysicalObject > m_Target;
 	float m_TurnLeft;
 	float m_TurnRight;
@@ -224,6 +226,11 @@ inline void Ship::SetLinkedSystemTarget(System * LinkedSystem)
 inline void Ship::SetRefuel(bool Refuel)
 {
 	m_Refuel = Refuel;
+}
+
+inline void Ship::SetTakeOff(bool TakeOff)
+{
+	m_TakeOff = TakeOff;
 }
 
 inline void Ship::SetTarget(Reference< PhysicalObject > Target)

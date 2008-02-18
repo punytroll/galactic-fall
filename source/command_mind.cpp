@@ -185,6 +185,13 @@ void CommandMind::SelectNextLinkedSystem(void)
 	}
 }
 
+void CommandMind::TakeOff(void)
+{
+	assert(GetCharacter() != 0);
+	assert(GetCharacter()->GetShip() != 0);
+	GetCharacter()->GetShip()->SetTakeOff(true);
+}
+
 void CommandMind::TargetPreviousCargo(void)
 {
 	assert(GetCharacter() != 0);

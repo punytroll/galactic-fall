@@ -855,7 +855,10 @@ public:
 		if(EventSource == g_PlanetDialog)
 		{
 			g_PlanetDialog = 0;
-			g_Pause = false;
+			if((g_InputMind.IsValid() == true) && (g_InputMind->GetCharacter() != 0) && (g_InputMind->GetCharacter()->GetShip() != 0))
+			{
+				g_InputMind->TakeOff();
+			}
 		}
 		else if(EventSource == g_MapDialog)
 		{
@@ -2022,7 +2025,6 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 						{
 							g_InputMind->GetCharacter()->RemoveCredits(SelectedPlanet->GetLandingFee());
 							g_InputMind->Land();
-							g_InputMind->GetCharacter()->GetShip()->SetHull(g_InputMind->GetCharacter()->GetShip()->GetShipClass()->GetHull());
 							g_PlanetDialog = new PlanetDialog(g_UserInterface->GetRootWidget(), const_cast< Planet * >(SelectedPlanet), g_InputMind->GetCharacter());
 							g_PlanetDialog->GrabKeyFocus();
 							g_PlanetDialog->AddDestroyListener(&g_GlobalDestroyListener);

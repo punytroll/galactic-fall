@@ -526,6 +526,7 @@ GoalRefuel::GoalRefuel(GoalMind * GoalMind) :
 void GoalRefuel::Activate(void)
 {
 	assert(GetSubGoals().empty() == true);
+	AddContent(new GoalTakeOffFromPlanet(GetMind()));
 	AddContent(new GoalWait(GetMind(), GetRandomFloat(2.0f, 5.0f)));
 	AddContent(new GoalBuyFuel(GetMind()));
 	AddContent(new GoalLandOnPlanet(GetMind()));
@@ -566,7 +567,7 @@ void GoalRefuel::Process(void)
 			assert(NextSubGoal != 0);
 			NextSubGoal->SetPlanet(m_PlanetToRefuelOn);
 		}
-		if(SubGoal->GetName() == "wait")
+		if(GetSubGoals().empty() == true)
 		{
 			SetState(Goal::COMPLETED);
 		}
@@ -711,6 +712,28 @@ void GoalLandOnPlanet::Process(void)
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
+// GoalTakeOffFromPlanet                                                                         //
+///////////////////////////////////////////////////////////////////////////////////////////////////
+GoalTakeOffFromPlanet::GoalTakeOffFromPlanet(GoalMind * GoalMind) :
+	Goal(GoalMind, "take_off_from_planet")
+{
+	SetObjectIdentifier("::goal(take_off_from_planet)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
+}
+
+void GoalTakeOffFromPlanet::Activate(void)
+{
+	assert(GetSubGoals().empty() == true);
+	SetState(Goal::ACTIVE);
+}
+
+void GoalTakeOffFromPlanet::Process(void)
+{
+	assert(GetState() == Goal::ACTIVE);
+	GetMind()->GetCharacter()->GetShip()->SetTakeOff(true);
+	SetState(Goal::COMPLETED);
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
 // GoalBuyFuel                                                                                   //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 GoalBuyFuel::GoalBuyFuel(GoalMind * GoalMind) :
@@ -730,6 +753,7 @@ void GoalBuyFuel::Process(void)
 	assert(GetState() == Goal::ACTIVE);
 	
 	const std::vector< PlanetAssetClass * > & PlanetAssetClasses(m_Planet->GetPlanetAssetClasses());
+	bool SuccessfullyRefueled(false);
 	
 	for(std::vector< PlanetAssetClass * >::const_iterator PlanetAssetClassIterator = PlanetAssetClasses.begin(); PlanetAssetClassIterator != PlanetAssetClasses.end(); ++PlanetAssetClassIterator)
 	{
@@ -742,13 +766,12 @@ void GoalBuyFuel::Process(void)
 			
 			GetMind()->GetCharacter()->GetShip()->SetFuel(GetMind()->GetCharacter()->GetShip()->GetFuel() + Buy);
 			GetMind()->GetCharacter()->RemoveCredits(static_cast< u4byte >(Buy * FuelPrice));
-			SetState(Goal::COMPLETED);
-		}
-		else
-		{
-			SetState(Goal::FAILED);
+			SuccessfullyRefueled = true;
+			
+			break;
 		}
 	}
+	SetState((SuccessfullyRefueled == true) ? (Goal::COMPLETED) : (Goal::FAILED));
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -850,6 +873,7 @@ GoalWait::GoalWait(GoalMind * GoalMind, float Seconds) :
 {
 	SetObjectIdentifier("::goal(wait)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")::seconds_to_wait(" + to_string_cast(m_SecondsToWait, 6) + ")");
 }
+
 void GoalWait::Activate(void)
 {
 	assert(GetSubGoals().empty() == true);
