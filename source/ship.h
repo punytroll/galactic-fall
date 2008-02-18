@@ -208,16 +208,6 @@ inline void Ship::SetEngineGlowParticleSystem(Reference< Graphics::ParticleSyste
 	m_EngineGlowParticleSystem = EngineGlowParticleSystem;
 }
 
-inline void Ship::SetFuel(float Fuel)
-{
-	m_Fuel = Fuel;
-}
-
-inline void Ship::SetHull(float Hull)
-{
-	m_Hull = Hull;
-}
-
 inline void Ship::SetLinkedSystemTarget(System * LinkedSystem)
 {
 	m_LinkedSystemTarget = LinkedSystem;

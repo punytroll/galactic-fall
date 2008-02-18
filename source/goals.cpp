@@ -162,6 +162,13 @@ bool GoalFighterThink::OnMessageReceived(Message * Message)
 		
 		return true;
 	}
+	else if(Message->GetTypeIdentifier() == "fuel_low")
+	{
+		assert(HasSubGoal("refuel") == false);
+		AddContent(new GoalRefuel(GetMind()));
+		
+		return true;
+	}
 	
 	return false;
 }
@@ -170,10 +177,6 @@ void GoalFighterThink::Process(void)
 {
 	assert(GetState() == Goal::ACTIVE);
 	assert(GetSubGoals().empty() == false);
-	if((HasSubGoal("refuel") == false) && (GetMind()->GetCharacter()->GetShip()->GetFuel() / GetMind()->GetCharacter()->GetShip()->GetFuelCapacity() < 0.25f))
-	{
-		AddContent(new GoalRefuel(GetMind()));
-	}
 	
 	Goal * SubGoal(GetSubGoals().front());
 	
