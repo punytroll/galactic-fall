@@ -20,6 +20,7 @@
 #include "asset_class.h"
 #include "color.h"
 #include "planet.h"
+#include "ship.h"
 
 PlanetAssetClass::PlanetAssetClass(const AssetClass * AssetClass) :
 	m_AssetClass(AssetClass),
@@ -76,4 +77,14 @@ PlanetAssetClass * Planet::CreatePlanetAssetClass(const AssetClass * AssetClass)
 	m_PlanetAssetClasses.push_back(new PlanetAssetClass(AssetClass));
 	
 	return m_PlanetAssetClasses.back();
+}
+
+void Planet::Land(Ship * Ship)
+{
+	Ship->SetVelocity(Vector3f(0.0f, 0.0f, 0.0f));
+	Ship->SetHull(Ship->GetShipClass()->GetHull());
+}
+
+void Planet::TakeOff(Ship * Ship)
+{
 }

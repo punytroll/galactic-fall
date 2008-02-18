@@ -26,8 +26,9 @@
 #include "physical_object.h"
 #include "type_definitions.h"
 
-class Color;
 class AssetClass;
+class Color;
+class Ship;
 
 class PlanetAssetClass
 {
@@ -70,7 +71,10 @@ public:
 	void SetDescription(const std::string & Description);
 	void SetSize(const float & Size);
 	void SetColor(const Color & Color);
+	// modifiers
 	PlanetAssetClass * CreatePlanetAssetClass(const AssetClass * AssetClass);
+	void Land(Ship * Ship);
+	void TakeOff(Ship * Ship);
 private:
 	std::string m_Identifier;
 	std::string m_Description;

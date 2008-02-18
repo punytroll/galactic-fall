@@ -48,6 +48,7 @@ public:
 	void Scoop(void);
 	void SelectLinkedSystem(System * LinkedSystem);
 	void SelectNextLinkedSystem(void);
+	void TakeOff(void);
 	void TargetPreviousCargo(void);
 	void TargetNearestCargo(void);
 	void TargetNextCargo(void);

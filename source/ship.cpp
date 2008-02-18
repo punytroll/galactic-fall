@@ -27,6 +27,7 @@
 #include "graphics_particle_system.h"
 #include "map_knowledge.h"
 #include "math.h"
+#include "planet.h"
 #include "ship.h"
 #include "shot.h"
 #include "slot.h"
@@ -49,6 +50,7 @@ Ship::Ship(const ShipClass * ShipClass) :
 	m_LinkedSystemTarget(0),
 	m_Refuel(false),
 	m_ShipClass(ShipClass),
+	m_TakeOff(false),
 	m_TurnLeft(0.0f),
 	m_TurnRight(0.0f),
 	m_Velocity(true)
@@ -191,13 +193,26 @@ void Ship::Update(float Seconds)
 	}
 	else if(m_Land == true)
 	{
-		SetLinkedSystemTarget(0);
-		SetTarget(0);
-		m_Velocity.Set(0.0f, 0.0f, 0.0f);
+		m_Land = false;
+		
+		Planet * ThePlanet(dynamic_cast< Planet * >(GetTarget().Get()));
+		
+		assert(ThePlanet != 0);
+		ThePlanet->Land(this);
 		m_Accelerate = false;
 		m_TurnLeft = 0.0f;
 		m_TurnRight = 0.0f;
-		m_Land = false;
+	}
+	else if(m_TakeOff == true)
+	{
+		m_TakeOff = false;
+		
+		Planet * ThePlanet(dynamic_cast< Planet * >(GetTarget().Get()));
+		
+		assert(ThePlanet != 0);
+		ThePlanet->TakeOff(this);
+		SetTarget(0);
+		SetLinkedSystemTarget(0);
 	}
 	else
 	{

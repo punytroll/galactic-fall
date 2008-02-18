@@ -146,6 +146,14 @@ public:
 	virtual void Process(void);
 };
 
+class GoalTakeOffFromPlanet : public Goal
+{
+public:
+	GoalTakeOffFromPlanet(GoalMind * GoalMind);
+	virtual void Activate(void);
+	virtual void Process(void);
+};
+
 class GoalBuyFuel : public Goal
 {
 public:
