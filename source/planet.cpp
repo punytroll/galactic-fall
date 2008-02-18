@@ -18,7 +18,11 @@
 **/
 
 #include "asset_class.h"
+#include "character.h"
 #include "color.h"
+#include "globals.h"
+#include "message.h"
+#include "message_dispatcher.h"
 #include "planet.h"
 #include "ship.h"
 
@@ -83,6 +87,19 @@ void Planet::Land(Ship * Ship)
 {
 	Ship->SetVelocity(Vector3f(0.0f, 0.0f, 0.0f));
 	Ship->SetHull(Ship->GetShipClass()->GetHull());
+	
+	// send message to all characters on the landed ship
+	const std::set< Object * > & ShipContent(Ship->GetContent());
+	
+	for(std::set< Object * >::iterator ContentIterator = ShipContent.begin(); ContentIterator != ShipContent.end(); ++ContentIterator)
+	{
+		Character * TheCharacter(dynamic_cast< Character * >(*ContentIterator));
+		
+		if(TheCharacter != 0)
+		{
+			g_MessageDispatcher->PushMessage(new Message("landed", GetReference(), TheCharacter->GetReference()));
+		}
+	}
 }
 
 void Planet::TakeOff(Ship * Ship)
