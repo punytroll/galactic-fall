@@ -40,7 +40,8 @@
 // GoalApproachTarget                                                                            //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 GoalApproachTarget::GoalApproachTarget(GoalMind * GoalMind) :
-	Goal(GoalMind, "approach_target")
+	Goal(GoalMind, "approach_target"),
+	m_FlyInDirection(0)
 {
 	SetObjectIdentifier("::goal(approach_target)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
 }
@@ -128,7 +129,8 @@ void GoalBuyFuel::Process(void)
 // GoalDestroyTarget                                                                             //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 GoalDestroyTarget::GoalDestroyTarget(GoalMind * GoalMind) :
-	Goal(GoalMind, "destroy_target")
+	Goal(GoalMind, "destroy_target"),
+	m_FlyInDirection(0)
 {
 	SetObjectIdentifier("::goal(destroy_target)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
 }
@@ -380,7 +382,8 @@ void GoalFlyInDirection::Process(void)
 // GoalFlyOverRandomPoint                                                                        //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 GoalFlyOverRandomPoint::GoalFlyOverRandomPoint(GoalMind * GoalMind) :
-	Goal(GoalMind, "fly_over_random_point")
+	Goal(GoalMind, "fly_over_random_point"),
+	m_FlyInDirection(0)
 {
 	SetObjectIdentifier("::goal(fly_over_random_point)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
 }
@@ -423,7 +426,8 @@ void GoalFlyOverRandomPoint::Terminate(void)
 // GoalFullStop                                                                                  //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 GoalFullStop::GoalFullStop(GoalMind * GoalMind) :
-	Goal(GoalMind, "full_stop")
+	Goal(GoalMind, "full_stop"),
+	m_FlyInDirection(0)
 {
 	SetObjectIdentifier("::goal(full_stop)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
 }
