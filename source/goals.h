@@ -23,7 +23,59 @@
 #include "goal.h"
 #include "math/vector3f.h"
 
+class GoalFlyInDirection;
 class Planet;
+
+class GoalApproachTarget : public Goal
+{
+public:
+	GoalApproachTarget(GoalMind * GoalMind);
+	virtual void Activate(void);
+	virtual void Process(void);
+	virtual void Terminate(void);
+private:
+	GoalFlyInDirection * m_FlyInDirection;
+};
+
+class GoalBuyFuel : public Goal
+{
+public:
+	GoalBuyFuel(GoalMind * GoalMind);
+	// setters
+	void SetPlanet(Planet * Planet);
+	virtual void Activate(void);
+	virtual void Process(void);
+private:
+	Planet * m_Planet;
+};
+
+class GoalDestroyTarget : public Goal
+{
+public:
+	GoalDestroyTarget(GoalMind * GoalMind);
+	virtual void Activate(void);
+	virtual void Process(void);
+	virtual void Terminate(void);
+private:
+	GoalFlyInDirection * m_FlyInDirection;
+};
+
+class GoalFighterThink : public Goal
+{
+public:
+	GoalFighterThink(GoalMind * GoalMind);
+	virtual void Activate(void);
+	virtual bool OnMessageReceived(Message * Message);
+	virtual void Process(void);
+};
+
+class GoalFightSomeTarget : public Goal
+{
+public:
+	GoalFightSomeTarget(GoalMind * GoalMind);
+	virtual void Activate(void);
+	virtual void Process(void);
+};
 
 class GoalFlyInDirection : public Goal
 {
@@ -52,64 +104,23 @@ private:
 	GoalFlyInDirection * m_FlyInDirection;
 };
 
-class GoalFighterThink : public Goal
+class GoalFullStop : public Goal
 {
 public:
-	GoalFighterThink(GoalMind * GoalMind);
-	virtual void Activate(void);
-	virtual bool OnMessageReceived(Message * Message);
-	virtual void Process(void);
-};
-
-class GoalFightSomeTarget : public Goal
-{
-public:
-	GoalFightSomeTarget(GoalMind * GoalMind);
-	virtual void Activate(void);
-	virtual void Process(void);
-};
-
-class GoalSelectFightableTarget : public Goal
-{
-public:
-	GoalSelectFightableTarget(GoalMind * GoalMind);
-	virtual void Activate(void);
-	virtual void Process(void);
-};
-
-class GoalSelectMeasuredCargo : public Goal
-{
-public:
-	GoalSelectMeasuredCargo(GoalMind * GoalMind);
-	virtual void Activate(void);
-	virtual void Process(void);
-};
-
-class GoalSelectStrandedShip : public Goal
-{
-public:
-	GoalSelectStrandedShip(GoalMind * GoalMind);
-	virtual void Activate(void);
-	virtual void Process(void);
-};
-
-class GoalSelectFighter : public Goal
-{
-public:
-	GoalSelectFighter(GoalMind * GoalMind);
-	virtual void Activate(void);
-	virtual void Process(void);
-};
-
-class GoalDestroyTarget : public Goal
-{
-public:
-	GoalDestroyTarget(GoalMind * GoalMind);
+	GoalFullStop(GoalMind * GoalMind);
 	virtual void Activate(void);
 	virtual void Process(void);
 	virtual void Terminate(void);
 private:
 	GoalFlyInDirection * m_FlyInDirection;
+};
+
+class GoalLandOnPlanet : public Goal
+{
+public:
+	GoalLandOnPlanet(GoalMind * GoalMind);
+	virtual void Activate(void);
+	virtual void Process(void);
 };
 
 class GoalRefuel : public Goal
@@ -122,10 +133,42 @@ private:
 	Planet * m_PlanetToRefuelOn;
 };
 
+class GoalSelectFightableTarget : public Goal
+{
+public:
+	GoalSelectFightableTarget(GoalMind * GoalMind);
+	virtual void Activate(void);
+	virtual void Process(void);
+};
+
+class GoalSelectFighter : public Goal
+{
+public:
+	GoalSelectFighter(GoalMind * GoalMind);
+	virtual void Activate(void);
+	virtual void Process(void);
+};
+
+class GoalSelectMeasuredCargo : public Goal
+{
+public:
+	GoalSelectMeasuredCargo(GoalMind * GoalMind);
+	virtual void Activate(void);
+	virtual void Process(void);
+};
+
 class GoalSelectNearestPlanet : public Goal
 {
 public:
 	GoalSelectNearestPlanet(GoalMind * GoalMind);
+	virtual void Activate(void);
+	virtual void Process(void);
+};
+
+class GoalSelectStrandedShip : public Goal
+{
+public:
+	GoalSelectStrandedShip(GoalMind * GoalMind);
 	virtual void Activate(void);
 	virtual void Process(void);
 };
@@ -138,54 +181,12 @@ public:
 	virtual void Process(void);
 };
 
-class GoalLandOnPlanet : public Goal
-{
-public:
-	GoalLandOnPlanet(GoalMind * GoalMind);
-	virtual void Activate(void);
-	virtual void Process(void);
-};
-
 class GoalTakeOffFromPlanet : public Goal
 {
 public:
 	GoalTakeOffFromPlanet(GoalMind * GoalMind);
 	virtual void Activate(void);
 	virtual void Process(void);
-};
-
-class GoalBuyFuel : public Goal
-{
-public:
-	GoalBuyFuel(GoalMind * GoalMind);
-	// setters
-	void SetPlanet(Planet * Planet);
-	virtual void Activate(void);
-	virtual void Process(void);
-private:
-	Planet * m_Planet;
-};
-
-class GoalApproachTarget : public Goal
-{
-public:
-	GoalApproachTarget(GoalMind * GoalMind);
-	virtual void Activate(void);
-	virtual void Process(void);
-	virtual void Terminate(void);
-private:
-	GoalFlyInDirection * m_FlyInDirection;
-};
-
-class GoalFullStop : public Goal
-{
-public:
-	GoalFullStop(GoalMind * GoalMind);
-	virtual void Activate(void);
-	virtual void Process(void);
-	virtual void Terminate(void);
-private:
-	GoalFlyInDirection * m_FlyInDirection;
 };
 
 class GoalWait : public Goal
