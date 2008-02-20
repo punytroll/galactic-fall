@@ -25,6 +25,7 @@
 
 class GoalFlyInDirection;
 class Planet;
+class System;
 
 class GoalApproachTarget : public Goal
 {
@@ -80,6 +81,17 @@ private:
 	bool m_FacesDirection;
 };
 
+class GoalFlyInSystemDirection : public Goal
+{
+public:
+	GoalFlyInSystemDirection(GoalMind * GoalMind);
+	virtual void Activate(void);
+	virtual void Process(void);
+	virtual void Terminate(void);
+private:
+	GoalFlyInDirection * m_FlyInDirection;
+};
+
 class GoalFlyOverRandomPoint : public Goal
 {
 public:
@@ -103,10 +115,33 @@ private:
 	GoalFlyInDirection * m_FlyInDirection;
 };
 
-class GoalLandOnPlanet : public Goal
+class GoalJump : public Goal
 {
 public:
-	GoalLandOnPlanet(GoalMind * GoalMind);
+	GoalJump(GoalMind * GoalMind);
+	virtual void Activate(void);
+	virtual void Process(void);
+};
+
+class GoalJumpToSystem : public Goal
+{
+public:
+	enum SystemPolicy
+	{
+		JUMP_TO_RANDOM_SYSTEM
+	};
+	
+	GoalJumpToSystem(GoalMind * GoalMind, GoalJumpToSystem::SystemPolicy SystemPolicy);
+	virtual void Activate(void);
+	virtual void Process(void);
+private:
+	GoalJumpToSystem::SystemPolicy m_SystemPolicy;
+};
+
+class GoalLand : public Goal
+{
+public:
+	GoalLand(GoalMind * GoalMind);
 	virtual void Activate(void);
 	virtual void Process(void);
 };
@@ -145,10 +180,18 @@ public:
 	virtual void Process(void);
 };
 
-class GoalSelectNearestPlanet : public Goal
+class GoalSelectNearestPlanetInSystem : public Goal
 {
 public:
-	GoalSelectNearestPlanet(GoalMind * GoalMind);
+	GoalSelectNearestPlanetInSystem(GoalMind * GoalMind);
+	virtual void Activate(void);
+	virtual void Process(void);
+};
+
+class GoalSelectRandomSystem : public Goal
+{
+public:
+	GoalSelectRandomSystem(GoalMind * GoalMind);
 	virtual void Activate(void);
 	virtual void Process(void);
 };
@@ -182,6 +225,7 @@ class GoalVisitPlanet : public Goal
 public:
 	enum PlanetPolicy
 	{
+		VISIT_NEAREST_PLANET,
 		VISIT_NEAREST_PLANET_IN_SYSTEM
 	};
 	

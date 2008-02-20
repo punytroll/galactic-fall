@@ -1,0 +1,8 @@
+<save>
+	<current-system identifier="tichel"/>
+	<time-warp value="2.23"/>
+	<main-camera>
+		<position x="0" y="0" z="440"/>
+		<field-of-view degree="45"/>
+	</main-camera>
+</save>
