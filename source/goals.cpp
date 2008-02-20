@@ -85,47 +85,6 @@ void GoalApproachTarget::Terminate(void)
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-// GoalBuyFuel                                                                                   //
-///////////////////////////////////////////////////////////////////////////////////////////////////
-GoalBuyFuel::GoalBuyFuel(GoalMind * GoalMind) :
-	Goal(GoalMind, "buy_fuel")
-{
-	SetObjectIdentifier("::goal(buy_fuel)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
-}
-
-void GoalBuyFuel::Activate(void)
-{
-	assert(GetSubGoals().empty() == true);
-	SetState(Goal::ACTIVE);
-}
-
-void GoalBuyFuel::Process(void)
-{
-	assert(GetState() == Goal::ACTIVE);
-	
-	const std::vector< PlanetAssetClass * > & PlanetAssetClasses(m_Planet->GetPlanetAssetClasses());
-	bool SuccessfullyRefueled(false);
-	
-	for(std::vector< PlanetAssetClass * >::const_iterator PlanetAssetClassIterator = PlanetAssetClasses.begin(); PlanetAssetClassIterator != PlanetAssetClasses.end(); ++PlanetAssetClassIterator)
-	{
-		if((*PlanetAssetClassIterator)->GetAssetClass()->GetIdentifier() == "fuel")
-		{
-			u4byte FuelPrice((*PlanetAssetClassIterator)->GetPrice());
-			float CanBuy(GetMind()->GetCharacter()->GetCredits() / FuelPrice);
-			float Need(GetMind()->GetCharacter()->GetShip()->GetFuelCapacity() - GetMind()->GetCharacter()->GetShip()->GetFuel());
-			float Buy((CanBuy > Need) ? (Need) : (CanBuy));
-			
-			GetMind()->GetCharacter()->GetShip()->SetFuel(GetMind()->GetCharacter()->GetShip()->GetFuel() + Buy);
-			GetMind()->GetCharacter()->RemoveCredits(static_cast< u4byte >(Buy * FuelPrice));
-			SuccessfullyRefueled = true;
-			
-			break;
-		}
-	}
-	SetState((SuccessfullyRefueled == true) ? (Goal::COMPLETED) : (Goal::FAILED));
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
 // GoalDestroyTarget                                                                             //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 GoalDestroyTarget::GoalDestroyTarget(GoalMind * GoalMind) :
@@ -203,8 +162,10 @@ bool GoalFighterThink::OnMessageReceived(Message * Message)
 	}
 	else if(Message->GetTypeIdentifier() == "fuel_low")
 	{
-		assert(HasSubGoal("refuel") == false);
-		AddContent(new GoalRefuel(GetMind()));
+		if(HasSubGoal("visit_planet") == false)
+		{
+			AddContent(new GoalVisitPlanet(GetMind(), GoalVisitPlanet::VISIT_NEAREST_PLANET_IN_SYSTEM));
+		}
 		
 		return true;
 	}
@@ -231,9 +192,8 @@ void GoalFighterThink::Process(void)
 		SubGoal->Terminate();
 		RemoveContent(SubGoal);
 		// other actions may depend on the SubGoal variable
-		if(SubGoal->GetName() != "refuel")
+		if(GetSubGoals().empty() == true)
 		{
-			assert(GetSubGoals().empty() == true);
 			SetState(Goal::INACTIVE);
 		}
 		// now destroy the SubGoal
@@ -246,8 +206,8 @@ void GoalFighterThink::Process(void)
 		SubGoal->Terminate();
 		RemoveContent(SubGoal);
 		// other actions may depend on the SubGoal variable
-		// if a refuel fails, just do what you did before
-		if(SubGoal->GetName() != "refuel")
+		// FightSomeTarget may fail if no fighter is present in the system: fly around
+		if(SubGoal->GetName() == "fight_some_target")
 		{
 			AddContent(new GoalFlyOverRandomPoint(GetMind()));
 		}
@@ -491,8 +451,9 @@ void GoalLandOnPlanet::Process(void)
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // GoalRefuel                                                                                    //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-GoalRefuel::GoalRefuel(GoalMind * GoalMind) :
-	Goal(GoalMind, "refuel")
+GoalRefuel::GoalRefuel(GoalMind * GoalMind, const Reference< Planet > & Planet) :
+	Goal(GoalMind, "refuel"),
+	m_Planet(Planet)
 {
 	SetObjectIdentifier("::goal(refuel)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
 }
@@ -500,66 +461,33 @@ GoalRefuel::GoalRefuel(GoalMind * GoalMind) :
 void GoalRefuel::Activate(void)
 {
 	assert(GetSubGoals().empty() == true);
-	AddContent(new GoalTakeOffFromPlanet(GetMind()));
-	AddContent(new GoalWait(GetMind(), GetRandomFloat(2.0f, 5.0f)));
-	AddContent(new GoalBuyFuel(GetMind()));
-	AddContent(new GoalLandOnPlanet(GetMind()));
-	AddContent(new GoalStopAtTarget(GetMind()));
-	AddContent(new GoalSelectNearestPlanet(GetMind()));
 	SetState(Goal::ACTIVE);
 }
 
 void GoalRefuel::Process(void)
 {
 	assert(GetState() == Goal::ACTIVE);
-	assert(GetSubGoals().empty() == false);
 	
-	Goal * SubGoal(GetSubGoals().front());
+	const std::vector< PlanetAssetClass * > & PlanetAssetClasses(m_Planet->GetPlanetAssetClasses());
+	bool SuccessfullyRefueled(false);
 	
-	if(SubGoal->GetState() == Goal::INACTIVE)
+	for(std::vector< PlanetAssetClass * >::const_iterator PlanetAssetClassIterator = PlanetAssetClasses.begin(); PlanetAssetClassIterator != PlanetAssetClasses.end(); ++PlanetAssetClassIterator)
 	{
-		SubGoal->Activate();
-	}
-	assert(SubGoal->GetState() == Goal::ACTIVE);
-	SubGoal->Process();
-	if(SubGoal->GetState() == Goal::COMPLETED)
-	{
-		// terminate and remove sub goal
-		SubGoal->Terminate();
-		RemoveContent(SubGoal);
-		// other actions may depend on the SubGoal variable
-		if(SubGoal->GetName() == "select_nearest_planet")
+		if((*PlanetAssetClassIterator)->GetAssetClass()->GetIdentifier() == "fuel")
 		{
-			m_PlanetToRefuelOn = const_cast< Planet * >(dynamic_cast< const Planet * >(GetMind()->GetCharacter()->GetShip()->GetTarget().Get()));
-		}
-		if(SubGoal->GetName() == "land_on_planet")
-		{
-			assert(GetSubGoals().empty() == false);
+			u4byte FuelPrice((*PlanetAssetClassIterator)->GetPrice());
+			float CanBuy(GetMind()->GetCharacter()->GetCredits() / FuelPrice);
+			float Need(GetMind()->GetCharacter()->GetShip()->GetFuelCapacity() - GetMind()->GetCharacter()->GetShip()->GetFuel());
+			float Buy((CanBuy > Need) ? (Need) : (CanBuy));
 			
-			GoalBuyFuel * NextSubGoal(dynamic_cast< GoalBuyFuel * >(GetSubGoals().front()));
+			GetMind()->GetCharacter()->GetShip()->SetFuel(GetMind()->GetCharacter()->GetShip()->GetFuel() + Buy);
+			GetMind()->GetCharacter()->RemoveCredits(static_cast< u4byte >(Buy * FuelPrice));
+			SuccessfullyRefueled = true;
 			
-			assert(NextSubGoal != 0);
-			NextSubGoal->SetPlanet(m_PlanetToRefuelOn);
+			break;
 		}
-		if(GetSubGoals().empty() == true)
-		{
-			SetState(Goal::COMPLETED);
-		}
-		// now destroy the SubGoal
-		SubGoal->Destroy();
-		delete SubGoal;
 	}
-	else if(SubGoal->GetState() == Goal::FAILED)
-	{
-		// terminate and remove sub goal
-		SubGoal->Terminate();
-		RemoveContent(SubGoal);
-		// other actions may depend on the SubGoal variable
-		SetState(Goal::FAILED);
-		// now destroy the SubGoal
-		SubGoal->Destroy();
-		delete SubGoal;
-	}
+	SetState((SuccessfullyRefueled == true) ? (Goal::COMPLETED) : (Goal::FAILED));
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -869,6 +797,86 @@ void GoalTakeOffFromPlanet::Process(void)
 	assert(GetState() == Goal::ACTIVE);
 	GetMind()->GetCharacter()->GetShip()->SetTakeOff(true);
 	SetState(Goal::COMPLETED);
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// GoalVisitPlanet                                                                               //
+///////////////////////////////////////////////////////////////////////////////////////////////////
+GoalVisitPlanet::GoalVisitPlanet(GoalMind * GoalMind, GoalVisitPlanet::PlanetPolicy PlanetPolicy) :
+	Goal(GoalMind, "visit_planet"),
+	m_PlanetPolicy(PlanetPolicy)
+{
+	SetObjectIdentifier("::goal(visit_planet)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
+}
+
+void GoalVisitPlanet::Activate(void)
+{
+	assert(GetSubGoals().empty() == true);
+	AddContent(new GoalTakeOffFromPlanet(GetMind()));
+	AddContent(new GoalLandOnPlanet(GetMind()));
+	AddContent(new GoalStopAtTarget(GetMind()));
+	if(m_PlanetPolicy == GoalVisitPlanet::VISIT_NEAREST_PLANET_IN_SYSTEM)
+	{
+		AddContent(new GoalSelectNearestPlanet(GetMind()));
+	}
+	else
+	{
+		assert(false);
+	}
+	SetState(Goal::ACTIVE);
+}
+
+bool GoalVisitPlanet::OnMessageReceived(Message * Message)
+{
+	if(Message->GetTypeIdentifier() == "landed")
+	{
+		AddContent(new GoalWait(GetMind(), GetRandomFloat(2.0f, 5.0f)));
+		AddContent(new GoalRefuel(GetMind(), Message->GetSender()));
+		
+		return true;
+	}
+	
+	return false;
+}
+
+void GoalVisitPlanet::Process(void)
+{
+	assert(GetState() == Goal::ACTIVE);
+	assert(GetSubGoals().empty() == false);
+	
+	Goal * SubGoal(GetSubGoals().front());
+	
+	if(SubGoal->GetState() == Goal::INACTIVE)
+	{
+		SubGoal->Activate();
+	}
+	assert(SubGoal->GetState() == Goal::ACTIVE);
+	SubGoal->Process();
+	if(SubGoal->GetState() == Goal::COMPLETED)
+	{
+		// terminate and remove sub goal
+		SubGoal->Terminate();
+		RemoveContent(SubGoal);
+		// other actions may depend on the SubGoal variable
+		if(GetSubGoals().empty() == true)
+		{
+			SetState(Goal::COMPLETED);
+		}
+		// now destroy the SubGoal
+		SubGoal->Destroy();
+		delete SubGoal;
+	}
+	else if(SubGoal->GetState() == Goal::FAILED)
+	{
+		// terminate and remove sub goal
+		SubGoal->Terminate();
+		RemoveContent(SubGoal);
+		// other actions may depend on the SubGoal variable
+		SetState(Goal::FAILED);
+		// now destroy the SubGoal
+		SubGoal->Destroy();
+		delete SubGoal;
+	}
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////

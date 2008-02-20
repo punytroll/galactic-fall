@@ -37,18 +37,6 @@ private:
 	GoalFlyInDirection * m_FlyInDirection;
 };
 
-class GoalBuyFuel : public Goal
-{
-public:
-	GoalBuyFuel(GoalMind * GoalMind);
-	// setters
-	void SetPlanet(Planet * Planet);
-	virtual void Activate(void);
-	virtual void Process(void);
-private:
-	Planet * m_Planet;
-};
-
 class GoalDestroyTarget : public Goal
 {
 public:
@@ -126,11 +114,11 @@ public:
 class GoalRefuel : public Goal
 {
 public:
-	GoalRefuel(GoalMind * GoalMind);
+	GoalRefuel(GoalMind * GoalMind, const Reference< Planet > & Planet);
 	virtual void Activate(void);
 	virtual void Process(void);
 private:
-	Planet * m_PlanetToRefuelOn;
+	Reference< Planet > m_Planet;
 };
 
 class GoalSelectFightableTarget : public Goal
@@ -189,6 +177,22 @@ public:
 	virtual void Process(void);
 };
 
+class GoalVisitPlanet : public Goal
+{
+public:
+	enum PlanetPolicy
+	{
+		VISIT_NEAREST_PLANET_IN_SYSTEM
+	};
+	
+	GoalVisitPlanet(GoalMind * GoalMind, GoalVisitPlanet::PlanetPolicy PlanetPolicy);
+	virtual void Activate(void);
+	bool OnMessageReceived(Message * Message);
+	virtual void Process(void);
+private:
+	GoalVisitPlanet::PlanetPolicy m_PlanetPolicy;
+};
+
 class GoalWait : public Goal
 {
 public:
@@ -199,12 +203,5 @@ private:
 	float m_SecondsToWait;
 	float m_TimeToLeave;
 };
-
-// inline implementations for all goals
-
-inline void GoalBuyFuel::SetPlanet(Planet * Planet)
-{
-	m_Planet = Planet;
-}
 
 #endif
