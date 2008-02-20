@@ -172,6 +172,15 @@ bool GoalFighterThink::OnMessageReceived(Message * Message)
 		
 		return true;
 	}
+	else if(Message->GetTypeIdentifier() == "hull_low")
+	{
+		if(HasSubGoal("visit_planet") == false)
+		{
+			AddContent(new GoalVisitPlanet(GetMind(), GoalVisitPlanet::VISIT_NEAREST_PLANET_IN_SYSTEM));
+		}
+		
+		return true;
+	}
 	
 	return false;
 }
@@ -195,6 +204,14 @@ void GoalFighterThink::Process(void)
 		SubGoal->Terminate();
 		RemoveContent(SubGoal);
 		// other actions may depend on the SubGoal variable
+		if((SubGoal->GetName() == "fight_some_target") && (GetMind()->GetCharacter()->GetShip()->GetHull() < 0.5 * GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetHull()))
+		{
+			// after a hard fight: queue a repair
+			if(HasSubGoal("visit_planet") == false)
+			{
+				AddContent(new GoalVisitPlanet(GetMind(), GoalVisitPlanet::VISIT_NEAREST_PLANET_IN_SYSTEM));
+			}
+		}
 		if(GetSubGoals().empty() == true)
 		{
 			SetState(Goal::INACTIVE);
