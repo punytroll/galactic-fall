@@ -25,6 +25,7 @@
 #include "character.h"
 #include "commodity.h"
 #include "game_time.h"
+#include "globals.h"
 #include "goals.h"
 #include "math.h"
 #include "message.h"
@@ -35,6 +36,8 @@
 #include "string_cast.h"
 #include "system.h"
 #include "threat.h"
+
+int WantToJump(Ship * Ship, System * System);
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // GoalApproachTarget                                                                            //
@@ -164,7 +167,7 @@ bool GoalFighterThink::OnMessageReceived(Message * Message)
 	{
 		if(HasSubGoal("visit_planet") == false)
 		{
-			AddContent(new GoalVisitPlanet(GetMind(), GoalVisitPlanet::VISIT_NEAREST_PLANET_IN_SYSTEM));
+			AddContent(new GoalVisitPlanet(GetMind(), GoalVisitPlanet::VISIT_NEAREST_PLANET));
 		}
 		
 		return true;
@@ -339,6 +342,39 @@ void GoalFlyInDirection::Process(void)
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
+// GoalFlyInSystemDirection                                                                      //
+///////////////////////////////////////////////////////////////////////////////////////////////////
+GoalFlyInSystemDirection::GoalFlyInSystemDirection(GoalMind * GoalMind) :
+	Goal(GoalMind, "fly_in_system_direction"),
+	m_FlyInDirection(0)
+{
+	SetObjectIdentifier("::goal(fly_in_system_direction)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
+}
+
+void GoalFlyInSystemDirection::Activate(void)
+{
+	assert(GetSubGoals().empty() == true);
+	m_FlyInDirection = new GoalFlyInDirection(GetMind());
+	AddContent(m_FlyInDirection);
+	m_FlyInDirection->Activate();
+	m_FlyInDirection->SetDirection((GetMind()->GetCharacter()->GetShip()->GetLinkedSystemTarget()->GetPosition() - GetMind()->GetCharacter()->GetShip()->GetCurrentSystem()->GetPosition()).Normalize());
+	SetState(Goal::ACTIVE);
+}
+
+void GoalFlyInSystemDirection::Process(void)
+{
+	assert(GetState() == Goal::ACTIVE);
+	assert(GetSubGoals().empty() == false);
+	assert(GetSubGoals().front()->GetState() == Goal::ACTIVE);
+	GetSubGoals().front()->Process();
+}
+
+void GoalFlyInSystemDirection::Terminate(void)
+{
+	m_FlyInDirection->Terminate();
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
 // GoalFlyOverRandomPoint                                                                        //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 GoalFlyOverRandomPoint::GoalFlyOverRandomPoint(GoalMind * GoalMind) :
@@ -427,21 +463,141 @@ void GoalFullStop::Terminate(void)
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-// GoalLandOnPlanet                                                                              //
+// GoalJump                                                                                      //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-GoalLandOnPlanet::GoalLandOnPlanet(GoalMind * GoalMind) :
-	Goal(GoalMind, "land_on_planet")
+GoalJump::GoalJump(GoalMind * GoalMind) :
+	Goal(GoalMind, "jump")
 {
-	SetObjectIdentifier("::goal(land_on_planet)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
+	SetObjectIdentifier("::goal(jump)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
 }
 
-void GoalLandOnPlanet::Activate(void)
+void GoalJump::Activate(void)
 {
 	assert(GetSubGoals().empty() == true);
 	SetState(Goal::ACTIVE);
 }
 
-void GoalLandOnPlanet::Process(void)
+void GoalJump::Process(void)
+{
+	assert(GetState() == Goal::ACTIVE);
+	GetMind()->GetCharacter()->GetShip()->m_Jump = true;
+	SetState(Goal::COMPLETED);
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// GoalJumpToSystem                                                                              //
+///////////////////////////////////////////////////////////////////////////////////////////////////
+GoalJumpToSystem::GoalJumpToSystem(GoalMind * GoalMind, GoalJumpToSystem::SystemPolicy SystemPolicy) :
+	Goal(GoalMind, "jump_to_system"),
+	m_SystemPolicy(SystemPolicy)
+{
+	SetObjectIdentifier("::goal(jump_to_system)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
+}
+
+void GoalJumpToSystem::Activate(void)
+{
+	assert(GetSubGoals().empty() == true);
+	AddContent(new GoalJump(GetMind()));
+	AddContent(new GoalFlyInSystemDirection(GetMind()));
+	if(m_SystemPolicy == GoalJumpToSystem::JUMP_TO_RANDOM_SYSTEM)
+	{
+		AddContent(new GoalSelectRandomSystem(GetMind()));
+	}
+	SetState(Goal::ACTIVE);
+}
+
+void GoalJumpToSystem::Process(void)
+{
+	assert(GetState() == Goal::ACTIVE);
+	assert(GetSubGoals().empty() == false);
+	
+	Goal * SubGoal(GetSubGoals().front());
+	
+	if(SubGoal->GetState() == Goal::INACTIVE)
+	{
+		SubGoal->Activate();
+	}
+	assert(SubGoal->GetState() == Goal::ACTIVE);
+	SubGoal->Process();
+	if(SubGoal->GetState() == Goal::COMPLETED)
+	{
+		// terminate and remove sub goal
+		SubGoal->Terminate();
+		RemoveContent(SubGoal);
+		// other actions may depend on the SubGoal variable
+		if(GetSubGoals().empty() == true)
+		{
+			SetState(Goal::COMPLETED);
+		}
+		// now destroy the SubGoal
+		SubGoal->Destroy();
+		delete SubGoal;
+	}
+	else if(SubGoal->GetState() == Goal::FAILED)
+	{
+		// terminate and remove sub goal
+		SubGoal->Terminate();
+		RemoveContent(SubGoal);
+		// other actions may depend on the SubGoal variable
+		SetState(Goal::FAILED);
+		// now destroy the SubGoal
+		SubGoal->Destroy();
+		delete SubGoal;
+	}
+	else if(SubGoal->GetState() == Goal::ACTIVE)
+	{
+		if(SubGoal->GetName() == "fly_in_system_direction")
+		{
+			switch(WantToJump(GetMind()->GetCharacter()->GetShip(), GetMind()->GetCharacter()->GetShip()->GetLinkedSystemTarget()))
+			{
+			case NOT_ENOUGH_FUEL:
+				{
+					assert("TODO: This ship had no fuel to jump." == 0);
+					
+					break;
+				}
+			case OK:
+				{
+					// terminate and remove sub goal
+					SubGoal->Terminate();
+					RemoveContent(SubGoal);
+					// now destroy the SubGoal
+					SubGoal->Destroy();
+					delete SubGoal;
+					
+					break;
+				}
+			case TOO_NEAR_TO_STELLAR_OBJECT:
+				{
+					// this is the common case which requires us to continue with the goal processing
+					
+					break;
+				}
+			default:
+				{
+					assert("TODO: Unhandled WantToJump() retur code." == 0);
+				}
+			}
+		}
+	}
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// GoalLand                                                                                      //
+///////////////////////////////////////////////////////////////////////////////////////////////////
+GoalLand::GoalLand(GoalMind * GoalMind) :
+	Goal(GoalMind, "land")
+{
+	SetObjectIdentifier("::goal(land)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
+}
+
+void GoalLand::Activate(void)
+{
+	assert(GetSubGoals().empty() == true);
+	SetState(Goal::ACTIVE);
+}
+
+void GoalLand::Process(void)
 {
 	assert(GetState() == Goal::ACTIVE);
 	GetMind()->GetCharacter()->GetShip()->m_Land = true;
@@ -637,21 +793,21 @@ void GoalSelectMeasuredCargo::Process(void)
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-// GoalSelectNearestPlanet                                                                       //
+// GoalSelectNearestPlanetInSystem                                                               //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-GoalSelectNearestPlanet::GoalSelectNearestPlanet(GoalMind * GoalMind) :
-	Goal(GoalMind, "select_nearest_planet")
+GoalSelectNearestPlanetInSystem::GoalSelectNearestPlanetInSystem(GoalMind * GoalMind) :
+	Goal(GoalMind, "select_nearest_planet_in_system")
 {
-	SetObjectIdentifier("::goal(select_nearest_planet)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
+	SetObjectIdentifier("::goal(select_nearest_planet_in_system)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
 }
 
-void GoalSelectNearestPlanet::Activate(void)
+void GoalSelectNearestPlanetInSystem::Activate(void)
 {
 	assert(GetSubGoals().empty() == true);
 	SetState(Goal::ACTIVE);
 }
 
-void GoalSelectNearestPlanet::Process(void)
+void GoalSelectNearestPlanetInSystem::Process(void)
 {
 	assert(GetState() == Goal::ACTIVE);
 	
@@ -672,6 +828,45 @@ void GoalSelectNearestPlanet::Process(void)
 	if(NearestPlanet != 0)
 	{
 		GetMind()->GetCharacter()->GetShip()->SetTarget(NearestPlanet->GetReference());
+		SetState(Goal::COMPLETED);
+	}
+	else
+	{
+		SetState(Goal::FAILED);
+	}
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// GoalSelectRandomSystem                                                                        //
+///////////////////////////////////////////////////////////////////////////////////////////////////
+GoalSelectRandomSystem::GoalSelectRandomSystem(GoalMind * GoalMind) :
+	Goal(GoalMind, "select_random_system")
+{
+	SetObjectIdentifier("::goal(select_random_system)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
+}
+
+void GoalSelectRandomSystem::Activate(void)
+{
+	assert(GetSubGoals().empty() == true);
+	SetState(Goal::ACTIVE);
+}
+
+void GoalSelectRandomSystem::Process(void)
+{
+	assert(GetState() == Goal::ACTIVE);
+	assert(GetSubGoals().empty() == true);
+	
+	const std::list< System * > & Systems(GetMind()->GetCharacter()->GetShip()->GetCurrentSystem()->GetLinkedSystems());
+	
+	if(Systems.size() != 0)
+	{
+		std::list< System * >::const_iterator SystemIterator(Systems.begin());
+		
+		for(std::list< System * >::size_type Choice = GetRandomInteger(Systems.size() - 1); Choice > 0; --Choice)
+		{
+			++SystemIterator;
+		}
+		GetMind()->GetCharacter()->GetShip()->SetLinkedSystemTarget(*SystemIterator);
 		SetState(Goal::COMPLETED);
 	}
 	else
@@ -756,7 +951,7 @@ void GoalStopAtTarget::Process(void)
 		SubGoal->Terminate();
 		RemoveContent(SubGoal);
 		// other actions may depend on the SubGoal variable
-		if(SubGoal->GetName() == "full_stop")
+		if(GetSubGoals().empty() == true)
 		{
 			SetState(Goal::COMPLETED);
 		}
@@ -813,11 +1008,11 @@ void GoalVisitPlanet::Activate(void)
 {
 	assert(GetSubGoals().empty() == true);
 	AddContent(new GoalTakeOffFromPlanet(GetMind()));
-	AddContent(new GoalLandOnPlanet(GetMind()));
+	AddContent(new GoalLand(GetMind()));
 	AddContent(new GoalStopAtTarget(GetMind()));
-	if(m_PlanetPolicy == GoalVisitPlanet::VISIT_NEAREST_PLANET_IN_SYSTEM)
+	if((m_PlanetPolicy == GoalVisitPlanet::VISIT_NEAREST_PLANET_IN_SYSTEM) || (m_PlanetPolicy == GoalVisitPlanet::VISIT_NEAREST_PLANET))
 	{
-		AddContent(new GoalSelectNearestPlanet(GetMind()));
+		AddContent(new GoalSelectNearestPlanetInSystem(GetMind()));
 	}
 	else
 	{
@@ -872,7 +1067,15 @@ void GoalVisitPlanet::Process(void)
 		SubGoal->Terminate();
 		RemoveContent(SubGoal);
 		// other actions may depend on the SubGoal variable
-		SetState(Goal::FAILED);
+		if((SubGoal->GetName() == "select_nearest_planet_in_system") && (m_PlanetPolicy == GoalVisitPlanet::VISIT_NEAREST_PLANET))
+		{
+			AddContent(new GoalSelectNearestPlanetInSystem(GetMind()));
+			AddContent(new GoalJumpToSystem(GetMind(), GoalJumpToSystem::JUMP_TO_RANDOM_SYSTEM));
+		}
+		else
+		{
+			SetState(Goal::FAILED);
+		}
 		// now destroy the SubGoal
 		SubGoal->Destroy();
 		delete SubGoal;
