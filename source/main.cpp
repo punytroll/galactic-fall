@@ -751,11 +751,11 @@ void UpdateUserInterface(void)
 		// set system label color according to jump status
 		if(WantToJump(g_CharacterObserver->GetObservedCharacter()->GetShip(), g_CharacterObserver->GetObservedCharacter()->GetShip()->GetLinkedSystemTarget()) == OK)
 		{
-			g_SystemLabel->GetForegroundColor().Set(0.7f, 0.8f, 1.0f);
+			g_SystemLabel->GetForegroundColor().Set(0.7f, 0.8f, 1.0f, 1.0f);
 		}
 		else
 		{
-			g_SystemLabel->GetForegroundColor().Set(0.4f, 0.4f, 0.4f);
+			g_SystemLabel->GetForegroundColor().Set(0.4f, 0.4f, 0.4f, 1.0f);
 		}
 		g_ScannerDisplay->SetOwner(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetReference());
 		g_ScannerDisplay->Update();

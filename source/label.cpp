@@ -26,7 +26,7 @@
 
 Label::Label(Widget * SupWidget) :
 	Widget(SupWidget),
-	m_ForegroundColor(1.0f, 1.0f, 1.0f),
+	m_ForegroundColor(1.0f, 1.0f, 1.0f, 1.0f),
 	m_Wrap(false),
 	m_WordWrap(false),
 	m_HorizontalAlignment(Label::ALIGN_LEFT),
@@ -37,7 +37,7 @@ Label::Label(Widget * SupWidget) :
 Label::Label(Widget * SupWidget, const std::string & String) :
 	Widget(SupWidget),
 	m_String(String),
-	m_ForegroundColor(1.0f, 1.0f, 1.0f),
+	m_ForegroundColor(1.0f, 1.0f, 1.0f, 1.0f),
 	m_Wrap(false),
 	m_WordWrap(false),
 	m_HorizontalAlignment(Label::ALIGN_LEFT),

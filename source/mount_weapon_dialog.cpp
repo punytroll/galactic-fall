@@ -130,7 +130,7 @@ void SlotListItem::SetSelected(bool Selected)
 	}
 	else
 	{
-		SetBackgroundColor(Color(0.4f, 0.1f, 0.1f));
+		SetBackgroundColor(Color(0.4f, 0.1f, 0.1f, 1.0f));
 	}
 }
 
@@ -138,7 +138,7 @@ void SlotListItem::OnMouseEnter(Widget * EventSource)
 {
 	if(GetSelected() == false)
 	{
-		SetBackgroundColor(Color(0.3f, 0.2f, 0.2f));
+		SetBackgroundColor(Color(0.3f, 0.2f, 0.2f, 1.0f));
 	}
 }
 
@@ -197,7 +197,7 @@ void WeaponListItem::SetSelected(bool Selected)
 	}
 	else
 	{
-		SetBackgroundColor(Color(0.4f, 0.1f, 0.1f));
+		SetBackgroundColor(Color(0.4f, 0.1f, 0.1f, 1.0f));
 	}
 }
 
@@ -205,7 +205,7 @@ void WeaponListItem::OnMouseEnter(Widget * EventSource)
 {
 	if(GetSelected() == false)
 	{
-		SetBackgroundColor(Color(0.3f, 0.2f, 0.2f));
+		SetBackgroundColor(Color(0.3f, 0.2f, 0.2f, 1.0f));
 	}
 }
 
