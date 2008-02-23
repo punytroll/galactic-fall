@@ -26,21 +26,21 @@
 WWindow::WWindow(Widget * SupWidget, const std::string & Title) :
 	Widget(SupWidget)
 {
-	SetBackgroundColor(Color(0.2f, 0.2f, 0.2f));
+	SetBackgroundColor(Color(0.2f, 0.2f, 0.2f, 1.0f));
 	m_Border = new Border(this);
 	m_Border->SetPosition(Vector2f(0.0f, 0.0f));
 	m_Border->SetSize(GetSize());
 	m_Border->SetAnchorBottom(true);
 	m_Border->SetAnchorRight(true);
 	m_Border->SetWidth(1.0f);
-	m_Border->SetForegroundColor(Color(0.4f, 0.4f, 0.4f));
+	m_Border->SetForegroundColor(Color(0.4f, 0.4f, 0.4f, 1.0f));
 	m_TitleLabel = new Label(this, Title);
 	m_TitleLabel->SetPosition(Vector2f(10.0f, 10.0f));
 	m_TitleLabel->SetSize(Vector2f(GetSize()[0] - 20.0f, 20.0f));
 	m_TitleLabel->SetAnchorRight(true);
 	m_TitleLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
 	m_TitleLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
-	m_TitleLabel->SetBackgroundColor(Color(0.2f, 0.2f, 0.4f));
+	m_TitleLabel->SetBackgroundColor(Color(0.2f, 0.2f, 0.4f, 1.0f));
 	m_TitleLabel->AddMouseButtonListener(this);
 	m_TitleLabel->AddMouseMotionListener(this);
 	m_ResizeDragBox = new Widget(this);
@@ -50,7 +50,7 @@ WWindow::WWindow(Widget * SupWidget, const std::string & Title) :
 	m_ResizeDragBox->SetAnchorLeft(false);
 	m_ResizeDragBox->SetAnchorRight(true);
 	m_ResizeDragBox->SetAnchorTop(false);
-	m_ResizeDragBox->SetBackgroundColor(Color(0.2f, 0.2f, 0.4f));
+	m_ResizeDragBox->SetBackgroundColor(Color(0.2f, 0.2f, 0.4f, 1.0f));
 	m_ResizeDragBox->AddMouseButtonListener(this);
 	m_ResizeDragBox->AddMouseMotionListener(this);
 }

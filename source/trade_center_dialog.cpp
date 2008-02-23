@@ -310,7 +310,7 @@ bool TradeCenterDialog::OnMouseButton(Widget * EventSource, int Button, int Stat
 				m_SelectedTradeCenterAssetClass->UnsetBackgroundColor();
 			}
 			m_SelectedTradeCenterAssetClass = SelectedTradeCenterAssetClass;
-			SelectedTradeCenterAssetClass->SetBackgroundColor(Color(0.4f, 0.1f, 0.1f));
+			SelectedTradeCenterAssetClass->SetBackgroundColor(Color(0.4f, 0.1f, 0.1f, 1.0f));
 			
 			return true;
 		}
@@ -339,7 +339,7 @@ void TradeCenterDialog::OnMouseEnter(Widget * EventSource)
 	
 	if((EnteredTradeCenterAssetClass != 0) && (EnteredTradeCenterAssetClass != m_SelectedTradeCenterAssetClass))
 	{
-		EnteredTradeCenterAssetClass->SetBackgroundColor(Color(0.3f, 0.2f, 0.2f));
+		EnteredTradeCenterAssetClass->SetBackgroundColor(Color(0.3f, 0.2f, 0.2f, 1.0f));
 	}
 }
 

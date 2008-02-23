@@ -26,9 +26,9 @@ class Color
 {
 public:
 	Color(void);
-	Color(float Red, float Green, float Blue, float Alpha = 1.0f);
+	Color(float Red, float Green, float Blue, float Alpha);
 	const Vector4f & GetColor(void) const;
-	void Set(float Red, float Green, float Blue, float Alpha = 1.0f);
+	void Set(float Red, float Green, float Blue, float Alpha);
 private:
 	Vector4f m_Color;
 };
