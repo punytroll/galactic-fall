@@ -35,6 +35,8 @@ std::list< Widget * > Widget::m_DestroyedWidgets;
 std::stack< std::pair< Vector2f, Vector2f > > Widget::m_ClippingRectangles;
 
 Widget::Widget(Widget * SupWidget, const std::string & Name) :
+	m_Enabled(true),
+	m_DisabledBackgroundColor(0),
 	m_Name(Name),
 	m_SupWidget(0),
 	m_HoverWidget(0),
@@ -59,13 +61,18 @@ Widget::~Widget(void)
 	assert(m_SupWidget == 0);
 	assert(m_SubWidgets.size() == 0);
 	delete m_BackgroundColor;
+	m_BackgroundColor = 0;
+	delete m_DisabledBackgroundColor;
+	m_DisabledBackgroundColor = 0;
 }
 
 void Widget::Draw(void) const
 {
-	if(m_BackgroundColor != 0)
+	Color * Color((GetEnabled() == true) ? (m_BackgroundColor) : (m_DisabledBackgroundColor));
+	
+	if(Color != 0)
 	{
-		glColor4fv(m_BackgroundColor->GetColor().m_V.m_A);
+		glColor4fv(Color->GetColor().m_V.m_A);
 		glBegin(GL_QUADS);
 		glVertex2f(0.0f, 0.0f);
 		glVertex2f(0.0f, m_Size.m_V.m_A[1]);
@@ -115,10 +122,22 @@ void Widget::SetBackgroundColor(const Color & BackgroundColor)
 	m_BackgroundColor = new Color(BackgroundColor);
 }
 
+void Widget::SetDisabledBackgroundColor(const Color & DisabledBackgroundColor)
+{
+	delete m_DisabledBackgroundColor;
+	m_DisabledBackgroundColor = new Color(DisabledBackgroundColor);
+}
+
 void Widget::UnsetBackgroundColor(void)
 {
 	delete m_BackgroundColor;
 	m_BackgroundColor = 0;
+}
+
+void Widget::UnsetDisabledBackgroundColor(void)
+{
+	delete m_DisabledBackgroundColor;
+	m_DisabledBackgroundColor = 0;
 }
 
 void Widget::SetPosition(const Vector2f & Position)
