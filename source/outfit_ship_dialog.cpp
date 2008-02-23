@@ -22,7 +22,7 @@
 #include "globals.h"
 #include "key_event_information.h"
 #include "label.h"
-#include "mount_weapon_dialog.h"
+#include "outfit_ship_dialog.h"
 #include "scroll_box.h"
 #include "ship.h"
 #include "slot.h"
@@ -50,14 +50,14 @@ private:
 	Label * m_TypeOrWeaponLabel;
 };
 
-class WeaponListItem : public MouseMotionListener, public Widget
+class EquipmentListItem : public MouseMotionListener, public Widget
 {
 public:
-	WeaponListItem(Widget * SupWidget, Weapon * Weapon);
+	EquipmentListItem(Widget * SupWidget, Weapon * Weapon);
 	void Update(void);
 	// getters
 	bool GetSelected(void) const;
-	Weapon * GetWeapon(void);
+	Weapon * GetEquipment(void);
 	// setters
 	void SetSelected(bool Selected);
 protected:
@@ -65,7 +65,7 @@ protected:
 	virtual void OnMouseLeave(Widget * EventSource);
 private:
 	bool m_Selected;
-	Weapon * m_Weapon;
+	Weapon * m_Equipment;
 };
 
 SlotListItem::SlotListItem(Widget * SupWidget, Slot * Slot) :
@@ -150,16 +150,16 @@ void SlotListItem::OnMouseLeave(Widget * EventSource)
 	}
 }
 
-WeaponListItem::WeaponListItem(Widget * SupWidget, Weapon * Weapon) :
+EquipmentListItem::EquipmentListItem(Widget * SupWidget, Weapon * Equipment) :
 	Widget(SupWidget),
 	m_Selected(false),
-	m_Weapon(Weapon)
+	m_Equipment(Equipment)
 {
 	AddMouseMotionListener(this);
 	// set to arbitrary design size
 	SetSize(Vector2f(100.0f, 100.0f));
 	
-	Label * NameLabel(new Label(this, Weapon->GetName()));
+	Label * NameLabel(new Label(this, Equipment->GetName()));
 	
 	NameLabel->SetPosition(Vector2f(5.0f, 5.0f));
 	NameLabel->SetSize(Vector2f(90.0f, 20.0f));
@@ -168,7 +168,7 @@ WeaponListItem::WeaponListItem(Widget * SupWidget, Weapon * Weapon) :
 	NameLabel->SetAnchorRight(true);
 	NameLabel->SetAnchorTop(true);
 	
-	Label * SlotTypeLabel(new Label(this, g_SlotClassManager->Get(Weapon->GetWeaponClass()->GetSlotClassIdentifier())->GetName()));
+	Label * SlotTypeLabel(new Label(this, g_SlotClassManager->Get(Equipment->GetWeaponClass()->GetSlotClassIdentifier())->GetName()));
 	
 	SlotTypeLabel->SetPosition(Vector2f(25.0f, 25.0f));
 	SlotTypeLabel->SetSize(Vector2f(70.0f, 20.0f));
@@ -178,17 +178,17 @@ WeaponListItem::WeaponListItem(Widget * SupWidget, Weapon * Weapon) :
 	SlotTypeLabel->SetAnchorTop(true);
 }
 
-bool WeaponListItem::GetSelected(void) const
+bool EquipmentListItem::GetSelected(void) const
 {
 	return m_Selected;
 }
 
-Weapon * WeaponListItem::GetWeapon(void)
+Weapon * EquipmentListItem::GetEquipment(void)
 {
-	return m_Weapon;
+	return m_Equipment;
 }
 
-void WeaponListItem::SetSelected(bool Selected)
+void EquipmentListItem::SetSelected(bool Selected)
 {
 	m_Selected = Selected;
 	if(m_Selected == false)
@@ -201,7 +201,7 @@ void WeaponListItem::SetSelected(bool Selected)
 	}
 }
 
-void WeaponListItem::OnMouseEnter(Widget * EventSource)
+void EquipmentListItem::OnMouseEnter(Widget * EventSource)
 {
 	if(GetSelected() == false)
 	{
@@ -209,7 +209,7 @@ void WeaponListItem::OnMouseEnter(Widget * EventSource)
 	}
 }
 
-void WeaponListItem::OnMouseLeave(Widget * EventSource)
+void EquipmentListItem::OnMouseLeave(Widget * EventSource)
 {
 	if(GetSelected() == false)
 	{
@@ -217,11 +217,11 @@ void WeaponListItem::OnMouseLeave(Widget * EventSource)
 	}
 }
 
-MountWeaponDialog::MountWeaponDialog(Widget * SupWidget, Ship * Ship) :
-	WWindow(SupWidget, "Mount Weapons"),
+OutfitShipDialog::OutfitShipDialog(Widget * SupWidget, Ship * Ship) :
+	WWindow(SupWidget, "Outfit Ship"),
 	m_Ship(Ship),
 	m_SelectedSlotListItem(0),
-	m_SelectedWeaponListItem(0)
+	m_SelectedEquipmentListItem(0)
 {
 	AddDimensionListener(this);
 	AddKeyListener(this);
@@ -308,39 +308,39 @@ MountWeaponDialog::MountWeaponDialog(Widget * SupWidget, Ship * Ship) :
 	m_RightPane->SetSize(Vector2f(200.0f, GetSize()[1] - 50.0f));
 	m_RightPane->SetAnchorBottom(true);
 	
-	Label * WeaponListLabel(new Label(m_RightPane, "Weapons"));
+	Label * EquipmentListLabel(new Label(m_RightPane, "Equipment"));
 	
-	WeaponListLabel->SetPosition(Vector2f(0.0f, 0.0f));
-	WeaponListLabel->SetSize(Vector2f(m_RightPane->GetSize()[0], 20.0f));
-	WeaponListLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
-	WeaponListLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
-	WeaponListLabel->SetAnchorRight(true);
-	m_WeaponScrollBox = new ScrollBox(m_RightPane);
-	m_WeaponScrollBox->SetPosition(Vector2f(0.0f, 30.0f));
-	m_WeaponScrollBox->SetSize(Vector2f(m_RightPane->GetSize()[0], m_RightPane->GetSize()[1] - 30.0f));
-	m_WeaponScrollBox->SetHorizontalScrollBarVisible(false);
-	m_WeaponScrollBox->SetAnchorBottom(true);
-	m_WeaponScrollBox->SetAnchorRight(true);
-	RebuildWeaponList();
+	EquipmentListLabel->SetPosition(Vector2f(0.0f, 0.0f));
+	EquipmentListLabel->SetSize(Vector2f(m_RightPane->GetSize()[0], 20.0f));
+	EquipmentListLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
+	EquipmentListLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
+	EquipmentListLabel->SetAnchorRight(true);
+	m_EquipmentScrollBox = new ScrollBox(m_RightPane);
+	m_EquipmentScrollBox->SetPosition(Vector2f(0.0f, 30.0f));
+	m_EquipmentScrollBox->SetSize(Vector2f(m_RightPane->GetSize()[0], m_RightPane->GetSize()[1] - 30.0f));
+	m_EquipmentScrollBox->SetHorizontalScrollBarVisible(false);
+	m_EquipmentScrollBox->SetAnchorBottom(true);
+	m_EquipmentScrollBox->SetAnchorRight(true);
+	RebuildEquipmentList();
 	UpdateButtons();
 	SetPosition(Vector2f(70.0f, 400.0f));
 	SetSize(Vector2f(600.0f, 400.0f));
 }
 
-void MountWeaponDialog::RebuildWeaponList(void)
+void OutfitShipDialog::RebuildEquipmentList(void)
 {
 	// empty the weapon list first
 	// save the selected weapon so we can reselect it if it is available after the rebuild
-	Weapon * SelectedWeapon(0);
+	Weapon * SelectedEquipment(0);
 	
-	if(m_SelectedWeaponListItem != 0)
+	if(m_SelectedEquipmentListItem != 0)
 	{
-		SelectedWeapon = m_SelectedWeaponListItem->GetWeapon();
-		m_SelectedWeaponListItem = 0;
+		SelectedEquipment = m_SelectedEquipmentListItem->GetEquipment();
+		m_SelectedEquipmentListItem = 0;
 	}
-	while(m_WeaponScrollBox->GetContent()->GetSubWidgets().empty() == false)
+	while(m_EquipmentScrollBox->GetContent()->GetSubWidgets().empty() == false)
 	{
-		m_WeaponScrollBox->GetContent()->GetSubWidgets().front()->Destroy();
+		m_EquipmentScrollBox->GetContent()->GetSubWidgets().front()->Destroy();
 	}
 	
 	// now fill the weapon list
@@ -349,35 +349,35 @@ void MountWeaponDialog::RebuildWeaponList(void)
 	
 	for(std::set< Object * >::iterator ContentIterator = Content.begin(); ContentIterator != Content.end(); ++ContentIterator)
 	{
-		Weapon * ContentWeapon(dynamic_cast< Weapon * >(*ContentIterator));
+		Weapon * ContentEquipment(dynamic_cast< Weapon * >(*ContentIterator));
 		
-		if((ContentWeapon != 0) && (ContentWeapon->GetSlot() == 0))
+		if((ContentEquipment != 0) && (ContentEquipment->GetSlot() == 0))
 		{
-			WeaponListItem * NewWeaponListItem(new WeaponListItem(m_WeaponScrollBox->GetContent(), ContentWeapon));
+			EquipmentListItem * NewEquipmentListItem(new EquipmentListItem(m_EquipmentScrollBox->GetContent(), ContentEquipment));
 			
-			NewWeaponListItem->SetPosition(Vector2f(5.0f, Top));
-			NewWeaponListItem->SetSize(Vector2f(m_WeaponScrollBox->GetContent()->GetSize()[0] - 10.0f, 50.0f));
-			NewWeaponListItem->SetAnchorRight(true);
-			NewWeaponListItem->AddMouseButtonListener(this);
-			if(ContentWeapon == SelectedWeapon)
+			NewEquipmentListItem->SetPosition(Vector2f(5.0f, Top));
+			NewEquipmentListItem->SetSize(Vector2f(m_EquipmentScrollBox->GetContent()->GetSize()[0] - 10.0f, 50.0f));
+			NewEquipmentListItem->SetAnchorRight(true);
+			NewEquipmentListItem->AddMouseButtonListener(this);
+			if(ContentEquipment == SelectedEquipment)
 			{
-				m_SelectedWeaponListItem = NewWeaponListItem;
-				m_SelectedWeaponListItem->SetSelected(true);
+				m_SelectedEquipmentListItem = NewEquipmentListItem;
+				m_SelectedEquipmentListItem->SetSelected(true);
 			}
 			Top += 55.0f;
 		}
 	}
-	m_WeaponScrollBox->GetContent()->SetSize(Vector2f(180.0f, std::max(Top, m_WeaponScrollBox->GetView()->GetSize()[1])));
-	m_WeaponScrollBox->GetContent()->SetAnchorRight(true);
+	m_EquipmentScrollBox->GetContent()->SetSize(Vector2f(180.0f, std::max(Top, m_EquipmentScrollBox->GetView()->GetSize()[1])));
+	m_EquipmentScrollBox->GetContent()->SetAnchorRight(true);
 }
 
-void MountWeaponDialog::UpdateButtons(void)
+void OutfitShipDialog::UpdateButtons(void)
 {
 	m_UnmountButton->SetEnabled((m_SelectedSlotListItem != 0) && (m_SelectedSlotListItem->GetSlot()->GetMountedObject().IsValid() == true));
-	m_MountButton->SetEnabled((m_SelectedSlotListItem != 0) && (m_SelectedSlotListItem->GetSlot()->GetMountedObject().IsValid() == false) && (m_SelectedWeaponListItem != 0) && (m_SelectedSlotListItem->GetSlot()->GetSlotClass()->AcceptsSlotClassIdentifier(m_SelectedWeaponListItem->GetWeapon()->GetWeaponClass()->GetSlotClassIdentifier()) == true));
+	m_MountButton->SetEnabled((m_SelectedSlotListItem != 0) && (m_SelectedSlotListItem->GetSlot()->GetMountedObject().IsValid() == false) && (m_SelectedEquipmentListItem != 0) && (m_SelectedSlotListItem->GetSlot()->GetSlotClass()->AcceptsSlotClassIdentifier(m_SelectedEquipmentListItem->GetEquipment()->GetWeaponClass()->GetSlotClassIdentifier()) == true));
 }
 
-bool MountWeaponDialog::OnClicked(Widget * EventSource)
+bool OutfitShipDialog::OnClicked(Widget * EventSource)
 {
 	if(EventSource == m_OKButton)
 	{
@@ -387,11 +387,11 @@ bool MountWeaponDialog::OnClicked(Widget * EventSource)
 	}
 	else if(EventSource == m_MountButton)
 	{
-		if((m_SelectedSlotListItem != 0) && (m_SelectedWeaponListItem != 0) && (m_SelectedSlotListItem->GetSlot()->GetMountedObject().IsValid() == false))
+		if((m_SelectedSlotListItem != 0) && (m_SelectedEquipmentListItem != 0) && (m_SelectedSlotListItem->GetSlot()->GetMountedObject().IsValid() == false))
 		{
-			m_Ship->Mount(m_SelectedWeaponListItem->GetWeapon(), m_SelectedSlotListItem->GetSlot()->GetIdentifier());
+			m_Ship->Mount(m_SelectedEquipmentListItem->GetEquipment(), m_SelectedSlotListItem->GetSlot()->GetIdentifier());
 			m_SelectedSlotListItem->Update();
-			RebuildWeaponList();
+			RebuildEquipmentList();
 			UpdateButtons();
 			
 			return true;
@@ -403,7 +403,7 @@ bool MountWeaponDialog::OnClicked(Widget * EventSource)
 		{
 			m_Ship->Unmount(m_SelectedSlotListItem->GetSlot()->GetIdentifier());
 			m_SelectedSlotListItem->Update();
-			RebuildWeaponList();
+			RebuildEquipmentList();
 			UpdateButtons();
 			
 			return true;
@@ -413,7 +413,7 @@ bool MountWeaponDialog::OnClicked(Widget * EventSource)
 	return false;
 }
 
-bool MountWeaponDialog::OnKey(Widget * EventSource, const KeyEventInformation & KeyEventInformation)
+bool OutfitShipDialog::OnKey(Widget * EventSource, const KeyEventInformation & KeyEventInformation)
 {
 	if(((KeyEventInformation.GetKeyCode() == 9 /* ESCAPE */) || (KeyEventInformation.GetKeyCode() == 36 /* RETURN */) || (KeyEventInformation.GetKeyCode() == 25 /* W */)) && (KeyEventInformation.IsDown() == true))
 	{
@@ -423,7 +423,7 @@ bool MountWeaponDialog::OnKey(Widget * EventSource, const KeyEventInformation & 
 	return true;
 }
 
-bool MountWeaponDialog::OnMouseButton(Widget * EventSource, int Button, int State, float X, float Y)
+bool OutfitShipDialog::OnMouseButton(Widget * EventSource, int Button, int State, float X, float Y)
 {
 	bool Result(false);
 	
@@ -444,16 +444,16 @@ bool MountWeaponDialog::OnMouseButton(Widget * EventSource, int Button, int Stat
 				m_SelectedSlotListItem->SetSelected(true);
 				Result = true;
 			}
-			else if(dynamic_cast< WeaponListItem * >(EventSource) != 0)
+			else if(dynamic_cast< EquipmentListItem * >(EventSource) != 0)
 			{
-				WeaponListItem * SelectedWeaponListItem(dynamic_cast< WeaponListItem * >(EventSource));
+				EquipmentListItem * SelectedEquipmentListItem(dynamic_cast< EquipmentListItem * >(EventSource));
 				
-				if(m_SelectedWeaponListItem != 0)
+				if(m_SelectedEquipmentListItem != 0)
 				{
-					m_SelectedWeaponListItem->SetSelected(false);
+					m_SelectedEquipmentListItem->SetSelected(false);
 				}
-				m_SelectedWeaponListItem = SelectedWeaponListItem;
-				m_SelectedWeaponListItem->SetSelected(true);
+				m_SelectedEquipmentListItem = SelectedEquipmentListItem;
+				m_SelectedEquipmentListItem->SetSelected(true);
 				Result = true;
 			}
 		}
@@ -466,7 +466,7 @@ bool MountWeaponDialog::OnMouseButton(Widget * EventSource, int Button, int Stat
 	return Result;
 }
 
-void MountWeaponDialog::OnSizeChanged(Widget * EventSource)
+void OutfitShipDialog::OnSizeChanged(Widget * EventSource)
 {
 	float AvailableWidth(GetSize()[0]);
 	

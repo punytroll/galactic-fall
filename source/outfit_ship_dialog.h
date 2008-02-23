@@ -17,8 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef MOUNT_WEAPON_DIALOG_H
-#define MOUNT_WEAPON_DIALOG_H
+#ifndef OUTFIT_SHIP_DIALOG_H
+#define OUTFIT_SHIP_DIALOG_H
 
 #include "clicked_listener.h"
 #include "dimension_listener.h"
@@ -30,28 +30,28 @@ class Button;
 class ScrollBox;
 class Ship;
 class SlotListItem;
-class WeaponListItem;
+class EquipmentListItem;
 
-class MountWeaponDialog : public ClickedListener, public DimensionListener, public KeyListener, virtual public MouseButtonListener, public WWindow
+class OutfitShipDialog : public ClickedListener, public DimensionListener, public KeyListener, virtual public MouseButtonListener, public WWindow
 {
 public:
-	MountWeaponDialog(Widget * SupWidget, Ship * Ship);
+	OutfitShipDialog(Widget * SupWidget, Ship * Ship);
 protected:
 	virtual bool OnClicked(Widget * EventSource);
 	virtual bool OnKey(Widget * EventSource, const KeyEventInformation & KeyEventInformation);
 	virtual bool OnMouseButton(Widget * EventSource, int Button, int State, float X, float Y);
 	virtual void OnSizeChanged(Widget * EventSource);
 private:
-	void RebuildWeaponList(void);
+	void RebuildEquipmentList(void);
 	void UpdateButtons(void);
 	Ship * m_Ship;
 	Button * m_OKButton;
 	Button * m_MountButton;
 	Button * m_UnmountButton;
 	ScrollBox * m_SlotScrollBox;
-	ScrollBox * m_WeaponScrollBox;
+	ScrollBox * m_EquipmentScrollBox;
 	SlotListItem * m_SelectedSlotListItem;
-	WeaponListItem * m_SelectedWeaponListItem;
+	EquipmentListItem * m_SelectedEquipmentListItem;
 	Widget * m_LeftPane;
 	Widget * m_CenterPane;
 	Widget * m_RightPane;
