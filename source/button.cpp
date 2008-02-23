@@ -25,7 +25,8 @@
 Button::Button(Widget * SupWidget) :
 	Widget(SupWidget)
 {
-	SetBackgroundColor(Color(0.3f, 0.3f, 0.3f));
+	SetBackgroundColor(Color(0.3f, 0.3f, 0.3f, 1.0f));
+	SetDisabledBackgroundColor(Color(0.23f, 0.23f, 0.23f, 1.0f));
 	AddMouseButtonListener(this);
 	AddMouseMotionListener(this);
 }
@@ -57,10 +58,10 @@ bool Button::OnMouseButton(Widget * EventSource, int Button, int State, float X,
 
 void Button::OnMouseEnter(Widget * EventSource)
 {
-	SetBackgroundColor(Color(0.4f, 0.4f, 0.4f));
+	SetBackgroundColor(Color(0.4f, 0.4f, 0.4f, 1.0f));
 }
 
 void Button::OnMouseLeave(Widget * EventSource)
 {
-	SetBackgroundColor(Color(0.3f, 0.3f, 0.3f));
+	SetBackgroundColor(Color(0.3f, 0.3f, 0.3f, 1.0f));
 }
