@@ -43,6 +43,7 @@ protected:
 	virtual void OnSizeChanged(Widget * EventSource);
 private:
 	void RebuildWeaponList(void);
+	void UpdateButtons(void);
 	Ship * m_Ship;
 	Button * m_OKButton;
 	Button * m_MountButton;

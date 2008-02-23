@@ -322,6 +322,7 @@ MountWeaponDialog::MountWeaponDialog(Widget * SupWidget, Ship * Ship) :
 	m_WeaponScrollBox->SetAnchorBottom(true);
 	m_WeaponScrollBox->SetAnchorRight(true);
 	RebuildWeaponList();
+	UpdateButtons();
 	SetPosition(Vector2f(70.0f, 400.0f));
 	SetSize(Vector2f(600.0f, 400.0f));
 }
@@ -370,6 +371,12 @@ void MountWeaponDialog::RebuildWeaponList(void)
 	m_WeaponScrollBox->GetContent()->SetAnchorRight(true);
 }
 
+void MountWeaponDialog::UpdateButtons(void)
+{
+	m_UnmountButton->SetEnabled((m_SelectedSlotListItem != 0) && (m_SelectedSlotListItem->GetSlot()->GetMountedObject().IsValid() == true));
+	m_MountButton->SetEnabled((m_SelectedSlotListItem != 0) && (m_SelectedSlotListItem->GetSlot()->GetMountedObject().IsValid() == false) && (m_SelectedWeaponListItem != 0) && (m_SelectedSlotListItem->GetSlot()->GetSlotClass()->AcceptsSlotClassIdentifier(m_SelectedWeaponListItem->GetWeapon()->GetWeaponClass()->GetSlotClassIdentifier()) == true));
+}
+
 bool MountWeaponDialog::OnClicked(Widget * EventSource)
 {
 	if(EventSource == m_OKButton)
@@ -385,6 +392,9 @@ bool MountWeaponDialog::OnClicked(Widget * EventSource)
 			m_Ship->Mount(m_SelectedWeaponListItem->GetWeapon(), m_SelectedSlotListItem->GetSlot()->GetIdentifier());
 			m_SelectedSlotListItem->Update();
 			RebuildWeaponList();
+			UpdateButtons();
+			
+			return true;
 		}
 	}
 	else if(EventSource == m_UnmountButton)
@@ -394,6 +404,9 @@ bool MountWeaponDialog::OnClicked(Widget * EventSource)
 			m_Ship->Unmount(m_SelectedSlotListItem->GetSlot()->GetIdentifier());
 			m_SelectedSlotListItem->Update();
 			RebuildWeaponList();
+			UpdateButtons();
+			
+			return true;
 		}
 	}
 	
@@ -412,41 +425,45 @@ bool MountWeaponDialog::OnKey(Widget * EventSource, const KeyEventInformation & 
 
 bool MountWeaponDialog::OnMouseButton(Widget * EventSource, int Button, int State, float X, float Y)
 {
-	if(WWindow::OnMouseButton(EventSource, Button, State, X, Y) == true)
+	bool Result(false);
+	
+	Result = WWindow::OnMouseButton(EventSource, Button, State, X, Y) == true;
+	if(Result == false)
 	{
-		return true;
-	}
-	if((Button == 1 /* LEFT */) && (State == EV_DOWN))
-	{
-		if(dynamic_cast< SlotListItem * >(EventSource) != 0)
+		if((Button == 1 /* LEFT */) && (State == EV_DOWN))
 		{
-			SlotListItem * SelectedSlotListItem(dynamic_cast< SlotListItem * >(EventSource));
-			
-			if(m_SelectedSlotListItem != 0)
+			if(dynamic_cast< SlotListItem * >(EventSource) != 0)
 			{
-				m_SelectedSlotListItem->SetSelected(false);
+				SlotListItem * SelectedSlotListItem(dynamic_cast< SlotListItem * >(EventSource));
+				
+				if(m_SelectedSlotListItem != 0)
+				{
+					m_SelectedSlotListItem->SetSelected(false);
+				}
+				m_SelectedSlotListItem = SelectedSlotListItem;
+				m_SelectedSlotListItem->SetSelected(true);
+				Result = true;
 			}
-			m_SelectedSlotListItem = SelectedSlotListItem;
-			m_SelectedSlotListItem->SetSelected(true);
-			
-			return true;
+			else if(dynamic_cast< WeaponListItem * >(EventSource) != 0)
+			{
+				WeaponListItem * SelectedWeaponListItem(dynamic_cast< WeaponListItem * >(EventSource));
+				
+				if(m_SelectedWeaponListItem != 0)
+				{
+					m_SelectedWeaponListItem->SetSelected(false);
+				}
+				m_SelectedWeaponListItem = SelectedWeaponListItem;
+				m_SelectedWeaponListItem->SetSelected(true);
+				Result = true;
+			}
 		}
-		else if(dynamic_cast< WeaponListItem * >(EventSource) != 0)
+		if(Result == true)
 		{
-			WeaponListItem * SelectedWeaponListItem(dynamic_cast< WeaponListItem * >(EventSource));
-			
-			if(m_SelectedWeaponListItem != 0)
-			{
-				m_SelectedWeaponListItem->SetSelected(false);
-			}
-			m_SelectedWeaponListItem = SelectedWeaponListItem;
-			m_SelectedWeaponListItem->SetSelected(true);
-			
-			return true;
+			UpdateButtons();
 		}
 	}
 	
-	return false;
+	return Result;
 }
 
 void MountWeaponDialog::OnSizeChanged(Widget * EventSource)
