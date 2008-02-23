@@ -68,8 +68,8 @@
 #include "messages.h"
 #include "mind.h"
 #include "mini_map_display.h"
-#include "mount_weapon_dialog.h"
 #include "object_factory.h"
+#include "outfit_ship_dialog.h"
 #include "perspective.h"
 #include "planet.h"
 #include "planet_dialog.h"
@@ -139,7 +139,7 @@ Label * g_TimeWarpLabel(0);
 // global dialog pointers
 PlanetDialog * g_PlanetDialog(0);
 MapDialog * g_MapDialog(0);
-MountWeaponDialog * g_MountWeaponDialog(0);
+OutfitShipDialog * g_OutfitShipDialog(0);
 LoadGameDialog * g_LoadGameDialog(0);
 SaveGameDialog * g_SaveGameDialog(0);
 TimingDialog * g_TimingDialog(0);
@@ -869,9 +869,9 @@ public:
 			g_MapDialog = 0;
 			g_Pause = false;
 		}
-		else if(EventSource == g_MountWeaponDialog)
+		else if(EventSource == g_OutfitShipDialog)
 		{
-			g_MountWeaponDialog = 0;
+			g_OutfitShipDialog = 0;
 		}
 		else if(EventSource == g_SaveGameDialog)
 		{
@@ -1802,11 +1802,11 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				if((g_MountWeaponDialog == 0) && (g_CharacterObserver->GetObservedCharacter().IsValid() == true))
+				if((g_OutfitShipDialog == 0) && (g_CharacterObserver->GetObservedCharacter().IsValid() == true))
 				{
-					g_MountWeaponDialog = new MountWeaponDialog(g_UserInterface->GetRootWidget(), g_CharacterObserver->GetObservedCharacter()->GetShip());
-					g_MountWeaponDialog->GrabKeyFocus();
-					g_MountWeaponDialog->AddDestroyListener(&g_GlobalDestroyListener);
+					g_OutfitShipDialog = new OutfitShipDialog(g_UserInterface->GetRootWidget(), g_CharacterObserver->GetObservedCharacter()->GetShip());
+					g_OutfitShipDialog->GrabKeyFocus();
+					g_OutfitShipDialog->AddDestroyListener(&g_GlobalDestroyListener);
 				}
 			}
 			
