@@ -45,7 +45,9 @@ public:
 	virtual ~Widget(void);
 	virtual void Draw(void) const;
 	void SetBackgroundColor(const Color & BackgroundColor);
+	void SetDisabledBackgroundColor(const Color & DisabledBackgroundColor);
 	void UnsetBackgroundColor(void);
+	void UnsetDisabledBackgroundColor(void);
 	void SetPosition(const Vector2f & Position);
 	void SetSize(const Vector2f & Size);
 	void AddSubWidget(Widget * SubWidget);
@@ -61,6 +63,7 @@ public:
 	bool GetAnchorRight(void) const;
 	bool GetAnchorTop(void) const;
 	const Color * GetBackgroundColor(void) const;
+	bool GetEnabled(void) const;
 	const Vector2f & GetPosition(void) const;
 	Vector2f GetGlobalPosition(void) const;
 	const Vector2f & GetSize(void) const;
@@ -79,6 +82,7 @@ public:
 	void SetAnchorLeft(bool AnchorLeft);
 	void SetAnchorRight(bool AnchorRight);
 	void SetAnchorTop(bool AnchorTop);
+	void SetEnabled(bool Enabled);
 	void SetVisible(bool Visible);
 	// receive input
 	bool MouseButton(int Button, int State, float X, float Y);
@@ -107,6 +111,8 @@ protected:
 	static void PopClippingRectangle(void);
 	static void DrawClippingRectangle(void);
 private:
+	bool m_Enabled;
+	Color * m_DisabledBackgroundColor;
 	std::string m_Name;
 	Widget * m_SupWidget;
 	Widget * m_HoverWidget;
@@ -154,6 +160,11 @@ inline bool Widget::GetAnchorTop(void) const
 inline const Color * Widget::GetBackgroundColor(void) const
 {
 	return m_BackgroundColor;
+}
+
+inline bool Widget::GetEnabled(void) const
+{
+	return m_Enabled;
 }
 
 inline const Vector2f & Widget::GetPosition(void) const
@@ -269,6 +280,11 @@ inline void Widget::SetAnchorRight(bool AnchorRight)
 inline void Widget::SetAnchorTop(bool AnchorTop)
 {
 	m_AnchorTop = AnchorTop;
+}
+
+inline void Widget::SetEnabled(bool Enabled)
+{
+	m_Enabled = Enabled;
 }
 
 inline void Widget::SetVisible(bool Visible)
