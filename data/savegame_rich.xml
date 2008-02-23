@@ -20,7 +20,14 @@
 		<position x="0" y="0"/>
 		<angular-position w="1" x="0" y="0" z="0"/>
 		<velocity x="0" y="0"/>
-		<content/>
+		<content>
+			<weapon class-identifier="light_laser" object-identifier="::weapon(light_laser)::1"/>
+			<weapon class-identifier="light_laser" object-identifier="::weapon(light_laser)::2"/>
+			<weapon class-identifier="light_laser" object-identifier="::weapon(light_laser)::3"/>
+			<weapon class-identifier="medium_laser" object-identifier="::weapon(medium_laser)::1"/>
+			<weapon class-identifier="medium_laser" object-identifier="::weapon(medium_laser)::2"/>
+			<weapon class-identifier="medium_laser" object-identifier="::weapon(medium_laser)::3"/>
+		</content>
 		<name value="Stargazer Alpha 1-0"/>
 	</ship>
 	<main-camera>
