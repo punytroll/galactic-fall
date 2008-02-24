@@ -1,4 +1,4 @@
-<definitions>
+<declarations>
 	
 	<accepted-slot-class is="string"/>
 	
@@ -208,4 +208,4 @@
 		<boolean identifier="anchor-top"/>
 	</widget>
 	
-</definitions>
+</declarations>

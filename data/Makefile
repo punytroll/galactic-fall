@@ -75,8 +75,8 @@ smooth_meshes = \
 	planet \
 	shuttle_hull
 
-definitions_xml = \
-	tools/definitions.xml
+declarations_xml = \
+	tools/declarations.xml
 
 littlem_to_xml_xsl = \
 	tools/littlem_to_xml.xsl
@@ -246,8 +246,8 @@ data.arx: $(data_arx)
 .data:
 	mkdir $@
 
-.data/%.data: %.xml $(definitions_xml) $(xml_to_data_py)
-	python tools/xml_to_data.py --definitions=tools/definitions.xml --in=$< --out=$@
+.data/%.data: %.xml $(declarations_xml) $(xml_to_data_py)
+	python tools/xml_to_data.py --declarations=tools/declarations.xml --in=$< --out=$@
 
 mesh_%.xml: meshes/%.xml $(littlem_to_xml_xsl)
 	xsltproc -output $@ tools/littlem_to_xml.xsl $<
