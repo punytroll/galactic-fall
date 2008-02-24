@@ -10,7 +10,6 @@
 		<x>220</x>
 		<y>220</y>
 	</size>
-	<visible>true</visible>
 	<use-background-color>false</use-background-color>
 	<background-color>
 		<red>0</red>
@@ -18,6 +17,7 @@
 		<blue>0</blue>
 		<alpha>0</alpha>
 	</background-color>
+	<visible>true</visible>
 	<anchor-bottom>true</anchor-bottom>
 	<anchor-left>true</anchor-left>
 	<anchor-right>true</anchor-right>
