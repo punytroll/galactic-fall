@@ -17,7 +17,7 @@
 **/
 
 /**
- * This is version 1.2.2 of the xml stream.
+ * This is version 1.2.3 of the xml stream.
  **/
 
 #ifndef XML_STREAM_H
@@ -44,6 +44,7 @@ public:
 	XMLStream & operator<<(unsigned int Value);
 	XMLStream & operator<<(unsigned long Value);
 	XMLStream & operator<<(float Value);
+	XMLStream & operator<<(double Value);
 	XMLStream & operator<<(bool Value);
 	XMLStream & operator<<(const void * Value);
 	XMLStream & operator<<(XMLStream & (* Function)(XMLStream &));

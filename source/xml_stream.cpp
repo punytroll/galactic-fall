@@ -17,7 +17,7 @@
 **/
 
 /**
- * This is version 1.2.2 of the xml stream.
+ * This is version 1.2.3 of the xml stream.
  **/
 
 #include "xml_stream.h"
@@ -201,6 +201,17 @@ XMLStream & XMLStream::operator<<(unsigned long Value)
 }
 
 XMLStream & XMLStream::operator<<(float Value)
+{
+	if(m_InElementName == true)
+	{
+		m_ElementName << Value;
+	}
+	m_OutputStream << Value;
+	
+	return *this;
+}
+
+XMLStream & XMLStream::operator<<(double Value)
 {
 	if(m_InElementName == true)
 	{
