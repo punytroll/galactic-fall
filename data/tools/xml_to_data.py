@@ -13,7 +13,7 @@ class ConvertException(Exception):
 	pass
 
 parser = OptionParser()
-parser.add_option("-d", "--definitions", dest="definitions", help="Load the definitions from the file.")
+parser.add_option("-d", "--declarations", dest="declarations", help="Load the declarations from the file.")
 parser.add_option("-i", "--in", dest="in_file", help="The file to convert to binary form.")
 parser.add_option("-o", "--out", dest="out_file", help="The file to put the binary form into.")
 
@@ -26,21 +26,21 @@ if options.out_file == None:
 	print "Set the file to write the binary form to with '--out'."
 	exit(1)
 
-# read the definitions first
-definitions = dict();
-if options.definitions != None:
-	definitions_document = parse(options.definitions)
-	definitions_element = definitions_document.documentElement
-	for definition_element in definitions_element.childNodes:
-		if definition_element.nodeType == Node.ELEMENT_NODE and definitions.has_key(definition_element.tagName) == False:
-			if definition_element.attributes.has_key("is") == True:
-				definitions[definition_element.tagName] = definition_element.attributes.get("is").nodeValue
+# read the declarations first
+declarations = dict();
+if options.declarations != None:
+	declarations_document = parse(options.declarations)
+	declarations_element = declarations_document.documentElement
+	for declaration_element in declarations_element.childNodes:
+		if declaration_element.nodeType == Node.ELEMENT_NODE and declarations.has_key(declaration_element.tagName) == False:
+			if declaration_element.attributes.has_key("is") == True:
+				declarations[declaration_element.tagName] = declaration_element.attributes.get("is").nodeValue
 			else:
-				definition = list()
-				for part_element in definition_element.childNodes:
+				declaration = list()
+				for part_element in declaration_element.childNodes:
 					if part_element.nodeType == Node.ELEMENT_NODE and part_element.attributes.has_key("identifier") == True:
-						definition.append((part_element.attributes.get("identifier").nodeValue, part_element.tagName))
-				definitions[definition_element.tagName] = definition
+						declaration.append((part_element.attributes.get("identifier").nodeValue, part_element.tagName))
+				declarations[declaration_element.tagName] = declaration
 
 # now open the out file for writing binary
 out_file = open(options.out_file, "wb")
@@ -93,9 +93,9 @@ def out(data_type, node):
 				stack_path += "/" + stack_entry
 			print "Couldn't open the file '" + inline_file_name + "' for '" + stack_path + "'."
 			raise ConvertException()
-	elif definitions.has_key(data_type) == True:
-		if isinstance(definitions[data_type], ListType):
-			for part in definitions[data_type]:
+	elif declarations.has_key(data_type) == True:
+		if isinstance(declarations[data_type], ListType):
+			for part in declarations[data_type]:
 				for node_part in node.childNodes:
 					found_it = False
 					if node_part.nodeType == Node.ELEMENT_NODE:
@@ -109,10 +109,10 @@ def out(data_type, node):
 						stack_path += "/" + stack_entry
 					print "In file '" + options.in_file + "' I found no value for '" + stack_path + "/" + part[0] + "' of type '" + part[1] + "'."
 					raise ConvertException()
-		elif isinstance(definitions[data_type], StringTypes):
-			out(definitions[data_type], node)
+		elif isinstance(declarations[data_type], StringTypes):
+			out(declarations[data_type], node)
 	else:
-		print "Could not find a suitable definition for type '" + data_type + "'."
+		print "Could not find a suitable declaration for type '" + data_type + "'."
 		raise ConvertException()
 	out_call_stack.pop()
 
