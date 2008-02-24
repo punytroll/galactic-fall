@@ -95,20 +95,29 @@ def out(data_type, node):
 			raise ConvertException()
 	elif declarations.has_key(data_type) == True:
 		if isinstance(declarations[data_type], ListType):
-			for part in declarations[data_type]:
-				for node_part in node.childNodes:
-					found_it = False
-					if node_part.nodeType == Node.ELEMENT_NODE:
-						if node_part.tagName == part[0]:
-							out(part[1], node_part)
-							found_it = True
-							break
-				if found_it == False:
-					stack_path = ""
-					for stack_entry in out_call_stack:
-						stack_path += "/" + stack_entry
-					print "In file '" + options.in_file + "' I found no value for '" + stack_path + "/" + part[0] + "' of type '" + part[1] + "'."
+			for child_node in node.childNodes:
+				if child_node.nodeType != Node.ELEMENT_NODE:
+					node.removeChild(child_node)
+			stack_path = ""
+			for stack_entry in out_call_stack:
+				stack_path += "/" + stack_entry
+			parts = map(None, declarations[data_type], node.childNodes)
+			for declaration, definition_node in parts:
+				# safe-guard
+				assert declaration != None or definition_node != None
+				if declaration == None:
+					print "In file '" + options.in_file + "' I could not match the definition of '" + stack_path + "/" + definition_node.tagName + "' to any declaration."
 					raise ConvertException()
+				declaration_name, declaration_type = declaration
+				if definition_node == None:
+					print "In file '" + options.in_file + "' I could not find the definition of '" + stack_path + "/" + declaration_name + "' of type '" + declaration_type + "'."
+					raise ConvertException()
+				if declaration_name != definition_node.tagName:
+					print "In file '" + options.in_file + "' the definition of '" + stack_path + "/" + definition_node.tagName + "' does not belong there."
+					print "\tExpected to find a definition for " + stack_path + "/" + declaration_name + " of type '" + declaration_type + "'."
+					raise ConvertException()
+				else:
+					out(declaration_type, definition_node)
 		elif isinstance(declarations[data_type], StringTypes):
 			out(declarations[data_type], node)
 	else:
