@@ -1352,7 +1352,11 @@ void LoadGameFromElement(const Element * SaveElement)
 	g_ResourceReader->ReadSystemLinks();
 	for(std::vector< Element * >::const_iterator SaveChild = SaveChilds.begin(); SaveChild != SaveChilds.end(); ++SaveChild)
 	{
-		if((*SaveChild)->GetName() == "current-system")
+		if((*SaveChild)->GetName() == "game-time")
+		{
+			GameTime::Set(from_string_cast< double >((*SaveChild)->GetAttribute("value")));
+		}
+		else if((*SaveChild)->GetName() == "current-system")
 		{
 			CurrentSystem = (*SaveChild)->GetAttribute("identifier");
 		}
@@ -1644,6 +1648,7 @@ void SaveGame(std::ostream & OStream)
 	
 	XML << element << "save";
 	
+	XML << element << "game-time" << attribute << "value" << value << GameTime::Get() << end;
 	if(g_CurrentSystem != 0)
 	{
 		XML << element << "current-system" << attribute << "identifier" << value << g_CurrentSystem->GetIdentifier() << end;
