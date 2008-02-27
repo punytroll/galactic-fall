@@ -26,11 +26,12 @@
 #include "key_event_information.h"
 #include "label.h"
 #include "map_dialog.h"
+#include "object_aspect_name.h"
 #include "star_map_display.h"
 #include "system.h"
 
 MapDialog::MapDialog(Widget * SupWidget, System * System, Character * Character) :
-	WWindow(SupWidget, "Map: " + System->GetName())
+	WWindow(SupWidget, "Map: " + System->GetAspectName()->GetName())
 {
 	SetPosition(Vector2f(70.0f, 400.0f));
 	SetSize(Vector2f(500.0f, 530.0f));

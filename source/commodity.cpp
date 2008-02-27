@@ -21,6 +21,7 @@
 #include "commodity.h"
 #include "commodity_class.h"
 #include "graphics_model.h"
+#include "object_aspect_name.h"
 
 Commodity::Commodity(const CommodityClass * CommodityClass) :
 	m_CommodityClass(CommodityClass),
@@ -28,7 +29,10 @@ Commodity::Commodity(const CommodityClass * CommodityClass) :
 	m_Velocity(true),
 	m_AngularPosition(true)
 {
-	SetName(m_CommodityClass->GetName());
+	// initialize required aspects
+	AddAspectName();
+	GetAspectName()->SetName(m_CommodityClass->GetName());
+	// other
 	SetRadialSize(m_CommodityClass->GetModel()->GetRadialSize());
 	SetSpaceRequirement(m_CommodityClass->GetSpaceRequirement());
 	
