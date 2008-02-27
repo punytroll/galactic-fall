@@ -1512,13 +1512,7 @@ void LoadGameFromElement(const Element * SaveElement)
 				}
 				else if((*CameraChild)->GetName() == "focus")
 				{
-					Object * FocusObject(Object::GetObject((*CameraChild)->GetAttribute("object-identifier")));
-					
-					if(FocusObject == 0)
-					{
-						throw std::runtime_error("The \"main-camera\" element focusses an object with a non-existing identifier \"" + (*CameraChild)->GetAttribute("object-identifier") + "\".");
-					}
-					g_Camera.SetFocus(FocusObject->GetReference());
+					// in second pass
 				}
 				else if((*CameraChild)->GetName() == "field-of-view")
 				{
@@ -1545,12 +1539,25 @@ void LoadGameFromElement(const Element * SaveElement)
 	}
 	// in the second pass we do a fast skip over the childs to resolve any object references
 	// no errors except resolving errors will be displayed
-	// here, all th dynamic_casts are done
+	// here, all the dynamic_casts are done
 	// at the moment this also resolves back references/containments
 	/// @todo The back references/containments should be dealt with by save the galaxy's structure recursively
 	for(std::vector< Element * >::const_iterator SaveChild = SaveChilds.begin(); SaveChild != SaveChilds.end(); ++SaveChild)
 	{
-		if((*SaveChild)->GetName() == "mind")
+		if((*SaveChild)->GetName() == "main-camera")
+		{
+			for(std::vector< Element * >::const_iterator CameraChild = (*SaveChild)->GetChilds().begin(); CameraChild != (*SaveChild)->GetChilds().end(); ++CameraChild)
+			{
+				if((*CameraChild)->GetName() == "focus")
+				{
+					Object * FocusObject(Object::GetObject((*CameraChild)->GetAttribute("object-identifier")));
+					
+					assert(FocusObject != 0);
+					g_Camera.SetFocus(FocusObject->GetReference());
+				}
+			}
+		}
+		else if((*SaveChild)->GetName() == "mind")
 		{
 			Mind * TheMind(dynamic_cast< Mind * >(Object::GetObject((*SaveChild)->GetAttribute("object-identifier"))));
 			
@@ -1560,6 +1567,7 @@ void LoadGameFromElement(const Element * SaveElement)
 				{
 					Character * TheCharacter(dynamic_cast< Character * >(Object::GetObject((*MindChild)->GetAttribute("object-identifier"))));
 					
+					assert(TheCharacter != 0);
 					TheMind->SetCharacter(TheCharacter);
 					TheCharacter->AddContent(TheMind);
 				}
@@ -1575,6 +1583,7 @@ void LoadGameFromElement(const Element * SaveElement)
 				{
 					Ship * TheShip(dynamic_cast< Ship * >(Object::GetObject((*CharacterChild)->GetAttribute("object-identifier"))));
 					
+					assert(TheShip != 0);
 					TheCharacter->SetShip(TheShip);
 					TheShip->AddContent(TheCharacter);
 				}
