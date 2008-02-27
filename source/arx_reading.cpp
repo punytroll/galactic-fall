@@ -46,6 +46,7 @@
 #include "local_file_data_channel.h"
 #include "mini_map_display.h"
 #include "object_aspect_name.h"
+#include "object_aspect_position.h"
 #include "planet.h"
 #include "scanner_display.h"
 #include "ship_class.h"
@@ -614,13 +615,13 @@ static void ReadSystem(Arxx::Reference & Reference)
 	
 	Reader >> Name >> Position >> TrafficDensity >> StarIdentifier >> StarPosition >> StarColor >> PlanetCount;
 	NewSystem->GetAspectName()->SetName(Name);
-	NewSystem->SetPosition(Vector3f(Position[0], Position[1], 0.0f));
+	NewSystem->GetAspectPosition()->SetPosition(Vector3f(Position[0], Position[1], 0.0f));
 	NewSystem->SetTrafficDensity(TrafficDensity);
 	
 	Star * NewStar(new Star());
 	
 	NewStar->SetObjectIdentifier("::star(" + StarIdentifier + ")::in_system(" + NewSystem->GetIdentifier() + ")");
-	NewStar->SetPosition(Vector3f(StarPosition[0], StarPosition[1], 0.0f));
+	NewStar->GetAspectPosition()->SetPosition(Vector3f(StarPosition[0], StarPosition[1], 0.0f));
 	NewStar->SetColor(StarColor);
 	if(NewSystem->AddContent(NewStar) == false)
 	{
@@ -646,7 +647,7 @@ static void ReadSystem(Arxx::Reference & Reference)
 		Reader >> Name >> Description >> PlanetPosition >> Size >> PlanetColor >> OfferedAssetsCount;
 		NewPlanet->GetAspectName()->SetName(Name);
 		NewPlanet->SetDescription(Description);
-		NewPlanet->SetPosition(Vector3f(PlanetPosition[0], PlanetPosition[1], 0.0f));
+		NewPlanet->GetAspectPosition()->SetPosition(Vector3f(PlanetPosition[0], PlanetPosition[1], 0.0f));
 		NewPlanet->SetSize(Size);
 		NewPlanet->SetColor(PlanetColor);
 		for(Arxx::u4byte OfferedAssetNumber = 1; OfferedAssetNumber <= OfferedAssetsCount; ++OfferedAssetNumber)

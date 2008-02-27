@@ -18,6 +18,7 @@
 **/
 
 #include "game_time.h"
+#include "object_aspect_position.h"
 #include "shot.h"
 #include "weapon_class.h"
 
@@ -29,6 +30,9 @@ Shot::Shot(const WeaponClass * WeaponClass) :
 	m_AngularPosition(0.0f),
 	m_Damage(WeaponClass->GetParticleDamage())
 {
+	// initialize object aspects
+	AddAspectPosition();
+	// other
 	SetRadialSize(0.54f);
 }
 
@@ -42,7 +46,7 @@ bool Shot::Update(float Seconds)
 	{
 		return false;
 	}
-	m_Position += m_Velocity * Seconds;
+	GetAspectPosition()->SetPosition(GetAspectPosition()->GetPosition() + (m_Velocity * Seconds));
 	
 	return true;
 }

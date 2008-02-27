@@ -21,6 +21,7 @@
 
 #include "commodity.h"
 #include "mini_map_display.h"
+#include "object_aspect_position.h"
 #include "planet.h"
 #include "ship.h"
 #include "system.h"
@@ -60,7 +61,7 @@ void MiniMapDisplay::DrawInViewport(void) const
 			{
 				glColor3f(0.2f, 1.0f, 0.0f);
 			}
-			glVertex2f((*PlanetIterator)->GetPosition().m_V.m_A[0], (*PlanetIterator)->GetPosition().m_V.m_A[1]);
+			glVertex2f((*PlanetIterator)->GetAspectPosition()->GetPosition().m_V.m_A[0], (*PlanetIterator)->GetAspectPosition()->GetPosition().m_V.m_A[1]);
 			if(*PlanetIterator == m_Owner->GetTarget().Get())
 			{
 				glColor3f(0.8f, 0.8f, 0.8f);
@@ -72,7 +73,7 @@ void MiniMapDisplay::DrawInViewport(void) const
 			{
 				glColor3f(0.2f, 1.0f, 0.0f);
 			}
-			glVertex2f((*ShipIterator)->GetPosition().m_V.m_A[0], (*ShipIterator)->GetPosition().m_V.m_A[1]);
+			glVertex2f((*ShipIterator)->GetAspectPosition()->GetPosition().m_V.m_A[0], (*ShipIterator)->GetAspectPosition()->GetPosition().m_V.m_A[1]);
 			if(*ShipIterator == m_Owner->GetTarget().Get())
 			{
 				glColor3f(0.8f, 0.8f, 0.8f);
@@ -84,7 +85,7 @@ void MiniMapDisplay::DrawInViewport(void) const
 			{
 				glColor3f(0.2f, 1.0f, 0.0f);
 			}
-			glVertex2f((*CommodityIterator)->GetPosition().m_V.m_A[0], (*CommodityIterator)->GetPosition().m_V.m_A[1]);
+			glVertex2f((*CommodityIterator)->GetAspectPosition()->GetPosition().m_V.m_A[0], (*CommodityIterator)->GetAspectPosition()->GetPosition().m_V.m_A[1]);
 			if(*CommodityIterator == m_Owner->GetTarget().Get())
 			{
 				glColor3f(0.8f, 0.8f, 0.8f);

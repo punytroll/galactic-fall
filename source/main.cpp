@@ -69,6 +69,7 @@
 #include "mind.h"
 #include "mini_map_display.h"
 #include "object_aspect_name.h"
+#include "object_aspect_position.h"
 #include "object_factory.h"
 #include "outfit_ship_dialog.h"
 #include "perspective.h"
@@ -182,7 +183,7 @@ int WantToJump(Ship * Ship, System * System)
 	
 	for(std::vector< Planet * >::const_iterator PlanetIterator = Planets.begin(); PlanetIterator != Planets.end(); ++PlanetIterator)
 	{
-		if((Ship->GetPosition() - (*PlanetIterator)->GetPosition()).SquaredLength() < 4 * (*PlanetIterator)->GetSize() * (*PlanetIterator)->GetSize())
+		if((Ship->GetAspectPosition()->GetPosition() - (*PlanetIterator)->GetAspectPosition()->GetPosition()).SquaredLength() < 4 * (*PlanetIterator)->GetSize() * (*PlanetIterator)->GetSize())
 		{
 			return TOO_NEAR_TO_STELLAR_OBJECT;
 		}
@@ -203,7 +204,7 @@ int WantToLand(const Character * Character, const Ship * Ship, const Planet * Pl
 		return NO_LAND_TARGET;
 	}
 	// test distance
-	if((Planet->GetPosition() - Ship->GetPosition()).SquaredLength() > Planet->GetSize() * Planet->GetSize())
+	if((Planet->GetAspectPosition()->GetPosition() - Ship->GetAspectPosition()->GetPosition()).SquaredLength() > Planet->GetSize() * Planet->GetSize())
 	{
 		return TOO_FAR_AWAY;
 	}
@@ -228,7 +229,7 @@ int WantToScoop(const Ship * Ship, const Commodity * Commodity)
 		return NO_SCOOP_TARGET;
 	}
 	// test distance
-	if((Commodity->GetPosition() - Ship->GetPosition()).SquaredLength() > 5.0f * Commodity->GetRadialSize() * Commodity->GetRadialSize())
+	if((Commodity->GetAspectPosition()->GetPosition() - Ship->GetAspectPosition()->GetPosition()).SquaredLength() > 5.0f * Commodity->GetRadialSize() * Commodity->GetRadialSize())
 	{
 		return TOO_FAR_AWAY;
 	}
@@ -285,7 +286,7 @@ void SetMessage(const std::string & Message)
 	g_MessageTimeoutNotification = g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 2.0f, Function(HideMessage));
 }
 
-void DrawSelection(const Position * Position, float RadialSize)
+void DrawSelection(const Object * Object, float RadialSize)
 {
 	static const float OuterFactor(0.9f);
 	static const float InnerFactor(1.1f);
@@ -295,7 +296,7 @@ void DrawSelection(const Position * Position, float RadialSize)
 	glPushMatrix();
 	glPushAttrib(GL_LIGHTING_BIT);
 	glDisable(GL_LIGHTING);
-	glTranslatef(Position->GetPosition().m_V.m_A[0], Position->GetPosition().m_V.m_A[1], 0.0f);
+	glTranslatef(Object->GetAspectPosition()->GetPosition().m_V.m_A[0], Object->GetAspectPosition()->GetPosition().m_V.m_A[1], 0.0f);
 	glColor3f(1.0f, 0.0f, 0.0f);
 	glBegin(GL_LINE_STRIP);
 	glVertex2f(-OuterSize, -InnerSize);
@@ -543,7 +544,7 @@ void CalculateMovements(System * System, float Seconds)
 		// update the ship's visualization
 		if((Ship != 0) && (Ship->GetVisualization().IsValid() == true))
 		{
-			Ship->GetVisualization()->SetPosition(Ship->GetPosition());
+			Ship->GetVisualization()->SetPosition(Ship->GetAspectPosition()->GetPosition());
 			Ship->GetVisualization()->SetOrientation(Ship->GetAngularPosition());
 		}
 	}
@@ -557,7 +558,7 @@ void CalculateMovements(System * System, float Seconds)
 		
 		Commodity->Move(Seconds);
 		// update visualization
-		Commodity->GetVisualization()->SetPosition(Commodity->GetPosition());
+		Commodity->GetVisualization()->SetPosition(Commodity->GetAspectPosition()->GetPosition());
 		Commodity->GetVisualization()->SetOrientation(Commodity->GetAngularPosition());
 	}
 	
@@ -580,7 +581,7 @@ void CalculateMovements(System * System, float Seconds)
 		else
 		{
 			// update visualization
-			TheShot->GetVisualization()->SetPosition(TheShot->GetPosition());
+			TheShot->GetVisualization()->SetPosition(TheShot->GetAspectPosition()->GetPosition());
 			TheShot->GetVisualization()->SetOrientation(TheShot->GetAngularPosition());
 		}
 		// test for collisions with ships
@@ -592,11 +593,11 @@ void CalculateMovements(System * System, float Seconds)
 				
 				if((TheShot->GetShooter().IsValid() == true) && (TheShot->GetShooter().Get() != TheShip))
 				{
-					if((TheShot->GetPosition() - TheShip->GetPosition()).SquaredLength() < (TheShot->GetRadialSize() * TheShot->GetRadialSize() + TheShip->GetRadialSize() * TheShip->GetRadialSize()))
+					if((TheShot->GetAspectPosition()->GetPosition() - TheShip->GetAspectPosition()->GetPosition()).SquaredLength() < (TheShot->GetRadialSize() * TheShot->GetRadialSize() + TheShip->GetRadialSize() * TheShip->GetRadialSize()))
 					{
 						Graphics::ParticleSystem * NewHitParticleSystem(CreateParticleSystem("hit"));
 						
-						NewHitParticleSystem->SetPosition(TheShot->GetPosition());
+						NewHitParticleSystem->SetPosition(TheShot->GetAspectPosition()->GetPosition());
 						NewHitParticleSystem->SetVelocity((TheShot->GetVelocity() * 0.2f) + (TheShip->GetVelocity() * 0.8f));
 						VisualizeParticleSystem(NewHitParticleSystem, g_ParticleSystemsLayer);
 						TheShip->SetHull(TheShip->GetHull() - TheShot->GetDamage());
@@ -617,7 +618,7 @@ void CalculateMovements(System * System, float Seconds)
 						{
 							Graphics::ParticleSystem * NewExplosionParticleSystem(CreateParticleSystem("explosion"));
 							
-							NewExplosionParticleSystem->SetPosition(TheShip->GetPosition());
+							NewExplosionParticleSystem->SetPosition(TheShip->GetAspectPosition()->GetPosition());
 							NewExplosionParticleSystem->SetVelocity(TheShip->GetVelocity() * 0.5f);
 							VisualizeParticleSystem(NewExplosionParticleSystem, g_ParticleSystemsLayer);
 							
@@ -634,7 +635,7 @@ void CalculateMovements(System * System, float Seconds)
 								if(TheCommodity != 0)
 								{
 									TheShip->RemoveContent(TheCommodity);
-									TheCommodity->SetPosition(TheShip->GetPosition());
+									TheCommodity->GetAspectPosition()->SetPosition(TheShip->GetAspectPosition()->GetPosition());
 									
 									Vector2f VelocityPart(GetRandomFloat(0.1f, 1.2f), GetRandomFloat(0.0f, 2 * M_PI), Vector2f::InitializeMagnitudeAngle);
 									
@@ -660,11 +661,11 @@ void CalculateMovements(System * System, float Seconds)
 			{
 				Commodity * TheCommodity(*CommodityIterator);
 				
-				if((TheShot->GetPosition() - TheCommodity->GetPosition()).SquaredLength() < (TheShot->GetRadialSize() * TheShot->GetRadialSize() + TheCommodity->GetRadialSize() * TheCommodity->GetRadialSize()))
+				if((TheShot->GetAspectPosition()->GetPosition() - TheCommodity->GetAspectPosition()->GetPosition()).SquaredLength() < (TheShot->GetRadialSize() * TheShot->GetRadialSize() + TheCommodity->GetRadialSize() * TheCommodity->GetRadialSize()))
 				{
 					Graphics::ParticleSystem * NewHitParticleSystem(CreateParticleSystem("hit"));
 					
-					NewHitParticleSystem->SetPosition(TheShot->GetPosition());
+					NewHitParticleSystem->SetPosition(TheShot->GetAspectPosition()->GetPosition());
 					NewHitParticleSystem->SetVelocity((TheShot->GetVelocity() * 0.4f) + (TheCommodity->GetVelocity() * 0.6f));
 					VisualizeParticleSystem(NewHitParticleSystem, g_ParticleSystemsLayer);
 					TheCommodity->SetHull(TheCommodity->GetHull() - TheShot->GetDamage());
@@ -672,7 +673,7 @@ void CalculateMovements(System * System, float Seconds)
 					{
 						Graphics::ParticleSystem * NewHitParticleSystem(CreateParticleSystem("hit"));
 						
-						NewHitParticleSystem->SetPosition(TheCommodity->GetPosition());
+						NewHitParticleSystem->SetPosition(TheCommodity->GetAspectPosition()->GetPosition());
 						NewHitParticleSystem->SetVelocity(TheCommodity->GetVelocity() * 0.5f);
 						VisualizeParticleSystem(NewHitParticleSystem, g_ParticleSystemsLayer);
 						DeleteObject(TheCommodity);
@@ -795,7 +796,7 @@ void RenderSystem(System * System)
 	if(CurrentStar != 0)
 	{
 		glEnable(GL_LIGHT0);
-		glLightfv(GL_LIGHT0, GL_POSITION, Vector4f(CurrentStar->GetPosition().m_V.m_A[0], CurrentStar->GetPosition().m_V.m_A[1], 100.0f, 0.0f).m_V.m_A);
+		glLightfv(GL_LIGHT0, GL_POSITION, Vector4f(CurrentStar->GetAspectPosition()->GetPosition().m_V.m_A[0], CurrentStar->GetAspectPosition()->GetPosition().m_V.m_A[1], 100.0f, 0.0f).m_V.m_A);
 		glLightfv(GL_LIGHT0, GL_DIFFUSE, CurrentStar->GetColor().GetColor().m_V.m_A);
 	}
 	else
@@ -811,13 +812,13 @@ void RenderSystem(System * System)
 		glClear(GL_DEPTH_BUFFER_BIT);
 		DrawSelection(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget().Get(), g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget()->GetRadialSize());
 		
-		Vector3f RelativePosition(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget()->GetPosition() - g_CharacterObserver->GetObservedCharacter()->GetShip()->GetPosition());
+		Vector3f RelativePosition(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget()->GetAspectPosition()->GetPosition() - g_CharacterObserver->GetObservedCharacter()->GetShip()->GetAspectPosition()->GetPosition());
 		
 		RelativePosition.Normalize();
 		glPushMatrix();
 		glPushAttrib(GL_LIGHTING_BIT);
 		glDisable(GL_LIGHTING);
-		glTranslatef(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetPosition().m_V.m_A[0], g_CharacterObserver->GetObservedCharacter()->GetShip()->GetPosition().m_V.m_A[1], 0.0f);
+		glTranslatef(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetAspectPosition()->GetPosition().m_V.m_A[0], g_CharacterObserver->GetObservedCharacter()->GetShip()->GetAspectPosition()->GetPosition().m_V.m_A[1], 0.0f);
 		glRotatef(GetRadians(Vector2f(RelativePosition[0], RelativePosition[1])) * 180.0f / M_PI, 0.0f, 0.0f, 1.0f);
 		glColor3f(0.0f, 0.5f, 0.5f);
 		glBegin(GL_LINES);
@@ -923,7 +924,7 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 	Ship * NewShip(dynamic_cast< Ship * >(g_ObjectFactory->Create("ship", ShipClassIdentifier)));
 	
 	NewShip->SetObjectIdentifier("::ship(" + NewShip->GetShipClass()->GetIdentifier() + ")" + IdentifierSuffix);
-	NewShip->SetPosition(Vector3f(GetRandomFloat(-200.0f, 200.0f), GetRandomFloat(-200.0f, 200.0f), 0.0f));
+	NewShip->GetAspectPosition()->SetPosition(Vector3f(GetRandomFloat(-200.0f, 200.0f), GetRandomFloat(-200.0f, 200.0f), 0.0f));
 	NewShip->SetAngularPosition(Quaternion(GetRandomFloat(0.0f, 2.0f * M_PI), Quaternion::InitializeRotationZ));
 	
 	Vector2f Velocity(GetRandomFloat(0.0f, NewShip->GetShipClass()->GetMaximumSpeed()), GetRandomFloat(0.0f, 2.0f * M_PI), Vector2f::InitializeMagnitudeAngle);
@@ -1446,7 +1447,7 @@ void LoadGameFromElement(const Element * SaveElement)
 				}
 				else if((*ShipChild)->GetName() == "position")
 				{
-					TheShip->SetPosition(Vector3f(from_string_cast< float >((*ShipChild)->GetAttribute("x")), from_string_cast< float >((*ShipChild)->GetAttribute("y")), 0.0f));
+					TheShip->GetAspectPosition()->SetPosition(Vector3f(from_string_cast< float >((*ShipChild)->GetAttribute("x")), from_string_cast< float >((*ShipChild)->GetAttribute("y")), 0.0f));
 				}
 				else if((*ShipChild)->GetName() == "velocity")
 				{
@@ -1511,13 +1512,13 @@ void LoadGameFromElement(const Element * SaveElement)
 				}
 				else if((*CameraChild)->GetName() == "focus")
 				{
-					Position * FocusPosition(dynamic_cast< Position * >(Object::GetObject((*CameraChild)->GetAttribute("object-identifier"))));
+					Object * FocusObject(Object::GetObject((*CameraChild)->GetAttribute("object-identifier")));
 					
-					if(FocusPosition == 0)
+					if(FocusObject == 0)
 					{
 						throw std::runtime_error("The \"main-camera\" element focusses an object with a non-existing identifier \"" + (*CameraChild)->GetAttribute("object-identifier") + "\".");
 					}
-					g_Camera.SetFocus(FocusPosition->GetReference());
+					g_Camera.SetFocus(FocusObject->GetReference());
 				}
 				else if((*CameraChild)->GetName() == "field-of-view")
 				{
@@ -1699,7 +1700,7 @@ void SaveGame(std::ostream & OStream)
 				XML << element << "system" << attribute << "identifier" << value << g_InputMind->GetCharacter()->GetShip()->GetCurrentSystem()->GetIdentifier() << end;
 				XML << element << "fuel" << attribute << "value" << value << Ship->GetFuel() << end;
 				XML << element << "hull" << attribute << "value" << value << Ship->GetHull() << end;
-				XML << element << "position" << attribute << "x" << value << Ship->GetPosition().m_V.m_A[0] << attribute << "y" << value << Ship->GetPosition().m_V.m_A[1] << end;
+				XML << element << "position" << attribute << "x" << value << Ship->GetAspectPosition()->GetPosition().m_V.m_A[0] << attribute << "y" << value << Ship->GetAspectPosition()->GetPosition().m_V.m_A[1] << end;
 				XML << element << "angular-position" << attribute << "w" << value << Ship->GetAngularPosition()[0] << attribute << "x" << value << Ship->GetAngularPosition()[1] << attribute << "y" << value << Ship->GetAngularPosition()[2] << attribute << "z" << value << Ship->GetAngularPosition()[3] << end;
 				XML << element << "velocity" << attribute << "x" << value << Ship->GetVelocity().m_V.m_A[0] << attribute << "y" << value << Ship->GetVelocity().m_V.m_A[1] << end;
 				XML << element << "content";

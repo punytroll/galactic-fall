@@ -33,6 +33,7 @@ System::System(const std::string & Identifier) :
 {
 	// initialize object aspects
 	AddAspectName();
+	AddAspectPosition();
 }
 
 System::~System(void)
@@ -77,17 +78,17 @@ bool System::IsAddingAllowed(Object * Content)
 		return m_Star == 0;
 	}
 	
-	return (dynamic_cast< Shot * >(Content) != 0) || (dynamic_cast< Ship * >(Content) != 0) || (dynamic_cast< Commodity * >(Content) != 0) || (Position::IsAddingAllowed(Content) == true);
+	return (dynamic_cast< Shot * >(Content) != 0) || (dynamic_cast< Ship * >(Content) != 0) || (dynamic_cast< Commodity * >(Content) != 0) || (Object::IsAddingAllowed(Content) == true);
 }
 
 bool System::IsRemovingAllowed(Object * Content)
 {
-	return Position::IsRemovingAllowed(Content);
+	return Object::IsRemovingAllowed(Content);
 }
 
 void System::OnContentAdded(Object * Content)
 {
-	Position::OnContentAdded(Content);
+	Object::OnContentAdded(Content);
 	
 	Shot * TheShot(dynamic_cast< Shot * >(Content));
 	
@@ -193,7 +194,7 @@ void System::OnContentRemoved(Object * Content)
 		assert(m_Star == TheStar);
 		m_Star = 0;
 	}
-	Position::OnContentRemoved(Content);
+	Object::OnContentRemoved(Content);
 }
 
 void System::AddLinkedSystem(System * LinkedSystem)

@@ -23,10 +23,10 @@
 #include <map>
 #include <vector>
 
-#include "position.h"
+#include "object.h"
 #include "type_definitions.h"
 
-class PhysicalObject : public Position
+class PhysicalObject : public Object
 {
 public:
 	virtual ~PhysicalObject(void);

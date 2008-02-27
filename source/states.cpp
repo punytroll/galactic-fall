@@ -32,6 +32,7 @@
 #include "globals.h"
 #include "math.h"
 #include "mind.h"
+#include "object_aspect_position.h"
 #include "object_factory.h"
 #include "planet.h"
 #include "ship.h"
@@ -120,7 +121,7 @@ void FlyOverRandomPoint::Enter(void)
 
 void FlyOverRandomPoint::Execute(void)
 {
-	Vector3f ToDestination(m_Point - GetMind()->GetCharacter()->GetShip()->GetPosition());
+	Vector3f ToDestination(m_Point - GetMind()->GetCharacter()->GetShip()->GetAspectPosition()->GetPosition());
 	float LengthSquared(ToDestination.SquaredLength());
 	
 	if(LengthSquared > 400.0f)
@@ -166,7 +167,7 @@ void TransporterPhase1::Enter(void)
 
 void TransporterPhase1::Execute(void)
 {
-	Vector3f ToDestination(GetMind()->GetCharacter()->GetShip()->GetTarget()->GetPosition() - GetMind()->GetCharacter()->GetShip()->GetPosition());
+	Vector3f ToDestination(GetMind()->GetCharacter()->GetShip()->GetTarget()->GetAspectPosition()->GetPosition() - GetMind()->GetCharacter()->GetShip()->GetAspectPosition()->GetPosition());
 	float DistanceSquared(ToDestination.SquaredLength());
 	float DistanceNeededToBrake(GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetMaximumSpeed() * ((M_PI / GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetTurnSpeed()) + ((GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetMaximumSpeed() / GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetForwardThrust()) / 2.0f)));
 	
@@ -371,7 +372,7 @@ void TransporterPhase4::Enter(void)
 			++SystemIterator;
 		}
 		GetMind()->GetCharacter()->GetShip()->SetLinkedSystemTarget(*SystemIterator);
-		m_JumpDirection = ((*SystemIterator)->GetPosition() - GetMind()->GetCharacter()->GetShip()->GetCurrentSystem()->GetPosition()).Normalize();
+		m_JumpDirection = ((*SystemIterator)->GetAspectPosition()->GetPosition() - GetMind()->GetCharacter()->GetShip()->GetCurrentSystem()->GetAspectPosition()->GetPosition()).Normalize();
 	}
 	else
 	{
@@ -452,7 +453,7 @@ void Fight::Execute(void)
 {
 	if(GetMind()->GetCharacter()->GetShip()->GetTarget().IsValid() == true)
 	{
-		Vector3f ToDestination(GetMind()->GetCharacter()->GetShip()->GetTarget()->GetPosition() - GetMind()->GetCharacter()->GetShip()->GetPosition());
+		Vector3f ToDestination(GetMind()->GetCharacter()->GetShip()->GetTarget()->GetAspectPosition()->GetPosition() - GetMind()->GetCharacter()->GetShip()->GetAspectPosition()->GetPosition());
 		float Length(ToDestination.Length());
 		// TODO: shot speed
 		float SecondsForShot(Length / 30.0f);
@@ -496,7 +497,7 @@ void ShootFarthestCargo::Enter(void)
 	
 	for(std::list< Commodity * >::const_iterator CommodityIterator = Commodities.begin(); CommodityIterator != Commodities.end(); ++CommodityIterator)
 	{
-		float Distance((*CommodityIterator)->GetPosition().SquaredLength());
+		float Distance((*CommodityIterator)->GetAspectPosition()->GetPosition().SquaredLength());
 		
 		if(Distance > MaximumDistance)
 		{
@@ -519,7 +520,7 @@ void ShootFarthestCargo::Execute(void)
 {
 	if(GetMind()->GetCharacter()->GetShip()->GetTarget().IsValid() == true)
 	{
-		Vector3f ToDestination(GetMind()->GetCharacter()->GetShip()->GetTarget()->GetPosition() - GetMind()->GetCharacter()->GetShip()->GetPosition());
+		Vector3f ToDestination(GetMind()->GetCharacter()->GetShip()->GetTarget()->GetAspectPosition()->GetPosition() - GetMind()->GetCharacter()->GetShip()->GetAspectPosition()->GetPosition());
 		float Length(ToDestination.Length());
 		// TODO: shot speed
 		float SecondsForShot(Length / 30.0f);
@@ -595,7 +596,7 @@ void RefuelPhase1::Enter(void)
 	
 	for(std::vector< Planet * >::const_iterator PlanetIterator = Planets.begin(); PlanetIterator != Planets.end(); ++PlanetIterator)
 	{
-		float Distance(((*PlanetIterator)->GetPosition() - GetMind()->GetCharacter()->GetShip()->GetPosition()).SquaredLength());
+		float Distance(((*PlanetIterator)->GetAspectPosition()->GetPosition() - GetMind()->GetCharacter()->GetShip()->GetAspectPosition()->GetPosition()).SquaredLength());
 		
 		if(Distance < MinimumDistance)
 		{
@@ -616,7 +617,7 @@ void RefuelPhase1::Enter(void)
 
 void RefuelPhase1::Execute(void)
 {
-	Vector3f ToDestination(GetMind()->GetCharacter()->GetShip()->GetTarget()->GetPosition() - GetMind()->GetCharacter()->GetShip()->GetPosition());
+	Vector3f ToDestination(GetMind()->GetCharacter()->GetShip()->GetTarget()->GetAspectPosition()->GetPosition() - GetMind()->GetCharacter()->GetShip()->GetAspectPosition()->GetPosition());
 	float DistanceSquared(ToDestination.SquaredLength());
 	float DistanceNeededToBrake(GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetMaximumSpeed() * ((M_PI / GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetTurnSpeed()) + ((GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetMaximumSpeed() / GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetForwardThrust()) / 2.0f)));
 	

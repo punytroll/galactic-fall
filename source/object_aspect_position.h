@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006  Hagen Möbius
+ * Copyright (C) 2008  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,26 +17,29 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef POSITION_H
-#define POSITION_H
+#ifndef OBJECT_ASPECT_POSITION_H
+#define OBJECT_ASPECT_POSITION_H
 
-#include "object.h"
 #include "math/vector3f.h"
 
-class Position : public Object
+class ObjectAspectPosition
 {
 public:
-	void SetPosition(const Vector3f & Position);
+	ObjectAspectPosition(void);
+	// getters
 	const Vector3f & GetPosition(void) const;
+	// setters
+	void SetPosition(const Vector3f & Position);
+private:
 	Vector3f m_Position;
 };
 
-inline void Position::SetPosition(const Vector3f & Position)
+inline void ObjectAspectPosition::SetPosition(const Vector3f & Position)
 {
 	m_Position = Position;
 }
 
-inline const Vector3f & Position::GetPosition(void) const
+inline const Vector3f & ObjectAspectPosition::GetPosition(void) const
 {
 	return m_Position;
 }

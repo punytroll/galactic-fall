@@ -22,6 +22,7 @@
 #include "character.h"
 #include "command_mind.h"
 #include "commodity.h"
+#include "object_aspect_position.h"
 #include "planet.h"
 #include "ship.h"
 #include "system.h"
@@ -237,11 +238,11 @@ void CommandMind::TargetNearestCargo(void)
 		if(MinimumCargo == 0)
 		{
 			MinimumCargo = *CommodityIterator;
-			MinimumDistance = (MinimumCargo->GetPosition() - GetCharacter()->GetShip()->GetPosition()).SquaredLength();
+			MinimumDistance = (MinimumCargo->GetAspectPosition()->GetPosition() - GetCharacter()->GetShip()->GetAspectPosition()->GetPosition()).SquaredLength();
 		}
 		else
 		{
-			float Distance(((*CommodityIterator)->GetPosition() - GetCharacter()->GetShip()->GetPosition()).SquaredLength());
+			float Distance(((*CommodityIterator)->GetAspectPosition()->GetPosition() - GetCharacter()->GetShip()->GetAspectPosition()->GetPosition()).SquaredLength());
 			
 			if(Distance < MinimumDistance)
 			{
@@ -340,11 +341,11 @@ void CommandMind::TargetNearestPlanet(void)
 		if(MinimumPlanet == 0)
 		{
 			MinimumPlanet = *PlanetIterator;
-			MinimumDistance = (MinimumPlanet->GetPosition() - GetCharacter()->GetShip()->GetPosition()).SquaredLength();
+			MinimumDistance = (MinimumPlanet->GetAspectPosition()->GetPosition() - GetCharacter()->GetShip()->GetAspectPosition()->GetPosition()).SquaredLength();
 		}
 		else
 		{
-			float Distance(((*PlanetIterator)->GetPosition() - GetCharacter()->GetShip()->GetPosition()).SquaredLength());
+			float Distance(((*PlanetIterator)->GetAspectPosition()->GetPosition() - GetCharacter()->GetShip()->GetAspectPosition()->GetPosition()).SquaredLength());
 			
 			if(Distance < MinimumDistance)
 			{

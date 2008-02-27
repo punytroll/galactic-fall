@@ -31,6 +31,7 @@
 #include "message.h"
 #include "messages.h"
 #include "mind.h"
+#include "object_aspect_position.h"
 #include "planet.h"
 #include "ship.h"
 #include "string_cast.h"
@@ -62,7 +63,7 @@ void GoalApproachTarget::Process(void)
 {
 	assert(GetState() == Goal::ACTIVE);
 	
-	Vector3f ToDestination(GetMind()->GetCharacter()->GetShip()->GetTarget()->GetPosition() - GetMind()->GetCharacter()->GetShip()->GetPosition());
+	Vector3f ToDestination(GetMind()->GetCharacter()->GetShip()->GetTarget()->GetAspectPosition()->GetPosition() - GetMind()->GetCharacter()->GetShip()->GetAspectPosition()->GetPosition());
 	float DistanceSquared(ToDestination.SquaredLength());
 	float DistanceNeededToBrake(GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetMaximumSpeed() * ((M_PI / GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetTurnSpeed()) + ((GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetMaximumSpeed() / GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetForwardThrust()) / 2.0f)));
 	
@@ -111,7 +112,7 @@ void GoalDestroyTarget::Process(void)
 	assert(GetState() == Goal::ACTIVE);
 	if(GetMind()->GetCharacter()->GetShip()->GetTarget().IsValid() == true)
 	{
-		Vector3f ToDestination(GetMind()->GetCharacter()->GetShip()->GetTarget()->GetPosition() - GetMind()->GetCharacter()->GetShip()->GetPosition());
+		Vector3f ToDestination(GetMind()->GetCharacter()->GetShip()->GetTarget()->GetAspectPosition()->GetPosition() - GetMind()->GetCharacter()->GetShip()->GetAspectPosition()->GetPosition());
 		float Length(ToDestination.Length());
 		// TODO: shot speed
 		float SecondsForShot(Length / 30.0f);
@@ -374,7 +375,7 @@ void GoalFlyInSystemDirection::Activate(void)
 	m_FlyInDirection = new GoalFlyInDirection(GetMind());
 	AddContent(m_FlyInDirection);
 	m_FlyInDirection->Activate();
-	m_FlyInDirection->SetDirection((GetMind()->GetCharacter()->GetShip()->GetLinkedSystemTarget()->GetPosition() - GetMind()->GetCharacter()->GetShip()->GetCurrentSystem()->GetPosition()).Normalize());
+	m_FlyInDirection->SetDirection((GetMind()->GetCharacter()->GetShip()->GetLinkedSystemTarget()->GetAspectPosition()->GetPosition() - GetMind()->GetCharacter()->GetShip()->GetCurrentSystem()->GetAspectPosition()->GetPosition()).Normalize());
 	SetState(Goal::ACTIVE);
 }
 
@@ -415,7 +416,7 @@ void GoalFlyOverRandomPoint::Process(void)
 {
 	assert(GetState() == Goal::ACTIVE);
 	
-	Vector3f ToDestination(m_Point - GetMind()->GetCharacter()->GetShip()->GetPosition());
+	Vector3f ToDestination(m_Point - GetMind()->GetCharacter()->GetShip()->GetAspectPosition()->GetPosition());
 	float LengthSquared(ToDestination.SquaredLength());
 	
 	if(LengthSquared > 400.0f)
@@ -790,7 +791,7 @@ void GoalSelectMeasuredCargo::Process(void)
 	{
 		// what this formula does is effectively calculating the distance of the cargo from a point that is twice a much away from the system center as the ship
 		// Why is this sensible? Because fighters will prefer cargo that is on "their" side of the system and is farther away from the system center than they are.
-		float Cost(((*CommodityIterator)->GetPosition() - 2.0f * GetMind()->GetCharacter()->GetShip()->GetPosition()).SquaredLength());
+		float Cost(((*CommodityIterator)->GetAspectPosition()->GetPosition() - 2.0f * GetMind()->GetCharacter()->GetShip()->GetAspectPosition()->GetPosition()).SquaredLength());
 		
 		if(Cost < MinimumCost)
 		{
@@ -834,7 +835,7 @@ void GoalSelectNearestPlanetInSystem::Process(void)
 	
 	for(std::vector< Planet * >::const_iterator PlanetIterator = Planets.begin(); PlanetIterator != Planets.end(); ++PlanetIterator)
 	{
-		float Distance(((*PlanetIterator)->GetPosition() - GetMind()->GetCharacter()->GetShip()->GetPosition()).SquaredLength());
+		float Distance(((*PlanetIterator)->GetAspectPosition()->GetPosition() - GetMind()->GetCharacter()->GetShip()->GetAspectPosition()->GetPosition()).SquaredLength());
 		
 		if(Distance < MinimumDistance)
 		{

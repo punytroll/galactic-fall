@@ -26,6 +26,7 @@
 #include "graphics_model_manager.h"
 #include "graphics_model_object.h"
 #include "graphics_particle_system.h"
+#include "object_aspect_position.h"
 #include "planet.h"
 #include "ship.h"
 #include "shot.h"
@@ -76,7 +77,7 @@ void VisualizeCommodity(Commodity * Commodity, Graphics::Node * Container)
 	Visualization->SetClearDepthBuffer(true);
 	Visualization->SetModel(Commodity->GetCommodityClass()->GetModel());
 	Visualization->SetOrientation(Commodity->GetAngularPosition());
-	Visualization->SetPosition(Commodity->GetPosition());
+	Visualization->SetPosition(Commodity->GetAspectPosition()->GetPosition());
 	Visualization->SetUseLighting(true);
 	
 	// create the Reference
@@ -119,7 +120,7 @@ void VisualizePlanet(Planet * Planet, Graphics::Node * Container)
 	Visualization->SetModel(g_ModelManager->Get("planet"));
 	Visualization->SetNormalize(true);
 	Visualization->SetOrientation(Quaternion(true));
-	Visualization->SetPosition(Planet->GetPosition());
+	Visualization->SetPosition(Planet->GetAspectPosition()->GetPosition());
 	Visualization->SetScale(Planet->GetRadialSize());
 	Visualization->SetUseLighting(true);
 	
@@ -153,7 +154,7 @@ void VisualizeShip(Ship * Ship, Graphics::Node * Container)
 	Visualization->SetClearDepthBuffer(true);
 	Visualization->SetModel(Ship->GetShipClass()->GetModel());
 	Visualization->SetOrientation(Ship->GetAngularPosition());
-	Visualization->SetPosition(Ship->GetPosition());
+	Visualization->SetPosition(Ship->GetAspectPosition()->GetPosition());
 	Visualization->SetUseLighting(true);
 	
 	// create the Reference
@@ -201,7 +202,7 @@ void VisualizeShot(Shot * Shot, Graphics::Node * Container)
 	Visualization->SetClearDepthBuffer(true);
 	Visualization->SetModel(Shot->GetWeaponClass()->GetParticleModel());
 	Visualization->SetOrientation(Shot->GetAngularPosition());
-	Visualization->SetPosition(Shot->GetPosition());
+	Visualization->SetPosition(Shot->GetAspectPosition()->GetPosition());
 	Visualization->SetUseBlending(true);
 	Visualization->SetUseLighting(false);
 	
@@ -229,7 +230,7 @@ void VisualizeWeapon(Weapon * Weapon, Graphics::Node * Container)
 	Visualization->AddMaterial(Weapon->GetWeaponClass()->GetModel()->GetIdentifier(), Material);
 	Visualization->SetModel(Weapon->GetWeaponClass()->GetModel());
 	Visualization->SetOrientation(Weapon->GetSlot()->GetOrientation() * Weapon->GetOrientation());
-	Visualization->SetPosition(Weapon->GetPosition() + Weapon->GetSlot()->GetPosition());
+	Visualization->SetPosition(Weapon->GetAspectPosition()->GetPosition() + Weapon->GetSlot()->GetPosition());
 	Visualization->SetUseLighting(true);
 	
 	// create the Reference
