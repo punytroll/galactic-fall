@@ -257,6 +257,9 @@ object_h = \
 	object.h \
 	$(referencing_h)
 
+object_aspect_messages_h = \
+	object_aspect_messages.h
+
 object_aspect_name_h = \
 	object_aspect_name.h
 
@@ -528,7 +531,7 @@ button.o: button.cpp $(button_h) $(clicked_listener_h) $(color_h) $(globals_h)
 camera.o: camera.cpp $(camera_h) $(position_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-character.o: character.cpp $(character_h) $(character_observer_h) $(map_knowledge_h) $(message_h) $(mind_h) $(threat_h)
+character.o: character.cpp $(character_h) $(character_observer_h) $(map_knowledge_h) $(message_h) $(mind_h) $(object_aspect_messages_h) $(threat_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 character_observer.o: character_observer.cpp $(character_h) $(character_observer_h) $(message_h)
@@ -639,7 +642,7 @@ map_knowledge.o: map_knowledge.cpp $(map_knowledge_h) $(system.h)
 message.o: message.cpp $(message_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-message_dispatcher.o: message_dispatcher.cpp $(globals_h) $(message_h) $(message_dispatcher_h) $(object_h) $(referencing_h) $(system_statistics_h)
+message_dispatcher.o: message_dispatcher.cpp $(globals_h) $(message_h) $(message_dispatcher_h) $(object_h) $(object_aspect_messages_h) $(referencing_h) $(system_statistics_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 messages.o: messages.cpp $(messages_h)
@@ -657,7 +660,10 @@ mouse_button_listener.o: mouse_button_listener.cpp $(mouse_button_listener_h)
 mouse_motion_listener.o: mouse_motion_listener.cpp $(mouse_motion_listener_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-object.o: object.cpp $(graphics_node_h) $(message_h) $(object_h) $(object_aspect_name_h) $(real_time_h) $(string_cast_h) $(xml_stream_h)
+object.o: object.cpp $(graphics_node_h) $(message_h) $(object_h) $(object_aspect_messages_h) $(object_aspect_name_h) $(real_time_h) $(string_cast_h) $(xml_stream_h)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+object_aspect_messages.o: object_aspect_messages.cpp $(object_aspect_messages_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 object_factory.o: object_factory.cpp $(commodity_h) $(commodity_class_h) $(commodity_class_manager_h) $(globals_h) $(object_factory_h) $(ship_h) $(ship_class_manager_h) $(weapon_h) $(weapon_class_h) $(weapon_class_manager_h)

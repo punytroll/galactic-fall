@@ -22,6 +22,7 @@
 #include "map_knowledge.h"
 #include "message.h"
 #include "mind.h"
+#include "object_aspect_messages.h"
 #include "threat.h"
 
 std::set< Character * > Character::m_Characters;
@@ -32,8 +33,10 @@ Character::Character(void) :
 	m_Ship(0),
 	m_Threat(new Threat())
 {
+	// static initialization
 	m_Characters.insert(this);
-	SetAcceptMessages(true);
+	// initialize object aspects
+	AddAspectMessages();
 }
 
 Character::~Character(void)
@@ -51,7 +54,7 @@ void Character::Update(void)
 	Message * Message(0);
 	
 	// take responsibility for the popped message
-	while((Message = PopMessage()) != 0)
+	while((Message = GetAspectMessages()->PopMessage()) != 0)
 	{
 		// forward message to all registered CharacterObservers
 		for(std::set< CharacterObserver * >::iterator ObserverIterator = m_Observers.begin(); ObserverIterator != m_Observers.end(); ++ObserverIterator)

@@ -20,7 +20,6 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 
-#include <deque>
 #include <map>
 #include <ostream>
 #include <set>
@@ -29,6 +28,7 @@
 #include "referencing.h"
 
 class Message;
+class ObjectAspectMessages;
 class ObjectAspectName;
 class XMLStream;
 
@@ -43,22 +43,22 @@ public:
 	Object(void);
 	virtual ~Object(void);
 	// setters
-	void SetAcceptMessages(bool AcceptMessages);
 	void SetObjectIdentifier(const std::string & ObjectIdentifier);
 	// getters
 	Object * GetContainer(void);
 	const Object * GetContainer(void) const;
 	const std::set< Object * > & GetContent(void) const;
+	ObjectAspectMessages * GetAspectMessages(void);
+	const ObjectAspectMessages * GetAspectMessages(void) const;
 	ObjectAspectName * GetAspectName(void);
 	const ObjectAspectName * GetAspectName(void) const;
 	const std::string & GetObjectIdentifier(void) const;
 	const Reference< Object > & GetReference(void) const;
 	Reference< Graphics::Node > & GetVisualization(void);
 	// modifiers
+	void AddAspectMessages(void);
 	void AddAspectName(void);
 	void Destroy(void);
-	Message * PopMessage(void);
-	void PushMessage(Message * Message);
 	bool AddContent(Object * Content);
 	bool RemoveContent(Object * Content);
 	void GenerateObjectIdentifier(void);
@@ -76,9 +76,9 @@ protected:
 	virtual void OnContentRemoved(Object * Content);
 private:
 	// aspects
+	ObjectAspectMessages * m_AspectMessages;
 	ObjectAspectName * m_AspectName;
 	// other
-	std::deque< Message * > * m_Messages;
 	std::string m_ObjectIdentifier;
 	Reference< Object > m_Reference;
 	Object * m_Container;
@@ -107,6 +107,16 @@ inline const std::set< Object * > & Object::GetContent(void) const
 inline const std::string & Object::GetObjectIdentifier(void) const
 {
 	return m_ObjectIdentifier;
+}
+
+inline ObjectAspectMessages * Object::GetAspectMessages(void)
+{
+	return m_AspectMessages;
+}
+
+inline const ObjectAspectMessages * Object::GetAspectMessages(void) const
+{
+	return m_AspectMessages;
 }
 
 inline ObjectAspectName * Object::GetAspectName(void)
