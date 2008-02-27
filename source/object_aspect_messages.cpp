@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2008  Aram Altschudjian
+ * Copyright (C) 2008  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,38 +19,32 @@
 
 #include <assert.h>
 
-#include "globals.h"
-#include "message.h"
-#include "message_dispatcher.h"
-#include "object.h"
 #include "object_aspect_messages.h"
-#include "referencing.h"
-#include "system_statistics.h"
 
-MessageDispatcher::~MessageDispatcher(void)
+ObjectAspectMessages::~ObjectAspectMessages(void)
 {
-	assert(m_MessageQueue.empty() == true);
+	assert(m_Messages.size() == 0);
 }
 
-void MessageDispatcher::DispatchMessages(void)
+Message * ObjectAspectMessages::PopMessage(void)
 {
-	u4byte DispatchedMessages(0);
-	
-	while(m_MessageQueue.empty() == false)
+	if(m_Messages.empty() == true)
 	{
-		Reference< Object > Receiver(m_MessageQueue.front()->GetReceiver());
-		
-		if(Receiver.IsValid() == true)
-		{
-			assert(Receiver->GetAspectMessages() != 0);
-			Receiver->GetAspectMessages()->PushMessage(m_MessageQueue.front());
-			++DispatchedMessages;
-		}
-		else
-		{
-			delete m_MessageQueue.front();
-		}
-		m_MessageQueue.pop_front();
+		return 0;
 	}
-	g_SystemStatistics->SetDispatchedMessagesThisFrame(DispatchedMessages);
+	else
+	{
+		// this will pass responsibility to the caller
+		Message * Message(m_Messages.front());
+		
+		m_Messages.pop_front();
+		
+		return Message;
+	}
+}
+
+void ObjectAspectMessages::PushMessage(Message * Message)
+{
+	// taking over responsibility for Message
+	m_Messages.push_back(Message);
 }
