@@ -45,6 +45,8 @@ Planet::Planet(const std::string & Identifier) :
 	m_Identifier(Identifier),
 	m_Color(0)
 {
+	// initialize object aspects
+	AddAspectName();
 }
 
 Planet::~Planet(void)

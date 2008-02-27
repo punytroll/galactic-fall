@@ -22,6 +22,7 @@
 #include "globals.h"
 #include "key_event_information.h"
 #include "label.h"
+#include "object_aspect_name.h"
 #include "outfit_ship_dialog.h"
 #include "scroll_box.h"
 #include "ship.h"
@@ -102,7 +103,7 @@ void SlotListItem::Update(void)
 	if(MountedObject != 0)
 	{
 		m_TypeOrWeaponLabel->SetForegroundColor(Color(0.6f, 0.8f, 0.6f, 1.0f));
-		m_TypeOrWeaponLabel->SetString(MountedObject->GetName());
+		m_TypeOrWeaponLabel->SetString(MountedObject->GetAspectName()->GetName());
 	}
 	else
 	{
@@ -159,7 +160,7 @@ EquipmentListItem::EquipmentListItem(Widget * SupWidget, Weapon * Equipment) :
 	// set to arbitrary design size
 	SetSize(Vector2f(100.0f, 100.0f));
 	
-	Label * NameLabel(new Label(this, Equipment->GetName()));
+	Label * NameLabel(new Label(this, Equipment->GetAspectName()->GetName()));
 	
 	NameLabel->SetPosition(Vector2f(5.0f, 5.0f));
 	NameLabel->SetSize(Vector2f(90.0f, 20.0f));

@@ -26,6 +26,7 @@
 #include "globals.h"
 #include "key_event_information.h"
 #include "label.h"
+#include "object_aspect_name.h"
 #include "object_factory.h"
 #include "planet.h"
 #include "scroll_bar.h"
@@ -89,7 +90,7 @@ const PlanetAssetClass * TradeCenterAssetClass::GetPlanetAssetClass(void) const
 }
 
 TradeCenterDialog::TradeCenterDialog(Widget * SupWidget, Planet * Planet, Character * Character) :
-	WWindow(SupWidget, "Trade Center: " + Planet->GetName()),
+	WWindow(SupWidget, "Trade Center: " + Planet->GetAspectName()->GetName()),
 	m_Planet(Planet),
 	m_Character(Character),
 	m_SelectedTradeCenterAssetClass(0)

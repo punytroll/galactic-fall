@@ -29,6 +29,7 @@
 #include "referencing.h"
 
 class Message;
+class ObjectAspectName;
 class XMLStream;
 
 namespace Graphics
@@ -48,10 +49,13 @@ public:
 	Object * GetContainer(void);
 	const Object * GetContainer(void) const;
 	const std::set< Object * > & GetContent(void) const;
+	ObjectAspectName * GetAspectName(void);
+	const ObjectAspectName * GetAspectName(void) const;
 	const std::string & GetObjectIdentifier(void) const;
 	const Reference< Object > & GetReference(void) const;
 	Reference< Graphics::Node > & GetVisualization(void);
 	// modifiers
+	void AddAspectName(void);
 	void Destroy(void);
 	Message * PopMessage(void);
 	void PushMessage(Message * Message);
@@ -71,6 +75,9 @@ protected:
 	virtual void OnContentAdded(Object * Content);
 	virtual void OnContentRemoved(Object * Content);
 private:
+	// aspects
+	ObjectAspectName * m_AspectName;
+	// other
 	std::deque< Message * > * m_Messages;
 	std::string m_ObjectIdentifier;
 	Reference< Object > m_Reference;
@@ -100,6 +107,16 @@ inline const std::set< Object * > & Object::GetContent(void) const
 inline const std::string & Object::GetObjectIdentifier(void) const
 {
 	return m_ObjectIdentifier;
+}
+
+inline ObjectAspectName * Object::GetAspectName(void)
+{
+	return m_AspectName;
+}
+
+inline const ObjectAspectName * Object::GetAspectName(void) const
+{
+	return m_AspectName;
 }
 
 inline const Reference< Object > & Object::GetReference(void) const

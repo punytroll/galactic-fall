@@ -38,7 +38,6 @@ public:
 	System(const std::string & Identifier);
 	virtual ~System(void);
 	const std::string & GetIdentifier(void) const;
-	const std::string & GetName(void) const;
 	const std::list< Commodity * > & GetCommodities(void) const;
 	const std::vector< Planet * > & GetPlanets(void) const;
 	const std::list< Ship * > & GetShips(void) const;
@@ -46,7 +45,6 @@ public:
 	const std::list< System * > GetLinkedSystems(void) const;
 	const Star * GetStar(void) const;
 	bool IsLinkedToSystem(const System * System) const;
-	void SetName(const std::string & Name);
 	void AddLinkedSystem(System * LinkedSystem);
 	// setters
 	void SetTrafficDensity(float TrafficDensity);
@@ -59,7 +57,6 @@ protected:
 	virtual void OnContentRemoved(Object * Content);
 private:
 	std::string m_Identifier;
-	std::string m_Name;
 	float m_TrafficDensity;
 	Star * m_Star;
 	std::vector< Planet * > m_Planets;
@@ -72,11 +69,6 @@ private:
 inline const std::string & System::GetIdentifier(void) const
 {
 	return m_Identifier;
-}
-
-inline const std::string & System::GetName(void) const
-{
-	return m_Name;
 }
 
 inline const std::list< Commodity * > & System::GetCommodities(void) const

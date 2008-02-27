@@ -26,6 +26,7 @@
 #include "globals.h"
 #include "math.h"
 #include "math/quaternion.h"
+#include "object_aspect_name.h"
 #include "ship.h"
 #include "shot.h"
 #include "slot.h"
@@ -42,7 +43,10 @@ Weapon::Weapon(const WeaponClass * WeaponClass) :
 	m_Fire(false),
 	m_NextTimeToFire(0.0)
 {
-	SetName(m_WeaponClass->GetName());
+	// initialize object aspects
+	AddAspectName();
+	GetAspectName()->SetName(m_WeaponClass->GetName());
+	// other
 	SetSpaceRequirement(m_WeaponClass->GetSpaceRequirement());
 	SetOrientation(m_WeaponClass->GetOrientation());
 	SetPosition(Vector3f(0.0f, 0.0f, 0.0f));

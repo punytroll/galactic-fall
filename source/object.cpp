@@ -22,6 +22,7 @@
 #include "graphics_node.h"
 #include "message.h"
 #include "object.h"
+#include "object_aspect_name.h"
 #include "real_time.h"
 #include "string_cast.h"
 #include "xml_stream.h"
@@ -30,6 +31,7 @@ std::set< Object * > Object::m_Objects;
 std::map< std::string, Object * > Object::m_IdentifiedObjects;
 
 Object::Object(void) :
+	m_AspectName(0),
 	m_Messages(0),
 	m_Reference(*this),
 	m_Container(0)
@@ -43,6 +45,9 @@ Object::~Object(void)
 	assert(m_Container == 0);
 	assert(m_Visualization.IsValid() == false);
 	assert(m_Content.empty() == true);
+	// aspects
+	delete m_AspectName;
+	m_AspectName = 0;
 	// messages
 	if(m_Messages != 0)
 	{
@@ -54,6 +59,12 @@ Object::~Object(void)
 	m_Reference.Invalidate();
 	SetObjectIdentifier("");
 	m_Objects.erase(m_Objects.find(this));
+}
+
+void Object::AddAspectName(void)
+{
+	assert(m_AspectName == 0);
+	m_AspectName = new ObjectAspectName();
 }
 
 void Object::SetAcceptMessages(bool AcceptMessages)

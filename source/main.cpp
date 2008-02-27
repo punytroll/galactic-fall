@@ -68,6 +68,7 @@
 #include "messages.h"
 #include "mind.h"
 #include "mini_map_display.h"
+#include "object_aspect_name.h"
 #include "object_factory.h"
 #include "outfit_ship_dialog.h"
 #include "perspective.h"
@@ -716,7 +717,7 @@ void UpdateUserInterface(void)
 		// display the name of the target
 		if(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget().IsValid() == true)
 		{
-			g_TargetLabel->SetString(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget()->GetName());
+			g_TargetLabel->SetString(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget()->GetAspectName()->GetName());
 		}
 		else
 		{
@@ -729,7 +730,7 @@ void UpdateUserInterface(void)
 			
 			if(UnexploredSystems.find(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetLinkedSystemTarget()) == UnexploredSystems.end())
 			{
-				g_SystemLabel->SetString(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetLinkedSystemTarget()->GetName());
+				g_SystemLabel->SetString(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetLinkedSystemTarget()->GetAspectName()->GetName());
 			}
 			else
 			{
@@ -747,7 +748,7 @@ void UpdateUserInterface(void)
 		// display credits in every cycle
 		g_CreditsLabel->SetString("Credits: " + to_string_cast(g_CharacterObserver->GetObservedCharacter()->GetCredits()));
 		// display the current system
-		g_CurrentSystemLabel->SetString(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetCurrentSystem()->GetName());
+		g_CurrentSystemLabel->SetString(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetCurrentSystem()->GetAspectName()->GetName());
 		// set system label color according to jump status
 		if(WantToJump(g_CharacterObserver->GetObservedCharacter()->GetShip(), g_CharacterObserver->GetObservedCharacter()->GetShip()->GetLinkedSystemTarget()) == OK)
 		{
@@ -1485,7 +1486,7 @@ void LoadGameFromElement(const Element * SaveElement)
 				}
 				else if((*ShipChild)->GetName() == "name")
 				{
-					TheShip->SetName((*ShipChild)->GetAttribute("value"));
+					TheShip->GetAspectName()->SetName((*ShipChild)->GetAttribute("value"));
 				}
 				else if((*ShipChild)->GetName() == "system")
 				{
@@ -1726,7 +1727,7 @@ void SaveGame(std::ostream & OStream)
 					++ContentIterator;
 				}
 				XML << end; // content
-				XML << element << "name" << attribute << "value" << value << Ship->GetName() << end;
+				XML << element << "name" << attribute << "value" << value << Ship->GetAspectName()->GetName() << end;
 				XML << end; // ship
 			}
 		}

@@ -45,6 +45,7 @@
 #include "label.h"
 #include "local_file_data_channel.h"
 #include "mini_map_display.h"
+#include "object_aspect_name.h"
 #include "planet.h"
 #include "scanner_display.h"
 #include "ship_class.h"
@@ -612,7 +613,7 @@ static void ReadSystem(Arxx::Reference & Reference)
 	Arxx::u4byte PlanetCount;
 	
 	Reader >> Name >> Position >> TrafficDensity >> StarIdentifier >> StarPosition >> StarColor >> PlanetCount;
-	NewSystem->SetName(Name);
+	NewSystem->GetAspectName()->SetName(Name);
 	NewSystem->SetPosition(Vector3f(Position[0], Position[1], 0.0f));
 	NewSystem->SetTrafficDensity(TrafficDensity);
 	
@@ -643,7 +644,7 @@ static void ReadSystem(Arxx::Reference & Reference)
 		Arxx::u4byte OfferedAssetsCount;
 		
 		Reader >> Name >> Description >> PlanetPosition >> Size >> PlanetColor >> OfferedAssetsCount;
-		NewPlanet->SetName(Name);
+		NewPlanet->GetAspectName()->SetName(Name);
 		NewPlanet->SetDescription(Description);
 		NewPlanet->SetPosition(Vector3f(PlanetPosition[0], PlanetPosition[1], 0.0f));
 		NewPlanet->SetSize(Size);

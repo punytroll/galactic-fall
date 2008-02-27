@@ -24,6 +24,7 @@
 #include "globals.h"
 #include "key_event_information.h"
 #include "label.h"
+#include "object_aspect_name.h"
 #include "planet.h"
 #include "planet_dialog.h"
 #include "ship.h"
@@ -31,7 +32,7 @@
 #include "trade_center_dialog.h"
 
 PlanetDialog::PlanetDialog(Widget * SupWidget, Planet * Planet, Character * Character) :
-	WWindow(SupWidget, "Planet: " + Planet->GetName()),
+	WWindow(SupWidget, "Planet: " + Planet->GetAspectName()->GetName()),
 	m_Planet(Planet),
 	m_Character(Character),
 	m_TradeCenterDialog(0)

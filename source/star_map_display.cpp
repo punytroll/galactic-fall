@@ -26,12 +26,13 @@
 #include "galaxy.h"
 #include "globals.h"
 #include "map_knowledge.h"
+#include "object_aspect_name.h"
 #include "star_map_display.h"
 #include "system.h"
 #include "user_interface.h"
 
 StarMapDisplay::StarMapDisplay(Widget * SupWidget, System * System, Character * Character) :
-	Widget(SupWidget, "Map: " + System->GetName()),
+	Widget(SupWidget),
 	m_Character(Character),
 	m_System(System),
 	m_SelectedSystem(0),
@@ -154,7 +155,7 @@ void StarMapDisplay::Draw(void) const
 		glScalef(1.0f, -1.0f, 1.0f);
 		glTranslatef(0.0f, 12.0f, 0.0f);
 		glColor3f(1.0f, 1.0f, 1.0f);
-		DrawText((*ExploredSystemIterator)->GetName());
+		DrawText((*ExploredSystemIterator)->GetAspectName()->GetName());
 		glPopMatrix();
 		glPopMatrix();
 	}

@@ -31,6 +31,8 @@ System::System(const std::string & Identifier) :
 	m_TrafficDensity(FLT_MAX),
 	m_Star(0)
 {
+	// initialize object aspects
+	AddAspectName();
 }
 
 System::~System(void)
@@ -38,11 +40,6 @@ System::~System(void)
 	assert(m_Star == 0);
 	assert(m_Planets.empty() == true);
 	assert(m_Ships.empty() == true);
-}
-
-void System::SetName(const std::string & Name)
-{
-	m_Name = Name;
 }
 
 bool System::IsLinkedToSystem(const System * LinkedSystem) const

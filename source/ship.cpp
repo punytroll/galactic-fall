@@ -57,6 +57,9 @@ Ship::Ship(const ShipClass * ShipClass) :
 	m_TurnRight(0.0f),
 	m_Velocity(true)
 {
+	// initialize object aspects
+	AddAspectName();
+	// other
 	SetHull(m_ShipClass->GetHull());
 	SetRadialSize(m_ShipClass->GetModel()->GetRadialSize());
 	
