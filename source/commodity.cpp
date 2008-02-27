@@ -50,6 +50,6 @@ Commodity::~Commodity(void)
 
 void Commodity::Move(float Seconds)
 {
-	GetAspectPosition()->SetPosition(GetAspectPosition()->GetPosition() + (m_Velocity * Seconds));
+	GetAspectPosition()->ModifyPosition(m_Velocity * Seconds);
 	m_AngularPosition *= Quaternion(Vector4f(m_AngularVelocity[0], m_AngularVelocity[1], m_AngularVelocity[2], 0.0f).m_V, m_AngularVelocity[3] * Seconds);
 }
