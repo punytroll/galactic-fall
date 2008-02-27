@@ -57,18 +57,15 @@ public:
 	System * GetCurrentSystem(void);
 	const System * GetCurrentSystem(void) const;
 	Reference< Graphics::ParticleSystem > & GetEngineGlowParticleSystem(void);
-	float GetForwardThrust(void) const;
 	float GetFuel(void) const;
 	float GetFuelCapacity(void) const;
 	float GetHull(void) const;
 	System * GetLinkedSystemTarget(void);
 	const System * GetLinkedSystemTarget(void) const;
-	float GetMaximumSpeed(void) const;
 	const ShipClass * GetShipClass(void) const;
 	const std::map< std::string, Slot * > & GetSlots(void) const;
 	Reference< PhysicalObject > & GetTarget(void);
 	const Reference< PhysicalObject > & GetTarget(void) const;
-	float GetTurnSpeed(void) const;
 	const Vector3f & GetVelocity(void) const;
 	// setters
 	void SetAccelerate(bool Accelerate);
@@ -128,11 +125,6 @@ inline Reference< Graphics::ParticleSystem > & Ship::GetEngineGlowParticleSystem
 	return m_EngineGlowParticleSystem;
 }
 
-inline float Ship::GetForwardThrust(void) const
-{
-	return m_ShipClass->GetForwardThrust();
-}
-
 inline float Ship::GetFuel(void) const
 {
 	return m_Fuel;
@@ -153,11 +145,6 @@ inline const System * Ship::GetLinkedSystemTarget(void) const
 	return m_LinkedSystemTarget;
 }
 
-inline float Ship::GetMaximumSpeed(void) const
-{
-	return m_ShipClass->GetMaximumSpeed();
-}
-
 inline const ShipClass * Ship::GetShipClass(void) const
 {
 	return m_ShipClass;
@@ -176,11 +163,6 @@ inline Reference< PhysicalObject > & Ship::GetTarget(void)
 inline const Reference< PhysicalObject > & Ship::GetTarget(void) const
 {
 	return m_Target;
-}
-
-inline float Ship::GetTurnSpeed(void) const
-{
-	return m_ShipClass->GetTurnSpeed();
 }
 
 inline const Vector3f & Ship::GetVelocity(void) const

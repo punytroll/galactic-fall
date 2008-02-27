@@ -354,7 +354,7 @@ void GoalFlyInDirection::Process(void)
 	{
 		GetMind()->GetCharacter()->GetShip()->SetTurnLeft(0.0f);
 		GetMind()->GetCharacter()->GetShip()->SetTurnRight(0.0f);
-		GetMind()->GetCharacter()->GetShip()->SetAccelerate(GetMind()->GetCharacter()->GetShip()->GetMaximumSpeed() - m_Direction.Dot(GetMind()->GetCharacter()->GetShip()->GetVelocity()) > 0.1f);
+		GetMind()->GetCharacter()->GetShip()->SetAccelerate(GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetMaximumSpeed() - m_Direction.Dot(GetMind()->GetCharacter()->GetShip()->GetVelocity()) > 0.1f);
 		m_FacesDirection = true;
 	}
 }
