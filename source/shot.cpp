@@ -46,7 +46,7 @@ bool Shot::Update(float Seconds)
 	{
 		return false;
 	}
-	GetAspectPosition()->SetPosition(GetAspectPosition()->GetPosition() + (m_Velocity * Seconds));
+	GetAspectPosition()->ModifyPosition(m_Velocity * Seconds);
 	
 	return true;
 }

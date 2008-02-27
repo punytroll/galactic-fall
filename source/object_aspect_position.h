@@ -30,18 +30,25 @@ public:
 	const Vector3f & GetPosition(void) const;
 	// setters
 	void SetPosition(const Vector3f & Position);
+	// modifiers
+	void ModifyPosition(const Vector3f & DeltaPosition);
 private:
 	Vector3f m_Position;
 };
 
-inline void ObjectAspectPosition::SetPosition(const Vector3f & Position)
-{
-	m_Position = Position;
-}
-
 inline const Vector3f & ObjectAspectPosition::GetPosition(void) const
 {
 	return m_Position;
+}
+
+inline void ObjectAspectPosition::ModifyPosition(const Vector3f & DeltaPosition)
+{
+	m_Position += DeltaPosition;
+}
+
+inline void ObjectAspectPosition::SetPosition(const Vector3f & Position)
+{
+	m_Position = Position;
 }
 
 #endif

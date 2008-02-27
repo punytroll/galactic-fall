@@ -273,7 +273,7 @@ void Ship::Update(float Seconds)
 				SetFuel(GetFuel() - FuelConsumption);
 			}
 		}
-		GetAspectPosition()->SetPosition(GetAspectPosition()->GetPosition() + (m_Velocity * Seconds));
+		GetAspectPosition()->ModifyPosition(m_Velocity * Seconds);
 		if(m_Accelerate == true)
 		{
 			float FuelConsumption(m_ShipClass->GetForwardFuel() * Seconds);
@@ -286,7 +286,7 @@ void Ship::Update(float Seconds)
 				ForwardThrust *= Seconds;
 				m_Velocity += Vector3f(ForwardThrust[0], ForwardThrust[1], 0.0f);
 				ForwardThrust *= 0.5f * Seconds;
-				GetAspectPosition()->SetPosition(GetAspectPosition()->GetPosition() + Vector3f(ForwardThrust[0], ForwardThrust[1], 0.0f));
+				GetAspectPosition()->ModifyPosition(Vector3f(ForwardThrust[0], ForwardThrust[1], 0.0f));
 				if(m_Velocity.Length() > GetMaximumSpeed())
 				{
 					m_Velocity.Normalize();
