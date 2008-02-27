@@ -24,6 +24,7 @@
 #include "object.h"
 #include "object_aspect_messages.h"
 #include "object_aspect_name.h"
+#include "object_aspect_position.h"
 #include "real_time.h"
 #include "string_cast.h"
 #include "xml_stream.h"
@@ -34,6 +35,7 @@ std::map< std::string, Object * > Object::m_IdentifiedObjects;
 Object::Object(void) :
 	m_AspectMessages(0),
 	m_AspectName(0),
+	m_AspectPosition(0),
 	m_Reference(*this),
 	m_Container(0)
 {
@@ -51,6 +53,8 @@ Object::~Object(void)
 	m_AspectMessages = 0;
 	delete m_AspectName;
 	m_AspectName = 0;
+	delete m_AspectPosition;
+	m_AspectPosition = 0;
 	// invalidate reference first, so no one accesses this object
 	m_Reference.Invalidate();
 	SetObjectIdentifier("");
@@ -67,6 +71,12 @@ void Object::AddAspectName(void)
 {
 	assert(m_AspectName == 0);
 	m_AspectName = new ObjectAspectName();
+}
+
+void Object::AddAspectPosition(void)
+{
+	assert(m_AspectPosition == 0);
+	m_AspectPosition = new ObjectAspectPosition();
 }
 
 void Object::SetObjectIdentifier(const std::string & ObjectIdentifier)

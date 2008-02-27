@@ -27,6 +27,7 @@
 #include "globals.h"
 #include "map_knowledge.h"
 #include "object_aspect_name.h"
+#include "object_aspect_position.h"
 #include "star_map_display.h"
 #include "system.h"
 #include "user_interface.h"
@@ -62,7 +63,7 @@ void StarMapDisplay::Draw(void) const
 	
 	for(std::set< System * >::const_iterator UnexploredSystemIterator = UnexploredSystems.begin(); UnexploredSystemIterator != UnexploredSystems.end(); ++UnexploredSystemIterator)
 	{
-		Vector3f Position((*UnexploredSystemIterator)->GetPosition() - m_System->GetPosition());
+		Vector3f Position((*UnexploredSystemIterator)->GetAspectPosition()->GetPosition() - m_System->GetAspectPosition()->GetPosition());
 		
 		Position *= m_Scale;
 		glPushMatrix();
@@ -100,7 +101,7 @@ void StarMapDisplay::Draw(void) const
 	
 	for(std::set< System * >::const_iterator ExploredSystemIterator = ExploredSystems.begin(); ExploredSystemIterator != ExploredSystems.end(); ++ExploredSystemIterator)
 	{
-		Vector3f Position((*ExploredSystemIterator)->GetPosition() - m_System->GetPosition());
+		Vector3f Position((*ExploredSystemIterator)->GetAspectPosition()->GetPosition() - m_System->GetAspectPosition()->GetPosition());
 		
 		Position *= m_Scale;
 		glPushMatrix();
@@ -122,7 +123,7 @@ void StarMapDisplay::Draw(void) const
 			}
 			glBegin(GL_LINES);
 			glVertex2f(0.0f, 0.0f);
-			glVertex2fv((((*LinkedSystemIterator)->GetPosition() - (*ExploredSystemIterator)->GetPosition()) * m_Scale).m_V.m_A);
+			glVertex2fv((((*LinkedSystemIterator)->GetAspectPosition()->GetPosition() - (*ExploredSystemIterator)->GetAspectPosition()->GetPosition()) * m_Scale).m_V.m_A);
 			glEnd();
 		}
 		if(*ExploredSystemIterator == m_SelectedSystem)
@@ -188,7 +189,7 @@ bool StarMapDisplay::OnMouseButton(Widget * EventSource, int Button, int State, 
 			
 			for(std::map< std::string, System * >::const_iterator SystemIterator = Systems.begin(); SystemIterator != Systems.end(); ++SystemIterator)
 			{
-				Vector3f Position(SystemIterator->second->GetPosition() - m_System->GetPosition());
+				Vector3f Position(SystemIterator->second->GetAspectPosition()->GetPosition() - m_System->GetAspectPosition()->GetPosition());
 				
 				Position *= m_Scale;
 				Position.m_V.m_A[0] -= X - m_OffsetPosition[0];

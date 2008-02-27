@@ -24,7 +24,7 @@
 #include <string>
 #include <vector>
 
-#include "position.h"
+#include "object.h"
 
 class Commodity;
 class Planet;
@@ -32,7 +32,7 @@ class Ship;
 class Shot;
 class Star;
 
-class System : public Position
+class System : public Object
 {
 public:
 	System(const std::string & Identifier);

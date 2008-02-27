@@ -20,7 +20,8 @@
 #include <GL/gl.h>
 
 #include "camera.h"
-#include "position.h"
+#include "object.h"
+#include "object_aspect_position.h"
 
 Camera::Camera(void) :
 	m_Focus(0)
@@ -32,11 +33,11 @@ void Camera::Draw(void) const
 	glTranslatef(-m_Position.m_V.m_A[0], -m_Position.m_V.m_A[1], -m_Position.m_V.m_A[2]);
 	if(m_Focus.IsValid() == true)
 	{
-		glTranslatef(-m_Focus->m_Position.m_V.m_A[0], -m_Focus->m_Position.m_V.m_A[1], 0.0f);
+		glTranslatef(-m_Focus->GetAspectPosition()->GetPosition().m_V.m_A[0], -m_Focus->GetAspectPosition()->GetPosition().m_V.m_A[1], 0.0f);
 	}
 }
 
-void Camera::SetFocus(Reference< Position > Focus)
+void Camera::SetFocus(Reference< Object > Focus)
 {
 	m_Focus = Focus;
 }

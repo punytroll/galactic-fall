@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006  Hagen Möbius
+ * Copyright (C) 2008  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,32 +17,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef STAR_H
-#define STAR_H
+#include "object_aspect_position.h"
 
-#include "color.h"
-#include "object.h"
-
-class Star : public Object
+ObjectAspectPosition::ObjectAspectPosition(void) :
+	m_Position(true)
 {
-public:
-	Star(void);
-	// getters
-	const Color & GetColor(void) const;
-	// setters
-	void SetColor(const Color & Color);
-private:
-	Color m_Color;
-};
-
-inline const Color & Star::GetColor(void) const
-{
-	return m_Color;
 }
-
-inline void Star::SetColor(const Color & Color)
-{
-	m_Color = Color;
-}
-
-#endif

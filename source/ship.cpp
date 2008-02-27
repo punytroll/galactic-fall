@@ -29,6 +29,7 @@
 #include "math.h"
 #include "message.h"
 #include "message_dispatcher.h"
+#include "object_aspect_position.h"
 #include "planet.h"
 #include "ship.h"
 #include "shot.h"
@@ -59,6 +60,7 @@ Ship::Ship(const ShipClass * ShipClass) :
 {
 	// initialize object aspects
 	AddAspectName();
+	AddAspectPosition();
 	// other
 	SetHull(m_ShipClass->GetHull());
 	SetRadialSize(m_ShipClass->GetModel()->GetRadialSize());
@@ -173,10 +175,10 @@ void Ship::Update(float Seconds)
 			SetFuel(GetFuel() - GetShipClass()->GetJumpFuel());
 			
 			// set the ship's position according to the old system
-			Vector3f Direction(NewSystem->GetPosition() - OldSystem->GetPosition());
+			Vector3f Direction(NewSystem->GetAspectPosition()->GetPosition() - OldSystem->GetAspectPosition()->GetPosition());
 			
 			Direction.Normalize();
-			m_Position = Direction * -300.0f;
+			GetAspectPosition()->SetPosition(Direction * -300.0f);
 			m_Velocity = Direction * GetShipClass()->GetMaximumSpeed();
 			m_AngularPosition = Quaternion(GetRadians(Vector2f(Direction[0], Direction[1])), Quaternion::InitializeRotationZ);
 			// set up the ship in the new system
@@ -271,7 +273,7 @@ void Ship::Update(float Seconds)
 				SetFuel(GetFuel() - FuelConsumption);
 			}
 		}
-		m_Position += m_Velocity * Seconds;
+		GetAspectPosition()->SetPosition(GetAspectPosition()->GetPosition() + (m_Velocity * Seconds));
 		if(m_Accelerate == true)
 		{
 			float FuelConsumption(m_ShipClass->GetForwardFuel() * Seconds);
@@ -284,7 +286,7 @@ void Ship::Update(float Seconds)
 				ForwardThrust *= Seconds;
 				m_Velocity += Vector3f(ForwardThrust[0], ForwardThrust[1], 0.0f);
 				ForwardThrust *= 0.5f * Seconds;
-				m_Position += Vector3f(ForwardThrust[0], ForwardThrust[1], 0.0f);
+				GetAspectPosition()->SetPosition(GetAspectPosition()->GetPosition() + Vector3f(ForwardThrust[0], ForwardThrust[1], 0.0f));
 				if(m_Velocity.Length() > GetMaximumSpeed())
 				{
 					m_Velocity.Normalize();
@@ -335,7 +337,7 @@ void Ship::Update(float Seconds)
 				if(TheCommodity != 0)
 				{
 					RemoveContent(TheCommodity);
-					TheCommodity->SetPosition(GetPosition());
+					TheCommodity->GetAspectPosition()->SetPosition(GetAspectPosition()->GetPosition());
 					TheCommodity->SetVelocity(GetVelocity() * 0.8f + Vector3f(GetRandomFloat(-0.5f, 0.5f), GetRandomFloat(-0.5f, 0.5f), 0.0f));
 					GetCurrentSystem()->AddContent(TheCommodity);
 					VisualizeCommodity(TheCommodity, g_CommodityLayer);

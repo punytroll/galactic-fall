@@ -22,6 +22,7 @@
 #include "commodity_class.h"
 #include "graphics_model.h"
 #include "object_aspect_name.h"
+#include "object_aspect_position.h"
 
 Commodity::Commodity(const CommodityClass * CommodityClass) :
 	m_CommodityClass(CommodityClass),
@@ -32,6 +33,7 @@ Commodity::Commodity(const CommodityClass * CommodityClass) :
 	// initialize required aspects
 	AddAspectName();
 	GetAspectName()->SetName(m_CommodityClass->GetName());
+	AddAspectPosition();
 	// other
 	SetRadialSize(m_CommodityClass->GetModel()->GetRadialSize());
 	SetSpaceRequirement(m_CommodityClass->GetSpaceRequirement());
@@ -48,6 +50,6 @@ Commodity::~Commodity(void)
 
 void Commodity::Move(float Seconds)
 {
-	m_Position += m_Velocity * Seconds;
+	GetAspectPosition()->SetPosition(GetAspectPosition()->GetPosition() + (m_Velocity * Seconds));
 	m_AngularPosition *= Quaternion(Vector4f(m_AngularVelocity[0], m_AngularVelocity[1], m_AngularVelocity[2], 0.0f).m_V, m_AngularVelocity[3] * Seconds);
 }
