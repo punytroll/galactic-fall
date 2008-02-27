@@ -68,7 +68,7 @@ static bool FlyTo(Ship * Ship, const Vector3f & Direction)
 	{
 		Ship->SetTurnLeft(0.0f);
 		Ship->SetTurnRight(0.0f);
-		Ship->SetAccelerate(Ship->GetMaximumSpeed() - Direction.Dot(Ship->GetVelocity()) > 0.1f);
+		Ship->SetAccelerate(Ship->GetShipClass()->GetMaximumSpeed() - Direction.Dot(Ship->GetVelocity()) > 0.1f);
 		
 		return true;
 	}

@@ -259,7 +259,7 @@ void Ship::Update(float Seconds)
 			
 			if(GetFuel() >= FuelConsumption)
 			{
-				m_AngularPosition *= Quaternion(GetTurnSpeed() * Seconds * m_TurnLeft, Quaternion::InitializeRotationZ);
+				m_AngularPosition *= Quaternion(GetShipClass()->GetTurnSpeed() * Seconds * m_TurnLeft, Quaternion::InitializeRotationZ);
 				SetFuel(GetFuel() - FuelConsumption);
 			}
 		}
@@ -269,7 +269,7 @@ void Ship::Update(float Seconds)
 			
 			if(GetFuel() >= FuelConsumption)
 			{
-				m_AngularPosition *= Quaternion(-GetTurnSpeed() * Seconds * m_TurnRight, Quaternion::InitializeRotationZ);
+				m_AngularPosition *= Quaternion(-GetShipClass()->GetTurnSpeed() * Seconds * m_TurnRight, Quaternion::InitializeRotationZ);
 				SetFuel(GetFuel() - FuelConsumption);
 			}
 		}
@@ -280,17 +280,17 @@ void Ship::Update(float Seconds)
 			
 			if(GetFuel() >= FuelConsumption)
 			{
-				Vector3f ForwardThrust(GetForwardThrust(), 0.0f, 0.0f);
+				Vector3f ForwardThrust(GetShipClass()->GetForwardThrust(), 0.0f, 0.0f);
 				
 				ForwardThrust *= m_AngularPosition;
 				ForwardThrust *= Seconds;
 				m_Velocity += Vector3f(ForwardThrust[0], ForwardThrust[1], 0.0f);
 				ForwardThrust *= 0.5f * Seconds;
 				GetAspectPosition()->ModifyPosition(Vector3f(ForwardThrust[0], ForwardThrust[1], 0.0f));
-				if(m_Velocity.Length() > GetMaximumSpeed())
+				if(m_Velocity.Length() > GetShipClass()->GetMaximumSpeed())
 				{
 					m_Velocity.Normalize();
-					m_Velocity *= GetMaximumSpeed();
+					m_Velocity *= GetShipClass()->GetMaximumSpeed();
 				}
 				SetFuel(GetFuel() - FuelConsumption);
 				if(m_EngineGlowParticleSystem.IsValid() == true)
