@@ -528,25 +528,32 @@ void CalculateMovements(System * System, float Seconds)
 	g_SystemStatistics->SetShipsInCurrentSystemThisFrame(Ships.size());
 	while(ShipIterator != Ships.end())
 	{
-		Ship * Ship(*ShipIterator);
+		Ship * TheShip(*ShipIterator);
 		
 		// increment up here because Update() might invalidate the iterator
 		++ShipIterator;
-		Ship->Update(Seconds);
-		if(Ship->GetCurrentSystem() != System)
+		if(TheShip->GetAspectUpdate()->Update(Seconds) == false)
 		{
-			// if another ship jumps out of the system ... remove it
-			if((g_CharacterObserver->GetObservedCharacter().IsValid() == false) || (g_CharacterObserver->GetObservedCharacter()->GetShip() != Ship))
-			{
-				DeleteObject(Ship);
-				Ship = 0;
-			}
+			DeleteObject(TheShip);
+			TheShip = 0;
 		}
-		// update the ship's visualization
-		if((Ship != 0) && (Ship->GetVisualization().IsValid() == true))
+		else
 		{
-			Ship->GetVisualization()->SetOrientation(Ship->GetAspectPosition()->GetOrientation());
-			Ship->GetVisualization()->SetPosition(Ship->GetAspectPosition()->GetPosition());
+			if(TheShip->GetCurrentSystem() != System)
+			{
+				// if another ship jumps out of the system ... remove it
+				if((g_CharacterObserver->GetObservedCharacter().IsValid() == false) || (g_CharacterObserver->GetObservedCharacter()->GetShip() != TheShip))
+				{
+					DeleteObject(TheShip);
+					TheShip = 0;
+				}
+			}
+			// update the ship's visualization
+			if((TheShip != 0) && (TheShip->GetVisualization().IsValid() == true))
+			{
+				TheShip->GetVisualization()->SetOrientation(TheShip->GetAspectPosition()->GetOrientation());
+				TheShip->GetVisualization()->SetPosition(TheShip->GetAspectPosition()->GetPosition());
+			}
 		}
 	}
 	
