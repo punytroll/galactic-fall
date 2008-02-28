@@ -147,6 +147,31 @@ protected:
 	Function m_Function;
 };
 
+template < typename Return, typename Type1, typename Class >
+class MethodCallback1 : public Callback1< Return, Type1 >
+{
+public:
+	typedef Return (Class::*Function)(Type1);
+	
+	explicit MethodCallback1(Class * Object, Function Function) :
+		m_Object(Object),
+		m_Function(Function)
+	{
+	}
+	
+	virtual ~MethodCallback1(void)
+	{
+	}
+	
+	virtual Return operator()(Type1 Argument1) const
+	{
+		return (m_Object->*(this->m_Function))(Argument1);
+	}
+protected:
+	Class * m_Object;
+	Function m_Function;
+};
+
 template < typename Return, typename Type1 >
 class Argument1Binder0 : public Callback0< Return >
 {
@@ -217,6 +242,12 @@ template < typename Return, typename Class >
 MethodCallback0< Return, Class > * Method(Class * Object, Return (Class::*Function)())
 {
 	return new MethodCallback0< Return, Class >(Object, Function);
+}
+
+template < typename Return, typename Type1, typename Class >
+MethodCallback1< Return, Type1, Class > * Method(Class * Object, Return (Class::*Function)(Type1))
+{
+	return new MethodCallback1< Return, Type1, Class >(Object, Function);
 }
 
 template < typename Return, typename Type1 >
