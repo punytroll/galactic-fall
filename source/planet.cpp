@@ -107,4 +107,16 @@ void Planet::Land(Ship * Ship)
 
 void Planet::TakeOff(Ship * Ship)
 {
+	// send message to all characters on the ship that
+	const std::set< Object * > & ShipContent(Ship->GetContent());
+	
+	for(std::set< Object * >::iterator ContentIterator = ShipContent.begin(); ContentIterator != ShipContent.end(); ++ContentIterator)
+	{
+		Character * TheCharacter(dynamic_cast< Character * >(*ContentIterator));
+		
+		if(TheCharacter != 0)
+		{
+			g_MessageDispatcher->PushMessage(new Message("taken_off", GetReference(), TheCharacter->GetReference()));
+		}
+	}
 }
