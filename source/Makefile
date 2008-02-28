@@ -719,7 +719,7 @@ ship_class.o: ship_class.cpp $(color_h) $(graphics_material_h) $(ship_class_h) $
 ship_class_manager.o: ship_class_manager.cpp $(ship_class_h) $(ship_class_manager_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-shot.o: shot.cpp $(game_time_h) $(object_aspect_position_h) $(shot_h) $(weapon_class_h)
+shot.o: shot.cpp $(game_time_h) $(object_aspect_position_h) $(object_aspect_update_h) $(shot_h) $(weapon_class_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 slot.o: slot.cpp $(slot_h)

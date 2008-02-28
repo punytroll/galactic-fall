@@ -84,7 +84,7 @@ public:
 	bool Mount(Object * Object, const std::string & SlotIdentifier);
 	bool Unmount(const std::string & SlotIdentifier);
 private:
-	// update slot for the object aspect Update
+	// slot for the object aspect Update
 	bool Update(float Seconds);
 private:
 	// ship class
