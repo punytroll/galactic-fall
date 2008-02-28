@@ -20,6 +20,7 @@
 #ifndef OBJECT_ASPECT_POSITION_H
 #define OBJECT_ASPECT_POSITION_H
 
+#include "math/quaternion.h"
 #include "math/vector3f.h"
 
 class ObjectAspectPosition
@@ -27,23 +28,42 @@ class ObjectAspectPosition
 public:
 	ObjectAspectPosition(void);
 	// getters
+	const Quaternion & GetOrientation(void) const;
 	const Vector3f & GetPosition(void) const;
 	// setters
+	void SetOrientation(const Quaternion & Orientation);
 	void SetPosition(const Vector3f & Position);
 	// modifiers
+	void ModifyOrientation(const Quaternion & DeltaOrientation);
 	void ModifyPosition(const Vector3f & DeltaPosition);
 private:
+	Quaternion m_Orientation;
 	Vector3f m_Position;
 };
+
+inline const Quaternion & ObjectAspectPosition::GetOrientation(void) const
+{
+	return m_Orientation;
+}
 
 inline const Vector3f & ObjectAspectPosition::GetPosition(void) const
 {
 	return m_Position;
 }
 
+inline void ObjectAspectPosition::ModifyOrientation(const Quaternion & DeltaOrientation)
+{
+	m_Orientation *= DeltaOrientation;
+}
+
 inline void ObjectAspectPosition::ModifyPosition(const Vector3f & DeltaPosition)
 {
 	m_Position += DeltaPosition;
+}
+
+inline void ObjectAspectPosition::SetOrientation(const Quaternion & Orientation)
+{
+	m_Orientation = Orientation;
 }
 
 inline void ObjectAspectPosition::SetPosition(const Vector3f & Position)

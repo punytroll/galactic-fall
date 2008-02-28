@@ -229,7 +229,7 @@ void VisualizeWeapon(Weapon * Weapon, Graphics::Node * Container)
 	Material->SetDiffuseColor(*(Weapon->GetWeaponClass()->GetModelColor()));
 	Visualization->AddMaterial(Weapon->GetWeaponClass()->GetModel()->GetIdentifier(), Material);
 	Visualization->SetModel(Weapon->GetWeaponClass()->GetModel());
-	Visualization->SetOrientation(Weapon->GetSlot()->GetOrientation() * Weapon->GetOrientation());
+	Visualization->SetOrientation(Weapon->GetSlot()->GetOrientation() * Weapon->GetAspectPosition()->GetOrientation());
 	Visualization->SetPosition(Weapon->GetAspectPosition()->GetPosition() + Weapon->GetSlot()->GetPosition());
 	Visualization->SetUseLighting(true);
 	

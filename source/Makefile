@@ -264,6 +264,7 @@ object_aspect_name_h = \
 
 object_aspect_position_h = \
 	object_aspect_position.h \
+	$(math_quaternion_h) \
 	$(math_vector3f_h)
 
 object_factory_h = \
@@ -434,7 +435,6 @@ visualizations_h = \
 
 weapon_h = \
 	weapon.h \
-	$(math_quaternion_h) \
 	$(physical_object_h)
 
 weapon_class_h = \
