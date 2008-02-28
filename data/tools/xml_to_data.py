@@ -9,6 +9,17 @@ from types import ListType, StringTypes
 from xml.dom.minidom import Node, parse
 from optparse import OptionParser
 
+DarkYellow = "\033[33m"
+LightYellow = "\033[33;1m"
+DarkGreen = "\033[32m"
+LightGreen = "\033[32;1m"
+Gray = "\033[30;1m"
+LightRed = "\033[31;1m"
+DarkRed = "\033[31m"
+White = "\033[0m"
+DarkBlue = "\033[34m"
+LightBlue = "\033[34;1m"
+
 class ConvertException(Exception):
 	pass
 
@@ -20,10 +31,10 @@ parser.add_option("-o", "--out", dest="out_file", help="The file to put the bina
 # read the options and validate
 (options, args) = parser.parse_args()
 if options.in_file == None:
-	print "Set the file to convert to binary form with '--in'."
+	print LightRed + "Usage" + White + ": Set the file to convert to binary form with " + LightYellow + "--in" + White + "."
 	exit(1)
 if options.out_file == None:
-	print "Set the file to write the binary form to with '--out'."
+	print LightRed + "Usage" + White + ": Set the file to write the binary form to with " + LightYellow + "--out" + White + "."
 	exit(1)
 
 # read the declarations first
@@ -51,6 +62,9 @@ out_call_stack = list()
 # the recursive output function
 def out(data_type, node):
 	out_call_stack.append(node.tagName)
+	stack_path = ""
+	for stack_entry in out_call_stack:
+		stack_path += "/" + stack_entry
 	if data_type == "string":
 		if node.firstChild != None:
 			out_file.write(node.firstChild.nodeValue)
@@ -63,15 +77,16 @@ def out(data_type, node):
 	elif data_type == "float":
 		out_file.write(pack('f', float(node.firstChild.nodeValue)))
 	elif data_type == "u1byte":
-		out_file.write(pack('B', int(node.firstChild.nodeValue)))
+		try:
+			out_file.write(pack('B', int(node.firstChild.nodeValue)))
+		except ValueError:
+			print LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " for " + LightYellow + stack_path + White + " of type " + DarkYellow + data_type + White + " I found an invalid value: " + LightRed + node.firstChild.nodeValue + White
+			raise ConvertException()
 	elif data_type == "u4byte":
 		try:
 			out_file.write(pack('I', long(node.firstChild.nodeValue)))
 		except ValueError:
-			stack_path = ""
-			for stack_entry in out_call_stack:
-				stack_path += "/" + stack_entry
-			print "In file '" + options.in_file + "' I found an invalid value '" + node.firstChild.nodeValue + "' for '" + stack_path + "' of type '" + data_type + "'."
+			print LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " for " + LightYellow + stack_path + White + " of type " + DarkYellow + data_type + White + " I found an invalid value: " + LightRed + node.firstChild.nodeValue + White
 			raise ConvertException()
 	elif data_type == "array":
 		count = 0
@@ -88,40 +103,34 @@ def out(data_type, node):
 			inline_file = open(inline_file_name, "rb")
 			copyfileobj(inline_file, out_file)
 		except IOError:
-			stack_path = ""
-			for stack_entry in out_call_stack:
-				stack_path += "/" + stack_entry
-			print "Couldn't open the file '" + inline_file_name + "' for '" + stack_path + "'."
+			print LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " for " + LightYellow + stack_path + White + " of type " + DarkYellow + data_type + White + " I couldn't open the file: " + LightRed + inline_file_name + White
 			raise ConvertException()
 	elif declarations.has_key(data_type) == True:
 		if isinstance(declarations[data_type], ListType):
 			for child_node in node.childNodes:
 				if child_node.nodeType != Node.ELEMENT_NODE:
 					node.removeChild(child_node)
-			stack_path = ""
-			for stack_entry in out_call_stack:
-				stack_path += "/" + stack_entry
 			parts = map(None, declarations[data_type], node.childNodes)
 			for declaration, definition_node in parts:
 				# safe-guard
 				assert declaration != None or definition_node != None
 				if declaration == None:
-					print "In file '" + options.in_file + "' I could not match the definition of '" + stack_path + "/" + definition_node.tagName + "' to any declaration."
+					print LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " for " + LightYellow + stack_path + "/" + definition_node.tagName + White + " I could not find any declaration."
 					raise ConvertException()
 				declaration_name, declaration_type = declaration
 				if definition_node == None:
-					print "In file '" + options.in_file + "' I could not find the definition of '" + stack_path + "/" + declaration_name + "' of type '" + declaration_type + "'."
+					print LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " for " + LightYellow + stack_path + "/" + declaration_name + White + " of type " + DarkYellow + declaration_type + White + " I could not find any definition."
 					raise ConvertException()
 				if declaration_name != definition_node.tagName:
-					print "In file '" + options.in_file + "' the definition of '" + stack_path + "/" + definition_node.tagName + "' does not belong there."
-					print "\tExpected to find a definition for " + stack_path + "/" + declaration_name + " of type '" + declaration_type + "'."
+					print LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " the definition for " + LightYellow + stack_path + "/" + definition_node.tagName + White + " does not belong there."
+					print "               Expected to find a definition for " + LightYellow + stack_path + "/" + declaration_name + White + " of type " + DarkYellow + declaration_type + White + "'."
 					raise ConvertException()
 				else:
 					out(declaration_type, definition_node)
 		elif isinstance(declarations[data_type], StringTypes):
 			out(declarations[data_type], node)
 	else:
-		print "Could not find a suitable declaration for type '" + data_type + "'."
+		print LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " for " + LightYellow + stack_path + White + " of type " + DarkYellow + data_type + White + " I could not find a suitable declaration."
 		raise ConvertException()
 	out_call_stack.pop()
 
