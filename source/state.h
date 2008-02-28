@@ -32,6 +32,8 @@ public:
 	virtual void Enter(void) = 0;
 	virtual void Execute(void) = 0;
 	virtual void Exit(void) = 0;
+	// modifiers
+	virtual bool HandleMessage(Message * Message);
 	// getters
 	StateMachineMind * GetMind(void);
 private:

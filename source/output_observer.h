@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006  Hagen Möbius
+ * Copyright (C) 2008  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,36 +17,20 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef STATE_MACHINE_H
-#define STATE_MACHINE_H
+#ifndef OUTPUT_OBSERVER_H
+#define OUTPUT_OBSERVER_H
 
-class State;
+#include "character_observer.h"
 
-class StateMachine
+class PlanetDialog;
+
+class OutputObserver : public CharacterObserver
 {
 public:
-	StateMachine(void);
-	~StateMachine(void);
-	void SetGlobalState(State * State);
-	void SetState(State * State);
-	State * GetGlobalState(void);
-	State * GetState(void);
-	void Update(void);
-	// modifiers
-	bool HandleMessage(Message * Message);
+	OutputObserver(void);
+	virtual void HandleMessage(Message * Message);
 private:
-	State * m_State;
-	State * m_GlobalState;
+	PlanetDialog * m_PlanetDialog;
 };
-
-inline State * StateMachine::GetGlobalState(void)
-{
-	return m_GlobalState;
-}
-
-inline State * StateMachine::GetState(void)
-{
-	return m_State;
-}
 
 #endif

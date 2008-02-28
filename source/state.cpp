@@ -23,3 +23,8 @@ State::State(StateMachineMind * Mind) :
 	m_Mind(Mind)
 {
 }
+
+bool State::HandleMessage(Message * Message)
+{
+	return false;
+}

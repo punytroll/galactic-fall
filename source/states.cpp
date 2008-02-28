@@ -20,7 +20,6 @@
 #include <assert.h>
 #include <float.h>
 
-#include <iostream>
 #include <list>
 #include <stdexcept>
 
@@ -31,6 +30,7 @@
 #include "game_time.h"
 #include "globals.h"
 #include "math.h"
+#include "message.h"
 #include "mind.h"
 #include "object_aspect_position.h"
 #include "object_factory.h"
@@ -333,6 +333,18 @@ void TransporterPhase3::Execute(void)
 {
 	if(GameTime::Get() >= m_TimeToLeave)
 	{
+		GetMind()->GetCharacter()->GetShip()->SetTakeOff(true);
+	}
+}
+
+void TransporterPhase3::Exit(void)
+{
+}
+
+bool TransporterPhase3::HandleMessage(Message * Message)
+{
+	if(Message->GetTypeIdentifier() == "taken_off")
+	{
 		if(GetRandomBoolean() == true)
 		{
 			GetMind()->GetStateMachine()->SetState(new TransporterPhase1(GetMind()));
@@ -343,11 +355,13 @@ void TransporterPhase3::Execute(void)
 			GetMind()->GetStateMachine()->SetState(new TransporterPhase4(GetMind()));
 			delete this;
 		}
+		
+		return true;
 	}
-}
-
-void TransporterPhase3::Exit(void)
-{
+	else
+	{
+		return false;
+	}
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -730,11 +744,25 @@ void RefuelPhase3::Execute(void)
 {
 	if(GameTime::Get() >= m_TimeToLeave)
 	{
-		GetMind()->GetStateMachine()->SetState(new SelectSteering(GetMind()));
-		delete this;
+		GetMind()->GetCharacter()->GetShip()->SetTakeOff(true);
 	}
 }
 
 void RefuelPhase3::Exit(void)
 {
+}
+
+bool RefuelPhase3::HandleMessage(Message * Message)
+{
+	if(Message->GetTypeIdentifier() == "taken_off")
+	{
+		GetMind()->GetStateMachine()->SetState(new SelectSteering(GetMind()));
+		delete this;
+		
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }

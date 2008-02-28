@@ -70,6 +70,7 @@ public:
 	virtual void Enter(void);
 	virtual void Execute(void);
 	virtual void Exit(void);
+	virtual bool HandleMessage(Message * Message);
 private:
 	double m_TimeToLeave;
 };
@@ -140,6 +141,7 @@ public:
 	virtual void Enter(void);
 	virtual void Execute(void);
 	virtual void Exit(void);
+	virtual bool HandleMessage(Message * Message);
 private:
 	double m_TimeToLeave;
 };

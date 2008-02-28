@@ -46,19 +46,21 @@ PlanetDialog::PlanetDialog(Widget * SupWidget, Planet * Planet, Character * Char
 	m_DescriptionLabel->SetWrap(true);
 	m_DescriptionLabel->SetWordWrap(true);
 	m_DescriptionLabel->SetAnchorRight(true);
-	m_OKButton = new Button(this);
-	m_OKButton->SetPosition(Vector2f(390.0f, 300.0f));
-	m_OKButton->SetSize(Vector2f(100.0f, 20.0f));
-	m_OKButton->AddClickedListener(this);
-	m_OKButton->SetAnchorBottom(true);
-	m_OKButton->SetAnchorLeft(false);
-	m_OKButton->SetAnchorRight(true);
-	m_OKButton->SetAnchorTop(false);
-	m_OKButtonLabel = new Label(m_OKButton, "OK");
-	m_OKButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
-	m_OKButtonLabel->SetSize(m_OKButton->GetSize());
-	m_OKButtonLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
-	m_OKButtonLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
+	m_TakeOffButton = new Button(this);
+	m_TakeOffButton->SetPosition(Vector2f(390.0f, 300.0f));
+	m_TakeOffButton->SetSize(Vector2f(100.0f, 20.0f));
+	m_TakeOffButton->AddClickedListener(this);
+	m_TakeOffButton->SetAnchorBottom(true);
+	m_TakeOffButton->SetAnchorLeft(false);
+	m_TakeOffButton->SetAnchorRight(true);
+	m_TakeOffButton->SetAnchorTop(false);
+	
+	Label * TakeOffButtonLabel = new Label(m_TakeOffButton, "Take Off");
+	
+	TakeOffButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
+	TakeOffButtonLabel->SetSize(m_TakeOffButton->GetSize());
+	TakeOffButtonLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
+	TakeOffButtonLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
 	m_TradeCenterButton = new Button(this);
 	m_TradeCenterButton->SetPosition(Vector2f(10.0f, 40.0f));
 	m_TradeCenterButton->SetSize(Vector2f(100.0f, 20.0f));
@@ -99,11 +101,11 @@ PlanetDialog::PlanetDialog(Widget * SupWidget, Planet * Planet, Character * Char
 
 bool PlanetDialog::OnClicked(Widget * EventSource)
 {
-	if(EventSource == m_OKButton)
+	if(EventSource == m_TakeOffButton)
 	{
 		if(m_TradeCenterDialog == 0)
 		{
-			Destroy();
+			m_Character->GetShip()->SetTakeOff(true);
 		}
 		
 		return true;
@@ -157,7 +159,7 @@ bool PlanetDialog::OnKey(Widget * EventSource, const KeyEventInformation & KeyEv
 {
 	if(((KeyEventInformation.GetKeyCode() == 9 /* ESCAPE */) || (KeyEventInformation.GetKeyCode() == 36 /* RETURN */)) && (KeyEventInformation.IsDown() == true))
 	{
-		Destroy();
+		m_Character->GetShip()->SetTakeOff(true);
 	}
 	else if((KeyEventInformation.GetKeyCode() == 28 /* T */) && (KeyEventInformation.IsDown() == true))
 	{

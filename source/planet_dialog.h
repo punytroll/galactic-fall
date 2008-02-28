@@ -42,8 +42,7 @@ private:
 	Planet * m_Planet;
 	Character * m_Character;
 	Label * m_DescriptionLabel;
-	Button * m_OKButton;
-	Label * m_OKButtonLabel;
+	Button * m_TakeOffButton;
 	Button * m_TradeCenterButton;
 	Label * m_TradeCenterLabel;
 	Button * m_RefuelButton;
