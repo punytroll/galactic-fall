@@ -20,6 +20,7 @@
 #include "object_aspect_position.h"
 
 ObjectAspectPosition::ObjectAspectPosition(void) :
+	m_Orientation(true),
 	m_Position(true)
 {
 }

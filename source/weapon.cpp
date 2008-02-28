@@ -39,7 +39,6 @@
 
 Weapon::Weapon(const WeaponClass * WeaponClass) :
 	m_WeaponClass(WeaponClass),
-	m_Orientation(true),
 	m_Slot(0),
 	m_Fire(false),
 	m_NextTimeToFire(0.0)
@@ -48,9 +47,9 @@ Weapon::Weapon(const WeaponClass * WeaponClass) :
 	AddAspectName();
 	GetAspectName()->SetName(m_WeaponClass->GetName());
 	AddAspectPosition();
+	GetAspectPosition()->SetOrientation(m_WeaponClass->GetOrientation());
 	// other
 	SetSpaceRequirement(m_WeaponClass->GetSpaceRequirement());
-	SetOrientation(m_WeaponClass->GetOrientation());
 }
 
 void Weapon::Update(float Seconds)
@@ -77,7 +76,7 @@ void Weapon::Update(float Seconds)
 		Vector3f ShotPosition(true);
 		
 		ShotPosition += ParticleExitPosition;
-		ShotPosition *= GetOrientation();
+		ShotPosition *= GetAspectPosition()->GetOrientation();
 		ShotPosition *= GetSlot()->GetOrientation();
 		ShotPosition += SlotPosition;
 		ShotPosition *= TheShip->GetAngularPosition();
@@ -89,7 +88,7 @@ void Weapon::Update(float Seconds)
 		
 		ShotAngularPosition *= TheShip->GetAngularPosition();
 		ShotAngularPosition *= GetSlot()->GetOrientation();
-		ShotAngularPosition *= GetOrientation();
+		ShotAngularPosition *= GetAspectPosition()->GetOrientation();
 		NewShot->SetAngularPosition(ShotAngularPosition);
 		
 		// calculate the shot's velocity

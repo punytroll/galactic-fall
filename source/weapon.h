@@ -20,7 +20,6 @@
 #ifndef WEAPON_H
 #define WEAPON_H
 
-#include "math/quaternion.h"
 #include "physical_object.h"
 
 class Ship;
@@ -33,26 +32,18 @@ public:
 	Weapon(const WeaponClass * WeaponClass);
 	void Update(float Seconds);
 	// getters
-	const Quaternion & GetOrientation(void) const;
 	Slot * GetSlot(void);
 	const Slot * GetSlot(void) const;
 	const WeaponClass * GetWeaponClass(void) const;
 	// setters
 	void SetFire(bool Fire);
-	void SetOrientation(const Quaternion & Orientation);
 	void SetSlot(Slot * Slot);
 private:
 	const WeaponClass * m_WeaponClass;
-	Quaternion m_Orientation;
 	Slot * m_Slot;
 	bool m_Fire;
 	double m_NextTimeToFire;
 };
-
-inline const Quaternion & Weapon::GetOrientation(void) const
-{
-	return m_Orientation;
-}
 
 inline Slot * Weapon::GetSlot(void)
 {
@@ -72,11 +63,6 @@ inline const WeaponClass * Weapon::GetWeaponClass(void) const
 inline void Weapon::SetFire(bool Fire)
 {
 	m_Fire = Fire;
-}
-
-inline void Weapon::SetOrientation(const Quaternion & Orientation)
-{
-	m_Orientation = Orientation;
 }
 
 inline void Weapon::SetSlot(Slot * Slot)
