@@ -544,8 +544,8 @@ void CalculateMovements(System * System, float Seconds)
 		// update the ship's visualization
 		if((Ship != 0) && (Ship->GetVisualization().IsValid() == true))
 		{
-			Ship->GetVisualization()->SetPosition(Ship->GetAspectPosition()->GetPosition());
 			Ship->GetVisualization()->SetOrientation(Ship->GetAngularPosition());
+			Ship->GetVisualization()->SetPosition(Ship->GetAspectPosition()->GetPosition());
 		}
 	}
 	
@@ -558,8 +558,8 @@ void CalculateMovements(System * System, float Seconds)
 		
 		Commodity->Move(Seconds);
 		// update visualization
-		Commodity->GetVisualization()->SetPosition(Commodity->GetAspectPosition()->GetPosition());
 		Commodity->GetVisualization()->SetOrientation(Commodity->GetAngularPosition());
+		Commodity->GetVisualization()->SetPosition(Commodity->GetAspectPosition()->GetPosition());
 	}
 	
 	const std::list< Shot * > & Shots(System->GetShots());
@@ -581,8 +581,8 @@ void CalculateMovements(System * System, float Seconds)
 		else
 		{
 			// update visualization
+			TheShot->GetVisualization()->SetOrientation(TheShot->GetAspectPosition()->GetOrientation());
 			TheShot->GetVisualization()->SetPosition(TheShot->GetAspectPosition()->GetPosition());
-			TheShot->GetVisualization()->SetOrientation(TheShot->GetAngularPosition());
 		}
 		// test for collisions with ships
 		if(TheShot != 0)

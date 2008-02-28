@@ -348,7 +348,6 @@ ship_class_manager_h = \
 
 shot_h = \
 	shot.h \
-	$(math_quaternion_h) \
 	$(math_vector3f_h) \
 	$(physical_object_h)
 

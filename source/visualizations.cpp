@@ -201,7 +201,7 @@ void VisualizeShot(Shot * Shot, Graphics::Node * Container)
 	Visualization->AddMaterial(Shot->GetWeaponClass()->GetParticleModel()->GetIdentifier(), Material);
 	Visualization->SetClearDepthBuffer(true);
 	Visualization->SetModel(Shot->GetWeaponClass()->GetParticleModel());
-	Visualization->SetOrientation(Shot->GetAngularPosition());
+	Visualization->SetOrientation(Shot->GetAspectPosition()->GetOrientation());
 	Visualization->SetPosition(Shot->GetAspectPosition()->GetPosition());
 	Visualization->SetUseBlending(true);
 	Visualization->SetUseLighting(false);
