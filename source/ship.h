@@ -44,7 +44,6 @@ class Ship : public PhysicalObject
 public:
 	Ship(const ShipClass * ShipClass);
 	virtual ~Ship(void);
-	void Update(float Seconds);
 	// controls
 	bool m_Jettison;
 	bool m_Jump;
@@ -84,6 +83,9 @@ public:
 	Slot * CreateSlot(const SlotClass * SlotClass, const std::string & SlotIdentifier);
 	bool Mount(Object * Object, const std::string & SlotIdentifier);
 	bool Unmount(const std::string & SlotIdentifier);
+private:
+	// update slot for the object aspect Update
+	bool Update(float Seconds);
 private:
 	// ship class
 	bool m_Accelerate;

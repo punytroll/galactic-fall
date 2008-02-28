@@ -30,6 +30,7 @@
 #include "message.h"
 #include "message_dispatcher.h"
 #include "object_aspect_position.h"
+#include "object_aspect_update.h"
 #include "planet.h"
 #include "ship.h"
 #include "shot.h"
@@ -60,6 +61,8 @@ Ship::Ship(const ShipClass * ShipClass) :
 	// initialize object aspects
 	AddAspectName();
 	AddAspectPosition();
+	AddAspectUpdate();
+	GetAspectUpdate()->SetCallback(Method(this, &Ship::Update));
 	// other
 	SetHull(m_ShipClass->GetHull());
 	SetRadialSize(m_ShipClass->GetModel()->GetRadialSize());
@@ -159,7 +162,7 @@ void Ship::SetFire(bool Fire)
 	}
 }
 
-void Ship::Update(float Seconds)
+bool Ship::Update(float Seconds)
 {
 	if(m_Jump == true)
 	{
@@ -370,6 +373,8 @@ void Ship::Update(float Seconds)
 			m_Scoop = false;
 		}
 	}
+	
+	return true;
 }
 
 Slot * Ship::CreateSlot(const SlotClass * SlotClass, const std::string & SlotIdentifier)
