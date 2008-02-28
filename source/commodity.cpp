@@ -17,12 +17,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include "callbacks.h"
 #include "color.h"
 #include "commodity.h"
 #include "commodity_class.h"
 #include "graphics_model.h"
 #include "object_aspect_name.h"
 #include "object_aspect_position.h"
+#include "object_aspect_update.h"
 
 Commodity::Commodity(const CommodityClass * CommodityClass) :
 	m_CommodityClass(CommodityClass),
@@ -33,6 +35,8 @@ Commodity::Commodity(const CommodityClass * CommodityClass) :
 	AddAspectName();
 	GetAspectName()->SetName(m_CommodityClass->GetName());
 	AddAspectPosition();
+	AddAspectUpdate();
+	GetAspectUpdate()->SetCallback(Method(this, &Commodity::Update));
 	// other
 	SetRadialSize(m_CommodityClass->GetModel()->GetRadialSize());
 	SetSpaceRequirement(m_CommodityClass->GetSpaceRequirement());
@@ -47,8 +51,10 @@ Commodity::~Commodity(void)
 {
 }
 
-void Commodity::Move(float Seconds)
+bool Commodity::Update(float Seconds)
 {
 	GetAspectPosition()->ModifyOrientation(Quaternion(Vector4f(m_AngularVelocity[0], m_AngularVelocity[1], m_AngularVelocity[2], 0.0f).m_V, m_AngularVelocity[3] * Seconds));
 	GetAspectPosition()->ModifyPosition(m_Velocity * Seconds);
+	
+	return true;
 }

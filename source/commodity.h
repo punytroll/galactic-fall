@@ -33,8 +33,6 @@ class Commodity : public PhysicalObject
 public:
 	Commodity(const CommodityClass * CommodityClass);
 	virtual ~Commodity(void);
-	// modifiers
-	void Move(float Seconds);
 	// getters
 	const CommodityClass * GetCommodityClass(void) const;
 	float GetHull(void) const;
@@ -42,6 +40,8 @@ public:
 	// setters
 	void SetHull(float Hull);
 	void SetVelocity(const Vector3f & Velocity);
+private:
+	bool Update(float Seconds);
 private:
 	const CommodityClass * m_CommodityClass;
 	float m_Hull;
