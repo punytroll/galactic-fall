@@ -335,7 +335,7 @@ void GoalFlyInDirection::Process(void)
 	
 	Vector3f LocalizedDirection(m_Direction);
 	
-	LocalizedDirection *= GetMind()->GetCharacter()->GetShip()->GetAngularPosition().Conjugated();
+	LocalizedDirection *= GetMind()->GetCharacter()->GetShip()->GetAspectPosition()->GetOrientation().Conjugated();
 	if((LocalizedDirection[1] > 0.1f) || ((LocalizedDirection[0] < 0.0f) && (LocalizedDirection[1] >= 0.0f)))
 	{
 		GetMind()->GetCharacter()->GetShip()->SetTurnLeft(1.0f);

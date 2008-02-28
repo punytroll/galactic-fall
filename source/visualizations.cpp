@@ -153,7 +153,7 @@ void VisualizeShip(Ship * Ship, Graphics::Node * Container)
 	}
 	Visualization->SetClearDepthBuffer(true);
 	Visualization->SetModel(Ship->GetShipClass()->GetModel());
-	Visualization->SetOrientation(Ship->GetAngularPosition());
+	Visualization->SetOrientation(Ship->GetAspectPosition()->GetOrientation());
 	Visualization->SetPosition(Ship->GetAspectPosition()->GetPosition());
 	Visualization->SetUseLighting(true);
 	
