@@ -558,7 +558,7 @@ void CalculateMovements(System * System, float Seconds)
 		
 		Commodity->Move(Seconds);
 		// update visualization
-		Commodity->GetVisualization()->SetOrientation(Commodity->GetAngularPosition());
+		Commodity->GetVisualization()->SetOrientation(Commodity->GetAspectPosition()->GetOrientation());
 		Commodity->GetVisualization()->SetPosition(Commodity->GetAspectPosition()->GetPosition());
 	}
 	

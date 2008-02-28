@@ -76,7 +76,7 @@ void VisualizeCommodity(Commodity * Commodity, Graphics::Node * Container)
 	Visualization->AddMaterial(Commodity->GetCommodityClass()->GetModel()->GetIdentifier(), Material);
 	Visualization->SetClearDepthBuffer(true);
 	Visualization->SetModel(Commodity->GetCommodityClass()->GetModel());
-	Visualization->SetOrientation(Commodity->GetAngularPosition());
+	Visualization->SetOrientation(Commodity->GetAspectPosition()->GetOrientation());
 	Visualization->SetPosition(Commodity->GetAspectPosition()->GetPosition());
 	Visualization->SetUseLighting(true);
 	

@@ -36,7 +36,6 @@ public:
 	// modifiers
 	void Move(float Seconds);
 	// getters
-	const Quaternion & GetAngularPosition(void) const;
 	const CommodityClass * GetCommodityClass(void) const;
 	float GetHull(void) const;
 	const Vector3f & GetVelocity(void) const;
@@ -47,16 +46,10 @@ private:
 	const CommodityClass * m_CommodityClass;
 	float m_Hull;
 	Vector3f m_Velocity;
-	Quaternion m_AngularPosition;
 	AxisAngle m_AngularVelocity;
 	// no copy constructor
 	Commodity(const Commodity & Commodity);
 };
-
-inline const Quaternion & Commodity::GetAngularPosition(void) const
-{
-	return m_AngularPosition;
-}
 
 inline const CommodityClass * Commodity::GetCommodityClass(void) const
 {
