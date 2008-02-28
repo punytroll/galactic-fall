@@ -19,12 +19,18 @@
 
 #include <iostream>
 
+#include "command_mind.h"
 #include "globals.h"
 #include "message.h"
 #include "output_observer.h"
 #include "planet.h"
 #include "planet_dialog.h"
 #include "user_interface.h"
+
+/// @todo evil hack
+class CommandMind;
+
+extern Reference< CommandMind > g_InputMind;
 
 OutputObserver::OutputObserver(void) :
 	m_PlanetDialog(0)
@@ -33,17 +39,20 @@ OutputObserver::OutputObserver(void) :
 
 void OutputObserver::HandleMessage(Message * Message)
 {
-	if(Message->GetTypeIdentifier() == "landed")
+	if((g_InputMind.IsValid() == true) && (GetObservedCharacter().Get() == g_InputMind->GetCharacter()))
 	{
-		assert(m_PlanetDialog == 0);
-		assert(dynamic_cast< Planet * >(Message->GetSender().Get()) != 0);
-		m_PlanetDialog = new PlanetDialog(g_UserInterface->GetRootWidget(), dynamic_cast< Planet * >(Message->GetSender().Get()), GetObservedCharacter().Get());
-		m_PlanetDialog->GrabKeyFocus();
-	}
-	else if(Message->GetTypeIdentifier() == "taken_off")
-	{
-		assert(m_PlanetDialog != 0);
-		m_PlanetDialog->Destroy();
-		m_PlanetDialog = 0;
+		if(Message->GetTypeIdentifier() == "landed")
+		{
+			assert(m_PlanetDialog == 0);
+			assert(dynamic_cast< Planet * >(Message->GetSender().Get()) != 0);
+			m_PlanetDialog = new PlanetDialog(g_UserInterface->GetRootWidget(), dynamic_cast< Planet * >(Message->GetSender().Get()), GetObservedCharacter().Get());
+			m_PlanetDialog->GrabKeyFocus();
+		}
+		else if(Message->GetTypeIdentifier() == "taken_off")
+		{
+			assert(m_PlanetDialog != 0);
+			m_PlanetDialog->Destroy();
+			m_PlanetDialog = 0;
+		}
 	}
 }
