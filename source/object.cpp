@@ -22,6 +22,7 @@
 #include "graphics_node.h"
 #include "message.h"
 #include "object.h"
+#include "object_aspect_accessory.h"
 #include "object_aspect_messages.h"
 #include "object_aspect_name.h"
 #include "object_aspect_position.h"
@@ -34,6 +35,7 @@ std::set< Object * > Object::m_Objects;
 std::map< std::string, Object * > Object::m_IdentifiedObjects;
 
 Object::Object(void) :
+	m_AspectAccessory(0),
 	m_AspectMessages(0),
 	m_AspectName(0),
 	m_AspectPosition(0),
@@ -51,6 +53,8 @@ Object::~Object(void)
 	assert(m_Visualization.IsValid() == false);
 	assert(m_Content.empty() == true);
 	// aspects
+	delete m_AspectAccessory;
+	m_AspectAccessory = 0;
 	delete m_AspectMessages;
 	m_AspectMessages = 0;
 	delete m_AspectName;
@@ -63,6 +67,12 @@ Object::~Object(void)
 	m_Reference.Invalidate();
 	SetObjectIdentifier("");
 	m_Objects.erase(m_Objects.find(this));
+}
+
+void Object::AddAspectAccessory(void)
+{
+	assert(m_AspectAccessory == 0);
+	m_AspectAccessory = new ObjectAspectAccessory();
 }
 
 void Object::AddAspectMessages(void)

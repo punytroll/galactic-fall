@@ -26,6 +26,7 @@
 #include "globals.h"
 #include "math.h"
 #include "math/quaternion.h"
+#include "object_aspect_accessory.h"
 #include "object_aspect_name.h"
 #include "object_aspect_position.h"
 #include "ship.h"
@@ -39,11 +40,12 @@
 
 Weapon::Weapon(const WeaponClass * WeaponClass) :
 	m_WeaponClass(WeaponClass),
-	m_Slot(0),
 	m_Fire(false),
 	m_NextTimeToFire(0.0)
 {
 	// initialize object aspects
+	AddAspectAccessory();
+	GetAspectAccessory()->SetSlotClassIdentifier(m_WeaponClass->GetSlotClassIdentifier());
 	AddAspectName();
 	GetAspectName()->SetName(m_WeaponClass->GetName());
 	AddAspectPosition();
@@ -71,13 +73,13 @@ void Weapon::Update(float Seconds)
 		
 		// calculating the shot's position in the world coordinate system
 		const Vector3f & ParticleExitPosition(GetWeaponClass()->GetParticleExitPosition());
-		const Vector3f & SlotPosition(GetSlot()->GetPosition());
+		const Vector3f & SlotPosition(GetAspectAccessory()->GetSlot()->GetPosition());
 		const Vector3f & ShipPosition(TheShip->GetAspectPosition()->GetPosition());
 		Vector3f ShotPosition(true);
 		
 		ShotPosition += ParticleExitPosition;
 		ShotPosition *= GetAspectPosition()->GetOrientation();
-		ShotPosition *= GetSlot()->GetOrientation();
+		ShotPosition *= GetAspectAccessory()->GetSlot()->GetOrientation();
 		ShotPosition += SlotPosition;
 		ShotPosition *= TheShip->GetAspectPosition()->GetOrientation();
 		ShotPosition += ShipPosition;
@@ -87,7 +89,7 @@ void Weapon::Update(float Seconds)
 		Quaternion ShotOrientation(true);
 		
 		ShotOrientation *= TheShip->GetAspectPosition()->GetOrientation();
-		ShotOrientation *= GetSlot()->GetOrientation();
+		ShotOrientation *= GetAspectAccessory()->GetSlot()->GetOrientation();
 		ShotOrientation *= GetAspectPosition()->GetOrientation();
 		NewShot->GetAspectPosition()->SetOrientation(ShotOrientation);
 		

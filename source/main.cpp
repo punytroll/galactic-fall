@@ -68,6 +68,7 @@
 #include "messages.h"
 #include "mind.h"
 #include "mini_map_display.h"
+#include "object_aspect_accessory.h"
 #include "object_aspect_name.h"
 #include "object_aspect_position.h"
 #include "object_aspect_update.h"
@@ -1743,9 +1744,9 @@ void SaveGame(std::ostream & OStream)
 					else if(TheWeapon != 0)
 					{
 						XML << element << "weapon" << attribute << "class-identifier" << value << TheWeapon->GetWeaponClass()->GetIdentifier() << attribute << "object-identifier" << value << TheWeapon->GetObjectIdentifier();
-						if(TheWeapon->GetSlot() != 0)
+						if(TheWeapon->GetAspectAccessory()->GetSlot() != 0)
 						{
-							XML << attribute << "mounted-on" << value << TheWeapon->GetSlot()->GetIdentifier();
+							XML << attribute << "mounted-on" << value << TheWeapon->GetAspectAccessory()->GetSlot()->GetIdentifier();
 						}
 						XML << end;
 					}

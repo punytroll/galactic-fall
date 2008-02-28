@@ -28,6 +28,7 @@
 #include "referencing.h"
 
 class Message;
+class ObjectAspectAccessory;
 class ObjectAspectMessages;
 class ObjectAspectName;
 class ObjectAspectPosition;
@@ -50,6 +51,8 @@ public:
 	Object * GetContainer(void);
 	const Object * GetContainer(void) const;
 	const std::set< Object * > & GetContent(void) const;
+	ObjectAspectAccessory * GetAspectAccessory(void);
+	const ObjectAspectAccessory * GetAspectAccessory(void) const;
 	ObjectAspectMessages * GetAspectMessages(void);
 	const ObjectAspectMessages * GetAspectMessages(void) const;
 	ObjectAspectName * GetAspectName(void);
@@ -62,6 +65,7 @@ public:
 	const Reference< Object > & GetReference(void) const;
 	Reference< Graphics::Node > & GetVisualization(void);
 	// modifiers
+	void AddAspectAccessory(void);
 	void AddAspectMessages(void);
 	void AddAspectName(void);
 	void AddAspectPosition(void);
@@ -84,6 +88,7 @@ protected:
 	virtual void OnContentRemoved(Object * Content);
 private:
 	// aspects
+	ObjectAspectAccessory * m_AspectAccessory;
 	ObjectAspectMessages * m_AspectMessages;
 	ObjectAspectName * m_AspectName;
 	ObjectAspectPosition * m_AspectPosition;
@@ -117,6 +122,16 @@ inline const std::set< Object * > & Object::GetContent(void) const
 inline const std::string & Object::GetObjectIdentifier(void) const
 {
 	return m_ObjectIdentifier;
+}
+
+inline ObjectAspectAccessory * Object::GetAspectAccessory(void)
+{
+	return m_AspectAccessory;
+}
+
+inline const ObjectAspectAccessory * Object::GetAspectAccessory(void) const
+{
+	return m_AspectAccessory;
 }
 
 inline ObjectAspectMessages * Object::GetAspectMessages(void)
