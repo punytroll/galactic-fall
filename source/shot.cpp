@@ -27,7 +27,6 @@ Shot::Shot(const WeaponClass * WeaponClass) :
 	m_Shooter(0),
 	m_TimeOfDeath(GameTime::Get() + WeaponClass->GetParticleLifeTime()),
 	m_Velocity(true),
-	m_AngularPosition(0.0f),
 	m_Damage(WeaponClass->GetParticleDamage())
 {
 	// initialize object aspects

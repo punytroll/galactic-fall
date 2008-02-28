@@ -20,7 +20,6 @@
 #ifndef SHOT_H
 #define SHOT_H
 
-#include "math/quaternion.h"
 #include "math/vector3f.h"
 #include "physical_object.h"
 
@@ -34,13 +33,11 @@ public:
 	virtual ~Shot(void);
 	bool Update(float Seconds);
 	// getters
-	const Quaternion & GetAngularPosition(void) const;
 	float GetDamage(void) const;
 	const Reference< PhysicalObject > & GetShooter(void) const;
 	const Vector3f & GetVelocity(void) const;
 	const WeaponClass * GetWeaponClass(void) const;
 	// setters
-	void SetAngularPosition(const Quaternion & AngularPosition);
 	void SetShooter(Reference< PhysicalObject > Shooter);
 	void SetVelocity(const Vector3f & Velocity);
 private:
@@ -48,14 +45,8 @@ private:
 	Reference< PhysicalObject > m_Shooter;
 	double m_TimeOfDeath;
 	Vector3f m_Velocity;
-	Quaternion m_AngularPosition;
 	float m_Damage;
 };
-
-inline const Quaternion & Shot::GetAngularPosition(void) const
-{
-	return m_AngularPosition;
-}
 
 inline float Shot::GetDamage(void) const
 {
@@ -75,11 +66,6 @@ inline const Vector3f & Shot::GetVelocity(void) const
 inline const WeaponClass * Shot::GetWeaponClass(void) const
 {
 	return m_WeaponClass;
-}
-
-inline void Shot::SetAngularPosition(const Quaternion & AngularPosition)
-{
-	m_AngularPosition = AngularPosition;
 }
 
 inline void Shot::SetShooter(Reference< PhysicalObject > Shooter)
