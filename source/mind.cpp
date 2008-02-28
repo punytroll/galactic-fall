@@ -34,7 +34,7 @@ StateMachineMind::~StateMachineMind(void)
 
 void StateMachineMind::HandleMessage(Message * Message)
 {
-	// ignore messages
+	m_StateMachine->HandleMessage(Message);
 }
 
 void StateMachineMind::Update(void)

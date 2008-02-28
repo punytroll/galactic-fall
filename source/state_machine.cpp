@@ -71,3 +71,22 @@ void StateMachine::Update(void)
 		m_State->Execute();
 	}
 }
+
+bool StateMachine::HandleMessage(Message * Message)
+{
+	if((m_State == 0) || (m_State->HandleMessage(Message) == false))
+	{
+		if(m_GlobalState != 0)
+		{
+			return m_GlobalState->HandleMessage(Message);
+		}
+		else
+		{
+			return false;
+		}
+	}
+	else
+	{
+		return true;
+	}
+}

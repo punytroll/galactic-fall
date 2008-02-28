@@ -37,7 +37,6 @@
 #include "callbacks.h"
 #include "camera.h"
 #include "character.h"
-#include "character_observer.h"
 #include "color.h"
 #include "command_mind.h"
 #include "commodity.h"
@@ -74,9 +73,9 @@
 #include "object_aspect_update.h"
 #include "object_factory.h"
 #include "outfit_ship_dialog.h"
+#include "output_observer.h"
 #include "perspective.h"
 #include "planet.h"
-#include "planet_dialog.h"
 #include "real_time.h"
 #include "save_game_dialog.h"
 #include "scanner_display.h"
@@ -141,7 +140,6 @@ Label * g_TargetLabel(0);
 Label * g_TimeWarpLabel(0);
 
 // global dialog pointers
-PlanetDialog * g_PlanetDialog(0);
 MapDialog * g_MapDialog(0);
 OutfitShipDialog * g_OutfitShipDialog(0);
 LoadGameDialog * g_LoadGameDialog(0);
@@ -153,7 +151,7 @@ int g_LastMotionY(-1);
 int g_MouseButton(-1);
 Camera g_Camera;
 Reference< CommandMind > g_InputMind;
-CharacterObserver * g_CharacterObserver;
+OutputObserver * g_CharacterObserver;
 float g_Width(0.0f);
 float g_Height(0.0f);
 System * g_CurrentSystem;
@@ -870,15 +868,7 @@ class GlobalDestroyListener : public DestroyListener
 public:
 	virtual void OnDestroy(Widget * EventSource)
 	{
-		if(EventSource == g_PlanetDialog)
-		{
-			g_PlanetDialog = 0;
-			if((g_InputMind.IsValid() == true) && (g_InputMind->GetCharacter() != 0) && (g_InputMind->GetCharacter()->GetShip() != 0))
-			{
-				g_InputMind->TakeOff();
-			}
-		}
-		else if(EventSource == g_MapDialog)
+		if(EventSource == g_MapDialog)
 		{
 			if((g_InputMind.IsValid() == true) && (g_InputMind->GetCharacter() != 0) && (g_InputMind->GetCharacter()->GetShip() != 0) && (g_InputMind->GetCharacter()->GetShip()->GetCurrentSystem()->IsLinkedToSystem(g_MapDialog->GetStarMapDisplay()->GetSelectedSystem()) == true))
 			{
@@ -2057,9 +2047,6 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 						{
 							g_InputMind->GetCharacter()->RemoveCredits(SelectedPlanet->GetLandingFee());
 							g_InputMind->Land();
-							g_PlanetDialog = new PlanetDialog(g_UserInterface->GetRootWidget(), const_cast< Planet * >(SelectedPlanet), g_InputMind->GetCharacter());
-							g_PlanetDialog->GrabKeyFocus();
-							g_PlanetDialog->AddDestroyListener(&g_GlobalDestroyListener);
 							
 							break;
 						}
@@ -2593,7 +2580,7 @@ int main(int argc, char ** argv)
 	g_GameTimeTimeoutNotifications = new TimeoutNotificationManager();
 	g_RealTimeTimeoutNotifications = new TimeoutNotificationManager();
 	g_SystemStatistics = new SystemStatistics();
-	g_CharacterObserver = new CharacterObserver();
+	g_CharacterObserver = new OutputObserver();
 	
 	// parse command line
 	std::vector< std::string > Arguments(argv, argv + argc);
