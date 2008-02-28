@@ -23,6 +23,7 @@
 #include "referencing.h"
 
 class Character;
+class Message;
 
 class CharacterObserver
 {
