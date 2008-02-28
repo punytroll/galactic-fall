@@ -31,6 +31,7 @@ class Message;
 class ObjectAspectMessages;
 class ObjectAspectName;
 class ObjectAspectPosition;
+class ObjectAspectUpdate;
 class XMLStream;
 
 namespace Graphics
@@ -55,6 +56,8 @@ public:
 	const ObjectAspectName * GetAspectName(void) const;
 	ObjectAspectPosition * GetAspectPosition(void);
 	const ObjectAspectPosition * GetAspectPosition(void) const;
+	ObjectAspectUpdate * GetAspectUpdate(void);
+	const ObjectAspectUpdate * GetAspectUpdate(void) const;
 	const std::string & GetObjectIdentifier(void) const;
 	const Reference< Object > & GetReference(void) const;
 	Reference< Graphics::Node > & GetVisualization(void);
@@ -62,6 +65,7 @@ public:
 	void AddAspectMessages(void);
 	void AddAspectName(void);
 	void AddAspectPosition(void);
+	void AddAspectUpdate(void);
 	void Destroy(void);
 	bool AddContent(Object * Content);
 	bool RemoveContent(Object * Content);
@@ -83,6 +87,7 @@ private:
 	ObjectAspectMessages * m_AspectMessages;
 	ObjectAspectName * m_AspectName;
 	ObjectAspectPosition * m_AspectPosition;
+	ObjectAspectUpdate * m_AspectUpdate;
 	// other
 	std::string m_ObjectIdentifier;
 	Reference< Object > m_Reference;
@@ -142,6 +147,16 @@ inline ObjectAspectPosition * Object::GetAspectPosition(void)
 inline const ObjectAspectPosition * Object::GetAspectPosition(void) const
 {
 	return m_AspectPosition;
+}
+
+inline ObjectAspectUpdate * Object::GetAspectUpdate(void)
+{
+	return m_AspectUpdate;
+}
+
+inline const ObjectAspectUpdate * Object::GetAspectUpdate(void) const
+{
+	return m_AspectUpdate;
 }
 
 inline const Reference< Object > & Object::GetReference(void) const

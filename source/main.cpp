@@ -70,6 +70,7 @@
 #include "mini_map_display.h"
 #include "object_aspect_name.h"
 #include "object_aspect_position.h"
+#include "object_aspect_update.h"
 #include "object_factory.h"
 #include "outfit_ship_dialog.h"
 #include "perspective.h"
@@ -554,12 +555,19 @@ void CalculateMovements(System * System, float Seconds)
 	g_SystemStatistics->SetCommoditiesInCurrentSystemThisFrame(Commodities.size());
 	for(std::list< Commodity * >::const_iterator CommodityIterator = Commodities.begin(); CommodityIterator != Commodities.end(); ++CommodityIterator)
 	{
-		Commodity * Commodity(*CommodityIterator);
+		Commodity * TheCommodity(*CommodityIterator);
 		
-		Commodity->Move(Seconds);
-		// update visualization
-		Commodity->GetVisualization()->SetOrientation(Commodity->GetAspectPosition()->GetOrientation());
-		Commodity->GetVisualization()->SetPosition(Commodity->GetAspectPosition()->GetPosition());
+		if(TheCommodity->GetAspectUpdate()->Update(Seconds) == false)
+		{
+			DeleteObject(TheCommodity);
+			TheCommodity = 0;
+		}
+		else
+		{
+			// update visualization
+			TheCommodity->GetVisualization()->SetOrientation(TheCommodity->GetAspectPosition()->GetOrientation());
+			TheCommodity->GetVisualization()->SetPosition(TheCommodity->GetAspectPosition()->GetPosition());
+		}
 	}
 	
 	const std::list< Shot * > & Shots(System->GetShots());
