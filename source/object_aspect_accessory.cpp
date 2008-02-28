@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2007  Hagen Möbius
+ * Copyright (C) 2008  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,37 +17,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef WEAPON_H
-#define WEAPON_H
+#include <assert.h>
 
-#include "physical_object.h"
+#include "object_aspect_accessory.h"
 
-class Ship;
-class WeaponClass;
-
-class Weapon : public PhysicalObject
+ObjectAspectAccessory::ObjectAspectAccessory(void) :
+	m_Slot(0)
 {
-public:
-	Weapon(const WeaponClass * WeaponClass);
-	void Update(float Seconds);
-	// getters
-	const WeaponClass * GetWeaponClass(void) const;
-	// setters
-	void SetFire(bool Fire);
-private:
-	const WeaponClass * m_WeaponClass;
-	bool m_Fire;
-	double m_NextTimeToFire;
-};
-
-inline const WeaponClass * Weapon::GetWeaponClass(void) const
-{
-	return m_WeaponClass;
 }
 
-inline void Weapon::SetFire(bool Fire)
+ObjectAspectAccessory::~ObjectAspectAccessory(void)
 {
-	m_Fire = Fire;
+	/// @todo This assert should be OK, but it isn't currently.
+	// assert(m_Slot == 0);
 }
-
-#endif

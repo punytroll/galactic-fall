@@ -26,6 +26,7 @@
 #include "graphics_model_manager.h"
 #include "graphics_model_object.h"
 #include "graphics_particle_system.h"
+#include "object_aspect_accessory.h"
 #include "object_aspect_position.h"
 #include "planet.h"
 #include "ship.h"
@@ -229,8 +230,8 @@ void VisualizeWeapon(Weapon * Weapon, Graphics::Node * Container)
 	Material->SetDiffuseColor(*(Weapon->GetWeaponClass()->GetModelColor()));
 	Visualization->AddMaterial(Weapon->GetWeaponClass()->GetModel()->GetIdentifier(), Material);
 	Visualization->SetModel(Weapon->GetWeaponClass()->GetModel());
-	Visualization->SetOrientation(Weapon->GetSlot()->GetOrientation() * Weapon->GetAspectPosition()->GetOrientation());
-	Visualization->SetPosition(Weapon->GetAspectPosition()->GetPosition() + Weapon->GetSlot()->GetPosition());
+	Visualization->SetOrientation(Weapon->GetAspectAccessory()->GetSlot()->GetOrientation() * Weapon->GetAspectPosition()->GetOrientation());
+	Visualization->SetPosition(Weapon->GetAspectPosition()->GetPosition() + Weapon->GetAspectAccessory()->GetSlot()->GetPosition());
 	Visualization->SetUseLighting(true);
 	
 	// create the Reference

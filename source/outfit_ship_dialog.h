@@ -30,7 +30,7 @@ class Button;
 class ScrollBox;
 class Ship;
 class SlotListItem;
-class EquipmentListItem;
+class AccessoryListItem;
 
 class OutfitShipDialog : public ClickedListener, public DimensionListener, public KeyListener, virtual public MouseButtonListener, public WWindow
 {
@@ -42,16 +42,16 @@ protected:
 	virtual bool OnMouseButton(Widget * EventSource, int Button, int State, float X, float Y);
 	virtual void OnSizeChanged(Widget * EventSource);
 private:
-	void RebuildEquipmentList(void);
+	void RebuildAccessoryList(void);
 	void UpdateButtons(void);
 	Ship * m_Ship;
 	Button * m_OKButton;
 	Button * m_MountButton;
 	Button * m_UnmountButton;
 	ScrollBox * m_SlotScrollBox;
-	ScrollBox * m_EquipmentScrollBox;
+	ScrollBox * m_AccessoryScrollBox;
 	SlotListItem * m_SelectedSlotListItem;
-	EquipmentListItem * m_SelectedEquipmentListItem;
+	AccessoryListItem * m_SelectedAccessoryListItem;
 	Widget * m_LeftPane;
 	Widget * m_CenterPane;
 	Widget * m_RightPane;

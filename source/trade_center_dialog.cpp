@@ -26,6 +26,7 @@
 #include "globals.h"
 #include "key_event_information.h"
 #include "label.h"
+#include "object_aspect_accessory.h"
 #include "object_aspect_name.h"
 #include "object_factory.h"
 #include "planet.h"
@@ -227,7 +228,7 @@ void TradeCenterDialog::Sell(const PlanetAssetClass * PlanetAssetClass)
 		{
 			Weapon * ContentWeapon(dynamic_cast< Weapon * >(*ContentIterator));
 			
-			if((ContentWeapon != 0) && (ContentWeapon->GetSlot() == 0) && (ContentWeapon->GetWeaponClass()->GetIdentifier() == PlanetAssetClass->GetAssetClass()->GetObjectClass()))
+			if((ContentWeapon != 0) && (ContentWeapon->GetAspectAccessory()->GetSlot() == 0) && (ContentWeapon->GetWeaponClass()->GetIdentifier() == PlanetAssetClass->GetAssetClass()->GetObjectClass()))
 			{
 				ContentObject = ContentWeapon;
 			}

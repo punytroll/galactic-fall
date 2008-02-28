@@ -29,6 +29,7 @@
 #include "math.h"
 #include "message.h"
 #include "message_dispatcher.h"
+#include "object_aspect_accessory.h"
 #include "object_aspect_position.h"
 #include "object_aspect_update.h"
 #include "planet.h"
@@ -101,7 +102,7 @@ float Ship::GetAvailableSpace(void) const
 		}
 		else if(dynamic_cast< Weapon * >(*ManifestIterator) != 0)
 		{
-			if(dynamic_cast< Weapon * >(*ManifestIterator)->GetSlot() == 0)
+			if(dynamic_cast< Weapon * >(*ManifestIterator)->GetAspectAccessory()->GetSlot() == 0)
 			{
 				AvailableSpace -= dynamic_cast< Weapon * >(*ManifestIterator)->GetSpaceRequirement();
 			}
@@ -132,7 +133,7 @@ unsigned_numeric Ship::GetContentAmount(const std::string & Type, const std::str
 		{
 			Weapon * TheWeapon(dynamic_cast< Weapon * >(*ContentIterator));
 			
-			if((TheWeapon != 0) && (TheWeapon->GetSlot() == 0) && (TheWeapon->GetWeaponClass()->GetIdentifier() == Class))
+			if((TheWeapon != 0) && (TheWeapon->GetAspectAccessory()->GetSlot() == 0) && (TheWeapon->GetWeaponClass()->GetIdentifier() == Class))
 			{
 				Amount += 1;
 			}
@@ -404,7 +405,7 @@ bool Ship::Mount(Object * Object, const std::string & SlotIdentifier)
 		if((TheWeapon != 0) && (SlotIterator->second->GetSlotClass()->AcceptsSlotClassIdentifier(TheWeapon->GetWeaponClass()->GetSlotClassIdentifier()) == true))
 		{
 			SlotIterator->second->SetMountedObject(TheWeapon->GetReference());
-			TheWeapon->SetSlot(SlotIterator->second);
+			TheWeapon->GetAspectAccessory()->SetSlot(SlotIterator->second);
 			if(GetVisualization().IsValid() == true)
 			{
 				VisualizeWeapon(TheWeapon, GetVisualization().Get());
@@ -428,7 +429,7 @@ bool Ship::Unmount(const std::string & SlotIdentifier)
 		if(TheWeapon != 0)
 		{
 			SlotIterator->second->SetMountedObject(0);
-			TheWeapon->SetSlot(0);
+			TheWeapon->GetAspectAccessory()->SetSlot(0);
 			if(TheWeapon->GetVisualization().IsValid() != 0)
 			{
 				UnvisualizeObject(TheWeapon);
