@@ -19,6 +19,7 @@
 
 #include "game_time.h"
 #include "object_aspect_position.h"
+#include "object_aspect_update.h"
 #include "shot.h"
 #include "weapon_class.h"
 
@@ -31,6 +32,8 @@ Shot::Shot(const WeaponClass * WeaponClass) :
 {
 	// initialize object aspects
 	AddAspectPosition();
+	AddAspectUpdate();
+	GetAspectUpdate()->SetCallback(Method(this, &Shot::Update));
 	// other
 	SetRadialSize(0.54f);
 }

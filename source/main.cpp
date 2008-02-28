@@ -588,7 +588,7 @@ void CalculateMovements(System * System, float Seconds)
 		
 		++NextIterator;
 		
-		if((*ShotIterator)->Update(Seconds) == false)
+		if((*ShotIterator)->GetAspectUpdate()->Update(Seconds) == false)
 		{
 			DeleteObject(TheShot);
 			TheShot = 0;

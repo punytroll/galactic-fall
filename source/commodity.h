@@ -41,6 +41,7 @@ public:
 	void SetHull(float Hull);
 	void SetVelocity(const Vector3f & Velocity);
 private:
+	// slot for the object aspect Update
 	bool Update(float Seconds);
 private:
 	const CommodityClass * m_CommodityClass;

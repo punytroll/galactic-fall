@@ -31,7 +31,6 @@ class Shot : public PhysicalObject
 public:
 	Shot(const WeaponClass * WeaponClass);
 	virtual ~Shot(void);
-	bool Update(float Seconds);
 	// getters
 	float GetDamage(void) const;
 	const Reference< PhysicalObject > & GetShooter(void) const;
@@ -40,6 +39,9 @@ public:
 	// setters
 	void SetShooter(Reference< PhysicalObject > Shooter);
 	void SetVelocity(const Vector3f & Velocity);
+private:
+	// slot for the object aspect Update
+	bool Update(float Seconds);
 private:
 	const WeaponClass * m_WeaponClass;
 	Reference< PhysicalObject > m_Shooter;
