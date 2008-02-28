@@ -51,7 +51,6 @@ public:
 	bool m_Land;
 	bool m_Scoop;
 	// getters
-	const Quaternion & GetAngularPosition(void) const;
 	float GetAvailableSpace(void) const;
 	unsigned_numeric GetContentAmount(const std::string & Type, const std::string & Class) const;
 	System * GetCurrentSystem(void);
@@ -69,7 +68,6 @@ public:
 	const Vector3f & GetVelocity(void) const;
 	// setters
 	void SetAccelerate(bool Accelerate);
-	void SetAngularPosition(const Quaternion & AngularPosition);
 	void SetCurrentSystem(System * CurrentSystem);
 	void SetEngineGlowParticleSystem(Reference< Graphics::ParticleSystem > & EngineGlowParticleSystem);
 	void SetFire(bool Fire);
@@ -89,7 +87,6 @@ public:
 private:
 	// ship class
 	bool m_Accelerate;
-	Quaternion m_AngularPosition;
 	System * m_CurrentSystem;
 	Reference< Graphics::ParticleSystem > m_EngineGlowParticleSystem;
 	float m_Fuel;
@@ -104,11 +101,6 @@ private:
 	float m_TurnRight;
 	Vector3f m_Velocity;
 };
-
-inline const Quaternion & Ship::GetAngularPosition(void) const
-{
-	return m_AngularPosition;
-}
 
 inline System * Ship::GetCurrentSystem(void)
 {
@@ -173,11 +165,6 @@ inline const Vector3f & Ship::GetVelocity(void) const
 inline void Ship::SetAccelerate(bool Accelerate)
 {
 	m_Accelerate = Accelerate;
-}
-
-inline void Ship::SetAngularPosition(const Quaternion & AngularPosition)
-{
-	m_AngularPosition = AngularPosition;
 }
 
 inline void Ship::SetCurrentSystem(System * CurrentSystem)

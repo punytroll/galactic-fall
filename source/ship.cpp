@@ -46,7 +46,6 @@ Ship::Ship(const ShipClass * ShipClass) :
 	m_Land(false),
 	m_Scoop(false),
 	m_Accelerate(false),
-	m_AngularPosition(true),
 	m_CurrentSystem(0),
 	m_Fuel(0.0f),
 	m_Hull(0.0f),
@@ -180,7 +179,7 @@ void Ship::Update(float Seconds)
 			Direction.Normalize();
 			GetAspectPosition()->SetPosition(Direction * -300.0f);
 			m_Velocity = Direction * GetShipClass()->GetMaximumSpeed();
-			m_AngularPosition = Quaternion(GetRadians(Vector2f(Direction[0], Direction[1])), Quaternion::InitializeRotationZ);
+			GetAspectPosition()->SetOrientation(Quaternion(GetRadians(Vector2f(Direction[0], Direction[1])), Quaternion::InitializeRotationZ));
 			// set up the ship in the new system
 			SetCurrentSystem(GetLinkedSystemTarget());
 			NewSystem->AddContent(this);
@@ -259,7 +258,7 @@ void Ship::Update(float Seconds)
 			
 			if(GetFuel() >= FuelConsumption)
 			{
-				m_AngularPosition *= Quaternion(GetShipClass()->GetTurnSpeed() * Seconds * m_TurnLeft, Quaternion::InitializeRotationZ);
+				GetAspectPosition()->ModifyOrientation(Quaternion(GetShipClass()->GetTurnSpeed() * Seconds * m_TurnLeft, Quaternion::InitializeRotationZ));
 				SetFuel(GetFuel() - FuelConsumption);
 			}
 		}
@@ -269,7 +268,7 @@ void Ship::Update(float Seconds)
 			
 			if(GetFuel() >= FuelConsumption)
 			{
-				m_AngularPosition *= Quaternion(-GetShipClass()->GetTurnSpeed() * Seconds * m_TurnRight, Quaternion::InitializeRotationZ);
+				GetAspectPosition()->ModifyOrientation(Quaternion(-GetShipClass()->GetTurnSpeed() * Seconds * m_TurnRight, Quaternion::InitializeRotationZ));
 				SetFuel(GetFuel() - FuelConsumption);
 			}
 		}
@@ -282,7 +281,7 @@ void Ship::Update(float Seconds)
 			{
 				Vector3f ForwardThrust(GetShipClass()->GetForwardThrust(), 0.0f, 0.0f);
 				
-				ForwardThrust *= m_AngularPosition;
+				ForwardThrust *= GetAspectPosition()->GetOrientation();
 				ForwardThrust *= Seconds;
 				m_Velocity += Vector3f(ForwardThrust[0], ForwardThrust[1], 0.0f);
 				ForwardThrust *= 0.5f * Seconds;
