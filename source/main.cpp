@@ -471,8 +471,8 @@ Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSyst
 			
 			Particle.m_Position.Set(Position[0], Position[1], 0.0f);
 			Particle.m_Velocity.Set(Velocity[0], Velocity[1], 0.0f);
-			Particle.m_TimeOfDeath = GameTime::Get() + GetRandomDouble(0.5f, 1.0f);
-			Particle.m_Color.Set(GetRandomFloat(0.4f, 0.5f), GetRandomFloat(0.4f, 0.5f), 1.0f, 0.4f);
+			Particle.m_TimeOfDeath = GameTime::Get() + GetRandomDouble(0.8f, 1.2f);
+			Particle.m_Color.Set(GetRandomFloat(0.5f, 0.65f), GetRandomFloat(0.6f, 0.65f), 1.0f, 0.5f);
 			Particle.m_Size = GetRandomFloat(0.5f, 0.9f);
 			ParticleSystem->AddParticle(Particle);
 		}
@@ -485,7 +485,7 @@ Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSyst
 			Particle.m_Position.Set(Position[0], Position[1], 0.0f);
 			Particle.m_Velocity.Set(Position[1], -Position[0], 0.0f);
 			Particle.m_TimeOfDeath = GameTime::Get() + GetRandomDouble(1.5f, 2.5f);
-			Particle.m_Color.Set(GetRandomFloat(0.4f, 0.5f), GetRandomFloat(0.85f, 1.0f), GetRandomFloat(0.75f, 0.95f), 0.1f);
+			Particle.m_Color.Set(GetRandomFloat(0.4f, 0.5f), GetRandomFloat(0.85f, 1.0f), GetRandomFloat(0.75f, 0.95f), 0.05f);
 			Particle.m_Size = GetRandomFloat(10.0f, 12.0f);
 			ParticleSystem->AddParticle(Particle);
 		}
