@@ -459,6 +459,52 @@ Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSyst
 		ParticleSystem->AddParticleScriptLine("kill-old");
 		ParticleSystem->AddParticleScriptLine("move");
 	}
+	else if(ParticleSystemClassIdentifier == "jump")
+	{
+		ParticleSystem->SetTimeOfDeath(GameTime::Get() + 2.0);
+		// add sparks which fly around fast
+		for(int Index = 0; Index < 100; ++Index)
+		{
+			Graphics::ParticleSystem::Particle Particle;
+			Vector2f Position(GetRandomFloat(1.0f, 4.0f) + GetRandomFloatFromExponentialDistribution(2.0f), GetRandomFloat(0.0f, 2 * M_PI), Vector2f::InitializeMagnitudeAngle);
+			Vector2f Velocity(GetRandomFloat(15.0f, 20.0f), GetRandomFloat(0.0f, 2 * M_PI), Vector2f::InitializeMagnitudeAngle);
+			
+			Particle.m_Position.Set(Position[0], Position[1], 0.0f);
+			Particle.m_Velocity.Set(Velocity[0], Velocity[1], 0.0f);
+			Particle.m_TimeOfDeath = GameTime::Get() + GetRandomDouble(0.5f, 1.0f);
+			Particle.m_Color.Set(GetRandomFloat(0.4f, 0.5f), GetRandomFloat(0.4f, 0.5f), 1.0f, 0.4f);
+			Particle.m_Size = GetRandomFloat(0.5f, 0.9f);
+			ParticleSystem->AddParticle(Particle);
+		}
+		// add green cloud which turns counter-clockwise
+		for(int Index = 0; Index < 50; ++Index)
+		{
+			Graphics::ParticleSystem::Particle Particle;
+			Vector2f Position(GetRandomFloat(0.0f, 8.0f) + GetRandomFloatFromExponentialDistribution(5.0f), GetRandomFloat(0.0f, 2 * M_PI), Vector2f::InitializeMagnitudeAngle);
+			
+			Particle.m_Position.Set(Position[0], Position[1], 0.0f);
+			Particle.m_Velocity.Set(Position[1], -Position[0], 0.0f);
+			Particle.m_TimeOfDeath = GameTime::Get() + GetRandomDouble(1.5f, 2.5f);
+			Particle.m_Color.Set(GetRandomFloat(0.4f, 0.5f), GetRandomFloat(0.85f, 1.0f), GetRandomFloat(0.75f, 0.95f), 0.1f);
+			Particle.m_Size = GetRandomFloat(10.0f, 12.0f);
+			ParticleSystem->AddParticle(Particle);
+		}
+		
+		// add flash
+		Graphics::ParticleSystem::Particle Particle;
+		
+		Particle.m_Position.Set(0.0f, 0.0f, 0.0f);
+		Particle.m_Velocity.Set(0.0f, 0.0f, 0.0f);
+		Particle.m_TimeOfDeath = GameTime::Get() + GetRandomDouble(0.1f, 0.15f);
+		Particle.m_Color.Set(0.4f, GetRandomFloat(0.4f, 1.0f), GetRandomFloat(0.95f, 1.0f), 0.3f);
+		Particle.m_Size = 200.0f;
+		ParticleSystem->AddParticle(Particle);
+		ParticleSystem->AddSystemScriptLine("kill-old");
+		ParticleSystem->AddSystemScriptLine("move");
+		ParticleSystem->AddSystemScriptLine("update-particles");
+		ParticleSystem->AddParticleScriptLine("kill-old");
+		ParticleSystem->AddParticleScriptLine("move");
+	}
 	else if(ParticleSystemClassIdentifier == "explosion")
 	{
 		ParticleSystem->SetTimeOfDeath(GameTime::Get() + 3.0);
@@ -488,9 +534,8 @@ Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSyst
 		}
 		
 		Graphics::ParticleSystem::Particle Particle;
-		Vector2f Position(GetRandomFloat(0.0f, 6.0f), GetRandomFloat(0.0f, 2 * M_PI), Vector2f::InitializeMagnitudeAngle);
 		
-		Particle.m_Position.Set(Position[0], Position[1], 0.0f);
+		Particle.m_Position.Set(0.0f, 0.0f, 0.0f);
 		Particle.m_Velocity.Set(0.0f, 0.0f, 0.0f);
 		Particle.m_TimeOfDeath = GameTime::Get() + GetRandomDouble(0.1f, 0.15f);
 		Particle.m_Color.Set(0.9f, GetRandomFloat(0.9f, 1.0f), GetRandomFloat(0.95f, 1.0f), 0.3f);
@@ -528,6 +573,8 @@ void CalculateMovements(System * System, float Seconds)
 	while(ShipIterator != Ships.end())
 	{
 		Ship * TheShip(*ShipIterator);
+		// save the position in case the ship jumps to another system and we need to display the jump particle system
+		Vector3f OldShipPosition(TheShip->GetAspectPosition()->GetPosition());
 		
 		// increment up here because Update() might invalidate the iterator
 		++ShipIterator;
@@ -543,6 +590,11 @@ void CalculateMovements(System * System, float Seconds)
 				// if another ship jumps out of the system ... remove it
 				if((g_CharacterObserver->GetObservedCharacter().IsValid() == false) || (g_CharacterObserver->GetObservedCharacter()->GetShip() != TheShip))
 				{
+					Graphics::ParticleSystem * NewJumpParticleSystem(CreateParticleSystem("jump"));
+					
+					NewJumpParticleSystem->SetPosition(OldShipPosition);
+					NewJumpParticleSystem->SetVelocity(Vector3f(0.0f, 0.0f, 0.0f));
+					VisualizeParticleSystem(NewJumpParticleSystem, g_ParticleSystemsLayer);
 					DeleteObject(TheShip);
 					TheShip = 0;
 				}
