@@ -25,10 +25,10 @@
 #include <stack>
 #include <string>
 
-#include "destroy_listener.h"
 #include "math/vector2f.h"
 
 class Color;
+class DestroyListener;
 class DimensionListener;
 class KeyEventInformation;
 class KeyListener;
@@ -36,7 +36,7 @@ class MouseButtonListener;
 class MouseMotionListener;
 class UserInterface;
 
-class Widget : public DestroyListener
+class Widget
 {
 public:
 	friend class UserInterface;
@@ -106,7 +106,6 @@ public:
 	// static manager functions
 	static std::list< Widget * > & GetDestroyedWidgets(void);
 protected:
-	virtual void OnDestroy(Widget * EventSource);
 	static void PushClippingRectangle(const Vector2f & Position, const Vector2f & Size);
 	static void PopClippingRectangle(void);
 	static void DrawClippingRectangle(void);

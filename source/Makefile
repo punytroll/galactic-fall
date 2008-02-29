@@ -306,6 +306,7 @@ planet_h = \
 planet_dialog_h = \
 	planet_dialog.h \
 	$(clicked_listener_h) \
+	$(destroy_listener_h) \
 	$(key_listener_h) \
 	$(window_h)
 
@@ -458,7 +459,6 @@ weapon_class_manager_h = \
 
 widget_h = \
 	widget.h \
-	$(destroy_listener_h) \
 	$(math_vector2f_h)
 
 window_h = \
@@ -795,7 +795,7 @@ weapon_class.o: weapon_class.cpp $(color_h) $(weapon_class_h)
 weapon_class_manager.o: weapon_class_manager.cpp $(weapon_class_h) $(weapon_class_manager_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-widget.o: widget.cpp $(color_h) $(dimension_listener_h) $(key_listener_h) $(math_h) $(mouse_button_listener_h) $(mouse_motion_listener_h) $(widget_h)
+widget.o: widget.cpp $(color_h) $(destroy_listener_h) $(dimension_listener_h) $(key_listener_h) $(math_h) $(mouse_button_listener_h) $(mouse_motion_listener_h) $(widget_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 window.o: window.cpp $(border_h) $(globals_h) $(label_h) $(user_interface_h) $(window_h)

@@ -24,6 +24,7 @@
 #include <GL/gl.h>
 
 #include "color.h"
+#include "destroy_listener.h"
 #include "dimension_listener.h"
 #include "key_listener.h"
 #include "math.h"
@@ -239,6 +240,10 @@ void Widget::RemoveSubWidget(Widget * SubWidget)
 	{
 		m_KeyFocus = 0;
 	}
+	if(SubWidget == m_HoverWidget)
+	{
+		m_HoverWidget = 0;
+	}
 }
 
 void Widget::RaiseSubWidget(Widget * SubWidget)
@@ -330,18 +335,17 @@ void Widget::MouseMotion(float X, float Y)
 		
 		if(((*SubWidgetIterator)->IsVisible() == true) && (X >= LeftTopCorner.m_V.m_A[0]) && (X < RightBottomCorner.m_V.m_A[0]) && (Y >= LeftTopCorner.m_V.m_A[1]) && (Y < RightBottomCorner.m_V.m_A[1]))
 		{
+			// test whether the new hover widget equals the old
 			if(m_HoverWidget != *SubWidgetIterator)
 			{
-				// save the HoverWidget so we can set it before calling MouseLeave
-				Widget * HoverWidget(m_HoverWidget);
-				
-				m_HoverWidget = *SubWidgetIterator;
-				m_HoverWidget->AddDestroyListener(this);
-				if(HoverWidget != 0)
+				// befor unsetting the hover widget inform the old hover widget that the mouse cursor is leaving
+				if(m_HoverWidget != 0)
 				{
-					HoverWidget->MouseLeave();
-					HoverWidget->RemoveDestroyListener(this);
+					m_HoverWidget->MouseLeave();
 				}
+				// now set the new hover widget
+				m_HoverWidget = *SubWidgetIterator;
+				// inform the new hover widget about the entering of the mouse cursor
 				m_HoverWidget->MouseEnter();
 			}
 			(*SubWidgetIterator)->MouseMotion(X - LeftTopCorner.m_V.m_A[0], Y - LeftTopCorner.m_V.m_A[1]);
@@ -350,14 +354,11 @@ void Widget::MouseMotion(float X, float Y)
 		}
 		++SubWidgetIterator;
 	}
-	// if all sub widget have been iterated through, the old hover widget is left
+	// if all sub widget have been iterated through, the old hover widget has been left by the mouse cursor
 	if((SubWidgetIterator == m_SubWidgets.end()) && (m_HoverWidget != 0))
 	{
-		Widget * HoverWidget(m_HoverWidget);
-		
+		m_HoverWidget->MouseLeave();
 		m_HoverWidget = 0;
-		HoverWidget->MouseLeave();
-		HoverWidget->RemoveDestroyListener(this);
 	}
 	// after this we may call all our listeners
 	for(std::list< MouseMotionListener * >::iterator MouseMotionListenerIterator = m_MouseMotionListeners.begin(); MouseMotionListenerIterator != m_MouseMotionListeners.end(); ++MouseMotionListenerIterator)
@@ -382,23 +383,10 @@ void Widget::MouseLeave(void)
 		
 		m_HoverWidget = 0;
 		HoverWidget->MouseLeave();
-		HoverWidget->RemoveDestroyListener(this);
 	}
 	for(std::list< MouseMotionListener * >::iterator MouseMotionListenerIterator = m_MouseMotionListeners.begin(); MouseMotionListenerIterator != m_MouseMotionListeners.end(); ++MouseMotionListenerIterator)
 	{
 		(*MouseMotionListenerIterator)->OnMouseLeave(this);
-	}
-}
-
-void Widget::OnDestroy(Widget * EventSource)
-{
-	if(EventSource == m_KeyFocus)
-	{
-		m_KeyFocus = 0;
-	}
-	if(EventSource == m_HoverWidget)
-	{
-		m_HoverWidget = 0;
 	}
 }
 
