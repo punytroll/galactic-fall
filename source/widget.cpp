@@ -256,14 +256,17 @@ void Widget::Destroy(void)
 		(*DestroyListenerIterator)->OnDestroy(this);
 	}
 	// now destroy
+	// first the sub widgets, they will remove themselves from this widget
 	while(m_SubWidgets.size() > 0)
 	{
 		m_SubWidgets.front()->Destroy();
 	}
+	// now remove ourself from the sup widget
 	if(m_SupWidget != 0)
 	{
 		m_SupWidget->RemoveSubWidget(this);
 	}
+	// now append ourself to the list of destroyed widgets to be delete'd by the garbage collection
 	m_DestroyedWidgets.push_back(this);
 }
 
