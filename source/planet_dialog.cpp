@@ -39,6 +39,7 @@ PlanetDialog::PlanetDialog(Widget * SupWidget, Planet * Planet, Character * Char
 {
 	SetPosition(Vector2f(50.0f, 50.0f));
 	SetSize(Vector2f(500.0f, 330.0f));
+	AddDestroyListener(this);
 	AddKeyListener(this);
 	m_DescriptionLabel = new Label(this, m_Planet->GetDescription());
 	m_DescriptionLabel->SetPosition(Vector2f(120.0f, 40.0f));
@@ -103,10 +104,7 @@ bool PlanetDialog::OnClicked(Widget * EventSource)
 {
 	if(EventSource == m_TakeOffButton)
 	{
-		if(m_TradeCenterDialog == 0)
-		{
-			m_Character->GetShip()->SetTakeOff(true);
-		}
+		m_Character->GetShip()->SetTakeOff(true);
 		
 		return true;
 	}
@@ -148,7 +146,14 @@ bool PlanetDialog::OnClicked(Widget * EventSource)
 void PlanetDialog::OnDestroy(Widget * EventSource)
 {
 	WWindow::OnDestroy(EventSource);
-	if(EventSource == m_TradeCenterDialog)
+	if(EventSource == this)
+	{
+		if(m_TradeCenterDialog != 0)
+		{
+			m_TradeCenterDialog->Destroy();
+		}
+	}
+	else if(EventSource == m_TradeCenterDialog)
 	{
 		m_TradeCenterDialog = 0;
 		GrabKeyFocus();
