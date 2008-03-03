@@ -91,7 +91,7 @@ public:
 	// MouseEnter may depend on the fact that m_HoverWidget on the m_SupWidget is set to this
 	// MouseEnter on the new hover widget is called after MouseLeave on the old hover widget
 	void MouseEnter(void);
-	// MouseLeave may depend on the fact that m_HoverWidget on the m_SupWidget is already set to the new widget
+	// MouseLeave may depend on the fact that m_HoverWidget on the m_SupWidget is still set to this
 	// MouseLeave on the old hover widget is called before MouseEnter on the new hover widget
 	void MouseLeave(void);
 	// add signal listeners
