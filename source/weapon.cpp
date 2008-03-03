@@ -50,6 +50,7 @@ Weapon::Weapon(const WeaponClass * WeaponClass) :
 	GetAspectName()->SetName(m_WeaponClass->GetName());
 	AddAspectPosition();
 	GetAspectPosition()->SetOrientation(m_WeaponClass->GetOrientation());
+	AddAspectVisualization();
 	// other
 	SetSpaceRequirement(m_WeaponClass->GetSpaceRequirement());
 }

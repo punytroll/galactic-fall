@@ -48,6 +48,7 @@ Planet::Planet(const std::string & Identifier) :
 	// initialize object aspects
 	AddAspectName();
 	AddAspectPosition();
+	AddAspectVisualization();
 }
 
 Planet::~Planet(void)
