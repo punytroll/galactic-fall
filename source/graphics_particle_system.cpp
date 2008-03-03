@@ -119,17 +119,18 @@ void Graphics::ParticleSystem::Draw(void)
 	{
 		glColor4fv(ParticleIterator->m_Color.GetColor().m_V.m_A);
 		
-		Vector3f & Position(ParticleIterator->m_Position);
+		const Vector3f & Position(ParticleIterator->m_Position);
+		const float & Size(ParticleIterator->m_Size);
 		
 		// TODO: billboarding
 		glTexCoord2f(0.0f, 0.0f);
-		glVertex3f(Position[0] - ParticleIterator->m_Size, Position[1] - ParticleIterator->m_Size, Position[2]);
+		glVertex3f(Position[0] - Size, Position[1] - Size, Position[2]);
 		glTexCoord2f(1.0f, 0.0f);
-		glVertex3f(Position[0] + ParticleIterator->m_Size, Position[1] - ParticleIterator->m_Size, Position[2]);
+		glVertex3f(Position[0] + Size, Position[1] - Size, Position[2]);
 		glTexCoord2f(1.0f, 1.0f);
-		glVertex3f(Position[0] + ParticleIterator->m_Size, Position[1] + ParticleIterator->m_Size, Position[2]);
+		glVertex3f(Position[0] + Size, Position[1] + Size, Position[2]);
 		glTexCoord2f(0.0f, 1.0f);
-		glVertex3f(Position[0] - ParticleIterator->m_Size, Position[1] + ParticleIterator->m_Size, Position[2]);
+		glVertex3f(Position[0] - Size, Position[1] + Size, Position[2]);
 	}
 	glEnd();
 	glPopAttrib();
