@@ -33,23 +33,15 @@ public:
 	void SetFocus(Reference< Object > Focus);
 	void SetPosition(float X, float Y);
 	void SetPosition(float X, float Y, float Z);
-	void SetFieldOfView(float FieldOfView);
 	Reference< Object > & GetFocus(void);
 	const Reference< Object > & GetFocus(void) const;
 	const Vector3f & GetPosition(void) const;
-	float GetFieldOfView(void) const;
 	void MoveIn(void);
 	void MoveOut(void);
 private:
 	Reference< Object > m_Focus;
 	Vector3f m_Position;
-	float m_FieldOfView;
 };
-
-inline void Camera::SetFieldOfView(float FieldOfView)
-{
-	m_FieldOfView = FieldOfView;
-}
 
 inline Reference< Object > & Camera::GetFocus(void)
 {
@@ -64,11 +56,6 @@ inline const Reference< Object > & Camera::GetFocus(void) const
 inline const Vector3f & Camera::GetPosition(void) const
 {
 	return m_Position;
-}
-
-inline float Camera::GetFieldOfView(void) const
-{
-	return m_FieldOfView;
 }
 
 #endif

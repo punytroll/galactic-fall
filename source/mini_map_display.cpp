@@ -29,7 +29,6 @@
 MiniMapDisplay::MiniMapDisplay(Widget * SupWidget) :
 	Viewport(SupWidget)
 {
-	GetCamera()->SetFieldOfView(0.392699082f);
 	GetCamera()->SetPosition(0.0f, 0.0f, 1500.0f);
 	GetPerspective()->SetAspect(1.0f);
 	GetPerspective()->SetFieldOfView(0.392699082f);

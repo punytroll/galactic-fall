@@ -27,6 +27,8 @@ class Perspective
 public:
 	Perspective(void);
 	void Draw(void) const;
+	// getters
+	float GetFieldOfView(void) const;
 	// setters
 	void SetAspect(float Aspect);
 	void SetFieldOfView(float FieldOfView);
@@ -40,6 +42,11 @@ private:
 	float m_FarClippingPlane;
 	mutable Matrix4f m_Matrix;
 };
+
+inline float Perspective::GetFieldOfView(void) const
+{
+	return m_FieldOfView;
+}
 
 inline void Perspective::SetAspect(float Aspect)
 {

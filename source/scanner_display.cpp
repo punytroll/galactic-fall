@@ -41,7 +41,6 @@ void ScannerDisplay::Update(void)
 		float FieldOfView(asinf(ExtendedRadialSize / sqrtf(ExtendedRadialSize * ExtendedRadialSize + 16 * RadialSize * RadialSize)));
 		
 		GetPerspective()->SetFieldOfView(FieldOfView);
-		GetCamera()->SetFieldOfView(FieldOfView);
 		GetCamera()->SetPosition(0.0f, 0.0f, 4.0f * RadialSize);
 		GetCamera()->SetFocus(m_Owner->GetTarget());
 	}

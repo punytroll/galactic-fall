@@ -1577,13 +1577,12 @@ void LoadGameFromElement(const Element * SaveElement)
 				{
 					if((*CameraChild)->HasAttribute("degree") == true)
 					{
-						g_Camera.SetFieldOfView(from_string_cast< float >((*CameraChild)->GetAttribute("degree")) * M_PI / 360.0f);
+						g_MainPerspective.SetFieldOfView(from_string_cast< float >((*CameraChild)->GetAttribute("degree")) * M_PI / 360.0f);
 					}
 					else if((*CameraChild)->HasAttribute("radians") == true)
 					{
-						g_Camera.SetFieldOfView(from_string_cast< float >((*CameraChild)->GetAttribute("radians")));
+						g_MainPerspective.SetFieldOfView(from_string_cast< float >((*CameraChild)->GetAttribute("radians")));
 					}
-					g_MainPerspective.SetFieldOfView(g_Camera.GetFieldOfView());
 				}
 				else
 				{
@@ -1812,7 +1811,7 @@ void SaveGame(std::ostream & OStream)
 		}
 		XML << element << "focus" << attribute << "object-identifier" << value << g_Camera.GetFocus()->GetObjectIdentifier() << end;
 	}
-	XML << element << "field-of-view" << attribute << "radians" << value << g_Camera.GetFieldOfView() << end;
+	XML << element << "field-of-view" << attribute << "radians" << value << g_MainPerspective.GetFieldOfView() << end;
 	XML << end; // camera
 	XML << end; // save
 	OStream << std::endl;
