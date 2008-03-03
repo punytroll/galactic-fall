@@ -32,6 +32,7 @@
 #include "object_aspect_accessory.h"
 #include "object_aspect_position.h"
 #include "object_aspect_update.h"
+#include "object_aspect_visualization.h"
 #include "planet.h"
 #include "ship.h"
 #include "shot.h"
@@ -64,6 +65,7 @@ Ship::Ship(const ShipClass * ShipClass) :
 	AddAspectPosition();
 	AddAspectUpdate();
 	GetAspectUpdate()->SetCallback(Method(this, &Ship::Update));
+	AddAspectVisualization();
 	// other
 	SetHull(m_ShipClass->GetHull());
 	SetRadialSize(m_ShipClass->GetModel()->GetRadialSize());
@@ -360,7 +362,7 @@ bool Ship::Update(float Seconds)
 					if(AddContent(SelectedCommodity) == true)
 					{
 						SetTarget(0);
-						if(SelectedCommodity->GetVisualization().IsValid() == true)
+						if(SelectedCommodity->GetAspectVisualization()->GetVisualization().IsValid() == true)
 						{
 							UnvisualizeObject(SelectedCommodity);
 						}
@@ -406,9 +408,9 @@ bool Ship::Mount(Object * Object, const std::string & SlotIdentifier)
 		{
 			SlotIterator->second->SetMountedObject(TheWeapon->GetReference());
 			TheWeapon->GetAspectAccessory()->SetSlot(SlotIterator->second);
-			if(GetVisualization().IsValid() == true)
+			if(GetAspectVisualization()->GetVisualization().IsValid() == true)
 			{
-				VisualizeWeapon(TheWeapon, GetVisualization().Get());
+				VisualizeWeapon(TheWeapon, GetAspectVisualization()->GetVisualization().Get());
 			}
 			
 			return true;
@@ -430,7 +432,7 @@ bool Ship::Unmount(const std::string & SlotIdentifier)
 		{
 			SlotIterator->second->SetMountedObject(0);
 			TheWeapon->GetAspectAccessory()->SetSlot(0);
-			if(TheWeapon->GetVisualization().IsValid() != 0)
+			if(TheWeapon->GetAspectVisualization()->GetVisualization().IsValid() != 0)
 			{
 				UnvisualizeObject(TheWeapon);
 			}

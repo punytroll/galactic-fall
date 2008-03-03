@@ -19,7 +19,6 @@
 
 #include <stdexcept>
 
-#include "graphics_node.h"
 #include "message.h"
 #include "object.h"
 #include "object_aspect_accessory.h"
@@ -27,6 +26,7 @@
 #include "object_aspect_name.h"
 #include "object_aspect_position.h"
 #include "object_aspect_update.h"
+#include "object_aspect_visualization.h"
 #include "real_time.h"
 #include "string_cast.h"
 #include "xml_stream.h"
@@ -40,6 +40,7 @@ Object::Object(void) :
 	m_AspectName(0),
 	m_AspectPosition(0),
 	m_AspectUpdate(0),
+	m_AspectVisualization(0),
 	m_Reference(*this),
 	m_Container(0)
 {
@@ -50,7 +51,6 @@ Object::~Object(void)
 {
 	// make some object hierarchy integrity checks first
 	assert(m_Container == 0);
-	assert(m_Visualization.IsValid() == false);
 	assert(m_Content.empty() == true);
 	// aspects
 	delete m_AspectAccessory;
@@ -63,6 +63,8 @@ Object::~Object(void)
 	m_AspectPosition = 0;
 	delete m_AspectUpdate;
 	m_AspectUpdate = 0;
+	delete m_AspectVisualization;
+	m_AspectVisualization = 0;
 	// invalidate reference first, so no one accesses this object
 	m_Reference.Invalidate();
 	SetObjectIdentifier("");
@@ -99,6 +101,12 @@ void Object::AddAspectUpdate(void)
 	m_AspectUpdate = new ObjectAspectUpdate();
 }
 
+void Object::AddAspectVisualization(void)
+{
+	assert(m_AspectVisualization == 0);
+	m_AspectVisualization = new ObjectAspectVisualization();
+}
+
 void Object::SetObjectIdentifier(const std::string & ObjectIdentifier)
 {
 	if(m_ObjectIdentifier.empty() == false)
@@ -131,13 +139,10 @@ void Object::Destroy(void)
 			throw std::runtime_error("RemoveContent() must not fail during Destroy()");
 		}
 	}
-	if(m_Visualization.IsValid() == true)
+	// call destroy on all relevant aspects
+	if(m_AspectVisualization != 0)
 	{
-		Reference< Graphics::Node > Visualization(GetVisualization());
-		
-		UnsetVisualization();
-		Visualization->Remove();
-		Visualization->Destroy();
+		m_AspectVisualization->Destroy();
 	}
 	// now delete and remove all content objects
 	while(m_Content.empty() == false)

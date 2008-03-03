@@ -33,6 +33,7 @@ class ObjectAspectMessages;
 class ObjectAspectName;
 class ObjectAspectPosition;
 class ObjectAspectUpdate;
+class ObjectAspectVisualization;
 class XMLStream;
 
 namespace Graphics
@@ -61,21 +62,21 @@ public:
 	const ObjectAspectPosition * GetAspectPosition(void) const;
 	ObjectAspectUpdate * GetAspectUpdate(void);
 	const ObjectAspectUpdate * GetAspectUpdate(void) const;
+	ObjectAspectVisualization * GetAspectVisualization(void);
+	const ObjectAspectVisualization * GetAspectVisualization(void) const;
 	const std::string & GetObjectIdentifier(void) const;
 	const Reference< Object > & GetReference(void) const;
-	Reference< Graphics::Node > & GetVisualization(void);
 	// modifiers
 	void AddAspectAccessory(void);
 	void AddAspectMessages(void);
 	void AddAspectName(void);
 	void AddAspectPosition(void);
 	void AddAspectUpdate(void);
+	void AddAspectVisualization(void);
 	void Destroy(void);
 	bool AddContent(Object * Content);
 	bool RemoveContent(Object * Content);
 	void GenerateObjectIdentifier(void);
-	void SetVisualization(Reference< Graphics::Node > & Visualization);
-	void UnsetVisualization(void);
 	
 	// static methods
 	static Object * GetObject(const std::string & ObjectIdentifier);
@@ -93,12 +94,12 @@ private:
 	ObjectAspectName * m_AspectName;
 	ObjectAspectPosition * m_AspectPosition;
 	ObjectAspectUpdate * m_AspectUpdate;
+	ObjectAspectVisualization * m_AspectVisualization;
 	// other
 	std::string m_ObjectIdentifier;
 	Reference< Object > m_Reference;
 	Object * m_Container;
 	std::set< Object * > m_Content;
-	Reference< Graphics::Node > m_Visualization;
 	
 	static std::set< Object * > m_Objects;
 	static std::map< std::string, Object * > m_IdentifiedObjects;
@@ -174,27 +175,19 @@ inline const ObjectAspectUpdate * Object::GetAspectUpdate(void) const
 	return m_AspectUpdate;
 }
 
+inline ObjectAspectVisualization * Object::GetAspectVisualization(void)
+{
+	return m_AspectVisualization;
+}
+
+inline const ObjectAspectVisualization * Object::GetAspectVisualization(void) const
+{
+	return m_AspectVisualization;
+}
+
 inline const Reference< Object > & Object::GetReference(void) const
 {
 	return m_Reference;
-}
-
-inline Reference< Graphics::Node > & Object::GetVisualization(void)
-{
-	return m_Visualization;
-}
-
-inline void Object::SetVisualization(Reference< Graphics::Node > & Visualization)
-{
-	assert(Visualization.IsValid() == true);
-	assert(m_Visualization.IsValid() == false);
-	m_Visualization = Visualization;
-}
-
-inline void Object::UnsetVisualization(void)
-{
-	assert(m_Visualization.IsValid() == true);
-	m_Visualization.Clear();
 }
 
 #endif

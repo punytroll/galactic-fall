@@ -37,6 +37,7 @@ Commodity::Commodity(const CommodityClass * CommodityClass) :
 	AddAspectPosition();
 	AddAspectUpdate();
 	GetAspectUpdate()->SetCallback(Method(this, &Commodity::Update));
+	AddAspectVisualization();
 	// other
 	SetRadialSize(m_CommodityClass->GetModel()->GetRadialSize());
 	SetSpaceRequirement(m_CommodityClass->GetSpaceRequirement());
