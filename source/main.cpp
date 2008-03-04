@@ -508,19 +508,56 @@ Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSyst
 	}
 	else if(ParticleSystemClassIdentifier == "explosion")
 	{
+		// center explosion
 		ParticleSystem->SetTimeOfDeath(GameTime::Get() + 3.0);
-		for(int Index = 0; Index < 500; ++Index)
+		for(int Index = 0; Index < 100; ++Index)
 		{
 			Graphics::ParticleSystem::Particle Particle;
-			Vector2f Velocity(GetRandomFloat(0.0f, 2.5f) + GetRandomFloatFromExponentialDistribution(2.0f), GetRandomFloat(0.0f, 2 * M_PI), Vector2f::InitializeMagnitudeAngle);
+			float Speed(GetRandomFloat(0.0f, 2.5f) + GetRandomFloatFromExponentialDistribution(2.0f));
+			Vector2f Velocity(Speed, GetRandomFloat(0.0f, 2 * M_PI), Vector2f::InitializeMagnitudeAngle);
 			
 			Particle.m_Velocity.Set(Velocity[0], Velocity[1], 0.0f);
 			Particle.m_Position.Set(0.0f, 0.0f, 0.0f);
 			Particle.m_TimeOfDeath = GameTime::Get() + GetRandomDouble(1.0f, 2.5f);
 			Particle.m_Color.Set(GetRandomFloat(0.4f, 0.8f), GetRandomFloat(0.2f, 0.4f), GetRandomFloat(0.05f, 0.15f), 0.5f);
-			Particle.m_Size = 1.0f;
+			Particle.m_Size = 5.0f / abs(Speed);
 			ParticleSystem->AddParticle(Particle);
 		}
+		
+		float CloudAngle(GetRandomFloat(0.0f, 2 * M_PI));
+		
+		// off-center explosion
+		for(int Index = 0; Index < 20; ++Index)
+		{
+			Graphics::ParticleSystem::Particle Particle;
+			float Speed(GetRandomFloat(0.0f, 2.0f) + GetRandomFloatFromExponentialDistribution(1.0f));
+			Vector2f Velocity(Speed, CloudAngle + GetRandomFloat(-0.1f, 0.1f), Vector2f::InitializeMagnitudeAngle);
+			float Distance(GetRandomFloat(0.0f, 1.0f) + GetRandomFloatFromExponentialDistribution(1.0f));
+			Vector2f Position(Distance, CloudAngle + GetRandomFloat(-0.3f, 0.3f), Vector2f::InitializeMagnitudeAngle);
+			
+			Particle.m_Velocity.Set(Velocity[0], Velocity[1], 0.0f);
+			Particle.m_Position.Set(Position[0], Position[1], 0.0f);
+			Particle.m_TimeOfDeath = GameTime::Get() + GetRandomDouble(1.0f, 2.5f);
+			Particle.m_Color.Set(GetRandomFloat(0.4f, 0.8f), GetRandomFloat(0.2f, 0.4f), GetRandomFloat(0.05f, 0.15f), 0.5f);
+			Particle.m_Size = 5.0f / abs(abs(Speed) - 3.0f);
+			ParticleSystem->AddParticle(Particle);
+		}
+		// exhalting explosion cloud
+		CloudAngle = GetRandomFloat(0.0f, 2 * M_PI);
+		for(int Index = 0; Index < 50; ++Index)
+		{
+			Graphics::ParticleSystem::Particle Particle;
+			float Speed(GetRandomFloat(2.0f, 10.0f) + GetRandomFloatFromExponentialDistribution(2.0f));
+			Vector2f Velocity(Speed, CloudAngle + GetRandomFloat(-0.1f, 0.1f), Vector2f::InitializeMagnitudeAngle);
+			
+			Particle.m_Velocity.Set(Velocity[0], Velocity[1], 0.0f);
+			Particle.m_Position.Set(0.0f, 0.0f, 0.0f);
+			Particle.m_TimeOfDeath = GameTime::Get() + GetRandomDouble(1.0f, 2.5f);
+			Particle.m_Color.Set(GetRandomFloat(0.4f, 0.8f), GetRandomFloat(0.2f, 0.4f), GetRandomFloat(0.05f, 0.15f), 0.5f);
+			Particle.m_Size = 3.0f / abs(abs(Speed) - 6.0f);
+			ParticleSystem->AddParticle(Particle);
+		}
+		// flash
 		for(int Index = 0; Index < 5; ++Index)
 		{
 			Graphics::ParticleSystem::Particle Particle;
