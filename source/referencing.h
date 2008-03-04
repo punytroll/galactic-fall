@@ -111,12 +111,18 @@ public:
 	
 	~Reference(void)
 	{
-		Clear();
+		if(m_Core != 0)
+		{
+			Clear();
+		}
 	}
 	
 	Reference< Type > & operator=(const Reference< Type > & Reference)
 	{
-		Clear();
+		if(m_Core != 0)
+		{
+			Clear();
+		}
 		m_Core = Reference.m_Core;
 		if(m_Core != 0)
 		{
@@ -138,20 +144,19 @@ public:
 	
 	void Invalidate(void)
 	{
+		assert(Get() != 0);
 		m_Core->Invalidate();
 	}
 	
 	void Clear(void)
 	{
-		if(m_Core != 0)
+		assert(m_Core != 0);
+		m_Core->Release();
+		if(m_Core->GetReferenceCount() == 0)
 		{
-			m_Core->Release();
-			if(m_Core->GetReferenceCount() == 0)
-			{
-				delete m_Core;
-			}
-			m_Core = 0;
+			delete m_Core;
 		}
+		m_Core = 0;
 	}
 	
 	Type * Get(void)
@@ -169,9 +174,14 @@ public:
 		return ((m_Core == 0) ? (false) : (m_Core->IsValid()));
 	}
 	
+	bool operator==(const Reference< Type > & Other) const
+	{
+		return Get() == Other.Get();
+	}
+	
 	bool operator!=(const Reference< Type > & Other) const
 	{
-		return m_Core != Other.m_Core;
+		return Get() != Other.Get();
 	}
 private:
 	Core * m_Core;
