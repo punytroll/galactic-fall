@@ -15,6 +15,7 @@ all: $(TEST_PROGRAMS)
 
 check: all
 	@for TEST_PROGRAM in $(TEST_PROGRAMS); do \
+		echo "Running test program" $${TEST_PROGRAM}; \
 		./$${TEST_PROGRAM}; \
 	done
 
