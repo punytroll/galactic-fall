@@ -404,10 +404,10 @@ bool Ship::Mount(Object * Object, const std::string & SlotIdentifier)
 	{
 		Weapon * TheWeapon(dynamic_cast< Weapon * >(Object));
 		
-		if((TheWeapon != 0) && (SlotIterator->second->GetSlotClass()->AcceptsSlotClassIdentifier(TheWeapon->GetWeaponClass()->GetSlotClassIdentifier()) == true))
+		if((TheWeapon != 0) && (SlotIterator->second->GetSlotClass()->AcceptsSlotClassIdentifier(Object->GetAspectAccessory()->GetSlotClassIdentifier()) == true))
 		{
-			SlotIterator->second->SetMountedObject(TheWeapon->GetReference());
-			TheWeapon->GetAspectAccessory()->SetSlot(SlotIterator->second);
+			SlotIterator->second->SetMountedObject(Object->GetReference());
+			Object->GetAspectAccessory()->SetSlot(SlotIterator->second);
 			if(GetAspectVisualization()->GetVisualization().IsValid() == true)
 			{
 				VisualizeWeapon(TheWeapon, GetAspectVisualization()->GetVisualization().Get());
@@ -426,19 +426,18 @@ bool Ship::Unmount(const std::string & SlotIdentifier)
 	
 	if(SlotIterator != m_Slots.end())
 	{
-		Weapon * TheWeapon(dynamic_cast< Weapon * >(SlotIterator->second->GetMountedObject().Get()));
+		Object * TheObject(SlotIterator->second->GetMountedObject().Get());
 		
-		if(TheWeapon != 0)
+		// don't allow unmounting a slot that has no mount
+		assert(TheObject != 0);
+		SlotIterator->second->SetMountedObject(0);
+		TheObject->GetAspectAccessory()->SetSlot(0);
+		if((TheObject->GetAspectVisualization() != 0) && (TheObject->GetAspectVisualization()->GetVisualization().IsValid() == true))
 		{
-			SlotIterator->second->SetMountedObject(0);
-			TheWeapon->GetAspectAccessory()->SetSlot(0);
-			if(TheWeapon->GetAspectVisualization()->GetVisualization().IsValid() != 0)
-			{
-				UnvisualizeObject(TheWeapon);
-			}
-			
-			return true;
+			UnvisualizeObject(TheObject);
 		}
+		
+		return true;
 	}
 	
 	return false;
