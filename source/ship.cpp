@@ -382,18 +382,13 @@ bool Ship::Update(float Seconds)
 
 Slot * Ship::CreateSlot(const SlotClass * SlotClass, const std::string & SlotIdentifier)
 {
-	if(m_Slots.find(SlotIdentifier) == m_Slots.end())
-	{
-		Slot * NewSlot(new Slot(SlotClass, SlotIdentifier));
-		
-		m_Slots[SlotIdentifier] = NewSlot;
-		
-		return NewSlot;
-	}
-	else
-	{
-		return 0;
-	}
+	assert(m_Slots.find(SlotIdentifier) == m_Slots.end());
+	
+	Slot * NewSlot(new Slot(SlotClass, SlotIdentifier));
+	
+	m_Slots[SlotIdentifier] = NewSlot;
+	
+	return NewSlot;
 }
 
 bool Ship::Mount(Object * Object, const std::string & SlotIdentifier)
