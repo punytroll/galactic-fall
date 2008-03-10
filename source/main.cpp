@@ -287,7 +287,7 @@ void SetMessage(const std::string & Message)
 	g_MessageTimeoutNotification = g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 2.0f, Function(HideMessage));
 }
 
-void DrawSelection(const Object * Object, float RadialSize)
+void DrawSelection(const Object * Object, float RadialSize, const Color & Color)
 {
 	static const float OuterFactor(0.9f);
 	static const float InnerFactor(1.1f);
@@ -298,7 +298,7 @@ void DrawSelection(const Object * Object, float RadialSize)
 	glPushAttrib(GL_LIGHTING_BIT);
 	glDisable(GL_LIGHTING);
 	glTranslatef(Object->GetAspectPosition()->GetPosition().m_V.m_A[0], Object->GetAspectPosition()->GetPosition().m_V.m_A[1], 0.0f);
-	glColor3f(1.0f, 0.0f, 0.0f);
+	glColor4fv(Color.GetColor().m_V.m_A);
 	glBegin(GL_LINE_STRIP);
 	glVertex2f(-OuterSize, -InnerSize);
 	glVertex2f(-OuterSize, -OuterSize);
@@ -913,8 +913,10 @@ void RenderSystem(System * System)
 	// HUD
 	if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0) && (g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget().IsValid() == true))
 	{
+		Color Color(1.0f, 0.0f, 0.0f, 1.0f);
+		
 		glClear(GL_DEPTH_BUFFER_BIT);
-		DrawSelection(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget().Get(), g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget()->GetRadialSize());
+		DrawSelection(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget().Get(), g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget()->GetRadialSize(), Color);
 		
 		Vector3f RelativePosition(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget()->GetAspectPosition()->GetPosition() - g_CharacterObserver->GetObservedCharacter()->GetShip()->GetAspectPosition()->GetPosition());
 		
@@ -935,6 +937,14 @@ void RenderSystem(System * System)
 		glEnd();
 		glPopAttrib();
 		glPopMatrix();
+	}
+	// debug HUD
+	if((g_InputMind.IsValid() == false) && (g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0))
+	{
+		Color Color(0.0f, 0.0f, 1.0f, 1.0f);
+		
+		glClear(GL_DEPTH_BUFFER_BIT);
+		DrawSelection(g_CharacterObserver->GetObservedCharacter()->GetShip(), g_CharacterObserver->GetObservedCharacter()->GetShip()->GetRadialSize(), Color);
 	}
 }
 
