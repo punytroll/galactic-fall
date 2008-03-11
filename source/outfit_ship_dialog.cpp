@@ -377,7 +377,7 @@ void OutfitShipDialog::RebuildAccessoryList(void)
 			}
 		}
 	}
-	m_AccessoryScrollBox->GetContent()->SetSize(Vector2f(180.0f, std::max(Top, m_AccessoryScrollBox->GetView()->GetSize()[1])));
+	m_AccessoryScrollBox->GetContent()->SetSize(Vector2f(m_AccessoryScrollBox->GetView()->GetSize()[0], std::max(Top, m_AccessoryScrollBox->GetView()->GetSize()[1])));
 	m_AccessoryScrollBox->GetContent()->SetAnchorRight(true);
 }
 
