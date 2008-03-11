@@ -28,6 +28,7 @@
 #include "math/quaternion.h"
 #include "object_aspect_accessory.h"
 #include "object_aspect_name.h"
+#include "object_aspect_object_container.h"
 #include "object_aspect_position.h"
 #include "ship.h"
 #include "shot.h"
@@ -99,7 +100,7 @@ void Weapon::Update(float Seconds)
 		
 		ParticleVelocity *= ShotOrientation;
 		NewShot->SetVelocity(TheShip->GetVelocity() + Vector3f(ParticleVelocity[0], ParticleVelocity[1], 0.0f));
-		TheShip->GetCurrentSystem()->AddContent(NewShot);
+		TheShip->GetCurrentSystem()->GetAspectObjectContainer()->AddContent(NewShot);
 		m_NextTimeToFire = GameTime::Get() + GetWeaponClass()->GetReloadTime();
 		// add visualization
 		VisualizeShot(NewShot, g_ShotLayer);

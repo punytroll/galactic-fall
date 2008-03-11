@@ -20,6 +20,7 @@
 #include <float.h>
 
 #include "commodity.h"
+#include "object_aspect_object_container.h"
 #include "planet.h"
 #include "ship.h"
 #include "shot.h"
@@ -33,6 +34,11 @@ System::System(const std::string & Identifier) :
 {
 	// initialize object aspects
 	AddAspectName();
+	AddAspectObjectContainer();
+	GetAspectObjectContainer()->SetAllowAddingCallback(Method(this, &System::AllowAdding));
+	GetAspectObjectContainer()->SetAllowRemovingCallback(Method(this, &System::AllowRemoving));
+	GetAspectObjectContainer()->SetOnAddedCallback(Method(this, &System::OnAdded));
+	GetAspectObjectContainer()->SetOnRemovedCallback(Method(this, &System::OnRemoved));
 	AddAspectPosition();
 }
 
@@ -56,7 +62,7 @@ bool System::IsLinkedToSystem(const System * LinkedSystem) const
 	return false;
 }
 
-bool System::IsAddingAllowed(Object * Content)
+bool System::AllowAdding(Object * Content)
 {
 	Planet * ThePlanet(dynamic_cast< Planet * >(Content));
 	
@@ -69,6 +75,8 @@ bool System::IsAddingAllowed(Object * Content)
 				return false;
 			}
 		}
+		
+		return true;
 	}
 	
 	Star * TheStar(dynamic_cast< Star * >(Content));
@@ -78,24 +86,21 @@ bool System::IsAddingAllowed(Object * Content)
 		return m_Star == 0;
 	}
 	
-	return (dynamic_cast< Shot * >(Content) != 0) || (dynamic_cast< Ship * >(Content) != 0) || (dynamic_cast< Commodity * >(Content) != 0) || (Object::IsAddingAllowed(Content) == true);
+	return (dynamic_cast< Shot * >(Content) != 0) || (dynamic_cast< Ship * >(Content) != 0) || (dynamic_cast< Commodity * >(Content) != 0);
 }
 
-bool System::IsRemovingAllowed(Object * Content)
+bool System::AllowRemoving(Object * Content)
 {
-	return Object::IsRemovingAllowed(Content);
+	return true;
 }
 
-void System::OnContentAdded(Object * Content)
+void System::OnAdded(Object * Content)
 {
-	Object::OnContentAdded(Content);
-	
 	Shot * TheShot(dynamic_cast< Shot * >(Content));
 	
 	if(TheShot != 0)
 	{
 		m_Shots.push_back(TheShot);
-		return;
 	}
 	
 	Ship * TheShip(dynamic_cast< Ship * >(Content));
@@ -103,7 +108,6 @@ void System::OnContentAdded(Object * Content)
 	if(TheShip != 0)
 	{
 		m_Ships.push_back(TheShip);
-		return;
 	}
 	
 	Commodity * TheCommodity(dynamic_cast< Commodity * >(Content));
@@ -111,7 +115,6 @@ void System::OnContentAdded(Object * Content)
 	if(TheCommodity != 0)
 	{
 		m_Commodities.push_back(TheCommodity);
-		return;
 	}
 	
 	Planet * ThePlanet(dynamic_cast< Planet * >(Content));
@@ -126,7 +129,6 @@ void System::OnContentAdded(Object * Content)
 			}
 		}
 		m_Planets.push_back(ThePlanet);
-		return;
 	}
 	
 	Star * TheStar(dynamic_cast< Star * >(Content));
@@ -135,12 +137,10 @@ void System::OnContentAdded(Object * Content)
 	{
 		assert(m_Star == 0);
 		m_Star = TheStar;
-		return;
 	}
-	assert(false);
 }
 
-void System::OnContentRemoved(Object * Content)
+void System::OnRemoved(Object * Content)
 {
 	Shot * TheShot(dynamic_cast< Shot * >(Content));
 	
@@ -194,7 +194,6 @@ void System::OnContentRemoved(Object * Content)
 		assert(m_Star == TheStar);
 		m_Star = 0;
 	}
-	Object::OnContentRemoved(Content);
 }
 
 void System::AddLinkedSystem(System * LinkedSystem)

@@ -93,12 +93,11 @@ public:
 	// actors
 	virtual void HandleMessage(Message * Message);
 	virtual void Update(void);
-protected:
-	virtual bool IsAddingAllowed(Object * Content);
-	virtual bool IsRemovingAllowed(Object * Content);
-	virtual void OnContentAdded(Object * Content);
-	virtual void OnContentRemoved(Object * Content);
 private:
+	bool AllowAdding(Object * Content);
+	bool AllowRemoving(Object * Content);
+	void OnAdded(Object * Content);
+	void OnRemoved(Object * Content);
 	Goal * m_Goal;
 };
 

@@ -54,7 +54,7 @@ void GoalApproachTarget::Activate(void)
 {
 	assert(GetSubGoals().empty() == true);
 	m_FlyInDirection = new GoalFlyInDirection(GetMind());
-	AddContent(m_FlyInDirection);
+	AddSubGoal(m_FlyInDirection);
 	m_FlyInDirection->Activate();
 	SetState(Goal::ACTIVE);
 }
@@ -102,7 +102,7 @@ void GoalDestroyTarget::Activate(void)
 {
 	assert(GetSubGoals().empty() == true);
 	m_FlyInDirection = new GoalFlyInDirection(GetMind());
-	AddContent(m_FlyInDirection);
+	AddSubGoal(m_FlyInDirection);
 	m_FlyInDirection->Activate();
 	SetState(Goal::ACTIVE);
 }
@@ -150,7 +150,7 @@ GoalFighterThink::GoalFighterThink(GoalMind * GoalMind) :
 void GoalFighterThink::Activate(void)
 {
 	assert(GetSubGoals().empty() == true);
-	AddContent(new GoalFightSomeTarget(GetMind()));
+	AddSubGoal(new GoalFightSomeTarget(GetMind()));
 	SetState(Goal::ACTIVE);
 }
 
@@ -168,7 +168,7 @@ bool GoalFighterThink::OnMessageReceived(Message * Message)
 	{
 		if(HasSubGoal("visit_planet") == false)
 		{
-			AddContent(new GoalVisitPlanet(GetMind(), GoalVisitPlanet::VISIT_NEAREST_PLANET));
+			AddSubGoal(new GoalVisitPlanet(GetMind(), GoalVisitPlanet::VISIT_NEAREST_PLANET));
 		}
 		
 		return true;
@@ -177,7 +177,7 @@ bool GoalFighterThink::OnMessageReceived(Message * Message)
 	{
 		if(HasSubGoal("visit_planet") == false)
 		{
-			AddContent(new GoalVisitPlanet(GetMind(), GoalVisitPlanet::VISIT_NEAREST_PLANET_IN_SYSTEM));
+			AddSubGoal(new GoalVisitPlanet(GetMind(), GoalVisitPlanet::VISIT_NEAREST_PLANET_IN_SYSTEM));
 		}
 		
 		return true;
@@ -203,14 +203,14 @@ void GoalFighterThink::Process(void)
 	{
 		// terminate and remove sub goal
 		SubGoal->Terminate();
-		RemoveContent(SubGoal);
+		RemoveSubGoal(SubGoal);
 		// other actions may depend on the SubGoal variable
 		if((SubGoal->GetName() == "fight_some_target") && (GetMind()->GetCharacter()->GetShip()->GetHull() < 0.5 * GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetHull()))
 		{
 			// after a hard fight: queue a repair
 			if(HasSubGoal("visit_planet") == false)
 			{
-				AddContent(new GoalVisitPlanet(GetMind(), GoalVisitPlanet::VISIT_NEAREST_PLANET_IN_SYSTEM));
+				AddSubGoal(new GoalVisitPlanet(GetMind(), GoalVisitPlanet::VISIT_NEAREST_PLANET_IN_SYSTEM));
 			}
 		}
 		if(GetSubGoals().empty() == true)
@@ -225,12 +225,12 @@ void GoalFighterThink::Process(void)
 	{
 		// terminate and remove sub goal
 		SubGoal->Terminate();
-		RemoveContent(SubGoal);
+		RemoveSubGoal(SubGoal);
 		// other actions may depend on the SubGoal variable
 		// FightSomeTarget may fail if no fighter is present in the system: fly around
 		if(SubGoal->GetName() == "fight_some_target")
 		{
-			AddContent(new GoalFlyOverRandomPoint(GetMind()));
+			AddSubGoal(new GoalFlyOverRandomPoint(GetMind()));
 		}
 		// now destroy the SubGoal
 		SubGoal->Destroy();
@@ -250,8 +250,8 @@ GoalFightSomeTarget::GoalFightSomeTarget(GoalMind * GoalMind) :
 void GoalFightSomeTarget::Activate(void)
 {
 	assert(GetSubGoals().empty() == true);
-	AddContent(new GoalDestroyTarget(GetMind()));
-	AddContent(new GoalSelectFightableTarget(GetMind()));
+	AddSubGoal(new GoalDestroyTarget(GetMind()));
+	AddSubGoal(new GoalSelectFightableTarget(GetMind()));
 	SetState(Goal::ACTIVE);
 }
 
@@ -279,7 +279,7 @@ void GoalFightSomeTarget::Process(void)
 	{
 		// terminate and remove sub goal
 		SubGoal->Terminate();
-		RemoveContent(SubGoal);
+		RemoveSubGoal(SubGoal);
 		// other actions may depend on the SubGoal variable
 		if(SubGoal->GetName() == "destroy_target")
 		{
@@ -293,7 +293,7 @@ void GoalFightSomeTarget::Process(void)
 	{
 		// terminate and remove sub goal
 		SubGoal->Terminate();
-		RemoveContent(SubGoal);
+		RemoveSubGoal(SubGoal);
 		// other actions may depend on the SubGoal variable
 		SetState(Goal::FAILED);
 		// now destroy the SubGoal
@@ -373,7 +373,7 @@ void GoalFlyInSystemDirection::Activate(void)
 {
 	assert(GetSubGoals().empty() == true);
 	m_FlyInDirection = new GoalFlyInDirection(GetMind());
-	AddContent(m_FlyInDirection);
+	AddSubGoal(m_FlyInDirection);
 	m_FlyInDirection->Activate();
 	m_FlyInDirection->SetDirection((GetMind()->GetCharacter()->GetShip()->GetLinkedSystemTarget()->GetAspectPosition()->GetPosition() - GetMind()->GetCharacter()->GetShip()->GetCurrentSystem()->GetAspectPosition()->GetPosition()).Normalize());
 	SetState(Goal::ACTIVE);
@@ -406,7 +406,7 @@ void GoalFlyOverRandomPoint::Activate(void)
 {
 	assert(GetSubGoals().empty() == true);
 	m_FlyInDirection = new GoalFlyInDirection(GetMind());
-	AddContent(m_FlyInDirection);
+	AddSubGoal(m_FlyInDirection);
 	m_FlyInDirection->Activate();
 	m_Point.Set(GetRandomFloat(-200.0f, 200.0f), GetRandomFloat(-200.0f, 200.0f), 0.0f);
 	SetState(Goal::ACTIVE);
@@ -450,7 +450,7 @@ void GoalFullStop::Activate(void)
 {
 	assert(GetSubGoals().empty() == true);
 	m_FlyInDirection = new GoalFlyInDirection(GetMind());
-	AddContent(m_FlyInDirection);
+	AddSubGoal(m_FlyInDirection);
 	m_FlyInDirection->Activate();
 	SetState(Goal::ACTIVE);
 }
@@ -515,11 +515,11 @@ GoalJumpToSystem::GoalJumpToSystem(GoalMind * GoalMind, GoalJumpToSystem::System
 void GoalJumpToSystem::Activate(void)
 {
 	assert(GetSubGoals().empty() == true);
-	AddContent(new GoalJump(GetMind()));
-	AddContent(new GoalFlyInSystemDirection(GetMind()));
+	AddSubGoal(new GoalJump(GetMind()));
+	AddSubGoal(new GoalFlyInSystemDirection(GetMind()));
 	if(m_SystemPolicy == GoalJumpToSystem::JUMP_TO_RANDOM_SYSTEM)
 	{
-		AddContent(new GoalSelectRandomSystem(GetMind()));
+		AddSubGoal(new GoalSelectRandomSystem(GetMind()));
 	}
 	SetState(Goal::ACTIVE);
 }
@@ -541,7 +541,7 @@ void GoalJumpToSystem::Process(void)
 	{
 		// terminate and remove sub goal
 		SubGoal->Terminate();
-		RemoveContent(SubGoal);
+		RemoveSubGoal(SubGoal);
 		// other actions may depend on the SubGoal variable
 		if(GetSubGoals().empty() == true)
 		{
@@ -555,7 +555,7 @@ void GoalJumpToSystem::Process(void)
 	{
 		// terminate and remove sub goal
 		SubGoal->Terminate();
-		RemoveContent(SubGoal);
+		RemoveSubGoal(SubGoal);
 		// other actions may depend on the SubGoal variable
 		SetState(Goal::FAILED);
 		// now destroy the SubGoal
@@ -578,7 +578,7 @@ void GoalJumpToSystem::Process(void)
 				{
 					// terminate and remove sub goal
 					SubGoal->Terminate();
-					RemoveContent(SubGoal);
+					RemoveSubGoal(SubGoal);
 					// now destroy the SubGoal
 					SubGoal->Destroy();
 					delete SubGoal;
@@ -676,9 +676,9 @@ GoalSelectFightableTarget::GoalSelectFightableTarget(GoalMind * GoalMind) :
 void GoalSelectFightableTarget::Activate(void)
 {
 	assert(GetSubGoals().empty() == true);
-	AddContent(new GoalSelectFighter(GetMind()));
-	AddContent(new GoalSelectStrandedShip(GetMind()));
-	AddContent(new GoalSelectMeasuredCargo(GetMind()));
+	AddSubGoal(new GoalSelectFighter(GetMind()));
+	AddSubGoal(new GoalSelectStrandedShip(GetMind()));
+	AddSubGoal(new GoalSelectMeasuredCargo(GetMind()));
 	SetState(Goal::ACTIVE);
 }
 
@@ -699,7 +699,7 @@ void GoalSelectFightableTarget::Process(void)
 	{
 		// terminate and remove sub goal
 		SubGoal->Terminate();
-		RemoveContent(SubGoal);
+		RemoveSubGoal(SubGoal);
 		// other actions may depend on the SubGoal variable
 		// if one subgoal succeeds the goal has done its job
 		SetState(Goal::COMPLETED);
@@ -711,7 +711,7 @@ void GoalSelectFightableTarget::Process(void)
 	{
 		// terminate and remove sub goal
 		SubGoal->Terminate();
-		RemoveContent(SubGoal);
+		RemoveSubGoal(SubGoal);
 		// other actions may depend on the SubGoal variable
 		// if no subgoal succeeded, this goal has failed
 		if(GetSubGoals().empty() == true)
@@ -945,8 +945,8 @@ GoalStopAtTarget::GoalStopAtTarget(GoalMind * GoalMind) :
 void GoalStopAtTarget::Activate(void)
 {
 	assert(GetSubGoals().empty() == true);
-	AddContent(new GoalFullStop(GetMind()));
-	AddContent(new GoalApproachTarget(GetMind()));
+	AddSubGoal(new GoalFullStop(GetMind()));
+	AddSubGoal(new GoalApproachTarget(GetMind()));
 	SetState(Goal::ACTIVE);
 }
 
@@ -967,7 +967,7 @@ void GoalStopAtTarget::Process(void)
 	{
 		// terminate and remove sub goal
 		SubGoal->Terminate();
-		RemoveContent(SubGoal);
+		RemoveSubGoal(SubGoal);
 		// other actions may depend on the SubGoal variable
 		if(GetSubGoals().empty() == true)
 		{
@@ -981,7 +981,7 @@ void GoalStopAtTarget::Process(void)
 	{
 		// terminate and remove sub goal
 		SubGoal->Terminate();
-		RemoveContent(SubGoal);
+		RemoveSubGoal(SubGoal);
 		// other actions may depend on the SubGoal variable
 		SetState(Goal::FAILED);
 		// now destroy the SubGoal
@@ -1025,12 +1025,12 @@ GoalVisitPlanet::GoalVisitPlanet(GoalMind * GoalMind, GoalVisitPlanet::PlanetPol
 void GoalVisitPlanet::Activate(void)
 {
 	assert(GetSubGoals().empty() == true);
-	AddContent(new GoalTakeOffFromPlanet(GetMind()));
-	AddContent(new GoalLand(GetMind()));
-	AddContent(new GoalStopAtTarget(GetMind()));
+	AddSubGoal(new GoalTakeOffFromPlanet(GetMind()));
+	AddSubGoal(new GoalLand(GetMind()));
+	AddSubGoal(new GoalStopAtTarget(GetMind()));
 	if((m_PlanetPolicy == GoalVisitPlanet::VISIT_NEAREST_PLANET_IN_SYSTEM) || (m_PlanetPolicy == GoalVisitPlanet::VISIT_NEAREST_PLANET))
 	{
-		AddContent(new GoalSelectNearestPlanetInSystem(GetMind()));
+		AddSubGoal(new GoalSelectNearestPlanetInSystem(GetMind()));
 	}
 	else
 	{
@@ -1043,8 +1043,8 @@ bool GoalVisitPlanet::OnMessageReceived(Message * Message)
 {
 	if(Message->GetTypeIdentifier() == "landed")
 	{
-		AddContent(new GoalWait(GetMind(), GetRandomFloat(2.0f, 5.0f)));
-		AddContent(new GoalRefuel(GetMind(), Message->GetSender()));
+		AddSubGoal(new GoalWait(GetMind(), GetRandomFloat(2.0f, 5.0f)));
+		AddSubGoal(new GoalRefuel(GetMind(), Message->GetSender()));
 		
 		return true;
 	}
@@ -1069,7 +1069,7 @@ void GoalVisitPlanet::Process(void)
 	{
 		// terminate and remove sub goal
 		SubGoal->Terminate();
-		RemoveContent(SubGoal);
+		RemoveSubGoal(SubGoal);
 		// other actions may depend on the SubGoal variable
 		if(GetSubGoals().empty() == true)
 		{
@@ -1083,12 +1083,12 @@ void GoalVisitPlanet::Process(void)
 	{
 		// terminate and remove sub goal
 		SubGoal->Terminate();
-		RemoveContent(SubGoal);
+		RemoveSubGoal(SubGoal);
 		// other actions may depend on the SubGoal variable
 		if((SubGoal->GetName() == "select_nearest_planet_in_system") && (m_PlanetPolicy == GoalVisitPlanet::VISIT_NEAREST_PLANET))
 		{
-			AddContent(new GoalSelectNearestPlanetInSystem(GetMind()));
-			AddContent(new GoalJumpToSystem(GetMind(), GoalJumpToSystem::JUMP_TO_RANDOM_SYSTEM));
+			AddSubGoal(new GoalSelectNearestPlanetInSystem(GetMind()));
+			AddSubGoal(new GoalJumpToSystem(GetMind(), GoalJumpToSystem::JUMP_TO_RANDOM_SYSTEM));
 		}
 		else
 		{

@@ -28,6 +28,7 @@
 #include "label.h"
 #include "object_aspect_accessory.h"
 #include "object_aspect_name.h"
+#include "object_aspect_object_container.h"
 #include "object_factory.h"
 #include "planet.h"
 #include "scroll_bar.h"
@@ -195,7 +196,8 @@ void TradeCenterDialog::Buy(const PlanetAssetClass * PlanetAssetClass)
 			Object * NewCargo(g_ObjectFactory->Create(PlanetAssetClass->GetAssetClass()->GetObjectType(), PlanetAssetClass->GetAssetClass()->GetObjectClass()));
 			
 			NewCargo->SetObjectIdentifier("::asset(" + PlanetAssetClass->GetAssetClass()->GetIdentifier() + ")::" + PlanetAssetClass->GetAssetClass()->GetObjectType() + "(" + PlanetAssetClass->GetAssetClass()->GetObjectClass() + ")::created_on(" + m_Planet->GetObjectIdentifier() + ")::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::bought_by(" + m_Character->GetObjectIdentifier() + ")::created_at_address(" + to_string_cast(reinterpret_cast< void * >(NewCargo)) + ")");
-			m_Character->GetShip()->AddContent(NewCargo);
+			assert(m_Character->GetShip()->GetAspectObjectContainer() != 0);
+			m_Character->GetShip()->GetAspectObjectContainer()->AddContent(NewCargo);
 			UpdateTraderCredits();
 			UpdateTraderAvailableSpace();
 		}
@@ -208,7 +210,9 @@ void TradeCenterDialog::Buy(const PlanetAssetClass * PlanetAssetClass)
 
 void TradeCenterDialog::Sell(const PlanetAssetClass * PlanetAssetClass)
 {
-	const std::set< Object * > & Content(m_Character->GetShip()->GetContent());
+	assert(m_Character->GetShip()->GetAspectObjectContainer() != 0);
+	
+	const std::set< Object * > & Content(m_Character->GetShip()->GetAspectObjectContainer()->GetContent());
 	std::set< Object * >::const_iterator ContentIterator(Content.begin());
 	
 	while(ContentIterator != Content.end())
@@ -235,7 +239,7 @@ void TradeCenterDialog::Sell(const PlanetAssetClass * PlanetAssetClass)
 		}
 		if(ContentObject != 0)
 		{
-			m_Character->GetShip()->RemoveContent(ContentObject);
+			m_Character->GetShip()->GetAspectObjectContainer()->RemoveContent(ContentObject);
 			delete ContentObject;
 			m_Character->AddCredits(PlanetAssetClass->GetPrice());
 			UpdateTraderCredits();

@@ -19,6 +19,7 @@
 
 #include "goal.h"
 #include "mind.h"
+#include "object_aspect_object_container.h"
 #include "state_machine.h"
 
 StateMachineMind::StateMachineMind(void) :
@@ -45,6 +46,12 @@ void StateMachineMind::Update(void)
 GoalMind::GoalMind(void) :
 	m_Goal(0)
 {
+	// initialize object aspects
+	AddAspectObjectContainer();
+	GetAspectObjectContainer()->SetAllowAddingCallback(Method(this, &GoalMind::AllowAdding));
+	GetAspectObjectContainer()->SetAllowRemovingCallback(Method(this, &GoalMind::AllowRemoving));
+	GetAspectObjectContainer()->SetOnAddedCallback(Method(this, &GoalMind::OnAdded));
+	GetAspectObjectContainer()->SetOnRemovedCallback(Method(this, &GoalMind::OnRemoved));
 }
 
 GoalMind::~GoalMind(void)
@@ -70,20 +77,18 @@ void GoalMind::Update(void)
 	m_Goal->Process();
 }
 
-bool GoalMind::IsAddingAllowed(Object * Content)
+bool GoalMind::AllowAdding(Object * Content)
 {
 	return (dynamic_cast< Goal * >(Content) != 0) && (m_Goal == 0);
 }
 
-bool GoalMind::IsRemovingAllowed(Object * Content)
+bool GoalMind::AllowRemoving(Object * Content)
 {
-	return Mind::IsRemovingAllowed(Content);
+	return true;
 }
 
-void GoalMind::OnContentAdded(Object * Content)
+void GoalMind::OnAdded(Object * Content)
 {
-	Mind::OnContentAdded(Content);
-	
 	Goal * TheGoal(dynamic_cast< Goal * >(Content));
 	
 	assert(TheGoal != 0);
@@ -91,12 +96,11 @@ void GoalMind::OnContentAdded(Object * Content)
 	m_Goal = TheGoal;
 }
 
-void GoalMind::OnContentRemoved(Object * Content)
+void GoalMind::OnRemoved(Object * Content)
 {
 	Goal * TheGoal(dynamic_cast< Goal * >(Content));
 	
 	assert(TheGoal != 0);
 	assert(m_Goal == TheGoal);
 	m_Goal = 0;
-	Mind::OnContentRemoved(Content);
 }

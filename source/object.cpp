@@ -24,6 +24,7 @@
 #include "object_aspect_accessory.h"
 #include "object_aspect_messages.h"
 #include "object_aspect_name.h"
+#include "object_aspect_object_container.h"
 #include "object_aspect_position.h"
 #include "object_aspect_update.h"
 #include "object_aspect_visualization.h"
@@ -38,6 +39,7 @@ Object::Object(void) :
 	m_AspectAccessory(0),
 	m_AspectMessages(0),
 	m_AspectName(0),
+	m_AspectObjectContainer(0),
 	m_AspectPosition(0),
 	m_AspectUpdate(0),
 	m_AspectVisualization(0),
@@ -51,7 +53,6 @@ Object::~Object(void)
 {
 	// make some object hierarchy integrity checks first
 	assert(m_Container == 0);
-	assert(m_Content.empty() == true);
 	// aspects
 	delete m_AspectAccessory;
 	m_AspectAccessory = 0;
@@ -59,6 +60,8 @@ Object::~Object(void)
 	m_AspectMessages = 0;
 	delete m_AspectName;
 	m_AspectName = 0;
+	delete m_AspectObjectContainer;
+	m_AspectObjectContainer = 0;
 	delete m_AspectPosition;
 	m_AspectPosition = 0;
 	delete m_AspectUpdate;
@@ -89,6 +92,12 @@ void Object::AddAspectName(void)
 	m_AspectName = new ObjectAspectName();
 }
 
+void Object::AddAspectObjectContainer(void)
+{
+	assert(m_AspectObjectContainer == 0);
+	m_AspectObjectContainer = new ObjectAspectObjectContainer(this);
+}
+
 void Object::AddAspectPosition(void)
 {
 	assert(m_AspectPosition == 0);
@@ -105,6 +114,12 @@ void Object::AddAspectVisualization(void)
 {
 	assert(m_AspectVisualization == 0);
 	m_AspectVisualization = new ObjectAspectVisualization();
+}
+
+void Object::SetContainer(Object * Container)
+{
+	assert(((m_Container == 0) || (Container == 0)) && (m_Container != Container));
+	m_Container = Container;
 }
 
 void Object::SetObjectIdentifier(const std::string & ObjectIdentifier)
@@ -134,7 +149,8 @@ void Object::Destroy(void)
 	// remove from object hierarchy
 	if(m_Container != 0)
 	{
-		if(m_Container->RemoveContent(this) == false)
+		assert(m_Container->GetAspectObjectContainer() != 0);
+		if(m_Container->GetAspectObjectContainer()->RemoveContent(this) == false)
 		{
 			throw std::runtime_error("RemoveContent() must not fail during Destroy()");
 		}
@@ -144,78 +160,10 @@ void Object::Destroy(void)
 	{
 		m_AspectVisualization->Destroy();
 	}
-	// now delete and remove all content objects
-	while(m_Content.empty() == false)
+	if(m_AspectObjectContainer != 0)
 	{
-		// save the pointer to Content because Destroy() will remove it from m_Content
-		Object * Content(*(m_Content.begin()));
-		
-		Content->Destroy();
-		delete Content;
+		m_AspectObjectContainer->Destroy();
 	}
-}
-
-bool Object::AddContent(Object * Content)
-{
-	assert(Content != 0);
-	assert(Content->m_Container == 0);
-	if(IsAddingAllowed(Content) == true)
-	{
-		std::pair< std::set< Object * >::iterator, bool > InsertionResult(m_Content.insert(Content));
-		
-		if(InsertionResult.second == true)
-		{
-			Content->m_Container = this;
-			OnContentAdded(Content);
-			
-			return true;
-		}
-	}
-	
-	return false;
-}
-
-bool Object::RemoveContent(Object * Content)
-{
-	assert(Content != 0);
-	assert(Content->m_Container == this);
-	if(IsRemovingAllowed(Content) == true)
-	{
-		std::set< Object * >::iterator ContentIterator(m_Content.find(Content));
-		
-		if(ContentIterator != m_Content.end())
-		{
-			Content->m_Container = 0;
-			m_Content.erase(ContentIterator);
-			OnContentRemoved(Content);
-			
-			return true;
-		}
-	}
-	
-	return false;
-}
-
-bool Object::IsAddingAllowed(Object * Content)
-{
-	//standard implementation always allows adding
-	return true;
-}
-
-bool Object::IsRemovingAllowed(Object * Content)
-{
-	// standard implementation always allows removing
-	return true;
-}
-
-void Object::OnContentAdded(Object * Content)
-{
-	// intentionally left empty
-}
-
-void Object::OnContentRemoved(Object * Content)
-{
-	// intentionally left empty
 }
 
 Object * Object::GetObject(const std::string & ObjectIdentifier)
@@ -249,12 +197,15 @@ void Object::Dump(std::ostream & OStream)
 	OStream << std::endl;
 }
 
-void DumpObjectHierarchy(XMLStream & XML, Object * Conatiner)
+void DumpObjectHierarchy(XMLStream & XML, Object * Container)
 {
-	XML << element << "object" << attribute << "type-name" << value << typeid(*Conatiner).name() << attribute << "identifier" << value << Conatiner->GetObjectIdentifier();
-	for(std::set< Object * >::const_iterator ObjectIterator = Conatiner->GetContent().begin(); ObjectIterator != Conatiner->GetContent().end(); ++ObjectIterator)
+	XML << element << "object" << attribute << "type-name" << value << typeid(*Container).name() << attribute << "identifier" << value << Container->GetObjectIdentifier();
+	if(Container->GetAspectObjectContainer() != 0)
 	{
-		DumpObjectHierarchy(XML, *ObjectIterator);
+		for(std::set< Object * >::const_iterator ObjectIterator = Container->GetAspectObjectContainer()->GetContent().begin(); ObjectIterator != Container->GetAspectObjectContainer()->GetContent().end(); ++ObjectIterator)
+		{
+			DumpObjectHierarchy(XML, *ObjectIterator);
+		}
 	}
 	XML << end;
 }

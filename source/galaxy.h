@@ -30,15 +30,16 @@ class System;
 class Galaxy : public Object
 {
 public:
+	// constructor & destructor
+	Galaxy(void);
 	// getters
 	System * GetSystem(const std::string & SystemIdentifier);
 	const std::map< std::string, System * > & GetSystems(void) const;
-protected:
-	virtual bool IsAddingAllowed(Object * Content);
-	virtual bool IsRemovingAllowed(Object * Content);
-	virtual void OnContentAdded(Object * Content);
-	virtual void OnContentRemoved(Object * Content);
 private:
+	bool AllowAdding(Object * Content);
+	bool AllowRemoving(Object * Content);
+	void OnAdded(Object * Content);
+	void OnRemoved(Object * Content);
 	std::map< std::string, System * > m_Systems;
 };
 

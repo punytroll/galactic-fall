@@ -50,12 +50,11 @@ public:
 	void SetTrafficDensity(float TrafficDensity);
 	// getters
 	float GetTrafficDensity(void) const;
-protected:
-	virtual bool IsAddingAllowed(Object * Content);
-	virtual bool IsRemovingAllowed(Object * Content);
-	virtual void OnContentAdded(Object * Content);
-	virtual void OnContentRemoved(Object * Content);
 private:
+	bool AllowAdding(Object * Content);
+	bool AllowRemoving(Object * Content);
+	void OnAdded(Object * Content);
+	void OnRemoved(Object * Content);
 	std::string m_Identifier;
 	float m_TrafficDensity;
 	Star * m_Star;

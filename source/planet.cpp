@@ -23,6 +23,7 @@
 #include "globals.h"
 #include "message.h"
 #include "message_dispatcher.h"
+#include "object_aspect_object_container.h"
 #include "planet.h"
 #include "ship.h"
 
@@ -92,8 +93,10 @@ void Planet::Land(Ship * Ship)
 	Ship->SetVelocity(Vector3f(0.0f, 0.0f, 0.0f));
 	Ship->SetHull(Ship->GetShipClass()->GetHull());
 	
+	assert(Ship->GetAspectObjectContainer() != 0);
+	
 	// send message to all characters on the landed ship
-	const std::set< Object * > & ShipContent(Ship->GetContent());
+	const std::set< Object * > & ShipContent(Ship->GetAspectObjectContainer()->GetContent());
 	
 	for(std::set< Object * >::iterator ContentIterator = ShipContent.begin(); ContentIterator != ShipContent.end(); ++ContentIterator)
 	{
@@ -108,8 +111,10 @@ void Planet::Land(Ship * Ship)
 
 void Planet::TakeOff(Ship * Ship)
 {
-	// send message to all characters on the ship that
-	const std::set< Object * > & ShipContent(Ship->GetContent());
+	assert(Ship->GetAspectObjectContainer() != 0);
+	
+	// send message to all characters on the ship that took off
+	const std::set< Object * > & ShipContent(Ship->GetAspectObjectContainer()->GetContent());
 	
 	for(std::set< Object * >::iterator ContentIterator = ShipContent.begin(); ContentIterator != ShipContent.end(); ++ContentIterator)
 	{
