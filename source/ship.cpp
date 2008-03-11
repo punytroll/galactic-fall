@@ -30,6 +30,7 @@
 #include "message.h"
 #include "message_dispatcher.h"
 #include "object_aspect_accessory.h"
+#include "object_aspect_object_container.h"
 #include "object_aspect_position.h"
 #include "object_aspect_update.h"
 #include "object_aspect_visualization.h"
@@ -62,6 +63,7 @@ Ship::Ship(const ShipClass * ShipClass) :
 {
 	// initialize object aspects
 	AddAspectName();
+	AddAspectObjectContainer();
 	AddAspectPosition();
 	AddAspectUpdate();
 	GetAspectUpdate()->SetCallback(Method(this, &Ship::Update));
@@ -94,22 +96,21 @@ Ship::~Ship(void)
 float Ship::GetAvailableSpace(void) const
 {
 	float AvailableSpace(m_ShipClass->GetMaximumAvailableSpace());
-	std::set< Object * >::const_iterator ManifestIterator(GetContent().begin());
+	const std::set< Object * > & Content(GetAspectObjectContainer()->GetContent());
 	
-	while(ManifestIterator != GetContent().end())
+	for(std::set< Object * >::const_iterator ContentIterator = Content.begin(); ContentIterator != Content.end(); ++ContentIterator)
 	{
-		if(dynamic_cast< Commodity * >(*ManifestIterator) != 0)
+		if(dynamic_cast< Commodity * >(*ContentIterator) != 0)
 		{
-			AvailableSpace -= dynamic_cast< Commodity * >(*ManifestIterator)->GetSpaceRequirement();
+			AvailableSpace -= dynamic_cast< Commodity * >(*ContentIterator)->GetSpaceRequirement();
 		}
-		else if(dynamic_cast< Weapon * >(*ManifestIterator) != 0)
+		else if(dynamic_cast< Weapon * >(*ContentIterator) != 0)
 		{
-			if(dynamic_cast< Weapon * >(*ManifestIterator)->GetAspectAccessory()->GetSlot() == 0)
+			if(dynamic_cast< Weapon * >(*ContentIterator)->GetAspectAccessory()->GetSlot() == 0)
 			{
-				AvailableSpace -= dynamic_cast< Weapon * >(*ManifestIterator)->GetSpaceRequirement();
+				AvailableSpace -= dynamic_cast< Weapon * >(*ContentIterator)->GetSpaceRequirement();
 			}
 		}
-		++ManifestIterator;
 	}
 	
 	return AvailableSpace;
@@ -118,9 +119,9 @@ float Ship::GetAvailableSpace(void) const
 unsigned_numeric Ship::GetContentAmount(const std::string & Type, const std::string & Class) const
 {
 	unsigned_numeric Amount(0);
-	std::set< Object * >::const_iterator ContentIterator(GetContent().begin());
+	const std::set< Object * > & Content(GetAspectObjectContainer()->GetContent());
 	
-	while(ContentIterator != GetContent().end())
+	for(std::set< Object * >::const_iterator ContentIterator = Content.begin(); ContentIterator != Content.end(); ++ContentIterator)
 	{
 		if(Type == "commodity")
 		{
@@ -140,7 +141,6 @@ unsigned_numeric Ship::GetContentAmount(const std::string & Type, const std::str
 				Amount += 1;
 			}
 		}
-		++ContentIterator;
 	}
 	
 	return Amount;
@@ -175,7 +175,8 @@ bool Ship::Update(float Seconds)
 			System * NewSystem(GetLinkedSystemTarget());
 			
 			// remove the ship from the old system
-			OldSystem->RemoveContent(this);
+			assert(OldSystem->GetAspectObjectContainer() != 0);
+			OldSystem->GetAspectObjectContainer()->RemoveContent(this);
 			SetCurrentSystem(0);
 			SetFuel(GetFuel() - GetShipClass()->GetJumpFuel());
 			
@@ -188,14 +189,19 @@ bool Ship::Update(float Seconds)
 			GetAspectPosition()->SetOrientation(Quaternion(GetRadians(Vector2f(Direction[0], Direction[1])), Quaternion::InitializeRotationZ));
 			// set up the ship in the new system
 			SetCurrentSystem(GetLinkedSystemTarget());
-			NewSystem->AddContent(this);
-			for(std::set< Object * >::iterator ManifestIterator = GetContent().begin(); ManifestIterator != GetContent().end(); ++ManifestIterator)
+			assert(NewSystem->GetAspectObjectContainer() != 0);
+			NewSystem->GetAspectObjectContainer()->AddContent(this);
+			assert(GetAspectObjectContainer() != 0);
+			
+			const std::set< Object * > & Content(GetAspectObjectContainer()->GetContent());
+			
+			for(std::set< Object * >::iterator ContentIterator = Content.begin(); ContentIterator != Content.end(); ++ContentIterator)
 			{
-				Character * ManifestCharacter(dynamic_cast< Character * >(*ManifestIterator));
+				Character * TheCharacter(dynamic_cast< Character * >(*ContentIterator));
 				
-				if(ManifestCharacter != 0)
+				if(TheCharacter != 0)
 				{
-					ManifestCharacter->GetMapKnowledge()->AddExploredSystem(NewSystem);
+					TheCharacter->GetMapKnowledge()->AddExploredSystem(NewSystem);
 				}
 			}
 			SetLinkedSystemTarget(0);
@@ -240,9 +246,11 @@ bool Ship::Update(float Seconds)
 		}
 		if(m_Refuel == true)
 		{
-			std::set< Object * >::const_iterator ContentIterator(GetContent().begin());
+			assert(GetAspectObjectContainer() != 0);
 			
-			while(ContentIterator != GetContent().end())
+			const std::set< Object * > & Content(GetAspectObjectContainer()->GetContent());
+			
+			for(std::set< Object * >::const_iterator ContentIterator = Content.begin(); ContentIterator != Content.end(); ++ContentIterator)
 			{
 				Commodity * TheCommodity(dynamic_cast< Commodity * >(*ContentIterator));
 				
@@ -254,7 +262,6 @@ bool Ship::Update(float Seconds)
 					
 					break;
 				}
-				++ContentIterator;
 			}
 			m_Refuel = false;
 		}
@@ -329,22 +336,22 @@ bool Ship::Update(float Seconds)
 		}
 		if(m_Jettison == true)
 		{
-			std::set< Object * >::const_iterator ManifestIterator;
-			std::set< Object * >::const_iterator NextIterator(GetContent().begin());
+			assert(GetAspectObjectContainer() != 0);
 			
-			while(NextIterator != GetContent().end())
+			std::set< Object * >::const_iterator ContentIterator(GetAspectObjectContainer()->GetContent().begin());
+			
+			while(ContentIterator != GetAspectObjectContainer()->GetContent().end())
 			{
-				ManifestIterator = NextIterator;
-				++NextIterator;
+				Commodity * TheCommodity(dynamic_cast< Commodity * >(*ContentIterator));
 				
-				Commodity * TheCommodity(dynamic_cast< Commodity * >(*ManifestIterator));
-				
+				++ContentIterator;
 				if(TheCommodity != 0)
 				{
-					RemoveContent(TheCommodity);
+					GetAspectObjectContainer()->RemoveContent(TheCommodity);
 					TheCommodity->GetAspectPosition()->SetPosition(GetAspectPosition()->GetPosition());
 					TheCommodity->SetVelocity(GetVelocity() * 0.8f + Vector3f(GetRandomFloat(-0.5f, 0.5f), GetRandomFloat(-0.5f, 0.5f), 0.0f));
-					GetCurrentSystem()->AddContent(TheCommodity);
+					assert(GetCurrentSystem()->GetAspectObjectContainer() != 0);
+					GetCurrentSystem()->GetAspectObjectContainer()->AddContent(TheCommodity);
 					VisualizeCommodity(TheCommodity, g_CommodityLayer);
 				}
 			}
@@ -356,10 +363,12 @@ bool Ship::Update(float Seconds)
 			
 			if(SelectedCommodity != 0)
 			{
+				assert(GetCurrentSystem()->GetAspectObjectContainer() != 0);
 				// the following is a typical occasion of bad practise: a transaction would be great here
-				if(GetCurrentSystem()->RemoveContent(SelectedCommodity) == true)
+				if(GetCurrentSystem()->GetAspectObjectContainer()->RemoveContent(SelectedCommodity) == true)
 				{
-					if(AddContent(SelectedCommodity) == true)
+					assert(GetAspectObjectContainer() != 0);
+					if(GetAspectObjectContainer()->AddContent(SelectedCommodity) == true)
 					{
 						SetTarget(0);
 						if(SelectedCommodity->GetAspectVisualization()->GetVisualization().IsValid() == true)
@@ -369,7 +378,7 @@ bool Ship::Update(float Seconds)
 					}
 					else
 					{
-						GetCurrentSystem()->AddContent(SelectedCommodity);
+						GetCurrentSystem()->GetAspectObjectContainer()->AddContent(SelectedCommodity);
 					}
 				}
 			}
@@ -393,9 +402,11 @@ Slot * Ship::CreateSlot(const SlotClass * SlotClass, const std::string & SlotIde
 
 bool Ship::Mount(Object * Object, const std::string & SlotIdentifier)
 {
+	assert(GetAspectObjectContainer() != 0);
+	
 	std::map< std::string, Slot * >::iterator SlotIterator(m_Slots.find(SlotIdentifier));
 	
-	if((GetContent().find(Object) != GetContent().end()) && (SlotIterator != m_Slots.end()))
+	if((GetAspectObjectContainer()->GetContent().find(Object) != GetAspectObjectContainer()->GetContent().end()) && (SlotIterator != m_Slots.end()))
 	{
 		Weapon * TheWeapon(dynamic_cast< Weapon * >(Object));
 		
@@ -447,7 +458,9 @@ void Ship::SetFuel(float Fuel)
 	if(FuelLow == true)
 	{
 		// send message to all characters on the ship
-		const std::set< Object * > & ShipContent(GetContent());
+		assert(GetAspectObjectContainer() != 0);
+		
+		const std::set< Object * > & ShipContent(GetAspectObjectContainer()->GetContent());
 		
 		for(std::set< Object * >::iterator ContentIterator = ShipContent.begin(); ContentIterator != ShipContent.end(); ++ContentIterator)
 		{
@@ -470,7 +483,9 @@ void Ship::SetHull(float Hull)
 	if(HullLow == true)
 	{
 		// send message to all characters on the ship
-		const std::set< Object * > & ShipContent(GetContent());
+		assert(GetAspectObjectContainer() != 0);
+		
+		const std::set< Object * > & ShipContent(GetAspectObjectContainer()->GetContent());
 		
 		for(std::set< Object * >::iterator ContentIterator = ShipContent.begin(); ContentIterator != ShipContent.end(); ++ContentIterator)
 		{

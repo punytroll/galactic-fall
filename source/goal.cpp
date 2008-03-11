@@ -18,12 +18,19 @@
 **/
 
 #include "goal.h"
+#include "object_aspect_object_container.h"
 
 Goal::Goal(GoalMind * GoalMind, const std::string & Name) :
 	m_GoalMind(GoalMind),
 	m_Name(Name),
 	m_State(Goal::INACTIVE)
 {
+	// initialize object aspects
+	AddAspectObjectContainer();
+	GetAspectObjectContainer()->SetAllowAddingCallback(Method(this, &Goal::AllowAdding));
+	GetAspectObjectContainer()->SetAllowRemovingCallback(Method(this, &Goal::AllowRemoving));
+	GetAspectObjectContainer()->SetOnAddedCallback(Method(this, &Goal::OnAdded));
+	GetAspectObjectContainer()->SetOnRemovedCallback(Method(this, &Goal::OnRemoved));
 }
 
 Goal::~Goal(void)
@@ -63,6 +70,11 @@ void Goal::Terminate(void)
 {
 }
 
+bool Goal::AddSubGoal(Goal * SubGoal)
+{
+	return GetAspectObjectContainer()->AddContent(SubGoal);
+}
+
 bool Goal::HandleMessage(Message * Message)
 {
 	if((m_SubGoals.size() != 0) && (m_SubGoals.front()->GetState() == Goal::ACTIVE) && (m_SubGoals.front()->HandleMessage(Message) == true))
@@ -75,27 +87,30 @@ bool Goal::HandleMessage(Message * Message)
 	}
 }
 
-bool Goal::IsAddingAllowed(Object * Content)
+bool Goal::RemoveSubGoal(Goal * SubGoal)
+{
+	return GetAspectObjectContainer()->RemoveContent(SubGoal);
+}
+
+bool Goal::AllowAdding(Object * Content)
 {
 	return dynamic_cast< Goal * >(Content) != 0;
 }
 
-bool Goal::IsRemovingAllowed(Object * Content)
+bool Goal::AllowRemoving(Object * Content)
 {
-	return Object::IsRemovingAllowed(Content);
+	return true;
 }
 
-void Goal::OnContentAdded(Object * Content)
+void Goal::OnAdded(Object * Content)
 {
-	Object::OnContentAdded(Content);
-	
 	Goal * TheGoal(dynamic_cast< Goal * >(Content));
 	
 	assert(TheGoal != 0);
 	m_SubGoals.push_front(TheGoal);
 }
 
-void Goal::OnContentRemoved(Object * Content)
+void Goal::OnRemoved(Object * Content)
 {
 	Goal * TheGoal(dynamic_cast< Goal * >(Content));
 	
@@ -105,5 +120,4 @@ void Goal::OnContentRemoved(Object * Content)
 	
 	assert(SubGoalIterator != m_SubGoals.end());
 	m_SubGoals.erase(SubGoalIterator);
-	Object::OnContentRemoved(Content);
 }

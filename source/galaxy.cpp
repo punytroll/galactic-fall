@@ -18,7 +18,18 @@
 **/
 
 #include "galaxy.h"
+#include "object_aspect_object_container.h"
 #include "system.h"
+
+Galaxy::Galaxy(void)
+{
+	// initialize object aspects
+	AddAspectObjectContainer();
+	GetAspectObjectContainer()->SetAllowAddingCallback(Method(this, &Galaxy::AllowAdding));
+	GetAspectObjectContainer()->SetAllowRemovingCallback(Method(this, &Galaxy::AllowRemoving));
+	GetAspectObjectContainer()->SetOnAddedCallback(Method(this, &Galaxy::OnAdded));
+	GetAspectObjectContainer()->SetOnRemovedCallback(Method(this, &Galaxy::OnRemoved));
+}
 
 System * Galaxy::GetSystem(const std::string & SystemIdentifier)
 {
@@ -34,7 +45,7 @@ System * Galaxy::GetSystem(const std::string & SystemIdentifier)
 	}
 }
 
-bool Galaxy::IsAddingAllowed(Object * Content)
+bool Galaxy::AllowAdding(Object * Content)
 {
 	System * TheSystem(dynamic_cast< System * >(Content));
 	
@@ -48,15 +59,13 @@ bool Galaxy::IsAddingAllowed(Object * Content)
 	}
 }
 
-bool Galaxy::IsRemovingAllowed(Object * Content)
+bool Galaxy::AllowRemoving(Object * Content)
 {
-	return Object::IsRemovingAllowed(Content);
+	return true;
 }
 
-void Galaxy::OnContentAdded(Object * Content)
+void Galaxy::OnAdded(Object * Content)
 {
-	Object::OnContentAdded(Content);
-	
 	System * TheSystem(dynamic_cast< System * >(Content));
 	
 	assert(TheSystem != 0);
@@ -64,7 +73,7 @@ void Galaxy::OnContentAdded(Object * Content)
 	m_Systems[TheSystem->GetIdentifier()] = TheSystem;
 }
 
-void Galaxy::OnContentRemoved(Object * Content)
+void Galaxy::OnRemoved(Object * Content)
 {
 	System * TheSystem(dynamic_cast< System * >(Content));
 	
@@ -74,5 +83,4 @@ void Galaxy::OnContentRemoved(Object * Content)
 	
 	assert(SystemIterator != m_Systems.end());
 	m_Systems.erase(SystemIterator);
-	Object::OnContentRemoved(Content);
 }

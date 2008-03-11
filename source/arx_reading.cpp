@@ -46,6 +46,7 @@
 #include "local_file_data_channel.h"
 #include "mini_map_display.h"
 #include "object_aspect_name.h"
+#include "object_aspect_object_container.h"
 #include "object_aspect_position.h"
 #include "planet.h"
 #include "scanner_display.h"
@@ -623,7 +624,7 @@ static void ReadSystem(Arxx::Reference & Reference)
 	NewStar->SetObjectIdentifier("::star(" + StarIdentifier + ")::in_system(" + NewSystem->GetIdentifier() + ")");
 	NewStar->GetAspectPosition()->SetPosition(Vector3f(StarPosition[0], StarPosition[1], 0.0f));
 	NewStar->SetColor(StarColor);
-	if(NewSystem->AddContent(NewStar) == false)
+	if(NewSystem->GetAspectObjectContainer()->AddContent(NewStar) == false)
 	{
 		throw std::runtime_error("Could not add star '" + StarIdentifier + "' to system '" + Identifier + "'.");
 	}
@@ -673,12 +674,12 @@ static void ReadSystem(Arxx::Reference & Reference)
 		
 		Reader >> LandingFee;
 		NewPlanet->SetLandingFee(LandingFee);
-		if(NewSystem->AddContent(NewPlanet) == false)
+		if(NewSystem->GetAspectObjectContainer()->AddContent(NewPlanet) == false)
 		{
 			throw std::runtime_error("Could not add planet '" + PlanetIdentifier + "' to system '" + Identifier + "'.");
 		}
 	}
-	if(g_Galaxy->AddContent(NewSystem) == false)
+	if(g_Galaxy->GetAspectObjectContainer()->AddContent(NewSystem) == false)
 	{
 		throw std::runtime_error("Could not add system '" + Identifier + "' to galaxy.");
 	}

@@ -69,6 +69,7 @@
 #include "mini_map_display.h"
 #include "object_aspect_accessory.h"
 #include "object_aspect_name.h"
+#include "object_aspect_object_container.h"
 #include "object_aspect_position.h"
 #include "object_aspect_update.h"
 #include "object_aspect_visualization.h"
@@ -673,11 +674,9 @@ void CalculateMovements(System * System, float Seconds)
 	while(ShotIterator != Shots.end())
 	{
 		Shot * TheShot(*ShotIterator);
-		std::list< Shot * >::const_iterator NextIterator(ShotIterator);
 		
-		++NextIterator;
-		
-		if((*ShotIterator)->GetAspectUpdate()->Update(Seconds) == false)
+		++ShotIterator;
+		if(TheShot->GetAspectUpdate()->Update(Seconds) == false)
 		{
 			DeleteObject(TheShot);
 			TheShot = 0;
@@ -705,9 +704,10 @@ void CalculateMovements(System * System, float Seconds)
 						NewHitParticleSystem->SetVelocity((TheShot->GetVelocity() * 0.2f) + (TheShip->GetVelocity() * 0.8f));
 						VisualizeParticleSystem(NewHitParticleSystem, g_ParticleSystemsLayer);
 						TheShip->SetHull(TheShip->GetHull() - TheShot->GetDamage());
+						assert(TheShip->GetAspectObjectContainer() != 0);
 						
 						// send message to all characters on the hit ship
-						const std::set< Object * > & ShipContent(TheShip->GetContent());
+						const std::set< Object * > & ShipContent(TheShip->GetAspectObjectContainer()->GetContent());
 						
 						for(std::set< Object * >::iterator ContentIterator = ShipContent.begin(); ContentIterator != ShipContent.end(); ++ContentIterator)
 						{
@@ -725,28 +725,29 @@ void CalculateMovements(System * System, float Seconds)
 							NewExplosionParticleSystem->SetPosition(TheShip->GetAspectPosition()->GetPosition());
 							NewExplosionParticleSystem->SetVelocity(TheShip->GetVelocity() * 0.5f);
 							VisualizeParticleSystem(NewExplosionParticleSystem, g_ParticleSystemsLayer);
-							
-							std::set< Object * >::const_iterator ManifestIterator;
-							std::set< Object * >::const_iterator NextIterator(TheShip->GetContent().begin());
-							
-							while(NextIterator != TheShip->GetContent().end())
+							// if the ship has content, drop all of it
+							if(TheShip->GetAspectObjectContainer() != 0)
 							{
-								ManifestIterator = NextIterator;
-								++NextIterator;
+								const std::set< Object * > & ShipContent(TheShip->GetAspectObjectContainer()->GetContent());
+								std::set< Object * >::const_iterator ContentIterator(ShipContent.begin());
 								
-								Commodity * TheCommodity(dynamic_cast< Commodity * >(*ManifestIterator));
-								
-								if(TheCommodity != 0)
+								while(ContentIterator != ShipContent.end())
 								{
-									TheShip->RemoveContent(TheCommodity);
-									TheCommodity->GetAspectPosition()->SetPosition(TheShip->GetAspectPosition()->GetPosition());
+									Commodity * TheCommodity(dynamic_cast< Commodity * >(*ContentIterator));
 									
-									Vector2f VelocityPart(GetRandomFloat(0.1f, 1.2f), GetRandomFloat(0.0f, 2 * M_PI), Vector2f::InitializeMagnitudeAngle);
-									
-									TheCommodity->SetVelocity(TheShip->GetVelocity() * 0.8f + Vector3f(VelocityPart[0], VelocityPart[1], 0.0f));
-									TheShip->GetCurrentSystem()->AddContent(TheCommodity);
-									// add visualization of the commodity
-									VisualizeCommodity(TheCommodity, g_CommodityLayer);
+									++ContentIterator;
+									if(TheCommodity != 0)
+									{
+										TheShip->GetAspectObjectContainer()->RemoveContent(TheCommodity);
+										TheCommodity->GetAspectPosition()->SetPosition(TheShip->GetAspectPosition()->GetPosition());
+										
+										Vector2f VelocityPart(GetRandomFloat(0.1f, 1.2f), GetRandomFloat(0.0f, 2 * M_PI), Vector2f::InitializeMagnitudeAngle);
+										
+										TheCommodity->SetVelocity(TheShip->GetVelocity() * 0.8f + Vector3f(VelocityPart[0], VelocityPart[1], 0.0f));
+										TheShip->GetCurrentSystem()->GetAspectObjectContainer()->AddContent(TheCommodity);
+										// add visualization of the commodity
+										VisualizeCommodity(TheCommodity, g_CommodityLayer);
+									}
 								}
 							}
 							DeleteObject(TheShip);
@@ -789,7 +790,6 @@ void CalculateMovements(System * System, float Seconds)
 				}
 			}
 		}
-		ShotIterator = NextIterator;
 	}
 }
 
@@ -1050,7 +1050,7 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 		Weapon * NewWeapon(dynamic_cast< Weapon * >(g_ObjectFactory->Create("weapon", "light_laser")));
 		
 		NewWeapon->SetObjectIdentifier("::weapon(" + NewWeapon->GetWeaponClass()->GetIdentifier() + ")::created_for(" + NewShip->GetObjectIdentifier() + ")" + IdentifierSuffix);
-		NewShip->AddContent(NewWeapon);
+		NewShip->GetAspectObjectContainer()->AddContent(NewWeapon);
 		NewShip->Mount(NewWeapon, "front_gun");
 	}
 	else if(ShipClassIdentifier == "transporter")
@@ -1075,7 +1075,7 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 					Object * NewCommodity(g_ObjectFactory->Create(AssetClassIterator->second->GetObjectType(), AssetClassIterator->second->GetObjectClass()));
 					
 					NewCommodity->SetObjectIdentifier("::" + AssetClassIterator->second->GetObjectType() + "(" + AssetClassIterator->second->GetIdentifier() + ")::(" + to_string_cast(NumberOfAssetClasses) + "|" + to_string_cast(AmountOfAssets) + ")" + IdentifierSuffix);
-					NewShip->AddContent(NewCommodity);
+					NewShip->GetAspectObjectContainer()->AddContent(NewCommodity);
 					--AmountOfAssets;
 				}
 			}
@@ -1095,7 +1095,7 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 		NewMind->SetCharacter(NewCharacter);
 		NewMind->GetStateMachine()->SetState(new SelectSteering(NewMind));
 		NewMind->GetStateMachine()->SetGlobalState(new MonitorFuel(NewMind));
-		NewCharacter->AddContent(NewMind);
+		NewCharacter->GetAspectObjectContainer()->AddContent(NewMind);
 	}
 	else
 	{
@@ -1103,11 +1103,11 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 		
 		NewMind->SetObjectIdentifier("::mind(goal)" + IdentifierSuffix);
 		NewMind->SetCharacter(NewCharacter);
-		NewMind->AddContent(new GoalFighterThink(NewMind));
-		NewCharacter->AddContent(NewMind);
+		NewMind->GetAspectObjectContainer()->AddContent(new GoalFighterThink(NewMind));
+		NewCharacter->GetAspectObjectContainer()->AddContent(NewMind);
 	}
-	NewShip->AddContent(NewCharacter);
-	System->AddContent(NewShip);
+	NewShip->GetAspectObjectContainer()->AddContent(NewCharacter);
+	System->GetAspectObjectContainer()->AddContent(NewShip);
 	// add visualization
 	VisualizeShip(NewShip, g_ShipLayer);
 }
@@ -1572,14 +1572,14 @@ void LoadGameFromElement(const Element * SaveElement)
 							Object * NewCommodity(g_ObjectFactory->Create((*ContentChild)->GetName(), (*ContentChild)->GetAttribute("class-identifier")));
 							
 							NewCommodity->SetObjectIdentifier((*ContentChild)->GetAttribute("object-identifier"));
-							TheShip->AddContent(NewCommodity);
+							TheShip->GetAspectObjectContainer()->AddContent(NewCommodity);
 						}
 						else if((*ContentChild)->GetName() == "weapon")
 						{
 							Weapon * NewWeapon(dynamic_cast< Weapon * >(g_ObjectFactory->Create((*ContentChild)->GetName(), (*ContentChild)->GetAttribute("class-identifier"))));
 							
 							NewWeapon->SetObjectIdentifier((*ContentChild)->GetAttribute("object-identifier"));
-							TheShip->AddContent(NewWeapon);
+							TheShip->GetAspectObjectContainer()->AddContent(NewWeapon);
 							if((*ContentChild)->HasAttribute("mounted-on") == true)
 							{
 								TheShip->Mount(NewWeapon, (*ContentChild)->GetAttribute("mounted-on"));
@@ -1599,7 +1599,7 @@ void LoadGameFromElement(const Element * SaveElement)
 				{
 					System * TheSystem(g_Galaxy->GetSystem((*ShipChild)->GetAttribute("identifier")));
 					
-					TheSystem->AddContent(TheShip);
+					TheSystem->GetAspectObjectContainer()->AddContent(TheShip);
 					TheShip->SetCurrentSystem(TheSystem);
 				}
 				else
@@ -1674,7 +1674,7 @@ void LoadGameFromElement(const Element * SaveElement)
 					
 					assert(TheCharacter != 0);
 					TheMind->SetCharacter(TheCharacter);
-					TheCharacter->AddContent(TheMind);
+					TheCharacter->GetAspectObjectContainer()->AddContent(TheMind);
 				}
 			}
 		}
@@ -1690,7 +1690,7 @@ void LoadGameFromElement(const Element * SaveElement)
 					
 					assert(TheShip != 0);
 					TheCharacter->SetShip(TheShip);
-					TheShip->AddContent(TheCharacter);
+					TheShip->GetAspectObjectContainer()->AddContent(TheCharacter);
 				}
 			}
 		}
@@ -1819,9 +1819,9 @@ void SaveGame(std::ostream & OStream)
 				XML << element << "velocity" << attribute << "x" << value << Ship->GetVelocity().m_V.m_A[0] << attribute << "y" << value << Ship->GetVelocity().m_V.m_A[1] << end;
 				XML << element << "content";
 				
-				std::set< Object * >::const_iterator ContentIterator(Ship->GetContent().begin());
+				std::set< Object * >::const_iterator ContentIterator(Ship->GetAspectObjectContainer()->GetContent().begin());
 				
-				while(ContentIterator != Ship->GetContent().end())
+				while(ContentIterator != Ship->GetAspectObjectContainer()->GetContent().end())
 				{
 					Commodity * TheCommodity(dynamic_cast< Commodity * >(*ContentIterator));
 					Weapon * TheWeapon(dynamic_cast< Weapon * >(*ContentIterator));

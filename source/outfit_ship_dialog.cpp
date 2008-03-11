@@ -24,6 +24,7 @@
 #include "label.h"
 #include "object_aspect_accessory.h"
 #include "object_aspect_name.h"
+#include "object_aspect_object_container.h"
 #include "outfit_ship_dialog.h"
 #include "scroll_box.h"
 #include "ship.h"
@@ -351,26 +352,29 @@ void OutfitShipDialog::RebuildAccessoryList(void)
 	
 	// now fill the weapon list
 	float Top(5.0f);
-	const std::set< Object * > & Content(m_Ship->GetContent());
-	
-	for(std::set< Object * >::iterator ContentIterator = Content.begin(); ContentIterator != Content.end(); ++ContentIterator)
+	if(m_Ship->GetAspectObjectContainer() != 0)
 	{
-		Object * ContentObject(*ContentIterator);
+		const std::set< Object * > & Content(m_Ship->GetAspectObjectContainer()->GetContent());
 		
-		if((ContentObject->GetAspectAccessory() != 0) && (ContentObject->GetAspectAccessory()->GetSlot() == 0))
+		for(std::set< Object * >::iterator ContentIterator = Content.begin(); ContentIterator != Content.end(); ++ContentIterator)
 		{
-			AccessoryListItem * NewAccessoryListItem(new AccessoryListItem(m_AccessoryScrollBox->GetContent(), ContentObject));
+			Object * ContentObject(*ContentIterator);
 			
-			NewAccessoryListItem->SetPosition(Vector2f(5.0f, Top));
-			NewAccessoryListItem->SetSize(Vector2f(m_AccessoryScrollBox->GetContent()->GetSize()[0] - 10.0f, 50.0f));
-			NewAccessoryListItem->SetAnchorRight(true);
-			NewAccessoryListItem->AddMouseButtonListener(this);
-			if(ContentObject == SelectedAccessory)
+			if((ContentObject->GetAspectAccessory() != 0) && (ContentObject->GetAspectAccessory()->GetSlot() == 0))
 			{
-				m_SelectedAccessoryListItem = NewAccessoryListItem;
-				m_SelectedAccessoryListItem->SetSelected(true);
+				AccessoryListItem * NewAccessoryListItem(new AccessoryListItem(m_AccessoryScrollBox->GetContent(), ContentObject));
+				
+				NewAccessoryListItem->SetPosition(Vector2f(5.0f, Top));
+				NewAccessoryListItem->SetSize(Vector2f(m_AccessoryScrollBox->GetContent()->GetSize()[0] - 10.0f, 50.0f));
+				NewAccessoryListItem->SetAnchorRight(true);
+				NewAccessoryListItem->AddMouseButtonListener(this);
+				if(ContentObject == SelectedAccessory)
+				{
+					m_SelectedAccessoryListItem = NewAccessoryListItem;
+					m_SelectedAccessoryListItem->SetSelected(true);
+				}
+				Top += 55.0f;
 			}
-			Top += 55.0f;
 		}
 	}
 	m_AccessoryScrollBox->GetContent()->SetSize(Vector2f(180.0f, std::max(Top, m_AccessoryScrollBox->GetView()->GetSize()[1])));

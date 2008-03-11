@@ -23,6 +23,7 @@
 #include "message.h"
 #include "mind.h"
 #include "object_aspect_messages.h"
+#include "object_aspect_object_container.h"
 #include "threat.h"
 
 std::set< Character * > Character::m_Characters;
@@ -37,6 +38,11 @@ Character::Character(void) :
 	m_Characters.insert(this);
 	// initialize object aspects
 	AddAspectMessages();
+	AddAspectObjectContainer();
+	GetAspectObjectContainer()->SetAllowAddingCallback(Method(this, &Character::AllowAdding));
+	GetAspectObjectContainer()->SetAllowRemovingCallback(Method(this, &Character::AllowRemoving));
+	GetAspectObjectContainer()->SetOnAddedCallback(Method(this, &Character::OnAdded));
+	GetAspectObjectContainer()->SetOnRemovedCallback(Method(this, &Character::OnRemoved));
 }
 
 Character::~Character(void)
@@ -105,27 +111,25 @@ void Character::RemoveObserver(CharacterObserver * CharacterObserver)
 	m_Observers.erase(m_Observers.find(CharacterObserver));
 }
 
-bool Character::IsAddingAllowed(Object * Content)
+bool Character::AllowAdding(Object * Content)
 {
 	return dynamic_cast< Mind * >(Content) != 0;
 }
 
-bool Character::IsRemovingAllowed(Object * Content)
+bool Character::AllowRemoving(Object * Content)
 {
-	return Object::IsRemovingAllowed(Content);
+	return true;
 }
 
-void Character::OnContentAdded(Object * Content)
+void Character::OnAdded(Object * Content)
 {
-	Object::OnContentAdded(Content);
-	
 	Mind * TheMind(dynamic_cast< Mind * >(Content));
 	
 	assert(TheMind != 0);
 	m_Minds.push_front(TheMind);
 }
 
-void Character::OnContentRemoved(Object * Content)
+void Character::OnRemoved(Object * Content)
 {
 	Mind * TheMind(dynamic_cast< Mind * >(Content));
 	
@@ -135,5 +139,4 @@ void Character::OnContentRemoved(Object * Content)
 	
 	assert(MindIterator != m_Minds.end());
 	m_Minds.erase(MindIterator);
-	Object::OnContentRemoved(Content);
 }

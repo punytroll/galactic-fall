@@ -32,6 +32,7 @@
 #include "math.h"
 #include "message.h"
 #include "mind.h"
+#include "object_aspect_object_container.h"
 #include "object_aspect_position.h"
 #include "object_factory.h"
 #include "planet.h"
@@ -268,7 +269,9 @@ void TransporterPhase3::Enter(void)
 	}
 	if(PlanetAssetClasses.empty() == false)
 	{
-		const std::set< Object * > & Content(GetMind()->GetCharacter()->GetShip()->GetContent());
+		assert(GetMind()->GetCharacter()->GetShip()->GetAspectObjectContainer() != 0);
+		
+		const std::set< Object * > & Content(GetMind()->GetCharacter()->GetShip()->GetAspectObjectContainer()->GetContent());
 		std::set< Object * >::const_iterator ContentIterator(Content.begin());
 		std::map< std::string, PlanetAssetClass * >::iterator PlanetAssetClassIterator(PlanetAssetClasses.end());
 		
@@ -290,7 +293,7 @@ void TransporterPhase3::Enter(void)
 					std::set< Object * >::iterator SaveIterator(ContentIterator);
 					
 					++SaveIterator;
-					GetMind()->GetCharacter()->GetShip()->RemoveContent(SellCommodity);
+					GetMind()->GetCharacter()->GetShip()->GetAspectObjectContainer()->RemoveContent(SellCommodity);
 					ContentIterator = SaveIterator;
 					delete SellCommodity;
 					GetMind()->GetCharacter()->AddCredits(PlanetAssetClassIterator->second->GetPrice());
@@ -317,7 +320,7 @@ void TransporterPhase3::Enter(void)
 						Object * NewCommodity(g_ObjectFactory->Create(PlanetAssetClassToBuy->GetAssetClass()->GetObjectType(), PlanetAssetClassToBuy->GetAssetClass()->GetObjectClass()));
 						
 						NewCommodity->SetObjectIdentifier("::" + PlanetAssetClassToBuy->GetAssetClass()->GetObjectType() + "(" + PlanetAssetClassToBuy->GetAssetClass()->GetObjectClass() + ")::buy_index(" + to_string_cast(NumberOfPlanetAssetClassesToBuy) + "|" + to_string_cast(NumberOfAssetsToBuy) + ")::bought_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::bought_by(" + GetMind()->GetObjectIdentifier() + ")::bought_on(" + Planet->GetObjectIdentifier() + ")");
-						GetMind()->GetCharacter()->GetShip()->AddContent(NewCommodity);
+						GetMind()->GetCharacter()->GetShip()->GetAspectObjectContainer()->AddContent(NewCommodity);
 					}
 					else
 					{

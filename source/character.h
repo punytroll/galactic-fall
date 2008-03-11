@@ -62,12 +62,11 @@ public:
 	void AddObserver(CharacterObserver * Reference);
 	bool RemoveCredits(u4byte Credits);
 	void RemoveObserver(CharacterObserver * Reference);
-protected:
-	virtual bool IsAddingAllowed(Object * Content);
-	virtual bool IsRemovingAllowed(Object * Content);
-	virtual void OnContentAdded(Object * Content);
-	virtual void OnContentRemoved(Object * Content);
 private:
+	bool AllowAdding(Object * Content);
+	bool AllowRemoving(Object * Content);
+	void OnAdded(Object * Content);
+	void OnRemoved(Object * Content);
 	std::deque< Mind * > m_Minds;
 	std::set< CharacterObserver * > m_Observers;
 	u4byte m_Credits;

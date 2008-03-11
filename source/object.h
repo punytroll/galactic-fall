@@ -31,6 +31,7 @@ class Message;
 class ObjectAspectAccessory;
 class ObjectAspectMessages;
 class ObjectAspectName;
+class ObjectAspectObjectContainer;
 class ObjectAspectPosition;
 class ObjectAspectUpdate;
 class ObjectAspectVisualization;
@@ -47,17 +48,19 @@ public:
 	Object(void);
 	virtual ~Object(void);
 	// setters
+	void SetContainer(Object * Container);
 	void SetObjectIdentifier(const std::string & ObjectIdentifier);
 	// getters
 	Object * GetContainer(void);
 	const Object * GetContainer(void) const;
-	const std::set< Object * > & GetContent(void) const;
 	ObjectAspectAccessory * GetAspectAccessory(void);
 	const ObjectAspectAccessory * GetAspectAccessory(void) const;
 	ObjectAspectMessages * GetAspectMessages(void);
 	const ObjectAspectMessages * GetAspectMessages(void) const;
 	ObjectAspectName * GetAspectName(void);
 	const ObjectAspectName * GetAspectName(void) const;
+	ObjectAspectObjectContainer * GetAspectObjectContainer(void);
+	const ObjectAspectObjectContainer * GetAspectObjectContainer(void) const;
 	ObjectAspectPosition * GetAspectPosition(void);
 	const ObjectAspectPosition * GetAspectPosition(void) const;
 	ObjectAspectUpdate * GetAspectUpdate(void);
@@ -70,28 +73,23 @@ public:
 	void AddAspectAccessory(void);
 	void AddAspectMessages(void);
 	void AddAspectName(void);
+	void AddAspectObjectContainer(void);
 	void AddAspectPosition(void);
 	void AddAspectUpdate(void);
 	void AddAspectVisualization(void);
 	void Destroy(void);
-	bool AddContent(Object * Content);
-	bool RemoveContent(Object * Content);
 	void GenerateObjectIdentifier(void);
 	
 	// static methods
 	static Object * GetObject(const std::string & ObjectIdentifier);
 	static void Dump(std::ostream & OStream);
 	static void Dump(XMLStream & XML);
-protected:
-	virtual bool IsAddingAllowed(Object * Content);
-	virtual bool IsRemovingAllowed(Object * Content);
-	virtual void OnContentAdded(Object * Content);
-	virtual void OnContentRemoved(Object * Content);
 private:
 	// aspects
 	ObjectAspectAccessory * m_AspectAccessory;
 	ObjectAspectMessages * m_AspectMessages;
 	ObjectAspectName * m_AspectName;
+	ObjectAspectObjectContainer * m_AspectObjectContainer;
 	ObjectAspectPosition * m_AspectPosition;
 	ObjectAspectUpdate * m_AspectUpdate;
 	ObjectAspectVisualization * m_AspectVisualization;
@@ -99,7 +97,6 @@ private:
 	std::string m_ObjectIdentifier;
 	Reference< Object > m_Reference;
 	Object * m_Container;
-	std::set< Object * > m_Content;
 	
 	static std::set< Object * > m_Objects;
 	static std::map< std::string, Object * > m_IdentifiedObjects;
@@ -113,11 +110,6 @@ inline Object * Object::GetContainer(void)
 inline const Object * Object::GetContainer(void) const
 {
 	return m_Container;
-}
-
-inline const std::set< Object * > & Object::GetContent(void) const
-{
-	return m_Content;
 }
 
 inline const std::string & Object::GetObjectIdentifier(void) const
@@ -153,6 +145,16 @@ inline ObjectAspectName * Object::GetAspectName(void)
 inline const ObjectAspectName * Object::GetAspectName(void) const
 {
 	return m_AspectName;
+}
+
+inline ObjectAspectObjectContainer * Object::GetAspectObjectContainer(void)
+{
+	return m_AspectObjectContainer;
+}
+
+inline const ObjectAspectObjectContainer * Object::GetAspectObjectContainer(void) const
+{
+	return m_AspectObjectContainer;
 }
 
 inline ObjectAspectPosition * Object::GetAspectPosition(void)

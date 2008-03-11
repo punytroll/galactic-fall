@@ -52,14 +52,16 @@ public:
 	virtual void Process(void);
 	virtual void Terminate(void);
 	// modifiers
+	bool AddSubGoal(Goal * SubGoal);
 	bool HandleMessage(Message * Message);
+	bool RemoveSubGoal(Goal * SubGoal);
 protected:
 	// setters
 	void SetState(int State);
-	virtual bool IsAddingAllowed(Object * Content);
-	virtual bool IsRemovingAllowed(Object * Content);
-	virtual void OnContentAdded(Object * Content);
-	virtual void OnContentRemoved(Object * Content);
+	bool AllowAdding(Object * Content);
+	bool AllowRemoving(Object * Content);
+	void OnAdded(Object * Content);
+	void OnRemoved(Object * Content);
 private:
 	GoalMind * m_GoalMind;
 	std::string m_Name;
