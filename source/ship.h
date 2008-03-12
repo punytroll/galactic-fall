@@ -24,7 +24,7 @@
 #include <vector>
 
 #include "math/vector2f.h"
-#include "physical_object.h"
+#include "object.h"
 #include "ship_class.h"
 #include "type_definitions.h"
 
@@ -39,7 +39,7 @@ namespace Graphics
 	class ParticleSystem;
 }
 
-class Ship : public PhysicalObject
+class Ship : public Object
 {
 public:
 	Ship(const ShipClass * ShipClass);
@@ -62,8 +62,8 @@ public:
 	const System * GetLinkedSystemTarget(void) const;
 	const ShipClass * GetShipClass(void) const;
 	const std::map< std::string, Slot * > & GetSlots(void) const;
-	Reference< PhysicalObject > & GetTarget(void);
-	const Reference< PhysicalObject > & GetTarget(void) const;
+	Reference< Object > & GetTarget(void);
+	const Reference< Object > & GetTarget(void) const;
 	const Vector3f & GetVelocity(void) const;
 	// setters
 	void SetAccelerate(bool Accelerate);
@@ -75,7 +75,7 @@ public:
 	void SetLinkedSystemTarget(System * LinkedSystem);
 	void SetRefuel(bool Refuel);
 	void SetTakeOff(bool TakeOff);
-	void SetTarget(Reference< PhysicalObject > Target);
+	void SetTarget(Reference< Object > Target);
 	void SetTurnLeft(float TurnLeft);
 	void SetTurnRight(float TurnRight);
 	void SetVelocity(const Vector3f & Velocity);
@@ -98,7 +98,7 @@ private:
 	const ShipClass * m_ShipClass;
 	std::map< std::string, Slot * > m_Slots;
 	bool m_TakeOff;
-	Reference< PhysicalObject > m_Target;
+	Reference< Object > m_Target;
 	float m_TurnLeft;
 	float m_TurnRight;
 	Vector3f m_Velocity;
@@ -149,12 +149,12 @@ inline const std::map< std::string, Slot * > & Ship::GetSlots(void) const
 	return m_Slots;
 }
 
-inline Reference< PhysicalObject > & Ship::GetTarget(void)
+inline Reference< Object > & Ship::GetTarget(void)
 {
 	return m_Target;
 }
 
-inline const Reference< PhysicalObject > & Ship::GetTarget(void) const
+inline const Reference< Object > & Ship::GetTarget(void) const
 {
 	return m_Target;
 }
@@ -194,7 +194,7 @@ inline void Ship::SetTakeOff(bool TakeOff)
 	m_TakeOff = TakeOff;
 }
 
-inline void Ship::SetTarget(Reference< PhysicalObject > Target)
+inline void Ship::SetTarget(Reference< Object > Target)
 {
 	m_Target = Target;
 }

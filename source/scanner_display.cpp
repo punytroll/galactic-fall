@@ -19,6 +19,7 @@
 
 #include <GL/gl.h>
 
+#include "object_aspect_physical.h"
 #include "scanner_display.h"
 #include "ship.h"
 #include "star.h"
@@ -36,7 +37,9 @@ void ScannerDisplay::Update(void)
 {
 	if((m_Owner.IsValid() == true) && (m_Owner->GetTarget().IsValid() == true))
 	{
-		float RadialSize(m_Owner->GetTarget()->GetRadialSize());
+		assert(m_Owner->GetTarget()->GetAspectPhysical() != 0);
+		
+		float RadialSize(m_Owner->GetTarget()->GetAspectPhysical()->GetRadialSize());
 		float ExtendedRadialSize((5.0f / 4.0f) * RadialSize);
 		float FieldOfView(asinf(ExtendedRadialSize / sqrtf(ExtendedRadialSize * ExtendedRadialSize + 16 * RadialSize * RadialSize)));
 		

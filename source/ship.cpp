@@ -31,6 +31,7 @@
 #include "message_dispatcher.h"
 #include "object_aspect_accessory.h"
 #include "object_aspect_object_container.h"
+#include "object_aspect_physical.h"
 #include "object_aspect_position.h"
 #include "object_aspect_update.h"
 #include "object_aspect_visualization.h"
@@ -64,13 +65,14 @@ Ship::Ship(const ShipClass * ShipClass) :
 	// initialize object aspects
 	AddAspectName();
 	AddAspectObjectContainer();
+	AddAspectPhysical();
+	GetAspectPhysical()->SetRadialSize(m_ShipClass->GetModel()->GetRadialSize());
 	AddAspectPosition();
 	AddAspectUpdate();
 	GetAspectUpdate()->SetCallback(Method(this, &Ship::Update));
 	AddAspectVisualization();
 	// other
 	SetHull(m_ShipClass->GetHull());
-	SetRadialSize(m_ShipClass->GetModel()->GetRadialSize());
 	
 	const std::map< std::string, Slot * > & ShipClassSlots(GetShipClass()->GetSlots());
 	
@@ -95,20 +97,25 @@ Ship::~Ship(void)
 
 float Ship::GetAvailableSpace(void) const
 {
+	assert(GetAspectObjectContainer() != 0);
+	
 	float AvailableSpace(m_ShipClass->GetMaximumAvailableSpace());
 	const std::set< Object * > & Content(GetAspectObjectContainer()->GetContent());
 	
 	for(std::set< Object * >::const_iterator ContentIterator = Content.begin(); ContentIterator != Content.end(); ++ContentIterator)
 	{
-		if(dynamic_cast< Commodity * >(*ContentIterator) != 0)
+		if((*ContentIterator)->GetAspectPhysical() != 0)
 		{
-			AvailableSpace -= dynamic_cast< Commodity * >(*ContentIterator)->GetSpaceRequirement();
-		}
-		else if(dynamic_cast< Weapon * >(*ContentIterator) != 0)
-		{
-			if(dynamic_cast< Weapon * >(*ContentIterator)->GetAspectAccessory()->GetSlot() == 0)
+			if((*ContentIterator)->GetAspectAccessory() != 0)
 			{
-				AvailableSpace -= dynamic_cast< Weapon * >(*ContentIterator)->GetSpaceRequirement();
+				if((*ContentIterator)->GetAspectAccessory()->GetSlot() == 0)
+				{
+					AvailableSpace -= (*ContentIterator)->GetAspectPhysical()->GetSpaceRequirement();
+				}
+			}
+			else
+			{
+				AvailableSpace -= (*ContentIterator)->GetAspectPhysical()->GetSpaceRequirement();
 			}
 		}
 	}

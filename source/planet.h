@@ -23,7 +23,7 @@
 #include <string>
 #include <vector>
 
-#include "physical_object.h"
+#include "object.h"
 #include "type_definitions.h"
 
 class AssetClass;
@@ -54,7 +54,7 @@ inline float PlanetAssetClass::GetBasePriceModifier(void) const
 	return m_BasePriceModifier;
 }
 
-class Planet : public PhysicalObject
+class Planet : public Object
 {
 public:
 	Planet(const std::string & Identifier);

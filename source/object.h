@@ -32,6 +32,7 @@ class ObjectAspectAccessory;
 class ObjectAspectMessages;
 class ObjectAspectName;
 class ObjectAspectObjectContainer;
+class ObjectAspectPhysical;
 class ObjectAspectPosition;
 class ObjectAspectUpdate;
 class ObjectAspectVisualization;
@@ -61,6 +62,8 @@ public:
 	const ObjectAspectName * GetAspectName(void) const;
 	ObjectAspectObjectContainer * GetAspectObjectContainer(void);
 	const ObjectAspectObjectContainer * GetAspectObjectContainer(void) const;
+	ObjectAspectPhysical * GetAspectPhysical(void);
+	const ObjectAspectPhysical * GetAspectPhysical(void) const;
 	ObjectAspectPosition * GetAspectPosition(void);
 	const ObjectAspectPosition * GetAspectPosition(void) const;
 	ObjectAspectUpdate * GetAspectUpdate(void);
@@ -74,6 +77,7 @@ public:
 	void AddAspectMessages(void);
 	void AddAspectName(void);
 	void AddAspectObjectContainer(void);
+	void AddAspectPhysical(void);
 	void AddAspectPosition(void);
 	void AddAspectUpdate(void);
 	void AddAspectVisualization(void);
@@ -90,6 +94,7 @@ private:
 	ObjectAspectMessages * m_AspectMessages;
 	ObjectAspectName * m_AspectName;
 	ObjectAspectObjectContainer * m_AspectObjectContainer;
+	ObjectAspectPhysical * m_AspectPhysical;
 	ObjectAspectPosition * m_AspectPosition;
 	ObjectAspectUpdate * m_AspectUpdate;
 	ObjectAspectVisualization * m_AspectVisualization;
@@ -155,6 +160,16 @@ inline ObjectAspectObjectContainer * Object::GetAspectObjectContainer(void)
 inline const ObjectAspectObjectContainer * Object::GetAspectObjectContainer(void) const
 {
 	return m_AspectObjectContainer;
+}
+
+inline ObjectAspectPhysical * Object::GetAspectPhysical(void)
+{
+	return m_AspectPhysical;
+}
+
+inline const ObjectAspectPhysical * Object::GetAspectPhysical(void) const
+{
+	return m_AspectPhysical;
 }
 
 inline ObjectAspectPosition * Object::GetAspectPosition(void)

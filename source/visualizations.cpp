@@ -27,6 +27,7 @@
 #include "graphics_model_object.h"
 #include "graphics_particle_system.h"
 #include "object_aspect_accessory.h"
+#include "object_aspect_physical.h"
 #include "object_aspect_position.h"
 #include "object_aspect_visualization.h"
 #include "planet.h"
@@ -113,6 +114,8 @@ void VisualizePlanet(Planet * Planet, Graphics::Node * Container)
 	assert(Planet != 0);
 	assert(Planet->GetAspectVisualization() != 0);
 	assert(Planet->GetAspectVisualization()->GetVisualization().IsValid() == false);
+	assert(Planet->GetAspectPhysical() != 0);
+	assert(Planet->GetAspectPosition() != 0);
 	assert(Container != 0);
 	
 	Graphics::ModelObject * Visualization(new Graphics::ModelObject());
@@ -126,7 +129,7 @@ void VisualizePlanet(Planet * Planet, Graphics::Node * Container)
 	Visualization->SetNormalize(true);
 	Visualization->SetOrientation(Quaternion(true));
 	Visualization->SetPosition(Planet->GetAspectPosition()->GetPosition());
-	Visualization->SetScale(Planet->GetRadialSize());
+	Visualization->SetScale(Planet->GetAspectPhysical()->GetRadialSize());
 	Visualization->SetUseLighting(true);
 	
 	// create the Reference
