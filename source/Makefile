@@ -489,6 +489,14 @@ all: check-dependencies check-consistency binary
 clean:
 	$(RM) binary
 	$(RM) $(OBJECT_FILES)
+	@MORE_OBJECT_FILES=$(wildcard *.o); \
+	if [ x$${MORE_OBJECT_FILES} != x ]; then \
+		echo -e "\nThe following object files were not deleted by the clean rule. You may want to delete them by hand."; \
+		for OBJECT_FILE in $${MORE_OBJECT_FILES}; do \
+			echo -e "\t$${OBJECT_FILE}"; \
+		done; \
+		echo ""; \
+	fi
 
 check-dependencies:
 	@if [ x`which pkg-config` = x ]; then \
@@ -504,22 +512,22 @@ check-dependencies:
 check-consistency:
 	@HEADER_FILE=; \
 	for HEADER_DEPENDENCY in $(HEADER_DEPENDENCIES); do \
-	    if [ -z $${HEADER_FILE} ]; then \
-		HEADER_FILE=$${HEADER_DEPENDENCY}; \
-	    else \
-		if [ -z "$${HEADER_DEPENDENCY}" ]; then \
-		    echo -e "\nThe build system contains no dependency specification for the header file '"$${HEADER_FILE}"'.\n"; \
-		    exit 1; \
-		else \
-		    for HEADER_FILE_DEPENDENCY in $${HEADER_DEPENDENCY}; do \
-			if [ ! -f $${HEADER_FILE_DEPENDENCY} ]; then \
-			    echo -e "\nThe build system contains a reference to the non-existent file '"$${HEADER_FILE_DEPENDENCY}"' for the header file '"$${HEADER_FILE}"'.\n"; \
-			    exit 1; \
+		if [ -z $${HEADER_FILE} ]; then \
+			HEADER_FILE=$${HEADER_DEPENDENCY}; \
+			else \
+			if [ -z "$${HEADER_DEPENDENCY}" ]; then \
+				echo -e "\nThe build system contains no dependency specification for the header file '"$${HEADER_FILE}"'.\n"; \
+				exit 1; \
+			else \
+				for HEADER_FILE_DEPENDENCY in $${HEADER_DEPENDENCY}; do \
+				if [ ! -f $${HEADER_FILE_DEPENDENCY} ]; then \
+					echo -e "\nThe build system contains a reference to the non-existent file '"$${HEADER_FILE_DEPENDENCY}"' for the header file '"$${HEADER_FILE}"'.\n"; \
+					exit 1; \
+				fi; \
+				done; \
 			fi; \
-		    done; \
-		fi; \
-		HEADER_FILE=; \
-	    fi \
+			HEADER_FILE=; \
+		fi \
 	done
 
 $(OBJECT_FILES): $(CXXFLAGS_configuration)
