@@ -24,6 +24,7 @@
 #include "message.h"
 #include "message_dispatcher.h"
 #include "object_aspect_object_container.h"
+#include "object_aspect_physical.h"
 #include "planet.h"
 #include "ship.h"
 
@@ -48,6 +49,7 @@ Planet::Planet(const std::string & Identifier) :
 {
 	// initialize object aspects
 	AddAspectName();
+	AddAspectPhysical();
 	AddAspectPosition();
 	AddAspectVisualization();
 }
@@ -71,7 +73,8 @@ void Planet::SetDescription(const std::string & Description)
 void Planet::SetSize(const float & Size)
 {
 	m_Size = Size;
-	SetRadialSize(m_Size / 2.0f);
+	assert(GetAspectPhysical() != 0);
+	GetAspectPhysical()->SetRadialSize(m_Size / 2.0f);
 }
 
 void Planet::SetColor(const Color & NewColor)

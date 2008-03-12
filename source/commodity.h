@@ -23,12 +23,12 @@
 #include "math/axis_angle.h"
 #include "math/quaternion.h"
 #include "math/vector3f.h"
-#include "physical_object.h"
+#include "object.h"
 
 class CommodityClass;
 class Model;
 
-class Commodity : public PhysicalObject
+class Commodity : public Object
 {
 public:
 	Commodity(const CommodityClass * CommodityClass);

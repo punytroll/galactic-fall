@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006  Hagen Möbius
+ * Copyright (C) 2008  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,19 +17,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef PHYSICAL_OBJECT_H
-#define PHYSICAL_OBJECT_H
+#ifndef OBJECT_ASPECT_PHYSICAL_H
+#define OBJECT_ASPECT_PHYSICAL_H
 
-#include <map>
-#include <vector>
-
-#include "object.h"
 #include "type_definitions.h"
 
-class PhysicalObject : public Object
+class ObjectAspectPhysical
 {
 public:
-	virtual ~PhysicalObject(void);
+	ObjectAspectPhysical(void);
 	// getters
 	float GetRadialSize(void) const;
 	unsigned_numeric GetSpaceRequirement(void) const;
@@ -41,22 +37,22 @@ private:
 	unsigned_numeric m_SpaceRequirement;
 };
 
-inline float PhysicalObject::GetRadialSize(void) const
+inline float ObjectAspectPhysical::GetRadialSize(void) const
 {
 	return m_RadialSize;
 }
 
-inline unsigned_numeric PhysicalObject::GetSpaceRequirement(void) const
+inline unsigned_numeric ObjectAspectPhysical::GetSpaceRequirement(void) const
 {
 	return m_SpaceRequirement;
 }
 
-inline void PhysicalObject::SetRadialSize(float RadialSize)
+inline void ObjectAspectPhysical::SetRadialSize(float RadialSize)
 {
 	m_RadialSize = RadialSize;
 }
 
-inline void PhysicalObject::SetSpaceRequirement(unsigned_numeric SpaceRequirement)
+inline void ObjectAspectPhysical::SetSpaceRequirement(unsigned_numeric SpaceRequirement)
 {
 	m_SpaceRequirement = SpaceRequirement;
 }

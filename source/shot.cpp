@@ -18,6 +18,7 @@
 **/
 
 #include "game_time.h"
+#include "object_aspect_physical.h"
 #include "object_aspect_position.h"
 #include "object_aspect_update.h"
 #include "shot.h"
@@ -31,12 +32,12 @@ Shot::Shot(const WeaponClass * WeaponClass) :
 	m_Damage(WeaponClass->GetParticleDamage())
 {
 	// initialize object aspects
+	AddAspectPhysical();
+	GetAspectPhysical()->SetRadialSize(0.54f);
 	AddAspectPosition();
 	AddAspectUpdate();
 	GetAspectUpdate()->SetCallback(Method(this, &Shot::Update));
 	AddAspectVisualization();
-	// other
-	SetRadialSize(0.54f);
 }
 
 Shot::~Shot(void)

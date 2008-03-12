@@ -100,7 +100,7 @@ SlotListItem::SlotListItem(Widget * SupWidget, Slot * Slot) :
 
 void SlotListItem::Update(void)
 {
-	PhysicalObject * MountedObject(dynamic_cast< PhysicalObject * >(m_Slot->GetMountedObject().Get()));
+	Object * MountedObject(dynamic_cast< Object * >(m_Slot->GetMountedObject().Get()));
 	
 	if(MountedObject != 0)
 	{

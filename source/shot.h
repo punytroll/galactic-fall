@@ -21,30 +21,30 @@
 #define SHOT_H
 
 #include "math/vector3f.h"
-#include "physical_object.h"
+#include "object.h"
 
 class Model;
 class WeaponClass;
 
-class Shot : public PhysicalObject
+class Shot : public Object
 {
 public:
 	Shot(const WeaponClass * WeaponClass);
 	virtual ~Shot(void);
 	// getters
 	float GetDamage(void) const;
-	const Reference< PhysicalObject > & GetShooter(void) const;
+	const Reference< Object > & GetShooter(void) const;
 	const Vector3f & GetVelocity(void) const;
 	const WeaponClass * GetWeaponClass(void) const;
 	// setters
-	void SetShooter(Reference< PhysicalObject > Shooter);
+	void SetShooter(Reference< Object > Shooter);
 	void SetVelocity(const Vector3f & Velocity);
 private:
 	// slot for the object aspect Update
 	bool Update(float Seconds);
 private:
 	const WeaponClass * m_WeaponClass;
-	Reference< PhysicalObject > m_Shooter;
+	Reference< Object > m_Shooter;
 	double m_TimeOfDeath;
 	Vector3f m_Velocity;
 	float m_Damage;
@@ -55,7 +55,7 @@ inline float Shot::GetDamage(void) const
 	return m_Damage;
 }
 
-inline const Reference< PhysicalObject > & Shot::GetShooter(void) const
+inline const Reference< Object > & Shot::GetShooter(void) const
 {
 	return m_Shooter;
 }
@@ -70,7 +70,7 @@ inline const WeaponClass * Shot::GetWeaponClass(void) const
 	return m_WeaponClass;
 }
 
-inline void Shot::SetShooter(Reference< PhysicalObject > Shooter)
+inline void Shot::SetShooter(Reference< Object > Shooter)
 {
 	m_Shooter = Shooter;
 }

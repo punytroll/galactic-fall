@@ -29,6 +29,7 @@
 #include "object_aspect_accessory.h"
 #include "object_aspect_name.h"
 #include "object_aspect_object_container.h"
+#include "object_aspect_physical.h"
 #include "object_aspect_position.h"
 #include "ship.h"
 #include "shot.h"
@@ -49,11 +50,11 @@ Weapon::Weapon(const WeaponClass * WeaponClass) :
 	GetAspectAccessory()->SetSlotClassIdentifier(m_WeaponClass->GetSlotClassIdentifier());
 	AddAspectName();
 	GetAspectName()->SetName(m_WeaponClass->GetName());
+	AddAspectPhysical();
+	GetAspectPhysical()->SetSpaceRequirement(m_WeaponClass->GetSpaceRequirement());
 	AddAspectPosition();
 	GetAspectPosition()->SetOrientation(m_WeaponClass->GetOrientation());
 	AddAspectVisualization();
-	// other
-	SetSpaceRequirement(m_WeaponClass->GetSpaceRequirement());
 }
 
 void Weapon::Update(float Seconds)

@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006  Hagen Möbius
+ * Copyright (C) 2008  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,8 +17,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include "physical_object.h"
+#include "object_aspect_physical.h"
 
-PhysicalObject::~PhysicalObject(void)
+ObjectAspectPhysical::ObjectAspectPhysical(void) :
+	m_RadialSize(0.0f),
+	m_SpaceRequirement(0)
 {
 }

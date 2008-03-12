@@ -20,12 +20,12 @@
 #ifndef WEAPON_H
 #define WEAPON_H
 
-#include "physical_object.h"
+#include "object.h"
 
 class Ship;
 class WeaponClass;
 
-class Weapon : public PhysicalObject
+class Weapon : public Object
 {
 public:
 	Weapon(const WeaponClass * WeaponClass);

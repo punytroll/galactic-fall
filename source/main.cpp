@@ -70,6 +70,7 @@
 #include "object_aspect_accessory.h"
 #include "object_aspect_name.h"
 #include "object_aspect_object_container.h"
+#include "object_aspect_physical.h"
 #include "object_aspect_position.h"
 #include "object_aspect_update.h"
 #include "object_aspect_visualization.h"
@@ -231,7 +232,9 @@ int WantToScoop(const Ship * Ship, const Commodity * Commodity)
 		return NO_SCOOP_TARGET;
 	}
 	// test distance
-	if((Commodity->GetAspectPosition()->GetPosition() - Ship->GetAspectPosition()->GetPosition()).SquaredLength() > 5.0f * Commodity->GetRadialSize() * Commodity->GetRadialSize())
+	assert(Commodity->GetAspectPhysical() != 0);
+	assert(Commodity->GetAspectPosition() != 0);
+	if((Commodity->GetAspectPosition()->GetPosition() - Ship->GetAspectPosition()->GetPosition()).SquaredLength() > 5.0f * Commodity->GetAspectPhysical()->GetRadialSize() * Commodity->GetAspectPhysical()->GetRadialSize())
 	{
 		return TOO_FAR_AWAY;
 	}
@@ -676,6 +679,7 @@ void CalculateMovements(System * System, float Seconds)
 		Shot * TheShot(*ShotIterator);
 		
 		++ShotIterator;
+		assert(TheShot->GetAspectUpdate() != 0);
 		if(TheShot->GetAspectUpdate()->Update(Seconds) == false)
 		{
 			DeleteObject(TheShot);
@@ -683,6 +687,7 @@ void CalculateMovements(System * System, float Seconds)
 		}
 		else
 		{
+			assert(TheShot->GetAspectVisualization() != 0);
 			// update visualization
 			TheShot->GetAspectVisualization()->GetVisualization()->SetOrientation(TheShot->GetAspectPosition()->GetOrientation());
 			TheShot->GetAspectVisualization()->GetVisualization()->SetPosition(TheShot->GetAspectPosition()->GetPosition());
@@ -696,7 +701,11 @@ void CalculateMovements(System * System, float Seconds)
 				
 				if((TheShot->GetShooter().IsValid() == true) && (TheShot->GetShooter().Get() != TheShip))
 				{
-					if((TheShot->GetAspectPosition()->GetPosition() - TheShip->GetAspectPosition()->GetPosition()).SquaredLength() < (TheShot->GetRadialSize() * TheShot->GetRadialSize() + TheShip->GetRadialSize() * TheShip->GetRadialSize()))
+					assert(TheShip->GetAspectPhysical() != 0);
+					assert(TheShip->GetAspectPosition() != 0);
+					assert(TheShot->GetAspectPhysical() != 0);
+					assert(TheShot->GetAspectPosition() != 0);
+					if((TheShot->GetAspectPosition()->GetPosition() - TheShip->GetAspectPosition()->GetPosition()).SquaredLength() < (TheShot->GetAspectPhysical()->GetRadialSize() * TheShot->GetAspectPhysical()->GetRadialSize() + TheShip->GetAspectPhysical()->GetRadialSize() * TheShip->GetAspectPhysical()->GetRadialSize()))
 					{
 						Graphics::ParticleSystem * NewHitParticleSystem(CreateParticleSystem("hit"));
 						
@@ -766,7 +775,11 @@ void CalculateMovements(System * System, float Seconds)
 			{
 				Commodity * TheCommodity(*CommodityIterator);
 				
-				if((TheShot->GetAspectPosition()->GetPosition() - TheCommodity->GetAspectPosition()->GetPosition()).SquaredLength() < (TheShot->GetRadialSize() * TheShot->GetRadialSize() + TheCommodity->GetRadialSize() * TheCommodity->GetRadialSize()))
+				assert(TheCommodity->GetAspectPhysical() != 0);
+				assert(TheCommodity->GetAspectPosition() != 0);
+				assert(TheShot->GetAspectPhysical() != 0);
+				assert(TheShot->GetAspectPosition() != 0);
+				if((TheShot->GetAspectPosition()->GetPosition() - TheCommodity->GetAspectPosition()->GetPosition()).SquaredLength() < (TheShot->GetAspectPhysical()->GetRadialSize() * TheShot->GetAspectPhysical()->GetRadialSize() + TheCommodity->GetAspectPhysical()->GetRadialSize() * TheCommodity->GetAspectPhysical()->GetRadialSize()))
 				{
 					Graphics::ParticleSystem * NewHitParticleSystem(CreateParticleSystem("hit"));
 					
@@ -916,8 +929,10 @@ void RenderSystem(System * System)
 		Color Color(1.0f, 0.0f, 0.0f, 1.0f);
 		
 		glClear(GL_DEPTH_BUFFER_BIT);
-		DrawSelection(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget().Get(), g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget()->GetRadialSize(), Color);
+		assert(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget()->GetAspectPhysical() != 0);
+		DrawSelection(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget().Get(), g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget()->GetAspectPhysical()->GetRadialSize(), Color);
 		
+		assert(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget()->GetAspectPosition() != 0);
 		Vector3f RelativePosition(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget()->GetAspectPosition()->GetPosition() - g_CharacterObserver->GetObservedCharacter()->GetShip()->GetAspectPosition()->GetPosition());
 		
 		RelativePosition.Normalize();
@@ -944,7 +959,8 @@ void RenderSystem(System * System)
 		Color Color(0.0f, 0.0f, 1.0f, 1.0f);
 		
 		glClear(GL_DEPTH_BUFFER_BIT);
-		DrawSelection(g_CharacterObserver->GetObservedCharacter()->GetShip(), g_CharacterObserver->GetObservedCharacter()->GetShip()->GetRadialSize(), Color);
+		assert(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetAspectPhysical() != 0);
+		DrawSelection(g_CharacterObserver->GetObservedCharacter()->GetShip(), g_CharacterObserver->GetObservedCharacter()->GetShip()->GetAspectPhysical()->GetRadialSize(), Color);
 	}
 }
 
