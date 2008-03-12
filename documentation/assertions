@@ -1,0 +1,11 @@
+This program makes heavy use of assertions. Assertions are used to state that a certain condition is expected to be met. The key here is "expected". As usual the border between using assertions in the right places and overusing assertions to test for input data from external sources is thin. The following points try to list certain conditions that stronly require or strongly forbid use of assertions.
+
+- The most important role of assertions is, to uncover errornous implementations.
+
+- Any function in this program should have HIGH expectations regarding their environments. If a function expects an argument to be not 0 or be in a specific range, it should assert that condition right after entering. It is ALWAYS the callers responsibility to call the function with correct parameters.
+
+- Assertions are used to verify that a certain object supports a certain aspect.
+
+- Whenever a component saves a reference to an object and the implementation "expects" this reference to stay valid while the component is storing and using it, assertions should be placed at certain key points to verify the validity of the reference.
+
+- Currently the program may also expect a correct data file. This MAY change in the future, if content suppliers are in need of a better error reporting facility than a program abort.
