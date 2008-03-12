@@ -19,6 +19,10 @@ check: all
 		./$${TEST_PROGRAM}; \
 	done
 
+clean:
+	$(RM) $(OBJECT_FILES)
+	$(RM) $(TEST_PROGRAMS)
+
 referencing: referencing.o
 	$(CXX) $(LDFLAGS) $^ -o $@
 
