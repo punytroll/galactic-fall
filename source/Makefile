@@ -511,24 +511,29 @@ check-dependencies:
 
 check-consistency:
 	@HEADER_FILE=; \
+	ERROR="no"; \
 	for HEADER_DEPENDENCY in $(HEADER_DEPENDENCIES); do \
 		if [ -z $${HEADER_FILE} ]; then \
 			HEADER_FILE=$${HEADER_DEPENDENCY}; \
-			else \
+		else \
 			if [ -z "$${HEADER_DEPENDENCY}" ]; then \
-				echo -e "\nThe build system contains no dependency specification for the header file '"$${HEADER_FILE}"'.\n"; \
-				exit 1; \
+				echo -e "\nThe build system contains no dependency specification for the header file '"$${HEADER_FILE}"'."; \
+				ERROR="yes"; \
 			else \
 				for HEADER_FILE_DEPENDENCY in $${HEADER_DEPENDENCY}; do \
-				if [ ! -f $${HEADER_FILE_DEPENDENCY} ]; then \
-					echo -e "\nThe build system contains a reference to the non-existent file '"$${HEADER_FILE_DEPENDENCY}"' for the header file '"$${HEADER_FILE}"'.\n"; \
-					exit 1; \
-				fi; \
+					if [ ! -f $${HEADER_FILE_DEPENDENCY} ]; then \
+						echo -e "\nThe build system contains a reference to the non-existent file '"$${HEADER_FILE_DEPENDENCY}"' for the header file '"$${HEADER_FILE}"'."; \
+						ERROR="yes"; \
+					fi; \
 				done; \
 			fi; \
 			HEADER_FILE=; \
-		fi \
-	done
+		fi; \
+	done; \
+	if [ $${ERROR} = "yes" ]; then \
+		echo ""; \
+		exit 1; \
+	fi
 
 $(OBJECT_FILES): $(CXXFLAGS_configuration)
 
