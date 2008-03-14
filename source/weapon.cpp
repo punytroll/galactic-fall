@@ -64,6 +64,7 @@ void Weapon::Update(float Seconds)
 		Ship * TheShip(dynamic_cast< Ship * >(GetContainer()));
 		
 		assert(TheShip != 0);
+		assert(TheShip->GetAspectPosition() != 0);
 		
 		std::stringstream IdentifierStream;
 		
@@ -71,6 +72,7 @@ void Weapon::Update(float Seconds)
 		
 		Shot * NewShot(new Shot(GetWeaponClass()));
 		
+		assert(NewShot->GetAspectPosition() != 0);
 		NewShot->SetObjectIdentifier(IdentifierStream.str());
 		NewShot->SetShooter(TheShip->GetReference());
 		
