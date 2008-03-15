@@ -17,6 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include <assert.h>
+
 #include <GL/gl.h>
 
 #include "user_interface.h"
@@ -94,61 +96,79 @@ bool UserInterface::MouseButton(int Button, int State, float X, float Y)
 {
 	if(m_CaptureWidget == 0)
 	{
-		const Vector2f & LeftTopCorner(m_RootWidget->GetPosition());
-		Vector2f RightBottomCorner(LeftTopCorner + m_RootWidget->GetSize());
-		
-		if((X >= LeftTopCorner.m_V.m_A[0]) && (X < RightBottomCorner.m_V.m_A[0]) && (Y >= LeftTopCorner.m_V.m_A[1]) && (Y < RightBottomCorner.m_V.m_A[1]))
+		assert(m_RootWidget != 0);
+		if(m_RootWidget->GetEnabled() == true)
 		{
-			return m_RootWidget->MouseButton(Button, State, X - LeftTopCorner.m_V.m_A[0], Y - LeftTopCorner.m_V.m_A[1]);
-		}
-		else
-		{
-			return false;
+			const Vector2f & LeftTopCorner(m_RootWidget->GetPosition());
+			Vector2f RightBottomCorner(LeftTopCorner + m_RootWidget->GetSize());
+			
+			if((X >= LeftTopCorner.m_V.m_A[0]) && (X < RightBottomCorner.m_V.m_A[0]) && (Y >= LeftTopCorner.m_V.m_A[1]) && (Y < RightBottomCorner.m_V.m_A[1]))
+			{
+				return m_RootWidget->MouseButton(Button, State, X - LeftTopCorner.m_V.m_A[0], Y - LeftTopCorner.m_V.m_A[1]);
+			}
 		}
 	}
 	else
 	{
-		Vector2f TopLeftCorner(m_CaptureWidget->GetGlobalPosition());
-		
-		return m_CaptureWidget->MouseButton(Button, State, X - TopLeftCorner.m_V.m_A[0], Y - TopLeftCorner.m_V.m_A[1]);
+		if(m_CaptureWidget->GetEnabled() == true)
+		{
+			Vector2f TopLeftCorner(m_CaptureWidget->GetGlobalPosition());
+			
+			return m_CaptureWidget->MouseButton(Button, State, X - TopLeftCorner.m_V.m_A[0], Y - TopLeftCorner.m_V.m_A[1]);
+		}
 	}
+	
+	return false;
 }
 
 bool UserInterface::Key(const KeyEventInformation & KeyEventInformation)
 {
-	return m_RootWidget->Key(KeyEventInformation);
+	assert(m_RootWidget != 0);
+	if(m_RootWidget->GetEnabled() == true)
+	{
+		return m_RootWidget->Key(KeyEventInformation);
+	}
+	
+	return false;
 }
 
 void UserInterface::MouseMotion(float X, float Y)
 {
 	if(m_CaptureWidget == 0)
 	{
-		const Vector2f & LeftTopCorner(m_RootWidget->GetPosition());
-		Vector2f RightBottomCorner(LeftTopCorner + m_RootWidget->GetSize());
-		
-		if((X >= LeftTopCorner.m_V.m_A[0]) && (X < RightBottomCorner.m_V.m_A[0]) && (Y >= LeftTopCorner.m_V.m_A[1]) && (Y < RightBottomCorner.m_V.m_A[1]))
+		assert(m_RootWidget != 0);
+		if(m_RootWidget->GetEnabled() == true)
 		{
-			if(m_HoverWidget != m_RootWidget)
+			const Vector2f & LeftTopCorner(m_RootWidget->GetPosition());
+			Vector2f RightBottomCorner(LeftTopCorner + m_RootWidget->GetSize());
+			
+			if((X >= LeftTopCorner.m_V.m_A[0]) && (X < RightBottomCorner.m_V.m_A[0]) && (Y >= LeftTopCorner.m_V.m_A[1]) && (Y < RightBottomCorner.m_V.m_A[1]))
 			{
-				m_HoverWidget = m_RootWidget;
-				m_RootWidget->MouseEnter();
+				if(m_HoverWidget != m_RootWidget)
+				{
+					m_HoverWidget = m_RootWidget;
+					m_RootWidget->MouseEnter();
+				}
+				m_RootWidget->MouseMotion(X, Y);
 			}
-			m_RootWidget->MouseMotion(X, Y);
-		}
-		else
-		{
-			if(m_HoverWidget == m_RootWidget)
+			else
 			{
-				m_HoverWidget = 0;
-				m_RootWidget->MouseLeave();
+				if(m_HoverWidget == m_RootWidget)
+				{
+					m_HoverWidget = 0;
+					m_RootWidget->MouseLeave();
+				}
 			}
 		}
 	}
 	else
 	{
-		Vector2f TopLeftCorner(m_CaptureWidget->GetGlobalPosition());
-		
-		m_CaptureWidget->MouseMotion(X - TopLeftCorner.m_V.m_A[0], Y - TopLeftCorner.m_V.m_A[1]);
+		if(m_CaptureWidget->GetEnabled() == true)
+		{
+			Vector2f TopLeftCorner(m_CaptureWidget->GetGlobalPosition());
+			
+			m_CaptureWidget->MouseMotion(X - TopLeftCorner.m_V.m_A[0], Y - TopLeftCorner.m_V.m_A[1]);
+		}
 	}
 }
 
@@ -158,9 +178,12 @@ void UserInterface::OnDestroy(Widget * EventSource)
 	{
 		m_CaptureWidget = 0;
 	}
-	else if(EventSource == m_RootWidget)
+	if(EventSource == m_HoverWidget)
+	{
+		m_HoverWidget = 0;
+	}
+	if(EventSource == m_RootWidget)
 	{
 		m_RootWidget = 0;
-		m_HoverWidget = 0;
 	}
 }
