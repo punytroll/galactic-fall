@@ -1,0 +1,31 @@
+The Blueprint Concept
+=====================
+
+This document describes the idea behind the blueprint concept in this program.
+
+The Problem
+===========
+
+At a certain point in the development of this project a considerable amount of source code had been written to provide a class system to the game objects. The classes were intended to provide a set of characteristics common to a subset of game objects. The game objects could reference a certain class object holding the information that was common to all game objects of this class.
+
+Take for example the class Ship. Every instance of this class, that is every ship in the program, held a reference to a ShipClass object which described some characteristics that were common among all ships that referenced this ShipClass object.
+
+While this approach uses memory quiet efficiently and provides a good way to hold common data in a central place it also has some disadvantages.
+
+First of all it lacks flexibility at runtime. It is absolutly impossible to "enhance" a certain property of one instance and leave all other instances unchanged. This of course can also be considered a feature, because that is, what it was designed for. However the need for flexibility is getting more and more obvious.
+
+Secondly this approach is tedious to implement. Every "class of object" (as in ships, weapons, generators, ...) requires a whole set of new C++ classes. Given you wanted to add a class "Shield", this would also add "ShieldClass", "ShieldClassManager" and some reading functions to the ARX reading class.
+
+
+The Solution
+============
+
+The blueprint concept was conceived to put an end to this C++ class inflation and, at the same time, provide many more features inside the game.
+
+
+The Roadmap
+===========
+
+Implementing the blueprint system and integrating it into the program will be done in many minor steps.
+
+1. Generalize the *ClassManager classes with a template class called ClassManager< ClassType >.
