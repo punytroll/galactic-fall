@@ -33,15 +33,14 @@
 
 #include "arx_reading.h"
 #include "asset_class.h"
-#include "asset_class_manager.h"
 #include "callbacks.h"
 #include "camera.h"
 #include "character.h"
+#include "class_manager.h"
 #include "color.h"
 #include "command_mind.h"
 #include "commodity.h"
 #include "commodity_class.h"
-#include "commodity_class_manager.h"
 #include "destroy_listener.h"
 #include "draw_text.h"
 #include "galaxy.h"
@@ -84,10 +83,9 @@
 #include "scanner_display.h"
 #include "ship.h"
 #include "ship_class.h"
-#include "ship_class_manager.h"
 #include "shot.h"
 #include "slot.h"
-#include "slot_class_manager.h"
+#include "slot_class.h"
 #include "star.h"
 #include "star_map_display.h"
 #include "state_machine.h"
@@ -101,14 +99,13 @@
 #include "visualizations.h"
 #include "weapon.h"
 #include "weapon_class.h"
-#include "weapon_class_manager.h"
 #include "widget.h"
 #include "xml_puny_dom.h"
 #include "xml_stream.h"
 
 // these objects are exported via globals.h
-AssetClassManager * g_AssetClassManager(0);
-CommodityClassManager * g_CommodityClassManager(0);
+ClassManager< AssetClass > * g_AssetClassManager(0);
+ClassManager< CommodityClass > * g_CommodityClassManager(0);
 Galaxy * g_Galaxy(0);
 Graphics::Engine * g_GraphicsEngine(0);
 Graphics::Scene * g_MainScene(0);
@@ -122,11 +119,11 @@ Graphics::ModelManager * g_ModelManager(0);
 Graphics::TextureManager * g_TextureManager(0);
 MessageDispatcher * g_MessageDispatcher(0);
 ObjectFactory * g_ObjectFactory(0);
-ShipClassManager * g_ShipClassManager(0);
-SlotClassManager * g_SlotClassManager(0);
+ClassManager< ShipClass > * g_ShipClassManager(0);
+ClassManager< SlotClass > * g_SlotClassManager(0);
 SystemStatistics * g_SystemStatistics(0);
 UserInterface * g_UserInterface(0);
-WeaponClassManager * g_WeaponClassManager(0);
+ClassManager< WeaponClass > * g_WeaponClassManager(0);
 
 // global widget pointers
 Label * g_CreditsLabel(0);
@@ -1074,7 +1071,7 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 		NewCharacter->SetCredits(GetRandomU4Byte(500, 2500));
 		for(int NumberOfAssetClasses = static_cast< int >(GetRandomFloatFromExponentialDistribution(2)); NumberOfAssetClasses > 0; --NumberOfAssetClasses)
 		{
-			const std::map< std::string, AssetClass * > & AssetClasses(g_AssetClassManager->GetAssetClasses());
+			const std::map< std::string, AssetClass * > & AssetClasses(g_AssetClassManager->GetClasses());
 			std::map< std::string, AssetClass * >::const_iterator AssetClassIterator(AssetClasses.begin());
 			
 			for(std::map< std::string, AssetClass * >::size_type Choice = GetRandomInteger(AssetClasses.size() - 1); Choice > 0; --Choice)
@@ -2677,8 +2674,8 @@ int main(int argc, char ** argv)
 	
 	g_MainPerspective.SetNearClippingPlane(1.0f);
 	g_MainPerspective.SetFarClippingPlane(1000.f);
-	g_AssetClassManager = new AssetClassManager();
-	g_CommodityClassManager = new CommodityClassManager();
+	g_AssetClassManager = new ClassManager< AssetClass >();
+	g_CommodityClassManager = new ClassManager< CommodityClass >();
 	g_Galaxy = 0;
 	g_GraphicsEngine = new Graphics::Engine();
 	g_GraphicsEngine->SetOnDestroyCallback(OnGraphicsNodeDestroyCallback);
@@ -2687,11 +2684,11 @@ int main(int argc, char ** argv)
 	g_MessageDispatcher = new MessageDispatcher();
 	g_ModelManager = new Graphics::ModelManager();
 	g_ObjectFactory = new ObjectFactory();
-	g_ShipClassManager = new ShipClassManager();
-	g_SlotClassManager = new SlotClassManager();
+	g_ShipClassManager = new ClassManager< ShipClass >();
+	g_SlotClassManager = new ClassManager< SlotClass >();
 	g_TextureManager = new Graphics::TextureManager();
 	g_UserInterface = new UserInterface();
-	g_WeaponClassManager = new WeaponClassManager();
+	g_WeaponClassManager = new ClassManager< WeaponClass >();
 	g_GameTimeTimeoutNotifications = new TimeoutNotificationManager();
 	g_RealTimeTimeoutNotifications = new TimeoutNotificationManager();
 	g_SystemStatistics = new SystemStatistics();

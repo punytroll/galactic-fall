@@ -18,6 +18,7 @@
 **/
 
 #include "button.h"
+#include "class_manager.h"
 #include "color.h"
 #include "globals.h"
 #include "key_event_information.h"
@@ -31,7 +32,6 @@
 #include "ship.h"
 #include "slot.h"
 #include "slot_class.h"
-#include "slot_class_manager.h"
 #include "weapon.h"
 #include "weapon_class.h"
 

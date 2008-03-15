@@ -19,16 +19,14 @@
 
 #include <stdexcept>
 
+#include "class_manager.h"
 #include "commodity.h"
 #include "commodity_class.h"
-#include "commodity_class_manager.h"
 #include "globals.h"
 #include "object_factory.h"
 #include "ship.h"
-#include "ship_class_manager.h"
 #include "weapon.h"
 #include "weapon_class.h"
-#include "weapon_class_manager.h"
 
 Object * ObjectFactory::Create(const std::string & Type, const std::string & Class) const
 {
