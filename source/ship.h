@@ -81,8 +81,8 @@ public:
 	void SetVelocity(const Vector3f & Velocity);
 	// modifiers
 	Slot * CreateSlot(const SlotClass * SlotClass, const std::string & SlotIdentifier);
-	bool Mount(Object * Object, const std::string & SlotIdentifier);
-	bool Unmount(const std::string & SlotIdentifier);
+	void Mount(Object * Object, const std::string & SlotIdentifier);
+	void Unmount(const std::string & SlotIdentifier);
 private:
 	// slot for the object aspect Update
 	bool Update(float Seconds);
