@@ -31,17 +31,20 @@
 #define EV_MOUSE_WHEEL_DOWN 4
 #define EV_MOUSE_WHEEL_UP 5
 
-class AssetClassManager;
-class CommodityClassManager;
+template < class ClassType >
+class ClassManager;
+
+class AssetClass;
+class CommodityClass;
 class Galaxy;
 class MessageDispatcher;
 class ObjectFactory;
-class ShipClassManager;
-class SlotClassManager;
+class ShipClass;
+class SlotClass;
 class SystemStatistics;
 class UserInterface;
 class TimeoutNotificationManager;
-class WeaponClassManager;
+class WeaponClass;
 
 namespace Graphics
 {
@@ -67,8 +70,8 @@ enum WantReturnCode
 	TOO_NEAR_TO_STELLAR_OBJECT
 };
 
-extern AssetClassManager * g_AssetClassManager;
-extern CommodityClassManager * g_CommodityClassManager;
+extern ClassManager< AssetClass > * g_AssetClassManager;
+extern ClassManager< CommodityClass > * g_CommodityClassManager;
 extern Graphics::Node * g_CommodityLayer;
 extern Galaxy * g_Galaxy;
 extern TimeoutNotificationManager * g_GameTimeTimeoutNotifications;
@@ -78,12 +81,12 @@ extern MessageDispatcher * g_MessageDispatcher;
 extern Graphics::ModelManager * g_ModelManager;
 extern ObjectFactory * g_ObjectFactory;
 extern TimeoutNotificationManager * g_RealTimeTimeoutNotifications;
-extern ShipClassManager * g_ShipClassManager;
+extern ClassManager< ShipClass > * g_ShipClassManager;
 extern Graphics::Node * g_ShotLayer;
-extern SlotClassManager * g_SlotClassManager;
+extern ClassManager< SlotClass > * g_SlotClassManager;
 extern SystemStatistics * g_SystemStatistics;
 extern Graphics::TextureManager * g_TextureManager;
 extern UserInterface * g_UserInterface;
-extern WeaponClassManager * g_WeaponClassManager;
+extern ClassManager< WeaponClass > * g_WeaponClassManager;
 
 #endif
