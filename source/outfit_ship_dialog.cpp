@@ -25,6 +25,7 @@
 #include "object_aspect_accessory.h"
 #include "object_aspect_name.h"
 #include "object_aspect_object_container.h"
+#include "object_aspect_physical.h"
 #include "outfit_ship_dialog.h"
 #include "scroll_box.h"
 #include "ship.h"
@@ -383,8 +384,20 @@ void OutfitShipDialog::RebuildAccessoryList(void)
 
 void OutfitShipDialog::UpdateButtons(void)
 {
-	m_UnmountButton->SetEnabled((m_SelectedSlotListItem != 0) && (m_SelectedSlotListItem->GetSlot()->GetMountedObject().IsValid() == true));
-	m_MountButton->SetEnabled((m_SelectedSlotListItem != 0) && (m_SelectedSlotListItem->GetSlot()->GetMountedObject().IsValid() == false) && (m_SelectedAccessoryListItem != 0) && (m_SelectedSlotListItem->GetSlot()->GetSlotClass()->AcceptsSlotClassIdentifier(m_SelectedAccessoryListItem->GetAccessory()->GetAspectAccessory()->GetSlotClassIdentifier()) == true));
+	m_UnmountButton->SetEnabled(false);
+	m_MountButton->SetEnabled(false);
+	if(m_SelectedSlotListItem != 0)
+	{
+		if(m_SelectedSlotListItem->GetSlot()->GetMountedObject().IsValid() == false)
+		{
+			m_MountButton->SetEnabled((m_SelectedAccessoryListItem != 0) && (m_SelectedSlotListItem->GetSlot()->GetSlotClass()->AcceptsSlotClassIdentifier(m_SelectedAccessoryListItem->GetAccessory()->GetAspectAccessory()->GetSlotClassIdentifier()) == true));
+		}
+		else
+		{
+			assert(m_SelectedSlotListItem->GetSlot()->GetMountedObject()->GetAspectPhysical() != 0);
+			m_UnmountButton->SetEnabled((m_Ship->GetAvailableSpace() >= m_SelectedSlotListItem->GetSlot()->GetMountedObject()->GetAspectPhysical()->GetSpaceRequirement()));
+		}
+	}
 }
 
 bool OutfitShipDialog::OnClicked(Widget * EventSource)
@@ -397,27 +410,24 @@ bool OutfitShipDialog::OnClicked(Widget * EventSource)
 	}
 	else if(EventSource == m_MountButton)
 	{
-		if((m_SelectedSlotListItem != 0) && (m_SelectedAccessoryListItem != 0) && (m_SelectedSlotListItem->GetSlot()->GetMountedObject().IsValid() == false))
-		{
-			m_Ship->Mount(m_SelectedAccessoryListItem->GetAccessory(), m_SelectedSlotListItem->GetSlot()->GetIdentifier());
-			m_SelectedSlotListItem->Update();
-			RebuildAccessoryList();
-			UpdateButtons();
-			
-			return true;
-		}
+		assert(m_SelectedAccessoryListItem != 0);
+		assert(m_SelectedSlotListItem != 0);
+		m_Ship->Mount(m_SelectedAccessoryListItem->GetAccessory(), m_SelectedSlotListItem->GetSlot()->GetIdentifier());
+		m_SelectedSlotListItem->Update();
+		RebuildAccessoryList();
+		UpdateButtons();
+		
+		return true;
 	}
 	else if(EventSource == m_UnmountButton)
 	{
-		if((m_SelectedSlotListItem != 0) && (m_SelectedSlotListItem->GetSlot()->GetMountedObject().IsValid() == true))
-		{
-			m_Ship->Unmount(m_SelectedSlotListItem->GetSlot()->GetIdentifier());
-			m_SelectedSlotListItem->Update();
-			RebuildAccessoryList();
-			UpdateButtons();
-			
-			return true;
-		}
+		assert(m_SelectedSlotListItem != 0);
+		m_Ship->Unmount(m_SelectedSlotListItem->GetSlot()->GetIdentifier());
+		m_SelectedSlotListItem->Update();
+		RebuildAccessoryList();
+		UpdateButtons();
+		
+		return true;
 	}
 	
 	return false;
