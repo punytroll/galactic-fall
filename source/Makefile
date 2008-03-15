@@ -489,9 +489,9 @@ all: check-dependencies check-consistency binary
 clean:
 	$(RM) binary
 	$(RM) $(OBJECT_FILES)
-	@MORE_OBJECT_FILES="$(wildcard *.o)"; \
+	@MORE_OBJECT_FILES="$(filter-out $(OBJECT_FILES),$(wildcard *.o))"; \
 	if [ x"$${MORE_OBJECT_FILES}" != x ]; then \
-		echo -e "\nThe following object files were not deleted by the clean rule. You may want to delete them by hand."; \
+		echo -e "\nThe following object files have not been removed automatically. You may want to remove them by hand."; \
 		for OBJECT_FILE in $${MORE_OBJECT_FILES}; do \
 			echo -e "\t$${OBJECT_FILE}"; \
 		done; \
