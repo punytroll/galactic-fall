@@ -51,7 +51,7 @@ public:
 	bool m_Scoop;
 	// getters
 	float GetAvailableSpace(void) const;
-	unsigned_numeric GetContentAmount(const std::string & Type, const std::string & Class) const;
+	unsigned_numeric GetContentAmount(const std::string & TypeIdentifier, const std::string & ClassIdentifier) const;
 	System * GetCurrentSystem(void);
 	const System * GetCurrentSystem(void) const;
 	Reference< Graphics::ParticleSystem > & GetEngineGlowParticleSystem(void);
