@@ -194,11 +194,11 @@ bool Ship::Update(float Seconds)
 			
 			for(std::set< Object * >::iterator ContentIterator = Content.begin(); ContentIterator != Content.end(); ++ContentIterator)
 			{
-				Character * TheCharacter(dynamic_cast< Character * >(*ContentIterator));
+				Object * Content(*ContentIterator);
 				
-				if(TheCharacter != 0)
+				if(Content->GetTypeIdentifier() == "character")
 				{
-					TheCharacter->GetMapKnowledge()->AddExploredSystem(NewSystem);
+					dynamic_cast< Character * >(Content)->GetMapKnowledge()->AddExploredSystem(NewSystem);
 				}
 			}
 			SetLinkedSystemTarget(0);
@@ -459,11 +459,11 @@ void Ship::SetFuel(float Fuel)
 		
 		for(std::set< Object * >::iterator ContentIterator = ShipContent.begin(); ContentIterator != ShipContent.end(); ++ContentIterator)
 		{
-			Character * TheCharacter(dynamic_cast< Character * >(*ContentIterator));
+			Object * Content(*ContentIterator);
 			
-			if(TheCharacter != 0)
+			if(Content->GetTypeIdentifier() == "character")
 			{
-				g_MessageDispatcher->PushMessage(new Message("fuel_low", GetReference(), TheCharacter->GetReference()));
+				g_MessageDispatcher->PushMessage(new Message("fuel_low", GetReference(), Content->GetReference()));
 			}
 		}
 	}
@@ -484,11 +484,11 @@ void Ship::SetHull(float Hull)
 		
 		for(std::set< Object * >::iterator ContentIterator = ShipContent.begin(); ContentIterator != ShipContent.end(); ++ContentIterator)
 		{
-			Character * TheCharacter(dynamic_cast< Character * >(*ContentIterator));
+			Object * Content(*ContentIterator);
 			
-			if(TheCharacter != 0)
+			if(Content->GetTypeIdentifier() == "character")
 			{
-				g_MessageDispatcher->PushMessage(new Message("hull_low", GetReference(), TheCharacter->GetReference()));
+				g_MessageDispatcher->PushMessage(new Message("hull_low", GetReference(), Content->GetReference()));
 			}
 		}
 	}
