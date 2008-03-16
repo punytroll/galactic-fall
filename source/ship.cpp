@@ -210,10 +210,11 @@ bool Ship::Update(float Seconds)
 	{
 		m_Land = false;
 		
-		Planet * ThePlanet(dynamic_cast< Planet * >(GetTarget().Get()));
+		Object * ThePlanet(GetTarget().Get());
 		
 		assert(ThePlanet != 0);
-		ThePlanet->Land(this);
+		assert(ThePlanet->GetTypeIdentifier() == "planet");
+		dynamic_cast< Planet * >(ThePlanet)->Land(this);
 		m_Accelerate = false;
 		m_TurnLeft = 0.0f;
 		m_TurnRight = 0.0f;
@@ -222,10 +223,11 @@ bool Ship::Update(float Seconds)
 	{
 		m_TakeOff = false;
 		
-		Planet * ThePlanet(dynamic_cast< Planet * >(GetTarget().Get()));
+		Object * ThePlanet(GetTarget().Get());
 		
 		assert(ThePlanet != 0);
-		ThePlanet->TakeOff(this);
+		assert(ThePlanet->GetTypeIdentifier() == "planet");
+		dynamic_cast< Planet * >(ThePlanet)->TakeOff(this);
 		SetTarget(0);
 		SetLinkedSystemTarget(0);
 	}

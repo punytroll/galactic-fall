@@ -44,7 +44,7 @@ void OutputObserver::HandleMessage(Message * Message)
 		if(Message->GetTypeIdentifier() == "landed")
 		{
 			assert(m_PlanetDialog == 0);
-			assert(dynamic_cast< Planet * >(Message->GetSender().Get()) != 0);
+			assert(Message->GetSender()->GetTypeIdentifier() == "planet");
 			m_PlanetDialog = new PlanetDialog(g_UserInterface->GetRootWidget(), dynamic_cast< Planet * >(Message->GetSender().Get()), GetObservedCharacter().Get());
 			m_PlanetDialog->GrabKeyFocus();
 		}

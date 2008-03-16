@@ -64,21 +64,6 @@ bool System::IsLinkedToSystem(const System * LinkedSystem) const
 
 bool System::AllowAdding(Object * Content)
 {
-	Planet * ThePlanet(dynamic_cast< Planet * >(Content));
-	
-	if(ThePlanet != 0)
-	{
-		for(std::vector< Planet *>::const_iterator PlanetIterator = m_Planets.begin(); PlanetIterator != m_Planets.end(); ++PlanetIterator)
-		{
-			if((*PlanetIterator)->GetIdentifier() == ThePlanet->GetIdentifier())
-			{
-				return false;
-			}
-		}
-		
-		return true;
-	}
-	
 	Star * TheStar(dynamic_cast< Star * >(Content));
 	
 	if(TheStar != 0)
@@ -86,7 +71,7 @@ bool System::AllowAdding(Object * Content)
 		return m_Star == 0;
 	}
 	
-	return (dynamic_cast< Shot * >(Content) != 0) || (dynamic_cast< Ship * >(Content) != 0) || (dynamic_cast< Commodity * >(Content) != 0);
+	return (Content->GetTypeIdentifier() == "commodity") || (Content->GetTypeIdentifier() == "planet") || (Content->GetTypeIdentifier() == "ship") || (dynamic_cast< Shot * >(Content) != 0);
 }
 
 bool System::AllowRemoving(Object * Content)
@@ -102,33 +87,24 @@ void System::OnAdded(Object * Content)
 	{
 		m_Shots.push_back(TheShot);
 	}
-	
-	Ship * TheShip(dynamic_cast< Ship * >(Content));
-	
-	if(TheShip != 0)
+	if(Content->GetTypeIdentifier() == "ship")
 	{
-		m_Ships.push_back(TheShip);
+		m_Ships.push_back(dynamic_cast< Ship * >(Content));
 	}
-	
-	Commodity * TheCommodity(dynamic_cast< Commodity * >(Content));
-	
-	if(TheCommodity != 0)
+	else if(Content->GetTypeIdentifier() == "commodity")
 	{
-		m_Commodities.push_back(TheCommodity);
+		m_Commodities.push_back(dynamic_cast< Commodity * >(Content));
 	}
-	
-	Planet * ThePlanet(dynamic_cast< Planet * >(Content));
-	
-	if(ThePlanet != 0)
+	else if(Content->GetTypeIdentifier() == "planet")
 	{
 		for(std::vector< Planet *>::const_iterator PlanetIterator = m_Planets.begin(); PlanetIterator != m_Planets.end(); ++PlanetIterator)
 		{
-			if((*PlanetIterator)->GetIdentifier() == ThePlanet->GetIdentifier())
+			if((*PlanetIterator)->GetIdentifier() == Content->GetClassIdentifier())
 			{
 				assert(false);
 			}
 		}
-		m_Planets.push_back(ThePlanet);
+		m_Planets.push_back(dynamic_cast< Planet * >(Content));
 	}
 	
 	Star * TheStar(dynamic_cast< Star * >(Content));
@@ -151,34 +127,25 @@ void System::OnRemoved(Object * Content)
 		assert(ShotIterator != m_Shots.end());
 		m_Shots.erase(ShotIterator);
 	}
-	
-	Ship * TheShip(dynamic_cast< Ship * >(Content));
-	
-	if(TheShip != 0)
+	if(Content->GetTypeIdentifier() == "ship")
 	{
-		std::list< Ship * >::iterator ShipIterator(std::find(m_Ships.begin(), m_Ships.end(), TheShip));
+		std::list< Ship * >::iterator ShipIterator(std::find(m_Ships.begin(), m_Ships.end(), Content));
 		
 		assert(ShipIterator != m_Ships.end());
 		m_Ships.erase(ShipIterator);
 	}
-	
-	Commodity * TheCommodity(dynamic_cast< Commodity * >(Content));
-	
-	if(TheCommodity != 0)
+	else if(Content->GetTypeIdentifier() == "commodity")
 	{
-		std::list< Commodity * >::iterator CommodityIterator(std::find(m_Commodities.begin(), m_Commodities.end(), TheCommodity));
+		std::list< Commodity * >::iterator CommodityIterator(std::find(m_Commodities.begin(), m_Commodities.end(), Content));
 		
 		assert(CommodityIterator != m_Commodities.end());
 		m_Commodities.erase(CommodityIterator);
 	}
-	
-	Planet * ThePlanet(dynamic_cast< Planet * >(Content));
-	
-	if(ThePlanet != 0)
+	else if(Content->GetTypeIdentifier() == "planet")
 	{
 		for(std::vector< Planet *>::iterator PlanetIterator = m_Planets.begin(); PlanetIterator != m_Planets.end(); ++PlanetIterator)
 		{
-			if((*PlanetIterator)->GetIdentifier() == ThePlanet->GetIdentifier())
+			if((*PlanetIterator)->GetIdentifier() == Content->GetClassIdentifier())
 			{
 				m_Planets.erase(PlanetIterator);
 				

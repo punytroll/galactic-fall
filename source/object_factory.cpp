@@ -25,6 +25,7 @@
 #include "commodity_class.h"
 #include "globals.h"
 #include "object_factory.h"
+#include "planet.h"
 #include "ship.h"
 #include "weapon.h"
 #include "weapon_class.h"
@@ -43,6 +44,10 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		const CommodityClass * CommodityClass(g_CommodityClassManager->Get(ClassIdentifier));
 		
 		Result = new Commodity(CommodityClass);
+	}
+	else if(TypeIdentifier == "planet")
+	{
+		Result = new Planet(ClassIdentifier);
 	}
 	else if(TypeIdentifier == "ship")
 	{
