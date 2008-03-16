@@ -1052,7 +1052,7 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 	NewShip->SetFuel(NewShip->GetFuelCapacity());
 	NewShip->SetCurrentSystem(System);
 	
-	Character * NewCharacter(new Character());
+	Character * NewCharacter(dynamic_cast< Character * >(g_ObjectFactory->Create("character", "")));
 	
 	NewCharacter->SetObjectIdentifier("::character(" + NewShip->GetShipClass()->GetIdentifier() + ")" + IdentifierSuffix);
 	NewCharacter->GetMapKnowledge()->AddExploredSystem(System);
@@ -1520,7 +1520,7 @@ void LoadGameFromElement(const Element * SaveElement)
 		}
 		else if((*SaveChild)->GetName() == "character")
 		{
-			Character * TheCharacter(new Character());
+			Character * TheCharacter(dynamic_cast< Character * >(g_ObjectFactory->Create("character", "")));
 			
 			TheCharacter->SetObjectIdentifier((*SaveChild)->GetAttribute("object-identifier"));
 			for(std::vector< Element * >::const_iterator CharacterChild = (*SaveChild)->GetChilds().begin(); CharacterChild != (*SaveChild)->GetChilds().end(); ++CharacterChild)

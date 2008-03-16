@@ -19,6 +19,7 @@
 
 #include <stdexcept>
 
+#include "character.h"
 #include "class_manager.h"
 #include "commodity.h"
 #include "commodity_class.h"
@@ -32,7 +33,12 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 {
 	Object * Result(0);
 	
-	if(TypeIdentifier == "commodity")
+	if(TypeIdentifier == "character")
+	{
+		assert(ClassIdentifier.empty() == true);
+		Result = new Character();
+	}
+	else if(TypeIdentifier == "commodity")
 	{
 		const CommodityClass * CommodityClass(g_CommodityClassManager->Get(ClassIdentifier));
 		
