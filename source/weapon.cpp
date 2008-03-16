@@ -61,14 +61,15 @@ void Weapon::Update(float Seconds)
 {
 	if((m_Fire == true) && (m_NextTimeToFire <= GameTime::Get()))
 	{
-		Ship * TheShip(dynamic_cast< Ship * >(GetContainer()));
+		Object * TheShip(GetContainer());
 		
 		assert(TheShip != 0);
 		assert(TheShip->GetAspectPosition() != 0);
+		assert(TheShip->GetContainer() != 0);
 		
 		std::stringstream IdentifierStream;
 		
-		IdentifierStream << "::shot::created_at_game_time(" << to_string_cast(GameTime::Get(), 2) << ")::created_by(" << GetContainer()->GetObjectIdentifier() << ")::in_system(" << TheShip->GetCurrentSystem()->GetIdentifier() << ")";
+		IdentifierStream << "::shot::created_at_game_time(" << to_string_cast(GameTime::Get(), 2) << ")::created_by(" << GetContainer()->GetObjectIdentifier() << ")::in_system(" << TheShip->GetContainer()->GetObjectIdentifier() << ")";
 		
 		Shot * NewShot(new Shot(GetWeaponClass()));
 		
@@ -102,8 +103,9 @@ void Weapon::Update(float Seconds)
 		Vector3f ParticleVelocity(GetWeaponClass()->GetParticleExitSpeed(), 0.0f, 0.0f);
 		
 		ParticleVelocity *= ShotOrientation;
-		NewShot->SetVelocity(TheShip->GetVelocity() + Vector3f(ParticleVelocity[0], ParticleVelocity[1], 0.0f));
-		TheShip->GetCurrentSystem()->GetAspectObjectContainer()->AddContent(NewShot);
+		assert(dynamic_cast< Ship * >(TheShip) != 0);
+		NewShot->SetVelocity(dynamic_cast< Ship * >(TheShip)->GetVelocity() + Vector3f(ParticleVelocity[0], ParticleVelocity[1], 0.0f));
+		TheShip->GetContainer()->GetAspectObjectContainer()->AddContent(NewShot);
 		m_NextTimeToFire = GameTime::Get() + GetWeaponClass()->GetReloadTime();
 		// add visualization
 		VisualizeShot(NewShot, g_ShotLayer);
