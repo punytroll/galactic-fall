@@ -48,12 +48,7 @@ class Object
 public:
 	Object(void);
 	virtual ~Object(void);
-	// setters
-	void SetContainer(Object * Container);
-	void SetObjectIdentifier(const std::string & ObjectIdentifier);
 	// getters
-	Object * GetContainer(void);
-	const Object * GetContainer(void) const;
 	ObjectAspectAccessory * GetAspectAccessory(void);
 	const ObjectAspectAccessory * GetAspectAccessory(void) const;
 	ObjectAspectMessages * GetAspectMessages(void);
@@ -70,8 +65,17 @@ public:
 	const ObjectAspectUpdate * GetAspectUpdate(void) const;
 	ObjectAspectVisualization * GetAspectVisualization(void);
 	const ObjectAspectVisualization * GetAspectVisualization(void) const;
+	const std::string & GetClassIdentifier(void) const;
+	Object * GetContainer(void);
+	const Object * GetContainer(void) const;
 	const std::string & GetObjectIdentifier(void) const;
 	const Reference< Object > & GetReference(void) const;
+	const std::string & GetTypeIdentifier(void) const;
+	// setters
+	void SetClassIdentifier(const std::string & ClassIdentifier);
+	void SetContainer(Object * Container);
+	void SetObjectIdentifier(const std::string & ObjectIdentifier);
+	void SetTypeIdentifier(const std::string & TypeIdentifier);
 	// modifiers
 	void AddAspectAccessory(void);
 	void AddAspectMessages(void);
@@ -99,28 +103,15 @@ private:
 	ObjectAspectUpdate * m_AspectUpdate;
 	ObjectAspectVisualization * m_AspectVisualization;
 	// other
+	std::string m_ClassIdentifier;
+	Object * m_Container;
 	std::string m_ObjectIdentifier;
 	Reference< Object > m_Reference;
-	Object * m_Container;
+	std::string m_TypeIdentifier;
 	
 	static std::set< Object * > m_Objects;
 	static std::map< std::string, Object * > m_IdentifiedObjects;
 };
-
-inline Object * Object::GetContainer(void)
-{
-	return m_Container;
-}
-
-inline const Object * Object::GetContainer(void) const
-{
-	return m_Container;
-}
-
-inline const std::string & Object::GetObjectIdentifier(void) const
-{
-	return m_ObjectIdentifier;
-}
 
 inline ObjectAspectAccessory * Object::GetAspectAccessory(void)
 {
@@ -202,9 +193,44 @@ inline const ObjectAspectVisualization * Object::GetAspectVisualization(void) co
 	return m_AspectVisualization;
 }
 
+inline const std::string & Object::GetClassIdentifier(void) const
+{
+	return m_ClassIdentifier;
+}
+
+inline Object * Object::GetContainer(void)
+{
+	return m_Container;
+}
+
+inline const Object * Object::GetContainer(void) const
+{
+	return m_Container;
+}
+
+inline const std::string & Object::GetObjectIdentifier(void) const
+{
+	return m_ObjectIdentifier;
+}
+
 inline const Reference< Object > & Object::GetReference(void) const
 {
 	return m_Reference;
+}
+
+inline const std::string & Object::GetTypeIdentifier(void) const
+{
+	return m_TypeIdentifier;
+}
+
+inline void Object::SetClassIdentifier(const std::string & ClassIdentifier)
+{
+	m_ClassIdentifier = ClassIdentifier;
+}
+
+inline void Object::SetTypeIdentifier(const std::string & TypeIdentifier)
+{
+	m_TypeIdentifier = TypeIdentifier;
 }
 
 #endif

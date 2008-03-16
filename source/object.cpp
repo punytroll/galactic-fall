@@ -45,8 +45,8 @@ Object::Object(void) :
 	m_AspectPosition(0),
 	m_AspectUpdate(0),
 	m_AspectVisualization(0),
-	m_Reference(*this),
-	m_Container(0)
+	m_Container(0),
+	m_Reference(*this)
 {
 	m_Objects.insert(this);
 }
