@@ -714,7 +714,7 @@ output_observer.o: output_observer.cpp $(command_mind_h) $(globals_h) $(message_
 perspective.o: perspective.cpp $(perspective_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-planet.o: planet.cpp $(asset_class_h) $(character_h) $(color_h) $(globals_h) $(message_h) $(message_dispatcher_h) $(object_aspect_object_container_h) $(object_aspect_physical_h) $(planet_h) $(ship_h)
+planet.o: planet.cpp $(asset_class_h) $(color_h) $(globals_h) $(message_h) $(message_dispatcher_h) $(object_aspect_object_container_h) $(object_aspect_physical_h) $(planet_h) $(ship_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 planet_dialog.o: planet_dialog.cpp $(asset_class_h) $(button_h) $(character_h) $(color_h) $(globals_h) $(key_event_information_h) $(label_h) $(object_aspect_name_h) $(planet_h) $(planet_dialog_h) $(ship_h) $(string_cast_h) $(trade_center_dialog_h)

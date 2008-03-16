@@ -18,7 +18,6 @@
 **/
 
 #include "asset_class.h"
-#include "character.h"
 #include "color.h"
 #include "globals.h"
 #include "message.h"
@@ -103,11 +102,11 @@ void Planet::Land(Ship * Ship)
 	
 	for(std::set< Object * >::iterator ContentIterator = ShipContent.begin(); ContentIterator != ShipContent.end(); ++ContentIterator)
 	{
-		Character * TheCharacter(dynamic_cast< Character * >(*ContentIterator));
+		Object * Content(*ContentIterator);
 		
-		if(TheCharacter != 0)
+		if(Content->GetTypeIdentifier() == "character")
 		{
-			g_MessageDispatcher->PushMessage(new Message("landed", GetReference(), TheCharacter->GetReference()));
+			g_MessageDispatcher->PushMessage(new Message("landed", GetReference(), Content->GetReference()));
 		}
 	}
 }
@@ -121,11 +120,11 @@ void Planet::TakeOff(Ship * Ship)
 	
 	for(std::set< Object * >::iterator ContentIterator = ShipContent.begin(); ContentIterator != ShipContent.end(); ++ContentIterator)
 	{
-		Character * TheCharacter(dynamic_cast< Character * >(*ContentIterator));
+		Object * Content(*ContentIterator);
 		
-		if(TheCharacter != 0)
+		if(Content->GetTypeIdentifier() == "character")
 		{
-			g_MessageDispatcher->PushMessage(new Message("taken_off", GetReference(), TheCharacter->GetReference()));
+			g_MessageDispatcher->PushMessage(new Message("taken_off", GetReference(), Content->GetReference()));
 		}
 	}
 }

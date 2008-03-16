@@ -717,11 +717,11 @@ void CalculateMovements(System * System, float Seconds)
 						
 						for(std::set< Object * >::iterator ContentIterator = ShipContent.begin(); ContentIterator != ShipContent.end(); ++ContentIterator)
 						{
-							Character * TheCharacter(dynamic_cast< Character * >(*ContentIterator));
+							Object * Content(*ContentIterator);
 							
-							if(TheCharacter != 0)
+							if(Content->GetTypeIdentifier() == "character")
 							{
-								g_MessageDispatcher->PushMessage(new ThreatMessage(TheShot->GetShooter(), TheCharacter->GetReference(), TheShot->GetDamage()));
+								g_MessageDispatcher->PushMessage(new ThreatMessage(TheShot->GetShooter(), Content->GetReference(), TheShot->GetDamage()));
 							}
 						}
 						if(TheShip->GetHull() <= 0.0f)
