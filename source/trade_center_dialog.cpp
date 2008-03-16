@@ -217,30 +217,15 @@ void TradeCenterDialog::Sell(const PlanetAssetClass * PlanetAssetClass)
 	
 	while(ContentIterator != Content.end())
 	{
-		Object * ContentObject(0);
+		Object * Content(*ContentIterator);
 		
-		if(PlanetAssetClass->GetAssetClass()->GetObjectType() == "commodity")
+		if((Content->GetTypeIdentifier() == PlanetAssetClass->GetAssetClass()->GetObjectType()) && (Content->GetClassIdentifier() == PlanetAssetClass->GetAssetClass()->GetObjectClass()) && ((Content->GetAspectAccessory() == 0) || (Content->GetAspectAccessory()->GetSlot() == 0)))
 		{
-			Commodity * ContentCommodity(dynamic_cast< Commodity * >(*ContentIterator));
-			
-			if((ContentCommodity != 0) && (ContentCommodity->GetCommodityClass()->GetIdentifier() == PlanetAssetClass->GetAssetClass()->GetObjectClass()))
-			{
-				ContentObject = ContentCommodity;
-			}
-		}
-		else if(PlanetAssetClass->GetAssetClass()->GetObjectType() == "weapon")
-		{
-			Weapon * ContentWeapon(dynamic_cast< Weapon * >(*ContentIterator));
-			
-			if((ContentWeapon != 0) && (ContentWeapon->GetAspectAccessory()->GetSlot() == 0) && (ContentWeapon->GetWeaponClass()->GetIdentifier() == PlanetAssetClass->GetAssetClass()->GetObjectClass()))
-			{
-				ContentObject = ContentWeapon;
-			}
-		}
-		if(ContentObject != 0)
-		{
-			m_Character->GetShip()->GetAspectObjectContainer()->RemoveContent(ContentObject);
-			delete ContentObject;
+			assert(m_Character != 0);
+			assert(m_Character->GetShip() != 0);
+			assert(m_Character->GetShip()->GetAspectObjectContainer() != 0);
+			m_Character->GetShip()->GetAspectObjectContainer()->RemoveContent(Content);
+			delete Content;
 			m_Character->AddCredits(PlanetAssetClass->GetPrice());
 			UpdateTraderCredits();
 			UpdateTraderAvailableSpace();
