@@ -1060,9 +1060,9 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 	{
 		NewCharacter->SetCredits(200 + GetRandomU4Byte(50, 250));
 		
-		Weapon * NewWeapon(dynamic_cast< Weapon * >(g_ObjectFactory->Create("weapon", "light_laser")));
+		Object * NewWeapon(g_ObjectFactory->Create("weapon", "light_laser"));
 		
-		NewWeapon->SetObjectIdentifier("::weapon(" + NewWeapon->GetWeaponClass()->GetIdentifier() + ")::created_for(" + NewShip->GetObjectIdentifier() + ")" + IdentifierSuffix);
+		NewWeapon->SetObjectIdentifier("::weapon(" + NewWeapon->GetClassIdentifier() + ")::created_for(" + NewShip->GetObjectIdentifier() + ")" + IdentifierSuffix);
 		NewShip->GetAspectObjectContainer()->AddContent(NewWeapon);
 		NewShip->Mount(NewWeapon, "front_gun");
 	}
@@ -1589,7 +1589,7 @@ void LoadGameFromElement(const Element * SaveElement)
 						}
 						else if((*ContentChild)->GetName() == "weapon")
 						{
-							Weapon * NewWeapon(dynamic_cast< Weapon * >(g_ObjectFactory->Create((*ContentChild)->GetName(), (*ContentChild)->GetAttribute("class-identifier"))));
+							Object * NewWeapon(g_ObjectFactory->Create((*ContentChild)->GetName(), (*ContentChild)->GetAttribute("class-identifier")));
 							
 							NewWeapon->SetObjectIdentifier((*ContentChild)->GetAttribute("object-identifier"));
 							TheShip->GetAspectObjectContainer()->AddContent(NewWeapon);
