@@ -123,30 +123,20 @@ float Ship::GetAvailableSpace(void) const
 	return AvailableSpace;
 }
 
-unsigned_numeric Ship::GetContentAmount(const std::string & Type, const std::string & Class) const
+unsigned_numeric Ship::GetContentAmount(const std::string & TypeIdentifier, const std::string & ClassIdentifier) const
 {
+	assert(GetAspectObjectContainer() != 0);
+	
 	unsigned_numeric Amount(0);
 	const std::set< Object * > & Content(GetAspectObjectContainer()->GetContent());
 	
 	for(std::set< Object * >::const_iterator ContentIterator = Content.begin(); ContentIterator != Content.end(); ++ContentIterator)
 	{
-		if(Type == "commodity")
+		const Object * Content(*ContentIterator);
+		
+		if((Content->GetTypeIdentifier() == TypeIdentifier) && (Content->GetClassIdentifier() == ClassIdentifier) && ((Content->GetAspectAccessory() == 0) || (Content->GetAspectAccessory()->GetSlot() == 0)))
 		{
-			Commodity * TheCommodity(dynamic_cast< Commodity * >(*ContentIterator));
-			
-			if((TheCommodity != 0) && (TheCommodity->GetCommodityClass()->GetIdentifier() == Class))
-			{
-				Amount += 1;
-			}
-		}
-		else if(Type == "weapon")
-		{
-			Weapon * TheWeapon(dynamic_cast< Weapon * >(*ContentIterator));
-			
-			if((TheWeapon != 0) && (TheWeapon->GetAspectAccessory()->GetSlot() == 0) && (TheWeapon->GetWeaponClass()->GetIdentifier() == Class))
-			{
-				Amount += 1;
-			}
+			Amount += 1;
 		}
 	}
 	
@@ -162,12 +152,11 @@ void Ship::SetFire(bool Fire)
 {
 	for(std::map< std::string, Slot * >::iterator SlotIterator = m_Slots.begin(); SlotIterator != m_Slots.end(); ++SlotIterator)
 	{
-		// only set firing on *mounted* *weapons*
-		Weapon * TheWeapon(dynamic_cast< Weapon * >(SlotIterator->second->GetMountedObject().Get()));
+		Object * Object(SlotIterator->second->GetMountedObject().Get());
 		
-		if(TheWeapon != 0)
+		if((Object != 0) && (Object->GetTypeIdentifier() == "weapon"))
 		{
-			TheWeapon->SetFire(Fire);
+			dynamic_cast< Weapon * >(Object)->SetFire(Fire);
 		}
 	}
 }
