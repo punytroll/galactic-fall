@@ -152,11 +152,12 @@ void Ship::SetFire(bool Fire)
 {
 	for(std::map< std::string, Slot * >::iterator SlotIterator = m_Slots.begin(); SlotIterator != m_Slots.end(); ++SlotIterator)
 	{
-		Object * Object(SlotIterator->second->GetMountedObject().Get());
+		// only update *mounted* *weapons*
+		Object * MountedObject(SlotIterator->second->GetMountedObject().Get());
 		
-		if((Object != 0) && (Object->GetTypeIdentifier() == "weapon"))
+		if((MountedObject != 0) && (MountedObject->GetTypeIdentifier() == "weapon"))
 		{
-			dynamic_cast< Weapon * >(Object)->SetFire(Fire);
+			dynamic_cast< Weapon * >(MountedObject)->SetFire(Fire);
 		}
 	}
 }
@@ -233,11 +234,11 @@ bool Ship::Update(float Seconds)
 		for(std::map< std::string, Slot * >::iterator SlotIterator = m_Slots.begin(); SlotIterator != m_Slots.end(); ++SlotIterator)
 		{
 			// only update *mounted* *weapons*
-			Weapon * TheWeapon(dynamic_cast< Weapon * >(SlotIterator->second->GetMountedObject().Get()));
+			Object * MountedObject(SlotIterator->second->GetMountedObject().Get());
 			
-			if(TheWeapon != 0)
+			if((MountedObject != 0) && (MountedObject->GetTypeIdentifier() == "weapon"))
 			{
-				TheWeapon->Update(Seconds);
+				dynamic_cast< Weapon * >(MountedObject)->Update(Seconds);
 			}
 		}
 		if(m_Refuel == true)
@@ -248,13 +249,13 @@ bool Ship::Update(float Seconds)
 			
 			for(std::set< Object * >::const_iterator ContentIterator = Content.begin(); ContentIterator != Content.end(); ++ContentIterator)
 			{
-				Commodity * TheCommodity(dynamic_cast< Commodity * >(*ContentIterator));
+				Object * Content(*ContentIterator);
 				
-				if((TheCommodity != 0) && (TheCommodity->GetCommodityClass()->GetIdentifier() == "fuel"))
+				if((Content->GetTypeIdentifier() == "commodity") && (Content->GetClassIdentifier() == "fuel"))
 				{
 					SetFuel(Clamp(GetFuel() + 1.0f, 0.0f, GetFuelCapacity()));
-					TheCommodity->Destroy();
-					delete TheCommodity;
+					Content->Destroy();
+					delete Content;
 					
 					break;
 				}
@@ -338,13 +339,18 @@ bool Ship::Update(float Seconds)
 			
 			while(ContentIterator != GetAspectObjectContainer()->GetContent().end())
 			{
-				Commodity * TheCommodity(dynamic_cast< Commodity * >(*ContentIterator));
+				Object * Content(*ContentIterator);
 				
 				++ContentIterator;
-				if(TheCommodity != 0)
+				if(Content->GetTypeIdentifier() == "commodity")
 				{
-					GetAspectObjectContainer()->RemoveContent(TheCommodity);
-					TheCommodity->GetAspectPosition()->SetPosition(GetAspectPosition()->GetPosition());
+					GetAspectObjectContainer()->RemoveContent(Content);
+					assert(GetAspectPosition() != 0);
+					assert(Content->GetAspectPosition() != 0);
+					Content->GetAspectPosition()->SetPosition(GetAspectPosition()->GetPosition());
+					
+					Commodity * TheCommodity(dynamic_cast< Commodity * >(Content));
+					
 					TheCommodity->SetVelocity(GetVelocity() * 0.8f + Vector3f(GetRandomFloat(-0.5f, 0.5f), GetRandomFloat(-0.5f, 0.5f), 0.0f));
 					assert(GetCurrentSystem()->GetAspectObjectContainer() != 0);
 					GetCurrentSystem()->GetAspectObjectContainer()->AddContent(TheCommodity);
@@ -355,26 +361,26 @@ bool Ship::Update(float Seconds)
 		}
 		if(m_Scoop == true)
 		{
-			Commodity * SelectedCommodity(dynamic_cast< Commodity * >(m_Target.Get()));
+			Object * Target(m_Target.Get());
 			
-			if(SelectedCommodity != 0)
+			if((Target != 0) && (Target->GetTypeIdentifier() == "commodity"))
 			{
 				assert(GetCurrentSystem()->GetAspectObjectContainer() != 0);
 				// the following is a typical occasion of bad practise: a transaction would be great here
-				if(GetCurrentSystem()->GetAspectObjectContainer()->RemoveContent(SelectedCommodity) == true)
+				if(GetCurrentSystem()->GetAspectObjectContainer()->RemoveContent(Target) == true)
 				{
 					assert(GetAspectObjectContainer() != 0);
-					if(GetAspectObjectContainer()->AddContent(SelectedCommodity) == true)
+					if(GetAspectObjectContainer()->AddContent(Target) == true)
 					{
 						SetTarget(0);
-						if(SelectedCommodity->GetAspectVisualization()->GetVisualization().IsValid() == true)
+						if((Target->GetAspectVisualization() != 0) && (Target->GetAspectVisualization()->GetVisualization().IsValid() == true))
 						{
-							UnvisualizeObject(SelectedCommodity);
+							UnvisualizeObject(Target);
 						}
 					}
 					else
 					{
-						GetCurrentSystem()->GetAspectObjectContainer()->AddContent(SelectedCommodity);
+						GetCurrentSystem()->GetAspectObjectContainer()->AddContent(Target);
 					}
 				}
 			}
@@ -409,12 +415,10 @@ void Ship::Mount(Object * Object, const std::string & SlotIdentifier)
 	SlotIterator->second->SetMountedObject(Object->GetReference());
 	Object->GetAspectAccessory()->SetSlot(SlotIterator->second);
 	
-	Weapon * TheWeapon(dynamic_cast< Weapon * >(Object));
-	
-	if((TheWeapon != 0) && (GetAspectVisualization()->GetVisualization().IsValid() == true))
+	if((Object->GetClassIdentifier() == "weapon") && (GetAspectVisualization()->GetVisualization().IsValid() == true))
 	{
 		// visualize all weapons on ships that are already visualized
-		VisualizeWeapon(TheWeapon, GetAspectVisualization()->GetVisualization().Get());
+		VisualizeWeapon(dynamic_cast< Weapon * >(Object), GetAspectVisualization()->GetVisualization().Get());
 	}
 }
 
