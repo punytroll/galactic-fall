@@ -47,6 +47,7 @@
 #include "object_aspect_name.h"
 #include "object_aspect_object_container.h"
 #include "object_aspect_position.h"
+#include "object_factory.h"
 #include "planet.h"
 #include "scanner_display.h"
 #include "ship_class.h"
@@ -630,7 +631,7 @@ static void ReadSystem(Arxx::Reference & Reference)
 		
 		Reader >> PlanetIdentifier;
 		
-		Planet * NewPlanet(new Planet(PlanetIdentifier));
+		Planet * NewPlanet(dynamic_cast< Planet * >(g_ObjectFactory->Create("planet", PlanetIdentifier)));
 		
 		NewPlanet->SetObjectIdentifier("::planet(" + NewPlanet->GetIdentifier() + ")::in_system(" + NewSystem->GetIdentifier() + ")");
 		
