@@ -27,6 +27,7 @@
 #include "object_factory.h"
 #include "planet.h"
 #include "ship.h"
+#include "shot.h"
 #include "weapon.h"
 #include "weapon_class.h"
 
@@ -54,6 +55,12 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		const ShipClass * ShipClass(g_ShipClassManager->Get(ClassIdentifier));
 		
 		Result = new Ship(ShipClass);
+	}
+	else if(TypeIdentifier == "shot")
+	{
+		const WeaponClass * WeaponClass(g_WeaponClassManager->Get(ClassIdentifier));
+		
+		Result = new Shot(WeaponClass);
 	}
 	else if(TypeIdentifier == "weapon")
 	{

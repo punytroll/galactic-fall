@@ -31,6 +31,7 @@
 #include "object_aspect_object_container.h"
 #include "object_aspect_physical.h"
 #include "object_aspect_position.h"
+#include "object_factory.h"
 #include "ship.h"
 #include "shot.h"
 #include "slot.h"
@@ -71,7 +72,7 @@ void Weapon::Update(float Seconds)
 		
 		IdentifierStream << "::shot::created_at_game_time(" << to_string_cast(GameTime::Get(), 2) << ")::created_by(" << GetContainer()->GetObjectIdentifier() << ")::in_system(" << TheShip->GetContainer()->GetObjectIdentifier() << ")";
 		
-		Shot * NewShot(new Shot(GetWeaponClass()));
+		Shot * NewShot(dynamic_cast< Shot * >(g_ObjectFactory->Create("shot", GetWeaponClass()->GetIdentifier())));
 		
 		assert(NewShot->GetAspectPosition() != 0);
 		NewShot->SetObjectIdentifier(IdentifierStream.str());
