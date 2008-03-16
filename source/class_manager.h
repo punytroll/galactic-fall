@@ -59,7 +59,7 @@ public:
 	// modifiers
 	ClassType * Create(const std::string & Identifier)
 	{
-		assert(m_Classes.find(Identifier) != m_Classes.end());
+		assert(m_Classes.find(Identifier) == m_Classes.end());
 		
 		ClassType * NewClass(new ClassType(Identifier));
 		
@@ -72,11 +72,10 @@ public:
 	{
 		typename std::map< std::string, ClassType * >::iterator ClassIterator(m_Classes.find(Identifier));
 		
-		if(ClassIterator != m_Classes.end())
-		{
-			delete ClassIterator->second;
-			m_Classes.erase(ClassIterator);
-		}
+		assert(ClassIterator != m_Classes.end());
+		
+		delete ClassIterator->second;
+		m_Classes.erase(ClassIterator);
 	}
 private:
 	std::map< std::string, ClassType * > m_Classes;
