@@ -27,8 +27,8 @@ class Object;
 class ObjectFactory
 {
 public:
-	Object * Create(const std::string & Type, const std::string & Class) const;
-	float GetSpaceRequirement(const std::string & Type, const std::string & Class) const;
+	Object * Create(const std::string & TypeIdentifier, const std::string & ClassIdentifier) const;
+	float GetSpaceRequirement(const std::string & TypeIdentifier, const std::string & ClassIdentifier) const;
 };
 
 #endif
