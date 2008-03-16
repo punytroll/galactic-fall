@@ -71,7 +71,7 @@ bool System::AllowAdding(Object * Content)
 		return m_Star == 0;
 	}
 	
-	return (Content->GetTypeIdentifier() == "commodity") || (Content->GetTypeIdentifier() == "planet") || (Content->GetTypeIdentifier() == "ship") || (dynamic_cast< Shot * >(Content) != 0);
+	return (Content->GetTypeIdentifier() == "commodity") || (Content->GetTypeIdentifier() == "planet") || (Content->GetTypeIdentifier() == "ship") || (Content->GetTypeIdentifier() == "shot");
 }
 
 bool System::AllowRemoving(Object * Content)
@@ -81,17 +81,7 @@ bool System::AllowRemoving(Object * Content)
 
 void System::OnAdded(Object * Content)
 {
-	Shot * TheShot(dynamic_cast< Shot * >(Content));
-	
-	if(TheShot != 0)
-	{
-		m_Shots.push_back(TheShot);
-	}
-	if(Content->GetTypeIdentifier() == "ship")
-	{
-		m_Ships.push_back(dynamic_cast< Ship * >(Content));
-	}
-	else if(Content->GetTypeIdentifier() == "commodity")
+	if(Content->GetTypeIdentifier() == "commodity")
 	{
 		m_Commodities.push_back(dynamic_cast< Commodity * >(Content));
 	}
@@ -106,6 +96,14 @@ void System::OnAdded(Object * Content)
 		}
 		m_Planets.push_back(dynamic_cast< Planet * >(Content));
 	}
+	else if(Content->GetTypeIdentifier() == "ship")
+	{
+		m_Ships.push_back(dynamic_cast< Ship * >(Content));
+	}
+	else if(Content->GetTypeIdentifier() == "shot")
+	{
+		m_Shots.push_back(dynamic_cast< Shot * >(Content));
+	}
 	
 	Star * TheStar(dynamic_cast< Star * >(Content));
 	
@@ -118,23 +116,7 @@ void System::OnAdded(Object * Content)
 
 void System::OnRemoved(Object * Content)
 {
-	Shot * TheShot(dynamic_cast< Shot * >(Content));
-	
-	if(TheShot != 0)
-	{
-		std::list< Shot * >::iterator ShotIterator(std::find(m_Shots.begin(), m_Shots.end(), TheShot));
-		
-		assert(ShotIterator != m_Shots.end());
-		m_Shots.erase(ShotIterator);
-	}
-	if(Content->GetTypeIdentifier() == "ship")
-	{
-		std::list< Ship * >::iterator ShipIterator(std::find(m_Ships.begin(), m_Ships.end(), Content));
-		
-		assert(ShipIterator != m_Ships.end());
-		m_Ships.erase(ShipIterator);
-	}
-	else if(Content->GetTypeIdentifier() == "commodity")
+	if(Content->GetTypeIdentifier() == "commodity")
 	{
 		std::list< Commodity * >::iterator CommodityIterator(std::find(m_Commodities.begin(), m_Commodities.end(), Content));
 		
@@ -152,6 +134,20 @@ void System::OnRemoved(Object * Content)
 				break;
 			}
 		}
+	}
+	else if(Content->GetTypeIdentifier() == "ship")
+	{
+		std::list< Ship * >::iterator ShipIterator(std::find(m_Ships.begin(), m_Ships.end(), Content));
+		
+		assert(ShipIterator != m_Ships.end());
+		m_Ships.erase(ShipIterator);
+	}
+	else if(Content->GetTypeIdentifier() == "shot")
+	{
+		std::list< Shot * >::iterator ShotIterator(std::find(m_Shots.begin(), m_Shots.end(), Content));
+		
+		assert(ShotIterator != m_Shots.end());
+		m_Shots.erase(ShotIterator);
 	}
 	
 	Star * TheStar(dynamic_cast< Star * >(Content));
