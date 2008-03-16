@@ -28,45 +28,36 @@
 #include "weapon.h"
 #include "weapon_class.h"
 
-Object * ObjectFactory::Create(const std::string & Type, const std::string & Class) const
+Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::string & ClassIdentifier) const
 {
-	if(Type == "commodity")
+	Object * Result(0);
+	
+	if(TypeIdentifier == "commodity")
 	{
-		const CommodityClass * CommodityClass(g_CommodityClassManager->Get(Class));
+		const CommodityClass * CommodityClass(g_CommodityClassManager->Get(ClassIdentifier));
 		
-		if(CommodityClass == 0)
-		{
-			throw std::runtime_error("Create: Unknown object class '" + Class + "' for object type '" + Type + "'.");
-		}
-		
-		return new Commodity(CommodityClass);
+		Result = new Commodity(CommodityClass);
 	}
-	else if(Type == "ship")
+	else if(TypeIdentifier == "ship")
 	{
-		const ShipClass * ShipClass(g_ShipClassManager->Get(Class));
+		const ShipClass * ShipClass(g_ShipClassManager->Get(ClassIdentifier));
 		
-		if(ShipClass == 0)
-		{
-			throw std::runtime_error("Create: Unknown object class '" + Class + "' for object type '" + Type + "'.");
-		}
-		
-		return new Ship(ShipClass);
+		Result = new Ship(ShipClass);
 	}
-	else if(Type == "weapon")
+	else if(TypeIdentifier == "weapon")
 	{
-		const WeaponClass * WeaponClass(g_WeaponClassManager->Get(Class));
+		const WeaponClass * WeaponClass(g_WeaponClassManager->Get(ClassIdentifier));
 		
-		if(WeaponClass == 0)
-		{
-			throw std::runtime_error("Create: Unknown object class '" + Class + "' for object type '" + Type + "'.");
-		}
-		
-		return new Weapon(WeaponClass);
+		Result = new Weapon(WeaponClass);
 	}
 	else
 	{
-		throw std::runtime_error("Create: Unknown object type '" + Type + "' (for object class '" + Class + "').");
+		throw std::runtime_error("Create: Unknown object type '" + TypeIdentifier + "' (for object class '" + ClassIdentifier + "').");
 	}
+	Result->SetTypeIdentifier(TypeIdentifier);
+	Result->SetClassIdentifier(ClassIdentifier);
+	
+	return Result;
 }
 
 float ObjectFactory::GetSpaceRequirement(const std::string & Type, const std::string & Class) const
@@ -75,21 +66,11 @@ float ObjectFactory::GetSpaceRequirement(const std::string & Type, const std::st
 	{
 		const CommodityClass * CommodityClass(g_CommodityClassManager->Get(Class));
 		
-		if(CommodityClass == 0)
-		{
-			throw std::runtime_error("SpaceRequirement: Unknown object class '" + Class + "' for object type '" + Type + "'.");
-		}
-		
 		return CommodityClass->GetSpaceRequirement();
 	}
 	else if(Type == "weapon")
 	{
 		const WeaponClass * WeaponClass(g_WeaponClassManager->Get(Class));
-		
-		if(WeaponClass == 0)
-		{
-			throw std::runtime_error("SpaceRequirement: Unknown object class '" + Class + "' for object type '" + Type + "'.");
-		}
 		
 		return WeaponClass->GetSpaceRequirement();
 	}
