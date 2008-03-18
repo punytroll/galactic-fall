@@ -39,6 +39,7 @@ public:
 	float GetHull(void) const;
 	const Vector3f & GetVelocity(void) const;
 	// setters
+	void SetAngularVelocity(const AxisAngle & AngularVelocity);
 	void SetHull(float Hull);
 	void SetVelocity(const Vector3f & Velocity);
 private:
@@ -71,6 +72,11 @@ inline float Commodity::GetHull(void) const
 inline const Vector3f & Commodity::GetVelocity(void) const
 {
 	return m_Velocity;
+}
+
+inline void Commodity::SetAngularVelocity(const AxisAngle & AngularVelocity)
+{
+	m_AngularVelocity = AngularVelocity;
 }
 
 inline void Commodity::SetHull(float Hull)
