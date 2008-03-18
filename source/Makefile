@@ -534,9 +534,6 @@ arx_reading.o: arx_reading.cpp $(arx_reading_h) $(arx_resources_h) $(asset_class
 asset_class.o: asset_class.cpp $(asset_class_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-asset_class_manager.o: asset_class_manager.cpp $(asset_class_h) $(asset_class_manager_h)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-
 border.o: border.cpp $(border_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
@@ -568,9 +565,6 @@ commodity.o: commodity.cpp $(callbacks_h) $(commodity_h) $(color_h) $(commodity_
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 commodity_class.o: commodity_class.cpp $(color_h) $(commodity_class_h)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-
-commodity_class_manager.o: commodity_class_manager.cpp $(commodity_class_h) $(commodity_class_manager_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 destroy_listener.o: destroy_listener.cpp $(destroy_listener_h)
@@ -743,9 +737,6 @@ ship.o: ship.cpp $(commodity_h) $(character_h) $(color_h) $(commodity_class_h) $
 
 ship_class.o: ship_class.cpp $(color_h) $(graphics_material_h) $(ship_class_h) $(slot_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
-	
-ship_class_manager.o: ship_class_manager.cpp $(ship_class_h) $(ship_class_manager_h)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 shot.o: shot.cpp $(game_time_h) $(object_aspect_physical_h) $(object_aspect_position_h) $(object_aspect_update_h) $(shot_h) $(weapon_class_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
@@ -754,9 +745,6 @@ slot.o: slot.cpp $(slot_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 slot_class.o: slot_class.cpp $(slot_class_h)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-
-slot_class_manager.o: slot_class_manager.cpp $(slot_class_h) $(slot_class_manager_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 star.o: star.cpp $(star_h)
@@ -805,9 +793,6 @@ weapon.o: weapon.cpp $(color_h) $(game_time_h) $(globals_h) $(math_h) $(math_qua
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 weapon_class.o: weapon_class.cpp $(color_h) $(weapon_class_h)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-
-weapon_class_manager.o: weapon_class_manager.cpp $(weapon_class_h) $(weapon_class_manager_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 widget.o: widget.cpp $(color_h) $(destroy_listener_h) $(dimension_listener_h) $(key_listener_h) $(math_h) $(mouse_button_listener_h) $(mouse_motion_listener_h) $(widget_h)
