@@ -1495,16 +1495,8 @@ void LoadGameFromElement(const Element * SaveElement)
 		}
 		else if((*SaveChild)->GetName() == "mind")
 		{
-			Mind * NewMind(0);
+			Object * NewMind(g_ObjectFactory->Create((*SaveChild)->GetName(), (*SaveChild)->GetAttribute("class")));
 			
-			if((*SaveChild)->GetAttribute("class") == "command-mind")
-			{
-				NewMind = new CommandMind();
-			}
-			else
-			{
-				throw std::runtime_error("The \"mind\" element \"" + (*SaveChild)->GetAttribute("object-identifier") + "\" contains an unidentified class attribute \"" + (*SaveChild)->GetAttribute("class") + "\".");
-			}
 			NewMind->SetObjectIdentifier((*SaveChild)->GetAttribute("object-identifier"));
 			for(std::vector< Element * >::const_iterator MindChild = (*SaveChild)->GetChilds().begin(); MindChild != (*SaveChild)->GetChilds().end(); ++MindChild)
 			{

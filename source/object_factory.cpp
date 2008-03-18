@@ -21,6 +21,7 @@
 
 #include "character.h"
 #include "class_manager.h"
+#include "command_mind.h"
 #include "commodity.h"
 #include "commodity_class.h"
 #include "globals.h"
@@ -45,6 +46,17 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		const CommodityClass * CommodityClass(g_CommodityClassManager->Get(ClassIdentifier));
 		
 		Result = new Commodity(CommodityClass);
+	}
+	else if(TypeIdentifier == "mind")
+	{
+		if(ClassIdentifier == "command-mind")
+		{
+			Result = new CommandMind();
+		}
+		else
+		{
+			throw std::runtime_error("Create: Unknown class '" + ClassIdentifier + "' (for object type '" + TypeIdentifier + "').");
+		}
 	}
 	else if(TypeIdentifier == "planet")
 	{
