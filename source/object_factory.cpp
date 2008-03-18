@@ -49,7 +49,7 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 	}
 	else if(TypeIdentifier == "mind")
 	{
-		if(ClassIdentifier == "command-mind")
+		if(ClassIdentifier == "command_mind")
 		{
 			Result = new CommandMind();
 		}
