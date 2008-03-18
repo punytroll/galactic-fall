@@ -417,7 +417,7 @@ void Ship::Mount(Object * Object, const std::string & SlotIdentifier)
 	SlotIterator->second->SetMountedObject(Object->GetReference());
 	Object->GetAspectAccessory()->SetSlot(SlotIterator->second);
 	
-	if((Object->GetClassIdentifier() == "weapon") && (GetAspectVisualization()->GetVisualization().IsValid() == true))
+	if((Object->GetTypeIdentifier() == "weapon") && (GetAspectVisualization()->GetVisualization().IsValid() == true))
 	{
 		// visualize all weapons on ships that are already visualized
 		VisualizeWeapon(dynamic_cast< Weapon * >(Object), GetAspectVisualization()->GetVisualization().Get());
