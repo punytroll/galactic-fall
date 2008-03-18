@@ -28,6 +28,7 @@
 #include "object_aspect_update.h"
 
 Commodity::Commodity(const CommodityClass * CommodityClass) :
+	m_AngularVelocity(true),
 	m_CommodityClass(CommodityClass),
 	m_Hull(20.0f),
 	m_Velocity(true)
