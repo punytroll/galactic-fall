@@ -3,7 +3,7 @@
 	<time-warp value="1"/>
 	<input-mind object-identifier="::player_mind"/>
 	<observed-character object-identifier="::character::player_character"/>
-	<mind class="command-mind" object-identifier="::player_mind">
+	<mind class="command_mind" object-identifier="::player_mind">
 		<character object-identifier="::character::player_character"/>
 	</mind>
 	<character object-identifier="::character::player_character">
