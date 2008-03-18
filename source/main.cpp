@@ -1580,27 +1580,13 @@ void LoadGameFromElement(const Element * SaveElement)
 				{
 					for(std::vector< Element * >::const_iterator ContentChild = (*ShipChild)->GetChilds().begin(); ContentChild != (*ShipChild)->GetChilds().end(); ++ContentChild)
 					{
-						if((*ContentChild)->GetName() == "commodity")
+						Object * Content(g_ObjectFactory->Create((*ContentChild)->GetName(), (*ContentChild)->GetAttribute("class-identifier")));
+						
+						Content->SetObjectIdentifier((*ContentChild)->GetAttribute("object-identifier"));
+						TheShip->GetAspectObjectContainer()->AddContent(Content);
+						if((*ContentChild)->HasAttribute("mounted-on") == true)
 						{
-							Object * NewCommodity(g_ObjectFactory->Create((*ContentChild)->GetName(), (*ContentChild)->GetAttribute("class-identifier")));
-							
-							NewCommodity->SetObjectIdentifier((*ContentChild)->GetAttribute("object-identifier"));
-							TheShip->GetAspectObjectContainer()->AddContent(NewCommodity);
-						}
-						else if((*ContentChild)->GetName() == "weapon")
-						{
-							Object * NewWeapon(g_ObjectFactory->Create((*ContentChild)->GetName(), (*ContentChild)->GetAttribute("class-identifier")));
-							
-							NewWeapon->SetObjectIdentifier((*ContentChild)->GetAttribute("object-identifier"));
-							TheShip->GetAspectObjectContainer()->AddContent(NewWeapon);
-							if((*ContentChild)->HasAttribute("mounted-on") == true)
-							{
-								TheShip->Mount(NewWeapon, (*ContentChild)->GetAttribute("mounted-on"));
-							}
-						}
-						else
-						{
-							throw std::runtime_error("The \"content\" element of the \"ship\" element \"" + (*SaveChild)->GetAttribute("object-identifier") + "\" contains a child element \"" + (*ContentChild)->GetName() + "\" which could not be handled.");
+							TheShip->Mount(Content, (*ContentChild)->GetAttribute("mounted-on"));
 						}
 					}
 				}
