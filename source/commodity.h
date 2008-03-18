@@ -34,6 +34,7 @@ public:
 	Commodity(const CommodityClass * CommodityClass);
 	virtual ~Commodity(void);
 	// getters
+	const AxisAngle & GetAngularVelocity(void) const;
 	const CommodityClass * GetCommodityClass(void) const;
 	float GetHull(void) const;
 	const Vector3f & GetVelocity(void) const;
@@ -44,13 +45,18 @@ private:
 	// slot for the object aspect Update
 	bool Update(float Seconds);
 private:
+	AxisAngle m_AngularVelocity;
 	const CommodityClass * m_CommodityClass;
 	float m_Hull;
 	Vector3f m_Velocity;
-	AxisAngle m_AngularVelocity;
 	// no copy constructor
 	Commodity(const Commodity & Commodity);
 };
+
+inline const AxisAngle & Commodity::GetAngularVelocity(void) const
+{
+	return m_AngularVelocity;
+}
 
 inline const CommodityClass * Commodity::GetCommodityClass(void) const
 {
