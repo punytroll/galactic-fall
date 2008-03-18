@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 1.3.4 of algebra.
+ * This is part of version 1.3.5 of algebra.
  **/
 
 #ifndef ALGEBRA_AXIS_ANGLE_H
@@ -33,6 +33,11 @@ public:
 	
 	AxisAngle(void)
 	{
+	}
+	
+	AxisAngle(bool)
+	{
+		m_V.m_A[0] = m_V.m_A[1] = m_V.m_A[2] = m_V.m_A[3] = 0.0f;
 	}
 	
 	AxisAngle(float X, float Y, float Z, float Angle)
