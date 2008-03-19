@@ -1,38 +1,213 @@
 <save>
+	<game-time value="6.43335"/>
 	<current-system identifier="sol"/>
 	<time-warp value="1"/>
 	<input-mind object-identifier="::player_mind"/>
 	<observed-character object-identifier="::character::player_character"/>
-	<mind class="command_mind" object-identifier="::player_mind">
-		<character object-identifier="::character::player_character"/>
-	</mind>
-	<character object-identifier="::character::player_character">
-		<ship object-identifier="::ship(shuttle)::player_ship"/>
-		<credits value="1000000"/>
-		<map-knowledge>
-			<explored-system identifier="sol"/>
-		</map-knowledge>
-	</character>
-	<ship class-identifier="shuttle" object-identifier="::ship(shuttle)::player_ship">
-		<system identifier="sol"/>
-		<fuel value="1"/>
-		<hull value="100"/>
-		<position x="0" y="0"/>
-		<angular-position w="1" x="0" y="0" z="0"/>
-		<velocity x="0" y="0"/>
-		<content>
-			<weapon class-identifier="light_laser" object-identifier="::weapon(light_laser)::1"/>
-			<weapon class-identifier="light_laser" object-identifier="::weapon(light_laser)::2"/>
-			<weapon class-identifier="light_laser" object-identifier="::weapon(light_laser)::3"/>
-			<weapon class-identifier="medium_laser" object-identifier="::weapon(medium_laser)::1"/>
-			<weapon class-identifier="medium_laser" object-identifier="::weapon(medium_laser)::2"/>
-			<weapon class-identifier="medium_laser" object-identifier="::weapon(medium_laser)::3"/>
-		</content>
-		<name value="Stargazer Alpha 1-0"/>
-	</ship>
 	<main-camera>
 		<position x="0" y="0" z="200"/>
 		<focus object-identifier="::ship(shuttle)::player_ship"/>
-		<field-of-view degree="45"/>
+		<field-of-view radians="0.392699"/>
 	</main-camera>
+	<object type-identifier="mind" class-identifier="command_mind" object-identifier="::player_mind">
+		<type-specific>
+			<character object-identifier="::character::player_character"/>
+		</type-specific>
+	</object>
+	<object type-identifier="ship" class-identifier="shuttle" object-identifier="::ship(shuttle)::player_ship">
+		<aspect-name>
+			<name value="Stargazer Alpha 1-0"/>
+		</aspect-name>
+		<aspect-object-container>
+			<content object-identifier="::character::player_character"/>
+			<content object-identifier="::weapon(light_laser)::1"/>
+			<content object-identifier="::weapon(light_laser)::2"/>
+			<content object-identifier="::weapon(light_laser)::3"/>
+			<content object-identifier="::weapon(medium_laser)::1"/>
+			<content object-identifier="::weapon(medium_laser)::2"/>
+			<content object-identifier="::weapon(medium_laser)::3"/>
+			<content object-identifier="::commodity(luxury_goods)::1"/>
+			<content object-identifier="::commodity(luxury_goods)::2"/>
+			<content object-identifier="::commodity(luxury_goods)::3"/>
+			<content object-identifier="::commodity(luxury_goods)::4"/>
+			<content object-identifier="::commodity(luxury_goods)::5"/>
+			<content object-identifier="::commodity(luxury_goods)::6"/>
+		</aspect-object-container>
+		<aspect-position>
+			<orientation w="1" x="0" y="0" z="0"/>
+			<position x="0" y="0" z="0"/>
+		</aspect-position>
+		<type-specific>
+			<fuel value="1"/>
+			<hull value="100"/>
+			<current-system object-identifier="::system(sol)"/>
+			<velocity x="0" y="0" z="0"/>
+		</type-specific>
+	</object>
+	<object type-identifier="character" class-identifier="" object-identifier="::character::player_character">
+		<aspect-object-container>
+			<content object-identifier="::player_mind"/>
+		</aspect-object-container>
+		<type-specific>
+			<credits value="1000000"/>
+			<ship object-identifier="::ship(shuttle)::player_ship"/>
+			<map-knowledge>
+				<explored-system object-identifier="::system(sol)"/>
+			</map-knowledge>
+		</type-specific>
+	</object>
+	<object type-identifier="commodity" class-identifier="luxury_goods" object-identifier="::commodity(luxury_goods)::1">
+		<aspect-name>
+			<name value="Luxury Goods"/>
+		</aspect-name>
+		<aspect-position>
+			<orientation w="1" x="0" y="0" z="0"/>
+			<position x="0" y="0" z="0"/>
+		</aspect-position>
+		<type-specific>
+			<angular-velocity axis-x="0.315482" axis-y="0.14018" axis-z="0.93852" angle="0.634292"/>
+			<hull value="20"/>
+			<velocity x="0" y="0" z="0"/>
+		</type-specific>
+	</object>
+	<object type-identifier="commodity" class-identifier="luxury_goods" object-identifier="::commodity(luxury_goods)::2">
+		<aspect-name>
+			<name value="Luxury Goods"/>
+		</aspect-name>
+		<aspect-position>
+			<orientation w="1" x="0" y="0" z="0"/>
+			<position x="0" y="0" z="0"/>
+		</aspect-position>
+		<type-specific>
+			<angular-velocity axis-x="0.718997" axis-y="0.685965" axis-z="0.111782" angle="0.745363"/>
+			<hull value="20"/>
+			<velocity x="0" y="0" z="0"/>
+		</type-specific>
+	</object>
+	<object type-identifier="commodity" class-identifier="luxury_goods" object-identifier="::commodity(luxury_goods)::3">
+		<aspect-name>
+			<name value="Luxury Goods"/>
+		</aspect-name>
+		<aspect-position>
+			<orientation w="1" x="0" y="0" z="0"/>
+			<position x="0" y="0" z="0"/>
+		</aspect-position>
+		<type-specific>
+			<angular-velocity axis-x="0.688299" axis-y="0.471314" axis-z="0.55146" angle="0.669925"/>
+			<hull value="20"/>
+			<velocity x="0" y="0" z="0"/>
+		</type-specific>
+	</object>
+	<object type-identifier="commodity" class-identifier="luxury_goods" object-identifier="::commodity(luxury_goods)::4">
+		<aspect-name>
+			<name value="Luxury Goods"/>
+		</aspect-name>
+		<aspect-position>
+			<orientation w="1" x="0" y="0" z="0"/>
+			<position x="0" y="0" z="0"/>
+		</aspect-position>
+		<type-specific>
+			<angular-velocity axis-x="0.350021" axis-y="0.393" axis-z="0.850315" angle="0.24139"/>
+			<hull value="20"/>
+			<velocity x="0" y="0" z="0"/>
+		</type-specific>
+	</object>
+	<object type-identifier="commodity" class-identifier="luxury_goods" object-identifier="::commodity(luxury_goods)::5">
+		<aspect-name>
+			<name value="Luxury Goods"/>
+		</aspect-name>
+		<aspect-position>
+			<orientation w="1" x="0" y="0" z="0"/>
+			<position x="0" y="0" z="0"/>
+		</aspect-position>
+		<type-specific>
+			<angular-velocity axis-x="0.617152" axis-y="0.382895" axis-z="0.687397" angle="0.821532"/>
+			<hull value="20"/>
+			<velocity x="0" y="0" z="0"/>
+		</type-specific>
+	</object>
+	<object type-identifier="commodity" class-identifier="luxury_goods" object-identifier="::commodity(luxury_goods)::6">
+		<aspect-name>
+			<name value="Luxury Goods"/>
+		</aspect-name>
+		<aspect-position>
+			<orientation w="1" x="0" y="0" z="0"/>
+			<position x="0" y="0" z="0"/>
+		</aspect-position>
+		<type-specific>
+			<angular-velocity axis-x="0.627698" axis-y="0.124698" axis-z="0.768405" angle="0.88073"/>
+			<hull value="20"/>
+			<velocity x="0" y="0" z="0"/>
+		</type-specific>
+	</object>
+	<object type-identifier="weapon" class-identifier="light_laser" object-identifier="::weapon(light_laser)::1">
+		<aspect-accessory>
+			<slot slot-identifier="backboard_gun"/>
+		</aspect-accessory>
+		<aspect-name>
+			<name value="Light Laser"/>
+		</aspect-name>
+		<aspect-position>
+			<orientation w="0.707107" x="0" y="0.707107" z="0"/>
+			<position x="0" y="0" z="0"/>
+		</aspect-position>
+		<type-specific/>
+	</object>
+	<object type-identifier="weapon" class-identifier="light_laser" object-identifier="::weapon(light_laser)::2">
+		<aspect-accessory>
+			<slot slot-identifier="starboard_gun"/>
+		</aspect-accessory>
+		<aspect-name>
+			<name value="Light Laser"/>
+		</aspect-name>
+		<aspect-position>
+			<orientation w="0.707107" x="0" y="0.707107" z="0"/>
+			<position x="0" y="0" z="0"/>
+		</aspect-position>
+		<type-specific/>
+	</object>
+	<object type-identifier="weapon" class-identifier="light_laser" object-identifier="::weapon(light_laser)::3">
+		<aspect-accessory/>
+		<aspect-name>
+			<name value="Light Laser"/>
+		</aspect-name>
+		<aspect-position>
+			<orientation w="0.707107" x="0" y="0.707107" z="0"/>
+			<position x="0" y="0" z="0"/>
+		</aspect-position>
+		<type-specific/>
+	</object>
+	<object type-identifier="weapon" class-identifier="medium_laser" object-identifier="::weapon(medium_laser)::1">
+		<aspect-accessory/>
+		<aspect-name>
+			<name value="Medium Laser"/>
+		</aspect-name>
+		<aspect-position>
+			<orientation w="0.707107" x="0" y="0.707107" z="0"/>
+			<position x="0" y="0" z="0"/>
+		</aspect-position>
+		<type-specific/>
+	</object>
+	<object type-identifier="weapon" class-identifier="medium_laser" object-identifier="::weapon(medium_laser)::2">
+		<aspect-accessory/>
+		<aspect-name>
+			<name value="Medium Laser"/>
+		</aspect-name>
+		<aspect-position>
+			<orientation w="0.707107" x="0" y="0.707107" z="0"/>
+			<position x="0" y="0" z="0"/>
+		</aspect-position>
+		<type-specific/>
+	</object>
+	<object type-identifier="weapon" class-identifier="medium_laser" object-identifier="::weapon(medium_laser)::3">
+		<aspect-accessory/>
+		<aspect-name>
+			<name value="Medium Laser"/>
+		</aspect-name>
+		<aspect-position>
+			<orientation w="0.707107" x="0" y="0.707107" z="0"/>
+			<position x="0" y="0" z="0"/>
+		</aspect-position>
+		<type-specific/>
+	</object>
 </save>
