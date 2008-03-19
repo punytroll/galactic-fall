@@ -23,6 +23,6 @@
 class Object;
 class XMLStream;
 
-void WriteToXMLStream(XMLStream & XMLStream, Object * Object);
+void WriteToXMLStream(XMLStream & XMLStream, Object * Object, bool Recursive);
 
 #endif
