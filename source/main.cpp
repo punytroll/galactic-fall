@@ -2008,23 +2008,24 @@ void SaveGame(std::ostream & OStream)
 	// now save the impoartant objects
 	if(g_InputMind.IsValid() == true)
 	{
-		// save the input mind
-		WriteToXMLStream(XML, g_InputMind.Get());
-		// save the character for the input mind
-		if(g_InputMind->GetCharacter() != 0)
+		// if no character is available
+		if(g_InputMind->GetCharacter() == 0)
 		{
-			// save the ship
-			if(g_InputMind->GetCharacter()->GetShip() != 0)
+			// only save the input mind
+			WriteToXMLStream(XML, g_InputMind.Get(), true);
+		}
+		else
+		{
+			// if no ship is available
+			if(g_InputMind->GetCharacter()->GetShip() == 0)
 			{
-				WriteToXMLStream(XML, g_InputMind->GetCharacter()->GetShip());
+				// only save the character
+				WriteToXMLStream(XML, g_InputMind->GetCharacter(), true);
 			}
-			
-			// save the ship's content
-			const std::set< Object * > & Content(g_InputMind->GetCharacter()->GetShip()->GetAspectObjectContainer()->GetContent());
-			
-			for(std::set< Object * >::const_iterator ContentIterator = Content.begin(); ContentIterator != Content.end(); ++ContentIterator)
+			else
 			{
-				WriteToXMLStream(XML, *ContentIterator);
+				// save the complete ship
+				WriteToXMLStream(XML, g_InputMind->GetCharacter()->GetShip(), true);
 			}
 		}
 	}

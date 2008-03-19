@@ -37,11 +37,49 @@
 #include "write_to_xml_stream.h"
 #include "xml_stream.h"
 
+static void WriteToXMLStream(XMLStream & XMLStream, Object * TheObject);
+static void WriteToXMLStream(XMLStream & XMLStream, Object * TheObject, std::stack< Object * > & ObjectStack);
+
 static void WriteCharacterToXMLStream(XMLStream & XMLStream, Character * TheCharacter);
 static void WriteCommodityToXMLStream(XMLStream & XMLStream, Commodity * TheCommodity);
 static void WriteMindToXMLStream(XMLStream & XMLStream, Mind * TheMind);
 static void WriteShipToXMLStream(XMLStream & XMLStream, Ship * TheShip);
 static void WriteWeaponToXMLStream(XMLStream & XMLStream, Weapon * TheWeapon);
+
+void WriteToXMLStream(XMLStream & XMLStream, Object * TheObject, bool Recursive)
+{
+	if(Recursive == true)
+	{
+		std::stack< Object * > ObjectStack;
+		
+		ObjectStack.push(TheObject);
+		while(ObjectStack.empty() == false)
+		{
+			Object * TopObject(ObjectStack.top());
+			
+			ObjectStack.pop();
+			WriteToXMLStream(XMLStream, TopObject, ObjectStack);
+		}
+	}
+	else
+	{
+		WriteToXMLStream(XMLStream, TheObject);
+	}
+}
+
+static void WriteToXMLStream(XMLStream & XMLStream, Object * TheObject, std::stack< Object * > & ObjectStack)
+{
+	if(TheObject->GetAspectObjectContainer() != 0)
+	{
+		const std::set< Object * > & Content(TheObject->GetAspectObjectContainer()->GetContent());
+		
+		for(std::set< Object * >::const_iterator ContentIterator =  Content.begin(); ContentIterator != Content.end(); ++ContentIterator)
+		{
+			ObjectStack.push(*ContentIterator);
+		}
+	}
+	WriteToXMLStream(XMLStream, TheObject);
+}
 
 void WriteToXMLStream(XMLStream & XMLStream, Object * TheObject)
 {
