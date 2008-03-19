@@ -100,6 +100,7 @@
 #include "weapon.h"
 #include "weapon_class.h"
 #include "widget.h"
+#include "write_to_xml_stream.h"
 #include "xml_puny_dom.h"
 #include "xml_stream.h"
 
@@ -1493,112 +1494,6 @@ void LoadGameFromElement(const Element * SaveElement)
 		{
 			ObservedCharacterObjectIdentifier = (*SaveChild)->GetAttribute("object-identifier");
 		}
-		else if((*SaveChild)->GetName() == "mind")
-		{
-			Object * NewMind(g_ObjectFactory->Create((*SaveChild)->GetName(), (*SaveChild)->GetAttribute("class")));
-			
-			NewMind->SetObjectIdentifier((*SaveChild)->GetAttribute("object-identifier"));
-			for(std::vector< Element * >::const_iterator MindChild = (*SaveChild)->GetChilds().begin(); MindChild != (*SaveChild)->GetChilds().end(); ++MindChild)
-			{
-				if((*MindChild)->GetName() == "character")
-				{
-					// on second pass
-				}
-				else
-				{
-					throw std::runtime_error("The \"mind\" element \"" + (*SaveChild)->GetAttribute("object-identifier") + "\" contains an unidentified child element \"" + (*MindChild)->GetName() + "\".");
-				}
-			}
-		}
-		else if((*SaveChild)->GetName() == "character")
-		{
-			Character * TheCharacter(dynamic_cast< Character * >(g_ObjectFactory->Create("character", "")));
-			
-			TheCharacter->SetObjectIdentifier((*SaveChild)->GetAttribute("object-identifier"));
-			for(std::vector< Element * >::const_iterator CharacterChild = (*SaveChild)->GetChilds().begin(); CharacterChild != (*SaveChild)->GetChilds().end(); ++CharacterChild)
-			{
-				if((*CharacterChild)->GetName() == "credits")
-				{
-					TheCharacter->SetCredits(from_string_cast< u4byte >((*CharacterChild)->GetAttribute("value")));
-				}
-				else if((*CharacterChild)->GetName() == "map-knowledge")
-				{
-					for(std::vector< Element * >::const_iterator MapKnowledgeChild = (*CharacterChild)->GetChilds().begin(); MapKnowledgeChild != (*CharacterChild)->GetChilds().end(); ++MapKnowledgeChild)
-					{
-						if((*MapKnowledgeChild)->GetName() == "explored-system")
-						{
-							TheCharacter->GetMapKnowledge()->AddExploredSystem(g_Galaxy->GetSystem((*MapKnowledgeChild)->GetAttribute("identifier")));
-						}
-					}
-				}
-				else if((*CharacterChild)->GetName() == "ship")
-				{
-					// in second pass
-				}
-				else
-				{
-					throw std::runtime_error("The \"character\" element \"" + (*SaveChild)->GetAttribute("object-identifier") + "\" contains an unidentified child element \"" + (*CharacterChild)->GetName() + "\".");
-				}
-			}
-		}
-		else if((*SaveChild)->GetName() == "ship")
-		{
-			Ship * TheShip(dynamic_cast< Ship * >(g_ObjectFactory->Create((*SaveChild)->GetName(), (*SaveChild)->GetAttribute("class-identifier"))));
-			
-			TheShip->SetObjectIdentifier((*SaveChild)->GetAttribute("object-identifier"));
-			for(std::vector< Element * >::const_iterator ShipChild = (*SaveChild)->GetChilds().begin(); ShipChild != (*SaveChild)->GetChilds().end(); ++ShipChild)
-			{
-				if((*ShipChild)->GetName() == "fuel")
-				{
-					TheShip->SetFuel(from_string_cast< float >((*ShipChild)->GetAttribute("value")));
-				}
-				else if((*ShipChild)->GetName() == "hull")
-				{
-					TheShip->SetHull(from_string_cast< float >((*ShipChild)->GetAttribute("value")));
-				}
-				else if((*ShipChild)->GetName() == "position")
-				{
-					TheShip->GetAspectPosition()->SetPosition(Vector3f(from_string_cast< float >((*ShipChild)->GetAttribute("x")), from_string_cast< float >((*ShipChild)->GetAttribute("y")), 0.0f));
-				}
-				else if((*ShipChild)->GetName() == "velocity")
-				{
-					TheShip->SetVelocity(Vector3f(from_string_cast< float >((*ShipChild)->GetAttribute("x")), from_string_cast< float >((*ShipChild)->GetAttribute("y")), 0.0f));
-				}
-				else if((*ShipChild)->GetName() == "angular-position")
-				{
-					TheShip->GetAspectPosition()->SetOrientation(Quaternion(from_string_cast< float >((*ShipChild)->GetAttribute("w")), from_string_cast< float >((*ShipChild)->GetAttribute("x")), from_string_cast< float >((*ShipChild)->GetAttribute("y")), from_string_cast< float >((*ShipChild)->GetAttribute("z"))));
-				}
-				else if((*ShipChild)->GetName() == "content")
-				{
-					for(std::vector< Element * >::const_iterator ContentChild = (*ShipChild)->GetChilds().begin(); ContentChild != (*ShipChild)->GetChilds().end(); ++ContentChild)
-					{
-						Object * Content(g_ObjectFactory->Create((*ContentChild)->GetName(), (*ContentChild)->GetAttribute("class-identifier")));
-						
-						Content->SetObjectIdentifier((*ContentChild)->GetAttribute("object-identifier"));
-						TheShip->GetAspectObjectContainer()->AddContent(Content);
-						if((*ContentChild)->HasAttribute("mounted-on") == true)
-						{
-							TheShip->Mount(Content, (*ContentChild)->GetAttribute("mounted-on"));
-						}
-					}
-				}
-				else if((*ShipChild)->GetName() == "name")
-				{
-					TheShip->GetAspectName()->SetName((*ShipChild)->GetAttribute("value"));
-				}
-				else if((*ShipChild)->GetName() == "system")
-				{
-					System * TheSystem(g_Galaxy->GetSystem((*ShipChild)->GetAttribute("identifier")));
-					
-					TheSystem->GetAspectObjectContainer()->AddContent(TheShip);
-					TheShip->SetCurrentSystem(TheSystem);
-				}
-				else
-				{
-					throw std::runtime_error("The \"ship\" element \"" + (*SaveChild)->GetAttribute("object-identifier") + "\" contains an unidentified child element \"" + (*ShipChild)->GetName() + "\".");
-				}
-			}
-		}
 		else if((*SaveChild)->GetName() == "main-camera")
 		{
 			for(std::vector< Element * >::const_iterator CameraChild = (*SaveChild)->GetChilds().begin(); CameraChild != (*SaveChild)->GetChilds().end(); ++CameraChild)
@@ -1609,7 +1504,7 @@ void LoadGameFromElement(const Element * SaveElement)
 				}
 				else if((*CameraChild)->GetName() == "focus")
 				{
-					// in second pass
+					// read in second pass
 				}
 				else if((*CameraChild)->GetName() == "field-of-view")
 				{
@@ -1628,6 +1523,246 @@ void LoadGameFromElement(const Element * SaveElement)
 				}
 			}
 		}
+		else if((*SaveChild)->GetName() == "object")
+		{
+			assert((*SaveChild)->HasAttribute("type-identifier") == true);
+			assert((*SaveChild)->HasAttribute("class-identifier") == true);
+			
+			Object * NewObject(g_ObjectFactory->Create((*SaveChild)->GetAttribute("type-identifier"), (*SaveChild)->GetAttribute("class-identifier")));
+			
+			assert((*SaveChild)->HasAttribute("object-identifier") == true);
+			NewObject->SetObjectIdentifier((*SaveChild)->GetAttribute("object-identifier"));
+			for(std::vector< Element * >::const_iterator ObjectChild = (*SaveChild)->GetChilds().begin(); ObjectChild != (*SaveChild)->GetChilds().end(); ++ObjectChild)
+			{
+				if((*ObjectChild)->GetName() == "aspect-accessory")
+				{
+					// assert that the object supports the name aspect
+					assert(NewObject->GetAspectAccessory() != 0);
+					// read data related to the name aspect
+					for(std::vector< Element * >::const_iterator AspectChild = (*ObjectChild)->GetChilds().begin(); AspectChild != (*ObjectChild)->GetChilds().end(); ++AspectChild)
+					{
+						if((*AspectChild)->GetName() == "slot")
+						{
+							assert((*AspectChild)->HasAttribute("slot-identifier") == true);
+							// read in third pass
+						}
+						else
+						{
+							throw std::runtime_error("The \"" + (*ObjectChild)->GetName() + "\" element for the object \"" + (*SaveChild)->GetAttribute("object-identifier") + "\" contains an unknown element \"" + (*AspectChild)->GetName() + "\".");
+						}
+					}
+				}
+				else if((*ObjectChild)->GetName() == "aspect-name")
+				{
+					// assert that the object supports the name aspect
+					assert(NewObject->GetAspectName() != 0);
+					// read data related to the name aspect
+					for(std::vector< Element * >::const_iterator AspectChild = (*ObjectChild)->GetChilds().begin(); AspectChild != (*ObjectChild)->GetChilds().end(); ++AspectChild)
+					{
+						if((*AspectChild)->GetName() == "name")
+						{
+							assert((*AspectChild)->HasAttribute("value") == true);
+							NewObject->GetAspectName()->SetName((*AspectChild)->GetAttribute("value"));
+						}
+						else
+						{
+							throw std::runtime_error("The \"" + (*ObjectChild)->GetName() + "\" element for the object \"" + (*SaveChild)->GetAttribute("object-identifier") + "\" contains an unknown element \"" + (*AspectChild)->GetName() + "\".");
+						}
+					}
+				}
+				else if((*ObjectChild)->GetName() == "aspect-object-container")
+				{
+					// assert that the object supports the object container aspect
+					assert(NewObject->GetAspectObjectContainer() != 0);
+					// read data related to the object container aspect
+					for(std::vector< Element * >::const_iterator AspectChild = (*ObjectChild)->GetChilds().begin(); AspectChild != (*ObjectChild)->GetChilds().end(); ++AspectChild)
+					{
+						if((*AspectChild)->GetName() == "content")
+						{
+							assert((*AspectChild)->HasAttribute("object-identifier") == true);
+							// read in second pass
+						}
+						else
+						{
+							throw std::runtime_error("The \"" + (*ObjectChild)->GetName() + "\" element for the object \"" + (*SaveChild)->GetAttribute("object-identifier") + "\" contains an unknown element \"" + (*AspectChild)->GetName() + "\".");
+						}
+					}
+				}
+				else if((*ObjectChild)->GetName() == "aspect-position")
+				{
+					// assert that the object supports the position aspect
+					assert(NewObject->GetAspectPosition() != 0);
+					// read data related to the position aspect
+					for(std::vector< Element * >::const_iterator AspectChild = (*ObjectChild)->GetChilds().begin(); AspectChild != (*ObjectChild)->GetChilds().end(); ++AspectChild)
+					{
+						if((*AspectChild)->GetName() == "orientation")
+						{
+							assert((*AspectChild)->HasAttribute("w") == true);
+							assert((*AspectChild)->HasAttribute("x") == true);
+							assert((*AspectChild)->HasAttribute("y") == true);
+							assert((*AspectChild)->HasAttribute("z") == true);
+							NewObject->GetAspectPosition()->SetOrientation(Quaternion(from_string_cast< float >((*AspectChild)->GetAttribute("w")), from_string_cast< float >((*AspectChild)->GetAttribute("x")), from_string_cast< float >((*AspectChild)->GetAttribute("y")), from_string_cast< float >((*AspectChild)->GetAttribute("z"))));
+						}
+						else if((*AspectChild)->GetName() == "position")
+						{
+							assert((*AspectChild)->HasAttribute("x") == true);
+							assert((*AspectChild)->HasAttribute("y") == true);
+							assert((*AspectChild)->HasAttribute("z") == true);
+							NewObject->GetAspectPosition()->SetPosition(Vector3f(from_string_cast< float >((*AspectChild)->GetAttribute("x")), from_string_cast< float >((*AspectChild)->GetAttribute("y")), from_string_cast< float >((*AspectChild)->GetAttribute("z"))));
+						}
+						else
+						{
+							throw std::runtime_error("The \"" + (*ObjectChild)->GetName() + "\" element for the object \"" + (*SaveChild)->GetAttribute("object-identifier") + "\" contains an unknown element \"" + (*AspectChild)->GetName() + "\".");
+						}
+					}
+				}
+				else if((*ObjectChild)->GetName() == "type-specific")
+				{
+					if((*SaveChild)->GetAttribute("type-identifier") == "character")
+					{
+						Character * NewCharacter(dynamic_cast< Character * >(NewObject));
+						
+						assert(NewCharacter != 0);
+						for(std::vector< Element * >::const_iterator TypeSpecificChild = (*ObjectChild)->GetChilds().begin(); TypeSpecificChild != (*ObjectChild)->GetChilds().end(); ++TypeSpecificChild)
+						{
+							if((*TypeSpecificChild)->GetName() == "credits")
+							{
+								assert((*TypeSpecificChild)->HasAttribute("value") == true);
+								NewCharacter->SetCredits(from_string_cast< u4byte >((*TypeSpecificChild)->GetAttribute("value")));
+							}
+							else if((*TypeSpecificChild)->GetName() == "map-knowledge")
+							{
+								for(std::vector< Element * >::const_iterator MapKnowledgeChild = (*TypeSpecificChild)->GetChilds().begin(); MapKnowledgeChild != (*TypeSpecificChild)->GetChilds().end(); ++MapKnowledgeChild)
+								{
+									if((*MapKnowledgeChild)->GetName() == "explored-system")
+									{
+										assert((*MapKnowledgeChild)->HasAttribute("object-identifier") == true);
+										// red in second pass
+									}
+									else
+									{
+										throw std::runtime_error("The \"" + (*TypeSpecificChild)->GetName() + "\" element for the object \"" + (*SaveChild)->GetAttribute("object-identifier") + "\" contains an unknown element \"" + (*MapKnowledgeChild)->GetName() + "\".");
+									}
+								}
+							}
+							else if((*TypeSpecificChild)->GetName() == "ship")
+							{
+								assert((*TypeSpecificChild)->HasAttribute("object-identifier") == true);
+								// read in second pass
+							}
+							else
+							{
+								throw std::runtime_error("The \"" + (*ObjectChild)->GetName() + "\" element for the object \"" + (*SaveChild)->GetAttribute("object-identifier") + "\" contains an unknown element \"" + (*TypeSpecificChild)->GetName() + "\".");
+							}
+						}
+					}
+					else if((*SaveChild)->GetAttribute("type-identifier") == "commodity")
+					{
+						Commodity * NewCommodity(dynamic_cast< Commodity * >(NewObject));
+						
+						assert(NewCommodity != 0);
+						for(std::vector< Element * >::const_iterator TypeSpecificChild = (*ObjectChild)->GetChilds().begin(); TypeSpecificChild != (*ObjectChild)->GetChilds().end(); ++TypeSpecificChild)
+						{
+							if((*TypeSpecificChild)->GetName() == "angular-velocity")
+							{
+								assert((*TypeSpecificChild)->HasAttribute("axis-x") == true);
+								assert((*TypeSpecificChild)->HasAttribute("axis-y") == true);
+								assert((*TypeSpecificChild)->HasAttribute("axis-z") == true);
+								assert((*TypeSpecificChild)->HasAttribute("angle") == true);
+								NewCommodity->SetAngularVelocity(AxisAngle(from_string_cast< float >((*TypeSpecificChild)->GetAttribute("axis-x")), from_string_cast< float >((*TypeSpecificChild)->GetAttribute("axis-y")), from_string_cast< float >((*TypeSpecificChild)->GetAttribute("axis-z")), from_string_cast< float >((*TypeSpecificChild)->GetAttribute("angle"))));
+							}
+							else if((*TypeSpecificChild)->GetName() == "hull")
+							{
+								assert((*TypeSpecificChild)->HasAttribute("value") == true);
+								NewCommodity->SetHull(from_string_cast< float >((*TypeSpecificChild)->GetAttribute("value")));
+							}
+							else if((*TypeSpecificChild)->GetName() == "velocity")
+							{
+								assert((*TypeSpecificChild)->HasAttribute("x") == true);
+								assert((*TypeSpecificChild)->HasAttribute("y") == true);
+								assert((*TypeSpecificChild)->HasAttribute("z") == true);
+								NewCommodity->SetVelocity(Vector3f(from_string_cast< float >((*TypeSpecificChild)->GetAttribute("x")), from_string_cast< float >((*TypeSpecificChild)->GetAttribute("y")), from_string_cast< float >((*TypeSpecificChild)->GetAttribute("z"))));
+							}
+							else
+							{
+								throw std::runtime_error("The \"" + (*ObjectChild)->GetName() + "\" element for the object \"" + (*SaveChild)->GetAttribute("object-identifier") + "\" contains an unknown element \"" + (*TypeSpecificChild)->GetName() + "\".");
+							}
+						}
+					}
+					else if((*SaveChild)->GetAttribute("type-identifier") == "mind")
+					{
+						Mind * NewMind(dynamic_cast< Mind * >(NewObject));
+						
+						assert(NewMind != 0);
+						for(std::vector< Element * >::const_iterator TypeSpecificChild = (*ObjectChild)->GetChilds().begin(); TypeSpecificChild != (*ObjectChild)->GetChilds().end(); ++TypeSpecificChild)
+						{
+							if((*TypeSpecificChild)->GetName() == "character")
+							{
+								assert((*TypeSpecificChild)->HasAttribute("object-identifier") == true);
+								// read in second pass
+							}
+							else
+							{
+								throw std::runtime_error("The \"" + (*ObjectChild)->GetName() + "\" element for the object \"" + (*SaveChild)->GetAttribute("object-identifier") + "\" contains an unknown element \"" + (*TypeSpecificChild)->GetName() + "\".");
+							}
+						}
+					}
+					else if((*SaveChild)->GetAttribute("type-identifier") == "ship")
+					{
+						Ship * NewShip(dynamic_cast< Ship * >(NewObject));
+						
+						assert(NewShip != 0);
+						for(std::vector< Element * >::const_iterator TypeSpecificChild = (*ObjectChild)->GetChilds().begin(); TypeSpecificChild != (*ObjectChild)->GetChilds().end(); ++TypeSpecificChild)
+						{
+							if((*TypeSpecificChild)->GetName() == "current-system")
+							{
+								assert((*TypeSpecificChild)->HasAttribute("object-identifier") == true);
+								// read in second pass
+							}
+							else if((*TypeSpecificChild)->GetName() == "fuel")
+							{
+								assert((*TypeSpecificChild)->HasAttribute("value") == true);
+								NewShip->SetFuel(from_string_cast< float >((*TypeSpecificChild)->GetAttribute("value")));
+							}
+							else if((*TypeSpecificChild)->GetName() == "hull")
+							{
+								assert((*TypeSpecificChild)->HasAttribute("value") == true);
+								NewShip->SetHull(from_string_cast< float >((*TypeSpecificChild)->GetAttribute("value")));
+							}
+							else if((*TypeSpecificChild)->GetName() == "velocity")
+							{
+								assert((*TypeSpecificChild)->HasAttribute("x") == true);
+								assert((*TypeSpecificChild)->HasAttribute("y") == true);
+								assert((*TypeSpecificChild)->HasAttribute("z") == true);
+								NewShip->SetVelocity(Vector3f(from_string_cast< float >((*TypeSpecificChild)->GetAttribute("x")), from_string_cast< float >((*TypeSpecificChild)->GetAttribute("y")), from_string_cast< float >((*TypeSpecificChild)->GetAttribute("z"))));
+							}
+							else
+							{
+								throw std::runtime_error("The \"" + (*ObjectChild)->GetName() + "\" element for the object \"" + (*SaveChild)->GetAttribute("object-identifier") + "\" contains an unknown element \"" + (*TypeSpecificChild)->GetName() + "\".");
+							}
+						}
+					}
+					else if((*SaveChild)->GetAttribute("type-identifier") == "weapon")
+					{
+						Weapon * NewWeapon(dynamic_cast< Weapon * >(NewObject));
+						
+						assert(NewWeapon != 0);
+						for(std::vector< Element * >::const_iterator TypeSpecificChild = (*ObjectChild)->GetChilds().begin(); TypeSpecificChild != (*ObjectChild)->GetChilds().end(); ++TypeSpecificChild)
+						{
+							throw std::runtime_error("The \"" + (*ObjectChild)->GetName() + "\" element for the object \"" + (*SaveChild)->GetAttribute("object-identifier") + "\" contains an unknown element \"" + (*TypeSpecificChild)->GetName() + "\".");
+						}
+					}
+					else
+					{
+						throw std::runtime_error("The object \"" + (*SaveChild)->GetAttribute("object-identifier") + "\" requests a type-specific setup for the unknown type \"" + (*SaveChild)->GetAttribute("type-identifier") + "\".");
+					}
+				}
+				else
+				{
+					throw std::runtime_error("The object \"" + (*SaveChild)->GetAttribute("object-identifier") + "\" contains an unidentified child element \"" + (*ObjectChild)->GetName() + "\".");
+				}
+			}
+		}
 		else
 		{
 			throw std::runtime_error("The \"save\" element contains an unidentified child element \"" + (*SaveChild)->GetName() + "\".");
@@ -1635,9 +1770,7 @@ void LoadGameFromElement(const Element * SaveElement)
 	}
 	// in the second pass we do a fast skip over the childs to resolve any object references
 	// no errors except resolving errors will be displayed
-	// here, all the dynamic_casts are done
 	// at the moment this also resolves back references/containments
-	/// @todo The back references/containments should be dealt with by save the galaxy's structure recursively
 	for(std::vector< Element * >::const_iterator SaveChild = SaveChilds.begin(); SaveChild != SaveChilds.end(); ++SaveChild)
 	{
 		if((*SaveChild)->GetName() == "main-camera")
@@ -1653,35 +1786,125 @@ void LoadGameFromElement(const Element * SaveElement)
 				}
 			}
 		}
-		else if((*SaveChild)->GetName() == "mind")
+		else if((*SaveChild)->GetName() == "object")
 		{
-			Mind * TheMind(dynamic_cast< Mind * >(Object::GetObject((*SaveChild)->GetAttribute("object-identifier"))));
+			assert((*SaveChild)->HasAttribute("object-identifier"));
 			
-			for(std::vector< Element * >::const_iterator MindChild = (*SaveChild)->GetChilds().begin(); MindChild != (*SaveChild)->GetChilds().end(); ++MindChild)
+			Object * TheObject(Object::GetObject((*SaveChild)->GetAttribute("object-identifier")));
+			
+			assert(TheObject != 0);
+			for(std::vector< Element * >::const_iterator ObjectChild = (*SaveChild)->GetChilds().begin(); ObjectChild != (*SaveChild)->GetChilds().end(); ++ObjectChild)
 			{
-				if((*MindChild)->GetName() == "character")
+				if((*ObjectChild)->GetName() == "aspect-object-container")
 				{
-					Character * TheCharacter(dynamic_cast< Character * >(Object::GetObject((*MindChild)->GetAttribute("object-identifier"))));
-					
-					assert(TheCharacter != 0);
-					TheMind->SetCharacter(TheCharacter);
-					TheCharacter->GetAspectObjectContainer()->AddContent(TheMind);
+					for(std::vector< Element * >::const_iterator AspectChild = (*ObjectChild)->GetChilds().begin(); AspectChild != (*ObjectChild)->GetChilds().end(); ++AspectChild)
+					{
+						if((*AspectChild)->GetName() == "content")
+						{
+							Object * Content(Object::GetObject((*AspectChild)->GetAttribute("object-identifier")));
+							
+							assert(Content != 0);
+							TheObject->GetAspectObjectContainer()->AddContent(Content);
+						}
+					}
+				}
+				else if((*ObjectChild)->GetName() == "type-specific")
+				{
+					if((*SaveChild)->GetAttribute("type-identifier") == "character")
+					{
+						Character * TheCharacter(dynamic_cast< Character * >(TheObject));
+						
+						assert(TheCharacter != 0);
+						for(std::vector< Element * >::const_iterator TypeSpecificChild = (*ObjectChild)->GetChilds().begin(); TypeSpecificChild != (*ObjectChild)->GetChilds().end(); ++TypeSpecificChild)
+						{
+							if((*TypeSpecificChild)->GetName() == "map-knowledge")
+							{
+								for(std::vector< Element * >::const_iterator MapKnowledgeChild = (*TypeSpecificChild)->GetChilds().begin(); MapKnowledgeChild != (*TypeSpecificChild)->GetChilds().end(); ++MapKnowledgeChild)
+								{
+									if((*MapKnowledgeChild)->GetName() == "explored-system")
+									{
+										Object * ExploredSystem(Object::GetObject((*MapKnowledgeChild)->GetAttribute("object-identifier")));
+										
+										assert(ExploredSystem != 0);
+										assert(dynamic_cast< System * >(ExploredSystem) != 0);
+										TheCharacter->GetMapKnowledge()->AddExploredSystem(dynamic_cast< System * >(ExploredSystem));
+									}
+								}
+							}
+							else if((*TypeSpecificChild)->GetName() == "ship")
+							{
+								Object * TheShip(Object::GetObject((*TypeSpecificChild)->GetAttribute("object-identifier")));
+								
+								assert(TheShip != 0);
+								assert(dynamic_cast< Ship * >(TheShip) != 0);
+								TheCharacter->SetShip(dynamic_cast< Ship * >(TheShip));
+							}
+						}
+					}
+					else if((*SaveChild)->GetAttribute("type-identifier") == "mind")
+					{
+						Mind * TheMind(dynamic_cast< Mind * >(TheObject));
+						
+						assert(TheMind != 0);
+						for(std::vector< Element * >::const_iterator TypeSpecificChild = (*ObjectChild)->GetChilds().begin(); TypeSpecificChild != (*ObjectChild)->GetChilds().end(); ++TypeSpecificChild)
+						{
+							if((*TypeSpecificChild)->GetName() == "character")
+							{
+								Object * TheCharacter(Object::GetObject((*TypeSpecificChild)->GetAttribute("object-identifier")));
+								
+								assert(TheCharacter != 0);
+								assert(dynamic_cast< Character * >(TheCharacter) != 0);
+								TheMind->SetCharacter(dynamic_cast< Character * >(TheCharacter));
+							}
+						}
+					}
+					else if((*SaveChild)->GetAttribute("type-identifier") == "ship")
+					{
+						Ship * TheShip(dynamic_cast< Ship * >(TheObject));
+						
+						assert(TheShip != 0);
+						for(std::vector< Element * >::const_iterator TypeSpecificChild = (*ObjectChild)->GetChilds().begin(); TypeSpecificChild != (*ObjectChild)->GetChilds().end(); ++TypeSpecificChild)
+						{
+							if((*TypeSpecificChild)->GetName() == "current-system")
+							{
+								Object * CurrentSystem(Object::GetObject((*TypeSpecificChild)->GetAttribute("object-identifier")));
+								
+								assert(CurrentSystem != 0);
+								assert(dynamic_cast< System * >(CurrentSystem) != 0);
+								TheShip->SetCurrentSystem(dynamic_cast< System * >(CurrentSystem));
+								dynamic_cast< System * >(CurrentSystem)->GetAspectObjectContainer()->AddContent(TheShip);
+							}
+						}
+					}
 				}
 			}
 		}
-		else if((*SaveChild)->GetName() == "character")
+	}
+	// in the third pass we do a fast skip over the elements and mount the objects that have an accessory aspect and are mounted
+	for(std::vector< Element * >::const_iterator SaveChild = SaveChilds.begin(); SaveChild != SaveChilds.end(); ++SaveChild)
+	{
+		if((*SaveChild)->GetName() == "object")
 		{
-			Character * TheCharacter(dynamic_cast< Character * >(Object::GetObject((*SaveChild)->GetAttribute("object-identifier"))));
+			assert((*SaveChild)->HasAttribute("object-identifier"));
 			
-			for(std::vector< Element * >::const_iterator CharacterChild = (*SaveChild)->GetChilds().begin(); CharacterChild != (*SaveChild)->GetChilds().end(); ++CharacterChild)
+			Object * TheObject(Object::GetObject((*SaveChild)->GetAttribute("object-identifier")));
+			
+			assert(TheObject != 0);
+			for(std::vector< Element * >::const_iterator ObjectChild = (*SaveChild)->GetChilds().begin(); ObjectChild != (*SaveChild)->GetChilds().end(); ++ObjectChild)
 			{
-				if((*CharacterChild)->GetName() == "ship")
+				if((*ObjectChild)->GetName() == "aspect-accessory")
 				{
-					Ship * TheShip(dynamic_cast< Ship * >(Object::GetObject((*CharacterChild)->GetAttribute("object-identifier"))));
-					
-					assert(TheShip != 0);
-					TheCharacter->SetShip(TheShip);
-					TheShip->GetAspectObjectContainer()->AddContent(TheCharacter);
+					for(std::vector< Element * >::const_iterator AspectChild = (*ObjectChild)->GetChilds().begin(); AspectChild != (*ObjectChild)->GetChilds().end(); ++AspectChild)
+					{
+						if((*AspectChild)->GetName() == "slot")
+						{
+							Object * TheShip(TheObject->GetContainer());
+							
+							assert(TheShip != 0);
+							assert(dynamic_cast< Ship * >(TheShip) != 0);
+							dynamic_cast< Ship * >(TheShip)->Mount(TheObject, (*AspectChild)->GetAttribute("slot-identifier"));
+						}
+					}
 				}
 			}
 		}
@@ -1769,75 +1992,6 @@ void SaveGame(std::ostream & OStream)
 	{
 		XML << element << "observed-character" << attribute << "object-identifier" << value << g_CharacterObserver->GetObservedCharacter()->GetObjectIdentifier() << end;
 	}
-	if(g_InputMind.IsValid() == true)
-	{
-		// save the input mind
-		XML << element << "mind" << attribute << "class" << value << "command-mind" << attribute << "object-identifier" << value << g_InputMind->GetObjectIdentifier();
-		if(g_InputMind->GetCharacter() != 0)
-		{
-			XML << element << "character" << attribute << "object-identifier" << value << g_InputMind->GetCharacter()->GetObjectIdentifier() << end;
-		}
-		XML << end;
-		// save the character for the input mind
-		if(g_InputMind->GetCharacter() != 0)
-		{
-			XML << element << "character" << attribute << "object-identifier" << value << g_InputMind->GetCharacter()->GetObjectIdentifier();
-			if(g_InputMind->GetCharacter()->GetShip() != 0)
-			{
-				XML << element << "ship" << attribute << "object-identifier" << value << g_InputMind->GetCharacter()->GetShip()->GetObjectIdentifier() << end;
-			}
-			XML << element << "credits" << attribute << "value" << value << g_InputMind->GetCharacter()->GetCredits() << end;
-			XML << element << "map-knowledge";
-			
-			const std::set< System * > & ExploredSystems(g_InputMind->GetCharacter()->GetMapKnowledge()->GetExploredSystems());
-			
-			for(std::set< System * >::const_iterator ExploredSystemIterator = ExploredSystems.begin(); ExploredSystemIterator != ExploredSystems.end(); ++ExploredSystemIterator)
-			{
-				XML << element << "explored-system" << attribute << "identifier" << value << (*ExploredSystemIterator)->GetIdentifier() << end;
-			}
-			XML << end; // map-knowledge
-			XML << end; // character
-			if(g_InputMind->GetCharacter()->GetShip() != 0)
-			{
-				Ship * Ship(g_InputMind->GetCharacter()->GetShip());
-				
-				XML << element << "ship" << attribute << "class-identifier" << value << Ship->GetShipClass()->GetIdentifier() << attribute << "object-identifier" << value << Ship->GetObjectIdentifier();
-				XML << element << "system" << attribute << "identifier" << value << g_InputMind->GetCharacter()->GetShip()->GetCurrentSystem()->GetIdentifier() << end;
-				XML << element << "fuel" << attribute << "value" << value << Ship->GetFuel() << end;
-				XML << element << "hull" << attribute << "value" << value << Ship->GetHull() << end;
-				XML << element << "position" << attribute << "x" << value << Ship->GetAspectPosition()->GetPosition().m_V.m_A[0] << attribute << "y" << value << Ship->GetAspectPosition()->GetPosition().m_V.m_A[1] << end;
-				XML << element << "angular-position" << attribute << "w" << value << Ship->GetAspectPosition()->GetOrientation()[0] << attribute << "x" << value << Ship->GetAspectPosition()->GetOrientation()[1] << attribute << "y" << value << Ship->GetAspectPosition()->GetOrientation()[2] << attribute << "z" << value << Ship->GetAspectPosition()->GetOrientation()[3] << end;
-				XML << element << "velocity" << attribute << "x" << value << Ship->GetVelocity().m_V.m_A[0] << attribute << "y" << value << Ship->GetVelocity().m_V.m_A[1] << end;
-				XML << element << "content";
-				
-				std::set< Object * >::const_iterator ContentIterator(Ship->GetAspectObjectContainer()->GetContent().begin());
-				
-				while(ContentIterator != Ship->GetAspectObjectContainer()->GetContent().end())
-				{
-					Commodity * TheCommodity(dynamic_cast< Commodity * >(*ContentIterator));
-					Weapon * TheWeapon(dynamic_cast< Weapon * >(*ContentIterator));
-					
-					if(TheCommodity != 0)
-					{
-						XML << element << "commodity" << attribute << "class-identifier" << value << TheCommodity->GetCommodityClass()->GetIdentifier() << attribute << "object-identifier" << value << TheCommodity->GetObjectIdentifier() << end;
-					}
-					else if(TheWeapon != 0)
-					{
-						XML << element << "weapon" << attribute << "class-identifier" << value << TheWeapon->GetWeaponClass()->GetIdentifier() << attribute << "object-identifier" << value << TheWeapon->GetObjectIdentifier();
-						if(TheWeapon->GetAspectAccessory()->GetSlot() != 0)
-						{
-							XML << attribute << "mounted-on" << value << TheWeapon->GetAspectAccessory()->GetSlot()->GetIdentifier();
-						}
-						XML << end;
-					}
-					++ContentIterator;
-				}
-				XML << end; // content
-				XML << element << "name" << attribute << "value" << value << Ship->GetAspectName()->GetName() << end;
-				XML << end; // ship
-			}
-		}
-	}
 	// save main camera properties
 	XML << element << "main-camera";
 	XML << element << "position" << attribute << "x" << value << g_Camera.GetPosition().m_V.m_A[0] << attribute << "y" << value << g_Camera.GetPosition().m_V.m_A[1] << attribute << "z" << value << g_Camera.GetPosition().m_V.m_A[2] << end;
@@ -1851,6 +2005,29 @@ void SaveGame(std::ostream & OStream)
 	}
 	XML << element << "field-of-view" << attribute << "radians" << value << g_MainPerspective.GetFieldOfView() << end;
 	XML << end; // camera
+	// now save the impoartant objects
+	if(g_InputMind.IsValid() == true)
+	{
+		// save the input mind
+		WriteToXMLStream(XML, g_InputMind.Get());
+		// save the character for the input mind
+		if(g_InputMind->GetCharacter() != 0)
+		{
+			// save the ship
+			if(g_InputMind->GetCharacter()->GetShip() != 0)
+			{
+				WriteToXMLStream(XML, g_InputMind->GetCharacter()->GetShip());
+			}
+			
+			// save the ship's content
+			const std::set< Object * > & Content(g_InputMind->GetCharacter()->GetShip()->GetAspectObjectContainer()->GetContent());
+			
+			for(std::set< Object * >::const_iterator ContentIterator = Content.begin(); ContentIterator != Content.end(); ++ContentIterator)
+			{
+				WriteToXMLStream(XML, *ContentIterator);
+			}
+		}
+	}
 	XML << end; // save
 	OStream << std::endl;
 }

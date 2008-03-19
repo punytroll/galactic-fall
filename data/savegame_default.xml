@@ -3,29 +3,44 @@
 	<time-warp value="1"/>
 	<input-mind object-identifier="::player_mind"/>
 	<observed-character object-identifier="::character::player_character"/>
-	<mind class="command_mind" object-identifier="::player_mind">
-		<character object-identifier="::character::player_character"/>
-	</mind>
-	<character object-identifier="::character::player_character">
-		<ship object-identifier="::ship(shuttle)::player_ship"/>
-		<credits value="1000"/>
-		<map-knowledge>
-			<explored-system identifier="sol"/>
-		</map-knowledge>
-	</character>
-	<ship class-identifier="shuttle" object-identifier="::ship(shuttle)::player_ship">
-		<system identifier="sol"/>
-		<fuel value="1"/>
-		<hull value="100"/>
-		<position x="0" y="0"/>
-		<angular-position w="1" x="0" y="0" z="0"/>
-		<velocity x="0" y="0"/>
-		<content/>
-		<name value="Stargazer Alpha 1-0"/>
-	</ship>
 	<main-camera>
 		<position x="0" y="0" z="200"/>
 		<focus object-identifier="::ship(shuttle)::player_ship"/>
 		<field-of-view radians="0.392699"/>
 	</main-camera>
+	<object type-identifier="mind" class-identifier="command_mind" object-identifier="::player_mind">
+		<type-specific>
+			<character object-identifier="::character::player_character"/>
+		</type-specific>
+	</object>
+	<object type-identifier="ship" class-identifier="shuttle" object-identifier="::ship(shuttle)::player_ship">
+		<aspect-name>
+			<name value="Stargazer Alpha 1-0"/>
+		</aspect-name>
+		<aspect-object-container>
+			<content object-identifier="::character::player_character"/>
+		</aspect-object-container>
+		<aspect-position>
+			<position x="0" y="0" z="0"/>
+			<orientation w="1" x="0" y="0" z="0"/>
+		</aspect-position>
+		<type-specific>
+			<current-system object-identifier="::system(sol)"/>
+			<fuel value="1"/>
+			<hull value="100"/>
+			<velocity x="0" y="0" z="0"/>
+		</type-specific>
+	</object>
+	<object type-identifier="character" class-identifier="" object-identifier="::character::player_character">
+		<aspect-object-container>
+			<content object-identifier="::player_mind"/>
+		</aspect-object-container>
+		<type-specific>
+			<ship object-identifier="::ship(shuttle)::player_ship"/>
+			<credits value="1000"/>
+			<map-knowledge>
+				<explored-system object-identifier="::system(sol)"/>
+			</map-knowledge>
+		</type-specific>
+	</object>
 </save>
