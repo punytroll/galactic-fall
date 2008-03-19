@@ -210,7 +210,7 @@ void GoalFighterThink::Process(void)
 			// after a hard fight: queue a repair
 			if(HasSubGoal("visit_planet") == false)
 			{
-				AddSubGoal(new GoalVisitPlanet(GetMind(), GoalVisitPlanet::VISIT_NEAREST_PLANET_IN_SYSTEM));
+				AddSubGoal(new GoalVisitPlanet(GetMind(), GoalVisitPlanet::VISIT_NEAREST_PLANET));
 			}
 		}
 		if(GetSubGoals().empty() == true)
@@ -231,6 +231,10 @@ void GoalFighterThink::Process(void)
 		if(SubGoal->GetName() == "fight_some_target")
 		{
 			AddSubGoal(new GoalFlyOverRandomPoint(GetMind()));
+		}
+		if(GetSubGoals().empty() == true)
+		{
+			SetState(Goal::INACTIVE);
 		}
 		// now destroy the SubGoal
 		SubGoal->Destroy();
@@ -570,7 +574,7 @@ void GoalJumpToSystem::Process(void)
 			{
 			case NOT_ENOUGH_FUEL:
 				{
-					assert("TODO: This ship had no fuel to jump." == 0);
+					SetState(Goal::FAILED);
 					
 					break;
 				}
