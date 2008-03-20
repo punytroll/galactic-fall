@@ -65,7 +65,7 @@ void GoalApproachTarget::Process(void)
 	
 	Vector3f ToDestination(GetMind()->GetCharacter()->GetShip()->GetTarget()->GetAspectPosition()->GetPosition() - GetMind()->GetCharacter()->GetShip()->GetAspectPosition()->GetPosition());
 	float DistanceSquared(ToDestination.SquaredLength());
-	float DistanceNeededToBrake(GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetMaximumSpeed() * ((M_PI / GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetTurnSpeed()) + ((GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetMaximumSpeed() / GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetForwardThrust()) / 2.0f)));
+	float DistanceNeededToBrake(GetMind()->GetCharacter()->GetShip()->GetMaximumSpeed() * ((M_PI / GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetTurnSpeed()) + ((GetMind()->GetCharacter()->GetShip()->GetMaximumSpeed() / GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetForwardThrust()) / 2.0f)));
 	
 	// braking to do a full stop takes time (turning + accelerating)
 	//  - turning: the ship will fly with maximum velocity towards the target
@@ -358,7 +358,7 @@ void GoalFlyInDirection::Process(void)
 	{
 		GetMind()->GetCharacter()->GetShip()->SetTurnLeft(0.0f);
 		GetMind()->GetCharacter()->GetShip()->SetTurnRight(0.0f);
-		GetMind()->GetCharacter()->GetShip()->SetAccelerate(GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetMaximumSpeed() - m_Direction.Dot(GetMind()->GetCharacter()->GetShip()->GetVelocity()) > 0.1f);
+		GetMind()->GetCharacter()->GetShip()->SetAccelerate(GetMind()->GetCharacter()->GetShip()->GetMaximumSpeed() - m_Direction.Dot(GetMind()->GetCharacter()->GetShip()->GetVelocity()) > 0.1f);
 		m_FacesDirection = true;
 	}
 }

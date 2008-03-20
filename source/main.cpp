@@ -1052,7 +1052,7 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 	NewShip->GetAspectPosition()->SetPosition(Vector3f(GetRandomFloat(-200.0f, 200.0f), GetRandomFloat(-200.0f, 200.0f), 0.0f));
 	NewShip->GetAspectPosition()->SetOrientation(Quaternion(GetRandomFloat(0.0f, 2.0f * M_PI), Quaternion::InitializeRotationZ));
 	
-	Vector2f Velocity(GetRandomFloat(0.0f, NewShip->GetShipClass()->GetMaximumSpeed()), GetRandomFloat(0.0f, 2.0f * M_PI), Vector2f::InitializeMagnitudeAngle);
+	Vector2f Velocity(GetRandomFloat(0.0f, NewShip->GetMaximumSpeed()), GetRandomFloat(0.0f, 2.0f * M_PI), Vector2f::InitializeMagnitudeAngle);
 	
 	NewShip->SetVelocity(Vector3f(Velocity[0], Velocity[1], 0.0f));
 	NewShip->SetFuel(NewShip->GetFuelCapacity());
@@ -1738,6 +1738,11 @@ void LoadGameFromElement(const Element * SaveElement)
 							{
 								assert((*TypeSpecificChild)->HasAttribute("value") == true);
 								NewShip->SetHull(from_string_cast< float >((*TypeSpecificChild)->GetAttribute("value")));
+							}
+							else if((*TypeSpecificChild)->GetName() == "maximum-speed")
+							{
+								assert((*TypeSpecificChild)->HasAttribute("value") == true);
+								NewShip->SetMaximumSpeed(from_string_cast< float >((*TypeSpecificChild)->GetAttribute("value")));
 							}
 							else if((*TypeSpecificChild)->GetName() == "velocity")
 							{
