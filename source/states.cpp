@@ -283,9 +283,9 @@ void TransporterPhase3::Enter(void)
 			if(SellCommodity != 0)
 			{
 				// update the asset class cache, hoping it will be right more than once
-				if((PlanetAssetClassIterator == PlanetAssetClasses.end()) || (PlanetAssetClassIterator->first != SellCommodity->GetCommodityClass()->GetIdentifier()))
+				if((PlanetAssetClassIterator == PlanetAssetClasses.end()) || (PlanetAssetClassIterator->first != SellCommodity->GetClassIdentifier()))
 				{
-					PlanetAssetClassIterator = PlanetAssetClasses.find(SellCommodity->GetCommodityClass()->GetIdentifier());
+					PlanetAssetClassIterator = PlanetAssetClasses.find(SellCommodity->GetClassIdentifier());
 				}
 				// work with the cached asset class
 				if((PlanetAssetClassIterator != PlanetAssetClasses.end()) && (PlanetAssetClassIterator->second->GetBasePriceModifier() > 1.0))

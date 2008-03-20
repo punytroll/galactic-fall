@@ -353,8 +353,14 @@ bool Ship::Update(float Seconds)
 					Content->GetAspectPosition()->SetPosition(GetAspectPosition()->GetPosition());
 					
 					Commodity * TheCommodity(dynamic_cast< Commodity * >(Content));
+					Vector2f Velocity(GetRandomFloat(0.0f, 0.5f), GetRandomFloat(0.0f, 2 * M_PI), Vector2f::InitializeMagnitudeAngle);
 					
-					TheCommodity->SetVelocity(GetVelocity() * 0.8f + Vector3f(GetRandomFloat(-0.5f, 0.5f), GetRandomFloat(-0.5f, 0.5f), 0.0f));
+					TheCommodity->SetVelocity(Vector3f(GetVelocity()[0] * 0.8f + Velocity[0], GetVelocity()[1] * 0.8 + Velocity[1], 0.0f));
+					
+					Vector3f RotationAxis(GetRandomFloat(-1.0f, 1.0f), GetRandomFloat(-1.0f, 1.0f), GetRandomFloat(-1.0f, 1.0f));
+					
+					RotationAxis.Normalize();
+					TheCommodity->SetAngularVelocity(AxisAngle(RotationAxis[0], RotationAxis[1], RotationAxis[2], GetRandomFloat(0.0f, 0.7f)));
 					assert(GetCurrentSystem()->GetAspectObjectContainer() != 0);
 					GetCurrentSystem()->GetAspectObjectContainer()->AddContent(TheCommodity);
 					VisualizeCommodity(TheCommodity, g_CommodityLayer);
