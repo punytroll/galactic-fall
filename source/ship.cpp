@@ -77,7 +77,7 @@ Ship::Ship(const ShipClass * ShipClass) :
 	SetFuelCapacity(ShipClass->GetFuelHoldSize());
 	SetHull(ShipClass->GetHull());
 	
-	const std::map< std::string, Slot * > & ShipClassSlots(GetShipClass()->GetSlots());
+	const std::map< std::string, Slot * > & ShipClassSlots(ShipClass->GetSlots());
 	
 	for(std::map< std::string, Slot * >::const_iterator SlotIterator = ShipClassSlots.begin(); SlotIterator != ShipClassSlots.end(); ++SlotIterator)
 	{
