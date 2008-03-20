@@ -190,7 +190,7 @@ int WantToJump(Ship * Ship, System * System)
 		}
 	}
 	// only let ships jump if they have enough fuel
-	if(Ship->GetFuel() < Ship->GetShipClass()->GetJumpFuel())
+	if(Ship->GetFuel() < Ship->GetFuelNeededToJump())
 	{
 		return NOT_ENOUGH_FUEL;
 	}
@@ -1733,6 +1733,11 @@ void LoadGameFromElement(const Element * SaveElement)
 							{
 								assert((*TypeSpecificChild)->HasAttribute("value") == true);
 								NewShip->SetFuelCapacity(from_string_cast< float >((*TypeSpecificChild)->GetAttribute("value")));
+							}
+							else if((*TypeSpecificChild)->GetName() == "fuel-needed-to-jump")
+							{
+								assert((*TypeSpecificChild)->HasAttribute("value") == true);
+								NewShip->SetFuelNeededToJump(from_string_cast< float >((*TypeSpecificChild)->GetAttribute("value")));
 							}
 							else if((*TypeSpecificChild)->GetName() == "hull")
 							{

@@ -29,7 +29,7 @@
 	<maximum-speed>8.5</maximum-speed>
 	<maximum-available-space>60</maximum-available-space>
 	<fuel-hold-size>4</fuel-hold-size>
-	<jump-fuel>0.20</jump-fuel>
+	<jump-fuel>0.2</jump-fuel>
 	<forward-fuel>0.025</forward-fuel>
 	<turn-fuel>0.016</turn-fuel>
 	<hull>236</hull>

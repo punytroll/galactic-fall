@@ -55,6 +55,7 @@ Ship::Ship(const ShipClass * ShipClass) :
 	m_CurrentSystem(0),
 	m_Fuel(0.0f),
 	m_FuelCapacity(0.0f),
+	m_FuelNeededToJump(0.0f),
 	m_Hull(0.0f),
 	m_LinkedSystemTarget(0),
 	m_MaximumSpeed(0.0f),
@@ -76,6 +77,7 @@ Ship::Ship(const ShipClass * ShipClass) :
 	AddAspectVisualization();
 	// other
 	SetFuelCapacity(ShipClass->GetFuelHoldSize());
+	SetFuelNeededToJump(ShipClass->GetJumpFuel());
 	SetHull(ShipClass->GetHull());
 	SetMaximumSpeed(ShipClass->GetMaximumSpeed());
 	
@@ -166,7 +168,7 @@ bool Ship::Update(float Seconds)
 {
 	if(m_Jump == true)
 	{
-		if((GetFuel() >= GetShipClass()->GetJumpFuel()) && (GetLinkedSystemTarget() != 0))
+		if((GetFuel() >= GetFuelNeededToJump()) && (GetLinkedSystemTarget() != 0))
 		{
 			System * OldSystem(GetCurrentSystem());
 			System * NewSystem(GetLinkedSystemTarget());
@@ -175,7 +177,7 @@ bool Ship::Update(float Seconds)
 			assert(OldSystem->GetAspectObjectContainer() != 0);
 			OldSystem->GetAspectObjectContainer()->RemoveContent(this);
 			SetCurrentSystem(0);
-			SetFuel(GetFuel() - GetShipClass()->GetJumpFuel());
+			SetFuel(GetFuel() - GetFuelNeededToJump());
 			
 			// set the ship's position according to the old system
 			Vector3f Direction(NewSystem->GetAspectPosition()->GetPosition() - OldSystem->GetAspectPosition()->GetPosition());
