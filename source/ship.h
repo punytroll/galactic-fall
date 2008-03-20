@@ -58,6 +58,7 @@ public:
 	float GetFuelCapacity(void) const;
 	float GetFuelNeededToJump(void) const;
 	float GetHull(void) const;
+	float GetHullCapacity(void) const;
 	System * GetLinkedSystemTarget(void);
 	const System * GetLinkedSystemTarget(void) const;
 	float GetMaximumSpeed(void) const;
@@ -76,6 +77,7 @@ public:
 	void SetFuelCapacity(float FuelCapacity);
 	void SetFuelNeededToJump(float FuelNeededToJump);
 	void SetHull(float Hull);
+	void SetHullCapacity(float HullCapacity);
 	void SetLinkedSystemTarget(System * LinkedSystem);
 	void SetMaximumSpeed(float MaximumSpeed);
 	void SetMaximumTurnSpeed(float MaximumTurnSpeed);
@@ -101,6 +103,7 @@ private:
 	float m_FuelCapacity;
 	float m_FuelNeededToJump;
 	float m_Hull;
+	float m_HullCapacity;
 	System * m_LinkedSystemTarget;
 	float m_MaximumSpeed;
 	float m_MaximumTurnSpeed;
@@ -147,6 +150,11 @@ inline float Ship::GetFuelNeededToJump(void) const
 inline float Ship::GetHull(void) const
 {
 	return m_Hull;
+}
+
+inline float Ship::GetHullCapacity(void) const
+{
+	return m_HullCapacity;
 }
 
 inline System * Ship::GetLinkedSystemTarget(void)
@@ -217,6 +225,11 @@ inline void Ship::SetFuelCapacity(float FuelCapacity)
 inline void Ship::SetFuelNeededToJump(float FuelNeededToJump)
 {
 	m_FuelNeededToJump = FuelNeededToJump;
+}
+
+inline void Ship::SetHullCapacity(float HullCapacity)
+{
+	m_HullCapacity = HullCapacity;
 }
 
 inline void Ship::SetLinkedSystemTarget(System * LinkedSystem)
