@@ -87,7 +87,7 @@ void SelectSteering::Enter(void)
 
 void SelectSteering::Execute(void)
 {
-	if(GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetIdentifier() == "transporter")
+	if(GetMind()->GetCharacter()->GetShip()->GetClassIdentifier() == "transporter")
 	{
 		GetMind()->GetStateMachine()->SetState(new TransporterPhase1(GetMind()));
 	}
@@ -450,7 +450,7 @@ void Fight::Enter(void)
 	
 	for(std::list< Ship * >::const_iterator ShipIterator = Ships.begin(); ShipIterator != Ships.end(); ++ShipIterator)
 	{
-		if((*ShipIterator != GetMind()->GetCharacter()->GetShip()) && (((*ShipIterator)->GetShipClass()->GetIdentifier() == "fighter") || (((*ShipIterator)->GetShipClass()->GetIdentifier() == "transporter") && ((*ShipIterator)->GetFuel() < 0.0001))))
+		if((*ShipIterator != GetMind()->GetCharacter()->GetShip()) && (((*ShipIterator)->GetClassIdentifier() == "fighter") || (((*ShipIterator)->GetClassIdentifier() == "transporter") && ((*ShipIterator)->GetFuel() < 0.0001))))
 		{
 			AttackPossibilities.push_back(*ShipIterator);
 		}
