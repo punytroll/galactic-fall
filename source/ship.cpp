@@ -41,6 +41,7 @@
 #include "slot.h"
 #include "slot_class.h"
 #include "system.h"
+#include "visualization_prototype.h"
 #include "visualizations.h"
 #include "weapon.h"
 #include "weapon_class.h"
@@ -66,7 +67,7 @@ Ship::Ship(const ShipClass * ShipClass) :
 	AddAspectName();
 	AddAspectObjectContainer();
 	AddAspectPhysical();
-	GetAspectPhysical()->SetRadialSize(m_ShipClass->GetModel()->GetRadialSize());
+	GetAspectPhysical()->SetRadialSize(ShipClass->GetVisualizationPrototype()->GetModel()->GetRadialSize());
 	AddAspectPosition();
 	AddAspectUpdate();
 	GetAspectUpdate()->SetCallback(Method(this, &Ship::Update));

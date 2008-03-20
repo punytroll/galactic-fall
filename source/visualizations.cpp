@@ -34,6 +34,7 @@
 #include "ship.h"
 #include "shot.h"
 #include "slot.h"
+#include "visualization_prototype.h"
 #include "visualizations.h"
 #include "weapon.h"
 #include "weapon_class.h"
@@ -152,7 +153,7 @@ void VisualizeShip(Ship * Ship, Graphics::Node * Container)
 	assert(Container != 0);
 	
 	Graphics::ModelObject * Visualization(new Graphics::ModelObject());
-	const std::map< std::string, Graphics::Material * > & PartMaterials(Ship->GetShipClass()->GetPartMaterials());
+	const std::map< std::string, Graphics::Material * > & PartMaterials(Ship->GetShipClass()->GetVisualizationPrototype()->GetPartMaterials());
 	
 	for(std::map< std::string, Graphics::Material * >::const_iterator PartMaterialIterator = PartMaterials.begin(); PartMaterialIterator != PartMaterials.end(); ++PartMaterialIterator)
 	{
@@ -161,7 +162,7 @@ void VisualizeShip(Ship * Ship, Graphics::Node * Container)
 		Visualization->AddMaterial(PartMaterialIterator->first, Material);
 	}
 	Visualization->SetClearDepthBuffer(true);
-	Visualization->SetModel(Ship->GetShipClass()->GetModel());
+	Visualization->SetModel(Ship->GetShipClass()->GetVisualizationPrototype()->GetModel());
 	Visualization->SetOrientation(Ship->GetAspectPosition()->GetOrientation());
 	Visualization->SetPosition(Ship->GetAspectPosition()->GetPosition());
 	Visualization->SetUseLighting(true);
