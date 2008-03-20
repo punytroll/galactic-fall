@@ -40,6 +40,7 @@
 			<fuel-needed-to-jump value="0.09"/>
 			<hull value="13.8"/>
 			<maximum-speed value="12"/>
+			<maximum-turn-speed value="1"/>
 			<velocity x="10.0685" y="6.5288" z="0"/>
 		</type-specific>
 	</object>

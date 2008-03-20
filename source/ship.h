@@ -62,6 +62,7 @@ public:
 	System * GetLinkedSystemTarget(void);
 	const System * GetLinkedSystemTarget(void) const;
 	float GetMaximumSpeed(void) const;
+	float GetMaximumTurnSpeed(void) const;
 	const ShipClass * GetShipClass(void) const;
 	const std::map< std::string, Slot * > & GetSlots(void) const;
 	Reference< Object > & GetTarget(void);
@@ -78,6 +79,7 @@ public:
 	void SetHull(float Hull);
 	void SetLinkedSystemTarget(System * LinkedSystem);
 	void SetMaximumSpeed(float MaximumSpeed);
+	void SetMaximumTurnSpeed(float MaximumTurnSpeed);
 	void SetRefuel(bool Refuel);
 	void SetTakeOff(bool TakeOff);
 	void SetTarget(Reference< Object > Target);
@@ -102,6 +104,7 @@ private:
 	float m_Hull;
 	System * m_LinkedSystemTarget;
 	float m_MaximumSpeed;
+	float m_MaximumTurnSpeed;
 	bool m_Refuel;
 	const ShipClass * m_ShipClass;
 	std::map< std::string, Slot * > m_Slots;
@@ -155,6 +158,11 @@ inline System * Ship::GetLinkedSystemTarget(void)
 inline float Ship::GetMaximumSpeed(void) const
 {
 	return m_MaximumSpeed;
+}
+
+inline float Ship::GetMaximumTurnSpeed(void) const
+{
+	return m_MaximumTurnSpeed;
 }
 
 inline const System * Ship::GetLinkedSystemTarget(void) const
@@ -220,6 +228,11 @@ inline void Ship::SetLinkedSystemTarget(System * LinkedSystem)
 inline void Ship::SetMaximumSpeed(float MaximumSpeed)
 {
 	m_MaximumSpeed = MaximumSpeed;
+}
+
+inline void Ship::SetMaximumTurnSpeed(float MaximumTurnSpeed)
+{
+	m_MaximumTurnSpeed = MaximumTurnSpeed;
 }
 
 inline void Ship::SetRefuel(bool Refuel)

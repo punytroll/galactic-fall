@@ -59,6 +59,7 @@ Ship::Ship(const ShipClass * ShipClass) :
 	m_Hull(0.0f),
 	m_LinkedSystemTarget(0),
 	m_MaximumSpeed(0.0f),
+	m_MaximumTurnSpeed(0.0f),
 	m_Refuel(false),
 	m_ShipClass(ShipClass),
 	m_TakeOff(false),
@@ -80,6 +81,7 @@ Ship::Ship(const ShipClass * ShipClass) :
 	SetFuelNeededToJump(ShipClass->GetJumpFuel());
 	SetHull(ShipClass->GetHull());
 	SetMaximumSpeed(ShipClass->GetMaximumSpeed());
+	SetMaximumTurnSpeed(ShipClass->GetTurnSpeed());
 	
 	const std::map< std::string, Slot * > & ShipClassSlots(ShipClass->GetSlots());
 	
@@ -272,7 +274,7 @@ bool Ship::Update(float Seconds)
 			
 			if(GetFuel() >= FuelConsumption)
 			{
-				GetAspectPosition()->ModifyOrientation(Quaternion(GetShipClass()->GetTurnSpeed() * Seconds * m_TurnLeft, Quaternion::InitializeRotationZ));
+				GetAspectPosition()->ModifyOrientation(Quaternion(GetMaximumTurnSpeed() * Seconds * m_TurnLeft, Quaternion::InitializeRotationZ));
 				SetFuel(GetFuel() - FuelConsumption);
 			}
 		}
@@ -282,7 +284,7 @@ bool Ship::Update(float Seconds)
 			
 			if(GetFuel() >= FuelConsumption)
 			{
-				GetAspectPosition()->ModifyOrientation(Quaternion(-GetShipClass()->GetTurnSpeed() * Seconds * m_TurnRight, Quaternion::InitializeRotationZ));
+				GetAspectPosition()->ModifyOrientation(Quaternion(-GetMaximumTurnSpeed() * Seconds * m_TurnRight, Quaternion::InitializeRotationZ));
 				SetFuel(GetFuel() - FuelConsumption);
 			}
 		}
