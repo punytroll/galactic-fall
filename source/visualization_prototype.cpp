@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006  Hagen Möbius
+ * Copyright (C) 2008  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,36 +17,29 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include "color.h"
 #include "graphics_material.h"
-#include "ship_class.h"
-#include "slot.h"
 #include "visualization_prototype.h"
 
-ShipClass::ShipClass(const std::string & Identifier) :
-	m_Identifier(Identifier),
-	m_MaximumAvailableSpace(0),
-	m_ExhaustOffset(true),
-	m_VisualizationPrototype(0)
+VisualizationPrototype::VisualizationPrototype(void) :
+	m_Model(0)
 {
 }
 
-ShipClass::~ShipClass(void)
+VisualizationPrototype::~VisualizationPrototype(void)
 {
-	while(m_Slots.empty() == false)
+	m_Model = 0;
+	while(m_PartMaterials.empty() == false)
 	{
-		delete m_Slots.begin()->second;
-		m_Slots.erase(m_Slots.begin());
+		delete m_PartMaterials.begin()->second;
+		m_PartMaterials.erase(m_PartMaterials.begin());
 	}
-	delete m_VisualizationPrototype;
-	m_VisualizationPrototype = 0;
 }
 
-bool ShipClass::AddSlot(const std::string & SlotIdentifier, Slot * Slot)
+bool VisualizationPrototype::AddPartMaterial(const std::string & PartIdentifier, Graphics::Material * PartMaterial)
 {
-	if(m_Slots.find(SlotIdentifier) == m_Slots.end())
+	if(m_PartMaterials.find(PartIdentifier) == m_PartMaterials.end())
 	{
-		m_Slots[SlotIdentifier] = Slot;
+		m_PartMaterials[PartIdentifier] = PartMaterial;
 		
 		return true;
 	}
@@ -54,10 +47,4 @@ bool ShipClass::AddSlot(const std::string & SlotIdentifier, Slot * Slot)
 	{
 		return false;
 	}
-}
-
-void ShipClass::AddVisualizationPrototype(void)
-{
-	assert(m_VisualizationPrototype == 0);
-	m_VisualizationPrototype = new VisualizationPrototype();
 }

@@ -27,12 +27,7 @@
 #include "type_definitions.h"
 
 class Slot;
-
-namespace Graphics
-{
-	class Material;
-	class Model;
-}
+class VisualizationPrototype;
 
 class ShipClass
 {
@@ -43,7 +38,6 @@ public:
 	~ShipClass(void);
 	// getters
 	const std::string & GetIdentifier(void) const;
-	const Graphics::Model * GetModel(void) const;
 	float GetForwardThrust(void) const;
 	float GetTurnSpeed(void) const;
 	float GetMaximumSpeed(void) const;
@@ -55,10 +49,10 @@ public:
 	float GetHull(void) const;
 	const Vector3f & GetExhaustOffset(void) const;
 	float GetExhaustRadius(void) const;
-	const std::map< std::string, Graphics::Material * > & GetPartMaterials(void) const;
 	const std::map< std::string, Slot * > & GetSlots(void) const;
+	VisualizationPrototype * GetVisualizationPrototype(void);
+	const VisualizationPrototype * GetVisualizationPrototype(void) const;
 	// setters
-	void SetModel(const Graphics::Model * Model);
 	void SetForwardThrust(float ForwardThrust);
 	void SetTurnSpeed(float TurnSpeed);
 	void SetMaximumSpeed(float MaximumSpeed);
@@ -71,19 +65,13 @@ public:
 	void SetExhaustOffset(const Vector3f & ExhaustOffset);
 	void SetExhaustRadius(float ExhaustRadius);
 	
-	// modifiers
-	/**
-	 * @note Passes memory management responsibility for @a PartMaterial to the ship class.
-	 **/
-	bool AddPartMaterial(const std::string & Identifier, Graphics::Material * PartMaterial);
-	
 	/**
 	 * @note Passes memory management responsibility for @a Slot to the ship class.
 	 **/
 	bool AddSlot(const std::string & SlotIdentifier, Slot * Slot);
+	void AddVisualizationPrototype(void);
 private:
 	std::string m_Identifier;
-	const Graphics::Model * m_Model;
 	float m_ForwardThrust;
 	float m_TurnSpeed;
 	float m_MaximumSpeed;
@@ -96,17 +84,12 @@ private:
 	Vector3f m_ExhaustOffset;
 	float m_ExhaustRadius;
 	std::map< std::string, Slot * > m_Slots;
-	std::map< std::string, Graphics::Material * > m_PartMaterials;
+	VisualizationPrototype * m_VisualizationPrototype;
 };
 
 inline const std::string & ShipClass::GetIdentifier(void) const
 {
 	return m_Identifier;
-}
-
-inline const Graphics::Model * ShipClass::GetModel(void) const
-{
-	return m_Model;
 }
 
 inline float ShipClass::GetForwardThrust(void) const
@@ -164,19 +147,19 @@ inline float ShipClass::GetExhaustRadius(void) const
 	return m_ExhaustRadius;
 }
 
-inline const std::map< std::string, Graphics::Material * > & ShipClass::GetPartMaterials(void) const
-{
-	return m_PartMaterials;
-}
-
 inline const std::map< std::string, Slot * > & ShipClass::GetSlots(void) const
 {
 	return m_Slots;
 }
 
-inline void ShipClass::SetModel(const Graphics::Model * Model)
+inline VisualizationPrototype * ShipClass::GetVisualizationPrototype(void)
 {
-	m_Model = Model;
+	return m_VisualizationPrototype;
+}
+
+inline const VisualizationPrototype * ShipClass::GetVisualizationPrototype(void) const
+{
+	return m_VisualizationPrototype;
 }
 
 inline void ShipClass::SetForwardThrust(float ForwardThrust)

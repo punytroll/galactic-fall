@@ -57,6 +57,7 @@
 #include "string_cast.h"
 #include "system.h"
 #include "user_interface.h"
+#include "visualization_prototype.h"
 #include "weapon_class.h"
 #include "widget.h"
 
@@ -451,6 +452,8 @@ static void ReadShipClass(Arxx::Reference & Reference)
 	}
 	
 	// read the visualization
+	NewShipClass->AddVisualizationPrototype();
+	
 	std::string ModelIdentifier;
 	
 	Reader >> ModelIdentifier;
@@ -461,7 +464,7 @@ static void ReadShipClass(Arxx::Reference & Reference)
 	{
 		throw std::runtime_error("For the ship class '" + Item->sGetName() + " could not find the model '" + ModelIdentifier + "'.");
 	}
-	NewShipClass->SetModel(Model);
+	NewShipClass->GetVisualizationPrototype()->SetModel(Model);
 	
 	Arxx::u4byte VisualizationPartCount;
 	
@@ -480,7 +483,7 @@ static void ReadShipClass(Arxx::Reference & Reference)
 		PartMaterial->SetDiffuseColor(PartDiffuseColor);
 		PartMaterial->SetSpecularColor(PartSpecularColor);
 		PartMaterial->SetShininess(PartShininess);
-		if(NewShipClass->AddPartMaterial(PartIdentifier, PartMaterial) == false)
+		if(NewShipClass->GetVisualizationPrototype()->AddPartMaterial(PartIdentifier, PartMaterial) == false)
 		{
 			throw std::runtime_error("For the ship class '" + Identifier + "' could not add the material for part '" + PartIdentifier + "'.");
 		}
