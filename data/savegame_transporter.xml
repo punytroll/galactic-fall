@@ -30,6 +30,7 @@
 			<fuel value="3.84"/>
 			<fuel-capacity value="4"/>
 			<hull value="229.44"/>
+			<maximum-speed value="8.5"/>
 			<velocity x="0" y="0" z="0"/>
 		</type-specific>
 	</object>

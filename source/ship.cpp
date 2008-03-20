@@ -57,6 +57,7 @@ Ship::Ship(const ShipClass * ShipClass) :
 	m_FuelCapacity(0.0f),
 	m_Hull(0.0f),
 	m_LinkedSystemTarget(0),
+	m_MaximumSpeed(0.0f),
 	m_Refuel(false),
 	m_ShipClass(ShipClass),
 	m_TakeOff(false),
@@ -76,6 +77,7 @@ Ship::Ship(const ShipClass * ShipClass) :
 	// other
 	SetFuelCapacity(ShipClass->GetFuelHoldSize());
 	SetHull(ShipClass->GetHull());
+	SetMaximumSpeed(ShipClass->GetMaximumSpeed());
 	
 	const std::map< std::string, Slot * > & ShipClassSlots(ShipClass->GetSlots());
 	
@@ -180,7 +182,7 @@ bool Ship::Update(float Seconds)
 			
 			Direction.Normalize();
 			GetAspectPosition()->SetPosition(Direction * -300.0f);
-			m_Velocity = Direction * GetShipClass()->GetMaximumSpeed();
+			m_Velocity = Direction * GetMaximumSpeed();
 			GetAspectPosition()->SetOrientation(Quaternion(GetRadians(Vector2f(Direction[0], Direction[1])), Quaternion::InitializeRotationZ));
 			// set up the ship in the new system
 			SetCurrentSystem(GetLinkedSystemTarget());
@@ -296,10 +298,10 @@ bool Ship::Update(float Seconds)
 				m_Velocity += Vector3f(ForwardThrust[0], ForwardThrust[1], 0.0f);
 				ForwardThrust *= 0.5f * Seconds;
 				GetAspectPosition()->ModifyPosition(Vector3f(ForwardThrust[0], ForwardThrust[1], 0.0f));
-				if(m_Velocity.Length() > GetShipClass()->GetMaximumSpeed())
+				if(m_Velocity.Length() > GetMaximumSpeed())
 				{
 					m_Velocity.Normalize();
-					m_Velocity *= GetShipClass()->GetMaximumSpeed();
+					m_Velocity *= GetMaximumSpeed();
 				}
 				SetFuel(GetFuel() - FuelConsumption);
 				if(m_EngineGlowParticleSystem.IsValid() == true)

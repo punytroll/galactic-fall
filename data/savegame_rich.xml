@@ -38,10 +38,11 @@
 			<position x="0" y="0" z="0"/>
 		</aspect-position>
 		<type-specific>
+			<current-system object-identifier="::system(sol)"/>
 			<fuel value="1"/>
 			<fuel-capacity value="1"/>
 			<hull value="100"/>
-			<current-system object-identifier="::system(sol)"/>
+			<maximum-speed value="12"/>
 			<velocity x="0" y="0" z="0"/>
 		</type-specific>
 	</object>
