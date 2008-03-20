@@ -1,12 +1,29 @@
 <commodity-class>
 	<identifier>fuel</identifier>
 	<name>Fuel</name>
-	<model-identifier>cargo_cube</model-identifier>
-	<color>
-		<red>0.25</red>
-		<green>0.13</green>
-		<blue>0.6</blue>
-		<alpha>1.0</alpha>
-	</color>
 	<space-requirement>1</space-requirement>
+	<visualization>
+		<model-identifier>cargo_cube</model-identifier>
+		<visualization-parts>
+			<visualization-part>
+				<part-identifier>cargo_cube</part-identifier>
+				<material>
+					<use-specular-color>true</use-specular-color>
+					<diffuse-color>
+						<red>0.25</red>
+						<green>0.13</green>
+						<blue>0.6</blue>
+						<alpha>1.0</alpha>
+					</diffuse-color>
+					<specular-color>
+						<red>0.4</red>
+						<green>0.8</green>
+						<blue>1</blue>
+						<alpha>1</alpha>
+					</specular-color>
+					<shininess>80</shininess>
+				</material>
+			</visualization-part>
+		</visualization-parts>
+	</visualization>
 </commodity-class>

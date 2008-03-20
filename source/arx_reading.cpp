@@ -72,6 +72,7 @@ static void ReadSlotClass(Arxx::Reference & Reference);
 static void ReadSystem(Arxx::Reference & Reference);
 static void ReadSystemLink(Arxx::Reference & Reference);
 static void ReadTexture(Arxx::Reference & Reference);
+static void ReadVisualizationPrototype(Arxx::BufferReader & Reader, VisualizationPrototype * VisualizationPrototype);
 static void ReadWeaponClass(Arxx::Reference & Reference);
 static void ReadWidget(Arxx::Reference & Reference);
 static void ReadWidgetLabel(Arxx::BufferReader & Reader, Label * ReadLabel);
@@ -292,23 +293,16 @@ static void ReadCommodityClass(Arxx::Reference & Reference)
 	}
 	
 	std::string Name;
-	std::string ModelIdentifier;
-	Color Color;
 	float SpaceRequirement;
 	
-	Reader >> Name >> ModelIdentifier >> Color >> SpaceRequirement;
+	Reader >> Name >> SpaceRequirement;
 	
 	NewCommodityClass->SetName(Name);
-	
-	const Graphics::Model * Model(g_ModelManager->Get(ModelIdentifier));
-	
-	if(Model == 0)
-	{
-		throw std::runtime_error("For the commodity class '" + Name + "' could not find the model '" + ModelIdentifier + "'.");
-	}
-	NewCommodityClass->SetModel(Model);
-	NewCommodityClass->SetColor(Color);
 	NewCommodityClass->SetSpaceRequirement(static_cast< unsigned_numeric >(1000 * SpaceRequirement));
+	
+	// read visualization prototype
+	NewCommodityClass->AddVisualizationPrototype();
+	ReadVisualizationPrototype(Reader, NewCommodityClass->GetVisualizationPrototype());
 }
 
 static void ReadMesh(Arxx::Reference & Reference)
@@ -453,41 +447,7 @@ static void ReadShipClass(Arxx::Reference & Reference)
 	
 	// read the visualization
 	NewShipClass->AddVisualizationPrototype();
-	
-	std::string ModelIdentifier;
-	
-	Reader >> ModelIdentifier;
-	
-	const Graphics::Model * Model(g_ModelManager->Get(ModelIdentifier));
-	
-	if(Model == 0)
-	{
-		throw std::runtime_error("For the ship class '" + Item->sGetName() + " could not find the model '" + ModelIdentifier + "'.");
-	}
-	NewShipClass->GetVisualizationPrototype()->SetModel(Model);
-	
-	Arxx::u4byte VisualizationPartCount;
-	
-	Reader >> VisualizationPartCount;
-	for(Arxx::u4byte VisualizationPartNumber = 1; VisualizationPartNumber <= VisualizationPartCount; ++VisualizationPartNumber)
-	{
-		std::string PartIdentifier;
-		Color PartDiffuseColor;
-		Color PartSpecularColor;
-		float PartShininess;
-		
-		Reader >> PartIdentifier >> PartDiffuseColor >> PartSpecularColor >> PartShininess;
-		
-		Graphics::Material * PartMaterial(new Graphics::Material());
-		
-		PartMaterial->SetDiffuseColor(PartDiffuseColor);
-		PartMaterial->SetSpecularColor(PartSpecularColor);
-		PartMaterial->SetShininess(PartShininess);
-		if(NewShipClass->GetVisualizationPrototype()->AddPartMaterial(PartIdentifier, PartMaterial) == false)
-		{
-			throw std::runtime_error("For the ship class '" + Identifier + "' could not add the material for part '" + PartIdentifier + "'.");
-		}
-	}
+	ReadVisualizationPrototype(Reader, NewShipClass->GetVisualizationPrototype());
 	
 	float ForwardThrust;
 	float TurnSpeed;
@@ -751,6 +711,38 @@ static void ReadTexture(Arxx::Reference & Reference)
 		throw std::runtime_error("Could not create texture '" + Identifier + "'.");
 	}
 	Texture->SetData(Width, Height, Format, Reader.GetBuffer().GetBegin() + Reader.stGetPosition());
+}
+
+static void ReadVisualizationPrototype(Arxx::BufferReader & Reader, VisualizationPrototype * VisualizationPrototype)
+{
+	std::string ModelIdentifier;
+	
+	Reader >> ModelIdentifier;
+	VisualizationPrototype->SetModel(g_ModelManager->Get(ModelIdentifier));
+	
+	Arxx::u4byte VisualizationPartCount;
+	
+	Reader >> VisualizationPartCount;
+	for(Arxx::u4byte VisualizationPartNumber = 1; VisualizationPartNumber <= VisualizationPartCount; ++VisualizationPartNumber)
+	{
+		std::string PartIdentifier;
+		bool PartUseSpecularColor;
+		Color PartDiffuseColor;
+		Color PartSpecularColor;
+		float PartShininess;
+		
+		Reader >> PartIdentifier >> PartUseSpecularColor >> PartDiffuseColor >> PartSpecularColor >> PartShininess;
+		
+		Graphics::Material * PartMaterial(new Graphics::Material());
+		
+		PartMaterial->SetDiffuseColor(PartDiffuseColor);
+		if(PartUseSpecularColor == true)
+		{
+			PartMaterial->SetSpecularColor(PartSpecularColor);
+		}
+		PartMaterial->SetShininess(PartShininess);
+		VisualizationPrototype->AddPartMaterial(PartIdentifier, PartMaterial);
+	}
 }
 
 static void ReadWeaponClass(Arxx::Reference & Reference)

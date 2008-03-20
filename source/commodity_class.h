@@ -24,12 +24,7 @@
 
 #include "type_definitions.h"
 
-class Color;
-
-namespace Graphics
-{
-	class Model;
-}
+class VisualizationPrototype;
 
 class CommodityClass
 {
@@ -37,37 +32,26 @@ public:
 	CommodityClass(const std::string & Identifier);
 	~CommodityClass(void);
 	// getters
-	const Color * GetColor(void) const;
 	const std::string & GetIdentifier(void) const;
-	const Graphics::Model * GetModel(void) const;
 	const std::string & GetName(void) const;
 	unsigned_numeric GetSpaceRequirement(void) const;
+	VisualizationPrototype * GetVisualizationPrototype(void);
+	const VisualizationPrototype * GetVisualizationPrototype(void) const;
 	// setters
-	void SetColor(const Color & Color);
-	void SetModel(const Graphics::Model * Model);
 	void SetName(const std::string & Name);
 	void SetSpaceRequirement(unsigned_numeric SpaceRequirement);
+	// modifiers
+	void AddVisualizationPrototype(void);
 private:
-	Color * m_Color;
 	std::string m_Identifier;
-	const Graphics::Model * m_Model;
 	std::string m_Name;
 	unsigned_numeric m_SpaceRequirement;
+	VisualizationPrototype * m_VisualizationPrototype;
 };
-
-inline const Color * CommodityClass::GetColor(void) const
-{
-	return m_Color;
-}
 
 inline const std::string & CommodityClass::GetIdentifier(void) const
 {
 	return m_Identifier;
-}
-
-inline const Graphics::Model * CommodityClass::GetModel(void) const
-{
-	return m_Model;
 }
 
 inline const std::string & CommodityClass::GetName(void) const
@@ -80,9 +64,14 @@ inline unsigned_numeric CommodityClass::GetSpaceRequirement(void) const
 	return m_SpaceRequirement;
 }
 
-inline void CommodityClass::SetModel(const Graphics::Model * Model)
+inline VisualizationPrototype * CommodityClass::GetVisualizationPrototype(void)
 {
-	m_Model = Model;
+	return m_VisualizationPrototype;
+}
+
+inline const VisualizationPrototype * CommodityClass::GetVisualizationPrototype(void) const
+{
+	return m_VisualizationPrototype;
 }
 
 inline void CommodityClass::SetName(const std::string & Name)

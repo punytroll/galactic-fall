@@ -1,12 +1,29 @@
 <commodity-class>
 	<identifier>medical_supplies</identifier>
 	<name>Medical Supplies</name>
-	<model-identifier>cargo_cube</model-identifier>
-	<color>
-		<red>0.98</red>
-		<green>0.98</green>
-		<blue>0.98</blue>
-		<alpha>1.0</alpha>
-	</color>
 	<space-requirement>1</space-requirement>
+	<visualization>
+		<model-identifier>cargo_cube</model-identifier>
+		<visualization-parts>
+			<visualization-part>
+				<part-identifier>cargo_cube</part-identifier>
+				<material>
+					<use-specular-color>false</use-specular-color>
+					<diffuse-color>
+						<red>0.98</red>
+						<green>0.98</green>
+						<blue>0.98</blue>
+						<alpha>1.0</alpha>
+					</diffuse-color>
+					<specular-color>
+						<red>0</red>
+						<green>0</green>
+						<blue>0</blue>
+						<alpha>1</alpha>
+					</specular-color>
+					<shininess>40</shininess>
+				</material>
+			</visualization-part>
+		</visualization-parts>
+	</visualization>
 </commodity-class>

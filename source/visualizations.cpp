@@ -76,12 +76,16 @@ void VisualizeCommodity(Commodity * Commodity, Graphics::Node * Container)
 	assert(Container != 0);
 	
 	Graphics::ModelObject * Visualization(new Graphics::ModelObject());
-	Graphics::Material * Material(new Graphics::Material());
+	const std::map< std::string, Graphics::Material * > & PartMaterials(Commodity->GetCommodityClass()->GetVisualizationPrototype()->GetPartMaterials());
 	
-	Material->SetDiffuseColor(*(Commodity->GetCommodityClass()->GetColor()));
-	Visualization->AddMaterial(Commodity->GetCommodityClass()->GetModel()->GetIdentifier(), Material);
+	for(std::map< std::string, Graphics::Material * >::const_iterator PartMaterialIterator = PartMaterials.begin(); PartMaterialIterator != PartMaterials.end(); ++PartMaterialIterator)
+	{
+		Graphics::Material * Material(new Graphics::Material(*(PartMaterialIterator->second)));
+		
+		Visualization->AddMaterial(PartMaterialIterator->first, Material);
+	}
 	Visualization->SetClearDepthBuffer(true);
-	Visualization->SetModel(Commodity->GetCommodityClass()->GetModel());
+	Visualization->SetModel(Commodity->GetCommodityClass()->GetVisualizationPrototype()->GetModel());
 	Visualization->SetOrientation(Commodity->GetAspectPosition()->GetOrientation());
 	Visualization->SetPosition(Commodity->GetAspectPosition()->GetPosition());
 	Visualization->SetUseLighting(true);
