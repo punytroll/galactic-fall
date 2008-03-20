@@ -54,6 +54,7 @@ Ship::Ship(const ShipClass * ShipClass) :
 	m_Accelerate(false),
 	m_CurrentSystem(0),
 	m_Fuel(0.0f),
+	m_FuelCapacity(0.0f),
 	m_Hull(0.0f),
 	m_LinkedSystemTarget(0),
 	m_Refuel(false),
@@ -73,7 +74,8 @@ Ship::Ship(const ShipClass * ShipClass) :
 	GetAspectUpdate()->SetCallback(Method(this, &Ship::Update));
 	AddAspectVisualization();
 	// other
-	SetHull(m_ShipClass->GetHull());
+	SetFuelCapacity(ShipClass->GetFuelHoldSize());
+	SetHull(ShipClass->GetHull());
 	
 	const std::map< std::string, Slot * > & ShipClassSlots(GetShipClass()->GetSlots());
 	
@@ -142,11 +144,6 @@ unsigned_numeric Ship::GetContentAmount(const std::string & TypeIdentifier, cons
 	}
 	
 	return Amount;
-}
-
-float Ship::GetFuelCapacity(void) const
-{
-	return m_ShipClass->GetFuelHoldSize();
 }
 
 void Ship::SetFire(bool Fire)
@@ -455,7 +452,7 @@ void Ship::Unmount(const std::string & SlotIdentifier)
 
 void Ship::SetFuel(float Fuel)
 {
-	float FuelThreshold(GetShipClass()->GetFuelHoldSize() * 0.2);
+	float FuelThreshold(GetFuelCapacity() * 0.2);
 	bool FuelLow((Fuel < FuelThreshold) && (GetFuel() > FuelThreshold));
 	
 	m_Fuel = Fuel;

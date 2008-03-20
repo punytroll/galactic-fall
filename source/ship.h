@@ -71,6 +71,7 @@ public:
 	void SetEngineGlowParticleSystem(Reference< Graphics::ParticleSystem > & EngineGlowParticleSystem);
 	void SetFire(bool Fire);
 	void SetFuel(float Fuel);
+	void SetFuelCapacity(float FuelCapacity);
 	void SetHull(float Hull);
 	void SetLinkedSystemTarget(System * LinkedSystem);
 	void SetRefuel(bool Refuel);
@@ -92,6 +93,7 @@ private:
 	System * m_CurrentSystem;
 	Reference< Graphics::ParticleSystem > m_EngineGlowParticleSystem;
 	float m_Fuel;
+	float m_FuelCapacity;
 	float m_Hull;
 	System * m_LinkedSystemTarget;
 	bool m_Refuel;
@@ -122,6 +124,11 @@ inline Reference< Graphics::ParticleSystem > & Ship::GetEngineGlowParticleSystem
 inline float Ship::GetFuel(void) const
 {
 	return m_Fuel;
+}
+
+inline float Ship::GetFuelCapacity(void) const
+{
+	return m_FuelCapacity;
 }
 
 inline float Ship::GetHull(void) const
@@ -177,6 +184,11 @@ inline void Ship::SetCurrentSystem(System * CurrentSystem)
 inline void Ship::SetEngineGlowParticleSystem(Reference< Graphics::ParticleSystem > & EngineGlowParticleSystem)
 {
 	m_EngineGlowParticleSystem = EngineGlowParticleSystem;
+}
+
+inline void Ship::SetFuelCapacity(float FuelCapacity)
+{
+	m_FuelCapacity = FuelCapacity;
 }
 
 inline void Ship::SetLinkedSystemTarget(System * LinkedSystem)
