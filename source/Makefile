@@ -567,10 +567,10 @@ color.o: color.cpp $(color_h)
 command_mind.o: command_mind.cpp $(commodity_h) $(character_h) $(command_mind_h) $(object_aspect_position_h) $(planet_h) $(ship_h) $(system_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-commodity.o: commodity.cpp $(callbacks_h) $(commodity_h) $(color_h) $(commodity_class_h) $(graphics_model_h) $(object_aspect_name_h) $(object_aspect_physical_h) $(object_aspect_position_h) $(object_aspect_update_h)
+commodity.o: commodity.cpp $(callbacks_h) $(commodity_h) $(color_h) $(commodity_class_h) $(graphics_model_h) $(object_aspect_name_h) $(object_aspect_physical_h) $(object_aspect_position_h) $(object_aspect_update_h) $(visualization_prototype_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-commodity_class.o: commodity_class.cpp $(color_h) $(commodity_class_h)
+commodity_class.o: commodity_class.cpp $(color_h) $(commodity_class_h) $(visualization_prototype_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 destroy_listener.o: destroy_listener.cpp $(destroy_listener_h)

@@ -1,12 +1,29 @@
 <commodity-class>
 	<identifier>equipment</identifier>
 	<name>Equipment</name>
-	<model-identifier>cargo_cube</model-identifier>
-	<color>
-		<red>0.95</red>
-		<green>0.68</green>
-		<blue>0.2</blue>
-		<alpha>1.0</alpha>
-	</color>
 	<space-requirement>1</space-requirement>
+	<visualization>
+		<model-identifier>cargo_cube</model-identifier>
+		<visualization-parts>
+			<visualization-part>
+				<part-identifier>cargo_cube</part-identifier>
+				<material>
+					<use-specular-color>true</use-specular-color>
+					<diffuse-color>
+						<red>0.95</red>
+						<green>0.68</green>
+						<blue>0.2</blue>
+						<alpha>1.0</alpha>
+					</diffuse-color>
+					<specular-color>
+						<red>1</red>
+						<green>0.9</green>
+						<blue>0.8</blue>
+						<alpha>1</alpha>
+					</specular-color>
+					<shininess>30</shininess>
+				</material>
+			</visualization-part>
+		</visualization-parts>
+	</visualization>
 </commodity-class>

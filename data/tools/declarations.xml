@@ -20,9 +20,8 @@
 	<commodity-class>
 		<string identifier="identifier"/>
 		<string identifier="name"/>
-		<string identifier="model-identifier"/>
-		<color4f identifier="color"/>
 		<float identifier="space-requirement"/>
+		<visualization identifier="visualization"/>
 	</commodity-class>
 	
 	<label>
@@ -34,6 +33,7 @@
 	</label>
 	
 	<material>
+		<boolean identifier="use-specular-color"/>
 		<color4f identifier="diffuse-color"/>
 		<color4f identifier="specular-color"/>
 		<float identifier="shininess"/>

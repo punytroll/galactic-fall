@@ -26,6 +26,7 @@
 #include "object_aspect_physical.h"
 #include "object_aspect_position.h"
 #include "object_aspect_update.h"
+#include "visualization_prototype.h"
 
 Commodity::Commodity(const CommodityClass * CommodityClass) :
 	m_AngularVelocity(true),
@@ -37,7 +38,7 @@ Commodity::Commodity(const CommodityClass * CommodityClass) :
 	AddAspectName();
 	GetAspectName()->SetName(m_CommodityClass->GetName());
 	AddAspectPhysical();
-	GetAspectPhysical()->SetRadialSize(m_CommodityClass->GetModel()->GetRadialSize());
+	GetAspectPhysical()->SetRadialSize(m_CommodityClass->GetVisualizationPrototype()->GetModel()->GetRadialSize());
 	GetAspectPhysical()->SetSpaceRequirement(m_CommodityClass->GetSpaceRequirement());
 	AddAspectPosition();
 	AddAspectUpdate();

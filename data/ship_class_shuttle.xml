@@ -6,6 +6,7 @@
 			<visualization-part>
 				<part-identifier>hull</part-identifier>
 				<material>
+					<use-specular-color>true</use-specular-color>
 					<diffuse-color>
 						<red>1.0</red>
 						<green>0.9</green>

@@ -17,24 +17,27 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include <assert.h>
+
 #include "color.h"
 #include "commodity_class.h"
+#include "visualization_prototype.h"
 
 CommodityClass::CommodityClass(const std::string & Identifier) :
-	m_Color(0),
 	m_Identifier(Identifier),
-	m_Model(0),
-	m_SpaceRequirement(0)
+	m_SpaceRequirement(0),
+	m_VisualizationPrototype(0)
 {
 }
 
 CommodityClass::~CommodityClass(void)
 {
-	delete m_Color;
-	m_Color = 0;
+	delete m_VisualizationPrototype;
+	m_VisualizationPrototype = 0;
 }
 
-void CommodityClass::SetColor(const Color & NewColor)
+void CommodityClass::AddVisualizationPrototype(void)
 {
-	m_Color = new Color(NewColor);
+	assert(m_VisualizationPrototype == 0);
+	m_VisualizationPrototype = new VisualizationPrototype();
 }
