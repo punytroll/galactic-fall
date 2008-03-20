@@ -25,6 +25,7 @@
 #include "commodity.h"
 #include "commodity_class.h"
 #include "globals.h"
+#include "object_aspect_visualization.h"
 #include "object_factory.h"
 #include "planet.h"
 #include "ship.h"
@@ -46,6 +47,8 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		const CommodityClass * CommodityClass(g_CommodityClassManager->Get(ClassIdentifier));
 		
 		Result = new Commodity(CommodityClass);
+		assert(Result->GetAspectVisualization() != 0);
+		Result->GetAspectVisualization()->SetVisualizationPrototype(CommodityClass->GetVisualizationPrototype());
 	}
 	else if(TypeIdentifier == "mind")
 	{
@@ -67,6 +70,8 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		const ShipClass * ShipClass(g_ShipClassManager->Get(ClassIdentifier));
 		
 		Result = new Ship(ShipClass);
+		assert(Result->GetAspectVisualization() != 0);
+		Result->GetAspectVisualization()->SetVisualizationPrototype(ShipClass->GetVisualizationPrototype());
 	}
 	else if(TypeIdentifier == "shot")
 	{
