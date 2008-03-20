@@ -1749,6 +1749,11 @@ void LoadGameFromElement(const Element * SaveElement)
 								assert((*TypeSpecificChild)->HasAttribute("value") == true);
 								NewShip->SetMaximumSpeed(from_string_cast< float >((*TypeSpecificChild)->GetAttribute("value")));
 							}
+							else if((*TypeSpecificChild)->GetName() == "maximum-turn-speed")
+							{
+								assert((*TypeSpecificChild)->HasAttribute("value") == true);
+								NewShip->SetMaximumTurnSpeed(from_string_cast< float >((*TypeSpecificChild)->GetAttribute("value")));
+							}
 							else if((*TypeSpecificChild)->GetName() == "velocity")
 							{
 								assert((*TypeSpecificChild)->HasAttribute("x") == true);
