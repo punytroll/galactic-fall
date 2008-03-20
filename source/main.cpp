@@ -1048,7 +1048,7 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 	
 	Ship * NewShip(dynamic_cast< Ship * >(g_ObjectFactory->Create("ship", ShipClassIdentifier)));
 	
-	NewShip->SetObjectIdentifier("::ship(" + NewShip->GetShipClass()->GetIdentifier() + ")" + IdentifierSuffix);
+	NewShip->SetObjectIdentifier("::ship(" + NewShip->GetClassIdentifier() + ")" + IdentifierSuffix);
 	NewShip->GetAspectPosition()->SetPosition(Vector3f(GetRandomFloat(-200.0f, 200.0f), GetRandomFloat(-200.0f, 200.0f), 0.0f));
 	NewShip->GetAspectPosition()->SetOrientation(Quaternion(GetRandomFloat(0.0f, 2.0f * M_PI), Quaternion::InitializeRotationZ));
 	
@@ -1060,7 +1060,7 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 	
 	Character * NewCharacter(dynamic_cast< Character * >(g_ObjectFactory->Create("character", "")));
 	
-	NewCharacter->SetObjectIdentifier("::character(" + NewShip->GetShipClass()->GetIdentifier() + ")" + IdentifierSuffix);
+	NewCharacter->SetObjectIdentifier("::character(" + NewShip->GetClassIdentifier() + ")" + IdentifierSuffix);
 	NewCharacter->GetMapKnowledge()->AddExploredSystem(System);
 	if(ShipClassIdentifier == "fighter")
 	{

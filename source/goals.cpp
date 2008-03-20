@@ -752,7 +752,7 @@ void GoalSelectFighter::Process(void)
 	
 	for(std::list< Ship * >::const_iterator ShipIterator = Ships.begin(); ShipIterator != Ships.end(); ++ShipIterator)
 	{
-		if((*ShipIterator != GetMind()->GetCharacter()->GetShip()) && ((*ShipIterator)->GetShipClass()->GetIdentifier() == "fighter"))
+		if((*ShipIterator != GetMind()->GetCharacter()->GetShip()) && ((*ShipIterator)->GetClassIdentifier() == "fighter"))
 		{
 			AttackPossibilities.push_back(*ShipIterator);
 		}
