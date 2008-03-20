@@ -18,38 +18,23 @@
 **/
 
 #include "callbacks.h"
-#include "color.h"
 #include "commodity.h"
-#include "commodity_class.h"
-#include "graphics_model.h"
-#include "object_aspect_name.h"
-#include "object_aspect_physical.h"
+#include "math/vector4f.h"
 #include "object_aspect_position.h"
 #include "object_aspect_update.h"
-#include "visualization_prototype.h"
 
-Commodity::Commodity(const CommodityClass * CommodityClass) :
+Commodity::Commodity(void) :
 	m_AngularVelocity(true),
-	m_CommodityClass(CommodityClass),
 	m_Hull(20.0f),
 	m_Velocity(true)
 {
 	// initialize required aspects
 	AddAspectName();
-	GetAspectName()->SetName(m_CommodityClass->GetName());
 	AddAspectPhysical();
-	GetAspectPhysical()->SetRadialSize(m_CommodityClass->GetVisualizationPrototype()->GetModel()->GetRadialSize());
-	GetAspectPhysical()->SetSpaceRequirement(m_CommodityClass->GetSpaceRequirement());
 	AddAspectPosition();
 	AddAspectUpdate();
 	GetAspectUpdate()->SetCallback(Method(this, &Commodity::Update));
 	AddAspectVisualization();
-	
-	// other
-	Vector3f RotationAxis(static_cast< float >(random()) / RAND_MAX, static_cast< float >(random()) / RAND_MAX, static_cast< float >(random()) / RAND_MAX);
-	
-	RotationAxis.Normalize();
-	m_AngularVelocity.Set(RotationAxis[0], RotationAxis[1], RotationAxis[2], static_cast< float >(random()) / RAND_MAX);
 }
 
 Commodity::~Commodity(void)

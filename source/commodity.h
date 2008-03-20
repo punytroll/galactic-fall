@@ -21,21 +21,16 @@
 #define COMMODITY_H
 
 #include "math/axis_angle.h"
-#include "math/quaternion.h"
 #include "math/vector3f.h"
 #include "object.h"
-
-class CommodityClass;
-class Model;
 
 class Commodity : public Object
 {
 public:
-	Commodity(const CommodityClass * CommodityClass);
+	Commodity(void);
 	virtual ~Commodity(void);
 	// getters
 	const AxisAngle & GetAngularVelocity(void) const;
-	const CommodityClass * GetCommodityClass(void) const;
 	float GetHull(void) const;
 	const Vector3f & GetVelocity(void) const;
 	// setters
@@ -47,7 +42,6 @@ private:
 	bool Update(float Seconds);
 private:
 	AxisAngle m_AngularVelocity;
-	const CommodityClass * m_CommodityClass;
 	float m_Hull;
 	Vector3f m_Velocity;
 	// no copy constructor
@@ -57,11 +51,6 @@ private:
 inline const AxisAngle & Commodity::GetAngularVelocity(void) const
 {
 	return m_AngularVelocity;
-}
-
-inline const CommodityClass * Commodity::GetCommodityClass(void) const
-{
-	return m_CommodityClass;
 }
 
 inline float Commodity::GetHull(void) const

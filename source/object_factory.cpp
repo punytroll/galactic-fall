@@ -25,6 +25,9 @@
 #include "commodity.h"
 #include "commodity_class.h"
 #include "globals.h"
+#include "graphics_model.h"
+#include "object_aspect_name.h"
+#include "object_aspect_physical.h"
 #include "object_aspect_visualization.h"
 #include "object_factory.h"
 #include "planet.h"
@@ -32,6 +35,7 @@
 #include "shot.h"
 #include "weapon.h"
 #include "weapon_class.h"
+#include "visualization_prototype.h"
 
 Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::string & ClassIdentifier) const
 {
@@ -46,7 +50,15 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 	{
 		const CommodityClass * CommodityClass(g_CommodityClassManager->Get(ClassIdentifier));
 		
-		Result = new Commodity(CommodityClass);
+		Result = new Commodity();
+		// set up name aspect
+		assert(Result->GetAspectName() != 0);
+		Result->GetAspectName()->SetName(CommodityClass->GetName());
+		// set up physical aspect
+		assert(Result->GetAspectPhysical() != 0);
+		Result->GetAspectPhysical()->SetRadialSize(CommodityClass->GetVisualizationPrototype()->GetModel()->GetRadialSize());
+		Result->GetAspectPhysical()->SetSpaceRequirement(CommodityClass->GetSpaceRequirement());
+		// set up visualization aspect
 		assert(Result->GetAspectVisualization() != 0);
 		Result->GetAspectVisualization()->SetVisualizationPrototype(CommodityClass->GetVisualizationPrototype());
 	}

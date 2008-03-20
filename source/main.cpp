@@ -748,9 +748,14 @@ void CalculateMovements(System * System, float Seconds)
 										TheShip->GetAspectObjectContainer()->RemoveContent(TheCommodity);
 										TheCommodity->GetAspectPosition()->SetPosition(TheShip->GetAspectPosition()->GetPosition());
 										
-										Vector2f VelocityPart(GetRandomFloat(0.1f, 1.2f), GetRandomFloat(0.0f, 2 * M_PI), Vector2f::InitializeMagnitudeAngle);
+										Vector2f Velocity(GetRandomFloat(0.0f, 1.2f), GetRandomFloat(0.0f, 2 * M_PI), Vector2f::InitializeMagnitudeAngle);
 										
-										TheCommodity->SetVelocity(TheShip->GetVelocity() * 0.8f + Vector3f(VelocityPart[0], VelocityPart[1], 0.0f));
+										TheCommodity->SetVelocity(Vector3f(TheShip->GetVelocity()[0] * 0.8f + Velocity[0], TheShip->GetVelocity()[1] * 0.8 + Velocity[1], 0.0f));
+										
+										Vector3f RotationAxis(GetRandomFloat(-1.0f, 1.0f), GetRandomFloat(-1.0f, 1.0f), GetRandomFloat(-1.0f, 1.0f));
+										
+										RotationAxis.Normalize();
+										TheCommodity->SetAngularVelocity(AxisAngle(RotationAxis[0], RotationAxis[1], RotationAxis[2], GetRandomFloat(0.0f, 0.7f)));
 										TheShip->GetCurrentSystem()->GetAspectObjectContainer()->AddContent(TheCommodity);
 										// add visualization of the commodity
 										VisualizeCommodity(TheCommodity, g_CommodityLayer);
