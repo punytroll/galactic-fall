@@ -450,6 +450,7 @@ static void ReadShipClass(Arxx::Reference & Reference)
 		throw std::runtime_error("Could not create ship class '" + Identifier + "'.");
 	}
 	
+	// read the visualization
 	std::string ModelIdentifier;
 	
 	Reader >> ModelIdentifier;
@@ -462,10 +463,10 @@ static void ReadShipClass(Arxx::Reference & Reference)
 	}
 	NewShipClass->SetModel(Model);
 	
-	Arxx::u4byte VisualizationCount;
+	Arxx::u4byte VisualizationPartCount;
 	
-	Reader >> VisualizationCount;
-	for(Arxx::u4byte VisualizationNumber = 1; VisualizationNumber <= VisualizationCount; ++VisualizationNumber)
+	Reader >> VisualizationPartCount;
+	for(Arxx::u4byte VisualizationPartNumber = 1; VisualizationPartNumber <= VisualizationPartCount; ++VisualizationPartNumber)
 	{
 		std::string PartIdentifier;
 		Color PartDiffuseColor;

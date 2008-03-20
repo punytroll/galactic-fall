@@ -1,25 +1,27 @@
 <ship-class>
 	<identifier>transporter</identifier>
-	<model-identifier>transporter</model-identifier>
 	<visualization>
-		<visualization-part>
-			<part-identifier>hull</part-identifier>
-			<material>
-				<diffuse-color>
-					<red>0.4</red>
-					<green>0.55</green>
-					<blue>0.65</blue>
-					<alpha>1.0</alpha>
-				</diffuse-color>
-				<specular-color>
-					<red>0.45</red>
-					<green>0.45</green>
-					<blue>0.45</blue>
-					<alpha>1</alpha>
-				</specular-color>
-				<shininess>40</shininess>
-			</material>
-		</visualization-part>
+		<model-identifier>transporter</model-identifier>
+		<visualization-parts>
+			<visualization-part>
+				<part-identifier>hull</part-identifier>
+				<material>
+					<diffuse-color>
+						<red>0.4</red>
+						<green>0.55</green>
+						<blue>0.65</blue>
+						<alpha>1.0</alpha>
+					</diffuse-color>
+					<specular-color>
+						<red>0.45</red>
+						<green>0.45</green>
+						<blue>0.45</blue>
+						<alpha>1</alpha>
+					</specular-color>
+					<shininess>40</shininess>
+				</material>
+			</visualization-part>
+		</visualization-parts>
 	</visualization>
 	<forward-thrust>4</forward-thrust>
 	<turn-speed>0.8</turn-speed>
