@@ -72,11 +72,12 @@ void VisualizeCommodity(Commodity * Commodity, Graphics::Node * Container)
 {
 	assert(Commodity != 0);
 	assert(Commodity->GetAspectVisualization() != 0);
+	assert(Commodity->GetAspectVisualization()->GetVisualizationPrototype() != 0);
 	assert(Commodity->GetAspectVisualization()->GetVisualization().IsValid() == false);
 	assert(Container != 0);
 	
 	Graphics::ModelObject * Visualization(new Graphics::ModelObject());
-	const std::map< std::string, Graphics::Material * > & PartMaterials(Commodity->GetCommodityClass()->GetVisualizationPrototype()->GetPartMaterials());
+	const std::map< std::string, Graphics::Material * > & PartMaterials(Commodity->GetAspectVisualization()->GetVisualizationPrototype()->GetPartMaterials());
 	
 	for(std::map< std::string, Graphics::Material * >::const_iterator PartMaterialIterator = PartMaterials.begin(); PartMaterialIterator != PartMaterials.end(); ++PartMaterialIterator)
 	{
@@ -85,7 +86,7 @@ void VisualizeCommodity(Commodity * Commodity, Graphics::Node * Container)
 		Visualization->AddMaterial(PartMaterialIterator->first, Material);
 	}
 	Visualization->SetClearDepthBuffer(true);
-	Visualization->SetModel(Commodity->GetCommodityClass()->GetVisualizationPrototype()->GetModel());
+	Visualization->SetModel(Commodity->GetAspectVisualization()->GetVisualizationPrototype()->GetModel());
 	Visualization->SetOrientation(Commodity->GetAspectPosition()->GetOrientation());
 	Visualization->SetPosition(Commodity->GetAspectPosition()->GetPosition());
 	Visualization->SetUseLighting(true);
@@ -152,12 +153,13 @@ void VisualizeShip(Ship * Ship, Graphics::Node * Container)
 {
 	assert(Ship != 0);
 	assert(Ship->GetAspectVisualization() != 0);
+	assert(Ship->GetAspectVisualization()->GetVisualizationPrototype() != 0);
 	assert(Ship->GetAspectVisualization()->GetVisualization().IsValid() == false);
 	assert(Ship->GetEngineGlowParticleSystem().IsValid() == false);
 	assert(Container != 0);
 	
 	Graphics::ModelObject * Visualization(new Graphics::ModelObject());
-	const std::map< std::string, Graphics::Material * > & PartMaterials(Ship->GetShipClass()->GetVisualizationPrototype()->GetPartMaterials());
+	const std::map< std::string, Graphics::Material * > & PartMaterials(Ship->GetAspectVisualization()->GetVisualizationPrototype()->GetPartMaterials());
 	
 	for(std::map< std::string, Graphics::Material * >::const_iterator PartMaterialIterator = PartMaterials.begin(); PartMaterialIterator != PartMaterials.end(); ++PartMaterialIterator)
 	{
@@ -166,7 +168,7 @@ void VisualizeShip(Ship * Ship, Graphics::Node * Container)
 		Visualization->AddMaterial(PartMaterialIterator->first, Material);
 	}
 	Visualization->SetClearDepthBuffer(true);
-	Visualization->SetModel(Ship->GetShipClass()->GetVisualizationPrototype()->GetModel());
+	Visualization->SetModel(Ship->GetAspectVisualization()->GetVisualizationPrototype()->GetModel());
 	Visualization->SetOrientation(Ship->GetAspectPosition()->GetOrientation());
 	Visualization->SetPosition(Ship->GetAspectPosition()->GetPosition());
 	Visualization->SetUseLighting(true);
