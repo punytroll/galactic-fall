@@ -1104,7 +1104,7 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 	{
 		NewShip->SetHull(GetRandomFloat(0.1f * NewShip->GetShipClass()->GetHull(), 0.9f * NewShip->GetShipClass()->GetHull()));
 	}
-	NewShip->SetFuel(GetRandomFloat(0.1f * NewShip->GetShipClass()->GetFuelHoldSize(), 0.8f * NewShip->GetShipClass()->GetFuelHoldSize()));
+	NewShip->SetFuel(GetRandomFloat(0.1f * NewShip->GetFuelCapacity(), 0.8f * NewShip->GetFuelCapacity()));
 	NewCharacter->SetShip(NewShip);
 	if(ShipClassIdentifier == "transporter")
 	{
