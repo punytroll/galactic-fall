@@ -57,6 +57,7 @@ public:
 	Reference< Graphics::ParticleSystem > & GetEngineGlowParticleSystem(void);
 	float GetFuel(void) const;
 	float GetFuelCapacity(void) const;
+	float GetFuelNeededToJump(void) const;
 	float GetHull(void) const;
 	System * GetLinkedSystemTarget(void);
 	const System * GetLinkedSystemTarget(void) const;
@@ -73,6 +74,7 @@ public:
 	void SetFire(bool Fire);
 	void SetFuel(float Fuel);
 	void SetFuelCapacity(float FuelCapacity);
+	void SetFuelNeededToJump(float FuelNeededToJump);
 	void SetHull(float Hull);
 	void SetLinkedSystemTarget(System * LinkedSystem);
 	void SetMaximumSpeed(float MaximumSpeed);
@@ -96,6 +98,7 @@ private:
 	Reference< Graphics::ParticleSystem > m_EngineGlowParticleSystem;
 	float m_Fuel;
 	float m_FuelCapacity;
+	float m_FuelNeededToJump;
 	float m_Hull;
 	System * m_LinkedSystemTarget;
 	float m_MaximumSpeed;
@@ -132,6 +135,11 @@ inline float Ship::GetFuel(void) const
 inline float Ship::GetFuelCapacity(void) const
 {
 	return m_FuelCapacity;
+}
+
+inline float Ship::GetFuelNeededToJump(void) const
+{
+	return m_FuelNeededToJump;
 }
 
 inline float Ship::GetHull(void) const
@@ -197,6 +205,11 @@ inline void Ship::SetEngineGlowParticleSystem(Reference< Graphics::ParticleSyste
 inline void Ship::SetFuelCapacity(float FuelCapacity)
 {
 	m_FuelCapacity = FuelCapacity;
+}
+
+inline void Ship::SetFuelNeededToJump(float FuelNeededToJump)
+{
+	m_FuelNeededToJump = FuelNeededToJump;
 }
 
 inline void Ship::SetLinkedSystemTarget(System * LinkedSystem)
