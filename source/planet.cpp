@@ -93,7 +93,7 @@ PlanetAssetClass * Planet::CreatePlanetAssetClass(const AssetClass * AssetClass)
 void Planet::Land(Ship * Ship)
 {
 	Ship->SetVelocity(Vector3f(0.0f, 0.0f, 0.0f));
-	Ship->SetHull(Ship->GetShipClass()->GetHull());
+	Ship->SetHull(Ship->GetHullCapacity());
 	
 	assert(Ship->GetAspectObjectContainer() != 0);
 	

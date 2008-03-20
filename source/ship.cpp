@@ -57,6 +57,7 @@ Ship::Ship(const ShipClass * ShipClass) :
 	m_FuelCapacity(0.0f),
 	m_FuelNeededToJump(0.0f),
 	m_Hull(0.0f),
+	m_HullCapacity(0.0f),
 	m_LinkedSystemTarget(0),
 	m_MaximumSpeed(0.0f),
 	m_MaximumTurnSpeed(0.0f),
@@ -76,10 +77,10 @@ Ship::Ship(const ShipClass * ShipClass) :
 	AddAspectUpdate();
 	GetAspectUpdate()->SetCallback(Method(this, &Ship::Update));
 	AddAspectVisualization();
-	// other
+	// set maximum & capacity values
 	SetFuelCapacity(ShipClass->GetFuelHoldSize());
 	SetFuelNeededToJump(ShipClass->GetJumpFuel());
-	SetHull(ShipClass->GetHull());
+	SetHullCapacity(ShipClass->GetHull());
 	SetMaximumSpeed(ShipClass->GetMaximumSpeed());
 	SetMaximumTurnSpeed(ShipClass->GetTurnSpeed());
 	
@@ -483,7 +484,7 @@ void Ship::SetFuel(float Fuel)
 
 void Ship::SetHull(float Hull)
 {
-	float HullThreshold(GetShipClass()->GetHull() * 0.33);
+	float HullThreshold(GetHullCapacity() * 0.33);
 	bool HullLow((Hull < HullThreshold) && (GetHull() > HullThreshold));
 	
 	m_Hull = Hull;

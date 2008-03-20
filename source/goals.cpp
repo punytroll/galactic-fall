@@ -205,7 +205,7 @@ void GoalFighterThink::Process(void)
 		SubGoal->Terminate();
 		RemoveSubGoal(SubGoal);
 		// other actions may depend on the SubGoal variable
-		if((SubGoal->GetName() == "fight_some_target") && (GetMind()->GetCharacter()->GetShip()->GetHull() < 0.5 * GetMind()->GetCharacter()->GetShip()->GetShipClass()->GetHull()))
+		if((SubGoal->GetName() == "fight_some_target") && (GetMind()->GetCharacter()->GetShip()->GetHull() < 0.5 * GetMind()->GetCharacter()->GetShip()->GetHullCapacity()))
 		{
 			// after a hard fight: queue a repair
 			if(HasSubGoal("visit_planet") == false)

@@ -1102,7 +1102,7 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 	}
 	if(GetRandomBoolean(0.2) == true)
 	{
-		NewShip->SetHull(GetRandomFloat(0.1f * NewShip->GetShipClass()->GetHull(), 0.9f * NewShip->GetShipClass()->GetHull()));
+		NewShip->SetHull(GetRandomFloat(0.1f * NewShip->GetHullCapacity(), 0.9f * NewShip->GetHullCapacity()));
 	}
 	NewShip->SetFuel(GetRandomFloat(0.1f * NewShip->GetFuelCapacity(), 0.8f * NewShip->GetFuelCapacity()));
 	NewCharacter->SetShip(NewShip);
@@ -1743,6 +1743,11 @@ void LoadGameFromElement(const Element * SaveElement)
 							{
 								assert((*TypeSpecificChild)->HasAttribute("value") == true);
 								NewShip->SetHull(from_string_cast< float >((*TypeSpecificChild)->GetAttribute("value")));
+							}
+							else if((*TypeSpecificChild)->GetName() == "hull-capacity")
+							{
+								assert((*TypeSpecificChild)->HasAttribute("value") == true);
+								NewShip->SetHullCapacity(from_string_cast< float >((*TypeSpecificChild)->GetAttribute("value")));
 							}
 							else if((*TypeSpecificChild)->GetName() == "maximum-speed")
 							{
