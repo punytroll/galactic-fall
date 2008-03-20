@@ -28,7 +28,6 @@
 #include "ship_class.h"
 #include "type_definitions.h"
 
-class CommodityClass;
 class ShipClass;
 class SlotClass;
 class System;
