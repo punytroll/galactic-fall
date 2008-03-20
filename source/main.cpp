@@ -1729,6 +1729,11 @@ void LoadGameFromElement(const Element * SaveElement)
 								assert((*TypeSpecificChild)->HasAttribute("value") == true);
 								NewShip->SetFuel(from_string_cast< float >((*TypeSpecificChild)->GetAttribute("value")));
 							}
+							else if((*TypeSpecificChild)->GetName() == "fuel-capacity")
+							{
+								assert((*TypeSpecificChild)->HasAttribute("value") == true);
+								NewShip->SetFuelCapacity(from_string_cast< float >((*TypeSpecificChild)->GetAttribute("value")));
+							}
 							else if((*TypeSpecificChild)->GetName() == "hull")
 							{
 								assert((*TypeSpecificChild)->HasAttribute("value") == true);
