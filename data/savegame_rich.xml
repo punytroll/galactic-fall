@@ -39,6 +39,7 @@
 		</aspect-position>
 		<type-specific>
 			<fuel value="1"/>
+			<fuel-capacity value="1"/>
 			<hull value="100"/>
 			<current-system object-identifier="::system(sol)"/>
 			<velocity x="0" y="0" z="0"/>
