@@ -219,7 +219,7 @@ void TransporterPhase2::Execute(void)
 		if(GetMind()->GetCharacter()->GetCredits() >= Planet->GetLandingFee())
 		{
 			GetMind()->GetCharacter()->RemoveCredits(Planet->GetLandingFee());
-			GetMind()->GetCharacter()->GetShip()->m_Land = true;
+			GetMind()->GetCharacter()->GetShip()->SetLand(true);
 			GetMind()->GetStateMachine()->SetState(new TransporterPhase3(GetMind()));
 			delete this;
 		}
@@ -411,7 +411,7 @@ void TransporterPhase4::Execute(void)
 		}
 	case OK:
 		{
-			GetMind()->GetCharacter()->GetShip()->m_Jump = true;
+			GetMind()->GetCharacter()->GetShip()->SetJump(true);
 			GetMind()->GetStateMachine()->SetState(new SelectSteering(GetMind()));
 			delete this;
 			
@@ -685,7 +685,7 @@ void RefuelPhase2::Execute(void)
 		if(GetMind()->GetCharacter()->GetCredits() >= Planet->GetLandingFee())
 		{
 			GetMind()->GetCharacter()->RemoveCredits(Planet->GetLandingFee());
-			GetMind()->GetCharacter()->GetShip()->m_Land = true;
+			GetMind()->GetCharacter()->GetShip()->SetLand(true);
 			GetMind()->GetStateMachine()->SetState(new RefuelPhase3(GetMind()));
 			delete this;
 		}
