@@ -47,10 +47,6 @@
 #include "weapon_class.h"
 
 Ship::Ship(const ShipClass * ShipClass) :
-	m_Jettison(false),
-	m_Jump(false),
-	m_Land(false),
-	m_Scoop(false),
 	m_Accelerate(false),
 	m_CurrentSystem(0),
 	m_Fuel(0.0f),
@@ -58,11 +54,15 @@ Ship::Ship(const ShipClass * ShipClass) :
 	m_FuelNeededToJump(0.0f),
 	m_Hull(0.0f),
 	m_HullCapacity(0.0f),
+	m_Jettison(false),
+	m_Jump(false),
+	m_Land(false),
 	m_LinkedSystemTarget(0),
 	m_MaximumForwardThrust(0.0f),
 	m_MaximumSpeed(0.0f),
 	m_MaximumTurnSpeed(0.0f),
 	m_Refuel(false),
+	m_Scoop(false),
 	m_ShipClass(ShipClass),
 	m_TakeOff(false),
 	m_TurnLeft(0.0f),

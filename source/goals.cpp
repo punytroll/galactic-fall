@@ -502,7 +502,7 @@ void GoalJump::Activate(void)
 void GoalJump::Process(void)
 {
 	assert(GetState() == Goal::ACTIVE);
-	GetMind()->GetCharacter()->GetShip()->m_Jump = true;
+	GetMind()->GetCharacter()->GetShip()->SetJump(true);
 	SetState(Goal::COMPLETED);
 }
 
@@ -622,7 +622,7 @@ void GoalLand::Activate(void)
 void GoalLand::Process(void)
 {
 	assert(GetState() == Goal::ACTIVE);
-	GetMind()->GetCharacter()->GetShip()->m_Land = true;
+	GetMind()->GetCharacter()->GetShip()->SetLand(true);
 	SetState(Goal::COMPLETED);
 }
 

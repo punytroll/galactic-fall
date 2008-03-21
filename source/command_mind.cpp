@@ -106,7 +106,7 @@ void CommandMind::Jettison(void)
 	assert(GetCharacter() != 0);
 	assert(GetCharacter()->GetShip() != 0);
 	
-	GetCharacter()->GetShip()->m_Jettison = true;
+	GetCharacter()->GetShip()->SetJettison(true);
 }
 
 void CommandMind::Jump(void)
@@ -114,7 +114,7 @@ void CommandMind::Jump(void)
 	assert(GetCharacter() != 0);
 	assert(GetCharacter()->GetShip() != 0);
 	
-	GetCharacter()->GetShip()->m_Jump = true;
+	GetCharacter()->GetShip()->SetJump(true);
 }
 
 void CommandMind::Land(void)
@@ -122,7 +122,7 @@ void CommandMind::Land(void)
 	assert(GetCharacter() != 0);
 	assert(GetCharacter()->GetShip() != 0);
 	
-	GetCharacter()->GetShip()->m_Land = true;
+	GetCharacter()->GetShip()->SetLand(true);
 }
 
 void CommandMind::Refuel(void)
@@ -138,7 +138,7 @@ void CommandMind::Scoop(void)
 	assert(GetCharacter() != 0);
 	assert(GetCharacter()->GetShip() != 0);
 	
-	GetCharacter()->GetShip()->m_Scoop = true;
+	GetCharacter()->GetShip()->SetScoop(true);
 }
 
 void CommandMind::SelectLinkedSystem(System * LinkedSystem)

@@ -43,11 +43,6 @@ class Ship : public Object
 public:
 	Ship(const ShipClass * ShipClass);
 	virtual ~Ship(void);
-	// controls
-	bool m_Jettison;
-	bool m_Jump;
-	bool m_Land;
-	bool m_Scoop;
 	// getters
 	float GetAvailableSpace(void) const;
 	unsigned_numeric GetContentAmount(const std::string & TypeIdentifier, const std::string & ClassIdentifier) const;
@@ -79,11 +74,15 @@ public:
 	void SetFuelNeededToJump(float FuelNeededToJump);
 	void SetHull(float Hull);
 	void SetHullCapacity(float HullCapacity);
+	void SetJettison(bool Jettison);
+	void SetJump(bool Jump);
+	void SetLand(bool Land);
 	void SetLinkedSystemTarget(System * LinkedSystem);
 	void SetMaximumForwardThrust(float MaximumForwardThrust);
 	void SetMaximumSpeed(float MaximumSpeed);
 	void SetMaximumTurnSpeed(float MaximumTurnSpeed);
 	void SetRefuel(bool Refuel);
+	void SetScoop(bool Scoop);
 	void SetTakeOff(bool TakeOff);
 	void SetTarget(Reference< Object > Target);
 	void SetTurnLeft(float TurnLeft);
@@ -106,11 +105,15 @@ private:
 	float m_FuelNeededToJump;
 	float m_Hull;
 	float m_HullCapacity;
+	bool m_Jettison;
+	bool m_Jump;
+	bool m_Land;
 	System * m_LinkedSystemTarget;
 	float m_MaximumForwardThrust;
 	float m_MaximumSpeed;
 	float m_MaximumTurnSpeed;
 	bool m_Refuel;
+	bool m_Scoop;
 	const ShipClass * m_ShipClass;
 	std::map< std::string, Slot * > m_Slots;
 	bool m_TakeOff;
@@ -240,6 +243,21 @@ inline void Ship::SetHullCapacity(float HullCapacity)
 	m_HullCapacity = HullCapacity;
 }
 
+inline void Ship::SetJettison(bool Jettison)
+{
+	m_Jettison = Jettison;
+}
+
+inline void Ship::SetJump(bool Jump)
+{
+	m_Jump = Jump;
+}
+
+inline void Ship::SetLand(bool Land)
+{
+	m_Land = Land;
+}
+
 inline void Ship::SetLinkedSystemTarget(System * LinkedSystem)
 {
 	m_LinkedSystemTarget = LinkedSystem;
@@ -263,6 +281,11 @@ inline void Ship::SetMaximumTurnSpeed(float MaximumTurnSpeed)
 inline void Ship::SetRefuel(bool Refuel)
 {
 	m_Refuel = Refuel;
+}
+
+inline void Ship::SetScoop(bool Scoop)
+{
+	m_Scoop = Scoop;
 }
 
 inline void Ship::SetTakeOff(bool TakeOff)
