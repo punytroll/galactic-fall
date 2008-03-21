@@ -32,6 +32,7 @@
 			<maximum-forward-thrust value="4"/>
 			<maximum-speed value="8.5"/>
 			<maximum-turn-speed value="0.8"/>
+			<space-capacity value="60000"/>
 			<current-system object-identifier="::system(rigel)"/>
 			<fuel value="3.84"/>
 			<hull value="229.44"/>

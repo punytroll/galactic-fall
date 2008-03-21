@@ -37,9 +37,10 @@
 			<fuel-capacity value="1.2"/>
 			<fuel-needed-to-jump value="0.09"/>
 			<hull-capacity value="100"/>
-			<maximum-forward-thrust value="10"/>
-			<maximum-speed value="12"/>
-			<maximum-turn-speed value="1"/>
+			<maximum-forward-thrust value="13"/>
+			<maximum-speed value="14"/>
+			<maximum-turn-speed value="1.2"/>
+			<space-capacity value="10000"/>
 			<current-system object-identifier="::system(alpha_centauri)"/>
 			<fuel value="0.07"/>
 			<hull value="13.8"/>
