@@ -64,6 +64,7 @@ Ship::Ship(const ShipClass * ShipClass) :
 	m_Refuel(false),
 	m_Scoop(false),
 	m_ShipClass(ShipClass),
+	m_SpaceCapacity(0),
 	m_TakeOff(false),
 	m_TurnLeft(0.0f),
 	m_TurnRight(0.0f),
@@ -85,6 +86,7 @@ Ship::Ship(const ShipClass * ShipClass) :
 	SetMaximumForwardThrust(ShipClass->GetForwardThrust());
 	SetMaximumSpeed(ShipClass->GetMaximumSpeed());
 	SetMaximumTurnSpeed(ShipClass->GetTurnSpeed());
+	SetSpaceCapacity(ShipClass->GetMaximumAvailableSpace());
 	
 	const std::map< std::string, Slot * > & ShipClassSlots(ShipClass->GetSlots());
 	
@@ -107,11 +109,11 @@ Ship::~Ship(void)
 	}
 }
 
-float Ship::GetAvailableSpace(void) const
+unsigned_numeric Ship::GetSpace(void) const
 {
 	assert(GetAspectObjectContainer() != 0);
 	
-	float AvailableSpace(m_ShipClass->GetMaximumAvailableSpace());
+	unsigned_numeric Space(m_SpaceCapacity);
 	const std::set< Object * > & Content(GetAspectObjectContainer()->GetContent());
 	
 	for(std::set< Object * >::const_iterator ContentIterator = Content.begin(); ContentIterator != Content.end(); ++ContentIterator)
@@ -122,17 +124,17 @@ float Ship::GetAvailableSpace(void) const
 			{
 				if((*ContentIterator)->GetAspectAccessory()->GetSlot() == 0)
 				{
-					AvailableSpace -= (*ContentIterator)->GetAspectPhysical()->GetSpaceRequirement();
+					Space -= (*ContentIterator)->GetAspectPhysical()->GetSpaceRequirement();
 				}
 			}
 			else
 			{
-				AvailableSpace -= (*ContentIterator)->GetAspectPhysical()->GetSpaceRequirement();
+				Space -= (*ContentIterator)->GetAspectPhysical()->GetSpaceRequirement();
 			}
 		}
 	}
 	
-	return AvailableSpace;
+	return Space;
 }
 
 unsigned_numeric Ship::GetContentAmount(const std::string & TypeIdentifier, const std::string & ClassIdentifier) const
@@ -447,10 +449,10 @@ void Ship::Unmount(const std::string & SlotIdentifier)
 	
 	assert(TheObject != 0);
 	
-	float AvailableSpace(GetAvailableSpace());
+	unsigned_numeric Space(GetSpace());
 	
 	assert(TheObject->GetAspectPhysical() != 0);
-	assert(AvailableSpace >= TheObject->GetAspectPhysical()->GetSpaceRequirement());
+	assert(Space >= TheObject->GetAspectPhysical()->GetSpaceRequirement());
 	SlotIterator->second->SetMountedObject(0);
 	TheObject->GetAspectAccessory()->SetSlot(0);
 	if((TheObject->GetAspectVisualization() != 0) && (TheObject->GetAspectVisualization()->GetVisualization().IsValid() == true))

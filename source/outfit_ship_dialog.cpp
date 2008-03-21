@@ -395,7 +395,7 @@ void OutfitShipDialog::UpdateButtons(void)
 		else
 		{
 			assert(m_SelectedSlotListItem->GetSlot()->GetMountedObject()->GetAspectPhysical() != 0);
-			m_UnmountButton->SetEnabled((m_Ship->GetAvailableSpace() >= m_SelectedSlotListItem->GetSlot()->GetMountedObject()->GetAspectPhysical()->GetSpaceRequirement()));
+			m_UnmountButton->SetEnabled((m_Ship->GetSpace() >= m_SelectedSlotListItem->GetSlot()->GetMountedObject()->GetAspectPhysical()->GetSpaceRequirement()));
 		}
 	}
 }

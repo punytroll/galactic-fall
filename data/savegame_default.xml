@@ -31,6 +31,7 @@
 			<maximum-forward-thrust value="10"/>
 			<maximum-speed value="12"/>
 			<maximum-turn-speed value="1"/>
+			<space-capacity value="12000"/>
 			<current-system object-identifier="::system(sol)"/>
 			<fuel value="1"/>
 			<hull value="100"/>

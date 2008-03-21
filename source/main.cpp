@@ -242,7 +242,7 @@ int WantToScoop(const Ship * Ship, const Commodity * Commodity)
 		return TOO_HIGH_RELATIVE_VELOCITY;
 	}
 	// test cargo hold size on the ship
-	if(Ship->GetAvailableSpace() < 1.0f)
+	if(Ship->GetSpace() < Commodity->GetAspectPhysical()->GetSpaceRequirement())
 	{
 		return NOT_ENOUGH_SPACE;
 	}
@@ -1085,9 +1085,9 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 				++AssetClassIterator;
 			}
 			
-			int AmountOfAssets(GetRandomIntegerFromExponentialDistribution(NewShip->GetShipClass()->GetMaximumAvailableSpace() / g_ObjectFactory->GetSpaceRequirement(AssetClassIterator->second->GetObjectType(), AssetClassIterator->second->GetObjectClass())));
+			int AmountOfAssets(GetRandomIntegerFromExponentialDistribution(NewShip->GetSpaceCapacity() / g_ObjectFactory->GetSpaceRequirement(AssetClassIterator->second->GetObjectType(), AssetClassIterator->second->GetObjectClass())));
 			
-			if(AmountOfAssets <= NewShip->GetAvailableSpace())
+			if(AmountOfAssets <= static_cast< int >(NewShip->GetSpace()))
 			{
 				while(AmountOfAssets > 0)
 				{
@@ -1767,6 +1767,11 @@ void LoadGameFromElement(const Element * SaveElement)
 							{
 								assert((*TypeSpecificChild)->HasAttribute("value") == true);
 								NewShip->SetMaximumTurnSpeed(from_string_cast< float >((*TypeSpecificChild)->GetAttribute("value")));
+							}
+							else if((*TypeSpecificChild)->GetName() == "space-capacity")
+							{
+								assert((*TypeSpecificChild)->HasAttribute("value") == true);
+								NewShip->SetSpaceCapacity(from_string_cast< float >((*TypeSpecificChild)->GetAttribute("value")));
 							}
 							else if((*TypeSpecificChild)->GetName() == "velocity")
 							{
