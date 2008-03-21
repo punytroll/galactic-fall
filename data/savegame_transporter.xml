@@ -26,6 +26,7 @@
 			<position x="20.0f" y="34.0f" z="0"/>
 		</aspect-position>
 		<type-specific>
+			<exhaust-offset x="-4.79" y="0" z="0"/>
 			<fuel-capacity value="4"/>
 			<fuel-needed-to-jump value="0.2"/>
 			<hull-capacity value="236"/>

@@ -34,6 +34,7 @@
 			<position x="-253.368" y="-16.2305" z="0"/>
 		</aspect-position>
 		<type-specific>
+			<exhaust-offset x="-3" y="0" z="0"/>
 			<fuel-capacity value="1.2"/>
 			<fuel-needed-to-jump value="0.09"/>
 			<hull-capacity value="100"/>
