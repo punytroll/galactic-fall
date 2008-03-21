@@ -48,6 +48,7 @@ public:
 	System * GetCurrentSystem(void);
 	const System * GetCurrentSystem(void) const;
 	Reference< Graphics::ParticleSystem > & GetEngineGlowParticleSystem(void);
+	const Vector3f & GetExhaustOffset(void) const;
 	float GetFuel(void) const;
 	float GetFuelCapacity(void) const;
 	float GetFuelNeededToJump(void) const;
@@ -58,7 +59,6 @@ public:
 	float GetMaximumForwardThrust(void) const;
 	float GetMaximumSpeed(void) const;
 	float GetMaximumTurnSpeed(void) const;
-	const ShipClass * GetShipClass(void) const;
 	const std::map< std::string, Slot * > & GetSlots(void) const;
 	unsigned_numeric GetSpace(void) const;
 	unsigned_numeric GetSpaceCapacity(void) const;
@@ -69,6 +69,7 @@ public:
 	void SetAccelerate(bool Accelerate);
 	void SetCurrentSystem(System * CurrentSystem);
 	void SetEngineGlowParticleSystem(Reference< Graphics::ParticleSystem > & EngineGlowParticleSystem);
+	void SetExhaustOffset(const Vector3f & ExhaustOffset);
 	void SetFire(bool Fire);
 	void SetFuel(float Fuel);
 	void SetFuelCapacity(float FuelCapacity);
@@ -102,6 +103,7 @@ private:
 	bool m_Accelerate;
 	System * m_CurrentSystem;
 	Reference< Graphics::ParticleSystem > m_EngineGlowParticleSystem;
+	Vector3f m_ExhaustOffset;
 	float m_Fuel;
 	float m_FuelCapacity;
 	float m_FuelNeededToJump;
@@ -139,6 +141,11 @@ inline const System * Ship::GetCurrentSystem(void) const
 inline Reference< Graphics::ParticleSystem > & Ship::GetEngineGlowParticleSystem(void)
 {
 	return m_EngineGlowParticleSystem;
+}
+
+inline const Vector3f & Ship::GetExhaustOffset(void) const
+{
+	return m_ExhaustOffset;
 }
 
 inline float Ship::GetFuel(void) const
@@ -191,11 +198,6 @@ inline const System * Ship::GetLinkedSystemTarget(void) const
 	return m_LinkedSystemTarget;
 }
 
-inline const ShipClass * Ship::GetShipClass(void) const
-{
-	return m_ShipClass;
-}
-
 inline const std::map< std::string, Slot * > & Ship::GetSlots(void) const
 {
 	return m_Slots;
@@ -234,6 +236,11 @@ inline void Ship::SetCurrentSystem(System * CurrentSystem)
 inline void Ship::SetEngineGlowParticleSystem(Reference< Graphics::ParticleSystem > & EngineGlowParticleSystem)
 {
 	m_EngineGlowParticleSystem = EngineGlowParticleSystem;
+}
+
+inline void Ship::SetExhaustOffset(const Vector3f & ExhaustOffset)
+{
+	m_ExhaustOffset = ExhaustOffset;
 }
 
 inline void Ship::SetFuelCapacity(float FuelCapacity)

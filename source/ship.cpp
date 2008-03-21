@@ -80,6 +80,7 @@ Ship::Ship(const ShipClass * ShipClass) :
 	GetAspectUpdate()->SetCallback(Method(this, &Ship::Update));
 	AddAspectVisualization();
 	// set maximum & capacity values
+	SetExhaustOffset(ShipClass->GetExhaustOffset());
 	SetFuelCapacity(ShipClass->GetFuelHoldSize());
 	SetFuelNeededToJump(ShipClass->GetJumpFuel());
 	SetHullCapacity(ShipClass->GetHull());
@@ -332,8 +333,8 @@ bool Ship::Update(float Seconds)
 							Y = GetRandomFloat(-1.0f, 1.0f);
 						} while(X * X + Y * Y >= 1.0f);
 						VelocityFactor = 1 - X * X - Y * Y;
-						X *= GetShipClass()->GetExhaustRadius();
-						Y *= GetShipClass()->GetExhaustRadius();
+						X *= m_ShipClass->GetExhaustRadius();
+						Y *= m_ShipClass->GetExhaustRadius();
 						Particle.m_Position = Vector3f(0.0f, X, Y);
 						Particle.m_Velocity = Vector3f(GetRandomFloat(-0.3f * VelocityFactor, 0.0f), 0.0f, 0.0f);
 						Particle.m_Size = 0.2f;
