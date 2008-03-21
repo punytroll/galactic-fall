@@ -189,6 +189,7 @@ static void WriteShipToXMLStream(XMLStream & XMLStream, Ship * TheShip)
 	XMLStream << element << "fuel-capacity" << attribute << "value" << value << TheShip->GetFuelCapacity() << end;
 	XMLStream << element << "fuel-needed-to-jump" << attribute << "value" << value << TheShip->GetFuelNeededToJump() << end;
 	XMLStream << element << "hull-capacity" << attribute << "value" << value << TheShip->GetHullCapacity() << end;
+	XMLStream << element << "maximum-forward-thrust" << attribute << "value" << value << TheShip->GetMaximumForwardThrust() << end;
 	XMLStream << element << "maximum-speed" << attribute << "value" << value << TheShip->GetMaximumSpeed() << end;
 	XMLStream << element << "maximum-turn-speed" << attribute << "value" << value << TheShip->GetMaximumTurnSpeed() << end;
 	// save current values

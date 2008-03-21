@@ -28,6 +28,7 @@
 			<fuel-capacity value="1"/>
 			<fuel-needed-to-jump value="0.09"/>
 			<hull-capacity value="100"/>
+			<maximum-forward-thrust value="10"/>
 			<maximum-speed value="12"/>
 			<maximum-turn-speed value="1"/>
 			<current-system object-identifier="::system(sol)"/>

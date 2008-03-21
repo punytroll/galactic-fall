@@ -61,6 +61,7 @@ public:
 	float GetHullCapacity(void) const;
 	System * GetLinkedSystemTarget(void);
 	const System * GetLinkedSystemTarget(void) const;
+	float GetMaximumForwardThrust(void) const;
 	float GetMaximumSpeed(void) const;
 	float GetMaximumTurnSpeed(void) const;
 	const ShipClass * GetShipClass(void) const;
@@ -79,6 +80,7 @@ public:
 	void SetHull(float Hull);
 	void SetHullCapacity(float HullCapacity);
 	void SetLinkedSystemTarget(System * LinkedSystem);
+	void SetMaximumForwardThrust(float MaximumForwardThrust);
 	void SetMaximumSpeed(float MaximumSpeed);
 	void SetMaximumTurnSpeed(float MaximumTurnSpeed);
 	void SetRefuel(bool Refuel);
@@ -105,6 +107,7 @@ private:
 	float m_Hull;
 	float m_HullCapacity;
 	System * m_LinkedSystemTarget;
+	float m_MaximumForwardThrust;
 	float m_MaximumSpeed;
 	float m_MaximumTurnSpeed;
 	bool m_Refuel;
@@ -160,6 +163,11 @@ inline float Ship::GetHullCapacity(void) const
 inline System * Ship::GetLinkedSystemTarget(void)
 {
 	return m_LinkedSystemTarget;
+}
+
+inline float Ship::GetMaximumForwardThrust(void) const
+{
+	return m_MaximumForwardThrust;
 }
 
 inline float Ship::GetMaximumSpeed(void) const
@@ -235,6 +243,11 @@ inline void Ship::SetHullCapacity(float HullCapacity)
 inline void Ship::SetLinkedSystemTarget(System * LinkedSystem)
 {
 	m_LinkedSystemTarget = LinkedSystem;
+}
+
+inline void Ship::SetMaximumForwardThrust(float MaximumForwardThrust)
+{
+	m_MaximumForwardThrust = MaximumForwardThrust;
 }
 
 inline void Ship::SetMaximumSpeed(float MaximumSpeed)

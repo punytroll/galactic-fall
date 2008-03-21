@@ -59,6 +59,7 @@ Ship::Ship(const ShipClass * ShipClass) :
 	m_Hull(0.0f),
 	m_HullCapacity(0.0f),
 	m_LinkedSystemTarget(0),
+	m_MaximumForwardThrust(0.0f),
 	m_MaximumSpeed(0.0f),
 	m_MaximumTurnSpeed(0.0f),
 	m_Refuel(false),
@@ -81,6 +82,7 @@ Ship::Ship(const ShipClass * ShipClass) :
 	SetFuelCapacity(ShipClass->GetFuelHoldSize());
 	SetFuelNeededToJump(ShipClass->GetJumpFuel());
 	SetHullCapacity(ShipClass->GetHull());
+	SetMaximumForwardThrust(ShipClass->GetForwardThrust());
 	SetMaximumSpeed(ShipClass->GetMaximumSpeed());
 	SetMaximumTurnSpeed(ShipClass->GetTurnSpeed());
 	
@@ -296,7 +298,7 @@ bool Ship::Update(float Seconds)
 			
 			if(GetFuel() >= FuelConsumption)
 			{
-				Vector3f ForwardThrust(GetShipClass()->GetForwardThrust(), 0.0f, 0.0f);
+				Vector3f ForwardThrust(GetMaximumForwardThrust(), 0.0f, 0.0f);
 				
 				ForwardThrust *= GetAspectPosition()->GetOrientation();
 				ForwardThrust *= Seconds;

@@ -1104,6 +1104,10 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 	{
 		NewShip->SetHull(GetRandomFloat(0.1f * NewShip->GetHullCapacity(), 0.9f * NewShip->GetHullCapacity()));
 	}
+	else
+	{
+		NewShip->SetHull(NewShip->GetHullCapacity());
+	}
 	NewShip->SetFuel(GetRandomFloat(0.1f * NewShip->GetFuelCapacity(), 0.8f * NewShip->GetFuelCapacity()));
 	NewCharacter->SetShip(NewShip);
 	if(ShipClassIdentifier == "transporter")
@@ -1748,6 +1752,11 @@ void LoadGameFromElement(const Element * SaveElement)
 							{
 								assert((*TypeSpecificChild)->HasAttribute("value") == true);
 								NewShip->SetHullCapacity(from_string_cast< float >((*TypeSpecificChild)->GetAttribute("value")));
+							}
+							else if((*TypeSpecificChild)->GetName() == "maximum-forward-thrust")
+							{
+								assert((*TypeSpecificChild)->HasAttribute("value") == true);
+								NewShip->SetMaximumForwardThrust(from_string_cast< float >((*TypeSpecificChild)->GetAttribute("value")));
 							}
 							else if((*TypeSpecificChild)->GetName() == "maximum-speed")
 							{
