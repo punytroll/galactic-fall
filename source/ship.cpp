@@ -73,6 +73,8 @@ Ship::Ship(const ShipClass * ShipClass) :
 	// initialize object aspects
 	AddAspectName();
 	AddAspectObjectContainer();
+	GetAspectObjectContainer()->SetOnAddedCallback(Method(this, &Ship::OnAdded));
+	GetAspectObjectContainer()->SetOnRemovedCallback(Method(this, &Ship::OnRemoved));
 	AddAspectPhysical();
 	GetAspectPhysical()->SetRadialSize(ShipClass->GetVisualizationPrototype()->GetModel()->GetRadialSize());
 	AddAspectPosition();
@@ -510,4 +512,14 @@ void Ship::SetHull(float Hull)
 			}
 		}
 	}
+}
+
+void Ship::OnAdded(Object * Content)
+{
+	// intentionally left empty
+}
+
+void Ship::OnRemoved(Object * Content)
+{
+	// intentionally left empty
 }

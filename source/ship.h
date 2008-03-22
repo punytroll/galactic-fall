@@ -96,8 +96,11 @@ public:
 	void Mount(Object * Object, const std::string & SlotIdentifier);
 	void Unmount(const std::string & SlotIdentifier);
 private:
-	// slot for the object aspect Update
+	// slot for the update aspect
 	bool Update(float Seconds);
+	// slots for the object container update
+	void OnAdded(Object * Content);
+	void OnRemoved(Object * Content);
 private:
 	// ship class
 	bool m_Accelerate;
