@@ -33,6 +33,7 @@
 #include "planet.h"
 #include "ship.h"
 #include "shot.h"
+#include "storage.h"
 #include "weapon.h"
 #include "weapon_class.h"
 #include "visualization_prototype.h"
@@ -90,6 +91,11 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		const WeaponClass * WeaponClass(g_WeaponClassManager->Get(ClassIdentifier));
 		
 		Result = new Shot(WeaponClass);
+	}
+	else if(TypeIdentifier == "storage")
+	{
+		assert(ClassIdentifier == "");
+		Result = new Storage();
 	}
 	else if(TypeIdentifier == "weapon")
 	{

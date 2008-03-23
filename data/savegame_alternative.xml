@@ -19,15 +19,8 @@
 		</aspect-name>
 		<aspect-object-container>
 			<content object-identifier="::character::player_character"/>
+			<content object-identifier="::storage(::ship(shuttle)::player_ship)"/>
 			<content object-identifier="::weapon(light_laser)"/>
-			<content object-identifier="::commodity(industrial)::1"/>
-			<content object-identifier="::commodity(industrial)::2"/>
-			<content object-identifier="::commodity(industrial)::3"/>
-			<content object-identifier="::commodity(industrial)::4"/>
-			<content object-identifier="::commodity(industrial)::5"/>
-			<content object-identifier="::commodity(industrial)::6"/>
-			<content object-identifier="::commodity(metal)::1"/>
-			<content object-identifier="::commodity(metal)::2"/>
 		</aspect-object-container>
 		<aspect-position>
 			<orientation w="-0.962905" x="0" y="0" z="-0.26984"/>
@@ -41,7 +34,6 @@
 			<maximum-forward-thrust value="13"/>
 			<maximum-speed value="14"/>
 			<maximum-turn-speed value="1.2"/>
-			<space-capacity value="10000"/>
 			<current-system object-identifier="::system(alpha_centauri)"/>
 			<fuel value="0.07"/>
 			<hull value="13.8"/>
@@ -186,5 +178,20 @@
 			<position x="0" y="0" z="0"/>
 		</aspect-position>
 		<type-specific/>
+	</object>
+	<object type-identifier="storage" class-identifier="" object-identifier="::storage(::ship(shuttle)::player_ship)">
+		<aspect-object-container>
+			<content object-identifier="::commodity(industrial)::1"/>
+			<content object-identifier="::commodity(industrial)::2"/>
+			<content object-identifier="::commodity(industrial)::3"/>
+			<content object-identifier="::commodity(industrial)::4"/>
+			<content object-identifier="::commodity(industrial)::5"/>
+			<content object-identifier="::commodity(industrial)::6"/>
+			<content object-identifier="::commodity(metal)::1"/>
+			<content object-identifier="::commodity(metal)::2"/>
+		</aspect-object-container>
+		<type-specific>
+			<space-capacity value="10000"/>
+		</type-specific>
 	</object>
 </save>

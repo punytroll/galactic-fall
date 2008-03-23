@@ -32,6 +32,7 @@
 #include "object_aspect_position.h"
 #include "ship.h"
 #include "slot.h"
+#include "storage.h"
 #include "system.h"
 #include "weapon.h"
 #include "write_to_xml_stream.h"
@@ -44,6 +45,7 @@ static void WriteCharacterToXMLStream(XMLStream & XMLStream, Character * TheChar
 static void WriteCommodityToXMLStream(XMLStream & XMLStream, Commodity * TheCommodity);
 static void WriteMindToXMLStream(XMLStream & XMLStream, Mind * TheMind);
 static void WriteShipToXMLStream(XMLStream & XMLStream, Ship * TheShip);
+static void WriteStorageToXMLStream(XMLStream & XMLStream, Storage * TheStorage);
 static void WriteWeaponToXMLStream(XMLStream & XMLStream, Weapon * TheWeapon);
 
 void WriteToXMLStream(XMLStream & XMLStream, Object * TheObject, bool Recursive)
@@ -136,6 +138,10 @@ void WriteToXMLStream(XMLStream & XMLStream, Object * TheObject)
 	{
 		WriteShipToXMLStream(XMLStream, dynamic_cast< Ship * >(TheObject));
 	}
+	else if(TheObject->GetTypeIdentifier() == "storage")
+	{
+		WriteStorageToXMLStream(XMLStream, dynamic_cast< Storage * >(TheObject));
+	}
 	else if(TheObject->GetTypeIdentifier() == "weapon")
 	{
 		WriteWeaponToXMLStream(XMLStream, dynamic_cast< Weapon * >(TheObject));
@@ -193,12 +199,17 @@ static void WriteShipToXMLStream(XMLStream & XMLStream, Ship * TheShip)
 	XMLStream << element << "maximum-forward-thrust" << attribute << "value" << value << TheShip->GetMaximumForwardThrust() << end;
 	XMLStream << element << "maximum-speed" << attribute << "value" << value << TheShip->GetMaximumSpeed() << end;
 	XMLStream << element << "maximum-turn-speed" << attribute << "value" << value << TheShip->GetMaximumTurnSpeed() << end;
-	XMLStream << element << "space-capacity" << attribute << "value" << value << TheShip->GetSpaceCapacity() << end;
 	// save current values
 	XMLStream << element << "current-system" << attribute << "object-identifier" << value << TheShip->GetCurrentSystem()->GetObjectIdentifier() << end;
 	XMLStream << element << "fuel" << attribute << "value" << value << TheShip->GetFuel() << end;
 	XMLStream << element << "hull" << attribute << "value" << value << TheShip->GetHull() << end;
 	XMLStream << element << "velocity" << attribute << "x" << value << TheShip->GetVelocity()[0] << attribute << "y" << value << TheShip->GetVelocity()[1] << attribute << "z" << value << TheShip->GetVelocity()[2] << end;
+}
+
+static void WriteStorageToXMLStream(XMLStream & XMLStream, Storage * TheStorage)
+{
+	assert(TheStorage != 0);
+	XMLStream << element << "space-capacity" << attribute << "value" << value << TheStorage->GetSpaceCapacity() << end;
 }
 
 static void WriteWeaponToXMLStream(XMLStream & XMLStream, Weapon * TheWeapon)

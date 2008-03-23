@@ -30,6 +30,7 @@
 
 class ShipClass;
 class SlotClass;
+class Storage;
 class System;
 class Weapon;
 
@@ -44,7 +45,8 @@ public:
 	Ship(const ShipClass * ShipClass);
 	virtual ~Ship(void);
 	// getters
-	unsigned_numeric GetContentAmount(const std::string & TypeIdentifier, const std::string & ClassIdentifier) const;
+	Storage * GetCargoHold(void);
+	const Storage * GetCargoHold(void) const;
 	System * GetCurrentSystem(void);
 	const System * GetCurrentSystem(void) const;
 	Reference< Graphics::ParticleSystem > & GetEngineGlowParticleSystem(void);
@@ -60,8 +62,6 @@ public:
 	float GetMaximumSpeed(void) const;
 	float GetMaximumTurnSpeed(void) const;
 	const std::map< std::string, Slot * > & GetSlots(void) const;
-	unsigned_numeric GetSpace(void) const;
-	unsigned_numeric GetSpaceCapacity(void) const;
 	Reference< Object > & GetTarget(void);
 	const Reference< Object > & GetTarget(void) const;
 	const Vector3f & GetVelocity(void) const;
@@ -85,7 +85,6 @@ public:
 	void SetMaximumTurnSpeed(float MaximumTurnSpeed);
 	void SetRefuel(bool Refuel);
 	void SetScoop(bool Scoop);
-	void SetSpaceCapacity(unsigned_numeric SpaceCapacity);
 	void SetTakeOff(bool TakeOff);
 	void SetTarget(Reference< Object > Target);
 	void SetTurnLeft(float TurnLeft);
@@ -104,6 +103,7 @@ private:
 private:
 	// ship class
 	bool m_Accelerate;
+	Storage * m_CargoHold;
 	System * m_CurrentSystem;
 	Reference< Graphics::ParticleSystem > m_EngineGlowParticleSystem;
 	Vector3f m_ExhaustOffset;
@@ -123,13 +123,22 @@ private:
 	bool m_Scoop;
 	const ShipClass * m_ShipClass;
 	std::map< std::string, Slot * > m_Slots;
-	unsigned_numeric m_SpaceCapacity;
 	bool m_TakeOff;
 	Reference< Object > m_Target;
 	float m_TurnLeft;
 	float m_TurnRight;
 	Vector3f m_Velocity;
 };
+
+inline Storage * Ship::GetCargoHold(void)
+{
+	return m_CargoHold;
+}
+
+inline const Storage * Ship::GetCargoHold(void) const
+{
+	return m_CargoHold;
+}
 
 inline System * Ship::GetCurrentSystem(void)
 {
@@ -204,11 +213,6 @@ inline const System * Ship::GetLinkedSystemTarget(void) const
 inline const std::map< std::string, Slot * > & Ship::GetSlots(void) const
 {
 	return m_Slots;
-}
-
-inline unsigned_numeric Ship::GetSpaceCapacity(void) const
-{
-	return m_SpaceCapacity;
 }
 
 inline Reference< Object > & Ship::GetTarget(void)
@@ -304,11 +308,6 @@ inline void Ship::SetRefuel(bool Refuel)
 inline void Ship::SetScoop(bool Scoop)
 {
 	m_Scoop = Scoop;
-}
-
-inline void Ship::SetSpaceCapacity(unsigned_numeric SpaceCapacity)
-{
-	m_SpaceCapacity = SpaceCapacity;
 }
 
 inline void Ship::SetTakeOff(bool TakeOff)

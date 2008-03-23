@@ -40,6 +40,7 @@
 #include "shot.h"
 #include "slot.h"
 #include "slot_class.h"
+#include "storage.h"
 #include "system.h"
 #include "visualization_prototype.h"
 #include "visualizations.h"
@@ -48,6 +49,7 @@
 
 Ship::Ship(const ShipClass * ShipClass) :
 	m_Accelerate(false),
+	m_CargoHold(0),
 	m_CurrentSystem(0),
 	m_Fuel(0.0f),
 	m_FuelCapacity(0.0f),
@@ -64,7 +66,6 @@ Ship::Ship(const ShipClass * ShipClass) :
 	m_Refuel(false),
 	m_Scoop(false),
 	m_ShipClass(ShipClass),
-	m_SpaceCapacity(0),
 	m_TakeOff(false),
 	m_TurnLeft(0.0f),
 	m_TurnRight(0.0f),
@@ -89,7 +90,6 @@ Ship::Ship(const ShipClass * ShipClass) :
 	SetMaximumForwardThrust(ShipClass->GetForwardThrust());
 	SetMaximumSpeed(ShipClass->GetMaximumSpeed());
 	SetMaximumTurnSpeed(ShipClass->GetTurnSpeed());
-	SetSpaceCapacity(ShipClass->GetMaximumAvailableSpace());
 	
 	const std::map< std::string, Slot * > & ShipClassSlots(ShipClass->GetSlots());
 	
@@ -110,54 +110,6 @@ Ship::~Ship(void)
 		delete m_Slots.begin()->second;
 		m_Slots.erase(m_Slots.begin());
 	}
-}
-
-unsigned_numeric Ship::GetSpace(void) const
-{
-	assert(GetAspectObjectContainer() != 0);
-	
-	unsigned_numeric Space(m_SpaceCapacity);
-	const std::set< Object * > & Content(GetAspectObjectContainer()->GetContent());
-	
-	for(std::set< Object * >::const_iterator ContentIterator = Content.begin(); ContentIterator != Content.end(); ++ContentIterator)
-	{
-		if((*ContentIterator)->GetAspectPhysical() != 0)
-		{
-			if((*ContentIterator)->GetAspectAccessory() != 0)
-			{
-				if((*ContentIterator)->GetAspectAccessory()->GetSlot() == 0)
-				{
-					Space -= (*ContentIterator)->GetAspectPhysical()->GetSpaceRequirement();
-				}
-			}
-			else
-			{
-				Space -= (*ContentIterator)->GetAspectPhysical()->GetSpaceRequirement();
-			}
-		}
-	}
-	
-	return Space;
-}
-
-unsigned_numeric Ship::GetContentAmount(const std::string & TypeIdentifier, const std::string & ClassIdentifier) const
-{
-	assert(GetAspectObjectContainer() != 0);
-	
-	unsigned_numeric Amount(0);
-	const std::set< Object * > & Content(GetAspectObjectContainer()->GetContent());
-	
-	for(std::set< Object * >::const_iterator ContentIterator = Content.begin(); ContentIterator != Content.end(); ++ContentIterator)
-	{
-		const Object * Content(*ContentIterator);
-		
-		if((Content->GetTypeIdentifier() == TypeIdentifier) && (Content->GetClassIdentifier() == ClassIdentifier) && ((Content->GetAspectAccessory() == 0) || (Content->GetAspectAccessory()->GetSlot() == 0)))
-		{
-			Amount += 1;
-		}
-	}
-	
-	return Amount;
 }
 
 void Ship::SetFire(bool Fire)
@@ -347,9 +299,10 @@ bool Ship::Update(float Seconds)
 		}
 		if(m_Jettison == true)
 		{
-			assert(GetAspectObjectContainer() != 0);
+			assert(GetCargoHold() != 0);
+			assert(GetCargoHold()->GetAspectObjectContainer() != 0);
 			
-			std::set< Object * >::const_iterator ContentIterator(GetAspectObjectContainer()->GetContent().begin());
+			std::set< Object * >::const_iterator ContentIterator(GetCargoHold()->GetAspectObjectContainer()->GetContent().begin());
 			
 			while(ContentIterator != GetAspectObjectContainer()->GetContent().end())
 			{
@@ -358,7 +311,7 @@ bool Ship::Update(float Seconds)
 				++ContentIterator;
 				if(Content->GetTypeIdentifier() == "commodity")
 				{
-					GetAspectObjectContainer()->RemoveContent(Content);
+					GetCargoHold()->GetAspectObjectContainer()->RemoveContent(Content);
 					assert(GetAspectPosition() != 0);
 					assert(Content->GetAspectPosition() != 0);
 					Content->GetAspectPosition()->SetPosition(GetAspectPosition()->GetPosition());
@@ -389,8 +342,9 @@ bool Ship::Update(float Seconds)
 				// the following is a typical occasion of bad practise: a transaction would be great here
 				if(GetCurrentSystem()->GetAspectObjectContainer()->RemoveContent(Target) == true)
 				{
-					assert(GetAspectObjectContainer() != 0);
-					if(GetAspectObjectContainer()->AddContent(Target) == true)
+					assert(GetCargoHold() != 0);
+					assert(GetCargoHold()->GetAspectObjectContainer() != 0);
+					if(GetCargoHold()->GetAspectObjectContainer()->AddContent(Target) == true)
 					{
 						SetTarget(0);
 						if((Target->GetAspectVisualization() != 0) && (Target->GetAspectVisualization()->GetVisualization().IsValid() == true))
@@ -434,7 +388,6 @@ void Ship::Mount(Object * Object, const std::string & SlotIdentifier)
 	assert(SlotIterator->second->GetSlotClass()->AcceptsSlotClassIdentifier(Object->GetAspectAccessory()->GetSlotClassIdentifier()) == true);
 	SlotIterator->second->SetMountedObject(Object->GetReference());
 	Object->GetAspectAccessory()->SetSlot(SlotIterator->second);
-	
 	if((Object->GetTypeIdentifier() == "weapon") && (GetAspectVisualization()->GetVisualization().IsValid() == true))
 	{
 		// visualize all weapons on ships that are already visualized
@@ -451,11 +404,6 @@ void Ship::Unmount(const std::string & SlotIdentifier)
 	Object * TheObject(SlotIterator->second->GetMountedObject().Get());
 	
 	assert(TheObject != 0);
-	
-	unsigned_numeric Space(GetSpace());
-	
-	assert(TheObject->GetAspectPhysical() != 0);
-	assert(Space >= TheObject->GetAspectPhysical()->GetSpaceRequirement());
 	SlotIterator->second->SetMountedObject(0);
 	TheObject->GetAspectAccessory()->SetSlot(0);
 	if((TheObject->GetAspectVisualization() != 0) && (TheObject->GetAspectVisualization()->GetVisualization().IsValid() == true))
@@ -516,10 +464,18 @@ void Ship::SetHull(float Hull)
 
 void Ship::OnAdded(Object * Content)
 {
-	// intentionally left empty
+	if(Content->GetTypeIdentifier() == "storage")
+	{
+		assert(m_CargoHold == 0);
+		m_CargoHold = dynamic_cast< Storage * >(Content);
+	}
 }
 
 void Ship::OnRemoved(Object * Content)
 {
-	// intentionally left empty
+	if(Content->GetTypeIdentifier() == "storage")
+	{
+		assert(m_CargoHold == Content);
+		m_CargoHold = 0;
+	}
 }

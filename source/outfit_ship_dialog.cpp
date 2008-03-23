@@ -32,6 +32,7 @@
 #include "ship.h"
 #include "slot.h"
 #include "slot_class.h"
+#include "storage.h"
 #include "weapon.h"
 #include "weapon_class.h"
 
@@ -350,32 +351,32 @@ void OutfitShipDialog::RebuildAccessoryList(void)
 	{
 		m_AccessoryScrollBox->GetContent()->GetSubWidgets().front()->Destroy();
 	}
-	
 	// now fill the weapon list
+	assert(m_Ship != 0);
+	assert(m_Ship->GetCargoHold() != 0);
+	assert(m_Ship->GetCargoHold()->GetAspectObjectContainer() != 0);
+	
+	const std::set< Object * > & Content(m_Ship->GetCargoHold()->GetAspectObjectContainer()->GetContent());
 	float Top(5.0f);
-	if(m_Ship->GetAspectObjectContainer() != 0)
+	
+	for(std::set< Object * >::iterator ContentIterator = Content.begin(); ContentIterator != Content.end(); ++ContentIterator)
 	{
-		const std::set< Object * > & Content(m_Ship->GetAspectObjectContainer()->GetContent());
+		Object * ContentObject(*ContentIterator);
 		
-		for(std::set< Object * >::iterator ContentIterator = Content.begin(); ContentIterator != Content.end(); ++ContentIterator)
+		if((ContentObject->GetAspectAccessory() != 0) && (ContentObject->GetAspectAccessory()->GetSlot() == 0))
 		{
-			Object * ContentObject(*ContentIterator);
+			AccessoryListItem * NewAccessoryListItem(new AccessoryListItem(m_AccessoryScrollBox->GetContent(), ContentObject));
 			
-			if((ContentObject->GetAspectAccessory() != 0) && (ContentObject->GetAspectAccessory()->GetSlot() == 0))
+			NewAccessoryListItem->SetPosition(Vector2f(5.0f, Top));
+			NewAccessoryListItem->SetSize(Vector2f(m_AccessoryScrollBox->GetContent()->GetSize()[0] - 10.0f, 50.0f));
+			NewAccessoryListItem->SetAnchorRight(true);
+			NewAccessoryListItem->AddMouseButtonListener(this);
+			if(ContentObject == SelectedAccessory)
 			{
-				AccessoryListItem * NewAccessoryListItem(new AccessoryListItem(m_AccessoryScrollBox->GetContent(), ContentObject));
-				
-				NewAccessoryListItem->SetPosition(Vector2f(5.0f, Top));
-				NewAccessoryListItem->SetSize(Vector2f(m_AccessoryScrollBox->GetContent()->GetSize()[0] - 10.0f, 50.0f));
-				NewAccessoryListItem->SetAnchorRight(true);
-				NewAccessoryListItem->AddMouseButtonListener(this);
-				if(ContentObject == SelectedAccessory)
-				{
-					m_SelectedAccessoryListItem = NewAccessoryListItem;
-					m_SelectedAccessoryListItem->SetSelected(true);
-				}
-				Top += 55.0f;
+				m_SelectedAccessoryListItem = NewAccessoryListItem;
+				m_SelectedAccessoryListItem->SetSelected(true);
 			}
+			Top += 55.0f;
 		}
 	}
 	m_AccessoryScrollBox->GetContent()->SetSize(Vector2f(m_AccessoryScrollBox->GetView()->GetSize()[0], std::max(Top, m_AccessoryScrollBox->GetView()->GetSize()[1])));
@@ -395,7 +396,7 @@ void OutfitShipDialog::UpdateButtons(void)
 		else
 		{
 			assert(m_SelectedSlotListItem->GetSlot()->GetMountedObject()->GetAspectPhysical() != 0);
-			m_UnmountButton->SetEnabled((m_Ship->GetSpace() >= m_SelectedSlotListItem->GetSlot()->GetMountedObject()->GetAspectPhysical()->GetSpaceRequirement()));
+			m_UnmountButton->SetEnabled((m_Ship->GetCargoHold()->GetSpace() >= m_SelectedSlotListItem->GetSlot()->GetMountedObject()->GetAspectPhysical()->GetSpaceRequirement()));
 		}
 	}
 }
@@ -412,7 +413,13 @@ bool OutfitShipDialog::OnClicked(Widget * EventSource)
 	{
 		assert(m_SelectedAccessoryListItem != 0);
 		assert(m_SelectedSlotListItem != 0);
-		m_Ship->Mount(m_SelectedAccessoryListItem->GetAccessory(), m_SelectedSlotListItem->GetSlot()->GetIdentifier());
+		
+		Object * Accessory(m_SelectedAccessoryListItem->GetAccessory());
+		
+		assert(Accessory != 0);
+		m_Ship->GetCargoHold()->GetAspectObjectContainer()->RemoveContent(Accessory);
+		m_Ship->GetAspectObjectContainer()->AddContent(Accessory);
+		m_Ship->Mount(Accessory, m_SelectedSlotListItem->GetSlot()->GetIdentifier());
 		m_SelectedSlotListItem->Update();
 		RebuildAccessoryList();
 		UpdateButtons();
@@ -422,7 +429,17 @@ bool OutfitShipDialog::OnClicked(Widget * EventSource)
 	else if(EventSource == m_UnmountButton)
 	{
 		assert(m_SelectedSlotListItem != 0);
+		
+		Object * Accessory(m_SelectedSlotListItem->GetSlot()->GetMountedObject().Get());
+		
+		assert(Accessory != 0);
+		if(Accessory->GetAspectPhysical() != 0)
+		{
+			assert(m_Ship->GetCargoHold()->GetSpace() >= Accessory->GetAspectPhysical()->GetSpaceRequirement());
+		}
 		m_Ship->Unmount(m_SelectedSlotListItem->GetSlot()->GetIdentifier());
+		m_Ship->GetAspectObjectContainer()->RemoveContent(Accessory);
+		m_Ship->GetCargoHold()->GetAspectObjectContainer()->AddContent(Accessory);
 		m_SelectedSlotListItem->Update();
 		RebuildAccessoryList();
 		UpdateButtons();

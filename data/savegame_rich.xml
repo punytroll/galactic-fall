@@ -20,18 +20,9 @@
 		</aspect-name>
 		<aspect-object-container>
 			<content object-identifier="::character::player_character"/>
+			<content object-identifier="::storage(::ship(shuttle)::player_ship)"/>
 			<content object-identifier="::weapon(light_laser)::1"/>
 			<content object-identifier="::weapon(light_laser)::2"/>
-			<content object-identifier="::weapon(light_laser)::3"/>
-			<content object-identifier="::weapon(medium_laser)::1"/>
-			<content object-identifier="::weapon(medium_laser)::2"/>
-			<content object-identifier="::weapon(medium_laser)::3"/>
-			<content object-identifier="::commodity(luxury_goods)::1"/>
-			<content object-identifier="::commodity(luxury_goods)::2"/>
-			<content object-identifier="::commodity(luxury_goods)::3"/>
-			<content object-identifier="::commodity(luxury_goods)::4"/>
-			<content object-identifier="::commodity(luxury_goods)::5"/>
-			<content object-identifier="::commodity(luxury_goods)::6"/>
 		</aspect-object-container>
 		<aspect-position>
 			<orientation w="1" x="0" y="0" z="0"/>
@@ -45,7 +36,6 @@
 			<maximum-forward-thrust value="10"/>
 			<maximum-speed value="12"/>
 			<maximum-turn-speed value="1"/>
-			<space-capacity value="12000"/>
 			<current-system object-identifier="::system(sol)"/>
 			<fuel value="1"/>
 			<hull value="100"/>
@@ -217,5 +207,22 @@
 			<position x="0" y="0" z="0"/>
 		</aspect-position>
 		<type-specific/>
+	</object>
+	<object type-identifier="storage" class-identifier="" object-identifier="::storage(::ship(shuttle)::player_ship)">
+		<aspect-object-container>
+			<content object-identifier="::weapon(light_laser)::3"/>
+			<content object-identifier="::weapon(medium_laser)::1"/>
+			<content object-identifier="::weapon(medium_laser)::2"/>
+			<content object-identifier="::weapon(medium_laser)::3"/>
+			<content object-identifier="::commodity(luxury_goods)::1"/>
+			<content object-identifier="::commodity(luxury_goods)::2"/>
+			<content object-identifier="::commodity(luxury_goods)::3"/>
+			<content object-identifier="::commodity(luxury_goods)::4"/>
+			<content object-identifier="::commodity(luxury_goods)::5"/>
+			<content object-identifier="::commodity(luxury_goods)::6"/>
+		</aspect-object-container>
+		<type-specific>
+			<space-capacity value="12000"/>
+		</type-specific>
 	</object>
 </save>

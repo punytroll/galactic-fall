@@ -39,6 +39,7 @@
 #include "ship.h"
 #include "state_machine.h"
 #include "states.h"
+#include "storage.h"
 #include "string_cast.h"
 #include "system.h"
 
@@ -293,7 +294,7 @@ void TransporterPhase3::Enter(void)
 					std::set< Object * >::iterator SaveIterator(ContentIterator);
 					
 					++SaveIterator;
-					GetMind()->GetCharacter()->GetShip()->GetAspectObjectContainer()->RemoveContent(SellCommodity);
+					GetMind()->GetCharacter()->GetShip()->GetCargoHold()->GetAspectObjectContainer()->RemoveContent(SellCommodity);
 					ContentIterator = SaveIterator;
 					delete SellCommodity;
 					GetMind()->GetCharacter()->AddCredits(PlanetAssetClassIterator->second->GetPrice());
@@ -310,17 +311,17 @@ void TransporterPhase3::Enter(void)
 			{
 				PlanetAssetClass * PlanetAssetClassToBuy(BuyPlanetAssetClasses[GetRandomInteger(BuyPlanetAssetClasses.size() - 1)]);
 				
-				for(int NumberOfAssetsToBuy = GetRandomIntegerFromExponentialDistribution(GetMind()->GetCharacter()->GetShip()->GetSpaceCapacity() / g_ObjectFactory->GetSpaceRequirement(PlanetAssetClassToBuy->GetAssetClass()->GetObjectType(), PlanetAssetClassToBuy->GetAssetClass()->GetObjectClass())); NumberOfAssetsToBuy > 0; --NumberOfAssetsToBuy)
+				for(int NumberOfAssetsToBuy = GetRandomIntegerFromExponentialDistribution(GetMind()->GetCharacter()->GetShip()->GetCargoHold()->GetSpaceCapacity() / g_ObjectFactory->GetSpaceRequirement(PlanetAssetClassToBuy->GetAssetClass()->GetObjectType(), PlanetAssetClassToBuy->GetAssetClass()->GetObjectClass())); NumberOfAssetsToBuy > 0; --NumberOfAssetsToBuy)
 				{
 					// TODO: the 400.0f is a safety margin for landing fees and fuel
-					if((GetMind()->GetCharacter()->GetShip()->GetSpace() >= 1.0f) && (GetMind()->GetCharacter()->GetCredits() - 400.0f >= PlanetAssetClassToBuy->GetPrice()))
+					if((GetMind()->GetCharacter()->GetShip()->GetCargoHold()->GetSpace() >= 1.0f) && (GetMind()->GetCharacter()->GetCredits() - 400.0f >= PlanetAssetClassToBuy->GetPrice()))
 					{
 						GetMind()->GetCharacter()->RemoveCredits(PlanetAssetClassToBuy->GetPrice());
 						
 						Object * NewCommodity(g_ObjectFactory->Create(PlanetAssetClassToBuy->GetAssetClass()->GetObjectType(), PlanetAssetClassToBuy->GetAssetClass()->GetObjectClass()));
 						
 						NewCommodity->SetObjectIdentifier("::" + PlanetAssetClassToBuy->GetAssetClass()->GetObjectType() + "(" + PlanetAssetClassToBuy->GetAssetClass()->GetObjectClass() + ")::buy_index(" + to_string_cast(NumberOfPlanetAssetClassesToBuy) + "|" + to_string_cast(NumberOfAssetsToBuy) + ")::bought_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::bought_by(" + GetMind()->GetObjectIdentifier() + ")::bought_on(" + Planet->GetObjectIdentifier() + ")");
-						GetMind()->GetCharacter()->GetShip()->GetAspectObjectContainer()->AddContent(NewCommodity);
+						GetMind()->GetCharacter()->GetShip()->GetCargoHold()->GetAspectObjectContainer()->AddContent(NewCommodity);
 					}
 					else
 					{
