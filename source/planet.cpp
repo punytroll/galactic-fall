@@ -37,9 +37,9 @@ PlanetAssetClass::~PlanetAssetClass(void)
 {
 }
 
-u4byte PlanetAssetClass::GetPrice(void) const
+unsigned_numeric PlanetAssetClass::GetPrice(void) const
 {
-	return static_cast< u4byte >(m_AssetClass->GetBasePrice() * m_BasePriceModifier);
+	return static_cast< unsigned_numeric >(m_AssetClass->GetBasePrice() * m_BasePriceModifier);
 }
 
 Planet::Planet(const std::string & Identifier) :

@@ -82,7 +82,7 @@ void Character::Update(void)
 	}
 }
 
-void Character::AddCredits(u4byte Credits)
+void Character::AddCredits(unsigned_numeric Credits)
 {
 	m_Credits += Credits;
 }
@@ -92,7 +92,7 @@ void Character::AddObserver(CharacterObserver * CharacterObserver)
 	m_Observers.insert(CharacterObserver);
 }
 
-bool Character::RemoveCredits(u4byte Credits)
+bool Character::RemoveCredits(unsigned_numeric Credits)
 {
 	if(m_Credits < Credits)
 	{

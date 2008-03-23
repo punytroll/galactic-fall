@@ -73,7 +73,7 @@
 					<base-price-modifier>1.02</base-price-modifier>
 				</offered-asset-class>
 			</offered-asset-classes>
-			<landing-fee>54.0</landing-fee>
+			<landing-fee>54</landing-fee>
 		</planet>
 	</planets>
 </system>

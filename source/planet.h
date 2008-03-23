@@ -36,7 +36,7 @@ public:
 	PlanetAssetClass(const AssetClass * AssetClass);
 	virtual ~PlanetAssetClass(void);
 	const AssetClass * GetAssetClass(void) const;
-	u4byte GetPrice(void) const;
+	unsigned_numeric GetPrice(void) const;
 	void SetBasePriceModifier(float BasePriceModifier);
 	float GetBasePriceModifier(void) const;
 private:
@@ -65,9 +65,9 @@ public:
 	const std::string & GetDescription(void) const;
 	float GetSize(void) const;
 	const std::vector< PlanetAssetClass * > & GetPlanetAssetClasses(void) const;
-	u4byte GetLandingFee(void) const;
+	unsigned_numeric GetLandingFee(void) const;
 	// setters
-	void SetLandingFee(float LandingFee);
+	void SetLandingFee(unsigned_numeric LandingFee);
 	void SetDescription(const std::string & Description);
 	void SetSize(const float & Size);
 	void SetColor(const Color & Color);
@@ -79,7 +79,7 @@ private:
 	std::string m_Identifier;
 	std::string m_Description;
 	float m_Size;
-	float m_LandingFee;
+	unsigned_numeric m_LandingFee;
 	Color * m_Color;
 	std::vector< PlanetAssetClass * > m_PlanetAssetClasses;
 };
@@ -114,12 +114,12 @@ inline const std::vector< PlanetAssetClass * > & Planet::GetPlanetAssetClasses(v
 	return m_PlanetAssetClasses;
 }
 
-inline u4byte Planet::GetLandingFee(void) const
+inline unsigned_numeric Planet::GetLandingFee(void) const
 {
-	return static_cast< u4byte >(m_LandingFee);
+	return m_LandingFee;
 }
 
-inline void Planet::SetLandingFee(float LandingFee)
+inline void Planet::SetLandingFee(unsigned_numeric LandingFee)
 {
 	m_LandingFee = LandingFee;
 }
