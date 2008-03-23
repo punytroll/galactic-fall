@@ -58,6 +58,7 @@ namespace Graphics
 enum WantReturnCode
 {
 	OK,
+	NO_STORAGE,
 	NO_JUMP_TARGET,
 	NO_LAND_TARGET,
 	NO_SCOOP_TARGET,

@@ -90,6 +90,7 @@
 #include "star_map_display.h"
 #include "state_machine.h"
 #include "states.h"
+#include "storage.h"
 #include "string_cast.h"
 #include "system.h"
 #include "system_statistics.h"
@@ -241,8 +242,13 @@ int WantToScoop(const Ship * Ship, const Commodity * Commodity)
 	{
 		return TOO_HIGH_RELATIVE_VELOCITY;
 	}
-	// test cargo hold size on the ship
-	if(Ship->GetSpace() < Commodity->GetAspectPhysical()->GetSpaceRequirement())
+	// test storage availability
+	if(Ship->GetCargoHold() == 0)
+	{
+		return NO_STORAGE;
+	}
+	// test available storage space
+	if(Ship->GetCargoHold()->GetSpace() < Commodity->GetAspectPhysical()->GetSpaceRequirement())
 	{
 		return NOT_ENOUGH_SPACE;
 	}
@@ -1058,6 +1064,13 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 	NewShip->SetFuel(NewShip->GetFuelCapacity());
 	NewShip->SetCurrentSystem(System);
 	
+	const ShipClass * ShipClass(g_ShipClassManager->Get(ShipClassIdentifier));
+	Storage * ShipStorage(dynamic_cast< Storage * >(g_ObjectFactory->Create("storage", "")));
+	
+	ShipStorage->SetObjectIdentifier("::storage(" + NewShip->GetObjectIdentifier() + ")");
+	ShipStorage->SetSpaceCapacity(ShipClass->GetMaximumAvailableSpace());
+	NewShip->GetAspectObjectContainer()->AddContent(ShipStorage);
+	
 	Character * NewCharacter(dynamic_cast< Character * >(g_ObjectFactory->Create("character", "")));
 	
 	NewCharacter->SetObjectIdentifier("::character(" + NewShip->GetClassIdentifier() + ")" + IdentifierSuffix);
@@ -1085,18 +1098,15 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 				++AssetClassIterator;
 			}
 			
-			int AmountOfAssets(GetRandomIntegerFromExponentialDistribution(NewShip->GetSpaceCapacity() / g_ObjectFactory->GetSpaceRequirement(AssetClassIterator->second->GetObjectType(), AssetClassIterator->second->GetObjectClass())));
+			int AmountOfAssets(GetRandomIntegerFromExponentialDistribution(NewShip->GetCargoHold()->GetSpaceCapacity() / g_ObjectFactory->GetSpaceRequirement(AssetClassIterator->second->GetObjectType(), AssetClassIterator->second->GetObjectClass())));
 			
-			if(AmountOfAssets <= static_cast< int >(NewShip->GetSpace()))
+			while((AmountOfAssets > 0) && (NewShip->GetCargoHold()->GetSpace() >= g_ObjectFactory->GetSpaceRequirement(AssetClassIterator->second->GetObjectType(), AssetClassIterator->second->GetObjectClass())))
 			{
-				while(AmountOfAssets > 0)
-				{
-					Object * NewCommodity(g_ObjectFactory->Create(AssetClassIterator->second->GetObjectType(), AssetClassIterator->second->GetObjectClass()));
-					
-					NewCommodity->SetObjectIdentifier("::" + AssetClassIterator->second->GetObjectType() + "(" + AssetClassIterator->second->GetIdentifier() + ")::(" + to_string_cast(NumberOfAssetClasses) + "|" + to_string_cast(AmountOfAssets) + ")" + IdentifierSuffix);
-					NewShip->GetAspectObjectContainer()->AddContent(NewCommodity);
-					--AmountOfAssets;
-				}
+				Object * NewCommodity(g_ObjectFactory->Create(AssetClassIterator->second->GetObjectType(), AssetClassIterator->second->GetObjectClass()));
+				
+				NewCommodity->SetObjectIdentifier("::" + AssetClassIterator->second->GetObjectType() + "(" + AssetClassIterator->second->GetIdentifier() + ")::(" + to_string_cast(NumberOfAssetClasses) + "|" + to_string_cast(AmountOfAssets) + ")" + IdentifierSuffix);
+				NewShip->GetCargoHold()->GetAspectObjectContainer()->AddContent(NewCommodity);
+				--AmountOfAssets;
 			}
 		}
 	}
@@ -1775,17 +1785,30 @@ void LoadGameFromElement(const Element * SaveElement)
 								assert((*TypeSpecificChild)->HasAttribute("value") == true);
 								NewShip->SetMaximumTurnSpeed(from_string_cast< float >((*TypeSpecificChild)->GetAttribute("value")));
 							}
-							else if((*TypeSpecificChild)->GetName() == "space-capacity")
-							{
-								assert((*TypeSpecificChild)->HasAttribute("value") == true);
-								NewShip->SetSpaceCapacity(from_string_cast< float >((*TypeSpecificChild)->GetAttribute("value")));
-							}
 							else if((*TypeSpecificChild)->GetName() == "velocity")
 							{
 								assert((*TypeSpecificChild)->HasAttribute("x") == true);
 								assert((*TypeSpecificChild)->HasAttribute("y") == true);
 								assert((*TypeSpecificChild)->HasAttribute("z") == true);
 								NewShip->SetVelocity(Vector3f(from_string_cast< float >((*TypeSpecificChild)->GetAttribute("x")), from_string_cast< float >((*TypeSpecificChild)->GetAttribute("y")), from_string_cast< float >((*TypeSpecificChild)->GetAttribute("z"))));
+							}
+							else
+							{
+								throw std::runtime_error("The \"" + (*ObjectChild)->GetName() + "\" element for the object \"" + (*SaveChild)->GetAttribute("object-identifier") + "\" contains an unknown element \"" + (*TypeSpecificChild)->GetName() + "\".");
+							}
+						}
+					}
+					else if((*SaveChild)->GetAttribute("type-identifier") == "storage")
+					{
+						Storage * NewStorage(dynamic_cast< Storage * >(NewObject));
+						
+						assert(NewStorage != 0);
+						for(std::vector< Element * >::const_iterator TypeSpecificChild = (*ObjectChild)->GetChilds().begin(); TypeSpecificChild != (*ObjectChild)->GetChilds().end(); ++TypeSpecificChild)
+						{
+							if((*TypeSpecificChild)->GetName() == "space-capacity")
+							{
+								assert((*TypeSpecificChild)->HasAttribute("value") == true);
+								NewStorage->SetSpaceCapacity(from_string_cast< unsigned_numeric >((*TypeSpecificChild)->GetAttribute("value")));
 							}
 							else
 							{

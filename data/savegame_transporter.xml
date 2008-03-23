@@ -19,6 +19,7 @@
 		</aspect-name>
 		<aspect-object-container>
 			<content object-identifier="::character::player_character"/>
+			<content object-identifier="::storage(::ship(transporter)::player_ship)"/>
 			<content object-identifier="::weapon(medium_laser)"/>
 		</aspect-object-container>
 		<aspect-position>
@@ -33,7 +34,6 @@
 			<maximum-forward-thrust value="4"/>
 			<maximum-speed value="8.5"/>
 			<maximum-turn-speed value="0.8"/>
-			<space-capacity value="60000"/>
 			<current-system object-identifier="::system(rigel)"/>
 			<fuel value="3.84"/>
 			<hull value="229.44"/>
@@ -64,6 +64,12 @@
 				<explored-system object-identifier="::system(sol)"/>
 				<explored-system object-identifier="::system(rigel)"/>
 			</map-knowledge>
+		</type-specific>
+	</object>
+	<object type-identifier="storage" class-identifier="" object-identifier="::storage(::ship(transporter)::player_ship)">
+		<aspect-object-container/>
+		<type-specific>
+			<space-capacity value="60000"/>
 		</type-specific>
 	</object>
 </save>

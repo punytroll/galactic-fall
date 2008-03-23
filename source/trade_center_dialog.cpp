@@ -34,6 +34,7 @@
 #include "scroll_bar.h"
 #include "scroll_box.h"
 #include "ship.h"
+#include "storage.h"
 #include "string_cast.h"
 #include "trade_center_dialog.h"
 #include "weapon.h"
@@ -83,7 +84,7 @@ TradeCenterAssetClass::TradeCenterAssetClass(Widget * SupWidget, PlanetAssetClas
 
 void TradeCenterAssetClass::UpdateCharacterAmount(void)
 {
-	m_CharacterAmountLabel->SetString(to_string_cast(m_Ship->GetContentAmount(m_PlanetAssetClass->GetAssetClass()->GetObjectType(), m_PlanetAssetClass->GetAssetClass()->GetObjectClass())));
+	m_CharacterAmountLabel->SetString(to_string_cast(m_Ship->GetCargoHold()->GetAmount(m_PlanetAssetClass->GetAssetClass()->GetObjectType(), m_PlanetAssetClass->GetAssetClass()->GetObjectClass())));
 }
 
 const PlanetAssetClass * TradeCenterAssetClass::GetPlanetAssetClass(void) const
@@ -182,7 +183,7 @@ void TradeCenterDialog::UpdateTraderCredits(void)
 
 void TradeCenterDialog::UpdateTraderAvailableSpace(void)
 {
-	m_TraderAvailableSpaceLabel->SetString("Available Space: " + to_string_cast(0.001 * m_Character->GetShip()->GetSpace(), 3));
+	m_TraderAvailableSpaceLabel->SetString("Available Space: " + to_string_cast(0.001 * m_Character->GetShip()->GetCargoHold()->GetSpace(), 3));
 }
 
 void TradeCenterDialog::Buy(const PlanetAssetClass * PlanetAssetClass)
@@ -191,13 +192,13 @@ void TradeCenterDialog::Buy(const PlanetAssetClass * PlanetAssetClass)
 	
 	if(m_Character->RemoveCredits(Price) == true)
 	{
-		if(m_Character->GetShip()->GetSpace() >= g_ObjectFactory->GetSpaceRequirement(PlanetAssetClass->GetAssetClass()->GetObjectType(), PlanetAssetClass->GetAssetClass()->GetObjectClass()))
+		if(m_Character->GetShip()->GetCargoHold()->GetSpace() >= g_ObjectFactory->GetSpaceRequirement(PlanetAssetClass->GetAssetClass()->GetObjectType(), PlanetAssetClass->GetAssetClass()->GetObjectClass()))
 		{
 			Object * NewCargo(g_ObjectFactory->Create(PlanetAssetClass->GetAssetClass()->GetObjectType(), PlanetAssetClass->GetAssetClass()->GetObjectClass()));
 			
 			NewCargo->SetObjectIdentifier("::asset(" + PlanetAssetClass->GetAssetClass()->GetIdentifier() + ")::" + PlanetAssetClass->GetAssetClass()->GetObjectType() + "(" + PlanetAssetClass->GetAssetClass()->GetObjectClass() + ")::created_on(" + m_Planet->GetObjectIdentifier() + ")::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::bought_by(" + m_Character->GetObjectIdentifier() + ")::created_at_address(" + to_string_cast(reinterpret_cast< void * >(NewCargo)) + ")");
 			assert(m_Character->GetShip()->GetAspectObjectContainer() != 0);
-			m_Character->GetShip()->GetAspectObjectContainer()->AddContent(NewCargo);
+			m_Character->GetShip()->GetCargoHold()->GetAspectObjectContainer()->AddContent(NewCargo);
 			UpdateTraderCredits();
 			UpdateTraderAvailableSpace();
 		}
@@ -210,9 +211,12 @@ void TradeCenterDialog::Buy(const PlanetAssetClass * PlanetAssetClass)
 
 void TradeCenterDialog::Sell(const PlanetAssetClass * PlanetAssetClass)
 {
-	assert(m_Character->GetShip()->GetAspectObjectContainer() != 0);
+	assert(m_Character != 0);
+	assert(m_Character->GetShip() != 0);
+	assert(m_Character->GetShip()->GetCargoHold() != 0);
+	assert(m_Character->GetShip()->GetCargoHold()->GetAspectObjectContainer() != 0);
 	
-	const std::set< Object * > & Content(m_Character->GetShip()->GetAspectObjectContainer()->GetContent());
+	const std::set< Object * > & Content(m_Character->GetShip()->GetCargoHold()->GetAspectObjectContainer()->GetContent());
 	std::set< Object * >::const_iterator ContentIterator(Content.begin());
 	
 	while(ContentIterator != Content.end())
@@ -221,10 +225,7 @@ void TradeCenterDialog::Sell(const PlanetAssetClass * PlanetAssetClass)
 		
 		if((Content->GetTypeIdentifier() == PlanetAssetClass->GetAssetClass()->GetObjectType()) && (Content->GetClassIdentifier() == PlanetAssetClass->GetAssetClass()->GetObjectClass()) && ((Content->GetAspectAccessory() == 0) || (Content->GetAspectAccessory()->GetSlot() == 0)))
 		{
-			assert(m_Character != 0);
-			assert(m_Character->GetShip() != 0);
-			assert(m_Character->GetShip()->GetAspectObjectContainer() != 0);
-			m_Character->GetShip()->GetAspectObjectContainer()->RemoveContent(Content);
+			m_Character->GetShip()->GetCargoHold()->GetAspectObjectContainer()->RemoveContent(Content);
 			delete Content;
 			m_Character->AddCredits(PlanetAssetClass->GetPrice());
 			UpdateTraderCredits();
