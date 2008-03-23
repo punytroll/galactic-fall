@@ -174,14 +174,19 @@ bool g_DumpEndReport(false);
 bool g_TakeScreenShot(false);
 ResourceReader * g_ResourceReader(0);
 
-int WantToJump(Ship * Ship, System * System)
+int WantToJump(Ship * Ship, System * TargetSystem)
 {
-	if(System == 0)
+	if(TargetSystem == 0)
 	{
 		return NO_JUMP_TARGET;
 	}
+	
+	const System * CurrentSystem(dynamic_cast< System * >(Ship->GetContainer()));
+	
+	assert(CurrentSystem != 0);
+	
 	// only let the ship jump if it is not near any other stellar object
-	const std::vector< Planet * > & Planets(Ship->GetCurrentSystem()->GetPlanets());
+	const std::vector< Planet * > & Planets(CurrentSystem->GetPlanets());
 	
 	for(std::vector< Planet * >::const_iterator PlanetIterator = Planets.begin(); PlanetIterator != Planets.end(); ++PlanetIterator)
 	{
@@ -631,7 +636,7 @@ void CalculateMovements(System * System, float Seconds)
 		}
 		else
 		{
-			if(TheShip->GetCurrentSystem() != System)
+			if(TheShip->GetContainer() != System)
 			{
 				// if another ship jumps out of the system ... remove it
 				if((g_CharacterObserver->GetObservedCharacter().IsValid() == false) || (g_CharacterObserver->GetObservedCharacter()->GetShip() != TheShip))
@@ -762,7 +767,7 @@ void CalculateMovements(System * System, float Seconds)
 										
 										RotationAxis.Normalize();
 										TheCommodity->SetAngularVelocity(AxisAngle(RotationAxis[0], RotationAxis[1], RotationAxis[2], GetRandomFloat(0.0f, 0.7f)));
-										TheShip->GetCurrentSystem()->GetAspectObjectContainer()->AddContent(TheCommodity);
+										TheShip->GetContainer()->GetAspectObjectContainer()->AddContent(TheCommodity);
 										// add visualization of the commodity
 										VisualizeCommodity(TheCommodity, g_CommodityLayer);
 									}
@@ -875,7 +880,7 @@ void UpdateUserInterface(void)
 		// display credits in every cycle
 		g_CreditsLabel->SetString("Credits: " + to_string_cast(g_CharacterObserver->GetObservedCharacter()->GetCredits()));
 		// display the current system
-		g_CurrentSystemLabel->SetString(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetCurrentSystem()->GetAspectName()->GetName());
+		g_CurrentSystemLabel->SetString(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetContainer()->GetAspectName()->GetName());
 		// set system label color according to jump status
 		if(WantToJump(g_CharacterObserver->GetObservedCharacter()->GetShip(), g_CharacterObserver->GetObservedCharacter()->GetShip()->GetLinkedSystemTarget()) == OK)
 		{
@@ -995,9 +1000,15 @@ public:
 	{
 		if(EventSource == g_MapDialog)
 		{
-			if((g_InputMind.IsValid() == true) && (g_InputMind->GetCharacter() != 0) && (g_InputMind->GetCharacter()->GetShip() != 0) && (g_InputMind->GetCharacter()->GetShip()->GetCurrentSystem()->IsLinkedToSystem(g_MapDialog->GetStarMapDisplay()->GetSelectedSystem()) == true))
+			if((g_InputMind.IsValid() == true) && (g_InputMind->GetCharacter() != 0) && (g_InputMind->GetCharacter()->GetShip() != 0))
 			{
-				g_InputMind->SelectLinkedSystem(g_MapDialog->GetStarMapDisplay()->GetSelectedSystem());
+				const System * CurrentSystem(dynamic_cast< System * >(g_InputMind->GetCharacter()->GetShip()->GetContainer()));
+				
+				assert(CurrentSystem != 0);
+				if(CurrentSystem->IsLinkedToSystem(g_MapDialog->GetStarMapDisplay()->GetSelectedSystem()) == true)
+				{
+					g_InputMind->SelectLinkedSystem(g_MapDialog->GetStarMapDisplay()->GetSelectedSystem());
+				}
 			}
 			g_MapDialog = 0;
 			g_Pause = false;
@@ -1062,7 +1073,6 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 	
 	NewShip->SetVelocity(Vector3f(Velocity[0], Velocity[1], 0.0f));
 	NewShip->SetFuel(NewShip->GetFuelCapacity());
-	NewShip->SetCurrentSystem(System);
 	
 	const ShipClass * ShipClass(g_ShipClassManager->Get(ShipClassIdentifier));
 	Storage * ShipStorage(dynamic_cast< Storage * >(g_ObjectFactory->Create("storage", "")));
@@ -1361,10 +1371,11 @@ void GameFrame(void)
 		TakeScreenShot();
 		g_TakeScreenShot = false;
 	}
-	if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0) && (g_CharacterObserver->GetObservedCharacter()->GetShip()->GetCurrentSystem() != g_CurrentSystem))
+	if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0) && (g_CharacterObserver->GetObservedCharacter()->GetShip()->GetContainer() != g_CurrentSystem))
 	{
 		OnOutputLeaveSystem(g_CurrentSystem);
-		g_CurrentSystem = g_CharacterObserver->GetObservedCharacter()->GetShip()->GetCurrentSystem();
+		g_CurrentSystem = dynamic_cast< System * >(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetContainer());
+		assert(g_CurrentSystem != 0);
 		OnOutputEnterSystem(g_CurrentSystem);
 		EmptySystem(CurrentSystem);
 		PopulateSystem(g_CurrentSystem);
@@ -1733,12 +1744,7 @@ void LoadGameFromElement(const Element * SaveElement)
 						assert(NewShip != 0);
 						for(std::vector< Element * >::const_iterator TypeSpecificChild = (*ObjectChild)->GetChilds().begin(); TypeSpecificChild != (*ObjectChild)->GetChilds().end(); ++TypeSpecificChild)
 						{
-							if((*TypeSpecificChild)->GetName() == "current-system")
-							{
-								assert((*TypeSpecificChild)->HasAttribute("object-identifier") == true);
-								// read in second pass
-							}
-							else if((*TypeSpecificChild)->GetName() == "exhaust-offset")
+							if((*TypeSpecificChild)->GetName() == "exhaust-offset")
 							{
 								assert((*TypeSpecificChild)->HasAttribute("x") == true);
 								assert((*TypeSpecificChild)->HasAttribute("y") == true);
@@ -1842,6 +1848,10 @@ void LoadGameFromElement(const Element * SaveElement)
 			throw std::runtime_error("The \"save\" element contains an unidentified child element \"" + (*SaveChild)->GetName() + "\".");
 		}
 	}
+	// this is a hack
+	assert(CurrentSystem.empty() == false);
+	g_CurrentSystem = g_Galaxy->GetSystem(CurrentSystem);
+	assert(g_CurrentSystem != 0);
 	// in the second pass we do a fast skip over the childs to resolve any object references
 	// no errors except resolving errors will be displayed
 	// at the moment this also resolves back references/containments
@@ -1934,21 +1944,12 @@ void LoadGameFromElement(const Element * SaveElement)
 					}
 					else if((*SaveChild)->GetAttribute("type-identifier") == "ship")
 					{
+						// the current system has been read in the first pass
+						// now we can place all the ships in the current system
 						Ship * TheShip(dynamic_cast< Ship * >(TheObject));
 						
 						assert(TheShip != 0);
-						for(std::vector< Element * >::const_iterator TypeSpecificChild = (*ObjectChild)->GetChilds().begin(); TypeSpecificChild != (*ObjectChild)->GetChilds().end(); ++TypeSpecificChild)
-						{
-							if((*TypeSpecificChild)->GetName() == "current-system")
-							{
-								Object * CurrentSystem(Object::GetObject((*TypeSpecificChild)->GetAttribute("object-identifier")));
-								
-								assert(CurrentSystem != 0);
-								assert(dynamic_cast< System * >(CurrentSystem) != 0);
-								TheShip->SetCurrentSystem(dynamic_cast< System * >(CurrentSystem));
-								dynamic_cast< System * >(CurrentSystem)->GetAspectObjectContainer()->AddContent(TheShip);
-							}
-						}
+						g_CurrentSystem->GetAspectObjectContainer()->AddContent(TheShip);
 					}
 				}
 			}
@@ -1983,9 +1984,6 @@ void LoadGameFromElement(const Element * SaveElement)
 			}
 		}
 	}
-	assert(CurrentSystem.empty() == false);
-	g_CurrentSystem = g_Galaxy->GetSystem(CurrentSystem);
-	assert(g_CurrentSystem != 0);
 	if(InputMindObjectIdentifier.empty() == false)
 	{
 		g_InputMind = Object::GetObject(InputMindObjectIdentifier)->GetReference();
@@ -2465,8 +2463,11 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 			{
 				if((g_MapDialog == 0) && (g_CharacterObserver->GetObservedCharacter().IsValid() == true))
 				{
+					System * CurrentSystem(dynamic_cast< System * >(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetContainer()));
+					
+					assert(CurrentSystem != 0);
 					g_Pause = true;
-					g_MapDialog = new MapDialog(g_UserInterface->GetRootWidget(), g_CharacterObserver->GetObservedCharacter()->GetShip()->GetCurrentSystem(), g_CharacterObserver->GetObservedCharacter().Get());
+					g_MapDialog = new MapDialog(g_UserInterface->GetRootWidget(), CurrentSystem, g_CharacterObserver->GetObservedCharacter().Get());
 					g_MapDialog->GrabKeyFocus();
 					g_MapDialog->AddDestroyListener(&g_GlobalDestroyListener);
 					if(g_InputMind.IsValid() == true)

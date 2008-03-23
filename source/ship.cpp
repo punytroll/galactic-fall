@@ -50,7 +50,6 @@
 Ship::Ship(const ShipClass * ShipClass) :
 	m_Accelerate(false),
 	m_CargoHold(0),
-	m_CurrentSystem(0),
 	m_Fuel(0.0f),
 	m_FuelCapacity(0.0f),
 	m_FuelNeededToJump(0.0f),
@@ -132,13 +131,12 @@ bool Ship::Update(float Seconds)
 	{
 		if((GetFuel() >= GetFuelNeededToJump()) && (GetLinkedSystemTarget() != 0))
 		{
-			System * OldSystem(GetCurrentSystem());
+			Object * OldSystem(GetContainer());
 			System * NewSystem(GetLinkedSystemTarget());
 			
 			// remove the ship from the old system
 			assert(OldSystem->GetAspectObjectContainer() != 0);
 			OldSystem->GetAspectObjectContainer()->RemoveContent(this);
-			SetCurrentSystem(0);
 			SetFuel(GetFuel() - GetFuelNeededToJump());
 			
 			// set the ship's position according to the old system
@@ -149,7 +147,6 @@ bool Ship::Update(float Seconds)
 			m_Velocity = Direction * GetMaximumSpeed();
 			GetAspectPosition()->SetOrientation(Quaternion(GetRadians(Vector2f(Direction[0], Direction[1])), Quaternion::InitializeRotationZ));
 			// set up the ship in the new system
-			SetCurrentSystem(GetLinkedSystemTarget());
 			assert(NewSystem->GetAspectObjectContainer() != 0);
 			NewSystem->GetAspectObjectContainer()->AddContent(this);
 			assert(GetAspectObjectContainer() != 0);
@@ -325,8 +322,8 @@ bool Ship::Update(float Seconds)
 					
 					RotationAxis.Normalize();
 					TheCommodity->SetAngularVelocity(AxisAngle(RotationAxis[0], RotationAxis[1], RotationAxis[2], GetRandomFloat(0.0f, 0.7f)));
-					assert(GetCurrentSystem()->GetAspectObjectContainer() != 0);
-					GetCurrentSystem()->GetAspectObjectContainer()->AddContent(TheCommodity);
+					assert(GetContainer()->GetAspectObjectContainer() != 0);
+					GetContainer()->GetAspectObjectContainer()->AddContent(TheCommodity);
 					VisualizeCommodity(TheCommodity, g_CommodityLayer);
 				}
 			}
@@ -338,9 +335,9 @@ bool Ship::Update(float Seconds)
 			
 			if((Target != 0) && (Target->GetTypeIdentifier() == "commodity"))
 			{
-				assert(GetCurrentSystem()->GetAspectObjectContainer() != 0);
+				assert(GetContainer()->GetAspectObjectContainer() != 0);
 				// the following is a typical occasion of bad practise: a transaction would be great here
-				if(GetCurrentSystem()->GetAspectObjectContainer()->RemoveContent(Target) == true)
+				if(GetContainer()->GetAspectObjectContainer()->RemoveContent(Target) == true)
 				{
 					assert(GetCargoHold() != 0);
 					assert(GetCargoHold()->GetAspectObjectContainer() != 0);
@@ -354,7 +351,7 @@ bool Ship::Update(float Seconds)
 					}
 					else
 					{
-						GetCurrentSystem()->GetAspectObjectContainer()->AddContent(Target);
+						GetContainer()->GetAspectObjectContainer()->AddContent(Target);
 					}
 				}
 			}

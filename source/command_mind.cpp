@@ -154,7 +154,11 @@ void CommandMind::SelectNextLinkedSystem(void)
 	assert(GetCharacter() != 0);
 	assert(GetCharacter()->GetShip() != 0);
 	
-	const std::list< System * > & LinkedSystems(GetCharacter()->GetShip()->GetCurrentSystem()->GetLinkedSystems());
+	const System * CurrentSystem(dynamic_cast< System * >(GetCharacter()->GetShip()->GetContainer()));
+	
+	assert(CurrentSystem != 0);
+	
+	const std::list< System * > & LinkedSystems(CurrentSystem->GetLinkedSystems());
 	
 	if(GetCharacter()->GetShip()->GetLinkedSystemTarget() != 0)
 	{
@@ -198,7 +202,11 @@ void CommandMind::TargetPreviousCargo(void)
 	assert(GetCharacter() != 0);
 	assert(GetCharacter()->GetShip() != 0);
 	
-	const std::list< Commodity * > & Commodities(GetCharacter()->GetShip()->GetCurrentSystem()->GetCommodities());
+	const System * CurrentSystem(dynamic_cast< System * >(GetCharacter()->GetShip()->GetContainer()));
+	
+	assert(CurrentSystem != 0);
+	
+	const std::list< Commodity * > & Commodities(CurrentSystem->GetCommodities());
 	const Commodity * SelectedCommodity(dynamic_cast< const Commodity * >(GetCharacter()->GetShip()->GetTarget().Get()));
 	
 	if(SelectedCommodity == 0)
@@ -229,7 +237,11 @@ void CommandMind::TargetNearestCargo(void)
 	assert(GetCharacter() != 0);
 	assert(GetCharacter()->GetShip() != 0);
 	
-	const std::list< Commodity * > & Commodities(GetCharacter()->GetShip()->GetCurrentSystem()->GetCommodities());
+	const System * CurrentSystem(dynamic_cast< System * >(GetCharacter()->GetShip()->GetContainer()));
+	
+	assert(CurrentSystem != 0);
+	
+	const std::list< Commodity * > & Commodities(CurrentSystem->GetCommodities());
 	float MinimumDistance(0.0f);
 	Commodity * MinimumCargo(0);
 	
@@ -266,7 +278,11 @@ void CommandMind::TargetNextCargo(void)
 	assert(GetCharacter() != 0);
 	assert(GetCharacter()->GetShip() != 0);
 	
-	const std::list< Commodity * > & Commodities(GetCharacter()->GetShip()->GetCurrentSystem()->GetCommodities());
+	const System * CurrentSystem(dynamic_cast< System * >(GetCharacter()->GetShip()->GetContainer()));
+	
+	assert(CurrentSystem != 0);
+	
+	const std::list< Commodity * > & Commodities(CurrentSystem->GetCommodities());
 	const Commodity * SelectedCommodity(dynamic_cast< const Commodity * >(GetCharacter()->GetShip()->GetTarget().Get()));
 	
 	if(SelectedCommodity == 0)
@@ -304,7 +320,11 @@ void CommandMind::TargetPreviousPlanet(void)
 	assert(GetCharacter() != 0);
 	assert(GetCharacter()->GetShip() != 0);
 	
-	const std::vector< Planet * > & Planets(GetCharacter()->GetShip()->GetCurrentSystem()->GetPlanets());
+	const System * CurrentSystem(dynamic_cast< System * >(GetCharacter()->GetShip()->GetContainer()));
+	
+	assert(CurrentSystem != 0);
+	
+	const std::vector< Planet * > & Planets(CurrentSystem->GetPlanets());
 	const Planet * SelectedPlanet(dynamic_cast< const Planet * >(GetCharacter()->GetShip()->GetTarget().Get()));
 	
 	if(SelectedPlanet == 0)
@@ -332,7 +352,14 @@ void CommandMind::TargetPreviousPlanet(void)
 
 void CommandMind::TargetNearestPlanet(void)
 {
-	const std::vector< Planet * > & Planets(GetCharacter()->GetShip()->GetCurrentSystem()->GetPlanets());
+	assert(GetCharacter() != 0);
+	assert(GetCharacter()->GetShip() != 0);
+	
+	const System * CurrentSystem(dynamic_cast< System * >(GetCharacter()->GetShip()->GetContainer()));
+	
+	assert(CurrentSystem != 0);
+	
+	const std::vector< Planet * > & Planets(CurrentSystem->GetPlanets());
 	float MinimumDistance(0.0f);
 	Planet * MinimumPlanet(0);
 	
@@ -369,7 +396,11 @@ void CommandMind::TargetNextPlanet(void)
 	assert(GetCharacter() != 0);
 	assert(GetCharacter()->GetShip() != 0);
 	
-	const std::vector< Planet * > & Planets(GetCharacter()->GetShip()->GetCurrentSystem()->GetPlanets());
+	const System * CurrentSystem(dynamic_cast< System * >(GetCharacter()->GetShip()->GetContainer()));
+	
+	assert(CurrentSystem != 0);
+	
+	const std::vector< Planet * > & Planets(CurrentSystem->GetPlanets());
 	const Planet * SelectedPlanet(dynamic_cast< const Planet * >(GetCharacter()->GetShip()->GetTarget().Get()));
 	
 	if(SelectedPlanet == 0)
@@ -407,7 +438,11 @@ void CommandMind::TargetNextShip(void)
 	assert(GetCharacter() != 0);
 	assert(GetCharacter()->GetShip() != 0);
 	
-	const std::list< Ship * > & Ships(GetCharacter()->GetShip()->GetCurrentSystem()->GetShips());
+	const System * CurrentSystem(dynamic_cast< System * >(GetCharacter()->GetShip()->GetContainer()));
+	
+	assert(CurrentSystem != 0);
+	
+	const std::list< Ship * > & Ships(CurrentSystem->GetShips());
 	const Ship * SelectedShip(dynamic_cast< const Ship * >(GetCharacter()->GetShip()->GetTarget().Get()));
 	
 	if(SelectedShip == 0)
@@ -445,7 +480,11 @@ void CommandMind::TargetPreviousShip(void)
 	assert(GetCharacter() != 0);
 	assert(GetCharacter()->GetShip() != 0);
 	
-	const std::list< Ship * > & Ships(GetCharacter()->GetShip()->GetCurrentSystem()->GetShips());
+	const System * CurrentSystem(dynamic_cast< System * >(GetCharacter()->GetShip()->GetContainer()));
+	
+	assert(CurrentSystem != 0);
+	
+	const std::list< Ship * > & Ships(CurrentSystem->GetShips());
 	const Ship * SelectedShip(dynamic_cast< const Ship * >(GetCharacter()->GetShip()->GetTarget().Get()));
 	
 	if(SelectedShip == 0)

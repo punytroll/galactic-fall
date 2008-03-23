@@ -47,8 +47,6 @@ public:
 	// getters
 	Storage * GetCargoHold(void);
 	const Storage * GetCargoHold(void) const;
-	System * GetCurrentSystem(void);
-	const System * GetCurrentSystem(void) const;
 	Reference< Graphics::ParticleSystem > & GetEngineGlowParticleSystem(void);
 	const Vector3f & GetExhaustOffset(void) const;
 	float GetFuel(void) const;
@@ -67,7 +65,6 @@ public:
 	const Vector3f & GetVelocity(void) const;
 	// setters
 	void SetAccelerate(bool Accelerate);
-	void SetCurrentSystem(System * CurrentSystem);
 	void SetEngineGlowParticleSystem(Reference< Graphics::ParticleSystem > & EngineGlowParticleSystem);
 	void SetExhaustOffset(const Vector3f & ExhaustOffset);
 	void SetFire(bool Fire);
@@ -104,7 +101,6 @@ private:
 	// ship class
 	bool m_Accelerate;
 	Storage * m_CargoHold;
-	System * m_CurrentSystem;
 	Reference< Graphics::ParticleSystem > m_EngineGlowParticleSystem;
 	Vector3f m_ExhaustOffset;
 	float m_Fuel;
@@ -138,16 +134,6 @@ inline Storage * Ship::GetCargoHold(void)
 inline const Storage * Ship::GetCargoHold(void) const
 {
 	return m_CargoHold;
-}
-
-inline System * Ship::GetCurrentSystem(void)
-{
-	return m_CurrentSystem;
-}
-
-inline const System * Ship::GetCurrentSystem(void) const
-{
-	return m_CurrentSystem;
 }
 
 inline Reference< Graphics::ParticleSystem > & Ship::GetEngineGlowParticleSystem(void)
@@ -233,11 +219,6 @@ inline const Vector3f & Ship::GetVelocity(void) const
 inline void Ship::SetAccelerate(bool Accelerate)
 {
 	m_Accelerate = Accelerate;
-}
-
-inline void Ship::SetCurrentSystem(System * CurrentSystem)
-{
-	m_CurrentSystem = CurrentSystem;
 }
 
 inline void Ship::SetEngineGlowParticleSystem(Reference< Graphics::ParticleSystem > & EngineGlowParticleSystem)

@@ -154,7 +154,11 @@ TransporterPhase1::TransporterPhase1(StateMachineMind * Mind) :
 
 void TransporterPhase1::Enter(void)
 {
-	const std::vector< Planet * > & Planets(GetMind()->GetCharacter()->GetShip()->GetCurrentSystem()->GetPlanets());
+	const System * CurrentSystem(dynamic_cast< System * >(GetMind()->GetCharacter()->GetShip()->GetContainer()));
+	
+	assert(CurrentSystem != 0);
+	
+	const std::vector< Planet * > & Planets(CurrentSystem->GetPlanets());
 	
 	if(Planets.size() != 0)
 	{
@@ -379,7 +383,11 @@ TransporterPhase4::TransporterPhase4(StateMachineMind * Mind) :
 
 void TransporterPhase4::Enter(void)
 {
-	const std::list< System * > & Systems(GetMind()->GetCharacter()->GetShip()->GetCurrentSystem()->GetLinkedSystems());
+	const System * CurrentSystem(dynamic_cast< System * >(GetMind()->GetCharacter()->GetShip()->GetContainer()));
+	
+	assert(CurrentSystem != 0);
+	
+	const std::list< System * > & Systems(CurrentSystem->GetLinkedSystems());
 	
 	if(Systems.size() != 0)
 	{
@@ -390,7 +398,7 @@ void TransporterPhase4::Enter(void)
 			++SystemIterator;
 		}
 		GetMind()->GetCharacter()->GetShip()->SetLinkedSystemTarget(*SystemIterator);
-		m_JumpDirection = ((*SystemIterator)->GetAspectPosition()->GetPosition() - GetMind()->GetCharacter()->GetShip()->GetCurrentSystem()->GetAspectPosition()->GetPosition()).Normalize();
+		m_JumpDirection = ((*SystemIterator)->GetAspectPosition()->GetPosition() - GetMind()->GetCharacter()->GetShip()->GetContainer()->GetAspectPosition()->GetPosition()).Normalize();
 	}
 	else
 	{
@@ -446,7 +454,11 @@ Fight::Fight(StateMachineMind * Mind) :
 
 void Fight::Enter(void)
 {
-	const std::list< Ship * > & Ships(GetMind()->GetCharacter()->GetShip()->GetCurrentSystem()->GetShips());
+	const System * CurrentSystem(dynamic_cast< System * >(GetMind()->GetCharacter()->GetShip()->GetContainer()));
+	
+	assert(CurrentSystem != 0);
+	
+	const std::list< Ship * > & Ships(CurrentSystem->GetShips());
 	std::vector< Ship * > AttackPossibilities;
 	
 	for(std::list< Ship * >::const_iterator ShipIterator = Ships.begin(); ShipIterator != Ships.end(); ++ShipIterator)
@@ -509,7 +521,11 @@ ShootFarthestCargo::ShootFarthestCargo(StateMachineMind * Mind) :
 
 void ShootFarthestCargo::Enter(void)
 {
-	const std::list< Commodity * > & Commodities(GetMind()->GetCharacter()->GetShip()->GetCurrentSystem()->GetCommodities());
+	const System * CurrentSystem(dynamic_cast< System * >(GetMind()->GetCharacter()->GetShip()->GetContainer()));
+	
+	assert(CurrentSystem != 0);
+	
+	const std::list< Commodity * > & Commodities(CurrentSystem->GetCommodities());
 	float MaximumDistance(FLT_MIN);
 	Commodity * FarthestCommodity(0);
 	
@@ -608,7 +624,11 @@ RefuelPhase1::RefuelPhase1(StateMachineMind * Mind) :
 
 void RefuelPhase1::Enter(void)
 {
-	const std::vector< Planet * > & Planets(GetMind()->GetCharacter()->GetShip()->GetCurrentSystem()->GetPlanets());
+	const System * CurrentSystem(dynamic_cast< System * >(GetMind()->GetCharacter()->GetShip()->GetContainer()));
+	
+	assert(CurrentSystem != 0);
+	
+	const std::vector< Planet * > & Planets(CurrentSystem->GetPlanets());
 	float MinimumDistance(FLT_MAX);
 	Planet * NearestPlanet(0);
 	
