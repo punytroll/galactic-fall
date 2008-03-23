@@ -1647,7 +1647,7 @@ void LoadGameFromElement(const Element * SaveElement)
 							if((*TypeSpecificChild)->GetName() == "credits")
 							{
 								assert((*TypeSpecificChild)->HasAttribute("value") == true);
-								NewCharacter->SetCredits(from_string_cast< u4byte >((*TypeSpecificChild)->GetAttribute("value")));
+								NewCharacter->SetCredits(from_string_cast< unsigned_numeric >((*TypeSpecificChild)->GetAttribute("value")));
 							}
 							else if((*TypeSpecificChild)->GetName() == "map-knowledge")
 							{

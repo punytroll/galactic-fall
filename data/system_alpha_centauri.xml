@@ -69,7 +69,7 @@
 					<base-price-modifier>0.95</base-price-modifier>
 				</offered-asset-class>
 			</offered-asset-classes>
-			<landing-fee>64.0</landing-fee>
+			<landing-fee>64</landing-fee>
 		</planet>
 		<planet>
 			<identifier>hephant</identifier>
@@ -108,7 +108,7 @@
 					<base-price-modifier>1.03</base-price-modifier>
 				</offered-asset-class>
 			</offered-asset-classes>
-			<landing-fee>40.0</landing-fee>
+			<landing-fee>40</landing-fee>
 		</planet>
 	</planets>
 </system>

@@ -631,7 +631,7 @@ static void ReadSystem(Arxx::Reference & Reference)
 			NewPlanetAssetClass->SetBasePriceModifier(BasePriceModifier);
 		}
 		
-		float LandingFee;
+		u4byte LandingFee;
 		
 		Reader >> LandingFee;
 		NewPlanet->SetLandingFee(LandingFee);

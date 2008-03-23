@@ -46,7 +46,7 @@ public:
 	virtual ~Character(void);
 	// getters
 	Mind * GetActiveMind(void);
-	u4byte GetCredits(void) const;
+	unsigned_numeric GetCredits(void) const;
 	MapKnowledge * GetMapKnowledge(void);
 	const MapKnowledge * GetMapKnowledge(void) const;
 	Ship * GetShip(void);
@@ -54,13 +54,13 @@ public:
 	Threat * GetThreat(void);
 	const Threat * GetThreat(void) const;
 	// setters
-	void SetCredits(u4byte Credits);
+	void SetCredits(unsigned_numeric Credits);
 	void SetShip(Ship * Ship);
 	// modifiers
 	void Update(void);
-	void AddCredits(u4byte Credits);
+	void AddCredits(unsigned_numeric Credits);
 	void AddObserver(CharacterObserver * Reference);
-	bool RemoveCredits(u4byte Credits);
+	bool RemoveCredits(unsigned_numeric Credits);
 	void RemoveObserver(CharacterObserver * Reference);
 private:
 	bool AllowAdding(Object * Content);
@@ -69,7 +69,7 @@ private:
 	void OnRemoved(Object * Content);
 	std::deque< Mind * > m_Minds;
 	std::set< CharacterObserver * > m_Observers;
-	u4byte m_Credits;
+	unsigned_numeric m_Credits;
 	MapKnowledge * m_MapKnowledge;
 	Ship * m_Ship;
 	Threat * m_Threat;
@@ -92,7 +92,7 @@ inline std::set< Character * > & Character::GetCharacters(void)
 	return m_Characters;
 }
 
-inline u4byte Character::GetCredits(void) const
+inline unsigned_numeric Character::GetCredits(void) const
 {
 	return m_Credits;
 }
@@ -127,7 +127,7 @@ inline const Threat * Character::GetThreat(void) const
 	return m_Threat;
 }
 
-inline void Character::SetCredits(u4byte Credits)
+inline void Character::SetCredits(unsigned_numeric Credits)
 {
 	m_Credits = Credits;
 }
