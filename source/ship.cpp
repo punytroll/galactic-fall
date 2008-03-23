@@ -304,7 +304,7 @@ bool Ship::Update(float Seconds)
 			
 			std::set< Object * >::const_iterator ContentIterator(GetCargoHold()->GetAspectObjectContainer()->GetContent().begin());
 			
-			while(ContentIterator != GetAspectObjectContainer()->GetContent().end())
+			while(ContentIterator != GetCargoHold()->GetAspectObjectContainer()->GetContent().end())
 			{
 				Object * Content(*ContentIterator);
 				
