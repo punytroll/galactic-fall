@@ -45,12 +45,15 @@ void MiniMapDisplay::SetOwner(Reference< Ship > Owner)
 void MiniMapDisplay::DrawInViewport(void) const
 {
 	// draw mini map
-	if((m_Owner.IsValid() == true) && (m_Owner->GetCurrentSystem() != 0))
+	if(m_Owner.IsValid() == true)
 	{
+		const System * CurrentSystem(dynamic_cast< const System * >(m_Owner->GetContainer()));
 		
-		const std::vector< Planet * > & Planets(m_Owner->GetCurrentSystem()->GetPlanets());
-		const std::list< Ship * > & Ships(m_Owner->GetCurrentSystem()->GetShips());
-		const std::list< Commodity * > & Commodities(m_Owner->GetCurrentSystem()->GetCommodities());
+		assert(CurrentSystem != 0);
+		
+		const std::vector< Planet * > & Planets(CurrentSystem->GetPlanets());
+		const std::list< Ship * > & Ships(CurrentSystem->GetShips());
+		const std::list< Commodity * > & Commodities(CurrentSystem->GetCommodities());
 		
 		glBegin(GL_POINTS);
 		glColor3f(0.8f, 0.8f, 0.8f);

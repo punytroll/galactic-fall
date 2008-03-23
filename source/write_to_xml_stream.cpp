@@ -200,7 +200,6 @@ static void WriteShipToXMLStream(XMLStream & XMLStream, Ship * TheShip)
 	XMLStream << element << "maximum-speed" << attribute << "value" << value << TheShip->GetMaximumSpeed() << end;
 	XMLStream << element << "maximum-turn-speed" << attribute << "value" << value << TheShip->GetMaximumTurnSpeed() << end;
 	// save current values
-	XMLStream << element << "current-system" << attribute << "object-identifier" << value << TheShip->GetCurrentSystem()->GetObjectIdentifier() << end;
 	XMLStream << element << "fuel" << attribute << "value" << value << TheShip->GetFuel() << end;
 	XMLStream << element << "hull" << attribute << "value" << value << TheShip->GetHull() << end;
 	XMLStream << element << "velocity" << attribute << "x" << value << TheShip->GetVelocity()[0] << attribute << "y" << value << TheShip->GetVelocity()[1] << attribute << "z" << value << TheShip->GetVelocity()[2] << end;

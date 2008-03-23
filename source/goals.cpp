@@ -379,7 +379,11 @@ void GoalFlyInSystemDirection::Activate(void)
 	m_FlyInDirection = new GoalFlyInDirection(GetMind());
 	AddSubGoal(m_FlyInDirection);
 	m_FlyInDirection->Activate();
-	m_FlyInDirection->SetDirection((GetMind()->GetCharacter()->GetShip()->GetLinkedSystemTarget()->GetAspectPosition()->GetPosition() - GetMind()->GetCharacter()->GetShip()->GetCurrentSystem()->GetAspectPosition()->GetPosition()).Normalize());
+	
+	const System * CurrentSystem(dynamic_cast< System * >(GetMind()->GetCharacter()->GetShip()->GetContainer()));
+	
+	assert(CurrentSystem != 0);
+	m_FlyInDirection->SetDirection((GetMind()->GetCharacter()->GetShip()->GetLinkedSystemTarget()->GetAspectPosition()->GetPosition() - CurrentSystem->GetAspectPosition()->GetPosition()).Normalize());
 	SetState(Goal::ACTIVE);
 }
 
@@ -747,7 +751,11 @@ void GoalSelectFighter::Process(void)
 {
 	assert(GetState() == Goal::ACTIVE);
 	
-	const std::list< Ship * > & Ships(GetMind()->GetCharacter()->GetShip()->GetCurrentSystem()->GetShips());
+	const System * CurrentSystem(dynamic_cast< System * >(GetMind()->GetCharacter()->GetShip()->GetContainer()));
+	
+	assert(CurrentSystem != 0);
+	
+	const std::list< Ship * > & Ships(CurrentSystem->GetShips());
 	std::vector< Ship * > AttackPossibilities;
 	
 	for(std::list< Ship * >::const_iterator ShipIterator = Ships.begin(); ShipIterator != Ships.end(); ++ShipIterator)
@@ -787,7 +795,11 @@ void GoalSelectMeasuredCargo::Process(void)
 {
 	assert(GetState() == Goal::ACTIVE);
 	
-	const std::list< Commodity * > & Commodities(GetMind()->GetCharacter()->GetShip()->GetCurrentSystem()->GetCommodities());
+	const System * CurrentSystem(dynamic_cast< System * >(GetMind()->GetCharacter()->GetShip()->GetContainer()));
+	
+	assert(CurrentSystem != 0);
+	
+	const std::list< Commodity * > & Commodities(CurrentSystem->GetCommodities());
 	float MinimumCost(FLT_MAX);
 	Commodity * MinimumCostCommodity(0);
 	
@@ -833,7 +845,11 @@ void GoalSelectNearestPlanetInSystem::Process(void)
 {
 	assert(GetState() == Goal::ACTIVE);
 	
-	const std::vector< Planet * > & Planets(GetMind()->GetCharacter()->GetShip()->GetCurrentSystem()->GetPlanets());
+	const System * CurrentSystem(dynamic_cast< System * >(GetMind()->GetCharacter()->GetShip()->GetContainer()));
+	
+	assert(CurrentSystem != 0);
+	
+	const std::vector< Planet * > & Planets(CurrentSystem->GetPlanets());
 	float MinimumDistance(FLT_MAX);
 	Planet * NearestPlanet(0);
 	
@@ -878,7 +894,11 @@ void GoalSelectRandomSystem::Process(void)
 	assert(GetState() == Goal::ACTIVE);
 	assert(GetSubGoals().empty() == true);
 	
-	const std::list< System * > & Systems(GetMind()->GetCharacter()->GetShip()->GetCurrentSystem()->GetLinkedSystems());
+	const System * CurrentSystem(dynamic_cast< System * >(GetMind()->GetCharacter()->GetShip()->GetContainer()));
+	
+	assert(CurrentSystem != 0);
+	
+	const std::list< System * > & Systems(CurrentSystem->GetLinkedSystems());
 	
 	if(Systems.size() != 0)
 	{
@@ -916,7 +936,11 @@ void GoalSelectStrandedShip::Process(void)
 {
 	assert(GetState() == Goal::ACTIVE);
 	
-	const std::list< Ship * > & Ships(GetMind()->GetCharacter()->GetShip()->GetCurrentSystem()->GetShips());
+	const System * CurrentSystem(dynamic_cast< System * >(GetMind()->GetCharacter()->GetShip()->GetContainer()));
+	
+	assert(CurrentSystem != 0);
+	
+	const std::list< Ship * > & Ships(CurrentSystem->GetShips());
 	std::vector< Ship * > AttackPossibilities;
 	
 	for(std::list< Ship * >::const_iterator ShipIterator = Ships.begin(); ShipIterator != Ships.end(); ++ShipIterator)
