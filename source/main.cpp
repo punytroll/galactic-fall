@@ -1098,7 +1098,7 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 	else if(ShipClassIdentifier == "transporter")
 	{
 		NewCharacter->SetCredits(GetRandomU4Byte(500, 2500));
-		for(int NumberOfAssetClasses = static_cast< int >(GetRandomFloatFromExponentialDistribution(2)); NumberOfAssetClasses > 0; --NumberOfAssetClasses)
+		for(int NumberOfAssetClasses = GetRandomIntegerFromExponentialDistribution(2); NumberOfAssetClasses > 0; --NumberOfAssetClasses)
 		{
 			const std::map< std::string, AssetClass * > & AssetClasses(g_AssetClassManager->GetClasses());
 			std::map< std::string, AssetClass * >::const_iterator AssetClassIterator(AssetClasses.begin());
