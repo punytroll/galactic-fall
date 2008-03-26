@@ -33,6 +33,7 @@
 #include "planet.h"
 #include "ship.h"
 #include "shot.h"
+#include "slot.h"
 #include "storage.h"
 #include "weapon.h"
 #include "weapon_class.h"
@@ -81,10 +82,39 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 	else if(TypeIdentifier == "ship")
 	{
 		const ShipClass * ShipClass(g_ShipClassManager->Get(ClassIdentifier));
+		Ship * NewShip(new Ship());
 		
-		Result = new Ship(ShipClass);
-		assert(Result->GetAspectVisualization() != 0);
-		Result->GetAspectVisualization()->SetVisualizationPrototype(ShipClass->GetVisualizationPrototype());
+		// set up type specific things
+		NewShip->SetExhaustOffset(ShipClass->GetExhaustOffset());
+		NewShip->SetExhaustRadius(ShipClass->GetExhaustRadius());
+		NewShip->SetFuelCapacity(ShipClass->GetFuelHoldSize());
+		NewShip->SetFuelNeededToAccelerate(ShipClass->GetForwardFuel());
+		NewShip->SetFuelNeededToJump(ShipClass->GetJumpFuel());
+		NewShip->SetFuelNeededToTurn(ShipClass->GetTurnFuel());
+		NewShip->SetHullCapacity(ShipClass->GetHull());
+		NewShip->SetMaximumForwardThrust(ShipClass->GetForwardThrust());
+		NewShip->SetMaximumSpeed(ShipClass->GetMaximumSpeed());
+		NewShip->SetMaximumTurnSpeed(ShipClass->GetTurnSpeed());
+		
+		// set up slots
+		const std::map< std::string, Slot * > & ShipClassSlots(ShipClass->GetSlots());
+		
+		for(std::map< std::string, Slot * >::const_iterator SlotIterator = ShipClassSlots.begin(); SlotIterator != ShipClassSlots.end(); ++SlotIterator)
+		{
+			Slot * NewSlot(NewShip->CreateSlot(SlotIterator->second->GetSlotClass(), SlotIterator->first));
+			
+			NewSlot->SetName(SlotIterator->second->GetName());
+			NewSlot->SetPosition(SlotIterator->second->GetPosition());
+			NewSlot->SetOrientation(SlotIterator->second->GetOrientation());
+		}
+		// set up aspects
+		// set up physical aspect
+		assert(NewShip->GetAspectPhysical() != 0);
+		NewShip->GetAspectPhysical()->SetRadialSize(ShipClass->GetVisualizationPrototype()->GetModel()->GetRadialSize());
+		// set up visualization aspect
+		assert(NewShip->GetAspectVisualization() != 0);
+		NewShip->GetAspectVisualization()->SetVisualizationPrototype(ShipClass->GetVisualizationPrototype());
+		Result = NewShip;
 	}
 	else if(TypeIdentifier == "shot")
 	{

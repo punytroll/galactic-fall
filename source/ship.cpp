@@ -18,12 +18,9 @@
 **/
 
 #include "character.h"
-#include "color.h"
 #include "commodity.h"
-#include "commodity_class.h"
 #include "game_time.h"
 #include "globals.h"
-#include "graphics_model.h"
 #include "graphics_particle_system.h"
 #include "map_knowledge.h"
 #include "math.h"
@@ -31,28 +28,27 @@
 #include "message_dispatcher.h"
 #include "object_aspect_accessory.h"
 #include "object_aspect_object_container.h"
-#include "object_aspect_physical.h"
 #include "object_aspect_position.h"
 #include "object_aspect_update.h"
 #include "object_aspect_visualization.h"
 #include "planet.h"
 #include "ship.h"
-#include "shot.h"
 #include "slot.h"
 #include "slot_class.h"
 #include "storage.h"
 #include "system.h"
-#include "visualization_prototype.h"
 #include "visualizations.h"
 #include "weapon.h"
-#include "weapon_class.h"
 
-Ship::Ship(const ShipClass * ShipClass) :
+Ship::Ship(void) :
 	m_Accelerate(false),
 	m_CargoHold(0),
+	m_ExhaustRadius(0.0f),
 	m_Fuel(0.0f),
 	m_FuelCapacity(0.0f),
+	m_FuelNeededToAccelerate(0.0f),
 	m_FuelNeededToJump(0.0f),
+	m_FuelNeededToTurn(0.0f),
 	m_Hull(0.0f),
 	m_HullCapacity(0.0f),
 	m_Jettison(false),
@@ -64,7 +60,6 @@ Ship::Ship(const ShipClass * ShipClass) :
 	m_MaximumTurnSpeed(0.0f),
 	m_Refuel(false),
 	m_Scoop(false),
-	m_ShipClass(ShipClass),
 	m_TakeOff(false),
 	m_TurnLeft(0.0f),
 	m_TurnRight(0.0f),
@@ -76,30 +71,10 @@ Ship::Ship(const ShipClass * ShipClass) :
 	GetAspectObjectContainer()->SetOnAddedCallback(Method(this, &Ship::OnAdded));
 	GetAspectObjectContainer()->SetOnRemovedCallback(Method(this, &Ship::OnRemoved));
 	AddAspectPhysical();
-	GetAspectPhysical()->SetRadialSize(ShipClass->GetVisualizationPrototype()->GetModel()->GetRadialSize());
 	AddAspectPosition();
 	AddAspectUpdate();
 	GetAspectUpdate()->SetCallback(Method(this, &Ship::Update));
 	AddAspectVisualization();
-	// set maximum & capacity values
-	SetExhaustOffset(ShipClass->GetExhaustOffset());
-	SetFuelCapacity(ShipClass->GetFuelHoldSize());
-	SetFuelNeededToJump(ShipClass->GetJumpFuel());
-	SetHullCapacity(ShipClass->GetHull());
-	SetMaximumForwardThrust(ShipClass->GetForwardThrust());
-	SetMaximumSpeed(ShipClass->GetMaximumSpeed());
-	SetMaximumTurnSpeed(ShipClass->GetTurnSpeed());
-	
-	const std::map< std::string, Slot * > & ShipClassSlots(ShipClass->GetSlots());
-	
-	for(std::map< std::string, Slot * >::const_iterator SlotIterator = ShipClassSlots.begin(); SlotIterator != ShipClassSlots.end(); ++SlotIterator)
-	{
-		Slot * NewSlot(CreateSlot(SlotIterator->second->GetSlotClass(), SlotIterator->first));
-		
-		NewSlot->SetName(SlotIterator->second->GetName());
-		NewSlot->SetPosition(SlotIterator->second->GetPosition());
-		NewSlot->SetOrientation(SlotIterator->second->GetOrientation());
-	}
 }
 
 Ship::~Ship(void)
@@ -227,7 +202,7 @@ bool Ship::Update(float Seconds)
 		}
 		if(m_TurnLeft > 0.0f)
 		{
-			float FuelConsumption(m_ShipClass->GetTurnFuel() * Seconds * m_TurnLeft);
+			float FuelConsumption(GetFuelNeededToTurn() * Seconds * m_TurnLeft);
 			
 			if(GetFuel() >= FuelConsumption)
 			{
@@ -237,7 +212,7 @@ bool Ship::Update(float Seconds)
 		}
 		if(m_TurnRight > 0.0f)
 		{
-			float FuelConsumption(m_ShipClass->GetTurnFuel() * Seconds * m_TurnRight);
+			float FuelConsumption(GetFuelNeededToTurn() * Seconds * m_TurnRight);
 			
 			if(GetFuel() >= FuelConsumption)
 			{
@@ -248,7 +223,7 @@ bool Ship::Update(float Seconds)
 		GetAspectPosition()->ModifyPosition(m_Velocity * Seconds);
 		if(m_Accelerate == true)
 		{
-			float FuelConsumption(m_ShipClass->GetForwardFuel() * Seconds);
+			float FuelConsumption(GetFuelNeededToAccelerate() * Seconds);
 			
 			if(GetFuel() >= FuelConsumption)
 			{
@@ -284,8 +259,8 @@ bool Ship::Update(float Seconds)
 							Y = GetRandomFloat(-1.0f, 1.0f);
 						} while(X * X + Y * Y >= 1.0f);
 						VelocityFactor = 1 - X * X - Y * Y;
-						X *= m_ShipClass->GetExhaustRadius();
-						Y *= m_ShipClass->GetExhaustRadius();
+						X *= GetExhaustRadius();
+						Y *= GetExhaustRadius();
 						Particle.m_Position = Vector3f(0.0f, X, Y);
 						Particle.m_Velocity = Vector3f(GetRandomFloat(-0.3f * VelocityFactor, 0.0f), 0.0f, 0.0f);
 						Particle.m_Size = 0.2f;
