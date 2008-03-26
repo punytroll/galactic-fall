@@ -2868,7 +2868,7 @@ void ProcessEvents(void)
 				
 				if(g_EchoEvents == true)
 				{
-					std::cout << "KeyEvent:       state=" << Event.xkey.state << "   keycode=" << KeyEventInformation.GetKeyCode() << "   string=" << KeyEventInformation.GetString() << "  [length=" << KeyEventInformation.GetString().length() << "]   keysym=" << KeyEventInformation.GetKeySymbol() << std::endl;
+					std::cout << "KeyEvent:       key_state=" << ((KeyEventInformation.IsDown() == true) ? ("down") : ((KeyEventInformation.IsUp() == true) ? ("up  ") : ("unknown"))) << "   modifier_state=" << Event.xkey.state << "   key_code=" << KeyEventInformation.GetKeyCode() << "   string='" << KeyEventInformation.GetString() << "'  string.length=" << KeyEventInformation.GetString().length() << "   key_symbol=" << KeyEventInformation.GetKeySymbol() << std::endl;
 				}
 				KeyEvent(KeyEventInformation);
 				
