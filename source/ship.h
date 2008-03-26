@@ -23,16 +23,13 @@
 #include <map>
 #include <vector>
 
-#include "math/vector2f.h"
+#include "math/vector3f.h"
 #include "object.h"
-#include "ship_class.h"
-#include "type_definitions.h"
 
-class ShipClass;
+class Slot;
 class SlotClass;
 class Storage;
 class System;
-class Weapon;
 
 namespace Graphics
 {
