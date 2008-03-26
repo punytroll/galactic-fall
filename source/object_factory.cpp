@@ -32,6 +32,7 @@
 #include "object_factory.h"
 #include "planet.h"
 #include "ship.h"
+#include "ship_class.h"
 #include "shot.h"
 #include "slot.h"
 #include "storage.h"
