@@ -42,16 +42,19 @@ namespace Graphics
 class Ship : public Object
 {
 public:
-	Ship(const ShipClass * ShipClass);
+	Ship(void);
 	virtual ~Ship(void);
 	// getters
 	Storage * GetCargoHold(void);
 	const Storage * GetCargoHold(void) const;
 	Reference< Graphics::ParticleSystem > & GetEngineGlowParticleSystem(void);
 	const Vector3f & GetExhaustOffset(void) const;
+	float GetExhaustRadius(void) const;
 	float GetFuel(void) const;
 	float GetFuelCapacity(void) const;
+	float GetFuelNeededToAccelerate(void) const;
 	float GetFuelNeededToJump(void) const;
+	float GetFuelNeededToTurn(void) const;
 	float GetHull(void) const;
 	float GetHullCapacity(void) const;
 	System * GetLinkedSystemTarget(void);
@@ -67,10 +70,13 @@ public:
 	void SetAccelerate(bool Accelerate);
 	void SetEngineGlowParticleSystem(Reference< Graphics::ParticleSystem > & EngineGlowParticleSystem);
 	void SetExhaustOffset(const Vector3f & ExhaustOffset);
+	void SetExhaustRadius(float ExhaustRadius);
 	void SetFire(bool Fire);
 	void SetFuel(float Fuel);
 	void SetFuelCapacity(float FuelCapacity);
+	void SetFuelNeededToAccelerate(float FuelNeededToAccelerate);
 	void SetFuelNeededToJump(float FuelNeededToJump);
+	void SetFuelNeededToTurn(float FuelNeededToTurn);
 	void SetHull(float Hull);
 	void SetHullCapacity(float HullCapacity);
 	void SetJettison(bool Jettison);
@@ -103,9 +109,12 @@ private:
 	Storage * m_CargoHold;
 	Reference< Graphics::ParticleSystem > m_EngineGlowParticleSystem;
 	Vector3f m_ExhaustOffset;
+	float m_ExhaustRadius;
 	float m_Fuel;
 	float m_FuelCapacity;
+	float m_FuelNeededToAccelerate;
 	float m_FuelNeededToJump;
+	float m_FuelNeededToTurn;
 	float m_Hull;
 	float m_HullCapacity;
 	bool m_Jettison;
@@ -117,7 +126,6 @@ private:
 	float m_MaximumTurnSpeed;
 	bool m_Refuel;
 	bool m_Scoop;
-	const ShipClass * m_ShipClass;
 	std::map< std::string, Slot * > m_Slots;
 	bool m_TakeOff;
 	Reference< Object > m_Target;
@@ -146,6 +154,11 @@ inline const Vector3f & Ship::GetExhaustOffset(void) const
 	return m_ExhaustOffset;
 }
 
+inline float Ship::GetExhaustRadius(void) const
+{
+	return m_ExhaustRadius;
+}
+
 inline float Ship::GetFuel(void) const
 {
 	return m_Fuel;
@@ -156,9 +169,19 @@ inline float Ship::GetFuelCapacity(void) const
 	return m_FuelCapacity;
 }
 
+inline float Ship::GetFuelNeededToAccelerate(void) const
+{
+	return m_FuelNeededToAccelerate;
+}
+
 inline float Ship::GetFuelNeededToJump(void) const
 {
 	return m_FuelNeededToJump;
+}
+
+inline float Ship::GetFuelNeededToTurn(void) const
+{
+	return m_FuelNeededToTurn;
 }
 
 inline float Ship::GetHull(void) const
@@ -231,14 +254,29 @@ inline void Ship::SetExhaustOffset(const Vector3f & ExhaustOffset)
 	m_ExhaustOffset = ExhaustOffset;
 }
 
+inline void Ship::SetExhaustRadius(float ExhaustRadius)
+{
+	m_ExhaustRadius = ExhaustRadius;
+}
+
 inline void Ship::SetFuelCapacity(float FuelCapacity)
 {
 	m_FuelCapacity = FuelCapacity;
 }
 
+inline void Ship::SetFuelNeededToAccelerate(float FuelNeededToAccelerate)
+{
+	m_FuelNeededToAccelerate = FuelNeededToAccelerate;
+}
+
 inline void Ship::SetFuelNeededToJump(float FuelNeededToJump)
 {
 	m_FuelNeededToJump = FuelNeededToJump;
+}
+
+inline void Ship::SetFuelNeededToTurn(float FuelNeededToTurn)
+{
+	m_FuelNeededToTurn = FuelNeededToTurn;
 }
 
 inline void Ship::SetHullCapacity(float HullCapacity)

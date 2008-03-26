@@ -706,7 +706,7 @@ object_aspect_update.o: object_aspect_update.cpp $(object_aspect_update_h)
 object_aspect_visualization.o: object_aspect_visualization.cpp $(object_aspect_visualization_h) $(visualizations_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-object_factory.o: object_factory.cpp $(character_h) $(class_manager_h) $(command_mind_h) $(commodity_h) $(commodity_class_h) $(globals_h) $(graphics_model_h) $(object_aspect_name_h) $(object_aspect_physical_h) $(object_aspect_visualization_h) $(object_factory_h) $(planet_h) $(ship_h) $(shot_h) $(storage_h) $(weapon_h) $(weapon_class_h) $(visualization_prototype_h)
+object_factory.o: object_factory.cpp $(character_h) $(class_manager_h) $(command_mind_h) $(commodity_h) $(commodity_class_h) $(globals_h) $(graphics_model_h) $(object_aspect_name_h) $(object_aspect_physical_h) $(object_aspect_visualization_h) $(object_factory_h) $(planet_h) $(ship_h) $(shot_h) $(slot_h) $(storage_h) $(weapon_h) $(weapon_class_h) $(visualization_prototype_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 outfit_ship_dialog.o: outfit_ship_dialog.cpp $(button_h) $(class_manager_h) $(color_h) $(globals_h) $(key_event_information_h) $(label_h) $(object_aspect_accessory_h) $(object_aspect_name_h) $(object_aspect_object_container_h) $(object_aspect_physical_h) $(outfit_ship_dialog_h) $(scroll_box_h) $(ship_h) $(slot_h) $(slot_class_h) $(storage_h) $(weapon_h) $(weapon_class_h)
@@ -742,7 +742,7 @@ scroll_box.o: scroll_box.cpp $(color_h) $(scroll_box_h)
 scroll_position_changed_listener.o: scroll_position_changed_listener.cpp $(scroll_position_changed_listener_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-ship.o: ship.cpp $(commodity_h) $(character_h) $(color_h) $(commodity_class_h) $(game_time_h) $(globals_h) $(graphics_model_h) $(graphics_particle_system_h) $(map_knowledge_h) $(math_h) $(message_h) $(message_dispatcher_h) $(object_aspect_accessory_h) $(object_aspect_object_container_h) $(object_aspect_physical_h) $(object_aspect_position_h) $(object_aspect_update_h) $(object_aspect_visualization_h) $(planet_h) $(ship_h) $(shot_h) $(slot_h) $(slot_class_h) $(storage_h) $(system_h) $(visualization_prototype_h) $(visualizations_h) $(weapon_h) $(weapon_class_h)
+ship.o: ship.cpp $(character_h) $(commodity_h) $(game_time_h) $(globals_h) $(graphics_particle_system_h) $(map_knowledge_h) $(math_h) $(message_h) $(message_dispatcher_h) $(object_aspect_accessory_h) $(object_aspect_object_container_h) $(object_aspect_position_h) $(object_aspect_update_h) $(object_aspect_visualization_h) $(planet_h) $(ship_h) $(slot_h) $(slot_class_h) $(storage_h) $(system_h) $(visualizations_h) $(weapon_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 ship_class.o: ship_class.cpp $(color_h) $(graphics_material_h) $(ship_class_h) $(slot_h) $(visualization_prototype_h)
