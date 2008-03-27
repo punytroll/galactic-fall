@@ -449,11 +449,11 @@ static void ReadShipClass(Arxx::Reference & Reference)
 	NewShipClass->AddVisualizationPrototype();
 	ReadVisualizationPrototype(Reader, NewShipClass->GetVisualizationPrototype());
 	
+	float FuelCapacity;
 	float ForwardThrust;
 	float TurnSpeed;
 	float MaximumSpeed;
 	float MaximumAvailableSpace;
-	float FuelHoldSize;
 	float JumpFuel;
 	float ForwardFuel;
 	float TurnFuel;
@@ -462,9 +462,9 @@ static void ReadShipClass(Arxx::Reference & Reference)
 	float ExhaustRadius;
 	Arxx::u4byte SlotCount;
 	
-	Reader >> ForwardThrust >> TurnSpeed >> MaximumSpeed >> MaximumAvailableSpace >> FuelHoldSize >> JumpFuel >> ForwardFuel >> TurnFuel >> Hull >> ExhaustOffset >> ExhaustRadius >> SlotCount;
+	Reader >> ForwardThrust >> TurnSpeed >> MaximumSpeed >> MaximumAvailableSpace >> FuelCapacity >> JumpFuel >> ForwardFuel >> TurnFuel >> Hull >> ExhaustOffset >> ExhaustRadius >> SlotCount;
+	NewShipClass->SetFuelCapacity(FuelCapacity);
 	NewShipClass->SetForwardThrust(ForwardThrust);
-	NewShipClass->SetFuelHoldSize(FuelHoldSize);
 	NewShipClass->SetJumpFuel(JumpFuel);
 	NewShipClass->SetMaximumSpeed(MaximumSpeed);
 	NewShipClass->SetMaximumAvailableSpace(static_cast< unsigned_numeric >(1000 * MaximumAvailableSpace));
