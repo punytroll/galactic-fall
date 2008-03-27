@@ -24,6 +24,7 @@
 Galaxy::Galaxy(void)
 {
 	// initialize object aspects
+	AddAspectName();
 	AddAspectObjectContainer();
 	GetAspectObjectContainer()->SetAllowAddingCallback(Method(this, &Galaxy::AllowAdding));
 	GetAspectObjectContainer()->SetAllowRemovingCallback(Method(this, &Galaxy::AllowRemoving));
