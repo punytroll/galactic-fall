@@ -20,6 +20,7 @@
 #include "button.h"
 #include "label.h"
 #include "object.h"
+#include "object_aspect_name.h"
 #include "object_information_dialog.h"
 #include "scroll_box.h"
 
@@ -105,28 +106,43 @@ void ObjectInformationDialog::Refresh(void)
 	{
 		m_PropertiesScrollBox->GetContent()->GetSubWidgets().front()->Destroy();
 	}
+	
+	float Top(0.0f);
+	
 	// fill the properties view
 	if(m_Object.IsValid() == true)
 	{
 		PropertyDisplay * TypeDisplay(new PropertyDisplay(m_PropertiesScrollBox->GetContent(), "Type", m_Object->GetTypeIdentifier()));
 		
-		TypeDisplay->SetPosition(Vector2f(10.0f, 0.0f));
+		TypeDisplay->SetPosition(Vector2f(10.0f, Top));
 		TypeDisplay->SetSize(Vector2f(m_PropertiesScrollBox->GetContent()->GetSize()[0] - 20.0f, 20.0f));
 		TypeDisplay->SetAnchorRight(true);
+		Top += 20.0f;
 		
 		PropertyDisplay * ClassDisplay(new PropertyDisplay(m_PropertiesScrollBox->GetContent(), "Class", m_Object->GetClassIdentifier()));
 		
-		ClassDisplay->SetPosition(Vector2f(10.0f, 20.0f));
+		ClassDisplay->SetPosition(Vector2f(10.0f, Top));
 		ClassDisplay->SetSize(Vector2f(m_PropertiesScrollBox->GetContent()->GetSize()[0] - 20.0f, 20.0f));
 		ClassDisplay->SetAnchorRight(true);
+		Top += 20.0f;
 		
 		PropertyDisplay * IdentifierDisplay(new PropertyDisplay(m_PropertiesScrollBox->GetContent(), "Identifier", m_Object->GetObjectIdentifier()));
 		
-		IdentifierDisplay->SetPosition(Vector2f(10.0f, 40.0f));
+		IdentifierDisplay->SetPosition(Vector2f(10.0f, Top));
 		IdentifierDisplay->SetSize(Vector2f(m_PropertiesScrollBox->GetContent()->GetSize()[0] - 20.0f, 20.0f));
 		IdentifierDisplay->SetAnchorRight(true);
+		Top += 20.0f;
+		if(m_Object->GetAspectName() != 0)
+		{
+			PropertyDisplay * NameDisplay(new PropertyDisplay(m_PropertiesScrollBox->GetContent(), "Name", m_Object->GetAspectName()->GetName()));
+			
+			NameDisplay->SetPosition(Vector2f(10.0f, Top));
+			NameDisplay->SetSize(Vector2f(m_PropertiesScrollBox->GetContent()->GetSize()[0] - 20.0f, 20.0f));
+			NameDisplay->SetAnchorRight(true);
+			Top += 20.0f;
+		}
 	}
-	m_PropertiesScrollBox->GetContent()->SetSize(Vector2f(m_PropertiesScrollBox->GetView()->GetSize()[0], std::max(60.0f, m_PropertiesScrollBox->GetView()->GetSize()[1])));
+	m_PropertiesScrollBox->GetContent()->SetSize(Vector2f(m_PropertiesScrollBox->GetView()->GetSize()[0], std::max(Top, m_PropertiesScrollBox->GetView()->GetSize()[1])));
 	m_PropertiesScrollBox->GetContent()->SetAnchorRight(true);
 }
 
