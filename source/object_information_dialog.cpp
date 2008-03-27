@@ -21,6 +21,7 @@
 #include "label.h"
 #include "object.h"
 #include "object_information_dialog.h"
+#include "scroll_box.h"
 
 class PropertyDisplay : public Widget
 {
@@ -37,13 +38,13 @@ PropertyDisplay::PropertyDisplay(Widget * SupWidget, const std::string & Propert
 	m_PropertyValueLabel(0)
 {
 	m_PropertyNameLabel = new Label(this, PropertyName + ":");
-	m_PropertyNameLabel->SetPosition(Vector2f(10.0f, 0.0f));
+	m_PropertyNameLabel->SetPosition(Vector2f(0.0f, 0.0f));
 	m_PropertyNameLabel->SetSize(Vector2f(6.0f * (PropertyName.length() + 1), 0.0f));
 	m_PropertyNameLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
 	m_PropertyNameLabel->SetAnchorBottom(true);
 	m_PropertyValueLabel = new Label(this, PropertyValue);
 	m_PropertyValueLabel->SetPosition(Vector2f(m_PropertyNameLabel->GetPosition()[0] + m_PropertyNameLabel->GetSize()[0], 0.0f));
-	m_PropertyValueLabel->SetSize(Vector2f(GetSize()[0] - m_PropertyNameLabel->GetPosition()[0] - m_PropertyNameLabel->GetSize()[0] - 10.0f, 0.0f));
+	m_PropertyValueLabel->SetSize(Vector2f(GetSize()[0] - m_PropertyNameLabel->GetPosition()[0] - m_PropertyNameLabel->GetSize()[0], 0.0f));
 	m_PropertyValueLabel->SetHorizontalAlignment(Label::ALIGN_RIGHT);
 	m_PropertyValueLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
 	m_PropertyValueLabel->SetAnchorRight(true);
@@ -73,24 +74,60 @@ ObjectInformationDialog::ObjectInformationDialog(Widget * SupWidget, const Refer
 	OKButtonLabel->SetSize(m_OKButton->GetSize());
 	OKButtonLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
 	OKButtonLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
+	m_PropertiesScrollBox = new ScrollBox(this);
+	m_PropertiesScrollBox->SetPosition(Vector2f(10.0f, 40.0f));
+	m_PropertiesScrollBox->SetSize(Vector2f(GetSize()[0] - 20.0f, GetSize()[1] - 80.0f));
+	m_PropertiesScrollBox->SetHorizontalScrollBarVisible(false);
+	m_PropertiesScrollBox->SetAnchorBottom(true);
+	m_PropertiesScrollBox->SetAnchorRight(true);
+	m_RefreshButton = new Button(this);
+	m_RefreshButton->SetSize(Vector2f(100.0f, 20.0f));
+	m_RefreshButton->SetPosition(Vector2f(m_OKButton->GetPosition()[0] - 10.0f - m_RefreshButton->GetSize()[0], GetSize()[1] - 10.0f - m_RefreshButton->GetSize()[1]));
+	m_RefreshButton->SetAnchorBottom(true);
+	m_RefreshButton->SetAnchorLeft(false);
+	m_RefreshButton->SetAnchorRight(true);
+	m_RefreshButton->SetAnchorTop(false);
+	m_RefreshButton->AddClickedListener(this);
 	
-	PropertyDisplay * TypeDisplay(new PropertyDisplay(this, "Type", m_Object->GetTypeIdentifier()));
+	Label * RefreshButtonLabel = new Label(m_RefreshButton, "Refresh");
 	
-	TypeDisplay->SetPosition(Vector2f(10.0f, 40.0f));
-	TypeDisplay->SetSize(Vector2f(GetSize()[0] - 20.0f, 20.0f));
-	TypeDisplay->SetAnchorRight(true);
-	
-	PropertyDisplay * ClassDisplay(new PropertyDisplay(this, "Class", m_Object->GetClassIdentifier()));
-	
-	ClassDisplay->SetPosition(Vector2f(10.0f, 60.0f));
-	ClassDisplay->SetSize(Vector2f(GetSize()[0] - 20.0f, 20.0f));
-	ClassDisplay->SetAnchorRight(true);
-	
-	PropertyDisplay * IdentifierDisplay(new PropertyDisplay(this, "Identifier", m_Object->GetObjectIdentifier()));
-	
-	IdentifierDisplay->SetPosition(Vector2f(10.0f, 80.0f));
-	IdentifierDisplay->SetSize(Vector2f(GetSize()[0] - 20.0f, 20.0f));
-	IdentifierDisplay->SetAnchorRight(true);
+	RefreshButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
+	RefreshButtonLabel->SetSize(m_RefreshButton->GetSize());
+	RefreshButtonLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
+	RefreshButtonLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
+	Refresh();
+}
+
+void ObjectInformationDialog::Refresh(void)
+{
+	// clear old properties
+	while(m_PropertiesScrollBox->GetContent()->GetSubWidgets().empty() == false)
+	{
+		m_PropertiesScrollBox->GetContent()->GetSubWidgets().front()->Destroy();
+	}
+	// fill the properties view
+	if(m_Object.IsValid() == true)
+	{
+		PropertyDisplay * TypeDisplay(new PropertyDisplay(m_PropertiesScrollBox->GetContent(), "Type", m_Object->GetTypeIdentifier()));
+		
+		TypeDisplay->SetPosition(Vector2f(10.0f, 0.0f));
+		TypeDisplay->SetSize(Vector2f(m_PropertiesScrollBox->GetContent()->GetSize()[0] - 20.0f, 20.0f));
+		TypeDisplay->SetAnchorRight(true);
+		
+		PropertyDisplay * ClassDisplay(new PropertyDisplay(m_PropertiesScrollBox->GetContent(), "Class", m_Object->GetClassIdentifier()));
+		
+		ClassDisplay->SetPosition(Vector2f(10.0f, 20.0f));
+		ClassDisplay->SetSize(Vector2f(m_PropertiesScrollBox->GetContent()->GetSize()[0] - 20.0f, 20.0f));
+		ClassDisplay->SetAnchorRight(true);
+		
+		PropertyDisplay * IdentifierDisplay(new PropertyDisplay(m_PropertiesScrollBox->GetContent(), "Identifier", m_Object->GetObjectIdentifier()));
+		
+		IdentifierDisplay->SetPosition(Vector2f(10.0f, 40.0f));
+		IdentifierDisplay->SetSize(Vector2f(m_PropertiesScrollBox->GetContent()->GetSize()[0] - 20.0f, 20.0f));
+		IdentifierDisplay->SetAnchorRight(true);
+	}
+	m_PropertiesScrollBox->GetContent()->SetSize(Vector2f(m_PropertiesScrollBox->GetView()->GetSize()[0], std::max(60.0f, m_PropertiesScrollBox->GetView()->GetSize()[1])));
+	m_PropertiesScrollBox->GetContent()->SetAnchorRight(true);
 }
 
 bool ObjectInformationDialog::OnClicked(Widget * EventSource)
@@ -98,6 +135,12 @@ bool ObjectInformationDialog::OnClicked(Widget * EventSource)
 	if(EventSource == m_OKButton)
 	{
 		Destroy();
+		
+		return true;
+	}
+	else if(EventSource == m_RefreshButton)
+	{
+		Refresh();
 		
 		return true;
 	}
