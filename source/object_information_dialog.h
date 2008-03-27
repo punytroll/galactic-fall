@@ -33,9 +33,11 @@ class ObjectInformationDialog : public ClickedListener, public WWindow
 public:
 	ObjectInformationDialog(Widget * SupWidget, const Reference< Object > & Object);
 private:
+	float AddObjectProperty(float Top, float Indentation, const Reference< Object > & Object);
 	float AddSeparator(float Top, float Indentation, const std::string & SeparatorName);
 	float AddStringProperty(float Top, float Indentation, const std::string & PropertyName, const std::string & PropertyValue);
-	bool OnClicked(Widget * EventSource);
+	virtual bool OnClicked(Widget * EventSource);
+	virtual bool OnMouseButton(Widget * EventSource, int Button, int State, float X, float Y);
 	void Refresh(void);
 private:
 	Reference< Object > m_Object;

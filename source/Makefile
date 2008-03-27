@@ -713,7 +713,7 @@ object_aspect_visualization.o: object_aspect_visualization.cpp $(object_aspect_v
 object_factory.o: object_factory.cpp $(character_h) $(class_manager_h) $(command_mind_h) $(commodity_h) $(commodity_class_h) $(globals_h) $(graphics_model_h) $(object_aspect_name_h) $(object_aspect_physical_h) $(object_aspect_visualization_h) $(object_factory_h) $(planet_h) $(ship_h) $(ship_class_h) $(shot_h) $(slot_h) $(storage_h) $(weapon_h) $(weapon_class_h) $(visualization_prototype_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-object_information_dialog.o: object_information_dialog.cpp $(button_h) $(label_h) $(object_h) $(object_aspect_name_h) $(object_aspect_object_container_h) $(object_information_dialog_h) $(scroll_box_h)
+object_information_dialog.o: object_information_dialog.cpp $(button_h) $(globals_h) $(label_h) $(object_h) $(object_aspect_name_h) $(object_aspect_object_container_h) $(object_information_dialog_h) $(scroll_bar_h) $(scroll_box_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 outfit_ship_dialog.o: outfit_ship_dialog.cpp $(button_h) $(class_manager_h) $(color_h) $(globals_h) $(key_event_information_h) $(label_h) $(object_aspect_accessory_h) $(object_aspect_name_h) $(object_aspect_object_container_h) $(object_aspect_physical_h) $(outfit_ship_dialog_h) $(scroll_box_h) $(ship_h) $(slot_h) $(slot_class_h) $(storage_h) $(weapon_h) $(weapon_class_h)

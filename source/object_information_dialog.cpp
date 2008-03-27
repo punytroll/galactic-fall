@@ -18,11 +18,13 @@
 **/
 
 #include "button.h"
+#include "globals.h"
 #include "label.h"
 #include "object.h"
 #include "object_aspect_name.h"
 #include "object_aspect_object_container.h"
 #include "object_information_dialog.h"
+#include "scroll_bar.h"
 #include "scroll_box.h"
 
 ObjectInformationDialog::ObjectInformationDialog(Widget * SupWidget, const Reference< Object > & Object) :
@@ -32,6 +34,7 @@ ObjectInformationDialog::ObjectInformationDialog(Widget * SupWidget, const Refer
 {
 	SetPosition(Vector2f(100.0f, 400.0f));
 	SetSize(Vector2f(500.0f, 300.0f));
+	AddMouseButtonListener(this);
 	// set up widgets
 	m_OKButton = new Button(this);
 	m_OKButton->SetSize(Vector2f(100.0f, 20.0f));
@@ -70,6 +73,31 @@ ObjectInformationDialog::ObjectInformationDialog(Widget * SupWidget, const Refer
 	RefreshButtonLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
 	RefreshButtonLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
 	Refresh();
+}
+
+float ObjectInformationDialog::AddObjectProperty(float Top, float Indentation, const Reference< Object > & Object)
+{
+	Widget * PropertyDisplay(new Widget(m_PropertiesScrollBox->GetContent()));
+	
+	PropertyDisplay->SetPosition(Vector2f(10.0f, Top));
+	PropertyDisplay->SetSize(Vector2f(m_PropertiesScrollBox->GetContent()->GetSize()[0] - 20.0f, 30.0f));
+	PropertyDisplay->SetAnchorRight(true);
+	
+	Button * ObjectButton(new Button(PropertyDisplay));
+	
+	ObjectButton->SetPosition(Vector2f(Indentation, 5.0f));
+	ObjectButton->SetSize(Vector2f(PropertyDisplay->GetSize()[0] - Indentation, 20.0f));
+	ObjectButton->SetAnchorRight(true);
+	ObjectButton->AddClickedListener(this);
+	
+	Label * ObjectButtonLabel(new Label(ObjectButton, Object->GetObjectIdentifier()));
+	
+	ObjectButtonLabel->SetPosition(Vector2f(Indentation, 0.0f));
+	ObjectButtonLabel->SetSize(ObjectButton->GetSize());
+	ObjectButtonLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
+	ObjectButtonLabel->SetAnchorBottom(true);
+	
+	return PropertyDisplay->GetSize()[1];
 }
 
 float ObjectInformationDialog::AddSeparator(float Top, float Indentation, const std::string & SeparatorName)
@@ -147,12 +175,34 @@ void ObjectInformationDialog::Refresh(void)
 			
 			for(std::set< Object * >::const_iterator ContentIterator = Content.begin(); ContentIterator != Content.end(); ++ContentIterator)
 			{
-				Top += AddStringProperty(Top, 20.0f, (*ContentIterator)->GetTypeIdentifier(), (((*ContentIterator)->GetAspectName() != 0) ? ((*ContentIterator)->GetAspectName()->GetName()) : ((*ContentIterator)->GetObjectIdentifier())));
+				Top += AddObjectProperty(Top, 20.0f, (*ContentIterator)->GetReference());
 			}
 		}
 	}
 	m_PropertiesScrollBox->GetContent()->SetSize(Vector2f(m_PropertiesScrollBox->GetView()->GetSize()[0], std::max(Top, m_PropertiesScrollBox->GetView()->GetSize()[1])));
 	m_PropertiesScrollBox->GetContent()->SetAnchorRight(true);
+}
+
+bool ObjectInformationDialog::OnMouseButton(Widget * EventSource, int Button, int State, float X, float Y)
+{
+	if(WWindow::OnMouseButton(EventSource, Button, State, X, Y) == true)
+	{
+		return true;
+	}
+	if((Button == 4 /* WHEEL_UP */) && (State == EV_DOWN))
+	{
+		m_PropertiesScrollBox->GetVerticalScrollBar()->StepLess();
+		
+		return true;
+	}
+	else if((Button == 5 /* WHEEL_DOWN */) && (State == EV_DOWN))
+	{
+		m_PropertiesScrollBox->GetVerticalScrollBar()->StepMore();
+		
+		return true;
+	}
+	
+	return false;
 }
 
 bool ObjectInformationDialog::OnClicked(Widget * EventSource)
@@ -168,6 +218,12 @@ bool ObjectInformationDialog::OnClicked(Widget * EventSource)
 		Refresh();
 		
 		return true;
+	}
+	else
+	{
+		assert(EventSource->GetSubWidgets().size() == 1);
+		assert(dynamic_cast< Label * >(EventSource->GetSubWidgets().front()) != 0);
+		new ObjectInformationDialog(GetRootWidget(), Object::GetObject(dynamic_cast< Label * >(EventSource->GetSubWidgets().front())->GetText())->GetReference());
 	}
 	
 	return false;
