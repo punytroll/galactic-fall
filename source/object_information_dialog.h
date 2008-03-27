@@ -33,6 +33,8 @@ class ObjectInformationDialog : public ClickedListener, public WWindow
 public:
 	ObjectInformationDialog(Widget * SupWidget, const Reference< Object > & Object);
 private:
+	float AddSeparator(float Top, float Indentation, const std::string & SeparatorName);
+	float AddStringProperty(float Top, float Indentation, const std::string & PropertyName, const std::string & PropertyValue);
 	bool OnClicked(Widget * EventSource);
 	void Refresh(void);
 private:
