@@ -1503,6 +1503,7 @@ void LoadGameFromElement(const Element * SaveElement)
 	g_Galaxy->SetTypeIdentifier("galaxy");
 	g_Galaxy->SetClassIdentifier("milky_way");
 	g_Galaxy->SetObjectIdentifier("::galaxy");
+	g_Galaxy->GetAspectName()->SetName("Milky Way");
 	g_ResourceReader->ReadSystems();
 	g_ResourceReader->ReadSystemLinks();
 	for(std::vector< Element * >::const_iterator SaveChild = SaveChilds.begin(); SaveChild != SaveChilds.end(); ++SaveChild)
