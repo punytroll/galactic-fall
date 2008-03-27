@@ -565,6 +565,8 @@ static void ReadSystem(Arxx::Reference & Reference)
 	
 	System * NewSystem(new System(Identifier));
 	
+	NewSystem->SetTypeIdentifier("system");
+	NewSystem->SetClassIdentifier(Identifier);
 	NewSystem->SetObjectIdentifier("::system(" + NewSystem->GetIdentifier() + ")");
 	
 	std::string Name;
