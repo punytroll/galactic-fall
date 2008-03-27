@@ -37,33 +37,33 @@ public:
 	// destructor
 	~ShipClass(void);
 	// getters
+	const Vector3f & GetExhaustOffset(void) const;
+	float GetExhaustRadius(void) const;
+	float GetFuelCapacity(void) const;
 	const std::string & GetIdentifier(void) const;
 	float GetForwardThrust(void) const;
 	float GetTurnSpeed(void) const;
 	float GetMaximumSpeed(void) const;
 	unsigned_numeric GetMaximumAvailableSpace(void) const;
-	float GetFuelHoldSize(void) const;
 	float GetJumpFuel(void) const;
 	float GetForwardFuel(void) const;
 	float GetTurnFuel(void) const;
 	float GetHull(void) const;
-	const Vector3f & GetExhaustOffset(void) const;
-	float GetExhaustRadius(void) const;
 	const std::map< std::string, Slot * > & GetSlots(void) const;
 	VisualizationPrototype * GetVisualizationPrototype(void);
 	const VisualizationPrototype * GetVisualizationPrototype(void) const;
 	// setters
+	void SetExhaustOffset(const Vector3f & ExhaustOffset);
+	void SetExhaustRadius(float ExhaustRadius);
+	void SetFuelCapacity(float FuelCapacity);
 	void SetForwardThrust(float ForwardThrust);
 	void SetTurnSpeed(float TurnSpeed);
 	void SetMaximumSpeed(float MaximumSpeed);
 	void SetMaximumAvailableSpace(unsigned_numeric MaximumAvailableSpace);
-	void SetFuelHoldSize(float FuelHoldSize);
 	void SetJumpFuel(float JumpFuel);
 	void SetForwardFuel(float ForwardFuel);
 	void SetTurnFuel(float TurnFuel);
 	void SetHull(float Hull);
-	void SetExhaustOffset(const Vector3f & ExhaustOffset);
-	void SetExhaustRadius(float ExhaustRadius);
 	
 	/**
 	 * @note Passes memory management responsibility for @a Slot to the ship class.
@@ -71,21 +71,36 @@ public:
 	bool AddSlot(const std::string & SlotIdentifier, Slot * Slot);
 	void AddVisualizationPrototype(void);
 private:
+	Vector3f m_ExhaustOffset;
+	float m_ExhaustRadius;
+	float m_FuelCapacity;
 	std::string m_Identifier;
 	float m_ForwardThrust;
 	float m_TurnSpeed;
 	float m_MaximumSpeed;
 	unsigned_numeric m_MaximumAvailableSpace;
-	float m_FuelHoldSize;
 	float m_JumpFuel;
 	float m_ForwardFuel;
 	float m_TurnFuel;
 	float m_Hull;
-	Vector3f m_ExhaustOffset;
-	float m_ExhaustRadius;
 	std::map< std::string, Slot * > m_Slots;
 	VisualizationPrototype * m_VisualizationPrototype;
 };
+
+inline const Vector3f & ShipClass::GetExhaustOffset(void) const
+{
+	return m_ExhaustOffset;
+}
+
+inline float ShipClass::GetExhaustRadius(void) const
+{
+	return m_ExhaustRadius;
+}
+
+inline float ShipClass::GetFuelCapacity(void) const
+{
+	return m_FuelCapacity;
+}
 
 inline const std::string & ShipClass::GetIdentifier(void) const
 {
@@ -112,11 +127,6 @@ inline unsigned_numeric ShipClass::GetMaximumAvailableSpace(void) const
 	return m_MaximumAvailableSpace;
 }
 
-inline float ShipClass::GetFuelHoldSize(void) const
-{
-	return m_FuelHoldSize;
-}
-
 inline float ShipClass::GetJumpFuel(void) const
 {
 	return m_JumpFuel;
@@ -137,16 +147,6 @@ inline float ShipClass::GetHull(void) const
 	return m_Hull;
 }
 
-inline const Vector3f & ShipClass::GetExhaustOffset(void) const
-{
-	return m_ExhaustOffset;
-}
-
-inline float ShipClass::GetExhaustRadius(void) const
-{
-	return m_ExhaustRadius;
-}
-
 inline const std::map< std::string, Slot * > & ShipClass::GetSlots(void) const
 {
 	return m_Slots;
@@ -160,6 +160,21 @@ inline VisualizationPrototype * ShipClass::GetVisualizationPrototype(void)
 inline const VisualizationPrototype * ShipClass::GetVisualizationPrototype(void) const
 {
 	return m_VisualizationPrototype;
+}
+
+inline void ShipClass::SetExhaustOffset(const Vector3f & ExhaustOffset)
+{
+	m_ExhaustOffset = ExhaustOffset;
+}
+
+inline void ShipClass::SetExhaustRadius(float ExhaustRadius)
+{
+	m_ExhaustRadius = ExhaustRadius;
+}
+
+inline void ShipClass::SetFuelCapacity(float FuelCapacity)
+{
+	m_FuelCapacity = FuelCapacity;
 }
 
 inline void ShipClass::SetForwardThrust(float ForwardThrust)
@@ -182,11 +197,6 @@ inline void ShipClass::SetMaximumAvailableSpace(unsigned_numeric MaximumAvailabl
 	m_MaximumAvailableSpace = MaximumAvailableSpace;
 }
 
-inline void ShipClass::SetFuelHoldSize(float FuelHoldSize)
-{
-	m_FuelHoldSize = FuelHoldSize;
-}
-
 inline void ShipClass::SetJumpFuel(float JumpFuel)
 {
 	m_JumpFuel = JumpFuel;
@@ -205,16 +215,6 @@ inline void ShipClass::SetTurnFuel(float TurnFuel)
 inline void ShipClass::SetHull(float Hull)
 {
 	m_Hull = Hull;
-}
-
-inline void ShipClass::SetExhaustOffset(const Vector3f & ExhaustOffset)
-{
-	m_ExhaustOffset = ExhaustOffset;
-}
-
-inline void ShipClass::SetExhaustRadius(float ExhaustRadius)
-{
-	m_ExhaustRadius = ExhaustRadius;
 }
 
 #endif

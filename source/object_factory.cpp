@@ -88,7 +88,7 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		// set up type specific things
 		NewShip->SetExhaustOffset(ShipClass->GetExhaustOffset());
 		NewShip->SetExhaustRadius(ShipClass->GetExhaustRadius());
-		NewShip->SetFuelCapacity(ShipClass->GetFuelHoldSize());
+		NewShip->SetFuelCapacity(ShipClass->GetFuelCapacity());
 		NewShip->SetFuelNeededToAccelerate(ShipClass->GetForwardFuel());
 		NewShip->SetFuelNeededToJump(ShipClass->GetJumpFuel());
 		NewShip->SetFuelNeededToTurn(ShipClass->GetTurnFuel());

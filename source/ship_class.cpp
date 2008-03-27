@@ -24,9 +24,9 @@
 #include "visualization_prototype.h"
 
 ShipClass::ShipClass(const std::string & Identifier) :
+	m_ExhaustOffset(true),
 	m_Identifier(Identifier),
 	m_MaximumAvailableSpace(0),
-	m_ExhaustOffset(true),
 	m_VisualizationPrototype(0)
 {
 }
