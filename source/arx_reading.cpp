@@ -871,15 +871,15 @@ static void ReadWidget(Arxx::Reference & Reference)
 
 static void ReadWidgetLabel(Arxx::BufferReader & Reader, Label * ReadLabel)
 {
-	bool UseForegroundColor;
-	Color ForegroundColor;
+	bool UseTextColor;
+	Color TextColor;
 	Arxx::u1byte HorizontalAlignment;
 	Arxx::u1byte VerticalAlignment;
 	
-	Reader >> UseForegroundColor >> ForegroundColor >> HorizontalAlignment >> VerticalAlignment;
-	if(UseForegroundColor == true)
+	Reader >> UseTextColor >> TextColor >> HorizontalAlignment >> VerticalAlignment;
+	if(UseTextColor == true)
 	{
-		ReadLabel->SetForegroundColor(ForegroundColor);
+		ReadLabel->SetTextColor(TextColor);
 	}
 	if(HorizontalAlignment == 0)
 	{

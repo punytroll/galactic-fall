@@ -42,65 +42,87 @@ public:
 		ALIGN_VERTICAL_CENTER
 	};
 	
-	Label(Widget * SupWidget = 0);
-	Label(Widget * SupWidget, const std::string & String);
-	~Label(void);
-	void SetString(const std::string & String);
-	void SetForegroundColor(const Color & ForegroundColor);
+	// constructor & destructor
+	Label(Widget * SupWidget = 0, const std::string & Text = "");
+	virtual ~Label(void);
+	// getters
+	Label::HorizontalAlignment GetHorizontalAlignment(void) const;
+	const std::string & GetText(void) const;
+	const Color * GetTextColor(void) const;
+	Label::VerticalAlignment GetVerticalAlignment(void) const;
+	bool GetWrap(void) const;
+	bool GetWordWrap(void) const;
+	// setters
+	void SetText(const std::string & Text);
+	void SetTextColor(const Color & ForegroundColor);
 	void SetWrap(bool Wrap);
 	void SetWordWrap(bool WordWrap);
-	void SetHorizontalAlignment(const Label::HorizontalAlignment & HorizontalAlignment);
-	void SetVerticalAlignment(const Label::VerticalAlignment & VerticalAlignment);
+	void SetHorizontalAlignment(Label::HorizontalAlignment HorizontalAlignment);
+	void SetVerticalAlignment(Label::VerticalAlignment VerticalAlignment);
+	// modifiers
 	virtual void Draw(void) const;
-	const std::string & GetString(void) const;
-	const Color & GetForegroundColor(void) const;
-	Color & GetForegroundColor(void);
-	const bool & GetWrap(void) const;
-	const bool & GetWordWrap(void) const;
-	const Label::HorizontalAlignment & GetHorizontalAlignment(void) const;
-	const Label::VerticalAlignment & GetVerticalAlignment(void) const;
 private:
-	std::string m_String;
-	Color m_ForegroundColor;
+	HorizontalAlignment m_HorizontalAlignment;
+	std::string m_Text;
+	Color * m_TextColor;
+	VerticalAlignment m_VerticalAlignment;
 	bool m_Wrap;
 	bool m_WordWrap;
-	HorizontalAlignment m_HorizontalAlignment;
-	VerticalAlignment m_VerticalAlignment;
 };
 
-inline const std::string & Label::GetString(void) const
-{
-	return m_String;
-}
-
-inline const Color & Label::GetForegroundColor(void) const
-{
-	return m_ForegroundColor;
-}
-
-inline Color & Label::GetForegroundColor(void)
-{
-	return m_ForegroundColor;
-}
-
-inline const bool & Label::GetWrap(void) const
-{
-	return m_Wrap;
-}
-
-inline const bool & Label::GetWordWrap(void) const
-{
-	return m_WordWrap;
-}
-
-inline const Label::HorizontalAlignment & Label::GetHorizontalAlignment(void) const
+inline Label::HorizontalAlignment Label::GetHorizontalAlignment(void) const
 {
 	return m_HorizontalAlignment;
 }
 
-inline const Label::VerticalAlignment & Label::GetVerticalAlignment(void) const
+inline const std::string & Label::GetText(void) const
+{
+	return m_Text;
+}
+
+inline const Color * Label::GetTextColor(void) const
+{
+	return m_TextColor;
+}
+
+inline bool Label::GetWrap(void) const
+{
+	return m_Wrap;
+}
+
+inline bool Label::GetWordWrap(void) const
+{
+	return m_WordWrap;
+}
+
+inline Label::VerticalAlignment Label::GetVerticalAlignment(void) const
 {
 	return m_VerticalAlignment;
+}
+
+inline void Label::SetHorizontalAlignment(Label::HorizontalAlignment HorizontalAlignment)
+{
+	m_HorizontalAlignment = HorizontalAlignment;
+}
+
+inline void Label::SetText(const std::string & Text)
+{
+	m_Text = Text;
+}
+
+inline void Label::SetWrap(bool Wrap)
+{
+	m_Wrap = Wrap;
+}
+
+inline void Label::SetWordWrap(bool WordWrap)
+{
+	m_WordWrap = WordWrap;
+}
+
+inline void Label::SetVerticalAlignment(Label::VerticalAlignment VerticalAlignment)
+{
+	m_VerticalAlignment = VerticalAlignment;
 }
 
 #endif

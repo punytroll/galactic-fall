@@ -188,17 +188,17 @@ TimingDialog::TimingDialog(Widget * SupWidget) :
 
 void TimingDialog::Update(void)
 {
-	m_AISecondsThisFrameLabel->SetString(to_string_cast(g_SystemStatistics->GetAISecondsThisFrame() * 1000, 2) + " ms");
-	m_CommoditiesInCurrentSystemThisFrameLabel->SetString(to_string_cast(g_SystemStatistics->GetCommoditiesInCurrentSystemThisFrame()));
-	m_DispatchedMessagesThisFrameLabel->SetString(to_string_cast(g_SystemStatistics->GetDispatchedMessagesThisFrame()));
-	m_FramesPerSecondLabel->SetString(to_string_cast(g_SystemStatistics->GetFramesPerSecond(), 2));
-	m_FrameToFrameSecondsThisFrameLabel->SetString(to_string_cast(g_SystemStatistics->GetFrameToFrameSecondsThisFrame() * 1000, 2) + " ms");
-	m_GraphicsSecondsThisFrameLabel->SetString(to_string_cast(g_SystemStatistics->GetGraphicsSecondsThisFrame() * 1000, 2) + " ms");
-	m_MessagingSecondsThisFrameLabel->SetString(to_string_cast(g_SystemStatistics->GetMessagingSecondsThisFrame() * 1000, 2) + " ms");
-	m_ParticleSystemsThisFrameLabel->SetString(to_string_cast(g_SystemStatistics->GetParticleSystemsThisFrame()));
-	m_ParticlesThisFrameLabel->SetString(to_string_cast(g_SystemStatistics->GetParticlesThisFrame()));
-	m_PhysicsSecondsThisFrameLabel->SetString(to_string_cast(g_SystemStatistics->GetPhysicsSecondsThisFrame() * 1000, 2) + " ms");
-	m_ProcessingSecondsThisFrameLabel->SetString(to_string_cast(g_SystemStatistics->GetProcessingSecondsThisFrame() * 1000, 2) + " ms");
-	m_ShipsInCurrentSystemThisFrameLabel->SetString(to_string_cast(g_SystemStatistics->GetShipsInCurrentSystemThisFrame()));
-	m_ShotsInCurrentSystemThisFrameLabel->SetString(to_string_cast(g_SystemStatistics->GetShotsInCurrentSystemThisFrame()));
+	m_AISecondsThisFrameLabel->SetText(to_string_cast(g_SystemStatistics->GetAISecondsThisFrame() * 1000, 2) + " ms");
+	m_CommoditiesInCurrentSystemThisFrameLabel->SetText(to_string_cast(g_SystemStatistics->GetCommoditiesInCurrentSystemThisFrame()));
+	m_DispatchedMessagesThisFrameLabel->SetText(to_string_cast(g_SystemStatistics->GetDispatchedMessagesThisFrame()));
+	m_FramesPerSecondLabel->SetText(to_string_cast(g_SystemStatistics->GetFramesPerSecond(), 2));
+	m_FrameToFrameSecondsThisFrameLabel->SetText(to_string_cast(g_SystemStatistics->GetFrameToFrameSecondsThisFrame() * 1000, 2) + " ms");
+	m_GraphicsSecondsThisFrameLabel->SetText(to_string_cast(g_SystemStatistics->GetGraphicsSecondsThisFrame() * 1000, 2) + " ms");
+	m_MessagingSecondsThisFrameLabel->SetText(to_string_cast(g_SystemStatistics->GetMessagingSecondsThisFrame() * 1000, 2) + " ms");
+	m_ParticleSystemsThisFrameLabel->SetText(to_string_cast(g_SystemStatistics->GetParticleSystemsThisFrame()));
+	m_ParticlesThisFrameLabel->SetText(to_string_cast(g_SystemStatistics->GetParticlesThisFrame()));
+	m_PhysicsSecondsThisFrameLabel->SetText(to_string_cast(g_SystemStatistics->GetPhysicsSecondsThisFrame() * 1000, 2) + " ms");
+	m_ProcessingSecondsThisFrameLabel->SetText(to_string_cast(g_SystemStatistics->GetProcessingSecondsThisFrame() * 1000, 2) + " ms");
+	m_ShipsInCurrentSystemThisFrameLabel->SetText(to_string_cast(g_SystemStatistics->GetShipsInCurrentSystemThisFrame()));
+	m_ShotsInCurrentSystemThisFrameLabel->SetText(to_string_cast(g_SystemStatistics->GetShotsInCurrentSystemThisFrame()));
 }

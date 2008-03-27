@@ -291,7 +291,7 @@ void HideMessage(void)
 
 void SetMessage(const std::string & Message)
 {
-	g_MessageLabel->SetString(Message);
+	g_MessageLabel->SetText(Message);
 	g_MessageLabel->SetVisible(true);
 	/// TODO: Make the 2.0f seconds timeout configurable via the game configuration archive.
 	if(g_MessageTimeoutNotification.IsValid() == true)
@@ -850,11 +850,11 @@ void UpdateUserInterface(void)
 		// display the name of the target
 		if(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget().IsValid() == true)
 		{
-			g_TargetLabel->SetString(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget()->GetAspectName()->GetName());
+			g_TargetLabel->SetText(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget()->GetAspectName()->GetName());
 		}
 		else
 		{
-			g_TargetLabel->SetString("");
+			g_TargetLabel->SetText("");
 		}
 		// display the name of the linked system
 		if(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetLinkedSystemTarget() != 0)
@@ -863,33 +863,33 @@ void UpdateUserInterface(void)
 			
 			if(UnexploredSystems.find(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetLinkedSystemTarget()) == UnexploredSystems.end())
 			{
-				g_SystemLabel->SetString(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetLinkedSystemTarget()->GetAspectName()->GetName());
+				g_SystemLabel->SetText(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetLinkedSystemTarget()->GetAspectName()->GetName());
 			}
 			else
 			{
-				g_SystemLabel->SetString("Unknown System");
+				g_SystemLabel->SetText("Unknown System");
 			}
 		}
 		else
 		{
-			g_SystemLabel->SetString("");
+			g_SystemLabel->SetText("");
 		}
 		// display fuel
-		g_FuelLabel->SetString("Fuel: " + to_string_cast(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetFuel(), 2));
+		g_FuelLabel->SetText("Fuel: " + to_string_cast(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetFuel(), 2));
 		// display hull
-		g_HullLabel->SetString("Hull: " + to_string_cast(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetHull(), 2));
+		g_HullLabel->SetText("Hull: " + to_string_cast(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetHull(), 2));
 		// display credits in every cycle
-		g_CreditsLabel->SetString("Credits: " + to_string_cast(g_CharacterObserver->GetObservedCharacter()->GetCredits()));
+		g_CreditsLabel->SetText("Credits: " + to_string_cast(g_CharacterObserver->GetObservedCharacter()->GetCredits()));
 		// display the current system
-		g_CurrentSystemLabel->SetString(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetContainer()->GetAspectName()->GetName());
+		g_CurrentSystemLabel->SetText(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetContainer()->GetAspectName()->GetName());
 		// set system label color according to jump status
 		if(WantToJump(g_CharacterObserver->GetObservedCharacter()->GetShip(), g_CharacterObserver->GetObservedCharacter()->GetShip()->GetLinkedSystemTarget()) == OK)
 		{
-			g_SystemLabel->GetForegroundColor().Set(0.7f, 0.8f, 1.0f, 1.0f);
+			g_SystemLabel->SetTextColor(Color(0.7f, 0.8f, 1.0f, 1.0f));
 		}
 		else
 		{
-			g_SystemLabel->GetForegroundColor().Set(0.4f, 0.4f, 0.4f, 1.0f);
+			g_SystemLabel->SetTextColor(Color(0.4f, 0.4f, 0.4f, 1.0f));
 		}
 		g_ScannerDisplay->SetOwner(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetReference());
 		g_ScannerDisplay->Update();
@@ -1401,7 +1401,7 @@ void SetTimeWarp(float TimeWarp)
 	std::stringstream TimeWarpString;
 	
 	TimeWarpString << "Time Warp: " << to_string_cast(g_TimeWarp, 2);
-	g_TimeWarpLabel->SetString(TimeWarpString.str());
+	g_TimeWarpLabel->SetText(TimeWarpString.str());
 }
 
 void MouseButtonDown(int MouseButton, int X, int Y)

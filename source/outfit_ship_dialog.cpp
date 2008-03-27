@@ -106,13 +106,13 @@ void SlotListItem::Update(void)
 	
 	if(MountedObject != 0)
 	{
-		m_TypeOrWeaponLabel->SetForegroundColor(Color(0.6f, 0.8f, 0.6f, 1.0f));
-		m_TypeOrWeaponLabel->SetString(MountedObject->GetAspectName()->GetName());
+		m_TypeOrWeaponLabel->SetText(MountedObject->GetAspectName()->GetName());
+		m_TypeOrWeaponLabel->SetTextColor(Color(0.6f, 0.8f, 0.6f, 1.0f));
 	}
 	else
 	{
-		m_TypeOrWeaponLabel->SetForegroundColor(Color(0.8f, 0.6f, 0.6f, 1.0f));
-		m_TypeOrWeaponLabel->SetString(m_Slot->GetSlotClass()->GetName());
+		m_TypeOrWeaponLabel->SetText(m_Slot->GetSlotClass()->GetName());
+		m_TypeOrWeaponLabel->SetTextColor(Color(0.8f, 0.6f, 0.6f, 1.0f));
 	}
 }
 

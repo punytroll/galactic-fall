@@ -81,7 +81,7 @@ LoadGameDialog::LoadGameDialog(Widget * SupWidget, Callback1< bool, std::istream
 	m_ErrorMessage = new Label(this);
 	m_ErrorMessage->SetPosition(Vector2f(10.0f, 150.0f));
 	m_ErrorMessage->SetSize(Vector2f(280.0f, 40.0f));
-	m_ErrorMessage->SetForegroundColor(Color(1.0f, 0.3, 0.3f, 1.0f));
+	m_ErrorMessage->SetTextColor(Color(1.0f, 0.3, 0.3f, 1.0f));
 	m_ErrorMessage->SetAnchorBottom(true);
 	m_ErrorMessage->SetAnchorRight(true);
 	m_ErrorMessage->SetAnchorTop(false);
@@ -90,7 +90,7 @@ LoadGameDialog::LoadGameDialog(Widget * SupWidget, Callback1< bool, std::istream
 	m_FileNameLabel = new Label(this);
 	m_FileNameLabel->SetPosition(Vector2f(10.0f, 70.0f));
 	m_FileNameLabel->SetSize(Vector2f(280.0f, 20.0f));
-	m_FileNameLabel->SetForegroundColor(Color(1.0f, 1.0f, 0.5f, 1.0f));
+	m_FileNameLabel->SetTextColor(Color(1.0f, 1.0f, 0.5f, 1.0f));
 	m_FileNameLabel->SetBackgroundColor(Color(0.1f, 0.1f, 0.1f, 1.0f));
 	m_FileNameLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
 	m_FileNameLabel->SetAnchorRight(true);
@@ -147,7 +147,7 @@ void LoadGameDialog::ShowErrorMessage(const std::string & ErrorMessage)
 		m_ErrorMessageTimeoutNotification.Dismiss();
 	}
 	m_ErrorMessage->SetVisible(true);
-	m_ErrorMessage->SetString(ErrorMessage);
+	m_ErrorMessage->SetText(ErrorMessage);
 	m_ErrorMessageTimeoutNotification = g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 2.0f, Method(this, &LoadGameDialog::HideErrorMessage));
 }
 
@@ -176,7 +176,7 @@ bool LoadGameDialog::Load(void)
 			return false;
 		}
 	}
-	Path += m_FileNameLabel->GetString() + ".xml";
+	Path += m_FileNameLabel->GetText() + ".xml";
 	/// @todo check Path (doesn't exist, if exists overwrite if it's a file?)
 	
 	std::ifstream InputFileStream;
@@ -234,14 +234,14 @@ bool LoadGameDialog::OnKey(Widget * EventSource, const KeyEventInformation & Key
 	{
 		if((KeyEventInformation.GetKeyCode() == 22 /* BACKSPACE */) && (KeyEventInformation.IsDown() == true))
 		{
-			if(m_FileNameLabel->GetString().length() > 0)
+			if(m_FileNameLabel->GetText().length() > 0)
 			{
-				m_FileNameLabel->SetString(m_FileNameLabel->GetString().substr(0, m_FileNameLabel->GetString().length() - 1));
+				m_FileNameLabel->SetText(m_FileNameLabel->GetText().substr(0, m_FileNameLabel->GetText().length() - 1));
 			}
 		}
 		else if((KeyEventInformation.GetKeyCode() == 36 /* RETURN */) && (KeyEventInformation.IsDown() == true))
 		{
-			if(m_FileNameLabel->GetString().length() > 0)
+			if(m_FileNameLabel->GetText().length() > 0)
 			{
 				if(Load() == true)
 				{
@@ -251,7 +251,7 @@ bool LoadGameDialog::OnKey(Widget * EventSource, const KeyEventInformation & Key
 		}
 		else if((KeyEventInformation.GetString().empty() == false) && (KeyEventInformation.IsDown() == true))
 		{
-			m_FileNameLabel->SetString(m_FileNameLabel->GetString() + KeyEventInformation.GetString());
+			m_FileNameLabel->SetText(m_FileNameLabel->GetText() + KeyEventInformation.GetString());
 		}
 	}
 	// eat all other input
@@ -276,7 +276,7 @@ bool LoadGameDialog::OnMouseButton(Widget * EventSource, int Button, int State, 
 			}
 			m_SelectedDirectoryEntryItem = SelectedDirectoryEntryItem;
 			m_SelectedDirectoryEntryItem->SetSelected(true);
-			m_FileNameLabel->SetString(m_SelectedDirectoryEntryItem->GetCaption());
+			m_FileNameLabel->SetText(m_SelectedDirectoryEntryItem->GetCaption());
 			
 			return true;
 		}

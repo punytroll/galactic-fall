@@ -24,13 +24,13 @@
 		<anchor-right>true</anchor-right>
 		<anchor-top>true</anchor-top>
 	</widget>
-	<use-foreground-color>true</use-foreground-color>
-	<foreground-color>
+	<use-text-color>true</use-text-color>
+	<text-color>
 		<red>0.7</red>
 		<green>0.8</green>
 		<blue>1.0</blue>
 		<alpha>1.0</alpha>
-	</foreground-color>
+	</text-color>
 	<horizontal-alignment>2</horizontal-alignment>
 	<vertical-alignment>2</vertical-alignment>
 </label>

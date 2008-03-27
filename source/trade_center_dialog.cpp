@@ -84,7 +84,7 @@ TradeCenterAssetClass::TradeCenterAssetClass(Widget * SupWidget, PlanetAssetClas
 
 void TradeCenterAssetClass::UpdateCharacterAmount(void)
 {
-	m_CharacterAmountLabel->SetString(to_string_cast(m_Ship->GetCargoHold()->GetAmount(m_PlanetAssetClass->GetAssetClass()->GetObjectType(), m_PlanetAssetClass->GetAssetClass()->GetObjectClass())));
+	m_CharacterAmountLabel->SetText(to_string_cast(m_Ship->GetCargoHold()->GetAmount(m_PlanetAssetClass->GetAssetClass()->GetObjectType(), m_PlanetAssetClass->GetAssetClass()->GetObjectClass())));
 }
 
 const PlanetAssetClass * TradeCenterAssetClass::GetPlanetAssetClass(void) const
@@ -178,12 +178,12 @@ TradeCenterDialog::TradeCenterDialog(Widget * SupWidget, Planet * Planet, Charac
 
 void TradeCenterDialog::UpdateTraderCredits(void)
 {
-	m_TraderCreditsLabel->SetString("Credits: " + to_string_cast(m_Character->GetCredits()));
+	m_TraderCreditsLabel->SetText("Credits: " + to_string_cast(m_Character->GetCredits()));
 }
 
 void TradeCenterDialog::UpdateTraderAvailableSpace(void)
 {
-	m_TraderAvailableSpaceLabel->SetString("Available Space: " + to_string_cast(0.001 * m_Character->GetShip()->GetCargoHold()->GetSpace(), 3));
+	m_TraderAvailableSpaceLabel->SetText("Available Space: " + to_string_cast(0.001 * m_Character->GetShip()->GetCargoHold()->GetSpace(), 3));
 }
 
 void TradeCenterDialog::Buy(const PlanetAssetClass * PlanetAssetClass)
