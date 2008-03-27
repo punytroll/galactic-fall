@@ -21,36 +21,9 @@
 #include "label.h"
 #include "object.h"
 #include "object_aspect_name.h"
+#include "object_aspect_object_container.h"
 #include "object_information_dialog.h"
 #include "scroll_box.h"
-
-class PropertyDisplay : public Widget
-{
-public:
-	PropertyDisplay(Widget * SupWidget, const std::string & PropertyName, const std::string & PropertyValue);
-private:
-	Label * m_PropertyNameLabel;
-	Label * m_PropertyValueLabel;
-};
-
-PropertyDisplay::PropertyDisplay(Widget * SupWidget, const std::string & PropertyName, const std::string & PropertyValue) :
-	Widget(SupWidget),
-	m_PropertyNameLabel(0),
-	m_PropertyValueLabel(0)
-{
-	m_PropertyNameLabel = new Label(this, PropertyName + ":");
-	m_PropertyNameLabel->SetPosition(Vector2f(0.0f, 0.0f));
-	m_PropertyNameLabel->SetSize(Vector2f(6.0f * (PropertyName.length() + 1), 0.0f));
-	m_PropertyNameLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
-	m_PropertyNameLabel->SetAnchorBottom(true);
-	m_PropertyValueLabel = new Label(this, PropertyValue);
-	m_PropertyValueLabel->SetPosition(Vector2f(m_PropertyNameLabel->GetPosition()[0] + m_PropertyNameLabel->GetSize()[0], 0.0f));
-	m_PropertyValueLabel->SetSize(Vector2f(GetSize()[0] - m_PropertyNameLabel->GetPosition()[0] - m_PropertyNameLabel->GetSize()[0], 0.0f));
-	m_PropertyValueLabel->SetHorizontalAlignment(Label::ALIGN_RIGHT);
-	m_PropertyValueLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
-	m_PropertyValueLabel->SetAnchorRight(true);
-	m_PropertyValueLabel->SetAnchorBottom(true);
-}
 
 ObjectInformationDialog::ObjectInformationDialog(Widget * SupWidget, const Reference< Object > & Object) :
 	WWindow(SupWidget, "Object Information"),
@@ -99,6 +72,52 @@ ObjectInformationDialog::ObjectInformationDialog(Widget * SupWidget, const Refer
 	Refresh();
 }
 
+float ObjectInformationDialog::AddSeparator(float Top, float Indentation, const std::string & SeparatorName)
+{
+	Widget * SeparatorDisplay(new Widget(m_PropertiesScrollBox->GetContent()));
+	
+	SeparatorDisplay->SetPosition(Vector2f(10.0f, Top));
+	SeparatorDisplay->SetSize(Vector2f(m_PropertiesScrollBox->GetContent()->GetSize()[0] - 20.0f, 20.0f));
+	SeparatorDisplay->SetAnchorRight(true);
+	
+	Label * SeparatorNameLabel(new Label(SeparatorDisplay, SeparatorName));
+	
+	SeparatorNameLabel->SetPosition(Vector2f(Indentation, 0.0f));
+	SeparatorNameLabel->SetSize(SeparatorDisplay->GetSize());
+	SeparatorNameLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
+	SeparatorNameLabel->SetAnchorBottom(true);
+	SeparatorNameLabel->SetTextColor(Color(0.5f, 0.8f, 1.0f, 1.0f));
+	
+	return SeparatorDisplay->GetSize()[1];
+}
+
+float ObjectInformationDialog::AddStringProperty(float Top, float Indentation, const std::string & PropertyName, const std::string & PropertyValue)
+{
+	Widget * PropertyDisplay(new Widget(m_PropertiesScrollBox->GetContent()));
+	
+	PropertyDisplay->SetPosition(Vector2f(10.0f, Top));
+	PropertyDisplay->SetSize(Vector2f(m_PropertiesScrollBox->GetContent()->GetSize()[0] - 20.0f, 20.0f));
+	PropertyDisplay->SetAnchorRight(true);
+	
+	Label * PropertyNameLabel(new Label(PropertyDisplay, PropertyName + ":"));
+	
+	PropertyNameLabel->SetPosition(Vector2f(Indentation, 0.0f));
+	PropertyNameLabel->SetSize(Vector2f(6.0f * (PropertyName.length() + 1), PropertyDisplay->GetSize()[1]));
+	PropertyNameLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
+	PropertyNameLabel->SetAnchorBottom(true);
+	
+	Label * PropertyValueLabel(new Label(PropertyDisplay, PropertyValue));
+	
+	PropertyValueLabel->SetPosition(Vector2f(PropertyNameLabel->GetPosition()[0] + PropertyNameLabel->GetSize()[0], 0.0f));
+	PropertyValueLabel->SetSize(Vector2f(PropertyDisplay->GetSize()[0] - PropertyNameLabel->GetPosition()[0] - PropertyNameLabel->GetSize()[0], PropertyDisplay->GetSize()[1]));
+	PropertyValueLabel->SetHorizontalAlignment(Label::ALIGN_RIGHT);
+	PropertyValueLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
+	PropertyValueLabel->SetAnchorRight(true);
+	PropertyValueLabel->SetAnchorBottom(true);
+	
+	return PropertyDisplay->GetSize()[1];
+}
+
 void ObjectInformationDialog::Refresh(void)
 {
 	// clear old properties
@@ -112,34 +131,24 @@ void ObjectInformationDialog::Refresh(void)
 	// fill the properties view
 	if(m_Object.IsValid() == true)
 	{
-		PropertyDisplay * TypeDisplay(new PropertyDisplay(m_PropertiesScrollBox->GetContent(), "Type", m_Object->GetTypeIdentifier()));
-		
-		TypeDisplay->SetPosition(Vector2f(10.0f, Top));
-		TypeDisplay->SetSize(Vector2f(m_PropertiesScrollBox->GetContent()->GetSize()[0] - 20.0f, 20.0f));
-		TypeDisplay->SetAnchorRight(true);
-		Top += 20.0f;
-		
-		PropertyDisplay * ClassDisplay(new PropertyDisplay(m_PropertiesScrollBox->GetContent(), "Class", m_Object->GetClassIdentifier()));
-		
-		ClassDisplay->SetPosition(Vector2f(10.0f, Top));
-		ClassDisplay->SetSize(Vector2f(m_PropertiesScrollBox->GetContent()->GetSize()[0] - 20.0f, 20.0f));
-		ClassDisplay->SetAnchorRight(true);
-		Top += 20.0f;
-		
-		PropertyDisplay * IdentifierDisplay(new PropertyDisplay(m_PropertiesScrollBox->GetContent(), "Identifier", m_Object->GetObjectIdentifier()));
-		
-		IdentifierDisplay->SetPosition(Vector2f(10.0f, Top));
-		IdentifierDisplay->SetSize(Vector2f(m_PropertiesScrollBox->GetContent()->GetSize()[0] - 20.0f, 20.0f));
-		IdentifierDisplay->SetAnchorRight(true);
-		Top += 20.0f;
+		Top += AddStringProperty(Top, 0.0f, "Type", m_Object->GetTypeIdentifier());
+		Top += AddStringProperty(Top, 0.0f, "Class", m_Object->GetClassIdentifier());
+		Top += AddStringProperty(Top, 0.0f, "Identifier", m_Object->GetObjectIdentifier());
 		if(m_Object->GetAspectName() != 0)
 		{
-			PropertyDisplay * NameDisplay(new PropertyDisplay(m_PropertiesScrollBox->GetContent(), "Name", m_Object->GetAspectName()->GetName()));
+			Top += AddSeparator(Top, 0.0f, "Name Aspect");
+			Top += AddStringProperty(Top, 20.0f, "Name", m_Object->GetAspectName()->GetName());
+		}
+		if(m_Object->GetAspectObjectContainer() != 0)
+		{
+			Top += AddSeparator(Top, 0.0f, "Object Container Aspect");
 			
-			NameDisplay->SetPosition(Vector2f(10.0f, Top));
-			NameDisplay->SetSize(Vector2f(m_PropertiesScrollBox->GetContent()->GetSize()[0] - 20.0f, 20.0f));
-			NameDisplay->SetAnchorRight(true);
-			Top += 20.0f;
+			const std::set< Object * > & Content(m_Object->GetAspectObjectContainer()->GetContent());
+			
+			for(std::set< Object * >::const_iterator ContentIterator = Content.begin(); ContentIterator != Content.end(); ++ContentIterator)
+			{
+				Top += AddStringProperty(Top, 20.0f, (*ContentIterator)->GetTypeIdentifier(), (((*ContentIterator)->GetAspectName() != 0) ? ((*ContentIterator)->GetAspectName()->GetName()) : ((*ContentIterator)->GetObjectIdentifier())));
+			}
 		}
 	}
 	m_PropertiesScrollBox->GetContent()->SetSize(Vector2f(m_PropertiesScrollBox->GetView()->GetSize()[0], std::max(Top, m_PropertiesScrollBox->GetView()->GetSize()[1])));
