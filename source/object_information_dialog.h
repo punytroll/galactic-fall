@@ -26,6 +26,7 @@
 
 class Button;
 class Object;
+class ScrollBox;
 
 class ObjectInformationDialog : public ClickedListener, public WWindow
 {
@@ -33,9 +34,12 @@ public:
 	ObjectInformationDialog(Widget * SupWidget, const Reference< Object > & Object);
 private:
 	bool OnClicked(Widget * EventSource);
+	void Refresh(void);
 private:
 	Reference< Object > m_Object;
 	Button * m_OKButton;
+	ScrollBox * m_PropertiesScrollBox;
+	Button * m_RefreshButton;
 };
 
 #endif
