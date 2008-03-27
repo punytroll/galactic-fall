@@ -26,8 +26,8 @@
 	
 	<label>
 		<widget identifier="widget"/>
-		<boolean identifier="use-foreground-color"/>
-		<color4f identifier="foreground-color"/>
+		<boolean identifier="use-text-color"/>
+		<color4f identifier="text-color"/>
 		<u1byte identifier="horizontal-alignment"/>
 		<u1byte identifier="vertical-alignment"/>
 	</label>
