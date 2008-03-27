@@ -74,6 +74,7 @@
 #include "object_aspect_update.h"
 #include "object_aspect_visualization.h"
 #include "object_factory.h"
+#include "object_information_dialog.h"
 #include "outfit_ship_dialog.h"
 #include "output_observer.h"
 #include "perspective.h"
@@ -1499,6 +1500,8 @@ void LoadGameFromElement(const Element * SaveElement)
 	// setup the game world
 	PurgeGame();
 	g_Galaxy = new Galaxy();
+	g_Galaxy->SetTypeIdentifier("galaxy");
+	g_Galaxy->SetClassIdentifier("milky_way");
 	g_Galaxy->SetObjectIdentifier("::galaxy");
 	g_ResourceReader->ReadSystems();
 	g_ResourceReader->ReadSystemLinks();
@@ -2553,6 +2556,17 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 					g_LoadGameDialog->GrabKeyFocus();
 					g_LoadGameDialog->AddDestroyListener(&g_GlobalDestroyListener);
 				}
+			}
+			
+			break;
+		}
+	case 74: // Key: F8
+		{
+			if(KeyEventInformation.IsDown() == true)
+			{
+				ObjectInformationDialog * Dialog(new ObjectInformationDialog(g_UserInterface->GetRootWidget(), g_Galaxy->GetReference()));
+				
+				Dialog->GrabKeyFocus();
 			}
 			
 			break;
