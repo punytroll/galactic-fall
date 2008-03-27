@@ -223,7 +223,13 @@ bool ObjectInformationDialog::OnClicked(Widget * EventSource)
 	{
 		assert(EventSource->GetSubWidgets().size() == 1);
 		assert(dynamic_cast< Label * >(EventSource->GetSubWidgets().front()) != 0);
-		new ObjectInformationDialog(GetRootWidget(), Object::GetObject(dynamic_cast< Label * >(EventSource->GetSubWidgets().front())->GetText())->GetReference());
+		
+		Object * Object(Object::GetObject(dynamic_cast< Label * >(EventSource->GetSubWidgets().front())->GetText()));
+		
+		if(Object != 0)
+		{
+			new ObjectInformationDialog(GetRootWidget(), Object->GetReference());
+		}
 	}
 	
 	return false;
