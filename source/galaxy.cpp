@@ -26,10 +26,10 @@ Galaxy::Galaxy(void)
 	// initialize object aspects
 	AddAspectName();
 	AddAspectObjectContainer();
-	GetAspectObjectContainer()->SetAllowAddingCallback(Method(this, &Galaxy::AllowAdding));
-	GetAspectObjectContainer()->SetAllowRemovingCallback(Method(this, &Galaxy::AllowRemoving));
-	GetAspectObjectContainer()->SetOnAddedCallback(Method(this, &Galaxy::OnAdded));
-	GetAspectObjectContainer()->SetOnRemovedCallback(Method(this, &Galaxy::OnRemoved));
+	GetAspectObjectContainer()->SetAllowAddingCallback(Callback(this, &Galaxy::AllowAdding));
+	GetAspectObjectContainer()->SetAllowRemovingCallback(Callback(this, &Galaxy::AllowRemoving));
+	GetAspectObjectContainer()->SetOnAddedCallback(Callback(this, &Galaxy::OnAdded));
+	GetAspectObjectContainer()->SetOnRemovedCallback(Callback(this, &Galaxy::OnRemoved));
 }
 
 System * Galaxy::GetSystem(const std::string & SystemIdentifier)

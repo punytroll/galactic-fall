@@ -176,57 +176,57 @@ bool ResourceReader::LoadArchive(const std::string & ArchivePath)
 
 void ResourceReader::ReadAssetClasses(void)
 {
-	ReadItems(m_Archive, "/Asset Classes", Function(ReadAssetClass));
+	ReadItems(m_Archive, "/Asset Classes", Callback(ReadAssetClass));
 }
 
 void ResourceReader::ReadCommodityClasses(void)
 {
-	ReadItems(m_Archive, "/Commodity Classes", Function(ReadCommodityClass));
+	ReadItems(m_Archive, "/Commodity Classes", Callback(ReadCommodityClass));
 }
 
 void ResourceReader::ReadMeshes(void)
 {
-	ReadItems(m_Archive, "/Meshes", Function(ReadMesh));
+	ReadItems(m_Archive, "/Meshes", Callback(ReadMesh));
 }
 
 void ResourceReader::ReadModels(void)
 {
-	ReadItems(m_Archive, "/Models", Function(ReadModel));
+	ReadItems(m_Archive, "/Models", Callback(ReadModel));
 }
 
 void ResourceReader::ReadShipClasses(void)
 {
-	ReadItems(m_Archive, "/Ship Classes", Function(ReadShipClass));
+	ReadItems(m_Archive, "/Ship Classes", Callback(ReadShipClass));
 }
 
 void ResourceReader::ReadSlotClasses(void)
 {
-	ReadItems(m_Archive, "/Slot Classes", Function(ReadSlotClass));
+	ReadItems(m_Archive, "/Slot Classes", Callback(ReadSlotClass));
 }
 
 void ResourceReader::ReadSystems(void)
 {
-	ReadItems(m_Archive, "/Systems", Function(ReadSystem));
+	ReadItems(m_Archive, "/Systems", Callback(ReadSystem));
 }
 
 void ResourceReader::ReadSystemLinks(void)
 {
-	ReadItems(m_Archive, "/System Links", Function(ReadSystemLink));
+	ReadItems(m_Archive, "/System Links", Callback(ReadSystemLink));
 }
 
 void ResourceReader::ReadTextures(void)
 {
-	ReadItems(m_Archive, "/Textures", Function(ReadTexture));
+	ReadItems(m_Archive, "/Textures", Callback(ReadTexture));
 }
 
 void ResourceReader::ReadUserInterface(void)
 {
-	ReadItems(m_Archive, "/User Interface", Function(ReadWidget));
+	ReadItems(m_Archive, "/User Interface", Callback(ReadWidget));
 }
 
 void ResourceReader::ReadWeaponClasses(void)
 {
-	ReadItems(m_Archive, "/Weapon Classes", Function(ReadWeaponClass));
+	ReadItems(m_Archive, "/Weapon Classes", Callback(ReadWeaponClass));
 }
 
 static void ReadAssetClass(Arxx::Reference & Reference)

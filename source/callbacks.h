@@ -126,11 +126,11 @@ template < typename Return, typename Class >
 class MethodCallback0 : public Callback0< Return >
 {
 public:
-	typedef Return (Class::*Function)();
+	typedef Return (Class::*Method)();
 	
-	explicit MethodCallback0(Class * Object, Function Function) :
+	explicit MethodCallback0(Class * Object, Method Method) :
 		m_Object(Object),
-		m_Function(Function)
+		m_Method(Method)
 	{
 	}
 	
@@ -140,22 +140,22 @@ public:
 	
 	virtual Return operator()(void) const
 	{
-		return (m_Object->*(this->m_Function))();
+		return (m_Object->*(this->m_Method))();
 	}
 protected:
 	Class * m_Object;
-	Function m_Function;
+	Method m_Method;
 };
 
 template < typename Return, typename Type1, typename Class >
 class MethodCallback1 : public Callback1< Return, Type1 >
 {
 public:
-	typedef Return (Class::*Function)(Type1);
+	typedef Return (Class::*Method)(Type1);
 	
-	explicit MethodCallback1(Class * Object, Function Function) :
+	explicit MethodCallback1(Class * Object, Method Method) :
 		m_Object(Object),
-		m_Function(Function)
+		m_Method(Method)
 	{
 	}
 	
@@ -165,11 +165,11 @@ public:
 	
 	virtual Return operator()(Type1 Argument1) const
 	{
-		return (m_Object->*(this->m_Function))(Argument1);
+		return (m_Object->*(this->m_Method))(Argument1);
 	}
 protected:
 	Class * m_Object;
-	Function m_Function;
+	Method m_Method;
 };
 
 template < typename Return, typename Type1 >
@@ -221,31 +221,31 @@ protected:
 };
 
 template < typename Return >
-FunctionCallback0< Return > * Function(Return (*Function)())
+FunctionCallback0< Return > * Callback(Return (*Function)())
 {
 	return new FunctionCallback0< Return >(Function);
 }
 
 template < typename Return, typename Type1 >
-FunctionCallback1< Return, Type1 > * Function(Return (*Function)(Type1))
+FunctionCallback1< Return, Type1 > * Callback(Return (*Function)(Type1))
 {
 	return new FunctionCallback1< Return, Type1 >(Function);
 }
 
 template < typename Return, typename Type1, typename Type2 >
-FunctionCallback2< Return, Type1, Type2 > * Function(Return (*Function)(Type1, Type2))
+FunctionCallback2< Return, Type1, Type2 > * Callback(Return (*Function)(Type1, Type2))
 {
 	return new FunctionCallback2< Return, Type1, Type2 >(Function);
 }
 
 template < typename Return, typename Class >
-MethodCallback0< Return, Class > * Method(Class * Object, Return (Class::*Function)())
+MethodCallback0< Return, Class > * Callback(Class * Object, Return (Class::*Function)())
 {
 	return new MethodCallback0< Return, Class >(Object, Function);
 }
 
 template < typename Return, typename Type1, typename Class >
-MethodCallback1< Return, Type1, Class > * Method(Class * Object, Return (Class::*Function)(Type1))
+MethodCallback1< Return, Type1, Class > * Callback(Class * Object, Return (Class::*Function)(Type1))
 {
 	return new MethodCallback1< Return, Type1, Class >(Object, Function);
 }

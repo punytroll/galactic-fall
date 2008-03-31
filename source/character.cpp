@@ -39,10 +39,10 @@ Character::Character(void) :
 	// initialize object aspects
 	AddAspectMessages();
 	AddAspectObjectContainer();
-	GetAspectObjectContainer()->SetAllowAddingCallback(Method(this, &Character::AllowAdding));
-	GetAspectObjectContainer()->SetAllowRemovingCallback(Method(this, &Character::AllowRemoving));
-	GetAspectObjectContainer()->SetOnAddedCallback(Method(this, &Character::OnAdded));
-	GetAspectObjectContainer()->SetOnRemovedCallback(Method(this, &Character::OnRemoved));
+	GetAspectObjectContainer()->SetAllowAddingCallback(Callback(this, &Character::AllowAdding));
+	GetAspectObjectContainer()->SetAllowRemovingCallback(Callback(this, &Character::AllowRemoving));
+	GetAspectObjectContainer()->SetOnAddedCallback(Callback(this, &Character::OnAdded));
+	GetAspectObjectContainer()->SetOnRemovedCallback(Callback(this, &Character::OnRemoved));
 }
 
 Character::~Character(void)

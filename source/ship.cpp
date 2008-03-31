@@ -68,12 +68,12 @@ Ship::Ship(void) :
 	// initialize object aspects
 	AddAspectName();
 	AddAspectObjectContainer();
-	GetAspectObjectContainer()->SetOnAddedCallback(Method(this, &Ship::OnAdded));
-	GetAspectObjectContainer()->SetOnRemovedCallback(Method(this, &Ship::OnRemoved));
+	GetAspectObjectContainer()->SetOnAddedCallback(Callback(this, &Ship::OnAdded));
+	GetAspectObjectContainer()->SetOnRemovedCallback(Callback(this, &Ship::OnRemoved));
 	AddAspectPhysical();
 	AddAspectPosition();
 	AddAspectUpdate();
-	GetAspectUpdate()->SetCallback(Method(this, &Ship::Update));
+	GetAspectUpdate()->SetCallback(Callback(this, &Ship::Update));
 	AddAspectVisualization();
 }
 

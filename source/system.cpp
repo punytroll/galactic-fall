@@ -35,10 +35,10 @@ System::System(const std::string & Identifier) :
 	// initialize object aspects
 	AddAspectName();
 	AddAspectObjectContainer();
-	GetAspectObjectContainer()->SetAllowAddingCallback(Method(this, &System::AllowAdding));
-	GetAspectObjectContainer()->SetAllowRemovingCallback(Method(this, &System::AllowRemoving));
-	GetAspectObjectContainer()->SetOnAddedCallback(Method(this, &System::OnAdded));
-	GetAspectObjectContainer()->SetOnRemovedCallback(Method(this, &System::OnRemoved));
+	GetAspectObjectContainer()->SetAllowAddingCallback(Callback(this, &System::AllowAdding));
+	GetAspectObjectContainer()->SetAllowRemovingCallback(Callback(this, &System::AllowRemoving));
+	GetAspectObjectContainer()->SetOnAddedCallback(Callback(this, &System::OnAdded));
+	GetAspectObjectContainer()->SetOnRemovedCallback(Callback(this, &System::OnRemoved));
 	AddAspectPosition();
 }
 

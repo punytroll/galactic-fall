@@ -298,7 +298,7 @@ void SetMessage(const std::string & Message)
 	{
 		g_MessageTimeoutNotification.Dismiss();
 	}
-	g_MessageTimeoutNotification = g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 2.0f, Function(HideMessage));
+	g_MessageTimeoutNotification = g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 2.0f, Callback(HideMessage));
 }
 
 void DrawSelection(const Object * Object, float RadialSize, const Color & Color)
@@ -402,7 +402,7 @@ void CollectWidgetsRecurrent(void)
 {
 	CollectWidgets();
 	/// TODO: Make the 5.0f seconds timeout configurable via the game configuration archive.
-	g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 5.0f, Function(CollectWidgetsRecurrent));
+	g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 5.0f, Callback(CollectWidgetsRecurrent));
 }
 
 void DisplayUserInterface(void)
@@ -1163,7 +1163,7 @@ void SpawnShipOnTimeout(System * SpawnInSystem)
 	IdentifierSuffix << "::created_at_game_time(" << std::fixed << GameTime::Get() << ")::in_system(" << SpawnInSystem->GetIdentifier() << ")";
 	
 	SpawnShip(SpawnInSystem, IdentifierSuffix.str());
-	g_SpawnShipTimeoutNotification = g_GameTimeTimeoutNotifications->Add(GameTime::Get() + GetRandomFloatFromExponentialDistribution(1.0f / SpawnInSystem->GetTrafficDensity()), Bind1(Function(SpawnShipOnTimeout), SpawnInSystem));
+	g_SpawnShipTimeoutNotification = g_GameTimeTimeoutNotifications->Add(GameTime::Get() + GetRandomFloatFromExponentialDistribution(1.0f / SpawnInSystem->GetTrafficDensity()), Bind1(Callback(SpawnShipOnTimeout), SpawnInSystem));
 }
 
 void PopulateSystem(System * System)
@@ -1184,7 +1184,7 @@ void OnOutputEnterSystem(System * EnterSystem)
 {
 	assert(g_SpawnShipTimeoutNotification.IsValid() == false);
 	assert(g_MainScene == 0);
-	g_SpawnShipTimeoutNotification = g_GameTimeTimeoutNotifications->Add(GameTime::Get() + GetRandomFloatFromExponentialDistribution(1.0f / EnterSystem->GetTrafficDensity()), Bind1(Function(SpawnShipOnTimeout), EnterSystem));
+	g_SpawnShipTimeoutNotification = g_GameTimeTimeoutNotifications->Add(GameTime::Get() + GetRandomFloatFromExponentialDistribution(1.0f / EnterSystem->GetTrafficDensity()), Bind1(Callback(SpawnShipOnTimeout), EnterSystem));
 	// build the static setup of the scene
 	g_MainScene = new Graphics::Scene();
 	g_GraphicsEngine->AddScene(g_MainScene);
@@ -2538,7 +2538,7 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 				if(g_SaveGameDialog == 0)
 				{
 					g_Pause = true;
-					g_SaveGameDialog = new SaveGameDialog(g_UserInterface->GetRootWidget(), Function(SaveGame));
+					g_SaveGameDialog = new SaveGameDialog(g_UserInterface->GetRootWidget(), Callback(SaveGame));
 					g_SaveGameDialog->GrabKeyFocus();
 					g_SaveGameDialog->AddDestroyListener(&g_GlobalDestroyListener);
 				}
@@ -2553,7 +2553,7 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 				if(g_LoadGameDialog == 0)
 				{
 					g_Pause = true;
-					g_LoadGameDialog = new LoadGameDialog(g_UserInterface->GetRootWidget(), Function(LoadGameFromInputStream));
+					g_LoadGameDialog = new LoadGameDialog(g_UserInterface->GetRootWidget(), Callback(LoadGameFromInputStream));
 					g_LoadGameDialog->GrabKeyFocus();
 					g_LoadGameDialog->AddDestroyListener(&g_GlobalDestroyListener);
 				}
@@ -2916,7 +2916,7 @@ int main(int argc, char ** argv)
 	// setup the random number generator for everyday use
 	srand(time(0));
 	// static initialization of data independent globals
-	Callback1< void, Graphics::Node * > * OnGraphicsNodeDestroyCallback(Function(OnGraphicsNodeDestroy));
+	Callback1< void, Graphics::Node * > * OnGraphicsNodeDestroyCallback(Callback(OnGraphicsNodeDestroy));
 	
 	g_MainPerspective.SetNearClippingPlane(1.0f);
 	g_MainPerspective.SetFarClippingPlane(1000.f);
@@ -3016,7 +3016,7 @@ int main(int argc, char ** argv)
 	assert(g_TargetLabel != 0);
 	assert(g_ScannerDisplay != 0);
 	// set first timeout for widget collector, it will reinsert itself on callback
-	g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 5.0f, Function(CollectWidgetsRecurrent));
+	g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 5.0f, Callback(CollectWidgetsRecurrent));
 	// setting up the graphical environment
 	CreateWindow();
 	InitializeOpenGL();
