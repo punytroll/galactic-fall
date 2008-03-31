@@ -27,10 +27,10 @@ Storage::Storage(void) :
 {
 	// initialize object aspects
 	AddAspectObjectContainer();
-	GetAspectObjectContainer()->SetAllowAddingCallback(Method(this, &Storage::AllowAdding));
-	GetAspectObjectContainer()->SetAllowRemovingCallback(Method(this, &Storage::AllowRemoving));
-	GetAspectObjectContainer()->SetOnAddedCallback(Method(this, &Storage::OnAdded));
-	GetAspectObjectContainer()->SetOnRemovedCallback(Method(this, &Storage::OnRemoved));
+	GetAspectObjectContainer()->SetAllowAddingCallback(Callback(this, &Storage::AllowAdding));
+	GetAspectObjectContainer()->SetAllowRemovingCallback(Callback(this, &Storage::AllowRemoving));
+	GetAspectObjectContainer()->SetOnAddedCallback(Callback(this, &Storage::OnAdded));
+	GetAspectObjectContainer()->SetOnRemovedCallback(Callback(this, &Storage::OnRemoved));
 }
 
 Storage::~Storage(void)
