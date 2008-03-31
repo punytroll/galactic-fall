@@ -36,7 +36,7 @@ Shot::Shot(const WeaponClass * WeaponClass) :
 	GetAspectPhysical()->SetRadialSize(0.54f);
 	AddAspectPosition();
 	AddAspectUpdate();
-	GetAspectUpdate()->SetCallback(Method(this, &Shot::Update));
+	GetAspectUpdate()->SetCallback(Callback(this, &Shot::Update));
 	AddAspectVisualization();
 }
 

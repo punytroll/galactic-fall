@@ -148,7 +148,7 @@ void LoadGameDialog::ShowErrorMessage(const std::string & ErrorMessage)
 	}
 	m_ErrorMessage->SetVisible(true);
 	m_ErrorMessage->SetText(ErrorMessage);
-	m_ErrorMessageTimeoutNotification = g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 2.0f, Method(this, &LoadGameDialog::HideErrorMessage));
+	m_ErrorMessageTimeoutNotification = g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 2.0f, Callback(this, &LoadGameDialog::HideErrorMessage));
 }
 
 void LoadGameDialog::HideErrorMessage(void)

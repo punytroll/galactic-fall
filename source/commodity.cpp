@@ -33,7 +33,7 @@ Commodity::Commodity(void) :
 	AddAspectPhysical();
 	AddAspectPosition();
 	AddAspectUpdate();
-	GetAspectUpdate()->SetCallback(Method(this, &Commodity::Update));
+	GetAspectUpdate()->SetCallback(Callback(this, &Commodity::Update));
 	AddAspectVisualization();
 }
 

@@ -200,7 +200,7 @@ void SaveGameDialog::ShowErrorMessage(const std::string & ErrorMessage)
 	}
 	m_ErrorMessage->SetVisible(true);
 	m_ErrorMessage->SetText(ErrorMessage);
-	m_ErrorMessageTimeoutNotification = g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 2.0f, Method(this, &SaveGameDialog::HideErrorMessage));
+	m_ErrorMessageTimeoutNotification = g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 2.0f, Callback(this, &SaveGameDialog::HideErrorMessage));
 }
 
 void SaveGameDialog::HideErrorMessage(void)
