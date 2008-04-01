@@ -73,7 +73,7 @@
 					<base-price-modifier>0.91</base-price-modifier>
 				</offered-asset-class>
 			</offered-asset-classes>
-			<landing-fee>75</landing-fee>
+			<landing-fee-per-space>1.25</landing-fee-per-space>
 		</planet>
 		<planet>
 			<identifier>moon</identifier>
@@ -116,7 +116,7 @@
 					<base-price-modifier>0.99</base-price-modifier>
 				</offered-asset-class>
 			</offered-asset-classes>
-			<landing-fee>63</landing-fee>
+			<landing-fee-per-space>1.05</landing-fee-per-space>
 		</planet>
 		<planet>
 			<identifier>mars</identifier>
@@ -163,7 +163,7 @@
 					<base-price-modifier>1.04</base-price-modifier>
 				</offered-asset-class>
 			</offered-asset-classes>
-			<landing-fee>70</landing-fee>
+			<landing-fee-per-space>1.15</landing-fee-per-space>
 		</planet>
 	</planets>
 </system>

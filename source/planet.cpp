@@ -44,6 +44,7 @@ unsigned_numeric PlanetAssetClass::GetPrice(void) const
 
 Planet::Planet(const std::string & Identifier) :
 	m_Identifier(Identifier),
+	m_LandingFeePerSpace(0.0f),
 	m_Color(0)
 {
 	// initialize object aspects

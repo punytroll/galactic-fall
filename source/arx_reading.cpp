@@ -638,10 +638,10 @@ static void ReadSystem(Arxx::Reference & Reference)
 			NewPlanetAssetClass->SetBasePriceModifier(BasePriceModifier);
 		}
 		
-		u4byte LandingFee;
+		float LandingFeePerSpace;
 		
-		Reader >> LandingFee;
-		NewPlanet->SetLandingFee(LandingFee);
+		Reader >> LandingFeePerSpace;
+		NewPlanet->SetLandingFeePerSpace(LandingFeePerSpace / 1000.0f);
 		if(NewSystem->GetAspectObjectContainer()->AddContent(NewPlanet) == false)
 		{
 			throw std::runtime_error("Could not add planet '" + PlanetIdentifier + "' to system '" + Identifier + "'.");
