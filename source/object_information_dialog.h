@@ -34,7 +34,8 @@ public:
 	ObjectInformationDialog(Widget * SupWidget, const Reference< Object > & Object);
 private:
 	float AddObjectProperty(float Top, float Indentation, const Reference< Object > & Object);
-	float AddSeparator(float Top, float Indentation, const std::string & SeparatorName);
+	float AddSeparator(float Top, float Indentation, const std::string & Separator);
+	float AddString(float Top, float Indentation, const std::string & String);
 	float AddStringProperty(float Top, float Indentation, const std::string & PropertyName, const std::string & PropertyValue);
 	virtual bool OnClicked(Widget * EventSource);
 	virtual bool OnMouseButton(Widget * EventSource, int Button, int State, float X, float Y);
