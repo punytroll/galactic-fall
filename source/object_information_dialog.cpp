@@ -100,7 +100,7 @@ float ObjectInformationDialog::AddObjectProperty(float Top, float Indentation, c
 	return PropertyDisplay->GetSize()[1];
 }
 
-float ObjectInformationDialog::AddSeparator(float Top, float Indentation, const std::string & SeparatorName)
+float ObjectInformationDialog::AddSeparator(float Top, float Indentation, const std::string & Separator)
 {
 	Widget * SeparatorDisplay(new Widget(m_PropertiesScrollBox->GetContent()));
 	
@@ -108,15 +108,33 @@ float ObjectInformationDialog::AddSeparator(float Top, float Indentation, const 
 	SeparatorDisplay->SetSize(Vector2f(m_PropertiesScrollBox->GetContent()->GetSize()[0] - 20.0f, 20.0f));
 	SeparatorDisplay->SetAnchorRight(true);
 	
-	Label * SeparatorNameLabel(new Label(SeparatorDisplay, SeparatorName));
+	Label * SeparatorLabel(new Label(SeparatorDisplay, Separator));
 	
-	SeparatorNameLabel->SetPosition(Vector2f(Indentation, 0.0f));
-	SeparatorNameLabel->SetSize(SeparatorDisplay->GetSize());
-	SeparatorNameLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
-	SeparatorNameLabel->SetAnchorBottom(true);
-	SeparatorNameLabel->SetTextColor(Color(0.5f, 0.8f, 1.0f, 1.0f));
+	SeparatorLabel->SetPosition(Vector2f(Indentation, 0.0f));
+	SeparatorLabel->SetSize(SeparatorDisplay->GetSize());
+	SeparatorLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
+	SeparatorLabel->SetAnchorBottom(true);
+	SeparatorLabel->SetTextColor(Color(0.5f, 0.8f, 1.0f, 1.0f));
 	
 	return SeparatorDisplay->GetSize()[1];
+}
+
+float ObjectInformationDialog::AddString(float Top, float Indentation, const std::string & String)
+{
+	Widget * StringDisplay(new Widget(m_PropertiesScrollBox->GetContent()));
+	
+	StringDisplay->SetPosition(Vector2f(10.0f, Top));
+	StringDisplay->SetSize(Vector2f(m_PropertiesScrollBox->GetContent()->GetSize()[0] - 20.0f, 20.0f));
+	StringDisplay->SetAnchorRight(true);
+	
+	Label * StringLabel(new Label(StringDisplay, String));
+	
+	StringLabel->SetPosition(Vector2f(Indentation, 0.0f));
+	StringLabel->SetSize(StringDisplay->GetSize());
+	StringLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
+	StringLabel->SetAnchorBottom(true);
+	
+	return StringDisplay->GetSize()[1];
 }
 
 float ObjectInformationDialog::AddStringProperty(float Top, float Indentation, const std::string & PropertyName, const std::string & PropertyValue)
@@ -162,6 +180,15 @@ void ObjectInformationDialog::Refresh(void)
 		Top += AddStringProperty(Top, 0.0f, "Type", m_Object->GetTypeIdentifier());
 		Top += AddStringProperty(Top, 0.0f, "Class", m_Object->GetClassIdentifier());
 		Top += AddStringProperty(Top, 0.0f, "Identifier", m_Object->GetObjectIdentifier());
+		Top += AddSeparator(Top, 0.0f, "Container");
+		if(m_Object->GetContainer() != 0)
+		{
+			Top += AddObjectProperty(Top, 20.0f, m_Object->GetContainer()->GetReference());
+		}
+		else
+		{
+			Top += AddString(Top, 20.0f, "No container.");
+		}
 		if(m_Object->GetAspectName() != 0)
 		{
 			Top += AddSeparator(Top, 0.0f, "Name Aspect");
