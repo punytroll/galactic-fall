@@ -1,5 +1,8 @@
 <ship-class>
 	<identifier>shuttle</identifier>
+	<physical-aspect>
+		<space-requirement>60</space-requirement>
+	</physical-aspect>
 	<visualization>
 		<model-identifier>shuttle</model-identifier>
 		<visualization-parts>

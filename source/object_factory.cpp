@@ -112,6 +112,7 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		// set up physical aspect
 		assert(NewShip->GetAspectPhysical() != 0);
 		NewShip->GetAspectPhysical()->SetRadialSize(ShipClass->GetVisualizationPrototype()->GetModel()->GetRadialSize());
+		NewShip->GetAspectPhysical()->SetSpaceRequirement(ShipClass->GetSpaceRequirement());
 		// set up visualization aspect
 		assert(NewShip->GetAspectVisualization() != 0);
 		NewShip->GetAspectVisualization()->SetVisualizationPrototype(ShipClass->GetVisualizationPrototype());

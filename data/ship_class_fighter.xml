@@ -1,5 +1,8 @@
 <ship-class>
 	<identifier>fighter</identifier>
+	<physical-aspect>
+		<space-requirement>46</space-requirement>
+	</physical-aspect>
 	<visualization>
 		<model-identifier>fighter</model-identifier>
 		<visualization-parts>

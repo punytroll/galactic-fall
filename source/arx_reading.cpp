@@ -298,7 +298,7 @@ static void ReadCommodityClass(Arxx::Reference & Reference)
 	Reader >> Name >> SpaceRequirement;
 	
 	NewCommodityClass->SetName(Name);
-	NewCommodityClass->SetSpaceRequirement(static_cast< unsigned_numeric >(1000 * SpaceRequirement));
+	NewCommodityClass->SetSpaceRequirement(1000 * SpaceRequirement);
 	
 	// read visualization prototype
 	NewCommodityClass->AddVisualizationPrototype();
@@ -444,6 +444,11 @@ static void ReadShipClass(Arxx::Reference & Reference)
 	{
 		throw std::runtime_error("Could not create ship class '" + Identifier + "'.");
 	}
+	// read the physical aspect
+	float SpaceRequirement;
+	
+	Reader >> SpaceRequirement;
+	NewShipClass->SetSpaceRequirement(1000 * SpaceRequirement);
 	
 	// read the visualization
 	NewShipClass->AddVisualizationPrototype();
