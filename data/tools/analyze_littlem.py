@@ -10,7 +10,7 @@ parser.add_option("-i", "--in", dest="in_file", help="The littlem file to analyz
 # read the options and validate
 (options, args) = parser.parse_args()
 if options.in_file == None:
-	print "Set the raw file to convert with '--in'."
+	print "Set the littlem file to analyze with '--in'."
 	exit(1)
 
 def analyze(mesh_element):
