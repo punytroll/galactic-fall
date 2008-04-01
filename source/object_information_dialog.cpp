@@ -23,9 +23,11 @@
 #include "object.h"
 #include "object_aspect_name.h"
 #include "object_aspect_object_container.h"
+#include "object_aspect_physical.h"
 #include "object_information_dialog.h"
 #include "scroll_bar.h"
 #include "scroll_box.h"
+#include "string_cast.h"
 
 ObjectInformationDialog::ObjectInformationDialog(Widget * SupWidget, const Reference< Object > & Object) :
 	WWindow(SupWidget, "Object Information"),
@@ -204,6 +206,12 @@ void ObjectInformationDialog::Refresh(void)
 			{
 				Top += AddObjectProperty(Top, 20.0f, (*ContentIterator)->GetReference());
 			}
+		}
+		if(m_Object->GetAspectPhysical() != 0)
+		{
+			Top += AddSeparator(Top, 0.0f, "Physical");
+			Top += AddStringProperty(Top, 20.0f, "Radial Size", to_string_cast(m_Object->GetAspectPhysical()->GetRadialSize()));
+			Top += AddStringProperty(Top, 20.0f, "Space Requirement", to_string_cast(m_Object->GetAspectPhysical()->GetSpaceRequirement()));
 		}
 	}
 	m_PropertiesScrollBox->GetContent()->SetSize(Vector2f(m_PropertiesScrollBox->GetView()->GetSize()[0], std::max(Top, m_PropertiesScrollBox->GetView()->GetSize()[1])));
