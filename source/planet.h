@@ -65,9 +65,9 @@ public:
 	const std::string & GetDescription(void) const;
 	float GetSize(void) const;
 	const std::vector< PlanetAssetClass * > & GetPlanetAssetClasses(void) const;
-	unsigned_numeric GetLandingFee(void) const;
+	float GetLandingFeePerSpace(void) const;
 	// setters
-	void SetLandingFee(unsigned_numeric LandingFee);
+	void SetLandingFeePerSpace(float LandingFeePerSpace);
 	void SetDescription(const std::string & Description);
 	void SetSize(const float & Size);
 	void SetColor(const Color & Color);
@@ -79,7 +79,7 @@ private:
 	std::string m_Identifier;
 	std::string m_Description;
 	float m_Size;
-	unsigned_numeric m_LandingFee;
+	float m_LandingFeePerSpace;
 	Color * m_Color;
 	std::vector< PlanetAssetClass * > m_PlanetAssetClasses;
 };
@@ -114,14 +114,14 @@ inline const std::vector< PlanetAssetClass * > & Planet::GetPlanetAssetClasses(v
 	return m_PlanetAssetClasses;
 }
 
-inline unsigned_numeric Planet::GetLandingFee(void) const
+inline float Planet::GetLandingFeePerSpace(void) const
 {
-	return m_LandingFee;
+	return m_LandingFeePerSpace;
 }
 
-inline void Planet::SetLandingFee(unsigned_numeric LandingFee)
+inline void Planet::SetLandingFeePerSpace(float LandingFeePerSpace)
 {
-	m_LandingFee = LandingFee;
+	m_LandingFeePerSpace = LandingFeePerSpace;
 }
 
 #endif

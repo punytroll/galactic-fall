@@ -33,6 +33,7 @@
 #include "message.h"
 #include "mind.h"
 #include "object_aspect_object_container.h"
+#include "object_aspect_physical.h"
 #include "object_aspect_position.h"
 #include "object_factory.h"
 #include "planet.h"
@@ -221,9 +222,9 @@ void TransporterPhase2::Execute(void)
 	{
 		Reference< Planet > Planet(GetMind()->GetCharacter()->GetShip()->GetTarget());
 		
-		if(GetMind()->GetCharacter()->GetCredits() >= Planet->GetLandingFee())
+		if(GetMind()->GetCharacter()->GetCredits() >= (Planet->GetLandingFeePerSpace() * GetMind()->GetCharacter()->GetShip()->GetAspectPhysical()->GetSpaceRequirement()))
 		{
-			GetMind()->GetCharacter()->RemoveCredits(Planet->GetLandingFee());
+			GetMind()->GetCharacter()->RemoveCredits(Planet->GetLandingFeePerSpace() * GetMind()->GetCharacter()->GetShip()->GetAspectPhysical()->GetSpaceRequirement());
 			GetMind()->GetCharacter()->GetShip()->SetLand(true);
 			GetMind()->GetStateMachine()->SetState(new TransporterPhase3(GetMind()));
 			delete this;
@@ -703,9 +704,9 @@ void RefuelPhase2::Execute(void)
 	{
 		Reference< Planet > Planet(GetMind()->GetCharacter()->GetShip()->GetTarget());
 		
-		if(GetMind()->GetCharacter()->GetCredits() >= Planet->GetLandingFee())
+		if(GetMind()->GetCharacter()->GetCredits() >= (Planet->GetLandingFeePerSpace() * GetMind()->GetCharacter()->GetShip()->GetAspectPhysical()->GetSpaceRequirement()))
 		{
-			GetMind()->GetCharacter()->RemoveCredits(Planet->GetLandingFee());
+			GetMind()->GetCharacter()->RemoveCredits((Planet->GetLandingFeePerSpace() * GetMind()->GetCharacter()->GetShip()->GetAspectPhysical()->GetSpaceRequirement()));
 			GetMind()->GetCharacter()->GetShip()->SetLand(true);
 			GetMind()->GetStateMachine()->SetState(new RefuelPhase3(GetMind()));
 			delete this;

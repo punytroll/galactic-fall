@@ -221,8 +221,9 @@ int WantToLand(const Character * Character, const Ship * Ship, const Planet * Pl
 	{
 		return TOO_FAST;
 	}
+	assert(Ship->GetAspectPhysical() !=0);
 	// test credits
-	if(Character->GetCredits() < Planet->GetLandingFee())
+	if(Character->GetCredits() < (Planet->GetLandingFeePerSpace() * Ship->GetAspectPhysical()->GetSpaceRequirement()))
 	{
 		return NOT_ENOUGH_CREDITS;
 	}
@@ -2389,7 +2390,7 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 					{
 					case OK:
 						{
-							g_InputMind->GetCharacter()->RemoveCredits(SelectedPlanet->GetLandingFee());
+							g_InputMind->GetCharacter()->RemoveCredits(SelectedPlanet->GetLandingFeePerSpace() * g_InputMind->GetCharacter()->GetShip()->GetAspectPhysical()->GetSpaceRequirement());
 							g_InputMind->Land();
 							
 							break;

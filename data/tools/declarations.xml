@@ -82,7 +82,7 @@
 		<float identifier="size"/>
 		<color4f identifier="color"/>
 		<array identifier="offered-asset-classes"/>
-		<u4byte identifier="landing-fee"/>
+		<float identifier="landing-fee-per-space"/>
 	</planet>
 	
 	<point>
