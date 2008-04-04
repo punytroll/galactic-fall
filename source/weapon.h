@@ -22,7 +22,6 @@
 
 #include "object.h"
 
-class Ship;
 class WeaponClass;
 
 class Weapon : public Object
