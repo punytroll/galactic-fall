@@ -26,6 +26,7 @@
 #include "math/vector3f.h"
 #include "object.h"
 
+class Battery;
 class Slot;
 class SlotClass;
 class Storage;
@@ -42,6 +43,7 @@ public:
 	Ship(void);
 	virtual ~Ship(void);
 	// getters
+	Battery * GetBattery(void);
 	Storage * GetCargoHold(void);
 	const Storage * GetCargoHold(void) const;
 	Reference< Graphics::ParticleSystem > & GetEngineGlowParticleSystem(void);
@@ -103,6 +105,7 @@ private:
 private:
 	// ship class
 	bool m_Accelerate;
+	Battery * m_Battery;
 	Storage * m_CargoHold;
 	Reference< Graphics::ParticleSystem > m_EngineGlowParticleSystem;
 	Vector3f m_ExhaustOffset;

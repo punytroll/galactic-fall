@@ -21,6 +21,7 @@
 
 #include <sstream>
 
+#include "battery.h"
 #include "color.h"
 #include "game_time.h"
 #include "globals.h"
@@ -43,6 +44,7 @@
 
 Weapon::Weapon(const WeaponClass * WeaponClass) :
 	m_WeaponClass(WeaponClass),
+	m_EnergyUsagePerShot(0.0f),
 	m_Fire(false),
 	m_NextTimeToFire(0.0)
 {
@@ -62,53 +64,62 @@ void Weapon::Update(float Seconds)
 {
 	if((m_Fire == true) && (m_NextTimeToFire <= GameTime::Get()))
 	{
-		Object * TheShip(GetContainer());
+		Object * Container(GetContainer());
+		
+		assert(Container != 0);
+		assert(Container->GetTypeIdentifier() == "ship");
+		
+		Ship * TheShip(dynamic_cast< Ship * >(Container));
 		
 		assert(TheShip != 0);
-		assert(TheShip->GetAspectPosition() != 0);
-		assert(TheShip->GetContainer() != 0);
-		
-		std::stringstream IdentifierStream;
-		
-		IdentifierStream << "::shot::created_at_game_time(" << to_string_cast(GameTime::Get(), 2) << ")::created_by(" << GetContainer()->GetObjectIdentifier() << ")::in_system(" << TheShip->GetContainer()->GetObjectIdentifier() << ")";
-		
-		Shot * NewShot(dynamic_cast< Shot * >(g_ObjectFactory->Create("shot", GetWeaponClass()->GetIdentifier())));
-		
-		assert(NewShot->GetAspectPosition() != 0);
-		NewShot->SetObjectIdentifier(IdentifierStream.str());
-		NewShot->SetShooter(TheShip->GetReference());
-		
-		// calculating the shot's position in the world coordinate system
-		const Vector3f & ParticleExitPosition(GetWeaponClass()->GetParticleExitPosition());
-		const Vector3f & SlotPosition(GetAspectAccessory()->GetSlot()->GetPosition());
-		const Vector3f & ShipPosition(TheShip->GetAspectPosition()->GetPosition());
-		Vector3f ShotPosition(true);
-		
-		ShotPosition += ParticleExitPosition;
-		ShotPosition *= GetAspectPosition()->GetOrientation();
-		ShotPosition *= GetAspectAccessory()->GetSlot()->GetOrientation();
-		ShotPosition += SlotPosition;
-		ShotPosition *= TheShip->GetAspectPosition()->GetOrientation();
-		ShotPosition += ShipPosition;
-		NewShot->GetAspectPosition()->SetPosition(ShotPosition);
-		
-		// calculating the shot's angular position in world coordinate system
-		Quaternion ShotOrientation(true);
-		
-		ShotOrientation *= TheShip->GetAspectPosition()->GetOrientation();
-		ShotOrientation *= GetAspectAccessory()->GetSlot()->GetOrientation();
-		ShotOrientation *= GetAspectPosition()->GetOrientation();
-		NewShot->GetAspectPosition()->SetOrientation(ShotOrientation);
-		
-		// calculate the shot's velocity
-		Vector3f ParticleVelocity(GetWeaponClass()->GetParticleExitSpeed(), 0.0f, 0.0f);
-		
-		ParticleVelocity *= ShotOrientation;
-		assert(dynamic_cast< Ship * >(TheShip) != 0);
-		NewShot->SetVelocity(dynamic_cast< Ship * >(TheShip)->GetVelocity() + Vector3f(ParticleVelocity[0], ParticleVelocity[1], 0.0f));
-		TheShip->GetContainer()->GetAspectObjectContainer()->AddContent(NewShot);
-		m_NextTimeToFire = GameTime::Get() + GetWeaponClass()->GetReloadTime();
-		// add visualization
-		VisualizeShot(NewShot, g_ShotLayer);
+		if((TheShip->GetBattery() != 0) && (TheShip->GetBattery()->GetEnergy() >= GetEnergyUsagePerShot()))
+		{
+			TheShip->GetBattery()->SetEnergy(TheShip->GetBattery()->GetEnergy() - GetEnergyUsagePerShot());
+			assert(Container->GetAspectPosition() != 0);
+			assert(Container->GetContainer() != 0);
+			
+			std::stringstream IdentifierStream;
+			
+			IdentifierStream << "::shot::created_at_game_time(" << to_string_cast(GameTime::Get(), 2) << ")::created_by(" << GetContainer()->GetObjectIdentifier() << ")::in_system(" << Container->GetContainer()->GetObjectIdentifier() << ")";
+			
+			Shot * NewShot(dynamic_cast< Shot * >(g_ObjectFactory->Create("shot", GetWeaponClass()->GetIdentifier())));
+			
+			assert(NewShot->GetAspectPosition() != 0);
+			NewShot->SetObjectIdentifier(IdentifierStream.str());
+			NewShot->SetShooter(Container->GetReference());
+			
+			// calculating the shot's position in the world coordinate system
+			const Vector3f & ParticleExitPosition(GetWeaponClass()->GetParticleExitPosition());
+			const Vector3f & SlotPosition(GetAspectAccessory()->GetSlot()->GetPosition());
+			const Vector3f & ShipPosition(Container->GetAspectPosition()->GetPosition());
+			Vector3f ShotPosition(true);
+			
+			ShotPosition += ParticleExitPosition;
+			ShotPosition *= GetAspectPosition()->GetOrientation();
+			ShotPosition *= GetAspectAccessory()->GetSlot()->GetOrientation();
+			ShotPosition += SlotPosition;
+			ShotPosition *= Container->GetAspectPosition()->GetOrientation();
+			ShotPosition += ShipPosition;
+			NewShot->GetAspectPosition()->SetPosition(ShotPosition);
+			
+			// calculating the shot's angular position in world coordinate system
+			Quaternion ShotOrientation(true);
+			
+			ShotOrientation *= Container->GetAspectPosition()->GetOrientation();
+			ShotOrientation *= GetAspectAccessory()->GetSlot()->GetOrientation();
+			ShotOrientation *= GetAspectPosition()->GetOrientation();
+			NewShot->GetAspectPosition()->SetOrientation(ShotOrientation);
+			
+			// calculate the shot's velocity
+			Vector3f ParticleVelocity(GetWeaponClass()->GetParticleExitSpeed(), 0.0f, 0.0f);
+			
+			ParticleVelocity *= ShotOrientation;
+			assert(dynamic_cast< Ship * >(Container) != 0);
+			NewShot->SetVelocity(dynamic_cast< Ship * >(Container)->GetVelocity() + Vector3f(ParticleVelocity[0], ParticleVelocity[1], 0.0f));
+			Container->GetContainer()->GetAspectObjectContainer()->AddContent(NewShot);
+			m_NextTimeToFire = GameTime::Get() + GetWeaponClass()->GetReloadTime();
+			// add visualization
+			VisualizeShot(NewShot, g_ShotLayer);
+		}
 	}
 }

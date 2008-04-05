@@ -51,6 +51,7 @@ all_data = \
 	.data/ship_class_shuttle.data \
 	.data/ship_class_transporter.data \
 	.data/ship_class_fighter.data \
+	.data/slot_class_light_battery.data \
 	.data/slot_class_light_weapon.data \
 	.data/slot_class_medium_weapon.data \
 	.data/system_alpha_centauri.data \
@@ -186,6 +187,7 @@ data.arx: $(data_arx)
 	arxadd $@ --$(data_location) --uid 105 --name "Scanner" --type 1 --subtype 0 --add "/User Interface" .data/widget_scanner.data
 	arxadd $@ --$(data_location) --uid 126 --name "Scanner Display" --type 1 --subtype 3 --add "/User Interface" .data/widget_scanner_display.data
 	@echo -e "\n\nAdding slot classes ...\n"
+	arxadd $@ --$(data_location) --name "Light Battery" --type 9 --subtype 0 --add "/Slot Classes" .data/slot_class_light_battery.data
 	arxadd $@ --$(data_location) --name "Light Weapon" --type 9 --subtype 0 --add "/Slot Classes" .data/slot_class_light_weapon.data
 	arxadd $@ --$(data_location) --name "Medium Weapon" --type 9 --subtype 0 --add "/Slot Classes" .data/slot_class_medium_weapon.data
 	@echo -e "\n\nAdding weapon classes ...\n"

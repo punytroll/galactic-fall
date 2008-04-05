@@ -199,6 +199,7 @@
 		<quaternion identifier="orientation"/>
 		<float identifier="reload-time"/>
 		<float identifier="space-requirement"/>
+		<float identifier="energy-usage-per-shot"/>
 		<particle identifier="particle"/>
 	</weapon-class>
 	

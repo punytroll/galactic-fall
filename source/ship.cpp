@@ -17,6 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include "battery.h"
 #include "character.h"
 #include "commodity.h"
 #include "game_time.h"
@@ -42,6 +43,7 @@
 
 Ship::Ship(void) :
 	m_Accelerate(false),
+	m_Battery(0),
 	m_CargoHold(0),
 	m_ExhaustRadius(0.0f),
 	m_Fuel(0.0f),
@@ -84,6 +86,20 @@ Ship::~Ship(void)
 		delete m_Slots.begin()->second;
 		m_Slots.erase(m_Slots.begin());
 	}
+}
+
+Battery * Ship::GetBattery(void)
+{
+	if(m_Battery != 0)
+	{
+		assert(m_Battery->GetAspectAccessory() != 0);
+		if(m_Battery->GetAspectAccessory()->GetSlot() != 0)
+		{
+			return m_Battery;
+		}
+	}
+	
+	return 0;
 }
 
 void Ship::SetFire(bool Fire)
@@ -436,7 +452,12 @@ void Ship::SetHull(float Hull)
 
 void Ship::OnAdded(Object * Content)
 {
-	if(Content->GetTypeIdentifier() == "storage")
+	if(Content->GetTypeIdentifier() == "battery")
+	{
+		assert(m_Battery == 0);
+		m_Battery = dynamic_cast< Battery * >(Content);
+	}
+	else if(Content->GetTypeIdentifier() == "storage")
 	{
 		assert(m_CargoHold == 0);
 		m_CargoHold = dynamic_cast< Storage * >(Content);
@@ -445,7 +466,12 @@ void Ship::OnAdded(Object * Content)
 
 void Ship::OnRemoved(Object * Content)
 {
-	if(Content->GetTypeIdentifier() == "storage")
+	if(Content->GetTypeIdentifier() == "battery")
+	{
+		assert(m_Battery == Content);
+		m_Battery = 0;
+	}
+	else if(Content->GetTypeIdentifier() == "storage")
 	{
 		assert(m_CargoHold == Content);
 		m_CargoHold = 0;

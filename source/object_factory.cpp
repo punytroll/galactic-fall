@@ -19,6 +19,7 @@
 
 #include <stdexcept>
 
+#include "battery.h"
 #include "character.h"
 #include "class_manager.h"
 #include "command_mind.h"
@@ -26,6 +27,7 @@
 #include "commodity_class.h"
 #include "globals.h"
 #include "graphics_model.h"
+#include "object_aspect_accessory.h"
 #include "object_aspect_name.h"
 #include "object_aspect_physical.h"
 #include "object_aspect_visualization.h"
@@ -44,7 +46,28 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 {
 	Object * Result(0);
 	
-	if(TypeIdentifier == "character")
+	if(TypeIdentifier == "battery")
+	{
+		assert(ClassIdentifier == "light_battery");
+		
+		Battery * NewBattery(new Battery());
+		
+		// set up type specific things
+		NewBattery->SetEnergy(200.0f);
+		NewBattery->SetEnergyCapacity(200.0f);
+		// set up aspects
+		// set up accessory aspect
+		assert(NewBattery->GetAspectAccessory() != 0);
+		NewBattery->GetAspectAccessory()->SetSlotClassIdentifier("light_battery");
+		// set up name aspect
+		assert(NewBattery->GetAspectName() != 0);
+		NewBattery->GetAspectName()->SetName("Light Battery");
+		// set up physical aspect
+		assert(NewBattery->GetAspectPhysical() != 0);
+		NewBattery->GetAspectPhysical()->SetSpaceRequirement(0.02);
+		Result = NewBattery;
+	}
+	else if(TypeIdentifier == "character")
 	{
 		assert(ClassIdentifier.empty() == true);
 		Result = new Character();
@@ -132,8 +155,10 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 	else if(TypeIdentifier == "weapon")
 	{
 		const WeaponClass * WeaponClass(g_WeaponClassManager->Get(ClassIdentifier));
+		Weapon * NewWeapon(new Weapon(WeaponClass));
 		
-		Result = new Weapon(WeaponClass);
+		NewWeapon->SetEnergyUsagePerShot(WeaponClass->GetEnergyUsagePerShot());
+		Result = NewWeapon;
 	}
 	else
 	{

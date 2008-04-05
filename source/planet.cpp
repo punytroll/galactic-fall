@@ -18,6 +18,7 @@
 **/
 
 #include "asset_class.h"
+#include "battery.h"
 #include "color.h"
 #include "globals.h"
 #include "message.h"
@@ -95,6 +96,10 @@ void Planet::Land(Ship * Ship)
 {
 	Ship->SetVelocity(Vector3f(0.0f, 0.0f, 0.0f));
 	Ship->SetHull(Ship->GetHullCapacity());
+	if(Ship->GetBattery() != 0)
+	{
+		Ship->GetBattery()->SetEnergy(Ship->GetBattery()->GetEnergyCapacity());
+	}
 	
 	assert(Ship->GetAspectObjectContainer() != 0);
 	

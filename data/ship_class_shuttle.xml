@@ -48,7 +48,7 @@
 			<class-identifier>light_weapon</class-identifier>
 			<name>Starboard Gun</name>
 			<position>
-				<x>3.0</x>
+				<x>3</x>
 				<y>-1.44</y>
 				<z>0</z>
 			</position>
@@ -64,7 +64,7 @@
 			<class-identifier>light_weapon</class-identifier>
 			<name>Backboard Gun</name>
 			<position>
-				<x>3.0</x>
+				<x>3</x>
 				<y>1.44</y>
 				<z>0</z>
 			</position>
@@ -73,6 +73,22 @@
 				<x>-0.5</x>
 				<y>-0.5</y>
 				<z>0.5</z>
+			</orientation>
+		</slot>
+		<slot>
+			<identifier>battery</identifier>
+			<class-identifier>light_battery</class-identifier>
+			<name>Battery</name>
+			<position>
+				<x>3</x>
+				<y>0</y>
+				<z>0</z>
+			</position>
+			<orientation>
+				<w>1</w>
+				<x>0</x>
+				<y>0</y>
+				<z>0</z>
 			</orientation>
 		</slot>
 	</slots>
