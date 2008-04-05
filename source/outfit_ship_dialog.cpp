@@ -419,7 +419,7 @@ bool OutfitShipDialog::OnClicked(Widget * EventSource)
 		assert(Accessory != 0);
 		m_Ship->GetCargoHold()->GetAspectObjectContainer()->RemoveContent(Accessory);
 		m_Ship->GetAspectObjectContainer()->AddContent(Accessory);
-		m_Ship->Mount(Accessory, m_SelectedSlotListItem->GetSlot()->GetIdentifier());
+		m_SelectedSlotListItem->GetSlot()->Mount(Accessory->GetReference());
 		m_SelectedSlotListItem->Update();
 		RebuildAccessoryList();
 		UpdateButtons();
@@ -437,7 +437,7 @@ bool OutfitShipDialog::OnClicked(Widget * EventSource)
 		{
 			assert(m_Ship->GetCargoHold()->GetSpace() >= Accessory->GetAspectPhysical()->GetSpaceRequirement());
 		}
-		m_Ship->Unmount(m_SelectedSlotListItem->GetSlot()->GetIdentifier());
+		m_SelectedSlotListItem->GetSlot()->Unmount();
 		m_Ship->GetAspectObjectContainer()->RemoveContent(Accessory);
 		m_Ship->GetCargoHold()->GetAspectObjectContainer()->AddContent(Accessory);
 		m_SelectedSlotListItem->Update();
