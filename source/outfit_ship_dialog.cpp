@@ -26,6 +26,7 @@
 #include "object_aspect_accessory.h"
 #include "object_aspect_name.h"
 #include "object_aspect_object_container.h"
+#include "object_aspect_outfitting.h"
 #include "object_aspect_physical.h"
 #include "outfit_ship_dialog.h"
 #include "scroll_box.h"
@@ -254,7 +255,7 @@ OutfitShipDialog::OutfitShipDialog(Widget * SupWidget, Ship * Ship) :
 	m_SlotScrollBox->SetAnchorRight(true);
 	
 	float Top(5.0f);
-	const std::map< std::string, Slot * > & Slots(m_Ship->GetSlots());
+	const std::map< std::string, Slot * > & Slots(m_Ship->GetAspectOutfitting()->GetSlots());
 	
 	for(std::map< std::string, Slot * >::const_iterator SlotIterator = Slots.begin(); SlotIterator != Slots.end(); ++SlotIterator)
 	{

@@ -20,9 +20,6 @@
 #ifndef SHIP_H
 #define SHIP_H
 
-#include <map>
-#include <vector>
-
 #include "math/vector3f.h"
 #include "object.h"
 
@@ -61,9 +58,6 @@ public:
 	float GetMaximumForwardThrust(void) const;
 	float GetMaximumSpeed(void) const;
 	float GetMaximumTurnSpeed(void) const;
-	Slot * GetSlot(const std::string & SlotIdentifier);
-	const Slot * GetSlot(const std::string & SlotIdentifier) const;
-	const std::map< std::string, Slot * > & GetSlots(void) const;
 	Reference< Object > & GetTarget(void);
 	const Reference< Object > & GetTarget(void) const;
 	const Vector3f & GetVelocity(void) const;
@@ -94,8 +88,6 @@ public:
 	void SetTurnLeft(float TurnLeft);
 	void SetTurnRight(float TurnRight);
 	void SetVelocity(const Vector3f & Velocity);
-	// modifiers
-	Slot * CreateSlot(const SlotClass * SlotClass, const std::string & SlotIdentifier);
 private:
 	// slot for the update aspect
 	bool Update(float Seconds);
@@ -126,7 +118,6 @@ private:
 	float m_MaximumTurnSpeed;
 	bool m_Refuel;
 	bool m_Scoop;
-	std::map< std::string, Slot * > m_Slots;
 	bool m_TakeOff;
 	Reference< Object > m_Target;
 	float m_TurnLeft;
@@ -217,25 +208,6 @@ inline float Ship::GetMaximumTurnSpeed(void) const
 inline const System * Ship::GetLinkedSystemTarget(void) const
 {
 	return m_LinkedSystemTarget;
-}
-
-inline Slot * Ship::GetSlot(const std::string & SlotIdentifier)
-{
-	std::map< std::string, Slot * >::iterator SlotIterator(m_Slots.find(SlotIdentifier));
-	
-	return ((SlotIterator != m_Slots.end()) ? (SlotIterator->second) : (0));
-}
-
-inline const Slot * Ship::GetSlot(const std::string & SlotIdentifier) const
-{
-	std::map< std::string, Slot * >::const_iterator SlotIterator(m_Slots.find(SlotIdentifier));
-	
-	return ((SlotIterator != m_Slots.end()) ? (SlotIterator->second) : (0));
-}
-
-inline const std::map< std::string, Slot * > & Ship::GetSlots(void) const
-{
-	return m_Slots;
 }
 
 inline Reference< Object > & Ship::GetTarget(void)

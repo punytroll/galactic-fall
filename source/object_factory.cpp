@@ -29,6 +29,7 @@
 #include "graphics_model.h"
 #include "object_aspect_accessory.h"
 #include "object_aspect_name.h"
+#include "object_aspect_outfitting.h"
 #include "object_aspect_physical.h"
 #include "object_aspect_visualization.h"
 #include "object_factory.h"
@@ -119,19 +120,21 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		NewShip->SetMaximumForwardThrust(ShipClass->GetForwardThrust());
 		NewShip->SetMaximumSpeed(ShipClass->GetMaximumSpeed());
 		NewShip->SetMaximumTurnSpeed(ShipClass->GetTurnSpeed());
+		// set up aspects
+		// set up outfitting aspect
+		assert(NewShip->GetAspectOutfitting() != 0);
 		
-		// set up slots
 		const std::map< std::string, Slot * > & ShipClassSlots(ShipClass->GetSlots());
 		
 		for(std::map< std::string, Slot * >::const_iterator SlotIterator = ShipClassSlots.begin(); SlotIterator != ShipClassSlots.end(); ++SlotIterator)
 		{
-			Slot * NewSlot(NewShip->CreateSlot(SlotIterator->second->GetSlotClass(), SlotIterator->first));
+			Slot * NewSlot(new Slot(SlotIterator->second->GetSlotClass(), SlotIterator->first));
 			
 			NewSlot->SetName(SlotIterator->second->GetName());
 			NewSlot->SetPosition(SlotIterator->second->GetPosition());
 			NewSlot->SetOrientation(SlotIterator->second->GetOrientation());
+			NewShip->GetAspectOutfitting()->AddSlot(NewSlot);
 		}
-		// set up aspects
 		// set up physical aspect
 		assert(NewShip->GetAspectPhysical() != 0);
 		NewShip->GetAspectPhysical()->SetRadialSize(ShipClass->GetVisualizationPrototype()->GetModel()->GetRadialSize());

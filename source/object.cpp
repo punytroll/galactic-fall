@@ -25,6 +25,7 @@
 #include "object_aspect_messages.h"
 #include "object_aspect_name.h"
 #include "object_aspect_object_container.h"
+#include "object_aspect_outfitting.h"
 #include "object_aspect_physical.h"
 #include "object_aspect_position.h"
 #include "object_aspect_update.h"
@@ -41,6 +42,7 @@ Object::Object(void) :
 	m_AspectMessages(0),
 	m_AspectName(0),
 	m_AspectObjectContainer(0),
+	m_AspectOutfitting(0),
 	m_AspectPhysical(0),
 	m_AspectPosition(0),
 	m_AspectUpdate(0),
@@ -64,6 +66,8 @@ Object::~Object(void)
 	m_AspectName = 0;
 	delete m_AspectObjectContainer;
 	m_AspectObjectContainer = 0;
+	delete m_AspectOutfitting;
+	m_AspectOutfitting = 0;
 	delete m_AspectPhysical;
 	m_AspectPhysical = 0;
 	delete m_AspectPosition;
@@ -100,6 +104,12 @@ void Object::AddAspectObjectContainer(void)
 {
 	assert(m_AspectObjectContainer == 0);
 	m_AspectObjectContainer = new ObjectAspectObjectContainer(this);
+}
+
+void Object::AddAspectOutfitting(void)
+{
+	assert(m_AspectOutfitting == 0);
+	m_AspectOutfitting = new ObjectAspectOutfitting();
 }
 
 void Object::AddAspectPhysical(void)
