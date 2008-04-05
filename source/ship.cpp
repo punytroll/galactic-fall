@@ -29,6 +29,7 @@
 #include "message_dispatcher.h"
 #include "object_aspect_accessory.h"
 #include "object_aspect_object_container.h"
+#include "object_aspect_outfitting.h"
 #include "object_aspect_position.h"
 #include "object_aspect_update.h"
 #include "object_aspect_visualization.h"
@@ -72,6 +73,7 @@ Ship::Ship(void) :
 	AddAspectObjectContainer();
 	GetAspectObjectContainer()->SetOnAddedCallback(Callback(this, &Ship::OnAdded));
 	GetAspectObjectContainer()->SetOnRemovedCallback(Callback(this, &Ship::OnRemoved));
+	AddAspectOutfitting();
 	AddAspectPhysical();
 	AddAspectPosition();
 	AddAspectUpdate();
@@ -81,11 +83,6 @@ Ship::Ship(void) :
 
 Ship::~Ship(void)
 {
-	while(m_Slots.empty() == false)
-	{
-		delete m_Slots.begin()->second;
-		m_Slots.erase(m_Slots.begin());
-	}
 }
 
 Battery * Ship::GetBattery(void)
@@ -104,7 +101,7 @@ Battery * Ship::GetBattery(void)
 
 void Ship::SetFire(bool Fire)
 {
-	for(std::map< std::string, Slot * >::iterator SlotIterator = m_Slots.begin(); SlotIterator != m_Slots.end(); ++SlotIterator)
+	for(std::map< std::string, Slot * >::const_iterator SlotIterator = GetAspectOutfitting()->GetSlots().begin(); SlotIterator != GetAspectOutfitting()->GetSlots().end(); ++SlotIterator)
 	{
 		// only update *mounted* *weapons*
 		Object * MountedObject(SlotIterator->second->GetMountedObject().Get());
@@ -185,7 +182,7 @@ bool Ship::Update(float Seconds)
 	}
 	else
 	{
-		for(std::map< std::string, Slot * >::iterator SlotIterator = m_Slots.begin(); SlotIterator != m_Slots.end(); ++SlotIterator)
+		for(std::map< std::string, Slot * >::const_iterator SlotIterator = GetAspectOutfitting()->GetSlots().begin(); SlotIterator != GetAspectOutfitting()->GetSlots().end(); ++SlotIterator)
 		{
 			// only update *mounted* *weapons*
 			Object * MountedObject(SlotIterator->second->GetMountedObject().Get());
@@ -351,17 +348,6 @@ bool Ship::Update(float Seconds)
 	}
 	
 	return true;
-}
-
-Slot * Ship::CreateSlot(const SlotClass * SlotClass, const std::string & SlotIdentifier)
-{
-	assert(m_Slots.find(SlotIdentifier) == m_Slots.end());
-	
-	Slot * NewSlot(new Slot(SlotClass, SlotIdentifier));
-	
-	m_Slots[SlotIdentifier] = NewSlot;
-	
-	return NewSlot;
 }
 
 void Ship::SetFuel(float Fuel)

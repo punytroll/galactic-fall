@@ -27,6 +27,7 @@
 #include "graphics_model_object.h"
 #include "graphics_particle_system.h"
 #include "object_aspect_accessory.h"
+#include "object_aspect_outfitting.h"
 #include "object_aspect_physical.h"
 #include "object_aspect_position.h"
 #include "object_aspect_visualization.h"
@@ -184,7 +185,7 @@ void VisualizeShip(Ship * Ship, Graphics::Node * Container)
 	Container->AddNode(Visualization);
 	
 	// add weapon visualizations
-	const std::map< std::string, Slot * > & Slots(Ship->GetSlots());
+	const std::map< std::string, Slot * > & Slots(Ship->GetAspectOutfitting()->GetSlots());
 	
 	for(std::map< std::string, Slot * >::const_iterator SlotIterator = Slots.begin(); SlotIterator != Slots.end(); ++SlotIterator)
 	{
