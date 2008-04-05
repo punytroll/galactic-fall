@@ -364,42 +364,6 @@ Slot * Ship::CreateSlot(const SlotClass * SlotClass, const std::string & SlotIde
 	return NewSlot;
 }
 
-void Ship::Mount(Object * Object, const std::string & SlotIdentifier)
-{
-	assert(Object != 0);
-	assert(GetAspectObjectContainer() != 0);
-	assert(GetAspectObjectContainer()->GetContent().find(Object) != GetAspectObjectContainer()->GetContent().end());
-	
-	std::map< std::string, Slot * >::iterator SlotIterator(m_Slots.find(SlotIdentifier));
-	
-	assert(SlotIterator != m_Slots.end());
-	assert(SlotIterator->second->GetSlotClass()->AcceptsSlotClassIdentifier(Object->GetAspectAccessory()->GetSlotClassIdentifier()) == true);
-	SlotIterator->second->SetMountedObject(Object->GetReference());
-	Object->GetAspectAccessory()->SetSlot(SlotIterator->second);
-	if((Object->GetTypeIdentifier() == "weapon") && (GetAspectVisualization()->GetVisualization().IsValid() == true))
-	{
-		// visualize all weapons on ships that are already visualized
-		VisualizeWeapon(dynamic_cast< Weapon * >(Object), GetAspectVisualization()->GetVisualization().Get());
-	}
-}
-
-void Ship::Unmount(const std::string & SlotIdentifier)
-{
-	std::map< std::string, Slot * >::iterator SlotIterator(m_Slots.find(SlotIdentifier));
-	
-	assert(SlotIterator != m_Slots.end());
-	
-	Object * TheObject(SlotIterator->second->GetMountedObject().Get());
-	
-	assert(TheObject != 0);
-	SlotIterator->second->SetMountedObject(0);
-	TheObject->GetAspectAccessory()->SetSlot(0);
-	if((TheObject->GetAspectVisualization() != 0) && (TheObject->GetAspectVisualization()->GetVisualization().IsValid() == true))
-	{
-		UnvisualizeObject(TheObject);
-	}
-}
-
 void Ship::SetFuel(float Fuel)
 {
 	float FuelThreshold(GetFuelCapacity() * 0.2);

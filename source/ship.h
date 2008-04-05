@@ -61,6 +61,8 @@ public:
 	float GetMaximumForwardThrust(void) const;
 	float GetMaximumSpeed(void) const;
 	float GetMaximumTurnSpeed(void) const;
+	Slot * GetSlot(const std::string & SlotIdentifier);
+	const Slot * GetSlot(const std::string & SlotIdentifier) const;
 	const std::map< std::string, Slot * > & GetSlots(void) const;
 	Reference< Object > & GetTarget(void);
 	const Reference< Object > & GetTarget(void) const;
@@ -94,8 +96,6 @@ public:
 	void SetVelocity(const Vector3f & Velocity);
 	// modifiers
 	Slot * CreateSlot(const SlotClass * SlotClass, const std::string & SlotIdentifier);
-	void Mount(Object * Object, const std::string & SlotIdentifier);
-	void Unmount(const std::string & SlotIdentifier);
 private:
 	// slot for the update aspect
 	bool Update(float Seconds);
@@ -217,6 +217,20 @@ inline float Ship::GetMaximumTurnSpeed(void) const
 inline const System * Ship::GetLinkedSystemTarget(void) const
 {
 	return m_LinkedSystemTarget;
+}
+
+inline Slot * Ship::GetSlot(const std::string & SlotIdentifier)
+{
+	std::map< std::string, Slot * >::iterator SlotIterator(m_Slots.find(SlotIdentifier));
+	
+	return ((SlotIterator != m_Slots.end()) ? (SlotIterator->second) : (0));
+}
+
+inline const Slot * Ship::GetSlot(const std::string & SlotIdentifier) const
+{
+	std::map< std::string, Slot * >::const_iterator SlotIterator(m_Slots.find(SlotIdentifier));
+	
+	return ((SlotIterator != m_Slots.end()) ? (SlotIterator->second) : (0));
 }
 
 inline const std::map< std::string, Slot * > & Ship::GetSlots(void) const

@@ -17,11 +17,30 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include "object.h"
+#include "object_aspect_accessory.h"
 #include "slot.h"
+#include "slot_class.h"
 
 Slot::Slot(const SlotClass * SlotClass, const std::string & Identifier) :
 	m_SlotClass(SlotClass),
 	m_Identifier(Identifier),
 	m_MountedObject(0)
 {
+}
+
+void Slot::Mount(Reference< Object > TheObject)
+{
+	assert(TheObject.IsValid() == true);
+	assert(TheObject->GetAspectAccessory() != 0);
+	assert(GetSlotClass()->AcceptsSlotClassIdentifier(TheObject->GetAspectAccessory()->GetSlotClassIdentifier()) == true);
+	m_MountedObject = TheObject;
+	TheObject->GetAspectAccessory()->SetSlot(this);
+}
+
+void Slot::Unmount(void)
+{
+	assert(GetMountedObject().IsValid() == true);
+	GetMountedObject()->GetAspectAccessory()->SetSlot(0);
+	GetMountedObject().Clear();
 }

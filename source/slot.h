@@ -42,10 +42,12 @@ public:
 	const Vector3f & GetPosition(void) const;
 	const SlotClass * GetSlotClass(void) const;
 	// setters
-	void SetMountedObject(Reference< Object > MountedObject);
 	void SetName(const std::string & Name);
 	void SetOrientation(const Quaternion & Orientation);
 	void SetPosition(const Vector3f & Position);
+	// modifiers
+	void Mount(Reference< Object > TheObject);
+	void Unmount(void);
 private:
 	const SlotClass * m_SlotClass;
 	std::string m_Identifier;
@@ -88,11 +90,6 @@ inline const Vector3f & Slot::GetPosition(void) const
 inline const SlotClass * Slot::GetSlotClass(void) const
 {
 	return m_SlotClass;
-}
-
-inline void Slot::SetMountedObject(Reference< Object > MountedObject)
-{
-	m_MountedObject = MountedObject;
 }
 
 inline void Slot::SetName(const std::string & Name)
