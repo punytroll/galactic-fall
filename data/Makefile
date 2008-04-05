@@ -27,6 +27,7 @@ all_data = \
 	.data/commodity_class_metal.data \
 	.data/label_credits.data \
 	.data/label_current_system.data \
+	.data/label_energy.data \
 	.data/label_fuel.data \
 	.data/label_hull.data \
 	.data/label_message.data \
@@ -176,6 +177,7 @@ data.arx: $(data_arx)
 	@echo -e "\nThe widgets will be read in uid order, so assign proper uids so that superior widgets are read before sub widgets.\n"
 	arxadd $@ --$(data_location) --uid 103 --name "Credits" --type 1 --subtype 1 --add "/User Interface" .data/label_credits.data
 	arxadd $@ --$(data_location) --uid 108 --name "Current System" --type 1 --subtype 1 --add "/User Interface" .data/label_current_system.data
+	arxadd $@ --$(data_location) --uid 10A --name "Energy" --type 1 --subtype 1 --add "/User Interface" .data/label_energy.data
 	arxadd $@ --$(data_location) --uid 104 --name "Fuel" --type 1 --subtype 1 --add "/User Interface" .data/label_fuel.data
 	arxadd $@ --$(data_location) --uid 132 --name "Hull" --type 1 --subtype 1 --add "/User Interface" .data/label_hull.data
 	arxadd $@ --$(data_location) --uid 100 --name "Message" --type 1 --subtype 1 --add "/User Interface" .data/label_message.data

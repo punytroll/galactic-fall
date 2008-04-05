@@ -1,10 +1,10 @@
 <label>
 	<widget>
 		<widget-path>/</widget-path>
-		<name>hull</name>
+		<name>energy</name>
 		<position>
 			<x>0</x>
-			<y>100</y>
+			<y>80</y>
 		</position>
 		<use-size>true</use-size>
 		<size>

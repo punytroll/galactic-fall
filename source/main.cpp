@@ -849,6 +849,19 @@ void UpdateUserInterface(void)
 		g_CreditsLabel->SetVisible(true);
 		g_MiniMap->SetVisible(true);
 		g_Scanner->SetVisible(true);
+		// display the energy status
+		if(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetBattery() != 0)
+		{
+			Label * EnergyLabel(dynamic_cast< Label * >(g_UserInterface->GetWidget("/energy")));
+			
+			assert(EnergyLabel != 0);
+			EnergyLabel->SetVisible(true);
+			EnergyLabel->SetText("Energy: " + to_string_cast(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetBattery()->GetEnergy(), 2));
+		}
+		else
+		{
+			g_UserInterface->GetWidget("/energy")->SetVisible(false);
+		}
 		// display the name of the target
 		if(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget().IsValid() == true)
 		{
@@ -899,6 +912,7 @@ void UpdateUserInterface(void)
 	}
 	else
 	{
+		g_UserInterface->GetWidget("/energy")->SetVisible(false);
 		g_TargetLabel->SetVisible(false);
 		g_SystemLabel->SetVisible(false);
 		g_FuelLabel->SetVisible(false);
