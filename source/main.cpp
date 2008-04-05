@@ -33,6 +33,7 @@
 
 #include "arx_reading.h"
 #include "asset_class.h"
+#include "battery.h"
 #include "callbacks.h"
 #include "camera.h"
 #include "character.h"
@@ -1083,6 +1084,12 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 	ShipStorage->SetSpaceCapacity(ShipClass->GetMaximumAvailableSpace());
 	NewShip->GetAspectObjectContainer()->AddContent(ShipStorage);
 	
+	Object * NewBattery(g_ObjectFactory->Create("battery", "light_battery"));
+	
+	NewBattery->SetObjectIdentifier("::battery(" + NewBattery->GetClassIdentifier() + ")::created_for(" + NewShip->GetObjectIdentifier() + ")" + IdentifierSuffix);
+	NewShip->GetAspectObjectContainer()->AddContent(NewBattery);
+	NewShip->Mount(NewBattery, "battery");
+	
 	Character * NewCharacter(dynamic_cast< Character * >(g_ObjectFactory->Create("character", "")));
 	
 	NewCharacter->SetObjectIdentifier("::character(" + NewShip->GetClassIdentifier() + ")" + IdentifierSuffix);
@@ -1653,7 +1660,30 @@ void LoadGameFromElement(const Element * SaveElement)
 				}
 				else if((*ObjectChild)->GetName() == "type-specific")
 				{
-					if((*SaveChild)->GetAttribute("type-identifier") == "character")
+					if((*SaveChild)->GetAttribute("type-identifier") == "battery")
+					{
+						Battery * NewBattery(dynamic_cast< Battery * >(NewObject));
+						
+						assert(NewBattery != 0);
+						for(std::vector< Element * >::const_iterator TypeSpecificChild = (*ObjectChild)->GetChilds().begin(); TypeSpecificChild != (*ObjectChild)->GetChilds().end(); ++TypeSpecificChild)
+						{
+							if((*TypeSpecificChild)->GetName() == "energy")
+							{
+								assert((*TypeSpecificChild)->HasAttribute("value") == true);
+								NewBattery->SetEnergy(from_string_cast< float >((*TypeSpecificChild)->GetAttribute("value")));
+							}
+							else if((*TypeSpecificChild)->GetName() == "energy-capacity")
+							{
+								assert((*TypeSpecificChild)->HasAttribute("value") == true);
+								NewBattery->SetEnergyCapacity(from_string_cast< float >((*TypeSpecificChild)->GetAttribute("value")));
+							}
+							else
+							{
+								throw std::runtime_error("The \"" + (*ObjectChild)->GetName() + "\" element for the object \"" + (*SaveChild)->GetAttribute("object-identifier") + "\" contains an unknown element \"" + (*TypeSpecificChild)->GetName() + "\".");
+							}
+						}
+					}
+					else if((*SaveChild)->GetAttribute("type-identifier") == "character")
 					{
 						Character * NewCharacter(dynamic_cast< Character * >(NewObject));
 						

@@ -41,6 +41,7 @@ public:
 	// destructor
 	~WeaponClass(void);
 	// getters
+	float GetEnergyUsagePerShot(void) const;
 	const std::string & GetIdentifier(void) const;
 	const Graphics::Model * GetModel(void) const;
 	const Color * GetModelColor(void) const;
@@ -56,6 +57,7 @@ public:
 	const std::string & GetSlotClassIdentifier(void) const;
 	unsigned_numeric GetSpaceRequirement(void) const;
 	// setters
+	void SetEnergyUsagePerShot(float EnergyUsagePerShot);
 	void SetModel(const Graphics::Model * Model);
 	void SetModelColor(const Color & ModelColor);
 	void SetName(const std::string & Name);
@@ -70,6 +72,7 @@ public:
 	void SetSlotClassIdentifier(const std::string & SlotClassIdentifier);
 	void SetSpaceRequirement(unsigned_numeric SpaceRequirement);
 private:
+	float m_EnergyUsagePerShot;
 	std::string m_Identifier;
 	const Graphics::Model * m_Model;
 	Color * m_ModelColor;
@@ -85,6 +88,11 @@ private:
 	Color * m_ParticleColor;
 	unsigned_numeric m_SpaceRequirement;
 };
+
+inline float WeaponClass::GetEnergyUsagePerShot(void) const
+{
+	return m_EnergyUsagePerShot;
+}
 
 inline const Color * WeaponClass::GetModelColor(void) const
 {
@@ -154,6 +162,11 @@ inline const std::string & WeaponClass::GetSlotClassIdentifier(void) const
 inline unsigned_numeric WeaponClass::GetSpaceRequirement(void) const
 {
 	return m_SpaceRequirement;
+}
+
+inline void WeaponClass::SetEnergyUsagePerShot(float EnergyUsagePerShot)
+{
+	m_EnergyUsagePerShot = EnergyUsagePerShot;
 }
 
 inline void WeaponClass::SetModel(const Graphics::Model * Model)

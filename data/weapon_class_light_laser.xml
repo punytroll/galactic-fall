@@ -17,6 +17,7 @@
 	</orientation>
 	<reload-time>0.63</reload-time>
 	<space-requirement>0.3</space-requirement>
+	<energy-usage-per-shot>5</energy-usage-per-shot>
 	<particle>
 		<exit-position>
 			<x>0.8</x>

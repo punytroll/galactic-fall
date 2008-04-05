@@ -17,49 +17,44 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef WEAPON_H
-#define WEAPON_H
+#ifndef BATTERY_H
+#define BATTERY_H
 
 #include "object.h"
 
-class WeaponClass;
-
-class Weapon : public Object
+class Battery : public Object
 {
 public:
-	Weapon(const WeaponClass * WeaponClass);
-	void Update(float Seconds);
+	Battery(void);
 	// getters
-	float GetEnergyUsagePerShot(void) const;
-	const WeaponClass * GetWeaponClass(void) const;
+	float GetEnergy(void) const;
+	float GetEnergyCapacity(void) const;
 	// setters
-	void SetEnergyUsagePerShot(float EnergyUsagePerShot);
-	void SetFire(bool Fire);
+	void SetEnergy(float Energy);
+	void SetEnergyCapacity(float EnergyCapacity);
 private:
-	const WeaponClass * m_WeaponClass;
-	float m_EnergyUsagePerShot;
-	bool m_Fire;
-	double m_NextTimeToFire;
+	float m_Energy;
+	float m_EnergyCapacity;
 };
 
-inline float Weapon::GetEnergyUsagePerShot(void) const
+inline float Battery::GetEnergy(void) const
 {
-	return m_EnergyUsagePerShot;
+	return m_Energy;
 }
 
-inline const WeaponClass * Weapon::GetWeaponClass(void) const
+inline float Battery::GetEnergyCapacity(void) const
 {
-	return m_WeaponClass;
+	return m_EnergyCapacity;
 }
 
-inline void Weapon::SetEnergyUsagePerShot(float EnergyUsagePerShot)
+inline void Battery::SetEnergy(float Energy)
 {
-	m_EnergyUsagePerShot = EnergyUsagePerShot;
+	m_Energy = Energy;
 }
 
-inline void Weapon::SetFire(bool Fire)
+inline void Battery::SetEnergyCapacity(float EnergyCapacity)
 {
-	m_Fire = Fire;
+	m_EnergyCapacity = EnergyCapacity;
 }
 
 #endif

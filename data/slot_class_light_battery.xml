@@ -1,0 +1,7 @@
+<slot-class>
+	<identifier>light_battery</identifier>
+	<name>Light Battery</name>
+	<accepted-slot-classes>
+		<accepted-slot-class>light_battery</accepted-slot-class>
+	</accepted-slot-classes>
+</slot-class>

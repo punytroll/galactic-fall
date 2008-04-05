@@ -21,6 +21,7 @@
 			<content object-identifier="::character::player_character"/>
 			<content object-identifier="::storage(::ship(shuttle)::player_ship)"/>
 			<content object-identifier="::weapon(light_laser)"/>
+			<content object-identifier="::battery(::ship(shuttle)::player_ship)"/>
 		</aspect-object-container>
 		<aspect-position>
 			<orientation w="-0.962905" x="0" y="0" z="-0.26984"/>
@@ -191,6 +192,18 @@
 		</aspect-object-container>
 		<type-specific>
 			<space-capacity value="10000"/>
+		</type-specific>
+	</object>
+	<object type-identifier="battery" class-identifier="light_battery" object-identifier="::battery(::ship(shuttle)::player_ship)">
+		<aspect-accessory>
+			<slot slot-identifier="battery"/>
+		</aspect-accessory>
+		<aspect-name>
+			<name value="Light Battery"/>
+		</aspect-name>
+		<type-specific>
+			<energy value="25"/>
+			<energy-capacity value="200"/>
 		</type-specific>
 	</object>
 </save>

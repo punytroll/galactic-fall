@@ -784,6 +784,7 @@ static void ReadWeaponClass(Arxx::Reference & Reference)
 	Quaternion Orientation;
 	float ReloadTime;
 	float SpaceRequirement;
+	float EnergyUsagePerShot;
 	Vector3f ParticleExitPosition;
 	float ParticleExitSpeed;
 	float ParticleDamage;
@@ -791,7 +792,7 @@ static void ReadWeaponClass(Arxx::Reference & Reference)
 	std::string ParticleModelIdentifier;
 	Color ParticleColor;
 	
-	Reader >> Name >> ModelColor >> ModelIdentifier >> SlotClassIdentifier >> Orientation >> ReloadTime >> SpaceRequirement >> ParticleExitPosition >> ParticleExitSpeed >> ParticleDamage >> ParticleLifeTime >> ParticleModelIdentifier >> ParticleColor;
+	Reader >> Name >> ModelColor >> ModelIdentifier >> SlotClassIdentifier >> Orientation >> ReloadTime >> SpaceRequirement >> EnergyUsagePerShot >> ParticleExitPosition >> ParticleExitSpeed >> ParticleDamage >> ParticleLifeTime >> ParticleModelIdentifier >> ParticleColor;
 	NewWeaponClass->SetName(Name);
 	
 	const Graphics::Model * WeaponClassModel(g_ModelManager->Get(ModelIdentifier));
@@ -806,6 +807,7 @@ static void ReadWeaponClass(Arxx::Reference & Reference)
 	NewWeaponClass->SetOrientation(Orientation);
 	NewWeaponClass->SetReloadTime(ReloadTime);
 	NewWeaponClass->SetSpaceRequirement(static_cast< unsigned_numeric >(1000 * SpaceRequirement));
+	NewWeaponClass->SetEnergyUsagePerShot(EnergyUsagePerShot);
 	NewWeaponClass->SetParticleExitPosition(ParticleExitPosition);
 	NewWeaponClass->SetParticleExitSpeed(ParticleExitSpeed);
 	NewWeaponClass->SetParticleDamage(ParticleDamage);
