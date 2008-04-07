@@ -21,12 +21,15 @@
 #include "globals.h"
 #include "label.h"
 #include "object.h"
+#include "object_aspect_accessory.h"
 #include "object_aspect_name.h"
 #include "object_aspect_object_container.h"
 #include "object_aspect_physical.h"
 #include "object_information_dialog.h"
 #include "scroll_bar.h"
 #include "scroll_box.h"
+#include "slot.h"
+#include "slot_class.h"
 #include "string_cast.h"
 
 ObjectInformationDialog::ObjectInformationDialog(Widget * SupWidget, const Reference< Object > & Object) :
@@ -212,6 +215,22 @@ void ObjectInformationDialog::Refresh(void)
 			Top += AddSeparator(Top, 0.0f, "Physical");
 			Top += AddStringProperty(Top, 20.0f, "Radial Size", to_string_cast(m_Object->GetAspectPhysical()->GetRadialSize()));
 			Top += AddStringProperty(Top, 20.0f, "Space Requirement", to_string_cast(m_Object->GetAspectPhysical()->GetSpaceRequirement()));
+		}
+		if(m_Object->GetAspectAccessory() != 0)
+		{
+			Top += AddSeparator(Top, 0.0f, "Accessory");
+			Top += AddStringProperty(Top, 20.0f, "Slot Class Identifier", m_Object->GetAspectAccessory()->GetSlotClassIdentifier());
+			if(m_Object->GetAspectAccessory()->GetSlot() != 0)
+			{
+				Top += AddString(Top, 20.0f, "Mounted to:");
+				Top += AddStringProperty(Top, 40.0f, "Slot Identifier", m_Object->GetAspectAccessory()->GetSlot()->GetIdentifier());
+				Top += AddStringProperty(Top, 40.0f, "Slot Name", m_Object->GetAspectAccessory()->GetSlot()->GetName());
+				Top += AddStringProperty(Top, 40.0f, "Slot Class Identifier", m_Object->GetAspectAccessory()->GetSlot()->GetSlotClass()->GetIdentifier());
+			}
+			else
+			{
+				Top += AddString(Top, 20.0f, "Not mounted.");
+			}
 		}
 	}
 	m_PropertiesScrollBox->GetContent()->SetSize(Vector2f(m_PropertiesScrollBox->GetView()->GetSize()[0], std::max(Top, m_PropertiesScrollBox->GetView()->GetSize()[1])));
