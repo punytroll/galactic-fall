@@ -1645,6 +1645,29 @@ void LoadGameFromElement(const Element * SaveElement)
 						}
 					}
 				}
+				else if((*ObjectChild)->GetName() == "aspect-physical")
+				{
+					// assert that the object supports the physical aspect
+					assert(NewObject->GetAspectPhysical() != 0);
+					// read data related to the physical aspect
+					for(std::vector< Element * >::const_iterator AspectChild = (*ObjectChild)->GetChilds().begin(); AspectChild != (*ObjectChild)->GetChilds().end(); ++AspectChild)
+					{
+						if((*AspectChild)->GetName() == "radial-size")
+						{
+							assert((*AspectChild)->HasAttribute("value") == true);
+							NewObject->GetAspectPhysical()->SetRadialSize(from_string_cast< float >((*AspectChild)->GetAttribute("value")));
+						}
+						else if((*AspectChild)->GetName() == "space-requirement")
+						{
+							assert((*AspectChild)->HasAttribute("value") == true);
+							NewObject->GetAspectPhysical()->SetSpaceRequirement(from_string_cast< float >((*AspectChild)->GetAttribute("value")));
+						}
+						else
+						{
+							throw std::runtime_error("The \"" + (*ObjectChild)->GetName() + "\" element for the object \"" + (*SaveChild)->GetAttribute("object-identifier") + "\" contains an unknown element \"" + (*AspectChild)->GetName() + "\".");
+						}
+					}
+				}
 				else if((*ObjectChild)->GetName() == "aspect-position")
 				{
 					// assert that the object supports the position aspect

@@ -837,7 +837,7 @@ widget.o: widget.cpp $(color_h) $(destroy_listener_h) $(dimension_listener_h) $(
 window.o: window.cpp $(border_h) $(globals_h) $(label_h) $(user_interface_h) $(window_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-write_to_xml_stream.o: write_to_xml_stream.cpp $(character_h) $(commodity_h) $(map_knowledge_h) $(mind_h) $(object_h) $(object_aspect_accessory_h) $(object_aspect_name_h) $(object_aspect_object_container_h) $(object_aspect_position_h) $(ship_h) $(slot_h) $(storage_h) $(system_h) $(weapon_h) $(write_to_xml_stream_h) $(xml_stream_h)
+write_to_xml_stream.o: write_to_xml_stream.cpp $(battery_h) $(character_h) $(commodity_h) $(map_knowledge_h) $(mind_h) $(object_h) $(object_aspect_accessory_h) $(object_aspect_name_h) $(object_aspect_object_container_h) $(object_aspect_physical_h) $(object_aspect_position_h) $(ship_h) $(slot_h) $(storage_h) $(system_h) $(weapon_h) $(write_to_xml_stream_h) $(xml_stream_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 xml_parser.o: xml_parser.cpp $(xml_parser_h)
