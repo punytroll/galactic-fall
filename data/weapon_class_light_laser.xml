@@ -1,13 +1,30 @@
 <weapon-class>
 	<identifier>light_laser</identifier>
 	<name>Light Laser</name>
-	<model-color>
-		<red>0.5</red>
-		<green>0.5</green>
-		<blue>0.5</blue>
-		<alpha>1</alpha>
-	</model-color>
-	<model-identifier>light_laser</model-identifier>
+	<visualization>
+		<model-identifier>light_laser</model-identifier>
+		<visualization-parts>
+			<visualization-part>
+				<part-identifier>hull</part-identifier>
+				<material>
+					<use-specular-color>false</use-specular-color>
+					<diffuse-color>
+						<red>0.5</red>
+						<green>0.5</green>
+						<blue>0.5</blue>
+						<alpha>1</alpha>
+					</diffuse-color>
+					<specular-color>
+						<red>0</red>
+						<green>0</green>
+						<blue>0</blue>
+						<alpha>1</alpha>
+					</specular-color>
+					<shininess>40</shininess>
+				</material>
+			</visualization-part>
+		</visualization-parts>
+	</visualization>
 	<slot-class-identifier>light_weapon</slot-class-identifier>
 	<orientation>
 		<w>0.7071067812</w>

@@ -17,39 +17,40 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include <assert.h>
 #include <float.h>
 
 #include "color.h"
+#include "visualization_prototype.h"
 #include "weapon_class.h"
 
 WeaponClass::WeaponClass(const std::string & Identifier) :
 	m_Identifier(Identifier),
-	m_Model(0),
-	m_ModelColor(0),
 	m_ReloadTime(FLT_MAX),
 	m_ParticleExitSpeed(0.0f),
 	m_ParticleDamage(0.0f),
 	m_ParticleLifeTime(0.0f),
-	m_ParticleColor(0)
+	m_ParticleColor(0),
+	m_VisualizationPrototype(0)
 {
 }
 
 WeaponClass::~WeaponClass(void)
 {
-	delete m_ModelColor;
-	m_ModelColor = 0;
 	delete m_ParticleColor;
 	m_ParticleColor = 0;
-}
-
-void WeaponClass::SetModelColor(const Color & ModelColor)
-{
-	delete m_ModelColor;
-	m_ModelColor = new Color(ModelColor);
+	delete m_VisualizationPrototype;
+	m_VisualizationPrototype = 0;
 }
 
 void WeaponClass::SetParticleColor(const Color & ParticleColor)
 {
 	delete m_ParticleColor;
 	m_ParticleColor = new Color(ParticleColor);
+}
+
+void WeaponClass::AddVisualizationPrototype(void)
+{
+	assert(m_VisualizationPrototype == 0);
+	m_VisualizationPrototype = new VisualizationPrototype();
 }

@@ -193,8 +193,7 @@
 	<weapon-class>
 		<string identifier="identifier"/>
 		<string identifier="name"/>
-		<color4f identifier="model-color"/>
-		<string identifier="model-identifier"/>
+		<visualization identifier="visualization"/>
 		<string identifier="slot-class-identifier"/>
 		<quaternion identifier="orientation"/>
 		<float identifier="reload-time"/>

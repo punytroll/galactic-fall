@@ -161,6 +161,9 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		Weapon * NewWeapon(new Weapon(WeaponClass));
 		
 		NewWeapon->SetEnergyUsagePerShot(WeaponClass->GetEnergyUsagePerShot());
+		// set up visualization aspect
+		assert(NewWeapon->GetAspectVisualization() != 0);
+		NewWeapon->GetAspectVisualization()->SetVisualizationPrototype(WeaponClass->GetVisualizationPrototype());
 		Result = NewWeapon;
 	}
 	else

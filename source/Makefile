@@ -828,7 +828,7 @@ visualizations.o: visualizations.cpp $(color_h) $(commodity_h) $(commodity_class
 weapon.o: weapon.cpp $(battery_h) $(color_h) $(game_time_h) $(globals_h) $(math_h) $(math_quaternion_h) $(object_aspect_accessory_h) $(object_aspect_name_h) $(object_aspect_object_container_h) $(object_aspect_physical_h) $(object_aspect_position_h) $(object_factory_h) $(ship_h) $(shot_h) $(slot_h) $(string_cast_h) $(system_h) $(visualizations_h) $(weapon_h) $(weapon_class_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-weapon_class.o: weapon_class.cpp $(color_h) $(weapon_class_h)
+weapon_class.o: weapon_class.cpp $(color_h) $(visualization_prototype_h) $(weapon_class_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 widget.o: widget.cpp $(color_h) $(destroy_listener_h) $(dimension_listener_h) $(key_listener_h) $(math_h) $(mouse_button_listener_h) $(mouse_motion_listener_h) $(widget_h)
