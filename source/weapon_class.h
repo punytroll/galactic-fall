@@ -27,6 +27,7 @@
 #include "type_definitions.h"
 
 class Color;
+class VisualizationPrototype;
 
 namespace Graphics
 {
@@ -43,8 +44,6 @@ public:
 	// getters
 	float GetEnergyUsagePerShot(void) const;
 	const std::string & GetIdentifier(void) const;
-	const Graphics::Model * GetModel(void) const;
-	const Color * GetModelColor(void) const;
 	const std::string & GetName(void) const;
 	const Quaternion & GetOrientation(void) const;
 	const Vector3f & GetParticleExitPosition(void) const;
@@ -56,10 +55,10 @@ public:
 	float GetReloadTime(void) const;
 	const std::string & GetSlotClassIdentifier(void) const;
 	unsigned_numeric GetSpaceRequirement(void) const;
+	VisualizationPrototype * GetVisualizationPrototype(void);
+	const VisualizationPrototype * GetVisualizationPrototype(void) const;
 	// setters
 	void SetEnergyUsagePerShot(float EnergyUsagePerShot);
-	void SetModel(const Graphics::Model * Model);
-	void SetModelColor(const Color & ModelColor);
 	void SetName(const std::string & Name);
 	void SetOrientation(const Quaternion & Orientation);
 	void SetParticleExitPosition(const Vector3f & ParticleExitPosition);
@@ -71,11 +70,11 @@ public:
 	void SetReloadTime(float ReloadTime);
 	void SetSlotClassIdentifier(const std::string & SlotClassIdentifier);
 	void SetSpaceRequirement(unsigned_numeric SpaceRequirement);
+	// modifiers
+	void AddVisualizationPrototype(void);
 private:
 	float m_EnergyUsagePerShot;
 	std::string m_Identifier;
-	const Graphics::Model * m_Model;
-	Color * m_ModelColor;
 	std::string m_Name;
 	std::string m_SlotClassIdentifier;
 	Quaternion m_Orientation;
@@ -87,6 +86,7 @@ private:
 	const Graphics::Model * m_ParticleModel;
 	Color * m_ParticleColor;
 	unsigned_numeric m_SpaceRequirement;
+	VisualizationPrototype * m_VisualizationPrototype;
 };
 
 inline float WeaponClass::GetEnergyUsagePerShot(void) const
@@ -94,19 +94,9 @@ inline float WeaponClass::GetEnergyUsagePerShot(void) const
 	return m_EnergyUsagePerShot;
 }
 
-inline const Color * WeaponClass::GetModelColor(void) const
-{
-	return m_ModelColor;
-}
-
 inline const std::string & WeaponClass::GetIdentifier(void) const
 {
 	return m_Identifier;
-}
-
-inline const Graphics::Model * WeaponClass::GetModel(void) const
-{
-	return m_Model;
 }
 
 inline const std::string & WeaponClass::GetName(void) const
@@ -164,14 +154,19 @@ inline unsigned_numeric WeaponClass::GetSpaceRequirement(void) const
 	return m_SpaceRequirement;
 }
 
+inline VisualizationPrototype * WeaponClass::GetVisualizationPrototype(void)
+{
+	return m_VisualizationPrototype;
+}
+
+inline const VisualizationPrototype * WeaponClass::GetVisualizationPrototype(void) const
+{
+	return m_VisualizationPrototype;
+}
+
 inline void WeaponClass::SetEnergyUsagePerShot(float EnergyUsagePerShot)
 {
 	m_EnergyUsagePerShot = EnergyUsagePerShot;
-}
-
-inline void WeaponClass::SetModel(const Graphics::Model * Model)
-{
-	m_Model = Model;
 }
 
 inline void WeaponClass::SetName(const std::string & Name)

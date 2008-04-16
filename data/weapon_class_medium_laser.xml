@@ -1,13 +1,30 @@
 <weapon-class>
 	<identifier>medium_laser</identifier>
 	<name>Medium Laser</name>
-	<model-color>
-		<red>0.45</red>
-		<green>0.4</green>
-		<blue>0.6</blue>
-		<alpha>1</alpha>
-	</model-color>
-	<model-identifier>light_laser</model-identifier>
+	<visualization>
+		<model-identifier>light_laser</model-identifier>
+		<visualization-parts>
+			<visualization-part>
+				<part-identifier>hull</part-identifier>
+				<material>
+					<use-specular-color>true</use-specular-color>
+					<diffuse-color>
+						<red>0.45</red>
+						<green>0.4</green>
+						<blue>0.6</blue>
+						<alpha>1</alpha>
+					</diffuse-color>
+					<specular-color>
+						<red>0.55</red>
+						<green>0.6</green>
+						<blue>0.4</blue>
+						<alpha>1</alpha>
+					</specular-color>
+					<shininess>30</shininess>
+				</material>
+			</visualization-part>
+		</visualization-parts>
+	</visualization>
 	<slot-class-identifier>medium_weapon</slot-class-identifier>
 	<orientation>
 		<w>0.7071067812</w>

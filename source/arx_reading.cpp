@@ -778,8 +778,14 @@ static void ReadWeaponClass(Arxx::Reference & Reference)
 	}
 	
 	std::string Name;
-	std::string ModelIdentifier;
-	Color ModelColor;
+	
+	Reader >> Name;
+	NewWeaponClass->SetName(Name);
+	
+	// read the visualization
+	NewWeaponClass->AddVisualizationPrototype();
+	ReadVisualizationPrototype(Reader, NewWeaponClass->GetVisualizationPrototype());
+	
 	std::string SlotClassIdentifier;
 	Quaternion Orientation;
 	float ReloadTime;
@@ -792,17 +798,7 @@ static void ReadWeaponClass(Arxx::Reference & Reference)
 	std::string ParticleModelIdentifier;
 	Color ParticleColor;
 	
-	Reader >> Name >> ModelColor >> ModelIdentifier >> SlotClassIdentifier >> Orientation >> ReloadTime >> SpaceRequirement >> EnergyUsagePerShot >> ParticleExitPosition >> ParticleExitSpeed >> ParticleDamage >> ParticleLifeTime >> ParticleModelIdentifier >> ParticleColor;
-	NewWeaponClass->SetName(Name);
-	
-	const Graphics::Model * WeaponClassModel(g_ModelManager->Get(ModelIdentifier));
-	
-	if(WeaponClassModel == 0)
-	{
-		throw std::runtime_error("For the weapon class '" + Item->sGetName() + " could not find the model '" + ModelIdentifier + "'.");
-	}
-	NewWeaponClass->SetModel(WeaponClassModel);
-	NewWeaponClass->SetModelColor(ModelColor);
+	Reader >> SlotClassIdentifier >> Orientation >> ReloadTime >> SpaceRequirement >> EnergyUsagePerShot >> ParticleExitPosition >> ParticleExitSpeed >> ParticleDamage >> ParticleLifeTime >> ParticleModelIdentifier >> ParticleColor;
 	NewWeaponClass->SetSlotClassIdentifier(SlotClassIdentifier);
 	NewWeaponClass->SetOrientation(Orientation);
 	NewWeaponClass->SetReloadTime(ReloadTime);

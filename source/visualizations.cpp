@@ -239,15 +239,20 @@ void VisualizeWeapon(Weapon * Weapon, Graphics::Node * Container)
 {
 	assert(Weapon != 0);
 	assert(Weapon->GetAspectVisualization() != 0);
+	assert(Weapon->GetAspectVisualization()->GetVisualizationPrototype() != 0);
 	assert(Weapon->GetAspectVisualization()->GetVisualization().IsValid() == false);
 	assert(Container != 0);
 	
 	Graphics::ModelObject * Visualization(new Graphics::ModelObject());
-	Graphics::Material * Material(new Graphics::Material());
+	const std::map< std::string, Graphics::Material * > & PartMaterials(Weapon->GetAspectVisualization()->GetVisualizationPrototype()->GetPartMaterials());
 	
-	Material->SetDiffuseColor(*(Weapon->GetWeaponClass()->GetModelColor()));
-	Visualization->AddMaterial(Weapon->GetWeaponClass()->GetModel()->GetIdentifier(), Material);
-	Visualization->SetModel(Weapon->GetWeaponClass()->GetModel());
+	for(std::map< std::string, Graphics::Material * >::const_iterator PartMaterialIterator = PartMaterials.begin(); PartMaterialIterator != PartMaterials.end(); ++PartMaterialIterator)
+	{
+		Graphics::Material * Material(new Graphics::Material(*(PartMaterialIterator->second)));
+		
+		Visualization->AddMaterial(PartMaterialIterator->first, Material);
+	}
+	Visualization->SetModel(Weapon->GetAspectVisualization()->GetVisualizationPrototype()->GetModel());
 	Visualization->SetOrientation(Weapon->GetAspectAccessory()->GetSlot()->GetOrientation() * Weapon->GetAspectPosition()->GetOrientation());
 	Visualization->SetPosition(Weapon->GetAspectPosition()->GetPosition() + Weapon->GetAspectAccessory()->GetSlot()->GetPosition());
 	Visualization->SetUseLighting(true);
