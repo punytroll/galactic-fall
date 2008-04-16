@@ -6,23 +6,22 @@
 	<main-camera>
 		<position x="0" y="0" z="200"/>
 		<focus object-identifier="::ship(shuttle)::player_ship"/>
-		<field-of-view radians="0.392699082"/>
+		<field-of-view radians="0.392699"/>
 	</main-camera>
-	<object type-identifier="mind" class-identifier="command_mind" object-identifier="::player_mind">
-		<type-specific>
-			<character object-identifier="::character::player_character"/>
-		</type-specific>
-	</object>
 	<object type-identifier="ship" class-identifier="shuttle" object-identifier="::ship(shuttle)::player_ship">
 		<aspect-name>
 			<name value="Freelancer 4"/>
 		</aspect-name>
 		<aspect-object-container>
 			<content object-identifier="::character::player_character"/>
-			<content object-identifier="::storage(::ship(shuttle)::player_ship)"/>
 			<content object-identifier="::weapon(light_laser)"/>
+			<content object-identifier="::storage(::ship(shuttle)::player_ship)"/>
 			<content object-identifier="::battery(::ship(shuttle)::player_ship)"/>
 		</aspect-object-container>
+		<aspect-physical>
+			<radial-size value="4.63479"/>
+			<space-requirement value="60000"/>
+		</aspect-physical>
 		<aspect-position>
 			<orientation w="-0.962905" x="0" y="0" z="-0.26984"/>
 			<position x="-253.368" y="-16.2305" z="0"/>
@@ -40,94 +39,45 @@
 			<velocity x="10.0685" y="6.5288" z="0"/>
 		</type-specific>
 	</object>
-	<object type-identifier="character" class-identifier="" object-identifier="::character::player_character">
+	<object type-identifier="battery" class-identifier="light_battery" object-identifier="::battery(::ship(shuttle)::player_ship)">
+		<aspect-accessory>
+			<slot slot-identifier="battery"/>
+		</aspect-accessory>
+		<aspect-name>
+			<name value="Light Battery"/>
+		</aspect-name>
+		<aspect-physical>
+			<radial-size value="0"/>
+			<space-requirement value="80"/>
+		</aspect-physical>
+		<type-specific>
+			<energy value="25"/>
+			<energy-capacity value="200"/>
+		</type-specific>
+	</object>
+	<object type-identifier="storage" class-identifier="" object-identifier="::storage(::ship(shuttle)::player_ship)">
 		<aspect-object-container>
-			<content object-identifier="::player_mind"/>
+			<content object-identifier="::commodity(industrial)::1"/>
+			<content object-identifier="::commodity(industrial)::2"/>
+			<content object-identifier="::commodity(industrial)::3"/>
+			<content object-identifier="::commodity(industrial)::4"/>
+			<content object-identifier="::commodity(industrial)::5"/>
+			<content object-identifier="::commodity(industrial)::6"/>
+			<content object-identifier="::commodity(metal)::1"/>
+			<content object-identifier="::commodity(metal)::2"/>
 		</aspect-object-container>
 		<type-specific>
-			<ship object-identifier="::ship(shuttle)::player_ship"/>
-			<credits value="15562"/>
-			<map-knowledge>
-				<explored-system object-identifier="::system(alpha_centauri)"/>
-				<explored-system object-identifier="::system(sol)"/>
-				<explored-system object-identifier="::system(rigel)"/>
-			</map-knowledge>
+			<space-capacity value="10000"/>
 		</type-specific>
 	</object>
-	<object type-identifier="commodity" class-identifier="industrial" object-identifier="::commodity(industrial)::1">
+	<object type-identifier="commodity" class-identifier="metal" object-identifier="::commodity(metal)::2">
 		<aspect-name>
 			<name value="Luxury Goods"/>
 		</aspect-name>
-		<aspect-position>
-			<orientation w="1" x="0" y="0" z="0"/>
-			<position x="0" y="0" z="0"/>
-		</aspect-position>
-		<type-specific>
-			<angular-velocity axis-x="0" axis-y="0" axis-z="0" angle="0"/>
-			<hull value="20"/>
-			<velocity x="0" y="0" z="0"/>
-		</type-specific>
-	</object>
-	<object type-identifier="commodity" class-identifier="industrial" object-identifier="::commodity(industrial)::2">
-		<aspect-name>
-			<name value="Luxury Goods"/>
-		</aspect-name>
-		<aspect-position>
-			<orientation w="1" x="0" y="0" z="0"/>
-			<position x="0" y="0" z="0"/>
-		</aspect-position>
-		<type-specific>
-			<angular-velocity axis-x="0" axis-y="0" axis-z="0" angle="0"/>
-			<hull value="20"/>
-			<velocity x="0" y="0" z="0"/>
-		</type-specific>
-	</object>
-	<object type-identifier="commodity" class-identifier="industrial" object-identifier="::commodity(industrial)::3">
-		<aspect-name>
-			<name value="Luxury Goods"/>
-		</aspect-name>
-		<aspect-position>
-			<orientation w="1" x="0" y="0" z="0"/>
-			<position x="0" y="0" z="0"/>
-		</aspect-position>
-		<type-specific>
-			<angular-velocity axis-x="0" axis-y="0" axis-z="0" angle="0"/>
-			<hull value="20"/>
-			<velocity x="0" y="0" z="0"/>
-		</type-specific>
-	</object>
-	<object type-identifier="commodity" class-identifier="industrial" object-identifier="::commodity(industrial)::4">
-		<aspect-name>
-			<name value="Luxury Goods"/>
-		</aspect-name>
-		<aspect-position>
-			<orientation w="1" x="0" y="0" z="0"/>
-			<position x="0" y="0" z="0"/>
-		</aspect-position>
-		<type-specific>
-			<angular-velocity axis-x="0" axis-y="0" axis-z="0" angle="0"/>
-			<hull value="20"/>
-			<velocity x="0" y="0" z="0"/>
-		</type-specific>
-	</object>
-	<object type-identifier="commodity" class-identifier="industrial" object-identifier="::commodity(industrial)::5">
-		<aspect-name>
-			<name value="Luxury Goods"/>
-		</aspect-name>
-		<aspect-position>
-			<orientation w="1" x="0" y="0" z="0"/>
-			<position x="0" y="0" z="0"/>
-		</aspect-position>
-		<type-specific>
-			<angular-velocity axis-x="0" axis-y="0" axis-z="0" angle="0"/>
-			<hull value="20"/>
-			<velocity x="0" y="0" z="0"/>
-		</type-specific>
-	</object>
-	<object type-identifier="commodity" class-identifier="industrial" object-identifier="::commodity(industrial)::6">
-		<aspect-name>
-			<name value="Luxury Goods"/>
-		</aspect-name>
+		<aspect-physical>
+			<radial-size value="0.866025"/>
+			<space-requirement value="1000"/>
+		</aspect-physical>
 		<aspect-position>
 			<orientation w="1" x="0" y="0" z="0"/>
 			<position x="0" y="0" z="0"/>
@@ -142,6 +92,10 @@
 		<aspect-name>
 			<name value="Luxury Goods"/>
 		</aspect-name>
+		<aspect-physical>
+			<radial-size value="0.866025"/>
+			<space-requirement value="1000"/>
+		</aspect-physical>
 		<aspect-position>
 			<orientation w="1" x="0" y="0" z="0"/>
 			<position x="0" y="0" z="0"/>
@@ -152,10 +106,104 @@
 			<velocity x="0" y="0" z="0"/>
 		</type-specific>
 	</object>
-	<object type-identifier="commodity" class-identifier="metal" object-identifier="::commodity(metal)::2">
+	<object type-identifier="commodity" class-identifier="industrial" object-identifier="::commodity(industrial)::6">
 		<aspect-name>
 			<name value="Luxury Goods"/>
 		</aspect-name>
+		<aspect-physical>
+			<radial-size value="0.866025"/>
+			<space-requirement value="1000"/>
+		</aspect-physical>
+		<aspect-position>
+			<orientation w="1" x="0" y="0" z="0"/>
+			<position x="0" y="0" z="0"/>
+		</aspect-position>
+			<type-specific>
+			<angular-velocity axis-x="0" axis-y="0" axis-z="0" angle="0"/>
+			<hull value="20"/>
+			<velocity x="0" y="0" z="0"/>
+		</type-specific>
+	</object>
+	<object type-identifier="commodity" class-identifier="industrial" object-identifier="::commodity(industrial)::5">
+		<aspect-name>
+			<name value="Luxury Goods"/>
+		</aspect-name>
+		<aspect-physical>
+			<radial-size value="0.866025"/>
+			<space-requirement value="1000"/>
+		</aspect-physical>
+		<aspect-position>
+			<orientation w="1" x="0" y="0" z="0"/>
+			<position x="0" y="0" z="0"/>
+		</aspect-position>
+		<type-specific>
+			<angular-velocity axis-x="0" axis-y="0" axis-z="0" angle="0"/>
+			<hull value="20"/>
+			<velocity x="0" y="0" z="0"/>
+		</type-specific>
+	</object>
+	<object type-identifier="commodity" class-identifier="industrial" object-identifier="::commodity(industrial)::4">
+		<aspect-name>
+			<name value="Luxury Goods"/>
+		</aspect-name>
+		<aspect-physical>
+			<radial-size value="0.866025"/>
+			<space-requirement value="1000"/>
+		</aspect-physical>
+		<aspect-position>
+			<orientation w="1" x="0" y="0" z="0"/>
+			<position x="0" y="0" z="0"/>
+		</aspect-position>
+		<type-specific>
+			<angular-velocity axis-x="0" axis-y="0" axis-z="0" angle="0"/>
+			<hull value="20"/>
+			<velocity x="0" y="0" z="0"/>
+		</type-specific>
+	</object>
+	<object type-identifier="commodity" class-identifier="industrial" object-identifier="::commodity(industrial)::3">
+		<aspect-name>
+			<name value="Luxury Goods"/>
+		</aspect-name>
+		<aspect-physical>
+			<radial-size value="0.866025"/>
+			<space-requirement value="1000"/>
+		</aspect-physical>
+		<aspect-position>
+			<orientation w="1" x="0" y="0" z="0"/>
+			<position x="0" y="0" z="0"/>
+		</aspect-position>
+		<type-specific>
+			<angular-velocity axis-x="0" axis-y="0" axis-z="0" angle="0"/>
+			<hull value="20"/>
+			<velocity x="0" y="0" z="0"/>
+		</type-specific>
+	</object>
+	<object type-identifier="commodity" class-identifier="industrial" object-identifier="::commodity(industrial)::2">
+		<aspect-name>
+			<name value="Luxury Goods"/>
+		</aspect-name>
+		<aspect-physical>
+			<radial-size value="0.866025"/>
+			<space-requirement value="1000"/>
+		</aspect-physical>
+		<aspect-position>
+			<orientation w="1" x="0" y="0" z="0"/>
+			<position x="0" y="0" z="0"/>
+		</aspect-position>
+		<type-specific>
+			<angular-velocity axis-x="0" axis-y="0" axis-z="0" angle="0"/>
+			<hull value="20"/>
+			<velocity x="0" y="0" z="0"/>
+		</type-specific>
+	</object>
+	<object type-identifier="commodity" class-identifier="industrial" object-identifier="::commodity(industrial)::1">
+		<aspect-name>
+			<name value="Luxury Goods"/>
+		</aspect-name>
+		<aspect-physical>
+			<radial-size value="0.866025"/>
+			<space-requirement value="1000"/>
+		</aspect-physical>
 		<aspect-position>
 			<orientation w="1" x="0" y="0" z="0"/>
 			<position x="0" y="0" z="0"/>
@@ -173,37 +221,33 @@
 		<aspect-name>
 			<name value="Light Laser"/>
 		</aspect-name>
+		<aspect-physical>
+			<radial-size value="0"/>
+			<space-requirement value="300"/>
+		</aspect-physical>
 		<aspect-position>
 			<orientation w="0.707107" x="0" y="0.707107" z="0"/>
 			<position x="0" y="0" z="0"/>
 		</aspect-position>
 		<type-specific/>
 	</object>
-	<object type-identifier="storage" class-identifier="" object-identifier="::storage(::ship(shuttle)::player_ship)">
+	<object type-identifier="character" class-identifier="" object-identifier="::character::player_character">
 		<aspect-object-container>
-			<content object-identifier="::commodity(industrial)::1"/>
-			<content object-identifier="::commodity(industrial)::2"/>
-			<content object-identifier="::commodity(industrial)::3"/>
-			<content object-identifier="::commodity(industrial)::4"/>
-			<content object-identifier="::commodity(industrial)::5"/>
-			<content object-identifier="::commodity(industrial)::6"/>
-			<content object-identifier="::commodity(metal)::1"/>
-			<content object-identifier="::commodity(metal)::2"/>
+			<content object-identifier="::player_mind"/>
 		</aspect-object-container>
 		<type-specific>
-			<space-capacity value="10000"/>
+			<credits value="15562"/>
+			<map-knowledge>
+				<explored-system object-identifier="::system(alpha_centauri)"/>
+				<explored-system object-identifier="::system(sol)"/>
+				<explored-system object-identifier="::system(rigel)"/>
+			</map-knowledge>
+			<ship object-identifier="::ship(shuttle)::player_ship"/>
 		</type-specific>
 	</object>
-	<object type-identifier="battery" class-identifier="light_battery" object-identifier="::battery(::ship(shuttle)::player_ship)">
-		<aspect-accessory>
-			<slot slot-identifier="battery"/>
-		</aspect-accessory>
-		<aspect-name>
-			<name value="Light Battery"/>
-		</aspect-name>
+	<object type-identifier="mind" class-identifier="command_mind" object-identifier="::player_mind">
 		<type-specific>
-			<energy value="25"/>
-			<energy-capacity value="200"/>
+			<character object-identifier="::character::player_character"/>
 		</type-specific>
 	</object>
 </save>

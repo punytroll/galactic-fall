@@ -65,7 +65,7 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		NewBattery->GetAspectName()->SetName("Light Battery");
 		// set up physical aspect
 		assert(NewBattery->GetAspectPhysical() != 0);
-		NewBattery->GetAspectPhysical()->SetSpaceRequirement(0.02);
+		NewBattery->GetAspectPhysical()->SetSpaceRequirement(80);
 		Result = NewBattery;
 	}
 	else if(TypeIdentifier == "character")

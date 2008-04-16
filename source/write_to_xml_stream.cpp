@@ -21,6 +21,7 @@
 
 #include <iostream>
 
+#include "battery.h"
 #include "character.h"
 #include "commodity.h"
 #include "map_knowledge.h"
@@ -29,6 +30,7 @@
 #include "object_aspect_accessory.h"
 #include "object_aspect_name.h"
 #include "object_aspect_object_container.h"
+#include "object_aspect_physical.h"
 #include "object_aspect_position.h"
 #include "ship.h"
 #include "slot.h"
@@ -41,6 +43,7 @@
 static void WriteToXMLStream(XMLStream & XMLStream, Object * TheObject);
 static void WriteToXMLStream(XMLStream & XMLStream, Object * TheObject, std::stack< Object * > & ObjectStack);
 
+static void WriteBatteryToXMLStream(XMLStream & XMLStream, Battery * TheBattery);
 static void WriteCharacterToXMLStream(XMLStream & XMLStream, Character * TheCharacter);
 static void WriteCommodityToXMLStream(XMLStream & XMLStream, Commodity * TheCommodity);
 static void WriteMindToXMLStream(XMLStream & XMLStream, Mind * TheMind);
@@ -114,6 +117,13 @@ void WriteToXMLStream(XMLStream & XMLStream, Object * TheObject)
 		}
 		XMLStream << end;
 	}
+	if(TheObject->GetAspectPhysical() != 0)
+	{
+		XMLStream << element << "aspect-physical";
+		XMLStream << element << "radial-size" << attribute << "value" << value << TheObject->GetAspectPhysical()->GetRadialSize() << end;
+		XMLStream << element << "space-requirement" << attribute << "value" << value << TheObject->GetAspectPhysical()->GetSpaceRequirement() << end;
+		XMLStream << end;
+	}
 	if(TheObject->GetAspectPosition() != 0)
 	{
 		XMLStream << element << "aspect-position";
@@ -122,7 +132,11 @@ void WriteToXMLStream(XMLStream & XMLStream, Object * TheObject)
 		XMLStream << end;
 	}
 	XMLStream << element << "type-specific";
-	if(TheObject->GetTypeIdentifier() == "character")
+	if(TheObject->GetTypeIdentifier() == "battery")
+	{
+		WriteBatteryToXMLStream(XMLStream, dynamic_cast< Battery * >(TheObject));
+	}
+	else if(TheObject->GetTypeIdentifier() == "character")
 	{
 		WriteCharacterToXMLStream(XMLStream, dynamic_cast< Character * >(TheObject));
 	}
@@ -153,6 +167,13 @@ void WriteToXMLStream(XMLStream & XMLStream, Object * TheObject)
 	}
 	XMLStream << end;
 	XMLStream << end;
+}
+
+static void WriteBatteryToXMLStream(XMLStream & XMLStream, Battery * TheBattery)
+{
+	assert(TheBattery != 0);
+	XMLStream << element << "energy" << attribute << "value" << value << TheBattery->GetEnergy() << end;
+	XMLStream << element << "energy-capacity" << attribute << "value" << value << TheBattery->GetEnergyCapacity() << end;
 }
 
 static void WriteCharacterToXMLStream(XMLStream & XMLStream, Character * TheCharacter)

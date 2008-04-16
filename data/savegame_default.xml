@@ -8,11 +8,6 @@
 		<focus object-identifier="::ship(shuttle)::player_ship"/>
 		<field-of-view radians="0.392699"/>
 	</main-camera>
-	<object type-identifier="mind" class-identifier="command_mind" object-identifier="::player_mind">
-		<type-specific>
-			<character object-identifier="::character::player_character"/>
-		</type-specific>
-	</object>
 	<object type-identifier="ship" class-identifier="shuttle" object-identifier="::ship(shuttle)::player_ship">
 		<aspect-name>
 			<name value="Stargazer Alpha 1-0"/>
@@ -22,9 +17,13 @@
 			<content object-identifier="::storage(::ship(shuttle)::player_ship)"/>
 			<content object-identifier="::battery(::ship(shuttle)::player_ship)"/>
 		</aspect-object-container>
+		<aspect-physical>
+			<radial-size value="4.63479"/>
+			<space-requirement value="60000"/>
+		</aspect-physical>
 		<aspect-position>
-			<position x="0" y="0" z="0"/>
 			<orientation w="1" x="0" y="0" z="0"/>
+			<position x="0" y="0" z="0"/>
 		</aspect-position>
 		<type-specific>
 			<exhaust-offset x="-3" y="0" z="0"/>
@@ -39,16 +38,20 @@
 			<velocity x="0" y="0" z="0"/>
 		</type-specific>
 	</object>
-	<object type-identifier="character" class-identifier="" object-identifier="::character::player_character">
-		<aspect-object-container>
-			<content object-identifier="::player_mind"/>
-		</aspect-object-container>
+	<object type-identifier="battery" class-identifier="light_battery" object-identifier="::battery(::ship(shuttle)::player_ship)">
+		<aspect-accessory>
+			<slot slot-identifier="battery"/>
+		</aspect-accessory>
+		<aspect-name>
+			<name value="Light Battery"/>
+		</aspect-name>
+		<aspect-physical>
+			<radial-size value="0"/>
+			<space-requirement value="80"/>
+		</aspect-physical>
 		<type-specific>
-			<ship object-identifier="::ship(shuttle)::player_ship"/>
-			<credits value="1000"/>
-			<map-knowledge>
-				<explored-system object-identifier="::system(sol)"/>
-			</map-knowledge>
+			<energy value="200"/>
+			<energy-capacity value="200"/>
 		</type-specific>
 	</object>
 	<object type-identifier="storage" class-identifier="" object-identifier="::storage(::ship(shuttle)::player_ship)">
@@ -57,16 +60,21 @@
 			<space-capacity value="12000"/>
 		</type-specific>
 	</object>
-	<object type-identifier="battery" class-identifier="light_battery" object-identifier="::battery(::ship(shuttle)::player_ship)">
-		<aspect-accessory>
-			<slot slot-identifier="battery"/>
-		</aspect-accessory>
-		<aspect-name>
-			<name value="Light Battery"/>
-		</aspect-name>
+	<object type-identifier="character" class-identifier="" object-identifier="::character::player_character">
+		<aspect-object-container>
+			<content object-identifier="::player_mind"/>
+		</aspect-object-container>
 		<type-specific>
-			<energy value="200"/>
-			<energy-capacity value="200"/>
+			<credits value="1000"/>
+			<map-knowledge>
+				<explored-system object-identifier="::system(sol)"/>
+			</map-knowledge>
+			<ship object-identifier="::ship(shuttle)::player_ship"/>
+		</type-specific>
+	</object>
+	<object type-identifier="mind" class-identifier="command_mind" object-identifier="::player_mind">
+		<type-specific>
+			<character object-identifier="::character::player_character"/>
 		</type-specific>
 	</object>
 </save>
