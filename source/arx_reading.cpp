@@ -795,10 +795,8 @@ static void ReadWeaponClass(Arxx::Reference & Reference)
 	float ParticleExitSpeed;
 	float ParticleDamage;
 	float ParticleLifeTime;
-	std::string ParticleModelIdentifier;
-	Color ParticleColor;
 	
-	Reader >> SlotClassIdentifier >> Orientation >> ReloadTime >> SpaceRequirement >> EnergyUsagePerShot >> ParticleExitPosition >> ParticleExitSpeed >> ParticleDamage >> ParticleLifeTime >> ParticleModelIdentifier >> ParticleColor;
+	Reader >> SlotClassIdentifier >> Orientation >> ReloadTime >> SpaceRequirement >> EnergyUsagePerShot >> ParticleExitPosition >> ParticleExitSpeed >> ParticleDamage >> ParticleLifeTime;
 	NewWeaponClass->SetSlotClassIdentifier(SlotClassIdentifier);
 	NewWeaponClass->SetOrientation(Orientation);
 	NewWeaponClass->SetReloadTime(ReloadTime);
@@ -808,15 +806,8 @@ static void ReadWeaponClass(Arxx::Reference & Reference)
 	NewWeaponClass->SetParticleExitSpeed(ParticleExitSpeed);
 	NewWeaponClass->SetParticleDamage(ParticleDamage);
 	NewWeaponClass->SetParticleLifeTime(ParticleLifeTime);
-	
-	const Graphics::Model * ParticleModel(g_ModelManager->Get(ParticleModelIdentifier));
-	
-	if(ParticleModel == 0)
-	{
-		throw std::runtime_error("For the weapon class '" + Item->sGetName() + " could not find the particle model '" + ParticleModelIdentifier + "'.");
-	}
-	NewWeaponClass->SetParticleModel(ParticleModel);
-	NewWeaponClass->SetParticleColor(ParticleColor);
+	NewWeaponClass->AddParticleVisualizationPrototype();
+	ReadVisualizationPrototype(Reader, NewWeaponClass->GetParticleVisualizationPrototype());
 }
 
 static void ReadWidget(Arxx::Reference & Reference)

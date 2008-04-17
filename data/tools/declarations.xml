@@ -66,8 +66,7 @@
 		<float identifier="exit-speed"/>
 		<float identifier="damage"/>
 		<float identifier="life-time"/>
-		<string identifier="model-identifier"/>
-		<color4f identifier="color"/>
+		<visualization identifier="visualization"/>
 	</particle>
 	
 	<physical-aspect>
