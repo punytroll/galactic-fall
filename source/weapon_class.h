@@ -50,8 +50,8 @@ public:
 	float GetParticleExitSpeed(void) const;
 	float GetParticleDamage(void) const;
 	float GetParticleLifeTime(void) const;
-	const Graphics::Model * GetParticleModel(void) const;
-	const Color * GetParticleColor(void) const;
+	VisualizationPrototype * GetParticleVisualizationPrototype(void);
+	const VisualizationPrototype * GetParticleVisualizationPrototype(void) const;
 	float GetReloadTime(void) const;
 	const std::string & GetSlotClassIdentifier(void) const;
 	unsigned_numeric GetSpaceRequirement(void) const;
@@ -65,12 +65,11 @@ public:
 	void SetParticleExitSpeed(float ParticleExitSpeed);
 	void SetParticleDamage(float ParticleDamage);
 	void SetParticleLifeTime(float ParticleLifeTime);
-	void SetParticleModel(const Graphics::Model * ParticleModel);
-	void SetParticleColor(const Color & ParticleColor);
 	void SetReloadTime(float ReloadTime);
 	void SetSlotClassIdentifier(const std::string & SlotClassIdentifier);
 	void SetSpaceRequirement(unsigned_numeric SpaceRequirement);
 	// modifiers
+	void AddParticleVisualizationPrototype(void);
 	void AddVisualizationPrototype(void);
 private:
 	float m_EnergyUsagePerShot;
@@ -83,8 +82,7 @@ private:
 	float m_ParticleExitSpeed;
 	float m_ParticleDamage;
 	float m_ParticleLifeTime;
-	const Graphics::Model * m_ParticleModel;
-	Color * m_ParticleColor;
+	VisualizationPrototype * m_ParticleVisualizationPrototype;
 	unsigned_numeric m_SpaceRequirement;
 	VisualizationPrototype * m_VisualizationPrototype;
 };
@@ -129,14 +127,14 @@ inline float WeaponClass::GetParticleLifeTime(void) const
 	return m_ParticleLifeTime;
 }
 
-inline const Graphics::Model * WeaponClass::GetParticleModel(void) const
+inline VisualizationPrototype * WeaponClass::GetParticleVisualizationPrototype(void)
 {
-	return m_ParticleModel;
+	return m_ParticleVisualizationPrototype;
 }
 
-inline const Color * WeaponClass::GetParticleColor(void) const
+inline const VisualizationPrototype * WeaponClass::GetParticleVisualizationPrototype(void) const
 {
-	return m_ParticleColor;
+	return m_ParticleVisualizationPrototype;
 }
 
 inline float WeaponClass::GetReloadTime(void) const
@@ -197,11 +195,6 @@ inline void WeaponClass::SetParticleDamage(float ParticleDamage)
 inline void WeaponClass::SetParticleLifeTime(float ParticleLifeTime)
 {
 	m_ParticleLifeTime = ParticleLifeTime;
-}
-
-inline void WeaponClass::SetParticleModel(const Graphics::Model * ParticleModel)
-{
-	m_ParticleModel = ParticleModel;
 }
 
 inline void WeaponClass::SetReloadTime(float ReloadTime)

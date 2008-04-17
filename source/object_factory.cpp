@@ -147,8 +147,12 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 	else if(TypeIdentifier == "shot")
 	{
 		const WeaponClass * WeaponClass(g_WeaponClassManager->Get(ClassIdentifier));
+		Shot * NewShot(new Shot(WeaponClass));
 		
-		Result = new Shot(WeaponClass);
+		// set up visualization aspect
+		assert(NewShot->GetAspectVisualization() != 0);
+		NewShot->GetAspectVisualization()->SetVisualizationPrototype(WeaponClass->GetParticleVisualizationPrototype());
+		Result = NewShot;
 	}
 	else if(TypeIdentifier == "storage")
 	{

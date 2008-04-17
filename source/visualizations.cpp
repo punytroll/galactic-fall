@@ -209,16 +209,21 @@ void VisualizeShot(Shot * Shot, Graphics::Node * Container)
 {
 	assert(Shot != 0);
 	assert(Shot->GetAspectVisualization() != 0);
+	assert(Shot->GetAspectVisualization()->GetVisualizationPrototype() != 0);
 	assert(Shot->GetAspectVisualization()->GetVisualization().IsValid() == false);
 	assert(Container != 0);
 	
 	Graphics::ModelObject * Visualization(new Graphics::ModelObject());
-	Graphics::Material * Material(new Graphics::Material());
+	const std::map< std::string, Graphics::Material * > & PartMaterials(Shot->GetAspectVisualization()->GetVisualizationPrototype()->GetPartMaterials());
 	
-	Material->SetDiffuseColor(*(Shot->GetWeaponClass()->GetParticleColor()));
-	Visualization->AddMaterial(Shot->GetWeaponClass()->GetParticleModel()->GetIdentifier(), Material);
+	for(std::map< std::string, Graphics::Material * >::const_iterator PartMaterialIterator = PartMaterials.begin(); PartMaterialIterator != PartMaterials.end(); ++PartMaterialIterator)
+	{
+		Graphics::Material * Material(new Graphics::Material(*(PartMaterialIterator->second)));
+		
+		Visualization->AddMaterial(PartMaterialIterator->first, Material);
+	}
 	Visualization->SetClearDepthBuffer(true);
-	Visualization->SetModel(Shot->GetWeaponClass()->GetParticleModel());
+	Visualization->SetModel(Shot->GetAspectVisualization()->GetVisualizationPrototype()->GetModel());
 	Visualization->SetOrientation(Shot->GetAspectPosition()->GetOrientation());
 	Visualization->SetPosition(Shot->GetAspectPosition()->GetPosition());
 	Visualization->SetUseBlending(true);

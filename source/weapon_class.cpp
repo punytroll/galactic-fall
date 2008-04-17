@@ -30,23 +30,23 @@ WeaponClass::WeaponClass(const std::string & Identifier) :
 	m_ParticleExitSpeed(0.0f),
 	m_ParticleDamage(0.0f),
 	m_ParticleLifeTime(0.0f),
-	m_ParticleColor(0),
+	m_ParticleVisualizationPrototype(0),
 	m_VisualizationPrototype(0)
 {
 }
 
 WeaponClass::~WeaponClass(void)
 {
-	delete m_ParticleColor;
-	m_ParticleColor = 0;
+	delete m_ParticleVisualizationPrototype;
+	m_ParticleVisualizationPrototype = 0;
 	delete m_VisualizationPrototype;
 	m_VisualizationPrototype = 0;
 }
 
-void WeaponClass::SetParticleColor(const Color & ParticleColor)
+void WeaponClass::AddParticleVisualizationPrototype(void)
 {
-	delete m_ParticleColor;
-	m_ParticleColor = new Color(ParticleColor);
+	assert(m_ParticleVisualizationPrototype == 0);
+	m_ParticleVisualizationPrototype = new VisualizationPrototype();
 }
 
 void WeaponClass::AddVisualizationPrototype(void)
