@@ -31,20 +31,44 @@ public:
 	void Update(float Seconds);
 	// getters
 	float GetEnergyUsagePerShot(void) const;
+	const Vector3f & GetParticleExitPosition(void) const;
+	float GetParticleExitSpeed(void) const;
+	float GetReloadTime(void) const;
 	const WeaponClass * GetWeaponClass(void) const;
 	// setters
 	void SetEnergyUsagePerShot(float EnergyUsagePerShot);
 	void SetFire(bool Fire);
+	void SetParticleExitPosition(const Vector3f & ParticleExitPosition);
+	void SetParticleExitSpeed(float ParticleExitSpeed);
+	void SetReloadTime(float ReloadTime);
 private:
 	const WeaponClass * m_WeaponClass;
 	float m_EnergyUsagePerShot;
 	bool m_Fire;
 	double m_NextTimeToFire;
+	Vector3f m_ParticleExitPosition;
+	float m_ParticleExitSpeed;
+	float m_ReloadTime;
 };
 
 inline float Weapon::GetEnergyUsagePerShot(void) const
 {
 	return m_EnergyUsagePerShot;
+}
+
+inline const Vector3f & Weapon::GetParticleExitPosition(void) const
+{
+	return m_ParticleExitPosition;
+}
+
+inline float Weapon::GetParticleExitSpeed(void) const
+{
+	return m_ParticleExitSpeed;
+}
+
+inline float Weapon::GetReloadTime(void) const
+{
+	return m_ReloadTime;
 }
 
 inline const WeaponClass * Weapon::GetWeaponClass(void) const
@@ -60,6 +84,21 @@ inline void Weapon::SetEnergyUsagePerShot(float EnergyUsagePerShot)
 inline void Weapon::SetFire(bool Fire)
 {
 	m_Fire = Fire;
+}
+
+inline void Weapon::SetParticleExitPosition(const Vector3f & ParticleExitPosition)
+{
+	m_ParticleExitPosition = ParticleExitPosition;
+}
+
+inline void Weapon::SetParticleExitSpeed(float ParticleExitSpeed)
+{
+	m_ParticleExitSpeed = ParticleExitSpeed;
+}
+
+inline void Weapon::SetReloadTime(float ReloadTime)
+{
+	m_ReloadTime = ReloadTime;
 }
 
 #endif
