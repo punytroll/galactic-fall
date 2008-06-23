@@ -46,7 +46,10 @@ Weapon::Weapon(const WeaponClass * WeaponClass) :
 	m_WeaponClass(WeaponClass),
 	m_EnergyUsagePerShot(0.0f),
 	m_Fire(false),
-	m_NextTimeToFire(0.0)
+	m_NextTimeToFire(0.0),
+	m_ParticleExitPosition(true),
+	m_ParticleExitSpeed(0.0f),
+	m_ReloadTime(0.0f)
 {
 	// initialize object aspects
 	AddAspectAccessory();
@@ -89,7 +92,7 @@ void Weapon::Update(float Seconds)
 			NewShot->SetShooter(Container->GetReference());
 			
 			// calculating the shot's position in the world coordinate system
-			const Vector3f & ParticleExitPosition(GetWeaponClass()->GetParticleExitPosition());
+			const Vector3f & ParticleExitPosition(GetParticleExitPosition());
 			const Vector3f & SlotPosition(GetAspectAccessory()->GetSlot()->GetPosition());
 			const Vector3f & ShipPosition(Container->GetAspectPosition()->GetPosition());
 			Vector3f ShotPosition(true);
@@ -111,13 +114,13 @@ void Weapon::Update(float Seconds)
 			NewShot->GetAspectPosition()->SetOrientation(ShotOrientation);
 			
 			// calculate the shot's velocity
-			Vector3f ParticleVelocity(GetWeaponClass()->GetParticleExitSpeed(), 0.0f, 0.0f);
+			Vector3f ParticleVelocity(GetParticleExitSpeed(), 0.0f, 0.0f);
 			
 			ParticleVelocity *= ShotOrientation;
 			assert(dynamic_cast< Ship * >(Container) != 0);
 			NewShot->SetVelocity(dynamic_cast< Ship * >(Container)->GetVelocity() + Vector3f(ParticleVelocity[0], ParticleVelocity[1], 0.0f));
 			Container->GetContainer()->GetAspectObjectContainer()->AddContent(NewShot);
-			m_NextTimeToFire = GameTime::Get() + GetWeaponClass()->GetReloadTime();
+			m_NextTimeToFire = GameTime::Get() + GetReloadTime();
 			// add visualization
 			VisualizeShot(NewShot, g_ShotLayer);
 		}
