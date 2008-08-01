@@ -18,6 +18,7 @@
 **/
 
 #include <stdexcept>
+#include <typeinfo>
 
 #include "message.h"
 #include "object.h"

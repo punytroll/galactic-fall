@@ -19,6 +19,8 @@
 
 #include <float.h>
 
+#include <algorithm>
+
 #include "commodity.h"
 #include "object_aspect_object_container.h"
 #include "planet.h"
