@@ -19,9 +19,10 @@
 
 #include <assert.h>
 
-#include <stdexcept>
+#include <algorithm>
 #include <iostream>
 #include <stack>
+#include <stdexcept>
 
 #include "xml_parser.h"
 #include "xml_puny_dom.h"

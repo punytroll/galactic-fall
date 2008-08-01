@@ -19,6 +19,8 @@
 
 #include <assert.h>
 
+#include <algorithm>
+
 #include "character.h"
 #include "command_mind.h"
 #include "commodity.h"
