@@ -10,9 +10,13 @@ write_all="no"
 
 # if --help command line argument is given, display which variables may be set with this configuration file
 if [ "$1" = "--help" ]; then
-	echo "CXXFLAGS"
-	echo "LDFLAGS"
-	echo "--data-internal/--data-external"
+	echo "These configuration variables can be modified:"
+	echo "  CXXFLAGS"
+	echo "  LDFLAGS"
+	echo
+	echo "These configuration switches can be set:"
+	echo "  --data-internal/--data-external"
+	echo
 	exit 1
 fi
 
@@ -96,52 +100,66 @@ fi
 
 # process the options from the command line
 for option in "$@"; do
+	case_handled="no"
 	case ${option} in
 	CXXFLAGS=*)
 		configure_CXXFLAGS=`echo ${option} | sed -e 's/^CXXFLAGS=//'`
 		write_CXXFLAGS="yes"
+		case_handled="yes"
 		;;
 	CXXFLAGS+=*)
 		add_CXXFLAGS=`echo ${option} | sed -e 's/^CXXFLAGS+=//'`
 		unify "${configure_CXXFLAGS}" "${add_CXXFLAGS}"
 		configure_CXXFLAGS=${result}
 		write_CXXFLAGS="yes"
+		case_handled="yes"
 		;;
 	CXXFLAGS-=*)
 		subtract_CXXFLAGS=`echo ${option} | sed -e 's/^CXXFLAGS-=//'`
 		subtract "${configure_CXXFLAGS}" "${subtract_CXXFLAGS}"
 		configure_CXXFLAGS=${result}
 		write_CXXFLAGS="yes"
+		case_handled="yes"
 		;;
 	LDFLAGS=*)
 		configure_LDFLAGS=`echo ${option} | sed -e 's/^LDFLAGS=//'`
 		write_LDFLAGS="yes"
+		case_handled="yes"
 		;;
 	LDFLAGS+=*)
 		add_LDFLAGS=`echo ${option} | sed -e 's/^LDFLAGS+=//'`
 		unify "${configure_LDFLAGS}" "${add_LDFLAGS}"
 		configure_LDFLAGS=${result}
 		write_LDFLAGS="yes"
+		case_handled="yes"
 		;;
 	LDFLAGS-=*)
 		subtract_LDFLAGS=`echo ${option} | sed -e 's/^LDFLAGS-=//'`
 		subtract "${configure_LDFLAGS}" "${subtract_LDFLAGS}"
 		configure_LDFLAGS=${result}
 		write_LDFLAGS="yes"
+		case_handled="yes"
 		;;
 	"--data-external")
 		if [ "${configure_data_location}" = "internal" ]; then
 			configure_data_location="external"
 			write_data_location="yes"
 		fi
+		case_handled="yes"
 		;;
 	"--data-internal")
 		if [ "${configure_data_location}" = "external" ]; then
 			configure_data_location="internal"
 			write_data_location="yes"
 		fi
+		case_handled="yes"
 		;;
 	esac
+	if [ "${case_handled}" = "no" ]; then
+		echo "Unkown command line parameter: ${option}"
+		echo "No configuration has been written."
+		exit 1
+	fi
 done
 
 # write the configuration files
