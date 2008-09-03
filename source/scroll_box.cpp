@@ -24,7 +24,6 @@
 ScrollBox::ScrollBox(Widget * SupWidget) :
 	Widget(SupWidget)
 {
-	AddDimensionListener(this);
 	m_View = new Widget(this);
 	m_View->SetPosition(Vector2f(0.0f, 0.0f));
 	m_View->SetSize(Vector2f(GetSize()[0] - 20.0f, GetSize()[1] - 20.0f));
@@ -32,6 +31,7 @@ ScrollBox::ScrollBox(Widget * SupWidget) :
 	m_View->SetAnchorLeft(true);
 	m_View->SetAnchorRight(true);
 	m_View->SetAnchorTop(true);
+	m_View->AddDimensionListener(this);
 	m_Content = new Widget(m_View);
 	m_Content->SetBackgroundColor(Color(0.15f, 0.15f, 0.15f, 1.0f));
 	m_HorizontalScrollBar = new ScrollBar(this, ScrollBar::HORIZONTAL);
@@ -58,7 +58,7 @@ ScrollBox::~ScrollBox(void)
 
 void ScrollBox::OnSizeChanged(Widget * EventSource)
 {
-	if(EventSource == this)
+	if(EventSource == m_View)
 	{
 		const std::list< Widget * > & ContentWidgets(GetContent()->GetSubWidgets());
 		float Bottom(0.0f);
