@@ -147,14 +147,14 @@ ResourceReader::ResourceReader(const std::string & DataDirectoryPath) :
 
 ResourceReader::~ResourceReader(void)
 {
+	delete m_Archive;
+	m_Archive = 0;
 	if(Arxx::Repository.bUnregisterDataChannel(m_LocalFileDataChannel) == false)
 	{
 		throw std::runtime_error("Could not unregister the local file data channel.");
 	}
 	delete m_LocalFileDataChannel;
 	m_LocalFileDataChannel = 0;
-	delete m_Archive;
-	m_Archive = 0;
 }
 
 bool ResourceReader::LoadArchive(const std::string & ArchivePath)
