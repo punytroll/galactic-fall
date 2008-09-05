@@ -109,6 +109,12 @@
 #include "xml_puny_dom.h"
 #include "xml_stream.h"
 
+#ifndef NDEBUG
+#define ON_DEBUG(A) (A)
+#else
+#define ON_DEBUG(A)
+#endif
+
 // these objects are exported via globals.h
 ClassManager< AssetClass > * g_AssetClassManager(0);
 ClassManager< CommodityClass > * g_CommodityClassManager(0);
@@ -2988,29 +2994,9 @@ int main(int argc, char ** argv)
 	// static initialization of data independent globals
 	Callback1< void, Graphics::Node * > * OnGraphicsNodeDestroyCallback(Callback(OnGraphicsNodeDestroy));
 	
-	g_MainPerspective.SetNearClippingPlane(1.0f);
-	g_MainPerspective.SetFarClippingPlane(1000.f);
-	g_AssetClassManager = new ClassManager< AssetClass >();
-	g_CommodityClassManager = new ClassManager< CommodityClass >();
-	g_Galaxy = 0;
-	g_GraphicsEngine = new Graphics::Engine();
-	g_GraphicsEngine->SetOnDestroyCallback(OnGraphicsNodeDestroyCallback);
-	g_MainScene = 0;
-	g_MeshManager = new Graphics::MeshManager();
-	g_MessageDispatcher = new MessageDispatcher();
-	g_ModelManager = new Graphics::ModelManager();
-	g_ObjectFactory = new ObjectFactory();
-	g_ShipClassManager = new ClassManager< ShipClass >();
-	g_SlotClassManager = new ClassManager< SlotClass >();
-	g_TextureManager = new Graphics::TextureManager();
-	g_UserInterface = new UserInterface();
-	g_WeaponClassManager = new ClassManager< WeaponClass >();
-	g_GameTimeTimeoutNotifications = new TimeoutNotificationManager();
-	g_RealTimeTimeoutNotifications = new TimeoutNotificationManager();
-	g_SystemStatistics = new SystemStatistics();
-	g_CharacterObserver = new OutputObserver();
-	
 	// parse command line
+	ON_DEBUG(std::cout << "Parsing command line." << std::endl);
+	
 	std::vector< std::string > Arguments(argv, argv + argc);
 	std::string LoadSavegameFileName("data/savegame_default.xml");
 	std::string DataFileName("data/data.arx");
@@ -3041,7 +3027,32 @@ int main(int argc, char ** argv)
 		}
 	}
 	
+	// create managers and global objects
+	ON_DEBUG(std::cout << "Creating global managers and objects." << std::endl);
+	g_MainPerspective.SetNearClippingPlane(1.0f);
+	g_MainPerspective.SetFarClippingPlane(1000.f);
+	g_AssetClassManager = new ClassManager< AssetClass >();
+	g_CommodityClassManager = new ClassManager< CommodityClass >();
+	g_Galaxy = 0;
+	g_GraphicsEngine = new Graphics::Engine();
+	g_GraphicsEngine->SetOnDestroyCallback(OnGraphicsNodeDestroyCallback);
+	g_MainScene = 0;
+	g_MeshManager = new Graphics::MeshManager();
+	g_MessageDispatcher = new MessageDispatcher();
+	g_ModelManager = new Graphics::ModelManager();
+	g_ObjectFactory = new ObjectFactory();
+	g_ShipClassManager = new ClassManager< ShipClass >();
+	g_SlotClassManager = new ClassManager< SlotClass >();
+	g_TextureManager = new Graphics::TextureManager();
+	g_UserInterface = new UserInterface();
+	g_WeaponClassManager = new ClassManager< WeaponClass >();
+	g_GameTimeTimeoutNotifications = new TimeoutNotificationManager();
+	g_RealTimeTimeoutNotifications = new TimeoutNotificationManager();
+	g_SystemStatistics = new SystemStatistics();
+	g_CharacterObserver = new OutputObserver();
+	
 	// try loading the game data archive
+	ON_DEBUG(std::cout << "Loading game archive." << std::endl);
 	g_ResourceReader = new ResourceReader(DataFileName.substr(0, DataFileName.rfind('/')) + '/');
 	if(g_ResourceReader->LoadArchive(DataFileName) == false)
 	{
@@ -3049,6 +3060,7 @@ int main(int argc, char ** argv)
 	}
 	
 	// read the data from the archive
+	ON_DEBUG(std::cout << "Reading the data objects from the game archive." << std::endl);
 	g_ResourceReader->ReadMeshes();
 	g_ResourceReader->ReadModels();
 	g_ResourceReader->ReadAssetClasses();
@@ -3088,18 +3100,23 @@ int main(int argc, char ** argv)
 	// set first timeout for widget collector, it will reinsert itself on callback
 	g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 5.0f, Callback(CollectWidgetsRecurrent));
 	// setting up the graphical environment
+	ON_DEBUG(std::cout << "Creating window." << std::endl);
 	CreateWindow();
+	ON_DEBUG(std::cout << "Initializing OpenGL." << std::endl);
 	InitializeOpenGL();
 	// since reading the textures already creates them we have to do this after initializing OpenGL
+	ON_DEBUG(std::cout << "Reading textures from game archive." << std::endl);
 	g_ResourceReader->ReadTextures();
 	
 	// load the specified savegame
+	ON_DEBUG(std::cout << "Loading save game file." << std::endl);
 	if(LoadGameFromFileName(LoadSavegameFileName) == false)
 	{
 		return 1;
 	}
 	
 	// main loop
+	ON_DEBUG(std::cout << "Entering game loop." << std::endl);
 	while(g_Quit == false)
 	{
 		ProcessEvents();
