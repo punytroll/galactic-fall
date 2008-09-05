@@ -756,7 +756,7 @@ scanner_display.o: scanner_display.cpp $(object_aspect_physical_h) $(scanner_dis
 scroll_bar.o: scroll_bar.cpp $(button_h) $(color_h) $(scroll_bar_h) $(scroll_position_changed_listener_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-scroll_box.o: scroll_box.cpp $(color_h) $(scroll_box_h)
+scroll_box.o: scroll_box.cpp $(color_h) $(scroll_bar_h) $(scroll_box_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 scroll_position_changed_listener.o: scroll_position_changed_listener.cpp $(scroll_position_changed_listener_h)
