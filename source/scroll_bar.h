@@ -21,16 +21,20 @@
 #define SCROLL_BAR_H
 
 #include "clicked_listener.h"
+#include "dimension_listener.h"
+#include "mouse_button_listener.h"
+#include "mouse_motion_listener.h"
 #include "widget.h"
 
 class Button;
 class ScrollPositionChangedListener;
 
-class ScrollBar : public ClickedListener, public Widget
+class ScrollBar : public ClickedListener, public DimensionListener, public MouseButtonListener, public MouseMotionListener, public Widget
 {
 public:
 	enum Alignment
 	{
+		UNDEFINED,
 		HORIZONTAL,
 		VERTICAL
 	};
@@ -39,6 +43,7 @@ public:
 	virtual ~ScrollBar(void);
 	void AddScrollPositionChangedListener(ScrollPositionChangedListener * ScrollPositionChangedListener);
 	// getters
+	ScrollBar::Alignment GetAlignment(void) const;
 	float GetCurrentPosition(void) const;
 	float GetMinimumPosition(void) const;
 	float GetMaximumPosition(void) const;
@@ -54,15 +59,26 @@ public:
 	void StepMore(void);
 protected:
 	virtual bool OnClicked(Widget * EventSource);
+	virtual void OnSizeChanged(Widget * EventSource);
+	virtual void OnMouseEnter(Widget * EventSource);
+	virtual void OnMouseLeave(Widget * EventSource);
 private:
+	void AdjustTrackerPosition(void);
 	std::list< ScrollPositionChangedListener * > m_ScrollPositionChangedListeners;
 	Button * m_LessButton;
 	Button * m_MoreButton;
+	Widget * m_Tracker;
+	ScrollBar::Alignment m_Alignment;
 	float m_CurrentPosition;
 	float m_MinimumPosition;
 	float m_MaximumPosition;
 	float m_StepSize;
 };
+
+inline ScrollBar::Alignment ScrollBar::GetAlignment(void) const
+{
+	return m_Alignment;
+}
 
 inline float ScrollBar::GetCurrentPosition(void) const
 {

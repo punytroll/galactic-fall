@@ -348,6 +348,9 @@ scanner_display_h = \
 scroll_bar_h = \
 	scroll_bar.h \
 	$(clicked_listener_h) \
+	$(dimension_listener_h) \
+	$(mouse_button_listener_h) \
+	$(mouse_motion_listener_h) \
 	$(widget_h)
 
 scroll_box_h = \
