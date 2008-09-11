@@ -2839,21 +2839,30 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 
 void CreateWindow(void)
 {
+	ON_DEBUG(std::cout << "Opening display." << std::endl);
 	g_Display = XOpenDisplay(0);
+	
+	ON_DEBUG(std::cout << "Getting default screen." << std::endl);
 	
 	int ScreenNumber(DefaultScreen(g_Display));
 	
+	ON_DEBUG(std::cout << "Getting display dimensions." << std::endl);
 	g_Width = DisplayWidth(g_Display, ScreenNumber);
 	g_Height = DisplayHeight(g_Display, ScreenNumber);
 	
 	int GLXAttributes[] = { GLX_RGBA, GLX_DOUBLEBUFFER, GLX_RED_SIZE, 4, GLX_GREEN_SIZE, 4, GLX_BLUE_SIZE, 4, GLX_ALPHA_SIZE, 4, GLX_DEPTH_SIZE, 16, 0 };
+	
+	ON_DEBUG(std::cout << "Choosing a visual." << std::endl);
+	
 	XVisualInfo * VisualInfo(glXChooseVisual(g_Display, ScreenNumber, GLXAttributes));
 	
+	ON_DEBUG(std::cout << "Choosen a visual." << std::endl);
 	if(VisualInfo == 0)
 	{
 		std::cerr << "Sorry, could not find a suitable visualization mode." << std::endl;
 		exit(1);
 	}
+	ON_DEBUG(std::cout << "Creating GLX context." << std::endl);
 	g_GLXContext = glXCreateContext(g_Display, VisualInfo, 0, GL_TRUE);
 	
 	XSetWindowAttributes WindowAttributes;
@@ -2861,22 +2870,14 @@ void CreateWindow(void)
 	WindowAttributes.colormap = XCreateColormap(g_Display, RootWindow(g_Display, VisualInfo->screen), VisualInfo->visual, AllocNone);
 	WindowAttributes.border_pixel = 0;
 	WindowAttributes.event_mask = ExposureMask | ButtonPressMask | ButtonReleaseMask | StructureNotifyMask | KeyPressMask | KeyReleaseMask | PointerMotionMask;
-	//WindowAttributes.override_redirect = True;
-	// create the window
+	ON_DEBUG(std::cout << "Creating X window." << std::endl);
 	g_Window = XCreateWindow(g_Display, RootWindow(g_Display, VisualInfo->screen), 0, 0, static_cast< unsigned int >(g_Width), static_cast< unsigned int >(g_Height), 0, VisualInfo->depth, InputOutput, VisualInfo->visual, CWBorderPixel | CWColormap | CWEventMask/* | CWOverrideRedirect*/, &WindowAttributes);
 	
 	Atom wmDelete = XInternAtom(g_Display, "WM_DELETE_WINDOW", True);
 	
 	XSetWMProtocols(g_Display, g_Window, &wmDelete, 1);
 	XSetStandardProperties(g_Display, g_Window, "galactic-fall 0.2", "TITLE", None, NULL, 0, NULL);
-	// show the window
 	XMapRaised(g_Display, g_Window);
-	// grab the keyboard so we get keyboard events and windowmanager can interfere
-	//XGrabKeyboard(g_Display, g_Window, True, GrabModeAsync, GrabModeAsync, CurrentTime);
-	// grab the mouse, so the mouse cursor can't leave our window
-	//XGrabPointer(g_Display, g_Window, True, ButtonPressMask, GrabModeAsync, GrabModeAsync, g_Window, None, CurrentTime);
-	// don't allow key repeats
-	//XAutoRepeatOff(g_Display);
 	XFree(VisualInfo);
 	glXMakeCurrent(g_Display, g_Window, g_GLXContext);
 }
@@ -3100,7 +3101,7 @@ int main(int argc, char ** argv)
 	// set first timeout for widget collector, it will reinsert itself on callback
 	g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 5.0f, Callback(CollectWidgetsRecurrent));
 	// setting up the graphical environment
-	ON_DEBUG(std::cout << "Creating window." << std::endl);
+	ON_DEBUG(std::cout << "Setting up the window." << std::endl);
 	CreateWindow();
 	ON_DEBUG(std::cout << "Initializing OpenGL." << std::endl);
 	InitializeOpenGL();
