@@ -100,16 +100,6 @@ inline float ScrollBar::GetStepSize(void) const
 	return m_StepSize;
 }
 
-inline void ScrollBar::SetMinimumPosition(float MinimumPosition)
-{
-	m_MinimumPosition = MinimumPosition;
-}
-
-inline void ScrollBar::SetMaximumPosition(float MaximumPosition)
-{
-	m_MaximumPosition = MaximumPosition;
-}
-
 inline void ScrollBar::SetStepSize(float StepSize)
 {
 	m_StepSize = StepSize;
