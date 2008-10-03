@@ -172,6 +172,7 @@ load_game_dialog_h = \
 	$(clicked_listener_h) \
 	$(key_listener_h) \
 	$(mouse_button_listener_h) \
+	$(timeout_notifications_h) \
 	$(window_h)
 
 map_dialog_h = \
@@ -338,6 +339,7 @@ save_game_dialog_h = \
 	$(clicked_listener_h) \
 	$(key_listener_h) \
 	$(mouse_button_listener_h) \
+	$(timeout_notifications_h) \
 	$(window_h)
 
 scanner_display_h = \
