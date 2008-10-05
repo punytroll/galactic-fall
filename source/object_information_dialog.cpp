@@ -198,6 +198,11 @@ void ObjectInformationDialog::Refresh(void)
 		{
 			Top += AddSeparator(Top, 0.0f, "Name Aspect");
 			Top += AddStringProperty(Top, 20.0f, "Name", m_Object->GetAspectName()->GetName());
+			GetTitleLabel()->SetText("Object Information: " + m_Object->GetAspectName()->GetName());
+		}
+		else
+		{
+			GetTitleLabel()->SetText("Object Information");
 		}
 		if(m_Object->GetAspectObjectContainer() != 0)
 		{
