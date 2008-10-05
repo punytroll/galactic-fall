@@ -33,6 +33,7 @@ public:
 	WWindow(Widget * SupWidget, const std::string & Title);
 	// getters
 	Border * GetBorder(void);
+	Label * GetTitleLabel(void);
 	virtual bool OnMouseButton(Widget * EventSource, int Button, int State, float X, float Y);
 	virtual void OnMouseMotion(Widget * EventSource, float X, float Y);
 private:
@@ -45,6 +46,11 @@ private:
 inline Border * WWindow::GetBorder(void)
 {
 	return m_Border;
+}
+
+inline Label * WWindow::GetTitleLabel(void)
+{
+	return m_TitleLabel;
 }
 
 #endif
