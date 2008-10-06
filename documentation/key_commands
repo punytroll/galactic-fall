@@ -98,11 +98,10 @@ On key down:
 	Acts upon InputMind.Character.Ship.
 
 67 (F1)
-	Dumps a savegame to standard out.
-	Requires a player ship and a player character.
+	Opens the "Save Game" dialog.
 
 68 (F2)
-	Dumps an object report to standard out.
+	Opens the "Load Game" dialog.
 
 74 (F8)
 	Opens up an object information dialog for the galaxy object for debugging purposes.
