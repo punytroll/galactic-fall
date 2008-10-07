@@ -35,6 +35,7 @@
 #include "arx_reading.h"
 #include "asset_class.h"
 #include "battery.h"
+#include "callbacks.h"
 #include "camera.h"
 #include "character.h"
 #include "class_manager.h"
@@ -2996,6 +2997,9 @@ int main(int argc, char ** argv)
 {
 	// setup the random number generator for everyday use
 	srand(time(0));
+	// static initialization of data independent globals
+	Callback1< void, Graphics::Node * > * OnGraphicsNodeDestroyCallback(Callback(OnGraphicsNodeDestroy));
+	
 	// parse command line
 	ON_DEBUG(std::cout << "Parsing command line." << std::endl);
 	
@@ -3037,7 +3041,7 @@ int main(int argc, char ** argv)
 	g_CommodityClassManager = new ClassManager< CommodityClass >();
 	g_Galaxy = 0;
 	g_GraphicsEngine = new Graphics::Engine();
-	g_GraphicsEngine->SetDestroyCallback(Callback(OnGraphicsNodeDestroy));
+	g_GraphicsEngine->SetOnDestroyCallback(OnGraphicsNodeDestroyCallback);
 	g_MainScene = 0;
 	g_MeshManager = new Graphics::MeshManager();
 	g_MessageDispatcher = new MessageDispatcher();
@@ -3154,6 +3158,7 @@ int main(int argc, char ** argv)
 	delete g_UserInterface;
 	delete g_WeaponClassManager;
 	delete g_ResourceReader;
+	delete OnGraphicsNodeDestroyCallback;
 	CollectWidgets();
 	
 	return 0;
