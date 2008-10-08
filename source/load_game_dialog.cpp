@@ -49,7 +49,7 @@ private:
 	Label * m_CaptionLabel;
 };
 
-LoadGameDialog::LoadGameDialog(Widget * SupWidget, Callback1< bool, std::istream & > * LoadGameCallback) :
+LoadGameDialog::LoadGameDialog(Widget * SupWidget, Callback1< bool, std::istream & > LoadGameCallback) :
 	WWindow(SupWidget, "Load Game"),
 	m_LoadGameCallback(LoadGameCallback),
 	m_SelectedDirectoryEntryItem(0)
@@ -192,7 +192,7 @@ bool LoadGameDialog::Load(void)
 	}
 	else
 	{
-		if((*m_LoadGameCallback)(InputFileStream) == false)
+		if(m_LoadGameCallback(InputFileStream) == false)
 		{
 			ShowErrorMessage("Loading the game file \"" + Path + "\" failed.");
 			

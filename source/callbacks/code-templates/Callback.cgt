@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<template>
+	<header name="Callback" description="A copyable and assignable callback wrapper." author="Hagen Möbius">
+		<uuid>8f5fd530-285b-43ce-bdab-a97185232a1e</uuid>
+		<label category="c++"/>
+		<label category="class"/>
+		<variable type="boolean" name="Assertions" default-value="true" description="Specify whether your generated code should contain assertions."/>
+		<variable type="boolean" name="InstanceCount" default-value="true" description="Specify whether your generated code should include debug messages on creation and destruction."/>
+		<variable type="integer" name="NumberOfArguments" default-value="0" description="The number of typed arguments."/>
+	</header>
+	<body>/////////  begin  <variable>Template.UUID</variable>  ///////////////////////
+// <variable>Template.Name</variable>
+// Assertions=<to-string><variable>Assertions</variable></to-string>
+// InstanceCount=<to-string><variable>InstanceCount</variable></to-string>
+// NumberOfArguments=<to-string><variable>NumberOfArguments</variable></to-string>
+///////////////////////////////////////////////////////////////////////////////
+/**
+ * @brief A light wrapper around a CallbackCore<to-string><variable>NumberOfArguments</variable></to-string>-derivative.
+ * 
+ * This wrapper can be copied and assigned and is therefore ideal for being handled by value. It can be passed by value and included in by-value-containers.
+ **/
+template &lt; typename ReturnType<foreach name="Loop"><over><range><to-integer>1</to-integer><variable>NumberOfArguments</variable></range></over><do>, typename Argument<to-string><variable>Loop</variable></to-string>Type</do></foreach> &gt;
+class Callback<to-string><variable>NumberOfArguments</variable></to-string>
+{
+public:
+	Callback<to-string><variable>NumberOfArguments</variable></to-string>(void) :
+		m_Core(0)
+	{<if><condition><equal><variable>InstanceCount</variable><to-boolean>true</to-boolean></equal></condition><then>
+		std::cout &lt;&lt; "+ Callback<to-string><variable>NumberOfArguments</variable></to-string>" &lt;&lt; std::endl;</then></if>
+	}
+	
+	Callback<to-string><variable>NumberOfArguments</variable></to-string>(CallbackCore<to-string><variable>NumberOfArguments</variable></to-string>&lt; ReturnType<foreach name="Loop"><over><range><to-integer>1</to-integer><variable>NumberOfArguments</variable></range></over><do>, Argument<to-string><variable>Loop</variable></to-string>Type</do></foreach> &gt; * Core) :
+		m_Core(Core)
+	{<if><condition><equal><variable>Assertions</variable><to-boolean>true</to-boolean></equal></condition><then>
+		assert(m_Core != 0);</then></if>
+		m_Core->Increment();<if><condition><equal><variable>InstanceCount</variable><to-boolean>true</to-boolean></equal></condition><then>
+		std::cout &lt;&lt; "+ Callback<to-string><variable>NumberOfArguments</variable></to-string>" &lt;&lt; std::endl;</then></if>
+	}
+	
+	Callback<to-string><variable>NumberOfArguments</variable></to-string>(const Callback<to-string><variable>NumberOfArguments</variable></to-string> &amp; OtherCallback) :
+		m_Core(OtherCallback.m_Core)
+	{<if><condition><equal><variable>Assertions</variable><to-boolean>true</to-boolean></equal></condition><then>
+		assert(m_Core != 0);</then></if>
+		m_Core->Increment();<if><condition><equal><variable>InstanceCount</variable><to-boolean>true</to-boolean></equal></condition><then>
+		std::cout &lt;&lt; "+ Callback<to-string><variable>NumberOfArguments</variable></to-string>" &lt;&lt; std::endl;</then></if>
+	}
+	
+	~Callback<to-string><variable>NumberOfArguments</variable></to-string>(void)
+	{
+		if(m_Core != 0)
+		{
+			m_Core-&gt;Decrement();
+			if(m_Core-&gt;GetCount() == 0)
+			{
+				delete m_Core;
+				m_Core = 0;
+			}
+		}<if><condition><equal><variable>InstanceCount</variable><to-boolean>true</to-boolean></equal></condition><then>
+		std::cout &lt;&lt; "- Callback<to-string><variable>NumberOfArguments</variable></to-string>" &lt;&lt; std::endl;</then></if>
+	}
+	
+	Callback<to-string><variable>NumberOfArguments</variable></to-string> &amp; operator=(const Callback<to-string><variable>NumberOfArguments</variable></to-string> &amp; Callback)
+	{
+		if(m_Core != 0)
+		{
+			m_Core-&gt;Decrement();
+			if(m_Core-&gt;GetCount() == 0)
+			{
+				delete m_Core;
+				m_Core = 0;
+			}
+		}
+		m_Core = Callback.m_Core;
+		if(m_Core != 0)
+		{
+			m_Core-&gt;Increment();
+		}
+		
+		return *this;
+	}
+	
+	ReturnType operator()(<if><condition><greater><variable>NumberOfArguments</variable><to-integer>0</to-integer></greater></condition><then><foreach name="Loop"><over><range><to-integer>1</to-integer><variable>NumberOfArguments</variable></range></over><do><if><condition><greater><variable>Loop</variable><to-integer>1</to-integer></greater></condition><then>, </then></if>Argument<to-string><variable>Loop</variable></to-string>Type Argument<to-string><variable>Loop</variable></to-string></do></foreach></then><else>void</else></if>) const
+	{
+		return m_Core-&gt;Call(<foreach name="Loop"><over><range><to-integer>1</to-integer><variable>NumberOfArguments</variable></range></over><do>Argument<to-string><variable>Loop</variable></to-string></do></foreach>);
+	}
+	
+	bool IsValid(void) const
+	{
+		return (m_Core != 0) &amp;&amp; (m_Core-&gt;IsValid() == true);
+	}
+	
+	CallbackCore<to-string><variable>NumberOfArguments</variable></to-string>&lt; ReturnType<foreach name="Loop"><over><range><to-integer>1</to-integer><variable>NumberOfArguments</variable></range></over><do>, Argument<to-string><variable>Loop</variable></to-string>Type</do></foreach> &gt; * GetCore(void)
+	{
+		return m_Core;
+	}
+	
+	const CallbackCore<to-string><variable>NumberOfArguments</variable></to-string>&lt; ReturnType<foreach name="Loop"><over><range><to-integer>1</to-integer><variable>NumberOfArguments</variable></range></over><do>, Argument<to-string><variable>Loop</variable></to-string>Type</do></foreach> &gt; * GetCore(void) const
+	{
+		return m_Core;
+	}
+private:
+	CallbackCore<to-string><variable>NumberOfArguments</variable></to-string>&lt; ReturnType<foreach name="Loop"><over><range><to-integer>1</to-integer><variable>NumberOfArguments</variable></range></over><do>, Argument<to-string><variable>Loop</variable></to-string>Type</do></foreach> &gt; * m_Core;
+};
+/////////  end    <variable>Template.UUID</variable>  ///////////////////////
+</body>
+</template>

@@ -20,7 +20,7 @@
 #ifndef LOAD_GAME_DIALOG_H
 #define LOAD_GAME_DIALOG_H
 
-#include "callbacks.h"
+#include "callbacks/callbacks.h"
 #include "clicked_listener.h"
 #include "key_listener.h"
 #include "mouse_button_listener.h"
@@ -35,7 +35,7 @@ class ScrollBox;
 class LoadGameDialog : public ClickedListener, public KeyListener, virtual public MouseButtonListener, public WWindow
 {
 public:
-	LoadGameDialog(Widget * SupWidget, Callback1< bool, std::istream & > * LoadGameCallback);
+	LoadGameDialog(Widget * SupWidget, Callback1< bool, std::istream & > LoadGameCallback);
 protected:
 	virtual bool OnClicked(Widget * EventSource);
 	virtual bool OnKey(Widget * EventSource, const KeyEventInformation & KeyEventInformation);
@@ -44,7 +44,7 @@ private:
 	void ShowErrorMessage(const std::string & ErrorMessage);
 	void HideErrorMessage(void);
 	bool Load(void);
-	Callback1< bool, std::istream & > * m_LoadGameCallback;
+	Callback1< bool, std::istream & > m_LoadGameCallback;
 	Button * m_CancelButton;
 	Button * m_OKButton;
 	Label * m_ErrorMessage;

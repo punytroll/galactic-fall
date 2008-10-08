@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<template>
+	<header name="Bind Argument Core" description="A callback core binding one of its arguments to a specific value." author="Hagen Möbius">
+		<uuid>9730669a-993e-4d2a-9e3d-25af128e728f</uuid>
+		<label category="c++"/>
+		<label category="class"/>
+		<variable type="boolean" name="Assertions" default-value="false" description="Specify whether you want your code to include assertions."/>
+		<variable type="integer" name="BindArgument" default-value="1" description="The number of the bound argument."/>
+		<variable type="boolean" name="InstanceCount" default-value="false" description="Specify whether your generated code should include debug messages on creation and destruction."/>
+		<variable type="integer" name="NumberOfArguments" default-value="1" description="The number of typed arguments."/>
+	</header>
+	<body>/////////  begin  <variable>Template.UUID</variable>  ///////////////////////
+// <variable>Template.Name</variable>
+// Assertions=<to-string><variable>Assertions</variable></to-string>
+// BindArgument=<to-string><variable>BindArgument</variable></to-string>
+// InstanceCount=<to-string><variable>InstanceCount</variable></to-string>
+// NumberOfArguments=<to-string><variable>NumberOfArguments</variable></to-string>
+///////////////////////////////////////////////////////////////////////////////
+template &lt; typename ReturnType<foreach name="Loop"><over><range><to-integer>1</to-integer><variable>NumberOfArguments</variable></range></over><do>, typename Argument<to-string><variable>Loop</variable></to-string>Type</do></foreach> &gt;
+class BindArgument<to-string><variable>BindArgument</variable></to-string>Core<to-string><subtract><variable>NumberOfArguments</variable><to-integer>1</to-integer></subtract></to-string> : public CallbackCore<to-string><subtract><variable>NumberOfArguments</variable><to-integer>1</to-integer></subtract></to-string>&lt; ReturnType<foreach name="Loop"><over><range><to-integer>1</to-integer><variable>NumberOfArguments</variable></range></over><do><if><condition><not-equal><variable>Loop</variable><variable>BindArgument</variable></not-equal></condition><then>, Argument<to-string><variable>Loop</variable></to-string></then></if></do></foreach> &gt;
+{
+public:
+	explicit BindArgument<to-string><variable>BindArgument</variable></to-string>Core<to-string><subtract><variable>NumberOfArguments</variable><to-integer>1</to-integer></subtract></to-string>(Callback<to-string><variable>NumberOfArguments</variable></to-string>&lt; ReturnType<foreach name="Loop"><over><range><to-integer>1</to-integer><variable>NumberOfArguments</variable></range></over><do>, Argument<to-string><variable>Loop</variable></to-string>Type</do></foreach> &gt; Callback, Argument<to-string><variable>BindArgument</variable></to-string>Type Argument<to-string><variable>BindArgument</variable></to-string>) :
+		m_CallbackCore(Callback.GetCore()),
+		m_Argument<to-string><variable>BindArgument</variable></to-string>(Argument<to-string><variable>BindArgument</variable></to-string>)
+	{<if><condition><equal><variable>Assertions</variable><to-boolean>true</to-boolean></equal></condition><then>
+		assert(m_CallbackCore != 0);</then></if>
+		m_CallbackCore->Increment();
+		<if><condition><equal><variable>InstanceCount</variable><to-boolean>true</to-boolean></equal></condition><then>
+		std::cout &lt;&lt; "+ BindArgument<to-string><variable>BindArgument</variable></to-string>Core<to-string><subtract><variable>NumberOfArguments</variable><to-integer>1</to-integer></subtract></to-string>" &lt;&lt; std::endl;</then></if>
+	}
+	
+	virtual ~BindArgument<to-string><variable>BindArgument</variable></to-string>Core<to-string><subtract><variable>NumberOfArguments</variable><to-integer>1</to-integer></subtract></to-string>(void)
+	{
+		if(m_CallbackCore != 0)
+		{
+			m_CallbackCore-&gt;Decrement();
+			if(m_CallbackCore-&gt;GetCount() == 0)
+			{
+				delete m_CallbackCore;
+				m_CallbackCore = 0;
+			}
+		}<if><condition><equal><variable>InstanceCount</variable><to-boolean>true</to-boolean></equal></condition><then>
+		std::cout &lt;&lt; "- BindArgument<to-string><variable>BindArgument</variable></to-string>Core<to-string><subtract><variable>NumberOfArguments</variable><to-integer>1</to-integer></subtract></to-string>" &lt;&lt; std::endl;</then></if>
+	}
+	
+	virtual ReturnType Call(<if><condition><greater><variable>NumberOfArguments</variable><to-integer>0</to-integer></greater></condition><then><foreach name="Loop"><over><range><to-integer>1</to-integer><variable>NumberOfArguments</variable></range></over><do><if><condition><not-equal><variable>Loop</variable><variable>BindArgument</variable></not-equal></condition><then><if><condition><greater><variable>Loop</variable><to-integer>1</to-integer></greater></condition><then>, </then></if>Argument<to-string><variable>Loop</variable></to-string>Type Argument<to-string><variable>Loop</variable></to-string></then></if></do></foreach></then><else>void</else></if>) const
+	{<if><condition><equal><variable>Assertions</variable><to-boolean>true</to-boolean></equal></condition><then>
+		assert(IsValid() == true);
+		</then></if>
+		return m_CallbackCore->Call(<foreach name="Loop"><over><range><to-integer>1</to-integer><variable>NumberOfArguments</variable></range></over><do><if><condition><equal><variable>Loop</variable><variable>BindArgument</variable></equal></condition><then>m_Argument<to-string><variable>BindArgument</variable></to-string></then><else>Argument<variable>Loop</variable></else></if></do></foreach>);
+	}
+	
+	virtual bool IsValid(void) const
+	{
+		return m_CallbackCore->IsValid();
+	}
+protected:
+	CallbackCore<to-string><variable>NumberOfArguments</variable></to-string>&lt; ReturnType<foreach name="Loop"><over><range><to-integer>1</to-integer><variable>NumberOfArguments</variable></range></over><do>, Argument<to-string><variable>Loop</variable></to-string>Type</do></foreach> &gt; * m_CallbackCore;
+	Argument<to-string><variable>BindArgument</variable></to-string>Type m_Argument<to-string><variable>BindArgument</variable></to-string>;
+};
+/////////  end    <variable>Template.UUID</variable>  ///////////////////////
+</body>
+</template>

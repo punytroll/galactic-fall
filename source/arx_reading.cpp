@@ -29,7 +29,7 @@
 #include "arx_resources.h"
 #include "asset_class.h"
 #include "buffer_reading.h"
-#include "callbacks.h"
+#include "callbacks/callbacks.h"
 #include "class_manager.h"
 #include "commodity_class.h"
 #include "galaxy.h"
@@ -111,7 +111,7 @@ static Arxx::Item * Resolve(Arxx::Reference & Reference)
 	return Item;
 }
 
-void ReadItems(Arxx::Archive * Archive, const std::string & Path, const Callback1< void, Arxx::Reference & > * Reader)
+void ReadItems(Arxx::Archive * Archive, const std::string & Path, const Callback1< void, Arxx::Reference & > Reader)
 {
 	Arxx::Item * Directory(Archive->GetItem(Path));
 	
@@ -129,10 +129,9 @@ void ReadItems(Arxx::Archive * Archive, const std::string & Path, const Callback
 	
 	while(CommodityIterator != Relation.end())
 	{
-		(*Reader)(*CommodityIterator);
+		Reader(*CommodityIterator);
 		++CommodityIterator;
 	}
-	delete Reader;
 }
 
 ResourceReader::ResourceReader(const std::string & DataDirectoryPath) :

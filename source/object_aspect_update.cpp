@@ -21,22 +21,11 @@
 
 #include "object_aspect_update.h"
 
-ObjectAspectUpdate::ObjectAspectUpdate(void) :
-	m_Callback(0)
-{
-}
-
-ObjectAspectUpdate::~ObjectAspectUpdate(void)
-{
-	delete m_Callback;
-	m_Callback = 0;
-}
-
 bool ObjectAspectUpdate::Update(float Seconds)
 {
-	if(m_Callback != 0)
+	if(m_Callback.IsValid() == true)
 	{
-		return (*m_Callback)(Seconds);
+		return m_Callback(Seconds);
 	}
 	else
 	{
@@ -44,8 +33,7 @@ bool ObjectAspectUpdate::Update(float Seconds)
 	}
 }
 
-void ObjectAspectUpdate::SetCallback(Callback1< bool, float > * Callback)
+void ObjectAspectUpdate::SetCallback(Callback1< bool, float > Callback)
 {
-	assert(m_Callback == 0);
 	m_Callback = Callback;
 }

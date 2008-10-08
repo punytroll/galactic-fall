@@ -93,7 +93,13 @@ raw_to_littlem_py = \
 xml_to_data_py = \
 	tools/xml_to_data.py
 
-all: check-dependencies $(all_data) data.arx
+default: all
+
+all: all-recursive
+
+all-here: check-dependencies $(all_data) data.arx
+
+all-recursive: all-here
 
 check-dependencies:
 	@if [ x`which pkg-config` = x ]; then \
@@ -115,7 +121,9 @@ check-dependencies:
 		echo -e "\nThe \"data_location\" configuration is missing.\nPlease run the configure script in the top level directory.\n"; false; \
 	fi
 
-clean:
+clean: clean-recursive
+
+clean-here:
 	$(RM) -r .data
 	$(RM) data.arx
 	$(RM) tools/xml_stream.pyc
@@ -132,6 +140,8 @@ clean:
 	$(RM) meshes/shuttle.xml
 	$(RM) meshes/transporter.xml
 	$(RM) textures/particle.tex
+
+clean-recursive: clean-here
 
 data.arx: $(data_arx)
 	@$(RM) -f $@
@@ -264,4 +274,4 @@ textures/%.tex: textures/%.vg $(rasterize_py)
 
 .data/texture_particle.data: textures/particle.tex
 
-.PHONY: check-dependencies
+.PHONY: all all-here all-recursive check-dependencies clean clean-here clean-recursive default

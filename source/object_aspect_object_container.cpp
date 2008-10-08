@@ -23,11 +23,7 @@
 #include "object_aspect_object_container.h"
 
 ObjectAspectObjectContainer::ObjectAspectObjectContainer(Object * Object) :
-	m_AllowAddingCallback(0),
-	m_AllowRemovingCallback(0),
-	m_Object(Object),
-	m_OnAddedCallback(0),
-	m_OnRemovedCallback(0)
+	m_Object(Object)
 {
 	assert(m_Object != 0);
 }
@@ -35,30 +31,22 @@ ObjectAspectObjectContainer::ObjectAspectObjectContainer(Object * Object) :
 ObjectAspectObjectContainer::~ObjectAspectObjectContainer(void)
 {
 	assert(m_Content.empty() == true);
-	delete m_AllowAddingCallback;
-	m_AllowAddingCallback = 0;
-	delete m_AllowRemovingCallback;
-	m_AllowRemovingCallback = 0;
-	delete m_OnAddedCallback;
-	m_OnAddedCallback = 0;
-	delete m_OnRemovedCallback;
-	m_OnRemovedCallback = 0;
 }
 
 bool ObjectAspectObjectContainer::AddContent(Object * Content)
 {
 	assert(Content != 0);
 	assert(Content->GetContainer() == 0);
-	if((m_AllowAddingCallback == 0) || ((*m_AllowAddingCallback)(Content) == true))
+	if((m_AllowAddingCallback.IsValid() == false) || (m_AllowAddingCallback(Content) == true))
 	{
 		std::pair< std::set< Object * >::iterator, bool > InsertionResult(m_Content.insert(Content));
 		
 		if(InsertionResult.second == true)
 		{
 			Content->SetContainer(GetObject());
-			if(m_OnAddedCallback != 0)
+			if(m_OnAddedCallback.IsValid() == true)
 			{
-				(*m_OnAddedCallback)(Content);
+				m_OnAddedCallback(Content);
 			}
 			
 			return true;
@@ -72,7 +60,7 @@ bool ObjectAspectObjectContainer::RemoveContent(Object * Content)
 {
 	assert(Content != 0);
 	assert(Content->GetContainer() == GetObject());
-	if((m_AllowRemovingCallback == 0) || ((*m_AllowRemovingCallback)(Content) == true))
+	if((m_AllowRemovingCallback.IsValid() == false) || (m_AllowRemovingCallback(Content) == true))
 	{
 		std::set< Object * >::iterator ContentIterator(m_Content.find(Content));
 		
@@ -80,9 +68,9 @@ bool ObjectAspectObjectContainer::RemoveContent(Object * Content)
 		{
 			Content->SetContainer(0);
 			m_Content.erase(ContentIterator);
-			if(m_OnRemovedCallback != 0)
+			if(m_OnRemovedCallback.IsValid() == true)
 			{
-				(*m_OnRemovedCallback)(Content);
+				m_OnRemovedCallback(Content);
 			}
 			
 			return true;
@@ -103,28 +91,4 @@ void ObjectAspectObjectContainer::Destroy(void)
 		Content->Destroy();
 		delete Content;
 	}
-}
-
-void ObjectAspectObjectContainer::SetAllowAddingCallback(Callback1< bool, Object * > * AllowAddingCallback)
-{
-	assert(m_AllowAddingCallback == 0);
-	m_AllowAddingCallback = AllowAddingCallback;
-}
-
-void ObjectAspectObjectContainer::SetAllowRemovingCallback(Callback1< bool, Object * > * AllowRemovingCallback)
-{
-	assert(m_AllowRemovingCallback == 0);
-	m_AllowRemovingCallback = AllowRemovingCallback;
-}
-
-void ObjectAspectObjectContainer::SetOnAddedCallback(Callback1< void, Object * > * OnAddedCallback)
-{
-	assert(m_OnAddedCallback == 0);
-	m_OnAddedCallback = OnAddedCallback;
-}
-
-void ObjectAspectObjectContainer::SetOnRemovedCallback(Callback1< void, Object * > * OnRemovedCallback)
-{
-	assert(m_OnRemovedCallback == 0);
-	m_OnRemovedCallback = OnRemovedCallback;
 }
