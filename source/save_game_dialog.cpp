@@ -101,7 +101,7 @@ void DirectoryEntryItem::OnMouseLeave(Widget * EventSource)
 	}
 }
 
-SaveGameDialog::SaveGameDialog(Widget * SupWidget, Callback1< void, std::ostream & > * SaveGameCallback) :
+SaveGameDialog::SaveGameDialog(Widget * SupWidget, Callback1< void, std::ostream & > SaveGameCallback) :
 	WWindow(SupWidget, "Save Game"),
 	m_SaveGameCallback(SaveGameCallback),
 	m_SelectedDirectoryEntryItem(0)
@@ -244,7 +244,7 @@ bool SaveGameDialog::Save(void)
 	}
 	else
 	{
-		(*m_SaveGameCallback)(OFStream);
+		m_SaveGameCallback(OFStream);
 		
 		return true;
 	}

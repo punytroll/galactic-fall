@@ -20,20 +20,17 @@
 #ifndef OBJECT_ASPECT_UPDATE_H
 #define OBJECT_ASPECT_UPDATE_H
 
-#include "callbacks.h"
+#include "callbacks/callbacks.h"
 
 class ObjectAspectUpdate
 {
 public:
-	// constructor & destructor
-	ObjectAspectUpdate(void);
-	~ObjectAspectUpdate(void);
 	// caller
 	bool Update(float Seconds);
 	// setters
-	void SetCallback(Callback1< bool, float > * Callback);
+	void SetCallback(Callback1< bool, float > Callback);
 private:
-	Callback1< bool, float > * m_Callback;
+	Callback1< bool, float > m_Callback;
 };
 
 #endif

@@ -22,7 +22,7 @@
 
 #include <set>
 
-#include "callbacks.h"
+#include "callbacks/callbacks.h"
 
 class Object;
 
@@ -41,17 +41,17 @@ public:
 	void Destroy(void);
 	bool RemoveContent(Object * Content);
 	// setters
-	void SetAllowAddingCallback(Callback1< bool, Object * > * AllowAddingCallback);
-	void SetAllowRemovingCallback(Callback1< bool, Object * > * AllowRemovingCallback);
-	void SetOnAddedCallback(Callback1< void, Object * > * OnAddedCallback);
-	void SetOnRemovedCallback(Callback1< void, Object * > * OnRemovedCallback);
+	void SetAllowAddingCallback(Callback1< bool, Object * > AllowAddingCallback);
+	void SetAllowRemovingCallback(Callback1< bool, Object * > AllowRemovingCallback);
+	void SetOnAddedCallback(Callback1< void, Object * > OnAddedCallback);
+	void SetOnRemovedCallback(Callback1< void, Object * > OnRemovedCallback);
 private:
-	Callback1< bool, Object * > * m_AllowAddingCallback;
-	Callback1< bool, Object * > * m_AllowRemovingCallback;
+	Callback1< bool, Object * > m_AllowAddingCallback;
+	Callback1< bool, Object * > m_AllowRemovingCallback;
 	std::set< Object * > m_Content;
 	Object * m_Object;
-	Callback1< void, Object * > * m_OnAddedCallback;
-	Callback1< void, Object * > * m_OnRemovedCallback;
+	Callback1< void, Object * > m_OnAddedCallback;
+	Callback1< void, Object * > m_OnRemovedCallback;
 };
 
 inline const std::set< Object * > & ObjectAspectObjectContainer::GetContent(void) const
@@ -67,6 +67,26 @@ inline Object * ObjectAspectObjectContainer::GetObject(void)
 inline const Object * ObjectAspectObjectContainer::GetObject(void) const
 {
 	return m_Object;
+}
+
+inline void ObjectAspectObjectContainer::SetAllowAddingCallback(Callback1< bool, Object * > AllowAddingCallback)
+{
+	m_AllowAddingCallback = AllowAddingCallback;
+}
+
+inline void ObjectAspectObjectContainer::SetAllowRemovingCallback(Callback1< bool, Object * > AllowRemovingCallback)
+{
+	m_AllowRemovingCallback = AllowRemovingCallback;
+}
+
+inline void ObjectAspectObjectContainer::SetOnAddedCallback(Callback1< void, Object * > OnAddedCallback)
+{
+	m_OnAddedCallback = OnAddedCallback;
+}
+
+inline void ObjectAspectObjectContainer::SetOnRemovedCallback(Callback1< void, Object * > OnRemovedCallback)
+{
+	m_OnRemovedCallback = OnRemovedCallback;
 }
 
 #endif

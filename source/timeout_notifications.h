@@ -22,7 +22,7 @@
 
 #include <map>
 
-#include "callbacks.h"
+#include "callbacks/callbacks.h"
 
 class TimeoutNotificationCore;
 class TimeoutNotificationManager;
@@ -40,7 +40,7 @@ public:
 private:
 	friend class TimeoutNotificationManager;
 	void Invalidate(void);
-	TimeoutNotification(TimeoutNotificationManager * Manager, std::multimap< double, TimeoutNotification * >::iterator Iterator, Callback0< void > * Callback);
+	TimeoutNotification(TimeoutNotificationManager * Manager, std::multimap< double, TimeoutNotification * >::iterator Iterator, Callback0< void > Callback);
 	TimeoutNotificationCore * m_Core;
 };
 
@@ -49,7 +49,7 @@ class TimeoutNotificationManager
 public:
 	~TimeoutNotificationManager(void);
 	void Process(double Time);
-	TimeoutNotification Add(double Time, Callback0< void > * Callback);
+	TimeoutNotification Add(double Time, Callback0< void > Callback);
 private:
 	friend class TimeoutNotificationCore;
 	void Remove(std::multimap< double, TimeoutNotification * >::iterator Iterator);

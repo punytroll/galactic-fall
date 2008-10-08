@@ -20,7 +20,7 @@
 #ifndef SAVE_GAME_DIALOG_H
 #define SAVE_GAME_DIALOG_H
 
-#include "callbacks.h"
+#include "callbacks/callbacks.h"
 #include "clicked_listener.h"
 #include "key_listener.h"
 #include "mouse_button_listener.h"
@@ -35,7 +35,7 @@ class ScrollBox;
 class SaveGameDialog : public ClickedListener, public KeyListener, virtual public MouseButtonListener, public WWindow
 {
 public:
-	SaveGameDialog(Widget * SupWidget, Callback1< void, std::ostream & > * SaveGameCallback);
+	SaveGameDialog(Widget * SupWidget, Callback1< void, std::ostream & > SaveGameCallback);
 protected:
 	virtual bool OnClicked(Widget * EventSource);
 	virtual bool OnKey(Widget * EventSource, const KeyEventInformation & KeyEventInformation);
@@ -44,7 +44,7 @@ private:
 	void ShowErrorMessage(const std::string & ErrorMessage);
 	void HideErrorMessage(void);
 	bool Save(void);
-	Callback1< void, std::ostream & > * m_SaveGameCallback;
+	Callback1< void, std::ostream & > m_SaveGameCallback;
 	Button * m_CancelButton;
 	Button * m_OKButton;
 	Label * m_ErrorMessage;

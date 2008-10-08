@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<template>
+	<header name="Counter" description="This class basically provides a counter." author="Hagen Möbius">
+		<uuid>e7be1f35-8091-47aa-b300-b94abd95708e</uuid>
+		<label category="c++"/>
+		<label category="class"/>
+		<variable type="boolean" name="Assertions" default-value="true" description="Specify whether your generated code should include assertions or not."/>
+		<variable type="boolean" name="InstanceCount" default-value="true" description="Specify whether your generated code should include debug messages on creation and destruction."/>
+	</header>
+	<body>/////////  begin  <variable>Template.UUID</variable>  ///////////////////////
+// <variable>Template.Name</variable>
+// Assertions=<to-string><variable>Assertions</variable></to-string>
+// InstanceCount=<to-string><variable>InstanceCount</variable></to-string>
+///////////////////////////////////////////////////////////////////////////////
+class Counter
+{
+public:
+	Counter(void) :
+		m_Count(0)
+	{<if><condition><equal><variable>InstanceCount</variable><to-boolean>true</to-boolean></equal></condition><then>
+		std::cout &lt;&lt; "+ Counter" &lt;&lt; std::endl;</then></if>
+	}<if><condition><or><equal><variable>Assertions</variable><to-boolean>true</to-boolean></equal><equal><variable>InstanceCount</variable><to-boolean>true</to-boolean></equal></or></condition><then>
+	
+	virtual ~Counter(void)
+	{<if><condition><equal><variable>Assertions</variable><to-boolean>true</to-boolean></equal></condition><then>
+		assert(m_Count == 0);</then></if><if><condition><equal><variable>InstanceCount</variable><to-boolean>true</to-boolean></equal></condition><then>
+		std::cout &lt;&lt; "- Counter" &lt;&lt; std::endl;</then></if>
+	}</then></if>
+	
+	void Increment(void)
+	{
+		m_Count += 1;
+	}
+	
+	void Decrement(void)
+	{<if><condition><equal><variable>Assertions</variable><to-boolean>true</to-boolean></equal></condition><then>
+		assert(m_Count > 0);</then></if>
+		m_Count -= 1;
+	}
+	
+	unsigned long int GetCount(void) const
+	{
+		return m_Count;
+	}
+private:
+	unsigned long int m_Count;
+};
+/////////  end    <variable>Template.UUID</variable>  ///////////////////////
+</body>
+</template>

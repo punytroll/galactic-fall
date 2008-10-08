@@ -25,7 +25,7 @@
 class TimeoutNotificationCore
 {
 public:
-	TimeoutNotificationCore(TimeoutNotificationManager * Manager, std::multimap< double, TimeoutNotification * >::iterator Iterator, Callback0< void > * Callback) :
+	TimeoutNotificationCore(TimeoutNotificationManager * Manager, std::multimap< double, TimeoutNotification * >::iterator Iterator, Callback0< void > Callback) :
 		m_Manager(Manager),
 		m_Iterator(Iterator),
 		m_References(0),
@@ -36,7 +36,6 @@ public:
 	~TimeoutNotificationCore(void)
 	{
 		assert(IsValid() == false);
-		delete m_Callback;
 	}
 	
 	void Reference(void)
@@ -74,13 +73,13 @@ public:
 	
 	void Call(void)
 	{
-		(*m_Callback)();
+		m_Callback();
 	}
 private:
 	TimeoutNotificationManager * m_Manager;
 	std::multimap< double, TimeoutNotification * >::iterator m_Iterator;
 	unsigned_numeric m_References;
-	Callback0< void > * m_Callback;
+	Callback0< void > m_Callback;
 };
 
 TimeoutNotification::TimeoutNotification(void) :
@@ -98,7 +97,7 @@ TimeoutNotification::TimeoutNotification(const TimeoutNotification & TimeoutNoti
 	}
 }
 
-TimeoutNotification::TimeoutNotification(TimeoutNotificationManager * Manager, std::multimap< double, TimeoutNotification * >::iterator Iterator, Callback0< void > * Callback) :
+TimeoutNotification::TimeoutNotification(TimeoutNotificationManager * Manager, std::multimap< double, TimeoutNotification * >::iterator Iterator, Callback0< void > Callback) :
 	m_Core(0)
 {
 	m_Core = new TimeoutNotificationCore(Manager, Iterator, Callback);
@@ -194,7 +193,7 @@ void TimeoutNotificationManager::Process(double Time)
 	}
 }
 
-TimeoutNotification TimeoutNotificationManager::Add(double Time, Callback0< void > * Callback)
+TimeoutNotification TimeoutNotificationManager::Add(double Time, Callback0< void > Callback)
 {
 	std::multimap< double, TimeoutNotification * >::iterator Iterator(m_TimeoutNotifications.insert(std::make_pair(Time, reinterpret_cast< TimeoutNotification * >(0))));
 	TimeoutNotification * Result(new TimeoutNotification(this, Iterator, Callback));

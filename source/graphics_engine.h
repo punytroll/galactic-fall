@@ -24,7 +24,7 @@
 
 #include <vector>
 
-#include "callbacks.h"
+#include "callbacks/callbacks.h"
 
 namespace Graphics
 {
@@ -34,41 +34,34 @@ namespace Graphics
 	class Engine
 	{
 	public:
-		Engine(void);
 		void AddScene(Graphics::Scene * Scene);
 		void RemoveScene(Graphics::Scene * Scene);
-		void SetOnDestroyCallback(Callback1< void, Graphics::Node * > * Callback);
-		void UnsetOnDestroyCallback(void);
+		void SetDestroyCallback(Callback1< void, Graphics::Node * > Callback);
+		void UnsetDestroyCallback(void);
 		void OnDestroy(Graphics::Node * Node);
-		Callback1< void, Graphics::Node * > * GetOnDestroyCallback(void);
+		Callback1< void, Graphics::Node * > GetDestroyCallback(void);
 	private:
 		std::vector< Graphics::Scene * > m_Scenes;
-		Callback1< void, Graphics::Node * > * m_OnDestroyCallback;
+		Callback1< void, Graphics::Node * > m_DestroyCallback;
 	};
 }
 
-inline void Graphics::Engine::SetOnDestroyCallback(Callback1< void, Graphics::Node * > * Callback)
+inline void Graphics::Engine::SetDestroyCallback(Callback1< void, Graphics::Node * > Callback)
 {
-	assert(m_OnDestroyCallback == 0);
-	m_OnDestroyCallback = Callback;
-}
-
-inline void Graphics::Engine::UnsetOnDestroyCallback(void)
-{
-	m_OnDestroyCallback = 0;
+	m_DestroyCallback = Callback;
 }
 
 inline void Graphics::Engine::OnDestroy(Graphics::Node * Node)
 {
-	if(m_OnDestroyCallback != 0)
+	if(m_DestroyCallback.IsValid() == true)
 	{
-		(*m_OnDestroyCallback)(Node);
+		m_DestroyCallback(Node);
 	}
 }
 
-inline Callback1< void, Graphics::Node * > * Graphics::Engine::GetOnDestroyCallback(void)
+inline Callback1< void, Graphics::Node * > Graphics::Engine::GetDestroyCallback(void)
 {
-	return m_OnDestroyCallback;
+	return m_DestroyCallback;
 }
 
 #endif

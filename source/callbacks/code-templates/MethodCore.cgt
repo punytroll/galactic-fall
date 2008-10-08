@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<template>
+	<header name="Method Core" description="A typed method core." author="Hagen Möbius">
+		<uuid>b383e6d4-5685-49d8-8289-ac19f517cc21</uuid>
+		<label category="c++"/>
+		<label category="class"/>
+		<variable type="boolean" name="Assertions" default-value="false" description="Specify whether you want your code to contain assertions."/>
+		<variable type="boolean" name="InstanceCount" default-value="false" description="Specify whether your generated code should include debug messages on creation and destruction."/>
+		<variable type="integer" name="NumberOfArguments" default-value="0" description="The number of typed arguments."/>
+	</header>
+	<body>/////////  begin  <variable>Template.UUID</variable>  ///////////////////////
+// <variable>Template.Name</variable>
+// Assertions=<to-string><variable>Assertions</variable></to-string>
+// InstanceCount=<to-string><variable>InstanceCount</variable></to-string>
+// NumberOfArguments=<to-string><variable>NumberOfArguments</variable></to-string>
+///////////////////////////////////////////////////////////////////////////////
+template &lt; typename Class, typename ReturnType<foreach name="Loop"><over><range><to-integer>1</to-integer><variable>NumberOfArguments</variable></range></over><do>, typename Argument<to-string><variable>Loop</variable></to-string>Type</do></foreach> &gt;
+class MethodCore<to-string><variable>NumberOfArguments</variable></to-string> : public CallbackCore<to-string><variable>NumberOfArguments</variable></to-string>&lt; ReturnType<foreach name="Loop"><over><range><to-integer>1</to-integer><variable>NumberOfArguments</variable></range></over><do>, Argument<to-string><variable>Loop</variable></to-string>Type</do></foreach> &gt;
+{
+public:
+	typedef ReturnType (Class::*Method)(<if><condition><greater><variable>NumberOfArguments</variable><to-integer>0</to-integer></greater></condition><then><foreach name="Loop"><over><range><to-integer>1</to-integer><variable>NumberOfArguments</variable></range></over><do><if><condition><greater><variable>Loop</variable><to-integer>1</to-integer></greater></condition><then>, </then></if>Argument<to-string><variable>Loop</variable></to-string>Type Argument<to-string><variable>Loop</variable></to-string></do></foreach></then><else>void</else></if>);
+	
+	explicit MethodCore<to-string><variable>NumberOfArguments</variable></to-string>(Class * Object, Method Method) :
+		m_Object(Object),
+		m_Method(Method)
+	{<if><condition><equal><variable>InstanceCount</variable><to-boolean>true</to-boolean></equal></condition><then>
+		std::cout &lt;&lt; "+ MethodCore<to-string><variable>NumberOfArguments</variable></to-string>" &lt;&lt; std::endl;</then></if>
+	}<if><condition><equal><variable>InstanceCount</variable><to-boolean>true</to-boolean></equal></condition><then>
+	
+	virtual ~MethodCore<to-string><variable>NumberOfArguments</variable></to-string>(void)
+	{
+		std::cout &lt;&lt; "- MethodCore<to-string><variable>NumberOfArguments</variable></to-string>" &lt;&lt; std::endl;
+	}</then></if>
+	
+	virtual ReturnType Call(<if><condition><greater><variable>NumberOfArguments</variable><to-integer>0</to-integer></greater></condition><then><foreach name="Loop"><over><range><to-integer>1</to-integer><variable>NumberOfArguments</variable></range></over><do><if><condition><greater><variable>Loop</variable><to-integer>1</to-integer></greater></condition><then>, </then></if>Argument<to-string><variable>Loop</variable></to-string>Type Argument<to-string><variable>Loop</variable></to-string></do></foreach></then><else>void</else></if>) const
+	{<if><condition><equal><variable>Assertions</variable><to-boolean>true</to-boolean></equal></condition><then>
+		assert(IsValid() == true);
+		</then></if>
+		return (m_Object-&gt;*(this-&gt;m_Method))(<foreach name="Loop"><over><range><to-integer>1</to-integer><variable>NumberOfArguments</variable></range></over><do><if><condition><greater><variable>Loop</variable><to-integer>1</to-integer></greater></condition><then>, </then></if>Argument<to-string><variable>Loop</variable></to-string></do></foreach>);
+	}
+	
+	virtual bool IsValid(void) const
+	{
+		return (m_Object != 0) &amp;&amp; (m_Method != 0);
+	}
+protected:
+	Class * m_Object;
+	Method m_Method;
+};
+/////////  end    <variable>Template.UUID</variable>  ///////////////////////
+</body>
+</template>

@@ -22,11 +22,6 @@
 #include "graphics_engine.h"
 #include "graphics_scene.h"
 
-Graphics::Engine::Engine(void) :
-	m_OnDestroyCallback(0)
-{
-}
-
 void Graphics::Engine::AddScene(Graphics::Scene * Scene)
 {
 	assert(Scene->GetEngine() == 0);

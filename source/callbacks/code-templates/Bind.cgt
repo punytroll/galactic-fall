@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<template>
+	<header name="Bind" description="A function which returns a Handler object wrapped around another Handler object. The resulting Handler binds one specific argument to a certain value thus reducing the number of arguments." author="Hagen Möbius">
+		<uuid>15c882f3-3fea-466b-8347-4074787f0f5b</uuid>
+		<label category="c++"/>
+		<label category="function"/>
+		<variable type="integer" name="BindArgument" default-value="1" description="The number of the bound argument."/>
+		<variable type="integer" name="NumberOfArguments" default-value="1" description="The number of typed arguments."/>
+	</header>
+	<body>/////////  begin  <variable>Template.UUID</variable>  ///////////////////////
+// <variable>Template.Name</variable>
+// BindArgument=<to-string><variable>BindArgument</variable></to-string>
+// NumberOfArguments=<to-string><variable>NumberOfArguments</variable></to-string>
+///////////////////////////////////////////////////////////////////////////////
+template &lt; typename ReturnType<foreach name="Loop"><over><range><to-integer>1</to-integer><variable>NumberOfArguments</variable></range></over><do>, typename Argument<to-string><variable>Loop</variable></to-string>Type</do></foreach> &gt;
+Callback<to-string><subtract><variable>NumberOfArguments</variable><to-integer>1</to-integer></subtract></to-string>&lt; ReturnType<foreach name="Loop"><over><range><to-integer>1</to-integer><variable>NumberOfArguments</variable></range></over><do><if><condition><not-equal><variable>Loop</variable><variable>BindArgument</variable></not-equal></condition><then>, Argument<to-string><variable>Loop</variable></to-string></then></if></do></foreach> &gt; Bind<to-string><variable>BindArgument</variable></to-string>(Callback<to-string><variable>NumberOfArguments</variable></to-string>&lt; ReturnType<foreach name="Loop"><over><range><to-integer>1</to-integer><variable>NumberOfArguments</variable></range></over><do>, Argument<to-string><variable>Loop</variable></to-string>Type</do></foreach> > Callback, Argument<to-string><variable>BindArgument</variable></to-string>Type Argument<to-string><variable>BindArgument</variable></to-string>)
+{
+	return Callback<to-string><subtract><variable>NumberOfArguments</variable><to-integer>1</to-integer></subtract></to-string>&lt; ReturnType<foreach name="Loop"><over><range><to-integer>1</to-integer><variable>NumberOfArguments</variable></range></over><do><if><condition><not-equal><variable>Loop</variable><variable>BindArgument</variable></not-equal></condition><then>, Argument<to-string><variable>Loop</variable></to-string></then></if></do></foreach> &gt;(new BindArgument<to-string><variable>BindArgument</variable></to-string>Core<to-string><subtract><variable>NumberOfArguments</variable><to-integer>1</to-integer></subtract></to-string>&lt; ReturnType<foreach name="Loop"><over><range><to-integer>1</to-integer><variable>NumberOfArguments</variable></range></over><do>, Argument<to-string><variable>Loop</variable></to-string>Type</do></foreach> >(Callback, Argument<to-string><variable>BindArgument</variable></to-string>));
+}
+/////////  end    <variable>Template.UUID</variable>  ///////////////////////
+</body>
+</template>

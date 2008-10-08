@@ -17,7 +17,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include "callbacks.h"
 #include "commodity.h"
 #include "math/vector4f.h"
 #include "object_aspect_position.h"
