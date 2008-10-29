@@ -1,0 +1,7 @@
+<asset-class>
+	<identifier>light_battery</identifier>
+	<name>Light Battery</name>
+	<base-price>1300</base-price>
+	<object-type>battery</object-type>
+	<object-class>light_battery</object-class>
+</asset-class>

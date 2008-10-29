@@ -65,6 +65,10 @@
 					<base-price-modifier>1.155</base-price-modifier>
 				</offered-asset-class>
 				<offered-asset-class>
+					<identifier>light_battery</identifier>
+					<base-price-modifier>0.97</base-price-modifier>
+				</offered-asset-class>
+				<offered-asset-class>
 					<identifier>light_laser</identifier>
 					<base-price-modifier>0.95</base-price-modifier>
 				</offered-asset-class>
