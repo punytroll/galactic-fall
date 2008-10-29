@@ -13,6 +13,7 @@ all_data = \
 	.data/asset_class_food.data \
 	.data/asset_class_fuel.data \
 	.data/asset_class_industrial.data \
+	.data/asset_class_light_battery.data \
 	.data/asset_class_light_laser.data \
 	.data/asset_class_luxury_goods.data \
 	.data/asset_class_medical_supplies.data \
@@ -214,6 +215,7 @@ data.arx: $(data_arx)
 	arxadd $@ --$(data_location) --name "Food" --type 4 --subtype 0 --add "/Asset Classes" .data/asset_class_food.data
 	arxadd $@ --$(data_location) --name "Fuel" --type 4 --subtype 0 --add "/Asset Classes" .data/asset_class_fuel.data
 	arxadd $@ --$(data_location) --name "Industrial" --type 4 --subtype 0 --add "/Asset Classes" .data/asset_class_industrial.data
+	arxadd $@ --$(data_location) --name "Light Battery" --type 4 --subtype 0 --add "/Asset Classes" .data/asset_class_light_battery.data
 	arxadd $@ --$(data_location) --name "Light Laser" --type 4 --subtype 0 --add "/Asset Classes" .data/asset_class_light_laser.data
 	arxadd $@ --$(data_location) --name "Luxury Goods" --type 4 --subtype 0 --add "/Asset Classes" .data/asset_class_luxury_goods.data
 	arxadd $@ --$(data_location) --name "Medical Supplies" --type 4 --subtype 0 --add "/Asset Classes" .data/asset_class_medical_supplies.data
