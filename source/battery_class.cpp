@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006  Hagen Möbius
+ * Copyright (C) 2007  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,37 +17,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef ARX_READING_H
-#define ARX_READING_H
+#include <assert.h>
 
-namespace Arxx
+#include "battery_class.h"
+
+BatteryClass::BatteryClass(const std::string & Identifier) :
+	m_EnergyCapacity(0.0),
+	m_Identifier(Identifier),
+	m_SpaceRequirement(0)
 {
-	class Archive;
 }
-
-class LocalFileDataChannel;
-
-class ResourceReader
-{
-public:
-	ResourceReader(const std::string & DataDirectoryPath);
-	~ResourceReader(void);
-	bool LoadArchive(const std::string & Path);
-	void ReadAssetClasses(void);
-	void ReadBatteryClasses(void);
-	void ReadCommodityClasses(void);
-	void ReadMeshes(void);
-	void ReadModels(void);
-	void ReadShipClasses(void);
-	void ReadSlotClasses(void);
-	void ReadSystems(void);
-	void ReadSystemLinks(void);
-	void ReadTextures(void);
-	void ReadUserInterface(void);
-	void ReadWeaponClasses(void);
-private:
-	LocalFileDataChannel * m_LocalFileDataChannel;
-	Arxx::Archive * m_Archive;
-};
-
-#endif

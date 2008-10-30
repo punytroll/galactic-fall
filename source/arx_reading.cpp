@@ -28,6 +28,7 @@
 #include "arx_reading.h"
 #include "arx_resources.h"
 #include "asset_class.h"
+#include "battery_class.h"
 #include "buffer_reading.h"
 #include "callbacks/callbacks.h"
 #include "class_manager.h"
@@ -64,6 +65,7 @@
 static Arxx::Item * Resolve(Arxx::Reference & Reference);
 
 static void ReadAssetClass(Arxx::Reference & Reference);
+static void ReadBatteryClass(Arxx::Reference & Reference);
 static void ReadCommodityClass(Arxx::Reference & Reference);
 static void ReadMesh(Arxx::Reference & Reference);
 static void ReadModel(Arxx::Reference & Reference);
@@ -178,6 +180,11 @@ void ResourceReader::ReadAssetClasses(void)
 	ReadItems(m_Archive, "/Asset Classes", Callback(ReadAssetClass));
 }
 
+void ResourceReader::ReadBatteryClasses(void)
+{
+	ReadItems(m_Archive, "/Battery Classes", Callback(ReadBatteryClass));
+}
+
 void ResourceReader::ReadCommodityClasses(void)
 {
 	ReadItems(m_Archive, "/Commodity Classes", Callback(ReadCommodityClass));
@@ -264,6 +271,44 @@ static void ReadAssetClass(Arxx::Reference & Reference)
 	NewAssetClass->SetBasePrice(BasePrice);
 	NewAssetClass->SetObjectType(ObjectType);
 	NewAssetClass->SetObjectClass(ObjectClass);
+}
+
+static void ReadBatteryClass(Arxx::Reference & Reference)
+{
+	Arxx::Item * Item(Resolve(Reference));
+	
+	if(Item->u4GetType() != ARX_TYPE_BATTERY_CLASS)
+	{
+		throw std::runtime_error("Item type for battery class '" + Item->sGetName() + "' should be '" + to_string_cast(ARX_TYPE_BATTERY_CLASS) + "' not '" + to_string_cast(Item->u4GetType()) + "'.");
+	}
+	if(Item->u4GetSubType() != 0)
+	{
+		throw std::runtime_error("Item sub type for battery class '" + Item->sGetName() + "' should be '0' not '" + to_string_cast(Item->u4GetSubType()) + "'.");
+	}
+	
+	Arxx::BufferReader Reader(*Item);
+	std::string Identifier;
+	
+	Reader >> Identifier;
+	
+	BatteryClass * NewBatteryClass(g_BatteryClassManager->Create(Identifier));
+	
+	if(NewBatteryClass == 0)
+	{
+		throw std::runtime_error("Could not create battery class '" + Identifier + "'.");
+	}
+	
+	std::string Name;
+	float SpaceRequirement;
+	float EnergyCapacity;
+	std::string SlotClassIdentifier;
+	
+	Reader >> Name >> SpaceRequirement >> EnergyCapacity >> SlotClassIdentifier;
+	
+	NewBatteryClass->SetName(Name);
+	NewBatteryClass->SetSpaceRequirement(1000 * SpaceRequirement);
+	NewBatteryClass->SetEnergyCapacity(EnergyCapacity);
+	NewBatteryClass->SetSlotClassIdentifier(SlotClassIdentifier);
 }
 
 static void ReadCommodityClass(Arxx::Reference & Reference)

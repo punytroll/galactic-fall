@@ -35,6 +35,7 @@
 #include "arx_reading.h"
 #include "asset_class.h"
 #include "battery.h"
+#include "battery_class.h"
 #include "camera.h"
 #include "character.h"
 #include "class_manager.h"
@@ -116,6 +117,7 @@
 
 // these objects are exported via globals.h
 ClassManager< AssetClass > * g_AssetClassManager(0);
+ClassManager< BatteryClass > * g_BatteryClassManager(0);
 ClassManager< CommodityClass > * g_CommodityClassManager(0);
 Galaxy * g_Galaxy(0);
 Graphics::Engine * g_GraphicsEngine(0);
@@ -3034,6 +3036,7 @@ int main(int argc, char ** argv)
 	g_MainPerspective.SetNearClippingPlane(1.0f);
 	g_MainPerspective.SetFarClippingPlane(1000.f);
 	g_AssetClassManager = new ClassManager< AssetClass >();
+	g_BatteryClassManager = new ClassManager< BatteryClass >();
 	g_CommodityClassManager = new ClassManager< CommodityClass >();
 	g_Galaxy = 0;
 	g_GraphicsEngine = new Graphics::Engine();
@@ -3066,6 +3069,7 @@ int main(int argc, char ** argv)
 	g_ResourceReader->ReadMeshes();
 	g_ResourceReader->ReadModels();
 	g_ResourceReader->ReadAssetClasses();
+	g_ResourceReader->ReadBatteryClasses();
 	g_ResourceReader->ReadCommodityClasses();
 	g_ResourceReader->ReadSlotClasses();
 	g_ResourceReader->ReadShipClasses();
@@ -3138,6 +3142,7 @@ int main(int argc, char ** argv)
 		std::cout << std::endl;
 	}
 	delete g_AssetClassManager;
+	delete g_BatteryClassManager;
 	delete g_CharacterObserver;
 	delete g_CommodityClassManager;
 	delete g_GameTimeTimeoutNotifications;

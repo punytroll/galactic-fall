@@ -20,6 +20,7 @@
 #include <stdexcept>
 
 #include "battery.h"
+#include "battery_class.h"
 #include "character.h"
 #include "class_manager.h"
 #include "command_mind.h"
@@ -49,23 +50,22 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 	
 	if(TypeIdentifier == "battery")
 	{
-		assert(ClassIdentifier == "light_battery");
-		
+		const BatteryClass * BatteryClass(g_BatteryClassManager->Get(ClassIdentifier));
 		Battery * NewBattery(new Battery());
 		
 		// set up type specific things
 		NewBattery->SetEnergy(200.0f);
-		NewBattery->SetEnergyCapacity(200.0f);
+		NewBattery->SetEnergyCapacity(BatteryClass->GetEnergyCapacity());
 		// set up aspects
 		// set up accessory aspect
 		assert(NewBattery->GetAspectAccessory() != 0);
-		NewBattery->GetAspectAccessory()->SetSlotClassIdentifier("light_battery");
+		NewBattery->GetAspectAccessory()->SetSlotClassIdentifier(BatteryClass->GetSlotClassIdentifier());
 		// set up name aspect
 		assert(NewBattery->GetAspectName() != 0);
-		NewBattery->GetAspectName()->SetName("Light Battery");
+		NewBattery->GetAspectName()->SetName(BatteryClass->GetName());
 		// set up physical aspect
 		assert(NewBattery->GetAspectPhysical() != 0);
-		NewBattery->GetAspectPhysical()->SetSpaceRequirement(80);
+		NewBattery->GetAspectPhysical()->SetSpaceRequirement(BatteryClass->GetSpaceRequirement());
 		Result = NewBattery;
 	}
 	else if(TypeIdentifier == "character")
@@ -185,7 +185,13 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 
 float ObjectFactory::GetSpaceRequirement(const std::string & Type, const std::string & Class) const
 {
-	if(Type == "commodity")
+	if(Type == "battery")
+	{
+		const BatteryClass * BatteryClass(g_BatteryClassManager->Get(Class));
+		
+		return BatteryClass->GetSpaceRequirement();
+	}
+	else if(Type == "commodity")
 	{
 		const CommodityClass * CommodityClass(g_CommodityClassManager->Get(Class));
 		

@@ -10,6 +10,14 @@
 		<string identifier="object-class"/>
 	</asset-class>
 	
+	<battery-class>
+		<string identifier="identifier"/>
+		<string identifier="name"/>
+		<float identifier="space-requirement"/>
+		<float identifier="energy-capacity"/>
+		<string identifier="slot-class-identifier"/>
+	</battery-class>
+	
 	<color4f>
 		<float identifier="red"/>
 		<float identifier="green"/>
