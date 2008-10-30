@@ -23,6 +23,7 @@
 #include <Common.h>
 
 const Arxx::u4byte ARX_TYPE_ASSET_CLASS = 4;
+const Arxx::u4byte ARX_TYPE_BATTERY_CLASS = 12;
 const Arxx::u4byte ARX_TYPE_COMMODITY_CLASS = 8;
 const Arxx::u4byte ARX_TYPE_WIDGET = 1;
 const Arxx::u4byte ARX_TYPE_WIDGET_SUB_TYPE_LABEL = 1;
