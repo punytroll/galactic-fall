@@ -27,28 +27,28 @@ class WeaponClass;
 class Weapon : public Object
 {
 public:
-	Weapon(const WeaponClass * WeaponClass);
+	Weapon(void);
 	void Update(float Seconds);
 	// getters
 	float GetEnergyUsagePerShot(void) const;
 	const Vector3f & GetParticleExitPosition(void) const;
 	float GetParticleExitSpeed(void) const;
 	float GetReloadTime(void) const;
-	const WeaponClass * GetWeaponClass(void) const;
 	// setters
 	void SetEnergyUsagePerShot(float EnergyUsagePerShot);
 	void SetFire(bool Fire);
 	void SetParticleExitPosition(const Vector3f & ParticleExitPosition);
 	void SetParticleExitSpeed(float ParticleExitSpeed);
 	void SetReloadTime(float ReloadTime);
+	void SetShotClassIdentifier(const std::string & ShotClassIdentifier);
 private:
-	const WeaponClass * m_WeaponClass;
 	float m_EnergyUsagePerShot;
 	bool m_Fire;
 	double m_NextTimeToFire;
 	Vector3f m_ParticleExitPosition;
 	float m_ParticleExitSpeed;
 	float m_ReloadTime;
+	std::string m_ShotClassIdentifier;
 };
 
 inline float Weapon::GetEnergyUsagePerShot(void) const
@@ -69,11 +69,6 @@ inline float Weapon::GetParticleExitSpeed(void) const
 inline float Weapon::GetReloadTime(void) const
 {
 	return m_ReloadTime;
-}
-
-inline const WeaponClass * Weapon::GetWeaponClass(void) const
-{
-	return m_WeaponClass;
 }
 
 inline void Weapon::SetEnergyUsagePerShot(float EnergyUsagePerShot)
@@ -99,6 +94,11 @@ inline void Weapon::SetParticleExitSpeed(float ParticleExitSpeed)
 inline void Weapon::SetReloadTime(float ReloadTime)
 {
 	m_ReloadTime = ReloadTime;
+}
+
+inline void Weapon::SetShotClassIdentifier(const std::string & ShotClassIdentifier)
+{
+	m_ShotClassIdentifier = ShotClassIdentifier;
 }
 
 #endif

@@ -33,6 +33,7 @@
 #include "object_aspect_name.h"
 #include "object_aspect_outfitting.h"
 #include "object_aspect_physical.h"
+#include "object_aspect_position.h"
 #include "object_aspect_visualization.h"
 #include "object_factory.h"
 #include "planet.h"
@@ -169,12 +170,25 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 	else if(TypeIdentifier == "weapon")
 	{
 		const WeaponClass * WeaponClass(g_WeaponClassManager->Get(ClassIdentifier));
-		Weapon * NewWeapon(new Weapon(WeaponClass));
+		Weapon * NewWeapon(new Weapon());
 		
 		NewWeapon->SetEnergyUsagePerShot(WeaponClass->GetEnergyUsagePerShot());
 		NewWeapon->SetParticleExitPosition(WeaponClass->GetParticleExitPosition());
 		NewWeapon->SetParticleExitSpeed(WeaponClass->GetParticleExitSpeed());
 		NewWeapon->SetReloadTime(WeaponClass->GetReloadTime());
+		NewWeapon->SetShotClassIdentifier(WeaponClass->GetIdentifier());
+		// set up accessory aspect
+		assert(NewWeapon->GetAspectAccessory() != 0);
+		NewWeapon->GetAspectAccessory()->SetSlotClassIdentifier(WeaponClass->GetSlotClassIdentifier());
+		// set up name aspect
+		assert(NewWeapon->GetAspectName() != 0);
+		NewWeapon->GetAspectName()->SetName(WeaponClass->GetName());
+		// set up physical aspect
+		assert(NewWeapon->GetAspectPhysical() != 0);
+		NewWeapon->GetAspectPhysical()->SetSpaceRequirement(WeaponClass->GetSpaceRequirement());
+		// set up position aspect
+		assert(NewWeapon->GetAspectPosition() != 0);
+		NewWeapon->GetAspectPosition()->SetOrientation(WeaponClass->GetOrientation());
 		// set up visualization aspect
 		assert(NewWeapon->GetAspectVisualization() != 0);
 		NewWeapon->GetAspectVisualization()->SetVisualizationPrototype(WeaponClass->GetVisualizationPrototype());
