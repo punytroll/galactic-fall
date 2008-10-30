@@ -18,22 +18,18 @@
 **/
 
 #include "game_time.h"
-#include "object_aspect_physical.h"
 #include "object_aspect_position.h"
 #include "object_aspect_update.h"
 #include "shot.h"
-#include "weapon_class.h"
 
-Shot::Shot(const WeaponClass * WeaponClass) :
-	m_WeaponClass(WeaponClass),
+Shot::Shot(void) :
 	m_Shooter(0),
-	m_TimeOfDeath(GameTime::Get() + WeaponClass->GetParticleLifeTime()),
+	m_TimeOfDeath(0.0),
 	m_Velocity(true),
-	m_Damage(WeaponClass->GetParticleDamage())
+	m_Damage(0.0)
 {
 	// initialize object aspects
 	AddAspectPhysical();
-	GetAspectPhysical()->SetRadialSize(0.54f);
 	AddAspectPosition();
 	AddAspectUpdate();
 	GetAspectUpdate()->SetCallback(Callback(this, &Shot::Update));

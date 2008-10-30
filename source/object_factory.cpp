@@ -26,6 +26,7 @@
 #include "command_mind.h"
 #include "commodity.h"
 #include "commodity_class.h"
+#include "game_time.h"
 #include "globals.h"
 #include "graphics_model.h"
 #include "object_aspect_accessory.h"
@@ -147,8 +148,14 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 	else if(TypeIdentifier == "shot")
 	{
 		const WeaponClass * WeaponClass(g_WeaponClassManager->Get(ClassIdentifier));
-		Shot * NewShot(new Shot(WeaponClass));
+		Shot * NewShot(new Shot());
 		
+		// set up type specific things
+		NewShot->SetDamage(WeaponClass->GetParticleDamage());
+		NewShot->SetTimeOfDeath(GameTime::Get() + WeaponClass->GetParticleLifeTime());
+		// set up physical aspect
+		assert(NewShot->GetAspectPhysical() != 0);
+		NewShot->GetAspectPhysical()->SetRadialSize(0.54f);
 		// set up visualization aspect
 		assert(NewShot->GetAspectVisualization() != 0);
 		NewShot->GetAspectVisualization()->SetVisualizationPrototype(WeaponClass->GetParticleVisualizationPrototype());

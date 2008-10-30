@@ -23,27 +23,24 @@
 #include "math/vector3f.h"
 #include "object.h"
 
-class Model;
-class WeaponClass;
-
 class Shot : public Object
 {
 public:
-	Shot(const WeaponClass * WeaponClass);
+	Shot(void);
 	virtual ~Shot(void);
 	// getters
 	float GetDamage(void) const;
 	const Reference< Object > & GetShooter(void) const;
 	const Vector3f & GetVelocity(void) const;
-	const WeaponClass * GetWeaponClass(void) const;
 	// setters
+	void SetDamage(float Damage);
 	void SetShooter(Reference< Object > Shooter);
+	void SetTimeOfDeath(float TimeOfDeath);
 	void SetVelocity(const Vector3f & Velocity);
 private:
 	// slot for the object aspect Update
 	bool Update(float Seconds);
 private:
-	const WeaponClass * m_WeaponClass;
 	Reference< Object > m_Shooter;
 	double m_TimeOfDeath;
 	Vector3f m_Velocity;
@@ -65,14 +62,19 @@ inline const Vector3f & Shot::GetVelocity(void) const
 	return m_Velocity;
 }
 
-inline const WeaponClass * Shot::GetWeaponClass(void) const
+inline void Shot::SetDamage(float Damage)
 {
-	return m_WeaponClass;
+	Damage = Damage;
 }
 
 inline void Shot::SetShooter(Reference< Object > Shooter)
 {
 	m_Shooter = Shooter;
+}
+
+inline void Shot::SetTimeOfDeath(float TimeOfDeath)
+{
+	m_TimeOfDeath = TimeOfDeath;
 }
 
 inline void Shot::SetVelocity(const Vector3f & Velocity)
