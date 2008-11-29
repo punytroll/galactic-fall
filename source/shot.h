@@ -64,7 +64,7 @@ inline const Vector3f & Shot::GetVelocity(void) const
 
 inline void Shot::SetDamage(float Damage)
 {
-	Damage = Damage;
+	m_Damage = Damage;
 }
 
 inline void Shot::SetShooter(Reference< Object > Shooter)
