@@ -83,7 +83,7 @@
 			<class-identifier>light_battery</class-identifier>
 			<name>Battery</name>
 			<position>
-				<x>3</x>
+				<x>0.4</x>
 				<y>0</y>
 				<z>0</z>
 			</position>
