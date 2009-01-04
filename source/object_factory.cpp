@@ -99,7 +99,7 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		}
 		else
 		{
-			throw std::runtime_error("Create: Unknown class '" + ClassIdentifier + "' (for object type '" + TypeIdentifier + "').");
+			throw std::runtime_error("ObjectFactory::Create(): Unknown class '" + ClassIdentifier + "' (for object type '" + TypeIdentifier + "').");
 		}
 	}
 	else if(TypeIdentifier == "planet")
@@ -196,7 +196,7 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 	}
 	else
 	{
-		throw std::runtime_error("Create: Unknown object type '" + TypeIdentifier + "' (for object class '" + ClassIdentifier + "').");
+		throw std::runtime_error("ObjectFactory::Create(): Unknown object type '" + TypeIdentifier + "' (for object class '" + ClassIdentifier + "').");
 	}
 	Result->SetTypeIdentifier(TypeIdentifier);
 	Result->SetClassIdentifier(ClassIdentifier);
@@ -226,6 +226,6 @@ float ObjectFactory::GetSpaceRequirement(const std::string & Type, const std::st
 	}
 	else
 	{
-		throw std::runtime_error("SpaceRequirement: Unknown object type '" + Type + "' (for object class '" + Class + "').");
+		throw std::runtime_error("ObjectFactory::GetSpaceRequirement(): Unknown object type '" + Type + "' (for object class '" + Class + "').");
 	}
 }
