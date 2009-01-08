@@ -91,5 +91,21 @@
 				<z>0</z>
 			</orientation>
 		</slot>
+		<slot>
+			<identifier>generator</identifier>
+			<class-identifier>small_generator</class-identifier>
+			<name>Generator</name>
+			<position>
+				<x>2</x>
+				<y>0</y>
+				<z>0</z>
+			</position>
+			<orientation>
+				<w>1</w>
+				<x>0</x>
+				<y>0</y>
+				<z>0</z>
+			</orientation>
+		</slot>
 	</slots>
 </ship-class>

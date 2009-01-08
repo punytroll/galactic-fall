@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006  Hagen Möbius
+ * Copyright (C) 2009  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,38 +17,31 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef ARX_READING_H
-#define ARX_READING_H
+#ifndef GENERATOR_H
+#define GENERATOR_H
 
-namespace Arxx
-{
-	class Archive;
-}
+#include "object.h"
 
-class LocalFileDataChannel;
-
-class ResourceReader
+class Generator : public Object
 {
 public:
-	ResourceReader(const std::string & DataDirectoryPath);
-	~ResourceReader(void);
-	bool LoadArchive(const std::string & Path);
-	void ReadAssetClasses(void);
-	void ReadBatteryClasses(void);
-	void ReadCommodityClasses(void);
-	void ReadGeneratorClasses(void);
-	void ReadMeshes(void);
-	void ReadModels(void);
-	void ReadShipClasses(void);
-	void ReadSlotClasses(void);
-	void ReadSystems(void);
-	void ReadSystemLinks(void);
-	void ReadTextures(void);
-	void ReadUserInterface(void);
-	void ReadWeaponClasses(void);
+	Generator(void);
+	// getters
+	float GetEnergyProvisionPerSecond(void) const;
+	// setters
+	void SetEnergyProvisionPerSecond(float EnergyProvisionPerSecond);
 private:
-	LocalFileDataChannel * m_LocalFileDataChannel;
-	Arxx::Archive * m_Archive;
+	float m_EnergyProvisionPerSecond;
 };
+
+inline float Generator::GetEnergyProvisionPerSecond(void) const
+{
+	return m_EnergyProvisionPerSecond;
+}
+
+inline void Generator::SetEnergyProvisionPerSecond(float EnergyProvisionPerSecond)
+{
+	m_EnergyProvisionPerSecond = EnergyProvisionPerSecond;
+}
 
 #endif

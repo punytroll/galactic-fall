@@ -24,6 +24,7 @@
 #include "battery.h"
 #include "character.h"
 #include "commodity.h"
+#include "generator.h"
 #include "map_knowledge.h"
 #include "mind.h"
 #include "object.h"
@@ -46,6 +47,7 @@ static void WriteToXMLStream(XMLStream & XMLStream, Object * TheObject, std::sta
 static void WriteBatteryToXMLStream(XMLStream & XMLStream, Battery * TheBattery);
 static void WriteCharacterToXMLStream(XMLStream & XMLStream, Character * TheCharacter);
 static void WriteCommodityToXMLStream(XMLStream & XMLStream, Commodity * TheCommodity);
+static void WriteGeneratorToXMLStream(XMLStream & XMLStream, Generator * TheGenerator);
 static void WriteMindToXMLStream(XMLStream & XMLStream, Mind * TheMind);
 static void WriteShipToXMLStream(XMLStream & XMLStream, Ship * TheShip);
 static void WriteStorageToXMLStream(XMLStream & XMLStream, Storage * TheStorage);
@@ -144,6 +146,10 @@ void WriteToXMLStream(XMLStream & XMLStream, Object * TheObject)
 	{
 		WriteCommodityToXMLStream(XMLStream, dynamic_cast< Commodity * >(TheObject));
 	}
+	else if(TheObject->GetTypeIdentifier() == "generator")
+	{
+		WriteGeneratorToXMLStream(XMLStream, dynamic_cast< Generator * >(TheObject));
+	}
 	else if(TheObject->GetTypeIdentifier() == "mind")
 	{
 		WriteMindToXMLStream(XMLStream, dynamic_cast< Mind * >(TheObject));
@@ -201,6 +207,12 @@ static void WriteCommodityToXMLStream(XMLStream & XMLStream, Commodity * TheComm
 	XMLStream << element << "angular-velocity" << attribute << "axis-x" << value << TheCommodity->GetAngularVelocity().m_V.m_A[0] << attribute << "axis-y" << value << TheCommodity->GetAngularVelocity().m_V.m_A[1] << attribute << "axis-z" << value << TheCommodity->GetAngularVelocity().m_V.m_A[2] << attribute << "angle" << value << TheCommodity->GetAngularVelocity().m_V.m_A[3] << end;
 	XMLStream << element << "hull" << attribute << "value" << value << TheCommodity->GetHull() << end;
 	XMLStream << element << "velocity" << attribute << "x" << value << TheCommodity->GetVelocity().m_V.m_A[0] << attribute << "y" << value << TheCommodity->GetVelocity().m_V.m_A[1] << attribute << "z" << value << TheCommodity->GetVelocity().m_V.m_A[2] << end;
+}
+
+static void WriteGeneratorToXMLStream(XMLStream & XMLStream, Generator * TheGenerator)
+{
+	assert(TheGenerator != 0);
+	XMLStream << element << "energy-provision-per-second" << attribute << "value" << value << TheGenerator->GetEnergyProvisionPerSecond() << end;
 }
 
 static void WriteMindToXMLStream(XMLStream & XMLStream, Mind * TheMind)

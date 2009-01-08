@@ -27,6 +27,8 @@
 #include "commodity.h"
 #include "commodity_class.h"
 #include "game_time.h"
+#include "generator.h"
+#include "generator_class.h"
 #include "globals.h"
 #include "graphics_model.h"
 #include "object_aspect_accessory.h"
@@ -56,7 +58,7 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		Battery * NewBattery(new Battery());
 		
 		// set up type specific things
-		NewBattery->SetEnergy(200.0f);
+		NewBattery->SetEnergy(BatteryClass->GetEnergyCapacity());
 		NewBattery->SetEnergyCapacity(BatteryClass->GetEnergyCapacity());
 		// set up aspects
 		// set up accessory aspect
@@ -90,6 +92,25 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		// set up visualization aspect
 		assert(Result->GetAspectVisualization() != 0);
 		Result->GetAspectVisualization()->SetVisualizationPrototype(CommodityClass->GetVisualizationPrototype());
+	}
+	else if(TypeIdentifier == "generator")
+	{
+		const GeneratorClass * GeneratorClass(g_GeneratorClassManager->Get(ClassIdentifier));
+		Generator * NewGenerator(new Generator());
+		
+		// set up type specific things
+		NewGenerator->SetEnergyProvisionPerSecond(GeneratorClass->GetEnergyProvisionPerSecond());
+		// set up aspects
+		// set up accessory aspect
+		assert(NewGenerator->GetAspectAccessory() != 0);
+		NewGenerator->GetAspectAccessory()->SetSlotClassIdentifier(GeneratorClass->GetSlotClassIdentifier());
+		// set up name aspect
+		assert(NewGenerator->GetAspectName() != 0);
+		NewGenerator->GetAspectName()->SetName(GeneratorClass->GetName());
+		// set up physical aspect
+		assert(NewGenerator->GetAspectPhysical() != 0);
+		NewGenerator->GetAspectPhysical()->SetSpaceRequirement(GeneratorClass->GetSpaceRequirement());
+		Result = NewGenerator;
 	}
 	else if(TypeIdentifier == "mind")
 	{
@@ -217,6 +238,12 @@ float ObjectFactory::GetSpaceRequirement(const std::string & Type, const std::st
 		const CommodityClass * CommodityClass(g_CommodityClassManager->Get(Class));
 		
 		return CommodityClass->GetSpaceRequirement();
+	}
+	else if(Type == "generator")
+	{
+		const GeneratorClass * GeneratorClass(g_GeneratorClassManager->Get(Class));
+		
+		return GeneratorClass->GetSpaceRequirement();
 	}
 	else if(Type == "weapon")
 	{

@@ -47,6 +47,8 @@
 #include "draw_text.h"
 #include "galaxy.h"
 #include "game_time.h"
+#include "generator.h"
+#include "generator_class.h"
 #include "globals.h"
 #include "goals.h"
 #include "graphics_engine.h"
@@ -120,6 +122,7 @@ ClassManager< AssetClass > * g_AssetClassManager(0);
 ClassManager< BatteryClass > * g_BatteryClassManager(0);
 ClassManager< CommodityClass > * g_CommodityClassManager(0);
 Galaxy * g_Galaxy(0);
+ClassManager< GeneratorClass > * g_GeneratorClassManager(0);
 Graphics::Engine * g_GraphicsEngine(0);
 Graphics::Scene * g_MainScene(0);
 Graphics::Node * g_CommodityLayer(0);
@@ -1800,6 +1803,24 @@ void LoadGameFromElement(const Element * SaveElement)
 							}
 						}
 					}
+					else if((*SaveChild)->GetAttribute("type-identifier") == "generator")
+					{
+						Generator * NewGenerator(dynamic_cast< Generator * >(NewObject));
+						
+						assert(NewGenerator != 0);
+						for(std::vector< Element * >::const_iterator TypeSpecificChild = (*ObjectChild)->GetChilds().begin(); TypeSpecificChild != (*ObjectChild)->GetChilds().end(); ++TypeSpecificChild)
+						{
+							if((*TypeSpecificChild)->GetName() == "energy-provision-per-second")
+							{
+								assert((*TypeSpecificChild)->HasAttribute("value") == true);
+								NewGenerator->SetEnergyProvisionPerSecond(from_string_cast< float >((*TypeSpecificChild)->GetAttribute("value")));
+							}
+							else
+							{
+								throw std::runtime_error("The \"" + (*ObjectChild)->GetName() + "\" element for the object \"" + (*SaveChild)->GetAttribute("object-identifier") + "\" contains an unknown element \"" + (*TypeSpecificChild)->GetName() + "\".");
+							}
+						}
+					}
 					else if((*SaveChild)->GetAttribute("type-identifier") == "mind")
 					{
 						Mind * NewMind(dynamic_cast< Mind * >(NewObject));
@@ -3039,6 +3060,7 @@ int main(int argc, char ** argv)
 	g_BatteryClassManager = new ClassManager< BatteryClass >();
 	g_CommodityClassManager = new ClassManager< CommodityClass >();
 	g_Galaxy = 0;
+	g_GeneratorClassManager = new ClassManager< GeneratorClass >();
 	g_GraphicsEngine = new Graphics::Engine();
 	g_GraphicsEngine->SetDestroyCallback(Callback(OnGraphicsNodeDestroy));
 	g_MainScene = 0;
@@ -3071,6 +3093,7 @@ int main(int argc, char ** argv)
 	g_ResourceReader->ReadAssetClasses();
 	g_ResourceReader->ReadBatteryClasses();
 	g_ResourceReader->ReadCommodityClasses();
+	g_ResourceReader->ReadGeneratorClasses();
 	g_ResourceReader->ReadSlotClasses();
 	g_ResourceReader->ReadShipClasses();
 	g_ResourceReader->ReadUserInterface();
@@ -3146,6 +3169,7 @@ int main(int argc, char ** argv)
 	delete g_CharacterObserver;
 	delete g_CommodityClassManager;
 	delete g_GameTimeTimeoutNotifications;
+	delete g_GeneratorClassManager;
 	delete g_GraphicsEngine;
 	delete g_MeshManager;
 	delete g_MessageDispatcher;

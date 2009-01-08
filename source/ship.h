@@ -24,6 +24,7 @@
 #include "object.h"
 
 class Battery;
+class Generator;
 class Slot;
 class SlotClass;
 class Storage;
@@ -51,6 +52,7 @@ public:
 	float GetFuelNeededToAccelerate(void) const;
 	float GetFuelNeededToJump(void) const;
 	float GetFuelNeededToTurn(void) const;
+	Generator * GetGenerator(void);
 	float GetHull(void) const;
 	float GetHullCapacity(void) const;
 	System * GetLinkedSystemTarget(void);
@@ -107,6 +109,7 @@ private:
 	float m_FuelNeededToAccelerate;
 	float m_FuelNeededToJump;
 	float m_FuelNeededToTurn;
+	Generator * m_Generator;
 	float m_Hull;
 	float m_HullCapacity;
 	bool m_Jettison;
@@ -173,6 +176,11 @@ inline float Ship::GetFuelNeededToJump(void) const
 inline float Ship::GetFuelNeededToTurn(void) const
 {
 	return m_FuelNeededToTurn;
+}
+
+inline Generator * Ship::GetGenerator(void)
+{
+	return m_Generator;
 }
 
 inline float Ship::GetHull(void) const
