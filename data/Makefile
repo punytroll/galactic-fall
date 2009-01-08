@@ -19,6 +19,7 @@ all_data = \
 	.data/asset_class_medical_supplies.data \
 	.data/asset_class_medium_laser.data \
 	.data/asset_class_metal.data \
+	.data/asset_class_small_generator.data \
 	.data/battery_class_light_battery.data \
 	.data/commodity_class_equipment.data \
 	.data/commodity_class_food.data \
@@ -27,6 +28,7 @@ all_data = \
 	.data/commodity_class_luxury_goods.data \
 	.data/commodity_class_medical_supplies.data \
 	.data/commodity_class_metal.data \
+	.data/generator_class_small_generator.data \
 	.data/label_credits.data \
 	.data/label_current_system.data \
 	.data/label_energy.data \
@@ -57,6 +59,7 @@ all_data = \
 	.data/slot_class_light_battery.data \
 	.data/slot_class_light_weapon.data \
 	.data/slot_class_medium_weapon.data \
+	.data/slot_class_small_generator.data \
 	.data/system_alpha_centauri.data \
 	.data/system_rigel.data \
 	.data/system_sol.data \
@@ -188,6 +191,9 @@ data.arx: $(data_arx)
 	arxtouch $@ c
 	arxmod $@ c -n "Battery Classes" -t 0 -st 0
 	arxmod $@ 0 -a "child" c
+	arxtouch $@ d
+	arxmod $@ d -n "Generator Classes" -t 0 -st 0
+	arxmod $@ 0 -a "child" d
 	@echo -e "\n\nAdding widgets ...\n"
 	@echo -e "\nThe widgets will be read in uid order, so assign proper uids so that superior widgets are read before sub widgets.\n"
 	arxadd $@ --$(data_location) --uid 103 --name "Credits" --type 1 --subtype 1 --add "/User Interface" .data/label_credits.data
@@ -207,11 +213,14 @@ data.arx: $(data_arx)
 	arxadd $@ --$(data_location) --name "Light Battery" --type 9 --subtype 0 --add "/Slot Classes" .data/slot_class_light_battery.data
 	arxadd $@ --$(data_location) --name "Light Weapon" --type 9 --subtype 0 --add "/Slot Classes" .data/slot_class_light_weapon.data
 	arxadd $@ --$(data_location) --name "Medium Weapon" --type 9 --subtype 0 --add "/Slot Classes" .data/slot_class_medium_weapon.data
+	arxadd $@ --$(data_location) --name "Small Generator" --type 9 --subtype 0 --add "/Slot Classes" .data/slot_class_small_generator.data
 	@echo -e "\n\nAdding weapon classes ...\n"
 	arxadd $@ --$(data_location) --name "Light Laser" --type 7 --subtype 0 --add "/Weapon Classes" .data/weapon_class_light_laser.data
 	arxadd $@ --$(data_location) --name "Medium Laser" --type 7 --subtype 0 --add "/Weapon Classes" .data/weapon_class_medium_laser.data
 	@echo -e "\n\nAdding battery classes ...\n"
 	arxadd $@ --$(data_location) --name "Light Battery" --type c --subtype 0 --add "/Battery Classes" .data/battery_class_light_battery.data
+	@echo -e "\n\nAdding generator classes ...\n"
+	arxadd $@ --$(data_location) --name "Small Generator" --type d --subtype 0 --add "/Generator Classes" .data/generator_class_small_generator.data
 	@echo -e "\n\nAdding ship classes ...\n"
 	arxadd $@ --$(data_location) --name "Fighter" --type 3 --subtype 0 --add "/Ship Classes" .data/ship_class_fighter.data
 	arxadd $@ --$(data_location) --name "Shuttle" --type 3 --subtype 0 --add "/Ship Classes" .data/ship_class_shuttle.data
@@ -227,6 +236,7 @@ data.arx: $(data_arx)
 	arxadd $@ --$(data_location) --name "Medical Supplies" --type 4 --subtype 0 --add "/Asset Classes" .data/asset_class_medical_supplies.data
 	arxadd $@ --$(data_location) --name "Medium Laser" --type 4 --subtype 0 --add "/Asset Classes" .data/asset_class_medium_laser.data
 	arxadd $@ --$(data_location) --name "Metal" --type 4 --subtype 0 --add "/Asset Classes" .data/asset_class_metal.data
+	arxadd $@ --$(data_location) --name "Small Generator" --type 4 --subtype 0 --add "/Asset Classes" .data/asset_class_small_generator.data
 	@echo -e "\n\nAdding commodity classes ...\n"
 	arxadd $@ --$(data_location) --name "Equipment" --type 8 --subtype 0 --add "/Commodity Classes" .data/commodity_class_equipment.data
 	arxadd $@ --$(data_location) --name "Food" --type 8 --subtype 0 --add "/Commodity Classes" .data/commodity_class_food.data

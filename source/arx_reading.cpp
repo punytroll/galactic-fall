@@ -34,6 +34,7 @@
 #include "class_manager.h"
 #include "commodity_class.h"
 #include "galaxy.h"
+#include "generator_class.h"
 #include "globals.h"
 #include "graphics_material.h"
 #include "graphics_mesh.h"
@@ -67,6 +68,7 @@ static Arxx::Item * Resolve(Arxx::Reference & Reference);
 static void ReadAssetClass(Arxx::Reference & Reference);
 static void ReadBatteryClass(Arxx::Reference & Reference);
 static void ReadCommodityClass(Arxx::Reference & Reference);
+static void ReadGeneratorClass(Arxx::Reference & Reference);
 static void ReadMesh(Arxx::Reference & Reference);
 static void ReadModel(Arxx::Reference & Reference);
 static void ReadShipClass(Arxx::Reference & Reference);
@@ -188,6 +190,11 @@ void ResourceReader::ReadBatteryClasses(void)
 void ResourceReader::ReadCommodityClasses(void)
 {
 	ReadItems(m_Archive, "/Commodity Classes", Callback(ReadCommodityClass));
+}
+
+void ResourceReader::ReadGeneratorClasses(void)
+{
+	ReadItems(m_Archive, "/Generator Classes", Callback(ReadGeneratorClass));
 }
 
 void ResourceReader::ReadMeshes(void)
@@ -347,6 +354,44 @@ static void ReadCommodityClass(Arxx::Reference & Reference)
 	// read visualization prototype
 	NewCommodityClass->AddVisualizationPrototype();
 	ReadVisualizationPrototype(Reader, NewCommodityClass->GetVisualizationPrototype());
+}
+
+static void ReadGeneratorClass(Arxx::Reference & Reference)
+{
+	Arxx::Item * Item(Resolve(Reference));
+	
+	if(Item->u4GetType() != ARX_TYPE_GENERATOR_CLASS)
+	{
+		throw std::runtime_error("Item type for generator class '" + Item->sGetName() + "' should be '" + to_string_cast(ARX_TYPE_GENERATOR_CLASS) + "' not '" + to_string_cast(Item->u4GetType()) + "'.");
+	}
+	if(Item->u4GetSubType() != 0)
+	{
+		throw std::runtime_error("Item sub type for generator class '" + Item->sGetName() + "' should be '0' not '" + to_string_cast(Item->u4GetSubType()) + "'.");
+	}
+	
+	Arxx::BufferReader Reader(*Item);
+	std::string Identifier;
+	
+	Reader >> Identifier;
+	
+	GeneratorClass * NewGeneratorClass(g_GeneratorClassManager->Create(Identifier));
+	
+	if(NewGeneratorClass == 0)
+	{
+		throw std::runtime_error("Could not create generator class '" + Identifier + "'.");
+	}
+	
+	std::string Name;
+	float SpaceRequirement;
+	float EnergyProvisionPerSecond;
+	std::string SlotClassIdentifier;
+	
+	Reader >> Name >> SpaceRequirement >> EnergyProvisionPerSecond >> SlotClassIdentifier;
+	
+	NewGeneratorClass->SetName(Name);
+	NewGeneratorClass->SetSpaceRequirement(1000 * SpaceRequirement);
+	NewGeneratorClass->SetEnergyProvisionPerSecond(EnergyProvisionPerSecond);
+	NewGeneratorClass->SetSlotClassIdentifier(SlotClassIdentifier);
 }
 
 static void ReadMesh(Arxx::Reference & Reference)

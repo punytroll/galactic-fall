@@ -21,6 +21,7 @@
 #include "character.h"
 #include "commodity.h"
 #include "game_time.h"
+#include "generator.h"
 #include "globals.h"
 #include "graphics_particle_system.h"
 #include "map_knowledge.h"
@@ -52,6 +53,7 @@ Ship::Ship(void) :
 	m_FuelNeededToAccelerate(0.0f),
 	m_FuelNeededToJump(0.0f),
 	m_FuelNeededToTurn(0.0f),
+	m_Generator(0),
 	m_Hull(0.0f),
 	m_HullCapacity(0.0f),
 	m_Jettison(false),
@@ -191,6 +193,12 @@ bool Ship::Update(float Seconds)
 			{
 				dynamic_cast< Weapon * >(MountedObject)->Update(Seconds);
 			}
+		}
+		if((GetGenerator() != 0) && (GetBattery() != 0))
+		{
+			float Energy(GetBattery()->GetEnergy() + Seconds * GetGenerator()->GetEnergyProvisionPerSecond());
+			
+			GetBattery()->SetEnergy((Energy < GetBattery()->GetEnergyCapacity()) ? (Energy) : (GetBattery()->GetEnergyCapacity()));
 		}
 		if(m_Refuel == true)
 		{
@@ -407,6 +415,11 @@ void Ship::OnAdded(Object * Content)
 		assert(m_Battery == 0);
 		m_Battery = dynamic_cast< Battery * >(Content);
 	}
+	else if(Content->GetTypeIdentifier() == "generator")
+	{
+		assert(m_Generator == 0);
+		m_Generator = dynamic_cast< Generator * >(Content);
+	}
 	else if(Content->GetTypeIdentifier() == "storage")
 	{
 		assert(m_CargoHold == 0);
@@ -420,6 +433,11 @@ void Ship::OnRemoved(Object * Content)
 	{
 		assert(m_Battery == Content);
 		m_Battery = 0;
+	}
+	else if(Content->GetTypeIdentifier() == "generator")
+	{
+		assert(m_Generator == Content);
+		m_Generator = 0;
 	}
 	else if(Content->GetTypeIdentifier() == "storage")
 	{

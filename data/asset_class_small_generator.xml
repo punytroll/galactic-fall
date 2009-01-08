@@ -1,0 +1,7 @@
+<asset-class>
+	<identifier>small_generator</identifier>
+	<name>Small Generator</name>
+	<base-price>2500</base-price>
+	<object-type>generator</object-type>
+	<object-class>small_generator</object-class>
+</asset-class>

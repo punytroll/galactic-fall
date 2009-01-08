@@ -1,0 +1,7 @@
+<slot-class>
+	<identifier>small_generator</identifier>
+	<name>Small Generator</name>
+	<accepted-slot-classes>
+		<accepted-slot-class>small_generator</accepted-slot-class>
+	</accepted-slot-classes>
+</slot-class>

@@ -17,6 +17,7 @@
 			<content object-identifier="::weapon(light_laser)"/>
 			<content object-identifier="::storage(::ship(shuttle)::player_ship)"/>
 			<content object-identifier="::battery(::ship(shuttle)::player_ship)"/>
+			<content object-identifier="::generator(::ship(shuttle)::player_ship)"/>
 		</aspect-object-container>
 		<aspect-physical>
 			<radial-size value="4.63479"/>
@@ -53,6 +54,21 @@
 		<type-specific>
 			<energy value="25"/>
 			<energy-capacity value="200"/>
+		</type-specific>
+	</object>
+	<object type-identifier="generator" class-identifier="small_generator" object-identifier="::generator(::ship(shuttle)::player_ship)">
+		<aspect-accessory>
+			<slot slot-identifier="generator"/>
+		</aspect-accessory>
+		<aspect-name>
+			<name value="Small Generator"/>
+		</aspect-name>
+		<aspect-physical>
+			<radial-size value="0"/>
+			<space-requirement value="500"/>
+		</aspect-physical>
+		<type-specific>
+			<energy-provision-per-second value="1.5"/>
 		</type-specific>
 	</object>
 	<object type-identifier="storage" class-identifier="" object-identifier="::storage(::ship(shuttle)::player_ship)">

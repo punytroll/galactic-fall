@@ -32,6 +32,14 @@
 		<visualization identifier="visualization"/>
 	</commodity-class>
 	
+	<generator-class>
+		<string identifier="identifier"/>
+		<string identifier="name"/>
+		<float identifier="space-requirement"/>
+		<float identifier="energy-provision-per-second"/>
+		<string identifier="slot-class-identifier"/>
+	</generator-class>
+	
 	<label>
 		<widget identifier="widget"/>
 		<boolean identifier="use-text-color"/>
