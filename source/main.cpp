@@ -2207,6 +2207,516 @@ void SaveGame(std::ostream & OStream)
 	OStream << std::endl;
 }
 
+void ActionAugmentTimeWarp(void)
+{
+	SetTimeWarp(g_TimeWarp * 1.1f);
+}
+
+void ActionDeleteObservedObject(void)
+{
+	if(g_InputMind.IsValid() == true)
+	{
+		DeleteObject(g_InputMind->GetCharacter()->GetShip());
+	}
+	else if(g_CharacterObserver->GetObservedCharacter().IsValid() == true)
+	{
+		DeleteObject(g_CharacterObserver->GetObservedCharacter()->GetShip());
+	}
+}
+
+void ActionDisableAccelerate(void)
+{
+	if(g_InputMind.IsValid() == true)
+	{
+		g_InputMind->DisableAccelerate();
+	}
+}
+
+void ActionDisableFire(void)
+{
+	if(g_InputMind.IsValid() == true)
+	{
+		g_InputMind->DisableFire();
+	}
+}
+
+void ActionDisableTurnLeft(void)
+{
+	if(g_InputMind.IsValid() == true)
+	{
+		g_InputMind->DisableTurnLeft();
+	}
+}
+
+void ActionDisableTurnRight(void)
+{
+	if(g_InputMind.IsValid() == true)
+	{
+		g_InputMind->DisableTurnRight();
+	}
+}
+
+void ActionDumpObjectReport(void)
+{
+	std::string FileName(MakeTimeStampedFileName("object-report", "xml"));
+	std::ofstream OutputFileStream(FileName.c_str());
+	XMLStream Out(OutputFileStream);
+	
+	Object::Dump(Out);
+	OutputFileStream << std::endl;
+	SetMessage("Object report written to file \"" + FileName + "\".");
+}
+
+void ActionEnableAccelerate(void)
+{
+	if(g_InputMind.IsValid() == true)
+	{
+		g_InputMind->EnableAccelerate();
+	}
+}
+
+void ActionEnableFire(void)
+{
+	if(g_InputMind.IsValid() == true)
+	{
+		g_InputMind->EnableFire();
+	}
+}
+
+void ActionEnableTurnLeft(void)
+{
+	if(g_InputMind.IsValid() == true)
+	{
+		g_InputMind->EnableTurnLeft();
+	}
+}
+
+void ActionEnableTurnRight(void)
+{
+	if(g_InputMind.IsValid() == true)
+	{
+		g_InputMind->EnableTurnRight();
+	}
+}
+
+void ActionFocusCameraOnNextShip(void)
+{
+	const std::list< Ship * > & Ships(g_CurrentSystem->GetShips());
+	const Ship * FocusShip(dynamic_cast< const Ship * >(g_Camera.GetFocus().Get()));
+	
+	std::list< Ship * >::const_iterator ShipIterator(find(Ships.begin(), Ships.end(), FocusShip));
+	
+	if((ShipIterator == Ships.end()) || (++ShipIterator == Ships.end()))
+	{
+		g_Camera.SetFocus(Ships.front()->GetReference());
+	}
+	else
+	{
+		g_Camera.SetFocus((*ShipIterator)->GetReference());
+	}
+}
+
+void ActionFocusCameraOnPreviousShip(void)
+{
+	const std::list< Ship * > & Ships(g_CurrentSystem->GetShips());
+	const Ship * FocusShip(dynamic_cast< const Ship * >(g_Camera.GetFocus().Get()));
+	
+	std::list< Ship * >::const_reverse_iterator ShipIterator(find(Ships.rbegin(), Ships.rend(), FocusShip));
+	
+	if((ShipIterator == Ships.rend()) || (++ShipIterator == Ships.rend()))
+	{
+		g_Camera.SetFocus(Ships.back()->GetReference());
+	}
+	else
+	{
+		g_Camera.SetFocus((*ShipIterator)->GetReference());
+	}
+}
+
+void ActionJettisonCargo(void)
+{
+	if(g_InputMind.IsValid() == true)
+	{
+		SetMessage("Jettison cargo.");
+		g_InputMind->Jettison();
+	}
+}
+
+void ActionJump(void)
+{
+	if(g_InputMind.IsValid() == true)
+	{
+		switch(WantToJump(g_InputMind->GetCharacter()->GetShip(), g_InputMind->GetCharacter()->GetShip()->GetLinkedSystemTarget()))
+		{
+		case OK:
+			{
+				g_InputMind->Jump();
+				
+				break;
+			}
+		case TOO_NEAR_TO_STELLAR_OBJECT:
+			{
+				SetMessage("You are too near to a stellar object to jump.");
+				
+				break;
+			}
+		case NOT_ENOUGH_FUEL:
+			{
+				SetMessage("You do not have enough fuel to jump.");
+				
+				break;
+			}
+		case NO_JUMP_TARGET:
+			{
+				SetMessage("No system selected to jump to.");
+				
+				break;
+			}
+		}
+	}
+}
+
+void ActionLand(void)
+{
+	if(g_InputMind.IsValid() == true)
+	{
+		const Planet * SelectedPlanet(dynamic_cast< const Planet * >(g_InputMind->GetCharacter()->GetShip()->GetTarget().Get()));
+		
+		switch(WantToLand(g_InputMind->GetCharacter(), g_InputMind->GetCharacter()->GetShip(), SelectedPlanet))
+		{
+		case OK:
+			{
+				g_InputMind->GetCharacter()->RemoveCredits(SelectedPlanet->GetLandingFeePerSpace() * g_InputMind->GetCharacter()->GetShip()->GetAspectPhysical()->GetSpaceRequirement());
+				g_InputMind->Land();
+				
+				break;
+			}
+		case NO_LAND_TARGET:
+			{
+				g_InputMind->TargetNearestPlanet();
+				
+				break;
+			}
+		case NOT_ENOUGH_CREDITS:
+			{
+				SetMessage("You don't have enough credits to pay the landing fee.");
+				
+				break;
+			}
+		case TOO_FAR_AWAY:
+			{
+				SetMessage("You are too far away from the planet to land.");
+				
+				break;
+			}
+		case TOO_FAST:
+			{
+				SetMessage("You are too fast to land on the planet.");
+				
+				break;
+			}
+		}
+	}
+}
+
+void ActionObserveNextCharacter(void)
+{
+	if(g_InputMind.IsValid() == false)
+	{
+		std::set< Character * > Characters(Character::GetCharacters());
+		
+		if(g_CharacterObserver->GetObservedCharacter().IsValid() == false)
+		{
+			if(Characters.empty() == false)
+			{
+				g_CharacterObserver->SetObservedCharacter((*(Characters.begin()))->GetReference());
+			}
+		}
+		else
+		{
+			std::set< Character * >::iterator CharacterIterator(Characters.find(g_CharacterObserver->GetObservedCharacter().Get()));
+			
+			assert(CharacterIterator != Characters.end());
+			++CharacterIterator;
+			if(CharacterIterator == Characters.end())
+			{
+				g_CharacterObserver->SetObservedCharacter(Reference< Character >());
+			}
+			else
+			{
+				g_CharacterObserver->SetObservedCharacter((*CharacterIterator)->GetReference());
+			}
+		}
+	}
+}
+
+void ActionObservePreviousCharacter(void)
+{
+	if(g_InputMind.IsValid() == false)
+	{
+		std::set< Character * > Characters(Character::GetCharacters());
+		
+		if(g_CharacterObserver->GetObservedCharacter().IsValid() == false)
+		{
+			if(Characters.empty() == false)
+			{
+				g_CharacterObserver->SetObservedCharacter((*(Characters.rbegin()))->GetReference());
+			}
+		}
+		else
+		{
+			std::set< Character * >::iterator CharacterIterator(Characters.find(g_CharacterObserver->GetObservedCharacter().Get()));
+			
+			assert(CharacterIterator != Characters.end());
+			if(CharacterIterator == Characters.begin())
+			{
+				g_CharacterObserver->SetObservedCharacter(Reference< Character >());
+			}
+			else
+			{
+				--CharacterIterator;
+				g_CharacterObserver->SetObservedCharacter((*CharacterIterator)->GetReference());
+			}
+		}
+	}
+}
+
+void ActionOpenLoadGameDialog(void)
+{
+	if(g_LoadGameDialog == 0)
+	{
+		g_Pause = true;
+		g_LoadGameDialog = new LoadGameDialog(g_UserInterface->GetRootWidget(), Callback(LoadGameFromInputStream));
+		g_LoadGameDialog->GrabKeyFocus();
+		g_LoadGameDialog->AddDestroyListener(&g_GlobalDestroyListener);
+	}
+}
+
+void ActionOpenMapDialog(void)
+{
+	if((g_MapDialog == 0) && (g_CharacterObserver->GetObservedCharacter().IsValid() == true))
+	{
+		System * CurrentSystem(dynamic_cast< System * >(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetContainer()));
+		
+		assert(CurrentSystem != 0);
+		g_Pause = true;
+		g_MapDialog = new MapDialog(g_UserInterface->GetRootWidget(), CurrentSystem, g_CharacterObserver->GetObservedCharacter().Get());
+		g_MapDialog->GrabKeyFocus();
+		g_MapDialog->AddDestroyListener(&g_GlobalDestroyListener);
+		if(g_InputMind.IsValid() == true)
+		{
+			g_InputMind->DisableAccelerate();
+			g_InputMind->DisableTurnLeft();
+			g_InputMind->DisableTurnRight();
+		}
+	}
+}
+
+void ActionOpenObjectInformationDialog(void)
+{
+	ObjectInformationDialog * Dialog(new ObjectInformationDialog(g_UserInterface->GetRootWidget(), g_Galaxy->GetReference()));
+	
+	Dialog->GrabKeyFocus();
+}
+
+void ActionOpenSaveGameDialog(void)
+{
+	if(g_SaveGameDialog == 0)
+	{
+		g_Pause = true;
+		g_SaveGameDialog = new SaveGameDialog(g_UserInterface->GetRootWidget(), Callback(SaveGame));
+		g_SaveGameDialog->GrabKeyFocus();
+		g_SaveGameDialog->AddDestroyListener(&g_GlobalDestroyListener);
+	}
+}
+
+void ActionOutfitShip(void)
+{
+	if((g_OutfitShipDialog == 0) && (g_CharacterObserver->GetObservedCharacter().IsValid() == true))
+	{
+		g_OutfitShipDialog = new OutfitShipDialog(g_UserInterface->GetRootWidget(), g_CharacterObserver->GetObservedCharacter()->GetShip());
+		g_OutfitShipDialog->GrabKeyFocus();
+		g_OutfitShipDialog->AddDestroyListener(&g_GlobalDestroyListener);
+	}
+}
+
+void ActionPurgeGame(void)
+{
+	PurgeGame();
+}
+
+void ActionQuitGameLoop(void)
+{
+	g_Quit = true;
+}
+
+void ActionQuitGameLoopAndDumpObjectReport(void)
+{
+	g_DumpEndReport = true;
+	g_Quit = true;
+}
+
+void ActionReduceTimeWarp(void)
+{
+	SetTimeWarp(g_TimeWarp / 1.1f);
+}
+
+void ActionRefuel(void)
+{
+	if(g_InputMind.IsValid() == true)
+	{
+		g_InputMind->Refuel();
+	}
+}
+
+void ActionResetCameraPosition(void)
+{
+	g_Camera.SetPosition(0.0f, 0.0f);
+}
+
+void ActionResetTimeWarp(void)
+{
+	SetTimeWarp(1.0f);
+}
+
+void ActionScoop(void)
+{
+	if(g_InputMind.IsValid() == true)
+	{
+		switch(WantToScoop(g_InputMind->GetCharacter()->GetShip(), dynamic_cast< const Commodity * >(g_InputMind->GetCharacter()->GetShip()->GetTarget().Get())))
+		{
+		case OK:
+			{
+				g_InputMind->Scoop();
+				
+				break;
+			}
+		case NO_SCOOP_TARGET:
+			{
+				g_InputMind->TargetNearestCargo();
+				
+				break;
+			}
+		case NOT_ENOUGH_SPACE:
+			{
+				SetMessage("Your cargo hold has not enough spare space to accomodate this item.");
+				
+				break;
+			}
+		case TOO_FAR_AWAY:
+			{
+				SetMessage("You are too far away from the cargo to scoop it up.");
+				
+				break;
+			}
+		case TOO_HIGH_RELATIVE_VELOCITY:
+			{
+				SetMessage("Your relative velocity to the cargo is too high to scoop it up.");
+				
+				break;
+			}
+		}
+	}
+}
+
+void ActionSelectNextLinkedSystem(void)
+{
+	if(g_InputMind.IsValid() == true)
+	{
+		g_InputMind->SelectNextLinkedSystem();
+	}
+}
+
+void ActionSpawnFighter(void)
+{
+	std::stringstream IdentifierPrefix;
+	
+	IdentifierPrefix << "::system(" << g_CurrentSystem->GetIdentifier() << ")::created_at_game_time(" << std::fixed << GameTime::Get() << ")";
+	SpawnShip(g_CurrentSystem, IdentifierPrefix.str(), "fighter");
+}
+
+void ActionSpawnRandomShip(void)
+{
+	std::stringstream IdentifierPrefix;
+	
+	IdentifierPrefix << "::system(" << g_CurrentSystem->GetIdentifier() << ")::created_at_game_time(" << std::fixed << GameTime::Get() << ")";
+	SpawnShip(g_CurrentSystem, IdentifierPrefix.str());
+}
+
+void ActionTakeScreenShot(void)
+{
+	g_TakeScreenShot = true;
+}
+
+void ActionTargetNearestCargo(void)
+{
+	if(g_InputMind.IsValid() == true)
+	{
+		g_InputMind->TargetNearestCargo();
+	}
+}
+
+void ActionTargetNextCargo(void)
+{
+	if(g_InputMind.IsValid() == true)
+	{
+		g_InputMind->TargetNextCargo();
+	}
+}
+
+void ActionTargetNextPlanet(void)
+{
+	if(g_InputMind.IsValid() == true)
+	{
+		g_InputMind->TargetNextPlanet();
+	}
+}
+
+void ActionTargetNextShip(void)
+{
+	if(g_InputMind.IsValid() == true)
+	{
+		g_InputMind->TargetNextShip();
+	}
+}
+
+void ActionTargetPreviousCargo(void)
+{
+	if(g_InputMind.IsValid() == true)
+	{
+		g_InputMind->TargetPreviousCargo();
+	}
+}
+
+void ActionTargetPreviousPlanet(void)
+{
+	if(g_InputMind.IsValid() == true)
+	{
+		g_InputMind->TargetPreviousPlanet();
+	}
+}
+
+void ActionTargetPreviousShip(void)
+{
+	if(g_InputMind.IsValid() == true)
+	{
+		g_InputMind->TargetPreviousShip();
+	}
+}
+
+void ActionToggleTimingDialog(void)
+{
+	if(g_TimingDialog == 0)
+	{
+		g_TimingDialog = new TimingDialog(g_UserInterface->GetRootWidget());
+	}
+	else
+	{
+		g_TimingDialog->Destroy();
+		g_TimingDialog = 0;
+	}
+}
+
 void KeyEvent(const KeyEventInformation & KeyEventInformation)
 {
 	if(g_UserInterface->Key(KeyEventInformation) == true)
@@ -2219,7 +2729,7 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				g_Quit = true;
+				ActionQuitGameLoop();
 			}
 			
 			break;
@@ -2228,14 +2738,7 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				if(g_InputMind.IsValid() == true)
-				{
-					DeleteObject(g_InputMind->GetCharacter()->GetShip());
-				}
-				else if(g_CharacterObserver->GetObservedCharacter().IsValid() == true)
-				{
-					DeleteObject(g_CharacterObserver->GetObservedCharacter()->GetShip());
-				}
+				ActionDeleteObservedObject();
 			}
 			
 			break;
@@ -2244,10 +2747,7 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				if(g_InputMind.IsValid() == true)
-				{
-					g_InputMind->Refuel();
-				}
+				ActionRefuel();
 			}
 			
 			break;
@@ -2256,8 +2756,7 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				g_DumpEndReport = true;
-				g_Quit = true;
+				ActionQuitGameLoopAndDumpObjectReport();
 			}
 			
 			break;
@@ -2266,12 +2765,7 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				if((g_OutfitShipDialog == 0) && (g_CharacterObserver->GetObservedCharacter().IsValid() == true))
-				{
-					g_OutfitShipDialog = new OutfitShipDialog(g_UserInterface->GetRootWidget(), g_CharacterObserver->GetObservedCharacter()->GetShip());
-					g_OutfitShipDialog->GrabKeyFocus();
-					g_OutfitShipDialog->AddDestroyListener(&g_GlobalDestroyListener);
-				}
+				ActionOutfitShip();
 			}
 			
 			break;
@@ -2280,10 +2774,7 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				if(g_InputMind.IsValid() == true)
-				{
-					g_InputMind->TargetPreviousShip();
-				}
+				ActionTargetPreviousShip();
 			}
 			
 			break;
@@ -2292,10 +2783,7 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				if(g_InputMind.IsValid() == true)
-				{
-					g_InputMind->TargetNextShip();
-				}
+				ActionTargetNextShip();
 			}
 			
 			break;
@@ -2304,10 +2792,7 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				if(g_InputMind.IsValid() == true)
-				{
-					g_InputMind->TargetPreviousPlanet();
-				}
+				ActionTargetPreviousPlanet();
 			}
 			
 			break;
@@ -2316,10 +2801,16 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				if(g_InputMind.IsValid() == true)
-				{
-					g_InputMind->TargetNextPlanet();
-				}
+				ActionTargetNextPlanet();
+			}
+			
+			break;
+		}
+	case 34: // Key: [
+		{
+			if(KeyEventInformation.IsDown() == true)
+			{
+				ActionFocusCameraOnPreviousShip();
 			}
 			
 			break;
@@ -2328,19 +2819,7 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				const std::list< Ship * > & Ships(g_CurrentSystem->GetShips());
-				const Ship * FocusShip(dynamic_cast< const Ship * >(g_Camera.GetFocus().Get()));
-				
-				std::list< Ship * >::const_iterator ShipIterator(find(Ships.begin(), Ships.end(), FocusShip));
-				
-				if((ShipIterator == Ships.end()) || (++ShipIterator == Ships.end()))
-				{
-					g_Camera.SetFocus(Ships.front()->GetReference());
-				}
-				else
-				{
-					g_Camera.SetFocus((*ShipIterator)->GetReference());
-				}
+				ActionFocusCameraOnNextShip();
 			}
 			
 			break;
@@ -2349,10 +2828,7 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				std::stringstream IdentifierPrefix;
-				
-				IdentifierPrefix << "::system(" << g_CurrentSystem->GetIdentifier() << ")::created_at_game_time(" << std::fixed << GameTime::Get() << ")";
-				SpawnShip(g_CurrentSystem, IdentifierPrefix.str(), "fighter");
+				ActionSpawnFighter();
 			}
 			
 			break;
@@ -2361,10 +2837,7 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				if(g_InputMind.IsValid() == true)
-				{
-					g_InputMind->TargetNearestCargo();
-				}
+				ActionTargetNearestCargo();
 			}
 			
 			break;
@@ -2373,42 +2846,7 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				if(g_InputMind.IsValid() == true)
-				{
-					switch(WantToScoop(g_InputMind->GetCharacter()->GetShip(), dynamic_cast< const Commodity * >(g_InputMind->GetCharacter()->GetShip()->GetTarget().Get())))
-					{
-					case OK:
-						{
-							g_InputMind->Scoop();
-							
-							break;
-						}
-					case NO_SCOOP_TARGET:
-						{
-							g_InputMind->TargetNearestCargo();
-							
-							break;
-						}
-					case NOT_ENOUGH_SPACE:
-						{
-							SetMessage("Your cargo hold has not enough spare space to accomodate this item.");
-							
-							break;
-						}
-					case TOO_FAR_AWAY:
-						{
-							SetMessage("You are too far away from the cargo to scoop it up.");
-							
-							break;
-						}
-					case TOO_HIGH_RELATIVE_VELOCITY:
-						{
-							SetMessage("Your relative velocity to the cargo is too high to scoop it up.");
-							
-							break;
-						}
-					}
-				}
+				ActionScoop();
 			}
 			
 			break;
@@ -2417,10 +2855,7 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				if(g_InputMind.IsValid() == true)
-				{
-					g_InputMind->TargetPreviousCargo();
-				}
+				ActionTargetPreviousCargo();
 			}
 			
 			break;
@@ -2429,10 +2864,7 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				if(g_InputMind.IsValid() == true)
-				{
-					g_InputMind->TargetNextCargo();
-				}
+				ActionTargetNextCargo();
 			}
 			
 			break;
@@ -2441,36 +2873,7 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				if(g_InputMind.IsValid() == true)
-				{
-					switch(WantToJump(g_InputMind->GetCharacter()->GetShip(), g_InputMind->GetCharacter()->GetShip()->GetLinkedSystemTarget()))
-					{
-					case OK:
-						{
-							g_InputMind->Jump();
-							
-							break;
-						}
-					case TOO_NEAR_TO_STELLAR_OBJECT:
-						{
-							SetMessage("You are too near to a stellar object to jump.");
-							
-							break;
-						}
-					case NOT_ENOUGH_FUEL:
-						{
-							SetMessage("You do not have enough fuel to jump.");
-							
-							break;
-						}
-					case NO_JUMP_TARGET:
-						{
-							SetMessage("No system selected to jump to.");
-							
-							break;
-						}
-					}
-				}
+				ActionJump();
 			}
 			
 			break;
@@ -2479,45 +2882,7 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				if(g_InputMind.IsValid() == true)
-				{
-					const Planet * SelectedPlanet(dynamic_cast< const Planet * >(g_InputMind->GetCharacter()->GetShip()->GetTarget().Get()));
-					
-					switch(WantToLand(g_InputMind->GetCharacter(), g_InputMind->GetCharacter()->GetShip(), SelectedPlanet))
-					{
-					case OK:
-						{
-							g_InputMind->GetCharacter()->RemoveCredits(SelectedPlanet->GetLandingFeePerSpace() * g_InputMind->GetCharacter()->GetShip()->GetAspectPhysical()->GetSpaceRequirement());
-							g_InputMind->Land();
-							
-							break;
-						}
-					case NO_LAND_TARGET:
-						{
-							g_InputMind->TargetNearestPlanet();
-							
-							break;
-						}
-					case NOT_ENOUGH_CREDITS:
-						{
-							SetMessage("You don't have enough credits to pay the landing fee.");
-							
-							break;
-						}
-					case TOO_FAR_AWAY:
-						{
-							SetMessage("You are too far away from the planet to land.");
-							
-							break;
-						}
-					case TOO_FAST:
-						{
-							SetMessage("You are too fast to land on the planet.");
-							
-							break;
-						}
-					}
-				}
+				ActionLand();
 			}
 			
 			break;
@@ -2526,10 +2891,7 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				std::stringstream IdentifierPrefix;
-				
-				IdentifierPrefix << "::system(" << g_CurrentSystem->GetIdentifier() << ")::created_at_game_time(" << std::fixed << GameTime::Get() << ")";
-				SpawnShip(g_CurrentSystem, IdentifierPrefix.str());
+				ActionSpawnRandomShip();
 			}
 			
 			break;
@@ -2538,11 +2900,7 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				if(g_InputMind.IsValid() == true)
-				{
-					SetMessage("Jettison cargo.");
-					g_InputMind->Jettison();
-				}
+				ActionJettisonCargo();
 			}
 			
 			break;
@@ -2551,10 +2909,7 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				if(g_InputMind.IsValid() == true)
-				{
-					g_InputMind->SelectNextLinkedSystem();
-				}
+				ActionSelectNextLinkedSystem();
 			}
 			
 			break;
@@ -2563,22 +2918,7 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				if((g_MapDialog == 0) && (g_CharacterObserver->GetObservedCharacter().IsValid() == true))
-				{
-					System * CurrentSystem(dynamic_cast< System * >(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetContainer()));
-					
-					assert(CurrentSystem != 0);
-					g_Pause = true;
-					g_MapDialog = new MapDialog(g_UserInterface->GetRootWidget(), CurrentSystem, g_CharacterObserver->GetObservedCharacter().Get());
-					g_MapDialog->GrabKeyFocus();
-					g_MapDialog->AddDestroyListener(&g_GlobalDestroyListener);
-					if(g_InputMind.IsValid() == true)
-					{
-						g_InputMind->DisableAccelerate();
-						g_InputMind->DisableTurnLeft();
-						g_InputMind->DisableTurnRight();
-					}
-				}
+				ActionOpenMapDialog();
 			}
 			
 			break;
@@ -2587,7 +2927,7 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				SetTimeWarp(g_TimeWarp / 1.1f);
+				ActionReduceTimeWarp();
 			}
 			
 			break;
@@ -2596,7 +2936,7 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				SetTimeWarp(g_TimeWarp * 1.1f);
+				ActionAugmentTimeWarp();
 			}
 			
 			break;
@@ -2605,7 +2945,7 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				SetTimeWarp(1.0f);
+				ActionResetTimeWarp();
 			}
 			
 			break;
@@ -2614,17 +2954,11 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				if(g_InputMind.IsValid() == true)
-				{
-					g_InputMind->EnableFire();
-				}
+				ActionEnableFire();
 			}
 			else
 			{
-				if(g_InputMind.IsValid() == true)
-				{
-					g_InputMind->DisableFire();
-				}
+				ActionDisableFire();
 			}
 			
 			break;
@@ -2633,13 +2967,7 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				if(g_SaveGameDialog == 0)
-				{
-					g_Pause = true;
-					g_SaveGameDialog = new SaveGameDialog(g_UserInterface->GetRootWidget(), Callback(SaveGame));
-					g_SaveGameDialog->GrabKeyFocus();
-					g_SaveGameDialog->AddDestroyListener(&g_GlobalDestroyListener);
-				}
+				ActionOpenSaveGameDialog();
 			}
 			
 			break;
@@ -2648,13 +2976,7 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				if(g_LoadGameDialog == 0)
-				{
-					g_Pause = true;
-					g_LoadGameDialog = new LoadGameDialog(g_UserInterface->GetRootWidget(), Callback(LoadGameFromInputStream));
-					g_LoadGameDialog->GrabKeyFocus();
-					g_LoadGameDialog->AddDestroyListener(&g_GlobalDestroyListener);
-				}
+				ActionOpenLoadGameDialog();
 			}
 			
 			break;
@@ -2663,9 +2985,7 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				ObjectInformationDialog * Dialog(new ObjectInformationDialog(g_UserInterface->GetRootWidget(), g_Galaxy->GetReference()));
-				
-				Dialog->GrabKeyFocus();
+				ActionOpenObjectInformationDialog();
 			}
 			
 			break;
@@ -2674,22 +2994,16 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				std::string FileName(MakeTimeStampedFileName("object-report", "xml"));
-				std::ofstream OutputFileStream(FileName.c_str());
-				XMLStream Out(OutputFileStream);
-				
-				Object::Dump(Out);
-				OutputFileStream << std::endl;
-				SetMessage("Object report written to file \"" + FileName + "\".");
+				ActionDumpObjectReport();
 			}
 			
 			break;
 		}
 	case 76: // Key: F10
 		{
-			if(KeyEventInformation.IsDown() == True)
+			if(KeyEventInformation.IsDown() == true)
 			{
-				g_TakeScreenShot = true;
+				ActionTakeScreenShot();
 			}
 			
 			break;
@@ -2698,7 +3012,7 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				PurgeGame();
+				ActionPurgeGame();
 			}
 			
 			break;
@@ -2707,15 +3021,7 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				if(g_TimingDialog == 0)
-				{
-					g_TimingDialog = new TimingDialog(g_UserInterface->GetRootWidget());
-				}
-				else
-				{
-					g_TimingDialog->Destroy();
-					g_TimingDialog = 0;
-				}
+				ActionToggleTimingDialog();
 			}
 			
 			break;
@@ -2724,7 +3030,7 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				g_Camera.SetPosition(0.0f, 0.0f);
+				ActionResetCameraPosition();
 			}
 			
 			break;
@@ -2733,17 +3039,11 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				if(g_InputMind.IsValid() == true)
-				{
-					g_InputMind->EnableAccelerate();
-				}
+				ActionEnableAccelerate();
 			}
 			else
 			{
-				if(g_InputMind.IsValid() == true)
-				{
-					g_InputMind->DisableAccelerate();
-				}
+				ActionDisableAccelerate();
 			}
 			
 			break;
@@ -2752,33 +3052,7 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				if(g_InputMind.IsValid() == false)
-				{
-					std::set< Character * > Characters(Character::GetCharacters());
-					
-					if(g_CharacterObserver->GetObservedCharacter().IsValid() == false)
-					{
-						if(Characters.empty() == false)
-						{
-							g_CharacterObserver->SetObservedCharacter((*(Characters.rbegin()))->GetReference());
-						}
-					}
-					else
-					{
-						std::set< Character * >::iterator CharacterIterator(Characters.find(g_CharacterObserver->GetObservedCharacter().Get()));
-						
-						assert(CharacterIterator != Characters.end());
-						if(CharacterIterator == Characters.begin())
-						{
-							g_CharacterObserver->SetObservedCharacter(Reference< Character >());
-						}
-						else
-						{
-							--CharacterIterator;
-							g_CharacterObserver->SetObservedCharacter((*CharacterIterator)->GetReference());
-						}
-					}
-				}
+				ActionObservePreviousCharacter();
 			}
 			
 			break;
@@ -2787,17 +3061,11 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				if(g_InputMind.IsValid() == true)
-				{
-					g_InputMind->EnableTurnLeft();
-				}
+				ActionEnableTurnLeft();
 			}
 			else
 			{
-				if(g_InputMind.IsValid() == true)
-				{
-					g_InputMind->DisableTurnLeft();
-				}
+				ActionDisableTurnLeft();
 			}
 			
 			break;
@@ -2806,17 +3074,11 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				if(g_InputMind.IsValid() == true)
-				{
-					g_InputMind->EnableTurnRight();
-				}
+				ActionEnableTurnRight();
 			}
 			else
 			{
-				if(g_InputMind.IsValid() == true)
-				{
-					g_InputMind->DisableTurnRight();
-				}
+				ActionDisableTurnRight();
 			}
 			
 			break;
@@ -2825,33 +3087,7 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				if(g_InputMind.IsValid() == false)
-				{
-					std::set< Character * > Characters(Character::GetCharacters());
-					
-					if(g_CharacterObserver->GetObservedCharacter().IsValid() == false)
-					{
-						if(Characters.empty() == false)
-						{
-							g_CharacterObserver->SetObservedCharacter((*(Characters.begin()))->GetReference());
-						}
-					}
-					else
-					{
-						std::set< Character * >::iterator CharacterIterator(Characters.find(g_CharacterObserver->GetObservedCharacter().Get()));
-						
-						assert(CharacterIterator != Characters.end());
-						++CharacterIterator;
-						if(CharacterIterator == Characters.end())
-						{
-							g_CharacterObserver->SetObservedCharacter(Reference< Character >());
-						}
-						else
-						{
-							g_CharacterObserver->SetObservedCharacter((*CharacterIterator)->GetReference());
-						}
-					}
-				}
+				ActionObserveNextCharacter();
 			}
 			
 			break;
