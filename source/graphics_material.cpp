@@ -27,21 +27,6 @@ Graphics::Material::Material(void) :
 {
 }
 
-Graphics::Material::Material(const Graphics::Material & Material) :
-	m_DiffuseColor(0),
-	m_Shininess(Material.GetShininess()),
-	m_SpecularColor(0)
-{
-	if(Material.GetDiffuseColor() != 0)
-	{
-		SetDiffuseColor(*(Material.GetDiffuseColor()));
-	}
-	if(Material.GetSpecularColor() != 0)
-	{
-		SetSpecularColor(*(Material.GetSpecularColor()));
-	}
-}
-
 Graphics::Material::~Material(void)
 {
 	delete m_DiffuseColor;
