@@ -29,8 +29,8 @@ namespace Graphics
 	class Material
 	{
 	public:
+		// constructor & destructor
 		Material(void);
-		Material(const Graphics::Material & Material);
 		~Material(void);
 		// getters
 		const Color * GetDiffuseColor(void) const;
