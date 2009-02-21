@@ -22,6 +22,11 @@
 #include "graphics_node.h"
 #include "object_aspect_visualization.h"
 
+ObjectAspectVisualization::ObjectAspectVisualization(void) :
+	m_VisualizationPrototype(0)
+{
+}
+
 ObjectAspectVisualization::~ObjectAspectVisualization(void)
 {
 	assert(m_Visualization.IsValid() == false);
