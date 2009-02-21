@@ -33,6 +33,7 @@ class ObjectAspectVisualization
 {
 public:
 	// constructor & destructor
+	ObjectAspectVisualization(void);
 	~ObjectAspectVisualization(void);
 	// getters
 	Reference< Graphics::Node > & GetVisualization(void);
