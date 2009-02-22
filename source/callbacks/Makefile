@@ -2,7 +2,7 @@ root = ../..
 
 -include $(root)/configuration
 
-code_generator_path = ../tools/code-generator
+code_generator_path = $(root)/tools/code-generator
 code_generator = $(code_generator_path)/CodeGenerator.py
 
 GENERATED_CODE_FILES = \
