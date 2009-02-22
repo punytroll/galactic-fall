@@ -22,6 +22,10 @@ clean-recursive: clean-here
 	@$(MAKE) -C source clean-recursive
 	@$(MAKE) -C test clean-recursive
 
+data: data-all-recursive
+
+source: source-all-recursive
+
 test: test-all-recursive
 
 data-all-recursive:
