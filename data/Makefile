@@ -88,9 +88,6 @@ declarations_xml = \
 littlem_to_xml_xsl = \
 	tools/littlem_to_xml.xsl
 
-rasterize_py = \
-	tools/rasterize.py
-
 raw_to_littlem_py = \
 	tools/raw_to_littlem.py \
 	tools/xml_stream.py
@@ -104,7 +101,7 @@ all: all-recursive
 
 all-here: check-dependencies $(all_data) data.arx
 
-all-recursive: all-here
+all-recursive: textures-all-recursive all-here
 
 check-dependencies:
 	@if [ x`which pkg-config` = x ]; then \
@@ -144,9 +141,8 @@ clean-here:
 	$(RM) meshes/planet.xml
 	$(RM) meshes/shuttle.xml
 	$(RM) meshes/transporter.xml
-	$(RM) textures/particle.tex
 
-clean-recursive: clean-here
+clean-recursive: clean-here textures-clean-recursive
 
 data.arx: $(data_arx)
 	@$(RM) -f $@
@@ -287,8 +283,11 @@ mesh_%.xml: meshes/%.xml $(littlem_to_xml_xsl)
 meshes/%.xml: meshes/%.raw $(raw_to_littlem_py)
 	python tools/raw_to_littlem.py --in=$< --out=$@ --identifier=$(subst meshes/,,$(subst .xml,,$@)) $(subst $(subst meshes/,,$(subst .xml,,$@)),--smooth,$(findstring $(subst meshes/,,$(subst .xml,,$@)),$(smooth_meshes)))
 
-textures/%.tex: textures/%.vg $(rasterize_py)
-	python tools/rasterize.py --in=$< --out=$@ --sub-pixels=3 --dimensions=32x32
+textures-all-recursive:
+	@$(MAKE) -C textures all-recursive
+
+textures-clean-recursive:
+	@$(MAKE) -C textures clean-recursive
 
 .data/texture_particle.data: textures/particle.tex
 

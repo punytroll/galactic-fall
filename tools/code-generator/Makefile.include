@@ -1,0 +1,8 @@
+code_generator_dependencies = \
+	$(root)/tools/code-generator/CodeGenerator.py \
+	$(root)/tools/code-generator/CodeModel.py \
+	$(root)/tools/code-generator/Context.py \
+	$(root)/tools/code-generator/Functors.py \
+	$(root)/tools/code-generator/Template.py
+
+code_generator_py = $(root)/tools/code-generator/CodeGenerator.py
