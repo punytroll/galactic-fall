@@ -45,6 +45,7 @@ all_data = \
 	.data/mesh_light_laser.data \
 	.data/mesh_planet.data \
 	.data/mesh_shuttle_hull.data \
+	.data/mesh_transporter_faction.data \
 	.data/mesh_transporter_hull.data \
 	.data/model_cargo_cube.data \
 	.data/model_fighter.data \
@@ -136,11 +137,13 @@ clean-here:
 	$(RM) mesh_planet.xml
 	$(RM) mesh_shuttle.xml
 	$(RM) mesh_transporter.xml
+	$(RM) mesh_transporter_faction.xml
 	$(RM) meshes/fighter.xml
 	$(RM) meshes/light_laser.xml
 	$(RM) meshes/planet.xml
 	$(RM) meshes/shuttle.xml
-	$(RM) meshes/transporter.xml
+	$(RM) meshes/transporter_faction.xml
+	$(RM) meshes/transporter_hull.xml
 
 clean-recursive: clean-here textures-clean-recursive
 
@@ -267,6 +270,7 @@ data.arx: $(data_arx)
 	arxadd $@ --$(data_location) --name "Light Laser" --type 2 --subtype 0 --add "/Meshes" .data/mesh_light_laser.data
 	arxadd $@ --$(data_location) --name "Planet" --type 2 --subtype 0 --add "/Meshes" .data/mesh_planet.data
 	arxadd $@ --$(data_location) --name "Shuttle Hull" --type 2 --subtype 0 --add "/Meshes" .data/mesh_shuttle_hull.data
+	arxadd $@ --$(data_location) --name "Transporter Faction" --type 2 --subtype 0 --add "/Meshes" .data/mesh_transporter_faction.data
 	arxadd $@ --$(data_location) --name "Transporter Hull" --type 2 --subtype 0 --add "/Meshes" .data/mesh_transporter_hull.data
 	@echo -e "\n\nAdding textures ...\n"
 	arxadd $@ --$(data_location) --name "Particle" --type a --subtype 0 --add "/Textures" .data/texture_particle.data

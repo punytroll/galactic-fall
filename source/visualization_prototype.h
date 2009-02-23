@@ -34,9 +34,11 @@ class VisualizationPrototype
 public:
 	// constructor & destructor
 	VisualizationPrototype(void);
+	VisualizationPrototype(const VisualizationPrototype * VisualizationPrototype);
 	~VisualizationPrototype(void);
 	// getters
 	const Graphics::Model * GetModel(void) const;
+	std::map< std::string, Graphics::Material * > & GetPartMaterials(void);
 	const std::map< std::string, Graphics::Material * > & GetPartMaterials(void) const;
 	// setters
 	void SetModel(const Graphics::Model * Model);
@@ -53,6 +55,11 @@ private:
 inline const Graphics::Model * VisualizationPrototype::GetModel(void) const
 {
 	return m_Model;
+}
+
+inline std::map< std::string, Graphics::Material * > & VisualizationPrototype::GetPartMaterials(void)
+{
+	return m_PartMaterials;
 }
 
 inline const std::map< std::string, Graphics::Material * > & VisualizationPrototype::GetPartMaterials(void) const

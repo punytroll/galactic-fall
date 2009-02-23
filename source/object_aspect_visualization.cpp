@@ -21,6 +21,7 @@
 
 #include "graphics_node.h"
 #include "object_aspect_visualization.h"
+#include "visualization_prototype.h"
 
 ObjectAspectVisualization::ObjectAspectVisualization(void) :
 	m_VisualizationPrototype(0)
@@ -30,6 +31,8 @@ ObjectAspectVisualization::ObjectAspectVisualization(void) :
 ObjectAspectVisualization::~ObjectAspectVisualization(void)
 {
 	assert(m_Visualization.IsValid() == false);
+	delete m_VisualizationPrototype;
+	m_VisualizationPrototype = 0;
 }
 
 void ObjectAspectVisualization::SetVisualization(Reference< Graphics::Node > & Visualization)
@@ -37,6 +40,12 @@ void ObjectAspectVisualization::SetVisualization(Reference< Graphics::Node > & V
 	assert(Visualization.IsValid() == true);
 	assert(m_Visualization.IsValid() == false);
 	m_Visualization = Visualization;
+}
+
+void ObjectAspectVisualization::SetVisualizationPrototype(VisualizationPrototype * VisualizationPrototype)
+{
+	delete m_VisualizationPrototype;
+	m_VisualizationPrototype = VisualizationPrototype;
 }
 
 void ObjectAspectVisualization::Destroy(void)

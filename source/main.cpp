@@ -52,6 +52,7 @@
 #include "globals.h"
 #include "goals.h"
 #include "graphics_engine.h"
+#include "graphics_material.h"
 #include "graphics_mesh_manager.h"
 #include "graphics_model.h"
 #include "graphics_model_manager.h"
@@ -103,6 +104,7 @@
 #include "timeout_notifications.h"
 #include "timing_dialog.h"
 #include "user_interface.h"
+#include "visualization_prototype.h"
 #include "visualizations.h"
 #include "weapon.h"
 #include "weapon_class.h"
@@ -1095,6 +1097,20 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 	Ship * NewShip(dynamic_cast< Ship * >(g_ObjectFactory->Create("ship", ShipClassIdentifier)));
 	
 	NewShip->SetObjectIdentifier("::ship(" + NewShip->GetClassIdentifier() + ")" + IdentifierSuffix);
+	
+	std::map< std::string, Graphics::Material * > & PartMaterials(NewShip->GetAspectVisualization()->GetVisualizationPrototype()->GetPartMaterials());
+	
+	if(PartMaterials.find("faction") != PartMaterials.end())
+	{
+		if(GetRandomBoolean() == true)
+		{
+			PartMaterials["faction"]->SetDiffuseColor(Color(1.0f, 0.0f, 0.0f, 1.0f));
+		}
+		else
+		{
+			PartMaterials["faction"]->SetDiffuseColor(Color(0.0f, 0.0f, 1.0f, 1.0f));
+		}
+	}
 	NewShip->GetAspectPosition()->SetPosition(Vector3f(GetRandomFloat(-200.0f, 200.0f), GetRandomFloat(-200.0f, 200.0f), 0.0f));
 	NewShip->GetAspectPosition()->SetOrientation(Quaternion(GetRandomFloat(0.0f, 2.0f * M_PI), Quaternion::InitializeRotationZ));
 	
@@ -3388,9 +3404,13 @@ int main(int argc, char ** argv)
 		GameFrame();
 		glXSwapBuffers(g_Display, g_Window);
 	}
+	ON_DEBUG(std::cout << "Left game loop." << std::endl);
 	// cleanup
+	ON_DEBUG(std::cout << "Purging game." << std::endl);
 	PurgeGame();
+	ON_DEBUG(std::cout << "Deinitializing OpenGL." << std::endl);
 	DeinitializeOpenGL();
+	ON_DEBUG(std::cout << "Destroying window." << std::endl);
 	DestroyWindow();
 	// if requested print some final debugging information
 	if(g_DumpEndReport == true)

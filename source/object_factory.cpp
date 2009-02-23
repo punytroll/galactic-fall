@@ -91,7 +91,7 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		Result->GetAspectPhysical()->SetSpaceRequirement(CommodityClass->GetSpaceRequirement());
 		// set up visualization aspect
 		assert(Result->GetAspectVisualization() != 0);
-		Result->GetAspectVisualization()->SetVisualizationPrototype(CommodityClass->GetVisualizationPrototype());
+		Result->GetAspectVisualization()->SetVisualizationPrototype(new VisualizationPrototype(CommodityClass->GetVisualizationPrototype()));
 	}
 	else if(TypeIdentifier == "generator")
 	{
@@ -164,7 +164,7 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		NewShip->GetAspectPhysical()->SetSpaceRequirement(ShipClass->GetSpaceRequirement());
 		// set up visualization aspect
 		assert(NewShip->GetAspectVisualization() != 0);
-		NewShip->GetAspectVisualization()->SetVisualizationPrototype(ShipClass->GetVisualizationPrototype());
+		NewShip->GetAspectVisualization()->SetVisualizationPrototype(new VisualizationPrototype(ShipClass->GetVisualizationPrototype()));
 		Result = NewShip;
 	}
 	else if(TypeIdentifier == "shot")
@@ -180,7 +180,7 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		NewShot->GetAspectPhysical()->SetRadialSize(0.54f);
 		// set up visualization aspect
 		assert(NewShot->GetAspectVisualization() != 0);
-		NewShot->GetAspectVisualization()->SetVisualizationPrototype(WeaponClass->GetParticleVisualizationPrototype());
+		NewShot->GetAspectVisualization()->SetVisualizationPrototype(new VisualizationPrototype(WeaponClass->GetParticleVisualizationPrototype()));
 		Result = NewShot;
 	}
 	else if(TypeIdentifier == "storage")
@@ -212,7 +212,7 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		NewWeapon->GetAspectPosition()->SetOrientation(WeaponClass->GetOrientation());
 		// set up visualization aspect
 		assert(NewWeapon->GetAspectVisualization() != 0);
-		NewWeapon->GetAspectVisualization()->SetVisualizationPrototype(WeaponClass->GetVisualizationPrototype());
+		NewWeapon->GetAspectVisualization()->SetVisualizationPrototype(new VisualizationPrototype(WeaponClass->GetVisualizationPrototype()));
 		Result = NewWeapon;
 	}
 	else
