@@ -1,0 +1,4 @@
+rasterizer_dependencies = \
+	$(root)/tools/rasterizer/Rasterizer.py
+
+rasterizer_py = $(root)/tools/rasterizer/Rasterizer.py
