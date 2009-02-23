@@ -31,6 +31,7 @@ namespace Graphics
 	public:
 		// constructor & destructor
 		Material(void);
+		Material(const Graphics::Material * Material);
 		~Material(void);
 		// getters
 		const Color * GetDiffuseColor(void) const;
@@ -44,6 +45,16 @@ namespace Graphics
 		Color * m_DiffuseColor;
 		float m_Shininess;
 		Color * m_SpecularColor;
+	private:
+		/**
+		 * @brief Hidden copy constructor.
+		 **/
+		Material(const Graphics::Material & Material);
+		
+		/**
+		 * @brief Hidden assignment operator.
+		 **/
+		Graphics::Material & operator=(const Graphics::Material & Material);
 	};
 }
 

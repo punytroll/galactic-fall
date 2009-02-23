@@ -26,6 +26,7 @@ class Color
 {
 public:
 	Color(void);
+	Color(const Color * Color);
 	Color(float Red, float Green, float Blue, float Alpha);
 	const Vector4f & GetColor(void) const;
 	void Set(float Red, float Green, float Blue, float Alpha);

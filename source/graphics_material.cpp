@@ -27,6 +27,13 @@ Graphics::Material::Material(void) :
 {
 }
 
+Graphics::Material::Material(const Graphics::Material * Material) :
+	m_DiffuseColor((Material->m_DiffuseColor != 0) ? (new Color(Material->m_DiffuseColor)) : (0)),
+	m_Shininess(Material->m_Shininess),
+	m_SpecularColor((Material->m_SpecularColor != 0) ? (new Color(Material->m_SpecularColor)) : (0))
+{
+}
+
 Graphics::Material::~Material(void)
 {
 	delete m_DiffuseColor;

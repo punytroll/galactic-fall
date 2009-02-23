@@ -82,9 +82,7 @@ void VisualizeCommodity(Commodity * Commodity, Graphics::Node * Container)
 	
 	for(std::map< std::string, Graphics::Material * >::const_iterator PartMaterialIterator = PartMaterials.begin(); PartMaterialIterator != PartMaterials.end(); ++PartMaterialIterator)
 	{
-		Graphics::Material * Material(new Graphics::Material(*(PartMaterialIterator->second)));
-		
-		Visualization->AddMaterial(PartMaterialIterator->first, Material);
+		Visualization->AddMaterial(PartMaterialIterator->first, new Graphics::Material(PartMaterialIterator->second));
 	}
 	Visualization->SetClearDepthBuffer(true);
 	Visualization->SetModel(Commodity->GetAspectVisualization()->GetVisualizationPrototype()->GetModel());
@@ -164,9 +162,7 @@ void VisualizeShip(Ship * Ship, Graphics::Node * Container)
 	
 	for(std::map< std::string, Graphics::Material * >::const_iterator PartMaterialIterator = PartMaterials.begin(); PartMaterialIterator != PartMaterials.end(); ++PartMaterialIterator)
 	{
-		Graphics::Material * Material(new Graphics::Material(*(PartMaterialIterator->second)));
-		
-		Visualization->AddMaterial(PartMaterialIterator->first, Material);
+		Visualization->AddMaterial(PartMaterialIterator->first, new Graphics::Material(PartMaterialIterator->second));
 	}
 	Visualization->SetClearDepthBuffer(true);
 	Visualization->SetModel(Ship->GetAspectVisualization()->GetVisualizationPrototype()->GetModel());
@@ -218,9 +214,7 @@ void VisualizeShot(Shot * Shot, Graphics::Node * Container)
 	
 	for(std::map< std::string, Graphics::Material * >::const_iterator PartMaterialIterator = PartMaterials.begin(); PartMaterialIterator != PartMaterials.end(); ++PartMaterialIterator)
 	{
-		Graphics::Material * Material(new Graphics::Material(*(PartMaterialIterator->second)));
-		
-		Visualization->AddMaterial(PartMaterialIterator->first, Material);
+		Visualization->AddMaterial(PartMaterialIterator->first, new Graphics::Material(PartMaterialIterator->second));
 	}
 	Visualization->SetClearDepthBuffer(true);
 	Visualization->SetModel(Shot->GetAspectVisualization()->GetVisualizationPrototype()->GetModel());
@@ -253,9 +247,7 @@ void VisualizeWeapon(Weapon * Weapon, Graphics::Node * Container)
 	
 	for(std::map< std::string, Graphics::Material * >::const_iterator PartMaterialIterator = PartMaterials.begin(); PartMaterialIterator != PartMaterials.end(); ++PartMaterialIterator)
 	{
-		Graphics::Material * Material(new Graphics::Material(*(PartMaterialIterator->second)));
-		
-		Visualization->AddMaterial(PartMaterialIterator->first, Material);
+		Visualization->AddMaterial(PartMaterialIterator->first, new Graphics::Material(PartMaterialIterator->second));
 	}
 	Visualization->SetModel(Weapon->GetAspectVisualization()->GetVisualizationPrototype()->GetModel());
 	Visualization->SetOrientation(Weapon->GetAspectAccessory()->GetSlot()->GetOrientation() * Weapon->GetAspectPosition()->GetOrientation());
