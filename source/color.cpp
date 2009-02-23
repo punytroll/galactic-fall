@@ -23,6 +23,11 @@ Color::Color(void)
 {
 }
 
+Color::Color(const Color * Color) :
+	m_Color(Color->m_Color)
+{
+}
+
 Color::Color(float Red, float Green, float Blue, float Alpha) :
 	m_Color(Red, Green, Blue, Alpha)
 {
