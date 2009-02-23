@@ -25,6 +25,15 @@ VisualizationPrototype::VisualizationPrototype(void) :
 {
 }
 
+VisualizationPrototype::VisualizationPrototype(const VisualizationPrototype * VisualizationPrototype) :
+	m_Model(VisualizationPrototype->m_Model)
+{
+	for(std::map< std::string, Graphics::Material * >::const_iterator PartMaterialIterator = VisualizationPrototype->m_PartMaterials.begin(); PartMaterialIterator != VisualizationPrototype->m_PartMaterials.end(); ++PartMaterialIterator)
+	{
+		m_PartMaterials[PartMaterialIterator->first] = new Graphics::Material(PartMaterialIterator->second);
+	}
+}
+
 VisualizationPrototype::~VisualizationPrototype(void)
 {
 	m_Model = 0;

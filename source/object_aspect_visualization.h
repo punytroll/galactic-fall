@@ -37,16 +37,19 @@ public:
 	~ObjectAspectVisualization(void);
 	// getters
 	Reference< Graphics::Node > & GetVisualization(void);
-	const VisualizationPrototype * GetVisualizationPrototype(void) const;
+	VisualizationPrototype * GetVisualizationPrototype(void);
 	// setters
 	void SetVisualization(Reference< Graphics::Node > & Visualization);
-	void SetVisualizationPrototype(const VisualizationPrototype * VisualizationPrototype);
+	/**
+	 * @note Passes memory management reponsibility of the VisualizationPrototype to this ObjectAspectVisualization.
+	 **/
+	void SetVisualizationPrototype(VisualizationPrototype * VisualizationPrototype);
 	// modifiers
 	void Destroy(void);
 	void UnsetVisualization(void);
 private:
 	Reference< Graphics::Node > m_Visualization;
-	const VisualizationPrototype * m_VisualizationPrototype;
+	VisualizationPrototype * m_VisualizationPrototype;
 };
 
 inline Reference< Graphics::Node > & ObjectAspectVisualization::GetVisualization(void)
@@ -54,14 +57,9 @@ inline Reference< Graphics::Node > & ObjectAspectVisualization::GetVisualization
 	return m_Visualization;
 }
 
-inline const VisualizationPrototype * ObjectAspectVisualization::GetVisualizationPrototype(void) const
+inline VisualizationPrototype * ObjectAspectVisualization::GetVisualizationPrototype(void)
 {
 	return m_VisualizationPrototype;
-}
-
-inline void ObjectAspectVisualization::SetVisualizationPrototype(const VisualizationPrototype * VisualizationPrototype)
-{
-	m_VisualizationPrototype = VisualizationPrototype;
 }
 
 #endif
