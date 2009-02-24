@@ -1,4 +1,11 @@
-rasterizer_dependencies = \
-	$(root)/tools/rasterizer/Rasterizer.py
+rasterizer-check-dependencies: 
+	@if [ x`which python` = x ]; then \
+	    echo -e "\nYour system is missing the python interpreter.\nIn order to use the rasterizer you will need to install it on your system.\n"; false; \
+	fi
 
-rasterizer_py = $(root)/tools/rasterizer/Rasterizer.py
+rasterizer_dependencies = \
+	$(root)/tools/rasterizer/rasterizer.py
+
+command_rasterizer = python $(root)/tools/rasterizer/rasterizer.py
+
+.PHONY: rasterizer-check-dependencies

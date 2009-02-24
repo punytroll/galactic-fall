@@ -11,7 +11,10 @@ all-recursive: all-here
 clean: clean-recursive
 
 clean-here:
-	$(RM) *.pyc
+	$(RM) CodeModel.pyc
+	$(RM) Context.pyc
+	$(RM) Functors.pyc
+	$(RM) Template.pyc
 
 clean-recursive: clean-here
 

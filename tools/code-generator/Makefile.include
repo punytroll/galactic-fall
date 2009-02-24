@@ -1,3 +1,8 @@
+code_generator-check-dependencies: 
+	@if [ x`which python` = x ]; then \
+	    echo -e "\nYour system is missing the python interpreter.\nIn order to use the code-generator you will need to install it on your system.\n"; false; \
+	fi
+
 code_generator_dependencies = \
 	$(root)/tools/code-generator/CodeGenerator.py \
 	$(root)/tools/code-generator/CodeModel.py \
@@ -5,4 +10,6 @@ code_generator_dependencies = \
 	$(root)/tools/code-generator/Functors.py \
 	$(root)/tools/code-generator/Template.py
 
-code_generator_py = $(root)/tools/code-generator/CodeGenerator.py
+command_code_generator = python $(root)/tools/code-generator/CodeGenerator.py
+
+.PHONY: code_generator-check-dependencies

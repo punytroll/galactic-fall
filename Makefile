@@ -13,15 +13,17 @@ check:
 
 clean: clean-recursive
 
-clean-here:
-	$(RM) -R .configuration
-	$(RM) configuration
+clean-here: 
 
 clean-recursive: clean-here
 	@$(MAKE) -C data clean-recursive
 	@$(MAKE) -C source clean-recursive
 	@$(MAKE) -C test clean-recursive
 	@$(MAKE) -C tools clean-recursive
+
+clean-repository: clean
+	$(RM) -R .configuration
+	$(RM) configuration
 
 data: data-all-recursive
 

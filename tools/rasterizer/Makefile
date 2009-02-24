@@ -10,8 +10,7 @@ all-recursive: all-here
 
 clean: clean-recursive
 
-clean-here:
-	$(RM) *.pyc
+clean-here: 
 
 clean-recursive: clean-here
 
