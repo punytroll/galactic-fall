@@ -14,10 +14,7 @@ all-here: check-dependencies $(tex_files)
 
 all-recursive: all-here
 
-check-dependencies:
-	@if [ x`which python` = x ]; then \
-	    echo -e "\nYour system is missing the python interpreter.\nIn order to build these textures you will need to install it on your system.\n"; false; \
-	fi
+check-dependencies: rasterizer-check-dependencies
 
 clean: clean-recursive
 
@@ -35,4 +32,4 @@ clean-here:
 clean-recursive: clean-here
 
 particle.tex: particle.vg $(rasterizer_dependencies)
-	python $(rasterizer_py) --in=$< --out=$@ --sub-pixels=3 --dimensions=32x32
+	$(command_rasterizer) --in=$< --out=$@ --sub-pixels=3 --dimensions=32x32
