@@ -1,7 +1,8 @@
 root = ../..
 
 -include $(root)/configuration
--include $(root)/tools/rasterizer/Makefile.include
+
+include $(root)/tools/rasterizer/Makefile.include
 
 vector_graphics_files = $(wildcard *.vg)
 tex_files = $(patsubst %.vg,%.tex,$(vector_graphics_files))
