@@ -1,7 +1,8 @@
 root = ../..
 
 -include $(root)/configuration
--include $(root)/tools/code-generator/Makefile.include
+
+include $(root)/tools/code_generator/Makefile.include
 
 generated_code_files = \
 	.generated-code/Counter.gc \
