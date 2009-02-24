@@ -2,6 +2,8 @@ root = ..
 
 -include $(root)/configuration
 
+include $(root)/tools/raw_to_littlem/Makefile.include
+
 data_arx = \
 	$(data_location_configuration) \
 	Makefile \
@@ -89,10 +91,6 @@ declarations_xml = \
 littlem_to_xml_xsl = \
 	tools/littlem_to_xml.xsl
 
-raw_to_littlem_py = \
-	tools/raw_to_littlem.py \
-	tools/xml_stream.py
-
 xml_to_data_py = \
 	tools/xml_to_data.py
 
@@ -104,7 +102,7 @@ all-here: check-dependencies $(all_data) data.arx
 
 all-recursive: textures-all-recursive all-here
 
-check-dependencies:
+check-dependencies: raw_to_littlem-check-dependencies
 	@if [ x`which pkg-config` = x ]; then \
 		echo -e "\nYour system is missing the \"pkg-config\" tool.\nThis tool is needed and you will need to install it in order to build the program.\n"; false; \
 	fi
@@ -284,8 +282,8 @@ data.arx: $(data_arx)
 mesh_%.xml: meshes/%.xml $(littlem_to_xml_xsl)
 	xsltproc -output $@ tools/littlem_to_xml.xsl $<
 
-meshes/%.xml: meshes/%.raw $(raw_to_littlem_py)
-	python tools/raw_to_littlem.py --in=$< --out=$@ --identifier=$(subst meshes/,,$(subst .xml,,$@)) $(subst $(subst meshes/,,$(subst .xml,,$@)),--smooth,$(findstring $(subst meshes/,,$(subst .xml,,$@)),$(smooth_meshes)))
+meshes/%.xml: meshes/%.raw $(raw_to_littlem_dependencies)
+	$(command_raw_to_littlem) --in=$< --out=$@ --identifier=$(subst meshes/,,$(subst .xml,,$@)) $(subst $(subst meshes/,,$(subst .xml,,$@)),--smooth,$(findstring $(subst meshes/,,$(subst .xml,,$@)),$(smooth_meshes)))
 
 textures-all-recursive:
 	@$(MAKE) -C textures all-recursive
