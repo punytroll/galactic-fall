@@ -1,0 +1,9 @@
+xml_stream-check-dependencies: 
+	@if [ x`which python` = x ]; then \
+	    echo -e "\nYour system is missing the python interpreter.\nIn order to use the xml_stream component you will need to install it on your system.\n"; false; \
+	fi
+
+xml_stream_dependencies = \
+	$(root)/tools/xml_stream/xml_stream.py
+
+.PHONY: xml_stream-check-dependencies
