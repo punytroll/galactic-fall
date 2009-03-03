@@ -11,18 +11,18 @@
 				<material>
 					<use-specular-color>true</use-specular-color>
 					<diffuse-color>
-						<red>0.76</red>
-						<green>0.35</green>
-						<blue>0.25</blue>
+						<red>0.78</red>
+						<green>0.76</green>
+						<blue>0.78</blue>
 						<alpha>1</alpha>
 					</diffuse-color>
 					<specular-color>
-						<red>0.45</red>
-						<green>0.45</green>
-						<blue>0.45</blue>
+						<red>0.65</red>
+						<green>0.65</green>
+						<blue>0.65</blue>
 						<alpha>1</alpha>
 					</specular-color>
-					<shininess>40</shininess>
+					<shininess>30</shininess>
 				</material>
 			</visualization-part>
 			<visualization-part>
@@ -41,7 +41,7 @@
 						<blue>1</blue>
 						<alpha>1</alpha>
 					</specular-color>
-					<shininess>100</shininess>
+					<shininess>80</shininess>
 				</material>
 			</visualization-part>
 		</visualization-parts>

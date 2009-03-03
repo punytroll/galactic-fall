@@ -1535,6 +1535,21 @@ void PurgeGame(void)
 	g_Galaxy = 0;
 }
 
+void SetupInitialGalaxyState(void)
+{
+	assert(g_Galaxy == 0);
+	// initialize the galaxy object with hard coded properties
+	g_Galaxy = new Galaxy();
+	g_Galaxy->SetTypeIdentifier("galaxy");
+	g_Galaxy->SetClassIdentifier("milky_way");
+	g_Galaxy->SetObjectIdentifier("::galaxy");
+	g_Galaxy->GetAspectName()->SetName("Milky Way");
+	// read the systems from the data archive
+	g_ResourceReader->ReadSystems();
+	// read the system links from the data archive
+	g_ResourceReader->ReadSystemLinks();
+}
+
 void LoadGameFromElement(const Element * SaveElement)
 {
 	if(SaveElement->GetName() != "save")
@@ -1549,13 +1564,7 @@ void LoadGameFromElement(const Element * SaveElement)
 	
 	// setup the game world
 	PurgeGame();
-	g_Galaxy = new Galaxy();
-	g_Galaxy->SetTypeIdentifier("galaxy");
-	g_Galaxy->SetClassIdentifier("milky_way");
-	g_Galaxy->SetObjectIdentifier("::galaxy");
-	g_Galaxy->GetAspectName()->SetName("Milky Way");
-	g_ResourceReader->ReadSystems();
-	g_ResourceReader->ReadSystemLinks();
+	SetupInitialGalaxyState();
 	for(std::vector< Element * >::const_iterator SaveChild = SaveChilds.begin(); SaveChild != SaveChilds.end(); ++SaveChild)
 	{
 		if((*SaveChild)->GetName() == "game-time")

@@ -11,9 +11,9 @@
 				<material>
 					<use-specular-color>true</use-specular-color>
 					<diffuse-color>
-						<red>1.0</red>
-						<green>0.9</green>
-						<blue>0.1</blue>
+						<red>0.5</red>
+						<green>0.55</green>
+						<blue>0.58</blue>
 						<alpha>1.0</alpha>
 					</diffuse-color>
 					<specular-color>
