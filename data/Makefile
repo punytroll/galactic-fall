@@ -79,12 +79,6 @@ all_data = \
 	.data/widget_scanner.data \
 	.data/widget_scanner_display.data
 
-smooth_meshes = \
-	fighter_cockpit \
-	fighter_hull \
-	planet \
-	shuttle_hull
-
 declarations_xml = \
 	tools/declarations.xml
 
@@ -100,7 +94,7 @@ all: all-recursive
 
 all-here: check-dependencies $(all_data) data.arx
 
-all-recursive: textures-all-recursive all-here
+all-recursive: meshes-all-recursive textures-all-recursive all-here
 
 check-dependencies: raw_to_littlem-check-dependencies
 	@if [ x`which pkg-config` = x ]; then \
@@ -127,7 +121,6 @@ clean: clean-recursive
 clean-here:
 	$(RM) -r .data
 	$(RM) data.arx
-	$(RM) tools/xml_stream.pyc
 	$(RM) mesh_cargo_cube.xml
 	$(RM) mesh_fighter.xml
 	$(RM) mesh_laser_shot.xml
@@ -136,14 +129,8 @@ clean-here:
 	$(RM) mesh_shuttle.xml
 	$(RM) mesh_transporter.xml
 	$(RM) mesh_transporter_faction.xml
-	$(RM) meshes/fighter.xml
-	$(RM) meshes/light_laser.xml
-	$(RM) meshes/planet.xml
-	$(RM) meshes/shuttle.xml
-	$(RM) meshes/transporter_faction.xml
-	$(RM) meshes/transporter_hull.xml
 
-clean-recursive: clean-here textures-clean-recursive
+clean-recursive: clean-here meshes-clean-recursive textures-clean-recursive
 
 data.arx: $(data_arx)
 	@$(RM) -f $@
@@ -282,15 +269,18 @@ data.arx: $(data_arx)
 mesh_%.xml: meshes/%.xml $(littlem_to_xml_xsl)
 	xsltproc -output $@ tools/littlem_to_xml.xsl $<
 
-meshes/%.xml: meshes/%.raw $(raw_to_littlem_dependencies)
-	$(command_raw_to_littlem) --in=$< --out=$@ --identifier=$(subst meshes/,,$(subst .xml,,$@)) $(subst $(subst meshes/,,$(subst .xml,,$@)),--smooth,$(findstring $(subst meshes/,,$(subst .xml,,$@)),$(smooth_meshes)))
+meshes-all-recursive:
+	@$(MAKE) -C meshes all-recursive
 
 textures-all-recursive:
 	@$(MAKE) -C textures all-recursive
+
+meshes-clean-recursive:
+	@$(MAKE) -C meshes clean-recursive
 
 textures-clean-recursive:
 	@$(MAKE) -C textures clean-recursive
 
 .data/texture_particle.data: textures/particle.tex
 
-.PHONY: all all-here all-recursive check-dependencies clean clean-here clean-recursive default
+.PHONY: all all-here all-recursive check-dependencies clean clean-here clean-recursive default meshes-all-recursive meshes-clean-recursive textures-all-recursive textures-clean-recursive
