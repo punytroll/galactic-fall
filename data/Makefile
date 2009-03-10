@@ -3,6 +3,7 @@ root = ..
 -include $(root)/configuration
 
 include $(root)/tools/raw_to_littlem/Makefile.include
+include $(root)/tools/xml_to_data/Makefile.include
 
 data_arx = \
 	$(data_location_configuration) \
@@ -85,9 +86,6 @@ declarations_xml = \
 littlem_to_xml_xsl = \
 	tools/littlem_to_xml.xsl
 
-xml_to_data_py = \
-	tools/xml_to_data.py
-
 default: all
 
 all: all-recursive
@@ -96,7 +94,7 @@ all-here: check-dependencies $(all_data) data.arx
 
 all-recursive: meshes-all-recursive textures-all-recursive all-here
 
-check-dependencies: raw_to_littlem-check-dependencies
+check-dependencies: raw_to_littlem-check-dependencies xml_to_data-check-dependencies
 	@if [ x`which pkg-config` = x ]; then \
 		echo -e "\nYour system is missing the \"pkg-config\" tool.\nThis tool is needed and you will need to install it in order to build the program.\n"; false; \
 	fi
@@ -263,8 +261,8 @@ data.arx: $(data_arx)
 .data:
 	mkdir $@
 
-.data/%.data: %.xml $(declarations_xml) $(xml_to_data_py)
-	python tools/xml_to_data.py --declarations=tools/declarations.xml --in=$< --out=$@
+.data/%.data: %.xml $(declarations_xml) $(xml_to_data_dependencies)
+	$(command_xml_to_data) --declarations=tools/declarations.xml --in=$< --out=$@
 
 mesh_%.xml: meshes/%.xml $(littlem_to_xml_xsl)
 	xsltproc -output $@ tools/littlem_to_xml.xsl $<

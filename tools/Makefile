@@ -6,7 +6,7 @@ all: all-recursive
 
 all-here: 
 
-all-recursive: all-here analyze_littlem-all-recursive code_generator-all-recursive rasterizer-all-recursive raw_to_littlem-all-recursive view_texture-all-recursive xml_stream-all-recursive
+all-recursive: all-here analyze_littlem-all-recursive code_generator-all-recursive rasterizer-all-recursive raw_to_littlem-all-recursive view_texture-all-recursive xml_stream-all-recursive xml_to_data-all-recursive
 
 clean: clean-recursive
 
@@ -19,6 +19,7 @@ clean-recursive: clean-here
 	@$(MAKE) -C raw_to_littlem clean-recursive
 	@$(MAKE) -C view_texture clean-recursive
 	@$(MAKE) -C xml_stream clean-recursive
+	@$(MAKE) -C xml_to_data clean-recursive
 
 analyze_littlem: analyze_littlem-all-recursive
 
@@ -31,6 +32,8 @@ raw_to_littlem: raw_to_littlem-all-recursive
 view_texture: view_texture-all-recursive
 
 xml_stream: xml_stream-all-recursive
+
+xml_to_data: xml_to_data-all-recursive
 
 analyze_littlem-all-recursive:
 	@$(MAKE) -C analyze_littlem all-recursive
@@ -50,4 +53,7 @@ view_texture-all-recursive:
 xml_stream-all-recursive:
 	@$(MAKE) -C xml_stream all-recursive
 
-.PHONY: all all-here all-recursive analyze_littlem analyze_littlem-all-recursive clean clean-here clean-recursive code_generator code_generator-all-recursive default rasterizer rasterizer-all-recursive raw_to_littlem raw_to_littlem-all-recursive view_texture view_texture-all-recursive xml_stream xml_stream-all-recursive
+xml_to_data-all-recursive:
+	@$(MAKE) -C xml_to_data all-recursive
+
+.PHONY: all all-here all-recursive analyze_littlem analyze_littlem-all-recursive clean clean-here clean-recursive code_generator code_generator-all-recursive default rasterizer rasterizer-all-recursive raw_to_littlem raw_to_littlem-all-recursive view_texture view_texture-all-recursive xml_stream xml_stream-all-recursive xml_to_data xml_to_data-all-recursive
