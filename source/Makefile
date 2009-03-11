@@ -90,6 +90,10 @@ dimension_listener_h = \
 draw_text_h = \
 	draw_text.h
 
+faction_h = \
+	faction.h \
+	$(object_h)
+
 file_handling_h = \
 	file_handling.h
 
@@ -583,7 +587,7 @@ $(OBJECT_FILES): $(CXXFLAGS_configuration)
 binary: $(OBJECT_FILES) $(LDFLAGS_configuration)
 	$(CXX) $(LDFLAGS) `pkg-config --libs libarxx` $(OBJECT_FILES) -lGL -o $@
 
-arx_reading.o: arx_reading.cpp $(arx_reading_h) $(arx_resources_h) $(asset_class_h) $(battery_class_h) $(buffer_reading_h) $(class_manager_h) $(commodity_class_h) $(galaxy_h) $(generator_class_h) $(globals_h) $(graphics_material_h) $(graphics_mesh_h) $(graphics_mesh_manager_h) $(graphics_model_h) $(graphics_model_manager_h) $(graphics_texture_h) $(graphics_texture_manager_h) $(label_h) $(local_file_data_channel_h) $(mini_map_display_h) $(object_aspect_name_h) $(object_aspect_object_container_h) $(object_aspect_position_h) $(object_factory_h) $(planet_h) $(scanner_display_h) $(ship_class_h) $(callbacks_callbacks_h) $(slot_h) $(star_h) $(string_cast_h) $(system_h) $(user_interface_h) $(visualization_prototype_h) $(weapon_class_h) $(widget_h)
+arx_reading.o: arx_reading.cpp $(arx_reading_h) $(arx_resources_h) $(asset_class_h) $(battery_class_h) $(buffer_reading_h) $(class_manager_h) $(commodity_class_h) $(faction_h) $(galaxy_h) $(generator_class_h) $(globals_h) $(graphics_material_h) $(graphics_mesh_h) $(graphics_mesh_manager_h) $(graphics_model_h) $(graphics_model_manager_h) $(graphics_texture_h) $(graphics_texture_manager_h) $(label_h) $(local_file_data_channel_h) $(mini_map_display_h) $(object_aspect_name_h) $(object_aspect_object_container_h) $(object_aspect_position_h) $(object_factory_h) $(planet_h) $(scanner_display_h) $(ship_class_h) $(callbacks_callbacks_h) $(slot_h) $(star_h) $(string_cast_h) $(system_h) $(user_interface_h) $(visualization_prototype_h) $(weapon_class_h) $(widget_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags libarxx` -c $< -o $@
 
 asset_class.o: asset_class.cpp $(asset_class_h)
@@ -637,10 +641,13 @@ dimension_listener.o: dimension_listener.cpp $(dimension_listener_h)
 draw_text.o: draw_text.cpp $(draw_text_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
+faction.o: faction.cpp $(color_h) $(faction_h)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
 file_handling.o: file_handling.cpp $(file_handling_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-galaxy.o: galaxy.cpp $(galaxy_h) $(object_aspect_object_container_h) $(system_h)
+galaxy.o: galaxy.cpp $(faction_h) $(galaxy_h) $(object_aspect_object_container_h) $(system_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 game_time.o: game_time.cpp $(game_time_h)
@@ -766,7 +773,7 @@ object_aspect_update.o: object_aspect_update.cpp $(object_aspect_update_h)
 object_aspect_visualization.o: object_aspect_visualization.cpp $(graphics_node_h) $(object_aspect_visualization_h) $(visualization_prototype_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-object_factory.o: object_factory.cpp $(battery_h) $(battery_class_h) $(character_h) $(class_manager_h) $(command_mind_h) $(commodity_h) $(commodity_class_h) $(game_time_h) $(generator_h) $(generator_class_h) $(globals_h) $(graphics_model_h) $(object_aspect_name_h) $(object_aspect_outfitting_h) $(object_aspect_physical_h) $(object_aspect_position_h) $(object_aspect_visualization_h) $(object_factory_h) $(planet_h) $(ship_h) $(ship_class_h) $(shot_h) $(slot_h) $(storage_h) $(weapon_h) $(weapon_class_h) $(visualization_prototype_h)
+object_factory.o: object_factory.cpp $(battery_h) $(battery_class_h) $(character_h) $(class_manager_h) $(command_mind_h) $(commodity_h) $(commodity_class_h) $(faction_h) $(game_time_h) $(generator_h) $(generator_class_h) $(globals_h) $(graphics_model_h) $(object_aspect_name_h) $(object_aspect_outfitting_h) $(object_aspect_physical_h) $(object_aspect_position_h) $(object_aspect_visualization_h) $(object_factory_h) $(planet_h) $(ship_h) $(ship_class_h) $(shot_h) $(slot_h) $(storage_h) $(weapon_h) $(weapon_class_h) $(visualization_prototype_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 object_information_dialog.o: object_information_dialog.cpp $(button_h) $(globals_h) $(label_h) $(object_h) $(object_aspect_accessory_h) $(object_aspect_name_h) $(object_aspect_object_container_h) $(object_aspect_physical_h) $(object_information_dialog_h) $(scroll_bar_h) $(scroll_box_h) $(slot_h) $(slot_class_h) $(string_cast_h)

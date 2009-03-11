@@ -33,6 +33,7 @@
 #include "callbacks/callbacks.h"
 #include "class_manager.h"
 #include "commodity_class.h"
+#include "faction.h"
 #include "galaxy.h"
 #include "generator_class.h"
 #include "globals.h"
@@ -68,6 +69,7 @@ static Arxx::Item * Resolve(Arxx::Reference & Reference);
 static void ReadAssetClass(Arxx::Reference & Reference);
 static void ReadBatteryClass(Arxx::Reference & Reference);
 static void ReadCommodityClass(Arxx::Reference & Reference);
+static void ReadFaction(Arxx::Reference & Reference);
 static void ReadGeneratorClass(Arxx::Reference & Reference);
 static void ReadMesh(Arxx::Reference & Reference);
 static void ReadModel(Arxx::Reference & Reference);
@@ -190,6 +192,11 @@ void ResourceReader::ReadBatteryClasses(void)
 void ResourceReader::ReadCommodityClasses(void)
 {
 	ReadItems(m_Archive, "/Commodity Classes", Callback(ReadCommodityClass));
+}
+
+void ResourceReader::ReadFactions(void)
+{
+	ReadItems(m_Archive, "/Factions", Callback(ReadFaction));
 }
 
 void ResourceReader::ReadGeneratorClasses(void)
@@ -354,6 +361,44 @@ static void ReadCommodityClass(Arxx::Reference & Reference)
 	// read visualization prototype
 	NewCommodityClass->AddVisualizationPrototype();
 	ReadVisualizationPrototype(Reader, NewCommodityClass->GetVisualizationPrototype());
+}
+
+static void ReadFaction(Arxx::Reference & Reference)
+{
+	Arxx::Item * Item(Resolve(Reference));
+	
+	if(Item->u4GetType() != ARX_TYPE_FACTION)
+	{
+		throw std::runtime_error("Item type for faction '" + Item->sGetName() + "' should be '" + to_string_cast(ARX_TYPE_FACTION) + "' not '" + to_string_cast(Item->u4GetType()) + "'.");
+	}
+	if(Item->u4GetSubType() != 0)
+	{
+		throw std::runtime_error("Item sub type for faction '" + Item->sGetName() + "' should be '0' not '" + to_string_cast(Item->u4GetSubType()) + "'.");
+	}
+	
+	Arxx::BufferReader Reader(*Item);
+	std::string Identifier;
+	
+	Reader >> Identifier;
+	
+	Faction * NewFaction(dynamic_cast< Faction * >(g_ObjectFactory->Create("faction", Identifier)));
+	
+	if(NewFaction == 0)
+	{
+		throw std::runtime_error("Could not create faction '" + Identifier + "'.");
+	}
+	NewFaction->SetObjectIdentifier("::faction(" + NewFaction->GetClassIdentifier() + ")");
+	
+	std::string Name;
+	Color FactionColor;
+	
+	Reader >> Name >> FactionColor;
+	NewFaction->GetAspectName()->SetName(Name);
+	NewFaction->SetColor(new Color(&FactionColor));
+	if(g_Galaxy->GetAspectObjectContainer()->AddContent(NewFaction) == false)
+	{
+		throw std::runtime_error("Could not add faction '" + Identifier + "' to galaxy.");
+	}
 }
 
 static void ReadGeneratorClass(Arxx::Reference & Reference)

@@ -1544,6 +1544,8 @@ void SetupInitialGalaxyState(void)
 	g_Galaxy->SetClassIdentifier("milky_way");
 	g_Galaxy->SetObjectIdentifier("::galaxy");
 	g_Galaxy->GetAspectName()->SetName("Milky Way");
+	// read the factions from the data archive
+	g_ResourceReader->ReadFactions();
 	// read the systems from the data archive
 	g_ResourceReader->ReadSystems();
 	// read the system links from the data archive

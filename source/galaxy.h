@@ -25,6 +25,7 @@
 
 #include "object.h"
 
+class Faction;
 class System;
 
 class Galaxy : public Object
@@ -33,7 +34,9 @@ public:
 	// constructor & destructor
 	Galaxy(void);
 	// getters
-	System * GetSystem(const std::string & SystemIdentifier);
+	Faction * GetFaction(const std::string & Identifier);
+	const std::map< std::string, Faction * > & GetFactions(void) const;
+	System * GetSystem(const std::string & Identifier);
 	const std::map< std::string, System * > & GetSystems(void) const;
 private:
 	bool AllowAdding(Object * Content);
@@ -41,7 +44,13 @@ private:
 	void OnAdded(Object * Content);
 	void OnRemoved(Object * Content);
 	std::map< std::string, System * > m_Systems;
+	std::map< std::string, Faction * > m_Factions;
 };
+
+inline const std::map< std::string, Faction * > & Galaxy::GetFactions(void) const
+{
+	return m_Factions;
+}
 
 inline const std::map< std::string, System * > & Galaxy::GetSystems(void) const
 {
