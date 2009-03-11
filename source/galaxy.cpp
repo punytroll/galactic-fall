@@ -17,6 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include "faction.h"
 #include "galaxy.h"
 #include "object_aspect_object_container.h"
 #include "system.h"
@@ -32,9 +33,23 @@ Galaxy::Galaxy(void)
 	GetAspectObjectContainer()->SetOnRemovedCallback(Callback(this, &Galaxy::OnRemoved));
 }
 
-System * Galaxy::GetSystem(const std::string & SystemIdentifier)
+Faction * Galaxy::GetFaction(const std::string & Identifier)
 {
-	std::map< std::string, System * >::iterator System(m_Systems.find(SystemIdentifier));
+	std::map< std::string, Faction * >::iterator Faction(m_Factions.find(Identifier));
+	
+	if(Faction != m_Factions.end())
+	{
+		return Faction->second;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+System * Galaxy::GetSystem(const std::string & Identifier)
+{
+	std::map< std::string, System * >::iterator System(m_Systems.find(Identifier));
 	
 	if(System != m_Systems.end())
 	{
@@ -48,11 +63,13 @@ System * Galaxy::GetSystem(const std::string & SystemIdentifier)
 
 bool Galaxy::AllowAdding(Object * Content)
 {
-	System * TheSystem(dynamic_cast< System * >(Content));
-	
-	if(TheSystem != 0)
+	if(Content->GetTypeIdentifier() == "system")
 	{
-		return m_Systems.find(TheSystem->GetIdentifier()) == m_Systems.end();
+		return m_Systems.find(Content->GetClassIdentifier()) == m_Systems.end();
+	}
+	else if(Content->GetTypeIdentifier() == "faction")
+	{
+		return m_Factions.find(Content->GetClassIdentifier()) == m_Factions.end();
 	}
 	else
 	{
@@ -67,21 +84,36 @@ bool Galaxy::AllowRemoving(Object * Content)
 
 void Galaxy::OnAdded(Object * Content)
 {
-	System * TheSystem(dynamic_cast< System * >(Content));
-	
-	assert(TheSystem != 0);
-	assert(m_Systems.find(TheSystem->GetIdentifier()) == m_Systems.end());
-	m_Systems[TheSystem->GetIdentifier()] = TheSystem;
+	if(Content->GetTypeIdentifier() == "system")
+	{
+		assert(m_Systems.find(Content->GetClassIdentifier()) == m_Systems.end());
+		m_Systems[Content->GetClassIdentifier()] = dynamic_cast< System * >(Content);
+	}
+	else if(Content->GetTypeIdentifier() == "faction")
+	{
+		assert(m_Factions.find(Content->GetClassIdentifier()) == m_Factions.end());
+		m_Factions[Content->GetClassIdentifier()] = dynamic_cast< Faction * >(Content);
+	}
+	else
+	{
+		assert(false);
+	}
 }
 
 void Galaxy::OnRemoved(Object * Content)
 {
-	System * TheSystem(dynamic_cast< System * >(Content));
-	
-	assert(TheSystem != 0);
-	
-	std::map< std::string, System * >::iterator SystemIterator(m_Systems.find(TheSystem->GetIdentifier()));
-	
-	assert(SystemIterator != m_Systems.end());
-	m_Systems.erase(SystemIterator);
+	if(Content->GetTypeIdentifier() == "system")
+	{
+		std::map< std::string, System * >::iterator Iterator(m_Systems.find(Content->GetClassIdentifier()));
+		
+		assert(Iterator != m_Systems.end());
+		m_Systems.erase(Iterator);
+	}
+	else if(Content->GetTypeIdentifier() == "system")
+	{
+		std::map< std::string, Faction * >::iterator Iterator(m_Factions.find(Content->GetClassIdentifier()));
+		
+		assert(Iterator != m_Factions.end());
+		m_Factions.erase(Iterator);
+	}
 }

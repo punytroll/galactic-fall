@@ -32,6 +32,12 @@
 		<visualization identifier="visualization"/>
 	</commodity-class>
 	
+	<faction>
+		<string identifier="identifier"/>
+		<string identifier="name"/>
+		<color4f identifier="color"/>
+	</faction>
+	
 	<generator-class>
 		<string identifier="identifier"/>
 		<string identifier="name"/>

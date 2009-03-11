@@ -31,6 +31,8 @@ all_data = \
 	.data/commodity_class_luxury_goods.data \
 	.data/commodity_class_medical_supplies.data \
 	.data/commodity_class_metal.data \
+	.data/faction_earth.data \
+	.data/faction_pirates.data \
 	.data/generator_class_small_generator.data \
 	.data/label_credits.data \
 	.data/label_current_system.data \
@@ -176,6 +178,12 @@ data.arx: $(data_arx)
 	arxtouch $@ d
 	arxmod $@ d -n "Generator Classes" -t 0 -st 0
 	arxmod $@ 0 -a "child" d
+	arxtouch $@ e
+	arxmod $@ e -n "Factions" -t 0 -st 0
+	arxmod $@ 0 -a "child" e
+	@echo -e "\n\nAdding factions ...\n"
+	arxadd $@ --$(data_location) --name "Earth Faction" --type e --subtype 0 --add "/Factions" .data/faction_earth.data
+	arxadd $@ --$(data_location) --name "Pirates Faction" --type e --subtype 0 --add "/Factions" .data/faction_pirates.data
 	@echo -e "\n\nAdding widgets ...\n"
 	@echo -e "\nThe widgets will be read in uid order, so assign proper uids so that superior widgets are read before sub widgets.\n"
 	arxadd $@ --$(data_location) --uid 103 --name "Credits" --type 1 --subtype 1 --add "/User Interface" .data/label_credits.data

@@ -26,6 +26,7 @@
 #include "command_mind.h"
 #include "commodity.h"
 #include "commodity_class.h"
+#include "faction.h"
 #include "game_time.h"
 #include "generator.h"
 #include "generator_class.h"
@@ -92,6 +93,10 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		// set up visualization aspect
 		assert(Result->GetAspectVisualization() != 0);
 		Result->GetAspectVisualization()->SetVisualizationPrototype(new VisualizationPrototype(CommodityClass->GetVisualizationPrototype()));
+	}
+	else if(TypeIdentifier == "faction")
+	{
+		Result = new Faction(ClassIdentifier);
 	}
 	else if(TypeIdentifier == "generator")
 	{

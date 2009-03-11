@@ -17,39 +17,41 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef ARX_READING_H
-#define ARX_READING_H
+#ifndef FACTION_H
+#define FACTION_H
 
-namespace Arxx
-{
-	class Archive;
-}
+#include <string>
 
-class LocalFileDataChannel;
+#include "object.h"
 
-class ResourceReader
+class Color;
+
+class Faction : public Object
 {
 public:
-	ResourceReader(const std::string & DataDirectoryPath);
-	~ResourceReader(void);
-	bool LoadArchive(const std::string & Path);
-	void ReadAssetClasses(void);
-	void ReadBatteryClasses(void);
-	void ReadCommodityClasses(void);
-	void ReadFactions(void);
-	void ReadGeneratorClasses(void);
-	void ReadMeshes(void);
-	void ReadModels(void);
-	void ReadShipClasses(void);
-	void ReadSlotClasses(void);
-	void ReadSystems(void);
-	void ReadSystemLinks(void);
-	void ReadTextures(void);
-	void ReadUserInterface(void);
-	void ReadWeaponClasses(void);
+	Faction(const std::string & Identifier);
+	~Faction(void);
+	// getters
+	Color * GetColor(void);
+	const std::string & GetIdentifier(void) const;
+	// setters
+	/**
+	 * @note This function passes memory management responsibility for the @a Color object to this faction object.
+	 **/
+	void SetColor(Color * Color);
 private:
-	LocalFileDataChannel * m_LocalFileDataChannel;
-	Arxx::Archive * m_Archive;
+	Color * m_Color;
+	std::string m_Identifier;
 };
+
+inline Color * Faction::GetColor(void)
+{
+	return m_Color;
+}
+
+inline const std::string & Faction::GetIdentifier(void) const
+{
+	return m_Identifier;
+}
 
 #endif
