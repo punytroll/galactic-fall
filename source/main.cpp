@@ -764,30 +764,45 @@ void CalculateMovements(System * System, float Seconds)
 							if(TheShip->GetAspectObjectContainer() != 0)
 							{
 								const std::set< Object * > & ShipContent(TheShip->GetAspectObjectContainer()->GetContent());
-								std::set< Object * >::const_iterator ContentIterator(ShipContent.begin());
+								std::set< Object * >::const_iterator ShipContentIterator(ShipContent.begin());
 								
-								while(ContentIterator != ShipContent.end())
+								while(ShipContentIterator != ShipContent.end())
 								{
-									Commodity * TheCommodity(dynamic_cast< Commodity * >(*ContentIterator));
-									
-									++ContentIterator;
-									if(TheCommodity != 0)
+									if((*ShipContentIterator)->GetTypeIdentifier() == "storage")
 									{
-										TheShip->GetAspectObjectContainer()->RemoveContent(TheCommodity);
-										TheCommodity->GetAspectPosition()->SetPosition(TheShip->GetAspectPosition()->GetPosition());
+										Object * TheStorage(*ShipContentIterator);
+										const std::set< Object * > & StorageContent(TheStorage->GetAspectObjectContainer()->GetContent());
+										std::set< Object * >::const_iterator StorageContentIterator(StorageContent.begin());
 										
-										Vector2f Velocity(GetRandomFloat(0.0f, 1.2f), GetRandomFloat(0.0f, 2 * M_PI), Vector2f::InitializeMagnitudeAngle);
-										
-										TheCommodity->SetVelocity(Vector3f(TheShip->GetVelocity()[0] * 0.8f + Velocity[0], TheShip->GetVelocity()[1] * 0.8 + Velocity[1], 0.0f));
-										
-										Vector3f RotationAxis(GetRandomFloat(-1.0f, 1.0f), GetRandomFloat(-1.0f, 1.0f), GetRandomFloat(-1.0f, 1.0f));
-										
-										RotationAxis.Normalize();
-										TheCommodity->SetAngularVelocity(AxisAngle(RotationAxis[0], RotationAxis[1], RotationAxis[2], GetRandomFloat(0.0f, 0.7f)));
-										TheShip->GetContainer()->GetAspectObjectContainer()->AddContent(TheCommodity);
-										// add visualization of the commodity
-										VisualizeCommodity(TheCommodity, g_CommodityLayer);
+										while(StorageContentIterator != StorageContent.end())
+										{
+											if((*StorageContentIterator)->GetTypeIdentifier() == "commodity")
+											{
+												Commodity * TheCommodity(dynamic_cast< Commodity * >(*StorageContentIterator));
+												
+												++StorageContentIterator;
+												TheStorage->GetAspectObjectContainer()->RemoveContent(TheCommodity);
+												TheCommodity->GetAspectPosition()->SetPosition(TheShip->GetAspectPosition()->GetPosition());
+												
+												Vector2f Velocity(GetRandomFloat(0.0f, 1.2f), GetRandomFloat(0.0f, 2 * M_PI), Vector2f::InitializeMagnitudeAngle);
+												
+												TheCommodity->SetVelocity(Vector3f(TheShip->GetVelocity()[0] * 0.8f + Velocity[0], TheShip->GetVelocity()[1] * 0.8 + Velocity[1], 0.0f));
+												
+												Vector3f RotationAxis(GetRandomFloat(-1.0f, 1.0f), GetRandomFloat(-1.0f, 1.0f), GetRandomFloat(-1.0f, 1.0f));
+												
+												RotationAxis.Normalize();
+												TheCommodity->SetAngularVelocity(AxisAngle(RotationAxis[0], RotationAxis[1], RotationAxis[2], GetRandomFloat(0.0f, 0.7f)));
+												TheShip->GetContainer()->GetAspectObjectContainer()->AddContent(TheCommodity);
+												// add visualization of the commodity
+												VisualizeCommodity(TheCommodity, g_CommodityLayer);
+											}
+											else
+											{
+												++StorageContentIterator;
+											}
+										}
 									}
+									++ShipContentIterator;
 								}
 							}
 							DeleteObject(TheShip);
