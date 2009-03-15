@@ -44,6 +44,25 @@
 					<shininess>80</shininess>
 				</material>
 			</visualization-part>
+			<visualization-part>
+				<part-identifier>faction</part-identifier>
+				<material>
+					<use-specular-color>true</use-specular-color>
+					<diffuse-color>
+						<red>0</red>
+						<green>0</green>
+						<blue>0</blue>
+						<alpha>1</alpha>
+					</diffuse-color>
+					<specular-color>
+						<red>0.5</red>
+						<green>0.5</green>
+						<blue>0.5</blue>
+						<alpha>1</alpha>
+					</specular-color>
+					<shininess>80</shininess>
+				</material>
+			</visualization-part>
 		</visualization-parts>
 	</visualization>
 	<forward-thrust>23</forward-thrust>
