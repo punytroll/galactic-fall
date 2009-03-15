@@ -45,6 +45,7 @@ all_data = \
 	.data/label_time_warp.data \
 	.data/mesh_cargo_cube.data \
 	.data/mesh_fighter_cockpit.data \
+	.data/mesh_fighter_faction.data \
 	.data/mesh_fighter_hull.data \
 	.data/mesh_laser_shot.data \
 	.data/mesh_light_laser.data \
@@ -256,6 +257,7 @@ data.arx: $(data_arx)
 	@echo -e "\n\nAdding meshes ...\n"
 	arxadd $@ --$(data_location) --name "Cargo Cube" --type 2 --subtype 0 --add "/Meshes" .data/mesh_cargo_cube.data
 	arxadd $@ --$(data_location) --name "Fighter Cockpit" --type 2 --subtype 0 --add "/Meshes" .data/mesh_fighter_cockpit.data
+	arxadd $@ --$(data_location) --name "Fighter Faction" --type 2 --subtype 0 --add "/Meshes" .data/mesh_fighter_faction.data
 	arxadd $@ --$(data_location) --name "Fighter Hull" --type 2 --subtype 0 --add "/Meshes" .data/mesh_fighter_hull.data
 	arxadd $@ --$(data_location) --name "Laser Shot" --type 2 --subtype 0 --add "/Meshes" .data/mesh_laser_shot.data
 	arxadd $@ --$(data_location) --name "Light Laser" --type 2 --subtype 0 --add "/Meshes" .data/mesh_light_laser.data

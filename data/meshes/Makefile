@@ -34,6 +34,9 @@ clean-recursive: clean-here
 fighter_cockpit.xml: fighter_cockpit.raw Makefile $(raw_to_littlem_dependencies)
 	$(command_raw_to_littlem) --in=$< --out=$@ --identifier=fighter_cockpit --smooth
 
+fighter_faction.xml: fighter_faction.raw Makefile $(raw_to_littlem_dependencies)
+	$(command_raw_to_littlem) --in=$< --out=$@ --identifier=fighter_faction --smooth
+
 fighter_hull.xml: fighter_hull.raw Makefile $(raw_to_littlem_dependencies)
 	$(command_raw_to_littlem) --in=$< --out=$@ --identifier=fighter_hull --smooth
 

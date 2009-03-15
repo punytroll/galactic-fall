@@ -9,5 +9,9 @@
 			<part-identifier>cockpit</part-identifier>
 			<mesh-identifier>fighter_cockpit</mesh-identifier>
 		</mesh-part>
+		<mesh-part>
+			<part-identifier>faction</part-identifier>
+			<mesh-identifier>fighter_faction</mesh-identifier>
+		</mesh-part>
 	</mesh-parts>
 </model>
