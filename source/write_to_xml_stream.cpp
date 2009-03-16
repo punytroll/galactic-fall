@@ -23,8 +23,11 @@
 
 #include "battery.h"
 #include "character.h"
+#include "color.h"
 #include "commodity.h"
+#include "faction.h"
 #include "generator.h"
+#include "graphics_material.h"
 #include "map_knowledge.h"
 #include "mind.h"
 #include "object.h"
@@ -33,10 +36,12 @@
 #include "object_aspect_object_container.h"
 #include "object_aspect_physical.h"
 #include "object_aspect_position.h"
+#include "object_aspect_visualization.h"
 #include "ship.h"
 #include "slot.h"
 #include "storage.h"
 #include "system.h"
+#include "visualization_prototype.h"
 #include "weapon.h"
 #include "write_to_xml_stream.h"
 #include "xml_stream.h"
@@ -131,6 +136,28 @@ void WriteToXMLStream(XMLStream & XMLStream, Object * TheObject)
 		XMLStream << element << "aspect-position";
 		XMLStream << element << "orientation" << attribute << "w" << value << TheObject->GetAspectPosition()->GetOrientation()[0] << attribute << "x" << value << TheObject->GetAspectPosition()->GetOrientation()[1] << attribute << "y" << value << TheObject->GetAspectPosition()->GetOrientation()[2] << attribute << "z" << value << TheObject->GetAspectPosition()->GetOrientation()[3] << end;
 		XMLStream << element << "position" << attribute << "x" << value << TheObject->GetAspectPosition()->GetPosition().m_V.m_A[0] << attribute << "y" << value << TheObject->GetAspectPosition()->GetPosition().m_V.m_A[1] << attribute << "z" << value << TheObject->GetAspectPosition()->GetPosition().m_V.m_A[2] << end;
+		XMLStream << end;
+	}
+	if(TheObject->GetAspectVisualization() != 0)
+	{
+		XMLStream << element << "aspect-visualization";
+		
+		const std::map< std::string, Graphics::Material * > & PartMaterials(TheObject->GetAspectVisualization()->GetVisualizationPrototype()->GetPartMaterials());
+		
+		for(std::map< std::string, Graphics::Material * >::const_iterator PartMaterialIterator = PartMaterials.begin(); PartMaterialIterator != PartMaterials.end(); ++PartMaterialIterator)
+		{
+			XMLStream << element << "part" << attribute << "identifier" << value << PartMaterialIterator->first;
+			if(PartMaterialIterator->second->GetDiffuseColor() != 0)
+			{
+				XMLStream << element << "material-diffuse-color" << attribute << "red" << value << PartMaterialIterator->second->GetDiffuseColor()->GetColor()[0] << attribute << "green" << value << PartMaterialIterator->second->GetDiffuseColor()->GetColor()[1] << attribute << "blue" << value << PartMaterialIterator->second->GetDiffuseColor()->GetColor()[2] << attribute << "alpha" << value << PartMaterialIterator->second->GetDiffuseColor()->GetColor()[3] << end;
+			}
+			if(PartMaterialIterator->second->GetSpecularColor() != 0)
+			{
+				XMLStream << element << "material-specular-color" << attribute << "red" << value << PartMaterialIterator->second->GetSpecularColor()->GetColor()[0] << attribute << "green" << value << PartMaterialIterator->second->GetSpecularColor()->GetColor()[1] << attribute << "blue" << value << PartMaterialIterator->second->GetSpecularColor()->GetColor()[2] << attribute << "alpha" << value << PartMaterialIterator->second->GetSpecularColor()->GetColor()[3] << end;
+			}
+			XMLStream << element << "material-shininess" << attribute << "value" << value << PartMaterialIterator->second->GetShininess() << end;
+			XMLStream << end;
+		}
 		XMLStream << end;
 	}
 	XMLStream << element << "type-specific";
@@ -233,6 +260,8 @@ static void WriteShipToXMLStream(XMLStream & XMLStream, Ship * TheShip)
 	XMLStream << element << "maximum-speed" << attribute << "value" << value << TheShip->GetMaximumSpeed() << end;
 	XMLStream << element << "maximum-turn-speed" << attribute << "value" << value << TheShip->GetMaximumTurnSpeed() << end;
 	// save current values
+	assert(TheShip->GetFaction().IsValid() == true);
+	XMLStream << element << "faction" << attribute << "identifier" << value << TheShip->GetFaction()->GetClassIdentifier() << end;
 	XMLStream << element << "fuel" << attribute << "value" << value << TheShip->GetFuel() << end;
 	XMLStream << element << "hull" << attribute << "value" << value << TheShip->GetHull() << end;
 	XMLStream << element << "velocity" << attribute << "x" << value << TheShip->GetVelocity()[0] << attribute << "y" << value << TheShip->GetVelocity()[1] << attribute << "z" << value << TheShip->GetVelocity()[2] << end;

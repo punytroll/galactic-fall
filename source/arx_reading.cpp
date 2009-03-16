@@ -882,7 +882,7 @@ static void ReadVisualizationPrototype(Arxx::BufferReader & Reader, Visualizatio
 			PartMaterial->SetSpecularColor(PartSpecularColor);
 		}
 		PartMaterial->SetShininess(PartShininess);
-		VisualizationPrototype->AddPartMaterial(PartIdentifier, PartMaterial);
+		VisualizationPrototype->SetPartMaterial(PartIdentifier, PartMaterial);
 	}
 }
 

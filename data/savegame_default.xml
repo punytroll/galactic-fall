@@ -13,9 +13,9 @@
 			<name value="Stargazer Alpha 1-0"/>
 		</aspect-name>
 		<aspect-object-container>
-			<content object-identifier="::character::player_character"/>
-			<content object-identifier="::storage(::ship(shuttle)::player_ship)"/>
 			<content object-identifier="::battery(::ship(shuttle)::player_ship)"/>
+			<content object-identifier="::storage(::ship(shuttle)::player_ship)"/>
+			<content object-identifier="::character::player_character"/>
 		</aspect-object-container>
 		<aspect-physical>
 			<radial-size value="4.63479"/>
@@ -25,6 +25,17 @@
 			<orientation w="1" x="0" y="0" z="0"/>
 			<position x="0" y="0" z="0"/>
 		</aspect-position>
+		<aspect-visualization>
+			<part identifier="faction">
+				<material-diffuse-color red="0" green="0" blue="1" alpha="1"/>
+				<material-shininess value="0"/>
+			</part>
+			<part identifier="hull">
+				<material-diffuse-color red="0.5" green="0.55" blue="0.58" alpha="1"/>
+				<material-specular-color red="0.45" green="0.45" blue="0.45" alpha="1"/>
+				<material-shininess value="40"/>
+			</part>
+		</aspect-visualization>
 		<type-specific>
 			<exhaust-offset x="-3" y="0" z="0"/>
 			<fuel-capacity value="1"/>
@@ -33,6 +44,7 @@
 			<maximum-forward-thrust value="10"/>
 			<maximum-speed value="12"/>
 			<maximum-turn-speed value="1"/>
+			<faction identifier="earth"/>
 			<fuel value="1"/>
 			<hull value="100"/>
 			<velocity x="0" y="0" z="0"/>

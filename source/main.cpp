@@ -45,6 +45,7 @@
 #include "commodity_class.h"
 #include "destroy_listener.h"
 #include "draw_text.h"
+#include "faction.h"
 #include "galaxy.h"
 #include "game_time.h"
 #include "generator.h"
@@ -1119,18 +1120,23 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 	
 	NewShip->SetObjectIdentifier("::ship(" + NewShip->GetClassIdentifier() + ")" + IdentifierSuffix);
 	
+	Faction * Faction(0);
+	
+	if(GetRandomUniform() < 0.2f)
+	{
+		Faction = g_Galaxy->GetFactions().find("pirates")->second;
+	}
+	else
+	{
+		Faction = g_Galaxy->GetFactions().find("earth")->second;
+	}
+	NewShip->SetFaction(Faction->GetReference());
+	
 	std::map< std::string, Graphics::Material * > & PartMaterials(NewShip->GetAspectVisualization()->GetVisualizationPrototype()->GetPartMaterials());
 	
 	if(PartMaterials.find("faction") != PartMaterials.end())
 	{
-		if(GetRandomBoolean() == true)
-		{
-			PartMaterials["faction"]->SetDiffuseColor(Color(1.0f, 0.0f, 0.0f, 1.0f));
-		}
-		else
-		{
-			PartMaterials["faction"]->SetDiffuseColor(Color(0.0f, 0.0f, 1.0f, 1.0f));
-		}
+		PartMaterials["faction"]->SetDiffuseColor(Color(Faction->GetColor()));
 	}
 	NewShip->GetAspectPosition()->SetPosition(Vector3f(GetRandomFloat(-200.0f, 200.0f), GetRandomFloat(-200.0f, 200.0f), 0.0f));
 	NewShip->GetAspectPosition()->SetOrientation(Quaternion(GetRandomFloat(0.0f, 2.0f * M_PI), Quaternion::InitializeRotationZ));
@@ -1755,6 +1761,55 @@ void LoadGameFromElement(const Element * SaveElement)
 						}
 					}
 				}
+				else if((*ObjectChild)->GetName() == "aspect-visualization")
+				{
+					// assert that the object supports the visualization aspect
+					assert(NewObject->GetAspectVisualization() != 0);
+					// read data related to the visualization aspect
+					for(std::vector< Element * >::const_iterator AspectChild = (*ObjectChild)->GetChilds().begin(); AspectChild != (*ObjectChild)->GetChilds().end(); ++AspectChild)
+					{
+						if((*AspectChild)->GetName() == "part")
+						{
+							assert((*AspectChild)->HasAttribute("identifier") == true);
+							
+							Graphics::Material * NewPartMaterial(new Graphics::Material());
+							
+							for(std::vector< Element * >::const_iterator PartChild = (*AspectChild)->GetChilds().begin(); PartChild != (*AspectChild)->GetChilds().end(); ++PartChild)
+							{
+								if((*PartChild)->GetName() == "material-diffuse-color")
+								{
+									assert((*PartChild)->HasAttribute("red") == true);
+									assert((*PartChild)->HasAttribute("green") == true);
+									assert((*PartChild)->HasAttribute("blue") == true);
+									assert((*PartChild)->HasAttribute("alpha") == true);
+									NewPartMaterial->SetDiffuseColor(new Color(from_string_cast< float >((*PartChild)->GetAttribute("red")), from_string_cast< float >((*PartChild)->GetAttribute("green")), from_string_cast< float >((*PartChild)->GetAttribute("blue")), from_string_cast< float >((*PartChild)->GetAttribute("alpha"))));
+								}
+								else if((*PartChild)->GetName() == "material-specular-color")
+								{
+									assert((*PartChild)->HasAttribute("red") == true);
+									assert((*PartChild)->HasAttribute("green") == true);
+									assert((*PartChild)->HasAttribute("blue") == true);
+									assert((*PartChild)->HasAttribute("alpha") == true);
+									NewPartMaterial->SetSpecularColor(new Color(from_string_cast< float >((*PartChild)->GetAttribute("red")), from_string_cast< float >((*PartChild)->GetAttribute("green")), from_string_cast< float >((*PartChild)->GetAttribute("blue")), from_string_cast< float >((*PartChild)->GetAttribute("alpha"))));
+								}
+								else if((*PartChild)->GetName() == "material-shininess")
+								{
+									assert((*PartChild)->HasAttribute("value") == true);
+									NewPartMaterial->SetShininess(from_string_cast< float >((*PartChild)->GetAttribute("value")));
+								}
+								else
+								{
+									throw std::runtime_error("The \"" + (*ObjectChild)->GetName() + "\" element for the object \"" + (*SaveChild)->GetAttribute("object-identifier") + "\" contains an unknown element \"" + (*PartChild)->GetName() + "\".");
+								}
+							}
+							NewObject->GetAspectVisualization()->GetVisualizationPrototype()->SetPartMaterial((*AspectChild)->GetAttribute("identifier"), NewPartMaterial);
+						}
+						else
+						{
+							throw std::runtime_error("The \"" + (*ObjectChild)->GetName() + "\" element for the object \"" + (*SaveChild)->GetAttribute("object-identifier") + "\" contains an unknown element \"" + (*AspectChild)->GetName() + "\".");
+						}
+					}
+				}
 				else if((*ObjectChild)->GetName() == "type-specific")
 				{
 					if((*SaveChild)->GetAttribute("type-identifier") == "battery")
@@ -1900,6 +1955,11 @@ void LoadGameFromElement(const Element * SaveElement)
 								assert((*TypeSpecificChild)->HasAttribute("y") == true);
 								assert((*TypeSpecificChild)->HasAttribute("z") == true);
 								NewShip->SetExhaustOffset(Vector3f(from_string_cast< float >((*TypeSpecificChild)->GetAttribute("x")), from_string_cast< float >((*TypeSpecificChild)->GetAttribute("y")), from_string_cast< float >((*TypeSpecificChild)->GetAttribute("z"))));
+							}
+							else if((*TypeSpecificChild)->GetName() == "faction")
+							{
+								assert((*TypeSpecificChild)->HasAttribute("identifier") == true);
+								NewShip->SetFaction(g_Galaxy->GetFaction((*TypeSpecificChild)->GetAttribute("identifier"))->GetReference());
 							}
 							else if((*TypeSpecificChild)->GetName() == "fuel")
 							{

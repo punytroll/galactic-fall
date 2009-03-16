@@ -42,11 +42,10 @@ public:
 	const std::map< std::string, Graphics::Material * > & GetPartMaterials(void) const;
 	// setters
 	void SetModel(const Graphics::Model * Model);
-	// modifiers
 	/**
 	 * @note Passes memory management responsibility for @a PartMaterial to the visualization prototype.
 	 **/
-	bool AddPartMaterial(const std::string & Identifier, Graphics::Material * PartMaterial);
+	void SetPartMaterial(const std::string & Identifier, Graphics::Material * PartMaterial);
 private:
 	const Graphics::Model * m_Model;
 	std::map< std::string, Graphics::Material * > m_PartMaterials;
