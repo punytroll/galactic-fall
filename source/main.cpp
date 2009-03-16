@@ -1099,13 +1099,19 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 {
 	if(ShipClassIdentifier == "")
 	{
-		if(GetRandomUniform() > 0.5f)
+		double RandomUniform(GetRandomUniform());
+		
+		if(RandomUniform < 0.2f)
 		{
-			ShipClassIdentifier = "fighter";
+			ShipClassIdentifier = "shuttle";
+		}
+		else if(RandomUniform < 0.5f)
+		{
+			ShipClassIdentifier = "transporter";
 		}
 		else
 		{
-			ShipClassIdentifier = "transporter";
+			ShipClassIdentifier = "fighter";
 		}
 	}
 	
@@ -1161,7 +1167,7 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 		NewShip->GetAspectObjectContainer()->AddContent(NewWeapon);
 		NewShip->GetAspectOutfitting()->GetSlot("front_gun")->Mount(NewWeapon->GetReference());
 	}
-	else if(ShipClassIdentifier == "transporter")
+	else if((ShipClassIdentifier == "transporter") || (ShipClassIdentifier == "shuttle"))
 	{
 		NewCharacter->SetCredits(GetRandomU4Byte(500, 2500));
 		for(int NumberOfAssetClasses = GetRandomIntegerFromExponentialDistribution(2); NumberOfAssetClasses > 0; --NumberOfAssetClasses)
@@ -1196,7 +1202,7 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 	}
 	NewShip->SetFuel(GetRandomFloat(0.1f * NewShip->GetFuelCapacity(), 0.8f * NewShip->GetFuelCapacity()));
 	NewCharacter->SetShip(NewShip);
-	if(ShipClassIdentifier == "transporter")
+	if((ShipClassIdentifier == "transporter") || (ShipClassIdentifier == "shuttle"))
 	{
 		StateMachineMind * NewMind(new StateMachineMind());
 		

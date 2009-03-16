@@ -25,6 +25,7 @@ clean-here:
 	$(RM) laser_shot.xml
 	$(RM) light_laser.xml
 	$(RM) planet.xml
+	$(RM) shuttle_faction.xml
 	$(RM) shuttle_hull.xml
 	$(RM) transporter_faction.xml
 	$(RM) transporter_hull.xml
@@ -48,6 +49,9 @@ light_laser.xml: light_laser.raw Makefile $(raw_to_littlem_dependencies)
 
 planet.xml: planet.raw Makefile $(raw_to_littlem_dependencies)
 	$(command_raw_to_littlem) --in=$< --out=$@ --identifier=planet --smooth
+
+shuttle_faction.xml: shuttle_faction.raw Makefile $(raw_to_littlem_dependencies)
+	$(command_raw_to_littlem) --in=$< --out=$@ --identifier=shuttle_faction --smooth
 
 shuttle_hull.xml: shuttle_hull.raw Makefile $(raw_to_littlem_dependencies)
 	$(command_raw_to_littlem) --in=$< --out=$@ --identifier=shuttle_hull --smooth

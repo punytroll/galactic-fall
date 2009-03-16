@@ -89,7 +89,7 @@ void SelectSteering::Enter(void)
 
 void SelectSteering::Execute(void)
 {
-	if(GetMind()->GetCharacter()->GetShip()->GetClassIdentifier() == "transporter")
+	if((GetMind()->GetCharacter()->GetShip()->GetClassIdentifier() == "transporter") || (GetMind()->GetCharacter()->GetShip()->GetClassIdentifier() == "shuttle"))
 	{
 		GetMind()->GetStateMachine()->SetState(new TransporterPhase1(GetMind()));
 	}
