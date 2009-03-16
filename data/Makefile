@@ -50,6 +50,7 @@ all_data = \
 	.data/mesh_laser_shot.data \
 	.data/mesh_light_laser.data \
 	.data/mesh_planet.data \
+	.data/mesh_shuttle_faction.data \
 	.data/mesh_shuttle_hull.data \
 	.data/mesh_transporter_faction.data \
 	.data/mesh_transporter_hull.data \
@@ -262,6 +263,7 @@ data.arx: $(data_arx)
 	arxadd $@ --$(data_location) --name "Laser Shot" --type 2 --subtype 0 --add "/Meshes" .data/mesh_laser_shot.data
 	arxadd $@ --$(data_location) --name "Light Laser" --type 2 --subtype 0 --add "/Meshes" .data/mesh_light_laser.data
 	arxadd $@ --$(data_location) --name "Planet" --type 2 --subtype 0 --add "/Meshes" .data/mesh_planet.data
+	arxadd $@ --$(data_location) --name "Shuttle Faction" --type 2 --subtype 0 --add "/Meshes" .data/mesh_shuttle_faction.data
 	arxadd $@ --$(data_location) --name "Shuttle Hull" --type 2 --subtype 0 --add "/Meshes" .data/mesh_shuttle_hull.data
 	arxadd $@ --$(data_location) --name "Transporter Faction" --type 2 --subtype 0 --add "/Meshes" .data/mesh_transporter_faction.data
 	arxadd $@ --$(data_location) --name "Transporter Hull" --type 2 --subtype 0 --add "/Meshes" .data/mesh_transporter_hull.data
