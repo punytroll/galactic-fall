@@ -44,16 +44,17 @@ VisualizationPrototype::~VisualizationPrototype(void)
 	}
 }
 
-bool VisualizationPrototype::AddPartMaterial(const std::string & PartIdentifier, Graphics::Material * PartMaterial)
+void VisualizationPrototype::SetPartMaterial(const std::string & PartIdentifier, Graphics::Material * PartMaterial)
 {
-	if(m_PartMaterials.find(PartIdentifier) == m_PartMaterials.end())
+	std::map< std::string, Graphics::Material * >::iterator PartIterator(m_PartMaterials.find(PartIdentifier));
+	
+	if(PartIterator != m_PartMaterials.end())
 	{
-		m_PartMaterials[PartIdentifier] = PartMaterial;
-		
-		return true;
+		delete PartIterator->second;
+		PartIterator->second = PartMaterial;
 	}
 	else
 	{
-		return false;
+		m_PartMaterials[PartIdentifier] = PartMaterial;
 	}
 }

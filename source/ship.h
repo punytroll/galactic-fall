@@ -24,6 +24,7 @@
 #include "object.h"
 
 class Battery;
+class Faction;
 class Generator;
 class Slot;
 class SlotClass;
@@ -47,6 +48,7 @@ public:
 	Reference< Graphics::ParticleSystem > & GetEngineGlowParticleSystem(void);
 	const Vector3f & GetExhaustOffset(void) const;
 	float GetExhaustRadius(void) const;
+	Reference< Faction > GetFaction(void);
 	float GetFuel(void) const;
 	float GetFuelCapacity(void) const;
 	float GetFuelNeededToAccelerate(void) const;
@@ -68,6 +70,7 @@ public:
 	void SetEngineGlowParticleSystem(Reference< Graphics::ParticleSystem > & EngineGlowParticleSystem);
 	void SetExhaustOffset(const Vector3f & ExhaustOffset);
 	void SetExhaustRadius(float ExhaustRadius);
+	void SetFaction(Reference< Faction > Faction);
 	void SetFire(bool Fire);
 	void SetFuel(float Fuel);
 	void SetFuelCapacity(float FuelCapacity);
@@ -104,6 +107,7 @@ private:
 	Reference< Graphics::ParticleSystem > m_EngineGlowParticleSystem;
 	Vector3f m_ExhaustOffset;
 	float m_ExhaustRadius;
+	Reference< Faction > m_Faction;
 	float m_Fuel;
 	float m_FuelCapacity;
 	float m_FuelNeededToAccelerate;
@@ -151,6 +155,11 @@ inline const Vector3f & Ship::GetExhaustOffset(void) const
 inline float Ship::GetExhaustRadius(void) const
 {
 	return m_ExhaustRadius;
+}
+
+inline Reference< Faction > Ship::GetFaction(void)
+{
+	return m_Faction;
 }
 
 inline float Ship::GetFuel(void) const
@@ -251,6 +260,11 @@ inline void Ship::SetExhaustOffset(const Vector3f & ExhaustOffset)
 inline void Ship::SetExhaustRadius(float ExhaustRadius)
 {
 	m_ExhaustRadius = ExhaustRadius;
+}
+
+inline void Ship::SetFaction(Reference< Faction > Faction)
+{
+	m_Faction = Faction;
 }
 
 inline void Ship::SetFuelCapacity(float FuelCapacity)

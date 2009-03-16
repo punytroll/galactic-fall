@@ -26,6 +26,17 @@
 			<orientation w="0.497571" x="0" y="0" z="-0.867423"/>
 			<position x="20" y="34" z="0"/>
 		</aspect-position>
+		<aspect-visualization>
+			<part identifier="faction">
+				<material-diffuse-color red="0" green="0" blue="1" alpha="1"/>
+				<material-shininess value="0"/>
+			</part>
+			<part identifier="hull">
+				<material-diffuse-color red="0.5" green="0.6" blue="0.50" alpha="1"/>
+				<material-specular-color red="0.45" green="0.45" blue="0.45" alpha="1"/>
+				<material-shininess value="40"/>
+			</part>
+		</aspect-visualization>
 		<type-specific>
 			<exhaust-offset x="-4.79" y="0" z="0"/>
 			<fuel-capacity value="4"/>
@@ -34,6 +45,7 @@
 			<maximum-forward-thrust value="4"/>
 			<maximum-speed value="8.5"/>
 			<maximum-turn-speed value="0.8"/>
+			<faction identifier="earth"/>
 			<fuel value="3.84"/>
 			<hull value="229.44"/>
 			<velocity x="0" y="0" z="0"/>
