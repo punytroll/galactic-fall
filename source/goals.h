@@ -164,10 +164,10 @@ public:
 	virtual void Process(void);
 };
 
-class GoalSelectFighter : public Goal
+class GoalSelectEnemy : public Goal
 {
 public:
-	GoalSelectFighter(GoalMind * GoalMind);
+	GoalSelectEnemy(GoalMind * GoalMind);
 	virtual void Activate(void);
 	virtual void Process(void);
 };

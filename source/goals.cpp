@@ -24,6 +24,7 @@
 #include "asset_class.h"
 #include "character.h"
 #include "commodity.h"
+#include "faction.h"
 #include "game_time.h"
 #include "globals.h"
 #include "goals.h"
@@ -684,7 +685,7 @@ GoalSelectFightableTarget::GoalSelectFightableTarget(GoalMind * GoalMind) :
 void GoalSelectFightableTarget::Activate(void)
 {
 	assert(GetSubGoals().empty() == true);
-	AddSubGoal(new GoalSelectFighter(GetMind()));
+	AddSubGoal(new GoalSelectEnemy(GetMind()));
 	AddSubGoal(new GoalSelectStrandedShip(GetMind()));
 	AddSubGoal(new GoalSelectMeasuredCargo(GetMind()));
 	SetState(Goal::ACTIVE);
@@ -733,21 +734,21 @@ void GoalSelectFightableTarget::Process(void)
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-// GoalSelectFighter                                                                             //
+// GoalSelectEnemy                                                                               //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-GoalSelectFighter::GoalSelectFighter(GoalMind * GoalMind) :
-	Goal(GoalMind, "select_fighter")
+GoalSelectEnemy::GoalSelectEnemy(GoalMind * GoalMind) :
+	Goal(GoalMind, "select_enemy")
 {
-	SetObjectIdentifier("::goal(select_fighter)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
+	SetObjectIdentifier("::goal(select_enemy)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
 }
 
-void GoalSelectFighter::Activate(void)
+void GoalSelectEnemy::Activate(void)
 {
 	assert(GetSubGoals().empty() == true);
 	SetState(Goal::ACTIVE);
 }
 
-void GoalSelectFighter::Process(void)
+void GoalSelectEnemy::Process(void)
 {
 	assert(GetState() == Goal::ACTIVE);
 	
@@ -760,7 +761,7 @@ void GoalSelectFighter::Process(void)
 	
 	for(std::list< Ship * >::const_iterator ShipIterator = Ships.begin(); ShipIterator != Ships.end(); ++ShipIterator)
 	{
-		if((*ShipIterator != GetMind()->GetCharacter()->GetShip()) && ((*ShipIterator)->GetClassIdentifier() == "fighter"))
+		if((*ShipIterator != GetMind()->GetCharacter()->GetShip()) && ((*ShipIterator)->GetFaction()->GetClassIdentifier() != GetMind()->GetCharacter()->GetShip()->GetFaction()->GetClassIdentifier()))
 		{
 			AttackPossibilities.push_back(*ShipIterator);
 		}
