@@ -662,7 +662,7 @@ generator_class.o: generator_class.cpp $(generator_class_h)
 goal.o: goal.cpp $(goal_h) $(object_aspect_object_container_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-goals.o: goals.cpp $(asset_class_h) $(character_h) $(commodity_h) $(game_time_h) $(globals_h) $(goals_h) $(math_h) $(message_h) $(messages_h) $(mind_h) $(object_aspect_position_h) $(planet_h) $(ship_h) $(string_cast_h) $(system_h) $(threat_h)
+goals.o: goals.cpp $(asset_class_h) $(character_h) $(commodity_h) $(faction_h) $(game_time_h) $(globals_h) $(goals_h) $(math_h) $(message_h) $(messages_h) $(mind_h) $(object_aspect_position_h) $(planet_h) $(ship_h) $(string_cast_h) $(system_h) $(threat_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 graphics_engine.o: graphics_engine.cpp $(graphics_engine_h) $(graphics_scene_h)

@@ -42,6 +42,7 @@ all_data = \
 	.data/label_message.data \
 	.data/label_system.data \
 	.data/label_target.data \
+	.data/label_target_faction.data \
 	.data/label_time_warp.data \
 	.data/mesh_cargo_cube.data \
 	.data/mesh_fighter_cockpit.data \
@@ -201,6 +202,7 @@ data.arx: $(data_arx)
 	arxadd $@ --$(data_location) --uid 109 --name "Mini Map Display" --type 1 --subtype 2 --add "/User Interface" .data/widget_mini_map_display.data
 	arxadd $@ --$(data_location) --uid 105 --name "Scanner" --type 1 --subtype 0 --add "/User Interface" .data/widget_scanner.data
 	arxadd $@ --$(data_location) --uid 126 --name "Scanner Display" --type 1 --subtype 3 --add "/User Interface" .data/widget_scanner_display.data
+	arxadd $@ --$(data_location) --uid 10B --name "Target Faction" --type 1 --subtype 1 --add "/User Interface" .data/label_target_faction.data
 	@echo -e "\n\nAdding slot classes ...\n"
 	arxadd $@ --$(data_location) --name "Light Battery" --type 9 --subtype 0 --add "/Slot Classes" .data/slot_class_light_battery.data
 	arxadd $@ --$(data_location) --name "Light Weapon" --type 9 --subtype 0 --add "/Slot Classes" .data/slot_class_light_weapon.data

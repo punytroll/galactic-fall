@@ -156,6 +156,7 @@ Widget * g_Scanner(0);
 ScannerDisplay * g_ScannerDisplay(0);
 Label * g_SystemLabel(0);
 Label * g_TargetLabel(0);
+Label * g_TargetFactionLabel(0);
 Label * g_TimeWarpLabel(0);
 
 // global dialog pointers
@@ -406,6 +407,10 @@ void CollectWidgets(void)
 		{
 			g_TargetLabel = 0;
 		}
+		else if(DestroyedWidget == g_TargetFactionLabel)
+		{
+			g_TargetFactionLabel = 0;
+		}
 		else if(DestroyedWidget == g_TimeWarpLabel)
 		{
 			g_TimeWarpLabel = 0;
@@ -558,24 +563,24 @@ Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSyst
 		float CloudAngle(GetRandomFloat(0.0f, 2 * M_PI));
 		
 		// off-center explosion
-		for(int Index = 0; Index < 20; ++Index)
+		for(int Index = 0; Index < 40; ++Index)
 		{
 			Graphics::ParticleSystem::Particle Particle;
-			float Speed(GetRandomFloat(0.0f, 2.0f) + GetRandomFloatFromExponentialDistribution(1.0f));
+			float Speed(GetRandomFloat(0.0f, 3.0f) + GetRandomFloatFromExponentialDistribution(2.0f));
 			Vector2f Velocity(Speed, CloudAngle + GetRandomFloat(-0.1f, 0.1f), Vector2f::InitializeMagnitudeAngle);
 			float Distance(GetRandomFloat(0.0f, 1.0f) + GetRandomFloatFromExponentialDistribution(1.0f));
 			Vector2f Position(Distance, CloudAngle + GetRandomFloat(-0.3f, 0.3f), Vector2f::InitializeMagnitudeAngle);
 			
 			Particle.m_Velocity.Set(Velocity[0], Velocity[1], 0.0f);
 			Particle.m_Position.Set(Position[0], Position[1], 0.0f);
-			Particle.m_TimeOfDeath = GameTime::Get() + GetRandomDouble(1.0f, 2.5f);
-			Particle.m_Color.Set(GetRandomFloat(0.4f, 0.8f), GetRandomFloat(0.2f, 0.4f), GetRandomFloat(0.05f, 0.15f), 0.5f);
+			Particle.m_TimeOfDeath = GameTime::Get() + GetRandomDouble(1.0f, 2.0f);
+			Particle.m_Color.Set(GetRandomFloat(0.6f, 0.9f), GetRandomFloat(0.3f, 0.5f), GetRandomFloat(0.15f, 0.2f), 0.5f);
 			Particle.m_Size = 5.0f / abs(abs(Speed) - 3.0f);
 			ParticleSystem->AddParticle(Particle);
 		}
 		// exhalting explosion cloud
 		CloudAngle = GetRandomFloat(0.0f, 2 * M_PI);
-		for(int Index = 0; Index < 50; ++Index)
+		for(int Index = 0; Index < 40; ++Index)
 		{
 			Graphics::ParticleSystem::Particle Particle;
 			float Speed(GetRandomFloat(2.0f, 10.0f) + GetRandomFloatFromExponentialDistribution(2.0f));
@@ -583,8 +588,8 @@ Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSyst
 			
 			Particle.m_Velocity.Set(Velocity[0], Velocity[1], 0.0f);
 			Particle.m_Position.Set(0.0f, 0.0f, 0.0f);
-			Particle.m_TimeOfDeath = GameTime::Get() + GetRandomDouble(1.0f, 2.5f);
-			Particle.m_Color.Set(GetRandomFloat(0.4f, 0.8f), GetRandomFloat(0.2f, 0.4f), GetRandomFloat(0.05f, 0.15f), 0.5f);
+			Particle.m_TimeOfDeath = GameTime::Get() + GetRandomDouble(0.8f, 1.8f);
+			Particle.m_Color.Set(GetRandomFloat(0.6f, 0.8f), GetRandomFloat(0.3f, 0.4f), GetRandomFloat(0.3f, 0.3f), 0.5f);
 			Particle.m_Size = 3.0f / abs(abs(Speed) - 6.0f);
 			ParticleSystem->AddParticle(Particle);
 		}
@@ -879,36 +884,48 @@ void UpdateUserInterface(void)
 		g_CreditsLabel->SetVisible(true);
 		g_MiniMap->SetVisible(true);
 		g_Scanner->SetVisible(true);
+		
+		Ship * ObservedShip(g_CharacterObserver->GetObservedCharacter()->GetShip());
+		
 		// display the energy status
-		if(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetBattery() != 0)
+		if(ObservedShip->GetBattery() != 0)
 		{
 			Label * EnergyLabel(dynamic_cast< Label * >(g_UserInterface->GetWidget("/energy")));
 			
 			assert(EnergyLabel != 0);
 			EnergyLabel->SetVisible(true);
-			EnergyLabel->SetText("Energy: " + to_string_cast(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetBattery()->GetEnergy(), 2));
+			EnergyLabel->SetText("Energy: " + to_string_cast(ObservedShip->GetBattery()->GetEnergy(), 2));
 		}
 		else
 		{
 			g_UserInterface->GetWidget("/energy")->SetVisible(false);
 		}
 		// display the name of the target
-		if(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget().IsValid() == true)
+		if(ObservedShip->GetTarget().IsValid() == true)
 		{
-			g_TargetLabel->SetText(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget()->GetAspectName()->GetName());
+			g_TargetLabel->SetText(ObservedShip->GetTarget()->GetAspectName()->GetName());
+			if(ObservedShip->GetTarget()->GetTypeIdentifier() == "ship")
+			{
+				g_TargetFactionLabel->SetText(dynamic_cast< Ship * >(ObservedShip->GetTarget().Get())->GetFaction()->GetAspectName()->GetName());
+			}
+			else
+			{
+				g_TargetFactionLabel->SetText("");
+			}
 		}
 		else
 		{
 			g_TargetLabel->SetText("");
+			g_TargetFactionLabel->SetText("");
 		}
 		// display the name of the linked system
-		if(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetLinkedSystemTarget() != 0)
+		if(ObservedShip->GetLinkedSystemTarget() != 0)
 		{
 			const std::set< System * > UnexploredSystems(g_CharacterObserver->GetObservedCharacter()->GetMapKnowledge()->GetUnexploredSystems());
 			
-			if(UnexploredSystems.find(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetLinkedSystemTarget()) == UnexploredSystems.end())
+			if(UnexploredSystems.find(ObservedShip->GetLinkedSystemTarget()) == UnexploredSystems.end())
 			{
-				g_SystemLabel->SetText(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetLinkedSystemTarget()->GetAspectName()->GetName());
+				g_SystemLabel->SetText(ObservedShip->GetLinkedSystemTarget()->GetAspectName()->GetName());
 			}
 			else
 			{
@@ -920,15 +937,15 @@ void UpdateUserInterface(void)
 			g_SystemLabel->SetText("");
 		}
 		// display fuel
-		g_FuelLabel->SetText("Fuel: " + to_string_cast(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetFuel(), 2));
+		g_FuelLabel->SetText("Fuel: " + to_string_cast(ObservedShip->GetFuel(), 2));
 		// display hull
-		g_HullLabel->SetText("Hull: " + to_string_cast(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetHull(), 2));
+		g_HullLabel->SetText("Hull: " + to_string_cast(ObservedShip->GetHull(), 2));
 		// display credits in every cycle
 		g_CreditsLabel->SetText("Credits: " + to_string_cast(g_CharacterObserver->GetObservedCharacter()->GetCredits()));
 		// display the current system
-		g_CurrentSystemLabel->SetText(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetContainer()->GetAspectName()->GetName());
+		g_CurrentSystemLabel->SetText(ObservedShip->GetContainer()->GetAspectName()->GetName());
 		// set system label color according to jump status
-		if(WantToJump(g_CharacterObserver->GetObservedCharacter()->GetShip(), g_CharacterObserver->GetObservedCharacter()->GetShip()->GetLinkedSystemTarget()) == OK)
+		if(WantToJump(ObservedShip, ObservedShip->GetLinkedSystemTarget()) == OK)
 		{
 			g_SystemLabel->SetTextColor(Color(0.7f, 0.8f, 1.0f, 1.0f));
 		}
@@ -936,9 +953,9 @@ void UpdateUserInterface(void)
 		{
 			g_SystemLabel->SetTextColor(Color(0.4f, 0.4f, 0.4f, 1.0f));
 		}
-		g_ScannerDisplay->SetOwner(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetReference());
+		g_ScannerDisplay->SetOwner(ObservedShip->GetReference());
 		g_ScannerDisplay->Update();
-		g_MiniMapDisplay->SetOwner(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetReference());
+		g_MiniMapDisplay->SetOwner(ObservedShip->GetReference());
 	}
 	else
 	{
@@ -3455,6 +3472,7 @@ int main(int argc, char ** argv)
 		g_MiniMapDisplay = dynamic_cast< MiniMapDisplay * >(g_UserInterface->GetWidget("/mini_map/display"));
 	g_Scanner = g_UserInterface->GetWidget("/scanner");
 		g_TargetLabel = dynamic_cast< Label * >(g_UserInterface->GetWidget("/scanner/target"));
+		g_TargetFactionLabel = dynamic_cast< Label * >(g_UserInterface->GetWidget("/scanner/target_faction"));
 		g_ScannerDisplay = dynamic_cast< ScannerDisplay * >(g_UserInterface->GetWidget("/scanner/display"));
 	
 	// sanity asserts
