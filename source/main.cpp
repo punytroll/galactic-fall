@@ -908,6 +908,10 @@ void UpdateUserInterface(void)
 			{
 				g_TargetFactionLabel->SetText(dynamic_cast< Ship * >(ObservedShip->GetTarget().Get())->GetFaction()->GetAspectName()->GetName());
 			}
+			else if(ObservedShip->GetTarget()->GetTypeIdentifier() == "planet")
+			{
+				g_TargetFactionLabel->SetText(dynamic_cast< Planet * >(ObservedShip->GetTarget().Get())->GetFaction()->GetAspectName()->GetName());
+			}
 			else
 			{
 				g_TargetFactionLabel->SetText("");

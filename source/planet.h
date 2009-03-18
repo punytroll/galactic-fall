@@ -28,60 +28,24 @@
 
 class AssetClass;
 class Color;
+class Faction;
 class Ship;
 
 class PlanetAssetClass
 {
 public:
+	// constructor & destructor
 	PlanetAssetClass(const AssetClass * AssetClass);
 	virtual ~PlanetAssetClass(void);
+	// getters
 	const AssetClass * GetAssetClass(void) const;
-	unsigned_numeric GetPrice(void) const;
-	void SetBasePriceModifier(float BasePriceModifier);
 	float GetBasePriceModifier(void) const;
+	unsigned_numeric GetPrice(void) const;
+	// setters
+	void SetBasePriceModifier(float BasePriceModifier);
 private:
 	const AssetClass * m_AssetClass;
 	float m_BasePriceModifier;
-};
-
-inline void PlanetAssetClass::SetBasePriceModifier(float BasePriceModifier)
-{
-	m_BasePriceModifier = BasePriceModifier;
-}
-
-inline float PlanetAssetClass::GetBasePriceModifier(void) const
-{
-	return m_BasePriceModifier;
-}
-
-class Planet : public Object
-{
-public:
-	Planet(const std::string & Identifier);
-	~Planet(void);
-	// getters
-	const std::string & GetIdentifier(void) const;
-	const Color & GetColor(void) const;
-	const std::string & GetDescription(void) const;
-	float GetSize(void) const;
-	const std::vector< PlanetAssetClass * > & GetPlanetAssetClasses(void) const;
-	float GetLandingFeePerSpace(void) const;
-	// setters
-	void SetLandingFeePerSpace(float LandingFeePerSpace);
-	void SetDescription(const std::string & Description);
-	void SetSize(const float & Size);
-	void SetColor(const Color & Color);
-	// modifiers
-	PlanetAssetClass * CreatePlanetAssetClass(const AssetClass * AssetClass);
-	void Land(Ship * Ship);
-	void TakeOff(Ship * Ship);
-private:
-	std::string m_Identifier;
-	std::string m_Description;
-	float m_Size;
-	float m_LandingFeePerSpace;
-	Color * m_Color;
-	std::vector< PlanetAssetClass * > m_PlanetAssetClasses;
 };
 
 inline const AssetClass * PlanetAssetClass::GetAssetClass(void) const
@@ -89,10 +53,49 @@ inline const AssetClass * PlanetAssetClass::GetAssetClass(void) const
 	return m_AssetClass;
 }
 
-inline const std::string & Planet::GetIdentifier(void) const
+inline float PlanetAssetClass::GetBasePriceModifier(void) const
 {
-	return m_Identifier;
+	return m_BasePriceModifier;
 }
+
+inline void PlanetAssetClass::SetBasePriceModifier(float BasePriceModifier)
+{
+	m_BasePriceModifier = BasePriceModifier;
+}
+
+class Planet : public Object
+{
+public:
+	// constructor & destructor
+	Planet(const std::string & Identifier);
+	~Planet(void);
+	// getters
+	const Color & GetColor(void) const;
+	const std::string & GetDescription(void) const;
+	Reference< Faction > GetFaction(void) const;
+	const std::string & GetIdentifier(void) const;
+	float GetLandingFeePerSpace(void) const;
+	const std::vector< PlanetAssetClass * > & GetPlanetAssetClasses(void) const;
+	float GetSize(void) const;
+	// setters
+	void SetColor(const Color & Color);
+	void SetDescription(const std::string & Description);
+	void SetFaction(Reference< Faction > Faction);
+	void SetLandingFeePerSpace(float LandingFeePerSpace);
+	void SetSize(const float & Size);
+	// modifiers
+	PlanetAssetClass * CreatePlanetAssetClass(const AssetClass * AssetClass);
+	void Land(Ship * Ship);
+	void TakeOff(Ship * Ship);
+private:
+	Color * m_Color;
+	std::string m_Description;
+	Reference< Faction > m_Faction;
+	std::string m_Identifier;
+	float m_LandingFeePerSpace;
+	std::vector< PlanetAssetClass * > m_PlanetAssetClasses;
+	float m_Size;
+};
 
 inline const Color & Planet::GetColor(void) const
 {
@@ -104,9 +107,19 @@ inline const std::string & Planet::GetDescription(void) const
 	return m_Description;
 }
 
-inline float Planet::GetSize(void) const
+inline Reference< Faction > Planet::GetFaction(void) const
 {
-	return m_Size;
+	return m_Faction;
+}
+
+inline const std::string & Planet::GetIdentifier(void) const
+{
+	return m_Identifier;
+}
+
+inline float Planet::GetLandingFeePerSpace(void) const
+{
+	return m_LandingFeePerSpace;
 }
 
 inline const std::vector< PlanetAssetClass * > & Planet::GetPlanetAssetClasses(void) const
@@ -114,9 +127,14 @@ inline const std::vector< PlanetAssetClass * > & Planet::GetPlanetAssetClasses(v
 	return m_PlanetAssetClasses;
 }
 
-inline float Planet::GetLandingFeePerSpace(void) const
+inline float Planet::GetSize(void) const
 {
-	return m_LandingFeePerSpace;
+	return m_Size;
+}
+
+inline void Planet::SetFaction(Reference< Faction > Faction)
+{
+	m_Faction = Faction;
 }
 
 inline void Planet::SetLandingFeePerSpace(float LandingFeePerSpace)

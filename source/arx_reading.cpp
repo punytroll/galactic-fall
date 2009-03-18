@@ -773,9 +773,11 @@ static void ReadSystem(Arxx::Reference & Reference)
 		}
 		
 		float LandingFeePerSpace;
+		std::string FactionIdentifier;
 		
-		Reader >> LandingFeePerSpace;
+		Reader >> LandingFeePerSpace >> FactionIdentifier;
 		NewPlanet->SetLandingFeePerSpace(LandingFeePerSpace / 1000.0f);
+		NewPlanet->SetFaction(g_Galaxy->GetFaction(FactionIdentifier)->GetReference());
 		if(NewSystem->GetAspectObjectContainer()->AddContent(NewPlanet) == false)
 		{
 			throw std::runtime_error("Could not add planet '" + PlanetIdentifier + "' to system '" + Identifier + "'.");
