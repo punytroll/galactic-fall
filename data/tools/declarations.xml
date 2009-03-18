@@ -104,6 +104,7 @@
 		<color4f identifier="color"/>
 		<array identifier="offered-asset-classes"/>
 		<float identifier="landing-fee-per-space"/>
+		<string identifier="faction-identifier"/>
 	</planet>
 	
 	<point>

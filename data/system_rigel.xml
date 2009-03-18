@@ -78,6 +78,7 @@
 				</offered-asset-class>
 			</offered-asset-classes>
 			<landing-fee-per-space>0.9</landing-fee-per-space>
+			<faction-identifier>earth</faction-identifier>
 		</planet>
 	</planets>
 </system>
