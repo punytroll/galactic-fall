@@ -18,6 +18,7 @@
 **/
 
 #include "globals.h"
+#include "key_event_information.h"
 #include "label.h"
 #include "string_cast.h"
 #include "system_statistics.h"
@@ -28,6 +29,7 @@ TimingDialog::TimingDialog(Widget * SupWidget) :
 {
 	SetPosition(Vector2f(300.0f, 300.0f));
 	SetSize(Vector2f(350.0f, 400.0f));
+	AddKeyListener(this);
 	
 	Label * FramesPerSecondCaptionLabel(new Label(this, "Frames per Second:"));
 	
@@ -184,6 +186,18 @@ TimingDialog::TimingDialog(Widget * SupWidget) :
 	m_ParticlesThisFrameLabel->SetAnchorLeft(false);
 	m_ParticlesThisFrameLabel->SetAnchorRight(true);
 	m_ParticlesThisFrameLabel->SetHorizontalAlignment(Label::ALIGN_RIGHT);
+}
+
+bool TimingDialog::OnKey(Widget * EventSource, const KeyEventInformation & KeyEventInformation)
+{
+	if((KeyEventInformation.GetKeyCode() == 9 /* ESCAPE */) && (KeyEventInformation.IsDown() == true))
+	{
+		Destroy();
+		
+		return true;
+	}
+	// ignore all other input
+	return false;
 }
 
 void TimingDialog::Update(void)
