@@ -1095,6 +1095,10 @@ public:
 			g_LoadGameDialog = 0;
 			g_Pause = false;
 		}
+		else if(EventSource == g_TimingDialog)
+		{
+			g_TimingDialog = 0;
+		}
 	}
 } g_GlobalDestroyListener;
 
@@ -2838,11 +2842,12 @@ void ActionToggleTimingDialog(void)
 	if(g_TimingDialog == 0)
 	{
 		g_TimingDialog = new TimingDialog(g_UserInterface->GetRootWidget());
+		g_TimingDialog->GrabKeyFocus();
+		g_TimingDialog->AddDestroyListener(&g_GlobalDestroyListener);
 	}
 	else
 	{
 		g_TimingDialog->Destroy();
-		g_TimingDialog = 0;
 	}
 }
 
