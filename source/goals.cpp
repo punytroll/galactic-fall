@@ -161,7 +161,10 @@ bool GoalFighterThink::OnMessageReceived(Message * Message)
 	{
 		ThreatMessage * TheThreatMessage(dynamic_cast< ThreatMessage * >(Message));
 		
-		GetMind()->GetCharacter()->GetThreat()->ModifyThreat(TheThreatMessage->GetSender(), TheThreatMessage->GetDeltaThreat());
+		if((TheThreatMessage->GetSender().IsValid() == true) && (TheThreatMessage->GetSender()->GetTypeIdentifier() == "ship") && (dynamic_cast< Ship * >(TheThreatMessage->GetSender().Get())->GetFaction()->GetClassIdentifier() != GetMind()->GetCharacter()->GetShip()->GetFaction()->GetClassIdentifier()))
+		{
+			GetMind()->GetCharacter()->GetThreat()->ModifyThreat(TheThreatMessage->GetSender(), TheThreatMessage->GetDeltaThreat());
+		}
 		
 		return true;
 	}
