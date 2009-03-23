@@ -379,7 +379,7 @@ scroll_box_h = \
 	$(widget_h)
 
 scroll_position_changed_listener_h = \
-	scroll_position_changed_listener.h \
+	scroll_position_changed_listener.h
 
 ship_h = \
 	ship.h \
