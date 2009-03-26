@@ -26,6 +26,7 @@ namespace Arxx
 }
 
 class LocalFileDataChannel;
+class Settings;
 
 class ResourceReader
 {
@@ -40,6 +41,7 @@ public:
 	void ReadGeneratorClasses(void);
 	void ReadMeshes(void);
 	void ReadModels(void);
+	void ReadSettings(Settings * Settings);
 	void ReadShipClasses(void);
 	void ReadSlotClasses(void);
 	void ReadSystems(void);

@@ -53,6 +53,7 @@
 #include "object_factory.h"
 #include "planet.h"
 #include "scanner_display.h"
+#include "settings.h"
 #include "ship_class.h"
 #include "slot.h"
 #include "slot_class.h"
@@ -212,6 +213,17 @@ void ResourceReader::ReadMeshes(void)
 void ResourceReader::ReadModels(void)
 {
 	ReadItems(m_Archive, "/Models", Callback(ReadModel));
+}
+
+void ResourceReader::ReadSettings(Settings * Settings)
+{
+	Arxx::Item * Item(m_Archive->GetItem("/Settings"));
+	
+	if(Item == 0)
+	{
+		throw std::runtime_error("Could not find an item at the path '/Settings'.");
+	}
+	Settings->LoadFromItem(Item);
 }
 
 void ResourceReader::ReadShipClasses(void)

@@ -62,6 +62,7 @@ all_data = \
 	.data/model_planet.data \
 	.data/model_shuttle.data \
 	.data/model_transporter.data \
+	.data/setting_window_dimensions.data \
 	.data/ship_class_shuttle.data \
 	.data/ship_class_transporter.data \
 	.data/ship_class_fighter.data \
@@ -184,6 +185,11 @@ data.arx: $(data_arx)
 	arxtouch $@ e
 	arxmod $@ e -n "Factions" -t 0 -st 0
 	arxmod $@ 0 -a "child" e
+	arxtouch $@ f
+	arxmod $@ f -n "Settings" -t 0 -st 0
+	arxmod $@ 0 -a "child" f
+	@echo -e "\n\nAdding settings ...\n"
+	arxadd $@ --$(data_location) --name "Window Dimensions" --type f --subtype 1 --add "/Settings" .data/setting_window_dimensions.data
 	@echo -e "\n\nAdding factions ...\n"
 	arxadd $@ --$(data_location) --name "Earth Faction" --type e --subtype 0 --add "/Factions" .data/faction_earth.data
 	arxadd $@ --$(data_location) --name "Pirates Faction" --type e --subtype 0 --add "/Factions" .data/faction_pirates.data
