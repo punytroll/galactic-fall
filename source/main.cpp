@@ -3422,6 +3422,14 @@ int main(int argc, char ** argv)
 		}
 	}
 	
+	// try loading the game data archive
+	ON_DEBUG(std::cout << "Loading game archive." << std::endl);
+	g_ResourceReader = new ResourceReader(DataFileName.substr(0, DataFileName.rfind('/')));
+	if(g_ResourceReader->LoadArchive(DataFileName) == false)
+	{
+		return 1;
+	}
+	
 	// create managers and global objects
 	ON_DEBUG(std::cout << "Creating global managers and objects." << std::endl);
 	g_MainPerspective.SetNearClippingPlane(1.0f);
@@ -3447,14 +3455,6 @@ int main(int argc, char ** argv)
 	g_RealTimeTimeoutNotifications = new TimeoutNotificationManager();
 	g_SystemStatistics = new SystemStatistics();
 	g_CharacterObserver = new OutputObserver();
-	
-	// try loading the game data archive
-	ON_DEBUG(std::cout << "Loading game archive." << std::endl);
-	g_ResourceReader = new ResourceReader(DataFileName.substr(0, DataFileName.rfind('/')) + '/');
-	if(g_ResourceReader->LoadArchive(DataFileName) == false)
-	{
-		return 1;
-	}
 	
 	// read the data from the archive
 	ON_DEBUG(std::cout << "Reading the data objects from the game archive." << std::endl);
