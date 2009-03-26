@@ -32,6 +32,11 @@
 		<visualization identifier="visualization"/>
 	</commodity-class>
 	
+	<dimensions2f>
+		<float identifier="width"/>
+		<float identifier="height"/>
+	</dimensions2f>
+	
 	<faction>
 		<string identifier="identifier"/>
 		<string identifier="name"/>

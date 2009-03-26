@@ -89,6 +89,7 @@
 #include "real_time.h"
 #include "save_game_dialog.h"
 #include "scanner_display.h"
+#include "settings.h"
 #include "ship.h"
 #include "ship_class.h"
 #include "shot.h"
@@ -191,6 +192,7 @@ bool g_EchoResizes(false);
 bool g_DumpEndReport(false);
 bool g_TakeScreenShot(false);
 ResourceReader * g_ResourceReader(0);
+Settings * g_Settings(0);
 
 int WantToJump(Ship * Ship, System * TargetSystem)
 {
@@ -3238,9 +3240,18 @@ void CreateWindow(void)
 	
 	int ScreenNumber(DefaultScreen(g_Display));
 	
-	ON_DEBUG(std::cout << "Getting display dimensions." << std::endl);
-	g_Width = DisplayWidth(g_Display, ScreenNumber);
-	g_Height = DisplayHeight(g_Display, ScreenNumber);
+	assert(g_Settings != 0);
+	if(g_Settings->GetWindowDimensions() == 0)
+	{
+		ON_DEBUG(std::cout << "Getting display dimensions." << std::endl);
+		g_Width = DisplayWidth(g_Display, ScreenNumber);
+		g_Height = DisplayHeight(g_Display, ScreenNumber);
+	}
+	else
+	{
+		g_Width = g_Settings->GetWindowDimensions()->m_V.m_A[0];
+		g_Height = g_Settings->GetWindowDimensions()->m_V.m_A[1];
+	}
 	
 	int GLXAttributes[] = { GLX_RGBA, GLX_DOUBLEBUFFER, GLX_RED_SIZE, 4, GLX_GREEN_SIZE, 4, GLX_BLUE_SIZE, 4, GLX_ALPHA_SIZE, 4, GLX_DEPTH_SIZE, 16, 0 };
 	
@@ -3281,6 +3292,7 @@ void CreateWindow(void)
 
 void InitializeOpenGL(void)
 {
+	ON_DEBUG(std::cout << "Initializing font." << std::endl);
 	InitializeFonts();
 	
 	// TODO: Make configurable via data.arx
@@ -3393,7 +3405,7 @@ int main(int argc, char ** argv)
 	ON_DEBUG(std::cout << "Parsing command line." << std::endl);
 	
 	std::vector< std::string > Arguments(argv, argv + argc);
-	std::string LoadSavegameFileName("data/savegame_default.xml");
+	std::string LoadSavegameFileName;
 	std::string DataFileName("data/data.arx");
 	
 	for(std::vector< std::string >::size_type Index = 0; Index < Arguments.size(); ++Index)
@@ -3430,6 +3442,55 @@ int main(int argc, char ** argv)
 		return 1;
 	}
 	
+	// read the settings from the archive
+	ON_DEBUG(std::cout << "Reading the settings from the game archive." << std::endl);
+	g_Settings = new Settings();
+	g_ResourceReader->ReadSettings(g_Settings);
+	ON_DEBUG(std::cout << "  - Window Dimensions = " << g_Settings->GetWindowDimensions()->m_V.m_A[0] << " x " << g_Settings->GetWindowDimensions()->m_V.m_A[1] << std::endl);
+	
+	// set up the timeout notification manager
+	g_GameTimeTimeoutNotifications = new TimeoutNotificationManager();
+	g_RealTimeTimeoutNotifications = new TimeoutNotificationManager();
+	// the user interface component should be available before the OpenGL context is created
+	g_UserInterface = new UserInterface();
+	// set first timeout for widget collector, it will reinsert itself on callback
+	g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 5.0f, Callback(CollectWidgetsRecurrent));
+	// the user interface widgets must be loaded before the first Resize() call
+	g_ResourceReader->ReadUserInterface();
+	// setup the global variables for the user interface
+	g_CreditsLabel = dynamic_cast< Label * >(g_UserInterface->GetWidget("/credits"));
+	g_FuelLabel = dynamic_cast< Label * >(g_UserInterface->GetWidget("/fuel"));
+	g_HullLabel = dynamic_cast< Label * >(g_UserInterface->GetWidget("/hull"));
+	g_MessageLabel = dynamic_cast< Label * >(g_UserInterface->GetWidget("/message"));
+	g_SystemLabel = dynamic_cast< Label * >(g_UserInterface->GetWidget("/system"));
+	g_TimeWarpLabel = dynamic_cast< Label * >(g_UserInterface->GetWidget("/time_warp"));
+	g_MiniMap = g_UserInterface->GetWidget("/mini_map");
+		g_CurrentSystemLabel = dynamic_cast< Label * >(g_UserInterface->GetWidget("/mini_map/current_system"));
+		g_MiniMapDisplay = dynamic_cast< MiniMapDisplay * >(g_UserInterface->GetWidget("/mini_map/display"));
+	g_Scanner = g_UserInterface->GetWidget("/scanner");
+		g_TargetLabel = dynamic_cast< Label * >(g_UserInterface->GetWidget("/scanner/target"));
+		g_TargetFactionLabel = dynamic_cast< Label * >(g_UserInterface->GetWidget("/scanner/target_faction"));
+		g_ScannerDisplay = dynamic_cast< ScannerDisplay * >(g_UserInterface->GetWidget("/scanner/display"));
+	// sanity asserts
+	assert(g_CreditsLabel != 0);
+	assert(g_FuelLabel != 0);
+	assert(g_HullLabel != 0);
+	assert(g_MessageLabel != 0);
+	assert(g_SystemLabel != 0);
+	assert(g_TimeWarpLabel != 0);
+	assert(g_MiniMap != 0);
+	assert(g_CurrentSystemLabel != 0);
+	assert(g_MiniMapDisplay != 0);
+	assert(g_Scanner != 0);
+	assert(g_TargetLabel != 0);
+	assert(g_ScannerDisplay != 0);
+	
+	// setting up the graphical environment
+	ON_DEBUG(std::cout << "Setting up the window." << std::endl);
+	CreateWindow();
+	ON_DEBUG(std::cout << "Initializing OpenGL." << std::endl);
+	InitializeOpenGL();
+	
 	// create managers and global objects
 	ON_DEBUG(std::cout << "Creating global managers and objects." << std::endl);
 	g_MainPerspective.SetNearClippingPlane(1.0f);
@@ -3449,10 +3510,7 @@ int main(int argc, char ** argv)
 	g_ShipClassManager = new ClassManager< ShipClass >();
 	g_SlotClassManager = new ClassManager< SlotClass >();
 	g_TextureManager = new Graphics::TextureManager();
-	g_UserInterface = new UserInterface();
 	g_WeaponClassManager = new ClassManager< WeaponClass >();
-	g_GameTimeTimeoutNotifications = new TimeoutNotificationManager();
-	g_RealTimeTimeoutNotifications = new TimeoutNotificationManager();
 	g_SystemStatistics = new SystemStatistics();
 	g_CharacterObserver = new OutputObserver();
 	
@@ -3466,53 +3524,19 @@ int main(int argc, char ** argv)
 	g_ResourceReader->ReadGeneratorClasses();
 	g_ResourceReader->ReadSlotClasses();
 	g_ResourceReader->ReadShipClasses();
-	g_ResourceReader->ReadUserInterface();
 	g_ResourceReader->ReadWeaponClasses();
-	
-	// setup the global variables for the user interface
-	g_CreditsLabel = dynamic_cast< Label * >(g_UserInterface->GetWidget("/credits"));
-	g_FuelLabel = dynamic_cast< Label * >(g_UserInterface->GetWidget("/fuel"));
-	g_HullLabel = dynamic_cast< Label * >(g_UserInterface->GetWidget("/hull"));
-	g_MessageLabel = dynamic_cast< Label * >(g_UserInterface->GetWidget("/message"));
-	g_SystemLabel = dynamic_cast< Label * >(g_UserInterface->GetWidget("/system"));
-	g_TimeWarpLabel = dynamic_cast< Label * >(g_UserInterface->GetWidget("/time_warp"));
-	g_MiniMap = dynamic_cast< Widget * >(g_UserInterface->GetWidget("/mini_map"));
-		g_CurrentSystemLabel = dynamic_cast< Label * >(g_UserInterface->GetWidget("/mini_map/current_system"));
-		g_MiniMapDisplay = dynamic_cast< MiniMapDisplay * >(g_UserInterface->GetWidget("/mini_map/display"));
-	g_Scanner = g_UserInterface->GetWidget("/scanner");
-		g_TargetLabel = dynamic_cast< Label * >(g_UserInterface->GetWidget("/scanner/target"));
-		g_TargetFactionLabel = dynamic_cast< Label * >(g_UserInterface->GetWidget("/scanner/target_faction"));
-		g_ScannerDisplay = dynamic_cast< ScannerDisplay * >(g_UserInterface->GetWidget("/scanner/display"));
-	
-	// sanity asserts
-	assert(g_CreditsLabel != 0);
-	assert(g_FuelLabel != 0);
-	assert(g_HullLabel != 0);
-	assert(g_MessageLabel != 0);
-	assert(g_SystemLabel != 0);
-	assert(g_TimeWarpLabel != 0);
-	assert(g_MiniMap != 0);
-	assert(g_CurrentSystemLabel != 0);
-	assert(g_MiniMapDisplay != 0);
-	assert(g_Scanner != 0);
-	assert(g_TargetLabel != 0);
-	assert(g_ScannerDisplay != 0);
-	// set first timeout for widget collector, it will reinsert itself on callback
-	g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 5.0f, Callback(CollectWidgetsRecurrent));
-	// setting up the graphical environment
-	ON_DEBUG(std::cout << "Setting up the window." << std::endl);
-	CreateWindow();
-	ON_DEBUG(std::cout << "Initializing OpenGL." << std::endl);
-	InitializeOpenGL();
 	// since reading the textures already creates them we have to do this after initializing OpenGL
 	ON_DEBUG(std::cout << "Reading textures from game archive." << std::endl);
 	g_ResourceReader->ReadTextures();
 	
 	// load the specified savegame
-	ON_DEBUG(std::cout << "Loading save game file." << std::endl);
-	if(LoadGameFromFileName(LoadSavegameFileName) == false)
+	if(LoadSavegameFileName.empty() == false)
 	{
-		return 1;
+		ON_DEBUG(std::cout << "Loading save game file '" << LoadSavegameFileName << "'." << std::endl);
+		if(LoadGameFromFileName(LoadSavegameFileName) == false)
+		{
+			return 1;
+		}
 	}
 	
 	// main loop
@@ -3555,8 +3579,9 @@ int main(int argc, char ** argv)
 	delete g_SlotClassManager;
 	delete g_SystemStatistics;
 	delete g_TextureManager;
-	delete g_UserInterface;
 	delete g_WeaponClassManager;
+	delete g_UserInterface;
+	delete g_Settings;
 	delete g_ResourceReader;
 	CollectWidgets();
 	
