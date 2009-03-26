@@ -48,7 +48,7 @@ bool LocalFileDataChannel::bFetchData(const Arxx::URI & URI, Arxx::Buffer & Buff
 	
 	if(BetterURI.sGetPath()[0] != '/')
 	{
-		BetterURI.vSetPath(m_RelativePathPrefix + BetterURI.sGetPath());
+		BetterURI.vSetPath(m_RelativePathPrefix + '/' + BetterURI.sGetPath());
 	}
 	
 	std::ifstream IStream(BetterURI.sGetPath().c_str());
