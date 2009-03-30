@@ -78,6 +78,10 @@
 		<string identifier="mesh-identifier"/>
 	</mesh-part>
 	
+	<mini-map-display>
+		<widget identifier="widget"/>
+	</mini-map-display>
+	
 	<model>
 		<string identifier="identifier"/>
 		<array identifier="mesh-parts"/>
@@ -124,6 +128,10 @@
 		<float identifier="y"/>
 		<float identifier="z"/>
 	</quaternion>
+	
+	<scanner-display>
+		<widget identifier="widget"/>
+	</scanner-display>
 	
 	<ship-class>
 		<string identifier="identifier"/>
