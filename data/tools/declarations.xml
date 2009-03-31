@@ -51,7 +51,7 @@
 		<string identifier="slot-class-identifier"/>
 	</generator-class>
 	
-	<label>
+	<label type="1" sub-type="1">
 		<widget identifier="widget"/>
 		<boolean identifier="use-text-color"/>
 		<color4f identifier="text-color"/>
@@ -78,7 +78,7 @@
 		<string identifier="mesh-identifier"/>
 	</mesh-part>
 	
-	<mini-map-display>
+	<mini-map-display type="1" sub-type="2">
 		<widget identifier="widget"/>
 	</mini-map-display>
 	
@@ -129,7 +129,7 @@
 		<float identifier="z"/>
 	</quaternion>
 	
-	<scanner-display>
+	<scanner-display type="1" sub-type="3">
 		<widget identifier="widget"/>
 	</scanner-display>
 	
@@ -250,6 +250,7 @@
 		<boolean identifier="anchor-left"/>
 		<boolean identifier="anchor-right"/>
 		<boolean identifier="anchor-top"/>
+		<array-with-types identifier="sub-widgets"/>
 	</widget>
 	
 </declarations>

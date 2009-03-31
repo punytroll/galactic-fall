@@ -23,6 +23,7 @@
 		<anchor-left>true</anchor-left>
 		<anchor-right>false</anchor-right>
 		<anchor-top>true</anchor-top>
+		<sub-widgets/>
 	</widget>
 	<use-text-color>true</use-text-color>
 	<text-color>

@@ -35,14 +35,11 @@ all_data = \
 	.data/faction_pirates.data \
 	.data/generator_class_small_generator.data \
 	.data/label_credits.data \
-	.data/label_current_system.data \
 	.data/label_energy.data \
 	.data/label_fuel.data \
 	.data/label_hull.data \
 	.data/label_message.data \
 	.data/label_system.data \
-	.data/label_target.data \
-	.data/label_target_faction.data \
 	.data/label_time_warp.data \
 	.data/mesh_cargo_cube.data \
 	.data/mesh_fighter_cockpit.data \
@@ -82,9 +79,7 @@ all_data = \
 	.data/weapon_class_light_laser.data \
 	.data/weapon_class_medium_laser.data \
 	.data/widget_mini_map.data \
-	.data/widget_mini_map_display.data \
-	.data/widget_scanner.data \
-	.data/widget_scanner_display.data
+	.data/widget_scanner.data
 
 declarations_xml = \
 	tools/declarations.xml
@@ -196,19 +191,14 @@ data.arx: $(data_arx)
 	@echo -e "\n\nAdding widgets ...\n"
 	@echo -e "\nThe widgets will be read in uid order, so assign proper uids so that superior widgets are read before sub widgets.\n"
 	arxadd $@ --$(data_location) --uid 103 --name "Credits" --type 1 --subtype 1 --add "/User Interface" .data/label_credits.data
-	arxadd $@ --$(data_location) --uid 108 --name "Current System" --type 1 --subtype 1 --add "/User Interface" .data/label_current_system.data
 	arxadd $@ --$(data_location) --uid 10A --name "Energy" --type 1 --subtype 1 --add "/User Interface" .data/label_energy.data
 	arxadd $@ --$(data_location) --uid 104 --name "Fuel" --type 1 --subtype 1 --add "/User Interface" .data/label_fuel.data
 	arxadd $@ --$(data_location) --uid 132 --name "Hull" --type 1 --subtype 1 --add "/User Interface" .data/label_hull.data
 	arxadd $@ --$(data_location) --uid 100 --name "Message" --type 1 --subtype 1 --add "/User Interface" .data/label_message.data
 	arxadd $@ --$(data_location) --uid 102 --name "System" --type 1 --subtype 1 --add "/User Interface" .data/label_system.data
-	arxadd $@ --$(data_location) --uid 107 --name "Target" --type 1 --subtype 1 --add "/User Interface" .data/label_target.data
 	arxadd $@ --$(data_location) --uid 101 --name "Time Warp" --type 1 --subtype 1 --add "/User Interface" .data/label_time_warp.data
 	arxadd $@ --$(data_location) --uid 106 --name "Mini Map" --type 1 --subtype 0 --add "/User Interface" .data/widget_mini_map.data
-	arxadd $@ --$(data_location) --uid 109 --name "Mini Map Display" --type 1 --subtype 2 --add "/User Interface" .data/widget_mini_map_display.data
 	arxadd $@ --$(data_location) --uid 105 --name "Scanner" --type 1 --subtype 0 --add "/User Interface" .data/widget_scanner.data
-	arxadd $@ --$(data_location) --uid 126 --name "Scanner Display" --type 1 --subtype 3 --add "/User Interface" .data/widget_scanner_display.data
-	arxadd $@ --$(data_location) --uid 10B --name "Target Faction" --type 1 --subtype 1 --add "/User Interface" .data/label_target_faction.data
 	@echo -e "\n\nAdding slot classes ...\n"
 	arxadd $@ --$(data_location) --name "Light Battery" --type 9 --subtype 0 --add "/Slot Classes" .data/slot_class_light_battery.data
 	arxadd $@ --$(data_location) --name "Light Weapon" --type 9 --subtype 0 --add "/Slot Classes" .data/slot_class_light_weapon.data
