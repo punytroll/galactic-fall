@@ -82,10 +82,11 @@ static void ReadTexture(Arxx::Reference & Reference);
 static void ReadVisualizationPrototype(Arxx::BufferReader & Reader, VisualizationPrototype * VisualizationPrototype);
 static void ReadWeaponClass(Arxx::Reference & Reference);
 static void ReadWidget(Arxx::Reference & Reference);
+static Widget * ReadWidget(Arxx::BufferReader & Reader, Arxx::u4byte Type, Arxx::u4byte SubType);
 static void ReadWidgetLabel(Arxx::BufferReader & Reader, Label * ReadLabel);
 static void ReadWidgetMiniMapDisplay(Arxx::BufferReader & Reader, MiniMapDisplay * ReadMiniMapDisplay);
 static void ReadWidgetScannerDisplay(Arxx::BufferReader & Reader, ScannerDisplay * ReadScannerDisplay);
-static void ReadWidgetWidget(Arxx::BufferReader & Reader, Widget * ReadWidget);
+static void ReadWidgetWidget(Arxx::BufferReader & Reader, Widget * TheWidget);
 
 static Arxx::Item * Resolve(Arxx::Reference & Reference)
 {
@@ -969,7 +970,18 @@ static void ReadWidget(Arxx::Reference & Reference)
 	
 	Arxx::BufferReader Reader(*Item);
 	
-	switch(Item->u4GetSubType())
+	ReadWidget(Reader, Item->u4GetType(), Item->u4GetSubType());
+	if(Reader.stGetPosition() != Item->u4GetDecompressedLength())
+	{
+		throw std::runtime_error("For the widget '" + Item->sGetName() + "' the reader functions did not read the expected amount of data. Should be '" + to_string_cast(Item->u4GetDecompressedLength()) + "' not '" + to_string_cast(Reader.stGetPosition()) + "'.");
+	}
+}
+	
+static Widget * ReadWidget(Arxx::BufferReader & Reader, Arxx::u4byte Type, Arxx::u4byte SubType)
+{
+	Widget * Result = 0;
+	
+	switch(SubType)
 	{
 	case ARX_TYPE_WIDGET_SUB_TYPE_LABEL:
 		{
@@ -977,6 +989,7 @@ static void ReadWidget(Arxx::Reference & Reference)
 			
 			ReadWidgetWidget(Reader, NewLabel);
 			ReadWidgetLabel(Reader, NewLabel);
+			Result = NewLabel;
 			
 			break;
 		}
@@ -986,6 +999,7 @@ static void ReadWidget(Arxx::Reference & Reference)
 			
 			ReadWidgetWidget(Reader, NewMiniMapDisplay);
 			ReadWidgetMiniMapDisplay(Reader, NewMiniMapDisplay);
+			Result = NewMiniMapDisplay;
 			
 			break;
 		}
@@ -995,6 +1009,7 @@ static void ReadWidget(Arxx::Reference & Reference)
 			
 			ReadWidgetWidget(Reader, NewScannerDisplay);
 			ReadWidgetScannerDisplay(Reader, NewScannerDisplay);
+			Result = NewScannerDisplay;
 			
 			break;
 		}
@@ -1003,14 +1018,17 @@ static void ReadWidget(Arxx::Reference & Reference)
 			Widget * NewWidget(new Widget());
 			
 			ReadWidgetWidget(Reader, NewWidget);
+			Result = NewWidget;
 			
 			break;
 		}
 	default:
 		{
-			throw std::runtime_error("Unknown item sub type for widget '" + Item->sGetName() + "' which is '" + to_string_cast(Item->u4GetSubType()) + "'.");
+			throw std::runtime_error("Unknown item sub type for widget '" + to_string_cast(SubType) + "'.");
 		}
 	}
+	
+	return Result;
 }
 
 static void ReadWidgetLabel(Arxx::BufferReader & Reader, Label * ReadLabel)
@@ -1059,7 +1077,7 @@ static void ReadWidgetScannerDisplay(Arxx::BufferReader & Reader, ScannerDisplay
 {
 }
 
-static void ReadWidgetWidget(Arxx::BufferReader & Reader, Widget * ReadWidget)
+static void ReadWidgetWidget(Arxx::BufferReader & Reader, Widget * TheWidget)
 {
 	std::string Path;
 	std::string Name;
@@ -1073,10 +1091,11 @@ static void ReadWidgetWidget(Arxx::BufferReader & Reader, Widget * ReadWidget)
 	bool AnchorLeft;
 	bool AnchorRight;
 	bool AnchorTop;
+	Arxx::u4byte SubWidgetCount;
 	
-	Reader >> Path >> Name >> Position >> UseSize >> Size >> UseBackgroundColor >> BackgroundColor >> Visible >> AnchorBottom >> AnchorLeft >> AnchorRight >> AnchorTop;
-	ReadWidget->SetName(Name);
-	if((Path != "") && (ReadWidget->GetSupWidget() == 0))
+	Reader >> Path >> Name >> Position >> UseSize >> Size >> UseBackgroundColor >> BackgroundColor >> Visible >> AnchorBottom >> AnchorLeft >> AnchorRight >> AnchorTop >> SubWidgetCount;
+	TheWidget->SetName(Name);
+	if((Path != "") && (TheWidget->GetSupWidget() == 0))
 	{
 		Widget * SupWidget(g_UserInterface->GetWidget(Path));
 		
@@ -1084,20 +1103,31 @@ static void ReadWidgetWidget(Arxx::BufferReader & Reader, Widget * ReadWidget)
 		{
 			throw std::runtime_error("For widget '" + Name + "' could not find the superior widget at path '" + Path + "'.");
 		}
-		SupWidget->AddSubWidget(ReadWidget);
+		SupWidget->AddSubWidget(TheWidget);
 	}
-	ReadWidget->SetPosition(Position);
+	TheWidget->SetPosition(Position);
 	if(UseSize == true)
 	{
-		ReadWidget->SetSize(Size);
+		TheWidget->SetSize(Size);
 	}
 	if(UseBackgroundColor == true)
 	{
-		ReadWidget->SetBackgroundColor(BackgroundColor);
+		TheWidget->SetBackgroundColor(BackgroundColor);
 	}
-	ReadWidget->SetVisible(Visible);
-	ReadWidget->SetAnchorBottom(AnchorBottom);
-	ReadWidget->SetAnchorLeft(AnchorLeft);
-	ReadWidget->SetAnchorRight(AnchorRight);
-	ReadWidget->SetAnchorTop(AnchorTop);
+	TheWidget->SetVisible(Visible);
+	TheWidget->SetAnchorBottom(AnchorBottom);
+	TheWidget->SetAnchorLeft(AnchorLeft);
+	TheWidget->SetAnchorRight(AnchorRight);
+	TheWidget->SetAnchorTop(AnchorTop);
+	for(Arxx::u4byte SubWidgetNumber = 0; SubWidgetNumber < SubWidgetCount; ++SubWidgetNumber)
+	{
+		Arxx::u4byte Type;
+		Arxx::u4byte SubType;
+		
+		Reader >> Type >> SubType;
+		
+		Widget * SubWidget(ReadWidget(Reader, Type, SubType));
+		
+		TheWidget->AddSubWidget(SubWidget);
+	}
 }

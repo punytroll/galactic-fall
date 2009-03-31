@@ -101,7 +101,7 @@ if options.declarations != None:
 				if declaration_element.attributes.has_key("type") == True:
 					declaration.type = int(declaration_element.attributes.get("type").nodeValue)
 				if declaration_element.attributes.has_key("sub-type") == True:
-					declaration.sub_type = int(declaration_element.attributes.get("sub_type").nodeValue)
+					declaration.sub_type = int(declaration_element.attributes.get("sub-type").nodeValue)
 				if declaration_element.attributes.has_key("is") == True:
 					declaration.is_declaration = declaration_element.attributes.get("is").nodeValue
 				else:
@@ -160,6 +160,27 @@ def out(data_type, node):
 		out_file.write(pack('I', long(count)))
 		for node_part in node.childNodes:
 			if node_part.nodeType == Node.ELEMENT_NODE:
+				out(node_part.tagName, node_part)
+	elif data_type == "array-with-types":
+		count = 0
+		for node_part in node.childNodes:
+			if node_part.nodeType == Node.ELEMENT_NODE:
+				count += 1
+		out_file.write(pack('I', long(count)))
+		for node_part in node.childNodes:
+			if node_part.nodeType == Node.ELEMENT_NODE:
+				data_type = node_part.tagName
+				if declarations.has_key(data_type) == False:
+					print LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " in " + LightYellow + stack_path + White + " I could not find any declaration for " + DarkYellow + data_type + White + "."
+					raise ConvertException()
+				declaration = declarations[data_type]
+				if declaration.type == None:
+					print LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " for " + LightYellow + stack_path + "/" + data_type + White + " no type was defined for the declaration of " + DarkYellow + data_type + White + "."
+					raise ConvertException()
+				if declaration.sub_type == None:
+					print LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " for " + LightYellow + stack_path + "/" + data_type + White + " no sub-type was defined for the declaration of " + DarkYellow + data_type + White + "."
+					raise ConvertException()
+				out_file.write(pack('II', long(declaration.type), long(declaration.sub_type)))
 				out(node_part.tagName, node_part)
 	elif data_type == "file":
 		inline_file_name = node.firstChild.nodeValue
