@@ -103,6 +103,9 @@ On key down:
 68 (F2)
 	Opens the "Load Game" dialog.
 
+69 (F3)
+	Starts a new game.
+
 74 (F8)
 	Opens up an object information dialog for the galaxy object for debugging purposes.
 
