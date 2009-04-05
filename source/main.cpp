@@ -2273,12 +2273,28 @@ bool LoadGameFromFileName(const std::string & FileName)
 	
 	if(InputFileStream == false)
 	{
-		std::cerr << "The savegame file \"" << FileName << "\" does not exist or is not readable." << std::endl;
+		std::cerr << "The savegame file '" << FileName << "' does not exist or is not readable." << std::endl;
 		
 		return false;
 	}
 	
 	return LoadGameFromInputStream(InputFileStream);
+}
+
+bool LoadGameFromResourcePath(const std::string & ResourcePath)
+{
+	std::string SaveGameString(g_ResourceReader->GetContentStringFromResourcePath(ResourcePath));
+	
+	if(SaveGameString.empty() == true)
+	{
+		std::cerr << "The savegame resource '" << ResourcePath << "' does not exist or is not readable." << std::endl;
+		
+		return false;
+	}
+	
+	std::stringstream SaveGameStringStream(SaveGameString);
+	
+	return LoadGameFromInputStream(SaveGameStringStream);
 }
 
 void SaveGame(std::ostream & OStream)
@@ -2778,6 +2794,11 @@ void ActionSpawnRandomShip(void)
 	SpawnShip(g_CurrentSystem, IdentifierPrefix.str());
 }
 
+void ActionStartNewGame(void)
+{
+	LoadGameFromResourcePath("/Savegames/Default");
+}
+
 void ActionTakeScreenShot(void)
 {
 	g_TakeScreenShot = true;
@@ -3113,6 +3134,15 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 			if(KeyEventInformation.IsDown() == true)
 			{
 				ActionOpenLoadGameDialog();
+			}
+			
+			break;
+		}
+	case 69: // Key: F3
+		{
+			if(KeyEventInformation.IsDown() == true)
+			{
+				ActionStartNewGame();
 			}
 			
 			break;

@@ -79,7 +79,8 @@ all_data = \
 	.data/weapon_class_light_laser.data \
 	.data/weapon_class_medium_laser.data \
 	.data/widget_mini_map.data \
-	.data/widget_scanner.data
+	.data/widget_scanner.data \
+	.data/savegame_default.data
 
 declarations_xml = \
 	tools/declarations.xml
@@ -99,7 +100,7 @@ check-dependencies: raw_to_littlem-check-dependencies xml_to_data-check-dependen
 	@if [ x`which pkg-config` = x ]; then \
 		echo -e "\nYour system is missing the \"pkg-config\" tool.\nThis tool is needed and you will need to install it in order to build the program.\n"; false; \
 	fi
-	@if ! pkg-config --atleast-version=0.5.0 arxtools; then \
+	@if ! pkg-config --atleast-version=0.5.1 arxtools; then \
 		echo -e "\nThe tool suite \"arxtools\" that is installed on your system is too old.\nYou have: Version `pkg-config --modversion arxtools`\nYou need: Version 0.5.0\nYou can get the most recent library from \"http://libarxx.sourceforge.net\"./\n"; false; \
 	fi
 	@if [ x`which arxtouch` = x -o x`which arxmod` = x -o x`which arxadd` = x ]; then \
@@ -183,6 +184,9 @@ data.arx: $(data_arx)
 	arxtouch $@ f
 	arxmod $@ f -n "Settings" -t 0 -st 0
 	arxmod $@ 0 -a "child" f
+	arxtouch $@ 10
+	arxmod $@ 10 -n "Savegames" -t 0 -st 0
+	arxmod $@ 0 -a "child" 10
 	@echo -e "\n\nAdding settings ...\n"
 	arxadd $@ --$(data_location) --name "Window Dimensions" --type f --subtype 1 --add "/Settings" .data/setting_window_dimensions.data
 	@echo -e "\n\nAdding factions ...\n"
@@ -245,6 +249,8 @@ data.arx: $(data_arx)
 	arxadd $@ --$(data_location) --name "Alpha Centauri / Tichel" --type 6 --subtype 0 --add "/System Links" .data/system_link_alpha_centauri_tichel.data
 	arxadd $@ --$(data_location) --name "Rigel / Sol" --type 6 --subtype 0 --add "/System Links" .data/system_link_rigel_sol.data
 	arxadd $@ --$(data_location) --name "Rigel / Tichel" --type 6 --subtype 0 --add "/System Links" .data/system_link_rigel_tichel.data
+	@echo -e "\n\nAdding savegames ...\n"
+	arxadd $@ --$(data_location) --name "Default" --type 10 --subtype 0 --add "/Savegames" .data/savegame_default.data
 	@echo -e "\n\nAdding models ...\n"
 	arxadd $@ --$(data_location) --name "Cargo Cube" --type b --subtype 0 --add "/Models" .data/model_cargo_cube.data
 	arxadd $@ --$(data_location) --name "Fighter" --type b --subtype 0 --add "/Models" .data/model_fighter.data
@@ -270,6 +276,9 @@ data.arx: $(data_arx)
 
 .data:
 	mkdir $@
+
+.data/savegame_default.data: savegame_default.xml
+	cp -f $< $@
 
 .data/%.data: %.xml $(declarations_xml) $(xml_to_data_dependencies)
 	$(command_xml_to_data) --declarations=tools/declarations.xml --in=$< --out=$@

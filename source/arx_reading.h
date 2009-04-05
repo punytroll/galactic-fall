@@ -49,6 +49,8 @@ public:
 	void ReadTextures(void);
 	void ReadUserInterface(void);
 	void ReadWeaponClasses(void);
+	// highly specialized ... too highly even
+	std::string GetContentStringFromResourcePath(const std::string & ResourcePath);
 private:
 	LocalFileDataChannel * m_LocalFileDataChannel;
 	Arxx::Archive * m_Archive;

@@ -88,14 +88,9 @@ static void ReadWidgetMiniMapDisplay(Arxx::BufferReader & Reader, MiniMapDisplay
 static void ReadWidgetScannerDisplay(Arxx::BufferReader & Reader, ScannerDisplay * ReadScannerDisplay);
 static void ReadWidgetWidget(Arxx::BufferReader & Reader, Widget * TheWidget);
 
-static Arxx::Item * Resolve(Arxx::Reference & Reference)
+static void MakeItemAvailable(Arxx::Item * Item)
 {
-	Arxx::Item * Item(Reference.pGetItem());
-	
-	if(Item == 0)
-	{
-		throw std::runtime_error("The unique identifier '" + to_string_cast(Reference.u4GetUniqueID()) + "' is referenced but could not be resolved.");
-	}
+	assert(Item != 0);
 	if(Item->bIsFetched() == false)
 	{
 		if(Item->bFetch() == false)
@@ -115,6 +110,17 @@ static Arxx::Item * Resolve(Arxx::Reference & Reference)
 			throw std::runtime_error("Could not decompress data for item '" + Item->sGetName() + "' [" + to_string_cast(Item->u4GetUniqueID()) + "].");
 		}
 	}
+}
+
+static Arxx::Item * Resolve(Arxx::Reference & Reference)
+{
+	Arxx::Item * Item(Reference.pGetItem());
+	
+	if(Item == 0)
+	{
+		throw std::runtime_error("The unique identifier '" + to_string_cast(Reference.u4GetUniqueID()) + "' is referenced but could not be resolved.");
+	}
+	MakeItemAvailable(Item);
 	
 	return Item;
 }
@@ -260,6 +266,23 @@ void ResourceReader::ReadUserInterface(void)
 void ResourceReader::ReadWeaponClasses(void)
 {
 	ReadItems(m_Archive, "/Weapon Classes", Callback(ReadWeaponClass));
+}
+
+std::string ResourceReader::GetContentStringFromResourcePath(const std::string & ResourcePath)
+{
+	Arxx::Item * Item(m_Archive->GetItem(ResourcePath));
+	std::string Result;
+	
+	if(Item != 0)
+	{
+		MakeItemAvailable(Item);
+		
+		Arxx::BufferReader Reader(*Item);
+		
+		Reader >> Result;
+	}
+	
+	return Result;
 }
 
 static void ReadAssetClass(Arxx::Reference & Reference)
