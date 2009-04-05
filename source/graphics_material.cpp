@@ -42,14 +42,14 @@ Graphics::Material::~Material(void)
 	m_SpecularColor = 0;
 }
 
-void Graphics::Material::SetDiffuseColor(const Color & DiffuseColor)
+void Graphics::Material::SetDiffuseColor(Color * DiffuseColor)
 {
 	delete m_DiffuseColor;
-	m_DiffuseColor = new Color(DiffuseColor);
+	m_DiffuseColor = DiffuseColor;
 }
 
-void Graphics::Material::SetSpecularColor(const Color & SpecularColor)
+void Graphics::Material::SetSpecularColor(Color * SpecularColor)
 {
 	delete m_SpecularColor;
-	m_SpecularColor = new Color(SpecularColor);
+	m_SpecularColor = SpecularColor;
 }

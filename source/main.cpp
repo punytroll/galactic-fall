@@ -1163,7 +1163,7 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 	
 	if(PartMaterials.find("faction") != PartMaterials.end())
 	{
-		PartMaterials["faction"]->SetDiffuseColor(Color(Faction->GetColor()));
+		PartMaterials["faction"]->SetDiffuseColor(new Color(Faction->GetColor()));
 	}
 	NewShip->GetAspectPosition()->SetPosition(Vector3f(GetRandomFloat(-200.0f, 200.0f), GetRandomFloat(-200.0f, 200.0f), 0.0f));
 	NewShip->GetAspectPosition()->SetOrientation(Quaternion(GetRandomFloat(0.0f, 2.0f * M_PI), Quaternion::InitializeRotationZ));
