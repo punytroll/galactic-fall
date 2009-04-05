@@ -31,16 +31,22 @@ namespace Graphics
 	public:
 		// constructor & destructor
 		Material(void);
-		Material(const Graphics::Material * Material);
+		explicit Material(const Graphics::Material * Material);
 		~Material(void);
 		// getters
 		const Color * GetDiffuseColor(void) const;
 		float GetShininess(void) const;
 		const Color * GetSpecularColor(void) const;
 		// setters
-		void SetDiffuseColor(const Color & DiffuseColor);
+		/**
+		 * @note This function transfers memory management responsibility for the @a DiffuseColor to the @a Graphics::Material.
+		 **/
+		void SetDiffuseColor(Color * DiffuseColor);
 		void SetShininess(float Shininess);
-		void SetSpecularColor(const Color & SpecularColor);
+		/**
+		 * @note This function transfers memory management responsibility for the @a SpecularColor to the @a Graphics::Material.
+		 **/
+		void SetSpecularColor(Color * SpecularColor);
 	private:
 		Color * m_DiffuseColor;
 		float m_Shininess;

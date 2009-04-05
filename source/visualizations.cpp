@@ -126,9 +126,9 @@ void VisualizePlanet(Planet * Planet, Graphics::Node * Container)
 	Graphics::ModelObject * Visualization(new Graphics::ModelObject());
 	Graphics::Material * Material(new Graphics::Material());
 	
-	Material->SetDiffuseColor(Planet->GetColor());
+	Material->SetDiffuseColor(new Color(Planet->GetColor()));
 	Material->SetShininess(10.0f);
-	Material->SetSpecularColor(Color(0.25f, 0.25f, 0.25f, 1.0f));
+	Material->SetSpecularColor(new Color(0.25f, 0.25f, 0.25f, 1.0f));
 	Visualization->AddMaterial(g_ModelManager->Get("planet")->GetIdentifier(), Material);
 	Visualization->SetModel(g_ModelManager->Get("planet"));
 	Visualization->SetNormalize(true);
