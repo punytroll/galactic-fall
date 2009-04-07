@@ -21,6 +21,7 @@
 
 #include <GL/gl.h>
 
+#include "callbacks/callbacks.h"
 #include "button.h"
 #include "globals.h"
 #include "key_event_information.h"
@@ -40,7 +41,7 @@ MapDialog::MapDialog(Widget * SupWidget, System * System, Character * Character)
 	m_OKButton = new Button(this);
 	m_OKButton->SetPosition(Vector2f(390.0f, 500.0f));
 	m_OKButton->SetSize(Vector2f(100.0f, 20.0f));
-	m_OKButton->AddClickedListener(this);
+	m_OKButton->AddClickedHandler(Callback(this, &MapDialog::OnClicked));
 	m_OKButtonLabel = new Label(m_OKButton, "OK");
 	m_OKButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
 	m_OKButtonLabel->SetSize(m_OKButton->GetSize());

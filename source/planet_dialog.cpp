@@ -19,6 +19,7 @@
 
 #include "asset_class.h"
 #include "button.h"
+#include "callbacks/callbacks.h"
 #include "character.h"
 #include "color.h"
 #include "globals.h"
@@ -50,7 +51,7 @@ PlanetDialog::PlanetDialog(Widget * SupWidget, Planet * Planet, Character * Char
 	m_TakeOffButton = new Button(this);
 	m_TakeOffButton->SetPosition(Vector2f(390.0f, 300.0f));
 	m_TakeOffButton->SetSize(Vector2f(100.0f, 20.0f));
-	m_TakeOffButton->AddClickedListener(this);
+	m_TakeOffButton->AddClickedHandler(Callback(this, &PlanetDialog::OnClicked));
 	m_TakeOffButton->SetAnchorBottom(true);
 	m_TakeOffButton->SetAnchorLeft(false);
 	m_TakeOffButton->SetAnchorRight(true);
@@ -65,7 +66,7 @@ PlanetDialog::PlanetDialog(Widget * SupWidget, Planet * Planet, Character * Char
 	m_TradeCenterButton = new Button(this);
 	m_TradeCenterButton->SetPosition(Vector2f(10.0f, 40.0f));
 	m_TradeCenterButton->SetSize(Vector2f(100.0f, 20.0f));
-	m_TradeCenterButton->AddClickedListener(this);
+	m_TradeCenterButton->AddClickedHandler(Callback(this, &PlanetDialog::OnClicked));
 	m_TradeCenterLabel = new Label(m_TradeCenterButton, "Trade Center");
 	m_TradeCenterLabel->SetPosition(Vector2f(0.0f, 0.0f));
 	m_TradeCenterLabel->SetSize(m_TradeCenterButton->GetSize());
@@ -81,7 +82,7 @@ PlanetDialog::PlanetDialog(Widget * SupWidget, Planet * Planet, Character * Char
 			m_RefuelButton = new Button(this);
 			m_RefuelButton->SetPosition(Vector2f(10.0f, 70.0f));
 			m_RefuelButton->SetSize(Vector2f(100.0f, 20.0f));
-			m_RefuelButton->AddClickedListener(this);
+			m_RefuelButton->AddClickedHandler(Callback(this, &PlanetDialog::OnClicked));
 			m_RefuelButtonLabel = new Label(m_RefuelButton, "Refuel");
 			m_RefuelButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
 			m_RefuelButtonLabel->SetSize(m_TradeCenterButton->GetSize());
