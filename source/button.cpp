@@ -18,6 +18,7 @@
 **/
 
 #include "button.h"
+#include "callbacks/callbacks.h"
 #include "clicked_listener.h"
 #include "color.h"
 #include "globals.h"
@@ -35,18 +36,18 @@ Button::~Button(void)
 {
 }
 
-void Button::AddClickedListener(ClickedListener * ClickedListener)
+void Button::AddClickedHandler(Callback1< bool, Widget * > ClickedHandler)
 {
-	m_ClickedListeners.push_back(ClickedListener);
+	m_ClickedEvent.push_back(ClickedHandler);
 }
 
 bool Button::OnMouseButton(Widget * EventSource, int Button, int State, float X, float Y)
 {
 	if((Button == 1 /* LEFT */) && (State == EV_UP))
 	{
-		for(std::list< ClickedListener * >::iterator ClickedListenerIterator = m_ClickedListeners.begin(); ClickedListenerIterator != m_ClickedListeners.end(); ++ClickedListenerIterator)
+		for(std::list< Callback1< bool, Widget * > >::iterator ClickedHandlerIterator = m_ClickedEvent.begin(); ClickedHandlerIterator != m_ClickedEvent.end(); ++ClickedHandlerIterator)
 		{
-			if((*ClickedListenerIterator)->OnClicked(this) == true)
+			if((*ClickedHandlerIterator)(this) == true)
 			{
 				return true;
 			}
