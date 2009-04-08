@@ -1056,12 +1056,14 @@ static Widget * ReadWidget(Arxx::BufferReader & Reader, Arxx::u4byte Type, Arxx:
 
 static void ReadWidgetLabel(Arxx::BufferReader & Reader, Label * ReadLabel)
 {
+	std::string Text;
 	bool UseTextColor;
 	Color TextColor;
 	Arxx::u1byte HorizontalAlignment;
 	Arxx::u1byte VerticalAlignment;
 	
-	Reader >> UseTextColor >> TextColor >> HorizontalAlignment >> VerticalAlignment;
+	Reader >> Text >> UseTextColor >> TextColor >> HorizontalAlignment >> VerticalAlignment;
+	ReadLabel->SetText(Text);
 	if(UseTextColor == true)
 	{
 		ReadLabel->SetTextColor(TextColor);
