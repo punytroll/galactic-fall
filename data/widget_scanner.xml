@@ -78,6 +78,7 @@
 				<anchor-top>true</anchor-top>
 				<sub-widgets/>
 			</widget>
+			<text></text>
 			<use-text-color>true</use-text-color>
 			<text-color>
 				<red>0.7</red>
@@ -115,6 +116,7 @@
 				<anchor-top>false</anchor-top>
 				<sub-widgets/>
 			</widget>
+			<text></text>
 			<use-text-color>true</use-text-color>
 			<text-color>
 				<red>0.7</red>

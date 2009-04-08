@@ -53,6 +53,7 @@
 	
 	<label type="1" sub-type="1">
 		<widget identifier="widget"/>
+		<string identifier="text"/>
 		<boolean identifier="use-text-color"/>
 		<color4f identifier="text-color"/>
 		<u1byte identifier="horizontal-alignment"/>
