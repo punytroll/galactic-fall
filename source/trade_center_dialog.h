@@ -20,7 +20,6 @@
 #ifndef TRADE_CENTER_DIALOG_H
 #define TRADE_CENTER_DIALOG_H
 
-#include "clicked_listener.h"
 #include "key_listener.h"
 #include "mouse_button_listener.h"
 #include "mouse_motion_listener.h"
@@ -33,7 +32,7 @@ class Planet;
 class ScrollBox;
 class TradeCenterAssetClass;
 
-class TradeCenterDialog : public ClickedListener, public KeyListener, virtual public MouseButtonListener, virtual public MouseMotionListener, public WWindow
+class TradeCenterDialog : public KeyListener, virtual public MouseButtonListener, virtual public MouseMotionListener, public WWindow
 {
 public:
 	TradeCenterDialog(Widget * SupWidget, Planet * Planet, Character * Character);

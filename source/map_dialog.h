@@ -20,7 +20,6 @@
 #ifndef MAP_DIALOG_H
 #define MAP_DIALOG_H
 
-#include "clicked_listener.h"
 #include "key_listener.h"
 #include "window.h"
 
@@ -30,7 +29,7 @@ class Label;
 class StarMapDisplay;
 class System;
 
-class MapDialog : public ClickedListener, public KeyListener, public WWindow
+class MapDialog : public KeyListener, public WWindow
 {
 public:
 	MapDialog(Widget * SupWidget, System * System, Character * Character);

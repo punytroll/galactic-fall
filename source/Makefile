@@ -60,9 +60,6 @@ character_observer_h = \
 class_manager_h = \
 	class_manager.h
 
-clicked_listener_h = \
-	clicked_listener.h
-
 color_h = \
 	color.h \
 	$(math_vector4f_h)
@@ -185,8 +182,6 @@ local_file_data_channel_h = \
 
 load_game_dialog_h = \
 	load_game_dialog.h \
-	$(callbacks_callbacks_h) \
-	$(clicked_listener_h) \
 	$(key_listener_h) \
 	$(mouse_button_listener_h) \
 	$(timeout_notifications_h) \
@@ -194,7 +189,6 @@ load_game_dialog_h = \
 
 map_dialog_h = \
 	map_dialog.h \
-	$(clicked_listener_h) \
 	$(key_listener_h) \
 	$(window_h)
 
@@ -312,13 +306,11 @@ object_factory_h = \
 
 object_information_dialog_h = \
 	object_information_dialog.h \
-	$(clicked_listener_h) \
 	$(referencing_h) \
 	$(window_h)
 
 outfit_ship_dialog_h = \
 	outfit_ship_dialog.h \
-	$(clicked_listener_h) \
 	$(dimension_listener_h) \
 	$(key_listener_h) \
 	$(mouse_button_listener_h) \
@@ -339,7 +331,6 @@ planet_h = \
 
 planet_dialog_h = \
 	planet_dialog.h \
-	$(clicked_listener_h) \
 	$(destroy_listener_h) \
 	$(key_listener_h) \
 	$(window_h)
@@ -352,8 +343,6 @@ referencing_h = \
 
 save_game_dialog_h = \
 	save_game_dialog.h \
-	$(callbacks_callbacks_h) \
-	$(clicked_listener_h) \
 	$(key_listener_h) \
 	$(mouse_button_listener_h) \
 	$(timeout_notifications_h) \
@@ -366,7 +355,6 @@ scanner_display_h = \
 
 scroll_bar_h = \
 	scroll_bar.h \
-	$(clicked_listener_h) \
 	$(dimension_listener_h) \
 	$(mouse_button_listener_h) \
 	$(mouse_motion_listener_h) \
@@ -464,7 +452,6 @@ timing_dialog_h = \
 
 trade_center_dialog_h = \
 	trade_center_dialog.h \
-	$(clicked_listener_h) \
 	$(key_listener_h) \
 	$(mouse_button_listener_h) \
 	$(mouse_motion_listener_h) \
@@ -610,7 +597,7 @@ border.o: border.cpp $(border_h)
 buffer_reading.o: buffer_reading.cpp $(buffer_reading_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags libarxx` -c $< -o $@
 
-button.o: button.cpp $(button_h) $(callbacks_callbacks_h) $(clicked_listener_h) $(color_h) $(globals_h)
+button.o: button.cpp $(button_h) $(callbacks_callbacks_h) $(color_h) $(globals_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 camera.o: camera.cpp $(camera_h) $(object_h) $(object_aspect_position_h)
@@ -620,9 +607,6 @@ character.o: character.cpp $(character_h) $(character_observer_h) $(map_knowledg
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 character_observer.o: character_observer.cpp $(character_h) $(character_observer_h) $(message_h)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-
-clicked_listener.o: clicked_listener.cpp $(clicked_listener_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 color.o: color.cpp $(color_h)

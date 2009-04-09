@@ -20,7 +20,6 @@
 #ifndef PLANET_DIALOG_H
 #define PLANET_DIALOG_H
 
-#include "clicked_listener.h"
 #include "destroy_listener.h"
 #include "key_listener.h"
 #include "window.h"
@@ -31,7 +30,7 @@ class Label;
 class Planet;
 class TradeCenterDialog;
 
-class PlanetDialog : public ClickedListener, public DestroyListener, public KeyListener, public WWindow
+class PlanetDialog : public DestroyListener, public KeyListener, public WWindow
 {
 public:
 	PlanetDialog(Widget * SupWidget, Planet * Planet, Character * Character);

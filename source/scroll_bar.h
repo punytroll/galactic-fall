@@ -20,7 +20,6 @@
 #ifndef SCROLL_BAR_H
 #define SCROLL_BAR_H
 
-#include "clicked_listener.h"
 #include "dimension_listener.h"
 #include "mouse_button_listener.h"
 #include "mouse_motion_listener.h"
@@ -29,7 +28,7 @@
 class Button;
 class ScrollPositionChangedListener;
 
-class ScrollBar : public ClickedListener, public DimensionListener, public MouseButtonListener, public MouseMotionListener, public Widget
+class ScrollBar : public DimensionListener, public MouseButtonListener, public MouseMotionListener, public Widget
 {
 public:
 	enum Alignment
