@@ -20,8 +20,6 @@
 #ifndef LOAD_GAME_DIALOG_H
 #define LOAD_GAME_DIALOG_H
 
-#include "callbacks/callbacks.h"
-#include "clicked_listener.h"
 #include "key_listener.h"
 #include "mouse_button_listener.h"
 #include "timeout_notifications.h"
@@ -31,8 +29,9 @@ class Button;
 class DirectoryEntryItem;
 class Label;
 class ScrollBox;
+template < typename ReturnType, typename Argument1Type > class Callback1;
 
-class LoadGameDialog : public ClickedListener, public KeyListener, virtual public MouseButtonListener, public WWindow
+class LoadGameDialog : public KeyListener, virtual public MouseButtonListener, public WWindow
 {
 public:
 	LoadGameDialog(Widget * SupWidget, Callback1< bool, std::istream & > LoadGameCallback);

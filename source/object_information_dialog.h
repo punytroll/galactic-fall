@@ -20,7 +20,6 @@
 #ifndef OBJECT_INFORMATION_DIALOG_H
 #define OBJECT_INFORMATION_DIALOG_H
 
-#include "clicked_listener.h"
 #include "referencing.h"
 #include "window.h"
 
@@ -28,7 +27,7 @@ class Button;
 class Object;
 class ScrollBox;
 
-class ObjectInformationDialog : public ClickedListener, public WWindow
+class ObjectInformationDialog : public WWindow
 {
 public:
 	ObjectInformationDialog(Widget * SupWidget, const Reference< Object > & Object);

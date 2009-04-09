@@ -20,8 +20,6 @@
 #ifndef SAVE_GAME_DIALOG_H
 #define SAVE_GAME_DIALOG_H
 
-#include "callbacks/callbacks.h"
-#include "clicked_listener.h"
 #include "key_listener.h"
 #include "mouse_button_listener.h"
 #include "timeout_notifications.h"
@@ -31,8 +29,9 @@ class Button;
 class DirectoryEntryItem;
 class Label;
 class ScrollBox;
+template < typename ReturnType, typename Argument1Type > class Callback1;
 
-class SaveGameDialog : public ClickedListener, public KeyListener, virtual public MouseButtonListener, public WWindow
+class SaveGameDialog : public KeyListener, virtual public MouseButtonListener, public WWindow
 {
 public:
 	SaveGameDialog(Widget * SupWidget, Callback1< void, std::ostream & > SaveGameCallback);

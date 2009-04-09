@@ -20,7 +20,6 @@
 #ifndef OUTFIT_SHIP_DIALOG_H
 #define OUTFIT_SHIP_DIALOG_H
 
-#include "clicked_listener.h"
 #include "dimension_listener.h"
 #include "key_listener.h"
 #include "mouse_button_listener.h"
@@ -32,7 +31,7 @@ class Ship;
 class SlotListItem;
 class AccessoryListItem;
 
-class OutfitShipDialog : public ClickedListener, public DimensionListener, public KeyListener, virtual public MouseButtonListener, public WWindow
+class OutfitShipDialog : public DimensionListener, public KeyListener, virtual public MouseButtonListener, public WWindow
 {
 public:
 	OutfitShipDialog(Widget * SupWidget, Ship * Ship);
