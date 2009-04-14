@@ -57,7 +57,10 @@ public:
 	void StepLess(void);
 	void StepMore(void);
 protected:
-	virtual bool OnClicked(Widget * EventSource);
+	// callbacks
+	void OnLessClicked(void);
+	void OnMoreClicked(void);
+	// listeners
 	virtual void OnSizeChanged(Widget * EventSource);
 	virtual void OnMouseEnter(Widget * EventSource);
 	virtual void OnMouseLeave(Widget * EventSource);

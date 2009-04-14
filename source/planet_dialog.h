@@ -35,7 +35,11 @@ class PlanetDialog : public DestroyListener, public KeyListener, public WWindow
 public:
 	PlanetDialog(Widget * SupWidget, Planet * Planet, Character * Character);
 protected:
-	virtual bool OnClicked(Widget * EventSource);
+	// callbacks
+	void OnRefuelClicked(void);
+	void OnTakeOffClicked(void);
+	void OnTradeCenterClicked(void);
+	// listeners
 	virtual void OnDestroy(Widget * EventSource);
 	virtual bool OnKey(Widget * EventSource, const KeyEventInformation & KeyEventInformation);
 private:

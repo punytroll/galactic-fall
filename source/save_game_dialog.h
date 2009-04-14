@@ -36,7 +36,10 @@ class SaveGameDialog : public KeyListener, virtual public MouseButtonListener, p
 public:
 	SaveGameDialog(Widget * SupWidget, Callback1< void, std::ostream & > SaveGameCallback);
 protected:
-	virtual bool OnClicked(Widget * EventSource);
+	// callbacks
+	void OnCancelClicked(void);
+	void OnOKClicked(void);
+	// listeners
 	virtual bool OnKey(Widget * EventSource, const KeyEventInformation & KeyEventInformation);
 	virtual bool OnMouseButton(Widget * EventSource, int Button, int State, float X, float Y);
 private:

@@ -51,7 +51,7 @@ PlanetDialog::PlanetDialog(Widget * SupWidget, Planet * Planet, Character * Char
 	m_TakeOffButton = new Button(this);
 	m_TakeOffButton->SetPosition(Vector2f(390.0f, 300.0f));
 	m_TakeOffButton->SetSize(Vector2f(100.0f, 20.0f));
-	m_TakeOffButton->AddClickedHandler(Callback(this, &PlanetDialog::OnClicked));
+	m_TakeOffButton->AddClickedHandler(Callback(this, &PlanetDialog::OnTakeOffClicked));
 	m_TakeOffButton->SetAnchorBottom(true);
 	m_TakeOffButton->SetAnchorLeft(false);
 	m_TakeOffButton->SetAnchorRight(true);
@@ -66,7 +66,7 @@ PlanetDialog::PlanetDialog(Widget * SupWidget, Planet * Planet, Character * Char
 	m_TradeCenterButton = new Button(this);
 	m_TradeCenterButton->SetPosition(Vector2f(10.0f, 40.0f));
 	m_TradeCenterButton->SetSize(Vector2f(100.0f, 20.0f));
-	m_TradeCenterButton->AddClickedHandler(Callback(this, &PlanetDialog::OnClicked));
+	m_TradeCenterButton->AddClickedHandler(Callback(this, &PlanetDialog::OnTradeCenterClicked));
 	m_TradeCenterLabel = new Label(m_TradeCenterButton, "Trade Center");
 	m_TradeCenterLabel->SetPosition(Vector2f(0.0f, 0.0f));
 	m_TradeCenterLabel->SetSize(m_TradeCenterButton->GetSize());
@@ -82,7 +82,7 @@ PlanetDialog::PlanetDialog(Widget * SupWidget, Planet * Planet, Character * Char
 			m_RefuelButton = new Button(this);
 			m_RefuelButton->SetPosition(Vector2f(10.0f, 70.0f));
 			m_RefuelButton->SetSize(Vector2f(100.0f, 20.0f));
-			m_RefuelButton->AddClickedHandler(Callback(this, &PlanetDialog::OnClicked));
+			m_RefuelButton->AddClickedHandler(Callback(this, &PlanetDialog::OnRefuelClicked));
 			m_RefuelButtonLabel = new Label(m_RefuelButton, "Refuel");
 			m_RefuelButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
 			m_RefuelButtonLabel->SetSize(m_TradeCenterButton->GetSize());
@@ -101,47 +101,40 @@ PlanetDialog::PlanetDialog(Widget * SupWidget, Planet * Planet, Character * Char
 	}
 }
 
-bool PlanetDialog::OnClicked(Widget * EventSource)
+void PlanetDialog::OnRefuelClicked(void)
 {
-	if(EventSource == m_TakeOffButton)
-	{
-		m_Character->GetShip()->SetTakeOff(true);
-		
-		return true;
-	}
-	else if(EventSource == m_RefuelButton)
-	{
-		const std::vector< PlanetAssetClass * > & PlanetAssetClasses(m_Planet->GetPlanetAssetClasses());
-		
-		for(std::vector< PlanetAssetClass * >::const_iterator PlanetAssetClassIterator = PlanetAssetClasses.begin(); PlanetAssetClassIterator != PlanetAssetClasses.end(); ++PlanetAssetClassIterator)
-		{
-			if((*PlanetAssetClassIterator)->GetAssetClass()->GetIdentifier() == "fuel")
-			{
-				u4byte FuelPrice((*PlanetAssetClassIterator)->GetPrice());
-				float CanBuy(m_Character->GetCredits() / FuelPrice);
-				float Need(m_Character->GetShip()->GetFuelCapacity() - m_Character->GetShip()->GetFuel());
-				float Buy((CanBuy > Need) ? (Need) : (CanBuy));
-				
-				m_Character->GetShip()->SetFuel(m_Character->GetShip()->GetFuel() + Buy);
-				m_Character->RemoveCredits(static_cast< u4byte >(Buy * FuelPrice));
-				
-				break;
-			}
-		}
-	}
-	else if(EventSource == m_TradeCenterButton)
-	{
-		if(m_TradeCenterDialog == 0)
-		{
-			m_TradeCenterDialog = new TradeCenterDialog(GetRootWidget(), m_Planet, m_Character);
-			m_TradeCenterDialog->GrabKeyFocus();
-			m_TradeCenterDialog->AddDestroyListener(this);
-		}
-		
-		return true;
-	}
+	const std::vector< PlanetAssetClass * > & PlanetAssetClasses(m_Planet->GetPlanetAssetClasses());
 	
-	return false;
+	for(std::vector< PlanetAssetClass * >::const_iterator PlanetAssetClassIterator = PlanetAssetClasses.begin(); PlanetAssetClassIterator != PlanetAssetClasses.end(); ++PlanetAssetClassIterator)
+	{
+		if((*PlanetAssetClassIterator)->GetAssetClass()->GetIdentifier() == "fuel")
+		{
+			u4byte FuelPrice((*PlanetAssetClassIterator)->GetPrice());
+			float CanBuy(m_Character->GetCredits() / FuelPrice);
+			float Need(m_Character->GetShip()->GetFuelCapacity() - m_Character->GetShip()->GetFuel());
+			float Buy((CanBuy > Need) ? (Need) : (CanBuy));
+			
+			m_Character->GetShip()->SetFuel(m_Character->GetShip()->GetFuel() + Buy);
+			m_Character->RemoveCredits(static_cast< u4byte >(Buy * FuelPrice));
+			
+			break;
+		}
+	}
+}
+
+void PlanetDialog::OnTakeOffClicked(void)
+{
+	m_Character->GetShip()->SetTakeOff(true);
+}
+
+void PlanetDialog::OnTradeCenterClicked(void)
+{
+	if(m_TradeCenterDialog == 0)
+	{
+		m_TradeCenterDialog = new TradeCenterDialog(GetRootWidget(), m_Planet, m_Character);
+		m_TradeCenterDialog->GrabKeyFocus();
+		m_TradeCenterDialog->AddDestroyListener(this);
+	}
 }
 
 void PlanetDialog::OnDestroy(Widget * EventSource)

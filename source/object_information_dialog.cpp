@@ -48,7 +48,7 @@ ObjectInformationDialog::ObjectInformationDialog(Widget * SupWidget, const Refer
 	m_OKButton->SetAnchorLeft(false);
 	m_OKButton->SetAnchorRight(true);
 	m_OKButton->SetAnchorTop(false);
-	m_OKButton->AddClickedHandler(Callback(this, &ObjectInformationDialog::OnClicked));
+	m_OKButton->AddClickedHandler(Callback(this, &ObjectInformationDialog::OnOKClicked));
 	
 	Label * OKButtonLabel = new Label(m_OKButton, "OK");
 	
@@ -69,7 +69,7 @@ ObjectInformationDialog::ObjectInformationDialog(Widget * SupWidget, const Refer
 	m_RefreshButton->SetAnchorLeft(false);
 	m_RefreshButton->SetAnchorRight(true);
 	m_RefreshButton->SetAnchorTop(false);
-	m_RefreshButton->AddClickedHandler(Callback(this, &ObjectInformationDialog::OnClicked));
+	m_RefreshButton->AddClickedHandler(Callback(this, &ObjectInformationDialog::OnRefreshClicked));
 	
 	Label * RefreshButtonLabel = new Label(m_RefreshButton, "Refresh");
 	
@@ -93,7 +93,7 @@ float ObjectInformationDialog::AddObjectProperty(float Top, float Indentation, c
 	ObjectButton->SetPosition(Vector2f(Indentation, 5.0f));
 	ObjectButton->SetSize(Vector2f(PropertyDisplay->GetSize()[0] - Indentation, 20.0f));
 	ObjectButton->SetAnchorRight(true);
-	ObjectButton->AddClickedHandler(Callback(this, &ObjectInformationDialog::OnClicked));
+	ObjectButton->AddClickedHandler(Bind1(Callback(this, &ObjectInformationDialog::OnObjectClicked), Object));
 	
 	Label * ObjectButtonLabel(new Label(ObjectButton, Object->GetObjectIdentifier()));
 	
@@ -264,32 +264,17 @@ bool ObjectInformationDialog::OnMouseButton(Widget * EventSource, int Button, in
 	return false;
 }
 
-bool ObjectInformationDialog::OnClicked(Widget * EventSource)
+void ObjectInformationDialog::OnObjectClicked(const Reference< Object > Object)
 {
-	if(EventSource == m_OKButton)
-	{
-		Destroy();
-		
-		return true;
-	}
-	else if(EventSource == m_RefreshButton)
-	{
-		Refresh();
-		
-		return true;
-	}
-	else
-	{
-		assert(EventSource->GetSubWidgets().size() == 1);
-		assert(dynamic_cast< Label * >(EventSource->GetSubWidgets().front()) != 0);
-		
-		Object * Object(Object::GetObject(dynamic_cast< Label * >(EventSource->GetSubWidgets().front())->GetText()));
-		
-		if(Object != 0)
-		{
-			new ObjectInformationDialog(GetRootWidget(), Object->GetReference());
-		}
-	}
-	
-	return false;
+	new ObjectInformationDialog(GetRootWidget(), Object);
+}
+
+void ObjectInformationDialog::OnOKClicked(void)
+{
+	Destroy();
+}
+
+void ObjectInformationDialog::OnRefreshClicked(void)
+{
+	Refresh();
 }

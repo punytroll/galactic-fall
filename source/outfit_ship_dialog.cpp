@@ -277,7 +277,7 @@ OutfitShipDialog::OutfitShipDialog(Widget * SupWidget, Ship * Ship) :
 	m_MountButton = new Button(m_CenterPane);
 	m_MountButton->SetPosition(Vector2f(0.0f, 40.0f));
 	m_MountButton->SetSize(Vector2f(m_CenterPane->GetSize()[0], 20.0f));
-	m_MountButton->AddClickedHandler(Callback(this, &OutfitShipDialog::OnClicked));
+	m_MountButton->AddClickedHandler(Callback(this, &OutfitShipDialog::OnMountClicked));
 	m_MountButton->SetAnchorRight(true);
 	
 	Label * MountButtonLabel(new Label(m_MountButton, "Mount"));
@@ -289,7 +289,7 @@ OutfitShipDialog::OutfitShipDialog(Widget * SupWidget, Ship * Ship) :
 	m_UnmountButton = new Button(m_CenterPane);
 	m_UnmountButton->SetPosition(Vector2f(0.0f, 70.0f));
 	m_UnmountButton->SetSize(Vector2f(m_CenterPane->GetSize()[0], 20.0f));
-	m_UnmountButton->AddClickedHandler(Callback(this, &OutfitShipDialog::OnClicked));
+	m_UnmountButton->AddClickedHandler(Callback(this, &OutfitShipDialog::OnUnmountClicked));
 	m_UnmountButton->SetAnchorRight(true);
 	
 	Label * UnmountButtonLabel(new Label(m_UnmountButton, "Unmount"));
@@ -301,7 +301,7 @@ OutfitShipDialog::OutfitShipDialog(Widget * SupWidget, Ship * Ship) :
 	m_OKButton = new Button(m_CenterPane);
 	m_OKButton->SetPosition(Vector2f(0.0f, m_CenterPane->GetSize()[1] - 30.0f));
 	m_OKButton->SetSize(Vector2f(m_CenterPane->GetSize()[0], 20.0f));
-	m_OKButton->AddClickedHandler(Callback(this, &OutfitShipDialog::OnClicked));
+	m_OKButton->AddClickedHandler(Callback(this, &OutfitShipDialog::OnOKClicked));
 	m_OKButton->SetAnchorBottom(true);
 	m_OKButton->SetAnchorRight(true);
 	m_OKButton->SetAnchorTop(false);
@@ -402,53 +402,44 @@ void OutfitShipDialog::UpdateButtons(void)
 	}
 }
 
-bool OutfitShipDialog::OnClicked(Widget * EventSource)
+void OutfitShipDialog::OnMountClicked()
 {
-	if(EventSource == m_OKButton)
-	{
-		Destroy();
-		
-		return true;
-	}
-	else if(EventSource == m_MountButton)
-	{
-		assert(m_SelectedAccessoryListItem != 0);
-		assert(m_SelectedSlotListItem != 0);
-		
-		Object * Accessory(m_SelectedAccessoryListItem->GetAccessory());
-		
-		assert(Accessory != 0);
-		m_Ship->GetCargoHold()->GetAspectObjectContainer()->RemoveContent(Accessory);
-		m_Ship->GetAspectObjectContainer()->AddContent(Accessory);
-		m_SelectedSlotListItem->GetSlot()->Mount(Accessory->GetReference());
-		m_SelectedSlotListItem->Update();
-		RebuildAccessoryList();
-		UpdateButtons();
-		
-		return true;
-	}
-	else if(EventSource == m_UnmountButton)
-	{
-		assert(m_SelectedSlotListItem != 0);
-		
-		Object * Accessory(m_SelectedSlotListItem->GetSlot()->GetMountedObject().Get());
-		
-		assert(Accessory != 0);
-		if(Accessory->GetAspectPhysical() != 0)
-		{
-			assert(m_Ship->GetCargoHold()->GetSpace() >= Accessory->GetAspectPhysical()->GetSpaceRequirement());
-		}
-		m_SelectedSlotListItem->GetSlot()->Unmount();
-		m_Ship->GetAspectObjectContainer()->RemoveContent(Accessory);
-		m_Ship->GetCargoHold()->GetAspectObjectContainer()->AddContent(Accessory);
-		m_SelectedSlotListItem->Update();
-		RebuildAccessoryList();
-		UpdateButtons();
-		
-		return true;
-	}
+	assert(m_SelectedAccessoryListItem != 0);
+	assert(m_SelectedSlotListItem != 0);
 	
-	return false;
+	Object * Accessory(m_SelectedAccessoryListItem->GetAccessory());
+	
+	assert(Accessory != 0);
+	m_Ship->GetCargoHold()->GetAspectObjectContainer()->RemoveContent(Accessory);
+	m_Ship->GetAspectObjectContainer()->AddContent(Accessory);
+	m_SelectedSlotListItem->GetSlot()->Mount(Accessory->GetReference());
+	m_SelectedSlotListItem->Update();
+	RebuildAccessoryList();
+	UpdateButtons();
+}
+
+void OutfitShipDialog::OnOKClicked()
+{
+	Destroy();
+}
+
+void OutfitShipDialog::OnUnmountClicked()
+{
+	assert(m_SelectedSlotListItem != 0);
+	
+	Object * Accessory(m_SelectedSlotListItem->GetSlot()->GetMountedObject().Get());
+	
+	assert(Accessory != 0);
+	if(Accessory->GetAspectPhysical() != 0)
+	{
+		assert(m_Ship->GetCargoHold()->GetSpace() >= Accessory->GetAspectPhysical()->GetSpaceRequirement());
+	}
+	m_SelectedSlotListItem->GetSlot()->Unmount();
+	m_Ship->GetAspectObjectContainer()->RemoveContent(Accessory);
+	m_Ship->GetCargoHold()->GetAspectObjectContainer()->AddContent(Accessory);
+	m_SelectedSlotListItem->Update();
+	RebuildAccessoryList();
+	UpdateButtons();
 }
 
 bool OutfitShipDialog::OnKey(Widget * EventSource, const KeyEventInformation & KeyEventInformation)

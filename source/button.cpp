@@ -35,7 +35,7 @@ Button::~Button(void)
 {
 }
 
-void Button::AddClickedHandler(Callback1< bool, Widget * > ClickedHandler)
+void Button::AddClickedHandler(Callback0< void > ClickedHandler)
 {
 	m_ClickedEvent.push_back(ClickedHandler);
 }
@@ -44,13 +44,12 @@ bool Button::OnMouseButton(Widget * EventSource, int Button, int State, float X,
 {
 	if((Button == 1 /* LEFT */) && (State == EV_UP))
 	{
-		for(std::list< Callback1< bool, Widget * > >::iterator ClickedHandlerIterator = m_ClickedEvent.begin(); ClickedHandlerIterator != m_ClickedEvent.end(); ++ClickedHandlerIterator)
+		for(std::list< Callback0< void > >::iterator ClickedHandlerIterator = m_ClickedEvent.begin(); ClickedHandlerIterator != m_ClickedEvent.end(); ++ClickedHandlerIterator)
 		{
-			if((*ClickedHandlerIterator)(this) == true)
-			{
-				return true;
-			}
+			(*ClickedHandlerIterator)();
 		}
+		
+		return true;
 	}
 	
 	return false;
