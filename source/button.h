@@ -26,21 +26,21 @@
 #include "mouse_motion_listener.h"
 #include "widget.h"
 
-template < typename ReturnType, typename Argument1Type >
-class Callback1;
+template < typename ReturnType >
+class Callback0;
 
 class Button : public Widget, public MouseButtonListener, public MouseMotionListener
 {
 public:
 	Button(Widget * SupWidget);
 	~Button(void);
-	void AddClickedHandler(Callback1< bool, Widget * > ClickedHandler);
+	void AddClickedHandler(Callback0< void > ClickedHandler);
 	// listener handlers
 	virtual bool OnMouseButton(Widget * EventSource, int Button, int State, float X, float Y);
 	virtual void OnMouseEnter(Widget * EventSource);
 	virtual void OnMouseLeave(Widget * EventSource);
 private:
-	std::list< Callback1< bool, Widget * > > m_ClickedEvent;
+	std::list< Callback0< void > > m_ClickedEvent;
 };
 
 #endif

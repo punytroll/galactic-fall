@@ -35,7 +35,9 @@ public:
 	MapDialog(Widget * SupWidget, System * System, Character * Character);
 	StarMapDisplay * GetStarMapDisplay(void);
 protected:
-	virtual bool OnClicked(Widget * EventSource);
+	// callbacks
+	void OnOKClicked(void);
+	// listeners
 	virtual bool OnKey(Widget * EventSource, const KeyEventInformation & KeyEventInformation);
 private:
 	Button * m_OKButton;

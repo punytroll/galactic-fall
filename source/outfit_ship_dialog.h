@@ -36,7 +36,11 @@ class OutfitShipDialog : public DimensionListener, public KeyListener, virtual p
 public:
 	OutfitShipDialog(Widget * SupWidget, Ship * Ship);
 protected:
-	virtual bool OnClicked(Widget * EventSource);
+	// callbacks
+	void OnMountClicked(void);
+	void OnOKClicked(void);
+	void OnUnmountClicked(void);
+	// listeners
 	virtual bool OnKey(Widget * EventSource, const KeyEventInformation & KeyEventInformation);
 	virtual bool OnMouseButton(Widget * EventSource, int Button, int State, float X, float Y);
 	virtual void OnSizeChanged(Widget * EventSource);

@@ -37,7 +37,11 @@ class TradeCenterDialog : public KeyListener, virtual public MouseButtonListener
 public:
 	TradeCenterDialog(Widget * SupWidget, Planet * Planet, Character * Character);
 protected:
-	virtual bool OnClicked(Widget * EventSource);
+	// callbacks
+	void OnBuyClicked(void);
+	void OnOKClicked(void);
+	void OnSellClicked(void);
+	// listeners
 	virtual bool OnKey(Widget * EventSource, const KeyEventInformation & KeyEventInformation);
 	virtual bool OnMouseButton(Widget * EventSource, int Button, int State, float X, float Y);
 	virtual void OnMouseEnter(Widget * EventSource);

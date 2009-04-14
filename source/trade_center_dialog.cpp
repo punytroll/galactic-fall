@@ -108,7 +108,7 @@ TradeCenterDialog::TradeCenterDialog(Widget * SupWidget, Planet * Planet, Charac
 	m_OKButton->SetAnchorLeft(false);
 	m_OKButton->SetAnchorRight(true);
 	m_OKButton->SetAnchorTop(false);
-	m_OKButton->AddClickedHandler(Callback(this, &TradeCenterDialog::OnClicked));
+	m_OKButton->AddClickedHandler(Callback(this, &TradeCenterDialog::OnOKClicked));
 	m_OKButtonLabel = new Label(m_OKButton, "OK");
 	m_OKButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
 	m_OKButtonLabel->SetSize(m_OKButton->GetSize());
@@ -119,7 +119,7 @@ TradeCenterDialog::TradeCenterDialog(Widget * SupWidget, Planet * Planet, Charac
 	m_BuyButton->SetSize(Vector2f(100.0f, 20.0f));
 	m_BuyButton->SetAnchorBottom(true);
 	m_BuyButton->SetAnchorTop(false);
-	m_BuyButton->AddClickedHandler(Callback(this, &TradeCenterDialog::OnClicked));
+	m_BuyButton->AddClickedHandler(Callback(this, &TradeCenterDialog::OnBuyClicked));
 	m_BuyButtonLabel = new Label(m_BuyButton, "Buy");
 	m_BuyButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
 	m_BuyButtonLabel->SetSize(m_BuyButton->GetSize());
@@ -130,7 +130,7 @@ TradeCenterDialog::TradeCenterDialog(Widget * SupWidget, Planet * Planet, Charac
 	m_SellButton->SetSize(Vector2f(100.0f, 20.0f));
 	m_SellButton->SetAnchorBottom(true);
 	m_SellButton->SetAnchorTop(false);
-	m_SellButton->AddClickedHandler(Callback(this, &TradeCenterDialog::OnClicked));
+	m_SellButton->AddClickedHandler(Callback(this, &TradeCenterDialog::OnSellClicked));
 	m_SellButtonLabel = new Label(m_SellButton, "Sell");
 	m_SellButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
 	m_SellButtonLabel->SetSize(m_SellButton->GetSize());
@@ -237,32 +237,27 @@ void TradeCenterDialog::Sell(const PlanetAssetClass * PlanetAssetClass)
 	}
 }
 
-bool TradeCenterDialog::OnClicked(Widget * EventSource)
+void TradeCenterDialog::OnBuyClicked(void)
 {
-	if(EventSource == m_OKButton)
+	if(m_SelectedTradeCenterAssetClass != 0)
 	{
-		Destroy();
-		
-		return true;
+		Buy(m_SelectedTradeCenterAssetClass->GetPlanetAssetClass());
+		m_SelectedTradeCenterAssetClass->UpdateCharacterAmount();
 	}
-	else if(EventSource == m_BuyButton)
+}
+
+void TradeCenterDialog::OnOKClicked(void)
+{
+	Destroy();
+}
+
+void TradeCenterDialog::OnSellClicked(void)
+{
+	if(m_SelectedTradeCenterAssetClass != 0)
 	{
-		if(m_SelectedTradeCenterAssetClass != 0)
-		{
-			Buy(m_SelectedTradeCenterAssetClass->GetPlanetAssetClass());
-			m_SelectedTradeCenterAssetClass->UpdateCharacterAmount();
-		}
+		Sell(m_SelectedTradeCenterAssetClass->GetPlanetAssetClass());
+		m_SelectedTradeCenterAssetClass->UpdateCharacterAmount();
 	}
-	else if(EventSource == m_SellButton)
-	{
-		if(m_SelectedTradeCenterAssetClass != 0)
-		{
-			Sell(m_SelectedTradeCenterAssetClass->GetPlanetAssetClass());
-			m_SelectedTradeCenterAssetClass->UpdateCharacterAmount();
-		}
-	}
-	
-	return false;
 }
 
 bool TradeCenterDialog::OnKey(Widget * EventSource, const KeyEventInformation & KeyEventInformation)

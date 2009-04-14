@@ -33,9 +33,9 @@ ScrollBar::ScrollBar(Widget * SupWidget, ScrollBar::Alignment Alignment) :
 	AddDimensionListener(this);
 	SetBackgroundColor(Color(0.23f, 0.23f, 0.23f, 1.0f));
 	m_LessButton = new Button(this);
-	m_LessButton->AddClickedHandler(Callback(this, &ScrollBar::OnClicked));
+	m_LessButton->AddClickedHandler(Callback(this, &ScrollBar::OnLessClicked));
 	m_MoreButton = new Button(this);
-	m_MoreButton->AddClickedHandler(Callback(this, &ScrollBar::OnClicked));
+	m_MoreButton->AddClickedHandler(Callback(this, &ScrollBar::OnMoreClicked));
 	m_Tracker = new Widget(this);
 	m_Tracker->SetBackgroundColor(Color(0.3f, 0.3f, 0.3f, 1.0f));
 	m_Tracker->AddMouseButtonListener(this);
@@ -56,22 +56,14 @@ void ScrollBar::AddScrollPositionChangedListener(ScrollPositionChangedListener *
 	m_ScrollPositionChangedListeners.push_back(ScrollPositionChangedListener);
 }
 
-bool ScrollBar::OnClicked(Widget * EventSource)
+void ScrollBar::OnLessClicked(void)
 {
-	if(EventSource == m_LessButton)
-	{
-		SetCurrentPosition(GetCurrentPosition() - GetStepSize());
-		
-		return true;
-	}
-	else if(EventSource == m_MoreButton)
-	{
-		SetCurrentPosition(GetCurrentPosition() + GetStepSize());
-		
-		return true;
-	}
-	
-	return false;
+	SetCurrentPosition(GetCurrentPosition() - GetStepSize());
+}
+
+void ScrollBar::OnMoreClicked(void)
+{
+	SetCurrentPosition(GetCurrentPosition() + GetStepSize());
 }
 
 void ScrollBar::OnSizeChanged(Widget * EventSource)
