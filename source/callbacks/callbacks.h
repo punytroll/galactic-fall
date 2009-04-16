@@ -4,7 +4,6 @@
 #include <assert.h>
 
 #include <iostream>
-#include <list>
 
 #include "callbacks.inc"
 
