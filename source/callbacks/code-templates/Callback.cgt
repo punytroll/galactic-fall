@@ -81,7 +81,7 @@ public:
 	
 	ReturnType operator()(<if><condition><greater><variable>NumberOfArguments</variable><to-integer>0</to-integer></greater></condition><then><foreach name="Loop"><over><range><to-integer>1</to-integer><variable>NumberOfArguments</variable></range></over><do><if><condition><greater><variable>Loop</variable><to-integer>1</to-integer></greater></condition><then>, </then></if>Argument<to-string><variable>Loop</variable></to-string>Type Argument<to-string><variable>Loop</variable></to-string></do></foreach></then><else>void</else></if>) const
 	{
-		return m_Core-&gt;Call(<foreach name="Loop"><over><range><to-integer>1</to-integer><variable>NumberOfArguments</variable></range></over><do>Argument<to-string><variable>Loop</variable></to-string></do></foreach>);
+		return m_Core-&gt;Call(<foreach name="Loop"><over><range><to-integer>1</to-integer><variable>NumberOfArguments</variable></range></over><do><if><condition><greater><variable>Loop</variable><to-integer>1</to-integer></greater></condition><then>, </then></if>Argument<to-string><variable>Loop</variable></to-string></do></foreach>);
 	}
 	
 	bool IsValid(void) const
