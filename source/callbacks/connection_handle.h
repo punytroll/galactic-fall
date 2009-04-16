@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006  Hagen Möbius
+ * Copyright (C) 2009  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,16 +17,38 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef DESTROY_LISTENER_H
-#define DESTROY_LISTENER_H
+#ifndef CONNECTION_HANDLE_H
+#define CONNECTION_HANDLE_H
 
-class Widget;
-
-class DestroyListener
+class ConnectionHandle
 {
 public:
-	virtual ~DestroyListener(void);
-	virtual void OnDestroy(Widget * EventSource);
+	ConnectionHandle(void) :
+		_Handle(0)
+	{
+	}
+	
+	ConnectionHandle(void * Handle) :
+		_Handle(Handle)
+	{
+	}
+	
+	bool IsValid(void) const
+	{
+		return _Handle != 0;
+	}
+	
+	void * GetHandle(void)
+	{
+		return _Handle;
+	}
+	
+	void Invalidate(void)
+	{
+		_Handle = 0;
+	}
+private:
+	void * _Handle;
 };
 
 #endif

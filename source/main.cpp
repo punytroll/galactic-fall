@@ -43,7 +43,6 @@
 #include "command_mind.h"
 #include "commodity.h"
 #include "commodity_class.h"
-#include "destroy_listener.h"
 #include "draw_text.h"
 #include "faction.h"
 #include "galaxy.h"
@@ -1063,46 +1062,43 @@ void Resize(void)
 	g_UserInterface->GetRootWidget()->SetSize(Vector2f(g_Width, g_Height));
 }
 
-class GlobalDestroyListener : public DestroyListener
+void OnMapDialogDestroyed(void)
 {
-public:
-	virtual void OnDestroy(Widget * EventSource)
+	if((g_InputMind.IsValid() == true) && (g_InputMind->GetCharacter() != 0) && (g_InputMind->GetCharacter()->GetShip() != 0))
 	{
-		if(EventSource == g_MapDialog)
+		const System * CurrentSystem(dynamic_cast< System * >(g_InputMind->GetCharacter()->GetShip()->GetContainer()));
+		
+		assert(CurrentSystem != 0);
+		if(CurrentSystem->IsLinkedToSystem(g_MapDialog->GetStarMapDisplay()->GetSelectedSystem()) == true)
 		{
-			if((g_InputMind.IsValid() == true) && (g_InputMind->GetCharacter() != 0) && (g_InputMind->GetCharacter()->GetShip() != 0))
-			{
-				const System * CurrentSystem(dynamic_cast< System * >(g_InputMind->GetCharacter()->GetShip()->GetContainer()));
-				
-				assert(CurrentSystem != 0);
-				if(CurrentSystem->IsLinkedToSystem(g_MapDialog->GetStarMapDisplay()->GetSelectedSystem()) == true)
-				{
-					g_InputMind->SelectLinkedSystem(g_MapDialog->GetStarMapDisplay()->GetSelectedSystem());
-				}
-			}
-			g_MapDialog = 0;
-			g_Pause = false;
-		}
-		else if(EventSource == g_OutfitShipDialog)
-		{
-			g_OutfitShipDialog = 0;
-		}
-		else if(EventSource == g_SaveGameDialog)
-		{
-			g_SaveGameDialog = 0;
-			g_Pause = false;
-		}
-		else if(EventSource == g_LoadGameDialog)
-		{
-			g_LoadGameDialog = 0;
-			g_Pause = false;
-		}
-		else if(EventSource == g_TimingDialog)
-		{
-			g_TimingDialog = 0;
+			g_InputMind->SelectLinkedSystem(g_MapDialog->GetStarMapDisplay()->GetSelectedSystem());
 		}
 	}
-} g_GlobalDestroyListener;
+	g_MapDialog = 0;
+	g_Pause = false;
+}
+
+void OnOutfitShipDialogDestroyed(void)
+{
+	g_OutfitShipDialog = 0;
+}
+
+void OnSaveGameDialogDestroyed(void)
+{
+	g_SaveGameDialog = 0;
+	g_Pause = false;
+}
+
+void OnLoadGameDialogDestroyed(void)
+{
+	g_LoadGameDialog = 0;
+	g_Pause = false;
+}
+
+void OnTimingDialogDestroyed(void)
+{
+	g_TimingDialog = 0;
+}
 
 void EmptySystem(System * System)
 {
@@ -2639,7 +2635,7 @@ void ActionOpenLoadGameDialog(void)
 		g_Pause = true;
 		g_LoadGameDialog = new LoadGameDialog(g_UserInterface->GetRootWidget(), Callback(LoadGameFromInputStream));
 		g_LoadGameDialog->GrabKeyFocus();
-		g_LoadGameDialog->AddDestroyListener(&g_GlobalDestroyListener);
+		g_LoadGameDialog->ConnectDestroyCallback(Callback(OnLoadGameDialogDestroyed));
 	}
 }
 
@@ -2653,7 +2649,7 @@ void ActionOpenMapDialog(void)
 		g_Pause = true;
 		g_MapDialog = new MapDialog(g_UserInterface->GetRootWidget(), CurrentSystem, g_CharacterObserver->GetObservedCharacter().Get());
 		g_MapDialog->GrabKeyFocus();
-		g_MapDialog->AddDestroyListener(&g_GlobalDestroyListener);
+		g_MapDialog->ConnectDestroyCallback(Callback(OnMapDialogDestroyed));
 		if(g_InputMind.IsValid() == true)
 		{
 			g_InputMind->DisableAccelerate();
@@ -2677,7 +2673,7 @@ void ActionOpenSaveGameDialog(void)
 		g_Pause = true;
 		g_SaveGameDialog = new SaveGameDialog(g_UserInterface->GetRootWidget(), Callback(SaveGame));
 		g_SaveGameDialog->GrabKeyFocus();
-		g_SaveGameDialog->AddDestroyListener(&g_GlobalDestroyListener);
+		g_SaveGameDialog->ConnectDestroyCallback(Callback(OnSaveGameDialogDestroyed));
 	}
 }
 
@@ -2687,7 +2683,7 @@ void ActionOutfitShip(void)
 	{
 		g_OutfitShipDialog = new OutfitShipDialog(g_UserInterface->GetRootWidget(), g_CharacterObserver->GetObservedCharacter()->GetShip());
 		g_OutfitShipDialog->GrabKeyFocus();
-		g_OutfitShipDialog->AddDestroyListener(&g_GlobalDestroyListener);
+		g_OutfitShipDialog->ConnectDestroyCallback(Callback(OnOutfitShipDialogDestroyed));
 	}
 }
 
@@ -2866,7 +2862,7 @@ void ActionToggleTimingDialog(void)
 	{
 		g_TimingDialog = new TimingDialog(g_UserInterface->GetRootWidget());
 		g_TimingDialog->GrabKeyFocus();
-		g_TimingDialog->AddDestroyListener(&g_GlobalDestroyListener);
+		g_TimingDialog->ConnectDestroyCallback(Callback(OnTimingDialogDestroyed));
 	}
 	else
 	{

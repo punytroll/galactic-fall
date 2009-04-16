@@ -15,7 +15,8 @@ public:
 	
 	void Disconnect(ConnectionHandle ConnectionHandle)
 	{
-		_Callbacks.Remove(ConnectionHandle.GetHandle());
+		_Callbacks.Remove(static_cast< Node< Callback0< ReturnType > > * >(ConnectionHandle.GetHandle()));
+		ConnectionHandle.Invalidate();
 	}
 	
 	void operator()(void)

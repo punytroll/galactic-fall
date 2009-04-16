@@ -46,10 +46,13 @@ callbacks_callbacks_h = \
 	callbacks/callbacks.h \
 	callbacks/callbacks.inc
 
+callbacks_connection_handle_h = \
+	callbacks/connection_handle.h
+
 callbacks_events_h = \
-	callbacks/connection_handle.inc \
 	callbacks/events.h \
 	callbacks/events.inc \
+	$(callbacks_connection_handle_h) \
 	$(list_h)
 
 camera_h = \
@@ -84,9 +87,6 @@ commodity_h = \
 commodity_class_h = \
 	commodity_class.h \
 	$(type_definitions_h)
-
-destroy_listener_h = \
-	destroy_listener.h
 
 dimension_listener_h = \
 	dimension_listener.h
@@ -341,7 +341,6 @@ planet_h = \
 
 planet_dialog_h = \
 	planet_dialog.h \
-	$(destroy_listener_h) \
 	$(key_listener_h) \
 	$(window_h)
 
@@ -497,6 +496,7 @@ weapon_class_h = \
 
 widget_h = \
 	widget.h \
+	$(callbacks_events_h) \
 	$(math_vector2f_h)
 
 window_h = \
@@ -631,9 +631,6 @@ commodity.o: commodity.cpp $(commodity_h) $(math_vector4f_h) $(object_aspect_pos
 commodity_class.o: commodity_class.cpp $(color_h) $(commodity_class_h) $(visualization_prototype_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-destroy_listener.o: destroy_listener.cpp $(destroy_listener_h)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-
 dimension_listener.o: dimension_listener.cpp $(dimension_listener_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
@@ -715,7 +712,7 @@ load_game_dialog.o: load_game_dialog.cpp $(button_h) $(globals_h) $(key_event_in
 local_file_data_channel.o: local_file_data_channel.cpp $(local_file_data_channel_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags libarxx` -c $< -o $@
 
-main.o: main.cpp $(arx_reading_h) $(asset_class_h) $(battery_h) $(battery_class_h) $(camera_h) $(commodity_h) $(commodity_class_h) $(character_h) $(color_h) $(command_mind_h) $(destroy_listener_h) $(draw_text_h) $(faction_h) $(galaxy_h) $(game_time_h) $(generator_h) $(generator_class_h) $(goals_h) $(graphics_engine_h) $(graphics_mesh_manager_h) $(graphics_model_h) $(graphics_model_manager_h) $(graphics_model_object_h) $(graphics_particle_system_h) $(graphics_scene_h) $(graphics_texture_manager_h) $(key_event_information_h) $(label_h) $(load_game_dialog_h) $(map_dialog_h) $(map_knowledge_h) $(math_h) $(message_h) $(message_dispatcher_h) $(messages_h) $(mind_h) $(mini_map_display_h) $(object_aspect_accessory_h) $(object_aspect_name_h) $(object_aspect_object_container_h) $(object_aspect_outfitting_h) $(object_aspect_physical_h) $(object_aspect_position_h) $(object_aspect_update_h) $(object_aspect_visualization_h) $(object_factory_h) $(object_information_dialog_h) $(outfit_ship_dialog_h) $(output_observer_h) $(perspective_h) $(planet_h) $(real_time_h) $(save_game_dialog_h) $(scanner_display_h) $(settings_h) $(ship_h) $(ship_class_h) $(shot_h) $(slot_h) $(slot_class_h) $(star_h) $(star_map_display_h) $(state_machine_h) $(states_h) $(storage_h) $(string_cast_h) $(system_h) $(system_statistics_h) $(timeout_notifications_h) $(timing_dialog_h) $(user_interface_h) $(visualizations_h) $(weapon_h) $(weapon_class_h) $(widget_h) $(write_to_xml_stream_h) $(xml_puny_dom_h) $(xml_stream_h)
+main.o: main.cpp $(arx_reading_h) $(asset_class_h) $(battery_h) $(battery_class_h) $(camera_h) $(commodity_h) $(commodity_class_h) $(character_h) $(color_h) $(command_mind_h) $(draw_text_h) $(faction_h) $(galaxy_h) $(game_time_h) $(generator_h) $(generator_class_h) $(goals_h) $(graphics_engine_h) $(graphics_mesh_manager_h) $(graphics_model_h) $(graphics_model_manager_h) $(graphics_model_object_h) $(graphics_particle_system_h) $(graphics_scene_h) $(graphics_texture_manager_h) $(key_event_information_h) $(label_h) $(load_game_dialog_h) $(map_dialog_h) $(map_knowledge_h) $(math_h) $(message_h) $(message_dispatcher_h) $(messages_h) $(mind_h) $(mini_map_display_h) $(object_aspect_accessory_h) $(object_aspect_name_h) $(object_aspect_object_container_h) $(object_aspect_outfitting_h) $(object_aspect_physical_h) $(object_aspect_position_h) $(object_aspect_update_h) $(object_aspect_visualization_h) $(object_factory_h) $(object_information_dialog_h) $(outfit_ship_dialog_h) $(output_observer_h) $(perspective_h) $(planet_h) $(real_time_h) $(save_game_dialog_h) $(scanner_display_h) $(settings_h) $(ship_h) $(ship_class_h) $(shot_h) $(slot_h) $(slot_class_h) $(star_h) $(star_map_display_h) $(state_machine_h) $(states_h) $(storage_h) $(string_cast_h) $(system_h) $(system_statistics_h) $(timeout_notifications_h) $(timing_dialog_h) $(user_interface_h) $(visualizations_h) $(weapon_h) $(weapon_class_h) $(widget_h) $(write_to_xml_stream_h) $(xml_puny_dom_h) $(xml_stream_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 map_dialog.o: map_dialog.cpp $(button_h) $(callbacks_callbacks_h) $(globals_h) $(key_event_information_h) $(label_h) $(map_dialog_h) $(object_aspect_name_h) $(star_map_display_h) $(system_h)
@@ -865,7 +862,7 @@ timing_dialog.o: timing_dialog.cpp $(globals_h) $(key_event_information_h) $(lab
 trade_center_dialog.o: trade_center_dialog.cpp $(asset_class_h) $(button_h) $(character_h) $(commodity_h) $(commodity_class_h) $(character_h) $(game_time_h) $(graphics_model_manager_h) $(key_event_information_h) $(label_h) $(object_aspect_accessory_h) $(object_aspect_name_h) $(object_aspect_object_container_h) $(object_factory_h) $(planet_h) $(scroll_bar_h) $(scroll_box_h) $(ship_h) $(storage_h) $(trade_center_dialog_h) $(weapon_h) $(weapon_class_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-user_interface.o: user_interface.cpp $(user_interface_h) $(widget_h)
+user_interface.o: user_interface.cpp $(callbacks_connection_handle_h) $(user_interface_h) $(widget_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 viewport.o: viewport.cpp $(viewport_h)
@@ -883,7 +880,7 @@ weapon.o: weapon.cpp $(battery_h) $(game_time_h) $(globals_h) $(math_h) $(math_q
 weapon_class.o: weapon_class.cpp $(color_h) $(visualization_prototype_h) $(weapon_class_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-widget.o: widget.cpp $(color_h) $(destroy_listener_h) $(dimension_listener_h) $(key_listener_h) $(math_h) $(mouse_button_listener_h) $(mouse_motion_listener_h) $(widget_h)
+widget.o: widget.cpp $(callbacks_callbacks_h) $(color_h) $(dimension_listener_h) $(key_listener_h) $(math_h) $(mouse_button_listener_h) $(mouse_motion_listener_h) $(widget_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 window.o: window.cpp $(border_h) $(globals_h) $(label_h) $(user_interface_h) $(window_h)

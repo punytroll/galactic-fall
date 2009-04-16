@@ -25,10 +25,10 @@
 #include <stack>
 #include <string>
 
+#include "callbacks/events.h"
 #include "math/vector2f.h"
 
 class Color;
-class DestroyListener;
 class DimensionListener;
 class KeyEventInformation;
 class KeyListener;
@@ -95,14 +95,15 @@ public:
 	// MouseLeave on the old hover widget is called before MouseEnter on the new hover widget
 	void MouseLeave(void);
 	// add signal listeners
-	void AddDestroyListener(DestroyListener * DestroyListener);
 	void AddDimensionListener(DimensionListener * DimensionListener);
 	void AddKeyListener(KeyListener * KeyListener);
 	void AddMouseButtonListener(MouseButtonListener * MouseButtonListener);
 	void AddMouseMotionListener(MouseMotionListener * MouseMotionListener);
 	// remove signal listeners
-	void RemoveDestroyListener(DestroyListener * DestroyListener);
 	void RemoveDimensionListener(DimensionListener * DimensionListener);
+	// events
+	ConnectionHandle ConnectDestroyCallback(Callback0< void > DestroyCallback);
+	void DisconnectDestroyCallback(ConnectionHandle ConnectionHandle);
 	// static manager functions
 	static std::list< Widget * > & GetDestroyedWidgets(void);
 protected:
@@ -125,8 +126,9 @@ private:
 	bool m_AnchorRight;
 	bool m_AnchorTop;
 	Widget * m_KeyFocus;
+	// events
+	Event0< void > _DestroyEvent;
 	// listeners
-	std::list< DestroyListener * > m_DestroyListeners;
 	std::list< DimensionListener * > m_DimensionListeners;
 	std::list< KeyListener * > m_KeyListeners;
 	std::list< MouseButtonListener * > m_MouseButtonListeners;

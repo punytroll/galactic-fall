@@ -22,12 +22,12 @@
 
 #include <string>
 
-#include "destroy_listener.h"
+#include "callbacks/connection_handle.h"
 
 class KeyEventInformation;
 class Widget;
 
-class UserInterface : public DestroyListener
+class UserInterface
 {
 public:
 	UserInterface(void);
@@ -43,10 +43,14 @@ public:
 	Widget * GetWidget(const std::string & Path);
 	Widget * GetRootWidget(void);
 	Widget * GetCaptureWidget(void);
-	// virtual event handlers
-	virtual void OnDestroy(Widget * EventSource);
 private:
+	// callbacks
+	void OnCaptureWidgetDestroy(void);
+	void OnHoverWidgetDestroy(void);
+	void OnRootWidgetDestroy(void);
+	// member variables
 	Widget * m_CaptureWidget;
+	ConnectionHandle m_CaptureWidgetDestroyCallbackConnectionHandle;
 	Widget * m_HoverWidget;
 	Widget * m_RootWidget;
 };

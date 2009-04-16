@@ -25,7 +25,8 @@ public:
 	
 	void Disconnect(ConnectionHandle ConnectionHandle)
 	{
-		_Callbacks.Remove(ConnectionHandle.GetHandle());
+		_Callbacks.Remove(static_cast&lt; Node&lt; Callback<to-string><variable>NumberOfArguments</variable></to-string>&lt; ReturnType<foreach name="Loop"><over><range><to-integer>1</to-integer><variable>NumberOfArguments</variable></range></over><do>, typename Argument<to-string><variable>Loop</variable></to-string>Type</do></foreach> &gt; &gt; * &gt;(ConnectionHandle.GetHandle()));
+		ConnectionHandle.Invalidate();
 	}
 	
 	void operator()(<if><condition><greater><variable>NumberOfArguments</variable><to-integer>0</to-integer></greater></condition><then><foreach name="Loop"><over><range><to-integer>1</to-integer><variable>NumberOfArguments</variable></range></over><do><if><condition><greater><variable>Loop</variable><to-integer>1</to-integer></greater></condition><then>, </then></if>Argument<to-string><variable>Loop</variable></to-string>Type Argument<to-string><variable>Loop</variable></to-string></do></foreach></then><else>void</else></if>)

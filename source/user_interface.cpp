@@ -21,6 +21,7 @@
 
 #include <GL/gl.h>
 
+#include "callbacks/callbacks.h"
 #include "user_interface.h"
 #include "widget.h"
 
@@ -30,11 +31,15 @@ UserInterface::UserInterface(void) :
 	m_RootWidget(new Widget(0))
 {
 	m_RootWidget->SetSize(Vector2f(1280.0f, 1024.0f));
-	m_RootWidget->AddDestroyListener(this);
+	m_RootWidget->ConnectDestroyCallback(Callback(this, &UserInterface::OnRootWidgetDestroy));
 }
 
 UserInterface::~UserInterface(void)
 {
+	if(m_CaptureWidgetDestroyCallbackConnectionHandle.IsValid() == true)
+	{
+		m_CaptureWidget->DisconnectDestroyCallback(m_CaptureWidgetDestroyCallbackConnectionHandle);
+	}
 	m_RootWidget->Destroy();
 	m_RootWidget = 0;
 }
@@ -58,7 +63,7 @@ void UserInterface::SetCaptureWidget(Widget * Widget)
 	if(m_CaptureWidget == 0)
 	{
 		m_CaptureWidget = Widget;
-		m_CaptureWidget->AddDestroyListener(this);
+		m_CaptureWidgetDestroyCallbackConnectionHandle = m_CaptureWidget->ConnectDestroyCallback(Callback(this, &UserInterface::OnCaptureWidgetDestroy));
 	}
 }
 
@@ -66,7 +71,7 @@ void UserInterface::ReleaseCaptureWidget(void)
 {
 	if(m_CaptureWidget != 0)
 	{
-		m_CaptureWidget->RemoveDestroyListener(this);
+		m_CaptureWidget->DisconnectDestroyCallback(m_CaptureWidgetDestroyCallbackConnectionHandle);
 		m_CaptureWidget = 0;
 	}
 }
@@ -172,18 +177,17 @@ void UserInterface::MouseMotion(float X, float Y)
 	}
 }
 
-void UserInterface::OnDestroy(Widget * EventSource)
+void UserInterface::OnCaptureWidgetDestroy(void)
 {
-	if(EventSource == m_CaptureWidget)
-	{
-		m_CaptureWidget = 0;
-	}
-	if(EventSource == m_HoverWidget)
-	{
-		m_HoverWidget = 0;
-	}
-	if(EventSource == m_RootWidget)
-	{
-		m_RootWidget = 0;
-	}
+	m_CaptureWidget = 0;
+}
+
+void UserInterface::OnHoverWidgetDestroy(void)
+{
+	m_HoverWidget = 0;
+}
+
+void UserInterface::OnRootWidgetDestroy(void)
+{
+	m_RootWidget = 0;
 }

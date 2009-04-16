@@ -31,7 +31,7 @@ default: all-recursive
 
 all: all-recursive
 
-all-here: check-dependencies .generated-code callbacks.inc connection_handle.inc events.inc
+all-here: check-dependencies .generated-code callbacks.inc events.inc
 
 all-recursive: all-here
 
