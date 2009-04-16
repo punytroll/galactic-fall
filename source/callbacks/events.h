@@ -5,13 +5,12 @@
 
 #include <iostream>
 
-#include "../list.h"
-
-#include "connection_handle.inc"
+#include "connection_handle.h"
 
 template < typename ReturnType >
 class Callback0;
 
+#include "../list.h"
 #include "events.inc"
 
 #endif

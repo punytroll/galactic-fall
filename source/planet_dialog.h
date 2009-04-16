@@ -20,7 +20,6 @@
 #ifndef PLANET_DIALOG_H
 #define PLANET_DIALOG_H
 
-#include "destroy_listener.h"
 #include "key_listener.h"
 #include "window.h"
 
@@ -30,19 +29,23 @@ class Label;
 class Planet;
 class TradeCenterDialog;
 
-class PlanetDialog : public DestroyListener, public KeyListener, public WWindow
+class PlanetDialog : public KeyListener, public WWindow
 {
 public:
 	PlanetDialog(Widget * SupWidget, Planet * Planet, Character * Character);
 protected:
+	// listeners
+	virtual bool OnKey(Widget * EventSource, const KeyEventInformation & KeyEventInformation);
+private:
 	// callbacks
+	void OnDestroy(void);
 	void OnRefuelClicked(void);
 	void OnTakeOffClicked(void);
 	void OnTradeCenterClicked(void);
-	// listeners
-	virtual void OnDestroy(Widget * EventSource);
-	virtual bool OnKey(Widget * EventSource, const KeyEventInformation & KeyEventInformation);
-private:
+	void OnTradeCenterDialogDestroy(void);
+	// helper functions & actions
+	void OpenTradeCenterDialog(void);
+	// member variables
 	Planet * m_Planet;
 	Character * m_Character;
 	Label * m_DescriptionLabel;

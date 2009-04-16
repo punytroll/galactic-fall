@@ -23,8 +23,8 @@
 
 #include <GL/gl.h>
 
+#include "callbacks/callbacks.h"
 #include "color.h"
-#include "destroy_listener.h"
 #include "dimension_listener.h"
 #include "key_listener.h"
 #include "math.h"
@@ -255,11 +255,8 @@ void Widget::RaiseSubWidget(Widget * SubWidget)
 
 void Widget::Destroy(void)
 {
-	// fire DestroyListeners before aything is actually destroyed
-	for(std::list< DestroyListener * >::iterator DestroyListenerIterator = m_DestroyListeners.begin(); DestroyListenerIterator != m_DestroyListeners.end(); ++DestroyListenerIterator)
-	{
-		(*DestroyListenerIterator)->OnDestroy(this);
-	}
+	// fire Destroy event before aything is actually destroyed
+	_DestroyEvent();
 	// now destroy
 	// first the sub widgets, they will remove themselves from this widget
 	while(m_SubWidgets.size() > 0)
@@ -390,9 +387,14 @@ void Widget::MouseLeave(void)
 	}
 }
 
-void Widget::AddDestroyListener(DestroyListener * DestroyListener)
+ConnectionHandle Widget::ConnectDestroyCallback(Callback0< void > DestroyCallback)
 {
-	m_DestroyListeners.push_back(DestroyListener);
+	return _DestroyEvent.Connect(DestroyCallback);
+}
+
+void Widget::DisconnectDestroyCallback(ConnectionHandle ConnectionHandle)
+{
+	_DestroyEvent.Disconnect(ConnectionHandle);
 }
 
 void Widget::AddDimensionListener(DimensionListener * DimensionListener)
@@ -413,19 +415,6 @@ void Widget::AddMouseButtonListener(MouseButtonListener * MouseButtonListener)
 void Widget::AddMouseMotionListener(MouseMotionListener * MouseMotionListener)
 {
 	m_MouseMotionListeners.push_back(MouseMotionListener);
-}
-
-void Widget::RemoveDestroyListener(DestroyListener * DestroyListenerToRemove)
-{
-	for(std::list< DestroyListener * >::iterator DestroyListenerIterator = m_DestroyListeners.begin(); DestroyListenerIterator != m_DestroyListeners.end(); ++DestroyListenerIterator)
-	{
-		if(*DestroyListenerIterator == DestroyListenerToRemove)
-		{
-			m_DestroyListeners.erase(DestroyListenerIterator);
-			
-			return;
-		}
-	}
 }
 
 void Widget::RemoveDimensionListener(DimensionListener * DimensionListenerToRemove)

@@ -40,7 +40,7 @@ PlanetDialog::PlanetDialog(Widget * SupWidget, Planet * Planet, Character * Char
 {
 	SetPosition(Vector2f(50.0f, 50.0f));
 	SetSize(Vector2f(500.0f, 330.0f));
-	AddDestroyListener(this);
+	ConnectDestroyCallback(Callback(this, &PlanetDialog::OnDestroy));
 	AddKeyListener(this);
 	m_DescriptionLabel = new Label(this, m_Planet->GetDescription());
 	m_DescriptionLabel->SetPosition(Vector2f(120.0f, 40.0f));
@@ -101,6 +101,14 @@ PlanetDialog::PlanetDialog(Widget * SupWidget, Planet * Planet, Character * Char
 	}
 }
 
+void PlanetDialog::OnDestroy(void)
+{
+	if(m_TradeCenterDialog != 0)
+	{
+		m_TradeCenterDialog->Destroy();
+	}
+}
+
 void PlanetDialog::OnRefuelClicked(void)
 {
 	const std::vector< PlanetAssetClass * > & PlanetAssetClasses(m_Planet->GetPlanetAssetClasses());
@@ -129,28 +137,13 @@ void PlanetDialog::OnTakeOffClicked(void)
 
 void PlanetDialog::OnTradeCenterClicked(void)
 {
-	if(m_TradeCenterDialog == 0)
-	{
-		m_TradeCenterDialog = new TradeCenterDialog(GetRootWidget(), m_Planet, m_Character);
-		m_TradeCenterDialog->GrabKeyFocus();
-		m_TradeCenterDialog->AddDestroyListener(this);
-	}
+	OpenTradeCenterDialog();
 }
 
-void PlanetDialog::OnDestroy(Widget * EventSource)
+void PlanetDialog::OnTradeCenterDialogDestroy(void)
 {
-	if(EventSource == this)
-	{
-		if(m_TradeCenterDialog != 0)
-		{
-			m_TradeCenterDialog->Destroy();
-		}
-	}
-	else if(EventSource == m_TradeCenterDialog)
-	{
-		m_TradeCenterDialog = 0;
-		GrabKeyFocus();
-	}
+	m_TradeCenterDialog = 0;
+	GrabKeyFocus();
 }
 
 bool PlanetDialog::OnKey(Widget * EventSource, const KeyEventInformation & KeyEventInformation)
@@ -161,13 +154,18 @@ bool PlanetDialog::OnKey(Widget * EventSource, const KeyEventInformation & KeyEv
 	}
 	else if((KeyEventInformation.GetKeyCode() == 28 /* T */) && (KeyEventInformation.IsDown() == true))
 	{
+		OpenTradeCenterDialog();
+	}
+	// eat up all other keys
+	return true;
+}
+
+void PlanetDialog::OpenTradeCenterDialog(void)
+{
 		if(m_TradeCenterDialog == 0)
 		{
 			m_TradeCenterDialog = new TradeCenterDialog(GetRootWidget(), m_Planet, m_Character);
 			m_TradeCenterDialog->GrabKeyFocus();
-			m_TradeCenterDialog->AddDestroyListener(this);
+			m_TradeCenterDialog->ConnectDestroyCallback(Callback(this, &PlanetDialog::OnTradeCenterDialogDestroy));
 		}
-	}
-	// eat up all other keys
-	return true;
 }
