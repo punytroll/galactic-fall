@@ -277,7 +277,7 @@ OutfitShipDialog::OutfitShipDialog(Widget * SupWidget, Ship * Ship) :
 	m_MountButton = new Button(m_CenterPane);
 	m_MountButton->SetPosition(Vector2f(0.0f, 40.0f));
 	m_MountButton->SetSize(Vector2f(m_CenterPane->GetSize()[0], 20.0f));
-	m_MountButton->AddClickedHandler(Callback(this, &OutfitShipDialog::OnMountClicked));
+	m_MountButton->ConnectClickedCallback(Callback(this, &OutfitShipDialog::OnMountClicked));
 	m_MountButton->SetAnchorRight(true);
 	
 	Label * MountButtonLabel(new Label(m_MountButton, "Mount"));
@@ -289,7 +289,7 @@ OutfitShipDialog::OutfitShipDialog(Widget * SupWidget, Ship * Ship) :
 	m_UnmountButton = new Button(m_CenterPane);
 	m_UnmountButton->SetPosition(Vector2f(0.0f, 70.0f));
 	m_UnmountButton->SetSize(Vector2f(m_CenterPane->GetSize()[0], 20.0f));
-	m_UnmountButton->AddClickedHandler(Callback(this, &OutfitShipDialog::OnUnmountClicked));
+	m_UnmountButton->ConnectClickedCallback(Callback(this, &OutfitShipDialog::OnUnmountClicked));
 	m_UnmountButton->SetAnchorRight(true);
 	
 	Label * UnmountButtonLabel(new Label(m_UnmountButton, "Unmount"));
@@ -301,7 +301,7 @@ OutfitShipDialog::OutfitShipDialog(Widget * SupWidget, Ship * Ship) :
 	m_OKButton = new Button(m_CenterPane);
 	m_OKButton->SetPosition(Vector2f(0.0f, m_CenterPane->GetSize()[1] - 30.0f));
 	m_OKButton->SetSize(Vector2f(m_CenterPane->GetSize()[0], 20.0f));
-	m_OKButton->AddClickedHandler(Callback(this, &OutfitShipDialog::OnOKClicked));
+	m_OKButton->ConnectClickedCallback(Callback(this, &OutfitShipDialog::OnOKClicked));
 	m_OKButton->SetAnchorBottom(true);
 	m_OKButton->SetAnchorRight(true);
 	m_OKButton->SetAnchorTop(false);

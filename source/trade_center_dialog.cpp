@@ -108,7 +108,7 @@ TradeCenterDialog::TradeCenterDialog(Widget * SupWidget, Planet * Planet, Charac
 	m_OKButton->SetAnchorLeft(false);
 	m_OKButton->SetAnchorRight(true);
 	m_OKButton->SetAnchorTop(false);
-	m_OKButton->AddClickedHandler(Callback(this, &TradeCenterDialog::OnOKClicked));
+	m_OKButton->ConnectClickedCallback(Callback(this, &TradeCenterDialog::OnOKClicked));
 	m_OKButtonLabel = new Label(m_OKButton, "OK");
 	m_OKButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
 	m_OKButtonLabel->SetSize(m_OKButton->GetSize());
@@ -119,7 +119,7 @@ TradeCenterDialog::TradeCenterDialog(Widget * SupWidget, Planet * Planet, Charac
 	m_BuyButton->SetSize(Vector2f(100.0f, 20.0f));
 	m_BuyButton->SetAnchorBottom(true);
 	m_BuyButton->SetAnchorTop(false);
-	m_BuyButton->AddClickedHandler(Callback(this, &TradeCenterDialog::OnBuyClicked));
+	m_BuyButton->ConnectClickedCallback(Callback(this, &TradeCenterDialog::OnBuyClicked));
 	m_BuyButtonLabel = new Label(m_BuyButton, "Buy");
 	m_BuyButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
 	m_BuyButtonLabel->SetSize(m_BuyButton->GetSize());
@@ -130,7 +130,7 @@ TradeCenterDialog::TradeCenterDialog(Widget * SupWidget, Planet * Planet, Charac
 	m_SellButton->SetSize(Vector2f(100.0f, 20.0f));
 	m_SellButton->SetAnchorBottom(true);
 	m_SellButton->SetAnchorTop(false);
-	m_SellButton->AddClickedHandler(Callback(this, &TradeCenterDialog::OnSellClicked));
+	m_SellButton->ConnectClickedCallback(Callback(this, &TradeCenterDialog::OnSellClicked));
 	m_SellButtonLabel = new Label(m_SellButton, "Sell");
 	m_SellButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
 	m_SellButtonLabel->SetSize(m_SellButton->GetSize());

@@ -37,6 +37,7 @@ buffer_reading_h = \
 
 button_h = \
 	button.h \
+	$(callbacks_events_h) \
 	$(mouse_button_listener_h) \
 	$(mouse_motion_listener_h) \
 	$(widget_h)
@@ -44,6 +45,12 @@ button_h = \
 callbacks_callbacks_h = \
 	callbacks/callbacks.h \
 	callbacks/callbacks.inc
+
+callbacks_events_h = \
+	callbacks/connection_handle.inc \
+	callbacks/events.h \
+	callbacks/events.inc \
+	$(list_h)
 
 camera_h = \
 	camera.h \
@@ -176,6 +183,9 @@ label_h = \
 	label.h \
 	$(color_h) \
 	$(widget_h)
+
+list_h = \
+	list.h
 
 local_file_data_channel_h = \
 	local_file_data_channel.h

@@ -61,7 +61,7 @@ LoadGameDialog::LoadGameDialog(Widget * SupWidget, Callback1< bool, std::istream
 	m_OKButton = new Button(this);
 	m_OKButton->SetPosition(Vector2f(10.0f, 40.0f));
 	m_OKButton->SetSize(Vector2f(100.0f, 20.0f));
-	m_OKButton->AddClickedHandler(Callback(this, &LoadGameDialog::OnOKClicked));
+	m_OKButton->ConnectClickedCallback(Callback(this, &LoadGameDialog::OnOKClicked));
 	
 	Label * OKButtonLabel(new Label(m_OKButton, "OK"));
 	
@@ -72,7 +72,7 @@ LoadGameDialog::LoadGameDialog(Widget * SupWidget, Callback1< bool, std::istream
 	m_CancelButton = new Button(this);
 	m_CancelButton->SetPosition(Vector2f(120.0f, 40.0f));
 	m_CancelButton->SetSize(Vector2f(100.0f, 20.0f));
-	m_CancelButton->AddClickedHandler(Callback(this, &LoadGameDialog::OnCancelClicked));
+	m_CancelButton->ConnectClickedCallback(Callback(this, &LoadGameDialog::OnCancelClicked));
 	
 	Label * CancelButtonLabel(new Label(m_CancelButton, "Cancel"));
 	

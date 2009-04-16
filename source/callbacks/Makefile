@@ -4,7 +4,7 @@ root = ../..
 
 include $(root)/tools/code_generator/Makefile.include
 
-generated_code_files = \
+callbacks_inc_generated_code_files = \
 	.generated-code/Counter.gc \
 	.generated-code/CallbackCore0.gc \
 	.generated-code/CallbackCore1.gc \
@@ -21,6 +21,9 @@ generated_code_files = \
 	.generated-code/MethodCallback1.gc \
 	.generated-code/Bind1_0.gc
 
+events_inc_generated_code_files = \
+	.generated-code/Event0.gc
+
 assertions = false
 instance_count = false
 
@@ -28,7 +31,7 @@ default: all-recursive
 
 all: all-recursive
 
-all-here: check-dependencies .generated-code callbacks.inc
+all-here: check-dependencies .generated-code callbacks.inc connection_handle.inc events.inc
 
 all-recursive: all-here
 
@@ -40,9 +43,16 @@ clean-here:
 
 clean-recursive: clean-here
 
-callbacks.inc: $(generated_code_files)
-	@$(RM) callbacks.inc
-	@for GENERATED_CODE_FILE in ${generated_code_files}; do \
+callbacks.inc: $(callbacks_inc_generated_code_files)
+	@$(RM) $@
+	@for GENERATED_CODE_FILE in $^; do \
+		cat $${GENERATED_CODE_FILE} >> $@; \
+		echo >> $@; \
+	done;
+
+events.inc: $(events_inc_generated_code_files)
+	@$(RM) $@
+	@for GENERATED_CODE_FILE in $^; do \
 		cat $${GENERATED_CODE_FILE} >> $@; \
 		echo >> $@; \
 	done;
@@ -70,6 +80,9 @@ callbacks.inc: $(generated_code_files)
 
 .generated-code/Counter.gc: code-templates/Counter.cgt $(code_generator_dependencies) Makefile
 	$(command_code_generator) --in=$< --out=$@ --variable=Assertions=$(assertions) --variable=InstanceCount=$(instance_count)
+
+.generated-code/Event0.gc: code-templates/Event.cgt $(code_generator_dependencies) Makefile
+	$(command_code_generator) --in=$< --out=$@ --variable=Assersions=$(assertions) --variable=InstanceCount=$(instance_count) --variable=NumberOfArguments=0
 
 .generated-code/FunctionCallback0.gc: code-templates/FunctionCallback.cgt $(code_generator_dependencies) Makefile
 	$(command_code_generator) --in=$< --out=$@ --variable=NumberOfArguments=0

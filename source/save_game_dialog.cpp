@@ -113,7 +113,7 @@ SaveGameDialog::SaveGameDialog(Widget * SupWidget, Callback1< void, std::ostream
 	m_OKButton = new Button(this);
 	m_OKButton->SetPosition(Vector2f(10.0f, 40.0f));
 	m_OKButton->SetSize(Vector2f(100.0f, 20.0f));
-	m_OKButton->AddClickedHandler(Callback(this, &SaveGameDialog::OnOKClicked));
+	m_OKButton->ConnectClickedCallback(Callback(this, &SaveGameDialog::OnOKClicked));
 	
 	Label * OKButtonLabel(new Label(m_OKButton, "OK"));
 	
@@ -124,7 +124,7 @@ SaveGameDialog::SaveGameDialog(Widget * SupWidget, Callback1< void, std::ostream
 	m_CancelButton = new Button(this);
 	m_CancelButton->SetPosition(Vector2f(120.0f, 40.0f));
 	m_CancelButton->SetSize(Vector2f(100.0f, 20.0f));
-	m_CancelButton->AddClickedHandler(Callback(this, &SaveGameDialog::OnCancelClicked));
+	m_CancelButton->ConnectClickedCallback(Callback(this, &SaveGameDialog::OnCancelClicked));
 	
 	Label * CancelButtonLabel(new Label(m_CancelButton, "Cancel"));
 	

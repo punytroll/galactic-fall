@@ -51,7 +51,7 @@ PlanetDialog::PlanetDialog(Widget * SupWidget, Planet * Planet, Character * Char
 	m_TakeOffButton = new Button(this);
 	m_TakeOffButton->SetPosition(Vector2f(390.0f, 300.0f));
 	m_TakeOffButton->SetSize(Vector2f(100.0f, 20.0f));
-	m_TakeOffButton->AddClickedHandler(Callback(this, &PlanetDialog::OnTakeOffClicked));
+	m_TakeOffButton->ConnectClickedCallback(Callback(this, &PlanetDialog::OnTakeOffClicked));
 	m_TakeOffButton->SetAnchorBottom(true);
 	m_TakeOffButton->SetAnchorLeft(false);
 	m_TakeOffButton->SetAnchorRight(true);
@@ -66,7 +66,7 @@ PlanetDialog::PlanetDialog(Widget * SupWidget, Planet * Planet, Character * Char
 	m_TradeCenterButton = new Button(this);
 	m_TradeCenterButton->SetPosition(Vector2f(10.0f, 40.0f));
 	m_TradeCenterButton->SetSize(Vector2f(100.0f, 20.0f));
-	m_TradeCenterButton->AddClickedHandler(Callback(this, &PlanetDialog::OnTradeCenterClicked));
+	m_TradeCenterButton->ConnectClickedCallback(Callback(this, &PlanetDialog::OnTradeCenterClicked));
 	m_TradeCenterLabel = new Label(m_TradeCenterButton, "Trade Center");
 	m_TradeCenterLabel->SetPosition(Vector2f(0.0f, 0.0f));
 	m_TradeCenterLabel->SetSize(m_TradeCenterButton->GetSize());
@@ -82,7 +82,7 @@ PlanetDialog::PlanetDialog(Widget * SupWidget, Planet * Planet, Character * Char
 			m_RefuelButton = new Button(this);
 			m_RefuelButton->SetPosition(Vector2f(10.0f, 70.0f));
 			m_RefuelButton->SetSize(Vector2f(100.0f, 20.0f));
-			m_RefuelButton->AddClickedHandler(Callback(this, &PlanetDialog::OnRefuelClicked));
+			m_RefuelButton->ConnectClickedCallback(Callback(this, &PlanetDialog::OnRefuelClicked));
 			m_RefuelButtonLabel = new Label(m_RefuelButton, "Refuel");
 			m_RefuelButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
 			m_RefuelButtonLabel->SetSize(m_TradeCenterButton->GetSize());
