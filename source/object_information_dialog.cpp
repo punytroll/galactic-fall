@@ -48,7 +48,7 @@ ObjectInformationDialog::ObjectInformationDialog(Widget * SupWidget, const Refer
 	m_OKButton->SetAnchorLeft(false);
 	m_OKButton->SetAnchorRight(true);
 	m_OKButton->SetAnchorTop(false);
-	m_OKButton->AddClickedHandler(Callback(this, &ObjectInformationDialog::OnOKClicked));
+	m_OKButton->ConnectClickedCallback(Callback(this, &ObjectInformationDialog::OnOKClicked));
 	
 	Label * OKButtonLabel = new Label(m_OKButton, "OK");
 	
@@ -69,7 +69,7 @@ ObjectInformationDialog::ObjectInformationDialog(Widget * SupWidget, const Refer
 	m_RefreshButton->SetAnchorLeft(false);
 	m_RefreshButton->SetAnchorRight(true);
 	m_RefreshButton->SetAnchorTop(false);
-	m_RefreshButton->AddClickedHandler(Callback(this, &ObjectInformationDialog::OnRefreshClicked));
+	m_RefreshButton->ConnectClickedCallback(Callback(this, &ObjectInformationDialog::OnRefreshClicked));
 	
 	Label * RefreshButtonLabel = new Label(m_RefreshButton, "Refresh");
 	
@@ -93,7 +93,7 @@ float ObjectInformationDialog::AddObjectProperty(float Top, float Indentation, c
 	ObjectButton->SetPosition(Vector2f(Indentation, 5.0f));
 	ObjectButton->SetSize(Vector2f(PropertyDisplay->GetSize()[0] - Indentation, 20.0f));
 	ObjectButton->SetAnchorRight(true);
-	ObjectButton->AddClickedHandler(Bind1(Callback(this, &ObjectInformationDialog::OnObjectClicked), Object));
+	ObjectButton->ConnectClickedCallback(Bind1(Callback(this, &ObjectInformationDialog::OnObjectClicked), Object));
 	
 	Label * ObjectButtonLabel(new Label(ObjectButton, Object->GetObjectIdentifier()));
 	

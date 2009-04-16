@@ -22,25 +22,23 @@
 
 #include <string>
 
+#include "callbacks/events.h"
 #include "mouse_button_listener.h"
 #include "mouse_motion_listener.h"
 #include "widget.h"
-
-template < typename ReturnType >
-class Callback0;
 
 class Button : public Widget, public MouseButtonListener, public MouseMotionListener
 {
 public:
 	Button(Widget * SupWidget);
 	~Button(void);
-	void AddClickedHandler(Callback0< void > ClickedHandler);
+	ConnectionHandle ConnectClickedCallback(Callback0< void > ClickedHandler);
 	// listener handlers
 	virtual bool OnMouseButton(Widget * EventSource, int Button, int State, float X, float Y);
 	virtual void OnMouseEnter(Widget * EventSource);
 	virtual void OnMouseLeave(Widget * EventSource);
 private:
-	std::list< Callback0< void > > m_ClickedEvent;
+	Event0< void > _ClickedEvent;
 };
 
 #endif
