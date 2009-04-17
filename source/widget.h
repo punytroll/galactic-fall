@@ -102,7 +102,7 @@ public:
 	// remove signal listeners
 	void RemoveDimensionListener(DimensionListener * DimensionListener);
 	// events
-	ConnectionHandle ConnectDestroyCallback(Callback0< void > DestroyCallback);
+	ConnectionHandle ConnectDestroyCallback(Callback0< void > Callback);
 	void DisconnectDestroyCallback(ConnectionHandle & ConnectionHandle);
 	// static manager functions
 	static std::list< Widget * > & GetDestroyedWidgets(void);

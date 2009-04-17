@@ -387,9 +387,9 @@ void Widget::MouseLeave(void)
 	}
 }
 
-ConnectionHandle Widget::ConnectDestroyCallback(Callback0< void > DestroyCallback)
+ConnectionHandle Widget::ConnectDestroyCallback(Callback0< void > Callback)
 {
-	return _DestroyEvent.Connect(DestroyCallback);
+	return _DestroyEvent.Connect(Callback);
 }
 
 void Widget::DisconnectDestroyCallback(ConnectionHandle & ConnectionHandle)
