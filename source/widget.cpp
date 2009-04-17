@@ -25,7 +25,6 @@
 
 #include "callbacks/callbacks.h"
 #include "color.h"
-#include "dimension_listener.h"
 #include "key_listener.h"
 #include "math.h"
 #include "mouse_button_listener.h"
@@ -144,10 +143,7 @@ void Widget::UnsetDisabledBackgroundColor(void)
 void Widget::SetPosition(const Vector2f & Position)
 {
 	m_Position = Position;
-	for(std::list< DimensionListener * >::iterator DimensionListenerIterator = m_DimensionListeners.begin(); DimensionListenerIterator != m_DimensionListeners.end(); ++DimensionListenerIterator)
-	{
-		(*DimensionListenerIterator)->OnPositionChanged(this);
-	}
+	_PositionChangedEvent();
 }
 
 void Widget::SetSize(const Vector2f & Size)
@@ -197,10 +193,7 @@ void Widget::SetSize(const Vector2f & Size)
 		SubWidget->SetSize(SubWidgetNewSize);
 		++SubWidgetIterator;
 	}
-	for(std::list< DimensionListener * >::iterator DimensionListenerIterator = m_DimensionListeners.begin(); DimensionListenerIterator != m_DimensionListeners.end(); ++DimensionListenerIterator)
-	{
-		(*DimensionListenerIterator)->OnSizeChanged(this);
-	}
+	_SizeChangedEvent();
 }
 
 void Widget::SetName(const std::string & Name)
@@ -392,14 +385,29 @@ ConnectionHandle Widget::ConnectDestroyCallback(Callback0< void > Callback)
 	return _DestroyEvent.Connect(Callback);
 }
 
+ConnectionHandle Widget::ConnectPositionChangedCallback(Callback0< void > Callback)
+{
+	return _PositionChangedEvent.Connect(Callback);
+}
+
+ConnectionHandle Widget::ConnectSizeChangedCallback(Callback0< void > Callback)
+{
+	return _SizeChangedEvent.Connect(Callback);
+}
+
 void Widget::DisconnectDestroyCallback(ConnectionHandle & ConnectionHandle)
 {
 	_DestroyEvent.Disconnect(ConnectionHandle);
 }
 
-void Widget::AddDimensionListener(DimensionListener * DimensionListener)
+void Widget::DisconnectPositionChangedCallback(ConnectionHandle & ConnectionHandle)
 {
-	m_DimensionListeners.push_back(DimensionListener);
+	_PositionChangedEvent.Disconnect(ConnectionHandle);
+}
+
+void Widget::DisconnectSizeChangedCallback(ConnectionHandle & ConnectionHandle)
+{
+	_SizeChangedEvent.Disconnect(ConnectionHandle);
 }
 
 void Widget::AddKeyListener(KeyListener * KeyListener)
@@ -415,19 +423,6 @@ void Widget::AddMouseButtonListener(MouseButtonListener * MouseButtonListener)
 void Widget::AddMouseMotionListener(MouseMotionListener * MouseMotionListener)
 {
 	m_MouseMotionListeners.push_back(MouseMotionListener);
-}
-
-void Widget::RemoveDimensionListener(DimensionListener * DimensionListenerToRemove)
-{
-	for(std::list< DimensionListener * >::iterator DimensionListenerIterator = m_DimensionListeners.begin(); DimensionListenerIterator != m_DimensionListeners.end(); ++DimensionListenerIterator)
-	{
-		if(*DimensionListenerIterator == DimensionListenerToRemove)
-		{
-			m_DimensionListeners.erase(DimensionListenerIterator);
-			
-			return;
-		}
-	}
 }
 
 void Widget::PushClippingRectangle(const Vector2f & Position, const Vector2f & Size)

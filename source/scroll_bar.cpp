@@ -29,7 +29,7 @@ ScrollBar::ScrollBar(Widget * SupWidget, ScrollBar::Alignment Alignment) :
 	m_Alignment(ScrollBar::UNDEFINED),
 	m_CurrentPosition(0.0f)
 {
-	AddDimensionListener(this);
+	ConnectSizeChangedCallback(Callback(this, &ScrollBar::OnSizeChanged));
 	SetBackgroundColor(Color(0.23f, 0.23f, 0.23f, 1.0f));
 	m_LessButton = new Button(this);
 	m_LessButton->ConnectClickedCallback(Callback(this, &ScrollBar::OnLessClicked));
@@ -70,12 +70,9 @@ void ScrollBar::OnMoreClicked(void)
 	SetCurrentPosition(GetCurrentPosition() + GetStepSize());
 }
 
-void ScrollBar::OnSizeChanged(Widget * EventSource)
+void ScrollBar::OnSizeChanged(void)
 {
-	if(EventSource == this)
-	{
-		AdjustTrackerPosition();
-	}
+	AdjustTrackerPosition();
 }
 
 void ScrollBar::OnMouseEnter(Widget * EventSource)

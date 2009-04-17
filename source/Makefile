@@ -88,9 +88,6 @@ commodity_class_h = \
 	commodity_class.h \
 	$(type_definitions_h)
 
-dimension_listener_h = \
-	dimension_listener.h
-
 draw_text_h = \
 	draw_text.h
 
@@ -321,7 +318,6 @@ object_information_dialog_h = \
 
 outfit_ship_dialog_h = \
 	outfit_ship_dialog.h \
-	$(dimension_listener_h) \
 	$(key_listener_h) \
 	$(mouse_button_listener_h) \
 	$(window_h)
@@ -364,14 +360,12 @@ scanner_display_h = \
 
 scroll_bar_h = \
 	scroll_bar.h \
-	$(dimension_listener_h) \
 	$(mouse_button_listener_h) \
 	$(mouse_motion_listener_h) \
 	$(widget_h)
 
 scroll_box_h = \
 	scroll_box.h \
-	$(dimension_listener_h) \
 	$(widget_h)
 
 settings_h = \
@@ -627,9 +621,6 @@ commodity.o: commodity.cpp $(commodity_h) $(math_vector4f_h) $(object_aspect_pos
 commodity_class.o: commodity_class.cpp $(color_h) $(commodity_class_h) $(visualization_prototype_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-dimension_listener.o: dimension_listener.cpp $(dimension_listener_h)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-
 draw_text.o: draw_text.cpp $(draw_text_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
@@ -873,7 +864,7 @@ weapon.o: weapon.cpp $(battery_h) $(game_time_h) $(globals_h) $(math_h) $(math_q
 weapon_class.o: weapon_class.cpp $(color_h) $(visualization_prototype_h) $(weapon_class_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-widget.o: widget.cpp $(callbacks_callbacks_h) $(color_h) $(dimension_listener_h) $(key_listener_h) $(math_h) $(mouse_button_listener_h) $(mouse_motion_listener_h) $(widget_h)
+widget.o: widget.cpp $(callbacks_callbacks_h) $(color_h) $(key_listener_h) $(math_h) $(mouse_button_listener_h) $(mouse_motion_listener_h) $(widget_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 window.o: window.cpp $(border_h) $(globals_h) $(label_h) $(user_interface_h) $(window_h)

@@ -20,7 +20,6 @@
 #ifndef OUTFIT_SHIP_DIALOG_H
 #define OUTFIT_SHIP_DIALOG_H
 
-#include "dimension_listener.h"
 #include "key_listener.h"
 #include "mouse_button_listener.h"
 #include "window.h"
@@ -31,7 +30,7 @@ class Ship;
 class SlotListItem;
 class AccessoryListItem;
 
-class OutfitShipDialog : public DimensionListener, public KeyListener, virtual public MouseButtonListener, public WWindow
+class OutfitShipDialog : public KeyListener, virtual public MouseButtonListener, public WWindow
 {
 public:
 	OutfitShipDialog(Widget * SupWidget, Ship * Ship);
@@ -39,11 +38,11 @@ protected:
 	// callbacks
 	void OnMountClicked(void);
 	void OnOKClicked(void);
+	void OnSizeChanged(void);
 	void OnUnmountClicked(void);
 	// listeners
 	virtual bool OnKey(Widget * EventSource, const KeyEventInformation & KeyEventInformation);
 	virtual bool OnMouseButton(Widget * EventSource, int Button, int State, float X, float Y);
-	virtual void OnSizeChanged(Widget * EventSource);
 private:
 	void RebuildAccessoryList(void);
 	void UpdateButtons(void);
