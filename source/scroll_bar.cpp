@@ -21,7 +21,6 @@
 #include "callbacks/callbacks.h"
 #include "color.h"
 #include "scroll_bar.h"
-#include "scroll_position_changed_listener.h"
 
 static const float g_ScrollBarTrackerBorderWidth = 4.0f;
 
@@ -51,9 +50,14 @@ ScrollBar::~ScrollBar(void)
 {
 }
 
-void ScrollBar::AddScrollPositionChangedListener(ScrollPositionChangedListener * ScrollPositionChangedListener)
+ConnectionHandle ScrollBar::ConnectScrollPositionChangedCallback(Callback0< void > Callback)
 {
-	m_ScrollPositionChangedListeners.push_back(ScrollPositionChangedListener);
+	return _ScrollPositionChangedEvent.Connect(Callback);
+}
+
+void ScrollBar::DisconnectScrollPositionChangedCallback(ConnectionHandle ConnectionHandle)
+{
+	_ScrollPositionChangedEvent.Disconnect(ConnectionHandle);
 }
 
 void ScrollBar::OnLessClicked(void)
@@ -156,13 +160,7 @@ void ScrollBar::SetCurrentPosition(float CurrentPosition)
 		m_CurrentPosition = CurrentPosition;
 		AdjustTrackerPosition();
 		// fire the scroll position listeners
-		for(std::list< ScrollPositionChangedListener * >::iterator ScrollPositionChangedListenerIterator = m_ScrollPositionChangedListeners.begin(); ScrollPositionChangedListenerIterator != m_ScrollPositionChangedListeners.end(); ++ScrollPositionChangedListenerIterator)
-		{
-			if((*ScrollPositionChangedListenerIterator)->OnScrollPositionChanged(this) == true)
-			{
-				return;
-			}
-		}
+		_ScrollPositionChangedEvent();
 	}
 }
 
