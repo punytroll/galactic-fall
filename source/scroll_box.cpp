@@ -17,6 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include "callbacks/callbacks.h"
 #include "color.h"
 #include "scroll_bar.h"
 #include "scroll_box.h"
@@ -39,7 +40,7 @@ ScrollBox::ScrollBox(Widget * SupWidget) :
 	m_HorizontalScrollBar = new ScrollBar(this, ScrollBar::HORIZONTAL);
 	m_HorizontalScrollBar->SetPosition(Vector2f(0.0f, GetSize()[1] - 20.0f));
 	m_HorizontalScrollBar->SetSize(Vector2f(GetSize()[0] - 20.0f, 20.0f));
-	m_HorizontalScrollBar->AddScrollPositionChangedListener(this);
+	m_HorizontalScrollBar->ConnectScrollPositionChangedCallback(Callback(this, &ScrollBox::OnHorizontalScrollPositionChanged));
 	m_HorizontalScrollBar->SetAnchorBottom(true);
 	m_HorizontalScrollBar->SetAnchorLeft(true);
 	m_HorizontalScrollBar->SetAnchorRight(true);
@@ -51,7 +52,7 @@ ScrollBox::ScrollBox(Widget * SupWidget) :
 	m_VerticalScrollBar = new ScrollBar(this, ScrollBar::VERTICAL);
 	m_VerticalScrollBar->SetPosition(Vector2f(GetSize()[0] - 20.0f, 0.0f));
 	m_VerticalScrollBar->SetSize(Vector2f(20.0f, GetSize()[1] - 20.0f));
-	m_VerticalScrollBar->AddScrollPositionChangedListener(this);
+	m_VerticalScrollBar->ConnectScrollPositionChangedCallback(Callback(this, &ScrollBox::OnVerticalScrollPositionChanged));
 	m_VerticalScrollBar->SetAnchorBottom(true);
 	m_VerticalScrollBar->SetAnchorLeft(false);
 	m_VerticalScrollBar->SetAnchorRight(true);
@@ -112,34 +113,26 @@ void ScrollBox::OnSizeChanged(Widget * EventSource)
 	}
 }
 
-bool ScrollBox::OnScrollPositionChanged(Widget * EventSource)
+void ScrollBox::OnHorizontalScrollPositionChanged(void)
 {
-	if(EventSource == m_VerticalScrollBar)
-	{
-		float ViewSize(m_View->GetSize()[1]);
-		float ContentSize(m_Content->GetSize()[1]);
-		
-		if(ContentSize > ViewSize)
-		{
-			m_Content->SetPosition(Vector2f(m_Content->GetPosition()[0], -m_VerticalScrollBar->GetCurrentPosition()));
-		}
-		
-		return true;
-	}
-	else if(EventSource == m_HorizontalScrollBar)
-	{
-		float ViewSize(m_View->GetSize()[0]);
-		float ContentSize(m_Content->GetSize()[0]);
-		
-		if(ContentSize > ViewSize)
-		{
-			m_Content->SetPosition(Vector2f(-m_HorizontalScrollBar->GetCurrentPosition(), m_Content->GetPosition()[1]));
-		}
-		
-		return true;
-	}
+	float ViewSize(m_View->GetSize()[0]);
+	float ContentSize(m_Content->GetSize()[0]);
 	
-	return false;
+	if(ContentSize > ViewSize)
+	{
+		m_Content->SetPosition(Vector2f(-m_HorizontalScrollBar->GetCurrentPosition(), m_Content->GetPosition()[1]));
+	}
+}
+
+void ScrollBox::OnVerticalScrollPositionChanged(void)
+{
+	float ViewSize(m_View->GetSize()[1]);
+	float ContentSize(m_Content->GetSize()[1]);
+	
+	if(ContentSize > ViewSize)
+	{
+		m_Content->SetPosition(Vector2f(m_Content->GetPosition()[0], -m_VerticalScrollBar->GetCurrentPosition()));
+	}
 }
 
 void ScrollBox::SetHorizontalScrollBarVisible(bool Visible)

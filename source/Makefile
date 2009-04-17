@@ -372,11 +372,7 @@ scroll_bar_h = \
 scroll_box_h = \
 	scroll_box.h \
 	$(dimension_listener_h) \
-	$(scroll_position_changed_listener_h) \
 	$(widget_h)
-
-scroll_position_changed_listener_h = \
-	scroll_position_changed_listener.h
 
 settings_h = \
 	settings.h \
@@ -799,13 +795,10 @@ save_game_dialog.o: save_game_dialog.cpp $(button_h) $(globals_h) $(key_event_in
 scanner_display.o: scanner_display.cpp $(object_aspect_physical_h) $(scanner_display_h) $(ship_h) $(star_h) $(system.h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-scroll_bar.o: scroll_bar.cpp $(button_h) $(callbacks_callbacks_h) $(color_h) $(scroll_bar_h) $(scroll_position_changed_listener_h)
+scroll_bar.o: scroll_bar.cpp $(button_h) $(callbacks_callbacks_h) $(color_h) $(scroll_bar_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-scroll_box.o: scroll_box.cpp $(color_h) $(scroll_bar_h) $(scroll_box_h)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-
-scroll_position_changed_listener.o: scroll_position_changed_listener.cpp $(scroll_position_changed_listener_h)
+scroll_box.o: scroll_box.cpp $(callbacks_callbacks_h) $(color_h) $(scroll_bar_h) $(scroll_box_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 settings.o: settings.cpp $(arx_resources_h) $(buffer_reading_h) $(settings_h) $(string_cast_h)

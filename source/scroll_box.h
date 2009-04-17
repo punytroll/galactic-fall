@@ -21,13 +21,12 @@
 #define SCROLL_BOX_H
 
 #include "dimension_listener.h"
-#include "scroll_position_changed_listener.h"
 #include "widget.h"
 
 class Button;
 class ScrollBar;
 
-class ScrollBox : public DimensionListener, public ScrollPositionChangedListener, public Widget
+class ScrollBox : public DimensionListener, public Widget
 {
 public:
 	ScrollBox(Widget * SupWidget);
@@ -44,7 +43,8 @@ public:
 	void SetVerticalScrollBarVisible(bool Visible);
 protected:
 	virtual void OnSizeChanged(Widget * EventSource);
-	virtual bool OnScrollPositionChanged(Widget * EventSource);
+	void OnHorizontalScrollPositionChanged(void);
+	void OnVerticalScrollPositionChanged(void);
 private:
 	Widget * m_Content;
 	Widget * m_View;

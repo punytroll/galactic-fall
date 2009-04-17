@@ -40,7 +40,9 @@ public:
 	
 	ScrollBar(Widget * SupWidget, ScrollBar::Alignment Alignment);
 	virtual ~ScrollBar(void);
-	void AddScrollPositionChangedListener(ScrollPositionChangedListener * ScrollPositionChangedListener);
+	// events
+	ConnectionHandle ConnectScrollPositionChangedCallback(Callback0< void > Callback);
+	void DisconnectScrollPositionChangedCallback(ConnectionHandle ConnectionHandle);
 	// getters
 	ScrollBar::Alignment GetAlignment(void) const;
 	float GetCurrentPosition(void) const;
@@ -66,7 +68,7 @@ protected:
 	virtual void OnMouseLeave(Widget * EventSource);
 private:
 	void AdjustTrackerPosition(void);
-	std::list< ScrollPositionChangedListener * > m_ScrollPositionChangedListeners;
+	Event0< void > _ScrollPositionChangedEvent;
 	Button * m_LessButton;
 	Button * m_MoreButton;
 	Widget * m_Tracker;
