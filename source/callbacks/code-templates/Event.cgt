@@ -18,26 +18,26 @@ template &lt; typename ReturnType<foreach name="Loop"><over><range><to-integer>1
 class Event<to-string><variable>NumberOfArguments</variable></to-string>
 {
 public:
-	ConnectionHandle Connect(Callback<to-string><variable>NumberOfArguments</variable></to-string>&lt; ReturnType<foreach name="Loop"><over><range><to-integer>1</to-integer><variable>NumberOfArguments</variable></range></over><do>, typename Argument<to-string><variable>Loop</variable></to-string>Type</do></foreach> &gt; Callback)
+	ConnectionHandle Connect(Callback<to-string><variable>NumberOfArguments</variable></to-string>&lt; ReturnType<foreach name="Loop"><over><range><to-integer>1</to-integer><variable>NumberOfArguments</variable></range></over><do>, Argument<to-string><variable>Loop</variable></to-string>Type</do></foreach> &gt; Callback)
 	{
 		return ConnectionHandle(_Callbacks.Append(Callback));
 	}
 	
 	void Disconnect(ConnectionHandle &amp; ConnectionHandle)
 	{
-		_Callbacks.Remove(static_cast&lt; Node&lt; Callback<to-string><variable>NumberOfArguments</variable></to-string>&lt; ReturnType<foreach name="Loop"><over><range><to-integer>1</to-integer><variable>NumberOfArguments</variable></range></over><do>, typename Argument<to-string><variable>Loop</variable></to-string>Type</do></foreach> &gt; &gt; * &gt;(ConnectionHandle.GetHandle()));
+		_Callbacks.Remove(static_cast&lt; Node&lt; Callback<to-string><variable>NumberOfArguments</variable></to-string>&lt; ReturnType<foreach name="Loop"><over><range><to-integer>1</to-integer><variable>NumberOfArguments</variable></range></over><do>, Argument<to-string><variable>Loop</variable></to-string>Type</do></foreach> &gt; &gt; * &gt;(ConnectionHandle.GetHandle()));
 		ConnectionHandle.Invalidate();
 	}
 	
 	void operator()(<if><condition><greater><variable>NumberOfArguments</variable><to-integer>0</to-integer></greater></condition><then><foreach name="Loop"><over><range><to-integer>1</to-integer><variable>NumberOfArguments</variable></range></over><do><if><condition><greater><variable>Loop</variable><to-integer>1</to-integer></greater></condition><then>, </then></if>Argument<to-string><variable>Loop</variable></to-string>Type Argument<to-string><variable>Loop</variable></to-string></do></foreach></then><else>void</else></if>)
 	{
-		for(Node&lt; Callback<to-string><variable>NumberOfArguments</variable></to-string>&lt; ReturnType<foreach name="Loop"><over><range><to-integer>1</to-integer><variable>NumberOfArguments</variable></range></over><do>, typename Argument<to-string><variable>Loop</variable></to-string>Type</do></foreach> &gt; &gt; * CallbackNode = _Callbacks.GetHead(); CallbackNode != 0; CallbackNode = CallbackNode-&gt;GetNext())
+		for(Node&lt; Callback<to-string><variable>NumberOfArguments</variable></to-string>&lt; ReturnType<foreach name="Loop"><over><range><to-integer>1</to-integer><variable>NumberOfArguments</variable></range></over><do>, Argument<to-string><variable>Loop</variable></to-string>Type</do></foreach> &gt; &gt; * CallbackNode = _Callbacks.GetHead(); CallbackNode != 0; CallbackNode = CallbackNode-&gt;GetNext())
 		{
 			CallbackNode-&gt;GetValue()(<foreach name="Loop"><over><range><to-integer>1</to-integer><variable>NumberOfArguments</variable></range></over><do><if><condition><greater><variable>Loop</variable><to-integer>1</to-integer></greater></condition><then>, </then></if>Argument<to-string><variable>Loop</variable></to-string></do></foreach>);
 		}
 	}
 private:
-	List&lt; Callback<to-string><variable>NumberOfArguments</variable></to-string>&lt; ReturnType<foreach name="Loop"><over><range><to-integer>1</to-integer><variable>NumberOfArguments</variable></range></over><do>, typename Argument<to-string><variable>Loop</variable></to-string>Type</do></foreach> &gt; &gt; _Callbacks;
+	List&lt; Callback<to-string><variable>NumberOfArguments</variable></to-string>&lt; ReturnType<foreach name="Loop"><over><range><to-integer>1</to-integer><variable>NumberOfArguments</variable></range></over><do>, Argument<to-string><variable>Loop</variable></to-string>Type</do></foreach> &gt; &gt; _Callbacks;
 };
 /////////  end    <variable>Template.UUID</variable>  ///////////////////////
 </body>
