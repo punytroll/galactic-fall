@@ -23,7 +23,7 @@ public:
 		return ConnectionHandle(_Callbacks.Append(Callback));
 	}
 	
-	void Disconnect(ConnectionHandle ConnectionHandle)
+	void Disconnect(ConnectionHandle &amp; ConnectionHandle)
 	{
 		_Callbacks.Remove(static_cast&lt; Node&lt; Callback<to-string><variable>NumberOfArguments</variable></to-string>&lt; ReturnType<foreach name="Loop"><over><range><to-integer>1</to-integer><variable>NumberOfArguments</variable></range></over><do>, typename Argument<to-string><variable>Loop</variable></to-string>Type</do></foreach> &gt; &gt; * &gt;(ConnectionHandle.GetHandle()));
 		ConnectionHandle.Invalidate();

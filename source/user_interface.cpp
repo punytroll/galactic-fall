@@ -38,7 +38,12 @@ UserInterface::~UserInterface(void)
 {
 	if(m_CaptureWidgetDestroyCallbackConnectionHandle.IsValid() == true)
 	{
+		assert(m_CaptureWidget != 0);
 		m_CaptureWidget->DisconnectDestroyCallback(m_CaptureWidgetDestroyCallbackConnectionHandle);
+	}
+	else
+	{
+		assert(m_CaptureWidget == 0);
 	}
 	m_RootWidget->Destroy();
 	m_RootWidget = 0;
@@ -179,6 +184,7 @@ void UserInterface::MouseMotion(float X, float Y)
 
 void UserInterface::OnCaptureWidgetDestroy(void)
 {
+	m_CaptureWidget->DisconnectDestroyCallback(m_CaptureWidgetDestroyCallbackConnectionHandle);
 	m_CaptureWidget = 0;
 }
 

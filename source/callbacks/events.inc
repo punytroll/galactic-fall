@@ -13,7 +13,7 @@ public:
 		return ConnectionHandle(_Callbacks.Append(Callback));
 	}
 	
-	void Disconnect(ConnectionHandle ConnectionHandle)
+	void Disconnect(ConnectionHandle & ConnectionHandle)
 	{
 		_Callbacks.Remove(static_cast< Node< Callback0< ReturnType > > * >(ConnectionHandle.GetHandle()));
 		ConnectionHandle.Invalidate();
