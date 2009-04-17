@@ -45,6 +45,7 @@ public:
 	
 	void Invalidate(void)
 	{
+		assert(_Handle != 0);
 		_Handle = 0;
 	}
 private:

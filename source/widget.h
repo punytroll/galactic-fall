@@ -103,7 +103,7 @@ public:
 	void RemoveDimensionListener(DimensionListener * DimensionListener);
 	// events
 	ConnectionHandle ConnectDestroyCallback(Callback0< void > DestroyCallback);
-	void DisconnectDestroyCallback(ConnectionHandle ConnectionHandle);
+	void DisconnectDestroyCallback(ConnectionHandle & ConnectionHandle);
 	// static manager functions
 	static std::list< Widget * > & GetDestroyedWidgets(void);
 protected:

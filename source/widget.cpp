@@ -392,7 +392,7 @@ ConnectionHandle Widget::ConnectDestroyCallback(Callback0< void > DestroyCallbac
 	return _DestroyEvent.Connect(DestroyCallback);
 }
 
-void Widget::DisconnectDestroyCallback(ConnectionHandle ConnectionHandle)
+void Widget::DisconnectDestroyCallback(ConnectionHandle & ConnectionHandle)
 {
 	_DestroyEvent.Disconnect(ConnectionHandle);
 }
