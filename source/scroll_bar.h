@@ -20,7 +20,6 @@
 #ifndef SCROLL_BAR_H
 #define SCROLL_BAR_H
 
-#include "dimension_listener.h"
 #include "mouse_button_listener.h"
 #include "mouse_motion_listener.h"
 #include "widget.h"
@@ -28,7 +27,7 @@
 class Button;
 class ScrollPositionChangedListener;
 
-class ScrollBar : public DimensionListener, public MouseButtonListener, public MouseMotionListener, public Widget
+class ScrollBar : public MouseButtonListener, public MouseMotionListener, public Widget
 {
 public:
 	enum Alignment
@@ -62,8 +61,8 @@ protected:
 	// callbacks
 	void OnLessClicked(void);
 	void OnMoreClicked(void);
+	void OnSizeChanged(void);
 	// listeners
-	virtual void OnSizeChanged(Widget * EventSource);
 	virtual void OnMouseEnter(Widget * EventSource);
 	virtual void OnMouseLeave(Widget * EventSource);
 private:

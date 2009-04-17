@@ -29,7 +29,6 @@
 #include "math/vector2f.h"
 
 class Color;
-class DimensionListener;
 class KeyEventInformation;
 class KeyListener;
 class MouseButtonListener;
@@ -95,15 +94,17 @@ public:
 	// MouseLeave on the old hover widget is called before MouseEnter on the new hover widget
 	void MouseLeave(void);
 	// add signal listeners
-	void AddDimensionListener(DimensionListener * DimensionListener);
 	void AddKeyListener(KeyListener * KeyListener);
 	void AddMouseButtonListener(MouseButtonListener * MouseButtonListener);
 	void AddMouseMotionListener(MouseMotionListener * MouseMotionListener);
 	// remove signal listeners
-	void RemoveDimensionListener(DimensionListener * DimensionListener);
 	// events
 	ConnectionHandle ConnectDestroyCallback(Callback0< void > Callback);
+	ConnectionHandle ConnectPositionChangedCallback(Callback0< void > Callback);
+	ConnectionHandle ConnectSizeChangedCallback(Callback0< void > Callback);
 	void DisconnectDestroyCallback(ConnectionHandle & ConnectionHandle);
+	void DisconnectPositionChangedCallback(ConnectionHandle & ConnectionHandle);
+	void DisconnectSizeChangedCallback(ConnectionHandle & ConnectionHandle);
 	// static manager functions
 	static std::list< Widget * > & GetDestroyedWidgets(void);
 protected:
@@ -128,8 +129,9 @@ private:
 	Widget * m_KeyFocus;
 	// events
 	Event0< void > _DestroyEvent;
+	Event0< void > _PositionChangedEvent;
+	Event0< void > _SizeChangedEvent;
 	// listeners
-	std::list< DimensionListener * > m_DimensionListeners;
 	std::list< KeyListener * > m_KeyListeners;
 	std::list< MouseButtonListener * > m_MouseButtonListeners;
 	std::list< MouseMotionListener * > m_MouseMotionListeners;

@@ -233,7 +233,7 @@ OutfitShipDialog::OutfitShipDialog(Widget * SupWidget, Ship * Ship) :
 	m_SelectedSlotListItem(0),
 	m_SelectedAccessoryListItem(0)
 {
-	AddDimensionListener(this);
+	ConnectSizeChangedCallback(Callback(this, &OutfitShipDialog::OnSizeChanged));
 	AddKeyListener(this);
 	m_LeftPane = new Widget(this);
 	m_LeftPane->SetPosition(Vector2f(10.0f, 40.0f));
@@ -495,7 +495,7 @@ bool OutfitShipDialog::OnMouseButton(Widget * EventSource, int Button, int State
 	return Result;
 }
 
-void OutfitShipDialog::OnSizeChanged(Widget * EventSource)
+void OutfitShipDialog::OnSizeChanged(void)
 {
 	float AvailableWidth(GetSize()[0]);
 	
