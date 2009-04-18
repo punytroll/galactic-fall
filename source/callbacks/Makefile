@@ -41,6 +41,8 @@ check-dependencies: code_generator-check-dependencies
 clean: clean-recursive
 
 clean-here: 
+	$(RM) .generated-code/*
+	rmdir .generated-code
 
 clean-recursive: clean-here
 
