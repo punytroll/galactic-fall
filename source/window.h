@@ -21,13 +21,12 @@
 #define WINDOW_H
 
 #include "mouse_button_listener.h"
-#include "mouse_motion_listener.h"
 #include "widget.h"
 
 class Border;
 class Label;
 
-class WWindow : virtual public MouseButtonListener, virtual public MouseMotionListener, public Widget
+class WWindow : virtual public MouseButtonListener, public Widget
 {
 public:
 	WWindow(Widget * SupWidget, const std::string & Title);
@@ -35,8 +34,11 @@ public:
 	Border * GetBorder(void);
 	Label * GetTitleLabel(void);
 	virtual bool OnMouseButton(Widget * EventSource, int Button, int State, float X, float Y);
-	virtual void OnMouseMotion(Widget * EventSource, float X, float Y);
 private:
+	// callbacks
+	void OnTitleLabelMouseMoved(float X, float Y);
+	void OnResizeDragBoxMouseMoved(float X, float Y);
+	// member variables
 	Border * m_Border;
 	Label * m_TitleLabel;
 	Widget * m_ResizeDragBox;

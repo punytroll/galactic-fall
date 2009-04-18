@@ -13,6 +13,9 @@ class Callback0;
 template < typename ReturnType, typename Argument1Type >
 class Callback1;
 
+template < typename ReturnType, typename Argument1Type, typename Argument2Type >
+class Callback2;
+
 #include "../list.h"
 #include "events.inc"
 
