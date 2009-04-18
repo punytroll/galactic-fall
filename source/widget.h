@@ -94,15 +94,16 @@ public:
 	// MouseLeave on the old hover widget is called before MouseEnter on the new hover widget
 	void MouseLeave(void);
 	// add signal listeners
-	void AddKeyListener(KeyListener * KeyListener);
 	void AddMouseButtonListener(MouseButtonListener * MouseButtonListener);
 	void AddMouseMotionListener(MouseMotionListener * MouseMotionListener);
 	// remove signal listeners
 	// events
 	ConnectionHandle ConnectDestroyCallback(Callback0< void > Callback);
+	ConnectionHandle ConnectKeyCallback(Callback1< bool, const KeyEventInformation & > Callback);
 	ConnectionHandle ConnectPositionChangedCallback(Callback0< void > Callback);
 	ConnectionHandle ConnectSizeChangedCallback(Callback0< void > Callback);
 	void DisconnectDestroyCallback(ConnectionHandle & ConnectionHandle);
+	void DisconnectKeyCallback(ConnectionHandle & ConnectionHandle);
 	void DisconnectPositionChangedCallback(ConnectionHandle & ConnectionHandle);
 	void DisconnectSizeChangedCallback(ConnectionHandle & ConnectionHandle);
 	// static manager functions
@@ -131,8 +132,8 @@ private:
 	Event0< void > _DestroyEvent;
 	Event0< void > _PositionChangedEvent;
 	Event0< void > _SizeChangedEvent;
+	Event1< bool, const KeyEventInformation & > _KeyEvent;
 	// listeners
-	std::list< KeyListener * > m_KeyListeners;
 	std::list< MouseButtonListener * > m_MouseButtonListeners;
 	std::list< MouseMotionListener * > m_MouseMotionListeners;
 	// static manager properties

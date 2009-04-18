@@ -18,6 +18,46 @@ template &lt; typename ReturnType<foreach name="Loop"><over><range><to-integer>1
 class Event<to-string><variable>NumberOfArguments</variable></to-string>
 {
 public:
+	class CallbackIterator
+	{
+	public:
+		CallbackIterator(Node&lt; Callback<to-string><variable>NumberOfArguments</variable></to-string>&lt; ReturnType<foreach name="Loop"><over><range><to-integer>1</to-integer><variable>NumberOfArguments</variable></range></over><do>, Argument<to-string><variable>Loop</variable></to-string>Type</do></foreach> &gt; &gt; * CallbackNode) :
+			_CallbackNode(CallbackNode)
+		{
+		}
+		
+		CallbackIterator(const CallbackIterator &amp; CallbackIterator) :
+			_CallbackNode(CallbackIterator._CallbackNode)
+		{
+		}
+		
+		CallbackIterator &amp; operator=(const CallbackIterator &amp; CallbackIterator)
+		{
+			_CallbackNode = CallbackIterator._CallbackNode;
+			
+			return *this;
+		}
+		
+		CallbackIterator &amp; operator++(void)
+		{
+			_CallbackNode = _CallbackNode-&gt;GetNext();
+			
+			return *this;
+		}
+		
+		bool IsValid(void) const
+		{
+			return _CallbackNode != 0;
+		}
+		
+		ReturnType operator()(<if><condition><greater><variable>NumberOfArguments</variable><to-integer>0</to-integer></greater></condition><then><foreach name="Loop"><over><range><to-integer>1</to-integer><variable>NumberOfArguments</variable></range></over><do><if><condition><greater><variable>Loop</variable><to-integer>1</to-integer></greater></condition><then>, </then></if>Argument<to-string><variable>Loop</variable></to-string>Type Argument<to-string><variable>Loop</variable></to-string></do></foreach></then><else>void</else></if>)
+		{
+			return _CallbackNode-&gt;GetValue()(<foreach name="Loop"><over><range><to-integer>1</to-integer><variable>NumberOfArguments</variable></range></over><do><if><condition><greater><variable>Loop</variable><to-integer>1</to-integer></greater></condition><then>, </then></if>Argument<to-string><variable>Loop</variable></to-string></do></foreach>);
+		}
+	private:
+		Node&lt; Callback<to-string><variable>NumberOfArguments</variable></to-string>&lt; ReturnType<foreach name="Loop"><over><range><to-integer>1</to-integer><variable>NumberOfArguments</variable></range></over><do>, Argument<to-string><variable>Loop</variable></to-string>Type</do></foreach> &gt; &gt; * _CallbackNode;
+	};
+	
 	ConnectionHandle Connect(Callback<to-string><variable>NumberOfArguments</variable></to-string>&lt; ReturnType<foreach name="Loop"><over><range><to-integer>1</to-integer><variable>NumberOfArguments</variable></range></over><do>, Argument<to-string><variable>Loop</variable></to-string>Type</do></foreach> &gt; Callback)
 	{
 		return ConnectionHandle(_Callbacks.Append(Callback));
@@ -27,6 +67,11 @@ public:
 	{
 		_Callbacks.Remove(static_cast&lt; Node&lt; Callback<to-string><variable>NumberOfArguments</variable></to-string>&lt; ReturnType<foreach name="Loop"><over><range><to-integer>1</to-integer><variable>NumberOfArguments</variable></range></over><do>, Argument<to-string><variable>Loop</variable></to-string>Type</do></foreach> &gt; &gt; * &gt;(ConnectionHandle.GetHandle()));
 		ConnectionHandle.Invalidate();
+	}
+	
+	CallbackIterator GetCallbackIterator(void)
+	{
+		return CallbackIterator(_Callbacks.GetHead());
 	}
 	
 	void operator()(<if><condition><greater><variable>NumberOfArguments</variable><to-integer>0</to-integer></greater></condition><then><foreach name="Loop"><over><range><to-integer>1</to-integer><variable>NumberOfArguments</variable></range></over><do><if><condition><greater><variable>Loop</variable><to-integer>1</to-integer></greater></condition><then>, </then></if>Argument<to-string><variable>Loop</variable></to-string>Type Argument<to-string><variable>Loop</variable></to-string></do></foreach></then><else>void</else></if>)

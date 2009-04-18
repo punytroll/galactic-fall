@@ -20,20 +20,20 @@
 #ifndef TIMING_DIALOG_H
 #define TIMING_DIALOG_H
 
-#include "key_listener.h"
 #include "type_definitions.h"
 #include "window.h"
 
 class Label;
 
-class TimingDialog : public WWindow, public KeyListener
+class TimingDialog : public WWindow
 {
 public:
 	TimingDialog(Widget * SupWidget);
 	void Update(void);
-protected:
-	virtual bool OnKey(Widget * EventSource, const KeyEventInformation & KeyEventInformation);
 private:
+	// callbacks
+	bool OnKey(const KeyEventInformation & KeyEventInformation);
+	// member variables
 	Label * m_AISecondsThisFrameLabel;
 	Label * m_CommoditiesInCurrentSystemThisFrameLabel;
 	Label * m_DispatchedMessagesThisFrameLabel;

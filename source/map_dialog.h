@@ -20,7 +20,6 @@
 #ifndef MAP_DIALOG_H
 #define MAP_DIALOG_H
 
-#include "key_listener.h"
 #include "window.h"
 
 class Button;
@@ -29,16 +28,15 @@ class Label;
 class StarMapDisplay;
 class System;
 
-class MapDialog : public KeyListener, public WWindow
+class MapDialog : public WWindow
 {
 public:
 	MapDialog(Widget * SupWidget, System * System, Character * Character);
 	StarMapDisplay * GetStarMapDisplay(void);
 protected:
 	// callbacks
+	bool OnKey(const KeyEventInformation & KeyEventInformation);
 	void OnOKClicked(void);
-	// listeners
-	virtual bool OnKey(Widget * EventSource, const KeyEventInformation & KeyEventInformation);
 private:
 	Button * m_OKButton;
 	Label * m_OKButtonLabel;

@@ -36,7 +36,7 @@ MapDialog::MapDialog(Widget * SupWidget, System * System, Character * Character)
 {
 	SetPosition(Vector2f(70.0f, 400.0f));
 	SetSize(Vector2f(500.0f, 530.0f));
-	AddKeyListener(this);
+	ConnectKeyCallback(Callback(this, &MapDialog::OnKey));
 	AddMouseButtonListener(this);
 	m_OKButton = new Button(this);
 	m_OKButton->SetPosition(Vector2f(390.0f, 500.0f));
@@ -58,12 +58,13 @@ void MapDialog::OnOKClicked(void)
 	Destroy();
 }
 
-bool MapDialog::OnKey(Widget * EventSource, const KeyEventInformation & KeyEventInformation)
+bool MapDialog::OnKey(const KeyEventInformation & KeyEventInformation)
 {
 	if(((KeyEventInformation.GetKeyCode() == 9 /* ESCAPE */) || (KeyEventInformation.GetKeyCode() == 36 /* RETURN */) || (KeyEventInformation.GetKeyCode() == 58 /* M */)) && (KeyEventInformation.IsDown() == true))
 	{
 		Destroy();
 	}
-	// eat all other input
+	
+	// eat all input
 	return true;
 }

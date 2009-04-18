@@ -22,7 +22,8 @@ callbacks_inc_generated_code_files = \
 	.generated-code/Bind1_0.gc
 
 events_inc_generated_code_files = \
-	.generated-code/Event0.gc
+	.generated-code/Event0.gc \
+	.generated-code/Event1.gc
 
 assertions = false
 instance_count = false
@@ -83,6 +84,9 @@ events.inc: $(events_inc_generated_code_files)
 
 .generated-code/Event0.gc: code-templates/Event.cgt $(code_generator_dependencies) Makefile
 	$(command_code_generator) --in=$< --out=$@ --variable=Assersions=$(assertions) --variable=InstanceCount=$(instance_count) --variable=NumberOfArguments=0
+
+.generated-code/Event1.gc: code-templates/Event.cgt $(code_generator_dependencies) Makefile
+	$(command_code_generator) --in=$< --out=$@ --variable=Assersions=$(assertions) --variable=InstanceCount=$(instance_count) --variable=NumberOfArguments=1
 
 .generated-code/FunctionCallback0.gc: code-templates/FunctionCallback.cgt $(code_generator_dependencies) Makefile
 	$(command_code_generator) --in=$< --out=$@ --variable=NumberOfArguments=0
