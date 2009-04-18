@@ -24,20 +24,25 @@
 
 #include "callbacks/events.h"
 #include "mouse_button_listener.h"
-#include "mouse_motion_listener.h"
 #include "widget.h"
 
-class Button : public Widget, public MouseButtonListener, public MouseMotionListener
+class Button : public Widget, public MouseButtonListener
 {
 public:
+	// constructors and deconstructors
 	Button(Widget * SupWidget);
-	~Button(void);
+	virtual ~Button(void);
+	// connect and disconnect events
 	ConnectionHandle ConnectClickedCallback(Callback0< void > ClickedHandler);
+	void DisconnectClickedCallback(ConnectionHandle & ConnectionHandle);
 	// listener handlers
 	virtual bool OnMouseButton(Widget * EventSource, int Button, int State, float X, float Y);
-	virtual void OnMouseEnter(Widget * EventSource);
-	virtual void OnMouseLeave(Widget * EventSource);
 private:
+	// callbacks
+	void OnMouseEnter(void);
+	void OnMouseLeave(void);
+	// member variables
+	// events
 	Event0< void > _ClickedEvent;
 };
 

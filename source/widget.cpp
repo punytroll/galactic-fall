@@ -361,10 +361,7 @@ void Widget::MouseMotion(float X, float Y)
 
 void Widget::MouseEnter(void)
 {
-	for(std::list< MouseMotionListener * >::iterator MouseMotionListenerIterator = m_MouseMotionListeners.begin(); MouseMotionListenerIterator != m_MouseMotionListeners.end(); ++MouseMotionListenerIterator)
-	{
-		(*MouseMotionListenerIterator)->OnMouseEnter(this);
-	}
+	_MouseEnterEvent();
 }
 
 void Widget::MouseLeave(void)
@@ -376,10 +373,7 @@ void Widget::MouseLeave(void)
 		m_HoverWidget = 0;
 		HoverWidget->MouseLeave();
 	}
-	for(std::list< MouseMotionListener * >::iterator MouseMotionListenerIterator = m_MouseMotionListeners.begin(); MouseMotionListenerIterator != m_MouseMotionListeners.end(); ++MouseMotionListenerIterator)
-	{
-		(*MouseMotionListenerIterator)->OnMouseLeave(this);
-	}
+	_MouseLeaveEvent();
 }
 
 ConnectionHandle Widget::ConnectDestroyCallback(Callback0< void > Callback)
@@ -390,6 +384,16 @@ ConnectionHandle Widget::ConnectDestroyCallback(Callback0< void > Callback)
 ConnectionHandle Widget::ConnectKeyCallback(Callback1< bool, const KeyEventInformation & > Callback)
 {
 	return _KeyEvent.Connect(Callback);
+}
+
+ConnectionHandle Widget::ConnectMouseEnterCallback(Callback0< void > Callback)
+{
+	return _MouseEnterEvent.Connect(Callback);
+}
+
+ConnectionHandle Widget::ConnectMouseLeaveCallback(Callback0< void > Callback)
+{
+	return _MouseLeaveEvent.Connect(Callback);
 }
 
 ConnectionHandle Widget::ConnectPositionChangedCallback(Callback0< void > Callback)
@@ -410,6 +414,16 @@ void Widget::DisconnectDestroyCallback(ConnectionHandle & ConnectionHandle)
 void Widget::DisconnectKeyCallback(ConnectionHandle & ConnectionHandle)
 {
 	_KeyEvent.Disconnect(ConnectionHandle);
+}
+
+void Widget::DisconnectMouseEnterCallback(ConnectionHandle & ConnectionHandle)
+{
+	_MouseEnterEvent.Disconnect(ConnectionHandle);
+}
+
+void Widget::DisconnectMouseLeaveCallback(ConnectionHandle & ConnectionHandle)
+{
+	_MouseLeaveEvent.Disconnect(ConnectionHandle);
 }
 
 void Widget::DisconnectPositionChangedCallback(ConnectionHandle & ConnectionHandle)

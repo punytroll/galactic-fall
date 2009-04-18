@@ -28,7 +28,8 @@ Button::Button(Widget * SupWidget) :
 	SetBackgroundColor(Color(0.3f, 0.3f, 0.3f, 1.0f));
 	SetDisabledBackgroundColor(Color(0.23f, 0.23f, 0.23f, 1.0f));
 	AddMouseButtonListener(this);
-	AddMouseMotionListener(this);
+	ConnectMouseEnterCallback(Callback(this, &Button::OnMouseEnter));
+	ConnectMouseLeaveCallback(Callback(this, &Button::OnMouseLeave));
 }
 
 Button::~Button(void)
@@ -38,6 +39,11 @@ Button::~Button(void)
 ConnectionHandle Button::ConnectClickedCallback(Callback0< void > ClickedHandler)
 {
 	return _ClickedEvent.Connect(ClickedHandler);
+}
+
+void Button::DisconnectClickedCallback(ConnectionHandle & ConnectionHandle)
+{
+	_ClickedEvent.Disconnect(ConnectionHandle);
 }
 
 bool Button::OnMouseButton(Widget * EventSource, int Button, int State, float X, float Y)
@@ -52,12 +58,12 @@ bool Button::OnMouseButton(Widget * EventSource, int Button, int State, float X,
 	return false;
 }
 
-void Button::OnMouseEnter(Widget * EventSource)
+void Button::OnMouseEnter(void)
 {
 	SetBackgroundColor(Color(0.4f, 0.4f, 0.4f, 1.0f));
 }
 
-void Button::OnMouseLeave(Widget * EventSource)
+void Button::OnMouseLeave(void)
 {
 	SetBackgroundColor(Color(0.3f, 0.3f, 0.3f, 1.0f));
 }

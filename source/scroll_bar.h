@@ -21,13 +21,12 @@
 #define SCROLL_BAR_H
 
 #include "mouse_button_listener.h"
-#include "mouse_motion_listener.h"
 #include "widget.h"
 
 class Button;
 class ScrollPositionChangedListener;
 
-class ScrollBar : public MouseButtonListener, public MouseMotionListener, public Widget
+class ScrollBar : public MouseButtonListener, public Widget
 {
 public:
 	enum Alignment
@@ -57,17 +56,16 @@ public:
 	// modifiers
 	void StepLess(void);
 	void StepMore(void);
-protected:
+private:
 	// callbacks
 	void OnLessClicked(void);
 	void OnMoreClicked(void);
 	void OnSizeChanged(void);
-	// listeners
-	virtual void OnMouseEnter(Widget * EventSource);
-	virtual void OnMouseLeave(Widget * EventSource);
-private:
+	void OnTrackerMouseEnter(void);
+	void OnTrackerMouseLeave(void);
+	// helper functions and actions
 	void AdjustTrackerPosition(void);
-	Event0< void > _ScrollPositionChangedEvent;
+	// member variables
 	Button * m_LessButton;
 	Button * m_MoreButton;
 	Widget * m_Tracker;
@@ -76,6 +74,8 @@ private:
 	float m_MinimumPosition;
 	float m_MaximumPosition;
 	float m_StepSize;
+	// events
+	Event0< void > _ScrollPositionChangedEvent;
 };
 
 inline ScrollBar::Alignment ScrollBar::GetAlignment(void) const
