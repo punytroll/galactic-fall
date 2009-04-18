@@ -25,7 +25,6 @@
 
 #include "callbacks/callbacks.h"
 #include "color.h"
-#include "key_listener.h"
 #include "math.h"
 #include "mouse_button_listener.h"
 #include "mouse_motion_listener.h"
@@ -265,24 +264,27 @@ void Widget::Destroy(void)
 	m_DestroyedWidgets.push_back(this);
 }
 
-bool Widget::Key(const KeyEventInformation & KeyEventInformation)
+bool Widget::Key(const KeyEventInformation & TheKeyEventInformation)
 {
 	if((m_KeyFocus != 0) && (m_KeyFocus->GetEnabled() == true))
 	{
-		if(m_KeyFocus->Key(KeyEventInformation) == true)
-		{
-			return true;
-		}
-	}
-	for(std::list< KeyListener * >::iterator KeyListenerIterator = m_KeyListeners.begin(); KeyListenerIterator != m_KeyListeners.end(); ++KeyListenerIterator)
-	{
-		if((*KeyListenerIterator)->OnKey(this, KeyEventInformation) == true)
+		if(m_KeyFocus->Key(TheKeyEventInformation) == true)
 		{
 			return true;
 		}
 	}
 	
-	return false;
+	bool Result(false);
+	
+	for(Event1< bool, const KeyEventInformation & >::CallbackIterator CallbackIterator = _KeyEvent.GetCallbackIterator(); CallbackIterator.IsValid() == true; ++CallbackIterator)
+	{
+		if(CallbackIterator(TheKeyEventInformation) == true)
+		{
+			Result = true;
+		}
+	}
+	
+	return Result;
 }
 
 bool Widget::MouseButton(int Button, int State, float X, float Y)
@@ -385,6 +387,11 @@ ConnectionHandle Widget::ConnectDestroyCallback(Callback0< void > Callback)
 	return _DestroyEvent.Connect(Callback);
 }
 
+ConnectionHandle Widget::ConnectKeyCallback(Callback1< bool, const KeyEventInformation & > Callback)
+{
+	return _KeyEvent.Connect(Callback);
+}
+
 ConnectionHandle Widget::ConnectPositionChangedCallback(Callback0< void > Callback)
 {
 	return _PositionChangedEvent.Connect(Callback);
@@ -400,6 +407,11 @@ void Widget::DisconnectDestroyCallback(ConnectionHandle & ConnectionHandle)
 	_DestroyEvent.Disconnect(ConnectionHandle);
 }
 
+void Widget::DisconnectKeyCallback(ConnectionHandle & ConnectionHandle)
+{
+	_KeyEvent.Disconnect(ConnectionHandle);
+}
+
 void Widget::DisconnectPositionChangedCallback(ConnectionHandle & ConnectionHandle)
 {
 	_PositionChangedEvent.Disconnect(ConnectionHandle);
@@ -408,11 +420,6 @@ void Widget::DisconnectPositionChangedCallback(ConnectionHandle & ConnectionHand
 void Widget::DisconnectSizeChangedCallback(ConnectionHandle & ConnectionHandle)
 {
 	_SizeChangedEvent.Disconnect(ConnectionHandle);
-}
-
-void Widget::AddKeyListener(KeyListener * KeyListener)
-{
-	m_KeyListeners.push_back(KeyListener);
 }
 
 void Widget::AddMouseButtonListener(MouseButtonListener * MouseButtonListener)

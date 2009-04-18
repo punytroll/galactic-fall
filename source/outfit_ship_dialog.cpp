@@ -234,7 +234,7 @@ OutfitShipDialog::OutfitShipDialog(Widget * SupWidget, Ship * Ship) :
 	m_SelectedAccessoryListItem(0)
 {
 	ConnectSizeChangedCallback(Callback(this, &OutfitShipDialog::OnSizeChanged));
-	AddKeyListener(this);
+	ConnectKeyCallback(Callback(this, &OutfitShipDialog::OnKey));
 	m_LeftPane = new Widget(this);
 	m_LeftPane->SetPosition(Vector2f(10.0f, 40.0f));
 	m_LeftPane->SetSize(Vector2f(200.0f, GetSize()[1] - 50.0f));
@@ -442,13 +442,14 @@ void OutfitShipDialog::OnUnmountClicked()
 	UpdateButtons();
 }
 
-bool OutfitShipDialog::OnKey(Widget * EventSource, const KeyEventInformation & KeyEventInformation)
+bool OutfitShipDialog::OnKey(const KeyEventInformation & KeyEventInformation)
 {
 	if(((KeyEventInformation.GetKeyCode() == 9 /* ESCAPE */) || (KeyEventInformation.GetKeyCode() == 36 /* RETURN */) || (KeyEventInformation.GetKeyCode() == 25 /* W */)) && (KeyEventInformation.IsDown() == true))
 	{
 		Destroy();
 	}
-	// eat all other input
+	
+	// eat all input
 	return true;
 }
 

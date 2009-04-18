@@ -100,7 +100,7 @@ TradeCenterDialog::TradeCenterDialog(Widget * SupWidget, Planet * Planet, Charac
 {
 	SetPosition(Vector2f(600.0f, 100.0f));
 	SetSize(Vector2f(500.0f, 330.0f));
-	AddKeyListener(this);
+	ConnectKeyCallback(Callback(this, &TradeCenterDialog::OnKey));
 	m_OKButton = new Button(this);
 	m_OKButton->SetPosition(Vector2f(390.0f, 300.0f));
 	m_OKButton->SetSize(Vector2f(100.0f, 20.0f));
@@ -260,7 +260,7 @@ void TradeCenterDialog::OnSellClicked(void)
 	}
 }
 
-bool TradeCenterDialog::OnKey(Widget * EventSource, const KeyEventInformation & KeyEventInformation)
+bool TradeCenterDialog::OnKey(const KeyEventInformation & KeyEventInformation)
 {
 	if(((KeyEventInformation.GetKeyCode() == 9 /* ESCAPE */) || (KeyEventInformation.GetKeyCode() == 36 /* RETURN */) || (KeyEventInformation.GetKeyCode() == 28 /* T */)) && (KeyEventInformation.IsDown() == true))
 	{

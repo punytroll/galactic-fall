@@ -17,6 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include "callbacks/callbacks.h"
 #include "globals.h"
 #include "key_event_information.h"
 #include "label.h"
@@ -29,7 +30,7 @@ TimingDialog::TimingDialog(Widget * SupWidget) :
 {
 	SetPosition(Vector2f(300.0f, 300.0f));
 	SetSize(Vector2f(350.0f, 400.0f));
-	AddKeyListener(this);
+	ConnectKeyCallback(Callback(this, &TimingDialog::OnKey));
 	
 	Label * FramesPerSecondCaptionLabel(new Label(this, "Frames per Second:"));
 	
@@ -188,7 +189,7 @@ TimingDialog::TimingDialog(Widget * SupWidget) :
 	m_ParticlesThisFrameLabel->SetHorizontalAlignment(Label::ALIGN_RIGHT);
 }
 
-bool TimingDialog::OnKey(Widget * EventSource, const KeyEventInformation & KeyEventInformation)
+bool TimingDialog::OnKey(const KeyEventInformation & KeyEventInformation)
 {
 	if((KeyEventInformation.GetKeyCode() == 9 /* ESCAPE */) && (KeyEventInformation.IsDown() == true))
 	{
@@ -196,7 +197,7 @@ bool TimingDialog::OnKey(Widget * EventSource, const KeyEventInformation & KeyEv
 		
 		return true;
 	}
-	// ignore all other input
+	
 	return false;
 }
 

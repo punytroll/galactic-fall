@@ -108,7 +108,7 @@ SaveGameDialog::SaveGameDialog(Widget * SupWidget, Callback1< void, std::ostream
 {
 	SetPosition(Vector2f(120.0f, 200.0f));
 	SetSize(Vector2f(300.0f, 300.0f));
-	AddKeyListener(this);
+	ConnectKeyCallback(Callback(this, &SaveGameDialog::OnKey));
 	AddMouseButtonListener(this);
 	m_OKButton = new Button(this);
 	m_OKButton->SetPosition(Vector2f(10.0f, 40.0f));
@@ -148,7 +148,7 @@ SaveGameDialog::SaveGameDialog(Widget * SupWidget, Callback1< void, std::ostream
 	m_FileNameLabel->SetBackgroundColor(Color(0.1f, 0.1f, 0.1f, 1.0f));
 	m_FileNameLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
 	m_FileNameLabel->SetAnchorRight(true);
-	m_FileNameLabel->AddKeyListener(this);
+	m_FileNameLabel->ConnectKeyCallback(Callback(this, &SaveGameDialog::OnFileNameLabelKey));
 	m_FileNameLabel->GrabKeyFocus();
 	m_FileScrollBox = new ScrollBox(this);
 	m_FileScrollBox->SetPosition(Vector2f(10.0f, 100.0f));
@@ -263,38 +263,44 @@ void SaveGameDialog::OnOKClicked(void)
 	}
 }
 
-bool SaveGameDialog::OnKey(Widget * EventSource, const KeyEventInformation & KeyEventInformation)
+bool SaveGameDialog::OnFileNameLabelKey(const KeyEventInformation & KeyEventInformation)
+{
+	if((KeyEventInformation.GetKeyCode() == 22 /* BACKSPACE */) && (KeyEventInformation.IsDown() == true))
+	{
+		if(m_FileNameLabel->GetText().length() > 0)
+		{
+			m_FileNameLabel->SetText(m_FileNameLabel->GetText().substr(0, m_FileNameLabel->GetText().length() - 1));
+		}
+	}
+	else if((KeyEventInformation.GetKeyCode() == 36 /* RETURN */) && (KeyEventInformation.IsDown() == true))
+	{
+		if(m_FileNameLabel->GetText().length() > 0)
+		{
+			if(Save() == true)
+			{
+				Destroy();
+			}
+		}
+	}
+	else if((KeyEventInformation.GetString().empty() == false) && (KeyEventInformation.IsDown() == true))
+	{
+		m_FileNameLabel->SetText(m_FileNameLabel->GetText() + KeyEventInformation.GetString());
+	}
+	
+	// eat all input
+	return true;
+}
+
+bool SaveGameDialog::OnKey(const KeyEventInformation & KeyEventInformation)
 {
 	if((KeyEventInformation.GetKeyCode() == 9 /* ESCAPE */) && (KeyEventInformation.IsDown() == true))
 	{
 		Destroy();
+		
+		return true;
 	}
-	else if(EventSource == m_FileNameLabel)
-	{
-		if((KeyEventInformation.GetKeyCode() == 22 /* BACKSPACE */) && (KeyEventInformation.IsDown() == true))
-		{
-			if(m_FileNameLabel->GetText().length() > 0)
-			{
-				m_FileNameLabel->SetText(m_FileNameLabel->GetText().substr(0, m_FileNameLabel->GetText().length() - 1));
-			}
-		}
-		else if((KeyEventInformation.GetKeyCode() == 36 /* RETURN */) && (KeyEventInformation.IsDown() == true))
-		{
-			if(m_FileNameLabel->GetText().length() > 0)
-			{
-				if(Save() == true)
-				{
-					Destroy();
-				}
-			}
-		}
-		else if((KeyEventInformation.GetString().empty() == false) && (KeyEventInformation.IsDown() == true))
-		{
-			m_FileNameLabel->SetText(m_FileNameLabel->GetText() + KeyEventInformation.GetString());
-		}
-	}
-	// eat all other input
-	return true;
+	
+	return false;
 }
 
 bool SaveGameDialog::OnMouseButton(Widget * EventSource, int Button, int State, float X, float Y)

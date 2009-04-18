@@ -56,7 +56,7 @@ LoadGameDialog::LoadGameDialog(Widget * SupWidget, Callback1< bool, std::istream
 {
 	SetPosition(Vector2f(120.0f, 200.0f));
 	SetSize(Vector2f(300.0f, 300.0f));
-	AddKeyListener(this);
+	ConnectKeyCallback(Callback(this, &LoadGameDialog::OnKey));
 	AddMouseButtonListener(this);
 	m_OKButton = new Button(this);
 	m_OKButton->SetPosition(Vector2f(10.0f, 40.0f));
@@ -96,7 +96,7 @@ LoadGameDialog::LoadGameDialog(Widget * SupWidget, Callback1< bool, std::istream
 	m_FileNameLabel->SetBackgroundColor(Color(0.1f, 0.1f, 0.1f, 1.0f));
 	m_FileNameLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
 	m_FileNameLabel->SetAnchorRight(true);
-	m_FileNameLabel->AddKeyListener(this);
+	m_FileNameLabel->ConnectKeyCallback(Callback(this, &LoadGameDialog::OnFileNameLabelKey));
 	m_FileNameLabel->GrabKeyFocus();
 	m_FileScrollBox = new ScrollBox(this);
 	m_FileScrollBox->SetPosition(Vector2f(10.0f, 100.0f));
@@ -218,38 +218,44 @@ void LoadGameDialog::OnOKClicked(void)
 	}
 }
 
-bool LoadGameDialog::OnKey(Widget * EventSource, const KeyEventInformation & KeyEventInformation)
+bool LoadGameDialog::OnFileNameLabelKey(const KeyEventInformation & KeyEventInformation)
+{
+	if((KeyEventInformation.GetKeyCode() == 22 /* BACKSPACE */) && (KeyEventInformation.IsDown() == true))
+	{
+		if(m_FileNameLabel->GetText().length() > 0)
+		{
+			m_FileNameLabel->SetText(m_FileNameLabel->GetText().substr(0, m_FileNameLabel->GetText().length() - 1));
+		}
+	}
+	else if((KeyEventInformation.GetKeyCode() == 36 /* RETURN */) && (KeyEventInformation.IsDown() == true))
+	{
+		if(m_FileNameLabel->GetText().length() > 0)
+		{
+			if(Load() == true)
+			{
+				Destroy();
+			}
+		}
+	}
+	else if((KeyEventInformation.GetString().empty() == false) && (KeyEventInformation.IsDown() == true))
+	{
+		m_FileNameLabel->SetText(m_FileNameLabel->GetText() + KeyEventInformation.GetString());
+	}
+	
+	// eat all input
+	return true;
+}
+
+bool LoadGameDialog::OnKey(const KeyEventInformation & KeyEventInformation)
 {
 	if((KeyEventInformation.GetKeyCode() == 9 /* ESCAPE */) && (KeyEventInformation.IsDown() == true))
 	{
 		Destroy();
+		
+		return true;
 	}
-	else if(EventSource == m_FileNameLabel)
-	{
-		if((KeyEventInformation.GetKeyCode() == 22 /* BACKSPACE */) && (KeyEventInformation.IsDown() == true))
-		{
-			if(m_FileNameLabel->GetText().length() > 0)
-			{
-				m_FileNameLabel->SetText(m_FileNameLabel->GetText().substr(0, m_FileNameLabel->GetText().length() - 1));
-			}
-		}
-		else if((KeyEventInformation.GetKeyCode() == 36 /* RETURN */) && (KeyEventInformation.IsDown() == true))
-		{
-			if(m_FileNameLabel->GetText().length() > 0)
-			{
-				if(Load() == true)
-				{
-					Destroy();
-				}
-			}
-		}
-		else if((KeyEventInformation.GetString().empty() == false) && (KeyEventInformation.IsDown() == true))
-		{
-			m_FileNameLabel->SetText(m_FileNameLabel->GetText() + KeyEventInformation.GetString());
-		}
-	}
-	// eat all other input
-	return true;
+	
+	return false;
 }
 
 bool LoadGameDialog::OnMouseButton(Widget * EventSource, int Button, int State, float X, float Y)

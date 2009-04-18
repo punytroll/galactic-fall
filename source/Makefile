@@ -173,9 +173,6 @@ graphics_texture_manager_h = \
 key_event_information_h = \
 	key_event_information.h
 
-key_listener_h = \
-	key_listener.h
-
 label_h = \
 	label.h \
 	$(color_h) \
@@ -189,14 +186,12 @@ local_file_data_channel_h = \
 
 load_game_dialog_h = \
 	load_game_dialog.h \
-	$(key_listener_h) \
 	$(mouse_button_listener_h) \
 	$(timeout_notifications_h) \
 	$(window_h)
 
 map_dialog_h = \
 	map_dialog.h \
-	$(key_listener_h) \
 	$(window_h)
 
 map_knowledge_h = \
@@ -318,7 +313,6 @@ object_information_dialog_h = \
 
 outfit_ship_dialog_h = \
 	outfit_ship_dialog.h \
-	$(key_listener_h) \
 	$(mouse_button_listener_h) \
 	$(window_h)
 
@@ -337,7 +331,6 @@ planet_h = \
 
 planet_dialog_h = \
 	planet_dialog.h \
-	$(key_listener_h) \
 	$(window_h)
 
 real_time_h = \
@@ -348,7 +341,6 @@ referencing_h = \
 
 save_game_dialog_h = \
 	save_game_dialog.h \
-	$(key_listener_h) \
 	$(mouse_button_listener_h) \
 	$(timeout_notifications_h) \
 	$(window_h)
@@ -445,13 +437,11 @@ timeout_notifications_h = \
 
 timing_dialog_h = \
 	timing_dialog.h \
-	$(key_listener_h) \
 	$(type_definitions_h) \
 	$(window_h)
 
 trade_center_dialog_h = \
 	trade_center_dialog.h \
-	$(key_listener_h) \
 	$(mouse_button_listener_h) \
 	$(mouse_motion_listener_h) \
 	$(window_h)
@@ -687,9 +677,6 @@ graphics_texture_manager.o: graphics_texture_manager.cpp $(graphics_texture_h) $
 key_event_information.o: key_event_information.cpp $(key_event_information_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-key_listener.o: key_listener.cpp $(key_listener_h)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-
 label.o: label.cpp $(label_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
@@ -840,7 +827,7 @@ threat.o: threat.cpp $(threat_h)
 timeout_notifications.o: timeout_notifications.cpp $(timeout_notifications_h) $(type_definitions_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-timing_dialog.o: timing_dialog.cpp $(globals_h) $(key_event_information_h) $(label_h) $(string_cast_h) $(system_statistics_h) $(timing_dialog_h)
+timing_dialog.o: timing_dialog.cpp $(callbacks_callbacks_h) $(globals_h) $(key_event_information_h) $(label_h) $(string_cast_h) $(system_statistics_h) $(timing_dialog_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 trade_center_dialog.o: trade_center_dialog.cpp $(asset_class_h) $(button_h) $(character_h) $(commodity_h) $(commodity_class_h) $(character_h) $(game_time_h) $(graphics_model_manager_h) $(key_event_information_h) $(label_h) $(object_aspect_accessory_h) $(object_aspect_name_h) $(object_aspect_object_container_h) $(object_factory_h) $(planet_h) $(scroll_bar_h) $(scroll_box_h) $(ship_h) $(storage_h) $(trade_center_dialog_h) $(weapon_h) $(weapon_class_h)
@@ -864,7 +851,7 @@ weapon.o: weapon.cpp $(battery_h) $(game_time_h) $(globals_h) $(math_h) $(math_q
 weapon_class.o: weapon_class.cpp $(color_h) $(visualization_prototype_h) $(weapon_class_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-widget.o: widget.cpp $(callbacks_callbacks_h) $(color_h) $(key_listener_h) $(math_h) $(mouse_button_listener_h) $(mouse_motion_listener_h) $(widget_h)
+widget.o: widget.cpp $(callbacks_callbacks_h) $(color_h) $(math_h) $(mouse_button_listener_h) $(mouse_motion_listener_h) $(widget_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 window.o: window.cpp $(border_h) $(globals_h) $(label_h) $(user_interface_h) $(window_h)
