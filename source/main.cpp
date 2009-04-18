@@ -1552,9 +1552,9 @@ void MouseButtonUp(int MouseButton, int X, int Y)
 	}
 }
 
-void MouseMotion(int X, int Y)
+void MouseMoved(int X, int Y)
 {
-	g_UserInterface->MouseMotion(X, Y);
+	g_UserInterface->MouseMoved(X, Y);
 	
 	int DeltaX(X - g_LastMotionX);
 	int DeltaY(Y - g_LastMotionY);
@@ -3364,7 +3364,7 @@ void ProcessEvents(void)
 				{
 					std::cout << "Motion:         x=" << Event.xbutton.x << "   y=" << Event.xbutton.y << std::endl;
 				}
-				MouseMotion(Event.xmotion.x, Event.xmotion.y);
+				MouseMoved(Event.xmotion.x, Event.xmotion.y);
 				
 				break;
 			}

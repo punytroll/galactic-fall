@@ -18,6 +18,7 @@
 **/
 
 #include "border.h"
+#include "callbacks/callbacks.h"
 #include "globals.h"
 #include "label.h"
 #include "user_interface.h"
@@ -42,7 +43,7 @@ WWindow::WWindow(Widget * SupWidget, const std::string & Title) :
 	m_TitleLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
 	m_TitleLabel->SetBackgroundColor(Color(0.2f, 0.2f, 0.4f, 1.0f));
 	m_TitleLabel->AddMouseButtonListener(this);
-	m_TitleLabel->AddMouseMotionListener(this);
+	m_TitleLabel->ConnectMouseMovedCallback(Callback(this, &WWindow::OnTitleLabelMouseMoved));
 	m_ResizeDragBox = new Widget(this);
 	m_ResizeDragBox->SetPosition(Vector2f(GetSize()[0] - 9.0f, GetSize()[1] - 9.0f));
 	m_ResizeDragBox->SetSize(Vector2f(7.0f, 7.0f));
@@ -52,7 +53,7 @@ WWindow::WWindow(Widget * SupWidget, const std::string & Title) :
 	m_ResizeDragBox->SetAnchorTop(false);
 	m_ResizeDragBox->SetBackgroundColor(Color(0.2f, 0.2f, 0.4f, 1.0f));
 	m_ResizeDragBox->AddMouseButtonListener(this);
-	m_ResizeDragBox->AddMouseMotionListener(this);
+	m_ResizeDragBox->ConnectMouseMovedCallback(Callback(this, &WWindow::OnResizeDragBoxMouseMoved));
 }
 
 bool WWindow::OnMouseButton(Widget * EventSource, int Button, int State, float X, float Y)
@@ -97,13 +98,17 @@ bool WWindow::OnMouseButton(Widget * EventSource, int Button, int State, float X
 	return false;
 }
 
-void WWindow::OnMouseMotion(Widget * EventSource, float X, float Y)
+void WWindow::OnTitleLabelMouseMoved(float X, float Y)
 {
-	if((EventSource == m_TitleLabel) && (g_UserInterface->GetCaptureWidget() == m_TitleLabel))
+	if(g_UserInterface->GetCaptureWidget() == m_TitleLabel)
 	{
 		SetPosition(GetPosition() + Vector2f(X, Y) - m_GrabPosition);
 	}
-	if((EventSource == m_ResizeDragBox) && (g_UserInterface->GetCaptureWidget() == m_ResizeDragBox))
+}
+
+void WWindow::OnResizeDragBoxMouseMoved(float X, float Y)
+{
+	if(g_UserInterface->GetCaptureWidget() == m_ResizeDragBox)
 	{
 		SetSize(GetSize() + Vector2f(X, Y) - m_GrabPosition);
 	}

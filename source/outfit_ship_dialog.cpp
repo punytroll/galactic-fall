@@ -57,7 +57,7 @@ private:
 	Label * m_TypeOrWeaponLabel;
 };
 
-class AccessoryListItem : public MouseMotionListener, public Widget
+class AccessoryListItem : public Widget
 {
 public:
 	AccessoryListItem(Widget * SupWidget, Object * Accessory);

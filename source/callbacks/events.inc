@@ -154,3 +154,81 @@ private:
 };
 /////////  end    1b679b70-2a62-11de-8c30-0800200c9a66  ///////////////////////
 
+/////////  begin  1b679b70-2a62-11de-8c30-0800200c9a66  ///////////////////////
+// Event
+// Assertions=true
+// InstanceCount=false
+// NumberOfArguments=2
+///////////////////////////////////////////////////////////////////////////////
+template < typename ReturnType, typename Argument1Type, typename Argument2Type >
+class Event2
+{
+public:
+	class CallbackIterator
+	{
+	public:
+		CallbackIterator(Node< Callback2< ReturnType, Argument1Type, Argument2Type > > * CallbackNode) :
+			_CallbackNode(CallbackNode)
+		{
+		}
+		
+		CallbackIterator(const CallbackIterator & CallbackIterator) :
+			_CallbackNode(CallbackIterator._CallbackNode)
+		{
+		}
+		
+		CallbackIterator & operator=(const CallbackIterator & CallbackIterator)
+		{
+			_CallbackNode = CallbackIterator._CallbackNode;
+			
+			return *this;
+		}
+		
+		CallbackIterator & operator++(void)
+		{
+			_CallbackNode = _CallbackNode->GetNext();
+			
+			return *this;
+		}
+		
+		bool IsValid(void) const
+		{
+			return _CallbackNode != 0;
+		}
+		
+		ReturnType operator()(Argument1Type Argument1, Argument2Type Argument2)
+		{
+			return _CallbackNode->GetValue()(Argument1, Argument2);
+		}
+	private:
+		Node< Callback2< ReturnType, Argument1Type, Argument2Type > > * _CallbackNode;
+	};
+	
+	ConnectionHandle Connect(Callback2< ReturnType, Argument1Type, Argument2Type > Callback)
+	{
+		return ConnectionHandle(_Callbacks.Append(Callback));
+	}
+	
+	void Disconnect(ConnectionHandle & ConnectionHandle)
+	{
+		_Callbacks.Remove(static_cast< Node< Callback2< ReturnType, Argument1Type, Argument2Type > > * >(ConnectionHandle.GetHandle()));
+		ConnectionHandle.Invalidate();
+	}
+	
+	CallbackIterator GetCallbackIterator(void)
+	{
+		return CallbackIterator(_Callbacks.GetHead());
+	}
+	
+	void operator()(Argument1Type Argument1, Argument2Type Argument2)
+	{
+		for(Node< Callback2< ReturnType, Argument1Type, Argument2Type > > * CallbackNode = _Callbacks.GetHead(); CallbackNode != 0; CallbackNode = CallbackNode->GetNext())
+		{
+			CallbackNode->GetValue()(Argument1, Argument2);
+		}
+	}
+private:
+	List< Callback2< ReturnType, Argument1Type, Argument2Type > > _Callbacks;
+};
+/////////  end    1b679b70-2a62-11de-8c30-0800200c9a66  ///////////////////////
+

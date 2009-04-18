@@ -39,7 +39,6 @@ button_h = \
 	button.h \
 	$(callbacks_events_h) \
 	$(mouse_button_listener_h) \
-	$(mouse_motion_listener_h) \
 	$(widget_h)
 
 callbacks_callbacks_h = \
@@ -263,9 +262,6 @@ mini_map_display_h = \
 mouse_button_listener_h = \
 	mouse_button_listener.h
 
-mouse_motion_listener_h = \
-	mouse_motion_listener.h
-
 object_h = \
 	object.h \
 	$(referencing_h)
@@ -353,7 +349,6 @@ scanner_display_h = \
 scroll_bar_h = \
 	scroll_bar.h \
 	$(mouse_button_listener_h) \
-	$(mouse_motion_listener_h) \
 	$(widget_h)
 
 scroll_box_h = \
@@ -396,7 +391,6 @@ star_h = \
 star_map_display_h = \
 	star_map_display.h \
 	$(mouse_button_listener_h) \
-	$(mouse_motion_listener_h) \
 	$(widget_h)
 
 state_h = \
@@ -443,7 +437,6 @@ timing_dialog_h = \
 trade_center_dialog_h = \
 	trade_center_dialog.h \
 	$(mouse_button_listener_h) \
-	$(mouse_motion_listener_h) \
 	$(window_h)
 
 type_definitions_h = \
@@ -482,7 +475,6 @@ widget_h = \
 window_h = \
 	window.h \
 	$(mouse_button_listener_h) \
-	$(mouse_motion_listener_h) \
 	$(widget_h)
 
 write_to_xml_stream_h = \
@@ -713,9 +705,6 @@ mini_map_display.o: mini_map_display.cpp $(commodity_h) $(mini_map_display_h) $(
 mouse_button_listener.o: mouse_button_listener.cpp $(mouse_button_listener_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-mouse_motion_listener.o: mouse_motion_listener.cpp $(mouse_motion_listener_h)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-
 object.o: object.cpp $(message_h) $(object_h) $(object_aspect_accessory_h) $(object_aspect_messages_h) $(object_aspect_name_h) $(object_aspect_object_container_h) $(object_aspect_outfitting_h) $(object_aspect_physical_h) $(object_aspect_position_h) $(object_aspect_update_h) $(object_aspect_visualization_h) $(real_time_h) $(string_cast_h) $(xml_stream_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
@@ -800,7 +789,7 @@ slot_class.o: slot_class.cpp $(slot_class_h)
 star.o: star.cpp $(star_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-star_map_display.o: star_map_display.cpp $(character_h) $(draw_text_h) $(galaxy_h) $(globals_h) $(map_knowledge_h) $(object_aspect_name_h) $(object_aspect_position_h) $(star_map_display_h) $(system_h) $(user_interface_h)
+star_map_display.o: star_map_display.cpp $(callbacks_callbacks_h) $(character_h) $(draw_text_h) $(galaxy_h) $(globals_h) $(map_knowledge_h) $(object_aspect_name_h) $(object_aspect_position_h) $(star_map_display_h) $(system_h) $(user_interface_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 state.o: state.cpp $(state_h)
@@ -851,10 +840,10 @@ weapon.o: weapon.cpp $(battery_h) $(game_time_h) $(globals_h) $(math_h) $(math_q
 weapon_class.o: weapon_class.cpp $(color_h) $(visualization_prototype_h) $(weapon_class_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-widget.o: widget.cpp $(callbacks_callbacks_h) $(color_h) $(math_h) $(mouse_button_listener_h) $(mouse_motion_listener_h) $(widget_h)
+widget.o: widget.cpp $(callbacks_callbacks_h) $(color_h) $(math_h) $(mouse_button_listener_h) $(widget_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-window.o: window.cpp $(border_h) $(globals_h) $(label_h) $(user_interface_h) $(window_h)
+window.o: window.cpp $(border_h) $(callbacks_callbacks_h) $(globals_h) $(label_h) $(user_interface_h) $(window_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 write_to_xml_stream.o: write_to_xml_stream.cpp $(battery_h) $(character_h) $(color_h) $(commodity_h) $(faction_h) $(generator_h) $(graphics_material_h) $(map_knowledge_h) $(mind_h) $(object_h) $(object_aspect_accessory_h) $(object_aspect_name_h) $(object_aspect_object_container_h) $(object_aspect_physical_h) $(object_aspect_position_h) $(object_aspect_visualization_h) $(ship_h) $(slot_h) $(storage_h) $(system_h) $(visualization_prototype_h) $(weapon_h) $(write_to_xml_stream_h) $(xml_stream_h)

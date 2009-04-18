@@ -142,7 +142,7 @@ bool UserInterface::Key(const KeyEventInformation & KeyEventInformation)
 	return false;
 }
 
-void UserInterface::MouseMotion(float X, float Y)
+void UserInterface::MouseMoved(float X, float Y)
 {
 	if(m_CaptureWidget == 0)
 	{
@@ -159,7 +159,7 @@ void UserInterface::MouseMotion(float X, float Y)
 					m_HoverWidget = m_RootWidget;
 					m_RootWidget->MouseEnter();
 				}
-				m_RootWidget->MouseMotion(X, Y);
+				m_RootWidget->MouseMoved(X, Y);
 			}
 			else
 			{
@@ -177,7 +177,7 @@ void UserInterface::MouseMotion(float X, float Y)
 		{
 			Vector2f TopLeftCorner(m_CaptureWidget->GetGlobalPosition());
 			
-			m_CaptureWidget->MouseMotion(X - TopLeftCorner.m_V.m_A[0], Y - TopLeftCorner.m_V.m_A[1]);
+			m_CaptureWidget->MouseMoved(X - TopLeftCorner.m_V.m_A[0], Y - TopLeftCorner.m_V.m_A[1]);
 		}
 	}
 }

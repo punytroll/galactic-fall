@@ -35,7 +35,7 @@ public:
 	void Draw(void) const;
 	bool MouseButton(int Button, int State, float X, float Y);
 	bool Key(const KeyEventInformation & KeyEventInformation);
-	void MouseMotion(float X, float Y);
+	void MouseMoved(float X, float Y);
 	// setters
 	void SetCaptureWidget(Widget * Widget);
 	void ReleaseCaptureWidget(void);

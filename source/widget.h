@@ -31,7 +31,6 @@
 class Color;
 class KeyEventInformation;
 class MouseButtonListener;
-class MouseMotionListener;
 class UserInterface;
 
 class Widget
@@ -85,7 +84,7 @@ public:
 	// receive input
 	bool MouseButton(int Button, int State, float X, float Y);
 	bool Key(const KeyEventInformation & KeyEventInformation);
-	void MouseMotion(float X, float Y);
+	void MouseMoved(float X, float Y);
 	// MouseEnter may depend on the fact that m_HoverWidget on the m_SupWidget is set to this
 	// MouseEnter on the new hover widget is called after MouseLeave on the old hover widget
 	void MouseEnter(void);
@@ -94,18 +93,19 @@ public:
 	void MouseLeave(void);
 	// add signal listeners
 	void AddMouseButtonListener(MouseButtonListener * MouseButtonListener);
-	void AddMouseMotionListener(MouseMotionListener * MouseMotionListener);
 	// connect and disconnect events
 	ConnectionHandle ConnectDestroyCallback(Callback0< void > Callback);
 	ConnectionHandle ConnectKeyCallback(Callback1< bool, const KeyEventInformation & > Callback);
 	ConnectionHandle ConnectMouseEnterCallback(Callback0< void > Callback);
 	ConnectionHandle ConnectMouseLeaveCallback(Callback0< void > Callback);
+	ConnectionHandle ConnectMouseMovedCallback(Callback2< void, float, float > Callback);
 	ConnectionHandle ConnectPositionChangedCallback(Callback0< void > Callback);
 	ConnectionHandle ConnectSizeChangedCallback(Callback0< void > Callback);
 	void DisconnectDestroyCallback(ConnectionHandle & ConnectionHandle);
 	void DisconnectKeyCallback(ConnectionHandle & ConnectionHandle);
 	void DisconnectMouseEnterCallback(ConnectionHandle & ConnectionHandle);
 	void DisconnectMouseLeaveCallback(ConnectionHandle & ConnectionHandle);
+	void DisconnectMouseMovedCallback(ConnectionHandle & ConnectionHandle);
 	void DisconnectPositionChangedCallback(ConnectionHandle & ConnectionHandle);
 	void DisconnectSizeChangedCallback(ConnectionHandle & ConnectionHandle);
 	// static manager functions
@@ -135,11 +135,11 @@ private:
 	Event1< bool, const KeyEventInformation & > _KeyEvent;
 	Event0< void > _MouseEnterEvent;
 	Event0< void > _MouseLeaveEvent;
+	Event2< void, float, float > _MouseMovedEvent;
 	Event0< void > _PositionChangedEvent;
 	Event0< void > _SizeChangedEvent;
 	// listeners
 	std::list< MouseButtonListener * > m_MouseButtonListeners;
-	std::list< MouseMotionListener * > m_MouseMotionListeners;
 	// static manager properties
 	static std::list< Widget * > m_DestroyedWidgets;
 	static std::stack< std::pair< Vector2f, Vector2f > > m_ClippingRectangles;

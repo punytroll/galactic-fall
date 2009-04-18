@@ -21,6 +21,7 @@
 
 #include <GL/gl.h>
 
+#include "callbacks/callbacks.h"
 #include "character.h"
 #include "draw_text.h"
 #include "galaxy.h"
@@ -41,7 +42,7 @@ StarMapDisplay::StarMapDisplay(Widget * SupWidget, System * System, Character * 
 	m_OffsetPosition(true)
 {
 	AddMouseButtonListener(this);
-	AddMouseMotionListener(this);
+	ConnectMouseMovedCallback(Callback(this, &StarMapDisplay::OnMouseMoved));
 }
 
 void StarMapDisplay::Draw(void) const
@@ -223,9 +224,9 @@ bool StarMapDisplay::OnMouseButton(Widget * EventSource, int Button, int State, 
 	return false;
 }
 
-void StarMapDisplay::OnMouseMotion(Widget * EventSource, float X, float Y)
+void StarMapDisplay::OnMouseMoved(float X, float Y)
 {
-	if((EventSource == this) && (g_UserInterface->GetCaptureWidget() == this))
+	if(g_UserInterface->GetCaptureWidget() == this)
 	{
 		m_OffsetPosition += (Vector2f(X, Y) - m_GrabPosition);
 		m_GrabPosition = Vector2f(X, Y);
