@@ -30,7 +30,6 @@
 
 class Color;
 class KeyEventInformation;
-class KeyListener;
 class MouseButtonListener;
 class MouseMotionListener;
 class UserInterface;
@@ -96,14 +95,17 @@ public:
 	// add signal listeners
 	void AddMouseButtonListener(MouseButtonListener * MouseButtonListener);
 	void AddMouseMotionListener(MouseMotionListener * MouseMotionListener);
-	// remove signal listeners
-	// events
+	// connect and disconnect events
 	ConnectionHandle ConnectDestroyCallback(Callback0< void > Callback);
 	ConnectionHandle ConnectKeyCallback(Callback1< bool, const KeyEventInformation & > Callback);
+	ConnectionHandle ConnectMouseEnterCallback(Callback0< void > Callback);
+	ConnectionHandle ConnectMouseLeaveCallback(Callback0< void > Callback);
 	ConnectionHandle ConnectPositionChangedCallback(Callback0< void > Callback);
 	ConnectionHandle ConnectSizeChangedCallback(Callback0< void > Callback);
 	void DisconnectDestroyCallback(ConnectionHandle & ConnectionHandle);
 	void DisconnectKeyCallback(ConnectionHandle & ConnectionHandle);
+	void DisconnectMouseEnterCallback(ConnectionHandle & ConnectionHandle);
+	void DisconnectMouseLeaveCallback(ConnectionHandle & ConnectionHandle);
 	void DisconnectPositionChangedCallback(ConnectionHandle & ConnectionHandle);
 	void DisconnectSizeChangedCallback(ConnectionHandle & ConnectionHandle);
 	// static manager functions
@@ -130,9 +132,11 @@ private:
 	Widget * m_KeyFocus;
 	// events
 	Event0< void > _DestroyEvent;
+	Event1< bool, const KeyEventInformation & > _KeyEvent;
+	Event0< void > _MouseEnterEvent;
+	Event0< void > _MouseLeaveEvent;
 	Event0< void > _PositionChangedEvent;
 	Event0< void > _SizeChangedEvent;
-	Event1< bool, const KeyEventInformation & > _KeyEvent;
 	// listeners
 	std::list< MouseButtonListener * > m_MouseButtonListeners;
 	std::list< MouseMotionListener * > m_MouseMotionListeners;

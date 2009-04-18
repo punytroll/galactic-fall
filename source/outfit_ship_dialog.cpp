@@ -37,7 +37,7 @@
 #include "weapon.h"
 #include "weapon_class.h"
 
-class SlotListItem : public MouseMotionListener, public Widget
+class SlotListItem : public Widget
 {
 public:
 	SlotListItem(Widget * SupWidget, Slot * Slot);
@@ -47,10 +47,11 @@ public:
 	Slot * GetSlot(void);
 	// setters
 	void SetSelected(bool Selected);
-protected:
-	virtual void OnMouseEnter(Widget * EventSource);
-	virtual void OnMouseLeave(Widget * EventSource);
 private:
+	// callbacks
+	void OnMouseEnter(void);
+	void OnMouseLeave(void);
+	// member variables
 	bool m_Selected;
 	Slot * m_Slot;
 	Label * m_TypeOrWeaponLabel;
@@ -66,10 +67,11 @@ public:
 	Object * GetAccessory(void);
 	// setters
 	void SetSelected(bool Selected);
-protected:
-	virtual void OnMouseEnter(Widget * EventSource);
-	virtual void OnMouseLeave(Widget * EventSource);
 private:
+	// callbacks
+	void OnMouseEnter(void);
+	void OnMouseLeave(void);
+	// member variables
 	bool m_Selected;
 	Object * m_Accessory;
 };
@@ -79,7 +81,8 @@ SlotListItem::SlotListItem(Widget * SupWidget, Slot * Slot) :
 	m_Selected(false),
 	m_Slot(Slot)
 {
-	AddMouseMotionListener(this);
+	ConnectMouseEnterCallback(Callback(this, &SlotListItem::OnMouseEnter));
+	ConnectMouseLeaveCallback(Callback(this, &SlotListItem::OnMouseLeave));
 	// set to arbitrary design size
 	SetSize(Vector2f(100.0f, 100.0f));
 	
@@ -140,7 +143,7 @@ void SlotListItem::SetSelected(bool Selected)
 	}
 }
 
-void SlotListItem::OnMouseEnter(Widget * EventSource)
+void SlotListItem::OnMouseEnter(void)
 {
 	if(GetSelected() == false)
 	{
@@ -148,7 +151,7 @@ void SlotListItem::OnMouseEnter(Widget * EventSource)
 	}
 }
 
-void SlotListItem::OnMouseLeave(Widget * EventSource)
+void SlotListItem::OnMouseLeave(void)
 {
 	if(GetSelected() == false)
 	{
@@ -161,7 +164,8 @@ AccessoryListItem::AccessoryListItem(Widget * SupWidget, Object * Accessory) :
 	m_Selected(false),
 	m_Accessory(Accessory)
 {
-	AddMouseMotionListener(this);
+	ConnectMouseEnterCallback(Callback(this, &AccessoryListItem::OnMouseEnter));
+	ConnectMouseLeaveCallback(Callback(this, &AccessoryListItem::OnMouseLeave));
 	// set to arbitrary design size
 	SetSize(Vector2f(100.0f, 100.0f));
 	// safe-guard: only accept objects with a name aspect
@@ -211,7 +215,7 @@ void AccessoryListItem::SetSelected(bool Selected)
 	}
 }
 
-void AccessoryListItem::OnMouseEnter(Widget * EventSource)
+void AccessoryListItem::OnMouseEnter(void)
 {
 	if(GetSelected() == false)
 	{
@@ -219,7 +223,7 @@ void AccessoryListItem::OnMouseEnter(Widget * EventSource)
 	}
 }
 
-void AccessoryListItem::OnMouseLeave(Widget * EventSource)
+void AccessoryListItem::OnMouseLeave(void)
 {
 	if(GetSelected() == false)
 	{

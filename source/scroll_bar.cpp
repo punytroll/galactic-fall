@@ -38,7 +38,8 @@ ScrollBar::ScrollBar(Widget * SupWidget, ScrollBar::Alignment Alignment) :
 	m_Tracker = new Widget(this);
 	m_Tracker->SetBackgroundColor(Color(0.3f, 0.3f, 0.3f, 1.0f));
 	m_Tracker->AddMouseButtonListener(this);
-	m_Tracker->AddMouseMotionListener(this);
+	m_Tracker->ConnectMouseEnterCallback(Callback(this, &ScrollBar::OnTrackerMouseEnter));
+	m_Tracker->ConnectMouseLeaveCallback(Callback(this, &ScrollBar::OnTrackerMouseLeave));
 	SetAlignment(Alignment);
 	SetMinimumPosition(0.0f);
 	SetMaximumPosition(1.0f);
@@ -75,20 +76,14 @@ void ScrollBar::OnSizeChanged(void)
 	AdjustTrackerPosition();
 }
 
-void ScrollBar::OnMouseEnter(Widget * EventSource)
+void ScrollBar::OnTrackerMouseEnter(void)
 {
-	if(EventSource == m_Tracker)
-	{
-		m_Tracker->SetBackgroundColor(Color(0.4f, 0.4f, 0.4f, 1.0f));
-	}
+	m_Tracker->SetBackgroundColor(Color(0.4f, 0.4f, 0.4f, 1.0f));
 }
 
-void ScrollBar::OnMouseLeave(Widget * EventSource)
+void ScrollBar::OnTrackerMouseLeave(void)
 {
-	if(EventSource == m_Tracker)
-	{
-		m_Tracker->SetBackgroundColor(Color(0.3f, 0.3f, 0.3f, 1.0f));
-	}
+	m_Tracker->SetBackgroundColor(Color(0.3f, 0.3f, 0.3f, 1.0f));
 }
 
 void ScrollBar::SetAlignment(ScrollBar::Alignment Alignment)

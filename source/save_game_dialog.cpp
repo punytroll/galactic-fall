@@ -30,7 +30,7 @@
 #include "save_game_dialog.h"
 #include "scroll_box.h"
 
-class DirectoryEntryItem : public MouseMotionListener, public Widget
+class DirectoryEntryItem : public Widget
 {
 public:
 	DirectoryEntryItem(Widget * SupWidget, const std::string & Caption);
@@ -40,10 +40,11 @@ public:
 	bool GetSelected(void) const;
 	// setters
 	void SetSelected(bool Selected);
-protected:
-	virtual void OnMouseEnter(Widget * EventSource);
-	virtual void OnMouseLeave(Widget * EventSource);
 private:
+	// callbacks
+	void OnMouseEnter(void);
+	void OnMouseLeave(void);
+	// member variables
 	bool m_Selected;
 	Label * m_CaptionLabel;
 };
@@ -52,7 +53,8 @@ DirectoryEntryItem::DirectoryEntryItem(Widget * SupWidget, const std::string & C
 	Widget(SupWidget),
 	m_Selected(false)
 {
-	AddMouseMotionListener(this);
+	ConnectMouseEnterCallback(Callback(this, &DirectoryEntryItem::OnMouseEnter));
+	ConnectMouseLeaveCallback(Callback(this, &DirectoryEntryItem::OnMouseLeave));
 	m_CaptionLabel = new Label(this, Caption);
 	m_CaptionLabel->SetPosition(Vector2f(5.0f, 0.0f));
 	m_CaptionLabel->SetSize(Vector2f(GetSize()[0] - 10.0f, 20.0f));
@@ -85,7 +87,7 @@ void DirectoryEntryItem::SetSelected(bool Selected)
 	}
 }
 
-void DirectoryEntryItem::OnMouseEnter(Widget * EventSource)
+void DirectoryEntryItem::OnMouseEnter(void)
 {
 	if(GetSelected() == false)
 	{
@@ -93,7 +95,7 @@ void DirectoryEntryItem::OnMouseEnter(Widget * EventSource)
 	}
 }
 
-void DirectoryEntryItem::OnMouseLeave(Widget * EventSource)
+void DirectoryEntryItem::OnMouseLeave(void)
 {
 	if(GetSelected() == false)
 	{

@@ -31,7 +31,7 @@
 #include "scroll_box.h"
 
 // this class is declared here, so we can use it, but defined in save_game_dialog.cpp
-class DirectoryEntryItem : public MouseMotionListener, public Widget
+class DirectoryEntryItem : public Widget
 {
 public:
 	DirectoryEntryItem(Widget * SupWidget, const std::string & Caption);
@@ -41,10 +41,11 @@ public:
 	bool GetSelected(void) const;
 	// setters
 	void SetSelected(bool Selected);
-protected:
-	virtual void OnMouseEnter(Widget * EventSource);
-	virtual void OnMouseLeave(Widget * EventSource);
 private:
+	// callbacks
+	void OnMouseEnter(void);
+	void OnMouseLeave(void);
+	// member variables
 	bool m_Selected;
 	Label * m_CaptionLabel;
 };

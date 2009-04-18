@@ -27,8 +27,6 @@ class MouseMotionListener
 public:
 	virtual ~MouseMotionListener(void);
 	virtual void OnMouseMotion(Widget * EventSource, float X, float Y);
-	virtual void OnMouseEnter(Widget * EventSource);
-	virtual void OnMouseLeave(Widget * EventSource);
 };
 
 #endif

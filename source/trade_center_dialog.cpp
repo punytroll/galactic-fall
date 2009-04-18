@@ -156,7 +156,8 @@ TradeCenterDialog::TradeCenterDialog(Widget * SupWidget, Planet * Planet, Charac
 		NewTradeCenterAssetClass->SetSize(Vector2f(m_AssetClassScrollBox->GetContent()->GetSize()[0] - 10.0f, 20.0f));
 		NewTradeCenterAssetClass->SetAnchorRight(true);
 		NewTradeCenterAssetClass->AddMouseButtonListener(this);
-		NewTradeCenterAssetClass->AddMouseMotionListener(this);
+		NewTradeCenterAssetClass->ConnectMouseEnterCallback(Bind1(Callback(this, &TradeCenterDialog::OnAssetClassMouseEnter), NewTradeCenterAssetClass));
+		NewTradeCenterAssetClass->ConnectMouseLeaveCallback(Bind1(Callback(this, &TradeCenterDialog::OnAssetClassMouseLeave), NewTradeCenterAssetClass));
 		Top += 25.0f;
 		++PlanetAssetClassIterator;
 	}
@@ -318,26 +319,18 @@ bool TradeCenterDialog::OnMouseButton(Widget * EventSource, int Button, int Stat
 	return false;
 }
 
-void TradeCenterDialog::OnMouseEnter(Widget * EventSource)
+void TradeCenterDialog::OnAssetClassMouseEnter(TradeCenterAssetClass * AssetClassWidget)
 {
-	WWindow::OnMouseEnter(EventSource);
-	
-	TradeCenterAssetClass * EnteredTradeCenterAssetClass(dynamic_cast< TradeCenterAssetClass * >(EventSource));
-	
-	if((EnteredTradeCenterAssetClass != 0) && (EnteredTradeCenterAssetClass != m_SelectedTradeCenterAssetClass))
+	if(AssetClassWidget != m_SelectedTradeCenterAssetClass)
 	{
-		EnteredTradeCenterAssetClass->SetBackgroundColor(Color(0.3f, 0.2f, 0.2f, 1.0f));
+		AssetClassWidget->SetBackgroundColor(Color(0.3f, 0.2f, 0.2f, 1.0f));
 	}
 }
 
-void TradeCenterDialog::OnMouseLeave(Widget * EventSource)
+void TradeCenterDialog::OnAssetClassMouseLeave(TradeCenterAssetClass * AssetClassWidget)
 {
-	WWindow::OnMouseLeave(EventSource);
-	
-	TradeCenterAssetClass * LeftTradeCenterAssetClass(dynamic_cast< TradeCenterAssetClass * >(EventSource));
-	
-	if((LeftTradeCenterAssetClass != 0) && (LeftTradeCenterAssetClass != m_SelectedTradeCenterAssetClass))
+	if(AssetClassWidget != m_SelectedTradeCenterAssetClass)
 	{
-		LeftTradeCenterAssetClass->UnsetBackgroundColor();
+		AssetClassWidget->UnsetBackgroundColor();
 	}
 }
