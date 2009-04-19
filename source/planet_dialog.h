@@ -34,12 +34,12 @@ public:
 	PlanetDialog(Widget * SupWidget, Planet * Planet, Character * Character);
 private:
 	// callbacks
-	void OnDestroy(void);
+	void OnDestroying(void);
 	bool OnKey(const KeyEventInformation & KeyEventInformation);
 	void OnRefuelClicked(void);
 	void OnTakeOffClicked(void);
 	void OnTradeCenterClicked(void);
-	void OnTradeCenterDialogDestroy(void);
+	void OnTradeCenterDialogDestroying(void);
 	// helper functions & actions
 	void OpenTradeCenterDialog(void);
 	// member variables

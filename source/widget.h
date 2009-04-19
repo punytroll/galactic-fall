@@ -94,14 +94,14 @@ public:
 	// add signal listeners
 	void AddMouseButtonListener(MouseButtonListener * MouseButtonListener);
 	// connect and disconnect events
-	ConnectionHandle ConnectDestroyCallback(Callback0< void > Callback);
+	ConnectionHandle ConnectDestroyingCallback(Callback0< void > Callback);
 	ConnectionHandle ConnectKeyCallback(Callback1< bool, const KeyEventInformation & > Callback);
 	ConnectionHandle ConnectMouseEnterCallback(Callback0< void > Callback);
 	ConnectionHandle ConnectMouseLeaveCallback(Callback0< void > Callback);
 	ConnectionHandle ConnectMouseMovedCallback(Callback2< void, float, float > Callback);
 	ConnectionHandle ConnectPositionChangedCallback(Callback0< void > Callback);
 	ConnectionHandle ConnectSizeChangedCallback(Callback0< void > Callback);
-	void DisconnectDestroyCallback(ConnectionHandle & ConnectionHandle);
+	void DisconnectDestroyingCallback(ConnectionHandle & ConnectionHandle);
 	void DisconnectKeyCallback(ConnectionHandle & ConnectionHandle);
 	void DisconnectMouseEnterCallback(ConnectionHandle & ConnectionHandle);
 	void DisconnectMouseLeaveCallback(ConnectionHandle & ConnectionHandle);
@@ -131,7 +131,7 @@ private:
 	bool m_AnchorTop;
 	Widget * m_KeyFocus;
 	// events
-	Event0< void > _DestroyEvent;
+	Event0< void > _DestroyingEvent;
 	Event1< bool, const KeyEventInformation & > _KeyEvent;
 	Event0< void > _MouseEnterEvent;
 	Event0< void > _MouseLeaveEvent;

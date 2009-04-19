@@ -40,7 +40,7 @@ PlanetDialog::PlanetDialog(Widget * SupWidget, Planet * Planet, Character * Char
 {
 	SetPosition(Vector2f(50.0f, 50.0f));
 	SetSize(Vector2f(500.0f, 330.0f));
-	ConnectDestroyCallback(Callback(this, &PlanetDialog::OnDestroy));
+	ConnectDestroyingCallback(Callback(this, &PlanetDialog::OnDestroying));
 	ConnectKeyCallback(Callback(this, &PlanetDialog::OnKey));
 	m_DescriptionLabel = new Label(this, m_Planet->GetDescription());
 	m_DescriptionLabel->SetPosition(Vector2f(120.0f, 40.0f));
@@ -101,7 +101,7 @@ PlanetDialog::PlanetDialog(Widget * SupWidget, Planet * Planet, Character * Char
 	}
 }
 
-void PlanetDialog::OnDestroy(void)
+void PlanetDialog::OnDestroying(void)
 {
 	if(m_TradeCenterDialog != 0)
 	{
@@ -140,7 +140,7 @@ void PlanetDialog::OnTradeCenterClicked(void)
 	OpenTradeCenterDialog();
 }
 
-void PlanetDialog::OnTradeCenterDialogDestroy(void)
+void PlanetDialog::OnTradeCenterDialogDestroying(void)
 {
 	m_TradeCenterDialog = 0;
 	GrabKeyFocus();
@@ -167,6 +167,6 @@ void PlanetDialog::OpenTradeCenterDialog(void)
 	{
 		m_TradeCenterDialog = new TradeCenterDialog(GetRootWidget(), m_Planet, m_Character);
 		m_TradeCenterDialog->GrabKeyFocus();
-		m_TradeCenterDialog->ConnectDestroyCallback(Callback(this, &PlanetDialog::OnTradeCenterDialogDestroy));
+		m_TradeCenterDialog->ConnectDestroyingCallback(Callback(this, &PlanetDialog::OnTradeCenterDialogDestroying));
 	}
 }

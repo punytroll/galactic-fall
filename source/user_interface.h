@@ -45,12 +45,12 @@ public:
 	Widget * GetCaptureWidget(void);
 private:
 	// callbacks
-	void OnCaptureWidgetDestroy(void);
-	void OnHoverWidgetDestroy(void);
-	void OnRootWidgetDestroy(void);
+	void OnCaptureWidgetDestroying(void);
+	void OnHoverWidgetDestroying(void);
+	void OnRootWidgetDestroying(void);
 	// member variables
 	Widget * m_CaptureWidget;
-	ConnectionHandle m_CaptureWidgetDestroyCallbackConnectionHandle;
+	ConnectionHandle m_CaptureWidgetDestroyingCallbackConnectionHandle;
 	Widget * m_HoverWidget;
 	Widget * m_RootWidget;
 };
