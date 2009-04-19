@@ -1062,7 +1062,7 @@ void Resize(void)
 	g_UserInterface->GetRootWidget()->SetSize(Vector2f(g_Width, g_Height));
 }
 
-void OnMapDialogDestroyed(void)
+void OnMapDialogDestroying(void)
 {
 	if((g_InputMind.IsValid() == true) && (g_InputMind->GetCharacter() != 0) && (g_InputMind->GetCharacter()->GetShip() != 0))
 	{
@@ -1078,24 +1078,24 @@ void OnMapDialogDestroyed(void)
 	g_Pause = false;
 }
 
-void OnOutfitShipDialogDestroyed(void)
+void OnOutfitShipDialogDestroying(void)
 {
 	g_OutfitShipDialog = 0;
 }
 
-void OnSaveGameDialogDestroyed(void)
+void OnSaveGameDialogDestroying(void)
 {
 	g_SaveGameDialog = 0;
 	g_Pause = false;
 }
 
-void OnLoadGameDialogDestroyed(void)
+void OnLoadGameDialogDestroying(void)
 {
 	g_LoadGameDialog = 0;
 	g_Pause = false;
 }
 
-void OnTimingDialogDestroyed(void)
+void OnTimingDialogDestroying(void)
 {
 	g_TimingDialog = 0;
 }
@@ -2635,7 +2635,7 @@ void ActionOpenLoadGameDialog(void)
 		g_Pause = true;
 		g_LoadGameDialog = new LoadGameDialog(g_UserInterface->GetRootWidget(), Callback(LoadGameFromInputStream));
 		g_LoadGameDialog->GrabKeyFocus();
-		g_LoadGameDialog->ConnectDestroyCallback(Callback(OnLoadGameDialogDestroyed));
+		g_LoadGameDialog->ConnectDestroyingCallback(Callback(OnLoadGameDialogDestroying));
 	}
 }
 
@@ -2649,7 +2649,7 @@ void ActionOpenMapDialog(void)
 		g_Pause = true;
 		g_MapDialog = new MapDialog(g_UserInterface->GetRootWidget(), CurrentSystem, g_CharacterObserver->GetObservedCharacter().Get());
 		g_MapDialog->GrabKeyFocus();
-		g_MapDialog->ConnectDestroyCallback(Callback(OnMapDialogDestroyed));
+		g_MapDialog->ConnectDestroyingCallback(Callback(OnMapDialogDestroying));
 		if(g_InputMind.IsValid() == true)
 		{
 			g_InputMind->DisableAccelerate();
@@ -2673,7 +2673,7 @@ void ActionOpenSaveGameDialog(void)
 		g_Pause = true;
 		g_SaveGameDialog = new SaveGameDialog(g_UserInterface->GetRootWidget(), Callback(SaveGame));
 		g_SaveGameDialog->GrabKeyFocus();
-		g_SaveGameDialog->ConnectDestroyCallback(Callback(OnSaveGameDialogDestroyed));
+		g_SaveGameDialog->ConnectDestroyingCallback(Callback(OnSaveGameDialogDestroying));
 	}
 }
 
@@ -2683,7 +2683,7 @@ void ActionOutfitShip(void)
 	{
 		g_OutfitShipDialog = new OutfitShipDialog(g_UserInterface->GetRootWidget(), g_CharacterObserver->GetObservedCharacter()->GetShip());
 		g_OutfitShipDialog->GrabKeyFocus();
-		g_OutfitShipDialog->ConnectDestroyCallback(Callback(OnOutfitShipDialogDestroyed));
+		g_OutfitShipDialog->ConnectDestroyingCallback(Callback(OnOutfitShipDialogDestroying));
 	}
 }
 
@@ -2862,7 +2862,7 @@ void ActionToggleTimingDialog(void)
 	{
 		g_TimingDialog = new TimingDialog(g_UserInterface->GetRootWidget());
 		g_TimingDialog->GrabKeyFocus();
-		g_TimingDialog->ConnectDestroyCallback(Callback(OnTimingDialogDestroyed));
+		g_TimingDialog->ConnectDestroyingCallback(Callback(OnTimingDialogDestroying));
 	}
 	else
 	{

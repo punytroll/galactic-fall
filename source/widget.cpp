@@ -247,7 +247,7 @@ void Widget::RaiseSubWidget(Widget * SubWidget)
 void Widget::Destroy(void)
 {
 	// fire Destroy event before aything is actually destroyed
-	_DestroyEvent();
+	_DestroyingEvent();
 	// now destroy
 	// first the sub widgets, they will remove themselves from this widget
 	while(m_SubWidgets.size() > 0)
@@ -372,9 +372,9 @@ void Widget::MouseLeave(void)
 	_MouseLeaveEvent();
 }
 
-ConnectionHandle Widget::ConnectDestroyCallback(Callback0< void > Callback)
+ConnectionHandle Widget::ConnectDestroyingCallback(Callback0< void > Callback)
 {
-	return _DestroyEvent.Connect(Callback);
+	return _DestroyingEvent.Connect(Callback);
 }
 
 ConnectionHandle Widget::ConnectKeyCallback(Callback1< bool, const KeyEventInformation & > Callback)
@@ -407,9 +407,9 @@ ConnectionHandle Widget::ConnectSizeChangedCallback(Callback0< void > Callback)
 	return _SizeChangedEvent.Connect(Callback);
 }
 
-void Widget::DisconnectDestroyCallback(ConnectionHandle & ConnectionHandle)
+void Widget::DisconnectDestroyingCallback(ConnectionHandle & ConnectionHandle)
 {
-	_DestroyEvent.Disconnect(ConnectionHandle);
+	_DestroyingEvent.Disconnect(ConnectionHandle);
 }
 
 void Widget::DisconnectKeyCallback(ConnectionHandle & ConnectionHandle)

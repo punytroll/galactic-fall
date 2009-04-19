@@ -31,15 +31,15 @@ UserInterface::UserInterface(void) :
 	m_RootWidget(new Widget(0))
 {
 	m_RootWidget->SetSize(Vector2f(1280.0f, 1024.0f));
-	m_RootWidget->ConnectDestroyCallback(Callback(this, &UserInterface::OnRootWidgetDestroy));
+	m_RootWidget->ConnectDestroyingCallback(Callback(this, &UserInterface::OnRootWidgetDestroying));
 }
 
 UserInterface::~UserInterface(void)
 {
-	if(m_CaptureWidgetDestroyCallbackConnectionHandle.IsValid() == true)
+	if(m_CaptureWidgetDestroyingCallbackConnectionHandle.IsValid() == true)
 	{
 		assert(m_CaptureWidget != 0);
-		m_CaptureWidget->DisconnectDestroyCallback(m_CaptureWidgetDestroyCallbackConnectionHandle);
+		m_CaptureWidget->DisconnectDestroyingCallback(m_CaptureWidgetDestroyingCallbackConnectionHandle);
 	}
 	else
 	{
@@ -68,7 +68,7 @@ void UserInterface::SetCaptureWidget(Widget * Widget)
 	if(m_CaptureWidget == 0)
 	{
 		m_CaptureWidget = Widget;
-		m_CaptureWidgetDestroyCallbackConnectionHandle = m_CaptureWidget->ConnectDestroyCallback(Callback(this, &UserInterface::OnCaptureWidgetDestroy));
+		m_CaptureWidgetDestroyingCallbackConnectionHandle = m_CaptureWidget->ConnectDestroyingCallback(Callback(this, &UserInterface::OnCaptureWidgetDestroying));
 	}
 }
 
@@ -76,7 +76,7 @@ void UserInterface::ReleaseCaptureWidget(void)
 {
 	if(m_CaptureWidget != 0)
 	{
-		m_CaptureWidget->DisconnectDestroyCallback(m_CaptureWidgetDestroyCallbackConnectionHandle);
+		m_CaptureWidget->DisconnectDestroyingCallback(m_CaptureWidgetDestroyingCallbackConnectionHandle);
 		m_CaptureWidget = 0;
 	}
 }
@@ -182,18 +182,18 @@ void UserInterface::MouseMoved(float X, float Y)
 	}
 }
 
-void UserInterface::OnCaptureWidgetDestroy(void)
+void UserInterface::OnCaptureWidgetDestroying(void)
 {
-	m_CaptureWidget->DisconnectDestroyCallback(m_CaptureWidgetDestroyCallbackConnectionHandle);
+	m_CaptureWidget->DisconnectDestroyingCallback(m_CaptureWidgetDestroyingCallbackConnectionHandle);
 	m_CaptureWidget = 0;
 }
 
-void UserInterface::OnHoverWidgetDestroy(void)
+void UserInterface::OnHoverWidgetDestroying(void)
 {
 	m_HoverWidget = 0;
 }
 
-void UserInterface::OnRootWidgetDestroy(void)
+void UserInterface::OnRootWidgetDestroying(void)
 {
 	m_RootWidget = 0;
 }
