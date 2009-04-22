@@ -19,7 +19,7 @@
 '''
 
 '''
-' This is version 0.8.0 of the code-generator python application.
+' This is version 0.8.2 of the code-generator python application.
 '''
 
 import types
@@ -44,6 +44,17 @@ def functor_add(context, *arguments):
 			raise ExecuteException(context.current_code_part, "The functor \"minus\" requires two integer arguments but got \"" + str(type(from_value)) + "\" and \"" + str(type(to_value)) + "\" arguments.")
 	else:
 		raise ExecuteException(context.current_code_part, "The functor \"minus\" requires exactely two arguments but " + str(len(arguments)) + " have been given.")
+
+def functor_and(context, *arguments):
+	if len(arguments) == 2:
+		first_value = context.get(arguments[0])
+		second_value = context.get(arguments[1])
+		if type(first_value) is types.BooleanType and type(second_value) is types.BooleanType:
+			return first_value and second_value
+		else:
+			raise ExecuteException(context.current_code_part, "The functor \"and\" requires two boolean arguments but got \"" + str(type(first_value)) + "\" and \"" + str(type(second_value)) + "\" arguments.")
+	else:
+		raise ExecuteException(context.current_code_part, "The functor \"and\" requires exactely two arguments but " + str(len(arguments)) + " have been given.")
 
 def functor_concatenate(context, *arguments):
 	result = u""
