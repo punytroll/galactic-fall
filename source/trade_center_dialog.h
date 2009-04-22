@@ -20,7 +20,6 @@
 #ifndef TRADE_CENTER_DIALOG_H
 #define TRADE_CENTER_DIALOG_H
 
-#include "mouse_button_listener.h"
 #include "window.h"
 
 class Button;
@@ -30,21 +29,20 @@ class Planet;
 class ScrollBox;
 class TradeCenterAssetClass;
 
-class TradeCenterDialog : virtual public MouseButtonListener, public WWindow
+class TradeCenterDialog : public WWindow
 {
 public:
 	TradeCenterDialog(Widget * SupWidget, Planet * Planet, Character * Character);
-protected:
-	// listeners
-	virtual bool OnMouseButton(Widget * EventSource, int Button, int State, float X, float Y);
 private:
 	// callbacks
+	bool OnAssetClassMouseButton(TradeCenterAssetClass * TradeCenterAssetClass, int Button, int State, float X, float Y);
+	void OnAssetClassMouseEnter(TradeCenterAssetClass * AssetClassWidget);
+	void OnAssetClassMouseLeave(TradeCenterAssetClass * AssetClassWidget);
+	bool OnAssetClassScrollBoxMouseButton(int Button, int State, float X, float Y);
 	void OnBuyClicked(void);
 	bool OnKey(const KeyEventInformation & KeyEventInformation);
 	void OnOKClicked(void);
 	void OnSellClicked(void);
-	void OnAssetClassMouseEnter(TradeCenterAssetClass * AssetClassWidget);
-	void OnAssetClassMouseLeave(TradeCenterAssetClass * AssetClassWidget);
 	// helper functions and actions
 	void Buy(const PlanetAssetClass * PlanetAssetClass);
 	void Sell(const PlanetAssetClass * PlanetAssetClass);

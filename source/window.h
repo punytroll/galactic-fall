@@ -20,23 +20,23 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
-#include "mouse_button_listener.h"
 #include "widget.h"
 
 class Border;
 class Label;
 
-class WWindow : virtual public MouseButtonListener, public Widget
+class WWindow : public Widget
 {
 public:
 	WWindow(Widget * SupWidget, const std::string & Title);
 	// getters
 	Border * GetBorder(void);
 	Label * GetTitleLabel(void);
-	virtual bool OnMouseButton(Widget * EventSource, int Button, int State, float X, float Y);
 private:
 	// callbacks
+	bool OnTitleLabelMouseButton(int Button, int State, float X, float Y);
 	void OnTitleLabelMouseMoved(float X, float Y);
+	bool OnResizeDragBoxMouseButton(int Button, int State, float X, float Y);
 	void OnResizeDragBoxMouseMoved(float X, float Y);
 	// member variables
 	Border * m_Border;

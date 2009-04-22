@@ -32,19 +32,18 @@ class ObjectInformationDialog : public WWindow
 public:
 	ObjectInformationDialog(Widget * SupWidget, const Reference< Object > & Object);
 private:
-	// modifiers
+	// callbacks
+	bool OnMouseButton(int Button, int State, float X, float Y);
+	void OnObjectClicked(const Reference< Object > Object);
+	void OnOKClicked(void);
+	void OnRefreshClicked(void);
+	// helper functions and actions
 	float AddObjectProperty(float Top, float Indentation, const Reference< Object > & Object);
 	float AddSeparator(float Top, float Indentation, const std::string & Separator);
 	float AddString(float Top, float Indentation, const std::string & String);
 	float AddStringProperty(float Top, float Indentation, const std::string & PropertyName, const std::string & PropertyValue);
 	void Refresh(void);
-	// callbacks
-	void OnOKClicked(void);
-	void OnRefreshClicked(void);
-	void OnObjectClicked(const Reference< Object > Object);
-	// listeners
-	virtual bool OnMouseButton(Widget * EventSource, int Button, int State, float X, float Y);
-private:
+	// member variables
 	Reference< Object > m_Object;
 	Button * m_OKButton;
 	ScrollBox * m_PropertiesScrollBox;

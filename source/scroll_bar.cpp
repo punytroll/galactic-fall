@@ -37,7 +37,6 @@ ScrollBar::ScrollBar(Widget * SupWidget, ScrollBar::Alignment Alignment) :
 	m_MoreButton->ConnectClickedCallback(Callback(this, &ScrollBar::OnMoreClicked));
 	m_Tracker = new Widget(this);
 	m_Tracker->SetBackgroundColor(Color(0.3f, 0.3f, 0.3f, 1.0f));
-	m_Tracker->AddMouseButtonListener(this);
 	m_Tracker->ConnectMouseEnterCallback(Callback(this, &ScrollBar::OnTrackerMouseEnter));
 	m_Tracker->ConnectMouseLeaveCallback(Callback(this, &ScrollBar::OnTrackerMouseLeave));
 	SetAlignment(Alignment);

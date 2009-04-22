@@ -42,7 +42,7 @@ WWindow::WWindow(Widget * SupWidget, const std::string & Title) :
 	m_TitleLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
 	m_TitleLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
 	m_TitleLabel->SetBackgroundColor(Color(0.2f, 0.2f, 0.4f, 1.0f));
-	m_TitleLabel->AddMouseButtonListener(this);
+	m_TitleLabel->ConnectMouseButtonCallback(Callback(this, &WWindow::OnTitleLabelMouseButton));
 	m_TitleLabel->ConnectMouseMovedCallback(Callback(this, &WWindow::OnTitleLabelMouseMoved));
 	m_ResizeDragBox = new Widget(this);
 	m_ResizeDragBox->SetPosition(Vector2f(GetSize()[0] - 9.0f, GetSize()[1] - 9.0f));
@@ -52,47 +52,47 @@ WWindow::WWindow(Widget * SupWidget, const std::string & Title) :
 	m_ResizeDragBox->SetAnchorRight(true);
 	m_ResizeDragBox->SetAnchorTop(false);
 	m_ResizeDragBox->SetBackgroundColor(Color(0.2f, 0.2f, 0.4f, 1.0f));
-	m_ResizeDragBox->AddMouseButtonListener(this);
+	m_ResizeDragBox->ConnectMouseButtonCallback(Callback(this, &WWindow::OnResizeDragBoxMouseButton));
 	m_ResizeDragBox->ConnectMouseMovedCallback(Callback(this, &WWindow::OnResizeDragBoxMouseMoved));
 }
 
-bool WWindow::OnMouseButton(Widget * EventSource, int Button, int State, float X, float Y)
+bool WWindow::OnTitleLabelMouseButton(int Button, int State, float X, float Y)
 {
-	if(EventSource == m_TitleLabel)
+	GetSupWidget()->RaiseSubWidget(this);
+	if(Button == 1)
 	{
-		GetSupWidget()->RaiseSubWidget(this);
-		if(Button == 1)
+		if(State == EV_DOWN)
 		{
-			if(State == EV_DOWN)
-			{
-				m_GrabPosition.Set(X, Y);
-				g_UserInterface->SetCaptureWidget(m_TitleLabel);
-			}
-			else
-			{
-				g_UserInterface->ReleaseCaptureWidget();
-			}
-			
-			return true;
+			m_GrabPosition.Set(X, Y);
+			g_UserInterface->SetCaptureWidget(m_TitleLabel);
 		}
+		else
+		{
+			g_UserInterface->ReleaseCaptureWidget();
+		}
+		
+		return true;
 	}
-	else if(EventSource == m_ResizeDragBox)
+	
+	return false;
+}
+
+bool WWindow::OnResizeDragBoxMouseButton(int Button, int State, float X, float Y)
+{
+	GetSupWidget()->RaiseSubWidget(this);
+	if(Button == 1)
 	{
-		GetSupWidget()->RaiseSubWidget(this);
-		if(Button == 1)
+		if(State == EV_DOWN)
 		{
-			if(State == EV_DOWN)
-			{
-				m_GrabPosition.Set(X, Y);
-				g_UserInterface->SetCaptureWidget(m_ResizeDragBox);
-			}
-			else
-			{
-				g_UserInterface->ReleaseCaptureWidget();
-			}
-			
-			return true;
+			m_GrabPosition.Set(X, Y);
+			g_UserInterface->SetCaptureWidget(m_ResizeDragBox);
 		}
+		else
+		{
+			g_UserInterface->ReleaseCaptureWidget();
+		}
+		
+		return true;
 	}
 	
 	return false;

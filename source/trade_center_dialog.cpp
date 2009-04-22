@@ -142,7 +142,7 @@ TradeCenterDialog::TradeCenterDialog(Widget * SupWidget, Planet * Planet, Charac
 	m_AssetClassScrollBox->SetHorizontalScrollBarVisible(false);
 	m_AssetClassScrollBox->SetAnchorRight(true);
 	m_AssetClassScrollBox->SetAnchorBottom(true);
-	m_AssetClassScrollBox->AddMouseButtonListener(this);
+	m_AssetClassScrollBox->ConnectMouseButtonCallback(Callback(this, &TradeCenterDialog::OnAssetClassScrollBoxMouseButton));
 	
 	const std::vector< PlanetAssetClass * > & PlanetAssetClasses(Planet->GetPlanetAssetClasses());
 	std::vector< PlanetAssetClass * >::const_iterator PlanetAssetClassIterator(PlanetAssetClasses.begin());
@@ -155,7 +155,7 @@ TradeCenterDialog::TradeCenterDialog(Widget * SupWidget, Planet * Planet, Charac
 		NewTradeCenterAssetClass->SetPosition(Vector2f(5.0f, Top));
 		NewTradeCenterAssetClass->SetSize(Vector2f(m_AssetClassScrollBox->GetContent()->GetSize()[0] - 10.0f, 20.0f));
 		NewTradeCenterAssetClass->SetAnchorRight(true);
-		NewTradeCenterAssetClass->AddMouseButtonListener(this);
+		NewTradeCenterAssetClass->ConnectMouseButtonCallback(Bind1(Callback(this, &TradeCenterDialog::OnAssetClassMouseButton), NewTradeCenterAssetClass));
 		NewTradeCenterAssetClass->ConnectMouseEnterCallback(Bind1(Callback(this, &TradeCenterDialog::OnAssetClassMouseEnter), NewTradeCenterAssetClass));
 		NewTradeCenterAssetClass->ConnectMouseLeaveCallback(Bind1(Callback(this, &TradeCenterDialog::OnAssetClassMouseLeave), NewTradeCenterAssetClass));
 		Top += 25.0f;
@@ -281,29 +281,26 @@ bool TradeCenterDialog::OnKey(const KeyEventInformation & KeyEventInformation)
 	return true;
 }
 
-bool TradeCenterDialog::OnMouseButton(Widget * EventSource, int Button, int State, float X, float Y)
+bool TradeCenterDialog::OnAssetClassMouseButton(TradeCenterAssetClass * TradeCenterAssetClass, int Button, int State, float X, float Y)
 {
-	if(WWindow::OnMouseButton(EventSource, Button, State, X, Y) == true)
-	{
-		return true;
-	}
 	if((Button == 1 /* LEFT */) && (State == EV_DOWN))
 	{
-		TradeCenterAssetClass * SelectedTradeCenterAssetClass(dynamic_cast< TradeCenterAssetClass * >(EventSource));
-		
-		if(SelectedTradeCenterAssetClass != 0)
+		if(m_SelectedTradeCenterAssetClass != 0)
 		{
-			if(m_SelectedTradeCenterAssetClass != 0)
-			{
-				m_SelectedTradeCenterAssetClass->UnsetBackgroundColor();
-			}
-			m_SelectedTradeCenterAssetClass = SelectedTradeCenterAssetClass;
-			SelectedTradeCenterAssetClass->SetBackgroundColor(Color(0.4f, 0.1f, 0.1f, 1.0f));
-			
-			return true;
+			m_SelectedTradeCenterAssetClass->UnsetBackgroundColor();
 		}
+		m_SelectedTradeCenterAssetClass = TradeCenterAssetClass;
+		m_SelectedTradeCenterAssetClass->SetBackgroundColor(Color(0.4f, 0.1f, 0.1f, 1.0f));
+		
+		return true;
 	}
-	else if((Button == 4 /* WHEEL_UP */) && (State == EV_DOWN))
+	
+	return false;
+}
+
+bool TradeCenterDialog::OnAssetClassScrollBoxMouseButton(int Button, int State, float X, float Y)
+{
+	if((Button == 4 /* WHEEL_UP */) && (State == EV_DOWN))
 	{
 		m_AssetClassScrollBox->GetVerticalScrollBar()->StepLess();
 		

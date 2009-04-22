@@ -20,7 +20,6 @@
 #ifndef LOAD_GAME_DIALOG_H
 #define LOAD_GAME_DIALOG_H
 
-#include "mouse_button_listener.h"
 #include "timeout_notifications.h"
 #include "window.h"
 
@@ -30,22 +29,22 @@ class Label;
 class ScrollBox;
 template < typename ReturnType, typename Argument1Type > class Callback1;
 
-class LoadGameDialog : virtual public MouseButtonListener, public WWindow
+class LoadGameDialog : public WWindow
 {
 public:
 	LoadGameDialog(Widget * SupWidget, Callback1< bool, std::istream & > LoadGameCallback);
-protected:
+private:
 	// callbacks
 	void OnCancelClicked(void);
+	bool OnDirectoryEntryItemMouseButton(DirectoryEntryItem * DirectoryEntryItem, int Button, int State, float X, float Y);
 	bool OnFileNameLabelKey(const KeyEventInformation & KeyEventInformation);
 	bool OnKey(const KeyEventInformation & KeyEventInformation);
 	void OnOKClicked(void);
-	// listeners
-	virtual bool OnMouseButton(Widget * EventSource, int Button, int State, float X, float Y);
-private:
+	// helper functions and actions
 	void ShowErrorMessage(const std::string & ErrorMessage);
 	void HideErrorMessage(void);
 	bool Load(void);
+	// member variables
 	Callback1< bool, std::istream & > m_LoadGameCallback;
 	Button * m_CancelButton;
 	Button * m_OKButton;

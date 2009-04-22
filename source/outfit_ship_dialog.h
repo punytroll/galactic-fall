@@ -20,7 +20,6 @@
 #ifndef OUTFIT_SHIP_DIALOG_H
 #define OUTFIT_SHIP_DIALOG_H
 
-#include "mouse_button_listener.h"
 #include "window.h"
 
 class Button;
@@ -29,22 +28,23 @@ class Ship;
 class SlotListItem;
 class AccessoryListItem;
 
-class OutfitShipDialog : virtual public MouseButtonListener, public WWindow
+class OutfitShipDialog : public WWindow
 {
 public:
 	OutfitShipDialog(Widget * SupWidget, Ship * Ship);
-protected:
+private:
 	// callbacks
+	bool OnAccessoryListItemMouseButton(AccessoryListItem * AccessoryListItem, int Button, int State, float X, float Y);
 	bool OnKey(const KeyEventInformation & KeyEventInformation);
 	void OnMountClicked(void);
 	void OnOKClicked(void);
 	void OnSizeChanged(void);
+	bool OnSlotListItemMouseButton(SlotListItem * SlotListItem, int Button, int State, float X, float Y);
 	void OnUnmountClicked(void);
-	// listeners
-	virtual bool OnMouseButton(Widget * EventSource, int Button, int State, float X, float Y);
-private:
+	// helper function and actions
 	void RebuildAccessoryList(void);
 	void UpdateButtons(void);
+	// member variables
 	Ship * m_Ship;
 	Button * m_OKButton;
 	Button * m_MountButton;

@@ -20,13 +20,12 @@
 #ifndef SCROLL_BAR_H
 #define SCROLL_BAR_H
 
-#include "mouse_button_listener.h"
 #include "widget.h"
 
 class Button;
 class ScrollPositionChangedListener;
 
-class ScrollBar : public MouseButtonListener, public Widget
+class ScrollBar : public Widget
 {
 public:
 	enum Alignment

@@ -41,7 +41,7 @@ StarMapDisplay::StarMapDisplay(Widget * SupWidget, System * System, Character * 
 	m_Scale(5.0f),
 	m_OffsetPosition(true)
 {
-	AddMouseButtonListener(this);
+	ConnectMouseButtonCallback(Callback(this, &StarMapDisplay::OnMouseButton));
 	ConnectMouseMovedCallback(Callback(this, &StarMapDisplay::OnMouseMoved));
 }
 
@@ -165,60 +165,57 @@ void StarMapDisplay::Draw(void) const
 	glPopAttrib();
 }
 
-bool StarMapDisplay::OnMouseButton(Widget * EventSource, int Button, int State, float X, float Y)
+bool StarMapDisplay::OnMouseButton(int Button, int State, float X, float Y)
 {
-	if(EventSource == this)
+	if((Button == 4 /* WHEEL_UP */) && (State == EV_DOWN))
 	{
-		if((Button == 4 /* WHEEL_UP */) && (State == EV_DOWN))
+		m_Scale *= 1.1f;
+		
+		return true;
+	}
+	else if((Button == 5 /* WHEEL_DOWN */) && (State == EV_DOWN))
+	{
+		m_Scale *= 0.9f;
+		
+		return true;
+	}
+	else if((Button == 1 /* LEFT */) && (State == EV_UP))
+	{
+		X -= GetSize().m_V.m_A[0] / 2;
+		Y -= GetSize().m_V.m_A[1] / 2;
+		
+		const std::map< std::string, System * > & Systems(g_Galaxy->GetSystems());
+		
+		for(std::map< std::string, System * >::const_iterator SystemIterator = Systems.begin(); SystemIterator != Systems.end(); ++SystemIterator)
 		{
-			m_Scale *= 1.1f;
+			Vector3f Position(SystemIterator->second->GetAspectPosition()->GetPosition() - m_System->GetAspectPosition()->GetPosition());
 			
-			return true;
-		}
-		else if((Button == 5 /* WHEEL_DOWN */) && (State == EV_DOWN))
-		{
-			m_Scale *= 0.9f;
-			
-			return true;
-		}
-		else if((Button == 1 /* LEFT */) && (State == EV_UP))
-		{
-			X -= GetSize().m_V.m_A[0] / 2;
-			Y -= GetSize().m_V.m_A[1] / 2;
-			
-			const std::map< std::string, System * > & Systems(g_Galaxy->GetSystems());
-			
-			for(std::map< std::string, System * >::const_iterator SystemIterator = Systems.begin(); SystemIterator != Systems.end(); ++SystemIterator)
+			Position *= m_Scale;
+			Position.m_V.m_A[0] -= X - m_OffsetPosition[0];
+			Position.m_V.m_A[1] += Y - m_OffsetPosition[1];
+			if(Position.SquaredLength() < 40.0f)
 			{
-				Vector3f Position(SystemIterator->second->GetAspectPosition()->GetPosition() - m_System->GetAspectPosition()->GetPosition());
+				m_SelectedSystem = SystemIterator->second;
 				
-				Position *= m_Scale;
-				Position.m_V.m_A[0] -= X - m_OffsetPosition[0];
-				Position.m_V.m_A[1] += Y - m_OffsetPosition[1];
-				if(Position.SquaredLength() < 40.0f)
-				{
-					m_SelectedSystem = SystemIterator->second;
-					
-					break;
-				}
+				break;
 			}
-			
-			return true;
 		}
-		else if(Button == 2 /* MIDDLE */)
+		
+		return true;
+	}
+	else if(Button == 2 /* MIDDLE */)
+	{
+		if(State == EV_DOWN)
 		{
-			if(State == EV_DOWN)
-			{
-				m_GrabPosition.Set(X, Y);
-				g_UserInterface->SetCaptureWidget(this);
-			}
-			else
-			{
-				g_UserInterface->ReleaseCaptureWidget();
-			}
-			
-			return true;
+			m_GrabPosition.Set(X, Y);
+			g_UserInterface->SetCaptureWidget(this);
 		}
+		else
+		{
+			g_UserInterface->ReleaseCaptureWidget();
+		}
+		
+		return true;
 	}
 	
 	return false;
