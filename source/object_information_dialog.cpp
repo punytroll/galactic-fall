@@ -39,7 +39,7 @@ ObjectInformationDialog::ObjectInformationDialog(Widget * SupWidget, const Refer
 {
 	SetPosition(Vector2f(100.0f, 400.0f));
 	SetSize(Vector2f(500.0f, 300.0f));
-	AddMouseButtonListener(this);
+	ConnectMouseButtonCallback(Callback(this, &ObjectInformationDialog::OnMouseButton));
 	// set up widgets
 	m_OKButton = new Button(this);
 	m_OKButton->SetSize(Vector2f(100.0f, 20.0f));
@@ -242,12 +242,8 @@ void ObjectInformationDialog::Refresh(void)
 	m_PropertiesScrollBox->GetContent()->SetAnchorRight(true);
 }
 
-bool ObjectInformationDialog::OnMouseButton(Widget * EventSource, int Button, int State, float X, float Y)
+bool ObjectInformationDialog::OnMouseButton(int Button, int State, float X, float Y)
 {
-	if(WWindow::OnMouseButton(EventSource, Button, State, X, Y) == true)
-	{
-		return true;
-	}
 	if((Button == 4 /* WHEEL_UP */) && (State == EV_DOWN))
 	{
 		m_PropertiesScrollBox->GetVerticalScrollBar()->StepLess();

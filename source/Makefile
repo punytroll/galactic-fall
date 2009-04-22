@@ -38,7 +38,6 @@ buffer_reading_h = \
 button_h = \
 	button.h \
 	$(callbacks_events_h) \
-	$(mouse_button_listener_h) \
 	$(widget_h)
 
 callbacks_callbacks_h = \
@@ -185,7 +184,6 @@ local_file_data_channel_h = \
 
 load_game_dialog_h = \
 	load_game_dialog.h \
-	$(mouse_button_listener_h) \
 	$(timeout_notifications_h) \
 	$(window_h)
 
@@ -259,9 +257,6 @@ mini_map_display_h = \
 	$(referencing_h) \
 	$(widget_h)
 
-mouse_button_listener_h = \
-	mouse_button_listener.h
-
 object_h = \
 	object.h \
 	$(referencing_h)
@@ -309,7 +304,6 @@ object_information_dialog_h = \
 
 outfit_ship_dialog_h = \
 	outfit_ship_dialog.h \
-	$(mouse_button_listener_h) \
 	$(window_h)
 
 output_observer_h = \
@@ -337,7 +331,6 @@ referencing_h = \
 
 save_game_dialog_h = \
 	save_game_dialog.h \
-	$(mouse_button_listener_h) \
 	$(timeout_notifications_h) \
 	$(window_h)
 
@@ -348,7 +341,6 @@ scanner_display_h = \
 
 scroll_bar_h = \
 	scroll_bar.h \
-	$(mouse_button_listener_h) \
 	$(widget_h)
 
 scroll_box_h = \
@@ -390,7 +382,6 @@ star_h = \
 
 star_map_display_h = \
 	star_map_display.h \
-	$(mouse_button_listener_h) \
 	$(widget_h)
 
 state_h = \
@@ -436,7 +427,6 @@ timing_dialog_h = \
 
 trade_center_dialog_h = \
 	trade_center_dialog.h \
-	$(mouse_button_listener_h) \
 	$(window_h)
 
 type_definitions_h = \
@@ -474,7 +464,6 @@ widget_h = \
 
 window_h = \
 	window.h \
-	$(mouse_button_listener_h) \
 	$(widget_h)
 
 write_to_xml_stream_h = \
@@ -702,9 +691,6 @@ mind.o: mind.cpp $(goal_h) $(mind_h) $(object_aspect_object_container_h) $(state
 mini_map_display.o: mini_map_display.cpp $(commodity_h) $(mini_map_display_h) $(object_aspect_position_h) $(planet_h) $(ship_h) $(system_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-mouse_button_listener.o: mouse_button_listener.cpp $(mouse_button_listener_h)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-
 object.o: object.cpp $(message_h) $(object_h) $(object_aspect_accessory_h) $(object_aspect_messages_h) $(object_aspect_name_h) $(object_aspect_object_container_h) $(object_aspect_outfitting_h) $(object_aspect_physical_h) $(object_aspect_position_h) $(object_aspect_update_h) $(object_aspect_visualization_h) $(real_time_h) $(string_cast_h) $(xml_stream_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
@@ -840,7 +826,7 @@ weapon.o: weapon.cpp $(battery_h) $(game_time_h) $(globals_h) $(math_h) $(math_q
 weapon_class.o: weapon_class.cpp $(color_h) $(visualization_prototype_h) $(weapon_class_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-widget.o: widget.cpp $(callbacks_callbacks_h) $(color_h) $(math_h) $(mouse_button_listener_h) $(widget_h)
+widget.o: widget.cpp $(callbacks_callbacks_h) $(color_h) $(math_h) $(widget_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 window.o: window.cpp $(border_h) $(callbacks_callbacks_h) $(globals_h) $(label_h) $(user_interface_h) $(window_h)

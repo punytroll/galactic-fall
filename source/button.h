@@ -23,10 +23,9 @@
 #include <string>
 
 #include "callbacks/events.h"
-#include "mouse_button_listener.h"
 #include "widget.h"
 
-class Button : public Widget, public MouseButtonListener
+class Button : public Widget
 {
 public:
 	// constructors and deconstructors
@@ -35,10 +34,9 @@ public:
 	// connect and disconnect events
 	ConnectionHandle ConnectClickedCallback(Callback0< void > ClickedHandler);
 	void DisconnectClickedCallback(ConnectionHandle & ConnectionHandle);
-	// listener handlers
-	virtual bool OnMouseButton(Widget * EventSource, int Button, int State, float X, float Y);
 private:
 	// callbacks
+	bool OnMouseButton(int Button, int State, float X, float Y);
 	void OnMouseEnter(void);
 	void OnMouseLeave(void);
 	// member variables

@@ -91,11 +91,10 @@ public:
 	// MouseLeave may depend on the fact that m_HoverWidget on the m_SupWidget is still set to this
 	// MouseLeave on the old hover widget is called before MouseEnter on the new hover widget
 	void MouseLeave(void);
-	// add signal listeners
-	void AddMouseButtonListener(MouseButtonListener * MouseButtonListener);
 	// connect and disconnect events
 	ConnectionHandle ConnectDestroyingCallback(Callback0< void > Callback);
 	ConnectionHandle ConnectKeyCallback(Callback1< bool, const KeyEventInformation & > Callback);
+	ConnectionHandle ConnectMouseButtonCallback(Callback4< bool, int, int, float, float > Callback);
 	ConnectionHandle ConnectMouseEnterCallback(Callback0< void > Callback);
 	ConnectionHandle ConnectMouseLeaveCallback(Callback0< void > Callback);
 	ConnectionHandle ConnectMouseMovedCallback(Callback2< void, float, float > Callback);
@@ -103,6 +102,7 @@ public:
 	ConnectionHandle ConnectSizeChangedCallback(Callback0< void > Callback);
 	void DisconnectDestroyingCallback(ConnectionHandle & ConnectionHandle);
 	void DisconnectKeyCallback(ConnectionHandle & ConnectionHandle);
+	void DisconnectMouseButtonCallback(ConnectionHandle & ConnectionHandle);
 	void DisconnectMouseEnterCallback(ConnectionHandle & ConnectionHandle);
 	void DisconnectMouseLeaveCallback(ConnectionHandle & ConnectionHandle);
 	void DisconnectMouseMovedCallback(ConnectionHandle & ConnectionHandle);
@@ -133,13 +133,12 @@ private:
 	// events
 	Event0< void > _DestroyingEvent;
 	Event1< bool, const KeyEventInformation & > _KeyEvent;
+	Event4< bool, int, int, float, float > _MouseButtonEvent;
 	Event0< void > _MouseEnterEvent;
 	Event0< void > _MouseLeaveEvent;
 	Event2< void, float, float > _MouseMovedEvent;
 	Event0< void > _PositionChangedEvent;
 	Event0< void > _SizeChangedEvent;
-	// listeners
-	std::list< MouseButtonListener * > m_MouseButtonListeners;
 	// static manager properties
 	static std::list< Widget * > m_DestroyedWidgets;
 	static std::stack< std::pair< Vector2f, Vector2f > > m_ClippingRectangles;

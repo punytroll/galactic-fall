@@ -26,7 +26,6 @@
 #include "callbacks/callbacks.h"
 #include "color.h"
 #include "math.h"
-#include "mouse_button_listener.h"
 #include "widget.h"
 
 std::list< Widget * > Widget::m_DestroyedWidgets;
@@ -302,16 +301,18 @@ bool Widget::MouseButton(int Button, int State, float X, float Y)
 			}
 		}
 	}
-	// if no sub widget wanted the mouse event, propagate to our own listeners
-	for(std::list< MouseButtonListener * >::iterator MouseButtonListenerIterator = m_MouseButtonListeners.begin(); MouseButtonListenerIterator != m_MouseButtonListeners.end(); ++MouseButtonListenerIterator)
+	
+	bool Result(false);
+	
+	for(Event4< bool, int, int, float, float >::CallbackIterator CallbackIterator = _MouseButtonEvent.GetCallbackIterator(); CallbackIterator.IsValid() == true; ++CallbackIterator)
 	{
-		if((*MouseButtonListenerIterator)->OnMouseButton(this, Button, State, X, Y) == true)
+		if(CallbackIterator(Button, State, X, Y) == true)
 		{
-			return true;
+			Result = true;
 		}
 	}
 	
-	return false;
+	return Result;
 }
 
 void Widget::MouseMoved(float X, float Y)
@@ -382,6 +383,11 @@ ConnectionHandle Widget::ConnectKeyCallback(Callback1< bool, const KeyEventInfor
 	return _KeyEvent.Connect(Callback);
 }
 
+ConnectionHandle Widget::ConnectMouseButtonCallback(Callback4< bool, int, int, float, float > Callback)
+{
+	return _MouseButtonEvent.Connect(Callback);
+}
+
 ConnectionHandle Widget::ConnectMouseEnterCallback(Callback0< void > Callback)
 {
 	return _MouseEnterEvent.Connect(Callback);
@@ -417,6 +423,11 @@ void Widget::DisconnectKeyCallback(ConnectionHandle & ConnectionHandle)
 	_KeyEvent.Disconnect(ConnectionHandle);
 }
 
+void Widget::DisconnectMouseButtonCallback(ConnectionHandle & ConnectionHandle)
+{
+	_MouseButtonEvent.Disconnect(ConnectionHandle);
+}
+
 void Widget::DisconnectMouseEnterCallback(ConnectionHandle & ConnectionHandle)
 {
 	_MouseEnterEvent.Disconnect(ConnectionHandle);
@@ -440,11 +451,6 @@ void Widget::DisconnectPositionChangedCallback(ConnectionHandle & ConnectionHand
 void Widget::DisconnectSizeChangedCallback(ConnectionHandle & ConnectionHandle)
 {
 	_SizeChangedEvent.Disconnect(ConnectionHandle);
-}
-
-void Widget::AddMouseButtonListener(MouseButtonListener * MouseButtonListener)
-{
-	m_MouseButtonListeners.push_back(MouseButtonListener);
 }
 
 void Widget::PushClippingRectangle(const Vector2f & Position, const Vector2f & Size)

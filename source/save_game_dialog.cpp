@@ -111,7 +111,6 @@ SaveGameDialog::SaveGameDialog(Widget * SupWidget, Callback1< void, std::ostream
 	SetPosition(Vector2f(120.0f, 200.0f));
 	SetSize(Vector2f(300.0f, 300.0f));
 	ConnectKeyCallback(Callback(this, &SaveGameDialog::OnKey));
-	AddMouseButtonListener(this);
 	m_OKButton = new Button(this);
 	m_OKButton->SetPosition(Vector2f(10.0f, 40.0f));
 	m_OKButton->SetSize(Vector2f(100.0f, 20.0f));
@@ -189,7 +188,7 @@ SaveGameDialog::SaveGameDialog(Widget * SupWidget, Callback1< void, std::ostream
 		EntryLabel->SetPosition(Vector2f(5.0f, Top));
 		EntryLabel->SetSize(Vector2f(m_FileScrollBox->GetContent()->GetSize()[0] - 10.0f, 20.0f));
 		EntryLabel->SetAnchorRight(true);
-		EntryLabel->AddMouseButtonListener(this);
+		EntryLabel->ConnectMouseButtonCallback(Bind1(Callback(this, &SaveGameDialog::OnDirectoryEntryItemMouseButton), EntryLabel));
 		Top += 25.0f;
 	}
 	m_FileScrollBox->GetContent()->SetSize(Vector2f(m_FileScrollBox->GetView()->GetSize()[0], std::max(Top, m_FileScrollBox->GetView()->GetSize()[1])));
@@ -305,28 +304,19 @@ bool SaveGameDialog::OnKey(const KeyEventInformation & KeyEventInformation)
 	return false;
 }
 
-bool SaveGameDialog::OnMouseButton(Widget * EventSource, int Button, int State, float X, float Y)
+bool SaveGameDialog::OnDirectoryEntryItemMouseButton(DirectoryEntryItem * DirectoryEntryItem, int Button, int State, float X, float Y)
 {
-	if(WWindow::OnMouseButton(EventSource, Button, State, X, Y) == true)
-	{
-		return true;
-	}
 	if((Button == 1 /* LEFT */) && (State == EV_DOWN))
 	{
-		DirectoryEntryItem * SelectedDirectoryEntryItem(dynamic_cast< DirectoryEntryItem * >(EventSource));
-		
-		if(SelectedDirectoryEntryItem != 0)
+		if(m_SelectedDirectoryEntryItem != 0)
 		{
-			if(m_SelectedDirectoryEntryItem != 0)
-			{
-				m_SelectedDirectoryEntryItem->SetSelected(false);
-			}
-			m_SelectedDirectoryEntryItem = SelectedDirectoryEntryItem;
-			m_SelectedDirectoryEntryItem->SetSelected(true);
-			m_FileNameLabel->SetText(m_SelectedDirectoryEntryItem->GetCaption());
-			
-			return true;
+			m_SelectedDirectoryEntryItem->SetSelected(false);
 		}
+		m_SelectedDirectoryEntryItem = DirectoryEntryItem;
+		m_SelectedDirectoryEntryItem->SetSelected(true);
+		m_FileNameLabel->SetText(m_SelectedDirectoryEntryItem->GetCaption());
+		
+		return true;
 	}
 	
 	return false;

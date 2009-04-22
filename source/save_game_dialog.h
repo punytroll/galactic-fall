@@ -20,7 +20,6 @@
 #ifndef SAVE_GAME_DIALOG_H
 #define SAVE_GAME_DIALOG_H
 
-#include "mouse_button_listener.h"
 #include "timeout_notifications.h"
 #include "window.h"
 
@@ -30,22 +29,22 @@ class Label;
 class ScrollBox;
 template < typename ReturnType, typename Argument1Type > class Callback1;
 
-class SaveGameDialog : virtual public MouseButtonListener, public WWindow
+class SaveGameDialog : public WWindow
 {
 public:
 	SaveGameDialog(Widget * SupWidget, Callback1< void, std::ostream & > SaveGameCallback);
-protected:
+private:
 	// callbacks
 	void OnCancelClicked(void);
+	bool OnDirectoryEntryItemMouseButton(DirectoryEntryItem * DirectoryEntryItem, int Button, int State, float X, float Y);
 	bool OnFileNameLabelKey(const KeyEventInformation & KeyEventInformation);
 	bool OnKey(const KeyEventInformation & KeyEventInformation);
 	void OnOKClicked(void);
-	// listeners
-	virtual bool OnMouseButton(Widget * EventSource, int Button, int State, float X, float Y);
-private:
+	// helper functions and actions
 	void ShowErrorMessage(const std::string & ErrorMessage);
 	void HideErrorMessage(void);
 	bool Save(void);
+	// member variables
 	Callback1< void, std::ostream & > m_SaveGameCallback;
 	Button * m_CancelButton;
 	Button * m_OKButton;

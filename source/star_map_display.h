@@ -20,22 +20,20 @@
 #ifndef STAR_MAP_DISPLAY_H
 #define STAR_MAP_DISPLAY_H
 
-#include "mouse_button_listener.h"
 #include "widget.h"
 
 class Character;
 class System;
 
-class StarMapDisplay : virtual public MouseButtonListener, public Widget
+class StarMapDisplay : public Widget
 {
 public:
 	StarMapDisplay(Widget * SupWidget, System * System, Character * Character);
 	virtual void Draw(void) const;
 	System * GetSelectedSystem(void);
-protected:
-	virtual bool OnMouseButton(Widget * EventSource, int Button, int State, float X, float Y);
 private:
 	// callbacks
+	bool OnMouseButton(int Button, int State, float X, float Y);
 	void OnMouseMoved(float X, float Y);
 	// member variables
 	Character * m_Character;
