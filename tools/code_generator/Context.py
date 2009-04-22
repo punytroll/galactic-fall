@@ -19,7 +19,7 @@
 '''
 
 '''
-' This is version 0.8.0 of the code-generator python application.
+' This is version 0.8.2 of the code-generator python application.
 '''
 
 import types

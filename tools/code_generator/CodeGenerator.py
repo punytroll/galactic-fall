@@ -19,7 +19,7 @@
 '''
 
 '''
-' This is version 0.8.0 of the code-generator python application.
+' This is version 0.8.2 of the code-generator python application.
 '''
 
 import optparse
@@ -174,7 +174,7 @@ option_parser.add_option("-v", "--variable", dest = "variables", action = "appen
 
 if options.list != None:
 	first = True
-	path = os.path.abspath(sys.argv[2])
+	path = os.path.abspath(options.list)
 	files = os.listdir(path)
 	for file in files:
 		file_path = os.path.join(path, file)
@@ -211,6 +211,8 @@ if options.list != None:
 else:
 	if options.in_file != None:
 		template_file = os.path.abspath(options.in_file)
+	else:
+		option_parser.error("The '--in' comand line option is mandatory, unless '--list' is used.")
 	if os.path.exists(template_file) == False:
 		raise Exception("Could not file the file \"" + template_file + "\".")
 	elif os.path.isfile(template_file) == False:
