@@ -43,6 +43,8 @@ public:
 	LoadGameDialog(Widget * SupWidget);
 	// getters
 	std::string GetFilePath(void);
+	// setters
+	void SetDirectoryPath(const std::string & DirectoryPath);
 	// modifiers
 	void ShowErrorMessage(const std::string & ErrorMessage);
 	// connecting and disconnecting event callbacks
@@ -58,6 +60,7 @@ private:
 	void _Close(LoadGameDialog::ClosingReason ClosingReason);
 	void _OnFileNameLabelTextChanged(void);
 	// member variables
+	std::string _DirectoryPath;
 	Button * m_CancelButton;
 	Button * m_OKButton;
 	Label * m_ErrorMessage;
