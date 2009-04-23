@@ -114,28 +114,34 @@ LoadGameDialog::LoadGameDialog(Widget * SupWidget) :
 	m_FileScrollBox->SetAnchorRight(true);
 	m_FileScrollBox->SetAnchorTop(true);
 	m_FileScrollBox->SetHorizontalScrollBarVisible(false);
-	
-	std::string Path(getenv("HOME"));
-	
-	if(IsExistingDirectory(Path) == false)
+}
+
+std::string LoadGameDialog::GetFilePath(void)
+{
+	if(m_FileNameLabel->GetText() == "")
 	{
-		ShowErrorMessage("Is not an existing directory: \"" + Path + "\".");
-		
-		return;
+		return "";
 	}
-	Path += "/.galactic-fall/";
-	if(IsExistingDirectory(Path) == false)
+	else
 	{
-		if(CreateDirectory(Path) == false)
-		{
-			ShowErrorMessage("Could not create the directory: \"" + Path + "\".");
-			
-			return;
-		}
+		return _DirectoryPath + '/' + m_FileNameLabel->GetText() + ".xml";
+	}
+}
+
+void LoadGameDialog::SetDirectoryPath(const std::string & DirectoryPath)
+{
+	_DirectoryPath = DirectoryPath;
+	while(m_FileScrollBox->GetContent()->GetSubWidgets().empty() == false)
+	{
+		m_FileScrollBox->GetContent()->GetSubWidgets().front()->Destroy();
+	}
+	if(IsExistingDirectory(_DirectoryPath) == false)
+	{
+		ShowErrorMessage("Is not an existing directory: \"" + _DirectoryPath + "\".");
 	}
 	
 	float Top(5.0f);
-	std::vector< std::string > Entries(GetDirectoryEntries(Path));
+	std::vector< std::string > Entries(GetDirectoryEntries(_DirectoryPath));
 	
 	for(std::vector< std::string >::iterator EntryIterator = Entries.begin(); EntryIterator != Entries.end(); ++EntryIterator)
 	{
@@ -148,19 +154,6 @@ LoadGameDialog::LoadGameDialog(Widget * SupWidget) :
 		Top += 25.0f;
 	}
 	m_FileScrollBox->GetContent()->SetSize(Vector2f(m_FileScrollBox->GetView()->GetSize()[0], std::max(Top, m_FileScrollBox->GetView()->GetSize()[1])));
-	m_FileScrollBox->GetContent()->SetAnchorRight(true);
-}
-
-std::string LoadGameDialog::GetFilePath(void)
-{
-	if(m_FileNameLabel->GetText() == "")
-	{
-		return "";
-	}
-	else
-	{
-		return std::string(getenv("HOME")) + '/' + ".galactic-fall" + '/' + m_FileNameLabel->GetText() + ".xml";
-	}
 }
 
 ConnectionHandle LoadGameDialog::ConnectClosingCallback(Callback1< bool, LoadGameDialog::ClosingReason > Callback)

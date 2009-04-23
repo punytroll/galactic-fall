@@ -45,6 +45,7 @@
 #include "commodity_class.h"
 #include "draw_text.h"
 #include "faction.h"
+#include "file_handling.h"
 #include "galaxy.h"
 #include "game_time.h"
 #include "generator.h"
@@ -2330,6 +2331,8 @@ bool OnLoadGameDialogClosing(LoadGameDialog::ClosingReason ClosingReason)
 		}
 		else
 		{
+			g_LoadGameDialog->ShowErrorMessage("You have not selected any file or entered a file name.");
+			
 			return false;
 		}
 	}
@@ -2686,6 +2689,15 @@ void ActionOpenLoadGameDialog(void)
 		g_LoadGameDialog->GrabKeyFocus();
 		g_LoadGameDialog->ConnectClosingCallback(Callback(OnLoadGameDialogClosing));
 		g_LoadGameDialog->ConnectDestroyingCallback(Callback(OnLoadGameDialogDestroying));
+		
+		std::string DirectoryPath(getenv("HOME"));
+		
+		DirectoryPath += "/.galactic-fall";
+		if(IsExistingDirectory(DirectoryPath) == false)
+		{
+			CreateDirectory(DirectoryPath);
+		}
+		g_LoadGameDialog->SetDirectoryPath(DirectoryPath);
 	}
 }
 
