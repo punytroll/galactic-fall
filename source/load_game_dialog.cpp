@@ -50,9 +50,8 @@ private:
 	Label * m_CaptionLabel;
 };
 
-LoadGameDialog::LoadGameDialog(Widget * SupWidget, Callback1< bool, std::istream & > LoadGameCallback) :
+LoadGameDialog::LoadGameDialog(Widget * SupWidget) :
 	WWindow(SupWidget, "Load Game"),
-	m_LoadGameCallback(LoadGameCallback),
 	m_SelectedDirectoryEntryItem(0)
 {
 	SetPosition(Vector2f(120.0f, 200.0f));
@@ -65,7 +64,7 @@ LoadGameDialog::LoadGameDialog(Widget * SupWidget, Callback1< bool, std::istream
 	m_OKButton->SetAnchorLeft(false);
 	m_OKButton->SetAnchorRight(true);
 	m_OKButton->SetAnchorTop(false);
-	m_OKButton->ConnectClickedCallback(Callback(this, &LoadGameDialog::OnOKClicked));
+	m_OKButton->ConnectClickedCallback(Bind1(Callback(this, &LoadGameDialog::_Close), LoadGameDialog::OK_BUTTON));
 	
 	Label * OKButtonLabel(new Label(m_OKButton, "OK"));
 	
@@ -80,7 +79,7 @@ LoadGameDialog::LoadGameDialog(Widget * SupWidget, Callback1< bool, std::istream
 	m_CancelButton->SetAnchorLeft(false);
 	m_CancelButton->SetAnchorRight(true);
 	m_CancelButton->SetAnchorTop(false);
-	m_CancelButton->ConnectClickedCallback(Callback(this, &LoadGameDialog::OnCancelClicked));
+	m_CancelButton->ConnectClickedCallback(Bind1(Callback(this, &LoadGameDialog::_Close), LoadGameDialog::CANCEL_BUTTON));
 	
 	Label * CancelButtonLabel(new Label(m_CancelButton, "Cancel"));
 	
@@ -152,6 +151,28 @@ LoadGameDialog::LoadGameDialog(Widget * SupWidget, Callback1< bool, std::istream
 	m_FileScrollBox->GetContent()->SetAnchorRight(true);
 }
 
+std::string LoadGameDialog::GetFilePath(void)
+{
+	if(m_FileNameLabel->GetText() == "")
+	{
+		return "";
+	}
+	else
+	{
+		return std::string(getenv("HOME")) + '/' + ".galactic-fall" + '/' + m_FileNameLabel->GetText() + ".xml";
+	}
+}
+
+ConnectionHandle LoadGameDialog::ConnectClosingCallback(Callback1< bool, LoadGameDialog::ClosingReason > Callback)
+{
+	return _ClosingEvent.Connect(Callback);
+}
+
+void LoadGameDialog::DisconnectClosingCallback(ConnectionHandle & ConnectionHandle)
+{
+	_ClosingEvent.Disconnect(ConnectionHandle);
+}
+
 void LoadGameDialog::ShowErrorMessage(const std::string & ErrorMessage)
 {
 	if(m_ErrorMessageTimeoutNotification.IsValid() == true)
@@ -168,88 +189,66 @@ void LoadGameDialog::HideErrorMessage(void)
 	m_ErrorMessage->SetVisible(false);
 }
 
-bool LoadGameDialog::Load(void)
+void LoadGameDialog::_Close(LoadGameDialog::ClosingReason ClosingReason)
 {
-	std::string Path(getenv("HOME"));
+	bool CallDestroy(true);
 	
-	if(IsExistingDirectory(Path) == false)
+	for(Event1< bool, LoadGameDialog::ClosingReason >::CallbackIterator CallbackIterator = _ClosingEvent.GetCallbackIterator(); CallbackIterator.IsValid() == true; ++CallbackIterator)
 	{
-		ShowErrorMessage("Is not an existing directory: \"" + Path + "\".");
-		
-		return false;
+		CallDestroy &= CallbackIterator(ClosingReason);
 	}
-	Path += "/.galactic-fall/";
-	if(IsExistingDirectory(Path) == false)
-	{
-		if(CreateDirectory(Path) == false)
-		{
-			ShowErrorMessage("Could not create the directory: \"" + Path + "\".");
-			
-			return false;
-		}
-	}
-	Path += m_FileNameLabel->GetText() + ".xml";
-	/// @todo check Path (doesn't exist, if exists overwrite if it's a file?)
-	
-	std::ifstream InputFileStream;
-	
-	InputFileStream.open(Path.c_str());
-	if(InputFileStream == false)
-	{
-		ShowErrorMessage("Could not find or read \"" + Path + "\".");
-		
-		return false;
-	}
-	else
-	{
-		if(m_LoadGameCallback(InputFileStream) == false)
-		{
-			ShowErrorMessage("Loading the game file \"" + Path + "\" failed.");
-			
-			return false;
-		}
-		else
-		{
-			return true;
-		}
-	}
-}
-
-void LoadGameDialog::OnCancelClicked(void)
-{
-	Destroy();
-}
-
-void LoadGameDialog::OnOKClicked(void)
-{
-	if(Load() == true)
+	if(CallDestroy == true)
 	{
 		Destroy();
 	}
 }
 
+void LoadGameDialog::_OnFileNameLabelTextChanged(void)
+{
+	if(m_SelectedDirectoryEntryItem != 0)
+	{
+		m_SelectedDirectoryEntryItem->SetSelected(false);
+		m_SelectedDirectoryEntryItem = 0;
+	}
+	
+	const std::list< Widget * > & ContentSubWidgets(m_FileScrollBox->GetContent()->GetSubWidgets());
+	
+	for(std::list< Widget * >::const_iterator ContentSubWidgetIterator = ContentSubWidgets.begin(); ContentSubWidgetIterator != ContentSubWidgets.end(); ++ContentSubWidgetIterator)
+	{
+		DirectoryEntryItem * EntryLabel(dynamic_cast< DirectoryEntryItem * >(*ContentSubWidgetIterator));
+		
+		if(EntryLabel != 0)
+		{
+			if(EntryLabel->GetCaption() == m_FileNameLabel->GetText())
+			{
+				m_SelectedDirectoryEntryItem = EntryLabel;
+				m_SelectedDirectoryEntryItem->SetSelected(true);
+				
+				return;
+			}
+		}
+	}
+}
+
 bool LoadGameDialog::OnFileNameLabelKey(const KeyEventInformation & KeyEventInformation)
 {
+	if((KeyEventInformation.GetKeyCode() == 9 /* ESCAPE */) || (KeyEventInformation.GetKeyCode() == 36 /* RETURN */))
+	{
+		// do not eat RETURN or ESCAPE keys
+		return false;
+	}
 	if((KeyEventInformation.GetKeyCode() == 22 /* BACKSPACE */) && (KeyEventInformation.IsDown() == true))
 	{
 		if(m_FileNameLabel->GetText().length() > 0)
 		{
 			m_FileNameLabel->SetText(m_FileNameLabel->GetText().substr(0, m_FileNameLabel->GetText().length() - 1));
-		}
-	}
-	else if((KeyEventInformation.GetKeyCode() == 36 /* RETURN */) && (KeyEventInformation.IsDown() == true))
-	{
-		if(m_FileNameLabel->GetText().length() > 0)
-		{
-			if(Load() == true)
-			{
-				Destroy();
-			}
+			_OnFileNameLabelTextChanged();
 		}
 	}
 	else if((KeyEventInformation.GetString().empty() == false) && (KeyEventInformation.IsDown() == true))
 	{
 		m_FileNameLabel->SetText(m_FileNameLabel->GetText() + KeyEventInformation.GetString());
+		_OnFileNameLabelTextChanged();
 	}
 	
 	// eat all input
@@ -260,7 +259,13 @@ bool LoadGameDialog::OnKey(const KeyEventInformation & KeyEventInformation)
 {
 	if((KeyEventInformation.GetKeyCode() == 9 /* ESCAPE */) && (KeyEventInformation.IsDown() == true))
 	{
-		Destroy();
+		_Close(ESCAPE_KEY);
+		
+		return true;
+	}
+	else if((KeyEventInformation.GetKeyCode() == 36 /* RETURN */) && (KeyEventInformation.IsDown() == true))
+	{
+		_Close(RETURN_KEY);
 		
 		return true;
 	}

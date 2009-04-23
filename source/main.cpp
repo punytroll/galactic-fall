@@ -2293,6 +2293,55 @@ bool LoadGameFromResourcePath(const std::string & ResourcePath)
 	return LoadGameFromInputStream(SaveGameStringStream);
 }
 
+bool OnLoadGameDialogClosing(LoadGameDialog::ClosingReason ClosingReason)
+{
+	if((ClosingReason == LoadGameDialog::CANCEL_BUTTON) || (ClosingReason == LoadGameDialog::ESCAPE_KEY))
+	{
+		return true;
+	}
+	else if((ClosingReason == LoadGameDialog::OK_BUTTON) || (ClosingReason == LoadGameDialog::RETURN_KEY))
+	{
+		std::string FilePath(g_LoadGameDialog->GetFilePath());
+		
+		if(FilePath != "")
+		{
+			std::ifstream InputFileStream;
+	
+			InputFileStream.open(FilePath.c_str());
+			if(InputFileStream == false)
+			{
+				g_LoadGameDialog->ShowErrorMessage("Could not find or read \"" + FilePath + "\".");
+				
+				return false;
+			}
+			else
+			{
+				if(LoadGameFromInputStream(InputFileStream) == false)
+				{
+					g_LoadGameDialog->ShowErrorMessage("Loading the game file \"" + FilePath + "\" failed.");
+					
+					return false;
+				}
+				else
+				{
+					return true;
+				}
+			}
+		}
+		else
+		{
+			return false;
+		}
+	}
+	else
+	{
+		std::cerr << "Unknown closing reason '" << ClosingReason << "'." << std::endl;
+		assert(false);
+	}
+	
+	return false;
+}
+
 void SaveGame(std::ostream & OStream)
 {
 	XMLStream XML(OStream);
@@ -2633,8 +2682,9 @@ void ActionOpenLoadGameDialog(void)
 	if(g_LoadGameDialog == 0)
 	{
 		g_Pause = true;
-		g_LoadGameDialog = new LoadGameDialog(g_UserInterface->GetRootWidget(), Callback(LoadGameFromInputStream));
+		g_LoadGameDialog = new LoadGameDialog(g_UserInterface->GetRootWidget());
 		g_LoadGameDialog->GrabKeyFocus();
+		g_LoadGameDialog->ConnectClosingCallback(Callback(OnLoadGameDialogClosing));
 		g_LoadGameDialog->ConnectDestroyingCallback(Callback(OnLoadGameDialogDestroying));
 	}
 }

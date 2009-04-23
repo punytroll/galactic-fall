@@ -32,20 +32,32 @@ template < typename ReturnType, typename Argument1Type > class Callback1;
 class LoadGameDialog : public WWindow
 {
 public:
-	LoadGameDialog(Widget * SupWidget, Callback1< bool, std::istream & > LoadGameCallback);
+	enum ClosingReason
+	{
+		OK_BUTTON,
+		CANCEL_BUTTON,
+		RETURN_KEY,
+		ESCAPE_KEY
+	};
+	
+	LoadGameDialog(Widget * SupWidget);
+	// getters
+	std::string GetFilePath(void);
+	// modifiers
+	void ShowErrorMessage(const std::string & ErrorMessage);
+	// connecting and disconnecting event callbacks
+	ConnectionHandle ConnectClosingCallback(Callback1< bool, LoadGameDialog::ClosingReason > Callback);
+	void DisconnectClosingCallback(ConnectionHandle & ConnectionHandle);
 private:
 	// callbacks
-	void OnCancelClicked(void);
 	bool OnDirectoryEntryItemMouseButton(DirectoryEntryItem * DirectoryEntryItem, int Button, int State, float X, float Y);
 	bool OnFileNameLabelKey(const KeyEventInformation & KeyEventInformation);
 	bool OnKey(const KeyEventInformation & KeyEventInformation);
-	void OnOKClicked(void);
 	// helper functions and actions
-	void ShowErrorMessage(const std::string & ErrorMessage);
 	void HideErrorMessage(void);
-	bool Load(void);
+	void _Close(LoadGameDialog::ClosingReason ClosingReason);
+	void _OnFileNameLabelTextChanged(void);
 	// member variables
-	Callback1< bool, std::istream & > m_LoadGameCallback;
 	Button * m_CancelButton;
 	Button * m_OKButton;
 	Label * m_ErrorMessage;
@@ -53,6 +65,8 @@ private:
 	Label * m_FileNameLabel;
 	ScrollBox * m_FileScrollBox;
 	DirectoryEntryItem * m_SelectedDirectoryEntryItem;
+	//events
+	Event1< bool, LoadGameDialog::ClosingReason > _ClosingEvent;
 };
 
 #endif
