@@ -109,11 +109,15 @@ SaveGameDialog::SaveGameDialog(Widget * SupWidget, Callback1< void, std::ostream
 	m_SelectedDirectoryEntryItem(0)
 {
 	SetPosition(Vector2f(120.0f, 200.0f));
-	SetSize(Vector2f(300.0f, 300.0f));
+	SetSize(Vector2f(300.0f, 400.0f));
 	ConnectKeyCallback(Callback(this, &SaveGameDialog::OnKey));
 	m_OKButton = new Button(this);
-	m_OKButton->SetPosition(Vector2f(10.0f, 40.0f));
 	m_OKButton->SetSize(Vector2f(100.0f, 20.0f));
+	m_OKButton->SetPosition(Vector2f(GetSize()[0] - 10.0f - m_OKButton->GetSize()[0], GetSize()[1] - 10.0f - m_OKButton->GetSize()[1]));
+	m_OKButton->SetAnchorBottom(true);
+	m_OKButton->SetAnchorLeft(false);
+	m_OKButton->SetAnchorRight(true);
+	m_OKButton->SetAnchorTop(false);
 	m_OKButton->ConnectClickedCallback(Callback(this, &SaveGameDialog::OnOKClicked));
 	
 	Label * OKButtonLabel(new Label(m_OKButton, "OK"));
@@ -123,8 +127,12 @@ SaveGameDialog::SaveGameDialog(Widget * SupWidget, Callback1< void, std::ostream
 	OKButtonLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
 	OKButtonLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
 	m_CancelButton = new Button(this);
-	m_CancelButton->SetPosition(Vector2f(120.0f, 40.0f));
 	m_CancelButton->SetSize(Vector2f(100.0f, 20.0f));
+	m_CancelButton->SetPosition(Vector2f(GetSize()[0] - 10.0f - m_OKButton->GetSize()[0] - 10.0f - m_CancelButton->GetSize()[0], GetSize()[1] - 10.0f - m_CancelButton->GetSize()[1]));
+	m_CancelButton->SetAnchorBottom(true);
+	m_CancelButton->SetAnchorLeft(false);
+	m_CancelButton->SetAnchorRight(true);
+	m_CancelButton->SetAnchorTop(false);
 	m_CancelButton->ConnectClickedCallback(Callback(this, &SaveGameDialog::OnCancelClicked));
 	
 	Label * CancelButtonLabel(new Label(m_CancelButton, "Cancel"));
@@ -134,17 +142,19 @@ SaveGameDialog::SaveGameDialog(Widget * SupWidget, Callback1< void, std::ostream
 	CancelButtonLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
 	CancelButtonLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
 	m_ErrorMessage = new Label(this);
-	m_ErrorMessage->SetPosition(Vector2f(10.0f, 150.0f));
-	m_ErrorMessage->SetSize(Vector2f(280.0f, 40.0f));
+	m_ErrorMessage->SetPosition(Vector2f(10.0f, 40.0f));
+	m_ErrorMessage->SetSize(Vector2f(GetSize()[0] - 10.0f - 10.0f, 30.0f));
 	m_ErrorMessage->SetTextColor(Color(1.0f, 0.3, 0.3f, 1.0f));
-	m_ErrorMessage->SetAnchorBottom(true);
+	m_ErrorMessage->SetAnchorBottom(false);
+	m_ErrorMessage->SetAnchorLeft(true);
 	m_ErrorMessage->SetAnchorRight(true);
-	m_ErrorMessage->SetAnchorTop(false);
+	m_ErrorMessage->SetAnchorTop(true);
 	m_ErrorMessage->SetWrap(true);
 	m_ErrorMessage->SetWordWrap(true);
+	m_ErrorMessage->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
 	m_FileNameLabel = new Label(this);
-	m_FileNameLabel->SetPosition(Vector2f(10.0f, 70.0f));
-	m_FileNameLabel->SetSize(Vector2f(280.0f, 20.0f));
+	m_FileNameLabel->SetPosition(Vector2f(10.0f, 80.0f));
+	m_FileNameLabel->SetSize(Vector2f(GetSize()[0] - 10.0f - 10.0f, 20.0f));
 	m_FileNameLabel->SetTextColor(Color(1.0f, 1.0f, 0.5f, 1.0f));
 	m_FileNameLabel->SetBackgroundColor(Color(0.1f, 0.1f, 0.1f, 1.0f));
 	m_FileNameLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
@@ -152,8 +162,8 @@ SaveGameDialog::SaveGameDialog(Widget * SupWidget, Callback1< void, std::ostream
 	m_FileNameLabel->ConnectKeyCallback(Callback(this, &SaveGameDialog::OnFileNameLabelKey));
 	m_FileNameLabel->GrabKeyFocus();
 	m_FileScrollBox = new ScrollBox(this);
-	m_FileScrollBox->SetPosition(Vector2f(10.0f, 100.0f));
-	m_FileScrollBox->SetSize(Vector2f(280.0f, 190.0));
+	m_FileScrollBox->SetPosition(Vector2f(10.0f, 110.0f));
+	m_FileScrollBox->SetSize(Vector2f(GetSize()[0] - 10.0f - 10.0f, GetSize()[1] - 110.0f - 30.0f - 10.0f - m_OKButton->GetSize()[1]));
 	m_FileScrollBox->SetAnchorBottom(true);
 	m_FileScrollBox->SetAnchorRight(true);
 	m_FileScrollBox->SetAnchorTop(true);
