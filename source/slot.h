@@ -41,10 +41,12 @@ public:
 	const Quaternion & GetOrientation(void) const;
 	const Vector3f & GetPosition(void) const;
 	const SlotClass * GetSlotClass(void) const;
+	bool GetVisualizeAccessory(void) const;
 	// setters
 	void SetName(const std::string & Name);
 	void SetOrientation(const Quaternion & Orientation);
 	void SetPosition(const Vector3f & Position);
+	void SetVisualizeAccessory(bool VisualizeAccessory);
 	// modifiers
 	void Mount(Reference< Object > TheObject);
 	void Unmount(void);
@@ -55,6 +57,7 @@ private:
 	Reference< Object > m_MountedObject;
 	Quaternion m_Orientation;
 	Vector3f m_Position;
+	bool _VisualizeAccessory;
 };
 
 inline const std::string & Slot::GetIdentifier(void) const
@@ -92,6 +95,11 @@ inline const SlotClass * Slot::GetSlotClass(void) const
 	return m_SlotClass;
 }
 
+inline bool Slot::GetVisualizeAccessory(void) const
+{
+	return _VisualizeAccessory;
+}
+
 inline void Slot::SetName(const std::string & Name)
 {
 	m_Name = Name;
@@ -105,6 +113,11 @@ inline void Slot::SetOrientation(const Quaternion & Orientation)
 inline void Slot::SetPosition(const Vector3f & Position)
 {
 	m_Position = Position;
+}
+
+inline void Slot::SetVisualizeAccessory(bool VisualizeAccessory)
+{
+	_VisualizeAccessory = VisualizeAccessory;
 }
 
 #endif

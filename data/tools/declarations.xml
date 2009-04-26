@@ -158,6 +158,7 @@
 		<string identifier="name"/>
 		<vector3f identifier="position"/>
 		<quaternion identifier="orientation"/>
+		<boolean identifier="visualize-accessory"/>
 	</slot>
 	
 	<slot-class>

@@ -161,6 +161,7 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 			NewSlot->SetName(SlotIterator->second->GetName());
 			NewSlot->SetPosition(SlotIterator->second->GetPosition());
 			NewSlot->SetOrientation(SlotIterator->second->GetOrientation());
+			NewSlot->SetVisualizeAccessory(SlotIterator->second->GetVisualizeAccessory());
 			NewShip->GetAspectOutfitting()->AddSlot(NewSlot);
 		}
 		// set up physical aspect

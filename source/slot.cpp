@@ -19,13 +19,16 @@
 
 #include "object.h"
 #include "object_aspect_accessory.h"
+#include "object_aspect_visualization.h"
 #include "slot.h"
 #include "slot_class.h"
+#include "visualizations.h"
 
 Slot::Slot(const SlotClass * SlotClass, const std::string & Identifier) :
 	m_SlotClass(SlotClass),
 	m_Identifier(Identifier),
-	m_MountedObject(0)
+	m_MountedObject(0),
+	_VisualizeAccessory(false)
 {
 }
 
@@ -36,11 +39,29 @@ void Slot::Mount(Reference< Object > TheObject)
 	assert(GetSlotClass()->AcceptsSlotClassIdentifier(TheObject->GetAspectAccessory()->GetSlotClassIdentifier()) == true);
 	m_MountedObject = TheObject;
 	TheObject->GetAspectAccessory()->SetSlot(this);
+	if(_VisualizeAccessory == true)
+	{
+		assert(GetMountedObject()->GetAspectVisualization() != 0);
+		assert(GetMountedObject()->GetAspectVisualization()->GetVisualization().IsValid() == false);
+		assert(GetMountedObject()->GetContainer() != 0);
+		assert(GetMountedObject()->GetContainer()->GetAspectVisualization() != 0);
+		// only visualize if the parent object is visualized
+		if(GetMountedObject()->GetContainer()->GetAspectVisualization()->GetVisualization().IsValid() == true)
+		{
+			VisualizeObject(GetMountedObject().Get(), GetMountedObject()->GetContainer()->GetAspectVisualization()->GetVisualization().Get());
+		}
+	}
 }
 
 void Slot::Unmount(void)
 {
 	assert(GetMountedObject().IsValid() == true);
+	if(_VisualizeAccessory == true)
+	{
+		assert(GetMountedObject()->GetAspectVisualization() != 0);
+		assert(GetMountedObject()->GetAspectVisualization()->GetVisualization().IsValid() == true);
+		UnvisualizeObject(GetMountedObject().Get());
+	}
 	GetMountedObject()->GetAspectAccessory()->SetSlot(0);
 	GetMountedObject().Clear();
 }
