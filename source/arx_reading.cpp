@@ -666,14 +666,16 @@ static void ReadShipClass(Arxx::Reference & Reference)
 		std::string Name;
 		Vector3f SlotPosition;
 		Quaternion SlotOrientation;
+		bool VisualizeAccessory;
 		
-		Reader >> Name >> SlotPosition >> SlotOrientation;
+		Reader >> Name >> SlotPosition >> SlotOrientation >> VisualizeAccessory;
 		
 		Slot * NewSlot(new Slot(SlotClass, SlotIdentifier));
 		
 		NewSlot->SetName(Name);
 		NewSlot->SetPosition(SlotPosition);
 		NewSlot->SetOrientation(SlotOrientation);
+		NewSlot->SetVisualizeAccessory(VisualizeAccessory);
 		if(NewShipClass->AddSlot(SlotIdentifier, NewSlot) == false)
 		{
 			throw std::runtime_error("Could not add slot '" + SlotIdentifier + "' to ship class '" + Identifier + "'.");

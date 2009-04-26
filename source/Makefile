@@ -766,7 +766,7 @@ ship_class.o: ship_class.cpp $(color_h) $(graphics_material_h) $(ship_class_h) $
 shot.o: shot.cpp $(game_time_h) $(object_aspect_position_h) $(object_aspect_update_h) $(shot_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-slot.o: slot.cpp $(object_h) $(object_aspect_accessory_h) $(slot_h) $(slot_class_h)
+slot.o: slot.cpp $(object_h) $(object_aspect_accessory_h) $(object_aspect_visualization_h) $(slot_h) $(slot_class_h) $(visualizations_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 slot_class.o: slot_class.cpp $(slot_class_h)

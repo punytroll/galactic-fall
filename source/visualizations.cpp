@@ -101,6 +101,18 @@ void VisualizeCommodity(Commodity * Commodity, Graphics::Node * Container)
 	Container->AddNode(Visualization);
 }
 
+void VisualizeObject(Object * Object, Graphics::Node * Container)
+{
+	if(Object->GetTypeIdentifier() == "weapon")
+	{
+		VisualizeWeapon(static_cast< Weapon * >(Object), Container);
+	}
+	else
+	{
+		assert(false);
+	}
+}
+
 Reference< Graphics::Node > & VisualizeParticleSystem(Graphics::Node * ParticleSystem, Graphics::Node * Container)
 {
 	assert(ParticleSystem != 0);

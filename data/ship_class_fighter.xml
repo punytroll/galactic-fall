@@ -96,6 +96,7 @@
 				<y>0</y>
 				<z>-0.7071067812</z>
 			</orientation>
+			<visualize-accessory>true</visualize-accessory>
 		</slot>
 		<slot>
 			<identifier>battery</identifier>
@@ -112,6 +113,7 @@
 				<y>0</y>
 				<z>0</z>
 			</orientation>
+			<visualize-accessory>false</visualize-accessory>
 		</slot>
 		<slot>
 			<identifier>generator</identifier>
@@ -128,6 +130,7 @@
 				<y>0</y>
 				<z>0</z>
 			</orientation>
+			<visualize-accessory>false</visualize-accessory>
 		</slot>
 	</slots>
 </ship-class>
