@@ -20,26 +20,17 @@
 #ifndef LOAD_GAME_DIALOG_H
 #define LOAD_GAME_DIALOG_H
 
+#include "dialog.h"
 #include "timeout_notifications.h"
-#include "window.h"
 
 class Button;
 class DirectoryEntryItem;
 class Label;
 class ScrollBox;
-template < typename ReturnType, typename Argument1Type > class Callback1;
 
-class LoadGameDialog : public WWindow
+class LoadGameDialog : public Dialog
 {
 public:
-	enum ClosingReason
-	{
-		OK_BUTTON,
-		CANCEL_BUTTON,
-		RETURN_KEY,
-		ESCAPE_KEY
-	};
-	
 	LoadGameDialog(Widget * SupWidget);
 	// getters
 	std::string GetFilePath(void);
@@ -47,9 +38,6 @@ public:
 	void SetDirectoryPath(const std::string & DirectoryPath);
 	// modifiers
 	void ShowErrorMessage(const std::string & ErrorMessage);
-	// connecting and disconnecting event callbacks
-	ConnectionHandle ConnectClosingCallback(Callback1< bool, LoadGameDialog::ClosingReason > Callback);
-	void DisconnectClosingCallback(ConnectionHandle & ConnectionHandle);
 private:
 	// callbacks
 	bool OnDirectoryEntryItemMouseButton(DirectoryEntryItem * DirectoryEntryItem, int Button, int State, float X, float Y);
@@ -57,7 +45,6 @@ private:
 	bool OnKey(const KeyEventInformation & KeyEventInformation);
 	// helper functions and actions
 	void HideErrorMessage(void);
-	void _Close(LoadGameDialog::ClosingReason ClosingReason);
 	void _OnFileNameLabelTextChanged(void);
 	// member variables
 	std::string _DirectoryPath;
@@ -68,8 +55,6 @@ private:
 	Label * m_FileNameLabel;
 	ScrollBox * m_FileScrollBox;
 	DirectoryEntryItem * m_SelectedDirectoryEntryItem;
-	//events
-	Event1< bool, LoadGameDialog::ClosingReason > _ClosingEvent;
 };
 
 #endif

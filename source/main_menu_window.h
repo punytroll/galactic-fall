@@ -19,10 +19,12 @@
 #ifndef MAIN_MENU_WINDOW_H
 #define MAIN_MENU_WINDOW_H
 
+#include "dialog.h"
 #include "window.h"
 
 class Button;
 class LoadGameDialog;
+class SaveGameDialog;
 
 class MainMenuWindow : public WWindow
 {
@@ -39,20 +41,24 @@ private:
 	// callbacks
 	bool _OnKey(const KeyEventInformation & KeyEventInformation);
 	void _OnLoadGameButtonClicked(void);
-	bool _OnLoadGameDialogClosing(LoadGameDialog::ClosingReason ClosingReason);
+	bool _OnLoadGameDialogClosing(Dialog::ClosingReason ClosingReason);
 	void _OnLoadGameDialogDestroying(void);
 	void _OnNewGameButtonClicked(void);
 	void _OnQuitButtonClicked(void);
 	void _OnResumeGameButtonClicked(void);
 	void _OnSaveGameButtonClicked(void);
+	bool _OnSaveGameDialogClosing(Dialog::ClosingReason ClosingReasong);
+	void _OnSaveGameDialogDestroying(void);
 	// member variables
 	bool _DestroyOnLoadGameDialogDestroy;
+	bool _DestroyOnSaveGameDialogDestroy;
 	Button * _LoadGameButton;
 	LoadGameDialog * _LoadGameDialog;
 	Button * _NewGameButton;
 	Button * _QuitButton;
 	Button * _ResumeGameButton;
 	Button * _SaveGameButton;
+	SaveGameDialog * _SaveGameDialog;
 };
 
 inline Button * MainMenuWindow::GetLoadGameButton(void)

@@ -20,32 +20,34 @@
 #ifndef SAVE_GAME_DIALOG_H
 #define SAVE_GAME_DIALOG_H
 
+#include "dialog.h"
 #include "timeout_notifications.h"
-#include "window.h"
 
 class Button;
 class DirectoryEntryItem;
 class Label;
 class ScrollBox;
-template < typename ReturnType, typename Argument1Type > class Callback1;
 
-class SaveGameDialog : public WWindow
+class SaveGameDialog : public Dialog
 {
 public:
-	SaveGameDialog(Widget * SupWidget, Callback1< void, std::ostream & > SaveGameCallback);
+	SaveGameDialog(Widget * SupWidget);
+	// getters
+	std::string GetFilePath(void);
+	// setters
+	void SetDirectoryPath(const std::string & DirectoryPath);
+	// modifiers
+	void ShowErrorMessage(const std::string & ErrorMessage);
 private:
 	// callbacks
-	void OnCancelClicked(void);
 	bool OnDirectoryEntryItemMouseButton(DirectoryEntryItem * DirectoryEntryItem, int Button, int State, float X, float Y);
 	bool OnFileNameLabelKey(const KeyEventInformation & KeyEventInformation);
 	bool OnKey(const KeyEventInformation & KeyEventInformation);
-	void OnOKClicked(void);
 	// helper functions and actions
-	void ShowErrorMessage(const std::string & ErrorMessage);
 	void HideErrorMessage(void);
-	bool Save(void);
+	void _OnFileNameLabelTextChanged(void);
 	// member variables
-	Callback1< void, std::ostream & > m_SaveGameCallback;
+	std::string _DirectoryPath;
 	Button * m_CancelButton;
 	Button * m_OKButton;
 	Label * m_ErrorMessage;

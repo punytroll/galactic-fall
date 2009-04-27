@@ -64,7 +64,6 @@
 #include "graphics_texture_manager.h"
 #include "key_event_information.h"
 #include "label.h"
-#include "load_game_dialog.h"
 #include "main_menu_window.h"
 #include "map_dialog.h"
 #include "map_knowledge.h"
@@ -89,7 +88,6 @@
 #include "perspective.h"
 #include "planet.h"
 #include "real_time.h"
-#include "save_game_dialog.h"
 #include "scanner_display.h"
 #include "settings.h"
 #include "ship.h"
@@ -152,7 +150,6 @@ Label * g_CreditsLabel(0);
 Label * g_CurrentSystemLabel(0);
 Label * g_FuelLabel(0);
 Label * g_HullLabel(0);
-MainMenuWindow * g_MainMenuWindow(0);
 Label * g_MessageLabel(0);
 Widget * g_MiniMap(0);
 MiniMapDisplay * g_MiniMapDisplay(0);
@@ -164,9 +161,9 @@ Label * g_TargetFactionLabel(0);
 Label * g_TimeWarpLabel(0);
 
 // global dialog pointers
+MainMenuWindow * g_MainMenuWindow(0);
 MapDialog * g_MapDialog(0);
 OutfitShipDialog * g_OutfitShipDialog(0);
-SaveGameDialog * g_SaveGameDialog(0);
 TimingDialog * g_TimingDialog(0);
 
 int g_LastMotionX(-1);
@@ -1090,12 +1087,6 @@ void OnMapDialogDestroying(void)
 void OnOutfitShipDialogDestroying(void)
 {
 	g_OutfitShipDialog = 0;
-}
-
-void OnSaveGameDialogDestroying(void)
-{
-	g_SaveGameDialog = 0;
-	g_Pause = false;
 }
 
 void OnTimingDialogDestroying(void)
@@ -2635,16 +2626,12 @@ void ActionOpenMainMenuWindow(void)
 {
 	if(g_MainMenuWindow == 0)
 	{
+		g_Pause = true;
 		g_MainMenuWindow = new MainMenuWindow(g_UserInterface->GetRootWidget());
 		// crude heuristic: if we are not in a system, no game is running
 		if(g_CurrentSystem == 0)
 		{
 			g_MainMenuWindow->GetResumeGameButton()->SetEnabled(false);
-			g_MainMenuWindow->GetSaveGameButton()->SetEnabled(false);
-		}
-		else
-		{
-			// always disable the "Save Game" button as it doesn't work yet
 			g_MainMenuWindow->GetSaveGameButton()->SetEnabled(false);
 		}
 		g_MainMenuWindow->SetPosition(Vector2f((g_Width - g_MainMenuWindow->GetSize()[0]) / 2.0f, (g_Height - g_MainMenuWindow->GetSize()[1]) / 2.0f));
@@ -2678,17 +2665,6 @@ void ActionOpenObjectInformationDialog(void)
 	ObjectInformationDialog * Dialog(new ObjectInformationDialog(g_UserInterface->GetRootWidget(), g_Galaxy->GetReference()));
 	
 	Dialog->GrabKeyFocus();
-}
-
-void ActionOpenSaveGameDialog(void)
-{
-	if(g_SaveGameDialog == 0)
-	{
-		g_Pause = true;
-		g_SaveGameDialog = new SaveGameDialog(g_UserInterface->GetRootWidget(), Callback(SaveGame));
-		g_SaveGameDialog->GrabKeyFocus();
-		g_SaveGameDialog->ConnectDestroyingCallback(Callback(OnSaveGameDialogDestroying));
-	}
 }
 
 void ActionOutfitShip(void)
@@ -3121,15 +3097,6 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 			else
 			{
 				ActionDisableFire();
-			}
-			
-			break;
-		}
-	case 67: // Key: F1
-		{
-			if(KeyEventInformation.IsDown() == true)
-			{
-				ActionOpenSaveGameDialog();
 			}
 			
 			break;

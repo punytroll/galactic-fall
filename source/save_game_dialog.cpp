@@ -103,11 +103,11 @@ void DirectoryEntryItem::OnMouseLeave(void)
 	}
 }
 
-SaveGameDialog::SaveGameDialog(Widget * SupWidget, Callback1< void, std::ostream & > SaveGameCallback) :
-	WWindow(SupWidget, "Save Game"),
-	m_SaveGameCallback(SaveGameCallback),
+SaveGameDialog::SaveGameDialog(Widget * SupWidget) :
+	Dialog(SupWidget),
 	m_SelectedDirectoryEntryItem(0)
 {
+	GetTitleLabel()->SetText("Save Game");
 	SetPosition(Vector2f(120.0f, 200.0f));
 	SetSize(Vector2f(300.0f, 400.0f));
 	ConnectKeyCallback(Callback(this, &SaveGameDialog::OnKey));
@@ -118,7 +118,7 @@ SaveGameDialog::SaveGameDialog(Widget * SupWidget, Callback1< void, std::ostream
 	m_OKButton->SetAnchorLeft(false);
 	m_OKButton->SetAnchorRight(true);
 	m_OKButton->SetAnchorTop(false);
-	m_OKButton->ConnectClickedCallback(Callback(this, &SaveGameDialog::OnOKClicked));
+	m_OKButton->ConnectClickedCallback(Bind1(Callback(dynamic_cast< Dialog * >(this), &SaveGameDialog::_Close), Dialog::OK_BUTTON));
 	
 	Label * OKButtonLabel(new Label(m_OKButton, "OK"));
 	
@@ -133,7 +133,7 @@ SaveGameDialog::SaveGameDialog(Widget * SupWidget, Callback1< void, std::ostream
 	m_CancelButton->SetAnchorLeft(false);
 	m_CancelButton->SetAnchorRight(true);
 	m_CancelButton->SetAnchorTop(false);
-	m_CancelButton->ConnectClickedCallback(Callback(this, &SaveGameDialog::OnCancelClicked));
+	m_CancelButton->ConnectClickedCallback(Bind1(Callback(dynamic_cast< Dialog * >(this), &SaveGameDialog::_Close), Dialog::CANCEL_BUTTON));
 	
 	Label * CancelButtonLabel(new Label(m_CancelButton, "Cancel"));
 	
@@ -168,28 +168,34 @@ SaveGameDialog::SaveGameDialog(Widget * SupWidget, Callback1< void, std::ostream
 	m_FileScrollBox->SetAnchorRight(true);
 	m_FileScrollBox->SetAnchorTop(true);
 	m_FileScrollBox->SetHorizontalScrollBarVisible(false);
-	
-	std::string Path(getenv("HOME"));
-	
-	if(IsExistingDirectory(Path) == false)
+}
+
+std::string SaveGameDialog::GetFilePath(void)
+{
+	if(m_FileNameLabel->GetText() == "")
 	{
-		ShowErrorMessage("Is not an existing directory: \"" + Path + "\".");
-		
-		return;
+		return "";
 	}
-	Path += "/.galactic-fall/";
-	if(IsExistingDirectory(Path) == false)
+	else
 	{
-		if(CreateDirectory(Path) == false)
-		{
-			ShowErrorMessage("Could not create the directory: \"" + Path + "\".");
-			
-			return;
-		}
+		return _DirectoryPath + '/' + m_FileNameLabel->GetText() + ".xml";
+	}
+}
+
+void SaveGameDialog::SetDirectoryPath(const std::string & DirectoryPath)
+{
+	_DirectoryPath = DirectoryPath;
+	while(m_FileScrollBox->GetContent()->GetSubWidgets().empty() == false)
+	{
+		m_FileScrollBox->GetContent()->GetSubWidgets().front()->Destroy();
+	}
+	if(IsExistingDirectory(_DirectoryPath) == false)
+	{
+		ShowErrorMessage("Is not an existing directory: \"" + _DirectoryPath + "\".");
 	}
 	
 	float Top(5.0f);
-	std::vector< std::string > Entries(GetDirectoryEntries(Path));
+	std::vector< std::string > Entries(GetDirectoryEntries(_DirectoryPath));
 	
 	for(std::vector< std::string >::iterator EntryIterator = Entries.begin(); EntryIterator != Entries.end(); ++EntryIterator)
 	{
@@ -202,7 +208,6 @@ SaveGameDialog::SaveGameDialog(Widget * SupWidget, Callback1< void, std::ostream
 		Top += 25.0f;
 	}
 	m_FileScrollBox->GetContent()->SetSize(Vector2f(m_FileScrollBox->GetView()->GetSize()[0], std::max(Top, m_FileScrollBox->GetView()->GetSize()[1])));
-	m_FileScrollBox->GetContent()->SetAnchorRight(true);
 }
 
 void SaveGameDialog::ShowErrorMessage(const std::string & ErrorMessage)
@@ -221,81 +226,52 @@ void SaveGameDialog::HideErrorMessage(void)
 	m_ErrorMessage->SetVisible(false);
 }
 
-bool SaveGameDialog::Save(void)
+void SaveGameDialog::_OnFileNameLabelTextChanged(void)
 {
-	std::string Path(getenv("HOME"));
-	
-	if(IsExistingDirectory(Path) == false)
+	if(m_SelectedDirectoryEntryItem != 0)
 	{
-		ShowErrorMessage("Is not an existing directory: \"" + Path + "\".");
-		
-		return false;
+		m_SelectedDirectoryEntryItem->SetSelected(false);
+		m_SelectedDirectoryEntryItem = 0;
 	}
-	Path += "/.galactic-fall/";
-	if(IsExistingDirectory(Path) == false)
+	
+	const std::list< Widget * > & ContentSubWidgets(m_FileScrollBox->GetContent()->GetSubWidgets());
+	
+	for(std::list< Widget * >::const_iterator ContentSubWidgetIterator = ContentSubWidgets.begin(); ContentSubWidgetIterator != ContentSubWidgets.end(); ++ContentSubWidgetIterator)
 	{
-		if(CreateDirectory(Path) == false)
+		DirectoryEntryItem * EntryLabel(dynamic_cast< DirectoryEntryItem * >(*ContentSubWidgetIterator));
+		
+		if(EntryLabel != 0)
 		{
-			ShowErrorMessage("Could not create the directory: \"" + Path + "\".");
-			
-			return false;
+			if(EntryLabel->GetCaption() == m_FileNameLabel->GetText())
+			{
+				m_SelectedDirectoryEntryItem = EntryLabel;
+				m_SelectedDirectoryEntryItem->SetSelected(true);
+				
+				return;
+			}
 		}
-	}
-	Path += m_FileNameLabel->GetText() + ".xml";
-	/// @todo check Path (doesn't exist, if exists overwrite if it's a file?)
-	
-	std::ofstream OFStream;
-	
-	OFStream.open(Path.c_str());
-	if(OFStream == false)
-	{
-		ShowErrorMessage("Could not create or write \"" + Path + "\".");
-		
-		return false;
-	}
-	else
-	{
-		m_SaveGameCallback(OFStream);
-		
-		return true;
-	}
-}
-
-void SaveGameDialog::OnCancelClicked(void)
-{
-	Destroy();
-}
-
-void SaveGameDialog::OnOKClicked(void)
-{
-	if(Save() == true)
-	{
-		Destroy();
 	}
 }
 
 bool SaveGameDialog::OnFileNameLabelKey(const KeyEventInformation & KeyEventInformation)
 {
+	if((KeyEventInformation.GetKeyCode() == 9 /* ESCAPE */) || (KeyEventInformation.GetKeyCode() == 36 /* RETURN */))
+	{
+		// do not eat RETURN or ESCAPE keys
+		return false;
+	}
 	if((KeyEventInformation.GetKeyCode() == 22 /* BACKSPACE */) && (KeyEventInformation.IsDown() == true))
 	{
 		if(m_FileNameLabel->GetText().length() > 0)
 		{
 			m_FileNameLabel->SetText(m_FileNameLabel->GetText().substr(0, m_FileNameLabel->GetText().length() - 1));
-		}
-	}
-	else if((KeyEventInformation.GetKeyCode() == 36 /* RETURN */) && (KeyEventInformation.IsDown() == true))
-	{
-		if(m_FileNameLabel->GetText().length() > 0)
-		{
-			if(Save() == true)
-			{
-				Destroy();
-			}
+			_OnFileNameLabelTextChanged();
 		}
 	}
 	else if((KeyEventInformation.GetString().empty() == false) && (KeyEventInformation.IsDown() == true))
 	{
 		m_FileNameLabel->SetText(m_FileNameLabel->GetText() + KeyEventInformation.GetString());
+		_OnFileNameLabelTextChanged();
 	}
 	
 	// eat all input
@@ -306,7 +282,13 @@ bool SaveGameDialog::OnKey(const KeyEventInformation & KeyEventInformation)
 {
 	if((KeyEventInformation.GetKeyCode() == 9 /* ESCAPE */) && (KeyEventInformation.IsDown() == true))
 	{
-		Destroy();
+		_Close(ESCAPE_KEY);
+		
+		return true;
+	}
+	else if((KeyEventInformation.GetKeyCode() == 36 /* RETURN */) && (KeyEventInformation.IsDown() == true))
+	{
+		_Close(RETURN_KEY);
 		
 		return true;
 	}
