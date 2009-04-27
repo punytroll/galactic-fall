@@ -36,6 +36,7 @@
 #include "asset_class.h"
 #include "battery.h"
 #include "battery_class.h"
+#include "button.h"
 #include "camera.h"
 #include "character.h"
 #include "class_manager.h"
@@ -64,6 +65,7 @@
 #include "key_event_information.h"
 #include "label.h"
 #include "load_game_dialog.h"
+#include "main_menu_window.h"
 #include "map_dialog.h"
 #include "map_knowledge.h"
 #include "math.h"
@@ -150,6 +152,7 @@ Label * g_CreditsLabel(0);
 Label * g_CurrentSystemLabel(0);
 Label * g_FuelLabel(0);
 Label * g_HullLabel(0);
+MainMenuWindow * g_MainMenuWindow(0);
 Label * g_MessageLabel(0);
 Widget * g_MiniMap(0);
 MiniMapDisplay * g_MiniMapDisplay(0);
@@ -163,7 +166,6 @@ Label * g_TimeWarpLabel(0);
 // global dialog pointers
 MapDialog * g_MapDialog(0);
 OutfitShipDialog * g_OutfitShipDialog(0);
-LoadGameDialog * g_LoadGameDialog(0);
 SaveGameDialog * g_SaveGameDialog(0);
 TimingDialog * g_TimingDialog(0);
 
@@ -1063,6 +1065,12 @@ void Resize(void)
 	g_UserInterface->GetRootWidget()->SetSize(Vector2f(g_Width, g_Height));
 }
 
+void OnMainMenuDestroying(void)
+{
+	g_MainMenuWindow = 0;
+	g_Pause = false;
+}
+
 void OnMapDialogDestroying(void)
 {
 	if((g_InputMind.IsValid() == true) && (g_InputMind->GetCharacter() != 0) && (g_InputMind->GetCharacter()->GetShip() != 0))
@@ -1087,12 +1095,6 @@ void OnOutfitShipDialogDestroying(void)
 void OnSaveGameDialogDestroying(void)
 {
 	g_SaveGameDialog = 0;
-	g_Pause = false;
-}
-
-void OnLoadGameDialogDestroying(void)
-{
-	g_LoadGameDialog = 0;
 	g_Pause = false;
 }
 
@@ -2294,57 +2296,6 @@ bool LoadGameFromResourcePath(const std::string & ResourcePath)
 	return LoadGameFromInputStream(SaveGameStringStream);
 }
 
-bool OnLoadGameDialogClosing(LoadGameDialog::ClosingReason ClosingReason)
-{
-	if((ClosingReason == LoadGameDialog::CANCEL_BUTTON) || (ClosingReason == LoadGameDialog::ESCAPE_KEY))
-	{
-		return true;
-	}
-	else if((ClosingReason == LoadGameDialog::OK_BUTTON) || (ClosingReason == LoadGameDialog::RETURN_KEY))
-	{
-		std::string FilePath(g_LoadGameDialog->GetFilePath());
-		
-		if(FilePath != "")
-		{
-			std::ifstream InputFileStream;
-	
-			InputFileStream.open(FilePath.c_str());
-			if(InputFileStream == false)
-			{
-				g_LoadGameDialog->ShowErrorMessage("Could not find or read \"" + FilePath + "\".");
-				
-				return false;
-			}
-			else
-			{
-				if(LoadGameFromInputStream(InputFileStream) == false)
-				{
-					g_LoadGameDialog->ShowErrorMessage("Loading the game file \"" + FilePath + "\" failed.");
-					
-					return false;
-				}
-				else
-				{
-					return true;
-				}
-			}
-		}
-		else
-		{
-			g_LoadGameDialog->ShowErrorMessage("You have not selected any file or entered a file name.");
-			
-			return false;
-		}
-	}
-	else
-	{
-		std::cerr << "Unknown closing reason '" << ClosingReason << "'." << std::endl;
-		assert(false);
-	}
-	
-	return false;
-}
-
 void SaveGame(std::ostream & OStream)
 {
 	XMLStream XML(OStream);
@@ -2680,24 +2631,25 @@ void ActionObservePreviousCharacter(void)
 	}
 }
 
-void ActionOpenLoadGameDialog(void)
+void ActionOpenMainMenuWindow(void)
 {
-	if(g_LoadGameDialog == 0)
+	if(g_MainMenuWindow == 0)
 	{
-		g_Pause = true;
-		g_LoadGameDialog = new LoadGameDialog(g_UserInterface->GetRootWidget());
-		g_LoadGameDialog->GrabKeyFocus();
-		g_LoadGameDialog->ConnectClosingCallback(Callback(OnLoadGameDialogClosing));
-		g_LoadGameDialog->ConnectDestroyingCallback(Callback(OnLoadGameDialogDestroying));
-		
-		std::string DirectoryPath(getenv("HOME"));
-		
-		DirectoryPath += "/.galactic-fall";
-		if(IsExistingDirectory(DirectoryPath) == false)
+		g_MainMenuWindow = new MainMenuWindow(g_UserInterface->GetRootWidget());
+		// crude heuristic: if we are not in a system, no game is running
+		if(g_CurrentSystem == 0)
 		{
-			CreateDirectory(DirectoryPath);
+			g_MainMenuWindow->GetResumeGameButton()->SetEnabled(false);
+			g_MainMenuWindow->GetSaveGameButton()->SetEnabled(false);
 		}
-		g_LoadGameDialog->SetDirectoryPath(DirectoryPath);
+		else
+		{
+			// always disable the "Save Game" button as it doesn't work yet
+			g_MainMenuWindow->GetSaveGameButton()->SetEnabled(false);
+		}
+		g_MainMenuWindow->SetPosition(Vector2f((g_Width - g_MainMenuWindow->GetSize()[0]) / 2.0f, (g_Height - g_MainMenuWindow->GetSize()[1]) / 2.0f));
+		g_MainMenuWindow->GrabKeyFocus();
+		g_MainMenuWindow->ConnectDestroyingCallback(Callback(OnMainMenuDestroying));
 	}
 }
 
@@ -2852,11 +2804,6 @@ void ActionSpawnRandomShip(void)
 	SpawnShip(g_CurrentSystem, IdentifierPrefix.str());
 }
 
-void ActionStartNewGame(void)
-{
-	LoadGameFromResourcePath("/Savegames/Default");
-}
-
 void ActionTakeScreenShot(void)
 {
 	g_TakeScreenShot = true;
@@ -2944,7 +2891,7 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			if(KeyEventInformation.IsDown() == true)
 			{
-				ActionQuitGameLoop();
+				ActionOpenMainMenuWindow();
 			}
 			
 			break;
@@ -3183,24 +3130,6 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 			if(KeyEventInformation.IsDown() == true)
 			{
 				ActionOpenSaveGameDialog();
-			}
-			
-			break;
-		}
-	case 68: // Key: F2
-		{
-			if(KeyEventInformation.IsDown() == true)
-			{
-				ActionOpenLoadGameDialog();
-			}
-			
-			break;
-		}
-	case 69: // Key: F3
-		{
-			if(KeyEventInformation.IsDown() == true)
-			{
-				ActionStartNewGame();
 			}
 			
 			break;
@@ -3625,6 +3554,11 @@ int main(int argc, char ** argv)
 		{
 			return 1;
 		}
+	}
+	else
+	{
+		assert(g_MainMenuWindow == 0);
+		ActionOpenMainMenuWindow();
 	}
 	
 	// main loop

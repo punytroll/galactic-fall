@@ -6,7 +6,7 @@ The number is the actual key code that is bound. In paranthesis a description of
 On key down:
 
 9 (ESCAPE)
-	Quits the application immediately.
+	Brings up the main menu window.
 
 22 (BACKSPACE)
 	Will delete the ship that belongs to the input mind. If no input mind is selected the ship that belongs to the output mind will be deleted.
@@ -99,12 +99,6 @@ On key down:
 
 67 (F1)
 	Opens the "Save Game" dialog.
-
-68 (F2)
-	Opens the "Load Game" dialog.
-
-69 (F3)
-	Starts a new game.
 
 74 (F8)
 	Opens up an object information dialog for the galaxy object for debugging purposes.
