@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006  Hagen Möbius
+ * Copyright (C) 2009  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,42 +17,36 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef WINDOW_H
-#define WINDOW_H
+#ifndef DIALOG_H
+#define DIALOG_H
 
-#include "widget.h"
+#include "window.h"
 
-class Border;
-class Label;
+template < typename ReturnType, typename Argument1Type >
+class Callback1;
 
-class WWindow : public Widget
+class Dialog : public WWindow
 {
 public:
-	WWindow(Widget * SupWidget, const std::string & Title = "");
-	// getters
-	Border * GetBorder(void);
-	Label * GetTitleLabel(void);
+	enum ClosingReason
+	{
+		OK_BUTTON,
+		CANCEL_BUTTON,
+		RETURN_KEY,
+		ESCAPE_KEY
+	};
+	// constructors & destructor
+	Dialog(Widget * SupWidget);
+	// connecting and disconnecting event callbacks
+	ConnectionHandle ConnectClosingCallback(Callback1< bool, Dialog::ClosingReason > Callback);
+	void DisconnectClosingCallback(ConnectionHandle & ConnectionHandle);
+protected:
+	// helper functions and actions
+	void _Close(Dialog::ClosingReason ClosingReason);
 private:
-	// callbacks
-	bool OnTitleLabelMouseButton(int Button, int State, float X, float Y);
-	void OnTitleLabelMouseMoved(float X, float Y);
-	bool OnResizeDragBoxMouseButton(int Button, int State, float X, float Y);
-	void OnResizeDragBoxMouseMoved(float X, float Y);
 	// member variables
-	Border * m_Border;
-	Label * m_TitleLabel;
-	Widget * m_ResizeDragBox;
-	Vector2f m_GrabPosition;
+	//events
+	Event1< bool, Dialog::ClosingReason > _ClosingEvent;
 };
-
-inline Border * WWindow::GetBorder(void)
-{
-	return m_Border;
-}
-
-inline Label * WWindow::GetTitleLabel(void)
-{
-	return m_TitleLabel;
-}
 
 #endif

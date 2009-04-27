@@ -97,9 +97,6 @@ On key down:
 	Turns on firing mode of the controlled ship.
 	Acts upon InputMind.Character.Ship.
 
-67 (F1)
-	Opens the "Save Game" dialog.
-
 74 (F8)
 	Opens up an object information dialog for the galaxy object for debugging purposes.
 

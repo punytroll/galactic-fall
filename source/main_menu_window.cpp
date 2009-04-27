@@ -27,21 +27,25 @@
 #include "label.h"
 #include "load_game_dialog.h"
 #include "main_menu_window.h"
+#include "save_game_dialog.h"
 
 // these functions are defined in main.cpp
+void ActionQuitGameLoop(void);
 bool LoadGameFromInputStream(std::istream & InputStream);
 bool LoadGameFromResourcePath(const std::string & ResourcePath);
-void ActionQuitGameLoop(void);
+void SaveGame(std::ostream & OStream);
 
 MainMenuWindow::MainMenuWindow(Widget * SupWidget) :
 	WWindow(SupWidget, "Galactic Fall"),
 	_DestroyOnLoadGameDialogDestroy(false),
+	_DestroyOnSaveGameDialogDestroy(false),
 	_LoadGameButton(0),
 	_LoadGameDialog(0),
 	_NewGameButton(0),
 	_QuitButton(0),
 	_ResumeGameButton(0),
-	_SaveGameButton(0)
+	_SaveGameButton(0),
+	_SaveGameDialog(0)
 {
 	ConnectKeyCallback(Callback(this, &MainMenuWindow::_OnKey));
 	SetSize(Vector2f(200.0f, 260.0f));
@@ -184,13 +188,13 @@ void MainMenuWindow::_OnLoadGameButtonClicked(void)
 	}
 }
 
-bool MainMenuWindow::_OnLoadGameDialogClosing(LoadGameDialog::ClosingReason ClosingReason)
+bool MainMenuWindow::_OnLoadGameDialogClosing(Dialog::ClosingReason ClosingReason)
 {
-	if((ClosingReason == LoadGameDialog::CANCEL_BUTTON) || (ClosingReason == LoadGameDialog::ESCAPE_KEY))
+	if((ClosingReason == Dialog::CANCEL_BUTTON) || (ClosingReason == Dialog::ESCAPE_KEY))
 	{
 		return true;
 	}
-	else if((ClosingReason == LoadGameDialog::OK_BUTTON) || (ClosingReason == LoadGameDialog::RETURN_KEY))
+	else if((ClosingReason == Dialog::OK_BUTTON) || (ClosingReason == Dialog::RETURN_KEY))
 	{
 		std::string FilePath(_LoadGameDialog->GetFilePath());
 		
@@ -259,7 +263,77 @@ void MainMenuWindow::_OnResumeGameButtonClicked(void)
 
 void MainMenuWindow::_OnSaveGameButtonClicked(void)
 {
-	Destroy();
+	if(_SaveGameDialog == 0)
+	{
+		_SaveGameDialog = new SaveGameDialog(GetRootWidget());
+		_SaveGameDialog->GrabKeyFocus();
+		_SaveGameDialog->ConnectClosingCallback(Callback(this, &MainMenuWindow::_OnSaveGameDialogClosing));
+		_SaveGameDialog->ConnectDestroyingCallback(Callback(this, &MainMenuWindow::_OnSaveGameDialogDestroying));
+		
+		std::string DirectoryPath(getenv("HOME"));
+		
+		DirectoryPath += "/.galactic-fall";
+		if(IsExistingDirectory(DirectoryPath) == false)
+		{
+			CreateDirectory(DirectoryPath);
+		}
+		_SaveGameDialog->SetDirectoryPath(DirectoryPath);
+		_DestroyOnSaveGameDialogDestroy = false;
+	}
+}
+
+bool MainMenuWindow::_OnSaveGameDialogClosing(Dialog::ClosingReason ClosingReason)
+{
+	if((ClosingReason == Dialog::CANCEL_BUTTON) || (ClosingReason == Dialog::ESCAPE_KEY))
+	{
+		return true;
+	}
+	else if((ClosingReason == Dialog::OK_BUTTON) || (ClosingReason == Dialog::RETURN_KEY))
+	{
+		std::string FilePath(_SaveGameDialog->GetFilePath());
+		
+		if(FilePath != "")
+		{
+			std::ofstream OutputFileStream;
+	
+			OutputFileStream.open(FilePath.c_str());
+			if(OutputFileStream == false)
+			{
+				_SaveGameDialog->ShowErrorMessage("Could not find or write to \"" + FilePath + "\".");
+				
+				return false;
+			}
+			else
+			{
+				SaveGame(OutputFileStream);
+				_DestroyOnSaveGameDialogDestroy = true;
+				
+				return true;
+			}
+		}
+		else
+		{
+			_SaveGameDialog->ShowErrorMessage("You have not selected any file .");
+			
+			return false;
+		}
+	}
+	else
+	{
+		std::cerr << "Unknown closing reason '" << ClosingReason << "'." << std::endl;
+		assert(false);
+	}
+	
+	return false;
+}
+
+void MainMenuWindow::_OnSaveGameDialogDestroying(void)
+{
+	_SaveGameDialog = 0;
+	if(_DestroyOnSaveGameDialogDestroy == true)
+	{
+		Destroy();
+	}
 }
 
 void MainMenuWindow::_OnQuitButtonClicked(void)

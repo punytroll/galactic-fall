@@ -51,9 +51,10 @@ private:
 };
 
 LoadGameDialog::LoadGameDialog(Widget * SupWidget) :
-	WWindow(SupWidget, "Load Game"),
+	Dialog(SupWidget),
 	m_SelectedDirectoryEntryItem(0)
 {
+	GetTitleLabel()->SetText("Load Game");
 	SetPosition(Vector2f(120.0f, 200.0f));
 	SetSize(Vector2f(300.0f, 400.0f));
 	ConnectKeyCallback(Callback(this, &LoadGameDialog::OnKey));
@@ -64,7 +65,7 @@ LoadGameDialog::LoadGameDialog(Widget * SupWidget) :
 	m_OKButton->SetAnchorLeft(false);
 	m_OKButton->SetAnchorRight(true);
 	m_OKButton->SetAnchorTop(false);
-	m_OKButton->ConnectClickedCallback(Bind1(Callback(this, &LoadGameDialog::_Close), LoadGameDialog::OK_BUTTON));
+	m_OKButton->ConnectClickedCallback(Bind1(Callback(dynamic_cast< Dialog * >(this), &LoadGameDialog::_Close), Dialog::OK_BUTTON));
 	
 	Label * OKButtonLabel(new Label(m_OKButton, "OK"));
 	
@@ -79,7 +80,7 @@ LoadGameDialog::LoadGameDialog(Widget * SupWidget) :
 	m_CancelButton->SetAnchorLeft(false);
 	m_CancelButton->SetAnchorRight(true);
 	m_CancelButton->SetAnchorTop(false);
-	m_CancelButton->ConnectClickedCallback(Bind1(Callback(this, &LoadGameDialog::_Close), LoadGameDialog::CANCEL_BUTTON));
+	m_CancelButton->ConnectClickedCallback(Bind1(Callback(dynamic_cast< Dialog * >(this), &LoadGameDialog::_Close), Dialog::CANCEL_BUTTON));
 	
 	Label * CancelButtonLabel(new Label(m_CancelButton, "Cancel"));
 	
@@ -156,16 +157,6 @@ void LoadGameDialog::SetDirectoryPath(const std::string & DirectoryPath)
 	m_FileScrollBox->GetContent()->SetSize(Vector2f(m_FileScrollBox->GetView()->GetSize()[0], std::max(Top, m_FileScrollBox->GetView()->GetSize()[1])));
 }
 
-ConnectionHandle LoadGameDialog::ConnectClosingCallback(Callback1< bool, LoadGameDialog::ClosingReason > Callback)
-{
-	return _ClosingEvent.Connect(Callback);
-}
-
-void LoadGameDialog::DisconnectClosingCallback(ConnectionHandle & ConnectionHandle)
-{
-	_ClosingEvent.Disconnect(ConnectionHandle);
-}
-
 void LoadGameDialog::ShowErrorMessage(const std::string & ErrorMessage)
 {
 	if(m_ErrorMessageTimeoutNotification.IsValid() == true)
@@ -180,20 +171,6 @@ void LoadGameDialog::ShowErrorMessage(const std::string & ErrorMessage)
 void LoadGameDialog::HideErrorMessage(void)
 {
 	m_ErrorMessage->SetVisible(false);
-}
-
-void LoadGameDialog::_Close(LoadGameDialog::ClosingReason ClosingReason)
-{
-	bool CallDestroy(true);
-	
-	for(Event1< bool, LoadGameDialog::ClosingReason >::CallbackIterator CallbackIterator = _ClosingEvent.GetCallbackIterator(); CallbackIterator.IsValid() == true; ++CallbackIterator)
-	{
-		CallDestroy &= CallbackIterator(ClosingReason);
-	}
-	if(CallDestroy == true)
-	{
-		Destroy();
-	}
 }
 
 void LoadGameDialog::_OnFileNameLabelTextChanged(void)
