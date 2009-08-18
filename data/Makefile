@@ -2,6 +2,8 @@ root = ..
 
 -include $(root)/configuration
 
+default: all
+
 include $(root)/tools/raw_to_littlem/Makefile.include
 include $(root)/tools/xml_to_data/Makefile.include
 
@@ -87,8 +89,6 @@ declarations_xml = \
 
 littlem_to_xml_xsl = \
 	tools/littlem_to_xml.xsl
-
-default: all
 
 all: all-recursive
 
