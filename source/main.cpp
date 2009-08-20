@@ -192,6 +192,7 @@ bool g_DumpEndReport(false);
 bool g_TakeScreenShot(false);
 ResourceReader * g_ResourceReader(0);
 Settings * g_Settings(0);
+void (*g_KeyboardLookupTable[128][2])(void);
 
 int WantToJump(Ship * Ship, System * TargetSystem)
 {
@@ -2667,7 +2668,7 @@ void ActionOpenObjectInformationDialog(void)
 	Dialog->GrabKeyFocus();
 }
 
-void ActionOutfitShip(void)
+void ActionOpenOutfitShipDialog(void)
 {
 	if((g_OutfitShipDialog == 0) && (g_CharacterObserver->GetObservedCharacter().IsValid() == true))
 	{
@@ -2687,7 +2688,7 @@ void ActionQuitGameLoop(void)
 	g_Quit = true;
 }
 
-void ActionQuitGameLoopAndDumpObjectReport(void)
+void ActionQuitGameAndDumpObjectReport(void)
 {
 	g_DumpEndReport = true;
 	g_Quit = true;
@@ -2861,356 +2862,21 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 	{
 		return;
 	}
-	switch(KeyEventInformation.GetKeyCode())
+	if((KeyEventInformation.GetKeyCode() >= 0) && (KeyEventInformation.GetKeyCode() < 127))
 	{
-	case 9:  // Key: ESCAPE
+		int EventIndex = -1;
+		
+		if(KeyEventInformation.IsDown() == true)
 		{
-			if(KeyEventInformation.IsDown() == true)
-			{
-				ActionOpenMainMenuWindow();
-			}
-			
-			break;
+			EventIndex = 0;
 		}
-	case 22: // Key: BACKSPACE
+		else
 		{
-			if(KeyEventInformation.IsDown() == true)
-			{
-				ActionDeleteObservedObject();
-			}
-			
-			break;
+			EventIndex = 1;
 		}
-	case 23: // Key: TABULATOR
+		if(g_KeyboardLookupTable[KeyEventInformation.GetKeyCode()][EventIndex] != 0)
 		{
-			if(KeyEventInformation.IsDown() == true)
-			{
-				ActionRefuel();
-			}
-			
-			break;
-		}
-	case 24: // Key: Q
-		{
-			if(KeyEventInformation.IsDown() == true)
-			{
-				ActionQuitGameLoopAndDumpObjectReport();
-			}
-			
-			break;
-		}
-	case 25: // Key: W
-		{
-			if(KeyEventInformation.IsDown() == true)
-			{
-				ActionOutfitShip();
-			}
-			
-			break;
-		}
-	case 26: // Key: E
-		{
-			if(KeyEventInformation.IsDown() == true)
-			{
-				ActionTargetPreviousShip();
-			}
-			
-			break;
-		}
-	case 27: // Key: R
-		{
-			if(KeyEventInformation.IsDown() == true)
-			{
-				ActionTargetNextShip();
-			}
-			
-			break;
-		}
-	case 32: // Key: O
-		{
-			if(KeyEventInformation.IsDown() == true)
-			{
-				ActionTargetPreviousPlanet();
-			}
-			
-			break;
-		}
-	case 33: // Key: P
-		{
-			if(KeyEventInformation.IsDown() == true)
-			{
-				ActionTargetNextPlanet();
-			}
-			
-			break;
-		}
-	case 34: // Key: [
-		{
-			if(KeyEventInformation.IsDown() == true)
-			{
-				ActionFocusCameraOnPreviousShip();
-			}
-			
-			break;
-		}
-	case 35: // Key: ]
-		{
-			if(KeyEventInformation.IsDown() == true)
-			{
-				ActionFocusCameraOnNextShip();
-			}
-			
-			break;
-		}
-	case 37: // Key: LEFT CONTROL
-		{
-			if(KeyEventInformation.IsDown() == true)
-			{
-				ActionSpawnFighter();
-			}
-			
-			break;
-		}
-	case 38: // Key: A
-		{
-			if(KeyEventInformation.IsDown() == true)
-			{
-				ActionTargetNearestCargo();
-			}
-			
-			break;
-		}
-	case 39: // Key: S
-		{
-			if(KeyEventInformation.IsDown() == true)
-			{
-				ActionScoop();
-			}
-			
-			break;
-		}
-	case 40: // Key: D
-		{
-			if(KeyEventInformation.IsDown() == true)
-			{
-				ActionTargetPreviousCargo();
-			}
-			
-			break;
-		}
-	case 41: // Key: F
-		{
-			if(KeyEventInformation.IsDown() == true)
-			{
-				ActionTargetNextCargo();
-			}
-			
-			break;
-		}
-	case 44: // Key: J
-		{
-			if(KeyEventInformation.IsDown() == true)
-			{
-				ActionJump();
-			}
-			
-			break;
-		}
-	case 46: // Key: L
-		{
-			if(KeyEventInformation.IsDown() == true)
-			{
-				ActionLand();
-			}
-			
-			break;
-		}
-	case 50: // Key: LEFT SHIFT
-		{
-			if(KeyEventInformation.IsDown() == true)
-			{
-				ActionSpawnRandomShip();
-			}
-			
-			break;
-		}
-	case 54: // Key: C
-		{
-			if(KeyEventInformation.IsDown() == true)
-			{
-				ActionJettisonCargo();
-			}
-			
-			break;
-		}
-	case 57: // Key: N
-		{
-			if(KeyEventInformation.IsDown() == true)
-			{
-				ActionSelectNextLinkedSystem();
-			}
-			
-			break;
-		}
-	case 58: // Key: M
-		{
-			if(KeyEventInformation.IsDown() == true)
-			{
-				ActionOpenMapDialog();
-			}
-			
-			break;
-		}
-	case 59: // Key: COMMA
-		{
-			if(KeyEventInformation.IsDown() == true)
-			{
-				ActionReduceTimeWarp();
-			}
-			
-			break;
-		}
-	case 60: // Key: PERIODE
-		{
-			if(KeyEventInformation.IsDown() == true)
-			{
-				ActionAugmentTimeWarp();
-			}
-			
-			break;
-		}
-	case 61: // Key: SLASH
-		{
-			if(KeyEventInformation.IsDown() == true)
-			{
-				ActionResetTimeWarp();
-			}
-			
-			break;
-		}
-	case 65: // Key: SPACE
-		{
-			if(KeyEventInformation.IsDown() == true)
-			{
-				ActionEnableFire();
-			}
-			else
-			{
-				ActionDisableFire();
-			}
-			
-			break;
-		}
-	case 74: // Key: F8
-		{
-			if(KeyEventInformation.IsDown() == true)
-			{
-				ActionOpenObjectInformationDialog();
-			}
-			
-			break;
-		}
-	case 75: // Key: F9
-		{
-			if(KeyEventInformation.IsDown() == true)
-			{
-				ActionDumpObjectReport();
-			}
-			
-			break;
-		}
-	case 76: // Key: F10
-		{
-			if(KeyEventInformation.IsDown() == true)
-			{
-				ActionTakeScreenShot();
-			}
-			
-			break;
-		}
-	case 95: // Key: F11
-		{
-			if(KeyEventInformation.IsDown() == true)
-			{
-				ActionPurgeGame();
-			}
-			
-			break;
-		}
-	case 96: // Key: F12
-		{
-			if(KeyEventInformation.IsDown() == true)
-			{
-				ActionToggleTimingDialog();
-			}
-			
-			break;
-		}
-	case 97: // Key: HOME
-		{
-			if(KeyEventInformation.IsDown() == true)
-			{
-				ActionResetCameraPosition();
-			}
-			
-			break;
-		}
-	case 98: // Key: UP
-		{
-			if(KeyEventInformation.IsDown() == true)
-			{
-				ActionEnableAccelerate();
-			}
-			else
-			{
-				ActionDisableAccelerate();
-			}
-			
-			break;
-		}
-	case 99: // Key: PAGE UP
-		{
-			if(KeyEventInformation.IsDown() == true)
-			{
-				ActionObservePreviousCharacter();
-			}
-			
-			break;
-		}
-	case 100: // Key: LEFT
-		{
-			if(KeyEventInformation.IsDown() == true)
-			{
-				ActionEnableTurnLeft();
-			}
-			else
-			{
-				ActionDisableTurnLeft();
-			}
-			
-			break;
-		}
-	case 102: // Key: RIGHT
-		{
-			if(KeyEventInformation.IsDown() == true)
-			{
-				ActionEnableTurnRight();
-			}
-			else
-			{
-				ActionDisableTurnRight();
-			}
-			
-			break;
-		}
-	case 105: // Key: PAGE DOWN
-		{
-			if(KeyEventInformation.IsDown() == true)
-			{
-				ActionObserveNextCharacter();
-			}
-			
-			break;
+			g_KeyboardLookupTable[KeyEventInformation.GetKeyCode()][EventIndex]();
 		}
 	}
 }
@@ -3381,6 +3047,214 @@ void DestroyWindow(void)
 	g_Display = 0;
 }
 
+void LoadKeyboardLookupTable(const std::list< Settings::KeyBinding > * KeyBindings)
+{
+	assert(KeyBindings != 0);
+	assert(g_KeyboardLookupTable != 0);
+	for(int Index = 0; Index < 128; ++Index)
+	{
+		g_KeyboardLookupTable[Index][0] = 0;
+		g_KeyboardLookupTable[Index][1] = 0;
+	}
+	for(std::list< Settings::KeyBinding >::const_iterator KeyBindingIterator = KeyBindings->begin(); KeyBindingIterator != KeyBindings->end(); ++KeyBindingIterator)
+	{
+		if((KeyBindingIterator->Code >= 0) && (KeyBindingIterator->Code < 128))
+		{
+			int EventIndex = -1;
+			
+			if(KeyBindingIterator->Event == "down")
+			{
+				EventIndex = 0;
+			}
+			else if(KeyBindingIterator->Event == "up")
+			{
+				EventIndex = 1;
+			}
+			if(EventIndex != -1)
+			{
+				if(KeyBindingIterator->Action == "augment_time_warp")
+				{
+					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionAugmentTimeWarp;
+				}
+				else if(KeyBindingIterator->Action == "delete_observed_object")
+				{
+					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionDeleteObservedObject;
+				}
+				else if(KeyBindingIterator->Action == "disable_accelerate")
+				{
+					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionDisableAccelerate;
+				}
+				else if(KeyBindingIterator->Action == "disable_fire")
+				{
+					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionDisableFire;
+				}
+				else if(KeyBindingIterator->Action == "disable_turn_left")
+				{
+					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionDisableTurnLeft;
+				}
+				else if(KeyBindingIterator->Action == "disable_turn_right")
+				{
+					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionDisableTurnRight;
+				}
+				else if(KeyBindingIterator->Action == "dump_object_report")
+				{
+					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionDumpObjectReport;
+				}
+				else if(KeyBindingIterator->Action == "enable_accelerate")
+				{
+					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionEnableAccelerate;
+				}
+				else if(KeyBindingIterator->Action == "enable_fire")
+				{
+					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionEnableFire;
+				}
+				else if(KeyBindingIterator->Action == "enable_turn_left")
+				{
+					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionEnableTurnLeft;
+				}
+				else if(KeyBindingIterator->Action == "enable_turn_right")
+				{
+					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionEnableTurnRight;
+				}
+				else if(KeyBindingIterator->Action == "focus_camera_on_next_ship")
+				{
+					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionFocusCameraOnNextShip;
+				}
+				else if(KeyBindingIterator->Action == "focus_camera_on_previous_ship")
+				{
+					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionFocusCameraOnPreviousShip;
+				}
+				else if(KeyBindingIterator->Action == "jettison_cargo")
+				{
+					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionJettisonCargo;
+				}
+				else if(KeyBindingIterator->Action == "jump")
+				{
+					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionJump;
+				}
+				else if(KeyBindingIterator->Action == "land")
+				{
+					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionLand;
+				}
+				else if(KeyBindingIterator->Action == "observe_next_character")
+				{
+					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionObserveNextCharacter;
+				}
+				else if(KeyBindingIterator->Action == "observe_previous_character")
+				{
+					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionObservePreviousCharacter;
+				}
+				else if(KeyBindingIterator->Action == "open_main_menu_window")
+				{
+					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionOpenMainMenuWindow;
+				}
+				else if(KeyBindingIterator->Action == "open_map_dialog")
+				{
+					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionOpenMapDialog;
+				}
+				else if(KeyBindingIterator->Action == "open_object_information_dialog")
+				{
+					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionOpenObjectInformationDialog;
+				}
+				else if(KeyBindingIterator->Action == "open_outfit_ship_dialog")
+				{
+					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionOpenOutfitShipDialog;
+				}
+				else if(KeyBindingIterator->Action == "purge_game")
+				{
+					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionPurgeGame;
+				}
+				else if(KeyBindingIterator->Action == "quit_game_and_dump_object_report")
+				{
+					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionQuitGameAndDumpObjectReport;
+				}
+				else if(KeyBindingIterator->Action == "reduce_time_warp")
+				{
+					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionReduceTimeWarp;
+				}
+				else if(KeyBindingIterator->Action == "refuel")
+				{
+					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionRefuel;
+				}
+				else if(KeyBindingIterator->Action == "reset_camera_position")
+				{
+					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionResetCameraPosition;
+				}
+				else if(KeyBindingIterator->Action == "reset_time_warp")
+				{
+					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionResetTimeWarp;
+				}
+				else if(KeyBindingIterator->Action == "scoop")
+				{
+					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionScoop;
+				}
+				else if(KeyBindingIterator->Action == "spawn_fighter")
+				{
+					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionSpawnFighter;
+				}
+				else if(KeyBindingIterator->Action == "take_screen_shot")
+				{
+					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionTakeScreenShot;
+				}
+				else if(KeyBindingIterator->Action == "target_nearest_cargo")
+				{
+					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionTargetNearestCargo;
+				}
+				else if(KeyBindingIterator->Action == "target_next_cargo")
+				{
+					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionTargetNextCargo;
+				}
+				else if(KeyBindingIterator->Action == "target_next_planet")
+				{
+					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionTargetNextPlanet;
+				}
+				else if(KeyBindingIterator->Action == "target_next_ship")
+				{
+					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionTargetNextShip;
+				}
+				else if(KeyBindingIterator->Action == "target_previous_cargo")
+				{
+					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionTargetPreviousCargo;
+				}
+				else if(KeyBindingIterator->Action == "target_previous_planet")
+				{
+					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionTargetPreviousPlanet;
+				}
+				else if(KeyBindingIterator->Action == "target_previous_ship")
+				{
+					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionTargetPreviousShip;
+				}
+				else if(KeyBindingIterator->Action == "toggle_timing_dialog")
+				{
+					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionToggleTimingDialog;
+				}
+				else if(KeyBindingIterator->Action == "select_next_linked_system")
+				{
+					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionSelectNextLinkedSystem;
+				}
+				else if(KeyBindingIterator->Action == "spawn_random_ship")
+				{
+					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionSpawnRandomShip;
+				}
+				else
+				{
+					throw std::runtime_error("The action '" + KeyBindingIterator->Action + "' is unknown.");
+				}
+			}
+		}
+	}
+}
+
+void PrintSettings(void)
+{
+	std::cout << "  - Window Dimensions = " << g_Settings->GetWindowDimensions()->m_V.m_A[0] << " x " << g_Settings->GetWindowDimensions()->m_V.m_A[1] << std::endl;
+	std::cout << "  - Key Binding Profile =" << std::endl;
+	for(std::list< Settings::KeyBinding >::const_iterator KeyBindingIterator = g_Settings->GetKeyBindings()->begin(); KeyBindingIterator != g_Settings->GetKeyBindings()->end(); ++KeyBindingIterator)
+	{
+		std::cout << "      Code=" << KeyBindingIterator->Code << "  Event=" << KeyBindingIterator->Event << "  Action=" << KeyBindingIterator->Action << std::endl;
+	}
+}
+
 int main(int argc, char ** argv)
 {
 	// setup the random number generator for everyday use
@@ -3430,7 +3304,7 @@ int main(int argc, char ** argv)
 	ON_DEBUG(std::cout << "Reading the settings from the game archive." << std::endl);
 	g_Settings = new Settings();
 	g_ResourceReader->ReadSettings(g_Settings);
-	ON_DEBUG(std::cout << "  - Window Dimensions = " << g_Settings->GetWindowDimensions()->m_V.m_A[0] << " x " << g_Settings->GetWindowDimensions()->m_V.m_A[1] << std::endl);
+	ON_DEBUG(PrintSettings());
 	
 	// set up the timeout notification manager
 	g_GameTimeTimeoutNotifications = new TimeoutNotificationManager();
@@ -3527,6 +3401,9 @@ int main(int argc, char ** argv)
 		assert(g_MainMenuWindow == 0);
 		ActionOpenMainMenuWindow();
 	}
+	
+	// transform the key binding profile from the settings into a lookup table for fast execution
+	LoadKeyboardLookupTable(g_Settings->GetKeyBindings());
 	
 	// main loop
 	ON_DEBUG(std::cout << "Entering game loop." << std::endl);

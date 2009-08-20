@@ -30,18 +30,36 @@ namespace Arxx
 class Settings
 {
 public:
+	struct KeyBinding
+	{
+		// constructor
+		KeyBinding(int Code, const std::string & Event, const std::string & Action);
+		// fields
+		std::string Action;
+		int Code;
+		std::string Event;
+	};
+	
 	// constructor and destructor
 	Settings(void);
 	~Settings(void);
 	// getters
+	const std::list< Settings::KeyBinding > * const GetKeyBindings(void) const;
 	const Vector2f * const GetWindowDimensions(void) const;
 	// setters
+	void SetKeyBindings(const std::list< Settings::KeyBinding > & KeyBindings);
 	void SetWindowDimensions(const Vector2f & WindowDimensions);
 	// modifiers
 	void LoadFromItem(Arxx::Item * Item);
 private:
+	std::list< Settings::KeyBinding > * _KeyBindings;
 	Vector2f * _WindowDimensions;
 };
+
+inline const std::list< Settings::KeyBinding > * const Settings::GetKeyBindings(void) const
+{
+	return _KeyBindings;
+}
 
 inline const Vector2f * const Settings::GetWindowDimensions(void) const
 {

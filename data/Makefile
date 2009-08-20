@@ -61,6 +61,7 @@ all_data = \
 	.data/model_planet.data \
 	.data/model_shuttle.data \
 	.data/model_transporter.data \
+	.data/setting_key_binding_profile.data \
 	.data/setting_window_dimensions.data \
 	.data/ship_class_shuttle.data \
 	.data/ship_class_transporter.data \
@@ -188,6 +189,7 @@ data.arx: $(data_arx)
 	arxmod $@ 10 -n "Savegames" -t 0 -st 0
 	arxmod $@ 0 -a "child" 10
 	@echo -e "\n\nAdding settings ...\n"
+	arxadd $@ --$(data_location) --name "Key Binding Profile" --type 10 --subtype 0 --add "/Settings" .data/setting_key_binding_profile.data
 	arxadd $@ --$(data_location) --name "Window Dimensions" --type f --subtype 1 --add "/Settings" .data/setting_window_dimensions.data
 	@echo -e "\n\nAdding factions ...\n"
 	arxadd $@ --$(data_location) --name "Earth Faction" --type e --subtype 0 --add "/Factions" .data/faction_earth.data

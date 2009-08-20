@@ -1,0 +1,250 @@
+<key-binding-profile>
+	<key-bindings>
+		<!-- ESCAPE: open main menu window -->
+		<key-binding>
+			<code>9</code>
+			<event>down</event>
+			<action>open_main_menu_window</action>
+		</key-binding>
+		<!-- BACKSPACE: delete observed object -->
+		<key-binding>
+			<code>22</code>
+			<event>down</event>
+			<action>delete_observed_object</action>
+		</key-binding>
+		<!-- TABULATOR: refuel -->
+		<key-binding>
+			<code>23</code>
+			<event>down</event>
+			<action>refuel</action>
+		</key-binding>
+		<!-- Q: quit game and dump object report -->
+		<key-binding>
+			<code>24</code>
+			<event>down</event>
+			<action>quit_game_and_dump_object_report</action>
+		</key-binding>
+		<!-- W: open outfit ship dialog -->
+		<key-binding>
+			<code>25</code>
+			<event>down</event>
+			<action>open_outfit_ship_dialog</action>
+		</key-binding>
+		<!-- E: target previous ship -->
+		<key-binding>
+			<code>26</code>
+			<event>down</event>
+			<action>target_previous_ship</action>
+		</key-binding>
+		<!-- R: target next ship -->
+		<key-binding>
+			<code>27</code>
+			<event>down</event>
+			<action>target_next_ship</action>
+		</key-binding>
+		<!-- O: target previous planet -->
+		<key-binding>
+			<code>32</code>
+			<event>down</event>
+			<action>target_previous_planet</action>
+		</key-binding>
+		<!-- P: target next planet -->
+		<key-binding>
+			<code>33</code>
+			<event>down</event>
+			<action>target_next_planet</action>
+		</key-binding>
+		<!-- [: focus camera on previous ship -->
+		<key-binding>
+			<code>34</code>
+			<event>down</event>
+			<action>focus_camera_on_previous_ship</action>
+		</key-binding>
+		<!-- ]: focus camera on next ship -->
+		<key-binding>
+			<code>35</code>
+			<event>down</event>
+			<action>focus_camera_on_next_ship</action>
+		</key-binding>
+		<!-- LEFT CONTROL: spawn fighter -->
+		<key-binding>
+			<code>37</code>
+			<event>down</event>
+			<action>spawn_fighter</action>
+		</key-binding>
+		<!-- A: target nearest cargo -->
+		<key-binding>
+			<code>38</code>
+			<event>down</event>
+			<action>target_nearest_cargo</action>
+		</key-binding>
+		<!-- S: scoop -->
+		<key-binding>
+			<code>39</code>
+			<event>down</event>
+			<action>scoop</action>
+		</key-binding>
+		<!-- D: target previous cargo -->
+		<key-binding>
+			<code>40</code>
+			<event>down</event>
+			<action>target_previous_cargo</action>
+		</key-binding>
+		<!-- F: target next cargo -->
+		<key-binding>
+			<code>41</code>
+			<event>down</event>
+			<action>target_next_cargo</action>
+		</key-binding>
+		<!-- J: jump -->
+		<key-binding>
+			<code>44</code>
+			<event>down</event>
+			<action>jump</action>
+		</key-binding>
+		<!-- L: land -->
+		<key-binding>
+			<code>46</code>
+			<event>down</event>
+			<action>land</action>
+		</key-binding>
+		<!-- LEFT SHIFT: spawn random ship -->
+		<key-binding>
+			<code>50</code>
+			<event>down</event>
+			<action>spawn_random_ship</action>
+		</key-binding>
+		<!-- C: jettison cargo -->
+		<key-binding>
+			<code>54</code>
+			<event>down</event>
+			<action>jettison_cargo</action>
+		</key-binding>
+		<!-- N: select next linked system -->
+		<key-binding>
+			<code>57</code>
+			<event>down</event>
+			<action>select_next_linked_system</action>
+		</key-binding>
+		<!-- M: open map dialog -->
+		<key-binding>
+			<code>58</code>
+			<event>down</event>
+			<action>open_map_dialog</action>
+		</key-binding>
+		<!-- COMMA: reduce time warp -->
+		<key-binding>
+			<code>59</code>
+			<event>down</event>
+			<action>reduce_time_warp</action>
+		</key-binding>
+		<!-- PERDIOD: augment time warp -->
+		<key-binding>
+			<code>60</code>
+			<event>down</event>
+			<action>augment_time_warp</action>
+		</key-binding>
+		<!-- SLASH: reset time warp -->
+		<key-binding>
+			<code>61</code>
+			<event>down</event>
+			<action>reset_time_warp</action>
+		</key-binding>
+		<!-- SPACE: enable/disable fire -->
+		<key-binding>
+			<code>65</code>
+			<event>down</event>
+			<action>enable_fire</action>
+		</key-binding>
+		<!-- SPACE: enable/disable fire -->
+		<key-binding>
+			<code>65</code>
+			<event>up</event>
+			<action>disable_fire</action>
+		</key-binding>
+		<!-- F8: open object information dialog -->
+		<key-binding>
+			<code>74</code>
+			<event>down</event>
+			<action>open_object_information_dialog</action>
+		</key-binding>
+		<!-- F9: dump object report -->
+		<key-binding>
+			<code>74</code>
+			<event>down</event>
+			<action>dump_object_report</action>
+		</key-binding>
+		<!-- F10: take screen shot -->
+		<key-binding>
+			<code>76</code>
+			<event>down</event>
+			<action>take_screen_shot</action>
+		</key-binding>
+		<!-- F11: purge game -->
+		<key-binding>
+			<code>95</code>
+			<event>down</event>
+			<action>purge_game</action>
+		</key-binding>
+		<!-- F12: toggle timing dialog -->
+		<key-binding>
+			<code>96</code>
+			<event>down</event>
+			<action>toggle_timing_dialog</action>
+		</key-binding>
+		<!-- HOME: reset camera position -->
+		<key-binding>
+			<code>97</code>
+			<event>down</event>
+			<action>reset_camera_position</action>
+		</key-binding>
+		<!-- UP: enable/disable accelerate -->
+		<key-binding>
+			<code>98</code>
+			<event>down</event>
+			<action>enable_accelerate</action>
+		</key-binding>
+		<!-- UP: enable/disable accelerate -->
+		<key-binding>
+			<code>98</code>
+			<event>up</event>
+			<action>disable_accelerate</action>
+		</key-binding>
+		<!-- PAGE UP: observe previous character -->
+		<key-binding>
+			<code>99</code>
+			<event>down</event>
+			<action>observe_previous_character</action>
+		</key-binding>
+		<!-- LEFT: enable/disable turn left -->
+		<key-binding>
+			<code>100</code>
+			<event>down</event>
+			<action>enable_turn_left</action>
+		</key-binding>
+		<!-- LEFT: enable/disable turn left -->
+		<key-binding>
+			<code>100</code>
+			<event>up</event>
+			<action>disable_turn_left</action>
+		</key-binding>
+		<!-- RIGHT: enable/disable turn right -->
+		<key-binding>
+			<code>102</code>
+			<event>down</event>
+			<action>enable_turn_right</action>
+		</key-binding>
+		<!-- RIGHT: enable/disable turn right -->
+		<key-binding>
+			<code>102</code>
+			<event>up</event>
+			<action>disable_turn_right</action>
+		</key-binding>
+		<!-- PAGE DOWN: observe next character -->
+		<key-binding>
+			<code>105</code>
+			<event>down</event>
+			<action>observe_next_character</action>
+		</key-binding>
+	</key-bindings>
+</key-binding-profile>
