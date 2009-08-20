@@ -27,6 +27,7 @@ const Arxx::u4byte ARX_TYPE_BATTERY_CLASS = 12;
 const Arxx::u4byte ARX_TYPE_COMMODITY_CLASS = 8;
 const Arxx::u4byte ARX_TYPE_FACTION = 14;
 const Arxx::u4byte ARX_TYPE_GENERATOR_CLASS = 13;
+const Arxx::u4byte ARX_TYPE_KEY_BINDING_PROFILE = 16;
 const Arxx::u4byte ARX_TYPE_WIDGET = 1;
 const Arxx::u4byte ARX_TYPE_WIDGET_SUB_TYPE_LABEL = 1;
 const Arxx::u4byte ARX_TYPE_WIDGET_SUB_TYPE_MINI_MAP_DISPLAY = 2;

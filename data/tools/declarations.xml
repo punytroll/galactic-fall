@@ -51,6 +51,16 @@
 		<string identifier="slot-class-identifier"/>
 	</generator-class>
 	
+	<key-binding>
+		<u4byte identifier="code"/>
+		<string identifier="event"/>
+		<string identifier="action"/>
+	</key-binding>
+	
+	<key-binding-profile>
+		<array identifier="key-bindings"/>
+	</key-binding-profile>
+	
 	<label type="1" sub-type="1">
 		<widget identifier="widget"/>
 		<string identifier="text"/>
