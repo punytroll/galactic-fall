@@ -2456,6 +2456,7 @@ void ActionFocusCameraOnNextShip(void)
 	{
 		g_Camera.SetFocus((*ShipIterator)->GetReference());
 	}
+	g_Camera.SetPosition(0.0f, 0.0f);
 }
 
 void ActionFocusCameraOnPreviousShip(void)
@@ -2473,6 +2474,7 @@ void ActionFocusCameraOnPreviousShip(void)
 	{
 		g_Camera.SetFocus((*ShipIterator)->GetReference());
 	}
+	g_Camera.SetPosition(0.0f, 0.0f);
 }
 
 void ActionJettisonCargo(void)
