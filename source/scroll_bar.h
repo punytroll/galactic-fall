@@ -60,11 +60,14 @@ private:
 	void OnLessClicked(void);
 	void OnMoreClicked(void);
 	void OnSizeChanged(void);
+	bool OnTrackerMouseButton(int Button, int State, float X, float Y);
 	void OnTrackerMouseEnter(void);
 	void OnTrackerMouseLeave(void);
+	void OnTrackerMouseMoved(float X, float Y);
 	// helper functions and actions
 	void AdjustTrackerPosition(void);
 	// member variables
+	Vector2f m_GrabPosition;
 	Button * m_LessButton;
 	Button * m_MoreButton;
 	Widget * m_Tracker;
