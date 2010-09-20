@@ -198,53 +198,53 @@
 			<event>down</event>
 			<action>reset_camera_position</action>
 		</key-binding>
-		<!-- UP: enable/disable accelerate -->
-		<key-binding>
-			<code>98</code>
-			<event>down</event>
-			<action>enable_accelerate</action>
-		</key-binding>
-		<!-- UP: enable/disable accelerate -->
-		<key-binding>
-			<code>98</code>
-			<event>up</event>
-			<action>disable_accelerate</action>
-		</key-binding>
 		<!-- PAGE UP: observe previous character -->
 		<key-binding>
 			<code>99</code>
 			<event>down</event>
 			<action>observe_previous_character</action>
 		</key-binding>
-		<!-- LEFT: enable/disable turn left -->
-		<key-binding>
-			<code>100</code>
-			<event>down</event>
-			<action>enable_turn_left</action>
-		</key-binding>
-		<!-- LEFT: enable/disable turn left -->
-		<key-binding>
-			<code>100</code>
-			<event>up</event>
-			<action>disable_turn_left</action>
-		</key-binding>
-		<!-- RIGHT: enable/disable turn right -->
-		<key-binding>
-			<code>102</code>
-			<event>down</event>
-			<action>enable_turn_right</action>
-		</key-binding>
-		<!-- RIGHT: enable/disable turn right -->
-		<key-binding>
-			<code>102</code>
-			<event>up</event>
-			<action>disable_turn_right</action>
-		</key-binding>
 		<!-- PAGE DOWN: observe next character -->
 		<key-binding>
 			<code>105</code>
 			<event>down</event>
 			<action>observe_next_character</action>
+		</key-binding>
+		<!-- UP: enable/disable accelerate -->
+		<key-binding>
+			<code>111</code>
+			<event>down</event>
+			<action>enable_accelerate</action>
+		</key-binding>
+		<!-- UP: enable/disable accelerate -->
+		<key-binding>
+			<code>111</code>
+			<event>up</event>
+			<action>disable_accelerate</action>
+		</key-binding>
+		<!-- LEFT: enable/disable turn left -->
+		<key-binding>
+			<code>113</code>
+			<event>down</event>
+			<action>enable_turn_left</action>
+		</key-binding>
+		<!-- LEFT: enable/disable turn left -->
+		<key-binding>
+			<code>113</code>
+			<event>up</event>
+			<action>disable_turn_left</action>
+		</key-binding>
+		<!-- RIGHT: enable/disable turn right -->
+		<key-binding>
+			<code>114</code>
+			<event>down</event>
+			<action>enable_turn_right</action>
+		</key-binding>
+		<!-- RIGHT: enable/disable turn right -->
+		<key-binding>
+			<code>114</code>
+			<event>up</event>
+			<action>disable_turn_right</action>
 		</key-binding>
 	</key-bindings>
 </key-binding-profile>
