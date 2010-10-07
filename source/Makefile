@@ -602,6 +602,7 @@ commodity_class.o: commodity_class.cpp $(color_h) $(commodity_class_h) $(visuali
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 dialog.o: dialog.cpp $(callbacks_callbacks_h) $(dialog_h)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 draw_text.o: draw_text.cpp $(draw_text_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
