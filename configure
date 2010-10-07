@@ -31,19 +31,6 @@ if [ "configure" -nt "configuration" ]; then
 	write_all="yes"
 fi
 
-# if no arguments are given, cat the configuration file and exit
-if [ $# -eq 0 -a -e "configuration" -a "configuration" -nt "configure" ]; then
-	cat configuration
-	configuration_files=`ls .configuration.d`
-	for configuration_file in ${configuration_files}; do
-		echo "========================================"
-		echo .configuration.d/${configuration_file}
-		echo "----------------------------------------"
-		cat .configuration.d/${configuration_file}
-	done
-	exit 0
-fi
-
 # this function unifies the string sets $1 and $2 without repetition and puts the result in $result
 function unify
 {
@@ -161,6 +148,23 @@ for option in "$@"; do
 		exit 1
 	fi
 done
+
+# print the configuration settings to the terminal
+if [ "${write_CXXFLAGS}" = "yes" -o "${write_all}" = "yes" ]; then
+	echo "Configure CXXFLAGS=${configure_CXXFLAGS}"
+else
+	echo "Configuration CXXFLAGS=${configure_CXXFLAGS}"
+fi
+if [ "${write_LDFLAGS}" = "yes" -o "${write_all}" = "yes" ]; then
+	echo "Configure LDFLAGS=${configure_LDFLAGS}"
+else
+	echo "Configuration LDFLAGS=${configure_LDFLAGS}"
+fi
+if [ "${write_data_location}" = "yes" -o "${write_all}" = "yes" ]; then
+	echo "Configure data_location=${configure_data_location}"
+else
+	echo "Configuration data_location=${configure_data_location}"
+fi
 
 # write the configuration files
 if [ "${write_CXXFLAGS}" = "yes" -o "${write_all}" = "yes" ]; then
