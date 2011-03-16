@@ -2887,7 +2887,40 @@ void CreateWindow(void)
 {
 	ON_DEBUG(std::cout << "Opening display." << std::endl);
 	g_Display = XOpenDisplay(0);
+	if(g_Display == 0)
+	{
+		std::cerr << "Coud not open the default display." << std::endl;
+		exit(1);
+	}
+	ON_DEBUG(std::cout << "Checking for GLX availability." << std::endl);
 	
+	int ErrorBase(0);
+	int EventBase(0);
+	
+	if(glXQueryExtension(g_Display, &ErrorBase, &EventBase) == false)
+	{
+		std::cerr << "The GLX extension is not available." << std::endl;
+		exit(1);
+	}
+	ON_DEBUG(std::cout << "Checking for GLX version." << std::endl);
+	
+	int MajorVersionNumber(0);
+	int MinorVersionNumber(0);
+	
+	if(glXQueryVersion(g_Display, &MajorVersionNumber, &MinorVersionNumber) == false)
+	{
+		std::cerr << "Checking the GLX version failed." << std::endl;
+		exit(1);
+	}
+	else
+	{
+		ON_DEBUG(std::cout << "  The GLX version is " << MajorVersionNumber << "." << MinorVersionNumber << "." << std::endl);
+		if((MajorVersionNumber < 1) || ((MajorVersionNumber == 1) && (MinorVersionNumber < 4)))
+		{
+			std::cerr << "The GLX version " << MajorVersionNumber << "." << MinorVersionNumber << " is below the minimal required version number 1.4." << std::endl;
+			exit(1);
+		}
+	}
 	ON_DEBUG(std::cout << "Getting default screen." << std::endl);
 	
 	int ScreenNumber(DefaultScreen(g_Display));
