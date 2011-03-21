@@ -4,11 +4,180 @@
 
 #include <iomanip>
 #include <iostream>
+#include <sstream>
+
+void AppendSeparated(std::string & String, const std::string & Append, const std::string & Separator)
+{
+	if(String.length() == 0)
+	{
+		String = Append;
+	}
+	else
+	{
+		String += Separator;
+		String += Append;
+	}
+}
+
+std::string GetCSVLine(Display * Display, GLXFBConfig & Configuration)
+{
+	std::stringstream Result;
+	int AttributeValue;
+	
+	glXGetFBConfigAttrib(Display, Configuration, GLX_FBCONFIG_ID, &AttributeValue);
+	Result << "0x" << std::hex << std::right << std::setw(4) << std::setfill('0') << AttributeValue << std::dec << ",";
+	glXGetFBConfigAttrib(Display, Configuration, GLX_BUFFER_SIZE, &AttributeValue);
+	Result << AttributeValue << ",";
+	glXGetFBConfigAttrib(Display, Configuration, GLX_LEVEL, &AttributeValue);
+	Result << AttributeValue << ",";
+	glXGetFBConfigAttrib(Display, Configuration, GLX_DOUBLEBUFFER, &AttributeValue);
+	Result << ((AttributeValue == True) ? ("True") : ("False")) << ",";
+	glXGetFBConfigAttrib(Display, Configuration, GLX_STEREO, &AttributeValue);
+	Result << ((AttributeValue == True) ? ("True") : ("False")) << ",";
+	glXGetFBConfigAttrib(Display, Configuration, GLX_AUX_BUFFERS, &AttributeValue);
+	Result << AttributeValue << ",";
+	glXGetFBConfigAttrib(Display, Configuration, GLX_RED_SIZE, &AttributeValue);
+	Result << AttributeValue << ",";
+	glXGetFBConfigAttrib(Display, Configuration, GLX_GREEN_SIZE, &AttributeValue);
+	Result << AttributeValue << ",";
+	glXGetFBConfigAttrib(Display, Configuration, GLX_BLUE_SIZE, &AttributeValue);
+	Result << AttributeValue << ",";
+	glXGetFBConfigAttrib(Display, Configuration, GLX_ALPHA_SIZE, &AttributeValue);
+	Result << AttributeValue << ",";
+	glXGetFBConfigAttrib(Display, Configuration, GLX_DEPTH_SIZE, &AttributeValue);
+	Result << AttributeValue << ",";
+	glXGetFBConfigAttrib(Display, Configuration, GLX_STENCIL_SIZE, &AttributeValue);
+	Result << AttributeValue << ",";
+	glXGetFBConfigAttrib(Display, Configuration, GLX_ACCUM_RED_SIZE, &AttributeValue);
+	Result << AttributeValue << ",";
+	glXGetFBConfigAttrib(Display, Configuration, GLX_ACCUM_GREEN_SIZE, &AttributeValue);
+	Result << AttributeValue << ",";
+	glXGetFBConfigAttrib(Display, Configuration, GLX_ACCUM_BLUE_SIZE, &AttributeValue);
+	Result << AttributeValue << ",";
+	glXGetFBConfigAttrib(Display, Configuration, GLX_ACCUM_ALPHA_SIZE, &AttributeValue);
+	Result << AttributeValue << ",";
+	glXGetFBConfigAttrib(Display, Configuration, GLX_SAMPLE_BUFFERS, &AttributeValue);
+	Result << AttributeValue << ",";
+	glXGetFBConfigAttrib(Display, Configuration, GLX_SAMPLES, &AttributeValue);
+	Result << AttributeValue << ",";
+	glXGetFBConfigAttrib(Display, Configuration, GLX_RENDER_TYPE, &AttributeValue);
+	
+	std::string RenderType;
+	
+	if((AttributeValue & GLX_RGBA_BIT) == GLX_RGBA_BIT)
+	{
+		AppendSeparated(RenderType, "RGBA", ";");
+	}
+	if((AttributeValue & GLX_RGBA_FLOAT_BIT_ARB) == GLX_RGBA_FLOAT_BIT_ARB)
+	{
+		AppendSeparated(RenderType, "RGBA float", ";");
+	}
+	Result << RenderType << ",";
+	glXGetFBConfigAttrib(Display, Configuration, GLX_DRAWABLE_TYPE, &AttributeValue);
+	
+	std::string DrawableType;
+	
+	if((AttributeValue & GLX_WINDOW_BIT) == GLX_WINDOW_BIT)
+	{
+		AppendSeparated(DrawableType, "Window", ";");
+	}
+	if((AttributeValue & GLX_PIXMAP_BIT) == GLX_PIXMAP_BIT)
+	{
+		AppendSeparated(DrawableType, "Pixmap", ";");
+	}
+	if((AttributeValue & GLX_PBUFFER_BIT) == GLX_PBUFFER_BIT)
+	{
+		AppendSeparated(DrawableType, "PBuffer", ";");
+	}
+	Result << DrawableType << ",";
+	glXGetFBConfigAttrib(Display, Configuration, GLX_X_RENDERABLE, &AttributeValue);
+	Result << ((AttributeValue == True) ? ("True") : ("False")) << ",";
+	glXGetFBConfigAttrib(Display, Configuration, GLX_X_VISUAL_TYPE, &AttributeValue);
+	if(AttributeValue == GLX_TRUE_COLOR)
+	{
+		Result << "TrueColor" << ",";
+	}
+	else if(AttributeValue == GLX_DIRECT_COLOR)
+	{
+		Result << "DirectColor" << ",";
+	}
+	else if(AttributeValue == GLX_PSEUDO_COLOR)
+	{
+		Result << "PseudoColor" << ",";
+	}
+	else if(AttributeValue == GLX_STATIC_COLOR)
+	{
+		Result << "StaticColor" << ",";
+	}
+	else if(AttributeValue == GLX_GRAY_SCALE)
+	{
+		Result << "GrayScale" << ",";
+	}
+	else if(AttributeValue == GLX_STATIC_GRAY)
+	{
+		Result << "StaticGray" << ",";
+	}
+	else if(AttributeValue == GLX_NONE)
+	{
+		Result << "None" << ",";
+	}
+	glXGetFBConfigAttrib(Display, Configuration, GLX_CONFIG_CAVEAT, &AttributeValue);
+	if(AttributeValue == GLX_NONE)
+	{
+		Result << "None" << ",";
+	}
+	else if(AttributeValue == GLX_SLOW_CONFIG)
+	{
+		Result << "Slow" << ",";
+	}
+	else if(AttributeValue == GLX_NON_CONFORMANT_CONFIG)
+	{
+		Result << "Non-conformant" << ",";
+	}
+	glXGetFBConfigAttrib(Display, Configuration, GLX_TRANSPARENT_TYPE, &AttributeValue);
+	if(AttributeValue == GLX_NONE)
+	{
+		Result << "None" << ",";
+	}
+	else if(AttributeValue == GLX_TRANSPARENT_RGB)
+	{
+		Result << "RGB" << ",";
+	}
+	else if(AttributeValue == GLX_TRANSPARENT_INDEX)
+	{
+		Result << "Index" << ",";
+	}
+	glXGetFBConfigAttrib(Display, Configuration, GLX_TRANSPARENT_INDEX_VALUE, &AttributeValue);
+	Result << AttributeValue << ",";
+	glXGetFBConfigAttrib(Display, Configuration, GLX_TRANSPARENT_RED_VALUE, &AttributeValue);
+	Result << AttributeValue << ",";
+	glXGetFBConfigAttrib(Display, Configuration, GLX_TRANSPARENT_GREEN_VALUE, &AttributeValue);
+	Result << AttributeValue << ",";
+	glXGetFBConfigAttrib(Display, Configuration, GLX_TRANSPARENT_BLUE_VALUE, &AttributeValue);
+	Result << AttributeValue << ",";
+	glXGetFBConfigAttrib(Display, Configuration, GLX_TRANSPARENT_ALPHA_VALUE, &AttributeValue);
+	Result << AttributeValue << ",";
+	glXGetFBConfigAttrib(Display, Configuration, GLX_MAX_PBUFFER_WIDTH, &AttributeValue);
+	Result << AttributeValue << ",";
+	glXGetFBConfigAttrib(Display, Configuration, GLX_MAX_PBUFFER_HEIGHT, &AttributeValue);
+	Result << AttributeValue << ",";
+	glXGetFBConfigAttrib(Display, Configuration, GLX_MAX_PBUFFER_PIXELS, &AttributeValue);
+	Result << AttributeValue << ",";
+	glXGetFBConfigAttrib(Display, Configuration, GLX_VISUAL_ID, &AttributeValue);
+	if(AttributeValue == 0)
+	{
+		Result << "None";
+	}
+	else
+	{
+		Result << "0x" << std::hex << std::right << std::setw(4) << std::setfill('0') << AttributeValue << std::dec;
+	}
+	
+	return Result.str();
+}
 
 int main(int argc, char ** argv)
 {
-	std::cout << "Opening display." << std::endl;
-	
 	Display * Display = XOpenDisplay(0);
 	
 	if(Display == 0)
@@ -16,7 +185,6 @@ int main(int argc, char ** argv)
 		std::cerr << "Coud not open the default display." << std::endl;
 		exit(1);
 	}
-	std::cout << "Checking for GLX availability." << std::endl;
 	
 	int ErrorBase(0);
 	int EventBase(0);
@@ -26,7 +194,6 @@ int main(int argc, char ** argv)
 		std::cerr << "The GLX extension is not available." << std::endl;
 		exit(1);
 	}
-	std::cout << "Checking for GLX version." << std::endl;
 	
 	int MajorVersionNumber(0);
 	int MinorVersionNumber(0);
@@ -38,211 +205,41 @@ int main(int argc, char ** argv)
 	}
 	else
 	{
-		std::cout << "  The GLX version is " << MajorVersionNumber << "." << MinorVersionNumber << "." << std::endl;
 		if((MajorVersionNumber < 1) || ((MajorVersionNumber == 1) && (MinorVersionNumber < 4)))
 		{
 			std::cerr << "The GLX version " << MajorVersionNumber << "." << MinorVersionNumber << " is below the minimal required version number 1.4." << std::endl;
 			exit(1);
 		}
 	}
-	std::cout << "Getting default screen." << std::endl;
 	
 	int ScreenNumber(DefaultScreen(Display));
 	int NumberOfConfigurations(0);
-	GLXFBConfig * Configurations(glXGetFBConfigs(Display, ScreenNumber, &NumberOfConfigurations));
+	int RequestedAttributes[] =
+	{
+		GLX_RENDER_TYPE, GLX_RGBA_BIT,
+		GLX_DRAWABLE_TYPE, GLX_WINDOW_BIT,
+		GLX_STEREO, GLX_DONT_CARE,
+		GLX_SAMPLES, GLX_DONT_CARE,
+		GLX_SAMPLE_BUFFERS, GLX_DONT_CARE,
+		GLX_X_RENDERABLE, True,
+		GLX_TRANSPARENT_TYPE, GLX_DONT_CARE,
+		GLX_STENCIL_SIZE, GLX_DONT_CARE,
+		GLX_BUFFER_SIZE, 32,
+		GLX_DOUBLEBUFFER, True,
+		GLX_X_VISUAL_TYPE, GLX_TRUE_COLOR,
+		GLX_RED_SIZE, 8,
+		GLX_GREEN_SIZE, 8,
+		GLX_BLUE_SIZE, 8,
+		GLX_ALPHA_SIZE, 8,
+		GLX_DEPTH_SIZE, 24,
+		GLX_AUX_BUFFERS, GLX_DONT_CARE,
+		0
+	};
+	GLXFBConfig * Configurations(glXChooseFBConfig(Display, ScreenNumber, RequestedAttributes, &NumberOfConfigurations));
 	
 	for(int ConfigurationIndex = 0; ConfigurationIndex < NumberOfConfigurations; ++ConfigurationIndex)
 	{
-		std::cout << "GLXFBConfig[" << ConfigurationIndex << "]:" << std::endl;
-		
-		int AttributeValue(0);
-		
-		if(glXGetFBConfigAttrib(Display, Configurations[ConfigurationIndex], GLX_DRAWABLE_TYPE, &AttributeValue) == Success)
-		{
-			std::cout << "  GLX_DRAWABLE_TYPE: 0x" << std::hex << std::setw(8) << std::right << std::setfill('0') << AttributeValue << std::dec << std::endl;
-			if((AttributeValue & GLX_WINDOW_BIT) == GLX_WINDOW_BIT)
-			{
-				std::cout << "     GLX_WINDOW_BIT (0x" << std::hex << std::setw(8) << std::right << std::setfill('0') << GLX_WINDOW_BIT << std::dec << ')' << std::endl;
-			}
-			if((AttributeValue & GLX_PIXMAP_BIT) == GLX_PIXMAP_BIT)
-			{
-				std::cout << "     GLX_PIXMAP_BIT (0x" << std::hex << std::setw(8) << std::right << std::setfill('0') << GLX_PIXMAP_BIT << std::dec << ')' << std::endl;
-			}
-			if((AttributeValue & GLX_PBUFFER_BIT) == GLX_PBUFFER_BIT)
-			{
-				std::cout << "     GLX_PBUFFER_BIT (0x" << std::hex << std::setw(8) << std::right << std::setfill('0') << GLX_PBUFFER_BIT << std::dec << ')' << std::endl;
-			}
-		}
-		else
-		{
-			std::cerr << "Could not get attribute \"GLX_DRAWABLE_TYPE\" for GLXFBConfig[" << ConfigurationIndex << "]." << std::endl;
-		}
-		if(glXGetFBConfigAttrib(Display, Configurations[ConfigurationIndex], GLX_RENDER_TYPE, &AttributeValue) == Success)
-		{
-			std::cout << "  GLX_RENDER_TYPE: 0x" << std::hex << std::setw(8) << std::right << std::setfill('0') << AttributeValue << std::dec << std::endl;
-			if((AttributeValue & GLX_RGBA_BIT) == GLX_RGBA_BIT)
-			{
-				std::cout << "     GLX_RGBA_BIT (0x" << std::hex << std::setw(8) << std::right << std::setfill('0') << GLX_RGBA_BIT << std::dec << ')' << std::endl;
-			}
-			if((AttributeValue & GLX_COLOR_INDEX_BIT) == GLX_COLOR_INDEX_BIT)
-			{
-				std::cout << "     GLX_COLOR_INDEX_BIT (0x" << std::hex << std::setw(8) << std::right << std::setfill('0') << GLX_COLOR_INDEX_BIT << std::dec << ')' << std::endl;
-			}
-		}
-		else
-		{
-			std::cerr << "Could not get attribute \"GLX_RENDER_TYPE\" for GLXFBConfig[" << ConfigurationIndex << "]." << std::endl;
-		}
-		if(glXGetFBConfigAttrib(Display, Configurations[ConfigurationIndex], GLX_BUFFER_SIZE, &AttributeValue) == Success)
-		{
-			std::cout << "  GLX_BUFFER_SIZE: " << AttributeValue << std::endl;
-		}
-		else
-		{
-			std::cerr << "Could not get attribute \"GLX_BUFFER_SIZE\" for GLXFBConfig[" << ConfigurationIndex << "]." << std::endl;
-		}
-		if(glXGetFBConfigAttrib(Display, Configurations[ConfigurationIndex], GLX_RED_SIZE, &AttributeValue) == Success)
-		{
-			std::cout << "  GLX_RED_SIZE: " << AttributeValue << std::endl;
-		}
-		else
-		{
-			std::cerr << "Could not get attribute \"GLX_RED_SIZE\" for GLXFBConfig[" << ConfigurationIndex << "]." << std::endl;
-		}
-		if(glXGetFBConfigAttrib(Display, Configurations[ConfigurationIndex], GLX_GREEN_SIZE, &AttributeValue) == Success)
-		{
-			std::cout << "  GLX_GREEN_SIZE: " << AttributeValue << std::endl;
-		}
-		else
-		{
-			std::cerr << "Could not get attribute \"GLX_GREEN_SIZE\" for GLXFBConfig[" << ConfigurationIndex << "]." << std::endl;
-		}
-		if(glXGetFBConfigAttrib(Display, Configurations[ConfigurationIndex], GLX_BLUE_SIZE, &AttributeValue) == Success)
-		{
-			std::cout << "  GLX_BLUE_SIZE: " << AttributeValue << std::endl;
-		}
-		else
-		{
-			std::cerr << "Could not get attribute \"GLX_BLUE_SIZE\" for GLXFBConfig[" << ConfigurationIndex << "]." << std::endl;
-		}
-		if(glXGetFBConfigAttrib(Display, Configurations[ConfigurationIndex], GLX_ALPHA_SIZE, &AttributeValue) == Success)
-		{
-			std::cout << "  GLX_ALPHA_SIZE: " << AttributeValue << std::endl;
-		}
-		else
-		{
-			std::cerr << "Could not get attribute \"GLX_ALPHA_SIZE\" for GLXFBConfig[" << ConfigurationIndex << "]." << std::endl;
-		}
-		if(glXGetFBConfigAttrib(Display, Configurations[ConfigurationIndex], GLX_DEPTH_SIZE, &AttributeValue) == Success)
-		{
-			std::cout << "  GLX_DEPTH_SIZE: " << AttributeValue << std::endl;
-		}
-		else
-		{
-			std::cerr << "Could not get attribute \"GLX_DEPTH_SIZE\" for GLXFBConfig[" << ConfigurationIndex << "]." << std::endl;
-		}
-		if(glXGetFBConfigAttrib(Display, Configurations[ConfigurationIndex], GLX_STENCIL_SIZE, &AttributeValue) == Success)
-		{
-			std::cout << "  GLX_STENCIL_SIZE: " << AttributeValue << std::endl;
-		}
-		else
-		{
-			std::cerr << "Could not get attribute \"GLX_STENCIL_SIZE\" for GLXFBConfig[" << ConfigurationIndex << "]." << std::endl;
-		}
-		if(glXGetFBConfigAttrib(Display, Configurations[ConfigurationIndex], GLX_DOUBLEBUFFER, &AttributeValue) == Success)
-		{
-			std::cout << "  GLX_DOUBLEBUFFER: " << AttributeValue << std::endl;
-		}
-		else
-		{
-			std::cerr << "Could not get attribute \"GLX_DOUBLEBUFFER\" for GLXFBConfig[" << ConfigurationIndex << "]." << std::endl;
-		}
-		if(glXGetFBConfigAttrib(Display, Configurations[ConfigurationIndex], GLX_SAMPLE_BUFFERS, &AttributeValue) == Success)
-		{
-			std::cout << "  GLX_SAMPLE_BUFFERS: " << AttributeValue << std::endl;
-		}
-		else
-		{
-			std::cerr << "Could not get attribute \"GLX_SAMPLE_BUFFERS\" for GLXFBConfig[" << ConfigurationIndex << "]." << std::endl;
-		}
-		if(glXGetFBConfigAttrib(Display, Configurations[ConfigurationIndex], GLX_SAMPLES, &AttributeValue) == Success)
-		{
-			std::cout << "  GLX_SAMPLES: " << AttributeValue << std::endl;
-		}
-		else
-		{
-			std::cerr << "Could not get attribute \"GLX_SAMPLES\" for GLXFBConfig[" << ConfigurationIndex << "]." << std::endl;
-		}
-		if(glXGetFBConfigAttrib(Display, Configurations[ConfigurationIndex], GLX_X_RENDERABLE, &AttributeValue) == Success)
-		{
-			if(AttributeValue == True)
-			{
-				std::cout << "  GLX_X_RENDERABLE: True" << std::endl;
-			}
-			else
-			{
-				std::cout << "  GLX_X_RENDERABLE: False" << std::endl;
-			}
-		}
-		else
-		{
-			std::cerr << "Could not get attribute \"GLX_X_RENDERABLE\" for GLXFBConfig[" << ConfigurationIndex << "]." << std::endl;
-		}
-		if(glXGetFBConfigAttrib(Display, Configurations[ConfigurationIndex], GLX_X_VISUAL_TYPE, &AttributeValue) == Success)
-		{
-			if(AttributeValue == GLX_NONE)
-			{
-				std::cout << "  GLX_X_VISUAL_TYPE: GLX_NONE" << std::endl;
-			}
-			else if(AttributeValue == GLX_TRUE_COLOR)
-			{
-				std::cout << "  GLX_X_VISUAL_TYPE: GLX_TRUE_COLOR" << std::endl;
-			}
-			else if(AttributeValue == GLX_DIRECT_COLOR)
-			{
-				std::cout << "  GLX_X_VISUAL_TYPE: GLX_DIRECT_COLOR" << std::endl;
-			}
-			else if(AttributeValue == GLX_PSEUDO_COLOR)
-			{
-				std::cout << "  GLX_X_VISUAL_TYPE: GLX_PSEUDO_COLOR" << std::endl;
-			}
-			else if(AttributeValue == GLX_STATIC_COLOR)
-			{
-				std::cout << "  GLX_X_VISUAL_TYPE: GLX_STATIC_COLOR" << std::endl;
-			}
-			else if(AttributeValue == GLX_GRAY_SCALE)
-			{
-				std::cout << "  GLX_X_VISUAL_TYPE: GLX_GRAY_SCALE" << std::endl;
-			}
-			else if(AttributeValue == GLX_STATIC_GRAY)
-			{
-				std::cout << "  GLX_X_VISUAL_TYPE: GLX_STATIC_GRAY" << std::endl;
-			}
-		}
-		else
-		{
-			std::cerr << "Could not get attribute \"GLX_X_VISUAL_TYPE\" for GLXFBConfig[" << ConfigurationIndex << "]." << std::endl;
-		}
-		if(glXGetFBConfigAttrib(Display, Configurations[ConfigurationIndex], GLX_CONFIG_CAVEAT, &AttributeValue) == Success)
-		{
-			if(AttributeValue == GLX_NONE)
-			{
-				std::cout << "  GLX_CONFIG_CAVEAT: GLX_NONE" << std::endl;
-			}
-			else if(AttributeValue == GLX_SLOW_CONFIG)
-			{
-				std::cout << "  GLX_CONFIG_CAVEAT: GLX_SLOW_CONFIG" << std::endl;
-			}
-			else if(AttributeValue == GLX_NON_CONFORMANT_CONFIG)
-			{
-				std::cout << "  GLX_CONFIG_CAVEAT: GLX_NON_CONFORMANT_CONFIG" << std::endl;
-			}
-		}
-		else
-		{
-			std::cerr << "Could not get attribute \"GLX_X_VISUAL_TYPE\" for GLXFBConfig[" << ConfigurationIndex << "]." << std::endl;
-		}
-		std::cout << std::endl;
+		std::cout << GetCSVLine(Display, Configurations[ConfigurationIndex]) << std::endl;
 	}
 	
 	return 0;
