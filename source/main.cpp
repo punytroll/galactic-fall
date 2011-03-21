@@ -185,6 +185,7 @@ TimeoutNotification g_MessageTimeoutNotification;
 Display * g_Display;
 GLXContext g_GLXContext;
 Window g_Window;
+Colormap g_ColorMap;
 Perspective g_MainPerspective;
 bool g_EchoEvents(false);
 bool g_EchoResizes(false);
@@ -2883,6 +2884,8 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 	}
 }
 
+typedef GLXContext (* CreateContextWithAttributesFunction)(Display * Display, GLXFBConfig FBConfiguration, GLXContext ShareContext, bool DirectRendering, const int * AttributeList);
+
 void CreateWindow(void)
 {
 	ON_DEBUG(std::cout << "Opening display." << std::endl);
@@ -2924,7 +2927,30 @@ void CreateWindow(void)
 	ON_DEBUG(std::cout << "Getting default screen." << std::endl);
 	
 	int ScreenNumber(DefaultScreen(g_Display));
+	int NumberOfConfigurations(0);
+	int RequestedAttributes[] =
+	{
+		GLX_RENDER_TYPE, GLX_RGBA_BIT,
+		GLX_DRAWABLE_TYPE, GLX_WINDOW_BIT,
+		GLX_X_RENDERABLE, True,
+		GLX_BUFFER_SIZE, 32,
+		GLX_DOUBLEBUFFER, True,
+		GLX_X_VISUAL_TYPE, GLX_TRUE_COLOR,
+		GLX_RED_SIZE, 8,
+		GLX_GREEN_SIZE, 8,
+		GLX_BLUE_SIZE, 8,
+		GLX_ALPHA_SIZE, 8,
+		GLX_DEPTH_SIZE, 24,
+		0
+	};
+	ON_DEBUG(std::cout << "Choosing a FB configuration." << std::endl);
+	GLXFBConfig * Configurations(glXChooseFBConfig(g_Display, ScreenNumber, RequestedAttributes, &NumberOfConfigurations));
 	
+	if(Configurations == 0)
+	{
+		std::cerr << "Sorry, could not find a suitable FB configuration." << std::endl;
+		exit(1);
+	}
 	assert(g_Settings != 0);
 	if(g_Settings->GetWindowDimensions() == 0)
 	{
@@ -2937,42 +2963,57 @@ void CreateWindow(void)
 		g_Width = g_Settings->GetWindowDimensions()->m_V.m_A[0];
 		g_Height = g_Settings->GetWindowDimensions()->m_V.m_A[1];
 	}
+	ON_DEBUG(std::cout << "Getting visualization information." << std::endl);
 	
-	int GLXAttributes[] = { GLX_RGBA, GLX_DOUBLEBUFFER, GLX_RED_SIZE, 4, GLX_GREEN_SIZE, 4, GLX_BLUE_SIZE, 4, GLX_ALPHA_SIZE, 4, GLX_DEPTH_SIZE, 16, 0 };
+	XVisualInfo * VisualizationInformation(glXGetVisualFromFBConfig(g_Display, Configurations[0]));
 	
-	ON_DEBUG(std::cout << "Choosing a visual." << std::endl);
-	
-	XVisualInfo * VisualInfo(glXChooseVisual(g_Display, ScreenNumber, GLXAttributes));
-	
-	ON_DEBUG(std::cout << "Choosen a visual." << std::endl);
-	if(VisualInfo == 0)
-	{
-		std::cerr << "Sorry, could not find a suitable visualization mode." << std::endl;
-		exit(1);
-	}
-	ON_DEBUG(std::cout << "Creating GLX context." << std::endl);
-	g_GLXContext = glXCreateContext(g_Display, VisualInfo, 0, GL_TRUE);
-	if(g_GLXContext == 0)
-	{
-		std::cerr << "Sorry, could not create a GLX context." << std::endl;
-		exit(1);
-	}
+	ON_DEBUG(std::cout << "Creating an X colormap." << std::endl);
+	g_ColorMap = XCreateColormap(g_Display, RootWindow(g_Display, VisualizationInformation->screen), VisualizationInformation->visual, AllocNone);
 	
 	XSetWindowAttributes WindowAttributes;
 	
-	WindowAttributes.colormap = XCreateColormap(g_Display, RootWindow(g_Display, VisualInfo->screen), VisualInfo->visual, AllocNone);
+	WindowAttributes.colormap = g_ColorMap;
 	WindowAttributes.border_pixel = 0;
 	WindowAttributes.event_mask = ExposureMask | ButtonPressMask | ButtonReleaseMask | StructureNotifyMask | KeyPressMask | KeyReleaseMask | PointerMotionMask;
 	ON_DEBUG(std::cout << "Creating X window." << std::endl);
-	g_Window = XCreateWindow(g_Display, RootWindow(g_Display, VisualInfo->screen), 0, 0, static_cast< unsigned int >(g_Width), static_cast< unsigned int >(g_Height), 0, VisualInfo->depth, InputOutput, VisualInfo->visual, CWBorderPixel | CWColormap | CWEventMask/* | CWOverrideRedirect*/, &WindowAttributes);
+	g_Window = XCreateWindow(g_Display, RootWindow(g_Display, VisualizationInformation->screen), 0, 0, static_cast< unsigned int >(g_Width), static_cast< unsigned int >(g_Height), 0, VisualizationInformation->depth, InputOutput, VisualizationInformation->visual, CWBorderPixel | CWColormap | CWEventMask/* | CWOverrideRedirect*/, &WindowAttributes);
+	if(g_Window == 0)
+	{
+		std::cerr << "Failed to create a window with the specified visualization information." << std::endl;
+		exit(1);
+	}
+	XFree(VisualizationInformation);
 	
 	Atom wmDelete = XInternAtom(g_Display, "WM_DELETE_WINDOW", True);
 	
 	XSetWMProtocols(g_Display, g_Window, &wmDelete, 1);
-	XSetStandardProperties(g_Display, g_Window, "galactic-fall 0.2", "TITLE", None, NULL, 0, NULL);
-	XMapRaised(g_Display, g_Window);
-	XFree(VisualInfo);
+	XStoreName(g_Display, g_Window, "galactic-fall 0.2");
+	XMapWindow(g_Display, g_Window);
+	ON_DEBUG(std::cout << "Creating GLX context." << std::endl);
+	
+	CreateContextWithAttributesFunction CreateContextWithAttributes(reinterpret_cast< CreateContextWithAttributesFunction >(glXGetProcAddressARB(reinterpret_cast< const GLubyte * >("glXCreateContextAttribsARB"))));
+
+    int RequestedContextAttributes[] =
+	{
+		GLX_CONTEXT_MAJOR_VERSION_ARB, 3,
+		GLX_CONTEXT_MINOR_VERSION_ARB, 0,
+		// GLX_CONTEXT_FLAGS_ARB, GLX_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB,
+		None
+	};
+ 
+    g_GLXContext = CreateContextWithAttributes(g_Display, Configurations[0], 0, true, RequestedContextAttributes);
+	if(glXIsDirect(g_Display, g_GLXContext) == false)
+	{
+		std::cerr << "Failed to acquire direct rendering context." << std::endl;
+		exit(1);
+	}
+	else
+	{
+		ON_DEBUG(std::cout << "  Direct rendering context acquired." << std::endl);
+	}
+	ON_DEBUG(std::cout << "Activating context." << std::endl);
 	glXMakeCurrent(g_Display, g_Window, g_GLXContext);
+	XFree(Configurations);
 }
 
 void InitializeOpenGL(void)
@@ -3078,6 +3119,8 @@ void DestroyWindow(void)
     }
 	XDestroyWindow(g_Display, g_Window);
 	g_Window = 0;
+	XFreeColormap(g_Display, g_ColorMap);
+	g_ColorMap = 0;
     XCloseDisplay(g_Display);
 	g_Display = 0;
 }
