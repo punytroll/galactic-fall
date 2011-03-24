@@ -101,6 +101,9 @@ check-dependencies: raw_to_littlem-check-dependencies xml_to_data-check-dependen
 	@if [ x`which pkg-config` = x ]; then \
 		echo -e "\nYour system is missing the \"pkg-config\" tool.\nThis tool is needed and you will need to install it in order to build the program.\n"; false; \
 	fi
+	@if ! pkg-config arxtools; then \
+		echo -e "\nThe tool suite \"arxtools\" is not installed on your system. You can get the most recent version from \"http://arx.googlecode.com/\".\n"; false; \
+	fi
 	@if ! pkg-config --atleast-version=0.5.2 arxtools; then \
 		echo -e "\nThe tool suite \"arxtools\" that is installed on your system is too old.\nYou have: Version `pkg-config --modversion arxtools`\nYou need: Version 0.5.2\nYou can get the most recent library from \"http://arx.googlecode.com/\"./\n"; false; \
 	fi
