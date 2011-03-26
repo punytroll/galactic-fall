@@ -44,7 +44,6 @@
 #include "graphics_model_manager.h"
 #include "graphics_texture.h"
 #include "graphics_texture_manager.h"
-#include "label.h"
 #include "local_file_data_channel.h"
 #include "mini_map_display.h"
 #include "object_aspect_name.h"
@@ -60,6 +59,7 @@
 #include "star.h"
 #include "string_cast.h"
 #include "system.h"
+#include "ui/label.h"
 #include "user_interface.h"
 #include "visualization_prototype.h"
 #include "weapon_class.h"
@@ -83,7 +83,7 @@ static void ReadVisualizationPrototype(Arxx::BufferReader & Reader, Visualizatio
 static void ReadWeaponClass(Arxx::Reference & Reference);
 static void ReadWidget(Arxx::Reference & Reference);
 static Widget * ReadWidget(Arxx::BufferReader & Reader, Arxx::u4byte Type, Arxx::u4byte SubType);
-static void ReadWidgetLabel(Arxx::BufferReader & Reader, Label * ReadLabel);
+static void ReadWidgetLabel(Arxx::BufferReader & Reader, UI::Label * ReadLabel);
 static void ReadWidgetMiniMapDisplay(Arxx::BufferReader & Reader, MiniMapDisplay * ReadMiniMapDisplay);
 static void ReadWidgetScannerDisplay(Arxx::BufferReader & Reader, ScannerDisplay * ReadScannerDisplay);
 static void ReadWidgetWidget(Arxx::BufferReader & Reader, Widget * TheWidget);
@@ -1010,7 +1010,7 @@ static Widget * ReadWidget(Arxx::BufferReader & Reader, Arxx::u4byte Type, Arxx:
 	{
 	case ARX_TYPE_WIDGET_SUB_TYPE_LABEL:
 		{
-			Label * NewLabel(new Label());
+			UI::Label * NewLabel(new UI::Label());
 			
 			ReadWidgetWidget(Reader, NewLabel);
 			ReadWidgetLabel(Reader, NewLabel);
@@ -1056,7 +1056,7 @@ static Widget * ReadWidget(Arxx::BufferReader & Reader, Arxx::u4byte Type, Arxx:
 	return Result;
 }
 
-static void ReadWidgetLabel(Arxx::BufferReader & Reader, Label * ReadLabel)
+static void ReadWidgetLabel(Arxx::BufferReader & Reader, UI::Label * ReadLabel)
 {
 	std::string Text;
 	bool UseTextColor;
@@ -1072,27 +1072,27 @@ static void ReadWidgetLabel(Arxx::BufferReader & Reader, Label * ReadLabel)
 	}
 	if(HorizontalAlignment == 0)
 	{
-		ReadLabel->SetHorizontalAlignment(Label::ALIGN_LEFT);
+		ReadLabel->SetHorizontalAlignment(UI::Label::ALIGN_LEFT);
 	}
 	else if(HorizontalAlignment == 1)
 	{
-		ReadLabel->SetHorizontalAlignment(Label::ALIGN_RIGHT);
+		ReadLabel->SetHorizontalAlignment(UI::Label::ALIGN_RIGHT);
 	}
 	else if(HorizontalAlignment == 2)
 	{
-		ReadLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
+		ReadLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
 	}
 	if(VerticalAlignment == 0)
 	{
-		ReadLabel->SetVerticalAlignment(Label::ALIGN_TOP);
+		ReadLabel->SetVerticalAlignment(UI::Label::ALIGN_TOP);
 	}
 	else if(VerticalAlignment == 1)
 	{
-		ReadLabel->SetVerticalAlignment(Label::ALIGN_BOTTOM);
+		ReadLabel->SetVerticalAlignment(UI::Label::ALIGN_BOTTOM);
 	}
 	else if(VerticalAlignment == 2)
 	{
-		ReadLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
+		ReadLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	}
 }
 

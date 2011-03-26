@@ -24,10 +24,10 @@
 #include "callbacks/callbacks.h"
 #include "file_handling.h"
 #include "key_event_information.h"
-#include "label.h"
 #include "load_game_dialog.h"
 #include "main_menu_window.h"
 #include "save_game_dialog.h"
+#include "ui/label.h"
 
 // these functions are defined in main.cpp
 void ActionQuitGameLoop(void);
@@ -60,7 +60,7 @@ MainMenuWindow::MainMenuWindow(Widget * SupWidget) :
 	_ResumeGameButton->SetAnchorTop(true);
 	_ResumeGameButton->ConnectClickedCallback(Callback(this, &MainMenuWindow::_OnResumeGameButtonClicked));
 	
-	Label * ResumeGameButtonLabel(new Label(_ResumeGameButton, "Resume Game"));
+	UI::Label * ResumeGameButtonLabel(new UI::Label(_ResumeGameButton, "Resume Game"));
 	
 	ResumeGameButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
 	ResumeGameButtonLabel->SetSize(_ResumeGameButton->GetSize());
@@ -68,8 +68,8 @@ MainMenuWindow::MainMenuWindow(Widget * SupWidget) :
 	ResumeGameButtonLabel->SetAnchorLeft(true);
 	ResumeGameButtonLabel->SetAnchorRight(true);
 	ResumeGameButtonLabel->SetAnchorTop(true);
-	ResumeGameButtonLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
-	ResumeGameButtonLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
+	ResumeGameButtonLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
+	ResumeGameButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	
 	// "New Game" button
 	_NewGameButton = new Button(this);
@@ -81,7 +81,7 @@ MainMenuWindow::MainMenuWindow(Widget * SupWidget) :
 	_NewGameButton->SetAnchorTop(true);
 	_NewGameButton->ConnectClickedCallback(Callback(this, &MainMenuWindow::_OnNewGameButtonClicked));
 	
-	Label * NewGameButtonLabel(new Label(_NewGameButton, "New Game"));
+	UI::Label * NewGameButtonLabel(new UI::Label(_NewGameButton, "New Game"));
 	
 	NewGameButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
 	NewGameButtonLabel->SetSize(_NewGameButton->GetSize());
@@ -89,8 +89,8 @@ MainMenuWindow::MainMenuWindow(Widget * SupWidget) :
 	NewGameButtonLabel->SetAnchorLeft(true);
 	NewGameButtonLabel->SetAnchorRight(true);
 	NewGameButtonLabel->SetAnchorTop(true);
-	NewGameButtonLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
-	NewGameButtonLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
+	NewGameButtonLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
+	NewGameButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	
 	// "Load Game" button
 	_LoadGameButton = new Button(this);
@@ -102,7 +102,7 @@ MainMenuWindow::MainMenuWindow(Widget * SupWidget) :
 	_LoadGameButton->SetAnchorTop(true);
 	_LoadGameButton->ConnectClickedCallback(Callback(this, &MainMenuWindow::_OnLoadGameButtonClicked));
 	
-	Label * LoadGameButtonLabel(new Label(_LoadGameButton, "Load Game"));
+	UI::Label * LoadGameButtonLabel(new UI::Label(_LoadGameButton, "Load Game"));
 	
 	LoadGameButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
 	LoadGameButtonLabel->SetSize(_LoadGameButton->GetSize());
@@ -110,8 +110,8 @@ MainMenuWindow::MainMenuWindow(Widget * SupWidget) :
 	LoadGameButtonLabel->SetAnchorLeft(true);
 	LoadGameButtonLabel->SetAnchorRight(true);
 	LoadGameButtonLabel->SetAnchorTop(true);
-	LoadGameButtonLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
-	LoadGameButtonLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
+	LoadGameButtonLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
+	LoadGameButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	
 	// "Save Game" button
 	_SaveGameButton = new Button(this);
@@ -123,7 +123,7 @@ MainMenuWindow::MainMenuWindow(Widget * SupWidget) :
 	_SaveGameButton->SetAnchorTop(true);
 	_SaveGameButton->ConnectClickedCallback(Callback(this, &MainMenuWindow::_OnSaveGameButtonClicked));
 	
-	Label * SaveGameButtonLabel(new Label(_SaveGameButton, "Save Game"));
+	UI::Label * SaveGameButtonLabel(new UI::Label(_SaveGameButton, "Save Game"));
 	
 	SaveGameButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
 	SaveGameButtonLabel->SetSize(_SaveGameButton->GetSize());
@@ -131,8 +131,8 @@ MainMenuWindow::MainMenuWindow(Widget * SupWidget) :
 	SaveGameButtonLabel->SetAnchorLeft(true);
 	SaveGameButtonLabel->SetAnchorRight(true);
 	SaveGameButtonLabel->SetAnchorTop(true);
-	SaveGameButtonLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
-	SaveGameButtonLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
+	SaveGameButtonLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
+	SaveGameButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	
 	// "Quit" button
 	_QuitButton = new Button(this);
@@ -144,7 +144,7 @@ MainMenuWindow::MainMenuWindow(Widget * SupWidget) :
 	_QuitButton->SetAnchorTop(true);
 	_QuitButton->ConnectClickedCallback(Callback(this, &MainMenuWindow::_OnQuitButtonClicked));
 	
-	Label * QuitButtonLabel(new Label(_QuitButton, "Quit"));
+	UI::Label * QuitButtonLabel(new UI::Label(_QuitButton, "Quit"));
 	
 	QuitButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
 	QuitButtonLabel->SetSize(_QuitButton->GetSize());
@@ -152,8 +152,8 @@ MainMenuWindow::MainMenuWindow(Widget * SupWidget) :
 	QuitButtonLabel->SetAnchorLeft(true);
 	QuitButtonLabel->SetAnchorRight(true);
 	QuitButtonLabel->SetAnchorTop(true);
-	QuitButtonLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
-	QuitButtonLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
+	QuitButtonLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
+	QuitButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 }
 
 bool MainMenuWindow::_OnKey(const KeyEventInformation & KeyEventInformation)

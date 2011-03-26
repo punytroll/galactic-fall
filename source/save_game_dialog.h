@@ -25,8 +25,12 @@
 
 class Button;
 class DirectoryEntryItem;
-class Label;
 class ScrollBox;
+
+namespace UI
+{
+	class Label;
+}
 
 class SaveGameDialog : public Dialog
 {
@@ -50,9 +54,9 @@ private:
 	std::string _DirectoryPath;
 	Button * m_CancelButton;
 	Button * m_OKButton;
-	Label * m_ErrorMessage;
+	UI::Label * m_ErrorMessage;
 	TimeoutNotification m_ErrorMessageTimeoutNotification;
-	Label * m_FileNameLabel;
+	UI::Label * m_FileNameLabel;
 	ScrollBox * m_FileScrollBox;
 	DirectoryEntryItem * m_SelectedDirectoryEntryItem;
 };

@@ -63,7 +63,6 @@
 #include "graphics_scene.h"
 #include "graphics_texture_manager.h"
 #include "key_event_information.h"
-#include "label.h"
 #include "main_menu_window.h"
 #include "map_dialog.h"
 #include "map_knowledge.h"
@@ -105,6 +104,7 @@
 #include "system_statistics.h"
 #include "timeout_notifications.h"
 #include "timing_dialog.h"
+#include "ui/label.h"
 #include "user_interface.h"
 #include "visualization_prototype.h"
 #include "visualizations.h"
@@ -146,19 +146,19 @@ UserInterface * g_UserInterface(0);
 ClassManager< WeaponClass > * g_WeaponClassManager(0);
 
 // global widget pointers
-Label * g_CreditsLabel(0);
-Label * g_CurrentSystemLabel(0);
-Label * g_FuelLabel(0);
-Label * g_HullLabel(0);
-Label * g_MessageLabel(0);
+UI::Label * g_CreditsLabel(0);
+UI::Label * g_CurrentSystemLabel(0);
+UI::Label * g_FuelLabel(0);
+UI::Label * g_HullLabel(0);
+UI::Label * g_MessageLabel(0);
 Widget * g_MiniMap(0);
 MiniMapDisplay * g_MiniMapDisplay(0);
 Widget * g_Scanner(0);
 ScannerDisplay * g_ScannerDisplay(0);
-Label * g_SystemLabel(0);
-Label * g_TargetLabel(0);
-Label * g_TargetFactionLabel(0);
-Label * g_TimeWarpLabel(0);
+UI::Label * g_SystemLabel(0);
+UI::Label * g_TargetLabel(0);
+UI::Label * g_TargetFactionLabel(0);
+UI::Label * g_TimeWarpLabel(0);
 
 // global dialog pointers
 MainMenuWindow * g_MainMenuWindow(0);
@@ -893,7 +893,7 @@ void UpdateUserInterface(void)
 		// display the energy status
 		if(ObservedShip->GetBattery() != 0)
 		{
-			Label * EnergyLabel(dynamic_cast< Label * >(g_UserInterface->GetWidget("/energy")));
+			UI::Label * EnergyLabel(dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/energy")));
 			
 			assert(EnergyLabel != 0);
 			EnergyLabel->SetVisible(true);
@@ -3394,18 +3394,18 @@ int main(int argc, char ** argv)
 	// the user interface widgets must be loaded before the first Resize() call
 	g_ResourceReader->ReadUserInterface();
 	// setup the global variables for the user interface
-	g_CreditsLabel = dynamic_cast< Label * >(g_UserInterface->GetWidget("/credits"));
-	g_FuelLabel = dynamic_cast< Label * >(g_UserInterface->GetWidget("/fuel"));
-	g_HullLabel = dynamic_cast< Label * >(g_UserInterface->GetWidget("/hull"));
-	g_MessageLabel = dynamic_cast< Label * >(g_UserInterface->GetWidget("/message"));
-	g_SystemLabel = dynamic_cast< Label * >(g_UserInterface->GetWidget("/system"));
-	g_TimeWarpLabel = dynamic_cast< Label * >(g_UserInterface->GetWidget("/time_warp"));
+	g_CreditsLabel = dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/credits"));
+	g_FuelLabel = dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/fuel"));
+	g_HullLabel = dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/hull"));
+	g_MessageLabel = dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/message"));
+	g_SystemLabel = dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/system"));
+	g_TimeWarpLabel = dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/time_warp"));
 	g_MiniMap = g_UserInterface->GetWidget("/mini_map");
-		g_CurrentSystemLabel = dynamic_cast< Label * >(g_UserInterface->GetWidget("/mini_map/current_system"));
+		g_CurrentSystemLabel = dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/mini_map/current_system"));
 		g_MiniMapDisplay = dynamic_cast< MiniMapDisplay * >(g_UserInterface->GetWidget("/mini_map/display"));
 	g_Scanner = g_UserInterface->GetWidget("/scanner");
-		g_TargetLabel = dynamic_cast< Label * >(g_UserInterface->GetWidget("/scanner/target"));
-		g_TargetFactionLabel = dynamic_cast< Label * >(g_UserInterface->GetWidget("/scanner/target_faction"));
+		g_TargetLabel = dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/scanner/target"));
+		g_TargetFactionLabel = dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/scanner/target_faction"));
 		g_ScannerDisplay = dynamic_cast< ScannerDisplay * >(g_UserInterface->GetWidget("/scanner/display"));
 	// sanity asserts
 	assert(g_CreditsLabel != 0);

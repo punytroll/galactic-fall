@@ -21,10 +21,10 @@
 
 #include <GL/gl.h>
 
-#include "draw_text.h"
+#include "../draw_text.h"
 #include "label.h"
 
-Label::Label(Widget * SupWidget, const std::string & Text) :
+UI::Label::Label(Widget * SupWidget, const std::string & Text) :
 	Widget(SupWidget),
 	m_HorizontalAlignment(Label::ALIGN_LEFT),
 	m_Text(Text),
@@ -36,18 +36,18 @@ Label::Label(Widget * SupWidget, const std::string & Text) :
 	m_TextColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
-Label::~Label(void)
+UI::Label::~Label(void)
 {
 	delete m_TextColor;
 }
 
-void Label::SetTextColor(const Color & TextColor)
+void UI::Label::SetTextColor(const Color & TextColor)
 {
 	delete m_TextColor;
 	m_TextColor = new Color(TextColor);
 }
 
-void Label::Draw(void) const
+void UI::Label::Draw(void) const
 {
 	float Width(GetSize().m_V.m_A[0]);
 	
