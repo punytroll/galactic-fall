@@ -24,10 +24,14 @@
 
 class Button;
 class Character;
-class Label;
 class Planet;
 class ScrollBox;
 class TradeCenterAssetClass;
+
+namespace UI
+{
+	class Label;
+}
 
 class TradeCenterDialog : public WWindow
 {
@@ -52,14 +56,11 @@ private:
 	Planet * m_Planet;
 	Character * m_Character;
 	Button * m_OKButton;
-	Label * m_OKButtonLabel;
 	Button * m_BuyButton;
-	Label * m_BuyButtonLabel;
 	Button * m_SellButton;
-	Label * m_SellButtonLabel;
 	ScrollBox * m_AssetClassScrollBox;
-	Label * m_TraderCreditsLabel;
-	Label * m_TraderAvailableSpaceLabel;
+	UI::Label * m_TraderCreditsLabel;
+	UI::Label * m_TraderAvailableSpaceLabel;
 	TradeCenterAssetClass * m_SelectedTradeCenterAssetClass;
 };
 

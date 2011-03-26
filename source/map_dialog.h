@@ -24,7 +24,6 @@
 
 class Button;
 class Character;
-class Label;
 class StarMapDisplay;
 class System;
 
@@ -39,7 +38,6 @@ protected:
 	void OnOKClicked(void);
 private:
 	Button * m_OKButton;
-	Label * m_OKButtonLabel;
 	StarMapDisplay * m_StarMapDisplay;
 };
 

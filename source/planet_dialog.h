@@ -24,7 +24,6 @@
 
 class Button;
 class Character;
-class Label;
 class Planet;
 class TradeCenterDialog;
 
@@ -45,12 +44,9 @@ private:
 	// member variables
 	Planet * m_Planet;
 	Character * m_Character;
-	Label * m_DescriptionLabel;
 	Button * m_TakeOffButton;
 	Button * m_TradeCenterButton;
-	Label * m_TradeCenterLabel;
 	Button * m_RefuelButton;
-	Label * m_RefuelButtonLabel;
 	TradeCenterDialog * m_TradeCenterDialog;
 };
 

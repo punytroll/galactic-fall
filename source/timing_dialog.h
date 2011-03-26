@@ -23,7 +23,10 @@
 #include "type_definitions.h"
 #include "window.h"
 
-class Label;
+namespace UI
+{
+	class Label;
+}
 
 class TimingDialog : public WWindow
 {
@@ -34,19 +37,19 @@ private:
 	// callbacks
 	bool OnKey(const KeyEventInformation & KeyEventInformation);
 	// member variables
-	Label * m_AISecondsThisFrameLabel;
-	Label * m_CommoditiesInCurrentSystemThisFrameLabel;
-	Label * m_DispatchedMessagesThisFrameLabel;
-	Label * m_FramesPerSecondLabel;
-	Label * m_FrameToFrameSecondsThisFrameLabel;
-	Label * m_GraphicsSecondsThisFrameLabel;
-	Label * m_MessagingSecondsThisFrameLabel;
-	Label * m_ParticleSystemsThisFrameLabel;
-	Label * m_ParticlesThisFrameLabel;
-	Label * m_PhysicsSecondsThisFrameLabel;
-	Label * m_ProcessingSecondsThisFrameLabel;
-	Label * m_ShipsInCurrentSystemThisFrameLabel;
-	Label * m_ShotsInCurrentSystemThisFrameLabel;
+	UI::Label * m_AISecondsThisFrameLabel;
+	UI::Label * m_CommoditiesInCurrentSystemThisFrameLabel;
+	UI::Label * m_DispatchedMessagesThisFrameLabel;
+	UI::Label * m_FramesPerSecondLabel;
+	UI::Label * m_FrameToFrameSecondsThisFrameLabel;
+	UI::Label * m_GraphicsSecondsThisFrameLabel;
+	UI::Label * m_MessagingSecondsThisFrameLabel;
+	UI::Label * m_ParticleSystemsThisFrameLabel;
+	UI::Label * m_ParticlesThisFrameLabel;
+	UI::Label * m_PhysicsSecondsThisFrameLabel;
+	UI::Label * m_ProcessingSecondsThisFrameLabel;
+	UI::Label * m_ShipsInCurrentSystemThisFrameLabel;
+	UI::Label * m_ShotsInCurrentSystemThisFrameLabel;
 };
 
 #endif

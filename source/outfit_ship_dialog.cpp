@@ -22,7 +22,6 @@
 #include "color.h"
 #include "globals.h"
 #include "key_event_information.h"
-#include "label.h"
 #include "object_aspect_accessory.h"
 #include "object_aspect_name.h"
 #include "object_aspect_object_container.h"
@@ -34,6 +33,7 @@
 #include "slot.h"
 #include "slot_class.h"
 #include "storage.h"
+#include "ui/label.h"
 #include "weapon.h"
 #include "weapon_class.h"
 
@@ -54,7 +54,7 @@ private:
 	// member variables
 	bool m_Selected;
 	Slot * m_Slot;
-	Label * m_TypeOrWeaponLabel;
+	UI::Label * m_TypeOrWeaponLabel;
 };
 
 class AccessoryListItem : public Widget
@@ -86,18 +86,18 @@ SlotListItem::SlotListItem(Widget * SupWidget, Slot * Slot) :
 	// set to arbitrary design size
 	SetSize(Vector2f(100.0f, 100.0f));
 	
-	Label * IdentifierLabel(new Label(this, Slot->GetName()));
+	UI::Label * IdentifierLabel(new UI::Label(this, Slot->GetName()));
 	
 	IdentifierLabel->SetPosition(Vector2f(5.0f, 5.0f));
 	IdentifierLabel->SetSize(Vector2f(90.0f, 20.0f));
-	IdentifierLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
+	IdentifierLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	IdentifierLabel->SetAnchorLeft(true);
 	IdentifierLabel->SetAnchorRight(true);
 	IdentifierLabel->SetAnchorTop(true);
-	m_TypeOrWeaponLabel = new Label(this);
+	m_TypeOrWeaponLabel = new UI::Label(this);
 	m_TypeOrWeaponLabel->SetPosition(Vector2f(25.0f, 25.0f));
 	m_TypeOrWeaponLabel->SetSize(Vector2f(70.0f, 20.0f));
-	m_TypeOrWeaponLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
+	m_TypeOrWeaponLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	m_TypeOrWeaponLabel->SetAnchorLeft(true);
 	m_TypeOrWeaponLabel->SetAnchorRight(true);
 	m_TypeOrWeaponLabel->SetAnchorTop(true);
@@ -173,20 +173,20 @@ AccessoryListItem::AccessoryListItem(Widget * SupWidget, Object * Accessory) :
 	// safe-guard: only accept objects with a accessory aspect
 	assert(Accessory->GetAspectAccessory() != 0);
 	
-	Label * NameLabel(new Label(this, Accessory->GetAspectName()->GetName()));
+	UI::Label * NameLabel(new UI::Label(this, Accessory->GetAspectName()->GetName()));
 	
 	NameLabel->SetPosition(Vector2f(5.0f, 5.0f));
 	NameLabel->SetSize(Vector2f(90.0f, 20.0f));
-	NameLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
+	NameLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	NameLabel->SetAnchorLeft(true);
 	NameLabel->SetAnchorRight(true);
 	NameLabel->SetAnchorTop(true);
 	
-	Label * SlotTypeLabel(new Label(this, g_SlotClassManager->Get(Accessory->GetAspectAccessory()->GetSlotClassIdentifier())->GetName()));
+	UI::Label * SlotTypeLabel(new UI::Label(this, g_SlotClassManager->Get(Accessory->GetAspectAccessory()->GetSlotClassIdentifier())->GetName()));
 	
 	SlotTypeLabel->SetPosition(Vector2f(25.0f, 25.0f));
 	SlotTypeLabel->SetSize(Vector2f(70.0f, 20.0f));
-	SlotTypeLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
+	SlotTypeLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	SlotTypeLabel->SetAnchorLeft(true);
 	SlotTypeLabel->SetAnchorRight(true);
 	SlotTypeLabel->SetAnchorTop(true);
@@ -244,12 +244,12 @@ OutfitShipDialog::OutfitShipDialog(Widget * SupWidget, Ship * Ship) :
 	m_LeftPane->SetSize(Vector2f(200.0f, GetSize()[1] - 50.0f));
 	m_LeftPane->SetAnchorBottom(true);
 	
-	Label * SlotListLabel(new Label(m_LeftPane, "Slots"));
+	UI::Label * SlotListLabel(new UI::Label(m_LeftPane, "Slots"));
 	
 	SlotListLabel->SetPosition(Vector2f(0.0f, 0.0f));
 	SlotListLabel->SetSize(Vector2f(m_LeftPane->GetSize()[0], 20.0f));
-	SlotListLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
-	SlotListLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
+	SlotListLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
+	SlotListLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	SlotListLabel->SetAnchorRight(true);
 	m_SlotScrollBox = new ScrollBox(m_LeftPane);
 	m_SlotScrollBox->SetPosition(Vector2f(0.0f, 30.0f));
@@ -284,24 +284,24 @@ OutfitShipDialog::OutfitShipDialog(Widget * SupWidget, Ship * Ship) :
 	m_MountButton->ConnectClickedCallback(Callback(this, &OutfitShipDialog::OnMountClicked));
 	m_MountButton->SetAnchorRight(true);
 	
-	Label * MountButtonLabel(new Label(m_MountButton, "Mount"));
+	UI::Label * MountButtonLabel(new UI::Label(m_MountButton, "Mount"));
 	
 	MountButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
 	MountButtonLabel->SetSize(Vector2f(m_MountButton->GetSize()));
-	MountButtonLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
-	MountButtonLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
+	MountButtonLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
+	MountButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	m_UnmountButton = new Button(m_CenterPane);
 	m_UnmountButton->SetPosition(Vector2f(0.0f, 70.0f));
 	m_UnmountButton->SetSize(Vector2f(m_CenterPane->GetSize()[0], 20.0f));
 	m_UnmountButton->ConnectClickedCallback(Callback(this, &OutfitShipDialog::OnUnmountClicked));
 	m_UnmountButton->SetAnchorRight(true);
 	
-	Label * UnmountButtonLabel(new Label(m_UnmountButton, "Unmount"));
+	UI::Label * UnmountButtonLabel(new UI::Label(m_UnmountButton, "Unmount"));
 	
 	UnmountButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
 	UnmountButtonLabel->SetSize(Vector2f(m_UnmountButton->GetSize()));
-	UnmountButtonLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
-	UnmountButtonLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
+	UnmountButtonLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
+	UnmountButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	m_OKButton = new Button(m_CenterPane);
 	m_OKButton->SetPosition(Vector2f(0.0f, m_CenterPane->GetSize()[1] - 30.0f));
 	m_OKButton->SetSize(Vector2f(m_CenterPane->GetSize()[0], 20.0f));
@@ -310,24 +310,24 @@ OutfitShipDialog::OutfitShipDialog(Widget * SupWidget, Ship * Ship) :
 	m_OKButton->SetAnchorRight(true);
 	m_OKButton->SetAnchorTop(false);
 	
-	Label * OKButtonLabel(new Label(m_OKButton, "OK"));
+	UI::Label * OKButtonLabel(new UI::Label(m_OKButton, "OK"));
 	
 	OKButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
 	OKButtonLabel->SetSize(Vector2f(m_OKButton->GetSize()));
-	OKButtonLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
-	OKButtonLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
+	OKButtonLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
+	OKButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	// right pane
 	m_RightPane = new Widget(this);
 	m_RightPane->SetPosition(Vector2f(10.0f + m_LeftPane->GetSize()[0] + 10.0f + m_CenterPane->GetSize()[0] + 10.0f, 40.0f));
 	m_RightPane->SetSize(Vector2f(200.0f, GetSize()[1] - 50.0f));
 	m_RightPane->SetAnchorBottom(true);
 	
-	Label * AccessoryListLabel(new Label(m_RightPane, "Accessories"));
+	UI::Label * AccessoryListLabel(new UI::Label(m_RightPane, "Accessories"));
 	
 	AccessoryListLabel->SetPosition(Vector2f(0.0f, 0.0f));
 	AccessoryListLabel->SetSize(Vector2f(m_RightPane->GetSize()[0], 20.0f));
-	AccessoryListLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
-	AccessoryListLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
+	AccessoryListLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
+	AccessoryListLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	AccessoryListLabel->SetAnchorRight(true);
 	m_AccessoryScrollBox = new ScrollBox(m_RightPane);
 	m_AccessoryScrollBox->SetPosition(Vector2f(0.0f, 30.0f));

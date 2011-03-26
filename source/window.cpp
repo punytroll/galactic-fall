@@ -20,7 +20,7 @@
 #include "border.h"
 #include "callbacks/callbacks.h"
 #include "globals.h"
-#include "label.h"
+#include "ui/label.h"
 #include "user_interface.h"
 #include "window.h"
 
@@ -35,12 +35,12 @@ WWindow::WWindow(Widget * SupWidget, const std::string & Title) :
 	m_Border->SetAnchorRight(true);
 	m_Border->SetWidth(1.0f);
 	m_Border->SetForegroundColor(Color(0.4f, 0.4f, 0.4f, 1.0f));
-	m_TitleLabel = new Label(this, Title);
+	m_TitleLabel = new UI::Label(this, Title);
 	m_TitleLabel->SetPosition(Vector2f(10.0f, 10.0f));
 	m_TitleLabel->SetSize(Vector2f(GetSize()[0] - 20.0f, 20.0f));
 	m_TitleLabel->SetAnchorRight(true);
-	m_TitleLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
-	m_TitleLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
+	m_TitleLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
+	m_TitleLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	m_TitleLabel->SetBackgroundColor(Color(0.2f, 0.2f, 0.4f, 1.0f));
 	m_TitleLabel->ConnectMouseButtonCallback(Callback(this, &WWindow::OnTitleLabelMouseButton));
 	m_TitleLabel->ConnectMouseMovedCallback(Callback(this, &WWindow::OnTitleLabelMouseMoved));

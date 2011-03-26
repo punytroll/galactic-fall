@@ -24,13 +24,13 @@
 #include "color.h"
 #include "globals.h"
 #include "key_event_information.h"
-#include "label.h"
 #include "object_aspect_name.h"
 #include "planet.h"
 #include "planet_dialog.h"
 #include "ship.h"
 #include "string_cast.h"
 #include "trade_center_dialog.h"
+#include "ui/label.h"
 
 PlanetDialog::PlanetDialog(Widget * SupWidget, Planet * Planet, Character * Character) :
 	WWindow(SupWidget, "Planet: " + Planet->GetAspectName()->GetName()),
@@ -42,12 +42,14 @@ PlanetDialog::PlanetDialog(Widget * SupWidget, Planet * Planet, Character * Char
 	SetSize(Vector2f(500.0f, 330.0f));
 	ConnectDestroyingCallback(Callback(this, &PlanetDialog::OnDestroying));
 	ConnectKeyCallback(Callback(this, &PlanetDialog::OnKey));
-	m_DescriptionLabel = new Label(this, m_Planet->GetDescription());
-	m_DescriptionLabel->SetPosition(Vector2f(120.0f, 40.0f));
-	m_DescriptionLabel->SetSize(Vector2f(360.0f, 100.0f));
-	m_DescriptionLabel->SetWrap(true);
-	m_DescriptionLabel->SetWordWrap(true);
-	m_DescriptionLabel->SetAnchorRight(true);
+	
+	UI::Label * DescriptionLabel(new UI::Label(this, m_Planet->GetDescription()));
+	
+	DescriptionLabel->SetPosition(Vector2f(120.0f, 40.0f));
+	DescriptionLabel->SetSize(Vector2f(360.0f, 100.0f));
+	DescriptionLabel->SetWrap(true);
+	DescriptionLabel->SetWordWrap(true);
+	DescriptionLabel->SetAnchorRight(true);
 	m_TakeOffButton = new Button(this);
 	m_TakeOffButton->SetPosition(Vector2f(390.0f, 300.0f));
 	m_TakeOffButton->SetSize(Vector2f(100.0f, 20.0f));
@@ -57,21 +59,22 @@ PlanetDialog::PlanetDialog(Widget * SupWidget, Planet * Planet, Character * Char
 	m_TakeOffButton->SetAnchorRight(true);
 	m_TakeOffButton->SetAnchorTop(false);
 	
-	Label * TakeOffButtonLabel = new Label(m_TakeOffButton, "Take Off");
+	UI::Label * TakeOffButtonLabel(new UI::Label(m_TakeOffButton, "Take Off"));
 	
 	TakeOffButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
 	TakeOffButtonLabel->SetSize(m_TakeOffButton->GetSize());
-	TakeOffButtonLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
-	TakeOffButtonLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
+	TakeOffButtonLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
+	TakeOffButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	m_TradeCenterButton = new Button(this);
 	m_TradeCenterButton->SetPosition(Vector2f(10.0f, 40.0f));
 	m_TradeCenterButton->SetSize(Vector2f(100.0f, 20.0f));
 	m_TradeCenterButton->ConnectClickedCallback(Callback(this, &PlanetDialog::OnTradeCenterClicked));
-	m_TradeCenterLabel = new Label(m_TradeCenterButton, "Trade Center");
-	m_TradeCenterLabel->SetPosition(Vector2f(0.0f, 0.0f));
-	m_TradeCenterLabel->SetSize(m_TradeCenterButton->GetSize());
-	m_TradeCenterLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
-	m_TradeCenterLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
+	
+	UI::Label * TradeCenterLabel(new UI::Label(m_TradeCenterButton, "Trade Center"));
+	TradeCenterLabel->SetPosition(Vector2f(0.0f, 0.0f));
+	TradeCenterLabel->SetSize(m_TradeCenterButton->GetSize());
+	TradeCenterLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
+	TradeCenterLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	
 	const std::vector< PlanetAssetClass * > & PlanetAssetClasses(m_Planet->GetPlanetAssetClasses());
 	
@@ -83,13 +86,15 @@ PlanetDialog::PlanetDialog(Widget * SupWidget, Planet * Planet, Character * Char
 			m_RefuelButton->SetPosition(Vector2f(10.0f, 70.0f));
 			m_RefuelButton->SetSize(Vector2f(100.0f, 20.0f));
 			m_RefuelButton->ConnectClickedCallback(Callback(this, &PlanetDialog::OnRefuelClicked));
-			m_RefuelButtonLabel = new Label(m_RefuelButton, "Refuel");
-			m_RefuelButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
-			m_RefuelButtonLabel->SetSize(m_TradeCenterButton->GetSize());
-			m_RefuelButtonLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
-			m_RefuelButtonLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
 			
-			Label * FuelPriceLabel = new Label(this, "Local fuel price is: " + to_string_cast((*PlanetAssetClassIterator)->GetPrice()) + " credits/unit.");
+			UI::Label * RefuelButtonLabel(new UI::Label(m_RefuelButton, "Refuel"));
+			
+			RefuelButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
+			RefuelButtonLabel->SetSize(m_TradeCenterButton->GetSize());
+			RefuelButtonLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
+			RefuelButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
+			
+			UI::Label * FuelPriceLabel(new UI::Label(this, "Local fuel price is: " + to_string_cast((*PlanetAssetClassIterator)->GetPrice()) + " credits/unit."));
 			
 			FuelPriceLabel->SetPosition(Vector2f(10.0f, 300.0f));
 			FuelPriceLabel->SetSize(Vector2f(300.0f, 20.0f));

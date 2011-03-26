@@ -25,10 +25,10 @@
 #include "file_handling.h"
 #include "globals.h"
 #include "key_event_information.h"
-#include "label.h"
 #include "real_time.h"
 #include "save_game_dialog.h"
 #include "scroll_box.h"
+#include "ui/label.h"
 
 class DirectoryEntryItem : public Widget
 {
@@ -46,7 +46,7 @@ private:
 	void OnMouseLeave(void);
 	// member variables
 	bool m_Selected;
-	Label * m_CaptionLabel;
+	UI::Label * m_CaptionLabel;
 };
 
 DirectoryEntryItem::DirectoryEntryItem(Widget * SupWidget, const std::string & Caption) :
@@ -55,10 +55,10 @@ DirectoryEntryItem::DirectoryEntryItem(Widget * SupWidget, const std::string & C
 {
 	ConnectMouseEnterCallback(Callback(this, &DirectoryEntryItem::OnMouseEnter));
 	ConnectMouseLeaveCallback(Callback(this, &DirectoryEntryItem::OnMouseLeave));
-	m_CaptionLabel = new Label(this, Caption);
+	m_CaptionLabel = new UI::Label(this, Caption);
 	m_CaptionLabel->SetPosition(Vector2f(5.0f, 0.0f));
 	m_CaptionLabel->SetSize(Vector2f(GetSize()[0] - 10.0f, 20.0f));
-	m_CaptionLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
+	m_CaptionLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	m_CaptionLabel->SetAnchorLeft(true);
 	m_CaptionLabel->SetAnchorRight(true);
 	m_CaptionLabel->SetAnchorTop(true);
@@ -120,12 +120,12 @@ SaveGameDialog::SaveGameDialog(Widget * SupWidget) :
 	m_OKButton->SetAnchorTop(false);
 	m_OKButton->ConnectClickedCallback(Bind1(Callback(dynamic_cast< Dialog * >(this), &SaveGameDialog::_Close), Dialog::OK_BUTTON));
 	
-	Label * OKButtonLabel(new Label(m_OKButton, "OK"));
+	UI::Label * OKButtonLabel(new UI::Label(m_OKButton, "OK"));
 	
 	OKButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
 	OKButtonLabel->SetSize(m_OKButton->GetSize());
-	OKButtonLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
-	OKButtonLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
+	OKButtonLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
+	OKButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	m_CancelButton = new Button(this);
 	m_CancelButton->SetSize(Vector2f(100.0f, 20.0f));
 	m_CancelButton->SetPosition(Vector2f(GetSize()[0] - 10.0f - m_OKButton->GetSize()[0] - 10.0f - m_CancelButton->GetSize()[0], GetSize()[1] - 10.0f - m_CancelButton->GetSize()[1]));
@@ -135,13 +135,13 @@ SaveGameDialog::SaveGameDialog(Widget * SupWidget) :
 	m_CancelButton->SetAnchorTop(false);
 	m_CancelButton->ConnectClickedCallback(Bind1(Callback(dynamic_cast< Dialog * >(this), &SaveGameDialog::_Close), Dialog::CANCEL_BUTTON));
 	
-	Label * CancelButtonLabel(new Label(m_CancelButton, "Cancel"));
+	UI::Label * CancelButtonLabel(new UI::Label(m_CancelButton, "Cancel"));
 	
 	CancelButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
 	CancelButtonLabel->SetSize(m_CancelButton->GetSize());
-	CancelButtonLabel->SetHorizontalAlignment(Label::ALIGN_HORIZONTAL_CENTER);
-	CancelButtonLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
-	m_ErrorMessage = new Label(this);
+	CancelButtonLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
+	CancelButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
+	m_ErrorMessage = new UI::Label(this);
 	m_ErrorMessage->SetPosition(Vector2f(10.0f, 40.0f));
 	m_ErrorMessage->SetSize(Vector2f(GetSize()[0] - 10.0f - 10.0f, 30.0f));
 	m_ErrorMessage->SetTextColor(Color(1.0f, 0.3, 0.3f, 1.0f));
@@ -151,13 +151,13 @@ SaveGameDialog::SaveGameDialog(Widget * SupWidget) :
 	m_ErrorMessage->SetAnchorTop(true);
 	m_ErrorMessage->SetWrap(true);
 	m_ErrorMessage->SetWordWrap(true);
-	m_ErrorMessage->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
-	m_FileNameLabel = new Label(this);
+	m_ErrorMessage->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
+	m_FileNameLabel = new UI::Label(this);
 	m_FileNameLabel->SetPosition(Vector2f(10.0f, 80.0f));
 	m_FileNameLabel->SetSize(Vector2f(GetSize()[0] - 10.0f - 10.0f, 20.0f));
 	m_FileNameLabel->SetTextColor(Color(1.0f, 1.0f, 0.5f, 1.0f));
 	m_FileNameLabel->SetBackgroundColor(Color(0.1f, 0.1f, 0.1f, 1.0f));
-	m_FileNameLabel->SetVerticalAlignment(Label::ALIGN_VERTICAL_CENTER);
+	m_FileNameLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	m_FileNameLabel->SetAnchorRight(true);
 	m_FileNameLabel->ConnectKeyCallback(Callback(this, &SaveGameDialog::OnFileNameLabelKey));
 	m_FileNameLabel->GrabKeyFocus();
