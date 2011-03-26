@@ -3,7 +3,7 @@ root = ..
 -include $(root)/configuration
 
 SOURCE_FILES = $(wildcard *.cpp)
-OBJECT_FILES = $(patsubst %.cpp,%.o,$(SOURCE_FILES))
+OBJECT_FILES = $(patsubst %.cpp,.object-files/%.o,$(SOURCE_FILES))
 HEADER_DEPENDENCIES = $(foreach HEADER_FILE, $(wildcard *.h), $(HEADER_FILE) '$($(patsubst %.h,%_h,$(HEADER_FILE)))')
 
 arx_reading_h = \
@@ -491,7 +491,7 @@ default: all
 
 all: all-recursive
 
-all-here: check-dependencies check-consistency binary
+all-here: check-dependencies check-consistency .object-files binary
 
 all-recursive: callbacks-all-recursive all-here
 
@@ -500,14 +500,15 @@ clean: clean-recursive
 clean-here:
 	$(RM) binary
 	$(RM) $(OBJECT_FILES)
-	@MORE_OBJECT_FILES="$(filter-out $(OBJECT_FILES),$(wildcard *.o))"; \
+	@MORE_OBJECT_FILES="$(filter-out $(OBJECT_FILES),$(wildcard .object-files/*.o))"; \
 	if [ x"$${MORE_OBJECT_FILES}" != x ]; then \
-		echo -e "\nThe following object files have not been removed automatically. You may want to remove them by hand."; \
+		echo "\nThe following object files have not been removed explicitly. They are deleted with the \".object-files\" directory, nevertheless."; \
 		for OBJECT_FILE in $${MORE_OBJECT_FILES}; do \
-			echo -e "\t$${OBJECT_FILE}"; \
+			echo "    $${OBJECT_FILE}"; \
 		done; \
 		echo ""; \
 	fi
+	$(RM) -r .object-files
 
 clean-recursive: callbacks-clean-recursive clean-here
 
@@ -554,307 +555,311 @@ check-consistency:
 		exit 1; \
 	fi
 
+.object-files:
+	mkdir $@
+
 $(OBJECT_FILES): $(CXXFLAGS_configuration)
 
 binary: $(OBJECT_FILES) $(LDFLAGS_configuration)
 	$(CXX) $(LDFLAGS) `pkg-config --libs libarxx` $(OBJECT_FILES) -lGL -lX11 -o $@
 
-arx_reading.o: arx_reading.cpp $(arx_reading_h) $(arx_resources_h) $(asset_class_h) $(battery_class_h) $(buffer_reading_h) $(callbacks_callbacks_h) $(class_manager_h) $(commodity_class_h) $(faction_h) $(galaxy_h) $(generator_class_h) $(globals_h) $(graphics_material_h) $(graphics_mesh_h) $(graphics_mesh_manager_h) $(graphics_model_h) $(graphics_model_manager_h) $(graphics_texture_h) $(graphics_texture_manager_h) $(label_h) $(local_file_data_channel_h) $(mini_map_display_h) $(object_aspect_name_h) $(object_aspect_object_container_h) $(object_aspect_position_h) $(object_factory_h) $(planet_h) $(scanner_display_h) $(settings_h) $(ship_class_h) $(slot_h) $(star_h) $(string_cast_h) $(system_h) $(user_interface_h) $(visualization_prototype_h) $(weapon_class_h) $(widget_h)
+.object-files/arx_reading.o: arx_reading.cpp $(arx_reading_h) $(arx_resources_h) $(asset_class_h) $(battery_class_h) $(buffer_reading_h) $(callbacks_callbacks_h) $(class_manager_h) $(commodity_class_h) $(faction_h) $(galaxy_h) $(generator_class_h) $(globals_h) $(graphics_material_h) $(graphics_mesh_h) $(graphics_mesh_manager_h) $(graphics_model_h) $(graphics_model_manager_h) $(graphics_texture_h) $(graphics_texture_manager_h) $(label_h) $(local_file_data_channel_h) $(mini_map_display_h) $(object_aspect_name_h) $(object_aspect_object_container_h) $(object_aspect_position_h) $(object_factory_h) $(planet_h) $(scanner_display_h) $(settings_h) $(ship_class_h) $(slot_h) $(star_h) $(string_cast_h) $(system_h) $(user_interface_h) $(visualization_prototype_h) $(weapon_class_h) $(widget_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags libarxx` -c $< -o $@
 
-asset_class.o: asset_class.cpp $(asset_class_h)
+.object-files/asset_class.o: asset_class.cpp $(asset_class_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-battery.o: battery.cpp $(battery_h)
+.object-files/battery.o: battery.cpp $(battery_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-battery_class.o: battery_class.cpp $(battery_class_h)
+.object-files/battery_class.o: battery_class.cpp $(battery_class_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-border.o: border.cpp $(border_h)
+.object-files/border.o: border.cpp $(border_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-buffer_reading.o: buffer_reading.cpp $(buffer_reading_h)
+.object-files/buffer_reading.o: buffer_reading.cpp $(buffer_reading_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags libarxx` -c $< -o $@
 
-button.o: button.cpp $(button_h) $(callbacks_callbacks_h) $(color_h) $(globals_h)
+.object-files/button.o: button.cpp $(button_h) $(callbacks_callbacks_h) $(color_h) $(globals_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-camera.o: camera.cpp $(camera_h) $(object_h) $(object_aspect_position_h)
+.object-files/camera.o: camera.cpp $(camera_h) $(object_h) $(object_aspect_position_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-character.o: character.cpp $(character_h) $(character_observer_h) $(map_knowledge_h) $(message_h) $(mind_h) $(object_aspect_messages_h) $(object_aspect_object_container_h) $(threat_h)
+.object-files/character.o: character.cpp $(character_h) $(character_observer_h) $(map_knowledge_h) $(message_h) $(mind_h) $(object_aspect_messages_h) $(object_aspect_object_container_h) $(threat_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-character_observer.o: character_observer.cpp $(character_h) $(character_observer_h) $(message_h)
+.object-files/character_observer.o: character_observer.cpp $(character_h) $(character_observer_h) $(message_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-color.o: color.cpp $(color_h)
+.object-files/color.o: color.cpp $(color_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-command_mind.o: command_mind.cpp $(commodity_h) $(character_h) $(command_mind_h) $(object_aspect_position_h) $(planet_h) $(ship_h) $(system_h)
+.object-files/command_mind.o: command_mind.cpp $(commodity_h) $(character_h) $(command_mind_h) $(object_aspect_position_h) $(planet_h) $(ship_h) $(system_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-commodity.o: commodity.cpp $(commodity_h) $(math_vector4f_h) $(object_aspect_position_h) $(object_aspect_update_h)
+.object-files/commodity.o: commodity.cpp $(commodity_h) $(math_vector4f_h) $(object_aspect_position_h) $(object_aspect_update_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-commodity_class.o: commodity_class.cpp $(color_h) $(commodity_class_h) $(visualization_prototype_h)
+.object-files/commodity_class.o: commodity_class.cpp $(color_h) $(commodity_class_h) $(visualization_prototype_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-dialog.o: dialog.cpp $(callbacks_callbacks_h) $(dialog_h)
+.object-files/dialog.o: dialog.cpp $(callbacks_callbacks_h) $(dialog_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-draw_text.o: draw_text.cpp $(draw_text_h)
+.object-files/draw_text.o: draw_text.cpp $(draw_text_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-faction.o: faction.cpp $(color_h) $(faction_h)
+.object-files/faction.o: faction.cpp $(color_h) $(faction_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-file_handling.o: file_handling.cpp $(file_handling_h)
+.object-files/file_handling.o: file_handling.cpp $(file_handling_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-galaxy.o: galaxy.cpp $(faction_h) $(galaxy_h) $(object_aspect_object_container_h) $(system_h)
+.object-files/galaxy.o: galaxy.cpp $(faction_h) $(galaxy_h) $(object_aspect_object_container_h) $(system_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-game_time.o: game_time.cpp $(game_time_h)
+.object-files/game_time.o: game_time.cpp $(game_time_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-generator.o: generator.cpp $(generator_h)
+.object-files/generator.o: generator.cpp $(generator_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-generator_class.o: generator_class.cpp $(generator_class_h)
+.object-files/generator_class.o: generator_class.cpp $(generator_class_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-goal.o: goal.cpp $(goal_h) $(object_aspect_object_container_h)
+.object-files/goal.o: goal.cpp $(goal_h) $(object_aspect_object_container_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-goals.o: goals.cpp $(asset_class_h) $(character_h) $(commodity_h) $(faction_h) $(game_time_h) $(globals_h) $(goals_h) $(math_h) $(message_h) $(messages_h) $(mind_h) $(object_aspect_position_h) $(planet_h) $(ship_h) $(string_cast_h) $(system_h) $(threat_h)
+.object-files/goals.o: goals.cpp $(asset_class_h) $(character_h) $(commodity_h) $(faction_h) $(game_time_h) $(globals_h) $(goals_h) $(math_h) $(message_h) $(messages_h) $(mind_h) $(object_aspect_position_h) $(planet_h) $(ship_h) $(string_cast_h) $(system_h) $(threat_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-graphics_engine.o: graphics_engine.cpp $(graphics_engine_h) $(graphics_scene_h)
+.object-files/graphics_engine.o: graphics_engine.cpp $(graphics_engine_h) $(graphics_scene_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-graphics_material.o: graphics_material.cpp $(color_h) $(graphics_material_h)
+.object-files/graphics_material.o: graphics_material.cpp $(color_h) $(graphics_material_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-graphics_mesh.o: graphics_mesh.cpp $(graphics_mesh_h)
+.object-files/graphics_mesh.o: graphics_mesh.cpp $(graphics_mesh_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-graphics_mesh_manager.o: graphics_mesh_manager.cpp $(graphics_mesh_h) $(graphics_mesh_manager_h)
+.object-files/graphics_mesh_manager.o: graphics_mesh_manager.cpp $(graphics_mesh_h) $(graphics_mesh_manager_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-graphics_model.o: graphics_model.cpp $(graphics_mesh_h) $(graphics_model_h)
+.object-files/graphics_model.o: graphics_model.cpp $(graphics_mesh_h) $(graphics_model_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-graphics_model_manager.o: graphics_model_manager.cpp $(graphics_model_h) $(graphics_model_manager_h)
+.object-files/graphics_model_manager.o: graphics_model_manager.cpp $(graphics_model_h) $(graphics_model_manager_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-graphics_model_object.o: graphics_model_object.cpp $(color_h) $(graphics_mesh_h) $(graphics_model_h) $(graphics_model_object_h) $(math_matrix4f_h)
+.object-files/graphics_model_object.o: graphics_model_object.cpp $(color_h) $(graphics_mesh_h) $(graphics_model_h) $(graphics_model_object_h) $(math_matrix4f_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-graphics_node.o: graphics_node.cpp $(graphics_engine_h) $(graphics_node_h) $(math_matrix4f_h)
+.object-files/graphics_node.o: graphics_node.cpp $(graphics_engine_h) $(graphics_node_h) $(math_matrix4f_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-graphics_particle_system.o: graphics_particle_system.cpp $(color_h) $(game_time_h) $(globals_h) $(graphics_particle_system_h) $(graphics_texture_h) $(graphics_texture_manager_h) $(math_h)
+.object-files/graphics_particle_system.o: graphics_particle_system.cpp $(color_h) $(game_time_h) $(globals_h) $(graphics_particle_system_h) $(graphics_texture_h) $(graphics_texture_manager_h) $(math_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-graphics_scene.o: graphics_scene.cpp $(graphics_particle_system_h) $(graphics_scene_h)
+.object-files/graphics_scene.o: graphics_scene.cpp $(graphics_particle_system_h) $(graphics_scene_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-graphics_texture.o: graphics_texture.cpp $(graphics_texture_h)
+.object-files/graphics_texture.o: graphics_texture.cpp $(graphics_texture_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-graphics_texture_manager.o: graphics_texture_manager.cpp $(graphics_texture_h) $(graphics_texture_manager_h)
+.object-files/graphics_texture_manager.o: graphics_texture_manager.cpp $(graphics_texture_h) $(graphics_texture_manager_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-key_event_information.o: key_event_information.cpp $(key_event_information_h)
+.object-files/key_event_information.o: key_event_information.cpp $(key_event_information_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-label.o: label.cpp $(label_h)
+.object-files/label.o: label.cpp $(label_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-load_game_dialog.o: load_game_dialog.cpp $(button_h) $(globals_h) $(key_event_information_h) $(label_h) $(load_game_dialog_h) $(real_time_h) $(scroll_box_h)
+.object-files/load_game_dialog.o: load_game_dialog.cpp $(button_h) $(globals_h) $(key_event_information_h) $(label_h) $(load_game_dialog_h) $(real_time_h) $(scroll_box_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-local_file_data_channel.o: local_file_data_channel.cpp $(local_file_data_channel_h)
+.object-files/local_file_data_channel.o: local_file_data_channel.cpp $(local_file_data_channel_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags libarxx` -c $< -o $@
 
-main.o: main.cpp $(arx_reading_h) $(asset_class_h) $(battery_h) $(battery_class_h) $(button_h) $(camera_h) $(commodity_h) $(commodity_class_h) $(character_h) $(color_h) $(command_mind_h) $(draw_text_h) $(faction_h) $(file_handling_h) $(galaxy_h) $(game_time_h) $(generator_h) $(generator_class_h) $(goals_h) $(graphics_engine_h) $(graphics_mesh_manager_h) $(graphics_model_h) $(graphics_model_manager_h) $(graphics_model_object_h) $(graphics_particle_system_h) $(graphics_scene_h) $(graphics_texture_manager_h) $(key_event_information_h) $(label_h) $(main_menu_window_h) $(map_dialog_h) $(map_knowledge_h) $(math_h) $(message_h) $(message_dispatcher_h) $(messages_h) $(mind_h) $(mini_map_display_h) $(object_aspect_accessory_h) $(object_aspect_name_h) $(object_aspect_object_container_h) $(object_aspect_outfitting_h) $(object_aspect_physical_h) $(object_aspect_position_h) $(object_aspect_update_h) $(object_aspect_visualization_h) $(object_factory_h) $(object_information_dialog_h) $(outfit_ship_dialog_h) $(output_observer_h) $(perspective_h) $(planet_h) $(real_time_h) $(scanner_display_h) $(settings_h) $(ship_h) $(ship_class_h) $(shot_h) $(slot_h) $(slot_class_h) $(star_h) $(star_map_display_h) $(state_machine_h) $(states_h) $(storage_h) $(string_cast_h) $(system_h) $(system_statistics_h) $(timeout_notifications_h) $(timing_dialog_h) $(user_interface_h) $(visualizations_h) $(weapon_h) $(weapon_class_h) $(widget_h) $(write_to_xml_stream_h) $(xml_puny_dom_h) $(xml_stream_h)
+.object-files/main.o: main.cpp $(arx_reading_h) $(asset_class_h) $(battery_h) $(battery_class_h) $(button_h) $(camera_h) $(commodity_h) $(commodity_class_h) $(character_h) $(color_h) $(command_mind_h) $(draw_text_h) $(faction_h) $(file_handling_h) $(galaxy_h) $(game_time_h) $(generator_h) $(generator_class_h) $(goals_h) $(graphics_engine_h) $(graphics_mesh_manager_h) $(graphics_model_h) $(graphics_model_manager_h) $(graphics_model_object_h) $(graphics_particle_system_h) $(graphics_scene_h) $(graphics_texture_manager_h) $(key_event_information_h) $(label_h) $(main_menu_window_h) $(map_dialog_h) $(map_knowledge_h) $(math_h) $(message_h) $(message_dispatcher_h) $(messages_h) $(mind_h) $(mini_map_display_h) $(object_aspect_accessory_h) $(object_aspect_name_h) $(object_aspect_object_container_h) $(object_aspect_outfitting_h) $(object_aspect_physical_h) $(object_aspect_position_h) $(object_aspect_update_h) $(object_aspect_visualization_h) $(object_factory_h) $(object_information_dialog_h) $(outfit_ship_dialog_h) $(output_observer_h) $(perspective_h) $(planet_h) $(real_time_h) $(scanner_display_h) $(settings_h) $(ship_h) $(ship_class_h) $(shot_h) $(slot_h) $(slot_class_h) $(star_h) $(star_map_display_h) $(state_machine_h) $(states_h) $(storage_h) $(string_cast_h) $(system_h) $(system_statistics_h) $(timeout_notifications_h) $(timing_dialog_h) $(user_interface_h) $(visualizations_h) $(weapon_h) $(weapon_class_h) $(widget_h) $(write_to_xml_stream_h) $(xml_puny_dom_h) $(xml_stream_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-main_menu_window.o: main_menu_window.cpp $(button_h) $(callbacks_callbacks_h) $(file_handling_h) $(key_event_information_h) $(label_h) $(load_game_dialog_h) $(main_menu_window_h) $(save_game_dialog_h)
+.object-files/main_menu_window.o: main_menu_window.cpp $(button_h) $(callbacks_callbacks_h) $(file_handling_h) $(key_event_information_h) $(label_h) $(load_game_dialog_h) $(main_menu_window_h) $(save_game_dialog_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-map_dialog.o: map_dialog.cpp $(button_h) $(callbacks_callbacks_h) $(globals_h) $(key_event_information_h) $(label_h) $(map_dialog_h) $(object_aspect_name_h) $(star_map_display_h) $(system_h)
+.object-files/map_dialog.o: map_dialog.cpp $(button_h) $(callbacks_callbacks_h) $(globals_h) $(key_event_information_h) $(label_h) $(map_dialog_h) $(object_aspect_name_h) $(star_map_display_h) $(system_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-map_knowledge.o: map_knowledge.cpp $(map_knowledge_h) $(system.h)
+.object-files/map_knowledge.o: map_knowledge.cpp $(map_knowledge_h) $(system.h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-message.o: message.cpp $(message_h)
+.object-files/message.o: message.cpp $(message_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-message_dispatcher.o: message_dispatcher.cpp $(globals_h) $(message_h) $(message_dispatcher_h) $(object_h) $(object_aspect_messages_h) $(referencing_h) $(system_statistics_h)
+.object-files/message_dispatcher.o: message_dispatcher.cpp $(globals_h) $(message_h) $(message_dispatcher_h) $(object_h) $(object_aspect_messages_h) $(referencing_h) $(system_statistics_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-messages.o: messages.cpp $(messages_h)
+.object-files/messages.o: messages.cpp $(messages_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-mind.o: mind.cpp $(goal_h) $(mind_h) $(object_aspect_object_container_h) $(state_machine_h)
+.object-files/mind.o: mind.cpp $(goal_h) $(mind_h) $(object_aspect_object_container_h) $(state_machine_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-mini_map_display.o: mini_map_display.cpp $(commodity_h) $(mini_map_display_h) $(object_aspect_position_h) $(planet_h) $(ship_h) $(system_h)
+.object-files/mini_map_display.o: mini_map_display.cpp $(commodity_h) $(mini_map_display_h) $(object_aspect_position_h) $(planet_h) $(ship_h) $(system_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-object.o: object.cpp $(message_h) $(object_h) $(object_aspect_accessory_h) $(object_aspect_messages_h) $(object_aspect_name_h) $(object_aspect_object_container_h) $(object_aspect_outfitting_h) $(object_aspect_physical_h) $(object_aspect_position_h) $(object_aspect_update_h) $(object_aspect_visualization_h) $(real_time_h) $(string_cast_h) $(xml_stream_h)
+.object-files/object.o: object.cpp $(message_h) $(object_h) $(object_aspect_accessory_h) $(object_aspect_messages_h) $(object_aspect_name_h) $(object_aspect_object_container_h) $(object_aspect_outfitting_h) $(object_aspect_physical_h) $(object_aspect_position_h) $(object_aspect_update_h) $(object_aspect_visualization_h) $(real_time_h) $(string_cast_h) $(xml_stream_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-object_aspect_accessory.o: object_aspect_accessory.cpp $(object_aspect_accessory_h)
+.object-files/object_aspect_accessory.o: object_aspect_accessory.cpp $(object_aspect_accessory_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-object_aspect_messages.o: object_aspect_messages.cpp $(object_aspect_messages_h)
+.object-files/object_aspect_messages.o: object_aspect_messages.cpp $(object_aspect_messages_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-object_aspect_object_container.o: object_aspect_object_container.cpp $(object_h) $(object_aspect_object_container_h)
+.object-files/object_aspect_object_container.o: object_aspect_object_container.cpp $(object_h) $(object_aspect_object_container_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-object_aspect_outfitting.o: object_aspect_outfitting.cpp $(object_aspect_outfitting_h) $(slot_h)
+.object-files/object_aspect_outfitting.o: object_aspect_outfitting.cpp $(object_aspect_outfitting_h) $(slot_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-object_aspect_physical.o: object_aspect_physical.cpp $(object_aspect_physical_h)
+.object-files/object_aspect_physical.o: object_aspect_physical.cpp $(object_aspect_physical_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-object_aspect_position.o: object_aspect_position.cpp $(object_aspect_position_h)
+.object-files/object_aspect_position.o: object_aspect_position.cpp $(object_aspect_position_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-object_aspect_update.o: object_aspect_update.cpp $(object_aspect_update_h)
+.object-files/object_aspect_update.o: object_aspect_update.cpp $(object_aspect_update_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-object_aspect_visualization.o: object_aspect_visualization.cpp $(graphics_node_h) $(object_aspect_visualization_h) $(visualization_prototype_h)
+.object-files/object_aspect_visualization.o: object_aspect_visualization.cpp $(graphics_node_h) $(object_aspect_visualization_h) $(visualization_prototype_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-object_factory.o: object_factory.cpp $(battery_h) $(battery_class_h) $(character_h) $(class_manager_h) $(command_mind_h) $(commodity_h) $(commodity_class_h) $(faction_h) $(game_time_h) $(generator_h) $(generator_class_h) $(globals_h) $(graphics_model_h) $(object_aspect_name_h) $(object_aspect_outfitting_h) $(object_aspect_physical_h) $(object_aspect_position_h) $(object_aspect_visualization_h) $(object_factory_h) $(planet_h) $(ship_h) $(ship_class_h) $(shot_h) $(slot_h) $(storage_h) $(weapon_h) $(weapon_class_h) $(visualization_prototype_h)
+.object-files/object_factory.o: object_factory.cpp $(battery_h) $(battery_class_h) $(character_h) $(class_manager_h) $(command_mind_h) $(commodity_h) $(commodity_class_h) $(faction_h) $(game_time_h) $(generator_h) $(generator_class_h) $(globals_h) $(graphics_model_h) $(object_aspect_name_h) $(object_aspect_outfitting_h) $(object_aspect_physical_h) $(object_aspect_position_h) $(object_aspect_visualization_h) $(object_factory_h) $(planet_h) $(ship_h) $(ship_class_h) $(shot_h) $(slot_h) $(storage_h) $(weapon_h) $(weapon_class_h) $(visualization_prototype_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-object_information_dialog.o: object_information_dialog.cpp $(button_h) $(globals_h) $(label_h) $(object_h) $(object_aspect_accessory_h) $(object_aspect_name_h) $(object_aspect_object_container_h) $(object_aspect_physical_h) $(object_information_dialog_h) $(scroll_bar_h) $(scroll_box_h) $(slot_h) $(slot_class_h) $(string_cast_h)
+.object-files/object_information_dialog.o: object_information_dialog.cpp $(button_h) $(globals_h) $(label_h) $(object_h) $(object_aspect_accessory_h) $(object_aspect_name_h) $(object_aspect_object_container_h) $(object_aspect_physical_h) $(object_information_dialog_h) $(scroll_bar_h) $(scroll_box_h) $(slot_h) $(slot_class_h) $(string_cast_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-outfit_ship_dialog.o: outfit_ship_dialog.cpp $(button_h) $(class_manager_h) $(color_h) $(globals_h) $(key_event_information_h) $(label_h) $(object_aspect_accessory_h) $(object_aspect_name_h) $(object_aspect_object_container_h) $(object_aspect_outfitting_h) $(object_aspect_physical_h) $(outfit_ship_dialog_h) $(scroll_box_h) $(ship_h) $(slot_h) $(slot_class_h) $(storage_h) $(weapon_h) $(weapon_class_h)
+.object-files/outfit_ship_dialog.o: outfit_ship_dialog.cpp $(button_h) $(class_manager_h) $(color_h) $(globals_h) $(key_event_information_h) $(label_h) $(object_aspect_accessory_h) $(object_aspect_name_h) $(object_aspect_object_container_h) $(object_aspect_outfitting_h) $(object_aspect_physical_h) $(outfit_ship_dialog_h) $(scroll_box_h) $(ship_h) $(slot_h) $(slot_class_h) $(storage_h) $(weapon_h) $(weapon_class_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-output_observer.o: output_observer.cpp $(command_mind_h) $(globals_h) $(message_h) $(output_observer_h) $(planet_h) $(planet_dialog_h) $(user_interface_h)
+.object-files/output_observer.o: output_observer.cpp $(command_mind_h) $(globals_h) $(message_h) $(output_observer_h) $(planet_h) $(planet_dialog_h) $(user_interface_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-perspective.o: perspective.cpp $(perspective_h)
+.object-files/perspective.o: perspective.cpp $(perspective_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-planet.o: planet.cpp $(asset_class_h) $(battery_h) $(color_h) $(globals_h) $(message_h) $(message_dispatcher_h) $(object_aspect_object_container_h) $(object_aspect_physical_h) $(planet_h) $(ship_h)
+.object-files/planet.o: planet.cpp $(asset_class_h) $(battery_h) $(color_h) $(globals_h) $(message_h) $(message_dispatcher_h) $(object_aspect_object_container_h) $(object_aspect_physical_h) $(planet_h) $(ship_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-planet_dialog.o: planet_dialog.cpp $(asset_class_h) $(button_h) $(callbacks_callbacks_h) $(character_h) $(color_h) $(globals_h) $(key_event_information_h) $(label_h) $(object_aspect_name_h) $(planet_h) $(planet_dialog_h) $(ship_h) $(string_cast_h) $(trade_center_dialog_h)
+.object-files/planet_dialog.o: planet_dialog.cpp $(asset_class_h) $(button_h) $(callbacks_callbacks_h) $(character_h) $(color_h) $(globals_h) $(key_event_information_h) $(label_h) $(object_aspect_name_h) $(planet_h) $(planet_dialog_h) $(ship_h) $(string_cast_h) $(trade_center_dialog_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-real_time.o: real_time.cpp $(real_time_h)
+.object-files/real_time.o: real_time.cpp $(real_time_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-save_game_dialog.o: save_game_dialog.cpp $(button_h) $(globals_h) $(key_event_information_h) $(label_h) $(real_time_h) $(save_game_dialog_h) $(scroll_box_h)
+.object-files/save_game_dialog.o: save_game_dialog.cpp $(button_h) $(globals_h) $(key_event_information_h) $(label_h) $(real_time_h) $(save_game_dialog_h) $(scroll_box_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-scanner_display.o: scanner_display.cpp $(object_aspect_physical_h) $(scanner_display_h) $(ship_h) $(star_h) $(system.h)
+.object-files/scanner_display.o: scanner_display.cpp $(object_aspect_physical_h) $(scanner_display_h) $(ship_h) $(star_h) $(system.h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-scroll_bar.o: scroll_bar.cpp $(button_h) $(callbacks_callbacks_h) $(color_h) $(globals_h) $(scroll_bar_h) $(user_interface_h)
+.object-files/scroll_bar.o: scroll_bar.cpp $(button_h) $(callbacks_callbacks_h) $(color_h) $(globals_h) $(scroll_bar_h) $(user_interface_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-scroll_box.o: scroll_box.cpp $(callbacks_callbacks_h) $(color_h) $(scroll_bar_h) $(scroll_box_h)
+.object-files/scroll_box.o: scroll_box.cpp $(callbacks_callbacks_h) $(color_h) $(scroll_bar_h) $(scroll_box_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-settings.o: settings.cpp $(arx_resources_h) $(buffer_reading_h) $(settings_h) $(string_cast_h)
+.object-files/settings.o: settings.cpp $(arx_resources_h) $(buffer_reading_h) $(settings_h) $(string_cast_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags libarxx` -c $< -o $@
 
-ship.o: ship.cpp $(battery_h) $(character_h) $(commodity_h) $(game_time_h) $(generator_h) $(globals_h) $(graphics_particle_system_h) $(map_knowledge_h) $(math_h) $(message_h) $(message_dispatcher_h) $(object_aspect_accessory_h) $(object_aspect_object_container_h) $(object_aspect_outfitting_h) $(object_aspect_position_h) $(object_aspect_update_h) $(object_aspect_visualization_h) $(planet_h) $(ship_h) $(slot_h) $(slot_class_h) $(storage_h) $(system_h) $(visualizations_h) $(weapon_h)
+.object-files/ship.o: ship.cpp $(battery_h) $(character_h) $(commodity_h) $(game_time_h) $(generator_h) $(globals_h) $(graphics_particle_system_h) $(map_knowledge_h) $(math_h) $(message_h) $(message_dispatcher_h) $(object_aspect_accessory_h) $(object_aspect_object_container_h) $(object_aspect_outfitting_h) $(object_aspect_position_h) $(object_aspect_update_h) $(object_aspect_visualization_h) $(planet_h) $(ship_h) $(slot_h) $(slot_class_h) $(storage_h) $(system_h) $(visualizations_h) $(weapon_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-ship_class.o: ship_class.cpp $(color_h) $(graphics_material_h) $(ship_class_h) $(slot_h) $(visualization_prototype_h)
+.object-files/ship_class.o: ship_class.cpp $(color_h) $(graphics_material_h) $(ship_class_h) $(slot_h) $(visualization_prototype_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-shot.o: shot.cpp $(game_time_h) $(object_aspect_position_h) $(object_aspect_update_h) $(shot_h)
+.object-files/shot.o: shot.cpp $(game_time_h) $(object_aspect_position_h) $(object_aspect_update_h) $(shot_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-slot.o: slot.cpp $(object_h) $(object_aspect_accessory_h) $(object_aspect_visualization_h) $(slot_h) $(slot_class_h) $(visualizations_h)
+.object-files/slot.o: slot.cpp $(object_h) $(object_aspect_accessory_h) $(object_aspect_visualization_h) $(slot_h) $(slot_class_h) $(visualizations_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-slot_class.o: slot_class.cpp $(slot_class_h)
+.object-files/slot_class.o: slot_class.cpp $(slot_class_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-star.o: star.cpp $(star_h)
+.object-files/star.o: star.cpp $(star_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-star_map_display.o: star_map_display.cpp $(callbacks_callbacks_h) $(character_h) $(draw_text_h) $(galaxy_h) $(globals_h) $(map_knowledge_h) $(object_aspect_name_h) $(object_aspect_position_h) $(star_map_display_h) $(system_h) $(user_interface_h)
+.object-files/star_map_display.o: star_map_display.cpp $(callbacks_callbacks_h) $(character_h) $(draw_text_h) $(galaxy_h) $(globals_h) $(map_knowledge_h) $(object_aspect_name_h) $(object_aspect_position_h) $(star_map_display_h) $(system_h) $(user_interface_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-state.o: state.cpp $(state_h)
+.object-files/state.o: state.cpp $(state_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-state_machine.o: state_machine.cpp $(state_h) $(state_machine_h)
+.object-files/state_machine.o: state_machine.cpp $(state_h) $(state_machine_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-states.o: states.cpp $(asset_class_h) $(character_h) $(commodity_h) $(commodity_class_h) $(game_time_h) $(globals_h) $(math_h) $(message_h) $(mind_h) $(object_aspect_object_container_h) $(object_aspect_physical_h) $(object_aspect_position_h) $(object_factory_h) $(planet_h) $(ship_h) $(state_machine_h) $(states_h) $(storage_h) $(string_cast_h) $(system_h)
+.object-files/states.o: states.cpp $(asset_class_h) $(character_h) $(commodity_h) $(commodity_class_h) $(game_time_h) $(globals_h) $(math_h) $(message_h) $(mind_h) $(object_aspect_object_container_h) $(object_aspect_physical_h) $(object_aspect_position_h) $(object_factory_h) $(planet_h) $(ship_h) $(state_machine_h) $(states_h) $(storage_h) $(string_cast_h) $(system_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-storage.o: storage.cpp $(object_aspect_object_container_h) $(object_aspect_physical_h) $(storage_h)
+.object-files/storage.o: storage.cpp $(object_aspect_object_container_h) $(object_aspect_physical_h) $(storage_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-string_cast.o: string_cast.cpp $(string_cast_h)
+.object-files/string_cast.o: string_cast.cpp $(string_cast_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-system.o: system.cpp $(commodity_h) $(object_aspect_object_container_h) $(planet_h) $(ship_h) $(shot_h) $(star_h) $(system_h)
+.object-files/system.o: system.cpp $(commodity_h) $(object_aspect_object_container_h) $(planet_h) $(ship_h) $(shot_h) $(star_h) $(system_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-threat.o: threat.cpp $(threat_h)
+.object-files/threat.o: threat.cpp $(threat_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-timeout_notifications.o: timeout_notifications.cpp $(timeout_notifications_h) $(type_definitions_h)
+.object-files/timeout_notifications.o: timeout_notifications.cpp $(timeout_notifications_h) $(type_definitions_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-timing_dialog.o: timing_dialog.cpp $(callbacks_callbacks_h) $(globals_h) $(key_event_information_h) $(label_h) $(string_cast_h) $(system_statistics_h) $(timing_dialog_h)
+.object-files/timing_dialog.o: timing_dialog.cpp $(callbacks_callbacks_h) $(globals_h) $(key_event_information_h) $(label_h) $(string_cast_h) $(system_statistics_h) $(timing_dialog_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-trade_center_dialog.o: trade_center_dialog.cpp $(asset_class_h) $(button_h) $(character_h) $(commodity_h) $(commodity_class_h) $(character_h) $(game_time_h) $(graphics_model_manager_h) $(key_event_information_h) $(label_h) $(object_aspect_accessory_h) $(object_aspect_name_h) $(object_aspect_object_container_h) $(object_factory_h) $(planet_h) $(scroll_bar_h) $(scroll_box_h) $(ship_h) $(storage_h) $(trade_center_dialog_h) $(weapon_h) $(weapon_class_h)
+.object-files/trade_center_dialog.o: trade_center_dialog.cpp $(asset_class_h) $(button_h) $(character_h) $(commodity_h) $(commodity_class_h) $(character_h) $(game_time_h) $(graphics_model_manager_h) $(key_event_information_h) $(label_h) $(object_aspect_accessory_h) $(object_aspect_name_h) $(object_aspect_object_container_h) $(object_factory_h) $(planet_h) $(scroll_bar_h) $(scroll_box_h) $(ship_h) $(storage_h) $(trade_center_dialog_h) $(weapon_h) $(weapon_class_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-user_interface.o: user_interface.cpp $(callbacks_connection_handle_h) $(user_interface_h) $(widget_h)
+.object-files/user_interface.o: user_interface.cpp $(callbacks_connection_handle_h) $(user_interface_h) $(widget_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-viewport.o: viewport.cpp $(viewport_h)
+.object-files/viewport.o: viewport.cpp $(viewport_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-visualization_prototype.o: visualization_prototype.cpp $(graphics_material_h) $(visualization_prototype_h)
+.object-files/visualization_prototype.o: visualization_prototype.cpp $(graphics_material_h) $(visualization_prototype_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-visualizations.o: visualizations.cpp $(color_h) $(commodity_h) $(commodity_class_h) $(globals_h) $(graphics_material_h) $(graphics_model_h) $(graphics_model_object_h) $(graphics_model_manager_h) $(graphics_particle_system_h) $(object_aspect_accessory_h) $(object_aspect_outfitting_h) $(object_aspect_physical_h) $(object_aspect_position_h) $(object_aspect_visualization_h) $(planet_h) $(ship_h) $(shot_h) $(visualization_prototype_h) $(visualizations_h) $(weapon_h) $(weapon_class_h)
+.object-files/visualizations.o: visualizations.cpp $(color_h) $(commodity_h) $(commodity_class_h) $(globals_h) $(graphics_material_h) $(graphics_model_h) $(graphics_model_object_h) $(graphics_model_manager_h) $(graphics_particle_system_h) $(object_aspect_accessory_h) $(object_aspect_outfitting_h) $(object_aspect_physical_h) $(object_aspect_position_h) $(object_aspect_visualization_h) $(planet_h) $(ship_h) $(shot_h) $(visualization_prototype_h) $(visualizations_h) $(weapon_h) $(weapon_class_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-weapon.o: weapon.cpp $(battery_h) $(game_time_h) $(globals_h) $(math_h) $(math_quaternion_h) $(object_aspect_accessory_h) $(object_aspect_object_container_h) $(object_aspect_position_h) $(object_factory_h) $(ship_h) $(shot_h) $(slot_h) $(string_cast_h) $(visualizations_h) $(weapon_h)
+.object-files/weapon.o: weapon.cpp $(battery_h) $(game_time_h) $(globals_h) $(math_h) $(math_quaternion_h) $(object_aspect_accessory_h) $(object_aspect_object_container_h) $(object_aspect_position_h) $(object_factory_h) $(ship_h) $(shot_h) $(slot_h) $(string_cast_h) $(visualizations_h) $(weapon_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-weapon_class.o: weapon_class.cpp $(color_h) $(visualization_prototype_h) $(weapon_class_h)
+.object-files/weapon_class.o: weapon_class.cpp $(color_h) $(visualization_prototype_h) $(weapon_class_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-widget.o: widget.cpp $(callbacks_callbacks_h) $(color_h) $(math_h) $(widget_h)
+.object-files/widget.o: widget.cpp $(callbacks_callbacks_h) $(color_h) $(math_h) $(widget_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-window.o: window.cpp $(border_h) $(callbacks_callbacks_h) $(globals_h) $(label_h) $(user_interface_h) $(window_h)
+.object-files/window.o: window.cpp $(border_h) $(callbacks_callbacks_h) $(globals_h) $(label_h) $(user_interface_h) $(window_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-write_to_xml_stream.o: write_to_xml_stream.cpp $(battery_h) $(character_h) $(color_h) $(commodity_h) $(faction_h) $(generator_h) $(graphics_material_h) $(map_knowledge_h) $(mind_h) $(object_h) $(object_aspect_accessory_h) $(object_aspect_name_h) $(object_aspect_object_container_h) $(object_aspect_physical_h) $(object_aspect_position_h) $(object_aspect_visualization_h) $(ship_h) $(slot_h) $(storage_h) $(system_h) $(visualization_prototype_h) $(weapon_h) $(write_to_xml_stream_h) $(xml_stream_h)
+.object-files/write_to_xml_stream.o: write_to_xml_stream.cpp $(battery_h) $(character_h) $(color_h) $(commodity_h) $(faction_h) $(generator_h) $(graphics_material_h) $(map_knowledge_h) $(mind_h) $(object_h) $(object_aspect_accessory_h) $(object_aspect_name_h) $(object_aspect_object_container_h) $(object_aspect_physical_h) $(object_aspect_position_h) $(object_aspect_visualization_h) $(ship_h) $(slot_h) $(storage_h) $(system_h) $(visualization_prototype_h) $(weapon_h) $(write_to_xml_stream_h) $(xml_stream_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-xml_parser.o: xml_parser.cpp $(xml_parser_h)
+.object-files/xml_parser.o: xml_parser.cpp $(xml_parser_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-xml_puny_dom.o: xml_puny_dom.cpp $(xml_parser_h) $(xml_puny_dom_h)
+.object-files/xml_puny_dom.o: xml_puny_dom.cpp $(xml_parser_h) $(xml_puny_dom_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-xml_stream.o: xml_stream.cpp $(xml_stream_h)
+.object-files/xml_stream.o: xml_stream.cpp $(xml_stream_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
+
