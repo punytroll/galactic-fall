@@ -188,13 +188,13 @@ void MainMenuWindow::_OnLoadGameButtonClicked(void)
 	}
 }
 
-bool MainMenuWindow::_OnLoadGameDialogClosing(Dialog::ClosingReason ClosingReason)
+bool MainMenuWindow::_OnLoadGameDialogClosing(UI::Dialog::ClosingReason ClosingReason)
 {
-	if((ClosingReason == Dialog::CANCEL_BUTTON) || (ClosingReason == Dialog::ESCAPE_KEY))
+	if((ClosingReason == UI::Dialog::CANCEL_BUTTON) || (ClosingReason == UI::Dialog::ESCAPE_KEY))
 	{
 		return true;
 	}
-	else if((ClosingReason == Dialog::OK_BUTTON) || (ClosingReason == Dialog::RETURN_KEY))
+	else if((ClosingReason == UI::Dialog::OK_BUTTON) || (ClosingReason == UI::Dialog::RETURN_KEY))
 	{
 		std::string FilePath(_LoadGameDialog->GetFilePath());
 		
@@ -282,13 +282,13 @@ void MainMenuWindow::_OnSaveGameButtonClicked(void)
 	}
 }
 
-bool MainMenuWindow::_OnSaveGameDialogClosing(Dialog::ClosingReason ClosingReason)
+bool MainMenuWindow::_OnSaveGameDialogClosing(UI::Dialog::ClosingReason ClosingReason)
 {
-	if((ClosingReason == Dialog::CANCEL_BUTTON) || (ClosingReason == Dialog::ESCAPE_KEY))
+	if((ClosingReason == UI::Dialog::CANCEL_BUTTON) || (ClosingReason == UI::Dialog::ESCAPE_KEY))
 	{
 		return true;
 	}
-	else if((ClosingReason == Dialog::OK_BUTTON) || (ClosingReason == Dialog::RETURN_KEY))
+	else if((ClosingReason == UI::Dialog::OK_BUTTON) || (ClosingReason == UI::Dialog::RETURN_KEY))
 	{
 		std::string FilePath(_SaveGameDialog->GetFilePath());
 		

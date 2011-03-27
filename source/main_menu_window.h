@@ -19,7 +19,7 @@
 #ifndef MAIN_MENU_WINDOW_H
 #define MAIN_MENU_WINDOW_H
 
-#include "dialog.h"
+#include "ui/dialog.h"
 #include "window.h"
 
 class Button;
@@ -41,13 +41,13 @@ private:
 	// callbacks
 	bool _OnKey(const KeyEventInformation & KeyEventInformation);
 	void _OnLoadGameButtonClicked(void);
-	bool _OnLoadGameDialogClosing(Dialog::ClosingReason ClosingReason);
+	bool _OnLoadGameDialogClosing(UI::Dialog::ClosingReason ClosingReason);
 	void _OnLoadGameDialogDestroying(void);
 	void _OnNewGameButtonClicked(void);
 	void _OnQuitButtonClicked(void);
 	void _OnResumeGameButtonClicked(void);
 	void _OnSaveGameButtonClicked(void);
-	bool _OnSaveGameDialogClosing(Dialog::ClosingReason ClosingReasong);
+	bool _OnSaveGameDialogClosing(UI::Dialog::ClosingReason ClosingReasong);
 	void _OnSaveGameDialogDestroying(void);
 	// member variables
 	bool _DestroyOnLoadGameDialogDestroy;
