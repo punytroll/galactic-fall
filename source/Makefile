@@ -25,11 +25,6 @@ battery_class_h = \
 	battery_class.h \
 	$(type_definitions_h)
 
-border_h = \
-	border.h \
-	$(color_h) \
-	$(widget_h)
-
 buffer_reading_h = \
 	buffer_reading.h \
 	$(color_h) \
@@ -438,6 +433,11 @@ trade_center_dialog_h = \
 type_definitions_h = \
 	type_definitions.h
 
+ui_border_h = \
+	ui/border.h \
+	$(color_h) \
+	$(widget_h)
+
 ui_label_h = \
 	ui/label.h \
 	$(color_h) \
@@ -580,9 +580,6 @@ binary: $(OBJECT_FILES) $(LDFLAGS_configuration)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 .object-files/battery_class.o: battery_class.cpp $(battery_class_h)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-
-.object-files/border.o: border.cpp $(border_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 .object-files/buffer_reading.o: buffer_reading.cpp $(buffer_reading_h)
@@ -831,6 +828,9 @@ binary: $(OBJECT_FILES) $(LDFLAGS_configuration)
 .object-files/trade_center_dialog.o: trade_center_dialog.cpp $(asset_class_h) $(button_h) $(character_h) $(commodity_h) $(commodity_class_h) $(character_h) $(game_time_h) $(graphics_model_manager_h) $(key_event_information_h) $(object_aspect_accessory_h) $(object_aspect_name_h) $(object_aspect_object_container_h) $(object_factory_h) $(planet_h) $(scroll_bar_h) $(scroll_box_h) $(ship_h) $(storage_h) $(trade_center_dialog_h) $(ui_label_h) $(weapon_h) $(weapon_class_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
+.object-files/ui/border.o: ui/border.cpp $(ui_border_h)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
 .object-files/ui/label.o: ui/label.cpp $(ui_label_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
@@ -855,7 +855,7 @@ binary: $(OBJECT_FILES) $(LDFLAGS_configuration)
 .object-files/widget.o: widget.cpp $(callbacks_callbacks_h) $(color_h) $(math_h) $(widget_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-.object-files/window.o: window.cpp $(border_h) $(callbacks_callbacks_h) $(globals_h) $(user_interface_h) $(window_h) $(ui_label_h)
+.object-files/window.o: window.cpp $(callbacks_callbacks_h) $(globals_h) $(user_interface_h) $(window_h) $(ui_border_h) $(ui_label_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 .object-files/write_to_xml_stream.o: write_to_xml_stream.cpp $(battery_h) $(character_h) $(color_h) $(commodity_h) $(faction_h) $(generator_h) $(graphics_material_h) $(map_knowledge_h) $(mind_h) $(object_h) $(object_aspect_accessory_h) $(object_aspect_name_h) $(object_aspect_object_container_h) $(object_aspect_physical_h) $(object_aspect_position_h) $(object_aspect_visualization_h) $(ship_h) $(slot_h) $(storage_h) $(system_h) $(visualization_prototype_h) $(weapon_h) $(write_to_xml_stream_h) $(xml_stream_h)
