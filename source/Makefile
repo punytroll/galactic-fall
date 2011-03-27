@@ -340,10 +340,6 @@ scanner_display_h = \
 	$(referencing_h) \
 	$(viewport_h)
 
-scroll_bar_h = \
-	scroll_bar.h \
-	$(widget_h)
-
 scroll_box_h = \
 	scroll_box.h \
 	$(widget_h)
@@ -441,6 +437,10 @@ ui_border_h = \
 ui_label_h = \
 	ui/label.h \
 	$(color_h) \
+	$(widget_h)
+
+ui_scroll_bar_h = \
+	ui/scroll_bar.h \
 	$(widget_h)
 
 user_interface_h = \
@@ -741,7 +741,7 @@ binary: $(OBJECT_FILES) $(LDFLAGS_configuration)
 .object-files/object_factory.o: object_factory.cpp $(battery_h) $(battery_class_h) $(character_h) $(class_manager_h) $(command_mind_h) $(commodity_h) $(commodity_class_h) $(faction_h) $(game_time_h) $(generator_h) $(generator_class_h) $(globals_h) $(graphics_model_h) $(object_aspect_name_h) $(object_aspect_outfitting_h) $(object_aspect_physical_h) $(object_aspect_position_h) $(object_aspect_visualization_h) $(object_factory_h) $(planet_h) $(ship_h) $(ship_class_h) $(shot_h) $(slot_h) $(storage_h) $(weapon_h) $(weapon_class_h) $(visualization_prototype_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-.object-files/object_information_dialog.o: object_information_dialog.cpp $(button_h) $(globals_h) $(object_h) $(object_aspect_accessory_h) $(object_aspect_name_h) $(object_aspect_object_container_h) $(object_aspect_physical_h) $(object_information_dialog_h) $(scroll_bar_h) $(scroll_box_h) $(slot_h) $(slot_class_h) $(string_cast_h) $(ui_label_h)
+.object-files/object_information_dialog.o: object_information_dialog.cpp $(button_h) $(globals_h) $(object_h) $(object_aspect_accessory_h) $(object_aspect_name_h) $(object_aspect_object_container_h) $(object_aspect_physical_h) $(object_information_dialog_h) $(scroll_box_h) $(slot_h) $(slot_class_h) $(string_cast_h) $(ui_label_h) $(ui_scroll_bar_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 .object-files/outfit_ship_dialog.o: outfit_ship_dialog.cpp $(button_h) $(class_manager_h) $(color_h) $(globals_h) $(key_event_information_h) $(object_aspect_accessory_h) $(object_aspect_name_h) $(object_aspect_object_container_h) $(object_aspect_outfitting_h) $(object_aspect_physical_h) $(outfit_ship_dialog_h) $(scroll_box_h) $(ship_h) $(slot_h) $(slot_class_h) $(storage_h) $(ui_label_h) $(weapon_h) $(weapon_class_h)
@@ -768,10 +768,7 @@ binary: $(OBJECT_FILES) $(LDFLAGS_configuration)
 .object-files/scanner_display.o: scanner_display.cpp $(object_aspect_physical_h) $(scanner_display_h) $(ship_h) $(star_h) $(system.h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-.object-files/scroll_bar.o: scroll_bar.cpp $(button_h) $(callbacks_callbacks_h) $(color_h) $(globals_h) $(scroll_bar_h) $(user_interface_h)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-
-.object-files/scroll_box.o: scroll_box.cpp $(callbacks_callbacks_h) $(color_h) $(scroll_bar_h) $(scroll_box_h)
+.object-files/scroll_box.o: scroll_box.cpp $(callbacks_callbacks_h) $(color_h) $(scroll_box_h) $(ui_scroll_bar_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 .object-files/settings.o: settings.cpp $(arx_resources_h) $(buffer_reading_h) $(settings_h) $(string_cast_h)
@@ -825,13 +822,16 @@ binary: $(OBJECT_FILES) $(LDFLAGS_configuration)
 .object-files/timing_dialog.o: timing_dialog.cpp $(callbacks_callbacks_h) $(globals_h) $(key_event_information_h) $(string_cast_h) $(system_statistics_h) $(timing_dialog_h) $(ui_label_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-.object-files/trade_center_dialog.o: trade_center_dialog.cpp $(asset_class_h) $(button_h) $(character_h) $(commodity_h) $(commodity_class_h) $(character_h) $(game_time_h) $(graphics_model_manager_h) $(key_event_information_h) $(object_aspect_accessory_h) $(object_aspect_name_h) $(object_aspect_object_container_h) $(object_factory_h) $(planet_h) $(scroll_bar_h) $(scroll_box_h) $(ship_h) $(storage_h) $(trade_center_dialog_h) $(ui_label_h) $(weapon_h) $(weapon_class_h)
+.object-files/trade_center_dialog.o: trade_center_dialog.cpp $(asset_class_h) $(button_h) $(character_h) $(commodity_h) $(commodity_class_h) $(character_h) $(game_time_h) $(graphics_model_manager_h) $(key_event_information_h) $(object_aspect_accessory_h) $(object_aspect_name_h) $(object_aspect_object_container_h) $(object_factory_h) $(planet_h) $(scroll_box_h) $(ship_h) $(storage_h) $(trade_center_dialog_h) $(ui_label_h) $(ui_scroll_bar_h) $(weapon_h) $(weapon_class_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 .object-files/ui/border.o: ui/border.cpp $(ui_border_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 .object-files/ui/label.o: ui/label.cpp $(ui_label_h)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+.object-files/ui/scroll_bar.o: ui/scroll_bar.cpp $(button_h) $(callbacks_callbacks_h) $(color_h) $(globals_h) $(user_interface_h) $(ui_scroll_bar_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 .object-files/user_interface.o: user_interface.cpp $(callbacks_connection_handle_h) $(user_interface_h) $(widget_h)

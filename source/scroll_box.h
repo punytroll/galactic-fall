@@ -23,7 +23,11 @@
 #include "widget.h"
 
 class Button;
-class ScrollBar;
+
+namespace UI
+{
+	class ScrollBar;
+}
 
 class ScrollBox : public Widget
 {
@@ -35,8 +39,8 @@ public:
 	const Widget * GetContent(void) const;
 	Widget * GetView(void);
 	const Widget * GetView(void) const;
-	ScrollBar * GetHorizontalScrollBar(void);
-	ScrollBar * GetVerticalScrollBar(void);
+	UI::ScrollBar * GetHorizontalScrollBar(void);
+	UI::ScrollBar * GetVerticalScrollBar(void);
 	// setters
 	void SetHorizontalScrollBarVisible(bool Visible);
 	void SetVerticalScrollBarVisible(bool Visible);
@@ -48,8 +52,8 @@ protected:
 private:
 	Widget * m_Content;
 	Widget * m_View;
-	ScrollBar * m_HorizontalScrollBar;
-	ScrollBar * m_VerticalScrollBar;
+	UI::ScrollBar * m_HorizontalScrollBar;
+	UI::ScrollBar * m_VerticalScrollBar;
 };
 
 inline Widget * ScrollBox::GetContent(void)
@@ -72,12 +76,12 @@ inline const Widget * ScrollBox::GetView(void) const
 	return m_View;
 }
 
-inline ScrollBar * ScrollBox::GetHorizontalScrollBar(void)
+inline UI::ScrollBar * ScrollBox::GetHorizontalScrollBar(void)
 {
 	return m_HorizontalScrollBar;
 }
 
-inline ScrollBar * ScrollBox::GetVerticalScrollBar(void)
+inline UI::ScrollBar * ScrollBox::GetVerticalScrollBar(void)
 {
 	return m_VerticalScrollBar;
 }
