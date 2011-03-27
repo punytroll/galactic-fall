@@ -19,8 +19,8 @@
 
 #include "callbacks/callbacks.h"
 #include "color.h"
-#include "scroll_bar.h"
 #include "scroll_box.h"
+#include "ui/scroll_bar.h"
 
 ScrollBox::ScrollBox(Widget * SupWidget) :
 	Widget(SupWidget)
@@ -37,7 +37,7 @@ ScrollBox::ScrollBox(Widget * SupWidget) :
 	m_Content->SetPosition(Vector2f(0.0f, 0.0f));
 	m_Content->SetBackgroundColor(Color(0.15f, 0.15f, 0.15f, 1.0f));
 	m_Content->ConnectSizeChangedCallback(Callback(this, &ScrollBox::OnContentOrViewSizeChanged));
-	m_HorizontalScrollBar = new ScrollBar(this, ScrollBar::HORIZONTAL);
+	m_HorizontalScrollBar = new UI::ScrollBar(this, UI::ScrollBar::HORIZONTAL);
 	m_HorizontalScrollBar->SetPosition(Vector2f(0.0f, GetSize()[1] - 20.0f));
 	m_HorizontalScrollBar->SetSize(Vector2f(GetSize()[0] - 20.0f, 20.0f));
 	m_HorizontalScrollBar->ConnectScrollPositionChangedCallback(Callback(this, &ScrollBox::OnHorizontalScrollPositionChanged));
@@ -49,7 +49,7 @@ ScrollBox::ScrollBox(Widget * SupWidget) :
 	m_HorizontalScrollBar->SetMaximumPosition(std::max(0.0f, GetContent()->GetSize()[0] - GetView()->GetSize()[0]));
 	m_HorizontalScrollBar->SetCurrentPosition(0.0f);
 	m_HorizontalScrollBar->SetStepSize(m_HorizontalScrollBar->GetMaximumPosition() / 10.0f);
-	m_VerticalScrollBar = new ScrollBar(this, ScrollBar::VERTICAL);
+	m_VerticalScrollBar = new UI::ScrollBar(this, UI::ScrollBar::VERTICAL);
 	m_VerticalScrollBar->SetPosition(Vector2f(GetSize()[0] - 20.0f, 0.0f));
 	m_VerticalScrollBar->SetSize(Vector2f(20.0f, GetSize()[1] - 20.0f));
 	m_VerticalScrollBar->ConnectScrollPositionChangedCallback(Callback(this, &ScrollBox::OnVerticalScrollPositionChanged));

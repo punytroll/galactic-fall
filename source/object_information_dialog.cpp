@@ -25,12 +25,12 @@
 #include "object_aspect_object_container.h"
 #include "object_aspect_physical.h"
 #include "object_information_dialog.h"
-#include "scroll_bar.h"
 #include "scroll_box.h"
 #include "slot.h"
 #include "slot_class.h"
 #include "string_cast.h"
 #include "ui/label.h"
+#include "ui/scroll_bar.h"
 
 ObjectInformationDialog::ObjectInformationDialog(Widget * SupWidget, const Reference< Object > & Object) :
 	WWindow(SupWidget, "Object Information"),
