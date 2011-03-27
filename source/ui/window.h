@@ -20,42 +20,42 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
-#include "widget.h"
+#include "../widget.h"
 
 namespace UI
 {
 	class Border;
 	class Label;
-}
 
-class WWindow : public Widget
-{
-public:
-	WWindow(Widget * SupWidget, const std::string & Title = "");
-	// getters
-	UI::Border * GetBorder(void);
-	UI::Label * GetTitleLabel(void);
-private:
-	// callbacks
-	bool OnTitleLabelMouseButton(int Button, int State, float X, float Y);
-	void OnTitleLabelMouseMoved(float X, float Y);
-	bool OnResizeDragBoxMouseButton(int Button, int State, float X, float Y);
-	void OnResizeDragBoxMouseMoved(float X, float Y);
-	// member variables
-	UI::Border * m_Border;
-	UI::Label * m_TitleLabel;
-	Widget * m_ResizeDragBox;
-	Vector2f m_GrabPosition;
-};
+	class Window : public Widget
+	{
+	public:
+		Window(Widget * SupWidget, const std::string & Title = "");
+		// getters
+		UI::Border * GetBorder(void);
+		UI::Label * GetTitleLabel(void);
+	private:
+		// callbacks
+		bool OnTitleLabelMouseButton(int Button, int State, float X, float Y);
+		void OnTitleLabelMouseMoved(float X, float Y);
+		bool OnResizeDragBoxMouseButton(int Button, int State, float X, float Y);
+		void OnResizeDragBoxMouseMoved(float X, float Y);
+		// member variables
+		UI::Border * m_Border;
+		UI::Label * m_TitleLabel;
+		Widget * m_ResizeDragBox;
+		Vector2f m_GrabPosition;
+	};
 
-inline UI::Border * WWindow::GetBorder(void)
-{
-	return m_Border;
-}
+	inline UI::Border * Window::GetBorder(void)
+	{
+		return m_Border;
+	}
 
-inline UI::Label * WWindow::GetTitleLabel(void)
-{
-	return m_TitleLabel;
+	inline UI::Label * Window::GetTitleLabel(void)
+	{
+		return m_TitleLabel;
+	}
 }
 
 #endif

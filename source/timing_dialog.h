@@ -21,14 +21,14 @@
 #define TIMING_DIALOG_H
 
 #include "type_definitions.h"
-#include "window.h"
+#include "ui/window.h"
 
 namespace UI
 {
 	class Label;
 }
 
-class TimingDialog : public WWindow
+class TimingDialog : public UI::Window
 {
 public:
 	TimingDialog(Widget * SupWidget);

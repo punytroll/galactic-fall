@@ -20,7 +20,7 @@
 #ifndef TRADE_CENTER_DIALOG_H
 #define TRADE_CENTER_DIALOG_H
 
-#include "window.h"
+#include "ui/window.h"
 
 class Button;
 class Character;
@@ -33,7 +33,7 @@ namespace UI
 	class Label;
 }
 
-class TradeCenterDialog : public WWindow
+class TradeCenterDialog : public UI::Window
 {
 public:
 	TradeCenterDialog(Widget * SupWidget, Planet * Planet, Character * Character);

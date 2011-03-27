@@ -20,7 +20,7 @@
 #ifndef OUTFIT_SHIP_DIALOG_H
 #define OUTFIT_SHIP_DIALOG_H
 
-#include "window.h"
+#include "ui/window.h"
 
 class Button;
 class ScrollBox;
@@ -28,7 +28,7 @@ class Ship;
 class SlotListItem;
 class AccessoryListItem;
 
-class OutfitShipDialog : public WWindow
+class OutfitShipDialog : public UI::Window
 {
 public:
 	OutfitShipDialog(Widget * SupWidget, Ship * Ship);

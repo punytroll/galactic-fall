@@ -36,7 +36,7 @@ bool LoadGameFromResourcePath(const std::string & ResourcePath);
 void SaveGame(std::ostream & OStream);
 
 MainMenuWindow::MainMenuWindow(Widget * SupWidget) :
-	WWindow(SupWidget, "Galactic Fall"),
+	Window(SupWidget, "Galactic Fall"),
 	_DestroyOnLoadGameDialogDestroy(false),
 	_DestroyOnSaveGameDialogDestroy(false),
 	_LoadGameButton(0),

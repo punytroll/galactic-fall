@@ -93,7 +93,7 @@ const PlanetAssetClass * TradeCenterAssetClass::GetPlanetAssetClass(void) const
 }
 
 TradeCenterDialog::TradeCenterDialog(Widget * SupWidget, Planet * Planet, Character * Character) :
-	WWindow(SupWidget, "Trade Center: " + Planet->GetAspectName()->GetName()),
+	UI::Window(SupWidget, "Trade Center: " + Planet->GetAspectName()->GetName()),
 	m_Planet(Planet),
 	m_Character(Character),
 	m_SelectedTradeCenterAssetClass(0)

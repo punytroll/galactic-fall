@@ -232,7 +232,7 @@ void AccessoryListItem::OnMouseLeave(void)
 }
 
 OutfitShipDialog::OutfitShipDialog(Widget * SupWidget, Ship * Ship) :
-	WWindow(SupWidget, "Outfit Ship"),
+	Window(SupWidget, "Outfit Ship"),
 	m_Ship(Ship),
 	m_SelectedSlotListItem(0),
 	m_SelectedAccessoryListItem(0)

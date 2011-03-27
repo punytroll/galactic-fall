@@ -20,14 +20,14 @@
 #ifndef MAP_DIALOG_H
 #define MAP_DIALOG_H
 
-#include "window.h"
+#include "ui/window.h"
 
 class Button;
 class Character;
 class StarMapDisplay;
 class System;
 
-class MapDialog : public WWindow
+class MapDialog : public UI::Window
 {
 public:
 	MapDialog(Widget * SupWidget, System * System, Character * Character);

@@ -182,11 +182,11 @@ load_game_dialog_h = \
 main_menu_window_h = \
 	main_menu_window.h \
 	$(ui_dialog_h) \
-	$(window_h)
+	$(ui_window_h)
 
 map_dialog_h = \
 	map_dialog.h \
-	$(window_h)
+	$(ui_window_h)
 
 map_knowledge_h = \
 	map_knowledge.h
@@ -297,11 +297,11 @@ object_factory_h = \
 object_information_dialog_h = \
 	object_information_dialog.h \
 	$(referencing_h) \
-	$(window_h)
+	$(ui_window_h)
 
 outfit_ship_dialog_h = \
 	outfit_ship_dialog.h \
-	$(window_h)
+	$(ui_window_h)
 
 output_observer_h = \
 	output_observer.h \
@@ -318,7 +318,7 @@ planet_h = \
 
 planet_dialog_h = \
 	planet_dialog.h \
-	$(window_h)
+	$(ui_window_h)
 
 real_time_h = \
 	real_time.h
@@ -416,11 +416,11 @@ timeout_notifications_h = \
 timing_dialog_h = \
 	timing_dialog.h \
 	$(type_definitions_h) \
-	$(window_h)
+	$(ui_window_h)
 
 trade_center_dialog_h = \
 	trade_center_dialog.h \
-	$(window_h)
+	$(ui_window_h)
 
 type_definitions_h = \
 	type_definitions.h
@@ -432,7 +432,7 @@ ui_border_h = \
 
 ui_dialog_h = \
 	ui/dialog.h \
-	$(window_h)
+	$(ui_window_h)
 
 ui_label_h = \
 	ui/label.h \
@@ -441,6 +441,10 @@ ui_label_h = \
 
 ui_scroll_bar_h = \
 	ui/scroll_bar.h \
+	$(widget_h)
+
+ui_window_h = \
+	ui/window.h \
 	$(widget_h)
 
 user_interface_h = \
@@ -472,10 +476,6 @@ widget_h = \
 	widget.h \
 	$(callbacks_events_h) \
 	$(math_vector2f_h)
-
-window_h = \
-	window.h \
-	$(widget_h)
 
 write_to_xml_stream_h = \
 	write_to_xml_stream.h
@@ -834,6 +834,9 @@ binary: $(OBJECT_FILES) $(LDFLAGS_configuration)
 .object-files/ui/scroll_bar.o: ui/scroll_bar.cpp $(button_h) $(callbacks_callbacks_h) $(color_h) $(globals_h) $(user_interface_h) $(ui_scroll_bar_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
+.object-files/ui/window.o: ui/window.cpp $(callbacks_callbacks_h) $(globals_h) $(user_interface_h) $(ui_border_h) $(ui_label_h) $(ui_window_h)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
 .object-files/user_interface.o: user_interface.cpp $(callbacks_connection_handle_h) $(user_interface_h) $(widget_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
@@ -853,9 +856,6 @@ binary: $(OBJECT_FILES) $(LDFLAGS_configuration)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 .object-files/widget.o: widget.cpp $(callbacks_callbacks_h) $(color_h) $(math_h) $(widget_h)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-
-.object-files/window.o: window.cpp $(callbacks_callbacks_h) $(globals_h) $(user_interface_h) $(window_h) $(ui_border_h) $(ui_label_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 .object-files/write_to_xml_stream.o: write_to_xml_stream.cpp $(battery_h) $(character_h) $(color_h) $(commodity_h) $(faction_h) $(generator_h) $(graphics_material_h) $(map_knowledge_h) $(mind_h) $(object_h) $(object_aspect_accessory_h) $(object_aspect_name_h) $(object_aspect_object_container_h) $(object_aspect_physical_h) $(object_aspect_position_h) $(object_aspect_visualization_h) $(ship_h) $(slot_h) $(storage_h) $(system_h) $(visualization_prototype_h) $(weapon_h) $(write_to_xml_stream_h) $(xml_stream_h)

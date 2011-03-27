@@ -26,7 +26,7 @@
 #include "ui/label.h"
 
 TimingDialog::TimingDialog(Widget * SupWidget) :
-	WWindow(SupWidget, "Timing Information")
+	UI::Window(SupWidget, "Timing Information")
 {
 	SetPosition(Vector2f(300.0f, 300.0f));
 	SetSize(Vector2f(350.0f, 400.0f));

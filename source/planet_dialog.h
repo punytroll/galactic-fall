@@ -20,14 +20,14 @@
 #ifndef PLANET_DIALOG_H
 #define PLANET_DIALOG_H
 
-#include "window.h"
+#include "ui/window.h"
 
 class Button;
 class Character;
 class Planet;
 class TradeCenterDialog;
 
-class PlanetDialog : public WWindow
+class PlanetDialog : public UI::Window
 {
 public:
 	PlanetDialog(Widget * SupWidget, Planet * Planet, Character * Character);

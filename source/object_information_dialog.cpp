@@ -33,7 +33,7 @@
 #include "ui/scroll_bar.h"
 
 ObjectInformationDialog::ObjectInformationDialog(Widget * SupWidget, const Reference< Object > & Object) :
-	WWindow(SupWidget, "Object Information"),
+	Window(SupWidget, "Object Information"),
 	m_Object(Object),
 	m_OKButton(0)
 {
