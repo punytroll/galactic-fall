@@ -21,7 +21,7 @@
 #include "dialog.h"
 
 UI::Dialog::Dialog(Widget * SupWidget) :
-	WWindow(SupWidget)
+	UI::Window(SupWidget)
 {
 }
 

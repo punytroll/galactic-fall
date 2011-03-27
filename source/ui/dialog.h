@@ -20,14 +20,14 @@
 #ifndef DIALOG_H
 #define DIALOG_H
 
-#include "../window.h"
+#include "window.h"
 
 template < typename ReturnType, typename Argument1Type >
 class Callback1;
 
 namespace UI
 {
-	class Dialog : public WWindow
+	class Dialog : public Window
 	{
 	public:
 		enum ClosingReason

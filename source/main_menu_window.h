@@ -20,13 +20,13 @@
 #define MAIN_MENU_WINDOW_H
 
 #include "ui/dialog.h"
-#include "window.h"
+#include "ui/window.h"
 
 class Button;
 class LoadGameDialog;
 class SaveGameDialog;
 
-class MainMenuWindow : public WWindow
+class MainMenuWindow : public UI::Window
 {
 public:
 	// constructor and destructor

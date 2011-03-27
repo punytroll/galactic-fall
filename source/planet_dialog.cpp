@@ -33,7 +33,7 @@
 #include "ui/label.h"
 
 PlanetDialog::PlanetDialog(Widget * SupWidget, Planet * Planet, Character * Character) :
-	WWindow(SupWidget, "Planet: " + Planet->GetAspectName()->GetName()),
+	UI::Window(SupWidget, "Planet: " + Planet->GetAspectName()->GetName()),
 	m_Planet(Planet),
 	m_Character(Character),
 	m_TradeCenterDialog(0)

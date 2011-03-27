@@ -21,13 +21,13 @@
 #define OBJECT_INFORMATION_DIALOG_H
 
 #include "referencing.h"
-#include "window.h"
+#include "ui/window.h"
 
 class Button;
 class Object;
 class ScrollBox;
 
-class ObjectInformationDialog : public WWindow
+class ObjectInformationDialog : public UI::Window
 {
 public:
 	ObjectInformationDialog(Widget * SupWidget, const Reference< Object > & Object);
