@@ -17,9 +17,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include "border.h"
 #include "callbacks/callbacks.h"
 #include "globals.h"
+#include "ui/border.h"
 #include "ui/label.h"
 #include "user_interface.h"
 #include "window.h"
@@ -28,7 +28,7 @@ WWindow::WWindow(Widget * SupWidget, const std::string & Title) :
 	Widget(SupWidget)
 {
 	SetBackgroundColor(Color(0.2f, 0.2f, 0.2f, 1.0f));
-	m_Border = new Border(this);
+	m_Border = new UI::Border(this);
 	m_Border->SetPosition(Vector2f(0.0f, 0.0f));
 	m_Border->SetSize(GetSize());
 	m_Border->SetAnchorBottom(true);

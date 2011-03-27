@@ -22,10 +22,9 @@
 
 #include "widget.h"
 
-class Border;
-
 namespace UI
 {
+	class Border;
 	class Label;
 }
 
@@ -34,7 +33,7 @@ class WWindow : public Widget
 public:
 	WWindow(Widget * SupWidget, const std::string & Title = "");
 	// getters
-	Border * GetBorder(void);
+	UI::Border * GetBorder(void);
 	UI::Label * GetTitleLabel(void);
 private:
 	// callbacks
@@ -43,13 +42,13 @@ private:
 	bool OnResizeDragBoxMouseButton(int Button, int State, float X, float Y);
 	void OnResizeDragBoxMouseMoved(float X, float Y);
 	// member variables
-	Border * m_Border;
+	UI::Border * m_Border;
 	UI::Label * m_TitleLabel;
 	Widget * m_ResizeDragBox;
 	Vector2f m_GrabPosition;
 };
 
-inline Border * WWindow::GetBorder(void)
+inline UI::Border * WWindow::GetBorder(void)
 {
 	return m_Border;
 }

@@ -21,16 +21,16 @@
 
 #include "border.h"
 
-Border::Border(Widget * SupWidget) :
+UI::Border::Border(Widget * SupWidget) :
 	Widget(SupWidget)
 {
 }
 
-Border::~Border(void)
+UI::Border::~Border(void)
 {
 }
 
-void Border::Draw(void) const
+void UI::Border::Draw(void) const
 {
 	Widget::Draw();
 	glColor4fv(m_ForegroundColor.GetColor().m_V.m_A);
