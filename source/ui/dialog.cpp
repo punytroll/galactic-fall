@@ -17,36 +17,34 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef DIALOG_H
-#define DIALOG_H
+#include "../callbacks/callbacks.h"
+#include "dialog.h"
 
-#include "window.h"
-
-template < typename ReturnType, typename Argument1Type >
-class Callback1;
-
-class Dialog : public WWindow
+UI::Dialog::Dialog(Widget * SupWidget) :
+	WWindow(SupWidget)
 {
-public:
-	enum ClosingReason
-	{
-		OK_BUTTON,
-		CANCEL_BUTTON,
-		RETURN_KEY,
-		ESCAPE_KEY
-	};
-	// constructors & destructor
-	Dialog(Widget * SupWidget);
-	// connecting and disconnecting event callbacks
-	ConnectionHandle ConnectClosingCallback(Callback1< bool, Dialog::ClosingReason > Callback);
-	void DisconnectClosingCallback(ConnectionHandle & ConnectionHandle);
-protected:
-	// helper functions and actions
-	void _Close(Dialog::ClosingReason ClosingReason);
-private:
-	// member variables
-	//events
-	Event1< bool, Dialog::ClosingReason > _ClosingEvent;
-};
+}
 
-#endif
+ConnectionHandle UI::Dialog::ConnectClosingCallback(Callback1< bool, UI::Dialog::ClosingReason > Callback)
+{
+	return _ClosingEvent.Connect(Callback);
+}
+
+void UI::Dialog::DisconnectClosingCallback(ConnectionHandle & ConnectionHandle)
+{
+	_ClosingEvent.Disconnect(ConnectionHandle);
+}
+
+void UI::Dialog::_Close(UI::Dialog::ClosingReason ClosingReason)
+{
+	bool CallDestroy(true);
+	
+	for(Event1< bool, UI::Dialog::ClosingReason >::CallbackIterator CallbackIterator = _ClosingEvent.GetCallbackIterator(); CallbackIterator.IsValid() == true; ++CallbackIterator)
+	{
+		CallDestroy &= CallbackIterator(ClosingReason);
+	}
+	if(CallDestroy == true)
+	{
+		Destroy();
+	}
+}

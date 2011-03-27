@@ -83,10 +83,6 @@ commodity_class_h = \
 	commodity_class.h \
 	$(type_definitions_h)
 
-dialog_h = \
-	dialog.h \
-	$(window_h)
-
 draw_text_h = \
 	draw_text.h
 
@@ -180,12 +176,12 @@ local_file_data_channel_h = \
 
 load_game_dialog_h = \
 	load_game_dialog.h \
-	$(dialog_h) \
+	$(ui_dialog_h) \
 	$(timeout_notifications_h)
 
 main_menu_window_h = \
 	main_menu_window.h \
-	$(dialog_h) \
+	$(ui_dialog_h) \
 	$(window_h)
 
 map_dialog_h = \
@@ -332,7 +328,7 @@ referencing_h = \
 
 save_game_dialog_h = \
 	save_game_dialog.h \
-	$(dialog_h) \
+	$(ui_dialog_h) \
 	$(timeout_notifications_h)
 
 scanner_display_h = \
@@ -433,6 +429,10 @@ ui_border_h = \
 	ui/border.h \
 	$(color_h) \
 	$(widget_h)
+
+ui_dialog_h = \
+	ui/dialog.h \
+	$(window_h)
 
 ui_label_h = \
 	ui/label.h \
@@ -607,9 +607,6 @@ binary: $(OBJECT_FILES) $(LDFLAGS_configuration)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 .object-files/commodity_class.o: commodity_class.cpp $(color_h) $(commodity_class_h) $(visualization_prototype_h)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-
-.object-files/dialog.o: dialog.cpp $(callbacks_callbacks_h) $(dialog_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 .object-files/draw_text.o: draw_text.cpp $(draw_text_h)
@@ -826,6 +823,9 @@ binary: $(OBJECT_FILES) $(LDFLAGS_configuration)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 .object-files/ui/border.o: ui/border.cpp $(ui_border_h)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+.object-files/ui/dialog.o: ui/dialog.cpp $(callbacks_callbacks_h) $(ui_dialog_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 .object-files/ui/label.o: ui/label.cpp $(ui_label_h)

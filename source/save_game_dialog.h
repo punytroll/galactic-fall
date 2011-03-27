@@ -20,7 +20,7 @@
 #ifndef SAVE_GAME_DIALOG_H
 #define SAVE_GAME_DIALOG_H
 
-#include "dialog.h"
+#include "ui/dialog.h"
 #include "timeout_notifications.h"
 
 class Button;
@@ -32,7 +32,7 @@ namespace UI
 	class Label;
 }
 
-class SaveGameDialog : public Dialog
+class SaveGameDialog : public UI::Dialog
 {
 public:
 	SaveGameDialog(Widget * SupWidget);

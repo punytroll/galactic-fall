@@ -20,7 +20,7 @@
 #ifndef LOAD_GAME_DIALOG_H
 #define LOAD_GAME_DIALOG_H
 
-#include "dialog.h"
+#include "ui/dialog.h"
 #include "timeout_notifications.h"
 
 class Button;
@@ -32,7 +32,7 @@ namespace UI
 	class Label;
 }
 
-class LoadGameDialog : public Dialog
+class LoadGameDialog : public UI::Dialog
 {
 public:
 	LoadGameDialog(Widget * SupWidget);
