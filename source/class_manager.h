@@ -23,6 +23,7 @@
 #include <assert.h>
 
 #include <map>
+#include <string>
 
 template< class ClassType >
 class ClassManager
