@@ -21,13 +21,13 @@
 
 #include <fstream>
 
-#include "button.h"
 #include "file_handling.h"
 #include "globals.h"
 #include "key_event_information.h"
 #include "real_time.h"
 #include "save_game_dialog.h"
 #include "scroll_box.h"
+#include "ui/button.h"
 #include "ui/label.h"
 
 class DirectoryEntryItem : public Widget
@@ -111,7 +111,7 @@ SaveGameDialog::SaveGameDialog(Widget * SupWidget) :
 	SetPosition(Vector2f(120.0f, 200.0f));
 	SetSize(Vector2f(300.0f, 400.0f));
 	ConnectKeyCallback(Callback(this, &SaveGameDialog::OnKey));
-	m_OKButton = new Button(this);
+	m_OKButton = new UI::Button(this);
 	m_OKButton->SetSize(Vector2f(100.0f, 20.0f));
 	m_OKButton->SetPosition(Vector2f(GetSize()[0] - 10.0f - m_OKButton->GetSize()[0], GetSize()[1] - 10.0f - m_OKButton->GetSize()[1]));
 	m_OKButton->SetAnchorBottom(true);
@@ -126,7 +126,7 @@ SaveGameDialog::SaveGameDialog(Widget * SupWidget) :
 	OKButtonLabel->SetSize(m_OKButton->GetSize());
 	OKButtonLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
 	OKButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
-	m_CancelButton = new Button(this);
+	m_CancelButton = new UI::Button(this);
 	m_CancelButton->SetSize(Vector2f(100.0f, 20.0f));
 	m_CancelButton->SetPosition(Vector2f(GetSize()[0] - 10.0f - m_OKButton->GetSize()[0] - 10.0f - m_CancelButton->GetSize()[0], GetSize()[1] - 10.0f - m_CancelButton->GetSize()[1]));
 	m_CancelButton->SetAnchorBottom(true);

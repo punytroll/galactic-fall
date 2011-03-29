@@ -22,10 +22,9 @@
 
 #include "widget.h"
 
-class Button;
-
 namespace UI
 {
+	class Button;
 	class ScrollBar;
 }
 

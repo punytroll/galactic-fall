@@ -18,7 +18,6 @@
 **/
 
 #include "asset_class.h"
-#include "button.h"
 #include "callbacks/callbacks.h"
 #include "character.h"
 #include "color.h"
@@ -30,6 +29,7 @@
 #include "ship.h"
 #include "string_cast.h"
 #include "trade_center_dialog.h"
+#include "ui/button.h"
 #include "ui/label.h"
 
 PlanetDialog::PlanetDialog(Widget * SupWidget, Planet * Planet, Character * Character) :
@@ -50,7 +50,7 @@ PlanetDialog::PlanetDialog(Widget * SupWidget, Planet * Planet, Character * Char
 	DescriptionLabel->SetWrap(true);
 	DescriptionLabel->SetWordWrap(true);
 	DescriptionLabel->SetAnchorRight(true);
-	m_TakeOffButton = new Button(this);
+	m_TakeOffButton = new UI::Button(this);
 	m_TakeOffButton->SetPosition(Vector2f(390.0f, 300.0f));
 	m_TakeOffButton->SetSize(Vector2f(100.0f, 20.0f));
 	m_TakeOffButton->ConnectClickedCallback(Callback(this, &PlanetDialog::OnTakeOffClicked));
@@ -65,7 +65,7 @@ PlanetDialog::PlanetDialog(Widget * SupWidget, Planet * Planet, Character * Char
 	TakeOffButtonLabel->SetSize(m_TakeOffButton->GetSize());
 	TakeOffButtonLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
 	TakeOffButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
-	m_TradeCenterButton = new Button(this);
+	m_TradeCenterButton = new UI::Button(this);
 	m_TradeCenterButton->SetPosition(Vector2f(10.0f, 40.0f));
 	m_TradeCenterButton->SetSize(Vector2f(100.0f, 20.0f));
 	m_TradeCenterButton->ConnectClickedCallback(Callback(this, &PlanetDialog::OnTradeCenterClicked));
@@ -82,7 +82,7 @@ PlanetDialog::PlanetDialog(Widget * SupWidget, Planet * Planet, Character * Char
 	{
 		if((*PlanetAssetClassIterator)->GetAssetClass()->GetIdentifier() == "fuel")
 		{
-			m_RefuelButton = new Button(this);
+			m_RefuelButton = new UI::Button(this);
 			m_RefuelButton->SetPosition(Vector2f(10.0f, 70.0f));
 			m_RefuelButton->SetSize(Vector2f(100.0f, 20.0f));
 			m_RefuelButton->ConnectClickedCallback(Callback(this, &PlanetDialog::OnRefuelClicked));

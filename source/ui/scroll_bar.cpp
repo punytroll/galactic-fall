@@ -17,11 +17,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include "../button.h"
 #include "../callbacks/callbacks.h"
 #include "../color.h"
 #include "../globals.h"
 #include "../user_interface.h"
+#include "button.h"
 #include "scroll_bar.h"
 
 static const float g_ScrollBarTrackerBorderWidth = 4.0f;

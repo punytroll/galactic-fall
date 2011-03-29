@@ -22,26 +22,29 @@
 
 #include <string>
 
-#include "callbacks/events.h"
-#include "widget.h"
+#include "../callbacks/events.h"
+#include "../widget.h"
 
-class Button : public Widget
+namespace UI
 {
-public:
-	// constructors and deconstructors
-	Button(Widget * SupWidget);
-	virtual ~Button(void);
-	// connect and disconnect events
-	ConnectionHandle ConnectClickedCallback(Callback0< void > ClickedHandler);
-	void DisconnectClickedCallback(ConnectionHandle & ConnectionHandle);
-private:
-	// callbacks
-	bool OnMouseButton(int Button, int State, float X, float Y);
-	void OnMouseEnter(void);
-	void OnMouseLeave(void);
-	// member variables
-	// events
-	Event0< void > _ClickedEvent;
-};
+	class Button : public Widget
+	{
+	public:
+		// constructors and deconstructors
+		Button(Widget * SupWidget);
+		virtual ~Button(void);
+		// connect and disconnect events
+		ConnectionHandle ConnectClickedCallback(Callback0< void > ClickedHandler);
+		void DisconnectClickedCallback(ConnectionHandle & ConnectionHandle);
+	private:
+		// callbacks
+		bool OnMouseButton(int Button, int State, float X, float Y);
+		void OnMouseEnter(void);
+		void OnMouseLeave(void);
+		// member variables
+		// events
+		Event0< void > _ClickedEvent;
+	};
+}
 
 #endif

@@ -17,7 +17,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include "button.h"
 #include "globals.h"
 #include "object.h"
 #include "object_aspect_accessory.h"
@@ -29,6 +28,7 @@
 #include "slot.h"
 #include "slot_class.h"
 #include "string_cast.h"
+#include "ui/button.h"
 #include "ui/label.h"
 #include "ui/scroll_bar.h"
 
@@ -41,7 +41,7 @@ ObjectInformationDialog::ObjectInformationDialog(Widget * SupWidget, const Refer
 	SetSize(Vector2f(500.0f, 300.0f));
 	ConnectMouseButtonCallback(Callback(this, &ObjectInformationDialog::OnMouseButton));
 	// set up widgets
-	m_OKButton = new Button(this);
+	m_OKButton = new UI::Button(this);
 	m_OKButton->SetSize(Vector2f(100.0f, 20.0f));
 	m_OKButton->SetPosition(Vector2f(GetSize()[0] - 10.0f - m_OKButton->GetSize()[0], GetSize()[1] - 10.0f - m_OKButton->GetSize()[1]));
 	m_OKButton->SetAnchorBottom(true);
@@ -62,7 +62,7 @@ ObjectInformationDialog::ObjectInformationDialog(Widget * SupWidget, const Refer
 	m_PropertiesScrollBox->SetHorizontalScrollBarVisible(false);
 	m_PropertiesScrollBox->SetAnchorBottom(true);
 	m_PropertiesScrollBox->SetAnchorRight(true);
-	m_RefreshButton = new Button(this);
+	m_RefreshButton = new UI::Button(this);
 	m_RefreshButton->SetSize(Vector2f(100.0f, 20.0f));
 	m_RefreshButton->SetPosition(Vector2f(m_OKButton->GetPosition()[0] - 10.0f - m_RefreshButton->GetSize()[0], GetSize()[1] - 10.0f - m_RefreshButton->GetSize()[1]));
 	m_RefreshButton->SetAnchorBottom(true);
@@ -88,7 +88,7 @@ float ObjectInformationDialog::AddObjectProperty(float Top, float Indentation, c
 	PropertyDisplay->SetSize(Vector2f(m_PropertiesScrollBox->GetContent()->GetSize()[0] - 20.0f, 30.0f));
 	PropertyDisplay->SetAnchorRight(true);
 	
-	Button * ObjectButton(new Button(PropertyDisplay));
+	UI::Button * ObjectButton(new UI::Button(PropertyDisplay));
 	
 	ObjectButton->SetPosition(Vector2f(Indentation, 5.0f));
 	ObjectButton->SetSize(Vector2f(PropertyDisplay->GetSize()[0] - Indentation, 20.0f));

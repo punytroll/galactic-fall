@@ -22,9 +22,13 @@
 #include "ui/dialog.h"
 #include "ui/window.h"
 
-class Button;
 class LoadGameDialog;
 class SaveGameDialog;
+
+namespace UI
+{
+	class Button;
+}
 
 class MainMenuWindow : public UI::Window
 {
@@ -32,11 +36,11 @@ public:
 	// constructor and destructor
 	MainMenuWindow(Widget * SupWidget);
 	// getters
-	Button * GetLoadGameButton(void);
-	Button * GetNewGameButton(void);
-	Button * GetQuitButton(void);
-	Button * GetResumeGameButton(void);
-	Button * GetSaveGameButton(void);
+	UI::Button * GetLoadGameButton(void);
+	UI::Button * GetNewGameButton(void);
+	UI::Button * GetQuitButton(void);
+	UI::Button * GetResumeGameButton(void);
+	UI::Button * GetSaveGameButton(void);
 private:
 	// callbacks
 	bool _OnKey(const KeyEventInformation & KeyEventInformation);
@@ -52,36 +56,36 @@ private:
 	// member variables
 	bool _DestroyOnLoadGameDialogDestroy;
 	bool _DestroyOnSaveGameDialogDestroy;
-	Button * _LoadGameButton;
+	UI::Button * _LoadGameButton;
 	LoadGameDialog * _LoadGameDialog;
-	Button * _NewGameButton;
-	Button * _QuitButton;
-	Button * _ResumeGameButton;
-	Button * _SaveGameButton;
+	UI::Button * _NewGameButton;
+	UI::Button * _QuitButton;
+	UI::Button * _ResumeGameButton;
+	UI::Button * _SaveGameButton;
 	SaveGameDialog * _SaveGameDialog;
 };
 
-inline Button * MainMenuWindow::GetLoadGameButton(void)
+inline UI::Button * MainMenuWindow::GetLoadGameButton(void)
 {
 	return _LoadGameButton;
 }
 
-inline Button * MainMenuWindow::GetNewGameButton(void)
+inline UI::Button * MainMenuWindow::GetNewGameButton(void)
 {
 	return _NewGameButton;
 }
 
-inline Button * MainMenuWindow::GetQuitButton(void)
+inline UI::Button * MainMenuWindow::GetQuitButton(void)
 {
 	return _QuitButton;
 }
 
-inline Button * MainMenuWindow::GetResumeGameButton(void)
+inline UI::Button * MainMenuWindow::GetResumeGameButton(void)
 {
 	return _ResumeGameButton;
 }
 
-inline Button * MainMenuWindow::GetSaveGameButton(void)
+inline UI::Button * MainMenuWindow::GetSaveGameButton(void)
 {
 	return _SaveGameButton;
 }

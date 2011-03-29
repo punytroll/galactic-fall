@@ -18,7 +18,6 @@
 **/
 
 #include "asset_class.h"
-#include "button.h"
 #include "character.h"
 #include "commodity.h"
 #include "commodity_class.h"
@@ -35,6 +34,7 @@
 #include "storage.h"
 #include "string_cast.h"
 #include "trade_center_dialog.h"
+#include "ui/button.h"
 #include "ui/label.h"
 #include "ui/scroll_bar.h"
 #include "weapon.h"
@@ -101,7 +101,7 @@ TradeCenterDialog::TradeCenterDialog(Widget * SupWidget, Planet * Planet, Charac
 	SetPosition(Vector2f(600.0f, 100.0f));
 	SetSize(Vector2f(500.0f, 330.0f));
 	ConnectKeyCallback(Callback(this, &TradeCenterDialog::OnKey));
-	m_OKButton = new Button(this);
+	m_OKButton = new UI::Button(this);
 	m_OKButton->SetPosition(Vector2f(390.0f, 300.0f));
 	m_OKButton->SetSize(Vector2f(100.0f, 20.0f));
 	m_OKButton->SetAnchorBottom(true);
@@ -116,7 +116,7 @@ TradeCenterDialog::TradeCenterDialog(Widget * SupWidget, Planet * Planet, Charac
 	OKButtonLabel->SetSize(m_OKButton->GetSize());
 	OKButtonLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
 	OKButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
-	m_BuyButton = new Button(this);
+	m_BuyButton = new UI::Button(this);
 	m_BuyButton->SetPosition(Vector2f(10.0f, 300.0f));
 	m_BuyButton->SetSize(Vector2f(100.0f, 20.0f));
 	m_BuyButton->SetAnchorBottom(true);
@@ -129,7 +129,7 @@ TradeCenterDialog::TradeCenterDialog(Widget * SupWidget, Planet * Planet, Charac
 	BuyButtonLabel->SetSize(m_BuyButton->GetSize());
 	BuyButtonLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
 	BuyButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
-	m_SellButton = new Button(this);
+	m_SellButton = new UI::Button(this);
 	m_SellButton->SetPosition(Vector2f(120.0f, 300.0f));
 	m_SellButton->SetSize(Vector2f(100.0f, 20.0f));
 	m_SellButton->SetAnchorBottom(true);

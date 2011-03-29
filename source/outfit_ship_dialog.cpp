@@ -17,7 +17,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include "button.h"
 #include "class_manager.h"
 #include "color.h"
 #include "globals.h"
@@ -33,6 +32,7 @@
 #include "slot.h"
 #include "slot_class.h"
 #include "storage.h"
+#include "ui/button.h"
 #include "ui/label.h"
 #include "weapon.h"
 #include "weapon_class.h"
@@ -278,7 +278,7 @@ OutfitShipDialog::OutfitShipDialog(Widget * SupWidget, Ship * Ship) :
 	m_CenterPane->SetPosition(Vector2f(10.0f + m_LeftPane->GetSize()[0] + 10.0f, 70.0f));
 	m_CenterPane->SetSize(Vector2f(160.0f, GetSize()[1] - 80.0f));
 	m_CenterPane->SetAnchorBottom(true);
-	m_MountButton = new Button(m_CenterPane);
+	m_MountButton = new UI::Button(m_CenterPane);
 	m_MountButton->SetPosition(Vector2f(0.0f, 40.0f));
 	m_MountButton->SetSize(Vector2f(m_CenterPane->GetSize()[0], 20.0f));
 	m_MountButton->ConnectClickedCallback(Callback(this, &OutfitShipDialog::OnMountClicked));
@@ -290,7 +290,7 @@ OutfitShipDialog::OutfitShipDialog(Widget * SupWidget, Ship * Ship) :
 	MountButtonLabel->SetSize(Vector2f(m_MountButton->GetSize()));
 	MountButtonLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
 	MountButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
-	m_UnmountButton = new Button(m_CenterPane);
+	m_UnmountButton = new UI::Button(m_CenterPane);
 	m_UnmountButton->SetPosition(Vector2f(0.0f, 70.0f));
 	m_UnmountButton->SetSize(Vector2f(m_CenterPane->GetSize()[0], 20.0f));
 	m_UnmountButton->ConnectClickedCallback(Callback(this, &OutfitShipDialog::OnUnmountClicked));
@@ -302,7 +302,7 @@ OutfitShipDialog::OutfitShipDialog(Widget * SupWidget, Ship * Ship) :
 	UnmountButtonLabel->SetSize(Vector2f(m_UnmountButton->GetSize()));
 	UnmountButtonLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
 	UnmountButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
-	m_OKButton = new Button(m_CenterPane);
+	m_OKButton = new UI::Button(m_CenterPane);
 	m_OKButton->SetPosition(Vector2f(0.0f, m_CenterPane->GetSize()[1] - 30.0f));
 	m_OKButton->SetSize(Vector2f(m_CenterPane->GetSize()[0], 20.0f));
 	m_OKButton->ConnectClickedCallback(Callback(this, &OutfitShipDialog::OnOKClicked));

@@ -23,9 +23,13 @@
 #include "referencing.h"
 #include "ui/window.h"
 
-class Button;
 class Object;
 class ScrollBox;
+
+namespace UI
+{
+	class Button;
+}
 
 class ObjectInformationDialog : public UI::Window
 {
@@ -45,9 +49,9 @@ private:
 	void Refresh(void);
 	// member variables
 	Reference< Object > m_Object;
-	Button * m_OKButton;
+	UI::Button * m_OKButton;
 	ScrollBox * m_PropertiesScrollBox;
-	Button * m_RefreshButton;
+	UI::Button * m_RefreshButton;
 };
 
 #endif

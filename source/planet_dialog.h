@@ -22,10 +22,14 @@
 
 #include "ui/window.h"
 
-class Button;
 class Character;
 class Planet;
 class TradeCenterDialog;
+
+namespace UI
+{
+	class Button;
+}
 
 class PlanetDialog : public UI::Window
 {
@@ -44,9 +48,9 @@ private:
 	// member variables
 	Planet * m_Planet;
 	Character * m_Character;
-	Button * m_TakeOffButton;
-	Button * m_TradeCenterButton;
-	Button * m_RefuelButton;
+	UI::Button * m_TakeOffButton;
+	UI::Button * m_TradeCenterButton;
+	UI::Button * m_RefuelButton;
 	TradeCenterDialog * m_TradeCenterDialog;
 };
 
