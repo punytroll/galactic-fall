@@ -17,12 +17,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include "../callbacks/callbacks.h"
+#include "../color.h"
+#include "../globals.h"
 #include "button.h"
-#include "callbacks/callbacks.h"
-#include "color.h"
-#include "globals.h"
 
-Button::Button(Widget * SupWidget) :
+UI::Button::Button(Widget * SupWidget) :
 	Widget(SupWidget)
 {
 	SetBackgroundColor(Color(0.3f, 0.3f, 0.3f, 1.0f));
@@ -32,21 +32,21 @@ Button::Button(Widget * SupWidget) :
 	ConnectMouseLeaveCallback(Callback(this, &Button::OnMouseLeave));
 }
 
-Button::~Button(void)
+UI::Button::~Button(void)
 {
 }
 
-ConnectionHandle Button::ConnectClickedCallback(Callback0< void > ClickedHandler)
+ConnectionHandle UI::Button::ConnectClickedCallback(Callback0< void > ClickedHandler)
 {
 	return _ClickedEvent.Connect(ClickedHandler);
 }
 
-void Button::DisconnectClickedCallback(ConnectionHandle & ConnectionHandle)
+void UI::Button::DisconnectClickedCallback(ConnectionHandle & ConnectionHandle)
 {
 	_ClickedEvent.Disconnect(ConnectionHandle);
 }
 
-bool Button::OnMouseButton(int Button, int State, float X, float Y)
+bool UI::Button::OnMouseButton(int Button, int State, float X, float Y)
 {
 	if((Button == 1 /* LEFT */) && (State == EV_UP))
 	{
@@ -58,12 +58,12 @@ bool Button::OnMouseButton(int Button, int State, float X, float Y)
 	return false;
 }
 
-void Button::OnMouseEnter(void)
+void UI::Button::OnMouseEnter(void)
 {
 	SetBackgroundColor(Color(0.4f, 0.4f, 0.4f, 1.0f));
 }
 
-void Button::OnMouseLeave(void)
+void UI::Button::OnMouseLeave(void)
 {
 	SetBackgroundColor(Color(0.3f, 0.3f, 0.3f, 1.0f));
 }

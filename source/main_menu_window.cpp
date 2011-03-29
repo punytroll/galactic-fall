@@ -20,13 +20,13 @@
 
 #include <fstream>
 
-#include "button.h"
 #include "callbacks/callbacks.h"
 #include "file_handling.h"
 #include "key_event_information.h"
 #include "load_game_dialog.h"
 #include "main_menu_window.h"
 #include "save_game_dialog.h"
+#include "ui/button.h"
 #include "ui/label.h"
 
 // these functions are defined in main.cpp
@@ -51,7 +51,7 @@ MainMenuWindow::MainMenuWindow(Widget * SupWidget) :
 	SetSize(Vector2f(200.0f, 260.0f));
 	
 	// "Resume Game" button
-	_ResumeGameButton = new Button(this);
+	_ResumeGameButton = new UI::Button(this);
 	_ResumeGameButton->SetPosition(Vector2f(20.0f, 60.0f));
 	_ResumeGameButton->SetSize(Vector2f(160.0f, 20.0f));
 	_ResumeGameButton->SetAnchorBottom(false);
@@ -72,7 +72,7 @@ MainMenuWindow::MainMenuWindow(Widget * SupWidget) :
 	ResumeGameButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	
 	// "New Game" button
-	_NewGameButton = new Button(this);
+	_NewGameButton = new UI::Button(this);
 	_NewGameButton->SetPosition(Vector2f(20.0f, 100.0f));
 	_NewGameButton->SetSize(Vector2f(160.0f, 20.0f));
 	_NewGameButton->SetAnchorBottom(false);
@@ -93,7 +93,7 @@ MainMenuWindow::MainMenuWindow(Widget * SupWidget) :
 	NewGameButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	
 	// "Load Game" button
-	_LoadGameButton = new Button(this);
+	_LoadGameButton = new UI::Button(this);
 	_LoadGameButton->SetPosition(Vector2f(20.0f, 140.0f));
 	_LoadGameButton->SetSize(Vector2f(160.0f, 20.0f));
 	_LoadGameButton->SetAnchorBottom(false);
@@ -114,7 +114,7 @@ MainMenuWindow::MainMenuWindow(Widget * SupWidget) :
 	LoadGameButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	
 	// "Save Game" button
-	_SaveGameButton = new Button(this);
+	_SaveGameButton = new UI::Button(this);
 	_SaveGameButton->SetPosition(Vector2f(20.0f, 180.0f));
 	_SaveGameButton->SetSize(Vector2f(160.0f, 20.0f));
 	_SaveGameButton->SetAnchorBottom(false);
@@ -135,7 +135,7 @@ MainMenuWindow::MainMenuWindow(Widget * SupWidget) :
 	SaveGameButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	
 	// "Quit" button
-	_QuitButton = new Button(this);
+	_QuitButton = new UI::Button(this);
 	_QuitButton->SetPosition(Vector2f(20.0f, 220.0f));
 	_QuitButton->SetSize(Vector2f(160.0f, 20.0f));
 	_QuitButton->SetAnchorBottom(false);

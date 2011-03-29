@@ -22,10 +22,14 @@
 
 #include "ui/window.h"
 
-class Button;
 class Character;
 class StarMapDisplay;
 class System;
+
+namespace UI
+{
+	class Button;
+}
 
 class MapDialog : public UI::Window
 {
@@ -37,7 +41,7 @@ protected:
 	bool OnKey(const KeyEventInformation & KeyEventInformation);
 	void OnOKClicked(void);
 private:
-	Button * m_OKButton;
+	UI::Button * m_OKButton;
 	StarMapDisplay * m_StarMapDisplay;
 };
 

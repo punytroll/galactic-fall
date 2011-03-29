@@ -23,12 +23,12 @@
 #include "ui/dialog.h"
 #include "timeout_notifications.h"
 
-class Button;
 class DirectoryEntryItem;
 class ScrollBox;
 
 namespace UI
 {
+	class Button;
 	class Label;
 }
 
@@ -52,8 +52,8 @@ private:
 	void _OnFileNameLabelTextChanged(void);
 	// member variables
 	std::string _DirectoryPath;
-	Button * m_CancelButton;
-	Button * m_OKButton;
+	UI::Button * m_CancelButton;
+	UI::Button * m_OKButton;
 	UI::Label * m_ErrorMessage;
 	TimeoutNotification m_ErrorMessageTimeoutNotification;
 	UI::Label * m_FileNameLabel;

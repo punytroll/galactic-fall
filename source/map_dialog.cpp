@@ -22,13 +22,13 @@
 #include <GL/gl.h>
 
 #include "callbacks/callbacks.h"
-#include "button.h"
 #include "globals.h"
 #include "key_event_information.h"
 #include "map_dialog.h"
 #include "object_aspect_name.h"
 #include "star_map_display.h"
 #include "system.h"
+#include "ui/button.h"
 #include "ui/label.h"
 
 MapDialog::MapDialog(Widget * SupWidget, System * System, Character * Character) :
@@ -37,7 +37,7 @@ MapDialog::MapDialog(Widget * SupWidget, System * System, Character * Character)
 	SetPosition(Vector2f(70.0f, 400.0f));
 	SetSize(Vector2f(500.0f, 530.0f));
 	ConnectKeyCallback(Callback(this, &MapDialog::OnKey));
-	m_OKButton = new Button(this);
+	m_OKButton = new UI::Button(this);
 	m_OKButton->SetPosition(Vector2f(390.0f, 500.0f));
 	m_OKButton->SetSize(Vector2f(100.0f, 20.0f));
 	m_OKButton->ConnectClickedCallback(Callback(this, &MapDialog::OnOKClicked));

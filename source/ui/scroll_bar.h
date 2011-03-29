@@ -22,10 +22,10 @@
 
 #include "../widget.h"
 
-class Button;
-
 namespace UI
 {
+	class Button;
+	
 	class ScrollBar : public Widget
 	{
 	public:
@@ -69,8 +69,8 @@ namespace UI
 		void AdjustTrackerPosition(void);
 		// member variables
 		Vector2f m_GrabPosition;
-		Button * m_LessButton;
-		Button * m_MoreButton;
+		UI::Button * m_LessButton;
+		UI::Button * m_MoreButton;
 		Widget * m_Tracker;
 		ScrollBar::Alignment m_Alignment;
 		float m_CurrentPosition;

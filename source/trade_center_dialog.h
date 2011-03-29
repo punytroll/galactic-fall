@@ -22,7 +22,6 @@
 
 #include "ui/window.h"
 
-class Button;
 class Character;
 class Planet;
 class ScrollBox;
@@ -30,6 +29,7 @@ class TradeCenterAssetClass;
 
 namespace UI
 {
+	class Button;
 	class Label;
 }
 
@@ -55,9 +55,9 @@ private:
 	// member variables
 	Planet * m_Planet;
 	Character * m_Character;
-	Button * m_OKButton;
-	Button * m_BuyButton;
-	Button * m_SellButton;
+	UI::Button * m_OKButton;
+	UI::Button * m_BuyButton;
+	UI::Button * m_SellButton;
 	ScrollBox * m_AssetClassScrollBox;
 	UI::Label * m_TraderCreditsLabel;
 	UI::Label * m_TraderAvailableSpaceLabel;

@@ -22,11 +22,15 @@
 
 #include "ui/window.h"
 
-class Button;
 class ScrollBox;
 class Ship;
 class SlotListItem;
 class AccessoryListItem;
+
+namespace UI
+{
+	class Button;
+}
 
 class OutfitShipDialog : public UI::Window
 {
@@ -46,9 +50,9 @@ private:
 	void UpdateButtons(void);
 	// member variables
 	Ship * m_Ship;
-	Button * m_OKButton;
-	Button * m_MountButton;
-	Button * m_UnmountButton;
+	UI::Button * m_OKButton;
+	UI::Button * m_MountButton;
+	UI::Button * m_UnmountButton;
 	ScrollBox * m_SlotScrollBox;
 	ScrollBox * m_AccessoryScrollBox;
 	SlotListItem * m_SelectedSlotListItem;
