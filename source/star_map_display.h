@@ -20,15 +20,15 @@
 #ifndef STAR_MAP_DISPLAY_H
 #define STAR_MAP_DISPLAY_H
 
-#include "widget.h"
+#include "ui/widget.h"
 
 class Character;
 class System;
 
-class StarMapDisplay : public Widget
+class StarMapDisplay : public UI::Widget
 {
 public:
-	StarMapDisplay(Widget * SupWidget, System * System, Character * Character);
+	StarMapDisplay(UI::Widget * SupWidget, System * System, Character * Character);
 	virtual void Draw(void) const;
 	System * GetSelectedSystem(void);
 private:

@@ -20,17 +20,17 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
-#include "../widget.h"
+#include "widget.h"
 
 namespace UI
 {
 	class Border;
 	class Label;
 
-	class Window : public Widget
+	class Window : public UI::Widget
 	{
 	public:
-		Window(Widget * SupWidget, const std::string & Title = "");
+		Window(UI::Widget * SupWidget, const std::string & Title = "");
 		// getters
 		UI::Border * GetBorder(void);
 		UI::Label * GetTitleLabel(void);
@@ -43,16 +43,16 @@ namespace UI
 		// member variables
 		UI::Border * m_Border;
 		UI::Label * m_TitleLabel;
-		Widget * m_ResizeDragBox;
+		UI::Widget * m_ResizeDragBox;
 		Vector2f m_GrabPosition;
 	};
 
-	inline UI::Border * Window::GetBorder(void)
+	inline UI::Border * UI::Window::GetBorder(void)
 	{
 		return m_Border;
 	}
 
-	inline UI::Label * Window::GetTitleLabel(void)
+	inline UI::Label * UI::Window::GetTitleLabel(void)
 	{
 		return m_TitleLabel;
 	}

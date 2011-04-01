@@ -40,10 +40,10 @@
 #include "weapon.h"
 #include "weapon_class.h"
 
-class TradeCenterAssetClass : public Widget
+class TradeCenterAssetClass : public UI::Widget
 {
 public:
-	TradeCenterAssetClass(Widget * SupWidget, PlanetAssetClass * PlanetAssetClass, Ship * Ship);
+	TradeCenterAssetClass(UI::Widget * SupWidget, PlanetAssetClass * PlanetAssetClass, Ship * Ship);
 	void UpdateCharacterAmount(void);
 	const PlanetAssetClass * GetPlanetAssetClass(void) const;
 private:
@@ -52,8 +52,8 @@ private:
 	UI::Label * m_CharacterAmountLabel;
 };
 
-TradeCenterAssetClass::TradeCenterAssetClass(Widget * SupWidget, PlanetAssetClass * PlanetAssetClass, Ship * Ship) :
-	Widget(SupWidget),
+TradeCenterAssetClass::TradeCenterAssetClass(UI::Widget * SupWidget, PlanetAssetClass * PlanetAssetClass, Ship * Ship) :
+	UI::Widget(SupWidget),
 	m_PlanetAssetClass(PlanetAssetClass),
 	m_Ship(Ship)
 {
@@ -92,7 +92,7 @@ const PlanetAssetClass * TradeCenterAssetClass::GetPlanetAssetClass(void) const
 	return m_PlanetAssetClass;
 }
 
-TradeCenterDialog::TradeCenterDialog(Widget * SupWidget, Planet * Planet, Character * Character) :
+TradeCenterDialog::TradeCenterDialog(UI::Widget * SupWidget, Planet * Planet, Character * Character) :
 	UI::Window(SupWidget, "Trade Center: " + Planet->GetAspectName()->GetName()),
 	m_Planet(Planet),
 	m_Character(Character),

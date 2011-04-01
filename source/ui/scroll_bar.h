@@ -20,13 +20,13 @@
 #ifndef SCROLL_BAR_H
 #define SCROLL_BAR_H
 
-#include "../widget.h"
+#include "widget.h"
 
 namespace UI
 {
 	class Button;
 	
-	class ScrollBar : public Widget
+	class ScrollBar : public UI::Widget
 	{
 	public:
 		enum Alignment
@@ -36,19 +36,19 @@ namespace UI
 			VERTICAL
 		};
 		
-		ScrollBar(Widget * SupWidget, ScrollBar::Alignment Alignment);
+		ScrollBar(UI::Widget * SupWidget, ScrollBar::Alignment Alignment);
 		virtual ~ScrollBar(void);
 		// events
 		ConnectionHandle ConnectScrollPositionChangedCallback(Callback0< void > Callback);
 		void DisconnectScrollPositionChangedCallback(ConnectionHandle ConnectionHandle);
 		// getters
-		ScrollBar::Alignment GetAlignment(void) const;
+		UI::ScrollBar::Alignment GetAlignment(void) const;
 		float GetCurrentPosition(void) const;
 		float GetMinimumPosition(void) const;
 		float GetMaximumPosition(void) const;
 		float GetStepSize(void) const;
 		// setters
-		void SetAlignment(ScrollBar::Alignment Alignment);
+		void SetAlignment(UI::ScrollBar::Alignment Alignment);
 		void SetCurrentPosition(float CurrentPosition);
 		void SetMinimumPosition(float MinimumPosition);
 		void SetMaximumPosition(float MaximumPosition);
@@ -71,7 +71,7 @@ namespace UI
 		Vector2f m_GrabPosition;
 		UI::Button * m_LessButton;
 		UI::Button * m_MoreButton;
-		Widget * m_Tracker;
+		UI::Widget * m_Tracker;
 		ScrollBar::Alignment m_Alignment;
 		float m_CurrentPosition;
 		float m_MinimumPosition;

@@ -25,7 +25,11 @@
 #include "callbacks/connection_handle.h"
 
 class KeyEventInformation;
-class Widget;
+
+namespace UI
+{
+	class Widget;
+}
 
 class UserInterface
 {
@@ -37,30 +41,30 @@ public:
 	bool Key(const KeyEventInformation & KeyEventInformation);
 	void MouseMoved(float X, float Y);
 	// setters
-	void SetCaptureWidget(Widget * Widget);
+	void SetCaptureWidget(UI::Widget * Widget);
 	void ReleaseCaptureWidget(void);
 	// getters
-	Widget * GetWidget(const std::string & Path);
-	Widget * GetRootWidget(void);
-	Widget * GetCaptureWidget(void);
+	UI::Widget * GetWidget(const std::string & Path);
+	UI::Widget * GetRootWidget(void);
+	UI::Widget * GetCaptureWidget(void);
 private:
 	// callbacks
 	void OnCaptureWidgetDestroying(void);
 	void OnHoverWidgetDestroying(void);
 	void OnRootWidgetDestroying(void);
 	// member variables
-	Widget * m_CaptureWidget;
+	UI::Widget * m_CaptureWidget;
 	ConnectionHandle m_CaptureWidgetDestroyingCallbackConnectionHandle;
-	Widget * m_HoverWidget;
-	Widget * m_RootWidget;
+	UI::Widget * m_HoverWidget;
+	UI::Widget * m_RootWidget;
 };
 
-inline Widget * UserInterface::GetCaptureWidget(void)
+inline UI::Widget * UserInterface::GetCaptureWidget(void)
 {
 	return m_CaptureWidget;
 }
 
-inline Widget * UserInterface::GetRootWidget(void)
+inline UI::Widget * UserInterface::GetRootWidget(void)
 {
 	return m_RootWidget;
 }

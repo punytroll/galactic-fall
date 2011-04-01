@@ -37,10 +37,10 @@
 #include "weapon.h"
 #include "weapon_class.h"
 
-class SlotListItem : public Widget
+class SlotListItem : public UI::Widget
 {
 public:
-	SlotListItem(Widget * SupWidget, Slot * Slot);
+	SlotListItem(UI::Widget * SupWidget, Slot * Slot);
 	void Update(void);
 	// getters
 	bool GetSelected(void) const;
@@ -57,10 +57,10 @@ private:
 	UI::Label * m_TypeOrWeaponLabel;
 };
 
-class AccessoryListItem : public Widget
+class AccessoryListItem : public UI::Widget
 {
 public:
-	AccessoryListItem(Widget * SupWidget, Object * Accessory);
+	AccessoryListItem(UI::Widget * SupWidget, Object * Accessory);
 	void Update(void);
 	// getters
 	bool GetSelected(void) const;
@@ -76,8 +76,8 @@ private:
 	Object * m_Accessory;
 };
 
-SlotListItem::SlotListItem(Widget * SupWidget, Slot * Slot) :
-	Widget(SupWidget),
+SlotListItem::SlotListItem(UI::Widget * SupWidget, Slot * Slot) :
+	UI::Widget(SupWidget),
 	m_Selected(false),
 	m_Slot(Slot)
 {
@@ -159,8 +159,8 @@ void SlotListItem::OnMouseLeave(void)
 	}
 }
 
-AccessoryListItem::AccessoryListItem(Widget * SupWidget, Object * Accessory) :
-	Widget(SupWidget),
+AccessoryListItem::AccessoryListItem(UI::Widget * SupWidget, Object * Accessory) :
+	UI::Widget(SupWidget),
 	m_Selected(false),
 	m_Accessory(Accessory)
 {
@@ -231,8 +231,8 @@ void AccessoryListItem::OnMouseLeave(void)
 	}
 }
 
-OutfitShipDialog::OutfitShipDialog(Widget * SupWidget, Ship * Ship) :
-	Window(SupWidget, "Outfit Ship"),
+OutfitShipDialog::OutfitShipDialog(UI::Widget * SupWidget, Ship * Ship) :
+	UI::Window(SupWidget, "Outfit Ship"),
 	m_Ship(Ship),
 	m_SelectedSlotListItem(0),
 	m_SelectedAccessoryListItem(0)
