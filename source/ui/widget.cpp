@@ -23,15 +23,15 @@
 
 #include <GL/gl.h>
 
-#include "callbacks/callbacks.h"
-#include "color.h"
-#include "math.h"
+#include "../callbacks/callbacks.h"
+#include "../color.h"
+#include "../math.h"
 #include "widget.h"
 
-std::list< Widget * > Widget::m_DestroyedWidgets;
-std::stack< std::pair< Vector2f, Vector2f > > Widget::m_ClippingRectangles;
+std::list< UI::Widget * > UI::Widget::m_DestroyedWidgets;
+std::stack< std::pair< Vector2f, Vector2f > > UI::Widget::m_ClippingRectangles;
 
-Widget::Widget(Widget * SupWidget, const std::string & Name) :
+UI::Widget::Widget(UI::Widget * SupWidget, const std::string & Name) :
 	m_Enabled(true),
 	m_DisabledBackgroundColor(0),
 	m_Name(Name),
@@ -53,7 +53,7 @@ Widget::Widget(Widget * SupWidget, const std::string & Name) :
 	}
 }
 
-Widget::~Widget(void)
+UI::Widget::~Widget(void)
 {
 	assert(m_SupWidget == 0);
 	assert(m_SubWidgets.size() == 0);
@@ -63,7 +63,7 @@ Widget::~Widget(void)
 	m_DisabledBackgroundColor = 0;
 }
 
-void Widget::Draw(void) const
+void UI::Widget::Draw(void) const
 {
 	Color * Color((GetEnabled() == true) ? (m_BackgroundColor) : (m_DisabledBackgroundColor));
 	
@@ -99,9 +99,9 @@ void Widget::Draw(void) const
 	}
 }
 
-Vector2f Widget::GetGlobalPosition(void) const
+Vector2f UI::Widget::GetGlobalPosition(void) const
 {
-	const Widget * CurrentWidget(this);
+	const UI::Widget * CurrentWidget(this);
 	Vector2f Result(true);
 	
 	while(CurrentWidget != 0)
@@ -113,37 +113,37 @@ Vector2f Widget::GetGlobalPosition(void) const
 	return Result;
 }
 
-void Widget::SetBackgroundColor(const Color & BackgroundColor)
+void UI::Widget::SetBackgroundColor(const Color & BackgroundColor)
 {
 	delete m_BackgroundColor;
 	m_BackgroundColor = new Color(BackgroundColor);
 }
 
-void Widget::SetDisabledBackgroundColor(const Color & DisabledBackgroundColor)
+void UI::Widget::SetDisabledBackgroundColor(const Color & DisabledBackgroundColor)
 {
 	delete m_DisabledBackgroundColor;
 	m_DisabledBackgroundColor = new Color(DisabledBackgroundColor);
 }
 
-void Widget::UnsetBackgroundColor(void)
+void UI::Widget::UnsetBackgroundColor(void)
 {
 	delete m_BackgroundColor;
 	m_BackgroundColor = 0;
 }
 
-void Widget::UnsetDisabledBackgroundColor(void)
+void UI::Widget::UnsetDisabledBackgroundColor(void)
 {
 	delete m_DisabledBackgroundColor;
 	m_DisabledBackgroundColor = 0;
 }
 
-void Widget::SetPosition(const Vector2f & Position)
+void UI::Widget::SetPosition(const Vector2f & Position)
 {
 	m_Position = Position;
 	_PositionChangedEvent();
 }
 
-void Widget::SetSize(const Vector2f & Size)
+void UI::Widget::SetSize(const Vector2f & Size)
 {
 	// early bailing out if this is a no-op
 	if(Size == m_Size)
@@ -193,19 +193,19 @@ void Widget::SetSize(const Vector2f & Size)
 	_SizeChangedEvent();
 }
 
-void Widget::SetName(const std::string & Name)
+void UI::Widget::SetName(const std::string & Name)
 {
 	m_Name = Name;
 }
 
-void Widget::SetKeyFocus(Widget * KeyFocus)
+void UI::Widget::SetKeyFocus(UI::Widget * KeyFocus)
 {
 	assert(find(m_SubWidgets.begin(), m_SubWidgets.end(), KeyFocus) != m_SubWidgets.end());
 	assert(KeyFocus->m_SupWidget == this);
 	m_KeyFocus = KeyFocus;
 }
 
-void Widget::GrabKeyFocus(void)
+void UI::Widget::GrabKeyFocus(void)
 {
 	if(m_SupWidget != 0)
 	{
@@ -214,14 +214,14 @@ void Widget::GrabKeyFocus(void)
 	}
 }
 
-void Widget::AddSubWidget(Widget * SubWidget)
+void UI::Widget::AddSubWidget(UI::Widget * SubWidget)
 {
 	assert(SubWidget->m_SupWidget == 0);
 	SubWidget->m_SupWidget = this;
 	m_SubWidgets.push_front(SubWidget);
 }
 
-void Widget::RemoveSubWidget(Widget * SubWidget)
+void UI::Widget::RemoveSubWidget(UI::Widget * SubWidget)
 {
 	assert(SubWidget->m_SupWidget == this);
 	SubWidget->m_SupWidget = 0;
@@ -236,14 +236,14 @@ void Widget::RemoveSubWidget(Widget * SubWidget)
 	}
 }
 
-void Widget::RaiseSubWidget(Widget * SubWidget)
+void UI::Widget::RaiseSubWidget(UI::Widget * SubWidget)
 {
 	assert(SubWidget->m_SupWidget == this);
 	m_SubWidgets.remove(SubWidget);
 	m_SubWidgets.push_front(SubWidget);
 }
 
-void Widget::Destroy(void)
+void UI::Widget::Destroy(void)
 {
 	// fire Destroy event before aything is actually destroyed
 	_DestroyingEvent();
@@ -262,7 +262,7 @@ void Widget::Destroy(void)
 	m_DestroyedWidgets.push_back(this);
 }
 
-bool Widget::Key(const KeyEventInformation & TheKeyEventInformation)
+bool UI::Widget::Key(const KeyEventInformation & TheKeyEventInformation)
 {
 	if((m_KeyFocus != 0) && (m_KeyFocus->GetEnabled() == true))
 	{
@@ -285,7 +285,7 @@ bool Widget::Key(const KeyEventInformation & TheKeyEventInformation)
 	return Result;
 }
 
-bool Widget::MouseButton(int Button, int State, float X, float Y)
+bool UI::Widget::MouseButton(int Button, int State, float X, float Y)
 {
 	// iterate all sub widgets, look for an intersection and propagate the mouse event with corrected coordinates
 	for(std::list< Widget * >::iterator SubWidgetIterator = m_SubWidgets.begin(); SubWidgetIterator != m_SubWidgets.end(); ++SubWidgetIterator)
@@ -315,7 +315,7 @@ bool Widget::MouseButton(int Button, int State, float X, float Y)
 	return Result;
 }
 
-void Widget::MouseMoved(float X, float Y)
+void UI::Widget::MouseMoved(float X, float Y)
 {
 	std::list< Widget * >::iterator SubWidgetIterator(m_SubWidgets.begin());
 	
@@ -356,12 +356,12 @@ void Widget::MouseMoved(float X, float Y)
 	_MouseMovedEvent(X, Y);
 }
 
-void Widget::MouseEnter(void)
+void UI::Widget::MouseEnter(void)
 {
 	_MouseEnterEvent();
 }
 
-void Widget::MouseLeave(void)
+void UI::Widget::MouseLeave(void)
 {
 	if(m_HoverWidget != 0)
 	{
@@ -373,87 +373,87 @@ void Widget::MouseLeave(void)
 	_MouseLeaveEvent();
 }
 
-ConnectionHandle Widget::ConnectDestroyingCallback(Callback0< void > Callback)
+ConnectionHandle UI::Widget::ConnectDestroyingCallback(Callback0< void > Callback)
 {
 	return _DestroyingEvent.Connect(Callback);
 }
 
-ConnectionHandle Widget::ConnectKeyCallback(Callback1< bool, const KeyEventInformation & > Callback)
+ConnectionHandle UI::Widget::ConnectKeyCallback(Callback1< bool, const KeyEventInformation & > Callback)
 {
 	return _KeyEvent.Connect(Callback);
 }
 
-ConnectionHandle Widget::ConnectMouseButtonCallback(Callback4< bool, int, int, float, float > Callback)
+ConnectionHandle UI::Widget::ConnectMouseButtonCallback(Callback4< bool, int, int, float, float > Callback)
 {
 	return _MouseButtonEvent.Connect(Callback);
 }
 
-ConnectionHandle Widget::ConnectMouseEnterCallback(Callback0< void > Callback)
+ConnectionHandle UI::Widget::ConnectMouseEnterCallback(Callback0< void > Callback)
 {
 	return _MouseEnterEvent.Connect(Callback);
 }
 
-ConnectionHandle Widget::ConnectMouseLeaveCallback(Callback0< void > Callback)
+ConnectionHandle UI::Widget::ConnectMouseLeaveCallback(Callback0< void > Callback)
 {
 	return _MouseLeaveEvent.Connect(Callback);
 }
 
-ConnectionHandle Widget::ConnectMouseMovedCallback(Callback2< void, float, float > Callback)
+ConnectionHandle UI::Widget::ConnectMouseMovedCallback(Callback2< void, float, float > Callback)
 {
 	return _MouseMovedEvent.Connect(Callback);
 }
 
-ConnectionHandle Widget::ConnectPositionChangedCallback(Callback0< void > Callback)
+ConnectionHandle UI::Widget::ConnectPositionChangedCallback(Callback0< void > Callback)
 {
 	return _PositionChangedEvent.Connect(Callback);
 }
 
-ConnectionHandle Widget::ConnectSizeChangedCallback(Callback0< void > Callback)
+ConnectionHandle UI::Widget::ConnectSizeChangedCallback(Callback0< void > Callback)
 {
 	return _SizeChangedEvent.Connect(Callback);
 }
 
-void Widget::DisconnectDestroyingCallback(ConnectionHandle & ConnectionHandle)
+void UI::Widget::DisconnectDestroyingCallback(ConnectionHandle & ConnectionHandle)
 {
 	_DestroyingEvent.Disconnect(ConnectionHandle);
 }
 
-void Widget::DisconnectKeyCallback(ConnectionHandle & ConnectionHandle)
+void UI::Widget::DisconnectKeyCallback(ConnectionHandle & ConnectionHandle)
 {
 	_KeyEvent.Disconnect(ConnectionHandle);
 }
 
-void Widget::DisconnectMouseButtonCallback(ConnectionHandle & ConnectionHandle)
+void UI::Widget::DisconnectMouseButtonCallback(ConnectionHandle & ConnectionHandle)
 {
 	_MouseButtonEvent.Disconnect(ConnectionHandle);
 }
 
-void Widget::DisconnectMouseEnterCallback(ConnectionHandle & ConnectionHandle)
+void UI::Widget::DisconnectMouseEnterCallback(ConnectionHandle & ConnectionHandle)
 {
 	_MouseEnterEvent.Disconnect(ConnectionHandle);
 }
 
-void Widget::DisconnectMouseLeaveCallback(ConnectionHandle & ConnectionHandle)
+void UI::Widget::DisconnectMouseLeaveCallback(ConnectionHandle & ConnectionHandle)
 {
 	_MouseLeaveEvent.Disconnect(ConnectionHandle);
 }
 
-void Widget::DisconnectMouseMovedCallback(ConnectionHandle & ConnectionHandle)
+void UI::Widget::DisconnectMouseMovedCallback(ConnectionHandle & ConnectionHandle)
 {
 	_MouseMovedEvent.Disconnect(ConnectionHandle);
 }
 
-void Widget::DisconnectPositionChangedCallback(ConnectionHandle & ConnectionHandle)
+void UI::Widget::DisconnectPositionChangedCallback(ConnectionHandle & ConnectionHandle)
 {
 	_PositionChangedEvent.Disconnect(ConnectionHandle);
 }
 
-void Widget::DisconnectSizeChangedCallback(ConnectionHandle & ConnectionHandle)
+void UI::Widget::DisconnectSizeChangedCallback(ConnectionHandle & ConnectionHandle)
 {
 	_SizeChangedEvent.Disconnect(ConnectionHandle);
 }
 
-void Widget::PushClippingRectangle(const Vector2f & Position, const Vector2f & Size)
+void UI::Widget::PushClippingRectangle(const Vector2f & Position, const Vector2f & Size)
 {
 	Vector2f LeftTop(true);
 	Vector2f RightBottom(Size);
@@ -468,12 +468,12 @@ void Widget::PushClippingRectangle(const Vector2f & Position, const Vector2f & S
 	m_ClippingRectangles.push(std::make_pair(LeftTop, RightBottom));
 }
 
-void Widget::PopClippingRectangle(void)
+void UI::Widget::PopClippingRectangle(void)
 {
 	m_ClippingRectangles.pop();
 }
 
-void Widget::DrawClippingRectangle(void)
+void UI::Widget::DrawClippingRectangle(void)
 {
 	double LeftPlane[4] = { 1.0, 0.0, 0.0, -m_ClippingRectangles.top().first[0] };
 	double TopPlane[4] = { 0.0, 1.0, 0.0, -m_ClippingRectangles.top().first[1] };

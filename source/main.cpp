@@ -105,12 +105,12 @@
 #include "timing_dialog.h"
 #include "ui/button.h"
 #include "ui/label.h"
+#include "ui/widget.h"
 #include "user_interface.h"
 #include "visualization_prototype.h"
 #include "visualizations.h"
 #include "weapon.h"
 #include "weapon_class.h"
-#include "widget.h"
 #include "write_to_xml_stream.h"
 #include "xml_puny_dom.h"
 #include "xml_stream.h"
@@ -151,9 +151,9 @@ UI::Label * g_CurrentSystemLabel(0);
 UI::Label * g_FuelLabel(0);
 UI::Label * g_HullLabel(0);
 UI::Label * g_MessageLabel(0);
-Widget * g_MiniMap(0);
+UI::Widget * g_MiniMap(0);
 MiniMapDisplay * g_MiniMapDisplay(0);
-Widget * g_Scanner(0);
+UI::Widget * g_Scanner(0);
 ScannerDisplay * g_ScannerDisplay(0);
 UI::Label * g_SystemLabel(0);
 UI::Label * g_TargetLabel(0);
@@ -360,11 +360,11 @@ void DrawSelection(const Object * Object, float RadialSize, const Color & Color)
 
 void CollectWidgets(void)
 {
-	std::list< Widget * > & DestroyedWidgets(Widget::GetDestroyedWidgets());
+	std::list< UI::Widget * > & DestroyedWidgets(UI::Widget::GetDestroyedWidgets());
 	
 	while(DestroyedWidgets.size() > 0)
 	{
-		Widget * DestroyedWidget(DestroyedWidgets.front());
+		UI::Widget * DestroyedWidget(DestroyedWidgets.front());
 		
 		if(DestroyedWidget == g_CreditsLabel)
 		{

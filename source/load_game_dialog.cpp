@@ -31,10 +31,10 @@
 #include "ui/label.h"
 
 // this class is declared here, so we can use it, but defined in save_game_dialog.cpp
-class DirectoryEntryItem : public Widget
+class DirectoryEntryItem : public UI::Widget
 {
 public:
-	DirectoryEntryItem(Widget * SupWidget, const std::string & Caption);
+	DirectoryEntryItem(UI::Widget * SupWidget, const std::string & Caption);
 	void Update(void);
 	// getters
 	const std::string & GetCaption(void) const;
@@ -50,7 +50,7 @@ private:
 	UI::Label * m_CaptionLabel;
 };
 
-LoadGameDialog::LoadGameDialog(Widget * SupWidget) :
+LoadGameDialog::LoadGameDialog(UI::Widget * SupWidget) :
 	Dialog(SupWidget),
 	m_SelectedDirectoryEntryItem(0)
 {
@@ -181,9 +181,9 @@ void LoadGameDialog::_OnFileNameLabelTextChanged(void)
 		m_SelectedDirectoryEntryItem = 0;
 	}
 	
-	const std::list< Widget * > & ContentSubWidgets(m_FileScrollBox->GetContent()->GetSubWidgets());
+	const std::list< UI::Widget * > & ContentSubWidgets(m_FileScrollBox->GetContent()->GetSubWidgets());
 	
-	for(std::list< Widget * >::const_iterator ContentSubWidgetIterator = ContentSubWidgets.begin(); ContentSubWidgetIterator != ContentSubWidgets.end(); ++ContentSubWidgetIterator)
+	for(std::list< UI::Widget * >::const_iterator ContentSubWidgetIterator = ContentSubWidgets.begin(); ContentSubWidgetIterator != ContentSubWidgets.end(); ++ContentSubWidgetIterator)
 	{
 		DirectoryEntryItem * EntryLabel(dynamic_cast< DirectoryEntryItem * >(*ContentSubWidgetIterator));
 		

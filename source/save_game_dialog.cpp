@@ -30,10 +30,10 @@
 #include "ui/button.h"
 #include "ui/label.h"
 
-class DirectoryEntryItem : public Widget
+class DirectoryEntryItem : public UI::Widget
 {
 public:
-	DirectoryEntryItem(Widget * SupWidget, const std::string & Caption);
+	DirectoryEntryItem(UI::Widget * SupWidget, const std::string & Caption);
 	void Update(void);
 	// getters
 	const std::string & GetCaption(void) const;
@@ -49,8 +49,8 @@ private:
 	UI::Label * m_CaptionLabel;
 };
 
-DirectoryEntryItem::DirectoryEntryItem(Widget * SupWidget, const std::string & Caption) :
-	Widget(SupWidget),
+DirectoryEntryItem::DirectoryEntryItem(UI::Widget * SupWidget, const std::string & Caption) :
+	UI::Widget(SupWidget),
 	m_Selected(false)
 {
 	ConnectMouseEnterCallback(Callback(this, &DirectoryEntryItem::OnMouseEnter));
@@ -103,8 +103,8 @@ void DirectoryEntryItem::OnMouseLeave(void)
 	}
 }
 
-SaveGameDialog::SaveGameDialog(Widget * SupWidget) :
-	Dialog(SupWidget),
+SaveGameDialog::SaveGameDialog(UI::Widget * SupWidget) :
+	UI::Dialog(SupWidget),
 	m_SelectedDirectoryEntryItem(0)
 {
 	GetTitleLabel()->SetText("Save Game");

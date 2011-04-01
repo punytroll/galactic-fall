@@ -60,10 +60,10 @@
 #include "string_cast.h"
 #include "system.h"
 #include "ui/label.h"
+#include "ui/widget.h"
 #include "user_interface.h"
 #include "visualization_prototype.h"
 #include "weapon_class.h"
-#include "widget.h"
 
 static Arxx::Item * Resolve(Arxx::Reference & Reference);
 
@@ -82,11 +82,11 @@ static void ReadTexture(Arxx::Reference & Reference);
 static void ReadVisualizationPrototype(Arxx::BufferReader & Reader, VisualizationPrototype * VisualizationPrototype);
 static void ReadWeaponClass(Arxx::Reference & Reference);
 static void ReadWidget(Arxx::Reference & Reference);
-static Widget * ReadWidget(Arxx::BufferReader & Reader, Arxx::u4byte Type, Arxx::u4byte SubType);
+static UI::Widget * ReadWidget(Arxx::BufferReader & Reader, Arxx::u4byte Type, Arxx::u4byte SubType);
 static void ReadWidgetLabel(Arxx::BufferReader & Reader, UI::Label * ReadLabel);
 static void ReadWidgetMiniMapDisplay(Arxx::BufferReader & Reader, MiniMapDisplay * ReadMiniMapDisplay);
 static void ReadWidgetScannerDisplay(Arxx::BufferReader & Reader, ScannerDisplay * ReadScannerDisplay);
-static void ReadWidgetWidget(Arxx::BufferReader & Reader, Widget * TheWidget);
+static void ReadWidgetWidget(Arxx::BufferReader & Reader, UI::Widget * Widget);
 
 static void MakeItemAvailable(Arxx::Item * Item)
 {
@@ -1002,9 +1002,9 @@ static void ReadWidget(Arxx::Reference & Reference)
 	}
 }
 	
-static Widget * ReadWidget(Arxx::BufferReader & Reader, Arxx::u4byte Type, Arxx::u4byte SubType)
+static UI::Widget * ReadWidget(Arxx::BufferReader & Reader, Arxx::u4byte Type, Arxx::u4byte SubType)
 {
-	Widget * Result = 0;
+	UI::Widget * Result = 0;
 	
 	switch(SubType)
 	{
@@ -1040,10 +1040,10 @@ static Widget * ReadWidget(Arxx::BufferReader & Reader, Arxx::u4byte Type, Arxx:
 		}
 	case ARX_TYPE_WIDGET_SUB_TYPE_WIDGET:
 		{
-			Widget * NewWidget(new Widget());
+			UI::Widget * Widget(new UI::Widget());
 			
-			ReadWidgetWidget(Reader, NewWidget);
-			Result = NewWidget;
+			ReadWidgetWidget(Reader, Widget);
+			Result = Widget;
 			
 			break;
 		}
@@ -1104,7 +1104,7 @@ static void ReadWidgetScannerDisplay(Arxx::BufferReader & Reader, ScannerDisplay
 {
 }
 
-static void ReadWidgetWidget(Arxx::BufferReader & Reader, Widget * TheWidget)
+static void ReadWidgetWidget(Arxx::BufferReader & Reader, UI::Widget * Widget)
 {
 	std::string Path;
 	std::string Name;
@@ -1121,31 +1121,31 @@ static void ReadWidgetWidget(Arxx::BufferReader & Reader, Widget * TheWidget)
 	Arxx::u4byte SubWidgetCount;
 	
 	Reader >> Path >> Name >> Position >> UseSize >> Size >> UseBackgroundColor >> BackgroundColor >> Visible >> AnchorBottom >> AnchorLeft >> AnchorRight >> AnchorTop >> SubWidgetCount;
-	TheWidget->SetName(Name);
-	if((Path != "") && (TheWidget->GetSupWidget() == 0))
+	Widget->SetName(Name);
+	if((Path != "") && (Widget->GetSupWidget() == 0))
 	{
-		Widget * SupWidget(g_UserInterface->GetWidget(Path));
+		UI::Widget * SupWidget(g_UserInterface->GetWidget(Path));
 		
 		if(SupWidget == 0)
 		{
 			throw std::runtime_error("For widget '" + Name + "' could not find the superior widget at path '" + Path + "'.");
 		}
-		SupWidget->AddSubWidget(TheWidget);
+		SupWidget->AddSubWidget(Widget);
 	}
-	TheWidget->SetPosition(Position);
+	Widget->SetPosition(Position);
 	if(UseSize == true)
 	{
-		TheWidget->SetSize(Size);
+		Widget->SetSize(Size);
 	}
 	if(UseBackgroundColor == true)
 	{
-		TheWidget->SetBackgroundColor(BackgroundColor);
+		Widget->SetBackgroundColor(BackgroundColor);
 	}
-	TheWidget->SetVisible(Visible);
-	TheWidget->SetAnchorBottom(AnchorBottom);
-	TheWidget->SetAnchorLeft(AnchorLeft);
-	TheWidget->SetAnchorRight(AnchorRight);
-	TheWidget->SetAnchorTop(AnchorTop);
+	Widget->SetVisible(Visible);
+	Widget->SetAnchorBottom(AnchorBottom);
+	Widget->SetAnchorLeft(AnchorLeft);
+	Widget->SetAnchorRight(AnchorRight);
+	Widget->SetAnchorTop(AnchorTop);
 	for(Arxx::u4byte SubWidgetNumber = 0; SubWidgetNumber < SubWidgetCount; ++SubWidgetNumber)
 	{
 		Arxx::u4byte Type;
@@ -1153,8 +1153,8 @@ static void ReadWidgetWidget(Arxx::BufferReader & Reader, Widget * TheWidget)
 		
 		Reader >> Type >> SubType;
 		
-		Widget * SubWidget(ReadWidget(Reader, Type, SubType));
+		UI::Widget * SubWidget(ReadWidget(Reader, Type, SubType));
 		
-		TheWidget->AddSubWidget(SubWidget);
+		Widget->AddSubWidget(SubWidget);
 	}
 }

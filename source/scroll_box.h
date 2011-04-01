@@ -20,7 +20,7 @@
 #ifndef SCROLL_BOX_H
 #define SCROLL_BOX_H
 
-#include "widget.h"
+#include "ui/widget.h"
 
 namespace UI
 {
@@ -28,16 +28,16 @@ namespace UI
 	class ScrollBar;
 }
 
-class ScrollBox : public Widget
+class ScrollBox : public UI::Widget
 {
 public:
-	ScrollBox(Widget * SupWidget);
+	ScrollBox(UI::Widget * SupWidget);
 	virtual ~ScrollBox(void);
 	// getters
-	Widget * GetContent(void);
-	const Widget * GetContent(void) const;
-	Widget * GetView(void);
-	const Widget * GetView(void) const;
+	UI::Widget * GetContent(void);
+	const UI::Widget * GetContent(void) const;
+	UI::Widget * GetView(void);
+	const UI::Widget * GetView(void) const;
 	UI::ScrollBar * GetHorizontalScrollBar(void);
 	UI::ScrollBar * GetVerticalScrollBar(void);
 	// setters
@@ -49,28 +49,28 @@ protected:
 	void OnHorizontalScrollPositionChanged(void);
 	void OnVerticalScrollPositionChanged(void);
 private:
-	Widget * m_Content;
-	Widget * m_View;
+	UI::Widget * m_Content;
+	UI::Widget * m_View;
 	UI::ScrollBar * m_HorizontalScrollBar;
 	UI::ScrollBar * m_VerticalScrollBar;
 };
 
-inline Widget * ScrollBox::GetContent(void)
+inline UI::Widget * ScrollBox::GetContent(void)
 {
 	return m_Content;
 }
 
-inline const Widget * ScrollBox::GetContent(void) const
+inline const UI::Widget * ScrollBox::GetContent(void) const
 {
 	return m_Content;
 }
 
-inline Widget * ScrollBox::GetView(void)
+inline UI::Widget * ScrollBox::GetView(void)
 {
 	return m_View;
 }
 
-inline const Widget * ScrollBox::GetView(void) const
+inline const UI::Widget * ScrollBox::GetView(void) const
 {
 	return m_View;
 }

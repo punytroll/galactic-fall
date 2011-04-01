@@ -22,13 +22,13 @@
 #include <GL/gl.h>
 
 #include "callbacks/callbacks.h"
+#include "ui/widget.h"
 #include "user_interface.h"
-#include "widget.h"
 
 UserInterface::UserInterface(void) :
 	m_CaptureWidget(0),
 	m_HoverWidget(0),
-	m_RootWidget(new Widget(0))
+	m_RootWidget(new UI::Widget(0))
 {
 	m_RootWidget->SetSize(Vector2f(1280.0f, 1024.0f));
 	m_RootWidget->ConnectDestroyingCallback(Callback(this, &UserInterface::OnRootWidgetDestroying));
@@ -54,16 +54,16 @@ void UserInterface::Draw(void) const
 	if((m_RootWidget != 0) && (m_RootWidget->IsVisible() == true))
 	{
 		glPushMatrix();
-		Widget::PushClippingRectangle(m_RootWidget->GetPosition(), m_RootWidget->GetSize());
+		UI::Widget::PushClippingRectangle(m_RootWidget->GetPosition(), m_RootWidget->GetSize());
 		glTranslatef(m_RootWidget->GetPosition().m_V.m_A[0], m_RootWidget->GetPosition().m_V.m_A[1], 0.0f);
-		Widget::DrawClippingRectangle();
+		UI::Widget::DrawClippingRectangle();
 		m_RootWidget->Draw();
-		Widget::PopClippingRectangle();
+		UI::Widget::PopClippingRectangle();
 		glPopMatrix();
 	}
 }
 
-void UserInterface::SetCaptureWidget(Widget * Widget)
+void UserInterface::SetCaptureWidget(UI::Widget * Widget)
 {
 	if(m_CaptureWidget == 0)
 	{
@@ -81,7 +81,7 @@ void UserInterface::ReleaseCaptureWidget(void)
 	}
 }
 
-Widget * UserInterface::GetWidget(const std::string & Path)
+UI::Widget * UserInterface::GetWidget(const std::string & Path)
 {
 	if(Path[0] != '/')
 	{
@@ -89,7 +89,7 @@ Widget * UserInterface::GetWidget(const std::string & Path)
 	}
 	
 	std::string::size_type Position(1);
-	Widget * Root(m_RootWidget);
+	UI::Widget * Root(m_RootWidget);
 	
 	while((Root != 0) && (Position < Path.length()))
 	{

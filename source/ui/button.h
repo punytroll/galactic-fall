@@ -23,15 +23,15 @@
 #include <string>
 
 #include "../callbacks/events.h"
-#include "../widget.h"
+#include "widget.h"
 
 namespace UI
 {
-	class Button : public Widget
+	class Button : public UI::Widget
 	{
 	public:
 		// constructors and deconstructors
-		Button(Widget * SupWidget);
+		Button(UI::Widget * SupWidget);
 		virtual ~Button(void);
 		// connect and disconnect events
 		ConnectionHandle ConnectClickedCallback(Callback0< void > ClickedHandler);

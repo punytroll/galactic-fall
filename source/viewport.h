@@ -22,12 +22,12 @@
 
 #include "camera.h"
 #include "perspective.h"
-#include "widget.h"
+#include "ui/widget.h"
 
-class Viewport : public Widget
+class Viewport : public UI::Widget
 {
 public:
-	Viewport(Widget * SupWidget = 0);
+	Viewport(UI::Widget * SupWidget = 0);
 	// getters
 	Camera * GetCamera(void);
 	Perspective * GetPerspective(void);

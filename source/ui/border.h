@@ -21,7 +21,7 @@
 #define BORDER_H
 
 #include "../color.h"
-#include "../widget.h"
+#include "widget.h"
 
 namespace UI
 {

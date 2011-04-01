@@ -247,7 +247,7 @@ mind_h = \
 mini_map_display_h = \
 	mini_map_display.h \
 	$(referencing_h) \
-	$(widget_h)
+	$(ui_widget_h)
 
 object_h = \
 	object.h \
@@ -333,7 +333,7 @@ scanner_display_h = \
 
 scroll_box_h = \
 	scroll_box.h \
-	$(widget_h)
+	$(ui_widget_h)
 
 settings_h = \
 	settings.h \
@@ -370,7 +370,7 @@ star_h = \
 
 star_map_display_h = \
 	star_map_display.h \
-	$(widget_h)
+	$(ui_widget_h)
 
 state_h = \
 	state.h \
@@ -423,12 +423,12 @@ type_definitions_h = \
 ui_border_h = \
 	ui/border.h \
 	$(color_h) \
-	$(widget_h)
+	$(ui_widget_h)
 
 ui_button_h = \
 	ui/button.h \
 	$(callbacks_events_h) \
-	$(widget_h)
+	$(ui_widget_h)
 
 ui_dialog_h = \
 	ui/dialog.h \
@@ -437,15 +437,20 @@ ui_dialog_h = \
 ui_label_h = \
 	ui/label.h \
 	$(color_h) \
-	$(widget_h)
+	$(ui_widget_h)
 
 ui_scroll_bar_h = \
 	ui/scroll_bar.h \
-	$(widget_h)
+	$(ui_widget_h)
+
+ui_widget_h = \
+	ui/widget.h \
+	$(callbacks_events_h) \
+	$(math_vector2f_h)
 
 ui_window_h = \
 	ui/window.h \
-	$(widget_h)
+	$(ui_widget_h)
 
 user_interface_h = \
 	user_interface.h
@@ -454,7 +459,7 @@ viewport_h = \
 	viewport.h \
 	$(camera_h) \
 	$(perspective_h) \
-	$(widget_h)
+	$(ui_widget_h)
 
 visualization_prototype_h = \
 	visualization_prototype.h
@@ -471,11 +476,6 @@ weapon_class_h = \
 	$(math_quaternion_h) \
 	$(math_vector3f_h) \
 	$(type_definitions_h)
-
-widget_h = \
-	widget.h \
-	$(callbacks_events_h) \
-	$(math_vector2f_h)
 
 write_to_xml_stream_h = \
 	write_to_xml_stream.h
@@ -570,7 +570,7 @@ $(OBJECT_FILES): $(CXXFLAGS_configuration)
 binary: $(OBJECT_FILES) $(LDFLAGS_configuration)
 	$(CXX) $(LDFLAGS) `pkg-config --libs libarxx` $(OBJECT_FILES) -lGL -lX11 -o $@
 
-.object-files/arx_reading.o: arx_reading.cpp $(arx_reading_h) $(arx_resources_h) $(asset_class_h) $(battery_class_h) $(buffer_reading_h) $(callbacks_callbacks_h) $(class_manager_h) $(commodity_class_h) $(faction_h) $(galaxy_h) $(generator_class_h) $(globals_h) $(graphics_material_h) $(graphics_mesh_h) $(graphics_mesh_manager_h) $(graphics_model_h) $(graphics_model_manager_h) $(graphics_texture_h) $(graphics_texture_manager_h) $(local_file_data_channel_h) $(mini_map_display_h) $(object_aspect_name_h) $(object_aspect_object_container_h) $(object_aspect_position_h) $(object_factory_h) $(planet_h) $(scanner_display_h) $(settings_h) $(ship_class_h) $(slot_h) $(star_h) $(string_cast_h) $(system_h) $(ui_label_h) $(user_interface_h) $(visualization_prototype_h) $(weapon_class_h) $(widget_h)
+.object-files/arx_reading.o: arx_reading.cpp $(arx_reading_h) $(arx_resources_h) $(asset_class_h) $(battery_class_h) $(buffer_reading_h) $(callbacks_callbacks_h) $(class_manager_h) $(commodity_class_h) $(faction_h) $(galaxy_h) $(generator_class_h) $(globals_h) $(graphics_material_h) $(graphics_mesh_h) $(graphics_mesh_manager_h) $(graphics_model_h) $(graphics_model_manager_h) $(graphics_texture_h) $(graphics_texture_manager_h) $(local_file_data_channel_h) $(mini_map_display_h) $(object_aspect_name_h) $(object_aspect_object_container_h) $(object_aspect_position_h) $(object_factory_h) $(planet_h) $(scanner_display_h) $(settings_h) $(ship_class_h) $(slot_h) $(star_h) $(string_cast_h) $(system_h) $(ui_label_h) $(ui_widget_h) $(user_interface_h) $(visualization_prototype_h) $(weapon_class_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags libarxx` -c $< -o $@
 
 .object-files/asset_class.o: asset_class.cpp $(asset_class_h)
@@ -678,7 +678,7 @@ binary: $(OBJECT_FILES) $(LDFLAGS_configuration)
 .object-files/local_file_data_channel.o: local_file_data_channel.cpp $(local_file_data_channel_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags libarxx` -c $< -o $@
 
-.object-files/main.o: main.cpp $(arx_reading_h) $(asset_class_h) $(battery_h) $(battery_class_h) $(camera_h) $(commodity_h) $(commodity_class_h) $(character_h) $(color_h) $(command_mind_h) $(draw_text_h) $(faction_h) $(file_handling_h) $(galaxy_h) $(game_time_h) $(generator_h) $(generator_class_h) $(goals_h) $(graphics_engine_h) $(graphics_mesh_manager_h) $(graphics_model_h) $(graphics_model_manager_h) $(graphics_model_object_h) $(graphics_particle_system_h) $(graphics_scene_h) $(graphics_texture_manager_h) $(key_event_information_h) $(main_menu_window_h) $(map_dialog_h) $(map_knowledge_h) $(math_h) $(message_h) $(message_dispatcher_h) $(messages_h) $(mind_h) $(mini_map_display_h) $(object_aspect_accessory_h) $(object_aspect_name_h) $(object_aspect_object_container_h) $(object_aspect_outfitting_h) $(object_aspect_physical_h) $(object_aspect_position_h) $(object_aspect_update_h) $(object_aspect_visualization_h) $(object_factory_h) $(object_information_dialog_h) $(outfit_ship_dialog_h) $(output_observer_h) $(perspective_h) $(planet_h) $(real_time_h) $(scanner_display_h) $(settings_h) $(ship_h) $(ship_class_h) $(shot_h) $(slot_h) $(slot_class_h) $(star_h) $(star_map_display_h) $(state_machine_h) $(states_h) $(storage_h) $(string_cast_h) $(system_h) $(system_statistics_h) $(timeout_notifications_h) $(timing_dialog_h) $(ui_button_h) $(ui_label_h) $(user_interface_h) $(visualizations_h) $(weapon_h) $(weapon_class_h) $(widget_h) $(write_to_xml_stream_h) $(xml_puny_dom_h) $(xml_stream_h)
+.object-files/main.o: main.cpp $(arx_reading_h) $(asset_class_h) $(battery_h) $(battery_class_h) $(camera_h) $(commodity_h) $(commodity_class_h) $(character_h) $(color_h) $(command_mind_h) $(draw_text_h) $(faction_h) $(file_handling_h) $(galaxy_h) $(game_time_h) $(generator_h) $(generator_class_h) $(goals_h) $(graphics_engine_h) $(graphics_mesh_manager_h) $(graphics_model_h) $(graphics_model_manager_h) $(graphics_model_object_h) $(graphics_particle_system_h) $(graphics_scene_h) $(graphics_texture_manager_h) $(key_event_information_h) $(main_menu_window_h) $(map_dialog_h) $(map_knowledge_h) $(math_h) $(message_h) $(message_dispatcher_h) $(messages_h) $(mind_h) $(mini_map_display_h) $(object_aspect_accessory_h) $(object_aspect_name_h) $(object_aspect_object_container_h) $(object_aspect_outfitting_h) $(object_aspect_physical_h) $(object_aspect_position_h) $(object_aspect_update_h) $(object_aspect_visualization_h) $(object_factory_h) $(object_information_dialog_h) $(outfit_ship_dialog_h) $(output_observer_h) $(perspective_h) $(planet_h) $(real_time_h) $(scanner_display_h) $(settings_h) $(ship_h) $(ship_class_h) $(shot_h) $(slot_h) $(slot_class_h) $(star_h) $(star_map_display_h) $(state_machine_h) $(states_h) $(storage_h) $(string_cast_h) $(system_h) $(system_statistics_h) $(timeout_notifications_h) $(timing_dialog_h) $(ui_button_h) $(ui_label_h) $(ui_widget_h) $(user_interface_h) $(visualizations_h) $(weapon_h) $(weapon_class_h) $(write_to_xml_stream_h) $(xml_puny_dom_h) $(xml_stream_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 .object-files/main_menu_window.o: main_menu_window.cpp $(callbacks_callbacks_h) $(file_handling_h) $(key_event_information_h) $(load_game_dialog_h) $(main_menu_window_h) $(save_game_dialog_h) $(ui_button_h) $(ui_label_h)
@@ -834,10 +834,13 @@ binary: $(OBJECT_FILES) $(LDFLAGS_configuration)
 .object-files/ui/scroll_bar.o: ui/scroll_bar.cpp $(callbacks_callbacks_h) $(color_h) $(globals_h) $(ui_button_h) $(ui_scroll_bar_h) $(user_interface_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
+.object-files/ui/widget.o: ui/widget.cpp $(callbacks_callbacks_h) $(color_h) $(math_h) $(ui_widget_h)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
 .object-files/ui/window.o: ui/window.cpp $(callbacks_callbacks_h) $(globals_h) $(user_interface_h) $(ui_border_h) $(ui_label_h) $(ui_window_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-.object-files/user_interface.o: user_interface.cpp $(callbacks_connection_handle_h) $(user_interface_h) $(widget_h)
+.object-files/user_interface.o: user_interface.cpp $(callbacks_connection_handle_h) $(ui_widget_h) $(user_interface_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 .object-files/viewport.o: viewport.cpp $(viewport_h)
@@ -853,9 +856,6 @@ binary: $(OBJECT_FILES) $(LDFLAGS_configuration)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 .object-files/weapon_class.o: weapon_class.cpp $(color_h) $(visualization_prototype_h) $(weapon_class_h)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-
-.object-files/widget.o: widget.cpp $(callbacks_callbacks_h) $(color_h) $(math_h) $(widget_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 .object-files/write_to_xml_stream.o: write_to_xml_stream.cpp $(battery_h) $(character_h) $(color_h) $(commodity_h) $(faction_h) $(generator_h) $(graphics_material_h) $(map_knowledge_h) $(mind_h) $(object_h) $(object_aspect_accessory_h) $(object_aspect_name_h) $(object_aspect_object_container_h) $(object_aspect_physical_h) $(object_aspect_position_h) $(object_aspect_visualization_h) $(ship_h) $(slot_h) $(storage_h) $(system_h) $(visualization_prototype_h) $(weapon_h) $(write_to_xml_stream_h) $(xml_stream_h)
