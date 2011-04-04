@@ -80,7 +80,6 @@
 #include "object_aspect_update.h"
 #include "object_aspect_visualization.h"
 #include "object_factory.h"
-#include "object_information_dialog.h"
 #include "outfit_ship_dialog.h"
 #include "output_observer.h"
 #include "perspective.h"
@@ -105,6 +104,7 @@
 #include "timing_dialog.h"
 #include "ui/button.h"
 #include "ui/label.h"
+#include "ui/object_information_dialog.h"
 #include "ui/widget.h"
 #include "user_interface.h"
 #include "visualization_prototype.h"
@@ -2666,7 +2666,7 @@ void ActionOpenMapDialog(void)
 
 void ActionOpenObjectInformationDialog(void)
 {
-	ObjectInformationDialog * Dialog(new ObjectInformationDialog(g_UserInterface->GetRootWidget(), g_Galaxy->GetReference()));
+	UI::ObjectInformationDialog * Dialog(new UI::ObjectInformationDialog(g_UserInterface->GetRootWidget(), g_Galaxy->GetReference()));
 	
 	Dialog->GrabKeyFocus();
 }
