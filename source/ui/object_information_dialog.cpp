@@ -17,23 +17,23 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include "globals.h"
-#include "object.h"
-#include "object_aspect_accessory.h"
-#include "object_aspect_name.h"
-#include "object_aspect_object_container.h"
-#include "object_aspect_physical.h"
+#include "../globals.h"
+#include "../object.h"
+#include "../object_aspect_accessory.h"
+#include "../object_aspect_name.h"
+#include "../object_aspect_object_container.h"
+#include "../object_aspect_physical.h"
+#include "../scroll_box.h"
+#include "../slot.h"
+#include "../slot_class.h"
+#include "../string_cast.h"
+#include "button.h"
+#include "label.h"
 #include "object_information_dialog.h"
-#include "scroll_box.h"
-#include "slot.h"
-#include "slot_class.h"
-#include "string_cast.h"
-#include "ui/button.h"
-#include "ui/label.h"
-#include "ui/scroll_bar.h"
+#include "scroll_bar.h"
 
-ObjectInformationDialog::ObjectInformationDialog(Widget * SupWidget, const Reference< Object > & Object) :
-	Window(SupWidget, "Object Information"),
+UI::ObjectInformationDialog::ObjectInformationDialog(UI::Widget * SupWidget, const Reference< Object > & Object) :
+	UI::Window(SupWidget, "Object Information"),
 	m_Object(Object),
 	m_OKButton(0)
 {
@@ -80,9 +80,9 @@ ObjectInformationDialog::ObjectInformationDialog(Widget * SupWidget, const Refer
 	Refresh();
 }
 
-float ObjectInformationDialog::AddObjectProperty(float Top, float Indentation, const Reference< Object > & Object)
+float UI::ObjectInformationDialog::AddObjectProperty(float Top, float Indentation, const Reference< Object > & Object)
 {
-	Widget * PropertyDisplay(new Widget(m_PropertiesScrollBox->GetContent()));
+	UI::Widget * PropertyDisplay(new UI::Widget(m_PropertiesScrollBox->GetContent()));
 	
 	PropertyDisplay->SetPosition(Vector2f(10.0f, Top));
 	PropertyDisplay->SetSize(Vector2f(m_PropertiesScrollBox->GetContent()->GetSize()[0] - 20.0f, 30.0f));
@@ -105,9 +105,9 @@ float ObjectInformationDialog::AddObjectProperty(float Top, float Indentation, c
 	return PropertyDisplay->GetSize()[1];
 }
 
-float ObjectInformationDialog::AddSeparator(float Top, float Indentation, const std::string & Separator)
+float UI::ObjectInformationDialog::AddSeparator(float Top, float Indentation, const std::string & Separator)
 {
-	Widget * SeparatorDisplay(new Widget(m_PropertiesScrollBox->GetContent()));
+	UI::Widget * SeparatorDisplay(new UI::Widget(m_PropertiesScrollBox->GetContent()));
 	
 	SeparatorDisplay->SetPosition(Vector2f(10.0f, Top));
 	SeparatorDisplay->SetSize(Vector2f(m_PropertiesScrollBox->GetContent()->GetSize()[0] - 20.0f, 20.0f));
@@ -124,9 +124,9 @@ float ObjectInformationDialog::AddSeparator(float Top, float Indentation, const 
 	return SeparatorDisplay->GetSize()[1];
 }
 
-float ObjectInformationDialog::AddString(float Top, float Indentation, const std::string & String)
+float UI::ObjectInformationDialog::AddString(float Top, float Indentation, const std::string & String)
 {
-	Widget * StringDisplay(new Widget(m_PropertiesScrollBox->GetContent()));
+	UI::Widget * StringDisplay(new UI::Widget(m_PropertiesScrollBox->GetContent()));
 	
 	StringDisplay->SetPosition(Vector2f(10.0f, Top));
 	StringDisplay->SetSize(Vector2f(m_PropertiesScrollBox->GetContent()->GetSize()[0] - 20.0f, 20.0f));
@@ -142,9 +142,9 @@ float ObjectInformationDialog::AddString(float Top, float Indentation, const std
 	return StringDisplay->GetSize()[1];
 }
 
-float ObjectInformationDialog::AddStringProperty(float Top, float Indentation, const std::string & PropertyName, const std::string & PropertyValue)
+float UI::ObjectInformationDialog::AddStringProperty(float Top, float Indentation, const std::string & PropertyName, const std::string & PropertyValue)
 {
-	Widget * PropertyDisplay(new Widget(m_PropertiesScrollBox->GetContent()));
+	UI::Widget * PropertyDisplay(new UI::Widget(m_PropertiesScrollBox->GetContent()));
 	
 	PropertyDisplay->SetPosition(Vector2f(10.0f, Top));
 	PropertyDisplay->SetSize(Vector2f(m_PropertiesScrollBox->GetContent()->GetSize()[0] - 20.0f, 20.0f));
@@ -169,7 +169,7 @@ float ObjectInformationDialog::AddStringProperty(float Top, float Indentation, c
 	return PropertyDisplay->GetSize()[1];
 }
 
-void ObjectInformationDialog::Refresh(void)
+void UI::ObjectInformationDialog::Refresh(void)
 {
 	// clear old properties
 	while(m_PropertiesScrollBox->GetContent()->GetSubWidgets().empty() == false)
@@ -242,7 +242,7 @@ void ObjectInformationDialog::Refresh(void)
 	m_PropertiesScrollBox->GetContent()->SetAnchorRight(true);
 }
 
-bool ObjectInformationDialog::OnMouseButton(int Button, int State, float X, float Y)
+bool UI::ObjectInformationDialog::OnMouseButton(int Button, int State, float X, float Y)
 {
 	if((Button == 4 /* WHEEL_UP */) && (State == EV_DOWN))
 	{
@@ -260,17 +260,17 @@ bool ObjectInformationDialog::OnMouseButton(int Button, int State, float X, floa
 	return false;
 }
 
-void ObjectInformationDialog::OnObjectClicked(const Reference< Object > Object)
+void UI::ObjectInformationDialog::OnObjectClicked(const Reference< Object > Object)
 {
-	new ObjectInformationDialog(GetRootWidget(), Object);
+	new UI::ObjectInformationDialog(GetRootWidget(), Object);
 }
 
-void ObjectInformationDialog::OnOKClicked(void)
+void UI::ObjectInformationDialog::OnOKClicked(void)
 {
 	Destroy();
 }
 
-void ObjectInformationDialog::OnRefreshClicked(void)
+void UI::ObjectInformationDialog::OnRefreshClicked(void)
 {
 	Refresh();
 }
