@@ -170,7 +170,7 @@
 		</key-binding>
 		<!-- F9: dump object report -->
 		<key-binding>
-			<code>74</code>
+			<code>75</code>
 			<event>down</event>
 			<action>dump_object_report</action>
 		</key-binding>
