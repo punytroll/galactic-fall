@@ -306,10 +306,6 @@ planet_h = \
 	$(object_h) \
 	$(type_definitions_h)
 
-planet_dialog_h = \
-	planet_dialog.h \
-	$(ui_window_h)
-
 real_time_h = \
 	real_time.h
 
@@ -437,6 +433,10 @@ ui_label_h = \
 ui_object_information_dialog_h = \
 	ui/object_information_dialog.h \
 	$(referencing_h) \
+	$(ui_window_h)
+
+ui_planet_dialog_h = \
+	ui/planet_dialog.h \
 	$(ui_window_h)
 
 ui_scroll_bar_h = \
@@ -738,16 +738,13 @@ binary: $(OBJECT_FILES) $(LDFLAGS_configuration)
 .object-files/outfit_ship_dialog.o: outfit_ship_dialog.cpp $(class_manager_h) $(color_h) $(globals_h) $(key_event_information_h) $(object_aspect_accessory_h) $(object_aspect_name_h) $(object_aspect_object_container_h) $(object_aspect_outfitting_h) $(object_aspect_physical_h) $(outfit_ship_dialog_h) $(scroll_box_h) $(ship_h) $(slot_h) $(slot_class_h) $(storage_h) $(ui_button_h) $(ui_label_h) $(weapon_h) $(weapon_class_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-.object-files/output_observer.o: output_observer.cpp $(command_mind_h) $(globals_h) $(message_h) $(output_observer_h) $(planet_h) $(planet_dialog_h) $(user_interface_h)
+.object-files/output_observer.o: output_observer.cpp $(command_mind_h) $(globals_h) $(message_h) $(output_observer_h) $(planet_h) $(ui_planet_dialog_h) $(user_interface_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 .object-files/perspective.o: perspective.cpp $(perspective_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 .object-files/planet.o: planet.cpp $(asset_class_h) $(battery_h) $(color_h) $(globals_h) $(message_h) $(message_dispatcher_h) $(object_aspect_object_container_h) $(object_aspect_physical_h) $(planet_h) $(ship_h)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-
-.object-files/planet_dialog.o: planet_dialog.cpp $(asset_class_h) $(callbacks_callbacks_h) $(character_h) $(color_h) $(globals_h) $(key_event_information_h) $(object_aspect_name_h) $(planet_h) $(planet_dialog_h) $(ship_h) $(string_cast_h) $(trade_center_dialog_h) $(ui_button_h) $(ui_label_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 .object-files/real_time.o: real_time.cpp $(real_time_h)
@@ -829,6 +826,9 @@ binary: $(OBJECT_FILES) $(LDFLAGS_configuration)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 .object-files/ui/object_information_dialog.o: ui/object_information_dialog.cpp  $(globals_h) $(object_h) $(object_aspect_accessory_h) $(object_aspect_name_h) $(object_aspect_object_container_h) $(object_aspect_physical_h)  $(scroll_box_h) $(slot_h) $(slot_class_h) $(string_cast_h) $(ui_button_h) $(ui_label_h) $(ui_object_information_dialog_h) $(ui_scroll_bar_h)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+.object-files/ui/planet_dialog.o: ui/planet_dialog.cpp $(asset_class_h) $(callbacks_callbacks_h) $(character_h) $(color_h) $(globals_h) $(key_event_information_h) $(object_aspect_name_h) $(planet_h) $(ship_h) $(string_cast_h) $(trade_center_dialog_h) $(ui_button_h) $(ui_label_h) $(ui_planet_dialog_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 .object-files/ui/scroll_bar.o: ui/scroll_bar.cpp $(callbacks_callbacks_h) $(color_h) $(globals_h) $(ui_button_h) $(ui_scroll_bar_h) $(user_interface_h)

@@ -17,22 +17,22 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include "asset_class.h"
-#include "callbacks/callbacks.h"
-#include "character.h"
-#include "color.h"
-#include "globals.h"
-#include "key_event_information.h"
-#include "object_aspect_name.h"
-#include "planet.h"
+#include "../asset_class.h"
+#include "../callbacks/callbacks.h"
+#include "../character.h"
+#include "../color.h"
+#include "../globals.h"
+#include "../key_event_information.h"
+#include "../object_aspect_name.h"
+#include "../planet.h"
+#include "../ship.h"
+#include "../string_cast.h"
+#include "../trade_center_dialog.h"
+#include "button.h"
+#include "label.h"
 #include "planet_dialog.h"
-#include "ship.h"
-#include "string_cast.h"
-#include "trade_center_dialog.h"
-#include "ui/button.h"
-#include "ui/label.h"
 
-PlanetDialog::PlanetDialog(Widget * SupWidget, Planet * Planet, Character * Character) :
+UI::PlanetDialog::PlanetDialog(UI::Widget * SupWidget, Planet * Planet, Character * Character) :
 	UI::Window(SupWidget, "Planet: " + Planet->GetAspectName()->GetName()),
 	m_Planet(Planet),
 	m_Character(Character),
@@ -106,7 +106,7 @@ PlanetDialog::PlanetDialog(Widget * SupWidget, Planet * Planet, Character * Char
 	}
 }
 
-void PlanetDialog::OnDestroying(void)
+void UI::PlanetDialog::OnDestroying(void)
 {
 	if(m_TradeCenterDialog != 0)
 	{
@@ -114,7 +114,7 @@ void PlanetDialog::OnDestroying(void)
 	}
 }
 
-void PlanetDialog::OnRefuelClicked(void)
+void UI::PlanetDialog::OnRefuelClicked(void)
 {
 	const std::vector< PlanetAssetClass * > & PlanetAssetClasses(m_Planet->GetPlanetAssetClasses());
 	
@@ -135,23 +135,23 @@ void PlanetDialog::OnRefuelClicked(void)
 	}
 }
 
-void PlanetDialog::OnTakeOffClicked(void)
+void UI::PlanetDialog::OnTakeOffClicked(void)
 {
 	m_Character->GetShip()->SetTakeOff(true);
 }
 
-void PlanetDialog::OnTradeCenterClicked(void)
+void UI::PlanetDialog::OnTradeCenterClicked(void)
 {
 	OpenTradeCenterDialog();
 }
 
-void PlanetDialog::OnTradeCenterDialogDestroying(void)
+void UI::PlanetDialog::OnTradeCenterDialogDestroying(void)
 {
 	m_TradeCenterDialog = 0;
 	GrabKeyFocus();
 }
 
-bool PlanetDialog::OnKey(const KeyEventInformation & KeyEventInformation)
+bool UI::PlanetDialog::OnKey(const KeyEventInformation & KeyEventInformation)
 {
 	if(((KeyEventInformation.GetKeyCode() == 9 /* ESCAPE */) || (KeyEventInformation.GetKeyCode() == 36 /* RETURN */)) && (KeyEventInformation.IsDown() == true))
 	{
@@ -166,7 +166,7 @@ bool PlanetDialog::OnKey(const KeyEventInformation & KeyEventInformation)
 	return true;
 }
 
-void PlanetDialog::OpenTradeCenterDialog(void)
+void UI::PlanetDialog::OpenTradeCenterDialog(void)
 {
 	if(m_TradeCenterDialog == 0)
 	{

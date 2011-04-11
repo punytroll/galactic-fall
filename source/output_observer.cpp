@@ -24,7 +24,7 @@
 #include "message.h"
 #include "output_observer.h"
 #include "planet.h"
-#include "planet_dialog.h"
+#include "ui/planet_dialog.h"
 #include "user_interface.h"
 
 /// @todo evil hack
@@ -45,7 +45,7 @@ void OutputObserver::HandleMessage(Message * Message)
 		{
 			assert(m_PlanetDialog == 0);
 			assert(Message->GetSender()->GetTypeIdentifier() == "planet");
-			m_PlanetDialog = new PlanetDialog(g_UserInterface->GetRootWidget(), dynamic_cast< Planet * >(Message->GetSender().Get()), GetObservedCharacter().Get());
+			m_PlanetDialog = new UI::PlanetDialog(g_UserInterface->GetRootWidget(), dynamic_cast< Planet * >(Message->GetSender().Get()), GetObservedCharacter().Get());
 			m_PlanetDialog->GrabKeyFocus();
 		}
 		else if(Message->GetTypeIdentifier() == "taken_off")
