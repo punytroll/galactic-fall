@@ -24,13 +24,13 @@
 
 class Character;
 class Planet;
-class ScrollBox;
 class TradeCenterAssetClass;
 
 namespace UI
 {
 	class Button;
 	class Label;
+	class ScrollBox;
 }
 
 class TradeCenterDialog : public UI::Window
@@ -58,7 +58,7 @@ private:
 	UI::Button * m_OKButton;
 	UI::Button * m_BuyButton;
 	UI::Button * m_SellButton;
-	ScrollBox * m_AssetClassScrollBox;
+	UI::ScrollBox * m_AssetClassScrollBox;
 	UI::Label * m_TraderCreditsLabel;
 	UI::Label * m_TraderAvailableSpaceLabel;
 	TradeCenterAssetClass * m_SelectedTradeCenterAssetClass;

@@ -26,9 +26,9 @@
 #include "key_event_information.h"
 #include "load_game_dialog.h"
 #include "real_time.h"
-#include "scroll_box.h"
 #include "ui/button.h"
 #include "ui/label.h"
+#include "ui/scroll_box.h"
 
 // this class is declared here, so we can use it, but defined in save_game_dialog.cpp
 class DirectoryEntryItem : public UI::Widget
@@ -108,7 +108,7 @@ LoadGameDialog::LoadGameDialog(UI::Widget * SupWidget) :
 	m_FileNameLabel->SetAnchorRight(true);
 	m_FileNameLabel->ConnectKeyCallback(Callback(this, &LoadGameDialog::OnFileNameLabelKey));
 	m_FileNameLabel->GrabKeyFocus();
-	m_FileScrollBox = new ScrollBox(this);
+	m_FileScrollBox = new UI::ScrollBox(this);
 	m_FileScrollBox->SetPosition(Vector2f(10.0f, 110.0f));
 	m_FileScrollBox->SetSize(Vector2f(GetSize()[0] - 10.0f - 10.0f, GetSize()[1] - 110.0f - 30.0f - 10.0f - m_OKButton->GetSize()[1]));
 	m_FileScrollBox->SetAnchorBottom(true);

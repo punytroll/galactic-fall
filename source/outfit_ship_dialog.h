@@ -22,7 +22,6 @@
 
 #include "ui/window.h"
 
-class ScrollBox;
 class Ship;
 class SlotListItem;
 class AccessoryListItem;
@@ -30,6 +29,7 @@ class AccessoryListItem;
 namespace UI
 {
 	class Button;
+	class ScrollBox;
 }
 
 class OutfitShipDialog : public UI::Window
@@ -53,8 +53,8 @@ private:
 	UI::Button * m_OKButton;
 	UI::Button * m_MountButton;
 	UI::Button * m_UnmountButton;
-	ScrollBox * m_SlotScrollBox;
-	ScrollBox * m_AccessoryScrollBox;
+	UI::ScrollBox * m_SlotScrollBox;
+	UI::ScrollBox * m_AccessoryScrollBox;
 	SlotListItem * m_SelectedSlotListItem;
 	AccessoryListItem * m_SelectedAccessoryListItem;
 	Widget * m_LeftPane;

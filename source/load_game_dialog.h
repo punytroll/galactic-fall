@@ -24,12 +24,12 @@
 #include "timeout_notifications.h"
 
 class DirectoryEntryItem;
-class ScrollBox;
 
 namespace UI
 {
 	class Button;
 	class Label;
+	class ScrollBox;
 }
 
 class LoadGameDialog : public UI::Dialog
@@ -57,7 +57,7 @@ private:
 	UI::Label * m_ErrorMessage;
 	TimeoutNotification m_ErrorMessageTimeoutNotification;
 	UI::Label * m_FileNameLabel;
-	ScrollBox * m_FileScrollBox;
+	UI::ScrollBox * m_FileScrollBox;
 	DirectoryEntryItem * m_SelectedDirectoryEntryItem;
 };
 

@@ -27,13 +27,13 @@
 #include "object_aspect_outfitting.h"
 #include "object_aspect_physical.h"
 #include "outfit_ship_dialog.h"
-#include "scroll_box.h"
 #include "ship.h"
 #include "slot.h"
 #include "slot_class.h"
 #include "storage.h"
 #include "ui/button.h"
 #include "ui/label.h"
+#include "ui/scroll_box.h"
 #include "weapon.h"
 #include "weapon_class.h"
 
@@ -251,7 +251,7 @@ OutfitShipDialog::OutfitShipDialog(UI::Widget * SupWidget, Ship * Ship) :
 	SlotListLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
 	SlotListLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	SlotListLabel->SetAnchorRight(true);
-	m_SlotScrollBox = new ScrollBox(m_LeftPane);
+	m_SlotScrollBox = new UI::ScrollBox(m_LeftPane);
 	m_SlotScrollBox->SetPosition(Vector2f(0.0f, 30.0f));
 	m_SlotScrollBox->SetSize(Vector2f(m_LeftPane->GetSize()[0], m_LeftPane->GetSize()[1] - 30.0f));
 	m_SlotScrollBox->SetHorizontalScrollBarVisible(false);
@@ -329,7 +329,7 @@ OutfitShipDialog::OutfitShipDialog(UI::Widget * SupWidget, Ship * Ship) :
 	AccessoryListLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
 	AccessoryListLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	AccessoryListLabel->SetAnchorRight(true);
-	m_AccessoryScrollBox = new ScrollBox(m_RightPane);
+	m_AccessoryScrollBox = new UI::ScrollBox(m_RightPane);
 	m_AccessoryScrollBox->SetPosition(Vector2f(0.0f, 30.0f));
 	m_AccessoryScrollBox->SetSize(Vector2f(m_RightPane->GetSize()[0], m_RightPane->GetSize()[1] - 30.0f));
 	m_AccessoryScrollBox->SetHorizontalScrollBarVisible(false);
