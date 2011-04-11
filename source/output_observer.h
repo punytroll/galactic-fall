@@ -22,7 +22,10 @@
 
 #include "character_observer.h"
 
-class PlanetDialog;
+namespace UI
+{
+	class PlanetDialog;
+}
 
 class OutputObserver : public CharacterObserver
 {
@@ -30,7 +33,7 @@ public:
 	OutputObserver(void);
 	virtual void HandleMessage(Message * Message);
 private:
-	PlanetDialog * m_PlanetDialog;
+	UI::PlanetDialog * m_PlanetDialog;
 };
 
 #endif

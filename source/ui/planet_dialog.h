@@ -20,7 +20,7 @@
 #ifndef PLANET_DIALOG_H
 #define PLANET_DIALOG_H
 
-#include "ui/window.h"
+#include "window.h"
 
 class Character;
 class Planet;
@@ -29,29 +29,29 @@ class TradeCenterDialog;
 namespace UI
 {
 	class Button;
+	
+	class PlanetDialog : public UI::Window
+	{
+	public:
+		PlanetDialog(UI::Widget * SupWidget, Planet * Planet, Character * Character);
+	private:
+		// callbacks
+		void OnDestroying(void);
+		bool OnKey(const KeyEventInformation & KeyEventInformation);
+		void OnRefuelClicked(void);
+		void OnTakeOffClicked(void);
+		void OnTradeCenterClicked(void);
+		void OnTradeCenterDialogDestroying(void);
+		// helper functions & actions
+		void OpenTradeCenterDialog(void);
+		// member variables
+		Planet * m_Planet;
+		Character * m_Character;
+		UI::Button * m_TakeOffButton;
+		UI::Button * m_TradeCenterButton;
+		UI::Button * m_RefuelButton;
+		TradeCenterDialog * m_TradeCenterDialog;
+	};
 }
-
-class PlanetDialog : public UI::Window
-{
-public:
-	PlanetDialog(Widget * SupWidget, Planet * Planet, Character * Character);
-private:
-	// callbacks
-	void OnDestroying(void);
-	bool OnKey(const KeyEventInformation & KeyEventInformation);
-	void OnRefuelClicked(void);
-	void OnTakeOffClicked(void);
-	void OnTradeCenterClicked(void);
-	void OnTradeCenterDialogDestroying(void);
-	// helper functions & actions
-	void OpenTradeCenterDialog(void);
-	// member variables
-	Planet * m_Planet;
-	Character * m_Character;
-	UI::Button * m_TakeOffButton;
-	UI::Button * m_TradeCenterButton;
-	UI::Button * m_RefuelButton;
-	TradeCenterDialog * m_TradeCenterDialog;
-};
 
 #endif
