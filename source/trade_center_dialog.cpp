@@ -29,7 +29,6 @@
 #include "object_aspect_object_container.h"
 #include "object_factory.h"
 #include "planet.h"
-#include "scroll_box.h"
 #include "ship.h"
 #include "storage.h"
 #include "string_cast.h"
@@ -37,6 +36,7 @@
 #include "ui/button.h"
 #include "ui/label.h"
 #include "ui/scroll_bar.h"
+#include "ui/scroll_box.h"
 #include "weapon.h"
 #include "weapon_class.h"
 
@@ -142,7 +142,7 @@ TradeCenterDialog::TradeCenterDialog(UI::Widget * SupWidget, Planet * Planet, Ch
 	SellButtonLabel->SetSize(m_SellButton->GetSize());
 	SellButtonLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
 	SellButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
-	m_AssetClassScrollBox = new ScrollBox(this);
+	m_AssetClassScrollBox = new UI::ScrollBox(this);
 	m_AssetClassScrollBox->SetPosition(Vector2f(10.0f, 40.0f));
 	m_AssetClassScrollBox->SetSize(Vector2f(480.0f, 150.0f));
 	m_AssetClassScrollBox->SetHorizontalScrollBarVisible(false);

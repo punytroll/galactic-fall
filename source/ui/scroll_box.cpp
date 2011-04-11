@@ -17,15 +17,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include "callbacks/callbacks.h"
-#include "color.h"
+#include "../callbacks/callbacks.h"
+#include "../color.h"
+#include "scroll_bar.h"
 #include "scroll_box.h"
-#include "ui/scroll_bar.h"
 
-ScrollBox::ScrollBox(Widget * SupWidget) :
-	Widget(SupWidget)
+UI::ScrollBox::ScrollBox(UI::Widget * SupWidget) :
+	UI::Widget(SupWidget)
 {
-	m_View = new Widget(this);
+	m_View = new UI::Widget(this);
 	m_View->SetPosition(Vector2f(0.0f, 0.0f));
 	m_View->SetSize(Vector2f(GetSize()[0] - 20.0f, GetSize()[1] - 20.0f));
 	m_View->SetAnchorBottom(true);
@@ -33,7 +33,7 @@ ScrollBox::ScrollBox(Widget * SupWidget) :
 	m_View->SetAnchorRight(true);
 	m_View->SetAnchorTop(true);
 	m_View->ConnectSizeChangedCallback(Callback(this, &ScrollBox::OnContentOrViewSizeChanged));
-	m_Content = new Widget(m_View);
+	m_Content = new UI::Widget(m_View);
 	m_Content->SetPosition(Vector2f(0.0f, 0.0f));
 	m_Content->SetBackgroundColor(Color(0.15f, 0.15f, 0.15f, 1.0f));
 	m_Content->ConnectSizeChangedCallback(Callback(this, &ScrollBox::OnContentOrViewSizeChanged));
@@ -63,11 +63,11 @@ ScrollBox::ScrollBox(Widget * SupWidget) :
 	m_VerticalScrollBar->SetStepSize(m_VerticalScrollBar->GetMaximumPosition() / 10.0f);
 }
 
-ScrollBox::~ScrollBox(void)
+UI::ScrollBox::~ScrollBox(void)
 {
 }
 
-void ScrollBox::OnContentOrViewSizeChanged(void)
+void UI::ScrollBox::OnContentOrViewSizeChanged(void)
 {
 	// setting the position
 	Vector2f NewContentPosition(GetContent()->GetPosition());
@@ -110,7 +110,7 @@ void ScrollBox::OnContentOrViewSizeChanged(void)
 	m_VerticalScrollBar->SetStepSize(m_VerticalScrollBar->GetMaximumPosition() / 10.0f);
 }
 
-void ScrollBox::OnHorizontalScrollPositionChanged(void)
+void UI::ScrollBox::OnHorizontalScrollPositionChanged(void)
 {
 	float ViewSize(m_View->GetSize()[0]);
 	float ContentSize(m_Content->GetSize()[0]);
@@ -121,7 +121,7 @@ void ScrollBox::OnHorizontalScrollPositionChanged(void)
 	}
 }
 
-void ScrollBox::OnVerticalScrollPositionChanged(void)
+void UI::ScrollBox::OnVerticalScrollPositionChanged(void)
 {
 	float ViewSize(m_View->GetSize()[1]);
 	float ContentSize(m_Content->GetSize()[1]);
@@ -132,7 +132,7 @@ void ScrollBox::OnVerticalScrollPositionChanged(void)
 	}
 }
 
-void ScrollBox::SetHorizontalScrollBarVisible(bool Visible)
+void UI::ScrollBox::SetHorizontalScrollBarVisible(bool Visible)
 {
 	if(Visible != m_HorizontalScrollBar->IsVisible())
 	{
@@ -150,7 +150,7 @@ void ScrollBox::SetHorizontalScrollBarVisible(bool Visible)
 	}
 }
 
-void ScrollBox::SetVerticalScrollBarVisible(bool Visible)
+void UI::ScrollBox::SetVerticalScrollBarVisible(bool Visible)
 {
 	if(Visible != m_VerticalScrollBar->IsVisible())
 	{

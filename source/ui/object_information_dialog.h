@@ -24,11 +24,11 @@
 #include "window.h"
 
 class Object;
-class ScrollBox;
 
 namespace UI
 {
 	class Button;
+	class ScrollBox;
 	
 	class ObjectInformationDialog : public UI::Window
 	{
@@ -49,7 +49,7 @@ namespace UI
 		// member variables
 		Reference< Object > m_Object;
 		UI::Button * m_OKButton;
-		ScrollBox * m_PropertiesScrollBox;
+		UI::ScrollBox * m_PropertiesScrollBox;
 		UI::Button * m_RefreshButton;
 	};
 }

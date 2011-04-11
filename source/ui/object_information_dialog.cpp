@@ -23,7 +23,6 @@
 #include "../object_aspect_name.h"
 #include "../object_aspect_object_container.h"
 #include "../object_aspect_physical.h"
-#include "../scroll_box.h"
 #include "../slot.h"
 #include "../slot_class.h"
 #include "../string_cast.h"
@@ -31,6 +30,7 @@
 #include "label.h"
 #include "object_information_dialog.h"
 #include "scroll_bar.h"
+#include "scroll_box.h"
 
 UI::ObjectInformationDialog::ObjectInformationDialog(UI::Widget * SupWidget, const Reference< Object > & Object) :
 	UI::Window(SupWidget, "Object Information"),
@@ -56,7 +56,7 @@ UI::ObjectInformationDialog::ObjectInformationDialog(UI::Widget * SupWidget, con
 	OKButtonLabel->SetSize(m_OKButton->GetSize());
 	OKButtonLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
 	OKButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
-	m_PropertiesScrollBox = new ScrollBox(this);
+	m_PropertiesScrollBox = new UI::ScrollBox(this);
 	m_PropertiesScrollBox->SetPosition(Vector2f(10.0f, 40.0f));
 	m_PropertiesScrollBox->SetSize(Vector2f(GetSize()[0] - 20.0f, GetSize()[1] - 80.0f));
 	m_PropertiesScrollBox->SetHorizontalScrollBarVisible(false);
