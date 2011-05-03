@@ -17,8 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef WIDGET_H
-#define WIDGET_H
+#ifndef UI_WIDGET_H
+#define UI_WIDGET_H
 
 #include <iostream>
 #include <list>

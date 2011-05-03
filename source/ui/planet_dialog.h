@@ -17,8 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef PLANET_DIALOG_H
-#define PLANET_DIALOG_H
+#ifndef UI_PLANET_DIALOG_H
+#define UI_PLANET_DIALOG_H
 
 #include "window.h"
 

@@ -17,8 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef BORDER_H
-#define BORDER_H
+#ifndef UI_BORDER_H
+#define UI_BORDER_H
 
 #include "../color.h"
 #include "widget.h"

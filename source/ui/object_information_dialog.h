@@ -17,8 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef OBJECT_INFORMATION_DIALOG_H
-#define OBJECT_INFORMATION_DIALOG_H
+#ifndef UI_OBJECT_INFORMATION_DIALOG_H
+#define UI_OBJECT_INFORMATION_DIALOG_H
 
 #include "../referencing.h"
 #include "window.h"
