@@ -21,19 +21,20 @@
 
 #include <GL/gl.h>
 
-#include "callbacks/callbacks.h"
-#include "character.h"
-#include "draw_text.h"
-#include "galaxy.h"
-#include "globals.h"
-#include "map_knowledge.h"
-#include "object_aspect_name.h"
-#include "object_aspect_position.h"
-#include "star_map_display.h"
-#include "system.h"
-#include "user_interface.h"
+#include "../callbacks/callbacks.h"
+#include "../character.h"
+#include "../draw_text.h"
+#include "../galaxy.h"
+#include "../globals.h"
+#include "../map_knowledge.h"
+#include "../object_aspect_name.h"
+#include "../object_aspect_position.h"
+#include "../system.h"
+#include "../user_interface.h"
 
-StarMapDisplay::StarMapDisplay(Widget * SupWidget, System * System, Character * Character) :
+#include "star_map_display.h"
+
+UI::StarMapDisplay::StarMapDisplay(Widget * SupWidget, System * System, Character * Character) :
 	Widget(SupWidget),
 	m_Character(Character),
 	m_System(System),
@@ -41,11 +42,11 @@ StarMapDisplay::StarMapDisplay(Widget * SupWidget, System * System, Character * 
 	m_Scale(5.0f),
 	m_OffsetPosition(true)
 {
-	ConnectMouseButtonCallback(Callback(this, &StarMapDisplay::OnMouseButton));
-	ConnectMouseMovedCallback(Callback(this, &StarMapDisplay::OnMouseMoved));
+	ConnectMouseButtonCallback(Callback(this, &UI::StarMapDisplay::OnMouseButton));
+	ConnectMouseMovedCallback(Callback(this, &UI::StarMapDisplay::OnMouseMoved));
 }
 
-void StarMapDisplay::Draw(void) const
+void UI::StarMapDisplay::Draw(void) const
 {
 	Widget::Draw();
 	
@@ -165,7 +166,7 @@ void StarMapDisplay::Draw(void) const
 	glPopAttrib();
 }
 
-bool StarMapDisplay::OnMouseButton(int Button, int State, float X, float Y)
+bool UI::StarMapDisplay::OnMouseButton(int Button, int State, float X, float Y)
 {
 	if((Button == 4 /* WHEEL_UP */) && (State == EV_DOWN))
 	{
@@ -221,7 +222,7 @@ bool StarMapDisplay::OnMouseButton(int Button, int State, float X, float Y)
 	return false;
 }
 
-void StarMapDisplay::OnMouseMoved(float X, float Y)
+void UI::StarMapDisplay::OnMouseMoved(float X, float Y)
 {
 	if(g_UserInterface->GetCaptureWidget() == this)
 	{

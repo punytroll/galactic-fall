@@ -23,29 +23,29 @@
 #include "ui/window.h"
 
 class Character;
-class StarMapDisplay;
 class System;
 
 namespace UI
 {
 	class Button;
+	class StarMapDisplay;
 }
 
 class MapDialog : public UI::Window
 {
 public:
 	MapDialog(Widget * SupWidget, System * System, Character * Character);
-	StarMapDisplay * GetStarMapDisplay(void);
+	UI::StarMapDisplay * GetStarMapDisplay(void);
 protected:
 	// callbacks
 	bool OnKey(const KeyEventInformation & KeyEventInformation);
 	void OnOKClicked(void);
 private:
 	UI::Button * m_OKButton;
-	StarMapDisplay * m_StarMapDisplay;
+	UI::StarMapDisplay * m_StarMapDisplay;
 };
 
-inline StarMapDisplay * MapDialog::GetStarMapDisplay(void)
+inline UI::StarMapDisplay * MapDialog::GetStarMapDisplay(void)
 {
 	return m_StarMapDisplay;
 }
