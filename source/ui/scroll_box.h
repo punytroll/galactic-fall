@@ -17,8 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef SCROLL_BOX_H
-#define SCROLL_BOX_H
+#ifndef UI_SCROLL_BOX_H
+#define UI_SCROLL_BOX_H
 
 #include "widget.h"
 

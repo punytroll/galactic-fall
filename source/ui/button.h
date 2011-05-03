@@ -17,8 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef BUTTON_H
-#define BUTTON_H
+#ifndef UI_BUTTON_H
+#define UI_BUTTON_H
 
 #include <string>
 

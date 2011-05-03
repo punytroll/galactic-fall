@@ -17,8 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef LABEL_H
-#define LABEL_H
+#ifndef UI_LABEL_H
+#define UI_LABEL_H
 
 #include <string>
 
