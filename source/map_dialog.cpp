@@ -26,10 +26,10 @@
 #include "key_event_information.h"
 #include "map_dialog.h"
 #include "object_aspect_name.h"
-#include "star_map_display.h"
 #include "system.h"
 #include "ui/button.h"
 #include "ui/label.h"
+#include "ui/star_map_display.h"
 
 MapDialog::MapDialog(Widget * SupWidget, System * System, Character * Character) :
 	Window(SupWidget, "Map: " + System->GetAspectName()->GetName())
@@ -48,7 +48,7 @@ MapDialog::MapDialog(Widget * SupWidget, System * System, Character * Character)
 	OKButtonLabel->SetSize(m_OKButton->GetSize());
 	OKButtonLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
 	OKButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
-	m_StarMapDisplay = new StarMapDisplay(this, System, Character);
+	m_StarMapDisplay = new UI::StarMapDisplay(this, System, Character);
 	m_StarMapDisplay->SetPosition(Vector2f(10.0f, 40.0f));
 	m_StarMapDisplay->SetSize(Vector2f(480.0f, 450.0f));
 	m_StarMapDisplay->SetBackgroundColor(Color(0.15f, 0.15f, 0.15f, 1.0f));

@@ -17,36 +17,39 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef STAR_MAP_DISPLAY_H
-#define STAR_MAP_DISPLAY_H
+#ifndef UI_STAR_MAP_DISPLAY_H
+#define UI_STAR_MAP_DISPLAY_H
 
-#include "ui/widget.h"
+#include "widget.h"
 
 class Character;
 class System;
 
-class StarMapDisplay : public UI::Widget
+namespace UI
 {
-public:
-	StarMapDisplay(UI::Widget * SupWidget, System * System, Character * Character);
-	virtual void Draw(void) const;
-	System * GetSelectedSystem(void);
-private:
-	// callbacks
-	bool OnMouseButton(int Button, int State, float X, float Y);
-	void OnMouseMoved(float X, float Y);
-	// member variables
-	Character * m_Character;
-	System * m_System;
-	System * m_SelectedSystem;
-	float m_Scale;
-	Vector2f m_GrabPosition;
-	Vector2f m_OffsetPosition;
-};
+	class StarMapDisplay : public UI::Widget
+	{
+	public:
+		StarMapDisplay(UI::Widget * SupWidget, System * System, Character * Character);
+		virtual void Draw(void) const;
+		System * GetSelectedSystem(void);
+	private:
+		// callbacks
+		bool OnMouseButton(int Button, int State, float X, float Y);
+		void OnMouseMoved(float X, float Y);
+		// member variables
+		Character * m_Character;
+		System * m_System;
+		System * m_SelectedSystem;
+		float m_Scale;
+		Vector2f m_GrabPosition;
+		Vector2f m_OffsetPosition;
+	};
 
-inline System * StarMapDisplay::GetSelectedSystem(void)
-{
-	return m_SelectedSystem;
+	inline System * StarMapDisplay::GetSelectedSystem(void)
+	{
+		return m_SelectedSystem;
+	}
 }
 
 #endif
