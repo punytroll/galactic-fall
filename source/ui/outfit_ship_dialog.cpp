@@ -17,149 +17,70 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include "class_manager.h"
-#include "color.h"
-#include "globals.h"
-#include "key_event_information.h"
-#include "object_aspect_accessory.h"
-#include "object_aspect_name.h"
-#include "object_aspect_object_container.h"
-#include "object_aspect_outfitting.h"
-#include "object_aspect_physical.h"
+#include "../class_manager.h"
+#include "../color.h"
+#include "../globals.h"
+#include "../key_event_information.h"
+#include "../object_aspect_accessory.h"
+#include "../object_aspect_name.h"
+#include "../object_aspect_object_container.h"
+#include "../object_aspect_outfitting.h"
+#include "../object_aspect_physical.h"
+#include "../ship.h"
+#include "../slot.h"
+#include "../slot_class.h"
+#include "../storage.h"
+#include "../weapon.h"
+#include "../weapon_class.h"
+
+#include "button.h"
+#include "label.h"
 #include "outfit_ship_dialog.h"
-#include "ship.h"
-#include "slot.h"
-#include "slot_class.h"
-#include "storage.h"
-#include "ui/button.h"
-#include "ui/label.h"
-#include "ui/scroll_box.h"
-#include "weapon.h"
-#include "weapon_class.h"
+#include "scroll_box.h"
 
-class SlotListItem : public UI::Widget
+namespace UI
 {
-public:
-	SlotListItem(UI::Widget * SupWidget, Slot * Slot);
-	void Update(void);
-	// getters
-	bool GetSelected(void) const;
-	Slot * GetSlot(void);
-	// setters
-	void SetSelected(bool Selected);
-private:
-	// callbacks
-	void OnMouseEnter(void);
-	void OnMouseLeave(void);
-	// member variables
-	bool m_Selected;
-	Slot * m_Slot;
-	UI::Label * m_TypeOrWeaponLabel;
-};
-
-class AccessoryListItem : public UI::Widget
-{
-public:
-	AccessoryListItem(UI::Widget * SupWidget, Object * Accessory);
-	void Update(void);
-	// getters
-	bool GetSelected(void) const;
-	Object * GetAccessory(void);
-	// setters
-	void SetSelected(bool Selected);
-private:
-	// callbacks
-	void OnMouseEnter(void);
-	void OnMouseLeave(void);
-	// member variables
-	bool m_Selected;
-	Object * m_Accessory;
-};
-
-SlotListItem::SlotListItem(UI::Widget * SupWidget, Slot * Slot) :
-	UI::Widget(SupWidget),
-	m_Selected(false),
-	m_Slot(Slot)
-{
-	ConnectMouseEnterCallback(Callback(this, &SlotListItem::OnMouseEnter));
-	ConnectMouseLeaveCallback(Callback(this, &SlotListItem::OnMouseLeave));
-	// set to arbitrary design size
-	SetSize(Vector2f(100.0f, 100.0f));
+	class AccessoryListItem : public UI::Widget
+	{
+	public:
+		AccessoryListItem(UI::Widget * SupWidget, Object * Accessory);
+		void Update(void);
+		// getters
+		bool GetSelected(void) const;
+		Object * GetAccessory(void);
+		// setters
+		void SetSelected(bool Selected);
+	private:
+		// callbacks
+		void OnMouseEnter(void);
+		void OnMouseLeave(void);
+		// member variables
+		bool m_Selected;
+		Object * m_Accessory;
+	};
 	
-	UI::Label * IdentifierLabel(new UI::Label(this, Slot->GetName()));
-	
-	IdentifierLabel->SetPosition(Vector2f(5.0f, 5.0f));
-	IdentifierLabel->SetSize(Vector2f(90.0f, 20.0f));
-	IdentifierLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
-	IdentifierLabel->SetAnchorLeft(true);
-	IdentifierLabel->SetAnchorRight(true);
-	IdentifierLabel->SetAnchorTop(true);
-	m_TypeOrWeaponLabel = new UI::Label(this);
-	m_TypeOrWeaponLabel->SetPosition(Vector2f(25.0f, 25.0f));
-	m_TypeOrWeaponLabel->SetSize(Vector2f(70.0f, 20.0f));
-	m_TypeOrWeaponLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
-	m_TypeOrWeaponLabel->SetAnchorLeft(true);
-	m_TypeOrWeaponLabel->SetAnchorRight(true);
-	m_TypeOrWeaponLabel->SetAnchorTop(true);
-	Update();
-}
-
-void SlotListItem::Update(void)
-{
-	Object * MountedObject(dynamic_cast< Object * >(m_Slot->GetMountedObject().Get()));
-	
-	if(MountedObject != 0)
+	class SlotListItem : public UI::Widget
 	{
-		m_TypeOrWeaponLabel->SetText(MountedObject->GetAspectName()->GetName());
-		m_TypeOrWeaponLabel->SetTextColor(Color(0.6f, 0.8f, 0.6f, 1.0f));
-	}
-	else
-	{
-		m_TypeOrWeaponLabel->SetText(m_Slot->GetSlotClass()->GetName());
-		m_TypeOrWeaponLabel->SetTextColor(Color(0.8f, 0.6f, 0.6f, 1.0f));
-	}
+	public:
+		SlotListItem(UI::Widget * SupWidget, Slot * Slot);
+		void Update(void);
+		// getters
+		bool GetSelected(void) const;
+		Slot * GetSlot(void);
+		// setters
+		void SetSelected(bool Selected);
+	private:
+		// callbacks
+		void OnMouseEnter(void);
+		void OnMouseLeave(void);
+		// member variables
+		bool m_Selected;
+		Slot * m_Slot;
+		UI::Label * m_TypeOrWeaponLabel;
+	};
 }
 
-bool SlotListItem::GetSelected(void) const
-{
-	return m_Selected;
-}
-
-Slot * SlotListItem::GetSlot(void)
-{
-	return m_Slot;
-}
-
-void SlotListItem::SetSelected(bool Selected)
-{
-	m_Selected = Selected;
-	if(m_Selected == false)
-	{
-		UnsetBackgroundColor();
-	}
-	else
-	{
-		SetBackgroundColor(Color(0.4f, 0.1f, 0.1f, 1.0f));
-	}
-}
-
-void SlotListItem::OnMouseEnter(void)
-{
-	if(GetSelected() == false)
-	{
-		SetBackgroundColor(Color(0.3f, 0.2f, 0.2f, 1.0f));
-	}
-}
-
-void SlotListItem::OnMouseLeave(void)
-{
-	if(GetSelected() == false)
-	{
-		UnsetBackgroundColor();
-	}
-}
-
-AccessoryListItem::AccessoryListItem(UI::Widget * SupWidget, Object * Accessory) :
+UI::AccessoryListItem::AccessoryListItem(UI::Widget * SupWidget, Object * Accessory) :
 	UI::Widget(SupWidget),
 	m_Selected(false),
 	m_Accessory(Accessory)
@@ -192,17 +113,17 @@ AccessoryListItem::AccessoryListItem(UI::Widget * SupWidget, Object * Accessory)
 	SlotTypeLabel->SetAnchorTop(true);
 }
 
-bool AccessoryListItem::GetSelected(void) const
+bool UI::AccessoryListItem::GetSelected(void) const
 {
 	return m_Selected;
 }
 
-Object * AccessoryListItem::GetAccessory(void)
+Object * UI::AccessoryListItem::GetAccessory(void)
 {
 	return m_Accessory;
 }
 
-void AccessoryListItem::SetSelected(bool Selected)
+void UI::AccessoryListItem::SetSelected(bool Selected)
 {
 	m_Selected = Selected;
 	if(m_Selected == false)
@@ -215,7 +136,7 @@ void AccessoryListItem::SetSelected(bool Selected)
 	}
 }
 
-void AccessoryListItem::OnMouseEnter(void)
+void UI::AccessoryListItem::OnMouseEnter(void)
 {
 	if(GetSelected() == false)
 	{
@@ -223,7 +144,7 @@ void AccessoryListItem::OnMouseEnter(void)
 	}
 }
 
-void AccessoryListItem::OnMouseLeave(void)
+void UI::AccessoryListItem::OnMouseLeave(void)
 {
 	if(GetSelected() == false)
 	{
@@ -231,14 +152,97 @@ void AccessoryListItem::OnMouseLeave(void)
 	}
 }
 
-OutfitShipDialog::OutfitShipDialog(UI::Widget * SupWidget, Ship * Ship) :
+UI::SlotListItem::SlotListItem(UI::Widget * SupWidget, Slot * Slot) :
+	UI::Widget(SupWidget),
+	m_Selected(false),
+	m_Slot(Slot)
+{
+	ConnectMouseEnterCallback(Callback(this, &SlotListItem::OnMouseEnter));
+	ConnectMouseLeaveCallback(Callback(this, &SlotListItem::OnMouseLeave));
+	// set to arbitrary design size
+	SetSize(Vector2f(100.0f, 100.0f));
+	
+	UI::Label * IdentifierLabel(new UI::Label(this, Slot->GetName()));
+	
+	IdentifierLabel->SetPosition(Vector2f(5.0f, 5.0f));
+	IdentifierLabel->SetSize(Vector2f(90.0f, 20.0f));
+	IdentifierLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
+	IdentifierLabel->SetAnchorLeft(true);
+	IdentifierLabel->SetAnchorRight(true);
+	IdentifierLabel->SetAnchorTop(true);
+	m_TypeOrWeaponLabel = new UI::Label(this);
+	m_TypeOrWeaponLabel->SetPosition(Vector2f(25.0f, 25.0f));
+	m_TypeOrWeaponLabel->SetSize(Vector2f(70.0f, 20.0f));
+	m_TypeOrWeaponLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
+	m_TypeOrWeaponLabel->SetAnchorLeft(true);
+	m_TypeOrWeaponLabel->SetAnchorRight(true);
+	m_TypeOrWeaponLabel->SetAnchorTop(true);
+	Update();
+}
+
+void UI::SlotListItem::Update(void)
+{
+	Object * MountedObject(dynamic_cast< Object * >(m_Slot->GetMountedObject().Get()));
+	
+	if(MountedObject != 0)
+	{
+		m_TypeOrWeaponLabel->SetText(MountedObject->GetAspectName()->GetName());
+		m_TypeOrWeaponLabel->SetTextColor(Color(0.6f, 0.8f, 0.6f, 1.0f));
+	}
+	else
+	{
+		m_TypeOrWeaponLabel->SetText(m_Slot->GetSlotClass()->GetName());
+		m_TypeOrWeaponLabel->SetTextColor(Color(0.8f, 0.6f, 0.6f, 1.0f));
+	}
+}
+
+bool UI::SlotListItem::GetSelected(void) const
+{
+	return m_Selected;
+}
+
+Slot * UI::SlotListItem::GetSlot(void)
+{
+	return m_Slot;
+}
+
+void UI::SlotListItem::SetSelected(bool Selected)
+{
+	m_Selected = Selected;
+	if(m_Selected == false)
+	{
+		UnsetBackgroundColor();
+	}
+	else
+	{
+		SetBackgroundColor(Color(0.4f, 0.1f, 0.1f, 1.0f));
+	}
+}
+
+void UI::SlotListItem::OnMouseEnter(void)
+{
+	if(GetSelected() == false)
+	{
+		SetBackgroundColor(Color(0.3f, 0.2f, 0.2f, 1.0f));
+	}
+}
+
+void UI::SlotListItem::OnMouseLeave(void)
+{
+	if(GetSelected() == false)
+	{
+		UnsetBackgroundColor();
+	}
+}
+
+UI::OutfitShipDialog::OutfitShipDialog(UI::Widget * SupWidget, Ship * Ship) :
 	UI::Window(SupWidget, "Outfit Ship"),
 	m_Ship(Ship),
 	m_SelectedSlotListItem(0),
 	m_SelectedAccessoryListItem(0)
 {
-	ConnectSizeChangedCallback(Callback(this, &OutfitShipDialog::OnSizeChanged));
-	ConnectKeyCallback(Callback(this, &OutfitShipDialog::OnKey));
+	ConnectSizeChangedCallback(Callback(this, &UI::OutfitShipDialog::OnSizeChanged));
+	ConnectKeyCallback(Callback(this, &UI::OutfitShipDialog::OnKey));
 	m_LeftPane = new Widget(this);
 	m_LeftPane->SetPosition(Vector2f(10.0f, 40.0f));
 	m_LeftPane->SetSize(Vector2f(200.0f, GetSize()[1] - 50.0f));
@@ -341,7 +345,7 @@ OutfitShipDialog::OutfitShipDialog(UI::Widget * SupWidget, Ship * Ship) :
 	SetSize(Vector2f(600.0f, 400.0f));
 }
 
-void OutfitShipDialog::RebuildAccessoryList(void)
+void UI::OutfitShipDialog::RebuildAccessoryList(void)
 {
 	// empty the weapon list first
 	// save the selected weapon so we can reselect it if it is available after the rebuild
@@ -370,7 +374,7 @@ void OutfitShipDialog::RebuildAccessoryList(void)
 		
 		if((ContentObject->GetAspectAccessory() != 0) && (ContentObject->GetAspectAccessory()->GetSlot() == 0))
 		{
-			AccessoryListItem * NewAccessoryListItem(new AccessoryListItem(m_AccessoryScrollBox->GetContent(), ContentObject));
+			AccessoryListItem * NewAccessoryListItem(new UI::AccessoryListItem(m_AccessoryScrollBox->GetContent(), ContentObject));
 			
 			NewAccessoryListItem->SetPosition(Vector2f(5.0f, Top));
 			NewAccessoryListItem->SetSize(Vector2f(m_AccessoryScrollBox->GetContent()->GetSize()[0] - 10.0f, 50.0f));
@@ -388,7 +392,7 @@ void OutfitShipDialog::RebuildAccessoryList(void)
 	m_AccessoryScrollBox->GetContent()->SetAnchorRight(true);
 }
 
-void OutfitShipDialog::UpdateButtons(void)
+void UI::OutfitShipDialog::UpdateButtons(void)
 {
 	m_UnmountButton->SetEnabled(false);
 	m_MountButton->SetEnabled(false);
@@ -406,7 +410,7 @@ void OutfitShipDialog::UpdateButtons(void)
 	}
 }
 
-void OutfitShipDialog::OnMountClicked()
+void UI::OutfitShipDialog::OnMountClicked()
 {
 	assert(m_SelectedAccessoryListItem != 0);
 	assert(m_SelectedSlotListItem != 0);
@@ -422,12 +426,12 @@ void OutfitShipDialog::OnMountClicked()
 	UpdateButtons();
 }
 
-void OutfitShipDialog::OnOKClicked()
+void UI::OutfitShipDialog::OnOKClicked()
 {
 	Destroy();
 }
 
-void OutfitShipDialog::OnUnmountClicked()
+void UI::OutfitShipDialog::OnUnmountClicked()
 {
 	assert(m_SelectedSlotListItem != 0);
 	
@@ -446,7 +450,7 @@ void OutfitShipDialog::OnUnmountClicked()
 	UpdateButtons();
 }
 
-bool OutfitShipDialog::OnKey(const KeyEventInformation & KeyEventInformation)
+bool UI::OutfitShipDialog::OnKey(const KeyEventInformation & KeyEventInformation)
 {
 	if(((KeyEventInformation.GetKeyCode() == 9 /* ESCAPE */) || (KeyEventInformation.GetKeyCode() == 36 /* RETURN */) || (KeyEventInformation.GetKeyCode() == 25 /* W */)) && (KeyEventInformation.IsDown() == true))
 	{
@@ -457,7 +461,7 @@ bool OutfitShipDialog::OnKey(const KeyEventInformation & KeyEventInformation)
 	return true;
 }
 
-bool OutfitShipDialog::OnSlotListItemMouseButton(SlotListItem * SlotListItem, int Button, int State, float X, float Y)
+bool UI::OutfitShipDialog::OnSlotListItemMouseButton(UI::SlotListItem * SlotListItem, int Button, int State, float X, float Y)
 {
 	if((Button == 1 /* LEFT */) && (State == EV_DOWN))
 	{
@@ -475,7 +479,7 @@ bool OutfitShipDialog::OnSlotListItemMouseButton(SlotListItem * SlotListItem, in
 	return false;
 }
 
-bool OutfitShipDialog::OnAccessoryListItemMouseButton(AccessoryListItem * AccessoryListItem, int Button, int State, float X, float Y)
+bool UI::OutfitShipDialog::OnAccessoryListItemMouseButton(UI::AccessoryListItem * AccessoryListItem, int Button, int State, float X, float Y)
 {
 	if((Button == 1 /* LEFT */) && (State == EV_DOWN))
 	{
@@ -493,7 +497,7 @@ bool OutfitShipDialog::OnAccessoryListItemMouseButton(AccessoryListItem * Access
 	return false;
 }
 
-void OutfitShipDialog::OnSizeChanged(void)
+void UI::OutfitShipDialog::OnSizeChanged(void)
 {
 	float AvailableWidth(GetSize()[0]);
 	
