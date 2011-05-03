@@ -80,7 +80,6 @@
 #include "object_aspect_update.h"
 #include "object_aspect_visualization.h"
 #include "object_factory.h"
-#include "outfit_ship_dialog.h"
 #include "output_observer.h"
 #include "perspective.h"
 #include "planet.h"
@@ -104,6 +103,7 @@
 #include "ui/button.h"
 #include "ui/label.h"
 #include "ui/object_information_dialog.h"
+#include "ui/outfit_ship_dialog.h"
 #include "ui/star_map_display.h"
 #include "ui/widget.h"
 #include "user_interface.h"
@@ -163,7 +163,7 @@ UI::Label * g_TimeWarpLabel(0);
 // global dialog pointers
 MainMenuWindow * g_MainMenuWindow(0);
 MapDialog * g_MapDialog(0);
-OutfitShipDialog * g_OutfitShipDialog(0);
+UI::OutfitShipDialog * g_OutfitShipDialog(0);
 TimingDialog * g_TimingDialog(0);
 
 int g_LastMotionX(-1);
@@ -2675,7 +2675,7 @@ void ActionOpenOutfitShipDialog(void)
 {
 	if((g_OutfitShipDialog == 0) && (g_CharacterObserver->GetObservedCharacter().IsValid() == true))
 	{
-		g_OutfitShipDialog = new OutfitShipDialog(g_UserInterface->GetRootWidget(), g_CharacterObserver->GetObservedCharacter()->GetShip());
+		g_OutfitShipDialog = new UI::OutfitShipDialog(g_UserInterface->GetRootWidget(), g_CharacterObserver->GetObservedCharacter()->GetShip());
 		g_OutfitShipDialog->GrabKeyFocus();
 		g_OutfitShipDialog->ConnectDestroyingCallback(Callback(OnOutfitShipDialogDestroying));
 	}
