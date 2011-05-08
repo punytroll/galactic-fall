@@ -30,14 +30,15 @@
 
 class Color;
 class KeyEventInformation;
-class UserInterface;
 
 namespace UI
 {
+	class UserInterface;
+	
 	class Widget
 	{
 	public:
-		friend class ::UserInterface;
+		friend class UI::UserInterface;
 		
 		Widget(Widget * SupWidget = 0, const std::string & Name = "");
 		virtual ~Widget(void);

@@ -25,7 +25,7 @@
 #include "output_observer.h"
 #include "planet.h"
 #include "ui/planet_dialog.h"
-#include "user_interface.h"
+#include "ui/user_interface.h"
 
 /// @todo evil hack
 class CommandMind;

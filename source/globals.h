@@ -44,7 +44,6 @@ class ObjectFactory;
 class ShipClass;
 class SlotClass;
 class SystemStatistics;
-class UserInterface;
 class TimeoutNotificationManager;
 class WeaponClass;
 
@@ -55,6 +54,11 @@ namespace Graphics
 	class ModelManager;
 	class Node;
 	class TextureManager;
+}
+
+namespace UI
+{
+	class UserInterface;
 }
 
 enum WantReturnCode
@@ -91,7 +95,7 @@ extern Graphics::Node * g_ShotLayer;
 extern ClassManager< SlotClass > * g_SlotClassManager;
 extern SystemStatistics * g_SystemStatistics;
 extern Graphics::TextureManager * g_TextureManager;
-extern UserInterface * g_UserInterface;
+extern UI::UserInterface * g_UserInterface;
 extern ClassManager< WeaponClass > * g_WeaponClassManager;
 
 #endif

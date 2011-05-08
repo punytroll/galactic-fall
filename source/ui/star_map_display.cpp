@@ -30,9 +30,8 @@
 #include "../object_aspect_name.h"
 #include "../object_aspect_position.h"
 #include "../system.h"
-#include "../user_interface.h"
-
 #include "star_map_display.h"
+#include "user_interface.h"
 
 UI::StarMapDisplay::StarMapDisplay(Widget * SupWidget, System * System, Character * Character) :
 	Widget(SupWidget),

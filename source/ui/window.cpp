@@ -19,9 +19,9 @@
 
 #include "../callbacks/callbacks.h"
 #include "../globals.h"
-#include "../user_interface.h"
 #include "border.h"
 #include "label.h"
+#include "user_interface.h"
 #include "window.h"
 
 UI::Window::Window(Widget * SupWidget, const std::string & Title) :
