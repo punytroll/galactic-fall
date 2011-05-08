@@ -169,11 +169,6 @@ list_h = \
 local_file_data_channel_h = \
 	local_file_data_channel.h
 
-load_game_dialog_h = \
-	load_game_dialog.h \
-	$(ui_dialog_h) \
-	$(timeout_notifications_h)
-
 main_menu_window_h = \
 	main_menu_window.h \
 	$(ui_dialog_h) \
@@ -308,11 +303,6 @@ real_time_h = \
 referencing_h = \
 	referencing.h
 
-save_game_dialog_h = \
-	save_game_dialog.h \
-	$(ui_dialog_h) \
-	$(timeout_notifications_h)
-
 scanner_display_h = \
 	scanner_display.h \
 	$(referencing_h) \
@@ -414,6 +404,11 @@ ui_label_h = \
 	$(color_h) \
 	$(ui_widget_h)
 
+ui_load_game_dialog_h = \
+	ui/load_game_dialog.h \
+	$(ui_dialog_h) \
+	$(timeout_notifications_h)
+
 ui_object_information_dialog_h = \
 	ui/object_information_dialog.h \
 	$(referencing_h) \
@@ -426,6 +421,11 @@ ui_outfit_ship_dialog_h = \
 ui_planet_dialog_h = \
 	ui/planet_dialog.h \
 	$(ui_window_h)
+
+ui_save_game_dialog_h = \
+	ui/save_game_dialog.h \
+	$(ui_dialog_h) \
+	$(timeout_notifications_h)
 
 ui_scroll_bar_h = \
 	ui/scroll_bar.h \
@@ -672,16 +672,13 @@ binary: $(OBJECT_FILES) $(LDFLAGS_configuration)
 .object-files/key_event_information.o: key_event_information.cpp $(key_event_information_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-.object-files/load_game_dialog.o: load_game_dialog.cpp $(globals_h) $(key_event_information_h) $(load_game_dialog_h) $(real_time_h) $(ui_button_h) $(ui_label_h) $(ui_scroll_box_h)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-
 .object-files/local_file_data_channel.o: local_file_data_channel.cpp $(local_file_data_channel_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags libarxx` -c $< -o $@
 
 .object-files/main.o: main.cpp $(arx_reading_h) $(asset_class_h) $(battery_h) $(battery_class_h) $(camera_h) $(commodity_h) $(commodity_class_h) $(character_h) $(color_h) $(command_mind_h) $(draw_text_h) $(faction_h) $(file_handling_h) $(galaxy_h) $(game_time_h) $(generator_h) $(generator_class_h) $(goals_h) $(graphics_engine_h) $(graphics_mesh_manager_h) $(graphics_model_h) $(graphics_model_manager_h) $(graphics_model_object_h) $(graphics_particle_system_h) $(graphics_scene_h) $(graphics_texture_manager_h) $(key_event_information_h) $(main_menu_window_h) $(map_dialog_h) $(map_knowledge_h) $(math_h) $(message_h) $(message_dispatcher_h) $(messages_h) $(mind_h) $(mini_map_display_h) $(object_aspect_accessory_h) $(object_aspect_name_h) $(object_aspect_object_container_h) $(object_aspect_outfitting_h) $(object_aspect_physical_h) $(object_aspect_position_h) $(object_aspect_update_h) $(object_aspect_visualization_h) $(object_factory_h) $(output_observer_h) $(perspective_h) $(planet_h) $(real_time_h) $(scanner_display_h) $(settings_h) $(ship_h) $(ship_class_h) $(shot_h) $(slot_h) $(slot_class_h) $(star_h) $(state_machine_h) $(states_h) $(storage_h) $(string_cast_h) $(system_h) $(system_statistics_h) $(timeout_notifications_h) $(timing_dialog_h) $(ui_button_h) $(ui_label_h) $(ui_object_information_dialog_h) $(ui_outfit_ship_dialog_h) $(ui_star_map_display_h) $(ui_widget_h) $(user_interface_h) $(visualizations_h) $(weapon_h) $(weapon_class_h) $(write_to_xml_stream_h) $(xml_puny_dom_h) $(xml_stream_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-.object-files/main_menu_window.o: main_menu_window.cpp $(callbacks_callbacks_h) $(file_handling_h) $(key_event_information_h) $(load_game_dialog_h) $(main_menu_window_h) $(save_game_dialog_h) $(ui_button_h) $(ui_label_h)
+.object-files/main_menu_window.o: main_menu_window.cpp $(callbacks_callbacks_h) $(file_handling_h) $(key_event_information_h) $(main_menu_window_h) $(ui_button_h) $(ui_label_h) $(ui_load_game_dialog_h) $(ui_save_game_dialog_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 .object-files/map_dialog.o: map_dialog.cpp $(callbacks_callbacks_h) $(globals_h) $(key_event_information_h) $(map_dialog_h) $(object_aspect_name_h) $(system_h) $(ui_button_h) $(ui_label_h) $(ui_star_map_display_h)
@@ -747,9 +744,6 @@ binary: $(OBJECT_FILES) $(LDFLAGS_configuration)
 .object-files/real_time.o: real_time.cpp $(real_time_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-.object-files/save_game_dialog.o: save_game_dialog.cpp $(globals_h) $(key_event_information_h) $(real_time_h) $(save_game_dialog_h) $(ui_button_h) $(ui_label_h) $(ui_scroll_box_h)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-
 .object-files/scanner_display.o: scanner_display.cpp $(object_aspect_physical_h) $(scanner_display_h) $(ship_h) $(star_h) $(system.h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
@@ -813,6 +807,9 @@ binary: $(OBJECT_FILES) $(LDFLAGS_configuration)
 .object-files/ui/label.o: ui/label.cpp $(ui_label_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
+.object-files/ui/load_game_dialog.o: ui/load_game_dialog.cpp $(globals_h) $(key_event_information_h) $(real_time_h) $(ui_button_h) $(ui_label_h) $(ui_load_game_dialog_h) $(ui_scroll_box_h)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
 .object-files/ui/object_information_dialog.o: ui/object_information_dialog.cpp  $(globals_h) $(object_h) $(object_aspect_accessory_h) $(object_aspect_name_h) $(object_aspect_object_container_h) $(object_aspect_physical_h)  $(slot_h) $(slot_class_h) $(string_cast_h) $(ui_button_h) $(ui_label_h) $(ui_object_information_dialog_h) $(ui_scroll_bar_h) $(ui_scroll_box_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
@@ -820,6 +817,9 @@ binary: $(OBJECT_FILES) $(LDFLAGS_configuration)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 .object-files/ui/planet_dialog.o: ui/planet_dialog.cpp $(asset_class_h) $(callbacks_callbacks_h) $(character_h) $(color_h) $(globals_h) $(key_event_information_h) $(object_aspect_name_h) $(planet_h) $(ship_h) $(string_cast_h) $(ui_button_h) $(ui_label_h) $(ui_planet_dialog_h) $(ui_trade_center_dialog_h)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+.object-files/ui/save_game_dialog.o: ui/save_game_dialog.cpp $(globals_h) $(key_event_information_h) $(real_time_h) $(ui_button_h) $(ui_label_h) $(ui_save_game_dialog_h) $(ui_scroll_box_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 .object-files/ui/scroll_bar.o: ui/scroll_bar.cpp $(callbacks_callbacks_h) $(color_h) $(globals_h) $(ui_button_h) $(ui_scroll_bar_h) $(user_interface_h)

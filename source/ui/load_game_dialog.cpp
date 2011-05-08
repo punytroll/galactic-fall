@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2007  Hagen Möbius
+ * Copyright (C) 2008  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,96 +21,46 @@
 
 #include <fstream>
 
-#include "file_handling.h"
-#include "globals.h"
-#include "key_event_information.h"
-#include "real_time.h"
-#include "save_game_dialog.h"
-#include "ui/button.h"
-#include "ui/label.h"
-#include "ui/scroll_box.h"
+#include "../file_handling.h"
+#include "../globals.h"
+#include "../key_event_information.h"
+#include "../real_time.h"
+#include "button.h"
+#include "label.h"
+#include "load_game_dialog.h"
+#include "scroll_box.h"
 
-class DirectoryEntryItem : public UI::Widget
+// this class is declared here, so we can use it, but defined in save_game_dialog.cpp
+namespace UI
 {
-public:
-	DirectoryEntryItem(UI::Widget * SupWidget, const std::string & Caption);
-	void Update(void);
-	// getters
-	const std::string & GetCaption(void) const;
-	bool GetSelected(void) const;
-	// setters
-	void SetSelected(bool Selected);
-private:
-	// callbacks
-	void OnMouseEnter(void);
-	void OnMouseLeave(void);
-	// member variables
-	bool m_Selected;
-	UI::Label * m_CaptionLabel;
-};
-
-DirectoryEntryItem::DirectoryEntryItem(UI::Widget * SupWidget, const std::string & Caption) :
-	UI::Widget(SupWidget),
-	m_Selected(false)
-{
-	ConnectMouseEnterCallback(Callback(this, &DirectoryEntryItem::OnMouseEnter));
-	ConnectMouseLeaveCallback(Callback(this, &DirectoryEntryItem::OnMouseLeave));
-	m_CaptionLabel = new UI::Label(this, Caption);
-	m_CaptionLabel->SetPosition(Vector2f(5.0f, 0.0f));
-	m_CaptionLabel->SetSize(Vector2f(GetSize()[0] - 10.0f, 20.0f));
-	m_CaptionLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
-	m_CaptionLabel->SetAnchorLeft(true);
-	m_CaptionLabel->SetAnchorRight(true);
-	m_CaptionLabel->SetAnchorTop(true);
-}
-
-const std::string & DirectoryEntryItem::GetCaption(void) const
-{
-	return m_CaptionLabel->GetText();
-}
-
-bool DirectoryEntryItem::GetSelected(void) const
-{
-	return m_Selected;
-}
-
-void DirectoryEntryItem::SetSelected(bool Selected)
-{
-	m_Selected = Selected;
-	if(m_Selected == false)
+	class DirectoryEntryItem : public UI::Widget
 	{
-		UnsetBackgroundColor();
-	}
-	else
-	{
-		SetBackgroundColor(Color(0.4f, 0.1f, 0.1f, 1.0f));
-	}
+	public:
+		DirectoryEntryItem(UI::Widget * SupWidget, const std::string & Caption);
+		void Update(void);
+		// getters
+		const std::string & GetCaption(void) const;
+		bool GetSelected(void) const;
+		// setters
+		void SetSelected(bool Selected);
+	private:
+		// callbacks
+		void OnMouseEnter(void);
+		void OnMouseLeave(void);
+		// member variables
+		bool m_Selected;
+		UI::Label * m_CaptionLabel;
+	};
 }
 
-void DirectoryEntryItem::OnMouseEnter(void)
-{
-	if(GetSelected() == false)
-	{
-		SetBackgroundColor(Color(0.3f, 0.2f, 0.2f, 1.0f));
-	}
-}
-
-void DirectoryEntryItem::OnMouseLeave(void)
-{
-	if(GetSelected() == false)
-	{
-		UnsetBackgroundColor();
-	}
-}
-
-SaveGameDialog::SaveGameDialog(UI::Widget * SupWidget) :
+UI::LoadGameDialog::LoadGameDialog(UI::Widget * SupWidget) :
 	UI::Dialog(SupWidget),
 	m_SelectedDirectoryEntryItem(0)
 {
-	GetTitleLabel()->SetText("Save Game");
+	GetTitleLabel()->SetText("Load Game");
 	SetPosition(Vector2f(120.0f, 200.0f));
 	SetSize(Vector2f(300.0f, 400.0f));
-	ConnectKeyCallback(Callback(this, &SaveGameDialog::OnKey));
+	ConnectKeyCallback(Callback(this, &LoadGameDialog::OnKey));
 	m_OKButton = new UI::Button(this);
 	m_OKButton->SetSize(Vector2f(100.0f, 20.0f));
 	m_OKButton->SetPosition(Vector2f(GetSize()[0] - 10.0f - m_OKButton->GetSize()[0], GetSize()[1] - 10.0f - m_OKButton->GetSize()[1]));
@@ -118,7 +68,7 @@ SaveGameDialog::SaveGameDialog(UI::Widget * SupWidget) :
 	m_OKButton->SetAnchorLeft(false);
 	m_OKButton->SetAnchorRight(true);
 	m_OKButton->SetAnchorTop(false);
-	m_OKButton->ConnectClickedCallback(Bind1(Callback(dynamic_cast< Dialog * >(this), &SaveGameDialog::_Close), Dialog::OK_BUTTON));
+	m_OKButton->ConnectClickedCallback(Bind1(Callback(dynamic_cast< Dialog * >(this), &LoadGameDialog::_Close), Dialog::OK_BUTTON));
 	
 	UI::Label * OKButtonLabel(new UI::Label(m_OKButton, "OK"));
 	
@@ -133,7 +83,7 @@ SaveGameDialog::SaveGameDialog(UI::Widget * SupWidget) :
 	m_CancelButton->SetAnchorLeft(false);
 	m_CancelButton->SetAnchorRight(true);
 	m_CancelButton->SetAnchorTop(false);
-	m_CancelButton->ConnectClickedCallback(Bind1(Callback(dynamic_cast< Dialog * >(this), &SaveGameDialog::_Close), Dialog::CANCEL_BUTTON));
+	m_CancelButton->ConnectClickedCallback(Bind1(Callback(dynamic_cast< Dialog * >(this), &LoadGameDialog::_Close), Dialog::CANCEL_BUTTON));
 	
 	UI::Label * CancelButtonLabel(new UI::Label(m_CancelButton, "Cancel"));
 	
@@ -159,7 +109,7 @@ SaveGameDialog::SaveGameDialog(UI::Widget * SupWidget) :
 	m_FileNameLabel->SetBackgroundColor(Color(0.1f, 0.1f, 0.1f, 1.0f));
 	m_FileNameLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	m_FileNameLabel->SetAnchorRight(true);
-	m_FileNameLabel->ConnectKeyCallback(Callback(this, &SaveGameDialog::OnFileNameLabelKey));
+	m_FileNameLabel->ConnectKeyCallback(Callback(this, &LoadGameDialog::OnFileNameLabelKey));
 	m_FileNameLabel->GrabKeyFocus();
 	m_FileScrollBox = new UI::ScrollBox(this);
 	m_FileScrollBox->SetPosition(Vector2f(10.0f, 110.0f));
@@ -170,7 +120,7 @@ SaveGameDialog::SaveGameDialog(UI::Widget * SupWidget) :
 	m_FileScrollBox->SetHorizontalScrollBarVisible(false);
 }
 
-std::string SaveGameDialog::GetFilePath(void)
+std::string UI::LoadGameDialog::GetFilePath(void)
 {
 	if(m_FileNameLabel->GetText() == "")
 	{
@@ -182,7 +132,7 @@ std::string SaveGameDialog::GetFilePath(void)
 	}
 }
 
-void SaveGameDialog::SetDirectoryPath(const std::string & DirectoryPath)
+void UI::LoadGameDialog::SetDirectoryPath(const std::string & DirectoryPath)
 {
 	_DirectoryPath = DirectoryPath;
 	while(m_FileScrollBox->GetContent()->GetSubWidgets().empty() == false)
@@ -204,13 +154,13 @@ void SaveGameDialog::SetDirectoryPath(const std::string & DirectoryPath)
 		EntryLabel->SetPosition(Vector2f(5.0f, Top));
 		EntryLabel->SetSize(Vector2f(m_FileScrollBox->GetContent()->GetSize()[0] - 10.0f, 20.0f));
 		EntryLabel->SetAnchorRight(true);
-		EntryLabel->ConnectMouseButtonCallback(Bind1(Callback(this, &SaveGameDialog::OnDirectoryEntryItemMouseButton), EntryLabel));
+		EntryLabel->ConnectMouseButtonCallback(Bind1(Callback(this, &LoadGameDialog::OnDirectoryEntryItemMouseButton), EntryLabel));
 		Top += 25.0f;
 	}
 	m_FileScrollBox->GetContent()->SetSize(Vector2f(m_FileScrollBox->GetView()->GetSize()[0], std::max(Top, m_FileScrollBox->GetView()->GetSize()[1])));
 }
 
-void SaveGameDialog::ShowErrorMessage(const std::string & ErrorMessage)
+void UI::LoadGameDialog::ShowErrorMessage(const std::string & ErrorMessage)
 {
 	if(m_ErrorMessageTimeoutNotification.IsValid() == true)
 	{
@@ -218,15 +168,15 @@ void SaveGameDialog::ShowErrorMessage(const std::string & ErrorMessage)
 	}
 	m_ErrorMessage->SetVisible(true);
 	m_ErrorMessage->SetText(ErrorMessage);
-	m_ErrorMessageTimeoutNotification = g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 2.0f, Callback(this, &SaveGameDialog::HideErrorMessage));
+	m_ErrorMessageTimeoutNotification = g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 2.0f, Callback(this, &LoadGameDialog::HideErrorMessage));
 }
 
-void SaveGameDialog::HideErrorMessage(void)
+void UI::LoadGameDialog::HideErrorMessage(void)
 {
 	m_ErrorMessage->SetVisible(false);
 }
 
-void SaveGameDialog::_OnFileNameLabelTextChanged(void)
+void UI::LoadGameDialog::_OnFileNameLabelTextChanged(void)
 {
 	if(m_SelectedDirectoryEntryItem != 0)
 	{
@@ -234,9 +184,9 @@ void SaveGameDialog::_OnFileNameLabelTextChanged(void)
 		m_SelectedDirectoryEntryItem = 0;
 	}
 	
-	const std::list< Widget * > & ContentSubWidgets(m_FileScrollBox->GetContent()->GetSubWidgets());
+	const std::list< UI::Widget * > & ContentSubWidgets(m_FileScrollBox->GetContent()->GetSubWidgets());
 	
-	for(std::list< Widget * >::const_iterator ContentSubWidgetIterator = ContentSubWidgets.begin(); ContentSubWidgetIterator != ContentSubWidgets.end(); ++ContentSubWidgetIterator)
+	for(std::list< UI::Widget * >::const_iterator ContentSubWidgetIterator = ContentSubWidgets.begin(); ContentSubWidgetIterator != ContentSubWidgets.end(); ++ContentSubWidgetIterator)
 	{
 		DirectoryEntryItem * EntryLabel(dynamic_cast< DirectoryEntryItem * >(*ContentSubWidgetIterator));
 		
@@ -253,7 +203,7 @@ void SaveGameDialog::_OnFileNameLabelTextChanged(void)
 	}
 }
 
-bool SaveGameDialog::OnFileNameLabelKey(const KeyEventInformation & KeyEventInformation)
+bool UI::LoadGameDialog::OnFileNameLabelKey(const KeyEventInformation & KeyEventInformation)
 {
 	if((KeyEventInformation.GetKeyCode() == 9 /* ESCAPE */) || (KeyEventInformation.GetKeyCode() == 36 /* RETURN */))
 	{
@@ -278,7 +228,7 @@ bool SaveGameDialog::OnFileNameLabelKey(const KeyEventInformation & KeyEventInfo
 	return true;
 }
 
-bool SaveGameDialog::OnKey(const KeyEventInformation & KeyEventInformation)
+bool UI::LoadGameDialog::OnKey(const KeyEventInformation & KeyEventInformation)
 {
 	if((KeyEventInformation.GetKeyCode() == 9 /* ESCAPE */) && (KeyEventInformation.IsDown() == true))
 	{
@@ -296,7 +246,7 @@ bool SaveGameDialog::OnKey(const KeyEventInformation & KeyEventInformation)
 	return false;
 }
 
-bool SaveGameDialog::OnDirectoryEntryItemMouseButton(DirectoryEntryItem * DirectoryEntryItem, int Button, int State, float X, float Y)
+bool UI::LoadGameDialog::OnDirectoryEntryItemMouseButton(UI::DirectoryEntryItem * DirectoryEntryItem, int Button, int State, float X, float Y)
 {
 	if((Button == 1 /* LEFT */) && (State == EV_DOWN))
 	{

@@ -22,12 +22,11 @@
 #include "ui/dialog.h"
 #include "ui/window.h"
 
-class LoadGameDialog;
-class SaveGameDialog;
-
 namespace UI
 {
 	class Button;
+	class LoadGameDialog;
+	class SaveGameDialog;
 }
 
 class MainMenuWindow : public UI::Window
@@ -57,12 +56,12 @@ private:
 	bool _DestroyOnLoadGameDialogDestroy;
 	bool _DestroyOnSaveGameDialogDestroy;
 	UI::Button * _LoadGameButton;
-	LoadGameDialog * _LoadGameDialog;
+	UI::LoadGameDialog * _LoadGameDialog;
 	UI::Button * _NewGameButton;
 	UI::Button * _QuitButton;
 	UI::Button * _ResumeGameButton;
 	UI::Button * _SaveGameButton;
-	SaveGameDialog * _SaveGameDialog;
+	UI::SaveGameDialog * _SaveGameDialog;
 };
 
 inline UI::Button * MainMenuWindow::GetLoadGameButton(void)
