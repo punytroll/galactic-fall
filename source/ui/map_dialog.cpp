@@ -21,26 +21,26 @@
 
 #include <GL/gl.h>
 
-#include "callbacks/callbacks.h"
-#include "globals.h"
-#include "key_event_information.h"
+#include "../callbacks/callbacks.h"
+#include "../globals.h"
+#include "../key_event_information.h"
+#include "../object_aspect_name.h"
+#include "../system.h"
+#include "button.h"
+#include "label.h"
 #include "map_dialog.h"
-#include "object_aspect_name.h"
-#include "system.h"
-#include "ui/button.h"
-#include "ui/label.h"
-#include "ui/star_map_display.h"
+#include "star_map_display.h"
 
-MapDialog::MapDialog(Widget * SupWidget, System * System, Character * Character) :
-	Window(SupWidget, "Map: " + System->GetAspectName()->GetName())
+UI::MapDialog::MapDialog(UI::Widget * SupWidget, System * System, Character * Character) :
+	UI::Window(SupWidget, "Map: " + System->GetAspectName()->GetName())
 {
 	SetPosition(Vector2f(70.0f, 400.0f));
 	SetSize(Vector2f(500.0f, 530.0f));
-	ConnectKeyCallback(Callback(this, &MapDialog::OnKey));
+	ConnectKeyCallback(Callback(this, &UI::MapDialog::OnKey));
 	m_OKButton = new UI::Button(this);
 	m_OKButton->SetPosition(Vector2f(390.0f, 500.0f));
 	m_OKButton->SetSize(Vector2f(100.0f, 20.0f));
-	m_OKButton->ConnectClickedCallback(Callback(this, &MapDialog::OnOKClicked));
+	m_OKButton->ConnectClickedCallback(Callback(this, &UI::MapDialog::OnOKClicked));
 	
 	UI::Label * OKButtonLabel = new UI::Label(m_OKButton, "OK");
 	
@@ -54,12 +54,12 @@ MapDialog::MapDialog(Widget * SupWidget, System * System, Character * Character)
 	m_StarMapDisplay->SetBackgroundColor(Color(0.15f, 0.15f, 0.15f, 1.0f));
 }
 
-void MapDialog::OnOKClicked(void)
+void UI::MapDialog::OnOKClicked(void)
 {
 	Destroy();
 }
 
-bool MapDialog::OnKey(const KeyEventInformation & KeyEventInformation)
+bool UI::MapDialog::OnKey(const KeyEventInformation & KeyEventInformation)
 {
 	if(((KeyEventInformation.GetKeyCode() == 9 /* ESCAPE */) || (KeyEventInformation.GetKeyCode() == 36 /* RETURN */) || (KeyEventInformation.GetKeyCode() == 58 /* M */)) && (KeyEventInformation.IsDown() == true))
 	{

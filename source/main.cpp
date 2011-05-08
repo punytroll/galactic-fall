@@ -63,7 +63,6 @@
 #include "graphics_texture_manager.h"
 #include "key_event_information.h"
 #include "main_menu_window.h"
-#include "map_dialog.h"
 #include "map_knowledge.h"
 #include "math.h"
 #include "message.h"
@@ -102,6 +101,7 @@
 #include "timing_dialog.h"
 #include "ui/button.h"
 #include "ui/label.h"
+#include "ui/map_dialog.h"
 #include "ui/object_information_dialog.h"
 #include "ui/outfit_ship_dialog.h"
 #include "ui/star_map_display.h"
@@ -162,7 +162,7 @@ UI::Label * g_TimeWarpLabel(0);
 
 // global dialog pointers
 MainMenuWindow * g_MainMenuWindow(0);
-MapDialog * g_MapDialog(0);
+UI::MapDialog * g_MapDialog(0);
 UI::OutfitShipDialog * g_OutfitShipDialog(0);
 TimingDialog * g_TimingDialog(0);
 
@@ -2652,7 +2652,7 @@ void ActionOpenMapDialog(void)
 		
 		assert(CurrentSystem != 0);
 		g_Pause = true;
-		g_MapDialog = new MapDialog(g_UserInterface->GetRootWidget(), CurrentSystem, g_CharacterObserver->GetObservedCharacter().Get());
+		g_MapDialog = new UI::MapDialog(g_UserInterface->GetRootWidget(), CurrentSystem, g_CharacterObserver->GetObservedCharacter().Get());
 		g_MapDialog->GrabKeyFocus();
 		g_MapDialog->ConnectDestroyingCallback(Callback(OnMapDialogDestroying));
 		if(g_InputMind.IsValid() == true)
