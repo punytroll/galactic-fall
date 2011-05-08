@@ -68,7 +68,6 @@
 #include "message_dispatcher.h"
 #include "messages.h"
 #include "mind.h"
-#include "mini_map_display.h"
 #include "object_aspect_accessory.h"
 #include "object_aspect_name.h"
 #include "object_aspect_object_container.h"
@@ -102,6 +101,7 @@
 #include "ui/label.h"
 #include "ui/main_menu_window.h"
 #include "ui/map_dialog.h"
+#include "ui/mini_map_display.h"
 #include "ui/object_information_dialog.h"
 #include "ui/outfit_ship_dialog.h"
 #include "ui/star_map_display.h"
@@ -152,7 +152,7 @@ UI::Label * g_FuelLabel(0);
 UI::Label * g_HullLabel(0);
 UI::Label * g_MessageLabel(0);
 UI::Widget * g_MiniMap(0);
-MiniMapDisplay * g_MiniMapDisplay(0);
+UI::MiniMapDisplay * g_MiniMapDisplay(0);
 UI::Widget * g_Scanner(0);
 ScannerDisplay * g_ScannerDisplay(0);
 UI::Label * g_SystemLabel(0);
@@ -3402,7 +3402,7 @@ int main(int argc, char ** argv)
 	g_TimeWarpLabel = dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/time_warp"));
 	g_MiniMap = g_UserInterface->GetWidget("/mini_map");
 		g_CurrentSystemLabel = dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/mini_map/current_system"));
-		g_MiniMapDisplay = dynamic_cast< MiniMapDisplay * >(g_UserInterface->GetWidget("/mini_map/display"));
+		g_MiniMapDisplay = dynamic_cast< UI::MiniMapDisplay * >(g_UserInterface->GetWidget("/mini_map/display"));
 	g_Scanner = g_UserInterface->GetWidget("/scanner");
 		g_TargetLabel = dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/scanner/target"));
 		g_TargetFactionLabel = dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/scanner/target_faction"));

@@ -17,22 +17,25 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef MINI_MAP_DISPLAY_H
-#define MINI_MAP_DISPLAY_H
+#ifndef UI_MINI_MAP_DISPLAY_H
+#define UI_MINI_MAP_DISPLAY_H
 
-#include "referencing.h"
-#include "viewport.h"
+#include "../referencing.h"
+#include "../viewport.h"
 
 class Ship;
 
-class MiniMapDisplay : public Viewport
+namespace UI
 {
-public:
-	MiniMapDisplay(Widget * SupWidget = 0);
-	void SetOwner(Reference< Ship > Owner);
-	virtual void DrawInViewport(void) const;
-private:
-	Reference< Ship > m_Owner;
-};
+	class MiniMapDisplay : public Viewport
+	{
+	public:
+		MiniMapDisplay(UI::Widget * SupWidget = 0);
+		void SetOwner(Reference< Ship > Owner);
+		virtual void DrawInViewport(void) const;
+	private:
+		Reference< Ship > m_Owner;
+	};
+}
 
 #endif
