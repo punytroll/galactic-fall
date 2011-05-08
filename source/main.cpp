@@ -105,8 +105,8 @@
 #include "ui/scanner_display.h"
 #include "ui/star_map_display.h"
 #include "ui/timing_dialog.h"
+#include "ui/user_interface.h"
 #include "ui/widget.h"
-#include "user_interface.h"
 #include "visualization_prototype.h"
 #include "visualizations.h"
 #include "weapon.h"
@@ -142,7 +142,7 @@ ObjectFactory * g_ObjectFactory(0);
 ClassManager< ShipClass > * g_ShipClassManager(0);
 ClassManager< SlotClass > * g_SlotClassManager(0);
 SystemStatistics * g_SystemStatistics(0);
-UserInterface * g_UserInterface(0);
+UI::UserInterface * g_UserInterface(0);
 ClassManager< WeaponClass > * g_WeaponClassManager(0);
 
 // global widget pointers
@@ -3388,7 +3388,7 @@ int main(int argc, char ** argv)
 	g_GameTimeTimeoutNotifications = new TimeoutNotificationManager();
 	g_RealTimeTimeoutNotifications = new TimeoutNotificationManager();
 	// the user interface component should be available before the OpenGL context is created
-	g_UserInterface = new UserInterface();
+	g_UserInterface = new UI::UserInterface();
 	// set first timeout for widget collector, it will reinsert itself on callback
 	g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 5.0f, Callback(CollectWidgetsRecurrent));
 	// the user interface widgets must be loaded before the first Resize() call

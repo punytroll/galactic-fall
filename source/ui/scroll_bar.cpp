@@ -20,9 +20,9 @@
 #include "../callbacks/callbacks.h"
 #include "../color.h"
 #include "../globals.h"
-#include "../user_interface.h"
 #include "button.h"
 #include "scroll_bar.h"
+#include "user_interface.h"
 
 static const float g_ScrollBarTrackerBorderWidth = 4.0f;
 

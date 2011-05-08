@@ -60,8 +60,8 @@
 #include "ui/label.h"
 #include "ui/mini_map_display.h"
 #include "ui/scanner_display.h"
+#include "ui/user_interface.h"
 #include "ui/widget.h"
-#include "user_interface.h"
 #include "visualization_prototype.h"
 #include "weapon_class.h"
 

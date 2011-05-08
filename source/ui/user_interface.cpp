@@ -21,20 +21,20 @@
 
 #include <GL/gl.h>
 
-#include "callbacks/callbacks.h"
-#include "ui/widget.h"
+#include "../callbacks/callbacks.h"
 #include "user_interface.h"
+#include "widget.h"
 
-UserInterface::UserInterface(void) :
+UI::UserInterface::UserInterface(void) :
 	m_CaptureWidget(0),
 	m_HoverWidget(0),
 	m_RootWidget(new UI::Widget(0))
 {
 	m_RootWidget->SetSize(Vector2f(1280.0f, 1024.0f));
-	m_RootWidget->ConnectDestroyingCallback(Callback(this, &UserInterface::OnRootWidgetDestroying));
+	m_RootWidget->ConnectDestroyingCallback(Callback(this, &UI::UserInterface::OnRootWidgetDestroying));
 }
 
-UserInterface::~UserInterface(void)
+UI::UserInterface::~UserInterface(void)
 {
 	if(m_CaptureWidgetDestroyingCallbackConnectionHandle.IsValid() == true)
 	{
@@ -49,7 +49,7 @@ UserInterface::~UserInterface(void)
 	m_RootWidget = 0;
 }
 
-void UserInterface::Draw(void) const
+void UI::UserInterface::Draw(void) const
 {
 	if((m_RootWidget != 0) && (m_RootWidget->IsVisible() == true))
 	{
@@ -63,16 +63,16 @@ void UserInterface::Draw(void) const
 	}
 }
 
-void UserInterface::SetCaptureWidget(UI::Widget * Widget)
+void UI::UserInterface::SetCaptureWidget(UI::Widget * Widget)
 {
 	if(m_CaptureWidget == 0)
 	{
 		m_CaptureWidget = Widget;
-		m_CaptureWidgetDestroyingCallbackConnectionHandle = m_CaptureWidget->ConnectDestroyingCallback(Callback(this, &UserInterface::OnCaptureWidgetDestroying));
+		m_CaptureWidgetDestroyingCallbackConnectionHandle = m_CaptureWidget->ConnectDestroyingCallback(Callback(this, &UI::UserInterface::OnCaptureWidgetDestroying));
 	}
 }
 
-void UserInterface::ReleaseCaptureWidget(void)
+void UI::UserInterface::ReleaseCaptureWidget(void)
 {
 	if(m_CaptureWidget != 0)
 	{
@@ -81,7 +81,7 @@ void UserInterface::ReleaseCaptureWidget(void)
 	}
 }
 
-UI::Widget * UserInterface::GetWidget(const std::string & Path)
+UI::Widget * UI::UserInterface::GetWidget(const std::string & Path)
 {
 	if(Path[0] != '/')
 	{
@@ -102,7 +102,7 @@ UI::Widget * UserInterface::GetWidget(const std::string & Path)
 	return Root;
 }
 
-bool UserInterface::MouseButton(int Button, int State, float X, float Y)
+bool UI::UserInterface::MouseButton(int Button, int State, float X, float Y)
 {
 	if(m_CaptureWidget == 0)
 	{
@@ -131,7 +131,7 @@ bool UserInterface::MouseButton(int Button, int State, float X, float Y)
 	return false;
 }
 
-bool UserInterface::Key(const KeyEventInformation & KeyEventInformation)
+bool UI::UserInterface::Key(const KeyEventInformation & KeyEventInformation)
 {
 	assert(m_RootWidget != 0);
 	if(m_RootWidget->GetEnabled() == true)
@@ -142,7 +142,7 @@ bool UserInterface::Key(const KeyEventInformation & KeyEventInformation)
 	return false;
 }
 
-void UserInterface::MouseMoved(float X, float Y)
+void UI::UserInterface::MouseMoved(float X, float Y)
 {
 	if(m_CaptureWidget == 0)
 	{
@@ -182,18 +182,18 @@ void UserInterface::MouseMoved(float X, float Y)
 	}
 }
 
-void UserInterface::OnCaptureWidgetDestroying(void)
+void UI::UserInterface::OnCaptureWidgetDestroying(void)
 {
 	m_CaptureWidget->DisconnectDestroyingCallback(m_CaptureWidgetDestroyingCallbackConnectionHandle);
 	m_CaptureWidget = 0;
 }
 
-void UserInterface::OnHoverWidgetDestroying(void)
+void UI::UserInterface::OnHoverWidgetDestroying(void)
 {
 	m_HoverWidget = 0;
 }
 
-void UserInterface::OnRootWidgetDestroying(void)
+void UI::UserInterface::OnRootWidgetDestroying(void)
 {
 	m_RootWidget = 0;
 }
