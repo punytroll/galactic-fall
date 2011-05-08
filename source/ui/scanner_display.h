@@ -21,13 +21,13 @@
 #define SCANNER_DISPLAY_H
 
 #include "../referencing.h"
-#include "../viewport.h"
+#include "viewport.h"
 
 class Ship;
 
 namespace UI
 {
-	class ScannerDisplay : public Viewport
+	class ScannerDisplay : public UI::Viewport
 	{
 	public:
 		ScannerDisplay(UI::Widget * SupWidget = 0);

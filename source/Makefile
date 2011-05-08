@@ -402,7 +402,7 @@ ui_map_dialog_h = \
 ui_mini_map_display_h = \
 	ui/mini_map_display.h \
 	$(referencing_h) \
-	$(ui_widget_h)
+	$(ui_viewport_h)
 
 ui_object_information_dialog_h = \
 	ui/object_information_dialog.h \
@@ -425,7 +425,7 @@ ui_save_game_dialog_h = \
 ui_scanner_display_h = \
 	ui/scanner_display.h \
 	$(referencing_h) \
-	$(viewport_h)
+	$(ui_viewport_h)
 
 ui_scroll_bar_h = \
 	ui/scroll_bar.h \
@@ -443,6 +443,12 @@ ui_trade_center_dialog_h = \
 	ui/trade_center_dialog.h \
 	$(ui_window_h)
 
+ui_viewport_h = \
+	ui/viewport.h \
+	$(camera_h) \
+	$(perspective_h) \
+	$(ui_widget_h)
+
 ui_widget_h = \
 	ui/widget.h \
 	$(callbacks_events_h) \
@@ -454,12 +460,6 @@ ui_window_h = \
 
 user_interface_h = \
 	user_interface.h
-
-viewport_h = \
-	viewport.h \
-	$(camera_h) \
-	$(perspective_h) \
-	$(ui_widget_h)
 
 visualization_prototype_h = \
 	visualization_prototype.h
@@ -834,6 +834,9 @@ binary: $(OBJECT_FILES) $(LDFLAGS_configuration)
 .object-files/ui/trade_center_dialog.o: ui/trade_center_dialog.cpp $(asset_class_h) $(character_h) $(commodity_h) $(commodity_class_h) $(character_h) $(game_time_h) $(graphics_model_manager_h) $(key_event_information_h) $(object_aspect_accessory_h) $(object_aspect_name_h) $(object_aspect_object_container_h) $(object_factory_h) $(planet_h) $(ship_h) $(storage_h) $(ui_button_h) $(ui_label_h) $(ui_scroll_bar_h) $(ui_scroll_box_h) $(ui_trade_center_dialog_h) $(weapon_h) $(weapon_class_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
+.object-files/ui/viewport.o: ui/viewport.cpp $(ui_viewport_h)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
 .object-files/ui/widget.o: ui/widget.cpp $(callbacks_callbacks_h) $(color_h) $(math_h) $(ui_widget_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
@@ -841,9 +844,6 @@ binary: $(OBJECT_FILES) $(LDFLAGS_configuration)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 .object-files/user_interface.o: user_interface.cpp $(callbacks_connection_handle_h) $(ui_widget_h) $(user_interface_h)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-
-.object-files/viewport.o: viewport.cpp $(viewport_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 .object-files/visualization_prototype.o: visualization_prototype.cpp $(graphics_material_h) $(visualization_prototype_h)
