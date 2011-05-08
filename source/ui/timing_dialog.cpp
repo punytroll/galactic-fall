@@ -17,20 +17,20 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include "callbacks/callbacks.h"
-#include "globals.h"
-#include "key_event_information.h"
-#include "string_cast.h"
-#include "system_statistics.h"
+#include "../callbacks/callbacks.h"
+#include "../globals.h"
+#include "../key_event_information.h"
+#include "../string_cast.h"
+#include "../system_statistics.h"
+#include "label.h"
 #include "timing_dialog.h"
-#include "ui/label.h"
 
-TimingDialog::TimingDialog(Widget * SupWidget) :
+UI::TimingDialog::TimingDialog(UI::Widget * SupWidget) :
 	UI::Window(SupWidget, "Timing Information")
 {
 	SetPosition(Vector2f(300.0f, 300.0f));
 	SetSize(Vector2f(350.0f, 400.0f));
-	ConnectKeyCallback(Callback(this, &TimingDialog::OnKey));
+	ConnectKeyCallback(Callback(this, &UI::TimingDialog::OnKey));
 	
 	UI::Label * FramesPerSecondCaptionLabel(new UI::Label(this, "Frames per Second:"));
 	
@@ -189,7 +189,7 @@ TimingDialog::TimingDialog(Widget * SupWidget) :
 	m_ParticlesThisFrameLabel->SetHorizontalAlignment(UI::Label::ALIGN_RIGHT);
 }
 
-bool TimingDialog::OnKey(const KeyEventInformation & KeyEventInformation)
+bool UI::TimingDialog::OnKey(const KeyEventInformation & KeyEventInformation)
 {
 	if((KeyEventInformation.GetKeyCode() == 9 /* ESCAPE */) && (KeyEventInformation.IsDown() == true))
 	{
@@ -201,7 +201,7 @@ bool TimingDialog::OnKey(const KeyEventInformation & KeyEventInformation)
 	return false;
 }
 
-void TimingDialog::Update(void)
+void UI::TimingDialog::Update(void)
 {
 	m_AISecondsThisFrameLabel->SetText(to_string_cast(g_SystemStatistics->GetAISecondsThisFrame() * 1000, 2) + " ms");
 	m_CommoditiesInCurrentSystemThisFrameLabel->SetText(to_string_cast(g_SystemStatistics->GetCommoditiesInCurrentSystemThisFrame()));

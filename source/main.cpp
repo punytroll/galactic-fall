@@ -95,7 +95,6 @@
 #include "system.h"
 #include "system_statistics.h"
 #include "timeout_notifications.h"
-#include "timing_dialog.h"
 #include "ui/button.h"
 #include "ui/label.h"
 #include "ui/main_menu_window.h"
@@ -105,6 +104,7 @@
 #include "ui/outfit_ship_dialog.h"
 #include "ui/scanner_display.h"
 #include "ui/star_map_display.h"
+#include "ui/timing_dialog.h"
 #include "ui/widget.h"
 #include "user_interface.h"
 #include "visualization_prototype.h"
@@ -164,7 +164,7 @@ UI::Label * g_TimeWarpLabel(0);
 UI::MainMenuWindow * g_MainMenuWindow(0);
 UI::MapDialog * g_MapDialog(0);
 UI::OutfitShipDialog * g_OutfitShipDialog(0);
-TimingDialog * g_TimingDialog(0);
+UI::TimingDialog * g_TimingDialog(0);
 
 int g_LastMotionX(-1);
 int g_LastMotionY(-1);
@@ -2849,7 +2849,7 @@ void ActionToggleTimingDialog(void)
 {
 	if(g_TimingDialog == 0)
 	{
-		g_TimingDialog = new TimingDialog(g_UserInterface->GetRootWidget());
+		g_TimingDialog = new UI::TimingDialog(g_UserInterface->GetRootWidget());
 		g_TimingDialog->GrabKeyFocus();
 		g_TimingDialog->ConnectDestroyingCallback(Callback(OnTimingDialogDestroying));
 	}
