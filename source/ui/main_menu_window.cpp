@@ -20,14 +20,14 @@
 
 #include <fstream>
 
-#include "callbacks/callbacks.h"
-#include "file_handling.h"
-#include "key_event_information.h"
+#include "../callbacks/callbacks.h"
+#include "../file_handling.h"
+#include "../key_event_information.h"
+#include "button.h"
+#include "label.h"
+#include "load_game_dialog.h"
 #include "main_menu_window.h"
-#include "ui/button.h"
-#include "ui/label.h"
-#include "ui/load_game_dialog.h"
-#include "ui/save_game_dialog.h"
+#include "save_game_dialog.h"
 
 // these functions are defined in main.cpp
 void ActionQuitGameLoop(void);
@@ -35,8 +35,8 @@ bool LoadGameFromInputStream(std::istream & InputStream);
 bool LoadGameFromResourcePath(const std::string & ResourcePath);
 void SaveGame(std::ostream & OStream);
 
-MainMenuWindow::MainMenuWindow(Widget * SupWidget) :
-	Window(SupWidget, "Galactic Fall"),
+UI::MainMenuWindow::MainMenuWindow(UI::Widget * SupWidget) :
+	UI::Window(SupWidget, "Galactic Fall"),
 	_DestroyOnLoadGameDialogDestroy(false),
 	_DestroyOnSaveGameDialogDestroy(false),
 	_LoadGameButton(0),
@@ -47,7 +47,7 @@ MainMenuWindow::MainMenuWindow(Widget * SupWidget) :
 	_SaveGameButton(0),
 	_SaveGameDialog(0)
 {
-	ConnectKeyCallback(Callback(this, &MainMenuWindow::_OnKey));
+	ConnectKeyCallback(Callback(this, &UI::MainMenuWindow::_OnKey));
 	SetSize(Vector2f(200.0f, 260.0f));
 	
 	// "Resume Game" button
@@ -58,7 +58,7 @@ MainMenuWindow::MainMenuWindow(Widget * SupWidget) :
 	_ResumeGameButton->SetAnchorLeft(true);
 	_ResumeGameButton->SetAnchorRight(true);
 	_ResumeGameButton->SetAnchorTop(true);
-	_ResumeGameButton->ConnectClickedCallback(Callback(this, &MainMenuWindow::_OnResumeGameButtonClicked));
+	_ResumeGameButton->ConnectClickedCallback(Callback(this, &UI::MainMenuWindow::_OnResumeGameButtonClicked));
 	
 	UI::Label * ResumeGameButtonLabel(new UI::Label(_ResumeGameButton, "Resume Game"));
 	
@@ -79,7 +79,7 @@ MainMenuWindow::MainMenuWindow(Widget * SupWidget) :
 	_NewGameButton->SetAnchorLeft(true);
 	_NewGameButton->SetAnchorRight(true);
 	_NewGameButton->SetAnchorTop(true);
-	_NewGameButton->ConnectClickedCallback(Callback(this, &MainMenuWindow::_OnNewGameButtonClicked));
+	_NewGameButton->ConnectClickedCallback(Callback(this, &UI::MainMenuWindow::_OnNewGameButtonClicked));
 	
 	UI::Label * NewGameButtonLabel(new UI::Label(_NewGameButton, "New Game"));
 	
@@ -100,7 +100,7 @@ MainMenuWindow::MainMenuWindow(Widget * SupWidget) :
 	_LoadGameButton->SetAnchorLeft(true);
 	_LoadGameButton->SetAnchorRight(true);
 	_LoadGameButton->SetAnchorTop(true);
-	_LoadGameButton->ConnectClickedCallback(Callback(this, &MainMenuWindow::_OnLoadGameButtonClicked));
+	_LoadGameButton->ConnectClickedCallback(Callback(this, &UI::MainMenuWindow::_OnLoadGameButtonClicked));
 	
 	UI::Label * LoadGameButtonLabel(new UI::Label(_LoadGameButton, "Load Game"));
 	
@@ -121,7 +121,7 @@ MainMenuWindow::MainMenuWindow(Widget * SupWidget) :
 	_SaveGameButton->SetAnchorLeft(true);
 	_SaveGameButton->SetAnchorRight(true);
 	_SaveGameButton->SetAnchorTop(true);
-	_SaveGameButton->ConnectClickedCallback(Callback(this, &MainMenuWindow::_OnSaveGameButtonClicked));
+	_SaveGameButton->ConnectClickedCallback(Callback(this, &UI::MainMenuWindow::_OnSaveGameButtonClicked));
 	
 	UI::Label * SaveGameButtonLabel(new UI::Label(_SaveGameButton, "Save Game"));
 	
@@ -142,7 +142,7 @@ MainMenuWindow::MainMenuWindow(Widget * SupWidget) :
 	_QuitButton->SetAnchorLeft(true);
 	_QuitButton->SetAnchorRight(true);
 	_QuitButton->SetAnchorTop(true);
-	_QuitButton->ConnectClickedCallback(Callback(this, &MainMenuWindow::_OnQuitButtonClicked));
+	_QuitButton->ConnectClickedCallback(Callback(this, &UI::MainMenuWindow::_OnQuitButtonClicked));
 	
 	UI::Label * QuitButtonLabel(new UI::Label(_QuitButton, "Quit"));
 	
@@ -156,7 +156,7 @@ MainMenuWindow::MainMenuWindow(Widget * SupWidget) :
 	QuitButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 }
 
-bool MainMenuWindow::_OnKey(const KeyEventInformation & KeyEventInformation)
+bool UI::MainMenuWindow::_OnKey(const KeyEventInformation & KeyEventInformation)
 {
 	if((KeyEventInformation.GetKeyCode() == 9 /* ESCAPE */) && (KeyEventInformation.IsDown() == true))
 	{
@@ -167,14 +167,14 @@ bool MainMenuWindow::_OnKey(const KeyEventInformation & KeyEventInformation)
 	return true;
 }
 
-void MainMenuWindow::_OnLoadGameButtonClicked(void)
+void UI::MainMenuWindow::_OnLoadGameButtonClicked(void)
 {
 	if(_LoadGameDialog == 0)
 	{
 		_LoadGameDialog = new UI::LoadGameDialog(GetRootWidget());
 		_LoadGameDialog->GrabKeyFocus();
-		_LoadGameDialog->ConnectClosingCallback(Callback(this, &MainMenuWindow::_OnLoadGameDialogClosing));
-		_LoadGameDialog->ConnectDestroyingCallback(Callback(this, &MainMenuWindow::_OnLoadGameDialogDestroying));
+		_LoadGameDialog->ConnectClosingCallback(Callback(this, &UI::MainMenuWindow::_OnLoadGameDialogClosing));
+		_LoadGameDialog->ConnectDestroyingCallback(Callback(this, &UI::MainMenuWindow::_OnLoadGameDialogDestroying));
 		
 		std::string DirectoryPath(getenv("HOME"));
 		
@@ -188,7 +188,7 @@ void MainMenuWindow::_OnLoadGameButtonClicked(void)
 	}
 }
 
-bool MainMenuWindow::_OnLoadGameDialogClosing(UI::Dialog::ClosingReason ClosingReason)
+bool UI::MainMenuWindow::_OnLoadGameDialogClosing(UI::Dialog::ClosingReason ClosingReason)
 {
 	if((ClosingReason == UI::Dialog::CANCEL_BUTTON) || (ClosingReason == UI::Dialog::ESCAPE_KEY))
 	{
@@ -241,7 +241,7 @@ bool MainMenuWindow::_OnLoadGameDialogClosing(UI::Dialog::ClosingReason ClosingR
 	return false;
 }
 
-void MainMenuWindow::_OnLoadGameDialogDestroying(void)
+void UI::MainMenuWindow::_OnLoadGameDialogDestroying(void)
 {
 	_LoadGameDialog = 0;
 	if(_DestroyOnLoadGameDialogDestroy == true)
@@ -250,25 +250,25 @@ void MainMenuWindow::_OnLoadGameDialogDestroying(void)
 	}
 }
 
-void MainMenuWindow::_OnNewGameButtonClicked(void)
+void UI::MainMenuWindow::_OnNewGameButtonClicked(void)
 {
 	LoadGameFromResourcePath("/Savegames/Default");
 	Destroy();
 }
 
-void MainMenuWindow::_OnResumeGameButtonClicked(void)
+void UI::MainMenuWindow::_OnResumeGameButtonClicked(void)
 {
 	Destroy();
 }
 
-void MainMenuWindow::_OnSaveGameButtonClicked(void)
+void UI::MainMenuWindow::_OnSaveGameButtonClicked(void)
 {
 	if(_SaveGameDialog == 0)
 	{
 		_SaveGameDialog = new UI::SaveGameDialog(GetRootWidget());
 		_SaveGameDialog->GrabKeyFocus();
-		_SaveGameDialog->ConnectClosingCallback(Callback(this, &MainMenuWindow::_OnSaveGameDialogClosing));
-		_SaveGameDialog->ConnectDestroyingCallback(Callback(this, &MainMenuWindow::_OnSaveGameDialogDestroying));
+		_SaveGameDialog->ConnectClosingCallback(Callback(this, &UI::MainMenuWindow::_OnSaveGameDialogClosing));
+		_SaveGameDialog->ConnectDestroyingCallback(Callback(this, &UI::MainMenuWindow::_OnSaveGameDialogDestroying));
 		
 		std::string DirectoryPath(getenv("HOME"));
 		
@@ -282,7 +282,7 @@ void MainMenuWindow::_OnSaveGameButtonClicked(void)
 	}
 }
 
-bool MainMenuWindow::_OnSaveGameDialogClosing(UI::Dialog::ClosingReason ClosingReason)
+bool UI::MainMenuWindow::_OnSaveGameDialogClosing(UI::Dialog::ClosingReason ClosingReason)
 {
 	if((ClosingReason == UI::Dialog::CANCEL_BUTTON) || (ClosingReason == UI::Dialog::ESCAPE_KEY))
 	{
@@ -327,7 +327,7 @@ bool MainMenuWindow::_OnSaveGameDialogClosing(UI::Dialog::ClosingReason ClosingR
 	return false;
 }
 
-void MainMenuWindow::_OnSaveGameDialogDestroying(void)
+void UI::MainMenuWindow::_OnSaveGameDialogDestroying(void)
 {
 	_SaveGameDialog = 0;
 	if(_DestroyOnSaveGameDialogDestroy == true)
@@ -336,7 +336,7 @@ void MainMenuWindow::_OnSaveGameDialogDestroying(void)
 	}
 }
 
-void MainMenuWindow::_OnQuitButtonClicked(void)
+void UI::MainMenuWindow::_OnQuitButtonClicked(void)
 {
 	ActionQuitGameLoop();
 	Destroy();

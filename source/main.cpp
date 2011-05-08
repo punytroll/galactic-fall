@@ -62,7 +62,6 @@
 #include "graphics_scene.h"
 #include "graphics_texture_manager.h"
 #include "key_event_information.h"
-#include "main_menu_window.h"
 #include "map_knowledge.h"
 #include "math.h"
 #include "message.h"
@@ -101,6 +100,7 @@
 #include "timing_dialog.h"
 #include "ui/button.h"
 #include "ui/label.h"
+#include "ui/main_menu_window.h"
 #include "ui/map_dialog.h"
 #include "ui/object_information_dialog.h"
 #include "ui/outfit_ship_dialog.h"
@@ -161,7 +161,7 @@ UI::Label * g_TargetFactionLabel(0);
 UI::Label * g_TimeWarpLabel(0);
 
 // global dialog pointers
-MainMenuWindow * g_MainMenuWindow(0);
+UI::MainMenuWindow * g_MainMenuWindow(0);
 UI::MapDialog * g_MapDialog(0);
 UI::OutfitShipDialog * g_OutfitShipDialog(0);
 TimingDialog * g_TimingDialog(0);
@@ -2631,7 +2631,7 @@ void ActionOpenMainMenuWindow(void)
 	if(g_MainMenuWindow == 0)
 	{
 		g_Pause = true;
-		g_MainMenuWindow = new MainMenuWindow(g_UserInterface->GetRootWidget());
+		g_MainMenuWindow = new UI::MainMenuWindow(g_UserInterface->GetRootWidget());
 		// crude heuristic: if we are not in a system, no game is running
 		if(g_CurrentSystem == 0)
 		{
