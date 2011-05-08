@@ -81,7 +81,6 @@
 #include "perspective.h"
 #include "planet.h"
 #include "real_time.h"
-#include "scanner_display.h"
 #include "settings.h"
 #include "ship.h"
 #include "ship_class.h"
@@ -104,6 +103,7 @@
 #include "ui/mini_map_display.h"
 #include "ui/object_information_dialog.h"
 #include "ui/outfit_ship_dialog.h"
+#include "ui/scanner_display.h"
 #include "ui/star_map_display.h"
 #include "ui/widget.h"
 #include "user_interface.h"
@@ -154,7 +154,7 @@ UI::Label * g_MessageLabel(0);
 UI::Widget * g_MiniMap(0);
 UI::MiniMapDisplay * g_MiniMapDisplay(0);
 UI::Widget * g_Scanner(0);
-ScannerDisplay * g_ScannerDisplay(0);
+UI::ScannerDisplay * g_ScannerDisplay(0);
 UI::Label * g_SystemLabel(0);
 UI::Label * g_TargetLabel(0);
 UI::Label * g_TargetFactionLabel(0);
@@ -3406,7 +3406,7 @@ int main(int argc, char ** argv)
 	g_Scanner = g_UserInterface->GetWidget("/scanner");
 		g_TargetLabel = dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/scanner/target"));
 		g_TargetFactionLabel = dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/scanner/target_faction"));
-		g_ScannerDisplay = dynamic_cast< ScannerDisplay * >(g_UserInterface->GetWidget("/scanner/display"));
+		g_ScannerDisplay = dynamic_cast< UI::ScannerDisplay * >(g_UserInterface->GetWidget("/scanner/display"));
 	// sanity asserts
 	assert(g_CreditsLabel != 0);
 	assert(g_FuelLabel != 0);

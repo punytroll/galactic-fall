@@ -20,34 +20,37 @@
 #ifndef SCANNER_DISPLAY_H
 #define SCANNER_DISPLAY_H
 
-#include "referencing.h"
-#include "viewport.h"
+#include "../referencing.h"
+#include "../viewport.h"
 
 class Ship;
 
-class ScannerDisplay : public Viewport
+namespace UI
 {
-public:
-	ScannerDisplay(Widget * SupWidget = 0);
-	// getters
-	const Reference< Ship > & GetOwner(void) const;
-	// setters
-	void SetOwner(Reference< Ship > Owner);
-	// actors
-	void Update(void);
-	virtual void DrawInViewport(void) const;
-private:
-	Reference< Ship > m_Owner;
-};
+	class ScannerDisplay : public Viewport
+	{
+	public:
+		ScannerDisplay(UI::Widget * SupWidget = 0);
+		// getters
+		const Reference< Ship > & GetOwner(void) const;
+		// setters
+		void SetOwner(Reference< Ship > Owner);
+		// actors
+		void Update(void);
+		virtual void DrawInViewport(void) const;
+	private:
+		Reference< Ship > m_Owner;
+	};
 
-inline const Reference< Ship > & ScannerDisplay::GetOwner(void) const
-{
-	return m_Owner;
-}
+	inline const Reference< Ship > & ScannerDisplay::GetOwner(void) const
+	{
+		return m_Owner;
+	}
 
-inline void ScannerDisplay::SetOwner(Reference< Ship > Owner)
-{
-	m_Owner = Owner;
+	inline void ScannerDisplay::SetOwner(Reference< Ship > Owner)
+	{
+		m_Owner = Owner;
+	}
 }
 
 #endif
