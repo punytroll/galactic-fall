@@ -20,7 +20,7 @@
 #ifndef MAP_DIALOG_H
 #define MAP_DIALOG_H
 
-#include "ui/window.h"
+#include "window.h"
 
 class Character;
 class System;
@@ -29,25 +29,25 @@ namespace UI
 {
 	class Button;
 	class StarMapDisplay;
-}
 
-class MapDialog : public UI::Window
-{
-public:
-	MapDialog(Widget * SupWidget, System * System, Character * Character);
-	UI::StarMapDisplay * GetStarMapDisplay(void);
-protected:
-	// callbacks
-	bool OnKey(const KeyEventInformation & KeyEventInformation);
-	void OnOKClicked(void);
-private:
-	UI::Button * m_OKButton;
-	UI::StarMapDisplay * m_StarMapDisplay;
-};
+	class MapDialog : public UI::Window
+	{
+	public:
+		MapDialog(UI::Widget * SupWidget, System * System, Character * Character);
+		UI::StarMapDisplay * GetStarMapDisplay(void);
+	protected:
+		// callbacks
+		bool OnKey(const KeyEventInformation & KeyEventInformation);
+		void OnOKClicked(void);
+	private:
+		UI::Button * m_OKButton;
+		UI::StarMapDisplay * m_StarMapDisplay;
+	};
 
-inline UI::StarMapDisplay * MapDialog::GetStarMapDisplay(void)
-{
-	return m_StarMapDisplay;
+	inline UI::StarMapDisplay * MapDialog::GetStarMapDisplay(void)
+	{
+		return m_StarMapDisplay;
+	}
 }
 
 #endif
