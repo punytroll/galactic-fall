@@ -19,14 +19,14 @@
 
 #include <GL/gl.h>
 
-#include "commodity.h"
+#include "../commodity.h"
+#include "../object_aspect_position.h"
+#include "../planet.h"
+#include "../ship.h"
+#include "../system.h"
 #include "mini_map_display.h"
-#include "object_aspect_position.h"
-#include "planet.h"
-#include "ship.h"
-#include "system.h"
 
-MiniMapDisplay::MiniMapDisplay(Widget * SupWidget) :
+UI::MiniMapDisplay::MiniMapDisplay(UI::Widget * SupWidget) :
 	Viewport(SupWidget)
 {
 	GetCamera()->SetPosition(0.0f, 0.0f, 1500.0f);
@@ -36,13 +36,13 @@ MiniMapDisplay::MiniMapDisplay(Widget * SupWidget) :
 	GetPerspective()->SetFarClippingPlane(10000.0f);
 }
 
-void MiniMapDisplay::SetOwner(Reference< Ship > Owner)
+void UI::MiniMapDisplay::SetOwner(Reference< Ship > Owner)
 {
 	m_Owner = Owner;
 	GetCamera()->SetFocus(Owner);
 }
 
-void MiniMapDisplay::DrawInViewport(void) const
+void UI::MiniMapDisplay::DrawInViewport(void) const
 {
 	// draw mini map
 	if(m_Owner.IsValid() == true)

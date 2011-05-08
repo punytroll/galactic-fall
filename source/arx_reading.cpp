@@ -45,7 +45,6 @@
 #include "graphics_texture.h"
 #include "graphics_texture_manager.h"
 #include "local_file_data_channel.h"
-#include "mini_map_display.h"
 #include "object_aspect_name.h"
 #include "object_aspect_object_container.h"
 #include "object_aspect_position.h"
@@ -60,6 +59,7 @@
 #include "string_cast.h"
 #include "system.h"
 #include "ui/label.h"
+#include "ui/mini_map_display.h"
 #include "ui/widget.h"
 #include "user_interface.h"
 #include "visualization_prototype.h"
@@ -84,7 +84,7 @@ static void ReadWeaponClass(Arxx::Reference & Reference);
 static void ReadWidget(Arxx::Reference & Reference);
 static UI::Widget * ReadWidget(Arxx::BufferReader & Reader, Arxx::u4byte Type, Arxx::u4byte SubType);
 static void ReadWidgetLabel(Arxx::BufferReader & Reader, UI::Label * ReadLabel);
-static void ReadWidgetMiniMapDisplay(Arxx::BufferReader & Reader, MiniMapDisplay * ReadMiniMapDisplay);
+static void ReadWidgetMiniMapDisplay(Arxx::BufferReader & Reader, UI::MiniMapDisplay * ReadMiniMapDisplay);
 static void ReadWidgetScannerDisplay(Arxx::BufferReader & Reader, ScannerDisplay * ReadScannerDisplay);
 static void ReadWidgetWidget(Arxx::BufferReader & Reader, UI::Widget * Widget);
 
@@ -1027,7 +1027,7 @@ static UI::Widget * ReadWidget(Arxx::BufferReader & Reader, Arxx::u4byte Type, A
 		}
 	case ARX_TYPE_WIDGET_SUB_TYPE_MINI_MAP_DISPLAY:
 		{
-			MiniMapDisplay * NewMiniMapDisplay(new MiniMapDisplay());
+			UI::MiniMapDisplay * NewMiniMapDisplay(new UI::MiniMapDisplay());
 			
 			ReadWidgetWidget(Reader, NewMiniMapDisplay);
 			ReadWidgetMiniMapDisplay(Reader, NewMiniMapDisplay);
@@ -1103,7 +1103,7 @@ static void ReadWidgetLabel(Arxx::BufferReader & Reader, UI::Label * ReadLabel)
 	}
 }
 
-static void ReadWidgetMiniMapDisplay(Arxx::BufferReader & Reader, MiniMapDisplay * ReadMiniMapDisplay)
+static void ReadWidgetMiniMapDisplay(Arxx::BufferReader & Reader, UI::MiniMapDisplay * ReadMiniMapDisplay)
 {
 }
 
