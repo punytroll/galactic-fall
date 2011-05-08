@@ -50,7 +50,6 @@
 #include "object_aspect_position.h"
 #include "object_factory.h"
 #include "planet.h"
-#include "scanner_display.h"
 #include "settings.h"
 #include "ship_class.h"
 #include "slot.h"
@@ -60,6 +59,7 @@
 #include "system.h"
 #include "ui/label.h"
 #include "ui/mini_map_display.h"
+#include "ui/scanner_display.h"
 #include "ui/widget.h"
 #include "user_interface.h"
 #include "visualization_prototype.h"
@@ -85,7 +85,7 @@ static void ReadWidget(Arxx::Reference & Reference);
 static UI::Widget * ReadWidget(Arxx::BufferReader & Reader, Arxx::u4byte Type, Arxx::u4byte SubType);
 static void ReadWidgetLabel(Arxx::BufferReader & Reader, UI::Label * ReadLabel);
 static void ReadWidgetMiniMapDisplay(Arxx::BufferReader & Reader, UI::MiniMapDisplay * ReadMiniMapDisplay);
-static void ReadWidgetScannerDisplay(Arxx::BufferReader & Reader, ScannerDisplay * ReadScannerDisplay);
+static void ReadWidgetScannerDisplay(Arxx::BufferReader & Reader, UI::ScannerDisplay * ReadScannerDisplay);
 static void ReadWidgetWidget(Arxx::BufferReader & Reader, UI::Widget * Widget);
 
 static void MakeItemAvailable(Arxx::Item * Item)
@@ -1017,31 +1017,31 @@ static UI::Widget * ReadWidget(Arxx::BufferReader & Reader, Arxx::u4byte Type, A
 	{
 	case ARX_TYPE_WIDGET_SUB_TYPE_LABEL:
 		{
-			UI::Label * NewLabel(new UI::Label());
+			UI::Label * Label(new UI::Label());
 			
-			ReadWidgetWidget(Reader, NewLabel);
-			ReadWidgetLabel(Reader, NewLabel);
-			Result = NewLabel;
+			ReadWidgetWidget(Reader, Label);
+			ReadWidgetLabel(Reader, Label);
+			Result = Label;
 			
 			break;
 		}
 	case ARX_TYPE_WIDGET_SUB_TYPE_MINI_MAP_DISPLAY:
 		{
-			UI::MiniMapDisplay * NewMiniMapDisplay(new UI::MiniMapDisplay());
+			UI::MiniMapDisplay * MiniMapDisplay(new UI::MiniMapDisplay());
 			
-			ReadWidgetWidget(Reader, NewMiniMapDisplay);
-			ReadWidgetMiniMapDisplay(Reader, NewMiniMapDisplay);
-			Result = NewMiniMapDisplay;
+			ReadWidgetWidget(Reader, MiniMapDisplay);
+			ReadWidgetMiniMapDisplay(Reader, MiniMapDisplay);
+			Result = MiniMapDisplay;
 			
 			break;
 		}
 	case ARX_TYPE_WIDGET_SUB_TYPE_SCANNER_DISPLAY:
 		{
-			ScannerDisplay * NewScannerDisplay(new ScannerDisplay());
+			UI::ScannerDisplay * ScannerDisplay(new UI::ScannerDisplay());
 			
-			ReadWidgetWidget(Reader, NewScannerDisplay);
-			ReadWidgetScannerDisplay(Reader, NewScannerDisplay);
-			Result = NewScannerDisplay;
+			ReadWidgetWidget(Reader, ScannerDisplay);
+			ReadWidgetScannerDisplay(Reader, ScannerDisplay);
+			Result = ScannerDisplay;
 			
 			break;
 		}
@@ -1063,7 +1063,7 @@ static UI::Widget * ReadWidget(Arxx::BufferReader & Reader, Arxx::u4byte Type, A
 	return Result;
 }
 
-static void ReadWidgetLabel(Arxx::BufferReader & Reader, UI::Label * ReadLabel)
+static void ReadWidgetLabel(Arxx::BufferReader & Reader, UI::Label * Label)
 {
 	std::string Text;
 	bool UseTextColor;
@@ -1072,42 +1072,42 @@ static void ReadWidgetLabel(Arxx::BufferReader & Reader, UI::Label * ReadLabel)
 	Arxx::u1byte VerticalAlignment;
 	
 	Reader >> Text >> UseTextColor >> TextColor >> HorizontalAlignment >> VerticalAlignment;
-	ReadLabel->SetText(Text);
+	Label->SetText(Text);
 	if(UseTextColor == true)
 	{
-		ReadLabel->SetTextColor(TextColor);
+		Label->SetTextColor(TextColor);
 	}
 	if(HorizontalAlignment == 0)
 	{
-		ReadLabel->SetHorizontalAlignment(UI::Label::ALIGN_LEFT);
+		Label->SetHorizontalAlignment(UI::Label::ALIGN_LEFT);
 	}
 	else if(HorizontalAlignment == 1)
 	{
-		ReadLabel->SetHorizontalAlignment(UI::Label::ALIGN_RIGHT);
+		Label->SetHorizontalAlignment(UI::Label::ALIGN_RIGHT);
 	}
 	else if(HorizontalAlignment == 2)
 	{
-		ReadLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
+		Label->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
 	}
 	if(VerticalAlignment == 0)
 	{
-		ReadLabel->SetVerticalAlignment(UI::Label::ALIGN_TOP);
+		Label->SetVerticalAlignment(UI::Label::ALIGN_TOP);
 	}
 	else if(VerticalAlignment == 1)
 	{
-		ReadLabel->SetVerticalAlignment(UI::Label::ALIGN_BOTTOM);
+		Label->SetVerticalAlignment(UI::Label::ALIGN_BOTTOM);
 	}
 	else if(VerticalAlignment == 2)
 	{
-		ReadLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
+		Label->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	}
 }
 
-static void ReadWidgetMiniMapDisplay(Arxx::BufferReader & Reader, UI::MiniMapDisplay * ReadMiniMapDisplay)
+static void ReadWidgetMiniMapDisplay(Arxx::BufferReader & Reader, UI::MiniMapDisplay * MiniMapDisplay)
 {
 }
 
-static void ReadWidgetScannerDisplay(Arxx::BufferReader & Reader, ScannerDisplay * ReadScannerDisplay)
+static void ReadWidgetScannerDisplay(Arxx::BufferReader & Reader, UI::ScannerDisplay * ScannerDisplay)
 {
 }
 

@@ -19,13 +19,13 @@
 
 #include <GL/gl.h>
 
-#include "object_aspect_physical.h"
+#include "../object_aspect_physical.h"
+#include "../ship.h"
+#include "../star.h"
+#include "../system.h"
 #include "scanner_display.h"
-#include "ship.h"
-#include "star.h"
-#include "system.h"
 
-ScannerDisplay::ScannerDisplay(Widget * SupWidget) :
+UI::ScannerDisplay::ScannerDisplay(UI::Widget * SupWidget) :
 	Viewport(SupWidget)
 {
 	GetPerspective()->SetAspect(1.0f);
@@ -33,7 +33,7 @@ ScannerDisplay::ScannerDisplay(Widget * SupWidget) :
 	GetPerspective()->SetFarClippingPlane(1000.0f);
 }
 
-void ScannerDisplay::Update(void)
+void UI::ScannerDisplay::Update(void)
 {
 	if((m_Owner.IsValid() == true) && (m_Owner->GetTarget().IsValid() == true))
 	{
@@ -49,7 +49,7 @@ void ScannerDisplay::Update(void)
 	}
 }
 
-void ScannerDisplay::DrawInViewport(void) const
+void UI::ScannerDisplay::DrawInViewport(void) const
 {
 	/// @todo draw scanner
 }
