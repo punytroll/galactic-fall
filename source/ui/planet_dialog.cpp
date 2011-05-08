@@ -27,10 +27,10 @@
 #include "../planet.h"
 #include "../ship.h"
 #include "../string_cast.h"
-#include "../trade_center_dialog.h"
 #include "button.h"
 #include "label.h"
 #include "planet_dialog.h"
+#include "trade_center_dialog.h"
 
 UI::PlanetDialog::PlanetDialog(UI::Widget * SupWidget, Planet * Planet, Character * Character) :
 	UI::Window(SupWidget, "Planet: " + Planet->GetAspectName()->GetName()),
@@ -170,7 +170,7 @@ void UI::PlanetDialog::OpenTradeCenterDialog(void)
 {
 	if(m_TradeCenterDialog == 0)
 	{
-		m_TradeCenterDialog = new TradeCenterDialog(GetRootWidget(), m_Planet, m_Character);
+		m_TradeCenterDialog = new UI::TradeCenterDialog(GetRootWidget(), m_Planet, m_Character);
 		m_TradeCenterDialog->GrabKeyFocus();
 		m_TradeCenterDialog->ConnectDestroyingCallback(Callback(this, &PlanetDialog::OnTradeCenterDialogDestroying));
 	}

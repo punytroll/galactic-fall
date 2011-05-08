@@ -17,42 +17,45 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include "asset_class.h"
-#include "character.h"
-#include "commodity.h"
-#include "commodity_class.h"
-#include "game_time.h"
-#include "globals.h"
-#include "key_event_information.h"
-#include "object_aspect_accessory.h"
-#include "object_aspect_name.h"
-#include "object_aspect_object_container.h"
-#include "object_factory.h"
-#include "planet.h"
-#include "ship.h"
-#include "storage.h"
-#include "string_cast.h"
+#include "../asset_class.h"
+#include "../character.h"
+#include "../commodity.h"
+#include "../commodity_class.h"
+#include "../game_time.h"
+#include "../globals.h"
+#include "../key_event_information.h"
+#include "../object_aspect_accessory.h"
+#include "../object_aspect_name.h"
+#include "../object_aspect_object_container.h"
+#include "../object_factory.h"
+#include "../planet.h"
+#include "../ship.h"
+#include "../storage.h"
+#include "../string_cast.h"
+#include "../weapon.h"
+#include "../weapon_class.h"
+#include "button.h"
+#include "label.h"
+#include "scroll_bar.h"
+#include "scroll_box.h"
 #include "trade_center_dialog.h"
-#include "ui/button.h"
-#include "ui/label.h"
-#include "ui/scroll_bar.h"
-#include "ui/scroll_box.h"
-#include "weapon.h"
-#include "weapon_class.h"
 
-class TradeCenterAssetClass : public UI::Widget
+namespace UI
 {
-public:
-	TradeCenterAssetClass(UI::Widget * SupWidget, PlanetAssetClass * PlanetAssetClass, Ship * Ship);
-	void UpdateCharacterAmount(void);
-	const PlanetAssetClass * GetPlanetAssetClass(void) const;
-private:
-	PlanetAssetClass * m_PlanetAssetClass;
-	Ship * m_Ship;
-	UI::Label * m_CharacterAmountLabel;
-};
+	class TradeCenterAssetClass : public UI::Widget
+	{
+	public:
+		TradeCenterAssetClass(UI::Widget * SupWidget, PlanetAssetClass * PlanetAssetClass, Ship * Ship);
+		void UpdateCharacterAmount(void);
+		const PlanetAssetClass * GetPlanetAssetClass(void) const;
+	private:
+		PlanetAssetClass * m_PlanetAssetClass;
+		Ship * m_Ship;
+		UI::Label * m_CharacterAmountLabel;
+	};
+}
 
-TradeCenterAssetClass::TradeCenterAssetClass(UI::Widget * SupWidget, PlanetAssetClass * PlanetAssetClass, Ship * Ship) :
+UI::TradeCenterAssetClass::TradeCenterAssetClass(UI::Widget * SupWidget, PlanetAssetClass * PlanetAssetClass, Ship * Ship) :
 	UI::Widget(SupWidget),
 	m_PlanetAssetClass(PlanetAssetClass),
 	m_Ship(Ship)
@@ -82,17 +85,17 @@ TradeCenterAssetClass::TradeCenterAssetClass(UI::Widget * SupWidget, PlanetAsset
 	UpdateCharacterAmount();
 }
 
-void TradeCenterAssetClass::UpdateCharacterAmount(void)
+void UI::TradeCenterAssetClass::UpdateCharacterAmount(void)
 {
 	m_CharacterAmountLabel->SetText(to_string_cast(m_Ship->GetCargoHold()->GetAmount(m_PlanetAssetClass->GetAssetClass()->GetObjectType(), m_PlanetAssetClass->GetAssetClass()->GetObjectClass())));
 }
 
-const PlanetAssetClass * TradeCenterAssetClass::GetPlanetAssetClass(void) const
+const PlanetAssetClass * UI::TradeCenterAssetClass::GetPlanetAssetClass(void) const
 {
 	return m_PlanetAssetClass;
 }
 
-TradeCenterDialog::TradeCenterDialog(UI::Widget * SupWidget, Planet * Planet, Character * Character) :
+UI::TradeCenterDialog::TradeCenterDialog(UI::Widget * SupWidget, Planet * Planet, Character * Character) :
 	UI::Window(SupWidget, "Trade Center: " + Planet->GetAspectName()->GetName()),
 	m_Planet(Planet),
 	m_Character(Character),
@@ -183,17 +186,17 @@ TradeCenterDialog::TradeCenterDialog(UI::Widget * SupWidget, Planet * Planet, Ch
 	UpdateTraderAvailableSpace();
 }
 
-void TradeCenterDialog::UpdateTraderCredits(void)
+void UI::TradeCenterDialog::UpdateTraderCredits(void)
 {
 	m_TraderCreditsLabel->SetText("Credits: " + to_string_cast(m_Character->GetCredits()));
 }
 
-void TradeCenterDialog::UpdateTraderAvailableSpace(void)
+void UI::TradeCenterDialog::UpdateTraderAvailableSpace(void)
 {
 	m_TraderAvailableSpaceLabel->SetText("Available Space: " + to_string_cast(0.001 * m_Character->GetShip()->GetCargoHold()->GetSpace(), 3));
 }
 
-void TradeCenterDialog::Buy(const PlanetAssetClass * PlanetAssetClass)
+void UI::TradeCenterDialog::Buy(const PlanetAssetClass * PlanetAssetClass)
 {
 	u4byte Price(PlanetAssetClass->GetPrice());
 	
@@ -216,7 +219,7 @@ void TradeCenterDialog::Buy(const PlanetAssetClass * PlanetAssetClass)
 	}
 }
 
-void TradeCenterDialog::Sell(const PlanetAssetClass * PlanetAssetClass)
+void UI::TradeCenterDialog::Sell(const PlanetAssetClass * PlanetAssetClass)
 {
 	assert(m_Character != 0);
 	assert(m_Character->GetShip() != 0);
@@ -244,7 +247,7 @@ void TradeCenterDialog::Sell(const PlanetAssetClass * PlanetAssetClass)
 	}
 }
 
-void TradeCenterDialog::OnBuyClicked(void)
+void UI::TradeCenterDialog::OnBuyClicked(void)
 {
 	if(m_SelectedTradeCenterAssetClass != 0)
 	{
@@ -253,12 +256,12 @@ void TradeCenterDialog::OnBuyClicked(void)
 	}
 }
 
-void TradeCenterDialog::OnOKClicked(void)
+void UI::TradeCenterDialog::OnOKClicked(void)
 {
 	Destroy();
 }
 
-void TradeCenterDialog::OnSellClicked(void)
+void UI::TradeCenterDialog::OnSellClicked(void)
 {
 	if(m_SelectedTradeCenterAssetClass != 0)
 	{
@@ -267,7 +270,7 @@ void TradeCenterDialog::OnSellClicked(void)
 	}
 }
 
-bool TradeCenterDialog::OnKey(const KeyEventInformation & KeyEventInformation)
+bool UI::TradeCenterDialog::OnKey(const KeyEventInformation & KeyEventInformation)
 {
 	if(((KeyEventInformation.GetKeyCode() == 9 /* ESCAPE */) || (KeyEventInformation.GetKeyCode() == 36 /* RETURN */) || (KeyEventInformation.GetKeyCode() == 28 /* T */)) && (KeyEventInformation.IsDown() == true))
 	{
@@ -287,7 +290,7 @@ bool TradeCenterDialog::OnKey(const KeyEventInformation & KeyEventInformation)
 	return true;
 }
 
-bool TradeCenterDialog::OnAssetClassMouseButton(TradeCenterAssetClass * TradeCenterAssetClass, int Button, int State, float X, float Y)
+bool UI::TradeCenterDialog::OnAssetClassMouseButton(TradeCenterAssetClass * TradeCenterAssetClass, int Button, int State, float X, float Y)
 {
 	if((Button == 1 /* LEFT */) && (State == EV_DOWN))
 	{
@@ -304,7 +307,7 @@ bool TradeCenterDialog::OnAssetClassMouseButton(TradeCenterAssetClass * TradeCen
 	return false;
 }
 
-bool TradeCenterDialog::OnAssetClassScrollBoxMouseButton(int Button, int State, float X, float Y)
+bool UI::TradeCenterDialog::OnAssetClassScrollBoxMouseButton(int Button, int State, float X, float Y)
 {
 	if((Button == 4 /* WHEEL_UP */) && (State == EV_DOWN))
 	{
@@ -322,7 +325,7 @@ bool TradeCenterDialog::OnAssetClassScrollBoxMouseButton(int Button, int State, 
 	return false;
 }
 
-void TradeCenterDialog::OnAssetClassMouseEnter(TradeCenterAssetClass * AssetClassWidget)
+void UI::TradeCenterDialog::OnAssetClassMouseEnter(TradeCenterAssetClass * AssetClassWidget)
 {
 	if(AssetClassWidget != m_SelectedTradeCenterAssetClass)
 	{
@@ -330,7 +333,7 @@ void TradeCenterDialog::OnAssetClassMouseEnter(TradeCenterAssetClass * AssetClas
 	}
 }
 
-void TradeCenterDialog::OnAssetClassMouseLeave(TradeCenterAssetClass * AssetClassWidget)
+void UI::TradeCenterDialog::OnAssetClassMouseLeave(TradeCenterAssetClass * AssetClassWidget)
 {
 	if(AssetClassWidget != m_SelectedTradeCenterAssetClass)
 	{
