@@ -21,14 +21,14 @@
 
 #include "viewport.h"
 
-Viewport::Viewport(Widget * SupWidget) :
-	Widget(SupWidget)
+UI::Viewport::Viewport(UI::Widget * SupWidget) :
+	UI::Widget(SupWidget)
 {
 }
 
-void Viewport::Draw(void) const
+void UI::Viewport::Draw(void) const
 {
-	Widget::Draw();
+	UI::Widget::Draw();
 	glPushAttrib(GL_ENABLE_BIT | GL_VIEWPORT_BIT | GL_TRANSFORM_BIT);
 	// clipping is performed by the viewport
 	glDisable(GL_CLIP_PLANE0);

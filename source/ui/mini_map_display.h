@@ -21,13 +21,13 @@
 #define UI_MINI_MAP_DISPLAY_H
 
 #include "../referencing.h"
-#include "../viewport.h"
+#include "viewport.h"
 
 class Ship;
 
 namespace UI
 {
-	class MiniMapDisplay : public Viewport
+	class MiniMapDisplay : public UI::Viewport
 	{
 	public:
 		MiniMapDisplay(UI::Widget * SupWidget = 0);

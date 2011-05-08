@@ -20,33 +20,36 @@
 #ifndef VIEWPORT_H
 #define VIEWPORT_H
 
-#include "camera.h"
-#include "perspective.h"
-#include "ui/widget.h"
+#include "../camera.h"
+#include "../perspective.h"
+#include "widget.h"
 
-class Viewport : public UI::Widget
+namespace UI
 {
-public:
-	Viewport(UI::Widget * SupWidget = 0);
-	// getters
-	Camera * GetCamera(void);
-	Perspective * GetPerspective(void);
-	// actors
-	virtual void DrawInViewport(void) const = 0;
-private:
-	virtual void Draw(void) const;
-	Camera m_Camera;
-	Perspective m_Perspective;
-};
+	class Viewport : public UI::Widget
+	{
+	public:
+		Viewport(UI::Widget * SupWidget = 0);
+		// getters
+		Camera * GetCamera(void);
+		Perspective * GetPerspective(void);
+		// actors
+		virtual void DrawInViewport(void) const = 0;
+	private:
+		virtual void Draw(void) const;
+		Camera m_Camera;
+		Perspective m_Perspective;
+	};
 
-inline Camera * Viewport::GetCamera(void)
-{
-	return &m_Camera;
-}
+	inline Camera * Viewport::GetCamera(void)
+	{
+		return &m_Camera;
+	}
 
-inline Perspective * Viewport::GetPerspective(void)
-{
-	return &m_Perspective;
+	inline Perspective * Viewport::GetPerspective(void)
+	{
+		return &m_Perspective;
+	}
 }
 
 #endif
