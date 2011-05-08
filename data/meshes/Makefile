@@ -21,6 +21,7 @@ clean: clean-recursive
 
 clean-here:
 	$(RM) fighter_cockpit.xml
+	$(RM) fighter_faction.xml
 	$(RM) fighter_hull.xml
 	$(RM) laser_shot.xml
 	$(RM) light_laser.xml

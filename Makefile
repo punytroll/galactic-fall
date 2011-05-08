@@ -22,7 +22,7 @@ clean-recursive: clean-here
 	@$(MAKE) -C tools clean-recursive
 
 clean-repository: clean
-	$(RM) -R .configuration
+	$(RM) -R .configuration.d
 	$(RM) configuration
 
 data: data-all-recursive
