@@ -23,11 +23,11 @@
 #include "callbacks/callbacks.h"
 #include "file_handling.h"
 #include "key_event_information.h"
-#include "load_game_dialog.h"
 #include "main_menu_window.h"
-#include "save_game_dialog.h"
 #include "ui/button.h"
 #include "ui/label.h"
+#include "ui/load_game_dialog.h"
+#include "ui/save_game_dialog.h"
 
 // these functions are defined in main.cpp
 void ActionQuitGameLoop(void);
@@ -171,7 +171,7 @@ void MainMenuWindow::_OnLoadGameButtonClicked(void)
 {
 	if(_LoadGameDialog == 0)
 	{
-		_LoadGameDialog = new LoadGameDialog(GetRootWidget());
+		_LoadGameDialog = new UI::LoadGameDialog(GetRootWidget());
 		_LoadGameDialog->GrabKeyFocus();
 		_LoadGameDialog->ConnectClosingCallback(Callback(this, &MainMenuWindow::_OnLoadGameDialogClosing));
 		_LoadGameDialog->ConnectDestroyingCallback(Callback(this, &MainMenuWindow::_OnLoadGameDialogDestroying));
@@ -265,7 +265,7 @@ void MainMenuWindow::_OnSaveGameButtonClicked(void)
 {
 	if(_SaveGameDialog == 0)
 	{
-		_SaveGameDialog = new SaveGameDialog(GetRootWidget());
+		_SaveGameDialog = new UI::SaveGameDialog(GetRootWidget());
 		_SaveGameDialog->GrabKeyFocus();
 		_SaveGameDialog->ConnectClosingCallback(Callback(this, &MainMenuWindow::_OnSaveGameDialogClosing));
 		_SaveGameDialog->ConnectDestroyingCallback(Callback(this, &MainMenuWindow::_OnSaveGameDialogDestroying));
