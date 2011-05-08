@@ -815,7 +815,14 @@ static void ReadSystem(Arxx::Reference & Reference)
 		
 		Reader >> LandingFeePerSpace >> FactionIdentifier;
 		NewPlanet->SetLandingFeePerSpace(LandingFeePerSpace / 1000.0f);
-		NewPlanet->SetFaction(g_Galaxy->GetFaction(FactionIdentifier)->GetReference());
+		
+		Faction * Faction(g_Galaxy->GetFaction(FactionIdentifier));
+		
+		if(Faction == 0)
+		{
+			throw std::runtime_error("Could not find faction '" + FactionIdentifier + "' for planet '" + PlanetIdentifier + "' in system '" + Identifier + "'.");
+		}
+		NewPlanet->SetFaction(Faction->GetReference());
 		if(NewSystem->GetAspectObjectContainer()->AddContent(NewPlanet) == false)
 		{
 			throw std::runtime_error("Could not add planet '" + PlanetIdentifier + "' to system '" + Identifier + "'.");
