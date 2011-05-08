@@ -24,11 +24,11 @@
 
 class Character;
 class Planet;
-class TradeCenterDialog;
 
 namespace UI
 {
 	class Button;
+	class TradeCenterDialog;
 	
 	class PlanetDialog : public UI::Window
 	{
@@ -50,7 +50,7 @@ namespace UI
 		UI::Button * m_TakeOffButton;
 		UI::Button * m_TradeCenterButton;
 		UI::Button * m_RefuelButton;
-		TradeCenterDialog * m_TradeCenterDialog;
+		UI::TradeCenterDialog * m_TradeCenterDialog;
 	};
 }
 
