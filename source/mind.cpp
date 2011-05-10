@@ -60,6 +60,7 @@ GoalMind::~GoalMind(void)
 
 void GoalMind::HandleMessage(Message * Message)
 {
+	assert(m_Goal != 0);
 	m_Goal->HandleMessage(Message);
 }
 
