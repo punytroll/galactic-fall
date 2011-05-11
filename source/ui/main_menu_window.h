@@ -39,6 +39,8 @@ namespace UI
 		UI::Button * GetQuitButton(void);
 		UI::Button * GetResumeGameButton(void);
 		UI::Button * GetSaveGameButton(void);
+		// setters
+		void SetDestroyOnESCAPEKey(bool DestroyOnESCAPEKey);
 	private:
 		// callbacks
 		bool _OnKey(const KeyEventInformation & KeyEventInformation);
@@ -52,6 +54,7 @@ namespace UI
 		bool _OnSaveGameDialogClosing(UI::Dialog::ClosingReason ClosingReasong);
 		void _OnSaveGameDialogDestroying(void);
 		// member variables
+		bool _DestroyOnESCAPEKey;
 		bool _DestroyOnLoadGameDialogDestroy;
 		bool _DestroyOnSaveGameDialogDestroy;
 		UI::Button * _LoadGameButton;
@@ -86,6 +89,11 @@ namespace UI
 	inline UI::Button * MainMenuWindow::GetSaveGameButton(void)
 	{
 		return _SaveGameButton;
+	}
+	
+	inline void MainMenuWindow::SetDestroyOnESCAPEKey(bool DestroyOnESCAPEKey)
+	{
+		_DestroyOnESCAPEKey = DestroyOnESCAPEKey;
 	}
 }
 
