@@ -37,6 +37,7 @@ void SaveGame(std::ostream & OStream);
 
 UI::MainMenuWindow::MainMenuWindow(UI::Widget * SupWidget) :
 	UI::Window(SupWidget, "Galactic Fall"),
+	_DestroyOnESCAPEKey(true),
 	_DestroyOnLoadGameDialogDestroy(false),
 	_DestroyOnSaveGameDialogDestroy(false),
 	_LoadGameButton(0),
@@ -160,7 +161,10 @@ bool UI::MainMenuWindow::_OnKey(const KeyEventInformation & KeyEventInformation)
 {
 	if((KeyEventInformation.GetKeyCode() == 9 /* ESCAPE */) && (KeyEventInformation.IsDown() == true))
 	{
-		Destroy();
+		if(_DestroyOnESCAPEKey == true)
+		{
+			Destroy();
+		}
 	}
 	
 	// eat all keys

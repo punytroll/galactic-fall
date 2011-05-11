@@ -3478,6 +3478,7 @@ int main(int argc, char ** argv)
 	{
 		assert(g_MainMenuWindow == 0);
 		ActionOpenMainMenuWindow();
+		g_MainMenuWindow->SetDestroyOnESCAPEKey(false);
 	}
 	
 	// transform the key binding profile from the settings into a lookup table for fast execution
