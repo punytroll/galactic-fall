@@ -234,7 +234,7 @@ void GoalFighterThink::Process(void)
 		// FightSomeTarget may fail if no fighter is present in the system: fly around
 		if(SubGoal->GetName() == "fight_some_target")
 		{
-			AddSubGoal(new GoalFlyOverRandomPoint(GetMind()));
+			AddSubGoal(new GoalFlyOverRandomPointWhileNoThreat(GetMind()));
 		}
 		if(GetSubGoals().empty() == true)
 		{
@@ -405,16 +405,16 @@ void GoalFlyInSystemDirection::Terminate(void)
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-// GoalFlyOverRandomPoint                                                                        //
+// GoalFlyOverRandomPointWhileNoThreat                                                           //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-GoalFlyOverRandomPoint::GoalFlyOverRandomPoint(GoalMind * GoalMind) :
-	Goal(GoalMind, "fly_over_random_point"),
+GoalFlyOverRandomPointWhileNoThreat::GoalFlyOverRandomPointWhileNoThreat(GoalMind * GoalMind) :
+	Goal(GoalMind, "fly_over_random_point_while_no_threat"),
 	m_FlyInDirection(0)
 {
-	SetObjectIdentifier("::goal(fly_over_random_point)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
+	SetObjectIdentifier("::goal(fly_over_random_point_while_no_threat)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
 }
 
-void GoalFlyOverRandomPoint::Activate(void)
+void GoalFlyOverRandomPointWhileNoThreat::Activate(void)
 {
 	assert(GetSubGoals().empty() == true);
 	m_FlyInDirection = new GoalFlyInDirection(GetMind());
@@ -424,26 +424,32 @@ void GoalFlyOverRandomPoint::Activate(void)
 	SetState(Goal::ACTIVE);
 }
 
-void GoalFlyOverRandomPoint::Process(void)
+void GoalFlyOverRandomPointWhileNoThreat::Process(void)
 {
 	assert(GetState() == Goal::ACTIVE);
-	
-	Vector3f ToDestination(m_Point - GetMind()->GetCharacter()->GetShip()->GetAspectPosition()->GetPosition());
-	float LengthSquared(ToDestination.SquaredLength());
-	
-	if(LengthSquared > 400.0f)
+	if(GetMind()->GetCharacter()->GetThreat()->GetObjectWithHighestThreat() != 0)
 	{
-		m_FlyInDirection->SetDirection(ToDestination / sqrt(LengthSquared));
-		assert(GetSubGoals().front()->GetState() == Goal::ACTIVE);
-		GetSubGoals().front()->Process();
+		SetState(Goal::FAILED);
 	}
 	else
 	{
-		SetState(Goal::COMPLETED);
+		Vector3f ToDestination(m_Point - GetMind()->GetCharacter()->GetShip()->GetAspectPosition()->GetPosition());
+		float LengthSquared(ToDestination.SquaredLength());
+		
+		if(LengthSquared > 400.0f)
+		{
+			m_FlyInDirection->SetDirection(ToDestination / sqrt(LengthSquared));
+			assert(GetSubGoals().front()->GetState() == Goal::ACTIVE);
+			GetSubGoals().front()->Process();
+		}
+		else
+		{
+			SetState(Goal::COMPLETED);
+		}
 	}
 }
 
-void GoalFlyOverRandomPoint::Terminate(void)
+void GoalFlyOverRandomPointWhileNoThreat::Terminate(void)
 {
 	m_FlyInDirection->Terminate();
 }
