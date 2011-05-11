@@ -92,10 +92,10 @@ private:
 	GoalFlyInDirection * m_FlyInDirection;
 };
 
-class GoalFlyOverRandomPoint : public Goal
+class GoalFlyOverRandomPointWhileNoThreat : public Goal
 {
 public:
-	GoalFlyOverRandomPoint(GoalMind * GoalMind);
+	GoalFlyOverRandomPointWhileNoThreat(GoalMind * GoalMind);
 	virtual void Activate(void);
 	virtual void Process(void);
 	virtual void Terminate(void);
