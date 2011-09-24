@@ -2989,19 +2989,26 @@ void CreateWindow(void)
 	XSetWMProtocols(g_Display, g_Window, &wmDelete, 1);
 	XStoreName(g_Display, g_Window, "galactic-fall 0.2");
 	XMapWindow(g_Display, g_Window);
-	ON_DEBUG(std::cout << "Creating GLX context." << std::endl);
+	ON_DEBUG(std::cout << "Getting function \"glXCreateContextAttribsARB\"." << std::endl);
 	
 	CreateContextWithAttributesFunction CreateContextWithAttributes(reinterpret_cast< CreateContextWithAttributesFunction >(glXGetProcAddressARB(reinterpret_cast< const GLubyte * >("glXCreateContextAttribsARB"))));
-
-    int RequestedContextAttributes[] =
+	
+	if(CreateContextWithAttributes == 0)
+	{
+		std::cerr << "Failed to get the function \"glXCreateContextAttribsARB\"." << std::endl;
+		exit(1);
+	}
+	
+	int RequestedContextAttributes[] =
 	{
 		GLX_CONTEXT_MAJOR_VERSION_ARB, 3,
 		GLX_CONTEXT_MINOR_VERSION_ARB, 0,
 		// GLX_CONTEXT_FLAGS_ARB, GLX_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB,
 		None
 	};
- 
-    g_GLXContext = CreateContextWithAttributes(g_Display, Configurations[0], 0, true, RequestedContextAttributes);
+	
+	ON_DEBUG(std::cout << "Creating GLX context." << std::endl);
+	g_GLXContext = CreateContextWithAttributes(g_Display, Configurations[0], 0, true, RequestedContextAttributes);
 	if(glXIsDirect(g_Display, g_GLXContext) == false)
 	{
 		std::cerr << "Failed to acquire direct rendering context." << std::endl;
