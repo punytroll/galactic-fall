@@ -35,7 +35,7 @@ public:
 	KeySym GetKeySymbol(void) const;
 private:
 	void PerformStringLookup(void) const;
-	mutable XKeyEvent & m_KeyEvent;
+	XKeyEvent & m_KeyEvent;
 	mutable bool m_LookupStringPerformed;
 	mutable std::string m_String;
 	mutable KeySym m_KeySymbol;
