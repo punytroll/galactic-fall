@@ -101,7 +101,7 @@ UI::TradeCenterDialog::TradeCenterDialog(UI::Widget * SupWidget, Planet * Planet
 	m_Character(Character),
 	m_SelectedTradeCenterAssetClass(0)
 {
-	SetPosition(Vector2f(600.0f, 100.0f));
+	SetPosition(Vector2f(300.0f, 100.0f));
 	SetSize(Vector2f(500.0f, 330.0f));
 	ConnectKeyCallback(Callback(this, &TradeCenterDialog::OnKey));
 	m_OKButton = new UI::Button(this);
