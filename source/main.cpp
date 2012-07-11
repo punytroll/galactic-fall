@@ -195,6 +195,22 @@ ResourceReader * g_ResourceReader(0);
 Settings * g_Settings(0);
 void (*g_KeyboardLookupTable[128][2])(void);
 
+std::vector< std::string > SplitString(const std::string & String, char Delimiter)
+{
+	std::vector< std::string > Result;
+	size_t Begin(0);
+	size_t End(String.find(Delimiter, Begin));
+	
+	while(End != std::string::npos)
+	{
+		Result.push_back(String.substr(Begin, End - Begin));
+		Begin = End + 1;
+		End = String.find(Delimiter, Begin);
+	}
+	
+	return Result;
+}
+
 int WantToJump(Ship * Ship, System * TargetSystem)
 {
 	if(TargetSystem == 0)
@@ -2927,6 +2943,17 @@ void CreateWindow(void)
 	ON_DEBUG(std::cout << "Getting default screen." << std::endl);
 	
 	int ScreenNumber(DefaultScreen(g_Display));
+	
+	ON_DEBUG(std::cout << "Getting the GLX extensions." << std::endl);
+	
+	const char * GLXExtensionsString(glXQueryExtensionsString(g_Display, ScreenNumber));
+	std::vector< std::string > ExtensionStrings(SplitString(GLXExtensionsString, ' '));
+	
+	for(std::vector< std::string >::iterator Iterator = ExtensionStrings.begin(); Iterator != ExtensionStrings.end(); ++Iterator)
+	{
+		ON_DEBUG(std::cout << "  " << *Iterator << std::endl);
+	}
+	
 	int NumberOfConfigurations(0);
 	int RequestedAttributes[] =
 	{
@@ -3003,11 +3030,11 @@ void CreateWindow(void)
 	{
 		GLX_CONTEXT_MAJOR_VERSION_ARB, 3,
 		GLX_CONTEXT_MINOR_VERSION_ARB, 0,
-		// GLX_CONTEXT_FLAGS_ARB, GLX_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB,
 		None
 	};
 	
 	ON_DEBUG(std::cout << "Creating GLX context." << std::endl);
+	ON_DEBUG(std::cout << "  Asking for GLX context with version 3.0." << std::endl);
 	g_GLXContext = CreateContextWithAttributes(g_Display, Configurations[0], 0, true, RequestedContextAttributes);
 	if(glXIsDirect(g_Display, g_GLXContext) == false)
 	{
