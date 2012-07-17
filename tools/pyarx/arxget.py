@@ -225,7 +225,14 @@ def print_information_from_item(item, queries):
 
 def print_information_from_relation(relation, queries):
 	if "" in queries:
-		pass
+		if queries[""] == "name":
+			print(get_relation_name_string(relation))
+		elif queries[""] == "item-count":
+			print(get_relation_item_count_string(relation))
+		elif queries[""] == "item-identifiers":
+			print(get_relation_item_identifiers_string(relation))
+		else:
+			print("Unrecognized data name '" + queries[""] + "'.")
 	else:
 		print("name: " + get_relation_name_string(relation))
 		print("item-count: " + get_relation_item_count_string(relation))
