@@ -161,12 +161,9 @@ bool ResourceReader::LoadArchive(const std::string & ArchivePath)
 {
 	assert(m_Archive == 0);
 	m_Archive = new Arxx::Archive();
-	
-	Arxx::URI URI(ArchivePath);
-	
-	if(m_Archive->Load(URI) == false)
+	if(m_Archive->Load(ArchivePath) == false)
 	{
-		std::cerr << "Could not find or open " << URI << "." << std::endl;
+		std::cerr << "Could not find or open \"" << ArchivePath << "\"." << std::endl;
 		
 		return false;
 	}
