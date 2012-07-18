@@ -166,9 +166,6 @@ key_event_information_h = \
 list_h = \
 	list.h
 
-local_file_data_channel_h = \
-	local_file_data_channel.h
-
 map_knowledge_h = \
 	map_knowledge.h
 
@@ -527,8 +524,8 @@ check-dependencies:
 	@if ! pkg-config --exists libarxx; then \
 		echo -e "\nYour system is missing the \"libarxx\" library.\nYou can get this library from \"http://libarxx.sourceforge.net\"./\n"; false; \
 	fi
-	@if ! pkg-config --atleast-version=0.8.5 libarxx; then \
-		echo -e "\nThe library \"libarxx\" that is installed on your system is too old.\nYou have: Version `pkg-config --modversion libarxx`\nYou need: Version 0.8.5\nYou can get the most recent library from \"http://libarxx.sourceforge.net\"./\n"; false; \
+	@if ! pkg-config --atleast-version=0.8.6 libarxx; then \
+		echo -e "\nThe library \"libarxx\" that is installed on your system is too old.\nYou have: Version `pkg-config --modversion libarxx`\nYou need: Version 0.8.6\nYou can get the most recent library from \"http://libarxx.sourceforge.net\"./\n"; false; \
 	fi
 
 check-consistency:
@@ -570,7 +567,7 @@ $(OBJECT_FILES): $(CXXFLAGS_configuration)
 binary: $(OBJECT_FILES) $(LDFLAGS_configuration)
 	$(CXX) $(LDFLAGS) `pkg-config --libs libarxx` $(OBJECT_FILES) -lGL -lX11 -o $@
 
-.object-files/arx_reading.o: arx_reading.cpp $(arx_reading_h) $(arx_resources_h) $(asset_class_h) $(battery_class_h) $(buffer_reading_h) $(callbacks_callbacks_h) $(class_manager_h) $(commodity_class_h) $(faction_h) $(galaxy_h) $(generator_class_h) $(globals_h) $(graphics_material_h) $(graphics_mesh_h) $(graphics_mesh_manager_h) $(graphics_model_h) $(graphics_model_manager_h) $(graphics_texture_h) $(graphics_texture_manager_h) $(local_file_data_channel_h) $(object_aspect_name_h) $(object_aspect_object_container_h) $(object_aspect_position_h) $(object_factory_h) $(planet_h) $(settings_h) $(ship_class_h) $(slot_h) $(star_h) $(string_cast_h) $(system_h) $(ui_label_h) $(ui_mini_map_display_h) $(ui_scanner_display_h) $(ui_user_interface_h) $(ui_widget_h) $(visualization_prototype_h) $(weapon_class_h)
+.object-files/arx_reading.o: arx_reading.cpp $(arx_reading_h) $(arx_resources_h) $(asset_class_h) $(battery_class_h) $(buffer_reading_h) $(callbacks_callbacks_h) $(class_manager_h) $(commodity_class_h) $(faction_h) $(galaxy_h) $(generator_class_h) $(globals_h) $(graphics_material_h) $(graphics_mesh_h) $(graphics_mesh_manager_h) $(graphics_model_h) $(graphics_model_manager_h) $(graphics_texture_h) $(graphics_texture_manager_h) $(object_aspect_name_h) $(object_aspect_object_container_h) $(object_aspect_position_h) $(object_factory_h) $(planet_h) $(settings_h) $(ship_class_h) $(slot_h) $(star_h) $(string_cast_h) $(system_h) $(ui_label_h) $(ui_mini_map_display_h) $(ui_scanner_display_h) $(ui_user_interface_h) $(ui_widget_h) $(visualization_prototype_h) $(weapon_class_h)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags libarxx` -c $< -o $@
 
 .object-files/asset_class.o: asset_class.cpp $(asset_class_h)
@@ -671,9 +668,6 @@ binary: $(OBJECT_FILES) $(LDFLAGS_configuration)
 
 .object-files/key_event_information.o: key_event_information.cpp $(key_event_information_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
-
-.object-files/local_file_data_channel.o: local_file_data_channel.cpp $(local_file_data_channel_h)
-	$(CXX) $(CXXFLAGS) `pkg-config --cflags libarxx` -c $< -o $@
 
 .object-files/main.o: main.cpp $(arx_reading_h) $(asset_class_h) $(battery_h) $(battery_class_h) $(camera_h) $(commodity_h) $(commodity_class_h) $(character_h) $(color_h) $(command_mind_h) $(draw_text_h) $(faction_h) $(file_handling_h) $(galaxy_h) $(game_time_h) $(generator_h) $(generator_class_h) $(goals_h) $(graphics_engine_h) $(graphics_mesh_manager_h) $(graphics_model_h) $(graphics_model_manager_h) $(graphics_model_object_h) $(graphics_particle_system_h) $(graphics_scene_h) $(graphics_texture_manager_h) $(key_event_information_h) $(map_knowledge_h) $(math_h) $(message_h) $(message_dispatcher_h) $(messages_h) $(mind_h) $(object_aspect_accessory_h) $(object_aspect_name_h) $(object_aspect_object_container_h) $(object_aspect_outfitting_h) $(object_aspect_physical_h) $(object_aspect_position_h) $(object_aspect_update_h) $(object_aspect_visualization_h) $(object_factory_h) $(output_observer_h) $(perspective_h) $(planet_h) $(real_time_h) $(settings_h) $(ship_h) $(ship_class_h) $(shot_h) $(slot_h) $(slot_class_h) $(star_h) $(state_machine_h) $(states_h) $(storage_h) $(string_cast_h) $(system_h) $(system_statistics_h) $(timeout_notifications_h) $(ui_button_h) $(ui_label_h) $(ui_main_menu_window_h) $(ui_map_dialog_h) $(ui_mini_map_display_h) $(ui_object_information_dialog_h) $(ui_outfit_ship_dialog_h) $(ui_scanner_display_h) $(ui_star_map_display_h) $(ui_timing_dialog_h) $(ui_user_interface_h) $(ui_widget_h) $(visualizations_h) $(weapon_h) $(weapon_class_h) $(write_to_xml_stream_h) $(xml_puny_dom_h) $(xml_stream_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@

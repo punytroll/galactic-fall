@@ -22,7 +22,6 @@
 #include <iostream>
 
 #include <Archive.h>
-#include <DataRepository.h>
 #include <Item.h>
 
 #include "arx_reading.h"
@@ -44,7 +43,6 @@
 #include "graphics_model_manager.h"
 #include "graphics_texture.h"
 #include "graphics_texture_manager.h"
-#include "local_file_data_channel.h"
 #include "object_aspect_name.h"
 #include "object_aspect_object_container.h"
 #include "object_aspect_position.h"
@@ -149,25 +147,14 @@ void ReadItems(Arxx::Archive * Archive, const std::string & Path, const Callback
 }
 
 ResourceReader::ResourceReader(const std::string & DataDirectoryPath) :
-	m_LocalFileDataChannel(new LocalFileDataChannel("file:", DataDirectoryPath)),
 	m_Archive(0)
 {
-	if(Arxx::Repository.bRegisterDataChannel(m_LocalFileDataChannel) == false)
-	{
-		throw std::runtime_error("Could not register local file data channel.");
-	}
 }
 
 ResourceReader::~ResourceReader(void)
 {
 	delete m_Archive;
 	m_Archive = 0;
-	if(Arxx::Repository.bUnregisterDataChannel(m_LocalFileDataChannel) == false)
-	{
-		throw std::runtime_error("Could not unregister the local file data channel.");
-	}
-	delete m_LocalFileDataChannel;
-	m_LocalFileDataChannel = 0;
 }
 
 bool ResourceReader::LoadArchive(const std::string & ArchivePath)

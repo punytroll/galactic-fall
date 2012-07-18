@@ -25,7 +25,6 @@ namespace Arxx
 	class Archive;
 }
 
-class LocalFileDataChannel;
 class Settings;
 
 class ResourceReader
@@ -52,7 +51,6 @@ public:
 	// highly specialized ... too highly even
 	std::string GetContentStringFromResourcePath(const std::string & ResourcePath);
 private:
-	LocalFileDataChannel * m_LocalFileDataChannel;
 	Arxx::Archive * m_Archive;
 };
 
