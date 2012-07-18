@@ -32,17 +32,17 @@ static void MakeItemAvailable(Arxx::Item * Item)
 	{
 		if(Item->Fetch() == false)
 		{
-			throw std::runtime_error("Could not fetch data for item '" + Item->sGetName() + "' [" + to_string_cast(Item->u4GetUniqueID()) + "] from URI '" + Item->GetURI().sGetURI() + "'.");
+			throw std::runtime_error("Could not fetch data for item '" + Item->sGetName() + "' [" + to_string_cast(Item->u4GetUniqueID()) + "].");
 		}
 		if(Item->IsFetched() == false)
 		{
-			throw std::runtime_error("Could not fetch data for item '" + Item->sGetName() + "' [" + to_string_cast(Item->u4GetUniqueID()) + "] from URI '" + Item->GetURI().sGetURI() + "'.");
+			throw std::runtime_error("Could not fetch data for item '" + Item->sGetName() + "' [" + to_string_cast(Item->u4GetUniqueID()) + "].");
 		}
 	}
-	if(Item->bIsCompressed() == true)
+	if(Item->IsCompressed() == true)
 	{
-		Item->vDecompress();
-		if(Item->bIsCompressed() == true)
+		Item->Decompress();
+		if(Item->IsCompressed() == true)
 		{
 			throw std::runtime_error("Could not decompress data for item '" + Item->sGetName() + "' [" + to_string_cast(Item->u4GetUniqueID()) + "].");
 		}

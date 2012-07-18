@@ -95,17 +95,17 @@ static void MakeItemAvailable(Arxx::Item * Item)
 	{
 		if(Item->Fetch() == false)
 		{
-			throw std::runtime_error("Could not fetch data for item '" + Item->sGetName() + "' [" + to_string_cast(Item->u4GetUniqueID()) + "] from URI '" + Item->GetURI().sGetURI() + "'.");
+			throw std::runtime_error("Could not fetch data for item '" + Item->sGetName() + "' [" + to_string_cast(Item->u4GetUniqueID()) + "].");
 		}
 		if(Item->IsFetched() == false)
 		{
-			throw std::runtime_error("Could not fetch data for item '" + Item->sGetName() + "' [" + to_string_cast(Item->u4GetUniqueID()) + "] from URI '" + Item->GetURI().sGetURI() + "'.");
+			throw std::runtime_error("Could not fetch data for item '" + Item->sGetName() + "' [" + to_string_cast(Item->u4GetUniqueID()) + "].");
 		}
 	}
-	if(Item->bIsCompressed() == true)
+	if(Item->IsCompressed() == true)
 	{
-		Item->vDecompress();
-		if(Item->bIsCompressed() == true)
+		Item->Decompress();
+		if(Item->IsCompressed() == true)
 		{
 			throw std::runtime_error("Could not decompress data for item '" + Item->sGetName() + "' [" + to_string_cast(Item->u4GetUniqueID()) + "].");
 		}
@@ -177,7 +177,7 @@ bool ResourceReader::LoadArchive(const std::string & ArchivePath)
 	
 	Arxx::URI URI(ArchivePath);
 	
-	if(m_Archive->bLoad(URI) == false)
+	if(m_Archive->Load(URI) == false)
 	{
 		std::cerr << "Could not find or open " << URI << "." << std::endl;
 		
@@ -1003,9 +1003,9 @@ static void ReadWidget(Arxx::Reference & Reference)
 	Arxx::BufferReader Reader(*Item);
 	
 	ReadWidget(Reader, Item->u4GetType(), Item->u4GetSubType());
-	if(Reader.stGetPosition() != Item->u4GetDecompressedLength())
+	if(Reader.stGetPosition() != Item->GetDecompressedLength())
 	{
-		throw std::runtime_error("For the widget '" + Item->sGetName() + "' the reader functions did not read the expected amount of data. Should be '" + to_string_cast(Item->u4GetDecompressedLength()) + "' not '" + to_string_cast(Reader.stGetPosition()) + "'.");
+		throw std::runtime_error("For the widget '" + Item->sGetName() + "' the reader functions did not read the expected amount of data. Should be '" + to_string_cast(Item->GetDecompressedLength()) + "' not '" + to_string_cast(Reader.stGetPosition()) + "'.");
 	}
 }
 	
