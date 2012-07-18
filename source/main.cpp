@@ -2279,7 +2279,7 @@ bool LoadGameFromFileName(const std::string & FileName)
 {
 	std::ifstream InputFileStream(FileName.c_str());
 	
-	if(InputFileStream == false)
+	if(!InputFileStream)
 	{
 		std::cerr << "The savegame file '" << FileName << "' does not exist or is not readable." << std::endl;
 		

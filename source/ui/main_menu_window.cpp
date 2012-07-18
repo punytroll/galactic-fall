@@ -207,7 +207,7 @@ bool UI::MainMenuWindow::_OnLoadGameDialogClosing(UI::Dialog::ClosingReason Clos
 			std::ifstream InputFileStream;
 	
 			InputFileStream.open(FilePath.c_str());
-			if(InputFileStream == false)
+			if(!InputFileStream)
 			{
 				_LoadGameDialog->ShowErrorMessage("Could not find or read \"" + FilePath + "\".");
 				
@@ -301,7 +301,7 @@ bool UI::MainMenuWindow::_OnSaveGameDialogClosing(UI::Dialog::ClosingReason Clos
 			std::ofstream OutputFileStream;
 	
 			OutputFileStream.open(FilePath.c_str());
-			if(OutputFileStream == false)
+			if(!OutputFileStream)
 			{
 				_SaveGameDialog->ShowErrorMessage("Could not find or write to \"" + FilePath + "\".");
 				

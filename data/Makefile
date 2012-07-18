@@ -103,8 +103,8 @@ check-dependencies: raw_to_littlem-check-dependencies xml_to_data-check-dependen
 	@if ! pkg-config arxtools; then \
 		echo -e "\nThe tool suite \"arxtools\" is not installed on your system. You can get the most recent version from \"http://arx.googlecode.com/\".\n"; false; \
 	fi
-	@if ! pkg-config --atleast-version=0.6.0 arxtools; then \
-		echo -e "\nThe tool suite \"arxtools\" that is installed on your system is too old.\nYou have: Version `pkg-config --modversion arxtools`\nYou need: Version 0.6.0\nYou can get the most recent library from \"http://arx.googlecode.com/\"./\n"; false; \
+	@if ! pkg-config --atleast-version=0.6.1 arxtools; then \
+		echo -e "\nThe tool suite \"arxtools\" that is installed on your system is too old.\nYou have: Version `pkg-config --modversion arxtools`\nYou need: Version 0.6.1\nYou can get the most recent library from \"http://arx.googlecode.com/\"./\n"; false; \
 	fi
 	@if [ x`which arxtouch` = x -o x`which arxmod` = x -o x`which arxadd` = x ]; then \
 	    echo -e "\nYour system is missing parts of the arxtools suite.\nYou will need to install the tools \"arxtouch\", \"arxmod\" and \"arxadd\" on your system.\n"; false; \

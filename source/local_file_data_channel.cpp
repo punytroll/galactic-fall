@@ -29,7 +29,7 @@ LocalFileDataChannel::LocalFileDataChannel(const Arxx::URI & URI, const std::str
 	}
 }
 
-bool LocalFileDataChannel::bFetchData(const Arxx::URI & URI, Arxx::Buffer & Buffer, Arxx::FetchStatus & FetchStatus)
+bool LocalFileDataChannel::bFetchData(const Arxx::URI & URI, Arxx::Buffer & Buffer)
 {
 	if(URI.sGetScheme() != "file")
 	{
@@ -53,7 +53,7 @@ bool LocalFileDataChannel::bFetchData(const Arxx::URI & URI, Arxx::Buffer & Buff
 	
 	std::ifstream IStream(BetterURI.sGetPath().c_str());
 	
-	if(IStream == false)
+	if(!IStream)
 	{
 		std::cerr << " *** LocalFileDataChannel::bFetchData: Could not open file with URI \"" << BetterURI << "\"." << std::endl;
 		
@@ -63,10 +63,8 @@ bool LocalFileDataChannel::bFetchData(const Arxx::URI & URI, Arxx::Buffer & Buff
 	
 	Arxx::BufferWriter BufferWriter(Buffer);
 	
-	FetchStatus = Arxx::TRANSFERING;
 	BufferWriter << std::make_pair(static_cast< Arxx::Buffer::size_type >(0xFFFFFFFF), reinterpret_cast< std::istream * >(&IStream));
 	IStream.close();
-	FetchStatus = Arxx::FETCHED;
 	
 	return true;
 }

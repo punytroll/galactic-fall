@@ -30,7 +30,7 @@ class LocalFileDataChannel : public Arxx::DataChannel
 {
 public:
 	LocalFileDataChannel(const Arxx::URI & URI, const std::string & RelativePathPrefix);
-	virtual bool bFetchData(const Arxx::URI & URI, Arxx::Buffer & Buffer, Arxx::FetchStatus & FetchStatus);
+	virtual bool bFetchData(const Arxx::URI & URI, Arxx::Buffer & Buffer);
 private:
 	std::string m_RelativePathPrefix;
 };

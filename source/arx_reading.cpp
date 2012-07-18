@@ -91,13 +91,13 @@ static void ReadWidgetWidget(Arxx::BufferReader & Reader, UI::Widget * Widget);
 static void MakeItemAvailable(Arxx::Item * Item)
 {
 	assert(Item != 0);
-	if(Item->bIsFetched() == false)
+	if(Item->IsFetched() == false)
 	{
-		if(Item->bFetch() == false)
+		if(Item->Fetch() == false)
 		{
 			throw std::runtime_error("Could not fetch data for item '" + Item->sGetName() + "' [" + to_string_cast(Item->u4GetUniqueID()) + "] from URI '" + Item->GetURI().sGetURI() + "'.");
 		}
-		if(Item->bIsFetched() == false)
+		if(Item->IsFetched() == false)
 		{
 			throw std::runtime_error("Could not fetch data for item '" + Item->sGetName() + "' [" + to_string_cast(Item->u4GetUniqueID()) + "] from URI '" + Item->GetURI().sGetURI() + "'.");
 		}
