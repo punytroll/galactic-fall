@@ -32,11 +32,11 @@ static void MakeItemAvailable(Arxx::Item * Item)
 	{
 		if(Item->Fetch() == false)
 		{
-			throw std::runtime_error("Could not fetch data for item '" + Item->sGetName() + "' [" + to_string_cast(Item->u4GetUniqueID()) + "].");
+			throw std::runtime_error("Could not fetch data for item '" + Item->GetName() + "' [" + to_string_cast(Item->GetIdentifier()) + "].");
 		}
 		if(Item->IsFetched() == false)
 		{
-			throw std::runtime_error("Could not fetch data for item '" + Item->sGetName() + "' [" + to_string_cast(Item->u4GetUniqueID()) + "].");
+			throw std::runtime_error("Could not fetch data for item '" + Item->GetName() + "' [" + to_string_cast(Item->GetIdentifier()) + "].");
 		}
 	}
 	if(Item->IsCompressed() == true)
@@ -44,7 +44,7 @@ static void MakeItemAvailable(Arxx::Item * Item)
 		Item->Decompress();
 		if(Item->IsCompressed() == true)
 		{
-			throw std::runtime_error("Could not decompress data for item '" + Item->sGetName() + "' [" + to_string_cast(Item->u4GetUniqueID()) + "].");
+			throw std::runtime_error("Could not decompress data for item '" + Item->GetName() + "' [" + to_string_cast(Item->GetIdentifier()) + "].");
 		}
 	}
 }
@@ -86,7 +86,7 @@ void Settings::LoadFromItem(Arxx::Item * Item)
 {
 	if(Item->GetStructure().bHasRelation("child") == false)
 	{
-		throw std::runtime_error("The item '" + Item->sGetName() + "' does not contain a 'child' relation.");
+		throw std::runtime_error("The item '" + Item->GetName() + "' does not contain a 'child' relation.");
 	}
 	
 	Arxx::Structure::Relation & ChildRelation(Item->GetStructure().GetRelation("child"));
@@ -98,13 +98,13 @@ void Settings::LoadFromItem(Arxx::Item * Item)
 	{
 		Arxx::Item * KeyBindingProfileItem(KeyBindingProfileItems.front());
 		
-		if(KeyBindingProfileItem->u4GetType() != ARX_TYPE_KEY_BINDING_PROFILE)
+		if(KeyBindingProfileItem->GetType() != ARX_TYPE_KEY_BINDING_PROFILE)
 		{
-			throw std::runtime_error("The item '" + KeyBindingProfileItem->sGetName() + "' does not have the type '" + to_string_cast(ARX_TYPE_KEY_BINDING_PROFILE) + "' but the type '" + to_string_cast(KeyBindingProfileItem->u4GetType()) + "'.");
+			throw std::runtime_error("The item '" + KeyBindingProfileItem->GetName() + "' does not have the type '" + to_string_cast(ARX_TYPE_KEY_BINDING_PROFILE) + "' but the type '" + to_string_cast(KeyBindingProfileItem->GetType()) + "'.");
 		}
-		if(KeyBindingProfileItem->u4GetSubType() != 0)
+		if(KeyBindingProfileItem->GetSubType() != 0)
 		{
-			throw std::runtime_error("The item '" + KeyBindingProfileItem->sGetName() + "' does not have the sub type '" + to_string_cast(0) + "' but the sub type '" + to_string_cast(KeyBindingProfileItem->u4GetSubType()) + "'.");
+			throw std::runtime_error("The item '" + KeyBindingProfileItem->GetName() + "' does not have the sub type '" + to_string_cast(0) + "' but the sub type '" + to_string_cast(KeyBindingProfileItem->GetSubType()) + "'.");
 		}
 		MakeItemAvailable(KeyBindingProfileItem);
 		
@@ -132,13 +132,13 @@ void Settings::LoadFromItem(Arxx::Item * Item)
 	{
 		Arxx::Item * WindowDimensionsItem(WindowDimensionsItems.front());
 		
-		if(WindowDimensionsItem->u4GetType() != ARX_TYPE_DIMENSIONS)
+		if(WindowDimensionsItem->GetType() != ARX_TYPE_DIMENSIONS)
 		{
-			throw std::runtime_error("The item '" + WindowDimensionsItem->sGetName() + "' does not have the type '" + to_string_cast(ARX_TYPE_DIMENSIONS) + "' but the type '" + to_string_cast(WindowDimensionsItem->u4GetType()) + "'.");
+			throw std::runtime_error("The item '" + WindowDimensionsItem->GetName() + "' does not have the type '" + to_string_cast(ARX_TYPE_DIMENSIONS) + "' but the type '" + to_string_cast(WindowDimensionsItem->GetType()) + "'.");
 		}
-		if(WindowDimensionsItem->u4GetSubType() != ARX_TYPE_DIMENSIONS_SUB_TYPE_2_FLOATS)
+		if(WindowDimensionsItem->GetSubType() != ARX_TYPE_DIMENSIONS_SUB_TYPE_2_FLOATS)
 		{
-			throw std::runtime_error("The item '" + WindowDimensionsItem->sGetName() + "' does not have the sub type '" + to_string_cast(ARX_TYPE_DIMENSIONS_SUB_TYPE_2_FLOATS) + "' but the sub type '" + to_string_cast(WindowDimensionsItem->u4GetSubType()) + "'.");
+			throw std::runtime_error("The item '" + WindowDimensionsItem->GetName() + "' does not have the sub type '" + to_string_cast(ARX_TYPE_DIMENSIONS_SUB_TYPE_2_FLOATS) + "' but the sub type '" + to_string_cast(WindowDimensionsItem->GetSubType()) + "'.");
 		}
 		MakeItemAvailable(WindowDimensionsItem);
 		

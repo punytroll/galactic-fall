@@ -93,11 +93,11 @@ static void MakeItemAvailable(Arxx::Item * Item)
 	{
 		if(Item->Fetch() == false)
 		{
-			throw std::runtime_error("Could not fetch data for item '" + Item->sGetName() + "' [" + to_string_cast(Item->u4GetUniqueID()) + "].");
+			throw std::runtime_error("Could not fetch data for item '" + Item->GetName() + "' [" + to_string_cast(Item->GetIdentifier()) + "].");
 		}
 		if(Item->IsFetched() == false)
 		{
-			throw std::runtime_error("Could not fetch data for item '" + Item->sGetName() + "' [" + to_string_cast(Item->u4GetUniqueID()) + "].");
+			throw std::runtime_error("Could not fetch data for item '" + Item->GetName() + "' [" + to_string_cast(Item->GetIdentifier()) + "].");
 		}
 	}
 	if(Item->IsCompressed() == true)
@@ -105,7 +105,7 @@ static void MakeItemAvailable(Arxx::Item * Item)
 		Item->Decompress();
 		if(Item->IsCompressed() == true)
 		{
-			throw std::runtime_error("Could not decompress data for item '" + Item->sGetName() + "' [" + to_string_cast(Item->u4GetUniqueID()) + "].");
+			throw std::runtime_error("Could not decompress data for item '" + Item->GetName() + "' [" + to_string_cast(Item->GetIdentifier()) + "].");
 		}
 	}
 }
@@ -273,13 +273,13 @@ static void ReadAssetClass(Arxx::Reference & Reference)
 {
 	Arxx::Item * Item(Resolve(Reference));
 	
-	if(Item->u4GetType() != ARX_TYPE_ASSET_CLASS)
+	if(Item->GetType() != ARX_TYPE_ASSET_CLASS)
 	{
-		throw std::runtime_error("Item type for asset class '" + Item->sGetName() + "' should be '" + to_string_cast(ARX_TYPE_ASSET_CLASS) + "' not '" + to_string_cast(Item->u4GetType()) + "'.");
+		throw std::runtime_error("Item type for asset class '" + Item->GetName() + "' should be '" + to_string_cast(ARX_TYPE_ASSET_CLASS) + "' not '" + to_string_cast(Item->GetType()) + "'.");
 	}
-	if(Item->u4GetSubType() != 0)
+	if(Item->GetSubType() != 0)
 	{
-		throw std::runtime_error("Item sub type for asset class '" + Item->sGetName() + "' should be '0' not '" + to_string_cast(Item->u4GetSubType()) + "'.");
+		throw std::runtime_error("Item sub type for asset class '" + Item->GetName() + "' should be '0' not '" + to_string_cast(Item->GetSubType()) + "'.");
 	}
 	
 	Arxx::BufferReader Reader(*Item);
@@ -311,13 +311,13 @@ static void ReadBatteryClass(Arxx::Reference & Reference)
 {
 	Arxx::Item * Item(Resolve(Reference));
 	
-	if(Item->u4GetType() != ARX_TYPE_BATTERY_CLASS)
+	if(Item->GetType() != ARX_TYPE_BATTERY_CLASS)
 	{
-		throw std::runtime_error("Item type for battery class '" + Item->sGetName() + "' should be '" + to_string_cast(ARX_TYPE_BATTERY_CLASS) + "' not '" + to_string_cast(Item->u4GetType()) + "'.");
+		throw std::runtime_error("Item type for battery class '" + Item->GetName() + "' should be '" + to_string_cast(ARX_TYPE_BATTERY_CLASS) + "' not '" + to_string_cast(Item->GetType()) + "'.");
 	}
-	if(Item->u4GetSubType() != 0)
+	if(Item->GetSubType() != 0)
 	{
-		throw std::runtime_error("Item sub type for battery class '" + Item->sGetName() + "' should be '0' not '" + to_string_cast(Item->u4GetSubType()) + "'.");
+		throw std::runtime_error("Item sub type for battery class '" + Item->GetName() + "' should be '0' not '" + to_string_cast(Item->GetSubType()) + "'.");
 	}
 	
 	Arxx::BufferReader Reader(*Item);
@@ -349,13 +349,13 @@ static void ReadCommodityClass(Arxx::Reference & Reference)
 {
 	Arxx::Item * Item(Resolve(Reference));
 	
-	if(Item->u4GetType() != ARX_TYPE_COMMODITY_CLASS)
+	if(Item->GetType() != ARX_TYPE_COMMODITY_CLASS)
 	{
-		throw std::runtime_error("Item type for commodity class '" + Item->sGetName() + "' should be '" + to_string_cast(ARX_TYPE_COMMODITY_CLASS) + "' not '" + to_string_cast(Item->u4GetType()) + "'.");
+		throw std::runtime_error("Item type for commodity class '" + Item->GetName() + "' should be '" + to_string_cast(ARX_TYPE_COMMODITY_CLASS) + "' not '" + to_string_cast(Item->GetType()) + "'.");
 	}
-	if(Item->u4GetSubType() != 0)
+	if(Item->GetSubType() != 0)
 	{
-		throw std::runtime_error("Item sub type for commodity class '" + Item->sGetName() + "' should be '0' not '" + to_string_cast(Item->u4GetSubType()) + "'.");
+		throw std::runtime_error("Item sub type for commodity class '" + Item->GetName() + "' should be '0' not '" + to_string_cast(Item->GetSubType()) + "'.");
 	}
 	
 	Arxx::BufferReader Reader(*Item);
@@ -387,13 +387,13 @@ static void ReadFaction(Arxx::Reference & Reference)
 {
 	Arxx::Item * Item(Resolve(Reference));
 	
-	if(Item->u4GetType() != ARX_TYPE_FACTION)
+	if(Item->GetType() != ARX_TYPE_FACTION)
 	{
-		throw std::runtime_error("Item type for faction '" + Item->sGetName() + "' should be '" + to_string_cast(ARX_TYPE_FACTION) + "' not '" + to_string_cast(Item->u4GetType()) + "'.");
+		throw std::runtime_error("Item type for faction '" + Item->GetName() + "' should be '" + to_string_cast(ARX_TYPE_FACTION) + "' not '" + to_string_cast(Item->GetType()) + "'.");
 	}
-	if(Item->u4GetSubType() != 0)
+	if(Item->GetSubType() != 0)
 	{
-		throw std::runtime_error("Item sub type for faction '" + Item->sGetName() + "' should be '0' not '" + to_string_cast(Item->u4GetSubType()) + "'.");
+		throw std::runtime_error("Item sub type for faction '" + Item->GetName() + "' should be '0' not '" + to_string_cast(Item->GetSubType()) + "'.");
 	}
 	
 	Arxx::BufferReader Reader(*Item);
@@ -425,13 +425,13 @@ static void ReadGeneratorClass(Arxx::Reference & Reference)
 {
 	Arxx::Item * Item(Resolve(Reference));
 	
-	if(Item->u4GetType() != ARX_TYPE_GENERATOR_CLASS)
+	if(Item->GetType() != ARX_TYPE_GENERATOR_CLASS)
 	{
-		throw std::runtime_error("Item type for generator class '" + Item->sGetName() + "' should be '" + to_string_cast(ARX_TYPE_GENERATOR_CLASS) + "' not '" + to_string_cast(Item->u4GetType()) + "'.");
+		throw std::runtime_error("Item type for generator class '" + Item->GetName() + "' should be '" + to_string_cast(ARX_TYPE_GENERATOR_CLASS) + "' not '" + to_string_cast(Item->GetType()) + "'.");
 	}
-	if(Item->u4GetSubType() != 0)
+	if(Item->GetSubType() != 0)
 	{
-		throw std::runtime_error("Item sub type for generator class '" + Item->sGetName() + "' should be '0' not '" + to_string_cast(Item->u4GetSubType()) + "'.");
+		throw std::runtime_error("Item sub type for generator class '" + Item->GetName() + "' should be '0' not '" + to_string_cast(Item->GetSubType()) + "'.");
 	}
 	
 	Arxx::BufferReader Reader(*Item);
@@ -463,13 +463,13 @@ static void ReadMesh(Arxx::Reference & Reference)
 {
 	Arxx::Item * Item(Resolve(Reference));
 	
-	if(Item->u4GetType() != ARX_TYPE_MESH)
+	if(Item->GetType() != ARX_TYPE_MESH)
 	{
-		throw std::runtime_error("Item type for mesh '" + Item->sGetName() + "' should be '" + to_string_cast(ARX_TYPE_MESH) + "' not '" + to_string_cast(Item->u4GetType()) + "'.");
+		throw std::runtime_error("Item type for mesh '" + Item->GetName() + "' should be '" + to_string_cast(ARX_TYPE_MESH) + "' not '" + to_string_cast(Item->GetType()) + "'.");
 	}
-	if(Item->u4GetSubType() != 0)
+	if(Item->GetSubType() != 0)
 	{
-		throw std::runtime_error("Item sub type for mesh '" + Item->sGetName() + "' should be '0' not '" + to_string_cast(Item->u4GetSubType()) + "'.");
+		throw std::runtime_error("Item sub type for mesh '" + Item->GetName() + "' should be '0' not '" + to_string_cast(Item->GetSubType()) + "'.");
 	}
 	
 	Arxx::BufferReader Reader(*Item);
@@ -533,13 +533,13 @@ static void ReadModel(Arxx::Reference & Reference)
 {
 	Arxx::Item * Item(Resolve(Reference));
 	
-	if(Item->u4GetType() != ARX_TYPE_MODEL)
+	if(Item->GetType() != ARX_TYPE_MODEL)
 	{
-		throw std::runtime_error("Item type for model '" + Item->sGetName() + "' should be '" + to_string_cast(ARX_TYPE_MODEL) + "' not '" + to_string_cast(Item->u4GetType()) + "'.");
+		throw std::runtime_error("Item type for model '" + Item->GetName() + "' should be '" + to_string_cast(ARX_TYPE_MODEL) + "' not '" + to_string_cast(Item->GetType()) + "'.");
 	}
-	if(Item->u4GetSubType() != 0)
+	if(Item->GetSubType() != 0)
 	{
-		throw std::runtime_error("Item sub type for model '" + Item->sGetName() + "' should be '0' not '" + to_string_cast(Item->u4GetSubType()) + "'.");
+		throw std::runtime_error("Item sub type for model '" + Item->GetName() + "' should be '0' not '" + to_string_cast(Item->GetSubType()) + "'.");
 	}
 	
 	Arxx::BufferReader Reader(*Item);
@@ -578,13 +578,13 @@ static void ReadShipClass(Arxx::Reference & Reference)
 {
 	Arxx::Item * Item(Resolve(Reference));
 	
-	if(Item->u4GetType() != ARX_TYPE_SHIP_CLASS)
+	if(Item->GetType() != ARX_TYPE_SHIP_CLASS)
 	{
-		throw std::runtime_error("Item type for ship class '" + Item->sGetName() + "' should be '" + to_string_cast(ARX_TYPE_SHIP_CLASS) + "' not '" + to_string_cast(Item->u4GetType()) + "'.");
+		throw std::runtime_error("Item type for ship class '" + Item->GetName() + "' should be '" + to_string_cast(ARX_TYPE_SHIP_CLASS) + "' not '" + to_string_cast(Item->GetType()) + "'.");
 	}
-	if(Item->u4GetSubType() != 0)
+	if(Item->GetSubType() != 0)
 	{
-		throw std::runtime_error("Item sub type for ship class '" + Item->sGetName() + "' should be '0' not '" + to_string_cast(Item->u4GetSubType()) + "'.");
+		throw std::runtime_error("Item sub type for ship class '" + Item->GetName() + "' should be '0' not '" + to_string_cast(Item->GetSubType()) + "'.");
 	}
 	
 	Arxx::BufferReader Reader(*Item);
@@ -671,13 +671,13 @@ static void ReadSlotClass(Arxx::Reference & Reference)
 {
 	Arxx::Item * Item(Resolve(Reference));
 	
-	if(Item->u4GetType() != ARX_TYPE_SLOT_CLASS)
+	if(Item->GetType() != ARX_TYPE_SLOT_CLASS)
 	{
-		throw std::runtime_error("Item type for slot class '" + Item->sGetName() + "' should be '" + to_string_cast(ARX_TYPE_SLOT_CLASS) + "' not '" + to_string_cast(Item->u4GetType()) + "'.");
+		throw std::runtime_error("Item type for slot class '" + Item->GetName() + "' should be '" + to_string_cast(ARX_TYPE_SLOT_CLASS) + "' not '" + to_string_cast(Item->GetType()) + "'.");
 	}
-	if(Item->u4GetSubType() != 0)
+	if(Item->GetSubType() != 0)
 	{
-		throw std::runtime_error("Item sub type for slot class '" + Item->sGetName() + "' should be '0' not '" + to_string_cast(Item->u4GetSubType()) + "'.");
+		throw std::runtime_error("Item sub type for slot class '" + Item->GetName() + "' should be '0' not '" + to_string_cast(Item->GetSubType()) + "'.");
 	}
 	
 	Arxx::BufferReader Reader(*Item);
@@ -710,13 +710,13 @@ static void ReadSystem(Arxx::Reference & Reference)
 {
 	Arxx::Item * Item(Resolve(Reference));
 	
-	if(Item->u4GetType() != ARX_TYPE_SYSTEM)
+	if(Item->GetType() != ARX_TYPE_SYSTEM)
 	{
-		throw std::runtime_error("Item type for system '" + Item->sGetName() + "' should be '" + to_string_cast(ARX_TYPE_SYSTEM) + "' not '" + to_string_cast(Item->u4GetType()) + "'.");
+		throw std::runtime_error("Item type for system '" + Item->GetName() + "' should be '" + to_string_cast(ARX_TYPE_SYSTEM) + "' not '" + to_string_cast(Item->GetType()) + "'.");
 	}
-	if(Item->u4GetSubType() != 0)
+	if(Item->GetSubType() != 0)
 	{
-		throw std::runtime_error("Item sub type for system '" + Item->sGetName() + "' should be '0' not '" + to_string_cast(Item->u4GetSubType()) + "'.");
+		throw std::runtime_error("Item sub type for system '" + Item->GetName() + "' should be '0' not '" + to_string_cast(Item->GetSubType()) + "'.");
 	}
 	
 	Arxx::BufferReader Reader(*Item);
@@ -822,13 +822,13 @@ static void ReadSystemLink(Arxx::Reference & Reference)
 {
 	Arxx::Item * Item(Resolve(Reference));
 	
-	if(Item->u4GetType() != ARX_TYPE_SYSTEM_LINK)
+	if(Item->GetType() != ARX_TYPE_SYSTEM_LINK)
 	{
-		throw std::runtime_error("Item type for system link '" + Item->sGetName() + "' should be '" + to_string_cast(ARX_TYPE_SYSTEM_LINK) + "' not '" + to_string_cast(Item->u4GetType()) + "'.");
+		throw std::runtime_error("Item type for system link '" + Item->GetName() + "' should be '" + to_string_cast(ARX_TYPE_SYSTEM_LINK) + "' not '" + to_string_cast(Item->GetType()) + "'.");
 	}
-	if(Item->u4GetSubType() != 0)
+	if(Item->GetSubType() != 0)
 	{
-		throw std::runtime_error("Item sub type for system link '" + Item->sGetName() + "' should be '0' not '" + to_string_cast(Item->u4GetSubType()) + "'.");
+		throw std::runtime_error("Item sub type for system link '" + Item->GetName() + "' should be '0' not '" + to_string_cast(Item->GetSubType()) + "'.");
 	}
 	
 	Arxx::BufferReader Reader(*Item);
@@ -842,11 +842,11 @@ static void ReadSystemLink(Arxx::Reference & Reference)
 	
 	if(System1 == 0)
 	{
-		throw std::runtime_error("For the system link '" + Item->sGetName() + "' the first system '" + System1Identifier + "' must be defined.");
+		throw std::runtime_error("For the system link '" + Item->GetName() + "' the first system '" + System1Identifier + "' must be defined.");
 	}		
 	if(System2 == 0)
 	{
-		throw std::runtime_error("For the system link '" + Item->sGetName() + "' the second system '" + System2Identifier + "' must be defined.");
+		throw std::runtime_error("For the system link '" + Item->GetName() + "' the second system '" + System2Identifier + "' must be defined.");
 	}
 	System1->AddLinkedSystem(System2);
 	System2->AddLinkedSystem(System1);
@@ -856,13 +856,13 @@ static void ReadTexture(Arxx::Reference & Reference)
 {
 	Arxx::Item * Item(Resolve(Reference));
 	
-	if(Item->u4GetType() != ARX_TYPE_TEXTURE)
+	if(Item->GetType() != ARX_TYPE_TEXTURE)
 	{
-		throw std::runtime_error("Item type for texture '" + Item->sGetName() + "' should be '" + to_string_cast(ARX_TYPE_TEXTURE) + "' not '" + to_string_cast(Item->u4GetType()) + "'.");
+		throw std::runtime_error("Item type for texture '" + Item->GetName() + "' should be '" + to_string_cast(ARX_TYPE_TEXTURE) + "' not '" + to_string_cast(Item->GetType()) + "'.");
 	}
-	if(Item->u4GetSubType() != 0)
+	if(Item->GetSubType() != 0)
 	{
-		throw std::runtime_error("Item sub type for texture '" + Item->sGetName() + "' should be '0' not '" + to_string_cast(Item->u4GetSubType()) + "'.");
+		throw std::runtime_error("Item sub type for texture '" + Item->GetName() + "' should be '0' not '" + to_string_cast(Item->GetSubType()) + "'.");
 	}
 	
 	Arxx::BufferReader Reader(*Item);
@@ -921,13 +921,13 @@ static void ReadWeaponClass(Arxx::Reference & Reference)
 {
 	Arxx::Item * Item(Resolve(Reference));
 	
-	if(Item->u4GetType() != ARX_TYPE_WEAPON_CLASS)
+	if(Item->GetType() != ARX_TYPE_WEAPON_CLASS)
 	{
-		throw std::runtime_error("Item type for weapon class '" + Item->sGetName() + "' should be '" + to_string_cast(ARX_TYPE_WEAPON_CLASS) + "' not '" + to_string_cast(Item->u4GetType()) + "'.");
+		throw std::runtime_error("Item type for weapon class '" + Item->GetName() + "' should be '" + to_string_cast(ARX_TYPE_WEAPON_CLASS) + "' not '" + to_string_cast(Item->GetType()) + "'.");
 	}
-	if(Item->u4GetSubType() != 0)
+	if(Item->GetSubType() != 0)
 	{
-		throw std::runtime_error("Item sub type for weapon class '" + Item->sGetName() + "' should be '0' not '" + to_string_cast(Item->u4GetSubType()) + "'.");
+		throw std::runtime_error("Item sub type for weapon class '" + Item->GetName() + "' should be '0' not '" + to_string_cast(Item->GetSubType()) + "'.");
 	}
 	
 	Arxx::BufferReader Reader(*Item);
@@ -979,17 +979,17 @@ static void ReadWidget(Arxx::Reference & Reference)
 {
 	Arxx::Item * Item(Resolve(Reference));
 	
-	if(Item->u4GetType() != ARX_TYPE_WIDGET)
+	if(Item->GetType() != ARX_TYPE_WIDGET)
 	{
-		throw std::runtime_error("Item type for widget '" + Item->sGetName() + "' should be '" + to_string_cast(ARX_TYPE_WIDGET) + "' not '" + to_string_cast(Item->u4GetType()) + "'.");
+		throw std::runtime_error("Item type for widget '" + Item->GetName() + "' should be '" + to_string_cast(ARX_TYPE_WIDGET) + "' not '" + to_string_cast(Item->GetType()) + "'.");
 	}
 	
 	Arxx::BufferReader Reader(*Item);
 	
-	ReadWidget(Reader, Item->u4GetType(), Item->u4GetSubType());
+	ReadWidget(Reader, Item->GetType(), Item->GetSubType());
 	if(Reader.stGetPosition() != Item->GetDecompressedLength())
 	{
-		throw std::runtime_error("For the widget '" + Item->sGetName() + "' the reader functions did not read the expected amount of data. Should be '" + to_string_cast(Item->GetDecompressedLength()) + "' not '" + to_string_cast(Reader.stGetPosition()) + "'.");
+		throw std::runtime_error("For the widget '" + Item->GetName() + "' the reader functions did not read the expected amount of data. Should be '" + to_string_cast(Item->GetDecompressedLength()) + "' not '" + to_string_cast(Reader.stGetPosition()) + "'.");
 	}
 }
 	
