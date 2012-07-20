@@ -524,8 +524,8 @@ check-dependencies:
 	@if ! pkg-config --exists libarxx; then \
 		echo -e "\nYour system is missing the \"libarxx\" library.\nYou can get this library from \"http://libarxx.sourceforge.net\"./\n"; false; \
 	fi
-	@if ! pkg-config --atleast-version=0.8.7 libarxx; then \
-		echo -e "\nThe library \"libarxx\" that is installed on your system is too old.\nYou have: Version `pkg-config --modversion libarxx`\nYou need: Version 0.8.7\nYou can get the most recent library from \"http://libarxx.sourceforge.net\"./\n"; false; \
+	@if ! pkg-config --atleast-version=0.8.9 libarxx; then \
+		echo -e "\nThe library \"libarxx\" that is installed on your system is too old.\nYou have: Version `pkg-config --modversion libarxx`\nYou need: Version 0.8.9\nYou can get the most recent library from \"http://libarxx.sourceforge.net\"./\n"; false; \
 	fi
 
 check-consistency:
