@@ -2948,10 +2948,20 @@ void CreateWindow(void)
 	
 	const char * GLXExtensionsString(glXQueryExtensionsString(g_Display, ScreenNumber));
 	std::vector< std::string > ExtensionStrings(SplitString(GLXExtensionsString, ' '));
+	bool GLX_ARB_create_context_Available(false);
 	
 	for(std::vector< std::string >::iterator Iterator = ExtensionStrings.begin(); Iterator != ExtensionStrings.end(); ++Iterator)
 	{
+		if(*Iterator == "GLX_ARB_create_context")
+		{
+			GLX_ARB_create_context_Available = true;
+		}
 		ON_DEBUG(std::cout << "  " << *Iterator << std::endl);
+	}
+	if(GLX_ARB_create_context_Available == false)
+	{
+		std::cerr << "Your GLX implementation does not support the required extension GLX_ARB_create_context." << std::endl;
+		exit(1);
 	}
 	
 	int NumberOfConfigurations(0);
