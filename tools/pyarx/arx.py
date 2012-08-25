@@ -22,7 +22,11 @@
 ' This is version 0.0.1 of the pyarx python suite.
 '''
 
+from random import randint
 from struct import unpack
+
+class InvalidOperation(Exception):
+	pass
 
 class Data(object):
 	def __init__(self):
@@ -157,7 +161,6 @@ class Item(object):
 		return self.__data
 	
 	def get_identifier(self):
-		assert isinstance(self.__identifier, int) == True
 		return self.__identifier
 	
 	def get_name(self):
@@ -195,24 +198,26 @@ class Item(object):
 				self.__archive.unregister_item(self)
 				self.__archive = None
 			else:
-				raise "ERROR"
+				raise InvalidOperation("This item is not registered at any archive.")
 		else:
 			if self.__archive == None:
 				self.__archive = archive
 				archive.register_item(self)
 			else:
-				raise "ERROR"
+				raise InvalidOperation("This item is already registered at an archive.")
 	
 	def set_identifier(self, identifier):
 		assert isinstance(identifier, int) == True
 		if self.__archive == None:
 			self.__identifier = identifier
-		else:
+		elif identifier != None:
 			archive = self.__archive
 			self.__archive.unregister_item(self)
 			self.__identifier = identifier
 			self.__archive = archive
 			self.__archive.register_item(self)
+		else:
+			raise InvalidOperation("This item is registered at an archive and must have an identifier.")
 	
 	def set_name(self, name):
 		assert isinstance(name, str) == True
@@ -311,7 +316,10 @@ class Archive(object):
 		return self.__items.values()
 	
 	def __get_new_item_identifier(self):
-		raise "TODO"
+		result = randint(0, 0xffffffff)
+		while result in self.__items:
+			result = randint(0, 0xffffffff)
+		return result
 	
 	def get_number_of_items(self):
 		assert isinstance(self.__items, dict) == True
@@ -334,21 +342,20 @@ class Archive(object):
 		assert isinstance(self.__items, dict) == True
 		if item.get_archive() == None:
 			if item.get_identifier() == None:
-				identifier = self.__get_new_item_identifier()
-				item.set_identifier(identifier)
+				item.set_identifier(self.__get_new_item_identifier())
 				item.set_archive(self)
-				self.__items[item.get_identifier()] = item
 			elif item.get_identifier() not in self.__items:
 				item.set_archive(self)
-				self.__items[item.get_identifier()] = item
 			else:
-				raise "ERROR"
+				raise InvalidOperation("This item identifier is already registered at this archive.")
 		elif item.get_archive() == self:
 			assert item.get_identifier() != None
-			assert item.get_identifier() not in self.__items
-			self.__items[item.get_identifier()] = item
+			if item.get_identifier() not in self.__items:
+				self.__items[item.get_identifier()] = item
+			else:
+				raise InvalidOperation("This item is already registered at this archive.")
 		else:
-			raise "ERROR"
+			raise InvalidOperation("This item is already registered at another archive.")
 	
 	def save(self, file_path):
 		pass
@@ -357,7 +364,51 @@ class Archive(object):
 		assert isinstance(item, Item) == True
 		assert item.get_identifier() != None
 		if item.get_archive() == self:
-			del self.__items[item.get_identifier()]
-			item.set_archive(None)
+			if item.get_identifier() in self.__items:
+				del self.__items[item.get_identifier()]
+				item.set_archive(None)
 		else:
-			raise "ERROR"
+			raise InvalidOperation()
+
+if __name__ == "__main__":
+	archive = Archive()
+	item = Item()
+	archive.register_item(item)
+	assert item.get_identifier() != None
+	identifier = item.get_identifier()
+	assert item.get_archive() == archive
+	assert archive.get_number_of_items() == 1
+	assert archive.has_item_by_identifier(item.get_identifier()) == True
+	assert archive.get_item_by_identifier(item.get_identifier()) == item
+	archive.unregister_item(item)
+	assert item.get_identifier() == identifier
+	assert item.get_archive() == None
+	assert archive.get_number_of_items() == 0
+	assert archive.has_item_by_identifier(item.get_identifier()) == False
+	assert archive.get_item_by_identifier(item.get_identifier()) == None
+	item.set_archive(archive)
+	assert item.get_archive() == archive
+	assert item.get_identifier() == identifier
+	assert archive.get_number_of_items() == 1
+	assert archive.has_item_by_identifier(item.get_identifier()) == True
+	assert archive.get_item_by_identifier(item.get_identifier()) == item
+	item.set_identifier(12)
+	identifier = 12
+	assert item.get_archive() == archive
+	assert item.get_identifier() == identifier
+	assert archive.get_number_of_items() == 1
+	assert archive.has_item_by_identifier(item.get_identifier()) == True
+	assert archive.get_item_by_identifier(item.get_identifier()) == item
+	item.set_archive(None)
+	assert item.get_identifier() == identifier
+	assert item.get_archive() == None
+	assert archive.get_number_of_items() == 0
+	assert archive.has_item_by_identifier(item.get_identifier()) == False
+	assert archive.get_item_by_identifier(item.get_identifier()) == None
+	archive.register_item(item)
+	assert item.get_archive() == archive
+	assert item.get_identifier() == identifier
+	assert archive.get_number_of_items() == 1
+	assert archive.has_item_by_identifier(item.get_identifier()) == True
+	assert archive.get_item_by_identifier(item.get_identifier()) == item
+	archive.register_item(item)
