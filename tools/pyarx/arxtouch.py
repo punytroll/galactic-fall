@@ -44,4 +44,4 @@ if __name__ == "__main__":
 		archive = Archive()
 		if arguments["archive_file_path"] != None:
 			archive.load(arguments["archive_file_path"]);
-		archive.save(arguments["archive_file_path"])
+			archive.save(arguments["archive_file_path"])
