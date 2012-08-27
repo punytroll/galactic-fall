@@ -189,9 +189,13 @@ def print_information_from_archive(archive, queries):
 			print_information_from_item(item, queries)
 		else:
 			print("An item with the identifier " + get_hexadecimal_string(item_identifier) + " does not exist.")
-
 	elif "path" in queries:
-		pass
+		path = queries["path"]
+		item = archive.get_item_by_path(path)
+		if item != None:
+			print_information_from_item(item, queries)
+		else:
+			print("An item at the path location '" + path + "' does not exist.")
 	elif "" in queries:
 		if queries[""] == "format-version":
 			print(get_archive_format_version_string(archive))
