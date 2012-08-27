@@ -335,7 +335,36 @@ class Archive(object):
 	def get_item_by_path(self, item_path):
 		assert isinstance(self.__items, dict) == True
 		assert isinstance(item_path, str) == True
-		raise "TODO"
+		if self.__root_item_identifier != None:
+			if len(item_path) == 0:
+				return self.get_item_by_identifier(self.__root_item_identifier)
+			elif item_path[0] == "/":
+				path = self.__parse_path(item_path)[1:]
+				item = self.get_item_by_identifier(self.__root_item_identifier)
+				while item != None and len(path) > 0:
+					part = path.pop(0)
+					relation = item.get_relation_from_name(part[0])
+					for child_identifier in relation.get_item_identifiers():
+						child = self.get_item_by_identifier(child_identifier)
+						if child != None and child.get_name() == part[1]:
+							item = child
+				return item
+			else:
+				return None
+	
+	def __parse_path(self, path):
+		assert isinstance(path, str) == True
+		result = list()
+		parts = path.split("/")
+		parts = [part.split("::") if "::" in part else [part, "child"] for part in parts]
+		result.append([None, parts[0][0]])
+		last_relation = None
+		for part in parts:
+			if last_relation != None:
+				result.append([last_relation, part[0]])
+			last_relation = part[1]
+		result.append([last_relation, None])
+		return result
 	
 	def get_items(self):
 		assert isinstance(self.__items, dict) == True
