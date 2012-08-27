@@ -295,8 +295,9 @@ class Archive(object):
 					item.get_version().set_minor_number(minor_number)
 					item.get_version().set_revision_number(revision_number)
 					item.get_version().set_candidate_number(candidate_number)
-				name = file.read(name_length + 1).decode()
+				name = file.read(name_length).decode()
 				item.set_name(name)
+				file.read(1)
 				while structure_length > 0:
 					relation_name, byte_length = self.__read_string_from_file(file)
 					structure_length -= byte_length
@@ -339,18 +340,29 @@ class Archive(object):
 			if len(item_path) == 0:
 				return self.get_item_by_identifier(self.__root_item_identifier)
 			elif item_path[0] == "/":
-				path = self.__parse_path(item_path)[1:]
+				path = self.__parse_path(item_path)[1:-1]
 				item = self.get_item_by_identifier(self.__root_item_identifier)
 				while item != None and len(path) > 0:
 					part = path.pop(0)
 					relation = item.get_relation_from_name(part[0])
-					for child_identifier in relation.get_item_identifiers():
-						child = self.get_item_by_identifier(child_identifier)
-						if child != None and child.get_name() == part[1]:
-							item = child
+					if relation != None:
+						for child_identifier in relation.get_item_identifiers():
+							child = self.get_item_by_identifier(child_identifier)
+							candidate = None
+							if child != None and child.get_name() == part[1]:
+								candidate = child
+								break
+						if candidate != None:
+							item = candidate
+						else:
+							return None
+					else:
+						return None
 				return item
 			else:
 				return None
+		else:
+			return None
 	
 	def __parse_path(self, path):
 		assert isinstance(path, str) == True
