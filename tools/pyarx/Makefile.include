@@ -1,0 +1,30 @@
+pyarx-check-dependencies: 
+	@if [ x`which python3` = x ]; then \
+	    echo -e "\nYour system is missing the python 3 interpreter.\nIn order to use the pyarx library you will need to install it on your system.\n"; false; \
+	fi
+
+arxadd-check-dependencies: pyarx-check-dependencies
+
+arxget-check-dependencies: pyarx-check-dependencies
+
+arxtouch-check-dependencies: pyarx-check-dependencies
+
+arxadd_dependencies = \
+	$(root)/tools/pyarx/arxadd.py \
+	$(root)/tools/pyarx/arx.py
+
+arxget_dependencies = \
+	$(root)/tools/pyarx/arxget.py \
+	$(root)/tools/pyarx/arx.py
+
+arxtouch_dependencies = \
+	$(root)/tools/pyarx/arxtouch.py \
+	$(root)/tools/pyarx/arx.py
+
+command_arxadd = python3 $(root)/tools/pyarx/arxadd.py
+
+command_arxget = python3 $(root)/tools/pyarx/arxget.py
+
+command_arxtouch = python3 $(root)/tools/pyarx/arxtouch.py
+
+.PHONY: arxadd-check-dependencies arxget-check-dependencies arxtouch-check-dependencies pyarx-check-dependencies 
