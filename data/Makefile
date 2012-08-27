@@ -189,7 +189,7 @@ data.arx: $(data_arx) $(arxtouch_dependencies) $(arxadd_dependencies)
 	$(command_arxadd) $@ --name="Small Generator" --type=4 --sub-type=0 --relation="/Asset Classes::child" --data-file=.data/asset_class_small_generator.data
 	@echo "\n\nAdding commodity classes ...\n"
 	$(command_arxadd) $@ --name="Equipment" --type=8 --sub-type=0 --relation="/Commodity Classes::child" --data-file=.data/commodity_class_equipment.data
-	$(command_arxadd) $@ --name =Food" --type=8 --sub-type=0 --relation="/Commodity Classes::child" --data-file=.data/commodity_class_food.data
+	$(command_arxadd) $@ --name="Food" --type=8 --sub-type=0 --relation="/Commodity Classes::child" --data-file=.data/commodity_class_food.data
 	$(command_arxadd) $@ --name="Fuel" --type=8 --sub-type=0 --relation="/Commodity Classes::child" --data-file=.data/commodity_class_fuel.data
 	$(command_arxadd) $@ --name="Industrial" --type=8 --sub-type=0 --relation="/Commodity Classes::child" --data-file=.data/commodity_class_industrial.data
 	$(command_arxadd) $@ --name="Luxury Goods" --type=8 --sub-type=0 --relation="/Commodity Classes::child" --data-file=.data/commodity_class_luxury_goods.data
