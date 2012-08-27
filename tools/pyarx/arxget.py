@@ -83,7 +83,11 @@ def parse_arguments(arguments):
 		return result
 
 def get_version_string(version):
-	return str(version.get_major_number()) + "." + str(version.get_minor_number()) + "." + str(version.get_revision_number()) + "." + str(version.get_candidate_number())
+	result = ""
+	if version.get_major_number() == None and version.get_minor_number() == None and version.get_revision_number() == None and version.get_candidate_number() == None:
+		return "<none>"
+	else:
+		return str(version.get_major_number()) + "." + str(version.get_minor_number()) + "." + str(version.get_revision_number()) + "." + str(version.get_candidate_number())
 
 def get_archive_format_version_string(archive):
 	return get_version_string(archive.get_format_version())
@@ -92,7 +96,11 @@ def get_archive_item_count_string(archive):
 	return str(archive.get_number_of_items())
 
 def get_archive_item_identifiers_string(archive):
-	return get_riffled_string(get_archive_item_identifier_strings(archive), " ")
+	item_identifier_strings = get_archive_item_identifier_strings(archive)
+	if len(item_identifier_strings) == 0:
+		return "<none>"
+	else:
+		return get_riffled_string(item_identifier_strings, " ")
 
 def get_archive_root_item_identifier_string(archive):
 	root_item_identifier = archive.get_root_item_identifier()
@@ -102,10 +110,18 @@ def get_archive_root_item_identifier_string(archive):
 		return get_hexadecimal_string(root_item_identifier)
 
 def get_item_data_compressed_length_string(item):
-	return str(item.get_data().get_compressed_length())
+	compressed_length = item.get_data().get_compressed_length()
+	if compressed_length == None:
+		return "<none>"
+	else:
+		return str(compressed_length)
 
 def get_item_data_compression_type_string(item):
-	return str(item.get_data().get_compression_type())
+	compression_type = item.get_data().get_compression_type()
+	if compression_type == None:
+		return "<none>"
+	else:
+		return str(compression_type)
 
 def get_item_data_decompressed_length_string(item):
 	return str(item.get_data().get_decompressed_length())
@@ -117,34 +133,50 @@ def get_item_identifier_string(item):
 	return get_hexadecimal_string(item.get_identifier())
 
 def get_item_name_string(item):
-	return item.get_name()
+	return "\"" + item.get_name() + "\""
 
 def get_item_relation_count_string(item):
 	return str(len(item.get_relations()))
 
-def get_item_relation_names_strings(item):
+def get_item_relation_name_strings(item):
 	return [relation.get_name() for relation in item.get_relations()]
 
 def get_item_relation_names_string(item):
-	return get_riffled_string(get_item_relation_names_strings(item), " ")
+	relation_name_strings = get_item_relation_name_strings(item)
+	if len(relation_name_strings) == 0:
+		return "<none>"
+	else:
+		return get_riffled_string(relation_name_strings, " ")
 
 def get_item_sub_type_string(item):
-	return get_hexadecimal_string(item.get_sub_type())
+	sub_type = item.get_sub_type()
+	if sub_type == None:
+		return "<none>"
+	else:
+		return get_hexadecimal_string(item.get_sub_type())
 
 def get_item_type_string(item):
-	return get_hexadecimal_string(item.get_type())
+	type = item.get_type()
+	if type == None:
+		return "<none>"
+	else:
+		return get_hexadecimal_string(item.get_type())
 
 def get_item_version_string(item):
 	return get_version_string(item.get_version())
 
-def get_relation_item_count_string(relation):
-	return str(relation.get_item_count())
+def get_relation_number_of_items_string(relation):
+	return str(relation.get_number_of_items())
 
 def get_relation_item_identifier_strings(relation):
 	return list(map(get_hexadecimal_string, relation.get_item_identifiers()))
 
 def get_relation_item_identifiers_string(relation):
-	return get_riffled_string(get_relation_item_identifier_strings(relation), " ")
+	item_identifier_strings = get_relation_item_identifier_strings(relation)
+	if len(item_identifier_strings) == 0:
+		return "<none>"
+	else:
+		return get_riffled_string(item_identifier_strings, " ")
 
 def get_relation_name_string(relation):
 	return relation.get_name()
@@ -228,14 +260,14 @@ def print_information_from_relation(relation, queries):
 		if queries[""] == "name":
 			print(get_relation_name_string(relation))
 		elif queries[""] == "item-count":
-			print(get_relation_item_count_string(relation))
+			print(get_relation_number_of_items_string(relation))
 		elif queries[""] == "item-identifiers":
 			print(get_relation_item_identifiers_string(relation))
 		else:
 			print("Unrecognized data name '" + queries[""] + "'.")
 	else:
 		print("name: " + get_relation_name_string(relation))
-		print("item-count: " + get_relation_item_count_string(relation))
+		print("item-count: " + get_relation_number_of_items_string(relation))
 		print("item-identifiers: " + get_relation_item_identifiers_string(relation))
 
 if __name__ == "__main__":

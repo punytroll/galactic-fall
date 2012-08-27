@@ -23,7 +23,7 @@
 '''
 
 from random import randint
-from struct import unpack
+from struct import pack, unpack
 
 class InvalidOperation(Exception):
 	pass
@@ -40,32 +40,36 @@ class Data(object):
 		return self.__content
 	
 	def get_compressed_length(self):
-		assert isinstance(self.__compressed_length, int) == True
+		assert isinstance(self.__compressed_length, int) == True or self.__compressed_length == None
 		return self.__compressed_length
 	
 	def get_compression_type(self):
-		assert isinstance(self.__compression_type, int) == True
+		assert isinstance(self.__compression_type, int) == True or self.__compression_type == None
 		return self.__compression_type
 	
 	def get_decompressed_length(self):
 		assert isinstance(self.__decompressed_length, int) == True
 		return self.__decompressed_length
 	
-	def set_content(self, content):
-		assert isinstance(content, bytes) == True
-		self.__content = content
+	def has_content(self):
+		return self.__content != None
 	
-	def set_compressed_length(self, compressed_length):
-		assert isinstance(compressed_length, int) == True
-		self.__compressed_length = compressed_length
+	def is_compressed(self):
+		return self.__compression_type != None
 	
-	def set_compression_type(self, compression_type):
-		assert isinstance(compression_type, int) == True
-		self.__compression_type = compression_type
+	def set_decompressed_content(self, decompressed_content):
+		assert isinstance(decompressed_content, bytes) == True
+		self.__content = decompressed_content
+		self.__decompressed_length = len(decompressed_content)
+		self.__compressed_length = None
+		self.__compression_type = None
 	
-	def set_decompressed_length(self, decompressed_length):
-		assert isinstance(decompressed_length, int) == True
+	def set_compressed_content(self, compressed_content, compression_type, decompressed_length):
+		assert isinstance(compressed_content, bytes) == True
+		self.__content = compressed_content
 		self.__decompressed_length = decompressed_length
+		self.__compressed_length = len(compressed_content)
+		self.__compression_type = compression_type
 
 class Version(object):
 	def __init__(self):
@@ -75,35 +79,35 @@ class Version(object):
 		self.__candidate_number = None
 	
 	def get_major_number(self):
-		assert isinstance(self.__major_number, int) == True
+		assert isinstance(self.__major_number, int) == True or self.__major_number == None
 		return self.__major_number
 	
 	def get_minor_number(self):
-		assert isinstance(self.__minor_number, int) == True
+		assert isinstance(self.__minor_number, int) == True or self.__minor_number == None
 		return self.__minor_number
 	
 	def get_revision_number(self):
-		assert isinstance(self.__revision_number, int) == True
+		assert isinstance(self.__revision_number, int) == True or self.__revision_number == None
 		return self.__revision_number
 	
 	def get_candidate_number(self):
-		assert isinstance(self.__candidate_number, int) == True
+		assert isinstance(self.__candidate_number, int) == True or self.__candidate_number == None
 		return self.__candidate_number
 	
 	def set_major_number(self, major_number):
-		assert isinstance(major_number, int) == True
+		assert isinstance(major_number, int) == True or major_number == None
 		self.__major_number = major_number
 	
 	def set_minor_number(self, minor_number):
-		assert isinstance(minor_number, int) == True
+		assert isinstance(minor_number, int) == True or minor_number == None
 		self.__minor_number = minor_number
 	
 	def set_revision_number(self, revision_number):
-		assert isinstance(revision_number, int) == True
+		assert isinstance(revision_number, int) == True or revision_number == None
 		self.__revision_number = revision_number
 	
 	def set_candidate_number(self, candidate_number):
-		assert isinstance(candidate_number, int) == True
+		assert isinstance(candidate_number, int) == True or candidate_number == None
 		self.__candidate_number = candidate_number
 
 class Relation(object):
@@ -116,10 +120,6 @@ class Relation(object):
 		assert isinstance(item_identifier, int) == True
 		self.__item_identifiers.append(item_identifier)
 	
-	def get_item_count(self):
-		assert isinstance(self.__item_identifiers, list) == True
-		return len(self.__item_identifiers)
-	
 	def get_item_identifiers(self):
 		assert isinstance(self.__item_identifiers, list) == True
 		return self.__item_identifiers
@@ -127,6 +127,10 @@ class Relation(object):
 	def get_name(self):
 		assert isinstance(self.__name, str) == True
 		return self.__name
+	
+	def get_number_of_items(self):
+		assert isinstance(self.__item_identifiers, list) == True
+		return len(self.__item_identifiers)
 	
 	def set_name(self, name):
 		assert isinstance(name, str) == True
@@ -164,7 +168,7 @@ class Item(object):
 		return self.__identifier
 	
 	def get_name(self):
-		assert isinstance(self.__name, str) == True
+		assert isinstance(self.__name, str) == True or self.__name == None
 		return self.__name
 	
 	def get_relation_from_name(self, relation_name):
@@ -180,11 +184,11 @@ class Item(object):
 		return self.__relations.values()
 	
 	def get_sub_type(self):
-		assert isinstance(self.__sub_type, int) == True
+		assert (isinstance(self.__sub_type, int) == True) or (self.__sub_type == None)
 		return self.__sub_type
 	
 	def get_type(self):
-		assert isinstance(self.__type, int) == True
+		assert (isinstance(self.__type, int) == True) or (self.__type == None)
 		return self.__type
 	
 	def get_version(self):
@@ -206,6 +210,15 @@ class Item(object):
 			else:
 				raise InvalidOperation("This item is already registered at an archive.")
 	
+	def set_compressed_data(self, compressed_data, compression_type):
+		assert isinstance(compressed_data, bytes) == True
+		assert isinstance(compression_type, int) == True
+		self.__data.set_compressed_content(compressed_data, compression_type)
+	
+	def set_decompressed_data(self, decompressed_data):
+		assert isinstance(decompressed_data, bytes) == True
+		self.__data.set_decompressed_content(decompressed_data)
+	
 	def set_identifier(self, identifier):
 		assert isinstance(identifier, int) == True
 		if self.__archive == None:
@@ -220,15 +233,15 @@ class Item(object):
 			raise InvalidOperation("This item is registered at an archive and must have an identifier.")
 	
 	def set_name(self, name):
-		assert isinstance(name, str) == True
+		assert isinstance(name, str) == True or name == None
 		self.__name = name
 	
 	def set_sub_type(self, sub_type):
-		assert isinstance(sub_type, int) == True
+		assert ((isinstance(sub_type, int) == True) and (sub_type >= 0) and (sub_type < 0xffffffff)) or (sub_type == None)
 		self.__sub_type = sub_type
 	
 	def set_type(self, type):
-		assert isinstance(type, int) == True
+		assert ((isinstance(type, int) == True) and (type >= 0) and (type < 0xffffffff)) or (type == None)
 		self.__type = type
 
 class Archive(object):
@@ -240,7 +253,7 @@ class Archive(object):
 	def load(self, file_path):
 		with open(file_path, "rb") as file:
 			archive_header = file.read(12)
-			major_number, minor_number, revision_number, candidate_number, root_item_identifier, number_of_items = unpack("!BBBBiI", archive_header)
+			major_number, minor_number, revision_number, candidate_number, root_item_identifier, number_of_items = unpack("!BBBBII", archive_header)
 			self.__format_version.set_major_number(major_number)
 			self.__format_version.set_minor_number(minor_number)
 			self.__format_version.set_revision_number(revision_number)
@@ -250,7 +263,7 @@ class Archive(object):
 			else:
 				print("Could not load an archive of format version " + str(self.__format_version.get_major_number()) + "." + str(self.__format_version.get_minor_number()) + "." + str(self.__format_version.get_revision_number()) + "." + str(self.__format_version.get_candidate_number()) + ".")
 				return False
-			if root_item_identifier == -1:
+			if root_item_identifier == 0xffffffff:
 				self.__root_item_identifier = None
 			else:
 				self.__root_item_identifier = root_item_identifier
@@ -260,16 +273,28 @@ class Archive(object):
 		while number_of_archive_items > 0:
 			number_of_archive_items -= 1
 			item_header = file.read(36)
-			identifier, type, sub_type, major_number, minor_number, revision_number, candidate_number, data_compression_type, name_length, data_decompressed_length, data_compressed_length, structure_length = unpack("!iiiBBBBIIIII", item_header)
+			identifier, type, sub_type, major_number, minor_number, revision_number, candidate_number, data_compression_type, name_length, data_decompressed_length, data_compressed_length, structure_length = unpack("!IIIBBBBIIIII", item_header)
 			if identifier not in self.__items:
 				item = Item()
 				item.set_identifier(identifier)
-				item.set_type(type)
-				item.set_sub_type(sub_type)
-				item.get_version().set_major_number(major_number)
-				item.get_version().set_minor_number(minor_number)
-				item.get_version().set_revision_number(revision_number)
-				item.get_version().set_candidate_number(candidate_number)
+				if type == 0xffffffff:
+					item.set_type(None)
+				else:
+					item.set_type(type)
+				if sub_type == 0xffffffff:
+					item.set_sub_type(None)
+				else:
+					item.set_sub_type(sub_type)
+				if major_number == 0 and minor_number == 0 and revision_number == 0 and candidate_number == 0:
+					item.get_version().set_major_number(None)
+					item.get_version().set_minor_number(None)
+					item.get_version().set_revision_number(None)
+					item.get_version().set_candidate_number(None)
+				else:
+					item.get_version().set_major_number(major_number)
+					item.get_version().set_minor_number(minor_number)
+					item.get_version().set_revision_number(revision_number)
+					item.get_version().set_candidate_number(candidate_number)
 				name = file.read(name_length + 1).decode()
 				item.set_name(name)
 				while structure_length > 0:
@@ -285,13 +310,9 @@ class Archive(object):
 						item_identifier = unpack("!I", raw_item_identifier)[0]
 						item.add_item_identifier(relation_name, item_identifier)
 				if data_compression_type == 0:
-					data = file.read(data_decompressed_length)
+					item.set_decompressed_data(file.read(data_decompressed_length))
 				else:
-					data = file.read(data_compressed_length)
-				item.get_data().set_compression_type(data_compression_type)
-				item.get_data().set_compressed_length(data_compressed_length)
-				item.get_data().set_decompressed_length(data_decompressed_length)
-				item.get_data().set_content(data)
+					item.set_compressed_data(file.read(data_compressed_length), data_compression_type, data_decompressed_length)
 				self.register_item(item)
 	
 	def __read_string_from_file(self, file):
@@ -310,6 +331,11 @@ class Archive(object):
 		if item_identifier in self.__items:
 			return self.__items[item_identifier]
 		return None
+	
+	def get_item_by_path(self, item_path):
+		assert isinstance(self.__items, dict) == True
+		assert isinstance(item_path, str) == True
+		raise "TODO"
 	
 	def get_items(self):
 		assert isinstance(self.__items, dict) == True
@@ -358,7 +384,72 @@ class Archive(object):
 			raise InvalidOperation("This item is already registered at another archive.")
 	
 	def save(self, file_path):
-		pass
+		with open(file_path, "wb") as file:
+			self.__save_2_1_0_0(file)
+	
+	def __save_2_1_0_0(self, file):
+		file.write(pack("!BBBB", 2, 1, 0, 0))
+		if self.__root_item_identifier != None:
+			file.write(pack("!I", self.__root_item_identifier))
+		else:
+			file.write(pack("!I", 0xffffffff))
+		file.write(pack("!I", self.get_number_of_items()))
+		for item in self.__items.values():
+			file.write(pack("!I", item.get_identifier()))
+			if item.get_type() != None:
+				file.write(pack("!I", item.get_type()))
+			else:
+				file.write(pack("!I", 0xffffffff))
+			if item.get_sub_type() != None:
+				file.write(pack("!I", item.get_sub_type()))
+			else:
+				file.write(pack("!I", 0xffffffff))
+			if item.get_version().get_major_number() != None:
+				file.write(pack("!B", item.get_version().get_major_number()))
+			else:
+				file.write(pack("!B", 0x00))
+			if item.get_version().get_minor_number() != None:
+				file.write(pack("!B", item.get_version().get_minor_number()))
+			else:
+				file.write(pack("!B", 0x00))
+			if item.get_version().get_revision_number() != None:
+				file.write(pack("!B", item.get_version().get_revision_number()))
+			else:
+				file.write(pack("!B", 0x00))
+			if item.get_version().get_candidate_number() != None:
+				file.write(pack("!B", item.get_version().get_candidate_number()))
+			else:
+				file.write(pack("!B", 0x00))
+			if item.get_data().is_compressed() == True:
+				file.write(pack("!I", item.get_data().get_compression_type()))
+			else:
+				file.write(pack("!I", 0))
+			if item.get_name() != None:
+				name = item.get_name().encode()
+			else:
+				name = "".encode()
+			file.write(pack("!I", len(name)))
+			if item.get_data().has_content() == True:
+				file.write(pack("!I", item.get_data().get_decompressed_length()))
+				if item.get_data().is_compressed() == True:
+					file.write(pack("!I", item.get_data().get_compressed_length()))
+				else:
+					file.write(pack("!I", 0))
+			else:
+				file.write(pack("!II", 0, 0))
+			structure = bytes()
+			for relation in item.get_relations():
+				structure += relation.get_name().encode()
+				structure += b"\x00"
+				structure += pack("!I", relation.get_number_of_items())
+				for item_identifier in relation.get_item_identifiers():
+					structure += pack("!I", item_identifier)
+			file.write(pack("!I", len(structure)))
+			file.write(name)
+			file.write(b"\x00")
+			file.write(structure)
+			if item.get_data().has_content() == True:
+				file.write(item.get_data().get_content())
 	
 	def unregister_item(self, item):
 		assert isinstance(item, Item) == True
@@ -369,6 +460,10 @@ class Archive(object):
 				item.set_archive(None)
 		else:
 			raise InvalidOperation()
+	
+	def set_root_item_identifier(self, root_item_identifier):
+		assert isinstance(root_item_identifier, int) == True
+		self.__root_item_identifier = root_item_identifier
 
 if __name__ == "__main__":
 	archive = Archive()
