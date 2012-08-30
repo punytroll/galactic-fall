@@ -29,8 +29,8 @@ from arx import Archive
 def parse_arguments(arguments):
 	result = dict()
 	if len(arguments) == 0 or arguments[0] == "--help":
-		print("Usage: arxtouch.py <arx archive> (<uii>)*")
-		print("uii is a unique identifier for an item in the archive given in hexadecimal form")
+		print("Usage: arxtouch.py <arx archive>")
+		print("       Calling this program creates an empty ARX archive.")
 		print("")
 		print("No warranty, whatsoever. Copyright by Hagen Möbius, 2012")
 		return None
