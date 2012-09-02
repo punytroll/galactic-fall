@@ -200,8 +200,11 @@ void UI::Widget::SetName(const std::string & Name)
 
 void UI::Widget::SetKeyFocus(UI::Widget * KeyFocus)
 {
-	assert(find(m_SubWidgets.begin(), m_SubWidgets.end(), KeyFocus) != m_SubWidgets.end());
-	assert(KeyFocus->m_SupWidget == this);
+	if(KeyFocus != 0)
+	{
+		assert(find(m_SubWidgets.begin(), m_SubWidgets.end(), KeyFocus) != m_SubWidgets.end());
+		assert(KeyFocus->m_SupWidget == this);
+	}
 	m_KeyFocus = KeyFocus;
 }
 
