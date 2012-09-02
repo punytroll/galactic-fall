@@ -436,9 +436,9 @@ ui_timing_dialog_h = \
 	$(type_definitions_h) \
 	$(ui_window_h)
 
-ui_trade_center_dialog_h = \
-	ui/trade_center_dialog.h \
-	$(ui_window_h)
+ui_trade_center_widget_h = \
+	ui/trade_center_widget.h \
+	$(ui_widget_h)
 
 ui_user_interface_h = \
 	ui/user_interface.h
@@ -804,7 +804,7 @@ binary: $(OBJECT_FILES) $(LDFLAGS_configuration)
 .object-files/ui/outfit_ship_dialog.o: ui/outfit_ship_dialog.cpp $(class_manager_h) $(color_h) $(globals_h) $(key_event_information_h) $(object_aspect_accessory_h) $(object_aspect_name_h) $(object_aspect_object_container_h) $(object_aspect_outfitting_h) $(object_aspect_physical_h) $(ship_h) $(slot_h) $(slot_class_h) $(storage_h) $(ui_button_h) $(ui_label_h) $(ui_outfit_ship_dialog_h) $(ui_scroll_box_h) $(weapon_h) $(weapon_class_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-.object-files/ui/planet_dialog.o: ui/planet_dialog.cpp $(asset_class_h) $(callbacks_callbacks_h) $(character_h) $(color_h) $(globals_h) $(key_event_information_h) $(object_aspect_name_h) $(planet_h) $(ship_h) $(string_cast_h) $(ui_button_h) $(ui_label_h) $(ui_planet_dialog_h) $(ui_trade_center_dialog_h)
+.object-files/ui/planet_dialog.o: ui/planet_dialog.cpp $(asset_class_h) $(callbacks_callbacks_h) $(character_h) $(color_h) $(globals_h) $(key_event_information_h) $(object_aspect_name_h) $(planet_h) $(ship_h) $(string_cast_h) $(ui_button_h) $(ui_label_h) $(ui_planet_dialog_h) $(ui_trade_center_widget_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 .object-files/ui/save_game_dialog.o: ui/save_game_dialog.cpp $(globals_h) $(key_event_information_h) $(real_time_h) $(ui_button_h) $(ui_label_h) $(ui_save_game_dialog_h) $(ui_scroll_box_h)
@@ -825,7 +825,7 @@ binary: $(OBJECT_FILES) $(LDFLAGS_configuration)
 .object-files/ui/timing_dialog.o: ui/timing_dialog.cpp $(callbacks_callbacks_h) $(globals_h) $(key_event_information_h) $(string_cast_h) $(system_statistics_h) $(ui_label_h) $(ui_timing_dialog_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-.object-files/ui/trade_center_dialog.o: ui/trade_center_dialog.cpp $(asset_class_h) $(character_h) $(commodity_h) $(commodity_class_h) $(character_h) $(game_time_h) $(graphics_model_manager_h) $(key_event_information_h) $(object_aspect_accessory_h) $(object_aspect_name_h) $(object_aspect_object_container_h) $(object_factory_h) $(planet_h) $(ship_h) $(storage_h) $(ui_button_h) $(ui_label_h) $(ui_scroll_bar_h) $(ui_scroll_box_h) $(ui_trade_center_dialog_h) $(weapon_h) $(weapon_class_h)
+.object-files/ui/trade_center_widget.o: ui/trade_center_widget.cpp $(asset_class_h) $(character_h) $(commodity_h) $(commodity_class_h) $(character_h) $(game_time_h) $(graphics_model_manager_h) $(key_event_information_h) $(object_aspect_accessory_h) $(object_aspect_name_h) $(object_aspect_object_container_h) $(object_factory_h) $(planet_h) $(ship_h) $(storage_h) $(ui_button_h) $(ui_label_h) $(ui_scroll_bar_h) $(ui_scroll_box_h) $(ui_trade_center_widget_h) $(weapon_h) $(weapon_class_h)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 .object-files/ui/user_interface.o: ui/user_interface.cpp $(callbacks_connection_handle_h) $(ui_user_interface_h) $(ui_widget_h)

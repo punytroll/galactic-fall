@@ -17,10 +17,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef TRADE_CENTER_DIALOG_H
-#define TRADE_CENTER_DIALOG_H
+#ifndef TRADE_CENTER_WIDGET_H
+#define TRADE_CENTER_WIDGET_H
 
-#include "window.h"
+#include "widget.h"
 
 class Character;
 class Planet;
@@ -32,10 +32,10 @@ namespace UI
 	class ScrollBox;
 	class TradeCenterAssetClass;
 
-	class TradeCenterDialog : public UI::Window
+	class TradeCenterWidget : public UI::Widget
 	{
 	public:
-		TradeCenterDialog(UI::Widget * SupWidget, Planet * Planet, Character * Character);
+		TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet, Character * Character);
 	private:
 		// callbacks
 		bool OnAssetClassMouseButton(UI::TradeCenterAssetClass * TradeCenterAssetClass, int Button, int State, float X, float Y);
@@ -44,7 +44,6 @@ namespace UI
 		bool OnAssetClassScrollBoxMouseButton(int Button, int State, float X, float Y);
 		void OnBuyClicked(void);
 		bool OnKey(const KeyEventInformation & KeyEventInformation);
-		void OnOKClicked(void);
 		void OnSellClicked(void);
 		// helper functions and actions
 		void Buy(const PlanetAssetClass * PlanetAssetClass);
@@ -54,7 +53,6 @@ namespace UI
 		// member variables
 		Planet * m_Planet;
 		Character * m_Character;
-		UI::Button * m_OKButton;
 		UI::Button * m_BuyButton;
 		UI::Button * m_SellButton;
 		UI::ScrollBox * m_AssetClassScrollBox;
