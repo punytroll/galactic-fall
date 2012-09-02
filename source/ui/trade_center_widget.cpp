@@ -38,7 +38,7 @@
 #include "label.h"
 #include "scroll_bar.h"
 #include "scroll_box.h"
-#include "trade_center_dialog.h"
+#include "trade_center_widget.h"
 
 namespace UI
 {
@@ -95,36 +95,20 @@ const PlanetAssetClass * UI::TradeCenterAssetClass::GetPlanetAssetClass(void) co
 	return m_PlanetAssetClass;
 }
 
-UI::TradeCenterDialog::TradeCenterDialog(UI::Widget * SupWidget, Planet * Planet, Character * Character) :
-	UI::Window(SupWidget, "Trade Center: " + Planet->GetAspectName()->GetName()),
+UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet, Character * Character) :
+	UI::Widget(SupWidget),
 	m_Planet(Planet),
 	m_Character(Character),
 	m_SelectedTradeCenterAssetClass(0)
 {
-	SetPosition(Vector2f(300.0f, 100.0f));
-	SetSize(Vector2f(500.0f, 330.0f));
-	ConnectKeyCallback(Callback(this, &TradeCenterDialog::OnKey));
-	m_OKButton = new UI::Button(this);
-	m_OKButton->SetPosition(Vector2f(390.0f, 300.0f));
-	m_OKButton->SetSize(Vector2f(100.0f, 20.0f));
-	m_OKButton->SetAnchorBottom(true);
-	m_OKButton->SetAnchorLeft(false);
-	m_OKButton->SetAnchorRight(true);
-	m_OKButton->SetAnchorTop(false);
-	m_OKButton->ConnectClickedCallback(Callback(this, &TradeCenterDialog::OnOKClicked));
-	
-	UI::Label * OKButtonLabel(new UI::Label(m_OKButton, "OK"));
-	
-	OKButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
-	OKButtonLabel->SetSize(m_OKButton->GetSize());
-	OKButtonLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
-	OKButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
+	SetSize(Vector2f(500.0f, 300.0f));
+	ConnectKeyCallback(Callback(this, &TradeCenterWidget::OnKey));
 	m_BuyButton = new UI::Button(this);
-	m_BuyButton->SetPosition(Vector2f(10.0f, 300.0f));
+	m_BuyButton->SetPosition(Vector2f(0.0f, 280.0f));
 	m_BuyButton->SetSize(Vector2f(100.0f, 20.0f));
 	m_BuyButton->SetAnchorBottom(true);
 	m_BuyButton->SetAnchorTop(false);
-	m_BuyButton->ConnectClickedCallback(Callback(this, &TradeCenterDialog::OnBuyClicked));
+	m_BuyButton->ConnectClickedCallback(Callback(this, &TradeCenterWidget::OnBuyClicked));
 	
 	UI::Label * BuyButtonLabel(new UI::Label(m_BuyButton, "Buy"));
 	
@@ -133,11 +117,11 @@ UI::TradeCenterDialog::TradeCenterDialog(UI::Widget * SupWidget, Planet * Planet
 	BuyButtonLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
 	BuyButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	m_SellButton = new UI::Button(this);
-	m_SellButton->SetPosition(Vector2f(120.0f, 300.0f));
+	m_SellButton->SetPosition(Vector2f(110.0f, 280.0f));
 	m_SellButton->SetSize(Vector2f(100.0f, 20.0f));
 	m_SellButton->SetAnchorBottom(true);
 	m_SellButton->SetAnchorTop(false);
-	m_SellButton->ConnectClickedCallback(Callback(this, &TradeCenterDialog::OnSellClicked));
+	m_SellButton->ConnectClickedCallback(Callback(this, &TradeCenterWidget::OnSellClicked));
 	
 	UI::Label * SellButtonLabel(new UI::Label(m_SellButton, "Sell"));
 	
@@ -146,12 +130,12 @@ UI::TradeCenterDialog::TradeCenterDialog(UI::Widget * SupWidget, Planet * Planet
 	SellButtonLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
 	SellButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	m_AssetClassScrollBox = new UI::ScrollBox(this);
-	m_AssetClassScrollBox->SetPosition(Vector2f(10.0f, 40.0f));
-	m_AssetClassScrollBox->SetSize(Vector2f(480.0f, 150.0f));
+	m_AssetClassScrollBox->SetPosition(Vector2f(0.0f, 0.0f));
+	m_AssetClassScrollBox->SetSize(Vector2f(500.0f, 210.0f));
 	m_AssetClassScrollBox->SetHorizontalScrollBarVisible(false);
 	m_AssetClassScrollBox->SetAnchorRight(true);
 	m_AssetClassScrollBox->SetAnchorBottom(true);
-	m_AssetClassScrollBox->ConnectMouseButtonCallback(Callback(this, &TradeCenterDialog::OnAssetClassScrollBoxMouseButton));
+	m_AssetClassScrollBox->ConnectMouseButtonCallback(Callback(this, &TradeCenterWidget::OnAssetClassScrollBoxMouseButton));
 	
 	const std::vector< PlanetAssetClass * > & PlanetAssetClasses(Planet->GetPlanetAssetClasses());
 	std::vector< PlanetAssetClass * >::const_iterator PlanetAssetClassIterator(PlanetAssetClasses.begin());
@@ -164,21 +148,21 @@ UI::TradeCenterDialog::TradeCenterDialog(UI::Widget * SupWidget, Planet * Planet
 		NewTradeCenterAssetClass->SetPosition(Vector2f(5.0f, Top));
 		NewTradeCenterAssetClass->SetSize(Vector2f(m_AssetClassScrollBox->GetContent()->GetSize()[0] - 10.0f, 20.0f));
 		NewTradeCenterAssetClass->SetAnchorRight(true);
-		NewTradeCenterAssetClass->ConnectMouseButtonCallback(Bind1(Callback(this, &TradeCenterDialog::OnAssetClassMouseButton), NewTradeCenterAssetClass));
-		NewTradeCenterAssetClass->ConnectMouseEnterCallback(Bind1(Callback(this, &TradeCenterDialog::OnAssetClassMouseEnter), NewTradeCenterAssetClass));
-		NewTradeCenterAssetClass->ConnectMouseLeaveCallback(Bind1(Callback(this, &TradeCenterDialog::OnAssetClassMouseLeave), NewTradeCenterAssetClass));
+		NewTradeCenterAssetClass->ConnectMouseButtonCallback(Bind1(Callback(this, &TradeCenterWidget::OnAssetClassMouseButton), NewTradeCenterAssetClass));
+		NewTradeCenterAssetClass->ConnectMouseEnterCallback(Bind1(Callback(this, &TradeCenterWidget::OnAssetClassMouseEnter), NewTradeCenterAssetClass));
+		NewTradeCenterAssetClass->ConnectMouseLeaveCallback(Bind1(Callback(this, &TradeCenterWidget::OnAssetClassMouseLeave), NewTradeCenterAssetClass));
 		Top += 25.0f;
 		++PlanetAssetClassIterator;
 	}
 	m_AssetClassScrollBox->GetContent()->SetSize(Vector2f(460.0f, Top));
 	m_AssetClassScrollBox->GetContent()->SetAnchorRight(true);
 	m_TraderCreditsLabel = new UI::Label(this, "");
-	m_TraderCreditsLabel->SetPosition(Vector2f(10.0f, 240.0f));
+	m_TraderCreditsLabel->SetPosition(Vector2f(0.0f, 230.0f));
 	m_TraderCreditsLabel->SetSize(Vector2f(200.0f, 20.0f));
 	m_TraderCreditsLabel->SetAnchorBottom(true);
 	m_TraderCreditsLabel->SetAnchorTop(false);
 	m_TraderAvailableSpaceLabel = new UI::Label(this, "");
-	m_TraderAvailableSpaceLabel->SetPosition(Vector2f(10.0f, 260.0f));
+	m_TraderAvailableSpaceLabel->SetPosition(Vector2f(0.0f, 250.0f));
 	m_TraderAvailableSpaceLabel->SetSize(Vector2f(200.0f, 20.0f));
 	m_TraderAvailableSpaceLabel->SetAnchorBottom(true);
 	m_TraderAvailableSpaceLabel->SetAnchorTop(false);
@@ -186,17 +170,17 @@ UI::TradeCenterDialog::TradeCenterDialog(UI::Widget * SupWidget, Planet * Planet
 	UpdateTraderAvailableSpace();
 }
 
-void UI::TradeCenterDialog::UpdateTraderCredits(void)
+void UI::TradeCenterWidget::UpdateTraderCredits(void)
 {
 	m_TraderCreditsLabel->SetText("Credits: " + to_string_cast(m_Character->GetCredits()));
 }
 
-void UI::TradeCenterDialog::UpdateTraderAvailableSpace(void)
+void UI::TradeCenterWidget::UpdateTraderAvailableSpace(void)
 {
 	m_TraderAvailableSpaceLabel->SetText("Available Space: " + to_string_cast(0.001 * m_Character->GetShip()->GetCargoHold()->GetSpace(), 3));
 }
 
-void UI::TradeCenterDialog::Buy(const PlanetAssetClass * PlanetAssetClass)
+void UI::TradeCenterWidget::Buy(const PlanetAssetClass * PlanetAssetClass)
 {
 	u4byte Price(PlanetAssetClass->GetPrice());
 	
@@ -219,7 +203,7 @@ void UI::TradeCenterDialog::Buy(const PlanetAssetClass * PlanetAssetClass)
 	}
 }
 
-void UI::TradeCenterDialog::Sell(const PlanetAssetClass * PlanetAssetClass)
+void UI::TradeCenterWidget::Sell(const PlanetAssetClass * PlanetAssetClass)
 {
 	assert(m_Character != 0);
 	assert(m_Character->GetShip() != 0);
@@ -247,7 +231,7 @@ void UI::TradeCenterDialog::Sell(const PlanetAssetClass * PlanetAssetClass)
 	}
 }
 
-void UI::TradeCenterDialog::OnBuyClicked(void)
+void UI::TradeCenterWidget::OnBuyClicked(void)
 {
 	if(m_SelectedTradeCenterAssetClass != 0)
 	{
@@ -256,12 +240,7 @@ void UI::TradeCenterDialog::OnBuyClicked(void)
 	}
 }
 
-void UI::TradeCenterDialog::OnOKClicked(void)
-{
-	Destroy();
-}
-
-void UI::TradeCenterDialog::OnSellClicked(void)
+void UI::TradeCenterWidget::OnSellClicked(void)
 {
 	if(m_SelectedTradeCenterAssetClass != 0)
 	{
@@ -270,13 +249,9 @@ void UI::TradeCenterDialog::OnSellClicked(void)
 	}
 }
 
-bool UI::TradeCenterDialog::OnKey(const KeyEventInformation & KeyEventInformation)
+bool UI::TradeCenterWidget::OnKey(const KeyEventInformation & KeyEventInformation)
 {
-	if(((KeyEventInformation.GetKeyCode() == 9 /* ESCAPE */) || (KeyEventInformation.GetKeyCode() == 36 /* RETURN */) || (KeyEventInformation.GetKeyCode() == 28 /* T */)) && (KeyEventInformation.IsDown() == true))
-	{
-		Destroy();
-	}
-	else if((KeyEventInformation.GetKeyCode() == 56 /* B */) && (m_SelectedTradeCenterAssetClass != 0) && (KeyEventInformation.IsDown() == true))
+	if((KeyEventInformation.GetKeyCode() == 56 /* B */) && (m_SelectedTradeCenterAssetClass != 0) && (KeyEventInformation.IsDown() == true))
 	{
 		Buy(m_SelectedTradeCenterAssetClass->GetPlanetAssetClass());
 		m_SelectedTradeCenterAssetClass->UpdateCharacterAmount();
@@ -287,10 +262,10 @@ bool UI::TradeCenterDialog::OnKey(const KeyEventInformation & KeyEventInformatio
 		m_SelectedTradeCenterAssetClass->UpdateCharacterAmount();
 	}
 	
-	return true;
+	return false;
 }
 
-bool UI::TradeCenterDialog::OnAssetClassMouseButton(TradeCenterAssetClass * TradeCenterAssetClass, int Button, int State, float X, float Y)
+bool UI::TradeCenterWidget::OnAssetClassMouseButton(TradeCenterAssetClass * TradeCenterAssetClass, int Button, int State, float X, float Y)
 {
 	if((Button == 1 /* LEFT */) && (State == EV_DOWN))
 	{
@@ -307,7 +282,7 @@ bool UI::TradeCenterDialog::OnAssetClassMouseButton(TradeCenterAssetClass * Trad
 	return false;
 }
 
-bool UI::TradeCenterDialog::OnAssetClassScrollBoxMouseButton(int Button, int State, float X, float Y)
+bool UI::TradeCenterWidget::OnAssetClassScrollBoxMouseButton(int Button, int State, float X, float Y)
 {
 	if((Button == 4 /* WHEEL_UP */) && (State == EV_DOWN))
 	{
@@ -325,7 +300,7 @@ bool UI::TradeCenterDialog::OnAssetClassScrollBoxMouseButton(int Button, int Sta
 	return false;
 }
 
-void UI::TradeCenterDialog::OnAssetClassMouseEnter(TradeCenterAssetClass * AssetClassWidget)
+void UI::TradeCenterWidget::OnAssetClassMouseEnter(TradeCenterAssetClass * AssetClassWidget)
 {
 	if(AssetClassWidget != m_SelectedTradeCenterAssetClass)
 	{
@@ -333,7 +308,7 @@ void UI::TradeCenterDialog::OnAssetClassMouseEnter(TradeCenterAssetClass * Asset
 	}
 }
 
-void UI::TradeCenterDialog::OnAssetClassMouseLeave(TradeCenterAssetClass * AssetClassWidget)
+void UI::TradeCenterWidget::OnAssetClassMouseLeave(TradeCenterAssetClass * AssetClassWidget)
 {
 	if(AssetClassWidget != m_SelectedTradeCenterAssetClass)
 	{

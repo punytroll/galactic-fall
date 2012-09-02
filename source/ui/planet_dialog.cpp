@@ -30,148 +30,151 @@
 #include "button.h"
 #include "label.h"
 #include "planet_dialog.h"
-#include "trade_center_dialog.h"
+#include "trade_center_widget.h"
 
 UI::PlanetDialog::PlanetDialog(UI::Widget * SupWidget, Planet * Planet, Character * Character) :
 	UI::Window(SupWidget, "Planet: " + Planet->GetAspectName()->GetName()),
-	m_Planet(Planet),
-	m_Character(Character),
-	m_TradeCenterDialog(0)
+	_Planet(Planet),
+	_Character(Character),
+	_TradeCenterWidget(0)
 {
 	SetPosition(Vector2f(50.0f, 50.0f));
-	SetSize(Vector2f(500.0f, 330.0f));
-	ConnectDestroyingCallback(Callback(this, &PlanetDialog::OnDestroying));
-	ConnectKeyCallback(Callback(this, &PlanetDialog::OnKey));
+	SetSize(Vector2f(500.0f, 400.0f));
+	ConnectKeyCallback(Callback(this, &PlanetDialog::_OnKey));
 	
-	UI::Label * DescriptionLabel(new UI::Label(this, m_Planet->GetDescription()));
+	UI::Button * HomeButton(new UI::Button(this));
 	
-	DescriptionLabel->SetPosition(Vector2f(120.0f, 40.0f));
-	DescriptionLabel->SetSize(Vector2f(360.0f, 100.0f));
-	DescriptionLabel->SetWrap(true);
-	DescriptionLabel->SetWordWrap(true);
-	DescriptionLabel->SetAnchorRight(true);
-	m_TakeOffButton = new UI::Button(this);
-	m_TakeOffButton->SetPosition(Vector2f(390.0f, 300.0f));
-	m_TakeOffButton->SetSize(Vector2f(100.0f, 20.0f));
-	m_TakeOffButton->ConnectClickedCallback(Callback(this, &PlanetDialog::OnTakeOffClicked));
-	m_TakeOffButton->SetAnchorBottom(true);
-	m_TakeOffButton->SetAnchorLeft(false);
-	m_TakeOffButton->SetAnchorRight(true);
-	m_TakeOffButton->SetAnchorTop(false);
+	HomeButton->SetPosition(Vector2f(10.0f, 40.0f));
+	HomeButton->SetSize(Vector2f(100.0f, 20.0f));
+	HomeButton->ConnectClickedCallback(Callback(this, &PlanetDialog::_OnHomeButtonClicked));
 	
-	UI::Label * TakeOffButtonLabel(new UI::Label(m_TakeOffButton, "Take Off"));
+	UI::Label * HomeButtonLabel(new UI::Label(HomeButton, "Home"));
+	
+	HomeButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
+	HomeButtonLabel->SetSize(HomeButton->GetSize());
+	HomeButtonLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
+	HomeButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
+	
+	UI::Button * TakeOffButton(new UI::Button(this));
+	
+	TakeOffButton->SetPosition(Vector2f(10.0f, 150.0f));
+	TakeOffButton->SetSize(Vector2f(100.0f, 20.0f));
+	TakeOffButton->ConnectClickedCallback(Callback(this, &PlanetDialog::_OnTakeOffButtonClicked));
+	
+	UI::Label * TakeOffButtonLabel(new UI::Label(TakeOffButton, "Take Off"));
 	
 	TakeOffButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
-	TakeOffButtonLabel->SetSize(m_TakeOffButton->GetSize());
+	TakeOffButtonLabel->SetSize(TakeOffButton->GetSize());
 	TakeOffButtonLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
 	TakeOffButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
-	m_TradeCenterButton = new UI::Button(this);
-	m_TradeCenterButton->SetPosition(Vector2f(10.0f, 40.0f));
-	m_TradeCenterButton->SetSize(Vector2f(100.0f, 20.0f));
-	m_TradeCenterButton->ConnectClickedCallback(Callback(this, &PlanetDialog::OnTradeCenterClicked));
 	
-	UI::Label * TradeCenterLabel(new UI::Label(m_TradeCenterButton, "Trade Center"));
+	UI::Button * TradeCenterButton(new UI::Button(this));
+	
+	TradeCenterButton->SetPosition(Vector2f(10.0f, 70.0f));
+	TradeCenterButton->SetSize(Vector2f(100.0f, 20.0f));
+	TradeCenterButton->ConnectClickedCallback(Callback(this, &PlanetDialog::_OnTradeCenterButtonClicked));
+	
+	UI::Label * TradeCenterLabel(new UI::Label(TradeCenterButton, "Trade Center"));
+	
 	TradeCenterLabel->SetPosition(Vector2f(0.0f, 0.0f));
-	TradeCenterLabel->SetSize(m_TradeCenterButton->GetSize());
+	TradeCenterLabel->SetSize(TradeCenterButton->GetSize());
 	TradeCenterLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
 	TradeCenterLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	
-	const std::vector< PlanetAssetClass * > & PlanetAssetClasses(m_Planet->GetPlanetAssetClasses());
+	const std::vector< PlanetAssetClass * > & PlanetAssetClasses(_Planet->GetPlanetAssetClasses());
 	
 	for(std::vector< PlanetAssetClass * >::const_iterator PlanetAssetClassIterator = PlanetAssetClasses.begin(); PlanetAssetClassIterator != PlanetAssetClasses.end(); ++PlanetAssetClassIterator)
 	{
 		if((*PlanetAssetClassIterator)->GetAssetClass()->GetIdentifier() == "fuel")
 		{
-			m_RefuelButton = new UI::Button(this);
-			m_RefuelButton->SetPosition(Vector2f(10.0f, 70.0f));
-			m_RefuelButton->SetSize(Vector2f(100.0f, 20.0f));
-			m_RefuelButton->ConnectClickedCallback(Callback(this, &PlanetDialog::OnRefuelClicked));
+			UI::Button * RefuelButton(new UI::Button(this));
 			
-			UI::Label * RefuelButtonLabel(new UI::Label(m_RefuelButton, "Refuel"));
+			RefuelButton->SetPosition(Vector2f(10.0f, 100.0f));
+			RefuelButton->SetSize(Vector2f(100.0f, 20.0f));
+			RefuelButton->ConnectClickedCallback(Callback(this, &PlanetDialog::_OnRefuelButtonClicked));
+			
+			UI::Label * RefuelButtonLabel(new UI::Label(RefuelButton, "Refuel"));
 			
 			RefuelButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
-			RefuelButtonLabel->SetSize(m_TradeCenterButton->GetSize());
+			RefuelButtonLabel->SetSize(RefuelButton->GetSize());
 			RefuelButtonLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
 			RefuelButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
-			
-			UI::Label * FuelPriceLabel(new UI::Label(this, "Local fuel price is: " + to_string_cast((*PlanetAssetClassIterator)->GetPrice()) + " credits/unit."));
-			
-			FuelPriceLabel->SetPosition(Vector2f(10.0f, 300.0f));
-			FuelPriceLabel->SetSize(Vector2f(300.0f, 20.0f));
-			FuelPriceLabel->SetAnchorTop(false);
-			FuelPriceLabel->SetAnchorBottom(true);
 			
 			break;
 		}
 	}
+	_DescriptionLabel = new UI::Label(this, _Planet->GetDescription());
+	_DescriptionLabel->SetPosition(Vector2f(120.0f, 40.0f));
+	_DescriptionLabel->SetSize(Vector2f(370.0f, 350.0f));
+	_DescriptionLabel->SetWrap(true);
+	_DescriptionLabel->SetWordWrap(true);
+	_DescriptionLabel->SetAnchorRight(true);
+	_DescriptionLabel->SetVisible(false);
+	_TradeCenterWidget = new UI::TradeCenterWidget(this, _Planet, _Character);
+	_TradeCenterWidget->SetPosition(Vector2f(120.0f, 40.0f));
+	_TradeCenterWidget->SetSize(Vector2f(370.0f, 350.0f));
+	_TradeCenterWidget->SetAnchorBottom(true);
+	_TradeCenterWidget->SetAnchorRight(true);
+	_TradeCenterWidget->SetVisible(false);
+	_OnHomeButtonClicked();
 }
 
-void UI::PlanetDialog::OnDestroying(void)
+void UI::PlanetDialog::_OnHomeButtonClicked(void)
 {
-	if(m_TradeCenterDialog != 0)
-	{
-		m_TradeCenterDialog->Destroy();
-	}
+	_TradeCenterWidget->SetVisible(false);
+	_DescriptionLabel->SetVisible(true);
+	SetKeyFocus(0);
 }
 
-void UI::PlanetDialog::OnRefuelClicked(void)
+void UI::PlanetDialog::_OnRefuelButtonClicked(void)
 {
-	const std::vector< PlanetAssetClass * > & PlanetAssetClasses(m_Planet->GetPlanetAssetClasses());
+	const std::vector< PlanetAssetClass * > & PlanetAssetClasses(_Planet->GetPlanetAssetClasses());
 	
 	for(std::vector< PlanetAssetClass * >::const_iterator PlanetAssetClassIterator = PlanetAssetClasses.begin(); PlanetAssetClassIterator != PlanetAssetClasses.end(); ++PlanetAssetClassIterator)
 	{
 		if((*PlanetAssetClassIterator)->GetAssetClass()->GetIdentifier() == "fuel")
 		{
 			u4byte FuelPrice((*PlanetAssetClassIterator)->GetPrice());
-			float CanBuy(m_Character->GetCredits() / FuelPrice);
-			float Need(m_Character->GetShip()->GetFuelCapacity() - m_Character->GetShip()->GetFuel());
+			float CanBuy(_Character->GetCredits() / FuelPrice);
+			float Need(_Character->GetShip()->GetFuelCapacity() - _Character->GetShip()->GetFuel());
 			float Buy((CanBuy > Need) ? (Need) : (CanBuy));
 			
-			m_Character->GetShip()->SetFuel(m_Character->GetShip()->GetFuel() + Buy);
-			m_Character->RemoveCredits(static_cast< u4byte >(Buy * FuelPrice));
+			_Character->GetShip()->SetFuel(_Character->GetShip()->GetFuel() + Buy);
+			_Character->RemoveCredits(static_cast< u4byte >(Buy * FuelPrice));
 			
 			break;
 		}
 	}
 }
 
-void UI::PlanetDialog::OnTakeOffClicked(void)
+void UI::PlanetDialog::_OnTakeOffButtonClicked(void)
 {
-	m_Character->GetShip()->SetTakeOff(true);
+	_Character->GetShip()->SetTakeOff(true);
 }
 
-void UI::PlanetDialog::OnTradeCenterClicked(void)
+void UI::PlanetDialog::_OnTradeCenterButtonClicked(void)
 {
-	OpenTradeCenterDialog();
+	_OpenTradeCenterWidget();
 }
 
-void UI::PlanetDialog::OnTradeCenterDialogDestroying(void)
-{
-	m_TradeCenterDialog = 0;
-	GrabKeyFocus();
-}
-
-bool UI::PlanetDialog::OnKey(const KeyEventInformation & KeyEventInformation)
+bool UI::PlanetDialog::_OnKey(const KeyEventInformation & KeyEventInformation)
 {
 	if(((KeyEventInformation.GetKeyCode() == 9 /* ESCAPE */) || (KeyEventInformation.GetKeyCode() == 36 /* RETURN */)) && (KeyEventInformation.IsDown() == true))
 	{
-		m_Character->GetShip()->SetTakeOff(true);
+		_Character->GetShip()->SetTakeOff(true);
 	}
 	else if((KeyEventInformation.GetKeyCode() == 28 /* T */) && (KeyEventInformation.IsDown() == true))
 	{
-		OpenTradeCenterDialog();
+		_OpenTradeCenterWidget();
 	}
 	
 	// eat all input
 	return true;
 }
 
-void UI::PlanetDialog::OpenTradeCenterDialog(void)
+void UI::PlanetDialog::_OpenTradeCenterWidget(void)
 {
-	if(m_TradeCenterDialog == 0)
-	{
-		m_TradeCenterDialog = new UI::TradeCenterDialog(GetRootWidget(), m_Planet, m_Character);
-		m_TradeCenterDialog->GrabKeyFocus();
-		m_TradeCenterDialog->ConnectDestroyingCallback(Callback(this, &PlanetDialog::OnTradeCenterDialogDestroying));
-	}
+	_DescriptionLabel->SetVisible(false);
+	_TradeCenterWidget->SetVisible(true);
+	_TradeCenterWidget->GrabKeyFocus();
 }

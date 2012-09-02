@@ -28,7 +28,8 @@ class Planet;
 namespace UI
 {
 	class Button;
-	class TradeCenterDialog;
+	class Label;
+	class TradeCenterWidget;
 	
 	class PlanetDialog : public UI::Window
 	{
@@ -36,21 +37,19 @@ namespace UI
 		PlanetDialog(UI::Widget * SupWidget, Planet * Planet, Character * Character);
 	private:
 		// callbacks
-		void OnDestroying(void);
-		bool OnKey(const KeyEventInformation & KeyEventInformation);
-		void OnRefuelClicked(void);
-		void OnTakeOffClicked(void);
-		void OnTradeCenterClicked(void);
-		void OnTradeCenterDialogDestroying(void);
+		void _OnDestroying(void);
+		bool _OnKey(const KeyEventInformation & KeyEventInformation);
+		void _OnHomeButtonClicked(void);
+		void _OnRefuelButtonClicked(void);
+		void _OnTakeOffButtonClicked(void);
+		void _OnTradeCenterButtonClicked(void);
 		// helper functions & actions
-		void OpenTradeCenterDialog(void);
+		void _OpenTradeCenterWidget(void);
 		// member variables
-		Planet * m_Planet;
-		Character * m_Character;
-		UI::Button * m_TakeOffButton;
-		UI::Button * m_TradeCenterButton;
-		UI::Button * m_RefuelButton;
-		UI::TradeCenterDialog * m_TradeCenterDialog;
+		Planet * _Planet;
+		Character * _Character;
+		UI::Label * _DescriptionLabel;
+		UI::TradeCenterWidget * _TradeCenterWidget;
 	};
 }
 
