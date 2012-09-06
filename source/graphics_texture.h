@@ -44,14 +44,14 @@ namespace Graphics
 		// modifiers
 		void Activate(void) const;
 	private:
-		std::string m_Identifier;
-		GLuint m_Texture;
+		std::string _Identifier;
+		GLuint _Texture;
 	};
 }
 
 inline const std::string & Graphics::Texture::GetIdentifier(void) const
 {
-	return m_Identifier;
+	return _Identifier;
 }
 
 #endif

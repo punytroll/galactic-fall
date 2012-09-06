@@ -24,35 +24,33 @@
 #include "graphics_texture.h"
 
 Graphics::Texture::Texture(const std::string & Identifier) :
-	m_Identifier(Identifier),
-	m_Texture(0)
+	_Identifier(Identifier),
+	_Texture(0)
 {
 }
 
 Graphics::Texture::~Texture(void)
 {
-	if(m_Texture != 0)
+	if(_Texture != 0)
 	{
-		glDeleteTextures(1, &m_Texture);
-		m_Texture = 0;
+		glDeleteTextures(1, &_Texture);
+		_Texture = 0;
 	}
 }
 
 void Graphics::Texture::SetData(unsigned_numeric Width, unsigned_numeric Height, unsigned_numeric Format, const unsigned char * Data)
 {
-	assert(m_Texture == 0);
+	assert(_Texture == 0);
+	glGenTextures(1, &_Texture);
+	glBindTexture(GL_TEXTURE_2D, _Texture);
 	if(Format == 1) /// RGBA one byte each
 	{
-		glGenTextures(1, &m_Texture);
-		glBindTexture(GL_TEXTURE_2D, m_Texture);
 		glTexImage2D(GL_TEXTURE_2D, 0, 4, Width, Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, Data);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	}
 	else if(Format == 2) /// RGB one byte each
 	{
-		glGenTextures(1, &m_Texture);
-		glBindTexture(GL_TEXTURE_2D, m_Texture);
 		glTexImage2D(GL_TEXTURE_2D, 0, 4, Width, Height, 0, GL_RGB, GL_UNSIGNED_BYTE, Data);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -65,6 +63,6 @@ void Graphics::Texture::SetData(unsigned_numeric Width, unsigned_numeric Height,
 
 void Graphics::Texture::Activate(void) const
 {
-	assert(m_Texture != 0);
-	glBindTexture(GL_TEXTURE_2D, m_Texture);
+	assert(_Texture != 0);
+	glBindTexture(GL_TEXTURE_2D, _Texture);
 }
