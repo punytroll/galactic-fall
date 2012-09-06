@@ -27,7 +27,7 @@
 #include "commodity.h"
 #include "faction.h"
 #include "generator.h"
-#include "graphics_material.h"
+#include "graphics/material.h"
 #include "map_knowledge.h"
 #include "mind.h"
 #include "object.h"

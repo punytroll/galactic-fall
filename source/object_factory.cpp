@@ -31,7 +31,7 @@
 #include "generator.h"
 #include "generator_class.h"
 #include "globals.h"
-#include "graphics_model.h"
+#include "graphics/model.h"
 #include "object_aspect_accessory.h"
 #include "object_aspect_name.h"
 #include "object_aspect_outfitting.h"

@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2007  Hagen Möbius
+ * Copyright (C) 2006  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -15,22 +15,41 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- **/
+**/
 
-#ifndef GRAPHICS_SCENE_H
-#define GRAPHICS_SCENE_H
+#ifndef GRAPHICS_MODEL_H
+#define GRAPHICS_MODEL_H
 
-#include "graphics_node.h"
+#include <map>
+#include <string>
 
 namespace Graphics
 {
-	class Scene : public Graphics::Node
+	class Mesh;
+	
+	class Model
 	{
 	public:
-		void Update(float Seconds);
+		Model(const std::string & Identifier);
+		const std::string & GetIdentifier(void) const;
+		const std::map< std::string, const Graphics::Mesh * > & GetMeshes(void) const;
+		float GetRadialSize(void) const;
+		void AddMesh(const std::string & MeshIdentifier, const Graphics::Mesh * Mesh);
 	private:
-		void Update(Graphics::Node * Node, float Seconds);
+		std::string m_Identifier;
+		std::map< std::string, const Graphics::Mesh * > m_Meshes;
+		mutable float m_RadialSize;
 	};
+	
+	inline const std::string & Model::GetIdentifier(void) const
+	{
+		return m_Identifier;
+	}
+	
+	inline const std::map< std::string, const Graphics::Mesh * > & Model::GetMeshes(void) const
+	{
+		return m_Meshes;
+	}
 }
 
 #endif

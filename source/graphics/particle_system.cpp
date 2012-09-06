@@ -21,14 +21,14 @@
 
 #include <GL/gl.h>
 
-#include "color.h"
-#include "game_time.h"
-#include "globals.h"
-#include "graphics_particle_system.h"
-#include "graphics_texture.h"
-#include "graphics_texture_manager.h"
-#include "math.h"
-#include "system_statistics.h"
+#include "../color.h"
+#include "../game_time.h"
+#include "../globals.h"
+#include "../math.h"
+#include "../system_statistics.h"
+#include "particle_system.h"
+#include "texture.h"
+#include "texture_manager.h"
 
 const Graphics::Texture * g_ParticleTexture(0);
 

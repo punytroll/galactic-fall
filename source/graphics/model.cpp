@@ -21,8 +21,8 @@
 
 #include <GL/gl.h>
 
-#include "graphics_mesh.h"
-#include "graphics_model.h"
+#include "mesh.h"
+#include "model.h"
 
 Graphics::Model::Model(const std::string & Identifier) :
 	m_Identifier(Identifier),

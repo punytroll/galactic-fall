@@ -21,7 +21,7 @@
 
 #include <iostream>
 
-#include "graphics_texture.h"
+#include "texture.h"
 
 Graphics::Texture::Texture(const std::string & Identifier) :
 	_Identifier(Identifier),

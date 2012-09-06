@@ -19,7 +19,7 @@
 
 #include <assert.h>
 
-#include "graphics_node.h"
+#include "graphics/node.h"
 #include "object_aspect_visualization.h"
 #include "visualization_prototype.h"
 

@@ -20,7 +20,7 @@
 #ifndef GRAPHICS_MODEL_OBJECT_H
 #define GRAPHICS_MODEL_OBJECT_H
 
-#include "graphics_node.h"
+#include "node.h"
 
 class Color;
 
@@ -102,36 +102,36 @@ namespace Graphics
 		bool m_UseLighting;
 		std::map< std::string, Graphics::Material * > m_Materials;
 	};
-}
-
-inline void Graphics::ModelObject::SetClearDepthBuffer(bool ClearDepthBuffer)
-{
-	m_ClearDepthBuffer = ClearDepthBuffer;
-}
-
-inline void Graphics::ModelObject::SetModel(const Graphics::Model * Model)
-{
-	m_Model = Model;
-}
-
-inline void Graphics::ModelObject::SetNormalize(bool Normalize)
-{
-	m_Normalize = Normalize;
-}
-
-inline void Graphics::ModelObject::SetScale(float Scale)
-{
-	m_Scale = Scale;
-}
-
-inline void Graphics::ModelObject::SetUseBlending(bool UseBlending)
-{
-	m_UseBlending = UseBlending;
-}
-
-inline void Graphics::ModelObject::SetUseLighting(bool UseLighting)
-{
-	m_UseLighting = UseLighting;
+	
+	inline void ModelObject::SetClearDepthBuffer(bool ClearDepthBuffer)
+	{
+		m_ClearDepthBuffer = ClearDepthBuffer;
+	}
+	
+	inline void ModelObject::SetModel(const Graphics::Model * Model)
+	{
+		m_Model = Model;
+	}
+	
+	inline void ModelObject::SetNormalize(bool Normalize)
+	{
+		m_Normalize = Normalize;
+	}
+	
+	inline void ModelObject::SetScale(float Scale)
+	{
+		m_Scale = Scale;
+	}
+	
+	inline void ModelObject::SetUseBlending(bool UseBlending)
+	{
+		m_UseBlending = UseBlending;
+	}
+	
+	inline void ModelObject::SetUseLighting(bool UseLighting)
+	{
+		m_UseLighting = UseLighting;
+	}
 }
 
 #endif

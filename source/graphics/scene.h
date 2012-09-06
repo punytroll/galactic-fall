@@ -15,34 +15,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-**/
+ **/
 
-#ifndef GRAPHICS_TEXTURE_MANAGER_H
-#define GRAPHICS_TEXTURE_MANAGER_H
+#ifndef GRAPHICS_SCENE_H
+#define GRAPHICS_SCENE_H
 
-#include <map>
-#include <string>
+#include "node.h"
 
 namespace Graphics
 {
-	class Texture;
-
-	class TextureManager
+	class Scene : public Graphics::Node
 	{
 	public:
-		~TextureManager(void);
-		const std::map< std::string, Graphics::Texture * > & Get(void) const;
-		const Graphics::Texture * Get(const std::string & Identifier) const;
-		Graphics::Texture * Create(const std::string & Identifier);
-		void Destroy(const std::string & Identifier);
+		void Update(float Seconds);
 	private:
-		std::map< std::string, Graphics::Texture * > m_Managed;
+		void Update(Graphics::Node * Node, float Seconds);
 	};
-}
-
-inline const std::map< std::string, Graphics::Texture * > & Graphics::TextureManager::Get(void) const
-{
-	return m_Managed;
 }
 
 #endif

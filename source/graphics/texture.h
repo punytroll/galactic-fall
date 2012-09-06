@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006  Hagen Möbius
+ * Copyright (C) 2007  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,39 +17,41 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef GRAPHICS_MODEL_H
-#define GRAPHICS_MODEL_H
+#ifndef GRAPHICS_TEXTURE_H
+#define GRAPHICS_TEXTURE_H
 
-#include <map>
 #include <string>
+#include <vector>
+
+#include <GL/gl.h>
+
+#include "../type_definitions.h"
 
 namespace Graphics
 {
-	class Mesh;
-	
-	class Model
+	class Texture
 	{
 	public:
-		Model(const std::string & Identifier);
+		/**
+		 * @brief The default constructor.
+		 **/
+		Texture(const std::string & Identifier);
+		~Texture(void);
+		// getters
 		const std::string & GetIdentifier(void) const;
-		const std::map< std::string, const Graphics::Mesh * > & GetMeshes(void) const;
-		float GetRadialSize(void) const;
-		void AddMesh(const std::string & MeshIdentifier, const Graphics::Mesh * Mesh);
+		// setters
+		void SetData(unsigned_numeric Width, unsigned_numeric Height, unsigned_numeric Format, const unsigned char * Data);
+		// modifiers
+		void Activate(void) const;
 	private:
-		std::string m_Identifier;
-		std::map< std::string, const Graphics::Mesh * > m_Meshes;
-		mutable float m_RadialSize;
+		std::string _Identifier;
+		GLuint _Texture;
 	};
-}
-
-inline const std::string & Graphics::Model::GetIdentifier(void) const
-{
-	return m_Identifier;
-}
-
-inline const std::map< std::string, const Graphics::Mesh * > & Graphics::Model::GetMeshes(void) const
-{
-	return m_Meshes;
+	
+	inline const std::string & Graphics::Texture::GetIdentifier(void) const
+	{
+		return _Identifier;
+	}
 }
 
 #endif

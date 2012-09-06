@@ -23,7 +23,7 @@
 #include "game_time.h"
 #include "generator.h"
 #include "globals.h"
-#include "graphics_particle_system.h"
+#include "graphics/particle_system.h"
 #include "map_knowledge.h"
 #include "math.h"
 #include "message.h"

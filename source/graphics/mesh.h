@@ -23,7 +23,7 @@
 #include <vector>
 #include <string>
 
-#include "math/vector4f.h"
+#include "../math/vector4f.h"
 
 namespace Graphics
 {
@@ -48,11 +48,11 @@ namespace Graphics
 		std::vector< Graphics::Mesh::Triangle > m_Triangles;
 		mutable float m_RadialSize;
 	};
-}
-
-inline const std::string & Graphics::Mesh::GetIdentifier(void) const
-{
-	return m_Identifier;
+	
+	inline const std::string & Mesh::GetIdentifier(void) const
+	{
+		return m_Identifier;
+	}
 }
 
 #endif

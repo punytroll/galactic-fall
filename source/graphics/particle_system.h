@@ -24,9 +24,9 @@
 #include <string>
 #include <vector>
 
-#include "color.h"
-#include "graphics_node.h"
-#include "math/vector3f.h"
+#include "../color.h"
+#include "../math/vector3f.h"
+#include "node.h"
 
 namespace Graphics
 {
@@ -59,16 +59,16 @@ namespace Graphics
 		std::vector< std::string > m_SystemScript;
 		std::vector< std::string > m_ParticleScript;
 	};
-}
-
-inline void Graphics::ParticleSystem::SetVelocity(const Vector3f & Velocity)
-{
-	m_Velocity = Velocity;
-}
-
-inline void Graphics::ParticleSystem::SetTimeOfDeath(double TimeOfDeath)
-{
-	m_TimeOfDeath = TimeOfDeath;
+	
+	inline void ParticleSystem::SetVelocity(const Vector3f & Velocity)
+	{
+		m_Velocity = Velocity;
+	}
+	
+	inline void ParticleSystem::SetTimeOfDeath(double TimeOfDeath)
+	{
+		m_TimeOfDeath = TimeOfDeath;
+	}
 }
 
 #endif

@@ -23,9 +23,9 @@
 
 #include <GL/gl.h>
 
-#include "graphics_engine.h"
-#include "graphics_node.h"
-#include "math/matrix4f.h"
+#include "../math/matrix4f.h"
+#include "engine.h"
+#include "node.h"
 
 Graphics::Node::Node(void) :
 	m_Container(0),

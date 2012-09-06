@@ -18,7 +18,6 @@
 **/
 
 #include "color.h"
-#include "graphics_material.h"
 #include "ship_class.h"
 #include "slot.h"
 #include "visualization_prototype.h"
