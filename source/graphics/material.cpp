@@ -17,8 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include "color.h"
-#include "graphics_material.h"
+#include "../color.h"
+#include "material.h"
 
 Graphics::Material::Material(void) :
 	m_DiffuseColor(0),

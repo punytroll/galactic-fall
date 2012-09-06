@@ -15,34 +15,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- **/
+**/
 
-#include "graphics_particle_system.h"
-#include "graphics_scene.h"
+#include <algorithm>
 
-void Graphics::Scene::Update(float Seconds)
+#include "engine.h"
+#include "scene.h"
+
+void Graphics::Engine::AddScene(Graphics::Scene * Scene)
 {
-	Update(this, Seconds);
+	assert(Scene->GetEngine() == 0);
+	m_Scenes.push_back(Scene);
+	Scene->SetEngine(this);
 }
 
-void Graphics::Scene::Update(Graphics::Node * Node, float Seconds)
+void Graphics::Engine::RemoveScene(Graphics::Scene * Scene)
 {
-	std::vector< Graphics::Node * > & Content(Node->GetContent());
-	std::vector< Graphics::Node * >::size_type ContentIndex(0);
-	
-	while(ContentIndex < Content.size())
-	{
-		Graphics::ParticleSystem * ParticleSystem(dynamic_cast< Graphics::ParticleSystem * >(Content[ContentIndex]));
-		
-		if((ParticleSystem != 0) && (ParticleSystem->Update(Seconds) == false))
-		{
-			Node->RemoveNode(ParticleSystem);
-			ParticleSystem->Destroy();
-		}
-		else
-		{
-			Update(Content[ContentIndex], Seconds);
-			++ContentIndex;
-		}
-	}
+	assert(Scene->GetEngine() == this);
+	m_Scenes.erase(std::find(m_Scenes.begin(), m_Scenes.end(), Scene));
 }

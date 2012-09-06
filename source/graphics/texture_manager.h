@@ -17,41 +17,32 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef GRAPHICS_TEXTURE_H
-#define GRAPHICS_TEXTURE_H
+#ifndef GRAPHICS_TEXTURE_MANAGER_H
+#define GRAPHICS_TEXTURE_MANAGER_H
 
+#include <map>
 #include <string>
-#include <vector>
-
-#include <GL/gl.h>
-
-#include "type_definitions.h"
 
 namespace Graphics
 {
-	class Texture
+	class Texture;
+
+	class TextureManager
 	{
 	public:
-		/**
-		 * @brief The default constructor.
-		 **/
-		Texture(const std::string & Identifier);
-		~Texture(void);
-		// getters
-		const std::string & GetIdentifier(void) const;
-		// setters
-		void SetData(unsigned_numeric Width, unsigned_numeric Height, unsigned_numeric Format, const unsigned char * Data);
-		// modifiers
-		void Activate(void) const;
+		~TextureManager(void);
+		const std::map< std::string, Graphics::Texture * > & Get(void) const;
+		const Graphics::Texture * Get(const std::string & Identifier) const;
+		Graphics::Texture * Create(const std::string & Identifier);
+		void Destroy(const std::string & Identifier);
 	private:
-		std::string _Identifier;
-		GLuint _Texture;
+		std::map< std::string, Graphics::Texture * > m_Managed;
 	};
-}
-
-inline const std::string & Graphics::Texture::GetIdentifier(void) const
-{
-	return _Identifier;
+	
+	inline const std::map< std::string, Graphics::Texture * > & Graphics::TextureManager::Get(void) const
+	{
+		return m_Managed;
+	}
 }
 
 #endif

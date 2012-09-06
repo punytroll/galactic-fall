@@ -17,8 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include "graphics_mesh.h"
-#include "graphics_mesh_manager.h"
+#include "mesh.h"
+#include "mesh_manager.h"
 
 Graphics::MeshManager::~MeshManager(void)
 {

@@ -24,8 +24,8 @@
 
 #include <vector>
 
-#include "math/quaternion.h"
-#include "math/vector3f.h"
+#include "../math/quaternion.h"
+#include "../math/vector3f.h"
 
 namespace Graphics
 {
@@ -103,62 +103,62 @@ namespace Graphics
 		Quaternion m_Orientation;
 		Vector3f m_Position;
 	};
-}
-
-inline Graphics::Node * Graphics::Node::GetContainer(void)
-{
-	return m_Container;
-}
-
-inline const Graphics::Node * Graphics::Node::GetContainer(void) const
-{
-	return m_Container;
-}
-
-inline std::vector< Graphics::Node * > & Graphics::Node::GetContent(void)
-{
-	return m_Content;
-}
-
-inline Graphics::Engine * Graphics::Node::GetEngine(void)
-{
-	return m_Engine;
-}
-
-inline const Quaternion & Graphics::Node::GetOrientation(void) const
-{
-	return m_Orientation;
-}
-
-inline const Vector3f & Graphics::Node::GetPosition(void) const
-{
-	return m_Position;
-}
-
-inline void Graphics::Node::Remove(void)
-{
-	assert(GetContainer() != 0);
-	m_Container->RemoveNode(this);
-}
-
-inline void Graphics::Node::SetOrientation(const Quaternion & Orientation)
-{
-	m_Orientation = Orientation;
-}
-
-inline void Graphics::Node::SetPosition(const Vector3f & Position)
-{
-	m_Position = Position;
-}
-
-inline void Graphics::Node::SetContainer(Graphics::Node * Container)
-{
-	m_Container = Container;
-}
-
-inline void Graphics::Node::SetEngine(Graphics::Engine * Engine)
-{
-	m_Engine = Engine;
+	
+	inline Graphics::Node * Node::GetContainer(void)
+	{
+		return m_Container;
+	}
+	
+	inline const Graphics::Node * Node::GetContainer(void) const
+	{
+		return m_Container;
+	}
+	
+	inline std::vector< Graphics::Node * > & Node::GetContent(void)
+	{
+		return m_Content;
+	}
+	
+	inline Graphics::Engine * Node::GetEngine(void)
+	{
+		return m_Engine;
+	}
+	
+	inline const Quaternion & Node::GetOrientation(void) const
+	{
+		return m_Orientation;
+	}
+	
+	inline const Vector3f & Node::GetPosition(void) const
+	{
+		return m_Position;
+	}
+	
+	inline void Node::Remove(void)
+	{
+		assert(GetContainer() != 0);
+		m_Container->RemoveNode(this);
+	}
+	
+	inline void Node::SetOrientation(const Quaternion & Orientation)
+	{
+		m_Orientation = Orientation;
+	}
+	
+	inline void Node::SetPosition(const Vector3f & Position)
+	{
+		m_Position = Position;
+	}
+	
+	inline void Node::SetContainer(Graphics::Node * Container)
+	{
+		m_Container = Container;
+	}
+	
+	inline void Node::SetEngine(Graphics::Engine * Engine)
+	{
+		m_Engine = Engine;
+	}
 }
 
 #endif

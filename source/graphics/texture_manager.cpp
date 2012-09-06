@@ -17,8 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include "graphics_texture.h"
-#include "graphics_texture_manager.h"
+#include "texture.h"
+#include "texture_manager.h"
 
 Graphics::TextureManager::~TextureManager(void)
 {

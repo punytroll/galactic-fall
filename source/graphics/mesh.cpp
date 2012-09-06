@@ -19,7 +19,7 @@
 
 #include <GL/gl.h>
 
-#include "graphics_mesh.h"
+#include "mesh.h"
 
 Graphics::Mesh::Mesh(const std::string & Identifier) :
 	m_Identifier(Identifier),

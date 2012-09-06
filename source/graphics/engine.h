@@ -24,7 +24,7 @@
 
 #include <vector>
 
-#include "callbacks/callbacks.h"
+#include "../callbacks/callbacks.h"
 
 namespace Graphics
 {
@@ -44,24 +44,24 @@ namespace Graphics
 		std::vector< Graphics::Scene * > m_Scenes;
 		Callback1< void, Graphics::Node * > m_DestroyCallback;
 	};
-}
-
-inline void Graphics::Engine::SetDestroyCallback(Callback1< void, Graphics::Node * > Callback)
-{
-	m_DestroyCallback = Callback;
-}
-
-inline void Graphics::Engine::OnDestroy(Graphics::Node * Node)
-{
-	if(m_DestroyCallback.IsValid() == true)
+	
+	inline void Engine::SetDestroyCallback(Callback1< void, Graphics::Node * > Callback)
 	{
-		m_DestroyCallback(Node);
+		m_DestroyCallback = Callback;
 	}
-}
-
-inline Callback1< void, Graphics::Node * > Graphics::Engine::GetDestroyCallback(void)
-{
-	return m_DestroyCallback;
+	
+	inline void Engine::OnDestroy(Graphics::Node * Node)
+	{
+		if(m_DestroyCallback.IsValid() == true)
+		{
+			m_DestroyCallback(Node);
+		}
+	}
+	
+	inline Callback1< void, Graphics::Node * > Engine::GetDestroyCallback(void)
+	{
+		return m_DestroyCallback;
+	}
 }
 
 #endif

@@ -17,7 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include "graphics_material.h"
+#include "graphics/material.h"
 #include "visualization_prototype.h"
 
 VisualizationPrototype::VisualizationPrototype(void) :

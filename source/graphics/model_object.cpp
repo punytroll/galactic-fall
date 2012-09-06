@@ -19,12 +19,12 @@
 
 #include <GL/gl.h>
 
-#include "color.h"
-#include "graphics_material.h"
-#include "graphics_mesh.h"
-#include "graphics_model.h"
-#include "graphics_model_object.h"
-#include "math/matrix4f.h"
+#include "../color.h"
+#include "../math/matrix4f.h"
+#include "material.h"
+#include "mesh.h"
+#include "model.h"
+#include "model_object.h"
 
 Graphics::ModelObject::ModelObject(void) :
 	m_ClearDepthBuffer(false),

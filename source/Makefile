@@ -6,7 +6,7 @@ SOURCE_DIRECTORIES := $(patsubst %/,%,$(sort $(dir $(shell find . -name '*.cpp')
 SOURCE_FILES := $(patsubst ./%,%,$(foreach SOURCE_DIRECTORY,$(SOURCE_DIRECTORIES),$(wildcard $(SOURCE_DIRECTORY)/*.cpp)))
 OBJECT_DIRECTORY := .object-files
 OBJECT_DIRECTORIES := $(patsubst .%, $(OBJECT_DIRECTORY)%, $(SOURCE_DIRECTORIES))
-OBJECT_FILES := $(patsubst %.cpp,$(OBJECT_DIRECTORY)/%.o,$(SOURCE_FILES))
+OBJECT_FILES := $(sort $(patsubst %.cpp,$(OBJECT_DIRECTORY)/%.o,$(SOURCE_FILES)))
 
 arx_reading_h = \
 	arx_reading.h
@@ -235,56 +235,56 @@ goals_h = \
 	$(math_vector3f_h)
 
 graphics_engine_cpp = \
-	graphics_engine.cpp \
+	graphics/engine.cpp \
 	$(graphics_engine_h) \
 	$(graphics_scene_h)
 
 graphics_engine_h = \
-	graphics_engine.h \
+	graphics/engine.h \
 	$(callbacks_callbacks_h)
 
 graphics_material_cpp = \
-	graphics_material.cpp \
+	graphics/material.cpp \
 	$(color_h) \
 	$(graphics_material_h)
 
 graphics_material_h = \
-	graphics_material.h
+	graphics/material.h
 
 graphics_mesh_cpp = \
-	graphics_mesh.cpp \
+	graphics/mesh.cpp \
 	$(graphics_mesh_h)
 
 graphics_mesh_h = \
-	graphics_mesh.h \
+	graphics/mesh.h \
 	$(math_vector4f_h)
 
 graphics_mesh_manager_cpp = \
-	graphics_mesh_manager.cpp \
+	graphics/mesh_manager.cpp \
 	$(graphics_mesh_h) \
 	$(graphics_mesh_manager_h)
 
 graphics_mesh_manager_h = \
-	graphics_mesh_manager.h
+	graphics/mesh_manager.h
 
 graphics_model_cpp = \
-	graphics_model.cpp \
+	graphics/model.cpp \
 	$(graphics_mesh_h) \
 	$(graphics_model_h)
 
 graphics_model_h = \
-	graphics_model.h
+	graphics/model.h
 
 graphics_model_manager_cpp = \
-	graphics_model_manager.cpp \
+	graphics/model_manager.cpp \
 	$(graphics_model_h) \
 	$(graphics_model_manager_h)
 
 graphics_model_manager_h = \
-	graphics_model_manager.h
+	graphics/model_manager.h
 
 graphics_model_object_cpp = \
-	graphics_model_object.cpp \
+	graphics/model_object.cpp \
 	$(color_h) \
 	$(graphics_mesh_h) \
 	$(graphics_model_h) \
@@ -292,21 +292,21 @@ graphics_model_object_cpp = \
 	$(math_matrix4f_h)
 
 graphics_model_object_h = \
-	graphics_model_object.h
+	graphics/model_object.h
 
 graphics_node_cpp = \
-	graphics_node.cpp \
+	graphics/node.cpp \
 	$(graphics_engine_h) \
 	$(graphics_node_h) \
 	$(math_matrix4f_h)
 
 graphics_node_h = \
-	graphics_node.h \
+	graphics/node.h \
 	$(math_quaternion_h) \
 	$(math_vector3f_h)
 
 graphics_particle_system_cpp = \
-	graphics_particle_system.cpp \
+	graphics/particle_system.cpp \
 	$(color_h) \
 	$(game_time_h) \
 	$(globals_h) \
@@ -316,35 +316,35 @@ graphics_particle_system_cpp = \
 	$(math_h)
 
 graphics_particle_system_h = \
-	graphics_particle_system.h \
+	graphics/particle_system.h \
 	$(color_h) \
 	$(graphics_node_h) \
 	$(math_vector2f_h)
 
 graphics_scene_cpp = \
-	graphics_scene.cpp \
+	graphics/scene.cpp \
 	$(graphics_particle_system_h) \
 	$(graphics_scene_h)
 
 graphics_scene_h = \
-	graphics_scene.h \
+	graphics/scene.h \
 	$(graphics_node_h)
 
 graphics_texture_cpp = \
-	graphics_texture.cpp \
+	graphics/texture.cpp \
 	$(graphics_texture_h)
 
 graphics_texture_h = \
-	graphics_texture.h \
+	graphics/texture.h \
 	$(type_definitions_h)
 
 graphics_texture_manager_cpp = \
-	graphics_texture_manager.cpp \
+	graphics/texture_manager.cpp \
 	$(graphics_texture_h) \
 	$(graphics_texture_manager_h)
 
 graphics_texture_manager_h = \
-	graphics_texture_manager.h
+	graphics/texture_manager.h
 
 key_event_information_cpp = \
 	key_event_information.cpp \

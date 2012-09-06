@@ -17,8 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include "graphics_model.h"
-#include "graphics_model_manager.h"
+#include "model.h"
+#include "model_manager.h"
 
 Graphics::ModelManager::~ModelManager(void)
 {

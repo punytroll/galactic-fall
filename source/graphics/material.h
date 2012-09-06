@@ -62,26 +62,26 @@ namespace Graphics
 		 **/
 		Graphics::Material & operator=(const Graphics::Material & Material);
 	};
-}
-
-inline const Color * Graphics::Material::GetDiffuseColor(void) const
-{
-	return m_DiffuseColor;
-}
-
-inline float Graphics::Material::GetShininess(void) const
-{
-	return m_Shininess;
-}
-
-inline const Color * Graphics::Material::GetSpecularColor(void) const
-{
-	return m_SpecularColor;
-}
-
-inline void Graphics::Material::SetShininess(float Shininess)
-{
-	m_Shininess = Shininess;
+	
+	inline const Color * Material::GetDiffuseColor(void) const
+	{
+		return m_DiffuseColor;
+	}
+	
+	inline float Material::GetShininess(void) const
+	{
+		return m_Shininess;
+	}
+	
+	inline const Color * Material::GetSpecularColor(void) const
+	{
+		return m_SpecularColor;
+	}
+	
+	inline void Material::SetShininess(float Shininess)
+	{
+		m_Shininess = Shininess;
+	}
 }
 
 #endif
