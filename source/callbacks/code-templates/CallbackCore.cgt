@@ -22,11 +22,13 @@ public:<if><condition><equal><variable>InstanceCount</variable><to-boolean>true<
 		std::cout &lt;&lt; "+ CallbackCore<to-string><variable>NumberOfArguments</variable></to-string>" &lt;&lt; std::endl;
 	}
 	
+</then></if>
 	virtual ~CallbackCore<to-string><variable>NumberOfArguments</variable></to-string>(void)
-	{
+	{<if><condition><equal><variable>InstanceCount</variable><to-boolean>true</to-boolean></equal></condition><then>
 		std::cout &lt;&lt; "- CallbackCore<to-string><variable>NumberOfArguments</variable></to-string>" &lt;&lt; std::endl;
+</then></if>
 	}
-	</then></if>
+	
 	virtual ReturnType Call(<if><condition><greater><variable>NumberOfArguments</variable><to-integer>0</to-integer></greater></condition><then><foreach name="Loop"><over><range><to-integer>1</to-integer><variable>NumberOfArguments</variable></range></over><do><if><condition><greater><variable>Loop</variable><to-integer>1</to-integer></greater></condition><then>, </then></if>Argument<to-string><variable>Loop</variable></to-string>Type Argument<to-string><variable>Loop</variable></to-string></do></foreach></then><else>void</else></if>) const = 0;
 	
 	virtual bool IsValid(void) const = 0;
