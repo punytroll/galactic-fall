@@ -214,7 +214,7 @@ int main(int argc, char ** argv)
 	
 	int ScreenNumber(DefaultScreen(Display));
 	int NumberOfConfigurations(0);
-	int RequestedAttributes[] =
+	unsigned int RequestedAttributes[] =
 	{
 		GLX_RENDER_TYPE, GLX_RGBA_BIT,
 		GLX_DRAWABLE_TYPE, GLX_WINDOW_BIT,
@@ -235,7 +235,7 @@ int main(int argc, char ** argv)
 		GLX_AUX_BUFFERS, GLX_DONT_CARE,
 		0
 	};
-	GLXFBConfig * Configurations(glXChooseFBConfig(Display, ScreenNumber, RequestedAttributes, &NumberOfConfigurations));
+	GLXFBConfig * Configurations(glXChooseFBConfig(Display, ScreenNumber, reinterpret_cast< const int * >(RequestedAttributes), &NumberOfConfigurations));
 	
 	for(int ConfigurationIndex = 0; ConfigurationIndex < NumberOfConfigurations; ++ConfigurationIndex)
 	{
