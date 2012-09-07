@@ -1405,5 +1405,5 @@ binary: $(OBJECT_FILES) $(LDFLAGS_configuration)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags libarxx` -c $< -o $@
 
 .SECONDEXPANSION:
-$(OBJECT_DIRECTORY)/%.o: $$($$(subst /,_,$$*_cpp))
+$(OBJECT_DIRECTORY)/%.o: $$($$(subst /,_,$$*)_cpp)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
