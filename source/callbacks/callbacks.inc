@@ -39,6 +39,10 @@ template < typename ReturnType >
 class CallbackCore0 : public Counter
 {
 public:
+	virtual ~CallbackCore0(void)
+	{
+	}
+	
 	virtual ReturnType Call(void) const = 0;
 	
 	virtual bool IsValid(void) const = 0;
@@ -54,6 +58,10 @@ template < typename ReturnType, typename Argument1Type >
 class CallbackCore1 : public Counter
 {
 public:
+	virtual ~CallbackCore1(void)
+	{
+	}
+	
 	virtual ReturnType Call(Argument1Type Argument1) const = 0;
 	
 	virtual bool IsValid(void) const = 0;
@@ -69,6 +77,10 @@ template < typename ReturnType, typename Argument1Type, typename Argument2Type >
 class CallbackCore2 : public Counter
 {
 public:
+	virtual ~CallbackCore2(void)
+	{
+	}
+	
 	virtual ReturnType Call(Argument1Type Argument1, Argument2Type Argument2) const = 0;
 	
 	virtual bool IsValid(void) const = 0;
@@ -84,6 +96,10 @@ template < typename ReturnType, typename Argument1Type, typename Argument2Type, 
 class CallbackCore4 : public Counter
 {
 public:
+	virtual ~CallbackCore4(void)
+	{
+	}
+	
 	virtual ReturnType Call(Argument1Type Argument1, Argument2Type Argument2, Argument3Type Argument3, Argument4Type Argument4) const = 0;
 	
 	virtual bool IsValid(void) const = 0;
@@ -99,6 +115,10 @@ template < typename ReturnType, typename Argument1Type, typename Argument2Type, 
 class CallbackCore5 : public Counter
 {
 public:
+	virtual ~CallbackCore5(void)
+	{
+	}
+	
 	virtual ReturnType Call(Argument1Type Argument1, Argument2Type Argument2, Argument3Type Argument3, Argument4Type Argument4, Argument5Type Argument5) const = 0;
 	
 	virtual bool IsValid(void) const = 0;
