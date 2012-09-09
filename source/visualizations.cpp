@@ -24,7 +24,7 @@
 #include "graphics/material.h"
 #include "graphics/model.h"
 #include "graphics/model_manager.h"
-#include "graphics/model_object.h"
+#include "graphics/model_node.h"
 #include "graphics/particle_system.h"
 #include "object_aspect_accessory.h"
 #include "object_aspect_outfitting.h"
@@ -77,7 +77,7 @@ void VisualizeCommodity(Commodity * Commodity, Graphics::Node * Container)
 	assert(Commodity->GetAspectVisualization()->GetVisualization().IsValid() == false);
 	assert(Container != 0);
 	
-	Graphics::ModelObject * Visualization(new Graphics::ModelObject());
+	Graphics::ModelNode * Visualization(new Graphics::ModelNode());
 	const std::map< std::string, Graphics::Material * > & PartMaterials(Commodity->GetAspectVisualization()->GetVisualizationPrototype()->GetPartMaterials());
 	
 	for(std::map< std::string, Graphics::Material * >::const_iterator PartMaterialIterator = PartMaterials.begin(); PartMaterialIterator != PartMaterials.end(); ++PartMaterialIterator)
@@ -135,7 +135,7 @@ void VisualizePlanet(Planet * Planet, Graphics::Node * Container)
 	assert(Planet->GetAspectPosition() != 0);
 	assert(Container != 0);
 	
-	Graphics::ModelObject * Visualization(new Graphics::ModelObject());
+	Graphics::ModelNode * Visualization(new Graphics::ModelNode());
 	Graphics::Material * Material(new Graphics::Material());
 	
 	Material->SetDiffuseColor(new Color(Planet->GetColor()));
@@ -169,7 +169,7 @@ void VisualizeShip(Ship * Ship, Graphics::Node * Container)
 	assert(Ship->GetEngineGlowParticleSystem().IsValid() == false);
 	assert(Container != 0);
 	
-	Graphics::ModelObject * Visualization(new Graphics::ModelObject());
+	Graphics::ModelNode * Visualization(new Graphics::ModelNode());
 	const std::map< std::string, Graphics::Material * > & PartMaterials(Ship->GetAspectVisualization()->GetVisualizationPrototype()->GetPartMaterials());
 	
 	for(std::map< std::string, Graphics::Material * >::const_iterator PartMaterialIterator = PartMaterials.begin(); PartMaterialIterator != PartMaterials.end(); ++PartMaterialIterator)
@@ -221,7 +221,7 @@ void VisualizeShot(Shot * Shot, Graphics::Node * Container)
 	assert(Shot->GetAspectVisualization()->GetVisualization().IsValid() == false);
 	assert(Container != 0);
 	
-	Graphics::ModelObject * Visualization(new Graphics::ModelObject());
+	Graphics::ModelNode * Visualization(new Graphics::ModelNode());
 	const std::map< std::string, Graphics::Material * > & PartMaterials(Shot->GetAspectVisualization()->GetVisualizationPrototype()->GetPartMaterials());
 	
 	for(std::map< std::string, Graphics::Material * >::const_iterator PartMaterialIterator = PartMaterials.begin(); PartMaterialIterator != PartMaterials.end(); ++PartMaterialIterator)
@@ -254,7 +254,7 @@ void VisualizeWeapon(Weapon * Weapon, Graphics::Node * Container)
 	assert(Weapon->GetAspectVisualization()->GetVisualization().IsValid() == false);
 	assert(Container != 0);
 	
-	Graphics::ModelObject * Visualization(new Graphics::ModelObject());
+	Graphics::ModelNode * Visualization(new Graphics::ModelNode());
 	const std::map< std::string, Graphics::Material * > & PartMaterials(Weapon->GetAspectVisualization()->GetVisualizationPrototype()->GetPartMaterials());
 	
 	for(std::map< std::string, Graphics::Material * >::const_iterator PartMaterialIterator = PartMaterials.begin(); PartMaterialIterator != PartMaterials.end(); ++PartMaterialIterator)

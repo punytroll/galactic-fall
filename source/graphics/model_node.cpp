@@ -24,72 +24,72 @@
 #include "material.h"
 #include "mesh.h"
 #include "model.h"
-#include "model_object.h"
+#include "model_node.h"
 
-Graphics::ModelObject::ModelObject(void) :
-	m_ClearDepthBuffer(false),
-	m_Model(0),
-	m_Normalize(false),
-	m_Scale(1.0f),
-	m_UseBlending(false),
-	m_UseLighting(false)
+Graphics::ModelNode::ModelNode(void) :
+	_ClearDepthBuffer(false),
+	_Model(0),
+	_Normalize(false),
+	_Scale(1.0f),
+	_UseBlending(false),
+	_UseLighting(false)
 {
 }
 
-Graphics::ModelObject::~ModelObject(void)
+Graphics::ModelNode::~ModelNode(void)
 {
-	while(m_Materials.empty() == false)
+	while(_Materials.empty() == false)
 	{
-		delete m_Materials.begin()->second;
-		m_Materials.erase(m_Materials.begin());
+		delete _Materials.begin()->second;
+		_Materials.erase(_Materials.begin());
 	}
 }
 
-void Graphics::ModelObject::Begin(void)
+void Graphics::ModelNode::Begin(void)
 {
 	glPushMatrix();
 	glTranslatef(GetPosition()[0], GetPosition()[1], GetPosition()[2]);
 	glMultMatrixf(Matrix4f(GetOrientation()).Transpose().Matrix());
-	if(m_Scale != 1.0f)
+	if(_Scale != 1.0f)
 	{
-		glScalef(m_Scale, m_Scale, m_Scale);
+		glScalef(_Scale, _Scale, _Scale);
 	}
 }
 
-void Graphics::ModelObject::Draw(void)
+void Graphics::ModelNode::Draw(void)
 {
-	if(m_Model != 0)
+	if(_Model != 0)
 	{
-		if(m_ClearDepthBuffer == true)
+		if(_ClearDepthBuffer == true)
 		{
 			glClear(GL_DEPTH_BUFFER_BIT);
 		}
-		if((m_Normalize || m_UseBlending || m_UseLighting) == true)
+		if((_Normalize == true) || (_UseBlending == true) || (_UseLighting == true))
 		{
 			glPushAttrib(GL_ENABLE_BIT);
 		}
-		if(m_Normalize == true)
+		if(_Normalize == true)
 		{
 			glEnable(GL_NORMALIZE);
 		}
-		if(m_UseBlending == true)
+		if(_UseBlending == true)
 		{
 			glEnable(GL_BLEND);
 		}
-		if(m_UseLighting == true)
+		if(_UseLighting == true)
 		{
 			glEnable(GL_LIGHTING);
 		}
 		
-		const std::map< std::string, const Graphics::Mesh * > & Meshes(m_Model->GetMeshes());
+		const std::map< std::string, const Graphics::Mesh * > & Meshes(_Model->GetMeshes());
 		
 		for(std::map< std::string, const Graphics::Mesh * >::const_iterator MeshIterator = Meshes.begin(); MeshIterator != Meshes.end(); ++MeshIterator)
 		{
-			std::map< std::string, Graphics::Material * >::const_iterator MaterialIterator(m_Materials.find(MeshIterator->first));
+			std::map< std::string, Graphics::Material * >::const_iterator MaterialIterator(_Materials.find(MeshIterator->first));
 			
-			if(m_UseLighting == true)
+			if(_UseLighting == true)
 			{
-				if(MaterialIterator == m_Materials.end())
+				if(MaterialIterator == _Materials.end())
 				{
 					// if no material is set for this mesh
 					glMaterialfv(GL_FRONT, GL_DIFFUSE, Vector4f(1.0f, 1.0f, 1.0f, 1.0f).m_V.m_A);
@@ -120,30 +120,30 @@ void Graphics::ModelObject::Draw(void)
 			}
 			else
 			{
-				if((MaterialIterator != m_Materials.end()) && (MaterialIterator->second->GetDiffuseColor() != 0))
+				if((MaterialIterator != _Materials.end()) && (MaterialIterator->second->GetDiffuseColor() != 0))
 				{
 					glColor4fv(MaterialIterator->second->GetDiffuseColor()->GetColor().m_V.m_A);
 				}
 			}
 			MeshIterator->second->Draw();
 		}
-		if((m_Normalize || m_UseBlending || m_UseLighting) == true)
+		if((_Normalize == true) || (_UseBlending == true) || (_UseLighting == true))
 		{
 			glPopAttrib();
 		}
 	}
 }
 
-void Graphics::ModelObject::End(void)
+void Graphics::ModelNode::End(void)
 {
 	glPopMatrix();
 }
 
-bool Graphics::ModelObject::AddMaterial(const std::string & MeshName, Graphics::Material * Material)
+bool Graphics::ModelNode::AddMaterial(const std::string & MeshName, Graphics::Material * Material)
 {
-	if(m_Materials.find(MeshName) == m_Materials.end())
+	if(_Materials.find(MeshName) == _Materials.end())
 	{
-		m_Materials[MeshName] = Material;
+		_Materials[MeshName] = Material;
 		
 		return true;
 	}

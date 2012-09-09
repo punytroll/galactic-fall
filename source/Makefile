@@ -283,16 +283,16 @@ graphics_model_manager_cpp = \
 graphics_model_manager_h = \
 	graphics/model_manager.h
 
-graphics_model_object_cpp = \
-	graphics/model_object.cpp \
+graphics_model_node_cpp = \
+	graphics/model_node.cpp \
 	$(color_h) \
 	$(graphics_mesh_h) \
 	$(graphics_model_h) \
-	$(graphics_model_object_h) \
+	$(graphics_model_node_h) \
 	$(math_matrix4f_h)
 
-graphics_model_object_h = \
-	graphics/model_object.h
+graphics_model_node_h = \
+	graphics/model_node.h
 
 graphics_node_cpp = \
 	graphics/node.cpp \
@@ -380,7 +380,7 @@ main_cpp = \
 	$(graphics_mesh_manager_h) \
 	$(graphics_model_h) \
 	$(graphics_model_manager_h) \
-	$(graphics_model_object_h) \
+	$(graphics_model_node_h) \
 	$(graphics_particle_system_h) \
 	$(graphics_scene_h) \
 	$(graphics_texture_manager_h) \
@@ -1238,7 +1238,7 @@ visualizations_cpp = \
 	$(globals_h) \
 	$(graphics_material_h) \
 	$(graphics_model_h) \
-	$(graphics_model_object_h) \
+	$(graphics_model_node_h) \
 	$(graphics_model_manager_h) \
 	$(graphics_particle_system_h) \
 	$(object_aspect_accessory_h) \
