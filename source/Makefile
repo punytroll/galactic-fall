@@ -1155,9 +1155,8 @@ ui_trade_center_widget_cpp = \
 	$(character_h) \
 	$(commodity_h) \
 	$(commodity_class_h) \
-	$(character_h) \
 	$(game_time_h) \
-	$(graphics_model_manager_h) \
+	$(globals_h) \
 	$(key_event_information_h) \
 	$(object_aspect_accessory_h) \
 	$(object_aspect_name_h) \
@@ -1166,6 +1165,7 @@ ui_trade_center_widget_cpp = \
 	$(planet_h) \
 	$(ship_h) \
 	$(storage_h) \
+	$(string_cast_h) \
 	$(ui_button_h) \
 	$(ui_label_h) \
 	$(ui_scroll_bar_h) \
