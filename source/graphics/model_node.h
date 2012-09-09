@@ -17,8 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef GRAPHICS_MODEL_OBJECT_H
-#define GRAPHICS_MODEL_OBJECT_H
+#ifndef GRAPHICS_MODEL_NODE_H
+#define GRAPHICS_MODEL_NODE_H
 
 #include "node.h"
 
@@ -29,20 +29,20 @@ namespace Graphics
 	class Material;
 	class Model;
 	
-	class ModelObject : public Graphics::Node
+	class ModelNode : public Graphics::Node
 	{
 	public:
 		/**
 		 * @brief The default constructor.
 		 **/
-		ModelObject(void);
+		ModelNode(void);
 		
 		/**
 		 * @brief The destoructor for a graphics node object.
 		 * 
-		 * The destructor will also delete all content nodes.
+		 * The destructor will also delete all materials.
 		 **/
-		virtual ~ModelObject(void);
+		virtual ~ModelNode(void);
 		
 		virtual void Begin(void);
 		
@@ -94,43 +94,43 @@ namespace Graphics
 		 **/
 		bool AddMaterial(const std::string & MeshIdentifier, Graphics::Material * Material);
 	private:
-		bool m_ClearDepthBuffer;
-		const Graphics::Model * m_Model;
-		bool m_Normalize;
-		float m_Scale;
-		bool m_UseBlending;
-		bool m_UseLighting;
-		std::map< std::string, Graphics::Material * > m_Materials;
+		bool _ClearDepthBuffer;
+		const Graphics::Model * _Model;
+		bool _Normalize;
+		float _Scale;
+		bool _UseBlending;
+		bool _UseLighting;
+		std::map< std::string, Graphics::Material * > _Materials;
 	};
 	
-	inline void ModelObject::SetClearDepthBuffer(bool ClearDepthBuffer)
+	inline void ModelNode::SetClearDepthBuffer(bool ClearDepthBuffer)
 	{
-		m_ClearDepthBuffer = ClearDepthBuffer;
+		_ClearDepthBuffer = ClearDepthBuffer;
 	}
 	
-	inline void ModelObject::SetModel(const Graphics::Model * Model)
+	inline void ModelNode::SetModel(const Graphics::Model * Model)
 	{
-		m_Model = Model;
+		_Model = Model;
 	}
 	
-	inline void ModelObject::SetNormalize(bool Normalize)
+	inline void ModelNode::SetNormalize(bool Normalize)
 	{
-		m_Normalize = Normalize;
+		_Normalize = Normalize;
 	}
 	
-	inline void ModelObject::SetScale(float Scale)
+	inline void ModelNode::SetScale(float Scale)
 	{
-		m_Scale = Scale;
+		_Scale = Scale;
 	}
 	
-	inline void ModelObject::SetUseBlending(bool UseBlending)
+	inline void ModelNode::SetUseBlending(bool UseBlending)
 	{
-		m_UseBlending = UseBlending;
+		_UseBlending = UseBlending;
 	}
 	
-	inline void ModelObject::SetUseLighting(bool UseLighting)
+	inline void ModelNode::SetUseLighting(bool UseLighting)
 	{
-		m_UseLighting = UseLighting;
+		_UseLighting = UseLighting;
 	}
 }
 

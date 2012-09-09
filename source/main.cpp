@@ -57,7 +57,7 @@
 #include "graphics/mesh_manager.h"
 #include "graphics/model.h"
 #include "graphics/model_manager.h"
-#include "graphics/model_object.h"
+#include "graphics/model_node.h"
 #include "graphics/particle_system.h"
 #include "graphics/scene.h"
 #include "graphics/texture_manager.h"
