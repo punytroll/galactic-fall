@@ -1296,6 +1296,11 @@ void OnOutputEnterSystem(System * EnterSystem)
 {
 	assert(g_SpawnShipTimeoutNotification.IsValid() == false);
 	assert(g_MainScene == 0);
+	assert(g_CommodityLayer == 0);
+	assert(g_ParticleSystemsLayer == 0);
+	assert(g_PlanetLayer == 0);
+	assert(g_ShipLayer == 0);
+	assert(g_ShotLayer == 0);
 	g_SpawnShipTimeoutNotification = g_GameTimeTimeoutNotifications->Add(GameTime::Get() + GetRandomFloatFromExponentialDistribution(1.0f / EnterSystem->GetTrafficDensity()), Bind1(Callback(SpawnShipOnTimeout), EnterSystem));
 	// build the static setup of the scene
 	g_MainScene = new Graphics::Scene();
