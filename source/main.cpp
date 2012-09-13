@@ -1305,16 +1305,20 @@ void OnOutputEnterSystem(System * EnterSystem)
 	// build the static setup of the scene
 	g_MainScene = new Graphics::Scene();
 	g_GraphicsEngine->AddScene(g_MainScene);
+	
+	Graphics::Node * RootNode(new Graphics::Node());
+	
+	g_MainScene->SetRootNode(RootNode);
 	g_CommodityLayer = new Graphics::Node();
 	g_ParticleSystemsLayer = new Graphics::Node();
 	g_PlanetLayer = new Graphics::Node();
 	g_ShipLayer = new Graphics::Node();
 	g_ShotLayer = new Graphics::Node();
-	g_MainScene->AddNode(g_PlanetLayer);
-	g_MainScene->AddNode(g_CommodityLayer);
-	g_MainScene->AddNode(g_ShotLayer);
-	g_MainScene->AddNode(g_ShipLayer);
-	g_MainScene->AddNode(g_ParticleSystemsLayer);
+	RootNode->AddNode(g_PlanetLayer);
+	RootNode->AddNode(g_CommodityLayer);
+	RootNode->AddNode(g_ShotLayer);
+	RootNode->AddNode(g_ShipLayer);
+	RootNode->AddNode(g_ParticleSystemsLayer);
 	
 	// add visualizations for all objects in the system
 	const std::vector< Planet * > & Planets(EnterSystem->GetPlanets());
@@ -1339,9 +1343,9 @@ void OnOutputLeaveSystem(System * System)
 	{
 		g_SpawnShipTimeoutNotification.Dismiss();
 	}
-	// clear scene
 	g_GraphicsEngine->RemoveScene(g_MainScene);
-	g_MainScene->Destroy();
+	delete g_MainScene;
+	g_MainScene = 0;
 }
 
 void OnGraphicsNodeDestroy(Graphics::Node * Node)
@@ -1365,10 +1369,6 @@ void OnGraphicsNodeDestroy(Graphics::Node * Node)
 	else if(Node == g_ShotLayer)
 	{
 		g_ShotLayer = 0;
-	}
-	else if(Node == g_MainScene)
-	{
-		g_MainScene = 0;
 	}
 	InvalidateVisualizationReference(Node);
 	delete Node;
