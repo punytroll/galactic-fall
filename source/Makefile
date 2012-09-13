@@ -55,9 +55,7 @@ check-dependencies: cpp_includes_to_makefile-check-dependencies
 		echo -e "\nThe library \"libarxx\" that is installed on your system is too old.\nYou have: Version `pkg-config --modversion libarxx`\nYou need: Version 0.8.9\nYou can get the most recent library from \"http://libarxx.sourceforge.net\"./\n"; false; \
 	fi
 
-dependencies: Makefile.dependencies
-
-Makefile.dependencies: $(cpp_includes_to_makefile_dependencies) $(HEADER_FILES) $(SOURCE_FILES)
+dependencies: $(cpp_includes_to_makefile_dependencies) $(HEADER_FILES) $(SOURCE_FILES)
 	$(RM) Makefile.dependencies
 	@for FILE in $(sort $(HEADER_FILES) $(SOURCE_FILES)); do \
 		$(command_cpp_includes_to_makefile) $${FILE} >> Makefile.dependencies; \
