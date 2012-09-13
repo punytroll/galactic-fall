@@ -3069,6 +3069,12 @@ void InitializeOpenGL(void)
 {
 	ON_DEBUG(std::cout << "Initializing font." << std::endl);
 	InitializeFonts();
+	ON_DEBUG(std::cout << "OpenGL capabilities:" << std::endl);
+	
+	int MaximalNumberOfLights(0);
+	
+	glGetIntegerv(GL_MAX_LIGHTS, &MaximalNumberOfLights);
+	ON_DEBUG(std::cout << "  Maximal number of lights: " << MaximalNumberOfLights << std::endl);
 	
 	// TODO: Make configurable via data.arx
 	Vector4f GlobalAmbientLightColor(0.0f, 0.0f, 0.0f, 0.0f);
