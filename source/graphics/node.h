@@ -30,10 +30,11 @@
 namespace Graphics
 {
 	class Engine;
+	class Scene;
 	
 	class Node
 	{
-		friend class Graphics::Engine;
+		friend class Graphics::Scene;
 	public:
 		/**
 		 * @brief The default constructor.

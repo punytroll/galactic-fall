@@ -17,15 +17,57 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  **/
 
+#include <assert.h>
+
 #include "particle_system.h"
 #include "scene.h"
 
-void Graphics::Scene::Update(float Seconds)
+Graphics::Scene::Scene(void) :
+	_Engine(0),
+	_RootNode(0)
 {
-	Update(this, Seconds);
 }
 
-void Graphics::Scene::Update(Graphics::Node * Node, float Seconds)
+Graphics::Scene::~Scene(void)
+{
+	if(_RootNode != 0)
+	{
+		_RootNode->Destroy();
+		_RootNode = 0;
+	}
+}
+
+void Graphics::Scene::Render(void)
+{
+	assert(_RootNode != 0);
+	_RootNode->Render();
+}
+
+void Graphics::Scene::_SetEngine(Graphics::Engine * Engine)
+{
+	assert(_Engine == 0);
+	assert(Engine != 0);
+	assert(_RootNode == 0);
+	_Engine = Engine;
+}
+
+void Graphics::Scene::SetRootNode(Graphics::Node * RootNode)
+{
+	assert(_Engine != 0);
+	assert(_RootNode == 0);
+	assert(RootNode != 0);
+	assert(RootNode->GetEngine() == 0);
+	_RootNode = RootNode;
+	_RootNode->SetEngine(_Engine);
+}
+
+void Graphics::Scene::Update(float Seconds)
+{
+	assert(_RootNode != 0);
+	_Update(_RootNode, Seconds);
+}
+
+void Graphics::Scene::_Update(Graphics::Node * Node, float Seconds)
 {
 	std::vector< Graphics::Node * > & Content(Node->GetContent());
 	std::vector< Graphics::Node * >::size_type ContentIndex(0);
@@ -41,7 +83,7 @@ void Graphics::Scene::Update(Graphics::Node * Node, float Seconds)
 		}
 		else
 		{
-			Update(Content[ContentIndex], Seconds);
+			_Update(Content[ContentIndex], Seconds);
 			++ContentIndex;
 		}
 	}

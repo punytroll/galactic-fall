@@ -24,13 +24,15 @@
 
 void Graphics::Engine::AddScene(Graphics::Scene * Scene)
 {
+	assert(Scene != 0);
 	assert(Scene->GetEngine() == 0);
 	m_Scenes.push_back(Scene);
-	Scene->SetEngine(this);
+	Scene->_SetEngine(this);
 }
 
 void Graphics::Engine::RemoveScene(Graphics::Scene * Scene)
 {
+	assert(Scene != 0);
 	assert(Scene->GetEngine() == this);
 	m_Scenes.erase(std::find(m_Scenes.begin(), m_Scenes.end(), Scene));
 }

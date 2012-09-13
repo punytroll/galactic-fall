@@ -20,17 +20,39 @@
 #ifndef GRAPHICS_SCENE_H
 #define GRAPHICS_SCENE_H
 
-#include "node.h"
-
 namespace Graphics
 {
-	class Scene : public Graphics::Node
+	class Engine;
+	class Node;
+	
+	class Scene
 	{
+		friend class Graphics::Engine;
 	public:
+		Scene(void);
+		~Scene(void);
+		void Clear(void);
+		Graphics::Engine * GetEngine(void);
+		Graphics::Node * GetRootNode(void);
+		void Render(void);
+		void SetRootNode(Graphics::Node * RootNode);
 		void Update(float Seconds);
 	private:
-		void Update(Graphics::Node * Node, float Seconds);
+		void _SetEngine(Graphics::Engine * Engine);
+		void _Update(Graphics::Node * Node, float Seconds);
+		Graphics::Engine * _Engine;
+		Graphics::Node * _RootNode;
 	};
+	
+	inline Graphics::Engine * Scene::GetEngine(void)
+	{
+		return _Engine;
+	}
+	
+	inline Graphics::Node * Scene::GetRootNode(void)
+	{
+		return _RootNode;
+	}
 }
 
 #endif

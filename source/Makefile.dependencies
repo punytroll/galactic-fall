@@ -354,8 +354,7 @@ graphics_scene_cpp = \
 	$(graphics_scene_h)
 
 graphics_scene_h = \
-	graphics/scene.h \
-	$(graphics_node_h)
+	graphics/scene.h
 
 graphics_texture_cpp = \
 	graphics/texture.cpp \
