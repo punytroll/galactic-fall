@@ -454,11 +454,9 @@ void DisplayUserInterface(void)
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glMatrixMode(GL_PROJECTION);
-	glPushMatrix();
 	glLoadIdentity();
 	glOrtho(0.0, static_cast< GLfloat >(g_Width), 0.0, static_cast< GLfloat >(g_Height), -1, 1);
 	glMatrixMode(GL_MODELVIEW);
-	glPushMatrix();
 	glLoadIdentity();
 	glScalef(1.0f, -1.0f, 1.0f);
 	glTranslatef(0.0f, -g_Height, 0.0f);
@@ -467,10 +465,6 @@ void DisplayUserInterface(void)
 	glEnable(GL_CLIP_PLANE2);
 	glEnable(GL_CLIP_PLANE3);
 	g_UserInterface->Draw();
-	glMatrixMode(GL_PROJECTION);
-	glPopMatrix();
-	glMatrixMode(GL_MODELVIEW);
-	glPopMatrix();
 	glPopAttrib();
 }
 
@@ -993,21 +987,14 @@ void UpdateUserInterface(void)
 	}
 }
 
-void PrepareGraphicalOutput(void)
+void RenderSystem(System * System)
 {
-	glViewport(0, 0, static_cast< GLsizei >(g_Width), static_cast< GLsizei >(g_Height));
+	assert(System != 0);
 	glMatrixMode(GL_PROJECTION);
 	g_MainPerspective.Draw();
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	g_Camera.Draw();
-	glClear(GL_COLOR_BUFFER_BIT);
-	glClear(GL_DEPTH_BUFFER_BIT);
-}
-
-void RenderSystem(System * System)
-{
-	assert(System != 0);
 	
 	const Star * CurrentStar(System->GetStar());
 	
@@ -1473,7 +1460,9 @@ void GameFrame(void)
 	
 	double GraphicsTimeBegin(RealTime::Get());
 	
-	PrepareGraphicalOutput();
+	glViewport(0, 0, static_cast< GLsizei >(g_Width), static_cast< GLsizei >(g_Height));
+	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_DEPTH_BUFFER_BIT);
 	if(CurrentSystem != 0)
 	{
 		RenderSystem(CurrentSystem);
