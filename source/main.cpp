@@ -170,6 +170,7 @@ int g_LastMotionY(-1);
 int g_MouseButton(-1);
 Vector3f g_CameraPosition;
 Reference< Object > g_CameraFocus;
+bool g_FirstPersonCameraMode(false);
 Reference< CommandMind > g_InputMind;
 OutputObserver * g_CharacterObserver;
 float g_Width(0.0f);
@@ -995,8 +996,16 @@ void RenderSystem(System * System)
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	glTranslatef(-g_CameraPosition.m_V.m_A[0], -g_CameraPosition.m_V.m_A[1], -g_CameraPosition.m_V.m_A[2]);
+	if(g_FirstPersonCameraMode == true)
+	{
+		glRotatef(90.0f, 0.0f, 0.0f, 1.0f);
+	}
 	if(g_CameraFocus.IsValid() == true)
 	{
+		if(g_FirstPersonCameraMode == true)
+		{
+			glMultMatrixf(Matrix4f(g_CameraFocus->GetAspectPosition()->GetOrientation()).Matrix());
+		}
 		glTranslatef(-g_CameraFocus->GetAspectPosition()->GetPosition().m_V.m_A[0], -g_CameraFocus->GetAspectPosition()->GetPosition().m_V.m_A[1], 0.0f);
 	}
 	
@@ -2861,6 +2870,11 @@ void ActionTargetPreviousShip(void)
 	}
 }
 
+void ActionToggleFirstPersonCameraMode(void)
+{
+	g_FirstPersonCameraMode = !g_FirstPersonCameraMode;
+}
+
 void ActionToggleTimingDialog(void)
 {
 	if(g_TimingDialog == 0)
@@ -3361,6 +3375,10 @@ void LoadKeyboardLookupTable(const std::list< Settings::KeyBinding > * KeyBindin
 				else if(KeyBindingIterator->Action == "target_previous_ship")
 				{
 					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionTargetPreviousShip;
+				}
+				else if(KeyBindingIterator->Action == "toggle_first_person_camera_mode")
+				{
+					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionToggleFirstPersonCameraMode;
 				}
 				else if(KeyBindingIterator->Action == "toggle_timing_dialog")
 				{

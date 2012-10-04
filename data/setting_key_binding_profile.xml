@@ -246,5 +246,11 @@
 			<event>up</event>
 			<action>disable_turn_right</action>
 		</key-binding>
+		<!-- DELETE: toggle first person camera mode -->
+		<key-binding>
+			<code>119</code>
+			<event>down</event>
+			<action>toggle_first_person_camera_mode</action>
+		</key-binding>
 	</key-bindings>
 </key-binding-profile>
