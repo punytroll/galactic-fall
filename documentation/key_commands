@@ -134,3 +134,6 @@ On key down:
 105 (PAGE DOWN)
 	Cycles the output mind forward through the set of characters in the game or to no output if the last one was selected.
 	Only works with no input mind set.
+
+119 (DELETE)
+	Toggles the first person camera mode. You will not look out of the ship, but the ship will remain stationary in relation to the camera.
