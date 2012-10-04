@@ -388,7 +388,6 @@ main_cpp = \
 	$(asset_class_h) \
 	$(battery_h) \
 	$(battery_class_h) \
-	$(camera_h) \
 	$(character_h) \
 	$(class_manager_h) \
 	$(color_h) \
