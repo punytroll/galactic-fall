@@ -36,7 +36,6 @@
 #include "asset_class.h"
 #include "battery.h"
 #include "battery_class.h"
-#include "camera.h"
 #include "character.h"
 #include "class_manager.h"
 #include "color.h"
@@ -169,7 +168,8 @@ UI::TimingDialog * g_TimingDialog(0);
 int g_LastMotionX(-1);
 int g_LastMotionY(-1);
 int g_MouseButton(-1);
-Camera g_Camera;
+Vector3f g_CameraPosition;
+Reference< Object > g_CameraFocus;
 Reference< CommandMind > g_InputMind;
 OutputObserver * g_CharacterObserver;
 float g_Width(0.0f);
@@ -994,7 +994,11 @@ void RenderSystem(System * System)
 	g_MainPerspective.Draw();
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	g_Camera.Draw();
+	glTranslatef(-g_CameraPosition.m_V.m_A[0], -g_CameraPosition.m_V.m_A[1], -g_CameraPosition.m_V.m_A[2]);
+	if(g_CameraFocus.IsValid() == true)
+	{
+		glTranslatef(-g_CameraFocus->GetAspectPosition()->GetPosition().m_V.m_A[0], -g_CameraFocus->GetAspectPosition()->GetPosition().m_V.m_A[1], 0.0f);
+	}
 	
 	const Star * CurrentStar(System->GetStar());
 	
@@ -1520,13 +1524,13 @@ void MouseButtonDown(int MouseButton, int X, int Y)
 	{
 	case 4: // MouseButton: WHEEL_UP
 		{
-			g_Camera.MoveIn();
+			g_CameraPosition.m_V.m_A[2] *= 0.95f;
 			
 			break;
 		}
 	case 5: // MouseButton: WHEEL_DOWN
 		{
-			g_Camera.MoveOut();
+			g_CameraPosition.m_V.m_A[2] *= 1.05f;
 			
 			break;
 		}
@@ -1569,9 +1573,8 @@ void MouseMoved(int X, int Y)
 	g_LastMotionY = Y;
 	if(g_MouseButton == 2) // MouseButton: MIDDLE
 	{
-		const Vector3f & CameraPosition(g_Camera.GetPosition());
-		
-		g_Camera.SetPosition(CameraPosition.m_V.m_A[0] - static_cast< float >(DeltaX) * 0.0008f * CameraPosition.m_V.m_A[2], CameraPosition.m_V.m_A[1] + static_cast< float >(DeltaY) * 0.0008f * CameraPosition.m_V.m_A[2]);
+		g_CameraPosition.m_V.m_A[0] = g_CameraPosition.m_V.m_A[0] - static_cast< float >(DeltaX) * 0.0011f * g_CameraPosition.m_V.m_A[2];
+		g_CameraPosition.m_V.m_A[1] = g_CameraPosition.m_V.m_A[1] + static_cast< float >(DeltaY) * 0.0011f * g_CameraPosition.m_V.m_A[2];
 	}
 }
 
@@ -1651,7 +1654,7 @@ void LoadGameFromElement(const Element * SaveElement)
 			{
 				if((*CameraChild)->GetName() == "position")
 				{
-					g_Camera.SetPosition(from_string_cast< float >((*CameraChild)->GetAttribute("x")), from_string_cast< float >((*CameraChild)->GetAttribute("y")), from_string_cast< float >((*CameraChild)->GetAttribute("z")));
+					g_CameraPosition.Set(from_string_cast< float >((*CameraChild)->GetAttribute("x")), from_string_cast< float >((*CameraChild)->GetAttribute("y")), from_string_cast< float >((*CameraChild)->GetAttribute("z")));
 				}
 				else if((*CameraChild)->GetName() == "focus")
 				{
@@ -2105,7 +2108,7 @@ void LoadGameFromElement(const Element * SaveElement)
 					Object * FocusObject(Object::GetObject((*CameraChild)->GetAttribute("object-identifier")));
 					
 					assert(FocusObject != 0);
-					g_Camera.SetFocus(FocusObject->GetReference());
+					g_CameraFocus = FocusObject->GetReference();
 				}
 			}
 		}
@@ -2321,14 +2324,14 @@ void SaveGame(std::ostream & OStream)
 	}
 	// save main camera properties
 	XML << element << "main-camera";
-	XML << element << "position" << attribute << "x" << value << g_Camera.GetPosition().m_V.m_A[0] << attribute << "y" << value << g_Camera.GetPosition().m_V.m_A[1] << attribute << "z" << value << g_Camera.GetPosition().m_V.m_A[2] << end;
-	if(g_Camera.GetFocus().IsValid() != 0)
+	XML << element << "position" << attribute << "x" << value << g_CameraPosition.m_V.m_A[0] << attribute << "y" << value << g_CameraPosition.m_V.m_A[1] << attribute << "z" << value << g_CameraPosition.m_V.m_A[2] << end;
+	if(g_CameraFocus.IsValid() != 0)
 	{
-		if(g_Camera.GetFocus()->GetObjectIdentifier() == "")
+		if(g_CameraFocus->GetObjectIdentifier() == "")
 		{
-			g_Camera.GetFocus()->GenerateObjectIdentifier();
+			g_CameraFocus->GenerateObjectIdentifier();
 		}
-		XML << element << "focus" << attribute << "object-identifier" << value << g_Camera.GetFocus()->GetObjectIdentifier() << end;
+		XML << element << "focus" << attribute << "object-identifier" << value << g_CameraFocus->GetObjectIdentifier() << end;
 	}
 	XML << element << "field-of-view" << attribute << "radians" << value << g_MainPerspective.GetFieldOfView() << end;
 	XML << end; // camera
@@ -2455,37 +2458,39 @@ void ActionEnableTurnRight(void)
 void ActionFocusCameraOnNextShip(void)
 {
 	const std::list< Ship * > & Ships(g_CurrentSystem->GetShips());
-	const Ship * FocusShip(dynamic_cast< const Ship * >(g_Camera.GetFocus().Get()));
+	const Ship * FocusShip(dynamic_cast< const Ship * >(g_CameraFocus.Get()));
 	
 	std::list< Ship * >::const_iterator ShipIterator(find(Ships.begin(), Ships.end(), FocusShip));
 	
 	if((ShipIterator == Ships.end()) || (++ShipIterator == Ships.end()))
 	{
-		g_Camera.SetFocus(Ships.front()->GetReference());
+		g_CameraFocus = Ships.front()->GetReference();
 	}
 	else
 	{
-		g_Camera.SetFocus((*ShipIterator)->GetReference());
+		g_CameraFocus = (*ShipIterator)->GetReference();
 	}
-	g_Camera.SetPosition(0.0f, 0.0f);
+	g_CameraPosition[0] = 0.0f;
+	g_CameraPosition[1] = 0.0f;
 }
 
 void ActionFocusCameraOnPreviousShip(void)
 {
 	const std::list< Ship * > & Ships(g_CurrentSystem->GetShips());
-	const Ship * FocusShip(dynamic_cast< const Ship * >(g_Camera.GetFocus().Get()));
+	const Ship * FocusShip(dynamic_cast< const Ship * >(g_CameraFocus.Get()));
 	
 	std::list< Ship * >::const_reverse_iterator ShipIterator(find(Ships.rbegin(), Ships.rend(), FocusShip));
 	
 	if((ShipIterator == Ships.rend()) || (++ShipIterator == Ships.rend()))
 	{
-		g_Camera.SetFocus(Ships.back()->GetReference());
+		g_CameraFocus = Ships.back()->GetReference();
 	}
 	else
 	{
-		g_Camera.SetFocus((*ShipIterator)->GetReference());
+		g_CameraFocus = (*ShipIterator)->GetReference();
 	}
-	g_Camera.SetPosition(0.0f, 0.0f);
+	g_CameraPosition[0] = 0.0f;
+	g_CameraPosition[1] = 0.0f;
 }
 
 void ActionJettisonCargo(void)
@@ -2722,7 +2727,8 @@ void ActionRefuel(void)
 
 void ActionResetCameraPosition(void)
 {
-	g_Camera.SetPosition(0.0f, 0.0f);
+	g_CameraPosition[0] = 0.0f;
+	g_CameraPosition[1] = 0.0f;
 }
 
 void ActionResetTimeWarp(void)
