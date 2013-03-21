@@ -1,0 +1,12 @@
+cpp_includes_to_makefile-check-dependencies: 
+	@if [ x`which python3` = x ]; then \
+	    echo -e "\nYour system is missing the python3 interpreter.\nIn order to use the cpp_includes_to_makefile component you will need to install it on your system.\n"; false; \
+	fi
+
+cpp_includes_to_makefile_dependencies = \
+	$(root)/tools/cpp_includes_to_makefile/cpp_includes_to_makefile.py
+
+command_cpp_includes_to_makefile = \
+	python3 $(root)/tools/cpp_includes_to_makefile/cpp_includes_to_makefile.py
+
+.PHONY: cpp_includes_to_makefile-check-dependencies
