@@ -429,7 +429,6 @@ main_cpp = \
 	$(object_aspect_visualization_h) \
 	$(object_factory_h) \
 	$(output_observer_h) \
-	$(perspective_h) \
 	$(planet_h) \
 	$(real_time_h) \
 	$(settings_h) \

@@ -77,7 +77,6 @@
 #include "object_aspect_visualization.h"
 #include "object_factory.h"
 #include "output_observer.h"
-#include "perspective.h"
 #include "planet.h"
 #include "real_time.h"
 #include "settings.h"
@@ -175,6 +174,7 @@ Reference< CommandMind > g_InputMind;
 OutputObserver * g_CharacterObserver;
 float g_Width(0.0f);
 float g_Height(0.0f);
+float g_FieldOfView(45.0f);
 System * g_CurrentSystem;
 float g_TimeWarp(1.0f);
 bool g_Quit(false);
@@ -187,7 +187,6 @@ Display * g_Display;
 GLXContext g_GLXContext;
 Window g_Window;
 Colormap g_ColorMap;
-Perspective g_MainPerspective;
 bool g_EchoEvents(false);
 bool g_EchoResizes(false);
 bool g_DumpEndReport(false);
@@ -195,6 +194,25 @@ bool g_TakeScreenShot(false);
 ResourceReader * g_ResourceReader(0);
 Settings * g_Settings(0);
 void (*g_KeyboardLookupTable[128][2])(void);
+
+Matrix4f GetPerspectiveMatrix(float FieldOfView, float Aspect, float NearClippingPlane, float FarClippingPlane)
+{
+	float Right, Top;
+	
+	Top = NearClippingPlane * tan(FieldOfView);
+	Right = Top * Aspect;
+	
+	Matrix4f Result;
+	
+	Result.m_M[1].m_A[0] = Result.m_M[2].m_A[0] = Result.m_M[3].m_A[0] = Result.m_M[0].m_A[1] = Result.m_M[2].m_A[1] = Result.m_M[3].m_A[1] = Result.m_M[0].m_A[2] = Result.m_M[1].m_A[2] = Result.m_M[0].m_A[3] = Result.m_M[1].m_A[3] = Result.m_M[3].m_A[3] = 0.0f;
+	Result.m_M[0].m_A[0] = NearClippingPlane / Right;
+	Result.m_M[1].m_A[1] = NearClippingPlane / Top;
+	Result.m_M[2].m_A[2] = -(FarClippingPlane + NearClippingPlane) / (FarClippingPlane - NearClippingPlane);
+	Result.m_M[3].m_A[2] = -(2.0f * FarClippingPlane * NearClippingPlane) / (FarClippingPlane - NearClippingPlane);
+	Result.m_M[2].m_A[3] = -1.0f;
+	
+	return Result;
+}
 
 std::vector< std::string > SplitString(const std::string & String, char Delimiter)
 {
@@ -992,7 +1010,7 @@ void RenderSystem(System * System)
 {
 	assert(System != 0);
 	glMatrixMode(GL_PROJECTION);
-	g_MainPerspective.Draw();
+	glLoadMatrixf(GetPerspectiveMatrix(g_FieldOfView, g_Width / g_Height, 1.0f, 1000.0f).Matrix());
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	glTranslatef(-g_CameraPosition.m_V.m_A[0], -g_CameraPosition.m_V.m_A[1], -g_CameraPosition.m_V.m_A[2]);
@@ -1076,7 +1094,6 @@ void Resize(void)
 		g_Height = 1;
 	}
 	glViewport(0, 0, static_cast< GLint >(g_Width), static_cast< GLint >(g_Height));
-	g_MainPerspective.SetAspect(g_Width / g_Height);
 	g_UserInterface->GetRootWidget()->SetSize(Vector2f(g_Width, g_Height));
 }
 
@@ -1673,11 +1690,11 @@ void LoadGameFromElement(const Element * SaveElement)
 				{
 					if((*CameraChild)->HasAttribute("degree") == true)
 					{
-						g_MainPerspective.SetFieldOfView(from_string_cast< float >((*CameraChild)->GetAttribute("degree")) * M_PI / 360.0f);
+						g_FieldOfView = from_string_cast< float >((*CameraChild)->GetAttribute("degree")) * M_PI / 360.0f;
 					}
 					else if((*CameraChild)->HasAttribute("radians") == true)
 					{
-						g_MainPerspective.SetFieldOfView(from_string_cast< float >((*CameraChild)->GetAttribute("radians")));
+						g_FieldOfView = from_string_cast< float >((*CameraChild)->GetAttribute("radians"));
 					}
 				}
 				else
@@ -2342,7 +2359,7 @@ void SaveGame(std::ostream & OStream)
 		}
 		XML << element << "focus" << attribute << "object-identifier" << value << g_CameraFocus->GetObjectIdentifier() << end;
 	}
-	XML << element << "field-of-view" << attribute << "radians" << value << g_MainPerspective.GetFieldOfView() << end;
+	XML << element << "field-of-view" << attribute << "radians" << value << g_FieldOfView << end;
 	XML << end; // camera
 	// now save the impoartant objects
 	if(g_InputMind.IsValid() == true)
@@ -3507,8 +3524,6 @@ int main(int argc, char ** argv)
 	
 	// create managers and global objects
 	ON_DEBUG(std::cout << "Creating global managers and objects." << std::endl);
-	g_MainPerspective.SetNearClippingPlane(1.0f);
-	g_MainPerspective.SetFarClippingPlane(1000.f);
 	g_AssetClassManager = new ClassManager< AssetClass >();
 	g_BatteryClassManager = new ClassManager< BatteryClass >();
 	g_CommodityClassManager = new ClassManager< CommodityClass >();
