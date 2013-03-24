@@ -58,6 +58,7 @@ check-dependencies: cpp_includes_to_makefile-check-dependencies
 dependencies: $(cpp_includes_to_makefile_dependencies) $(HEADER_FILES) $(SOURCE_FILES)
 	$(RM) Makefile.dependencies
 	@for FILE in $(sort $(HEADER_FILES) $(SOURCE_FILES)); do \
+		echo "$(command_cpp_includes_to_makefile) $${FILE} >> Makefile.dependencies"; \
 		$(command_cpp_includes_to_makefile) $${FILE} >> Makefile.dependencies; \
 		echo >> Makefile.dependencies; \
 	done
