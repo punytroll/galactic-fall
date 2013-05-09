@@ -21,20 +21,20 @@
 #define UI_MINI_MAP_DISPLAY_H
 
 #include "../referencing.h"
-#include "viewport.h"
+#include "widget.h"
 
 class Ship;
 
 namespace UI
 {
-	class MiniMapDisplay : public UI::Viewport
+	class MiniMapDisplay : public UI::Widget
 	{
 	public:
 		MiniMapDisplay(UI::Widget * SupWidget = 0);
 		void SetOwner(Reference< Ship > Owner);
-		virtual void DrawInViewport(void) const;
+		virtual void Draw(void) const;
 	private:
-		Reference< Ship > m_Owner;
+		Reference< Ship > _Owner;
 	};
 }
 

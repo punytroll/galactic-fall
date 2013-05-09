@@ -90,16 +90,6 @@ callbacks_events_h = \
 	$(callbacks_events_inc) \
 	$(list_h)
 
-camera_cpp = \
-	camera.cpp \
-	$(camera_h) \
-	$(object_h) \
-	$(object_aspect_position_h)
-
-camera_h = \
-	camera.h \
-	$(referencing_h)
-
 character_cpp = \
 	character.cpp \
 	$(character_h) \
@@ -692,13 +682,6 @@ output_observer_h = \
 	output_observer.h \
 	$(character_observer_h)
 
-perspective_cpp = \
-	perspective.cpp \
-	$(perspective_h)
-
-perspective_h = \
-	perspective.h
-
 planet_cpp = \
 	planet.cpp \
 	$(asset_class_h) \
@@ -1020,7 +1003,7 @@ ui_mini_map_display_cpp = \
 ui_mini_map_display_h = \
 	ui/mini_map_display.h \
 	$(referencing_h) \
-	$(ui_viewport_h)
+	$(ui_widget_h)
 
 ui_object_information_dialog_cpp = \
 	ui/object_information_dialog.cpp \
@@ -1214,16 +1197,6 @@ ui_user_interface_cpp = \
 ui_user_interface_h = \
 	ui/user_interface.h \
 	$(callbacks_connection_handle_h)
-
-ui_viewport_cpp = \
-	ui/viewport.cpp \
-	$(ui_viewport_h)
-
-ui_viewport_h = \
-	ui/viewport.h \
-	$(camera_h) \
-	$(perspective_h) \
-	$(ui_widget_h)
 
 ui_widget_cpp = \
 	ui/widget.cpp \
