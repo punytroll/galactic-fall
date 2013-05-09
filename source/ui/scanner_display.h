@@ -21,13 +21,13 @@
 #define SCANNER_DISPLAY_H
 
 #include "../referencing.h"
-#include "viewport.h"
+#include "widget.h"
 
 class Ship;
 
 namespace UI
 {
-	class ScannerDisplay : public UI::Viewport
+	class ScannerDisplay : public UI::Widget
 	{
 	public:
 		ScannerDisplay(UI::Widget * SupWidget = 0);
@@ -37,19 +37,21 @@ namespace UI
 		void SetOwner(Reference< Ship > Owner);
 		// actors
 		void Update(void);
-		virtual void DrawInViewport(void) const;
+		virtual void Draw(void) const;
 	private:
-		Reference< Ship > m_Owner;
+		float _CameraZ;
+		float _FieldOfView;
+		Reference< Ship > _Owner;
 	};
 
 	inline const Reference< Ship > & ScannerDisplay::GetOwner(void) const
 	{
-		return m_Owner;
+		return _Owner;
 	}
 
 	inline void ScannerDisplay::SetOwner(Reference< Ship > Owner)
 	{
-		m_Owner = Owner;
+		_Owner = Owner;
 	}
 }
 
