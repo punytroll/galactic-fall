@@ -63,6 +63,7 @@
 #include "key_event_information.h"
 #include "map_knowledge.h"
 #include "math.h"
+#include "math/matrix4f.h"
 #include "message.h"
 #include "message_dispatcher.h"
 #include "messages.h"

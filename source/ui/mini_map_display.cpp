@@ -20,34 +20,69 @@
 #include <GL/gl.h>
 
 #include "../commodity.h"
+#include "../math/matrix4f.h"
 #include "../object_aspect_position.h"
 #include "../planet.h"
 #include "../ship.h"
 #include "../system.h"
 #include "mini_map_display.h"
 
-UI::MiniMapDisplay::MiniMapDisplay(UI::Widget * SupWidget) :
-	Viewport(SupWidget)
+static void CalculatePerspectiveMatrix(float FieldOfView, float Aspect, float NearClippingPlane, float FarClippingPlane, Matrix4f & Matrix)
 {
-	GetCamera()->SetPosition(0.0f, 0.0f, 1500.0f);
-	GetPerspective()->SetAspect(1.0f);
-	GetPerspective()->SetFieldOfView(0.392699082f);
-	GetPerspective()->SetNearClippingPlane(1.0f);
-	GetPerspective()->SetFarClippingPlane(10000.0f);
+	float Right, Top;
+	
+	Top = NearClippingPlane * tan(FieldOfView);
+	Right = Top * Aspect;
+	
+	Matrix.m_M[1].m_A[0] = Matrix.m_M[2].m_A[0] = Matrix.m_M[3].m_A[0] = Matrix.m_M[0].m_A[1] = Matrix.m_M[2].m_A[1] = Matrix.m_M[3].m_A[1] = Matrix.m_M[0].m_A[2] = Matrix.m_M[1].m_A[2] = Matrix.m_M[0].m_A[3] = Matrix.m_M[1].m_A[3] = Matrix.m_M[3].m_A[3] = 0.0f;
+	Matrix.m_M[0].m_A[0] = NearClippingPlane / Right;
+	Matrix.m_M[1].m_A[1] = NearClippingPlane / Top;
+	Matrix.m_M[2].m_A[2] = -(FarClippingPlane + NearClippingPlane) / (FarClippingPlane - NearClippingPlane);
+	Matrix.m_M[3].m_A[2] = -(2.0f * FarClippingPlane * NearClippingPlane) / (FarClippingPlane - NearClippingPlane);
+	Matrix.m_M[2].m_A[3] = -1.0f;
+}
+
+UI::MiniMapDisplay::MiniMapDisplay(UI::Widget * SupWidget) :
+	UI::Widget(SupWidget)
+{
 }
 
 void UI::MiniMapDisplay::SetOwner(Reference< Ship > Owner)
 {
-	m_Owner = Owner;
-	GetCamera()->SetFocus(Owner);
+	_Owner = Owner;
 }
 
-void UI::MiniMapDisplay::DrawInViewport(void) const
+void UI::MiniMapDisplay::Draw(void) const
 {
-	// draw mini map
-	if(m_Owner.IsValid() == true)
+	UI::Widget::Draw();
+	glPushAttrib(GL_ENABLE_BIT | GL_VIEWPORT_BIT | GL_TRANSFORM_BIT);
+	// clipping is performed by the viewport
+	glDisable(GL_CLIP_PLANE0);
+	glDisable(GL_CLIP_PLANE1);
+	glDisable(GL_CLIP_PLANE2);
+	glDisable(GL_CLIP_PLANE3);
+	glEnable(GL_DEPTH_TEST);
+	glDisable(GL_BLEND);
+	glViewport(static_cast< GLint >(GetGlobalPosition()[0]), static_cast< GLint >(GetRootWidget()->GetSize()[1] - GetGlobalPosition()[1] - GetSize()[1]), static_cast< GLint >(GetSize()[0]), static_cast< GLint >(GetSize()[1]));
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+	
+	Matrix4f PerspectiveMatrix;
+	
+	CalculatePerspectiveMatrix(0.392699082f, 1.0f, 1.0f, 10000.0f, PerspectiveMatrix);
+	glLoadMatrixf(PerspectiveMatrix.Matrix());
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+	glLoadIdentity();
+	if(_Owner.IsValid() == true)
 	{
-		const System * CurrentSystem(dynamic_cast< const System * >(m_Owner->GetContainer()));
+		glTranslatef(-_Owner->GetAspectPosition()->GetPosition().m_V.m_A[0], -_Owner->GetAspectPosition()->GetPosition().m_V.m_A[1], -1500.0f);
+	}
+	glClear(GL_DEPTH_BUFFER_BIT);
+	// draw mini map
+	if(_Owner.IsValid() == true)
+	{
+		const System * CurrentSystem(dynamic_cast< const System * >(_Owner->GetContainer()));
 		
 		assert(CurrentSystem != 0);
 		
@@ -59,40 +94,44 @@ void UI::MiniMapDisplay::DrawInViewport(void) const
 		glColor3f(0.8f, 0.8f, 0.8f);
 		for(std::vector< Planet * >::const_iterator PlanetIterator = Planets.begin(); PlanetIterator != Planets.end(); ++PlanetIterator)
 		{
-			if(*PlanetIterator == m_Owner->GetTarget().Get())
+			if(*PlanetIterator == _Owner->GetTarget().Get())
 			{
 				glColor3f(0.2f, 1.0f, 0.0f);
 			}
 			glVertex2f((*PlanetIterator)->GetAspectPosition()->GetPosition().m_V.m_A[0], (*PlanetIterator)->GetAspectPosition()->GetPosition().m_V.m_A[1]);
-			if(*PlanetIterator == m_Owner->GetTarget().Get())
+			if(*PlanetIterator == _Owner->GetTarget().Get())
 			{
 				glColor3f(0.8f, 0.8f, 0.8f);
 			}
 		}
 		for(std::list< Ship * >::const_iterator ShipIterator = Ships.begin(); ShipIterator != Ships.end(); ++ShipIterator)
 		{
-			if(*ShipIterator == m_Owner->GetTarget().Get())
+			if(*ShipIterator == _Owner->GetTarget().Get())
 			{
 				glColor3f(0.2f, 1.0f, 0.0f);
 			}
 			glVertex2f((*ShipIterator)->GetAspectPosition()->GetPosition().m_V.m_A[0], (*ShipIterator)->GetAspectPosition()->GetPosition().m_V.m_A[1]);
-			if(*ShipIterator == m_Owner->GetTarget().Get())
+			if(*ShipIterator == _Owner->GetTarget().Get())
 			{
 				glColor3f(0.8f, 0.8f, 0.8f);
 			}
 		}
 		for(std::list< Commodity * >::const_iterator CommodityIterator = Commodities.begin(); CommodityIterator != Commodities.end(); ++CommodityIterator)
 		{
-			if(*CommodityIterator == m_Owner->GetTarget().Get())
+			if(*CommodityIterator == _Owner->GetTarget().Get())
 			{
 				glColor3f(0.2f, 1.0f, 0.0f);
 			}
 			glVertex2f((*CommodityIterator)->GetAspectPosition()->GetPosition().m_V.m_A[0], (*CommodityIterator)->GetAspectPosition()->GetPosition().m_V.m_A[1]);
-			if(*CommodityIterator == m_Owner->GetTarget().Get())
+			if(*CommodityIterator == _Owner->GetTarget().Get())
 			{
 				glColor3f(0.8f, 0.8f, 0.8f);
 			}
 		}
 		glEnd();
 	}
+	glPopMatrix();
+	glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
+	glPopAttrib();
 }
