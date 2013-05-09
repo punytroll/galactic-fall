@@ -19,37 +19,79 @@
 
 #include <GL/gl.h>
 
+#include "../math/matrix4f.h"
 #include "../object_aspect_physical.h"
+#include "../object_aspect_position.h"
 #include "../ship.h"
-#include "../star.h"
-#include "../system.h"
 #include "scanner_display.h"
 
-UI::ScannerDisplay::ScannerDisplay(UI::Widget * SupWidget) :
-	Viewport(SupWidget)
+static void CalculatePerspectiveMatrix(float FieldOfView, float Aspect, float NearClippingPlane, float FarClippingPlane, Matrix4f & Matrix)
 {
-	GetPerspective()->SetAspect(1.0f);
-	GetPerspective()->SetNearClippingPlane(1.0f);
-	GetPerspective()->SetFarClippingPlane(1000.0f);
+	float Right, Top;
+	
+	Top = NearClippingPlane * tan(FieldOfView);
+	Right = Top * Aspect;
+	
+	Matrix.m_M[1].m_A[0] = Matrix.m_M[2].m_A[0] = Matrix.m_M[3].m_A[0] = Matrix.m_M[0].m_A[1] = Matrix.m_M[2].m_A[1] = Matrix.m_M[3].m_A[1] = Matrix.m_M[0].m_A[2] = Matrix.m_M[1].m_A[2] = Matrix.m_M[0].m_A[3] = Matrix.m_M[1].m_A[3] = Matrix.m_M[3].m_A[3] = 0.0f;
+	Matrix.m_M[0].m_A[0] = NearClippingPlane / Right;
+	Matrix.m_M[1].m_A[1] = NearClippingPlane / Top;
+	Matrix.m_M[2].m_A[2] = -(FarClippingPlane + NearClippingPlane) / (FarClippingPlane - NearClippingPlane);
+	Matrix.m_M[3].m_A[2] = -(2.0f * FarClippingPlane * NearClippingPlane) / (FarClippingPlane - NearClippingPlane);
+	Matrix.m_M[2].m_A[3] = -1.0f;
+}
+
+UI::ScannerDisplay::ScannerDisplay(UI::Widget * SupWidget) :
+	UI::Widget(SupWidget)
+{
 }
 
 void UI::ScannerDisplay::Update(void)
 {
-	if((m_Owner.IsValid() == true) && (m_Owner->GetTarget().IsValid() == true))
+	if((_Owner.IsValid() == true) && (_Owner->GetTarget().IsValid() == true))
 	{
-		assert(m_Owner->GetTarget()->GetAspectPhysical() != 0);
+		assert(_Owner->GetTarget()->GetAspectPhysical() != 0);
 		
-		float RadialSize(m_Owner->GetTarget()->GetAspectPhysical()->GetRadialSize());
+		float RadialSize(_Owner->GetTarget()->GetAspectPhysical()->GetRadialSize());
 		float ExtendedRadialSize((5.0f / 4.0f) * RadialSize);
-		float FieldOfView(asinf(ExtendedRadialSize / sqrtf(ExtendedRadialSize * ExtendedRadialSize + 16 * RadialSize * RadialSize)));
 		
-		GetPerspective()->SetFieldOfView(FieldOfView);
-		GetCamera()->SetPosition(0.0f, 0.0f, 4.0f * RadialSize);
-		GetCamera()->SetFocus(m_Owner->GetTarget());
+		_FieldOfView = asinf(ExtendedRadialSize / sqrtf(ExtendedRadialSize * ExtendedRadialSize + 16 * RadialSize * RadialSize));
+		_CameraZ = 4.0f * RadialSize;
 	}
 }
 
-void UI::ScannerDisplay::DrawInViewport(void) const
+void UI::ScannerDisplay::Draw(void) const
 {
-	/// @todo draw scanner
+	UI::Widget::Draw();
+	glPushAttrib(GL_ENABLE_BIT | GL_VIEWPORT_BIT | GL_TRANSFORM_BIT);
+	// clipping is performed by the viewport
+	glDisable(GL_CLIP_PLANE0);
+	glDisable(GL_CLIP_PLANE1);
+	glDisable(GL_CLIP_PLANE2);
+	glDisable(GL_CLIP_PLANE3);
+	glEnable(GL_DEPTH_TEST);
+	glDisable(GL_BLEND);
+	glViewport(static_cast< GLint >(GetGlobalPosition()[0]), static_cast< GLint >(GetRootWidget()->GetSize()[1] - GetGlobalPosition()[1] - GetSize()[1]), static_cast< GLint >(GetSize()[0]), static_cast< GLint >(GetSize()[1]));
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+	
+	Matrix4f PerspectiveMatrix;
+	
+	CalculatePerspectiveMatrix(_FieldOfView, 1.0f, 1.0f, 1000.0f, PerspectiveMatrix);
+	
+	glLoadMatrixf(PerspectiveMatrix.Matrix());
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+	glLoadIdentity();
+	if((_Owner.IsValid() == true) && (_Owner->GetTarget().IsValid() == true))
+	{
+		assert(_Owner->GetTarget()->GetAspectPosition() != 0);
+		glTranslatef(-_Owner->GetTarget()->GetAspectPosition()->GetPosition().m_V.m_A[0], -_Owner->GetTarget()->GetAspectPosition()->GetPosition().m_V.m_A[1], -_CameraZ);
+	}
+	glClear(GL_DEPTH_BUFFER_BIT);
+	// draw viewport content
+	// TODO: draw scanner content
+	glPopMatrix();
+	glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
+	glPopAttrib();
 }
