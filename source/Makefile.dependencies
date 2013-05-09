@@ -75,7 +75,9 @@ buffer_reading_cpp = \
 buffer_reading_h = \
 	buffer_reading.h \
 	$(color_h) \
-	$(math_quaternion_h)
+	$(math_quaternion_h) \
+	$(math_vector2f_h) \
+	$(math_vector3f_h)
 
 callbacks_callbacks_h = \
 	callbacks/callbacks.h \
@@ -124,7 +126,8 @@ color_cpp = \
 	$(color_h)
 
 color_h = \
-	color.h
+	color.h \
+	$(math_vector4f_h)
 
 command_mind_cpp = \
 	command_mind.cpp \
@@ -143,12 +146,14 @@ command_mind_h = \
 commodity_cpp = \
 	commodity.cpp \
 	$(commodity_h) \
+	$(math_vector4f_h) \
 	$(object_aspect_position_h) \
 	$(object_aspect_update_h)
 
 commodity_h = \
 	commodity.h \
 	$(math_axis_angle_h) \
+	$(math_vector3f_h) \
 	$(object_h)
 
 commodity_class_cpp = \
@@ -251,7 +256,8 @@ goals_cpp = \
 
 goals_h = \
 	goals.h \
-	$(goal_h)
+	$(goal_h) \
+	$(math_vector3f_h)
 
 graphics_engine_cpp = \
 	graphics/engine.cpp \
@@ -275,7 +281,8 @@ graphics_mesh_cpp = \
 	$(graphics_mesh_h)
 
 graphics_mesh_h = \
-	graphics/mesh.h
+	graphics/mesh.h \
+	$(math_vector4f_h)
 
 graphics_mesh_manager_cpp = \
 	graphics/mesh_manager.cpp \
@@ -307,7 +314,8 @@ graphics_model_node_cpp = \
 	$(graphics_material_h) \
 	$(graphics_mesh_h) \
 	$(graphics_model_h) \
-	$(graphics_model_node_h)
+	$(graphics_model_node_h) \
+	$(math_matrix4f_h)
 
 graphics_model_node_h = \
 	graphics/model_node.h \
@@ -316,11 +324,13 @@ graphics_model_node_h = \
 graphics_node_cpp = \
 	graphics/node.cpp \
 	$(graphics_engine_h) \
-	$(graphics_node_h)
+	$(graphics_node_h) \
+	$(math_matrix4f_h)
 
 graphics_node_h = \
 	graphics/node.h \
-	$(math_quaternion_h)
+	$(math_quaternion_h) \
+	$(math_vector3f_h)
 
 graphics_particle_system_cpp = \
 	graphics/particle_system.cpp \
@@ -336,7 +346,8 @@ graphics_particle_system_cpp = \
 graphics_particle_system_h = \
 	graphics/particle_system.h \
 	$(color_h) \
-	$(graphics_node_h)
+	$(graphics_node_h) \
+	$(math_vector3f_h)
 
 graphics_scene_cpp = \
 	graphics/scene.cpp \
@@ -405,6 +416,7 @@ main_cpp = \
 	$(key_event_information_h) \
 	$(map_knowledge_h) \
 	$(math_h) \
+	$(math_matrix4f_h) \
 	$(message_h) \
 	$(message_dispatcher_h) \
 	$(messages_h) \
@@ -465,6 +477,9 @@ map_knowledge_h = \
 
 math_h = \
 	math.h \
+	$(math_vector2f_h) \
+	$(math_vector3f_h) \
+	$(math_vector4d_h) \
 	$(type_definitions_h)
 
 math_axis_angle_h = \
@@ -494,6 +509,7 @@ math_vector2f_h = \
 math_vector3f_h = \
 	math/vector3f.h \
 	$(math_details_h) \
+	$(math_matrix3f_h) \
 	$(math_quaternion_h)
 
 math_vector4d_h = \
@@ -613,7 +629,8 @@ object_aspect_position_cpp = \
 
 object_aspect_position_h = \
 	object_aspect_position.h \
-	$(math_quaternion_h)
+	$(math_quaternion_h) \
+	$(math_vector3f_h)
 
 object_aspect_update_cpp = \
 	object_aspect_update.cpp \
@@ -718,7 +735,8 @@ settings_cpp = \
 	$(string_cast_h)
 
 settings_h = \
-	settings.h
+	settings.h \
+	$(math_vector2f_h)
 
 ship_cpp = \
 	ship.cpp \
@@ -750,6 +768,7 @@ ship_cpp = \
 
 ship_h = \
 	ship.h \
+	$(math_vector3f_h) \
 	$(object_h)
 
 ship_class_cpp = \
@@ -761,6 +780,7 @@ ship_class_cpp = \
 
 ship_class_h = \
 	ship_class.h \
+	$(math_vector3f_h) \
 	$(type_definitions_h)
 
 shot_cpp = \
@@ -772,6 +792,7 @@ shot_cpp = \
 
 shot_h = \
 	shot.h \
+	$(math_vector3f_h) \
 	$(object_h)
 
 slot_cpp = \
@@ -786,6 +807,7 @@ slot_cpp = \
 slot_h = \
 	slot.h \
 	$(math_quaternion_h) \
+	$(math_vector3f_h) \
 	$(referencing_h)
 
 slot_class_cpp = \
@@ -845,6 +867,7 @@ states_cpp = \
 
 states_h = \
 	states.h \
+	$(math_vector3f_h) \
 	$(state_h)
 
 storage_cpp = \
@@ -994,6 +1017,7 @@ ui_map_dialog_h = \
 ui_mini_map_display_cpp = \
 	ui/mini_map_display.cpp \
 	$(commodity_h) \
+	$(math_matrix4f_h) \
 	$(object_aspect_position_h) \
 	$(planet_h) \
 	$(ship_h) \
@@ -1092,6 +1116,7 @@ ui_save_game_dialog_h = \
 
 ui_scanner_display_cpp = \
 	ui/scanner_display.cpp \
+	$(math_matrix4f_h) \
 	$(object_aspect_physical_h) \
 	$(object_aspect_position_h) \
 	$(ship_h) \
@@ -1207,7 +1232,8 @@ ui_widget_cpp = \
 
 ui_widget_h = \
 	ui/widget.h \
-	$(callbacks_events_h)
+	$(callbacks_events_h) \
+	$(math_vector2f_h)
 
 ui_window_cpp = \
 	ui/window.cpp \
@@ -1289,6 +1315,7 @@ weapon_class_cpp = \
 weapon_class_h = \
 	weapon_class.h \
 	$(math_quaternion_h) \
+	$(math_vector3f_h) \
 	$(type_definitions_h)
 
 write_to_xml_stream_cpp = \
