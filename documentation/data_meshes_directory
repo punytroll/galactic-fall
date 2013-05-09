@@ -1,0 +1,37 @@
+The directory data/meshes contains the following sub directories:
+
+* original/blender
+* original/littlem
+* generated/raw
+* generated/littlem
+
+The original/blender directory contains *.blend files which can be loaded and
+edited with blender. These files are binary of content and have to be stored
+in the repository. Currently the only way to extract meshes from a blender file
+and make it available for galactic-fall is to export them to raw mesh files but
+it is impossible to convert meshes stored inside a blender file to raw mesh
+files automatically on the command line. Therefore the raw mesh files have to
+be exported by hand and, to avoid tedious repetition of that manual process,
+have to be stored in the repository.
+
+The original/littlem directory contains *.xml files containing a mesh created
+and saved in littlem a small mesh editing software not yet available to the
+open source community. The littlem-xml format is the only format that can be
+converted to xml-data files for galactic-fall and thus all mesh data has to go
+through this easy format. Since these files are original, they have to be
+stored in the repository.
+
+The generated/raw directory contains *.raw files that have been exported from
+blender. They contain one mesh each and are processed to littlem-xml files
+during the build process. As mentioned above, although being generated, they
+have to be stored in the repository because the export process has to be
+performed manually.
+
+The generated/littlem direcory contains *.xml files containing a mesh exported
+from a *.raw file during the build process using a command line utility. The
+export process is easily repeatable and thus the result is not stored in the
+repository.
+
+Both the contents of the directories original/littlem and generated/littlem are
+transformed to xml data files and binary data files during the build process,
+if they are marked for inclusion in the data archive.
