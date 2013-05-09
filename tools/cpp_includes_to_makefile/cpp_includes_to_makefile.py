@@ -31,7 +31,7 @@ arguments = vars(parser.parse_args())
 if arguments["input-file"] != None:
 	input_file_path = arguments["input-file"]
 	input_file_directory = os.path.dirname(input_file_path)
-	include_pattern = re.compile("^#include \"([/_\.a-z]+)\"$")
+	include_pattern = re.compile("^#include \"([/_\.A-Za-z0-9]+)\"$")
 	dependency_file_names = list()
 	for line in open(input_file_path):
 		match = include_pattern.match(line)
