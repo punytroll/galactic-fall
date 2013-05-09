@@ -239,7 +239,10 @@ data.arx: $(data_arx) $(arxtouch_dependencies) $(arxadd_dependencies)
 .data/%.data: %.xml $(declarations_xml) $(xml_to_data_dependencies)
 	$(command_xml_to_data) --declarations=tools/declarations.xml --in=$< --out=$@
 
-mesh_%.xml: meshes/%.xml $(littlem_to_xml_xsl)
+mesh_%.xml: meshes/original/littlem/%.xml $(littlem_to_xml_xsl)
+	xsltproc -output $@ tools/littlem_to_xml.xsl $<
+
+mesh_%.xml: meshes/generated/littlem/%.xml $(littlem_to_xml_xsl)
 	xsltproc -output $@ tools/littlem_to_xml.xsl $<
 
 meshes-all-recursive:

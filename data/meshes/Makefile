@@ -2,16 +2,16 @@ root = ../..
 
 -include $(root)/configuration
 
+default: all
+
 include $(root)/tools/raw_to_littlem/Makefile.include
 
-raw_mesh_files = $(wildcard *.raw)
-generated_littlem_mesh_files = $(patsubst %.raw,%.xml,$(raw_mesh_files))
-
-default: all
+raw_files = $(wildcard generated/raw/*.raw)
+generated_littlem_mesh_files = $(patsubst generated/raw/%.raw,generated/littlem/%.xml,$(raw_files))
 
 all: all-recursive
 
-all-here: check-dependencies $(generated_littlem_mesh_files)
+all-here: prepare-build $(generated_littlem_mesh_files)
 
 all-recursive: all-here
 
@@ -20,45 +20,43 @@ check-dependencies: raw_to_littlem-check-dependencies
 clean: clean-recursive
 
 clean-here:
-	$(RM) fighter_cockpit.xml
-	$(RM) fighter_faction.xml
-	$(RM) fighter_hull.xml
-	$(RM) laser_shot.xml
-	$(RM) light_laser.xml
-	$(RM) planet.xml
-	$(RM) shuttle_faction.xml
-	$(RM) shuttle_hull.xml
-	$(RM) transporter_faction.xml
-	$(RM) transporter_hull.xml
+	$(RM) -rfv generated/littlem
 
 clean-recursive: clean-here
 
-fighter_cockpit.xml: fighter_cockpit.raw Makefile $(raw_to_littlem_dependencies)
+generated/littlem/fighter_cockpit.xml: generated/raw/fighter_cockpit.raw Makefile $(raw_to_littlem_dependencies)
 	$(command_raw_to_littlem) --in=$< --out=$@ --identifier=fighter_cockpit --smooth
 
-fighter_faction.xml: fighter_faction.raw Makefile $(raw_to_littlem_dependencies)
+generated/littlem/fighter_faction.xml: generated/raw/fighter_faction.raw Makefile $(raw_to_littlem_dependencies)
 	$(command_raw_to_littlem) --in=$< --out=$@ --identifier=fighter_faction --smooth
 
-fighter_hull.xml: fighter_hull.raw Makefile $(raw_to_littlem_dependencies)
+generated/littlem/fighter_hull.xml: generated/raw/fighter_hull.raw Makefile $(raw_to_littlem_dependencies)
 	$(command_raw_to_littlem) --in=$< --out=$@ --identifier=fighter_hull --smooth
 
-laser_shot.xml: laser_shot.raw Makefile $(raw_to_littlem_dependencies)
+generated/littlem/laser_shot.xml: generated/raw/laser_shot.raw Makefile $(raw_to_littlem_dependencies)
 	$(command_raw_to_littlem) --in=$< --out=$@ --identifier=laser_shot
 
-light_laser.xml: light_laser.raw Makefile $(raw_to_littlem_dependencies)
+generated/littlem/light_laser.xml: generated/raw/light_laser.raw Makefile $(raw_to_littlem_dependencies)
 	$(command_raw_to_littlem) --in=$< --out=$@ --identifier=light_laser
 
-planet.xml: planet.raw Makefile $(raw_to_littlem_dependencies)
+generated/littlem/planet.xml: generated/raw/planet.raw Makefile $(raw_to_littlem_dependencies)
 	$(command_raw_to_littlem) --in=$< --out=$@ --identifier=planet --smooth
 
-shuttle_faction.xml: shuttle_faction.raw Makefile $(raw_to_littlem_dependencies)
+generated/littlem/shuttle_faction.xml: generated/raw/shuttle_faction.raw Makefile $(raw_to_littlem_dependencies)
 	$(command_raw_to_littlem) --in=$< --out=$@ --identifier=shuttle_faction --smooth
 
-shuttle_hull.xml: shuttle_hull.raw Makefile $(raw_to_littlem_dependencies)
+generated/littlem/shuttle_hull.xml: generated/raw/shuttle_hull.raw Makefile $(raw_to_littlem_dependencies)
 	$(command_raw_to_littlem) --in=$< --out=$@ --identifier=shuttle_hull --smooth
 
-transporter_faction.xml: transporter_faction.raw Makefile $(raw_to_littlem_dependencies)
+generated/littlem/transporter_faction.xml: generated/raw/transporter_faction.raw Makefile $(raw_to_littlem_dependencies)
 	$(command_raw_to_littlem) --in=$< --out=$@ --identifier=transporter_faction
 
-transporter_hull.xml: transporter_hull.raw Makefile $(raw_to_littlem_dependencies)
+generated/littlem/transporter_hull.xml: generated/raw/transporter_hull.raw Makefile $(raw_to_littlem_dependencies)
 	$(command_raw_to_littlem) --in=$< --out=$@ --identifier=transporter_hull
+
+generated/littlem:
+	mkdir $@
+
+prepare-build: generated/littlem
+
+.PHONY: default all all-here all-recursive check-dependencies clean clean-here clean-recursive prepare-build
