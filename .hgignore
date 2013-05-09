@@ -6,3 +6,5 @@ syntax: glob
 source/callbacks/.generated-code/*
 source/binary
 tools/list_glx_fb_configurations/list_glx_fb_configurations
+configuration
+.configuration.d
