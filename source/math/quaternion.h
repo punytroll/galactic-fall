@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 1.3.5 of algebra.
+ * This is part of version 1.4.2 of algebra.
  **/
 
 #ifndef ALGEBRA_QUATERNION_H
@@ -26,6 +26,7 @@
 
 #include <math.h>
 
+#include "axis_angle.h"
 #include "details.h"
 
 class Quaternion
@@ -52,9 +53,14 @@ public:
 		m_V.m_A[3] = Z;
 	}
 	
-	Quaternion(Array4f Axis, float Radians)
+	Quaternion(const AxisAngle & AxisAngle)
 	{
-		Rotation(Axis, Radians);
+		Rotation(AxisAngle);
+	}
+	
+	Quaternion(Array4f Axis, float AngleInRadians)
+	{
+		Rotation(Axis.m_A[0], Axis.m_A[1], Axis.m_A[2], AngleInRadians);
 	}
 	
 	Quaternion(bool)
@@ -125,18 +131,23 @@ public:
 		m_V.m_A[3] = sin(Radians);
 	}
 	
-	void Rotation(Array4f Axis, float Radians)
+	void Rotation(const AxisAngle & AxisAngle)
 	{
-		Radians /= 2.0;
+		Rotation(AxisAngle.m_V.m_A[0], AxisAngle.m_V.m_A[1], AxisAngle.m_V.m_A[2], AxisAngle.m_V.m_A[3]);
+	}
+	
+	void Rotation(float X, float Y, float Z, float AngleInRadians)
+	{
+		AngleInRadians /= 2.0;
 		
-		float SinusRadians(sin(Radians));
+		float SinusRadians(sin(AngleInRadians));
 		
-		m_V.m_A[0] = cos(Radians);
-		if(Radians != 0.0f)
+		m_V.m_A[0] = cos(AngleInRadians);
+		if(AngleInRadians != 0.0f)
 		{
-			m_V.m_A[1] = Axis.m_A[0] * SinusRadians;
-			m_V.m_A[2] = Axis.m_A[1] * SinusRadians;
-			m_V.m_A[3] = Axis.m_A[2] * SinusRadians;
+			m_V.m_A[1] = X * SinusRadians;
+			m_V.m_A[2] = Y * SinusRadians;
+			m_V.m_A[3] = Z * SinusRadians;
 		}
 		else
 		{
