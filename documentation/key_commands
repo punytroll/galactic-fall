@@ -119,23 +119,23 @@ On key down:
 97 (HOME)
 	Returns the camera to offset (0, 0) above the camera focus or the system center if no object is focused.
 
-98 (ARROW UP)
+111 (ARROW UP)
 	Turns on thrusters of the controlled ship.
 	Acts upon InputMind.Character.Ship.
 
-99 (PAGE UP)
+112 (PAGE UP)
 	Cycles the output mind backward through the set of characters in the game or to no output if the first one was selected.
 	Only works with no input mind set.
 
-100 (ARROW LEFT)
+113 (ARROW LEFT)
 	Turns the controlled ship to the left.
 	Acts upon InputMind.Character.Ship.
 
-102 (ARROW RIGHT)
+114 (ARROW RIGHT)
 	Turns the controlled ship to the right.
 	Acts upon InputMind.Character.Ship.
 
-105 (PAGE DOWN)
+117 (PAGE DOWN)
 	Cycles the output mind forward through the set of characters in the game or to no output if the last one was selected.
 	Only works with no input mind set.
 
