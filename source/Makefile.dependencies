@@ -324,8 +324,7 @@ graphics_model_node_h = \
 graphics_node_cpp = \
 	graphics/node.cpp \
 	$(graphics_engine_h) \
-	$(graphics_node_h) \
-	$(math_matrix4f_h)
+	$(graphics_node_h)
 
 graphics_node_h = \
 	graphics/node.h \
