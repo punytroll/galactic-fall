@@ -51,7 +51,9 @@
 #include "generator_class.h"
 #include "globals.h"
 #include "goals.h"
+#include "graphics/camera.h"
 #include "graphics/engine.h"
+#include "graphics/light.h"
 #include "graphics/material.h"
 #include "graphics/mesh_manager.h"
 #include "graphics/model.h"
@@ -195,25 +197,6 @@ bool g_TakeScreenShot(false);
 ResourceReader * g_ResourceReader(0);
 Settings * g_Settings(0);
 void (*g_KeyboardLookupTable[128][2])(void);
-
-Matrix4f GetPerspectiveMatrix(float FieldOfView, float Aspect, float NearClippingPlane, float FarClippingPlane)
-{
-	float Right, Top;
-	
-	Top = NearClippingPlane * tan(FieldOfView);
-	Right = Top * Aspect;
-	
-	Matrix4f Result;
-	
-	Result.m_M[1].m_A[0] = Result.m_M[2].m_A[0] = Result.m_M[3].m_A[0] = Result.m_M[0].m_A[1] = Result.m_M[2].m_A[1] = Result.m_M[3].m_A[1] = Result.m_M[0].m_A[2] = Result.m_M[1].m_A[2] = Result.m_M[0].m_A[3] = Result.m_M[1].m_A[3] = Result.m_M[3].m_A[3] = 0.0f;
-	Result.m_M[0].m_A[0] = NearClippingPlane / Right;
-	Result.m_M[1].m_A[1] = NearClippingPlane / Top;
-	Result.m_M[2].m_A[2] = -(FarClippingPlane + NearClippingPlane) / (FarClippingPlane - NearClippingPlane);
-	Result.m_M[3].m_A[2] = -(2.0f * FarClippingPlane * NearClippingPlane) / (FarClippingPlane - NearClippingPlane);
-	Result.m_M[2].m_A[3] = -1.0f;
-	
-	return Result;
-}
 
 std::vector< std::string > SplitString(const std::string & String, char Delimiter)
 {
@@ -1010,38 +993,23 @@ void UpdateUserInterface(void)
 void RenderSystem(System * System)
 {
 	assert(System != 0);
-	glMatrixMode(GL_PROJECTION);
-	glLoadMatrixf(GetPerspectiveMatrix(g_FieldOfView, g_Width / g_Height, 1.0f, 1000.0f).Matrix());
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-	glTranslatef(-g_CameraPosition.m_V.m_A[0], -g_CameraPosition.m_V.m_A[1], -g_CameraPosition.m_V.m_A[2]);
+	assert(g_MainScene != 0);
+	
+	Matrix4f SpacialMatrix(-g_CameraPosition.m_V.m_A[0], -g_CameraPosition.m_V.m_A[1], -g_CameraPosition.m_V.m_A[2]);
+
 	if(g_FirstPersonCameraMode == true)
 	{
-		glRotatef(90.0f, 0.0f, 0.0f, 1.0f);
+		SpacialMatrix.Transform(Matrix4f(Quaternion(M_PI / 2.0f, Quaternion::InitializeRotationZ)));
 	}
 	if(g_CameraFocus.IsValid() == true)
 	{
 		if(g_FirstPersonCameraMode == true)
 		{
-			glMultMatrixf(Matrix4f(g_CameraFocus->GetAspectPosition()->GetOrientation()).Matrix());
+			SpacialMatrix.Transform(Matrix4f(g_CameraFocus->GetAspectPosition()->GetOrientation().Conjugated()));
 		}
-		glTranslatef(-g_CameraFocus->GetAspectPosition()->GetPosition().m_V.m_A[0], -g_CameraFocus->GetAspectPosition()->GetPosition().m_V.m_A[1], 0.0f);
+		SpacialMatrix.Transform(Matrix4f(-g_CameraFocus->GetAspectPosition()->GetPosition().m_V.m_A[0], -g_CameraFocus->GetAspectPosition()->GetPosition().m_V.m_A[1], 0.0f));
 	}
-	
-	const Star * CurrentStar(System->GetStar());
-	
-	if(CurrentStar != 0)
-	{
-		glEnable(GL_LIGHT0);
-		glLightfv(GL_LIGHT0, GL_POSITION, Vector4f(CurrentStar->GetAspectPosition()->GetPosition().m_V.m_A[0], CurrentStar->GetAspectPosition()->GetPosition().m_V.m_A[1], 100.0f, 0.0f).m_V.m_A);
-		glLightfv(GL_LIGHT0, GL_DIFFUSE, CurrentStar->GetColor().GetColor().m_V.m_A);
-	}
-	else
-	{
-		glDisable(GL_LIGHT0);
-	}
-	// disable lighting by default, nodes have to activate it if they want it
-	glDisable(GL_LIGHTING);
+	g_MainScene->GetCamera()->SetSpacialMatrix(SpacialMatrix);
 	g_MainScene->Render();
 	// HUD
 	if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0) && (g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget().IsValid() == true))
@@ -1322,6 +1290,26 @@ void OnOutputEnterSystem(System * EnterSystem)
 	g_SpawnShipTimeoutNotification = g_GameTimeTimeoutNotifications->Add(GameTime::Get() + GetRandomFloatFromExponentialDistribution(1.0f / EnterSystem->GetTrafficDensity()), Bind1(Callback(SpawnShipOnTimeout), EnterSystem));
 	// build the static setup of the scene
 	g_MainScene = new Graphics::Scene();
+	assert(g_MainScene->GetCamera() != 0);
+	g_MainScene->GetCamera()->SetFieldOfView(g_FieldOfView);
+	g_MainScene->GetCamera()->SetAspect(g_Width / g_Height);
+	g_MainScene->GetCamera()->SetNearClippingPlane(1.0f);
+	g_MainScene->GetCamera()->SetFarClippingPlane(1000.0f);
+	
+	const Star * Star(EnterSystem->GetStar());
+	
+	if(Star != 0)
+	{
+		g_MainScene->ActivateLight();
+		assert(g_MainScene->GetLight() != 0);
+		assert(Star->GetAspectPosition() != 0);
+		g_MainScene->GetLight()->SetPosition(Star->GetAspectPosition()->GetPosition().m_V.m_A[0], Star->GetAspectPosition()->GetPosition().m_V.m_A[1], 100.0f);
+		g_MainScene->GetLight()->SetDiffuseColor(Star->GetColor().GetColor().m_V.m_A[0], Star->GetColor().GetColor().m_V.m_A[1], Star->GetColor().GetColor().m_V.m_A[2], Star->GetColor().GetColor().m_V.m_A[3]);
+	}
+	else
+	{
+		g_MainScene->DeactivateLight();
+	}
 	g_GraphicsEngine->AddScene(g_MainScene);
 	
 	Graphics::Node * RootNode(new Graphics::Node());
