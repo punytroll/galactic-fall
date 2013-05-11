@@ -257,6 +257,6 @@ meshes-clean-recursive:
 textures-clean-recursive:
 	@$(MAKE) -C textures clean-recursive
 
-.data/texture_particle.data: textures/particle.tex
+.data/texture_particle.data: textures/generated/particle.tex
 
 .PHONY: all all-here all-recursive check-dependencies clean clean-here clean-recursive default meshes-all-recursive meshes-clean-recursive textures-all-recursive textures-clean-recursive

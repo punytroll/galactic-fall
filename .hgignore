@@ -9,3 +9,4 @@ tools/list_glx_fb_configurations/list_glx_fb_configurations
 configuration
 .configuration.d
 data/meshes/generated/littlem/*.xml
+data/textures/generated/*.tex
