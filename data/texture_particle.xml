@@ -1,4 +1,4 @@
 <texture>
 	<identifier>particle</identifier>
-	<tex-file>textures/particle.tex</tex-file>
+	<tex-file>textures/generated/particle.tex</tex-file>
 </texture>
