@@ -44,6 +44,10 @@ On key down:
 	Selects the next planet in the system or the first one if no planet was selected or deselects any planet if the last one was selected.
 	Acts upon InputMind.Character.Ship.
 
+34 (OPENING BRACKET)
+	Moves the camera focus to the previous ship or to the last one if the first ship was focused.
+	Acts upon the camera focus.
+
 35 (CLOSING BRACKET)
 	Moves the camera focus to the next ship or to the first one if the last ship was focused.
 	Acts upon the camera focus.
