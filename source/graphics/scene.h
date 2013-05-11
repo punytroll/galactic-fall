@@ -22,7 +22,9 @@
 
 namespace Graphics
 {
+	class Camera;
 	class Engine;
+	class Light;
 	class Node;
 	
 	class Scene
@@ -31,22 +33,40 @@ namespace Graphics
 	public:
 		Scene(void);
 		~Scene(void);
-		void Clear(void);
+		// getters
+		Graphics::Camera * GetCamera(void);
 		Graphics::Engine * GetEngine(void);
+		Graphics::Light * GetLight(void);
 		Graphics::Node * GetRootNode(void);
-		void Render(void);
+		// setters
 		void SetRootNode(Graphics::Node * RootNode);
+		// modifiers
+		void ActivateLight(void);
+		void DeactivateLight(void);
+		void Render(void);
 		void Update(float Seconds);
 	private:
 		void _SetEngine(Graphics::Engine * Engine);
 		void _Update(Graphics::Node * Node, float Seconds);
+		Graphics::Camera * _Camera;
 		Graphics::Engine * _Engine;
+		Graphics::Light * _Light;
 		Graphics::Node * _RootNode;
 	};
+	
+	inline Graphics::Camera * Scene::GetCamera(void)
+	{
+		return _Camera;
+	}
 	
 	inline Graphics::Engine * Scene::GetEngine(void)
 	{
 		return _Engine;
+	}
+	
+	inline Graphics::Light * Scene::GetLight(void)
+	{
+		return _Light;
 	}
 	
 	inline Graphics::Node * Scene::GetRootNode(void)

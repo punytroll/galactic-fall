@@ -259,6 +259,14 @@ goals_h = \
 	$(goal_h) \
 	$(math_vector3f_h)
 
+graphics_camera_cpp = \
+	graphics/camera.cpp \
+	$(graphics_camera_h)
+
+graphics_camera_h = \
+	graphics/camera.h \
+	$(math_matrix4f_h)
+
 graphics_engine_cpp = \
 	graphics/engine.cpp \
 	$(graphics_engine_h) \
@@ -267,6 +275,14 @@ graphics_engine_cpp = \
 graphics_engine_h = \
 	graphics/engine.h \
 	$(callbacks_callbacks_h)
+
+graphics_light_cpp = \
+	graphics/light.cpp \
+	$(graphics_light_h)
+
+graphics_light_h = \
+	graphics/light.h \
+	$(math_vector4f_h)
 
 graphics_material_cpp = \
 	graphics/material.cpp \
@@ -350,6 +366,8 @@ graphics_particle_system_h = \
 
 graphics_scene_cpp = \
 	graphics/scene.cpp \
+	$(graphics_camera_h) \
+	$(graphics_light_h) \
 	$(graphics_particle_system_h) \
 	$(graphics_scene_h)
 
@@ -403,7 +421,9 @@ main_cpp = \
 	$(generator_class_h) \
 	$(globals_h) \
 	$(goals_h) \
+	$(graphics_camera_h) \
 	$(graphics_engine_h) \
+	$(graphics_light_h) \
 	$(graphics_material_h) \
 	$(graphics_mesh_manager_h) \
 	$(graphics_model_h) \
@@ -499,6 +519,7 @@ math_matrix4f_h = \
 
 math_quaternion_h = \
 	math/quaternion.h \
+	$(math_axis_angle_h) \
 	$(math_details_h)
 
 math_vector2f_h = \
