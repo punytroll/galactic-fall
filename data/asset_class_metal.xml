@@ -4,4 +4,5 @@
 	<base-price>90</base-price>
 	<object-type>commodity</object-type>
 	<object-class>metal</object-class>
+	<image-identifier>asset_class_metal</image-identifier>
 </asset-class>

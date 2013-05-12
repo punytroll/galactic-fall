@@ -33,65 +33,78 @@ public:
 	// getters
 	float GetBasePrice(void) const;
 	const std::string & GetIdentifier(void) const;
+	const std::string & GetImageIdentifier(void) const;
 	const std::string & GetName(void) const;
 	const std::string & GetObjectClass(void) const;
 	const std::string & GetObjectType(void) const;
 	// setters
 	void SetBasePrice(float BasePrice);
+	void SetImageIdentifier(const std::string & ImageIdentifier);
 	void SetName(const std::string & Name);
 	void SetObjectClass(const std::string & ObjectClass);
 	void SetObjectType(const std::string & ObjectType);
 private:
-	float m_BasePrice;
-	std::string m_Identifier;
-	std::string m_Name;
-	std::string m_ObjectClass;
-	std::string m_ObjectType;
+	float _BasePrice;
+	std::string _Identifier;
+	std::string _ImageIdentifier;
+	std::string _Name;
+	std::string _ObjectClass;
+	std::string _ObjectType;
 };
 
 inline float AssetClass::GetBasePrice(void) const
 {
-	return m_BasePrice;
+	return _BasePrice;
 }
 
 inline const std::string & AssetClass::GetIdentifier(void) const
 {
-	return m_Identifier;
+	return _Identifier;
+}
+
+inline const std::string & AssetClass::GetImageIdentifier(void) const
+{
+	return _ImageIdentifier;
 }
 
 inline const std::string & AssetClass::GetName(void) const
 {
-	return m_Name;
+	return _Name;
 }
 
 inline const std::string & AssetClass::GetObjectClass(void) const
 {
-	return m_ObjectClass;
+	return _ObjectClass;
 }
 
 inline const std::string & AssetClass::GetObjectType(void) const
 {
-	return m_ObjectType;
+	return _ObjectType;
 }
 
 inline void AssetClass::SetBasePrice(float BasePrice)
 {
-	m_BasePrice = BasePrice;
+	_BasePrice = BasePrice;
+}
+
+inline void AssetClass::SetImageIdentifier(const std::string & ImageIdentifier)
+{
+	_ImageIdentifier = ImageIdentifier;
 }
 
 inline void AssetClass::SetName(const std::string & Name)
 {
-	m_Name = Name;
+	_Name = Name;
 }
 
 inline void AssetClass::SetObjectClass(const std::string & ObjectClass)
 {
-	m_ObjectClass = ObjectClass;
+	_ObjectClass = ObjectClass;
 }
 
 inline void AssetClass::SetObjectType(const std::string & ObjectType)
 {
-	m_ObjectType = ObjectType;
+	_ObjectType = ObjectType;
 }
 
 #endif

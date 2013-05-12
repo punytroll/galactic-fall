@@ -4,4 +4,5 @@
 	<base-price>500</base-price>
 	<object-type>commodity</object-type>
 	<object-class>luxury_goods</object-class>
+	<image-identifier>asset_class_luxury_goods</image-identifier>
 </asset-class>

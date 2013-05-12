@@ -981,6 +981,19 @@ ui_dialog_h = \
 	ui/dialog.h \
 	$(ui_window_h)
 
+ui_image_cpp = \
+	ui/image.cpp \
+	$(color_h) \
+	$(globals_h) \
+	$(graphics_engine_h) \
+	$(graphics_texture_h) \
+	$(graphics_texture_manager_h) \
+	$(ui_image_h)
+
+ui_image_h = \
+	ui/image.h \
+	$(ui_widget_h)
+
 ui_label_cpp = \
 	ui/label.cpp \
 	$(draw_text_h) \
@@ -1227,6 +1240,7 @@ ui_trade_center_widget_cpp = \
 	$(storage_h) \
 	$(string_cast_h) \
 	$(ui_button_h) \
+	$(ui_image_h) \
 	$(ui_label_h) \
 	$(ui_scroll_bar_h) \
 	$(ui_scroll_box_h) \
