@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2007  Hagen Möbius
+ * Copyright (C) 2013  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,13 +17,30 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include "asset_class.h"
+#ifndef UI_IMAGE_H
+#define UI_IMAGE_H
 
-AssetClass::AssetClass(const std::string & Identifier) :
-	_Identifier(Identifier)
+#include <string>
+
+#include "widget.h"
+
+namespace UI
 {
+	class Image : public Widget
+	{
+	public:
+		Image(Widget * SupWidget);
+		virtual ~Image(void);
+		// setters
+		void SetTextureIdentifier(const std::string & TextureIdentifier);
+		// modifiers
+		void UnsetTexture(void);
+		// draw
+		virtual void Draw(void) const;
+	private:
+		std::string * _TextureIdentifier;
+	};
 }
 
-AssetClass::~AssetClass(void)
-{
-}
+#endif
+ 

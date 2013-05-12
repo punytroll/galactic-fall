@@ -28,6 +28,7 @@ class Planet;
 namespace UI
 {
 	class Button;
+	class Image;
 	class Label;
 	class ScrollBox;
 	class TradeCenterAssetClass;
@@ -56,6 +57,7 @@ namespace UI
 		UI::Button * m_BuyButton;
 		UI::Button * m_SellButton;
 		UI::ScrollBox * m_AssetClassScrollBox;
+		UI::Image * _AssetClassImage;
 		UI::Label * m_TraderCreditsLabel;
 		UI::Label * m_TraderAvailableSpaceLabel;
 		UI::TradeCenterAssetClass * m_SelectedTradeCenterAssetClass;

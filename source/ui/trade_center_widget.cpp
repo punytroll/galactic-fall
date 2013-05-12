@@ -35,6 +35,7 @@
 #include "../weapon.h"
 #include "../weapon_class.h"
 #include "button.h"
+#include "image.h"
 #include "label.h"
 #include "scroll_bar.h"
 #include "scroll_box.h"
@@ -101,7 +102,7 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet
 	m_Character(Character),
 	m_SelectedTradeCenterAssetClass(0)
 {
-	SetSize(Vector2f(500.0f, 300.0f));
+	SetSize(Vector2f(600.0f, 300.0f));
 	ConnectKeyCallback(Callback(this, &TradeCenterWidget::OnKey));
 	m_BuyButton = new UI::Button(this);
 	m_BuyButton->SetPosition(Vector2f(0.0f, 280.0f));
@@ -131,7 +132,7 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet
 	SellButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	m_AssetClassScrollBox = new UI::ScrollBox(this);
 	m_AssetClassScrollBox->SetPosition(Vector2f(0.0f, 0.0f));
-	m_AssetClassScrollBox->SetSize(Vector2f(500.0f, 210.0f));
+	m_AssetClassScrollBox->SetSize(Vector2f(490.0f, 210.0f));
 	m_AssetClassScrollBox->SetHorizontalScrollBarVisible(false);
 	m_AssetClassScrollBox->SetAnchorRight(true);
 	m_AssetClassScrollBox->SetAnchorBottom(true);
@@ -154,8 +155,13 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet
 		Top += 25.0f;
 		++PlanetAssetClassIterator;
 	}
-	m_AssetClassScrollBox->GetContent()->SetSize(Vector2f(460.0f, Top));
+	m_AssetClassScrollBox->GetContent()->SetSize(Vector2f(450.0f, Top));
 	m_AssetClassScrollBox->GetContent()->SetAnchorRight(true);
+	_AssetClassImage = new UI::Image(this);
+	_AssetClassImage->SetPosition(Vector2f(500.0f, 0.0f));
+	_AssetClassImage->SetSize(Vector2f(100.0f, 100.0f));
+	_AssetClassImage->SetAnchorLeft(false);
+	_AssetClassImage->SetAnchorRight(true);
 	m_TraderCreditsLabel = new UI::Label(this, "");
 	m_TraderCreditsLabel->SetPosition(Vector2f(0.0f, 230.0f));
 	m_TraderCreditsLabel->SetSize(Vector2f(200.0f, 20.0f));
@@ -275,6 +281,7 @@ bool UI::TradeCenterWidget::OnAssetClassMouseButton(TradeCenterAssetClass * Trad
 		}
 		m_SelectedTradeCenterAssetClass = TradeCenterAssetClass;
 		m_SelectedTradeCenterAssetClass->SetBackgroundColor(Color(0.4f, 0.1f, 0.1f, 1.0f));
+		_AssetClassImage->SetTextureIdentifier(m_SelectedTradeCenterAssetClass->GetPlanetAssetClass()->GetAssetClass()->GetImageIdentifier());
 		
 		return true;
 	}
