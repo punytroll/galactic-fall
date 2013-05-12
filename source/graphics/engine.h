@@ -28,39 +28,68 @@
 
 namespace Graphics
 {
+	class MeshManager;
+	class ModelManager;
 	class Node;
 	class Scene;
+	class TextureManager;
 	
 	class Engine
 	{
 	public:
+		// constructor & destructor
+		Engine(void);
+		~Engine(void);
+		// getters
+		Callback1< void, Graphics::Node * > GetDestroyCallback(void);
+		Graphics::MeshManager * GetMeshManager(void);
+		Graphics::ModelManager * GetModelManager(void);
+		Graphics::TextureManager * GetTextureManager(void);
+		// modifiers
 		void AddScene(Graphics::Scene * Scene);
 		void RemoveScene(Graphics::Scene * Scene);
 		void SetDestroyCallback(Callback1< void, Graphics::Node * > Callback);
 		void UnsetDestroyCallback(void);
 		void OnDestroy(Graphics::Node * Node);
-		Callback1< void, Graphics::Node * > GetDestroyCallback(void);
 	private:
-		std::vector< Graphics::Scene * > m_Scenes;
-		Callback1< void, Graphics::Node * > m_DestroyCallback;
+		Callback1< void, Graphics::Node * > _DestroyCallback;
+		Graphics::MeshManager * _MeshManager;
+		Graphics::ModelManager * _ModelManager;
+		std::vector< Graphics::Scene * > _Scenes;
+		Graphics::TextureManager * _TextureManager;
 	};
+	
+	inline Callback1< void, Graphics::Node * > Engine::GetDestroyCallback(void)
+	{
+		return _DestroyCallback;
+	}
+	
+	inline Graphics::MeshManager * Engine::GetMeshManager(void)
+	{
+		return _MeshManager;
+	}
+	
+	inline Graphics::ModelManager * Engine::GetModelManager(void)
+	{
+		return _ModelManager;
+	}
+	
+	inline Graphics::TextureManager * Engine::GetTextureManager(void)
+	{
+		return _TextureManager;
+	}
 	
 	inline void Engine::SetDestroyCallback(Callback1< void, Graphics::Node * > Callback)
 	{
-		m_DestroyCallback = Callback;
+		_DestroyCallback = Callback;
 	}
 	
 	inline void Engine::OnDestroy(Graphics::Node * Node)
 	{
-		if(m_DestroyCallback.IsValid() == true)
+		if(_DestroyCallback.IsValid() == true)
 		{
-			m_DestroyCallback(Node);
+			_DestroyCallback(Node);
 		}
-	}
-	
-	inline Callback1< void, Graphics::Node * > Engine::GetDestroyCallback(void)
-	{
-		return m_DestroyCallback;
 	}
 }
 

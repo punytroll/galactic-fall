@@ -12,6 +12,7 @@ arx_reading_cpp = \
 	$(galaxy_h) \
 	$(generator_class_h) \
 	$(globals_h) \
+	$(graphics_engine_h) \
 	$(graphics_material_h) \
 	$(graphics_mesh_h) \
 	$(graphics_mesh_manager_h) \
@@ -270,7 +271,10 @@ graphics_camera_h = \
 graphics_engine_cpp = \
 	graphics/engine.cpp \
 	$(graphics_engine_h) \
-	$(graphics_scene_h)
+	$(graphics_mesh_manager_h) \
+	$(graphics_model_manager_h) \
+	$(graphics_scene_h) \
+	$(graphics_texture_manager_h)
 
 graphics_engine_h = \
 	graphics/engine.h \
@@ -352,6 +356,7 @@ graphics_particle_system_cpp = \
 	$(color_h) \
 	$(game_time_h) \
 	$(globals_h) \
+	$(graphics_engine_h) \
 	$(graphics_particle_system_h) \
 	$(graphics_texture_h) \
 	$(graphics_texture_manager_h) \
@@ -1282,6 +1287,7 @@ visualizations_cpp = \
 	$(commodity_h) \
 	$(commodity_class_h) \
 	$(globals_h) \
+	$(graphics_engine_h) \
 	$(graphics_material_h) \
 	$(graphics_model_h) \
 	$(graphics_model_manager_h) \
