@@ -7,6 +7,7 @@ window = None
 texture = None
 x = None
 y = None
+draw_wire = False
 
 def load_texture(file_name):
 	global texture, x, y
@@ -33,8 +34,8 @@ def load_texture(file_name):
 	else:
 		print "Unknown format '" + str(format) + "'."
 		sys.exit(1)
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST)
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
 
 def initialize_opengl(Width, Height):
 	load_texture(sys.argv[1])
@@ -57,8 +58,9 @@ def draw_scene():
 	global texture, x, y
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 	glLoadIdentity()
-	glTranslatef(0.0, 0.0, -1.6)
-	glBindTexture(GL_TEXTURE_2D,texture)
+	glTranslatef(0.0, 0.0, -2.0)
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
+	glBindTexture(GL_TEXTURE_2D, texture)
 	glBegin(GL_QUADS)
 	glTexCoord2f(0.0, 0.0)
 	glVertex3f(-x, -y, 0.0)
@@ -69,24 +71,53 @@ def draw_scene():
 	glTexCoord2f(0.0, 1.0)
 	glVertex3f(-x, y, 0.0)
 	glEnd()
+	global draw_wire
+	if draw_wire == True:
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
+		glBindTexture(GL_TEXTURE_2D, 0)
+		glBegin(GL_QUADS)
+		glVertex3f(-x, -y, 0.0)
+		glVertex3f(x, -y, 0.0)
+		glVertex3f(x, y, 0.0)
+		glVertex3f(-x, y, 0.0)
+		glEnd()
 	glutSwapBuffers()
 
 def key_pressed(key, x, y):
-	if key == '\033':
+	if key == "\033":
 		glutDestroyWindow(window)
 		sys.exit()
+	elif key == "1":
+		glClearColor(0.0, 0.0, 0.0, 0.0)
+		glutPostRedisplay()
+	elif key == "2":
+		glClearColor(1.0, 0.0, 0.0, 0.0)
+		glutPostRedisplay()
+	elif key == "3":
+		glClearColor(0.0, 1.0, 0.0, 0.0)
+		glutPostRedisplay()
+	elif key == "4":
+		glClearColor(0.0, 0.0, 1.0, 0.0)
+		glutPostRedisplay()
+	elif key == "5":
+		glClearColor(1.0, 1.0, 1.0, 0.0)
+		glutPostRedisplay()
+	elif key == " ":
+		global draw_wire
+		draw_wire = not draw_wire
+		glutPostRedisplay()
 
 def main():
 	global window
 	glutInit("")
 	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | GLUT_DEPTH)
-	glutInitWindowSize(640, 480)
+	glutInitWindowSize(800, 800)
 	glutInitWindowPosition(0, 0)
 	window = glutCreateWindow("Texture Viewer")
 	glutDisplayFunc(draw_scene)
 	glutReshapeFunc(resize_window)
 	glutKeyboardFunc(key_pressed)
-	initialize_opengl(640, 480)
+	initialize_opengl(800, 800)
 	glutMainLoop()
 
 main()
