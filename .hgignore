@@ -3,6 +3,7 @@ syntax: glob
 *.arx
 *.o
 *.data
+*.dep
 source/callbacks/.generated-code/*
 source/binary
 tools/list_glx_fb_configurations/list_glx_fb_configurations

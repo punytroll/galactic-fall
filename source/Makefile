@@ -14,6 +14,9 @@ SOURCE_FILES := $(patsubst ./%,%,$(foreach SOURCE_DIRECTORY,$(SOURCE_DIRECTORIES
 OBJECT_DIRECTORY := .object-files
 OBJECT_DIRECTORIES := $(patsubst .%, $(OBJECT_DIRECTORY)%, $(SOURCE_DIRECTORIES))
 OBJECT_FILES := $(sort $(patsubst %.cpp,$(OBJECT_DIRECTORY)/%.o,$(SOURCE_FILES)))
+DEPENDENCY_DIRECTORY := .dependency-files
+DEPENDENCY_DIRECTORIES := $(sort $(patsubst .%, $(DEPENDENCY_DIRECTORY)%, $(HEADER_DIRECTORIES) $(SOURCE_DIRECTORIES)))
+DEPENDENCY_FILES := $(sort $(foreach file,$(HEADER_FILES) $(SOURCE_FILES),$(DEPENDENCY_DIRECTORY)/$(file).dep))
 
 all: all-recursive
 
@@ -55,23 +58,28 @@ check-dependencies: cpp_includes_to_makefile-check-dependencies
 		echo -e "\nThe library \"libarxx\" that is installed on your system is too old.\nYou have: Version `pkg-config --modversion libarxx`\nYou need: Version 0.8.9\nYou can get the most recent library from \"http://libarxx.sourceforge.net\"./\n"; false; \
 	fi
 
-dependencies: $(cpp_includes_to_makefile_dependencies) $(HEADER_FILES) $(SOURCE_FILES)
+dependencies: $(DEPENDENCY_FILES)
 	$(RM) Makefile.dependencies
-	@for FILE in $(sort $(HEADER_FILES) $(SOURCE_FILES)); do \
-		echo "$(command_cpp_includes_to_makefile) $${FILE} >> Makefile.dependencies"; \
-		$(command_cpp_includes_to_makefile) $${FILE} >> Makefile.dependencies; \
+	@for FILE in $(DEPENDENCY_FILES); do \
+		echo "cat $${FILE} >> Makefile.dependencies"; \
+		cat $${FILE} >> Makefile.dependencies; \
 		echo >> Makefile.dependencies; \
 	done
 
-$(OBJECT_DIRECTORIES):
+$(OBJECT_DIRECTORIES) $(DEPENDENCY_DIRECTORIES):
 	mkdir $@
 
 prepare-build: $(OBJECT_DIRECTORIES)
 
 $(OBJECT_FILES): $(CXXFLAGS_configuration)
 
+$(DEPENDENCY_FILES): $(cpp_includes_to_makefile_dependencies) $(DEPENDENCY_DIRECTORIES)
+
 binary: $(OBJECT_FILES) $(LDFLAGS_configuration)
 	$(CXX) $(LDFLAGS) `pkg-config --libs libarxx` $(OBJECT_FILES) -lGL -lX11 -o $@
+
+.dependency-files/%.dep: %
+	$(command_cpp_includes_to_makefile) $< > $@
 
 .object-files/arx_reading.o: $(arx_reading_cpp)
 	$(CXX) $(CXXFLAGS) `pkg-config --cflags libarxx` -c $< -o $@
