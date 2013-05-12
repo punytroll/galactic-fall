@@ -1,7 +1,7 @@
 <commodity-class>
 	<identifier>metal</identifier>
 	<name>Metal</name>
-	<space-requirement>1</space-requirement>
+	<space-requirement>1000</space-requirement>
 	<visualization>
 		<model-identifier>cargo_cube</model-identifier>
 		<visualization-parts>

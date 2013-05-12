@@ -1,7 +1,7 @@
 <battery-class>
 	<identifier>light_battery</identifier>
 	<name>Light Battery</name>
-	<space-requirement>0.08</space-requirement>
+	<space-requirement>80</space-requirement>
 	<energy-capacity>200</energy-capacity>
 	<slot-class-identifier>light_battery</slot-class-identifier>
 </battery-class>

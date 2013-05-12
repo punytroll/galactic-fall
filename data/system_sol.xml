@@ -162,7 +162,7 @@
 				</offered-asset-class>
 				<offered-asset-class>
 					<identifier>metal</identifier>
-					<base-price-modifier>0.95</base-price-modifier>
+					<base-price-modifier>0.91</base-price-modifier>
 				</offered-asset-class>
 				<offered-asset-class>
 					<identifier>equipment</identifier>

@@ -14,7 +14,7 @@
 	<battery-class>
 		<string identifier="identifier"/>
 		<string identifier="name"/>
-		<float identifier="space-requirement"/>
+		<u4byte identifier="space-requirement"/>
 		<float identifier="energy-capacity"/>
 		<string identifier="slot-class-identifier"/>
 	</battery-class>
@@ -29,7 +29,7 @@
 	<commodity-class>
 		<string identifier="identifier"/>
 		<string identifier="name"/>
-		<float identifier="space-requirement"/>
+		<u4byte identifier="space-requirement"/>
 		<visualization identifier="visualization"/>
 	</commodity-class>
 	
@@ -47,7 +47,7 @@
 	<generator-class>
 		<string identifier="identifier"/>
 		<string identifier="name"/>
-		<float identifier="space-requirement"/>
+		<u4byte identifier="space-requirement"/>
 		<float identifier="energy-provision-per-second"/>
 		<string identifier="slot-class-identifier"/>
 	</generator-class>
@@ -113,7 +113,7 @@
 	</particle>
 	
 	<physical-aspect>
-		<float identifier="space-requirement"/>
+		<u4byte identifier="space-requirement"/>
 	</physical-aspect>
 	
 	<planet>
@@ -245,7 +245,7 @@
 		<string identifier="slot-class-identifier"/>
 		<quaternion identifier="orientation"/>
 		<float identifier="reload-time"/>
-		<float identifier="space-requirement"/>
+		<u4byte identifier="space-requirement"/>
 		<float identifier="energy-usage-per-shot"/>
 		<particle identifier="particle"/>
 	</weapon-class>
