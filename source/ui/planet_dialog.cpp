@@ -39,7 +39,7 @@ UI::PlanetDialog::PlanetDialog(UI::Widget * SupWidget, Planet * Planet, Characte
 	_TradeCenterWidget(0)
 {
 	SetPosition(Vector2f(50.0f, 50.0f));
-	SetSize(Vector2f(500.0f, 400.0f));
+	SetSize(Vector2f(700.0f, 400.0f));
 	ConnectKeyCallback(Callback(this, &PlanetDialog::_OnKey));
 	
 	UI::Button * HomeButton(new UI::Button(this));
@@ -105,14 +105,14 @@ UI::PlanetDialog::PlanetDialog(UI::Widget * SupWidget, Planet * Planet, Characte
 	}
 	_DescriptionLabel = new UI::Label(this, _Planet->GetDescription());
 	_DescriptionLabel->SetPosition(Vector2f(120.0f, 40.0f));
-	_DescriptionLabel->SetSize(Vector2f(370.0f, 350.0f));
+	_DescriptionLabel->SetSize(Vector2f(570.0f, 350.0f));
 	_DescriptionLabel->SetWrap(true);
 	_DescriptionLabel->SetWordWrap(true);
 	_DescriptionLabel->SetAnchorRight(true);
 	_DescriptionLabel->SetVisible(false);
 	_TradeCenterWidget = new UI::TradeCenterWidget(this, _Planet, _Character);
 	_TradeCenterWidget->SetPosition(Vector2f(120.0f, 40.0f));
-	_TradeCenterWidget->SetSize(Vector2f(370.0f, 350.0f));
+	_TradeCenterWidget->SetSize(Vector2f(570.0f, 350.0f));
 	_TradeCenterWidget->SetAnchorBottom(true);
 	_TradeCenterWidget->SetAnchorRight(true);
 	_TradeCenterWidget->SetVisible(false);
