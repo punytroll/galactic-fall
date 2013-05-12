@@ -20,13 +20,33 @@
 #include <algorithm>
 
 #include "engine.h"
+#include "mesh_manager.h"
+#include "model_manager.h"
 #include "scene.h"
+#include "texture_manager.h"
+
+Graphics::Engine::Engine(void) :
+	_MeshManager(new Graphics::MeshManager()),
+	_ModelManager(new Graphics::ModelManager()),
+	_TextureManager(new Graphics::TextureManager())
+{
+}
+
+Graphics::Engine::~Engine(void)
+{
+	delete _MeshManager;
+	_MeshManager = 0;
+	delete _ModelManager;
+	_ModelManager = 0;
+	delete _TextureManager;
+	_TextureManager = 0;
+}
 
 void Graphics::Engine::AddScene(Graphics::Scene * Scene)
 {
 	assert(Scene != 0);
 	assert(Scene->GetEngine() == 0);
-	m_Scenes.push_back(Scene);
+	_Scenes.push_back(Scene);
 	Scene->_SetEngine(this);
 }
 
@@ -34,5 +54,5 @@ void Graphics::Engine::RemoveScene(Graphics::Scene * Scene)
 {
 	assert(Scene != 0);
 	assert(Scene->GetEngine() == this);
-	m_Scenes.erase(std::find(m_Scenes.begin(), m_Scenes.end(), Scene));
+	_Scenes.erase(std::find(_Scenes.begin(), _Scenes.end(), Scene));
 }

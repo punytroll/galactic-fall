@@ -21,6 +21,7 @@
 #include "commodity.h"
 #include "commodity_class.h"
 #include "globals.h"
+#include "graphics/engine.h"
 #include "graphics/material.h"
 #include "graphics/model.h"
 #include "graphics/model_manager.h"
@@ -141,8 +142,8 @@ void VisualizePlanet(Planet * Planet, Graphics::Node * Container)
 	Material->SetDiffuseColor(new Color(Planet->GetColor()));
 	Material->SetShininess(10.0f);
 	Material->SetSpecularColor(new Color(0.25f, 0.25f, 0.25f, 1.0f));
-	Visualization->AddMaterial(g_ModelManager->Get("planet")->GetIdentifier(), Material);
-	Visualization->SetModel(g_ModelManager->Get("planet"));
+	Visualization->AddMaterial(g_GraphicsEngine->GetModelManager()->Get("planet")->GetIdentifier(), Material);
+	Visualization->SetModel(g_GraphicsEngine->GetModelManager()->Get("planet"));
 	Visualization->SetNormalize(true);
 	Visualization->SetOrientation(Quaternion(true));
 	Visualization->SetPosition(Planet->GetAspectPosition()->GetPosition());

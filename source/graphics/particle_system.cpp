@@ -26,6 +26,7 @@
 #include "../globals.h"
 #include "../math.h"
 #include "../system_statistics.h"
+#include "engine.h"
 #include "particle_system.h"
 #include "texture.h"
 #include "texture_manager.h"
@@ -34,11 +35,6 @@ const Graphics::Texture * g_ParticleTexture(0);
 
 Graphics::ParticleSystem::ParticleSystem(void)
 {
-	if(g_ParticleTexture == 0)
-	{
-		g_ParticleTexture = g_TextureManager->Get("particle");
-		assert(g_ParticleTexture != 0);
-	}
 }
 
 bool Graphics::ParticleSystem::Update(float Seconds)
@@ -105,6 +101,11 @@ bool Graphics::ParticleSystem::Update(float Seconds)
 
 void Graphics::ParticleSystem::Draw(void)
 {
+	if(g_ParticleTexture == 0)
+	{
+		g_ParticleTexture = GetEngine()->GetTextureManager()->Get("particle");
+		assert(g_ParticleTexture != 0);
+	}
 	glPushMatrix();
 	glTranslatef(GetPosition()[0], GetPosition()[1], GetPosition()[2]);
 	glPushAttrib(GL_ENABLE_BIT);

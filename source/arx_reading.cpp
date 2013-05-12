@@ -36,6 +36,7 @@
 #include "galaxy.h"
 #include "generator_class.h"
 #include "globals.h"
+#include "graphics/engine.h"
 #include "graphics/material.h"
 #include "graphics/mesh.h"
 #include "graphics/mesh_manager.h"
@@ -477,7 +478,7 @@ static void ReadMesh(Arxx::Reference & Reference)
 	
 	Reader >> Identifier;
 	
-	Graphics::Mesh * NewMesh(g_MeshManager->Create(Identifier));
+	Graphics::Mesh * NewMesh(g_GraphicsEngine->GetMeshManager()->Create(Identifier));
 	
 	if(NewMesh == 0)
 	{
@@ -547,7 +548,7 @@ static void ReadModel(Arxx::Reference & Reference)
 	
 	Reader >> Identifier;
 	
-	Graphics::Model * NewModel(g_ModelManager->Create(Identifier));
+	Graphics::Model * NewModel(g_GraphicsEngine->GetModelManager()->Create(Identifier));
 	
 	if(NewModel == 0)
 	{
@@ -564,7 +565,7 @@ static void ReadModel(Arxx::Reference & Reference)
 		
 		Reader >> PartIdentifier >> MeshIdentifier;
 		
-		const Graphics::Mesh * Mesh(g_MeshManager->Get(MeshIdentifier));
+		const Graphics::Mesh * Mesh(g_GraphicsEngine->GetMeshManager()->Get(MeshIdentifier));
 		
 		if(Mesh == 0)
 		{
@@ -876,7 +877,7 @@ static void ReadTexture(Arxx::Reference & Reference)
 	Height = ntohl(Height);
 	Format = ntohl(Format);
 	
-	Graphics::Texture * Texture(g_TextureManager->Create(Identifier));
+	Graphics::Texture * Texture(g_GraphicsEngine->GetTextureManager()->Create(Identifier));
 	
 	if(Texture == 0)
 	{
@@ -890,7 +891,7 @@ static void ReadVisualizationPrototype(Arxx::BufferReader & Reader, Visualizatio
 	std::string ModelIdentifier;
 	
 	Reader >> ModelIdentifier;
-	VisualizationPrototype->SetModel(g_ModelManager->Get(ModelIdentifier));
+	VisualizationPrototype->SetModel(g_GraphicsEngine->GetModelManager()->Get(ModelIdentifier));
 	
 	Arxx::u4byte VisualizationPartCount;
 	

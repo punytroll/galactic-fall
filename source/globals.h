@@ -50,10 +50,7 @@ class WeaponClass;
 namespace Graphics
 {
 	class Engine;
-	class MeshManager;
-	class ModelManager;
 	class Node;
-	class TextureManager;
 }
 
 namespace UI
@@ -85,16 +82,13 @@ extern Galaxy * g_Galaxy;
 extern TimeoutNotificationManager * g_GameTimeTimeoutNotifications;
 extern ClassManager< GeneratorClass > * g_GeneratorClassManager;
 extern Graphics::Engine * g_GraphicsEngine;
-extern Graphics::MeshManager * g_MeshManager;
 extern MessageDispatcher * g_MessageDispatcher;
-extern Graphics::ModelManager * g_ModelManager;
 extern ObjectFactory * g_ObjectFactory;
 extern TimeoutNotificationManager * g_RealTimeTimeoutNotifications;
 extern ClassManager< ShipClass > * g_ShipClassManager;
 extern Graphics::Node * g_ShotLayer;
 extern ClassManager< SlotClass > * g_SlotClassManager;
 extern SystemStatistics * g_SystemStatistics;
-extern Graphics::TextureManager * g_TextureManager;
 extern UI::UserInterface * g_UserInterface;
 extern ClassManager< WeaponClass > * g_WeaponClassManager;
 
