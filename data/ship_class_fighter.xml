@@ -1,7 +1,7 @@
 <ship-class>
 	<identifier>fighter</identifier>
 	<physical-aspect>
-		<space-requirement>46</space-requirement>
+		<space-requirement>46000</space-requirement>
 	</physical-aspect>
 	<visualization>
 		<model-identifier>fighter</model-identifier>

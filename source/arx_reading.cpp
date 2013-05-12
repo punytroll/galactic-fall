@@ -336,14 +336,14 @@ static void ReadBatteryClass(Arxx::Reference & Reference)
 	}
 	
 	std::string Name;
-	float SpaceRequirement;
+	Arxx::u4byte SpaceRequirement;
 	float EnergyCapacity;
 	std::string SlotClassIdentifier;
 	
 	Reader >> Name >> SpaceRequirement >> EnergyCapacity >> SlotClassIdentifier;
 	
 	NewBatteryClass->SetName(Name);
-	NewBatteryClass->SetSpaceRequirement(1000 * SpaceRequirement);
+	NewBatteryClass->SetSpaceRequirement(SpaceRequirement);
 	NewBatteryClass->SetEnergyCapacity(EnergyCapacity);
 	NewBatteryClass->SetSlotClassIdentifier(SlotClassIdentifier);
 }
@@ -374,12 +374,12 @@ static void ReadCommodityClass(Arxx::Reference & Reference)
 	}
 	
 	std::string Name;
-	float SpaceRequirement;
+	Arxx::u4byte SpaceRequirement;
 	
 	Reader >> Name >> SpaceRequirement;
 	
 	NewCommodityClass->SetName(Name);
-	NewCommodityClass->SetSpaceRequirement(1000 * SpaceRequirement);
+	NewCommodityClass->SetSpaceRequirement(SpaceRequirement);
 	
 	// read visualization prototype
 	NewCommodityClass->AddVisualizationPrototype();
@@ -450,14 +450,14 @@ static void ReadGeneratorClass(Arxx::Reference & Reference)
 	}
 	
 	std::string Name;
-	float SpaceRequirement;
+	Arxx::u4byte SpaceRequirement;
 	float EnergyProvisionPerSecond;
 	std::string SlotClassIdentifier;
 	
 	Reader >> Name >> SpaceRequirement >> EnergyProvisionPerSecond >> SlotClassIdentifier;
 	
 	NewGeneratorClass->SetName(Name);
-	NewGeneratorClass->SetSpaceRequirement(1000 * SpaceRequirement);
+	NewGeneratorClass->SetSpaceRequirement(SpaceRequirement);
 	NewGeneratorClass->SetEnergyProvisionPerSecond(EnergyProvisionPerSecond);
 	NewGeneratorClass->SetSlotClassIdentifier(SlotClassIdentifier);
 }
@@ -602,10 +602,10 @@ static void ReadShipClass(Arxx::Reference & Reference)
 		throw std::runtime_error("Could not create ship class '" + Identifier + "'.");
 	}
 	// read the physical aspect
-	float SpaceRequirement;
+	Arxx::u4byte SpaceRequirement;
 	
 	Reader >> SpaceRequirement;
-	NewShipClass->SetSpaceRequirement(1000 * SpaceRequirement);
+	NewShipClass->SetSpaceRequirement(SpaceRequirement);
 	
 	// read the visualization
 	NewShipClass->AddVisualizationPrototype();
@@ -957,7 +957,7 @@ static void ReadWeaponClass(Arxx::Reference & Reference)
 	std::string SlotClassIdentifier;
 	Quaternion Orientation;
 	float ReloadTime;
-	float SpaceRequirement;
+	Arxx::u4byte SpaceRequirement;
 	float EnergyUsagePerShot;
 	Vector3f ParticleExitPosition;
 	float ParticleExitSpeed;
@@ -968,7 +968,7 @@ static void ReadWeaponClass(Arxx::Reference & Reference)
 	NewWeaponClass->SetSlotClassIdentifier(SlotClassIdentifier);
 	NewWeaponClass->SetOrientation(Orientation);
 	NewWeaponClass->SetReloadTime(ReloadTime);
-	NewWeaponClass->SetSpaceRequirement(static_cast< unsigned_numeric >(1000 * SpaceRequirement));
+	NewWeaponClass->SetSpaceRequirement(static_cast< unsigned_numeric >(SpaceRequirement));
 	NewWeaponClass->SetEnergyUsagePerShot(EnergyUsagePerShot);
 	NewWeaponClass->SetParticleExitPosition(ParticleExitPosition);
 	NewWeaponClass->SetParticleExitSpeed(ParticleExitSpeed);

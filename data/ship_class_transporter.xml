@@ -1,7 +1,7 @@
 <ship-class>
 	<identifier>transporter</identifier>
 	<physical-aspect>
-		<space-requirement>160</space-requirement>
+		<space-requirement>160000</space-requirement>
 	</physical-aspect>
 	<visualization>
 		<model-identifier>transporter</model-identifier>

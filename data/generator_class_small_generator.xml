@@ -1,7 +1,7 @@
 <generator-class>
 	<identifier>small_generator</identifier>
 	<name>Small Generator</name>
-	<space-requirement>0.5</space-requirement>
+	<space-requirement>500</space-requirement>
 	<energy-provision-per-second>1.5</energy-provision-per-second>
 	<slot-class-identifier>small_generator</slot-class-identifier>
 </generator-class>
