@@ -2375,9 +2375,22 @@ void SaveGame(std::ostream & OStream)
 	OStream << std::endl;
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// Actions                                                                                       //
+// - Actions must be functions with no arguments and no return values.                           //
+// - Actions are called in response to key events.                                               //
+///////////////////////////////////////////////////////////////////////////////////////////////////
 void ActionAugmentTimeWarp(void)
 {
 	SetTimeWarp(g_TimeWarp * 1.1f);
+}
+
+void ActionDecreaseFieldOfView(void)
+{
+	if((g_MainScene != 0) && (g_MainScene->GetCamera() != 0))
+	{
+		g_MainScene->GetCamera()->SetFieldOfView(0.9f * g_MainScene->GetCamera()->GetFieldOfView());
+	}
 }
 
 void ActionDeleteObservedObject(void)
@@ -2503,6 +2516,14 @@ void ActionFocusCameraOnPreviousShip(void)
 	}
 	g_CameraPosition[0] = 0.0f;
 	g_CameraPosition[1] = 0.0f;
+}
+
+void ActionIncreaseFieldOfView(void)
+{
+	if((g_MainScene != 0) && (g_MainScene->GetCamera() != 0))
+	{
+		g_MainScene->GetCamera()->SetFieldOfView(1.1f * g_MainScene->GetCamera()->GetFieldOfView());
+	}
 }
 
 void ActionJettisonCargo(void)
@@ -3231,6 +3252,10 @@ void LoadKeyboardLookupTable(const std::list< Settings::KeyBinding > * KeyBindin
 				{
 					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionAugmentTimeWarp;
 				}
+				else if(KeyBindingIterator->Action == "decrease_field_of_view")
+				{
+					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionDecreaseFieldOfView;
+				}
 				else if(KeyBindingIterator->Action == "delete_observed_object")
 				{
 					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionDeleteObservedObject;
@@ -3278,6 +3303,10 @@ void LoadKeyboardLookupTable(const std::list< Settings::KeyBinding > * KeyBindin
 				else if(KeyBindingIterator->Action == "focus_camera_on_previous_ship")
 				{
 					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionFocusCameraOnPreviousShip;
+				}
+				else if(KeyBindingIterator->Action == "increase_field_of_view")
+				{
+					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionIncreaseFieldOfView;
 				}
 				else if(KeyBindingIterator->Action == "jettison_cargo")
 				{

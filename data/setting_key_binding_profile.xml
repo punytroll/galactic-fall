@@ -180,6 +180,18 @@
 			<event>down</event>
 			<action>take_screen_shot</action>
 		</key-binding>
+		<!-- NUMPAD MINUS: decrease field of view -->
+		<key-binding>
+			<code>82</code>
+			<event>down</event>
+			<action>decrease_field_of_view</action>
+		</key-binding>
+		<!-- NUMPAD PLUS: increase field of view -->
+		<key-binding>
+			<code>86</code>
+			<event>down</event>
+			<action>increase_field_of_view</action>
+		</key-binding>
 		<!-- F11: purge game -->
 		<key-binding>
 			<code>95</code>
