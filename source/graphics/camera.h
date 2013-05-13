@@ -29,6 +29,10 @@ namespace Graphics
 	public:
 		Camera(void);
 		// getters
+		float GetAspect(void) const;
+		float GetFarClippingPlane(void) const;
+		float GetFieldOfView(void) const;
+		float GetNearClippingPlane(void) const;
 		const Matrix4f & GetPerspectiveMatrix(void) const;
 		const Matrix4f & GetSpacialMatrix(void) const;
 		// setters
@@ -46,6 +50,26 @@ namespace Graphics
 		mutable bool _PerspectiveMatrixInitialized;
 		Matrix4f _SpacialMatrix;
 	};
+	
+	inline float Camera::GetAspect(void) const
+	{
+		return _Aspect;
+	}
+	
+	inline float Camera::GetFarClippingPlane(void) const
+	{
+		return _FarClippingPlane;
+	}
+	
+	inline float Camera::GetFieldOfView(void) const
+	{
+		return _FieldOfView;
+	}
+	
+	inline float Camera::GetNearClippingPlane(void) const
+	{
+		return _NearClippingPlane;
+	}
 }
 
 #endif
