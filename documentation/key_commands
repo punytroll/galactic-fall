@@ -110,6 +110,12 @@ On key down:
 76 (F10)
 	Takes a screenshot and saves it in the current directory under the file name screenshot-YYYYMMDD-HHMMSS.tex.
 
+82 (NUMPAD MINUS)
+	Decreases the field of view for the main scene camera.
+
+86 (NUMPAD PLUS)
+	Increases the field of view for the main scene camera.
+
 95 (F11)
 	Purges the game. This key removes all game content from memory and effectively puts the game in an out-of-game mode.
 
