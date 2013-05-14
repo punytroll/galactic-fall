@@ -1114,7 +1114,6 @@ void OnMapDialogDestroying(void)
 		}
 	}
 	g_MapDialog = 0;
-	g_Pause = false;
 }
 
 void OnOutfitShipDialogDestroying(void)
@@ -2713,7 +2712,6 @@ void ActionOpenMapDialog(void)
 		System * CurrentSystem(dynamic_cast< System * >(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetContainer()));
 		
 		assert(CurrentSystem != 0);
-		g_Pause = true;
 		g_MapDialog = new UI::MapDialog(g_UserInterface->GetRootWidget(), CurrentSystem, g_CharacterObserver->GetObservedCharacter().Get());
 		g_MapDialog->GrabKeyFocus();
 		g_MapDialog->ConnectDestroyingCallback(Callback(OnMapDialogDestroying));
