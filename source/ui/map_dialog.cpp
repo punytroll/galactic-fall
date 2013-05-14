@@ -34,7 +34,7 @@
 UI::MapDialog::MapDialog(UI::Widget * SupWidget, System * System, Character * Character) :
 	UI::Window(SupWidget, "Map: " + System->GetAspectName()->GetName())
 {
-	SetPosition(Vector2f(70.0f, 400.0f));
+	SetPosition(Vector2f(70.0f, 200.0f));
 	SetSize(Vector2f(500.0f, 530.0f));
 	ConnectKeyCallback(Callback(this, &UI::MapDialog::OnKey));
 	m_OKButton = new UI::Button(this);
