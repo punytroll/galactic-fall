@@ -132,17 +132,17 @@
 			<event>down</event>
 			<action>open_map_dialog</action>
 		</key-binding>
-		<!-- COMMA: reduce time warp -->
+		<!-- COMMA: decrease time warp -->
 		<key-binding>
 			<code>59</code>
 			<event>down</event>
-			<action>reduce_time_warp</action>
+			<action>decrease_time_warp</action>
 		</key-binding>
-		<!-- PERDIOD: augment time warp -->
+		<!-- PERDIOD: increase time warp -->
 		<key-binding>
 			<code>60</code>
 			<event>down</event>
-			<action>augment_time_warp</action>
+			<action>increase_time_warp</action>
 		</key-binding>
 		<!-- SLASH: reset time warp -->
 		<key-binding>
