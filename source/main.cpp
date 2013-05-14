@@ -1049,6 +1049,32 @@ void RenderSystem(System * System)
 	}
 }
 
+void OnGraphicsNodeDestroy(Graphics::Node * Node)
+{
+	if(Node == g_CommodityLayer)
+	{
+		g_CommodityLayer = 0;
+	}
+	else if(Node == g_ParticleSystemsLayer)
+	{
+		g_ParticleSystemsLayer = 0;
+	}
+	else if(Node == g_PlanetLayer)
+	{
+		g_PlanetLayer = 0;
+	}
+	else if(Node == g_ShipLayer)
+	{
+		g_ShipLayer = 0;
+	}
+	else if(Node == g_ShotLayer)
+	{
+		g_ShotLayer = 0;
+	}
+	InvalidateVisualizationReference(Node);
+	delete Node;
+}
+
 void Resize(void)
 {
 	if(g_EchoResizes == true)
@@ -1292,6 +1318,7 @@ void OnOutputEnterSystem(System * EnterSystem)
 	g_SpawnShipTimeoutNotification = g_GameTimeTimeoutNotifications->Add(GameTime::Get() + GetRandomFloatFromExponentialDistribution(1.0f / EnterSystem->GetTrafficDensity()), Bind1(Callback(SpawnShipOnTimeout), EnterSystem));
 	// build the static setup of the scene
 	g_MainScene = new Graphics::Scene();
+	g_MainScene->SetDestroyCallback(Callback(OnGraphicsNodeDestroy));
 	assert(g_MainScene->GetCamera() != 0);
 	g_MainScene->GetCamera()->SetFieldOfView(g_FieldOfView);
 	g_MainScene->GetCamera()->SetAspect(g_Width / g_Height);
@@ -1354,32 +1381,6 @@ void OnOutputLeaveSystem(System * System)
 	g_GraphicsEngine->RemoveScene(g_MainScene);
 	delete g_MainScene;
 	g_MainScene = 0;
-}
-
-void OnGraphicsNodeDestroy(Graphics::Node * Node)
-{
-	if(Node == g_CommodityLayer)
-	{
-		g_CommodityLayer = 0;
-	}
-	else if(Node == g_ParticleSystemsLayer)
-	{
-		g_ParticleSystemsLayer = 0;
-	}
-	else if(Node == g_PlanetLayer)
-	{
-		g_PlanetLayer = 0;
-	}
-	else if(Node == g_ShipLayer)
-	{
-		g_ShipLayer = 0;
-	}
-	else if(Node == g_ShotLayer)
-	{
-		g_ShotLayer = 0;
-	}
-	InvalidateVisualizationReference(Node);
-	delete Node;
 }
 
 std::string MakeTimeStampedFileName(const std::string & Name, const std::string & Extension)
@@ -3550,7 +3551,6 @@ int main(int argc, char ** argv)
 	g_Galaxy = 0;
 	g_GeneratorClassManager = new ClassManager< GeneratorClass >();
 	g_GraphicsEngine = new Graphics::Engine();
-	g_GraphicsEngine->SetDestroyCallback(Callback(OnGraphicsNodeDestroy));
 	g_MainScene = 0;
 	g_MessageDispatcher = new MessageDispatcher();
 	g_ObjectFactory = new ObjectFactory();

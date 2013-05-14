@@ -273,13 +273,11 @@ graphics_engine_cpp = \
 	$(graphics_engine_h) \
 	$(graphics_mesh_manager_h) \
 	$(graphics_model_manager_h) \
-	$(graphics_node_h) \
 	$(graphics_scene_h) \
 	$(graphics_texture_manager_h)
 
 graphics_engine_h = \
-	graphics/engine.h \
-	$(callbacks_callbacks_h)
+	graphics/engine.h
 
 graphics_light_cpp = \
 	graphics/light.cpp \
@@ -344,7 +342,6 @@ graphics_model_node_h = \
 
 graphics_node_cpp = \
 	graphics/node.cpp \
-	$(graphics_engine_h) \
 	$(graphics_node_h) \
 	$(graphics_scene_h)
 
@@ -380,7 +377,8 @@ graphics_scene_cpp = \
 	$(graphics_scene_h)
 
 graphics_scene_h = \
-	graphics/scene.h
+	graphics/scene.h \
+	$(callbacks_callbacks_h)
 
 graphics_texture_cpp = \
 	graphics/texture.cpp \

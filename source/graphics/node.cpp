@@ -23,7 +23,6 @@
 
 #include <GL/gl.h>
 
-#include "engine.h"
 #include "node.h"
 #include "scene.h"
 
@@ -90,8 +89,5 @@ void Graphics::Node::Destroy(void)
 	Graphics::Scene * Scene(_Scene);
 	
 	_Scene = 0;
-	if(Scene->GetEngine() != 0)
-	{
-		Scene->GetEngine()->OnDestroy(this);
-	}
+	Scene->OnDestroy(this);
 }

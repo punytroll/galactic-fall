@@ -91,6 +91,17 @@ void Graphics::Scene::DeactivateLight(void)
 	}
 }
 
+void Graphics::Scene::OnDestroy(Graphics::Node * Node)
+{
+	assert(Node->GetContainer() == 0);
+	assert(Node->GetScene() == 0);
+	assert(Node->GetContent().empty() == true);
+	if(_DestroyCallback.IsValid() == true)
+	{
+		_DestroyCallback(Node);
+	}
+}
+
 void Graphics::Scene::Render(void)
 {
 	assert(_Camera != 0);

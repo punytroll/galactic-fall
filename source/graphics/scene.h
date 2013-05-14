@@ -20,6 +20,8 @@
 #ifndef GRAPHICS_SCENE_H
 #define GRAPHICS_SCENE_H
 
+#include "../callbacks/callbacks.h"
+
 namespace Graphics
 {
 	class Camera;
@@ -35,20 +37,25 @@ namespace Graphics
 		~Scene(void);
 		// getters
 		Graphics::Camera * GetCamera(void);
+		Callback1< void, Graphics::Node * > GetDestroyCallback(void);
 		Graphics::Engine * GetEngine(void);
 		Graphics::Light * GetLight(void);
 		Graphics::Node * GetRootNode(void);
 		// setters
 		void SetRootNode(Graphics::Node * RootNode);
+		void SetDestroyCallback(Callback1< void, Graphics::Node * > Callback);
+		void UnsetDestroyCallback(void);
 		// modifiers
 		void ActivateLight(void);
 		void DeactivateLight(void);
 		void Render(void);
 		void Update(float Seconds);
+		void OnDestroy(Graphics::Node * Node);
 	private:
 		void _SetEngine(Graphics::Engine * Engine);
 		void _Update(Graphics::Node * Node, float Seconds);
 		Graphics::Camera * _Camera;
+		Callback1< void, Graphics::Node * > _DestroyCallback;
 		Graphics::Engine * _Engine;
 		Graphics::Light * _Light;
 		Graphics::Node * _RootNode;
@@ -57,6 +64,11 @@ namespace Graphics
 	inline Graphics::Camera * Scene::GetCamera(void)
 	{
 		return _Camera;
+	}
+	
+	inline Callback1< void, Graphics::Node * > Scene::GetDestroyCallback(void)
+	{
+		return _DestroyCallback;
 	}
 	
 	inline Graphics::Engine * Scene::GetEngine(void)
@@ -72,6 +84,11 @@ namespace Graphics
 	inline Graphics::Node * Scene::GetRootNode(void)
 	{
 		return _RootNode;
+	}
+	
+	inline void Scene::SetDestroyCallback(Callback1< void, Graphics::Node * > Callback)
+	{
+		_DestroyCallback = Callback;
 	}
 }
 
