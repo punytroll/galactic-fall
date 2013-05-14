@@ -1059,6 +1059,11 @@ void Resize(void)
 	{
 		g_Height = 1;
 	}
+	if(g_MainScene != 0)
+	{
+		assert(g_MainScene->GetCamera() != 0);
+		g_MainScene->GetCamera()->SetAspect(g_Width / g_Height);
+	}
 	glViewport(0, 0, static_cast< GLint >(g_Width), static_cast< GLint >(g_Height));
 	g_UserInterface->GetRootWidget()->SetSize(Vector2f(g_Width, g_Height));
 }
