@@ -66,7 +66,6 @@ void UnvisualizeObject(Object * Object)
 	
 	assert(VisualizationReference.IsValid() == true);
 	Object->GetAspectVisualization()->UnsetVisualization();
-	VisualizationReference->Remove();
 	VisualizationReference->Destroy();
 }
 

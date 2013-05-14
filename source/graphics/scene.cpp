@@ -53,20 +53,25 @@ Graphics::Scene::~Scene(void)
 
 void Graphics::Scene::_SetEngine(Graphics::Engine * Engine)
 {
-	assert(_Engine == 0);
-	assert(Engine != 0);
-	assert(_RootNode == 0);
-	_Engine = Engine;
+	if(Engine == 0)
+	{
+		assert(_Engine != 0);
+		_Engine = 0;
+	}
+	else
+	{
+		assert(_Engine == 0);
+		_Engine = Engine;
+	}
 }
 
 void Graphics::Scene::SetRootNode(Graphics::Node * RootNode)
 {
-	assert(_Engine != 0);
 	assert(_RootNode == 0);
 	assert(RootNode != 0);
-	assert(RootNode->GetEngine() == 0);
+	assert(RootNode->GetScene() == 0);
 	_RootNode = RootNode;
-	_RootNode->SetEngine(_Engine);
+	_RootNode->_SetScene(this);
 }
 
 void Graphics::Scene::ActivateLight(void)
@@ -126,7 +131,6 @@ void Graphics::Scene::_Update(Graphics::Node * Node, float Seconds)
 		
 		if((ParticleSystem != 0) && (ParticleSystem->Update(Seconds) == false))
 		{
-			Node->RemoveNode(ParticleSystem);
 			ParticleSystem->Destroy();
 		}
 		else

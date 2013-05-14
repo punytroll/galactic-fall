@@ -83,14 +83,6 @@ namespace Graphics
 	{
 		_DestroyCallback = Callback;
 	}
-	
-	inline void Engine::OnDestroy(Graphics::Node * Node)
-	{
-		if(_DestroyCallback.IsValid() == true)
-		{
-			_DestroyCallback(Node);
-		}
-	}
 }
 
 #endif

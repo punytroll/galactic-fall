@@ -25,26 +25,27 @@
 
 #include "engine.h"
 #include "node.h"
+#include "scene.h"
 
 Graphics::Node::Node(void) :
-	m_Container(0),
-	m_Engine(0),
-	m_Orientation(1.0f, 0.0f, 0.0f, 0.0f),
-	m_Position(0.0f, 0.0f, 0.0f)
+	_Container(0),
+	_Orientation(1.0f, 0.0f, 0.0f, 0.0f),
+	_Position(0.0f, 0.0f, 0.0f),
+	_Scene(0)
 {
 }
 
 Graphics::Node::~Node(void)
 {
-	assert(m_Container == 0);
-	assert(m_Content.empty() == true);
+	assert(_Container == 0);
+	assert(_Content.empty() == true);
 }
 
 void Graphics::Node::Render(void)
 {
 	Begin();
 	Draw();
-	for(std::vector< Graphics::Node * >::iterator ContentIterator = m_Content.begin(); ContentIterator != m_Content.end(); ++ContentIterator)
+	for(std::vector< Graphics::Node * >::iterator ContentIterator = _Content.begin(); ContentIterator != _Content.end(); ++ContentIterator)
 	{
 		(*ContentIterator)->Render();
 	}
@@ -65,30 +66,32 @@ void Graphics::Node::End(void)
 
 void Graphics::Node::AddNode(Graphics::Node * Content)
 {
-	assert(Content->GetContainer() == 0);
-	assert(GetEngine() != 0);
-	assert(Content->GetEngine() == 0);
-	Content->SetEngine(GetEngine());
-	Content->SetContainer(this);
-	m_Content.push_back(Content);
-}
-
-void Graphics::Node::RemoveNode(Graphics::Node * Content)
-{
-	assert(Content->GetContainer() == this);
-	m_Content.erase(std::find(m_Content.begin(), m_Content.end(), Content));
-	Content->SetContainer(0);
+	assert(Content->_Container == 0);
+	assert(_Scene != 0);
+	assert(Content->_Scene == 0);
+	Content->_Scene = _Scene;
+	Content->_Container = this;
+	_Content.push_back(Content);
 }
 
 void Graphics::Node::Destroy(void)
 {
-	assert(GetContainer() == 0);
-	while(m_Content.empty() == false)
+	assert(_Scene != 0);
+	while(_Content.empty() == false)
 	{
-		Graphics::Node * Content(m_Content.back());
-		
-		RemoveNode(Content);
-		Content->Destroy();
+		_Content.back()->Destroy();
 	}
-	GetEngine()->OnDestroy(this);
+	if(_Container != 0)
+	{
+		_Container->_Content.erase(std::find(_Container->_Content.begin(), _Container->_Content.end(), this));
+		_Container = 0;
+	}
+	
+	Graphics::Scene * Scene(_Scene);
+	
+	_Scene = 0;
+	if(Scene->GetEngine() != 0)
+	{
+		Scene->GetEngine()->OnDestroy(this);
+	}
 }
