@@ -2380,17 +2380,17 @@ void SaveGame(std::ostream & OStream)
 // - Actions must be functions with no arguments and no return values.                           //
 // - Actions are called in response to key events.                                               //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-void ActionAugmentTimeWarp(void)
-{
-	SetTimeWarp(g_TimeWarp * 1.1f);
-}
-
 void ActionDecreaseFieldOfView(void)
 {
 	if((g_MainScene != 0) && (g_MainScene->GetCamera() != 0))
 	{
 		g_MainScene->GetCamera()->SetFieldOfView(0.9f * g_MainScene->GetCamera()->GetFieldOfView());
 	}
+}
+
+void ActionDecreaseTimeWarp(void)
+{
+	SetTimeWarp(g_TimeWarp / 1.1f);
 }
 
 void ActionDeleteObservedObject(void)
@@ -2524,6 +2524,11 @@ void ActionIncreaseFieldOfView(void)
 	{
 		g_MainScene->GetCamera()->SetFieldOfView(1.1f * g_MainScene->GetCamera()->GetFieldOfView());
 	}
+}
+
+void ActionIncreaseTimeWarp(void)
+{
+	SetTimeWarp(g_TimeWarp * 1.1f);
 }
 
 void ActionJettisonCargo(void)
@@ -2743,11 +2748,6 @@ void ActionQuitGameAndDumpObjectReport(void)
 {
 	g_DumpEndReport = true;
 	g_Quit = true;
-}
-
-void ActionReduceTimeWarp(void)
-{
-	SetTimeWarp(g_TimeWarp / 1.1f);
 }
 
 void ActionRefuel(void)
@@ -3248,13 +3248,13 @@ void LoadKeyboardLookupTable(const std::list< Settings::KeyBinding > * KeyBindin
 			}
 			if(EventIndex != -1)
 			{
-				if(KeyBindingIterator->Action == "augment_time_warp")
-				{
-					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionAugmentTimeWarp;
-				}
-				else if(KeyBindingIterator->Action == "decrease_field_of_view")
+				if(KeyBindingIterator->Action == "decrease_field_of_view")
 				{
 					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionDecreaseFieldOfView;
+				}
+				else if(KeyBindingIterator->Action == "decrease_time_warp")
+				{
+					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionDecreaseTimeWarp;
 				}
 				else if(KeyBindingIterator->Action == "delete_observed_object")
 				{
@@ -3308,6 +3308,10 @@ void LoadKeyboardLookupTable(const std::list< Settings::KeyBinding > * KeyBindin
 				{
 					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionIncreaseFieldOfView;
 				}
+				else if(KeyBindingIterator->Action == "increase_time_warp")
+				{
+					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionIncreaseTimeWarp;
+				}
 				else if(KeyBindingIterator->Action == "jettison_cargo")
 				{
 					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionJettisonCargo;
@@ -3351,10 +3355,6 @@ void LoadKeyboardLookupTable(const std::list< Settings::KeyBinding > * KeyBindin
 				else if(KeyBindingIterator->Action == "quit_game_and_dump_object_report")
 				{
 					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionQuitGameAndDumpObjectReport;
-				}
-				else if(KeyBindingIterator->Action == "reduce_time_warp")
-				{
-					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionReduceTimeWarp;
 				}
 				else if(KeyBindingIterator->Action == "refuel")
 				{
