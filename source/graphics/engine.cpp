@@ -22,8 +22,8 @@
 #include "engine.h"
 #include "mesh_manager.h"
 #include "model_manager.h"
-#include "scene.h"
 #include "texture_manager.h"
+#include "view.h"
 
 Graphics::Engine::Engine(void) :
 	_MeshManager(new Graphics::MeshManager()),
@@ -34,7 +34,7 @@ Graphics::Engine::Engine(void) :
 
 Graphics::Engine::~Engine(void)
 {
-	assert(_Scenes.empty() == true);
+	assert(_Views.empty() == true);
 	delete _MeshManager;
 	_MeshManager = 0;
 	delete _ModelManager;
@@ -43,17 +43,18 @@ Graphics::Engine::~Engine(void)
 	_TextureManager = 0;
 }
 
-void Graphics::Engine::AddScene(Graphics::Scene * Scene)
+void Graphics::Engine::AddView(Graphics::View * View)
 {
-	assert(Scene != 0);
-	assert(Scene->GetEngine() == 0);
-	_Scenes.push_back(Scene);
-	Scene->_SetEngine(this);
+	assert(View != 0);
+	assert(View->GetEngine() == 0);
+	_Views.push_back(View);
+	View->_SetEngine(this);
 }
 
-void Graphics::Engine::RemoveScene(Graphics::Scene * Scene)
+void Graphics::Engine::RemoveView(Graphics::View * View)
 {
-	assert(Scene != 0);
-	assert(Scene->GetEngine() == this);
-	_Scenes.erase(std::find(_Scenes.begin(), _Scenes.end(), Scene));
+	assert(View != 0);
+	assert(View->GetEngine() == this);
+	View->_SetEngine(0);
+	_Views.erase(std::find(_Views.begin(), _Views.end(), View));
 }

@@ -24,19 +24,18 @@
 
 namespace Graphics
 {
-	class Camera;
 	class Engine;
 	class Light;
 	class Node;
+	class View;
 	
 	class Scene
 	{
-		friend class Graphics::Engine;
+		friend class Graphics::View;
 	public:
 		Scene(void);
 		~Scene(void);
 		// getters
-		Graphics::Camera * GetCamera(void);
 		Callback1< void, Graphics::Node * > GetDestroyCallback(void);
 		Graphics::Engine * GetEngine(void);
 		Graphics::Light * GetLight(void);
@@ -54,17 +53,11 @@ namespace Graphics
 	private:
 		void _SetEngine(Graphics::Engine * Engine);
 		void _Update(Graphics::Node * Node, float Seconds);
-		Graphics::Camera * _Camera;
 		Callback1< void, Graphics::Node * > _DestroyCallback;
 		Graphics::Engine * _Engine;
 		Graphics::Light * _Light;
 		Graphics::Node * _RootNode;
 	};
-	
-	inline Graphics::Camera * Scene::GetCamera(void)
-	{
-		return _Camera;
-	}
 	
 	inline Callback1< void, Graphics::Node * > Scene::GetDestroyCallback(void)
 	{

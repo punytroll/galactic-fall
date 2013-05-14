@@ -62,6 +62,7 @@
 #include "graphics/particle_system.h"
 #include "graphics/scene.h"
 #include "graphics/texture_manager.h"
+#include "graphics/view.h"
 #include "key_event_information.h"
 #include "map_knowledge.h"
 #include "math.h"
@@ -129,7 +130,7 @@ ClassManager< CommodityClass > * g_CommodityClassManager(0);
 Galaxy * g_Galaxy(0);
 ClassManager< GeneratorClass > * g_GeneratorClassManager(0);
 Graphics::Engine * g_GraphicsEngine(0);
-Graphics::Scene * g_MainScene(0);
+Graphics::View * g_MainView(0);
 Graphics::Node * g_CommodityLayer(0);
 Graphics::Node * g_PlanetLayer(0);
 Graphics::Node * g_ShipLayer(0);
@@ -174,7 +175,6 @@ Reference< CommandMind > g_InputMind;
 OutputObserver * g_CharacterObserver;
 float g_Width(0.0f);
 float g_Height(0.0f);
-float g_FieldOfView(45.0f);
 System * g_CurrentSystem;
 float g_TimeWarp(1.0f);
 bool g_Quit(false);
@@ -990,7 +990,6 @@ void UpdateUserInterface(void)
 void RenderSystem(System * System)
 {
 	assert(System != 0);
-	assert(g_MainScene != 0);
 	
 	Matrix4f SpacialMatrix(-g_CameraPosition.m_V.m_A[0], -g_CameraPosition.m_V.m_A[1], -g_CameraPosition.m_V.m_A[2]);
 
@@ -1006,8 +1005,10 @@ void RenderSystem(System * System)
 		}
 		SpacialMatrix.Transform(Matrix4f(-g_CameraFocus->GetAspectPosition()->GetPosition().m_V.m_A[0], -g_CameraFocus->GetAspectPosition()->GetPosition().m_V.m_A[1], 0.0f));
 	}
-	g_MainScene->GetCamera()->SetSpacialMatrix(SpacialMatrix);
-	g_MainScene->Render();
+	assert(g_MainView != 0);
+	assert(g_MainView->GetCamera() != 0);
+	g_MainView->GetCamera()->SetSpacialMatrix(SpacialMatrix);
+	g_MainView->Render();
 	// HUD
 	if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0) && (g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget().IsValid() == true))
 	{
@@ -1085,10 +1086,10 @@ void Resize(void)
 	{
 		g_Height = 1;
 	}
-	if(g_MainScene != 0)
+	if(g_MainView != 0)
 	{
-		assert(g_MainScene->GetCamera() != 0);
-		g_MainScene->GetCamera()->SetAspect(g_Width / g_Height);
+		assert(g_MainView->GetCamera() != 0);
+		g_MainView->GetCamera()->SetAspect(g_Width / g_Height);
 	}
 	glViewport(0, 0, static_cast< GLint >(g_Width), static_cast< GLint >(g_Height));
 	g_UserInterface->GetRootWidget()->SetSize(Vector2f(g_Width, g_Height));
@@ -1309,41 +1310,37 @@ void PopulateSystem(System * System)
 void OnOutputEnterSystem(System * EnterSystem)
 {
 	assert(g_SpawnShipTimeoutNotification.IsValid() == false);
-	assert(g_MainScene == 0);
 	assert(g_CommodityLayer == 0);
 	assert(g_ParticleSystemsLayer == 0);
 	assert(g_PlanetLayer == 0);
 	assert(g_ShipLayer == 0);
 	assert(g_ShotLayer == 0);
-	g_SpawnShipTimeoutNotification = g_GameTimeTimeoutNotifications->Add(GameTime::Get() + GetRandomFloatFromExponentialDistribution(1.0f / EnterSystem->GetTrafficDensity()), Bind1(Callback(SpawnShipOnTimeout), EnterSystem));
+	assert(g_MainView != 0);
+	assert(g_MainView->GetScene() == 0);
 	// build the static setup of the scene
-	g_MainScene = new Graphics::Scene();
-	g_MainScene->SetDestroyCallback(Callback(OnGraphicsNodeDestroy));
-	assert(g_MainScene->GetCamera() != 0);
-	g_MainScene->GetCamera()->SetFieldOfView(g_FieldOfView);
-	g_MainScene->GetCamera()->SetAspect(g_Width / g_Height);
-	g_MainScene->GetCamera()->SetNearClippingPlane(1.0f);
-	g_MainScene->GetCamera()->SetFarClippingPlane(1000.0f);
+	Graphics::Scene * MainScene(new Graphics::Scene());
+	
+	MainScene->SetDestroyCallback(Callback(OnGraphicsNodeDestroy));
 	
 	const Star * Star(EnterSystem->GetStar());
 	
 	if(Star != 0)
 	{
-		g_MainScene->ActivateLight();
-		assert(g_MainScene->GetLight() != 0);
+		MainScene->ActivateLight();
+		assert(MainScene->GetLight() != 0);
 		assert(Star->GetAspectPosition() != 0);
-		g_MainScene->GetLight()->SetPosition(Star->GetAspectPosition()->GetPosition().m_V.m_A[0], Star->GetAspectPosition()->GetPosition().m_V.m_A[1], 100.0f);
-		g_MainScene->GetLight()->SetDiffuseColor(Star->GetColor().GetColor().m_V.m_A[0], Star->GetColor().GetColor().m_V.m_A[1], Star->GetColor().GetColor().m_V.m_A[2], Star->GetColor().GetColor().m_V.m_A[3]);
+		MainScene->GetLight()->SetPosition(Star->GetAspectPosition()->GetPosition().m_V.m_A[0], Star->GetAspectPosition()->GetPosition().m_V.m_A[1], 100.0f);
+		MainScene->GetLight()->SetDiffuseColor(Star->GetColor().GetColor().m_V.m_A[0], Star->GetColor().GetColor().m_V.m_A[1], Star->GetColor().GetColor().m_V.m_A[2], Star->GetColor().GetColor().m_V.m_A[3]);
 	}
 	else
 	{
-		g_MainScene->DeactivateLight();
+		MainScene->DeactivateLight();
 	}
-	g_GraphicsEngine->AddScene(g_MainScene);
+	g_MainView->SetScene(MainScene);
 	
 	Graphics::Node * RootNode(new Graphics::Node());
 	
-	g_MainScene->SetRootNode(RootNode);
+	MainScene->SetRootNode(RootNode);
 	g_CommodityLayer = new Graphics::Node();
 	g_ParticleSystemsLayer = new Graphics::Node();
 	g_PlanetLayer = new Graphics::Node();
@@ -1369,6 +1366,7 @@ void OnOutputEnterSystem(System * EnterSystem)
 	{
 		VisualizeShip(*ShipIterator, g_ShipLayer);
 	}
+	g_SpawnShipTimeoutNotification = g_GameTimeTimeoutNotifications->Add(GameTime::Get() + GetRandomFloatFromExponentialDistribution(1.0f / EnterSystem->GetTrafficDensity()), Bind1(Callback(SpawnShipOnTimeout), EnterSystem));
 }
 
 void OnOutputLeaveSystem(System * System)
@@ -1378,9 +1376,11 @@ void OnOutputLeaveSystem(System * System)
 	{
 		g_SpawnShipTimeoutNotification.Dismiss();
 	}
-	g_GraphicsEngine->RemoveScene(g_MainScene);
-	delete g_MainScene;
-	g_MainScene = 0;
+	
+	Graphics::Scene * MainScene(g_MainView->GetScene());
+	
+	g_MainView->SetScene(0);
+	delete MainScene;
 }
 
 std::string MakeTimeStampedFileName(const std::string & Name, const std::string & Extension)
@@ -1464,9 +1464,10 @@ void GameFrame(void)
 	double PhysicsTimeBegin(RealTime::Get());
 	float Seconds(CalculateTime());
 	
-	if(g_MainScene != 0)
+	assert(g_MainView != 0);
+	if(g_MainView->GetScene() != 0)
 	{
-		g_MainScene->Update(Seconds);
+		g_MainView->GetScene()->Update(Seconds);
 	}
 	if(CurrentSystem != 0)
 	{
@@ -1682,11 +1683,15 @@ void LoadGameFromElement(const Element * SaveElement)
 				{
 					if((*CameraChild)->HasAttribute("degree") == true)
 					{
-						g_FieldOfView = from_string_cast< float >((*CameraChild)->GetAttribute("degree")) * M_PI / 360.0f;
+						assert(g_MainView != 0);
+						assert(g_MainView->GetCamera() != 0);
+						g_MainView->GetCamera()->SetFieldOfView(from_string_cast< float >((*CameraChild)->GetAttribute("degree")) * M_PI / 360.0f);
 					}
 					else if((*CameraChild)->HasAttribute("radians") == true)
 					{
-						g_FieldOfView = from_string_cast< float >((*CameraChild)->GetAttribute("radians"));
+						assert(g_MainView != 0);
+						assert(g_MainView->GetCamera() != 0);
+						g_MainView->GetCamera()->SetFieldOfView(from_string_cast< float >((*CameraChild)->GetAttribute("radians")));
 					}
 				}
 				else
@@ -2351,7 +2356,9 @@ void SaveGame(std::ostream & OStream)
 		}
 		XML << element << "focus" << attribute << "object-identifier" << value << g_CameraFocus->GetObjectIdentifier() << end;
 	}
-	XML << element << "field-of-view" << attribute << "radians" << value << g_FieldOfView << end;
+	assert(g_MainView != 0);
+	assert(g_MainView->GetCamera() != 0);
+	XML << element << "field-of-view" << attribute << "radians" << value << g_MainView->GetCamera()->GetFieldOfView() << end;
 	XML << end; // camera
 	// now save the impoartant objects
 	if(g_InputMind.IsValid() == true)
@@ -2388,10 +2395,9 @@ void SaveGame(std::ostream & OStream)
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 void ActionDecreaseFieldOfView(void)
 {
-	if((g_MainScene != 0) && (g_MainScene->GetCamera() != 0))
-	{
-		g_MainScene->GetCamera()->SetFieldOfView(0.9f * g_MainScene->GetCamera()->GetFieldOfView());
-	}
+	assert(g_MainView != 0);
+	assert(g_MainView->GetCamera() != 0);
+	g_MainView->GetCamera()->SetFieldOfView(0.9f * g_MainView->GetCamera()->GetFieldOfView());
 }
 
 void ActionDecreaseTimeWarp(void)
@@ -2526,10 +2532,7 @@ void ActionFocusCameraOnPreviousShip(void)
 
 void ActionIncreaseFieldOfView(void)
 {
-	if((g_MainScene != 0) && (g_MainScene->GetCamera() != 0))
-	{
-		g_MainScene->GetCamera()->SetFieldOfView(1.1f * g_MainScene->GetCamera()->GetFieldOfView());
-	}
+	g_MainView->GetCamera()->SetFieldOfView(1.1f * g_MainView->GetCamera()->GetFieldOfView());
 }
 
 void ActionIncreaseTimeWarp(void)
@@ -3551,7 +3554,12 @@ int main(int argc, char ** argv)
 	g_Galaxy = 0;
 	g_GeneratorClassManager = new ClassManager< GeneratorClass >();
 	g_GraphicsEngine = new Graphics::Engine();
-	g_MainScene = 0;
+	g_MainView = new Graphics::View();
+	assert(g_MainView->GetCamera() != 0);
+	g_MainView->GetCamera()->SetAspect(g_Width / g_Height);
+	g_MainView->GetCamera()->SetNearClippingPlane(1.0f);
+	g_MainView->GetCamera()->SetFarClippingPlane(1000.0f);
+	g_GraphicsEngine->AddView(g_MainView);
 	g_MessageDispatcher = new MessageDispatcher();
 	g_ObjectFactory = new ObjectFactory();
 	g_ShipClassManager = new ClassManager< ShipClass >();
@@ -3624,6 +3632,8 @@ int main(int argc, char ** argv)
 	delete g_CommodityClassManager;
 	delete g_GameTimeTimeoutNotifications;
 	delete g_GeneratorClassManager;
+	g_GraphicsEngine->RemoveView(g_MainView);
+	delete g_MainView;
 	delete g_GraphicsEngine;
 	delete g_MessageDispatcher;
 	delete g_ObjectFactory;
