@@ -273,6 +273,7 @@ graphics_engine_cpp = \
 	$(graphics_engine_h) \
 	$(graphics_mesh_manager_h) \
 	$(graphics_model_manager_h) \
+	$(graphics_node_h) \
 	$(graphics_scene_h) \
 	$(graphics_texture_manager_h)
 
@@ -344,7 +345,8 @@ graphics_model_node_h = \
 graphics_node_cpp = \
 	graphics/node.cpp \
 	$(graphics_engine_h) \
-	$(graphics_node_h)
+	$(graphics_node_h) \
+	$(graphics_scene_h)
 
 graphics_node_h = \
 	graphics/node.h \
@@ -358,6 +360,7 @@ graphics_particle_system_cpp = \
 	$(globals_h) \
 	$(graphics_engine_h) \
 	$(graphics_particle_system_h) \
+	$(graphics_scene_h) \
 	$(graphics_texture_h) \
 	$(graphics_texture_manager_h) \
 	$(math_h) \

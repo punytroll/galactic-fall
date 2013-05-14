@@ -55,7 +55,6 @@ void ObjectAspectVisualization::Destroy(void)
 		Reference< Graphics::Node > Visualization(GetVisualization());
 		
 		UnsetVisualization();
-		Visualization->Remove();
 		Visualization->Destroy();
 	}
 }

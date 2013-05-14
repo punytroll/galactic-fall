@@ -28,6 +28,7 @@
 #include "../system_statistics.h"
 #include "engine.h"
 #include "particle_system.h"
+#include "scene.h"
 #include "texture.h"
 #include "texture_manager.h"
 
@@ -103,7 +104,7 @@ void Graphics::ParticleSystem::Draw(void)
 {
 	if(g_ParticleTexture == 0)
 	{
-		g_ParticleTexture = GetEngine()->GetTextureManager()->Get("particle");
+		g_ParticleTexture = GetScene()->GetEngine()->GetTextureManager()->Get("particle");
 		assert(g_ParticleTexture != 0);
 	}
 	glPushMatrix();

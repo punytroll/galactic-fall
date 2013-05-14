@@ -29,7 +29,6 @@
 
 namespace Graphics
 {
-	class Engine;
 	class Scene;
 	
 	class Node
@@ -74,19 +73,13 @@ namespace Graphics
 		 **/
 		void AddNode(Graphics::Node * Content);
 		
-		/**
-		 * @brief Removes a node from the container.
-		 **/
-		void RemoveNode(Graphics::Node * Content);
-		
-		void Remove(void);
-		
 		Graphics::Node * GetContainer(void);
 		const Graphics::Node * GetContainer(void) const;
 		std::vector< Graphics::Node * > & GetContent(void);
-		Graphics::Engine * GetEngine(void);
 		const Quaternion & GetOrientation(void) const;
 		const Vector3f & GetPosition(void) const;
+		Graphics::Scene * GetScene(void);
+		// setters
 		void SetOrientation(const Quaternion & Orientation);
 		void SetPosition(const Vector3f & Position);
 	private:
@@ -95,70 +88,64 @@ namespace Graphics
 		 * 
 		 * This function is only used internally, which is, why it is private.
 		 **/
-		void SetContainer(Graphics::Node * Container);
-		void SetEngine(Graphics::Engine * Engine);
+		void _SetContainer(Graphics::Node * Container);
+		void _SetScene(Graphics::Scene * Scene);
 		
-		Graphics::Node * m_Container;
-		std::vector< Graphics::Node * > m_Content;
-		Graphics::Engine * m_Engine;
-		Quaternion m_Orientation;
-		Vector3f m_Position;
+		Graphics::Node * _Container;
+		std::vector< Graphics::Node * > _Content;
+		Quaternion _Orientation;
+		Vector3f _Position;
+		Graphics::Scene * _Scene;
 	};
 	
 	inline Graphics::Node * Node::GetContainer(void)
 	{
-		return m_Container;
+		return _Container;
 	}
 	
 	inline const Graphics::Node * Node::GetContainer(void) const
 	{
-		return m_Container;
+		return _Container;
 	}
 	
 	inline std::vector< Graphics::Node * > & Node::GetContent(void)
 	{
-		return m_Content;
+		return _Content;
 	}
 	
-	inline Graphics::Engine * Node::GetEngine(void)
+	inline Graphics::Scene* Node::GetScene(void)
 	{
-		return m_Engine;
+		return _Scene;
 	}
 	
 	inline const Quaternion & Node::GetOrientation(void) const
 	{
-		return m_Orientation;
+		return _Orientation;
 	}
 	
 	inline const Vector3f & Node::GetPosition(void) const
 	{
-		return m_Position;
-	}
-	
-	inline void Node::Remove(void)
-	{
-		assert(GetContainer() != 0);
-		m_Container->RemoveNode(this);
+		return _Position;
 	}
 	
 	inline void Node::SetOrientation(const Quaternion & Orientation)
 	{
-		m_Orientation = Orientation;
+		_Orientation = Orientation;
 	}
 	
 	inline void Node::SetPosition(const Vector3f & Position)
 	{
-		m_Position = Position;
+		_Position = Position;
 	}
 	
-	inline void Node::SetContainer(Graphics::Node * Container)
+	inline void Node::_SetContainer(Graphics::Node * Container)
 	{
-		m_Container = Container;
+		_Container = Container;
 	}
 	
-	inline void Node::SetEngine(Graphics::Engine * Engine)
+	inline void Node::_SetScene(Graphics::Scene * Scene)
 	{
-		m_Engine = Engine;
+		_Scene = Scene;
 	}
 }
 
