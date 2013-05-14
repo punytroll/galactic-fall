@@ -21,13 +21,11 @@
 
 #include <GL/gl.h>
 
-#include "camera.h"
 #include "light.h"
 #include "particle_system.h"
 #include "scene.h"
 
 Graphics::Scene::Scene(void) :
-	_Camera(new Graphics::Camera()),
 	_Engine(0),
 	_Light(0),
 	_RootNode(0)
@@ -36,9 +34,6 @@ Graphics::Scene::Scene(void) :
 
 Graphics::Scene::~Scene(void)
 {
-	assert(_Camera != 0);
-	delete _Camera;
-	_Camera = 0;
 	if(_Light != 0)
 	{
 		delete _Light;
@@ -104,12 +99,7 @@ void Graphics::Scene::OnDestroy(Graphics::Node * Node)
 
 void Graphics::Scene::Render(void)
 {
-	assert(_Camera != 0);
 	assert(_RootNode != 0);
-	glMatrixMode(GL_PROJECTION);
-	glLoadMatrixf(_Camera->GetPerspectiveMatrix().Matrix());
-	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf(Matrix4f(_Camera->GetSpacialMatrix()).Transpose().Matrix());
 	if(_Light != 0)
 	{
 		glEnable(GL_LIGHT0);

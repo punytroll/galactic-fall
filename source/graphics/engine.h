@@ -27,8 +27,8 @@ namespace Graphics
 	class MeshManager;
 	class ModelManager;
 	class Node;
-	class Scene;
 	class TextureManager;
+	class View;
 	
 	class Engine
 	{
@@ -41,12 +41,12 @@ namespace Graphics
 		Graphics::ModelManager * GetModelManager(void);
 		Graphics::TextureManager * GetTextureManager(void);
 		// modifiers
-		void AddScene(Graphics::Scene * Scene);
-		void RemoveScene(Graphics::Scene * Scene);
+		void AddView(Graphics::View * View);
+		void RemoveView(Graphics::View * View);
 	private:
 		Graphics::MeshManager * _MeshManager;
 		Graphics::ModelManager * _ModelManager;
-		std::vector< Graphics::Scene * > _Scenes;
+		std::vector< Graphics::View * > _Views;
 		Graphics::TextureManager * _TextureManager;
 	};
 	
