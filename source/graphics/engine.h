@@ -20,11 +20,7 @@
 #ifndef GRAPHICS_ENGINE_H
 #define GRAPHICS_ENGINE_H
 
-#include <assert.h>
-
 #include <vector>
-
-#include "../callbacks/callbacks.h"
 
 namespace Graphics
 {
@@ -41,28 +37,18 @@ namespace Graphics
 		Engine(void);
 		~Engine(void);
 		// getters
-		Callback1< void, Graphics::Node * > GetDestroyCallback(void);
 		Graphics::MeshManager * GetMeshManager(void);
 		Graphics::ModelManager * GetModelManager(void);
 		Graphics::TextureManager * GetTextureManager(void);
 		// modifiers
 		void AddScene(Graphics::Scene * Scene);
 		void RemoveScene(Graphics::Scene * Scene);
-		void SetDestroyCallback(Callback1< void, Graphics::Node * > Callback);
-		void UnsetDestroyCallback(void);
-		void OnDestroy(Graphics::Node * Node);
 	private:
-		Callback1< void, Graphics::Node * > _DestroyCallback;
 		Graphics::MeshManager * _MeshManager;
 		Graphics::ModelManager * _ModelManager;
 		std::vector< Graphics::Scene * > _Scenes;
 		Graphics::TextureManager * _TextureManager;
 	};
-	
-	inline Callback1< void, Graphics::Node * > Engine::GetDestroyCallback(void)
-	{
-		return _DestroyCallback;
-	}
 	
 	inline Graphics::MeshManager * Engine::GetMeshManager(void)
 	{
@@ -77,11 +63,6 @@ namespace Graphics
 	inline Graphics::TextureManager * Engine::GetTextureManager(void)
 	{
 		return _TextureManager;
-	}
-	
-	inline void Engine::SetDestroyCallback(Callback1< void, Graphics::Node * > Callback)
-	{
-		_DestroyCallback = Callback;
 	}
 }
 

@@ -22,7 +22,6 @@
 #include "engine.h"
 #include "mesh_manager.h"
 #include "model_manager.h"
-#include "node.h"
 #include "scene.h"
 #include "texture_manager.h"
 
@@ -57,15 +56,4 @@ void Graphics::Engine::RemoveScene(Graphics::Scene * Scene)
 	assert(Scene != 0);
 	assert(Scene->GetEngine() == this);
 	_Scenes.erase(std::find(_Scenes.begin(), _Scenes.end(), Scene));
-}
-
-void Graphics::Engine::OnDestroy(Graphics::Node * Node)
-{
-	assert(Node->GetContainer() == 0);
-	assert(Node->GetScene() == 0);
-	assert(Node->GetContent().empty() == true);
-	if(_DestroyCallback.IsValid() == true)
-	{
-		_DestroyCallback(Node);
-	}
 }
