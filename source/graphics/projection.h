@@ -17,40 +17,32 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include <assert.h>
+#ifndef GRAPHICS_PROJECTION_H
+#define GRAPHICS_PROJECTION_H
 
-#include "camera.h"
+#include "../math/matrix4f.h"
 
-Graphics::Camera::Camera(void) :
-	_Projection(0)
+namespace Graphics
 {
-}
-
-Graphics::Camera::~Camera(void)
-{
-	assert(_Projection == 0);
-}
-
-const Matrix4f & Graphics::Camera::GetSpacialMatrix(void) const
-{
-	return _SpacialMatrix;
-}
-
-void Graphics::Camera::SetProjection(Graphics::Projection * Projection)
-{
-	if(Projection == 0)
+	class Projection
 	{
-		assert(_Projection != 0);
-		_Projection = 0;
-	}
-	else
+	public:
+		Projection(void);
+		virtual ~Projection(void);
+		// getters
+		const Matrix4f & GetMatrix(void) const;
+	protected:
+		void InvalidateMatrix();
+		virtual Matrix4f CalculateMatrix(void) const = 0;
+	private:
+		mutable Matrix4f _Matrix;
+		mutable bool _MatrixValid;
+	};
+	
+	inline void Projection::InvalidateMatrix(void)
 	{
-		assert(_Projection == 0);
-		_Projection = Projection;
+		_MatrixValid = false;
 	}
 }
 
-void Graphics::Camera::SetSpacialMatrix(const Matrix4f & SpacialMatrix)
-{
-	_SpacialMatrix = SpacialMatrix;
-}
+#endif
