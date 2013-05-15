@@ -24,51 +24,27 @@
 
 namespace Graphics
 {
+	class Projection;
+	
 	class Camera
 	{
 	public:
 		Camera(void);
+		~Camera(void);
 		// getters
-		float GetAspect(void) const;
-		float GetFarClippingPlane(void) const;
-		float GetFieldOfView(void) const;
-		float GetNearClippingPlane(void) const;
-		const Matrix4f & GetPerspectiveMatrix(void) const;
+		Graphics::Projection * GetProjection(void);
 		const Matrix4f & GetSpacialMatrix(void) const;
 		// setters
-		void SetAspect(float Aspect);
-		void SetFarClippingPlane(float FarClippingPlane);
-		void SetFieldOfView(float FieldOfView);
-		void SetNearClippingPlane(float NearClippingPlane);
+		void SetProjection(Graphics::Projection * Projection);
 		void SetSpacialMatrix(const Matrix4f & SpacialMatrix);
 	private:
-		float _Aspect;
-		float _FarClippingPlane;
-		float _FieldOfView;
-		float _NearClippingPlane;
-		mutable Matrix4f _PerspectiveMatrix;
-		mutable bool _PerspectiveMatrixInitialized;
+		Graphics::Projection * _Projection;
 		Matrix4f _SpacialMatrix;
 	};
 	
-	inline float Camera::GetAspect(void) const
+	inline Graphics::Projection * Camera::GetProjection(void)
 	{
-		return _Aspect;
-	}
-	
-	inline float Camera::GetFarClippingPlane(void) const
-	{
-		return _FarClippingPlane;
-	}
-	
-	inline float Camera::GetFieldOfView(void) const
-	{
-		return _FieldOfView;
-	}
-	
-	inline float Camera::GetNearClippingPlane(void) const
-	{
-		return _NearClippingPlane;
+		return _Projection;
 	}
 }
 

@@ -60,6 +60,7 @@
 #include "graphics/model_manager.h"
 #include "graphics/model_node.h"
 #include "graphics/particle_system.h"
+#include "graphics/perspective_projection.h"
 #include "graphics/scene.h"
 #include "graphics/texture_manager.h"
 #include "graphics/view.h"
@@ -130,6 +131,7 @@ ClassManager< CommodityClass > * g_CommodityClassManager(0);
 Galaxy * g_Galaxy(0);
 ClassManager< GeneratorClass > * g_GeneratorClassManager(0);
 Graphics::Engine * g_GraphicsEngine(0);
+Graphics::PerspectiveProjection * g_MainProjection(0);
 Graphics::View * g_MainView(0);
 Graphics::Node * g_CommodityLayer(0);
 Graphics::Node * g_PlanetLayer(0);
@@ -1088,8 +1090,8 @@ void Resize(void)
 	}
 	if(g_MainView != 0)
 	{
-		assert(g_MainView->GetCamera() != 0);
-		g_MainView->GetCamera()->SetAspect(g_Width / g_Height);
+		assert(g_MainProjection != 0);
+		g_MainProjection->SetAspect(g_Width / g_Height);
 	}
 	glViewport(0, 0, static_cast< GLint >(g_Width), static_cast< GLint >(g_Height));
 	g_UserInterface->GetRootWidget()->SetSize(Vector2f(g_Width, g_Height));
@@ -1682,15 +1684,13 @@ void LoadGameFromElement(const Element * SaveElement)
 				{
 					if((*CameraChild)->HasAttribute("degree") == true)
 					{
-						assert(g_MainView != 0);
-						assert(g_MainView->GetCamera() != 0);
-						g_MainView->GetCamera()->SetFieldOfView(from_string_cast< float >((*CameraChild)->GetAttribute("degree")) * M_PI / 360.0f);
+						assert(g_MainProjection != 0);
+						g_MainProjection->SetFieldOfView(from_string_cast< float >((*CameraChild)->GetAttribute("degree")) * M_PI / 360.0f);
 					}
 					else if((*CameraChild)->HasAttribute("radians") == true)
 					{
-						assert(g_MainView != 0);
-						assert(g_MainView->GetCamera() != 0);
-						g_MainView->GetCamera()->SetFieldOfView(from_string_cast< float >((*CameraChild)->GetAttribute("radians")));
+						assert(g_MainProjection != 0);
+						g_MainProjection->SetFieldOfView(from_string_cast< float >((*CameraChild)->GetAttribute("radians")));
 					}
 				}
 				else
@@ -2355,9 +2355,8 @@ void SaveGame(std::ostream & OStream)
 		}
 		XML << element << "focus" << attribute << "object-identifier" << value << g_CameraFocus->GetObjectIdentifier() << end;
 	}
-	assert(g_MainView != 0);
-	assert(g_MainView->GetCamera() != 0);
-	XML << element << "field-of-view" << attribute << "radians" << value << g_MainView->GetCamera()->GetFieldOfView() << end;
+	assert(g_MainProjection != 0);
+	XML << element << "field-of-view" << attribute << "radians" << value << g_MainProjection->GetFieldOfView() << end;
 	XML << end; // camera
 	// now save the impoartant objects
 	if(g_InputMind.IsValid() == true)
@@ -2394,9 +2393,8 @@ void SaveGame(std::ostream & OStream)
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 void ActionDecreaseFieldOfView(void)
 {
-	assert(g_MainView != 0);
-	assert(g_MainView->GetCamera() != 0);
-	g_MainView->GetCamera()->SetFieldOfView(0.9f * g_MainView->GetCamera()->GetFieldOfView());
+	assert(g_MainProjection != 0);
+	g_MainProjection->SetFieldOfView(0.9f * g_MainProjection->GetFieldOfView());
 }
 
 void ActionDecreaseTimeWarp(void)
@@ -2531,7 +2529,8 @@ void ActionFocusCameraOnPreviousShip(void)
 
 void ActionIncreaseFieldOfView(void)
 {
-	g_MainView->GetCamera()->SetFieldOfView(1.1f * g_MainView->GetCamera()->GetFieldOfView());
+	assert(g_MainProjection != 0);
+	g_MainProjection->SetFieldOfView(1.1f * g_MainProjection->GetFieldOfView());
 }
 
 void ActionIncreaseTimeWarp(void)
@@ -3552,11 +3551,13 @@ int main(int argc, char ** argv)
 	g_Galaxy = 0;
 	g_GeneratorClassManager = new ClassManager< GeneratorClass >();
 	g_GraphicsEngine = new Graphics::Engine();
+	g_MainProjection = new Graphics::PerspectiveProjection();
+	g_MainProjection->SetAspect(g_Width / g_Height);
+	g_MainProjection->SetNearClippingPlane(1.0f);
+	g_MainProjection->SetFarClippingPlane(1000.0f);
 	g_MainView = new Graphics::View();
 	assert(g_MainView->GetCamera() != 0);
-	g_MainView->GetCamera()->SetAspect(g_Width / g_Height);
-	g_MainView->GetCamera()->SetNearClippingPlane(1.0f);
-	g_MainView->GetCamera()->SetFarClippingPlane(1000.0f);
+	g_MainView->GetCamera()->SetProjection(g_MainProjection);
 	g_GraphicsEngine->AddView(g_MainView);
 	g_MessageDispatcher = new MessageDispatcher();
 	g_ObjectFactory = new ObjectFactory();
@@ -3630,6 +3631,12 @@ int main(int argc, char ** argv)
 	delete g_CommodityClassManager;
 	delete g_GameTimeTimeoutNotifications;
 	delete g_GeneratorClassManager;
+	assert(g_MainView != 0);
+	assert(g_MainView->GetCamera() != 0);
+	assert(g_MainView->GetCamera()->GetProjection() == g_MainProjection);
+	assert(g_MainProjection != 0);
+	g_MainView->GetCamera()->SetProjection(0);
+	delete g_MainProjection;
 	g_GraphicsEngine->RemoveView(g_MainView);
 	delete g_MainView;
 	delete g_GraphicsEngine;

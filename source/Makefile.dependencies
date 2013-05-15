@@ -369,6 +369,23 @@ graphics_particle_system_h = \
 	$(graphics_node_h) \
 	$(math_vector3f_h)
 
+graphics_perspective_projection_cpp = \
+	graphics/perspective_projection.cpp \
+	$(graphics_perspective_projection_h)
+
+graphics_perspective_projection_h = \
+	graphics/perspective_projection.h \
+	$(graphics_projection_h) \
+	$(math_matrix4f_h)
+
+graphics_projection_cpp = \
+	graphics/projection.cpp \
+	$(graphics_projection_h)
+
+graphics_projection_h = \
+	graphics/projection.h \
+	$(math_matrix4f_h)
+
 graphics_scene_cpp = \
 	graphics/scene.cpp \
 	$(graphics_light_h) \
@@ -398,6 +415,7 @@ graphics_texture_manager_h = \
 graphics_view_cpp = \
 	graphics/view.cpp \
 	$(graphics_camera_h) \
+	$(graphics_projection_h) \
 	$(graphics_scene_h) \
 	$(graphics_view_h)
 
@@ -444,6 +462,7 @@ main_cpp = \
 	$(graphics_model_manager_h) \
 	$(graphics_model_node_h) \
 	$(graphics_particle_system_h) \
+	$(graphics_perspective_projection_h) \
 	$(graphics_scene_h) \
 	$(graphics_texture_manager_h) \
 	$(graphics_view_h) \
