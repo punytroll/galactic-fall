@@ -59,6 +59,7 @@
 #include "graphics/model.h"
 #include "graphics/model_manager.h"
 #include "graphics/model_node.h"
+#include "graphics/orthogonal_2d_projection.h"
 #include "graphics/particle_system.h"
 #include "graphics/perspective_projection.h"
 #include "graphics/scene.h"
@@ -133,6 +134,8 @@ ClassManager< GeneratorClass > * g_GeneratorClassManager(0);
 Graphics::Engine * g_GraphicsEngine(0);
 Graphics::PerspectiveProjection * g_MainProjection(0);
 Graphics::View * g_MainView(0);
+Graphics::Orthogonal2DProjection * g_UIProjection(0);
+Graphics::View * g_UIView(0);
 Graphics::Node * g_CommodityLayer(0);
 Graphics::Node * g_PlanetLayer(0);
 Graphics::Node * g_ShipLayer(0);
@@ -450,6 +453,7 @@ void CollectWidgetsRecurrent(void)
 
 void DisplayUserInterface(void)
 {
+	g_UIView->Render();
 	glPushAttrib(GL_ENABLE_BIT);
 	glDisable(GL_LIGHTING);
 	glDisable(GL_DEPTH_TEST);
@@ -459,11 +463,6 @@ void DisplayUserInterface(void)
 	glEnable(GL_CLIP_PLANE2);
 	glEnable(GL_CLIP_PLANE3);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glOrtho(0.0, static_cast< GLdouble >(g_Width), static_cast< GLdouble >(g_Height), 0.0, -1.0, 1.0);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
 	g_UserInterface->Draw();
 	glPopAttrib();
 }
@@ -1011,7 +1010,6 @@ void UpdateMainViewCamera(void)
 
 void DisplayMainView(void)
 {
-	assert(g_MainView->GetScene() != 0);
 	g_MainView->Render();
 	// HUD
 	if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0) && (g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget().IsValid() == true))
@@ -1090,12 +1088,17 @@ void Resize(void)
 	{
 		g_Height = 1;
 	}
-	if(g_MainView != 0)
+	if(g_MainProjection != 0)
 	{
-		assert(g_MainProjection != 0);
 		g_MainProjection->SetAspect(g_Width / g_Height);
 	}
-	glViewport(0, 0, static_cast< GLint >(g_Width), static_cast< GLint >(g_Height));
+	if(g_UIProjection != 0)
+	{
+		g_UIProjection->SetRight(g_Width);
+		g_UIProjection->SetBottom(g_Height);
+	}
+	assert(g_UserInterface != 0);
+	assert(g_UserInterface->GetRootWidget() != 0);
 	g_UserInterface->GetRootWidget()->SetSize(Vector2f(g_Width, g_Height));
 }
 
@@ -1490,10 +1493,7 @@ void GameFrame(void)
 	glViewport(0, 0, static_cast< GLsizei >(g_Width), static_cast< GLsizei >(g_Height));
 	glClear(GL_COLOR_BUFFER_BIT);
 	glClear(GL_DEPTH_BUFFER_BIT);
-	if(g_MainView->GetScene() != 0)
-	{
-		DisplayMainView();
-	}
+	DisplayMainView();
 	DisplayUserInterface();
 	RealTime::Invalidate();
 	
@@ -3554,6 +3554,20 @@ int main(int argc, char ** argv)
 	g_Galaxy = 0;
 	g_GeneratorClassManager = new ClassManager< GeneratorClass >();
 	g_GraphicsEngine = new Graphics::Engine();
+	g_UIProjection = new Graphics::Orthogonal2DProjection();
+	g_UIProjection->SetLeft(0.0f);
+	g_UIProjection->SetRight(g_Width);
+	g_UIProjection->SetTop(0.0f);
+	g_UIProjection->SetBottom(g_Height);
+	g_UIView = new Graphics::View();
+	assert(g_UIView->GetCamera() != 0);
+	g_UIView->GetCamera()->SetProjection(g_UIProjection);
+	
+	Matrix4f UISpacialMatrix;
+	
+	UISpacialMatrix.Translation(0.0f, 0.0f, 0.0f);
+	g_UIView->GetCamera()->SetSpacialMatrix(UISpacialMatrix);
+	g_GraphicsEngine->AddView(g_UIView);
 	g_MainProjection = new Graphics::PerspectiveProjection();
 	g_MainProjection->SetAspect(g_Width / g_Height);
 	g_MainProjection->SetNearClippingPlane(1.0f);
@@ -3634,6 +3648,14 @@ int main(int argc, char ** argv)
 	delete g_CommodityClassManager;
 	delete g_GameTimeTimeoutNotifications;
 	delete g_GeneratorClassManager;
+	assert(g_UIView != 0);
+	assert(g_UIView->GetCamera() != 0);
+	assert(g_UIView->GetCamera()->GetProjection() == g_UIProjection);
+	assert(g_UIProjection != 0);
+	g_UIView->GetCamera()->SetProjection(0);
+	delete g_UIProjection;
+	g_GraphicsEngine->RemoveView(g_UIView);
+	delete g_UIView;
 	assert(g_MainView != 0);
 	assert(g_MainView->GetCamera() != 0);
 	assert(g_MainView->GetCamera()->GetProjection() == g_MainProjection);
