@@ -457,11 +457,9 @@ void DisplayUserInterface(void)
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glOrtho(0.0, static_cast< GLfloat >(g_Width), 0.0, static_cast< GLfloat >(g_Height), -1, 1);
+	glOrtho(0.0, static_cast< GLdouble >(g_Width), static_cast< GLdouble >(g_Height), 0.0, -1.0, 1.0);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	glScalef(1.0f, -1.0f, 1.0f);
-	glTranslatef(0.0f, -g_Height, 0.0f);
 	glEnable(GL_CLIP_PLANE0);
 	glEnable(GL_CLIP_PLANE1);
 	glEnable(GL_CLIP_PLANE2);
