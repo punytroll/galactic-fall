@@ -37,12 +37,25 @@ Matrix4f Graphics::PerspectiveProjection::CalculateMatrix(void) const
 	float Top(_NearClippingPlane * tan(_FieldOfView));
 	float Right(Top * _Aspect);
 	
-	Result.m_M[1].m_A[0] = Result.m_M[2].m_A[0] = Result.m_M[3].m_A[0] = Result.m_M[0].m_A[1] = Result.m_M[2].m_A[1] = Result.m_M[3].m_A[1] = Result.m_M[0].m_A[2] = Result.m_M[1].m_A[2] = Result.m_M[0].m_A[3] = Result.m_M[1].m_A[3] = Result.m_M[3].m_A[3] = 0.0f;
 	Result.m_M[0].m_A[0] = _NearClippingPlane / Right;
+	Result.m_M[0].m_A[1] = 0.0f;
+	Result.m_M[0].m_A[2] = 0.0f;
+	Result.m_M[0].m_A[3] = 0.0f;
+	
+	Result.m_M[1].m_A[0] = 0.0f;
 	Result.m_M[1].m_A[1] = _NearClippingPlane / Top;
+	Result.m_M[1].m_A[2] = 0.0f;
+	Result.m_M[1].m_A[3] = 0.0f;
+	
+	Result.m_M[2].m_A[0] = 0.0f;
+	Result.m_M[2].m_A[1] = 0.0f;
 	Result.m_M[2].m_A[2] = -(_FarClippingPlane + _NearClippingPlane) / (_FarClippingPlane - _NearClippingPlane);
-	Result.m_M[3].m_A[2] = -(2.0f * _FarClippingPlane * _NearClippingPlane) / (_FarClippingPlane - _NearClippingPlane);
 	Result.m_M[2].m_A[3] = -1.0f;
+	
+	Result.m_M[3].m_A[0] = 0.0f;
+	Result.m_M[3].m_A[1] = 0.0f;
+	Result.m_M[3].m_A[2] = -(2.0f * _FarClippingPlane * _NearClippingPlane) / (_FarClippingPlane - _NearClippingPlane);
+	Result.m_M[3].m_A[3] = 0.0f;
 	
 	return Result;
 }
