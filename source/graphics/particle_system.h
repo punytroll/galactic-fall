@@ -44,7 +44,9 @@ namespace Graphics
 		
 		ParticleSystem(void);
 		bool Update(float Seconds);
-		void Draw(void);
+		virtual void Begin(void);
+		virtual void Draw(void);
+		virtual void End(void);
 		// setters
 		void SetVelocity(const Vector3f & Velocity);
 		void SetTimeOfDeath(double TimeOfDeath);

@@ -100,8 +100,9 @@ bool Graphics::ParticleSystem::Update(float Seconds)
 	return true;
 }
 
-void Graphics::ParticleSystem::Draw(void)
+void Graphics::ParticleSystem::Begin(void)
 {
+	Graphics::Node::Begin();
 	if(g_ParticleTexture == 0)
 	{
 		g_ParticleTexture = GetScene()->GetEngine()->GetTextureManager()->Get("particle");
@@ -116,6 +117,10 @@ void Graphics::ParticleSystem::Draw(void)
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 	g_ParticleTexture->Activate();
 	glEnable(GL_TEXTURE_2D);
+}
+
+void Graphics::ParticleSystem::Draw(void)
+{
 	glBegin(GL_QUADS);
 	for(std::list< Graphics::ParticleSystem::Particle >::iterator ParticleIterator = m_Particles.begin(); ParticleIterator != m_Particles.end(); ++ParticleIterator)
 	{
@@ -135,6 +140,11 @@ void Graphics::ParticleSystem::Draw(void)
 		glVertex3f(Position[0] - Size, Position[1] + Size, Position[2]);
 	}
 	glEnd();
+	Graphics::Node::Draw();
+}
+
+void Graphics::ParticleSystem::End(void)
+{
 	glPopAttrib();
 	glPopMatrix();
 }

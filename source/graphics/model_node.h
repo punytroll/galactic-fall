@@ -46,11 +46,6 @@ namespace Graphics
 		
 		virtual void Begin(void);
 		
-		/**
-		 * @brief Draws @em this node.
-		 * 
-		 * The default implementation is empty.
-		 **/
 		virtual void Draw(void);
 		
 		virtual void End(void);
