@@ -40,23 +40,18 @@ Graphics::Node::~Node(void)
 	assert(_Content.empty() == true);
 }
 
-void Graphics::Node::Render(void)
-{
-	Begin();
-	Draw();
-	for(std::vector< Graphics::Node * >::iterator ContentIterator = _Content.begin(); ContentIterator != _Content.end(); ++ContentIterator)
-	{
-		(*ContentIterator)->Render();
-	}
-	End();
-}
-
 void Graphics::Node::Begin(void)
 {
 }
 
 void Graphics::Node::Draw(void)
 {
+	for(std::vector< Graphics::Node * >::iterator ContentIterator = _Content.begin(); ContentIterator != _Content.end(); ++ContentIterator)
+	{
+		(*ContentIterator)->Begin();
+		(*ContentIterator)->Draw();
+		(*ContentIterator)->End();
+	}
 }
 
 void Graphics::Node::End(void)

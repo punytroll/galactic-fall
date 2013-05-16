@@ -50,20 +50,9 @@ namespace Graphics
 		 **/
 		void Destroy(void);
 		
-		/**
-		 * @brief Recursive operation to render all nodes.
-		 * 
-		 * Calls the virtual function Draw() to draw @em this node.
-		 **/
-		void Render(void);
 		
 		virtual void Begin(void);
 		
-		/**
-		 * @brief Draws @em this node.
-		 * 
-		 * The default implementation is empty.
-		 **/
 		virtual void Draw(void);
 		
 		virtual void End(void);

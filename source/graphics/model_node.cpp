@@ -47,6 +47,7 @@ Graphics::ModelNode::~ModelNode(void)
 
 void Graphics::ModelNode::Begin(void)
 {
+	Graphics::Node::Begin();
 	glPushMatrix();
 	glTranslatef(GetPosition()[0], GetPosition()[1], GetPosition()[2]);
 	glMultMatrixf(Matrix4f(GetOrientation()).Transpose().Matrix());
@@ -132,11 +133,13 @@ void Graphics::ModelNode::Draw(void)
 			glPopAttrib();
 		}
 	}
+	Graphics::Node::Draw();
 }
 
 void Graphics::ModelNode::End(void)
 {
 	glPopMatrix();
+	Graphics::Node::End();
 }
 
 bool Graphics::ModelNode::AddMaterial(const std::string & MeshName, Graphics::Material * Material)
