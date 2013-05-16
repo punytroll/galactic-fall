@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 1.4.2 of algebra.
+ * This is part of version 1.4.4 of algebra.
  **/
 
 #ifndef ALGEBRA_MATRIX4F_H
@@ -58,13 +58,18 @@ public:
 		this->m_M[0].m_A[0] = 1.0f - 2.0f * (YY + ZZ);
 		this->m_M[0].m_A[1] = 2.0f * (XY - ZW);
 		this->m_M[0].m_A[2] = 2.0f * (XZ + YW);
+		this->m_M[0].m_A[3] = 0.0f;
 		this->m_M[1].m_A[0] = 2.0f * (XY + ZW);
 		this->m_M[1].m_A[1] = 1.0f - 2.0f * (XX + ZZ);
 		this->m_M[1].m_A[2] = 2.0f * (YZ - XW);
+		this->m_M[1].m_A[3] = 0.0f;
 		this->m_M[2].m_A[0] = 2.0f * (XZ - YW);
 		this->m_M[2].m_A[1] = 2.0f * (YZ + XW);
 		this->m_M[2].m_A[2] = 1.0f - 2.0f * (XX + YY);
-		this->m_M[0].m_A[3] = this->m_M[1].m_A[3] = this->m_M[2].m_A[3] = this->m_M[3].m_A[0] = this->m_M[3].m_A[1] = this->m_M[3].m_A[2] = 0.0f;
+		this->m_M[2].m_A[3] = 0.0f;
+		this->m_M[3].m_A[0] = 0.0f;
+		this->m_M[3].m_A[1] = 0.0f;
+		this->m_M[3].m_A[2] = 0.0f;
 		this->m_M[3].m_A[3] = 1.0f;
 	}
 	
@@ -174,6 +179,30 @@ public:
 		std::swap(m_M[2].m_A[3], m_M[3].m_A[2]);
 		
 		return *this;
+	}
+	
+	Matrix4f Transposed(void) const
+	{
+		Matrix4f Result;
+		
+		Result.m_M[0].m_A[0] = m_M[0].m_A[0];
+		Result.m_M[0].m_A[1] = m_M[1].m_A[0];
+		Result.m_M[0].m_A[2] = m_M[2].m_A[0];
+		Result.m_M[0].m_A[3] = m_M[3].m_A[0];
+		Result.m_M[1].m_A[0] = m_M[0].m_A[1];
+		Result.m_M[1].m_A[1] = m_M[1].m_A[1];
+		Result.m_M[1].m_A[2] = m_M[2].m_A[1];
+		Result.m_M[1].m_A[3] = m_M[3].m_A[1];
+		Result.m_M[2].m_A[0] = m_M[0].m_A[2];
+		Result.m_M[2].m_A[1] = m_M[1].m_A[2];
+		Result.m_M[2].m_A[2] = m_M[2].m_A[2];
+		Result.m_M[2].m_A[3] = m_M[3].m_A[2];
+		Result.m_M[3].m_A[0] = m_M[0].m_A[3];
+		Result.m_M[3].m_A[1] = m_M[1].m_A[3];
+		Result.m_M[3].m_A[2] = m_M[2].m_A[3];
+		Result.m_M[3].m_A[3] = m_M[3].m_A[3];
+		
+		return Result;
 	}
 };
 
