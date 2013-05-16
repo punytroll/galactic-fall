@@ -38,20 +38,17 @@ Matrix4f Graphics::Orthogonal2DProjection::CalculateMatrix(void) const
 	Result.m_M[0].m_A[0] = 2.0f / (_Right - _Left);
 	Result.m_M[0].m_A[1] = 0.0f;
 	Result.m_M[0].m_A[2] = 0.0f;
-	Result.m_M[0].m_A[3] = 0.0f;
-	
+	Result.m_M[0].m_A[3] = (_Left + _Right) / (_Left - _Right);
 	Result.m_M[1].m_A[0] = 0.0f;
 	Result.m_M[1].m_A[1] = 2.0f / (_Top - _Bottom);
 	Result.m_M[1].m_A[2] = 0.0f;
-	Result.m_M[1].m_A[3] = 0.0f;
-	
+	Result.m_M[1].m_A[3] = (_Bottom + _Top) / (_Bottom - _Top);
 	Result.m_M[2].m_A[0] = 0.0f;
 	Result.m_M[2].m_A[1] = 0.0f;
 	Result.m_M[2].m_A[2] = -1.0f;
 	Result.m_M[2].m_A[3] = 0.0f;
-	
-	Result.m_M[3].m_A[0] = (_Left + _Right) / (_Left - _Right);
-	Result.m_M[3].m_A[1] = (_Bottom + _Top) / (_Bottom - _Top);
+	Result.m_M[3].m_A[0] = 0.0f;
+	Result.m_M[3].m_A[1] = 0.0f;
 	Result.m_M[3].m_A[2] = 0.0f;
 	Result.m_M[3].m_A[3] = 1.0f;
 	
