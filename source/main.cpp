@@ -3128,6 +3128,11 @@ void InitializeOpenGL(void)
 	glGetIntegerv(GL_MAX_FRAGMENT_UNIFORM_COMPONENTS, &MaximalNumberOfUniformComponentsForFragmentShaders);
 	ON_DEBUG(std::cout << "  Maximal number of uniform components for fragment shaders: " << MaximalNumberOfUniformComponentsForFragmentShaders << std::endl);
 	
+	int MaximalNumberOfVertexAtributes(0);
+	
+	glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &MaximalNumberOfVertexAtributes);
+	ON_DEBUG(std::cout << "  Maximal number of vertex attributes: " << MaximalNumberOfVertexAtributes << std::endl);
+	
 	// TODO: Make configurable via data.arx
 	Vector4f GlobalAmbientLightColor(0.0f, 0.0f, 0.0f, 0.0f);
 	
