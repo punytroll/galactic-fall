@@ -987,10 +987,8 @@ void UpdateUserInterface(void)
 	}
 }
 
-void RenderSystem(System * System)
+void UpdateMainViewCamera(void)
 {
-	assert(System != 0);
-	
 	Matrix4f SpacialMatrix(-g_CameraPosition.m_V.m_A[0], -g_CameraPosition.m_V.m_A[1], -g_CameraPosition.m_V.m_A[2]);
 
 	if(g_FirstPersonCameraMode == true)
@@ -999,6 +997,7 @@ void RenderSystem(System * System)
 	}
 	if(g_CameraFocus.IsValid() == true)
 	{
+		assert(g_CameraFocus->GetAspectPosition() != 0);
 		if(g_FirstPersonCameraMode == true)
 		{
 			SpacialMatrix.Transform(Matrix4f(g_CameraFocus->GetAspectPosition()->GetOrientation().Conjugated()));
@@ -1008,6 +1007,11 @@ void RenderSystem(System * System)
 	assert(g_MainView != 0);
 	assert(g_MainView->GetCamera() != 0);
 	g_MainView->GetCamera()->SetSpacialMatrix(SpacialMatrix);
+}
+
+void DisplayMainView(void)
+{
+	assert(g_MainView->GetScene() != 0);
 	g_MainView->Render();
 	// HUD
 	if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0) && (g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget().IsValid() == true))
@@ -1472,6 +1476,7 @@ void GameFrame(void)
 	{
 		CalculateMovements(CurrentSystem, Seconds);
 	}
+	UpdateMainViewCamera();
 	RealTime::Invalidate();
 	
 	double PhysicsTimeEnd(RealTime::Get());
@@ -1485,9 +1490,9 @@ void GameFrame(void)
 	glViewport(0, 0, static_cast< GLsizei >(g_Width), static_cast< GLsizei >(g_Height));
 	glClear(GL_COLOR_BUFFER_BIT);
 	glClear(GL_DEPTH_BUFFER_BIT);
-	if(CurrentSystem != 0)
+	if(g_MainView->GetScene() != 0)
 	{
-		RenderSystem(CurrentSystem);
+		DisplayMainView();
 	}
 	DisplayUserInterface();
 	RealTime::Invalidate();
@@ -3652,4 +3657,3 @@ int main(int argc, char ** argv)
 	
 	return 0;
 }
-
