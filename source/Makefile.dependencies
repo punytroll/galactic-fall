@@ -350,6 +350,15 @@ graphics_node_h = \
 	$(math_quaternion_h) \
 	$(math_vector3f_h)
 
+graphics_orthogonal_2d_projection_cpp = \
+	graphics/orthogonal_2d_projection.cpp \
+	$(graphics_orthogonal_2d_projection_h)
+
+graphics_orthogonal_2d_projection_h = \
+	graphics/orthogonal_2d_projection.h \
+	$(graphics_projection_h) \
+	$(math_matrix4f_h)
+
 graphics_particle_system_cpp = \
 	graphics/particle_system.cpp \
 	$(color_h) \
@@ -461,6 +470,7 @@ main_cpp = \
 	$(graphics_model_h) \
 	$(graphics_model_manager_h) \
 	$(graphics_model_node_h) \
+	$(graphics_orthogonal_2d_projection_h) \
 	$(graphics_particle_system_h) \
 	$(graphics_perspective_projection_h) \
 	$(graphics_scene_h) \
