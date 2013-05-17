@@ -200,6 +200,18 @@ ResourceReader * g_ResourceReader(0);
 Settings * g_Settings(0);
 void (*g_KeyboardLookupTable[128][2])(void);
 
+namespace Graphics
+{
+	class UIRootNode : public Graphics::Node
+	{
+	public:
+		virtual void Draw(void)
+		{
+			g_UserInterface->Draw();
+		}
+	};
+}
+
 std::vector< std::string > SplitString(const std::string & String, char Delimiter)
 {
 	std::vector< std::string > Result;
@@ -449,22 +461,6 @@ void CollectWidgetsRecurrent(void)
 	CollectWidgets();
 	/// TODO: Make the 5.0f seconds timeout configurable via the game configuration archive.
 	g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 5.0f, Callback(CollectWidgetsRecurrent));
-}
-
-void DisplayUserInterface(void)
-{
-	g_UIView->Render();
-	glPushAttrib(GL_ENABLE_BIT | GL_COLOR_BUFFER_BIT);
-	glDisable(GL_LIGHTING);
-	glDisable(GL_DEPTH_TEST);
-	glEnable(GL_BLEND);
-	glEnable(GL_CLIP_PLANE0);
-	glEnable(GL_CLIP_PLANE1);
-	glEnable(GL_CLIP_PLANE2);
-	glEnable(GL_CLIP_PLANE3);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	g_UserInterface->Draw();
-	glPopAttrib();
 }
 
 void DeleteObject(Object * Object)
@@ -1052,7 +1048,7 @@ void DisplayMainView(void)
 	}
 }
 
-void OnGraphicsNodeDestroy(Graphics::Node * Node)
+void OnMainSceneNodeDestroy(Graphics::Node * Node)
 {
 	if(Node == g_CommodityLayer)
 	{
@@ -1075,6 +1071,11 @@ void OnGraphicsNodeDestroy(Graphics::Node * Node)
 		g_ShotLayer = 0;
 	}
 	InvalidateVisualizationReference(Node);
+	delete Node;
+}
+
+void OnUISceneNodeDestroy(Graphics::Node * Node)
+{
 	delete Node;
 }
 
@@ -1326,7 +1327,7 @@ void OnOutputEnterSystem(System * EnterSystem)
 	// build the static setup of the scene
 	Graphics::Scene * MainScene(new Graphics::Scene());
 	
-	MainScene->SetDestroyCallback(Callback(OnGraphicsNodeDestroy));
+	MainScene->SetDestroyCallback(Callback(OnMainSceneNodeDestroy));
 	
 	const Star * Star(EnterSystem->GetStar());
 	
@@ -1494,7 +1495,7 @@ void GameFrame(void)
 	glClear(GL_COLOR_BUFFER_BIT);
 	glClear(GL_DEPTH_BUFFER_BIT);
 	DisplayMainView();
-	DisplayUserInterface();
+	g_UIView->Render();
 	RealTime::Invalidate();
 	
 	double GraphicsTimeEnd(RealTime::Get());
@@ -3580,6 +3581,23 @@ int main(int argc, char ** argv)
 	g_MainView = new Graphics::View();
 	assert(g_MainView->GetCamera() != 0);
 	g_MainView->GetCamera()->SetProjection(g_MainProjection);
+	
+	Graphics::Scene * UIScene(new Graphics::Scene());
+	
+	UIScene->SetDestroyCallback(Callback(OnUISceneNodeDestroy));
+	g_UIView->SetScene(UIScene);
+	
+	Graphics::UIRootNode * UIRootNode(new Graphics::UIRootNode());
+	
+	UIRootNode->SetUseLighting(false);
+	UIRootNode->SetUseDepthTest(false);
+	UIRootNode->SetUseBlending(true);
+	UIRootNode->SetUseClipPlane0(true);
+	UIRootNode->SetUseClipPlane1(true);
+	UIRootNode->SetUseClipPlane2(true);
+	UIRootNode->SetUseClipPlane3(true);
+	UIRootNode->SetBlendFunction(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	UIScene->SetRootNode(UIRootNode);
 	g_GraphicsEngine->AddView(g_MainView);
 	g_MessageDispatcher = new MessageDispatcher();
 	g_ObjectFactory = new ObjectFactory();
@@ -3659,6 +3677,10 @@ int main(int argc, char ** argv)
 	assert(g_UIProjection != 0);
 	g_UIView->GetCamera()->SetProjection(0);
 	delete g_UIProjection;
+	assert(g_UIView->GetScene() == UIScene);
+	assert(UIScene != 0);
+	g_UIView->SetScene(0);
+	delete UIScene;
 	g_GraphicsEngine->RemoveView(g_UIView);
 	delete g_UIView;
 	assert(g_MainView != 0);
