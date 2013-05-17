@@ -54,7 +54,9 @@ namespace Graphics
 		void SetPosition(const Vector3f & Position);
 		void SetScale(float Scale);
 		void SetUseBlending(bool UseBlending);
+		void SetUseDepthTest(bool UseDepthTest);
 		void SetUseLighting(bool UseLighting);
+		void SetUse2DTexture(bool Use2DTexture);
 		// modifiers
 		void AddNode(Graphics::Node * Content);
 		virtual void Begin(void);
@@ -74,7 +76,9 @@ namespace Graphics
 		float _Scale;
 		Graphics::Scene * _Scene;
 		bool _UseBlending;
+		bool _UseDepthTest;
 		bool _UseLighting;
+		bool _Use2DTexture;
 	};
 	
 	inline Graphics::Node * Node::GetContainer(void)
@@ -157,9 +161,19 @@ namespace Graphics
 		_UseBlending = UseBlending;
 	}
 	
+	inline void Node::SetUseDepthTest(bool UseDepthTest)
+	{
+		_UseDepthTest = UseDepthTest;
+	}
+	
 	inline void Node::SetUseLighting(bool UseLighting)
 	{
 		_UseLighting = UseLighting;
+	}
+	
+	inline void Node::SetUse2DTexture(bool Use2DTexture)
+	{
+		_Use2DTexture = Use2DTexture;
 	}
 }
 

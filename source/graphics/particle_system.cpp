@@ -36,6 +36,10 @@ const Graphics::Texture * g_ParticleTexture(0);
 
 Graphics::ParticleSystem::ParticleSystem(void)
 {
+	SetUseBlending(true);
+	SetUseDepthTest(false);
+	SetUseLighting(false);
+	SetUse2DTexture(true);
 }
 
 bool Graphics::ParticleSystem::Update(float Seconds)
@@ -107,14 +111,9 @@ void Graphics::ParticleSystem::Begin(void)
 		g_ParticleTexture = GetScene()->GetEngine()->GetTextureManager()->Get("particle");
 		assert(g_ParticleTexture != 0);
 	}
-	Graphics::Node::Begin();
-	glPushAttrib(GL_ENABLE_BIT);
-	glDisable(GL_LIGHTING);
-	glDisable(GL_DEPTH_TEST);
-	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+	Graphics::Node::Begin();
 	g_ParticleTexture->Activate();
-	glEnable(GL_TEXTURE_2D);
 }
 
 void Graphics::ParticleSystem::Draw(void)
@@ -143,8 +142,7 @@ void Graphics::ParticleSystem::Draw(void)
 
 void Graphics::ParticleSystem::End(void)
 {
-	glPopAttrib();
-	glPopMatrix();
+	Graphics::Node::End();
 }
 
 void Graphics::ParticleSystem::AddParticle(const Graphics::ParticleSystem::Particle & Particle)
