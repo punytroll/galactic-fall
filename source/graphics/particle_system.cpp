@@ -36,6 +36,7 @@ const Graphics::Texture * g_ParticleTexture(0);
 
 Graphics::ParticleSystem::ParticleSystem(void)
 {
+	SetBlendFunction(GL_SRC_ALPHA, GL_ONE);
 	SetUseBlending(true);
 	SetUseDepthTest(false);
 	SetUseLighting(false);
@@ -111,7 +112,6 @@ void Graphics::ParticleSystem::Begin(void)
 		g_ParticleTexture = GetScene()->GetEngine()->GetTextureManager()->Get("particle");
 		assert(g_ParticleTexture != 0);
 	}
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 	Graphics::Node::Begin();
 	g_ParticleTexture->Activate();
 }
