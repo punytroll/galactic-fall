@@ -27,12 +27,7 @@
 #include "model_node.h"
 
 Graphics::ModelNode::ModelNode(void) :
-	_ClearDepthBuffer(false),
-	_Model(0),
-	_Normalize(false),
-	_Scale(1.0f),
-	_UseBlending(false),
-	_UseLighting(false)
+	_Model(0)
 {
 }
 
@@ -48,39 +43,12 @@ Graphics::ModelNode::~ModelNode(void)
 void Graphics::ModelNode::Begin(void)
 {
 	Graphics::Node::Begin();
-	glPushMatrix();
-	glTranslatef(GetPosition()[0], GetPosition()[1], GetPosition()[2]);
-	glMultMatrixf(Matrix4f(GetOrientation()).Transpose().Matrix());
-	if(_Scale != 1.0f)
-	{
-		glScalef(_Scale, _Scale, _Scale);
-	}
 }
 
 void Graphics::ModelNode::Draw(void)
 {
 	if(_Model != 0)
 	{
-		if(_ClearDepthBuffer == true)
-		{
-			glClear(GL_DEPTH_BUFFER_BIT);
-		}
-		if((_Normalize == true) || (_UseBlending == true) || (_UseLighting == true))
-		{
-			glPushAttrib(GL_ENABLE_BIT);
-		}
-		if(_Normalize == true)
-		{
-			glEnable(GL_NORMALIZE);
-		}
-		if(_UseBlending == true)
-		{
-			glEnable(GL_BLEND);
-		}
-		if(_UseLighting == true)
-		{
-			glEnable(GL_LIGHTING);
-		}
 		
 		const std::map< std::string, const Graphics::Mesh * > & Meshes(_Model->GetMeshes());
 		
@@ -88,7 +56,7 @@ void Graphics::ModelNode::Draw(void)
 		{
 			std::map< std::string, Graphics::Material * >::const_iterator MaterialIterator(_Materials.find(MeshIterator->first));
 			
-			if(_UseLighting == true)
+			if(GetUseLighting() == true)
 			{
 				if(MaterialIterator == _Materials.end())
 				{
@@ -128,17 +96,12 @@ void Graphics::ModelNode::Draw(void)
 			}
 			MeshIterator->second->Draw();
 		}
-		if((_Normalize == true) || (_UseBlending == true) || (_UseLighting == true))
-		{
-			glPopAttrib();
-		}
 	}
 	Graphics::Node::Draw();
 }
 
 void Graphics::ModelNode::End(void)
 {
-	glPopMatrix();
 	Graphics::Node::End();
 }
 
