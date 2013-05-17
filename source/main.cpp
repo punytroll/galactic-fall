@@ -454,7 +454,7 @@ void CollectWidgetsRecurrent(void)
 void DisplayUserInterface(void)
 {
 	g_UIView->Render();
-	glPushAttrib(GL_ENABLE_BIT);
+	glPushAttrib(GL_ENABLE_BIT | GL_COLOR_BUFFER_BIT);
 	glDisable(GL_LIGHTING);
 	glDisable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);

@@ -28,6 +28,8 @@
 #include "scene.h"
 
 Graphics::Node::Node(void) :
+	_BlendFunctionDestinationFactor(GL_ZERO),
+	_BlendFunctionSourceFactor(GL_ONE),
 	_ClearDepthBuffer(false),
 	_Container(0),
 	_Normalize(false),
@@ -61,6 +63,7 @@ void Graphics::Node::Begin(void)
 	{
 		glScalef(_Scale, _Scale, _Scale);
 	}
+	glPushAttrib(GL_ENABLE_BIT | GL_COLOR_BUFFER_BIT);
 	if(_Normalize == true)
 	{
 		glEnable(GL_NORMALIZE);
@@ -101,6 +104,7 @@ void Graphics::Node::Begin(void)
 	{
 		glDisable(GL_TEXTURE_2D);
 	}
+	glBlendFunc(_BlendFunctionSourceFactor, _BlendFunctionDestinationFactor);
 }
 
 void Graphics::Node::Draw(void)
@@ -115,6 +119,7 @@ void Graphics::Node::Draw(void)
 
 void Graphics::Node::End(void)
 {
+	glPopAttrib();
 	glPopMatrix();
 }
 

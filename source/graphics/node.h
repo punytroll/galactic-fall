@@ -57,6 +57,7 @@ namespace Graphics
 		void SetUseDepthTest(bool UseDepthTest);
 		void SetUseLighting(bool UseLighting);
 		void SetUse2DTexture(bool Use2DTexture);
+		void SetBlendFunction(int SourceFactor, int DestinationFactor);
 		// modifiers
 		void AddNode(Graphics::Node * Content);
 		virtual void Begin(void);
@@ -67,6 +68,8 @@ namespace Graphics
 		void _SetContainer(Graphics::Node * Container);
 		void _SetScene(Graphics::Scene * Scene);
 		
+		int _BlendFunctionDestinationFactor;
+		int _BlendFunctionSourceFactor;
 		bool _ClearDepthBuffer;
 		Graphics::Node * _Container;
 		std::vector< Graphics::Node * > _Content;
@@ -119,6 +122,12 @@ namespace Graphics
 	inline bool Node::GetUseLighting(void) const
 	{
 		return _UseLighting;
+	}
+	
+	inline void Node::SetBlendFunction(int SourceFactor, int DestinationFactor)
+	{
+		_BlendFunctionSourceFactor = SourceFactor;
+		_BlendFunctionDestinationFactor = DestinationFactor;
 	}
 	
 	inline void Node::SetClearDepthBuffer(bool ClearDepthBuffer)
