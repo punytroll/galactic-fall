@@ -36,7 +36,9 @@ Graphics::Node::Node(void) :
 	_Scale(1.0f),
 	_Scene(0),
 	_UseBlending(false),
-	_UseLighting(false)
+	_UseDepthTest(false),
+	_UseLighting(false),
+	_Use2DTexture(false)
 {
 }
 
@@ -59,18 +61,45 @@ void Graphics::Node::Begin(void)
 	{
 		glScalef(_Scale, _Scale, _Scale);
 	}
-	glPushAttrib(GL_ENABLE_BIT);
 	if(_Normalize == true)
 	{
 		glEnable(GL_NORMALIZE);
+	}
+	else
+	{
+		glDisable(GL_NORMALIZE);
 	}
 	if(_UseBlending == true)
 	{
 		glEnable(GL_BLEND);
 	}
+	else
+	{
+		glDisable(GL_BLEND);
+	}
+	if(_UseDepthTest == true)
+	{
+		glEnable(GL_DEPTH_TEST);
+	}
+	else
+	{
+		glDisable(GL_DEPTH_TEST);
+	}
 	if(_UseLighting == true)
 	{
 		glEnable(GL_LIGHTING);
+	}
+	else
+	{
+		glDisable(GL_LIGHTING);
+	}
+	if(_Use2DTexture == true)
+	{
+		glEnable(GL_TEXTURE_2D);
+	}
+	else
+	{
+		glDisable(GL_TEXTURE_2D);
 	}
 }
 
@@ -86,7 +115,6 @@ void Graphics::Node::Draw(void)
 
 void Graphics::Node::End(void)
 {
-	glPopAttrib();
 	glPopMatrix();
 }
 

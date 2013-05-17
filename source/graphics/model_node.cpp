@@ -29,6 +29,7 @@
 Graphics::ModelNode::ModelNode(void) :
 	_Model(0)
 {
+	SetUseDepthTest(true);
 }
 
 Graphics::ModelNode::~ModelNode(void)
