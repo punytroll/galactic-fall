@@ -343,7 +343,8 @@ graphics_model_node_h = \
 graphics_node_cpp = \
 	graphics/node.cpp \
 	$(graphics_node_h) \
-	$(graphics_scene_h)
+	$(graphics_scene_h) \
+	$(math_matrix4f_h)
 
 graphics_node_h = \
 	graphics/node.h \
@@ -437,9 +438,6 @@ key_event_information_cpp = \
 
 key_event_information_h = \
 	key_event_information.h
-
-list_h = \
-	list.h
 
 main_cpp = \
 	main.cpp \
