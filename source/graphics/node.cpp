@@ -38,6 +38,10 @@ Graphics::Node::Node(void) :
 	_Scale(1.0f),
 	_Scene(0),
 	_UseBlending(false),
+	_UseClipPlane0(false),
+	_UseClipPlane1(false),
+	_UseClipPlane2(false),
+	_UseClipPlane3(false),
 	_UseDepthTest(false),
 	_UseLighting(false),
 	_Use2DTexture(false)
@@ -79,6 +83,38 @@ void Graphics::Node::Begin(void)
 	else
 	{
 		glDisable(GL_BLEND);
+	}
+	if(_UseClipPlane0 == true)
+	{
+		glEnable(GL_CLIP_PLANE0);
+	}
+	else
+	{
+		glDisable(GL_CLIP_PLANE0);
+	}
+	if(_UseClipPlane1 == true)
+	{
+		glEnable(GL_CLIP_PLANE1);
+	}
+	else
+	{
+		glDisable(GL_CLIP_PLANE1);
+	}
+	if(_UseClipPlane2 == true)
+	{
+		glEnable(GL_CLIP_PLANE2);
+	}
+	else
+	{
+		glDisable(GL_CLIP_PLANE2);
+	}
+	if(_UseClipPlane3 == true)
+	{
+		glEnable(GL_CLIP_PLANE3);
+	}
+	else
+	{
+		glDisable(GL_CLIP_PLANE3);
 	}
 	if(_UseDepthTest == true)
 	{

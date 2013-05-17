@@ -48,16 +48,20 @@ namespace Graphics
 		Graphics::Scene * GetScene(void);
 		bool GetUseLighting(void) const;
 		// setters
+		void SetBlendFunction(int SourceFactor, int DestinationFactor);
 		void SetClearDepthBuffer(bool ClearDepthBuffer);
 		void SetNormalize(bool Normalize);
 		void SetOrientation(const Quaternion & Orientation);
 		void SetPosition(const Vector3f & Position);
 		void SetScale(float Scale);
 		void SetUseBlending(bool UseBlending);
+		void SetUseClipPlane0(bool UseClipPlane0);
+		void SetUseClipPlane1(bool UseClipPlane1);
+		void SetUseClipPlane2(bool UseClipPlane2);
+		void SetUseClipPlane3(bool UseClipPlane3);
 		void SetUseDepthTest(bool UseDepthTest);
 		void SetUseLighting(bool UseLighting);
 		void SetUse2DTexture(bool Use2DTexture);
-		void SetBlendFunction(int SourceFactor, int DestinationFactor);
 		// modifiers
 		void AddNode(Graphics::Node * Content);
 		virtual void Begin(void);
@@ -79,6 +83,10 @@ namespace Graphics
 		float _Scale;
 		Graphics::Scene * _Scene;
 		bool _UseBlending;
+		bool _UseClipPlane0;
+		bool _UseClipPlane1;
+		bool _UseClipPlane2;
+		bool _UseClipPlane3;
 		bool _UseDepthTest;
 		bool _UseLighting;
 		bool _Use2DTexture;
@@ -168,6 +176,26 @@ namespace Graphics
 	inline void Node::SetUseBlending(bool UseBlending)
 	{
 		_UseBlending = UseBlending;
+	}
+	
+	inline void Node::SetUseClipPlane0(bool UseClipPlane0)
+	{
+		_UseClipPlane0 = UseClipPlane0;
+	}
+	
+	inline void Node::SetUseClipPlane1(bool UseClipPlane1)
+	{
+		_UseClipPlane1 = UseClipPlane1;
+	}
+	
+	inline void Node::SetUseClipPlane2(bool UseClipPlane2)
+	{
+		_UseClipPlane2 = UseClipPlane2;
+	}
+	
+	inline void Node::SetUseClipPlane3(bool UseClipPlane3)
+	{
+		_UseClipPlane3 = UseClipPlane3;
 	}
 	
 	inline void Node::SetUseDepthTest(bool UseDepthTest)
