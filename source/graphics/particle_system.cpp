@@ -102,14 +102,12 @@ bool Graphics::ParticleSystem::Update(float Seconds)
 
 void Graphics::ParticleSystem::Begin(void)
 {
-	Graphics::Node::Begin();
 	if(g_ParticleTexture == 0)
 	{
 		g_ParticleTexture = GetScene()->GetEngine()->GetTextureManager()->Get("particle");
 		assert(g_ParticleTexture != 0);
 	}
-	glPushMatrix();
-	glTranslatef(GetPosition()[0], GetPosition()[1], GetPosition()[2]);
+	Graphics::Node::Begin();
 	glPushAttrib(GL_ENABLE_BIT);
 	glDisable(GL_LIGHTING);
 	glDisable(GL_DEPTH_TEST);

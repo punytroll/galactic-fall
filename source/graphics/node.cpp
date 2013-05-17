@@ -23,14 +23,20 @@
 
 #include <GL/gl.h>
 
+#include "../math/matrix4f.h"
 #include "node.h"
 #include "scene.h"
 
 Graphics::Node::Node(void) :
+	_ClearDepthBuffer(false),
 	_Container(0),
+	_Normalize(false),
 	_Orientation(1.0f, 0.0f, 0.0f, 0.0f),
 	_Position(0.0f, 0.0f, 0.0f),
-	_Scene(0)
+	_Scale(1.0f),
+	_Scene(0),
+	_UseBlending(false),
+	_UseLighting(false)
 {
 }
 
@@ -42,6 +48,30 @@ Graphics::Node::~Node(void)
 
 void Graphics::Node::Begin(void)
 {
+	if(_ClearDepthBuffer == true)
+	{
+		glClear(GL_DEPTH_BUFFER_BIT);
+	}
+	glPushMatrix();
+	glTranslatef(_Position[0], _Position[1], _Position[2]);
+	glMultMatrixf(Matrix4f(_Orientation).Transpose().Matrix());
+	if(_Scale != 1.0f)
+	{
+		glScalef(_Scale, _Scale, _Scale);
+	}
+	glPushAttrib(GL_ENABLE_BIT);
+	if(_Normalize == true)
+	{
+		glEnable(GL_NORMALIZE);
+	}
+	if(_UseBlending == true)
+	{
+		glEnable(GL_BLEND);
+	}
+	if(_UseLighting == true)
+	{
+		glEnable(GL_LIGHTING);
+	}
 }
 
 void Graphics::Node::Draw(void)
@@ -56,6 +86,8 @@ void Graphics::Node::Draw(void)
 
 void Graphics::Node::End(void)
 {
+	glPopAttrib();
+	glPopMatrix();
 }
 
 void Graphics::Node::AddNode(Graphics::Node * Content)

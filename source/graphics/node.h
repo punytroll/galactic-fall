@@ -35,56 +35,46 @@ namespace Graphics
 	{
 		friend class Graphics::Scene;
 	public:
-		/**
-		 * @brief The default constructor.
-		 **/
+		// constructor & destructor
 		Node(void);
-		
-		/**
-		 * @brief The destoructor for a graphics node object.
-		 **/
 		virtual ~Node(void);
-		
-		/**
-		 * @brief Destroys the node and all of its content.
-		 **/
-		void Destroy(void);
-		
-		
-		virtual void Begin(void);
-		
-		virtual void Draw(void);
-		
-		virtual void End(void);
-		
-		/**
-		 * @brief Adds a content node to @em this node.
-		 **/
-		void AddNode(Graphics::Node * Content);
-		
+		// getters
 		Graphics::Node * GetContainer(void);
 		const Graphics::Node * GetContainer(void) const;
 		std::vector< Graphics::Node * > & GetContent(void);
 		const Quaternion & GetOrientation(void) const;
 		const Vector3f & GetPosition(void) const;
+		float GetScale() const;
 		Graphics::Scene * GetScene(void);
+		bool GetUseLighting(void) const;
 		// setters
+		void SetClearDepthBuffer(bool ClearDepthBuffer);
+		void SetNormalize(bool Normalize);
 		void SetOrientation(const Quaternion & Orientation);
 		void SetPosition(const Vector3f & Position);
+		void SetScale(float Scale);
+		void SetUseBlending(bool UseBlending);
+		void SetUseLighting(bool UseLighting);
+		// modifiers
+		void AddNode(Graphics::Node * Content);
+		virtual void Begin(void);
+		void Destroy(void);
+		virtual void Draw(void);
+		virtual void End(void);
 	private:
-		/**
-		 * @brief Sets the container node for @em this node.
-		 * 
-		 * This function is only used internally, which is, why it is private.
-		 **/
 		void _SetContainer(Graphics::Node * Container);
 		void _SetScene(Graphics::Scene * Scene);
 		
+		bool _ClearDepthBuffer;
 		Graphics::Node * _Container;
 		std::vector< Graphics::Node * > _Content;
+		bool _Normalize;
 		Quaternion _Orientation;
 		Vector3f _Position;
+		float _Scale;
 		Graphics::Scene * _Scene;
+		bool _UseBlending;
+		bool _UseLighting;
 	};
 	
 	inline Graphics::Node * Node::GetContainer(void)
@@ -102,11 +92,6 @@ namespace Graphics
 		return _Content;
 	}
 	
-	inline Graphics::Scene* Node::GetScene(void)
-	{
-		return _Scene;
-	}
-	
 	inline const Quaternion & Node::GetOrientation(void) const
 	{
 		return _Orientation;
@@ -115,6 +100,31 @@ namespace Graphics
 	inline const Vector3f & Node::GetPosition(void) const
 	{
 		return _Position;
+	}
+	
+	inline float Node::GetScale(void) const
+	{
+		return _Scale;
+	}
+	
+	inline Graphics::Scene * Node::GetScene(void)
+	{
+		return _Scene;
+	}
+	
+	inline bool Node::GetUseLighting(void) const
+	{
+		return _UseLighting;
+	}
+	
+	inline void Node::SetClearDepthBuffer(bool ClearDepthBuffer)
+	{
+		_ClearDepthBuffer = ClearDepthBuffer;
+	}
+	
+	inline void Node::SetNormalize(bool Normalize)
+	{
+		_Normalize = Normalize;
 	}
 	
 	inline void Node::SetOrientation(const Quaternion & Orientation)
@@ -127,6 +137,11 @@ namespace Graphics
 		_Position = Position;
 	}
 	
+	inline void Node::SetScale(float Scale)
+	{
+		_Scale = Scale;
+	}
+	
 	inline void Node::_SetContainer(Graphics::Node * Container)
 	{
 		_Container = Container;
@@ -135,6 +150,16 @@ namespace Graphics
 	inline void Node::_SetScene(Graphics::Scene * Scene)
 	{
 		_Scene = Scene;
+	}
+	
+	inline void Node::SetUseBlending(bool UseBlending)
+	{
+		_UseBlending = UseBlending;
+	}
+	
+	inline void Node::SetUseLighting(bool UseLighting)
+	{
+		_UseLighting = UseLighting;
 	}
 }
 
