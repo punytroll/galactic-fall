@@ -49,6 +49,7 @@ namespace Graphics
 		bool GetUseLighting(void) const;
 		// setters
 		void SetBlendFunction(int SourceFactor, int DestinationFactor);
+		void SetClearColorBuffer(bool ClearColorBuffer);
 		void SetClearDepthBuffer(bool ClearDepthBuffer);
 		void SetNormalize(bool Normalize);
 		void SetOrientation(const Quaternion & Orientation);
@@ -74,6 +75,7 @@ namespace Graphics
 		
 		int _BlendFunctionDestinationFactor;
 		int _BlendFunctionSourceFactor;
+		bool _ClearColorBuffer;
 		bool _ClearDepthBuffer;
 		Graphics::Node * _Container;
 		std::vector< Graphics::Node * > _Content;
@@ -136,6 +138,11 @@ namespace Graphics
 	{
 		_BlendFunctionSourceFactor = SourceFactor;
 		_BlendFunctionDestinationFactor = DestinationFactor;
+	}
+	
+	inline void Node::SetClearColorBuffer(bool ClearColorBuffer)
+	{
+		_ClearColorBuffer = ClearColorBuffer;
 	}
 	
 	inline void Node::SetClearDepthBuffer(bool ClearDepthBuffer)

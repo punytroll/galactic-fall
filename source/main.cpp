@@ -1347,7 +1347,13 @@ void OnOutputEnterSystem(System * EnterSystem)
 	
 	Graphics::Node * RootNode(new Graphics::Node());
 	
+	RootNode->SetClearColorBuffer(true);
+	RootNode->SetClearDepthBuffer(true);
 	MainScene->SetRootNode(RootNode);
+	assert(g_UIView != 0);
+	assert(g_UIView->GetScene() != 0);
+	assert(g_UIView->GetScene()->GetRootNode() != 0);
+	g_UIView->GetScene()->GetRootNode()->SetClearColorBuffer(false);
 	g_CommodityLayer = new Graphics::Node();
 	g_ParticleSystemsLayer = new Graphics::Node();
 	g_PlanetLayer = new Graphics::Node();
@@ -1388,6 +1394,10 @@ void OnOutputLeaveSystem(System * System)
 	
 	g_MainView->SetScene(0);
 	delete MainScene;
+	assert(g_UIView != 0);
+	assert(g_UIView->GetScene() != 0);
+	assert(g_UIView->GetScene()->GetRootNode() != 0);
+	g_UIView->GetScene()->GetRootNode()->SetClearColorBuffer(true);
 }
 
 std::string MakeTimeStampedFileName(const std::string & Name, const std::string & Extension)
@@ -1492,8 +1502,6 @@ void GameFrame(void)
 	double GraphicsTimeBegin(RealTime::Get());
 	
 	glViewport(0, 0, static_cast< GLsizei >(g_Width), static_cast< GLsizei >(g_Height));
-	glClear(GL_COLOR_BUFFER_BIT);
-	glClear(GL_DEPTH_BUFFER_BIT);
 	DisplayMainView();
 	g_UIView->Render();
 	RealTime::Invalidate();
@@ -3589,6 +3597,7 @@ int main(int argc, char ** argv)
 	
 	Graphics::UIRootNode * UIRootNode(new Graphics::UIRootNode());
 	
+	UIRootNode->SetClearColorBuffer(true);
 	UIRootNode->SetUseLighting(false);
 	UIRootNode->SetUseDepthTest(false);
 	UIRootNode->SetUseBlending(true);
