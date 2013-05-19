@@ -25,44 +25,61 @@
 
 Graphics::Texture::Texture(const std::string & Identifier) :
 	_Identifier(Identifier),
-	_Texture(0)
+	_TextureName(0)
 {
 }
 
 Graphics::Texture::~Texture(void)
 {
-	if(_Texture != 0)
+	if(_TextureName != 0)
 	{
-		glDeleteTextures(1, &_Texture);
-		_Texture = 0;
+		glDeleteTextures(1, &_TextureName);
+		_TextureName = 0;
 	}
 }
 
 void Graphics::Texture::SetData(unsigned_numeric Width, unsigned_numeric Height, unsigned_numeric Format, const unsigned char * Data)
 {
-	assert(_Texture == 0);
-	glGenTextures(1, &_Texture);
-	glBindTexture(GL_TEXTURE_2D, _Texture);
+	assert(_TextureName == 0);
+	glGenTextures(1, &_TextureName);
+	assert(_TextureName != 0);
+	glBindTexture(GL_TEXTURE_2D, _TextureName);
 	if(Format == 1) /// RGBA one byte each
 	{
-		glTexImage2D(GL_TEXTURE_2D, 0, 4, Width, Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, Data);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, Width, Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, Data);
 	}
 	else if(Format == 2) /// RGB one byte each
 	{
-		glTexImage2D(GL_TEXTURE_2D, 0, 4, Width, Height, 0, GL_RGB, GL_UNSIGNED_BYTE, Data);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, Width, Height, 0, GL_RGB, GL_UNSIGNED_BYTE, Data);
 	}
 	else
 	{
 		throw;
 	}
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 }
 
 void Graphics::Texture::Activate(void) const
 {
-	assert(_Texture != 0);
-	glBindTexture(GL_TEXTURE_2D, _Texture);
+	assert(_TextureName != 0);
+	glBindTexture(GL_TEXTURE_2D, _TextureName);
+}
+
+void Graphics::Texture::Create(unsigned_numeric Width, unsigned_numeric Height, unsigned_numeric Format)
+{
+	assert(_TextureName == 0);
+	glGenTextures(1, &_TextureName);
+	assert(_TextureName != 0);
+	glBindTexture(GL_TEXTURE_2D, _TextureName);
+	if(Format == 1) /// RGBA one byte each
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, Width, Height, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+	}
+	else if(Format == 2) /// RGB one byte each
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, Width, Height, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+	}
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 }

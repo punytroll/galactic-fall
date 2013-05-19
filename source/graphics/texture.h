@@ -21,7 +21,6 @@
 #define GRAPHICS_TEXTURE_H
 
 #include <string>
-#include <vector>
 
 #include <GL/gl.h>
 
@@ -32,25 +31,30 @@ namespace Graphics
 	class Texture
 	{
 	public:
-		/**
-		 * @brief The default constructor.
-		 **/
+		// constructor & destructor
 		Texture(const std::string & Identifier);
 		~Texture(void);
 		// getters
 		const std::string & GetIdentifier(void) const;
+		GLuint GetTextureName(void) const;
 		// setters
 		void SetData(unsigned_numeric Width, unsigned_numeric Height, unsigned_numeric Format, const unsigned char * Data);
 		// modifiers
 		void Activate(void) const;
+		void Create(unsigned_numeric Width, unsigned_numeric Height, unsigned_numeric Format);
 	private:
 		std::string _Identifier;
-		GLuint _Texture;
+		GLuint _TextureName;
 	};
 	
-	inline const std::string & Graphics::Texture::GetIdentifier(void) const
+	inline const std::string & Texture::GetIdentifier(void) const
 	{
 		return _Identifier;
+	}
+	
+	inline GLuint Texture::GetTextureName(void) const
+	{
+		return _TextureName;
 	}
 }
 
