@@ -231,35 +231,27 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 	return Result;
 }
 
-float ObjectFactory::GetSpaceRequirement(const std::string & Type, const std::string & Class) const
+float ObjectFactory::GetSpaceRequirement(const std::string & TypeIdentifier, const std::string & ClassIdentifier) const
 {
-	if(Type == "battery")
+	if(TypeIdentifier == "battery")
 	{
-		const BatteryClass * BatteryClass(g_BatteryClassManager->Get(Class));
-		
-		return BatteryClass->GetSpaceRequirement();
+		return g_BatteryClassManager->Get(ClassIdentifier)->GetSpaceRequirement();
 	}
-	else if(Type == "commodity")
+	else if(TypeIdentifier == "commodity")
 	{
-		const CommodityClass * CommodityClass(g_CommodityClassManager->Get(Class));
-		
-		return CommodityClass->GetSpaceRequirement();
+		return g_CommodityClassManager->Get(ClassIdentifier)->GetSpaceRequirement();
 	}
-	else if(Type == "generator")
+	else if(TypeIdentifier == "generator")
 	{
-		const GeneratorClass * GeneratorClass(g_GeneratorClassManager->Get(Class));
-		
-		return GeneratorClass->GetSpaceRequirement();
+		return g_GeneratorClassManager->Get(ClassIdentifier)->GetSpaceRequirement();
 	}
-	else if(Type == "weapon")
+	else if(TypeIdentifier == "weapon")
 	{
-		const WeaponClass * WeaponClass(g_WeaponClassManager->Get(Class));
-		
-		return WeaponClass->GetSpaceRequirement();
+		return g_WeaponClassManager->Get(ClassIdentifier)->GetSpaceRequirement();
 	}
 	else
 	{
-		throw std::runtime_error("ObjectFactory::GetSpaceRequirement(): Unknown object type '" + Type + "' (for object class '" + Class + "').");
+		throw std::runtime_error("ObjectFactory::GetSpaceRequirement(): Unknown object type '" + TypeIdentifier + "' (for object class '" + ClassIdentifier + "').");
 	}
 }
 
