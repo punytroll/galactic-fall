@@ -51,6 +51,7 @@
 #include "globals.h"
 #include "goals.h"
 #include "graphics/camera.h"
+#include "graphics/default_render_target.h"
 #include "graphics/engine.h"
 #include "graphics/gl.h"
 #include "graphics/light.h"
@@ -3114,6 +3115,7 @@ void CreateWindow(void)
 void InitializeOpenGL(void)
 {
 	ON_DEBUG(std::cout << "Loading OpenGL functions." << std::endl);
+	LoadOpenGLFunction(glBindFramebuffer);
 	LoadOpenGLFunction(glEnable);
 	LoadOpenGLFunction(glGetIntegerv);
 	LoadOpenGLFunction(glLightModelfv);
@@ -3568,6 +3570,7 @@ int main(int argc, char ** argv)
 	g_Galaxy = 0;
 	g_GeneratorClassManager = new ClassManager< GeneratorClass >();
 	g_GraphicsEngine = new Graphics::Engine();
+	// UI view
 	g_UIProjection = new Graphics::Orthogonal2DProjection();
 	g_UIProjection->SetLeft(0.0f);
 	g_UIProjection->SetRight(g_Width);
@@ -3582,13 +3585,6 @@ int main(int argc, char ** argv)
 	UISpacialMatrix.Translation(0.0f, 0.0f, 0.0f);
 	g_UIView->GetCamera()->SetSpacialMatrix(UISpacialMatrix);
 	g_GraphicsEngine->AddView(g_UIView);
-	g_MainProjection = new Graphics::PerspectiveProjection();
-	g_MainProjection->SetAspect(g_Width / g_Height);
-	g_MainProjection->SetNearClippingPlane(1.0f);
-	g_MainProjection->SetFarClippingPlane(1000.0f);
-	g_MainView = new Graphics::View();
-	assert(g_MainView->GetCamera() != 0);
-	g_MainView->GetCamera()->SetProjection(g_MainProjection);
 	
 	Graphics::Scene * UIScene(new Graphics::Scene());
 	
@@ -3607,6 +3603,18 @@ int main(int argc, char ** argv)
 	UIRootNode->SetUseClipPlane3(true);
 	UIRootNode->SetBlendFunction(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	UIScene->SetRootNode(UIRootNode);
+	// main view
+	g_MainProjection = new Graphics::PerspectiveProjection();
+	g_MainProjection->SetAspect(g_Width / g_Height);
+	g_MainProjection->SetNearClippingPlane(1.0f);
+	g_MainProjection->SetFarClippingPlane(1000.0f);
+	g_MainView = new Graphics::View();
+	assert(g_MainView->GetCamera() != 0);
+	g_MainView->GetCamera()->SetProjection(g_MainProjection);
+	
+	Graphics::DefaultRenderTarget * MainViewRenderTarget(new Graphics::DefaultRenderTarget());
+	
+	g_MainView->SetRenderTarget(MainViewRenderTarget);
 	g_GraphicsEngine->AddView(g_MainView);
 	g_MessageDispatcher = new MessageDispatcher();
 	g_ObjectFactory = new ObjectFactory();
@@ -3680,6 +3688,20 @@ int main(int argc, char ** argv)
 	delete g_CommodityClassManager;
 	delete g_GameTimeTimeoutNotifications;
 	delete g_GeneratorClassManager;
+	// main view
+	assert(g_MainView != 0);
+	assert(g_MainView->GetRenderTarget() == MainViewRenderTarget);
+	assert(MainViewRenderTarget != 0);
+	g_MainView->SetRenderTarget(0);
+	delete MainViewRenderTarget;
+	assert(g_MainView->GetCamera() != 0);
+	assert(g_MainView->GetCamera()->GetProjection() == g_MainProjection);
+	assert(g_MainProjection != 0);
+	g_MainView->GetCamera()->SetProjection(0);
+	delete g_MainProjection;
+	g_GraphicsEngine->RemoveView(g_MainView);
+	delete g_MainView;
+	// ui view
 	assert(g_UIView != 0);
 	assert(g_UIView->GetCamera() != 0);
 	assert(g_UIView->GetCamera()->GetProjection() == g_UIProjection);
@@ -3692,14 +3714,6 @@ int main(int argc, char ** argv)
 	delete UIScene;
 	g_GraphicsEngine->RemoveView(g_UIView);
 	delete g_UIView;
-	assert(g_MainView != 0);
-	assert(g_MainView->GetCamera() != 0);
-	assert(g_MainView->GetCamera()->GetProjection() == g_MainProjection);
-	assert(g_MainProjection != 0);
-	g_MainView->GetCamera()->SetProjection(0);
-	delete g_MainProjection;
-	g_GraphicsEngine->RemoveView(g_MainView);
-	delete g_MainView;
 	delete g_GraphicsEngine;
 	delete g_MessageDispatcher;
 	delete g_ObjectFactory;

@@ -23,12 +23,14 @@
 
 #include "camera.h"
 #include "projection.h"
+#include "render_target.h"
 #include "scene.h"
 #include "view.h"
 
 Graphics::View::View(void) :
 	_Camera(new Graphics::Camera()),
 	_Engine(0),
+	_RenderTarget(0),
 	_Scene(0)
 {
 }
@@ -39,12 +41,17 @@ Graphics::View::~View(void)
 	delete _Camera;
 	_Camera = 0;
 	assert(_Engine == 0);
+	assert(_RenderTarget == 0);
 	assert(_Scene == 0);
 }
 
 void Graphics::View::Render(void)
 {
 	assert(_Engine != 0);
+	if(_RenderTarget != 0)
+	{
+		_RenderTarget->Activate();
+	}
 	assert(_Camera != 0);
 	assert(_Camera->GetProjection() != 0);
 	glMatrixMode(GL_PROJECTION);
@@ -69,6 +76,20 @@ void Graphics::View::_SetEngine(Graphics::Engine * Engine)
 	{
 		assert(_Engine == 0);
 		_Engine = Engine;
+	}
+}
+
+void Graphics::View::SetRenderTarget(Graphics::RenderTarget * RenderTarget)
+{
+	if(RenderTarget == 0)
+	{
+		assert(_RenderTarget != 0);
+		_RenderTarget = 0;
+	}
+	else
+	{
+		assert(_RenderTarget == 0);
+		_RenderTarget = RenderTarget;
 	}
 }
 
