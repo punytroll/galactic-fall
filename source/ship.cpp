@@ -320,7 +320,7 @@ bool Ship::Update(float Seconds)
 					TheCommodity->SetAngularVelocity(AxisAngle(RotationAxis[0], RotationAxis[1], RotationAxis[2], GetRandomFloat(0.0f, 0.7f)));
 					assert(GetContainer()->GetAspectObjectContainer() != 0);
 					GetContainer()->GetAspectObjectContainer()->AddContent(TheCommodity);
-					VisualizeCommodity(TheCommodity, g_CommodityLayer);
+					VisualizeObject(TheCommodity, g_CommodityLayer);
 				}
 			}
 			m_Jettison = false;

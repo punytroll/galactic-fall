@@ -112,7 +112,7 @@ void Weapon::Update(float Seconds)
 			Container->GetContainer()->GetAspectObjectContainer()->AddContent(NewShot);
 			m_NextTimeToFire = GameTime::Get() + GetReloadTime();
 			// add visualization
-			VisualizeShot(NewShot, g_ShotLayer);
+			VisualizeObject(NewShot, g_ShotLayer);
 		}
 	}
 }
