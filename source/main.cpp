@@ -808,7 +808,7 @@ void CalculateMovements(System * System, float Seconds)
 												TheCommodity->SetAngularVelocity(AxisAngle(RotationAxis[0], RotationAxis[1], RotationAxis[2], GetRandomFloat(0.0f, 0.7f)));
 												TheShip->GetContainer()->GetAspectObjectContainer()->AddContent(TheCommodity);
 												// add visualization of the commodity
-												VisualizeCommodity(TheCommodity, g_CommodityLayer);
+												VisualizeObject(TheCommodity, g_CommodityLayer);
 											}
 											else
 											{
@@ -1285,7 +1285,7 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 	NewShip->GetAspectObjectContainer()->AddContent(NewCharacter);
 	System->GetAspectObjectContainer()->AddContent(NewShip);
 	// add visualization
-	VisualizeShip(NewShip, g_ShipLayer);
+	VisualizeObject(NewShip, g_ShipLayer);
 }
 
 void SpawnShipOnTimeout(System * SpawnInSystem)
@@ -1368,14 +1368,14 @@ void OnOutputEnterSystem(System * EnterSystem)
 	
 	for(std::vector< Planet * >::const_iterator PlanetIterator = Planets.begin(); PlanetIterator != Planets.end(); ++PlanetIterator)
 	{
-		VisualizePlanet(*PlanetIterator, g_PlanetLayer);
+		VisualizeObject(*PlanetIterator, g_PlanetLayer);
 	}
 	
 	const std::list< Ship * > & Ships(EnterSystem->GetShips());
 	
 	for(std::list< Ship * >::const_iterator ShipIterator = Ships.begin(); ShipIterator != Ships.end(); ++ShipIterator)
 	{
-		VisualizeShip(*ShipIterator, g_ShipLayer);
+		VisualizeObject(*ShipIterator, g_ShipLayer);
 	}
 	g_SpawnShipTimeoutNotification = g_GameTimeTimeoutNotifications->Add(GameTime::Get() + GetRandomFloatFromExponentialDistribution(1.0f / EnterSystem->GetTrafficDensity()), Bind1(Callback(SpawnShipOnTimeout), EnterSystem));
 }
