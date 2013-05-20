@@ -262,3 +262,27 @@ float ObjectFactory::GetSpaceRequirement(const std::string & Type, const std::st
 		throw std::runtime_error("ObjectFactory::GetSpaceRequirement(): Unknown object type '" + Type + "' (for object class '" + Class + "').");
 	}
 }
+
+const VisualizationPrototype * ObjectFactory::GetVisualizationPrototype(const std::string & TypeIdentifier, const std::string & ClassIdentifier) const
+{
+	if(TypeIdentifier == "battery")
+	{
+		return 0;
+	}
+	else if(TypeIdentifier == "commodity")
+	{
+		return g_CommodityClassManager->Get(ClassIdentifier)->GetVisualizationPrototype();
+	}
+	else if(TypeIdentifier == "generator")
+	{
+		return 0;
+	}
+	else if(TypeIdentifier == "weapon")
+	{
+		return g_WeaponClassManager->Get(ClassIdentifier)->GetVisualizationPrototype();
+	}
+	else
+	{
+		throw std::runtime_error("ObjectFactory::GetVisualizationPrototype(): Unknown object type '" + TypeIdentifier + "' (for object class '" + ClassIdentifier + "').");
+	}
+}
