@@ -21,9 +21,8 @@
 
 #include <algorithm>
 
-#include <GL/gl.h>
-
 #include "../math/matrix4f.h"
+#include "gl.h"
 #include "node.h"
 #include "scene.h"
 
@@ -75,7 +74,7 @@ void Graphics::Node::Begin(void)
 	glPushAttrib(GL_ENABLE_BIT | GL_COLOR_BUFFER_BIT);
 	if(_Normalize == true)
 	{
-		glEnable(GL_NORMALIZE);
+		GLEnable(GL_NORMALIZE);
 	}
 	else
 	{
@@ -83,7 +82,7 @@ void Graphics::Node::Begin(void)
 	}
 	if(_UseBlending == true)
 	{
-		glEnable(GL_BLEND);
+		GLEnable(GL_BLEND);
 	}
 	else
 	{
@@ -91,7 +90,7 @@ void Graphics::Node::Begin(void)
 	}
 	if(_UseClipPlane0 == true)
 	{
-		glEnable(GL_CLIP_PLANE0);
+		GLEnable(GL_CLIP_PLANE0);
 	}
 	else
 	{
@@ -99,7 +98,7 @@ void Graphics::Node::Begin(void)
 	}
 	if(_UseClipPlane1 == true)
 	{
-		glEnable(GL_CLIP_PLANE1);
+		GLEnable(GL_CLIP_PLANE1);
 	}
 	else
 	{
@@ -107,7 +106,7 @@ void Graphics::Node::Begin(void)
 	}
 	if(_UseClipPlane2 == true)
 	{
-		glEnable(GL_CLIP_PLANE2);
+		GLEnable(GL_CLIP_PLANE2);
 	}
 	else
 	{
@@ -115,7 +114,7 @@ void Graphics::Node::Begin(void)
 	}
 	if(_UseClipPlane3 == true)
 	{
-		glEnable(GL_CLIP_PLANE3);
+		GLEnable(GL_CLIP_PLANE3);
 	}
 	else
 	{
@@ -123,7 +122,7 @@ void Graphics::Node::Begin(void)
 	}
 	if(_UseDepthTest == true)
 	{
-		glEnable(GL_DEPTH_TEST);
+		GLEnable(GL_DEPTH_TEST);
 	}
 	else
 	{
@@ -131,7 +130,7 @@ void Graphics::Node::Begin(void)
 	}
 	if(_UseLighting == true)
 	{
-		glEnable(GL_LIGHTING);
+		GLEnable(GL_LIGHTING);
 	}
 	else
 	{
@@ -139,7 +138,7 @@ void Graphics::Node::Begin(void)
 	}
 	if(_Use2DTexture == true)
 	{
-		glEnable(GL_TEXTURE_2D);
+		GLEnable(GL_TEXTURE_2D);
 	}
 	else
 	{

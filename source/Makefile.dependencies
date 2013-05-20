@@ -168,7 +168,8 @@ commodity_class_h = \
 	$(type_definitions_h)
 
 draw_text_cpp = \
-	draw_text.cpp
+	draw_text.cpp \
+	$(graphics_gl_h)
 
 draw_text_h = \
 	draw_text.h
@@ -279,6 +280,13 @@ graphics_engine_cpp = \
 graphics_engine_h = \
 	graphics/engine.h
 
+graphics_gl_cpp = \
+	graphics/gl.cpp \
+	$(graphics_gl_h)
+
+graphics_gl_h = \
+	graphics/gl.h
+
 graphics_light_cpp = \
 	graphics/light.cpp \
 	$(graphics_light_h)
@@ -342,6 +350,7 @@ graphics_model_node_h = \
 
 graphics_node_cpp = \
 	graphics/node.cpp \
+	$(graphics_gl_h) \
 	$(graphics_node_h) \
 	$(graphics_scene_h) \
 	$(math_matrix4f_h)
@@ -398,6 +407,7 @@ graphics_projection_h = \
 
 graphics_scene_cpp = \
 	graphics/scene.cpp \
+	$(graphics_gl_h) \
 	$(graphics_light_h) \
 	$(graphics_particle_system_h) \
 	$(graphics_scene_h)
@@ -465,6 +475,7 @@ main_cpp = \
 	$(goals_h) \
 	$(graphics_camera_h) \
 	$(graphics_engine_h) \
+	$(graphics_gl_h) \
 	$(graphics_light_h) \
 	$(graphics_material_h) \
 	$(graphics_mesh_manager_h) \
@@ -1028,6 +1039,7 @@ ui_image_cpp = \
 	$(color_h) \
 	$(globals_h) \
 	$(graphics_engine_h) \
+	$(graphics_gl_h) \
 	$(graphics_texture_h) \
 	$(graphics_texture_manager_h) \
 	$(ui_image_h)
@@ -1097,6 +1109,7 @@ ui_map_dialog_h = \
 ui_mini_map_display_cpp = \
 	ui/mini_map_display.cpp \
 	$(commodity_h) \
+	$(graphics_gl_h) \
 	$(math_matrix4f_h) \
 	$(object_aspect_position_h) \
 	$(planet_h) \
@@ -1196,6 +1209,7 @@ ui_save_game_dialog_h = \
 
 ui_scanner_display_cpp = \
 	ui/scanner_display.cpp \
+	$(graphics_gl_h) \
 	$(math_matrix4f_h) \
 	$(object_aspect_physical_h) \
 	$(object_aspect_position_h) \

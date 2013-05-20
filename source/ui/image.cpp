@@ -17,11 +17,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include <GL/gl.h>
-
 #include "../color.h"
 #include "../globals.h"
 #include "../graphics/engine.h"
+#include "../graphics/gl.h"
 #include "../graphics/texture.h"
 #include "../graphics/texture_manager.h"
 #include "image.h"
@@ -61,7 +60,7 @@ void UI::Image::Draw(void) const
 		glPushAttrib(GL_ENABLE_BIT | GL_COLOR_BUFFER_BIT);
 		glDisable(GL_LIGHTING);
 		glDisable(GL_DEPTH_TEST);
-		glEnable(GL_BLEND);
+		GLEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 		assert(g_GraphicsEngine != 0);
 		assert(g_GraphicsEngine->GetTextureManager() != 0);
@@ -71,7 +70,7 @@ void UI::Image::Draw(void) const
 		assert(Texture != 0);
 		Texture->Activate();
 		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-		glEnable(GL_TEXTURE_2D);
+		GLEnable(GL_TEXTURE_2D);
 		glBegin(GL_QUADS);
 		glTexCoord2f(0.0f, 1.0f);
 		glVertex2f(0.0f, 0.0f);

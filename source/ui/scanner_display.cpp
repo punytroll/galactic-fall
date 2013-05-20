@@ -17,8 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include <GL/gl.h>
-
+#include "../graphics/gl.h"
 #include "../math/matrix4f.h"
 #include "../object_aspect_physical.h"
 #include "../object_aspect_position.h"
@@ -68,7 +67,7 @@ void UI::ScannerDisplay::Draw(void) const
 	glDisable(GL_CLIP_PLANE1);
 	glDisable(GL_CLIP_PLANE2);
 	glDisable(GL_CLIP_PLANE3);
-	glEnable(GL_DEPTH_TEST);
+	GLEnable(GL_DEPTH_TEST);
 	glDisable(GL_BLEND);
 	glViewport(static_cast< GLint >(GetGlobalPosition()[0]), static_cast< GLint >(GetRootWidget()->GetSize()[1] - GetGlobalPosition()[1] - GetSize()[1]), static_cast< GLint >(GetSize()[0]), static_cast< GLint >(GetSize()[1]));
 	glMatrixMode(GL_PROJECTION);
@@ -81,7 +80,7 @@ void UI::ScannerDisplay::Draw(void) const
 	glLoadMatrixf(PerspectiveMatrix.Matrix());
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
-	glLoadIdentity();
+	GLLoadIdentity();
 	if((_Owner.IsValid() == true) && (_Owner->GetTarget().IsValid() == true))
 	{
 		assert(_Owner->GetTarget()->GetAspectPosition() != 0);
