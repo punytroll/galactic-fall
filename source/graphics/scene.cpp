@@ -19,8 +19,7 @@
 
 #include <assert.h>
 
-#include <GL/gl.h>
-
+#include "gl.h"
 #include "light.h"
 #include "particle_system.h"
 #include "scene.h"
@@ -102,7 +101,7 @@ void Graphics::Scene::Render(void)
 	assert(_RootNode != 0);
 	if(_Light != 0)
 	{
-		glEnable(GL_LIGHT0);
+		GLEnable(GL_LIGHT0);
 		glLightfv(GL_LIGHT0, GL_POSITION, _Light->GetPosition().m_V.m_A);
 		glLightfv(GL_LIGHT0, GL_DIFFUSE, _Light->GetDiffuseColor().m_V.m_A);
 	}

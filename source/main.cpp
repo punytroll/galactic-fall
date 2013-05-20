@@ -30,7 +30,6 @@
 #include <vector>
 
 #include <GL/glx.h>
-#include <GL/gl.h>
 
 #include "arx_reading.h"
 #include "asset_class.h"
@@ -53,6 +52,7 @@
 #include "goals.h"
 #include "graphics/camera.h"
 #include "graphics/engine.h"
+#include "graphics/gl.h"
 #include "graphics/light.h"
 #include "graphics/material.h"
 #include "graphics/mesh_manager.h"
@@ -3116,37 +3116,44 @@ void CreateWindow(void)
 
 void InitializeOpenGL(void)
 {
+	ON_DEBUG(std::cout << "Loading OpenGL functions." << std::endl);
+	LoadOpenGLFunction(glEnable);
+	LoadOpenGLFunction(glGetIntegerv);
+	LoadOpenGLFunction(glLightModelfv);
+	LoadOpenGLFunction(glLoadIdentity);
+	LoadOpenGLFunction(glMatrixMode);
+	
 	ON_DEBUG(std::cout << "Initializing font." << std::endl);
 	InitializeFonts();
 	ON_DEBUG(std::cout << "OpenGL capabilities:" << std::endl);
 	
 	int MaximalNumberOfLights(0);
 	
-	glGetIntegerv(GL_MAX_LIGHTS, &MaximalNumberOfLights);
+	GLGetIntegerv(GL_MAX_LIGHTS, &MaximalNumberOfLights);
 	ON_DEBUG(std::cout << "  Maximal number of lights: " << MaximalNumberOfLights << std::endl);
 	
 	int MaximalNumberOfUniformComponentsForVertexShaders(0);
 	
-	glGetIntegerv(GL_MAX_VERTEX_UNIFORM_COMPONENTS, &MaximalNumberOfUniformComponentsForVertexShaders);
+	GLGetIntegerv(GL_MAX_VERTEX_UNIFORM_COMPONENTS, &MaximalNumberOfUniformComponentsForVertexShaders);
 	ON_DEBUG(std::cout << "  Maximal number of uniform components for vertex shaders: " << MaximalNumberOfUniformComponentsForVertexShaders << std::endl);
 	
 	int MaximalNumberOfUniformComponentsForFragmentShaders(0);
 	
-	glGetIntegerv(GL_MAX_FRAGMENT_UNIFORM_COMPONENTS, &MaximalNumberOfUniformComponentsForFragmentShaders);
+	GLGetIntegerv(GL_MAX_FRAGMENT_UNIFORM_COMPONENTS, &MaximalNumberOfUniformComponentsForFragmentShaders);
 	ON_DEBUG(std::cout << "  Maximal number of uniform components for fragment shaders: " << MaximalNumberOfUniformComponentsForFragmentShaders << std::endl);
 	
 	int MaximalNumberOfVertexAtributes(0);
 	
-	glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &MaximalNumberOfVertexAtributes);
+	GLGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &MaximalNumberOfVertexAtributes);
 	ON_DEBUG(std::cout << "  Maximal number of vertex attributes: " << MaximalNumberOfVertexAtributes << std::endl);
 	
-	glEnable(GL_LIGHTING);
-	glEnable(GL_CULL_FACE);
-	glEnable(GL_DEPTH_TEST);
+	GLEnable(GL_LIGHTING);
+	GLEnable(GL_CULL_FACE);
+	GLEnable(GL_DEPTH_TEST);
 	
 	Vector4f GlobalAmbientLightColor(0.0f, 0.0f, 0.0f, 0.0f);
 	
-	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, GlobalAmbientLightColor.m_V.m_A);
+	GLLightModelfv(GL_LIGHT_MODEL_AMBIENT, GlobalAmbientLightColor.m_V.m_A);
 	Resize();
 }
 

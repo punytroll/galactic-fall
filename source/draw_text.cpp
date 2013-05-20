@@ -21,6 +21,8 @@
 
 #include <string>
 
+#include "graphics/gl.h"
+
 #define CHARACTERS 95
 #define CHARACTEROFFSET 32
 
@@ -131,11 +133,11 @@ void InitializeFonts(void)
 	glViewport(0, 0, 128, 64);
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
-	glLoadIdentity();
+	GLLoadIdentity();
 	glOrtho(0.0, 128.0, 0.0, 64.0, -1, 1);
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
-	glLoadIdentity();
+	GLLoadIdentity();
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
@@ -202,7 +204,7 @@ void DeinitializeFonts(void)
 void DrawText(const std::string & String)
 {
 	glPushAttrib(GL_ENABLE_BIT);
-	glEnable(GL_TEXTURE_2D);
+	GLEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, g_FontTexture);
 	glListBase(g_CharacterCallLists - CHARACTEROFFSET);
 	glCallLists(String.length(), GL_UNSIGNED_BYTE, String.c_str());
