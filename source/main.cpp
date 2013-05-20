@@ -3140,14 +3140,12 @@ void InitializeOpenGL(void)
 	glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &MaximalNumberOfVertexAtributes);
 	ON_DEBUG(std::cout << "  Maximal number of vertex attributes: " << MaximalNumberOfVertexAtributes << std::endl);
 	
-	// TODO: Make configurable via data.arx
-	Vector4f GlobalAmbientLightColor(0.0f, 0.0f, 0.0f, 0.0f);
-	
 	glEnable(GL_LIGHTING);
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
+	
+	Vector4f GlobalAmbientLightColor(0.0f, 0.0f, 0.0f, 0.0f);
+	
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, GlobalAmbientLightColor.m_V.m_A);
 	Resize();
 }
