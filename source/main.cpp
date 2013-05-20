@@ -866,12 +866,9 @@ void CalculateMovements(System * System, float Seconds)
 	}
 }
 
-void UpdateUserInterface(void)
+void UpdateUserInterface(float RealTimeSeconds, float GameTimeSeconds)
 {
-	if(g_TimingDialog != 0)
-	{
-		g_TimingDialog->Update();
-	}
+	g_UserInterface->Update(RealTimeSeconds, GameTimeSeconds);
 	// reset the incremental counters
 	g_SystemStatistics->SetParticleSystemsThisFrame(0);
 	g_SystemStatistics->SetParticlesThisFrame(0);
@@ -1494,7 +1491,7 @@ void GameFrame(void)
 	double PhysicsTimeEnd(RealTime::Get());
 	double PhysicsTimeDelta(PhysicsTimeEnd - PhysicsTimeBegin);
 	
-	UpdateUserInterface();
+	UpdateUserInterface(FrameTimeDelta, Seconds);
 	RealTime::Invalidate();
 	
 	double GraphicsTimeBegin(RealTime::Get());

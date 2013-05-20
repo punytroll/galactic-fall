@@ -102,6 +102,7 @@ namespace UI
 		ConnectionHandle ConnectMouseMovedCallback(Callback2< void, float, float > Callback);
 		ConnectionHandle ConnectPositionChangedCallback(Callback0< void > Callback);
 		ConnectionHandle ConnectSizeChangedCallback(Callback0< void > Callback);
+		ConnectionHandle ConnectUpdatingCallback(Callback2< void, float, float > Callback);
 		void DisconnectDestroyingCallback(ConnectionHandle & ConnectionHandle);
 		void DisconnectKeyCallback(ConnectionHandle & ConnectionHandle);
 		void DisconnectMouseButtonCallback(ConnectionHandle & ConnectionHandle);
@@ -110,6 +111,7 @@ namespace UI
 		void DisconnectMouseMovedCallback(ConnectionHandle & ConnectionHandle);
 		void DisconnectPositionChangedCallback(ConnectionHandle & ConnectionHandle);
 		void DisconnectSizeChangedCallback(ConnectionHandle & ConnectionHandle);
+		void DisconnectUpdatingCallback(ConnectionHandle & ConnectionHandle);
 		// static manager functions
 		static std::list< Widget * > & GetDestroyedWidgets(void);
 	protected:
@@ -141,6 +143,7 @@ namespace UI
 		Event2< void, float, float > _MouseMovedEvent;
 		Event0< void > _PositionChangedEvent;
 		Event0< void > _SizeChangedEvent;
+		Event2< void, float, float > _UpdatingEvent;
 		// static manager properties
 		static std::list< Widget * > m_DestroyedWidgets;
 		static std::stack< std::pair< Vector2f, Vector2f > > m_ClippingRectangles;

@@ -182,6 +182,33 @@ void UI::UserInterface::MouseMoved(float X, float Y)
 	}
 }
 
+void UI::UserInterface::Update(float RealTimeSeconds, float GameTimeSeconds)
+{
+	assert (m_RootWidget != 0);
+	
+	std::stack< std::pair< UI::Widget *, bool > > ToDo;
+	
+	ToDo.push(std::make_pair(m_RootWidget, false));
+	while(ToDo.size() > 0)
+	{
+		std::pair< UI::Widget *, bool > & Widget(ToDo.top());
+		
+		if((Widget.first->m_SubWidgets.size() == 0) || (Widget.second == true))
+		{
+			Widget.first->_UpdatingEvent(RealTimeSeconds, GameTimeSeconds);
+			ToDo.pop();
+		}
+		else
+		{
+			Widget.second = true;
+			for(std::list< UI::Widget * >::reverse_iterator SubWidgetIterator = Widget.first->m_SubWidgets.rbegin(); SubWidgetIterator != Widget.first->m_SubWidgets.rend(); ++SubWidgetIterator)
+			{
+				ToDo.push(std::make_pair(*SubWidgetIterator, false));
+			}
+		}
+	}
+}
+
 void UI::UserInterface::OnCaptureWidgetDestroying(void)
 {
 	m_CaptureWidget->DisconnectDestroyingCallback(m_CaptureWidgetDestroyingCallbackConnectionHandle);

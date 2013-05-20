@@ -31,10 +31,10 @@ namespace UI
 	{
 	public:
 		TimingDialog(UI::Widget * SupWidget);
-		void Update(void);
 	private:
 		// callbacks
 		bool OnKey(const KeyEventInformation & KeyEventInformation);
+		void _OnUpdating(float RealTimeSeconds, float GameTimeSeconds);
 		// member variables
 		UI::Label * m_AISecondsThisFrameLabel;
 		UI::Label * m_CommoditiesInCurrentSystemThisFrameLabel;

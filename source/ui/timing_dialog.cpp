@@ -31,6 +31,7 @@ UI::TimingDialog::TimingDialog(UI::Widget * SupWidget) :
 	SetPosition(Vector2f(300.0f, 300.0f));
 	SetSize(Vector2f(350.0f, 400.0f));
 	ConnectKeyCallback(Callback(this, &UI::TimingDialog::OnKey));
+	ConnectUpdatingCallback(Callback(this, &UI::TimingDialog::_OnUpdating));
 	
 	UI::Label * FramesPerSecondCaptionLabel(new UI::Label(this, "Frames per Second:"));
 	
@@ -201,7 +202,7 @@ bool UI::TimingDialog::OnKey(const KeyEventInformation & KeyEventInformation)
 	return false;
 }
 
-void UI::TimingDialog::Update(void)
+void UI::TimingDialog::_OnUpdating(float RealTimeSeconds, float GameTimeSeconds)
 {
 	m_AISecondsThisFrameLabel->SetText(to_string_cast(g_SystemStatistics->GetAISecondsThisFrame() * 1000, 2) + " ms");
 	m_CommoditiesInCurrentSystemThisFrameLabel->SetText(to_string_cast(g_SystemStatistics->GetCommoditiesInCurrentSystemThisFrame()));

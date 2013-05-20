@@ -416,6 +416,11 @@ ConnectionHandle UI::Widget::ConnectSizeChangedCallback(Callback0< void > Callba
 	return _SizeChangedEvent.Connect(Callback);
 }
 
+ConnectionHandle UI::Widget::ConnectUpdatingCallback(Callback2< void, float, float > Callback)
+{
+	return _UpdatingEvent.Connect(Callback);
+}
+
 void UI::Widget::DisconnectDestroyingCallback(ConnectionHandle & ConnectionHandle)
 {
 	_DestroyingEvent.Disconnect(ConnectionHandle);
@@ -454,6 +459,11 @@ void UI::Widget::DisconnectPositionChangedCallback(ConnectionHandle & Connection
 void UI::Widget::DisconnectSizeChangedCallback(ConnectionHandle & ConnectionHandle)
 {
 	_SizeChangedEvent.Disconnect(ConnectionHandle);
+}
+
+void UI::Widget::DisconnectUpdatingCallback(ConnectionHandle & ConnectionHandle)
+{
+	_UpdatingEvent.Disconnect(ConnectionHandle);
 }
 
 void UI::Widget::PushClippingRectangle(const Vector2f & Position, const Vector2f & Size)
