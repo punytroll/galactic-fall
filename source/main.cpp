@@ -984,21 +984,19 @@ void UpdateUserInterface(void)
 
 void UpdateMainViewCamera(void)
 {
-	Matrix4f SpacialMatrix(-g_CameraPosition.m_V.m_A[0], -g_CameraPosition.m_V.m_A[1], -g_CameraPosition.m_V.m_A[2]);
+	Matrix4f SpacialMatrix(true);
 
-	if(g_FirstPersonCameraMode == true)
-	{
-		SpacialMatrix.Transform(Matrix4f(Quaternion(M_PI / 2.0f, Quaternion::InitializeRotationZ)));
-	}
 	if(g_CameraFocus.IsValid() == true)
 	{
 		assert(g_CameraFocus->GetAspectPosition() != 0);
+		SpacialMatrix.Translate(g_CameraFocus->GetAspectPosition()->GetPosition().m_V.m_A[0], g_CameraFocus->GetAspectPosition()->GetPosition().m_V.m_A[1], 0.0f);
 		if(g_FirstPersonCameraMode == true)
 		{
-			SpacialMatrix.Transform(Matrix4f(g_CameraFocus->GetAspectPosition()->GetOrientation().Conjugated()));
+			SpacialMatrix.RotateZ(-M_PI / 2.0f);
+			SpacialMatrix.Transform(g_CameraFocus->GetAspectPosition()->GetOrientation());
 		}
-		SpacialMatrix.Transform(Matrix4f(-g_CameraFocus->GetAspectPosition()->GetPosition().m_V.m_A[0], -g_CameraFocus->GetAspectPosition()->GetPosition().m_V.m_A[1], 0.0f));
 	}
+	SpacialMatrix.Translate(g_CameraPosition);
 	assert(g_MainView != 0);
 	assert(g_MainView->GetCamera() != 0);
 	g_MainView->GetCamera()->SetSpacialMatrix(SpacialMatrix);

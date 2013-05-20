@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 1.4.4 of algebra.
+ * This is part of version 1.5.0 of algebra.
  **/
 
 #ifndef ALGEBRA_AXIS_ANGLE_H
