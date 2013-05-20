@@ -50,7 +50,7 @@ void Graphics::View::Render(void)
 	glMatrixMode(GL_PROJECTION);
 	glLoadMatrixf(_Camera->GetProjection()->GetMatrix().Transposed().Matrix());
 	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf(_Camera->GetSpacialMatrix().Transposed().Matrix());
+	glLoadMatrixf(_Camera->GetSpacialMatrix().Inverted().Transpose().Matrix());
 	if(_Scene != 0)
 	{
 		_Scene->Render();
