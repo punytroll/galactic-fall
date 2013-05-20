@@ -560,7 +560,9 @@ math_matrix3f_h = \
 math_matrix4f_h = \
 	math/matrix4f.h \
 	$(math_details_h) \
-	$(math_quaternion_h)
+	$(math_quaternion_h) \
+	$(math_vector3f_h) \
+	$(math_vector4f_h)
 
 math_quaternion_h = \
 	math/quaternion.h \
