@@ -39,6 +39,7 @@ namespace UI
 		bool MouseButton(int Button, int State, float X, float Y);
 		bool Key(const KeyEventInformation & KeyEventInformation);
 		void MouseMoved(float X, float Y);
+		void Update(float RealTimeSeconds, float GameTimeSeconds);
 		// setters
 		void SetCaptureWidget(UI::Widget * Widget);
 		void ReleaseCaptureWidget(void);
