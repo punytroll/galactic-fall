@@ -24,6 +24,7 @@ namespace Graphics
 {
 	class Camera;
 	class Engine;
+	class RenderTarget;
 	class Scene;
 	
 	class View
@@ -35,8 +36,10 @@ namespace Graphics
 		// getters
 		Graphics::Camera * GetCamera(void);
 		Graphics::Engine * GetEngine(void);
+		Graphics::RenderTarget * GetRenderTarget(void);
 		Graphics::Scene * GetScene(void);
 		// setters
+		void SetRenderTarget(Graphics::RenderTarget * RenderTarget);
 		void SetScene(Graphics::Scene * Scene);
 		// modifiers
 		void Render(void);
@@ -44,6 +47,7 @@ namespace Graphics
 		void _SetEngine(Graphics::Engine * Engine);
 		Graphics::Camera * _Camera;
 		Graphics::Engine * _Engine;
+		Graphics::RenderTarget * _RenderTarget;
 		Graphics::Scene * _Scene;
 	};
 	
@@ -55,6 +59,11 @@ namespace Graphics
 	inline Graphics::Engine * View::GetEngine(void)
 	{
 		return _Engine;
+	}
+	
+	inline Graphics::RenderTarget * View::GetRenderTarget(void)
+	{
+		return _RenderTarget;
 	}
 	
 	inline Graphics::Scene * View::GetScene(void)

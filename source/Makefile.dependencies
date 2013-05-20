@@ -269,6 +269,15 @@ graphics_camera_h = \
 	graphics/camera.h \
 	$(math_matrix4f_h)
 
+graphics_default_render_target_cpp = \
+	graphics/default_render_target.cpp \
+	$(graphics_default_render_target_h) \
+	$(graphics_gl_h)
+
+graphics_default_render_target_h = \
+	graphics/default_render_target.h \
+	$(graphics_render_target_h)
+
 graphics_engine_cpp = \
 	graphics/engine.cpp \
 	$(graphics_engine_h) \
@@ -405,6 +414,13 @@ graphics_projection_h = \
 	graphics/projection.h \
 	$(math_matrix4f_h)
 
+graphics_render_target_cpp = \
+	graphics/render_target.cpp \
+	$(graphics_render_target_h)
+
+graphics_render_target_h = \
+	graphics/render_target.h
+
 graphics_scene_cpp = \
 	graphics/scene.cpp \
 	$(graphics_gl_h) \
@@ -436,6 +452,7 @@ graphics_view_cpp = \
 	graphics/view.cpp \
 	$(graphics_camera_h) \
 	$(graphics_projection_h) \
+	$(graphics_render_target_h) \
 	$(graphics_scene_h) \
 	$(graphics_view_h)
 
@@ -474,6 +491,7 @@ main_cpp = \
 	$(globals_h) \
 	$(goals_h) \
 	$(graphics_camera_h) \
+	$(graphics_default_render_target_h) \
 	$(graphics_engine_h) \
 	$(graphics_gl_h) \
 	$(graphics_light_h) \
