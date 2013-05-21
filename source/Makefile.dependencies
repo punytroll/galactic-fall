@@ -276,7 +276,8 @@ graphics_default_render_target_cpp = \
 
 graphics_default_render_target_h = \
 	graphics/default_render_target.h \
-	$(graphics_render_target_h)
+	$(graphics_render_target_h) \
+	$(type_definitions_h)
 
 graphics_engine_cpp = \
 	graphics/engine.cpp \
