@@ -101,7 +101,7 @@ UI::TradeCenterAssetClass::TradeCenterAssetClass(UI::Widget * SupWidget, PlanetA
 
 void UI::TradeCenterAssetClass::UpdateCharacterAmount(void)
 {
-	m_CharacterAmountLabel->SetText(to_string_cast(m_Ship->GetCargoHold()->GetAmount(m_PlanetAssetClass->GetAssetClass()->GetObjectType(), m_PlanetAssetClass->GetAssetClass()->GetObjectClass())));
+	m_CharacterAmountLabel->SetText(to_string_cast(m_Ship->GetCargoHold()->GetAmount(m_PlanetAssetClass->GetAssetClass()->GetObjectTypeIdentifier(), m_PlanetAssetClass->GetAssetClass()->GetObjectClassIdentifier())));
 }
 
 const PlanetAssetClass * UI::TradeCenterAssetClass::GetPlanetAssetClass(void) const
@@ -207,11 +207,11 @@ void UI::TradeCenterWidget::Buy(const PlanetAssetClass * PlanetAssetClass)
 	
 	if(m_Character->RemoveCredits(Price) == true)
 	{
-		if(m_Character->GetShip()->GetCargoHold()->GetSpace() >= g_ObjectFactory->GetSpaceRequirement(PlanetAssetClass->GetAssetClass()->GetObjectType(), PlanetAssetClass->GetAssetClass()->GetObjectClass()))
+		if(m_Character->GetShip()->GetCargoHold()->GetSpace() >= g_ObjectFactory->GetSpaceRequirement(PlanetAssetClass->GetAssetClass()->GetObjectTypeIdentifier(), PlanetAssetClass->GetAssetClass()->GetObjectClassIdentifier()))
 		{
-			Object * NewCargo(g_ObjectFactory->Create(PlanetAssetClass->GetAssetClass()->GetObjectType(), PlanetAssetClass->GetAssetClass()->GetObjectClass()));
+			Object * NewCargo(g_ObjectFactory->Create(PlanetAssetClass->GetAssetClass()->GetObjectTypeIdentifier(), PlanetAssetClass->GetAssetClass()->GetObjectClassIdentifier()));
 			
-			NewCargo->SetObjectIdentifier("::asset(" + PlanetAssetClass->GetAssetClass()->GetIdentifier() + ")::" + PlanetAssetClass->GetAssetClass()->GetObjectType() + "(" + PlanetAssetClass->GetAssetClass()->GetObjectClass() + ")::created_on(" + m_Planet->GetObjectIdentifier() + ")::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::bought_by(" + m_Character->GetObjectIdentifier() + ")::created_at_address(" + to_string_cast(reinterpret_cast< void * >(NewCargo)) + ")");
+			NewCargo->SetObjectIdentifier("::asset(" + PlanetAssetClass->GetAssetClass()->GetIdentifier() + ")::" + PlanetAssetClass->GetAssetClass()->GetObjectTypeIdentifier() + "(" + PlanetAssetClass->GetAssetClass()->GetObjectClassIdentifier() + ")::created_on(" + m_Planet->GetObjectIdentifier() + ")::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::bought_by(" + m_Character->GetObjectIdentifier() + ")::created_at_address(" + to_string_cast(reinterpret_cast< void * >(NewCargo)) + ")");
 			assert(m_Character->GetShip()->GetAspectObjectContainer() != 0);
 			m_Character->GetShip()->GetCargoHold()->GetAspectObjectContainer()->AddContent(NewCargo);
 			UpdateTraderCredits();
@@ -275,7 +275,7 @@ void UI::TradeCenterWidget::Sell(const PlanetAssetClass * PlanetAssetClass)
 	{
 		Object * Content(*ContentIterator);
 		
-		if((Content->GetTypeIdentifier() == PlanetAssetClass->GetAssetClass()->GetObjectType()) && (Content->GetClassIdentifier() == PlanetAssetClass->GetAssetClass()->GetObjectClass()) && ((Content->GetAspectAccessory() == 0) || (Content->GetAspectAccessory()->GetSlot() == 0)))
+		if((Content->GetTypeIdentifier() == PlanetAssetClass->GetAssetClass()->GetObjectTypeIdentifier()) && (Content->GetClassIdentifier() == PlanetAssetClass->GetAssetClass()->GetObjectClassIdentifier()) && ((Content->GetAspectAccessory() == 0) || (Content->GetAspectAccessory()->GetSlot() == 0)))
 		{
 			m_Character->GetShip()->GetCargoHold()->GetAspectObjectContainer()->RemoveContent(Content);
 			delete Content;
@@ -335,7 +335,7 @@ bool UI::TradeCenterWidget::OnAssetClassMouseButton(TradeCenterAssetClass * Trad
 		m_SelectedTradeCenterAssetClass->SetBackgroundColor(Color(0.4f, 0.1f, 0.1f, 1.0f));
 		ClearAssetClassViewDisplay();
 		
-		const VisualizationPrototype * VisualizationPrototype(g_ObjectFactory->GetVisualizationPrototype(m_SelectedTradeCenterAssetClass->GetPlanetAssetClass()->GetAssetClass()->GetObjectType(), m_SelectedTradeCenterAssetClass->GetPlanetAssetClass()->GetAssetClass()->GetObjectClass()));
+		const VisualizationPrototype * VisualizationPrototype(g_ObjectFactory->GetVisualizationPrototype(m_SelectedTradeCenterAssetClass->GetPlanetAssetClass()->GetAssetClass()->GetObjectTypeIdentifier(), m_SelectedTradeCenterAssetClass->GetPlanetAssetClass()->GetAssetClass()->GetObjectClassIdentifier()));
 		
 		if(VisualizationPrototype != 0)
 		{

@@ -28,6 +28,7 @@ class Model;
 class AssetClass
 {
 public:
+	// constructor & destructor
 	AssetClass(const std::string & Identifier);
 	~AssetClass(void);
 	// getters
@@ -35,21 +36,21 @@ public:
 	const std::string & GetIdentifier(void) const;
 	const std::string & GetImageIdentifier(void) const;
 	const std::string & GetName(void) const;
-	const std::string & GetObjectClass(void) const;
-	const std::string & GetObjectType(void) const;
+	const std::string & GetObjectClassIdentifier(void) const;
+	const std::string & GetObjectTypeIdentifier(void) const;
 	// setters
 	void SetBasePrice(float BasePrice);
 	void SetImageIdentifier(const std::string & ImageIdentifier);
 	void SetName(const std::string & Name);
-	void SetObjectClass(const std::string & ObjectClass);
-	void SetObjectType(const std::string & ObjectType);
+	void SetObjectClassIdentifier(const std::string & ObjectClassIdentifier);
+	void SetObjectTypeIdentifier(const std::string & ObjectTypeIdentifier);
 private:
 	float _BasePrice;
 	std::string _Identifier;
 	std::string _ImageIdentifier;
 	std::string _Name;
-	std::string _ObjectClass;
-	std::string _ObjectType;
+	std::string _ObjectClassIdentifier;
+	std::string _ObjectTypeIdentifier;
 };
 
 inline float AssetClass::GetBasePrice(void) const
@@ -72,14 +73,14 @@ inline const std::string & AssetClass::GetName(void) const
 	return _Name;
 }
 
-inline const std::string & AssetClass::GetObjectClass(void) const
+inline const std::string & AssetClass::GetObjectClassIdentifier(void) const
 {
-	return _ObjectClass;
+	return _ObjectClassIdentifier;
 }
 
-inline const std::string & AssetClass::GetObjectType(void) const
+inline const std::string & AssetClass::GetObjectTypeIdentifier(void) const
 {
-	return _ObjectType;
+	return _ObjectTypeIdentifier;
 }
 
 inline void AssetClass::SetBasePrice(float BasePrice)
@@ -97,14 +98,14 @@ inline void AssetClass::SetName(const std::string & Name)
 	_Name = Name;
 }
 
-inline void AssetClass::SetObjectClass(const std::string & ObjectClass)
+inline void AssetClass::SetObjectClassIdentifier(const std::string & ObjectClassIdentifier)
 {
-	_ObjectClass = ObjectClass;
+	_ObjectClassIdentifier = ObjectClassIdentifier;
 }
 
-inline void AssetClass::SetObjectType(const std::string & ObjectType)
+inline void AssetClass::SetObjectTypeIdentifier(const std::string & ObjectTypeIdentifier)
 {
-	_ObjectType = ObjectType;
+	_ObjectTypeIdentifier = ObjectTypeIdentifier;
 }
 
 #endif
