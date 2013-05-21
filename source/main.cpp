@@ -2722,7 +2722,7 @@ void ActionOpenMainMenuWindow(void)
 			g_MainMenuWindow->GetResumeGameButton()->SetEnabled(false);
 			g_MainMenuWindow->GetSaveGameButton()->SetEnabled(false);
 		}
-		g_MainMenuWindow->SetPosition(Vector2f((g_Width - g_MainMenuWindow->GetSize()[0]) / 2.0f, (g_Height - g_MainMenuWindow->GetSize()[1]) / 2.0f));
+		g_MainMenuWindow->SetPosition(Vector2f((g_UserInterface->GetRootWidget()->GetSize()[0] - g_MainMenuWindow->GetSize()[0]) / 2.0f, (g_UserInterface->GetRootWidget()->GetSize()[1] - g_MainMenuWindow->GetSize()[1]) / 2.0f));
 		g_MainMenuWindow->GrabKeyFocus();
 		g_MainMenuWindow->ConnectDestroyingCallback(Callback(OnMainMenuDestroying));
 	}
