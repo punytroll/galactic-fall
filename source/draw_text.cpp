@@ -182,13 +182,13 @@ void InitializeFonts(void)
 		glNewList(g_CharacterCallLists + CharacterIndex, GL_COMPILE);
 		glBegin(GL_QUADS);
 		glTexCoord2f((CharacterIndex % CharactersPerLine) * CharacterWidth, 1.0f - (CharacterHeight * static_cast< unsigned int >(CharacterIndex / CharactersPerLine + 1)));
-		glVertex2f(0.0f, 12.0f);
+		GLVertex2f(0.0f, 12.0f);
 		glTexCoord2f((CharacterIndex % CharactersPerLine + 1) * CharacterWidth, 1.0f - (CharacterHeight * static_cast< unsigned int >(CharacterIndex / CharactersPerLine + 1)));
-		glVertex2f(6.0f, 12.0f);
+		GLVertex2f(6.0f, 12.0f);
 		glTexCoord2f((CharacterIndex % CharactersPerLine + 1) * CharacterWidth, 1.0f - (CharacterHeight * static_cast< unsigned int >(CharacterIndex / CharactersPerLine)));
-		glVertex2f(6.0f, 0.0f);
+		GLVertex2f(6.0f, 0.0f);
 		glTexCoord2f((CharacterIndex % CharactersPerLine) * CharacterWidth, 1.0f - (CharacterHeight * static_cast< unsigned int >(CharacterIndex / CharactersPerLine)));
-		glVertex2f(0.0f, 0.0f);
+		GLVertex2f(0.0f, 0.0f);
 		glEnd();
 		glTranslatef(6.0f, 0.0f, 0.0f);
 		glEndList();

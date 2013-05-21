@@ -73,13 +73,13 @@ void UI::Image::Draw(void) const
 		GLEnable(GL_TEXTURE_2D);
 		glBegin(GL_QUADS);
 		glTexCoord2f(0.0f, 1.0f);
-		glVertex2f(0.0f, 0.0f);
+		GLVertex2f(0.0f, 0.0f);
 		glTexCoord2f(0.0f, 0.0f);
-		glVertex2f(0.0f, GetSize()[1]);
+		GLVertex2f(0.0f, GetSize()[1]);
 		glTexCoord2f(1.0f, 0.0f);
-		glVertex2f(GetSize()[0], GetSize()[1]);
+		GLVertex2f(GetSize()[0], GetSize()[1]);
 		glTexCoord2f(1.0f, 1.0f);
-		glVertex2f(GetSize()[0], 0.0f);
+		GLVertex2f(GetSize()[0], 0.0f);
 		glEnd();
 		glPopAttrib();
 	}

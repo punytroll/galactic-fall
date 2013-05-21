@@ -97,7 +97,7 @@ void UI::MiniMapDisplay::Draw(void) const
 			{
 				glColor3f(0.2f, 1.0f, 0.0f);
 			}
-			glVertex2f((*PlanetIterator)->GetAspectPosition()->GetPosition().m_V.m_A[0], (*PlanetIterator)->GetAspectPosition()->GetPosition().m_V.m_A[1]);
+			GLVertex2f((*PlanetIterator)->GetAspectPosition()->GetPosition().m_V.m_A[0], (*PlanetIterator)->GetAspectPosition()->GetPosition().m_V.m_A[1]);
 			if(*PlanetIterator == _Owner->GetTarget().Get())
 			{
 				glColor3f(0.8f, 0.8f, 0.8f);
@@ -109,7 +109,7 @@ void UI::MiniMapDisplay::Draw(void) const
 			{
 				glColor3f(0.2f, 1.0f, 0.0f);
 			}
-			glVertex2f((*ShipIterator)->GetAspectPosition()->GetPosition().m_V.m_A[0], (*ShipIterator)->GetAspectPosition()->GetPosition().m_V.m_A[1]);
+			GLVertex2f((*ShipIterator)->GetAspectPosition()->GetPosition().m_V.m_A[0], (*ShipIterator)->GetAspectPosition()->GetPosition().m_V.m_A[1]);
 			if(*ShipIterator == _Owner->GetTarget().Get())
 			{
 				glColor3f(0.8f, 0.8f, 0.8f);
@@ -121,7 +121,7 @@ void UI::MiniMapDisplay::Draw(void) const
 			{
 				glColor3f(0.2f, 1.0f, 0.0f);
 			}
-			glVertex2f((*CommodityIterator)->GetAspectPosition()->GetPosition().m_V.m_A[0], (*CommodityIterator)->GetAspectPosition()->GetPosition().m_V.m_A[1]);
+			GLVertex2f((*CommodityIterator)->GetAspectPosition()->GetPosition().m_V.m_A[0], (*CommodityIterator)->GetAspectPosition()->GetPosition().m_V.m_A[1]);
 			if(*CommodityIterator == _Owner->GetTarget().Get())
 			{
 				glColor3f(0.8f, 0.8f, 0.8f);

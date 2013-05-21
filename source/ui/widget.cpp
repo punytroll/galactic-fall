@@ -70,10 +70,10 @@ void UI::Widget::Draw(void) const
 	{
 		GLColor4fv(Color->GetColor().m_V.m_A);
 		glBegin(GL_QUADS);
-		glVertex2f(0.0f, 0.0f);
-		glVertex2f(0.0f, m_Size.m_V.m_A[1]);
-		glVertex2f(m_Size.m_V.m_A[0], m_Size.m_V.m_A[1]);
-		glVertex2f(m_Size.m_V.m_A[0], 0.0f);
+		GLVertex2f(0.0f, 0.0f);
+		GLVertex2f(0.0f, m_Size.m_V.m_A[1]);
+		GLVertex2f(m_Size.m_V.m_A[0], m_Size.m_V.m_A[1]);
+		GLVertex2f(m_Size.m_V.m_A[0], 0.0f);
 		glEnd();
 	}
 	if(m_SubWidgets.empty() == false)

@@ -37,5 +37,6 @@ glMaterialfvFunction __glMaterialfv(0);
 glMatrixModeFunction __glMatrixMode(0);
 glNormal3fvFunction __glNormal3fv(0);
 glRenderbufferStorageFunction __glRenderbufferStorage(0);
+glVertex2fFunction __glVertex2f(0);
 glVertex3fvFunction __glVertex3fv(0);
 glViewportFunction __glViewport(0);
