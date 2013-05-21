@@ -76,3 +76,7 @@ extern glMatrixModeFunction __glMatrixMode;
 typedef void (* glRenderbufferStorageFunction)(GLenum target, GLenum internalformat, GLsizei width, GLsizei height);
 extern glRenderbufferStorageFunction __glRenderbufferStorage;
 #define GLRenderbufferStorage(target, internalformat, width, height) { assert(__glRenderbufferStorage != 0); __glRenderbufferStorage(target, internalformat, width, height); CheckGLError; }
+
+typedef void (* glViewportFunction)(GLint x, GLint y, GLsizei width, GLsizei height);
+extern glViewportFunction __glViewport;
+#define GLViewport(x, y, width, height) { assert(__glViewport != 0); __glViewport(x, y, width, height); CheckGLError; }

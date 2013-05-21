@@ -31,3 +31,4 @@ glLightModelfvFunction __glLightModelfv(0);
 glLoadIdentityFunction __glLoadIdentity(0);
 glMatrixModeFunction __glMatrixMode(0);
 glRenderbufferStorageFunction __glRenderbufferStorage(0);
+glViewportFunction __glViewport(0);

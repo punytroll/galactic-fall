@@ -20,6 +20,7 @@
 #ifndef GRAPHICS_DEFAULT_RENDER_TARGET_H
 #define GRAPHICS_DEFAULT_RENDER_TARGET_H
 
+#include "../type_definitions.h"
 #include "render_target.h"
 
 namespace Graphics
@@ -27,7 +28,13 @@ namespace Graphics
 	class DefaultRenderTarget : public RenderTarget
 	{
 	public:
+		// setters
+		void SetSize(unsigned_numeric Width, unsigned_numeric Height);
+		// modifiers
 		virtual void Activate(void);
+	private:
+		unsigned_numeric _Height;
+		unsigned_numeric _Width;
 	};
 }
 
