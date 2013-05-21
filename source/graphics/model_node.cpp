@@ -49,7 +49,6 @@ void Graphics::ModelNode::Draw(void)
 {
 	if(_Model != 0)
 	{
-		
 		const std::map< std::string, const Graphics::Mesh * > & Meshes(_Model->GetMeshes());
 		
 		for(std::map< std::string, const Graphics::Mesh * >::const_iterator MeshIterator = Meshes.begin(); MeshIterator != Meshes.end(); ++MeshIterator)
