@@ -25,7 +25,9 @@ namespace Graphics
 	class RenderTarget
 	{
 	public:
+		// destructor
 		virtual ~RenderTarget(void);
+		// modifiers
 		virtual void Activate(void) = 0;
 	};
 }
