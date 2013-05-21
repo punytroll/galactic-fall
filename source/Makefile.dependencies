@@ -315,6 +315,7 @@ graphics_material_h = \
 
 graphics_mesh_cpp = \
 	graphics/mesh.cpp \
+	$(graphics_gl_h) \
 	$(graphics_mesh_h)
 
 graphics_mesh_h = \
@@ -348,6 +349,7 @@ graphics_model_manager_h = \
 graphics_model_node_cpp = \
 	graphics/model_node.cpp \
 	$(color_h) \
+	$(graphics_gl_h) \
 	$(graphics_material_h) \
 	$(graphics_mesh_h) \
 	$(graphics_model_h) \
@@ -385,6 +387,7 @@ graphics_particle_system_cpp = \
 	$(game_time_h) \
 	$(globals_h) \
 	$(graphics_engine_h) \
+	$(graphics_gl_h) \
 	$(graphics_particle_system_h) \
 	$(graphics_scene_h) \
 	$(graphics_texture_h) \
@@ -1037,6 +1040,7 @@ type_definitions_h = \
 
 ui_border_cpp = \
 	ui/border.cpp \
+	$(graphics_gl_h) \
 	$(ui_border_h)
 
 ui_border_h = \
@@ -1082,6 +1086,7 @@ ui_image_h = \
 ui_label_cpp = \
 	ui/label.cpp \
 	$(draw_text_h) \
+	$(graphics_gl_h) \
 	$(ui_label_h)
 
 ui_label_h = \
@@ -1366,9 +1371,8 @@ ui_view_display_cpp = \
 	ui/view_display.cpp \
 	$(color_h) \
 	$(globals_h) \
-	$(graphics_engine_h) \
 	$(graphics_texture_h) \
-	$(graphics_texture_manager_h) \
+	$(graphics_texture_render_target_h) \
 	$(graphics_view_h) \
 	$(ui_view_display_h)
 
@@ -1380,6 +1384,7 @@ ui_widget_cpp = \
 	ui/widget.cpp \
 	$(callbacks_callbacks_h) \
 	$(color_h) \
+	$(graphics_gl_h) \
 	$(math_h) \
 	$(ui_widget_h)
 

@@ -19,9 +19,8 @@
 
 #include <vector>
 
-#include <GL/gl.h>
-
 #include "../draw_text.h"
+#include "../graphics/gl.h"
 #include "label.h"
 
 UI::Label::Label(Widget * SupWidget, const std::string & Text) :
@@ -52,7 +51,7 @@ void UI::Label::Draw(void) const
 	float Width(GetSize().m_V.m_A[0]);
 	
 	Widget::Draw();
-	glColor4fv(m_TextColor->GetColor().m_V.m_A);
+	GLColor4fv(m_TextColor->GetColor().m_V.m_A);
 	if(m_Wrap == false)
 	{
 		glPushMatrix();

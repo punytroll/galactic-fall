@@ -17,10 +17,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include <GL/gl.h>
-
 #include "../color.h"
 #include "../math/matrix4f.h"
+#include "gl.h"
 #include "material.h"
 #include "mesh.h"
 #include "model.h"
@@ -62,29 +61,29 @@ void Graphics::ModelNode::Draw(void)
 				if(MaterialIterator == _Materials.end())
 				{
 					// if no material is set for this mesh
-					glMaterialfv(GL_FRONT, GL_DIFFUSE, Vector4f(1.0f, 1.0f, 1.0f, 1.0f).m_V.m_A);
-					glMaterialf(GL_FRONT, GL_SHININESS, 0.0f);
-					glMaterialfv(GL_FRONT, GL_SPECULAR, Vector4f(0.0f, 0.0f, 0.0f, 1.0f).m_V.m_A);
+					GLMaterialfv(GL_FRONT, GL_DIFFUSE, Vector4f(1.0f, 1.0f, 1.0f, 1.0f).m_V.m_A);
+					GLMaterialf(GL_FRONT, GL_SHININESS, 0.0f);
+					GLMaterialfv(GL_FRONT, GL_SPECULAR, Vector4f(0.0f, 0.0f, 0.0f, 1.0f).m_V.m_A);
 				}
 				else
 				{
 					if(MaterialIterator->second->GetDiffuseColor() != 0)
 					{
-						glMaterialfv(GL_FRONT, GL_DIFFUSE, MaterialIterator->second->GetDiffuseColor()->GetColor().m_V.m_A);
+						GLMaterialfv(GL_FRONT, GL_DIFFUSE, MaterialIterator->second->GetDiffuseColor()->GetColor().m_V.m_A);
 					}
 					else
 					{
-						glMaterialfv(GL_FRONT, GL_DIFFUSE, Vector4f(1.0f, 1.0f, 1.0f, 1.0f).m_V.m_A);
+						GLMaterialfv(GL_FRONT, GL_DIFFUSE, Vector4f(1.0f, 1.0f, 1.0f, 1.0f).m_V.m_A);
 					}
 					if(MaterialIterator->second->GetSpecularColor() != 0)
 					{
-						glMaterialf(GL_FRONT, GL_SHININESS, MaterialIterator->second->GetShininess());
-						glMaterialfv(GL_FRONT, GL_SPECULAR, MaterialIterator->second->GetSpecularColor()->GetColor().m_V.m_A);
+						GLMaterialf(GL_FRONT, GL_SHININESS, MaterialIterator->second->GetShininess());
+						GLMaterialfv(GL_FRONT, GL_SPECULAR, MaterialIterator->second->GetSpecularColor()->GetColor().m_V.m_A);
 					}
 					else
 					{
-						glMaterialf(GL_FRONT, GL_SHININESS, 0.0f);
-						glMaterialfv(GL_FRONT, GL_SPECULAR, Vector4f(0.0f, 0.0f, 0.0f, 1.0f).m_V.m_A);
+						GLMaterialf(GL_FRONT, GL_SHININESS, 0.0f);
+						GLMaterialfv(GL_FRONT, GL_SPECULAR, Vector4f(0.0f, 0.0f, 0.0f, 1.0f).m_V.m_A);
 					}
 				}
 			}
@@ -92,7 +91,7 @@ void Graphics::ModelNode::Draw(void)
 			{
 				if((MaterialIterator != _Materials.end()) && (MaterialIterator->second->GetDiffuseColor() != 0))
 				{
-					glColor4fv(MaterialIterator->second->GetDiffuseColor()->GetColor().m_V.m_A);
+					GLColor4fv(MaterialIterator->second->GetDiffuseColor()->GetColor().m_V.m_A);
 				}
 			}
 			MeshIterator->second->Draw();
