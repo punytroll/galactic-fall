@@ -355,11 +355,7 @@ bool UI::TradeCenterWidget::OnAssetClassMouseButton(TradeCenterAssetClass * Trad
 				g_GraphicsEngine->AddView(View);
 				assert(View->GetCamera() != 0);
 				View->GetCamera()->SetProjection(PerspectiveProjection);
-				
-				Matrix4f SpacialMatrix(0.0f, -2.5f, 1.4f);
-				
-				SpacialMatrix.Transform(Quaternion(1.05f, Quaternion::InitializeRotationX));
-				View->GetCamera()->SetSpacialMatrix(SpacialMatrix);
+				View->GetCamera()->SetSpacialMatrix(Matrix4f(0.0f, -2.5f, 1.4f).RotateX(1.05f));
 				
 				Graphics::Scene * Scene(new Graphics::Scene());
 				
@@ -445,6 +441,6 @@ void UI::TradeCenterWidget::_OnUpdating(float RealTimeSeconds, float GameTimeSec
 	{
 		assert(_AssetClassViewDisplay->GetView()->GetScene() != 0);
 		assert(_AssetClassViewDisplay->GetView()->GetScene()->GetRootNode() != 0);
-		_AssetClassViewDisplay->GetView()->GetScene()->GetRootNode()->SetOrientation(_AssetClassViewDisplay->GetView()->GetScene()->GetRootNode()->GetOrientation() * Quaternion(-RealTimeSeconds * M_PI / 4.0f, Quaternion::InitializeRotationZ));
+		_AssetClassViewDisplay->GetView()->GetScene()->GetRootNode()->SetOrientation(_AssetClassViewDisplay->GetView()->GetScene()->GetRootNode()->GetOrientation().RotatedZ(-RealTimeSeconds * M_PI / 4.0f));
 	}
 }
