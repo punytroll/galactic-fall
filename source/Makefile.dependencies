@@ -449,6 +449,17 @@ graphics_texture_manager_cpp = \
 graphics_texture_manager_h = \
 	graphics/texture_manager.h
 
+graphics_texture_render_target_cpp = \
+	graphics/texture_render_target.cpp \
+	$(graphics_gl_h) \
+	$(graphics_texture_h) \
+	$(graphics_texture_render_target_h)
+
+graphics_texture_render_target_h = \
+	graphics/texture_render_target.h \
+	$(graphics_gl_h) \
+	$(graphics_render_target_h)
+
 graphics_view_cpp = \
 	graphics/view.cpp \
 	$(graphics_camera_h) \
@@ -505,6 +516,7 @@ main_cpp = \
 	$(graphics_particle_system_h) \
 	$(graphics_perspective_projection_h) \
 	$(graphics_scene_h) \
+	$(graphics_texture_h) \
 	$(graphics_texture_manager_h) \
 	$(graphics_view_h) \
 	$(key_event_information_h) \
@@ -1305,6 +1317,16 @@ ui_trade_center_widget_cpp = \
 	$(commodity_class_h) \
 	$(game_time_h) \
 	$(globals_h) \
+	$(graphics_camera_h) \
+	$(graphics_engine_h) \
+	$(graphics_light_h) \
+	$(graphics_node_h) \
+	$(graphics_perspective_projection_h) \
+	$(graphics_scene_h) \
+	$(graphics_texture_h) \
+	$(graphics_texture_manager_h) \
+	$(graphics_texture_render_target_h) \
+	$(graphics_view_h) \
 	$(key_event_information_h) \
 	$(object_aspect_accessory_h) \
 	$(object_aspect_name_h) \
@@ -1320,6 +1342,9 @@ ui_trade_center_widget_cpp = \
 	$(ui_scroll_bar_h) \
 	$(ui_scroll_box_h) \
 	$(ui_trade_center_widget_h) \
+	$(ui_view_display_h) \
+	$(visualization_prototype_h) \
+	$(visualizations_h) \
 	$(weapon_h) \
 	$(weapon_class_h)
 
@@ -1336,6 +1361,20 @@ ui_user_interface_cpp = \
 ui_user_interface_h = \
 	ui/user_interface.h \
 	$(callbacks_connection_handle_h)
+
+ui_view_display_cpp = \
+	ui/view_display.cpp \
+	$(color_h) \
+	$(globals_h) \
+	$(graphics_engine_h) \
+	$(graphics_texture_h) \
+	$(graphics_texture_manager_h) \
+	$(graphics_view_h) \
+	$(ui_view_display_h)
+
+ui_view_display_h = \
+	ui/view_display.h \
+	$(ui_widget_h)
 
 ui_widget_cpp = \
 	ui/widget.cpp \

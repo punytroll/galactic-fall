@@ -64,6 +64,7 @@
 #include "graphics/particle_system.h"
 #include "graphics/perspective_projection.h"
 #include "graphics/scene.h"
+#include "graphics/texture.h"
 #include "graphics/texture_manager.h"
 #include "graphics/view.h"
 #include "key_event_information.h"
@@ -142,6 +143,7 @@ Graphics::Node * g_PlanetLayer(0);
 Graphics::Node * g_ShipLayer(0);
 Graphics::Node * g_ShotLayer(0);
 Graphics::Node * g_ParticleSystemsLayer(0);
+std::vector< Graphics::View * > g_PrerenderedViews;
 MessageDispatcher * g_MessageDispatcher(0);
 ObjectFactory * g_ObjectFactory(0);
 ClassManager< ShipClass > * g_ShipClassManager(0);
@@ -1444,6 +1446,17 @@ void TakeScreenShot(void)
 	delete[] ScreenshotData;
 }
 
+void PrerenderViews(void)
+{
+	for(std::vector< Graphics::View * >::iterator PrerenderedViewIterator = g_PrerenderedViews.begin(); PrerenderedViewIterator != g_PrerenderedViews.end(); ++PrerenderedViewIterator)
+	{
+		Graphics::View * PrerenderedView(*PrerenderedViewIterator);
+		
+		glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
+		PrerenderedView->Render();
+	}
+}
+
 void GameFrame(void)
 {
 	RealTime::Invalidate();
@@ -1499,6 +1512,8 @@ void GameFrame(void)
 	
 	double GraphicsTimeBegin(RealTime::Get());
 	
+	PrerenderViews();
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	DisplayMainView();
 	g_UIView->Render();
 	RealTime::Invalidate();
@@ -3117,11 +3132,19 @@ void InitializeOpenGL(void)
 {
 	ON_DEBUG(std::cout << "Loading OpenGL functions." << std::endl);
 	LoadOpenGLFunction(glBindFramebuffer);
+	LoadOpenGLFunction(glBindRenderbuffer);
+	LoadOpenGLFunction(glDeleteFramebuffers);
+	LoadOpenGLFunction(glDeleteRenderbuffers);
 	LoadOpenGLFunction(glEnable);
+	LoadOpenGLFunction(glFramebufferRenderbuffer);
+	LoadOpenGLFunction(glFramebufferTexture);
+	LoadOpenGLFunction(glGenFramebuffers);
+	LoadOpenGLFunction(glGenRenderbuffers);
 	LoadOpenGLFunction(glGetIntegerv);
 	LoadOpenGLFunction(glLightModelfv);
 	LoadOpenGLFunction(glLoadIdentity);
 	LoadOpenGLFunction(glMatrixMode);
+	LoadOpenGLFunction(glRenderbufferStorage);
 	LoadOpenGLFunction(glViewport);
 	
 	ON_DEBUG(std::cout << "Initializing font." << std::endl);

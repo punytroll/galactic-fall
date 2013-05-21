@@ -37,6 +37,14 @@ typedef void (* glBindRenderbufferFunction)(GLenum target, GLuint renderbuffer);
 extern glBindRenderbufferFunction __glBindRenderbuffer;
 #define GLBindRenderbuffer(target, renderbuffer) { assert(__glBindRenderbuffer != 0); __glBindRenderbuffer(target, renderbuffer); CheckGLError; }
 
+typedef void (* glDeleteFramebuffersFunction)(GLsizei n, GLuint * framebuffers);
+extern glDeleteFramebuffersFunction __glDeleteFramebuffers;
+#define GLDeleteFramebuffers(n, framebuffers) { assert(__glDeleteFramebuffers != 0); __glDeleteFramebuffers(n, framebuffers); CheckGLError; }
+
+typedef void (* glDeleteRenderbuffersFunction)(GLsizei n, GLuint * renderbuffers);
+extern glDeleteRenderbuffersFunction __glDeleteRenderbuffers;
+#define GLDeleteRenderbuffers(n, renderbuffers) { assert(__glDeleteRenderbuffers != 0); __glDeleteRenderbuffers(n, renderbuffers); CheckGLError; }
+
 typedef void (* glEnableFunction)(GLenum cap);
 extern glEnableFunction __glEnable;
 #define GLEnable(cap) { assert(__glEnable != 0); __glEnable(cap); CheckGLError; }

@@ -24,8 +24,10 @@
 #include "texture.h"
 
 Graphics::Texture::Texture(const std::string & Identifier) :
+	_Height(0),
 	_Identifier(Identifier),
-	_TextureName(0)
+	_TextureName(0),
+	_Width(0)
 {
 }
 
@@ -58,6 +60,8 @@ void Graphics::Texture::SetData(unsigned_numeric Width, unsigned_numeric Height,
 	}
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	_Width = Width;
+	_Height = Height;
 }
 
 void Graphics::Texture::Activate(void) const
@@ -82,4 +86,6 @@ void Graphics::Texture::Create(unsigned_numeric Width, unsigned_numeric Height, 
 	}
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	_Width = Width;
+	_Height = Height;
 }

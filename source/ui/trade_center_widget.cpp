@@ -23,6 +23,16 @@
 #include "../commodity_class.h"
 #include "../game_time.h"
 #include "../globals.h"
+#include "../graphics/camera.h"
+#include "../graphics/engine.h"
+#include "../graphics/light.h"
+#include "../graphics/node.h"
+#include "../graphics/scene.h"
+#include "../graphics/perspective_projection.h"
+#include "../graphics/texture.h"
+#include "../graphics/texture_manager.h"
+#include "../graphics/texture_render_target.h"
+#include "../graphics/view.h"
 #include "../key_event_information.h"
 #include "../object_aspect_accessory.h"
 #include "../object_aspect_name.h"
@@ -32,6 +42,8 @@
 #include "../ship.h"
 #include "../storage.h"
 #include "../string_cast.h"
+#include "../visualization_prototype.h"
+#include "../visualizations.h"
 #include "../weapon.h"
 #include "../weapon_class.h"
 #include "button.h"
@@ -40,6 +52,7 @@
 #include "scroll_bar.h"
 #include "scroll_box.h"
 #include "trade_center_widget.h"
+#include "view_display.h"
 
 namespace UI
 {
@@ -103,7 +116,9 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet
 	m_SelectedTradeCenterAssetClass(0)
 {
 	SetSize(Vector2f(600.0f, 300.0f));
+	ConnectDestroyingCallback(Callback(this, &TradeCenterWidget::_OnDestroying));
 	ConnectKeyCallback(Callback(this, &TradeCenterWidget::OnKey));
+	ConnectUpdatingCallback(Callback(this, &TradeCenterWidget::_OnUpdating));
 	m_BuyButton = new UI::Button(this);
 	m_BuyButton->SetPosition(Vector2f(0.0f, 280.0f));
 	m_BuyButton->SetSize(Vector2f(100.0f, 20.0f));
@@ -157,11 +172,11 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet
 	}
 	m_AssetClassScrollBox->GetContent()->SetSize(Vector2f(450.0f, Top));
 	m_AssetClassScrollBox->GetContent()->SetAnchorRight(true);
-	_AssetClassImage = new UI::Image(this);
-	_AssetClassImage->SetPosition(Vector2f(500.0f, 0.0f));
-	_AssetClassImage->SetSize(Vector2f(100.0f, 100.0f));
-	_AssetClassImage->SetAnchorLeft(false);
-	_AssetClassImage->SetAnchorRight(true);
+	_AssetClassViewDisplay = new UI::ViewDisplay(this);
+	_AssetClassViewDisplay->SetPosition(Vector2f(500.0f, 0.0f));
+	_AssetClassViewDisplay->SetSize(Vector2f(100.0f, 100.0f));
+	_AssetClassViewDisplay->SetAnchorLeft(false);
+	_AssetClassViewDisplay->SetAnchorRight(true);
 	m_TraderCreditsLabel = new UI::Label(this, "");
 	m_TraderCreditsLabel->SetPosition(Vector2f(0.0f, 230.0f));
 	m_TraderCreditsLabel->SetSize(Vector2f(200.0f, 20.0f));
@@ -206,6 +221,43 @@ void UI::TradeCenterWidget::Buy(const PlanetAssetClass * PlanetAssetClass)
 		{
 			m_Character->AddCredits(Price);
 		}
+	}
+}
+
+void UI::TradeCenterWidget::ClearAssetClassViewDisplay(void)
+{
+	Graphics::View * OldView(_AssetClassViewDisplay->GetView());
+	
+	if(OldView != 0)
+	{
+		_AssetClassViewDisplay->SetView(0);
+		assert(OldView->GetScene() != 0);
+		
+		Graphics::Scene * Scene(OldView->GetScene());
+		
+		OldView->SetScene(0);
+		delete Scene;
+		
+		assert(OldView->GetCamera() != 0);
+		assert(OldView->GetCamera()->GetProjection() != 0);
+		
+		Graphics::Projection * Projection(OldView->GetCamera()->GetProjection());
+		
+		OldView->GetCamera()->SetProjection(0);
+		delete Projection;
+		
+		Graphics::TextureRenderTarget * TextureRenderTarget(dynamic_cast< Graphics::TextureRenderTarget * >(OldView->GetRenderTarget()));
+		
+		assert(TextureRenderTarget != 0);
+		OldView->SetRenderTarget(0);
+		
+		Graphics::Texture * Texture(TextureRenderTarget->GetTexture());
+		
+		TextureRenderTarget->SetTexture(0);
+		delete TextureRenderTarget;
+		g_GraphicsEngine->GetTextureManager()->Destroy(Texture->GetIdentifier());
+		g_GraphicsEngine->RemoveView(OldView);
+		delete OldView;
 	}
 }
 
@@ -281,7 +333,60 @@ bool UI::TradeCenterWidget::OnAssetClassMouseButton(TradeCenterAssetClass * Trad
 		}
 		m_SelectedTradeCenterAssetClass = TradeCenterAssetClass;
 		m_SelectedTradeCenterAssetClass->SetBackgroundColor(Color(0.4f, 0.1f, 0.1f, 1.0f));
-		_AssetClassImage->SetTextureIdentifier(m_SelectedTradeCenterAssetClass->GetPlanetAssetClass()->GetAssetClass()->GetImageIdentifier());
+		ClearAssetClassViewDisplay();
+		
+		const VisualizationPrototype * VisualizationPrototype(g_ObjectFactory->GetVisualizationPrototype(m_SelectedTradeCenterAssetClass->GetPlanetAssetClass()->GetAssetClass()->GetObjectType(), m_SelectedTradeCenterAssetClass->GetPlanetAssetClass()->GetAssetClass()->GetObjectClass()));
+		
+		if(VisualizationPrototype != 0)
+		{
+			Graphics::Node * VisualizationNode(VisualizePrototype(VisualizationPrototype));
+			
+			if(VisualizationNode != 0)
+			{
+				Graphics::PerspectiveProjection * PerspectiveProjection(new Graphics::PerspectiveProjection());
+				
+				PerspectiveProjection->SetFieldOfView(0.32);
+				PerspectiveProjection->SetAspect(_AssetClassViewDisplay->GetSize()[0] / _AssetClassViewDisplay->GetSize()[1]);
+				PerspectiveProjection->SetNearClippingPlane(0.1f);
+				PerspectiveProjection->SetFarClippingPlane(100.0f);
+				
+				Graphics::View * View(new Graphics::View());
+				
+				g_GraphicsEngine->AddView(View);
+				assert(View->GetCamera() != 0);
+				View->GetCamera()->SetProjection(PerspectiveProjection);
+				
+				Matrix4f SpacialMatrix(0.0f, -2.5f, 1.4f);
+				
+				SpacialMatrix.Transform(Quaternion(1.05f, Quaternion::InitializeRotationX));
+				View->GetCamera()->SetSpacialMatrix(SpacialMatrix);
+				
+				Graphics::Scene * Scene(new Graphics::Scene());
+				
+				Scene->SetDestroyCallback(Callback(this, &UI::TradeCenterWidget::_OnDestroyInScene));
+				Scene->ActivateLight();
+				assert(Scene->GetLight() != 0);
+				Scene->GetLight()->SetPosition(-20.0f, -10.0f, 20.0f);
+				Scene->GetLight()->SetDiffuseColor(1.0f, 1.0f, 1.0f, 0.0f);
+				View->SetScene(Scene);
+				
+				Graphics::Texture * Texture(g_GraphicsEngine->GetTextureManager()->Create("trade-center-widget-commodity-view"));
+				
+				assert(Texture != 0);
+				Texture->Create(_AssetClassViewDisplay->GetSize()[0], _AssetClassViewDisplay->GetSize()[1], 1);
+				
+				Graphics::TextureRenderTarget * RenderTarget(new Graphics::TextureRenderTarget());
+				
+				RenderTarget->SetTexture(Texture);
+				View->SetRenderTarget(RenderTarget);
+				Scene->SetRootNode(VisualizationNode);
+				VisualizationNode->SetClearColorBuffer(true);
+				VisualizationNode->SetClearDepthBuffer(true);
+				VisualizationNode->SetUseLighting(true);
+				VisualizationNode->SetUseDepthTest(true);
+				_AssetClassViewDisplay->SetView(View);
+			}
+		}
 		
 		return true;
 	}
@@ -320,5 +425,26 @@ void UI::TradeCenterWidget::OnAssetClassMouseLeave(TradeCenterAssetClass * Asset
 	if(AssetClassWidget != m_SelectedTradeCenterAssetClass)
 	{
 		AssetClassWidget->UnsetBackgroundColor();
+	}
+}
+
+void UI::TradeCenterWidget::_OnDestroying(void)
+{
+	ClearAssetClassViewDisplay();
+}
+
+void UI::TradeCenterWidget::_OnDestroyInScene(Graphics::Node * Node)
+{
+	delete Node;
+}
+
+void UI::TradeCenterWidget::_OnUpdating(float RealTimeSeconds, float GameTimeSeconds)
+{
+	assert(_AssetClassViewDisplay != 0);
+	if(_AssetClassViewDisplay->GetView() != 0)
+	{
+		assert(_AssetClassViewDisplay->GetView()->GetScene() != 0);
+		assert(_AssetClassViewDisplay->GetView()->GetScene()->GetRootNode() != 0);
+		_AssetClassViewDisplay->GetView()->GetScene()->GetRootNode()->SetOrientation(_AssetClassViewDisplay->GetView()->GetScene()->GetRootNode()->GetOrientation() * Quaternion(-RealTimeSeconds * M_PI / 4.0f, Quaternion::InitializeRotationZ));
 	}
 }

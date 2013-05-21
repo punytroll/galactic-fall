@@ -35,17 +35,26 @@ namespace Graphics
 		Texture(const std::string & Identifier);
 		~Texture(void);
 		// getters
+		unsigned_numeric GetHeight(void) const;
 		const std::string & GetIdentifier(void) const;
 		GLuint GetTextureName(void) const;
+		unsigned_numeric GetWidth(void) const;
 		// setters
 		void SetData(unsigned_numeric Width, unsigned_numeric Height, unsigned_numeric Format, const unsigned char * Data);
 		// modifiers
 		void Activate(void) const;
 		void Create(unsigned_numeric Width, unsigned_numeric Height, unsigned_numeric Format);
 	private:
+		unsigned_numeric _Height;
 		std::string _Identifier;
 		GLuint _TextureName;
+		unsigned_numeric _Width;
 	};
+	
+	inline unsigned_numeric Texture::GetHeight(void) const
+	{
+		return _Height;
+	}
 	
 	inline const std::string & Texture::GetIdentifier(void) const
 	{
@@ -55,6 +64,11 @@ namespace Graphics
 	inline GLuint Texture::GetTextureName(void) const
 	{
 		return _TextureName;
+	}
+	
+	inline unsigned_numeric Texture::GetWidth(void) const
+	{
+		return _Width;
 	}
 }
 
