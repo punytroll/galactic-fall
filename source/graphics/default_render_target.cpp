@@ -23,4 +23,11 @@
 void Graphics::DefaultRenderTarget::Activate(void)
 {
 	GLBindFramebuffer(GL_FRAMEBUFFER, 0);
+	GLViewport(0, 0, _Width, _Height);
+}
+
+void Graphics::DefaultRenderTarget::SetSize(unsigned_numeric Width, unsigned_numeric Height)
+{
+	_Width = Width;
+	_Height = Height;
 }

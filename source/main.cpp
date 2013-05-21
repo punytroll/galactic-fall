@@ -1085,15 +1085,17 @@ void Resize(void)
 	{
 		g_Height = 1;
 	}
-	if(g_MainProjection != 0)
-	{
-		g_MainProjection->SetAspect(g_Width / g_Height);
-	}
-	if(g_UIProjection != 0)
-	{
-		g_UIProjection->SetRight(g_Width);
-		g_UIProjection->SetBottom(g_Height);
-	}
+	assert(g_MainView != 0);
+	
+	Graphics::DefaultRenderTarget * MainViewRenderTarget(dynamic_cast< Graphics::DefaultRenderTarget * >(g_MainView->GetRenderTarget()));
+	
+	assert(MainViewRenderTarget != 0);
+	MainViewRenderTarget->SetSize(g_Width, g_Height);
+	assert(g_MainProjection != 0);
+	g_MainProjection->SetAspect(g_Width / g_Height);
+	assert(g_UIProjection != 0);
+	g_UIProjection->SetRight(g_Width);
+	g_UIProjection->SetBottom(g_Height);
 	assert(g_UserInterface != 0);
 	assert(g_UserInterface->GetRootWidget() != 0);
 	g_UserInterface->GetRootWidget()->SetSize(Vector2f(g_Width, g_Height));
@@ -1497,7 +1499,6 @@ void GameFrame(void)
 	
 	double GraphicsTimeBegin(RealTime::Get());
 	
-	glViewport(0, 0, static_cast< GLsizei >(g_Width), static_cast< GLsizei >(g_Height));
 	DisplayMainView();
 	g_UIView->Render();
 	RealTime::Invalidate();
@@ -3121,6 +3122,7 @@ void InitializeOpenGL(void)
 	LoadOpenGLFunction(glLightModelfv);
 	LoadOpenGLFunction(glLoadIdentity);
 	LoadOpenGLFunction(glMatrixMode);
+	LoadOpenGLFunction(glViewport);
 	
 	ON_DEBUG(std::cout << "Initializing font." << std::endl);
 	InitializeFonts();
@@ -3153,7 +3155,6 @@ void InitializeOpenGL(void)
 	Vector4f GlobalAmbientLightColor(0.0f, 0.0f, 0.0f, 0.0f);
 	
 	GLLightModelfv(GL_LIGHT_MODEL_AMBIENT, GlobalAmbientLightColor.m_V.m_A);
-	Resize();
 }
 
 void DeinitializeOpenGL(void)
@@ -3573,9 +3574,7 @@ int main(int argc, char ** argv)
 	// UI view
 	g_UIProjection = new Graphics::Orthogonal2DProjection();
 	g_UIProjection->SetLeft(0.0f);
-	g_UIProjection->SetRight(g_Width);
 	g_UIProjection->SetTop(0.0f);
-	g_UIProjection->SetBottom(g_Height);
 	g_UIView = new Graphics::View();
 	assert(g_UIView->GetCamera() != 0);
 	g_UIView->GetCamera()->SetProjection(g_UIProjection);
@@ -3605,7 +3604,6 @@ int main(int argc, char ** argv)
 	UIScene->SetRootNode(UIRootNode);
 	// main view
 	g_MainProjection = new Graphics::PerspectiveProjection();
-	g_MainProjection->SetAspect(g_Width / g_Height);
 	g_MainProjection->SetNearClippingPlane(1.0f);
 	g_MainProjection->SetFarClippingPlane(1000.0f);
 	g_MainView = new Graphics::View();
@@ -3616,6 +3614,8 @@ int main(int argc, char ** argv)
 	
 	g_MainView->SetRenderTarget(MainViewRenderTarget);
 	g_GraphicsEngine->AddView(g_MainView);
+	// resize here after the graphics have been set up
+	Resize();
 	g_MessageDispatcher = new MessageDispatcher();
 	g_ObjectFactory = new ObjectFactory();
 	g_ShipClassManager = new ClassManager< ShipClass >();
