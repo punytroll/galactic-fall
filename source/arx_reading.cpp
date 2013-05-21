@@ -297,16 +297,16 @@ static void ReadAssetClass(Arxx::Reference & Reference)
 	
 	std::string Name;
 	float BasePrice;
-	std::string ObjectType;
-	std::string ObjectClass;
+	std::string ObjectTypeIdentifier;
+	std::string ObjectClassIdentifier;
 	std::string ImageIdentifier;
 	
-	Reader >> Name >> BasePrice >> ObjectType >> ObjectClass >> ImageIdentifier;
+	Reader >> Name >> BasePrice >> ObjectTypeIdentifier >> ObjectClassIdentifier >> ImageIdentifier;
 	
 	NewAssetClass->SetName(Name);
 	NewAssetClass->SetBasePrice(BasePrice);
-	NewAssetClass->SetObjectType(ObjectType);
-	NewAssetClass->SetObjectClass(ObjectClass);
+	NewAssetClass->SetObjectTypeIdentifier(ObjectTypeIdentifier);
+	NewAssetClass->SetObjectClassIdentifier(ObjectClassIdentifier);
 	NewAssetClass->SetImageIdentifier(ImageIdentifier);
 }
 
