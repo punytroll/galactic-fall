@@ -19,10 +19,9 @@
 
 #include <algorithm>
 
-#include <GL/gl.h>
-
 #include "../color.h"
 #include "../globals.h"
+#include "../graphics/gl.h"
 #include "../graphics/texture.h"
 #include "../graphics/texture_render_target.h"
 #include "../graphics/view.h"
@@ -82,13 +81,13 @@ void UI::ViewDisplay::Draw(void) const
 		glEnable(GL_TEXTURE_2D);
 		glBegin(GL_QUADS);
 		glTexCoord2f(0.0f, 1.0f);
-		glVertex2f(0.0f, 0.0f);
+		GLVertex2f(0.0f, 0.0f);
 		glTexCoord2f(0.0f, 0.0f);
-		glVertex2f(0.0f, GetSize()[1]);
+		GLVertex2f(0.0f, GetSize()[1]);
 		glTexCoord2f(1.0f, 0.0f);
-		glVertex2f(GetSize()[0], GetSize()[1]);
+		GLVertex2f(GetSize()[0], GetSize()[1]);
 		glTexCoord2f(1.0f, 1.0f);
-		glVertex2f(GetSize()[0], 0.0f);
+		GLVertex2f(GetSize()[0], 0.0f);
 		glEnd();
 		glPopAttrib();
 	}

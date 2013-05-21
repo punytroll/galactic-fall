@@ -19,13 +19,12 @@
 
 #include <map>
 
-#include <GL/gl.h>
-
 #include "../callbacks/callbacks.h"
 #include "../character.h"
 #include "../draw_text.h"
 #include "../galaxy.h"
 #include "../globals.h"
+#include "../graphics/gl.h"
 #include "../map_knowledge.h"
 #include "../object_aspect_name.h"
 #include "../object_aspect_position.h"
@@ -82,18 +81,18 @@ void UI::StarMapDisplay::Draw(void) const
 			glColor3f(0.5f, 0.5f, 0.5f);
 		}
 		glBegin(GL_LINE_LOOP);
-		glVertex2f(SystemSize, 0.0f);
-		glVertex2f(SystemSize * 0.866f, SystemSize * 0.5f);
-		glVertex2f(SystemSize * 0.5f, SystemSize * 0.866f);
-		glVertex2f(0.0f, SystemSize);
-		glVertex2f(-SystemSize * 0.5f, SystemSize * 0.866f);
-		glVertex2f(-SystemSize * 0.866f, SystemSize * 0.5f);
-		glVertex2f(-SystemSize, 0.0f);
-		glVertex2f(-SystemSize * 0.866f, -SystemSize * 0.5f);
-		glVertex2f(-SystemSize * 0.5f, -SystemSize * 0.866f);
-		glVertex2f(0.0f, -SystemSize);
-		glVertex2f(SystemSize * 0.5f, -SystemSize * 0.866f);
-		glVertex2f(SystemSize * 0.866f, -SystemSize * 0.5f);
+		GLVertex2f(SystemSize, 0.0f);
+		GLVertex2f(SystemSize * 0.866f, SystemSize * 0.5f);
+		GLVertex2f(SystemSize * 0.5f, SystemSize * 0.866f);
+		GLVertex2f(0.0f, SystemSize);
+		GLVertex2f(-SystemSize * 0.5f, SystemSize * 0.866f);
+		GLVertex2f(-SystemSize * 0.866f, SystemSize * 0.5f);
+		GLVertex2f(-SystemSize, 0.0f);
+		GLVertex2f(-SystemSize * 0.866f, -SystemSize * 0.5f);
+		GLVertex2f(-SystemSize * 0.5f, -SystemSize * 0.866f);
+		GLVertex2f(0.0f, -SystemSize);
+		GLVertex2f(SystemSize * 0.5f, -SystemSize * 0.866f);
+		GLVertex2f(SystemSize * 0.866f, -SystemSize * 0.5f);
 		glEnd();
 		glPopMatrix();
 	}
@@ -123,7 +122,7 @@ void UI::StarMapDisplay::Draw(void) const
 				glColor3f(0.5f, 0.5f, 0.5f);
 			}
 			glBegin(GL_LINES);
-			glVertex2f(0.0f, 0.0f);
+			GLVertex2f(0.0f, 0.0f);
 			glVertex2fv((((*LinkedSystemIterator)->GetAspectPosition()->GetPosition() - (*ExploredSystemIterator)->GetAspectPosition()->GetPosition()) * m_Scale).m_V.m_A);
 			glEnd();
 		}
@@ -140,18 +139,18 @@ void UI::StarMapDisplay::Draw(void) const
 			glColor3f(0.0f, 0.0f, 0.8f);
 		}
 		glBegin(GL_LINE_LOOP);
-		glVertex2f(SystemSize, 0.0f);
-		glVertex2f(SystemSize * 0.866f, SystemSize * 0.5f);
-		glVertex2f(SystemSize * 0.5f, SystemSize * 0.866f);
-		glVertex2f(0.0f, SystemSize);
-		glVertex2f(-SystemSize * 0.5f, SystemSize * 0.866f);
-		glVertex2f(-SystemSize * 0.866f, SystemSize * 0.5f);
-		glVertex2f(-SystemSize, 0.0f);
-		glVertex2f(-SystemSize * 0.866f, -SystemSize * 0.5f);
-		glVertex2f(-SystemSize * 0.5f, -SystemSize * 0.866f);
-		glVertex2f(0.0f, -SystemSize);
-		glVertex2f(SystemSize * 0.5f, -SystemSize * 0.866f);
-		glVertex2f(SystemSize * 0.866f, -SystemSize * 0.5f);
+		GLVertex2f(SystemSize, 0.0f);
+		GLVertex2f(SystemSize * 0.866f, SystemSize * 0.5f);
+		GLVertex2f(SystemSize * 0.5f, SystemSize * 0.866f);
+		GLVertex2f(0.0f, SystemSize);
+		GLVertex2f(-SystemSize * 0.5f, SystemSize * 0.866f);
+		GLVertex2f(-SystemSize * 0.866f, SystemSize * 0.5f);
+		GLVertex2f(-SystemSize, 0.0f);
+		GLVertex2f(-SystemSize * 0.866f, -SystemSize * 0.5f);
+		GLVertex2f(-SystemSize * 0.5f, -SystemSize * 0.866f);
+		GLVertex2f(0.0f, -SystemSize);
+		GLVertex2f(SystemSize * 0.5f, -SystemSize * 0.866f);
+		GLVertex2f(SystemSize * 0.866f, -SystemSize * 0.5f);
 		glEnd();
 		glPushMatrix();
 		glScalef(1.0f, -1.0f, 1.0f);

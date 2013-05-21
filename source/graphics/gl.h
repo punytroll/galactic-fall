@@ -101,6 +101,10 @@ typedef void (* glRenderbufferStorageFunction)(GLenum target, GLenum internalfor
 extern glRenderbufferStorageFunction __glRenderbufferStorage;
 #define GLRenderbufferStorage(target, internalformat, width, height) { assert(__glRenderbufferStorage != 0); __glRenderbufferStorage(target, internalformat, width, height); CheckGLError; }
 
+typedef void (* glVertex2fFunction)(GLfloat x, GLfloat y);
+extern glVertex2fFunction __glVertex2f;
+#define GLVertex2f(x, y) { assert(__glVertex2f != 0); __glVertex2f(x, y); }
+
 typedef void (* glVertex3fvFunction)(const GLfloat * v);
 extern glVertex3fvFunction __glVertex3fv;
 #define GLVertex3fv(v) { assert(__glVertex3fv != 0); __glVertex3fv(v); }

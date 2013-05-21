@@ -35,24 +35,24 @@ void UI::Border::Draw(void) const
 	GLColor4fv(m_ForegroundColor.GetColor().m_V.m_A);
 	glBegin(GL_QUADS);
 		// left
-		glVertex2f(0.0f, 0.0f);
-		glVertex2f(0.0f, GetSize()[1]);
-		glVertex2f(GetWidth(), GetSize()[1]);
-		glVertex2f(GetWidth(), 0.0f);
+		GLVertex2f(0.0f, 0.0f);
+		GLVertex2f(0.0f, GetSize()[1]);
+		GLVertex2f(GetWidth(), GetSize()[1]);
+		GLVertex2f(GetWidth(), 0.0f);
 		// bottom
-		glVertex2f(0.0f, GetSize()[1]);
-		glVertex2f(GetSize()[0], GetSize()[1]);
-		glVertex2f(GetSize()[0], GetSize()[1] - GetWidth());
-		glVertex2f(0.0f, GetSize()[1] - GetWidth());
+		GLVertex2f(0.0f, GetSize()[1]);
+		GLVertex2f(GetSize()[0], GetSize()[1]);
+		GLVertex2f(GetSize()[0], GetSize()[1] - GetWidth());
+		GLVertex2f(0.0f, GetSize()[1] - GetWidth());
 		// right
-		glVertex2f(GetSize()[0], GetSize()[1]);
-		glVertex2f(GetSize()[0], 0.0f);
-		glVertex2f(GetSize()[0] - GetWidth(), 0.0f);
-		glVertex2f(GetSize()[0] - GetWidth(), GetSize()[1]);
+		GLVertex2f(GetSize()[0], GetSize()[1]);
+		GLVertex2f(GetSize()[0], 0.0f);
+		GLVertex2f(GetSize()[0] - GetWidth(), 0.0f);
+		GLVertex2f(GetSize()[0] - GetWidth(), GetSize()[1]);
 		// top
-		glVertex2f(GetSize()[0], 0.0f);
-		glVertex2f(0.0f, 0.0f);
-		glVertex2f(0.0f, GetWidth());
-		glVertex2f(GetSize()[0], GetWidth());
+		GLVertex2f(GetSize()[0], 0.0f);
+		GLVertex2f(0.0f, 0.0f);
+		GLVertex2f(0.0f, GetWidth());
+		GLVertex2f(GetSize()[0], GetWidth());
 	glEnd();
 }
