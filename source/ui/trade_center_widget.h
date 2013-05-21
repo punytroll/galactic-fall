@@ -25,11 +25,16 @@
 class Character;
 class Planet;
 
+namespace Graphics
+{
+	class Node;
+}
+
 namespace UI
 {
 	class Button;
-	class Image;
 	class Label;
+	class ViewDisplay;
 	class ScrollBox;
 	class TradeCenterAssetClass;
 
@@ -46,8 +51,12 @@ namespace UI
 		void OnBuyClicked(void);
 		bool OnKey(const KeyEventInformation & KeyEventInformation);
 		void OnSellClicked(void);
+		void _OnDestroying(void);
+		void _OnDestroyInScene(Graphics::Node * Node);
+		void _OnUpdating(float RealTimeSeconds, float GameTimeSeconds);
 		// helper functions and actions
 		void Buy(const PlanetAssetClass * PlanetAssetClass);
+		void ClearAssetClassViewDisplay(void);
 		void Sell(const PlanetAssetClass * PlanetAssetClass);
 		void UpdateTraderCredits(void);
 		void UpdateTraderAvailableSpace(void);
@@ -57,7 +66,7 @@ namespace UI
 		UI::Button * m_BuyButton;
 		UI::Button * m_SellButton;
 		UI::ScrollBox * m_AssetClassScrollBox;
-		UI::Image * _AssetClassImage;
+		UI::ViewDisplay * _AssetClassViewDisplay;
 		UI::Label * m_TraderCreditsLabel;
 		UI::Label * m_TraderAvailableSpaceLabel;
 		UI::TradeCenterAssetClass * m_SelectedTradeCenterAssetClass;

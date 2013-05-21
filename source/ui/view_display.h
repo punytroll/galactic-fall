@@ -17,20 +17,35 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include "gl.h"
+#ifndef UI_VIEW_DISPLAY_H
+#define UI_VIEW_DISPLAY_H
 
-glBindFramebufferFunction __glBindFramebuffer(0);
-glBindRenderbufferFunction __glBindRenderbuffer(0);
-glDeleteFramebuffersFunction __glDeleteFramebuffers(0);
-glDeleteRenderbuffersFunction __glDeleteRenderbuffers(0);
-glEnableFunction __glEnable(0);
-glFramebufferRenderbufferFunction __glFramebufferRenderbuffer(0);
-glFramebufferTextureFunction __glFramebufferTexture(0);
-glGenFramebuffersFunction __glGenFramebuffers(0);
-glGenRenderbuffersFunction __glGenRenderbuffers(0);
-glGetIntegervFunction __glGetIntegerv(0);
-glLightModelfvFunction __glLightModelfv(0);
-glLoadIdentityFunction __glLoadIdentity(0);
-glMatrixModeFunction __glMatrixMode(0);
-glRenderbufferStorageFunction __glRenderbufferStorage(0);
-glViewportFunction __glViewport(0);
+#include <string>
+
+#include "widget.h"
+
+namespace Graphics
+{
+	class View;
+}
+
+namespace UI
+{
+	class ViewDisplay : public Widget
+	{
+	public:
+		ViewDisplay(Widget * SupWidget);
+		virtual ~ViewDisplay(void);
+		// getters
+		Graphics::View * GetView(void);
+		// setters
+		void SetView(Graphics::View * View);
+		// draw
+		virtual void Draw(void) const;
+	private:
+		Graphics::View * _View;
+	};
+}
+
+#endif
+ 

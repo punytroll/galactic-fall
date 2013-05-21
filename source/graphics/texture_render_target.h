@@ -17,20 +17,39 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include "gl.h"
+#ifndef GRAPHICS_TEXTURE_RENDER_TARGET_H
+#define GRAPHICS_TEXTURE_RENDER_TARGET_H
 
-glBindFramebufferFunction __glBindFramebuffer(0);
-glBindRenderbufferFunction __glBindRenderbuffer(0);
-glDeleteFramebuffersFunction __glDeleteFramebuffers(0);
-glDeleteRenderbuffersFunction __glDeleteRenderbuffers(0);
-glEnableFunction __glEnable(0);
-glFramebufferRenderbufferFunction __glFramebufferRenderbuffer(0);
-glFramebufferTextureFunction __glFramebufferTexture(0);
-glGenFramebuffersFunction __glGenFramebuffers(0);
-glGenRenderbuffersFunction __glGenRenderbuffers(0);
-glGetIntegervFunction __glGetIntegerv(0);
-glLightModelfvFunction __glLightModelfv(0);
-glLoadIdentityFunction __glLoadIdentity(0);
-glMatrixModeFunction __glMatrixMode(0);
-glRenderbufferStorageFunction __glRenderbufferStorage(0);
-glViewportFunction __glViewport(0);
+#include "gl.h"
+#include "render_target.h"
+
+namespace Graphics
+{
+	class Texture;
+	
+	class TextureRenderTarget : public RenderTarget
+	{
+	public:
+		// constructor & destructor
+		TextureRenderTarget(void);
+		~TextureRenderTarget(void);
+		// getters
+		Graphics::Texture * GetTexture(void);
+		// setters
+		void SetTexture(Graphics::Texture * Texture);
+		// modifiers
+		virtual void Activate(void);
+	private:
+		GLuint _FramebufferName;
+		GLuint _RenderbufferName;
+		Graphics::Texture * _Texture;
+	};
+	
+	inline Graphics::Texture * TextureRenderTarget::GetTexture(void)
+	{
+		return _Texture;
+	}
+}
+
+#endif
+ 
