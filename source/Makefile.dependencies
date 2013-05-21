@@ -804,7 +804,7 @@ output_observer_cpp = \
 	$(message_h) \
 	$(output_observer_h) \
 	$(planet_h) \
-	$(ui_planet_dialog_h) \
+	$(ui_planet_window_h) \
 	$(ui_user_interface_h)
 
 output_observer_h = \
@@ -1206,25 +1206,22 @@ ui_outfit_ship_dialog_h = \
 	ui/outfit_ship_dialog.h \
 	$(ui_window_h)
 
-ui_planet_dialog_cpp = \
-	ui/planet_dialog.cpp \
+ui_planet_window_cpp = \
+	ui/planet_window.cpp \
 	$(asset_class_h) \
 	$(callbacks_callbacks_h) \
 	$(character_h) \
-	$(color_h) \
-	$(globals_h) \
 	$(key_event_information_h) \
 	$(object_aspect_name_h) \
 	$(planet_h) \
 	$(ship_h) \
-	$(string_cast_h) \
 	$(ui_button_h) \
 	$(ui_label_h) \
-	$(ui_planet_dialog_h) \
+	$(ui_planet_window_h) \
 	$(ui_trade_center_widget_h)
 
-ui_planet_dialog_h = \
-	ui/planet_dialog.h \
+ui_planet_window_h = \
+	ui/planet_window.h \
 	$(ui_window_h)
 
 ui_save_game_dialog_cpp = \
@@ -1288,6 +1285,7 @@ ui_star_map_display_cpp = \
 	$(draw_text_h) \
 	$(galaxy_h) \
 	$(globals_h) \
+	$(graphics_gl_h) \
 	$(map_knowledge_h) \
 	$(object_aspect_name_h) \
 	$(object_aspect_position_h) \
@@ -1371,6 +1369,7 @@ ui_view_display_cpp = \
 	ui/view_display.cpp \
 	$(color_h) \
 	$(globals_h) \
+	$(graphics_gl_h) \
 	$(graphics_texture_h) \
 	$(graphics_texture_render_target_h) \
 	$(graphics_view_h) \
