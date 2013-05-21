@@ -39,7 +39,7 @@ extern glBindRenderbufferFunction __glBindRenderbuffer;
 
 typedef void (* glColor4fvFunction)(const GLfloat * v);
 extern glColor4fvFunction __glColor4fv;
-#define GLColor4fv(v) { assert(__glColor4fv != 0); __glColor4fv(v); CheckGLError; }
+#define GLColor4fv(v) { assert(__glColor4fv != 0); __glColor4fv(v); }
 
 typedef void (* glDeleteFramebuffersFunction)(GLsizei n, GLuint * framebuffers);
 extern glDeleteFramebuffersFunction __glDeleteFramebuffers;
@@ -83,11 +83,11 @@ extern glLoadIdentityFunction __glLoadIdentity;
 
 typedef void (* glMaterialfFunction)(GLenum face, GLenum pname, GLfloat param);
 extern glMaterialfFunction __glMaterialf;
-#define GLMaterialf(face, pname, param) { assert(__glMaterialf != 0); __glMaterialf(face, pname, param); CheckGLError; }
+#define GLMaterialf(face, pname, param) { assert(__glMaterialf != 0); __glMaterialf(face, pname, param); }
 
 typedef void (* glMaterialfvFunction)(GLenum face, GLenum pname, const GLfloat * params);
 extern glMaterialfvFunction __glMaterialfv;
-#define GLMaterialfv(face, pname, params) { assert(__glMaterialfv != 0); __glMaterialfv(face, pname, params); CheckGLError; }
+#define GLMaterialfv(face, pname, params) { assert(__glMaterialfv != 0); __glMaterialfv(face, pname, params); }
 
 typedef void (* glMatrixModeFunction)(GLenum mode);
 extern glMatrixModeFunction __glMatrixMode;
@@ -95,7 +95,7 @@ extern glMatrixModeFunction __glMatrixMode;
 
 typedef void (* glNormal3fvFunction)(const GLfloat * v);
 extern glNormal3fvFunction __glNormal3fv;
-#define GLNormal3fv(v) { assert(__glNormal3fv != 0); __glNormal3fv(v); CheckGLError; }
+#define GLNormal3fv(v) { assert(__glNormal3fv != 0); __glNormal3fv(v); }
 
 typedef void (* glRenderbufferStorageFunction)(GLenum target, GLenum internalformat, GLsizei width, GLsizei height);
 extern glRenderbufferStorageFunction __glRenderbufferStorage;
@@ -103,7 +103,7 @@ extern glRenderbufferStorageFunction __glRenderbufferStorage;
 
 typedef void (* glVertex3fvFunction)(const GLfloat * v);
 extern glVertex3fvFunction __glVertex3fv;
-#define GLVertex3fv(v) { assert(__glVertex3fv != 0); __glVertex3fv(v); CheckGLError; }
+#define GLVertex3fv(v) { assert(__glVertex3fv != 0); __glVertex3fv(v); }
 
 typedef void (* glViewportFunction)(GLint x, GLint y, GLsizei width, GLsizei height);
 extern glViewportFunction __glViewport;
