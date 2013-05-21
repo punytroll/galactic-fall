@@ -24,7 +24,7 @@
 
 namespace UI
 {
-	class PlanetDialog;
+	class PlanetWindow;
 }
 
 class OutputObserver : public CharacterObserver
@@ -33,7 +33,7 @@ public:
 	OutputObserver(void);
 	virtual void HandleMessage(Message * Message);
 private:
-	UI::PlanetDialog * m_PlanetDialog;
+	UI::PlanetWindow * _PlanetWindow;
 };
 
 #endif

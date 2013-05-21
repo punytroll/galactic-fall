@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006  Hagen Möbius
+ * Copyright (C) 2013  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,8 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef UI_PLANET_DIALOG_H
-#define UI_PLANET_DIALOG_H
+#ifndef UI_PLANET_WINDOW_H
+#define UI_PLANET_WINDOW_H
 
 #include "window.h"
 
@@ -31,24 +31,26 @@ namespace UI
 	class Label;
 	class TradeCenterWidget;
 	
-	class PlanetDialog : public UI::Window
+	class PlanetWindow : public UI::Window
 	{
 	public:
-		PlanetDialog(UI::Widget * SupWidget, Planet * Planet, Character * Character);
+		PlanetWindow(UI::Widget * SupWidget, Reference< Planet > Planet, Reference< Character > Character);
 	private:
 		// callbacks
 		void _OnDestroying(void);
-		bool _OnKey(const KeyEventInformation & KeyEventInformation);
 		void _OnHomeButtonClicked(void);
+		bool _OnKey(const KeyEventInformation & KeyEventInformation);
 		void _OnRefuelButtonClicked(void);
 		void _OnTakeOffButtonClicked(void);
 		void _OnTradeCenterButtonClicked(void);
 		// helper functions & actions
-		void _OpenTradeCenterWidget(void);
+		void _OpenTradeCenter(void);
+		void _Refuel(void);
+		void _TakeOff(void);
 		// member variables
-		Planet * _Planet;
-		Character * _Character;
+		Reference< Character > _Character;
 		UI::Label * _DescriptionLabel;
+		Reference< Planet > _Planet;
 		UI::TradeCenterWidget * _TradeCenterWidget;
 	};
 }

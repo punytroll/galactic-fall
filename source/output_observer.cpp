@@ -24,7 +24,7 @@
 #include "message.h"
 #include "output_observer.h"
 #include "planet.h"
-#include "ui/planet_dialog.h"
+#include "ui/planet_window.h"
 #include "ui/user_interface.h"
 
 /// @todo evil hack
@@ -33,7 +33,7 @@ class CommandMind;
 extern Reference< CommandMind > g_InputMind;
 
 OutputObserver::OutputObserver(void) :
-	m_PlanetDialog(0)
+	_PlanetWindow(0)
 {
 }
 
@@ -43,16 +43,16 @@ void OutputObserver::HandleMessage(Message * Message)
 	{
 		if(Message->GetTypeIdentifier() == "landed")
 		{
-			assert(m_PlanetDialog == 0);
+			assert(_PlanetWindow == 0);
 			assert(Message->GetSender()->GetTypeIdentifier() == "planet");
-			m_PlanetDialog = new UI::PlanetDialog(g_UserInterface->GetRootWidget(), dynamic_cast< Planet * >(Message->GetSender().Get()), GetObservedCharacter().Get());
-			m_PlanetDialog->GrabKeyFocus();
+			_PlanetWindow = new UI::PlanetWindow(g_UserInterface->GetRootWidget(), Message->GetSender(), GetObservedCharacter());
+			_PlanetWindow->GrabKeyFocus();
 		}
 		else if(Message->GetTypeIdentifier() == "taken_off")
 		{
-			assert(m_PlanetDialog != 0);
-			m_PlanetDialog->Destroy();
-			m_PlanetDialog = 0;
+			assert(_PlanetWindow != 0);
+			_PlanetWindow->Destroy();
+			_PlanetWindow = 0;
 		}
 	}
 }
