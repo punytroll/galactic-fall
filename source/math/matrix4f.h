@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 1.5.0 of algebra.
+ * This is part of version 1.5.1 of algebra.
  **/
 
 #ifndef ALGEBRA_MATRIX4F_H
@@ -130,6 +130,28 @@ public:
 		m_M[3].m_A[3] = 1.0f;
 	}
 	
+	Matrix4f & Identity(void)
+	{
+		m_M[0].m_A[0] = 1;
+		m_M[0].m_A[1] = 0;
+		m_M[0].m_A[2] = 0;
+		m_M[0].m_A[3] = 0;
+		m_M[1].m_A[0] = 0;
+		m_M[1].m_A[1] = 1;
+		m_M[1].m_A[2] = 0;
+		m_M[1].m_A[3] = 0;
+		m_M[2].m_A[0] = 0;
+		m_M[2].m_A[1] = 0;
+		m_M[2].m_A[2] = 1;
+		m_M[2].m_A[3] = 0;
+		m_M[3].m_A[0] = 0;
+		m_M[3].m_A[1] = 0;
+		m_M[3].m_A[2] = 0;
+		m_M[3].m_A[3] = 1;
+		
+		return *this;
+	}
+	
 	float * Matrix(void)
 	{
 		return reinterpret_cast< float * >(m_M);
@@ -138,6 +160,48 @@ public:
 	const float * Matrix(void) const
 	{
 		return reinterpret_cast< const float * >(m_M);
+	}
+	
+	Matrix4f & RotateX(float Radians)
+	{
+		float Sin(sin(Radians));
+		float Cos(cos(Radians));
+		float Value02(Cos * m_M[0].m_A[2] - Sin * m_M[0].m_A[1]);
+		float Value12(Cos * m_M[1].m_A[2] - Sin * m_M[1].m_A[1]);
+		float Value22(Cos * m_M[2].m_A[2] - Sin * m_M[2].m_A[1]);
+		float Value32(Cos * m_M[3].m_A[2] - Sin * m_M[3].m_A[1]);
+		
+		m_M[0].m_A[1] = Cos * m_M[0].m_A[1] + Sin * m_M[0].m_A[2];
+		m_M[0].m_A[2] = Value02;
+		m_M[1].m_A[1] = Cos * m_M[1].m_A[1] + Sin * m_M[1].m_A[2];
+		m_M[1].m_A[2] = Value12;
+		m_M[2].m_A[1] = Cos * m_M[2].m_A[1] + Sin * m_M[2].m_A[2];
+		m_M[2].m_A[2] = Value22;
+		m_M[3].m_A[1] = Cos * m_M[3].m_A[1] + Sin * m_M[3].m_A[2];
+		m_M[3].m_A[2] = Value32;
+		
+		return *this;
+	}
+	
+	Matrix4f & RotateY(float Radians)
+	{
+		float Sin(sin(Radians));
+		float Cos(cos(Radians));
+		float Value00(Cos * m_M[0].m_A[0] - Sin * m_M[0].m_A[2]);
+		float Value10(Cos * m_M[1].m_A[0] - Sin * m_M[1].m_A[2]);
+		float Value20(Cos * m_M[2].m_A[0] - Sin * m_M[2].m_A[2]);
+		float Value30(Cos * m_M[3].m_A[0] - Sin * m_M[3].m_A[2]);
+		
+		m_M[0].m_A[2] = Cos * m_M[0].m_A[2] + Sin * m_M[0].m_A[0];
+		m_M[0].m_A[0] = Value00;
+		m_M[1].m_A[2] = Cos * m_M[1].m_A[2] + Sin * m_M[1].m_A[0];
+		m_M[1].m_A[0] = Value10;
+		m_M[2].m_A[2] = Cos * m_M[2].m_A[2] + Sin * m_M[2].m_A[0];
+		m_M[2].m_A[0] = Value20;
+		m_M[3].m_A[2] = Cos * m_M[3].m_A[2] + Sin * m_M[3].m_A[0];
+		m_M[3].m_A[0] = Value30;
+		
+		return *this;
 	}
 	
 	Matrix4f & RotateZ(float Radians)
@@ -163,33 +227,6 @@ public:
 	
 	Matrix4f & Transform(const Matrix4f & Other)
 	{
-		// mathematica:
-		// [
-		//     [
-		//         a00 b00 + a01 b10 + a02 b20 + a03 b30,
-		//         a00 b01 + a01 b11 + a02 b21 + a03 b31,
-		//         a00 b02 + a01 b12 + a02 b22 + a03 b32,
-		//         a00 b03 + a01 b13 + a02 b23 + a03 b33
-		//     ],
-		//     [
-		//         a10 b00 + a11 b10 + a12 b20 + a13 b30,
-		//         a10 b01 + a11 b11 + a12 b21 + a13 b31,
-		//         a10 b02 + a11 b12 + a12 b22 + a13 b32,
-		//         a10 b03 + a11 b13 + a12 b23 + a13 b33
-		//     ],
-		//     [
-		//         a20 b00 + a21 b10 + a22 b20 + a23 b30,
-		//         a20 b01 + a21 b11 + a22 b21 + a23 b31,
-		//         a20 b02 + a21 b12 + a22 b22 + a23 b32,
-		//         a20 b03 + a21 b13 + a22 b23 + a23 b33
-		//     ],
-		//     [
-		//         a30 b00 + a31 b10 + a32 b20 + a33 b30,
-		//         a30 b01 + a31 b11 + a32 b21 + a33 b31,
-		//         a30 b02 + a31 b12 + a32 b22 + a33 b32,
-		//         a30 b03 + a31 b13 + a32 b23 + a33 b33
-		//     ]
-		// ]
 		float Value00(m_M[0].m_A[0] * Other.m_M[0].m_A[0] + m_M[0].m_A[1] * Other.m_M[1].m_A[0] + m_M[0].m_A[2] * Other.m_M[2].m_A[0] + m_M[0].m_A[3] * Other.m_M[3].m_A[0]);
 		float Value01(m_M[0].m_A[0] * Other.m_M[0].m_A[1] + m_M[0].m_A[1] * Other.m_M[1].m_A[1] + m_M[0].m_A[2] * Other.m_M[2].m_A[1] + m_M[0].m_A[3] * Other.m_M[3].m_A[1]);
 		float Value02(m_M[0].m_A[0] * Other.m_M[0].m_A[2] + m_M[0].m_A[1] * Other.m_M[1].m_A[2] + m_M[0].m_A[2] * Other.m_M[2].m_A[2] + m_M[0].m_A[3] * Other.m_M[3].m_A[2]);
