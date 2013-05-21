@@ -19,11 +19,10 @@
 
 #include <stdexcept>
 
-#include <GL/gl.h>
-
 #include "../color.h"
 #include "../game_time.h"
 #include "../globals.h"
+#include "../graphics/gl.h"
 #include "../math.h"
 #include "../system_statistics.h"
 #include "engine.h"
@@ -121,7 +120,7 @@ void Graphics::ParticleSystem::Draw(void)
 	glBegin(GL_QUADS);
 	for(std::list< Graphics::ParticleSystem::Particle >::iterator ParticleIterator = m_Particles.begin(); ParticleIterator != m_Particles.end(); ++ParticleIterator)
 	{
-		glColor4fv(ParticleIterator->m_Color.GetColor().m_V.m_A);
+		GLColor4fv(ParticleIterator->m_Color.GetColor().m_V.m_A);
 		
 		const Vector3f & Position(ParticleIterator->m_Position);
 		const float & Size(ParticleIterator->m_Size);

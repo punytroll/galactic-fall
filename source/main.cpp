@@ -369,7 +369,7 @@ void DrawSelection(const Object * Object, float RadialSize, const Color & Color)
 	glPushAttrib(GL_LIGHTING_BIT);
 	glDisable(GL_LIGHTING);
 	glTranslatef(Object->GetAspectPosition()->GetPosition().m_V.m_A[0], Object->GetAspectPosition()->GetPosition().m_V.m_A[1], 0.0f);
-	glColor4fv(Color.GetColor().m_V.m_A);
+	GLColor4fv(Color.GetColor().m_V.m_A);
 	glBegin(GL_LINE_STRIP);
 	glVertex2f(-OuterSize, -InnerSize);
 	glVertex2f(-OuterSize, -OuterSize);
@@ -3133,6 +3133,7 @@ void InitializeOpenGL(void)
 	ON_DEBUG(std::cout << "Loading OpenGL functions." << std::endl);
 	LoadOpenGLFunction(glBindFramebuffer);
 	LoadOpenGLFunction(glBindRenderbuffer);
+	LoadOpenGLFunction(glColor4fv);
 	LoadOpenGLFunction(glDeleteFramebuffers);
 	LoadOpenGLFunction(glDeleteRenderbuffers);
 	LoadOpenGLFunction(glEnable);
@@ -3143,8 +3144,12 @@ void InitializeOpenGL(void)
 	LoadOpenGLFunction(glGetIntegerv);
 	LoadOpenGLFunction(glLightModelfv);
 	LoadOpenGLFunction(glLoadIdentity);
+	LoadOpenGLFunction(glMaterialf);
+	LoadOpenGLFunction(glMaterialfv);
 	LoadOpenGLFunction(glMatrixMode);
+	LoadOpenGLFunction(glNormal3fv);
 	LoadOpenGLFunction(glRenderbufferStorage);
+	LoadOpenGLFunction(glVertex3fv);
 	LoadOpenGLFunction(glViewport);
 	
 	ON_DEBUG(std::cout << "Initializing font." << std::endl);

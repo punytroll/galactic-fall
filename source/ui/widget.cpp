@@ -21,10 +21,9 @@
 
 #include <algorithm>
 
-#include <GL/gl.h>
-
 #include "../callbacks/callbacks.h"
 #include "../color.h"
+#include "../graphics/gl.h"
 #include "../math.h"
 #include "widget.h"
 
@@ -69,7 +68,7 @@ void UI::Widget::Draw(void) const
 	
 	if(Color != 0)
 	{
-		glColor4fv(Color->GetColor().m_V.m_A);
+		GLColor4fv(Color->GetColor().m_V.m_A);
 		glBegin(GL_QUADS);
 		glVertex2f(0.0f, 0.0f);
 		glVertex2f(0.0f, m_Size.m_V.m_A[1]);

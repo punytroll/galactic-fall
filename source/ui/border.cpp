@@ -17,8 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include <GL/gl.h>
-
+#include "../graphics/gl.h"
 #include "border.h"
 
 UI::Border::Border(Widget * SupWidget) :
@@ -33,7 +32,7 @@ UI::Border::~Border(void)
 void UI::Border::Draw(void) const
 {
 	Widget::Draw();
-	glColor4fv(m_ForegroundColor.GetColor().m_V.m_A);
+	GLColor4fv(m_ForegroundColor.GetColor().m_V.m_A);
 	glBegin(GL_QUADS);
 		// left
 		glVertex2f(0.0f, 0.0f);

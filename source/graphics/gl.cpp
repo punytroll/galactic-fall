@@ -21,6 +21,7 @@
 
 glBindFramebufferFunction __glBindFramebuffer(0);
 glBindRenderbufferFunction __glBindRenderbuffer(0);
+glColor4fvFunction __glColor4fv(0);
 glDeleteFramebuffersFunction __glDeleteFramebuffers(0);
 glDeleteRenderbuffersFunction __glDeleteRenderbuffers(0);
 glEnableFunction __glEnable(0);
@@ -31,6 +32,10 @@ glGenRenderbuffersFunction __glGenRenderbuffers(0);
 glGetIntegervFunction __glGetIntegerv(0);
 glLightModelfvFunction __glLightModelfv(0);
 glLoadIdentityFunction __glLoadIdentity(0);
+glMaterialfFunction __glMaterialf(0);
+glMaterialfvFunction __glMaterialfv(0);
 glMatrixModeFunction __glMatrixMode(0);
+glNormal3fvFunction __glNormal3fv(0);
 glRenderbufferStorageFunction __glRenderbufferStorage(0);
+glVertex3fvFunction __glVertex3fv(0);
 glViewportFunction __glViewport(0);
