@@ -19,9 +19,8 @@
 
 #include <assert.h>
 
-#include <GL/gl.h>
-
 #include "camera.h"
+#include "gl.h"
 #include "projection.h"
 #include "render_target.h"
 #include "scene.h"
@@ -54,9 +53,9 @@ void Graphics::View::Render(void)
 	}
 	assert(_Camera != 0);
 	assert(_Camera->GetProjection() != 0);
-	glMatrixMode(GL_PROJECTION);
+	GLMatrixMode(GL_PROJECTION);
 	glLoadMatrixf(_Camera->GetProjection()->GetMatrix().Transposed().Matrix());
-	glMatrixMode(GL_MODELVIEW);
+	GLMatrixMode(GL_MODELVIEW);
 	glLoadMatrixf(_Camera->GetSpacialMatrix().Inverted().Transpose().Matrix());
 	if(_Scene != 0)
 	{

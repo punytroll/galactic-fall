@@ -19,9 +19,8 @@
 
 #include <assert.h>
 
-#include <GL/gl.h>
-
 #include "../callbacks/callbacks.h"
+#include "../graphics/gl.h"
 #include "user_interface.h"
 #include "widget.h"
 
@@ -53,13 +52,13 @@ void UI::UserInterface::Draw(void) const
 {
 	if((m_RootWidget != 0) && (m_RootWidget->IsVisible() == true))
 	{
-		glPushMatrix();
+		GLPushMatrix();
 		UI::Widget::PushClippingRectangle(m_RootWidget->GetPosition(), m_RootWidget->GetSize());
 		glTranslatef(m_RootWidget->GetPosition().m_V.m_A[0], m_RootWidget->GetPosition().m_V.m_A[1], 0.0f);
 		UI::Widget::DrawClippingRectangle();
 		m_RootWidget->Draw();
 		UI::Widget::PopClippingRectangle();
-		glPopMatrix();
+		GLPopMatrix();
 	}
 }
 

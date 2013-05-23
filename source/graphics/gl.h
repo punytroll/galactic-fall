@@ -37,6 +37,10 @@ typedef void (* glBindRenderbufferFunction)(GLenum target, GLuint renderbuffer);
 extern glBindRenderbufferFunction __glBindRenderbuffer;
 #define GLBindRenderbuffer(target, renderbuffer) { assert(__glBindRenderbuffer != 0); __glBindRenderbuffer(target, renderbuffer); CheckGLError; }
 
+typedef void (* glClearFunction)(GLbitfield mask);
+extern glClearFunction __glClear;
+#define GLClear(mask) { assert(__glClear != 0); __glClear(mask); CheckGLError; }
+
 typedef void (* glColor4fvFunction)(const GLfloat * v);
 extern glColor4fvFunction __glColor4fv;
 #define GLColor4fv(v) { assert(__glColor4fv != 0); __glColor4fv(v); }
@@ -96,6 +100,14 @@ extern glMatrixModeFunction __glMatrixMode;
 typedef void (* glNormal3fvFunction)(const GLfloat * v);
 extern glNormal3fvFunction __glNormal3fv;
 #define GLNormal3fv(v) { assert(__glNormal3fv != 0); __glNormal3fv(v); }
+
+typedef void (* glPopMatrixFunction)(void);
+extern glPopMatrixFunction __glPopMatrix;
+#define GLPopMatrix() { assert(__glPopMatrix != 0); __glPopMatrix(); CheckGLError; }
+
+typedef void (* glPushMatrixFunction)(void);
+extern glPushMatrixFunction __glPushMatrix;
+#define GLPushMatrix() { assert(__glPushMatrix != 0); __glPushMatrix(); CheckGLError; }
 
 typedef void (* glRenderbufferStorageFunction)(GLenum target, GLenum internalformat, GLsizei width, GLsizei height);
 extern glRenderbufferStorageFunction __glRenderbufferStorage;

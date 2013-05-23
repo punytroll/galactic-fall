@@ -58,13 +58,13 @@ void Graphics::Node::Begin(void)
 {
 	if(_ClearDepthBuffer == true)
 	{
-		glClear(GL_DEPTH_BUFFER_BIT);
+		GLClear(GL_DEPTH_BUFFER_BIT);
 	}
 	if(_ClearColorBuffer == true)
 	{
-		glClear(GL_COLOR_BUFFER_BIT);
+		GLClear(GL_COLOR_BUFFER_BIT);
 	}
-	glPushMatrix();
+	GLPushMatrix();
 	glTranslatef(_Position[0], _Position[1], _Position[2]);
 	glMultMatrixf(Matrix4f(_Orientation).Transpose().Matrix());
 	if(_Scale != 1.0f)
