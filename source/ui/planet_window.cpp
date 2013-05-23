@@ -168,7 +168,7 @@ void UI::PlanetWindow::_OpenTradeCenter(void)
 	}
 	if(_TradeCenterWidget == 0)
 	{
-		_TradeCenterWidget = new UI::TradeCenterWidget(this, _Planet.Get(), _Character.Get());
+		_TradeCenterWidget = new UI::TradeCenterWidget(this, _Planet, _Character);
 		_TradeCenterWidget->SetPosition(Vector2f(120.0f, 40.0f));
 		_TradeCenterWidget->SetSize(Vector2f(570.0f, 350.0f));
 		_TradeCenterWidget->SetAnchorBottom(true);
