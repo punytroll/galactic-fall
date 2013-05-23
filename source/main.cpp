@@ -2684,6 +2684,12 @@ void ActionObserveNextCharacter(void)
 				g_CharacterObserver->SetObservedCharacter((*CharacterIterator)->GetReference());
 			}
 		}
+		if(g_CharacterObserver->GetObservedCharacter().IsValid() == true)
+		{
+			g_CameraFocus = g_CharacterObserver->GetObservedCharacter()->GetShip()->GetReference();
+			g_CameraPosition[0] = 0.0f;
+			g_CameraPosition[1] = 0.0f;
+		}
 	}
 }
 
@@ -2714,6 +2720,12 @@ void ActionObservePreviousCharacter(void)
 				--CharacterIterator;
 				g_CharacterObserver->SetObservedCharacter((*CharacterIterator)->GetReference());
 			}
+		}
+		if(g_CharacterObserver->GetObservedCharacter().IsValid() == true)
+		{
+			g_CameraFocus = g_CharacterObserver->GetObservedCharacter()->GetShip()->GetReference();
+			g_CameraPosition[0] = 0.0f;
+			g_CameraPosition[1] = 0.0f;
 		}
 	}
 }
