@@ -4,5 +4,4 @@
 	<base-price>70</base-price>
 	<object-type>commodity</object-type>
 	<object-class>food</object-class>
-	<image-identifier>asset_class_food</image-identifier>
 </asset-class>

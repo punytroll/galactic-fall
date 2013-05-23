@@ -4,5 +4,4 @@
 	<base-price>200</base-price>
 	<object-type>commodity</object-type>
 	<object-class>fuel</object-class>
-	<image-identifier>asset_class_fuel</image-identifier>
 </asset-class>

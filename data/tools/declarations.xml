@@ -8,7 +8,6 @@
 		<float identifier="base-price"/>
 		<string identifier="object-type"/>
 		<string identifier="object-class"/>
-		<string identifier="image-identifier"/>
 	</asset-class>
 	
 	<battery-class>
