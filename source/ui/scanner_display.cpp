@@ -70,27 +70,27 @@ void UI::ScannerDisplay::Draw(void) const
 	GLEnable(GL_DEPTH_TEST);
 	glDisable(GL_BLEND);
 	glViewport(static_cast< GLint >(GetGlobalPosition()[0]), static_cast< GLint >(GetRootWidget()->GetSize()[1] - GetGlobalPosition()[1] - GetSize()[1]), static_cast< GLint >(GetSize()[0]), static_cast< GLint >(GetSize()[1]));
-	glMatrixMode(GL_PROJECTION);
-	glPushMatrix();
+	GLMatrixMode(GL_PROJECTION);
+	GLPushMatrix();
 	
 	Matrix4f PerspectiveMatrix;
 	
 	CalculatePerspectiveMatrix(_FieldOfView, 1.0f, 1.0f, 1000.0f, PerspectiveMatrix);
 	
 	glLoadMatrixf(PerspectiveMatrix.Matrix());
-	glMatrixMode(GL_MODELVIEW);
-	glPushMatrix();
+	GLMatrixMode(GL_MODELVIEW);
+	GLPushMatrix();
 	GLLoadIdentity();
 	if((_Owner.IsValid() == true) && (_Owner->GetTarget().IsValid() == true))
 	{
 		assert(_Owner->GetTarget()->GetAspectPosition() != 0);
 		glTranslatef(-_Owner->GetTarget()->GetAspectPosition()->GetPosition().m_V.m_A[0], -_Owner->GetTarget()->GetAspectPosition()->GetPosition().m_V.m_A[1], -_CameraZ);
 	}
-	glClear(GL_DEPTH_BUFFER_BIT);
+	GLClear(GL_DEPTH_BUFFER_BIT);
 	// draw viewport content
 	// TODO: draw scanner content
-	glPopMatrix();
-	glMatrixMode(GL_PROJECTION);
-	glPopMatrix();
+	GLPopMatrix();
+	GLMatrixMode(GL_PROJECTION);
+	GLPopMatrix();
 	glPopAttrib();
 }

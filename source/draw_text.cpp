@@ -131,15 +131,15 @@ GLuint g_FontTexture;
 void InitializeFonts(void)
 {
 	glViewport(0, 0, 128, 64);
-	glMatrixMode(GL_PROJECTION);
-	glPushMatrix();
+	GLMatrixMode(GL_PROJECTION);
+	GLPushMatrix();
 	GLLoadIdentity();
 	glOrtho(0.0, 128.0, 0.0, 64.0, -1, 1);
-	glMatrixMode(GL_MODELVIEW);
-	glPushMatrix();
+	GLMatrixMode(GL_MODELVIEW);
+	GLPushMatrix();
 	GLLoadIdentity();
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
+	GLClear(GL_COLOR_BUFFER_BIT);
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 	for(unsigned int CharacterIndex = 0; CharacterIndex < CHARACTERS; ++CharacterIndex)

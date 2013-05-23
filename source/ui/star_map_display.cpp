@@ -55,7 +55,7 @@ void UI::StarMapDisplay::Draw(void) const
 	float SystemSize(5.0f);
 	
 	glPushAttrib(GL_ENABLE_BIT);
-	glPushMatrix();
+	GLPushMatrix();
 	glTranslatef(Middle.m_V.m_A[0], Middle.m_V.m_A[1], 0.0f);
 	glScalef(1.0f, -1.0f, 1.0f);
 	
@@ -66,7 +66,7 @@ void UI::StarMapDisplay::Draw(void) const
 		Vector3f Position((*UnexploredSystemIterator)->GetAspectPosition()->GetPosition() - m_System->GetAspectPosition()->GetPosition());
 		
 		Position *= m_Scale;
-		glPushMatrix();
+		GLPushMatrix();
 		glTranslatef(Position.m_V.m_A[0], Position.m_V.m_A[1], 0.0f);
 		if(*UnexploredSystemIterator == m_SelectedSystem)
 		{
@@ -94,7 +94,7 @@ void UI::StarMapDisplay::Draw(void) const
 		GLVertex2f(SystemSize * 0.5f, -SystemSize * 0.866f);
 		GLVertex2f(SystemSize * 0.866f, -SystemSize * 0.5f);
 		glEnd();
-		glPopMatrix();
+		GLPopMatrix();
 	}
 	
 	const std::set< System * > & ExploredSystems(m_Character->GetMapKnowledge()->GetExploredSystems());
@@ -104,7 +104,7 @@ void UI::StarMapDisplay::Draw(void) const
 		Vector3f Position((*ExploredSystemIterator)->GetAspectPosition()->GetPosition() - m_System->GetAspectPosition()->GetPosition());
 		
 		Position *= m_Scale;
-		glPushMatrix();
+		GLPushMatrix();
 		glTranslatef(Position.m_V.m_A[0], Position.m_V.m_A[1], 0.0f);
 		
 		const std::list< System * > & LinkedSystems((*ExploredSystemIterator)->GetLinkedSystems());
@@ -152,15 +152,15 @@ void UI::StarMapDisplay::Draw(void) const
 		GLVertex2f(SystemSize * 0.5f, -SystemSize * 0.866f);
 		GLVertex2f(SystemSize * 0.866f, -SystemSize * 0.5f);
 		glEnd();
-		glPushMatrix();
+		GLPushMatrix();
 		glScalef(1.0f, -1.0f, 1.0f);
 		glTranslatef(0.0f, 12.0f, 0.0f);
 		glColor3f(1.0f, 1.0f, 1.0f);
 		DrawText((*ExploredSystemIterator)->GetAspectName()->GetName());
-		glPopMatrix();
-		glPopMatrix();
+		GLPopMatrix();
+		GLPopMatrix();
 	}
-	glPopMatrix();
+	GLPopMatrix();
 	glPopAttrib();
 }
 

@@ -63,21 +63,21 @@ void UI::MiniMapDisplay::Draw(void) const
 	GLEnable(GL_DEPTH_TEST);
 	glDisable(GL_BLEND);
 	glViewport(static_cast< GLint >(GetGlobalPosition()[0]), static_cast< GLint >(GetRootWidget()->GetSize()[1] - GetGlobalPosition()[1] - GetSize()[1]), static_cast< GLint >(GetSize()[0]), static_cast< GLint >(GetSize()[1]));
-	glMatrixMode(GL_PROJECTION);
-	glPushMatrix();
+	GLMatrixMode(GL_PROJECTION);
+	GLPushMatrix();
 	
 	Matrix4f PerspectiveMatrix;
 	
 	CalculatePerspectiveMatrix(0.392699082f, 1.0f, 1.0f, 10000.0f, PerspectiveMatrix);
 	glLoadMatrixf(PerspectiveMatrix.Matrix());
-	glMatrixMode(GL_MODELVIEW);
-	glPushMatrix();
+	GLMatrixMode(GL_MODELVIEW);
+	GLPushMatrix();
 	GLLoadIdentity();
 	if(_Owner.IsValid() == true)
 	{
 		glTranslatef(-_Owner->GetAspectPosition()->GetPosition().m_V.m_A[0], -_Owner->GetAspectPosition()->GetPosition().m_V.m_A[1], -1500.0f);
 	}
-	glClear(GL_DEPTH_BUFFER_BIT);
+	GLClear(GL_DEPTH_BUFFER_BIT);
 	// draw mini map
 	if(_Owner.IsValid() == true)
 	{
@@ -129,8 +129,8 @@ void UI::MiniMapDisplay::Draw(void) const
 		}
 		glEnd();
 	}
-	glPopMatrix();
-	glMatrixMode(GL_PROJECTION);
-	glPopMatrix();
+	GLPopMatrix();
+	GLMatrixMode(GL_PROJECTION);
+	GLPopMatrix();
 	glPopAttrib();
 }

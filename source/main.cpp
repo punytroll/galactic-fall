@@ -365,7 +365,7 @@ void DrawSelection(const Object * Object, float RadialSize, const Color & Color)
 	float OuterSize(RadialSize / OuterFactor);
 	float InnerSize(RadialSize / InnerFactor);
 	
-	glPushMatrix();
+	GLPushMatrix();
 	glPushAttrib(GL_LIGHTING_BIT);
 	glDisable(GL_LIGHTING);
 	glTranslatef(Object->GetAspectPosition()->GetPosition().m_V.m_A[0], Object->GetAspectPosition()->GetPosition().m_V.m_A[1], 0.0f);
@@ -1010,7 +1010,7 @@ void DisplayMainView(void)
 	{
 		Color Color(1.0f, 0.0f, 0.0f, 1.0f);
 		
-		glClear(GL_DEPTH_BUFFER_BIT);
+		GLClear(GL_DEPTH_BUFFER_BIT);
 		assert(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget()->GetAspectPhysical() != 0);
 		DrawSelection(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget().Get(), g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget()->GetAspectPhysical()->GetRadialSize(), Color);
 		
@@ -1018,7 +1018,7 @@ void DisplayMainView(void)
 		Vector3f RelativePosition(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget()->GetAspectPosition()->GetPosition() - g_CharacterObserver->GetObservedCharacter()->GetShip()->GetAspectPosition()->GetPosition());
 		
 		RelativePosition.Normalize();
-		glPushMatrix();
+		GLPushMatrix();
 		glPushAttrib(GL_LIGHTING_BIT);
 		glDisable(GL_LIGHTING);
 		glTranslatef(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetAspectPosition()->GetPosition().m_V.m_A[0], g_CharacterObserver->GetObservedCharacter()->GetShip()->GetAspectPosition()->GetPosition().m_V.m_A[1], 0.0f);
@@ -1040,7 +1040,7 @@ void DisplayMainView(void)
 	{
 		Color Color(0.0f, 0.0f, 1.0f, 1.0f);
 		
-		glClear(GL_DEPTH_BUFFER_BIT);
+		GLClear(GL_DEPTH_BUFFER_BIT);
 		assert(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetAspectPhysical() != 0);
 		DrawSelection(g_CharacterObserver->GetObservedCharacter()->GetShip(), g_CharacterObserver->GetObservedCharacter()->GetShip()->GetAspectPhysical()->GetRadialSize(), Color);
 	}
@@ -3133,6 +3133,7 @@ void InitializeOpenGL(void)
 	ON_DEBUG(std::cout << "Loading OpenGL functions." << std::endl);
 	LoadOpenGLFunction(glBindFramebuffer);
 	LoadOpenGLFunction(glBindRenderbuffer);
+	LoadOpenGLFunction(glClear);
 	LoadOpenGLFunction(glColor4fv);
 	LoadOpenGLFunction(glDeleteFramebuffers);
 	LoadOpenGLFunction(glDeleteRenderbuffers);
@@ -3148,6 +3149,8 @@ void InitializeOpenGL(void)
 	LoadOpenGLFunction(glMaterialfv);
 	LoadOpenGLFunction(glMatrixMode);
 	LoadOpenGLFunction(glNormal3fv);
+	LoadOpenGLFunction(glPopMatrix);
+	LoadOpenGLFunction(glPushMatrix);
 	LoadOpenGLFunction(glRenderbufferStorage);
 	LoadOpenGLFunction(glVertex2f);
 	LoadOpenGLFunction(glVertex3fv);

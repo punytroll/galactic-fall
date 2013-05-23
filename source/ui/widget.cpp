@@ -84,13 +84,13 @@ void UI::Widget::Draw(void) const
 			
 			if(SubWidget->IsVisible() == true)
 			{
-				glPushMatrix();
+				GLPushMatrix();
 				PushClippingRectangle(SubWidget->GetPosition(), SubWidget->GetSize());
 				glTranslatef(SubWidget->m_Position.m_V.m_A[0], SubWidget->m_Position.m_V.m_A[1], 0.0f);
 				DrawClippingRectangle();
 				SubWidget->Draw();
 				PopClippingRectangle();
-				glPopMatrix();
+				GLPopMatrix();
 			}
 		}
 		// restore the clipping rectangle for this widget
