@@ -70,7 +70,6 @@ public:
 	Planet(const std::string & Identifier);
 	~Planet(void);
 	// getters
-	const Color & GetColor(void) const;
 	const std::string & GetDescription(void) const;
 	Reference< Faction > GetFaction(void) const;
 	const std::string & GetIdentifier(void) const;
@@ -78,7 +77,6 @@ public:
 	const std::vector< PlanetAssetClass * > & GetPlanetAssetClasses(void) const;
 	float GetSize(void) const;
 	// setters
-	void SetColor(const Color & Color);
 	void SetDescription(const std::string & Description);
 	void SetFaction(Reference< Faction > Faction);
 	void SetLandingFeePerSpace(float LandingFeePerSpace);
@@ -88,7 +86,6 @@ public:
 	void Land(Ship * Ship);
 	void TakeOff(Ship * Ship);
 private:
-	Color * m_Color;
 	std::string m_Description;
 	Reference< Faction > m_Faction;
 	std::string m_Identifier;
@@ -96,11 +93,6 @@ private:
 	std::vector< PlanetAssetClass * > m_PlanetAssetClasses;
 	float m_Size;
 };
-
-inline const Color & Planet::GetColor(void) const
-{
-	return *m_Color;
-}
 
 inline const std::string & Planet::GetDescription(void) const
 {

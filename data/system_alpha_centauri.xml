@@ -24,17 +24,35 @@
 			<identifier>tau_prime</identifier>
 			<name>Tau Prime</name>
 			<description/>
+			<visualization>
+				<model-identifier>planet</model-identifier>
+				<visualization-parts>
+					<visualization-part>
+						<part-identifier>planet</part-identifier>
+						<material>
+							<use-specular-color>true</use-specular-color>
+							<diffuse-color>
+								<red>0.8</red>
+								<green>0.6</green>
+								<blue>1.0</blue>
+								<alpha>1.0</alpha>
+							</diffuse-color>
+							<specular-color>
+								<red>0.25</red>
+								<green>0.25</green>
+								<blue>0.25</blue>
+								<alpha>1</alpha>
+							</specular-color>
+							<shininess>10</shininess>
+						</material>
+					</visualization-part>
+				</visualization-parts>
+			</visualization>
 			<position>
 				<x>-100</x>
 				<y>80</y>
 			</position>
 			<size>120</size>
-			<color>
-				<red>0.8</red>
-				<green>0.6</green>
-				<blue>1.0</blue>
-				<alpha>1.0</alpha>
-			</color>
 			<offered-asset-classes>
 				<offered-asset-class>
 					<identifier>food</identifier>
@@ -80,17 +98,35 @@
 			<identifier>hephant</identifier>
 			<name>Hephant</name>
 			<description/>
+			<visualization>
+				<model-identifier>planet</model-identifier>
+				<visualization-parts>
+					<visualization-part>
+						<part-identifier>planet</part-identifier>
+						<material>
+							<use-specular-color>true</use-specular-color>
+							<diffuse-color>
+								<red>0.8</red>
+								<green>0.6</green>
+								<blue>0.8</blue>
+								<alpha>1.0</alpha>
+							</diffuse-color>
+							<specular-color>
+								<red>0.25</red>
+								<green>0.25</green>
+								<blue>0.25</blue>
+								<alpha>1</alpha>
+							</specular-color>
+							<shininess>10</shininess>
+						</material>
+					</visualization-part>
+				</visualization-parts>
+			</visualization>
 			<position>
 				<x>-200</x>
 				<y>60</y>
 			</position>
 			<size>30</size>
-			<color>
-				<red>0.8</red>
-				<green>0.6</green>
-				<blue>0.8</blue>
-				<alpha>1.0</alpha>
-			</color>
 			<offered-asset-classes>
 				<offered-asset-class>
 					<identifier>food</identifier>

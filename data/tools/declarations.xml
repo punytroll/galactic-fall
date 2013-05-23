@@ -119,9 +119,9 @@
 		<string identifier="identifier"/>
 		<string identifier="name"/>
 		<string identifier="description"/>
+		<visualization identifier="visualization"/>
 		<vector2f identifier="position"/>
 		<float identifier="size"/>
-		<color4f identifier="color"/>
 		<array identifier="offered-asset-classes"/>
 		<float identifier="landing-fee-per-space"/>
 		<string identifier="faction-identifier"/>

@@ -47,6 +47,7 @@
 #include "object_aspect_name.h"
 #include "object_aspect_object_container.h"
 #include "object_aspect_position.h"
+#include "object_aspect_visualization.h"
 #include "object_factory.h"
 #include "planet.h"
 #include "settings.h"
@@ -767,17 +768,26 @@ static void ReadSystem(Arxx::Reference & Reference)
 		
 		std::string Name;
 		std::string Description;
-		Vector2f PlanetPosition;
-		float Size;
-		Color PlanetColor;
-		Arxx::u4byte OfferedAssetsCount;
 		
-		Reader >> Name >> Description >> PlanetPosition >> Size >> PlanetColor >> OfferedAssetsCount;
+		Reader >> Name >> Description;
 		NewPlanet->GetAspectName()->SetName(Name);
 		NewPlanet->SetDescription(Description);
+		
+		// read the visualization
+		VisualizationPrototype * PlanetVisualizationPrototype(new VisualizationPrototype());
+		
+		ReadVisualizationPrototype(Reader, PlanetVisualizationPrototype);
+		assert(NewPlanet->GetAspectVisualization() != 0);
+		assert(NewPlanet->GetAspectVisualization()->GetVisualizationPrototype() == 0);
+		NewPlanet->GetAspectVisualization()->SetVisualizationPrototype(PlanetVisualizationPrototype);
+		
+		Vector2f PlanetPosition;
+		float Size;
+		Arxx::u4byte OfferedAssetsCount;
+		
+		Reader >> PlanetPosition >> Size >> OfferedAssetsCount;
 		NewPlanet->GetAspectPosition()->SetPosition(Vector3f(PlanetPosition[0], PlanetPosition[1], 0.0f));
 		NewPlanet->SetSize(Size);
-		NewPlanet->SetColor(PlanetColor);
 		for(Arxx::u4byte OfferedAssetNumber = 1; OfferedAssetNumber <= OfferedAssetsCount; ++OfferedAssetNumber)
 		{
 			std::string AssetClassIdentifier;

@@ -44,7 +44,6 @@ unsigned_numeric PlanetAssetClass::GetPrice(void) const
 }
 
 Planet::Planet(const std::string & Identifier) :
-	m_Color(0),
 	m_Identifier(Identifier),
 	m_LandingFeePerSpace(0.0f)
 {
@@ -62,8 +61,6 @@ Planet::~Planet(void)
 		delete m_PlanetAssetClasses.back();
 		m_PlanetAssetClasses.pop_back();
 	}
-	delete m_Color;
-	m_Color = 0;
 }
 
 void Planet::SetDescription(const std::string & Description)
@@ -76,12 +73,6 @@ void Planet::SetSize(const float & Size)
 	m_Size = Size;
 	assert(GetAspectPhysical() != 0);
 	GetAspectPhysical()->SetRadialSize(m_Size / 2.0f);
-}
-
-void Planet::SetColor(const Color & NewColor)
-{
-	delete m_Color;
-	m_Color = new Color(NewColor);
 }
 
 PlanetAssetClass * Planet::CreatePlanetAssetClass(const AssetClass * AssetClass)

@@ -142,22 +142,17 @@ void VisualizePlanet(Planet * Planet, Graphics::Node * Container)
 {
 	assert(Planet != 0);
 	assert(Planet->GetAspectVisualization() != 0);
-	assert(Planet->GetAspectPhysical() != 0);
-	assert(Planet->GetAspectPosition() != 0);
+	assert(Planet->GetAspectVisualization()->GetVisualizationPrototype() != 0);
 	
-	Graphics::ModelNode * Visualization(new Graphics::ModelNode());
-	Graphics::Material * Material(new Graphics::Material());
+	Graphics::Node * Visualization(VisualizePrototype(Planet->GetAspectVisualization()->GetVisualizationPrototype()));
 	
-	Material->SetDiffuseColor(new Color(Planet->GetColor()));
-	Material->SetShininess(10.0f);
-	Material->SetSpecularColor(new Color(0.25f, 0.25f, 0.25f, 1.0f));
-	Visualization->AddMaterial(g_GraphicsEngine->GetModelManager()->Get("planet")->GetIdentifier(), Material);
-	Visualization->SetModel(g_GraphicsEngine->GetModelManager()->Get("planet"));
-	Visualization->SetNormalize(true);
-	Visualization->SetOrientation(Quaternion(true));
-	Visualization->SetPosition(Planet->GetAspectPosition()->GetPosition());
-	Visualization->SetScale(Planet->GetAspectPhysical()->GetRadialSize());
 	Visualization->SetUseLighting(true);
+	Visualization->SetOrientation(Quaternion(true));
+	assert(Planet->GetAspectPosition() != 0);
+	Visualization->SetPosition(Planet->GetAspectPosition()->GetPosition());
+	assert(Planet->GetAspectPhysical() != 0);
+	Visualization->SetScale(Planet->GetAspectPhysical()->GetRadialSize());
+	Visualization->SetNormalize(true);
 	
 	// create and store the visualization reference
 	Reference< Graphics::Node > VisualizationReference(*Visualization);
