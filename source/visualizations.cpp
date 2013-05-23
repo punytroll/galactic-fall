@@ -17,6 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include <iostream>
+
 #include "color.h"
 #include "commodity.h"
 #include "commodity_class.h"
@@ -96,6 +98,11 @@ void VisualizeObject(Object * Object, Graphics::Node * Container)
 	else if(Object->GetTypeIdentifier() == "weapon")
 	{
 		VisualizeWeapon(static_cast< Weapon * >(Object), Container);
+	}
+	else
+	{
+		std::cerr << "Don't know how to visualize an object with the type identifier \"" << Object->GetTypeIdentifier() << "\"." << std::endl;
+		assert(false);
 	}
 }
 
@@ -191,14 +198,14 @@ void VisualizeShip(Ship * Ship, Graphics::Node * Container)
 	assert(Container != 0);
 	Container->AddNode(Visualization);
 	
-	// add weapon visualizations
+	// add accessory visualizations
 	assert(Ship->GetAspectOutfitting() != 0);
 	
 	const std::map< std::string, Slot * > & Slots(Ship->GetAspectOutfitting()->GetSlots());
 	
 	for(std::map< std::string, Slot * >::const_iterator SlotIterator = Slots.begin(); SlotIterator != Slots.end(); ++SlotIterator)
 	{
-		if(SlotIterator->second->GetMountedObject().IsValid() == true)
+		if((SlotIterator->second->GetVisualizeAccessory() == true) && (SlotIterator->second->GetMountedObject().IsValid() == true))
 		{
 			VisualizeObject(SlotIterator->second->GetMountedObject().Get(), Visualization);
 		}
