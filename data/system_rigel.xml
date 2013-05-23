@@ -24,17 +24,35 @@
 			<identifier>rigel_guardian</identifier>
 			<name>Rigel Guardian</name>
 			<description/>
+			<visualization>
+				<model-identifier>planet</model-identifier>
+				<visualization-parts>
+					<visualization-part>
+						<part-identifier>planet</part-identifier>
+						<material>
+							<use-specular-color>true</use-specular-color>
+							<diffuse-color>
+								<red>0.8</red>
+								<green>0.9</green>
+								<blue>0.4</blue>
+								<alpha>1.0</alpha>
+							</diffuse-color>
+							<specular-color>
+								<red>0.25</red>
+								<green>0.25</green>
+								<blue>0.25</blue>
+								<alpha>1</alpha>
+							</specular-color>
+							<shininess>10</shininess>
+						</material>
+					</visualization-part>
+				</visualization-parts>
+			</visualization>
 			<position>
 				<x>10</x>
 				<y>-20</y>
 			</position>
 			<size>60</size>
-			<color>
-				<red>0.8</red>
-				<green>0.9</green>
-				<blue>0.4</blue>
-				<alpha>1.0</alpha>
-			</color>
 			<offered-asset-classes>
 				<offered-asset-class>
 					<identifier>food</identifier>
