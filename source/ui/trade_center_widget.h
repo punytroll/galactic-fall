@@ -41,35 +41,33 @@ namespace UI
 	class TradeCenterWidget : public UI::Widget
 	{
 	public:
-		TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet, Character * Character);
+		TradeCenterWidget(UI::Widget * SupWidget, Reference< Planet > Planet, Reference< Character > Character);
 	private:
 		// callbacks
-		bool OnAssetClassMouseButton(UI::TradeCenterAssetClass * TradeCenterAssetClass, int Button, int State, float X, float Y);
-		void OnAssetClassMouseEnter(UI::TradeCenterAssetClass * AssetClassWidget);
-		void OnAssetClassMouseLeave(UI::TradeCenterAssetClass * AssetClassWidget);
-		bool OnAssetClassScrollBoxMouseButton(int Button, int State, float X, float Y);
-		void OnBuyClicked(void);
-		bool OnKey(const KeyEventInformation & KeyEventInformation);
-		void OnSellClicked(void);
+		bool _OnAssetClassMouseButton(UI::TradeCenterAssetClass * TradeCenterAssetClass, int Button, int State, float X, float Y);
+		void _OnAssetClassMouseEnter(UI::TradeCenterAssetClass * AssetClassWidget);
+		void _OnAssetClassMouseLeave(UI::TradeCenterAssetClass * AssetClassWidget);
+		bool _OnAssetClassScrollBoxMouseButton(int Button, int State, float X, float Y);
+		void _OnBuyButtonClicked(void);
 		void _OnDestroying(void);
 		void _OnDestroyInScene(Graphics::Node * Node);
+		bool _OnKey(const KeyEventInformation & KeyEventInformation);
+		void _OnSellButtonClicked(void);
 		void _OnUpdating(float RealTimeSeconds, float GameTimeSeconds);
 		// helper functions and actions
-		void Buy(const PlanetAssetClass * PlanetAssetClass);
-		void ClearAssetClassViewDisplay(void);
-		void Sell(const PlanetAssetClass * PlanetAssetClass);
-		void UpdateTraderCredits(void);
-		void UpdateTraderAvailableSpace(void);
+		void _Buy(const PlanetAssetClass * PlanetAssetClass);
+		void _ClearAssetClassViewDisplay(void);
+		void _Sell(const PlanetAssetClass * PlanetAssetClass);
 		// member variables
-		Planet * m_Planet;
-		Character * m_Character;
-		UI::Button * m_BuyButton;
-		UI::Button * m_SellButton;
-		UI::ScrollBox * m_AssetClassScrollBox;
+		UI::ScrollBox * _AssetClassScrollBox;
 		UI::ViewDisplay * _AssetClassViewDisplay;
-		UI::Label * m_TraderCreditsLabel;
-		UI::Label * m_TraderAvailableSpaceLabel;
-		UI::TradeCenterAssetClass * m_SelectedTradeCenterAssetClass;
+		UI::Button * _BuyButton;
+		Reference< Character > _Character;
+		Reference< Planet > _Planet;
+		UI::TradeCenterAssetClass * _SelectedTradeCenterAssetClass;
+		UI::Button * _SellButton;
+		UI::Label * _TraderAvailableSpaceLabel;
+		UI::Label * _TraderCreditsLabel;
 	};
 }
 
