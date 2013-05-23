@@ -114,7 +114,6 @@ void VisualizeCommodity(Commodity * Commodity, Graphics::Node * Container)
 	
 	Graphics::Node * Visualization(VisualizePrototype(Commodity->GetAspectVisualization()->GetVisualizationPrototype()));
 	
-	Visualization->SetClearDepthBuffer(true);
 	Visualization->SetUseLighting(true);
 	assert(Commodity->GetAspectPosition() != 0);
 	Visualization->SetOrientation(Commodity->GetAspectPosition()->GetOrientation());
@@ -181,7 +180,6 @@ void VisualizeShip(Ship * Ship, Graphics::Node * Container)
 	
 	Graphics::Node * Visualization(VisualizePrototype(Ship->GetAspectVisualization()->GetVisualizationPrototype()));
 	
-	Visualization->SetClearDepthBuffer(true);
 	Visualization->SetUseLighting(true);
 	assert(Ship->GetAspectPosition() != 0);
 	Visualization->SetOrientation(Ship->GetAspectPosition()->GetOrientation());
@@ -228,7 +226,6 @@ void VisualizeShot(Shot * Shot, Graphics::Node * Container)
 	
 	Graphics::Node * Visualization(VisualizePrototype(Shot->GetAspectVisualization()->GetVisualizationPrototype()));
 	
-	Visualization->SetClearDepthBuffer(true);
 	Visualization->SetUseBlending(true);
 	Visualization->SetUseLighting(false);
 	assert(Shot->GetAspectPosition() != 0);

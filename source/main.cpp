@@ -1355,10 +1355,14 @@ void OnOutputEnterSystem(System * EnterSystem)
 	assert(g_UIView->GetScene()->GetRootNode() != 0);
 	g_UIView->GetScene()->GetRootNode()->SetClearColorBuffer(false);
 	g_CommodityLayer = new Graphics::Node();
+	g_CommodityLayer->SetClearDepthBuffer(true);
 	g_ParticleSystemsLayer = new Graphics::Node();
 	g_PlanetLayer = new Graphics::Node();
+	g_PlanetLayer->SetClearDepthBuffer(true);
 	g_ShipLayer = new Graphics::Node();
+	g_ShipLayer->SetClearDepthBuffer(true);
 	g_ShotLayer = new Graphics::Node();
+	g_ShotLayer->SetClearDepthBuffer(true);
 	RootNode->AddNode(g_PlanetLayer);
 	RootNode->AddNode(g_CommodityLayer);
 	RootNode->AddNode(g_ShotLayer);
