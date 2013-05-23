@@ -2516,39 +2516,47 @@ void ActionEnableTurnRight(void)
 void ActionFocusCameraOnNextShip(void)
 {
 	const std::list< Ship * > & Ships(g_CurrentSystem->GetShips());
-	const Ship * FocusShip(dynamic_cast< const Ship * >(g_CameraFocus.Get()));
 	
-	std::list< Ship * >::const_iterator ShipIterator(find(Ships.begin(), Ships.end(), FocusShip));
-	
-	if((ShipIterator == Ships.end()) || (++ShipIterator == Ships.end()))
+	if(Ships.empty() == false)
 	{
-		g_CameraFocus = Ships.front()->GetReference();
+		const Ship * FocusShip(dynamic_cast< const Ship * >(g_CameraFocus.Get()));
+		
+		std::list< Ship * >::const_iterator ShipIterator(find(Ships.begin(), Ships.end(), FocusShip));
+		
+		if((ShipIterator == Ships.end()) || (++ShipIterator == Ships.end()))
+		{
+			g_CameraFocus = Ships.front()->GetReference();
+		}
+		else
+		{
+			g_CameraFocus = (*ShipIterator)->GetReference();
+		}
+		g_CameraPosition[0] = 0.0f;
+		g_CameraPosition[1] = 0.0f;
 	}
-	else
-	{
-		g_CameraFocus = (*ShipIterator)->GetReference();
-	}
-	g_CameraPosition[0] = 0.0f;
-	g_CameraPosition[1] = 0.0f;
 }
 
 void ActionFocusCameraOnPreviousShip(void)
 {
 	const std::list< Ship * > & Ships(g_CurrentSystem->GetShips());
-	const Ship * FocusShip(dynamic_cast< const Ship * >(g_CameraFocus.Get()));
 	
-	std::list< Ship * >::const_reverse_iterator ShipIterator(find(Ships.rbegin(), Ships.rend(), FocusShip));
-	
-	if((ShipIterator == Ships.rend()) || (++ShipIterator == Ships.rend()))
+	if(Ships.empty() == false)
 	{
-		g_CameraFocus = Ships.back()->GetReference();
+		const Ship * FocusShip(dynamic_cast< const Ship * >(g_CameraFocus.Get()));
+		
+		std::list< Ship * >::const_reverse_iterator ShipIterator(find(Ships.rbegin(), Ships.rend(), FocusShip));
+		
+		if((ShipIterator == Ships.rend()) || (++ShipIterator == Ships.rend()))
+		{
+			g_CameraFocus = Ships.back()->GetReference();
+		}
+		else
+		{
+			g_CameraFocus = (*ShipIterator)->GetReference();
+		}
+		g_CameraPosition[0] = 0.0f;
+		g_CameraPosition[1] = 0.0f;
 	}
-	else
-	{
-		g_CameraFocus = (*ShipIterator)->GetReference();
-	}
-	g_CameraPosition[0] = 0.0f;
-	g_CameraPosition[1] = 0.0f;
 }
 
 void ActionIncreaseFieldOfView(void)
