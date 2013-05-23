@@ -4,5 +4,4 @@
 	<base-price>2500</base-price>
 	<object-type>generator</object-type>
 	<object-class>small_generator</object-class>
-	<image-identifier>asset_class_small_generator</image-identifier>
 </asset-class>

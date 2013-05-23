@@ -78,17 +78,6 @@ all_data = \
 	.data/system_link_alpha_centauri_tichel.data \
 	.data/system_link_rigel_sol.data \
 	.data/system_link_rigel_tichel.data \
-	.data/texture_asset_class_equipment.data \
-	.data/texture_asset_class_food.data \
-	.data/texture_asset_class_fuel.data \
-	.data/texture_asset_class_industrial.data \
-	.data/texture_asset_class_light_battery.data \
-	.data/texture_asset_class_light_laser.data \
-	.data/texture_asset_class_luxury_goods.data \
-	.data/texture_asset_class_medical_supplies.data \
-	.data/texture_asset_class_medium_laser.data \
-	.data/texture_asset_class_metal.data \
-	.data/texture_asset_class_small_generator.data \
 	.data/texture_particle.data \
 	.data/weapon_class_light_laser.data \
 	.data/weapon_class_medium_laser.data \
@@ -239,18 +228,7 @@ data.arx: $(data_arx) $(arxtouch_dependencies) $(arxadd_dependencies)
 	$(command_arxadd) $@ --name="Transporter Faction" --type=2 --sub-type=0 --relation="/Meshes::child" --data-file=.data/mesh_transporter_faction.data
 	$(command_arxadd) $@ --name="Transporter Hull" --type=2 --sub-type=0 --relation="/Meshes::child" --data-file=.data/mesh_transporter_hull.data
 	@echo "\n\nAdding textures ...\n"
-	$(command_arxadd) $@ --name="Equipment" --type=a --sub-type=0 --relation="/Textures::child" --data-file=.data/texture_asset_class_equipment.data
-	$(command_arxadd) $@ --name="Food" --type=a --sub-type=0 --relation="/Textures::child" --data-file=.data/texture_asset_class_food.data
-	$(command_arxadd) $@ --name="Fuel" --type=a --sub-type=0 --relation="/Textures::child" --data-file=.data/texture_asset_class_fuel.data
-	$(command_arxadd) $@ --name="Industrial" --type=a --sub-type=0 --relation="/Textures::child" --data-file=.data/texture_asset_class_industrial.data
-	$(command_arxadd) $@ --name="Light Battery" --type=a --sub-type=0 --relation="/Textures::child" --data-file=.data/texture_asset_class_light_battery.data
-	$(command_arxadd) $@ --name="Light Laser" --type=a --sub-type=0 --relation="/Textures::child" --data-file=.data/texture_asset_class_light_laser.data
-	$(command_arxadd) $@ --name="Luxury Goods" --type=a --sub-type=0 --relation="/Textures::child" --data-file=.data/texture_asset_class_luxury_goods.data
-	$(command_arxadd) $@ --name="Medical Supplies" --type=a --sub-type=0 --relation="/Textures::child" --data-file=.data/texture_asset_class_medical_supplies.data
-	$(command_arxadd) $@ --name="Medium Laser" --type=a --sub-type=0 --relation="/Textures::child" --data-file=.data/texture_asset_class_medium_laser.data
-	$(command_arxadd) $@ --name="Metal" --type=a --sub-type=0 --relation="/Textures::child" --data-file=.data/texture_asset_class_metal.data
 	$(command_arxadd) $@ --name="Particle" --type=a --sub-type=0 --relation="/Textures::child" --data-file=.data/texture_particle.data
-	$(command_arxadd) $@ --name="Small Generator" --type=a --sub-type=0 --relation="/Textures::child" --data-file=.data/texture_asset_class_small_generator.data
 
 .data:
 	mkdir $@
@@ -278,28 +256,6 @@ meshes-clean-recursive:
 
 textures-clean-recursive:
 	@$(MAKE) -C textures clean-recursive
-
-.data/texture_asset_class_equipment.data: textures/generated/asset_class_equipment.tex
-
-.data/texture_asset_class_food.data: textures/generated/asset_class_food.tex
-
-.data/texture_asset_class_fuel.data: textures/generated/asset_class_fuel.tex
-
-.data/texture_asset_class_industrial.data: textures/generated/asset_class_industrial.tex
-
-.data/texture_asset_class_light_battery.data: textures/generated/asset_class_light_battery.tex
-
-.data/texture_asset_class_light_laser.data: textures/generated/asset_class_light_laser.tex
-
-.data/texture_asset_class_luxury_goods.data: textures/generated/asset_class_luxury_goods.tex
-
-.data/texture_asset_class_medical_supplies.data: textures/generated/asset_class_medical_supplies.tex
-
-.data/texture_asset_class_medium_laser.data: textures/generated/asset_class_medium_laser.tex
-
-.data/texture_asset_class_metal.data: textures/generated/asset_class_metal.tex
-
-.data/texture_asset_class_small_generator.data: textures/generated/asset_class_small_generator.tex
 
 .data/texture_particle.data: textures/generated/particle.tex
 

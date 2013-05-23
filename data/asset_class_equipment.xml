@@ -4,5 +4,4 @@
 	<base-price>210</base-price>
 	<object-type>commodity</object-type>
 	<object-class>equipment</object-class>
-	<image-identifier>asset_class_equipment</image-identifier>
 </asset-class>

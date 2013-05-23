@@ -4,5 +4,4 @@
 	<base-price>4200</base-price>
 	<object-type>weapon</object-type>
 	<object-class>medium_laser</object-class>
-	<image-identifier>asset_class_medium_laser</image-identifier>
 </asset-class>

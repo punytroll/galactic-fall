@@ -4,5 +4,4 @@
 	<base-price>1300</base-price>
 	<object-type>battery</object-type>
 	<object-class>light_battery</object-class>
-	<image-identifier>asset_class_light_battery</image-identifier>
 </asset-class>

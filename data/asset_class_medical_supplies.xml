@@ -4,5 +4,4 @@
 	<base-price>300</base-price>
 	<object-type>commodity</object-type>
 	<object-class>medical_supplies</object-class>
-	<image-identifier>asset_class_medical_supplies</image-identifier>
 </asset-class>
