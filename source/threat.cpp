@@ -67,6 +67,6 @@ void Threat::ModifyThreat(const Reference< Object > & ThreateningObject, float D
 	}
 	else
 	{
-		m_Threats.push_back(std::make_pair< Reference< Object >, float >(ThreateningObject, DeltaThreat));
+		m_Threats.push_back(std::make_pair(ThreateningObject, DeltaThreat));
 	}
 }
