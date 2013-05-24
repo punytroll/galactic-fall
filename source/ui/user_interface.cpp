@@ -54,7 +54,7 @@ void UI::UserInterface::Draw(void) const
 	{
 		GLPushMatrix();
 		UI::Widget::PushClippingRectangle(m_RootWidget->GetPosition(), m_RootWidget->GetSize());
-		glTranslatef(m_RootWidget->GetPosition().m_V.m_A[0], m_RootWidget->GetPosition().m_V.m_A[1], 0.0f);
+		GLTranslatef(m_RootWidget->GetPosition().m_V.m_A[0], m_RootWidget->GetPosition().m_V.m_A[1], 0.0f);
 		UI::Widget::DrawClippingRectangle();
 		m_RootWidget->Draw();
 		UI::Widget::PopClippingRectangle();

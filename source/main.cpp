@@ -366,32 +366,32 @@ void DrawSelection(const Object * Object, float RadialSize, const Color & Color)
 	float InnerSize(RadialSize / InnerFactor);
 	
 	GLPushMatrix();
-	glPushAttrib(GL_LIGHTING_BIT);
+	GLPushAttrib(GL_LIGHTING_BIT);
 	glDisable(GL_LIGHTING);
-	glTranslatef(Object->GetAspectPosition()->GetPosition().m_V.m_A[0], Object->GetAspectPosition()->GetPosition().m_V.m_A[1], 0.0f);
+	GLTranslatef(Object->GetAspectPosition()->GetPosition().m_V.m_A[0], Object->GetAspectPosition()->GetPosition().m_V.m_A[1], 0.0f);
 	GLColor4fv(Color.GetColor().m_V.m_A);
-	glBegin(GL_LINE_STRIP);
+	GLBegin(GL_LINE_STRIP);
 	GLVertex2f(-OuterSize, -InnerSize);
 	GLVertex2f(-OuterSize, -OuterSize);
 	GLVertex2f(-InnerSize, -OuterSize);
-	glEnd();
-	glBegin(GL_LINE_STRIP);
+	GLEnd();
+	GLBegin(GL_LINE_STRIP);
 	GLVertex2f(-OuterSize, InnerSize);
 	GLVertex2f(-OuterSize, OuterSize);
 	GLVertex2f(-InnerSize, OuterSize);
-	glEnd();
-	glBegin(GL_LINE_STRIP);
+	GLEnd();
+	GLBegin(GL_LINE_STRIP);
 	GLVertex2f(OuterSize, -InnerSize);
 	GLVertex2f(OuterSize, -OuterSize);
 	GLVertex2f(InnerSize, -OuterSize);
-	glEnd();
-	glBegin(GL_LINE_STRIP);
+	GLEnd();
+	GLBegin(GL_LINE_STRIP);
 	GLVertex2f(OuterSize, InnerSize);
 	GLVertex2f(OuterSize, OuterSize);
 	GLVertex2f(InnerSize, OuterSize);
-	glEnd();
-	glPopAttrib();
-	glPopMatrix();
+	GLEnd();
+	GLPopAttrib();
+	GLPopMatrix();
 }
 
 void CollectWidgets(void)
@@ -1019,21 +1019,21 @@ void DisplayMainView(void)
 		
 		RelativePosition.Normalize();
 		GLPushMatrix();
-		glPushAttrib(GL_LIGHTING_BIT);
+		GLPushAttrib(GL_LIGHTING_BIT);
 		glDisable(GL_LIGHTING);
-		glTranslatef(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetAspectPosition()->GetPosition().m_V.m_A[0], g_CharacterObserver->GetObservedCharacter()->GetShip()->GetAspectPosition()->GetPosition().m_V.m_A[1], 0.0f);
+		GLTranslatef(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetAspectPosition()->GetPosition().m_V.m_A[0], g_CharacterObserver->GetObservedCharacter()->GetShip()->GetAspectPosition()->GetPosition().m_V.m_A[1], 0.0f);
 		glRotatef(GetRadians(Vector2f(RelativePosition[0], RelativePosition[1])) * 180.0f / M_PI, 0.0f, 0.0f, 1.0f);
-		glColor3f(0.0f, 0.5f, 0.5f);
-		glBegin(GL_LINES);
+		GLColor3f(0.0f, 0.5f, 0.5f);
+		GLBegin(GL_LINES);
 		GLVertex2f(20.0f, 0.0f);
 		GLVertex2f(30.0f, 0.0f);
 		GLVertex2f(26.0f, 4.0f);
 		GLVertex2f(30.0f, 0.0f);
 		GLVertex2f(26.0f, -4.0f);
 		GLVertex2f(30.0f, 0.0f);
-		glEnd();
-		glPopAttrib();
-		glPopMatrix();
+		GLEnd();
+		GLPopAttrib();
+		GLPopMatrix();
 	}
 	// debug HUD
 	if((g_InputMind.IsValid() == false) && (g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0))
@@ -1423,12 +1423,12 @@ void TakeScreenShot(void)
 	GLubyte * ScreenshotData(new GLubyte[static_cast< GLsizei >(g_Width) * static_cast< GLsizei >(g_Height) * 3]);
 	
 	// store the read buffer and change it to the front buffer so we get what we see
-	glPushAttrib(GL_PIXEL_MODE_BIT);
+	GLPushAttrib(GL_PIXEL_MODE_BIT);
 	glReadBuffer(GL_FRONT);
 	// now read the bits
 	glReadPixels(0, 0, static_cast< GLsizei >(g_Width), static_cast< GLsizei >(g_Height), GL_RGB, GL_UNSIGNED_BYTE, ScreenshotData);
 	// revert the read buffer
-	glPopAttrib();
+	GLPopAttrib();
 	
 	// the file name with the current datetime in the format YYYYMMDD-HHMMSS
 	std::string FileName(MakeTimeStampedFileName("screenshot", "tex"));
@@ -3155,13 +3155,17 @@ void CreateWindow(void)
 void InitializeOpenGL(void)
 {
 	ON_DEBUG(std::cout << "Loading OpenGL functions." << std::endl);
+	LoadOpenGLFunction(glBegin);
 	LoadOpenGLFunction(glBindFramebuffer);
 	LoadOpenGLFunction(glBindRenderbuffer);
 	LoadOpenGLFunction(glClear);
+	LoadOpenGLFunction(glColor3f);
+	LoadOpenGLFunction(glColor4f);
 	LoadOpenGLFunction(glColor4fv);
 	LoadOpenGLFunction(glDeleteFramebuffers);
 	LoadOpenGLFunction(glDeleteRenderbuffers);
 	LoadOpenGLFunction(glEnable);
+	LoadOpenGLFunction(glEnd);
 	LoadOpenGLFunction(glFramebufferRenderbuffer);
 	LoadOpenGLFunction(glFramebufferTexture);
 	LoadOpenGLFunction(glGenFramebuffers);
@@ -3173,10 +3177,15 @@ void InitializeOpenGL(void)
 	LoadOpenGLFunction(glMaterialfv);
 	LoadOpenGLFunction(glMatrixMode);
 	LoadOpenGLFunction(glNormal3fv);
+	LoadOpenGLFunction(glPopAttrib);
 	LoadOpenGLFunction(glPopMatrix);
+	LoadOpenGLFunction(glPushAttrib);
 	LoadOpenGLFunction(glPushMatrix);
 	LoadOpenGLFunction(glRenderbufferStorage);
+	LoadOpenGLFunction(glTexCoord2f);
+	LoadOpenGLFunction(glTranslatef);
 	LoadOpenGLFunction(glVertex2f);
+	LoadOpenGLFunction(glVertex3f);
 	LoadOpenGLFunction(glVertex3fv);
 	LoadOpenGLFunction(glViewport);
 	

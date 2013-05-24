@@ -117,7 +117,7 @@ void Graphics::ParticleSystem::Begin(void)
 
 void Graphics::ParticleSystem::Draw(void)
 {
-	glBegin(GL_QUADS);
+	GLBegin(GL_QUADS);
 	for(std::list< Graphics::ParticleSystem::Particle >::iterator ParticleIterator = m_Particles.begin(); ParticleIterator != m_Particles.end(); ++ParticleIterator)
 	{
 		GLColor4fv(ParticleIterator->m_Color.GetColor().m_V.m_A);
@@ -126,16 +126,16 @@ void Graphics::ParticleSystem::Draw(void)
 		const float & Size(ParticleIterator->m_Size);
 		
 		// TODO: billboarding
-		glTexCoord2f(0.0f, 0.0f);
-		glVertex3f(Position[0] - Size, Position[1] - Size, Position[2]);
-		glTexCoord2f(1.0f, 0.0f);
-		glVertex3f(Position[0] + Size, Position[1] - Size, Position[2]);
-		glTexCoord2f(1.0f, 1.0f);
-		glVertex3f(Position[0] + Size, Position[1] + Size, Position[2]);
-		glTexCoord2f(0.0f, 1.0f);
-		glVertex3f(Position[0] - Size, Position[1] + Size, Position[2]);
+		GLTexCoord2f(0.0f, 0.0f);
+		GLVertex3f(Position[0] - Size, Position[1] - Size, Position[2]);
+		GLTexCoord2f(1.0f, 0.0f);
+		GLVertex3f(Position[0] + Size, Position[1] - Size, Position[2]);
+		GLTexCoord2f(1.0f, 1.0f);
+		GLVertex3f(Position[0] + Size, Position[1] + Size, Position[2]);
+		GLTexCoord2f(0.0f, 1.0f);
+		GLVertex3f(Position[0] - Size, Position[1] + Size, Position[2]);
 	}
-	glEnd();
+	GLEnd();
 	Graphics::Node::Draw();
 }
 

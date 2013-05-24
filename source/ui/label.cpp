@@ -55,7 +55,7 @@ void UI::Label::Draw(void) const
 	if(m_Wrap == false)
 	{
 		GLPushMatrix();
-		glTranslatef(((m_HorizontalAlignment == Label::ALIGN_LEFT) ? (0.0f) : ((m_HorizontalAlignment == Label::ALIGN_RIGHT) ? (Width - 6.0f * m_Text.length()) : (0.5f * (Width - 6.0f * m_Text.length())))), ((m_VerticalAlignment == Label::ALIGN_TOP) ? (0.0f) : ((m_VerticalAlignment == Label::ALIGN_BOTTOM) ? (GetSize().m_V.m_A[1] - 12.0f) : (0.5f * (GetSize().m_V.m_A[1] - 12.0f)))), 0.0f);
+		GLTranslatef(((m_HorizontalAlignment == Label::ALIGN_LEFT) ? (0.0f) : ((m_HorizontalAlignment == Label::ALIGN_RIGHT) ? (Width - 6.0f * m_Text.length()) : (0.5f * (Width - 6.0f * m_Text.length())))), ((m_VerticalAlignment == Label::ALIGN_TOP) ? (0.0f) : ((m_VerticalAlignment == Label::ALIGN_BOTTOM) ? (GetSize().m_V.m_A[1] - 12.0f) : (0.5f * (GetSize().m_V.m_A[1] - 12.0f)))), 0.0f);
 		DrawText(m_Text);
 		GLPopMatrix();
 	}
@@ -89,7 +89,7 @@ void UI::Label::Draw(void) const
 		for(std::vector< std::pair< std::string::size_type, std::string::size_type > >::size_type Line = 0; Line < Lines.size(); ++Line)
 		{
 			GLPushMatrix();
-			glTranslatef(((m_HorizontalAlignment == Label::ALIGN_LEFT) ? (0.0f) : ((m_HorizontalAlignment == Label::ALIGN_RIGHT) ? (Width - 6.0f * Lines[Line].second) : ((Width - 6.0f * Lines[Line].second) / 2.0f))),  ((m_VerticalAlignment == Label::ALIGN_TOP) ? (12.0f * Line) : ((m_VerticalAlignment == Label::ALIGN_BOTTOM) ? (GetSize().m_V.m_A[1] - 12.0f * Line) : (0.5f * (GetSize().m_V.m_A[1] - 12.0f * Lines.size()) + 12.0f * Line))), 0.0f);
+			GLTranslatef(((m_HorizontalAlignment == Label::ALIGN_LEFT) ? (0.0f) : ((m_HorizontalAlignment == Label::ALIGN_RIGHT) ? (Width - 6.0f * Lines[Line].second) : ((Width - 6.0f * Lines[Line].second) / 2.0f))),  ((m_VerticalAlignment == Label::ALIGN_TOP) ? (12.0f * Line) : ((m_VerticalAlignment == Label::ALIGN_BOTTOM) ? (GetSize().m_V.m_A[1] - 12.0f * Line) : (0.5f * (GetSize().m_V.m_A[1] - 12.0f * Lines.size()) + 12.0f * Line))), 0.0f);
 			DrawText(m_Text.substr(Lines[Line].first, Lines[Line].second));
 			GLPopMatrix();
 		}

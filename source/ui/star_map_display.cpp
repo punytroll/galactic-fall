@@ -54,9 +54,9 @@ void UI::StarMapDisplay::Draw(void) const
 	
 	float SystemSize(5.0f);
 	
-	glPushAttrib(GL_ENABLE_BIT);
+	GLPushAttrib(GL_ENABLE_BIT);
 	GLPushMatrix();
-	glTranslatef(Middle.m_V.m_A[0], Middle.m_V.m_A[1], 0.0f);
+	GLTranslatef(Middle.m_V.m_A[0], Middle.m_V.m_A[1], 0.0f);
 	glScalef(1.0f, -1.0f, 1.0f);
 	
 	const std::set< System * > & UnexploredSystems(m_Character->GetMapKnowledge()->GetUnexploredSystems());
@@ -67,20 +67,20 @@ void UI::StarMapDisplay::Draw(void) const
 		
 		Position *= m_Scale;
 		GLPushMatrix();
-		glTranslatef(Position.m_V.m_A[0], Position.m_V.m_A[1], 0.0f);
+		GLTranslatef(Position.m_V.m_A[0], Position.m_V.m_A[1], 0.0f);
 		if(*UnexploredSystemIterator == m_SelectedSystem)
 		{
-			glColor3f(0.0f, 1.0f, 0.0f);
+			GLColor3f(0.0f, 1.0f, 0.0f);
 		}
 		else if(*UnexploredSystemIterator == m_System)
 		{
-			glColor3f(0.8f, 0.8f, 0.0f);
+			GLColor3f(0.8f, 0.8f, 0.0f);
 		}
 		else
 		{
-			glColor3f(0.5f, 0.5f, 0.5f);
+			GLColor3f(0.5f, 0.5f, 0.5f);
 		}
-		glBegin(GL_LINE_LOOP);
+		GLBegin(GL_LINE_LOOP);
 		GLVertex2f(SystemSize, 0.0f);
 		GLVertex2f(SystemSize * 0.866f, SystemSize * 0.5f);
 		GLVertex2f(SystemSize * 0.5f, SystemSize * 0.866f);
@@ -93,7 +93,7 @@ void UI::StarMapDisplay::Draw(void) const
 		GLVertex2f(0.0f, -SystemSize);
 		GLVertex2f(SystemSize * 0.5f, -SystemSize * 0.866f);
 		GLVertex2f(SystemSize * 0.866f, -SystemSize * 0.5f);
-		glEnd();
+		GLEnd();
 		GLPopMatrix();
 	}
 	
@@ -105,7 +105,7 @@ void UI::StarMapDisplay::Draw(void) const
 		
 		Position *= m_Scale;
 		GLPushMatrix();
-		glTranslatef(Position.m_V.m_A[0], Position.m_V.m_A[1], 0.0f);
+		GLTranslatef(Position.m_V.m_A[0], Position.m_V.m_A[1], 0.0f);
 		
 		const std::list< System * > & LinkedSystems((*ExploredSystemIterator)->GetLinkedSystems());
 		
@@ -114,31 +114,31 @@ void UI::StarMapDisplay::Draw(void) const
 			if(UnexploredSystems.find(*LinkedSystemIterator) == UnexploredSystems.end())
 			{
 				// system already explored so make it blue
-				glColor3f(0.0f, 0.0f, 0.8f);
+				GLColor3f(0.0f, 0.0f, 0.8f);
 			}
 			else
 			{
 				// system still unexplored so make it grey
-				glColor3f(0.5f, 0.5f, 0.5f);
+				GLColor3f(0.5f, 0.5f, 0.5f);
 			}
-			glBegin(GL_LINES);
+			GLBegin(GL_LINES);
 			GLVertex2f(0.0f, 0.0f);
 			glVertex2fv((((*LinkedSystemIterator)->GetAspectPosition()->GetPosition() - (*ExploredSystemIterator)->GetAspectPosition()->GetPosition()) * m_Scale).m_V.m_A);
-			glEnd();
+			GLEnd();
 		}
 		if(*ExploredSystemIterator == m_SelectedSystem)
 		{
-			glColor3f(0.0f, 1.0f, 0.0f);
+			GLColor3f(0.0f, 1.0f, 0.0f);
 		}
 		else if(*ExploredSystemIterator == m_System)
 		{
-			glColor3f(0.8f, 0.8f, 0.0f);
+			GLColor3f(0.8f, 0.8f, 0.0f);
 		}
 		else
 		{
-			glColor3f(0.0f, 0.0f, 0.8f);
+			GLColor3f(0.0f, 0.0f, 0.8f);
 		}
-		glBegin(GL_LINE_LOOP);
+		GLBegin(GL_LINE_LOOP);
 		GLVertex2f(SystemSize, 0.0f);
 		GLVertex2f(SystemSize * 0.866f, SystemSize * 0.5f);
 		GLVertex2f(SystemSize * 0.5f, SystemSize * 0.866f);
@@ -151,17 +151,17 @@ void UI::StarMapDisplay::Draw(void) const
 		GLVertex2f(0.0f, -SystemSize);
 		GLVertex2f(SystemSize * 0.5f, -SystemSize * 0.866f);
 		GLVertex2f(SystemSize * 0.866f, -SystemSize * 0.5f);
-		glEnd();
+		GLEnd();
 		GLPushMatrix();
 		glScalef(1.0f, -1.0f, 1.0f);
-		glTranslatef(0.0f, 12.0f, 0.0f);
-		glColor3f(1.0f, 1.0f, 1.0f);
+		GLTranslatef(0.0f, 12.0f, 0.0f);
+		GLColor3f(1.0f, 1.0f, 1.0f);
 		DrawText((*ExploredSystemIterator)->GetAspectName()->GetName());
 		GLPopMatrix();
 		GLPopMatrix();
 	}
 	GLPopMatrix();
-	glPopAttrib();
+	GLPopAttrib();
 }
 
 bool UI::StarMapDisplay::OnMouseButton(int Button, int State, float X, float Y)

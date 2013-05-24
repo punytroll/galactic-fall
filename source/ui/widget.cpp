@@ -69,12 +69,12 @@ void UI::Widget::Draw(void) const
 	if(Color != 0)
 	{
 		GLColor4fv(Color->GetColor().m_V.m_A);
-		glBegin(GL_QUADS);
+		GLBegin(GL_QUADS);
 		GLVertex2f(0.0f, 0.0f);
 		GLVertex2f(0.0f, m_Size.m_V.m_A[1]);
 		GLVertex2f(m_Size.m_V.m_A[0], m_Size.m_V.m_A[1]);
 		GLVertex2f(m_Size.m_V.m_A[0], 0.0f);
-		glEnd();
+		GLEnd();
 	}
 	if(m_SubWidgets.empty() == false)
 	{
@@ -86,7 +86,7 @@ void UI::Widget::Draw(void) const
 			{
 				GLPushMatrix();
 				PushClippingRectangle(SubWidget->GetPosition(), SubWidget->GetSize());
-				glTranslatef(SubWidget->m_Position.m_V.m_A[0], SubWidget->m_Position.m_V.m_A[1], 0.0f);
+				GLTranslatef(SubWidget->m_Position.m_V.m_A[0], SubWidget->m_Position.m_V.m_A[1], 0.0f);
 				DrawClippingRectangle();
 				SubWidget->Draw();
 				PopClippingRectangle();
