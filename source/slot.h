@@ -33,6 +33,7 @@ class Slot
 {
 public:
 	Slot(const SlotClass * SlotClass, const std::string & Identifier);
+	~Slot(void);
 	// getters
 	const std::string & GetIdentifier(void) const;
 	Reference< Object > & GetMountedObject(void);
@@ -40,6 +41,7 @@ public:
 	const std::string & GetName(void) const;
 	const Quaternion & GetOrientation(void) const;
 	const Vector3f & GetPosition(void) const;
+	Reference< Slot > GetReference(void);
 	const SlotClass * GetSlotClass(void) const;
 	bool GetVisualizeAccessory(void) const;
 	// setters
@@ -57,6 +59,7 @@ private:
 	Reference< Object > m_MountedObject;
 	Quaternion m_Orientation;
 	Vector3f m_Position;
+	Reference< Slot > _SelfReference;
 	bool _VisualizeAccessory;
 };
 
@@ -88,6 +91,11 @@ inline const Quaternion & Slot::GetOrientation(void) const
 inline const Vector3f & Slot::GetPosition(void) const
 {
 	return m_Position;
+}
+
+inline Reference< Slot > Slot::GetReference(void)
+{
+	return _SelfReference;
 }
 
 inline const SlotClass * Slot::GetSlotClass(void) const

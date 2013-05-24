@@ -43,50 +43,48 @@ namespace UI
 	class AccessoryListItem : public UI::Widget
 	{
 	public:
-		AccessoryListItem(UI::Widget * SupWidget, Object * Accessory);
+		AccessoryListItem(UI::Widget * SupWidget, Reference< Object > Accessory);
 		void Update(void);
 		// getters
-		bool GetSelected(void) const;
-		Object * GetAccessory(void);
+		Reference< Object > GetAccessory(void);
 		// setters
 		void SetSelected(bool Selected);
 	private:
 		// callbacks
-		void OnMouseEnter(void);
-		void OnMouseLeave(void);
+		void _OnMouseEnter(void);
+		void _OnMouseLeave(void);
 		// member variables
-		bool m_Selected;
-		Object * m_Accessory;
+		Reference< Object > _Accessory;
+		bool _Selected;
 	};
 	
 	class SlotListItem : public UI::Widget
 	{
 	public:
-		SlotListItem(UI::Widget * SupWidget, Slot * Slot);
+		SlotListItem(UI::Widget * SupWidget, Reference< Slot > Slot);
 		void Update(void);
 		// getters
-		bool GetSelected(void) const;
-		Slot * GetSlot(void);
+		Reference< Slot > GetSlot(void);
 		// setters
 		void SetSelected(bool Selected);
 	private:
 		// callbacks
-		void OnMouseEnter(void);
-		void OnMouseLeave(void);
+		void _OnMouseEnter(void);
+		void _OnMouseLeave(void);
 		// member variables
-		bool m_Selected;
-		Slot * m_Slot;
-		UI::Label * m_TypeOrWeaponLabel;
+		bool _Selected;
+		Reference< Slot> _Slot;
+		UI::Label * _TypeOrWeaponLabel;
 	};
 }
 
-UI::AccessoryListItem::AccessoryListItem(UI::Widget * SupWidget, Object * Accessory) :
+UI::AccessoryListItem::AccessoryListItem(UI::Widget * SupWidget, Reference< Object > Accessory) :
 	UI::Widget(SupWidget),
-	m_Selected(false),
-	m_Accessory(Accessory)
+	_Accessory(Accessory),
+	_Selected(false)
 {
-	ConnectMouseEnterCallback(Callback(this, &AccessoryListItem::OnMouseEnter));
-	ConnectMouseLeaveCallback(Callback(this, &AccessoryListItem::OnMouseLeave));
+	ConnectMouseEnterCallback(Callback(this, &AccessoryListItem::_OnMouseEnter));
+	ConnectMouseLeaveCallback(Callback(this, &AccessoryListItem::_OnMouseLeave));
 	// set to arbitrary design size
 	SetSize(Vector2f(100.0f, 100.0f));
 	// safe-guard: only accept objects with a name aspect
@@ -113,20 +111,15 @@ UI::AccessoryListItem::AccessoryListItem(UI::Widget * SupWidget, Object * Access
 	SlotTypeLabel->SetAnchorTop(true);
 }
 
-bool UI::AccessoryListItem::GetSelected(void) const
+Reference< Object > UI::AccessoryListItem::GetAccessory(void)
 {
-	return m_Selected;
-}
-
-Object * UI::AccessoryListItem::GetAccessory(void)
-{
-	return m_Accessory;
+	return _Accessory;
 }
 
 void UI::AccessoryListItem::SetSelected(bool Selected)
 {
-	m_Selected = Selected;
-	if(m_Selected == false)
+	_Selected = Selected;
+	if(_Selected == false)
 	{
 		UnsetBackgroundColor();
 	}
@@ -136,33 +129,33 @@ void UI::AccessoryListItem::SetSelected(bool Selected)
 	}
 }
 
-void UI::AccessoryListItem::OnMouseEnter(void)
+void UI::AccessoryListItem::_OnMouseEnter(void)
 {
-	if(GetSelected() == false)
+	if(_Selected == false)
 	{
 		SetBackgroundColor(Color(0.3f, 0.2f, 0.2f, 1.0f));
 	}
 }
 
-void UI::AccessoryListItem::OnMouseLeave(void)
+void UI::AccessoryListItem::_OnMouseLeave(void)
 {
-	if(GetSelected() == false)
+	if(_Selected == false)
 	{
 		UnsetBackgroundColor();
 	}
 }
 
-UI::SlotListItem::SlotListItem(UI::Widget * SupWidget, Slot * Slot) :
+UI::SlotListItem::SlotListItem(UI::Widget * SupWidget, Reference< Slot > Slot) :
 	UI::Widget(SupWidget),
-	m_Selected(false),
-	m_Slot(Slot)
+	_Selected(false),
+	_Slot(Slot)
 {
-	ConnectMouseEnterCallback(Callback(this, &SlotListItem::OnMouseEnter));
-	ConnectMouseLeaveCallback(Callback(this, &SlotListItem::OnMouseLeave));
+	ConnectMouseEnterCallback(Callback(this, &SlotListItem::_OnMouseEnter));
+	ConnectMouseLeaveCallback(Callback(this, &SlotListItem::_OnMouseLeave));
 	// set to arbitrary design size
 	SetSize(Vector2f(100.0f, 100.0f));
 	
-	UI::Label * IdentifierLabel(new UI::Label(this, Slot->GetName()));
+	UI::Label * IdentifierLabel(new UI::Label(this, _Slot->GetName()));
 	
 	IdentifierLabel->SetPosition(Vector2f(5.0f, 5.0f));
 	IdentifierLabel->SetSize(Vector2f(90.0f, 20.0f));
@@ -170,46 +163,41 @@ UI::SlotListItem::SlotListItem(UI::Widget * SupWidget, Slot * Slot) :
 	IdentifierLabel->SetAnchorLeft(true);
 	IdentifierLabel->SetAnchorRight(true);
 	IdentifierLabel->SetAnchorTop(true);
-	m_TypeOrWeaponLabel = new UI::Label(this);
-	m_TypeOrWeaponLabel->SetPosition(Vector2f(25.0f, 25.0f));
-	m_TypeOrWeaponLabel->SetSize(Vector2f(70.0f, 20.0f));
-	m_TypeOrWeaponLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
-	m_TypeOrWeaponLabel->SetAnchorLeft(true);
-	m_TypeOrWeaponLabel->SetAnchorRight(true);
-	m_TypeOrWeaponLabel->SetAnchorTop(true);
+	_TypeOrWeaponLabel = new UI::Label(this);
+	_TypeOrWeaponLabel->SetPosition(Vector2f(25.0f, 25.0f));
+	_TypeOrWeaponLabel->SetSize(Vector2f(70.0f, 20.0f));
+	_TypeOrWeaponLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
+	_TypeOrWeaponLabel->SetAnchorLeft(true);
+	_TypeOrWeaponLabel->SetAnchorRight(true);
+	_TypeOrWeaponLabel->SetAnchorTop(true);
 	Update();
 }
 
 void UI::SlotListItem::Update(void)
 {
-	Object * MountedObject(dynamic_cast< Object * >(m_Slot->GetMountedObject().Get()));
+	Object * MountedObject(dynamic_cast< Object * >(_Slot->GetMountedObject().Get()));
 	
 	if(MountedObject != 0)
 	{
-		m_TypeOrWeaponLabel->SetText(MountedObject->GetAspectName()->GetName());
-		m_TypeOrWeaponLabel->SetTextColor(Color(0.6f, 0.8f, 0.6f, 1.0f));
+		_TypeOrWeaponLabel->SetText(MountedObject->GetAspectName()->GetName());
+		_TypeOrWeaponLabel->SetTextColor(Color(0.6f, 0.8f, 0.6f, 1.0f));
 	}
 	else
 	{
-		m_TypeOrWeaponLabel->SetText(m_Slot->GetSlotClass()->GetName());
-		m_TypeOrWeaponLabel->SetTextColor(Color(0.8f, 0.6f, 0.6f, 1.0f));
+		_TypeOrWeaponLabel->SetText(_Slot->GetSlotClass()->GetName());
+		_TypeOrWeaponLabel->SetTextColor(Color(0.8f, 0.6f, 0.6f, 1.0f));
 	}
 }
 
-bool UI::SlotListItem::GetSelected(void) const
+Reference< Slot > UI::SlotListItem::GetSlot(void)
 {
-	return m_Selected;
-}
-
-Slot * UI::SlotListItem::GetSlot(void)
-{
-	return m_Slot;
+	return _Slot;
 }
 
 void UI::SlotListItem::SetSelected(bool Selected)
 {
-	m_Selected = Selected;
-	if(m_Selected == false)
+	_Selected = Selected;
+	if(_Selected == false)
 	{
 		UnsetBackgroundColor();
 	}
@@ -219,238 +207,241 @@ void UI::SlotListItem::SetSelected(bool Selected)
 	}
 }
 
-void UI::SlotListItem::OnMouseEnter(void)
+void UI::SlotListItem::_OnMouseEnter(void)
 {
-	if(GetSelected() == false)
+	if(_Selected == false)
 	{
 		SetBackgroundColor(Color(0.3f, 0.2f, 0.2f, 1.0f));
 	}
 }
 
-void UI::SlotListItem::OnMouseLeave(void)
+void UI::SlotListItem::_OnMouseLeave(void)
 {
-	if(GetSelected() == false)
+	if(_Selected == false)
 	{
 		UnsetBackgroundColor();
 	}
 }
 
-UI::OutfitShipDialog::OutfitShipDialog(UI::Widget * SupWidget, Ship * Ship) :
+UI::OutfitShipDialog::OutfitShipDialog(UI::Widget * SupWidget, Reference< Ship > Ship) :
 	UI::Window(SupWidget, "Outfit Ship"),
-	m_Ship(Ship),
-	m_SelectedSlotListItem(0),
-	m_SelectedAccessoryListItem(0)
+	_SelectedAccessoryListItem(0),
+	_SelectedSlotListItem(0),
+	_Ship(Ship)
 {
-	ConnectSizeChangedCallback(Callback(this, &UI::OutfitShipDialog::OnSizeChanged));
-	ConnectKeyCallback(Callback(this, &UI::OutfitShipDialog::OnKey));
-	m_LeftPane = new Widget(this);
-	m_LeftPane->SetPosition(Vector2f(10.0f, 40.0f));
-	m_LeftPane->SetSize(Vector2f(200.0f, GetSize()[1] - 50.0f));
-	m_LeftPane->SetAnchorBottom(true);
+	ConnectSizeChangedCallback(Callback(this, &UI::OutfitShipDialog::_OnSizeChanged));
+	ConnectKeyCallback(Callback(this, &UI::OutfitShipDialog::_OnKey));
+	_LeftPane = new Widget(this);
+	_LeftPane->SetPosition(Vector2f(10.0f, 40.0f));
+	_LeftPane->SetSize(Vector2f(200.0f, GetSize()[1] - 50.0f));
+	_LeftPane->SetAnchorBottom(true);
 	
-	UI::Label * SlotListLabel(new UI::Label(m_LeftPane, "Slots"));
+	UI::Label * SlotListLabel(new UI::Label(_LeftPane, "Slots"));
 	
 	SlotListLabel->SetPosition(Vector2f(0.0f, 0.0f));
-	SlotListLabel->SetSize(Vector2f(m_LeftPane->GetSize()[0], 20.0f));
+	SlotListLabel->SetSize(Vector2f(_LeftPane->GetSize()[0], 20.0f));
 	SlotListLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
 	SlotListLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	SlotListLabel->SetAnchorRight(true);
-	m_SlotScrollBox = new UI::ScrollBox(m_LeftPane);
-	m_SlotScrollBox->SetPosition(Vector2f(0.0f, 30.0f));
-	m_SlotScrollBox->SetSize(Vector2f(m_LeftPane->GetSize()[0], m_LeftPane->GetSize()[1] - 30.0f));
-	m_SlotScrollBox->SetHorizontalScrollBarVisible(false);
-	m_SlotScrollBox->SetAnchorBottom(true);
-	m_SlotScrollBox->SetAnchorRight(true);
+	_SlotScrollBox = new UI::ScrollBox(_LeftPane);
+	_SlotScrollBox->SetPosition(Vector2f(0.0f, 30.0f));
+	_SlotScrollBox->SetSize(Vector2f(_LeftPane->GetSize()[0], _LeftPane->GetSize()[1] - 30.0f));
+	_SlotScrollBox->SetHorizontalScrollBarVisible(false);
+	_SlotScrollBox->SetAnchorBottom(true);
+	_SlotScrollBox->SetAnchorRight(true);
 	
 	float Top(5.0f);
-	const std::map< std::string, Slot * > & Slots(m_Ship->GetAspectOutfitting()->GetSlots());
+	const std::map< std::string, Slot * > & Slots(_Ship->GetAspectOutfitting()->GetSlots());
 	
 	for(std::map< std::string, Slot * >::const_iterator SlotIterator = Slots.begin(); SlotIterator != Slots.end(); ++SlotIterator)
 	{
-		SlotListItem * NewSlotListItem(new SlotListItem(m_SlotScrollBox->GetContent(), SlotIterator->second));
+		SlotListItem * NewSlotListItem(new SlotListItem(_SlotScrollBox->GetContent(), SlotIterator->second->GetReference()));
 		
 		NewSlotListItem->SetPosition(Vector2f(5.0f, Top));
-		NewSlotListItem->SetSize(Vector2f(m_SlotScrollBox->GetContent()->GetSize()[0] - 10.0f, 50.0f));
+		NewSlotListItem->SetSize(Vector2f(_SlotScrollBox->GetContent()->GetSize()[0] - 10.0f, 50.0f));
 		NewSlotListItem->SetAnchorRight(true);
-		NewSlotListItem->ConnectMouseButtonCallback(Bind1(Callback(this, &OutfitShipDialog::OnSlotListItemMouseButton), NewSlotListItem));
+		NewSlotListItem->ConnectMouseButtonCallback(Bind1(Callback(this, &OutfitShipDialog::_OnSlotListItemMouseButton), NewSlotListItem));
 		Top += 55.0f;
 	}
-	m_SlotScrollBox->GetContent()->SetSize(Vector2f(180.0f, std::max(Top, m_SlotScrollBox->GetView()->GetSize()[1])));
-	m_SlotScrollBox->GetContent()->SetAnchorRight(true);
+	_SlotScrollBox->GetContent()->SetSize(Vector2f(180.0f, std::max(Top, _SlotScrollBox->GetView()->GetSize()[1])));
+	_SlotScrollBox->GetContent()->SetAnchorRight(true);
 	// center pane
-	m_CenterPane = new Widget(this);
-	m_CenterPane->SetPosition(Vector2f(10.0f + m_LeftPane->GetSize()[0] + 10.0f, 70.0f));
-	m_CenterPane->SetSize(Vector2f(160.0f, GetSize()[1] - 80.0f));
-	m_CenterPane->SetAnchorBottom(true);
-	m_MountButton = new UI::Button(m_CenterPane);
-	m_MountButton->SetPosition(Vector2f(0.0f, 40.0f));
-	m_MountButton->SetSize(Vector2f(m_CenterPane->GetSize()[0], 20.0f));
-	m_MountButton->ConnectClickedCallback(Callback(this, &OutfitShipDialog::OnMountClicked));
-	m_MountButton->SetAnchorRight(true);
+	_CenterPane = new Widget(this);
+	_CenterPane->SetPosition(Vector2f(10.0f + _LeftPane->GetSize()[0] + 10.0f, 70.0f));
+	_CenterPane->SetSize(Vector2f(160.0f, GetSize()[1] - 80.0f));
+	_CenterPane->SetAnchorBottom(true);
+	_MountButton = new UI::Button(_CenterPane);
+	_MountButton->SetPosition(Vector2f(0.0f, 40.0f));
+	_MountButton->SetSize(Vector2f(_CenterPane->GetSize()[0], 20.0f));
+	_MountButton->ConnectClickedCallback(Callback(this, &OutfitShipDialog::_OnMountButtonClicked));
+	_MountButton->SetAnchorRight(true);
 	
-	UI::Label * MountButtonLabel(new UI::Label(m_MountButton, "Mount"));
+	UI::Label * MountButtonLabel(new UI::Label(_MountButton, "Mount"));
 	
 	MountButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
-	MountButtonLabel->SetSize(Vector2f(m_MountButton->GetSize()));
+	MountButtonLabel->SetSize(Vector2f(_MountButton->GetSize()));
 	MountButtonLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
 	MountButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
-	m_UnmountButton = new UI::Button(m_CenterPane);
-	m_UnmountButton->SetPosition(Vector2f(0.0f, 70.0f));
-	m_UnmountButton->SetSize(Vector2f(m_CenterPane->GetSize()[0], 20.0f));
-	m_UnmountButton->ConnectClickedCallback(Callback(this, &OutfitShipDialog::OnUnmountClicked));
-	m_UnmountButton->SetAnchorRight(true);
+	_UnmountButton = new UI::Button(_CenterPane);
+	_UnmountButton->SetPosition(Vector2f(0.0f, 70.0f));
+	_UnmountButton->SetSize(Vector2f(_CenterPane->GetSize()[0], 20.0f));
+	_UnmountButton->ConnectClickedCallback(Callback(this, &OutfitShipDialog::_OnUnmountButtonClicked));
+	_UnmountButton->SetAnchorRight(true);
 	
-	UI::Label * UnmountButtonLabel(new UI::Label(m_UnmountButton, "Unmount"));
+	UI::Label * UnmountButtonLabel(new UI::Label(_UnmountButton, "Unmount"));
 	
 	UnmountButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
-	UnmountButtonLabel->SetSize(Vector2f(m_UnmountButton->GetSize()));
+	UnmountButtonLabel->SetSize(Vector2f(_UnmountButton->GetSize()));
 	UnmountButtonLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
 	UnmountButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
-	m_OKButton = new UI::Button(m_CenterPane);
-	m_OKButton->SetPosition(Vector2f(0.0f, m_CenterPane->GetSize()[1] - 30.0f));
-	m_OKButton->SetSize(Vector2f(m_CenterPane->GetSize()[0], 20.0f));
-	m_OKButton->ConnectClickedCallback(Callback(this, &OutfitShipDialog::OnOKClicked));
-	m_OKButton->SetAnchorBottom(true);
-	m_OKButton->SetAnchorRight(true);
-	m_OKButton->SetAnchorTop(false);
+	_OKButton = new UI::Button(_CenterPane);
+	_OKButton->SetPosition(Vector2f(0.0f, _CenterPane->GetSize()[1] - 30.0f));
+	_OKButton->SetSize(Vector2f(_CenterPane->GetSize()[0], 20.0f));
+	_OKButton->ConnectClickedCallback(Callback(this, &OutfitShipDialog::_OnOKButtonClicked));
+	_OKButton->SetAnchorBottom(true);
+	_OKButton->SetAnchorRight(true);
+	_OKButton->SetAnchorTop(false);
 	
-	UI::Label * OKButtonLabel(new UI::Label(m_OKButton, "OK"));
+	UI::Label * OKButtonLabel(new UI::Label(_OKButton, "OK"));
 	
 	OKButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
-	OKButtonLabel->SetSize(Vector2f(m_OKButton->GetSize()));
+	OKButtonLabel->SetSize(Vector2f(_OKButton->GetSize()));
 	OKButtonLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
 	OKButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	// right pane
-	m_RightPane = new Widget(this);
-	m_RightPane->SetPosition(Vector2f(10.0f + m_LeftPane->GetSize()[0] + 10.0f + m_CenterPane->GetSize()[0] + 10.0f, 40.0f));
-	m_RightPane->SetSize(Vector2f(200.0f, GetSize()[1] - 50.0f));
-	m_RightPane->SetAnchorBottom(true);
+	_RightPane = new Widget(this);
+	_RightPane->SetPosition(Vector2f(10.0f + _LeftPane->GetSize()[0] + 10.0f + _CenterPane->GetSize()[0] + 10.0f, 40.0f));
+	_RightPane->SetSize(Vector2f(200.0f, GetSize()[1] - 50.0f));
+	_RightPane->SetAnchorBottom(true);
 	
-	UI::Label * AccessoryListLabel(new UI::Label(m_RightPane, "Accessories"));
+	UI::Label * AccessoryListLabel(new UI::Label(_RightPane, "Accessories"));
 	
 	AccessoryListLabel->SetPosition(Vector2f(0.0f, 0.0f));
-	AccessoryListLabel->SetSize(Vector2f(m_RightPane->GetSize()[0], 20.0f));
+	AccessoryListLabel->SetSize(Vector2f(_RightPane->GetSize()[0], 20.0f));
 	AccessoryListLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
 	AccessoryListLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	AccessoryListLabel->SetAnchorRight(true);
-	m_AccessoryScrollBox = new UI::ScrollBox(m_RightPane);
-	m_AccessoryScrollBox->SetPosition(Vector2f(0.0f, 30.0f));
-	m_AccessoryScrollBox->SetSize(Vector2f(m_RightPane->GetSize()[0], m_RightPane->GetSize()[1] - 30.0f));
-	m_AccessoryScrollBox->SetHorizontalScrollBarVisible(false);
-	m_AccessoryScrollBox->SetAnchorBottom(true);
-	m_AccessoryScrollBox->SetAnchorRight(true);
-	RebuildAccessoryList();
-	UpdateButtons();
+	_AccessoryScrollBox = new UI::ScrollBox(_RightPane);
+	_AccessoryScrollBox->SetPosition(Vector2f(0.0f, 30.0f));
+	_AccessoryScrollBox->SetSize(Vector2f(_RightPane->GetSize()[0], _RightPane->GetSize()[1] - 30.0f));
+	_AccessoryScrollBox->SetHorizontalScrollBarVisible(false);
+	_AccessoryScrollBox->SetAnchorBottom(true);
+	_AccessoryScrollBox->SetAnchorRight(true);
+	_RebuildAccessoryList();
+	_UpdateButtons();
 	SetPosition(Vector2f(70.0f, 400.0f));
 	SetSize(Vector2f(600.0f, 400.0f));
 }
 
-void UI::OutfitShipDialog::RebuildAccessoryList(void)
+void UI::OutfitShipDialog::_RebuildAccessoryList(void)
 {
 	// empty the weapon list first
 	// save the selected weapon so we can reselect it if it is available after the rebuild
-	Object * SelectedAccessory(0);
+	Reference< Object > SelectedAccessory;
 	
-	if(m_SelectedAccessoryListItem != 0)
+	if(_SelectedAccessoryListItem != 0)
 	{
-		SelectedAccessory = m_SelectedAccessoryListItem->GetAccessory();
-		m_SelectedAccessoryListItem = 0;
+		SelectedAccessory = _SelectedAccessoryListItem->GetAccessory();
+		_SelectedAccessoryListItem = 0;
 	}
-	while(m_AccessoryScrollBox->GetContent()->GetSubWidgets().empty() == false)
+	while(_AccessoryScrollBox->GetContent()->GetSubWidgets().empty() == false)
 	{
-		m_AccessoryScrollBox->GetContent()->GetSubWidgets().front()->Destroy();
+		_AccessoryScrollBox->GetContent()->GetSubWidgets().front()->Destroy();
 	}
 	// now fill the weapon list
-	assert(m_Ship != 0);
-	assert(m_Ship->GetCargoHold() != 0);
-	assert(m_Ship->GetCargoHold()->GetAspectObjectContainer() != 0);
+	assert(_Ship.IsValid() == true);
+	assert(_Ship->GetCargoHold() != 0);
+	assert(_Ship->GetCargoHold()->GetAspectObjectContainer() != 0);
 	
-	const std::set< Object * > & Content(m_Ship->GetCargoHold()->GetAspectObjectContainer()->GetContent());
+	const std::set< Object * > & Content(_Ship->GetCargoHold()->GetAspectObjectContainer()->GetContent());
 	float Top(5.0f);
 	
 	for(std::set< Object * >::iterator ContentIterator = Content.begin(); ContentIterator != Content.end(); ++ContentIterator)
 	{
-		Object * ContentObject(*ContentIterator);
+		Reference< Object > ContentObject((*ContentIterator)->GetReference());
 		
 		if((ContentObject->GetAspectAccessory() != 0) && (ContentObject->GetAspectAccessory()->GetSlot() == 0))
 		{
-			AccessoryListItem * NewAccessoryListItem(new UI::AccessoryListItem(m_AccessoryScrollBox->GetContent(), ContentObject));
+			AccessoryListItem * NewAccessoryListItem(new UI::AccessoryListItem(_AccessoryScrollBox->GetContent(), ContentObject));
 			
 			NewAccessoryListItem->SetPosition(Vector2f(5.0f, Top));
-			NewAccessoryListItem->SetSize(Vector2f(m_AccessoryScrollBox->GetContent()->GetSize()[0] - 10.0f, 50.0f));
+			NewAccessoryListItem->SetSize(Vector2f(_AccessoryScrollBox->GetContent()->GetSize()[0] - 10.0f, 50.0f));
 			NewAccessoryListItem->SetAnchorRight(true);
-			NewAccessoryListItem->ConnectMouseButtonCallback(Bind1(Callback(this, &OutfitShipDialog::OnAccessoryListItemMouseButton), NewAccessoryListItem));
+			NewAccessoryListItem->ConnectMouseButtonCallback(Bind1(Callback(this, &OutfitShipDialog::_OnAccessoryListItemMouseButton), NewAccessoryListItem));
 			if(ContentObject == SelectedAccessory)
 			{
-				m_SelectedAccessoryListItem = NewAccessoryListItem;
-				m_SelectedAccessoryListItem->SetSelected(true);
+				_SelectedAccessoryListItem = NewAccessoryListItem;
+				_SelectedAccessoryListItem->SetSelected(true);
 			}
 			Top += 55.0f;
 		}
 	}
-	m_AccessoryScrollBox->GetContent()->SetSize(Vector2f(m_AccessoryScrollBox->GetView()->GetSize()[0], std::max(Top, m_AccessoryScrollBox->GetView()->GetSize()[1])));
-	m_AccessoryScrollBox->GetContent()->SetAnchorRight(true);
+	_AccessoryScrollBox->GetContent()->SetSize(Vector2f(_AccessoryScrollBox->GetView()->GetSize()[0], std::max(Top, _AccessoryScrollBox->GetView()->GetSize()[1])));
+	_AccessoryScrollBox->GetContent()->SetAnchorRight(true);
 }
 
-void UI::OutfitShipDialog::UpdateButtons(void)
+void UI::OutfitShipDialog::_UpdateButtons(void)
 {
-	m_UnmountButton->SetEnabled(false);
-	m_MountButton->SetEnabled(false);
-	if(m_SelectedSlotListItem != 0)
+	_UnmountButton->SetEnabled(false);
+	_MountButton->SetEnabled(false);
+	if(_SelectedSlotListItem != 0)
 	{
-		if(m_SelectedSlotListItem->GetSlot()->GetMountedObject().IsValid() == false)
+		assert(_SelectedSlotListItem->GetSlot().IsValid() == true);
+		if(_SelectedSlotListItem->GetSlot()->GetMountedObject().IsValid() == false)
 		{
-			m_MountButton->SetEnabled((m_SelectedAccessoryListItem != 0) && (m_SelectedSlotListItem->GetSlot()->GetSlotClass()->AcceptsSlotClassIdentifier(m_SelectedAccessoryListItem->GetAccessory()->GetAspectAccessory()->GetSlotClassIdentifier()) == true));
+			_MountButton->SetEnabled((_SelectedAccessoryListItem != 0) && (_SelectedSlotListItem->GetSlot()->GetSlotClass()->AcceptsSlotClassIdentifier(_SelectedAccessoryListItem->GetAccessory()->GetAspectAccessory()->GetSlotClassIdentifier()) == true));
 		}
 		else
 		{
-			assert(m_SelectedSlotListItem->GetSlot()->GetMountedObject()->GetAspectPhysical() != 0);
-			m_UnmountButton->SetEnabled((m_Ship->GetCargoHold()->GetSpace() >= m_SelectedSlotListItem->GetSlot()->GetMountedObject()->GetAspectPhysical()->GetSpaceRequirement()));
+			assert(_SelectedSlotListItem->GetSlot()->GetMountedObject()->GetAspectPhysical() != 0);
+			_UnmountButton->SetEnabled((_Ship->GetCargoHold()->GetSpace() >= _SelectedSlotListItem->GetSlot()->GetMountedObject()->GetAspectPhysical()->GetSpaceRequirement()));
 		}
 	}
 }
 
-void UI::OutfitShipDialog::OnMountClicked()
+void UI::OutfitShipDialog::_OnMountButtonClicked()
 {
-	assert(m_SelectedAccessoryListItem != 0);
-	assert(m_SelectedSlotListItem != 0);
+	assert(_SelectedAccessoryListItem != 0);
+	assert(_SelectedSlotListItem != 0);
 	
-	Object * Accessory(m_SelectedAccessoryListItem->GetAccessory());
+	Reference< Object > Accessory(_SelectedAccessoryListItem->GetAccessory());
 	
-	assert(Accessory != 0);
-	m_Ship->GetCargoHold()->GetAspectObjectContainer()->RemoveContent(Accessory);
-	m_Ship->GetAspectObjectContainer()->AddContent(Accessory);
-	m_SelectedSlotListItem->GetSlot()->Mount(Accessory->GetReference());
-	m_SelectedSlotListItem->Update();
-	RebuildAccessoryList();
-	UpdateButtons();
+	assert(Accessory.IsValid() == true);
+	assert(_Ship.IsValid() == true);
+	_Ship->GetCargoHold()->GetAspectObjectContainer()->RemoveContent(Accessory.Get());
+	_Ship->GetAspectObjectContainer()->AddContent(Accessory.Get());
+	_SelectedSlotListItem->GetSlot()->Mount(Accessory);
+	_SelectedSlotListItem->Update();
+	_RebuildAccessoryList();
+	_UpdateButtons();
 }
 
-void UI::OutfitShipDialog::OnOKClicked()
+void UI::OutfitShipDialog::_OnOKButtonClicked()
 {
 	Destroy();
 }
 
-void UI::OutfitShipDialog::OnUnmountClicked()
+void UI::OutfitShipDialog::_OnUnmountButtonClicked()
 {
-	assert(m_SelectedSlotListItem != 0);
+	assert(_SelectedSlotListItem != 0);
 	
-	Object * Accessory(m_SelectedSlotListItem->GetSlot()->GetMountedObject().Get());
+	Reference< Object > Accessory(_SelectedSlotListItem->GetSlot()->GetMountedObject());
 	
-	assert(Accessory != 0);
+	assert(_Ship.IsValid() == true);
+	assert(Accessory.IsValid() == true);
 	if(Accessory->GetAspectPhysical() != 0)
 	{
-		assert(m_Ship->GetCargoHold()->GetSpace() >= Accessory->GetAspectPhysical()->GetSpaceRequirement());
+		assert(_Ship->GetCargoHold()->GetSpace() >= Accessory->GetAspectPhysical()->GetSpaceRequirement());
 	}
-	m_SelectedSlotListItem->GetSlot()->Unmount();
-	m_Ship->GetAspectObjectContainer()->RemoveContent(Accessory);
-	m_Ship->GetCargoHold()->GetAspectObjectContainer()->AddContent(Accessory);
-	m_SelectedSlotListItem->Update();
-	RebuildAccessoryList();
-	UpdateButtons();
+	_SelectedSlotListItem->GetSlot()->Unmount();
+	_Ship->GetAspectObjectContainer()->RemoveContent(Accessory.Get());
+	_Ship->GetCargoHold()->GetAspectObjectContainer()->AddContent(Accessory.Get());
+	_SelectedSlotListItem->Update();
+	_RebuildAccessoryList();
+	_UpdateButtons();
 }
 
-bool UI::OutfitShipDialog::OnKey(const KeyEventInformation & KeyEventInformation)
+bool UI::OutfitShipDialog::_OnKey(const KeyEventInformation & KeyEventInformation)
 {
 	if(((KeyEventInformation.GetKeyCode() == 9 /* ESCAPE */) || (KeyEventInformation.GetKeyCode() == 36 /* RETURN */) || (KeyEventInformation.GetKeyCode() == 25 /* W */)) && (KeyEventInformation.IsDown() == true))
 	{
@@ -461,17 +452,17 @@ bool UI::OutfitShipDialog::OnKey(const KeyEventInformation & KeyEventInformation
 	return true;
 }
 
-bool UI::OutfitShipDialog::OnSlotListItemMouseButton(UI::SlotListItem * SlotListItem, int Button, int State, float X, float Y)
+bool UI::OutfitShipDialog::_OnSlotListItemMouseButton(UI::SlotListItem * SlotListItem, int Button, int State, float X, float Y)
 {
 	if((Button == 1 /* LEFT */) && (State == EV_DOWN))
 	{
-		if(m_SelectedSlotListItem != 0)
+		if(_SelectedSlotListItem != 0)
 		{
-			m_SelectedSlotListItem->SetSelected(false);
+			_SelectedSlotListItem->SetSelected(false);
 		}
-		m_SelectedSlotListItem = SlotListItem;
-		m_SelectedSlotListItem->SetSelected(true);
-		UpdateButtons();
+		_SelectedSlotListItem = SlotListItem;
+		_SelectedSlotListItem->SetSelected(true);
+		_UpdateButtons();
 		
 		return true;
 	}
@@ -479,17 +470,17 @@ bool UI::OutfitShipDialog::OnSlotListItemMouseButton(UI::SlotListItem * SlotList
 	return false;
 }
 
-bool UI::OutfitShipDialog::OnAccessoryListItemMouseButton(UI::AccessoryListItem * AccessoryListItem, int Button, int State, float X, float Y)
+bool UI::OutfitShipDialog::_OnAccessoryListItemMouseButton(UI::AccessoryListItem * AccessoryListItem, int Button, int State, float X, float Y)
 {
 	if((Button == 1 /* LEFT */) && (State == EV_DOWN))
 	{
-		if(m_SelectedAccessoryListItem != 0)
+		if(_SelectedAccessoryListItem != 0)
 		{
-			m_SelectedAccessoryListItem->SetSelected(false);
+			_SelectedAccessoryListItem->SetSelected(false);
 		}
-		m_SelectedAccessoryListItem = AccessoryListItem;
-		m_SelectedAccessoryListItem->SetSelected(true);
-		UpdateButtons();
+		_SelectedAccessoryListItem = AccessoryListItem;
+		_SelectedAccessoryListItem->SetSelected(true);
+		_UpdateButtons();
 		
 		return true;
 	}
@@ -497,16 +488,16 @@ bool UI::OutfitShipDialog::OnAccessoryListItemMouseButton(UI::AccessoryListItem 
 	return false;
 }
 
-void UI::OutfitShipDialog::OnSizeChanged(void)
+void UI::OutfitShipDialog::_OnSizeChanged(void)
 {
 	float AvailableWidth(GetSize()[0]);
 	
 	// substract 10.0f for each border: left of left, between left and center, between center and right, right of right
 	AvailableWidth -= 10.0f + 10.0f + 10.0f + 10.0f;
-	AvailableWidth -= m_CenterPane->GetSize()[0];
+	AvailableWidth -= _CenterPane->GetSize()[0];
 	AvailableWidth /= 2.0f;
-	m_LeftPane->SetSize(Vector2f(AvailableWidth, m_LeftPane->GetSize()[1]));
-	m_CenterPane->SetPosition(Vector2f(10.0f + m_LeftPane->GetSize()[0] + 10.0f, m_CenterPane->GetPosition()[1]));
-	m_RightPane->SetSize(Vector2f(AvailableWidth, m_RightPane->GetSize()[1]));
-	m_RightPane->SetPosition(Vector2f(10.0f + m_LeftPane->GetSize()[0] + 10.0f + m_CenterPane->GetSize()[0] + 10.0f, m_RightPane->GetPosition()[1]));
+	_LeftPane->SetSize(Vector2f(AvailableWidth, _LeftPane->GetSize()[1]));
+	_CenterPane->SetPosition(Vector2f(10.0f + _LeftPane->GetSize()[0] + 10.0f, _CenterPane->GetPosition()[1]));
+	_RightPane->SetSize(Vector2f(AvailableWidth, _RightPane->GetSize()[1]));
+	_RightPane->SetPosition(Vector2f(10.0f + _LeftPane->GetSize()[0] + 10.0f + _CenterPane->GetSize()[0] + 10.0f, _RightPane->GetPosition()[1]));
 }
