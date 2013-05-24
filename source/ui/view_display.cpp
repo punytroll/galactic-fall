@@ -72,24 +72,24 @@ void UI::ViewDisplay::Draw(void) const
 		assert(TextureRenderTarget != 0);
 		assert(TextureRenderTarget->GetTexture() != 0);
 		TextureRenderTarget->GetTexture()->Activate();
-		glPushAttrib(GL_ENABLE_BIT | GL_COLOR_BUFFER_BIT);
+		GLPushAttrib(GL_ENABLE_BIT | GL_COLOR_BUFFER_BIT);
 		glDisable(GL_LIGHTING);
 		glDisable(GL_DEPTH_TEST);
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+		GLColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 		glEnable(GL_TEXTURE_2D);
-		glBegin(GL_QUADS);
-		glTexCoord2f(0.0f, 1.0f);
+		GLBegin(GL_QUADS);
+		GLTexCoord2f(0.0f, 1.0f);
 		GLVertex2f(0.0f, 0.0f);
-		glTexCoord2f(0.0f, 0.0f);
+		GLTexCoord2f(0.0f, 0.0f);
 		GLVertex2f(0.0f, GetSize()[1]);
-		glTexCoord2f(1.0f, 0.0f);
+		GLTexCoord2f(1.0f, 0.0f);
 		GLVertex2f(GetSize()[0], GetSize()[1]);
-		glTexCoord2f(1.0f, 1.0f);
+		GLTexCoord2f(1.0f, 1.0f);
 		GLVertex2f(GetSize()[0], 0.0f);
-		glEnd();
-		glPopAttrib();
+		GLEnd();
+		GLPopAttrib();
 	}
 }
  

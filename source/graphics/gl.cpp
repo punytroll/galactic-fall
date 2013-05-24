@@ -19,13 +19,17 @@
 
 #include "gl.h"
 
+glBeginFunction __glBegin(0);
 glBindFramebufferFunction __glBindFramebuffer(0);
 glBindRenderbufferFunction __glBindRenderbuffer(0);
 glClearFunction __glClear(0);
+glColor3fFunction __glColor3f(0);
+glColor4fFunction __glColor4f(0);
 glColor4fvFunction __glColor4fv(0);
 glDeleteFramebuffersFunction __glDeleteFramebuffers(0);
 glDeleteRenderbuffersFunction __glDeleteRenderbuffers(0);
 glEnableFunction __glEnable(0);
+glEndFunction __glEnd(0);
 glFramebufferRenderbufferFunction __glFramebufferRenderbuffer(0);
 glFramebufferTextureFunction __glFramebufferTexture(0);
 glGenFramebuffersFunction __glGenFramebuffers(0);
@@ -37,9 +41,14 @@ glMaterialfFunction __glMaterialf(0);
 glMaterialfvFunction __glMaterialfv(0);
 glMatrixModeFunction __glMatrixMode(0);
 glNormal3fvFunction __glNormal3fv(0);
+glPopAttribFunction __glPopAttrib(0);
 glPopMatrixFunction __glPopMatrix(0);
+glPushAttribFunction __glPushAttrib(0);
 glPushMatrixFunction __glPushMatrix(0);
 glRenderbufferStorageFunction __glRenderbufferStorage(0);
+glTexCoord2fFunction __glTexCoord2f(0);
+glTranslatefFunction __glTranslatef(0);
 glVertex2fFunction __glVertex2f(0);
+glVertex3fFunction __glVertex3f(0);
 glVertex3fvFunction __glVertex3fv(0);
 glViewportFunction __glViewport(0);

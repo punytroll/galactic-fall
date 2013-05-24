@@ -65,13 +65,13 @@ void Graphics::Node::Begin(void)
 		GLClear(GL_COLOR_BUFFER_BIT);
 	}
 	GLPushMatrix();
-	glTranslatef(_Position[0], _Position[1], _Position[2]);
+	GLTranslatef(_Position[0], _Position[1], _Position[2]);
 	glMultMatrixf(Matrix4f(_Orientation).Transpose().Matrix());
 	if(_Scale != 1.0f)
 	{
 		glScalef(_Scale, _Scale, _Scale);
 	}
-	glPushAttrib(GL_ENABLE_BIT | GL_COLOR_BUFFER_BIT);
+	GLPushAttrib(GL_ENABLE_BIT | GL_COLOR_BUFFER_BIT);
 	if(_Normalize == true)
 	{
 		GLEnable(GL_NORMALIZE);
@@ -159,8 +159,8 @@ void Graphics::Node::Draw(void)
 
 void Graphics::Node::End(void)
 {
-	glPopAttrib();
-	glPopMatrix();
+	GLPopAttrib();
+	GLPopMatrix();
 }
 
 void Graphics::Node::AddNode(Graphics::Node * Content)

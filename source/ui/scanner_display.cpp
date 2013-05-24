@@ -61,7 +61,7 @@ void UI::ScannerDisplay::Update(void)
 void UI::ScannerDisplay::Draw(void) const
 {
 	UI::Widget::Draw();
-	glPushAttrib(GL_ENABLE_BIT | GL_VIEWPORT_BIT | GL_TRANSFORM_BIT);
+	GLPushAttrib(GL_ENABLE_BIT | GL_VIEWPORT_BIT | GL_TRANSFORM_BIT);
 	// clipping is performed by the viewport
 	glDisable(GL_CLIP_PLANE0);
 	glDisable(GL_CLIP_PLANE1);
@@ -84,7 +84,7 @@ void UI::ScannerDisplay::Draw(void) const
 	if((_Owner.IsValid() == true) && (_Owner->GetTarget().IsValid() == true))
 	{
 		assert(_Owner->GetTarget()->GetAspectPosition() != 0);
-		glTranslatef(-_Owner->GetTarget()->GetAspectPosition()->GetPosition().m_V.m_A[0], -_Owner->GetTarget()->GetAspectPosition()->GetPosition().m_V.m_A[1], -_CameraZ);
+		GLTranslatef(-_Owner->GetTarget()->GetAspectPosition()->GetPosition().m_V.m_A[0], -_Owner->GetTarget()->GetAspectPosition()->GetPosition().m_V.m_A[1], -_CameraZ);
 	}
 	GLClear(GL_DEPTH_BUFFER_BIT);
 	// draw viewport content
@@ -92,5 +92,5 @@ void UI::ScannerDisplay::Draw(void) const
 	GLPopMatrix();
 	GLMatrixMode(GL_PROJECTION);
 	GLPopMatrix();
-	glPopAttrib();
+	GLPopAttrib();
 }

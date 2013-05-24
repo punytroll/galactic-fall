@@ -57,7 +57,7 @@ void UI::Image::Draw(void) const
 	Widget::Draw();
 	if(_TextureIdentifier != 0)
 	{
-		glPushAttrib(GL_ENABLE_BIT | GL_COLOR_BUFFER_BIT);
+		GLPushAttrib(GL_ENABLE_BIT | GL_COLOR_BUFFER_BIT);
 		glDisable(GL_LIGHTING);
 		glDisable(GL_DEPTH_TEST);
 		GLEnable(GL_BLEND);
@@ -69,19 +69,19 @@ void UI::Image::Draw(void) const
 		
 		assert(Texture != 0);
 		Texture->Activate();
-		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+		GLColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 		GLEnable(GL_TEXTURE_2D);
-		glBegin(GL_QUADS);
-		glTexCoord2f(0.0f, 1.0f);
+		GLBegin(GL_QUADS);
+		GLTexCoord2f(0.0f, 1.0f);
 		GLVertex2f(0.0f, 0.0f);
-		glTexCoord2f(0.0f, 0.0f);
+		GLTexCoord2f(0.0f, 0.0f);
 		GLVertex2f(0.0f, GetSize()[1]);
-		glTexCoord2f(1.0f, 0.0f);
+		GLTexCoord2f(1.0f, 0.0f);
 		GLVertex2f(GetSize()[0], GetSize()[1]);
-		glTexCoord2f(1.0f, 1.0f);
+		GLTexCoord2f(1.0f, 1.0f);
 		GLVertex2f(GetSize()[0], 0.0f);
-		glEnd();
-		glPopAttrib();
+		GLEnd();
+		GLPopAttrib();
 	}
 }
  
