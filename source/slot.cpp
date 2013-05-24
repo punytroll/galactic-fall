@@ -28,8 +28,14 @@ Slot::Slot(const SlotClass * SlotClass, const std::string & Identifier) :
 	m_SlotClass(SlotClass),
 	m_Identifier(Identifier),
 	m_MountedObject(0),
+	_SelfReference(*this),
 	_VisualizeAccessory(false)
 {
+}
+
+Slot::~Slot(void)
+{
+	_SelfReference.Invalidate();
 }
 
 void Slot::Mount(Reference< Object > TheObject)

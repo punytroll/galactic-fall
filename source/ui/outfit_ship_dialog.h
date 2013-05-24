@@ -34,31 +34,31 @@ namespace UI
 	class OutfitShipDialog : public UI::Window
 	{
 	public:
-		OutfitShipDialog(UI::Widget * SupWidget, Ship * Ship);
+		OutfitShipDialog(UI::Widget * SupWidget, Reference< Ship > Ship);
 	private:
 		// callbacks
-		bool OnAccessoryListItemMouseButton(UI::AccessoryListItem * AccessoryListItem, int Button, int State, float X, float Y);
-		bool OnKey(const KeyEventInformation & KeyEventInformation);
-		void OnMountClicked(void);
-		void OnOKClicked(void);
-		void OnSizeChanged(void);
-		bool OnSlotListItemMouseButton(UI::SlotListItem * SlotListItem, int Button, int State, float X, float Y);
-		void OnUnmountClicked(void);
+		bool _OnAccessoryListItemMouseButton(UI::AccessoryListItem * AccessoryListItem, int Button, int State, float X, float Y);
+		bool _OnKey(const KeyEventInformation & KeyEventInformation);
+		void _OnMountButtonClicked(void);
+		void _OnOKButtonClicked(void);
+		void _OnSizeChanged(void);
+		bool _OnSlotListItemMouseButton(UI::SlotListItem * SlotListItem, int Button, int State, float X, float Y);
+		void _OnUnmountButtonClicked(void);
 		// helper function and actions
-		void RebuildAccessoryList(void);
-		void UpdateButtons(void);
+		void _RebuildAccessoryList(void);
+		void _UpdateButtons(void);
 		// member variables
-		Ship * m_Ship;
-		UI::Button * m_OKButton;
-		UI::Button * m_MountButton;
-		UI::Button * m_UnmountButton;
-		UI::ScrollBox * m_SlotScrollBox;
-		UI::ScrollBox * m_AccessoryScrollBox;
-		UI::SlotListItem * m_SelectedSlotListItem;
-		UI::AccessoryListItem * m_SelectedAccessoryListItem;
-		UI::Widget * m_LeftPane;
-		UI::Widget * m_CenterPane;
-		UI::Widget * m_RightPane;
+		UI::ScrollBox * _AccessoryScrollBox;
+		UI::Widget * _CenterPane;
+		UI::Widget * _LeftPane;
+		UI::Button * _MountButton;
+		UI::Button * _OKButton;
+		UI::Widget * _RightPane;
+		UI::AccessoryListItem * _SelectedAccessoryListItem;
+		UI::SlotListItem * _SelectedSlotListItem;
+		Reference< Ship > _Ship;
+		UI::ScrollBox * _SlotScrollBox;
+		UI::Button * _UnmountButton;
 	};
 }
 
