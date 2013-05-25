@@ -1424,9 +1424,9 @@ void TakeScreenShot(void)
 	
 	// store the read buffer and change it to the front buffer so we get what we see
 	GLPushAttrib(GL_PIXEL_MODE_BIT);
-	glReadBuffer(GL_FRONT);
+	GLReadBuffer(GL_FRONT);
 	// now read the bits
-	glReadPixels(0, 0, static_cast< GLsizei >(g_Width), static_cast< GLsizei >(g_Height), GL_RGB, GL_UNSIGNED_BYTE, ScreenshotData);
+	GLReadPixels(0, 0, static_cast< GLsizei >(g_Width), static_cast< GLsizei >(g_Height), GL_RGB, GL_UNSIGNED_BYTE, ScreenshotData);
 	// revert the read buffer
 	GLPopAttrib();
 	
@@ -3158,6 +3158,7 @@ void InitializeOpenGL(void)
 	LoadOpenGLFunction(glBegin);
 	LoadOpenGLFunction(glBindFramebuffer);
 	LoadOpenGLFunction(glBindRenderbuffer);
+	LoadOpenGLFunction(glBitmap);
 	LoadOpenGLFunction(glBlendFunc);
 	LoadOpenGLFunction(glClear);
 	LoadOpenGLFunction(glClearColor);
@@ -3187,6 +3188,9 @@ void InitializeOpenGL(void)
 	LoadOpenGLFunction(glPopMatrix);
 	LoadOpenGLFunction(glPushAttrib);
 	LoadOpenGLFunction(glPushMatrix);
+	LoadOpenGLFunction(glRasterPos2i);
+	LoadOpenGLFunction(glReadBuffer);
+	LoadOpenGLFunction(glReadPixels);
 	LoadOpenGLFunction(glRenderbufferStorage);
 	LoadOpenGLFunction(glRotatef);
 	LoadOpenGLFunction(glScalef);

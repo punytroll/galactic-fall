@@ -41,6 +41,10 @@ typedef void (* glBindRenderbufferFunction)(GLenum target, GLuint renderbuffer);
 extern glBindRenderbufferFunction __glBindRenderbuffer;
 #define GLBindRenderbuffer(target, renderbuffer) { assert(__glBindRenderbuffer != 0); __glBindRenderbuffer(target, renderbuffer); CheckGLError; }
 
+typedef void (* glBitmapFunction)(GLsizei width, GLsizei height, GLfloat xorig, GLfloat yorig, GLfloat xmove, GLfloat ymove, const GLubyte * bitmap);
+extern glBitmapFunction __glBitmap;
+#define GLBitmap(width, height, xorig, yorig, xmove, ymove, bitmap) { assert(__glBitmap != 0); __glBitmap(width, height, xorig, yorig, xmove, ymove, bitmap); CheckGLError; }
+
 typedef void (* glBlendFuncFunction)(GLenum sfactor, GLenum dfactor);
 extern glBlendFuncFunction __glBlendFunc;
 #define GLBlendFunc(sfactor, dfactor) { assert(__glBlendFunc != 0); __glBlendFunc(sfactor, dfactor); CheckGLError; }
@@ -156,6 +160,18 @@ extern glPushAttribFunction __glPushAttrib;
 typedef void (* glPushMatrixFunction)(void);
 extern glPushMatrixFunction __glPushMatrix;
 #define GLPushMatrix() { assert(__glPushMatrix != 0); __glPushMatrix(); CheckGLError; }
+
+typedef void (* glRasterPos2iFunction)(GLint x, GLint y);
+extern glRasterPos2iFunction __glRasterPos2i;
+#define GLRasterPos2i(x, y) { assert(__glRasterPos2i != 0); __glRasterPos2i(x, y); CheckGLError; }
+
+typedef void (* glReadBufferFunction)(GLenum mode);
+extern glReadBufferFunction __glReadBuffer;
+#define GLReadBuffer(mode) { assert(__glReadBuffer != 0); __glReadBuffer(mode); CheckGLError; }
+
+typedef void (* glReadPixelsFunction)(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, GLvoid * data);
+extern glReadPixelsFunction __glReadPixels;
+#define GLReadPixels(x, y, width, height, format, type, data) { assert(__glReadPixels != 0); __glReadPixels(x, y, width, height, format, type, data); CheckGLError; }
 
 typedef void (* glRenderbufferStorageFunction)(GLenum target, GLenum internalformat, GLsizei width, GLsizei height);
 extern glRenderbufferStorageFunction __glRenderbufferStorage;

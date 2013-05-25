@@ -144,13 +144,13 @@ void InitializeFonts(void)
 	GLColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 	for(unsigned int CharacterIndex = 0; CharacterIndex < CHARACTERS; ++CharacterIndex)
 	{
-		glRasterPos2i((CharacterIndex % (128 / 6)) * 6, 64 - (CharacterIndex / (128 / 6) + 1) * 12);
-		glBitmap(6, 12, 0, 0, 0, 0, g_Letters[CharacterIndex]);
+		GLRasterPos2i((CharacterIndex % (128 / 6)) * 6, 64 - (CharacterIndex / (128 / 6) + 1) * 12);
+		GLBitmap(6, 12, 0, 0, 0, 0, g_Letters[CharacterIndex]);
 	}
 	
 	GLubyte * FontTextureData(new GLubyte[128 * 64 * 4]);
 	
-	glReadPixels(0, 0, 128, 64, GL_RGBA, GL_UNSIGNED_BYTE, FontTextureData);
+	GLReadPixels(0, 0, 128, 64, GL_RGBA, GL_UNSIGNED_BYTE, FontTextureData);
 	for(unsigned int Row = 0; Row < 64; ++Row)
 	{
 		for(unsigned int Column = 0; Column < 128; ++Column)
