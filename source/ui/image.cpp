@@ -58,10 +58,10 @@ void UI::Image::Draw(void) const
 	if(_TextureIdentifier != 0)
 	{
 		GLPushAttrib(GL_ENABLE_BIT | GL_COLOR_BUFFER_BIT);
-		glDisable(GL_LIGHTING);
-		glDisable(GL_DEPTH_TEST);
+		GLDisable(GL_LIGHTING);
+		GLDisable(GL_DEPTH_TEST);
 		GLEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+		GLBlendFunc(GL_SRC_ALPHA, GL_ONE);
 		assert(g_GraphicsEngine != 0);
 		assert(g_GraphicsEngine->GetTextureManager() != 0);
 		

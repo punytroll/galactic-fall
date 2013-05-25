@@ -21,6 +21,7 @@
 
 #include <iostream>
 
+#include "gl.h"
 #include "texture.h"
 
 Graphics::Texture::Texture(const std::string & Identifier) :
@@ -58,8 +59,8 @@ void Graphics::Texture::SetData(unsigned_numeric Width, unsigned_numeric Height,
 	{
 		throw;
 	}
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	GLTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	GLTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	_Width = Width;
 	_Height = Height;
 }
@@ -84,8 +85,8 @@ void Graphics::Texture::Create(unsigned_numeric Width, unsigned_numeric Height, 
 	{
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, Width, Height, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
 	}
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	GLTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	GLTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	_Width = Width;
 	_Height = Height;
 }

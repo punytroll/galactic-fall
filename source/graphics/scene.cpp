@@ -107,10 +107,10 @@ void Graphics::Scene::Render(void)
 	}
 	else
 	{
-		glDisable(GL_LIGHT0);
+		GLDisable(GL_LIGHT0);
 	}
 	// disable lighting by default, nodes have to activate it if they want it
-	glDisable(GL_LIGHTING);
+	GLDisable(GL_LIGHTING);
 	_RootNode->Begin();
 	_RootNode->Draw();
 	_RootNode->End();
