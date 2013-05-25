@@ -41,6 +41,10 @@ typedef void (* glBindRenderbufferFunction)(GLenum target, GLuint renderbuffer);
 extern glBindRenderbufferFunction __glBindRenderbuffer;
 #define GLBindRenderbuffer(target, renderbuffer) { assert(__glBindRenderbuffer != 0); __glBindRenderbuffer(target, renderbuffer); CheckGLError; }
 
+typedef void (* glBindTextureFunction)(GLenum target, GLuint texture);
+extern glBindTextureFunction __glBindTexture;
+#define GLBindTexture(target, texture) { assert(__glBindTexture != 0); __glBindTexture(target, texture); CheckGLError; }
+
 typedef void (* glBitmapFunction)(GLsizei width, GLsizei height, GLfloat xorig, GLfloat yorig, GLfloat xmove, GLfloat ymove, const GLubyte * bitmap);
 extern glBitmapFunction __glBitmap;
 #define GLBitmap(width, height, xorig, yorig, xmove, ymove, bitmap) { assert(__glBitmap != 0); __glBitmap(width, height, xorig, yorig, xmove, ymove, bitmap); CheckGLError; }
@@ -105,6 +109,10 @@ typedef void (* glGenRenderbuffersFunction)(GLsizei n, GLuint * renderbuffers);
 extern glGenRenderbuffersFunction __glGenRenderbuffers;
 #define GLGenRenderbuffers(n, renderbuffers) { assert(__glGenRenderbuffers != 0); __glGenRenderbuffers(n, renderbuffers); CheckGLError; }
 
+typedef void (* glGenTexturesFunction)(GLsizei n, GLuint * textures);
+extern glGenTexturesFunction __glGenTextures;
+#define GLGenTextures(n, textures) { assert(__glGenTextures != 0); __glGenTextures(n, textures); CheckGLError; }
+
 typedef void (* glGetIntegervFunction)(GLenum pname, GLint * params);
 extern glGetIntegervFunction __glGetIntegerv;
 #define GLGetIntegerv(pname, params) { assert(__glGetIntegerv != 0); __glGetIntegerv(pname, params); CheckGLError; }
@@ -132,6 +140,10 @@ extern glMaterialfvFunction __glMaterialfv;
 typedef void (* glMatrixModeFunction)(GLenum mode);
 extern glMatrixModeFunction __glMatrixMode;
 #define GLMatrixMode(mode) { assert(__glMatrixMode != 0); __glMatrixMode(mode); CheckGLError; }
+
+typedef void (* glNewListFunction)(GLuint list, GLenum mode);
+extern glNewListFunction __glNewList;
+#define GLNewList(list, mode) { assert(__glNewList != 0); __glNewList(list, mode); CheckGLError; }
 
 typedef void (* glNormal3fvFunction)(const GLfloat * v);
 extern glNormal3fvFunction __glNormal3fv;
@@ -188,6 +200,10 @@ extern glScalefFunction __glScalef;
 typedef void (* glTexCoord2fFunction)(GLfloat s, GLfloat t);
 extern glTexCoord2fFunction __glTexCoord2f;
 #define GLTexCoord2f(s, t) { assert(__glTexCoord2f != 0); __glTexCoord2f(s, t); }
+
+typedef void (* glTexImage2DFunction)(GLenum target, GLint level, GLint internalFormat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, const GLvoid * data);
+extern glTexImage2DFunction __glTexImage2D;
+#define GLTexImage2D(target, level, internalFormat, width, height, border, format, type, data) { assert(__glTexImage2D != 0); __glTexImage2D(target, level, internalFormat, width, height, border, format, type, data); CheckGLError; }
 
 typedef void (* glTexParameteriFunction)(GLenum target, GLenum pname, GLint param);
 extern glTexParameteriFunction __glTexParameteri;

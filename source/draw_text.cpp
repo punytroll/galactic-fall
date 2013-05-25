@@ -161,9 +161,9 @@ void InitializeFonts(void)
 			}
 		}
 	}
-	glGenTextures(1, &g_FontTexture);
-	glBindTexture(GL_TEXTURE_2D, g_FontTexture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 128, 64, 0, GL_RGBA, GL_UNSIGNED_BYTE, FontTextureData);
+	GLGenTextures(1, &g_FontTexture);
+	GLBindTexture(GL_TEXTURE_2D, g_FontTexture);
+	GLTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 128, 64, 0, GL_RGBA, GL_UNSIGNED_BYTE, FontTextureData);
 	GLTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	GLTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	delete[] FontTextureData;
@@ -179,7 +179,7 @@ void InitializeFonts(void)
 	g_CharacterCallLists = glGenLists(CHARACTERS);
 	for(unsigned int CharacterIndex = 0; CharacterIndex < CHARACTERS; ++CharacterIndex)
 	{
-		glNewList(g_CharacterCallLists + CharacterIndex, GL_COMPILE);
+		GLNewList(g_CharacterCallLists + CharacterIndex, GL_COMPILE);
 		GLBegin(GL_QUADS);
 		GLTexCoord2f((CharacterIndex % CharactersPerLine) * CharacterWidth, 1.0f - (CharacterHeight * static_cast< unsigned int >(CharacterIndex / CharactersPerLine + 1)));
 		GLVertex2f(0.0f, 12.0f);
@@ -205,7 +205,7 @@ void DrawText(const std::string & String)
 {
 	GLPushAttrib(GL_ENABLE_BIT);
 	GLEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, g_FontTexture);
+	GLBindTexture(GL_TEXTURE_2D, g_FontTexture);
 	glListBase(g_CharacterCallLists - CHARACTEROFFSET);
 	glCallLists(String.length(), GL_UNSIGNED_BYTE, String.c_str());
 	GLPopAttrib();
