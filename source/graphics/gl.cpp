@@ -22,6 +22,7 @@
 glBeginFunction __glBegin(0);
 glBindFramebufferFunction __glBindFramebuffer(0);
 glBindRenderbufferFunction __glBindRenderbuffer(0);
+glBitmapFunction __glBitmap(0);
 glBlendFuncFunction __glBlendFunc(0);
 glClearFunction __glClear(0);
 glClearColorFunction __glClearColor(0);
@@ -51,6 +52,9 @@ glPopAttribFunction __glPopAttrib(0);
 glPopMatrixFunction __glPopMatrix(0);
 glPushAttribFunction __glPushAttrib(0);
 glPushMatrixFunction __glPushMatrix(0);
+glRasterPos2iFunction __glRasterPos2i(0);
+glReadBufferFunction __glReadBuffer(0);
+glReadPixelsFunction __glReadPixels(0);
 glRenderbufferStorageFunction __glRenderbufferStorage(0);
 glRotatefFunction __glRotatef(0);
 glScalefFunction __glScalef(0);
