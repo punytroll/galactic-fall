@@ -44,16 +44,16 @@ Graphics::Texture::~Texture(void)
 void Graphics::Texture::SetData(unsigned_numeric Width, unsigned_numeric Height, unsigned_numeric Format, const unsigned char * Data)
 {
 	assert(_TextureName == 0);
-	glGenTextures(1, &_TextureName);
+	GLGenTextures(1, &_TextureName);
 	assert(_TextureName != 0);
-	glBindTexture(GL_TEXTURE_2D, _TextureName);
+	GLBindTexture(GL_TEXTURE_2D, _TextureName);
 	if(Format == 1) /// RGBA one byte each
 	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, Width, Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, Data);
+		GLTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, Width, Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, Data);
 	}
 	else if(Format == 2) /// RGB one byte each
 	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, Width, Height, 0, GL_RGB, GL_UNSIGNED_BYTE, Data);
+		GLTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, Width, Height, 0, GL_RGB, GL_UNSIGNED_BYTE, Data);
 	}
 	else
 	{
@@ -68,22 +68,22 @@ void Graphics::Texture::SetData(unsigned_numeric Width, unsigned_numeric Height,
 void Graphics::Texture::Activate(void) const
 {
 	assert(_TextureName != 0);
-	glBindTexture(GL_TEXTURE_2D, _TextureName);
+	GLBindTexture(GL_TEXTURE_2D, _TextureName);
 }
 
 void Graphics::Texture::Create(unsigned_numeric Width, unsigned_numeric Height, unsigned_numeric Format)
 {
 	assert(_TextureName == 0);
-	glGenTextures(1, &_TextureName);
+	GLGenTextures(1, &_TextureName);
 	assert(_TextureName != 0);
-	glBindTexture(GL_TEXTURE_2D, _TextureName);
+	GLBindTexture(GL_TEXTURE_2D, _TextureName);
 	if(Format == 1) /// RGBA one byte each
 	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, Width, Height, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+		GLTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, Width, Height, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
 	}
 	else if(Format == 2) /// RGB one byte each
 	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, Width, Height, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+		GLTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, Width, Height, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
 	}
 	GLTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	GLTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
