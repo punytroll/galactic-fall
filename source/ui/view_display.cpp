@@ -73,12 +73,12 @@ void UI::ViewDisplay::Draw(void) const
 		assert(TextureRenderTarget->GetTexture() != 0);
 		TextureRenderTarget->GetTexture()->Activate();
 		GLPushAttrib(GL_ENABLE_BIT | GL_COLOR_BUFFER_BIT);
-		glDisable(GL_LIGHTING);
-		glDisable(GL_DEPTH_TEST);
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		GLDisable(GL_LIGHTING);
+		GLDisable(GL_DEPTH_TEST);
+		GLEnable(GL_BLEND);
+		GLBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		GLColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-		glEnable(GL_TEXTURE_2D);
+		GLEnable(GL_TEXTURE_2D);
 		GLBegin(GL_QUADS);
 		GLTexCoord2f(0.0f, 1.0f);
 		GLVertex2f(0.0f, 0.0f);

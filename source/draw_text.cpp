@@ -130,17 +130,17 @@ GLuint g_FontTexture;
 
 void InitializeFonts(void)
 {
-	glViewport(0, 0, 128, 64);
+	GLViewport(0, 0, 128, 64);
 	GLMatrixMode(GL_PROJECTION);
 	GLPushMatrix();
 	GLLoadIdentity();
-	glOrtho(0.0, 128.0, 0.0, 64.0, -1, 1);
+	GLOrtho(0.0, 128.0, 0.0, 64.0, -1, 1);
 	GLMatrixMode(GL_MODELVIEW);
 	GLPushMatrix();
 	GLLoadIdentity();
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	GLClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	GLClear(GL_COLOR_BUFFER_BIT);
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+	GLPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	GLColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 	for(unsigned int CharacterIndex = 0; CharacterIndex < CHARACTERS; ++CharacterIndex)
 	{
@@ -164,8 +164,8 @@ void InitializeFonts(void)
 	glGenTextures(1, &g_FontTexture);
 	glBindTexture(GL_TEXTURE_2D, g_FontTexture);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 128, 64, 0, GL_RGBA, GL_UNSIGNED_BYTE, FontTextureData);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	GLTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	GLTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	delete[] FontTextureData;
 	GLPopMatrix();
 	GLMatrixMode(GL_PROJECTION);

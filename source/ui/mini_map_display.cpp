@@ -56,20 +56,20 @@ void UI::MiniMapDisplay::Draw(void) const
 	UI::Widget::Draw();
 	GLPushAttrib(GL_ENABLE_BIT | GL_VIEWPORT_BIT | GL_TRANSFORM_BIT);
 	// clipping is performed by the viewport
-	glDisable(GL_CLIP_PLANE0);
-	glDisable(GL_CLIP_PLANE1);
-	glDisable(GL_CLIP_PLANE2);
-	glDisable(GL_CLIP_PLANE3);
+	GLDisable(GL_CLIP_PLANE0);
+	GLDisable(GL_CLIP_PLANE1);
+	GLDisable(GL_CLIP_PLANE2);
+	GLDisable(GL_CLIP_PLANE3);
 	GLEnable(GL_DEPTH_TEST);
-	glDisable(GL_BLEND);
-	glViewport(static_cast< GLint >(GetGlobalPosition()[0]), static_cast< GLint >(GetRootWidget()->GetSize()[1] - GetGlobalPosition()[1] - GetSize()[1]), static_cast< GLint >(GetSize()[0]), static_cast< GLint >(GetSize()[1]));
+	GLDisable(GL_BLEND);
+	GLViewport(static_cast< GLint >(GetGlobalPosition()[0]), static_cast< GLint >(GetRootWidget()->GetSize()[1] - GetGlobalPosition()[1] - GetSize()[1]), static_cast< GLint >(GetSize()[0]), static_cast< GLint >(GetSize()[1]));
 	GLMatrixMode(GL_PROJECTION);
 	GLPushMatrix();
 	
 	Matrix4f PerspectiveMatrix;
 	
 	CalculatePerspectiveMatrix(0.392699082f, 1.0f, 1.0f, 10000.0f, PerspectiveMatrix);
-	glLoadMatrixf(PerspectiveMatrix.Matrix());
+	GLLoadMatrixf(PerspectiveMatrix.Matrix());
 	GLMatrixMode(GL_MODELVIEW);
 	GLPushMatrix();
 	GLLoadIdentity();

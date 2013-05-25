@@ -69,7 +69,7 @@ void Graphics::Node::Begin(void)
 	glMultMatrixf(Matrix4f(_Orientation).Transpose().Matrix());
 	if(_Scale != 1.0f)
 	{
-		glScalef(_Scale, _Scale, _Scale);
+		GLScalef(_Scale, _Scale, _Scale);
 	}
 	GLPushAttrib(GL_ENABLE_BIT | GL_COLOR_BUFFER_BIT);
 	if(_Normalize == true)
@@ -78,7 +78,7 @@ void Graphics::Node::Begin(void)
 	}
 	else
 	{
-		glDisable(GL_NORMALIZE);
+		GLDisable(GL_NORMALIZE);
 	}
 	if(_UseBlending == true)
 	{
@@ -86,7 +86,7 @@ void Graphics::Node::Begin(void)
 	}
 	else
 	{
-		glDisable(GL_BLEND);
+		GLDisable(GL_BLEND);
 	}
 	if(_UseClipPlane0 == true)
 	{
@@ -94,7 +94,7 @@ void Graphics::Node::Begin(void)
 	}
 	else
 	{
-		glDisable(GL_CLIP_PLANE0);
+		GLDisable(GL_CLIP_PLANE0);
 	}
 	if(_UseClipPlane1 == true)
 	{
@@ -102,7 +102,7 @@ void Graphics::Node::Begin(void)
 	}
 	else
 	{
-		glDisable(GL_CLIP_PLANE1);
+		GLDisable(GL_CLIP_PLANE1);
 	}
 	if(_UseClipPlane2 == true)
 	{
@@ -110,7 +110,7 @@ void Graphics::Node::Begin(void)
 	}
 	else
 	{
-		glDisable(GL_CLIP_PLANE2);
+		GLDisable(GL_CLIP_PLANE2);
 	}
 	if(_UseClipPlane3 == true)
 	{
@@ -118,7 +118,7 @@ void Graphics::Node::Begin(void)
 	}
 	else
 	{
-		glDisable(GL_CLIP_PLANE3);
+		GLDisable(GL_CLIP_PLANE3);
 	}
 	if(_UseDepthTest == true)
 	{
@@ -126,7 +126,7 @@ void Graphics::Node::Begin(void)
 	}
 	else
 	{
-		glDisable(GL_DEPTH_TEST);
+		GLDisable(GL_DEPTH_TEST);
 	}
 	if(_UseLighting == true)
 	{
@@ -134,7 +134,7 @@ void Graphics::Node::Begin(void)
 	}
 	else
 	{
-		glDisable(GL_LIGHTING);
+		GLDisable(GL_LIGHTING);
 	}
 	if(_Use2DTexture == true)
 	{
@@ -142,9 +142,9 @@ void Graphics::Node::Begin(void)
 	}
 	else
 	{
-		glDisable(GL_TEXTURE_2D);
+		GLDisable(GL_TEXTURE_2D);
 	}
-	glBlendFunc(_BlendFunctionSourceFactor, _BlendFunctionDestinationFactor);
+	GLBlendFunc(_BlendFunctionSourceFactor, _BlendFunctionDestinationFactor);
 }
 
 void Graphics::Node::Draw(void)

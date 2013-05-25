@@ -57,7 +57,7 @@ void UI::StarMapDisplay::Draw(void) const
 	GLPushAttrib(GL_ENABLE_BIT);
 	GLPushMatrix();
 	GLTranslatef(Middle.m_V.m_A[0], Middle.m_V.m_A[1], 0.0f);
-	glScalef(1.0f, -1.0f, 1.0f);
+	GLScalef(1.0f, -1.0f, 1.0f);
 	
 	const std::set< System * > & UnexploredSystems(m_Character->GetMapKnowledge()->GetUnexploredSystems());
 	
@@ -123,7 +123,7 @@ void UI::StarMapDisplay::Draw(void) const
 			}
 			GLBegin(GL_LINES);
 			GLVertex2f(0.0f, 0.0f);
-			glVertex2fv((((*LinkedSystemIterator)->GetAspectPosition()->GetPosition() - (*ExploredSystemIterator)->GetAspectPosition()->GetPosition()) * m_Scale).m_V.m_A);
+			GLVertex2fv((((*LinkedSystemIterator)->GetAspectPosition()->GetPosition() - (*ExploredSystemIterator)->GetAspectPosition()->GetPosition()) * m_Scale).m_V.m_A);
 			GLEnd();
 		}
 		if(*ExploredSystemIterator == m_SelectedSystem)
@@ -153,7 +153,7 @@ void UI::StarMapDisplay::Draw(void) const
 		GLVertex2f(SystemSize * 0.866f, -SystemSize * 0.5f);
 		GLEnd();
 		GLPushMatrix();
-		glScalef(1.0f, -1.0f, 1.0f);
+		GLScalef(1.0f, -1.0f, 1.0f);
 		GLTranslatef(0.0f, 12.0f, 0.0f);
 		GLColor3f(1.0f, 1.0f, 1.0f);
 		DrawText((*ExploredSystemIterator)->GetAspectName()->GetName());

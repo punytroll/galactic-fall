@@ -41,9 +41,17 @@ typedef void (* glBindRenderbufferFunction)(GLenum target, GLuint renderbuffer);
 extern glBindRenderbufferFunction __glBindRenderbuffer;
 #define GLBindRenderbuffer(target, renderbuffer) { assert(__glBindRenderbuffer != 0); __glBindRenderbuffer(target, renderbuffer); CheckGLError; }
 
+typedef void (* glBlendFuncFunction)(GLenum sfactor, GLenum dfactor);
+extern glBlendFuncFunction __glBlendFunc;
+#define GLBlendFunc(sfactor, dfactor) { assert(__glBlendFunc != 0); __glBlendFunc(sfactor, dfactor); CheckGLError; }
+
 typedef void (* glClearFunction)(GLbitfield mask);
 extern glClearFunction __glClear;
 #define GLClear(mask) { assert(__glClear != 0); __glClear(mask); CheckGLError; }
+
+typedef void (* glClearColorFunction)(GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha);
+extern glClearColorFunction __glClearColor;
+#define GLClearColor(red, green, blue, alpha) { assert(__glClearColor != 0); __glClearColor(red, green, blue, alpha); CheckGLError; }
 
 typedef void (* glColor3fFunction)(GLfloat red, GLfloat green, GLfloat blue);
 extern glColor3fFunction __glColor3f;
@@ -64,6 +72,10 @@ extern glDeleteFramebuffersFunction __glDeleteFramebuffers;
 typedef void (* glDeleteRenderbuffersFunction)(GLsizei n, GLuint * renderbuffers);
 extern glDeleteRenderbuffersFunction __glDeleteRenderbuffers;
 #define GLDeleteRenderbuffers(n, renderbuffers) { assert(__glDeleteRenderbuffers != 0); __glDeleteRenderbuffers(n, renderbuffers); CheckGLError; }
+
+typedef void (* glDisableFunction)(GLenum cap);
+extern glDisableFunction __glDisable;
+#define GLDisable(cap) { assert(__glDisable != 0); __glDisable(cap); CheckGLError; }
 
 typedef void (* glEnableFunction)(GLenum cap);
 extern glEnableFunction __glEnable;
@@ -101,6 +113,10 @@ typedef void (* glLoadIdentityFunction)(void);
 extern glLoadIdentityFunction __glLoadIdentity;
 #define GLLoadIdentity() { assert(__glLoadIdentity != 0); __glLoadIdentity(); CheckGLError; }
 
+typedef void (* glLoadMatrixfFunction)(const GLfloat * m);
+extern glLoadMatrixfFunction __glLoadMatrixf;
+#define GLLoadMatrixf(m) { assert(__glLoadMatrixf != 0); __glLoadMatrixf(m); CheckGLError; }
+
 typedef void (* glMaterialfFunction)(GLenum face, GLenum pname, GLfloat param);
 extern glMaterialfFunction __glMaterialf;
 #define GLMaterialf(face, pname, param) { assert(__glMaterialf != 0); __glMaterialf(face, pname, param); }
@@ -116,6 +132,14 @@ extern glMatrixModeFunction __glMatrixMode;
 typedef void (* glNormal3fvFunction)(const GLfloat * v);
 extern glNormal3fvFunction __glNormal3fv;
 #define GLNormal3fv(v) { assert(__glNormal3fv != 0); __glNormal3fv(v); }
+
+typedef void (* glOrthoFunction)(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble nearVal, GLdouble farVal);
+extern glOrthoFunction __glOrtho;
+#define GLOrtho(left, right, bottom, top, nearVal, farVal) { assert(__glOrtho != 0); __glOrtho(left, right, bottom, top, nearVal, farVal); CheckGLError; }
+
+typedef void (* glPixelStoreiFunction)(GLenum pname, GLint param);
+extern glPixelStoreiFunction __glPixelStorei;
+#define GLPixelStorei(pname, param) { assert(__glPixelStorei != 0); __glPixelStorei(pname, param); CheckGLError; }
 
 typedef void (* glPopAttribFunction)(void);
 extern glPopAttribFunction __glPopAttrib;
@@ -137,9 +161,21 @@ typedef void (* glRenderbufferStorageFunction)(GLenum target, GLenum internalfor
 extern glRenderbufferStorageFunction __glRenderbufferStorage;
 #define GLRenderbufferStorage(target, internalformat, width, height) { assert(__glRenderbufferStorage != 0); __glRenderbufferStorage(target, internalformat, width, height); CheckGLError; }
 
+typedef void (* glRotatefFunction)(GLfloat angle, GLfloat x, GLfloat y, GLfloat z);
+extern glRotatefFunction __glRotatef;
+#define GLRotatef(angle, x, y, z) { assert(__glRotatef != 0); __glRotatef(angle, x, y, z); CheckGLError; }
+
+typedef void (* glScalefFunction)(GLfloat x, GLfloat y, GLfloat z);
+extern glScalefFunction __glScalef;
+#define GLScalef(x, y, z) { assert(__glScalef != 0); __glScalef(x, y, z); CheckGLError; }
+
 typedef void (* glTexCoord2fFunction)(GLfloat s, GLfloat t);
 extern glTexCoord2fFunction __glTexCoord2f;
 #define GLTexCoord2f(s, t) { assert(__glTexCoord2f != 0); __glTexCoord2f(s, t); }
+
+typedef void (* glTexParameteriFunction)(GLenum target, GLenum pname, GLint param);
+extern glTexParameteriFunction __glTexParameteri;
+#define GLTexParameteri(target, pname, param) { assert(__glTexParameteri != 0); __glTexParameteri(target, pname, param); CheckGLError; }
 
 typedef void (* glTranslatefFunction)(GLfloat x, GLfloat y, GLfloat z);
 extern glTranslatefFunction __glTranslatef;
@@ -148,6 +184,10 @@ extern glTranslatefFunction __glTranslatef;
 typedef void (* glVertex2fFunction)(GLfloat x, GLfloat y);
 extern glVertex2fFunction __glVertex2f;
 #define GLVertex2f(x, y) { assert(__glVertex2f != 0); __glVertex2f(x, y); }
+
+typedef void (* glVertex2fvFunction)(const GLfloat * v);
+extern glVertex2fvFunction __glVertex2fv;
+#define GLVertex2fv(v) { assert(__glVertex2fv != 0); __glVertex2fv(v); }
 
 typedef void (* glVertex3fFunction)(GLfloat x, GLfloat y, GLfloat z);
 extern glVertex3fFunction __glVertex3f;

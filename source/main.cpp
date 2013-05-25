@@ -367,7 +367,7 @@ void DrawSelection(const Object * Object, float RadialSize, const Color & Color)
 	
 	GLPushMatrix();
 	GLPushAttrib(GL_LIGHTING_BIT);
-	glDisable(GL_LIGHTING);
+	GLDisable(GL_LIGHTING);
 	GLTranslatef(Object->GetAspectPosition()->GetPosition().m_V.m_A[0], Object->GetAspectPosition()->GetPosition().m_V.m_A[1], 0.0f);
 	GLColor4fv(Color.GetColor().m_V.m_A);
 	GLBegin(GL_LINE_STRIP);
@@ -1020,9 +1020,9 @@ void DisplayMainView(void)
 		RelativePosition.Normalize();
 		GLPushMatrix();
 		GLPushAttrib(GL_LIGHTING_BIT);
-		glDisable(GL_LIGHTING);
+		GLDisable(GL_LIGHTING);
 		GLTranslatef(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetAspectPosition()->GetPosition().m_V.m_A[0], g_CharacterObserver->GetObservedCharacter()->GetShip()->GetAspectPosition()->GetPosition().m_V.m_A[1], 0.0f);
-		glRotatef(GetRadians(Vector2f(RelativePosition[0], RelativePosition[1])) * 180.0f / M_PI, 0.0f, 0.0f, 1.0f);
+		GLRotatef(GetRadians(Vector2f(RelativePosition[0], RelativePosition[1])) * 180.0f / M_PI, 0.0f, 0.0f, 1.0f);
 		GLColor3f(0.0f, 0.5f, 0.5f);
 		GLBegin(GL_LINES);
 		GLVertex2f(20.0f, 0.0f);
@@ -1456,7 +1456,7 @@ void PrerenderViews(void)
 	{
 		Graphics::View * PrerenderedView(*PrerenderedViewIterator);
 		
-		glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
+		GLClearColor(1.0f, 1.0f, 1.0f, 0.0f);
 		PrerenderedView->Render();
 	}
 }
@@ -1517,7 +1517,7 @@ void GameFrame(void)
 	double GraphicsTimeBegin(RealTime::Get());
 	
 	PrerenderViews();
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	GLClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	DisplayMainView();
 	g_UIView->Render();
 	RealTime::Invalidate();
@@ -3158,12 +3158,15 @@ void InitializeOpenGL(void)
 	LoadOpenGLFunction(glBegin);
 	LoadOpenGLFunction(glBindFramebuffer);
 	LoadOpenGLFunction(glBindRenderbuffer);
+	LoadOpenGLFunction(glBlendFunc);
 	LoadOpenGLFunction(glClear);
+	LoadOpenGLFunction(glClearColor);
 	LoadOpenGLFunction(glColor3f);
 	LoadOpenGLFunction(glColor4f);
 	LoadOpenGLFunction(glColor4fv);
 	LoadOpenGLFunction(glDeleteFramebuffers);
 	LoadOpenGLFunction(glDeleteRenderbuffers);
+	LoadOpenGLFunction(glDisable);
 	LoadOpenGLFunction(glEnable);
 	LoadOpenGLFunction(glEnd);
 	LoadOpenGLFunction(glFramebufferRenderbuffer);
@@ -3173,18 +3176,25 @@ void InitializeOpenGL(void)
 	LoadOpenGLFunction(glGetIntegerv);
 	LoadOpenGLFunction(glLightModelfv);
 	LoadOpenGLFunction(glLoadIdentity);
+	LoadOpenGLFunction(glLoadMatrixf);
 	LoadOpenGLFunction(glMaterialf);
 	LoadOpenGLFunction(glMaterialfv);
 	LoadOpenGLFunction(glMatrixMode);
 	LoadOpenGLFunction(glNormal3fv);
+	LoadOpenGLFunction(glOrtho);
+	LoadOpenGLFunction(glPixelStorei);
 	LoadOpenGLFunction(glPopAttrib);
 	LoadOpenGLFunction(glPopMatrix);
 	LoadOpenGLFunction(glPushAttrib);
 	LoadOpenGLFunction(glPushMatrix);
 	LoadOpenGLFunction(glRenderbufferStorage);
+	LoadOpenGLFunction(glRotatef);
+	LoadOpenGLFunction(glScalef);
 	LoadOpenGLFunction(glTexCoord2f);
+	LoadOpenGLFunction(glTexParameteri);
 	LoadOpenGLFunction(glTranslatef);
 	LoadOpenGLFunction(glVertex2f);
+	LoadOpenGLFunction(glVertex2fv);
 	LoadOpenGLFunction(glVertex3f);
 	LoadOpenGLFunction(glVertex3fv);
 	LoadOpenGLFunction(glViewport);
