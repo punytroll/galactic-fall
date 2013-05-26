@@ -220,7 +220,7 @@ void Object::Dump(std::ostream & OStream)
 
 void DumpObjectHierarchy(XMLStream & XML, Object * Container)
 {
-	XML << element << "object" << attribute << "type-name" << value << typeid(*Container).name() << attribute << "identifier" << value << Container->GetObjectIdentifier();
+	XML << element << "object" << attribute << "address" << value << Container << attribute << "type-identifier" << value << Container->GetTypeIdentifier() << attribute << "class-identifier" << value << Container->GetClassIdentifier() << attribute << "identifier" << value << Container->GetObjectIdentifier();
 	if(Container->GetAspectObjectContainer() != 0)
 	{
 		for(std::set< Object * >::const_iterator ObjectIterator = Container->GetAspectObjectContainer()->GetContent().begin(); ObjectIterator != Container->GetAspectObjectContainer()->GetContent().end(); ++ObjectIterator)
@@ -237,13 +237,13 @@ void Object::Dump(XMLStream & XML)
 	XML << element << "objects" << attribute << "count" << value << static_cast< int >(m_Objects.size());
 	for(std::set< Object * >::const_iterator ObjectIterator = m_Objects.begin(); ObjectIterator != m_Objects.end(); ++ObjectIterator)
 	{
-		XML << element << "object" << attribute << "address" << value << *ObjectIterator << attribute << "type-name" << value << typeid(**ObjectIterator).name() << end;
+		XML << element << "object" << attribute << "address" << value << *ObjectIterator << end;
 	}
 	XML << end;
 	XML << element << "identified-objects" << attribute << "count" << value << static_cast< int >(m_IdentifiedObjects.size());
 	for(std::map< std::string, Object * >::const_iterator ObjectIterator = m_IdentifiedObjects.begin(); ObjectIterator != m_IdentifiedObjects.end(); ++ObjectIterator)
 	{
-		XML << element << "object" << attribute << "address" << value << ObjectIterator->second << attribute << "identifier" << value << ObjectIterator->first << attribute << "type-name" << value << typeid(*(ObjectIterator->second)).name() << end;
+		XML << element << "object" << attribute << "address" << value << ObjectIterator->second << attribute << "identifier" << value << ObjectIterator->first << end;
 	}
 	XML << end;
 	XML << element << "object-hierarchy";

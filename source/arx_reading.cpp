@@ -749,6 +749,8 @@ static void ReadSystem(Arxx::Reference & Reference)
 	
 	Star * NewStar(new Star());
 	
+	NewStar->SetTypeIdentifier("star");
+	NewStar->SetClassIdentifier(StarIdentifier);
 	NewStar->SetObjectIdentifier("::star(" + StarIdentifier + ")::in_system(" + NewSystem->GetIdentifier() + ")");
 	NewStar->GetAspectPosition()->SetPosition(Vector3f(StarPosition[0], StarPosition[1], 0.0f));
 	NewStar->SetColor(StarColor);
