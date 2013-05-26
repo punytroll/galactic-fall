@@ -22,9 +22,9 @@
 #include <algebra/vector3f.h>
 #include <algebra/vector4f.h>
 
-#include "widgets/widgets.h"
+#include <xml_stream/xml_stream.h>
 
-#include "xmlstream.h"
+#include "widgets/widgets.h"
 
 #define glPointParameterfv(A, B) glPointParameterfvARB((A), (B))
 #define glPointParameterf(A, B) glPointParameterfARB((A), (B))
@@ -142,7 +142,7 @@ inline XMLPoint point(unsigned long Identifier, const Vector4f & Position, const
 	return Point;
 }
 
-xmlstream & operator<<(xmlstream & XMLStream, const XMLPoint & Point)
+XMLStream & operator<<(XMLStream & XMLStream, const XMLPoint & Point)
 {
 	XMLStream << element << "point" << attribute << "identifier" << value << Point.m_Identifier << attribute << "position-x" << value << Point.m_Position.m_V.m_A[0] << attribute << "position-y" << value << Point.m_Position.m_V.m_A[1] << attribute << "position-z" << value << Point.m_Position.m_V.m_A[2] << attribute << "name" << value << Point.m_Name;
 	
@@ -163,7 +163,7 @@ inline XMLPointReference point(unsigned long PointIdentifier)
 	return Point;
 }
 
-xmlstream & operator<<(xmlstream & XMLStream, const XMLPointReference & PointReference)
+XMLStream & operator<<(XMLStream & XMLStream, const XMLPointReference & PointReference)
 {
 	XMLStream << element << "point" << attribute << "point-identifier" << value <<PointReference.m_PointIdentifier;
 	
@@ -186,7 +186,7 @@ inline XMLTriangle triangle(unsigned long Identifier, const std::string & Name)
 	return Triangle;
 }
 
-xmlstream & operator<<(xmlstream & XMLStream, const XMLTriangle & Triangle)
+XMLStream & operator<<(XMLStream & XMLStream, const XMLTriangle & Triangle)
 {
 	XMLStream << element << "triangle" << attribute << "identifier" << value << Triangle.m_Identifier << attribute << "name" << value << Triangle.m_Name;
 	
@@ -209,7 +209,7 @@ inline XMLTrianglePoint trianglepoint(unsigned long TrianglePointIdentifier, con
 	return TrianglePoint;
 }
 
-xmlstream & operator<<(xmlstream & XMLStream, const XMLTrianglePoint & TrianglePoint)
+XMLStream & operator<<(XMLStream & XMLStream, const XMLTrianglePoint & TrianglePoint)
 {
 	XMLStream << element << "triangle-point" << attribute << "identifier" << value << TrianglePoint.m_TrianglePointIdentifier << attribute << "normal-x" << value << TrianglePoint.m_Normal.m_V.m_A[0] << attribute << "normal-y" << value << TrianglePoint.m_Normal.m_V.m_A[1] << attribute << "normal-z" << value << TrianglePoint.m_Normal.m_V.m_A[2];
 	
@@ -230,7 +230,7 @@ inline XMLTrianglePointReference trianglepoint(unsigned long TrianglePointIdenti
 	return TrianglePointReference;
 }
 
-xmlstream & operator<<(xmlstream & XMLStream, const XMLTrianglePointReference & TrianglePointReference)
+XMLStream & operator<<(XMLStream & XMLStream, const XMLTrianglePointReference & TrianglePointReference)
 {
 	XMLStream << element << "triangle-point" << attribute << "triangle-point-identifier" << value << TrianglePointReference.m_TrianglePointIdentifier;
 	
@@ -279,7 +279,7 @@ inline XMLModel model(const std::vector< Point * > & Points, const std::vector< 
 	return XMLModel(Points, TrianglePoints, Triangles);
 }
 
-xmlstream & operator<<(xmlstream & XMLStream, XMLModel Model)
+XMLStream & operator<<(XMLStream & XMLStream, XMLModel Model)
 {
 	XMLStream << element << "model";
 	
@@ -569,7 +569,7 @@ CameraDescription camera(const Vector4f & Position, const Quaternion & Orientati
 	return CameraDescription;
 }
 
-xmlstream & operator<<(xmlstream & XMLStream, const CameraDescription & CameraDescription)
+XMLStream & operator<<(XMLStream & XMLStream, const CameraDescription & CameraDescription)
 {
 	XMLStream << element << "camera";
 	XMLStream << attribute << "position-x" << value << CameraDescription.m_Position.m_V.m_A[0];
@@ -608,7 +608,7 @@ LightDescription light(Light * pLight)
 	return LightDescription(pLight);
 }
 
-xmlstream & operator<<(xmlstream & XMLStream, const LightDescription & LightDescription)
+XMLStream & operator<<(XMLStream & XMLStream, const LightDescription & LightDescription)
 {
 	XMLStream << element << "light";
 	XMLStream << attribute << "enabled" << value << LightDescription.m_bEnabled;
@@ -2654,7 +2654,7 @@ public:
 				if(iModifiers == GLUT_ACTIVE_ALT)
 				{
 					std::ofstream OutputFileStream("model.xml");
-					xmlstream XMLStream(OutputFileStream);
+					XMLStream XMLStream(OutputFileStream);
 					
 					XMLStream << model(g_Points, g_TrianglePoints, g_Triangles) << end;
 				}
@@ -2798,7 +2798,7 @@ public:
 				else if(iModifiers == GLUT_ACTIVE_SHIFT)
 				{
 					std::ofstream OutputFileStream("scene.xml");
-					xmlstream XMLStream(OutputFileStream);
+					XMLStream XMLStream(OutputFileStream);
 					
 					XMLStream << element << "scene" << model(g_Points, g_TrianglePoints, g_Triangles) << end;
 					for(std::vector< Light * >::size_type stLight = 0; stLight < g_Lights.size(); ++stLight)

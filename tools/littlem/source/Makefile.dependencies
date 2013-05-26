@@ -110,9 +110,3 @@ xmlparser_cpp = \
 xmlparser_h = \
 	xmlparser.h
 
-xmlstream_cpp = \
-	xmlstream.cpp
-
-xmlstream_h = \
-	xmlstream.h
-

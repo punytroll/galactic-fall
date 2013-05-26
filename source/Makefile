@@ -6,6 +6,7 @@ default: all
 
 include $(root)/tools/cpp_includes_to_makefile/Makefile.include
 include $(root)/libraries/algebra/Makefile.include
+include $(root)/libraries/xml_stream/Makefile.include
 include Makefile.dependencies
 
 HEADER_DIRECTORIES := $(patsubst %/,%,$(sort $(dir $(shell find . -name '*.h'))))
@@ -18,6 +19,9 @@ OBJECT_FILES := $(sort $(patsubst %.cpp,$(OBJECT_DIRECTORY)/%.o,$(SOURCE_FILES))
 DEPENDENCY_DIRECTORY := .dependency-files
 DEPENDENCY_DIRECTORIES := $(sort $(patsubst .%, $(DEPENDENCY_DIRECTORY)%, $(HEADER_DIRECTORIES) $(SOURCE_DIRECTORIES)))
 DEPENDENCY_FILES := $(sort $(foreach file,$(HEADER_FILES) $(SOURCE_FILES),$(DEPENDENCY_DIRECTORY)/$(file).dep))
+
+arxx_include = $(shell pkg-config --cflags libarxx)
+arxx_linking = $(shell pkg-config --libs libarxx)
 
 all: all-recursive
 
@@ -78,23 +82,14 @@ $(OBJECT_FILES): $(CXXFLAGS_configuration)
 
 $(DEPENDENCY_FILES): $(cpp_includes_to_makefile_dependencies) $(DEPENDENCY_DIRECTORIES)
 
-binary: $(OBJECT_FILES) $(LDFLAGS_configuration)
-	$(CXX) $(LDFLAGS) `pkg-config --libs libarxx` $(OBJECT_FILES) -lGL -lX11 -o $@
+binary: $(OBJECT_FILES) $(algebra_object_files) $(arxx_libraries) $(xml_stream_object_files) $(LDFLAGS_configuration)
+	$(CXX) $(LDFLAGS) $(OBJECT_FILES) $(algebra_object-files) $(arxx_linking) $(xml_stream_object_files) -lGL -lX11 -o $@
 
 .dependency-files/%.dep: %
 	$(command_cpp_includes_to_makefile) $< > $@
 
-.object-files/arx_reading.o: $(arx_reading_cpp)
-	$(CXX) $(CXXFLAGS) `pkg-config --cflags libarxx` $(algebra_include) -c $< -o $@
-
-.object-files/buffer_reading.o: $(buffer_reading_cpp)
-	$(CXX) $(CXXFLAGS) `pkg-config --cflags libarxx` $(algebra_include) -c $< -o $@
-
-.object-files/settings.o: $(settings_cpp)
-	$(CXX) $(CXXFLAGS) `pkg-config --cflags libarxx` $(algebra_include) -c $< -o $@
-
 .SECONDEXPANSION:
 $(OBJECT_DIRECTORY)/%.o: $$($$(subst /,_,$$*)_cpp)
-	$(CXX) $(CXXFLAGS) $(algebra_include) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(algebra_include) $(arxx_include) $(xml_stream_include) -c $< -o $@
 
 .PHONY: dependencies
