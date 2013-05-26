@@ -1446,10 +1446,3 @@ xml_puny_dom_cpp = \
 xml_puny_dom_h = \
 	xml_puny_dom.h
 
-xml_stream_cpp = \
-	xml_stream.cpp \
-	$(xml_stream_h)
-
-xml_stream_h = \
-	xml_stream.h
-

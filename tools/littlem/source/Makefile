@@ -6,6 +6,7 @@ default: all
 
 include $(root)/tools/cpp_includes_to_makefile/Makefile.include
 include $(root)/libraries/algebra/Makefile.include
+include $(root)/libraries/xml_stream/Makefile.include
 include Makefile.dependencies
 
 HEADER_DIRECTORIES := $(patsubst %/,%,$(sort $(dir $(shell find . -name '*.h'))))
@@ -40,13 +41,7 @@ clean-here:
 	fi
 	$(RM) -r $(OBJECT_DIRECTORY)
 
-clean-recursive: callbacks-clean-recursive clean-here
-
-callbacks-all-recursive:
-	@$(MAKE) -C callbacks all-recursive
-
-callbacks-clean-recursive:
-	@$(MAKE) -C callbacks clean-recursive
+clean-recursive: clean-here
 
 dependencies: $(DEPENDENCY_FILES)
 	$(RM) Makefile.dependencies
@@ -66,13 +61,13 @@ $(OBJECT_FILES): $(CXXFLAGS_configuration)
 $(DEPENDENCY_FILES): $(cpp_includes_to_makefile_dependencies) $(DEPENDENCY_DIRECTORIES)
 
 binary: $(OBJECT_FILES) $(LDFLAGS_configuration)
-	$(CXX) $(LDFLAGS) $(OBJECT_FILES) -lGL -lX11 -lglut -lGLU -o $@
+	$(CXX) $(LDFLAGS) $(OBJECT_FILES) $(algebra_object_files) $(xml_stream_object_files) -lGL -lX11 -lglut -lGLU -o $@
 
 .dependency-files/%.dep: %
 	$(command_cpp_includes_to_makefile) $< > $@
 
 .SECONDEXPANSION:
 $(OBJECT_DIRECTORY)/%.o: $$($$(subst /,_,$$*)_cpp)
-	$(CXX) $(CXXFLAGS) $(algebra_include) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(algebra_include) $(xml_stream_include)	-c $< -o $@
 
 .PHONY: dependencies

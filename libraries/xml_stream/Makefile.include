@@ -1,0 +1,5 @@
+xml_stream_include = \
+	-I$(root)/libraries/xml_stream/include
+
+xml_stream_object_files = \
+	$(root)/libraries/xml_stream/source/xml_stream.o
