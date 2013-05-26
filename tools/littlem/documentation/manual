@@ -1,0 +1,142 @@
+﻿There are four views:
+· Model View (default)
+· Camera View
+· Point View
+· Triangle Point
+
+When a command is not recognized in the camera, point or triangle view it will be passed to the model view.
+This enables switching from one view to every other view although the change view commands are only defined in the model view.
+
+These view can be activated using:
+· Model View  --  SHIFT + M
+· Camera View  --  SHIFT + C
+· Point View  --  SHIFT + P
+· Triangle View  --  SHIFT + T
+
+Model View responsibilities:
+· display property toggles
+· light management
+· loading / saving
+· importing / exporting
+· snapping management
+
+Model View commands:
+· ALT + C  --  toggle culling backfaces
+· SHIFT + C  --  change to camera view
+· ALT + D  --  toggle depth testing
+· ALT + E  --  export model
+· ALT + F  --  toggle front face
+· ALT + I  --  import model
+· ALT + L  --  toggle lighting
+· SHIFT + L  --  load scene
+· L  --  create light
+· SHIFT + M  --  change to model view
+· SHIFT + P  --  change to point view
+· ALT + S  --  toggle snapping
+· SHIFT + S  --  save scene
+· SHIFT + T  --  change to triangle view
+· ENTER  --  toggle light active for selected light
+· ESCAPE  --  quits the program (without any questions and warnings)
+· DELETE  --  delete selected light
+· +  --  increase point size
+· -  --  decrease point size
+· <  --  increase snapping factor by 10
+· >  -- decrease snapping factor by 10
+· /  --  toggle point distance attenuation
+· LEFT  --  move selected light along -x axis
+· RIGHT  --  move selected light along +x axis
+· UP  --  move selected light along +y axis
+· DOWN  --  move selected light along -y axis
+· PAGE_UP  --  move selected light along -z axis
+· PAGE_DOWN  --  move selected light along +z axis
+· F12  --  print point distance attenuation parameters to console
+
+Camera View commands:
+· C  --  create camera
+· SPACE  --  change camera
+· LEFT  --  move selected camera along -x axis (or the viewport camera if non is selected)
+· RIGHT  --  move selected camera along +x axis (or the viewport camera if non is selected)
+· UP  --  move selected camera along +y axis (or the viewport camera if non is selected)
+· DOWN  --  move selected camera along -y axis (or the viewport camera if non is selected)
+· PAGE_UP  --  move selected camera along -z axis (or the viewport camera if non is selected)
+· PAGE_DOWN  --  move selected camera along +z axis (or the viewport camera if non is selected)
+· HOME  --  increase field of view of selected camera (or the viewport camera if non is selected)
+· END  --  decrease field of view of selected camera (or the viewport camera if non is selected)
+· F1  --  moves the viewport camera to (0, 0, 4), orients it along the -z axis and resets the field of view (normalized from view)
+· F2  --  moves the viewport camera to (-4, 0, 0), orients it along the +x axis and resets the field of view (normalized left view)
+· F3  --  moves the viewport camera to (4, 0, 0), orients it along the -x axis and resets the field of view (normalized right view)
+· F4  --  moves the viewport camera to (0, 0, -4), orients it along the +z axis and resets the field of view (normalized back view)
+· F5  --  moves the viewport camera to (0, 4, 0), orients it along the -y axis and resets the field of view (normalized top view)
+· F6  --  moves the viewport camera to (0, -4, 0), orients it along the +y axis and resets the field of view (normalized bottom view)
+
+Point View:
+· SPACE  --  create triangle (awkward in the point view but better usable)
+· TABULATOR  --  every selected point is advanced once (cycling through all points)
+· D  --  duplicate point
+· N  --  create point
+· R  --  rename point (don't use)
+· T  --  select all triangles connected to the selected triangles
+· X  --  enter floating point number as x coordinate (don't use)
+· Y  --  enter floating point number as y coordinate (don't use)
+· Z  --  enter floating point number as z coordinate (don't use)
+· DELETE  --  deletes all selected points (also deletes attached triangles)
+· LEFT  --  move all selected points along the -x axis (using snapping)
+· RIGHT  --  move all selected points along the +x axis (using snapping)
+· UP  --  move all selected points along the +y axis (using snapping)
+· DOWN  --  move all selected points along the -y axis (using snapping)
+· PAGE_UP  --  move all selected points along the +z axis (using snapping)
+· PAGE_DOWN  --  move all selected points along the -z axis (using snapping)
+
+Triangle View commands:
+· I  --  invert selected triangles
+· R  --  rename triangle (don't use)
+· S  --  separate triangle points
+· T  --  select all triangles connected to the selected points
+· U  --  unify triangle points
+· ENTER  --  realign triangle point normals
+· DELETE --  delete triangle (leave the points)
+
+
+Command reference:
+change camera:
+	changes the viewport to the hovered or if non is hovered the selected camera
+create camera:
+	creates a new camera at position (0, 0, 0)
+create light:
+	creates a new inactive light source at position (0, 0, 0)
+create point:
+	creates a point at randomized coordinates in ([-1, 1], [-1, 1], [-1, 1])
+create triangle:
+	creates a triangle with the three selected points (only works with exactly three selected points) each triangle point is singular and normalized along the triangles normal
+culling backfaces:
+	when enabled, triangles which's front face is AWAY from you, are not drawn (see also: front face)
+depth testing:
+	when disabled all triangles are simply drawn to the screen in order of creation, without checking if they are obscured by other triangles
+export model:
+	will write a file named "model.xml" to the working directory containing only the model, no scene description
+front face:
+	describes whether clockwise or counter-clockwise point sequence defines the front side of all triangles (see also: culling backfaces)
+import model:
+	reads the file "model.xml" from the working directory and ADDS it to the scene, leaving all lights, cameras and the model in place
+invert triangle:
+	exchanges two points of the triangle thus changing from clockwise to counter-clockwise or the other way around. Changes the front face of the triangle (see also: front face, culling backfaces)
+light active:
+	when enabled the light is used for lighting the scene
+lighting:
+	when enabled the lights in the scene will be used to shed light on all triangles
+load scene:
+	will clear the current scene (cameras, lights, model) and load a new scene from "scene.xml" (cameras, lights, model)
+point distance attenuation:
+	when enabled points that are further away will be drawn smaller
+realign triangle point normals:
+	for every selected triangle realign associated triangle points' normals to the triangle's normal (attention: watch unified normals)
+rename point:
+	awfully done! Type some text and finish with ENTER. The text is echoed somewhere in the upper left corner as you type. No capital letters recognized yet. All other commands hidden.
+save scene:
+	writes a file "scene.xml" with the scene definition (cameras, lights, model)
+separate triangle points:
+	for every selected point separate the triangle points of all connected and selected triangles (see also: unify triangle points)
+snapping:
+	when enabled the global snapping factor defines the minimal change of coordinates for other operations
+unify triangle points:
+	for every selected point unify the triangle points of all connected and selected triangles (see also: separate triangle points)
