@@ -25,8 +25,9 @@
 #include <stack>
 #include <string>
 
+#include <algebra/vector2f.h>
+
 #include "../callbacks/events.h"
-#include "../math/vector2f.h"
 
 class Color;
 class KeyEventInformation;

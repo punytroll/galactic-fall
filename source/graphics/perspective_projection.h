@@ -20,7 +20,8 @@
 #ifndef GRAPHICS_PERSPECTIVE_PROJECTION_H
 #define GRAPHICS_PERSPECTIVE_PROJECTION_H
 
-#include "../math/matrix4f.h"
+#include <algebra/matrix4f.h>
+
 #include "projection.h"
 
 namespace Graphics

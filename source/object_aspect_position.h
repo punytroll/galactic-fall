@@ -20,8 +20,8 @@
 #ifndef OBJECT_ASPECT_POSITION_H
 #define OBJECT_ASPECT_POSITION_H
 
-#include "math/quaternion.h"
-#include "math/vector3f.h"
+#include <algebra/quaternion.h>
+#include <algebra/vector3f.h>
 
 class ObjectAspectPosition
 {

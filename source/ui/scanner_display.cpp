@@ -17,8 +17,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include <algebra/matrix4f.h>
+
 #include "../graphics/gl.h"
-#include "../math/matrix4f.h"
 #include "../object_aspect_physical.h"
 #include "../object_aspect_position.h"
 #include "../ship.h"

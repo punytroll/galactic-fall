@@ -20,7 +20,7 @@
 #ifndef GRAPHICS_CAMERA_H
 #define GRAPHICS_CAMERA_H
 
-#include "../math/matrix4f.h"
+#include <algebra/matrix4f.h>
 
 namespace Graphics
 {

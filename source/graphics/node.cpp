@@ -21,7 +21,8 @@
 
 #include <algorithm>
 
-#include "../math/matrix4f.h"
+#include <algebra/matrix4f.h>
+
 #include "gl.h"
 #include "node.h"
 #include "scene.h"

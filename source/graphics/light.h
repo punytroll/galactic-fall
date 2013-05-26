@@ -20,7 +20,7 @@
 #ifndef GRAPHICS_LIGHT_H
 #define GRAPHICS_LIGHT_H
 
-#include "../math/vector4f.h"
+#include <algebra/vector4f.h>
 
 namespace Graphics
 {

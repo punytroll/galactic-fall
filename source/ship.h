@@ -20,7 +20,8 @@
 #ifndef SHIP_H
 #define SHIP_H
 
-#include "math/vector3f.h"
+#include <algebra/vector3f.h>
+
 #include "object.h"
 
 class Battery;

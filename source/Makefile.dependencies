@@ -23,6 +23,7 @@ arx_reading_cpp = \
 	$(object_aspect_name_h) \
 	$(object_aspect_object_container_h) \
 	$(object_aspect_position_h) \
+	$(object_aspect_visualization_h) \
 	$(object_factory_h) \
 	$(planet_h) \
 	$(settings_h) \
@@ -75,10 +76,7 @@ buffer_reading_cpp = \
 
 buffer_reading_h = \
 	buffer_reading.h \
-	$(color_h) \
-	$(math_quaternion_h) \
-	$(math_vector2f_h) \
-	$(math_vector3f_h)
+	$(color_h)
 
 callbacks_callbacks_h = \
 	callbacks/callbacks.h \
@@ -127,8 +125,7 @@ color_cpp = \
 	$(color_h)
 
 color_h = \
-	color.h \
-	$(math_vector4f_h)
+	color.h
 
 command_mind_cpp = \
 	command_mind.cpp \
@@ -147,14 +144,11 @@ command_mind_h = \
 commodity_cpp = \
 	commodity.cpp \
 	$(commodity_h) \
-	$(math_vector4f_h) \
 	$(object_aspect_position_h) \
 	$(object_aspect_update_h)
 
 commodity_h = \
 	commodity.h \
-	$(math_axis_angle_h) \
-	$(math_vector3f_h) \
 	$(object_h)
 
 commodity_class_cpp = \
@@ -258,16 +252,14 @@ goals_cpp = \
 
 goals_h = \
 	goals.h \
-	$(goal_h) \
-	$(math_vector3f_h)
+	$(goal_h)
 
 graphics_camera_cpp = \
 	graphics/camera.cpp \
 	$(graphics_camera_h)
 
 graphics_camera_h = \
-	graphics/camera.h \
-	$(math_matrix4f_h)
+	graphics/camera.h
 
 graphics_default_render_target_cpp = \
 	graphics/default_render_target.cpp \
@@ -302,8 +294,7 @@ graphics_light_cpp = \
 	$(graphics_light_h)
 
 graphics_light_h = \
-	graphics/light.h \
-	$(math_vector4f_h)
+	graphics/light.h
 
 graphics_material_cpp = \
 	graphics/material.cpp \
@@ -319,8 +310,7 @@ graphics_mesh_cpp = \
 	$(graphics_mesh_h)
 
 graphics_mesh_h = \
-	graphics/mesh.h \
-	$(math_vector4f_h)
+	graphics/mesh.h
 
 graphics_mesh_manager_cpp = \
 	graphics/mesh_manager.cpp \
@@ -353,8 +343,7 @@ graphics_model_node_cpp = \
 	$(graphics_material_h) \
 	$(graphics_mesh_h) \
 	$(graphics_model_h) \
-	$(graphics_model_node_h) \
-	$(math_matrix4f_h)
+	$(graphics_model_node_h)
 
 graphics_model_node_h = \
 	graphics/model_node.h \
@@ -364,13 +353,10 @@ graphics_node_cpp = \
 	graphics/node.cpp \
 	$(graphics_gl_h) \
 	$(graphics_node_h) \
-	$(graphics_scene_h) \
-	$(math_matrix4f_h)
+	$(graphics_scene_h)
 
 graphics_node_h = \
-	graphics/node.h \
-	$(math_quaternion_h) \
-	$(math_vector3f_h)
+	graphics/node.h
 
 graphics_orthogonal_2d_projection_cpp = \
 	graphics/orthogonal_2d_projection.cpp \
@@ -378,8 +364,7 @@ graphics_orthogonal_2d_projection_cpp = \
 
 graphics_orthogonal_2d_projection_h = \
 	graphics/orthogonal_2d_projection.h \
-	$(graphics_projection_h) \
-	$(math_matrix4f_h)
+	$(graphics_projection_h)
 
 graphics_particle_system_cpp = \
 	graphics/particle_system.cpp \
@@ -398,8 +383,7 @@ graphics_particle_system_cpp = \
 graphics_particle_system_h = \
 	graphics/particle_system.h \
 	$(color_h) \
-	$(graphics_node_h) \
-	$(math_vector3f_h)
+	$(graphics_node_h)
 
 graphics_perspective_projection_cpp = \
 	graphics/perspective_projection.cpp \
@@ -407,16 +391,14 @@ graphics_perspective_projection_cpp = \
 
 graphics_perspective_projection_h = \
 	graphics/perspective_projection.h \
-	$(graphics_projection_h) \
-	$(math_matrix4f_h)
+	$(graphics_projection_h)
 
 graphics_projection_cpp = \
 	graphics/projection.cpp \
 	$(graphics_projection_h)
 
 graphics_projection_h = \
-	graphics/projection.h \
-	$(math_matrix4f_h)
+	graphics/projection.h
 
 graphics_render_target_cpp = \
 	graphics/render_target.cpp \
@@ -438,6 +420,7 @@ graphics_scene_h = \
 
 graphics_texture_cpp = \
 	graphics/texture.cpp \
+	$(graphics_gl_h) \
 	$(graphics_texture_h)
 
 graphics_texture_h = \
@@ -466,6 +449,7 @@ graphics_texture_render_target_h = \
 graphics_view_cpp = \
 	graphics/view.cpp \
 	$(graphics_camera_h) \
+	$(graphics_gl_h) \
 	$(graphics_projection_h) \
 	$(graphics_render_target_h) \
 	$(graphics_scene_h) \
@@ -525,7 +509,6 @@ main_cpp = \
 	$(key_event_information_h) \
 	$(map_knowledge_h) \
 	$(math_h) \
-	$(math_matrix4f_h) \
 	$(message_h) \
 	$(message_dispatcher_h) \
 	$(messages_h) \
@@ -586,51 +569,7 @@ map_knowledge_h = \
 
 math_h = \
 	math.h \
-	$(math_vector2f_h) \
-	$(math_vector3f_h) \
-	$(math_vector4d_h) \
 	$(type_definitions_h)
-
-math_axis_angle_h = \
-	math/axis_angle.h \
-	$(math_details_h)
-
-math_details_h = \
-	math/details.h
-
-math_matrix3f_h = \
-	math/matrix3f.h \
-	$(math_details_h)
-
-math_matrix4f_h = \
-	math/matrix4f.h \
-	$(math_details_h) \
-	$(math_quaternion_h) \
-	$(math_vector3f_h) \
-	$(math_vector4f_h)
-
-math_quaternion_h = \
-	math/quaternion.h \
-	$(math_axis_angle_h) \
-	$(math_details_h)
-
-math_vector2f_h = \
-	math/vector2f.h \
-	$(math_details_h)
-
-math_vector3f_h = \
-	math/vector3f.h \
-	$(math_details_h) \
-	$(math_matrix3f_h) \
-	$(math_quaternion_h)
-
-math_vector4d_h = \
-	math/vector4d.h
-
-math_vector4f_h = \
-	math/vector4f.h \
-	$(math_details_h) \
-	$(math_quaternion_h)
 
 message_cpp = \
 	message.cpp \
@@ -740,9 +679,7 @@ object_aspect_position_cpp = \
 	$(object_aspect_position_h)
 
 object_aspect_position_h = \
-	object_aspect_position.h \
-	$(math_quaternion_h) \
-	$(math_vector3f_h)
+	object_aspect_position.h
 
 object_aspect_update_cpp = \
 	object_aspect_update.cpp \
@@ -847,8 +784,7 @@ settings_cpp = \
 	$(string_cast_h)
 
 settings_h = \
-	settings.h \
-	$(math_vector2f_h)
+	settings.h
 
 ship_cpp = \
 	ship.cpp \
@@ -880,7 +816,6 @@ ship_cpp = \
 
 ship_h = \
 	ship.h \
-	$(math_vector3f_h) \
 	$(object_h)
 
 ship_class_cpp = \
@@ -892,7 +827,6 @@ ship_class_cpp = \
 
 ship_class_h = \
 	ship_class.h \
-	$(math_vector3f_h) \
 	$(type_definitions_h)
 
 shot_cpp = \
@@ -904,7 +838,6 @@ shot_cpp = \
 
 shot_h = \
 	shot.h \
-	$(math_vector3f_h) \
 	$(object_h)
 
 slot_cpp = \
@@ -918,8 +851,6 @@ slot_cpp = \
 
 slot_h = \
 	slot.h \
-	$(math_quaternion_h) \
-	$(math_vector3f_h) \
 	$(referencing_h)
 
 slot_class_cpp = \
@@ -979,7 +910,6 @@ states_cpp = \
 
 states_h = \
 	states.h \
-	$(math_vector3f_h) \
 	$(state_h)
 
 storage_cpp = \
@@ -1146,7 +1076,6 @@ ui_mini_map_display_cpp = \
 	ui/mini_map_display.cpp \
 	$(commodity_h) \
 	$(graphics_gl_h) \
-	$(math_matrix4f_h) \
 	$(object_aspect_position_h) \
 	$(planet_h) \
 	$(ship_h) \
@@ -1243,7 +1172,6 @@ ui_save_game_dialog_h = \
 ui_scanner_display_cpp = \
 	ui/scanner_display.cpp \
 	$(graphics_gl_h) \
-	$(math_matrix4f_h) \
 	$(object_aspect_physical_h) \
 	$(object_aspect_position_h) \
 	$(ship_h) \
@@ -1358,6 +1286,7 @@ ui_trade_center_widget_h = \
 ui_user_interface_cpp = \
 	ui/user_interface.cpp \
 	$(callbacks_callbacks_h) \
+	$(graphics_gl_h) \
 	$(ui_user_interface_h) \
 	$(ui_widget_h)
 
@@ -1389,8 +1318,7 @@ ui_widget_cpp = \
 
 ui_widget_h = \
 	ui/widget.h \
-	$(callbacks_events_h) \
-	$(math_vector2f_h)
+	$(callbacks_events_h)
 
 ui_window_cpp = \
 	ui/window.cpp \
@@ -1448,7 +1376,6 @@ weapon_cpp = \
 	$(game_time_h) \
 	$(globals_h) \
 	$(math_h) \
-	$(math_quaternion_h) \
 	$(object_aspect_accessory_h) \
 	$(object_aspect_object_container_h) \
 	$(object_aspect_position_h) \
@@ -1472,8 +1399,6 @@ weapon_class_cpp = \
 
 weapon_class_h = \
 	weapon_class.h \
-	$(math_quaternion_h) \
-	$(math_vector3f_h) \
 	$(type_definitions_h)
 
 write_to_xml_stream_cpp = \

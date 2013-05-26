@@ -5,6 +5,7 @@ root = ..
 default: all
 
 include $(root)/tools/cpp_includes_to_makefile/Makefile.include
+include $(root)/libraries/algebra/Makefile.include
 include Makefile.dependencies
 
 HEADER_DIRECTORIES := $(patsubst %/,%,$(sort $(dir $(shell find . -name '*.h'))))
@@ -38,6 +39,8 @@ clean-here:
 		echo ""; \
 	fi
 	$(RM) -r $(OBJECT_DIRECTORY)
+	$(RM) $(DEPENDENCY_FILES)
+	$(RM) -r $(DEPENDENCY_DIRECTORY)
 
 clean-recursive: callbacks-clean-recursive clean-here
 
@@ -82,16 +85,16 @@ binary: $(OBJECT_FILES) $(LDFLAGS_configuration)
 	$(command_cpp_includes_to_makefile) $< > $@
 
 .object-files/arx_reading.o: $(arx_reading_cpp)
-	$(CXX) $(CXXFLAGS) `pkg-config --cflags libarxx` -c $< -o $@
+	$(CXX) $(CXXFLAGS) `pkg-config --cflags libarxx` $(algebra_include) -c $< -o $@
 
 .object-files/buffer_reading.o: $(buffer_reading_cpp)
-	$(CXX) $(CXXFLAGS) `pkg-config --cflags libarxx` -c $< -o $@
+	$(CXX) $(CXXFLAGS) `pkg-config --cflags libarxx` $(algebra_include) -c $< -o $@
 
 .object-files/settings.o: $(settings_cpp)
-	$(CXX) $(CXXFLAGS) `pkg-config --cflags libarxx` -c $< -o $@
+	$(CXX) $(CXXFLAGS) `pkg-config --cflags libarxx` $(algebra_include) -c $< -o $@
 
 .SECONDEXPANSION:
 $(OBJECT_DIRECTORY)/%.o: $$($$(subst /,_,$$*)_cpp)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(algebra_include) -c $< -o $@
 
 .PHONY: dependencies

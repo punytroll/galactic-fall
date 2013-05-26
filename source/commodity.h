@@ -20,8 +20,9 @@
 #ifndef COMMODITY_H
 #define COMMODITY_H
 
-#include "math/axis_angle.h"
-#include "math/vector3f.h"
+#include <algebra/axis_angle.h>
+#include <algebra/vector3f.h>
+
 #include "object.h"
 
 class Commodity : public Object

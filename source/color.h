@@ -20,7 +20,7 @@
 #ifndef COLOR_H
 #define COLOR_H
 
-#include "math/vector4f.h"
+#include <algebra/vector4f.h>
 
 class Color
 {

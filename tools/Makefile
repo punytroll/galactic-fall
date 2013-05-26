@@ -8,6 +8,8 @@ all-here:
 
 all-recursive: all-here analyze_littlem-all-recursive code_generator-all-recursive list_glx_fb_configurations-all-recursive rasterizer-all-recursive raw_to_littlem-all-recursive view_texture-all-recursive xml_stream-all-recursive xml_to_data-all-recursive
 
+check: 
+
 clean: clean-recursive
 
 clean-here: 
@@ -62,4 +64,4 @@ xml_stream-all-recursive:
 xml_to_data-all-recursive:
 	@$(MAKE) -C xml_to_data all-recursive
 
-.PHONY: all all-here all-recursive analyze_littlem analyze_littlem-all-recursive clean clean-here clean-recursive code_generator code_generator-all-recursive default list_glx_fb_configurations list_glx_fb_configurations-all-recursive rasterizer rasterizer-all-recursive raw_to_littlem raw_to_littlem-all-recursive view_texture view_texture-all-recursive xml_stream xml_stream-all-recursive xml_to_data xml_to_data-all-recursive
+.PHONY: all all-here all-recursive analyze_littlem analyze_littlem-all-recursive check clean clean-here clean-recursive code_generator code_generator-all-recursive default list_glx_fb_configurations list_glx_fb_configurations-all-recursive rasterizer rasterizer-all-recursive raw_to_littlem raw_to_littlem-all-recursive view_texture view_texture-all-recursive xml_stream xml_stream-all-recursive xml_to_data xml_to_data-all-recursive

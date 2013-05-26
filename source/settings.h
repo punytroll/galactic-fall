@@ -20,7 +20,7 @@
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
-#include "math/vector2f.h"
+#include <algebra/vector2f.h>
 
 namespace Arxx
 {

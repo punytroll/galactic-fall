@@ -23,7 +23,7 @@
 #include <vector>
 #include <string>
 
-#include "../math/vector4f.h"
+#include <algebra/vector4f.h>
 
 namespace Graphics
 {
