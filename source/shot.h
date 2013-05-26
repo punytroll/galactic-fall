@@ -20,7 +20,8 @@
 #ifndef SHOT_H
 #define SHOT_H
 
-#include "math/vector3f.h"
+#include <algebra/vector3f.h>
+
 #include "object.h"
 
 class Shot : public Object

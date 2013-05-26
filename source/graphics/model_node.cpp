@@ -17,8 +17,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include <algebra/matrix4f.h>
+
 #include "../color.h"
-#include "../math/matrix4f.h"
 #include "gl.h"
 #include "material.h"
 #include "mesh.h"

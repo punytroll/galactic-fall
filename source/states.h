@@ -20,7 +20,8 @@
 #ifndef STATES_H
 #define STATES_H
 
-#include "math/vector3f.h"
+#include <algebra/vector3f.h>
+
 #include "state.h"
 
 class StateMachineMind;

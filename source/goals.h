@@ -20,8 +20,9 @@
 #ifndef GOALS_H
 #define GOALS_H
 
+#include <algebra/vector3f.h>
+
 #include "goal.h"
-#include "math/vector3f.h"
 
 class GoalFlyInDirection;
 class Planet;

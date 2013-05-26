@@ -21,11 +21,12 @@
 
 #include <sstream>
 
+#include <algebra/quaternion.h>
+
 #include "battery.h"
 #include "game_time.h"
 #include "globals.h"
 #include "math.h"
-#include "math/quaternion.h"
 #include "object_aspect_accessory.h"
 #include "object_aspect_object_container.h"
 #include "object_aspect_position.h"

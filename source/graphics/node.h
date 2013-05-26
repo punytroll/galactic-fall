@@ -24,8 +24,8 @@
 
 #include <vector>
 
-#include "../math/quaternion.h"
-#include "../math/vector3f.h"
+#include <algebra/quaternion.h>
+#include <algebra/vector3f.h>
 
 namespace Graphics
 {

@@ -23,7 +23,8 @@
 #include <map>
 #include <string>
 
-#include "math/vector3f.h"
+#include <algebra/vector3f.h>
+
 #include "type_definitions.h"
 
 class Slot;

@@ -1,0 +1,2 @@
+algebra_include = \
+	-I$(root)/libraries/algebra/include

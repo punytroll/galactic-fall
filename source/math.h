@@ -23,9 +23,10 @@
 #include <assert.h>
 #include <stdlib.h>
 
-#include "math/vector2f.h"
-#include "math/vector3f.h"
-#include "math/vector4d.h"
+#include <algebra/vector2f.h>
+#include <algebra/vector3f.h>
+#include <algebra/vector4d.h>
+
 #include "type_definitions.h"
 
 const float g_Epsilon(0.01f);

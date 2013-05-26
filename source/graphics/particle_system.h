@@ -24,8 +24,9 @@
 #include <string>
 #include <vector>
 
+#include <algebra/vector3f.h>
+
 #include "../color.h"
-#include "../math/vector3f.h"
 #include "node.h"
 
 namespace Graphics
