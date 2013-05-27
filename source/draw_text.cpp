@@ -176,7 +176,7 @@ void InitializeFonts(void)
 	const float CharacterHeight(12.0f / 64.0f);
 	const unsigned int CharactersPerLine(128 / 6);
 	
-	g_CharacterCallLists = glGenLists(CHARACTERS);
+	g_CharacterCallLists = GLGenLists(CHARACTERS);
 	for(unsigned int CharacterIndex = 0; CharacterIndex < CHARACTERS; ++CharacterIndex)
 	{
 		GLNewList(g_CharacterCallLists + CharacterIndex, GL_COMPILE);
@@ -191,14 +191,14 @@ void InitializeFonts(void)
 		GLVertex2f(0.0f, 0.0f);
 		GLEnd();
 		GLTranslatef(6.0f, 0.0f, 0.0f);
-		glEndList();
+		GLEndList();
 	}
 }
 
 void DeinitializeFonts(void)
 {
-	glDeleteTextures(1, &g_FontTexture);
-	glDeleteLists(g_CharacterCallLists, CHARACTERS);
+	GLDeleteTextures(1, &g_FontTexture);
+	GLDeleteLists(g_CharacterCallLists, CHARACTERS);
 }
 
 void DrawText(const std::string & String)
@@ -206,7 +206,7 @@ void DrawText(const std::string & String)
 	GLPushAttrib(GL_ENABLE_BIT);
 	GLEnable(GL_TEXTURE_2D);
 	GLBindTexture(GL_TEXTURE_2D, g_FontTexture);
-	glListBase(g_CharacterCallLists - CHARACTEROFFSET);
-	glCallLists(String.length(), GL_UNSIGNED_BYTE, String.c_str());
+	GLListBase(g_CharacterCallLists - CHARACTEROFFSET);
+	GLCallLists(String.length(), GL_UNSIGNED_BYTE, String.c_str());
 	GLPopAttrib();
 }
