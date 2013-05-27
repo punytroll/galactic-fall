@@ -17,6 +17,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#ifndef GRAPHICS_GL_H
+#define GRAPHICS_GL_H
+
 #include <assert.h>
 #include <GL/gl.h>
 
@@ -53,6 +56,10 @@ typedef void (* glBlendFuncFunction)(GLenum sfactor, GLenum dfactor);
 extern glBlendFuncFunction __glBlendFunc;
 #define GLBlendFunc(sfactor, dfactor) { assert(__glBlendFunc != 0); __glBlendFunc(sfactor, dfactor); CheckGLError; }
 
+typedef void (* glCallListsFunction)(GLsizei n, GLenum type, const GLvoid * lists);
+extern glCallListsFunction __glCallLists;
+#define GLCallLists(n, type, lists) { assert(__glCallLists != 0); __glCallLists(n, type, lists); CheckGLError; }
+
 typedef void (* glClearFunction)(GLbitfield mask);
 extern glClearFunction __glClear;
 #define GLClear(mask) { assert(__glClear != 0); __glClear(mask); CheckGLError; }
@@ -77,9 +84,17 @@ typedef void (* glDeleteFramebuffersFunction)(GLsizei n, GLuint * framebuffers);
 extern glDeleteFramebuffersFunction __glDeleteFramebuffers;
 #define GLDeleteFramebuffers(n, framebuffers) { assert(__glDeleteFramebuffers != 0); __glDeleteFramebuffers(n, framebuffers); CheckGLError; }
 
+typedef void (* glDeleteListsFunction)(GLuint list, GLsizei range);;
+extern glDeleteListsFunction __glDeleteLists;
+#define GLDeleteLists(list, range) { assert(__glDeleteLists != 0); __glDeleteLists(list, range); CheckGLError; }
+
 typedef void (* glDeleteRenderbuffersFunction)(GLsizei n, GLuint * renderbuffers);
 extern glDeleteRenderbuffersFunction __glDeleteRenderbuffers;
 #define GLDeleteRenderbuffers(n, renderbuffers) { assert(__glDeleteRenderbuffers != 0); __glDeleteRenderbuffers(n, renderbuffers); CheckGLError; }
+
+typedef void (* glDeleteTexturesFunction)(GLsizei n, const GLuint * textures);
+extern glDeleteTexturesFunction __glDeleteTextures;
+#define GLDeleteTextures(n, textures) { assert(__glDeleteTextures != 0); __glDeleteTextures(n, textures); CheckGLError; }
 
 typedef void (* glDisableFunction)(GLenum cap);
 extern glDisableFunction __glDisable;
@@ -93,6 +108,10 @@ typedef void (* glEndFunction)(void);
 extern glEndFunction __glEnd;
 #define GLEnd() { assert(__glEnd != 0); __glEnd(); CheckGLError; }
 
+typedef void (* glEndListFunction)(void);
+extern glEndListFunction __glEndList;
+#define GLEndList() { assert(__glEndList != 0); __glEndList(); CheckGLError; }
+
 typedef void (* glFramebufferRenderbufferFunction)(GLenum target, GLenum attachment, GLenum renderbuffertarget, GLuint renderbuffer);
 extern glFramebufferRenderbufferFunction __glFramebufferRenderbuffer;
 #define GLFramebufferRenderbuffer(target, attachment, renderbuffertarget, renderbuffer) { assert(__glFramebufferRenderbuffer != 0); __glFramebufferRenderbuffer(target, attachment, renderbuffertarget, renderbuffer); CheckGLError; }
@@ -104,6 +123,23 @@ extern glFramebufferTextureFunction __glFramebufferTexture;
 typedef void (* glGenFramebuffersFunction)(GLsizei n, GLuint * ids);
 extern glGenFramebuffersFunction __glGenFramebuffers;
 #define GLGenFramebuffers(n, ids) { assert(__glGenFramebuffers != 0); __glGenFramebuffers(n, ids); CheckGLError; }
+
+typedef GLuint (* glGenListsFunction)(GLsizei range);
+extern glGenListsFunction __glGenLists;
+#ifdef NDEBUG
+#define GLGenLists(range) __glGenLists(range); CheckGLError;
+#else
+inline GLuint GLGenLists(GLsizei range)
+{
+	GLuint Result;
+	
+	assert(__glGenLists != 0);
+	Result = __glGenLists(range);
+	CheckGLError;
+	
+	return Result;
+}
+#endif
 
 typedef void (* glGenRenderbuffersFunction)(GLsizei n, GLuint * renderbuffers);
 extern glGenRenderbuffersFunction __glGenRenderbuffers;
@@ -120,6 +156,10 @@ extern glGetIntegervFunction __glGetIntegerv;
 typedef void (* glLightModelfvFunction)(GLenum pname, const GLfloat * params);
 extern glLightModelfvFunction __glLightModelfv;
 #define GLLightModelfv(pname, params) { assert(__glLightModelfv != 0); __glLightModelfv(pname, params); CheckGLError; }
+
+typedef void (* glListBaseFunction)(GLuint base);
+extern glListBaseFunction __glListBase;
+#define GLListBase(base) { assert(__glListBase != 0); __glListBase(base); CheckGLError; }
 
 typedef void (* glLoadIdentityFunction)(void);
 extern glLoadIdentityFunction __glLoadIdentity;
@@ -232,3 +272,5 @@ extern glVertex3fvFunction __glVertex3fv;
 typedef void (* glViewportFunction)(GLint x, GLint y, GLsizei width, GLsizei height);
 extern glViewportFunction __glViewport;
 #define GLViewport(x, y, width, height) { assert(__glViewport != 0); __glViewport(x, y, width, height); CheckGLError; }
+
+#endif
