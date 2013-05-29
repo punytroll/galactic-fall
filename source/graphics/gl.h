@@ -153,6 +153,23 @@ typedef void (* glGetIntegervFunction)(GLenum pname, GLint * params);
 extern glGetIntegervFunction __glGetIntegerv;
 #define GLGetIntegerv(pname, params) { assert(__glGetIntegerv != 0); __glGetIntegerv(pname, params); CheckGLError; }
 
+typedef const GLubyte * (* glGetStringFunction)(GLenum name);
+extern glGetStringFunction __glGetString;
+#ifdef NDEBUG
+#define GLGetString(name) __glGetString(name); CheckGLError;
+#else
+inline const GLubyte * GLGetString(GLenum name)
+{
+	const GLubyte * Result;
+	
+	assert(__glGetString != 0);
+	Result = __glGetString(name);
+	CheckGLError;
+	
+	return Result;
+}
+#endif
+
 typedef void (* glLightModelfvFunction)(GLenum pname, const GLfloat * params);
 extern glLightModelfvFunction __glLightModelfv;
 #define GLLightModelfv(pname, params) { assert(__glLightModelfv != 0); __glLightModelfv(pname, params); CheckGLError; }

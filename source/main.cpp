@@ -3134,6 +3134,7 @@ void CreateWindow(void)
 	{
 		GLX_CONTEXT_MAJOR_VERSION_ARB, 3,
 		GLX_CONTEXT_MINOR_VERSION_ARB, 0,
+// 		GLX_CONTEXT_FLAGS_ARB, GLX_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB,
 		None
 	};
 	
@@ -3184,6 +3185,7 @@ void InitializeOpenGL(void)
 	LoadOpenGLFunction(glGenRenderbuffers);
 	LoadOpenGLFunction(glGenTextures);
 	LoadOpenGLFunction(glGetIntegerv);
+	LoadOpenGLFunction(glGetString);
 	LoadOpenGLFunction(glLightModelfv);
 	LoadOpenGLFunction(glListBase);
 	LoadOpenGLFunction(glLoadIdentity);
@@ -3215,9 +3217,12 @@ void InitializeOpenGL(void)
 	LoadOpenGLFunction(glVertex3fv);
 	LoadOpenGLFunction(glViewport);
 	
-	ON_DEBUG(std::cout << "Initializing font." << std::endl);
-	InitializeFonts();
 	ON_DEBUG(std::cout << "OpenGL capabilities:" << std::endl);
+	
+	const unsigned char * ShadingLanguageVersion(0);
+	
+	ShadingLanguageVersion = GLGetString(GL_SHADING_LANGUAGE_VERSION);
+	ON_DEBUG(std::cout << "  Shading Language Version: " << ShadingLanguageVersion << std::endl);
 	
 	int MaximalNumberOfLights(0);
 	
@@ -3239,6 +3244,8 @@ void InitializeOpenGL(void)
 	GLGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &MaximalNumberOfVertexAtributes);
 	ON_DEBUG(std::cout << "  Maximal number of vertex attributes: " << MaximalNumberOfVertexAtributes << std::endl);
 	
+	ON_DEBUG(std::cout << "Initializing font." << std::endl);
+	InitializeFonts();
 	GLEnable(GL_LIGHTING);
 	GLEnable(GL_CULL_FACE);
 	GLEnable(GL_DEPTH_TEST);

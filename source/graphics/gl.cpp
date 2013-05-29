@@ -46,6 +46,7 @@ glGenListsFunction __glGenLists(0);
 glGenRenderbuffersFunction __glGenRenderbuffers(0);
 glGenTexturesFunction __glGenTextures(0);
 glGetIntegervFunction __glGetIntegerv(0);
+glGetStringFunction __glGetString(0);
 glLightModelfvFunction __glLightModelfv(0);
 glListBaseFunction __glListBase(0);
 glLoadIdentityFunction __glLoadIdentity(0);
