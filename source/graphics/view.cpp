@@ -19,6 +19,7 @@
 
 #include <assert.h>
 
+#include "../color.h"
 #include "camera.h"
 #include "gl.h"
 #include "projection.h"
@@ -28,6 +29,7 @@
 
 Graphics::View::View(void) :
 	_Camera(new Graphics::Camera()),
+	_ClearColor(0),
 	_Engine(0),
 	_RenderTarget(0),
 	_Scene(0)
@@ -39,6 +41,8 @@ Graphics::View::~View(void)
 	assert(_Camera != 0);
 	delete _Camera;
 	_Camera = 0;
+	delete _ClearColor;
+	_ClearColor = 0;
 	assert(_Engine == 0);
 	assert(_RenderTarget == 0);
 	assert(_Scene == 0);
@@ -51,6 +55,10 @@ void Graphics::View::Render(void)
 	{
 		_RenderTarget->Activate();
 	}
+	if(_ClearColor != 0)
+	{
+		GLClearColor(_ClearColor->GetColor()[0], _ClearColor->GetColor()[1], _ClearColor->GetColor()[2], _ClearColor->GetColor()[3]);
+	}
 	assert(_Camera != 0);
 	assert(_Camera->GetProjection() != 0);
 	GLMatrixMode(GL_PROJECTION);
@@ -61,6 +69,12 @@ void Graphics::View::Render(void)
 	{
 		_Scene->Render();
 	}
+}
+
+void Graphics::View::SetClearColor(const Color & ClearColor)
+{
+	delete _ClearColor;
+	_ClearColor = new Color(ClearColor);
 }
 
 void Graphics::View::_SetEngine(Graphics::Engine * Engine)
