@@ -1458,7 +1458,6 @@ void PrerenderViews(void)
 	{
 		Graphics::View * PrerenderedView(*PrerenderedViewIterator);
 		
-		GLClearColor(1.0f, 1.0f, 1.0f, 0.0f);
 		PrerenderedView->Render();
 	}
 }
@@ -1519,7 +1518,6 @@ void GameFrame(void)
 	double GraphicsTimeBegin(RealTime::Get());
 	
 	PrerenderViews();
-	GLClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	DisplayMainView();
 	g_UIView->Render();
 	RealTime::Invalidate();
@@ -3674,6 +3672,7 @@ int main(int argc, char ** argv)
 	g_UIProjection->SetLeft(0.0f);
 	g_UIProjection->SetTop(0.0f);
 	g_UIView = new Graphics::View();
+	g_UIView->SetClearColor(Color(0.0f, 0.0f, 0.0f, 1.0f));
 	assert(g_UIView->GetCamera() != 0);
 	g_UIView->GetCamera()->SetProjection(g_UIProjection);
 	
@@ -3705,6 +3704,7 @@ int main(int argc, char ** argv)
 	g_MainProjection->SetNearClippingPlane(1.0f);
 	g_MainProjection->SetFarClippingPlane(1000.0f);
 	g_MainView = new Graphics::View();
+	g_MainView->SetClearColor(Color(0.0f, 0.0f, 0.0f, 1.0f));
 	assert(g_MainView->GetCamera() != 0);
 	g_MainView->GetCamera()->SetProjection(g_MainProjection);
 	
