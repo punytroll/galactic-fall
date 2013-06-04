@@ -3008,7 +3008,11 @@ void CreateWindow(void)
 	int ErrorBase(0);
 	int EventBase(0);
 	
-	if(glXQueryExtension(g_Display, &ErrorBase, &EventBase) == false)
+	if(glXQueryExtension(g_Display, &ErrorBase, &EventBase) == true)
+	{
+		ON_DEBUG(std::cout << "  The GLX extension is available." << std::endl);
+	}
+	else
 	{
 		std::cerr << "The GLX extension is not available." << std::endl;
 		exit(1);
@@ -3036,7 +3040,93 @@ void CreateWindow(void)
 	
 	int ScreenNumber(DefaultScreen(g_Display));
 	
-	ON_DEBUG(std::cout << "Getting the GLX extensions." << std::endl);
+	ON_DEBUG(std::cout << "Getting the GLX server properties." << std::endl);
+	
+	const char * GLXServerVendor(glXQueryServerString(g_Display, ScreenNumber, GLX_VENDOR));
+	
+	if(GLXServerVendor != 0)
+	{
+		ON_DEBUG(std::cout << "  GLX Server Vendor: \"" << GLXServerVendor << "\"" << std::endl);
+	}
+	else
+	{
+		std::cerr << "The GLX server vendor string is invalid." << std::endl;
+		exit(1);
+	}
+	
+	const char * GLXServerVersion(glXQueryServerString(g_Display, ScreenNumber, GLX_VERSION));
+	
+	if(GLXServerVersion != 0)
+	{
+		ON_DEBUG(std::cout << "  GLX Server Version: \"" << GLXServerVersion << "\"" << std::endl);
+	}
+	else
+	{
+		std::cerr << "The GLX server version string is invalid." << std::endl;
+		exit(1);
+	}
+	
+	const char * GLXServerExtensionsString(glXQueryServerString(g_Display, ScreenNumber, GLX_EXTENSIONS));
+	
+	if(GLXServerExtensionsString != 0)
+	{
+		std::vector< std::string > GLXServerExtensions(SplitString(GLXServerExtensionsString, ' '));
+		
+		ON_DEBUG(std::cout << "  GLX server extensions:" << std::endl);
+		for(std::vector< std::string >::iterator Iterator = GLXServerExtensions.begin(); Iterator != GLXServerExtensions.end(); ++Iterator)
+		{
+			ON_DEBUG(std::cout << "    \"" << *Iterator << '"' << std::endl);
+		}
+	}
+	else
+	{
+		std::cerr << "The GLX server extensions string is invalid." << std::endl;
+		exit(1);
+	}
+	ON_DEBUG(std::cout << "Getting the GLX client properties." << std::endl);
+	
+	const char * GLXClientVendor(glXGetClientString(g_Display, GLX_VENDOR));
+	
+	if(GLXClientVendor != 0)
+	{
+		ON_DEBUG(std::cout << "  GLX Client Vendor: \"" << GLXClientVendor << "\"" << std::endl);
+	}
+	else
+	{
+		std::cerr << "The GLX client vendor string is invalid." << std::endl;
+		exit(1);
+	}
+	
+	const char * GLXClientVersion(glXGetClientString(g_Display, GLX_VERSION));
+	
+	if(GLXClientVersion != 0)
+	{
+		ON_DEBUG(std::cout << "  GLX Client Version: \"" << GLXClientVersion << "\"" << std::endl);
+	}
+	else
+	{
+		std::cerr << "The GLX client version string is invalid." << std::endl;
+		exit(1);
+	}
+	
+	const char * GLXClientExtensionsString(glXGetClientString(g_Display, GLX_EXTENSIONS));
+	
+	if(GLXClientExtensionsString != 0)
+	{
+		std::vector< std::string > GLXClientExtensions(SplitString(GLXClientExtensionsString, ' '));
+		
+		ON_DEBUG(std::cout << "  GLX client extensions:" << std::endl);
+		for(std::vector< std::string >::iterator Iterator = GLXClientExtensions.begin(); Iterator != GLXClientExtensions.end(); ++Iterator)
+		{
+			ON_DEBUG(std::cout << "    \"" << *Iterator << '"' << std::endl);
+		}
+	}
+	else
+	{
+		std::cerr << "The GLX client extensions string is invalid." << std::endl;
+		exit(1);
+	}
+	ON_DEBUG(std::cout << "Getting the GLX connection extensions." << std::endl);
 	
 	const char * GLXExtensionsString(glXQueryExtensionsString(g_Display, ScreenNumber));
 	std::vector< std::string > ExtensionStrings(SplitString(GLXExtensionsString, ' '));
@@ -3052,7 +3142,7 @@ void CreateWindow(void)
 	}
 	if(GLX_ARB_create_context_Available == false)
 	{
-		std::cerr << "Your GLX implementation does not support the required extension GLX_ARB_create_context." << std::endl;
+		std::cerr << "Your GLX connection does not support the required extension GLX_ARB_create_context." << std::endl;
 		exit(1);
 	}
 	
