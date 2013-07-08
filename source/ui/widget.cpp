@@ -71,9 +71,9 @@ void UI::Widget::Draw(void) const
 		GLColor4fv(Color->GetColor().m_V.m_A);
 		GLBegin(GL_QUADS);
 		GLVertex2f(0.0f, 0.0f);
-		GLVertex2f(0.0f, m_Size.m_V.m_A[1]);
-		GLVertex2f(m_Size.m_V.m_A[0], m_Size.m_V.m_A[1]);
-		GLVertex2f(m_Size.m_V.m_A[0], 0.0f);
+		GLVertex2f(0.0f, m_Size[1]);
+		GLVertex2f(m_Size[0], m_Size[1]);
+		GLVertex2f(m_Size[0], 0.0f);
 		GLEnd();
 	}
 	if(m_SubWidgets.empty() == false)
@@ -86,7 +86,7 @@ void UI::Widget::Draw(void) const
 			{
 				GLPushMatrix();
 				PushClippingRectangle(SubWidget->GetPosition(), SubWidget->GetSize());
-				GLTranslatef(SubWidget->m_Position.m_V.m_A[0], SubWidget->m_Position.m_V.m_A[1], 0.0f);
+				GLTranslatef(SubWidget->m_Position[0], SubWidget->m_Position[1], 0.0f);
 				DrawClippingRectangle();
 				SubWidget->Draw();
 				PopClippingRectangle();
@@ -295,9 +295,9 @@ bool UI::Widget::MouseButton(int Button, int State, float X, float Y)
 		const Vector2f & SubWidgetPosition((*SubWidgetIterator)->GetPosition());
 		const Vector2f & SubWidgetSize((*SubWidgetIterator)->GetSize());
 		
-		if(((*SubWidgetIterator)->IsVisible() == true) && ((*SubWidgetIterator)->GetEnabled() == true) && (X >= SubWidgetPosition.m_V.m_A[0]) && (X < SubWidgetPosition.m_V.m_A[0] + SubWidgetSize.m_V.m_A[0]) && (Y >= SubWidgetPosition.m_V.m_A[1]) && (Y < SubWidgetPosition.m_V.m_A[1] + SubWidgetSize.m_V.m_A[1]))
+		if(((*SubWidgetIterator)->IsVisible() == true) && ((*SubWidgetIterator)->GetEnabled() == true) && (X >= SubWidgetPosition[0]) && (X < SubWidgetPosition[0] + SubWidgetSize[0]) && (Y >= SubWidgetPosition[1]) && (Y < SubWidgetPosition[1] + SubWidgetSize[1]))
 		{
-			if((*SubWidgetIterator)->MouseButton(Button, State, X - SubWidgetPosition.m_V.m_A[0], Y - SubWidgetPosition.m_V.m_A[1]) == true)
+			if((*SubWidgetIterator)->MouseButton(Button, State, X - SubWidgetPosition[0], Y - SubWidgetPosition[1]) == true)
 			{
 				return true;
 			}
@@ -327,7 +327,7 @@ void UI::Widget::MouseMoved(float X, float Y)
 		const Vector2f & LeftTopCorner((*SubWidgetIterator)->GetPosition());
 		Vector2f RightBottomCorner(LeftTopCorner + (*SubWidgetIterator)->GetSize());
 		
-		if(((*SubWidgetIterator)->IsVisible() == true) && ((*SubWidgetIterator)->GetEnabled() == true) && (X >= LeftTopCorner.m_V.m_A[0]) && (X < RightBottomCorner.m_V.m_A[0]) && (Y >= LeftTopCorner.m_V.m_A[1]) && (Y < RightBottomCorner.m_V.m_A[1]))
+		if(((*SubWidgetIterator)->IsVisible() == true) && ((*SubWidgetIterator)->GetEnabled() == true) && (X >= LeftTopCorner[0]) && (X < RightBottomCorner[0]) && (Y >= LeftTopCorner[1]) && (Y < RightBottomCorner[1]))
 		{
 			// test whether the new hover widget equals the old
 			if(m_HoverWidget != *SubWidgetIterator)
@@ -342,7 +342,7 @@ void UI::Widget::MouseMoved(float X, float Y)
 				// inform the new hover widget about the entering of the mouse cursor
 				m_HoverWidget->MouseEnter();
 			}
-			(*SubWidgetIterator)->MouseMoved(X - LeftTopCorner.m_V.m_A[0], Y - LeftTopCorner.m_V.m_A[1]);
+			(*SubWidgetIterator)->MouseMoved(X - LeftTopCorner[0], Y - LeftTopCorner[1]);
 			
 			break;
 		}

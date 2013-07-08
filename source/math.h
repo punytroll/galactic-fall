@@ -59,9 +59,9 @@ inline float NormalizedRadians(float Radians)
 
 inline float GetRadians(const Vector2f & Vector)
 {
-	float Radians(acosf(Vector.m_V.m_A[0]));
+	float Radians(acosf(Vector[0]));
 	
-	if(Vector.m_V.m_A[1] >= 0)
+	if(Vector[1] >= 0)
 	{
 		return Radians;
 	}

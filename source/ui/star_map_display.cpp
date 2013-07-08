@@ -56,7 +56,7 @@ void UI::StarMapDisplay::Draw(void) const
 	
 	GLPushAttrib(GL_ENABLE_BIT);
 	GLPushMatrix();
-	GLTranslatef(Middle.m_V.m_A[0], Middle.m_V.m_A[1], 0.0f);
+	GLTranslatef(Middle[0], Middle[1], 0.0f);
 	GLScalef(1.0f, -1.0f, 1.0f);
 	
 	const std::set< System * > & UnexploredSystems(m_Character->GetMapKnowledge()->GetUnexploredSystems());
@@ -67,7 +67,7 @@ void UI::StarMapDisplay::Draw(void) const
 		
 		Position *= m_Scale;
 		GLPushMatrix();
-		GLTranslatef(Position.m_V.m_A[0], Position.m_V.m_A[1], 0.0f);
+		GLTranslatef(Position[0], Position[1], 0.0f);
 		if(*UnexploredSystemIterator == m_SelectedSystem)
 		{
 			GLColor3f(0.0f, 1.0f, 0.0f);
@@ -105,7 +105,7 @@ void UI::StarMapDisplay::Draw(void) const
 		
 		Position *= m_Scale;
 		GLPushMatrix();
-		GLTranslatef(Position.m_V.m_A[0], Position.m_V.m_A[1], 0.0f);
+		GLTranslatef(Position[0], Position[1], 0.0f);
 		
 		const std::list< System * > & LinkedSystems((*ExploredSystemIterator)->GetLinkedSystems());
 		
@@ -180,8 +180,8 @@ bool UI::StarMapDisplay::OnMouseButton(int Button, int State, float X, float Y)
 	}
 	else if((Button == 1 /* LEFT */) && (State == EV_UP))
 	{
-		X -= GetSize().m_V.m_A[0] / 2;
-		Y -= GetSize().m_V.m_A[1] / 2;
+		X -= GetSize()[0] / 2;
+		Y -= GetSize()[1] / 2;
 		
 		const std::map< std::string, System * > & Systems(g_Galaxy->GetSystems());
 		
@@ -190,8 +190,8 @@ bool UI::StarMapDisplay::OnMouseButton(int Button, int State, float X, float Y)
 			Vector3f Position(SystemIterator->second->GetAspectPosition()->GetPosition() - m_System->GetAspectPosition()->GetPosition());
 			
 			Position *= m_Scale;
-			Position.m_V.m_A[0] -= X - m_OffsetPosition[0];
-			Position.m_V.m_A[1] += Y - m_OffsetPosition[1];
+			Position[0] -= X - m_OffsetPosition[0];
+			Position[1] += Y - m_OffsetPosition[1];
 			if(Position.SquaredLength() < 40.0f)
 			{
 				m_SelectedSystem = SystemIterator->second;

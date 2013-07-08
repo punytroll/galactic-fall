@@ -54,7 +54,7 @@ void UI::UserInterface::Draw(void) const
 	{
 		GLPushMatrix();
 		UI::Widget::PushClippingRectangle(m_RootWidget->GetPosition(), m_RootWidget->GetSize());
-		GLTranslatef(m_RootWidget->GetPosition().m_V.m_A[0], m_RootWidget->GetPosition().m_V.m_A[1], 0.0f);
+		GLTranslatef(m_RootWidget->GetPosition()[0], m_RootWidget->GetPosition()[1], 0.0f);
 		UI::Widget::DrawClippingRectangle();
 		m_RootWidget->Draw();
 		UI::Widget::PopClippingRectangle();
@@ -111,9 +111,9 @@ bool UI::UserInterface::MouseButton(int Button, int State, float X, float Y)
 			const Vector2f & LeftTopCorner(m_RootWidget->GetPosition());
 			Vector2f RightBottomCorner(LeftTopCorner + m_RootWidget->GetSize());
 			
-			if((X >= LeftTopCorner.m_V.m_A[0]) && (X < RightBottomCorner.m_V.m_A[0]) && (Y >= LeftTopCorner.m_V.m_A[1]) && (Y < RightBottomCorner.m_V.m_A[1]))
+			if((X >= LeftTopCorner[0]) && (X < RightBottomCorner[0]) && (Y >= LeftTopCorner[1]) && (Y < RightBottomCorner[1]))
 			{
-				return m_RootWidget->MouseButton(Button, State, X - LeftTopCorner.m_V.m_A[0], Y - LeftTopCorner.m_V.m_A[1]);
+				return m_RootWidget->MouseButton(Button, State, X - LeftTopCorner[0], Y - LeftTopCorner[1]);
 			}
 		}
 	}
@@ -123,7 +123,7 @@ bool UI::UserInterface::MouseButton(int Button, int State, float X, float Y)
 		{
 			Vector2f TopLeftCorner(m_CaptureWidget->GetGlobalPosition());
 			
-			return m_CaptureWidget->MouseButton(Button, State, X - TopLeftCorner.m_V.m_A[0], Y - TopLeftCorner.m_V.m_A[1]);
+			return m_CaptureWidget->MouseButton(Button, State, X - TopLeftCorner[0], Y - TopLeftCorner[1]);
 		}
 	}
 	
@@ -151,7 +151,7 @@ void UI::UserInterface::MouseMoved(float X, float Y)
 			const Vector2f & LeftTopCorner(m_RootWidget->GetPosition());
 			Vector2f RightBottomCorner(LeftTopCorner + m_RootWidget->GetSize());
 			
-			if((X >= LeftTopCorner.m_V.m_A[0]) && (X < RightBottomCorner.m_V.m_A[0]) && (Y >= LeftTopCorner.m_V.m_A[1]) && (Y < RightBottomCorner.m_V.m_A[1]))
+			if((X >= LeftTopCorner[0]) && (X < RightBottomCorner[0]) && (Y >= LeftTopCorner[1]) && (Y < RightBottomCorner[1]))
 			{
 				if(m_HoverWidget != m_RootWidget)
 				{
@@ -176,7 +176,7 @@ void UI::UserInterface::MouseMoved(float X, float Y)
 		{
 			Vector2f TopLeftCorner(m_CaptureWidget->GetGlobalPosition());
 			
-			m_CaptureWidget->MouseMoved(X - TopLeftCorner.m_V.m_A[0], Y - TopLeftCorner.m_V.m_A[1]);
+			m_CaptureWidget->MouseMoved(X - TopLeftCorner[0], Y - TopLeftCorner[1]);
 		}
 	}
 }
