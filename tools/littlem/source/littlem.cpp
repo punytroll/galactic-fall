@@ -883,7 +883,7 @@ void vDrawBoxAt(float fX, float fY, float fWidth, float fHeight)
 
 void vDrawBoxAt(Vector2f & Position, Vector2f & Size)
 {
-	vDrawBoxAt(Position.m_V.m_A[0], Position.m_V.m_A[1], Size.m_V.m_A[0], Size.m_V.m_A[1]);
+	vDrawBoxAt(Position[0], Position[1], Size[0], Size[1]);
 }
 
 void vDrawTextAt(GLfloat fPositionX, GLfloat fPositionY, const std::string & sString)
