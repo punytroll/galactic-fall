@@ -135,7 +135,7 @@ bool Ship::Update(float Seconds)
 			Direction.Normalize();
 			GetAspectPosition()->SetPosition(Direction * -300.0f);
 			m_Velocity = Direction * GetMaximumSpeed();
-			GetAspectPosition()->SetOrientation(Quaternion(GetRadians(Vector2f(Direction[0], Direction[1])), Quaternion::InitializeRotationZ));
+			GetAspectPosition()->SetOrientation(Quaternion::CreateAsRotationZ(GetRadians(Vector2f(Direction[0], Direction[1]))));
 			// set up the ship in the new system
 			assert(NewSystem->GetAspectObjectContainer() != 0);
 			NewSystem->GetAspectObjectContainer()->AddContent(this);
@@ -227,7 +227,7 @@ bool Ship::Update(float Seconds)
 			
 			if(GetFuel() >= FuelConsumption)
 			{
-				GetAspectPosition()->ModifyOrientation(Quaternion(GetMaximumTurnSpeed() * Seconds * m_TurnLeft, Quaternion::InitializeRotationZ));
+				GetAspectPosition()->ModifyOrientation(Quaternion::CreateAsRotationZ(GetMaximumTurnSpeed() * Seconds * m_TurnLeft));
 				SetFuel(GetFuel() - FuelConsumption);
 			}
 		}
@@ -237,7 +237,7 @@ bool Ship::Update(float Seconds)
 			
 			if(GetFuel() >= FuelConsumption)
 			{
-				GetAspectPosition()->ModifyOrientation(Quaternion(-GetMaximumTurnSpeed() * Seconds * m_TurnRight, Quaternion::InitializeRotationZ));
+				GetAspectPosition()->ModifyOrientation(Quaternion::CreateAsRotationZ(-GetMaximumTurnSpeed() * Seconds * m_TurnRight));
 				SetFuel(GetFuel() - FuelConsumption);
 			}
 		}

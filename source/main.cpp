@@ -1198,7 +1198,7 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 		PartMaterials["faction"]->SetDiffuseColor(new Color(Faction->GetColor()));
 	}
 	NewShip->GetAspectPosition()->SetPosition(Vector3f(GetRandomFloat(-200.0f, 200.0f), GetRandomFloat(-200.0f, 200.0f), 0.0f));
-	NewShip->GetAspectPosition()->SetOrientation(Quaternion(GetRandomFloat(0.0f, 2.0f * M_PI), Quaternion::InitializeRotationZ));
+	NewShip->GetAspectPosition()->SetOrientation(Quaternion::CreateAsRotationZ(GetRandomFloat(0.0f, 2.0f * M_PI)));
 	
 	Vector2f Velocity(GetRandomFloat(0.0f, NewShip->GetMaximumSpeed()), GetRandomFloat(0.0f, 2.0f * M_PI), Vector2f::InitializeMagnitudeAngle);
 	
@@ -1828,7 +1828,7 @@ void LoadGameFromElement(const Element * SaveElement)
 							assert((*AspectChild)->HasAttribute("x") == true);
 							assert((*AspectChild)->HasAttribute("y") == true);
 							assert((*AspectChild)->HasAttribute("z") == true);
-							NewObject->GetAspectPosition()->SetOrientation(Quaternion(from_string_cast< float >((*AspectChild)->GetAttribute("w")), from_string_cast< float >((*AspectChild)->GetAttribute("x")), from_string_cast< float >((*AspectChild)->GetAttribute("y")), from_string_cast< float >((*AspectChild)->GetAttribute("z"))));
+							NewObject->GetAspectPosition()->SetOrientation(Quaternion::CreateFromComponents(from_string_cast< float >((*AspectChild)->GetAttribute("w")), from_string_cast< float >((*AspectChild)->GetAttribute("x")), from_string_cast< float >((*AspectChild)->GetAttribute("y")), from_string_cast< float >((*AspectChild)->GetAttribute("z"))));
 						}
 						else if((*AspectChild)->GetName() == "position")
 						{

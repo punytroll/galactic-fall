@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 1.5.1 of algebra.
+ * This is part of version 1.5.2 of algebra.
  **/
 
 #ifndef ALGEBRA_VECTOR3F_H
@@ -186,7 +186,7 @@ public:
 	
 	Vector3f & operator*=(const Quaternion & AQuaternion)
 	{
-		Quaternion Result(AQuaternion * Quaternion(0.0f, m_V.m_A[0], m_V.m_A[1], m_V.m_A[2]) * AQuaternion.Conjugated());
+		Quaternion Result(AQuaternion * Quaternion::CreateFromComponents(0.0f, m_V.m_A[0], m_V.m_A[1], m_V.m_A[2]) * AQuaternion.Conjugated());
 		
 		m_V.m_A[0] = Result.m_V.m_A[1];
 		m_V.m_A[1] = Result.m_V.m_A[2];

@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 1.5.1 of algebra.
+ * This is part of version 1.5.2 of algebra.
  **/
 
 #ifndef ALGEBRA_QUATERNION_H
@@ -32,62 +32,53 @@
 class Quaternion
 {
 public:
-	enum Initializer
-	{
-		InitializeRotationX,
-		InitializeRotationY,
-		InitializeRotationZ
-	};
-	
 	Array4f m_V;
 	
 	Quaternion(void)
 	{
 	}
 	
-	Quaternion(float W, float X, float Y, float Z)
+	static Quaternion CreateFromComponents(float W, float X, float Y, float Z)
 	{
-		m_V.m_A[0] = W;
-		m_V.m_A[1] = X;
-		m_V.m_A[2] = Y;
-		m_V.m_A[3] = Z;
+		return Quaternion().Set(W, X, Y, Z);
 	}
 	
-	Quaternion(const AxisAngle & AxisAngle)
+	static Quaternion CreateIdentity(void)
 	{
-		Rotation(AxisAngle);
+		return Quaternion().Identity();
 	}
 	
-	Quaternion(Array4f Axis, float AngleInRadians)
+	static Quaternion CreateFromAxisAngle(const AxisAngle & AxisAngle)
 	{
-		Rotation(Axis.m_A[0], Axis.m_A[1], Axis.m_A[2], AngleInRadians);
+		return Quaternion().Rotation(AxisAngle);
 	}
 	
-	Quaternion(bool)
+	static Quaternion CreateFromAxisComponentsAndAngle(float X, float Y, float Z, float AngleInRadians)
 	{
-		Identity();
+		return Quaternion().Rotation(X, Y, Z, AngleInRadians);
 	}
 	
-	Quaternion(float Radians, Initializer Initializer)
+	static Quaternion CreateAsRotationX(float AngleInRadians)
 	{
-		if(Initializer == InitializeRotationX)
-		{
-			RotationX(Radians);
-		}
-		else if(Initializer == InitializeRotationY)
-		{
-			RotationY(Radians);
-		}
-		else if(Initializer == InitializeRotationZ)
-		{
-			RotationZ(Radians);
-		}
+		return Quaternion().RotationX(AngleInRadians);
 	}
 	
-	void Identity(void)
+	static Quaternion CreateAsRotationY(float AngleInRadians)
+	{
+		return Quaternion().RotationY(AngleInRadians);
+	}
+	
+	static Quaternion CreateAsRotationZ(float AngleInRadians)
+	{
+		return Quaternion().RotationZ(AngleInRadians);
+	}
+	
+	Quaternion & Identity(void)
 	{
 		m_V.m_A[0] = 1.0f;
 		m_V.m_A[1] = m_V.m_A[2] = m_V.m_A[3] = 0.0f;
+		
+		return *this;
 	}
 	
 	Quaternion & Conjugate(void)
@@ -101,44 +92,58 @@ public:
 	
 	Quaternion Conjugated(void) const
 	{
-		return Quaternion(m_V.m_A[0], -m_V.m_A[1], -m_V.m_A[2], -m_V.m_A[3]);
+		return Quaternion::CreateFromComponents(m_V.m_A[0], -m_V.m_A[1], -m_V.m_A[2], -m_V.m_A[3]);
 	}
 	
-	void RotationX(float Radians)
+	Quaternion & RotationX(float Radians)
 	{
 		Radians /= 2.0f;
 		m_V.m_A[0] = cos(Radians);
 		m_V.m_A[1] = sin(Radians);
 		m_V.m_A[2] = 0.0f;
 		m_V.m_A[3] = 0.0f;
+		
+		return *this;
 	}
 	
-	void RotationY(float Radians)
+	Quaternion & RotationY(float Radians)
 	{
 		Radians /= 2.0f;
 		m_V.m_A[0] = cos(Radians);
 		m_V.m_A[1] = 0.0f;
 		m_V.m_A[2] = sin(Radians);
 		m_V.m_A[3] = 0.0f;
+		
+		return *this;
 	}
 	
-	void RotationZ(float Radians)
+	Quaternion & RotationZ(float Radians)
 	{
 		Radians /= 2.0f;
 		m_V.m_A[0] = cos(Radians);
 		m_V.m_A[1] = 0.0f;
 		m_V.m_A[2] = 0.0f;
 		m_V.m_A[3] = sin(Radians);
+		
+		return *this;
 	}
 	
-	void Rotation(const AxisAngle & AxisAngle)
+	Quaternion & Rotation(const AxisAngle & AxisAngle)
 	{
-		Rotation(AxisAngle.m_V.m_A[0], AxisAngle.m_V.m_A[1], AxisAngle.m_V.m_A[2], AxisAngle.m_V.m_A[3]);
+		float AngleInRadians(AxisAngle.m_V.m_A[3] / 2.0f);
+		float SinusRadians(sin(AngleInRadians));
+		
+		m_V.m_A[0] = cos(AngleInRadians);
+		m_V.m_A[1] = AxisAngle.m_V.m_A[0] * SinusRadians;
+		m_V.m_A[2] = AxisAngle.m_V.m_A[1] * SinusRadians;
+		m_V.m_A[3] = AxisAngle.m_V.m_A[2] * SinusRadians;
+		
+		return *this;
 	}
 	
-	void Rotation(float X, float Y, float Z, float AngleInRadians)
+	Quaternion & Rotation(float X, float Y, float Z, float AngleInRadians)
 	{
-		AngleInRadians /= 2.0;
+		AngleInRadians /= 2.0f;
 		
 		float SinusRadians(sin(AngleInRadians));
 		
@@ -146,16 +151,13 @@ public:
 		m_V.m_A[1] = X * SinusRadians;
 		m_V.m_A[2] = Y * SinusRadians;
 		m_V.m_A[3] = Z * SinusRadians;
-	}
-	
-	Quaternion & Rotate(Array4f Axis, float Radians)
-	{
-		return *this *= Quaternion(Axis, Radians);
+		
+		return *this;
 	}
 	
 	Quaternion Rotated(float X, float Y, float Z, float AngleInRadians)
 	{
-		AngleInRadians /= 2.0;
+		AngleInRadians /= 2.0f;
 		
 		float Sinus(sin(AngleInRadians));
 		float SinusX(Sinus * X);
@@ -163,57 +165,57 @@ public:
 		float SinusZ(Sinus * Z);
 		float Cosinus(cos(AngleInRadians));
 		
-		return Quaternion(m_V.m_A[0] * Cosinus - m_V.m_A[1] * SinusX - m_V.m_A[2] * SinusY - m_V.m_A[3] * SinusZ, m_V.m_A[1] * Cosinus + m_V.m_A[0] * SinusX - m_V.m_A[3] * SinusY + m_V.m_A[2] * SinusZ, m_V.m_A[2] * Cosinus + m_V.m_A[3] * SinusX + m_V.m_A[0] * SinusY - m_V.m_A[1] * SinusZ, m_V.m_A[3] * Cosinus - m_V.m_A[2] * SinusX + m_V.m_A[1] * SinusY + m_V.m_A[0] * SinusZ);
+		return Quaternion::CreateFromComponents(m_V.m_A[0] * Cosinus - m_V.m_A[1] * SinusX - m_V.m_A[2] * SinusY - m_V.m_A[3] * SinusZ, m_V.m_A[1] * Cosinus + m_V.m_A[0] * SinusX - m_V.m_A[3] * SinusY + m_V.m_A[2] * SinusZ, m_V.m_A[2] * Cosinus + m_V.m_A[3] * SinusX + m_V.m_A[0] * SinusY - m_V.m_A[1] * SinusZ, m_V.m_A[3] * Cosinus - m_V.m_A[2] * SinusX + m_V.m_A[1] * SinusY + m_V.m_A[0] * SinusZ);
 	}
 	
 	Quaternion RotatedX(float AngleInRadians) const
 	{
-		AngleInRadians /= 2.0;
+		AngleInRadians /= 2.0f;
 		
 		float Sinus(sin(AngleInRadians));
 		float Cosinus(cos(AngleInRadians));
 		
-		return Quaternion(m_V.m_A[0] * Cosinus - m_V.m_A[1] * Sinus, m_V.m_A[1] * Cosinus + m_V.m_A[0] * Sinus, m_V.m_A[2] * Cosinus + m_V.m_A[3] * Sinus, m_V.m_A[3] * Cosinus - m_V.m_A[2] * Sinus);
+		return Quaternion::CreateFromComponents(m_V.m_A[0] * Cosinus - m_V.m_A[1] * Sinus, m_V.m_A[1] * Cosinus + m_V.m_A[0] * Sinus, m_V.m_A[2] * Cosinus + m_V.m_A[3] * Sinus, m_V.m_A[3] * Cosinus - m_V.m_A[2] * Sinus);
 	}
 	
 	Quaternion RotatedY(float AngleInRadians) const
 	{
-		AngleInRadians /= 2.0;
+		AngleInRadians /= 2.0f;
 		
 		float Sinus(sin(AngleInRadians));
 		float Cosinus(cos(AngleInRadians));
 		
-		return Quaternion(m_V.m_A[0] * Cosinus - m_V.m_A[2] * Sinus, m_V.m_A[1] * Cosinus - m_V.m_A[3] * Sinus, m_V.m_A[2] * Cosinus + m_V.m_A[0] * Sinus, m_V.m_A[3] * Cosinus + m_V.m_A[1] * Sinus);
+		return Quaternion::CreateFromComponents(m_V.m_A[0] * Cosinus - m_V.m_A[2] * Sinus, m_V.m_A[1] * Cosinus - m_V.m_A[3] * Sinus, m_V.m_A[2] * Cosinus + m_V.m_A[0] * Sinus, m_V.m_A[3] * Cosinus + m_V.m_A[1] * Sinus);
 	}
 	
 	Quaternion RotatedZ(float AngleInRadians) const
 	{
-		AngleInRadians /= 2.0;
+		AngleInRadians /= 2.0f;
 		
 		float Sinus(sin(AngleInRadians));
 		float Cosinus(cos(AngleInRadians));
 		
-		return Quaternion(m_V.m_A[0] * Cosinus - m_V.m_A[3] * Sinus, m_V.m_A[1] * Cosinus + m_V.m_A[2] * Sinus, m_V.m_A[2] * Cosinus - m_V.m_A[1] * Sinus, m_V.m_A[3] * Cosinus + m_V.m_A[0] * Sinus);
+		return Quaternion::CreateFromComponents(m_V.m_A[0] * Cosinus - m_V.m_A[3] * Sinus, m_V.m_A[1] * Cosinus + m_V.m_A[2] * Sinus, m_V.m_A[2] * Cosinus - m_V.m_A[1] * Sinus, m_V.m_A[3] * Cosinus + m_V.m_A[0] * Sinus);
 	}
 	
 	Quaternion & RotateX(float Radians)
 	{
-		return *this *= Quaternion(Radians, InitializeRotationX);
+		return *this *= Quaternion::CreateAsRotationX(Radians);
 	}
 	
 	Quaternion & RotateY(float Radians)
 	{
-		return *this *= Quaternion(Radians, InitializeRotationY);
+		return *this *= Quaternion::CreateAsRotationY(Radians);
 	}
 	
 	Quaternion & RotateZ(float Radians)
 	{
-		return *this *= Quaternion(Radians, InitializeRotationZ);
+		return *this *= Quaternion::CreateAsRotationZ(Radians);
 	}
 	
 	Quaternion operator*(const Quaternion & Other) const
 	{
-		return Quaternion(
+		return Quaternion::CreateFromComponents(
 			m_V.m_A[0] * Other.m_V.m_A[0] - m_V.m_A[1] * Other.m_V.m_A[1] - m_V.m_A[2] * Other.m_V.m_A[2] - m_V.m_A[3] * Other.m_V.m_A[3],
 			m_V.m_A[1] * Other.m_V.m_A[0] + m_V.m_A[0] * Other.m_V.m_A[1] - m_V.m_A[3] * Other.m_V.m_A[2] + m_V.m_A[2] * Other.m_V.m_A[3],
 			m_V.m_A[2] * Other.m_V.m_A[0] + m_V.m_A[3] * Other.m_V.m_A[1] + m_V.m_A[0] * Other.m_V.m_A[2] - m_V.m_A[1] * Other.m_V.m_A[3],
@@ -236,12 +238,14 @@ public:
 		return *this;
 	}
 	
-	void Set(float W, float X, float Y, float Z)
+	Quaternion & Set(float W, float X, float Y, float Z)
 	{
 		m_V.m_A[0] = W;
 		m_V.m_A[1] = X;
 		m_V.m_A[2] = Y;
 		m_V.m_A[3] = Z;
+		
+		return *this;
 	}
 	
 	float operator[](int Index) const
