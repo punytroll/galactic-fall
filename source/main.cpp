@@ -3179,8 +3179,8 @@ void CreateWindow(void)
 	}
 	else
 	{
-		g_Width = g_Settings->GetWindowDimensions()->m_V.m_A[0];
-		g_Height = g_Settings->GetWindowDimensions()->m_V.m_A[1];
+		g_Width = g_Settings->GetWindowDimensions()->operator[](0);
+		g_Height = g_Settings->GetWindowDimensions()->operator[](1);
 	}
 	ON_DEBUG(std::cout << "Getting visualization information." << std::endl);
 	
@@ -3647,7 +3647,7 @@ void LoadKeyboardLookupTable(const std::list< Settings::KeyBinding > * KeyBindin
 
 void PrintSettings(void)
 {
-	std::cout << "  - Window Dimensions = " << g_Settings->GetWindowDimensions()->m_V.m_A[0] << " x " << g_Settings->GetWindowDimensions()->m_V.m_A[1] << std::endl;
+	std::cout << "  - Window Dimensions = " << g_Settings->GetWindowDimensions()->operator[](0) << " x " << g_Settings->GetWindowDimensions()->operator[](1) << std::endl;
 	std::cout << "  - Key Binding Profile =" << std::endl;
 	for(std::list< Settings::KeyBinding >::const_iterator KeyBindingIterator = g_Settings->GetKeyBindings()->begin(); KeyBindingIterator != g_Settings->GetKeyBindings()->end(); ++KeyBindingIterator)
 	{
