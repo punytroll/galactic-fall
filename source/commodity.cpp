@@ -43,7 +43,7 @@ Commodity::~Commodity(void)
 
 bool Commodity::Update(float Seconds)
 {
-	GetAspectPosition()->ModifyOrientation(Quaternion(Vector4f(m_AngularVelocity[0], m_AngularVelocity[1], m_AngularVelocity[2], 0.0f).m_V, m_AngularVelocity[3] * Seconds));
+	GetAspectPosition()->ModifyOrientation(Quaternion::CreateFromAxisComponentsAndAngle(m_AngularVelocity[0], m_AngularVelocity[1], m_AngularVelocity[2], m_AngularVelocity[3] * Seconds));
 	GetAspectPosition()->ModifyPosition(m_Velocity * Seconds);
 	
 	return true;

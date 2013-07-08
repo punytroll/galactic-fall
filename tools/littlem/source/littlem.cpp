@@ -653,7 +653,7 @@ public:
 			CameraDescription CameraDescription;
 			
 			CameraDescription.m_Position = Vector4f(ConvertToFloat(Attributes.find("position-x")->second), ConvertToFloat(Attributes.find("position-y")->second), ConvertToFloat(Attributes.find("position-z")->second), 0.0f);
-			CameraDescription.m_Orientation = Quaternion(ConvertToFloat(Attributes.find("orientation-w")->second), ConvertToFloat(Attributes.find("orientation-x")->second), ConvertToFloat(Attributes.find("orientation-y")->second), ConvertToFloat(Attributes.find("orientation-z")->second));
+			CameraDescription.m_Orientation = Quaternion::CreateFromComponents(ConvertToFloat(Attributes.find("orientation-w")->second), ConvertToFloat(Attributes.find("orientation-x")->second), ConvertToFloat(Attributes.find("orientation-y")->second), ConvertToFloat(Attributes.find("orientation-z")->second));
 			CameraDescription.m_fFieldOfView = ConvertToFloat(Attributes.find("field-of-view")->second);
 			m_CameraDescriptions.push_back(CameraDescription);
 		}

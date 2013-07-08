@@ -97,8 +97,9 @@ void Weapon::Update(float Seconds)
 			NewShot->GetAspectPosition()->SetPosition(ShotPosition);
 			
 			// calculating the shot's angular position in world coordinate system
-			Quaternion ShotOrientation(true);
+			Quaternion ShotOrientation;
 			
+			ShotOrientation.Identity();
 			ShotOrientation *= Container->GetAspectPosition()->GetOrientation();
 			ShotOrientation *= GetAspectAccessory()->GetSlot()->GetOrientation();
 			ShotOrientation *= GetAspectPosition()->GetOrientation();

@@ -34,7 +34,6 @@ Graphics::Node::Node(void) :
 	_ClearDepthBuffer(false),
 	_Container(0),
 	_Normalize(false),
-	_Orientation(1.0f, 0.0f, 0.0f, 0.0f),
 	_Position(0.0f, 0.0f, 0.0f),
 	_Scale(1.0f),
 	_Scene(0),
@@ -47,6 +46,7 @@ Graphics::Node::Node(void) :
 	_UseLighting(false),
 	_Use2DTexture(false)
 {
+	_Orientation.Identity();
 }
 
 Graphics::Node::~Node(void)

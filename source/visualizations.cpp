@@ -153,7 +153,7 @@ void VisualizePlanet(Planet * Planet, Graphics::Node * Container)
 	Graphics::Node * Visualization(VisualizePrototype(Planet->GetAspectVisualization()->GetVisualizationPrototype()));
 	
 	Visualization->SetUseLighting(true);
-	Visualization->SetOrientation(Quaternion(true));
+	Visualization->SetOrientation(Quaternion::CreateIdentity());
 	assert(Planet->GetAspectPosition() != 0);
 	Visualization->SetPosition(Planet->GetAspectPosition()->GetPosition());
 	assert(Planet->GetAspectPhysical() != 0);
