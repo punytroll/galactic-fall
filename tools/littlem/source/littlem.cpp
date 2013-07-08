@@ -310,105 +310,115 @@ XMLStream & operator<<(XMLStream & XMLStream, XMLModel Model)
 	return XMLStream;
 }
 
-class ModelReader : public XMLParser
+class MeshReader : public XMLParser
 {
 public:
-	ModelReader(std::istream & InputStream) :
+	MeshReader(std::istream & InputStream) :
 		XMLParser(InputStream),
-		m_bInModel(false),
-		m_pCurrentTrianglePoint(0),
-		m_pCurrentTriangle(0),
-		m_iTrianglePoint(0)
+		_InMesh(false),
+		_CurrentTrianglePoint(0),
+		_CurrentTriangle(0),
+		_TrianglePoint(0)
 	{
 	}
 	
-	virtual ~ModelReader(void)
+	virtual ~MeshReader(void)
 	{
 	}
 	
-	virtual void elementStart(const std::string & sElementName, const std::map< std::string, std::string > & Attributes)
+	virtual void elementStart(const std::string & ElementName, const std::map< std::string, std::string > & Attributes)
 	{
-		// safe-guard: only accept geometry input if we entered a model definition
-		if(sElementName == "model")
+		// safe-guard: only accept geometry input if we entered a mesh definition
+		if(ElementName == "mesh")
 		{
-			assert(m_bInModel == false);
-			m_bInModel = true;
+			assert(_InMesh == false);
+			_InMesh = true;
 		}
 		else
 		{
-			if(m_bInModel == false)
+			if(_InMesh == false)
 			{
 				return;
 			}
 		}
 		// now we have confirmed that we in a model definition
-		if(sElementName == "point")
+		if(ElementName == "point")
 		{
-			if(m_pCurrentTrianglePoint == 0)
+			if(_CurrentTrianglePoint == 0)
 			{
-				Point * pPoint(new Point(fConvertToFloat(Attributes.find("position-x")->second), fConvertToFloat(Attributes.find("position-y")->second), fConvertToFloat(Attributes.find("position-z")->second)));
+				Point * CurrentPoint(new Point(ConvertToFloat(Attributes.find("position-x")->second), ConvertToFloat(Attributes.find("position-y")->second), ConvertToFloat(Attributes.find("position-z")->second)));
+				std::map< std::string, std::string >::const_iterator NameAttribute(Attributes.find("name"));
 				
-				pPoint->vSetName(Attributes.find("name")->second);
-				m_Points[ulConvertToUnsigedLong(Attributes.find("identifier")->second)] = pPoint;
+				if(NameAttribute != Attributes.end())
+				{
+					CurrentPoint->vSetName(NameAttribute->second);
+				}
+				_Points[ConvertToUnsigedLong(Attributes.find("identifier")->second)] = CurrentPoint;
 			}
 			else
 			{
-				m_pCurrentTrianglePoint->m_pPoint = m_Points[ulConvertToUnsigedLong(Attributes.find("point-identifier")->second)];
-				m_pCurrentTrianglePoint->m_pPoint->m_TrianglePoints.push_back(m_pCurrentTrianglePoint);
+				_CurrentTrianglePoint->m_pPoint = _Points[ConvertToUnsigedLong(Attributes.find("point-identifier")->second)];
+				_CurrentTrianglePoint->m_pPoint->m_TrianglePoints.push_back(_CurrentTrianglePoint);
 			}
 		}
-		else if(sElementName == "triangle-point")
+		else if(ElementName == "triangle-point")
 		{
-			if(m_pCurrentTriangle == 0)
+			if(_CurrentTriangle == 0)
 			{
-				assert(m_pCurrentTrianglePoint == 0);
-				m_pCurrentTrianglePoint = new TrianglePoint();
-				m_TrianglePoints[ulConvertToUnsigedLong(Attributes.find("identifier")->second)] = m_pCurrentTrianglePoint;
-				m_pCurrentTrianglePoint->m_Normal.Set(fConvertToFloat(Attributes.find("normal-x")->second), fConvertToFloat(Attributes.find("normal-y")->second), fConvertToFloat(Attributes.find("normal-z")->second), 0.0f);
+				assert(_CurrentTrianglePoint == 0);
+				_CurrentTrianglePoint = new TrianglePoint();
+				_TrianglePoints[ConvertToUnsigedLong(Attributes.find("identifier")->second)] = _CurrentTrianglePoint;
+				_CurrentTrianglePoint->m_Normal.Set(ConvertToFloat(Attributes.find("normal-x")->second), ConvertToFloat(Attributes.find("normal-y")->second), ConvertToFloat(Attributes.find("normal-z")->second), 0.0f);
 			}
 			else
 			{
-				m_pCurrentTriangle->vSetTrianglePoint(m_iTrianglePoint + 1, m_TrianglePoints[ulConvertToUnsigedLong(Attributes.find("triangle-point-identifier")->second)]);
-				m_pCurrentTriangle->pGetTrianglePoint(m_iTrianglePoint + 1)->m_Triangles.push_back(m_pCurrentTriangle);
-				++m_iTrianglePoint;
+				_CurrentTriangle->vSetTrianglePoint(_TrianglePoint + 1, _TrianglePoints[ConvertToUnsigedLong(Attributes.find("triangle-point-identifier")->second)]);
+				_CurrentTriangle->pGetTrianglePoint(_TrianglePoint + 1)->m_Triangles.push_back(_CurrentTriangle);
+				++_TrianglePoint;
 			}
 		}
-		else if(sElementName == "triangle")
+		else if(ElementName == "triangle")
 		{
-			assert(m_pCurrentTriangle == 0);
-			m_pCurrentTriangle = new Triangle();
-			m_pCurrentTriangle->vSetName(Attributes.find("name")->second);
-			m_Triangles[ulConvertToUnsigedLong(Attributes.find("identifier")->second)] = m_pCurrentTriangle;
+			assert(_CurrentTriangle == 0);
+			_CurrentTriangle = new Triangle();
+		
+			std::map< std::string, std::string >::const_iterator NameAttribute(Attributes.find("name"));
+			
+			if(NameAttribute != Attributes.end())
+			{
+				_CurrentTriangle->vSetName(NameAttribute->second);
+			}
+			_Triangles[ConvertToUnsigedLong(Attributes.find("identifier")->second)] = _CurrentTriangle;
 		}
 	}
 	
-	virtual void elementEnd(const std::string & sElementName)
+	virtual void elementEnd(const std::string & ElementName)
 	{
-		if(sElementName == "model")
+		if(ElementName == "mesh")
 		{
-			assert(m_bInModel == true);
-			m_bInModel = false;
+			assert(_InMesh == true);
+			_InMesh = false;
 		}
-		else if(sElementName == "triangle")
+		else if(ElementName == "triangle")
 		{
-			m_pCurrentTriangle = 0;
-			m_iTrianglePoint = 0;
+			_CurrentTriangle = 0;
+			_TrianglePoint = 0;
 		}
-		else if(sElementName == "triangle-point")
+		else if(ElementName == "triangle-point")
 		{
-			m_pCurrentTrianglePoint = 0;
+			_CurrentTrianglePoint = 0;
 		}
 	}
 	
 	std::vector< Point * > GetPoints(void)
 	{
 		std::vector< Point * > Result;
-		std::map< unsigned long, Point * >::iterator iPoint(m_Points.begin());
+		std::map< unsigned long, Point * >::iterator Point(_Points.begin());
 		
-		while(iPoint != m_Points.end())
+		while(Point != _Points.end())
 		{
-			Result.push_back(iPoint->second);
-			++iPoint;
+			Result.push_back(Point->second);
+			++Point;
 		}
 		
 		return Result;
@@ -417,12 +427,12 @@ public:
 	std::vector< Triangle * > GetTriangles(void)
 	{
 		std::vector< Triangle * > Result;
-		std::map< unsigned long, Triangle * >::iterator iTriangle(m_Triangles.begin());
+		std::map< unsigned long, Triangle * >::iterator Triangle(_Triangles.begin());
 		
-		while(iTriangle != m_Triangles.end())
+		while(Triangle != _Triangles.end())
 		{
-			Result.push_back(iTriangle->second);
-			++iTriangle;
+			Result.push_back(Triangle->second);
+			++Triangle;
 		}
 		
 		return Result;
@@ -431,49 +441,49 @@ public:
 	std::vector< TrianglePoint * > GetTrianglePoints(void)
 	{
 		std::vector< TrianglePoint * > Result;
-		std::map< unsigned long, TrianglePoint * >::iterator iTrianglePoint(m_TrianglePoints.begin());
+		std::map< unsigned long, TrianglePoint * >::iterator TrianglePoint(_TrianglePoints.begin());
 		
-		while(iTrianglePoint != m_TrianglePoints.end())
+		while(TrianglePoint != _TrianglePoints.end())
 		{
-			Result.push_back(iTrianglePoint->second);
-			++iTrianglePoint;
+			Result.push_back(TrianglePoint->second);
+			++TrianglePoint;
 		}
 		
 		return Result;
 	}
 protected:
-	unsigned long ulConvertToUnsigedLong(const std::string & sValue)
+	unsigned long ConvertToUnsigedLong(const std::string & Value)
 	{
-		std::istringstream ssInputStringStream(sValue);
-		unsigned long ulValue;
+		std::istringstream InputStringStream(Value);
+		unsigned long Result;
 		
-		ssInputStringStream >> ulValue;
+		InputStringStream >> Result;
 		
-		return ulValue;
+		return Result;
 	}
 	
-	float fConvertToFloat(const std::string & sValue)
+	float ConvertToFloat(const std::string & Value)
 	{
-		std::istringstream ssInputStringStream(sValue);
-		float fValue;
+		std::istringstream InputStringStream(Value);
+		float Result;
 		
-		ssInputStringStream >> fValue;
+		InputStringStream >> Result;
 		
-		return fValue;
+		return Result;
 	}
 	
-	bool bConvertToBool(const std::string & sValue)
+	bool ConvertToBool(const std::string & Value)
 	{
-		return sValue == "true";
+		return Value == "true";
 	}
 private:
-	bool m_bInModel;
-	TrianglePoint * m_pCurrentTrianglePoint;
-	Triangle * m_pCurrentTriangle;
-	int m_iTrianglePoint;
-	std::map< unsigned long, Point * > m_Points;
-	std::map< unsigned long, Triangle * > m_Triangles;
-	std::map< unsigned long, TrianglePoint * > m_TrianglePoints;
+	bool _InMesh;
+	TrianglePoint * _CurrentTrianglePoint;
+	Triangle * _CurrentTriangle;
+	int _TrianglePoint;
+	std::map< unsigned long, Point * > _Points;
+	std::map< unsigned long, Triangle * > _Triangles;
+	std::map< unsigned long, TrianglePoint * > _TrianglePoints;
 };
 
 class Light;
@@ -618,11 +628,11 @@ XMLStream & operator<<(XMLStream & XMLStream, const LightDescription & LightDesc
 	return XMLStream;
 }
 
-class SceneReader : public ModelReader
+class SceneReader : public MeshReader
 {
 public:
 	SceneReader(std::istream & InputStream) :
-		ModelReader(InputStream)
+		MeshReader(InputStream)
 	{
 	}
 	
@@ -632,9 +642,9 @@ public:
 		{
 			LightDescription LightDescription;
 			
-			LightDescription.m_Position = Vector4f(fConvertToFloat(Attributes.find("position-x")->second), fConvertToFloat(Attributes.find("position-y")->second), fConvertToFloat(Attributes.find("position-z")->second), fConvertToFloat(Attributes.find("position-w")->second));
-			LightDescription.m_DiffuseColor = Vector4f(fConvertToFloat(Attributes.find("color-red")->second), fConvertToFloat(Attributes.find("color-green")->second), fConvertToFloat(Attributes.find("color-blue")->second), fConvertToFloat(Attributes.find("color-alpha")->second));
-			LightDescription.m_bEnabled = bConvertToBool(Attributes.find("enabled")->second);
+			LightDescription.m_Position = Vector4f(ConvertToFloat(Attributes.find("position-x")->second), ConvertToFloat(Attributes.find("position-y")->second), ConvertToFloat(Attributes.find("position-z")->second), ConvertToFloat(Attributes.find("position-w")->second));
+			LightDescription.m_DiffuseColor = Vector4f(ConvertToFloat(Attributes.find("color-red")->second), ConvertToFloat(Attributes.find("color-green")->second), ConvertToFloat(Attributes.find("color-blue")->second), ConvertToFloat(Attributes.find("color-alpha")->second));
+			LightDescription.m_bEnabled = ConvertToBool(Attributes.find("enabled")->second);
 			
 			m_LightDescriptions.push_back(LightDescription);
 		}
@@ -642,20 +652,20 @@ public:
 		{
 			CameraDescription CameraDescription;
 			
-			CameraDescription.m_Position = Vector4f(fConvertToFloat(Attributes.find("position-x")->second), fConvertToFloat(Attributes.find("position-y")->second), fConvertToFloat(Attributes.find("position-z")->second), 0.0f);
-			CameraDescription.m_Orientation = Quaternion(fConvertToFloat(Attributes.find("orientation-w")->second), fConvertToFloat(Attributes.find("orientation-x")->second), fConvertToFloat(Attributes.find("orientation-y")->second), fConvertToFloat(Attributes.find("orientation-z")->second));
-			CameraDescription.m_fFieldOfView = fConvertToFloat(Attributes.find("field-of-view")->second);
+			CameraDescription.m_Position = Vector4f(ConvertToFloat(Attributes.find("position-x")->second), ConvertToFloat(Attributes.find("position-y")->second), ConvertToFloat(Attributes.find("position-z")->second), 0.0f);
+			CameraDescription.m_Orientation = Quaternion(ConvertToFloat(Attributes.find("orientation-w")->second), ConvertToFloat(Attributes.find("orientation-x")->second), ConvertToFloat(Attributes.find("orientation-y")->second), ConvertToFloat(Attributes.find("orientation-z")->second));
+			CameraDescription.m_fFieldOfView = ConvertToFloat(Attributes.find("field-of-view")->second);
 			m_CameraDescriptions.push_back(CameraDescription);
 		}
 		else
 		{
-			ModelReader::elementStart(sElementName, Attributes);
+			MeshReader::elementStart(sElementName, Attributes);
 		}
 	}
 	
 	virtual void elementEnd(const std::string & sElementName)
 	{
-		ModelReader::elementEnd(sElementName);
+		MeshReader::elementEnd(sElementName);
 	}
 	
 	const std::vector< CameraDescription > & GetCameraDescriptions(void) const
@@ -2678,14 +2688,16 @@ public:
 				
 				if(iModifiers == GLUT_ACTIVE_ALT)
 				{
+					std::cout << "Importing model.xml." << std::endl;
+					
 					std::ifstream InputFileStream("model.xml");
-					ModelReader ModelReader(InputFileStream);
+					MeshReader MeshReader(InputFileStream);
 					
-					ModelReader.parse();
+					MeshReader.parse();
 					
-					std::vector< Point * > Points(ModelReader.GetPoints());
-					std::vector< TrianglePoint * > TrianglePoints(ModelReader.GetTrianglePoints());
-					std::vector< Triangle * > Triangles(ModelReader.GetTriangles());
+					std::vector< Point * > Points(MeshReader.GetPoints());
+					std::vector< TrianglePoint * > TrianglePoints(MeshReader.GetTrianglePoints());
+					std::vector< Triangle * > Triangles(MeshReader.GetTriangles());
 					
 					copy(Points.begin(), Points.end(), back_inserter(g_Points));
 					copy(TrianglePoints.begin(), TrianglePoints.end(), back_inserter(g_TrianglePoints));
