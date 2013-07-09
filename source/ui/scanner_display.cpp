@@ -85,7 +85,7 @@ void UI::ScannerDisplay::Draw(void) const
 	if((_Owner.IsValid() == true) && (_Owner->GetTarget().IsValid() == true))
 	{
 		assert(_Owner->GetTarget()->GetAspectPosition() != 0);
-		GLTranslatef(-_Owner->GetTarget()->GetAspectPosition()->GetPosition().m_V.m_A[0], -_Owner->GetTarget()->GetAspectPosition()->GetPosition().m_V.m_A[1], -_CameraZ);
+		GLTranslatef(-_Owner->GetTarget()->GetAspectPosition()->GetPosition()[0], -_Owner->GetTarget()->GetAspectPosition()->GetPosition()[1], -_CameraZ);
 	}
 	GLClear(GL_DEPTH_BUFFER_BIT);
 	// draw viewport content

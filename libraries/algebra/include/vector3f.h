@@ -18,57 +18,57 @@
 **/
 
 /**
- * This is part of version 1.5.4 of algebra.
+ * This is part of version 1.5.5 of algebra.
  **/
 
 #ifndef ALGEBRA_VECTOR3F_H
 #define ALGEBRA_VECTOR3F_H
 
-#include "details.h"
 #include "matrix3f.h"
 #include "quaternion.h"
 
+class Matrix4f;
+
 class Vector3f
 {
+	friend Matrix4f;
+	friend Vector3f operator*(float Scalar, const Vector3f & Vector);
+private:
+	float _[3];
 public:
-	Array4f m_V;
-	
 	Vector3f(void)
 	{
 	}
 	
 	Vector3f(bool)
 	{
-		m_V.m_A[0] = m_V.m_A[1] = m_V.m_A[2] = 0.0f;
+		_[0] = 0.0f;
+		_[1] = 0.0f;
+		_[2] = 0.0f;
 	}
 	
-	Vector3f(const float & Float1, const float & Float2, const float & Float3)
+	Vector3f(const float & X, const float & Y, const float & Z)
 	{
-		m_V.m_A[0] = Float1;
-		m_V.m_A[1] = Float2;
-		m_V.m_A[2] = Float3;
+		_[0] = X;
+		_[1] = Y;
+		_[2] = Z;
 	}
 	
-	Vector3f(const vector4float & V)
+	void Set(const float & X, const float & Y, const float & Z)
 	{
-		m_V.m_V = V;
-	}
-	
-	void Set(const float & Float1, const float & Float2, const float & Float3)
-	{
-		m_V.m_A[0] = Float1;
-		m_V.m_A[1] = Float2;
-		m_V.m_A[2] = Float3;
+		_[0] = X;
+		_[1] = Y;
+		_[2] = Z;
 	}
 	
 	float Length(void) const
 	{
-		return sqrtf(m_V.m_A[0] * m_V.m_A[0] + m_V.m_A[1] * m_V.m_A[1] + m_V.m_A[2] * m_V.m_A[2]);
+		return sqrtf(_[0] * _[0] + _[1] * _[1] + _[2] * _[2]);
 	}
 	
 	float SquaredLength(void) const
 	{
-		return m_V.m_A[0] * m_V.m_A[0] + m_V.m_A[1] * m_V.m_A[1] + m_V.m_A[2] * m_V.m_A[2];
+		return _[0] * _[0] + _[1] * _[1] + _[2] * _[2];
 	}
 	
 	Vector3f & Normalize(void)
@@ -83,12 +83,12 @@ public:
 	
 	Vector3f operator+(const Vector3f & Other) const
 	{
-		return Vector3f(m_V.m_A[0] + Other.m_V.m_A[0], m_V.m_A[1] + Other.m_V.m_A[1], m_V.m_A[2] + Other.m_V.m_A[2]);
+		return Vector3f(_[0] + Other._[0], _[1] + Other._[1], _[2] + Other._[2]);
 	}
 	
 	Vector3f operator-(const Vector3f & Other) const
 	{
-		return Vector3f(m_V.m_A[0] - Other.m_V.m_A[0], m_V.m_A[1] - Other.m_V.m_A[1], m_V.m_A[2] - Other.m_V.m_A[2]);
+		return Vector3f(_[0] - Other._[0], _[1] - Other._[1], _[2] - Other._[2]);
 	}
 
 	Vector3f operator+(void) const
@@ -98,17 +98,17 @@ public:
 	
 	Vector3f operator-(void) const
 	{
-		return Vector3f(-m_V.m_A[0], -m_V.m_A[1], -m_V.m_A[2]);
+		return Vector3f(-_[0], -_[1], -_[2]);
 	}
 	
 	Vector3f operator*(float Scalar) const
 	{
-		return Vector3f(Scalar * m_V.m_A[0], Scalar * m_V.m_A[1], Scalar * m_V.m_A[2]);
+		return Vector3f(_[0] * Scalar, _[1] * Scalar, _[2] * Scalar);
 	}
 	
 	Vector3f operator/(float Scalar) const
 	{
-		return Vector3f(m_V.m_A[0] / Scalar, m_V.m_A[1] / Scalar, m_V.m_A[2] / Scalar);
+		return Vector3f(_[0] / Scalar, _[1] / Scalar, _[2] / Scalar);
 	}
 	
 	Vector3f operator%(const Vector3f & Other)
@@ -118,97 +118,97 @@ public:
 	
 	Vector3f & operator=(const Vector3f & Other)
 	{
-		m_V.m_A[0] = Other.m_V.m_A[0];
-		m_V.m_A[1] = Other.m_V.m_A[1];
-		m_V.m_A[2] = Other.m_V.m_A[2];
+		_[0] = Other._[0];
+		_[1] = Other._[1];
+		_[2] = Other._[2];
 		
 		return *this;
 	}
 	
 	Vector3f & operator+=(const Vector3f & Other)
 	{
-		m_V.m_A[0] += Other.m_V.m_A[0];
-		m_V.m_A[1] += Other.m_V.m_A[1];
-		m_V.m_A[2] += Other.m_V.m_A[2];
+		_[0] += Other._[0];
+		_[1] += Other._[1];
+		_[2] += Other._[2];
 		
 		return *this;
 	}
 	
 	Vector3f & operator-=(const Vector3f & Other)
 	{
-		m_V.m_A[0] -= Other.m_V.m_A[0];
-		m_V.m_A[1] -= Other.m_V.m_A[1];
-		m_V.m_A[2] -= Other.m_V.m_A[2];
+		_[0] -= Other._[0];
+		_[1] -= Other._[1];
+		_[2] -= Other._[2];
 		
 		return *this;
 	}
 	
 	Vector3f & operator*=(const float & Scalar)
 	{
-		m_V.m_A[0] *= Scalar;
-		m_V.m_A[1] *= Scalar;
-		m_V.m_A[2] *= Scalar;
+		_[0] *= Scalar;
+		_[1] *= Scalar;
+		_[2] *= Scalar;
 		
 		return *this;
 	}
 	
 	Vector3f & operator/=(const float & Scalar)
 	{
-		m_V.m_A[0] /= Scalar;
-		m_V.m_A[1] /= Scalar;
-		m_V.m_A[2] /= Scalar;
+		_[0] /= Scalar;
+		_[1] /= Scalar;
+		_[2] /= Scalar;
 		
 		return *this;
 	}
 	
 	float Dot(const Vector3f & Other) const
 	{
-		return m_V.m_A[0] * Other.m_V.m_A[0] + m_V.m_A[1] * Other.m_V.m_A[1] + m_V.m_A[2] * Other.m_V.m_A[2];
+		return _[0] * Other._[0] + _[1] * Other._[1] + _[2] * Other._[2];
 	}
 	
 	Vector3f Cross(const Vector3f & Other) const
 	{
-		return Vector3f(m_V.m_A[1] * Other.m_V.m_A[2] - m_V.m_A[2] * Other.m_V.m_A[1], m_V.m_A[2] * Other.m_V.m_A[0] - m_V.m_A[0] * Other.m_V.m_A[2], m_V.m_A[0] * Other.m_V.m_A[1] - m_V.m_A[1] * Other.m_V.m_A[0]);
+		return Vector3f(_[1] * Other._[2] - _[2] * Other._[1], _[2] * Other._[0] - _[0] * Other._[2], _[0] * Other._[1] - _[1] * Other._[0]);
 	}
 	
 	Vector3f & operator*=(const Matrix3f & Matrix)
 	{
-		float Float1 = (Matrix.m_M[0].m_A[0] * m_V.m_A[0]) + (Matrix.m_M[0].m_A[1] * m_V.m_A[1]) + (Matrix.m_M[0].m_A[2] * m_V.m_A[2]);
-		float Float2 = (Matrix.m_M[1].m_A[0] * m_V.m_A[0]) + (Matrix.m_M[1].m_A[1] * m_V.m_A[1]) + (Matrix.m_M[1].m_A[2] * m_V.m_A[2]);
-		float Float3 = (Matrix.m_M[2].m_A[0] * m_V.m_A[0]) + (Matrix.m_M[2].m_A[1] * m_V.m_A[1]) + (Matrix.m_M[2].m_A[2] * m_V.m_A[2]);
+		float X = (Matrix.m_M[0].m_A[0] * _[0]) + (Matrix.m_M[0].m_A[1] * _[1]) + (Matrix.m_M[0].m_A[2] * _[2]);
+		float Y = (Matrix.m_M[1].m_A[0] * _[0]) + (Matrix.m_M[1].m_A[1] * _[1]) + (Matrix.m_M[1].m_A[2] * _[2]);
+		float Z = (Matrix.m_M[2].m_A[0] * _[0]) + (Matrix.m_M[2].m_A[1] * _[1]) + (Matrix.m_M[2].m_A[2] * _[2]);
 		
-		m_V.m_A[0] = Float1;
-		m_V.m_A[1] = Float2;
-		m_V.m_A[2] = Float3;
+		_[0] = X;
+		_[1] = Y;
+		_[2] = Z;
 		
 		return *this;
 	}
 	
 	Vector3f & operator*=(const Quaternion & AQuaternion)
 	{
-		Quaternion Result(AQuaternion * Quaternion(0.0f, m_V.m_A[0], m_V.m_A[1], m_V.m_A[2]) * AQuaternion.Conjugated());
+		Quaternion Result(AQuaternion * Quaternion(0.0f, _[0],_[1], _[2]) * AQuaternion.Conjugated());
 		
-		m_V.m_A[0] = Result.m_V.m_A[1];
-		m_V.m_A[1] = Result.m_V.m_A[2];
-		m_V.m_A[2] = Result.m_V.m_A[3];
+		_[0] = Result.m_V.m_A[1];
+		_[1] = Result.m_V.m_A[2];
+		_[2] = Result.m_V.m_A[3];
 		
 		return *this;
 	}
 	
 	float operator[](int Index) const
 	{
-		return m_V.m_A[Index];
+		return _[Index];
 	}
 	
 	float & operator[](int Index)
 	{
-		return m_V.m_A[Index];
+		return _[Index];
 	}
 };
 
 inline Vector3f operator*(float Scalar, const Vector3f & Vector)
 {
-	return Vector3f(Scalar * Vector[0], Scalar * Vector[1], Scalar * Vector[2]);
+	return Vector3f(Scalar * Vector._[0], Scalar * Vector._[1], Scalar * Vector._[2]);
 }
 
 #endif

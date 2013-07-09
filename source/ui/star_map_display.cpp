@@ -123,7 +123,10 @@ void UI::StarMapDisplay::Draw(void) const
 			}
 			GLBegin(GL_LINES);
 			GLVertex2f(0.0f, 0.0f);
-			GLVertex2fv((((*LinkedSystemIterator)->GetAspectPosition()->GetPosition() - (*ExploredSystemIterator)->GetAspectPosition()->GetPosition()) * m_Scale).m_V.m_A);
+			
+			Vector3f To(m_Scale * ((*LinkedSystemIterator)->GetAspectPosition()->GetPosition() - (*ExploredSystemIterator)->GetAspectPosition()->GetPosition()));
+			
+			GLVertex2f(To[0], To[1]);
 			GLEnd();
 		}
 		if(*ExploredSystemIterator == m_SelectedSystem)
