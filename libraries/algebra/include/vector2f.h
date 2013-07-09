@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 1.5.2 of algebra.
+ * This is part of version 1.5.3 of algebra.
  **/
 
 #ifndef ALGEBRA_VECTOR2F_H
@@ -31,12 +31,6 @@
 class Vector2f
 {
 public:
-	enum Initializer
-	{
-		InitializeCoordinates,
-		InitializeMagnitudeAngle
-	};
-	
 	Array2f m_V;
 	
 	Vector2f(void)
@@ -45,35 +39,27 @@ public:
 	
 	Vector2f(bool)
 	{
-		m_V.m_A[0] = m_V.m_A[1] = 0.0f;
+		m_V.m_A[0] = 0.0f;
+		m_V.m_A[1] = 0.0f;
 	}
 	
-	Vector2f(const float & Float1, const float & Float2, Initializer Initializer = InitializeCoordinates)
+	Vector2f(float X, float Y)
 	{
-		if(Initializer == InitializeCoordinates)
-		{
-			m_V.m_A[0] = Float1;
-			m_V.m_A[1] = Float2;
-		}
-		else if(Initializer == InitializeMagnitudeAngle)
-		{
-			// Float1 = magnitude
-			// Float2 = angle
-			m_V.m_A[0] = cos(Float2);
-			m_V.m_A[1] = sin(Float2);
-			*this *= Float1;
-		}
+		m_V.m_A[0] = X;
+		m_V.m_A[1] = Y;
 	}
 	
-	Vector2f(const vector2float & V)
+	static Vector2f CreateFromMagnitudeAndAngle(float Magnitude, float Angle)
 	{
-		m_V.m_V = V;
+		return Vector2f(Magnitude * cos(Angle), Magnitude * sin(Angle));
 	}
 	
-	void Set(const float & Float1, const float & Float2)
+	Vector2f & Set(float Float1, float Float2)
 	{
 		m_V.m_A[0] = Float1;
 		m_V.m_A[1] = Float2;
+		
+		return *this;
 	}
 	
 	float Length(void) const
@@ -96,7 +82,7 @@ public:
 		return *this / Length();
 	}
 	
-	Vector2f & Scale(const float & Scalar)
+	Vector2f & Scale(float Scalar)
 	{
 		m_V.m_A[0] *= Scalar;
 		m_V.m_A[1] *= Scalar;
@@ -114,12 +100,12 @@ public:
 		return Vector2f(m_V.m_A[0] - Other.m_V.m_A[0], m_V.m_A[1] - Other.m_V.m_A[1]);
 	}
 	
-	Vector2f operator*(const float & Scalar) const
+	Vector2f operator*(float Scalar) const
 	{
 		return Vector2f(Scalar * m_V.m_A[0], Scalar * m_V.m_A[1]);
 	}
 	
-	Vector2f operator/(const float & Scalar) const
+	Vector2f operator/(float Scalar) const
 	{
 		return Vector2f(m_V.m_A[0] / Scalar, m_V.m_A[1] / Scalar);
 	}
@@ -148,7 +134,7 @@ public:
 		return *this;
 	}
 	
-	Vector2f & operator*=(const float & Scalar)
+	Vector2f & operator*=(float Scalar)
 	{
 		m_V.m_A[0] *= Scalar;
 		m_V.m_A[1] *= Scalar;
@@ -156,7 +142,7 @@ public:
 		return *this;
 	}
 	
-	Vector2f & operator/=(const float & Scalar)
+	Vector2f & operator/=(float Scalar)
 	{
 		m_V.m_A[0] /= Scalar;
 		m_V.m_A[1] /= Scalar;
