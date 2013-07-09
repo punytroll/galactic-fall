@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 1.5.3 of algebra.
+ * This is part of version 1.5.4 of algebra.
  **/
 
 #ifndef ALGEBRA_VECTOR2F_H
@@ -26,27 +26,25 @@
 
 #include <math.h>
 
-#include "details.h"
-
 class Vector2f
 {
+private:
+	float _[2];
 public:
-	Array2f m_V;
-	
 	Vector2f(void)
 	{
 	}
 	
 	Vector2f(bool)
 	{
-		m_V.m_A[0] = 0.0f;
-		m_V.m_A[1] = 0.0f;
+		_[0] = 0.0f;
+		_[1] = 0.0f;
 	}
 	
 	Vector2f(float X, float Y)
 	{
-		m_V.m_A[0] = X;
-		m_V.m_A[1] = Y;
+		_[0] = X;
+		_[1] = Y;
 	}
 	
 	static Vector2f CreateFromMagnitudeAndAngle(float Magnitude, float Angle)
@@ -56,96 +54,108 @@ public:
 	
 	Vector2f & Set(float Float1, float Float2)
 	{
-		m_V.m_A[0] = Float1;
-		m_V.m_A[1] = Float2;
+		_[0] = Float1;
+		_[1] = Float2;
 		
 		return *this;
 	}
 	
 	float Length(void) const
 	{
-		return sqrtf(m_V.m_A[0] * m_V.m_A[0] + m_V.m_A[1] * m_V.m_A[1]);
+		return sqrtf(_[0] * _[0] + _[1] * _[1]);
 	}
 	
 	float SquaredLength(void) const
 	{
-		return m_V.m_A[0] * m_V.m_A[0] + m_V.m_A[1] * m_V.m_A[1];
+		return _[0] * _[0] + _[1] * _[1];
 	}
 	
 	Vector2f & Normalize(void)
 	{
-		return operator/=(Length());
-	}
-	
-	Vector2f Normalized(void) const
-	{
-		return *this / Length();
-	}
-	
-	Vector2f & Scale(float Scalar)
-	{
-		m_V.m_A[0] *= Scalar;
-		m_V.m_A[1] *= Scalar;
+		float L(sqrtf(_[0] * _[0] + _[1] * _[1]));
+		
+		_[0] /= L;
+		_[1] /= L;
 		
 		return *this;
 	}
 	
+	Vector2f Normalized(void) const
+	{
+		float L(sqrtf(_[0] * _[0] + _[1] * _[1]));
+		
+		return Vector2f(_[0] / L, _[1] / L);
+	}
+	
+	Vector2f & Scale(float Scalar)
+	{
+		_[0] *= Scalar;
+		_[1] *= Scalar;
+		
+		return *this;
+	}
+	
+	Vector2f Scaled(float Scalar)
+	{
+		return Vector2f(_[0] * Scalar, _[1] * Scalar);
+	}
+	
 	Vector2f operator+(const Vector2f & Other) const
 	{
-		return Vector2f(m_V.m_A[0] + Other.m_V.m_A[0], m_V.m_A[1] + Other.m_V.m_A[1]);
+		return Vector2f(_[0] + Other._[0], _[1] + Other._[1]);
 	}
 	
 	Vector2f operator-(const Vector2f & Other) const
 	{
-		return Vector2f(m_V.m_A[0] - Other.m_V.m_A[0], m_V.m_A[1] - Other.m_V.m_A[1]);
+		return Vector2f(_[0] - Other._[0], _[1] - Other._[1]);
 	}
 	
 	Vector2f operator*(float Scalar) const
 	{
-		return Vector2f(Scalar * m_V.m_A[0], Scalar * m_V.m_A[1]);
+		return Vector2f(_[0] * Scalar, _[1] * Scalar);
 	}
 	
 	Vector2f operator/(float Scalar) const
 	{
-		return Vector2f(m_V.m_A[0] / Scalar, m_V.m_A[1] / Scalar);
+		return Vector2f(_[0] / Scalar, _[1] / Scalar);
 	}
 	
 	Vector2f & operator=(const Vector2f & Other)
 	{
-		m_V.m_A[0] = Other.m_V.m_A[0];
-		m_V.m_A[1] = Other.m_V.m_A[1];
+		_[0] = Other._[0];
+		_[1] = Other._[1];
 		
 		return *this;
 	}
 	
 	Vector2f & operator+=(const Vector2f & Other)
 	{
-		m_V.m_A[0] += Other.m_V.m_A[0];
-		m_V.m_A[1] += Other.m_V.m_A[1];
+		_[0] += Other._[0];
+		_[1] += Other._[1];
 		
 		return *this;
 	}
 	
 	Vector2f & operator-=(const Vector2f & Other)
 	{
-		m_V.m_A[0] -= Other.m_V.m_A[0];
-		m_V.m_A[1] -= Other.m_V.m_A[1];
+		_[0] -= Other._[0];
+		_[1] -= Other._[1];
 		
 		return *this;
 	}
 	
 	Vector2f & operator*=(float Scalar)
 	{
-		m_V.m_A[0] *= Scalar;
-		m_V.m_A[1] *= Scalar;
+		_[0] *= Scalar;
+		_[1] *= Scalar;
 		
 		return *this;
 	}
 	
 	Vector2f & operator/=(float Scalar)
 	{
-		m_V.m_A[0] /= Scalar;
-		m_V.m_A[1] /= Scalar;
+		_[0] /= Scalar;
+		_[1] /= Scalar;
 		
 		return *this;
 	}
@@ -157,36 +167,36 @@ public:
 	
 	Vector2f operator-(void) const
 	{
-		return Vector2f(-m_V.m_A[0], -m_V.m_A[1]);
+		return Vector2f(-_[0], -_[1]);
 	}
 	
 	Vector2f & Negate(void)
 	{
-		m_V.m_A[0] = -m_V.m_A[0];
-		m_V.m_A[1] = -m_V.m_A[1];
+		_[0] = -_[0];
+		_[1] = -_[1];
 		
 		return *this;
 	}
 	
 	Vector2f Negated(void)
 	{
-		return Vector2f(-m_V.m_A[0], -m_V.m_A[1]);
+		return Vector2f(-_[0], -_[1]);
 	}
 	
 	float Dot(const Vector2f & Other) const
 	{
-		return m_V.m_A[0] * Other.m_V.m_A[0] + m_V.m_A[1] * Other.m_V.m_A[1];
+		return _[0] * Other._[0] + _[1] * Other._[1];
 	}
 	
 	Vector2f & Turn(float Angle)
 	{
 		float SinAngle(sin(Angle));
 		float CosAngle(cos(Angle));
-		float fX((CosAngle * m_V.m_A[0]) + (-SinAngle * m_V.m_A[1]));
-		float fY((SinAngle * m_V.m_A[0]) + (CosAngle * m_V.m_A[1]));
+		float fX((CosAngle * _[0]) + (-SinAngle * _[1]));
+		float fY((SinAngle * _[0]) + (CosAngle * _[1]));
 		
-		m_V.m_A[0] = fX;
-		m_V.m_A[1] = fY;
+		_[0] = fX;
+		_[1] = fY;
 		
 		return *this;
 	}
@@ -196,22 +206,22 @@ public:
 		float SinAngle(sin(Angle));
 		float CosAngle(cos(Angle));
 		
-		return Vector2f((CosAngle * m_V.m_A[0]) + (-SinAngle * m_V.m_A[1]), (SinAngle * m_V.m_A[0]) + (CosAngle * m_V.m_A[1]));
+		return Vector2f((CosAngle * _[0]) + (-SinAngle * _[1]), (SinAngle * _[0]) + (CosAngle * _[1]));
 	}
 	
 	float operator[](int Index) const
 	{
-		return m_V.m_A[Index];
+		return _[Index];
 	}
 	
 	float & operator[](int Index)
 	{
-		return m_V.m_A[Index];
+		return _[Index];
 	}
 	
 	bool operator==(const Vector2f & Other) const
 	{
-		return (m_V.m_A[0] == Other.m_V.m_A[0]) && (m_V.m_A[1] == Other.m_V.m_A[1]);
+		return (_[0] == Other._[0]) && (_[1] == Other._[1]);
 	}
 };
 
