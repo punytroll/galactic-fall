@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 1.5.4 of algebra.
+ * This is part of version 1.5.5 of algebra.
  **/
 
 #ifndef ALGEBRA_DETAILS_H

@@ -76,7 +76,7 @@ void UI::MiniMapDisplay::Draw(void) const
 	GLLoadIdentity();
 	if(_Owner.IsValid() == true)
 	{
-		GLTranslatef(-_Owner->GetAspectPosition()->GetPosition().m_V.m_A[0], -_Owner->GetAspectPosition()->GetPosition().m_V.m_A[1], -1500.0f);
+		GLTranslatef(-_Owner->GetAspectPosition()->GetPosition()[0], -_Owner->GetAspectPosition()->GetPosition()[1], -1500.0f);
 	}
 	GLClear(GL_DEPTH_BUFFER_BIT);
 	// draw mini map
@@ -98,7 +98,7 @@ void UI::MiniMapDisplay::Draw(void) const
 			{
 				GLColor3f(0.2f, 1.0f, 0.0f);
 			}
-			GLVertex2f((*PlanetIterator)->GetAspectPosition()->GetPosition().m_V.m_A[0], (*PlanetIterator)->GetAspectPosition()->GetPosition().m_V.m_A[1]);
+			GLVertex2f((*PlanetIterator)->GetAspectPosition()->GetPosition()[0], (*PlanetIterator)->GetAspectPosition()->GetPosition()[1]);
 			if(*PlanetIterator == _Owner->GetTarget().Get())
 			{
 				GLColor3f(0.8f, 0.8f, 0.8f);
@@ -110,7 +110,7 @@ void UI::MiniMapDisplay::Draw(void) const
 			{
 				GLColor3f(0.2f, 1.0f, 0.0f);
 			}
-			GLVertex2f((*ShipIterator)->GetAspectPosition()->GetPosition().m_V.m_A[0], (*ShipIterator)->GetAspectPosition()->GetPosition().m_V.m_A[1]);
+			GLVertex2f((*ShipIterator)->GetAspectPosition()->GetPosition()[0], (*ShipIterator)->GetAspectPosition()->GetPosition()[1]);
 			if(*ShipIterator == _Owner->GetTarget().Get())
 			{
 				GLColor3f(0.8f, 0.8f, 0.8f);
@@ -122,7 +122,7 @@ void UI::MiniMapDisplay::Draw(void) const
 			{
 				GLColor3f(0.2f, 1.0f, 0.0f);
 			}
-			GLVertex2f((*CommodityIterator)->GetAspectPosition()->GetPosition().m_V.m_A[0], (*CommodityIterator)->GetAspectPosition()->GetPosition().m_V.m_A[1]);
+			GLVertex2f((*CommodityIterator)->GetAspectPosition()->GetPosition()[0], (*CommodityIterator)->GetAspectPosition()->GetPosition()[1]);
 			if(*CommodityIterator == _Owner->GetTarget().Get())
 			{
 				GLColor3f(0.8f, 0.8f, 0.8f);

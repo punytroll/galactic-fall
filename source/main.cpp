@@ -370,7 +370,7 @@ void DrawSelection(const Object * Object, float RadialSize, const Color & Color)
 	GLPushMatrix();
 	GLPushAttrib(GL_LIGHTING_BIT);
 	GLDisable(GL_LIGHTING);
-	GLTranslatef(Object->GetAspectPosition()->GetPosition().m_V.m_A[0], Object->GetAspectPosition()->GetPosition().m_V.m_A[1], 0.0f);
+	GLTranslatef(Object->GetAspectPosition()->GetPosition()[0], Object->GetAspectPosition()->GetPosition()[1], 0.0f);
 	GLColor4fv(Color.GetColor().m_V.m_A);
 	GLBegin(GL_LINE_STRIP);
 	GLVertex2f(-OuterSize, -InnerSize);
@@ -991,7 +991,7 @@ void UpdateMainViewCamera(void)
 	if(g_CameraFocus.IsValid() == true)
 	{
 		assert(g_CameraFocus->GetAspectPosition() != 0);
-		SpacialMatrix.Translate(g_CameraFocus->GetAspectPosition()->GetPosition().m_V.m_A[0], g_CameraFocus->GetAspectPosition()->GetPosition().m_V.m_A[1], 0.0f);
+		SpacialMatrix.Translate(g_CameraFocus->GetAspectPosition()->GetPosition()[0], g_CameraFocus->GetAspectPosition()->GetPosition()[1], 0.0f);
 		if(g_FirstPersonCameraMode == true)
 		{
 			SpacialMatrix.RotateZ(-M_PI / 2.0f);
@@ -1023,7 +1023,7 @@ void DisplayMainView(void)
 		GLPushMatrix();
 		GLPushAttrib(GL_LIGHTING_BIT);
 		GLDisable(GL_LIGHTING);
-		GLTranslatef(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetAspectPosition()->GetPosition().m_V.m_A[0], g_CharacterObserver->GetObservedCharacter()->GetShip()->GetAspectPosition()->GetPosition().m_V.m_A[1], 0.0f);
+		GLTranslatef(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetAspectPosition()->GetPosition()[0], g_CharacterObserver->GetObservedCharacter()->GetShip()->GetAspectPosition()->GetPosition()[1], 0.0f);
 		GLRotatef(GetRadians(Vector2f(RelativePosition[0], RelativePosition[1])) * 180.0f / M_PI, 0.0f, 0.0f, 1.0f);
 		GLColor3f(0.0f, 0.5f, 0.5f);
 		GLBegin(GL_LINES);
@@ -1338,7 +1338,7 @@ void OnOutputEnterSystem(System * EnterSystem)
 		MainScene->ActivateLight();
 		assert(MainScene->GetLight() != 0);
 		assert(Star->GetAspectPosition() != 0);
-		MainScene->GetLight()->SetPosition(Star->GetAspectPosition()->GetPosition().m_V.m_A[0], Star->GetAspectPosition()->GetPosition().m_V.m_A[1], 100.0f);
+		MainScene->GetLight()->SetPosition(Star->GetAspectPosition()->GetPosition()[0], Star->GetAspectPosition()->GetPosition()[1], 100.0f);
 		MainScene->GetLight()->SetDiffuseColor(Star->GetColor().GetColor().m_V.m_A[0], Star->GetColor().GetColor().m_V.m_A[1], Star->GetColor().GetColor().m_V.m_A[2], Star->GetColor().GetColor().m_V.m_A[3]);
 	}
 	else
@@ -1572,13 +1572,13 @@ void MouseButtonDown(int MouseButton, int X, int Y)
 	{
 	case 4: // MouseButton: WHEEL_UP
 		{
-			g_CameraPosition.m_V.m_A[2] *= 0.95f;
+			g_CameraPosition[2] *= 0.95f;
 			
 			break;
 		}
 	case 5: // MouseButton: WHEEL_DOWN
 		{
-			g_CameraPosition.m_V.m_A[2] *= 1.05f;
+			g_CameraPosition[2] *= 1.05f;
 			
 			break;
 		}
@@ -1621,8 +1621,8 @@ void MouseMoved(int X, int Y)
 	g_LastMotionY = Y;
 	if(g_MouseButton == 2) // MouseButton: MIDDLE
 	{
-		g_CameraPosition.m_V.m_A[0] = g_CameraPosition.m_V.m_A[0] - static_cast< float >(DeltaX) * 0.0011f * g_CameraPosition.m_V.m_A[2];
-		g_CameraPosition.m_V.m_A[1] = g_CameraPosition.m_V.m_A[1] + static_cast< float >(DeltaY) * 0.0011f * g_CameraPosition.m_V.m_A[2];
+		g_CameraPosition[0] = g_CameraPosition[0] - static_cast< float >(DeltaX) * 0.0011f * g_CameraPosition[2];
+		g_CameraPosition[1] = g_CameraPosition[1] + static_cast< float >(DeltaY) * 0.0011f * g_CameraPosition[2];
 	}
 }
 
@@ -2374,7 +2374,7 @@ void SaveGame(std::ostream & OStream)
 	}
 	// save main camera properties
 	XML << element << "main-camera";
-	XML << element << "position" << attribute << "x" << value << g_CameraPosition.m_V.m_A[0] << attribute << "y" << value << g_CameraPosition.m_V.m_A[1] << attribute << "z" << value << g_CameraPosition.m_V.m_A[2] << end;
+	XML << element << "position" << attribute << "x" << value << g_CameraPosition[0] << attribute << "y" << value << g_CameraPosition[1] << attribute << "z" << value << g_CameraPosition[2] << end;
 	if(g_CameraFocus.IsValid() != 0)
 	{
 		if(g_CameraFocus->GetObjectIdentifier() == "")

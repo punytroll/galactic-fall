@@ -135,7 +135,7 @@ void WriteToXMLStream(XMLStream & XMLStream, Object * TheObject)
 	{
 		XMLStream << element << "aspect-position";
 		XMLStream << element << "orientation" << attribute << "w" << value << TheObject->GetAspectPosition()->GetOrientation()[0] << attribute << "x" << value << TheObject->GetAspectPosition()->GetOrientation()[1] << attribute << "y" << value << TheObject->GetAspectPosition()->GetOrientation()[2] << attribute << "z" << value << TheObject->GetAspectPosition()->GetOrientation()[3] << end;
-		XMLStream << element << "position" << attribute << "x" << value << TheObject->GetAspectPosition()->GetPosition().m_V.m_A[0] << attribute << "y" << value << TheObject->GetAspectPosition()->GetPosition().m_V.m_A[1] << attribute << "z" << value << TheObject->GetAspectPosition()->GetPosition().m_V.m_A[2] << end;
+		XMLStream << element << "position" << attribute << "x" << value << TheObject->GetAspectPosition()->GetPosition()[0] << attribute << "y" << value << TheObject->GetAspectPosition()->GetPosition()[1] << attribute << "z" << value << TheObject->GetAspectPosition()->GetPosition()[2] << end;
 		XMLStream << end;
 	}
 	if(TheObject->GetAspectVisualization() != 0)
@@ -233,7 +233,7 @@ static void WriteCommodityToXMLStream(XMLStream & XMLStream, Commodity * TheComm
 	assert(TheCommodity != 0);
 	XMLStream << element << "angular-velocity" << attribute << "axis-x" << value << TheCommodity->GetAngularVelocity()[0] << attribute << "axis-y" << value << TheCommodity->GetAngularVelocity()[1] << attribute << "axis-z" << value << TheCommodity->GetAngularVelocity()[2] << attribute << "angle" << value << TheCommodity->GetAngularVelocity()[3] << end;
 	XMLStream << element << "hull" << attribute << "value" << value << TheCommodity->GetHull() << end;
-	XMLStream << element << "velocity" << attribute << "x" << value << TheCommodity->GetVelocity().m_V.m_A[0] << attribute << "y" << value << TheCommodity->GetVelocity().m_V.m_A[1] << attribute << "z" << value << TheCommodity->GetVelocity().m_V.m_A[2] << end;
+	XMLStream << element << "velocity" << attribute << "x" << value << TheCommodity->GetVelocity()[0] << attribute << "y" << value << TheCommodity->GetVelocity()[1] << attribute << "z" << value << TheCommodity->GetVelocity()[2] << end;
 }
 
 static void WriteGeneratorToXMLStream(XMLStream & XMLStream, Generator * TheGenerator)
