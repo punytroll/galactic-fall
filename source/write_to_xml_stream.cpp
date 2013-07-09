@@ -231,7 +231,7 @@ static void WriteCharacterToXMLStream(XMLStream & XMLStream, Character * TheChar
 static void WriteCommodityToXMLStream(XMLStream & XMLStream, Commodity * TheCommodity)
 {
 	assert(TheCommodity != 0);
-	XMLStream << element << "angular-velocity" << attribute << "axis-x" << value << TheCommodity->GetAngularVelocity().m_V.m_A[0] << attribute << "axis-y" << value << TheCommodity->GetAngularVelocity().m_V.m_A[1] << attribute << "axis-z" << value << TheCommodity->GetAngularVelocity().m_V.m_A[2] << attribute << "angle" << value << TheCommodity->GetAngularVelocity().m_V.m_A[3] << end;
+	XMLStream << element << "angular-velocity" << attribute << "axis-x" << value << TheCommodity->GetAngularVelocity()[0] << attribute << "axis-y" << value << TheCommodity->GetAngularVelocity()[1] << attribute << "axis-z" << value << TheCommodity->GetAngularVelocity()[2] << attribute << "angle" << value << TheCommodity->GetAngularVelocity()[3] << end;
 	XMLStream << element << "hull" << attribute << "value" << value << TheCommodity->GetHull() << end;
 	XMLStream << element << "velocity" << attribute << "x" << value << TheCommodity->GetVelocity().m_V.m_A[0] << attribute << "y" << value << TheCommodity->GetVelocity().m_V.m_A[1] << attribute << "z" << value << TheCommodity->GetVelocity().m_V.m_A[2] << end;
 }

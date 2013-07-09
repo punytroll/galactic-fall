@@ -310,7 +310,7 @@ bool Ship::Update(float Seconds)
 					Content->GetAspectPosition()->SetPosition(GetAspectPosition()->GetPosition());
 					
 					Commodity * TheCommodity(dynamic_cast< Commodity * >(Content));
-					Vector2f Velocity(GetRandomFloat(0.0f, 0.5f), GetRandomFloat(0.0f, 2 * M_PI), Vector2f::InitializeMagnitudeAngle);
+					Vector2f Velocity(Vector2f::CreateFromMagnitudeAndAngle(GetRandomFloat(0.0f, 0.5f), GetRandomFloat(0.0f, 2 * M_PI)));
 					
 					TheCommodity->SetVelocity(Vector3f(GetVelocity()[0] * 0.8f + Velocity[0], GetVelocity()[1] * 0.8 + Velocity[1], 0.0f));
 					

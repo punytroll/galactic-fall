@@ -494,7 +494,7 @@ Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSyst
 		for(int Index = 0; Index < 30; ++Index)
 		{
 			Graphics::ParticleSystem::Particle Particle;
-			Vector2f Velocity(GetRandomFloat(0.0f, 0.5f) + GetRandomFloatFromExponentialDistribution(1.0f), GetRandomFloat(0.0f, 2 * M_PI), Vector2f::InitializeMagnitudeAngle);
+			Vector2f Velocity(Vector2f::CreateFromMagnitudeAndAngle(GetRandomFloat(0.0f, 0.5f) + GetRandomFloatFromExponentialDistribution(1.0f), GetRandomFloat(0.0f, 2 * M_PI)));
 			
 			Particle.m_Position.Set(0.0f, 0.0f, 0.0f);
 			Particle.m_Velocity.Set(Velocity[0], Velocity[1], 0.0f);
@@ -516,8 +516,8 @@ Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSyst
 		for(int Index = 0; Index < 100; ++Index)
 		{
 			Graphics::ParticleSystem::Particle Particle;
-			Vector2f Position(GetRandomFloat(1.0f, 4.0f) + GetRandomFloatFromExponentialDistribution(2.0f), GetRandomFloat(0.0f, 2 * M_PI), Vector2f::InitializeMagnitudeAngle);
-			Vector2f Velocity(GetRandomFloat(15.0f, 20.0f), GetRandomFloat(0.0f, 2 * M_PI), Vector2f::InitializeMagnitudeAngle);
+			Vector2f Position(Vector2f::CreateFromMagnitudeAndAngle(GetRandomFloat(1.0f, 4.0f) + GetRandomFloatFromExponentialDistribution(2.0f), GetRandomFloat(0.0f, 2 * M_PI)));
+			Vector2f Velocity(Vector2f::CreateFromMagnitudeAndAngle(GetRandomFloat(15.0f, 20.0f), GetRandomFloat(0.0f, 2 * M_PI)));
 			
 			Particle.m_Position.Set(Position[0], Position[1], 0.0f);
 			Particle.m_Velocity.Set(Velocity[0], Velocity[1], 0.0f);
@@ -530,7 +530,7 @@ Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSyst
 		for(int Index = 0; Index < 50; ++Index)
 		{
 			Graphics::ParticleSystem::Particle Particle;
-			Vector2f Position(GetRandomFloat(0.0f, 8.0f) + GetRandomFloatFromExponentialDistribution(5.0f), GetRandomFloat(0.0f, 2 * M_PI), Vector2f::InitializeMagnitudeAngle);
+			Vector2f Position(Vector2f::CreateFromMagnitudeAndAngle(GetRandomFloat(0.0f, 8.0f) + GetRandomFloatFromExponentialDistribution(5.0f), GetRandomFloat(0.0f, 2 * M_PI)));
 			
 			Particle.m_Position.Set(Position[0], Position[1], 0.0f);
 			Particle.m_Velocity.Set(Position[1], -Position[0], 0.0f);
@@ -563,7 +563,7 @@ Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSyst
 		{
 			Graphics::ParticleSystem::Particle Particle;
 			float Speed(GetRandomFloat(0.0f, 2.5f) + GetRandomFloatFromExponentialDistribution(2.0f));
-			Vector2f Velocity(Speed, GetRandomFloat(0.0f, 2 * M_PI), Vector2f::InitializeMagnitudeAngle);
+			Vector2f Velocity(Vector2f::CreateFromMagnitudeAndAngle(Speed, GetRandomFloat(0.0f, 2 * M_PI)));
 			
 			Particle.m_Velocity.Set(Velocity[0], Velocity[1], 0.0f);
 			Particle.m_Position.Set(0.0f, 0.0f, 0.0f);
@@ -580,9 +580,9 @@ Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSyst
 		{
 			Graphics::ParticleSystem::Particle Particle;
 			float Speed(GetRandomFloat(0.0f, 3.0f) + GetRandomFloatFromExponentialDistribution(2.0f));
-			Vector2f Velocity(Speed, CloudAngle + GetRandomFloat(-0.1f, 0.1f), Vector2f::InitializeMagnitudeAngle);
+			Vector2f Velocity(Vector2f::CreateFromMagnitudeAndAngle(Speed, CloudAngle + GetRandomFloat(-0.1f, 0.1f)));
 			float Distance(GetRandomFloat(0.0f, 1.0f) + GetRandomFloatFromExponentialDistribution(1.0f));
-			Vector2f Position(Distance, CloudAngle + GetRandomFloat(-0.3f, 0.3f), Vector2f::InitializeMagnitudeAngle);
+			Vector2f Position(Vector2f::CreateFromMagnitudeAndAngle(Distance, CloudAngle + GetRandomFloat(-0.3f, 0.3f)));
 			
 			Particle.m_Velocity.Set(Velocity[0], Velocity[1], 0.0f);
 			Particle.m_Position.Set(Position[0], Position[1], 0.0f);
@@ -597,7 +597,7 @@ Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSyst
 		{
 			Graphics::ParticleSystem::Particle Particle;
 			float Speed(GetRandomFloat(2.0f, 10.0f) + GetRandomFloatFromExponentialDistribution(2.0f));
-			Vector2f Velocity(Speed, CloudAngle + GetRandomFloat(-0.1f, 0.1f), Vector2f::InitializeMagnitudeAngle);
+			Vector2f Velocity(Vector2f::CreateFromMagnitudeAndAngle(Speed, CloudAngle + GetRandomFloat(-0.1f, 0.1f)));
 			
 			Particle.m_Velocity.Set(Velocity[0], Velocity[1], 0.0f);
 			Particle.m_Position.Set(0.0f, 0.0f, 0.0f);
@@ -610,7 +610,7 @@ Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSyst
 		for(int Index = 0; Index < 5; ++Index)
 		{
 			Graphics::ParticleSystem::Particle Particle;
-			Vector2f Position(GetRandomFloat(0.0f, 6.0f), GetRandomFloat(0.0f, 2 * M_PI), Vector2f::InitializeMagnitudeAngle);
+			Vector2f Position(Vector2f::CreateFromMagnitudeAndAngle(GetRandomFloat(0.0f, 6.0f), GetRandomFloat(0.0f, 2 * M_PI)));
 			
 			Particle.m_Position.Set(Position[0], Position[1], 0.0f);
 			Particle.m_Velocity.Set(0.0f, 0.0f, 0.0f);
@@ -803,7 +803,7 @@ void CalculateMovements(System * System, float Seconds)
 												TheStorage->GetAspectObjectContainer()->RemoveContent(TheCommodity);
 												TheCommodity->GetAspectPosition()->SetPosition(TheShip->GetAspectPosition()->GetPosition());
 												
-												Vector2f Velocity(GetRandomFloat(0.0f, 1.2f), GetRandomFloat(0.0f, 2 * M_PI), Vector2f::InitializeMagnitudeAngle);
+												Vector2f Velocity(Vector2f::CreateFromMagnitudeAndAngle(GetRandomFloat(0.0f, 1.2f), GetRandomFloat(0.0f, 2 * M_PI)));
 												
 												TheCommodity->SetVelocity(Vector3f(TheShip->GetVelocity()[0] * 0.8f + Velocity[0], TheShip->GetVelocity()[1] * 0.8 + Velocity[1], 0.0f));
 												
@@ -1200,7 +1200,7 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 	NewShip->GetAspectPosition()->SetPosition(Vector3f(GetRandomFloat(-200.0f, 200.0f), GetRandomFloat(-200.0f, 200.0f), 0.0f));
 	NewShip->GetAspectPosition()->SetOrientation(Quaternion::CreateAsRotationZ(GetRandomFloat(0.0f, 2.0f * M_PI)));
 	
-	Vector2f Velocity(GetRandomFloat(0.0f, NewShip->GetMaximumSpeed()), GetRandomFloat(0.0f, 2.0f * M_PI), Vector2f::InitializeMagnitudeAngle);
+	Vector2f Velocity(Vector2f::CreateFromMagnitudeAndAngle(GetRandomFloat(0.0f, NewShip->GetMaximumSpeed()), GetRandomFloat(0.0f, 2.0f * M_PI)));
 	
 	NewShip->SetVelocity(Vector3f(Velocity[0], Velocity[1], 0.0f));
 	NewShip->SetFuel(NewShip->GetFuelCapacity());
@@ -1828,7 +1828,7 @@ void LoadGameFromElement(const Element * SaveElement)
 							assert((*AspectChild)->HasAttribute("x") == true);
 							assert((*AspectChild)->HasAttribute("y") == true);
 							assert((*AspectChild)->HasAttribute("z") == true);
-							NewObject->GetAspectPosition()->SetOrientation(Quaternion::CreateFromComponents(from_string_cast< float >((*AspectChild)->GetAttribute("w")), from_string_cast< float >((*AspectChild)->GetAttribute("x")), from_string_cast< float >((*AspectChild)->GetAttribute("y")), from_string_cast< float >((*AspectChild)->GetAttribute("z"))));
+							NewObject->GetAspectPosition()->SetOrientation(Quaternion(from_string_cast< float >((*AspectChild)->GetAttribute("w")), from_string_cast< float >((*AspectChild)->GetAttribute("x")), from_string_cast< float >((*AspectChild)->GetAttribute("y")), from_string_cast< float >((*AspectChild)->GetAttribute("z"))));
 						}
 						else if((*AspectChild)->GetName() == "position")
 						{

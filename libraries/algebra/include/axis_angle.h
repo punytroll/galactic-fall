@@ -18,52 +18,56 @@
 **/
 
 /**
- * This is part of version 1.5.2 of algebra.
+ * This is part of version 1.5.3 of algebra.
  **/
 
 #ifndef ALGEBRA_AXIS_ANGLE_H
 #define ALGEBRA_AXIS_ANGLE_H
 
-#include "details.h"
+class Quaternion;
 
 class AxisAngle
 {
+	friend Quaternion;
+private:
+	float _[4];
 public:
-	Array4f m_V;
-	
 	AxisAngle(void)
 	{
 	}
 	
 	AxisAngle(bool)
 	{
-		m_V.m_A[0] = m_V.m_A[1] = m_V.m_A[2] = m_V.m_A[3] = 0.0f;
+		_[0] = 0.0f;
+		_[1] = 0.0f;
+		_[2] = 0.0f;
+		_[3] = 0.0f;
 	}
 	
 	AxisAngle(float X, float Y, float Z, float Angle)
 	{
-		m_V.m_A[0] = X;
-		m_V.m_A[1] = Y;
-		m_V.m_A[2] = Z;
-		m_V.m_A[3] = Angle;
+		_[0] = X;
+		_[1] = Y;
+		_[2] = Z;
+		_[3] = Angle;
 	}
 	
 	void Set(float X, float Y, float Z, float Angle)
 	{
-		m_V.m_A[0] = X;
-		m_V.m_A[1] = Y;
-		m_V.m_A[2] = Z;
-		m_V.m_A[3] = Angle;
+		_[0] = X;
+		_[1] = Y;
+		_[2] = Z;
+		_[3] = Angle;
 	}
 	
 	float operator[](int Index) const
 	{
-		return m_V.m_A[Index];
+		return _[Index];
 	}
 	
 	float & operator[](int Index)
 	{
-		return m_V.m_A[Index];
+		return _[Index];
 	}
 };
 
