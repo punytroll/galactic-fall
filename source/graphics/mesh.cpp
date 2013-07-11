@@ -31,12 +31,12 @@ void Graphics::Mesh::Draw(void) const
 	GLBegin(GL_TRIANGLES);
 	for(std::vector< Graphics::Mesh::Triangle >::size_type Triangle = 0; Triangle < m_Triangles.size(); ++Triangle)
 	{
-		GLNormal3fv(m_Triangles[Triangle].Normals[0].m_V.m_A);
-		GLVertex3fv(m_Points[m_Triangles[Triangle].Points[0]].m_V.m_A);
-		GLNormal3fv(m_Triangles[Triangle].Normals[1].m_V.m_A);
-		GLVertex3fv(m_Points[m_Triangles[Triangle].Points[1]].m_V.m_A);
-		GLNormal3fv(m_Triangles[Triangle].Normals[2].m_V.m_A);
-		GLVertex3fv(m_Points[m_Triangles[Triangle].Points[2]].m_V.m_A);
+		GLNormal3fv(m_Triangles[Triangle].Normals[0].GetPointer());
+		GLVertex3fv(m_Points[m_Triangles[Triangle].Points[0]].GetPointer());
+		GLNormal3fv(m_Triangles[Triangle].Normals[1].GetPointer());
+		GLVertex3fv(m_Points[m_Triangles[Triangle].Points[1]].GetPointer());
+		GLNormal3fv(m_Triangles[Triangle].Normals[2].GetPointer());
+		GLVertex3fv(m_Points[m_Triangles[Triangle].Points[2]].GetPointer());
 	}
 	GLEnd();
 }

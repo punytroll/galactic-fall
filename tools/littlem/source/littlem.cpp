@@ -127,11 +127,11 @@
 struct XMLPoint
 {
 	unsigned long m_Identifier;
-	Vector4f m_Position;
+	Vector3f m_Position;
 	std::string m_Name;
 };
 
-inline XMLPoint point(unsigned long Identifier, const Vector4f & Position, const std::string & Name)
+inline XMLPoint point(unsigned long Identifier, const Vector3f & Position, const std::string & Name)
 {
 	XMLPoint Point;
 	
@@ -144,7 +144,7 @@ inline XMLPoint point(unsigned long Identifier, const Vector4f & Position, const
 
 XMLStream & operator<<(XMLStream & XMLStream, const XMLPoint & Point)
 {
-	XMLStream << element << "point" << attribute << "identifier" << value << Point.m_Identifier << attribute << "position-x" << value << Point.m_Position.m_V.m_A[0] << attribute << "position-y" << value << Point.m_Position.m_V.m_A[1] << attribute << "position-z" << value << Point.m_Position.m_V.m_A[2] << attribute << "name" << value << Point.m_Name;
+	XMLStream << element << "point" << attribute << "identifier" << value << Point.m_Identifier << attribute << "position-x" << value << Point.m_Position[0] << attribute << "position-y" << value << Point.m_Position[1] << attribute << "position-z" << value << Point.m_Position[2] << attribute << "name" << value << Point.m_Name;
 	
 	return XMLStream;
 }
@@ -196,10 +196,10 @@ XMLStream & operator<<(XMLStream & XMLStream, const XMLTriangle & Triangle)
 struct XMLTrianglePoint
 {
 	unsigned long m_TrianglePointIdentifier;
-	Vector4f m_Normal;
+	Vector3f m_Normal;
 };
 
-inline XMLTrianglePoint trianglepoint(unsigned long TrianglePointIdentifier, const Vector4f & Normal)
+inline XMLTrianglePoint trianglepoint(unsigned long TrianglePointIdentifier, const Vector3f & Normal)
 {
 	XMLTrianglePoint TrianglePoint;
 	
@@ -211,7 +211,7 @@ inline XMLTrianglePoint trianglepoint(unsigned long TrianglePointIdentifier, con
 
 XMLStream & operator<<(XMLStream & XMLStream, const XMLTrianglePoint & TrianglePoint)
 {
-	XMLStream << element << "triangle-point" << attribute << "identifier" << value << TrianglePoint.m_TrianglePointIdentifier << attribute << "normal-x" << value << TrianglePoint.m_Normal.m_V.m_A[0] << attribute << "normal-y" << value << TrianglePoint.m_Normal.m_V.m_A[1] << attribute << "normal-z" << value << TrianglePoint.m_Normal.m_V.m_A[2];
+	XMLStream << element << "triangle-point" << attribute << "identifier" << value << TrianglePoint.m_TrianglePointIdentifier << attribute << "normal-x" << value << TrianglePoint.m_Normal[0] << attribute << "normal-y" << value << TrianglePoint.m_Normal[1] << attribute << "normal-z" << value << TrianglePoint.m_Normal[2];
 	
 	return XMLStream;
 }
@@ -288,7 +288,7 @@ XMLStream & operator<<(XMLStream & XMLStream, XMLModel Model)
 	
 	for(std::vector< Point * >::size_type stPoint = 0; stPoint < Model.m_Points.size(); ++stPoint)
 	{
-		XMLStream << point(stPoint, Model.m_Points[stPoint]->m_Position, Model.m_Points[stPoint]->sGetName()) << end;
+		XMLStream << point(stPoint, Model.m_Points[stPoint]->GetPosition(), Model.m_Points[stPoint]->sGetName()) << end;
 		PointMap[Model.m_Points[stPoint]] = stPoint;
 	}
 	for(std::vector< TrianglePoint * >::size_type stTrianglePoint = 0; stTrianglePoint < Model.m_TrianglePoints.size(); ++stTrianglePoint)
@@ -368,7 +368,7 @@ public:
 				assert(_CurrentTrianglePoint == 0);
 				_CurrentTrianglePoint = new TrianglePoint();
 				_TrianglePoints[ConvertToUnsigedLong(Attributes.find("identifier")->second)] = _CurrentTrianglePoint;
-				_CurrentTrianglePoint->m_Normal.Set(ConvertToFloat(Attributes.find("normal-x")->second), ConvertToFloat(Attributes.find("normal-y")->second), ConvertToFloat(Attributes.find("normal-z")->second), 0.0f);
+				_CurrentTrianglePoint->m_Normal.Set(ConvertToFloat(Attributes.find("normal-x")->second), ConvertToFloat(Attributes.find("normal-y")->second), ConvertToFloat(Attributes.find("normal-z")->second));
 			}
 			else
 			{
@@ -499,12 +499,12 @@ public:
 	{
 	}
 	
-	void vSetDiffuseColor(float fRed, float fGreen, float fBlue, float fAlpha = 0.0f)
+	void vSetDiffuseColor(float Red, float Green, float Blue, float Alpha = 0.0f)
 	{
-		m_DiffuseColor.m_V.m_A[0] = fRed;
-		m_DiffuseColor.m_V.m_A[1] = fGreen;
-		m_DiffuseColor.m_V.m_A[2] = fBlue;
-		m_DiffuseColor.m_V.m_A[3] = fAlpha;
+		m_DiffuseColor[0] = Red;
+		m_DiffuseColor[1] = Green;
+		m_DiffuseColor[2] = Blue;
+		m_DiffuseColor[3] = Alpha;
 		if(m_LightNumber != 0)
 		{
 			vSetDiffuseColor();
@@ -513,15 +513,7 @@ public:
 	
 	void vSetDiffuseColor(void)
 	{
-		glLightfv(m_LightNumber, GL_DIFFUSE, m_DiffuseColor.m_V.m_A);
-	}
-	
-	void vSetPosition(float fX, float fY, float fZ)
-	{
-		m_Position.m_V.m_A[0] = fX;
-		m_Position.m_V.m_A[1] = fY;
-		m_Position.m_V.m_A[2] = fZ;
-		m_Position.m_V.m_A[3] = 1.0f;
+		glLightfv(m_LightNumber, GL_DIFFUSE, m_DiffuseColor.GetPointer());
 	}
 	
 	bool bIsEnabled(void) const
@@ -563,33 +555,34 @@ public:
 	{
 	}
 	
-	Vector4f m_Position;
-	Quaternion m_Orientation;
-	float m_fFieldOfView;
+	CameraDescription(Camera * Camera) :
+		Position(Camera->GetPosition()),
+		Orientation(Camera->m_Orientation),
+		FieldOfView(Camera->m_fFieldOfView)
+	{
+	}
+	
+	Vector3f Position;
+	Quaternion Orientation;
+	float FieldOfView;
 };
 
-CameraDescription camera(const Vector4f & Position, const Quaternion & Orientation, float fFieldOfView)
+CameraDescription camera(Camera * Camera)
 {
-	CameraDescription CameraDescription;
-	
-	CameraDescription.m_Position = Position;
-	CameraDescription.m_Orientation = Orientation;
-	CameraDescription.m_fFieldOfView = fFieldOfView;
-	
-	return CameraDescription;
+	return CameraDescription(Camera);
 }
 
 XMLStream & operator<<(XMLStream & XMLStream, const CameraDescription & CameraDescription)
 {
 	XMLStream << element << "camera";
-	XMLStream << attribute << "position-x" << value << CameraDescription.m_Position.m_V.m_A[0];
-	XMLStream << attribute << "position-y" << value << CameraDescription.m_Position.m_V.m_A[1];
-	XMLStream << attribute << "position-z" << value << CameraDescription.m_Position.m_V.m_A[2];
-	XMLStream << attribute << "orientation-w" << value << CameraDescription.m_Orientation.m_V.m_A[0];
-	XMLStream << attribute << "orientation-x" << value << CameraDescription.m_Orientation.m_V.m_A[1];
-	XMLStream << attribute << "orientation-y" << value << CameraDescription.m_Orientation.m_V.m_A[2];
-	XMLStream << attribute << "orientation-z" << value << CameraDescription.m_Orientation.m_V.m_A[3];
-	XMLStream << attribute << "field-of-view" << value << CameraDescription.m_fFieldOfView;
+	XMLStream << attribute << "position-x" << value << CameraDescription.Position[0];
+	XMLStream << attribute << "position-y" << value << CameraDescription.Position[1];
+	XMLStream << attribute << "position-z" << value << CameraDescription.Position[2];
+	XMLStream << attribute << "orientation-w" << value << CameraDescription.Orientation.m_V.m_A[0];
+	XMLStream << attribute << "orientation-x" << value << CameraDescription.Orientation.m_V.m_A[1];
+	XMLStream << attribute << "orientation-y" << value << CameraDescription.Orientation.m_V.m_A[2];
+	XMLStream << attribute << "orientation-z" << value << CameraDescription.Orientation.m_V.m_A[3];
+	XMLStream << attribute << "field-of-view" << value << CameraDescription.FieldOfView;
 	
 	return XMLStream;
 }
@@ -602,13 +595,13 @@ public:
 	}
 	
 	LightDescription(Light * pLight) :
-		m_Position(pLight->m_Position),
+		m_Position(pLight->GetPosition()),
 		m_DiffuseColor(pLight->m_DiffuseColor),
 		m_bEnabled(pLight->bIsEnabled())
 	{
 	}
 	
-	Vector4f m_Position;
+	Vector3f m_Position;
 	Vector4f m_DiffuseColor;
 	bool m_bEnabled;
 };
@@ -622,8 +615,8 @@ XMLStream & operator<<(XMLStream & XMLStream, const LightDescription & LightDesc
 {
 	XMLStream << element << "light";
 	XMLStream << attribute << "enabled" << value << LightDescription.m_bEnabled;
-	XMLStream << attribute << "position-x" << value << LightDescription.m_Position.m_V.m_A[0] << attribute << "position-y" << value << LightDescription.m_Position.m_V.m_A[1] << attribute << "position-z" << value << LightDescription.m_Position.m_V.m_A[2] << attribute << "position-w" << value << LightDescription.m_Position.m_V.m_A[3];
-	XMLStream << attribute << "color-red" << value << LightDescription.m_DiffuseColor.m_V.m_A[0] << attribute << "color-green" << value << LightDescription.m_DiffuseColor.m_V.m_A[1] << attribute << "color-blue" << value << LightDescription.m_DiffuseColor.m_V.m_A[2] << attribute << "color-alpha" << value << LightDescription.m_DiffuseColor.m_V.m_A[3];
+	XMLStream << attribute << "position-x" << value << LightDescription.m_Position[0] << attribute << "position-y" << value << LightDescription.m_Position[1] << attribute << "position-z" << value << LightDescription.m_Position[2];
+	XMLStream << attribute << "color-red" << value << LightDescription.m_DiffuseColor[0] << attribute << "color-green" << value << LightDescription.m_DiffuseColor[1] << attribute << "color-blue" << value << LightDescription.m_DiffuseColor[2] << attribute << "color-alpha" << value << LightDescription.m_DiffuseColor[3];
 	
 	return XMLStream;
 }
@@ -642,7 +635,7 @@ public:
 		{
 			LightDescription LightDescription;
 			
-			LightDescription.m_Position = Vector4f(ConvertToFloat(Attributes.find("position-x")->second), ConvertToFloat(Attributes.find("position-y")->second), ConvertToFloat(Attributes.find("position-z")->second), ConvertToFloat(Attributes.find("position-w")->second));
+			LightDescription.m_Position = Vector3f(ConvertToFloat(Attributes.find("position-x")->second), ConvertToFloat(Attributes.find("position-y")->second), ConvertToFloat(Attributes.find("position-z")->second));
 			LightDescription.m_DiffuseColor = Vector4f(ConvertToFloat(Attributes.find("color-red")->second), ConvertToFloat(Attributes.find("color-green")->second), ConvertToFloat(Attributes.find("color-blue")->second), ConvertToFloat(Attributes.find("color-alpha")->second));
 			LightDescription.m_bEnabled = ConvertToBool(Attributes.find("enabled")->second);
 			
@@ -652,9 +645,9 @@ public:
 		{
 			CameraDescription CameraDescription;
 			
-			CameraDescription.m_Position = Vector4f(ConvertToFloat(Attributes.find("position-x")->second), ConvertToFloat(Attributes.find("position-y")->second), ConvertToFloat(Attributes.find("position-z")->second), 0.0f);
-			CameraDescription.m_Orientation = Quaternion(ConvertToFloat(Attributes.find("orientation-w")->second), ConvertToFloat(Attributes.find("orientation-x")->second), ConvertToFloat(Attributes.find("orientation-y")->second), ConvertToFloat(Attributes.find("orientation-z")->second));
-			CameraDescription.m_fFieldOfView = ConvertToFloat(Attributes.find("field-of-view")->second);
+			CameraDescription.Position = Vector3f(ConvertToFloat(Attributes.find("position-x")->second), ConvertToFloat(Attributes.find("position-y")->second), ConvertToFloat(Attributes.find("position-z")->second));
+			CameraDescription.Orientation = Quaternion(ConvertToFloat(Attributes.find("orientation-w")->second), ConvertToFloat(Attributes.find("orientation-x")->second), ConvertToFloat(Attributes.find("orientation-y")->second), ConvertToFloat(Attributes.find("orientation-z")->second));
+			CameraDescription.FieldOfView = ConvertToFloat(Attributes.find("field-of-view")->second);
 			m_CameraDescriptions.push_back(CameraDescription);
 		}
 		else
@@ -837,42 +830,42 @@ void vResetView(int iFixedViewIndex)
 		{
 		case LITTLEM_VIEW_FRONT:
 			{
-				g_pCurrentCamera->m_Position.Set(0.0f, 0.0f, 4.0f, 0.0f);
+				g_pCurrentCamera->SetPosition(0.0f, 0.0f, 4.0f);
 				g_pCurrentCamera->m_Orientation.Identity();
 				
 				break;
 			}
 		case LITTLEM_VIEW_LEFT:
 			{
-				g_pCurrentCamera->m_Position.Set(-4.0f, 0.0f, 0.0f, 0.0f);
+				g_pCurrentCamera->SetPosition(-4.0f, 0.0f, 0.0f);
 				g_pCurrentCamera->m_Orientation.RotationY(-M_PI_2);
 				
 				break;
 			}
 		case LITTLEM_VIEW_BACK:
 			{
-				g_pCurrentCamera->m_Position.Set(0.0f, 0.0f, -4.0f, 0.0f);
+				g_pCurrentCamera->SetPosition(0.0f, 0.0f, -4.0f);
 				g_pCurrentCamera->m_Orientation.RotationY(M_PI);
 				
 				break;
 			}
 		case LITTLEM_VIEW_RIGHT:
 			{
-				g_pCurrentCamera->m_Position.Set(4.0f, 0.0f, 0.0f, 0.0f);
+				g_pCurrentCamera->SetPosition(4.0f, 0.0f, 0.0f);
 				g_pCurrentCamera->m_Orientation.RotationY(M_PI_2);
 				
 				break;
 			}
 		case LITTLEM_VIEW_TOP:
 			{
-				g_pCurrentCamera->m_Position.Set(0.0f, 4.0f, 0.0f, 0.0f);
+				g_pCurrentCamera->SetPosition(0.0f, 4.0f, 0.0f);
 				g_pCurrentCamera->m_Orientation.RotationX(-M_PI_2);
 				
 				break;
 			}
 		case LITTLEM_VIEW_BOTTOM:
 			{
-				g_pCurrentCamera->m_Position.Set(0.0f, -4.0f, 0.0f, 0.0f);
+				g_pCurrentCamera->SetPosition(0.0f, -4.0f, 0.0f);
 				g_pCurrentCamera->m_Orientation.RotationX(M_PI_2);
 				
 				break;
@@ -974,7 +967,7 @@ void vDisplayTexts(void)
 	{
 		std::stringstream ssPointInformationText;
 		
-		ssPointInformationText << "Point:  X: " << g_SelectedPoints.front()->m_Position.m_V.m_A[0] << "   Y: " << g_SelectedPoints.front()->m_Position.m_V.m_A[1] << "   Z: " << g_SelectedPoints.front()->m_Position.m_V.m_A[2] << "   Name: \"" << g_SelectedPoints.front()->sGetName() << "\"   #TrianglePoints: " << g_SelectedPoints.front()->m_TrianglePoints.size();
+		ssPointInformationText << "Point:  X: " << g_SelectedPoints.front()->GetX() << "   Y: " << g_SelectedPoints.front()->GetY() << "   Z: " << g_SelectedPoints.front()->GetZ() << "   Name: \"" << g_SelectedPoints.front()->sGetName() << "\"   #TrianglePoints: " << g_SelectedPoints.front()->m_TrianglePoints.size();
 		vDrawTextAt(0, g_sHeight - 36, ssPointInformationText.str());
 	}
 	if(g_SelectedTriangles.size() > 0)
@@ -1020,7 +1013,7 @@ void vPerformPicking(void)
 	{
 		glLoadName(stI);
 		glBegin(GL_POINTS);
-		g_Points[stI]->vDrawSelection();
+		g_Points[stI]->DrawSelection();
 		glEnd();
 	}
 	glPopName();
@@ -1031,7 +1024,7 @@ void vPerformPicking(void)
 	{
 		glLoadName(stLight);
 		glBegin(GL_POINTS);
-		g_Lights[stLight]->vDrawSelection();
+		g_Lights[stLight]->DrawSelection();
 		glEnd();
 	}
 	glPopName();
@@ -1042,7 +1035,7 @@ void vPerformPicking(void)
 	{
 		glLoadName(stCamera);
 		glBegin(GL_POINTS);
-		g_Cameras[stCamera]->vDrawSelection();
+		g_Cameras[stCamera]->DrawSelection();
 		glEnd();
 	}
 	glPopName();
@@ -1061,10 +1054,12 @@ void vDisplayModel(void)
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	glMultMatrixf(Matrix4f(g_pCurrentCamera->m_Orientation).Matrix());
-	glTranslatef(-g_pCurrentCamera->m_Position.m_V.m_A[0], -g_pCurrentCamera->m_Position.m_V.m_A[1], -g_pCurrentCamera->m_Position.m_V.m_A[2]);
+	glTranslatef(-g_pCurrentCamera->GetX(), -g_pCurrentCamera->GetY(), -g_pCurrentCamera->GetZ());
 	for(std::vector< Light * >::size_type stLight = 0; stLight < g_EnabledLights.size(); ++stLight)
 	{
-		glLightfv(g_EnabledLights[stLight]->m_LightNumber, GL_POSITION, g_EnabledLights[stLight]->m_Position.m_V.m_A);
+		Vector4f LightPosition(g_EnabledLights[stLight]->GetX(), g_EnabledLights[stLight]->GetY(), g_EnabledLights[stLight]->GetZ(), 1.0f);
+		
+		glLightfv(g_EnabledLights[stLight]->m_LightNumber, GL_POSITION, LightPosition.GetPointer());
 	}
 	glBegin(GL_TRIANGLES);
 	glColor3f(0.3f, 0.3f, 0.5f);
@@ -1085,7 +1080,7 @@ void vDisplayModel(void)
 	glBegin(GL_POINTS);
 	for(std::vector< Point * >::size_type stI = 0; stI < g_Points.size(); ++stI)
 	{
-		g_Points[stI]->vDraw();
+		g_Points[stI]->Draw();
 	}
 	glEnd();
 	// draw all lights with deactivated lighting
@@ -1093,7 +1088,7 @@ void vDisplayModel(void)
 	glBegin(GL_POINTS);
 	for(std::vector< Light * >::size_type stLight = 0; stLight < g_Lights.size(); ++stLight)
 	{
-		g_Lights[stLight]->vDraw();
+		g_Lights[stLight]->Draw();
 	}
 	glEnd();
 	// draw all cameras with deactivated lighting
@@ -1101,7 +1096,7 @@ void vDisplayModel(void)
 	glBegin(GL_POINTS);
 	for(std::vector< Camera * >::size_type stCamera = 0; stCamera < g_Cameras.size(); ++stCamera)
 	{
-		g_Cameras[stCamera]->vDraw();
+		g_Cameras[stCamera]->Draw();
 	}
 	glEnd();
 	// now draw selected stuff
@@ -1116,35 +1111,35 @@ void vDisplayModel(void)
 			glColor3f(0.6f, 0.6f, 0.0f);
 			glPushMatrix();
 			
-			Vector4f TriangleCenter(g_SelectedTriangles[stTriangle]->GetTriangleCenter());
-			Vector4f TriangleNormal(g_SelectedTriangles[stTriangle]->GetTriangleNormal());
+			Vector3f TriangleCenter(g_SelectedTriangles[stTriangle]->GetTriangleCenter());
+			Vector3f TriangleNormal(g_SelectedTriangles[stTriangle]->GetTriangleNormal());
 			
-			glTranslatef(TriangleCenter.m_V.m_A[0], TriangleCenter.m_V.m_A[1], TriangleCenter.m_V.m_A[2]);
+			glTranslatef(TriangleCenter[0], TriangleCenter[1], TriangleCenter[2]);
 			glBegin(GL_LINES);
 			glVertex3f(0.0f, 0.0f, 0.0f);
-			glVertex3fv(TriangleNormal.m_V.m_A);
+			glVertex3fv(TriangleNormal.GetPointer());
 			glEnd();
 			glPopMatrix();
 			glColor3f(0.4f, 0.1f, 0.0f);
 			glPushMatrix();
-			glTranslatef(g_SelectedTriangles[stTriangle]->pGetPoint(1)->m_Position.m_V.m_A[0], g_SelectedTriangles[stTriangle]->pGetPoint(1)->m_Position.m_V.m_A[1], g_SelectedTriangles[stTriangle]->pGetPoint(1)->m_Position.m_V.m_A[2]);
+			glTranslatef(g_SelectedTriangles[stTriangle]->pGetPoint(1)->GetX(), g_SelectedTriangles[stTriangle]->pGetPoint(1)->GetY(), g_SelectedTriangles[stTriangle]->pGetPoint(1)->GetZ());
 			glBegin(GL_LINES);
 			glVertex3f(0.0f, 0.0f, 0.0f);
-			glVertex3fv(g_SelectedTriangles[stTriangle]->pGetTrianglePoint(1)->m_Normal.m_V.m_A);
+			glVertex3fv(g_SelectedTriangles[stTriangle]->pGetTrianglePoint(1)->m_Normal.GetPointer());
 			glEnd();
 			glPopMatrix();
 			glPushMatrix();
-			glTranslatef(g_SelectedTriangles[stTriangle]->pGetPoint(2)->m_Position.m_V.m_A[0], g_SelectedTriangles[stTriangle]->pGetPoint(2)->m_Position.m_V.m_A[1], g_SelectedTriangles[stTriangle]->pGetPoint(2)->m_Position.m_V.m_A[2]);
+			glTranslatef(g_SelectedTriangles[stTriangle]->pGetPoint(2)->GetX(), g_SelectedTriangles[stTriangle]->pGetPoint(2)->GetY(), g_SelectedTriangles[stTriangle]->pGetPoint(2)->GetZ());
 			glBegin(GL_LINES);
 			glVertex3f(0.0f, 0.0f, 0.0f);
-			glVertex3fv(g_SelectedTriangles[stTriangle]->pGetTrianglePoint(2)->m_Normal.m_V.m_A);
+			glVertex3fv(g_SelectedTriangles[stTriangle]->pGetTrianglePoint(2)->m_Normal.GetPointer());
 			glEnd();
 			glPopMatrix();
 			glPushMatrix();
-			glTranslatef(g_SelectedTriangles[stTriangle]->pGetPoint(3)->m_Position.m_V.m_A[0], g_SelectedTriangles[stTriangle]->pGetPoint(3)->m_Position.m_V.m_A[1], g_SelectedTriangles[stTriangle]->pGetPoint(3)->m_Position.m_V.m_A[2]);
+			glTranslatef(g_SelectedTriangles[stTriangle]->pGetPoint(3)->GetX(), g_SelectedTriangles[stTriangle]->pGetPoint(3)->GetY(), g_SelectedTriangles[stTriangle]->pGetPoint(3)->GetZ());
 			glBegin(GL_LINES);
 			glVertex3f(0.0f, 0.0f, 0.0f);
-			glVertex3fv(g_SelectedTriangles[stTriangle]->pGetTrianglePoint(3)->m_Normal.m_V.m_A);
+			glVertex3fv(g_SelectedTriangles[stTriangle]->pGetTrianglePoint(3)->m_Normal.GetPointer());
 			glEnd();
 			glPopMatrix();
 		}
@@ -1156,7 +1151,7 @@ void vDisplayModel(void)
 		for(std::vector< Point * >::size_type stI = 0; stI < g_SelectedPoints.size(); ++stI)
 		{
 			glPushMatrix();
-			glTranslatef(g_SelectedPoints[stI]->m_Position.m_V.m_A[0], g_SelectedPoints[stI]->m_Position.m_V.m_A[1], g_SelectedPoints[stI]->m_Position.m_V.m_A[2]);
+			glTranslatef(g_SelectedPoints[stI]->GetX(), g_SelectedPoints[stI]->GetY(), g_SelectedPoints[stI]->GetZ());
 			glMultMatrixf(Matrix.Matrix());
 			glBegin(GL_POINTS);
 			glColor3f(1.0f, 0.0f, 0.0f);
@@ -1171,7 +1166,7 @@ void vDisplayModel(void)
 	if(g_pSelectedLight != 0)
 	{
 		glPushMatrix();
-		glTranslatef(g_pSelectedLight->m_Position.m_V.m_A[0], g_pSelectedLight->m_Position.m_V.m_A[1], g_pSelectedLight->m_Position.m_V.m_A[2]);
+		glTranslatef(g_pSelectedLight->GetX(), g_pSelectedLight->GetY(), g_pSelectedLight->GetZ());
 		glMultMatrixf(Matrix4f(g_pCurrentCamera->m_Orientation.Conjugated()).Matrix());
 		glBegin(GL_POINTS);
 		glColor3f(1.0f, 1.0f, 0.0f);
@@ -1185,7 +1180,7 @@ void vDisplayModel(void)
 	if(g_pSelectedCamera != 0)
 	{
 		glPushMatrix();
-		glTranslatef(g_pSelectedCamera->m_Position.m_V.m_A[0], g_pSelectedCamera->m_Position.m_V.m_A[1], g_pSelectedCamera->m_Position.m_V.m_A[2]);
+		glTranslatef(g_pSelectedCamera->GetX(), g_pSelectedCamera->GetY(), g_pSelectedCamera->GetZ());
 		glPushMatrix();
 		glMultMatrixf(Matrix4f(g_pCurrentCamera->m_Orientation.Conjugated()).Matrix());
 		glBegin(GL_POINTS);
@@ -1208,7 +1203,7 @@ void vDisplayModel(void)
 	{
 		glColor3f(0.5f, 0.5f, 1.0f);
 		glBegin(GL_POINTS);
-		g_pHoveredPoint->vDraw();
+		g_pHoveredPoint->Draw();
 		glEnd();
 	}
 	else if(g_pHoveredTriangle != 0)
@@ -1220,35 +1215,35 @@ void vDisplayModel(void)
 		glColor3f(0.3f, 0.1f, 0.3f);
 		glPushMatrix();
 		
-		Vector4f TriangleCenter(g_pHoveredTriangle->GetTriangleCenter());
-		Vector4f TriangleNormal(g_pHoveredTriangle->GetTriangleNormal());
+		Vector3f TriangleCenter(g_pHoveredTriangle->GetTriangleCenter());
+		Vector3f TriangleNormal(g_pHoveredTriangle->GetTriangleNormal());
 		
-		glTranslatef(TriangleCenter.m_V.m_A[0], TriangleCenter.m_V.m_A[1], TriangleCenter.m_V.m_A[2]);
+		glTranslatef(TriangleCenter[0], TriangleCenter[1], TriangleCenter[2]);
 		glBegin(GL_LINES);
 		glVertex3f(0.0f, 0.0f, 0.0f);
-		glVertex3fv(TriangleNormal.m_V.m_A);
+		glVertex3fv(TriangleNormal.GetPointer());
 		glEnd();
 		glPopMatrix();
 		glColor3f(0.0f, 0.1f, 0.4f);
 		glPushMatrix();
-		glTranslatef(g_pHoveredTriangle->pGetPoint(1)->m_Position.m_V.m_A[0], g_pHoveredTriangle->pGetPoint(1)->m_Position.m_V.m_A[1], g_pHoveredTriangle->pGetPoint(1)->m_Position.m_V.m_A[2]);
+		glTranslatef(g_pHoveredTriangle->pGetPoint(1)->GetX(), g_pHoveredTriangle->pGetPoint(1)->GetY(), g_pHoveredTriangle->pGetPoint(1)->GetZ());
 		glBegin(GL_LINES);
 		glVertex3f(0.0f, 0.0f, 0.0f);
-		glVertex3fv(g_pHoveredTriangle->pGetTrianglePoint(1)->m_Normal.m_V.m_A);
+		glVertex3fv(g_pHoveredTriangle->pGetTrianglePoint(1)->m_Normal.GetPointer());
 		glEnd();
 		glPopMatrix();
 		glPushMatrix();
-		glTranslatef(g_pHoveredTriangle->pGetPoint(2)->m_Position.m_V.m_A[0], g_pHoveredTriangle->pGetPoint(2)->m_Position.m_V.m_A[1], g_pHoveredTriangle->pGetPoint(2)->m_Position.m_V.m_A[2]);
+		glTranslatef(g_pHoveredTriangle->pGetPoint(2)->GetX(), g_pHoveredTriangle->pGetPoint(2)->GetY(), g_pHoveredTriangle->pGetPoint(2)->GetZ());
 		glBegin(GL_LINES);
 		glVertex3f(0.0f, 0.0f, 0.0f);
-		glVertex3fv(g_pHoveredTriangle->pGetTrianglePoint(2)->m_Normal.m_V.m_A);
+		glVertex3fv(g_pHoveredTriangle->pGetTrianglePoint(2)->m_Normal.GetPointer());
 		glEnd();
 		glPopMatrix();
 		glPushMatrix();
-		glTranslatef(g_pHoveredTriangle->pGetPoint(3)->m_Position.m_V.m_A[0], g_pHoveredTriangle->pGetPoint(3)->m_Position.m_V.m_A[1], g_pHoveredTriangle->pGetPoint(3)->m_Position.m_V.m_A[2]);
+		glTranslatef(g_pHoveredTriangle->pGetPoint(3)->GetX(), g_pHoveredTriangle->pGetPoint(3)->GetY(), g_pHoveredTriangle->pGetPoint(3)->GetZ());
 		glBegin(GL_LINES);
 		glVertex3f(0.0f, 0.0f, 0.0f);
-		glVertex3fv(g_pHoveredTriangle->pGetTrianglePoint(3)->m_Normal.m_V.m_A);
+		glVertex3fv(g_pHoveredTriangle->pGetTrianglePoint(3)->m_Normal.GetPointer());
 		glEnd();
 		glPopMatrix();
 	}
@@ -1256,17 +1251,17 @@ void vDisplayModel(void)
 	{
 		glColor3f(1.0f, 0.5f, 0.5f);
 		glBegin(GL_POINTS);
-		g_pHoveredLight->vDraw();
+		g_pHoveredLight->Draw();
 		glEnd();
 	}
 	else if(g_pHoveredCamera != 0)
 	{
 		glColor3f(0.0f, 1.0f, 0.5f);
 		glBegin(GL_POINTS);
-		g_pHoveredCamera->vDraw();
+		g_pHoveredCamera->Draw();
 		glEnd();
 		glPushMatrix();
-		glTranslatef(g_pHoveredCamera->m_Position.m_V.m_A[0], g_pHoveredCamera->m_Position.m_V.m_A[1], g_pHoveredCamera->m_Position.m_V.m_A[2]);
+		glTranslatef(g_pHoveredCamera->GetX(), g_pHoveredCamera->GetY(), g_pHoveredCamera->GetZ());
 		glMultMatrixf(Matrix4f(g_pHoveredCamera->m_Orientation.Conjugated()).Matrix());
 		glColor3f(0.0f, 0.5f, 0.5f);
 		glBegin(GL_LINES);
@@ -1633,32 +1628,50 @@ void vAdjustFloatValue(float & fValue, float fDelta)
 	}
 }
 
-float fGetSnappedValue(float fValue)
+float GetAdjustedFloatValue(float Value, float Delta)
 {
 	if(g_bSnapping == true)
 	{
-		if(fValue < 0.0f)
+		if(Delta < 0)
 		{
-			fValue -= g_fSnapFactor;
+			if(Delta > -g_fSnapFactor)
+			{
+				Delta = -g_fSnapFactor;
+			}
 		}
 		else
 		{
-			fValue += g_fSnapFactor;
+			if(Delta < g_fSnapFactor)
+			{
+				Delta = g_fSnapFactor;
+			}
 		}
 	}
+	
+	float Result(Value + Delta);
+	
 	if(g_bSnapping == true)
 	{
-		return truncf(fValue / g_fSnapFactor) * g_fSnapFactor;
+		Result = roundf(Result / g_fSnapFactor) * g_fSnapFactor;
 	}
-	else
-	{
-		return fValue;
-	}
+	
+	return Result;
 }
 
-void vMovePosition(Position * pPosition, int iAxis, float fDelta)
+void MovePosition(Position * Position, int Axis, float Delta)
 {
-	vAdjustFloatValue(pPosition->m_Position.m_V.m_A[iAxis], fDelta);
+	if(Axis == 0)
+	{
+		Position->SetX(GetAdjustedFloatValue(Position->GetX(), Delta));
+	}
+	else if(Axis == 1)
+	{
+		Position->SetY(GetAdjustedFloatValue(Position->GetY(), Delta));
+	}
+	else if(Axis == 2)
+	{
+		Position->SetZ(GetAdjustedFloatValue(Position->GetZ(), Delta));
+	}
 }
 
 /**
@@ -1818,134 +1831,6 @@ char cGetCharacterFromKeyCode(int iKeyCode)
 	return '\0';
 }
 
-class EditFloat : public Widget
-{
-public:
-	EditFloat(float & fValue) :
-		m_fValue(fValue)
-	{
-		vSetBackgroundColor(Color(0.1f, 0.2f, 0.4f));
-		
-		std::ostringstream ssValue;
-		
-		ssValue << m_fValue;
-		m_sString = ssValue.str();
-		vSetMinimumSize(Boxes::Size(6.0f * m_sString.length(), 12.0f));
-	}
-	
-	virtual void vDraw(void)
-	{
-		Widget::vDraw();
-		glColor3f(1.0f, 1.0f, 1.0f);
-		vDrawText(m_sString);
-	}
-	
-	virtual bool bAcceptKey(int iKeyCode)
-	{
-		if(bIsFloatNumberKeyCode(iKeyCode) == true)
-		{
-			vCharacterInput(cGetCharacterFromKeyCode(iKeyCode));
-			
-			std::istringstream ssValue(m_sString);
-			
-			ssValue >> m_fValue;
-			glutPostRedisplay();
-			
-			return true;
-		}
-		else if(iKeyCode == LITTLEM_KEY_ENTER)
-		{
-			g_UserInterface.vDelete(this);
-			glutPostRedisplay();
-			
-			return true;
-		}
-		else if(iKeyCode == LITTLEM_KEY_BACKSPACE)
-		{
-			if(m_sString.length() > 0)
-			{
-				m_sString.erase(m_sString.length() - 1);
-				vSetMinimumSize(Boxes::Size(6.0f * m_sString.length(), 12.0f));
-			}
-			
-			std::istringstream ssValue(m_sString);
-			
-			ssValue >> m_fValue;
-			glutPostRedisplay();
-			
-			return true;
-		}
-		
-		return false;
-	}
-	
-	void vCharacterInput(char cCharacter)
-	{
-		m_sString.insert(m_sString.length(), 1, cCharacter);
-		vSetMinimumSize(Boxes::Size(6.0f * m_sString.length(), 12.0f));
-	}
-private:
-	std::string m_sString;
-	float & m_fValue;
-};
-
-class EditString : public Widget
-{
-public:
-	EditString(std::string & sString) :
-		m_sString(sString)
-	{
-		vSetBackgroundColor(Color(0.1f, 0.2f, 0.4f));
-		vSetMinimumSize(Boxes::Size(6.0f * m_sString.length(), 12.0f));
-	}
-	
-	virtual void vDraw(void)
-	{
-		Widget::vDraw();
-		glColor3f(1.0f, 1.0f, 1.0f);
-		vDrawText(m_sString);
-	}
-	
-	virtual bool bAcceptKey(int iKeyCode)
-	{
-		if(bIsAlphaNumericKeyCode(iKeyCode) == true)
-		{
-			vCharacterInput(cGetCharacterFromKeyCode(iKeyCode));
-			glutPostRedisplay();
-			
-			return true;
-		}
-		else if(iKeyCode == LITTLEM_KEY_ENTER)
-		{
-			g_UserInterface.vDelete(this);
-			glutPostRedisplay();
-			
-			return true;
-		}
-		else if(iKeyCode == LITTLEM_KEY_BACKSPACE)
-		{
-			if(m_sString.length() > 0)
-			{
-				m_sString.erase(m_sString.length() - 1);
-				vSetMinimumSize(Boxes::Size(6.0f * m_sString.length(), 12.0f));
-			}
-			glutPostRedisplay();
-			
-			return true;
-		}
-		
-		return false;
-	}
-	
-	void vCharacterInput(char cCharacter)
-	{
-		m_sString.insert(m_sString.length(), 1, cCharacter);
-		vSetMinimumSize(Boxes::Size(6.0f * m_sString.length(), 12.0f));
-	}
-private:
-	std::string & m_sString;
-};
-
 class PointsView : public KeyAcceptor
 {
 public:
@@ -2040,21 +1925,6 @@ public:
 				
 				break;
 			}
-		case LITTLEM_KEY_R:
-			{
-				if(g_SelectedPoints.size() == 1)
-				{
-					EditString * pRenamePoint(new EditString(g_SelectedPoints.front()->sGetNameToModify()));
-					
-					g_UserInterface.pGetRootWidget()->vAddBox(pRenamePoint, Boxes::FreeLayout::AddOptions(20.0f, 200.0f));
-					g_UserInterface.vAddKeyAcceptor(pRenamePoint);
-					g_UserInterface.vGrabKeyFocus(pRenamePoint);
-					glutPostRedisplay();
-					bKeyAccepted = true;
-				}
-				
-				break;
-			}
 		case LITTLEM_KEY_T:
 			{
 				if(glutGetModifiers() == 0)
@@ -2081,51 +1951,6 @@ public:
 				
 				break;
 			}
-		case LITTLEM_KEY_X:
-			{
-				if(g_SelectedPoints.size() == 1)
-				{
-					EditFloat * pRepositionX(new EditFloat(g_SelectedPoints.front()->m_Position.m_V.m_A[0]));
-					
-					g_UserInterface.pGetRootWidget()->vAddBox(pRepositionX, Boxes::FreeLayout::AddOptions(20.0f, 200.0f));
-					g_UserInterface.vAddKeyAcceptor(pRepositionX);
-					g_UserInterface.vGrabKeyFocus(pRepositionX);
-					glutPostRedisplay();
-					bKeyAccepted = true;
-				}
-				
-				break;
-			}
-		case LITTLEM_KEY_Y:
-			{
-				if(g_SelectedPoints.size() == 1)
-				{
-					EditFloat * pRepositionY(new EditFloat(g_SelectedPoints.front()->m_Position.m_V.m_A[1]));
-					
-					g_UserInterface.pGetRootWidget()->vAddBox(pRepositionY, Boxes::FreeLayout::AddOptions(20.0f, 200.0f));
-					g_UserInterface.vAddKeyAcceptor(pRepositionY);
-					g_UserInterface.vGrabKeyFocus(pRepositionY);
-					glutPostRedisplay();
-					bKeyAccepted = true;
-				}
-				
-				break;
-			}
-		case LITTLEM_KEY_Z:
-			{
-				if(g_SelectedPoints.size() == 1)
-				{
-					EditFloat * pRepositionZ(new EditFloat(g_SelectedPoints.front()->m_Position.m_V.m_A[2]));
-					
-					g_UserInterface.pGetRootWidget()->vAddBox(pRepositionZ, Boxes::FreeLayout::AddOptions(20.0f, 200.0f));
-					g_UserInterface.vAddKeyAcceptor(pRepositionZ);
-					g_UserInterface.vGrabKeyFocus(pRepositionZ);
-					glutPostRedisplay();
-					bKeyAccepted = true;
-				}
-				
-				break;
-			}
 		case LITTLEM_KEY_DELETE:
 			{
 				while(g_SelectedPoints.size() > 0)
@@ -2143,7 +1968,7 @@ public:
 				{
 					for(std::vector< Point * >::size_type stI = 0; stI < g_SelectedPoints.size(); ++stI)
 					{
-						vMovePosition(g_SelectedPoints[stI], 0, 0.01);
+						MovePosition(g_SelectedPoints[stI], 0, 0.01);
 					}
 					glutPostRedisplay();
 					bKeyAccepted = true;
@@ -2157,7 +1982,7 @@ public:
 				{
 					for(std::vector< Point * >::size_type stI = 0; stI < g_SelectedPoints.size(); ++stI)
 					{
-						vMovePosition(g_SelectedPoints[stI], 0, -0.01);
+						MovePosition(g_SelectedPoints[stI], 0, -0.01);
 					}
 					glutPostRedisplay();
 					bKeyAccepted = true;
@@ -2171,7 +1996,7 @@ public:
 				{
 					for(std::vector< Point * >::size_type stI = 0; stI < g_SelectedPoints.size(); ++stI)
 					{
-						vMovePosition(g_SelectedPoints[stI], 1, 0.01);
+						MovePosition(g_SelectedPoints[stI], 1, 0.01);
 					}
 					glutPostRedisplay();
 					bKeyAccepted = true;
@@ -2185,7 +2010,7 @@ public:
 				{
 					for(std::vector< Point * >::size_type stI = 0; stI < g_SelectedPoints.size(); ++stI)
 					{
-						vMovePosition(g_SelectedPoints[stI], 1, -0.01);
+						MovePosition(g_SelectedPoints[stI], 1, -0.01);
 					}
 					glutPostRedisplay();
 					bKeyAccepted = true;
@@ -2199,7 +2024,7 @@ public:
 				{
 					for(std::vector< Point * >::size_type stI = 0; stI < g_SelectedPoints.size(); ++stI)
 					{
-						vMovePosition(g_SelectedPoints[stI], 2, 0.01);
+						MovePosition(g_SelectedPoints[stI], 2, 0.01);
 					}
 					glutPostRedisplay();
 					bKeyAccepted = true;
@@ -2213,7 +2038,7 @@ public:
 				{
 					for(std::vector< Point * >::size_type stI = 0; stI < g_SelectedPoints.size(); ++stI)
 					{
-						vMovePosition(g_SelectedPoints[stI], 2, -0.01);
+						MovePosition(g_SelectedPoints[stI], 2, -0.01);
 					}
 					glutPostRedisplay();
 					bKeyAccepted = true;
@@ -2249,21 +2074,6 @@ public:
 						glutPostRedisplay();
 						bKeyAccepted = true;
 					}
-				}
-				
-				break;
-			}
-		case LITTLEM_KEY_R:
-			{
-				if(g_SelectedTriangles.size() == 1)
-				{
-					EditString * pRenameTriangle(new EditString(g_SelectedTriangles.front()->sGetNameToModify()));
-					
-					g_UserInterface.pGetRootWidget()->vAddBox(pRenameTriangle, Boxes::FreeLayout::AddOptions(20.0f, 200.0f));
-					g_UserInterface.vAddKeyAcceptor(pRenameTriangle);
-					g_UserInterface.vGrabKeyFocus(pRenameTriangle);
-					glutPostRedisplay();
-					bKeyAccepted = true;
 				}
 				
 				break;
@@ -2335,7 +2145,7 @@ public:
 							if(pNewTrianglePoint == 0)
 							{
 								pNewTrianglePoint = new TrianglePoint(g_SelectedPoints[stPoint]);
-								pNewTrianglePoint->m_Normal.Set(0.0f, 0.0f, 0.0f, 0.0f);
+								pNewTrianglePoint->m_Normal.Set(0.0f, 0.0f, 0.0f);
 								g_TrianglePoints.push_back(pNewTrianglePoint);
 								g_SelectedPoints[stPoint]->m_TrianglePoints.push_back(pNewTrianglePoint);
 							}
@@ -2402,7 +2212,7 @@ public:
 				{
 					Camera * pCamera(new Camera());
 					
-					pCamera->m_Position.Set(0.0f, 0.0f, 0.0f, 0.0f);
+					pCamera->SetPosition(0.0f, 0.0f, 0.0f);
 					pCamera->m_Orientation.Identity();
 					pCamera->m_fFieldOfView = 52.0f;
 					g_Cameras.push_back(pCamera);
@@ -2434,11 +2244,11 @@ public:
 			{
 				if(g_pSelectedCamera != 0)
 				{
-					vAdjustFloatValue(g_pSelectedCamera->m_Position.m_V.m_A[0], 0.01);
+					MovePosition(g_pSelectedCamera, 0, 0.01);
 				}
 				else if(g_pCurrentCamera != 0)
 				{
-					vAdjustFloatValue(g_pCurrentCamera->m_Position.m_V.m_A[0], 0.01);
+					MovePosition(g_pCurrentCamera, 0, 0.01);
 				}
 				glutPostRedisplay();
 				bKeyAccepted = true;
@@ -2449,11 +2259,11 @@ public:
 			{
 				if(g_pSelectedCamera != 0)
 				{
-					vAdjustFloatValue(g_pSelectedCamera->m_Position.m_V.m_A[0], -0.01);
+					MovePosition(g_pSelectedCamera, 0, -0.01);
 				}
 				else if(g_pCurrentCamera != 0)
 				{
-					vAdjustFloatValue(g_pCurrentCamera->m_Position.m_V.m_A[0], -0.01);
+					MovePosition(g_pCurrentCamera, 0, -0.01);
 				}
 				glutPostRedisplay();
 				bKeyAccepted = true;
@@ -2464,11 +2274,11 @@ public:
 			{
 				if(g_pSelectedCamera != 0)
 				{
-					vAdjustFloatValue(g_pSelectedCamera->m_Position.m_V.m_A[1], 0.01);
+					MovePosition(g_pSelectedCamera, 1, 0.01);
 				}
 				else if(g_pCurrentCamera != 0)
 				{
-					vAdjustFloatValue(g_pCurrentCamera->m_Position.m_V.m_A[1], 0.01);
+					MovePosition(g_pCurrentCamera, 1, 0.01);
 				}
 				glutPostRedisplay();
 				bKeyAccepted = true;
@@ -2479,11 +2289,11 @@ public:
 			{
 				if(g_pSelectedCamera != 0)
 				{
-					vAdjustFloatValue(g_pSelectedCamera->m_Position.m_V.m_A[1], -0.01);
+					MovePosition(g_pSelectedCamera, 1, -0.01);
 				}
 				else if(g_pCurrentCamera != 0)
 				{
-					vAdjustFloatValue(g_pCurrentCamera->m_Position.m_V.m_A[1], -0.01);
+					MovePosition(g_pCurrentCamera, 1, -0.01);
 				}
 				glutPostRedisplay();
 				bKeyAccepted = true;
@@ -2494,11 +2304,11 @@ public:
 			{
 				if(g_pSelectedCamera != 0)
 				{
-					vAdjustFloatValue(g_pSelectedCamera->m_Position.m_V.m_A[2], 0.01);
+					MovePosition(g_pSelectedCamera, 2, 0.01);
 				}
 				else if(g_pCurrentCamera != 0)
 				{
-					vAdjustFloatValue(g_pCurrentCamera->m_Position.m_V.m_A[2], 0.01);
+					MovePosition(g_pCurrentCamera, 2, 0.01);
 				}
 				glutPostRedisplay();
 				bKeyAccepted = true;
@@ -2509,11 +2319,11 @@ public:
 			{
 				if(g_pSelectedCamera != 0)
 				{
-					vAdjustFloatValue(g_pSelectedCamera->m_Position.m_V.m_A[2], -0.01);
+					MovePosition(g_pSelectedCamera, 2, -0.01);
 				}
 				else if(g_pCurrentCamera != 0)
 				{
-					vAdjustFloatValue(g_pCurrentCamera->m_Position.m_V.m_A[2], -0.01);
+					MovePosition(g_pCurrentCamera, 2, -0.01);
 				}
 				glutPostRedisplay();
 				bKeyAccepted = true;
@@ -2739,8 +2549,8 @@ public:
 						Light * pLight(new Light());
 						
 						g_Lights.push_back(pLight);
-						pLight->vSetPosition(LightDescriptions[stLightDescription].m_Position.m_V.m_A[0], LightDescriptions[stLightDescription].m_Position.m_V.m_A[1], LightDescriptions[stLightDescription].m_Position.m_V.m_A[2]);
-						pLight->vSetDiffuseColor(LightDescriptions[stLightDescription].m_DiffuseColor.m_V.m_A[0], LightDescriptions[stLightDescription].m_DiffuseColor.m_V.m_A[1], LightDescriptions[stLightDescription].m_DiffuseColor.m_V.m_A[2], LightDescriptions[stLightDescription].m_DiffuseColor.m_V.m_A[3]);
+						pLight->SetPosition(LightDescriptions[stLightDescription].m_Position[0], LightDescriptions[stLightDescription].m_Position[1], LightDescriptions[stLightDescription].m_Position[2]);
+						pLight->vSetDiffuseColor(LightDescriptions[stLightDescription].m_DiffuseColor[0], LightDescriptions[stLightDescription].m_DiffuseColor[1], LightDescriptions[stLightDescription].m_DiffuseColor[2], LightDescriptions[stLightDescription].m_DiffuseColor[3]);
 						if(LightDescriptions[stLightDescription].m_bEnabled == true)
 						{
 							pLight->vEnable();
@@ -2753,9 +2563,9 @@ public:
 					{
 						Camera * pCamera(new Camera());
 						
-						pCamera->m_Position = CameraDescriptions[stCameraDescription].m_Position;
-						pCamera->m_Orientation = CameraDescriptions[stCameraDescription].m_Orientation;
-						pCamera->m_fFieldOfView = CameraDescriptions[stCameraDescription].m_fFieldOfView;
+						pCamera->SetPosition(CameraDescriptions[stCameraDescription].Position[0], CameraDescriptions[stCameraDescription].Position[1], CameraDescriptions[stCameraDescription].Position[2]);
+						pCamera->m_Orientation = CameraDescriptions[stCameraDescription].Orientation;
+						pCamera->m_fFieldOfView = CameraDescriptions[stCameraDescription].FieldOfView;
 						g_Cameras.push_back(pCamera);
 					}
 					if(g_Cameras.size() > 0)
@@ -2770,7 +2580,7 @@ public:
 					Light * pLight(new Light());
 					
 					g_Lights.push_back(pLight);
-					pLight->vSetPosition(0.0f, 0.0f, 0.0f);
+					pLight->SetPosition(0.0f, 0.0f, 0.0f);
 					pLight->vSetDiffuseColor(1.0f, 1.0f, 1.0f);
 					glutPostRedisplay();
 				}
@@ -2819,7 +2629,7 @@ public:
 					}
 					for(std::vector< Camera * >::size_type stCamera = 0; stCamera < g_Cameras.size(); ++stCamera)
 					{
-						XMLStream << camera(g_Cameras[stCamera]->m_Position, g_Cameras[stCamera]->m_Orientation, g_Cameras[stCamera]->m_fFieldOfView) << end;
+						XMLStream << camera(g_Cameras[stCamera]) << end;
 					}
 				}
 				
@@ -3002,7 +2812,7 @@ public:
 			{
 				if(g_pSelectedLight != 0)
 				{
-					vMovePosition(g_pSelectedLight, 0, 0.01);
+					MovePosition(g_pSelectedLight, 0, 0.01);
 					glutPostRedisplay();
 					bKeyAccepted = true;
 				}
@@ -3013,7 +2823,7 @@ public:
 			{
 				if(g_pSelectedLight != 0)
 				{
-					vMovePosition(g_pSelectedLight, 0, -0.01);
+					MovePosition(g_pSelectedLight, 0, -0.01);
 					glutPostRedisplay();
 					bKeyAccepted = true;
 				}
@@ -3024,7 +2834,7 @@ public:
 			{
 				if(g_pSelectedLight != 0)
 				{
-					vMovePosition(g_pSelectedLight, 1, 0.01);
+					MovePosition(g_pSelectedLight, 1, 0.01);
 					glutPostRedisplay();
 					bKeyAccepted = true;
 				}
@@ -3035,7 +2845,7 @@ public:
 			{
 				if(g_pSelectedLight != 0)
 				{
-					vMovePosition(g_pSelectedLight, 1, -0.01);
+					MovePosition(g_pSelectedLight, 1, -0.01);
 					glutPostRedisplay();
 					bKeyAccepted = true;
 				}
@@ -3046,7 +2856,7 @@ public:
 			{
 				if(g_pSelectedLight != 0)
 				{
-					vMovePosition(g_pSelectedLight, 2, 0.01);
+					MovePosition(g_pSelectedLight, 2, 0.01);
 					glutPostRedisplay();
 					bKeyAccepted = true;
 				}
@@ -3057,7 +2867,7 @@ public:
 			{
 				if(g_pSelectedLight != 0)
 				{
-					vMovePosition(g_pSelectedLight, 2, -0.01);
+					MovePosition(g_pSelectedLight, 2, -0.01);
 					glutPostRedisplay();
 					bKeyAccepted = true;
 				}
@@ -3259,7 +3069,7 @@ void vMouse(int iButton, int iState, int iX, int iY)
 		{
 			if(g_pCurrentCamera != 0)
 			{
-				g_pCurrentCamera->m_Position.m_V.m_A[2] -= 0.1f;
+				g_pCurrentCamera->SetZ(g_pCurrentCamera->GetZ() - 0.1f);
 				glutPostRedisplay();
 			}
 			
@@ -3269,7 +3079,7 @@ void vMouse(int iButton, int iState, int iX, int iY)
 		{
 			if(g_pCurrentCamera != 0)
 			{
-				g_pCurrentCamera->m_Position.m_V.m_A[2] += 0.1f;
+				g_pCurrentCamera->SetZ(g_pCurrentCamera->GetZ() + 0.1f);
 				glutPostRedisplay();
 			}
 			
@@ -3364,7 +3174,7 @@ void vInit(void)
 	Light * pLight(new Light());
 	
 	g_Lights.push_back(pLight);
-	pLight->vSetPosition(0.0f, 0.0f, 4.0f);
+	pLight->SetPosition(0.0f, 0.0f, 4.0f);
 	pLight->vSetDiffuseColor(1.0f, 1.0f, 1.0f);
 	pLight->vEnable();
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);

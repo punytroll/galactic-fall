@@ -13,22 +13,22 @@ Triangle::Triangle(void)
 
 void Triangle::vRealignNormal(void)
 {
-	Vector4f Delta1(pGetPoint(2)->m_Position - pGetPoint(1)->m_Position);
-	Vector4f Delta2(pGetPoint(3)->m_Position - pGetPoint(1)->m_Position);
-	Vector4f Normal(Delta1.Cross3D(Delta2));
+	Vector3f Delta1(pGetPoint(2)->GetPosition() - pGetPoint(1)->GetPosition());
+	Vector3f Delta2(pGetPoint(3)->GetPosition() - pGetPoint(1)->GetPosition());
+	Vector3f Normal(Delta1.Cross(Delta2));
 	
 	Normal.Normalize();
 	pGetTrianglePoint(1)->m_Normal = pGetTrianglePoint(2)->m_Normal = pGetTrianglePoint(3)->m_Normal = Normal;
 }
 
-Vector4f Triangle::GetTriangleCenter(void) const
+Vector3f Triangle::GetTriangleCenter(void) const
 {
-	return Vector4f(pGetPoint(1)->m_Position + pGetPoint(2)->m_Position + pGetPoint(3)->m_Position) / 3.0f;
+	return Vector3f(pGetPoint(1)->GetPosition() + pGetPoint(2)->GetPosition() + pGetPoint(3)->GetPosition()) / 3.0f;
 }
 
-Vector4f Triangle::GetTriangleNormal(void) const
+Vector3f Triangle::GetTriangleNormal(void) const
 {
-	return Vector4f((pGetPoint(2)->m_Position - pGetPoint(1)->m_Position).Cross3D(pGetPoint(3)->m_Position - pGetPoint(1)->m_Position)).Normalized();
+	return Vector3f((pGetPoint(2)->GetPosition() - pGetPoint(1)->GetPosition()).Cross(pGetPoint(3)->GetPosition() - pGetPoint(1)->GetPosition())).Normalized();
 }
 
 void Triangle::vDraw(void)

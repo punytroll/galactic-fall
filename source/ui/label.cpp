@@ -51,7 +51,7 @@ void UI::Label::Draw(void) const
 	float Width(GetSize()[0]);
 	
 	Widget::Draw();
-	GLColor4fv(m_TextColor->GetColor().m_V.m_A);
+	GLColor4fv(m_TextColor->GetColor().GetPointer());
 	if(m_Wrap == false)
 	{
 		GLPushMatrix();

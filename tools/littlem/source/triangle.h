@@ -13,8 +13,8 @@ class Triangle : public Object
 public:
 	Triangle(void);
 	void vRealignNormal(void);
-	Vector4f GetTriangleCenter(void) const;
-	Vector4f GetTriangleNormal(void) const;
+	Vector3f GetTriangleCenter(void) const;
+	Vector3f GetTriangleNormal(void) const;
 	void vDraw(void);
 	void vDrawSelection(void);
 	void vInvert(void);

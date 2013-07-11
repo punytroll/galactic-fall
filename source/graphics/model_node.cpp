@@ -61,29 +61,29 @@ void Graphics::ModelNode::Draw(void)
 				if(MaterialIterator == _Materials.end())
 				{
 					// if no material is set for this mesh
-					GLMaterialfv(GL_FRONT, GL_DIFFUSE, Vector4f(1.0f, 1.0f, 1.0f, 1.0f).m_V.m_A);
+					GLMaterialfv(GL_FRONT, GL_DIFFUSE, Vector4f(1.0f, 1.0f, 1.0f, 1.0f).GetPointer());
 					GLMaterialf(GL_FRONT, GL_SHININESS, 0.0f);
-					GLMaterialfv(GL_FRONT, GL_SPECULAR, Vector4f(0.0f, 0.0f, 0.0f, 1.0f).m_V.m_A);
+					GLMaterialfv(GL_FRONT, GL_SPECULAR, Vector4f(0.0f, 0.0f, 0.0f, 1.0f).GetPointer());
 				}
 				else
 				{
 					if(MaterialIterator->second->GetDiffuseColor() != 0)
 					{
-						GLMaterialfv(GL_FRONT, GL_DIFFUSE, MaterialIterator->second->GetDiffuseColor()->GetColor().m_V.m_A);
+						GLMaterialfv(GL_FRONT, GL_DIFFUSE, MaterialIterator->second->GetDiffuseColor()->GetColor().GetPointer());
 					}
 					else
 					{
-						GLMaterialfv(GL_FRONT, GL_DIFFUSE, Vector4f(1.0f, 1.0f, 1.0f, 1.0f).m_V.m_A);
+						GLMaterialfv(GL_FRONT, GL_DIFFUSE, Vector4f(1.0f, 1.0f, 1.0f, 1.0f).GetPointer());
 					}
 					if(MaterialIterator->second->GetSpecularColor() != 0)
 					{
 						GLMaterialf(GL_FRONT, GL_SHININESS, MaterialIterator->second->GetShininess());
-						GLMaterialfv(GL_FRONT, GL_SPECULAR, MaterialIterator->second->GetSpecularColor()->GetColor().m_V.m_A);
+						GLMaterialfv(GL_FRONT, GL_SPECULAR, MaterialIterator->second->GetSpecularColor()->GetColor().GetPointer());
 					}
 					else
 					{
 						GLMaterialf(GL_FRONT, GL_SHININESS, 0.0f);
-						GLMaterialfv(GL_FRONT, GL_SPECULAR, Vector4f(0.0f, 0.0f, 0.0f, 1.0f).m_V.m_A);
+						GLMaterialfv(GL_FRONT, GL_SPECULAR, Vector4f(0.0f, 0.0f, 0.0f, 1.0f).GetPointer());
 					}
 				}
 			}
@@ -91,7 +91,7 @@ void Graphics::ModelNode::Draw(void)
 			{
 				if((MaterialIterator != _Materials.end()) && (MaterialIterator->second->GetDiffuseColor() != 0))
 				{
-					GLColor4fv(MaterialIterator->second->GetDiffuseColor()->GetColor().m_V.m_A);
+					GLColor4fv(MaterialIterator->second->GetDiffuseColor()->GetColor().GetPointer());
 				}
 			}
 			MeshIterator->second->Draw();

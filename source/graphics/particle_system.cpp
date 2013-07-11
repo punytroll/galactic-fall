@@ -120,7 +120,7 @@ void Graphics::ParticleSystem::Draw(void)
 	GLBegin(GL_QUADS);
 	for(std::list< Graphics::ParticleSystem::Particle >::iterator ParticleIterator = m_Particles.begin(); ParticleIterator != m_Particles.end(); ++ParticleIterator)
 	{
-		GLColor4fv(ParticleIterator->m_Color.GetColor().m_V.m_A);
+		GLColor4fv(ParticleIterator->m_Color.GetColor().GetPointer());
 		
 		const Vector3f & Position(ParticleIterator->m_Position);
 		const float & Size(ParticleIterator->m_Size);

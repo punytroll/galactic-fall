@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 1.5.5 of algebra.
+ * This is part of version 1.5.6 of algebra.
  **/
 
 #ifndef ALGEBRA_VECTOR3F_H
@@ -47,18 +47,20 @@ public:
 		_[2] = 0.0f;
 	}
 	
-	Vector3f(const float & X, const float & Y, const float & Z)
+	Vector3f(float Value1, float Value2, float Value3)
 	{
-		_[0] = X;
-		_[1] = Y;
-		_[2] = Z;
+		_[0] = Value1;
+		_[1] = Value2;
+		_[2] = Value3;
 	}
 	
-	void Set(const float & X, const float & Y, const float & Z)
+	Vector3f & Set(float Value1, float Value2, float Value3)
 	{
-		_[0] = X;
-		_[1] = Y;
-		_[2] = Z;
+		_[0] = Value1;
+		_[1] = Value2;
+		_[2] = Value3;
+		
+		return *this;
 	}
 	
 	float Length(void) const
@@ -143,7 +145,7 @@ public:
 		return *this;
 	}
 	
-	Vector3f & operator*=(const float & Scalar)
+	Vector3f & operator*=(float Scalar)
 	{
 		_[0] *= Scalar;
 		_[1] *= Scalar;
@@ -152,7 +154,7 @@ public:
 		return *this;
 	}
 	
-	Vector3f & operator/=(const float & Scalar)
+	Vector3f & operator/=(float Scalar)
 	{
 		_[0] /= Scalar;
 		_[1] /= Scalar;
@@ -203,6 +205,11 @@ public:
 	float & operator[](int Index)
 	{
 		return _[Index];
+	}
+	
+	const float * const GetPointer(void) const
+	{
+		return _;
 	}
 };
 

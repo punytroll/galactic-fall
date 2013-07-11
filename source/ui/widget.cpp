@@ -68,7 +68,7 @@ void UI::Widget::Draw(void) const
 	
 	if(Color != 0)
 	{
-		GLColor4fv(Color->GetColor().m_V.m_A);
+		GLColor4fv(Color->GetColor().GetPointer());
 		GLBegin(GL_QUADS);
 		GLVertex2f(0.0f, 0.0f);
 		GLVertex2f(0.0f, m_Size[1]);

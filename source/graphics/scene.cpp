@@ -102,8 +102,8 @@ void Graphics::Scene::Render(void)
 	if(_Light != 0)
 	{
 		GLEnable(GL_LIGHT0);
-		glLightfv(GL_LIGHT0, GL_POSITION, _Light->GetPosition().m_V.m_A);
-		glLightfv(GL_LIGHT0, GL_DIFFUSE, _Light->GetDiffuseColor().m_V.m_A);
+		glLightfv(GL_LIGHT0, GL_POSITION, _Light->GetPosition().GetPointer());
+		glLightfv(GL_LIGHT0, GL_DIFFUSE, _Light->GetDiffuseColor().GetPointer());
 	}
 	else
 	{

@@ -74,11 +74,7 @@ Point View:
 · TABULATOR  --  every selected point is advanced once (cycling through all points)
 · D  --  duplicate point
 · N  --  create point
-· R  --  rename point (don't use)
 · T  --  select all triangles connected to the selected triangles
-· X  --  enter floating point number as x coordinate (don't use)
-· Y  --  enter floating point number as y coordinate (don't use)
-· Z  --  enter floating point number as z coordinate (don't use)
 · DELETE  --  deletes all selected points (also deletes attached triangles)
 · LEFT  --  move all selected points along the -x axis (using snapping)
 · RIGHT  --  move all selected points along the +x axis (using snapping)
@@ -89,7 +85,6 @@ Point View:
 
 Triangle View commands:
 · I  --  invert selected triangles
-· R  --  rename triangle (don't use)
 · S  --  separate triangle points
 · T  --  select all triangles connected to the selected points
 · U  --  unify triangle points

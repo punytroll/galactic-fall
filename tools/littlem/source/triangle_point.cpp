@@ -15,11 +15,11 @@ TrianglePoint::TrianglePoint(Point * pPoint) :
 
 void TrianglePoint::vDraw(void)
 {
-	glNormal3fv(m_Normal.m_V.m_A);
-	m_pPoint->vDraw();
+	glNormal3fv(m_Normal.GetPointer());
+	m_pPoint->Draw();
 }
 
 void TrianglePoint::vDrawSelection(void)
 {
-	m_pPoint->vDrawSelection();
+	m_pPoint->DrawSelection();
 }
