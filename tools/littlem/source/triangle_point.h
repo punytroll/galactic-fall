@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include <algebra/vector4f.h>
+#include <algebra/vector3f.h>
 
 class Point;
 class Triangle;
@@ -16,7 +16,7 @@ public:
 	void vDraw(void);
 	void vDrawSelection(void);
 	Point * m_pPoint;
-	Vector4f m_Normal;
+	Vector3f m_Normal;
 	std::vector< Triangle * > m_Triangles;
 };
 

@@ -35,16 +35,16 @@ const Vector4f & Graphics::Light::GetDiffuseColor(void) const
 
 void Graphics::Light::SetPosition(float X, float Y, float Z)
 {
-	_Position.m_V.m_A[0] = X;
-	_Position.m_V.m_A[1] = Y;
-	_Position.m_V.m_A[2] = Z;
-	_Position.m_V.m_A[3] = 0.0f;
+	_Position[0] = X;
+	_Position[1] = Y;
+	_Position[2] = Z;
+	_Position[3] = 0.0f;
 }
 
 void Graphics::Light::SetDiffuseColor(float Red, float Green, float Blue, float Alpha)
 {
-	_DiffuseColor.m_V.m_A[0] = Red;
-	_DiffuseColor.m_V.m_A[1] = Green;
-	_DiffuseColor.m_V.m_A[2] = Blue;
-	_DiffuseColor.m_V.m_A[3] = Alpha;
+	_DiffuseColor[0] = Red;
+	_DiffuseColor[1] = Green;
+	_DiffuseColor[2] = Blue;
+	_DiffuseColor[3] = Alpha;
 }

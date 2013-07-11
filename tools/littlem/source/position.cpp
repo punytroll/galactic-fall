@@ -6,13 +6,13 @@ Position::Position(void)
 {
 }
 
-Position::Position(float fX, float fY, float fZ) :
-	m_Position(fX, fY, fZ, 1.0f)
+Position::Position(float X, float Y, float Z) :
+	_Position(X, Y, Z)
 {
 }
 
 Position::Position(const Position & Position) :
-	m_Position(Position.m_Position)
+	_Position(Position._Position)
 {
 }
 
@@ -20,12 +20,12 @@ Position::~Position(void)
 {
 }
 
-void Position::vDraw(void)
+void Position::Draw(void)
 {
-	glVertex3fv(m_Position.m_V.m_A);
+	glVertex3fv(_Position.GetPointer());
 }
 
-void Position::vDrawSelection(void)
+void Position::DrawSelection(void)
 {
-	glVertex3fv(m_Position.m_V.m_A);
+	glVertex3fv(_Position.GetPointer());
 }

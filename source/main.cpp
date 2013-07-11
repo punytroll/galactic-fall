@@ -371,7 +371,7 @@ void DrawSelection(const Object * Object, float RadialSize, const Color & Color)
 	GLPushAttrib(GL_LIGHTING_BIT);
 	GLDisable(GL_LIGHTING);
 	GLTranslatef(Object->GetAspectPosition()->GetPosition()[0], Object->GetAspectPosition()->GetPosition()[1], 0.0f);
-	GLColor4fv(Color.GetColor().m_V.m_A);
+	GLColor4fv(Color.GetColor().GetPointer());
 	GLBegin(GL_LINE_STRIP);
 	GLVertex2f(-OuterSize, -InnerSize);
 	GLVertex2f(-OuterSize, -OuterSize);
@@ -1339,7 +1339,7 @@ void OnOutputEnterSystem(System * EnterSystem)
 		assert(MainScene->GetLight() != 0);
 		assert(Star->GetAspectPosition() != 0);
 		MainScene->GetLight()->SetPosition(Star->GetAspectPosition()->GetPosition()[0], Star->GetAspectPosition()->GetPosition()[1], 100.0f);
-		MainScene->GetLight()->SetDiffuseColor(Star->GetColor().GetColor().m_V.m_A[0], Star->GetColor().GetColor().m_V.m_A[1], Star->GetColor().GetColor().m_V.m_A[2], Star->GetColor().GetColor().m_V.m_A[3]);
+		MainScene->GetLight()->SetDiffuseColor(Star->GetColor().GetColor()[0], Star->GetColor().GetColor()[1], Star->GetColor().GetColor()[2], Star->GetColor().GetColor()[3]);
 	}
 	else
 	{
@@ -3340,7 +3340,7 @@ void InitializeOpenGL(void)
 	
 	Vector4f GlobalAmbientLightColor(0.0f, 0.0f, 0.0f, 0.0f);
 	
-	GLLightModelfv(GL_LIGHT_MODEL_AMBIENT, GlobalAmbientLightColor.m_V.m_A);
+	GLLightModelfv(GL_LIGHT_MODEL_AMBIENT, GlobalAmbientLightColor.GetPointer());
 }
 
 void DeinitializeOpenGL(void)

@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 1.5.5 of algebra.
+ * This is part of version 1.5.6 of algebra.
  **/
 
 #ifndef ALGEBRA_MATRIX4F_H
@@ -85,15 +85,15 @@ public:
 		m_M[0].m_A[0] = 1;
 		m_M[0].m_A[1] = 0;
 		m_M[0].m_A[2] = 0;
-		m_M[0].m_A[3] = InitializeTranslation.m_V.m_A[0];
+		m_M[0].m_A[3] = InitializeTranslation._[0];
 		m_M[1].m_A[0] = 0;
 		m_M[1].m_A[1] = 1;
 		m_M[1].m_A[2] = 0;
-		m_M[1].m_A[3] = InitializeTranslation.m_V.m_A[1];
+		m_M[1].m_A[3] = InitializeTranslation._[1];
 		m_M[2].m_A[0] = 0;
 		m_M[2].m_A[1] = 0;
 		m_M[2].m_A[2] = 1;
-		m_M[2].m_A[3] = InitializeTranslation.m_V.m_A[2];
+		m_M[2].m_A[3] = InitializeTranslation._[2];
 		m_M[3].m_A[0] = 0;
 		m_M[3].m_A[1] = 0;
 		m_M[3].m_A[2] = 0;
@@ -322,10 +322,10 @@ public:
 	
 	Matrix4f & Translate(const Vector4f & Translation)
 	{
-		m_M[0].m_A[3] += m_M[0].m_A[0] * Translation.m_V.m_A[0] + m_M[0].m_A[1] * Translation.m_V.m_A[1] + m_M[0].m_A[2] * Translation.m_V.m_A[2];
-		m_M[1].m_A[3] += m_M[1].m_A[0] * Translation.m_V.m_A[0] + m_M[1].m_A[1] * Translation.m_V.m_A[1] + m_M[1].m_A[2] * Translation.m_V.m_A[2];
-		m_M[2].m_A[3] += m_M[2].m_A[0] * Translation.m_V.m_A[0] + m_M[2].m_A[1] * Translation.m_V.m_A[1] + m_M[2].m_A[2] * Translation.m_V.m_A[2];
-		m_M[3].m_A[3] += m_M[3].m_A[0] * Translation.m_V.m_A[0] + m_M[3].m_A[1] * Translation.m_V.m_A[1] + m_M[3].m_A[2] * Translation.m_V.m_A[2];
+		m_M[0].m_A[3] += m_M[0].m_A[0] * Translation._[0] + m_M[0].m_A[1] * Translation._[1] + m_M[0].m_A[2] * Translation._[2];
+		m_M[1].m_A[3] += m_M[1].m_A[0] * Translation._[0] + m_M[1].m_A[1] * Translation._[1] + m_M[1].m_A[2] * Translation._[2];
+		m_M[2].m_A[3] += m_M[2].m_A[0] * Translation._[0] + m_M[2].m_A[1] * Translation._[1] + m_M[2].m_A[2] * Translation._[2];
+		m_M[3].m_A[3] += m_M[3].m_A[0] * Translation._[0] + m_M[3].m_A[1] * Translation._[1] + m_M[3].m_A[2] * Translation._[2];
 		
 		return *this;
 	}

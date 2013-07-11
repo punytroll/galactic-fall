@@ -32,7 +32,7 @@ UI::Border::~Border(void)
 void UI::Border::Draw(void) const
 {
 	Widget::Draw();
-	GLColor4fv(m_ForegroundColor.GetColor().m_V.m_A);
+	GLColor4fv(m_ForegroundColor.GetColor().GetPointer());
 	GLBegin(GL_QUADS);
 		// left
 		GLVertex2f(0.0f, 0.0f);

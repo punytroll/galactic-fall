@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 1.5.5 of algebra.
+ * This is part of version 1.5.6 of algebra.
  **/
 
 #ifndef ALGEBRA_VECTOR2F_H
@@ -41,10 +41,10 @@ public:
 		_[1] = 0.0f;
 	}
 	
-	Vector2f(float X, float Y)
+	Vector2f(float Value1, float Value2)
 	{
-		_[0] = X;
-		_[1] = Y;
+		_[0] = Value1;
+		_[1] = Value2;
 	}
 	
 	static Vector2f CreateFromMagnitudeAndAngle(float Magnitude, float Angle)
@@ -52,10 +52,10 @@ public:
 		return Vector2f(Magnitude * cos(Angle), Magnitude * sin(Angle));
 	}
 	
-	Vector2f & Set(float Float1, float Float2)
+	Vector2f & Set(float Value1, float Value2)
 	{
-		_[0] = Float1;
-		_[1] = Float2;
+		_[0] = Value1;
+		_[1] = Value2;
 		
 		return *this;
 	}
