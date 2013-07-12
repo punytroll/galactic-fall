@@ -62,9 +62,9 @@ void Graphics::View::Render(void)
 	assert(_Camera != 0);
 	assert(_Camera->GetProjection() != 0);
 	GLMatrixMode(GL_PROJECTION);
-	GLLoadMatrixf(_Camera->GetProjection()->GetMatrix().Transposed().Matrix());
+	GLLoadMatrixf(_Camera->GetProjection()->GetMatrix().GetPointer());
 	GLMatrixMode(GL_MODELVIEW);
-	GLLoadMatrixf(_Camera->GetSpacialMatrix().Inverted().Transpose().Matrix());
+	GLLoadMatrixf(_Camera->GetSpacialMatrix().Inverted().GetPointer());
 	if(_Scene != 0)
 	{
 		_Scene->Render();

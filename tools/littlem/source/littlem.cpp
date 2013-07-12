@@ -1053,7 +1053,7 @@ void vDisplayModel(void)
 	assert(g_pCurrentCamera != 0);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	glMultMatrixf(Matrix4f(g_pCurrentCamera->m_Orientation).Matrix());
+	glMultMatrixf(Matrix4f::CreateFromQuaternion(g_pCurrentCamera->m_Orientation).GetPointer());
 	glTranslatef(-g_pCurrentCamera->GetX(), -g_pCurrentCamera->GetY(), -g_pCurrentCamera->GetZ());
 	for(std::vector< Light * >::size_type stLight = 0; stLight < g_EnabledLights.size(); ++stLight)
 	{
@@ -1146,13 +1146,13 @@ void vDisplayModel(void)
 	}
 	if(g_SelectedPoints.size() > 0)
 	{
-		Matrix4f Matrix(g_pCurrentCamera->m_Orientation.Conjugated());
+		Matrix4f Matrix(Matrix4f::CreateFromQuaternion(g_pCurrentCamera->m_Orientation.Conjugated()));
 		
 		for(std::vector< Point * >::size_type stI = 0; stI < g_SelectedPoints.size(); ++stI)
 		{
 			glPushMatrix();
 			glTranslatef(g_SelectedPoints[stI]->GetX(), g_SelectedPoints[stI]->GetY(), g_SelectedPoints[stI]->GetZ());
-			glMultMatrixf(Matrix.Matrix());
+			glMultMatrixf(Matrix.GetPointer());
 			glBegin(GL_POINTS);
 			glColor3f(1.0f, 0.0f, 0.0f);
 			glVertex3f(-0.05f, -0.05f, 0.0f);
@@ -1167,7 +1167,7 @@ void vDisplayModel(void)
 	{
 		glPushMatrix();
 		glTranslatef(g_pSelectedLight->GetX(), g_pSelectedLight->GetY(), g_pSelectedLight->GetZ());
-		glMultMatrixf(Matrix4f(g_pCurrentCamera->m_Orientation.Conjugated()).Matrix());
+		glMultMatrixf(Matrix4f::CreateFromQuaternion(g_pCurrentCamera->m_Orientation.Conjugated()).GetPointer());
 		glBegin(GL_POINTS);
 		glColor3f(1.0f, 1.0f, 0.0f);
 		glVertex3f(-0.05f, -0.05f, 0.0f);
@@ -1182,7 +1182,7 @@ void vDisplayModel(void)
 		glPushMatrix();
 		glTranslatef(g_pSelectedCamera->GetX(), g_pSelectedCamera->GetY(), g_pSelectedCamera->GetZ());
 		glPushMatrix();
-		glMultMatrixf(Matrix4f(g_pCurrentCamera->m_Orientation.Conjugated()).Matrix());
+		glMultMatrixf(Matrix4f::CreateFromQuaternion(g_pCurrentCamera->m_Orientation.Conjugated()).GetPointer());
 		glBegin(GL_POINTS);
 		glColor3f(1.0f, 1.0f, 0.0f);
 		glVertex3f(-0.05f, -0.05f, 0.0f);
@@ -1191,7 +1191,7 @@ void vDisplayModel(void)
 		glVertex3f(-0.05f, 0.05f, 0.0f);
 		glEnd();
 		glPopMatrix();
-		glMultMatrixf(Matrix4f(g_pSelectedCamera->m_Orientation.Conjugated()).Matrix());
+		glMultMatrixf(Matrix4f::CreateFromQuaternion(g_pSelectedCamera->m_Orientation.Conjugated()).GetPointer());
 		glColor3f(0.2f, 0.8f, 0.5f);
 		glBegin(GL_LINES);
 		glVertex3f(0.0f, 0.0f, 0.0f);
@@ -1262,7 +1262,7 @@ void vDisplayModel(void)
 		glEnd();
 		glPushMatrix();
 		glTranslatef(g_pHoveredCamera->GetX(), g_pHoveredCamera->GetY(), g_pHoveredCamera->GetZ());
-		glMultMatrixf(Matrix4f(g_pHoveredCamera->m_Orientation.Conjugated()).Matrix());
+		glMultMatrixf(Matrix4f::CreateFromQuaternion(g_pHoveredCamera->m_Orientation.Conjugated()).GetPointer());
 		glColor3f(0.0f, 0.5f, 0.5f);
 		glBegin(GL_LINES);
 		glVertex3f(0.0f, 0.0f, 0.0f);

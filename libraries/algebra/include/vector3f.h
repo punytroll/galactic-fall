@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 1.5.6 of algebra.
+ * This is part of version 1.6.0 of algebra.
  **/
 
 #ifndef ALGEBRA_VECTOR3F_H
@@ -175,9 +175,9 @@ public:
 	
 	Vector3f & operator*=(const Matrix3f & Matrix)
 	{
-		float X = (Matrix.m_M[0].m_A[0] * _[0]) + (Matrix.m_M[0].m_A[1] * _[1]) + (Matrix.m_M[0].m_A[2] * _[2]);
-		float Y = (Matrix.m_M[1].m_A[0] * _[0]) + (Matrix.m_M[1].m_A[1] * _[1]) + (Matrix.m_M[1].m_A[2] * _[2]);
-		float Z = (Matrix.m_M[2].m_A[0] * _[0]) + (Matrix.m_M[2].m_A[1] * _[1]) + (Matrix.m_M[2].m_A[2] * _[2]);
+		float X = (Matrix._[0] * _[0]) + (Matrix._[4] * _[1]) + (Matrix._[6] * _[2]);
+		float Y = (Matrix._[1] * _[0]) + (Matrix._[5] * _[1]) + (Matrix._[7] * _[2]);
+		float Z = (Matrix._[3] * _[0]) + (Matrix._[6] * _[1]) + (Matrix._[8] * _[2]);
 		
 		_[0] = X;
 		_[1] = Y;

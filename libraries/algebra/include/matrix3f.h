@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 1.5.6 of algebra.
+ * This is part of version 1.6.0 of algebra.
  **/
 
 #ifndef ALGEBRA_MATRIX3F_H
@@ -26,140 +26,230 @@
 
 #include <math.h>
 
-#include "details.h"
+class Vector3f;
 
 class Matrix3f
 {
+	friend Vector3f;
+private:
+	float _[9];
 public:
-	enum Initializer
-	{
-		InitializeZero,
-		InitializeIdentity,
-		InitializeRotationX,
-		InitializeRotationY,
-		InitializeRotationZ
-	};
-	
-	Array4f m_M[4];
-	
 	Matrix3f(void)
 	{
 	}
 	
-	Matrix3f(Initializer Initializer)
+	Matrix3f(bool)
 	{
-		if(Initializer == InitializeZero)
-		{
-			Zero();
-		}
-		else if(Initializer == InitializeIdentity)
-		{
-			Identity();
-		}
+		_[0] = 1.0f;
+		_[1] = 0.0f;
+		_[2] = 0.0f;
+		_[3] = 0.0f;
+		_[4] = 1.0f;
+		_[5] = 0.0f;
+		_[6] = 0.0f;
+		_[7] = 0.0f;
+		_[8] = 1.0f;
 	}
 	
-	Matrix3f(float Angle, Initializer Initializer)
+	static Matrix3f CreateZero(void)
 	{
-		if(Initializer == InitializeRotationX)
-		{
-			RotationX(Angle);
-		}
-		else if(Initializer == InitializeRotationY)
-		{
-			RotationY(Angle);
-		}
-		else if(Initializer == InitializeRotationZ)
-		{
-			RotationZ(Angle);
-		}
+		Matrix3f Result;
+		
+		Result._[0] = 0.0f;
+		Result._[1] = 0.0f;
+		Result._[2] = 0.0f;
+		Result._[3] = 0.0f;
+		Result._[4] = 0.0f;
+		Result._[5] = 0.0f;
+		Result._[6] = 0.0f;
+		Result._[7] = 0.0f;
+		Result._[8] = 0.0f;
+		
+		return Result;
+	}
+	
+	static Matrix3f CreateRotationX(float Angle)
+	{
+		Matrix3f Result;
+		float Cos(cos(Angle));
+		float Sin(sin(Angle));
+		
+		Result._[0] = 1.0f;
+		Result._[1] = 0.0f;
+		Result._[2] = 0.0f;
+		Result._[3] = 0.0f;
+		Result._[4] = Cos;
+		Result._[5] = Sin;
+		Result._[6] = 0.0f;
+		Result._[7] = -Sin;
+		Result._[8] = Cos;
+		
+		return Result;
+	}
+	
+	static Matrix3f CreateRotationY(float Angle)
+	{
+		Matrix3f Result;
+		float Cos(cos(Angle));
+		float Sin(sin(Angle));
+		
+		Result._[0] = Cos;
+		Result._[1] = 0.0f;
+		Result._[2] = -Sin;
+		Result._[3] = 0.0f;
+		Result._[4] = 1.0f;
+		Result._[5] = 0.0f;
+		Result._[6] = Sin;
+		Result._[7] = 0.0f;
+		Result._[8] = Cos;
+		
+		return Result;
+	}
+	
+	static Matrix3f CreateRotationZ(float Angle)
+	{
+		Matrix3f Result;
+		float Cos(cos(Angle));
+		float Sin(sin(Angle));
+		
+		Result._[0] = Cos;
+		Result._[1] = Sin;
+		Result._[2] = 0.0f;
+		Result._[3] = -Sin;
+		Result._[4] = Cos;
+		Result._[5] = 0.0f;
+		Result._[6] = 0.0f;
+		Result._[7] = 0.0f;
+		Result._[8] = 1.0f;
+		
+		return Result;
 	}
 	
 	void Zero(void)
 	{
-		m_M[0].m_A[0] = m_M[0].m_A[1] = m_M[0].m_A[2] = m_M[1].m_A[0] = m_M[1].m_A[1] = m_M[1].m_A[2] = m_M[2].m_A[0] = m_M[2].m_A[1] = m_M[2].m_A[2] = 0.0f;
+		_[0] = 0.0f;
+		_[1] = 0.0f;
+		_[2] = 0.0f;
+		_[3] = 0.0f;
+		_[4] = 0.0f;
+		_[5] = 0.0f;
+		_[6] = 0.0f;
+		_[7] = 0.0f;
+		_[8] = 0.0f;
 	}
 	
 	void Identity(void)
 	{
-		m_M[0].m_A[1] = m_M[0].m_A[2] = m_M[1].m_A[0] = m_M[1].m_A[2] = m_M[2].m_A[0] = m_M[2].m_A[1] = 0.0f;
-		m_M[0].m_A[0] = m_M[1].m_A[1] = m_M[2].m_A[2] = 1.0f;
+		_[0] = 1.0f;
+		_[1] = 0.0f;
+		_[2] = 0.0f;
+		_[3] = 0.0f;
+		_[4] = 1.0f;
+		_[5] = 0.0f;
+		_[6] = 0.0f;
+		_[7] = 0.0f;
+		_[8] = 1.0f;
 	}
 	
 	void RotationX(float Angle)
 	{
-		m_M[0].m_A[0] = 1.0f;
-		m_M[0].m_A[1] = m_M[0].m_A[2] = m_M[1].m_A[0] = m_M[2].m_A[0] = 0.0f;
-		m_M[1].m_A[1] = m_M[2].m_A[2] = cos(Angle);
-		m_M[1].m_A[2] = -(m_M[2].m_A[1] = sin(Angle));
+		float Cos(cos(Angle));
+		float Sin(sin(Angle));
+		
+		_[0] = 1.0f;
+		_[1] = 0.0f;
+		_[2] = 0.0f;
+		_[3] = 0.0f;
+		_[4] = Cos;
+		_[5] = Sin;
+		_[6] = 0.0f;
+		_[7] = -Sin;
+		_[8] = Cos;
 	}
 	
 	void RotationY(float Angle)
 	{
-		m_M[0].m_A[1] = m_M[1].m_A[0] = m_M[1].m_A[2] = m_M[2].m_A[1] = 0.0f;
-		m_M[1].m_A[1] = 1.0f;
-		m_M[0].m_A[0] = m_M[2].m_A[2] = cos(Angle);
-		m_M[2].m_A[0] = -(m_M[0].m_A[2] = sin(Angle));
+		float Cos(cos(Angle));
+		float Sin(sin(Angle));
+		
+		_[0] = Cos;
+		_[1] = 0.0f;
+		_[2] = -Sin;
+		_[3] = 0.0f;
+		_[4] = 1.0f;
+		_[5] = 0.0f;
+		_[6] = Sin;
+		_[7] = 0.0f;
+		_[8] = Cos;
 	}
 	
 	void RotationZ(float Angle)
 	{
-		m_M[0].m_A[2] = m_M[1].m_A[2] = m_M[2].m_A[0] = m_M[2].m_A[1] = 0.0f;
-		m_M[2].m_A[2] = 1.0f;
-		m_M[0].m_A[0] = m_M[1].m_A[1] = cos(Angle);
-		m_M[0].m_A[1] = -(m_M[1].m_A[0] = sin(Angle));
+		float Cos(cos(Angle));
+		float Sin(sin(Angle));
+		
+		_[0] = Cos;
+		_[1] = Sin;
+		_[2] = 0.0f;
+		_[3] = -Sin;
+		_[4] = Cos;
+		_[5] = 0.0f;
+		_[6] = 0.0f;
+		_[7] = 0.0f;
+		_[8] = 1.0f;
 	}
 	
 	Matrix3f & operator+=(const Matrix3f & Other)
 	{
-		m_M[0].m_A[0] += Other.m_M[0].m_A[0];
-		m_M[0].m_A[1] += Other.m_M[0].m_A[1];
-		m_M[0].m_A[2] += Other.m_M[0].m_A[2];
-		m_M[1].m_A[0] += Other.m_M[1].m_A[0];
-		m_M[1].m_A[1] += Other.m_M[1].m_A[1];
-		m_M[1].m_A[2] += Other.m_M[1].m_A[2];
-		m_M[2].m_A[0] += Other.m_M[2].m_A[0];
-		m_M[2].m_A[1] += Other.m_M[2].m_A[1];
-		m_M[2].m_A[2] += Other.m_M[2].m_A[2];
+		_[0] += Other._[0];
+		_[1] += Other._[1];
+		_[2] += Other._[2];
+		_[3] += Other._[3];
+		_[4] += Other._[4];
+		_[5] += Other._[5];
+		_[6] += Other._[6];
+		_[7] += Other._[7];
+		_[8] += Other._[8];
 		
 		return *this;
 	}
 	
 	Matrix3f & operator-=(const Matrix3f & Other)
 	{
-		m_M[0].m_A[0] -= Other.m_M[0].m_A[0];
-		m_M[0].m_A[1] -= Other.m_M[0].m_A[1];
-		m_M[0].m_A[2] -= Other.m_M[0].m_A[2];
-		m_M[1].m_A[0] -= Other.m_M[1].m_A[0];
-		m_M[1].m_A[1] -= Other.m_M[1].m_A[1];
-		m_M[1].m_A[2] -= Other.m_M[1].m_A[2];
-		m_M[2].m_A[0] -= Other.m_M[2].m_A[0];
-		m_M[2].m_A[1] -= Other.m_M[2].m_A[1];
-		m_M[2].m_A[2] -= Other.m_M[2].m_A[2];
+		_[0] -= Other._[0];
+		_[1] -= Other._[1];
+		_[2] -= Other._[2];
+		_[3] -= Other._[3];
+		_[4] -= Other._[4];
+		_[5] -= Other._[5];
+		_[6] -= Other._[6];
+		_[7] -= Other._[7];
+		_[8] -= Other._[8];
 		
 		return *this;
 	}
 	
 	Matrix3f & operator*=(const Matrix3f & Other)
 	{
-		float Value00(m_M[0].m_A[0] * Other.m_M[0].m_A[0] + m_M[0].m_A[1] * Other.m_M[1].m_A[0] + m_M[0].m_A[2] * Other.m_M[2].m_A[0]);
-		float Value01(m_M[0].m_A[0] * Other.m_M[0].m_A[1] + m_M[0].m_A[1] * Other.m_M[1].m_A[1] + m_M[0].m_A[2] * Other.m_M[2].m_A[1]);
-		float Value02(m_M[0].m_A[0] * Other.m_M[0].m_A[2] + m_M[0].m_A[1] * Other.m_M[1].m_A[2] + m_M[0].m_A[2] * Other.m_M[2].m_A[2]);
-		float Value10(m_M[1].m_A[0] * Other.m_M[0].m_A[0] + m_M[1].m_A[1] * Other.m_M[1].m_A[0] + m_M[1].m_A[2] * Other.m_M[2].m_A[0]);
-		float Value11(m_M[1].m_A[0] * Other.m_M[0].m_A[1] + m_M[1].m_A[1] * Other.m_M[1].m_A[1] + m_M[1].m_A[2] * Other.m_M[2].m_A[1]);
-		float Value12(m_M[1].m_A[0] * Other.m_M[0].m_A[2] + m_M[1].m_A[1] * Other.m_M[1].m_A[2] + m_M[1].m_A[2] * Other.m_M[2].m_A[2]);
-		float Value20(m_M[2].m_A[0] * Other.m_M[0].m_A[0] + m_M[2].m_A[1] * Other.m_M[1].m_A[0] + m_M[2].m_A[2] * Other.m_M[2].m_A[0]);
-		float Value21(m_M[2].m_A[0] * Other.m_M[0].m_A[1] + m_M[2].m_A[1] * Other.m_M[1].m_A[1] + m_M[2].m_A[2] * Other.m_M[2].m_A[1]);
-		float Value22(m_M[2].m_A[0] * Other.m_M[0].m_A[2] + m_M[2].m_A[1] * Other.m_M[1].m_A[2] + m_M[2].m_A[2] * Other.m_M[2].m_A[2]);
+		float Value0(_[0] * Other._[0] + _[3] * Other._[1] + _[6] * Other._[2]);
+		float Value1(_[1] * Other._[0] + _[4] * Other._[1] + _[7] * Other._[2]);
+		float Value2(_[2] * Other._[0] + _[5] * Other._[1] + _[8] * Other._[2]);
+		float Value3(_[0] * Other._[3] + _[3] * Other._[4] + _[6] * Other._[5]);
+		float Value4(_[1] * Other._[3] + _[4] * Other._[4] + _[7] * Other._[5]);
+		float Value5(_[2] * Other._[3] + _[5] * Other._[4] + _[8] * Other._[5]);
+		float Value6(_[0] * Other._[6] + _[3] * Other._[7] + _[6] * Other._[8]);
+		float Value7(_[1] * Other._[6] + _[4] * Other._[7] + _[7] * Other._[8]);
+		float Value8(_[2] * Other._[6] + _[5] * Other._[7] + _[8] * Other._[8]);
 		
-		m_M[0].m_A[0] = Value00;
-		m_M[0].m_A[1] = Value01;
-		m_M[0].m_A[2] = Value02;
-		m_M[1].m_A[0] = Value10;
-		m_M[1].m_A[1] = Value11;
-		m_M[1].m_A[2] = Value12;
-		m_M[2].m_A[0] = Value20;
-		m_M[2].m_A[1] = Value21;
-		m_M[2].m_A[2] = Value22;
+		_[0] = Value0;
+		_[1] = Value1;
+		_[2] = Value2;
+		_[3] = Value3;
+		_[4] = Value4;
+		_[5] = Value5;
+		_[6] = Value6;
+		_[7] = Value7;
+		_[8] = Value8;
 		
 		return *this;
 	}
