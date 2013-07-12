@@ -282,7 +282,7 @@ bool UI::TradeCenterWidget::_OnAssetClassMouseButton(TradeCenterAssetClass * Tra
 				View->SetClearColor(Color(1.0f, 1.0f, 1.0f, 0.0f));
 				assert(View->GetCamera() != 0);
 				View->GetCamera()->SetProjection(PerspectiveProjection);
-				View->GetCamera()->SetSpacialMatrix(Matrix4f(0.0f, -2.5f, 1.4f).RotateX(1.05f));
+				View->GetCamera()->SetSpacialMatrix(Matrix4f::CreateFromTranslationComponents(0.0f, -2.5f, 1.4f).RotateX(1.05f));
 				
 				Graphics::Scene * Scene(new Graphics::Scene());
 				

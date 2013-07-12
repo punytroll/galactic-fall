@@ -29,17 +29,25 @@
 
 static void CalculatePerspectiveMatrix(float FieldOfView, float Aspect, float NearClippingPlane, float FarClippingPlane, Matrix4f & Matrix)
 {
-	float Right, Top;
+	float Top(NearClippingPlane * tan(FieldOfView));
+	float Right(Top * Aspect);
 	
-	Top = NearClippingPlane * tan(FieldOfView);
-	Right = Top * Aspect;
-	
-	Matrix.m_M[1].m_A[0] = Matrix.m_M[2].m_A[0] = Matrix.m_M[3].m_A[0] = Matrix.m_M[0].m_A[1] = Matrix.m_M[2].m_A[1] = Matrix.m_M[3].m_A[1] = Matrix.m_M[0].m_A[2] = Matrix.m_M[1].m_A[2] = Matrix.m_M[0].m_A[3] = Matrix.m_M[1].m_A[3] = Matrix.m_M[3].m_A[3] = 0.0f;
-	Matrix.m_M[0].m_A[0] = NearClippingPlane / Right;
-	Matrix.m_M[1].m_A[1] = NearClippingPlane / Top;
-	Matrix.m_M[2].m_A[2] = -(FarClippingPlane + NearClippingPlane) / (FarClippingPlane - NearClippingPlane);
-	Matrix.m_M[3].m_A[2] = -(2.0f * FarClippingPlane * NearClippingPlane) / (FarClippingPlane - NearClippingPlane);
-	Matrix.m_M[2].m_A[3] = -1.0f;
+	Matrix[0] = NearClippingPlane / Right;
+	Matrix[1] = 0.0f;
+	Matrix[2] = 0.0f;
+	Matrix[3] = 0.0f;
+	Matrix[4] = 0.0f;
+	Matrix[5] = NearClippingPlane / Top;
+	Matrix[6] = 0.0f;
+	Matrix[7] = 0.0f;
+	Matrix[8] = 0.0f;
+	Matrix[9] = 0.0f;
+	Matrix[10] = -(FarClippingPlane + NearClippingPlane) / (FarClippingPlane - NearClippingPlane);
+	Matrix[11] = -1.0f;
+	Matrix[12] = 0.0f;
+	Matrix[13] = 0.0f;
+	Matrix[14] = -(2.0f * FarClippingPlane * NearClippingPlane) / (FarClippingPlane - NearClippingPlane);
+	Matrix[15] = 0.0f;
 }
 
 UI::MiniMapDisplay::MiniMapDisplay(UI::Widget * SupWidget) :
@@ -70,7 +78,7 @@ void UI::MiniMapDisplay::Draw(void) const
 	Matrix4f PerspectiveMatrix;
 	
 	CalculatePerspectiveMatrix(0.392699082f, 1.0f, 1.0f, 10000.0f, PerspectiveMatrix);
-	GLLoadMatrixf(PerspectiveMatrix.Matrix());
+	GLLoadMatrixf(PerspectiveMatrix.GetPointer());
 	GLMatrixMode(GL_MODELVIEW);
 	GLPushMatrix();
 	GLLoadIdentity();
