@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 1.6.0 of algebra.
+ * This is part of version 1.7.0 of algebra.
  **/
 
 #ifndef ALGEBRA_VECTOR4F_H
@@ -185,10 +185,10 @@ public:
 	{
 		Quaternion Result(AQuaternion * Quaternion(_[3], _[0], _[1], _[2]) * AQuaternion.Conjugated());
 		
-		_[0] = Result.m_V.m_A[1];
-		_[1] = Result.m_V.m_A[2];
-		_[2] = Result.m_V.m_A[3];
-		_[3] = Result.m_V.m_A[0];
+		_[0] = Result._[1];
+		_[1] = Result._[2];
+		_[2] = Result._[3];
+		_[3] = Result._[0];
 		
 		return *this;
 	}
