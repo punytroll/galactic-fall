@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 1.6.0 of algebra.
+ * This is part of version 1.7.0 of algebra.
  **/
 
 #ifndef ALGEBRA_MATRIX4F_H
@@ -134,15 +134,15 @@ public:
 	static Matrix4f CreateFromQuaternion(const Quaternion & Quaternion)
 	{
 		Matrix4f Result;
-		float WX(Quaternion.m_V.m_A[0] * Quaternion.m_V.m_A[1]);
-		float WY(Quaternion.m_V.m_A[0] * Quaternion.m_V.m_A[2]);
-		float WZ(Quaternion.m_V.m_A[0] * Quaternion.m_V.m_A[3]);
-		float XX(Quaternion.m_V.m_A[1] * Quaternion.m_V.m_A[1]);
-		float XY(Quaternion.m_V.m_A[1] * Quaternion.m_V.m_A[2]);
-		float XZ(Quaternion.m_V.m_A[1] * Quaternion.m_V.m_A[3]);
-		float YY(Quaternion.m_V.m_A[2] * Quaternion.m_V.m_A[2]);
-		float YZ(Quaternion.m_V.m_A[2] * Quaternion.m_V.m_A[3]);
-		float ZZ(Quaternion.m_V.m_A[3] * Quaternion.m_V.m_A[3]);
+		float WX(Quaternion._[0] * Quaternion._[1]);
+		float WY(Quaternion._[0] * Quaternion._[2]);
+		float WZ(Quaternion._[0] * Quaternion._[3]);
+		float XX(Quaternion._[1] * Quaternion._[1]);
+		float XY(Quaternion._[1] * Quaternion._[2]);
+		float XZ(Quaternion._[1] * Quaternion._[3]);
+		float YY(Quaternion._[2] * Quaternion._[2]);
+		float YZ(Quaternion._[2] * Quaternion._[3]);
+		float ZZ(Quaternion._[3] * Quaternion._[3]);
 		
 		Result._[0] = 1.0f - 2.0f * (YY + ZZ);
 		Result._[1] = 2.0f * (XY + WZ);
@@ -290,15 +290,15 @@ public:
 	
 	Matrix4f & Transform(const Quaternion & Quaternion)
 	{
-		float WX(Quaternion.m_V.m_A[0] * Quaternion.m_V.m_A[1]);
-		float WY(Quaternion.m_V.m_A[0] * Quaternion.m_V.m_A[2]);
-		float WZ(Quaternion.m_V.m_A[0] * Quaternion.m_V.m_A[3]);
-		float XX(Quaternion.m_V.m_A[1] * Quaternion.m_V.m_A[1]);
-		float XY(Quaternion.m_V.m_A[1] * Quaternion.m_V.m_A[2]);
-		float XZ(Quaternion.m_V.m_A[1] * Quaternion.m_V.m_A[3]);
-		float YY(Quaternion.m_V.m_A[2] * Quaternion.m_V.m_A[2]);
-		float YZ(Quaternion.m_V.m_A[2] * Quaternion.m_V.m_A[3]);
-		float ZZ(Quaternion.m_V.m_A[3] * Quaternion.m_V.m_A[3]);
+		float WX(Quaternion._[0] * Quaternion._[1]);
+		float WY(Quaternion._[0] * Quaternion._[2]);
+		float WZ(Quaternion._[0] * Quaternion._[3]);
+		float XX(Quaternion._[1] * Quaternion._[1]);
+		float XY(Quaternion._[1] * Quaternion._[2]);
+		float XZ(Quaternion._[1] * Quaternion._[3]);
+		float YY(Quaternion._[2] * Quaternion._[2]);
+		float YZ(Quaternion._[2] * Quaternion._[3]);
+		float ZZ(Quaternion._[3] * Quaternion._[3]);
 		float Value4(_[4] + 2 * _[8] * WX - 2 * _[4] * XX + 2 * _[0] * XY - 2 * _[0] * WZ + 2 * _[8] * YZ - 2 * _[4] * ZZ);
 		float Value5(_[5] + 2 * _[9] * WX - 2 * _[5] * XX + 2 * _[1] * XY - 2 * _[1] * WZ + 2 * _[9] * YZ - 2 * _[5] * ZZ);
 		float Value6(_[6] + 2 * _[10] * WX - 2 * _[6] * XX + 2 * _[2] * XY - 2 * _[2] * WZ + 2 * _[10] * YZ - 2 * _[6] * ZZ);

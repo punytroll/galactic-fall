@@ -578,10 +578,10 @@ XMLStream & operator<<(XMLStream & XMLStream, const CameraDescription & CameraDe
 	XMLStream << attribute << "position-x" << value << CameraDescription.Position[0];
 	XMLStream << attribute << "position-y" << value << CameraDescription.Position[1];
 	XMLStream << attribute << "position-z" << value << CameraDescription.Position[2];
-	XMLStream << attribute << "orientation-w" << value << CameraDescription.Orientation.m_V.m_A[0];
-	XMLStream << attribute << "orientation-x" << value << CameraDescription.Orientation.m_V.m_A[1];
-	XMLStream << attribute << "orientation-y" << value << CameraDescription.Orientation.m_V.m_A[2];
-	XMLStream << attribute << "orientation-z" << value << CameraDescription.Orientation.m_V.m_A[3];
+	XMLStream << attribute << "orientation-w" << value << CameraDescription.Orientation[0];
+	XMLStream << attribute << "orientation-x" << value << CameraDescription.Orientation[1];
+	XMLStream << attribute << "orientation-y" << value << CameraDescription.Orientation[2];
+	XMLStream << attribute << "orientation-z" << value << CameraDescription.Orientation[3];
 	XMLStream << attribute << "field-of-view" << value << CameraDescription.FieldOfView;
 	
 	return XMLStream;
