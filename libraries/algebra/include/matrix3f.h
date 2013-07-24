@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 1.7.0 of algebra.
+ * This is part of version 1.8.0 of algebra.
  **/
 
 #ifndef ALGEBRA_MATRIX3F_H
@@ -49,6 +49,19 @@ public:
 		_[6] = 0.0f;
 		_[7] = 0.0f;
 		_[8] = 1.0f;
+	}
+	
+	Matrix3f(float Value0, float Value1, float Value2, float Value3, float Value4, float Value5, float Value6, float Value7, float Value8)
+	{
+		_[0] = Value0;
+		_[1] = Value1;
+		_[2] = Value2;
+		_[3] = Value3;
+		_[4] = Value4;
+		_[5] = Value5;
+		_[6] = Value6;
+		_[7] = Value7;
+		_[8] = Value8;
 	}
 	
 	static Matrix3f CreateZero(void)
@@ -125,17 +138,74 @@ public:
 		return Result;
 	}
 	
-	void Zero(void)
+	Matrix3f & operator+=(const Matrix3f & Other)
 	{
-		_[0] = 0.0f;
-		_[1] = 0.0f;
-		_[2] = 0.0f;
-		_[3] = 0.0f;
-		_[4] = 0.0f;
-		_[5] = 0.0f;
-		_[6] = 0.0f;
-		_[7] = 0.0f;
-		_[8] = 0.0f;
+		_[0] += Other._[0];
+		_[1] += Other._[1];
+		_[2] += Other._[2];
+		_[3] += Other._[3];
+		_[4] += Other._[4];
+		_[5] += Other._[5];
+		_[6] += Other._[6];
+		_[7] += Other._[7];
+		_[8] += Other._[8];
+		
+		return *this;
+	}
+	
+	Matrix3f & operator-=(const Matrix3f & Other)
+	{
+		_[0] -= Other._[0];
+		_[1] -= Other._[1];
+		_[2] -= Other._[2];
+		_[3] -= Other._[3];
+		_[4] -= Other._[4];
+		_[5] -= Other._[5];
+		_[6] -= Other._[6];
+		_[7] -= Other._[7];
+		_[8] -= Other._[8];
+		
+		return *this;
+	}
+	
+	Matrix3f & operator*=(const Matrix3f & Other)
+	{
+		float Value0(_[0] * Other._[0] + _[3] * Other._[1] + _[6] * Other._[2]);
+		float Value1(_[1] * Other._[0] + _[4] * Other._[1] + _[7] * Other._[2]);
+		float Value2(_[2] * Other._[0] + _[5] * Other._[1] + _[8] * Other._[2]);
+		float Value3(_[0] * Other._[3] + _[3] * Other._[4] + _[6] * Other._[5]);
+		float Value4(_[1] * Other._[3] + _[4] * Other._[4] + _[7] * Other._[5]);
+		float Value5(_[2] * Other._[3] + _[5] * Other._[4] + _[8] * Other._[5]);
+		float Value6(_[0] * Other._[6] + _[3] * Other._[7] + _[6] * Other._[8]);
+		float Value7(_[1] * Other._[6] + _[4] * Other._[7] + _[7] * Other._[8]);
+		float Value8(_[2] * Other._[6] + _[5] * Other._[7] + _[8] * Other._[8]);
+		
+		_[0] = Value0;
+		_[1] = Value1;
+		_[2] = Value2;
+		_[3] = Value3;
+		_[4] = Value4;
+		_[5] = Value5;
+		_[6] = Value6;
+		_[7] = Value7;
+		_[8] = Value8;
+		
+		return *this;
+	}
+	
+	float operator[](int Index) const
+	{
+		return _[Index];
+	}
+	
+	float & operator[](int Index)
+	{
+		return _[Index];
+	}
+	
+	const float * const GetPointer(void) const
+	{
+		return _;
 	}
 	
 	void Identity(void)
@@ -199,59 +269,17 @@ public:
 		_[8] = 1.0f;
 	}
 	
-	Matrix3f & operator+=(const Matrix3f & Other)
+	void Zero(void)
 	{
-		_[0] += Other._[0];
-		_[1] += Other._[1];
-		_[2] += Other._[2];
-		_[3] += Other._[3];
-		_[4] += Other._[4];
-		_[5] += Other._[5];
-		_[6] += Other._[6];
-		_[7] += Other._[7];
-		_[8] += Other._[8];
-		
-		return *this;
-	}
-	
-	Matrix3f & operator-=(const Matrix3f & Other)
-	{
-		_[0] -= Other._[0];
-		_[1] -= Other._[1];
-		_[2] -= Other._[2];
-		_[3] -= Other._[3];
-		_[4] -= Other._[4];
-		_[5] -= Other._[5];
-		_[6] -= Other._[6];
-		_[7] -= Other._[7];
-		_[8] -= Other._[8];
-		
-		return *this;
-	}
-	
-	Matrix3f & operator*=(const Matrix3f & Other)
-	{
-		float Value0(_[0] * Other._[0] + _[3] * Other._[1] + _[6] * Other._[2]);
-		float Value1(_[1] * Other._[0] + _[4] * Other._[1] + _[7] * Other._[2]);
-		float Value2(_[2] * Other._[0] + _[5] * Other._[1] + _[8] * Other._[2]);
-		float Value3(_[0] * Other._[3] + _[3] * Other._[4] + _[6] * Other._[5]);
-		float Value4(_[1] * Other._[3] + _[4] * Other._[4] + _[7] * Other._[5]);
-		float Value5(_[2] * Other._[3] + _[5] * Other._[4] + _[8] * Other._[5]);
-		float Value6(_[0] * Other._[6] + _[3] * Other._[7] + _[6] * Other._[8]);
-		float Value7(_[1] * Other._[6] + _[4] * Other._[7] + _[7] * Other._[8]);
-		float Value8(_[2] * Other._[6] + _[5] * Other._[7] + _[8] * Other._[8]);
-		
-		_[0] = Value0;
-		_[1] = Value1;
-		_[2] = Value2;
-		_[3] = Value3;
-		_[4] = Value4;
-		_[5] = Value5;
-		_[6] = Value6;
-		_[7] = Value7;
-		_[8] = Value8;
-		
-		return *this;
+		_[0] = 0.0f;
+		_[1] = 0.0f;
+		_[2] = 0.0f;
+		_[3] = 0.0f;
+		_[4] = 0.0f;
+		_[5] = 0.0f;
+		_[6] = 0.0f;
+		_[7] = 0.0f;
+		_[8] = 0.0f;
 	}
 };
 
