@@ -995,7 +995,7 @@ void UpdateMainViewCamera(void)
 		if(g_FirstPersonCameraMode == true)
 		{
 			SpacialMatrix.RotateZ(-M_PI / 2.0f);
-			SpacialMatrix.Transform(g_CameraFocus->GetAspectPosition()->GetOrientation());
+			SpacialMatrix.Rotate(g_CameraFocus->GetAspectPosition()->GetOrientation());
 		}
 	}
 	SpacialMatrix.Translate(g_CameraPosition);

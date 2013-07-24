@@ -18,16 +18,17 @@
 **/
 
 /**
- * This is part of version 1.7.0 of algebra.
+ * This is part of version 1.8.0 of algebra.
  **/
 
 #ifndef ALGEBRA_VECTOR3F_H
 #define ALGEBRA_VECTOR3F_H
 
-#include "matrix3f.h"
-#include "quaternion.h"
+#include <math.h>
 
+class Matrix3f;
 class Matrix4f;
+class Quaternion;
 
 class Vector3f
 {
@@ -173,29 +174,9 @@ public:
 		return Vector3f(_[1] * Other._[2] - _[2] * Other._[1], _[2] * Other._[0] - _[0] * Other._[2], _[0] * Other._[1] - _[1] * Other._[0]);
 	}
 	
-	Vector3f & operator*=(const Matrix3f & Matrix)
-	{
-		float X = (Matrix._[0] * _[0]) + (Matrix._[4] * _[1]) + (Matrix._[6] * _[2]);
-		float Y = (Matrix._[1] * _[0]) + (Matrix._[5] * _[1]) + (Matrix._[7] * _[2]);
-		float Z = (Matrix._[3] * _[0]) + (Matrix._[6] * _[1]) + (Matrix._[8] * _[2]);
-		
-		_[0] = X;
-		_[1] = Y;
-		_[2] = Z;
-		
-		return *this;
-	}
+	Vector3f & operator*=(const Matrix3f & Matrix);
 	
-	Vector3f & operator*=(const Quaternion & AQuaternion)
-	{
-		Quaternion Result(AQuaternion * Quaternion(0.0f, _[0],_[1], _[2]) * AQuaternion.Conjugated());
-		
-		_[0] = Result._[1];
-		_[1] = Result._[2];
-		_[2] = Result._[3];
-		
-		return *this;
-	}
+	Vector3f & operator*=(const Quaternion & AQuaternion);
 	
 	float operator[](int Index) const
 	{
@@ -212,6 +193,37 @@ public:
 		return _;
 	}
 };
+
+/**
+ * IMPLEMENTATION
+ **/
+
+#include "matrix3f.h"
+#include "quaternion.h"
+
+inline Vector3f & Vector3f::operator*=(const Matrix3f & Matrix)
+{
+	float X = (Matrix._[0] * _[0]) + (Matrix._[4] * _[1]) + (Matrix._[6] * _[2]);
+	float Y = (Matrix._[1] * _[0]) + (Matrix._[5] * _[1]) + (Matrix._[7] * _[2]);
+	float Z = (Matrix._[3] * _[0]) + (Matrix._[6] * _[1]) + (Matrix._[8] * _[2]);
+	
+	_[0] = X;
+	_[1] = Y;
+	_[2] = Z;
+	
+	return *this;
+}
+
+inline Vector3f & Vector3f::operator*=(const Quaternion & AQuaternion)
+{
+	Quaternion Result(AQuaternion * Quaternion(0.0f, _[0],_[1], _[2]) * AQuaternion.Conjugated());
+	
+	_[0] = Result._[1];
+	_[1] = Result._[2];
+	_[2] = Result._[3];
+	
+	return *this;
+}
 
 inline Vector3f operator*(float Scalar, const Vector3f & Vector)
 {
