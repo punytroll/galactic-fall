@@ -18,13 +18,15 @@
 **/
 
 /**
- * This is part of version 1.8.0 of algebra.
+ * This is part of version 1.8.2 of algebra.
  **/
 
 #ifndef ALGEBRA_MATRIX3F_H
 #define ALGEBRA_MATRIX3F_H
 
 #include <math.h>
+
+#include <utility>
 
 class Vector3f;
 
@@ -208,7 +210,7 @@ public:
 		return _;
 	}
 	
-	void Identity(void)
+	Matrix3f & Identity(void)
 	{
 		_[0] = 1.0f;
 		_[1] = 0.0f;
@@ -219,9 +221,37 @@ public:
 		_[6] = 0.0f;
 		_[7] = 0.0f;
 		_[8] = 1.0f;
+		
+		return *this;
 	}
 	
-	void RotationX(float Angle)
+	Matrix3f & Invert(void)
+	{
+		float Determinant = -_[2] * _[4] * _[6] + _[1] * _[5] * _[6] + _[2] * _[3] * _[7] - _[0] * _[5] * _[7] - _[1] * _[3] * _[8] + _[0] * _[4] * _[8];
+		float Value0 = -_[5] * _[7] + _[4] * _[8];
+		float Value1 = _[2] * _[7] - _[1] * _[8];
+		float Value2 = -_[2] * _[4] + _[1] * _[5];
+		float Value3 = _[5] * _[6] - _[3] * _[8];
+		float Value4 = -_[2] * _[6] + _[0] * _[8];
+		float Value5 = _[2] * _[3] - _[0] * _[5];
+		float Value6 = -_[4] * _[6] + _[3] * _[7];
+		float Value7 = _[1] * _[6] - _[0] * _[7];
+		float Value8 = -_[1] * _[3] + _[0] * _[4];
+		
+		_[0] = Value0 / Determinant;
+		_[1] = Value1 / Determinant;
+		_[2] = Value2 / Determinant;
+		_[3] = Value3 / Determinant;
+		_[4] = Value4 / Determinant;
+		_[5] = Value5 / Determinant;
+		_[6] = Value6 / Determinant;
+		_[7] = Value7 / Determinant;
+		_[8] = Value8 / Determinant;
+		
+		return *this;
+	}
+	
+	Matrix3f & RotationX(float Angle)
 	{
 		float Cos(cos(Angle));
 		float Sin(sin(Angle));
@@ -235,9 +265,11 @@ public:
 		_[6] = 0.0f;
 		_[7] = -Sin;
 		_[8] = Cos;
+		
+		return *this;
 	}
 	
-	void RotationY(float Angle)
+	Matrix3f & RotationY(float Angle)
 	{
 		float Cos(cos(Angle));
 		float Sin(sin(Angle));
@@ -251,9 +283,11 @@ public:
 		_[6] = Sin;
 		_[7] = 0.0f;
 		_[8] = Cos;
+		
+		return *this;
 	}
 	
-	void RotationZ(float Angle)
+	Matrix3f & RotationZ(float Angle)
 	{
 		float Cos(cos(Angle));
 		float Sin(sin(Angle));
@@ -267,9 +301,20 @@ public:
 		_[6] = 0.0f;
 		_[7] = 0.0f;
 		_[8] = 1.0f;
+		
+		return *this;
 	}
 	
-	void Zero(void)
+	Matrix3f & Transpose(void)
+	{
+		std::swap(_[1], _[3]);
+		std::swap(_[2], _[6]);
+		std::swap(_[5], _[7]);
+		
+		return *this;
+	}
+	
+	Matrix3f & Zero(void)
 	{
 		_[0] = 0.0f;
 		_[1] = 0.0f;
@@ -280,6 +325,8 @@ public:
 		_[6] = 0.0f;
 		_[7] = 0.0f;
 		_[8] = 0.0f;
+		
+		return *this;
 	}
 };
 
