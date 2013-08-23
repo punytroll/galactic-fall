@@ -22,7 +22,7 @@
 Graphics::PerspectiveProjection::PerspectiveProjection(void) :
 	_Aspect(1.0f),
 	_FarClippingPlane(10000.0f),
-	_FieldOfView(0.392699082f),
+	_FieldOfViewY(1.0f),
 	_NearClippingPlane(1.0f)
 {
 }
@@ -34,7 +34,7 @@ Graphics::PerspectiveProjection::~PerspectiveProjection(void)
 Matrix4f Graphics::PerspectiveProjection::CalculateMatrix(void) const
 {
 	Matrix4f Result;
-	float Top(_NearClippingPlane * tan(_FieldOfView));
+	float Top(_NearClippingPlane * tan(_FieldOfViewY / 2.0f));
 	float Right(Top * _Aspect);
 	
 	Result[0] = _NearClippingPlane / Right;
@@ -75,11 +75,11 @@ void Graphics::PerspectiveProjection::SetFarClippingPlane(float FarClippingPlane
 	}
 }
 
-void Graphics::PerspectiveProjection::SetFieldOfView(float FieldOfView)
+void Graphics::PerspectiveProjection::SetFieldOfViewY(float FieldOfViewY)
 {
-	if(_FieldOfView != FieldOfView)
+	if(_FieldOfViewY != FieldOfViewY)
 	{
-		_FieldOfView = FieldOfView;
+		_FieldOfViewY = FieldOfViewY;
 		InvalidateMatrix();
 	}
 }

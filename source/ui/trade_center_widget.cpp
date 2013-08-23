@@ -271,7 +271,7 @@ bool UI::TradeCenterWidget::_OnAssetClassMouseButton(TradeCenterAssetClass * Tra
 			{
 				Graphics::PerspectiveProjection * PerspectiveProjection(new Graphics::PerspectiveProjection());
 				
-				PerspectiveProjection->SetFieldOfView(0.32);
+				PerspectiveProjection->SetFieldOfViewY(0.8f);
 				PerspectiveProjection->SetAspect(_AssetClassViewDisplay->GetSize()[0] / _AssetClassViewDisplay->GetSize()[1]);
 				PerspectiveProjection->SetNearClippingPlane(0.1f);
 				PerspectiveProjection->SetFarClippingPlane(100.0f);
