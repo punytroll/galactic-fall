@@ -20,7 +20,6 @@
 #ifndef TIMING_DIALOG_H
 #define TIMING_DIALOG_H
 
-#include "../type_definitions.h"
 #include "window.h"
 
 namespace UI
@@ -33,22 +32,22 @@ namespace UI
 		TimingDialog(UI::Widget * SupWidget);
 	private:
 		// callbacks
-		bool OnKey(const KeyEventInformation & KeyEventInformation);
+		bool _OnKey(const KeyEventInformation & KeyEventInformation);
 		void _OnUpdating(float RealTimeSeconds, float GameTimeSeconds);
 		// member variables
-		UI::Label * m_AISecondsThisFrameLabel;
-		UI::Label * m_CommoditiesInCurrentSystemThisFrameLabel;
-		UI::Label * m_DispatchedMessagesThisFrameLabel;
-		UI::Label * m_FramesPerSecondLabel;
-		UI::Label * m_FrameToFrameSecondsThisFrameLabel;
-		UI::Label * m_GraphicsSecondsThisFrameLabel;
-		UI::Label * m_MessagingSecondsThisFrameLabel;
-		UI::Label * m_ParticleSystemsThisFrameLabel;
-		UI::Label * m_ParticlesThisFrameLabel;
-		UI::Label * m_PhysicsSecondsThisFrameLabel;
-		UI::Label * m_ProcessingSecondsThisFrameLabel;
-		UI::Label * m_ShipsInCurrentSystemThisFrameLabel;
-		UI::Label * m_ShotsInCurrentSystemThisFrameLabel;
+		UI::Label * _AISecondsThisFrameLabel;
+		UI::Label * _CommoditiesInCurrentSystemThisFrameLabel;
+		UI::Label * _DispatchedMessagesThisFrameLabel;
+		UI::Label * _FramesPerSecondLabel;
+		UI::Label * _FrameToFrameSecondsThisFrameLabel;
+		UI::Label * _GraphicsSecondsThisFrameLabel;
+		UI::Label * _MessagingSecondsThisFrameLabel;
+		UI::Label * _ParticleSystemsThisFrameLabel;
+		UI::Label * _ParticlesThisFrameLabel;
+		UI::Label * _PhysicsSecondsThisFrameLabel;
+		UI::Label * _ProcessingSecondsThisFrameLabel;
+		UI::Label * _ShipsInCurrentSystemThisFrameLabel;
+		UI::Label * _ShotsInCurrentSystemThisFrameLabel;
 	};
 }
 
