@@ -448,6 +448,7 @@ graphics_texture_render_target_h = \
 
 graphics_view_cpp = \
 	graphics/view.cpp \
+	$(color_h) \
 	$(graphics_camera_h) \
 	$(graphics_gl_h) \
 	$(graphics_projection_h) \
@@ -556,8 +557,7 @@ main_cpp = \
 	$(weapon_h) \
 	$(weapon_class_h) \
 	$(write_to_xml_stream_h) \
-	$(xml_puny_dom_h) \
-	$(xml_stream_h)
+	$(xml_puny_dom_h)
 
 map_knowledge_cpp = \
 	map_knowledge.cpp \
@@ -1237,7 +1237,6 @@ ui_timing_dialog_cpp = \
 
 ui_timing_dialog_h = \
 	ui/timing_dialog.h \
-	$(type_definitions_h) \
 	$(ui_window_h)
 
 ui_trade_center_widget_cpp = \
