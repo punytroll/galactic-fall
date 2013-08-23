@@ -34,19 +34,19 @@ namespace Graphics
 		// getters
 		float GetAspect(void) const;
 		float GetFarClippingPlane(void) const;
-		float GetFieldOfView(void) const;
+		float GetFieldOfViewY(void) const;
 		float GetNearClippingPlane(void) const;
 		// setters
 		void SetAspect(float Aspect);
 		void SetFarClippingPlane(float FarClippingPlane);
-		void SetFieldOfView(float FieldOfView);
+		void SetFieldOfViewY(float FieldOfViewY);
 		void SetNearClippingPlane(float NearClippingPlane);
 	protected:
 		virtual Matrix4f CalculateMatrix(void) const;
 	private:
 		float _Aspect;
 		float _FarClippingPlane;
-		float _FieldOfView;
+		float _FieldOfViewY;
 		float _NearClippingPlane;
 	};
 	
@@ -60,9 +60,9 @@ namespace Graphics
 		return _FarClippingPlane;
 	}
 	
-	inline float PerspectiveProjection::GetFieldOfView(void) const
+	inline float PerspectiveProjection::GetFieldOfViewY(void) const
 	{
-		return _FieldOfView;
+		return _FieldOfViewY;
 	}
 	
 	inline float PerspectiveProjection::GetNearClippingPlane(void) const

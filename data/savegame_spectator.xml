@@ -3,6 +3,6 @@
 	<time-warp value="4.23"/>
 	<main-camera>
 		<position x="0" y="0" z="440"/>
-		<field-of-view degree="45"/>
+		<field-of-view-y radians="1"/>
 	</main-camera>
 </save>

@@ -1708,17 +1708,12 @@ void LoadGameFromElement(const Element * SaveElement)
 				{
 					// read in second pass
 				}
-				else if((*CameraChild)->GetName() == "field-of-view")
+				else if((*CameraChild)->GetName() == "field-of-view-y")
 				{
-					if((*CameraChild)->HasAttribute("degree") == true)
+					if((*CameraChild)->HasAttribute("radians") == true)
 					{
 						assert(g_MainProjection != 0);
-						g_MainProjection->SetFieldOfView(from_string_cast< float >((*CameraChild)->GetAttribute("degree")) * M_PI / 360.0f);
-					}
-					else if((*CameraChild)->HasAttribute("radians") == true)
-					{
-						assert(g_MainProjection != 0);
-						g_MainProjection->SetFieldOfView(from_string_cast< float >((*CameraChild)->GetAttribute("radians")));
+						g_MainProjection->SetFieldOfViewY(from_string_cast< float >((*CameraChild)->GetAttribute("radians")));
 					}
 				}
 				else
@@ -2384,7 +2379,7 @@ void SaveGame(std::ostream & OStream)
 		XML << element << "focus" << attribute << "object-identifier" << value << g_CameraFocus->GetObjectIdentifier() << end;
 	}
 	assert(g_MainProjection != 0);
-	XML << element << "field-of-view" << attribute << "radians" << value << g_MainProjection->GetFieldOfView() << end;
+	XML << element << "field-of-view-y" << attribute << "radians" << value << g_MainProjection->GetFieldOfViewY() << end;
 	XML << end; // camera
 	// now save the impoartant objects
 	if(g_InputMind.IsValid() == true)
@@ -2422,7 +2417,7 @@ void SaveGame(std::ostream & OStream)
 void ActionDecreaseFieldOfView(void)
 {
 	assert(g_MainProjection != 0);
-	g_MainProjection->SetFieldOfView(0.9f * g_MainProjection->GetFieldOfView());
+	g_MainProjection->SetFieldOfViewY(0.9f * g_MainProjection->GetFieldOfViewY());
 }
 
 void ActionDecreaseTimeWarp(void)
@@ -2566,7 +2561,7 @@ void ActionFocusCameraOnPreviousShip(void)
 void ActionIncreaseFieldOfView(void)
 {
 	assert(g_MainProjection != 0);
-	g_MainProjection->SetFieldOfView(1.1f * g_MainProjection->GetFieldOfView());
+	g_MainProjection->SetFieldOfViewY(1.1f * g_MainProjection->GetFieldOfViewY());
 }
 
 void ActionIncreaseTimeWarp(void)
