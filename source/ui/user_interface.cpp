@@ -183,7 +183,7 @@ void UI::UserInterface::MouseMoved(float X, float Y)
 
 void UI::UserInterface::Update(float RealTimeSeconds, float GameTimeSeconds)
 {
-	assert (m_RootWidget != 0);
+	assert(m_RootWidget != 0);
 	
 	std::stack< std::pair< UI::Widget *, bool > > ToDo;
 	
