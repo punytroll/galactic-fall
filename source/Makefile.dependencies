@@ -983,7 +983,8 @@ ui_button_cpp = \
 	$(callbacks_callbacks_h) \
 	$(color_h) \
 	$(globals_h) \
-	$(ui_button_h)
+	$(ui_button_h) \
+	$(ui_user_interface_h)
 
 ui_button_h = \
 	ui/button.h \
