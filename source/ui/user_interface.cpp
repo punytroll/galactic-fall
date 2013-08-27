@@ -64,11 +64,10 @@ void UI::UserInterface::Draw(void) const
 
 void UI::UserInterface::SetCaptureWidget(UI::Widget * Widget)
 {
-	if(m_CaptureWidget == 0)
-	{
-		m_CaptureWidget = Widget;
-		m_CaptureWidgetDestroyingCallbackConnectionHandle = m_CaptureWidget->ConnectDestroyingCallback(Callback(this, &UI::UserInterface::OnCaptureWidgetDestroying));
-	}
+	assert(Widget != 0);
+	assert(m_CaptureWidget == 0);
+	m_CaptureWidget = Widget;
+	m_CaptureWidgetDestroyingCallbackConnectionHandle = m_CaptureWidget->ConnectDestroyingCallback(Callback(this, &UI::UserInterface::OnCaptureWidgetDestroying));
 }
 
 void UI::UserInterface::ReleaseCaptureWidget(void)
@@ -174,9 +173,20 @@ void UI::UserInterface::MouseMoved(float X, float Y)
 	{
 		if(m_CaptureWidget->GetEnabled() == true)
 		{
-			Vector2f TopLeftCorner(m_CaptureWidget->GetGlobalPosition());
+			Vector2f LeftTopCorner(m_CaptureWidget->GetGlobalPosition());
+			Vector2f RightBottomCorner(LeftTopCorner + m_CaptureWidget->GetSize());
 			
-			m_CaptureWidget->MouseMoved(X - TopLeftCorner[0], Y - TopLeftCorner[1]);
+			if((X >= LeftTopCorner[0]) && (X < RightBottomCorner[0]) && (Y >= LeftTopCorner[1]) && (Y < RightBottomCorner[1]) && (m_CaptureWidget->m_SupWidget->m_HoverWidget != m_CaptureWidget))
+			{
+				m_CaptureWidget->m_SupWidget->m_HoverWidget = m_CaptureWidget;
+				m_CaptureWidget->MouseEnter();
+			}
+			m_CaptureWidget->MouseMoved(X - LeftTopCorner[0], Y - LeftTopCorner[1]);
+			if(((X < LeftTopCorner[0]) || (X >= RightBottomCorner[0]) || (Y < LeftTopCorner[1]) || (Y >= RightBottomCorner[1])) && (m_CaptureWidget->m_SupWidget->m_HoverWidget == m_CaptureWidget))
+			{
+				m_CaptureWidget->m_SupWidget->m_HoverWidget = 0;
+				m_CaptureWidget->MouseLeave();
+			}
 		}
 	}
 }

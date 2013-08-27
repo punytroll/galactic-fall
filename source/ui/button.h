@@ -38,9 +38,9 @@ namespace UI
 		void DisconnectClickedCallback(ConnectionHandle & ConnectionHandle);
 	private:
 		// callbacks
-		bool OnMouseButton(int Button, int State, float X, float Y);
-		void OnMouseEnter(void);
-		void OnMouseLeave(void);
+		bool _OnMouseButton(int Button, int State, float X, float Y);
+		void _OnMouseEnter(void);
+		void _OnMouseLeave(void);
 		// member variables
 		// events
 		Event0< void > _ClickedEvent;
