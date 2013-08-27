@@ -400,9 +400,9 @@ void CollectWidgets(void)
 {
 	std::list< UI::Widget * > & DestroyedWidgets(UI::Widget::GetDestroyedWidgets());
 	
-	while(DestroyedWidgets.size() > 0)
+	for(std::list< UI::Widget * >::iterator DestroyedWidgetIterator = DestroyedWidgets.begin(); DestroyedWidgetIterator != DestroyedWidgets.end(); ++DestroyedWidgetIterator)
 	{
-		UI::Widget * DestroyedWidget(DestroyedWidgets.front());
+		UI::Widget * DestroyedWidget(*DestroyedWidgetIterator);
 		
 		if(DestroyedWidget == g_CreditsLabel)
 		{
@@ -457,8 +457,8 @@ void CollectWidgets(void)
 			g_TimeWarpLabel = 0;
 		}
 		delete DestroyedWidget;
-		DestroyedWidgets.pop_front();
 	}
+	DestroyedWidgets.clear();
 }
 
 void CollectWidgetsRecurrent(void)
