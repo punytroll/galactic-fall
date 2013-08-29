@@ -34,58 +34,58 @@
 
 UI::ObjectInformationDialog::ObjectInformationDialog(UI::Widget * SupWidget, const Reference< Object > & Object) :
 	UI::Window(SupWidget, "Object Information"),
-	m_Object(Object),
-	m_OKButton(0)
+	_Object(Object),
+	_OKButton(0)
 {
 	SetPosition(Vector2f(100.0f, 400.0f));
 	SetSize(Vector2f(500.0f, 300.0f));
-	ConnectMouseButtonCallback(Callback(this, &ObjectInformationDialog::OnMouseButton));
+	ConnectMouseButtonCallback(Callback(this, &ObjectInformationDialog::_OnMouseButton));
 	// set up widgets
-	m_OKButton = new UI::Button(this);
-	m_OKButton->SetSize(Vector2f(100.0f, 20.0f));
-	m_OKButton->SetPosition(Vector2f(GetSize()[0] - 10.0f - m_OKButton->GetSize()[0], GetSize()[1] - 10.0f - m_OKButton->GetSize()[1]));
-	m_OKButton->SetAnchorBottom(true);
-	m_OKButton->SetAnchorLeft(false);
-	m_OKButton->SetAnchorRight(true);
-	m_OKButton->SetAnchorTop(false);
-	m_OKButton->ConnectClickedCallback(Callback(this, &ObjectInformationDialog::OnOKClicked));
+	_OKButton = new UI::Button(this);
+	_OKButton->SetSize(Vector2f(100.0f, 20.0f));
+	_OKButton->SetPosition(Vector2f(GetSize()[0] - 10.0f - _OKButton->GetSize()[0], GetSize()[1] - 10.0f - _OKButton->GetSize()[1]));
+	_OKButton->SetAnchorBottom(true);
+	_OKButton->SetAnchorLeft(false);
+	_OKButton->SetAnchorRight(true);
+	_OKButton->SetAnchorTop(false);
+	_OKButton->ConnectClickedCallback(Callback(this, &ObjectInformationDialog::_OnOKClicked));
 	
-	UI::Label * OKButtonLabel = new UI::Label(m_OKButton, "OK");
+	UI::Label * OKButtonLabel = new UI::Label(_OKButton, "OK");
 	
 	OKButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
-	OKButtonLabel->SetSize(m_OKButton->GetSize());
+	OKButtonLabel->SetSize(_OKButton->GetSize());
 	OKButtonLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
 	OKButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
-	m_PropertiesScrollBox = new UI::ScrollBox(this);
-	m_PropertiesScrollBox->SetPosition(Vector2f(10.0f, 40.0f));
-	m_PropertiesScrollBox->SetSize(Vector2f(GetSize()[0] - 20.0f, GetSize()[1] - 80.0f));
-	m_PropertiesScrollBox->SetHorizontalScrollBarVisible(false);
-	m_PropertiesScrollBox->SetAnchorBottom(true);
-	m_PropertiesScrollBox->SetAnchorRight(true);
-	m_RefreshButton = new UI::Button(this);
-	m_RefreshButton->SetSize(Vector2f(100.0f, 20.0f));
-	m_RefreshButton->SetPosition(Vector2f(m_OKButton->GetPosition()[0] - 10.0f - m_RefreshButton->GetSize()[0], GetSize()[1] - 10.0f - m_RefreshButton->GetSize()[1]));
-	m_RefreshButton->SetAnchorBottom(true);
-	m_RefreshButton->SetAnchorLeft(false);
-	m_RefreshButton->SetAnchorRight(true);
-	m_RefreshButton->SetAnchorTop(false);
-	m_RefreshButton->ConnectClickedCallback(Callback(this, &ObjectInformationDialog::OnRefreshClicked));
+	_PropertiesScrollBox = new UI::ScrollBox(this);
+	_PropertiesScrollBox->SetPosition(Vector2f(10.0f, 40.0f));
+	_PropertiesScrollBox->SetSize(Vector2f(GetSize()[0] - 20.0f, GetSize()[1] - 80.0f));
+	_PropertiesScrollBox->SetHorizontalScrollBarVisible(false);
+	_PropertiesScrollBox->SetAnchorBottom(true);
+	_PropertiesScrollBox->SetAnchorRight(true);
+	_RefreshButton = new UI::Button(this);
+	_RefreshButton->SetSize(Vector2f(100.0f, 20.0f));
+	_RefreshButton->SetPosition(Vector2f(_OKButton->GetPosition()[0] - 10.0f - _RefreshButton->GetSize()[0], GetSize()[1] - 10.0f - _RefreshButton->GetSize()[1]));
+	_RefreshButton->SetAnchorBottom(true);
+	_RefreshButton->SetAnchorLeft(false);
+	_RefreshButton->SetAnchorRight(true);
+	_RefreshButton->SetAnchorTop(false);
+	_RefreshButton->ConnectClickedCallback(Callback(this, &ObjectInformationDialog::_OnRefreshClicked));
 	
-	UI::Label * RefreshButtonLabel = new UI::Label(m_RefreshButton, "Refresh");
+	UI::Label * RefreshButtonLabel = new UI::Label(_RefreshButton, "Refresh");
 	
 	RefreshButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
-	RefreshButtonLabel->SetSize(m_RefreshButton->GetSize());
+	RefreshButtonLabel->SetSize(_RefreshButton->GetSize());
 	RefreshButtonLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
 	RefreshButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
-	Refresh();
+	_Refresh();
 }
 
-float UI::ObjectInformationDialog::AddObjectProperty(float Top, float Indentation, const Reference< Object > & Object)
+float UI::ObjectInformationDialog::_AddObjectProperty(float Top, float Indentation, const Reference< Object > & Object)
 {
-	UI::Widget * PropertyDisplay(new UI::Widget(m_PropertiesScrollBox->GetContent()));
+	UI::Widget * PropertyDisplay(new UI::Widget(_PropertiesScrollBox->GetContent()));
 	
 	PropertyDisplay->SetPosition(Vector2f(10.0f, Top));
-	PropertyDisplay->SetSize(Vector2f(m_PropertiesScrollBox->GetContent()->GetSize()[0] - 20.0f, 30.0f));
+	PropertyDisplay->SetSize(Vector2f(_PropertiesScrollBox->GetContent()->GetSize()[0] - 20.0f, 30.0f));
 	PropertyDisplay->SetAnchorRight(true);
 	
 	UI::Button * ObjectButton(new UI::Button(PropertyDisplay));
@@ -93,7 +93,7 @@ float UI::ObjectInformationDialog::AddObjectProperty(float Top, float Indentatio
 	ObjectButton->SetPosition(Vector2f(Indentation, 5.0f));
 	ObjectButton->SetSize(Vector2f(PropertyDisplay->GetSize()[0] - Indentation, 20.0f));
 	ObjectButton->SetAnchorRight(true);
-	ObjectButton->ConnectClickedCallback(Bind1(Callback(this, &ObjectInformationDialog::OnObjectClicked), Object));
+	ObjectButton->ConnectClickedCallback(Bind1(Callback(this, &ObjectInformationDialog::_OnObjectClicked), Object));
 	
 	UI::Label * ObjectButtonLabel(new UI::Label(ObjectButton, Object->GetObjectIdentifier()));
 	
@@ -105,12 +105,12 @@ float UI::ObjectInformationDialog::AddObjectProperty(float Top, float Indentatio
 	return PropertyDisplay->GetSize()[1];
 }
 
-float UI::ObjectInformationDialog::AddSeparator(float Top, float Indentation, const std::string & Separator)
+float UI::ObjectInformationDialog::_AddSeparator(float Top, float Indentation, const std::string & Separator)
 {
-	UI::Widget * SeparatorDisplay(new UI::Widget(m_PropertiesScrollBox->GetContent()));
+	UI::Widget * SeparatorDisplay(new UI::Widget(_PropertiesScrollBox->GetContent()));
 	
 	SeparatorDisplay->SetPosition(Vector2f(10.0f, Top));
-	SeparatorDisplay->SetSize(Vector2f(m_PropertiesScrollBox->GetContent()->GetSize()[0] - 20.0f, 20.0f));
+	SeparatorDisplay->SetSize(Vector2f(_PropertiesScrollBox->GetContent()->GetSize()[0] - 20.0f, 20.0f));
 	SeparatorDisplay->SetAnchorRight(true);
 	
 	UI::Label * SeparatorLabel(new UI::Label(SeparatorDisplay, Separator));
@@ -124,12 +124,12 @@ float UI::ObjectInformationDialog::AddSeparator(float Top, float Indentation, co
 	return SeparatorDisplay->GetSize()[1];
 }
 
-float UI::ObjectInformationDialog::AddString(float Top, float Indentation, const std::string & String)
+float UI::ObjectInformationDialog::_AddString(float Top, float Indentation, const std::string & String)
 {
-	UI::Widget * StringDisplay(new UI::Widget(m_PropertiesScrollBox->GetContent()));
+	UI::Widget * StringDisplay(new UI::Widget(_PropertiesScrollBox->GetContent()));
 	
 	StringDisplay->SetPosition(Vector2f(10.0f, Top));
-	StringDisplay->SetSize(Vector2f(m_PropertiesScrollBox->GetContent()->GetSize()[0] - 20.0f, 20.0f));
+	StringDisplay->SetSize(Vector2f(_PropertiesScrollBox->GetContent()->GetSize()[0] - 20.0f, 20.0f));
 	StringDisplay->SetAnchorRight(true);
 	
 	UI::Label * StringLabel(new UI::Label(StringDisplay, String));
@@ -142,12 +142,12 @@ float UI::ObjectInformationDialog::AddString(float Top, float Indentation, const
 	return StringDisplay->GetSize()[1];
 }
 
-float UI::ObjectInformationDialog::AddStringProperty(float Top, float Indentation, const std::string & PropertyName, const std::string & PropertyValue)
+float UI::ObjectInformationDialog::_AddStringProperty(float Top, float Indentation, const std::string & PropertyName, const std::string & PropertyValue)
 {
-	UI::Widget * PropertyDisplay(new UI::Widget(m_PropertiesScrollBox->GetContent()));
+	UI::Widget * PropertyDisplay(new UI::Widget(_PropertiesScrollBox->GetContent()));
 	
 	PropertyDisplay->SetPosition(Vector2f(10.0f, Top));
-	PropertyDisplay->SetSize(Vector2f(m_PropertiesScrollBox->GetContent()->GetSize()[0] - 20.0f, 20.0f));
+	PropertyDisplay->SetSize(Vector2f(_PropertiesScrollBox->GetContent()->GetSize()[0] - 20.0f, 20.0f));
 	PropertyDisplay->SetAnchorRight(true);
 	
 	UI::Label * PropertyNameLabel(new UI::Label(PropertyDisplay, PropertyName + ":"));
@@ -169,90 +169,90 @@ float UI::ObjectInformationDialog::AddStringProperty(float Top, float Indentatio
 	return PropertyDisplay->GetSize()[1];
 }
 
-void UI::ObjectInformationDialog::Refresh(void)
+void UI::ObjectInformationDialog::_Refresh(void)
 {
 	// clear old properties
-	while(m_PropertiesScrollBox->GetContent()->GetSubWidgets().empty() == false)
+	while(_PropertiesScrollBox->GetContent()->GetSubWidgets().empty() == false)
 	{
-		m_PropertiesScrollBox->GetContent()->GetSubWidgets().front()->Destroy();
+		_PropertiesScrollBox->GetContent()->GetSubWidgets().front()->Destroy();
 	}
 	
 	float Top(0.0f);
 	
 	// fill the properties view
-	if(m_Object.IsValid() == true)
+	if(_Object.IsValid() == true)
 	{
-		Top += AddStringProperty(Top, 0.0f, "Type", m_Object->GetTypeIdentifier());
-		Top += AddStringProperty(Top, 0.0f, "Class", m_Object->GetClassIdentifier());
-		Top += AddStringProperty(Top, 0.0f, "Identifier", m_Object->GetObjectIdentifier());
-		Top += AddSeparator(Top, 0.0f, "Container");
-		if(m_Object->GetContainer() != 0)
+		Top += _AddStringProperty(Top, 0.0f, "Type", _Object->GetTypeIdentifier());
+		Top += _AddStringProperty(Top, 0.0f, "Class", _Object->GetClassIdentifier());
+		Top += _AddStringProperty(Top, 0.0f, "Identifier", _Object->GetObjectIdentifier());
+		Top += _AddSeparator(Top, 0.0f, "Container");
+		if(_Object->GetContainer() != 0)
 		{
-			Top += AddObjectProperty(Top, 20.0f, m_Object->GetContainer()->GetReference());
+			Top += _AddObjectProperty(Top, 20.0f, _Object->GetContainer()->GetReference());
 		}
 		else
 		{
-			Top += AddString(Top, 20.0f, "No container.");
+			Top += _AddString(Top, 20.0f, "No container.");
 		}
-		if(m_Object->GetAspectName() != 0)
+		if(_Object->GetAspectName() != 0)
 		{
-			Top += AddSeparator(Top, 0.0f, "Name Aspect");
-			Top += AddStringProperty(Top, 20.0f, "Name", m_Object->GetAspectName()->GetName());
-			GetTitleLabel()->SetText("Object Information: " + m_Object->GetAspectName()->GetName());
+			Top += _AddSeparator(Top, 0.0f, "Name Aspect");
+			Top += _AddStringProperty(Top, 20.0f, "Name", _Object->GetAspectName()->GetName());
+			GetTitleLabel()->SetText("Object Information: " + _Object->GetAspectName()->GetName());
 		}
 		else
 		{
 			GetTitleLabel()->SetText("Object Information");
 		}
-		if(m_Object->GetAspectObjectContainer() != 0)
+		if(_Object->GetAspectObjectContainer() != 0)
 		{
-			Top += AddSeparator(Top, 0.0f, "Object Container Aspect");
+			Top += _AddSeparator(Top, 0.0f, "Object Container Aspect");
 			
-			const std::set< Object * > & Content(m_Object->GetAspectObjectContainer()->GetContent());
+			const std::set< Object * > & Content(_Object->GetAspectObjectContainer()->GetContent());
 			
 			for(std::set< Object * >::const_iterator ContentIterator = Content.begin(); ContentIterator != Content.end(); ++ContentIterator)
 			{
-				Top += AddObjectProperty(Top, 20.0f, (*ContentIterator)->GetReference());
+				Top += _AddObjectProperty(Top, 20.0f, (*ContentIterator)->GetReference());
 			}
 		}
-		if(m_Object->GetAspectPhysical() != 0)
+		if(_Object->GetAspectPhysical() != 0)
 		{
-			Top += AddSeparator(Top, 0.0f, "Physical");
-			Top += AddStringProperty(Top, 20.0f, "Radial Size", to_string_cast(m_Object->GetAspectPhysical()->GetRadialSize()));
-			Top += AddStringProperty(Top, 20.0f, "Space Requirement", to_string_cast(m_Object->GetAspectPhysical()->GetSpaceRequirement()));
+			Top += _AddSeparator(Top, 0.0f, "Physical");
+			Top += _AddStringProperty(Top, 20.0f, "Radial Size", to_string_cast(_Object->GetAspectPhysical()->GetRadialSize()));
+			Top += _AddStringProperty(Top, 20.0f, "Space Requirement", to_string_cast(_Object->GetAspectPhysical()->GetSpaceRequirement()));
 		}
-		if(m_Object->GetAspectAccessory() != 0)
+		if(_Object->GetAspectAccessory() != 0)
 		{
-			Top += AddSeparator(Top, 0.0f, "Accessory");
-			Top += AddStringProperty(Top, 20.0f, "Slot Class Identifier", m_Object->GetAspectAccessory()->GetSlotClassIdentifier());
-			if(m_Object->GetAspectAccessory()->GetSlot() != 0)
+			Top += _AddSeparator(Top, 0.0f, "Accessory");
+			Top += _AddStringProperty(Top, 20.0f, "Slot Class Identifier", _Object->GetAspectAccessory()->GetSlotClassIdentifier());
+			if(_Object->GetAspectAccessory()->GetSlot() != 0)
 			{
-				Top += AddString(Top, 20.0f, "Mounted to:");
-				Top += AddStringProperty(Top, 40.0f, "Slot Identifier", m_Object->GetAspectAccessory()->GetSlot()->GetIdentifier());
-				Top += AddStringProperty(Top, 40.0f, "Slot Name", m_Object->GetAspectAccessory()->GetSlot()->GetName());
-				Top += AddStringProperty(Top, 40.0f, "Slot Class Identifier", m_Object->GetAspectAccessory()->GetSlot()->GetSlotClass()->GetIdentifier());
+				Top += _AddString(Top, 20.0f, "Mounted to:");
+				Top += _AddStringProperty(Top, 40.0f, "Slot Identifier", _Object->GetAspectAccessory()->GetSlot()->GetIdentifier());
+				Top += _AddStringProperty(Top, 40.0f, "Slot Name", _Object->GetAspectAccessory()->GetSlot()->GetName());
+				Top += _AddStringProperty(Top, 40.0f, "Slot Class Identifier", _Object->GetAspectAccessory()->GetSlot()->GetSlotClass()->GetIdentifier());
 			}
 			else
 			{
-				Top += AddString(Top, 20.0f, "Not mounted.");
+				Top += _AddString(Top, 20.0f, "Not mounted.");
 			}
 		}
 	}
-	m_PropertiesScrollBox->GetContent()->SetSize(Vector2f(m_PropertiesScrollBox->GetView()->GetSize()[0], std::max(Top, m_PropertiesScrollBox->GetView()->GetSize()[1])));
-	m_PropertiesScrollBox->GetContent()->SetAnchorRight(true);
+	_PropertiesScrollBox->GetContent()->SetSize(Vector2f(_PropertiesScrollBox->GetView()->GetSize()[0], std::max(Top, _PropertiesScrollBox->GetView()->GetSize()[1])));
+	_PropertiesScrollBox->GetContent()->SetAnchorRight(true);
 }
 
-bool UI::ObjectInformationDialog::OnMouseButton(int Button, int State, float X, float Y)
+bool UI::ObjectInformationDialog::_OnMouseButton(int Button, int State, float X, float Y)
 {
 	if((Button == 4 /* WHEEL_UP */) && (State == EV_DOWN))
 	{
-		m_PropertiesScrollBox->GetVerticalScrollBar()->StepLess();
+		_PropertiesScrollBox->GetVerticalScrollBar()->StepLess();
 		
 		return true;
 	}
 	else if((Button == 5 /* WHEEL_DOWN */) && (State == EV_DOWN))
 	{
-		m_PropertiesScrollBox->GetVerticalScrollBar()->StepMore();
+		_PropertiesScrollBox->GetVerticalScrollBar()->StepMore();
 		
 		return true;
 	}
@@ -260,17 +260,17 @@ bool UI::ObjectInformationDialog::OnMouseButton(int Button, int State, float X, 
 	return false;
 }
 
-void UI::ObjectInformationDialog::OnObjectClicked(const Reference< Object > Object)
+void UI::ObjectInformationDialog::_OnObjectClicked(const Reference< Object > Object)
 {
 	new UI::ObjectInformationDialog(GetRootWidget(), Object);
 }
 
-void UI::ObjectInformationDialog::OnOKClicked(void)
+void UI::ObjectInformationDialog::_OnOKClicked(void)
 {
 	Destroy();
 }
 
-void UI::ObjectInformationDialog::OnRefreshClicked(void)
+void UI::ObjectInformationDialog::_OnRefreshClicked(void)
 {
-	Refresh();
+	_Refresh();
 }
