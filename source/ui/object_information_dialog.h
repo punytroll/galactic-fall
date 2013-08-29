@@ -36,21 +36,21 @@ namespace UI
 		ObjectInformationDialog(UI::Widget * SupWidget, const Reference< Object > & Object);
 	private:
 		// callbacks
-		bool OnMouseButton(int Button, int State, float X, float Y);
-		void OnObjectClicked(const Reference< Object > Object);
-		void OnOKClicked(void);
-		void OnRefreshClicked(void);
+		bool _OnMouseButton(int Button, int State, float X, float Y);
+		void _OnObjectClicked(const Reference< Object > Object);
+		void _OnOKClicked(void);
+		void _OnRefreshClicked(void);
 		// helper functions and actions
-		float AddObjectProperty(float Top, float Indentation, const Reference< Object > & Object);
-		float AddSeparator(float Top, float Indentation, const std::string & Separator);
-		float AddString(float Top, float Indentation, const std::string & String);
-		float AddStringProperty(float Top, float Indentation, const std::string & PropertyName, const std::string & PropertyValue);
-		void Refresh(void);
+		float _AddObjectProperty(float Top, float Indentation, const Reference< Object > & Object);
+		float _AddSeparator(float Top, float Indentation, const std::string & Separator);
+		float _AddString(float Top, float Indentation, const std::string & String);
+		float _AddStringProperty(float Top, float Indentation, const std::string & PropertyName, const std::string & PropertyValue);
+		void _Refresh(void);
 		// member variables
-		Reference< Object > m_Object;
-		UI::Button * m_OKButton;
-		UI::ScrollBox * m_PropertiesScrollBox;
-		UI::Button * m_RefreshButton;
+		Reference< Object > _Object;
+		UI::Button * _OKButton;
+		UI::ScrollBox * _PropertiesScrollBox;
+		UI::Button * _RefreshButton;
 	};
 }
 
