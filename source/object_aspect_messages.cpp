@@ -23,21 +23,21 @@
 
 ObjectAspectMessages::~ObjectAspectMessages(void)
 {
-	assert(m_Messages.size() == 0);
+	assert(_Messages.size() == 0);
 }
 
 Message * ObjectAspectMessages::PopMessage(void)
 {
-	if(m_Messages.empty() == true)
+	if(_Messages.empty() == true)
 	{
 		return 0;
 	}
 	else
 	{
 		// this will pass responsibility to the caller
-		Message * Message(m_Messages.front());
+		Message * Message(_Messages.front());
 		
-		m_Messages.pop_front();
+		_Messages.pop_front();
 		
 		return Message;
 	}
@@ -46,5 +46,5 @@ Message * ObjectAspectMessages::PopMessage(void)
 void ObjectAspectMessages::PushMessage(Message * Message)
 {
 	// taking over responsibility for Message
-	m_Messages.push_back(Message);
+	_Messages.push_back(Message);
 }
