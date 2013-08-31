@@ -1091,11 +1091,16 @@ ui_mini_map_display_h = \
 ui_object_information_dialog_cpp = \
 	ui/object_information_dialog.cpp \
 	$(globals_h) \
+	$(message_h) \
 	$(object_h) \
 	$(object_aspect_accessory_h) \
+	$(object_aspect_messages_h) \
 	$(object_aspect_name_h) \
 	$(object_aspect_object_container_h) \
+	$(object_aspect_outfitting_h) \
 	$(object_aspect_physical_h) \
+	$(object_aspect_position_h) \
+	$(object_aspect_visualization_h) \
 	$(slot_h) \
 	$(slot_class_h) \
 	$(string_cast_h) \

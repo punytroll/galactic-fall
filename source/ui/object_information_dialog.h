@@ -24,6 +24,8 @@
 #include "window.h"
 
 class Object;
+class Quaternion;
+class Vector3f;
 
 namespace UI
 {
@@ -38,17 +40,19 @@ namespace UI
 		// callbacks
 		bool _OnMouseButton(int Button, int State, float X, float Y);
 		void _OnObjectClicked(const Reference< Object > Object);
-		void _OnOKClicked(void);
+		void _OnCloseClicked(void);
 		void _OnRefreshClicked(void);
 		// helper functions and actions
 		float _AddObjectProperty(float Top, float Indentation, const Reference< Object > & Object);
 		float _AddSeparator(float Top, float Indentation, const std::string & Separator);
 		float _AddString(float Top, float Indentation, const std::string & String);
 		float _AddStringProperty(float Top, float Indentation, const std::string & PropertyName, const std::string & PropertyValue);
+		std::string _GetPositionString(const Vector3f & Position);
+		std::string _GetOrientationString(const Quaternion & Orientation);
 		void _Refresh(void);
 		// member variables
 		Reference< Object > _Object;
-		UI::Button * _OKButton;
+		UI::Button * _CloseButton;
 		UI::ScrollBox * _PropertiesScrollBox;
 		UI::Button * _RefreshButton;
 	};
