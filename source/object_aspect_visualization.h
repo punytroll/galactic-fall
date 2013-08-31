@@ -48,18 +48,18 @@ public:
 	void Destroy(void);
 	void UnsetVisualization(void);
 private:
-	Reference< Graphics::Node > m_Visualization;
-	VisualizationPrototype * m_VisualizationPrototype;
+	Reference< Graphics::Node > _Visualization;
+	VisualizationPrototype * _VisualizationPrototype;
 };
 
 inline Reference< Graphics::Node > & ObjectAspectVisualization::GetVisualization(void)
 {
-	return m_Visualization;
+	return _Visualization;
 }
 
 inline VisualizationPrototype * ObjectAspectVisualization::GetVisualizationPrototype(void)
 {
-	return m_VisualizationPrototype;
+	return _VisualizationPrototype;
 }
 
 #endif
