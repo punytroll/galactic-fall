@@ -28,11 +28,18 @@ class ObjectAspectMessages
 {
 public:
 	~ObjectAspectMessages(void);
+	// getters
+	const std::deque< Message * > & GetMessages(void) const;
 	// modifiers
 	Message * PopMessage(void);
 	void PushMessage(Message * Message);
 private:
-	std::deque< Message * > m_Messages;
+	std::deque< Message * > _Messages;
 };
+
+inline const std::deque< Message * > & ObjectAspectMessages::GetMessages(void) const
+{
+	return _Messages;
+}
 
 #endif
