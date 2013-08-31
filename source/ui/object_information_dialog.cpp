@@ -18,11 +18,16 @@
 **/
 
 #include "../globals.h"
+#include "../message.h"
 #include "../object.h"
 #include "../object_aspect_accessory.h"
+#include "../object_aspect_messages.h"
 #include "../object_aspect_name.h"
 #include "../object_aspect_object_container.h"
+#include "../object_aspect_outfitting.h"
 #include "../object_aspect_physical.h"
+#include "../object_aspect_position.h"
+#include "../object_aspect_visualization.h"
 #include "../slot.h"
 #include "../slot_class.h"
 #include "../string_cast.h"
@@ -35,27 +40,28 @@
 UI::ObjectInformationDialog::ObjectInformationDialog(UI::Widget * SupWidget, const Reference< Object > & Object) :
 	UI::Window(SupWidget, "Object Information"),
 	_Object(Object),
-	_OKButton(0)
+	_CloseButton(0),
+	_RefreshButton(0)
 {
 	SetPosition(Vector2f(100.0f, 400.0f));
 	SetSize(Vector2f(500.0f, 300.0f));
 	ConnectMouseButtonCallback(Callback(this, &ObjectInformationDialog::_OnMouseButton));
 	// set up widgets
-	_OKButton = new UI::Button(this);
-	_OKButton->SetSize(Vector2f(100.0f, 20.0f));
-	_OKButton->SetPosition(Vector2f(GetSize()[0] - 10.0f - _OKButton->GetSize()[0], GetSize()[1] - 10.0f - _OKButton->GetSize()[1]));
-	_OKButton->SetAnchorBottom(true);
-	_OKButton->SetAnchorLeft(false);
-	_OKButton->SetAnchorRight(true);
-	_OKButton->SetAnchorTop(false);
-	_OKButton->ConnectClickedCallback(Callback(this, &ObjectInformationDialog::_OnOKClicked));
+	_CloseButton = new UI::Button(this);
+	_CloseButton->SetSize(Vector2f(100.0f, 20.0f));
+	_CloseButton->SetPosition(Vector2f(GetSize()[0] - 10.0f - _CloseButton->GetSize()[0], GetSize()[1] - 10.0f - _CloseButton->GetSize()[1]));
+	_CloseButton->SetAnchorBottom(true);
+	_CloseButton->SetAnchorLeft(false);
+	_CloseButton->SetAnchorRight(true);
+	_CloseButton->SetAnchorTop(false);
+	_CloseButton->ConnectClickedCallback(Callback(this, &ObjectInformationDialog::_OnCloseClicked));
 	
-	UI::Label * OKButtonLabel = new UI::Label(_OKButton, "OK");
+	UI::Label * CloseButtonLabel = new UI::Label(_CloseButton, "Close");
 	
-	OKButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
-	OKButtonLabel->SetSize(_OKButton->GetSize());
-	OKButtonLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
-	OKButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
+	CloseButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
+	CloseButtonLabel->SetSize(_CloseButton->GetSize());
+	CloseButtonLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
+	CloseButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	_PropertiesScrollBox = new UI::ScrollBox(this);
 	_PropertiesScrollBox->SetPosition(Vector2f(10.0f, 40.0f));
 	_PropertiesScrollBox->SetSize(Vector2f(GetSize()[0] - 20.0f, GetSize()[1] - 80.0f));
@@ -64,7 +70,7 @@ UI::ObjectInformationDialog::ObjectInformationDialog(UI::Widget * SupWidget, con
 	_PropertiesScrollBox->SetAnchorRight(true);
 	_RefreshButton = new UI::Button(this);
 	_RefreshButton->SetSize(Vector2f(100.0f, 20.0f));
-	_RefreshButton->SetPosition(Vector2f(_OKButton->GetPosition()[0] - 10.0f - _RefreshButton->GetSize()[0], GetSize()[1] - 10.0f - _RefreshButton->GetSize()[1]));
+	_RefreshButton->SetPosition(Vector2f(_CloseButton->GetPosition()[0] - 10.0f - _RefreshButton->GetSize()[0], GetSize()[1] - 10.0f - _RefreshButton->GetSize()[1]));
 	_RefreshButton->SetAnchorBottom(true);
 	_RefreshButton->SetAnchorLeft(false);
 	_RefreshButton->SetAnchorRight(true);
@@ -215,6 +221,12 @@ void UI::ObjectInformationDialog::_Refresh(void)
 				Top += _AddObjectProperty(Top, 20.0f, (*ContentIterator)->GetReference());
 			}
 		}
+		if(_Object->GetAspectPosition() != 0)
+		{
+			Top += _AddSeparator(Top, 0.0f, "Position");
+			Top += _AddStringProperty(Top, 20.0f, "Position", _GetPositionString(_Object->GetAspectPosition()->GetPosition()));
+			Top += _AddStringProperty(Top, 20.0f, "Orientation", _GetOrientationString(_Object->GetAspectPosition()->GetOrientation()));
+		}
 		if(_Object->GetAspectPhysical() != 0)
 		{
 			Top += _AddSeparator(Top, 0.0f, "Physical");
@@ -236,6 +248,39 @@ void UI::ObjectInformationDialog::_Refresh(void)
 			{
 				Top += _AddString(Top, 20.0f, "Not mounted.");
 			}
+		}
+		if(_Object->GetAspectMessages() != 0)
+		{
+			Top += _AddSeparator(Top, 0.0f, "Messages");
+			
+			const std::deque< Message * > & Messages(_Object->GetAspectMessages()->GetMessages());
+			
+			Top += _AddStringProperty(Top, 20.0f, "Number of messages", to_string_cast(Messages.size()));
+			for(std::deque< Message * >::const_iterator MessageIterator = Messages.begin(); MessageIterator != Messages.end(); ++MessageIterator)
+			{
+				Top += _AddString(Top, 40.0f, (*MessageIterator)->GetTypeIdentifier());
+			}
+		}
+		if(_Object->GetAspectOutfitting() != 0)
+		{
+			Top += _AddSeparator(Top, 0.0f, "Outfitting");
+			
+			const std::map< std::string, Slot * > & Slots(_Object->GetAspectOutfitting()->GetSlots());
+			
+			Top += _AddStringProperty(Top, 20.0f, "Number of slots", to_string_cast(Slots.size()));
+			for(std::map< std::string, Slot * >::const_iterator SlotIterator = Slots.begin(); SlotIterator != Slots.end(); ++SlotIterator)
+			{
+				Top += _AddStringProperty(Top, 40.0f, SlotIterator->second->GetName(), SlotIterator->second->GetSlotClass()->GetIdentifier());
+			}
+		}
+		if(_Object->GetAspectUpdate() != 0)
+		{
+			Top += _AddSeparator(Top, 0.0f, "Update");
+		}
+		if(_Object->GetAspectVisualization() != 0)
+		{
+			Top += _AddSeparator(Top, 0.0f, "Visualization");
+			Top += _AddStringProperty(Top, 20.0f, "Is valid", ((_Object->GetAspectVisualization()->GetVisualization().IsValid() == true) ? ("true") : ("false")));
 		}
 	}
 	_PropertiesScrollBox->GetContent()->SetSize(Vector2f(_PropertiesScrollBox->GetView()->GetSize()[0], std::max(Top, _PropertiesScrollBox->GetView()->GetSize()[1])));
@@ -265,7 +310,7 @@ void UI::ObjectInformationDialog::_OnObjectClicked(const Reference< Object > Obj
 	new UI::ObjectInformationDialog(GetRootWidget(), Object);
 }
 
-void UI::ObjectInformationDialog::_OnOKClicked(void)
+void UI::ObjectInformationDialog::_OnCloseClicked(void)
 {
 	Destroy();
 }
@@ -273,4 +318,14 @@ void UI::ObjectInformationDialog::_OnOKClicked(void)
 void UI::ObjectInformationDialog::_OnRefreshClicked(void)
 {
 	_Refresh();
+}
+
+std::string UI::ObjectInformationDialog::_GetPositionString(const Vector3f & Position)
+{
+	return "x=" + to_string_cast(Position[0]) + "; y=" + to_string_cast(Position[1]) + "; z=" + to_string_cast(Position[2]);
+}
+
+std::string UI::ObjectInformationDialog::_GetOrientationString(const Quaternion & Orientation)
+{
+	return "w=" + to_string_cast(Orientation[0]) + "; x=" + to_string_cast(Orientation[1]) + "; y=" + to_string_cast(Orientation[2]) + "; z=" + to_string_cast(Orientation[3]);
 }
