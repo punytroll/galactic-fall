@@ -42,6 +42,11 @@ public:
 		_Position[2] = Z;
 	}
 	
+	void SetPosition(const Vector3f & Position)
+	{
+		_Position = Position;
+	}
+	
 	void SetX(float X)
 	{
 		_Position[0] = X;
