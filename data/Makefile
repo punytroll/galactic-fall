@@ -48,6 +48,7 @@ all_data = \
 	.data/mesh_fighter_faction.data \
 	.data/mesh_fighter_hull.data \
 	.data/mesh_laser_shot.data \
+	.data/mesh_light_battery.data \
 	.data/mesh_light_laser.data \
 	.data/mesh_planet.data \
 	.data/mesh_shuttle_faction.data \
@@ -57,6 +58,7 @@ all_data = \
 	.data/model_cargo_cube.data \
 	.data/model_fighter.data \
 	.data/model_laser_shot.data \
+	.data/model_light_battery.data \
 	.data/model_light_laser.data \
 	.data/model_planet.data \
 	.data/model_shuttle.data \
@@ -211,6 +213,7 @@ data.arx: $(data_arx) $(arxtouch_dependencies) $(arxadd_dependencies)
 	$(command_arxadd) $@ --name="Cargo Cube" --type=b --sub-type=0 --relation="/Models::child" --data-file=.data/model_cargo_cube.data
 	$(command_arxadd) $@ --name="Fighter" --type=b --sub-type=0 --relation="/Models::child" --data-file=.data/model_fighter.data
 	$(command_arxadd) $@ --name="Laser Shot" --type=b --sub-type=0 --relation="/Models::child" --data-file=.data/model_laser_shot.data
+	$(command_arxadd) $@ --name="Light Battery" --type=b --sub-type=0 --relation="/Models::child" --data-file=.data/model_light_battery.data
 	$(command_arxadd) $@ --name="Light Laser" --type=b --sub-type=0 --relation="/Models::child" --data-file=.data/model_light_laser.data
 	$(command_arxadd) $@ --name="Planet" --type=b --sub-type=0 --relation="/Models::child" --data-file=.data/model_planet.data
 	$(command_arxadd) $@ --name="Shuttle" --type=b --sub-type=0 --relation="/Models::child" --data-file=.data/model_shuttle.data
@@ -221,6 +224,7 @@ data.arx: $(data_arx) $(arxtouch_dependencies) $(arxadd_dependencies)
 	$(command_arxadd) $@ --name="Fighter Faction" --type=2 --sub-type=0 --relation="/Meshes::child" --data-file=.data/mesh_fighter_faction.data
 	$(command_arxadd) $@ --name="Fighter Hull" --type=2 --sub-type=0 --relation="/Meshes::child" --data-file=.data/mesh_fighter_hull.data
 	$(command_arxadd) $@ --name="Laser Shot" --type=2 --sub-type=0 --relation="/Meshes::child" --data-file=.data/mesh_laser_shot.data
+	$(command_arxadd) $@ --name="Light Battery" --type=2 --sub-type=0 --relation="/Meshes::child" --data-file=.data/mesh_light_battery.data
 	$(command_arxadd) $@ --name="Light Laser" --type=2 --sub-type=0 --relation="/Meshes::child" --data-file=.data/mesh_light_laser.data
 	$(command_arxadd) $@ --name="Planet" --type=2 --sub-type=0 --relation="/Meshes::child" --data-file=.data/mesh_planet.data
 	$(command_arxadd) $@ --name="Shuttle Faction" --type=2 --sub-type=0 --relation="/Meshes::child" --data-file=.data/mesh_shuttle_faction.data

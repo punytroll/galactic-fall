@@ -13,6 +13,7 @@
 	<battery-class>
 		<string identifier="identifier"/>
 		<string identifier="name"/>
+		<visualization identifier="visualization"/>
 		<u4byte identifier="space-requirement"/>
 		<float identifier="energy-capacity"/>
 		<string identifier="slot-class-identifier"/>
