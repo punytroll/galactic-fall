@@ -24,6 +24,8 @@
 
 #include "type_definitions.h"
 
+class VisualizationPrototype;
+
 class BatteryClass
 {
 public:
@@ -34,62 +36,77 @@ public:
 	const std::string & GetName(void) const;
 	const std::string & GetSlotClassIdentifier(void) const;
 	unsigned_numeric GetSpaceRequirement(void) const;
+	VisualizationPrototype * GetVisualizationPrototype(void);
+	const VisualizationPrototype * GetVisualizationPrototype(void) const;
 	// setters
 	void SetEnergyCapacity(float EnergyCapacity);
 	void SetName(const std::string & Name);
 	void SetSlotClassIdentifier(const std::string & SlotClassIdentifier);
 	void SetSpaceRequirement(unsigned_numeric SpaceRequirement);
+	// modifiers
+	void AddVisualizationPrototype(void);
 private:
-	float m_EnergyCapacity;
-	std::string m_Identifier;
-	std::string m_Name;
-	std::string m_SlotClassIdentifier;
-	unsigned_numeric m_SpaceRequirement;
+	float _EnergyCapacity;
+	std::string _Identifier;
+	std::string _Name;
+	std::string _SlotClassIdentifier;
+	unsigned_numeric _SpaceRequirement;
+	VisualizationPrototype * _VisualizationPrototype;
 };
 
 inline float BatteryClass::GetEnergyCapacity(void) const
 {
-	return m_EnergyCapacity;
+	return _EnergyCapacity;
 }
 
 inline const std::string & BatteryClass::GetIdentifier(void) const
 {
-	return m_Identifier;
+	return _Identifier;
 }
 
 inline const std::string & BatteryClass::GetName(void) const
 {
-	return m_Name;
+	return _Name;
 }
 
 inline const std::string & BatteryClass::GetSlotClassIdentifier(void) const
 {
-	return m_SlotClassIdentifier;
+	return _SlotClassIdentifier;
 }
 
 inline unsigned_numeric BatteryClass::GetSpaceRequirement(void) const
 {
-	return m_SpaceRequirement;
+	return _SpaceRequirement;
+}
+
+inline VisualizationPrototype * BatteryClass::GetVisualizationPrototype(void)
+{
+	return _VisualizationPrototype;
+}
+
+inline const VisualizationPrototype * BatteryClass::GetVisualizationPrototype(void) const
+{
+	return _VisualizationPrototype;
 }
 
 inline void BatteryClass::SetEnergyCapacity(float EnergyCapacity)
 {
-	m_EnergyCapacity = EnergyCapacity;
+	_EnergyCapacity = EnergyCapacity;
 }
 
 inline void BatteryClass::SetName(const std::string & Name)
 {
-	m_Name = Name;
+	_Name = Name;
 }
 
 inline void BatteryClass::SetSlotClassIdentifier(const std::string & SlotClassIdentifier)
 {
-	m_SlotClassIdentifier = SlotClassIdentifier;
+	_SlotClassIdentifier = SlotClassIdentifier;
 }
 
 inline void BatteryClass::SetSpaceRequirement(unsigned_numeric SpaceRequirement)
 {
-	m_SpaceRequirement = SpaceRequirement;
+	_SpaceRequirement = SpaceRequirement;
 }
 
 #endif

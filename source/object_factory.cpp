@@ -71,6 +71,9 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		// set up physical aspect
 		assert(NewBattery->GetAspectPhysical() != 0);
 		NewBattery->GetAspectPhysical()->SetSpaceRequirement(BatteryClass->GetSpaceRequirement());
+		// set up visualization aspect
+		assert(NewBattery->GetAspectVisualization() != 0);
+		NewBattery->GetAspectVisualization()->SetVisualizationPrototype(new VisualizationPrototype(BatteryClass->GetVisualizationPrototype()));
 		Result = NewBattery;
 	}
 	else if(TypeIdentifier == "character")
@@ -259,7 +262,7 @@ const VisualizationPrototype * ObjectFactory::GetVisualizationPrototype(const st
 {
 	if(TypeIdentifier == "battery")
 	{
-		return 0;
+		return g_BatteryClassManager->Get(ClassIdentifier)->GetVisualizationPrototype();
 	}
 	else if(TypeIdentifier == "commodity")
 	{

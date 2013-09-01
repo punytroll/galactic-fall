@@ -20,10 +20,18 @@
 #include <assert.h>
 
 #include "battery_class.h"
+#include "visualization_prototype.h"
 
 BatteryClass::BatteryClass(const std::string & Identifier) :
-	m_EnergyCapacity(0.0),
-	m_Identifier(Identifier),
-	m_SpaceRequirement(0)
+	_EnergyCapacity(0.0),
+	_Identifier(Identifier),
+	_SpaceRequirement(0),
+	_VisualizationPrototype(0)
 {
+}
+
+void BatteryClass::AddVisualizationPrototype(void)
+{
+	assert(_VisualizationPrototype == 0);
+	_VisualizationPrototype = new VisualizationPrototype();
 }

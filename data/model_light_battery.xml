@@ -1,0 +1,9 @@
+<model>
+	<identifier>light_battery</identifier>
+	<mesh-parts>
+		<mesh-part>
+			<part-identifier>light_battery</part-identifier>
+			<mesh-identifier>light_battery</mesh-identifier>
+		</mesh-part>
+	</mesh-parts>
+</model>

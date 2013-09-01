@@ -337,13 +337,19 @@ static void ReadBatteryClass(Arxx::Reference & Reference)
 	}
 	
 	std::string Name;
+	
+	Reader >> Name;
+	NewBatteryClass->SetName(Name);
+	
+	// read visualization prototype
+	NewBatteryClass->AddVisualizationPrototype();
+	ReadVisualizationPrototype(Reader, NewBatteryClass->GetVisualizationPrototype());
+	
 	Arxx::u4byte SpaceRequirement;
 	float EnergyCapacity;
 	std::string SlotClassIdentifier;
 	
-	Reader >> Name >> SpaceRequirement >> EnergyCapacity >> SlotClassIdentifier;
-	
-	NewBatteryClass->SetName(Name);
+	Reader >> SpaceRequirement >> EnergyCapacity >> SlotClassIdentifier;
 	NewBatteryClass->SetSpaceRequirement(SpaceRequirement);
 	NewBatteryClass->SetEnergyCapacity(EnergyCapacity);
 	NewBatteryClass->SetSlotClassIdentifier(SlotClassIdentifier);
