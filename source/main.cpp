@@ -3704,39 +3704,6 @@ int main(int argc, char ** argv)
 	// set up the timeout notification manager
 	g_GameTimeTimeoutNotifications = new TimeoutNotificationManager();
 	g_RealTimeTimeoutNotifications = new TimeoutNotificationManager();
-	// the user interface component should be available before the OpenGL context is created
-	g_UserInterface = new UI::UserInterface();
-	// set first timeout for widget collector, it will reinsert itself on callback
-	g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 5.0f, Callback(CollectWidgetsRecurrent));
-	// the user interface widgets must be loaded before the first Resize() call
-	g_ResourceReader->ReadUserInterface();
-	// setup the global variables for the user interface
-	g_CreditsLabel = dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/credits"));
-	g_FuelLabel = dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/fuel"));
-	g_HullLabel = dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/hull"));
-	g_MessageLabel = dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/message"));
-	g_SystemLabel = dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/system"));
-	g_TimeWarpLabel = dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/time_warp"));
-	g_MiniMap = g_UserInterface->GetWidget("/mini_map");
-		g_CurrentSystemLabel = dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/mini_map/current_system"));
-		g_MiniMapDisplay = dynamic_cast< UI::MiniMapDisplay * >(g_UserInterface->GetWidget("/mini_map/display"));
-	g_Scanner = g_UserInterface->GetWidget("/scanner");
-		g_TargetLabel = dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/scanner/target"));
-		g_TargetFactionLabel = dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/scanner/target_faction"));
-		g_ScannerDisplay = dynamic_cast< UI::ScannerDisplay * >(g_UserInterface->GetWidget("/scanner/display"));
-	// sanity asserts
-	assert(g_CreditsLabel != 0);
-	assert(g_FuelLabel != 0);
-	assert(g_HullLabel != 0);
-	assert(g_MessageLabel != 0);
-	assert(g_SystemLabel != 0);
-	assert(g_TimeWarpLabel != 0);
-	assert(g_MiniMap != 0);
-	assert(g_CurrentSystemLabel != 0);
-	assert(g_MiniMapDisplay != 0);
-	assert(g_Scanner != 0);
-	assert(g_TargetLabel != 0);
-	assert(g_ScannerDisplay != 0);
 	
 	// setting up the graphical environment
 	ON_DEBUG(std::cout << "Setting up the window." << std::endl);
@@ -3746,11 +3713,7 @@ int main(int argc, char ** argv)
 	
 	// create managers and global objects
 	ON_DEBUG(std::cout << "Creating global managers and objects." << std::endl);
-	g_AssetClassManager = new ClassManager< AssetClass >();
-	g_BatteryClassManager = new ClassManager< BatteryClass >();
-	g_CommodityClassManager = new ClassManager< CommodityClass >();
 	g_Galaxy = 0;
-	g_GeneratorClassManager = new ClassManager< GeneratorClass >();
 	g_GraphicsEngine = new Graphics::Engine();
 	// UI view
 	g_UIProjection = new Graphics::Orthogonal2DProjection();
@@ -3797,13 +3760,52 @@ int main(int argc, char ** argv)
 	
 	g_MainView->SetRenderTarget(MainViewRenderTarget);
 	g_GraphicsEngine->AddView(g_MainView);
+	
+	// user interface
+	g_UserInterface = new UI::UserInterface();
+	// set first timeout for widget collector, it will reinsert itself on callback
+	g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 5.0f, Callback(CollectWidgetsRecurrent));
+	// the user interface widgets must be loaded before the first Resize() call
+	g_ResourceReader->ReadUserInterface();
+	// setup the global variables for the user interface
+	g_CreditsLabel = dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/credits"));
+	g_FuelLabel = dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/fuel"));
+	g_HullLabel = dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/hull"));
+	g_MessageLabel = dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/message"));
+	g_SystemLabel = dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/system"));
+	g_TimeWarpLabel = dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/time_warp"));
+	g_MiniMap = g_UserInterface->GetWidget("/mini_map");
+		g_CurrentSystemLabel = dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/mini_map/current_system"));
+		g_MiniMapDisplay = dynamic_cast< UI::MiniMapDisplay * >(g_UserInterface->GetWidget("/mini_map/display"));
+	g_Scanner = g_UserInterface->GetWidget("/scanner");
+		g_TargetLabel = dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/scanner/target"));
+		g_TargetFactionLabel = dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/scanner/target_faction"));
+		g_ScannerDisplay = dynamic_cast< UI::ScannerDisplay * >(g_UserInterface->GetWidget("/scanner/display"));
+	// sanity asserts
+	assert(g_CreditsLabel != 0);
+	assert(g_FuelLabel != 0);
+	assert(g_HullLabel != 0);
+	assert(g_MessageLabel != 0);
+	assert(g_SystemLabel != 0);
+	assert(g_TimeWarpLabel != 0);
+	assert(g_MiniMap != 0);
+	assert(g_CurrentSystemLabel != 0);
+	assert(g_MiniMapDisplay != 0);
+	assert(g_Scanner != 0);
+	assert(g_TargetLabel != 0);
+	assert(g_ScannerDisplay != 0);
+	
 	// resize here after the graphics have been set up
 	Resize();
 	g_MessageDispatcher = new MessageDispatcher();
 	g_ObjectFactory = new ObjectFactory();
+	g_GeneratorClassManager = new ClassManager< GeneratorClass >();
 	g_ShipClassManager = new ClassManager< ShipClass >();
 	g_SlotClassManager = new ClassManager< SlotClass >();
 	g_WeaponClassManager = new ClassManager< WeaponClass >();
+	g_AssetClassManager = new ClassManager< AssetClass >();
+	g_BatteryClassManager = new ClassManager< BatteryClass >();
+	g_CommodityClassManager = new ClassManager< CommodityClass >();
 	g_SystemStatistics = new SystemStatistics();
 	g_CharacterObserver = new OutputObserver();
 	
@@ -3865,12 +3867,19 @@ int main(int argc, char ** argv)
 		Object::Dump(Out);
 		std::cout << std::endl;
 	}
-	delete g_AssetClassManager;
-	delete g_BatteryClassManager;
+	// destroying global variables in reverse order
 	delete g_CharacterObserver;
+	delete g_SystemStatistics;
 	delete g_CommodityClassManager;
-	delete g_GameTimeTimeoutNotifications;
+	delete g_BatteryClassManager;
+	delete g_AssetClassManager;
+	delete g_WeaponClassManager;
+	delete g_SlotClassManager;
+	delete g_ShipClassManager;
 	delete g_GeneratorClassManager;
+	delete g_ObjectFactory;
+	delete g_MessageDispatcher;
+	delete g_UserInterface;
 	// main view
 	assert(g_MainView != 0);
 	assert(g_MainView->GetRenderTarget() == MainViewRenderTarget);
@@ -3898,14 +3907,9 @@ int main(int argc, char ** argv)
 	g_GraphicsEngine->RemoveView(g_UIView);
 	delete g_UIView;
 	delete g_GraphicsEngine;
-	delete g_MessageDispatcher;
-	delete g_ObjectFactory;
+	// these are the first things hat got created
 	delete g_RealTimeTimeoutNotifications;
-	delete g_ShipClassManager;
-	delete g_SlotClassManager;
-	delete g_SystemStatistics;
-	delete g_WeaponClassManager;
-	delete g_UserInterface;
+	delete g_GameTimeTimeoutNotifications;
 	delete g_Settings;
 	delete g_ResourceReader;
 	CollectWidgets();
