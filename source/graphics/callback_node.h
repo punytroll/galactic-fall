@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006  Hagen Möbius
+ * Copyright (C) 2013  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,35 +17,32 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef UI_MINI_MAP_DISPLAY_H
-#define UI_MINI_MAP_DISPLAY_H
+#ifndef GRAPHICS_CALLBACK_NODE_H
+#define GRAPHICS_CALLBACK_NODE_H
 
-#include "../referencing.h"
-#include "view_display.h"
+#include "../callbacks/callbacks.h"
+#include "node.h"
 
-class Ship;
-
-namespace UI
+namespace Graphics
 {
-	class MiniMapDisplay : public UI::ViewDisplay
+	class CallbackNode : public Graphics::Node
 	{
 	public:
 		// constructor & destructor
-		MiniMapDisplay(UI::Widget * SupWidget = 0);
-		virtual ~MiniMapDisplay(void);
+		CallbackNode(void);
+		virtual ~CallbackNode(void);
 		// setters
-		void SetOwner(Reference< Ship > Owner);
-	private:
+		void SetDrawCallback(Callback0< void > Callback);
 		// modifiers
-		void _ClearView(void);
-		void _SetupView(void);
-		// callback handlers
-		void _OnDestroying(void);
-		void _OnDestroyInScene(Graphics::Node * Node);
-		void _OnDraw(void);
-		void _OnSizeChanged(void);
-		Reference< Ship > _Owner;
+		virtual void Draw(void);
+	private:
+		Callback0< void > _DrawCallback;
 	};
+	
+	inline void CallbackNode::SetDrawCallback(Callback0< void > Callback)
+	{
+		_DrawCallback = Callback;
+	}
 }
 
 #endif
