@@ -6,7 +6,7 @@
 	<main-camera>
 		<position x="0" y="0" z="200"/>
 		<focus object-identifier="::ship(shuttle)::player_ship"/>
-		<field-of-view-y radians="1"/>
+		<field-of-view-y radians="0.8"/>
 	</main-camera>
 	<object type-identifier="ship" class-identifier="shuttle" object-identifier="::ship(shuttle)::player_ship">
 		<aspect-name>
