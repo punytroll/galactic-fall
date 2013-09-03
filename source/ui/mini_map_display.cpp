@@ -19,39 +19,34 @@
 
 #include <algebra/matrix4f.h>
 
+#include "../color.h"
 #include "../commodity.h"
-#include "../graphics/gl.h"
+#include "../globals.h"
+#include "../graphics/callback_node.h"
+#include "../graphics/camera.h"
+#include "../graphics/engine.h"
+#include "../graphics/perspective_projection.h"
+#include "../graphics/scene.h"
+#include "../graphics/texture.h"
+#include "../graphics/texture_manager.h"
+#include "../graphics/texture_render_target.h"
+#include "../graphics/view.h"
 #include "../object_aspect_position.h"
 #include "../planet.h"
 #include "../ship.h"
 #include "../system.h"
 #include "mini_map_display.h"
 
-static void CalculatePerspectiveMatrix(float FieldOfView, float Aspect, float NearClippingPlane, float FarClippingPlane, Matrix4f & Matrix)
+UI::MiniMapDisplay::MiniMapDisplay(UI::Widget * SupWidget) :
+	UI::ViewDisplay(SupWidget)
 {
-	float Top(NearClippingPlane * tan(FieldOfView));
-	float Right(Top * Aspect);
-	
-	Matrix[0] = NearClippingPlane / Right;
-	Matrix[1] = 0.0f;
-	Matrix[2] = 0.0f;
-	Matrix[3] = 0.0f;
-	Matrix[4] = 0.0f;
-	Matrix[5] = NearClippingPlane / Top;
-	Matrix[6] = 0.0f;
-	Matrix[7] = 0.0f;
-	Matrix[8] = 0.0f;
-	Matrix[9] = 0.0f;
-	Matrix[10] = -(FarClippingPlane + NearClippingPlane) / (FarClippingPlane - NearClippingPlane);
-	Matrix[11] = -1.0f;
-	Matrix[12] = 0.0f;
-	Matrix[13] = 0.0f;
-	Matrix[14] = -(2.0f * FarClippingPlane * NearClippingPlane) / (FarClippingPlane - NearClippingPlane);
-	Matrix[15] = 0.0f;
+	SetSize(Vector2f(100.0f, 100.0f));
+	ConnectDestroyingCallback(Callback(this, &UI::MiniMapDisplay::_OnDestroying));
+	ConnectSizeChangedCallback(Callback(this, &UI::MiniMapDisplay::_OnSizeChanged));
+	_SetupView();
 }
 
-UI::MiniMapDisplay::MiniMapDisplay(UI::Widget * SupWidget) :
-	UI::Widget(SupWidget)
+UI::MiniMapDisplay::~MiniMapDisplay(void)
 {
 }
 
@@ -60,36 +55,104 @@ void UI::MiniMapDisplay::SetOwner(Reference< Ship > Owner)
 	_Owner = Owner;
 }
 
-void UI::MiniMapDisplay::Draw(void) const
+void UI::MiniMapDisplay::_ClearView(void)
 {
-	UI::Widget::Draw();
-	GLPushAttrib(GL_ENABLE_BIT | GL_VIEWPORT_BIT | GL_TRANSFORM_BIT);
-	// clipping is performed by the viewport
-	GLDisable(GL_CLIP_PLANE0);
-	GLDisable(GL_CLIP_PLANE1);
-	GLDisable(GL_CLIP_PLANE2);
-	GLDisable(GL_CLIP_PLANE3);
-	GLEnable(GL_DEPTH_TEST);
-	GLDisable(GL_BLEND);
-	GLViewport(static_cast< GLint >(GetGlobalPosition()[0]), static_cast< GLint >(GetRootWidget()->GetSize()[1] - GetGlobalPosition()[1] - GetSize()[1]), static_cast< GLint >(GetSize()[0]), static_cast< GLint >(GetSize()[1]));
-	GLMatrixMode(GL_PROJECTION);
-	GLPushMatrix();
+	Graphics::View * OldView(GetView());
 	
-	Matrix4f PerspectiveMatrix;
-	
-	CalculatePerspectiveMatrix(0.392699082f, 1.0f, 1.0f, 10000.0f, PerspectiveMatrix);
-	GLLoadMatrixf(PerspectiveMatrix.GetPointer());
-	GLMatrixMode(GL_MODELVIEW);
-	GLPushMatrix();
-	GLLoadIdentity();
-	if(_Owner.IsValid() == true)
+	if(OldView != 0)
 	{
-		GLTranslatef(-_Owner->GetAspectPosition()->GetPosition()[0], -_Owner->GetAspectPosition()->GetPosition()[1], -1500.0f);
+		SetView(0);
+		assert(OldView->GetScene() != 0);
+		
+		Graphics::Scene * Scene(OldView->GetScene());
+		
+		OldView->SetScene(0);
+		delete Scene;
+		
+		assert(OldView->GetCamera() != 0);
+		assert(OldView->GetCamera()->GetProjection() != 0);
+		
+		Graphics::Projection * Projection(OldView->GetCamera()->GetProjection());
+		
+		OldView->GetCamera()->SetProjection(0);
+		delete Projection;
+		
+		Graphics::TextureRenderTarget * TextureRenderTarget(dynamic_cast< Graphics::TextureRenderTarget * >(OldView->GetRenderTarget()));
+		
+		assert(TextureRenderTarget != 0);
+		OldView->SetRenderTarget(0);
+		
+		Graphics::Texture * Texture(TextureRenderTarget->GetTexture());
+		
+		TextureRenderTarget->SetTexture(0);
+		delete TextureRenderTarget;
+		g_GraphicsEngine->GetTextureManager()->Destroy(Texture->GetIdentifier());
+		g_GraphicsEngine->RemoveView(OldView);
+		delete OldView;
 	}
-	GLClear(GL_DEPTH_BUFFER_BIT);
-	// draw mini map
+}
+
+void UI::MiniMapDisplay::_SetupView(void)
+{
+	Graphics::PerspectiveProjection * PerspectiveProjection(new Graphics::PerspectiveProjection());
+	
+	PerspectiveProjection->SetFieldOfViewY(0.8f);
+	PerspectiveProjection->SetAspect(GetSize()[0] / GetSize()[1]);
+	PerspectiveProjection->SetNearClippingPlane(1.0f);
+	PerspectiveProjection->SetFarClippingPlane(10000.0f);
+	
+	Graphics::View * View(new Graphics::View());
+	
+	View->SetClearColor(Color(1.0f, 1.0f, 1.0f, 0.0f));
+	assert(View->GetCamera() != 0);
+	View->GetCamera()->SetProjection(PerspectiveProjection);
+	View->GetCamera()->SetSpacialMatrix(Matrix4f::CreateFromTranslationComponents(0.0f, 0.0f, 1500.0f));
+	assert(g_GraphicsEngine != 0);
+	g_GraphicsEngine->AddView(View);
+	
+	Graphics::Scene * Scene(new Graphics::Scene());
+	
+	Scene->SetDestroyCallback(Callback(this, &UI::MiniMapDisplay::_OnDestroyInScene));
+	View->SetScene(Scene);
+	
+	Graphics::Texture * Texture(g_GraphicsEngine->GetTextureManager()->Create("mini-map-display"));
+	
+	assert(Texture != 0);
+	Texture->Create(GetSize()[0], GetSize()[1], 1);
+	
+	Graphics::TextureRenderTarget * RenderTarget(new Graphics::TextureRenderTarget());
+	
+	RenderTarget->SetTexture(Texture);
+	View->SetRenderTarget(RenderTarget);
+	
+	Graphics::CallbackNode * RootNode(new Graphics::CallbackNode());
+	
+	RootNode->SetDrawCallback(Callback(this, &UI::MiniMapDisplay::_OnDraw));
+	RootNode->SetClearColorBuffer(true);
+	RootNode->SetClearDepthBuffer(true);
+	RootNode->SetUseBlending(false);
+	RootNode->SetUseLighting(false);
+	RootNode->SetUseDepthTest(true);
+	Scene->SetRootNode(RootNode);
+	SetView(View);
+}
+
+void UI::MiniMapDisplay::_OnDestroying(void)
+{
+	_ClearView();
+}
+
+void UI::MiniMapDisplay::_OnDestroyInScene(Graphics::Node * Node)
+{
+	delete Node;
+}
+
+void UI::MiniMapDisplay::_OnDraw(void)
+{
 	if(_Owner.IsValid() == true)
 	{
+		GLTranslatef(-_Owner->GetAspectPosition()->GetPosition()[0], -_Owner->GetAspectPosition()->GetPosition()[1], 0);
+		
 		const System * CurrentSystem(dynamic_cast< const System * >(_Owner->GetContainer()));
 		
 		assert(CurrentSystem != 0);
@@ -138,8 +201,10 @@ void UI::MiniMapDisplay::Draw(void) const
 		}
 		GLEnd();
 	}
-	GLPopMatrix();
-	GLMatrixMode(GL_PROJECTION);
-	GLPopMatrix();
-	GLPopAttrib();
+}
+
+void UI::MiniMapDisplay::_OnSizeChanged(void)
+{
+	_ClearView();
+	_SetupView();
 }

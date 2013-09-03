@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006  Hagen Möbius
+ * Copyright (C) 2013  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,35 +17,18 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef UI_MINI_MAP_DISPLAY_H
-#define UI_MINI_MAP_DISPLAY_H
+#include "callback_node.h"
 
-#include "../referencing.h"
-#include "view_display.h"
-
-class Ship;
-
-namespace UI
+Graphics::CallbackNode::CallbackNode(void)
 {
-	class MiniMapDisplay : public UI::ViewDisplay
-	{
-	public:
-		// constructor & destructor
-		MiniMapDisplay(UI::Widget * SupWidget = 0);
-		virtual ~MiniMapDisplay(void);
-		// setters
-		void SetOwner(Reference< Ship > Owner);
-	private:
-		// modifiers
-		void _ClearView(void);
-		void _SetupView(void);
-		// callback handlers
-		void _OnDestroying(void);
-		void _OnDestroyInScene(Graphics::Node * Node);
-		void _OnDraw(void);
-		void _OnSizeChanged(void);
-		Reference< Ship > _Owner;
-	};
 }
 
-#endif
+Graphics::CallbackNode::~CallbackNode(void)
+{
+}
+
+void Graphics::CallbackNode::Draw(void)
+{
+	_DrawCallback();
+	Graphics::Node::Draw();
+}

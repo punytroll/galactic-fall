@@ -255,6 +255,15 @@ goals_h = \
 	goals.h \
 	$(goal_h)
 
+graphics_callback_node_cpp = \
+	graphics/callback_node.cpp \
+	$(graphics_callback_node_h)
+
+graphics_callback_node_h = \
+	graphics/callback_node.h \
+	$(callbacks_callbacks_h) \
+	$(graphics_node_h)
+
 graphics_camera_cpp = \
 	graphics/camera.cpp \
 	$(graphics_camera_h)
@@ -1076,8 +1085,18 @@ ui_map_dialog_h = \
 
 ui_mini_map_display_cpp = \
 	ui/mini_map_display.cpp \
+	$(color_h) \
 	$(commodity_h) \
-	$(graphics_gl_h) \
+	$(globals_h) \
+	$(graphics_callback_node_h) \
+	$(graphics_camera_h) \
+	$(graphics_engine_h) \
+	$(graphics_perspective_projection_h) \
+	$(graphics_scene_h) \
+	$(graphics_texture_h) \
+	$(graphics_texture_manager_h) \
+	$(graphics_texture_render_target_h) \
+	$(graphics_view_h) \
 	$(object_aspect_position_h) \
 	$(planet_h) \
 	$(ship_h) \
@@ -1087,7 +1106,7 @@ ui_mini_map_display_cpp = \
 ui_mini_map_display_h = \
 	ui/mini_map_display.h \
 	$(referencing_h) \
-	$(ui_widget_h)
+	$(ui_view_display_h)
 
 ui_object_information_dialog_cpp = \
 	ui/object_information_dialog.cpp \
