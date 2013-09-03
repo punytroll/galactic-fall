@@ -31,7 +31,6 @@ UI::ViewDisplay::ViewDisplay(Widget * SupWidget) :
 	Widget(SupWidget),
 	_View(0)
 {
-	SetBackgroundColor(Color(0.15f, 0.15f, 0.15f, 1.0f));
 }
 
 UI::ViewDisplay::~ViewDisplay(void)
