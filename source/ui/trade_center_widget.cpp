@@ -179,6 +179,7 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Reference< Plan
 	_AssetClassViewDisplay->SetSize(Vector2f(100.0f, 100.0f));
 	_AssetClassViewDisplay->SetAnchorLeft(false);
 	_AssetClassViewDisplay->SetAnchorRight(true);
+	_AssetClassViewDisplay->SetBackgroundColor(Color(0.15f, 0.15f, 0.15f, 1.0f));
 	_TraderCreditsLabel = new UI::Label(this, "");
 	_TraderCreditsLabel->SetPosition(Vector2f(0.0f, 230.0f));
 	_TraderCreditsLabel->SetSize(Vector2f(200.0f, 20.0f));
