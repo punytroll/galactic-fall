@@ -29,7 +29,9 @@ class VisualizationPrototype;
 class BatteryClass
 {
 public:
+	// constructor & destructor
 	BatteryClass(const std::string & Identifier);
+	~BatteryClass(void);
 	// getters
 	float GetEnergyCapacity(void) const;
 	const std::string & GetIdentifier(void) const;

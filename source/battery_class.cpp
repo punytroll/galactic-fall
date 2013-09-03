@@ -30,6 +30,12 @@ BatteryClass::BatteryClass(const std::string & Identifier) :
 {
 }
 
+BatteryClass::~BatteryClass(void)
+{
+	delete _VisualizationPrototype;
+	_VisualizationPrototype = 0;
+}
+
 void BatteryClass::AddVisualizationPrototype(void)
 {
 	assert(_VisualizationPrototype == 0);
