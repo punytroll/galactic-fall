@@ -64,7 +64,8 @@ battery_h = \
 
 battery_class_cpp = \
 	battery_class.cpp \
-	$(battery_class_h)
+	$(battery_class_h) \
+	$(visualization_prototype_h)
 
 battery_class_h = \
 	battery_class.h \
