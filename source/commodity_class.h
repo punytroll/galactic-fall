@@ -43,45 +43,45 @@ public:
 	// modifiers
 	void AddVisualizationPrototype(void);
 private:
-	std::string m_Identifier;
-	std::string m_Name;
-	unsigned_numeric m_SpaceRequirement;
-	VisualizationPrototype * m_VisualizationPrototype;
+	std::string _Identifier;
+	std::string _Name;
+	unsigned_numeric _SpaceRequirement;
+	VisualizationPrototype * _VisualizationPrototype;
 };
 
 inline const std::string & CommodityClass::GetIdentifier(void) const
 {
-	return m_Identifier;
+	return _Identifier;
 }
 
 inline const std::string & CommodityClass::GetName(void) const
 {
-	return m_Name;
+	return _Name;
 }
 
 inline unsigned_numeric CommodityClass::GetSpaceRequirement(void) const
 {
-	return m_SpaceRequirement;
+	return _SpaceRequirement;
 }
 
 inline VisualizationPrototype * CommodityClass::GetVisualizationPrototype(void)
 {
-	return m_VisualizationPrototype;
+	return _VisualizationPrototype;
 }
 
 inline const VisualizationPrototype * CommodityClass::GetVisualizationPrototype(void) const
 {
-	return m_VisualizationPrototype;
+	return _VisualizationPrototype;
 }
 
 inline void CommodityClass::SetName(const std::string & Name)
 {
-	m_Name = Name;
+	_Name = Name;
 }
 
 inline void CommodityClass::SetSpaceRequirement(unsigned_numeric SpaceRequirement)
 {
-	m_SpaceRequirement = SpaceRequirement;
+	_SpaceRequirement = SpaceRequirement;
 }
 
 #endif
