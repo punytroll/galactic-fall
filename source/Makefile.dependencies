@@ -154,7 +154,6 @@ commodity_h = \
 
 commodity_class_cpp = \
 	commodity_class.cpp \
-	$(color_h) \
 	$(commodity_class_h) \
 	$(visualization_prototype_h)
 

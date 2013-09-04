@@ -19,25 +19,24 @@
 
 #include <assert.h>
 
-#include "color.h"
 #include "commodity_class.h"
 #include "visualization_prototype.h"
 
 CommodityClass::CommodityClass(const std::string & Identifier) :
-	m_Identifier(Identifier),
-	m_SpaceRequirement(0),
-	m_VisualizationPrototype(0)
+	_Identifier(Identifier),
+	_SpaceRequirement(0),
+	_VisualizationPrototype(0)
 {
 }
 
 CommodityClass::~CommodityClass(void)
 {
-	delete m_VisualizationPrototype;
-	m_VisualizationPrototype = 0;
+	delete _VisualizationPrototype;
+	_VisualizationPrototype = 0;
 }
 
 void CommodityClass::AddVisualizationPrototype(void)
 {
-	assert(m_VisualizationPrototype == 0);
-	m_VisualizationPrototype = new VisualizationPrototype();
+	assert(_VisualizationPrototype == 0);
+	_VisualizationPrototype = new VisualizationPrototype();
 }
