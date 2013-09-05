@@ -13,6 +13,7 @@ callbacks_inc_generated_code_files = \
 	.generated-code/CallbackCore5.gc \
 	.generated-code/FunctionCore0.gc \
 	.generated-code/FunctionCore1.gc \
+	.generated-code/FunctionCore2.gc \
 	.generated-code/MethodCore0.gc \
 	.generated-code/MethodCore1.gc \
 	.generated-code/MethodCore2.gc \
@@ -25,15 +26,18 @@ callbacks_inc_generated_code_files = \
 	.generated-code/Callback5.gc \
 	.generated-code/BindArgument1Core0.gc \
 	.generated-code/BindArgument1Core4.gc \
+	.generated-code/BindArgument2Core1.gc \
 	.generated-code/FunctionCallback0.gc \
 	.generated-code/FunctionCallback1.gc \
+	.generated-code/FunctionCallback2.gc \
 	.generated-code/MethodCallback0.gc \
 	.generated-code/MethodCallback1.gc \
 	.generated-code/MethodCallback2.gc \
 	.generated-code/MethodCallback4.gc \
 	.generated-code/MethodCallback5.gc \
 	.generated-code/Bind1_0.gc \
-	.generated-code/Bind1_4.gc
+	.generated-code/Bind1_4.gc \
+	.generated-code/Bind2_1.gc
 
 events_inc_generated_code_files = \
 	.generated-code/Event0.gc \
@@ -84,11 +88,17 @@ events.inc: $(events_inc_generated_code_files)
 .generated-code/Bind1_4.gc: code-templates/Bind.cgt $(code_generator_dependencies) Makefile
 	$(command_code_generator) --in=$< --out=$@ --variable=BindArgument=1 --variable=NumberOfArguments=5
 
+.generated-code/Bind2_1.gc: code-templates/Bind.cgt $(code_generator_dependencies) Makefile
+	$(command_code_generator) --in=$< --out=$@ --variable=BindArgument=2 --variable=NumberOfArguments=2
+
 .generated-code/BindArgument1Core0.gc: code-templates/BindArgumentCore.cgt $(code_generator_dependencies) Makefile
 	$(command_code_generator) --in=$< --out=$@ --variable=Assertions=$(assertions) --variable=BindArgument=1 --variable=InstanceCount=$(instance_count) --variable=NumberOfArguments=1
 
 .generated-code/BindArgument1Core4.gc: code-templates/BindArgumentCore.cgt $(code_generator_dependencies) Makefile
 	$(command_code_generator) --in=$< --out=$@ --variable=Assertions=$(assertions) --variable=BindArgument=1 --variable=InstanceCount=$(instance_count) --variable=NumberOfArguments=5
+
+.generated-code/BindArgument2Core1.gc: code-templates/BindArgumentCore.cgt $(code_generator_dependencies) Makefile
+	$(command_code_generator) --in=$< --out=$@ --variable=Assertions=$(assertions) --variable=BindArgument=2 --variable=InstanceCount=$(instance_count) --variable=NumberOfArguments=2
 
 .generated-code/Callback0.gc: code-templates/Callback.cgt $(code_generator_dependencies) Makefile
 	$(command_code_generator) --in=$< --out=$@ --variable=Assertions=$(assertions) --variable=InstanceCount=$(instance_count) --variable=NumberOfArguments=0
@@ -141,11 +151,17 @@ events.inc: $(events_inc_generated_code_files)
 .generated-code/FunctionCallback1.gc: code-templates/FunctionCallback.cgt $(code_generator_dependencies) Makefile
 	$(command_code_generator) --in=$< --out=$@ --variable=NumberOfArguments=1
 
+.generated-code/FunctionCallback2.gc: code-templates/FunctionCallback.cgt $(code_generator_dependencies) Makefile
+	$(command_code_generator) --in=$< --out=$@ --variable=NumberOfArguments=2
+
 .generated-code/FunctionCore0.gc: code-templates/FunctionCore.cgt $(code_generator_dependencies) Makefile
 	$(command_code_generator) --in=$< --out=$@ --variable=Assertions=$(assertions) --variable=InstanceCount=$(instance_count) --variable=NumberOfArguments=0
 
 .generated-code/FunctionCore1.gc: code-templates/FunctionCore.cgt $(code_generator_dependencies) Makefile
 	$(command_code_generator) --in=$< --out=$@ --variable=Assertions=$(assertions) --variable=InstanceCount=$(instance_count) --variable=NumberOfArguments=1
+
+.generated-code/FunctionCore2.gc: code-templates/FunctionCore.cgt $(code_generator_dependencies) Makefile
+	$(command_code_generator) --in=$< --out=$@ --variable=Assertions=$(assertions) --variable=InstanceCount=$(instance_count) --variable=NumberOfArguments=2
 
 .generated-code/MethodCallback0.gc: code-templates/MethodCallback.cgt $(code_generator_dependencies) Makefile
 	$(command_code_generator) --in=$< --out=$@ --variable=NumberOfArguments=0
