@@ -145,6 +145,13 @@
 		<widget identifier="widget"/>
 	</scanner-display>
 	
+	<scenario>
+		<string identifier="identifier"/>
+		<string identifier="name"/>
+		<string identifier="description"/>
+		<file identifier="savegame-file"/>
+	</scenario>
+	
 	<ship-class>
 		<string identifier="identifier"/>
 		<physical-aspect identifier="physical-aspect"/>

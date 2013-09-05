@@ -90,6 +90,8 @@
 #include "output_observer.h"
 #include "planet.h"
 #include "real_time.h"
+#include "scenario.h"
+#include "scenario_manager.h"
 #include "settings.h"
 #include "ship.h"
 #include "ship_class.h"
@@ -148,6 +150,7 @@ Graphics::Node * g_ParticleSystemsLayer(0);
 std::vector< Graphics::View * > g_PrerenderedViews;
 MessageDispatcher * g_MessageDispatcher(0);
 ObjectFactory * g_ObjectFactory(0);
+ScenarioManager * g_ScenarioManager(0);
 ClassManager< ShipClass > * g_ShipClassManager(0);
 ClassManager< SlotClass > * g_SlotClassManager(0);
 SystemStatistics * g_SystemStatistics(0);
@@ -2331,20 +2334,29 @@ bool LoadGameFromFileName(const std::string & FileName)
 	return LoadGameFromInputStream(InputFileStream);
 }
 
-bool LoadGameFromResourcePath(const std::string & ResourcePath)
+bool LoadScenario(const Scenario * Scenario)
 {
-	std::string SaveGameString(g_ResourceReader->GetContentStringFromResourcePath(ResourcePath));
+	assert(Scenario != 0);
 	
-	if(SaveGameString.empty() == true)
+	std::string SavegameString(g_ResourceReader->ReadSavegameFromScenarioPath(Scenario->GetResourcePath()));
+	
+	if(SavegameString.empty() == true)
 	{
-		std::cerr << "The savegame resource '" << ResourcePath << "' does not exist or is not readable." << std::endl;
+		std::cerr << "The scenario '" << Scenario->GetName() << "' does not exist or is not readable." << std::endl;
 		
 		return false;
 	}
 	
-	std::stringstream SaveGameStringStream(SaveGameString);
+	std::stringstream SavegameStringStream(SavegameString);
 	
-	return LoadGameFromInputStream(SaveGameStringStream);
+	return LoadGameFromInputStream(SavegameStringStream);
+}
+
+bool LoadScenarioFromScenarioIdentifier(const std::string & ScenarioIdentifier)
+{
+	assert(g_ScenarioManager != 0);
+	
+	return LoadScenario(g_ScenarioManager->Get(ScenarioIdentifier));
 }
 
 void SaveGame(std::ostream & OStream)
@@ -3798,6 +3810,7 @@ int main(int argc, char ** argv)
 	
 	// resize here after the graphics have been set up
 	Resize();
+	g_ScenarioManager = new ScenarioManager();
 	g_MessageDispatcher = new MessageDispatcher();
 	g_ObjectFactory = new ObjectFactory();
 	g_GeneratorClassManager = new ClassManager< GeneratorClass >();
@@ -3821,6 +3834,7 @@ int main(int argc, char ** argv)
 	g_ResourceReader->ReadSlotClasses();
 	g_ResourceReader->ReadShipClasses();
 	g_ResourceReader->ReadWeaponClasses();
+	g_ResourceReader->ReadScenarios(g_ScenarioManager);
 	// since reading the textures already creates them we have to do this after initializing OpenGL
 	ON_DEBUG(std::cout << "Reading textures from game archive." << std::endl);
 	g_ResourceReader->ReadTextures();
@@ -3868,6 +3882,11 @@ int main(int argc, char ** argv)
 		Object::Dump(Out);
 		std::cout << std::endl;
 	}
+	if(g_ScenarioManager != 0)
+	{
+		delete g_ScenarioManager;
+		g_ScenarioManager = 0;
+	}
 	// destroying global variables in reverse order
 	delete g_CharacterObserver;
 	delete g_SystemStatistics;
@@ -3880,6 +3899,7 @@ int main(int argc, char ** argv)
 	delete g_GeneratorClassManager;
 	delete g_ObjectFactory;
 	delete g_MessageDispatcher;
+	delete g_ScenarioManager;
 	delete g_UserInterface;
 	// main view
 	assert(g_MainView != 0);

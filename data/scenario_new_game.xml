@@ -1,0 +1,6 @@
+<scenario>
+	<identifier>new_game</identifier>
+	<name>New Game</name>
+	<description>This scenario starts a new game in the Galactic Fall galaxy.</description>
+	<savegame-file>savegame_new_game.xml</savegame-file>
+</scenario>

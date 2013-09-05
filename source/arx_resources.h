@@ -25,23 +25,24 @@
 const Arxx::u4byte ARX_TYPE_ASSET_CLASS = 4;
 const Arxx::u4byte ARX_TYPE_BATTERY_CLASS = 12;
 const Arxx::u4byte ARX_TYPE_COMMODITY_CLASS = 8;
+const Arxx::u4byte ARX_TYPE_DIMENSIONS = 15;
+const Arxx::u4byte ARX_TYPE_DIMENSIONS_SUB_TYPE_2_FLOATS = 1;
 const Arxx::u4byte ARX_TYPE_FACTION = 14;
 const Arxx::u4byte ARX_TYPE_GENERATOR_CLASS = 13;
 const Arxx::u4byte ARX_TYPE_KEY_BINDING_PROFILE = 16;
-const Arxx::u4byte ARX_TYPE_WIDGET = 1;
-const Arxx::u4byte ARX_TYPE_WIDGET_SUB_TYPE_LABEL = 1;
-const Arxx::u4byte ARX_TYPE_WIDGET_SUB_TYPE_MINI_MAP_DISPLAY = 2;
-const Arxx::u4byte ARX_TYPE_WIDGET_SUB_TYPE_SCANNER_DISPLAY = 3;
-const Arxx::u4byte ARX_TYPE_WIDGET_SUB_TYPE_WIDGET = 0;
 const Arxx::u4byte ARX_TYPE_MESH = 2;
 const Arxx::u4byte ARX_TYPE_MODEL = 11;
+const Arxx::u4byte ARX_TYPE_SCENARIO = 17;
 const Arxx::u4byte ARX_TYPE_SHIP_CLASS = 3;
-const Arxx::u4byte ARX_TYPE_DIMENSIONS = 15;
-const Arxx::u4byte ARX_TYPE_DIMENSIONS_SUB_TYPE_2_FLOATS = 1;
 const Arxx::u4byte ARX_TYPE_SLOT_CLASS = 9;
 const Arxx::u4byte ARX_TYPE_SYSTEM = 5;
 const Arxx::u4byte ARX_TYPE_SYSTEM_LINK = 6;
 const Arxx::u4byte ARX_TYPE_TEXTURE = 10;
 const Arxx::u4byte ARX_TYPE_WEAPON_CLASS = 7;
+const Arxx::u4byte ARX_TYPE_WIDGET = 1;
+const Arxx::u4byte ARX_TYPE_WIDGET_SUB_TYPE_LABEL = 1;
+const Arxx::u4byte ARX_TYPE_WIDGET_SUB_TYPE_MINI_MAP_DISPLAY = 2;
+const Arxx::u4byte ARX_TYPE_WIDGET_SUB_TYPE_SCANNER_DISPLAY = 3;
+const Arxx::u4byte ARX_TYPE_WIDGET_SUB_TYPE_WIDGET = 0;
 
 #endif
