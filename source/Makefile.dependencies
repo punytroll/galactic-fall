@@ -26,6 +26,8 @@ arx_reading_cpp = \
 	$(object_aspect_visualization_h) \
 	$(object_factory_h) \
 	$(planet_h) \
+	$(scenario_h) \
+	$(scenario_manager_h) \
 	$(settings_h) \
 	$(ship_class_h) \
 	$(slot_h) \
@@ -535,6 +537,8 @@ main_cpp = \
 	$(output_observer_h) \
 	$(planet_h) \
 	$(real_time_h) \
+	$(scenario_h) \
+	$(scenario_manager_h) \
 	$(settings_h) \
 	$(ship_h) \
 	$(ship_class_h) \
@@ -784,6 +788,21 @@ real_time_h = \
 
 referencing_h = \
 	referencing.h
+
+scenario_cpp = \
+	scenario.cpp \
+	$(scenario_h)
+
+scenario_h = \
+	scenario.h
+
+scenario_manager_cpp = \
+	scenario_manager.cpp \
+	$(scenario_h) \
+	$(scenario_manager_h)
+
+scenario_manager_h = \
+	scenario_manager.h
 
 settings_cpp = \
 	settings.cpp \

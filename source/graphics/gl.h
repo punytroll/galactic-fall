@@ -60,6 +60,23 @@ typedef void (* glCallListsFunction)(GLsizei n, GLenum type, const GLvoid * list
 extern glCallListsFunction __glCallLists;
 #define GLCallLists(n, type, lists) { assert(__glCallLists != 0); __glCallLists(n, type, lists); CheckGLError; }
 
+typedef GLenum (* glCheckFramebufferStatusFunction)(GLenum target);
+extern glCheckFramebufferStatusFunction __glCheckFramebufferStatus;
+#ifdef NDEBUG
+#define GLCheckFramebufferStatus(target) __glCheckFramebufferStatus(target); CheckGLError;
+#else
+inline GLenum GLCheckFramebufferStatus(GLenum target)
+{
+	GLenum Result;
+	
+	assert(__glCheckFramebufferStatus != 0);
+	Result = __glCheckFramebufferStatus(target);
+	CheckGLError;
+	
+	return Result;
+}
+#endif
+
 typedef void (* glClearFunction)(GLbitfield mask);
 extern glClearFunction __glClear;
 #define GLClear(mask) { assert(__glClear != 0); __glClear(mask); CheckGLError; }

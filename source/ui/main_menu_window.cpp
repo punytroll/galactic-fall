@@ -32,7 +32,7 @@
 // these functions are defined in main.cpp
 void ActionQuitGameLoop(void);
 bool LoadGameFromInputStream(std::istream & InputStream);
-bool LoadGameFromResourcePath(const std::string & ResourcePath);
+bool LoadScenarioFromScenarioIdentifier(const std::string & ScenarioIdentifier);
 void SaveGame(std::ostream & OStream);
 
 UI::MainMenuWindow::MainMenuWindow(UI::Widget * SupWidget) :
@@ -256,7 +256,7 @@ void UI::MainMenuWindow::_OnLoadGameDialogDestroying(void)
 
 void UI::MainMenuWindow::_OnNewGameButtonClicked(void)
 {
-	LoadGameFromResourcePath("/Savegames/Default");
+	LoadScenarioFromScenarioIdentifier("new_game");
 	Destroy();
 }
 
