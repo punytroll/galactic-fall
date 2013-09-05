@@ -67,7 +67,7 @@ void Graphics::Node::Begin(void)
 	}
 	GLPushMatrix();
 	GLTranslatef(_Position[0], _Position[1], _Position[2]);
-	glMultMatrixf(Matrix4f::CreateFromQuaternion(_Orientation).GetPointer());
+	GLMultMatrixf(Matrix4f::CreateFromQuaternion(_Orientation).GetPointer());
 	if(_Scale != 1.0f)
 	{
 		GLScalef(_Scale, _Scale, _Scale);

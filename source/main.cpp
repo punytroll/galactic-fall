@@ -3263,6 +3263,7 @@ void InitializeOpenGL(void)
 	LoadOpenGLFunction(glCheckFramebufferStatus);
 	LoadOpenGLFunction(glClear);
 	LoadOpenGLFunction(glClearColor);
+	LoadOpenGLFunction(glClipPlane);
 	LoadOpenGLFunction(glColor3f);
 	LoadOpenGLFunction(glColor4f);
 	LoadOpenGLFunction(glColor4fv);
@@ -3282,6 +3283,7 @@ void InitializeOpenGL(void)
 	LoadOpenGLFunction(glGenTextures);
 	LoadOpenGLFunction(glGetIntegerv);
 	LoadOpenGLFunction(glGetString);
+	LoadOpenGLFunction(glLightfv);
 	LoadOpenGLFunction(glLightModelfv);
 	LoadOpenGLFunction(glListBase);
 	LoadOpenGLFunction(glLoadIdentity);
@@ -3289,6 +3291,7 @@ void InitializeOpenGL(void)
 	LoadOpenGLFunction(glMaterialf);
 	LoadOpenGLFunction(glMaterialfv);
 	LoadOpenGLFunction(glMatrixMode);
+	LoadOpenGLFunction(glMultMatrixf);
 	LoadOpenGLFunction(glNewList);
 	LoadOpenGLFunction(glNormal3fv);
 	LoadOpenGLFunction(glOrtho);
