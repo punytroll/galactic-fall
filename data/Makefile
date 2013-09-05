@@ -82,6 +82,7 @@ all_data = \
 	.data/system_link_alpha_centauri_tichel.data \
 	.data/system_link_rigel_sol.data \
 	.data/system_link_rigel_tichel.data \
+	.data/texture_font.data \
 	.data/texture_particle.data \
 	.data/weapon_class_light_laser.data \
 	.data/weapon_class_medium_laser.data \
@@ -231,6 +232,7 @@ data.arx: $(data_arx) $(arxtouch_dependencies) $(arxadd_dependencies)
 	$(command_arxadd) $@ --name="Transporter Faction" --type=2 --sub-type=0 --relation="/Meshes::child" --data-file=.data/mesh_transporter_faction.data
 	$(command_arxadd) $@ --name="Transporter Hull" --type=2 --sub-type=0 --relation="/Meshes::child" --data-file=.data/mesh_transporter_hull.data
 	@echo "\n\nAdding textures ...\n"
+	$(command_arxadd) $@ --name="Font" --type=a --sub-type=0 --relation="/Textures::child" --data-file=.data/texture_font.data
 	$(command_arxadd) $@ --name="Particle" --type=a --sub-type=0 --relation="/Textures::child" --data-file=.data/texture_particle.data
 	@echo "\n\nAdding scenarios ...\n"
 	$(command_arxadd) $@ --name="New Game" --type=11 --sub-type=0 --relation="/Scenarios::child" --data-file=.data/scenario_new_game.data
@@ -259,7 +261,5 @@ meshes-clean-recursive:
 
 textures-clean-recursive:
 	@$(MAKE) -C textures clean-recursive
-
-.data/texture_particle.data: textures/generated/particle.tex
 
 .PHONY: all all-here all-recursive check-dependencies clean clean-here clean-recursive default meshes-all-recursive meshes-clean-recursive textures-all-recursive textures-clean-recursive

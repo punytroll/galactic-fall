@@ -6,8 +6,8 @@ default: all
 
 include $(root)/tools/rasterizer/Makefile.include
 
-vg_files = $(wildcard original/*.vg)
-tex_files = $(patsubst original/%.vg,generated/%.tex,$(vg_files))
+vg_files = $(wildcard original/vg/*.vg)
+tex_files = $(patsubst original/vg/%.vg,generated/tex/%.tex,$(vg_files))
 
 all: all-recursive
 
@@ -24,10 +24,10 @@ clean-here:
 
 clean-recursive: clean-here
 
-generated/particle.tex: original/particle.vg $(rasterizer_dependencies) generated
+generated/tex/particle.tex: original/vg/particle.vg $(rasterizer_dependencies) generated/tex
 	$(command_rasterizer) --in=$< --out=$@ --sub-pixels=3 --dimensions=32x32
 
-generated:
+generated generated/tex:
 	mkdir $@
 
 .PHONY: default all all-here all-recursive check-dependencies clean clean-here clean-recursive
