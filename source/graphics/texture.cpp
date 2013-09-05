@@ -36,7 +36,7 @@ Graphics::Texture::~Texture(void)
 {
 	if(_TextureName != 0)
 	{
-		glDeleteTextures(1, &_TextureName);
+		GLDeleteTextures(1, &_TextureName);
 		_TextureName = 0;
 	}
 }

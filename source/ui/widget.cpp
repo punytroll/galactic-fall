@@ -492,8 +492,8 @@ void UI::Widget::DrawClippingRectangle(void)
 	double RightPlane[4] = { -1.0, 0.0, 0.0, m_ClippingRectangles.top().second[0] };
 	double BottomPlane[4] = { 0.0, -1.0, 0.0, m_ClippingRectangles.top().second[1] };
 	
-	glClipPlane(GL_CLIP_PLANE0, LeftPlane);
-	glClipPlane(GL_CLIP_PLANE1, TopPlane);
-	glClipPlane(GL_CLIP_PLANE2, RightPlane);
-	glClipPlane(GL_CLIP_PLANE3, BottomPlane);
+	GLClipPlane(GL_CLIP_PLANE0, LeftPlane);
+	GLClipPlane(GL_CLIP_PLANE1, TopPlane);
+	GLClipPlane(GL_CLIP_PLANE2, RightPlane);
+	GLClipPlane(GL_CLIP_PLANE3, BottomPlane);
 }

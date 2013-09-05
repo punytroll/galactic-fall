@@ -85,6 +85,10 @@ typedef void (* glClearColorFunction)(GLclampf red, GLclampf green, GLclampf blu
 extern glClearColorFunction __glClearColor;
 #define GLClearColor(red, green, blue, alpha) { assert(__glClearColor != 0); __glClearColor(red, green, blue, alpha); CheckGLError; }
 
+typedef void (* glClipPlaneFunction)(GLenum plane, const GLdouble * equation);
+extern glClipPlaneFunction __glClipPlane;
+#define GLClipPlane(plane, equation) { assert(__glClipPlane != 0); __glClipPlane(plane, equation); CheckGLError; }
+
 typedef void (* glColor3fFunction)(GLfloat red, GLfloat green, GLfloat blue);
 extern glColor3fFunction __glColor3f;
 #define GLColor3f(red, green, blue) { assert(__glColor3f != 0); __glColor3f(red, green, blue); }
@@ -187,6 +191,10 @@ inline const GLubyte * GLGetString(GLenum name)
 }
 #endif
 
+typedef void (* glLightfvFunction)(GLenum light, GLenum pname, const GLfloat * params);
+extern glLightfvFunction __glLightfv;
+#define GLLightfv(light, pname, params) { assert(__glLightfv != 0); __glLightfv(light, pname, params); CheckGLError; }
+
 typedef void (* glLightModelfvFunction)(GLenum pname, const GLfloat * params);
 extern glLightModelfvFunction __glLightModelfv;
 #define GLLightModelfv(pname, params) { assert(__glLightModelfv != 0); __glLightModelfv(pname, params); CheckGLError; }
@@ -214,6 +222,10 @@ extern glMaterialfvFunction __glMaterialfv;
 typedef void (* glMatrixModeFunction)(GLenum mode);
 extern glMatrixModeFunction __glMatrixMode;
 #define GLMatrixMode(mode) { assert(__glMatrixMode != 0); __glMatrixMode(mode); CheckGLError; }
+
+typedef void (* glMultMatrixfFunction)(const GLfloat * m);
+extern glMultMatrixfFunction __glMultMatrixf;
+#define GLMultMatrixf(m) { assert(__glMultMatrixf != 0); __glMultMatrixf(m); CheckGLError; }
 
 typedef void (* glNewListFunction)(GLuint list, GLenum mode);
 extern glNewListFunction __glNewList;
