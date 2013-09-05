@@ -36,19 +36,19 @@ namespace Graphics
 		float GetRadialSize(void) const;
 		void AddMesh(const std::string & MeshIdentifier, const Graphics::Mesh * Mesh);
 	private:
-		std::string m_Identifier;
-		std::map< std::string, const Graphics::Mesh * > m_Meshes;
-		mutable float m_RadialSize;
+		std::string _Identifier;
+		std::map< std::string, const Graphics::Mesh * > _Meshes;
+		mutable float _RadialSize;
 	};
 	
 	inline const std::string & Model::GetIdentifier(void) const
 	{
-		return m_Identifier;
+		return _Identifier;
 	}
 	
 	inline const std::map< std::string, const Graphics::Mesh * > & Model::GetMeshes(void) const
 	{
-		return m_Meshes;
+		return _Meshes;
 	}
 }
 

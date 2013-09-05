@@ -19,38 +19,36 @@
 
 #include <assert.h>
 
-#include <GL/gl.h>
-
 #include "mesh.h"
 #include "model.h"
 
 Graphics::Model::Model(const std::string & Identifier) :
-	m_Identifier(Identifier),
-	m_RadialSize(-1.0f)
+	_Identifier(Identifier),
+	_RadialSize(-1.0f)
 {
 }
 
 float Graphics::Model::GetRadialSize(void) const
 {
-	if(m_RadialSize < 0.0f)
+	if(_RadialSize < 0.0f)
 	{
-		for(std::map< std::string, const Graphics::Mesh * >::const_iterator MeshIterator = m_Meshes.begin(); MeshIterator != m_Meshes.end(); ++MeshIterator)
+		for(std::map< std::string, const Graphics::Mesh * >::const_iterator MeshIterator = _Meshes.begin(); MeshIterator != _Meshes.end(); ++MeshIterator)
 		{
 			float RadialSize(MeshIterator->second->GetRadialSize());
 			
-			if(m_RadialSize < RadialSize)
+			if(_RadialSize < RadialSize)
 			{
-				m_RadialSize = RadialSize;
+				_RadialSize = RadialSize;
 			}
 		}
 	}
 	
-	return m_RadialSize;
+	return _RadialSize;
 }
 
 void Graphics::Model::AddMesh(const std::string & MeshIdentifier, const Graphics::Mesh * Mesh)
 {
-	assert(m_Meshes.find(MeshIdentifier) == m_Meshes.end());
+	assert(_Meshes.find(MeshIdentifier) == _Meshes.end());
 	
-	m_Meshes[MeshIdentifier] = Mesh;
+	_Meshes[MeshIdentifier] = Mesh;
 }
