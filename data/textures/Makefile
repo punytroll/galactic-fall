@@ -30,4 +30,6 @@ generated/tex/particle.tex: original/vg/particle.vg $(rasterizer_dependencies) g
 generated generated/tex:
 	mkdir $@
 
+generated/tex: generated
+
 .PHONY: default all all-here all-recursive check-dependencies clean clean-here clean-recursive
