@@ -26,6 +26,7 @@ glBindRenderbufferFunction __glBindRenderbuffer(0);
 glBitmapFunction __glBitmap(0);
 glBlendFuncFunction __glBlendFunc(0);
 glCallListsFunction __glCallLists(0);
+glCheckFramebufferStatusFunction __glCheckFramebufferStatus(0);
 glClearFunction __glClear(0);
 glClearColorFunction __glClearColor(0);
 glColor3fFunction __glColor3f(0);

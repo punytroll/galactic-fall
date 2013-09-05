@@ -25,6 +25,7 @@ namespace Arxx
 	class Archive;
 }
 
+class ScenarioManager;
 class Settings;
 
 class ResourceReader
@@ -40,6 +41,7 @@ public:
 	void ReadGeneratorClasses(void);
 	void ReadMeshes(void);
 	void ReadModels(void);
+	void ReadScenarios(ScenarioManager * ScenarioManager);
 	void ReadSettings(Settings * Settings);
 	void ReadShipClasses(void);
 	void ReadSlotClasses(void);
@@ -48,8 +50,7 @@ public:
 	void ReadTextures(void);
 	void ReadUserInterface(void);
 	void ReadWeaponClasses(void);
-	// highly specialized ... too highly even
-	std::string GetContentStringFromResourcePath(const std::string & ResourcePath);
+	std::string ReadSavegameFromScenarioPath(const std::string & ScenarioPath);
 private:
 	Arxx::Archive * m_Archive;
 };
