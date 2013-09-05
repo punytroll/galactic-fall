@@ -1,0 +1,6 @@
+<scenario>
+	<identifier>sol_spectator</identifier>
+	<name>Sol Spectator</name>
+	<description>Watch the constant battle of earth forces against pirates in the Sol system.</description>
+	<savegame-file>savegame_sol_spectator.xml</savegame-file>
+</scenario>

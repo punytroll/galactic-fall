@@ -63,6 +63,8 @@ all_data = \
 	.data/model_planet.data \
 	.data/model_shuttle.data \
 	.data/model_transporter.data \
+	.data/scenario_new_game.data \
+	.data/scenario_sol_spectator.data \
 	.data/setting_key_binding_profile.data \
 	.data/setting_window_dimensions.data \
 	.data/ship_class_shuttle.data \
@@ -84,8 +86,7 @@ all_data = \
 	.data/weapon_class_light_laser.data \
 	.data/weapon_class_medium_laser.data \
 	.data/widget_mini_map.data \
-	.data/widget_scanner.data \
-	.data/savegame_default.data
+	.data/widget_scanner.data
 
 declarations_xml = \
 	tools/declarations.xml
@@ -143,7 +144,7 @@ data.arx: $(data_arx) $(arxtouch_dependencies) $(arxadd_dependencies)
 	$(command_arxadd) $@ --identifier=d --name="Generator Classes" --type=0 --sub-type=0 --relation=0::child
 	$(command_arxadd) $@ --identifier=e --name="Factions" --type=0 --sub-type=0 --relation=0::child
 	$(command_arxadd) $@ --identifier=f --name="Settings" --type=0 --sub-type=0 --relation=0::child
-	$(command_arxadd) $@ --identifier=10 --name="Savegames" --type=0 --sub-type=0 --relation=0::child
+	$(command_arxadd) $@ --identifier=10 --name="Scenarios" --type=0 --sub-type=0 --relation=0::child
 	@echo "\n\nAdding settings ...\n"
 	$(command_arxadd) $@ --name="Key Binding Profile" --type=10 --sub-type=0 --relation="/Settings::child" --data-file=.data/setting_key_binding_profile.data
 	$(command_arxadd) $@ --name="Window Dimensions" --type=f --sub-type=1 --relation="/Settings::child" --data-file=.data/setting_window_dimensions.data
@@ -207,8 +208,6 @@ data.arx: $(data_arx) $(arxtouch_dependencies) $(arxadd_dependencies)
 	$(command_arxadd) $@ --name="Alpha Centauri / Tichel" --type=6 --sub-type=0 --relation="/System Links::child" --data-file=.data/system_link_alpha_centauri_tichel.data
 	$(command_arxadd) $@ --name="Rigel / Sol" --type=6 --sub-type=0 --relation="/System Links::child" --data-file=.data/system_link_rigel_sol.data
 	$(command_arxadd) $@ --name="Rigel / Tichel" --type=6 --sub-type=0 --relation="/System Links::child" --data-file=.data/system_link_rigel_tichel.data
-	@echo "\n\nAdding savegames ...\n"
-	$(command_arxadd) $@ --name="Default" --type=10 --sub-type=0 --relation="/Savegames::child" --data-file=.data/savegame_default.data
 	@echo "\n\nAdding models ...\n"
 	$(command_arxadd) $@ --name="Cargo Cube" --type=b --sub-type=0 --relation="/Models::child" --data-file=.data/model_cargo_cube.data
 	$(command_arxadd) $@ --name="Fighter" --type=b --sub-type=0 --relation="/Models::child" --data-file=.data/model_fighter.data
@@ -233,12 +232,12 @@ data.arx: $(data_arx) $(arxtouch_dependencies) $(arxadd_dependencies)
 	$(command_arxadd) $@ --name="Transporter Hull" --type=2 --sub-type=0 --relation="/Meshes::child" --data-file=.data/mesh_transporter_hull.data
 	@echo "\n\nAdding textures ...\n"
 	$(command_arxadd) $@ --name="Particle" --type=a --sub-type=0 --relation="/Textures::child" --data-file=.data/texture_particle.data
+	@echo "\n\nAdding scenarios ...\n"
+	$(command_arxadd) $@ --name="New Game" --type=11 --sub-type=0 --relation="/Scenarios::child" --data-file=.data/scenario_new_game.data
+	$(command_arxadd) $@ --name="Sol Spectator" --type=11 --sub-type=0 --relation="/Scenarios::child" --data-file=.data/scenario_sol_spectator.data
 
 .data:
 	mkdir $@
-
-.data/savegame_default.data: savegame_default.xml
-	cp -f $< $@
 
 .data/%.data: %.xml $(declarations_xml) $(xml_to_data_dependencies)
 	$(command_xml_to_data) --declarations=tools/declarations.xml --in=$< --out=$@

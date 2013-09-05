@@ -50,6 +50,8 @@
 #include "object_aspect_visualization.h"
 #include "object_factory.h"
 #include "planet.h"
+#include "scenario.h"
+#include "scenario_manager.h"
 #include "settings.h"
 #include "ship_class.h"
 #include "slot.h"
@@ -74,6 +76,7 @@ static void ReadFaction(Arxx::Reference & Reference);
 static void ReadGeneratorClass(Arxx::Reference & Reference);
 static void ReadMesh(Arxx::Reference & Reference);
 static void ReadModel(Arxx::Reference & Reference);
+static void ReadScenario(Arxx::Reference & Reference, ScenarioManager * ScenarioManager);
 static void ReadShipClass(Arxx::Reference & Reference);
 static void ReadSlotClass(Arxx::Reference & Reference);
 static void ReadSystem(Arxx::Reference & Reference);
@@ -208,6 +211,11 @@ void ResourceReader::ReadModels(void)
 	ReadItems(m_Archive, "/Models", Callback(ReadModel));
 }
 
+void ResourceReader::ReadScenarios(ScenarioManager * ScenarioManager)
+{
+	ReadItems(m_Archive, "/Scenarios", Bind2(Callback(ReadScenario), ScenarioManager));
+}
+
 void ResourceReader::ReadSettings(Settings * Settings)
 {
 	Arxx::Item * Item(m_Archive->GetItem("/Settings"));
@@ -254,9 +262,9 @@ void ResourceReader::ReadWeaponClasses(void)
 	ReadItems(m_Archive, "/Weapon Classes", Callback(ReadWeaponClass));
 }
 
-std::string ResourceReader::GetContentStringFromResourcePath(const std::string & ResourcePath)
+std::string ResourceReader::ReadSavegameFromScenarioPath(const std::string & ScenarioPath)
 {
-	Arxx::Item * Item(m_Archive->GetItem(ResourcePath));
+	Arxx::Item * Item(m_Archive->GetItem(ScenarioPath));
 	std::string Result;
 	
 	if(Item != 0)
@@ -264,8 +272,11 @@ std::string ResourceReader::GetContentStringFromResourcePath(const std::string &
 		MakeItemAvailable(Item);
 		
 		Arxx::BufferReader Reader(*Item);
+		std::string Identifier;
+		std::string Name;
+		std::string Description;
 		
-		Reader >> Result;
+		Reader >> Identifier >> Name >> Description >> Result;
 	}
 	
 	return Result;
@@ -582,6 +593,40 @@ static void ReadModel(Arxx::Reference & Reference)
 		}
 		NewModel->AddMesh(PartIdentifier, Mesh);
 	}
+}
+
+static void ReadScenario(Arxx::Reference & Reference, ScenarioManager * ScenarioManager)
+{
+	Arxx::Item * Item(Resolve(Reference));
+	
+	if(Item->GetType() != ARX_TYPE_SCENARIO)
+	{
+		throw std::runtime_error("Item type for scenario '" + Item->GetName() + "' should be '" + to_string_cast(ARX_TYPE_SCENARIO) + "' not '" + to_string_cast(Item->GetType()) + "'.");
+	}
+	if(Item->GetSubType() != 0)
+	{
+		throw std::runtime_error("Item sub type for scenario '" + Item->GetName() + "' should be '0' not '" + to_string_cast(Item->GetSubType()) + "'.");
+	}
+	
+	Arxx::BufferReader Reader(*Item);
+	std::string Identifier;
+	
+	Reader >> Identifier;
+	
+	Scenario * NewScenario(ScenarioManager->Create(Identifier));
+	
+	if(NewScenario == 0)
+	{
+		throw std::runtime_error("Could not create scenario '" + Identifier + "'.");
+	}
+	NewScenario->SetResourcePath("/Scenarios/" + Item->GetName());
+	
+	std::string Name;
+	std::string Description;
+	
+	Reader >> Name >> Description;
+	NewScenario->SetName(Name);
+	NewScenario->SetDescription(Description);
 }
 
 static void ReadShipClass(Arxx::Reference & Reference)
