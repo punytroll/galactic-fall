@@ -3343,20 +3343,11 @@ void InitializeOpenGL(void)
 	GLGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &MaximalNumberOfVertexAtributes);
 	ON_DEBUG(std::cout << "  Maximal number of vertex attributes: " << MaximalNumberOfVertexAtributes << std::endl);
 	
-	ON_DEBUG(std::cout << "Initializing font." << std::endl);
-	InitializeFonts();
-	GLEnable(GL_LIGHTING);
-	GLEnable(GL_CULL_FACE);
-	GLEnable(GL_DEPTH_TEST);
-	
 	Vector4f GlobalAmbientLightColor(0.0f, 0.0f, 0.0f, 0.0f);
 	
 	GLLightModelfv(GL_LIGHT_MODEL_AMBIENT, GlobalAmbientLightColor.GetPointer());
-}
-
-void DeinitializeOpenGL(void)
-{
-	DeinitializeFonts();
+	GLEnable(GL_CULL_FACE);
+	GLEnable(GL_DEPTH_TEST);
 }
 
 void ProcessEvents(void)
@@ -3841,7 +3832,9 @@ int main(int argc, char ** argv)
 	// since reading the textures already creates them we have to do this after initializing OpenGL
 	ON_DEBUG(std::cout << "Reading textures from game archive." << std::endl);
 	g_ResourceReader->ReadTextures();
-	
+	// since initializing the textures uses a texture, we have to do it after reading the textures
+	ON_DEBUG(std::cout << "Initializing font." << std::endl);
+	InitializeFont();
 	// load the specified savegame
 	if(LoadSavegameFileName.empty() == false)
 	{
@@ -3873,8 +3866,8 @@ int main(int argc, char ** argv)
 	// cleanup
 	ON_DEBUG(std::cout << "Purging game." << std::endl);
 	PurgeGame();
-	ON_DEBUG(std::cout << "Deinitializing OpenGL." << std::endl);
-	DeinitializeOpenGL();
+	ON_DEBUG(std::cout << "Deinitializing font." << std::endl);
+	DeinitializeFont();
 	ON_DEBUG(std::cout << "Destroying window." << std::endl);
 	DestroyWindow();
 	// if requested print some final debugging information

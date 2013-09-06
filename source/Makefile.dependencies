@@ -165,7 +165,11 @@ commodity_class_h = \
 
 draw_text_cpp = \
 	draw_text.cpp \
-	$(graphics_gl_h)
+	$(globals_h) \
+	$(graphics_engine_h) \
+	$(graphics_gl_h) \
+	$(graphics_texture_h) \
+	$(graphics_texture_manager_h)
 
 draw_text_h = \
 	draw_text.h

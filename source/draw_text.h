@@ -22,8 +22,8 @@
 
 #include <string>
 
-void InitializeFonts(void);
-void DeinitializeFonts(void);
+void InitializeFont(void);
+void DeinitializeFont(void);
 void DrawText(const std::string & String);
 
 #endif
