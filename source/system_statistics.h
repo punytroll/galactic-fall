@@ -29,6 +29,7 @@ public:
 	float GetAISecondsThisFrame(void) const;
 	u4byte GetCommoditiesInCurrentSystemThisFrame(void) const;
 	u4byte GetDispatchedMessagesThisFrame(void) const;
+	float GetFontSecondsThisFrame(void) const;
 	float GetFramesPerSecond(void) const;
 	float GetFrameToFrameSecondsThisFrame(void) const;
 	float GetGraphicsSecondsThisFrame(void) const;
@@ -43,6 +44,7 @@ public:
 	void SetAISecondsThisFrame(float AISecondsThisFrame);
 	void SetCommoditiesInCurrentSystemThisFrame(u4byte CommoditiesInCurrentSystemThisFrame);
 	void SetDispatchedMessagesThisFrame(u4byte DispatchedMessagesThisFrame);
+	void SetFontSecondsThisFrame(float FontSecondsThisFrame);
 	void SetFrameToFrameSecondsThisFrame(float FrameToFrameSecondsThisFrame);
 	void SetGraphicsSecondsThisFrame(float GraphicsSecondsThisFrame);
 	void SetMessagingSecondsThisFrame(float MessagingSecondsThisFrame);
@@ -53,145 +55,156 @@ public:
 	void SetShipsInCurrentSystemThisFrame(u4byte ShipsInCurrentSystemThisFrame);
 	void SetShotsInCurrentSystemThisFrame(u4byte ShotsInCurrentSystemThisFrame);
 private:
-	float m_AISecondsThisFrame;
-	u4byte m_CommoditiesInCurrentSystemThisFrame;
-	u4byte m_DispatchedMessagesThisFrame;
-	float m_FramesPerSecond;
-	float m_FrameToFrameSecondsThisFrame;
-	float m_GraphicsSecondsThisFrame;
-	float m_MessageSecondsThisFrame;
-	u4byte m_ParticleSystemsThisFrame;
-	u4byte m_ParticlesThisFrame;
-	float m_PhysicsSecondsThisFrame;
-	float m_ProcessingSecondsThisFrame;
-	u4byte m_ShipsInCurrentSystemThisFrame;
-	u4byte m_ShotsInCurrentSystemThisFrame;
+	float _AISecondsThisFrame;
+	u4byte _CommoditiesInCurrentSystemThisFrame;
+	u4byte _DispatchedMessagesThisFrame;
+	float _FontSecondsThisFrame;
+	float _FramesPerSecond;
+	float _FrameToFrameSecondsThisFrame;
+	float _GraphicsSecondsThisFrame;
+	float _MessageSecondsThisFrame;
+	u4byte _ParticleSystemsThisFrame;
+	u4byte _ParticlesThisFrame;
+	float _PhysicsSecondsThisFrame;
+	float _ProcessingSecondsThisFrame;
+	u4byte _ShipsInCurrentSystemThisFrame;
+	u4byte _ShotsInCurrentSystemThisFrame;
 };
 
 inline float SystemStatistics::GetAISecondsThisFrame(void) const
 {
-	return m_AISecondsThisFrame;
+	return _AISecondsThisFrame;
 }
 
 inline u4byte SystemStatistics::GetCommoditiesInCurrentSystemThisFrame(void) const
 {
-	return m_CommoditiesInCurrentSystemThisFrame;
+	return _CommoditiesInCurrentSystemThisFrame;
 }
 
 inline u4byte SystemStatistics::GetDispatchedMessagesThisFrame(void) const
 {
-	return m_DispatchedMessagesThisFrame;
+	return _DispatchedMessagesThisFrame;
+}
+
+inline float SystemStatistics::GetFontSecondsThisFrame(void) const
+{
+	return _FontSecondsThisFrame;
 }
 
 inline float SystemStatistics::GetFramesPerSecond(void) const
 {
-	return m_FramesPerSecond;
+	return _FramesPerSecond;
 }
 
 inline float SystemStatistics::GetFrameToFrameSecondsThisFrame(void) const
 {
-	return m_FrameToFrameSecondsThisFrame;
+	return _FrameToFrameSecondsThisFrame;
 }
 
 inline float SystemStatistics::GetGraphicsSecondsThisFrame(void) const
 {
-	return m_GraphicsSecondsThisFrame;
+	return _GraphicsSecondsThisFrame;
 }
 
 inline float SystemStatistics::GetMessagingSecondsThisFrame(void) const
 {
-	return m_MessageSecondsThisFrame;
+	return _MessageSecondsThisFrame;
 }
 
 inline u4byte SystemStatistics::GetParticleSystemsThisFrame(void) const
 {
-	return m_ParticleSystemsThisFrame;
+	return _ParticleSystemsThisFrame;
 }
 
 inline u4byte SystemStatistics::GetParticlesThisFrame(void) const
 {
-	return m_ParticlesThisFrame;
+	return _ParticlesThisFrame;
 }
 
 inline float SystemStatistics::GetPhysicsSecondsThisFrame(void) const
 {
-	return m_PhysicsSecondsThisFrame;
+	return _PhysicsSecondsThisFrame;
 }
 
 inline float SystemStatistics::GetProcessingSecondsThisFrame(void) const
 {
-	return m_ProcessingSecondsThisFrame;
+	return _ProcessingSecondsThisFrame;
 }
 
 inline u4byte SystemStatistics::GetShipsInCurrentSystemThisFrame(void) const
 {
-	return m_ShipsInCurrentSystemThisFrame;
+	return _ShipsInCurrentSystemThisFrame;
 }
 
 inline u4byte SystemStatistics::GetShotsInCurrentSystemThisFrame(void) const
 {
-	return m_ShotsInCurrentSystemThisFrame;
+	return _ShotsInCurrentSystemThisFrame;
 }
 
 inline void SystemStatistics::SetAISecondsThisFrame(float AISecondsThisFrame)
 {
-	m_AISecondsThisFrame = AISecondsThisFrame;
+	_AISecondsThisFrame = AISecondsThisFrame;
 }
 
 inline void SystemStatistics::SetCommoditiesInCurrentSystemThisFrame(u4byte CommoditiesInCurrentSystemThisFrame)
 {
-	m_CommoditiesInCurrentSystemThisFrame = CommoditiesInCurrentSystemThisFrame;
+	_CommoditiesInCurrentSystemThisFrame = CommoditiesInCurrentSystemThisFrame;
 }
 
 inline void SystemStatistics::SetDispatchedMessagesThisFrame(u4byte DispatchedMessagesThisFrame)
 {
-	m_DispatchedMessagesThisFrame = DispatchedMessagesThisFrame;
+	_DispatchedMessagesThisFrame = DispatchedMessagesThisFrame;
+}
+
+inline void SystemStatistics::SetFontSecondsThisFrame(float FontSecondsThisFrame)
+{
+	_FontSecondsThisFrame = FontSecondsThisFrame;
 }
 
 inline void SystemStatistics::SetFrameToFrameSecondsThisFrame(float FrameToFrameSecondsThisFrame)
 {
-	m_FrameToFrameSecondsThisFrame = FrameToFrameSecondsThisFrame;
-	m_FramesPerSecond = 1.0f / FrameToFrameSecondsThisFrame;
+	_FrameToFrameSecondsThisFrame = FrameToFrameSecondsThisFrame;
+	_FramesPerSecond = 1.0f / FrameToFrameSecondsThisFrame;
 }
 
 inline void SystemStatistics::SetGraphicsSecondsThisFrame(float GraphicsSecondsThisFrame)
 {
-	m_GraphicsSecondsThisFrame = GraphicsSecondsThisFrame;
+	_GraphicsSecondsThisFrame = GraphicsSecondsThisFrame;
 }
 
 inline void SystemStatistics::SetMessagingSecondsThisFrame(float MessagingSecondsThisFrame)
 {
-	m_MessageSecondsThisFrame = MessagingSecondsThisFrame;
+	_MessageSecondsThisFrame = MessagingSecondsThisFrame;
 }
 
 inline void SystemStatistics::SetParticleSystemsThisFrame(u4byte ParticleSystemsThisFrame)
 {
-	m_ParticleSystemsThisFrame = ParticleSystemsThisFrame;
+	_ParticleSystemsThisFrame = ParticleSystemsThisFrame;
 }
 
 inline void SystemStatistics::SetParticlesThisFrame(u4byte ParticlesThisFrame)
 {
-	m_ParticlesThisFrame = ParticlesThisFrame;
+	_ParticlesThisFrame = ParticlesThisFrame;
 }
 
 inline void SystemStatistics::SetPhysicsSecondsThisFrame(float PhysicsSecondsThisFrame)
 {
-	m_PhysicsSecondsThisFrame = PhysicsSecondsThisFrame;
+	_PhysicsSecondsThisFrame = PhysicsSecondsThisFrame;
 }
 
 inline void SystemStatistics::SetProcessingSecondsThisFrame(float ProcessingSecondsThisFrame)
 {
-	m_ProcessingSecondsThisFrame = ProcessingSecondsThisFrame;
+	_ProcessingSecondsThisFrame = ProcessingSecondsThisFrame;
 }
 
 inline void SystemStatistics::SetShipsInCurrentSystemThisFrame(u4byte ShipsInCurrentSystemThisFrame)
 {
-	m_ShipsInCurrentSystemThisFrame = ShipsInCurrentSystemThisFrame;
+	_ShipsInCurrentSystemThisFrame = ShipsInCurrentSystemThisFrame;
 }
 
 inline void SystemStatistics::SetShotsInCurrentSystemThisFrame(u4byte ShotsInCurrentSystemThisFrame)
 {
-	m_ShotsInCurrentSystemThisFrame = ShotsInCurrentSystemThisFrame;
+	_ShotsInCurrentSystemThisFrame = ShotsInCurrentSystemThisFrame;
 }
 
 #endif

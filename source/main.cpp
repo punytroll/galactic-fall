@@ -880,6 +880,7 @@ void UpdateUserInterface(float RealTimeSeconds, float GameTimeSeconds)
 	// reset the incremental counters
 	g_SystemStatistics->SetParticleSystemsThisFrame(0);
 	g_SystemStatistics->SetParticlesThisFrame(0);
+	g_SystemStatistics->SetFontSecondsThisFrame(0.0f);
 	if(g_Galaxy != 0)
 	{
 		g_TimeWarpLabel->SetVisible(true);

@@ -188,6 +188,18 @@ UI::TimingDialog::TimingDialog(UI::Widget * SupWidget) :
 	_ParticlesThisFrameLabel->SetAnchorLeft(false);
 	_ParticlesThisFrameLabel->SetAnchorRight(true);
 	_ParticlesThisFrameLabel->SetHorizontalAlignment(UI::Label::ALIGN_RIGHT);
+	
+	UI::Label * FontSecondsThisFrameCaptionLabel(new UI::Label(this, "Font Seconds this Frame:"));
+	
+	FontSecondsThisFrameCaptionLabel->SetPosition(Vector2f(10.0f, 300.0f));
+	FontSecondsThisFrameCaptionLabel->SetSize(Vector2f(GetSize()[0] - 100.0f, 20.0f));
+	FontSecondsThisFrameCaptionLabel->SetAnchorRight(true);
+	_FontSecondsThisFrameLabel = new UI::Label(this, "0");
+	_FontSecondsThisFrameLabel->SetPosition(Vector2f(GetSize()[0] - 80.0f, 300.0f));
+	_FontSecondsThisFrameLabel->SetSize(Vector2f(70.0f, 20.0f));
+	_FontSecondsThisFrameLabel->SetAnchorLeft(false);
+	_FontSecondsThisFrameLabel->SetAnchorRight(true);
+	_FontSecondsThisFrameLabel->SetHorizontalAlignment(UI::Label::ALIGN_RIGHT);
 }
 
 bool UI::TimingDialog::_OnKey(const KeyEventInformation & KeyEventInformation)
@@ -207,6 +219,7 @@ void UI::TimingDialog::_OnUpdating(float RealTimeSeconds, float GameTimeSeconds)
 	_AISecondsThisFrameLabel->SetText(to_string_cast(g_SystemStatistics->GetAISecondsThisFrame() * 1000, 2) + " ms");
 	_CommoditiesInCurrentSystemThisFrameLabel->SetText(to_string_cast(g_SystemStatistics->GetCommoditiesInCurrentSystemThisFrame()));
 	_DispatchedMessagesThisFrameLabel->SetText(to_string_cast(g_SystemStatistics->GetDispatchedMessagesThisFrame()));
+	_FontSecondsThisFrameLabel->SetText(to_string_cast(g_SystemStatistics->GetFontSecondsThisFrame()));
 	_FramesPerSecondLabel->SetText(to_string_cast(g_SystemStatistics->GetFramesPerSecond(), 2));
 	_FrameToFrameSecondsThisFrameLabel->SetText(to_string_cast(g_SystemStatistics->GetFrameToFrameSecondsThisFrame() * 1000, 2) + " ms");
 	_GraphicsSecondsThisFrameLabel->SetText(to_string_cast(g_SystemStatistics->GetGraphicsSecondsThisFrame() * 1000, 2) + " ms");
