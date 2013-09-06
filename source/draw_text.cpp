@@ -26,6 +26,8 @@
 #include "graphics/gl.h"
 #include "graphics/texture.h"
 #include "graphics/texture_manager.h"
+#include "real_time.h"
+#include "system_statistics.h"
 
 #define CHARACTERS 95
 #define CHARACTEROFFSET 32
@@ -72,6 +74,10 @@ void DeinitializeFont(void)
 
 void DrawText(const std::string & String)
 {
+	RealTime::Invalidate();
+	
+	double Begin(RealTime::Get());
+	
 	GLPushAttrib(GL_ENABLE_BIT);
 	GLEnable(GL_TEXTURE_2D);
 	assert(g_FontTexture != 0);
@@ -79,4 +85,10 @@ void DrawText(const std::string & String)
 	GLListBase(g_CharacterCallLists - CHARACTEROFFSET);
 	GLCallLists(String.length(), GL_UNSIGNED_BYTE, String.c_str());
 	GLPopAttrib();
+	RealTime::Invalidate();
+	
+	double End(RealTime::Get());
+	double Delta(End - Begin);
+	
+	g_SystemStatistics->SetFontSecondsThisFrame(g_SystemStatistics->GetFontSecondsThisFrame() + Delta);
 }
