@@ -31,7 +31,7 @@
 #define CHARACTEROFFSET 32
 
 GLuint g_CharacterCallLists(0);
-const Graphics::Texture * g_FontTexture;
+const Graphics::Texture * g_FontTexture(0);
 
 void InitializeFont(void)
 {
@@ -45,6 +45,7 @@ void InitializeFont(void)
 	const unsigned int CharactersPerLine(128 / 6);
 	
 	g_CharacterCallLists = GLGenLists(CHARACTERS);
+	assert(g_CharacterCallLists != 0);
 	for(unsigned int CharacterIndex = 0; CharacterIndex < CHARACTERS; ++CharacterIndex)
 	{
 		GLNewList(g_CharacterCallLists + CharacterIndex, GL_COMPILE);
@@ -66,12 +67,14 @@ void InitializeFont(void)
 void DeinitializeFont(void)
 {
 	GLDeleteLists(g_CharacterCallLists, CHARACTERS);
+	g_FontTexture = 0;
 }
 
 void DrawText(const std::string & String)
 {
 	GLPushAttrib(GL_ENABLE_BIT);
 	GLEnable(GL_TEXTURE_2D);
+	assert(g_FontTexture != 0);
 	g_FontTexture->Activate();
 	GLListBase(g_CharacterCallLists - CHARACTEROFFSET);
 	GLCallLists(String.length(), GL_UNSIGNED_BYTE, String.c_str());
