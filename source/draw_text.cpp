@@ -66,7 +66,7 @@ void DrawText(const std::string & String)
 	{
 		int GlyphIndex(*CharacterIterator - CHARACTEROFFSET);
 		
-		GLBegin(GL_QUADS);
+		GLBegin(GL_TRIANGLE_FAN);
 		GLTexCoord2f((GlyphIndex % GlyphsPerLine) * GlyphWidth, 1.0f - (GlyphHeight * static_cast< unsigned int >(GlyphIndex / GlyphsPerLine + 1)));
 		GLVertex2f(0.0f, 12.0f);
 		GLTexCoord2f((GlyphIndex % GlyphsPerLine + 1) * GlyphWidth, 1.0f - (GlyphHeight * static_cast< unsigned int >(GlyphIndex / GlyphsPerLine + 1)));
