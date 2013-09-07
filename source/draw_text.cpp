@@ -32,7 +32,6 @@
 #define CHARACTERS 95
 #define CHARACTEROFFSET 32
 
-GLuint g_CharacterCallLists(0);
 const Graphics::Texture * g_FontTexture(0);
 
 void InitializeFont(void)
@@ -41,34 +40,10 @@ void InitializeFont(void)
 	assert(g_GraphicsEngine->GetTextureManager() != 0);
 	g_FontTexture = g_GraphicsEngine->GetTextureManager()->Get("font");
 	assert(g_FontTexture != 0);
-	
-	const float CharacterWidth(6.0f / 128.0f);
-	const float CharacterHeight(12.0f / 64.0f);
-	const unsigned int CharactersPerLine(128 / 6);
-	
-	g_CharacterCallLists = GLGenLists(CHARACTERS);
-	assert(g_CharacterCallLists != 0);
-	for(unsigned int CharacterIndex = 0; CharacterIndex < CHARACTERS; ++CharacterIndex)
-	{
-		GLNewList(g_CharacterCallLists + CharacterIndex, GL_COMPILE);
-		GLBegin(GL_QUADS);
-		GLTexCoord2f((CharacterIndex % CharactersPerLine) * CharacterWidth, 1.0f - (CharacterHeight * static_cast< unsigned int >(CharacterIndex / CharactersPerLine + 1)));
-		GLVertex2f(0.0f, 12.0f);
-		GLTexCoord2f((CharacterIndex % CharactersPerLine + 1) * CharacterWidth, 1.0f - (CharacterHeight * static_cast< unsigned int >(CharacterIndex / CharactersPerLine + 1)));
-		GLVertex2f(6.0f, 12.0f);
-		GLTexCoord2f((CharacterIndex % CharactersPerLine + 1) * CharacterWidth, 1.0f - (CharacterHeight * static_cast< unsigned int >(CharacterIndex / CharactersPerLine)));
-		GLVertex2f(6.0f, 0.0f);
-		GLTexCoord2f((CharacterIndex % CharactersPerLine) * CharacterWidth, 1.0f - (CharacterHeight * static_cast< unsigned int >(CharacterIndex / CharactersPerLine)));
-		GLVertex2f(0.0f, 0.0f);
-		GLEnd();
-		GLTranslatef(6.0f, 0.0f, 0.0f);
-		GLEndList();
-	}
 }
 
 void DeinitializeFont(void)
 {
-	GLDeleteLists(g_CharacterCallLists, CHARACTERS);
 	g_FontTexture = 0;
 }
 
@@ -82,8 +57,27 @@ void DrawText(const std::string & String)
 	GLEnable(GL_TEXTURE_2D);
 	assert(g_FontTexture != 0);
 	g_FontTexture->Activate();
-	GLListBase(g_CharacterCallLists - CHARACTEROFFSET);
-	GLCallLists(String.length(), GL_UNSIGNED_BYTE, String.c_str());
+	
+	const float GlyphWidth(6.0f / 128.0f);
+	const float GlyphHeight(12.0f / 64.0f);
+	const unsigned int GlyphsPerLine(128 / 6);
+	
+	for(std::string::const_iterator CharacterIterator = String.begin(); CharacterIterator != String.end(); ++CharacterIterator)
+	{
+		int GlyphIndex(*CharacterIterator - CHARACTEROFFSET);
+		
+		GLBegin(GL_QUADS);
+		GLTexCoord2f((GlyphIndex % GlyphsPerLine) * GlyphWidth, 1.0f - (GlyphHeight * static_cast< unsigned int >(GlyphIndex / GlyphsPerLine + 1)));
+		GLVertex2f(0.0f, 12.0f);
+		GLTexCoord2f((GlyphIndex % GlyphsPerLine + 1) * GlyphWidth, 1.0f - (GlyphHeight * static_cast< unsigned int >(GlyphIndex / GlyphsPerLine + 1)));
+		GLVertex2f(6.0f, 12.0f);
+		GLTexCoord2f((GlyphIndex % GlyphsPerLine + 1) * GlyphWidth, 1.0f - (GlyphHeight * static_cast< unsigned int >(GlyphIndex / GlyphsPerLine)));
+		GLVertex2f(6.0f, 0.0f);
+		GLTexCoord2f((GlyphIndex % GlyphsPerLine) * GlyphWidth, 1.0f - (GlyphHeight * static_cast< unsigned int >(GlyphIndex / GlyphsPerLine)));
+		GLVertex2f(0.0f, 0.0f);
+		GLEnd();
+		GLTranslatef(6.0f, 0.0f, 0.0f);
+	}
 	GLPopAttrib();
 	RealTime::Invalidate();
 	
