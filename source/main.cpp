@@ -118,6 +118,7 @@
 #include "ui/timing_dialog.h"
 #include "ui/user_interface.h"
 #include "ui/widget.h"
+#include "visualization.h"
 #include "visualization_prototype.h"
 #include "visualizations.h"
 #include "weapon.h"
@@ -690,10 +691,10 @@ void CalculateMovements(System * System, float Seconds)
 				}
 			}
 			// update the ship's visualization
-			if((TheShip != 0) && (TheShip->GetAspectVisualization()->GetVisualization().IsValid() == true))
+			if((TheShip != 0) && (TheShip->GetAspectVisualization()->GetVisualization() != 0))
 			{
-				TheShip->GetAspectVisualization()->GetVisualization()->SetOrientation(TheShip->GetAspectPosition()->GetOrientation());
-				TheShip->GetAspectVisualization()->GetVisualization()->SetPosition(TheShip->GetAspectPosition()->GetPosition());
+				TheShip->GetAspectVisualization()->GetVisualization()->GetGraphics()->SetOrientation(TheShip->GetAspectPosition()->GetOrientation());
+				TheShip->GetAspectVisualization()->GetVisualization()->GetGraphics()->SetPosition(TheShip->GetAspectPosition()->GetPosition());
 			}
 		}
 	}
@@ -713,8 +714,8 @@ void CalculateMovements(System * System, float Seconds)
 		else
 		{
 			// update visualization
-			TheCommodity->GetAspectVisualization()->GetVisualization()->SetOrientation(TheCommodity->GetAspectPosition()->GetOrientation());
-			TheCommodity->GetAspectVisualization()->GetVisualization()->SetPosition(TheCommodity->GetAspectPosition()->GetPosition());
+			TheCommodity->GetAspectVisualization()->GetVisualization()->GetGraphics()->SetOrientation(TheCommodity->GetAspectPosition()->GetOrientation());
+			TheCommodity->GetAspectVisualization()->GetVisualization()->GetGraphics()->SetPosition(TheCommodity->GetAspectPosition()->GetPosition());
 		}
 	}
 	
@@ -737,8 +738,8 @@ void CalculateMovements(System * System, float Seconds)
 		{
 			assert(TheShot->GetAspectVisualization() != 0);
 			// update visualization
-			TheShot->GetAspectVisualization()->GetVisualization()->SetOrientation(TheShot->GetAspectPosition()->GetOrientation());
-			TheShot->GetAspectVisualization()->GetVisualization()->SetPosition(TheShot->GetAspectPosition()->GetPosition());
+			TheShot->GetAspectVisualization()->GetVisualization()->GetGraphics()->SetOrientation(TheShot->GetAspectPosition()->GetOrientation());
+			TheShot->GetAspectVisualization()->GetVisualization()->GetGraphics()->SetPosition(TheShot->GetAspectPosition()->GetPosition());
 		}
 		// test for collisions with ships
 		if(TheShot != 0)

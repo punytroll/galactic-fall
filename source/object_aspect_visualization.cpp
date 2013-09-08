@@ -21,25 +21,41 @@
 
 #include "graphics/node.h"
 #include "object_aspect_visualization.h"
+#include "visualization.h"
 #include "visualization_prototype.h"
 
 ObjectAspectVisualization::ObjectAspectVisualization(void) :
+	_Visualization(0),
 	_VisualizationPrototype(0)
 {
 }
 
 ObjectAspectVisualization::~ObjectAspectVisualization(void)
 {
-	assert(_Visualization.IsValid() == false);
+	delete _Visualization;
+	_Visualization = 0;
 	delete _VisualizationPrototype;
 	_VisualizationPrototype = 0;
 }
 
-void ObjectAspectVisualization::SetVisualization(Reference< Graphics::Node > & Visualization)
+Visualization * ObjectAspectVisualization::GetVisualization(void)
 {
-	assert(Visualization.IsValid() == true);
-	assert(_Visualization.IsValid() == false);
-	_Visualization = Visualization;
+	if((_Visualization != 0) && (_Visualization->GetGraphics().IsValid() == true))
+	{
+		return _Visualization;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+void ObjectAspectVisualization::SetVisualization(Reference< Graphics::Node > & Graphics)
+{
+	assert(Graphics.IsValid() == true);
+	delete _Visualization;
+	_Visualization = new Visualization();
+	_Visualization->SetGraphics(Graphics);
 }
 
 void ObjectAspectVisualization::SetVisualizationPrototype(VisualizationPrototype * VisualizationPrototype)
@@ -50,15 +66,21 @@ void ObjectAspectVisualization::SetVisualizationPrototype(VisualizationPrototype
 
 void ObjectAspectVisualization::Destroy(void)
 {
-	if(_Visualization.IsValid() == true)
+	if(_Visualization != 0)
 	{
-		UnsetVisualization();
+		if(_Visualization->GetGraphics().IsValid() == true)
+		{
+			UnsetVisualization();
+		}
+		delete _Visualization;
+		_Visualization = 0;
 	}
 }
 
 void ObjectAspectVisualization::UnsetVisualization(void)
 {
-	assert(_Visualization.IsValid() == true);
-	_Visualization->Destroy();
-	_Visualization.Clear();
+	assert((_Visualization != 0) && (_Visualization->GetGraphics().IsValid() == true));
+	_Visualization->GetGraphics()->Destroy();
+	delete _Visualization;
+	_Visualization = 0;
 }

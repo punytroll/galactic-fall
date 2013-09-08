@@ -169,7 +169,9 @@ draw_text_cpp = \
 	$(graphics_engine_h) \
 	$(graphics_gl_h) \
 	$(graphics_texture_h) \
-	$(graphics_texture_manager_h)
+	$(graphics_texture_manager_h) \
+	$(real_time_h) \
+	$(system_statistics_h)
 
 draw_text_h = \
 	draw_text.h
@@ -569,6 +571,7 @@ main_cpp = \
 	$(ui_timing_dialog_h) \
 	$(ui_user_interface_h) \
 	$(ui_widget_h) \
+	$(visualization_h) \
 	$(visualization_prototype_h) \
 	$(visualizations_h) \
 	$(weapon_h) \
@@ -710,6 +713,7 @@ object_aspect_visualization_cpp = \
 	object_aspect_visualization.cpp \
 	$(graphics_node_h) \
 	$(object_aspect_visualization_h) \
+	$(visualization_h) \
 	$(visualization_prototype_h)
 
 object_aspect_visualization_h = \
@@ -879,6 +883,7 @@ slot_cpp = \
 	$(object_aspect_visualization_h) \
 	$(slot_h) \
 	$(slot_class_h) \
+	$(visualization_h) \
 	$(visualizations_h)
 
 slot_h = \
@@ -1379,6 +1384,14 @@ ui_window_cpp = \
 ui_window_h = \
 	ui/window.h \
 	$(ui_widget_h)
+
+visualization_cpp = \
+	visualization.cpp \
+	$(visualization_h)
+
+visualization_h = \
+	visualization.h \
+	$(referencing_h)
 
 visualization_prototype_cpp = \
 	visualization_prototype.cpp \

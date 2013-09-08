@@ -22,6 +22,7 @@
 
 #include "referencing.h"
 
+class Visualization;
 class VisualizationPrototype;
 
 namespace Graphics
@@ -36,7 +37,7 @@ public:
 	ObjectAspectVisualization(void);
 	~ObjectAspectVisualization(void);
 	// getters
-	Reference< Graphics::Node > & GetVisualization(void);
+	Visualization * GetVisualization(void);
 	VisualizationPrototype * GetVisualizationPrototype(void);
 	// setters
 	void SetVisualization(Reference< Graphics::Node > & Visualization);
@@ -48,14 +49,9 @@ public:
 	void Destroy(void);
 	void UnsetVisualization(void);
 private:
-	Reference< Graphics::Node > _Visualization;
+	Visualization * _Visualization;
 	VisualizationPrototype * _VisualizationPrototype;
 };
-
-inline Reference< Graphics::Node > & ObjectAspectVisualization::GetVisualization(void)
-{
-	return _Visualization;
-}
 
 inline VisualizationPrototype * ObjectAspectVisualization::GetVisualizationPrototype(void)
 {

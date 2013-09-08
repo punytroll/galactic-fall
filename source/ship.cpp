@@ -340,7 +340,7 @@ bool Ship::Update(float Seconds)
 					if(GetCargoHold()->GetAspectObjectContainer()->AddContent(Target) == true)
 					{
 						SetTarget(0);
-						if((Target->GetAspectVisualization() != 0) && (Target->GetAspectVisualization()->GetVisualization().IsValid() == true))
+						if((Target->GetAspectVisualization() != 0) && (Target->GetAspectVisualization()->GetVisualization() != 0))
 						{
 							UnvisualizeObject(Target);
 						}
