@@ -53,7 +53,7 @@ static void VisualizePlanet(Planet * Planet, Graphics::Node * Container);
 static void VisualizeShip(Ship * Ship, Graphics::Node * Container);
 static void VisualizeShot(Shot * Shot, Graphics::Node * Container);
 static void VisualizeWeapon(Weapon * Weapon, Graphics::Node * Container);
-	
+
 void InvalidateVisualizationReference(Graphics::Node * Node)
 {
 	std::map< Graphics::Node *, Reference< Graphics::Node > >::iterator VisualizationReferenceIterator(g_VisualizationReferences.find(Node));
