@@ -69,12 +69,8 @@ void UnvisualizeObject(Object * Object)
 {
 	assert(Object != 0);
 	assert(Object->GetAspectVisualization() != 0);
-	
-	Reference< Graphics::Node > VisualizationReference(Object->GetAspectVisualization()->GetVisualization());
-	
-	assert(VisualizationReference.IsValid() == true);
+	assert(Object->GetAspectVisualization()->GetVisualization().IsValid() == true);
 	Object->GetAspectVisualization()->UnsetVisualization();
-	VisualizationReference->Destroy();
 }
 
 void VisualizeObject(Object * Object, Graphics::Node * Container)

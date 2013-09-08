@@ -52,15 +52,13 @@ void ObjectAspectVisualization::Destroy(void)
 {
 	if(_Visualization.IsValid() == true)
 	{
-		Reference< Graphics::Node > Visualization(GetVisualization());
-		
 		UnsetVisualization();
-		Visualization->Destroy();
 	}
 }
 
 void ObjectAspectVisualization::UnsetVisualization(void)
 {
 	assert(_Visualization.IsValid() == true);
+	_Visualization->Destroy();
 	_Visualization.Clear();
 }
