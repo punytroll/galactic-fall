@@ -69,7 +69,7 @@ void UnvisualizeObject(Object * Object)
 {
 	assert(Object != 0);
 	assert(Object->GetAspectVisualization() != 0);
-	assert(Object->GetAspectVisualization()->GetVisualization().IsValid() == true);
+	assert(Object->GetAspectVisualization()->GetVisualization() != 0);
 	Object->GetAspectVisualization()->UnsetVisualization();
 }
 
@@ -120,7 +120,7 @@ void VisualizeCommodity(Commodity * Commodity, Graphics::Node * Container)
 	
 	g_VisualizationReferences[Visualization] = VisualizationReference;
 	// set as the object's visualization
-	assert(Commodity->GetAspectVisualization()->GetVisualization().IsValid() == false);
+	assert(Commodity->GetAspectVisualization()->GetVisualization() == 0);
 	Commodity->GetAspectVisualization()->SetVisualization(VisualizationReference);
 	// add to the scene
 	assert(Container != 0);
@@ -161,7 +161,7 @@ void VisualizePlanet(Planet * Planet, Graphics::Node * Container)
 	
 	g_VisualizationReferences[Visualization] = VisualizationReference;
 	// set as the object's visualization
-	assert(Planet->GetAspectVisualization()->GetVisualization().IsValid() == false);
+	assert(Planet->GetAspectVisualization()->GetVisualization() == 0);
 	Planet->GetAspectVisualization()->SetVisualization(VisualizationReference);
 	// add to the scene
 	assert(Container != 0);
@@ -186,7 +186,7 @@ void VisualizeShip(Ship * Ship, Graphics::Node * Container)
 	
 	g_VisualizationReferences[Visualization] = VisualizationReference;
 	// set as the object's visualization
-	assert(Ship->GetAspectVisualization()->GetVisualization().IsValid() == false);
+	assert(Ship->GetAspectVisualization()->GetVisualization() == 0);
 	Ship->GetAspectVisualization()->SetVisualization(VisualizationReference);
 	// add to the scene
 	assert(Container != 0);
@@ -233,7 +233,7 @@ void VisualizeShot(Shot * Shot, Graphics::Node * Container)
 	
 	g_VisualizationReferences[Visualization] = VisualizationReference;
 	// set as the object's visualization
-	assert(Shot->GetAspectVisualization()->GetVisualization().IsValid() == false);
+	assert(Shot->GetAspectVisualization()->GetVisualization() == 0);
 	Shot->GetAspectVisualization()->SetVisualization(VisualizationReference);
 	// add to the scene
 	assert(Container != 0);
@@ -258,7 +258,7 @@ void VisualizeWeapon(Weapon * Weapon, Graphics::Node * Container)
 	
 	g_VisualizationReferences[Visualization] = VisualizationReference;
 	// set as the object's visualization
-	assert(Weapon->GetAspectVisualization()->GetVisualization().IsValid() == false);
+	assert(Weapon->GetAspectVisualization()->GetVisualization() == 0);
 	Weapon->GetAspectVisualization()->SetVisualization(VisualizationReference);
 	// add to the container node
 	assert(Container != 0);
