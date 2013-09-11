@@ -44,7 +44,7 @@ Graphics::ParticleSystem::ParticleSystem(void)
 
 bool Graphics::ParticleSystem::Update(float Seconds)
 {
-	g_SystemStatistics->SetParticleSystemsThisFrame(g_SystemStatistics->GetParticleSystemsThisFrame() + 1);
+	g_SystemStatistics->SetParticleSystemsUpdatedThisFrame(g_SystemStatistics->GetParticleSystemsUpdatedThisFrame() + 1);
 	for(std::vector< std::string >::const_iterator ScriptLine = m_SystemScript.begin(); ScriptLine != m_SystemScript.end(); ++ScriptLine)
 	{
 		if(*ScriptLine == "kill-old")
@@ -60,7 +60,7 @@ bool Graphics::ParticleSystem::Update(float Seconds)
 		}
 		else if(*ScriptLine == "update-particles")
 		{
-			g_SystemStatistics->SetParticlesThisFrame(g_SystemStatistics->GetParticlesThisFrame() + m_Particles.size());
+			g_SystemStatistics->SetParticlesUpdatedThisFrame(g_SystemStatistics->GetParticlesUpdatedThisFrame() + m_Particles.size());
 			
 			std::list< Graphics::ParticleSystem::Particle >::iterator ParticleIterator(m_Particles.begin());
 			
@@ -117,9 +117,11 @@ void Graphics::ParticleSystem::Begin(void)
 
 void Graphics::ParticleSystem::Draw(void)
 {
+	g_SystemStatistics->SetParticleSystemsDrawnThisFrame(g_SystemStatistics->GetParticleSystemsDrawnThisFrame() + 1);
 	GLBegin(GL_QUADS);
 	for(std::list< Graphics::ParticleSystem::Particle >::iterator ParticleIterator = m_Particles.begin(); ParticleIterator != m_Particles.end(); ++ParticleIterator)
 	{
+		g_SystemStatistics->SetParticlesDrawnThisFrame(g_SystemStatistics->GetParticlesDrawnThisFrame() + 1);
 		GLColor4fv(ParticleIterator->m_Color.GetColor().GetPointer());
 		
 		const Vector3f & Position(ParticleIterator->m_Position);

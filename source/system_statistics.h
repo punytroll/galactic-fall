@@ -34,8 +34,10 @@ public:
 	float GetFrameToFrameSecondsThisFrame(void) const;
 	float GetGraphicsSecondsThisFrame(void) const;
 	float GetMessagingSecondsThisFrame(void) const;
-	u4byte GetParticleSystemsThisFrame(void) const;
-	u4byte GetParticlesThisFrame(void) const;
+	u4byte GetParticleSystemsDrawnThisFrame(void) const;
+	u4byte GetParticleSystemsUpdatedThisFrame(void) const;
+	u4byte GetParticlesDrawnThisFrame(void) const;
+	u4byte GetParticlesUpdatedThisFrame(void) const;
 	float GetPhysicsSecondsThisFrame(void) const;
 	float GetProcessingSecondsThisFrame(void) const;
 	u4byte GetShipsInCurrentSystemThisFrame(void) const;
@@ -48,8 +50,10 @@ public:
 	void SetFrameToFrameSecondsThisFrame(float FrameToFrameSecondsThisFrame);
 	void SetGraphicsSecondsThisFrame(float GraphicsSecondsThisFrame);
 	void SetMessagingSecondsThisFrame(float MessagingSecondsThisFrame);
-	void SetParticleSystemsThisFrame(u4byte ParticleSystemsThisFrame);
-	void SetParticlesThisFrame(u4byte ParticlesThisFrame);
+	void SetParticleSystemsDrawnThisFrame(u4byte ParticleSystemsDrawnThisFrame);
+	void SetParticleSystemsUpdatedThisFrame(u4byte ParticleSystemsUpdatedThisFrame);
+	void SetParticlesDrawnThisFrame(u4byte ParticlesDrawnThisFrame);
+	void SetParticlesUpdatedThisFrame(u4byte ParticlesUpdatedThisFrame);
 	void SetPhysicsSecondsThisFrame(float PhysicsSecondsThisFrame);
 	void SetProcessingSecondsThisFrame(float ProcessingSecondsThisFrame);
 	void SetShipsInCurrentSystemThisFrame(u4byte ShipsInCurrentSystemThisFrame);
@@ -63,8 +67,10 @@ private:
 	float _FrameToFrameSecondsThisFrame;
 	float _GraphicsSecondsThisFrame;
 	float _MessageSecondsThisFrame;
-	u4byte _ParticleSystemsThisFrame;
-	u4byte _ParticlesThisFrame;
+	u4byte _ParticleSystemsDrawnThisFrame;
+	u4byte _ParticleSystemsUpdatedThisFrame;
+	u4byte _ParticlesDrawnThisFrame;
+	u4byte _ParticlesUpdatedThisFrame;
 	float _PhysicsSecondsThisFrame;
 	float _ProcessingSecondsThisFrame;
 	u4byte _ShipsInCurrentSystemThisFrame;
@@ -111,14 +117,24 @@ inline float SystemStatistics::GetMessagingSecondsThisFrame(void) const
 	return _MessageSecondsThisFrame;
 }
 
-inline u4byte SystemStatistics::GetParticleSystemsThisFrame(void) const
+inline u4byte SystemStatistics::GetParticleSystemsDrawnThisFrame(void) const
 {
-	return _ParticleSystemsThisFrame;
+	return _ParticleSystemsDrawnThisFrame;
 }
 
-inline u4byte SystemStatistics::GetParticlesThisFrame(void) const
+inline u4byte SystemStatistics::GetParticleSystemsUpdatedThisFrame(void) const
 {
-	return _ParticlesThisFrame;
+	return _ParticleSystemsUpdatedThisFrame;
+}
+
+inline u4byte SystemStatistics::GetParticlesDrawnThisFrame(void) const
+{
+	return _ParticlesDrawnThisFrame;
+}
+
+inline u4byte SystemStatistics::GetParticlesUpdatedThisFrame(void) const
+{
+	return _ParticlesUpdatedThisFrame;
 }
 
 inline float SystemStatistics::GetPhysicsSecondsThisFrame(void) const
@@ -177,14 +193,24 @@ inline void SystemStatistics::SetMessagingSecondsThisFrame(float MessagingSecond
 	_MessageSecondsThisFrame = MessagingSecondsThisFrame;
 }
 
-inline void SystemStatistics::SetParticleSystemsThisFrame(u4byte ParticleSystemsThisFrame)
+inline void SystemStatistics::SetParticleSystemsDrawnThisFrame(u4byte ParticleSystemsDrawnThisFrame)
 {
-	_ParticleSystemsThisFrame = ParticleSystemsThisFrame;
+	_ParticleSystemsDrawnThisFrame = ParticleSystemsDrawnThisFrame;
 }
 
-inline void SystemStatistics::SetParticlesThisFrame(u4byte ParticlesThisFrame)
+inline void SystemStatistics::SetParticleSystemsUpdatedThisFrame(u4byte ParticleSystemsUpdatedThisFrame)
 {
-	_ParticlesThisFrame = ParticlesThisFrame;
+	_ParticleSystemsUpdatedThisFrame = ParticleSystemsUpdatedThisFrame;
+}
+
+inline void SystemStatistics::SetParticlesDrawnThisFrame(u4byte ParticlesDrawnThisFrame)
+{
+	_ParticlesDrawnThisFrame = ParticlesDrawnThisFrame;
+}
+
+inline void SystemStatistics::SetParticlesUpdatedThisFrame(u4byte ParticlesUpdatedThisFrame)
+{
+	_ParticlesUpdatedThisFrame = ParticlesUpdatedThisFrame;
 }
 
 inline void SystemStatistics::SetPhysicsSecondsThisFrame(float PhysicsSecondsThisFrame)

@@ -43,8 +43,10 @@ namespace UI
 		UI::Label * _FrameToFrameSecondsThisFrameLabel;
 		UI::Label * _GraphicsSecondsThisFrameLabel;
 		UI::Label * _MessagingSecondsThisFrameLabel;
-		UI::Label * _ParticleSystemsThisFrameLabel;
-		UI::Label * _ParticlesThisFrameLabel;
+		UI::Label * _ParticleSystemsDrawnThisFrameLabel;
+		UI::Label * _ParticleSystemsUpdatedThisFrameLabel;
+		UI::Label * _ParticlesDrawnThisFrameLabel;
+		UI::Label * _ParticlesUpdatedThisFrameLabel;
 		UI::Label * _PhysicsSecondsThisFrameLabel;
 		UI::Label * _ProcessingSecondsThisFrameLabel;
 		UI::Label * _ShipsInCurrentSystemThisFrameLabel;

@@ -879,8 +879,10 @@ void UpdateUserInterface(float RealTimeSeconds, float GameTimeSeconds)
 {
 	g_UserInterface->Update(RealTimeSeconds, GameTimeSeconds);
 	// reset the incremental counters
-	g_SystemStatistics->SetParticleSystemsThisFrame(0);
-	g_SystemStatistics->SetParticlesThisFrame(0);
+	g_SystemStatistics->SetParticleSystemsDrawnThisFrame(0);
+	g_SystemStatistics->SetParticleSystemsUpdatedThisFrame(0);
+	g_SystemStatistics->SetParticlesDrawnThisFrame(0);
+	g_SystemStatistics->SetParticlesUpdatedThisFrame(0);
 	g_SystemStatistics->SetFontSecondsThisFrame(0.0f);
 	if(g_Galaxy != 0)
 	{

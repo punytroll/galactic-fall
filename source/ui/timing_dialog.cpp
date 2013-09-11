@@ -165,37 +165,61 @@ UI::TimingDialog::TimingDialog(UI::Widget * SupWidget) :
 	_ShotsInCurrentSystemThisFrameLabel->SetAnchorRight(true);
 	_ShotsInCurrentSystemThisFrameLabel->SetHorizontalAlignment(UI::Label::ALIGN_RIGHT);
 	
-	UI::Label * ParticleSystemsThisFrameCaptionLabel(new UI::Label(this, "Particle systems this Frame:"));
+	UI::Label * ParticleSystemsUpdatedThisFrameCaptionLabel(new UI::Label(this, "Particle systems updated this Frame:"));
 	
-	ParticleSystemsThisFrameCaptionLabel->SetPosition(Vector2f(10.0f, 260.0f));
-	ParticleSystemsThisFrameCaptionLabel->SetSize(Vector2f(GetSize()[0] - 100.0f, 20.0f));
-	ParticleSystemsThisFrameCaptionLabel->SetAnchorRight(true);
-	_ParticleSystemsThisFrameLabel = new UI::Label(this, "0");
-	_ParticleSystemsThisFrameLabel->SetPosition(Vector2f(GetSize()[0] - 80.0f, 260.0f));
-	_ParticleSystemsThisFrameLabel->SetSize(Vector2f(70.0f, 20.0f));
-	_ParticleSystemsThisFrameLabel->SetAnchorLeft(false);
-	_ParticleSystemsThisFrameLabel->SetAnchorRight(true);
-	_ParticleSystemsThisFrameLabel->SetHorizontalAlignment(UI::Label::ALIGN_RIGHT);
+	ParticleSystemsUpdatedThisFrameCaptionLabel->SetPosition(Vector2f(10.0f, 260.0f));
+	ParticleSystemsUpdatedThisFrameCaptionLabel->SetSize(Vector2f(GetSize()[0] - 100.0f, 20.0f));
+	ParticleSystemsUpdatedThisFrameCaptionLabel->SetAnchorRight(true);
+	_ParticleSystemsUpdatedThisFrameLabel = new UI::Label(this, "0");
+	_ParticleSystemsUpdatedThisFrameLabel->SetPosition(Vector2f(GetSize()[0] - 80.0f, 260.0f));
+	_ParticleSystemsUpdatedThisFrameLabel->SetSize(Vector2f(70.0f, 20.0f));
+	_ParticleSystemsUpdatedThisFrameLabel->SetAnchorLeft(false);
+	_ParticleSystemsUpdatedThisFrameLabel->SetAnchorRight(true);
+	_ParticleSystemsUpdatedThisFrameLabel->SetHorizontalAlignment(UI::Label::ALIGN_RIGHT);
 	
-	UI::Label * ParticlesThisFrameCaptionLabel(new UI::Label(this, "Particles this Frame:"));
+	UI::Label * ParticleSystemsDrawnThisFrameCaptionLabel(new UI::Label(this, "Particle systems drawn this Frame:"));
 	
-	ParticlesThisFrameCaptionLabel->SetPosition(Vector2f(10.0f, 280.0f));
-	ParticlesThisFrameCaptionLabel->SetSize(Vector2f(GetSize()[0] - 100.0f, 20.0f));
-	ParticlesThisFrameCaptionLabel->SetAnchorRight(true);
-	_ParticlesThisFrameLabel = new UI::Label(this, "0");
-	_ParticlesThisFrameLabel->SetPosition(Vector2f(GetSize()[0] - 80.0f, 280.0f));
-	_ParticlesThisFrameLabel->SetSize(Vector2f(70.0f, 20.0f));
-	_ParticlesThisFrameLabel->SetAnchorLeft(false);
-	_ParticlesThisFrameLabel->SetAnchorRight(true);
-	_ParticlesThisFrameLabel->SetHorizontalAlignment(UI::Label::ALIGN_RIGHT);
+	ParticleSystemsDrawnThisFrameCaptionLabel->SetPosition(Vector2f(10.0f, 280.0f));
+	ParticleSystemsDrawnThisFrameCaptionLabel->SetSize(Vector2f(GetSize()[0] - 100.0f, 20.0f));
+	ParticleSystemsDrawnThisFrameCaptionLabel->SetAnchorRight(true);
+	_ParticleSystemsDrawnThisFrameLabel = new UI::Label(this, "0");
+	_ParticleSystemsDrawnThisFrameLabel->SetPosition(Vector2f(GetSize()[0] - 80.0f, 280.0f));
+	_ParticleSystemsDrawnThisFrameLabel->SetSize(Vector2f(70.0f, 20.0f));
+	_ParticleSystemsDrawnThisFrameLabel->SetAnchorLeft(false);
+	_ParticleSystemsDrawnThisFrameLabel->SetAnchorRight(true);
+	_ParticleSystemsDrawnThisFrameLabel->SetHorizontalAlignment(UI::Label::ALIGN_RIGHT);
+	
+	UI::Label * ParticlesUpdatedThisFrameCaptionLabel(new UI::Label(this, "Particles updated this Frame:"));
+	
+	ParticlesUpdatedThisFrameCaptionLabel->SetPosition(Vector2f(10.0f, 300.0f));
+	ParticlesUpdatedThisFrameCaptionLabel->SetSize(Vector2f(GetSize()[0] - 100.0f, 20.0f));
+	ParticlesUpdatedThisFrameCaptionLabel->SetAnchorRight(true);
+	_ParticlesUpdatedThisFrameLabel = new UI::Label(this, "0");
+	_ParticlesUpdatedThisFrameLabel->SetPosition(Vector2f(GetSize()[0] - 80.0f, 300.0f));
+	_ParticlesUpdatedThisFrameLabel->SetSize(Vector2f(70.0f, 20.0f));
+	_ParticlesUpdatedThisFrameLabel->SetAnchorLeft(false);
+	_ParticlesUpdatedThisFrameLabel->SetAnchorRight(true);
+	_ParticlesUpdatedThisFrameLabel->SetHorizontalAlignment(UI::Label::ALIGN_RIGHT);
+	
+	UI::Label * ParticlesDrawnThisFrameCaptionLabel(new UI::Label(this, "Particles drawn this Frame:"));
+	
+	ParticlesDrawnThisFrameCaptionLabel->SetPosition(Vector2f(10.0f, 320.0f));
+	ParticlesDrawnThisFrameCaptionLabel->SetSize(Vector2f(GetSize()[0] - 100.0f, 20.0f));
+	ParticlesDrawnThisFrameCaptionLabel->SetAnchorRight(true);
+	_ParticlesDrawnThisFrameLabel = new UI::Label(this, "0");
+	_ParticlesDrawnThisFrameLabel->SetPosition(Vector2f(GetSize()[0] - 80.0f, 320.0f));
+	_ParticlesDrawnThisFrameLabel->SetSize(Vector2f(70.0f, 20.0f));
+	_ParticlesDrawnThisFrameLabel->SetAnchorLeft(false);
+	_ParticlesDrawnThisFrameLabel->SetAnchorRight(true);
+	_ParticlesDrawnThisFrameLabel->SetHorizontalAlignment(UI::Label::ALIGN_RIGHT);
 	
 	UI::Label * FontSecondsThisFrameCaptionLabel(new UI::Label(this, "Font Seconds this Frame:"));
 	
-	FontSecondsThisFrameCaptionLabel->SetPosition(Vector2f(10.0f, 300.0f));
+	FontSecondsThisFrameCaptionLabel->SetPosition(Vector2f(10.0f, 340.0f));
 	FontSecondsThisFrameCaptionLabel->SetSize(Vector2f(GetSize()[0] - 100.0f, 20.0f));
 	FontSecondsThisFrameCaptionLabel->SetAnchorRight(true);
 	_FontSecondsThisFrameLabel = new UI::Label(this, "0");
-	_FontSecondsThisFrameLabel->SetPosition(Vector2f(GetSize()[0] - 80.0f, 300.0f));
+	_FontSecondsThisFrameLabel->SetPosition(Vector2f(GetSize()[0] - 80.0f, 340.0f));
 	_FontSecondsThisFrameLabel->SetSize(Vector2f(70.0f, 20.0f));
 	_FontSecondsThisFrameLabel->SetAnchorLeft(false);
 	_FontSecondsThisFrameLabel->SetAnchorRight(true);
@@ -224,8 +248,10 @@ void UI::TimingDialog::_OnUpdating(float RealTimeSeconds, float GameTimeSeconds)
 	_FrameToFrameSecondsThisFrameLabel->SetText(to_string_cast(g_SystemStatistics->GetFrameToFrameSecondsThisFrame() * 1000, 2) + " ms");
 	_GraphicsSecondsThisFrameLabel->SetText(to_string_cast(g_SystemStatistics->GetGraphicsSecondsThisFrame() * 1000, 2) + " ms");
 	_MessagingSecondsThisFrameLabel->SetText(to_string_cast(g_SystemStatistics->GetMessagingSecondsThisFrame() * 1000, 2) + " ms");
-	_ParticleSystemsThisFrameLabel->SetText(to_string_cast(g_SystemStatistics->GetParticleSystemsThisFrame()));
-	_ParticlesThisFrameLabel->SetText(to_string_cast(g_SystemStatistics->GetParticlesThisFrame()));
+	_ParticleSystemsDrawnThisFrameLabel->SetText(to_string_cast(g_SystemStatistics->GetParticleSystemsDrawnThisFrame()));
+	_ParticleSystemsUpdatedThisFrameLabel->SetText(to_string_cast(g_SystemStatistics->GetParticleSystemsUpdatedThisFrame()));
+	_ParticlesDrawnThisFrameLabel->SetText(to_string_cast(g_SystemStatistics->GetParticlesDrawnThisFrame()));
+	_ParticlesUpdatedThisFrameLabel->SetText(to_string_cast(g_SystemStatistics->GetParticlesUpdatedThisFrame()));
 	_PhysicsSecondsThisFrameLabel->SetText(to_string_cast(g_SystemStatistics->GetPhysicsSecondsThisFrame() * 1000, 2) + " ms");
 	_ProcessingSecondsThisFrameLabel->SetText(to_string_cast(g_SystemStatistics->GetProcessingSecondsThisFrame() * 1000, 2) + " ms");
 	_ShipsInCurrentSystemThisFrameLabel->SetText(to_string_cast(g_SystemStatistics->GetShipsInCurrentSystemThisFrame()));
