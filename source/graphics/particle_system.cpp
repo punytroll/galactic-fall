@@ -95,6 +95,13 @@ bool Graphics::ParticleSystem::Update(float Seconds)
 				}
 			}
 		}
+		else if(*ScriptLine == "kill-empty")
+		{
+			if(m_Particles.empty() == true)
+			{
+				return false;
+			}
+		}
 		else
 		{
 			throw std::runtime_error("Unknown particle system command '" + *ScriptLine + "'.");
