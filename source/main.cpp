@@ -494,7 +494,6 @@ Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSyst
 	
 	if(ParticleSystemClassIdentifier == "hit")
 	{
-		ParticleSystem->SetTimeOfDeath(GameTime::Get() + 3.0);
 		for(int Index = 0; Index < 30; ++Index)
 		{
 			Graphics::ParticleSystem::Particle Particle;
@@ -507,7 +506,7 @@ Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSyst
 			Particle.m_Size = GetRandomFloat(0.25f, 0.4f);
 			ParticleSystem->AddParticle(Particle);
 		}
-		ParticleSystem->AddSystemScriptLine("kill-old");
+		ParticleSystem->AddSystemScriptLine("kill-empty");
 		ParticleSystem->AddSystemScriptLine("move");
 		ParticleSystem->AddSystemScriptLine("update-particles");
 		ParticleSystem->AddParticleScriptLine("kill-old");
@@ -515,7 +514,6 @@ Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSyst
 	}
 	else if(ParticleSystemClassIdentifier == "jump")
 	{
-		ParticleSystem->SetTimeOfDeath(GameTime::Get() + 2.0);
 		// add sparks which fly around fast
 		for(int Index = 0; Index < 100; ++Index)
 		{
@@ -553,7 +551,7 @@ Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSyst
 		Particle.m_Color.Set(0.4f, GetRandomFloat(0.4f, 1.0f), GetRandomFloat(0.95f, 1.0f), 0.3f);
 		Particle.m_Size = 200.0f;
 		ParticleSystem->AddParticle(Particle);
-		ParticleSystem->AddSystemScriptLine("kill-old");
+		ParticleSystem->AddSystemScriptLine("kill-empty");
 		ParticleSystem->AddSystemScriptLine("move");
 		ParticleSystem->AddSystemScriptLine("update-particles");
 		ParticleSystem->AddParticleScriptLine("kill-old");
@@ -562,7 +560,6 @@ Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSyst
 	else if(ParticleSystemClassIdentifier == "explosion")
 	{
 		// center explosion
-		ParticleSystem->SetTimeOfDeath(GameTime::Get() + 3.0);
 		for(int Index = 0; Index < 100; ++Index)
 		{
 			Graphics::ParticleSystem::Particle Particle;
@@ -632,7 +629,7 @@ Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSyst
 		Particle.m_Color.Set(0.9f, GetRandomFloat(0.9f, 1.0f), GetRandomFloat(0.95f, 1.0f), 0.3f);
 		Particle.m_Size = 200.0f;
 		ParticleSystem->AddParticle(Particle);
-		ParticleSystem->AddSystemScriptLine("kill-old");
+		ParticleSystem->AddSystemScriptLine("kill-empty");
 		ParticleSystem->AddSystemScriptLine("move");
 		ParticleSystem->AddSystemScriptLine("update-particles");
 		ParticleSystem->AddParticleScriptLine("kill-old");
