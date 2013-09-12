@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2007  Hagen Möbius
+ * Copyright (C) 2013  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,62 +19,57 @@
 
 #include <stdexcept>
 
-#include "../color.h"
 #include "../game_time.h"
 #include "../globals.h"
-#include "../graphics/gl.h"
-#include "../math.h"
 #include "../system_statistics.h"
-#include "engine.h"
 #include "particle_system.h"
-#include "scene.h"
-#include "texture.h"
-#include "texture_manager.h"
-
-const Graphics::Texture * g_ParticleTexture(0);
+#include "particle_system_node.h"
 
 Graphics::ParticleSystem::ParticleSystem(void)
 {
-	SetBlendFunction(GL_SRC_ALPHA, GL_ONE);
-	SetUseBlending(true);
-	SetUseDepthTest(false);
-	SetUseLighting(false);
-	SetUse2DTexture(true);
+}
+
+Graphics::ParticleSystem::~ParticleSystem(void)
+{
+	while(_ParticleSystemNodes.empty() == false)
+	{
+		(*_ParticleSystemNodes.begin())->Destroy();
+	}
 }
 
 bool Graphics::ParticleSystem::Update(float Seconds)
 {
 	g_SystemStatistics->SetParticleSystemsUpdatedThisFrame(g_SystemStatistics->GetParticleSystemsUpdatedThisFrame() + 1);
-	for(std::vector< std::string >::const_iterator ScriptLine = m_SystemScript.begin(); ScriptLine != m_SystemScript.end(); ++ScriptLine)
+	for(std::vector< std::string >::const_iterator ScriptLine = _SystemScript.begin(); ScriptLine != _SystemScript.end(); ++ScriptLine)
 	{
 		if(*ScriptLine == "kill-old")
 		{
-			if(GameTime::Get() >= m_TimeOfDeath)
+			if(GameTime::Get() >= _TimeOfDeath)
 			{
 				return false;
 			}
 		}
 		else if(*ScriptLine == "move")
 		{
-			SetPosition(GetPosition() + Seconds * m_Velocity);
+			SetPosition(GetPosition() + Seconds * _Velocity);
 		}
 		else if(*ScriptLine == "update-particles")
 		{
-			g_SystemStatistics->SetParticlesUpdatedThisFrame(g_SystemStatistics->GetParticlesUpdatedThisFrame() + m_Particles.size());
+			g_SystemStatistics->SetParticlesUpdatedThisFrame(g_SystemStatistics->GetParticlesUpdatedThisFrame() + _Particles.size());
 			
-			std::list< Graphics::ParticleSystem::Particle >::iterator ParticleIterator(m_Particles.begin());
+			std::list< Graphics::ParticleSystem::Particle >::iterator ParticleIterator(_Particles.begin());
 			
-			while(ParticleIterator != m_Particles.end())
+			while(ParticleIterator != _Particles.end())
 			{
 				bool Forward(true);
 				
-				for(std::vector< std::string >::const_iterator ScriptLine = m_ParticleScript.begin(); ScriptLine != m_ParticleScript.end(); ++ScriptLine)
+				for(std::vector< std::string >::const_iterator ScriptLine = _ParticleScript.begin(); ScriptLine != _ParticleScript.end(); ++ScriptLine)
 				{
 					if(*ScriptLine == "kill-old")
 					{
-						if(GameTime::Get() >= ParticleIterator->m_TimeOfDeath)
+						if(GameTime::Get() >= ParticleIterator->_TimeOfDeath)
 						{
-							ParticleIterator = m_Particles.erase(ParticleIterator);
+							ParticleIterator = _Particles.erase(ParticleIterator);
 							Forward = false;
 							
 							break;
@@ -82,7 +77,7 @@ bool Graphics::ParticleSystem::Update(float Seconds)
 					}
 					else if(*ScriptLine == "move")
 					{
-						ParticleIterator->m_Position += ParticleIterator->m_Velocity * Seconds;
+						ParticleIterator->_Position += ParticleIterator->_Velocity * Seconds;
 					}
 					else
 					{
@@ -97,7 +92,7 @@ bool Graphics::ParticleSystem::Update(float Seconds)
 		}
 		else if(*ScriptLine == "kill-empty")
 		{
-			if(m_Particles.empty() == true)
+			if(_Particles.empty() == true)
 			{
 				return false;
 			}
@@ -111,59 +106,17 @@ bool Graphics::ParticleSystem::Update(float Seconds)
 	return true;
 }
 
-void Graphics::ParticleSystem::Begin(void)
-{
-	if(g_ParticleTexture == 0)
-	{
-		g_ParticleTexture = GetScene()->GetEngine()->GetTextureManager()->Get("particle");
-		assert(g_ParticleTexture != 0);
-	}
-	Graphics::Node::Begin();
-	g_ParticleTexture->Activate();
-}
-
-void Graphics::ParticleSystem::Draw(void)
-{
-	g_SystemStatistics->SetParticleSystemsDrawnThisFrame(g_SystemStatistics->GetParticleSystemsDrawnThisFrame() + 1);
-	GLBegin(GL_QUADS);
-	for(std::list< Graphics::ParticleSystem::Particle >::iterator ParticleIterator = m_Particles.begin(); ParticleIterator != m_Particles.end(); ++ParticleIterator)
-	{
-		g_SystemStatistics->SetParticlesDrawnThisFrame(g_SystemStatistics->GetParticlesDrawnThisFrame() + 1);
-		GLColor4fv(ParticleIterator->m_Color.GetColor().GetPointer());
-		
-		const Vector3f & Position(ParticleIterator->m_Position);
-		const float & Size(ParticleIterator->m_Size);
-		
-		// TODO: billboarding
-		GLTexCoord2f(0.0f, 0.0f);
-		GLVertex3f(Position[0] - Size, Position[1] - Size, Position[2]);
-		GLTexCoord2f(1.0f, 0.0f);
-		GLVertex3f(Position[0] + Size, Position[1] - Size, Position[2]);
-		GLTexCoord2f(1.0f, 1.0f);
-		GLVertex3f(Position[0] + Size, Position[1] + Size, Position[2]);
-		GLTexCoord2f(0.0f, 1.0f);
-		GLVertex3f(Position[0] - Size, Position[1] + Size, Position[2]);
-	}
-	GLEnd();
-	Graphics::Node::Draw();
-}
-
-void Graphics::ParticleSystem::End(void)
-{
-	Graphics::Node::End();
-}
-
 void Graphics::ParticleSystem::AddParticle(const Graphics::ParticleSystem::Particle & Particle)
 {
-	m_Particles.push_back(Particle);
+	_Particles.push_back(Particle);
 }
 
 void Graphics::ParticleSystem::AddSystemScriptLine(const std::string & SystemScriptLine)
 {
-	m_SystemScript.push_back(SystemScriptLine);
+	_SystemScript.push_back(SystemScriptLine);
 }
 
 void Graphics::ParticleSystem::AddParticleScriptLine(const std::string & ParticleScriptLine)
 {
-	m_ParticleScript.push_back(ParticleScriptLine);
+	_ParticleScript.push_back(ParticleScriptLine);
 }

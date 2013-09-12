@@ -32,6 +32,7 @@
 #include "generator_class.h"
 #include "globals.h"
 #include "graphics/model.h"
+#include "graphics/particle_system.h"
 #include "object_aspect_accessory.h"
 #include "object_aspect_name.h"
 #include "object_aspect_outfitting.h"
@@ -48,6 +49,8 @@
 #include "weapon.h"
 #include "weapon_class.h"
 #include "visualization_prototype.h"
+
+Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSystemClassIdentifier);
 
 Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::string & ClassIdentifier) const
 {
@@ -151,6 +154,11 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		NewShip->SetMaximumForwardThrust(ShipClass->GetForwardThrust());
 		NewShip->SetMaximumSpeed(ShipClass->GetMaximumSpeed());
 		NewShip->SetMaximumTurnSpeed(ShipClass->GetTurnSpeed());
+		
+		Graphics::ParticleSystem * EngineGlowParticleSystem(CreateParticleSystem("engine_glow"));
+		
+		EngineGlowParticleSystem->SetPosition(Vector3f(ShipClass->GetExhaustOffset()));
+		NewShip->SetEngineGlowParticleSystem(EngineGlowParticleSystem);
 		// set up aspects
 		// set up outfitting aspect
 		assert(NewShip->GetAspectOutfitting() != 0);

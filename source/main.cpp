@@ -499,11 +499,11 @@ Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSyst
 			Graphics::ParticleSystem::Particle Particle;
 			Vector2f Velocity(Vector2f::CreateFromMagnitudeAndAngle(GetRandomFloat(0.0f, 0.5f) + GetRandomFloatFromExponentialDistribution(1.0f), GetRandomFloat(0.0f, 2 * M_PI)));
 			
-			Particle.m_Position.Set(0.0f, 0.0f, 0.0f);
-			Particle.m_Velocity.Set(Velocity[0], Velocity[1], 0.0f);
-			Particle.m_TimeOfDeath = GameTime::Get() + GetRandomDouble(0.3f, 0.8f);
-			Particle.m_Color.Set(GetRandomFloat(0.4f, 0.5f), GetRandomFloat(0.35f, 0.45f), GetRandomFloat(0.35f, 0.65f), 0.3f);
-			Particle.m_Size = GetRandomFloat(0.25f, 0.4f);
+			Particle._Position.Set(0.0f, 0.0f, 0.0f);
+			Particle._Velocity.Set(Velocity[0], Velocity[1], 0.0f);
+			Particle._TimeOfDeath = GameTime::Get() + GetRandomDouble(0.3f, 0.8f);
+			Particle._Color.Set(GetRandomFloat(0.4f, 0.5f), GetRandomFloat(0.35f, 0.45f), GetRandomFloat(0.35f, 0.65f), 0.3f);
+			Particle._Size = GetRandomFloat(0.25f, 0.4f);
 			ParticleSystem->AddParticle(Particle);
 		}
 		ParticleSystem->AddSystemScriptLine("kill-empty");
@@ -521,11 +521,11 @@ Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSyst
 			Vector2f Position(Vector2f::CreateFromMagnitudeAndAngle(GetRandomFloat(1.0f, 4.0f) + GetRandomFloatFromExponentialDistribution(2.0f), GetRandomFloat(0.0f, 2 * M_PI)));
 			Vector2f Velocity(Vector2f::CreateFromMagnitudeAndAngle(GetRandomFloat(15.0f, 20.0f), GetRandomFloat(0.0f, 2 * M_PI)));
 			
-			Particle.m_Position.Set(Position[0], Position[1], 0.0f);
-			Particle.m_Velocity.Set(Velocity[0], Velocity[1], 0.0f);
-			Particle.m_TimeOfDeath = GameTime::Get() + GetRandomDouble(0.8f, 1.2f);
-			Particle.m_Color.Set(GetRandomFloat(0.5f, 0.65f), GetRandomFloat(0.6f, 0.65f), 1.0f, 0.5f);
-			Particle.m_Size = GetRandomFloat(0.5f, 0.9f);
+			Particle._Position.Set(Position[0], Position[1], 0.0f);
+			Particle._Velocity.Set(Velocity[0], Velocity[1], 0.0f);
+			Particle._TimeOfDeath = GameTime::Get() + GetRandomDouble(0.8f, 1.2f);
+			Particle._Color.Set(GetRandomFloat(0.5f, 0.65f), GetRandomFloat(0.6f, 0.65f), 1.0f, 0.5f);
+			Particle._Size = GetRandomFloat(0.5f, 0.9f);
 			ParticleSystem->AddParticle(Particle);
 		}
 		// add green cloud which turns counter-clockwise
@@ -534,22 +534,22 @@ Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSyst
 			Graphics::ParticleSystem::Particle Particle;
 			Vector2f Position(Vector2f::CreateFromMagnitudeAndAngle(GetRandomFloat(0.0f, 8.0f) + GetRandomFloatFromExponentialDistribution(5.0f), GetRandomFloat(0.0f, 2 * M_PI)));
 			
-			Particle.m_Position.Set(Position[0], Position[1], 0.0f);
-			Particle.m_Velocity.Set(Position[1], -Position[0], 0.0f);
-			Particle.m_TimeOfDeath = GameTime::Get() + GetRandomDouble(1.5f, 2.5f);
-			Particle.m_Color.Set(GetRandomFloat(0.4f, 0.5f), GetRandomFloat(0.85f, 1.0f), GetRandomFloat(0.75f, 0.95f), 0.05f);
-			Particle.m_Size = GetRandomFloat(10.0f, 12.0f);
+			Particle._Position.Set(Position[0], Position[1], 0.0f);
+			Particle._Velocity.Set(Position[1], -Position[0], 0.0f);
+			Particle._TimeOfDeath = GameTime::Get() + GetRandomDouble(1.5f, 2.5f);
+			Particle._Color.Set(GetRandomFloat(0.4f, 0.5f), GetRandomFloat(0.85f, 1.0f), GetRandomFloat(0.75f, 0.95f), 0.05f);
+			Particle._Size = GetRandomFloat(10.0f, 12.0f);
 			ParticleSystem->AddParticle(Particle);
 		}
 		
 		// add flash
 		Graphics::ParticleSystem::Particle Particle;
 		
-		Particle.m_Position.Set(0.0f, 0.0f, 0.0f);
-		Particle.m_Velocity.Set(0.0f, 0.0f, 0.0f);
-		Particle.m_TimeOfDeath = GameTime::Get() + GetRandomDouble(0.1f, 0.15f);
-		Particle.m_Color.Set(0.4f, GetRandomFloat(0.4f, 1.0f), GetRandomFloat(0.95f, 1.0f), 0.3f);
-		Particle.m_Size = 200.0f;
+		Particle._Position.Set(0.0f, 0.0f, 0.0f);
+		Particle._Velocity.Set(0.0f, 0.0f, 0.0f);
+		Particle._TimeOfDeath = GameTime::Get() + GetRandomDouble(0.1f, 0.15f);
+		Particle._Color.Set(0.4f, GetRandomFloat(0.4f, 1.0f), GetRandomFloat(0.95f, 1.0f), 0.3f);
+		Particle._Size = 200.0f;
 		ParticleSystem->AddParticle(Particle);
 		ParticleSystem->AddSystemScriptLine("kill-empty");
 		ParticleSystem->AddSystemScriptLine("move");
@@ -566,11 +566,11 @@ Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSyst
 			float Speed(GetRandomFloat(0.0f, 2.5f) + GetRandomFloatFromExponentialDistribution(2.0f));
 			Vector2f Velocity(Vector2f::CreateFromMagnitudeAndAngle(Speed, GetRandomFloat(0.0f, 2 * M_PI)));
 			
-			Particle.m_Velocity.Set(Velocity[0], Velocity[1], 0.0f);
-			Particle.m_Position.Set(0.0f, 0.0f, 0.0f);
-			Particle.m_TimeOfDeath = GameTime::Get() + GetRandomDouble(1.0f, 2.5f);
-			Particle.m_Color.Set(GetRandomFloat(0.4f, 0.8f), GetRandomFloat(0.2f, 0.4f), GetRandomFloat(0.05f, 0.15f), 0.5f);
-			Particle.m_Size = 5.0f / abs(Speed);
+			Particle._Velocity.Set(Velocity[0], Velocity[1], 0.0f);
+			Particle._Position.Set(0.0f, 0.0f, 0.0f);
+			Particle._TimeOfDeath = GameTime::Get() + GetRandomDouble(1.0f, 2.5f);
+			Particle._Color.Set(GetRandomFloat(0.4f, 0.8f), GetRandomFloat(0.2f, 0.4f), GetRandomFloat(0.05f, 0.15f), 0.5f);
+			Particle._Size = 5.0f / abs(Speed);
 			ParticleSystem->AddParticle(Particle);
 		}
 		
@@ -585,11 +585,11 @@ Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSyst
 			float Distance(GetRandomFloat(0.0f, 1.0f) + GetRandomFloatFromExponentialDistribution(1.0f));
 			Vector2f Position(Vector2f::CreateFromMagnitudeAndAngle(Distance, CloudAngle + GetRandomFloat(-0.3f, 0.3f)));
 			
-			Particle.m_Velocity.Set(Velocity[0], Velocity[1], 0.0f);
-			Particle.m_Position.Set(Position[0], Position[1], 0.0f);
-			Particle.m_TimeOfDeath = GameTime::Get() + GetRandomDouble(1.0f, 2.0f);
-			Particle.m_Color.Set(GetRandomFloat(0.6f, 0.9f), GetRandomFloat(0.3f, 0.5f), GetRandomFloat(0.15f, 0.2f), 0.5f);
-			Particle.m_Size = 5.0f / abs(abs(Speed) - 3.0f);
+			Particle._Velocity.Set(Velocity[0], Velocity[1], 0.0f);
+			Particle._Position.Set(Position[0], Position[1], 0.0f);
+			Particle._TimeOfDeath = GameTime::Get() + GetRandomDouble(1.0f, 2.0f);
+			Particle._Color.Set(GetRandomFloat(0.6f, 0.9f), GetRandomFloat(0.3f, 0.5f), GetRandomFloat(0.15f, 0.2f), 0.5f);
+			Particle._Size = 5.0f / abs(abs(Speed) - 3.0f);
 			ParticleSystem->AddParticle(Particle);
 		}
 		// exhalting explosion cloud
@@ -600,11 +600,11 @@ Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSyst
 			float Speed(GetRandomFloat(2.0f, 10.0f) + GetRandomFloatFromExponentialDistribution(2.0f));
 			Vector2f Velocity(Vector2f::CreateFromMagnitudeAndAngle(Speed, CloudAngle + GetRandomFloat(-0.1f, 0.1f)));
 			
-			Particle.m_Velocity.Set(Velocity[0], Velocity[1], 0.0f);
-			Particle.m_Position.Set(0.0f, 0.0f, 0.0f);
-			Particle.m_TimeOfDeath = GameTime::Get() + GetRandomDouble(0.8f, 1.8f);
-			Particle.m_Color.Set(GetRandomFloat(0.6f, 0.8f), GetRandomFloat(0.3f, 0.4f), GetRandomFloat(0.3f, 0.3f), 0.5f);
-			Particle.m_Size = 3.0f / abs(abs(Speed) - 6.0f);
+			Particle._Velocity.Set(Velocity[0], Velocity[1], 0.0f);
+			Particle._Position.Set(0.0f, 0.0f, 0.0f);
+			Particle._TimeOfDeath = GameTime::Get() + GetRandomDouble(0.8f, 1.8f);
+			Particle._Color.Set(GetRandomFloat(0.6f, 0.8f), GetRandomFloat(0.3f, 0.4f), GetRandomFloat(0.3f, 0.3f), 0.5f);
+			Particle._Size = 3.0f / abs(abs(Speed) - 6.0f);
 			ParticleSystem->AddParticle(Particle);
 		}
 		// flash
@@ -613,21 +613,21 @@ Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSyst
 			Graphics::ParticleSystem::Particle Particle;
 			Vector2f Position(Vector2f::CreateFromMagnitudeAndAngle(GetRandomFloat(0.0f, 6.0f), GetRandomFloat(0.0f, 2 * M_PI)));
 			
-			Particle.m_Position.Set(Position[0], Position[1], 0.0f);
-			Particle.m_Velocity.Set(0.0f, 0.0f, 0.0f);
-			Particle.m_TimeOfDeath = GameTime::Get() + GetRandomDouble(0.1f, 0.22f);
-			Particle.m_Color.Set(0.9f, GetRandomFloat(0.9f, 1.0f), GetRandomFloat(0.95f, 1.0f), 0.15f);
-			Particle.m_Size = 20.0f;
+			Particle._Position.Set(Position[0], Position[1], 0.0f);
+			Particle._Velocity.Set(0.0f, 0.0f, 0.0f);
+			Particle._TimeOfDeath = GameTime::Get() + GetRandomDouble(0.1f, 0.22f);
+			Particle._Color.Set(0.9f, GetRandomFloat(0.9f, 1.0f), GetRandomFloat(0.95f, 1.0f), 0.15f);
+			Particle._Size = 20.0f;
 			ParticleSystem->AddParticle(Particle);
 		}
 		
 		Graphics::ParticleSystem::Particle Particle;
 		
-		Particle.m_Position.Set(0.0f, 0.0f, 0.0f);
-		Particle.m_Velocity.Set(0.0f, 0.0f, 0.0f);
-		Particle.m_TimeOfDeath = GameTime::Get() + GetRandomDouble(0.1f, 0.15f);
-		Particle.m_Color.Set(0.9f, GetRandomFloat(0.9f, 1.0f), GetRandomFloat(0.95f, 1.0f), 0.3f);
-		Particle.m_Size = 200.0f;
+		Particle._Position.Set(0.0f, 0.0f, 0.0f);
+		Particle._Velocity.Set(0.0f, 0.0f, 0.0f);
+		Particle._TimeOfDeath = GameTime::Get() + GetRandomDouble(0.1f, 0.15f);
+		Particle._Color.Set(0.9f, GetRandomFloat(0.9f, 1.0f), GetRandomFloat(0.95f, 1.0f), 0.3f);
+		Particle._Size = 200.0f;
 		ParticleSystem->AddParticle(Particle);
 		ParticleSystem->AddSystemScriptLine("kill-empty");
 		ParticleSystem->AddSystemScriptLine("move");
@@ -645,6 +645,8 @@ Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSyst
 	{
 		throw std::runtime_error("Could not create a paricle system with the class identifier'" + ParticleSystemClassIdentifier + "'.");
 	}
+	assert(g_GraphicsEngine != 0);
+	g_GraphicsEngine->AddParticleSystem(ParticleSystem);
 	
 	return ParticleSystem;
 }
@@ -1501,11 +1503,8 @@ void GameFrame(void)
 	double PhysicsTimeBegin(RealTime::Get());
 	float Seconds(CalculateTime());
 	
-	assert(g_MainView != 0);
-	if(g_MainView->GetScene() != 0)
-	{
-		g_MainView->GetScene()->Update(Seconds);
-	}
+	assert(g_GraphicsEngine != 0);
+	g_GraphicsEngine->Update(Seconds);
 	if(CurrentSystem != 0)
 	{
 		CalculateMovements(CurrentSystem, Seconds);

@@ -46,7 +46,7 @@ public:
 	Battery * GetBattery(void);
 	Storage * GetCargoHold(void);
 	const Storage * GetCargoHold(void) const;
-	Reference< Graphics::ParticleSystem > & GetEngineGlowParticleSystem(void);
+	Graphics::ParticleSystem * GetEngineGlowParticleSystem(void);
 	const Vector3f & GetExhaustOffset(void) const;
 	float GetExhaustRadius(void) const;
 	Reference< Faction > GetFaction(void);
@@ -68,7 +68,7 @@ public:
 	const Vector3f & GetVelocity(void) const;
 	// setters
 	void SetAccelerate(bool Accelerate);
-	void SetEngineGlowParticleSystem(Reference< Graphics::ParticleSystem > & EngineGlowParticleSystem);
+	void SetEngineGlowParticleSystem(Graphics::ParticleSystem * EngineGlowParticleSystem);
 	void SetExhaustOffset(const Vector3f & ExhaustOffset);
 	void SetExhaustRadius(float ExhaustRadius);
 	void SetFaction(Reference< Faction > Faction);
@@ -105,7 +105,7 @@ private:
 	bool m_Accelerate;
 	Battery * m_Battery;
 	Storage * m_CargoHold;
-	Reference< Graphics::ParticleSystem > m_EngineGlowParticleSystem;
+	Graphics::ParticleSystem * _EngineGlowParticleSystem;
 	Vector3f m_ExhaustOffset;
 	float m_ExhaustRadius;
 	Reference< Faction > m_Faction;
@@ -143,9 +143,9 @@ inline const Storage * Ship::GetCargoHold(void) const
 	return m_CargoHold;
 }
 
-inline Reference< Graphics::ParticleSystem > & Ship::GetEngineGlowParticleSystem(void)
+inline Graphics::ParticleSystem * Ship::GetEngineGlowParticleSystem(void)
 {
-	return m_EngineGlowParticleSystem;
+	return _EngineGlowParticleSystem;
 }
 
 inline const Vector3f & Ship::GetExhaustOffset(void) const
@@ -248,9 +248,9 @@ inline void Ship::SetAccelerate(bool Accelerate)
 	m_Accelerate = Accelerate;
 }
 
-inline void Ship::SetEngineGlowParticleSystem(Reference< Graphics::ParticleSystem > & EngineGlowParticleSystem)
+inline void Ship::SetEngineGlowParticleSystem(Graphics::ParticleSystem * EngineGlowParticleSystem)
 {
-	m_EngineGlowParticleSystem = EngineGlowParticleSystem;
+	_EngineGlowParticleSystem = EngineGlowParticleSystem;
 }
 
 inline void Ship::SetExhaustOffset(const Vector3f & ExhaustOffset)

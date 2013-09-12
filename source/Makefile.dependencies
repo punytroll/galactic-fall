@@ -293,6 +293,7 @@ graphics_engine_cpp = \
 	$(graphics_engine_h) \
 	$(graphics_mesh_manager_h) \
 	$(graphics_model_manager_h) \
+	$(graphics_particle_system_h) \
 	$(graphics_texture_manager_h) \
 	$(graphics_view_h)
 
@@ -385,21 +386,30 @@ graphics_orthogonal_2d_projection_h = \
 
 graphics_particle_system_cpp = \
 	graphics/particle_system.cpp \
-	$(color_h) \
 	$(game_time_h) \
 	$(globals_h) \
-	$(graphics_engine_h) \
-	$(graphics_gl_h) \
 	$(graphics_particle_system_h) \
-	$(graphics_scene_h) \
-	$(graphics_texture_h) \
-	$(graphics_texture_manager_h) \
-	$(math_h) \
+	$(graphics_particle_system_node_h) \
 	$(system_statistics_h)
 
 graphics_particle_system_h = \
 	graphics/particle_system.h \
-	$(color_h) \
+	$(color_h)
+
+graphics_particle_system_node_cpp = \
+	graphics/particle_system_node.cpp \
+	$(globals_h) \
+	$(graphics_engine_h) \
+	$(graphics_gl_h) \
+	$(graphics_particle_system_h) \
+	$(graphics_particle_system_node_h) \
+	$(graphics_scene_h) \
+	$(graphics_texture_h) \
+	$(graphics_texture_manager_h) \
+	$(system_statistics_h)
+
+graphics_particle_system_node_h = \
+	graphics/particle_system_node.h \
 	$(graphics_node_h)
 
 graphics_perspective_projection_cpp = \
@@ -428,6 +438,7 @@ graphics_scene_cpp = \
 	graphics/scene.cpp \
 	$(graphics_gl_h) \
 	$(graphics_light_h) \
+	$(graphics_node_h) \
 	$(graphics_particle_system_h) \
 	$(graphics_scene_h)
 
@@ -735,6 +746,7 @@ object_factory_cpp = \
 	$(generator_class_h) \
 	$(globals_h) \
 	$(graphics_model_h) \
+	$(graphics_particle_system_h) \
 	$(object_aspect_accessory_h) \
 	$(object_aspect_name_h) \
 	$(object_aspect_outfitting_h) \
@@ -830,6 +842,7 @@ ship_cpp = \
 	$(game_time_h) \
 	$(generator_h) \
 	$(globals_h) \
+	$(graphics_engine_h) \
 	$(graphics_particle_system_h) \
 	$(map_knowledge_h) \
 	$(math_h) \
@@ -1412,7 +1425,7 @@ visualizations_cpp = \
 	$(graphics_model_h) \
 	$(graphics_model_manager_h) \
 	$(graphics_model_node_h) \
-	$(graphics_particle_system_h) \
+	$(graphics_particle_system_node_h) \
 	$(object_aspect_accessory_h) \
 	$(object_aspect_outfitting_h) \
 	$(object_aspect_physical_h) \

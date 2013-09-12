@@ -21,6 +21,7 @@
 
 #include "gl.h"
 #include "light.h"
+#include "node.h"
 #include "particle_system.h"
 #include "scene.h"
 
@@ -114,31 +115,4 @@ void Graphics::Scene::Render(void)
 	_RootNode->Begin();
 	_RootNode->Draw();
 	_RootNode->End();
-}
-
-void Graphics::Scene::Update(float Seconds)
-{
-	assert(_RootNode != 0);
-	_Update(_RootNode, Seconds);
-}
-
-void Graphics::Scene::_Update(Graphics::Node * Node, float Seconds)
-{
-	std::vector< Graphics::Node * > & Content(Node->GetContent());
-	std::vector< Graphics::Node * >::size_type ContentIndex(0);
-	
-	while(ContentIndex < Content.size())
-	{
-		Graphics::ParticleSystem * ParticleSystem(dynamic_cast< Graphics::ParticleSystem * >(Content[ContentIndex]));
-		
-		if((ParticleSystem != 0) && (ParticleSystem->Update(Seconds) == false))
-		{
-			ParticleSystem->Destroy();
-		}
-		else
-		{
-			_Update(Content[ContentIndex], Seconds);
-			++ContentIndex;
-		}
-	}
 }

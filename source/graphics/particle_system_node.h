@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2007  Hagen Möbius
+ * Copyright (C) 2013  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,27 +17,30 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef VISUALIZATIONS_H
-#define VISUALIZATIONS_H
+#ifndef GRAPHICS_PARTICLE_SYSTEM_NODE_H
+#define GRAPHICS_PARTICLE_SYSTEM_NODE_H
 
-class Commodity;
-class Object;
-class Planet;
-class Ship;
-class Shot;
-class VisualizationPrototype;
-class Weapon;
+#include "node.h"
 
 namespace Graphics
 {
-	class Node;
 	class ParticleSystem;
+	
+	class ParticleSystemNode : public Graphics::Node
+	{
+	public:
+		// constructor & destructor
+		ParticleSystemNode(void);
+		virtual ~ParticleSystemNode(void);
+		// setters
+		void SetParticleSystem(Graphics::ParticleSystem * ParticleSystem);
+		// modifiers
+		virtual void Begin(void);
+		virtual void Draw(void);
+		virtual void End(void);
+	private:
+		ParticleSystem * _ParticleSystem;
+	};
 }
-
-void InvalidateVisualizationReference(Graphics::Node * Node);
-void UnvisualizeObject(Object * Object);
-void VisualizeObject(Object * Object, Graphics::Node * Container);
-void VisualizeParticleSystem(Graphics::ParticleSystem * ParticleSystem, Graphics::Node * Container);
-Graphics::Node * VisualizePrototype(const VisualizationPrototype * VisualizationPrototype);
 
 #endif
