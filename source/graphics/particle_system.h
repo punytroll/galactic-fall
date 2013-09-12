@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2007  Hagen Möbius
+ * Copyright (C) 2013  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,56 +21,78 @@
 #define GRAPHICS_PARTICLE_SYSTEM_H
 
 #include <list>
+#include <set>
 #include <string>
 #include <vector>
 
 #include <algebra/vector3f.h>
 
 #include "../color.h"
-#include "node.h"
 
 namespace Graphics
 {
-	class ParticleSystem : public Graphics::Node
+	class ParticleSystemNode;
+	
+	class ParticleSystem
 	{
+		friend class ParticleSystemNode;
 	public:
 		struct Particle
 		{
-			Vector3f m_Position;
-			Vector3f m_Velocity;
-			Color m_Color;
-			double m_TimeOfDeath;
-			float m_Size;
+			Vector3f _Position;
+			Vector3f _Velocity;
+			Color _Color;
+			double _TimeOfDeath;
+			float _Size;
 		};
 		
 		ParticleSystem(void);
-		bool Update(float Seconds);
-		virtual void Begin(void);
-		virtual void Draw(void);
-		virtual void End(void);
+		virtual ~ParticleSystem(void);
+		// getters
+		const std::list< Graphics::ParticleSystem::Particle > & GetParticles(void) const;
+		const Vector3f & GetPosition(void) const;
 		// setters
+		void SetPosition(const Vector3f & Position);
 		void SetVelocity(const Vector3f & Velocity);
 		void SetTimeOfDeath(double TimeOfDeath);
 		// modifiers
 		void AddParticle(const Graphics::ParticleSystem::Particle & Particle);
 		void AddSystemScriptLine(const std::string & SystemScriptLine);
 		void AddParticleScriptLine(const std::string & ParticleScriptLine);
+		bool Update(float Seconds);
 	protected:
-		Vector3f m_Velocity;
-		double m_TimeOfDeath;
-		std::list< Graphics::ParticleSystem::Particle > m_Particles;
-		std::vector< std::string > m_SystemScript;
-		std::vector< std::string > m_ParticleScript;
+		Vector3f _Position;
+		Vector3f _Velocity;
+		double _TimeOfDeath;
+		std::list< Graphics::ParticleSystem::Particle > _Particles;
+		std::vector< std::string > _SystemScript;
+		std::vector< std::string > _ParticleScript;
+		std::set< Graphics::ParticleSystemNode * > _ParticleSystemNodes;
 	};
+	
+	inline const std::list< Graphics::ParticleSystem::Particle > & ParticleSystem::GetParticles(void) const
+	{
+		return _Particles;
+	}
+	
+	inline const Vector3f & ParticleSystem::GetPosition(void) const
+	{
+		return _Position;
+	}
+	
+	inline void ParticleSystem::SetPosition(const Vector3f & Position)
+	{
+		_Position = Position;
+	}
 	
 	inline void ParticleSystem::SetVelocity(const Vector3f & Velocity)
 	{
-		m_Velocity = Velocity;
+		_Velocity = Velocity;
 	}
 	
 	inline void ParticleSystem::SetTimeOfDeath(double TimeOfDeath)
 	{
-		m_TimeOfDeath = TimeOfDeath;
+		_TimeOfDeath = TimeOfDeath;
 	}
 }
 

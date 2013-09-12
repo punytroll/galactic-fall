@@ -20,6 +20,7 @@
 #ifndef GRAPHICS_ENGINE_H
 #define GRAPHICS_ENGINE_H
 
+#include <set>
 #include <vector>
 
 namespace Graphics
@@ -27,6 +28,7 @@ namespace Graphics
 	class MeshManager;
 	class ModelManager;
 	class Node;
+	class ParticleSystem;
 	class TextureManager;
 	class View;
 	
@@ -41,11 +43,15 @@ namespace Graphics
 		Graphics::ModelManager * GetModelManager(void);
 		Graphics::TextureManager * GetTextureManager(void);
 		// modifiers
+		void AddParticleSystem(Graphics::ParticleSystem * ParticleSystem);
 		void AddView(Graphics::View * View);
+		void RemoveParticleSystem(Graphics::ParticleSystem * ParticleSystem);
 		void RemoveView(Graphics::View * View);
+		void Update(float Seconds);
 	private:
 		Graphics::MeshManager * _MeshManager;
 		Graphics::ModelManager * _ModelManager;
+		std::set< Graphics::ParticleSystem * > _ParticleSystems;
 		std::vector< Graphics::View * > _Views;
 		Graphics::TextureManager * _TextureManager;
 	};

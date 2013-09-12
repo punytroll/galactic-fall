@@ -48,11 +48,9 @@ namespace Graphics
 		void ActivateLight(void);
 		void DeactivateLight(void);
 		void Render(void);
-		void Update(float Seconds);
 		void OnDestroy(Graphics::Node * Node);
 	private:
 		void _SetEngine(Graphics::Engine * Engine);
-		void _Update(Graphics::Node * Node, float Seconds);
 		Callback1< void, Graphics::Node * > _DestroyCallback;
 		Graphics::Engine * _Engine;
 		Graphics::Light * _Light;

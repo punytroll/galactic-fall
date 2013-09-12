@@ -28,7 +28,7 @@
 #include "graphics/model.h"
 #include "graphics/model_manager.h"
 #include "graphics/model_node.h"
-#include "graphics/particle_system.h"
+#include "graphics/particle_system_node.h"
 #include "object_aspect_accessory.h"
 #include "object_aspect_outfitting.h"
 #include "object_aspect_physical.h"
@@ -45,8 +45,6 @@
 
 // This map holds the References to the Graphics::Nodes that have to be referenced in the Game subsystem
 std::map< Graphics::Node *, Reference< Graphics::Node > > g_VisualizationReferences;
-
-Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSystemClassIdentifier);
 
 static void VisualizeCommodity(Commodity * Commodity, Graphics::Node * Container);
 static void VisualizePlanet(Planet * Planet, Graphics::Node * Container);
@@ -127,17 +125,19 @@ void VisualizeCommodity(Commodity * Commodity, Graphics::Node * Container)
 	Container->AddNode(Visualization);
 }
 
-Reference< Graphics::Node > & VisualizeParticleSystem(Graphics::Node * ParticleSystem, Graphics::Node * Container)
+void VisualizeParticleSystem(Graphics::ParticleSystem * ParticleSystem, Graphics::Node * Container)
 {
 	assert(ParticleSystem != 0);
 	assert(Container != 0);
 	
-	Reference< Graphics::Node > ParticleSystemReference(*ParticleSystem);
-	Reference< Graphics::Node > & Result(g_VisualizationReferences.insert(std::make_pair(ParticleSystem, ParticleSystemReference)).first->second);
+	Graphics::ParticleSystemNode * Visualization(new Graphics::ParticleSystemNode());
 	
-	Container->AddNode(ParticleSystem);
+	Visualization->SetParticleSystem(ParticleSystem);
 	
-	return Result;
+	Reference< Graphics::Node > VisualizationReference(*Visualization);
+	
+	g_VisualizationReferences[Visualization] = VisualizationReference;
+	Container->AddNode(Visualization);
 }
 
 void VisualizePlanet(Planet * Planet, Graphics::Node * Container)
@@ -204,14 +204,9 @@ void VisualizeShip(Ship * Ship, Graphics::Node * Container)
 			VisualizeObject(SlotIterator->second->GetMountedObject().Get(), Visualization);
 		}
 	}
-	
 	// add engine glow particle system
-	Graphics::ParticleSystem * EngineGlowParticleSystem(CreateParticleSystem("engine_glow"));
-	Reference< Graphics::ParticleSystem > EngineGlowParticleSystemReference(VisualizeParticleSystem(EngineGlowParticleSystem, Visualization));
-	
-	EngineGlowParticleSystem->SetPosition(Vector3f(Ship->GetExhaustOffset()));
-	assert(Ship->GetEngineGlowParticleSystem().IsValid() == false);
-	Ship->SetEngineGlowParticleSystem(EngineGlowParticleSystemReference);
+	assert(Ship->GetEngineGlowParticleSystem() != 0);
+	VisualizeParticleSystem(Ship->GetEngineGlowParticleSystem(), Visualization);
 }
 
 void VisualizeShot(Shot * Shot, Graphics::Node * Container)

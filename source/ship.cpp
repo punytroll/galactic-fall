@@ -23,6 +23,7 @@
 #include "game_time.h"
 #include "generator.h"
 #include "globals.h"
+#include "graphics/engine.h"
 #include "graphics/particle_system.h"
 #include "map_knowledge.h"
 #include "math.h"
@@ -47,6 +48,7 @@ Ship::Ship(void) :
 	m_Accelerate(false),
 	m_Battery(0),
 	m_CargoHold(0),
+	_EngineGlowParticleSystem(0),
 	m_ExhaustRadius(0.0f),
 	m_Fuel(0.0f),
 	m_FuelCapacity(0.0f),
@@ -85,6 +87,9 @@ Ship::Ship(void) :
 
 Ship::~Ship(void)
 {
+	g_GraphicsEngine->RemoveParticleSystem(_EngineGlowParticleSystem);
+	delete _EngineGlowParticleSystem;
+	_EngineGlowParticleSystem = 0;
 }
 
 Battery * Ship::GetBattery(void)
@@ -261,32 +266,30 @@ bool Ship::Update(float Seconds)
 					m_Velocity *= GetMaximumSpeed();
 				}
 				SetFuel(GetFuel() - FuelConsumption);
-				if(m_EngineGlowParticleSystem.IsValid() == true)
+				assert(_EngineGlowParticleSystem != 0);
+				for(int I = 0; I < 4; ++I)
 				{
-					for(int I = 0; I < 4; ++I)
+					Graphics::ParticleSystem::Particle Particle;
+					
+					Particle._TimeOfDeath = GameTime::Get() + GetRandomFloat(0.5f, 0.9f);
+					Particle._Color = Color(GetRandomFloat(0.8f, 1.0f), GetRandomFloat(0.7f, 0.8f), 0.5f, 0.08f);
+					
+					float X;
+					float Y;
+					float VelocityFactor;
+					
+					do
 					{
-						Graphics::ParticleSystem::Particle Particle;
-						
-						Particle.m_TimeOfDeath = GameTime::Get() + GetRandomFloat(0.5f, 0.9f);
-						Particle.m_Color = Color(GetRandomFloat(0.8f, 1.0f), GetRandomFloat(0.7f, 0.8f), 0.5f, 0.08f);
-						
-						float X;
-						float Y;
-						float VelocityFactor;
-						
-						do
-						{
-							X = GetRandomFloat(-1.0f, 1.0f);
-							Y = GetRandomFloat(-1.0f, 1.0f);
-						} while(X * X + Y * Y >= 1.0f);
-						VelocityFactor = 1 - X * X - Y * Y;
-						X *= GetExhaustRadius();
-						Y *= GetExhaustRadius();
-						Particle.m_Position = Vector3f(0.0f, X, Y);
-						Particle.m_Velocity = Vector3f(GetRandomFloat(-0.3f * VelocityFactor, 0.0f), 0.0f, 0.0f);
-						Particle.m_Size = 0.2f;
-						m_EngineGlowParticleSystem->AddParticle(Particle);
-					}
+						X = GetRandomFloat(-1.0f, 1.0f);
+						Y = GetRandomFloat(-1.0f, 1.0f);
+					} while(X * X + Y * Y >= 1.0f);
+					VelocityFactor = 1 - X * X - Y * Y;
+					X *= GetExhaustRadius();
+					Y *= GetExhaustRadius();
+					Particle._Position = Vector3f(0.0f, X, Y);
+					Particle._Velocity = Vector3f(GetRandomFloat(-0.3f * VelocityFactor, 0.0f), 0.0f, 0.0f);
+					Particle._Size = 0.2f;
+					_EngineGlowParticleSystem->AddParticle(Particle);
 				}
 			}
 		}
