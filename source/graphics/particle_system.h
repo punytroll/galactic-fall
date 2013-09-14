@@ -49,6 +49,7 @@ namespace Graphics
 		ParticleSystem(void);
 		virtual ~ParticleSystem(void);
 		// getters
+		bool IsDone(void) const;
 		const std::list< Graphics::ParticleSystem::Particle > & GetParticles(void) const;
 		const Vector3f & GetPosition(void) const;
 		// setters
@@ -59,8 +60,9 @@ namespace Graphics
 		void AddParticle(const Graphics::ParticleSystem::Particle & Particle);
 		void AddSystemScriptLine(const std::string & SystemScriptLine);
 		void AddParticleScriptLine(const std::string & ParticleScriptLine);
-		bool Update(float Seconds);
+		void Update(float Seconds);
 	protected:
+		bool _IsDone;
 		Vector3f _Position;
 		Vector3f _Velocity;
 		double _TimeOfDeath;
@@ -69,6 +71,11 @@ namespace Graphics
 		std::vector< std::string > _ParticleScript;
 		std::set< Graphics::ParticleSystemNode * > _ParticleSystemNodes;
 	};
+	
+	inline bool ParticleSystem::IsDone(void) const
+	{
+		return _IsDone;
+	}
 	
 	inline const std::list< Graphics::ParticleSystem::Particle > & ParticleSystem::GetParticles(void) const
 	{

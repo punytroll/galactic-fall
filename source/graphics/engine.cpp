@@ -80,7 +80,8 @@ void Graphics::Engine::Update(float Seconds)
 	{
 		Graphics::ParticleSystem * ParticleSystem(*ParticleSystemIterator);
 		
-		if(ParticleSystem->Update(Seconds) == false)
+		ParticleSystem->Update(Seconds);
+		if(ParticleSystem->IsDone() == true)
 		{
 			_ParticleSystems.erase(ParticleSystemIterator++);
 			delete ParticleSystem;
