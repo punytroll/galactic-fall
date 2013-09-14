@@ -25,7 +25,8 @@
 #include "particle_system.h"
 #include "particle_system_node.h"
 
-Graphics::ParticleSystem::ParticleSystem(void)
+Graphics::ParticleSystem::ParticleSystem(void) :
+	_IsDone(false)
 {
 }
 
@@ -37,7 +38,7 @@ Graphics::ParticleSystem::~ParticleSystem(void)
 	}
 }
 
-bool Graphics::ParticleSystem::Update(float Seconds)
+void Graphics::ParticleSystem::Update(float Seconds)
 {
 	g_SystemStatistics->SetParticleSystemsUpdatedThisFrame(g_SystemStatistics->GetParticleSystemsUpdatedThisFrame() + 1);
 	for(std::vector< std::string >::const_iterator ScriptLine = _SystemScript.begin(); ScriptLine != _SystemScript.end(); ++ScriptLine)
@@ -46,7 +47,9 @@ bool Graphics::ParticleSystem::Update(float Seconds)
 		{
 			if(GameTime::Get() >= _TimeOfDeath)
 			{
-				return false;
+				_IsDone = true;
+				
+				return;
 			}
 		}
 		else if(*ScriptLine == "move")
@@ -94,7 +97,9 @@ bool Graphics::ParticleSystem::Update(float Seconds)
 		{
 			if(_Particles.empty() == true)
 			{
-				return false;
+				_IsDone = true;
+				
+				return;
 			}
 		}
 		else
@@ -102,8 +107,6 @@ bool Graphics::ParticleSystem::Update(float Seconds)
 			throw std::runtime_error("Unknown particle system command '" + *ScriptLine + "'.");
 		}
 	}
-	
-	return true;
 }
 
 void Graphics::ParticleSystem::AddParticle(const Graphics::ParticleSystem::Particle & Particle)
