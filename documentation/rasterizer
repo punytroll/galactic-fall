@@ -1,20 +1,36 @@
+The job of the rasterizer is to calculate a bitmap image from a vectorial
+description of the image. The description contains geometrical primitives with
+colors and transparency.
+The size of the output image is requested on the command line whereas the
+vectorial description is given in a local coordinate system, that can be chosen
+freely and independently with each vector description. The rasterizer
+normalizes the coordinates and maps them into the size of the output image.
+The rasterization process works in two phases:
+
+1. The vectorial description is turned into a two-dimensional array of samples,
+   the smallest entity of color and transparency.
+2. The samples are aggregated into pixels of the output image.
+
+The second step allows to produce anti-aliasing.
+
 pixels_x:
-	Anzahl der Pixel des erstellten Bildes in X-Richtung.
+	The number of pixels on the X-axis, of the output image.
 
 pixels_y:
-	Anzahl der Pixel des erstellten Bildes in Y-Richtung.
-
-sample:
-	Stellt einen berechneten Farbpunkt dar.
+	The number of pixels on the Y-axis, of the output image.
 
 sub_pixels:
-	Anzahl der Samples in eine Richtung pro Pixel.
+	The number of samples of a single pixel on one axis.
 
 samples_x:
-	Gesamtanzahl der Samples in X-Richtung für das gesamte Bild. (pixels_x * sub_pixels)
+	The number of samples on the X-axis.
+	Calculated as:
+		pixels_x * sub_pixels
 
 samples_y:
-	Gesamtanzahl der Samples in Y-Richtung für das gesamte Bild. (pixels_y * sub_pixels)
+	The number of samples on the Y-axis.
+	Calculated as:
+		pixels_y * sub_pixels
 
 file format:
 	width: 4 byte unsigned integer in network byte order (big endian)
@@ -32,4 +48,5 @@ file format:
 	content: width * height in format
 
 transparency:
-	Although the rasterizer works with transparency internally the output will contain correct alpha values for opacity.
+	Although the rasterizer works with transparency internally the output will
+	contain correct alpha values for opacity.
