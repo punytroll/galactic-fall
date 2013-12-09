@@ -1,0 +1,31 @@
+Particle Systems
+================
+
+Because of the requirement to display the same particle system in multiple
+views and even multiple scenes, particle systems are devided according to the
+model/view pattern. The particle system model stores the dynamic particle data
+and the view of a particle system is derived from Graphics::Node to be used in
+the scene graph. The same particle system model can then be referenced in
+multiple particle system nodes to display the same particle system. These nodes
+may be located in different scenes or the same scene, and may be rendered once
+or multiple times for every scene they are in, it makes no matter. Furthermore,
+particle system models do not have to be visualized by any nodes at all - they
+could just be simulated off-screen. Because of this, the following design
+principle must be regarded:
+
+* Removing a particle system node must never delete the corresponding particle
+  system model, even if the node was the last viewer of the model.
+
+To complete the pattern, a controller needs to join the model and the view.
+However, for the moment and to keep it as simple as possible, the model is its
+own controller. Every particle system model has an Update method which is
+called to advance the particle system for a certain time span, given as a
+fraction of a second.
+While updating a particle system, the Update method (in principle defined on
+the controller, but equally valid for the model) may decide that the particle
+system is done and can be deleted. For that reason, the particle system model
+defines a field IsDone, which the Update method can set to true, if it wants to
+signal that the particle system model can be removed from the game. After
+calling the Update() method, the graphics engine checks the IsDone field on the
+particle system and, in case it is true, removes it from the particle system
+container and deletes the model instance.
