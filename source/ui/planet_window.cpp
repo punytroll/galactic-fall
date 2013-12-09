@@ -120,7 +120,7 @@ void UI::PlanetWindow::_OnHomeButtonClicked(void)
 	{
 		_DescriptionLabel = new UI::Label(this, _Planet->GetDescription());
 		_DescriptionLabel->SetPosition(Vector2f(120.0f, 40.0f));
-		_DescriptionLabel->SetSize(Vector2f(570.0f, 350.0f));
+		_DescriptionLabel->SetSize(Vector2f(GetSize()[0] - 130.0f, GetSize()[1] - 50.0f));
 		_DescriptionLabel->SetWrap(true);
 		_DescriptionLabel->SetWordWrap(true);
 		_DescriptionLabel->SetAnchorRight(true);
@@ -170,7 +170,7 @@ void UI::PlanetWindow::_OpenTradeCenter(void)
 	{
 		_TradeCenterWidget = new UI::TradeCenterWidget(this, _Planet, _Character);
 		_TradeCenterWidget->SetPosition(Vector2f(120.0f, 40.0f));
-		_TradeCenterWidget->SetSize(Vector2f(570.0f, 350.0f));
+		_TradeCenterWidget->SetSize(Vector2f(GetSize()[0] - 130.0f, GetSize()[1] - 50.0f));
 		_TradeCenterWidget->SetAnchorBottom(true);
 		_TradeCenterWidget->SetAnchorRight(true);
 	}
