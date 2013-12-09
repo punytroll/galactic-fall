@@ -202,7 +202,7 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 	}
 	else if(TypeIdentifier == "storage")
 	{
-		assert(ClassIdentifier == "");
+		assert(ClassIdentifier.empty() == true);
 		Result = new Storage();
 	}
 	else if(TypeIdentifier == "weapon")
