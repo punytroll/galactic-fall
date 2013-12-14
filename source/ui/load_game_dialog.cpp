@@ -39,16 +39,15 @@ namespace UI
 		DirectoryEntryItem(UI::Widget * SupWidget, const std::string & Caption);
 		// getters
 		const std::string & GetCaption(void) const;
-		bool GetSelected(void) const;
 		// setters
 		void SetSelected(bool Selected);
 	private:
 		// callbacks
-		void OnMouseEnter(void);
-		void OnMouseLeave(void);
+		void _OnMouseEnter(void);
+		void _OnMouseLeave(void);
 		// member variables
-		bool m_Selected;
-		UI::Label * m_CaptionLabel;
+		bool _Selected;
+		UI::Label * _CaptionLabel;
 	};
 }
 
