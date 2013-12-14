@@ -37,7 +37,6 @@ namespace UI
 	{
 	public:
 		DirectoryEntryItem(UI::Widget * SupWidget, const std::string & Caption);
-		void Update(void);
 		// getters
 		const std::string & GetCaption(void) const;
 		bool GetSelected(void) const;
