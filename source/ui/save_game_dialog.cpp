@@ -38,48 +38,42 @@ namespace UI
 		DirectoryEntryItem(UI::Widget * SupWidget, const std::string & Caption);
 		// getters
 		const std::string & GetCaption(void) const;
-		bool GetSelected(void) const;
 		// setters
 		void SetSelected(bool Selected);
 	private:
 		// callbacks
-		void OnMouseEnter(void);
-		void OnMouseLeave(void);
+		void _OnMouseEnter(void);
+		void _OnMouseLeave(void);
 		// member variables
-		bool m_Selected;
-		UI::Label * m_CaptionLabel;
+		bool _Selected;
+		UI::Label * _CaptionLabel;
 	};
 }
 
 UI::DirectoryEntryItem::DirectoryEntryItem(UI::Widget * SupWidget, const std::string & Caption) :
 	UI::Widget(SupWidget),
-	m_Selected(false)
+	_Selected(false)
 {
-	ConnectMouseEnterCallback(Callback(this, &UI::DirectoryEntryItem::OnMouseEnter));
-	ConnectMouseLeaveCallback(Callback(this, &UI::DirectoryEntryItem::OnMouseLeave));
-	m_CaptionLabel = new UI::Label(this, Caption);
-	m_CaptionLabel->SetPosition(Vector2f(5.0f, 0.0f));
-	m_CaptionLabel->SetSize(Vector2f(GetSize()[0] - 10.0f, 20.0f));
-	m_CaptionLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
-	m_CaptionLabel->SetAnchorLeft(true);
-	m_CaptionLabel->SetAnchorRight(true);
-	m_CaptionLabel->SetAnchorTop(true);
+	ConnectMouseEnterCallback(Callback(this, &UI::DirectoryEntryItem::_OnMouseEnter));
+	ConnectMouseLeaveCallback(Callback(this, &UI::DirectoryEntryItem::_OnMouseLeave));
+	_CaptionLabel = new UI::Label(this, Caption);
+	_CaptionLabel->SetPosition(Vector2f(5.0f, 0.0f));
+	_CaptionLabel->SetSize(Vector2f(GetSize()[0] - 10.0f, 20.0f));
+	_CaptionLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
+	_CaptionLabel->SetAnchorLeft(true);
+	_CaptionLabel->SetAnchorRight(true);
+	_CaptionLabel->SetAnchorTop(true);
 }
 
 const std::string & UI::DirectoryEntryItem::GetCaption(void) const
 {
-	return m_CaptionLabel->GetText();
-}
-
-bool UI::DirectoryEntryItem::GetSelected(void) const
-{
-	return m_Selected;
+	return _CaptionLabel->GetText();
 }
 
 void UI::DirectoryEntryItem::SetSelected(bool Selected)
 {
-	m_Selected = Selected;
-	if(m_Selected == false)
+	_Selected = Selected;
+	if(_Selected == false)
 	{
 		UnsetBackgroundColor();
 	}
@@ -89,17 +83,17 @@ void UI::DirectoryEntryItem::SetSelected(bool Selected)
 	}
 }
 
-void UI::DirectoryEntryItem::OnMouseEnter(void)
+void UI::DirectoryEntryItem::_OnMouseEnter(void)
 {
-	if(GetSelected() == false)
+	if(_Selected == false)
 	{
 		SetBackgroundColor(Color(0.3f, 0.2f, 0.2f, 1.0f));
 	}
 }
 
-void UI::DirectoryEntryItem::OnMouseLeave(void)
+void UI::DirectoryEntryItem::_OnMouseLeave(void)
 {
-	if(GetSelected() == false)
+	if(_Selected == false)
 	{
 		UnsetBackgroundColor();
 	}
