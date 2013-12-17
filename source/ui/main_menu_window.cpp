@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009  Hagen Möbius
+ * Copyright (C) 2013  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -23,33 +23,40 @@
 #include "../callbacks/callbacks.h"
 #include "../file_handling.h"
 #include "../key_event_information.h"
+#include "../scenario.h"
 #include "button.h"
 #include "label.h"
 #include "load_game_dialog.h"
+#include "load_scenario_dialog.h"
 #include "main_menu_window.h"
 #include "save_game_dialog.h"
 
 // these functions are defined in main.cpp
 void ActionQuitGameLoop(void);
 bool LoadGameFromInputStream(std::istream & InputStream);
+bool LoadScenario(const Scenario * Scenario);
 bool LoadScenarioFromScenarioIdentifier(const std::string & ScenarioIdentifier);
 void SaveGame(std::ostream & OStream);
 
-UI::MainMenuWindow::MainMenuWindow(UI::Widget * SupWidget) :
+UI::MainMenuWindow::MainMenuWindow(UI::Widget * SupWidget, ScenarioManager * ScenarioManager) :
 	UI::Window(SupWidget, "Galactic Fall"),
 	_DestroyOnESCAPEKey(true),
 	_DestroyOnLoadGameDialogDestroy(false),
+	_DestroyOnLoadScenarioDialogDestroy(false),
 	_DestroyOnSaveGameDialogDestroy(false),
 	_LoadGameButton(0),
 	_LoadGameDialog(0),
+	_LoadScenarioButton(0),
+	_LoadScenarioDialog(0),
 	_NewGameButton(0),
 	_QuitButton(0),
 	_ResumeGameButton(0),
 	_SaveGameButton(0),
-	_SaveGameDialog(0)
+	_SaveGameDialog(0),
+	_ScenarioManager(ScenarioManager)
 {
 	ConnectKeyCallback(Callback(this, &UI::MainMenuWindow::_OnKey));
-	SetSize(Vector2f(200.0f, 260.0f));
+	SetSize(Vector2f(200.0f, 300.0f));
 	
 	// "Resume Game" button
 	_ResumeGameButton = new UI::Button(this);
@@ -74,7 +81,7 @@ UI::MainMenuWindow::MainMenuWindow(UI::Widget * SupWidget) :
 	
 	// "New Game" button
 	_NewGameButton = new UI::Button(this);
-	_NewGameButton->SetPosition(Vector2f(20.0f, 100.0f));
+	_NewGameButton->SetPosition(Vector2f(20.0f, _ResumeGameButton->GetPosition()[1] + 40.0f));
 	_NewGameButton->SetSize(Vector2f(160.0f, 20.0f));
 	_NewGameButton->SetAnchorBottom(false);
 	_NewGameButton->SetAnchorLeft(true);
@@ -93,9 +100,30 @@ UI::MainMenuWindow::MainMenuWindow(UI::Widget * SupWidget) :
 	NewGameButtonLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
 	NewGameButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	
+	// "Load Scenario" button
+	_LoadScenarioButton = new UI::Button(this);
+	_LoadScenarioButton->SetPosition(Vector2f(20.0f, _NewGameButton->GetPosition()[1] + 40.0f));
+	_LoadScenarioButton->SetSize(Vector2f(160.0f, 20.0f));
+	_LoadScenarioButton->SetAnchorBottom(false);
+	_LoadScenarioButton->SetAnchorLeft(true);
+	_LoadScenarioButton->SetAnchorRight(true);
+	_LoadScenarioButton->SetAnchorTop(true);
+	_LoadScenarioButton->ConnectClickedCallback(Callback(this, &UI::MainMenuWindow::_OnLoadScenarioButtonClicked));
+	
+	UI::Label * LoadScenarioButtonLabel(new UI::Label(_LoadScenarioButton, "Load Scenario"));
+	
+	LoadScenarioButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
+	LoadScenarioButtonLabel->SetSize(_LoadScenarioButton->GetSize());
+	LoadScenarioButtonLabel->SetAnchorBottom(true);
+	LoadScenarioButtonLabel->SetAnchorLeft(true);
+	LoadScenarioButtonLabel->SetAnchorRight(true);
+	LoadScenarioButtonLabel->SetAnchorTop(true);
+	LoadScenarioButtonLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
+	LoadScenarioButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
+	
 	// "Load Game" button
 	_LoadGameButton = new UI::Button(this);
-	_LoadGameButton->SetPosition(Vector2f(20.0f, 140.0f));
+	_LoadGameButton->SetPosition(Vector2f(20.0f, _LoadScenarioButton->GetPosition()[1] + 40.0f));
 	_LoadGameButton->SetSize(Vector2f(160.0f, 20.0f));
 	_LoadGameButton->SetAnchorBottom(false);
 	_LoadGameButton->SetAnchorLeft(true);
@@ -116,7 +144,7 @@ UI::MainMenuWindow::MainMenuWindow(UI::Widget * SupWidget) :
 	
 	// "Save Game" button
 	_SaveGameButton = new UI::Button(this);
-	_SaveGameButton->SetPosition(Vector2f(20.0f, 180.0f));
+	_SaveGameButton->SetPosition(Vector2f(20.0f, _LoadGameButton->GetPosition()[1] + 40.0f));
 	_SaveGameButton->SetSize(Vector2f(160.0f, 20.0f));
 	_SaveGameButton->SetAnchorBottom(false);
 	_SaveGameButton->SetAnchorLeft(true);
@@ -137,7 +165,7 @@ UI::MainMenuWindow::MainMenuWindow(UI::Widget * SupWidget) :
 	
 	// "Quit" button
 	_QuitButton = new UI::Button(this);
-	_QuitButton->SetPosition(Vector2f(20.0f, 220.0f));
+	_QuitButton->SetPosition(Vector2f(20.0f, _SaveGameButton->GetPosition()[1] + 40.0f));
 	_QuitButton->SetSize(Vector2f(160.0f, 20.0f));
 	_QuitButton->SetAnchorBottom(false);
 	_QuitButton->SetAnchorLeft(true);
@@ -249,6 +277,68 @@ void UI::MainMenuWindow::_OnLoadGameDialogDestroying(void)
 {
 	_LoadGameDialog = 0;
 	if(_DestroyOnLoadGameDialogDestroy == true)
+	{
+		Destroy();
+	}
+}
+
+void UI::MainMenuWindow::_OnLoadScenarioButtonClicked(void)
+{
+	if(_LoadScenarioDialog == 0)
+	{
+		_LoadScenarioDialog = new UI::LoadScenarioDialog(GetRootWidget(), _ScenarioManager);
+		_LoadScenarioDialog->GrabKeyFocus();
+		_LoadScenarioDialog->ConnectClosingCallback(Callback(this, &UI::MainMenuWindow::_OnLoadScenarioDialogClosing));
+		_LoadScenarioDialog->ConnectDestroyingCallback(Callback(this, &UI::MainMenuWindow::_OnLoadScenarioDialogDestroying));
+		_DestroyOnLoadScenarioDialogDestroy = false;
+	}
+}
+
+bool UI::MainMenuWindow::_OnLoadScenarioDialogClosing(UI::Dialog::ClosingReason ClosingReason)
+{
+	if((ClosingReason == UI::Dialog::CANCEL_BUTTON) || (ClosingReason == UI::Dialog::ESCAPE_KEY))
+	{
+		return true;
+	}
+	else if((ClosingReason == UI::Dialog::OK_BUTTON) || (ClosingReason == UI::Dialog::RETURN_KEY))
+	{
+		Scenario * Scenario(_LoadScenarioDialog->GetScenario());
+		
+		if(Scenario != 0)
+		{
+			if(LoadScenario(Scenario) == false)
+			{
+				_LoadScenarioDialog->ShowErrorMessage("Loading the scenario \"" + Scenario->GetName() + "\" failed.");
+				
+				return false;
+			}
+			else
+			{
+				_DestroyOnLoadScenarioDialogDestroy = true;
+				
+				return true;
+			}
+		}
+		else
+		{
+			_LoadScenarioDialog->ShowErrorMessage("You have not selected a scenario.");
+			
+			return false;
+		}
+	}
+	else
+	{
+		std::cerr << "Unknown closing reason '" << ClosingReason << "'." << std::endl;
+		assert(false);
+	}
+	
+	return false;
+}
+
+void UI::MainMenuWindow::_OnLoadScenarioDialogDestroying(void)
+{
+	_LoadScenarioDialog = 0;
+	if(_DestroyOnLoadScenarioDialogDestroy == true)
 	{
 		Destroy();
 	}
