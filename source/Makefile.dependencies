@@ -1091,14 +1091,33 @@ ui_load_game_dialog_h = \
 	$(timeout_notifications_h) \
 	$(ui_dialog_h)
 
+ui_load_scenario_dialog_cpp = \
+	ui/load_scenario_dialog.cpp \
+	$(globals_h) \
+	$(key_event_information_h) \
+	$(real_time_h) \
+	$(scenario_h) \
+	$(scenario_manager_h) \
+	$(ui_button_h) \
+	$(ui_label_h) \
+	$(ui_load_scenario_dialog_h) \
+	$(ui_scroll_box_h)
+
+ui_load_scenario_dialog_h = \
+	ui/load_scenario_dialog.h \
+	$(timeout_notifications_h) \
+	$(ui_dialog_h)
+
 ui_main_menu_window_cpp = \
 	ui/main_menu_window.cpp \
 	$(callbacks_callbacks_h) \
 	$(file_handling_h) \
 	$(key_event_information_h) \
+	$(scenario_h) \
 	$(ui_button_h) \
 	$(ui_label_h) \
 	$(ui_load_game_dialog_h) \
+	$(ui_load_scenario_dialog_h) \
 	$(ui_main_menu_window_h) \
 	$(ui_save_game_dialog_h)
 

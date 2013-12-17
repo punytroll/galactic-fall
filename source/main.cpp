@@ -2746,7 +2746,7 @@ void ActionOpenMainMenuWindow(void)
 	if(g_MainMenuWindow == 0)
 	{
 		g_Pause = true;
-		g_MainMenuWindow = new UI::MainMenuWindow(g_UserInterface->GetRootWidget());
+		g_MainMenuWindow = new UI::MainMenuWindow(g_UserInterface->GetRootWidget(), g_ScenarioManager);
 		// crude heuristic: if we are not in a system, no game is running
 		if(g_CurrentSystem == 0)
 		{
