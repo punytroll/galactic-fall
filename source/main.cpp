@@ -164,7 +164,6 @@ UI::Widget * g_MiniMap(0);
 UI::MiniMapDisplay * g_MiniMapDisplay(0);
 UI::Widget * g_Scanner(0);
 UI::ScannerDisplay * g_ScannerDisplay(0);
-UI::Label * g_TargetFactionLabel(0);
 
 // global dialog pointers
 UI::MainMenuWindow * g_MainMenuWindow(0);
@@ -420,10 +419,6 @@ void CollectWidgets(void)
 		else if(DestroyedWidget == g_ScannerDisplay)
 		{
 			g_ScannerDisplay = 0;
-		}
-		else if(DestroyedWidget == g_TargetFactionLabel)
-		{
-			g_TargetFactionLabel = 0;
 		}
 		delete DestroyedWidget;
 	}
@@ -857,32 +852,9 @@ void UpdateUserInterface(float RealTimeSeconds, float GameTimeSeconds)
 		g_Scanner->SetVisible(true);
 		g_ScannerDisplay->SetOwner(ObservedShip->GetReference());
 		g_ScannerDisplay->Update();
-		// display the name of the target
-		if(ObservedShip->GetTarget().IsValid() == true)
-		{
-			if(ObservedShip->GetTarget()->GetTypeIdentifier() == "ship")
-			{
-				g_TargetFactionLabel->SetVisible(true);
-				g_TargetFactionLabel->SetText(dynamic_cast< Ship * >(ObservedShip->GetTarget().Get())->GetFaction()->GetAspectName()->GetName());
-			}
-			else if(ObservedShip->GetTarget()->GetTypeIdentifier() == "planet")
-			{
-				g_TargetFactionLabel->SetVisible(true);
-				g_TargetFactionLabel->SetText(dynamic_cast< Planet * >(ObservedShip->GetTarget().Get())->GetFaction()->GetAspectName()->GetName());
-			}
-			else
-			{
-				g_TargetFactionLabel->SetVisible(false);
-			}
-		}
-		else
-		{
-			g_TargetFactionLabel->SetVisible(false);
-		}
 	}
 	else
 	{
-		g_TargetFactionLabel->SetVisible(false);
 		g_MiniMap->SetVisible(false);
 		g_Scanner->SetVisible(false);
 	}
@@ -990,7 +962,7 @@ void UpdateSystemNameLabel(UI::Label * SystemNameLabel, float RealTimeSeconds, f
 
 void UpdateTargetNameLabel(UI::Label * TargetNameLabel, float RealTimeSeconds, float GameTimeSeconds)
 {
-	if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0) && (g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget() != 0))
+	if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0) && (g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget().IsValid() == true))
 	{
 		TargetNameLabel->SetVisible(true);
 		assert(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget()->GetAspectName() != 0);
@@ -999,6 +971,43 @@ void UpdateTargetNameLabel(UI::Label * TargetNameLabel, float RealTimeSeconds, f
 	else
 	{
 		TargetNameLabel->SetVisible(false);
+	}
+}
+
+void UpdateTargetFactionNameLabel(UI::Label * TargetFactionNameLabel, float RealTimeSeconds, float GameTimeSeconds)
+{
+	if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0) && (g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget().IsValid() == true))
+	{
+		if(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget()->GetTypeIdentifier() == "ship")
+		{
+			TargetFactionNameLabel->SetVisible(true);
+			
+			Ship * TargetedShip(dynamic_cast< Ship * >(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget().Get()));
+			
+			assert(TargetedShip != 0);
+			assert(TargetedShip->GetFaction() != 0);
+			assert(TargetedShip->GetFaction()->GetAspectName() != 0);
+			TargetFactionNameLabel->SetText(TargetedShip->GetFaction()->GetAspectName()->GetName());
+		}
+		else if(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget()->GetTypeIdentifier() == "planet")
+		{
+			TargetFactionNameLabel->SetVisible(true);
+			
+			Planet * TargetedPlanet(dynamic_cast< Planet * >(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget().Get()));
+			
+			assert(TargetedPlanet != 0);
+			assert(TargetedPlanet->GetFaction() != 0);
+			assert(TargetedPlanet->GetFaction()->GetAspectName() != 0);
+			TargetFactionNameLabel->SetText(TargetedPlanet->GetFaction()->GetAspectName()->GetName());
+		}
+		else
+		{
+			TargetFactionNameLabel->SetVisible(false);
+		}
+	}
+	else
+	{
+		TargetFactionNameLabel->SetVisible(false);
 	}
 }
 
@@ -3821,6 +3830,11 @@ int main(int argc, char ** argv)
 	assert(SystemNameLabel != 0);
 	SystemNameLabel->ConnectUpdatingCallback(Bind1(Callback(UpdateSystemNameLabel), SystemNameLabel));
 	
+	UI::Label * TargetFactionNameLabel(dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/scanner/target_faction")));
+	
+	assert(TargetFactionNameLabel != 0);
+	TargetFactionNameLabel->ConnectUpdatingCallback(Bind1(Callback(UpdateTargetFactionNameLabel), TargetFactionNameLabel));
+	
 	UI::Label * TargetNameLabel(dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/scanner/target")));
 	
 	assert(TargetNameLabel != 0);
@@ -3836,7 +3850,6 @@ int main(int argc, char ** argv)
 	g_MiniMap = g_UserInterface->GetWidget("/mini_map");
 		g_MiniMapDisplay = dynamic_cast< UI::MiniMapDisplay * >(g_UserInterface->GetWidget("/mini_map/display"));
 	g_Scanner = g_UserInterface->GetWidget("/scanner");
-		g_TargetFactionLabel = dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/scanner/target_faction"));
 		g_ScannerDisplay = dynamic_cast< UI::ScannerDisplay * >(g_UserInterface->GetWidget("/scanner/display"));
 	// sanity asserts
 	assert(g_MessageLabel != 0);
