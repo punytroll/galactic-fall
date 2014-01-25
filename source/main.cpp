@@ -896,7 +896,6 @@ void UpdateUserInterface(float RealTimeSeconds, float GameTimeSeconds)
 	}
 	else
 	{
-		g_UserInterface->GetWidget("/energy")->SetVisible(false);
 		g_TargetLabel->SetVisible(false);
 		g_MiniMap->SetVisible(false);
 		g_Scanner->SetVisible(false);
