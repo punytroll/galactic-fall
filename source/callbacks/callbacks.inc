@@ -90,6 +90,25 @@ public:
 /////////  begin  5afb7876-076b-4ec6-9531-60f51d795b63  ///////////////////////
 // Callback Core
 // InstanceCount=false
+// NumberOfArguments=3
+///////////////////////////////////////////////////////////////////////////////
+template < typename ReturnType, typename Argument1Type, typename Argument2Type, typename Argument3Type >
+class CallbackCore3 : public Counter
+{
+public:
+	virtual ~CallbackCore3(void)
+	{
+	}
+	
+	virtual ReturnType Call(Argument1Type Argument1, Argument2Type Argument2, Argument3Type Argument3) const = 0;
+	
+	virtual bool IsValid(void) const = 0;
+};
+/////////  end    5afb7876-076b-4ec6-9531-60f51d795b63  ///////////////////////
+
+/////////  begin  5afb7876-076b-4ec6-9531-60f51d795b63  ///////////////////////
+// Callback Core
+// InstanceCount=false
 // NumberOfArguments=4
 ///////////////////////////////////////////////////////////////////////////////
 template < typename ReturnType, typename Argument1Type, typename Argument2Type, typename Argument3Type, typename Argument4Type >
@@ -218,6 +237,37 @@ protected:
 };
 /////////  end    ccf8225b-77a6-4f78-ae69-ffd3060466bf  ///////////////////////
 
+/////////  begin  ccf8225b-77a6-4f78-ae69-ffd3060466bf  ///////////////////////
+// Function Core
+// Assertions=false
+// InstanceCount=false
+// NumberOfArguments=3
+///////////////////////////////////////////////////////////////////////////////
+template < typename ReturnType, typename Argument1Type, typename Argument2Type, typename Argument3Type >
+class FunctionCore3 : public CallbackCore3< ReturnType, Argument1Type, Argument2Type, Argument3Type >
+{
+public:
+	typedef ReturnType (*Function)(Argument1Type, Argument2Type, Argument3Type);
+	
+	explicit FunctionCore3(Function Function) :
+		m_Function(Function)
+	{
+	}
+	
+	virtual ReturnType Call(Argument1Type Argument1, Argument2Type Argument2, Argument3Type Argument3) const
+	{
+		return (*m_Function)(Argument1, Argument2, Argument3);
+	}
+	
+	virtual bool IsValid(void) const
+	{
+		return m_Function != 0;
+	}
+protected:
+	Function m_Function;
+};
+/////////  end    ccf8225b-77a6-4f78-ae69-ffd3060466bf  ///////////////////////
+
 /////////  begin  b383e6d4-5685-49d8-8289-ac19f517cc21  ///////////////////////
 // Method Core
 // Assertions=false
@@ -305,6 +355,39 @@ public:
 	virtual ReturnType Call(Argument1Type Argument1, Argument2Type Argument2) const
 	{
 		return (m_Object->*(this->m_Method))(Argument1, Argument2);
+	}
+	
+	virtual bool IsValid(void) const
+	{
+		return (m_Object != 0) && (m_Method != 0);
+	}
+protected:
+	Class * m_Object;
+	Method m_Method;
+};
+/////////  end    b383e6d4-5685-49d8-8289-ac19f517cc21  ///////////////////////
+
+/////////  begin  b383e6d4-5685-49d8-8289-ac19f517cc21  ///////////////////////
+// Method Core
+// Assertions=false
+// InstanceCount=false
+// NumberOfArguments=3
+///////////////////////////////////////////////////////////////////////////////
+template < typename Class, typename ReturnType, typename Argument1Type, typename Argument2Type, typename Argument3Type >
+class MethodCore3 : public CallbackCore3< ReturnType, Argument1Type, Argument2Type, Argument3Type >
+{
+public:
+	typedef ReturnType (Class::*Method)(Argument1Type Argument1, Argument2Type Argument2, Argument3Type Argument3);
+	
+	explicit MethodCore3(Class * Object, Method Method) :
+		m_Object(Object),
+		m_Method(Method)
+	{
+	}
+	
+	virtual ReturnType Call(Argument1Type Argument1, Argument2Type Argument2, Argument3Type Argument3) const
+	{
+		return (m_Object->*(this->m_Method))(Argument1, Argument2, Argument3);
 	}
 	
 	virtual bool IsValid(void) const
@@ -654,6 +737,95 @@ private:
 // Callback
 // Assertions=false
 // InstanceCount=false
+// NumberOfArguments=3
+///////////////////////////////////////////////////////////////////////////////
+/**
+ * @brief A light wrapper around a CallbackCore3-derivative.
+ * 
+ * This wrapper can be copied and assigned and is therefore ideal for being handled by value. It can be passed by value and included in by-value-containers.
+ **/
+template < typename ReturnType, typename Argument1Type, typename Argument2Type, typename Argument3Type >
+class Callback3
+{
+public:
+	Callback3(void) :
+		m_Core(0)
+	{
+	}
+	
+	Callback3(CallbackCore3< ReturnType, Argument1Type, Argument2Type, Argument3Type > * Core) :
+		m_Core(Core)
+	{
+		m_Core->Increment();
+	}
+	
+	Callback3(const Callback3 & OtherCallback) :
+		m_Core(OtherCallback.m_Core)
+	{
+		m_Core->Increment();
+	}
+	
+	~Callback3(void)
+	{
+		if(m_Core != 0)
+		{
+			m_Core->Decrement();
+			if(m_Core->GetCount() == 0)
+			{
+				delete m_Core;
+				m_Core = 0;
+			}
+		}
+	}
+	
+	Callback3 & operator=(const Callback3 & Callback)
+	{
+		if(m_Core != 0)
+		{
+			m_Core->Decrement();
+			if(m_Core->GetCount() == 0)
+			{
+				delete m_Core;
+				m_Core = 0;
+			}
+		}
+		m_Core = Callback.m_Core;
+		if(m_Core != 0)
+		{
+			m_Core->Increment();
+		}
+		
+		return *this;
+	}
+	
+	ReturnType operator()(Argument1Type Argument1, Argument2Type Argument2, Argument3Type Argument3) const
+	{
+		return m_Core->Call(Argument1, Argument2, Argument3);
+	}
+	
+	bool IsValid(void) const
+	{
+		return (m_Core != 0) && (m_Core->IsValid() == true);
+	}
+	
+	CallbackCore3< ReturnType, Argument1Type, Argument2Type, Argument3Type > * GetCore(void)
+	{
+		return m_Core;
+	}
+	
+	const CallbackCore3< ReturnType, Argument1Type, Argument2Type, Argument3Type > * GetCore(void) const
+	{
+		return m_Core;
+	}
+private:
+	CallbackCore3< ReturnType, Argument1Type, Argument2Type, Argument3Type > * m_Core;
+};
+/////////  end    8f5fd530-285b-43ce-bdab-a97185232a1e  ///////////////////////
+
+/////////  begin  8f5fd530-285b-43ce-bdab-a97185232a1e  ///////////////////////
+// Callback
+// Assertions=false
+// InstanceCount=false
 // NumberOfArguments=4
 ///////////////////////////////////////////////////////////////////////////////
 /**
@@ -880,6 +1052,53 @@ protected:
 // Assertions=false
 // BindArgument=1
 // InstanceCount=false
+// NumberOfArguments=3
+///////////////////////////////////////////////////////////////////////////////
+template < typename ReturnType, typename Argument1Type, typename Argument2Type, typename Argument3Type >
+class BindArgument1Core2 : public CallbackCore2< ReturnType, Argument2Type, Argument3Type >
+{
+public:
+	explicit BindArgument1Core2(Callback3< ReturnType, Argument1Type, Argument2Type, Argument3Type > Callback, Argument1Type Argument1) :
+		m_CallbackCore(Callback.GetCore()),
+		m_Argument1(Argument1)
+	{
+		m_CallbackCore->Increment();
+		
+	}
+	
+	virtual ~BindArgument1Core2(void)
+	{
+		if(m_CallbackCore != 0)
+		{
+			m_CallbackCore->Decrement();
+			if(m_CallbackCore->GetCount() == 0)
+			{
+				delete m_CallbackCore;
+				m_CallbackCore = 0;
+			}
+		}
+	}
+	
+	virtual ReturnType Call(Argument2Type Argument2, Argument3Type Argument3) const
+	{
+		return m_CallbackCore->Call(m_Argument1, Argument2, Argument3);
+	}
+	
+	virtual bool IsValid(void) const
+	{
+		return m_CallbackCore->IsValid();
+	}
+protected:
+	CallbackCore3< ReturnType, Argument1Type, Argument2Type, Argument3Type > * m_CallbackCore;
+	Argument1Type m_Argument1;
+};
+/////////  end    9730669a-993e-4d2a-9e3d-25af128e728f  ///////////////////////
+
+/////////  begin  9730669a-993e-4d2a-9e3d-25af128e728f  ///////////////////////
+// Bind Argument Core
+// Assertions=false
+// BindArgument=1
+// InstanceCount=false
 // NumberOfArguments=5
 ///////////////////////////////////////////////////////////////////////////////
 template < typename ReturnType, typename Argument1Type, typename Argument2Type, typename Argument3Type, typename Argument4Type, typename Argument5Type >
@@ -1002,6 +1221,17 @@ Callback2< ReturnType, Argument1Type, Argument2Type > Callback(ReturnType (*Func
 }
 /////////  end    a0f7a88b-e6d2-470d-a371-1d21950dea90  ///////////////////////
 
+/////////  begin  a0f7a88b-e6d2-470d-a371-1d21950dea90  ///////////////////////
+// Function Callback
+// NumberOfArguments=3
+///////////////////////////////////////////////////////////////////////////////
+template < typename ReturnType, typename Argument1Type, typename Argument2Type, typename Argument3Type >
+Callback3< ReturnType, Argument1Type, Argument2Type, Argument3Type > Callback(ReturnType (*Function)(Argument1Type, Argument2Type, Argument3Type))
+{
+	return Callback3< ReturnType, Argument1Type, Argument2Type, Argument3Type >(new FunctionCore3< ReturnType, Argument1Type, Argument2Type, Argument3Type >(Function));
+}
+/////////  end    a0f7a88b-e6d2-470d-a371-1d21950dea90  ///////////////////////
+
 /////////  begin  89e43761-647f-4c24-88d4-76caa736d627  ///////////////////////
 // Method Callback
 // NumberOfArguments=0
@@ -1037,6 +1267,17 @@ Callback2< ReturnType, Argument1Type, Argument2Type > Callback(ClassType * Objec
 
 /////////  begin  89e43761-647f-4c24-88d4-76caa736d627  ///////////////////////
 // Method Callback
+// NumberOfArguments=3
+///////////////////////////////////////////////////////////////////////////////
+template < typename ClassType, typename ReturnType, typename Argument1Type, typename Argument2Type, typename Argument3Type >
+Callback3< ReturnType, Argument1Type, Argument2Type, Argument3Type > Callback(ClassType * Object, ReturnType (ClassType::*Method)(Argument1Type, Argument2Type, Argument3Type))
+{
+	return Callback3< ReturnType, Argument1Type, Argument2Type, Argument3Type >(new MethodCore3< ClassType, ReturnType, Argument1Type, Argument2Type, Argument3Type >(Object, Method));
+}
+/////////  end    89e43761-647f-4c24-88d4-76caa736d627  ///////////////////////
+
+/////////  begin  89e43761-647f-4c24-88d4-76caa736d627  ///////////////////////
+// Method Callback
 // NumberOfArguments=4
 ///////////////////////////////////////////////////////////////////////////////
 template < typename ClassType, typename ReturnType, typename Argument1Type, typename Argument2Type, typename Argument3Type, typename Argument4Type >
@@ -1066,6 +1307,18 @@ template < typename ReturnType, typename Argument1Type >
 Callback0< ReturnType > Bind1(Callback1< ReturnType, Argument1Type > Callback, Argument1Type Argument1)
 {
 	return Callback0< ReturnType >(new BindArgument1Core0< ReturnType, Argument1Type >(Callback, Argument1));
+}
+/////////  end    15c882f3-3fea-466b-8347-4074787f0f5b  ///////////////////////
+
+/////////  begin  15c882f3-3fea-466b-8347-4074787f0f5b  ///////////////////////
+// Bind
+// BindArgument=1
+// NumberOfArguments=3
+///////////////////////////////////////////////////////////////////////////////
+template < typename ReturnType, typename Argument1Type, typename Argument2Type, typename Argument3Type >
+Callback2< ReturnType, Argument2Type, Argument3Type > Bind1(Callback3< ReturnType, Argument1Type, Argument2Type, Argument3Type > Callback, Argument1Type Argument1)
+{
+	return Callback2< ReturnType, Argument2Type, Argument3Type >(new BindArgument1Core2< ReturnType, Argument1Type, Argument2Type, Argument3Type >(Callback, Argument1));
 }
 /////////  end    15c882f3-3fea-466b-8347-4074787f0f5b  ///////////////////////
 
