@@ -168,7 +168,6 @@ UI::ScannerDisplay * g_ScannerDisplay(0);
 UI::Label * g_SystemLabel(0);
 UI::Label * g_TargetLabel(0);
 UI::Label * g_TargetFactionLabel(0);
-UI::Label * g_TimeWarpLabel(0);
 
 // global dialog pointers
 UI::MainMenuWindow * g_MainMenuWindow(0);
@@ -440,10 +439,6 @@ void CollectWidgets(void)
 		else if(DestroyedWidget == g_TargetFactionLabel)
 		{
 			g_TargetFactionLabel = 0;
-		}
-		else if(DestroyedWidget == g_TimeWarpLabel)
-		{
-			g_TimeWarpLabel = 0;
 		}
 		delete DestroyedWidget;
 	}
@@ -868,14 +863,6 @@ void UpdateUserInterface(float RealTimeSeconds, float GameTimeSeconds)
 	g_SystemStatistics->SetParticlesDrawnThisFrame(0);
 	g_SystemStatistics->SetParticlesUpdatedThisFrame(0);
 	g_SystemStatistics->SetFontSecondsThisFrame(0.0f);
-	if(g_Galaxy != 0)
-	{
-		g_TimeWarpLabel->SetVisible(true);
-	}
-	else
-	{
-		g_TimeWarpLabel->SetVisible(false);
-	}
 	if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0))
 	{
 		g_TargetLabel->SetVisible(true);
@@ -999,6 +986,19 @@ void UpdateHullLabel(UI::Label * HullLabel, float RealTimeSeconds, float GameTim
 	else
 	{
 		HullLabel->SetVisible(false);
+	}
+}
+
+void UpdateTimeWarpLabel(UI::Label * TimeWarpLabel, float RealTimeSeconds, float GameTimeSeconds)
+{
+	if(g_Galaxy != 0)
+	{
+		TimeWarpLabel->SetVisible(true);
+		TimeWarpLabel->SetText("Time Warp: " + to_string_cast(g_TimeWarp, 2));
+	}
+	else
+	{
+		TimeWarpLabel->SetVisible(false);
 	}
 }
 
@@ -1567,16 +1567,6 @@ void GameFrame(void)
 	g_SystemStatistics->SetProcessingSecondsThisFrame(FrameProcessingTimeDelta);
 }
 
-void SetTimeWarp(float TimeWarp)
-{
-	g_TimeWarp = TimeWarp;
-	
-	std::stringstream TimeWarpString;
-	
-	TimeWarpString << "Time Warp: " << to_string_cast(g_TimeWarp, 2);
-	g_TimeWarpLabel->SetText(TimeWarpString.str());
-}
-
 void MouseButtonDown(int MouseButton, int X, int Y)
 {
 	if(g_UserInterface->MouseButton(MouseButton, EV_DOWN, X, Y) == true)
@@ -1701,7 +1691,7 @@ void LoadGameFromElement(const Element * SaveElement)
 		}
 		else if((*SaveChild)->GetName() == "time-warp")
 		{
-			SetTimeWarp(from_string_cast< float >((*SaveChild)->GetAttribute("value")));
+			g_TimeWarp = from_string_cast< float >((*SaveChild)->GetAttribute("value"));
 		}
 		else if((*SaveChild)->GetName() == "input-mind")
 		{
@@ -2446,7 +2436,7 @@ void ActionDecreaseFieldOfView(void)
 
 void ActionDecreaseTimeWarp(void)
 {
-	SetTimeWarp(g_TimeWarp / 1.1f);
+	g_TimeWarp /= 1.1f;
 }
 
 void ActionDeleteObservedObject(void)
@@ -2590,7 +2580,7 @@ void ActionIncreaseFieldOfView(void)
 
 void ActionIncreaseTimeWarp(void)
 {
-	SetTimeWarp(g_TimeWarp * 1.1f);
+	g_TimeWarp *= 1.1f;
 }
 
 void ActionJettisonCargo(void)
@@ -2839,7 +2829,7 @@ void ActionResetCameraPosition(void)
 
 void ActionResetTimeWarp(void)
 {
-	SetTimeWarp(1.0f);
+	g_TimeWarp = 1.0f;
 }
 
 void ActionScoop(void)
@@ -3808,10 +3798,14 @@ int main(int argc, char ** argv)
 	assert(HullLabel != 0);
 	HullLabel->ConnectUpdatingCallback(Bind1(Callback(UpdateHullLabel), HullLabel));
 	
+	UI::Label * TimeWarpLabel(dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/time_warp")));
+	
+	assert(TimeWarpLabel != 0);
+	TimeWarpLabel->ConnectUpdatingCallback(Bind1(Callback(UpdateTimeWarpLabel), TimeWarpLabel));
+	
 	// setup the global variables for the user interface
 	g_MessageLabel = dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/message"));
 	g_SystemLabel = dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/system"));
-	g_TimeWarpLabel = dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/time_warp"));
 	g_MiniMap = g_UserInterface->GetWidget("/mini_map");
 		g_CurrentSystemLabel = dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/mini_map/current_system"));
 		g_MiniMapDisplay = dynamic_cast< UI::MiniMapDisplay * >(g_UserInterface->GetWidget("/mini_map/display"));
@@ -3822,7 +3816,6 @@ int main(int argc, char ** argv)
 	// sanity asserts
 	assert(g_MessageLabel != 0);
 	assert(g_SystemLabel != 0);
-	assert(g_TimeWarpLabel != 0);
 	assert(g_MiniMap != 0);
 	assert(g_CurrentSystemLabel != 0);
 	assert(g_MiniMapDisplay != 0);
