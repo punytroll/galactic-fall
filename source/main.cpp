@@ -159,7 +159,6 @@ UI::UserInterface * g_UserInterface(0);
 ClassManager< WeaponClass > * g_WeaponClassManager(0);
 
 // global widget pointers
-UI::Label * g_CurrentSystemLabel(0);
 UI::Label * g_MessageLabel(0);
 UI::Widget * g_MiniMap(0);
 UI::MiniMapDisplay * g_MiniMapDisplay(0);
@@ -403,11 +402,7 @@ void CollectWidgets(void)
 	{
 		UI::Widget * DestroyedWidget(*DestroyedWidgetIterator);
 		
-		if(DestroyedWidget == g_CurrentSystemLabel)
-		{
-			g_CurrentSystemLabel = 0;
-		}
-		else if(DestroyedWidget == g_MessageLabel)
+		if(DestroyedWidget == g_MessageLabel)
 		{
 			g_MessageLabel = 0;
 		}
@@ -860,43 +855,43 @@ void UpdateUserInterface(float RealTimeSeconds, float GameTimeSeconds)
 	g_SystemStatistics->SetFontSecondsThisFrame(0.0f);
 	if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0))
 	{
-		g_TargetLabel->SetVisible(true);
-		g_MiniMap->SetVisible(true);
-		g_Scanner->SetVisible(true);
-		
 		Ship * ObservedShip(g_CharacterObserver->GetObservedCharacter()->GetShip());
 		
+		g_MiniMap->SetVisible(true);
+		g_MiniMapDisplay->SetOwner(ObservedShip->GetReference());
+		g_Scanner->SetVisible(true);
+		g_ScannerDisplay->SetOwner(ObservedShip->GetReference());
+		g_ScannerDisplay->Update();
 		// display the name of the target
 		if(ObservedShip->GetTarget().IsValid() == true)
 		{
+			g_TargetLabel->SetVisible(true);
 			g_TargetLabel->SetText(ObservedShip->GetTarget()->GetAspectName()->GetName());
 			if(ObservedShip->GetTarget()->GetTypeIdentifier() == "ship")
 			{
+				g_TargetFactionLabel->SetVisible(true);
 				g_TargetFactionLabel->SetText(dynamic_cast< Ship * >(ObservedShip->GetTarget().Get())->GetFaction()->GetAspectName()->GetName());
 			}
 			else if(ObservedShip->GetTarget()->GetTypeIdentifier() == "planet")
 			{
+				g_TargetFactionLabel->SetVisible(true);
 				g_TargetFactionLabel->SetText(dynamic_cast< Planet * >(ObservedShip->GetTarget().Get())->GetFaction()->GetAspectName()->GetName());
 			}
 			else
 			{
-				g_TargetFactionLabel->SetText("");
+				g_TargetFactionLabel->SetVisible(false);
 			}
 		}
 		else
 		{
-			g_TargetLabel->SetText("");
-			g_TargetFactionLabel->SetText("");
+			g_TargetLabel->SetVisible(false);
+			g_TargetFactionLabel->SetVisible(false);
 		}
-		// display the current system
-		g_CurrentSystemLabel->SetText(ObservedShip->GetContainer()->GetAspectName()->GetName());
-		g_ScannerDisplay->SetOwner(ObservedShip->GetReference());
-		g_ScannerDisplay->Update();
-		g_MiniMapDisplay->SetOwner(ObservedShip->GetReference());
 	}
 	else
 	{
 		g_TargetLabel->SetVisible(false);
+		g_TargetFactionLabel->SetVisible(false);
 		g_MiniMap->SetVisible(false);
 		g_Scanner->SetVisible(false);
 	}
@@ -984,6 +979,21 @@ void UpdateLinkedSystemTargetLabel(UI::Label * LinkedSystemTargetLabel, float Re
 	else
 	{
 		LinkedSystemTargetLabel->SetVisible(false);
+	}
+}
+
+void UpdateSystemLabel(UI::Label * SystemLabel, float RealTimeSeconds, float GameTimeSeconds)
+{
+	if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0))
+	{
+		SystemLabel->SetVisible(true);
+		assert(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetContainer() != 0);
+		assert(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetContainer()->GetAspectName() != 0);
+		SystemLabel->SetText(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetContainer()->GetAspectName()->GetName());
+	}
+	else
+	{
+		SystemLabel->SetVisible(false);
 	}
 }
 
@@ -3801,6 +3811,11 @@ int main(int argc, char ** argv)
 	assert(LinkedSystemTargetLabel != 0);
 	LinkedSystemTargetLabel->ConnectUpdatingCallback(Bind1(Callback(UpdateLinkedSystemTargetLabel), LinkedSystemTargetLabel));
 	
+	UI::Label * SystemLabel(dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/mini_map/current_system")));
+	
+	assert(SystemLabel != 0);
+	SystemLabel->ConnectUpdatingCallback(Bind1(Callback(UpdateSystemLabel), SystemLabel));
+	
 	UI::Label * TimeWarpLabel(dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/time_warp")));
 	
 	assert(TimeWarpLabel != 0);
@@ -3809,7 +3824,6 @@ int main(int argc, char ** argv)
 	// setup the global variables for the user interface
 	g_MessageLabel = dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/message"));
 	g_MiniMap = g_UserInterface->GetWidget("/mini_map");
-		g_CurrentSystemLabel = dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/mini_map/current_system"));
 		g_MiniMapDisplay = dynamic_cast< UI::MiniMapDisplay * >(g_UserInterface->GetWidget("/mini_map/display"));
 	g_Scanner = g_UserInterface->GetWidget("/scanner");
 		g_TargetLabel = dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/scanner/target"));
@@ -3818,7 +3832,6 @@ int main(int argc, char ** argv)
 	// sanity asserts
 	assert(g_MessageLabel != 0);
 	assert(g_MiniMap != 0);
-	assert(g_CurrentSystemLabel != 0);
 	assert(g_MiniMapDisplay != 0);
 	assert(g_Scanner != 0);
 	assert(g_TargetLabel != 0);
