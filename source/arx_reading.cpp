@@ -254,7 +254,7 @@ void ResourceReader::ReadTextures(void)
 
 void ResourceReader::ReadUserInterface(void)
 {
-	ReadItems(m_Archive, "/User Interface", Callback(ReadWidget));
+	ReadItems(m_Archive, "/User Interface", Callback<void, Arxx::Reference &>(ReadWidget));
 }
 
 void ResourceReader::ReadWeaponClasses(void)
@@ -1061,7 +1061,7 @@ static void ReadWidget(Arxx::Reference & Reference)
 	
 static UI::Widget * ReadWidget(Arxx::BufferReader & Reader, Arxx::u4byte Type, Arxx::u4byte SubType)
 {
-	UI::Widget * Result = 0;
+	UI::Widget * Result(0);
 	
 	switch(SubType)
 	{

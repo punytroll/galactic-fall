@@ -243,7 +243,7 @@ void UI::TimingDialog::_OnUpdating(float RealTimeSeconds, float GameTimeSeconds)
 	_AISecondsThisFrameLabel->SetText(to_string_cast(g_SystemStatistics->GetAISecondsThisFrame() * 1000, 2) + " ms");
 	_CommoditiesInCurrentSystemThisFrameLabel->SetText(to_string_cast(g_SystemStatistics->GetCommoditiesInCurrentSystemThisFrame()));
 	_DispatchedMessagesThisFrameLabel->SetText(to_string_cast(g_SystemStatistics->GetDispatchedMessagesThisFrame()));
-	_FontSecondsThisFrameLabel->SetText(to_string_cast(g_SystemStatistics->GetFontSecondsThisFrame()));
+	_FontSecondsThisFrameLabel->SetText(to_string_cast(g_SystemStatistics->GetFontSecondsThisFrame() * 1000, 2) + " ms");
 	_FramesPerSecondLabel->SetText(to_string_cast(g_SystemStatistics->GetFramesPerSecond(), 2));
 	_FrameToFrameSecondsThisFrameLabel->SetText(to_string_cast(g_SystemStatistics->GetFrameToFrameSecondsThisFrame() * 1000, 2) + " ms");
 	_GraphicsSecondsThisFrameLabel->SetText(to_string_cast(g_SystemStatistics->GetGraphicsSecondsThisFrame() * 1000, 2) + " ms");
