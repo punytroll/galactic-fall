@@ -164,7 +164,6 @@ UI::Widget * g_MiniMap(0);
 UI::MiniMapDisplay * g_MiniMapDisplay(0);
 UI::Widget * g_Scanner(0);
 UI::ScannerDisplay * g_ScannerDisplay(0);
-UI::Label * g_TargetLabel(0);
 UI::Label * g_TargetFactionLabel(0);
 
 // global dialog pointers
@@ -421,10 +420,6 @@ void CollectWidgets(void)
 		else if(DestroyedWidget == g_ScannerDisplay)
 		{
 			g_ScannerDisplay = 0;
-		}
-		else if(DestroyedWidget == g_TargetLabel)
-		{
-			g_TargetLabel = 0;
 		}
 		else if(DestroyedWidget == g_TargetFactionLabel)
 		{
@@ -865,8 +860,6 @@ void UpdateUserInterface(float RealTimeSeconds, float GameTimeSeconds)
 		// display the name of the target
 		if(ObservedShip->GetTarget().IsValid() == true)
 		{
-			g_TargetLabel->SetVisible(true);
-			g_TargetLabel->SetText(ObservedShip->GetTarget()->GetAspectName()->GetName());
 			if(ObservedShip->GetTarget()->GetTypeIdentifier() == "ship")
 			{
 				g_TargetFactionLabel->SetVisible(true);
@@ -884,13 +877,11 @@ void UpdateUserInterface(float RealTimeSeconds, float GameTimeSeconds)
 		}
 		else
 		{
-			g_TargetLabel->SetVisible(false);
 			g_TargetFactionLabel->SetVisible(false);
 		}
 	}
 	else
 	{
-		g_TargetLabel->SetVisible(false);
 		g_TargetFactionLabel->SetVisible(false);
 		g_MiniMap->SetVisible(false);
 		g_Scanner->SetVisible(false);
@@ -982,18 +973,32 @@ void UpdateLinkedSystemTargetLabel(UI::Label * LinkedSystemTargetLabel, float Re
 	}
 }
 
-void UpdateSystemLabel(UI::Label * SystemLabel, float RealTimeSeconds, float GameTimeSeconds)
+void UpdateSystemNameLabel(UI::Label * SystemNameLabel, float RealTimeSeconds, float GameTimeSeconds)
 {
 	if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0))
 	{
-		SystemLabel->SetVisible(true);
+		SystemNameLabel->SetVisible(true);
 		assert(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetContainer() != 0);
 		assert(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetContainer()->GetAspectName() != 0);
-		SystemLabel->SetText(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetContainer()->GetAspectName()->GetName());
+		SystemNameLabel->SetText(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetContainer()->GetAspectName()->GetName());
 	}
 	else
 	{
-		SystemLabel->SetVisible(false);
+		SystemNameLabel->SetVisible(false);
+	}
+}
+
+void UpdateTargetNameLabel(UI::Label * TargetNameLabel, float RealTimeSeconds, float GameTimeSeconds)
+{
+	if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0) && (g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget() != 0))
+	{
+		TargetNameLabel->SetVisible(true);
+		assert(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget()->GetAspectName() != 0);
+		TargetNameLabel->SetText(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget()->GetAspectName()->GetName());
+	}
+	else
+	{
+		TargetNameLabel->SetVisible(false);
 	}
 }
 
@@ -3811,10 +3816,15 @@ int main(int argc, char ** argv)
 	assert(LinkedSystemTargetLabel != 0);
 	LinkedSystemTargetLabel->ConnectUpdatingCallback(Bind1(Callback(UpdateLinkedSystemTargetLabel), LinkedSystemTargetLabel));
 	
-	UI::Label * SystemLabel(dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/mini_map/current_system")));
+	UI::Label * SystemNameLabel(dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/mini_map/current_system")));
 	
-	assert(SystemLabel != 0);
-	SystemLabel->ConnectUpdatingCallback(Bind1(Callback(UpdateSystemLabel), SystemLabel));
+	assert(SystemNameLabel != 0);
+	SystemNameLabel->ConnectUpdatingCallback(Bind1(Callback(UpdateSystemNameLabel), SystemNameLabel));
+	
+	UI::Label * TargetNameLabel(dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/scanner/target")));
+	
+	assert(TargetNameLabel != 0);
+	TargetNameLabel->ConnectUpdatingCallback(Bind1(Callback(UpdateTargetNameLabel), TargetNameLabel));
 	
 	UI::Label * TimeWarpLabel(dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/time_warp")));
 	
@@ -3826,7 +3836,6 @@ int main(int argc, char ** argv)
 	g_MiniMap = g_UserInterface->GetWidget("/mini_map");
 		g_MiniMapDisplay = dynamic_cast< UI::MiniMapDisplay * >(g_UserInterface->GetWidget("/mini_map/display"));
 	g_Scanner = g_UserInterface->GetWidget("/scanner");
-		g_TargetLabel = dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/scanner/target"));
 		g_TargetFactionLabel = dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/scanner/target_faction"));
 		g_ScannerDisplay = dynamic_cast< UI::ScannerDisplay * >(g_UserInterface->GetWidget("/scanner/display"));
 	// sanity asserts
@@ -3834,7 +3843,6 @@ int main(int argc, char ** argv)
 	assert(g_MiniMap != 0);
 	assert(g_MiniMapDisplay != 0);
 	assert(g_Scanner != 0);
-	assert(g_TargetLabel != 0);
 	assert(g_ScannerDisplay != 0);
 	
 	// resize here after the graphics have been set up
