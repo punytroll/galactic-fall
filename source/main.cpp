@@ -159,7 +159,6 @@ UI::UserInterface * g_UserInterface(0);
 ClassManager< WeaponClass > * g_WeaponClassManager(0);
 
 // global widget pointers
-UI::Label * g_CreditsLabel(0);
 UI::Label * g_CurrentSystemLabel(0);
 UI::Label * g_FuelLabel(0);
 UI::Label * g_HullLabel(0);
@@ -408,11 +407,7 @@ void CollectWidgets(void)
 	{
 		UI::Widget * DestroyedWidget(*DestroyedWidgetIterator);
 		
-		if(DestroyedWidget == g_CreditsLabel)
-		{
-			g_CreditsLabel = 0;
-		}
-		else if(DestroyedWidget == g_CurrentSystemLabel)
+		if(DestroyedWidget == g_CurrentSystemLabel)
 		{
 			g_CurrentSystemLabel = 0;
 		}
@@ -897,7 +892,6 @@ void UpdateUserInterface(float RealTimeSeconds, float GameTimeSeconds)
 		g_SystemLabel->SetVisible(true);
 		g_FuelLabel->SetVisible(true);
 		g_HullLabel->SetVisible(true);
-		g_CreditsLabel->SetVisible(true);
 		g_MiniMap->SetVisible(true);
 		g_Scanner->SetVisible(true);
 		
@@ -960,8 +954,6 @@ void UpdateUserInterface(float RealTimeSeconds, float GameTimeSeconds)
 		g_FuelLabel->SetText("Fuel: " + to_string_cast(ObservedShip->GetFuel(), 2));
 		// display hull
 		g_HullLabel->SetText("Hull: " + to_string_cast(ObservedShip->GetHull(), 2));
-		// display credits in every cycle
-		g_CreditsLabel->SetText("Credits: " + to_string_cast(g_CharacterObserver->GetObservedCharacter()->GetCredits()));
 		// display the current system
 		g_CurrentSystemLabel->SetText(ObservedShip->GetContainer()->GetAspectName()->GetName());
 		// set system label color according to jump status
@@ -984,9 +976,21 @@ void UpdateUserInterface(float RealTimeSeconds, float GameTimeSeconds)
 		g_SystemLabel->SetVisible(false);
 		g_FuelLabel->SetVisible(false);
 		g_HullLabel->SetVisible(false);
-		g_CreditsLabel->SetVisible(false);
 		g_MiniMap->SetVisible(false);
 		g_Scanner->SetVisible(false);
+	}
+}
+
+void UpdateCreditsLabel(UI::Label * CreditsLabel, float RealTimeSeconds, float GameTimeSeconds)
+{
+	if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0))
+	{
+		CreditsLabel->SetVisible(true);
+		CreditsLabel->SetText("Credits: " + to_string_cast(g_CharacterObserver->GetObservedCharacter()->GetCredits()));
+	}
+	else
+	{
+		CreditsLabel->SetVisible(false);
 	}
 }
 
@@ -3774,8 +3778,14 @@ int main(int argc, char ** argv)
 	g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 5.0f, Callback(CollectWidgetsRecurrent));
 	// the user interface widgets must be loaded before the first Resize() call
 	g_ResourceReader->ReadUserInterface();
+	
+	// connect updating routines
+	UI::Label * CreditsLabel(dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/credits")));
+	
+	assert(CreditsLabel != 0);
+	CreditsLabel->ConnectUpdatingCallback(Bind1(Callback(UpdateCreditsLabel), CreditsLabel));
+	
 	// setup the global variables for the user interface
-	g_CreditsLabel = dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/credits"));
 	g_FuelLabel = dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/fuel"));
 	g_HullLabel = dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/hull"));
 	g_MessageLabel = dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/message"));
@@ -3789,7 +3799,6 @@ int main(int argc, char ** argv)
 		g_TargetFactionLabel = dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/scanner/target_faction"));
 		g_ScannerDisplay = dynamic_cast< UI::ScannerDisplay * >(g_UserInterface->GetWidget("/scanner/display"));
 	// sanity asserts
-	assert(g_CreditsLabel != 0);
 	assert(g_FuelLabel != 0);
 	assert(g_HullLabel != 0);
 	assert(g_MessageLabel != 0);
