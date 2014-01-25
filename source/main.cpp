@@ -885,19 +885,6 @@ void UpdateUserInterface(float RealTimeSeconds, float GameTimeSeconds)
 		
 		Ship * ObservedShip(g_CharacterObserver->GetObservedCharacter()->GetShip());
 		
-		// display the energy status
-		if(ObservedShip->GetBattery() != 0)
-		{
-			UI::Label * EnergyLabel(dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/energy")));
-			
-			assert(EnergyLabel != 0);
-			EnergyLabel->SetVisible(true);
-			EnergyLabel->SetText("Energy: " + to_string_cast(ObservedShip->GetBattery()->GetEnergy(), 2));
-		}
-		else
-		{
-			g_UserInterface->GetWidget("/energy")->SetVisible(false);
-		}
 		// display the name of the target
 		if(ObservedShip->GetTarget().IsValid() == true)
 		{
@@ -973,6 +960,19 @@ void UpdateCreditsLabel(UI::Label * CreditsLabel, float RealTimeSeconds, float G
 	else
 	{
 		CreditsLabel->SetVisible(false);
+	}
+}
+
+void UpdateEnergyLabel(UI::Label * EnergyLabel, float RealTimeSeconds, float GameTimeSeconds)
+{
+	if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0) && (g_CharacterObserver->GetObservedCharacter()->GetShip()->GetBattery() != 0))
+	{
+		EnergyLabel->SetVisible(true);
+		EnergyLabel->SetText("Energy: " + to_string_cast(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetBattery()->GetEnergy(), 2));
+	}
+	else
+	{
+		EnergyLabel->SetVisible(false);
 	}
 }
 
@@ -3792,6 +3792,11 @@ int main(int argc, char ** argv)
 	
 	assert(CreditsLabel != 0);
 	CreditsLabel->ConnectUpdatingCallback(Bind1(Callback(UpdateCreditsLabel), CreditsLabel));
+	
+	UI::Label * EnergyLabel(dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/energy")));
+	
+	assert(EnergyLabel != 0);
+	EnergyLabel->ConnectUpdatingCallback(Bind1(Callback(UpdateEnergyLabel), EnergyLabel));
 	
 	UI::Label * FuelLabel(dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/fuel")));
 	
