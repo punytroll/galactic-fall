@@ -159,7 +159,6 @@ UI::UserInterface * g_UserInterface(0);
 ClassManager< WeaponClass > * g_WeaponClassManager(0);
 
 // global widget pointers
-UI::Label * g_MessageLabel(0);
 UI::Widget * g_MiniMap(0);
 UI::MiniMapDisplay * g_MiniMapDisplay(0);
 UI::Widget * g_Scanner(0);
@@ -341,13 +340,16 @@ float CalculateTime(void)
 
 void HideMessage(void)
 {
-	g_MessageLabel->SetVisible(false);
+	g_UserInterface->GetWidget("/message")->SetVisible(false);
 }
 
 void SetMessage(const std::string & Message)
 {
-	g_MessageLabel->SetText(Message);
-	g_MessageLabel->SetVisible(true);
+	UI::Label * MessageLabel(dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/message")));
+	
+	assert(MessageLabel != 0);
+	MessageLabel->SetText(Message);
+	MessageLabel->SetVisible(true);
 	/// TODO: Make the 2.0f seconds timeout configurable via the game configuration archive.
 	if(g_MessageTimeoutNotification.IsValid() == true)
 	{
@@ -400,11 +402,7 @@ void CollectWidgets(void)
 	{
 		UI::Widget * DestroyedWidget(*DestroyedWidgetIterator);
 		
-		if(DestroyedWidget == g_MessageLabel)
-		{
-			g_MessageLabel = 0;
-		}
-		else if(DestroyedWidget == g_MiniMap)
+		if(DestroyedWidget == g_MiniMap)
 		{
 			g_MiniMap = 0;
 		}
@@ -3846,13 +3844,11 @@ int main(int argc, char ** argv)
 	TimeWarpLabel->ConnectUpdatingCallback(Bind1(Callback(UpdateTimeWarpLabel), TimeWarpLabel));
 	
 	// setup the global variables for the user interface
-	g_MessageLabel = dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/message"));
 	g_MiniMap = g_UserInterface->GetWidget("/mini_map");
 		g_MiniMapDisplay = dynamic_cast< UI::MiniMapDisplay * >(g_UserInterface->GetWidget("/mini_map/display"));
 	g_Scanner = g_UserInterface->GetWidget("/scanner");
 		g_ScannerDisplay = dynamic_cast< UI::ScannerDisplay * >(g_UserInterface->GetWidget("/scanner/display"));
 	// sanity asserts
-	assert(g_MessageLabel != 0);
 	assert(g_MiniMap != 0);
 	assert(g_MiniMapDisplay != 0);
 	assert(g_Scanner != 0);
