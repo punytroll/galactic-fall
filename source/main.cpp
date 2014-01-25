@@ -160,7 +160,6 @@ ClassManager< WeaponClass > * g_WeaponClassManager(0);
 
 // global widget pointers
 UI::Label * g_CurrentSystemLabel(0);
-UI::Label * g_FuelLabel(0);
 UI::Label * g_HullLabel(0);
 UI::Label * g_MessageLabel(0);
 UI::Widget * g_MiniMap(0);
@@ -414,10 +413,6 @@ void CollectWidgets(void)
 		else if(DestroyedWidget == g_HullLabel)
 		{
 			g_HullLabel = 0;
-		}
-		else if(DestroyedWidget == g_FuelLabel)
-		{
-			g_FuelLabel = 0;
 		}
 		else if(DestroyedWidget == g_MessageLabel)
 		{
@@ -890,7 +885,6 @@ void UpdateUserInterface(float RealTimeSeconds, float GameTimeSeconds)
 	{
 		g_TargetLabel->SetVisible(true);
 		g_SystemLabel->SetVisible(true);
-		g_FuelLabel->SetVisible(true);
 		g_HullLabel->SetVisible(true);
 		g_MiniMap->SetVisible(true);
 		g_Scanner->SetVisible(true);
@@ -950,8 +944,6 @@ void UpdateUserInterface(float RealTimeSeconds, float GameTimeSeconds)
 		{
 			g_SystemLabel->SetText("");
 		}
-		// display fuel
-		g_FuelLabel->SetText("Fuel: " + to_string_cast(ObservedShip->GetFuel(), 2));
 		// display hull
 		g_HullLabel->SetText("Hull: " + to_string_cast(ObservedShip->GetHull(), 2));
 		// display the current system
@@ -974,7 +966,6 @@ void UpdateUserInterface(float RealTimeSeconds, float GameTimeSeconds)
 		g_UserInterface->GetWidget("/energy")->SetVisible(false);
 		g_TargetLabel->SetVisible(false);
 		g_SystemLabel->SetVisible(false);
-		g_FuelLabel->SetVisible(false);
 		g_HullLabel->SetVisible(false);
 		g_MiniMap->SetVisible(false);
 		g_Scanner->SetVisible(false);
@@ -983,7 +974,7 @@ void UpdateUserInterface(float RealTimeSeconds, float GameTimeSeconds)
 
 void UpdateCreditsLabel(UI::Label * CreditsLabel, float RealTimeSeconds, float GameTimeSeconds)
 {
-	if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0))
+	if(g_CharacterObserver->GetObservedCharacter().IsValid() == true)
 	{
 		CreditsLabel->SetVisible(true);
 		CreditsLabel->SetText("Credits: " + to_string_cast(g_CharacterObserver->GetObservedCharacter()->GetCredits()));
@@ -991,6 +982,21 @@ void UpdateCreditsLabel(UI::Label * CreditsLabel, float RealTimeSeconds, float G
 	else
 	{
 		CreditsLabel->SetVisible(false);
+	}
+}
+
+void UpdateFuelLabel(UI::Label * FuelLabel, float RealTimeSeconds, float GameTimeSeconds)
+{
+	if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0))
+	{
+		Ship * ObservedShip(g_CharacterObserver->GetObservedCharacter()->GetShip());
+		
+		FuelLabel->SetVisible(true);
+		FuelLabel->SetText("Fuel: " + to_string_cast(ObservedShip->GetFuel(), 2));
+	}
+	else
+	{
+		FuelLabel->SetVisible(false);
 	}
 }
 
@@ -3785,8 +3791,12 @@ int main(int argc, char ** argv)
 	assert(CreditsLabel != 0);
 	CreditsLabel->ConnectUpdatingCallback(Bind1(Callback(UpdateCreditsLabel), CreditsLabel));
 	
+	UI::Label * FuelLabel(dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/fuel")));
+	
+	assert(FuelLabel != 0);
+	FuelLabel->ConnectUpdatingCallback(Bind1(Callback(UpdateFuelLabel), FuelLabel));
+	
 	// setup the global variables for the user interface
-	g_FuelLabel = dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/fuel"));
 	g_HullLabel = dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/hull"));
 	g_MessageLabel = dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/message"));
 	g_SystemLabel = dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/system"));
@@ -3799,7 +3809,6 @@ int main(int argc, char ** argv)
 		g_TargetFactionLabel = dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/scanner/target_faction"));
 		g_ScannerDisplay = dynamic_cast< UI::ScannerDisplay * >(g_UserInterface->GetWidget("/scanner/display"));
 	// sanity asserts
-	assert(g_FuelLabel != 0);
 	assert(g_HullLabel != 0);
 	assert(g_MessageLabel != 0);
 	assert(g_SystemLabel != 0);
