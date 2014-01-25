@@ -165,7 +165,6 @@ UI::Widget * g_MiniMap(0);
 UI::MiniMapDisplay * g_MiniMapDisplay(0);
 UI::Widget * g_Scanner(0);
 UI::ScannerDisplay * g_ScannerDisplay(0);
-UI::Label * g_SystemLabel(0);
 UI::Label * g_TargetLabel(0);
 UI::Label * g_TargetFactionLabel(0);
 
@@ -427,10 +426,6 @@ void CollectWidgets(void)
 		else if(DestroyedWidget == g_ScannerDisplay)
 		{
 			g_ScannerDisplay = 0;
-		}
-		else if(DestroyedWidget == g_SystemLabel)
-		{
-			g_SystemLabel = 0;
 		}
 		else if(DestroyedWidget == g_TargetLabel)
 		{
@@ -866,7 +861,6 @@ void UpdateUserInterface(float RealTimeSeconds, float GameTimeSeconds)
 	if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0))
 	{
 		g_TargetLabel->SetVisible(true);
-		g_SystemLabel->SetVisible(true);
 		g_MiniMap->SetVisible(true);
 		g_Scanner->SetVisible(true);
 		
@@ -894,35 +888,8 @@ void UpdateUserInterface(float RealTimeSeconds, float GameTimeSeconds)
 			g_TargetLabel->SetText("");
 			g_TargetFactionLabel->SetText("");
 		}
-		// display the name of the linked system
-		if(ObservedShip->GetLinkedSystemTarget() != 0)
-		{
-			const std::set< System * > UnexploredSystems(g_CharacterObserver->GetObservedCharacter()->GetMapKnowledge()->GetUnexploredSystems());
-			
-			if(UnexploredSystems.find(ObservedShip->GetLinkedSystemTarget()) == UnexploredSystems.end())
-			{
-				g_SystemLabel->SetText(ObservedShip->GetLinkedSystemTarget()->GetAspectName()->GetName());
-			}
-			else
-			{
-				g_SystemLabel->SetText("Unknown System");
-			}
-		}
-		else
-		{
-			g_SystemLabel->SetText("");
-		}
 		// display the current system
 		g_CurrentSystemLabel->SetText(ObservedShip->GetContainer()->GetAspectName()->GetName());
-		// set system label color according to jump status
-		if(WantToJump(ObservedShip, ObservedShip->GetLinkedSystemTarget()) == OK)
-		{
-			g_SystemLabel->SetTextColor(Color(0.7f, 0.8f, 1.0f, 1.0f));
-		}
-		else
-		{
-			g_SystemLabel->SetTextColor(Color(0.4f, 0.4f, 0.4f, 1.0f));
-		}
 		g_ScannerDisplay->SetOwner(ObservedShip->GetReference());
 		g_ScannerDisplay->Update();
 		g_MiniMapDisplay->SetOwner(ObservedShip->GetReference());
@@ -931,7 +898,6 @@ void UpdateUserInterface(float RealTimeSeconds, float GameTimeSeconds)
 	{
 		g_UserInterface->GetWidget("/energy")->SetVisible(false);
 		g_TargetLabel->SetVisible(false);
-		g_SystemLabel->SetVisible(false);
 		g_MiniMap->SetVisible(false);
 		g_Scanner->SetVisible(false);
 	}
@@ -986,6 +952,39 @@ void UpdateHullLabel(UI::Label * HullLabel, float RealTimeSeconds, float GameTim
 	else
 	{
 		HullLabel->SetVisible(false);
+	}
+}
+
+void UpdateLinkedSystemTargetLabel(UI::Label * LinkedSystemTargetLabel, float RealTimeSeconds, float GameTimeSeconds)
+{
+	if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0) && (g_CharacterObserver->GetObservedCharacter()->GetShip()->GetLinkedSystemTarget() != 0))
+	{
+		LinkedSystemTargetLabel->SetVisible(true);
+		assert(g_CharacterObserver->GetObservedCharacter()->GetMapKnowledge() != 0);
+		
+		const std::set< System * > UnexploredSystems(g_CharacterObserver->GetObservedCharacter()->GetMapKnowledge()->GetUnexploredSystems());
+		
+		if(UnexploredSystems.find(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetLinkedSystemTarget()) == UnexploredSystems.end())
+		{
+			LinkedSystemTargetLabel->SetText(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetLinkedSystemTarget()->GetAspectName()->GetName());
+		}
+		else
+		{
+			LinkedSystemTargetLabel->SetText("Unknown System");
+		}
+		// set system label color according to jump status
+		if(WantToJump(g_CharacterObserver->GetObservedCharacter()->GetShip(), g_CharacterObserver->GetObservedCharacter()->GetShip()->GetLinkedSystemTarget()) == OK)
+		{
+			LinkedSystemTargetLabel->SetTextColor(Color(0.7f, 0.8f, 1.0f, 1.0f));
+		}
+		else
+		{
+			LinkedSystemTargetLabel->SetTextColor(Color(0.4f, 0.4f, 0.4f, 1.0f));
+		}
+	}
+	else
+	{
+		LinkedSystemTargetLabel->SetVisible(false);
 	}
 }
 
@@ -3798,6 +3797,11 @@ int main(int argc, char ** argv)
 	assert(HullLabel != 0);
 	HullLabel->ConnectUpdatingCallback(Bind1(Callback(UpdateHullLabel), HullLabel));
 	
+	UI::Label * LinkedSystemTargetLabel(dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/system")));
+	
+	assert(LinkedSystemTargetLabel != 0);
+	LinkedSystemTargetLabel->ConnectUpdatingCallback(Bind1(Callback(UpdateLinkedSystemTargetLabel), LinkedSystemTargetLabel));
+	
 	UI::Label * TimeWarpLabel(dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/time_warp")));
 	
 	assert(TimeWarpLabel != 0);
@@ -3805,7 +3809,6 @@ int main(int argc, char ** argv)
 	
 	// setup the global variables for the user interface
 	g_MessageLabel = dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/message"));
-	g_SystemLabel = dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/system"));
 	g_MiniMap = g_UserInterface->GetWidget("/mini_map");
 		g_CurrentSystemLabel = dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/mini_map/current_system"));
 		g_MiniMapDisplay = dynamic_cast< UI::MiniMapDisplay * >(g_UserInterface->GetWidget("/mini_map/display"));
@@ -3815,7 +3818,6 @@ int main(int argc, char ** argv)
 		g_ScannerDisplay = dynamic_cast< UI::ScannerDisplay * >(g_UserInterface->GetWidget("/scanner/display"));
 	// sanity asserts
 	assert(g_MessageLabel != 0);
-	assert(g_SystemLabel != 0);
 	assert(g_MiniMap != 0);
 	assert(g_CurrentSystemLabel != 0);
 	assert(g_MiniMapDisplay != 0);
