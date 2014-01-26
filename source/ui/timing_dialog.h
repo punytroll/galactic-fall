@@ -38,7 +38,7 @@ namespace UI
 		UI::Label * _AISecondsThisFrameLabel;
 		UI::Label * _CommoditiesInCurrentSystemThisFrameLabel;
 		UI::Label * _DispatchedMessagesThisFrameLabel;
-		UI::Label * _FontSecondsThisFrameLabel;
+		UI::Label * _FontSecondsLastFrameLabel;
 		UI::Label * _FramesPerSecondLabel;
 		UI::Label * _FrameToFrameSecondsThisFrameLabel;
 		UI::Label * _GraphicsSecondsThisFrameLabel;

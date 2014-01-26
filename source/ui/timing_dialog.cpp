@@ -213,17 +213,17 @@ UI::TimingDialog::TimingDialog(UI::Widget * SupWidget) :
 	_ParticlesDrawnThisFrameLabel->SetAnchorRight(true);
 	_ParticlesDrawnThisFrameLabel->SetHorizontalAlignment(UI::Label::ALIGN_RIGHT);
 	
-	UI::Label * FontSecondsThisFrameCaptionLabel(new UI::Label(this, "Font Seconds this Frame:"));
+	UI::Label * FontSecondsLastFrameCaptionLabel(new UI::Label(this, "Font Seconds last Frame:"));
 	
-	FontSecondsThisFrameCaptionLabel->SetPosition(Vector2f(10.0f, 340.0f));
-	FontSecondsThisFrameCaptionLabel->SetSize(Vector2f(GetSize()[0] - 100.0f, 20.0f));
-	FontSecondsThisFrameCaptionLabel->SetAnchorRight(true);
-	_FontSecondsThisFrameLabel = new UI::Label(this, "0");
-	_FontSecondsThisFrameLabel->SetPosition(Vector2f(GetSize()[0] - 80.0f, 340.0f));
-	_FontSecondsThisFrameLabel->SetSize(Vector2f(70.0f, 20.0f));
-	_FontSecondsThisFrameLabel->SetAnchorLeft(false);
-	_FontSecondsThisFrameLabel->SetAnchorRight(true);
-	_FontSecondsThisFrameLabel->SetHorizontalAlignment(UI::Label::ALIGN_RIGHT);
+	FontSecondsLastFrameCaptionLabel->SetPosition(Vector2f(10.0f, 340.0f));
+	FontSecondsLastFrameCaptionLabel->SetSize(Vector2f(GetSize()[0] - 100.0f, 20.0f));
+	FontSecondsLastFrameCaptionLabel->SetAnchorRight(true);
+	_FontSecondsLastFrameLabel = new UI::Label(this, "0");
+	_FontSecondsLastFrameLabel->SetPosition(Vector2f(GetSize()[0] - 80.0f, 340.0f));
+	_FontSecondsLastFrameLabel->SetSize(Vector2f(70.0f, 20.0f));
+	_FontSecondsLastFrameLabel->SetAnchorLeft(false);
+	_FontSecondsLastFrameLabel->SetAnchorRight(true);
+	_FontSecondsLastFrameLabel->SetHorizontalAlignment(UI::Label::ALIGN_RIGHT);
 }
 
 bool UI::TimingDialog::_OnKey(const KeyEventInformation & KeyEventInformation)
@@ -243,7 +243,7 @@ void UI::TimingDialog::_OnUpdating(float RealTimeSeconds, float GameTimeSeconds)
 	_AISecondsThisFrameLabel->SetText(to_string_cast(g_SystemStatistics->GetAISecondsThisFrame() * 1000, 2) + " ms");
 	_CommoditiesInCurrentSystemThisFrameLabel->SetText(to_string_cast(g_SystemStatistics->GetCommoditiesInCurrentSystemThisFrame()));
 	_DispatchedMessagesThisFrameLabel->SetText(to_string_cast(g_SystemStatistics->GetDispatchedMessagesThisFrame()));
-	_FontSecondsThisFrameLabel->SetText(to_string_cast(g_SystemStatistics->GetFontSecondsThisFrame() * 1000, 2) + " ms");
+	_FontSecondsLastFrameLabel->SetText(to_string_cast(g_SystemStatistics->GetFontSecondsLastFrame() * 1000, 2) + " ms");
 	_FramesPerSecondLabel->SetText(to_string_cast(g_SystemStatistics->GetFramesPerSecond(), 2));
 	_FrameToFrameSecondsThisFrameLabel->SetText(to_string_cast(g_SystemStatistics->GetFrameToFrameSecondsThisFrame() * 1000, 2) + " ms");
 	_GraphicsSecondsThisFrameLabel->SetText(to_string_cast(g_SystemStatistics->GetGraphicsSecondsThisFrame() * 1000, 2) + " ms");
