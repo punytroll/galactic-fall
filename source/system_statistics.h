@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2008  Aram Altschudjian
+ * Copyright (C) 2008, 2013  Aram Altschudjian, Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -29,6 +29,7 @@ public:
 	float GetAISecondsThisFrame(void) const;
 	u4byte GetCommoditiesInCurrentSystemThisFrame(void) const;
 	u4byte GetDispatchedMessagesThisFrame(void) const;
+	float GetFontSecondsLastFrame(void) const;
 	float GetFontSecondsThisFrame(void) const;
 	float GetFramesPerSecond(void) const;
 	float GetFrameToFrameSecondsThisFrame(void) const;
@@ -58,10 +59,13 @@ public:
 	void SetProcessingSecondsThisFrame(float ProcessingSecondsThisFrame);
 	void SetShipsInCurrentSystemThisFrame(u4byte ShipsInCurrentSystemThisFrame);
 	void SetShotsInCurrentSystemThisFrame(u4byte ShotsInCurrentSystemThisFrame);
+	// modifiers
+	void NextFrame(void);
 private:
 	float _AISecondsThisFrame;
 	u4byte _CommoditiesInCurrentSystemThisFrame;
 	u4byte _DispatchedMessagesThisFrame;
+	float _FontSecondsLastFrame;
 	float _FontSecondsThisFrame;
 	float _FramesPerSecond;
 	float _FrameToFrameSecondsThisFrame;
@@ -90,6 +94,11 @@ inline u4byte SystemStatistics::GetCommoditiesInCurrentSystemThisFrame(void) con
 inline u4byte SystemStatistics::GetDispatchedMessagesThisFrame(void) const
 {
 	return _DispatchedMessagesThisFrame;
+}
+
+inline float SystemStatistics::GetFontSecondsLastFrame(void) const
+{
+	return _FontSecondsLastFrame;
 }
 
 inline float SystemStatistics::GetFontSecondsThisFrame(void) const

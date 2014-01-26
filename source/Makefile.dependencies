@@ -994,6 +994,10 @@ system_h = \
 	system.h \
 	$(object_h)
 
+system_statistics_cpp = \
+	system_statistics.cpp \
+	$(system_statistics_h)
+
 system_statistics_h = \
 	system_statistics.h \
 	$(type_definitions_h)

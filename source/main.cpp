@@ -835,12 +835,6 @@ void CalculateMovements(System * System, float Seconds)
 void UpdateUserInterface(float RealTimeSeconds, float GameTimeSeconds)
 {
 	g_UserInterface->Update(RealTimeSeconds, GameTimeSeconds);
-	// reset the incremental counters
-	g_SystemStatistics->SetParticleSystemsDrawnThisFrame(0);
-	g_SystemStatistics->SetParticleSystemsUpdatedThisFrame(0);
-	g_SystemStatistics->SetParticlesDrawnThisFrame(0);
-	g_SystemStatistics->SetParticlesUpdatedThisFrame(0);
-	g_SystemStatistics->SetFontSecondsThisFrame(0.0f);
 	if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0))
 	{
 		Ship * ObservedShip(g_CharacterObserver->GetObservedCharacter()->GetShip());
@@ -1502,6 +1496,8 @@ void PrerenderViews(void)
 
 void GameFrame(void)
 {
+	g_SystemStatistics->NextFrame();
+	
 	RealTime::Invalidate();
 	
 	static double FrameTimeBegin(RealTime::Get());
@@ -1548,6 +1544,10 @@ void GameFrame(void)
 	double PhysicsTimeDelta(PhysicsTimeEnd - PhysicsTimeBegin);
 	
 	UpdateUserInterface(FrameTimeDelta, Seconds);
+	g_SystemStatistics->SetParticleSystemsDrawnThisFrame(0);
+	g_SystemStatistics->SetParticleSystemsUpdatedThisFrame(0);
+	g_SystemStatistics->SetParticlesDrawnThisFrame(0);
+	g_SystemStatistics->SetParticlesUpdatedThisFrame(0);
 	RealTime::Invalidate();
 	
 	double GraphicsTimeBegin(RealTime::Get());
