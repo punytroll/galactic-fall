@@ -17,16 +17,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include "../asset_class.h"
 #include "../callbacks/callbacks.h"
-#include "../character.h"
 #include "../key_event_information.h"
 #include "../object_aspect_name.h"
 #include "../planet.h"
-#include "../ship.h"
 #include "button.h"
 #include "label.h"
 #include "planet_window.h"
+#include "space_dock_widget.h"
 #include "trade_center_widget.h"
 
 UI::PlanetWindow::PlanetWindow(UI::Widget * SupWidget, Reference< Planet > Planet, Reference< Character > Character) :
@@ -34,6 +32,7 @@ UI::PlanetWindow::PlanetWindow(UI::Widget * SupWidget, Reference< Planet > Plane
 	_Character(Character),
 	_DescriptionLabel(0),
 	_Planet(Planet),
+	_SpaceDockWidget(0),
 	_TradeCenterWidget(0)
 {
 	assert(_Character.IsValid() == true);
@@ -57,62 +56,77 @@ UI::PlanetWindow::PlanetWindow(UI::Widget * SupWidget, Reference< Planet > Plane
 	HomeButtonLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
 	HomeButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	
-	UI::Button * TakeOffButton(new UI::Button(this));
-	
-	TakeOffButton->SetPosition(Vector2f(10.0f, 150.0f));
-	TakeOffButton->SetSize(Vector2f(100.0f, 20.0f));
-	TakeOffButton->ConnectClickedCallback(Callback(this, &PlanetWindow::_OnTakeOffButtonClicked));
-	
-	UI::Label * TakeOffButtonLabel(new UI::Label(TakeOffButton, "Take Off"));
-	
-	TakeOffButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
-	TakeOffButtonLabel->SetSize(TakeOffButton->GetSize());
-	TakeOffButtonLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
-	TakeOffButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
-	
 	UI::Button * TradeCenterButton(new UI::Button(this));
 	
 	TradeCenterButton->SetPosition(Vector2f(10.0f, 70.0f));
 	TradeCenterButton->SetSize(Vector2f(100.0f, 20.0f));
 	TradeCenterButton->ConnectClickedCallback(Callback(this, &PlanetWindow::_OnTradeCenterButtonClicked));
 	
-	UI::Label * TradeCenterLabel(new UI::Label(TradeCenterButton, "Trade Center"));
+	UI::Label * TradeCenterButtonLabel(new UI::Label(TradeCenterButton, "Trade Center"));
 	
-	TradeCenterLabel->SetPosition(Vector2f(0.0f, 0.0f));
-	TradeCenterLabel->SetSize(TradeCenterButton->GetSize());
-	TradeCenterLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
-	TradeCenterLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
+	TradeCenterButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
+	TradeCenterButtonLabel->SetSize(TradeCenterButton->GetSize());
+	TradeCenterButtonLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
+	TradeCenterButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	
-	const std::vector< PlanetAssetClass * > & PlanetAssetClasses(_Planet->GetPlanetAssetClasses());
+	UI::Button * SpaceDockButton(new UI::Button(this));
 	
-	for(std::vector< PlanetAssetClass * >::const_iterator PlanetAssetClassIterator = PlanetAssetClasses.begin(); PlanetAssetClassIterator != PlanetAssetClasses.end(); ++PlanetAssetClassIterator)
-	{
-		if((*PlanetAssetClassIterator)->GetAssetClass()->GetIdentifier() == "fuel")
-		{
-			UI::Button * RefuelButton(new UI::Button(this));
-			
-			RefuelButton->SetPosition(Vector2f(10.0f, 100.0f));
-			RefuelButton->SetSize(Vector2f(100.0f, 20.0f));
-			RefuelButton->ConnectClickedCallback(Callback(this, &PlanetWindow::_OnRefuelButtonClicked));
-			
-			UI::Label * RefuelButtonLabel(new UI::Label(RefuelButton, "Refuel"));
-			
-			RefuelButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
-			RefuelButtonLabel->SetSize(RefuelButton->GetSize());
-			RefuelButtonLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
-			RefuelButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
-			
-			break;
-		}
-	}
-	_OnHomeButtonClicked();
+	SpaceDockButton->SetPosition(Vector2f(10.0f, 100.0f));
+	SpaceDockButton->SetSize(Vector2f(100.0f, 20.0f));
+	SpaceDockButton->ConnectClickedCallback(Callback(this, &PlanetWindow::_OnSpaceDockButtonClicked));
+	
+	UI::Label * SpaceDockButtonLabel(new UI::Label(SpaceDockButton, "Space Dock"));
+	
+	SpaceDockButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
+	SpaceDockButtonLabel->SetSize(SpaceDockButton->GetSize());
+	SpaceDockButtonLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
+	SpaceDockButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
+	_OpenHomeScreen();
 }
 
 void UI::PlanetWindow::_OnHomeButtonClicked(void)
 {
+	_OpenHomeScreen();
+}
+
+bool UI::PlanetWindow::_OnKey(const KeyEventInformation & KeyEventInformation)
+{
+	if((KeyEventInformation.GetKeyCode() == 39 /* S */) && (KeyEventInformation.IsDown() == true))
+	{
+		_OpenSpaceDock();
+	}
+	else if((KeyEventInformation.GetKeyCode() == 28 /* T */) && (KeyEventInformation.IsDown() == true))
+	{
+		_OpenTradeCenter();
+	}
+	
+	// eat all input
+	return true;
+}
+
+void UI::PlanetWindow::_OnSpaceDockButtonClicked(void)
+{
+	_OpenSpaceDock();
+}
+
+void UI::PlanetWindow::_OnTradeCenterButtonClicked(void)
+{
+	_OpenTradeCenter();
+}
+
+void UI::PlanetWindow::_OpenHomeScreen(void)
+{
+	if(_SpaceDockWidget != 0)
+	{
+		assert(_DescriptionLabel == 0);
+		assert(_TradeCenterWidget == 0);
+		_SpaceDockWidget->Destroy();
+		_SpaceDockWidget = 0;
+	}
 	if(_TradeCenterWidget != 0)
 	{
 		assert(_DescriptionLabel == 0);
+		assert(_SpaceDockWidget == 0);
 		_TradeCenterWidget->Destroy();
 		_TradeCenterWidget = 0;
 	}
@@ -128,43 +142,48 @@ void UI::PlanetWindow::_OnHomeButtonClicked(void)
 	SetKeyFocus(0);
 }
 
-bool UI::PlanetWindow::_OnKey(const KeyEventInformation & KeyEventInformation)
+void UI::PlanetWindow::_OpenSpaceDock(void)
 {
-	if(((KeyEventInformation.GetKeyCode() == 9 /* ESCAPE */) || (KeyEventInformation.GetKeyCode() == 36 /* RETURN */)) && (KeyEventInformation.IsDown() == true))
+	if(_DescriptionLabel != 0)
 	{
-		_TakeOff();
+		assert(_TradeCenterWidget == 0);
+		assert(_SpaceDockWidget == 0);
+		_DescriptionLabel->Destroy();
+		_DescriptionLabel = 0;
 	}
-	else if((KeyEventInformation.GetKeyCode() == 28 /* T */) && (KeyEventInformation.IsDown() == true))
+	if(_TradeCenterWidget != 0)
 	{
-		_OpenTradeCenter();
+		assert(_DescriptionLabel == 0);
+		assert(_SpaceDockWidget == 0);
+		_TradeCenterWidget->Destroy();
+		_TradeCenterWidget = 0;
 	}
-	
-	// eat all input
-	return true;
-}
-
-void UI::PlanetWindow::_OnRefuelButtonClicked(void)
-{
-	_Refuel();
-}
-
-void UI::PlanetWindow::_OnTakeOffButtonClicked(void)
-{
-	_TakeOff();
-}
-
-void UI::PlanetWindow::_OnTradeCenterButtonClicked(void)
-{
-	_OpenTradeCenter();
+	if(_SpaceDockWidget == 0)
+	{
+		_SpaceDockWidget = new UI::SpaceDockWidget(this, _Planet, _Character);
+		_SpaceDockWidget->SetPosition(Vector2f(120.0f, 40.0f));
+		_SpaceDockWidget->SetSize(Vector2f(GetSize()[0] - 130.0f, GetSize()[1] - 50.0f));
+		_SpaceDockWidget->SetAnchorBottom(true);
+		_SpaceDockWidget->SetAnchorRight(true);
+	}
+	_SpaceDockWidget->GrabKeyFocus();
 }
 
 void UI::PlanetWindow::_OpenTradeCenter(void)
 {
 	if(_DescriptionLabel != 0)
 	{
+		assert(_SpaceDockWidget == 0);
 		assert(_TradeCenterWidget == 0);
 		_DescriptionLabel->Destroy();
 		_DescriptionLabel = 0;
+	}
+	if(_SpaceDockWidget != 0)
+	{
+		assert(_DescriptionLabel == 0);
+		assert(_TradeCenterWidget == 0);
+		_SpaceDockWidget->Destroy();
+		_SpaceDockWidget = 0;
 	}
 	if(_TradeCenterWidget == 0)
 	{
@@ -175,40 +194,4 @@ void UI::PlanetWindow::_OpenTradeCenter(void)
 		_TradeCenterWidget->SetAnchorRight(true);
 	}
 	_TradeCenterWidget->GrabKeyFocus();
-}
-
-void UI::PlanetWindow::_Refuel(void)
-{
-	assert(_Planet.IsValid() == true);
-	
-	const std::vector< PlanetAssetClass * > & PlanetAssetClasses(_Planet->GetPlanetAssetClasses());
-	
-	for(std::vector< PlanetAssetClass * >::const_iterator PlanetAssetClassIterator = PlanetAssetClasses.begin(); PlanetAssetClassIterator != PlanetAssetClasses.end(); ++PlanetAssetClassIterator)
-	{
-		if((*PlanetAssetClassIterator)->GetAssetClass()->GetIdentifier() == "fuel")
-		{
-			u4byte FuelPrice((*PlanetAssetClassIterator)->GetPrice());
-			
-			assert(_Character.IsValid() == true);
-			
-			float CanBuy(_Character->GetCredits() / FuelPrice);
-			
-			assert(_Character->GetShip() != 0);
-			
-			float Need(_Character->GetShip()->GetFuelCapacity() - _Character->GetShip()->GetFuel());
-			float Buy((CanBuy > Need) ? (Need) : (CanBuy));
-			
-			_Character->GetShip()->SetFuel(_Character->GetShip()->GetFuel() + Buy);
-			_Character->RemoveCredits(static_cast< u4byte >(Buy * FuelPrice));
-			
-			break;
-		}
-	}
-}
-
-void UI::PlanetWindow::_TakeOff(void)
-{
-	assert(_Character.IsValid() == true);
-	assert(_Character->GetShip() != 0);
-	_Character->GetShip()->SetTakeOff(true);
 }
