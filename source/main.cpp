@@ -158,12 +158,6 @@ SystemStatistics * g_SystemStatistics(0);
 UI::UserInterface * g_UserInterface(0);
 ClassManager< WeaponClass > * g_WeaponClassManager(0);
 
-// global widget pointers
-UI::Widget * g_MiniMap(0);
-UI::MiniMapDisplay * g_MiniMapDisplay(0);
-UI::Widget * g_Scanner(0);
-UI::ScannerDisplay * g_ScannerDisplay(0);
-
 // global dialog pointers
 UI::MainMenuWindow * g_MainMenuWindow(0);
 UI::MapDialog * g_MapDialog(0);
@@ -400,25 +394,7 @@ void CollectWidgets(void)
 	
 	for(std::list< UI::Widget * >::iterator DestroyedWidgetIterator = DestroyedWidgets.begin(); DestroyedWidgetIterator != DestroyedWidgets.end(); ++DestroyedWidgetIterator)
 	{
-		UI::Widget * DestroyedWidget(*DestroyedWidgetIterator);
-		
-		if(DestroyedWidget == g_MiniMap)
-		{
-			g_MiniMap = 0;
-		}
-		else if(DestroyedWidget == g_MiniMapDisplay)
-		{
-			g_MiniMapDisplay = 0;
-		}
-		else if(DestroyedWidget == g_Scanner)
-		{
-			g_Scanner = 0;
-		}
-		else if(DestroyedWidget == g_ScannerDisplay)
-		{
-			g_ScannerDisplay = 0;
-		}
-		delete DestroyedWidget;
+		delete *DestroyedWidgetIterator;
 	}
 	DestroyedWidgets.clear();
 }
@@ -832,26 +808,6 @@ void CalculateMovements(System * System, float Seconds)
 	}
 }
 
-void UpdateUserInterface(float RealTimeSeconds, float GameTimeSeconds)
-{
-	g_UserInterface->Update(RealTimeSeconds, GameTimeSeconds);
-	if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0))
-	{
-		Ship * ObservedShip(g_CharacterObserver->GetObservedCharacter()->GetShip());
-		
-		g_MiniMap->SetVisible(true);
-		g_MiniMapDisplay->SetOwner(ObservedShip->GetReference());
-		g_Scanner->SetVisible(true);
-		g_ScannerDisplay->SetOwner(ObservedShip->GetReference());
-		g_ScannerDisplay->Update();
-	}
-	else
-	{
-		g_MiniMap->SetVisible(false);
-		g_Scanner->SetVisible(false);
-	}
-}
-
 void UpdateCreditsLabel(UI::Label * CreditsLabel, float RealTimeSeconds, float GameTimeSeconds)
 {
 	if(g_CharacterObserver->GetObservedCharacter().IsValid() == true)
@@ -934,6 +890,56 @@ void UpdateLinkedSystemTargetLabel(UI::Label * LinkedSystemTargetLabel, float Re
 	else
 	{
 		LinkedSystemTargetLabel->SetVisible(false);
+	}
+}
+
+void UpdateMiniMap(UI::Widget * MiniMap, float RealTimeSeconds, float GameTimeSeconds)
+{
+	if(g_CharacterObserver->GetObservedCharacter().IsValid() == true)
+	{
+		MiniMap->SetVisible(true);
+	}
+	else
+	{
+		MiniMap->SetVisible(false);
+	}
+}
+
+void UpdateMiniMapDisplay(UI::MiniMapDisplay * MiniMapDisplay, float RealTimeSeconds, float GameTimeSeconds)
+{
+	if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0))
+	{
+		MiniMapDisplay->SetVisible(true);
+		MiniMapDisplay->SetOwner(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetReference());
+	}
+	else
+	{
+		MiniMapDisplay->SetVisible(false);
+	}
+}
+
+void UpdateScanner(UI::Widget * Scanner, float RealTimeSeconds, float GameTimeSeconds)
+{
+	if(g_CharacterObserver->GetObservedCharacter().IsValid() == true)
+	{
+		Scanner->SetVisible(true);
+	}
+	else
+	{
+		Scanner->SetVisible(false);
+	}
+}
+
+void UpdateScannerDisplay(UI::ScannerDisplay * ScannerDisplay, float RealTimeSeconds, float GameTimeSeconds)
+{
+	if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0))
+	{
+		ScannerDisplay->SetVisible(true);
+		ScannerDisplay->SetOwner(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetReference());
+	}
+	else
+	{
+		ScannerDisplay->SetVisible(false);
 	}
 }
 
@@ -1497,7 +1503,6 @@ void PrerenderViews(void)
 void GameFrame(void)
 {
 	g_SystemStatistics->NextFrame();
-	
 	RealTime::Invalidate();
 	
 	static double FrameTimeBegin(RealTime::Get());
@@ -1543,7 +1548,7 @@ void GameFrame(void)
 	double PhysicsTimeEnd(RealTime::Get());
 	double PhysicsTimeDelta(PhysicsTimeEnd - PhysicsTimeBegin);
 	
-	UpdateUserInterface(FrameTimeDelta, Seconds);
+	g_UserInterface->Update(FrameTimeDelta, Seconds);
 	g_SystemStatistics->SetParticleSystemsDrawnThisFrame(0);
 	g_SystemStatistics->SetParticleSystemsUpdatedThisFrame(0);
 	g_SystemStatistics->SetParticlesDrawnThisFrame(0);
@@ -2307,12 +2312,6 @@ void LoadGameFromElement(const Element * SaveElement)
 	OnOutputEnterSystem(g_CurrentSystem);
 	RealTime::Invalidate();
 	PopulateSystem(g_CurrentSystem);
-	// setting up the player environment
-	if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0))
-	{
-		g_MiniMapDisplay->SetOwner(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetReference());
-		g_ScannerDisplay->SetOwner(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetReference());
-	}
 }
 
 bool LoadGameFromInputStream(std::istream & InputStream)
@@ -3823,6 +3822,26 @@ int main(int argc, char ** argv)
 	assert(LinkedSystemTargetLabel != 0);
 	LinkedSystemTargetLabel->ConnectUpdatingCallback(Bind1(Callback(UpdateLinkedSystemTargetLabel), LinkedSystemTargetLabel));
 	
+	UI::Widget * MiniMap(g_UserInterface->GetWidget("/mini_map"));
+	
+	assert(MiniMap != 0);
+	MiniMap->ConnectUpdatingCallback(Bind1(Callback(UpdateMiniMap), MiniMap));
+	
+	UI::MiniMapDisplay * MiniMapDisplay(dynamic_cast< UI::MiniMapDisplay * >(g_UserInterface->GetWidget("/mini_map/display")));
+	
+	assert(MiniMapDisplay != 0);
+	MiniMapDisplay->ConnectUpdatingCallback(Bind1(Callback(UpdateMiniMapDisplay), MiniMapDisplay));
+	
+	UI::Widget * Scanner(g_UserInterface->GetWidget("/scanner"));
+	
+	assert(Scanner != 0);
+	Scanner->ConnectUpdatingCallback(Bind1(Callback(UpdateScanner), Scanner));
+	
+	UI::ScannerDisplay * ScannerDisplay(dynamic_cast< UI::ScannerDisplay * >(g_UserInterface->GetWidget("/scanner/display")));
+	
+	assert(ScannerDisplay != 0);
+	ScannerDisplay->ConnectUpdatingCallback(Bind1(Callback(UpdateScannerDisplay), ScannerDisplay));
+	
 	UI::Label * SystemNameLabel(dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/mini_map/current_system")));
 	
 	assert(SystemNameLabel != 0);
@@ -3842,17 +3861,6 @@ int main(int argc, char ** argv)
 	
 	assert(TimeWarpLabel != 0);
 	TimeWarpLabel->ConnectUpdatingCallback(Bind1(Callback(UpdateTimeWarpLabel), TimeWarpLabel));
-	
-	// setup the global variables for the user interface
-	g_MiniMap = g_UserInterface->GetWidget("/mini_map");
-		g_MiniMapDisplay = dynamic_cast< UI::MiniMapDisplay * >(g_UserInterface->GetWidget("/mini_map/display"));
-	g_Scanner = g_UserInterface->GetWidget("/scanner");
-		g_ScannerDisplay = dynamic_cast< UI::ScannerDisplay * >(g_UserInterface->GetWidget("/scanner/display"));
-	// sanity asserts
-	assert(g_MiniMap != 0);
-	assert(g_MiniMapDisplay != 0);
-	assert(g_Scanner != 0);
-	assert(g_ScannerDisplay != 0);
 	
 	// resize here after the graphics have been set up
 	Resize();
