@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2013  Hagen Möbius
+ * Copyright (C) 2014  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,41 +17,37 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef UI_PLANET_WINDOW_H
-#define UI_PLANET_WINDOW_H
+#ifndef UI_SPACE_DOCK_WIDGET_H
+#define UI_SPACE_DOCK_WIDGET_H
 
-#include "window.h"
+#include "../referencing.h"
+#include "widget.h"
 
 class Character;
 class Planet;
 
 namespace UI
 {
-	class Label;
-	class SpaceDockWidget;
-	class TradeCenterWidget;
+	class Button;
 	
-	class PlanetWindow : public UI::Window
+	class SpaceDockWidget : public UI::Widget
 	{
 	public:
-		PlanetWindow(UI::Widget * SupWidget, Reference< Planet > Planet, Reference< Character > Character);
+		SpaceDockWidget(UI::Widget * SupWidget, Reference< Planet > Planet, Reference< Character > Character);
 	private:
 		// callbacks
-		void _OnDestroying(void);
-		void _OnHomeButtonClicked(void);
-		bool _OnKey(const KeyEventInformation & KeyEventInformation);
-		void _OnSpaceDockButtonClicked(void);
-		void _OnTradeCenterButtonClicked(void);
+		void _OnRechargeButtonClicked(void);
+		void _OnRefuelButtonClicked(void);
+		void _OnRepairButtonClicked(void);
+		void _OnTakeOffButtonClicked(void);
 		// helper functions & actions
-		void _OpenHomeScreen(void);
-		void _OpenSpaceDock(void);
-		void _OpenTradeCenter(void);
+		void _Recharge(void);
+		void _Refuel(void);
+		void _Repair(void);
+		void _TakeOff(void);
 		// member variables
 		Reference< Character > _Character;
-		UI::Label * _DescriptionLabel;
 		Reference< Planet > _Planet;
-		UI::SpaceDockWidget * _SpaceDockWidget;
-		UI::TradeCenterWidget * _TradeCenterWidget;
 	};
 }
 

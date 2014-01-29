@@ -1226,16 +1226,14 @@ ui_outfit_ship_dialog_h = \
 
 ui_planet_window_cpp = \
 	ui/planet_window.cpp \
-	$(asset_class_h) \
 	$(callbacks_callbacks_h) \
-	$(character_h) \
 	$(key_event_information_h) \
 	$(object_aspect_name_h) \
 	$(planet_h) \
-	$(ship_h) \
 	$(ui_button_h) \
 	$(ui_label_h) \
 	$(ui_planet_window_h) \
+	$(ui_space_dock_widget_h) \
 	$(ui_trade_center_widget_h)
 
 ui_planet_window_h = \
@@ -1293,6 +1291,22 @@ ui_scroll_box_cpp = \
 
 ui_scroll_box_h = \
 	ui/scroll_box.h \
+	$(ui_widget_h)
+
+ui_space_dock_widget_cpp = \
+	ui/space_dock_widget.cpp \
+	$(asset_class_h) \
+	$(callbacks_callbacks_h) \
+	$(character_h) \
+	$(planet_h) \
+	$(ship_h) \
+	$(ui_button_h) \
+	$(ui_label_h) \
+	$(ui_space_dock_widget_h)
+
+ui_space_dock_widget_h = \
+	ui/space_dock_widget.h \
+	$(referencing_h) \
 	$(ui_widget_h)
 
 ui_star_map_display_cpp = \
