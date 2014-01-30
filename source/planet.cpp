@@ -19,6 +19,7 @@
 
 #include "asset_class.h"
 #include "battery.h"
+#include "character.h"
 #include "color.h"
 #include "globals.h"
 #include "message.h"
@@ -29,8 +30,8 @@
 #include "ship.h"
 
 PlanetAssetClass::PlanetAssetClass(const AssetClass * AssetClass) :
-	m_AssetClass(AssetClass),
-	m_BasePriceModifier(1.0f)
+	_AssetClass(AssetClass),
+	_BasePriceModifier(1.0f)
 {
 }
 
@@ -40,12 +41,12 @@ PlanetAssetClass::~PlanetAssetClass(void)
 
 unsigned_numeric PlanetAssetClass::GetPrice(void) const
 {
-	return static_cast< unsigned_numeric >(m_AssetClass->GetBasePrice() * m_BasePriceModifier);
+	return static_cast< unsigned_numeric >(_AssetClass->GetBasePrice() * _BasePriceModifier);
 }
 
 Planet::Planet(const std::string & Identifier) :
-	m_Identifier(Identifier),
-	m_LandingFeePerSpace(0.0f)
+	_Identifier(Identifier),
+	_LandingFeePerSpace(0.0f)
 {
 	// initialize object aspects
 	AddAspectName();
@@ -56,41 +57,36 @@ Planet::Planet(const std::string & Identifier) :
 
 Planet::~Planet(void)
 {
-	while(m_PlanetAssetClasses.size() > 0)
+	while(_PlanetAssetClasses.size() > 0)
 	{
-		delete m_PlanetAssetClasses.back();
-		m_PlanetAssetClasses.pop_back();
+		delete _PlanetAssetClasses.back();
+		_PlanetAssetClasses.pop_back();
 	}
 }
 
 void Planet::SetDescription(const std::string & Description)
 {
-	m_Description = Description;
+	_Description = Description;
 }
 
 void Planet::SetSize(const float & Size)
 {
-	m_Size = Size;
+	_Size = Size;
 	assert(GetAspectPhysical() != 0);
-	GetAspectPhysical()->SetRadialSize(m_Size / 2.0f);
+	GetAspectPhysical()->SetRadialSize(_Size / 2.0f);
 }
 
 PlanetAssetClass * Planet::CreatePlanetAssetClass(const AssetClass * AssetClass)
 {
 	/// @todo check whether the planet asset class already exists
-	m_PlanetAssetClasses.push_back(new PlanetAssetClass(AssetClass));
+	_PlanetAssetClasses.push_back(new PlanetAssetClass(AssetClass));
 	
-	return m_PlanetAssetClasses.back();
+	return _PlanetAssetClasses.back();
 }
 
 void Planet::Land(Ship * Ship)
 {
 	Ship->SetVelocity(Vector3f(0.0f, 0.0f, 0.0f));
-	Ship->SetHull(Ship->GetHullCapacity());
-	if(Ship->GetBattery() != 0)
-	{
-		Ship->GetBattery()->SetEnergy(Ship->GetBattery()->GetEnergyCapacity());
-	}
 	
 	assert(Ship->GetAspectObjectContainer() != 0);
 	
@@ -106,6 +102,46 @@ void Planet::Land(Ship * Ship)
 			g_MessageDispatcher->PushMessage(new Message("landed", GetReference(), Content->GetReference()));
 		}
 	}
+}
+
+void Planet::Recharge(Ship * Ship, Character * Character)
+{
+	assert(Ship != 0);
+	if(Ship->GetBattery() != 0)
+	{
+		Ship->GetBattery()->SetEnergy(Ship->GetBattery()->GetEnergyCapacity());
+	}
+}
+
+void Planet::Refuel(Ship * Ship, Character * Character)
+{
+	for(std::vector< PlanetAssetClass * >::iterator PlanetAssetClassIterator = _PlanetAssetClasses.begin(); PlanetAssetClassIterator != _PlanetAssetClasses.end(); ++PlanetAssetClassIterator)
+	{
+		if((*PlanetAssetClassIterator)->GetAssetClass()->GetIdentifier() == "fuel")
+		{
+			u4byte FuelPrice((*PlanetAssetClassIterator)->GetPrice());
+			
+			assert(Character != 0);
+			
+			float CanBuy(Character->GetCredits() / FuelPrice);
+			
+			assert(Character->GetShip() != 0);
+			
+			float Need(Character->GetShip()->GetFuelCapacity() - Character->GetShip()->GetFuel());
+			float Buy((CanBuy > Need) ? (Need) : (CanBuy));
+			
+			Character->GetShip()->SetFuel(Character->GetShip()->GetFuel() + Buy);
+			Character->RemoveCredits(static_cast< u4byte >(Buy * FuelPrice));
+			
+			break;
+		}
+	}
+}
+
+void Planet::Repair(Ship * Ship, Character * Character)
+{
+	assert(Ship != 0);
+	Ship->SetHull(Ship->GetHullCapacity());
 }
 
 void Planet::TakeOff(Ship * Ship)

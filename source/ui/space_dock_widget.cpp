@@ -118,39 +118,26 @@ void UI::SpaceDockWidget::_OnTakeOffButtonClicked(void)
 
 void UI::SpaceDockWidget::_Recharge(void)
 {
+	assert(_Planet.IsValid() == true);
+	assert(_Character.IsValid() == true);
+	assert(_Character->GetShip() != 0);
+	_Planet->Recharge(_Character->GetShip(), _Character.Get());
 }
 
 void UI::SpaceDockWidget::_Refuel(void)
 {
 	assert(_Planet.IsValid() == true);
-	
-	const std::vector< PlanetAssetClass * > & PlanetAssetClasses(_Planet->GetPlanetAssetClasses());
-	
-	for(std::vector< PlanetAssetClass * >::const_iterator PlanetAssetClassIterator = PlanetAssetClasses.begin(); PlanetAssetClassIterator != PlanetAssetClasses.end(); ++PlanetAssetClassIterator)
-	{
-		if((*PlanetAssetClassIterator)->GetAssetClass()->GetIdentifier() == "fuel")
-		{
-			u4byte FuelPrice((*PlanetAssetClassIterator)->GetPrice());
-			
-			assert(_Character.IsValid() == true);
-			
-			float CanBuy(_Character->GetCredits() / FuelPrice);
-			
-			assert(_Character->GetShip() != 0);
-			
-			float Need(_Character->GetShip()->GetFuelCapacity() - _Character->GetShip()->GetFuel());
-			float Buy((CanBuy > Need) ? (Need) : (CanBuy));
-			
-			_Character->GetShip()->SetFuel(_Character->GetShip()->GetFuel() + Buy);
-			_Character->RemoveCredits(static_cast< u4byte >(Buy * FuelPrice));
-			
-			break;
-		}
-	}
+	assert(_Character.IsValid() == true);
+	assert(_Character->GetShip() != 0);
+	_Planet->Refuel(_Character->GetShip(), _Character.Get());
 }
 
 void UI::SpaceDockWidget::_Repair(void)
 {
+	assert(_Planet.IsValid() == true);
+	assert(_Character.IsValid() == true);
+	assert(_Character->GetShip() != 0);
+	_Planet->Repair(_Character->GetShip(), _Character.Get());
 }
 
 void UI::SpaceDockWidget::_TakeOff(void)
