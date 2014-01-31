@@ -210,7 +210,7 @@ def out(data_type, node):
 					raise ConvertException()
 				if declaration_part.name != definition_node.tagName:
 					print LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " the definition for " + LightYellow + stack_path + "/" + definition_node.tagName + White + " does not belong there."
-					print "               Expected to find a definition for " + LightYellow + stack_path + "/" + declaration_part.name + White + " of type " + DarkYellow + declaration_part.type_identifier + White + "'."
+					print "       Expected to find a definition for " + LightYellow + stack_path + "/" + declaration_part.name + White + " of type " + LightBlue + declaration_part.type_identifier + White + "."
 					raise ConvertException()
 				else:
 					out(declaration_part.type_identifier, definition_node)
