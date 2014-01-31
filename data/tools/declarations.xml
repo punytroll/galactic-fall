@@ -126,7 +126,9 @@
 		<array identifier="offered-asset-classes"/>
 		<float identifier="landing-fee-per-space"/>
 		<boolean identifier="offers-recharging"/>
+		<float identifier="recharging-fee-per-energy"/>
 		<boolean identifier="offers-repairing"/>
+		<float identifier="repairing-fee-per-hull"/>
 		<string identifier="faction-identifier"/>
 	</planet>
 	

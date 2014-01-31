@@ -46,7 +46,11 @@ unsigned_numeric PlanetAssetClass::GetPrice(void) const
 
 Planet::Planet(const std::string & Identifier) :
 	_Identifier(Identifier),
-	_LandingFeePerSpace(0.0f)
+	_LandingFeePerSpace(0.0f),
+	_OffersRecharging(false),
+	_OffersRepairing(false),
+	_RechargingFeePerEnergy(0.0f),
+	_RepairingFeePerHull(0.0f)
 {
 	// initialize object aspects
 	AddAspectName();
@@ -106,12 +110,19 @@ void Planet::Land(Ship * Ship)
 
 void Planet::Recharge(Ship * Ship, Character * Character)
 {
-	assert(Ship != 0);
 	if(_OffersRecharging == true)
 	{
+		assert(Ship != 0);
 		if(Ship->GetBattery() != 0)
 		{
-			Ship->GetBattery()->SetEnergy(Ship->GetBattery()->GetEnergyCapacity());
+			assert(Character != 0);
+			
+			float CanBuy(Character->GetCredits() / _RechargingFeePerEnergy);
+			float Need(Ship->GetBattery()->GetEnergyCapacity() - Ship->GetBattery()->GetEnergy());
+			float Buy((CanBuy > Need) ? (Need) : (CanBuy));
+			
+			Ship->GetBattery()->SetEnergy(Ship->GetBattery()->GetEnergy() + Buy);
+			Character->RemoveCredits(static_cast< unsigned_numeric >(Buy * _RechargingFeePerEnergy));
 		}
 	}
 }
@@ -122,18 +133,18 @@ void Planet::Refuel(Ship * Ship, Character * Character)
 	{
 		if((*PlanetAssetClassIterator)->GetAssetClass()->GetIdentifier() == "fuel")
 		{
-			u4byte FuelPrice((*PlanetAssetClassIterator)->GetPrice());
+			unsigned_numeric FuelPrice((*PlanetAssetClassIterator)->GetPrice());
 			
 			assert(Character != 0);
 			
 			float CanBuy(Character->GetCredits() / FuelPrice);
 			
-			assert(Character->GetShip() != 0);
+			assert(Ship != 0);
 			
-			float Need(Character->GetShip()->GetFuelCapacity() - Character->GetShip()->GetFuel());
+			float Need(Ship->GetFuelCapacity() - Ship->GetFuel());
 			float Buy((CanBuy > Need) ? (Need) : (CanBuy));
 			
-			Character->GetShip()->SetFuel(Character->GetShip()->GetFuel() + Buy);
+			Ship->SetFuel(Ship->GetFuel() + Buy);
 			Character->RemoveCredits(static_cast< u4byte >(Buy * FuelPrice));
 			
 			break;
@@ -143,10 +154,19 @@ void Planet::Refuel(Ship * Ship, Character * Character)
 
 void Planet::Repair(Ship * Ship, Character * Character)
 {
-	assert(Ship != 0);
 	if(_OffersRepairing == true)
 	{
-		Ship->SetHull(Ship->GetHullCapacity());
+		assert(Character != 0);
+		
+		float CanBuy(Character->GetCredits() / _RepairingFeePerHull);
+		
+		assert(Ship != 0);
+		
+		float Need(Ship->GetHullCapacity() - Ship->GetHull());
+		float Buy((CanBuy > Need) ? (Need) : (CanBuy));
+		
+		Ship->SetHull(Ship->GetHull() + Buy);
+		Character->RemoveCredits(static_cast< unsigned_numeric >(Buy * _RepairingFeePerHull));
 	}
 }
 

@@ -85,6 +85,8 @@ public:
 	void SetLandingFeePerSpace(float LandingFeePerSpace);
 	void SetOffersRecharging(bool OffersRecharging);
 	void SetOffersRepairing(bool OffersRepairing);
+	void SetRechargingFeePerEnergy(float RechargingFeePerEnergy);
+	void SetRepairingFeePerHull(float RepairingFeePerHull);
 	void SetSize(const float & Size);
 	// modifiers
 	PlanetAssetClass * CreatePlanetAssetClass(const AssetClass * AssetClass);
@@ -101,6 +103,8 @@ private:
 	bool _OffersRecharging;
 	bool _OffersRepairing;
 	std::vector< PlanetAssetClass * > _PlanetAssetClasses;
+	float _RechargingFeePerEnergy;
+	float _RepairingFeePerHull;
 	float _Size;
 };
 
@@ -162,6 +166,16 @@ inline void Planet::SetOffersRecharging(bool OffersRecharging)
 inline void Planet::SetOffersRepairing(bool OffersRepairing)
 {
 	_OffersRepairing = OffersRepairing;
+}
+
+inline void Planet::SetRechargingFeePerEnergy(float RechargingFeePerEnergy)
+{
+	_RechargingFeePerEnergy = RechargingFeePerEnergy;
+}
+
+inline void Planet::SetRepairingFeePerHull(float RepairingFeePerHull)
+{
+	_RepairingFeePerHull = RepairingFeePerHull;
 }
 
 #endif

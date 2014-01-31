@@ -862,13 +862,17 @@ static void ReadSystem(Arxx::Reference & Reference)
 		
 		float LandingFeePerSpace;
 		bool OffersRecharging;
+		float RechargingFeePerEnergy;
 		bool OffersRepairing;
+		float RepairingFeePerHull;
 		std::string FactionIdentifier;
 		
-		Reader >> LandingFeePerSpace >> OffersRecharging >> OffersRepairing >> FactionIdentifier;
+		Reader >> LandingFeePerSpace >> OffersRecharging >> RechargingFeePerEnergy >> OffersRepairing >> RepairingFeePerHull >> FactionIdentifier;
 		NewPlanet->SetLandingFeePerSpace(LandingFeePerSpace / 1000.0f);
 		NewPlanet->SetOffersRecharging(OffersRecharging);
+		NewPlanet->SetRechargingFeePerEnergy(RechargingFeePerEnergy);
 		NewPlanet->SetOffersRepairing(OffersRepairing);
+		NewPlanet->SetRepairingFeePerHull(RepairingFeePerHull);
 		
 		Faction * Faction(g_Galaxy->GetFaction(FactionIdentifier));
 		
