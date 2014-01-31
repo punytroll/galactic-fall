@@ -18,6 +18,7 @@
 **/
 
 #include "../asset_class.h"
+#include "../battery.h"
 #include "../callbacks/callbacks.h"
 #include "../character.h"
 #include "../ship.h"
@@ -101,7 +102,9 @@ void UI::SpaceDockWidget::_OnRechargeButtonClicked(void)
 
 void UI::SpaceDockWidget::_OnRechargeButtonUpdating(UI::Button * RechargeButton, float RealTimeSeconds, float GameTimeSeconds)
 {
-	RechargeButton->SetEnabled(_Planet->GetOffersRecharging());
+	assert(_Character.IsValid() == true);
+	assert(_Planet.IsValid() == true);
+	RechargeButton->SetEnabled((_Planet->GetOffersRecharging() == true) && (_Character->GetShip() != 0) && (_Character->GetShip()->GetBattery() != 0) && (_Character->GetShip()->GetBattery()->GetEnergy() < _Character->GetShip()->GetBattery()->GetEnergyCapacity()));
 }
 
 void UI::SpaceDockWidget::_OnRefuelButtonClicked(void)
@@ -114,6 +117,9 @@ void UI::SpaceDockWidget::_OnRefuelButtonClicked(void)
 
 void UI::SpaceDockWidget::_OnRefuelButtonUpdating(UI::Button * RefuelButton, float RealTimeSeconds, float GameTimeSeconds)
 {
+	assert(_Character.IsValid() == true);
+	assert(_Planet.IsValid() == true);
+	
 	const std::vector< PlanetAssetClass * > & PlanetAssetClasses(_Planet->GetPlanetAssetClasses());
 	bool OffersRefueling(false);
 	
@@ -126,7 +132,7 @@ void UI::SpaceDockWidget::_OnRefuelButtonUpdating(UI::Button * RefuelButton, flo
 			break;
 		}
 	}
-	RefuelButton->SetEnabled(OffersRefueling);
+	RefuelButton->SetEnabled((OffersRefueling == true) && (_Character->GetShip() != 0) && (_Character->GetShip()->GetFuel() < _Character->GetShip()->GetFuelCapacity()));
 }
 
 void UI::SpaceDockWidget::_OnRepairButtonClicked(void)
@@ -139,7 +145,9 @@ void UI::SpaceDockWidget::_OnRepairButtonClicked(void)
 
 void UI::SpaceDockWidget::_OnRepairButtonUpdating(UI::Button * RepairButton, float RealTimeSeconds, float GameTimeSeconds)
 {
-	RepairButton->SetEnabled(_Planet->GetOffersRepairing());
+	assert(_Character.IsValid() == true);
+	assert(_Planet.IsValid() == true);
+	RepairButton->SetEnabled((_Planet->GetOffersRepairing() == true) && (_Character->GetShip() != 0) && (_Character->GetShip()->GetHull() < _Character->GetShip()->GetHullCapacity()));
 }
 
 void UI::SpaceDockWidget::_OnTakeOffButtonClicked(void)
