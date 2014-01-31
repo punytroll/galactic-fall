@@ -95,9 +95,11 @@
 					<base-price-modifier>1.02</base-price-modifier>
 				</offered-asset-class>
 			</offered-asset-classes>
-			<landing-fee-per-space>0.9</landing-fee-per-space>
+			<landing-fee-per-space>0.8</landing-fee-per-space>
 			<offers-recharging>true</offers-recharging>
+			<recharging-fee-per-energy>0.01</recharging-fee-per-energy>
 			<offers-repairing>true</offers-repairing>
+			<repairing-fee-per-hull>0.12</repairing-fee-per-hull>
 			<faction-identifier>earth</faction-identifier>
 		</planet>
 	</planets>
