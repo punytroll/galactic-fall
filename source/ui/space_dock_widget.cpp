@@ -31,13 +31,16 @@ UI::SpaceDockWidget::SpaceDockWidget(UI::Widget * SupWidget, Reference< Planet >
 	_Character(Character),
 	_Planet(Planet)
 {
+	assert(_Character.IsValid() == true);
+	assert(_Planet.IsValid() == true);
 	SetSize(Vector2f(600.0f, 300.0f));
 	
 	UI::Button * RepairButton(new UI::Button(this));
 	
 	RepairButton->SetPosition(Vector2f(0.0f, 0.0f));
 	RepairButton->SetSize(Vector2f(180.0f, 20.0f));
-	RepairButton->ConnectClickedCallback(Callback(this, &SpaceDockWidget::_OnRepairButtonClicked));
+	RepairButton->ConnectClickedCallback(Callback(this, &UI::SpaceDockWidget::_OnRepairButtonClicked));
+	RepairButton->ConnectUpdatingCallback(Bind1(Callback(this, &UI::SpaceDockWidget::_OnRepairButtonUpdating), RepairButton));
 	
 	UI::Label * RepairButtonLabel(new UI::Label(RepairButton, "Repair"));
 	
@@ -50,7 +53,8 @@ UI::SpaceDockWidget::SpaceDockWidget(UI::Widget * SupWidget, Reference< Planet >
 	
 	RechargeButton->SetPosition(Vector2f(0.0f, 30.0f));
 	RechargeButton->SetSize(Vector2f(180.0f, 20.0f));
-	RechargeButton->ConnectClickedCallback(Callback(this, &SpaceDockWidget::_OnRechargeButtonClicked));
+	RechargeButton->ConnectClickedCallback(Callback(this, &UI::SpaceDockWidget::_OnRechargeButtonClicked));
+	RechargeButton->ConnectUpdatingCallback(Bind1(Callback(this, &UI::SpaceDockWidget::_OnRechargeButtonUpdating), RechargeButton));
 	
 	UI::Label * RechargeButtonLabel(new UI::Label(RechargeButton, "Recharge"));
 	
@@ -59,34 +63,25 @@ UI::SpaceDockWidget::SpaceDockWidget(UI::Widget * SupWidget, Reference< Planet >
 	RechargeButtonLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
 	RechargeButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	
-	const std::vector< PlanetAssetClass * > & PlanetAssetClasses(_Planet->GetPlanetAssetClasses());
+	UI::Button * RefuelButton(new UI::Button(this));
 	
-	for(std::vector< PlanetAssetClass * >::const_iterator PlanetAssetClassIterator = PlanetAssetClasses.begin(); PlanetAssetClassIterator != PlanetAssetClasses.end(); ++PlanetAssetClassIterator)
-	{
-		if((*PlanetAssetClassIterator)->GetAssetClass()->GetIdentifier() == "fuel")
-		{
-			UI::Button * RefuelButton(new UI::Button(this));
-			
-			RefuelButton->SetPosition(Vector2f(0.0f, 60.0f));
-			RefuelButton->SetSize(Vector2f(180.0f, 20.0f));
-			RefuelButton->ConnectClickedCallback(Callback(this, &SpaceDockWidget::_OnRefuelButtonClicked));
-			
-			UI::Label * RefuelButtonLabel(new UI::Label(RefuelButton, "Refuel"));
-			
-			RefuelButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
-			RefuelButtonLabel->SetSize(RefuelButton->GetSize());
-			RefuelButtonLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
-			RefuelButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
-			
-			break;
-		}
-	}
+	RefuelButton->SetPosition(Vector2f(0.0f, 60.0f));
+	RefuelButton->SetSize(Vector2f(180.0f, 20.0f));
+	RefuelButton->ConnectClickedCallback(Callback(this, &UI::SpaceDockWidget::_OnRefuelButtonClicked));
+	RefuelButton->ConnectUpdatingCallback(Bind1(Callback(this, &UI::SpaceDockWidget::_OnRefuelButtonUpdating), RefuelButton));
+	
+	UI::Label * RefuelButtonLabel(new UI::Label(RefuelButton, "Refuel"));
+	
+	RefuelButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
+	RefuelButtonLabel->SetSize(RefuelButton->GetSize());
+	RefuelButtonLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
+	RefuelButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	
 	UI::Button * TakeOffButton(new UI::Button(this));
 	
 	TakeOffButton->SetPosition(Vector2f(0.0f, 90.0f));
 	TakeOffButton->SetSize(Vector2f(180.0f, 20.0f));
-	TakeOffButton->ConnectClickedCallback(Callback(this, &SpaceDockWidget::_OnTakeOffButtonClicked));
+	TakeOffButton->ConnectClickedCallback(Callback(this, &UI::SpaceDockWidget::_OnTakeOffButtonClicked));
 	
 	UI::Label * TakeOffButtonLabel(new UI::Label(TakeOffButton, "Take Off"));
 	
@@ -98,33 +93,18 @@ UI::SpaceDockWidget::SpaceDockWidget(UI::Widget * SupWidget, Reference< Planet >
 
 void UI::SpaceDockWidget::_OnRechargeButtonClicked(void)
 {
-	_Recharge();
-}
-
-void UI::SpaceDockWidget::_OnRefuelButtonClicked(void)
-{
-	_Refuel();
-}
-
-void UI::SpaceDockWidget::_OnRepairButtonClicked(void)
-{
-	_Repair();
-}
-
-void UI::SpaceDockWidget::_OnTakeOffButtonClicked(void)
-{
-	_TakeOff();
-}
-
-void UI::SpaceDockWidget::_Recharge(void)
-{
 	assert(_Planet.IsValid() == true);
 	assert(_Character.IsValid() == true);
 	assert(_Character->GetShip() != 0);
 	_Planet->Recharge(_Character->GetShip(), _Character.Get());
 }
 
-void UI::SpaceDockWidget::_Refuel(void)
+void UI::SpaceDockWidget::_OnRechargeButtonUpdating(UI::Button * RechargeButton, float RealTimeSeconds, float GameTimeSeconds)
+{
+	RechargeButton->SetEnabled(_Planet->GetOffersRecharging());
+}
+
+void UI::SpaceDockWidget::_OnRefuelButtonClicked(void)
 {
 	assert(_Planet.IsValid() == true);
 	assert(_Character.IsValid() == true);
@@ -132,7 +112,24 @@ void UI::SpaceDockWidget::_Refuel(void)
 	_Planet->Refuel(_Character->GetShip(), _Character.Get());
 }
 
-void UI::SpaceDockWidget::_Repair(void)
+void UI::SpaceDockWidget::_OnRefuelButtonUpdating(UI::Button * RefuelButton, float RealTimeSeconds, float GameTimeSeconds)
+{
+	const std::vector< PlanetAssetClass * > & PlanetAssetClasses(_Planet->GetPlanetAssetClasses());
+	bool OffersRefueling(false);
+	
+	for(std::vector< PlanetAssetClass * >::const_iterator PlanetAssetClassIterator = PlanetAssetClasses.begin(); PlanetAssetClassIterator != PlanetAssetClasses.end(); ++PlanetAssetClassIterator)
+	{
+		if((*PlanetAssetClassIterator)->GetAssetClass()->GetIdentifier() == "fuel")
+		{
+			OffersRefueling = true;
+			
+			break;
+		}
+	}
+	RefuelButton->SetEnabled(OffersRefueling);
+}
+
+void UI::SpaceDockWidget::_OnRepairButtonClicked(void)
 {
 	assert(_Planet.IsValid() == true);
 	assert(_Character.IsValid() == true);
@@ -140,7 +137,12 @@ void UI::SpaceDockWidget::_Repair(void)
 	_Planet->Repair(_Character->GetShip(), _Character.Get());
 }
 
-void UI::SpaceDockWidget::_TakeOff(void)
+void UI::SpaceDockWidget::_OnRepairButtonUpdating(UI::Button * RepairButton, float RealTimeSeconds, float GameTimeSeconds)
+{
+	RepairButton->SetEnabled(_Planet->GetOffersRepairing());
+}
+
+void UI::SpaceDockWidget::_OnTakeOffButtonClicked(void)
 {
 	assert(_Character.IsValid() == true);
 	assert(_Character->GetShip() != 0);

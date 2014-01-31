@@ -75,12 +75,16 @@ public:
 	Reference< Faction > GetFaction(void) const;
 	const std::string & GetIdentifier(void) const;
 	float GetLandingFeePerSpace(void) const;
+	bool GetOffersRecharging(void) const;
+	bool GetOffersRepairing(void) const;
 	const std::vector< PlanetAssetClass * > & GetPlanetAssetClasses(void) const;
 	float GetSize(void) const;
 	// setters
 	void SetDescription(const std::string & Description);
 	void SetFaction(Reference< Faction > Faction);
 	void SetLandingFeePerSpace(float LandingFeePerSpace);
+	void SetOffersRecharging(bool OffersRecharging);
+	void SetOffersRepairing(bool OffersRepairing);
 	void SetSize(const float & Size);
 	// modifiers
 	PlanetAssetClass * CreatePlanetAssetClass(const AssetClass * AssetClass);
@@ -94,6 +98,8 @@ private:
 	Reference< Faction > _Faction;
 	std::string _Identifier;
 	float _LandingFeePerSpace;
+	bool _OffersRecharging;
+	bool _OffersRepairing;
 	std::vector< PlanetAssetClass * > _PlanetAssetClasses;
 	float _Size;
 };
@@ -118,6 +124,16 @@ inline float Planet::GetLandingFeePerSpace(void) const
 	return _LandingFeePerSpace;
 }
 
+inline bool Planet::GetOffersRecharging(void) const
+{
+	return _OffersRecharging;
+}
+
+inline bool Planet::GetOffersRepairing(void) const
+{
+	return _OffersRepairing;
+}
+
 inline const std::vector< PlanetAssetClass * > & Planet::GetPlanetAssetClasses(void) const
 {
 	return _PlanetAssetClasses;
@@ -136,6 +152,16 @@ inline void Planet::SetFaction(Reference< Faction > Faction)
 inline void Planet::SetLandingFeePerSpace(float LandingFeePerSpace)
 {
 	_LandingFeePerSpace = LandingFeePerSpace;
+}
+
+inline void Planet::SetOffersRecharging(bool OffersRecharging)
+{
+	_OffersRecharging = OffersRecharging;
+}
+
+inline void Planet::SetOffersRepairing(bool OffersRepairing)
+{
+	_OffersRepairing = OffersRepairing;
 }
 
 #endif

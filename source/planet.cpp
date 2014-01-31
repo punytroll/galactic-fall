@@ -107,9 +107,12 @@ void Planet::Land(Ship * Ship)
 void Planet::Recharge(Ship * Ship, Character * Character)
 {
 	assert(Ship != 0);
-	if(Ship->GetBattery() != 0)
+	if(_OffersRecharging == true)
 	{
-		Ship->GetBattery()->SetEnergy(Ship->GetBattery()->GetEnergyCapacity());
+		if(Ship->GetBattery() != 0)
+		{
+			Ship->GetBattery()->SetEnergy(Ship->GetBattery()->GetEnergyCapacity());
+		}
 	}
 }
 
@@ -141,7 +144,10 @@ void Planet::Refuel(Ship * Ship, Character * Character)
 void Planet::Repair(Ship * Ship, Character * Character)
 {
 	assert(Ship != 0);
-	Ship->SetHull(Ship->GetHullCapacity());
+	if(_OffersRepairing == true)
+	{
+		Ship->SetHull(Ship->GetHullCapacity());
+	}
 }
 
 void Planet::TakeOff(Ship * Ship)

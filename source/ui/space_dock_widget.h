@@ -37,14 +37,12 @@ namespace UI
 	private:
 		// callbacks
 		void _OnRechargeButtonClicked(void);
+		void _OnRechargeButtonUpdating(UI::Button * RechargeButton, float RealTimeSeconds, float GameTimeSeconds);
 		void _OnRefuelButtonClicked(void);
+		void _OnRefuelButtonUpdating(UI::Button * RefuelButton, float RealTimeSeconds, float GameTimeSeconds);
 		void _OnRepairButtonClicked(void);
+		void _OnRepairButtonUpdating(UI::Button * RechargeButton, float RealTimeSeconds, float GameTimeSeconds);
 		void _OnTakeOffButtonClicked(void);
-		// helper functions & actions
-		void _Recharge(void);
-		void _Refuel(void);
-		void _Repair(void);
-		void _TakeOff(void);
 		// member variables
 		Reference< Character > _Character;
 		Reference< Planet > _Planet;
