@@ -96,6 +96,8 @@
 				</offered-asset-class>
 			</offered-asset-classes>
 			<landing-fee-per-space>1.25</landing-fee-per-space>
+			<offers-recharging>true</offers-recharging>
+			<offers-repairing>true</offers-repairing>
 			<faction-identifier>earth</faction-identifier>
 		</planet>
 		<planet>
@@ -162,6 +164,8 @@
 				</offered-asset-class>
 			</offered-asset-classes>
 			<landing-fee-per-space>1.05</landing-fee-per-space>
+			<offers-recharging>true</offers-recharging>
+			<offers-repairing>true</offers-repairing>
 			<faction-identifier>earth</faction-identifier>
 		</planet>
 		<planet>
@@ -232,6 +236,8 @@
 				</offered-asset-class>
 			</offered-asset-classes>
 			<landing-fee-per-space>1.15</landing-fee-per-space>
+			<offers-recharging>true</offers-recharging>
+			<offers-repairing>true</offers-repairing>
 			<faction-identifier>earth</faction-identifier>
 		</planet>
 	</planets>
