@@ -24,16 +24,16 @@ Color::Color(void)
 }
 
 Color::Color(const Color * Color) :
-	m_Color(Color->m_Color)
+	_Color(Color->_Color)
 {
 }
 
-Color::Color(float Red, float Green, float Blue, float Alpha) :
-	m_Color(Red, Green, Blue, Alpha)
+Color::Color(float Red, float Green, float Blue, float Opacity) :
+	_Color(Red, Green, Blue, Opacity)
 {
 }
 
-void Color::Set(float Red, float Green, float Blue, float Alpha)
+void Color::Set(float Red, float Green, float Blue, float Opacity)
 {
-	m_Color.Set(Red, Green, Blue, Alpha);
+	_Color.Set(Red, Green, Blue, Opacity);
 }

@@ -27,16 +27,16 @@ class Color
 public:
 	Color(void);
 	explicit Color(const Color * Color);
-	Color(float Red, float Green, float Blue, float Alpha);
+	Color(float Red, float Green, float Blue, float Opacity);
 	const Vector4f & GetColor(void) const;
-	void Set(float Red, float Green, float Blue, float Alpha);
+	void Set(float Red, float Green, float Blue, float Opacity);
 private:
-	Vector4f m_Color;
+	Vector4f _Color;
 };
 
 inline const Vector4f & Color::GetColor(void) const
 {
-	return m_Color;
+	return _Color;
 }
 
 #endif
