@@ -34,7 +34,7 @@ UI::Window::Window(Widget * SupWidget, const std::string & Title) :
 	m_Border->SetAnchorBottom(true);
 	m_Border->SetAnchorRight(true);
 	m_Border->SetWidth(1.0f);
-	m_Border->SetForegroundColor(Color(0.4f, 0.4f, 0.4f, 1.0f));
+	m_Border->SetColor(Color(0.4f, 0.4f, 0.4f, 1.0f));
 	m_TitleLabel = new UI::Label(this, Title);
 	m_TitleLabel->SetPosition(Vector2f(10.0f, 10.0f));
 	m_TitleLabel->SetSize(Vector2f(GetSize()[0] - 20.0f, 20.0f));
