@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2007  Hagen Möbius
+ * Copyright (C) 2007, 2014  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,8 +20,9 @@
 #ifndef UI_BORDER_H
 #define UI_BORDER_H
 
-#include "../color.h"
 #include "widget.h"
+
+class Color;
 
 namespace UI
 {
@@ -31,42 +32,31 @@ namespace UI
 		Border(Widget * SupWidget);
 		virtual ~Border(void);
 		// getters
-		Color & GetForegroundColor(void);
-		const Color & GetForegroundColor(void) const;
+		const Color * GetColor(void) const;
 		float GetWidth(void) const;
 		// setters
-		void SetForegroundColor(const Color & ForegroundColor);
+		void SetColor(const Color & Color);
 		void SetWidth(float Width);
 		// draw
 		virtual void Draw(void) const;
 	private:
-		Color m_ForegroundColor;
-		float m_Width;
+		Color * _Color;
+		float _Width;
 	};
 
-	inline Color & Border::GetForegroundColor(void)
+	inline const Color * Border::GetColor(void) const
 	{
-		return m_ForegroundColor;
-	}
-
-	inline const Color & Border::GetForegroundColor(void) const
-	{
-		return m_ForegroundColor;
+		return _Color;
 	}
 
 	inline float Border::GetWidth(void) const
 	{
-		return m_Width;
-	}
-
-	inline void Border::SetForegroundColor(const Color & ForegroundColor)
-	{
-		m_ForegroundColor = ForegroundColor;
+		return _Width;
 	}
 
 	inline void Border::SetWidth(float Width)
 	{
-		m_Width = Width;
+		_Width = Width;
 	}
 }
 
