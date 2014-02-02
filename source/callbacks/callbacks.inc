@@ -1099,6 +1099,53 @@ protected:
 // Assertions=false
 // BindArgument=1
 // InstanceCount=false
+// NumberOfArguments=4
+///////////////////////////////////////////////////////////////////////////////
+template < typename ReturnType, typename Argument1Type, typename Argument2Type, typename Argument3Type, typename Argument4Type >
+class BindArgument1Core3 : public CallbackCore3< ReturnType, Argument2Type, Argument3Type, Argument4Type >
+{
+public:
+	explicit BindArgument1Core3(Callback4< ReturnType, Argument1Type, Argument2Type, Argument3Type, Argument4Type > Callback, Argument1Type Argument1) :
+		m_CallbackCore(Callback.GetCore()),
+		m_Argument1(Argument1)
+	{
+		m_CallbackCore->Increment();
+		
+	}
+	
+	virtual ~BindArgument1Core3(void)
+	{
+		if(m_CallbackCore != 0)
+		{
+			m_CallbackCore->Decrement();
+			if(m_CallbackCore->GetCount() == 0)
+			{
+				delete m_CallbackCore;
+				m_CallbackCore = 0;
+			}
+		}
+	}
+	
+	virtual ReturnType Call(Argument2Type Argument2, Argument3Type Argument3, Argument4Type Argument4) const
+	{
+		return m_CallbackCore->Call(m_Argument1, Argument2, Argument3, Argument4);
+	}
+	
+	virtual bool IsValid(void) const
+	{
+		return m_CallbackCore->IsValid();
+	}
+protected:
+	CallbackCore4< ReturnType, Argument1Type, Argument2Type, Argument3Type, Argument4Type > * m_CallbackCore;
+	Argument1Type m_Argument1;
+};
+/////////  end    9730669a-993e-4d2a-9e3d-25af128e728f  ///////////////////////
+
+/////////  begin  9730669a-993e-4d2a-9e3d-25af128e728f  ///////////////////////
+// Bind Argument Core
+// Assertions=false
+// BindArgument=1
+// InstanceCount=false
 // NumberOfArguments=5
 ///////////////////////////////////////////////////////////////////////////////
 template < typename ReturnType, typename Argument1Type, typename Argument2Type, typename Argument3Type, typename Argument4Type, typename Argument5Type >
@@ -1319,6 +1366,18 @@ template < typename ReturnType, typename Argument1Type, typename Argument2Type, 
 Callback2< ReturnType, Argument2Type, Argument3Type > Bind1(Callback3< ReturnType, Argument1Type, Argument2Type, Argument3Type > Callback, Argument1Type Argument1)
 {
 	return Callback2< ReturnType, Argument2Type, Argument3Type >(new BindArgument1Core2< ReturnType, Argument1Type, Argument2Type, Argument3Type >(Callback, Argument1));
+}
+/////////  end    15c882f3-3fea-466b-8347-4074787f0f5b  ///////////////////////
+
+/////////  begin  15c882f3-3fea-466b-8347-4074787f0f5b  ///////////////////////
+// Bind
+// BindArgument=1
+// NumberOfArguments=4
+///////////////////////////////////////////////////////////////////////////////
+template < typename ReturnType, typename Argument1Type, typename Argument2Type, typename Argument3Type, typename Argument4Type >
+Callback3< ReturnType, Argument2Type, Argument3Type, Argument4Type > Bind1(Callback4< ReturnType, Argument1Type, Argument2Type, Argument3Type, Argument4Type > Callback, Argument1Type Argument1)
+{
+	return Callback3< ReturnType, Argument2Type, Argument3Type, Argument4Type >(new BindArgument1Core3< ReturnType, Argument1Type, Argument2Type, Argument3Type, Argument4Type >(Callback, Argument1));
 }
 /////////  end    15c882f3-3fea-466b-8347-4074787f0f5b  ///////////////////////
 
