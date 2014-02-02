@@ -30,6 +30,7 @@ callbacks_inc_generated_code_files = \
 	.generated-code/Callback5.gc \
 	.generated-code/BindArgument1Core0.gc \
 	.generated-code/BindArgument1Core2.gc \
+	.generated-code/BindArgument1Core3.gc \
 	.generated-code/BindArgument1Core4.gc \
 	.generated-code/BindArgument2Core1.gc \
 	.generated-code/FunctionCallback0.gc \
@@ -44,6 +45,7 @@ callbacks_inc_generated_code_files = \
 	.generated-code/MethodCallback5.gc \
 	.generated-code/Bind1_0.gc \
 	.generated-code/Bind1_2.gc \
+	.generated-code/Bind1_3.gc \
 	.generated-code/Bind1_4.gc \
 	.generated-code/Bind2_1.gc
 
@@ -96,6 +98,9 @@ events.inc: $(events_inc_generated_code_files)
 .generated-code/Bind1_2.gc: code-templates/Bind.cgt $(code_generator_dependencies) Makefile
 	$(command_code_generator) --in=$< --out=$@ --variable=BindArgument=1 --variable=NumberOfArguments=3
 
+.generated-code/Bind1_3.gc: code-templates/Bind.cgt $(code_generator_dependencies) Makefile
+	$(command_code_generator) --in=$< --out=$@ --variable=BindArgument=1 --variable=NumberOfArguments=4
+
 .generated-code/Bind1_4.gc: code-templates/Bind.cgt $(code_generator_dependencies) Makefile
 	$(command_code_generator) --in=$< --out=$@ --variable=BindArgument=1 --variable=NumberOfArguments=5
 
@@ -107,6 +112,9 @@ events.inc: $(events_inc_generated_code_files)
 
 .generated-code/BindArgument1Core2.gc: code-templates/BindArgumentCore.cgt $(code_generator_dependencies) Makefile
 	$(command_code_generator) --in=$< --out=$@ --variable=Assertions=$(assertions) --variable=BindArgument=1 --variable=InstanceCount=$(instance_count) --variable=NumberOfArguments=3
+
+.generated-code/BindArgument1Core3.gc: code-templates/BindArgumentCore.cgt $(code_generator_dependencies) Makefile
+	$(command_code_generator) --in=$< --out=$@ --variable=Assertions=$(assertions) --variable=BindArgument=1 --variable=InstanceCount=$(instance_count) --variable=NumberOfArguments=4
 
 .generated-code/BindArgument1Core4.gc: code-templates/BindArgumentCore.cgt $(code_generator_dependencies) Makefile
 	$(command_code_generator) --in=$< --out=$@ --variable=Assertions=$(assertions) --variable=BindArgument=1 --variable=InstanceCount=$(instance_count) --variable=NumberOfArguments=5
