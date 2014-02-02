@@ -785,6 +785,7 @@ planet_cpp = \
 	planet.cpp \
 	$(asset_class_h) \
 	$(battery_h) \
+	$(character_h) \
 	$(color_h) \
 	$(globals_h) \
 	$(message_h) \
@@ -1024,12 +1025,12 @@ type_definitions_h = \
 
 ui_border_cpp = \
 	ui/border.cpp \
+	$(color_h) \
 	$(graphics_gl_h) \
 	$(ui_border_h)
 
 ui_border_h = \
 	ui/border.h \
-	$(color_h) \
 	$(ui_widget_h)
 
 ui_button_cpp = \
@@ -1296,10 +1297,13 @@ ui_scroll_box_h = \
 ui_space_dock_widget_cpp = \
 	ui/space_dock_widget.cpp \
 	$(asset_class_h) \
+	$(battery_h) \
 	$(callbacks_callbacks_h) \
 	$(character_h) \
 	$(planet_h) \
 	$(ship_h) \
+	$(string_cast_h) \
+	$(ui_border_h) \
 	$(ui_button_h) \
 	$(ui_label_h) \
 	$(ui_space_dock_widget_h)
