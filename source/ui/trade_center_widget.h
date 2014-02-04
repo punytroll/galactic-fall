@@ -49,10 +49,12 @@ namespace UI
 		void _OnAssetClassMouseLeave(UI::TradeCenterAssetClass * AssetClassWidget);
 		bool _OnAssetClassScrollBoxMouseButton(int Button, int State, float X, float Y);
 		void _OnBuyButtonClicked(void);
+		void _OnBuyButtonUpdating(UI::Button * BuyButton, float RealTimeSeconds, float GameTimeSeconds);
 		void _OnDestroying(void);
 		void _OnDestroyInScene(Graphics::Node * Node);
 		bool _OnKey(const KeyEventInformation & KeyEventInformation);
 		void _OnSellButtonClicked(void);
+		void _OnSellButtonUpdating(UI::Button * BuyButton, float RealTimeSeconds, float GameTimeSeconds);
 		void _OnUpdating(float RealTimeSeconds, float GameTimeSeconds);
 		// helper functions and actions
 		void _Buy(const PlanetAssetClass * PlanetAssetClass);
@@ -61,11 +63,9 @@ namespace UI
 		// member variables
 		UI::ScrollBox * _AssetClassScrollBox;
 		UI::ViewDisplay * _AssetClassViewDisplay;
-		UI::Button * _BuyButton;
 		Reference< Character > _Character;
 		Reference< Planet > _Planet;
 		UI::TradeCenterAssetClass * _SelectedTradeCenterAssetClass;
-		UI::Button * _SellButton;
 		UI::Label * _TraderAvailableSpaceLabel;
 		UI::Label * _TraderCreditsLabel;
 	};

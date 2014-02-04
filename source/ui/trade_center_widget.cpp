@@ -119,28 +119,34 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Reference< Plan
 	_SelectedTradeCenterAssetClass(0)
 {
 	SetSize(Vector2f(600.0f, 300.0f));
-	ConnectDestroyingCallback(Callback(this, &TradeCenterWidget::_OnDestroying));
-	ConnectKeyCallback(Callback(this, &TradeCenterWidget::_OnKey));
-	ConnectUpdatingCallback(Callback(this, &TradeCenterWidget::_OnUpdating));
-	_BuyButton = new UI::TextButton(this, "Buy");
-	_BuyButton->SetPosition(Vector2f(0.0f, 280.0f));
-	_BuyButton->SetSize(Vector2f(100.0f, 20.0f));
-	_BuyButton->SetAnchorBottom(true);
-	_BuyButton->SetAnchorTop(false);
-	_BuyButton->ConnectClickedCallback(Callback(this, &TradeCenterWidget::_OnBuyButtonClicked));
-	_SellButton = new UI::TextButton(this, "Sell");
-	_SellButton->SetPosition(Vector2f(110.0f, 280.0f));
-	_SellButton->SetSize(Vector2f(100.0f, 20.0f));
-	_SellButton->SetAnchorBottom(true);
-	_SellButton->SetAnchorTop(false);
-	_SellButton->ConnectClickedCallback(Callback(this, &TradeCenterWidget::_OnSellButtonClicked));
+	ConnectDestroyingCallback(Callback(this, &UI::TradeCenterWidget::_OnDestroying));
+	ConnectKeyCallback(Callback(this, &UI::TradeCenterWidget::_OnKey));
+	ConnectUpdatingCallback(Callback(this, &UI::TradeCenterWidget::_OnUpdating));
+	
+	UI::Button * BuyButton(new UI::TextButton(this, "Buy"));
+	
+	BuyButton->SetPosition(Vector2f(0.0f, 280.0f));
+	BuyButton->SetSize(Vector2f(100.0f, 20.0f));
+	BuyButton->SetAnchorBottom(true);
+	BuyButton->SetAnchorTop(false);
+	BuyButton->ConnectClickedCallback(Callback(this, &UI::TradeCenterWidget::_OnBuyButtonClicked));
+	BuyButton->ConnectUpdatingCallback(Bind1(Callback(this, &UI::TradeCenterWidget::_OnBuyButtonUpdating), BuyButton));
+	
+	UI::Button * SellButton(new UI::TextButton(this, "Sell"));
+	
+	SellButton->SetPosition(Vector2f(110.0f, 280.0f));
+	SellButton->SetSize(Vector2f(100.0f, 20.0f));
+	SellButton->SetAnchorBottom(true);
+	SellButton->SetAnchorTop(false);
+	SellButton->ConnectClickedCallback(Callback(this, &UI::TradeCenterWidget::_OnSellButtonClicked));
+	SellButton->ConnectUpdatingCallback(Bind1(Callback(this, &UI::TradeCenterWidget::_OnSellButtonUpdating), SellButton));
 	_AssetClassScrollBox = new UI::ScrollBox(this);
 	_AssetClassScrollBox->SetPosition(Vector2f(0.0f, 0.0f));
 	_AssetClassScrollBox->SetSize(Vector2f(490.0f, 210.0f));
 	_AssetClassScrollBox->SetHorizontalScrollBarVisible(false);
 	_AssetClassScrollBox->SetAnchorRight(true);
 	_AssetClassScrollBox->SetAnchorBottom(true);
-	_AssetClassScrollBox->ConnectMouseButtonCallback(Callback(this, &TradeCenterWidget::_OnAssetClassScrollBoxMouseButton));
+	_AssetClassScrollBox->ConnectMouseButtonCallback(Callback(this, &UI::TradeCenterWidget::_OnAssetClassScrollBoxMouseButton));
 	
 	const std::vector< PlanetAssetClass * > & PlanetAssetClasses(Planet->GetPlanetAssetClasses());
 	std::vector< PlanetAssetClass * >::const_iterator PlanetAssetClassIterator(PlanetAssetClasses.begin());
@@ -148,14 +154,14 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Reference< Plan
 	
 	while(PlanetAssetClassIterator != PlanetAssetClasses.end())
 	{
-		TradeCenterAssetClass * NewTradeCenterAssetClass(new TradeCenterAssetClass(_AssetClassScrollBox->GetContent(), *PlanetAssetClassIterator, _Character->GetShip()->GetReference()));
+		TradeCenterAssetClass * NewTradeCenterAssetClass(new UI::TradeCenterAssetClass(_AssetClassScrollBox->GetContent(), *PlanetAssetClassIterator, _Character->GetShip()->GetReference()));
 		
 		NewTradeCenterAssetClass->SetPosition(Vector2f(5.0f, Top));
 		NewTradeCenterAssetClass->SetSize(Vector2f(_AssetClassScrollBox->GetContent()->GetSize()[0] - 10.0f, 20.0f));
 		NewTradeCenterAssetClass->SetAnchorRight(true);
-		NewTradeCenterAssetClass->ConnectMouseButtonCallback(Bind1(Callback(this, &TradeCenterWidget::_OnAssetClassMouseButton), NewTradeCenterAssetClass));
-		NewTradeCenterAssetClass->ConnectMouseEnterCallback(Bind1(Callback(this, &TradeCenterWidget::_OnAssetClassMouseEnter), NewTradeCenterAssetClass));
-		NewTradeCenterAssetClass->ConnectMouseLeaveCallback(Bind1(Callback(this, &TradeCenterWidget::_OnAssetClassMouseLeave), NewTradeCenterAssetClass));
+		NewTradeCenterAssetClass->ConnectMouseButtonCallback(Bind1(Callback(this, &UI::TradeCenterWidget::_OnAssetClassMouseButton), NewTradeCenterAssetClass));
+		NewTradeCenterAssetClass->ConnectMouseEnterCallback(Bind1(Callback(this, &UI::TradeCenterWidget::_OnAssetClassMouseEnter), NewTradeCenterAssetClass));
+		NewTradeCenterAssetClass->ConnectMouseLeaveCallback(Bind1(Callback(this, &UI::TradeCenterWidget::_OnAssetClassMouseLeave), NewTradeCenterAssetClass));
 		Top += 25.0f;
 		++PlanetAssetClassIterator;
 	}
@@ -181,21 +187,25 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Reference< Plan
 
 void UI::TradeCenterWidget::_Buy(const PlanetAssetClass * PlanetAssetClass)
 {
-	u4byte Price(PlanetAssetClass->GetPrice());
-	
-	if(_Character->RemoveCredits(Price) == true)
+	assert(PlanetAssetClass != 0);
+	assert(PlanetAssetClass->GetAssetClass() != 0);
+	assert(_Character.IsValid() == true);
+	if(_Character->RemoveCredits(PlanetAssetClass->GetPrice()) == true)
 	{
+		assert(_Character->GetShip() != 0);
+		assert(_Character->GetShip()->GetCargoHold() != 0);
 		if(_Character->GetShip()->GetCargoHold()->GetSpace() >= g_ObjectFactory->GetSpaceRequirement(PlanetAssetClass->GetAssetClass()->GetObjectTypeIdentifier(), PlanetAssetClass->GetAssetClass()->GetObjectClassIdentifier()))
 		{
 			Object * NewCargo(g_ObjectFactory->Create(PlanetAssetClass->GetAssetClass()->GetObjectTypeIdentifier(), PlanetAssetClass->GetAssetClass()->GetObjectClassIdentifier()));
 			
+			assert(NewCargo != 0);
 			NewCargo->SetObjectIdentifier("::asset(" + PlanetAssetClass->GetAssetClass()->GetIdentifier() + ")::" + PlanetAssetClass->GetAssetClass()->GetObjectTypeIdentifier() + "(" + PlanetAssetClass->GetAssetClass()->GetObjectClassIdentifier() + ")::created_on(" + _Planet->GetObjectIdentifier() + ")::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::bought_by(" + _Character->GetObjectIdentifier() + ")::created_at_address(" + to_string_cast(reinterpret_cast< void * >(NewCargo)) + ")");
-			assert(_Character->GetShip()->GetAspectObjectContainer() != 0);
+			assert(_Character->GetShip()->GetCargoHold()->GetAspectObjectContainer() != 0);
 			_Character->GetShip()->GetCargoHold()->GetAspectObjectContainer()->AddContent(NewCargo);
 		}
 		else
 		{
-			_Character->AddCredits(Price);
+			_Character->AddCredits(PlanetAssetClass->GetPrice());
 		}
 	}
 }
@@ -347,6 +357,12 @@ void UI::TradeCenterWidget::_OnBuyButtonClicked(void)
 	}
 }
 
+void UI::TradeCenterWidget::_OnBuyButtonUpdating(UI::Button * BuyButton, float RealTimeSeconds, float GameTimeSeconds)
+{
+	assert(_Character.IsValid() == true);
+	BuyButton->SetEnabled((_SelectedTradeCenterAssetClass != 0) && (_Character->GetCredits() >= _SelectedTradeCenterAssetClass->GetPlanetAssetClass()->GetPrice()) && (_Character->GetShip() != 0) && (_Character->GetShip()->GetCargoHold()->GetSpace() >= g_ObjectFactory->GetSpaceRequirement(_SelectedTradeCenterAssetClass->GetPlanetAssetClass()->GetAssetClass()->GetObjectTypeIdentifier(), _SelectedTradeCenterAssetClass->GetPlanetAssetClass()->GetAssetClass()->GetObjectClassIdentifier())));
+}
+
 void UI::TradeCenterWidget::_OnDestroying(void)
 {
 	_ClearAssetClassViewDisplay();
@@ -379,6 +395,37 @@ void UI::TradeCenterWidget::_OnSellButtonClicked(void)
 	}
 }
 
+void UI::TradeCenterWidget::_OnSellButtonUpdating(UI::Button * SellButton, float RealTimeSeconds, float GameTimeSeconds)
+{
+	assert(_Character.IsValid() == true);
+	
+	bool Enabled(false);
+	
+	if((_SelectedTradeCenterAssetClass != 0) && (_Character->GetShip() != 0) && (_Character->GetShip()->GetCargoHold() != 0))
+	{
+		assert(_SelectedTradeCenterAssetClass->GetPlanetAssetClass() != 0);
+		assert(_SelectedTradeCenterAssetClass->GetPlanetAssetClass()->GetAssetClass() != 0);
+		assert(_Character->GetShip()->GetCargoHold()->GetAspectObjectContainer() != 0);
+		
+		const std::set< Object * > & Content(_Character->GetShip()->GetCargoHold()->GetAspectObjectContainer()->GetContent());
+		std::set< Object * >::const_iterator ContentIterator(Content.begin());
+		
+		while(ContentIterator != Content.end())
+		{
+			Object * Content(*ContentIterator);
+			
+			if((Content->GetTypeIdentifier() == _SelectedTradeCenterAssetClass->GetPlanetAssetClass()->GetAssetClass()->GetObjectTypeIdentifier()) && (Content->GetClassIdentifier() == _SelectedTradeCenterAssetClass->GetPlanetAssetClass()->GetAssetClass()->GetObjectClassIdentifier()) && ((Content->GetAspectAccessory() == 0) || (Content->GetAspectAccessory()->GetSlot() == 0)))
+			{
+				Enabled = true;
+				
+				break;
+			}
+			++ContentIterator;
+		}
+	}
+	SellButton->SetEnabled(Enabled);
+}
+
 void UI::TradeCenterWidget::_OnUpdating(float RealTimeSeconds, float GameTimeSeconds)
 {
 	assert(_Character.IsValid() == true);
@@ -399,6 +446,8 @@ void UI::TradeCenterWidget::_OnUpdating(float RealTimeSeconds, float GameTimeSec
 
 void UI::TradeCenterWidget::_Sell(const PlanetAssetClass * PlanetAssetClass)
 {
+	assert(PlanetAssetClass != 0);
+	assert(PlanetAssetClass->GetAssetClass() != 0);
 	assert(_Character.IsValid() == true);
 	assert(_Character->GetShip() != 0);
 	assert(_Character->GetShip()->GetCargoHold() != 0);
