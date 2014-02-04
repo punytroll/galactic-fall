@@ -33,11 +33,11 @@ UI::ScrollBar::ScrollBar(Widget * SupWidget, UI::ScrollBar::Alignment Alignment)
 {
 	ConnectSizeChangedCallback(Callback(this, &ScrollBar::OnSizeChanged));
 	SetBackgroundColor(Color(0.23f, 0.23f, 0.23f, 1.0f));
-	m_LessButton = new Button(this);
+	m_LessButton = new UI::Button(this);
 	m_LessButton->ConnectClickedCallback(Callback(this, &ScrollBar::OnLessClicked));
-	m_MoreButton = new Button(this);
+	m_MoreButton = new UI::Button(this);
 	m_MoreButton->ConnectClickedCallback(Callback(this, &ScrollBar::OnMoreClicked));
-	m_Tracker = new Widget(this);
+	m_Tracker = new UI::Widget(this);
 	m_Tracker->SetBackgroundColor(Color(0.3f, 0.3f, 0.3f, 1.0f));
 	m_Tracker->ConnectMouseEnterCallback(Callback(this, &ScrollBar::OnTrackerMouseEnter));
 	m_Tracker->ConnectMouseLeaveCallback(Callback(this, &ScrollBar::OnTrackerMouseLeave));

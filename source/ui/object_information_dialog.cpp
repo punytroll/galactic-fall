@@ -17,6 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include "../color.h"
 #include "../globals.h"
 #include "../message.h"
 #include "../object.h"
@@ -31,11 +32,11 @@
 #include "../slot.h"
 #include "../slot_class.h"
 #include "../string_cast.h"
-#include "button.h"
 #include "label.h"
 #include "object_information_dialog.h"
 #include "scroll_bar.h"
 #include "scroll_box.h"
+#include "text_button.h"
 
 UI::ObjectInformationDialog::ObjectInformationDialog(UI::Widget * SupWidget, const Reference< Object > & Object) :
 	UI::Window(SupWidget, "Object Information"),
@@ -47,7 +48,7 @@ UI::ObjectInformationDialog::ObjectInformationDialog(UI::Widget * SupWidget, con
 	SetSize(Vector2f(500.0f, 300.0f));
 	ConnectMouseButtonCallback(Callback(this, &ObjectInformationDialog::_OnMouseButton));
 	// set up widgets
-	_CloseButton = new UI::Button(this);
+	_CloseButton = new UI::TextButton(this, "Close");
 	_CloseButton->SetSize(Vector2f(100.0f, 20.0f));
 	_CloseButton->SetPosition(Vector2f(GetSize()[0] - 10.0f - _CloseButton->GetSize()[0], GetSize()[1] - 10.0f - _CloseButton->GetSize()[1]));
 	_CloseButton->SetAnchorBottom(true);
@@ -55,20 +56,13 @@ UI::ObjectInformationDialog::ObjectInformationDialog(UI::Widget * SupWidget, con
 	_CloseButton->SetAnchorRight(true);
 	_CloseButton->SetAnchorTop(false);
 	_CloseButton->ConnectClickedCallback(Callback(this, &ObjectInformationDialog::_OnCloseClicked));
-	
-	UI::Label * CloseButtonLabel = new UI::Label(_CloseButton, "Close");
-	
-	CloseButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
-	CloseButtonLabel->SetSize(_CloseButton->GetSize());
-	CloseButtonLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
-	CloseButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	_PropertiesScrollBox = new UI::ScrollBox(this);
 	_PropertiesScrollBox->SetPosition(Vector2f(10.0f, 40.0f));
 	_PropertiesScrollBox->SetSize(Vector2f(GetSize()[0] - 20.0f, GetSize()[1] - 80.0f));
 	_PropertiesScrollBox->SetHorizontalScrollBarVisible(false);
 	_PropertiesScrollBox->SetAnchorBottom(true);
 	_PropertiesScrollBox->SetAnchorRight(true);
-	_RefreshButton = new UI::Button(this);
+	_RefreshButton = new UI::TextButton(this, "Refresh");
 	_RefreshButton->SetSize(Vector2f(100.0f, 20.0f));
 	_RefreshButton->SetPosition(Vector2f(_CloseButton->GetPosition()[0] - 10.0f - _RefreshButton->GetSize()[0], GetSize()[1] - 10.0f - _RefreshButton->GetSize()[1]));
 	_RefreshButton->SetAnchorBottom(true);
@@ -76,13 +70,6 @@ UI::ObjectInformationDialog::ObjectInformationDialog(UI::Widget * SupWidget, con
 	_RefreshButton->SetAnchorRight(true);
 	_RefreshButton->SetAnchorTop(false);
 	_RefreshButton->ConnectClickedCallback(Callback(this, &ObjectInformationDialog::_OnRefreshClicked));
-	
-	UI::Label * RefreshButtonLabel = new UI::Label(_RefreshButton, "Refresh");
-	
-	RefreshButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
-	RefreshButtonLabel->SetSize(_RefreshButton->GetSize());
-	RefreshButtonLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
-	RefreshButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	_Refresh();
 }
 
@@ -94,19 +81,12 @@ float UI::ObjectInformationDialog::_AddObjectProperty(float Top, float Indentati
 	PropertyDisplay->SetSize(Vector2f(_PropertiesScrollBox->GetContent()->GetSize()[0] - 20.0f, 30.0f));
 	PropertyDisplay->SetAnchorRight(true);
 	
-	UI::Button * ObjectButton(new UI::Button(PropertyDisplay));
+	UI::Button * ObjectButton(new UI::TextButton(PropertyDisplay, Object->GetObjectIdentifier()));
 	
 	ObjectButton->SetPosition(Vector2f(Indentation, 5.0f));
 	ObjectButton->SetSize(Vector2f(PropertyDisplay->GetSize()[0] - Indentation, 20.0f));
 	ObjectButton->SetAnchorRight(true);
 	ObjectButton->ConnectClickedCallback(Bind1(Callback(this, &ObjectInformationDialog::_OnObjectClicked), Object));
-	
-	UI::Label * ObjectButtonLabel(new UI::Label(ObjectButton, Object->GetObjectIdentifier()));
-	
-	ObjectButtonLabel->SetPosition(Vector2f(Indentation, 0.0f));
-	ObjectButtonLabel->SetSize(ObjectButton->GetSize());
-	ObjectButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
-	ObjectButtonLabel->SetAnchorBottom(true);
 	
 	return PropertyDisplay->GetSize()[1];
 }

@@ -22,8 +22,9 @@
 
 #include <string>
 
-#include "../color.h"
 #include "widget.h"
+
+class Color;
 
 namespace UI
 {
