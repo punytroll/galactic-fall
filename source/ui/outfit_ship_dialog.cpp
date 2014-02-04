@@ -273,20 +273,22 @@ UI::OutfitShipDialog::OutfitShipDialog(UI::Widget * SupWidget, Reference< Ship >
 	_MountButton = new UI::TextButton(_CenterPane, "Mount");
 	_MountButton->SetPosition(Vector2f(0.0f, 40.0f));
 	_MountButton->SetSize(Vector2f(_CenterPane->GetSize()[0], 20.0f));
-	_MountButton->ConnectClickedCallback(Callback(this, &OutfitShipDialog::_OnMountButtonClicked));
 	_MountButton->SetAnchorRight(true);
+	_MountButton->ConnectClickedCallback(Callback(this, &UI::OutfitShipDialog::_OnMountButtonClicked));
+	_MountButton->ConnectUpdatingCallback(Bind1(Callback(this, &UI::OutfitShipDialog::_OnMountButtonUpdating), _MountButton));
 	_UnmountButton = new UI::TextButton(_CenterPane, "Unmount");
 	_UnmountButton->SetPosition(Vector2f(0.0f, 70.0f));
 	_UnmountButton->SetSize(Vector2f(_CenterPane->GetSize()[0], 20.0f));
-	_UnmountButton->ConnectClickedCallback(Callback(this, &OutfitShipDialog::_OnUnmountButtonClicked));
 	_UnmountButton->SetAnchorRight(true);
+	_UnmountButton->ConnectClickedCallback(Callback(this, &UI::OutfitShipDialog::_OnUnmountButtonClicked));
+	_UnmountButton->ConnectUpdatingCallback(Bind1(Callback(this, &UI::OutfitShipDialog::_OnUnmountButtonUpdating), _UnmountButton));
 	_OKButton = new UI::TextButton(_CenterPane, "OK");
 	_OKButton->SetPosition(Vector2f(0.0f, _CenterPane->GetSize()[1] - 30.0f));
 	_OKButton->SetSize(Vector2f(_CenterPane->GetSize()[0], 20.0f));
-	_OKButton->ConnectClickedCallback(Callback(this, &OutfitShipDialog::_OnOKButtonClicked));
 	_OKButton->SetAnchorBottom(true);
 	_OKButton->SetAnchorRight(true);
 	_OKButton->SetAnchorTop(false);
+	_OKButton->ConnectClickedCallback(Callback(this, &UI::OutfitShipDialog::_OnOKButtonClicked));
 	// right pane
 	_RightPane = new UI::Widget(this);
 	_RightPane->SetPosition(Vector2f(10.0f + _LeftPane->GetSize()[0] + 10.0f + _CenterPane->GetSize()[0] + 10.0f, 40.0f));
@@ -307,7 +309,6 @@ UI::OutfitShipDialog::OutfitShipDialog(UI::Widget * SupWidget, Reference< Ship >
 	_AccessoryScrollBox->SetAnchorBottom(true);
 	_AccessoryScrollBox->SetAnchorRight(true);
 	_RebuildAccessoryList();
-	_UpdateButtons();
 	SetPosition(Vector2f(70.0f, 400.0f));
 	SetSize(Vector2f(600.0f, 400.0f));
 }
@@ -359,22 +360,37 @@ void UI::OutfitShipDialog::_RebuildAccessoryList(void)
 	_AccessoryScrollBox->GetContent()->SetAnchorRight(true);
 }
 
-void UI::OutfitShipDialog::_UpdateButtons(void)
+void UI::OutfitShipDialog::_OnMountButtonUpdating(UI::Button * MountButton, float RealTimeSeconds, float GameTimeSeconds)
 {
-	_UnmountButton->SetEnabled(false);
-	_MountButton->SetEnabled(false);
 	if(_SelectedSlotListItem != 0)
 	{
 		assert(_SelectedSlotListItem->GetSlot().IsValid() == true);
-		if(_SelectedSlotListItem->GetSlot()->GetMountedObject().IsValid() == false)
+		MountButton->SetEnabled((_SelectedSlotListItem->GetSlot()->GetMountedObject().IsValid() == false) && (_SelectedAccessoryListItem != 0) && (_SelectedSlotListItem->GetSlot()->GetSlotClass()->AcceptsSlotClassIdentifier(_SelectedAccessoryListItem->GetAccessory()->GetAspectAccessory()->GetSlotClassIdentifier()) == true));
+	}
+	else
+	{
+		MountButton->SetEnabled(false);
+	}
+}
+
+void UI::OutfitShipDialog::_OnUnmountButtonUpdating(UI::Button * UnmountButton, float RealTimeSeconds, float GameTimeSeconds)
+{
+	if(_SelectedSlotListItem != 0)
+	{
+		assert(_SelectedSlotListItem->GetSlot().IsValid() == true);
+		if(_SelectedSlotListItem->GetSlot()->GetMountedObject().IsValid() == true)
 		{
-			_MountButton->SetEnabled((_SelectedAccessoryListItem != 0) && (_SelectedSlotListItem->GetSlot()->GetSlotClass()->AcceptsSlotClassIdentifier(_SelectedAccessoryListItem->GetAccessory()->GetAspectAccessory()->GetSlotClassIdentifier()) == true));
+			assert(_SelectedSlotListItem->GetSlot()->GetMountedObject()->GetAspectPhysical() != 0);
+			UnmountButton->SetEnabled((_Ship->GetCargoHold()->GetSpace() >= _SelectedSlotListItem->GetSlot()->GetMountedObject()->GetAspectPhysical()->GetSpaceRequirement()));
 		}
 		else
 		{
-			assert(_SelectedSlotListItem->GetSlot()->GetMountedObject()->GetAspectPhysical() != 0);
-			_UnmountButton->SetEnabled((_Ship->GetCargoHold()->GetSpace() >= _SelectedSlotListItem->GetSlot()->GetMountedObject()->GetAspectPhysical()->GetSpaceRequirement()));
+			UnmountButton->SetEnabled(false);
 		}
+	}
+	else
+	{
+		UnmountButton->SetEnabled(false);
 	}
 }
 
@@ -392,7 +408,6 @@ void UI::OutfitShipDialog::_OnMountButtonClicked()
 	_SelectedSlotListItem->GetSlot()->Mount(Accessory);
 	_SelectedSlotListItem->Update();
 	_RebuildAccessoryList();
-	_UpdateButtons();
 }
 
 void UI::OutfitShipDialog::_OnOKButtonClicked()
@@ -417,7 +432,6 @@ void UI::OutfitShipDialog::_OnUnmountButtonClicked()
 	_Ship->GetCargoHold()->GetAspectObjectContainer()->AddContent(Accessory.Get());
 	_SelectedSlotListItem->Update();
 	_RebuildAccessoryList();
-	_UpdateButtons();
 }
 
 bool UI::OutfitShipDialog::_OnKey(const KeyEventInformation & KeyEventInformation)
@@ -441,7 +455,6 @@ bool UI::OutfitShipDialog::_OnSlotListItemMouseButton(UI::SlotListItem * SlotLis
 		}
 		_SelectedSlotListItem = SlotListItem;
 		_SelectedSlotListItem->SetSelected(true);
-		_UpdateButtons();
 		
 		return true;
 	}
@@ -459,7 +472,6 @@ bool UI::OutfitShipDialog::_OnAccessoryListItemMouseButton(UI::AccessoryListItem
 		}
 		_SelectedAccessoryListItem = AccessoryListItem;
 		_SelectedAccessoryListItem->SetSelected(true);
-		_UpdateButtons();
 		
 		return true;
 	}
