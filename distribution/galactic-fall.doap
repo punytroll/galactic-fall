@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:doap="http://usefulinc.com/ns/doap#" xmlns:foaf="http://xmlns.com/foaf/0.1/">
+	<doap:Project>
+		<doap:name>Galactic Fall</doap:name>
+		<doap:description>A very simple 2D space shooter designed in the spirit of and as an hommage to "Escape Velocity".</doap:description>
+		<doap:homepage rdf:resource="https://bitbucket.org/punytroll/galactic-fall" />
+		<doap:wiki rdf:resource="https://bitbucket.org/punytroll/galactic-fall/wiki/Home"/>
+		<doap:download-page rdf:resource="https://bitbucket.org/punytroll/galactic-fall/downloads"/>
+		<doap:bug-database rdf:resource="https://bitbucket.org/punytroll/galactic-fall/issues"/>
+		<doap:license rdf:resource="http://usefulinc.com/doap/licenses/gpl"/>
+		<doap:os>Linux</doap:os>
+		<doap:programming-language>C/C++</doap:programming-language>
+		<doap:programming-language>Python</doap:programming-language>
+		<doap:developer>
+			<foaf:Person>
+				<foaf:name>Hagen Möbius</foaf:name>
+				<foaf:mbox_sha1sum>bf94c08ec3d74837205f8be889c0dbd0efaabe25</foaf:mbox_sha1sum>
+			</foaf:Person>
+		</doap:developer>
+		<doap:repository> 
+			<doap:HgRepository>
+				<doap:location rdf:resource="https://bitbucket.org/punytroll/galactic-fall"/> 
+				<doap:browse rdf:resource="https://bitbucket.org/punytroll/galactic-fall/src"/> 
+			</doap:HgRepository> 
+		</doap:repository> 
+	</doap:Project>
+</rdf:RDF>
