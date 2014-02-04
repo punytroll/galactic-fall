@@ -40,13 +40,14 @@ namespace UI
 		bool _OnAccessoryListItemMouseButton(UI::AccessoryListItem * AccessoryListItem, int Button, int State, float X, float Y);
 		bool _OnKey(const KeyEventInformation & KeyEventInformation);
 		void _OnMountButtonClicked(void);
+		void _OnMountButtonUpdating(UI::Button * MountButton, float RealTimeSeconds, float GameTimeSeconds);
 		void _OnOKButtonClicked(void);
 		void _OnSizeChanged(void);
 		bool _OnSlotListItemMouseButton(UI::SlotListItem * SlotListItem, int Button, int State, float X, float Y);
 		void _OnUnmountButtonClicked(void);
+		void _OnUnmountButtonUpdating(UI::Button * UnmountButton, float RealTimeSeconds, float GameTimeSeconds);
 		// helper function and actions
 		void _RebuildAccessoryList(void);
-		void _UpdateButtons(void);
 		// member variables
 		UI::ScrollBox * _AccessoryScrollBox;
 		UI::Widget * _CenterPane;
