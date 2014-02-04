@@ -231,7 +231,7 @@ UI::OutfitShipDialog::OutfitShipDialog(UI::Widget * SupWidget, Reference< Ship >
 {
 	ConnectSizeChangedCallback(Callback(this, &UI::OutfitShipDialog::_OnSizeChanged));
 	ConnectKeyCallback(Callback(this, &UI::OutfitShipDialog::_OnKey));
-	_LeftPane = new Widget(this);
+	_LeftPane = new UI::Widget(this);
 	_LeftPane->SetPosition(Vector2f(10.0f, 40.0f));
 	_LeftPane->SetSize(Vector2f(200.0f, GetSize()[1] - 50.0f));
 	_LeftPane->SetAnchorBottom(true);
@@ -266,7 +266,7 @@ UI::OutfitShipDialog::OutfitShipDialog(UI::Widget * SupWidget, Reference< Ship >
 	_SlotScrollBox->GetContent()->SetSize(Vector2f(180.0f, std::max(Top, _SlotScrollBox->GetView()->GetSize()[1])));
 	_SlotScrollBox->GetContent()->SetAnchorRight(true);
 	// center pane
-	_CenterPane = new Widget(this);
+	_CenterPane = new UI::Widget(this);
 	_CenterPane->SetPosition(Vector2f(10.0f + _LeftPane->GetSize()[0] + 10.0f, 70.0f));
 	_CenterPane->SetSize(Vector2f(160.0f, GetSize()[1] - 80.0f));
 	_CenterPane->SetAnchorBottom(true);
@@ -288,7 +288,7 @@ UI::OutfitShipDialog::OutfitShipDialog(UI::Widget * SupWidget, Reference< Ship >
 	_OKButton->SetAnchorRight(true);
 	_OKButton->SetAnchorTop(false);
 	// right pane
-	_RightPane = new Widget(this);
+	_RightPane = new UI::Widget(this);
 	_RightPane->SetPosition(Vector2f(10.0f + _LeftPane->GetSize()[0] + 10.0f + _CenterPane->GetSize()[0] + 10.0f, 40.0f));
 	_RightPane->SetSize(Vector2f(200.0f, GetSize()[1] - 50.0f));
 	_RightPane->SetAnchorBottom(true);
