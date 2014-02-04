@@ -18,6 +18,7 @@
 **/
 
 #include "../callbacks/callbacks.h"
+#include "../color.h"
 #include "../globals.h"
 #include "border.h"
 #include "label.h"

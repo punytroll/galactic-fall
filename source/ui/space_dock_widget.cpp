@@ -21,13 +21,14 @@
 #include "../battery.h"
 #include "../callbacks/callbacks.h"
 #include "../character.h"
+#include "../color.h"
 #include "../planet.h"
 #include "../ship.h"
 #include "../string_cast.h"
 #include "border.h"
-#include "button.h"
 #include "label.h"
 #include "space_dock_widget.h"
+#include "text_button.h"
 
 UI::SpaceDockWidget::SpaceDockWidget(UI::Widget * SupWidget, Reference< Planet > Planet, Reference< Character > Character) :
 	UI::Widget(SupWidget),
@@ -38,19 +39,12 @@ UI::SpaceDockWidget::SpaceDockWidget(UI::Widget * SupWidget, Reference< Planet >
 	assert(_Planet.IsValid() == true);
 	SetSize(Vector2f(600.0f, 300.0f));
 	
-	UI::Button * RepairButton(new UI::Button(this));
+	UI::Button * RepairButton(new UI::TextButton(this, "Repair"));
 	
 	RepairButton->SetPosition(Vector2f(0.0f, 0.0f));
 	RepairButton->SetSize(Vector2f(180.0f, 20.0f));
 	RepairButton->ConnectClickedCallback(Callback(this, &UI::SpaceDockWidget::_OnRepairButtonClicked));
 	RepairButton->ConnectUpdatingCallback(Bind1(Callback(this, &UI::SpaceDockWidget::_OnRepairButtonUpdating), RepairButton));
-	
-	UI::Label * RepairButtonLabel(new UI::Label(RepairButton, "Repair"));
-	
-	RepairButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
-	RepairButtonLabel->SetSize(RepairButton->GetSize());
-	RepairButtonLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
-	RepairButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	
 	UI::Widget * HullStateBar(new UI::Widget(this));
 	
@@ -86,19 +80,12 @@ UI::SpaceDockWidget::SpaceDockWidget(UI::Widget * SupWidget, Reference< Planet >
 	HullStateBarBorder->SetAnchorRight(true);
 	HullStateBarBorder->SetAnchorTop(true);
 	
-	UI::Button * RechargeButton(new UI::Button(this));
+	UI::Button * RechargeButton(new UI::TextButton(this, "Recharge"));
 	
 	RechargeButton->SetPosition(Vector2f(0.0f, 30.0f));
 	RechargeButton->SetSize(Vector2f(180.0f, 20.0f));
 	RechargeButton->ConnectClickedCallback(Callback(this, &UI::SpaceDockWidget::_OnRechargeButtonClicked));
 	RechargeButton->ConnectUpdatingCallback(Bind1(Callback(this, &UI::SpaceDockWidget::_OnRechargeButtonUpdating), RechargeButton));
-	
-	UI::Label * RechargeButtonLabel(new UI::Label(RechargeButton, "Recharge"));
-	
-	RechargeButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
-	RechargeButtonLabel->SetSize(RechargeButton->GetSize());
-	RechargeButtonLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
-	RechargeButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	
 	UI::Widget * EnergyStateBar(new UI::Widget(this));
 	
@@ -134,19 +121,12 @@ UI::SpaceDockWidget::SpaceDockWidget(UI::Widget * SupWidget, Reference< Planet >
 	EnergyStateBarBorder->SetAnchorRight(true);
 	EnergyStateBarBorder->SetAnchorTop(true);
 	
-	UI::Button * RefuelButton(new UI::Button(this));
+	UI::Button * RefuelButton(new UI::TextButton(this, "Refuel"));
 	
 	RefuelButton->SetPosition(Vector2f(0.0f, 60.0f));
 	RefuelButton->SetSize(Vector2f(180.0f, 20.0f));
 	RefuelButton->ConnectClickedCallback(Callback(this, &UI::SpaceDockWidget::_OnRefuelButtonClicked));
 	RefuelButton->ConnectUpdatingCallback(Bind1(Callback(this, &UI::SpaceDockWidget::_OnRefuelButtonUpdating), RefuelButton));
-	
-	UI::Label * RefuelButtonLabel(new UI::Label(RefuelButton, "Refuel"));
-	
-	RefuelButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
-	RefuelButtonLabel->SetSize(RefuelButton->GetSize());
-	RefuelButtonLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
-	RefuelButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	
 	UI::Widget * FuelStateBar(new UI::Widget(this));
 	
@@ -182,18 +162,11 @@ UI::SpaceDockWidget::SpaceDockWidget(UI::Widget * SupWidget, Reference< Planet >
 	FuelStateBarBorder->SetAnchorRight(true);
 	FuelStateBarBorder->SetAnchorTop(true);
 	
-	UI::Button * TakeOffButton(new UI::Button(this));
+	UI::Button * TakeOffButton(new UI::TextButton(this, "Take Off"));
 	
 	TakeOffButton->SetPosition(Vector2f(0.0f, 90.0f));
 	TakeOffButton->SetSize(Vector2f(180.0f, 20.0f));
 	TakeOffButton->ConnectClickedCallback(Callback(this, &UI::SpaceDockWidget::_OnTakeOffButtonClicked));
-	
-	UI::Label * TakeOffButtonLabel(new UI::Label(TakeOffButton, "Take Off"));
-	
-	TakeOffButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
-	TakeOffButtonLabel->SetSize(TakeOffButton->GetSize());
-	TakeOffButtonLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
-	TakeOffButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 }
 
 void UI::SpaceDockWidget::_OnEnergyStateBarUpdating(UI::Widget * EnergyStateBarFill, UI::Label * EnergyStateBarLabel, float RealTimeSeconds, float GameTimeSeconds)

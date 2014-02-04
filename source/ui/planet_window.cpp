@@ -21,10 +21,10 @@
 #include "../key_event_information.h"
 #include "../object_aspect_name.h"
 #include "../planet.h"
-#include "button.h"
 #include "label.h"
 #include "planet_window.h"
 #include "space_dock_widget.h"
+#include "text_button.h"
 #include "trade_center_widget.h"
 
 UI::PlanetWindow::PlanetWindow(UI::Widget * SupWidget, Reference< Planet > Planet, Reference< Character > Character) :
@@ -43,44 +43,23 @@ UI::PlanetWindow::PlanetWindow(UI::Widget * SupWidget, Reference< Planet > Plane
 	SetSize(Vector2f(700.0f, 400.0f));
 	ConnectKeyCallback(Callback(this, &PlanetWindow::_OnKey));
 	
-	UI::Button * HomeButton(new UI::Button(this));
+	UI::Button * HomeButton(new UI::TextButton(this, "Hom"));
 	
 	HomeButton->SetPosition(Vector2f(10.0f, 40.0f));
 	HomeButton->SetSize(Vector2f(100.0f, 20.0f));
 	HomeButton->ConnectClickedCallback(Callback(this, &PlanetWindow::_OnHomeButtonClicked));
 	
-	UI::Label * HomeButtonLabel(new UI::Label(HomeButton, "Home"));
-	
-	HomeButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
-	HomeButtonLabel->SetSize(HomeButton->GetSize());
-	HomeButtonLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
-	HomeButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
-	
-	UI::Button * TradeCenterButton(new UI::Button(this));
+	UI::Button * TradeCenterButton(new UI::TextButton(this, "Trade Center"));
 	
 	TradeCenterButton->SetPosition(Vector2f(10.0f, 70.0f));
 	TradeCenterButton->SetSize(Vector2f(100.0f, 20.0f));
 	TradeCenterButton->ConnectClickedCallback(Callback(this, &PlanetWindow::_OnTradeCenterButtonClicked));
 	
-	UI::Label * TradeCenterButtonLabel(new UI::Label(TradeCenterButton, "Trade Center"));
-	
-	TradeCenterButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
-	TradeCenterButtonLabel->SetSize(TradeCenterButton->GetSize());
-	TradeCenterButtonLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
-	TradeCenterButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
-	
-	UI::Button * SpaceDockButton(new UI::Button(this));
+	UI::Button * SpaceDockButton(new UI::TextButton(this, "Space Dock"));
 	
 	SpaceDockButton->SetPosition(Vector2f(10.0f, 100.0f));
 	SpaceDockButton->SetSize(Vector2f(100.0f, 20.0f));
 	SpaceDockButton->ConnectClickedCallback(Callback(this, &PlanetWindow::_OnSpaceDockButtonClicked));
-	
-	UI::Label * SpaceDockButtonLabel(new UI::Label(SpaceDockButton, "Space Dock"));
-	
-	SpaceDockButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
-	SpaceDockButtonLabel->SetSize(SpaceDockButton->GetSize());
-	SpaceDockButtonLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
-	SpaceDockButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	_OpenHomeScreen();
 }
 

@@ -19,6 +19,7 @@
 
 #include "../asset_class.h"
 #include "../character.h"
+#include "../color.h"
 #include "../commodity.h"
 #include "../commodity_class.h"
 #include "../game_time.h"
@@ -46,11 +47,11 @@
 #include "../visualizations.h"
 #include "../weapon.h"
 #include "../weapon_class.h"
-#include "button.h"
 #include "image.h"
 #include "label.h"
 #include "scroll_bar.h"
 #include "scroll_box.h"
+#include "text_button.h"
 #include "trade_center_widget.h"
 #include "view_display.h"
 
@@ -121,32 +122,18 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Reference< Plan
 	ConnectDestroyingCallback(Callback(this, &TradeCenterWidget::_OnDestroying));
 	ConnectKeyCallback(Callback(this, &TradeCenterWidget::_OnKey));
 	ConnectUpdatingCallback(Callback(this, &TradeCenterWidget::_OnUpdating));
-	_BuyButton = new UI::Button(this);
+	_BuyButton = new UI::TextButton(this, "Buy");
 	_BuyButton->SetPosition(Vector2f(0.0f, 280.0f));
 	_BuyButton->SetSize(Vector2f(100.0f, 20.0f));
 	_BuyButton->SetAnchorBottom(true);
 	_BuyButton->SetAnchorTop(false);
 	_BuyButton->ConnectClickedCallback(Callback(this, &TradeCenterWidget::_OnBuyButtonClicked));
-	
-	UI::Label * BuyButtonLabel(new UI::Label(_BuyButton, "Buy"));
-	
-	BuyButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
-	BuyButtonLabel->SetSize(_BuyButton->GetSize());
-	BuyButtonLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
-	BuyButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
-	_SellButton = new UI::Button(this);
+	_SellButton = new UI::TextButton(this, "Sell");
 	_SellButton->SetPosition(Vector2f(110.0f, 280.0f));
 	_SellButton->SetSize(Vector2f(100.0f, 20.0f));
 	_SellButton->SetAnchorBottom(true);
 	_SellButton->SetAnchorTop(false);
 	_SellButton->ConnectClickedCallback(Callback(this, &TradeCenterWidget::_OnSellButtonClicked));
-	
-	UI::Label * SellButtonLabel(new UI::Label(_SellButton, "Sell"));
-	
-	SellButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
-	SellButtonLabel->SetSize(_SellButton->GetSize());
-	SellButtonLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
-	SellButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	_AssetClassScrollBox = new UI::ScrollBox(this);
 	_AssetClassScrollBox->SetPosition(Vector2f(0.0f, 0.0f));
 	_AssetClassScrollBox->SetSize(Vector2f(490.0f, 210.0f));

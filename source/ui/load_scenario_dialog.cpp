@@ -17,15 +17,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include "../color.h"
 #include "../globals.h"
 #include "../key_event_information.h"
 #include "../real_time.h"
 #include "../scenario.h"
 #include "../scenario_manager.h"
 #include "label.h"
-#include "button.h"
 #include "load_scenario_dialog.h"
 #include "scroll_box.h"
+#include "text_button.h"
 
 namespace UI
 {
@@ -108,7 +109,7 @@ UI::LoadScenarioDialog::LoadScenarioDialog(UI::Widget * SupWidget, ScenarioManag
 	SetPosition(Vector2f(120.0f, 200.0f));
 	SetSize(Vector2f(300.0f, 400.0f));
 	ConnectKeyCallback(Callback(this, &LoadScenarioDialog::_OnKey));
-	_OKButton = new UI::Button(this);
+	_OKButton = new UI::TextButton(this, "OK");
 	_OKButton->SetSize(Vector2f(100.0f, 20.0f));
 	_OKButton->SetPosition(Vector2f(GetSize()[0] - 10.0f - _OKButton->GetSize()[0], GetSize()[1] - 10.0f - _OKButton->GetSize()[1]));
 	_OKButton->SetAnchorBottom(true);
@@ -116,14 +117,7 @@ UI::LoadScenarioDialog::LoadScenarioDialog(UI::Widget * SupWidget, ScenarioManag
 	_OKButton->SetAnchorRight(true);
 	_OKButton->SetAnchorTop(false);
 	_OKButton->ConnectClickedCallback(Bind1(Callback(dynamic_cast< Dialog * >(this), &LoadScenarioDialog::_Close), Dialog::OK_BUTTON));
-	
-	UI::Label * OKButtonLabel(new UI::Label(_OKButton, "OK"));
-	
-	OKButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
-	OKButtonLabel->SetSize(_OKButton->GetSize());
-	OKButtonLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
-	OKButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
-	_CancelButton = new UI::Button(this);
+	_CancelButton = new UI::TextButton(this, "Cancel");
 	_CancelButton->SetSize(Vector2f(100.0f, 20.0f));
 	_CancelButton->SetPosition(Vector2f(GetSize()[0] - 10.0f - _OKButton->GetSize()[0] - 10.0f - _CancelButton->GetSize()[0], GetSize()[1] - 10.0f - _CancelButton->GetSize()[1]));
 	_CancelButton->SetAnchorBottom(true);
@@ -131,13 +125,6 @@ UI::LoadScenarioDialog::LoadScenarioDialog(UI::Widget * SupWidget, ScenarioManag
 	_CancelButton->SetAnchorRight(true);
 	_CancelButton->SetAnchorTop(false);
 	_CancelButton->ConnectClickedCallback(Bind1(Callback(dynamic_cast< Dialog * >(this), &LoadScenarioDialog::_Close), Dialog::CANCEL_BUTTON));
-	
-	UI::Label * CancelButtonLabel(new UI::Label(_CancelButton, "Cancel"));
-	
-	CancelButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
-	CancelButtonLabel->SetSize(_CancelButton->GetSize());
-	CancelButtonLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
-	CancelButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	_ErrorMessage = new UI::Label(this);
 	_ErrorMessage->SetPosition(Vector2f(10.0f, 40.0f));
 	_ErrorMessage->SetSize(Vector2f(GetSize()[0] - 10.0f - 10.0f, 30.0f));

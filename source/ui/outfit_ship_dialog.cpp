@@ -33,10 +33,10 @@
 #include "../weapon.h"
 #include "../weapon_class.h"
 
-#include "button.h"
 #include "label.h"
 #include "outfit_ship_dialog.h"
 #include "scroll_box.h"
+#include "text_button.h"
 
 namespace UI
 {
@@ -270,44 +270,23 @@ UI::OutfitShipDialog::OutfitShipDialog(UI::Widget * SupWidget, Reference< Ship >
 	_CenterPane->SetPosition(Vector2f(10.0f + _LeftPane->GetSize()[0] + 10.0f, 70.0f));
 	_CenterPane->SetSize(Vector2f(160.0f, GetSize()[1] - 80.0f));
 	_CenterPane->SetAnchorBottom(true);
-	_MountButton = new UI::Button(_CenterPane);
+	_MountButton = new UI::TextButton(_CenterPane, "Mount");
 	_MountButton->SetPosition(Vector2f(0.0f, 40.0f));
 	_MountButton->SetSize(Vector2f(_CenterPane->GetSize()[0], 20.0f));
 	_MountButton->ConnectClickedCallback(Callback(this, &OutfitShipDialog::_OnMountButtonClicked));
 	_MountButton->SetAnchorRight(true);
-	
-	UI::Label * MountButtonLabel(new UI::Label(_MountButton, "Mount"));
-	
-	MountButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
-	MountButtonLabel->SetSize(Vector2f(_MountButton->GetSize()));
-	MountButtonLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
-	MountButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
-	_UnmountButton = new UI::Button(_CenterPane);
+	_UnmountButton = new UI::TextButton(_CenterPane, "Unmount");
 	_UnmountButton->SetPosition(Vector2f(0.0f, 70.0f));
 	_UnmountButton->SetSize(Vector2f(_CenterPane->GetSize()[0], 20.0f));
 	_UnmountButton->ConnectClickedCallback(Callback(this, &OutfitShipDialog::_OnUnmountButtonClicked));
 	_UnmountButton->SetAnchorRight(true);
-	
-	UI::Label * UnmountButtonLabel(new UI::Label(_UnmountButton, "Unmount"));
-	
-	UnmountButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
-	UnmountButtonLabel->SetSize(Vector2f(_UnmountButton->GetSize()));
-	UnmountButtonLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
-	UnmountButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
-	_OKButton = new UI::Button(_CenterPane);
+	_OKButton = new UI::TextButton(_CenterPane, "OK");
 	_OKButton->SetPosition(Vector2f(0.0f, _CenterPane->GetSize()[1] - 30.0f));
 	_OKButton->SetSize(Vector2f(_CenterPane->GetSize()[0], 20.0f));
 	_OKButton->ConnectClickedCallback(Callback(this, &OutfitShipDialog::_OnOKButtonClicked));
 	_OKButton->SetAnchorBottom(true);
 	_OKButton->SetAnchorRight(true);
 	_OKButton->SetAnchorTop(false);
-	
-	UI::Label * OKButtonLabel(new UI::Label(_OKButton, "OK"));
-	
-	OKButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
-	OKButtonLabel->SetSize(Vector2f(_OKButton->GetSize()));
-	OKButtonLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
-	OKButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	// right pane
 	_RightPane = new Widget(this);
 	_RightPane->SetPosition(Vector2f(10.0f + _LeftPane->GetSize()[0] + 10.0f + _CenterPane->GetSize()[0] + 10.0f, 40.0f));

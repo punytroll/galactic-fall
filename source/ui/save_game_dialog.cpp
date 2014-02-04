@@ -21,14 +21,15 @@
 
 #include <fstream>
 
+#include "../color.h"
 #include "../file_handling.h"
 #include "../globals.h"
 #include "../key_event_information.h"
 #include "../real_time.h"
-#include "button.h"
 #include "label.h"
 #include "save_game_dialog.h"
 #include "scroll_box.h"
+#include "text_button.h"
 
 namespace UI
 {
@@ -107,7 +108,7 @@ UI::SaveGameDialog::SaveGameDialog(UI::Widget * SupWidget) :
 	SetPosition(Vector2f(120.0f, 200.0f));
 	SetSize(Vector2f(300.0f, 400.0f));
 	ConnectKeyCallback(Callback(this, &SaveGameDialog::OnKey));
-	m_OKButton = new UI::Button(this);
+	m_OKButton = new UI::TextButton(this, "OK");
 	m_OKButton->SetSize(Vector2f(100.0f, 20.0f));
 	m_OKButton->SetPosition(Vector2f(GetSize()[0] - 10.0f - m_OKButton->GetSize()[0], GetSize()[1] - 10.0f - m_OKButton->GetSize()[1]));
 	m_OKButton->SetAnchorBottom(true);
@@ -115,14 +116,7 @@ UI::SaveGameDialog::SaveGameDialog(UI::Widget * SupWidget) :
 	m_OKButton->SetAnchorRight(true);
 	m_OKButton->SetAnchorTop(false);
 	m_OKButton->ConnectClickedCallback(Bind1(Callback(dynamic_cast< Dialog * >(this), &SaveGameDialog::_Close), Dialog::OK_BUTTON));
-	
-	UI::Label * OKButtonLabel(new UI::Label(m_OKButton, "OK"));
-	
-	OKButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
-	OKButtonLabel->SetSize(m_OKButton->GetSize());
-	OKButtonLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
-	OKButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
-	m_CancelButton = new UI::Button(this);
+	m_CancelButton = new UI::TextButton(this, "Cancel");
 	m_CancelButton->SetSize(Vector2f(100.0f, 20.0f));
 	m_CancelButton->SetPosition(Vector2f(GetSize()[0] - 10.0f - m_OKButton->GetSize()[0] - 10.0f - m_CancelButton->GetSize()[0], GetSize()[1] - 10.0f - m_CancelButton->GetSize()[1]));
 	m_CancelButton->SetAnchorBottom(true);
@@ -130,13 +124,6 @@ UI::SaveGameDialog::SaveGameDialog(UI::Widget * SupWidget) :
 	m_CancelButton->SetAnchorRight(true);
 	m_CancelButton->SetAnchorTop(false);
 	m_CancelButton->ConnectClickedCallback(Bind1(Callback(dynamic_cast< Dialog * >(this), &SaveGameDialog::_Close), Dialog::CANCEL_BUTTON));
-	
-	UI::Label * CancelButtonLabel(new UI::Label(m_CancelButton, "Cancel"));
-	
-	CancelButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
-	CancelButtonLabel->SetSize(m_CancelButton->GetSize());
-	CancelButtonLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
-	CancelButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	m_ErrorMessage = new UI::Label(this);
 	m_ErrorMessage->SetPosition(Vector2f(10.0f, 40.0f));
 	m_ErrorMessage->SetSize(Vector2f(GetSize()[0] - 10.0f - 10.0f, 30.0f));

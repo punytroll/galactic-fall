@@ -19,6 +19,7 @@
 
 #include <vector>
 
+#include "../color.h"
 #include "../draw_text.h"
 #include "../graphics/gl.h"
 #include "label.h"

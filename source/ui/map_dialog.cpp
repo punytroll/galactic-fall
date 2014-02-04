@@ -22,14 +22,14 @@
 #include <GL/gl.h>
 
 #include "../callbacks/callbacks.h"
+#include "../color.h"
 #include "../globals.h"
 #include "../key_event_information.h"
 #include "../object_aspect_name.h"
 #include "../system.h"
-#include "button.h"
-#include "label.h"
 #include "map_dialog.h"
 #include "star_map_display.h"
+#include "text_button.h"
 
 UI::MapDialog::MapDialog(UI::Widget * SupWidget, System * System, Character * Character) :
 	UI::Window(SupWidget, "Map: " + System->GetAspectName()->GetName())
@@ -37,17 +37,10 @@ UI::MapDialog::MapDialog(UI::Widget * SupWidget, System * System, Character * Ch
 	SetPosition(Vector2f(70.0f, 200.0f));
 	SetSize(Vector2f(500.0f, 530.0f));
 	ConnectKeyCallback(Callback(this, &UI::MapDialog::OnKey));
-	m_OKButton = new UI::Button(this);
+	m_OKButton = new UI::TextButton(this, "OK");
 	m_OKButton->SetPosition(Vector2f(390.0f, 500.0f));
 	m_OKButton->SetSize(Vector2f(100.0f, 20.0f));
 	m_OKButton->ConnectClickedCallback(Callback(this, &UI::MapDialog::OnOKClicked));
-	
-	UI::Label * OKButtonLabel = new UI::Label(m_OKButton, "OK");
-	
-	OKButtonLabel->SetPosition(Vector2f(0.0f, 0.0f));
-	OKButtonLabel->SetSize(m_OKButton->GetSize());
-	OKButtonLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
-	OKButtonLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	m_StarMapDisplay = new UI::StarMapDisplay(this, System, Character);
 	m_StarMapDisplay->SetPosition(Vector2f(10.0f, 40.0f));
 	m_StarMapDisplay->SetSize(Vector2f(480.0f, 450.0f));
