@@ -52,14 +52,11 @@ namespace UI
 		UI::ScrollBox * _AccessoryScrollBox;
 		UI::Widget * _CenterPane;
 		UI::Widget * _LeftPane;
-		UI::Button * _MountButton;
-		UI::Button * _OKButton;
 		UI::Widget * _RightPane;
 		UI::AccessoryListItem * _SelectedAccessoryListItem;
 		UI::SlotListItem * _SelectedSlotListItem;
 		Reference< Ship > _Ship;
 		UI::ScrollBox * _SlotScrollBox;
-		UI::Button * _UnmountButton;
 	};
 }
 
