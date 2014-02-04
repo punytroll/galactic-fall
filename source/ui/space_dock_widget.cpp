@@ -173,13 +173,20 @@ void UI::SpaceDockWidget::_OnEnergyStateBarUpdating(UI::Widget * EnergyStateBarF
 {
 	assert(_Character.IsValid() == true);
 	assert(_Character->GetShip() != 0);
-	assert(_Character->GetShip()->GetBattery() != 0);
 	assert(EnergyStateBarLabel != 0);
-	EnergyStateBarLabel->SetText(to_string_cast(_Character->GetShip()->GetBattery()->GetEnergy(), 2));
 	assert(EnergyStateBarFill != 0);
 	
-	float EnergyPercentage(_Character->GetShip()->GetBattery()->GetEnergy() / _Character->GetShip()->GetBattery()->GetEnergyCapacity());
+	float EnergyPercentage(0.0f);
 	
+	if(_Character->GetShip()->GetBattery() != 0)
+	{
+		EnergyStateBarLabel->SetText(to_string_cast(_Character->GetShip()->GetBattery()->GetEnergy(), 2));
+		EnergyPercentage = _Character->GetShip()->GetBattery()->GetEnergy() / _Character->GetShip()->GetBattery()->GetEnergyCapacity();
+	}
+	else
+	{
+		EnergyStateBarLabel->SetText("n/a");
+	}
 	EnergyStateBarFill->SetSize(Vector2f(EnergyPercentage * EnergyStateBarLabel->GetSize()[0], EnergyStateBarFill->GetSize()[1]));
 	EnergyStateBarFill->SetBackgroundColor(Color(1.0f - EnergyPercentage, EnergyPercentage, 0.0f, 1.0f));
 }
