@@ -270,25 +270,31 @@ UI::OutfitShipDialog::OutfitShipDialog(UI::Widget * SupWidget, Reference< Ship >
 	_CenterPane->SetPosition(Vector2f(10.0f + _LeftPane->GetSize()[0] + 10.0f, 70.0f));
 	_CenterPane->SetSize(Vector2f(160.0f, GetSize()[1] - 80.0f));
 	_CenterPane->SetAnchorBottom(true);
-	_MountButton = new UI::TextButton(_CenterPane, "Mount");
-	_MountButton->SetPosition(Vector2f(0.0f, 40.0f));
-	_MountButton->SetSize(Vector2f(_CenterPane->GetSize()[0], 20.0f));
-	_MountButton->SetAnchorRight(true);
-	_MountButton->ConnectClickedCallback(Callback(this, &UI::OutfitShipDialog::_OnMountButtonClicked));
-	_MountButton->ConnectUpdatingCallback(Bind1(Callback(this, &UI::OutfitShipDialog::_OnMountButtonUpdating), _MountButton));
-	_UnmountButton = new UI::TextButton(_CenterPane, "Unmount");
-	_UnmountButton->SetPosition(Vector2f(0.0f, 70.0f));
-	_UnmountButton->SetSize(Vector2f(_CenterPane->GetSize()[0], 20.0f));
-	_UnmountButton->SetAnchorRight(true);
-	_UnmountButton->ConnectClickedCallback(Callback(this, &UI::OutfitShipDialog::_OnUnmountButtonClicked));
-	_UnmountButton->ConnectUpdatingCallback(Bind1(Callback(this, &UI::OutfitShipDialog::_OnUnmountButtonUpdating), _UnmountButton));
-	_OKButton = new UI::TextButton(_CenterPane, "OK");
-	_OKButton->SetPosition(Vector2f(0.0f, _CenterPane->GetSize()[1] - 30.0f));
-	_OKButton->SetSize(Vector2f(_CenterPane->GetSize()[0], 20.0f));
-	_OKButton->SetAnchorBottom(true);
-	_OKButton->SetAnchorRight(true);
-	_OKButton->SetAnchorTop(false);
-	_OKButton->ConnectClickedCallback(Callback(this, &UI::OutfitShipDialog::_OnOKButtonClicked));
+	
+	UI::Button * MountButton(new UI::TextButton(_CenterPane, "Mount"));
+	
+	MountButton->SetPosition(Vector2f(0.0f, 40.0f));
+	MountButton->SetSize(Vector2f(_CenterPane->GetSize()[0], 20.0f));
+	MountButton->SetAnchorRight(true);
+	MountButton->ConnectClickedCallback(Callback(this, &UI::OutfitShipDialog::_OnMountButtonClicked));
+	MountButton->ConnectUpdatingCallback(Bind1(Callback(this, &UI::OutfitShipDialog::_OnMountButtonUpdating), MountButton));
+	
+	UI::Button * UnmountButton(new UI::TextButton(_CenterPane, "Unmount"));
+	
+	UnmountButton->SetPosition(Vector2f(0.0f, 70.0f));
+	UnmountButton->SetSize(Vector2f(_CenterPane->GetSize()[0], 20.0f));
+	UnmountButton->SetAnchorRight(true);
+	UnmountButton->ConnectClickedCallback(Callback(this, &UI::OutfitShipDialog::_OnUnmountButtonClicked));
+	UnmountButton->ConnectUpdatingCallback(Bind1(Callback(this, &UI::OutfitShipDialog::_OnUnmountButtonUpdating), UnmountButton));
+	
+	UI::Button * OKButton(new UI::TextButton(_CenterPane, "OK"));
+	
+	OKButton->SetPosition(Vector2f(0.0f, _CenterPane->GetSize()[1] - 30.0f));
+	OKButton->SetSize(Vector2f(_CenterPane->GetSize()[0], 20.0f));
+	OKButton->SetAnchorBottom(true);
+	OKButton->SetAnchorRight(true);
+	OKButton->SetAnchorTop(false);
+	OKButton->ConnectClickedCallback(Callback(this, &UI::OutfitShipDialog::_OnOKButtonClicked));
 	// right pane
 	_RightPane = new UI::Widget(this);
 	_RightPane->SetPosition(Vector2f(10.0f + _LeftPane->GetSize()[0] + 10.0f + _CenterPane->GetSize()[0] + 10.0f, 40.0f));
