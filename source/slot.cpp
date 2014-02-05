@@ -55,7 +55,7 @@ void Slot::Mount(Reference< Object > TheObject)
 		// only visualize if the parent object is visualized
 		if(GetMountedObject()->GetContainer()->GetAspectVisualization()->GetVisualization() != 0)
 		{
-			VisualizeObject(GetMountedObject().Get(), GetMountedObject()->GetContainer()->GetAspectVisualization()->GetVisualization()->GetGraphics().Get());
+			VisualizeObject(GetMountedObject().Get(), GetMountedObject()->GetContainer()->GetAspectVisualization()->GetVisualization()->GetGraphics());
 		}
 	}
 }
@@ -70,8 +70,8 @@ void Slot::Unmount(void)
 		assert(GetMountedObject()->GetContainer() != 0);
 		assert(GetMountedObject()->GetContainer()->GetAspectVisualization() != 0);
 		assert(GetMountedObject()->GetContainer()->GetAspectVisualization()->GetVisualization() != 0);
-		assert(GetMountedObject()->GetContainer()->GetAspectVisualization()->GetVisualization()->GetGraphics().IsValid() == true);
-		UnvisualizeObject(GetMountedObject().Get(), GetMountedObject()->GetContainer()->GetAspectVisualization()->GetVisualization()->GetGraphics().Get());
+		assert(GetMountedObject()->GetContainer()->GetAspectVisualization()->GetVisualization()->GetGraphics() != 0);
+		UnvisualizeObject(GetMountedObject().Get(), GetMountedObject()->GetContainer()->GetAspectVisualization()->GetVisualization()->GetGraphics());
 	}
 	GetMountedObject()->GetAspectAccessory()->SetSlot(0);
 	GetMountedObject().Clear();

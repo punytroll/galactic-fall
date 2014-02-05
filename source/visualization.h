@@ -20,8 +20,6 @@
 #ifndef VISUALIZATION_H
 #define VISUALIZATION_H
 
-#include "referencing.h"
-
 namespace Graphics
 {
 	class Node;
@@ -30,22 +28,23 @@ namespace Graphics
 class Visualization
 {
 public:
-	// destructor
+	// constructor & destructor
+	Visualization(void);
 	~Visualization(void);
 	// getters
-	Reference< Graphics::Node > & GetGraphics(void);
+	Graphics::Node * GetGraphics(void);
 	// setters
-	void SetGraphics(Reference< Graphics::Node > & Graphics);
+	void SetGraphics(Graphics::Node * Graphics);
 private:
-	Reference< Graphics::Node > _Graphics;
+	Graphics::Node * _Graphics;
 };
 
-inline Reference< Graphics::Node > & Visualization::GetGraphics(void)
+inline Graphics::Node * Visualization::GetGraphics(void)
 {
 	return _Graphics;
 }
 
-inline void Visualization::SetGraphics(Reference< Graphics::Node > & Graphics)
+inline void Visualization::SetGraphics(Graphics::Node * Graphics)
 {
 	_Graphics = Graphics;
 }

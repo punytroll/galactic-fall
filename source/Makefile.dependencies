@@ -1461,8 +1461,7 @@ visualization_cpp = \
 	$(visualization_h)
 
 visualization_h = \
-	visualization.h \
-	$(referencing_h)
+	visualization.h
 
 visualization_prototype_cpp = \
 	visualization_prototype.cpp \

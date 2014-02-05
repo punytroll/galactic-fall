@@ -17,9 +17,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include <assert.h>
+
 #include "visualization.h"
+
+Visualization::Visualization(void) :
+	_Graphics(0)
+{
+}
 
 Visualization::~Visualization(void)
 {
-	assert(_Graphics.IsValid() == false);
+	assert(_Graphics == 0);
 }

@@ -40,7 +40,7 @@ ObjectAspectVisualization::~ObjectAspectVisualization(void)
 
 Visualization * ObjectAspectVisualization::GetVisualization(void)
 {
-	if((_Visualization != 0) && (_Visualization->GetGraphics().IsValid() == true))
+	if((_Visualization != 0) && (_Visualization->GetGraphics() != 0))
 	{
 		return _Visualization;
 	}
@@ -50,9 +50,9 @@ Visualization * ObjectAspectVisualization::GetVisualization(void)
 	}
 }
 
-void ObjectAspectVisualization::SetVisualization(Reference< Graphics::Node > & Graphics)
+void ObjectAspectVisualization::SetGraphics(Graphics::Node * Graphics)
 {
-	assert(Graphics.IsValid() == true);
+	assert(Graphics != 0);
 	delete _Visualization;
 	_Visualization = new Visualization();
 	_Visualization->SetGraphics(Graphics);
@@ -68,7 +68,7 @@ void ObjectAspectVisualization::Destroy(void)
 {
 	if(_Visualization != 0)
 	{
-		if(_Visualization->GetGraphics().IsValid() == true)
+		if(_Visualization->GetGraphics() != 0)
 		{
 			DestroyVisualization();
 		}
@@ -82,7 +82,7 @@ void ObjectAspectVisualization::Destroy(void)
 
 void ObjectAspectVisualization::DestroyVisualization(void)
 {
-	assert((_Visualization != 0) && (_Visualization->GetGraphics().IsValid() == true));
+	assert((_Visualization != 0) && (_Visualization->GetGraphics() != 0));
 	_Visualization->GetGraphics()->Destroy();
 	delete _Visualization;
 	_Visualization = 0;
@@ -90,8 +90,8 @@ void ObjectAspectVisualization::DestroyVisualization(void)
 
 void ObjectAspectVisualization::UnsetVisualization(void)
 {
-	assert((_Visualization != 0) && (_Visualization->GetGraphics().IsValid() == true));
-	_Visualization->GetGraphics().Invalidate();
+	assert((_Visualization != 0) && (_Visualization->GetGraphics() != 0));
+	_Visualization->SetGraphics(0);
 	delete _Visualization;
 	_Visualization = 0;
 }
