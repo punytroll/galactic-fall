@@ -133,10 +133,6 @@ void VisualizeParticleSystem(Graphics::ParticleSystem * ParticleSystem, Graphics
 	Graphics::ParticleSystemNode * Visualization(new Graphics::ParticleSystemNode());
 	
 	Visualization->SetParticleSystem(ParticleSystem);
-	
-	Reference< Graphics::Node > VisualizationReference(*Visualization);
-	
-	g_VisualizationReferences[Visualization] = VisualizationReference;
 	Container->AddNode(Visualization);
 }
 
