@@ -38,6 +38,7 @@
 #include "ship.h"
 #include "shot.h"
 #include "slot.h"
+#include "visualization.h"
 #include "visualization_prototype.h"
 #include "visualizations.h"
 #include "weapon.h"
@@ -63,12 +64,14 @@ void InvalidateVisualizationReference(Graphics::Node * Node)
 	}
 }
 
-void UnvisualizeObject(Object * Object)
+void UnvisualizeObject(Object * Object, Graphics::Node * Container)
 {
 	assert(Object != 0);
 	assert(Object->GetAspectVisualization() != 0);
 	assert(Object->GetAspectVisualization()->GetVisualization() != 0);
-	Object->GetAspectVisualization()->UnsetVisualization();
+	assert(Object->GetAspectVisualization()->GetVisualization()->GetGraphics().IsValid() == true);
+	assert(Object->GetAspectVisualization()->GetVisualization()->GetGraphics()->GetContainer() == Container);
+	Object->GetAspectVisualization()->DestroyVisualization();
 }
 
 void VisualizeObject(Object * Object, Graphics::Node * Container)

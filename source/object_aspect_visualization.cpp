@@ -70,14 +70,17 @@ void ObjectAspectVisualization::Destroy(void)
 	{
 		if(_Visualization->GetGraphics().IsValid() == true)
 		{
-			UnsetVisualization();
+			DestroyVisualization();
 		}
-		delete _Visualization;
-		_Visualization = 0;
+		else
+		{
+			delete _Visualization;
+			_Visualization = 0;
+		}
 	}
 }
 
-void ObjectAspectVisualization::UnsetVisualization(void)
+void ObjectAspectVisualization::DestroyVisualization(void)
 {
 	assert((_Visualization != 0) && (_Visualization->GetGraphics().IsValid() == true));
 	_Visualization->GetGraphics()->Destroy();
