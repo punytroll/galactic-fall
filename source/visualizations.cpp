@@ -64,16 +64,6 @@ void InvalidateVisualizationReference(Graphics::Node * Node)
 	}
 }
 
-void UnvisualizeObject(Object * Object, Graphics::Node * Container)
-{
-	assert(Object != 0);
-	assert(Object->GetAspectVisualization() != 0);
-	assert(Object->GetAspectVisualization()->GetVisualization() != 0);
-	assert(Object->GetAspectVisualization()->GetVisualization()->GetGraphics() != 0);
-	assert(Object->GetAspectVisualization()->GetVisualization()->GetGraphics()->GetContainer() == Container);
-	Object->GetAspectVisualization()->DestroyVisualization();
-}
-
 void VisualizeObject(Object * Object, Graphics::Node * Container)
 {
 	if(Object->GetTypeIdentifier() == "commodity")

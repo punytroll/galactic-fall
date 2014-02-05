@@ -35,7 +35,6 @@ namespace Graphics
 }
 
 void InvalidateVisualizationReference(Graphics::Node * Node);
-void UnvisualizeObject(Object * Object, Graphics::Node * Container);
 void VisualizeObject(Object * Object, Graphics::Node * Container);
 void VisualizeParticleSystem(Graphics::ParticleSystem * ParticleSystem, Graphics::Node * Container);
 Graphics::Node * VisualizePrototype(const VisualizationPrototype * VisualizationPrototype);

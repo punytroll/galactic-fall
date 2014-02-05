@@ -349,7 +349,7 @@ bool Ship::Update(float Seconds)
 							assert(GetContainer()->GetAspectVisualization() != 0);
 							assert(GetContainer()->GetAspectVisualization()->GetVisualization() != 0);
 							assert(GetContainer()->GetAspectVisualization()->GetVisualization()->GetGraphics() != 0);
-							UnvisualizeObject(Target, GetContainer()->GetAspectVisualization()->GetVisualization()->GetGraphics());
+							Target->GetAspectVisualization()->DestroyVisualization(GetContainer()->GetAspectVisualization()->GetVisualization()->GetGraphics());
 						}
 					}
 					else
