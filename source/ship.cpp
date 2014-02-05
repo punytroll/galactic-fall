@@ -41,6 +41,7 @@
 #include "slot_class.h"
 #include "storage.h"
 #include "system.h"
+#include "visualization.h"
 #include "visualizations.h"
 #include "weapon.h"
 
@@ -345,7 +346,10 @@ bool Ship::Update(float Seconds)
 						SetTarget(0);
 						if((Target->GetAspectVisualization() != 0) && (Target->GetAspectVisualization()->GetVisualization() != 0))
 						{
-							UnvisualizeObject(Target);
+							assert(GetContainer()->GetAspectVisualization() != 0);
+							assert(GetContainer()->GetAspectVisualization()->GetVisualization() != 0);
+							assert(GetContainer()->GetAspectVisualization()->GetVisualization()->GetGraphics().IsValid() == true);
+							UnvisualizeObject(Target, GetContainer()->GetAspectVisualization()->GetVisualization()->GetGraphics().Get());
 						}
 					}
 					else

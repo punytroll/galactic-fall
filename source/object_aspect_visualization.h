@@ -47,7 +47,7 @@ public:
 	void SetVisualizationPrototype(VisualizationPrototype * VisualizationPrototype);
 	// modifiers
 	void Destroy(void);
-	void UnsetVisualization(void);
+	void DestroyVisualization(void);
 private:
 	Visualization * _Visualization;
 	VisualizationPrototype * _VisualizationPrototype;

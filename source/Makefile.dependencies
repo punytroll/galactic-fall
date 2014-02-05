@@ -861,6 +861,7 @@ ship_cpp = \
 	$(slot_class_h) \
 	$(storage_h) \
 	$(system_h) \
+	$(visualization_h) \
 	$(visualizations_h) \
 	$(weapon_h)
 
@@ -1492,6 +1493,7 @@ visualizations_cpp = \
 	$(ship_h) \
 	$(shot_h) \
 	$(slot_h) \
+	$(visualization_h) \
 	$(visualization_prototype_h) \
 	$(visualizations_h) \
 	$(weapon_h) \
