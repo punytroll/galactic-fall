@@ -71,7 +71,7 @@ void Slot::Unmount(void)
 		assert(GetMountedObject()->GetContainer()->GetAspectVisualization() != 0);
 		assert(GetMountedObject()->GetContainer()->GetAspectVisualization()->GetVisualization() != 0);
 		assert(GetMountedObject()->GetContainer()->GetAspectVisualization()->GetVisualization()->GetGraphics() != 0);
-		UnvisualizeObject(GetMountedObject().Get(), GetMountedObject()->GetContainer()->GetAspectVisualization()->GetVisualization()->GetGraphics());
+		GetMountedObject()->GetAspectVisualization()->DestroyVisualization(GetMountedObject()->GetContainer()->GetAspectVisualization()->GetVisualization()->GetGraphics());
 	}
 	GetMountedObject()->GetAspectAccessory()->SetSlot(0);
 	GetMountedObject().Clear();

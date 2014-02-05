@@ -68,21 +68,16 @@ void ObjectAspectVisualization::Destroy(void)
 {
 	if(_Visualization != 0)
 	{
-		if(_Visualization->GetGraphics() != 0)
-		{
-			DestroyVisualization();
-		}
-		else
-		{
-			delete _Visualization;
-			_Visualization = 0;
-		}
+		assert(_Visualization->GetGraphics() != 0);
+		_Visualization->GetGraphics()->Destroy();
+		delete _Visualization;
+		_Visualization = 0;
 	}
 }
 
-void ObjectAspectVisualization::DestroyVisualization(void)
+void ObjectAspectVisualization::DestroyVisualization(Graphics::Node * Container)
 {
-	assert((_Visualization != 0) && (_Visualization->GetGraphics() != 0));
+	assert((_Visualization != 0) && (_Visualization->GetGraphics() != 0) && (_Visualization->GetGraphics()->GetContainer() == Container));
 	_Visualization->GetGraphics()->Destroy();
 	delete _Visualization;
 	_Visualization = 0;
