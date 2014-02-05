@@ -69,7 +69,7 @@ void UnvisualizeObject(Object * Object, Graphics::Node * Container)
 	assert(Object != 0);
 	assert(Object->GetAspectVisualization() != 0);
 	assert(Object->GetAspectVisualization()->GetVisualization() != 0);
-	assert(Object->GetAspectVisualization()->GetVisualization()->GetGraphics().IsValid() == true);
+	assert(Object->GetAspectVisualization()->GetVisualization()->GetGraphics() != 0);
 	assert(Object->GetAspectVisualization()->GetVisualization()->GetGraphics()->GetContainer() == Container);
 	Object->GetAspectVisualization()->DestroyVisualization();
 }
@@ -109,23 +109,19 @@ void VisualizeCommodity(Commodity * Commodity, Graphics::Node * Container)
 	assert(Commodity->GetAspectVisualization() != 0);
 	assert(Commodity->GetAspectVisualization()->GetVisualizationPrototype() != 0);
 	
-	Graphics::Node * Visualization(VisualizePrototype(Commodity->GetAspectVisualization()->GetVisualizationPrototype()));
+	Graphics::Node * Graphics(VisualizePrototype(Commodity->GetAspectVisualization()->GetVisualizationPrototype()));
 	
-	Visualization->SetUseLighting(true);
+	Graphics->SetUseLighting(true);
 	assert(Commodity->GetAspectPosition() != 0);
-	Visualization->SetOrientation(Commodity->GetAspectPosition()->GetOrientation());
-	Visualization->SetPosition(Commodity->GetAspectPosition()->GetPosition());
-	
-	// create and store the visualization reference
-	Reference< Graphics::Node > VisualizationReference(*Visualization);
-	
-	g_ObjectVisualizations[Visualization] = Commodity->GetAspectVisualization();
+	Graphics->SetOrientation(Commodity->GetAspectPosition()->GetOrientation());
+	Graphics->SetPosition(Commodity->GetAspectPosition()->GetPosition());
+	g_ObjectVisualizations[Graphics] = Commodity->GetAspectVisualization();
 	// set as the object's visualization
 	assert(Commodity->GetAspectVisualization()->GetVisualization() == 0);
-	Commodity->GetAspectVisualization()->SetVisualization(VisualizationReference);
+	Commodity->GetAspectVisualization()->SetGraphics(Graphics);
 	// add to the scene
 	assert(Container != 0);
-	Container->AddNode(Visualization);
+	Container->AddNode(Graphics);
 }
 
 void VisualizeParticleSystem(Graphics::ParticleSystem * ParticleSystem, Graphics::Node * Container)
@@ -133,10 +129,10 @@ void VisualizeParticleSystem(Graphics::ParticleSystem * ParticleSystem, Graphics
 	assert(ParticleSystem != 0);
 	assert(Container != 0);
 	
-	Graphics::ParticleSystemNode * Visualization(new Graphics::ParticleSystemNode());
+	Graphics::ParticleSystemNode * Graphics(new Graphics::ParticleSystemNode());
 	
-	Visualization->SetParticleSystem(ParticleSystem);
-	Container->AddNode(Visualization);
+	Graphics->SetParticleSystem(ParticleSystem);
+	Container->AddNode(Graphics);
 }
 
 void VisualizePlanet(Planet * Planet, Graphics::Node * Container)
@@ -145,26 +141,22 @@ void VisualizePlanet(Planet * Planet, Graphics::Node * Container)
 	assert(Planet->GetAspectVisualization() != 0);
 	assert(Planet->GetAspectVisualization()->GetVisualizationPrototype() != 0);
 	
-	Graphics::Node * Visualization(VisualizePrototype(Planet->GetAspectVisualization()->GetVisualizationPrototype()));
+	Graphics::Node * Graphics(VisualizePrototype(Planet->GetAspectVisualization()->GetVisualizationPrototype()));
 	
-	Visualization->SetUseLighting(true);
-	Visualization->SetOrientation(Quaternion(true));
+	Graphics->SetUseLighting(true);
+	Graphics->SetOrientation(Quaternion(true));
 	assert(Planet->GetAspectPosition() != 0);
-	Visualization->SetPosition(Planet->GetAspectPosition()->GetPosition());
+	Graphics->SetPosition(Planet->GetAspectPosition()->GetPosition());
 	assert(Planet->GetAspectPhysical() != 0);
-	Visualization->SetScale(Planet->GetAspectPhysical()->GetRadialSize());
-	Visualization->SetNormalize(true);
-	
-	// create and store the visualization reference
-	Reference< Graphics::Node > VisualizationReference(*Visualization);
-	
-	g_ObjectVisualizations[Visualization] = Planet->GetAspectVisualization();
+	Graphics->SetScale(Planet->GetAspectPhysical()->GetRadialSize());
+	Graphics->SetNormalize(true);
+	g_ObjectVisualizations[Graphics] = Planet->GetAspectVisualization();
 	// set as the object's visualization
 	assert(Planet->GetAspectVisualization()->GetVisualization() == 0);
-	Planet->GetAspectVisualization()->SetVisualization(VisualizationReference);
+	Planet->GetAspectVisualization()->SetGraphics(Graphics);
 	// add to the scene
 	assert(Container != 0);
-	Container->AddNode(Visualization);
+	Container->AddNode(Graphics);
 }
 
 void VisualizeShip(Ship * Ship, Graphics::Node * Container)
@@ -173,23 +165,19 @@ void VisualizeShip(Ship * Ship, Graphics::Node * Container)
 	assert(Ship->GetAspectVisualization() != 0);
 	assert(Ship->GetAspectVisualization()->GetVisualizationPrototype() != 0);
 	
-	Graphics::Node * Visualization(VisualizePrototype(Ship->GetAspectVisualization()->GetVisualizationPrototype()));
+	Graphics::Node * Graphics(VisualizePrototype(Ship->GetAspectVisualization()->GetVisualizationPrototype()));
 	
-	Visualization->SetUseLighting(true);
+	Graphics->SetUseLighting(true);
 	assert(Ship->GetAspectPosition() != 0);
-	Visualization->SetOrientation(Ship->GetAspectPosition()->GetOrientation());
-	Visualization->SetPosition(Ship->GetAspectPosition()->GetPosition());
-	
-	// create and store the visualization reference
-	Reference< Graphics::Node > VisualizationReference(*Visualization);
-	
-	g_ObjectVisualizations[Visualization] = Ship->GetAspectVisualization();
+	Graphics->SetOrientation(Ship->GetAspectPosition()->GetOrientation());
+	Graphics->SetPosition(Ship->GetAspectPosition()->GetPosition());
+	g_ObjectVisualizations[Graphics] = Ship->GetAspectVisualization();
 	// set as the object's visualization
 	assert(Ship->GetAspectVisualization()->GetVisualization() == 0);
-	Ship->GetAspectVisualization()->SetVisualization(VisualizationReference);
+	Ship->GetAspectVisualization()->SetGraphics(Graphics);
 	// add to the scene
 	assert(Container != 0);
-	Container->AddNode(Visualization);
+	Container->AddNode(Graphics);
 	
 	// add accessory visualizations
 	assert(Ship->GetAspectOutfitting() != 0);
@@ -200,12 +188,12 @@ void VisualizeShip(Ship * Ship, Graphics::Node * Container)
 	{
 		if((SlotIterator->second->GetVisualizeAccessory() == true) && (SlotIterator->second->GetMountedObject().IsValid() == true))
 		{
-			VisualizeObject(SlotIterator->second->GetMountedObject().Get(), Visualization);
+			VisualizeObject(SlotIterator->second->GetMountedObject().Get(), Graphics);
 		}
 	}
 	// add engine glow particle system
 	assert(Ship->GetEngineGlowParticleSystem() != 0);
-	VisualizeParticleSystem(Ship->GetEngineGlowParticleSystem(), Visualization);
+	VisualizeParticleSystem(Ship->GetEngineGlowParticleSystem(), Graphics);
 }
 
 void VisualizeShot(Shot * Shot, Graphics::Node * Container)
@@ -214,24 +202,20 @@ void VisualizeShot(Shot * Shot, Graphics::Node * Container)
 	assert(Shot->GetAspectVisualization() != 0);
 	assert(Shot->GetAspectVisualization()->GetVisualizationPrototype() != 0);
 	
-	Graphics::Node * Visualization(VisualizePrototype(Shot->GetAspectVisualization()->GetVisualizationPrototype()));
+	Graphics::Node * Graphics(VisualizePrototype(Shot->GetAspectVisualization()->GetVisualizationPrototype()));
 	
-	Visualization->SetUseBlending(true);
-	Visualization->SetUseLighting(false);
+	Graphics->SetUseBlending(true);
+	Graphics->SetUseLighting(false);
 	assert(Shot->GetAspectPosition() != 0);
-	Visualization->SetOrientation(Shot->GetAspectPosition()->GetOrientation());
-	Visualization->SetPosition(Shot->GetAspectPosition()->GetPosition());
-	
-	// create and store the visualization reference
-	Reference< Graphics::Node > VisualizationReference(*Visualization);
-	
-	g_ObjectVisualizations[Visualization] = Shot->GetAspectVisualization();
+	Graphics->SetOrientation(Shot->GetAspectPosition()->GetOrientation());
+	Graphics->SetPosition(Shot->GetAspectPosition()->GetPosition());
+	g_ObjectVisualizations[Graphics] = Shot->GetAspectVisualization();
 	// set as the object's visualization
 	assert(Shot->GetAspectVisualization()->GetVisualization() == 0);
-	Shot->GetAspectVisualization()->SetVisualization(VisualizationReference);
+	Shot->GetAspectVisualization()->SetGraphics(Graphics);
 	// add to the scene
 	assert(Container != 0);
-	Container->AddNode(Visualization);
+	Container->AddNode(Graphics);
 }
 
 void VisualizeWeapon(Weapon * Weapon, Graphics::Node * Container)
@@ -240,23 +224,19 @@ void VisualizeWeapon(Weapon * Weapon, Graphics::Node * Container)
 	assert(Weapon->GetAspectVisualization() != 0);
 	assert(Weapon->GetAspectVisualization()->GetVisualizationPrototype() != 0);
 	
-	Graphics::Node * Visualization(VisualizePrototype(Weapon->GetAspectVisualization()->GetVisualizationPrototype()));
+	Graphics::Node * Graphics(VisualizePrototype(Weapon->GetAspectVisualization()->GetVisualizationPrototype()));
 	
-	Visualization->SetUseLighting(true);
+	Graphics->SetUseLighting(true);
 	assert(Weapon->GetAspectPosition() != 0);
-	Visualization->SetOrientation(Weapon->GetAspectAccessory()->GetSlot()->GetOrientation() * Weapon->GetAspectPosition()->GetOrientation());
-	Visualization->SetPosition(Weapon->GetAspectAccessory()->GetSlot()->GetPosition() + Weapon->GetAspectPosition()->GetPosition());
-	
-	// create and store the visualization reference
-	Reference< Graphics::Node > VisualizationReference(*Visualization);
-	
-	g_ObjectVisualizations[Visualization] = Weapon->GetAspectVisualization();
+	Graphics->SetOrientation(Weapon->GetAspectAccessory()->GetSlot()->GetOrientation() * Weapon->GetAspectPosition()->GetOrientation());
+	Graphics->SetPosition(Weapon->GetAspectAccessory()->GetSlot()->GetPosition() + Weapon->GetAspectPosition()->GetPosition());
+	g_ObjectVisualizations[Graphics] = Weapon->GetAspectVisualization();
 	// set as the object's visualization
 	assert(Weapon->GetAspectVisualization()->GetVisualization() == 0);
-	Weapon->GetAspectVisualization()->SetVisualization(VisualizationReference);
+	Weapon->GetAspectVisualization()->SetGraphics(Graphics);
 	// add to the container node
 	assert(Container != 0);
-	Container->AddNode(Visualization);
+	Container->AddNode(Graphics);
 }
 
 Graphics::Node * VisualizePrototype(const VisualizationPrototype * VisualizationPrototype)

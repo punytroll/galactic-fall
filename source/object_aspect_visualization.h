@@ -40,7 +40,7 @@ public:
 	Visualization * GetVisualization(void);
 	VisualizationPrototype * GetVisualizationPrototype(void);
 	// setters
-	void SetVisualization(Reference< Graphics::Node > & Visualization);
+	void SetGraphics(Graphics::Node * Visualization);
 	/**
 	 * @note Passes memory management reponsibility of the VisualizationPrototype to this ObjectAspectVisualization.
 	 **/
