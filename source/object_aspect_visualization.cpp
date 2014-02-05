@@ -87,3 +87,11 @@ void ObjectAspectVisualization::DestroyVisualization(void)
 	delete _Visualization;
 	_Visualization = 0;
 }
+
+void ObjectAspectVisualization::UnsetVisualization(void)
+{
+	assert((_Visualization != 0) && (_Visualization->GetGraphics().IsValid() == true));
+	_Visualization->GetGraphics().Invalidate();
+	delete _Visualization;
+	_Visualization = 0;
+}

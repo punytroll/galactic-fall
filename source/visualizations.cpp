@@ -45,7 +45,7 @@
 #include "weapon_class.h"
 
 // This map holds the References to the Graphics::Nodes that have to be referenced in the Game subsystem
-std::map< Graphics::Node *, Reference< Graphics::Node > > g_VisualizationReferences;
+std::map< Graphics::Node *, ObjectAspectVisualization * > g_ObjectVisualizations;
 
 static void VisualizeCommodity(Commodity * Commodity, Graphics::Node * Container);
 static void VisualizePlanet(Planet * Planet, Graphics::Node * Container);
@@ -55,12 +55,12 @@ static void VisualizeWeapon(Weapon * Weapon, Graphics::Node * Container);
 
 void InvalidateVisualizationReference(Graphics::Node * Node)
 {
-	std::map< Graphics::Node *, Reference< Graphics::Node > >::iterator VisualizationReferenceIterator(g_VisualizationReferences.find(Node));
+	std::map< Graphics::Node *, ObjectAspectVisualization * >::iterator ObjectVisualizationIterator(g_ObjectVisualizations.find(Node));
 	
-	if(VisualizationReferenceIterator != g_VisualizationReferences.end())
+	if(ObjectVisualizationIterator != g_ObjectVisualizations.end())
 	{
-		VisualizationReferenceIterator->second.Invalidate();
-		g_VisualizationReferences.erase(VisualizationReferenceIterator);
+		ObjectVisualizationIterator->second->UnsetVisualization();
+		g_ObjectVisualizations.erase(ObjectVisualizationIterator);
 	}
 }
 
@@ -119,7 +119,7 @@ void VisualizeCommodity(Commodity * Commodity, Graphics::Node * Container)
 	// create and store the visualization reference
 	Reference< Graphics::Node > VisualizationReference(*Visualization);
 	
-	g_VisualizationReferences[Visualization] = VisualizationReference;
+	g_ObjectVisualizations[Visualization] = Commodity->GetAspectVisualization();
 	// set as the object's visualization
 	assert(Commodity->GetAspectVisualization()->GetVisualization() == 0);
 	Commodity->GetAspectVisualization()->SetVisualization(VisualizationReference);
@@ -158,7 +158,7 @@ void VisualizePlanet(Planet * Planet, Graphics::Node * Container)
 	// create and store the visualization reference
 	Reference< Graphics::Node > VisualizationReference(*Visualization);
 	
-	g_VisualizationReferences[Visualization] = VisualizationReference;
+	g_ObjectVisualizations[Visualization] = Planet->GetAspectVisualization();
 	// set as the object's visualization
 	assert(Planet->GetAspectVisualization()->GetVisualization() == 0);
 	Planet->GetAspectVisualization()->SetVisualization(VisualizationReference);
@@ -183,7 +183,7 @@ void VisualizeShip(Ship * Ship, Graphics::Node * Container)
 	// create and store the visualization reference
 	Reference< Graphics::Node > VisualizationReference(*Visualization);
 	
-	g_VisualizationReferences[Visualization] = VisualizationReference;
+	g_ObjectVisualizations[Visualization] = Ship->GetAspectVisualization();
 	// set as the object's visualization
 	assert(Ship->GetAspectVisualization()->GetVisualization() == 0);
 	Ship->GetAspectVisualization()->SetVisualization(VisualizationReference);
@@ -225,7 +225,7 @@ void VisualizeShot(Shot * Shot, Graphics::Node * Container)
 	// create and store the visualization reference
 	Reference< Graphics::Node > VisualizationReference(*Visualization);
 	
-	g_VisualizationReferences[Visualization] = VisualizationReference;
+	g_ObjectVisualizations[Visualization] = Shot->GetAspectVisualization();
 	// set as the object's visualization
 	assert(Shot->GetAspectVisualization()->GetVisualization() == 0);
 	Shot->GetAspectVisualization()->SetVisualization(VisualizationReference);
@@ -250,7 +250,7 @@ void VisualizeWeapon(Weapon * Weapon, Graphics::Node * Container)
 	// create and store the visualization reference
 	Reference< Graphics::Node > VisualizationReference(*Visualization);
 	
-	g_VisualizationReferences[Visualization] = VisualizationReference;
+	g_ObjectVisualizations[Visualization] = Weapon->GetAspectVisualization();
 	// set as the object's visualization
 	assert(Weapon->GetAspectVisualization()->GetVisualization() == 0);
 	Weapon->GetAspectVisualization()->SetVisualization(VisualizationReference);
