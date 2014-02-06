@@ -43,7 +43,7 @@ UI::PlanetWindow::PlanetWindow(UI::Widget * SupWidget, Reference< Planet > Plane
 	SetSize(Vector2f(700.0f, 400.0f));
 	ConnectKeyCallback(Callback(this, &PlanetWindow::_OnKey));
 	
-	UI::Button * HomeButton(new UI::TextButton(this, "Hom"));
+	UI::Button * HomeButton(new UI::TextButton(this, "Home"));
 	
 	HomeButton->SetPosition(Vector2f(10.0f, 40.0f));
 	HomeButton->SetSize(Vector2f(100.0f, 20.0f));
