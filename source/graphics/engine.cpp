@@ -39,17 +39,17 @@ Graphics::Engine::~Engine(void)
 {
 	assert(_Views.empty() == true);
 	delete _MeshManager;
-	_MeshManager = 0;
+	_MeshManager = nullptr;
 	delete _ModelManager;
-	_ModelManager = 0;
+	_ModelManager = nullptr;
 	delete _TextureManager;
-	_TextureManager = 0;
+	_TextureManager = nullptr;
 }
 
 void Graphics::Engine::AddView(Graphics::View * View)
 {
-	assert(View != 0);
-	assert(View->GetEngine() == 0);
+	assert(View != nullptr);
+	assert(View->GetEngine() == nullptr);
 	_Views.push_back(View);
 	View->_SetEngine(this);
 }
@@ -66,19 +66,19 @@ void Graphics::Engine::RemoveParticleSystem(Graphics::ParticleSystem * ParticleS
 
 void Graphics::Engine::RemoveView(Graphics::View * View)
 {
-	assert(View != 0);
+	assert(View != nullptr);
 	assert(View->GetEngine() == this);
-	View->_SetEngine(0);
+	View->_SetEngine(nullptr);
 	_Views.erase(std::find(_Views.begin(), _Views.end(), View));
 }
 
 void Graphics::Engine::Update(float Seconds)
 {
-	std::set< Graphics::ParticleSystem * >::iterator ParticleSystemIterator(_ParticleSystems.begin());
+	auto ParticleSystemIterator(_ParticleSystems.begin());
 	
 	while(ParticleSystemIterator != _ParticleSystems.end())
 	{
-		Graphics::ParticleSystem * ParticleSystem(*ParticleSystemIterator);
+		auto ParticleSystem(*ParticleSystemIterator);
 		
 		ParticleSystem->Update(Seconds);
 		if(ParticleSystem->IsDone() == true)
