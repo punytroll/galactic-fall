@@ -107,7 +107,6 @@ void VisualizeCommodity(Commodity * Commodity, Graphics::Node * Container)
 	Graphics->SetPosition(Commodity->GetAspectPosition()->GetPosition());
 	g_ObjectVisualizations[Graphics] = Commodity->GetAspectVisualization();
 	// set as the object's visualization
-	assert(Commodity->GetAspectVisualization()->GetVisualization() == 0);
 	Commodity->GetAspectVisualization()->AddGraphics(Graphics);
 	// add to the scene
 	assert(Container != 0);
@@ -142,7 +141,6 @@ void VisualizePlanet(Planet * Planet, Graphics::Node * Container)
 	Graphics->SetNormalize(true);
 	g_ObjectVisualizations[Graphics] = Planet->GetAspectVisualization();
 	// set as the object's visualization
-	assert(Planet->GetAspectVisualization()->GetVisualization() == 0);
 	Planet->GetAspectVisualization()->AddGraphics(Graphics);
 	// add to the scene
 	assert(Container != 0);
@@ -163,7 +161,6 @@ void VisualizeShip(Ship * Ship, Graphics::Node * Container)
 	Graphics->SetPosition(Ship->GetAspectPosition()->GetPosition());
 	g_ObjectVisualizations[Graphics] = Ship->GetAspectVisualization();
 	// set as the object's visualization
-	assert(Ship->GetAspectVisualization()->GetVisualization() == 0);
 	Ship->GetAspectVisualization()->AddGraphics(Graphics);
 	// add to the scene
 	assert(Container != 0);
@@ -201,7 +198,6 @@ void VisualizeShot(Shot * Shot, Graphics::Node * Container)
 	Graphics->SetPosition(Shot->GetAspectPosition()->GetPosition());
 	g_ObjectVisualizations[Graphics] = Shot->GetAspectVisualization();
 	// set as the object's visualization
-	assert(Shot->GetAspectVisualization()->GetVisualization() == 0);
 	Shot->GetAspectVisualization()->AddGraphics(Graphics);
 	// add to the scene
 	assert(Container != 0);
@@ -222,7 +218,6 @@ void VisualizeWeapon(Weapon * Weapon, Graphics::Node * Container)
 	Graphics->SetPosition(Weapon->GetAspectAccessory()->GetSlot()->GetPosition() + Weapon->GetAspectPosition()->GetPosition());
 	g_ObjectVisualizations[Graphics] = Weapon->GetAspectVisualization();
 	// set as the object's visualization
-	assert(Weapon->GetAspectVisualization()->GetVisualization() == 0);
 	Weapon->GetAspectVisualization()->AddGraphics(Graphics);
 	// add to the container node
 	assert(Container != 0);
