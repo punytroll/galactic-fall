@@ -346,10 +346,7 @@ bool Ship::Update(float Seconds)
 						SetTarget(0);
 						if((Target->GetAspectVisualization() != 0) && (Target->GetAspectVisualization()->GetVisualization() != 0))
 						{
-							assert(GetContainer()->GetAspectVisualization() != 0);
-							assert(GetContainer()->GetAspectVisualization()->GetVisualization() != 0);
-							assert(GetContainer()->GetAspectVisualization()->GetVisualization()->GetGraphics() != 0);
-							Target->GetAspectVisualization()->DestroyVisualization(GetContainer()->GetAspectVisualization()->GetVisualization()->GetGraphics());
+							Target->GetAspectVisualization()->DestroyVisualization(g_CommodityLayer);
 						}
 					}
 					else
