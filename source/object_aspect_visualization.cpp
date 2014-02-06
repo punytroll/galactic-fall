@@ -38,6 +38,14 @@ ObjectAspectVisualization::~ObjectAspectVisualization(void)
 	_VisualizationPrototype = 0;
 }
 
+void ObjectAspectVisualization::AddGraphics(Graphics::Node * Graphics)
+{
+	assert(Graphics != 0);
+	delete _Visualization;
+	_Visualization = new Visualization();
+	_Visualization->SetGraphics(Graphics);
+}
+
 Visualization * ObjectAspectVisualization::GetVisualization(void)
 {
 	if((_Visualization != 0) && (_Visualization->GetGraphics() != 0))
@@ -48,14 +56,6 @@ Visualization * ObjectAspectVisualization::GetVisualization(void)
 	{
 		return 0;
 	}
-}
-
-void ObjectAspectVisualization::SetGraphics(Graphics::Node * Graphics)
-{
-	assert(Graphics != 0);
-	delete _Visualization;
-	_Visualization = new Visualization();
-	_Visualization->SetGraphics(Graphics);
 }
 
 void ObjectAspectVisualization::SetVisualizationPrototype(VisualizationPrototype * VisualizationPrototype)
@@ -83,9 +83,9 @@ void ObjectAspectVisualization::DestroyVisualization(Graphics::Node * Container)
 	_Visualization = 0;
 }
 
-void ObjectAspectVisualization::UnsetVisualization(void)
+void ObjectAspectVisualization::RemoveGraphics(Graphics::Node * Graphics)
 {
-	assert((_Visualization != 0) && (_Visualization->GetGraphics() != 0));
+	assert((Graphics != 0) && (_Visualization != 0) && (_Visualization->GetGraphics() == Graphics));
 	_Visualization->SetGraphics(0);
 	delete _Visualization;
 	_Visualization = 0;

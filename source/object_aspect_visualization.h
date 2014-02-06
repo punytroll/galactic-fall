@@ -40,15 +40,15 @@ public:
 	Visualization * GetVisualization(void);
 	VisualizationPrototype * GetVisualizationPrototype(void);
 	// setters
-	void SetGraphics(Graphics::Node * Visualization);
 	/**
 	 * @note Passes memory management reponsibility of the VisualizationPrototype to this ObjectAspectVisualization.
 	 **/
 	void SetVisualizationPrototype(VisualizationPrototype * VisualizationPrototype);
 	// modifiers
+	void AddGraphics(Graphics::Node * Graphics);
 	void Destroy(void);
 	void DestroyVisualization(Graphics::Node * Container);
-	void UnsetVisualization(void);
+	void RemoveGraphics(Graphics::Node * Graphics);
 private:
 	Visualization * _Visualization;
 	VisualizationPrototype * _VisualizationPrototype;
