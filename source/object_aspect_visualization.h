@@ -20,8 +20,6 @@
 #ifndef OBJECT_ASPECT_VISUALIZATION_H
 #define OBJECT_ASPECT_VISUALIZATION_H
 
-#include "referencing.h"
-
 class Visualization;
 class VisualizationPrototype;
 

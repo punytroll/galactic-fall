@@ -728,8 +728,7 @@ object_aspect_visualization_cpp = \
 	$(visualization_prototype_h)
 
 object_aspect_visualization_h = \
-	object_aspect_visualization.h \
-	$(referencing_h)
+	object_aspect_visualization.h
 
 object_factory_cpp = \
 	object_factory.cpp \
