@@ -39,8 +39,8 @@ ObjectAspectVisualization::~ObjectAspectVisualization(void)
 
 void ObjectAspectVisualization::AddGraphics(Graphics::Node * Graphics)
 {
-	assert(Graphics != 0);
-	delete _Visualization;
+	assert(Graphics != nullptr);
+	assert(_Visualization == nullptr);
 	_Visualization = new Visualization();
 	_Visualization->SetGraphics(Graphics);
 }
