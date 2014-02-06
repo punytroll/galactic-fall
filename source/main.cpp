@@ -585,9 +585,20 @@ Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSyst
 	return ParticleSystem;
 }
 
+void UpdateVisualization(Object * Object)
+{
+	assert(Object != nullptr);
+	assert(Object->GetAspectPosition() != nullptr);
+	assert(Object->GetAspectVisualization() != nullptr);
+	assert(Object->GetAspectVisualization()->GetVisualization() != nullptr);
+	assert(Object->GetAspectVisualization()->GetVisualization()->GetGraphics() != nullptr);
+	Object->GetAspectVisualization()->GetVisualization()->GetGraphics()->SetOrientation(Object->GetAspectPosition()->GetOrientation());
+	Object->GetAspectVisualization()->GetVisualization()->GetGraphics()->SetPosition(Object->GetAspectPosition()->GetPosition());
+}
+
 void CalculateMovements(System * System, float Seconds)
 {
-	assert(System != 0);
+	assert(System != nullptr);
 	
 	// TODO: it is unclear, which Ships to update really.
 	const std::list< Ship * > & Ships(System->GetShips());
@@ -605,7 +616,7 @@ void CalculateMovements(System * System, float Seconds)
 		if(TheShip->GetAspectUpdate()->Update(Seconds) == false)
 		{
 			DeleteObject(TheShip);
-			TheShip = 0;
+			TheShip = nullptr;
 		}
 		else
 		{
@@ -620,14 +631,12 @@ void CalculateMovements(System * System, float Seconds)
 					NewJumpParticleSystem->SetVelocity(Vector3f(0.0f, 0.0f, 0.0f));
 					VisualizeParticleSystem(NewJumpParticleSystem, g_ParticleSystemsLayer);
 					DeleteObject(TheShip);
-					TheShip = 0;
+					TheShip = nullptr;
 				}
 			}
-			// update the ship's visualization
-			if((TheShip != 0) && (TheShip->GetAspectVisualization()->GetVisualization() != 0))
+			if(TheShip != nullptr)
 			{
-				TheShip->GetAspectVisualization()->GetVisualization()->GetGraphics()->SetOrientation(TheShip->GetAspectPosition()->GetOrientation());
-				TheShip->GetAspectVisualization()->GetVisualization()->GetGraphics()->SetPosition(TheShip->GetAspectPosition()->GetPosition());
+				UpdateVisualization(TheShip);
 			}
 		}
 	}
@@ -642,13 +651,11 @@ void CalculateMovements(System * System, float Seconds)
 		if(TheCommodity->GetAspectUpdate()->Update(Seconds) == false)
 		{
 			DeleteObject(TheCommodity);
-			TheCommodity = 0;
+			TheCommodity = nullptr;
 		}
-		else
+		if(TheCommodity != nullptr)
 		{
-			// update visualization
-			TheCommodity->GetAspectVisualization()->GetVisualization()->GetGraphics()->SetOrientation(TheCommodity->GetAspectPosition()->GetOrientation());
-			TheCommodity->GetAspectVisualization()->GetVisualization()->GetGraphics()->SetPosition(TheCommodity->GetAspectPosition()->GetPosition());
+			UpdateVisualization(TheCommodity);
 		}
 	}
 	
@@ -661,21 +668,14 @@ void CalculateMovements(System * System, float Seconds)
 		Shot * TheShot(*ShotIterator);
 		
 		++ShotIterator;
-		assert(TheShot->GetAspectUpdate() != 0);
+		assert(TheShot->GetAspectUpdate() != nullptr);
 		if(TheShot->GetAspectUpdate()->Update(Seconds) == false)
 		{
 			DeleteObject(TheShot);
-			TheShot = 0;
-		}
-		else
-		{
-			assert(TheShot->GetAspectVisualization() != 0);
-			// update visualization
-			TheShot->GetAspectVisualization()->GetVisualization()->GetGraphics()->SetOrientation(TheShot->GetAspectPosition()->GetOrientation());
-			TheShot->GetAspectVisualization()->GetVisualization()->GetGraphics()->SetPosition(TheShot->GetAspectPosition()->GetPosition());
+			TheShot = nullptr;
 		}
 		// test for collisions with ships
-		if(TheShot != 0)
+		if(TheShot != nullptr)
 		{
 			for(std::list< Ship * >::const_iterator ShipIterator = Ships.begin(); ShipIterator != Ships.end(); ++ShipIterator)
 			{
@@ -683,10 +683,10 @@ void CalculateMovements(System * System, float Seconds)
 				
 				if((TheShot->GetShooter().IsValid() == true) && (TheShot->GetShooter().Get() != TheShip))
 				{
-					assert(TheShip->GetAspectPhysical() != 0);
-					assert(TheShip->GetAspectPosition() != 0);
-					assert(TheShot->GetAspectPhysical() != 0);
-					assert(TheShot->GetAspectPosition() != 0);
+					assert(TheShip->GetAspectPhysical() != nullptr);
+					assert(TheShip->GetAspectPosition() != nullptr);
+					assert(TheShot->GetAspectPhysical() != nullptr);
+					assert(TheShot->GetAspectPosition() != nullptr);
 					if((TheShot->GetAspectPosition()->GetPosition() - TheShip->GetAspectPosition()->GetPosition()).SquaredLength() < (TheShot->GetAspectPhysical()->GetRadialSize() * TheShot->GetAspectPhysical()->GetRadialSize() + TheShip->GetAspectPhysical()->GetRadialSize() * TheShip->GetAspectPhysical()->GetRadialSize()))
 					{
 						Graphics::ParticleSystem * NewHitParticleSystem(CreateParticleSystem("hit"));
@@ -695,7 +695,7 @@ void CalculateMovements(System * System, float Seconds)
 						NewHitParticleSystem->SetVelocity((TheShot->GetVelocity() * 0.2f) + (TheShip->GetVelocity() * 0.8f));
 						VisualizeParticleSystem(NewHitParticleSystem, g_ParticleSystemsLayer);
 						TheShip->SetHull(TheShip->GetHull() - TheShot->GetDamage());
-						assert(TheShip->GetAspectObjectContainer() != 0);
+						assert(TheShip->GetAspectObjectContainer() != nullptr);
 						
 						// send message to all characters on the hit ship
 						const std::set< Object * > & ShipContent(TheShip->GetAspectObjectContainer()->GetContent());
@@ -717,7 +717,7 @@ void CalculateMovements(System * System, float Seconds)
 							NewExplosionParticleSystem->SetVelocity(TheShip->GetVelocity() * 0.5f);
 							VisualizeParticleSystem(NewExplosionParticleSystem, g_ParticleSystemsLayer);
 							// if the ship has content, drop all of it
-							if(TheShip->GetAspectObjectContainer() != 0)
+							if(TheShip->GetAspectObjectContainer() != nullptr)
 							{
 								const std::set< Object * > & ShipContent(TheShip->GetAspectObjectContainer()->GetContent());
 								std::set< Object * >::const_iterator ShipContentIterator(ShipContent.begin());
@@ -764,23 +764,23 @@ void CalculateMovements(System * System, float Seconds)
 							DeleteObject(TheShip);
 						}
 						DeleteObject(TheShot);
-						TheShot = 0;
+						TheShot = nullptr;
 						
 						break;
 					}
 				}
 			}
 		}
-		if(TheShot != 0)
+		if(TheShot != nullptr)
 		{
 			for(std::list< Commodity * >::const_iterator CommodityIterator = Commodities.begin(); CommodityIterator != Commodities.end(); ++CommodityIterator)
 			{
 				Commodity * TheCommodity(*CommodityIterator);
 				
-				assert(TheCommodity->GetAspectPhysical() != 0);
-				assert(TheCommodity->GetAspectPosition() != 0);
-				assert(TheShot->GetAspectPhysical() != 0);
-				assert(TheShot->GetAspectPosition() != 0);
+				assert(TheCommodity->GetAspectPhysical() != nullptr);
+				assert(TheCommodity->GetAspectPosition() != nullptr);
+				assert(TheShot->GetAspectPhysical() != nullptr);
+				assert(TheShot->GetAspectPosition() != nullptr);
 				if((TheShot->GetAspectPosition()->GetPosition() - TheCommodity->GetAspectPosition()->GetPosition()).SquaredLength() < (TheShot->GetAspectPhysical()->GetRadialSize() * TheShot->GetAspectPhysical()->GetRadialSize() + TheCommodity->GetAspectPhysical()->GetRadialSize() * TheCommodity->GetAspectPhysical()->GetRadialSize()))
 				{
 					Graphics::ParticleSystem * NewHitParticleSystem(CreateParticleSystem("hit"));
@@ -799,11 +799,15 @@ void CalculateMovements(System * System, float Seconds)
 						DeleteObject(TheCommodity);
 					}
 					DeleteObject(TheShot);
-					TheShot = 0;
+					TheShot = nullptr;
 					
 					break;
 				}
 			}
+		}
+		if(TheShot != nullptr)
+		{
+			UpdateVisualization(TheShot);
 		}
 	}
 }
