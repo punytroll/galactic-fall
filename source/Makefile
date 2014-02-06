@@ -90,6 +90,6 @@ binary: $(OBJECT_FILES) $(algebra_object_files) $(arxx_libraries) $(xml_stream_o
 
 .SECONDEXPANSION:
 $(OBJECT_DIRECTORY)/%.o: $$($$(subst /,_,$$*)_cpp)
-	$(CXX) $(CXXFLAGS) $(algebra_include) $(arxx_include) $(xml_stream_include) -c $< -o $@
+	$(CXX) -std=c++11 $(CXXFLAGS) $(algebra_include) $(arxx_include) $(xml_stream_include) -c $< -o $@
 
 .PHONY: dependencies

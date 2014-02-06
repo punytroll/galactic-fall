@@ -25,7 +25,7 @@ list_glx_fb_configurations: $(OBJECT_FILES) $(LDFLAGS_configuration)
 	$(CXX) $(LDFLAGS) $(OBJECT_FILES) -lGL -lX11 -o $@
 
 list_glx_fb_configurations.o: list_glx_fb_configurations.cpp
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+	$(CXX) -std=c++11 $(CXXFLAGS) -c $< -o $@
 
 $(OBJECT_FILES): $(CXXFLAGS_configuration)
 
