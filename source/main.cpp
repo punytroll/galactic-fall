@@ -601,13 +601,13 @@ void CalculateMovements(System * System, float Seconds)
 	assert(System != nullptr);
 	
 	// TODO: it is unclear, which Ships to update really.
-	const std::list< Ship * > & Ships(System->GetShips());
-	std::list< Ship * >::const_iterator ShipIterator(Ships.begin());
+	const auto & Ships(System->GetShips());
+	auto ShipIterator(Ships.begin());
 	
 	g_SystemStatistics->SetShipsInCurrentSystemThisFrame(Ships.size());
 	while(ShipIterator != Ships.end())
 	{
-		Ship * TheShip(*ShipIterator);
+		auto TheShip(*ShipIterator);
 		// save the position in case the ship jumps to another system and we need to display the jump particle system
 		Vector3f OldShipPosition(TheShip->GetAspectPosition()->GetPosition());
 		
@@ -625,7 +625,7 @@ void CalculateMovements(System * System, float Seconds)
 				// if another ship jumps out of the system ... remove it
 				if((g_CharacterObserver->GetObservedCharacter().IsValid() == false) || (g_CharacterObserver->GetObservedCharacter()->GetShip() != TheShip))
 				{
-					Graphics::ParticleSystem * NewJumpParticleSystem(CreateParticleSystem("jump"));
+					auto NewJumpParticleSystem(CreateParticleSystem("jump"));
 					
 					NewJumpParticleSystem->SetPosition(OldShipPosition);
 					NewJumpParticleSystem->SetVelocity(Vector3f(0.0f, 0.0f, 0.0f));
@@ -641,12 +641,12 @@ void CalculateMovements(System * System, float Seconds)
 		}
 	}
 	
-	const std::list< Commodity * > & Commodities(System->GetCommodities());
+	const auto & Commodities(System->GetCommodities());
 	
 	g_SystemStatistics->SetCommoditiesInCurrentSystemThisFrame(Commodities.size());
-	for(std::list< Commodity * >::const_iterator CommodityIterator = Commodities.begin(); CommodityIterator != Commodities.end(); ++CommodityIterator)
+	for(auto CommodityIterator = Commodities.begin(); CommodityIterator != Commodities.end(); ++CommodityIterator)
 	{
-		Commodity * TheCommodity(*CommodityIterator);
+		auto TheCommodity(*CommodityIterator);
 		
 		if(TheCommodity->GetAspectUpdate()->Update(Seconds) == false)
 		{
@@ -659,13 +659,13 @@ void CalculateMovements(System * System, float Seconds)
 		}
 	}
 	
-	const std::list< Shot * > & Shots(System->GetShots());
-	std::list< Shot * >::const_iterator ShotIterator(Shots.begin());
+	const auto & Shots(System->GetShots());
+	auto ShotIterator(Shots.begin());
 	
 	g_SystemStatistics->SetShotsInCurrentSystemThisFrame(Shots.size());
 	while(ShotIterator != Shots.end())
 	{
-		Shot * TheShot(*ShotIterator);
+		auto TheShot(*ShotIterator);
 		
 		++ShotIterator;
 		assert(TheShot->GetAspectUpdate() != nullptr);
@@ -677,9 +677,9 @@ void CalculateMovements(System * System, float Seconds)
 		// test for collisions with ships
 		if(TheShot != nullptr)
 		{
-			for(std::list< Ship * >::const_iterator ShipIterator = Ships.begin(); ShipIterator != Ships.end(); ++ShipIterator)
+			for(auto ShipIterator = Ships.begin(); ShipIterator != Ships.end(); ++ShipIterator)
 			{
-				Ship * TheShip(*ShipIterator);
+				auto TheShip(*ShipIterator);
 				
 				if((TheShot->GetShooter().IsValid() == true) && (TheShot->GetShooter().Get() != TheShip))
 				{
@@ -689,7 +689,7 @@ void CalculateMovements(System * System, float Seconds)
 					assert(TheShot->GetAspectPosition() != nullptr);
 					if((TheShot->GetAspectPosition()->GetPosition() - TheShip->GetAspectPosition()->GetPosition()).SquaredLength() < (TheShot->GetAspectPhysical()->GetRadialSize() * TheShot->GetAspectPhysical()->GetRadialSize() + TheShip->GetAspectPhysical()->GetRadialSize() * TheShip->GetAspectPhysical()->GetRadialSize()))
 					{
-						Graphics::ParticleSystem * NewHitParticleSystem(CreateParticleSystem("hit"));
+						auto * NewHitParticleSystem(CreateParticleSystem("hit"));
 						
 						NewHitParticleSystem->SetPosition(TheShot->GetAspectPosition()->GetPosition());
 						NewHitParticleSystem->SetVelocity((TheShot->GetVelocity() * 0.2f) + (TheShip->GetVelocity() * 0.8f));
@@ -698,11 +698,11 @@ void CalculateMovements(System * System, float Seconds)
 						assert(TheShip->GetAspectObjectContainer() != nullptr);
 						
 						// send message to all characters on the hit ship
-						const std::set< Object * > & ShipContent(TheShip->GetAspectObjectContainer()->GetContent());
+						const auto & ShipContent(TheShip->GetAspectObjectContainer()->GetContent());
 						
-						for(std::set< Object * >::iterator ContentIterator = ShipContent.begin(); ContentIterator != ShipContent.end(); ++ContentIterator)
+						for(auto ContentIterator = ShipContent.begin(); ContentIterator != ShipContent.end(); ++ContentIterator)
 						{
-							Object * Content(*ContentIterator);
+							auto Content(*ContentIterator);
 							
 							if(Content->GetTypeIdentifier() == "character")
 							{
@@ -711,7 +711,7 @@ void CalculateMovements(System * System, float Seconds)
 						}
 						if(TheShip->GetHull() <= 0.0f)
 						{
-							Graphics::ParticleSystem * NewExplosionParticleSystem(CreateParticleSystem("explosion"));
+							auto NewExplosionParticleSystem(CreateParticleSystem("explosion"));
 							
 							NewExplosionParticleSystem->SetPosition(TheShip->GetAspectPosition()->GetPosition());
 							NewExplosionParticleSystem->SetVelocity(TheShip->GetVelocity() * 0.5f);
@@ -719,22 +719,22 @@ void CalculateMovements(System * System, float Seconds)
 							// if the ship has content, drop all of it
 							if(TheShip->GetAspectObjectContainer() != nullptr)
 							{
-								const std::set< Object * > & ShipContent(TheShip->GetAspectObjectContainer()->GetContent());
-								std::set< Object * >::const_iterator ShipContentIterator(ShipContent.begin());
+								const auto & ShipContent(TheShip->GetAspectObjectContainer()->GetContent());
+								auto ShipContentIterator(ShipContent.begin());
 								
 								while(ShipContentIterator != ShipContent.end())
 								{
 									if((*ShipContentIterator)->GetTypeIdentifier() == "storage")
 									{
-										Object * TheStorage(*ShipContentIterator);
-										const std::set< Object * > & StorageContent(TheStorage->GetAspectObjectContainer()->GetContent());
-										std::set< Object * >::const_iterator StorageContentIterator(StorageContent.begin());
+										auto TheStorage(*ShipContentIterator);
+										const auto & StorageContent(TheStorage->GetAspectObjectContainer()->GetContent());
+										auto StorageContentIterator(StorageContent.begin());
 										
 										while(StorageContentIterator != StorageContent.end())
 										{
 											if((*StorageContentIterator)->GetTypeIdentifier() == "commodity")
 											{
-												Commodity * TheCommodity(dynamic_cast< Commodity * >(*StorageContentIterator));
+												auto TheCommodity(dynamic_cast< Commodity * >(*StorageContentIterator));
 												
 												++StorageContentIterator;
 												TheStorage->GetAspectObjectContainer()->RemoveContent(TheCommodity);
@@ -773,9 +773,9 @@ void CalculateMovements(System * System, float Seconds)
 		}
 		if(TheShot != nullptr)
 		{
-			for(std::list< Commodity * >::const_iterator CommodityIterator = Commodities.begin(); CommodityIterator != Commodities.end(); ++CommodityIterator)
+			for(auto CommodityIterator = Commodities.begin(); CommodityIterator != Commodities.end(); ++CommodityIterator)
 			{
-				Commodity * TheCommodity(*CommodityIterator);
+				auto TheCommodity(*CommodityIterator);
 				
 				assert(TheCommodity->GetAspectPhysical() != nullptr);
 				assert(TheCommodity->GetAspectPosition() != nullptr);
@@ -783,7 +783,7 @@ void CalculateMovements(System * System, float Seconds)
 				assert(TheShot->GetAspectPosition() != nullptr);
 				if((TheShot->GetAspectPosition()->GetPosition() - TheCommodity->GetAspectPosition()->GetPosition()).SquaredLength() < (TheShot->GetAspectPhysical()->GetRadialSize() * TheShot->GetAspectPhysical()->GetRadialSize() + TheCommodity->GetAspectPhysical()->GetRadialSize() * TheCommodity->GetAspectPhysical()->GetRadialSize()))
 				{
-					Graphics::ParticleSystem * NewHitParticleSystem(CreateParticleSystem("hit"));
+					auto NewHitParticleSystem(CreateParticleSystem("hit"));
 					
 					NewHitParticleSystem->SetPosition(TheShot->GetAspectPosition()->GetPosition());
 					NewHitParticleSystem->SetVelocity((TheShot->GetVelocity() * 0.4f) + (TheCommodity->GetVelocity() * 0.6f));
@@ -791,7 +791,7 @@ void CalculateMovements(System * System, float Seconds)
 					TheCommodity->SetHull(TheCommodity->GetHull() - TheShot->GetDamage());
 					if(TheCommodity->GetHull() <= 0.0f)
 					{
-						Graphics::ParticleSystem * NewHitParticleSystem(CreateParticleSystem("hit"));
+						auto NewHitParticleSystem(CreateParticleSystem("hit"));
 						
 						NewHitParticleSystem->SetPosition(TheCommodity->GetAspectPosition()->GetPosition());
 						NewHitParticleSystem->SetVelocity(TheCommodity->GetVelocity() * 0.5f);
