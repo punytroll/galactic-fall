@@ -25,17 +25,16 @@
 #include "visualization_prototype.h"
 
 ObjectAspectVisualization::ObjectAspectVisualization(void) :
-	_Visualization(0),
-	_VisualizationPrototype(0)
+	_Visualization(nullptr),
+	_VisualizationPrototype(nullptr)
 {
 }
 
 ObjectAspectVisualization::~ObjectAspectVisualization(void)
 {
-	delete _Visualization;
-	_Visualization = 0;
+	assert(_Visualization == nullptr);
 	delete _VisualizationPrototype;
-	_VisualizationPrototype = 0;
+	_VisualizationPrototype = nullptr;
 }
 
 void ObjectAspectVisualization::AddGraphics(Graphics::Node * Graphics)
@@ -48,14 +47,9 @@ void ObjectAspectVisualization::AddGraphics(Graphics::Node * Graphics)
 
 Visualization * ObjectAspectVisualization::GetVisualization(void)
 {
-	if((_Visualization != 0) && (_Visualization->GetGraphics() != 0))
-	{
-		return _Visualization;
-	}
-	else
-	{
-		return 0;
-	}
+	assert((_Visualization == nullptr) || (_Visualization->GetGraphics() != nullptr));
+	
+	return _Visualization;
 }
 
 void ObjectAspectVisualization::SetVisualizationPrototype(VisualizationPrototype * VisualizationPrototype)
@@ -66,27 +60,26 @@ void ObjectAspectVisualization::SetVisualizationPrototype(VisualizationPrototype
 
 void ObjectAspectVisualization::Destroy(void)
 {
-	if(_Visualization != 0)
+	if(_Visualization != nullptr)
 	{
-		assert(_Visualization->GetGraphics() != 0);
+		assert(_Visualization->GetGraphics() != nullptr);
 		_Visualization->GetGraphics()->Destroy();
-		delete _Visualization;
-		_Visualization = 0;
+		assert(_Visualization == nullptr);
 	}
 }
 
 void ObjectAspectVisualization::DestroyVisualization(Graphics::Node * Container)
 {
-	assert((_Visualization != 0) && (_Visualization->GetGraphics() != 0) && (_Visualization->GetGraphics()->GetContainer() == Container));
+	assert((Container != nullptr) && (_Visualization != nullptr) && (_Visualization->GetGraphics() != nullptr) && (_Visualization->GetGraphics()->GetContainer() == Container));
 	_Visualization->GetGraphics()->Destroy();
 	delete _Visualization;
-	_Visualization = 0;
+	_Visualization = nullptr;
 }
 
 void ObjectAspectVisualization::RemoveGraphics(Graphics::Node * Graphics)
 {
-	assert((Graphics != 0) && (_Visualization != 0) && (_Visualization->GetGraphics() == Graphics));
-	_Visualization->SetGraphics(0);
+	assert((Graphics != nullptr) && (_Visualization != nullptr) && (_Visualization->GetGraphics() == Graphics));
+	_Visualization->SetGraphics(nullptr);
 	delete _Visualization;
-	_Visualization = 0;
+	_Visualization = nullptr;
 }
