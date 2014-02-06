@@ -22,13 +22,13 @@
 #include "camera.h"
 
 Graphics::Camera::Camera(void) :
-	_Projection(0)
+	_Projection(nullptr)
 {
 }
 
 Graphics::Camera::~Camera(void)
 {
-	assert(_Projection == 0);
+	assert(_Projection == nullptr);
 }
 
 const Matrix4f & Graphics::Camera::GetSpacialMatrix(void) const
@@ -38,14 +38,14 @@ const Matrix4f & Graphics::Camera::GetSpacialMatrix(void) const
 
 void Graphics::Camera::SetProjection(Graphics::Projection * Projection)
 {
-	if(Projection == 0)
+	if(Projection == nullptr)
 	{
-		assert(_Projection != 0);
-		_Projection = 0;
+		assert(_Projection != nullptr);
+		_Projection = nullptr;
 	}
 	else
 	{
-		assert(_Projection == 0);
+		assert(_Projection == nullptr);
 		_Projection = Projection;
 	}
 }
