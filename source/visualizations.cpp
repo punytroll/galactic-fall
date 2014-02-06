@@ -59,7 +59,7 @@ void InvalidateVisualizationReference(Graphics::Node * Node)
 	
 	if(ObjectVisualizationIterator != g_ObjectVisualizations.end())
 	{
-		ObjectVisualizationIterator->second->UnsetVisualization();
+		ObjectVisualizationIterator->second->RemoveGraphics(Node);
 		g_ObjectVisualizations.erase(ObjectVisualizationIterator);
 	}
 }
@@ -108,7 +108,7 @@ void VisualizeCommodity(Commodity * Commodity, Graphics::Node * Container)
 	g_ObjectVisualizations[Graphics] = Commodity->GetAspectVisualization();
 	// set as the object's visualization
 	assert(Commodity->GetAspectVisualization()->GetVisualization() == 0);
-	Commodity->GetAspectVisualization()->SetGraphics(Graphics);
+	Commodity->GetAspectVisualization()->AddGraphics(Graphics);
 	// add to the scene
 	assert(Container != 0);
 	Container->AddNode(Graphics);
@@ -143,7 +143,7 @@ void VisualizePlanet(Planet * Planet, Graphics::Node * Container)
 	g_ObjectVisualizations[Graphics] = Planet->GetAspectVisualization();
 	// set as the object's visualization
 	assert(Planet->GetAspectVisualization()->GetVisualization() == 0);
-	Planet->GetAspectVisualization()->SetGraphics(Graphics);
+	Planet->GetAspectVisualization()->AddGraphics(Graphics);
 	// add to the scene
 	assert(Container != 0);
 	Container->AddNode(Graphics);
@@ -164,7 +164,7 @@ void VisualizeShip(Ship * Ship, Graphics::Node * Container)
 	g_ObjectVisualizations[Graphics] = Ship->GetAspectVisualization();
 	// set as the object's visualization
 	assert(Ship->GetAspectVisualization()->GetVisualization() == 0);
-	Ship->GetAspectVisualization()->SetGraphics(Graphics);
+	Ship->GetAspectVisualization()->AddGraphics(Graphics);
 	// add to the scene
 	assert(Container != 0);
 	Container->AddNode(Graphics);
@@ -202,7 +202,7 @@ void VisualizeShot(Shot * Shot, Graphics::Node * Container)
 	g_ObjectVisualizations[Graphics] = Shot->GetAspectVisualization();
 	// set as the object's visualization
 	assert(Shot->GetAspectVisualization()->GetVisualization() == 0);
-	Shot->GetAspectVisualization()->SetGraphics(Graphics);
+	Shot->GetAspectVisualization()->AddGraphics(Graphics);
 	// add to the scene
 	assert(Container != 0);
 	Container->AddNode(Graphics);
@@ -223,7 +223,7 @@ void VisualizeWeapon(Weapon * Weapon, Graphics::Node * Container)
 	g_ObjectVisualizations[Graphics] = Weapon->GetAspectVisualization();
 	// set as the object's visualization
 	assert(Weapon->GetAspectVisualization()->GetVisualization() == 0);
-	Weapon->GetAspectVisualization()->SetGraphics(Graphics);
+	Weapon->GetAspectVisualization()->AddGraphics(Graphics);
 	// add to the container node
 	assert(Container != 0);
 	Container->AddNode(Graphics);
