@@ -115,7 +115,7 @@ void Character::RemoveObserver(CharacterObserver * CharacterObserver)
 
 bool Character::AllowAdding(Object * Content)
 {
-	return dynamic_cast< Mind * >(Content) != 0;
+	return true;
 }
 
 bool Character::AllowRemoving(Object * Content)
@@ -125,6 +125,8 @@ bool Character::AllowRemoving(Object * Content)
 
 void Character::OnAdded(Object * Content)
 {
+	assert(Content != nullptr);
+	
 	Mind * TheMind(dynamic_cast< Mind * >(Content));
 	
 	assert(TheMind != 0);
@@ -133,6 +135,8 @@ void Character::OnAdded(Object * Content)
 
 void Character::OnRemoved(Object * Content)
 {
+	assert(Content != nullptr);
+	
 	Mind * TheMind(dynamic_cast< Mind * >(Content));
 	
 	assert(TheMind != 0);

@@ -66,14 +66,7 @@ bool System::IsLinkedToSystem(const System * LinkedSystem) const
 
 bool System::AllowAdding(Object * Content)
 {
-	Star * TheStar(dynamic_cast< Star * >(Content));
-	
-	if(TheStar != 0)
-	{
-		return m_Star == 0;
-	}
-	
-	return (Content->GetTypeIdentifier() == "commodity") || (Content->GetTypeIdentifier() == "planet") || (Content->GetTypeIdentifier() == "ship") || (Content->GetTypeIdentifier() == "shot");
+	return true;
 }
 
 bool System::AllowRemoving(Object * Content)
@@ -83,36 +76,53 @@ bool System::AllowRemoving(Object * Content)
 
 void System::OnAdded(Object * Content)
 {
+	assert(Content != nullptr);
 	if(Content->GetTypeIdentifier() == "commodity")
 	{
-		m_Commodities.push_back(dynamic_cast< Commodity * >(Content));
+		auto TheCommodity(dynamic_cast< Commodity * >(Content));
+		
+		assert(TheCommodity != nullptr);
+		m_Commodities.push_back(TheCommodity);
 	}
 	else if(Content->GetTypeIdentifier() == "planet")
 	{
+		auto ThePlanet(dynamic_cast< Planet * >(Content));
+		
+		assert(ThePlanet != nullptr);
 		for(std::vector< Planet *>::const_iterator PlanetIterator = m_Planets.begin(); PlanetIterator != m_Planets.end(); ++PlanetIterator)
 		{
-			if((*PlanetIterator)->GetIdentifier() == Content->GetClassIdentifier())
+			if((*PlanetIterator)->GetIdentifier() == ThePlanet->GetClassIdentifier())
 			{
 				assert(false);
 			}
 		}
-		m_Planets.push_back(dynamic_cast< Planet * >(Content));
+		m_Planets.push_back(ThePlanet);
 	}
 	else if(Content->GetTypeIdentifier() == "ship")
 	{
-		m_Ships.push_back(dynamic_cast< Ship * >(Content));
+		auto TheShip(dynamic_cast< Ship * >(Content));
+		
+		assert(TheShip != nullptr);
+		m_Ships.push_back(TheShip);
 	}
 	else if(Content->GetTypeIdentifier() == "shot")
 	{
-		m_Shots.push_back(dynamic_cast< Shot * >(Content));
+		auto TheShot(dynamic_cast< Shot * >(Content));
+		
+		assert(TheShot != nullptr);
+		m_Shots.push_back(TheShot);
 	}
-	
-	Star * TheStar(dynamic_cast< Star * >(Content));
-	
-	if(TheStar != 0)
+	else if(Content->GetTypeIdentifier() == "star")
 	{
-		assert(m_Star == 0);
+		auto TheStar(dynamic_cast< Star * >(Content));
+		
+		assert(TheStar != nullptr);
+		assert(m_Star == nullptr);
 		m_Star = TheStar;
+	}
+	else
+	{
+		assert(false);
 	}
 }
 

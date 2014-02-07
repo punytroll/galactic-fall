@@ -80,7 +80,7 @@ void GoalMind::Update(void)
 
 bool GoalMind::AllowAdding(Object * Content)
 {
-	return (dynamic_cast< Goal * >(Content) != 0) && (m_Goal == 0);
+	return true;
 }
 
 bool GoalMind::AllowRemoving(Object * Content)
@@ -90,18 +90,22 @@ bool GoalMind::AllowRemoving(Object * Content)
 
 void GoalMind::OnAdded(Object * Content)
 {
+	assert(Content != nullptr);
+	
 	Goal * TheGoal(dynamic_cast< Goal * >(Content));
 	
-	assert(TheGoal != 0);
-	assert(m_Goal == 0);
+	assert(TheGoal != nullptr);
+	assert(m_Goal == nullptr);
 	m_Goal = TheGoal;
 }
 
 void GoalMind::OnRemoved(Object * Content)
 {
+	assert(Content != nullptr);
+	
 	Goal * TheGoal(dynamic_cast< Goal * >(Content));
 	
-	assert(TheGoal != 0);
+	assert(TheGoal != nullptr);
 	assert(m_Goal == TheGoal);
-	m_Goal = 0;
+	m_Goal = nullptr;
 }

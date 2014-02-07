@@ -67,7 +67,7 @@ void Storage::SetSpaceCapacity(unsigned_numeric SpaceCapacity)
 
 bool Storage::AllowAdding(Object * Content)
 {
-	return (Content->GetAspectPhysical() == 0) || (GetSpace() >= Content->GetAspectPhysical()->GetSpaceRequirement());
+	return true;
 }
 
 bool Storage::AllowRemoving(Object * Content)
@@ -77,7 +77,7 @@ bool Storage::AllowRemoving(Object * Content)
 
 void Storage::OnAdded(Object * Content)
 {
-	if(Content->GetAspectPhysical() != 0)
+	if(Content->GetAspectPhysical() != nullptr)
 	{
 		assert(GetSpace() >= Content->GetAspectPhysical()->GetSpaceRequirement());
 		m_Space -= Content->GetAspectPhysical()->GetSpaceRequirement();
@@ -86,7 +86,7 @@ void Storage::OnAdded(Object * Content)
 
 void Storage::OnRemoved(Object * Content)
 {
-	if(Content->GetAspectPhysical() != 0)
+	if(Content->GetAspectPhysical() != nullptr)
 	{
 		m_Space += Content->GetAspectPhysical()->GetSpaceRequirement();
 	}
