@@ -345,7 +345,6 @@ bool Ship::Update(float Seconds)
 					assert(Target->GetContainer()->GetAspectObjectContainer() != nullptr);
 					Target->GetContainer()->GetAspectObjectContainer()->RemoveContent(Target);
 					_CargoHold->GetAspectObjectContainer()->AddContent(Target);
-					_Target.Clear();
 					if((Target->GetAspectVisualization() != nullptr) && (Target->GetAspectVisualization()->GetVisualization() != nullptr))
 					{
 						Target->GetAspectVisualization()->DestroyVisualization(g_CommodityLayer);
