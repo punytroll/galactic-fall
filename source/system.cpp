@@ -30,28 +30,30 @@
 #include "system.h"
 
 System::System(const std::string & Identifier) :
-	m_Identifier(Identifier),
-	m_TrafficDensity(FLT_MAX),
-	m_Star(0)
+	_Identifier(Identifier),
+	_TrafficDensity(FLT_MAX),
+	_Star(nullptr)
 {
 	// initialize object aspects
 	AddAspectName();
 	AddAspectObjectContainer();
-	GetAspectObjectContainer()->SetOnAddedCallback(Callback(this, &System::OnAdded));
-	GetAspectObjectContainer()->SetOnRemovedCallback(Callback(this, &System::OnRemoved));
+	GetAspectObjectContainer()->SetOnAddedCallback(Callback(this, &System::_OnAdded));
+	GetAspectObjectContainer()->SetOnRemovedCallback(Callback(this, &System::_OnRemoved));
 	AddAspectPosition();
 }
 
 System::~System(void)
 {
-	assert(m_Star == 0);
-	assert(m_Planets.empty() == true);
-	assert(m_Ships.empty() == true);
+	assert(_Commodities.empty() == true);
+	assert(_Planets.empty() == true);
+	assert(_Ships.empty() == true);
+	assert(_Shots.empty() == true);
+	assert(_Star == nullptr);
 }
 
 bool System::IsLinkedToSystem(const System * LinkedSystem) const
 {
-	for(std::list< System * >::const_iterator LinkedSystemIterator = m_LinkedSystems.begin(); LinkedSystemIterator != m_LinkedSystems.end(); ++LinkedSystemIterator)
+	for(auto LinkedSystemIterator = _LinkedSystems.begin(); LinkedSystemIterator != _LinkedSystems.end(); ++LinkedSystemIterator)
 	{
 		if(*LinkedSystemIterator == LinkedSystem)
 		{
@@ -62,7 +64,7 @@ bool System::IsLinkedToSystem(const System * LinkedSystem) const
 	return false;
 }
 
-void System::OnAdded(Object * Content)
+void System::_OnAdded(Object * Content)
 {
 	assert(Content != nullptr);
 	if(Content->GetTypeIdentifier() == "commodity")
@@ -70,43 +72,43 @@ void System::OnAdded(Object * Content)
 		auto TheCommodity(dynamic_cast< Commodity * >(Content));
 		
 		assert(TheCommodity != nullptr);
-		m_Commodities.push_back(TheCommodity);
+		_Commodities.push_back(TheCommodity);
 	}
 	else if(Content->GetTypeIdentifier() == "planet")
 	{
 		auto ThePlanet(dynamic_cast< Planet * >(Content));
 		
 		assert(ThePlanet != nullptr);
-		for(std::vector< Planet *>::const_iterator PlanetIterator = m_Planets.begin(); PlanetIterator != m_Planets.end(); ++PlanetIterator)
+		for(auto PlanetIterator = _Planets.begin(); PlanetIterator != _Planets.end(); ++PlanetIterator)
 		{
 			if((*PlanetIterator)->GetIdentifier() == ThePlanet->GetClassIdentifier())
 			{
 				assert(false);
 			}
 		}
-		m_Planets.push_back(ThePlanet);
+		_Planets.push_back(ThePlanet);
 	}
 	else if(Content->GetTypeIdentifier() == "ship")
 	{
 		auto TheShip(dynamic_cast< Ship * >(Content));
 		
 		assert(TheShip != nullptr);
-		m_Ships.push_back(TheShip);
+		_Ships.push_back(TheShip);
 	}
 	else if(Content->GetTypeIdentifier() == "shot")
 	{
 		auto TheShot(dynamic_cast< Shot * >(Content));
 		
 		assert(TheShot != nullptr);
-		m_Shots.push_back(TheShot);
+		_Shots.push_back(TheShot);
 	}
 	else if(Content->GetTypeIdentifier() == "star")
 	{
 		auto TheStar(dynamic_cast< Star * >(Content));
 		
 		assert(TheStar != nullptr);
-		assert(m_Star == nullptr);
-		m_Star = TheStar;
+		assert(_Star == nullptr);
+		_Star = TheStar;
 	}
 	else
 	{
@@ -114,22 +116,23 @@ void System::OnAdded(Object * Content)
 	}
 }
 
-void System::OnRemoved(Object * Content)
+void System::_OnRemoved(Object * Content)
 {
+	assert(Content != nullptr);
 	if(Content->GetTypeIdentifier() == "commodity")
 	{
-		std::list< Commodity * >::iterator CommodityIterator(std::find(m_Commodities.begin(), m_Commodities.end(), Content));
+		auto CommodityIterator(std::find(_Commodities.begin(), _Commodities.end(), Content));
 		
-		assert(CommodityIterator != m_Commodities.end());
-		m_Commodities.erase(CommodityIterator);
+		assert(CommodityIterator != _Commodities.end());
+		_Commodities.erase(CommodityIterator);
 	}
 	else if(Content->GetTypeIdentifier() == "planet")
 	{
-		for(std::vector< Planet *>::iterator PlanetIterator = m_Planets.begin(); PlanetIterator != m_Planets.end(); ++PlanetIterator)
+		for(auto PlanetIterator = _Planets.begin(); PlanetIterator != _Planets.end(); ++PlanetIterator)
 		{
 			if((*PlanetIterator)->GetIdentifier() == Content->GetClassIdentifier())
 			{
-				m_Planets.erase(PlanetIterator);
+				_Planets.erase(PlanetIterator);
 				
 				break;
 			}
@@ -137,29 +140,33 @@ void System::OnRemoved(Object * Content)
 	}
 	else if(Content->GetTypeIdentifier() == "ship")
 	{
-		std::list< Ship * >::iterator ShipIterator(std::find(m_Ships.begin(), m_Ships.end(), Content));
+		auto ShipIterator(std::find(_Ships.begin(), _Ships.end(), Content));
 		
-		assert(ShipIterator != m_Ships.end());
-		m_Ships.erase(ShipIterator);
+		assert(ShipIterator != _Ships.end());
+		_Ships.erase(ShipIterator);
 	}
 	else if(Content->GetTypeIdentifier() == "shot")
 	{
-		std::list< Shot * >::iterator ShotIterator(std::find(m_Shots.begin(), m_Shots.end(), Content));
+		auto ShotIterator(std::find(_Shots.begin(), _Shots.end(), Content));
 		
-		assert(ShotIterator != m_Shots.end());
-		m_Shots.erase(ShotIterator);
+		assert(ShotIterator != _Shots.end());
+		_Shots.erase(ShotIterator);
 	}
-	
-	Star * TheStar(dynamic_cast< Star * >(Content));
-	
-	if(TheStar != 0)
+	else if(Content->GetTypeIdentifier() == "star")
 	{
-		assert(m_Star == TheStar);
-		m_Star = 0;
+		assert(_Star == Content);
+		_Star = nullptr;
+	}
+	for(auto ShipIterator : _Ships)
+	{
+		if(ShipIterator->GetTarget() == Content)
+		{
+			ShipIterator->UnsetTarget();
+		}
 	}
 }
 
 void System::AddLinkedSystem(System * LinkedSystem)
 {
-	m_LinkedSystems.push_back(LinkedSystem);
+	_LinkedSystems.push_back(LinkedSystem);
 }

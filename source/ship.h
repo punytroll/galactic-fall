@@ -94,6 +94,8 @@ public:
 	void SetTurnLeft(float TurnLeft);
 	void SetTurnRight(float TurnRight);
 	void SetVelocity(const Vector3f & Velocity);
+	// modifiers
+	void UnsetTarget(void);
 private:
 	// slot for the update aspect
 	bool Update(float Seconds);
@@ -363,6 +365,11 @@ inline void Ship::SetTurnRight(float TurnRight)
 inline void Ship::SetVelocity(const Vector3f & Velocity)
 {
 	m_Velocity = Velocity;
+}
+
+inline void Ship::UnsetTarget(void)
+{
+	_Target.Clear();
 }
 
 #endif
