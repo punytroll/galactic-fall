@@ -179,6 +179,11 @@ public:
 		return Get() == Other.Get();
 	}
 	
+	bool operator==(const Type * Other) const
+	{
+		return Get() == Other;
+	}
+	
 	bool operator!=(const Reference< Type > & Other) const
 	{
 		return Get() != Other.Get();
