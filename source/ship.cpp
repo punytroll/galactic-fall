@@ -32,6 +32,7 @@
 #include "object_aspect_accessory.h"
 #include "object_aspect_object_container.h"
 #include "object_aspect_outfitting.h"
+#include "object_aspect_physical.h"
 #include "object_aspect_position.h"
 #include "object_aspect_update.h"
 #include "object_aspect_visualization.h"
@@ -47,8 +48,8 @@
 
 Ship::Ship(void) :
 	m_Accelerate(false),
-	m_Battery(0),
-	m_CargoHold(0),
+	_Battery(nullptr),
+	_CargoHold(nullptr),
 	_EngineGlowParticleSystem(0),
 	m_ExhaustRadius(0.0f),
 	m_Fuel(0.0f),
@@ -56,7 +57,7 @@ Ship::Ship(void) :
 	m_FuelNeededToAccelerate(0.0f),
 	m_FuelNeededToJump(0.0f),
 	m_FuelNeededToTurn(0.0f),
-	m_Generator(0),
+	_Generator(nullptr),
 	m_Hull(0.0f),
 	m_HullCapacity(0.0f),
 	m_Jettison(false),
@@ -88,6 +89,9 @@ Ship::Ship(void) :
 
 Ship::~Ship(void)
 {
+	assert(_Battery == nullptr);
+	assert(_CargoHold == nullptr);
+	assert(_Generator == nullptr);
 	g_GraphicsEngine->RemoveParticleSystem(_EngineGlowParticleSystem);
 	delete _EngineGlowParticleSystem;
 	_EngineGlowParticleSystem = 0;
@@ -95,16 +99,13 @@ Ship::~Ship(void)
 
 Battery * Ship::GetBattery(void)
 {
-	if(m_Battery != 0)
+	if(_Battery != nullptr)
 	{
-		assert(m_Battery->GetAspectAccessory() != 0);
-		if(m_Battery->GetAspectAccessory()->GetSlot() != 0)
-		{
-			return m_Battery;
-		}
+		assert(_Battery->GetAspectAccessory() != 0);
+		assert(_Battery->GetAspectAccessory()->GetSlot() != 0);
 	}
 	
-	return 0;
+	return _Battery;
 }
 
 void Ship::SetFire(bool Fire)
@@ -331,21 +332,24 @@ bool Ship::Update(float Seconds)
 		}
 		if(m_Scoop == true)
 		{
-			Object * Target(m_Target.Get());
-			
-			if((Target != nullptr) && (Target->GetTypeIdentifier() == "commodity"))
+			if((_CargoHold != nullptr) && (_Target.IsValid() == true))
 			{
-				assert(Target->GetContainer() != nullptr);
-				assert(Target->GetContainer()->GetAspectObjectContainer() != nullptr);
-				// the following is a typical occasion of bad practise: a transaction would be great here
-				Target->GetContainer()->GetAspectObjectContainer()->RemoveContent(Target);
-				assert(GetCargoHold() != nullptr);
-				assert(GetCargoHold()->GetAspectObjectContainer() != nullptr);
-				GetCargoHold()->GetAspectObjectContainer()->AddContent(Target);
-				SetTarget(Reference< Object >());
-				if((Target->GetAspectVisualization() != nullptr) && (Target->GetAspectVisualization()->GetVisualization() != nullptr))
+				assert(_CargoHold->GetAspectObjectContainer() != nullptr);
+				
+				auto Target(_Target.Get());
+				
+				assert(Target != nullptr);
+				if((Target->GetAspectPhysical() != nullptr) && (Target->GetAspectPhysical()->GetSpaceRequirement() <= _CargoHold->GetSpace()))
 				{
-					Target->GetAspectVisualization()->DestroyVisualization(g_CommodityLayer);
+					assert(Target->GetContainer() != nullptr);
+					assert(Target->GetContainer()->GetAspectObjectContainer() != nullptr);
+					Target->GetContainer()->GetAspectObjectContainer()->RemoveContent(Target);
+					_CargoHold->GetAspectObjectContainer()->AddContent(Target);
+					_Target.Clear();
+					if((Target->GetAspectVisualization() != nullptr) && (Target->GetAspectVisualization()->GetVisualization() != nullptr))
+					{
+						Target->GetAspectVisualization()->DestroyVisualization(g_CommodityLayer);
+					}
 				}
 			}
 			m_Scoop = false;
@@ -407,38 +411,52 @@ void Ship::SetHull(float Hull)
 
 void Ship::OnAdded(Object * Content)
 {
+	assert(Content != nullptr);
 	if(Content->GetTypeIdentifier() == "battery")
 	{
-		assert(m_Battery == 0);
-		m_Battery = dynamic_cast< Battery * >(Content);
+		assert(_Battery == nullptr);
+		
+		auto TheBattery(dynamic_cast< Battery * >(Content));
+		
+		assert(TheBattery != nullptr);
+		_Battery = TheBattery;
 	}
 	else if(Content->GetTypeIdentifier() == "generator")
 	{
-		assert(m_Generator == 0);
-		m_Generator = dynamic_cast< Generator * >(Content);
+		assert(_Generator == nullptr);
+		
+		auto TheGenerator(dynamic_cast< Generator * >(Content));
+		
+		assert(TheGenerator != nullptr);
+		_Generator = TheGenerator;
 	}
 	else if(Content->GetTypeIdentifier() == "storage")
 	{
-		assert(m_CargoHold == 0);
-		m_CargoHold = dynamic_cast< Storage * >(Content);
+		assert(_CargoHold == nullptr);
+		
+		auto TheCargoHold(dynamic_cast< Storage * >(Content));
+		
+		assert(TheCargoHold != nullptr);
+		_CargoHold = TheCargoHold;
 	}
 }
 
 void Ship::OnRemoved(Object * Content)
 {
+	assert(Content != nullptr);
 	if(Content->GetTypeIdentifier() == "battery")
 	{
-		assert(m_Battery == Content);
-		m_Battery = 0;
+		assert(_Battery == Content);
+		_Battery = nullptr;
 	}
 	else if(Content->GetTypeIdentifier() == "generator")
 	{
-		assert(m_Generator == Content);
-		m_Generator = 0;
+		assert(_Generator == Content);
+		_Generator = nullptr;
 	}
 	else if(Content->GetTypeIdentifier() == "storage")
 	{
-		assert(m_CargoHold == Content);
-		m_CargoHold = 0;
+		assert(_CargoHold == Content);
+		_CargoHold = nullptr;
 	}
 }
