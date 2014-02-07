@@ -29,7 +29,7 @@ class ObjectFactory
 {
 public:
 	Object * Create(const std::string & TypeIdentifier, const std::string & ClassIdentifier) const;
-	float GetSpaceRequirement(const std::string & TypeIdentifier, const std::string & ClassIdentifier) const;
+	unsigned_numeric GetSpaceRequirement(const std::string & TypeIdentifier, const std::string & ClassIdentifier) const;
 	const VisualizationPrototype * GetVisualizationPrototype(const std::string & TypeIdentifier, const std::string & ClassIdentifier) const;
 };
 
