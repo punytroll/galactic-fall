@@ -103,8 +103,8 @@ private:
 private:
 	// ship class
 	bool m_Accelerate;
-	Battery * m_Battery;
-	Storage * m_CargoHold;
+	Battery * _Battery;
+	Storage * _CargoHold;
 	Graphics::ParticleSystem * _EngineGlowParticleSystem;
 	Vector3f m_ExhaustOffset;
 	float m_ExhaustRadius;
@@ -114,7 +114,7 @@ private:
 	float m_FuelNeededToAccelerate;
 	float m_FuelNeededToJump;
 	float m_FuelNeededToTurn;
-	Generator * m_Generator;
+	Generator * _Generator;
 	float m_Hull;
 	float m_HullCapacity;
 	bool m_Jettison;
@@ -127,7 +127,7 @@ private:
 	bool m_Refuel;
 	bool m_Scoop;
 	bool m_TakeOff;
-	Reference< Object > m_Target;
+	Reference< Object > _Target;
 	float m_TurnLeft;
 	float m_TurnRight;
 	Vector3f m_Velocity;
@@ -135,12 +135,12 @@ private:
 
 inline Storage * Ship::GetCargoHold(void)
 {
-	return m_CargoHold;
+	return _CargoHold;
 }
 
 inline const Storage * Ship::GetCargoHold(void) const
 {
-	return m_CargoHold;
+	return _CargoHold;
 }
 
 inline Graphics::ParticleSystem * Ship::GetEngineGlowParticleSystem(void)
@@ -190,7 +190,7 @@ inline float Ship::GetFuelNeededToTurn(void) const
 
 inline Generator * Ship::GetGenerator(void)
 {
-	return m_Generator;
+	return _Generator;
 }
 
 inline float Ship::GetHull(void) const
@@ -230,12 +230,12 @@ inline const System * Ship::GetLinkedSystemTarget(void) const
 
 inline Reference< Object > & Ship::GetTarget(void)
 {
-	return m_Target;
+	return _Target;
 }
 
 inline const Reference< Object > & Ship::GetTarget(void) const
 {
-	return m_Target;
+	return _Target;
 }
 
 inline const Vector3f & Ship::GetVelocity(void) const
@@ -345,7 +345,7 @@ inline void Ship::SetTakeOff(bool TakeOff)
 
 inline void Ship::SetTarget(Reference< Object > Target)
 {
-	m_Target = Target;
+	_Target = Target;
 }
 
 inline void Ship::SetTurnLeft(float TurnLeft)
