@@ -1,162 +1,82 @@
-#! /bin/bash
+#! /usr/bin/python3
 
-configure_CXXFLAGS=""
-write_CXXFLAGS="no"
-configure_LDFLAGS=""
-write_LDFLAGS="no"
-write_all="no"
+import argparse
+import os
 
-# if --help command line argument is given, display which variables may be set with this configuration file
-if [ "$1" = "--help" ]; then
-	echo "These configuration variables can be modified:"
-	echo "  CXXFLAGS"
-	echo "  LDFLAGS"
-	echo
-	exit 1
-fi
+parser = argparse.ArgumentParser()
+debugging_group = parser.add_mutually_exclusive_group()
+debugging_group.add_argument("--enable-debugging", action="store_true", default=None, dest="debugging")
+debugging_group.add_argument("--disable-debugging", action="store_false", default=None, dest="debugging")
+optimization_group = parser.add_mutually_exclusive_group()
+optimization_group.add_argument("--enable-optimization", action="store_true", default=None, dest="optimization")
+optimization_group.add_argument("--disable-optimization", action="store_false", default=None, dest="optimization")
+arguments = parser.parse_args()
 
-# create this whatever we do and write all sub files
-if [ ! -d .configuration.d ]; then
-	mkdir .configuration.d
-	write_all="yes"
-fi
+write_all = False
 
-# re-create the configuration if the configure script has changed
-if [ "configure" -nt "configuration" ]; then
-	write_all="yes"
-fi
+def get_line_parts(line, name):
+	prefix = name + " = "
+	if line.startswith(prefix) == True:
+		return set(line[len(prefix):].split())
+	else:
+		return set()
 
-# this function unifies the string sets $1 and $2 without repetition and puts the result in $result
-function unify
-{
-	local IFS=" "
-	result=$1
-	for word in $2; do
-		for test_word in $1; do
-			if [ "${word}" = "${test_word}" ]; then
-				continue 2
-			fi
-		done
-		result="${result} ${word}"
-	done
-}
+configuration_directory = ".configuration.d"
+if os.path.isdir(configuration_directory) == False:
+	if os.path.exists(configuration_directory) == True:
+		os.remove(configuration_directory)
+	os.makedirs(configuration_directory)
+	write_all = True
 
-# this function removes all strings in the string set $2 from the string set $1 and puts the result in $result
-function subtract
-{
-	local IFS=" "
-	result=""
-	for word in ${1}; do
-		for test_word in ${2}; do
-			if [ "${word}" = "${test_word}" ]; then
-				continue 2
-			fi
-		done
-		result="${result} ${word}"
-	done
-}
+if os.path.exists("configuration") == False or os.path.getctime("configure") > os.path.getctime("configuration"):
+	write_all = True
 
-# read the "configuration" files and initialize variables with the values from the files
-if [ -d .configuration.d ]; then
-	configuration_files=`ls .configuration.d`
-	for configuration_file in ${configuration_files}; do
-		configuration=`cat .configuration.d/${configuration_file}`
-		IFS='
-'
-		for configuration_line in ${configuration}; do
-			if [ -n "${configuration_line}" ]; then
-				case ${configuration_line} in
-				"CXXFLAGS = "*)
-					configure_CXXFLAGS=`echo ${configuration_line} | sed -e 's/^CXXFLAGS = //'`
-					;;
-				"LDFLAGS = "*)
-					configure_LDFLAGS=`echo ${configuration_line} | sed -e 's/^LDFLAGS = //'`
-				esac
-			fi
-		done
-	done
-fi
+configuration_CXXFLAGS = set()
+configuration_LDFLAGS = set()
+for item_name in os.listdir(configuration_directory):
+	item_path = os.path.join(configuration_directory, item_name)
+	if os.path.isfile(item_path) == True:
+		for line in open(item_path):
+			configuration_CXXFLAGS |= get_line_parts(line, "CXXFLAGS")
+			configuration_LDFLAGS |= get_line_parts(line, "LDFLAGS")
 
-# process the options from the command line
-for option in "$@"; do
-	case_handled="no"
-	case ${option} in
-	CXXFLAGS=*)
-		configure_CXXFLAGS=`echo ${option} | sed -e 's/^CXXFLAGS=//'`
-		write_CXXFLAGS="yes"
-		case_handled="yes"
-		;;
-	CXXFLAGS+=*)
-		add_CXXFLAGS=`echo ${option} | sed -e 's/^CXXFLAGS+=//'`
-		unify "${configure_CXXFLAGS}" "${add_CXXFLAGS}"
-		configure_CXXFLAGS=${result}
-		write_CXXFLAGS="yes"
-		case_handled="yes"
-		;;
-	CXXFLAGS-=*)
-		subtract_CXXFLAGS=`echo ${option} | sed -e 's/^CXXFLAGS-=//'`
-		subtract "${configure_CXXFLAGS}" "${subtract_CXXFLAGS}"
-		configure_CXXFLAGS=${result}
-		write_CXXFLAGS="yes"
-		case_handled="yes"
-		;;
-	LDFLAGS=*)
-		configure_LDFLAGS=`echo ${option} | sed -e 's/^LDFLAGS=//'`
-		write_LDFLAGS="yes"
-		case_handled="yes"
-		;;
-	LDFLAGS+=*)
-		add_LDFLAGS=`echo ${option} | sed -e 's/^LDFLAGS+=//'`
-		unify "${configure_LDFLAGS}" "${add_LDFLAGS}"
-		configure_LDFLAGS=${result}
-		write_LDFLAGS="yes"
-		case_handled="yes"
-		;;
-	LDFLAGS-=*)
-		subtract_LDFLAGS=`echo ${option} | sed -e 's/^LDFLAGS-=//'`
-		subtract "${configure_LDFLAGS}" "${subtract_LDFLAGS}"
-		configure_LDFLAGS=${result}
-		write_LDFLAGS="yes"
-		case_handled="yes"
-		;;
-	esac
-	if [ "${case_handled}" = "no" ]; then
-		echo "Unkown command line parameter: ${option}"
-		echo "No configuration has been written."
-		exit 1
-	fi
-done
+CXXFLAGS = configuration_CXXFLAGS.copy()
+CXXFLAGS.add("-Wall")
+CXXFLAGS.add("-Werror")
+CXXFLAGS.add("-std=c++11")
+LDFLAGS = configuration_LDFLAGS.copy()
 
-# print the configuration settings to the terminal
-if [ "${write_CXXFLAGS}" = "yes" -o "${write_all}" = "yes" ]; then
-	echo "Configure CXXFLAGS=${configure_CXXFLAGS}"
-else
-	echo "Configuration CXXFLAGS=${configure_CXXFLAGS}"
-fi
-if [ "${write_LDFLAGS}" = "yes" -o "${write_all}" = "yes" ]; then
-	echo "Configure LDFLAGS=${configure_LDFLAGS}"
-else
-	echo "Configuration LDFLAGS=${configure_LDFLAGS}"
-fi
+if arguments.debugging == True:
+	CXXFLAGS.add("-g")
+	LDFLAGS.add("-g")
+elif arguments.debugging == False:
+	CXXFLAGS.discard("-g")
+	LDFLAGS.discard("-g")
 
-# write the configuration files
-if [ "${write_CXXFLAGS}" = "yes" -o "${write_all}" = "yes" ]; then
-	echo '# configuration generated by configure and read by Makefile' > .configuration.d/CXXFLAGS
-	echo 'CXXFLAGS_configuration = $(root)/.configuration.d/CXXFLAGS' >> .configuration.d/CXXFLAGS
-	echo "CXXFLAGS = ${configure_CXXFLAGS}" >> .configuration.d/CXXFLAGS
-	echo >> .configuration.d/CXXFLAGS
-fi
+if arguments.optimization == True:
+	CXXFLAGS.add("-O2")
+elif arguments.optimization == False:
+	CXXFLAGS.discard("-O2")
 
-if [ "${write_LDFLAGS}" = "yes" -o "${write_all}" = "yes" ]; then
-	echo '# configuration generated by configure and read by Makefile' > .configuration.d/LDFLAGS
-	echo 'LDFLAGS_configuration = $(root)/.configuration.d/LDFLAGS' >> .configuration.d/LDFLAGS
-	echo "LDFLAGS = ${configure_LDFLAGS}" >> .configuration.d/LDFLAGS
-	echo >> .configuration.d/LDFLAGS
-fi
+if len(CXXFLAGS.symmetric_difference(configuration_CXXFLAGS)) > 0 or write_all == True:
+	print("Configuring CXXFLAGS=" + " ".join(CXXFLAGS))
+	with open(os.path.join(configuration_directory, "CXXFLAGS"), "w") as file:
+		file.write("# configuration generated by configure and read by Makefiles\n")
+		file.write("CXXFLAGS_configuration = $(root)/.configuration.d/CXXFLAGS\n")
+		file.write("CXXFLAGS = " + " ".join(CXXFLAGS) + "\n")
+else:
+	print("Configuration CXXFLAGS=" + " ".join(CXXFLAGS))
 
-echo "# configuration generated by configure and read by Makefile" > configuration
-echo >> configuration
-echo 'include ${root}/.configuration.d/CXXFLAGS' >> configuration
-echo >> configuration
-echo 'include ${root}/.configuration.d/LDFLAGS' >> configuration
-echo >> configuration
+if len(LDFLAGS.symmetric_difference(configuration_LDFLAGS)) > 0 or write_all == True:
+	print("Configuring LDFLAGS=" + " ".join(LDFLAGS))
+	with open(os.path.join(configuration_directory, "LDFLAGS"), "w") as file:
+		file.write("# configuration generated by configure and read by Makefiles\n")
+		file.write("LDFLAGS_configuration = $(root)/.configuration.d/LDFLAGS\n")
+		file.write("LDFLAGS = " + " ".join(LDFLAGS) + "\n")
+else:
+	print("Configuration LDFLAGS=" + " ".join(LDFLAGS))
+
+with open("configuration", "w") as file:
+	file.write("# configuration generated by configure and read by Makefiles\n\n")
+	file.write("include ${root}/.configuration.d/CXXFLAGS\n\n")
+	file.write("include ${root}/.configuration.d/LDFLAGS\n")

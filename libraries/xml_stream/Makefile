@@ -22,12 +22,12 @@ clean-here:
 clean-recursive: clean-here
 
 source/xml_stream.o: source/xml_stream.cpp include/xml_stream.h $(CXXFLAGS_configuration)
-	$(CXX) -std=c++11 $(CXXFLAGS) -Iinclude -c $< -o $@
+	$(CXX) $(CXXFLAGS) -Iinclude -c $< -o $@
 
 test/test: test/test.o source/xml_stream.o $(LDFLAGS_configuration)
 	$(CXX) $(LDFLAGS) test/test.o source/xml_stream.o -o $@
 
 test/test.o: test/test.cpp include/xml_stream.h $(CXXFLAGS_configuration)
-	$(CXX) -std=c++11 $(CXXFLAGS) -Iinclude -c $< -o $@
+	$(CXX) $(CXXFLAGS) -Iinclude -c $< -o $@
 
 .PHONY: default all all-here all-recursive check clean clean-here clean-recursive

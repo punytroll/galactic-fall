@@ -68,6 +68,6 @@ binary: $(OBJECT_FILES) $(LDFLAGS_configuration)
 
 .SECONDEXPANSION:
 $(OBJECT_DIRECTORY)/%.o: $$($$(subst /,_,$$*)_cpp)
-	$(CXX) -std=c++11 $(CXXFLAGS) $(algebra_include) $(xml_stream_include)	-c $< -o $@
+	$(CXX) $(CXXFLAGS) $(algebra_include) $(xml_stream_include)	-c $< -o $@
 
 .PHONY: dependencies
