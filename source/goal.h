@@ -58,8 +58,6 @@ public:
 protected:
 	// setters
 	void SetState(int State);
-	bool AllowAdding(Object * Content);
-	bool AllowRemoving(Object * Content);
 	void OnAdded(Object * Content);
 	void OnRemoved(Object * Content);
 private:

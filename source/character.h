@@ -63,8 +63,6 @@ public:
 	bool RemoveCredits(unsigned_numeric Credits);
 	void RemoveObserver(CharacterObserver * Reference);
 private:
-	bool AllowAdding(Object * Content);
-	bool AllowRemoving(Object * Content);
 	void OnAdded(Object * Content);
 	void OnRemoved(Object * Content);
 	std::deque< Mind * > m_Minds;

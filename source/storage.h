@@ -36,8 +36,6 @@ public:
 	// setters
 	void SetSpaceCapacity(unsigned_numeric SpaceCapacity);
 private:
-	bool AllowAdding(Object * Content);
-	bool AllowRemoving(Object * Content);
 	void OnAdded(Object * Content);
 	void OnRemoved(Object * Content);
 	unsigned_numeric m_Space;

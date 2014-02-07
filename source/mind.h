@@ -94,8 +94,6 @@ public:
 	virtual void HandleMessage(Message * Message);
 	virtual void Update(void);
 private:
-	bool AllowAdding(Object * Content);
-	bool AllowRemoving(Object * Content);
 	void OnAdded(Object * Content);
 	void OnRemoved(Object * Content);
 	Goal * m_Goal;

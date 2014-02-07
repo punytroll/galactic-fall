@@ -37,8 +37,6 @@ System::System(const std::string & Identifier) :
 	// initialize object aspects
 	AddAspectName();
 	AddAspectObjectContainer();
-	GetAspectObjectContainer()->SetAllowAddingCallback(Callback(this, &System::AllowAdding));
-	GetAspectObjectContainer()->SetAllowRemovingCallback(Callback(this, &System::AllowRemoving));
 	GetAspectObjectContainer()->SetOnAddedCallback(Callback(this, &System::OnAdded));
 	GetAspectObjectContainer()->SetOnRemovedCallback(Callback(this, &System::OnRemoved));
 	AddAspectPosition();
@@ -62,16 +60,6 @@ bool System::IsLinkedToSystem(const System * LinkedSystem) const
 	}
 	
 	return false;
-}
-
-bool System::AllowAdding(Object * Content)
-{
-	return true;
-}
-
-bool System::AllowRemoving(Object * Content)
-{
-	return true;
 }
 
 void System::OnAdded(Object * Content)

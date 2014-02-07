@@ -41,8 +41,6 @@ Character::Character(void) :
 	// initialize object aspects
 	AddAspectMessages();
 	AddAspectObjectContainer();
-	GetAspectObjectContainer()->SetAllowAddingCallback(Callback(this, &Character::AllowAdding));
-	GetAspectObjectContainer()->SetAllowRemovingCallback(Callback(this, &Character::AllowRemoving));
 	GetAspectObjectContainer()->SetOnAddedCallback(Callback(this, &Character::OnAdded));
 	GetAspectObjectContainer()->SetOnRemovedCallback(Callback(this, &Character::OnRemoved));
 }
@@ -111,16 +109,6 @@ bool Character::RemoveCredits(unsigned_numeric Credits)
 void Character::RemoveObserver(CharacterObserver * CharacterObserver)
 {
 	m_Observers.erase(m_Observers.find(CharacterObserver));
-}
-
-bool Character::AllowAdding(Object * Content)
-{
-	return true;
-}
-
-bool Character::AllowRemoving(Object * Content)
-{
-	return true;
 }
 
 void Character::OnAdded(Object * Content)

@@ -171,10 +171,7 @@ void Object::Destroy(void)
 	if(m_Container != 0)
 	{
 		assert(m_Container->GetAspectObjectContainer() != 0);
-		if(m_Container->GetAspectObjectContainer()->RemoveContent(this) == false)
-		{
-			throw std::runtime_error("RemoveContent() must not fail during Destroy()");
-		}
+		m_Container->GetAspectObjectContainer()->RemoveContent(this);
 	}
 	// call destroy on all relevant aspects
 	if(m_AspectVisualization != 0)

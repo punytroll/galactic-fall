@@ -338,22 +338,14 @@ bool Ship::Update(float Seconds)
 				assert(Target->GetContainer() != nullptr);
 				assert(Target->GetContainer()->GetAspectObjectContainer() != nullptr);
 				// the following is a typical occasion of bad practise: a transaction would be great here
-				if(Target->GetContainer()->GetAspectObjectContainer()->RemoveContent(Target) == true)
+				Target->GetContainer()->GetAspectObjectContainer()->RemoveContent(Target);
+				assert(GetCargoHold() != nullptr);
+				assert(GetCargoHold()->GetAspectObjectContainer() != nullptr);
+				GetCargoHold()->GetAspectObjectContainer()->AddContent(Target);
+				SetTarget(Reference< Object >());
+				if((Target->GetAspectVisualization() != nullptr) && (Target->GetAspectVisualization()->GetVisualization() != nullptr))
 				{
-					assert(GetCargoHold() != nullptr);
-					assert(GetCargoHold()->GetAspectObjectContainer() != nullptr);
-					if(GetCargoHold()->GetAspectObjectContainer()->AddContent(Target) == true)
-					{
-						SetTarget(Reference< Object >());
-						if((Target->GetAspectVisualization() != nullptr) && (Target->GetAspectVisualization()->GetVisualization() != nullptr))
-						{
-							Target->GetAspectVisualization()->DestroyVisualization(g_CommodityLayer);
-						}
-					}
-					else
-					{
-						Target->GetContainer()->GetAspectObjectContainer()->AddContent(Target);
-					}
+					Target->GetAspectVisualization()->DestroyVisualization(g_CommodityLayer);
 				}
 			}
 			m_Scoop = false;

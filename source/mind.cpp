@@ -48,8 +48,6 @@ GoalMind::GoalMind(void) :
 {
 	// initialize object aspects
 	AddAspectObjectContainer();
-	GetAspectObjectContainer()->SetAllowAddingCallback(Callback(this, &GoalMind::AllowAdding));
-	GetAspectObjectContainer()->SetAllowRemovingCallback(Callback(this, &GoalMind::AllowRemoving));
 	GetAspectObjectContainer()->SetOnAddedCallback(Callback(this, &GoalMind::OnAdded));
 	GetAspectObjectContainer()->SetOnRemovedCallback(Callback(this, &GoalMind::OnRemoved));
 }
@@ -76,16 +74,6 @@ void GoalMind::Update(void)
 		m_Goal->Activate();
 	}
 	m_Goal->Process();
-}
-
-bool GoalMind::AllowAdding(Object * Content)
-{
-	return true;
-}
-
-bool GoalMind::AllowRemoving(Object * Content)
-{
-	return true;
 }
 
 void GoalMind::OnAdded(Object * Content)

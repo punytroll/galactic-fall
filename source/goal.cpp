@@ -29,8 +29,6 @@ Goal::Goal(GoalMind * GoalMind, const std::string & Name) :
 {
 	// initialize object aspects
 	AddAspectObjectContainer();
-	GetAspectObjectContainer()->SetAllowAddingCallback(Callback(this, &Goal::AllowAdding));
-	GetAspectObjectContainer()->SetAllowRemovingCallback(Callback(this, &Goal::AllowRemoving));
 	GetAspectObjectContainer()->SetOnAddedCallback(Callback(this, &Goal::OnAdded));
 	GetAspectObjectContainer()->SetOnRemovedCallback(Callback(this, &Goal::OnRemoved));
 }
@@ -74,7 +72,9 @@ void Goal::Terminate(void)
 
 bool Goal::AddSubGoal(Goal * SubGoal)
 {
-	return GetAspectObjectContainer()->AddContent(SubGoal);
+	GetAspectObjectContainer()->AddContent(SubGoal);
+	
+	return true;
 }
 
 bool Goal::HandleMessage(Message * Message)
@@ -91,16 +91,8 @@ bool Goal::HandleMessage(Message * Message)
 
 bool Goal::RemoveSubGoal(Goal * SubGoal)
 {
-	return GetAspectObjectContainer()->RemoveContent(SubGoal);
-}
-
-bool Goal::AllowAdding(Object * Content)
-{
-	return true;
-}
-
-bool Goal::AllowRemoving(Object * Content)
-{
+	GetAspectObjectContainer()->RemoveContent(SubGoal);
+	
 	return true;
 }
 
