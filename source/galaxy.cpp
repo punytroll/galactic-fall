@@ -63,18 +63,7 @@ System * Galaxy::GetSystem(const std::string & Identifier)
 
 bool Galaxy::AllowAdding(Object * Content)
 {
-	if(Content->GetTypeIdentifier() == "system")
-	{
-		return m_Systems.find(Content->GetClassIdentifier()) == m_Systems.end();
-	}
-	else if(Content->GetTypeIdentifier() == "faction")
-	{
-		return m_Factions.find(Content->GetClassIdentifier()) == m_Factions.end();
-	}
-	else
-	{
-		return false;
-	}
+	return true;
 }
 
 bool Galaxy::AllowRemoving(Object * Content)
@@ -84,15 +73,24 @@ bool Galaxy::AllowRemoving(Object * Content)
 
 void Galaxy::OnAdded(Object * Content)
 {
+	assert(Content != nullptr);
 	if(Content->GetTypeIdentifier() == "system")
 	{
 		assert(m_Systems.find(Content->GetClassIdentifier()) == m_Systems.end());
-		m_Systems[Content->GetClassIdentifier()] = dynamic_cast< System * >(Content);
+		
+		auto TheSystem(dynamic_cast< System * >(Content));
+		
+		assert(TheSystem != nullptr);
+		m_Systems[Content->GetClassIdentifier()] = TheSystem;
 	}
 	else if(Content->GetTypeIdentifier() == "faction")
 	{
 		assert(m_Factions.find(Content->GetClassIdentifier()) == m_Factions.end());
-		m_Factions[Content->GetClassIdentifier()] = dynamic_cast< Faction * >(Content);
+		
+		auto TheFaction(dynamic_cast< Faction * >(Content));
+		
+		assert(TheFaction != nullptr);
+		m_Factions[Content->GetClassIdentifier()] = TheFaction;
 	}
 	else
 	{
@@ -102,6 +100,7 @@ void Galaxy::OnAdded(Object * Content)
 
 void Galaxy::OnRemoved(Object * Content)
 {
+	assert(Content != nullptr);
 	if(Content->GetTypeIdentifier() == "system")
 	{
 		std::map< std::string, System * >::iterator Iterator(m_Systems.find(Content->GetClassIdentifier()));
@@ -109,11 +108,15 @@ void Galaxy::OnRemoved(Object * Content)
 		assert(Iterator != m_Systems.end());
 		m_Systems.erase(Iterator);
 	}
-	else if(Content->GetTypeIdentifier() == "system")
+	else if(Content->GetTypeIdentifier() == "faction")
 	{
 		std::map< std::string, Faction * >::iterator Iterator(m_Factions.find(Content->GetClassIdentifier()));
 		
 		assert(Iterator != m_Factions.end());
 		m_Factions.erase(Iterator);
+	}
+	else
+	{
+		assert(false);
 	}
 }

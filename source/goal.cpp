@@ -96,7 +96,7 @@ bool Goal::RemoveSubGoal(Goal * SubGoal)
 
 bool Goal::AllowAdding(Object * Content)
 {
-	return dynamic_cast< Goal * >(Content) != 0;
+	return true;
 }
 
 bool Goal::AllowRemoving(Object * Content)
@@ -106,17 +106,21 @@ bool Goal::AllowRemoving(Object * Content)
 
 void Goal::OnAdded(Object * Content)
 {
+	assert(Content != nullptr);
+	
 	Goal * TheGoal(dynamic_cast< Goal * >(Content));
 	
-	assert(TheGoal != 0);
+	assert(TheGoal != nullptr);
 	m_SubGoals.push_front(TheGoal);
 }
 
 void Goal::OnRemoved(Object * Content)
 {
+	assert(Content != nullptr);
+	
 	Goal * TheGoal(dynamic_cast< Goal * >(Content));
 	
-	assert(TheGoal != 0);
+	assert(TheGoal != nullptr);
 	
 	std::deque< Goal * >::iterator SubGoalIterator(std::find(m_SubGoals.begin(), m_SubGoals.end(), TheGoal));
 	
