@@ -242,7 +242,7 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 	return Result;
 }
 
-float ObjectFactory::GetSpaceRequirement(const std::string & TypeIdentifier, const std::string & ClassIdentifier) const
+unsigned_numeric ObjectFactory::GetSpaceRequirement(const std::string & TypeIdentifier, const std::string & ClassIdentifier) const
 {
 	if(TypeIdentifier == "battery")
 	{
