@@ -51,8 +51,6 @@ public:
 	// getters
 	float GetTrafficDensity(void) const;
 private:
-	bool AllowAdding(Object * Content);
-	bool AllowRemoving(Object * Content);
 	void OnAdded(Object * Content);
 	void OnRemoved(Object * Content);
 	std::string m_Identifier;

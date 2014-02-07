@@ -37,56 +37,42 @@ public:
 	Object * GetObject(void);
 	const Object * GetObject(void) const;
 	// modifiers
-	bool AddContent(Object * Content);
+	void AddContent(Object * Content);
 	void Destroy(void);
-	bool RemoveContent(Object * Content);
+	void RemoveContent(Object * Content);
 	// setters
-	void SetAllowAddingCallback(Callback1< bool, Object * > AllowAddingCallback);
-	void SetAllowRemovingCallback(Callback1< bool, Object * > AllowRemovingCallback);
 	void SetOnAddedCallback(Callback1< void, Object * > OnAddedCallback);
 	void SetOnRemovedCallback(Callback1< void, Object * > OnRemovedCallback);
 private:
-	Callback1< bool, Object * > m_AllowAddingCallback;
-	Callback1< bool, Object * > m_AllowRemovingCallback;
-	std::set< Object * > m_Content;
-	Object * m_Object;
-	Callback1< void, Object * > m_OnAddedCallback;
-	Callback1< void, Object * > m_OnRemovedCallback;
+	std::set< Object * > _Content;
+	Object * _Object;
+	Callback1< void, Object * > _OnAddedCallback;
+	Callback1< void, Object * > _OnRemovedCallback;
 };
 
 inline const std::set< Object * > & ObjectAspectObjectContainer::GetContent(void) const
 {
-	return m_Content;
+	return _Content;
 }
 
 inline Object * ObjectAspectObjectContainer::GetObject(void)
 {
-	return m_Object;
+	return _Object;
 }
 
 inline const Object * ObjectAspectObjectContainer::GetObject(void) const
 {
-	return m_Object;
-}
-
-inline void ObjectAspectObjectContainer::SetAllowAddingCallback(Callback1< bool, Object * > AllowAddingCallback)
-{
-	m_AllowAddingCallback = AllowAddingCallback;
-}
-
-inline void ObjectAspectObjectContainer::SetAllowRemovingCallback(Callback1< bool, Object * > AllowRemovingCallback)
-{
-	m_AllowRemovingCallback = AllowRemovingCallback;
+	return _Object;
 }
 
 inline void ObjectAspectObjectContainer::SetOnAddedCallback(Callback1< void, Object * > OnAddedCallback)
 {
-	m_OnAddedCallback = OnAddedCallback;
+	_OnAddedCallback = OnAddedCallback;
 }
 
 inline void ObjectAspectObjectContainer::SetOnRemovedCallback(Callback1< void, Object * > OnRemovedCallback)
 {
-	m_OnRemovedCallback = OnRemovedCallback;
+	_OnRemovedCallback = OnRemovedCallback;
 }
 
 #endif

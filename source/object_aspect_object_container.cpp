@@ -23,70 +23,54 @@
 #include "object_aspect_object_container.h"
 
 ObjectAspectObjectContainer::ObjectAspectObjectContainer(Object * Object) :
-	m_Object(Object)
+	_Object(Object)
 {
-	assert(m_Object != 0);
+	assert(_Object != nullptr);
 }
 
 ObjectAspectObjectContainer::~ObjectAspectObjectContainer(void)
 {
-	assert(m_Content.empty() == true);
+	assert(_Content.empty() == true);
 }
 
-bool ObjectAspectObjectContainer::AddContent(Object * Content)
+void ObjectAspectObjectContainer::AddContent(Object * Content)
 {
-	assert(Content != 0);
-	assert(Content->GetContainer() == 0);
-	if((m_AllowAddingCallback.IsValid() == false) || (m_AllowAddingCallback(Content) == true))
-	{
-		std::pair< std::set< Object * >::iterator, bool > InsertionResult(m_Content.insert(Content));
-		
-		if(InsertionResult.second == true)
-		{
-			Content->SetContainer(GetObject());
-			if(m_OnAddedCallback.IsValid() == true)
-			{
-				m_OnAddedCallback(Content);
-			}
-			
-			return true;
-		}
-	}
+	assert(Content != nullptr);
+	assert(Content->GetContainer() == nullptr);
 	
-	return false;
+	auto InsertionResult(_Content.insert(Content));
+	
+	assert(InsertionResult.second == true);
+	Content->SetContainer(_Object);
+	if(_OnAddedCallback.IsValid() == true)
+	{
+		_OnAddedCallback(Content);
+	}
 }
 
-bool ObjectAspectObjectContainer::RemoveContent(Object * Content)
+void ObjectAspectObjectContainer::RemoveContent(Object * Content)
 {
-	assert(Content != 0);
-	assert(Content->GetContainer() == GetObject());
-	if((m_AllowRemovingCallback.IsValid() == false) || (m_AllowRemovingCallback(Content) == true))
-	{
-		std::set< Object * >::iterator ContentIterator(m_Content.find(Content));
-		
-		if(ContentIterator != m_Content.end())
-		{
-			Content->SetContainer(0);
-			m_Content.erase(ContentIterator);
-			if(m_OnRemovedCallback.IsValid() == true)
-			{
-				m_OnRemovedCallback(Content);
-			}
-			
-			return true;
-		}
-	}
+	assert(Content != nullptr);
+	assert(Content->GetContainer() == _Object);
 	
-	return false;
+	auto ContentIterator(_Content.find(Content));
+		
+	assert(ContentIterator != _Content.end());
+	Content->SetContainer(0);
+	_Content.erase(ContentIterator);
+	if(_OnRemovedCallback.IsValid() == true)
+	{
+		_OnRemovedCallback(Content);
+	}
 }
 
 void ObjectAspectObjectContainer::Destroy(void)
 {
 	// now delete and remove all content objects
-	while(m_Content.empty() == false)
+	while(_Content.empty() == false)
 	{
 		// save the pointer to Content because Destroy() will remove it from m_Content
-		Object * Content(*(m_Content.begin()));
+		auto Content(*(_Content.begin()));
 		
 		Content->Destroy();
 		delete Content;

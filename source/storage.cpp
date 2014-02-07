@@ -27,8 +27,6 @@ Storage::Storage(void) :
 {
 	// initialize object aspects
 	AddAspectObjectContainer();
-	GetAspectObjectContainer()->SetAllowAddingCallback(Callback(this, &Storage::AllowAdding));
-	GetAspectObjectContainer()->SetAllowRemovingCallback(Callback(this, &Storage::AllowRemoving));
 	GetAspectObjectContainer()->SetOnAddedCallback(Callback(this, &Storage::OnAdded));
 	GetAspectObjectContainer()->SetOnRemovedCallback(Callback(this, &Storage::OnRemoved));
 }
@@ -63,16 +61,6 @@ void Storage::SetSpaceCapacity(unsigned_numeric SpaceCapacity)
 	
 	m_SpaceCapacity = SpaceCapacity;
 	m_Space += SpaceDifference;
-}
-
-bool Storage::AllowAdding(Object * Content)
-{
-	return true;
-}
-
-bool Storage::AllowRemoving(Object * Content)
-{
-	return true;
 }
 
 void Storage::OnAdded(Object * Content)

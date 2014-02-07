@@ -436,10 +436,7 @@ static void ReadFaction(Arxx::Reference & Reference)
 	Reader >> Name >> FactionColor;
 	NewFaction->GetAspectName()->SetName(Name);
 	NewFaction->SetColor(new Color(&FactionColor));
-	if(g_Galaxy->GetAspectObjectContainer()->AddContent(NewFaction) == false)
-	{
-		throw std::runtime_error("Could not add faction '" + Identifier + "' to galaxy.");
-	}
+	g_Galaxy->GetAspectObjectContainer()->AddContent(NewFaction);
 }
 
 static void ReadGeneratorClass(Arxx::Reference & Reference)
@@ -805,10 +802,7 @@ static void ReadSystem(Arxx::Reference & Reference)
 	NewStar->SetObjectIdentifier("::star(" + StarIdentifier + ")::in_system(" + NewSystem->GetIdentifier() + ")");
 	NewStar->GetAspectPosition()->SetPosition(Vector3f(StarPosition[0], StarPosition[1], 0.0f));
 	NewStar->SetColor(StarColor);
-	if(NewSystem->GetAspectObjectContainer()->AddContent(NewStar) == false)
-	{
-		throw std::runtime_error("Could not add star '" + StarIdentifier + "' to system '" + Identifier + "'.");
-	}
+	NewSystem->GetAspectObjectContainer()->AddContent(NewStar);
 	for(Arxx::u4byte Number = 1; Number <= PlanetCount; ++Number)
 	{
 		std::string PlanetIdentifier;
@@ -881,15 +875,9 @@ static void ReadSystem(Arxx::Reference & Reference)
 			throw std::runtime_error("Could not find faction '" + FactionIdentifier + "' for planet '" + PlanetIdentifier + "' in system '" + Identifier + "'.");
 		}
 		NewPlanet->SetFaction(Faction->GetReference());
-		if(NewSystem->GetAspectObjectContainer()->AddContent(NewPlanet) == false)
-		{
-			throw std::runtime_error("Could not add planet '" + PlanetIdentifier + "' to system '" + Identifier + "'.");
-		}
+		NewSystem->GetAspectObjectContainer()->AddContent(NewPlanet);
 	}
-	if(g_Galaxy->GetAspectObjectContainer()->AddContent(NewSystem) == false)
-	{
-		throw std::runtime_error("Could not add system '" + Identifier + "' to galaxy.");
-	}
+	g_Galaxy->GetAspectObjectContainer()->AddContent(NewSystem);
 }
 
 static void ReadSystemLink(Arxx::Reference & Reference)
