@@ -41,11 +41,6 @@ Graphics::ModelNode::~ModelNode(void)
 	}
 }
 
-void Graphics::ModelNode::Begin(void)
-{
-	Graphics::Node::Begin();
-}
-
 void Graphics::ModelNode::Draw(void)
 {
 	if(_Model != 0)
@@ -98,11 +93,6 @@ void Graphics::ModelNode::Draw(void)
 		}
 	}
 	Graphics::Node::Draw();
-}
-
-void Graphics::ModelNode::End(void)
-{
-	Graphics::Node::End();
 }
 
 bool Graphics::ModelNode::AddMaterial(const std::string & MeshName, Graphics::Material * Material)

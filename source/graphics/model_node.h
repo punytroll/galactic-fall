@@ -39,9 +39,7 @@ namespace Graphics
 		void SetModel(const Graphics::Model * Model);
 		// modifiers
 		bool AddMaterial(const std::string & MeshIdentifier, Graphics::Material * Material);
-		virtual void Begin(void);
 		virtual void Draw(void);
-		virtual void End(void);
 	private:
 		const Graphics::Model * _Model;
 		std::map< std::string, Graphics::Material * > _Materials;
