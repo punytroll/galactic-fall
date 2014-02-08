@@ -36,7 +36,6 @@
 #include "slot.h"
 #include "string_cast.h"
 #include "weapon.h"
-#include "visualizations.h"
 
 Weapon::Weapon(void) :
 	m_EnergyUsagePerShot(0.0f),
@@ -113,8 +112,6 @@ void Weapon::Update(float Seconds)
 			NewShot->SetVelocity(dynamic_cast< Ship * >(Container)->GetVelocity() + Vector3f(ParticleVelocity[0], ParticleVelocity[1], 0.0f));
 			Container->GetContainer()->GetAspectObjectContainer()->AddContent(NewShot);
 			m_NextTimeToFire = GameTime::Get() + GetReloadTime();
-			// add visualization
-			VisualizeObject(NewShot, g_ShotLayer);
 		}
 	}
 }

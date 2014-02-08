@@ -1328,8 +1328,6 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 	}
 	NewShip->GetAspectObjectContainer()->AddContent(NewCharacter);
 	System->GetAspectObjectContainer()->AddContent(NewShip);
-	// add visualization
-	VisualizeObject(NewShip, g_ShipLayer);
 }
 
 void SpawnShipOnTimeout(System * SpawnInSystem)
