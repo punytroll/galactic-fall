@@ -22,12 +22,15 @@
 #include <algorithm>
 
 #include "commodity.h"
+#include "globals.h"
 #include "object_aspect_object_container.h"
+#include "object_aspect_visualization.h"
 #include "planet.h"
 #include "ship.h"
 #include "shot.h"
 #include "star.h"
 #include "system.h"
+#include "visualizations.h"
 
 System::System(const std::string & Identifier) :
 	_Identifier(Identifier),
@@ -73,6 +76,7 @@ void System::_OnAdded(Object * Content)
 		
 		assert(TheCommodity != nullptr);
 		_Commodities.push_back(TheCommodity);
+		VisualizeObject(TheCommodity, g_CommodityLayer);
 	}
 	else if(Content->GetTypeIdentifier() == "planet")
 	{
@@ -125,6 +129,11 @@ void System::_OnRemoved(Object * Content)
 		
 		assert(CommodityIterator != _Commodities.end());
 		_Commodities.erase(CommodityIterator);
+		assert(Content->GetAspectVisualization() != nullptr);
+		if(Content->GetAspectVisualization()->GetVisualization() != nullptr)
+		{
+			Content->GetAspectVisualization()->DestroyVisualization(g_CommodityLayer);
+		}
 	}
 	else if(Content->GetTypeIdentifier() == "planet")
 	{

@@ -854,15 +854,12 @@ ship_cpp = \
 	$(object_aspect_physical_h) \
 	$(object_aspect_position_h) \
 	$(object_aspect_update_h) \
-	$(object_aspect_visualization_h) \
 	$(planet_h) \
 	$(ship_h) \
 	$(slot_h) \
 	$(slot_class_h) \
 	$(storage_h) \
 	$(system_h) \
-	$(visualization_h) \
-	$(visualizations_h) \
 	$(weapon_h)
 
 ship_h = \
@@ -985,12 +982,15 @@ string_cast_h = \
 system_cpp = \
 	system.cpp \
 	$(commodity_h) \
+	$(globals_h) \
 	$(object_aspect_object_container_h) \
+	$(object_aspect_visualization_h) \
 	$(planet_h) \
 	$(ship_h) \
 	$(shot_h) \
 	$(star_h) \
-	$(system_h)
+	$(system_h) \
+	$(visualizations_h)
 
 system_h = \
 	system.h \

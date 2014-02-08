@@ -35,15 +35,12 @@
 #include "object_aspect_physical.h"
 #include "object_aspect_position.h"
 #include "object_aspect_update.h"
-#include "object_aspect_visualization.h"
 #include "planet.h"
 #include "ship.h"
 #include "slot.h"
 #include "slot_class.h"
 #include "storage.h"
 #include "system.h"
-#include "visualization.h"
-#include "visualizations.h"
 #include "weapon.h"
 
 Ship::Ship(void) :
@@ -325,7 +322,6 @@ bool Ship::Update(float Seconds)
 					TheCommodity->SetAngularVelocity(AxisAngle(RotationAxis[0], RotationAxis[1], RotationAxis[2], GetRandomFloat(0.0f, 0.7f)));
 					assert(GetContainer()->GetAspectObjectContainer() != 0);
 					GetContainer()->GetAspectObjectContainer()->AddContent(TheCommodity);
-					VisualizeObject(TheCommodity, g_CommodityLayer);
 				}
 			}
 			m_Jettison = false;
@@ -345,10 +341,6 @@ bool Ship::Update(float Seconds)
 					assert(Target->GetContainer()->GetAspectObjectContainer() != nullptr);
 					Target->GetContainer()->GetAspectObjectContainer()->RemoveContent(Target);
 					_CargoHold->GetAspectObjectContainer()->AddContent(Target);
-					if((Target->GetAspectVisualization() != nullptr) && (Target->GetAspectVisualization()->GetVisualization() != nullptr))
-					{
-						Target->GetAspectVisualization()->DestroyVisualization(g_CommodityLayer);
-					}
 				}
 			}
 			m_Scoop = false;

@@ -749,8 +749,6 @@ void CalculateMovements(System * System, float Seconds)
 												RotationAxis.Normalize();
 												TheCommodity->SetAngularVelocity(AxisAngle(RotationAxis[0], RotationAxis[1], RotationAxis[2], GetRandomFloat(0.0f, 0.7f)));
 												TheShip->GetContainer()->GetAspectObjectContainer()->AddContent(TheCommodity);
-												// add visualization of the commodity
-												VisualizeObject(TheCommodity, g_CommodityLayer);
 											}
 											else
 											{
