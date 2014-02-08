@@ -76,7 +76,10 @@ void System::_OnAdded(Object * Content)
 		
 		assert(TheCommodity != nullptr);
 		_Commodities.push_back(TheCommodity);
-		VisualizeObject(TheCommodity, g_CommodityLayer);
+		if(g_CommodityLayer != nullptr)
+		{
+			VisualizeObject(TheCommodity, g_CommodityLayer);
+		}
 	}
 	else if(Content->GetTypeIdentifier() == "planet")
 	{
@@ -98,6 +101,10 @@ void System::_OnAdded(Object * Content)
 		
 		assert(TheShip != nullptr);
 		_Ships.push_back(TheShip);
+		if(g_ShipLayer != nullptr)
+		{
+			VisualizeObject(TheShip, g_ShipLayer);
+		}
 	}
 	else if(Content->GetTypeIdentifier() == "shot")
 	{
@@ -105,6 +112,10 @@ void System::_OnAdded(Object * Content)
 		
 		assert(TheShot != nullptr);
 		_Shots.push_back(TheShot);
+		if(g_ShotLayer != nullptr)
+		{
+			VisualizeObject(TheShot, g_ShotLayer);
+		}
 	}
 	else if(Content->GetTypeIdentifier() == "star")
 	{

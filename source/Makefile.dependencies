@@ -1515,7 +1515,6 @@ weapon_cpp = \
 	$(shot_h) \
 	$(slot_h) \
 	$(string_cast_h) \
-	$(visualizations_h) \
 	$(weapon_h)
 
 weapon_h = \
