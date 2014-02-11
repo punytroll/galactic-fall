@@ -38,6 +38,7 @@
 #include "ship.h"
 #include "shot.h"
 #include "slot.h"
+#include "system.h"
 #include "visualization.h"
 #include "visualization_prototype.h"
 #include "visualizations.h"
@@ -51,6 +52,7 @@ static void VisualizeCommodity(Commodity * Commodity, Graphics::Node * Container
 static void VisualizePlanet(Planet * Planet, Graphics::Node * Container);
 static void VisualizeShip(Ship * Ship, Graphics::Node * Container);
 static void VisualizeShot(Shot * Shot, Graphics::Node * Container);
+static void VisualizeSystem(System * System, Graphics::Node * Container);
 static void VisualizeWeapon(Weapon * Weapon, Graphics::Node * Container);
 
 void InvalidateVisualizationReference(Graphics::Node * Node)
@@ -81,6 +83,10 @@ void VisualizeObject(Object * Object, Graphics::Node * Container)
 	else if(Object->GetTypeIdentifier() == "shot")
 	{
 		VisualizeShot(static_cast< Shot * >(Object), Container);
+	}
+	else if(Object->GetTypeIdentifier() == "system")
+	{
+		VisualizeSystem(static_cast< System * >(Object), Container);
 	}
 	else if(Object->GetTypeIdentifier() == "weapon")
 	{
@@ -201,6 +207,52 @@ void VisualizeShot(Shot * Shot, Graphics::Node * Container)
 	Shot->GetAspectVisualization()->AddGraphics(Graphics);
 	// add to the scene
 	assert(Container != 0);
+	Container->AddNode(Graphics);
+}
+
+void VisualizeSystem(System * System, Graphics::Node * Container)
+{
+	assert(g_CommodityLayer == nullptr);
+	assert(g_ParticleSystemsLayer == nullptr);
+	assert(g_PlanetLayer == nullptr);
+	assert(g_ShipLayer == nullptr);
+	assert(g_ShotLayer == nullptr);
+	assert(System != nullptr);
+	assert(System->GetAspectVisualization() != nullptr);
+	
+	auto Graphics(new Graphics::Node());
+	
+	g_CommodityLayer = new Graphics::Node();
+	g_CommodityLayer->SetClearDepthBuffer(true);
+	g_ParticleSystemsLayer = new Graphics::Node();
+	g_PlanetLayer = new Graphics::Node();
+	g_PlanetLayer->SetClearDepthBuffer(true);
+	g_ShipLayer = new Graphics::Node();
+	g_ShipLayer->SetClearDepthBuffer(true);
+	g_ShotLayer = new Graphics::Node();
+	g_ShotLayer->SetClearDepthBuffer(true);
+	Graphics->AddNode(g_PlanetLayer);
+	Graphics->AddNode(g_CommodityLayer);
+	Graphics->AddNode(g_ShotLayer);
+	Graphics->AddNode(g_ShipLayer);
+	Graphics->AddNode(g_ParticleSystemsLayer);
+	g_ObjectVisualizations[Graphics] = System->GetAspectVisualization();
+	// set as the object's visualization
+	System->GetAspectVisualization()->AddGraphics(Graphics);
+	// add visualizations for all objects in the system
+	for(auto Planet : System->GetPlanets())
+	{
+		VisualizeObject(Planet, g_PlanetLayer);
+	}
+	
+	const std::list< Ship * > & Ships();
+	
+	for(auto Ship : System->GetShips())
+	{
+		VisualizeObject(Ship, g_ShipLayer);
+	}
+	// add to the container node
+	assert(Container != nullptr);
 	Container->AddNode(Graphics);
 }
 

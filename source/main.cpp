@@ -1357,11 +1357,6 @@ void PopulateSystem(System * System)
 void OnOutputEnterSystem(System * EnterSystem)
 {
 	assert(g_SpawnShipTimeoutNotification.IsValid() == false);
-	assert(g_CommodityLayer == 0);
-	assert(g_ParticleSystemsLayer == 0);
-	assert(g_PlanetLayer == 0);
-	assert(g_ShipLayer == 0);
-	assert(g_ShotLayer == 0);
 	assert(g_MainView != 0);
 	assert(g_MainView->GetScene() == 0);
 	// build the static setup of the scene
@@ -1390,39 +1385,11 @@ void OnOutputEnterSystem(System * EnterSystem)
 	RootNode->SetClearColorBuffer(true);
 	RootNode->SetClearDepthBuffer(true);
 	MainScene->SetRootNode(RootNode);
+	VisualizeObject(EnterSystem, RootNode);
 	assert(g_UIView != 0);
 	assert(g_UIView->GetScene() != 0);
 	assert(g_UIView->GetScene()->GetRootNode() != 0);
 	g_UIView->GetScene()->GetRootNode()->SetClearColorBuffer(false);
-	g_CommodityLayer = new Graphics::Node();
-	g_CommodityLayer->SetClearDepthBuffer(true);
-	g_ParticleSystemsLayer = new Graphics::Node();
-	g_PlanetLayer = new Graphics::Node();
-	g_PlanetLayer->SetClearDepthBuffer(true);
-	g_ShipLayer = new Graphics::Node();
-	g_ShipLayer->SetClearDepthBuffer(true);
-	g_ShotLayer = new Graphics::Node();
-	g_ShotLayer->SetClearDepthBuffer(true);
-	RootNode->AddNode(g_PlanetLayer);
-	RootNode->AddNode(g_CommodityLayer);
-	RootNode->AddNode(g_ShotLayer);
-	RootNode->AddNode(g_ShipLayer);
-	RootNode->AddNode(g_ParticleSystemsLayer);
-	
-	// add visualizations for all objects in the system
-	const std::vector< Planet * > & Planets(EnterSystem->GetPlanets());
-	
-	for(std::vector< Planet * >::const_iterator PlanetIterator = Planets.begin(); PlanetIterator != Planets.end(); ++PlanetIterator)
-	{
-		VisualizeObject(*PlanetIterator, g_PlanetLayer);
-	}
-	
-	const std::list< Ship * > & Ships(EnterSystem->GetShips());
-	
-	for(std::list< Ship * >::const_iterator ShipIterator = Ships.begin(); ShipIterator != Ships.end(); ++ShipIterator)
-	{
-		VisualizeObject(*ShipIterator, g_ShipLayer);
-	}
 	g_SpawnShipTimeoutNotification = g_GameTimeTimeoutNotifications->Add(GameTime::Get() + GetRandomFloatFromExponentialDistribution(1.0f / EnterSystem->GetTrafficDensity()), Bind1(Callback(SpawnShipOnTimeout), EnterSystem));
 }
 

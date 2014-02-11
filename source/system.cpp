@@ -43,6 +43,7 @@ System::System(const std::string & Identifier) :
 	GetAspectObjectContainer()->SetOnAddedCallback(Callback(this, &System::_OnAdded));
 	GetAspectObjectContainer()->SetOnRemovedCallback(Callback(this, &System::_OnRemoved));
 	AddAspectPosition();
+	AddAspectVisualization();
 }
 
 System::~System(void)
