@@ -29,6 +29,7 @@
 #include "graphics/model_manager.h"
 #include "graphics/model_node.h"
 #include "graphics/particle_system_node.h"
+#include "graphics/system_node.h"
 #include "object_aspect_accessory.h"
 #include "object_aspect_outfitting.h"
 #include "object_aspect_physical.h"
@@ -214,24 +215,20 @@ void VisualizeSystem(System * System, Graphics::Node * Container)
 {
 	assert(g_CommodityLayer == nullptr);
 	assert(g_ParticleSystemsLayer == nullptr);
-	assert(g_PlanetLayer == nullptr);
 	assert(g_ShipLayer == nullptr);
 	assert(g_ShotLayer == nullptr);
 	assert(System != nullptr);
 	assert(System->GetAspectVisualization() != nullptr);
 	
-	auto Graphics(new Graphics::Node());
+	auto Graphics(new Graphics::SystemNode());
 	
 	g_CommodityLayer = new Graphics::Node();
 	g_CommodityLayer->SetClearDepthBuffer(true);
 	g_ParticleSystemsLayer = new Graphics::Node();
-	g_PlanetLayer = new Graphics::Node();
-	g_PlanetLayer->SetClearDepthBuffer(true);
 	g_ShipLayer = new Graphics::Node();
 	g_ShipLayer->SetClearDepthBuffer(true);
 	g_ShotLayer = new Graphics::Node();
 	g_ShotLayer->SetClearDepthBuffer(true);
-	Graphics->AddNode(g_PlanetLayer);
 	Graphics->AddNode(g_CommodityLayer);
 	Graphics->AddNode(g_ShotLayer);
 	Graphics->AddNode(g_ShipLayer);
@@ -242,7 +239,7 @@ void VisualizeSystem(System * System, Graphics::Node * Container)
 	// add visualizations for all objects in the system
 	for(auto Planet : System->GetPlanets())
 	{
-		VisualizeObject(Planet, g_PlanetLayer);
+		VisualizeObject(Planet, Graphics->GetPlanetLayer());
 	}
 	
 	const std::list< Ship * > & Ships();

@@ -23,6 +23,7 @@
 
 #include "commodity.h"
 #include "globals.h"
+#include "graphics/system_node.h"
 #include "object_aspect_object_container.h"
 #include "object_aspect_visualization.h"
 #include "planet.h"
@@ -30,6 +31,7 @@
 #include "shot.h"
 #include "star.h"
 #include "system.h"
+#include "visualization.h"
 #include "visualizations.h"
 
 System::System(const std::string & Identifier) :
@@ -156,7 +158,10 @@ void System::_OnRemoved(Object * Content)
 		assert(Content->GetAspectVisualization() != nullptr);
 		if(Content->GetAspectVisualization()->GetVisualization() != nullptr)
 		{
-			Content->GetAspectVisualization()->DestroyVisualization(g_PlanetLayer);
+			assert(GetAspectVisualization() != nullptr);
+			assert(GetAspectVisualization()->GetVisualization() != nullptr);
+			assert(GetAspectVisualization()->GetVisualization()->GetGraphics() != nullptr);
+			Content->GetAspectVisualization()->DestroyVisualization((static_cast< Graphics::SystemNode * >(GetAspectVisualization()->GetVisualization()->GetGraphics()))->GetPlanetLayer());
 		}
 	}
 	else if(Content->GetTypeIdentifier() == "ship")
