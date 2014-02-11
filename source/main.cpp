@@ -3074,7 +3074,7 @@ void CreateWindow(void)
 	
 	if(GLXServerVendor != 0)
 	{
-		ON_DEBUG(std::cout << "  GLX Server Vendor: \"" << GLXServerVendor << "\"" << std::endl);
+		ON_DEBUG(std::cout << "  GLX server vendor: \"" << GLXServerVendor << "\"" << std::endl);
 	}
 	else
 	{
@@ -3086,7 +3086,7 @@ void CreateWindow(void)
 	
 	if(GLXServerVersion != 0)
 	{
-		ON_DEBUG(std::cout << "  GLX Server Version: \"" << GLXServerVersion << "\"" << std::endl);
+		ON_DEBUG(std::cout << "  GLX server version: \"" << GLXServerVersion << "\"" << std::endl);
 	}
 	else
 	{
@@ -3117,7 +3117,7 @@ void CreateWindow(void)
 	
 	if(GLXClientVendor != 0)
 	{
-		ON_DEBUG(std::cout << "  GLX Client Vendor: \"" << GLXClientVendor << "\"" << std::endl);
+		ON_DEBUG(std::cout << "  GLX client vendor: \"" << GLXClientVendor << "\"" << std::endl);
 	}
 	else
 	{
@@ -3129,7 +3129,7 @@ void CreateWindow(void)
 	
 	if(GLXClientVersion != 0)
 	{
-		ON_DEBUG(std::cout << "  GLX Client Version: \"" << GLXClientVersion << "\"" << std::endl);
+		ON_DEBUG(std::cout << "  GLX client version: \"" << GLXClientVersion << "\"" << std::endl);
 	}
 	else
 	{
@@ -3160,13 +3160,14 @@ void CreateWindow(void)
 	std::vector< std::string > ExtensionStrings(SplitString(GLXExtensionsString, ' '));
 	bool GLX_ARB_create_context_Available(false);
 	
+	ON_DEBUG(std::cout << "  GLX connection extensions:" << std::endl);
 	for(std::vector< std::string >::iterator Iterator = ExtensionStrings.begin(); Iterator != ExtensionStrings.end(); ++Iterator)
 	{
 		if(*Iterator == "GLX_ARB_create_context")
 		{
 			GLX_ARB_create_context_Available = true;
 		}
-		ON_DEBUG(std::cout << "  " << *Iterator << std::endl);
+		ON_DEBUG(std::cout << "    \"" << *Iterator << '"' << std::endl);
 	}
 	if(GLX_ARB_create_context_Available == false)
 	{
