@@ -77,7 +77,7 @@ void Graphics::Node::AddNode(Graphics::Node * Content)
 				
 				Todo.pop_back();
 				Todo.insert(Todo.end(), Node->_Content.begin(), Node->_Content.end());
-				assert(Content->_Scene == nullptr);
+				assert(Node->_Scene == nullptr);
 				Node->_Scene = _Scene;
 			}
 		}
