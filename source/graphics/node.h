@@ -66,7 +66,7 @@ namespace Graphics
 		// modifiers
 		void AddNode(Graphics::Node * Content);
 		virtual void Begin(void);
-		void Destroy(void);
+		virtual void Destroy(void);
 		virtual void Draw(void);
 		virtual void End(void);
 	private:
