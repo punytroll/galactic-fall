@@ -80,7 +80,6 @@ enum WantReturnCode
 extern ClassManager< AssetClass > * g_AssetClassManager;
 extern ClassManager< BatteryClass > * g_BatteryClassManager;
 extern ClassManager< CommodityClass > * g_CommodityClassManager;
-extern Graphics::Node * g_CommodityLayer;
 extern Galaxy * g_Galaxy;
 extern TimeoutNotificationManager * g_GameTimeTimeoutNotifications;
 extern ClassManager< GeneratorClass > * g_GeneratorClassManager;
