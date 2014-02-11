@@ -57,9 +57,9 @@ System::~System(void)
 
 bool System::IsLinkedToSystem(const System * LinkedSystem) const
 {
-	for(auto LinkedSystemIterator = _LinkedSystems.begin(); LinkedSystemIterator != _LinkedSystems.end(); ++LinkedSystemIterator)
+	for(auto LinkedSystem : _LinkedSystems)
 	{
-		if(*LinkedSystemIterator == LinkedSystem)
+		if(LinkedSystem == LinkedSystem)
 		{
 			return true;
 		}
@@ -87,9 +87,9 @@ void System::_OnAdded(Object * Content)
 		auto ThePlanet(dynamic_cast< Planet * >(Content));
 		
 		assert(ThePlanet != nullptr);
-		for(auto PlanetIterator = _Planets.begin(); PlanetIterator != _Planets.end(); ++PlanetIterator)
+		for(auto Planet : _Planets)
 		{
-			if((*PlanetIterator)->GetIdentifier() == ThePlanet->GetClassIdentifier())
+			if(Planet->GetIdentifier() == ThePlanet->GetClassIdentifier())
 			{
 				assert(false);
 			}
@@ -149,14 +149,14 @@ void System::_OnRemoved(Object * Content)
 	}
 	else if(Content->GetTypeIdentifier() == "planet")
 	{
-		for(auto PlanetIterator = _Planets.begin(); PlanetIterator != _Planets.end(); ++PlanetIterator)
+		auto PlanetIterator(std::find(_Planets.begin(), _Planets.end(), Content));
+		
+		assert(PlanetIterator != _Planets.end());
+		_Planets.erase(PlanetIterator);
+		assert(Content->GetAspectVisualization() != nullptr);
+		if(Content->GetAspectVisualization()->GetVisualization() != nullptr)
 		{
-			if((*PlanetIterator)->GetIdentifier() == Content->GetClassIdentifier())
-			{
-				_Planets.erase(PlanetIterator);
-				
-				break;
-			}
+			Content->GetAspectVisualization()->DestroyVisualization(g_PlanetLayer);
 		}
 	}
 	else if(Content->GetTypeIdentifier() == "ship")
@@ -177,6 +177,11 @@ void System::_OnRemoved(Object * Content)
 		
 		assert(ShotIterator != _Shots.end());
 		_Shots.erase(ShotIterator);
+		assert(Content->GetAspectVisualization() != nullptr);
+		if(Content->GetAspectVisualization()->GetVisualization() != nullptr)
+		{
+			Content->GetAspectVisualization()->DestroyVisualization(g_ShotLayer);
+		}
 	}
 	else if(Content->GetTypeIdentifier() == "star")
 	{
