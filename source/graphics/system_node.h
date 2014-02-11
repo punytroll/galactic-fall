@@ -33,11 +33,13 @@ namespace Graphics
 		// getters
 		Graphics::Node * GetCommodityLayer(void);
 		Graphics::Node * GetPlanetLayer(void);
+		Graphics::Node * GetShipLayer(void);
 		// modifiers
 		virtual void Destroy(void) override;
 	private:
 		Graphics::Node * _CommodityLayer;
 		Graphics::Node * _PlanetLayer;
+		Graphics::Node * _ShipLayer;
 	};
 	
 	inline Graphics::Node * SystemNode::GetCommodityLayer(void)
@@ -48,6 +50,11 @@ namespace Graphics
 	inline Graphics::Node * SystemNode::GetPlanetLayer(void)
 	{
 		return _PlanetLayer;
+	}
+	
+	inline Graphics::Node * SystemNode::GetShipLayer(void)
+	{
+		return _ShipLayer;
 	}
 }
 

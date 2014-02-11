@@ -106,9 +106,11 @@ void System::_OnAdded(Object * Content)
 		
 		assert(TheShip != nullptr);
 		_Ships.push_back(TheShip);
-		if(g_ShipLayer != nullptr)
+		assert(GetAspectVisualization() != nullptr);
+		if(GetAspectVisualization()->GetVisualization() != nullptr)
 		{
-			VisualizeObject(TheShip, g_ShipLayer);
+			assert(GetAspectVisualization()->GetVisualization()->GetGraphics() != nullptr);
+			VisualizeObject(TheShip, (static_cast< Graphics::SystemNode * >(GetAspectVisualization()->GetVisualization()->GetGraphics()))->GetShipLayer());
 		}
 	}
 	else if(Content->GetTypeIdentifier() == "shot")
@@ -178,7 +180,10 @@ void System::_OnRemoved(Object * Content)
 		assert(Content->GetAspectVisualization() != nullptr);
 		if(Content->GetAspectVisualization()->GetVisualization() != nullptr)
 		{
-			Content->GetAspectVisualization()->DestroyVisualization(g_ShipLayer);
+			assert(GetAspectVisualization() != nullptr);
+			assert(GetAspectVisualization()->GetVisualization() != nullptr);
+			assert(GetAspectVisualization()->GetVisualization()->GetGraphics() != nullptr);
+			Content->GetAspectVisualization()->DestroyVisualization((static_cast< Graphics::SystemNode * >(GetAspectVisualization()->GetVisualization()->GetGraphics()))->GetShipLayer());
 		}
 	}
 	else if(Content->GetTypeIdentifier() == "shot")

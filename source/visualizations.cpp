@@ -214,7 +214,6 @@ void VisualizeShot(Shot * Shot, Graphics::Node * Container)
 void VisualizeSystem(System * System, Graphics::Node * Container)
 {
 	assert(g_ParticleSystemsLayer == nullptr);
-	assert(g_ShipLayer == nullptr);
 	assert(g_ShotLayer == nullptr);
 	assert(System != nullptr);
 	assert(System->GetAspectVisualization() != nullptr);
@@ -222,12 +221,9 @@ void VisualizeSystem(System * System, Graphics::Node * Container)
 	auto Graphics(new Graphics::SystemNode());
 	
 	g_ParticleSystemsLayer = new Graphics::Node();
-	g_ShipLayer = new Graphics::Node();
-	g_ShipLayer->SetClearDepthBuffer(true);
 	g_ShotLayer = new Graphics::Node();
 	g_ShotLayer->SetClearDepthBuffer(true);
 	Graphics->AddNode(g_ShotLayer);
-	Graphics->AddNode(g_ShipLayer);
 	Graphics->AddNode(g_ParticleSystemsLayer);
 	g_ObjectVisualizations[Graphics] = System->GetAspectVisualization();
 	// set as the object's visualization
@@ -242,7 +238,7 @@ void VisualizeSystem(System * System, Graphics::Node * Container)
 	
 	for(auto Ship : System->GetShips())
 	{
-		VisualizeObject(Ship, g_ShipLayer);
+		VisualizeObject(Ship, Graphics->GetShipLayer());
 	}
 	// add to the container node
 	assert(Container != nullptr);
