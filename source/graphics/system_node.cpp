@@ -22,14 +22,17 @@
 Graphics::SystemNode::SystemNode(void) :
 	_CommodityLayer(new Graphics::Node()),
 	_PlanetLayer(new Graphics::Node()),
-	_ShipLayer(new Graphics::Node())
+	_ShipLayer(new Graphics::Node()),
+	_ShotLayer(new Graphics::Node())
 {
 	_CommodityLayer->SetClearDepthBuffer(true);
 	_PlanetLayer->SetClearDepthBuffer(true);
 	_ShipLayer->SetClearDepthBuffer(true);
+	_ShotLayer->SetClearDepthBuffer(true);
 	AddNode(_PlanetLayer);
 	AddNode(_CommodityLayer);
 	AddNode(_ShipLayer);
+	AddNode(_ShotLayer);
 }
 
 Graphics::SystemNode::~SystemNode(void)
@@ -37,6 +40,7 @@ Graphics::SystemNode::~SystemNode(void)
 	assert(_CommodityLayer == nullptr);
 	assert(_PlanetLayer == nullptr);
 	assert(_ShipLayer == nullptr);
+	assert(_ShotLayer == nullptr);
 }
 
 void Graphics::SystemNode::Destroy(void)
@@ -47,5 +51,7 @@ void Graphics::SystemNode::Destroy(void)
 	_PlanetLayer = nullptr;
 	assert(_ShipLayer != nullptr);
 	_ShipLayer = nullptr;
+	assert(_ShotLayer != nullptr);
+	_ShotLayer = nullptr;
 	Graphics::Node::Destroy();
 }

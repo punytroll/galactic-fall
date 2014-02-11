@@ -143,7 +143,6 @@ Graphics::PerspectiveProjection * g_MainProjection(0);
 Graphics::View * g_MainView(0);
 Graphics::Orthogonal2DProjection * g_UIProjection(0);
 Graphics::View * g_UIView(0);
-Graphics::Node * g_ShotLayer(0);
 Graphics::Node * g_ParticleSystemsLayer(0);
 std::vector< Graphics::View * > g_PrerenderedViews;
 MessageDispatcher * g_MessageDispatcher(0);
@@ -1090,10 +1089,6 @@ void OnMainSceneNodeDestroy(Graphics::Node * Node)
 	if(Node == g_ParticleSystemsLayer)
 	{
 		g_ParticleSystemsLayer = 0;
-	}
-	else if(Node == g_ShotLayer)
-	{
-		g_ShotLayer = 0;
 	}
 	InvalidateVisualizationReference(Node);
 	delete Node;
