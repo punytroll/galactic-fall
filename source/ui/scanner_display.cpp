@@ -49,7 +49,8 @@ static void CalculatePerspectiveMatrix(float FieldOfView, float Aspect, float Ne
 }
 
 UI::ScannerDisplay::ScannerDisplay(UI::Widget * SupWidget) :
-	UI::Widget(SupWidget)
+	UI::Widget(SupWidget),
+	_FieldOfView(1.0f)
 {
 }
 
