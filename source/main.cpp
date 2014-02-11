@@ -144,7 +144,6 @@ Graphics::View * g_MainView(0);
 Graphics::Orthogonal2DProjection * g_UIProjection(0);
 Graphics::View * g_UIView(0);
 Graphics::Node * g_CommodityLayer(0);
-Graphics::Node * g_PlanetLayer(0);
 Graphics::Node * g_ShipLayer(0);
 Graphics::Node * g_ShotLayer(0);
 Graphics::Node * g_ParticleSystemsLayer(0);
@@ -1097,10 +1096,6 @@ void OnMainSceneNodeDestroy(Graphics::Node * Node)
 	else if(Node == g_ParticleSystemsLayer)
 	{
 		g_ParticleSystemsLayer = 0;
-	}
-	else if(Node == g_PlanetLayer)
-	{
-		g_PlanetLayer = 0;
 	}
 	else if(Node == g_ShipLayer)
 	{
