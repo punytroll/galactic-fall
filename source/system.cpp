@@ -79,9 +79,11 @@ void System::_OnAdded(Object * Content)
 		
 		assert(TheCommodity != nullptr);
 		_Commodities.push_back(TheCommodity);
-		if(g_CommodityLayer != nullptr)
+		assert(GetAspectVisualization() != nullptr);
+		if(GetAspectVisualization()->GetVisualization() != nullptr)
 		{
-			VisualizeObject(TheCommodity, g_CommodityLayer);
+			assert(GetAspectVisualization()->GetVisualization()->GetGraphics() != nullptr);
+			VisualizeObject(TheCommodity, (static_cast< Graphics::SystemNode * >(GetAspectVisualization()->GetVisualization()->GetGraphics()))->GetCommodityLayer());
 		}
 	}
 	else if(Content->GetTypeIdentifier() == "planet")
@@ -146,7 +148,10 @@ void System::_OnRemoved(Object * Content)
 		assert(Content->GetAspectVisualization() != nullptr);
 		if(Content->GetAspectVisualization()->GetVisualization() != nullptr)
 		{
-			Content->GetAspectVisualization()->DestroyVisualization(g_CommodityLayer);
+			assert(GetAspectVisualization() != nullptr);
+			assert(GetAspectVisualization()->GetVisualization() != nullptr);
+			assert(GetAspectVisualization()->GetVisualization()->GetGraphics() != nullptr);
+			Content->GetAspectVisualization()->DestroyVisualization((static_cast< Graphics::SystemNode * >(GetAspectVisualization()->GetVisualization()->GetGraphics()))->GetCommodityLayer());
 		}
 	}
 	else if(Content->GetTypeIdentifier() == "planet")

@@ -20,19 +20,25 @@
 #include "system_node.h"
 
 Graphics::SystemNode::SystemNode(void) :
+	_CommodityLayer(new Graphics::Node()),
 	_PlanetLayer(new Graphics::Node())
 {
+	_CommodityLayer->SetClearDepthBuffer(true);
 	_PlanetLayer->SetClearDepthBuffer(true);
 	AddNode(_PlanetLayer);
+	AddNode(_CommodityLayer);
 }
 
 Graphics::SystemNode::~SystemNode(void)
 {
+	assert(_CommodityLayer == nullptr);
 	assert(_PlanetLayer == nullptr);
 }
 
 void Graphics::SystemNode::Destroy(void)
 {
+	assert(_CommodityLayer != nullptr);
+	_CommodityLayer = nullptr;
 	assert(_PlanetLayer != nullptr);
 	_PlanetLayer = nullptr;
 	Graphics::Node::Destroy();

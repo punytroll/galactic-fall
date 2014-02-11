@@ -31,12 +31,19 @@ namespace Graphics
 		SystemNode(void);
 		virtual ~SystemNode(void);
 		// getters
+		Graphics::Node * GetCommodityLayer(void);
 		Graphics::Node * GetPlanetLayer(void);
 		// modifiers
 		virtual void Destroy(void) override;
 	private:
+		Graphics::Node * _CommodityLayer;
 		Graphics::Node * _PlanetLayer;
 	};
+	
+	inline Graphics::Node * SystemNode::GetCommodityLayer(void)
+	{
+		return _CommodityLayer;
+	}
 	
 	inline Graphics::Node * SystemNode::GetPlanetLayer(void)
 	{
