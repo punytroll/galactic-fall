@@ -21,6 +21,7 @@
 
 Graphics::SystemNode::SystemNode(void) :
 	_CommodityLayer(new Graphics::Node()),
+	_ParticleSystemLayer(new Graphics::Node()),
 	_PlanetLayer(new Graphics::Node()),
 	_ShipLayer(new Graphics::Node()),
 	_ShotLayer(new Graphics::Node())
@@ -33,11 +34,13 @@ Graphics::SystemNode::SystemNode(void) :
 	AddNode(_CommodityLayer);
 	AddNode(_ShipLayer);
 	AddNode(_ShotLayer);
+	AddNode(_ParticleSystemLayer);
 }
 
 Graphics::SystemNode::~SystemNode(void)
 {
 	assert(_CommodityLayer == nullptr);
+	assert(_ParticleSystemLayer == nullptr);
 	assert(_PlanetLayer == nullptr);
 	assert(_ShipLayer == nullptr);
 	assert(_ShotLayer == nullptr);
@@ -47,6 +50,8 @@ void Graphics::SystemNode::Destroy(void)
 {
 	assert(_CommodityLayer != nullptr);
 	_CommodityLayer = nullptr;
+	assert(_ParticleSystemLayer != nullptr);
+	_ParticleSystemLayer = nullptr;
 	assert(_PlanetLayer != nullptr);
 	_PlanetLayer = nullptr;
 	assert(_ShipLayer != nullptr);
