@@ -90,7 +90,6 @@ extern Graphics::Node * g_ParticleSystemsLayer;
 extern std::vector< Graphics::View * > g_PrerenderedViews;
 extern TimeoutNotificationManager * g_RealTimeTimeoutNotifications;
 extern ClassManager< ShipClass > * g_ShipClassManager;
-extern Graphics::Node * g_ShipLayer;
 extern Graphics::Node * g_ShotLayer;
 extern ClassManager< SlotClass > * g_SlotClassManager;
 extern SystemStatistics * g_SystemStatistics;
