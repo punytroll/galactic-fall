@@ -87,6 +87,8 @@ extern ClassManager< GeneratorClass > * g_GeneratorClassManager;
 extern Graphics::Engine * g_GraphicsEngine;
 extern MessageDispatcher * g_MessageDispatcher;
 extern ObjectFactory * g_ObjectFactory;
+extern Graphics::Node * g_ParticleSystemsLayer;
+extern Graphics::Node * g_PlanetLayer;
 extern std::vector< Graphics::View * > g_PrerenderedViews;
 extern TimeoutNotificationManager * g_RealTimeTimeoutNotifications;
 extern ClassManager< ShipClass > * g_ShipClassManager;

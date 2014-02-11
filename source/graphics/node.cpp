@@ -20,6 +20,7 @@
 #include <assert.h>
 
 #include <algorithm>
+#include <deque>
 
 #include <algebra/matrix4f.h>
 
@@ -58,17 +59,32 @@ Graphics::Node::~Node(void)
 void Graphics::Node::AddNode(Graphics::Node * Content)
 {
 	assert(Content->_Container == nullptr);
-	assert(Content->_Scene == nullptr);
 	if(_Scene != nullptr)
 	{
 		if(Content->_Content.empty() == true)
 		{
+			assert(Content->_Scene == nullptr);
 			Content->_Scene = _Scene;
 		}
 		else
 		{
-			assert(false);
+			std::deque< Graphics::Node * > Todo;
+			
+			Todo.push_back(Content);
+			while(Todo.empty() == false)
+			{
+				auto Node(Todo.back());
+				
+				Todo.pop_back();
+				Todo.insert(Todo.end(), Node->_Content.begin(), Node->_Content.end());
+				assert(Content->_Scene == nullptr);
+				Node->_Scene = _Scene;
+			}
 		}
+	}
+	else
+	{
+		assert(Content->_Scene == nullptr);
 	}
 	Content->_Container = this;
 	_Content.push_back(Content);
