@@ -58,9 +58,18 @@ Graphics::Node::~Node(void)
 void Graphics::Node::AddNode(Graphics::Node * Content)
 {
 	assert(Content->_Container == nullptr);
-	assert(_Scene != nullptr);
 	assert(Content->_Scene == nullptr);
-	Content->_Scene = _Scene;
+	if(_Scene != nullptr)
+	{
+		if(Content->_Content.empty() == true)
+		{
+			Content->_Scene = _Scene;
+		}
+		else
+		{
+			assert(false);
+		}
+	}
 	Content->_Container = this;
 	_Content.push_back(Content);
 }
