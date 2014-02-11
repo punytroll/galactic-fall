@@ -213,14 +213,11 @@ void VisualizeShot(Shot * Shot, Graphics::Node * Container)
 
 void VisualizeSystem(System * System, Graphics::Node * Container)
 {
-	assert(g_ParticleSystemsLayer == nullptr);
 	assert(System != nullptr);
 	assert(System->GetAspectVisualization() != nullptr);
 	
 	auto Graphics(new Graphics::SystemNode());
 	
-	g_ParticleSystemsLayer = new Graphics::Node();
-	Graphics->AddNode(g_ParticleSystemsLayer);
 	g_ObjectVisualizations[Graphics] = System->GetAspectVisualization();
 	// set as the object's visualization
 	System->GetAspectVisualization()->AddGraphics(Graphics);

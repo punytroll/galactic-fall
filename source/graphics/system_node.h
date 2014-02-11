@@ -32,6 +32,7 @@ namespace Graphics
 		virtual ~SystemNode(void);
 		// getters
 		Graphics::Node * GetCommodityLayer(void);
+		Graphics::Node * GetParticleSystemLayer(void);
 		Graphics::Node * GetPlanetLayer(void);
 		Graphics::Node * GetShipLayer(void);
 		Graphics::Node * GetShotLayer(void);
@@ -39,6 +40,7 @@ namespace Graphics
 		virtual void Destroy(void) override;
 	private:
 		Graphics::Node * _CommodityLayer;
+		Graphics::Node * _ParticleSystemLayer;
 		Graphics::Node * _PlanetLayer;
 		Graphics::Node * _ShipLayer;
 		Graphics::Node * _ShotLayer;
@@ -47,6 +49,11 @@ namespace Graphics
 	inline Graphics::Node * SystemNode::GetCommodityLayer(void)
 	{
 		return _CommodityLayer;
+	}
+	
+	inline Graphics::Node * SystemNode::GetParticleSystemLayer(void)
+	{
+		return _ParticleSystemLayer;
 	}
 	
 	inline Graphics::Node * SystemNode::GetPlanetLayer(void)

@@ -68,6 +68,7 @@
 #include "graphics/particle_system.h"
 #include "graphics/perspective_projection.h"
 #include "graphics/scene.h"
+#include "graphics/system_node.h"
 #include "graphics/texture.h"
 #include "graphics/texture_manager.h"
 #include "graphics/view.h"
@@ -143,7 +144,6 @@ Graphics::PerspectiveProjection * g_MainProjection(0);
 Graphics::View * g_MainView(0);
 Graphics::Orthogonal2DProjection * g_UIProjection(0);
 Graphics::View * g_UIView(0);
-Graphics::Node * g_ParticleSystemsLayer(0);
 std::vector< Graphics::View * > g_PrerenderedViews;
 MessageDispatcher * g_MessageDispatcher(0);
 ObjectFactory * g_ObjectFactory(0);
@@ -625,7 +625,10 @@ void CalculateMovements(System * System, float Seconds)
 					
 					NewJumpParticleSystem->SetPosition(OldShipPosition);
 					NewJumpParticleSystem->SetVelocity(Vector3f(0.0f, 0.0f, 0.0f));
-					VisualizeParticleSystem(NewJumpParticleSystem, g_ParticleSystemsLayer);
+					assert(System->GetAspectVisualization() != nullptr);
+					assert(System->GetAspectVisualization()->GetVisualization() != nullptr);
+					assert(System->GetAspectVisualization()->GetVisualization()->GetGraphics() != nullptr);
+					VisualizeParticleSystem(NewJumpParticleSystem, (static_cast< Graphics::SystemNode * >(System->GetAspectVisualization()->GetVisualization()->GetGraphics()))->GetParticleSystemLayer());
 					DeleteObject(TheShip);
 					TheShip = nullptr;
 				}
@@ -689,7 +692,10 @@ void CalculateMovements(System * System, float Seconds)
 						
 						NewHitParticleSystem->SetPosition(TheShot->GetAspectPosition()->GetPosition());
 						NewHitParticleSystem->SetVelocity((TheShot->GetVelocity() * 0.2f) + (TheShip->GetVelocity() * 0.8f));
-						VisualizeParticleSystem(NewHitParticleSystem, g_ParticleSystemsLayer);
+						assert(System->GetAspectVisualization() != nullptr);
+						assert(System->GetAspectVisualization()->GetVisualization() != nullptr);
+						assert(System->GetAspectVisualization()->GetVisualization()->GetGraphics() != nullptr);
+						VisualizeParticleSystem(NewHitParticleSystem, (static_cast< Graphics::SystemNode * >(System->GetAspectVisualization()->GetVisualization()->GetGraphics()))->GetParticleSystemLayer());
 						TheShip->SetHull(TheShip->GetHull() - TheShot->GetDamage());
 						assert(TheShip->GetAspectObjectContainer() != nullptr);
 						
@@ -711,7 +717,10 @@ void CalculateMovements(System * System, float Seconds)
 							
 							NewExplosionParticleSystem->SetPosition(TheShip->GetAspectPosition()->GetPosition());
 							NewExplosionParticleSystem->SetVelocity(TheShip->GetVelocity() * 0.5f);
-							VisualizeParticleSystem(NewExplosionParticleSystem, g_ParticleSystemsLayer);
+							assert(System->GetAspectVisualization() != nullptr);
+							assert(System->GetAspectVisualization()->GetVisualization() != nullptr);
+							assert(System->GetAspectVisualization()->GetVisualization()->GetGraphics() != nullptr);
+							VisualizeParticleSystem(NewExplosionParticleSystem, (static_cast< Graphics::SystemNode * >(System->GetAspectVisualization()->GetVisualization()->GetGraphics()))->GetParticleSystemLayer());
 							// if the ship has content, drop all of it
 							if(TheShip->GetAspectObjectContainer() != nullptr)
 							{
@@ -781,7 +790,10 @@ void CalculateMovements(System * System, float Seconds)
 					
 					NewHitParticleSystem->SetPosition(TheShot->GetAspectPosition()->GetPosition());
 					NewHitParticleSystem->SetVelocity((TheShot->GetVelocity() * 0.4f) + (TheCommodity->GetVelocity() * 0.6f));
-					VisualizeParticleSystem(NewHitParticleSystem, g_ParticleSystemsLayer);
+					assert(System->GetAspectVisualization() != nullptr);
+					assert(System->GetAspectVisualization()->GetVisualization() != nullptr);
+					assert(System->GetAspectVisualization()->GetVisualization()->GetGraphics() != nullptr);
+					VisualizeParticleSystem(NewHitParticleSystem, (static_cast< Graphics::SystemNode * >(System->GetAspectVisualization()->GetVisualization()->GetGraphics()))->GetParticleSystemLayer());
 					TheCommodity->SetHull(TheCommodity->GetHull() - TheShot->GetDamage());
 					if(TheCommodity->GetHull() <= 0.0f)
 					{
@@ -789,7 +801,10 @@ void CalculateMovements(System * System, float Seconds)
 						
 						NewHitParticleSystem->SetPosition(TheCommodity->GetAspectPosition()->GetPosition());
 						NewHitParticleSystem->SetVelocity(TheCommodity->GetVelocity() * 0.5f);
-						VisualizeParticleSystem(NewHitParticleSystem, g_ParticleSystemsLayer);
+						assert(System->GetAspectVisualization() != nullptr);
+						assert(System->GetAspectVisualization()->GetVisualization() != nullptr);
+						assert(System->GetAspectVisualization()->GetVisualization()->GetGraphics() != nullptr);
+						VisualizeParticleSystem(NewHitParticleSystem, (static_cast< Graphics::SystemNode * >(System->GetAspectVisualization()->GetVisualization()->GetGraphics()))->GetParticleSystemLayer());
 						DeleteObject(TheCommodity);
 					}
 					DeleteObject(TheShot);
@@ -1086,10 +1101,6 @@ void DisplayMainView(void)
 
 void OnMainSceneNodeDestroy(Graphics::Node * Node)
 {
-	if(Node == g_ParticleSystemsLayer)
-	{
-		g_ParticleSystemsLayer = 0;
-	}
 	InvalidateVisualizationReference(Node);
 	delete Node;
 }
