@@ -32,11 +32,11 @@ Graphics::Node::Node(void) :
 	_BlendFunctionSourceFactor(GL_ONE),
 	_ClearColorBuffer(false),
 	_ClearDepthBuffer(false),
-	_Container(0),
+	_Container(nullptr),
 	_Normalize(false),
 	_Position(0.0f, 0.0f, 0.0f),
 	_Scale(1.0f),
-	_Scene(0),
+	_Scene(nullptr),
 	_UseBlending(false),
 	_UseClipPlane0(false),
 	_UseClipPlane1(false),
@@ -51,7 +51,7 @@ Graphics::Node::Node(void) :
 
 Graphics::Node::~Node(void)
 {
-	assert(_Container == 0);
+	assert(_Container == nullptr);
 	assert(_Content.empty() == true);
 }
 
@@ -166,9 +166,9 @@ void Graphics::Node::End(void)
 
 void Graphics::Node::AddNode(Graphics::Node * Content)
 {
-	assert(Content->_Container == 0);
-	assert(_Scene != 0);
-	assert(Content->_Scene == 0);
+	assert(Content->_Container == nullptr);
+	assert(_Scene != nullptr);
+	assert(Content->_Scene == nullptr);
 	Content->_Scene = _Scene;
 	Content->_Container = this;
 	_Content.push_back(Content);
@@ -176,19 +176,19 @@ void Graphics::Node::AddNode(Graphics::Node * Content)
 
 void Graphics::Node::Destroy(void)
 {
-	assert(_Scene != 0);
+	assert(_Scene != nullptr);
 	while(_Content.empty() == false)
 	{
 		_Content.back()->Destroy();
 	}
-	if(_Container != 0)
+	if(_Container != nullptr)
 	{
 		_Container->_Content.erase(std::find(_Container->_Content.begin(), _Container->_Content.end(), this));
-		_Container = 0;
+		_Container = nullptr;
 	}
 	
 	Graphics::Scene * Scene(_Scene);
 	
-	_Scene = 0;
+	_Scene = nullptr;
 	Scene->OnDestroy(this);
 }
