@@ -164,6 +164,11 @@ void System::_OnRemoved(Object * Content)
 		
 		assert(ShipIterator != _Ships.end());
 		_Ships.erase(ShipIterator);
+		assert(Content->GetAspectVisualization() != nullptr);
+		if(Content->GetAspectVisualization()->GetVisualization() != nullptr)
+		{
+			Content->GetAspectVisualization()->DestroyVisualization(g_ShipLayer);
+		}
 	}
 	else if(Content->GetTypeIdentifier() == "shot")
 	{
