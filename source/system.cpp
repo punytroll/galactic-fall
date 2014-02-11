@@ -119,9 +119,11 @@ void System::_OnAdded(Object * Content)
 		
 		assert(TheShot != nullptr);
 		_Shots.push_back(TheShot);
-		if(g_ShotLayer != nullptr)
+		assert(GetAspectVisualization() != nullptr);
+		if(GetAspectVisualization()->GetVisualization() != nullptr)
 		{
-			VisualizeObject(TheShot, g_ShotLayer);
+			assert(GetAspectVisualization()->GetVisualization()->GetGraphics() != nullptr);
+			VisualizeObject(TheShot, (static_cast< Graphics::SystemNode * >(GetAspectVisualization()->GetVisualization()->GetGraphics()))->GetShotLayer());
 		}
 	}
 	else if(Content->GetTypeIdentifier() == "star")
@@ -195,7 +197,10 @@ void System::_OnRemoved(Object * Content)
 		assert(Content->GetAspectVisualization() != nullptr);
 		if(Content->GetAspectVisualization()->GetVisualization() != nullptr)
 		{
-			Content->GetAspectVisualization()->DestroyVisualization(g_ShotLayer);
+			assert(GetAspectVisualization() != nullptr);
+			assert(GetAspectVisualization()->GetVisualization() != nullptr);
+			assert(GetAspectVisualization()->GetVisualization()->GetGraphics() != nullptr);
+			Content->GetAspectVisualization()->DestroyVisualization((static_cast< Graphics::SystemNode * >(GetAspectVisualization()->GetVisualization()->GetGraphics()))->GetShotLayer());
 		}
 	}
 	else if(Content->GetTypeIdentifier() == "star")
