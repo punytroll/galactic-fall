@@ -55,6 +55,16 @@ Graphics::Node::~Node(void)
 	assert(_Content.empty() == true);
 }
 
+void Graphics::Node::AddNode(Graphics::Node * Content)
+{
+	assert(Content->_Container == nullptr);
+	assert(_Scene != nullptr);
+	assert(Content->_Scene == nullptr);
+	Content->_Scene = _Scene;
+	Content->_Container = this;
+	_Content.push_back(Content);
+}
+
 void Graphics::Node::Begin(void)
 {
 	if(_ClearDepthBuffer == true)
@@ -148,32 +158,6 @@ void Graphics::Node::Begin(void)
 	GLBlendFunc(_BlendFunctionSourceFactor, _BlendFunctionDestinationFactor);
 }
 
-void Graphics::Node::Draw(void)
-{
-	for(std::vector< Graphics::Node * >::iterator ContentIterator = _Content.begin(); ContentIterator != _Content.end(); ++ContentIterator)
-	{
-		(*ContentIterator)->Begin();
-		(*ContentIterator)->Draw();
-		(*ContentIterator)->End();
-	}
-}
-
-void Graphics::Node::End(void)
-{
-	GLPopAttrib();
-	GLPopMatrix();
-}
-
-void Graphics::Node::AddNode(Graphics::Node * Content)
-{
-	assert(Content->_Container == nullptr);
-	assert(_Scene != nullptr);
-	assert(Content->_Scene == nullptr);
-	Content->_Scene = _Scene;
-	Content->_Container = this;
-	_Content.push_back(Content);
-}
-
 void Graphics::Node::Destroy(void)
 {
 	assert(_Scene != nullptr);
@@ -191,4 +175,20 @@ void Graphics::Node::Destroy(void)
 	
 	_Scene = nullptr;
 	Scene->OnDestroy(this);
+}
+
+void Graphics::Node::Draw(void)
+{
+	for(auto Content : _Content)
+	{
+		Content->Begin();
+		Content->Draw();
+		Content->End();
+	}
+}
+
+void Graphics::Node::End(void)
+{
+	GLPopAttrib();
+	GLPopMatrix();
 }
