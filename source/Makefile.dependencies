@@ -540,6 +540,7 @@ main_cpp = \
 	$(graphics_particle_system_h) \
 	$(graphics_perspective_projection_h) \
 	$(graphics_scene_h) \
+	$(graphics_system_node_h) \
 	$(graphics_texture_h) \
 	$(graphics_texture_manager_h) \
 	$(graphics_view_h) \

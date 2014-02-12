@@ -260,7 +260,7 @@ void UI::ObjectInformationDialog::_Refresh(void)
 		if(_Object->GetAspectVisualization() != 0)
 		{
 			Top += _AddSeparator(Top, 0.0f, "Visualization");
-			Top += _AddStringProperty(Top, 20.0f, "Is valid", ((_Object->GetAspectVisualization()->GetVisualization() != 0) ? ("true") : ("false")));
+			Top += _AddStringProperty(Top, 20.0f, "Number of visualizations", to_string_cast(_Object->GetAspectVisualization()->GetVisualizations().size()));
 		}
 	}
 	_PropertiesScrollBox->GetContent()->SetSize(Vector2f(_PropertiesScrollBox->GetView()->GetSize()[0], std::max(Top, _PropertiesScrollBox->GetView()->GetSize()[1])));

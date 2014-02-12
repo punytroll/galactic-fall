@@ -26,9 +26,9 @@
 #include "visualizations.h"
 
 Slot::Slot(const SlotClass * SlotClass, const std::string & Identifier) :
-	m_SlotClass(SlotClass),
-	m_Identifier(Identifier),
-	m_MountedObject(0),
+	_SlotClass(SlotClass),
+	_Identifier(Identifier),
+	_MountedObject(0),
 	_SelfReference(*this),
 	_VisualizeAccessory(false)
 {
@@ -43,36 +43,35 @@ void Slot::Mount(Reference< Object > TheObject)
 {
 	assert(TheObject.IsValid() == true);
 	assert(TheObject->GetAspectAccessory() != 0);
-	assert(GetSlotClass()->AcceptsSlotClassIdentifier(TheObject->GetAspectAccessory()->GetSlotClassIdentifier()) == true);
-	m_MountedObject = TheObject;
+	assert(_SlotClass->AcceptsSlotClassIdentifier(TheObject->GetAspectAccessory()->GetSlotClassIdentifier()) == true);
+	_MountedObject = TheObject;
 	TheObject->GetAspectAccessory()->SetSlot(this);
 	if(_VisualizeAccessory == true)
 	{
-		assert(GetMountedObject()->GetAspectVisualization() != 0);
-		assert(GetMountedObject()->GetAspectVisualization()->GetVisualization() == 0);
-		assert(GetMountedObject()->GetContainer() != 0);
-		assert(GetMountedObject()->GetContainer()->GetAspectVisualization() != 0);
+		assert(_MountedObject->GetAspectVisualization() != 0);
+		assert(_MountedObject->GetContainer() != 0);
+		assert(_MountedObject->GetContainer()->GetAspectVisualization() != 0);
 		// only visualize if the parent object is visualized
-		if(GetMountedObject()->GetContainer()->GetAspectVisualization()->GetVisualization() != 0)
+		for(auto Visualization : _MountedObject->GetContainer()->GetAspectVisualization()->GetVisualizations())
 		{
-			VisualizeObject(GetMountedObject().Get(), GetMountedObject()->GetContainer()->GetAspectVisualization()->GetVisualization()->GetGraphics());
+			VisualizeObject(_MountedObject.Get(), Visualization->GetGraphics());
 		}
 	}
 }
 
 void Slot::Unmount(void)
 {
-	assert(GetMountedObject().IsValid() == true);
+	assert(_MountedObject.IsValid() == true);
 	if(_VisualizeAccessory == true)
 	{
-		assert(GetMountedObject()->GetAspectVisualization() != 0);
-		assert(GetMountedObject()->GetAspectVisualization()->GetVisualization() != 0);
-		assert(GetMountedObject()->GetContainer() != 0);
-		assert(GetMountedObject()->GetContainer()->GetAspectVisualization() != 0);
-		assert(GetMountedObject()->GetContainer()->GetAspectVisualization()->GetVisualization() != 0);
-		assert(GetMountedObject()->GetContainer()->GetAspectVisualization()->GetVisualization()->GetGraphics() != 0);
-		GetMountedObject()->GetAspectVisualization()->DestroyVisualization(GetMountedObject()->GetContainer()->GetAspectVisualization()->GetVisualization()->GetGraphics());
+		assert(_MountedObject->GetAspectVisualization() != 0);
+		assert(_MountedObject->GetContainer() != 0);
+		assert(_MountedObject->GetContainer()->GetAspectVisualization() != 0);
+		for(auto Visualization : _MountedObject->GetContainer()->GetAspectVisualization()->GetVisualizations())
+		{
+			_MountedObject->GetAspectVisualization()->DestroyVisualization(Visualization->GetGraphics());
+		}
 	}
-	GetMountedObject()->GetAspectAccessory()->SetSlot(0);
-	GetMountedObject().Clear();
+	_MountedObject->GetAspectAccessory()->SetSlot(0);
+	_MountedObject.Clear();
 }

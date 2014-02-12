@@ -120,6 +120,17 @@ void VisualizeCommodity(Commodity * Commodity, Graphics::Node * Container)
 	Container->AddNode(Graphics);
 }
 
+void VisualizeParticleSystem(Graphics::ParticleSystem * ParticleSystem, System * System)
+{
+	assert(ParticleSystem != nullptr);
+	assert(System != nullptr);
+	assert(System->GetAspectVisualization() != nullptr);
+	for(auto Visualization : System->GetAspectVisualization()->GetVisualizations())
+	{
+		VisualizeParticleSystem(ParticleSystem, (static_cast< Graphics::SystemNode * >(Visualization->GetGraphics()))->GetParticleSystemLayer());
+	}
+}
+
 void VisualizeParticleSystem(Graphics::ParticleSystem * ParticleSystem, Graphics::Node * Container)
 {
 	assert(ParticleSystem != 0);

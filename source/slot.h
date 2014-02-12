@@ -54,44 +54,44 @@ public:
 	void Mount(Reference< Object > TheObject);
 	void Unmount(void);
 private:
-	const SlotClass * m_SlotClass;
-	std::string m_Identifier;
-	std::string m_Name;
-	Reference< Object > m_MountedObject;
-	Quaternion m_Orientation;
-	Vector3f m_Position;
+	const SlotClass * _SlotClass;
+	std::string _Identifier;
+	std::string _Name;
+	Reference< Object > _MountedObject;
+	Quaternion _Orientation;
+	Vector3f _Position;
 	Reference< Slot > _SelfReference;
 	bool _VisualizeAccessory;
 };
 
 inline const std::string & Slot::GetIdentifier(void) const
 {
-	return m_Identifier;
+	return _Identifier;
 }
 
 inline Reference< Object > & Slot::GetMountedObject(void)
 {
-	return m_MountedObject;
+	return _MountedObject;
 }
 
 inline const Reference< Object > & Slot::GetMountedObject(void) const
 {
-	return m_MountedObject;
+	return _MountedObject;
 }
 
 inline const std::string & Slot::GetName(void) const
 {
-	return m_Name;
+	return _Name;
 }
 
 inline const Quaternion & Slot::GetOrientation(void) const
 {
-	return m_Orientation;
+	return _Orientation;
 }
 
 inline const Vector3f & Slot::GetPosition(void) const
 {
-	return m_Position;
+	return _Position;
 }
 
 inline Reference< Slot > Slot::GetReference(void)
@@ -101,7 +101,7 @@ inline Reference< Slot > Slot::GetReference(void)
 
 inline const SlotClass * Slot::GetSlotClass(void) const
 {
-	return m_SlotClass;
+	return _SlotClass;
 }
 
 inline bool Slot::GetVisualizeAccessory(void) const
@@ -111,17 +111,17 @@ inline bool Slot::GetVisualizeAccessory(void) const
 
 inline void Slot::SetName(const std::string & Name)
 {
-	m_Name = Name;
+	_Name = Name;
 }
 
 inline void Slot::SetOrientation(const Quaternion & Orientation)
 {
-	m_Orientation = Orientation;
+	_Orientation = Orientation;
 }
 
 inline void Slot::SetPosition(const Vector3f & Position)
 {
-	m_Position = Position;
+	_Position = Position;
 }
 
 inline void Slot::SetVisualizeAccessory(bool VisualizeAccessory)
