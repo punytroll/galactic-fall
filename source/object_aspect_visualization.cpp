@@ -72,8 +72,7 @@ void ObjectAspectVisualization::DestroyVisualization(Graphics::Node * Container)
 {
 	assert((Container != nullptr) && (_Visualization != nullptr) && (_Visualization->GetGraphics() != nullptr) && (_Visualization->GetGraphics()->GetContainer() == Container));
 	_Visualization->GetGraphics()->Destroy();
-	delete _Visualization;
-	_Visualization = nullptr;
+	assert(_Visualization == nullptr);
 }
 
 void ObjectAspectVisualization::RemoveGraphics(Graphics::Node * Graphics)
