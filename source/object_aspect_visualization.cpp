@@ -46,19 +46,6 @@ void ObjectAspectVisualization::AddGraphics(Graphics::Node * Graphics)
 	_Visualizations.push_back(NewVisualization);
 }
 
-Visualization * ObjectAspectVisualization::GetVisualization(void)
-{
-	if(_Visualizations.empty() == true)
-	{
-		return nullptr;
-	}
-	else
-	{
-		assert(_Visualizations.front()->GetGraphics() != nullptr);
-		return _Visualizations.front();
-	}
-}
-
 void ObjectAspectVisualization::SetVisualizationPrototype(VisualizationPrototype * VisualizationPrototype)
 {
 	delete _VisualizationPrototype;

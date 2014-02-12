@@ -37,8 +37,8 @@ public:
 	ObjectAspectVisualization(void);
 	~ObjectAspectVisualization(void);
 	// getters
-	Visualization * GetVisualization(void);
 	VisualizationPrototype * GetVisualizationPrototype(void);
+	const std::list< Visualization * > & GetVisualizations(void) const;
 	// setters
 	/**
 	 * @note Passes memory management reponsibility of the VisualizationPrototype to this ObjectAspectVisualization.
@@ -57,6 +57,11 @@ private:
 inline VisualizationPrototype * ObjectAspectVisualization::GetVisualizationPrototype(void)
 {
 	return _VisualizationPrototype;
+}
+
+inline const std::list< Visualization * > & ObjectAspectVisualization::GetVisualizations(void) const
+{
+	return _Visualizations;
 }
 
 #endif

@@ -80,10 +80,10 @@ void System::_OnAdded(Object * Content)
 		assert(TheCommodity != nullptr);
 		_Commodities.push_back(TheCommodity);
 		assert(GetAspectVisualization() != nullptr);
-		if(GetAspectVisualization()->GetVisualization() != nullptr)
+		for(auto Visualization : GetAspectVisualization()->GetVisualizations())
 		{
-			assert(GetAspectVisualization()->GetVisualization()->GetGraphics() != nullptr);
-			VisualizeObject(TheCommodity, (static_cast< Graphics::SystemNode * >(GetAspectVisualization()->GetVisualization()->GetGraphics()))->GetCommodityLayer());
+			assert(Visualization->GetGraphics() != nullptr);
+			VisualizeObject(TheCommodity, (static_cast< Graphics::SystemNode * >(Visualization->GetGraphics()))->GetCommodityLayer());
 		}
 	}
 	else if(Content->GetTypeIdentifier() == "planet")
@@ -107,10 +107,10 @@ void System::_OnAdded(Object * Content)
 		assert(TheShip != nullptr);
 		_Ships.push_back(TheShip);
 		assert(GetAspectVisualization() != nullptr);
-		if(GetAspectVisualization()->GetVisualization() != nullptr)
+		for(auto Visualization : GetAspectVisualization()->GetVisualizations())
 		{
-			assert(GetAspectVisualization()->GetVisualization()->GetGraphics() != nullptr);
-			VisualizeObject(TheShip, (static_cast< Graphics::SystemNode * >(GetAspectVisualization()->GetVisualization()->GetGraphics()))->GetShipLayer());
+			assert(Visualization->GetGraphics() != nullptr);
+			VisualizeObject(TheShip, (static_cast< Graphics::SystemNode * >(Visualization->GetGraphics()))->GetShipLayer());
 		}
 	}
 	else if(Content->GetTypeIdentifier() == "shot")
@@ -120,10 +120,10 @@ void System::_OnAdded(Object * Content)
 		assert(TheShot != nullptr);
 		_Shots.push_back(TheShot);
 		assert(GetAspectVisualization() != nullptr);
-		if(GetAspectVisualization()->GetVisualization() != nullptr)
+		for(auto Visualization : GetAspectVisualization()->GetVisualizations())
 		{
-			assert(GetAspectVisualization()->GetVisualization()->GetGraphics() != nullptr);
-			VisualizeObject(TheShot, (static_cast< Graphics::SystemNode * >(GetAspectVisualization()->GetVisualization()->GetGraphics()))->GetShotLayer());
+			assert(Visualization->GetGraphics() != nullptr);
+			VisualizeObject(TheShot, (static_cast< Graphics::SystemNode * >(Visualization->GetGraphics()))->GetShotLayer());
 		}
 	}
 	else if(Content->GetTypeIdentifier() == "star")
@@ -150,12 +150,10 @@ void System::_OnRemoved(Object * Content)
 		assert(CommodityIterator != _Commodities.end());
 		_Commodities.erase(CommodityIterator);
 		assert(Content->GetAspectVisualization() != nullptr);
-		if(Content->GetAspectVisualization()->GetVisualization() != nullptr)
+		assert(GetAspectVisualization() != nullptr);
+		for(auto Visualization : GetAspectVisualization()->GetVisualizations())
 		{
-			assert(GetAspectVisualization() != nullptr);
-			assert(GetAspectVisualization()->GetVisualization() != nullptr);
-			assert(GetAspectVisualization()->GetVisualization()->GetGraphics() != nullptr);
-			Content->GetAspectVisualization()->DestroyVisualization((static_cast< Graphics::SystemNode * >(GetAspectVisualization()->GetVisualization()->GetGraphics()))->GetCommodityLayer());
+			Content->GetAspectVisualization()->DestroyVisualization((static_cast< Graphics::SystemNode * >(Visualization->GetGraphics()))->GetCommodityLayer());
 		}
 	}
 	else if(Content->GetTypeIdentifier() == "planet")
@@ -165,12 +163,10 @@ void System::_OnRemoved(Object * Content)
 		assert(PlanetIterator != _Planets.end());
 		_Planets.erase(PlanetIterator);
 		assert(Content->GetAspectVisualization() != nullptr);
-		if(Content->GetAspectVisualization()->GetVisualization() != nullptr)
+		assert(GetAspectVisualization() != nullptr);
+		for(auto Visualization : GetAspectVisualization()->GetVisualizations())
 		{
-			assert(GetAspectVisualization() != nullptr);
-			assert(GetAspectVisualization()->GetVisualization() != nullptr);
-			assert(GetAspectVisualization()->GetVisualization()->GetGraphics() != nullptr);
-			Content->GetAspectVisualization()->DestroyVisualization((static_cast< Graphics::SystemNode * >(GetAspectVisualization()->GetVisualization()->GetGraphics()))->GetPlanetLayer());
+			Content->GetAspectVisualization()->DestroyVisualization((static_cast< Graphics::SystemNode * >(Visualization->GetGraphics()))->GetPlanetLayer());
 		}
 	}
 	else if(Content->GetTypeIdentifier() == "ship")
@@ -180,12 +176,10 @@ void System::_OnRemoved(Object * Content)
 		assert(ShipIterator != _Ships.end());
 		_Ships.erase(ShipIterator);
 		assert(Content->GetAspectVisualization() != nullptr);
-		if(Content->GetAspectVisualization()->GetVisualization() != nullptr)
+		assert(GetAspectVisualization() != nullptr);
+		for(auto Visualization : GetAspectVisualization()->GetVisualizations())
 		{
-			assert(GetAspectVisualization() != nullptr);
-			assert(GetAspectVisualization()->GetVisualization() != nullptr);
-			assert(GetAspectVisualization()->GetVisualization()->GetGraphics() != nullptr);
-			Content->GetAspectVisualization()->DestroyVisualization((static_cast< Graphics::SystemNode * >(GetAspectVisualization()->GetVisualization()->GetGraphics()))->GetShipLayer());
+			Content->GetAspectVisualization()->DestroyVisualization((static_cast< Graphics::SystemNode * >(Visualization->GetGraphics()))->GetShipLayer());
 		}
 	}
 	else if(Content->GetTypeIdentifier() == "shot")
@@ -195,12 +189,10 @@ void System::_OnRemoved(Object * Content)
 		assert(ShotIterator != _Shots.end());
 		_Shots.erase(ShotIterator);
 		assert(Content->GetAspectVisualization() != nullptr);
-		if(Content->GetAspectVisualization()->GetVisualization() != nullptr)
+		assert(GetAspectVisualization() != nullptr);
+		for(auto Visualization : GetAspectVisualization()->GetVisualizations())
 		{
-			assert(GetAspectVisualization() != nullptr);
-			assert(GetAspectVisualization()->GetVisualization() != nullptr);
-			assert(GetAspectVisualization()->GetVisualization()->GetGraphics() != nullptr);
-			Content->GetAspectVisualization()->DestroyVisualization((static_cast< Graphics::SystemNode * >(GetAspectVisualization()->GetVisualization()->GetGraphics()))->GetShotLayer());
+			Content->GetAspectVisualization()->DestroyVisualization((static_cast< Graphics::SystemNode * >(Visualization->GetGraphics()))->GetShotLayer());
 		}
 	}
 	else if(Content->GetTypeIdentifier() == "star")

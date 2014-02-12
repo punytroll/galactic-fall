@@ -20,13 +20,9 @@
 #ifndef VISUALIZATIONS_H
 #define VISUALIZATIONS_H
 
-class Commodity;
 class Object;
-class Planet;
-class Ship;
-class Shot;
+class System;
 class VisualizationPrototype;
-class Weapon;
 
 namespace Graphics
 {
@@ -36,6 +32,7 @@ namespace Graphics
 
 void InvalidateVisualizationReference(Graphics::Node * Node);
 void VisualizeObject(Object * Object, Graphics::Node * Container);
+void VisualizeParticleSystem(Graphics::ParticleSystem * ParticleSystem, System * System);
 void VisualizeParticleSystem(Graphics::ParticleSystem * ParticleSystem, Graphics::Node * Container);
 Graphics::Node * VisualizePrototype(const VisualizationPrototype * VisualizationPrototype);
 
