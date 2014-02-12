@@ -25,14 +25,13 @@
 #include "visualization_prototype.h"
 
 ObjectAspectVisualization::ObjectAspectVisualization(void) :
-	_Visualization(nullptr),
 	_VisualizationPrototype(nullptr)
 {
 }
 
 ObjectAspectVisualization::~ObjectAspectVisualization(void)
 {
-	assert(_Visualization == nullptr);
+	assert(_Visualizations.empty() == true);
 	delete _VisualizationPrototype;
 	_VisualizationPrototype = nullptr;
 }
@@ -40,16 +39,24 @@ ObjectAspectVisualization::~ObjectAspectVisualization(void)
 void ObjectAspectVisualization::AddGraphics(Graphics::Node * Graphics)
 {
 	assert(Graphics != nullptr);
-	assert(_Visualization == nullptr);
-	_Visualization = new Visualization();
-	_Visualization->SetGraphics(Graphics);
+	
+	auto NewVisualization(new Visualization());
+	
+	NewVisualization->SetGraphics(Graphics);
+	_Visualizations.push_back(NewVisualization);
 }
 
 Visualization * ObjectAspectVisualization::GetVisualization(void)
 {
-	assert((_Visualization == nullptr) || (_Visualization->GetGraphics() != nullptr));
-	
-	return _Visualization;
+	if(_Visualizations.empty() == true)
+	{
+		return nullptr;
+	}
+	else
+	{
+		assert(_Visualizations.front()->GetGraphics() != nullptr);
+		return _Visualizations.front();
+	}
 }
 
 void ObjectAspectVisualization::SetVisualizationPrototype(VisualizationPrototype * VisualizationPrototype)
@@ -60,25 +67,57 @@ void ObjectAspectVisualization::SetVisualizationPrototype(VisualizationPrototype
 
 void ObjectAspectVisualization::Destroy(void)
 {
-	if(_Visualization != nullptr)
+	while(_Visualizations.empty() == false)
 	{
-		assert(_Visualization->GetGraphics() != nullptr);
-		_Visualization->GetGraphics()->Destroy();
-		assert(_Visualization == nullptr);
+		auto OldCount(_Visualizations.size());
+		auto Visualization(_Visualizations.front());
+		
+		assert(Visualization->GetGraphics() != nullptr);
+		Visualization->GetGraphics()->Destroy();
+		assert(_Visualizations.size() + 1 == OldCount);
 	}
 }
 
 void ObjectAspectVisualization::DestroyVisualization(Graphics::Node * Container)
 {
-	assert((Container != nullptr) && (_Visualization != nullptr) && (_Visualization->GetGraphics() != nullptr) && (_Visualization->GetGraphics()->GetContainer() == Container));
-	_Visualization->GetGraphics()->Destroy();
-	assert(_Visualization == nullptr);
+	assert(Container != nullptr);
+	
+	auto Found(false);
+	
+	for(auto VisualizationIterator = _Visualizations.begin(); VisualizationIterator != _Visualizations.end(); ++VisualizationIterator)
+	{
+		assert((*VisualizationIterator)->GetGraphics() != nullptr);
+		if((*VisualizationIterator)->GetGraphics()->GetContainer() == Container)
+		{
+			Found = true;
+			
+			auto OldCount(_Visualizations.size());
+			
+			(*VisualizationIterator)->GetGraphics()->Destroy();
+			assert(_Visualizations.size() + 1 == OldCount);
+			
+			break;
+		}
+	}
+	assert(Found == true);
 }
 
 void ObjectAspectVisualization::RemoveGraphics(Graphics::Node * Graphics)
 {
-	assert((Graphics != nullptr) && (_Visualization != nullptr) && (_Visualization->GetGraphics() == Graphics));
-	_Visualization->SetGraphics(nullptr);
-	delete _Visualization;
-	_Visualization = nullptr;
+	assert(Graphics != nullptr);
+	
+	auto OldCount(_Visualizations.size());
+	
+	for(auto VisualizationIterator = _Visualizations.begin(); VisualizationIterator != _Visualizations.end(); ++VisualizationIterator)
+	{
+		if((*VisualizationIterator)->GetGraphics() == Graphics)
+		{
+			(*VisualizationIterator)->SetGraphics(nullptr);
+			delete *VisualizationIterator;
+			_Visualizations.erase(VisualizationIterator);
+			
+			break;
+		}
+	}
+	assert(_Visualizations.size() + 1 == OldCount);
 }

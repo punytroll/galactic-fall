@@ -20,6 +20,8 @@
 #ifndef OBJECT_ASPECT_VISUALIZATION_H
 #define OBJECT_ASPECT_VISUALIZATION_H
 
+#include <list>
+
 class Visualization;
 class VisualizationPrototype;
 
@@ -48,7 +50,7 @@ public:
 	void DestroyVisualization(Graphics::Node * Container);
 	void RemoveGraphics(Graphics::Node * Graphics);
 private:
-	Visualization * _Visualization;
+	std::list< Visualization * > _Visualizations;
 	VisualizationPrototype * _VisualizationPrototype;
 };
 
