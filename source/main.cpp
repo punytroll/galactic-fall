@@ -3194,13 +3194,13 @@ void CreateWindow(void)
 	int RequestedContextAttributes[] =
 	{
 		GLX_CONTEXT_MAJOR_VERSION_ARB, 3,
-		GLX_CONTEXT_MINOR_VERSION_ARB, 0,
+		GLX_CONTEXT_MINOR_VERSION_ARB, 1,
 // 		GLX_CONTEXT_FLAGS_ARB, GLX_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB,
 		None
 	};
 	
 	ON_DEBUG(std::cout << "Creating GLX context." << std::endl);
-	ON_DEBUG(std::cout << "  Asking for GLX context with version 3.0." << std::endl);
+	ON_DEBUG(std::cout << "  Asking for GLX context with version " << RequestedContextAttributes[1] << '.' << RequestedContextAttributes[3] << "." << std::endl);
 	g_GLXContext = CreateContextWithAttributes(g_Display, Configurations[0], 0, true, RequestedContextAttributes);
 	if(glXIsDirect(g_Display, g_GLXContext) == false)
 	{
