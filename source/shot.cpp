@@ -23,16 +23,15 @@
 #include "shot.h"
 
 Shot::Shot(void) :
-	m_Shooter(0),
-	m_TimeOfDeath(0.0),
-	m_Velocity(true),
-	m_Damage(0.0)
+	_TimeOfDeath(0.0),
+	_Velocity(true),
+	_Damage(0.0)
 {
 	// initialize object aspects
 	AddAspectPhysical();
 	AddAspectPosition();
 	AddAspectUpdate();
-	GetAspectUpdate()->SetCallback(Callback(this, &Shot::Update));
+	GetAspectUpdate()->SetCallback(Callback(this, &Shot::_Update));
 	AddAspectVisualization();
 }
 
@@ -40,13 +39,17 @@ Shot::~Shot(void)
 {
 }
 
-bool Shot::Update(float Seconds)
+bool Shot::_Update(float Seconds)
 {
-	if(m_TimeOfDeath < GameTime::Get())
+	if(_TimeOfDeath >= GameTime::Get())
+	{
+		assert(GetAspectPosition() != nullptr);
+		GetAspectPosition()->ModifyPosition(_Velocity * Seconds);
+		
+		return true;
+	}
+	else
 	{
 		return false;
 	}
-	GetAspectPosition()->ModifyPosition(m_Velocity * Seconds);
-	
-	return true;
 }
