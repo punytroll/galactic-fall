@@ -931,10 +931,10 @@ void UpdateScanner(UI::Widget * Scanner, float RealTimeSeconds, float GameTimeSe
 
 void UpdateScannerDisplay(UI::ScannerDisplay * ScannerDisplay, float RealTimeSeconds, float GameTimeSeconds)
 {
-	if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0))
+	if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != nullptr) && (g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget().IsValid() == true))
 	{
 		ScannerDisplay->SetVisible(true);
-		ScannerDisplay->SetOwner(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetReference());
+		ScannerDisplay->SetTarget(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget());
 	}
 	else
 	{
