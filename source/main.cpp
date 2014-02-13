@@ -581,15 +581,28 @@ Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSyst
 	return ParticleSystem;
 }
 
-void UpdateVisualization(Object * Object)
+void UpdateVisualizations(Galaxy * Galaxy)
 {
-	assert(Object != nullptr);
-	assert(Object->GetAspectPosition() != nullptr);
-	assert(Object->GetAspectVisualization() != nullptr);
-	for(auto Visualization : Object->GetAspectVisualization()->GetVisualizations())
+	std::deque< Object * > Todo;
+	
+	Todo.push_back(Galaxy);
+	while(Todo.empty() == false)
 	{
-		Visualization->GetGraphics()->SetOrientation(Object->GetAspectPosition()->GetOrientation());
-		Visualization->GetGraphics()->SetPosition(Object->GetAspectPosition()->GetPosition());
+		auto TheObject(Todo.back());
+		
+		Todo.pop_back();
+		if(TheObject->GetAspectObjectContainer() != nullptr)
+		{
+			Todo.insert(Todo.end(), TheObject->GetAspectObjectContainer()->GetContent().begin(), TheObject->GetAspectObjectContainer()->GetContent().end());
+		}
+		if((TheObject->GetAspectVisualization() != nullptr) && (TheObject->GetAspectPosition() != nullptr))
+		{
+			for(auto Visualization : TheObject->GetAspectVisualization()->GetVisualizations())
+			{
+				Visualization->GetGraphics()->SetOrientation(TheObject->GetAspectPosition()->GetOrientation());
+				Visualization->GetGraphics()->SetPosition(TheObject->GetAspectPosition()->GetPosition());
+			}
+		}
 	}
 }
 
@@ -631,10 +644,6 @@ void CalculateMovements(System * System, float Seconds)
 					TheShip = nullptr;
 				}
 			}
-			if(TheShip != nullptr)
-			{
-				UpdateVisualization(TheShip);
-			}
 		}
 	}
 	
@@ -649,10 +658,6 @@ void CalculateMovements(System * System, float Seconds)
 		{
 			DeleteObject(TheCommodity);
 			TheCommodity = nullptr;
-		}
-		if(TheCommodity != nullptr)
-		{
-			UpdateVisualization(TheCommodity);
 		}
 	}
 	
@@ -799,10 +804,6 @@ void CalculateMovements(System * System, float Seconds)
 					break;
 				}
 			}
-		}
-		if(TheShot != nullptr)
-		{
-			UpdateVisualization(TheShot);
 		}
 	}
 }
@@ -1482,9 +1483,13 @@ void GameFrame(void)
 	
 	assert(g_GraphicsEngine != 0);
 	g_GraphicsEngine->Update(Seconds);
-	if(CurrentSystem != 0)
+	if(g_Galaxy != nullptr)
 	{
-		CalculateMovements(CurrentSystem, Seconds);
+		if(CurrentSystem != nullptr)
+		{
+			CalculateMovements(CurrentSystem, Seconds);
+		}
+		UpdateVisualizations(g_Galaxy);
 	}
 	UpdateMainViewCamera();
 	RealTime::Invalidate();
