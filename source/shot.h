@@ -39,48 +39,48 @@ public:
 	void SetTimeOfDeath(float TimeOfDeath);
 	void SetVelocity(const Vector3f & Velocity);
 private:
-	// slot for the object aspect Update
-	bool Update(float Seconds);
-private:
-	Reference< Object > m_Shooter;
-	double m_TimeOfDeath;
-	Vector3f m_Velocity;
-	float m_Damage;
+	// modifers
+	bool _Update(float Seconds);
+	// variables
+	Reference< Object > _Shooter;
+	double _TimeOfDeath;
+	Vector3f _Velocity;
+	float _Damage;
 };
 
 inline float Shot::GetDamage(void) const
 {
-	return m_Damage;
+	return _Damage;
 }
 
 inline const Reference< Object > & Shot::GetShooter(void) const
 {
-	return m_Shooter;
+	return _Shooter;
 }
 
 inline const Vector3f & Shot::GetVelocity(void) const
 {
-	return m_Velocity;
+	return _Velocity;
 }
 
 inline void Shot::SetDamage(float Damage)
 {
-	m_Damage = Damage;
+	_Damage = Damage;
 }
 
 inline void Shot::SetShooter(Reference< Object > Shooter)
 {
-	m_Shooter = Shooter;
+	_Shooter = Shooter;
 }
 
 inline void Shot::SetTimeOfDeath(float TimeOfDeath)
 {
-	m_TimeOfDeath = TimeOfDeath;
+	_TimeOfDeath = TimeOfDeath;
 }
 
 inline void Shot::SetVelocity(const Vector3f & Velocity)
 {
-	m_Velocity = Velocity;
+	_Velocity = Velocity;
 }
 
 #endif
