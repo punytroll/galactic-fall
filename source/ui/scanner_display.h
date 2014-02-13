@@ -21,37 +21,40 @@
 #define SCANNER_DISPLAY_H
 
 #include "../referencing.h"
-#include "widget.h"
+#include "view_display.h"
 
-class Ship;
+class Object;
+
+namespace Graphics
+{
+	class Node;
+}
 
 namespace UI
 {
-	class ScannerDisplay : public UI::Widget
+	class ScannerDisplay : public UI::ViewDisplay
 	{
 	public:
+		// constructor & destructor
 		ScannerDisplay(UI::Widget * SupWidget = 0);
 		// getters
-		const Reference< Ship > & GetOwner(void) const;
+		const Reference< Object > & GetTarget(void) const;
 		// setters
-		void SetOwner(Reference< Ship > Owner);
-		// actors
-		void Update(void);
-		virtual void Draw(void) const;
+		void SetTarget(Reference< Object > Target);
 	private:
-		float _CameraZ;
-		float _FieldOfView;
-		Reference< Ship > _Owner;
+		// modifiers
+		void _Clear(void);
+		void _OnDestroying(void);
+		void _OnDestroyInScene(Graphics::Node * Node);
+		void _OnUpdating(float RealTimeSeconds, float GameTimeSeconds);
+		void _Setup(void);
+		// variables
+		Reference< Object > _Target;
 	};
 
-	inline const Reference< Ship > & ScannerDisplay::GetOwner(void) const
+	inline const Reference< Object > & ScannerDisplay::GetTarget(void) const
 	{
-		return _Owner;
-	}
-
-	inline void ScannerDisplay::SetOwner(Reference< Ship > Owner)
-	{
-		_Owner = Owner;
+		return _Target;
 	}
 }
 
