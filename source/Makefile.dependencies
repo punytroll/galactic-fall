@@ -1275,16 +1275,31 @@ ui_save_game_dialog_h = \
 
 ui_scanner_display_cpp = \
 	ui/scanner_display.cpp \
-	$(graphics_gl_h) \
+	$(callbacks_callbacks_h) \
+	$(color_h) \
+	$(globals_h) \
+	$(graphics_camera_h) \
+	$(graphics_engine_h) \
+	$(graphics_light_h) \
+	$(graphics_node_h) \
+	$(graphics_perspective_projection_h) \
+	$(graphics_scene_h) \
+	$(graphics_texture_h) \
+	$(graphics_texture_manager_h) \
+	$(graphics_texture_render_target_h) \
+	$(graphics_view_h) \
+	$(object_h) \
 	$(object_aspect_physical_h) \
 	$(object_aspect_position_h) \
-	$(ship_h) \
-	$(ui_scanner_display_h)
+	$(star_h) \
+	$(system_h) \
+	$(ui_scanner_display_h) \
+	$(visualizations_h)
 
 ui_scanner_display_h = \
 	ui/scanner_display.h \
 	$(referencing_h) \
-	$(ui_widget_h)
+	$(ui_view_display_h)
 
 ui_scroll_bar_cpp = \
 	ui/scroll_bar.cpp \
