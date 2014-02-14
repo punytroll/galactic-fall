@@ -41,7 +41,11 @@
 #include "slot_class.h"
 #include "storage.h"
 #include "system.h"
+#include "visualizations.h"
 #include "weapon.h"
+
+// this function defined in main.cpp
+Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSystemClassIdentifier);
 
 Ship::Ship(void) :
 	m_Accelerate(false),
@@ -132,6 +136,13 @@ bool Ship::Update(float Seconds)
 			assert(OldSystem->GetAspectObjectContainer() != 0);
 			OldSystem->GetAspectObjectContainer()->RemoveContent(this);
 			SetFuel(GetFuel() - GetFuelNeededToJump());
+			
+			// display jump partice system in old system
+			auto NewJumpParticleSystem(CreateParticleSystem("jump"));
+			
+			NewJumpParticleSystem->SetPosition(GetAspectPosition()->GetPosition());
+			NewJumpParticleSystem->SetVelocity(Vector3f(0.0f, 0.0f, 0.0f));
+			VisualizeParticleSystem(NewJumpParticleSystem, dynamic_cast< System * >(OldSystem));
 			
 			// set the ship's position according to the old system
 			Vector3f Direction(NewSystem->GetAspectPosition()->GetPosition() - OldSystem->GetAspectPosition()->GetPosition());
