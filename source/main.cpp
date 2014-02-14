@@ -636,7 +636,7 @@ void EmptyUnwatchedSystems(Galaxy * Galaxy)
 	}
 }
 
-void CalculateMovements(System * System, float Seconds)
+void UpdateObjects(System * System, float Seconds)
 {
 	assert(System != nullptr);
 	// update ships
@@ -678,92 +678,98 @@ void CalculateMovements(System * System, float Seconds)
 		if(Shot->GetAspectUpdate()->Update(Seconds) == false)
 		{
 			DeleteObject(Shot);
-			Shot = nullptr;
 		}
+	}
+}
+
+void CollisionDetection(System * System)
+{
+	std::list< Shot * > Shots(System->GetShots().begin(), System->GetShots().end());
+	
+	for(auto Shot : Shots)
+	{
+		assert(Shot != nullptr);
 		// test for collisions with ships
-		if(Shot != nullptr)
+		for(auto Ship : System->GetShips())
 		{
-			for(auto Ship : System->GetShips())
+			assert(Ship != nullptr);
+			if((Shot->GetShooter().IsValid() == true) && (Shot->GetShooter().Get() != Ship))
 			{
-				assert(Ship != nullptr);
-				if((Shot->GetShooter().IsValid() == true) && (Shot->GetShooter().Get() != Ship))
+				assert(Ship->GetAspectPhysical() != nullptr);
+				assert(Ship->GetAspectPosition() != nullptr);
+				assert(Shot->GetAspectPhysical() != nullptr);
+				assert(Shot->GetAspectPosition() != nullptr);
+				if((Shot->GetAspectPosition()->GetPosition() - Ship->GetAspectPosition()->GetPosition()).SquaredLength() < (Shot->GetAspectPhysical()->GetRadialSize() * Shot->GetAspectPhysical()->GetRadialSize() + Ship->GetAspectPhysical()->GetRadialSize() * Ship->GetAspectPhysical()->GetRadialSize()))
 				{
-					assert(Ship->GetAspectPhysical() != nullptr);
-					assert(Ship->GetAspectPosition() != nullptr);
-					assert(Shot->GetAspectPhysical() != nullptr);
-					assert(Shot->GetAspectPosition() != nullptr);
-					if((Shot->GetAspectPosition()->GetPosition() - Ship->GetAspectPosition()->GetPosition()).SquaredLength() < (Shot->GetAspectPhysical()->GetRadialSize() * Shot->GetAspectPhysical()->GetRadialSize() + Ship->GetAspectPhysical()->GetRadialSize() * Ship->GetAspectPhysical()->GetRadialSize()))
+					auto * NewHitParticleSystem(CreateParticleSystem("hit"));
+					
+					NewHitParticleSystem->SetPosition(Shot->GetAspectPosition()->GetPosition());
+					NewHitParticleSystem->SetVelocity((Shot->GetVelocity() * 0.2f) + (Ship->GetVelocity() * 0.8f));
+					VisualizeParticleSystem(NewHitParticleSystem, System);
+					Ship->SetHull(Ship->GetHull() - Shot->GetDamage());
+					assert(Ship->GetAspectObjectContainer() != nullptr);
+					for(auto Content : Ship->GetAspectObjectContainer()->GetContent())
 					{
-						auto * NewHitParticleSystem(CreateParticleSystem("hit"));
-						
-						NewHitParticleSystem->SetPosition(Shot->GetAspectPosition()->GetPosition());
-						NewHitParticleSystem->SetVelocity((Shot->GetVelocity() * 0.2f) + (Ship->GetVelocity() * 0.8f));
-						VisualizeParticleSystem(NewHitParticleSystem, System);
-						Ship->SetHull(Ship->GetHull() - Shot->GetDamage());
-						assert(Ship->GetAspectObjectContainer() != nullptr);
-						for(auto Content : Ship->GetAspectObjectContainer()->GetContent())
+						if(Content->GetTypeIdentifier() == "character")
 						{
-							if(Content->GetTypeIdentifier() == "character")
-							{
-								g_MessageDispatcher->PushMessage(new ThreatMessage(Shot->GetShooter(), Content->GetReference(), Shot->GetDamage()));
-							}
+							g_MessageDispatcher->PushMessage(new ThreatMessage(Shot->GetShooter(), Content->GetReference(), Shot->GetDamage()));
 						}
-						if(Ship->GetHull() <= 0.0f)
+					}
+					if(Ship->GetHull() <= 0.0f)
+					{
+						auto NewExplosionParticleSystem(CreateParticleSystem("explosion"));
+						
+						NewExplosionParticleSystem->SetPosition(Ship->GetAspectPosition()->GetPosition());
+						NewExplosionParticleSystem->SetVelocity(Ship->GetVelocity() * 0.5f);
+						VisualizeParticleSystem(NewExplosionParticleSystem, System);
+						// if the ship has content, drop all of it
+						assert(Ship->GetAspectObjectContainer() != nullptr);
+						
+						const auto & ShipContent(Ship->GetAspectObjectContainer()->GetContent());
+						auto ShipContentIterator(ShipContent.begin());
+						
+						while(ShipContentIterator != ShipContent.end())
 						{
-							auto NewExplosionParticleSystem(CreateParticleSystem("explosion"));
-							
-							NewExplosionParticleSystem->SetPosition(Ship->GetAspectPosition()->GetPosition());
-							NewExplosionParticleSystem->SetVelocity(Ship->GetVelocity() * 0.5f);
-							VisualizeParticleSystem(NewExplosionParticleSystem, System);
-							// if the ship has content, drop all of it
-							assert(Ship->GetAspectObjectContainer() != nullptr);
-							
-							const auto & ShipContent(Ship->GetAspectObjectContainer()->GetContent());
-							auto ShipContentIterator(ShipContent.begin());
-							
-							while(ShipContentIterator != ShipContent.end())
+							if((*ShipContentIterator)->GetTypeIdentifier() == "storage")
 							{
-								if((*ShipContentIterator)->GetTypeIdentifier() == "storage")
+								auto TheStorage(*ShipContentIterator);
+								const auto & StorageContent(TheStorage->GetAspectObjectContainer()->GetContent());
+								auto StorageContentIterator(StorageContent.begin());
+								
+								while(StorageContentIterator != StorageContent.end())
 								{
-									auto TheStorage(*ShipContentIterator);
-									const auto & StorageContent(TheStorage->GetAspectObjectContainer()->GetContent());
-									auto StorageContentIterator(StorageContent.begin());
-									
-									while(StorageContentIterator != StorageContent.end())
+									if((*StorageContentIterator)->GetTypeIdentifier() == "commodity")
 									{
-										if((*StorageContentIterator)->GetTypeIdentifier() == "commodity")
-										{
-											auto TheCommodity(dynamic_cast< Commodity * >(*StorageContentIterator));
-											
-											++StorageContentIterator;
-											TheStorage->GetAspectObjectContainer()->RemoveContent(TheCommodity);
-											TheCommodity->GetAspectPosition()->SetPosition(Ship->GetAspectPosition()->GetPosition());
-											
-											Vector2f Velocity(Vector2f::CreateFromMagnitudeAndAngle(GetRandomFloat(0.0f, 1.2f), GetRandomFloat(0.0f, 2 * M_PI)));
-											
-											TheCommodity->SetVelocity(Vector3f(Ship->GetVelocity()[0] * 0.8f + Velocity[0], Ship->GetVelocity()[1] * 0.8 + Velocity[1], 0.0f));
-											
-											Vector3f RotationAxis(GetRandomFloat(-1.0f, 1.0f), GetRandomFloat(-1.0f, 1.0f), GetRandomFloat(-1.0f, 1.0f));
-											
-											RotationAxis.Normalize();
-											TheCommodity->SetAngularVelocity(AxisAngle(RotationAxis[0], RotationAxis[1], RotationAxis[2], GetRandomFloat(0.0f, 0.7f)));
-											Ship->GetContainer()->GetAspectObjectContainer()->AddContent(TheCommodity);
-										}
-										else
-										{
-											++StorageContentIterator;
-										}
+										auto TheCommodity(dynamic_cast< Commodity * >(*StorageContentIterator));
+										
+										++StorageContentIterator;
+										TheStorage->GetAspectObjectContainer()->RemoveContent(TheCommodity);
+										TheCommodity->GetAspectPosition()->SetPosition(Ship->GetAspectPosition()->GetPosition());
+										
+										Vector2f Velocity(Vector2f::CreateFromMagnitudeAndAngle(GetRandomFloat(0.0f, 1.2f), GetRandomFloat(0.0f, 2 * M_PI)));
+										
+										TheCommodity->SetVelocity(Vector3f(Ship->GetVelocity()[0] * 0.8f + Velocity[0], Ship->GetVelocity()[1] * 0.8 + Velocity[1], 0.0f));
+										
+										Vector3f RotationAxis(GetRandomFloat(-1.0f, 1.0f), GetRandomFloat(-1.0f, 1.0f), GetRandomFloat(-1.0f, 1.0f));
+										
+										RotationAxis.Normalize();
+										TheCommodity->SetAngularVelocity(AxisAngle(RotationAxis[0], RotationAxis[1], RotationAxis[2], GetRandomFloat(0.0f, 0.7f)));
+										Ship->GetContainer()->GetAspectObjectContainer()->AddContent(TheCommodity);
+									}
+									else
+									{
+										++StorageContentIterator;
 									}
 								}
-								++ShipContentIterator;
 							}
-							DeleteObject(Ship);
+							++ShipContentIterator;
 						}
-						DeleteObject(Shot);
-						Shot = nullptr;
-						
-						break;
+						DeleteObject(Ship);
 					}
+					DeleteObject(Shot);
+					Shot = nullptr;
+					
+					break;
 				}
 			}
 		}
@@ -1463,7 +1469,8 @@ void GameFrame(void)
 	{
 		if(CurrentSystem != nullptr)
 		{
-			CalculateMovements(CurrentSystem, Seconds);
+			UpdateObjects(CurrentSystem, Seconds);
+			CollisionDetection(CurrentSystem);
 		}
 		if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0) && (g_CharacterObserver->GetObservedCharacter()->GetShip()->GetContainer() != g_CurrentSystem))
 		{
