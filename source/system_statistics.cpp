@@ -23,4 +23,11 @@ void SystemStatistics::NextFrame(void)
 {
 	_FontSecondsLastFrame = _FontSecondsThisFrame;
 	_FontSecondsThisFrame = 0.0f;
+	_ParticleSystemsDrawnThisFrame = 0;
+	_ParticleSystemsUpdatedThisFrame = 0;
+	_ParticlesDrawnThisFrame = 0;
+	_ParticlesUpdatedThisFrame = 0;
+	_ShipsInCurrentSystemThisFrame = 0;
+	_CommoditiesInCurrentSystemThisFrame = 0;
+	_ShotsInCurrentSystemThisFrame = 0;
 }
