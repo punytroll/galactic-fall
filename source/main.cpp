@@ -639,191 +639,162 @@ void EmptyUnwatchedSystems(Galaxy * Galaxy)
 void CalculateMovements(System * System, float Seconds)
 {
 	assert(System != nullptr);
-	
-	// TODO: it is unclear, which Ships to update really.
-	const auto & Ships(System->GetShips());
-	auto ShipIterator(Ships.begin());
+	// update ships
+	std::list< Ship * > Ships(System->GetShips().begin(), System->GetShips().end());
 	
 	g_SystemStatistics->SetShipsInCurrentSystemThisFrame(Ships.size());
-	while(ShipIterator != Ships.end())
+	for(auto Ship : Ships)
 	{
-		auto TheShip(*ShipIterator);
-		// save the position in case the ship jumps to another system and we need to display the jump particle system
-		Vector3f OldShipPosition(TheShip->GetAspectPosition()->GetPosition());
-		
-		// increment up here because Update() might invalidate the iterator
-		++ShipIterator;
-		if(TheShip->GetAspectUpdate()->Update(Seconds) == false)
+		assert(Ship != nullptr);
+		assert(Ship->GetAspectUpdate() != nullptr);
+		if(Ship->GetAspectUpdate()->Update(Seconds) == false)
 		{
-			DeleteObject(TheShip);
-			TheShip = nullptr;
-		}
-		else
-		{
-			if(TheShip->GetContainer() != System)
-			{
-				auto NewJumpParticleSystem(CreateParticleSystem("jump"));
-				
-				NewJumpParticleSystem->SetPosition(OldShipPosition);
-				NewJumpParticleSystem->SetVelocity(Vector3f(0.0f, 0.0f, 0.0f));
-				VisualizeParticleSystem(NewJumpParticleSystem, System);
-			}
+			DeleteObject(Ship);
 		}
 	}
 	
-	const auto & Commodities(System->GetCommodities());
+	// update commodities
+	std::list< Commodity * > Commodities(System->GetCommodities().begin(), System->GetCommodities().end());
 	
 	g_SystemStatistics->SetCommoditiesInCurrentSystemThisFrame(Commodities.size());
-	for(auto CommodityIterator = Commodities.begin(); CommodityIterator != Commodities.end(); ++CommodityIterator)
+	for(auto Commodity : Commodities)
 	{
-		auto TheCommodity(*CommodityIterator);
-		
-		if(TheCommodity->GetAspectUpdate()->Update(Seconds) == false)
+		assert(Commodity != nullptr);
+		assert(Commodity->GetAspectUpdate() != nullptr);
+		if(Commodity->GetAspectUpdate()->Update(Seconds) == false)
 		{
-			DeleteObject(TheCommodity);
-			TheCommodity = nullptr;
+			DeleteObject(Commodity);
 		}
 	}
 	
-	const auto & Shots(System->GetShots());
-	auto ShotIterator(Shots.begin());
+	// update shots
+	std::list< Shot * > Shots(System->GetShots().begin(), System->GetShots().end());
 	
 	g_SystemStatistics->SetShotsInCurrentSystemThisFrame(Shots.size());
-	while(ShotIterator != Shots.end())
+	for(auto Shot : Shots)
 	{
-		auto TheShot(*ShotIterator);
-		
-		++ShotIterator;
-		assert(TheShot->GetAspectUpdate() != nullptr);
-		if(TheShot->GetAspectUpdate()->Update(Seconds) == false)
+		assert(Shot != nullptr);
+		assert(Shot->GetAspectUpdate() != nullptr);
+		if(Shot->GetAspectUpdate()->Update(Seconds) == false)
 		{
-			DeleteObject(TheShot);
-			TheShot = nullptr;
+			DeleteObject(Shot);
+			Shot = nullptr;
 		}
 		// test for collisions with ships
-		if(TheShot != nullptr)
+		if(Shot != nullptr)
 		{
-			for(auto ShipIterator = Ships.begin(); ShipIterator != Ships.end(); ++ShipIterator)
+			for(auto Ship : System->GetShips())
 			{
-				auto TheShip(*ShipIterator);
-				
-				if((TheShot->GetShooter().IsValid() == true) && (TheShot->GetShooter().Get() != TheShip))
+				assert(Ship != nullptr);
+				if((Shot->GetShooter().IsValid() == true) && (Shot->GetShooter().Get() != Ship))
 				{
-					assert(TheShip->GetAspectPhysical() != nullptr);
-					assert(TheShip->GetAspectPosition() != nullptr);
-					assert(TheShot->GetAspectPhysical() != nullptr);
-					assert(TheShot->GetAspectPosition() != nullptr);
-					if((TheShot->GetAspectPosition()->GetPosition() - TheShip->GetAspectPosition()->GetPosition()).SquaredLength() < (TheShot->GetAspectPhysical()->GetRadialSize() * TheShot->GetAspectPhysical()->GetRadialSize() + TheShip->GetAspectPhysical()->GetRadialSize() * TheShip->GetAspectPhysical()->GetRadialSize()))
+					assert(Ship->GetAspectPhysical() != nullptr);
+					assert(Ship->GetAspectPosition() != nullptr);
+					assert(Shot->GetAspectPhysical() != nullptr);
+					assert(Shot->GetAspectPosition() != nullptr);
+					if((Shot->GetAspectPosition()->GetPosition() - Ship->GetAspectPosition()->GetPosition()).SquaredLength() < (Shot->GetAspectPhysical()->GetRadialSize() * Shot->GetAspectPhysical()->GetRadialSize() + Ship->GetAspectPhysical()->GetRadialSize() * Ship->GetAspectPhysical()->GetRadialSize()))
 					{
 						auto * NewHitParticleSystem(CreateParticleSystem("hit"));
 						
-						NewHitParticleSystem->SetPosition(TheShot->GetAspectPosition()->GetPosition());
-						NewHitParticleSystem->SetVelocity((TheShot->GetVelocity() * 0.2f) + (TheShip->GetVelocity() * 0.8f));
+						NewHitParticleSystem->SetPosition(Shot->GetAspectPosition()->GetPosition());
+						NewHitParticleSystem->SetVelocity((Shot->GetVelocity() * 0.2f) + (Ship->GetVelocity() * 0.8f));
 						VisualizeParticleSystem(NewHitParticleSystem, System);
-						TheShip->SetHull(TheShip->GetHull() - TheShot->GetDamage());
-						assert(TheShip->GetAspectObjectContainer() != nullptr);
-						
-						// send message to all characters on the hit ship
-						const auto & ShipContent(TheShip->GetAspectObjectContainer()->GetContent());
-						
-						for(auto ContentIterator = ShipContent.begin(); ContentIterator != ShipContent.end(); ++ContentIterator)
+						Ship->SetHull(Ship->GetHull() - Shot->GetDamage());
+						assert(Ship->GetAspectObjectContainer() != nullptr);
+						for(auto Content : Ship->GetAspectObjectContainer()->GetContent())
 						{
-							auto Content(*ContentIterator);
-							
 							if(Content->GetTypeIdentifier() == "character")
 							{
-								g_MessageDispatcher->PushMessage(new ThreatMessage(TheShot->GetShooter(), Content->GetReference(), TheShot->GetDamage()));
+								g_MessageDispatcher->PushMessage(new ThreatMessage(Shot->GetShooter(), Content->GetReference(), Shot->GetDamage()));
 							}
 						}
-						if(TheShip->GetHull() <= 0.0f)
+						if(Ship->GetHull() <= 0.0f)
 						{
 							auto NewExplosionParticleSystem(CreateParticleSystem("explosion"));
 							
-							NewExplosionParticleSystem->SetPosition(TheShip->GetAspectPosition()->GetPosition());
-							NewExplosionParticleSystem->SetVelocity(TheShip->GetVelocity() * 0.5f);
+							NewExplosionParticleSystem->SetPosition(Ship->GetAspectPosition()->GetPosition());
+							NewExplosionParticleSystem->SetVelocity(Ship->GetVelocity() * 0.5f);
 							VisualizeParticleSystem(NewExplosionParticleSystem, System);
 							// if the ship has content, drop all of it
-							if(TheShip->GetAspectObjectContainer() != nullptr)
+							assert(Ship->GetAspectObjectContainer() != nullptr);
+							
+							const auto & ShipContent(Ship->GetAspectObjectContainer()->GetContent());
+							auto ShipContentIterator(ShipContent.begin());
+							
+							while(ShipContentIterator != ShipContent.end())
 							{
-								const auto & ShipContent(TheShip->GetAspectObjectContainer()->GetContent());
-								auto ShipContentIterator(ShipContent.begin());
-								
-								while(ShipContentIterator != ShipContent.end())
+								if((*ShipContentIterator)->GetTypeIdentifier() == "storage")
 								{
-									if((*ShipContentIterator)->GetTypeIdentifier() == "storage")
+									auto TheStorage(*ShipContentIterator);
+									const auto & StorageContent(TheStorage->GetAspectObjectContainer()->GetContent());
+									auto StorageContentIterator(StorageContent.begin());
+									
+									while(StorageContentIterator != StorageContent.end())
 									{
-										auto TheStorage(*ShipContentIterator);
-										const auto & StorageContent(TheStorage->GetAspectObjectContainer()->GetContent());
-										auto StorageContentIterator(StorageContent.begin());
-										
-										while(StorageContentIterator != StorageContent.end())
+										if((*StorageContentIterator)->GetTypeIdentifier() == "commodity")
 										{
-											if((*StorageContentIterator)->GetTypeIdentifier() == "commodity")
-											{
-												auto TheCommodity(dynamic_cast< Commodity * >(*StorageContentIterator));
-												
-												++StorageContentIterator;
-												TheStorage->GetAspectObjectContainer()->RemoveContent(TheCommodity);
-												TheCommodity->GetAspectPosition()->SetPosition(TheShip->GetAspectPosition()->GetPosition());
-												
-												Vector2f Velocity(Vector2f::CreateFromMagnitudeAndAngle(GetRandomFloat(0.0f, 1.2f), GetRandomFloat(0.0f, 2 * M_PI)));
-												
-												TheCommodity->SetVelocity(Vector3f(TheShip->GetVelocity()[0] * 0.8f + Velocity[0], TheShip->GetVelocity()[1] * 0.8 + Velocity[1], 0.0f));
-												
-												Vector3f RotationAxis(GetRandomFloat(-1.0f, 1.0f), GetRandomFloat(-1.0f, 1.0f), GetRandomFloat(-1.0f, 1.0f));
-												
-												RotationAxis.Normalize();
-												TheCommodity->SetAngularVelocity(AxisAngle(RotationAxis[0], RotationAxis[1], RotationAxis[2], GetRandomFloat(0.0f, 0.7f)));
-												TheShip->GetContainer()->GetAspectObjectContainer()->AddContent(TheCommodity);
-											}
-											else
-											{
-												++StorageContentIterator;
-											}
+											auto TheCommodity(dynamic_cast< Commodity * >(*StorageContentIterator));
+											
+											++StorageContentIterator;
+											TheStorage->GetAspectObjectContainer()->RemoveContent(TheCommodity);
+											TheCommodity->GetAspectPosition()->SetPosition(Ship->GetAspectPosition()->GetPosition());
+											
+											Vector2f Velocity(Vector2f::CreateFromMagnitudeAndAngle(GetRandomFloat(0.0f, 1.2f), GetRandomFloat(0.0f, 2 * M_PI)));
+											
+											TheCommodity->SetVelocity(Vector3f(Ship->GetVelocity()[0] * 0.8f + Velocity[0], Ship->GetVelocity()[1] * 0.8 + Velocity[1], 0.0f));
+											
+											Vector3f RotationAxis(GetRandomFloat(-1.0f, 1.0f), GetRandomFloat(-1.0f, 1.0f), GetRandomFloat(-1.0f, 1.0f));
+											
+											RotationAxis.Normalize();
+											TheCommodity->SetAngularVelocity(AxisAngle(RotationAxis[0], RotationAxis[1], RotationAxis[2], GetRandomFloat(0.0f, 0.7f)));
+											Ship->GetContainer()->GetAspectObjectContainer()->AddContent(TheCommodity);
+										}
+										else
+										{
+											++StorageContentIterator;
 										}
 									}
-									++ShipContentIterator;
 								}
+								++ShipContentIterator;
 							}
-							DeleteObject(TheShip);
+							DeleteObject(Ship);
 						}
-						DeleteObject(TheShot);
-						TheShot = nullptr;
+						DeleteObject(Shot);
+						Shot = nullptr;
 						
 						break;
 					}
 				}
 			}
 		}
-		if(TheShot != nullptr)
+		if(Shot != nullptr)
 		{
-			for(auto CommodityIterator = Commodities.begin(); CommodityIterator != Commodities.end(); ++CommodityIterator)
+			for(auto Commodity : System->GetCommodities())
 			{
-				auto TheCommodity(*CommodityIterator);
-				
-				assert(TheCommodity->GetAspectPhysical() != nullptr);
-				assert(TheCommodity->GetAspectPosition() != nullptr);
-				assert(TheShot->GetAspectPhysical() != nullptr);
-				assert(TheShot->GetAspectPosition() != nullptr);
-				if((TheShot->GetAspectPosition()->GetPosition() - TheCommodity->GetAspectPosition()->GetPosition()).SquaredLength() < (TheShot->GetAspectPhysical()->GetRadialSize() * TheShot->GetAspectPhysical()->GetRadialSize() + TheCommodity->GetAspectPhysical()->GetRadialSize() * TheCommodity->GetAspectPhysical()->GetRadialSize()))
+				assert(Commodity != nullptr);
+				assert(Commodity->GetAspectPhysical() != nullptr);
+				assert(Commodity->GetAspectPosition() != nullptr);
+				assert(Shot->GetAspectPhysical() != nullptr);
+				assert(Shot->GetAspectPosition() != nullptr);
+				if((Shot->GetAspectPosition()->GetPosition() - Commodity->GetAspectPosition()->GetPosition()).SquaredLength() < (Shot->GetAspectPhysical()->GetRadialSize() * Shot->GetAspectPhysical()->GetRadialSize() + Commodity->GetAspectPhysical()->GetRadialSize() * Commodity->GetAspectPhysical()->GetRadialSize()))
 				{
 					auto NewHitParticleSystem(CreateParticleSystem("hit"));
 					
-					NewHitParticleSystem->SetPosition(TheShot->GetAspectPosition()->GetPosition());
-					NewHitParticleSystem->SetVelocity((TheShot->GetVelocity() * 0.4f) + (TheCommodity->GetVelocity() * 0.6f));
+					NewHitParticleSystem->SetPosition(Shot->GetAspectPosition()->GetPosition());
+					NewHitParticleSystem->SetVelocity((Shot->GetVelocity() * 0.4f) + (Commodity->GetVelocity() * 0.6f));
 					VisualizeParticleSystem(NewHitParticleSystem, System);
-					TheCommodity->SetHull(TheCommodity->GetHull() - TheShot->GetDamage());
-					if(TheCommodity->GetHull() <= 0.0f)
+					Commodity->SetHull(Commodity->GetHull() - Shot->GetDamage());
+					if(Commodity->GetHull() <= 0.0f)
 					{
 						auto NewHitParticleSystem(CreateParticleSystem("hit"));
 						
-						NewHitParticleSystem->SetPosition(TheCommodity->GetAspectPosition()->GetPosition());
-						NewHitParticleSystem->SetVelocity(TheCommodity->GetVelocity() * 0.5f);
+						NewHitParticleSystem->SetPosition(Commodity->GetAspectPosition()->GetPosition());
+						NewHitParticleSystem->SetVelocity(Commodity->GetVelocity() * 0.5f);
 						VisualizeParticleSystem(NewHitParticleSystem, System);
-						DeleteObject(TheCommodity);
+						DeleteObject(Commodity);
 					}
-					DeleteObject(TheShot);
-					TheShot = nullptr;
+					DeleteObject(Shot);
+					Shot = nullptr;
 					
 					break;
 				}

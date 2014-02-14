@@ -869,6 +869,7 @@ ship_cpp = \
 	$(slot_class_h) \
 	$(storage_h) \
 	$(system_h) \
+	$(visualizations_h) \
 	$(weapon_h)
 
 ship_h = \
