@@ -30,6 +30,7 @@
 #include "object_aspect_accessory.h"
 #include "object_aspect_object_container.h"
 #include "object_aspect_position.h"
+#include "object_aspect_update.h"
 #include "object_factory.h"
 #include "ship.h"
 #include "shot.h"
@@ -51,9 +52,11 @@ Weapon::Weapon(void) :
 	AddAspectPhysical();
 	AddAspectPosition();
 	AddAspectVisualization();
+	AddAspectUpdate();
+	GetAspectUpdate()->SetCallback(Callback(this, &Weapon::_Update));
 }
 
-void Weapon::Update(float Seconds)
+bool Weapon::_Update(float Seconds)
 {
 	if((m_Fire == true) && (m_NextTimeToFire <= GameTime::Get()))
 	{
@@ -114,4 +117,6 @@ void Weapon::Update(float Seconds)
 			m_NextTimeToFire = GameTime::Get() + GetReloadTime();
 		}
 	}
+	
+	return true;
 }

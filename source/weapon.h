@@ -28,7 +28,6 @@ class Weapon : public Object
 {
 public:
 	Weapon(void);
-	void Update(float Seconds);
 	// getters
 	float GetEnergyUsagePerShot(void) const;
 	const Vector3f & GetParticleExitPosition(void) const;
@@ -42,6 +41,9 @@ public:
 	void SetReloadTime(float ReloadTime);
 	void SetShotClassIdentifier(const std::string & ShotClassIdentifier);
 private:
+	// modifiers
+	bool _Update(float Seconds);
+	// variables
 	float m_EnergyUsagePerShot;
 	bool m_Fire;
 	double m_NextTimeToFire;

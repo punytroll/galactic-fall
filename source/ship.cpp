@@ -199,16 +199,6 @@ bool Ship::Update(float Seconds)
 	}
 	else
 	{
-		for(std::map< std::string, Slot * >::const_iterator SlotIterator = GetAspectOutfitting()->GetSlots().begin(); SlotIterator != GetAspectOutfitting()->GetSlots().end(); ++SlotIterator)
-		{
-			// only update *mounted* *weapons*
-			Object * MountedObject(SlotIterator->second->GetMountedObject().Get());
-			
-			if((MountedObject != 0) && (MountedObject->GetTypeIdentifier() == "weapon"))
-			{
-				dynamic_cast< Weapon * >(MountedObject)->Update(Seconds);
-			}
-		}
 		if((GetGenerator() != 0) && (GetBattery() != 0))
 		{
 			float Energy(GetBattery()->GetEnergy() + Seconds * GetGenerator()->GetEnergyProvisionPerSecond());

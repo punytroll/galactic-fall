@@ -1539,6 +1539,7 @@ weapon_cpp = \
 	$(object_aspect_accessory_h) \
 	$(object_aspect_object_container_h) \
 	$(object_aspect_position_h) \
+	$(object_aspect_update_h) \
 	$(object_factory_h) \
 	$(ship_h) \
 	$(shot_h) \

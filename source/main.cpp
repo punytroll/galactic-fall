@@ -583,17 +583,17 @@ Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSyst
 
 void UpdateVisualizations(Galaxy * Galaxy)
 {
-	std::deque< Object * > Todo;
+	std::deque< Object * > ToDo;
 	
-	Todo.push_back(Galaxy);
-	while(Todo.empty() == false)
+	ToDo.push_back(Galaxy);
+	while(ToDo.empty() == false)
 	{
-		auto TheObject(Todo.back());
+		auto TheObject(ToDo.back());
 		
-		Todo.pop_back();
+		ToDo.pop_back();
 		if(TheObject->GetAspectObjectContainer() != nullptr)
 		{
-			Todo.insert(Todo.end(), TheObject->GetAspectObjectContainer()->GetContent().begin(), TheObject->GetAspectObjectContainer()->GetContent().end());
+			ToDo.insert(ToDo.end(), TheObject->GetAspectObjectContainer()->GetContent().begin(), TheObject->GetAspectObjectContainer()->GetContent().end());
 		}
 		if((TheObject->GetAspectVisualization() != nullptr) && (TheObject->GetAspectPosition() != nullptr))
 		{
@@ -636,48 +636,43 @@ void EmptyUnwatchedSystems(Galaxy * Galaxy)
 	}
 }
 
-void UpdateObjects(System * System, float Seconds)
+void UpdateObjects(Galaxy * Galaxy, float Seconds)
 {
-	assert(System != nullptr);
-	// update ships
-	std::list< Ship * > Ships(System->GetShips().begin(), System->GetShips().end());
+	assert(Galaxy != nullptr);
+	assert(Galaxy->GetAspectObjectContainer() != nullptr);
 	
-	g_SystemStatistics->SetShipsInCurrentSystemThisFrame(Ships.size());
-	for(auto Ship : Ships)
+	std::deque< Object * > ToDo;
+	
+	ToDo.push_back(Galaxy);
+	while(ToDo.empty() == false)
 	{
-		assert(Ship != nullptr);
-		assert(Ship->GetAspectUpdate() != nullptr);
-		if(Ship->GetAspectUpdate()->Update(Seconds) == false)
+		auto TheObject(ToDo.back());
+		
+		ToDo.pop_back();
+		assert(TheObject != nullptr);
+		if(TheObject->GetTypeIdentifier() == "ship")
 		{
-			DeleteObject(Ship);
+			g_SystemStatistics->SetShipsInCurrentSystemThisFrame(g_SystemStatistics->GetShipsInCurrentSystemThisFrame() + 1);
 		}
-	}
-	
-	// update commodities
-	std::list< Commodity * > Commodities(System->GetCommodities().begin(), System->GetCommodities().end());
-	
-	g_SystemStatistics->SetCommoditiesInCurrentSystemThisFrame(Commodities.size());
-	for(auto Commodity : Commodities)
-	{
-		assert(Commodity != nullptr);
-		assert(Commodity->GetAspectUpdate() != nullptr);
-		if(Commodity->GetAspectUpdate()->Update(Seconds) == false)
+		else if(TheObject->GetTypeIdentifier() == "commodity")
 		{
-			DeleteObject(Commodity);
+			g_SystemStatistics->SetCommoditiesInCurrentSystemThisFrame(g_SystemStatistics->GetCommoditiesInCurrentSystemThisFrame() + 1);
 		}
-	}
-	
-	// update shots
-	std::list< Shot * > Shots(System->GetShots().begin(), System->GetShots().end());
-	
-	g_SystemStatistics->SetShotsInCurrentSystemThisFrame(Shots.size());
-	for(auto Shot : Shots)
-	{
-		assert(Shot != nullptr);
-		assert(Shot->GetAspectUpdate() != nullptr);
-		if(Shot->GetAspectUpdate()->Update(Seconds) == false)
+		else if(TheObject->GetTypeIdentifier() == "shot")
 		{
-			DeleteObject(Shot);
+			g_SystemStatistics->SetShotsInCurrentSystemThisFrame(g_SystemStatistics->GetShotsInCurrentSystemThisFrame() + 1);
+		}
+		if(TheObject->GetAspectUpdate() != nullptr)
+		{
+			if(TheObject->GetAspectUpdate()->Update(Seconds) == false)
+			{
+				DeleteObject(TheObject);
+				TheObject = nullptr;
+			}
+		}
+		if((TheObject != nullptr) && (TheObject->GetAspectObjectContainer() != nullptr))
+		{
+			ToDo.insert(ToDo.end(), TheObject->GetAspectObjectContainer()->GetContent().begin(), TheObject->GetAspectObjectContainer()->GetContent().end());
 		}
 	}
 }
@@ -1467,9 +1462,9 @@ void GameFrame(void)
 	g_GraphicsEngine->Update(Seconds);
 	if(g_Galaxy != nullptr)
 	{
+		UpdateObjects(g_Galaxy, Seconds);
 		if(CurrentSystem != nullptr)
 		{
-			UpdateObjects(CurrentSystem, Seconds);
 			CollisionDetection(CurrentSystem);
 		}
 		if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0) && (g_CharacterObserver->GetObservedCharacter()->GetShip()->GetContainer() != g_CurrentSystem))
@@ -1490,10 +1485,6 @@ void GameFrame(void)
 	double PhysicsTimeDelta(PhysicsTimeEnd - PhysicsTimeBegin);
 	
 	g_UserInterface->Update(FrameTimeDelta, Seconds);
-	g_SystemStatistics->SetParticleSystemsDrawnThisFrame(0);
-	g_SystemStatistics->SetParticleSystemsUpdatedThisFrame(0);
-	g_SystemStatistics->SetParticlesDrawnThisFrame(0);
-	g_SystemStatistics->SetParticlesUpdatedThisFrame(0);
 	RealTime::Invalidate();
 	
 	double GraphicsTimeBegin(RealTime::Get());
