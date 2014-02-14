@@ -606,6 +606,36 @@ void UpdateVisualizations(Galaxy * Galaxy)
 	}
 }
 
+void EmptySystem(System * System)
+{
+	assert(System != nullptr);
+	while(System->GetShips().empty() == false)
+	{
+		DeleteObject(System->GetShips().front());
+	}
+	while(System->GetCommodities().empty() == false)
+	{
+		DeleteObject(System->GetCommodities().front());
+	}
+	while(System->GetShots().empty() == false)
+	{
+		DeleteObject(System->GetShots().front());
+	}
+}
+
+void EmptyUnwatchedSystems(Galaxy * Galaxy)
+{
+	assert(Galaxy != nullptr);
+	assert(Galaxy->GetAspectObjectContainer() != nullptr);
+	for(auto Object : Galaxy->GetAspectObjectContainer()->GetContent())
+	{
+		if((Object->GetTypeIdentifier() == "system") && (Object != g_CurrentSystem))
+		{
+			EmptySystem(dynamic_cast< System * >(Object));
+		}
+	}
+}
+
 void CalculateMovements(System * System, float Seconds)
 {
 	assert(System != nullptr);
@@ -632,17 +662,11 @@ void CalculateMovements(System * System, float Seconds)
 		{
 			if(TheShip->GetContainer() != System)
 			{
-				// if another ship jumps out of the system ... remove it
-				if((g_CharacterObserver->GetObservedCharacter().IsValid() == false) || (g_CharacterObserver->GetObservedCharacter()->GetShip() != TheShip))
-				{
-					auto NewJumpParticleSystem(CreateParticleSystem("jump"));
-					
-					NewJumpParticleSystem->SetPosition(OldShipPosition);
-					NewJumpParticleSystem->SetVelocity(Vector3f(0.0f, 0.0f, 0.0f));
-					VisualizeParticleSystem(NewJumpParticleSystem, System);
-					DeleteObject(TheShip);
-					TheShip = nullptr;
-				}
+				auto NewJumpParticleSystem(CreateParticleSystem("jump"));
+				
+				NewJumpParticleSystem->SetPosition(OldShipPosition);
+				NewJumpParticleSystem->SetVelocity(Vector3f(0.0f, 0.0f, 0.0f));
+				VisualizeParticleSystem(NewJumpParticleSystem, System);
 			}
 		}
 	}
@@ -1154,25 +1178,6 @@ void OnTimingDialogDestroying(void)
 	g_TimingDialog = 0;
 }
 
-void EmptySystem(System * System)
-{
-	if(System != 0)
-	{
-		while(System->GetShips().empty() == false)
-		{
-			DeleteObject(System->GetShips().front());
-		}
-		while(System->GetCommodities().empty() == false)
-		{
-			DeleteObject(System->GetCommodities().front());
-		}
-		while(System->GetShots().empty() == false)
-		{
-			DeleteObject(System->GetShots().front());
-		}
-	}
-}
-
 void SpawnShip(System * System, const std::string & IdentifierSuffix, std::string ShipClassIdentifier = "")
 {
 	if(ShipClassIdentifier == "")
@@ -1489,6 +1494,15 @@ void GameFrame(void)
 		{
 			CalculateMovements(CurrentSystem, Seconds);
 		}
+		if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0) && (g_CharacterObserver->GetObservedCharacter()->GetShip()->GetContainer() != g_CurrentSystem))
+		{
+			OnOutputLeaveSystem(g_CurrentSystem);
+			g_CurrentSystem = dynamic_cast< System * >(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetContainer());
+			assert(g_CurrentSystem != 0);
+			OnOutputEnterSystem(g_CurrentSystem);
+			PopulateSystem(g_CurrentSystem);
+		}
+		EmptyUnwatchedSystems(g_Galaxy);
 		UpdateVisualizations(g_Galaxy);
 	}
 	UpdateMainViewCamera();
@@ -1518,15 +1532,6 @@ void GameFrame(void)
 	{
 		TakeScreenShot();
 		g_TakeScreenShot = false;
-	}
-	if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0) && (g_CharacterObserver->GetObservedCharacter()->GetShip()->GetContainer() != g_CurrentSystem))
-	{
-		OnOutputLeaveSystem(g_CurrentSystem);
-		g_CurrentSystem = dynamic_cast< System * >(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetContainer());
-		assert(g_CurrentSystem != 0);
-		OnOutputEnterSystem(g_CurrentSystem);
-		EmptySystem(CurrentSystem);
-		PopulateSystem(g_CurrentSystem);
 	}
 	RealTime::Invalidate();
 	
