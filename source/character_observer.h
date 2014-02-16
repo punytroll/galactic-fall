@@ -38,17 +38,17 @@ public:
 	// modifiers
 	virtual void HandleMessage(Message * Message);
 private:
-	Reference< Character > m_ObservedCharacter;
+	Reference< Character > _ObservedCharacter;
 };
 
 inline Reference< Character > & CharacterObserver::GetObservedCharacter(void)
 {
-	return m_ObservedCharacter;
+	return _ObservedCharacter;
 }
 
 inline const Reference< Character > & CharacterObserver::GetObservedCharacter(void) const
 {
-	return m_ObservedCharacter;
+	return _ObservedCharacter;
 }
 
 #endif
