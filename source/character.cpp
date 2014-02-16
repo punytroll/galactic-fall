@@ -26,6 +26,7 @@
 #include "mind.h"
 #include "object_aspect_messages.h"
 #include "object_aspect_object_container.h"
+#include "ship.h"
 #include "threat.h"
 
 std::set< Character * > Character::m_Characters;
@@ -33,7 +34,6 @@ std::set< Character * > Character::m_Characters;
 Character::Character(void) :
 	m_Credits(0),
 	m_MapKnowledge(new MapKnowledge()),
-	m_Ship(0),
 	m_Threat(new Threat())
 {
 	// static initialization
@@ -90,6 +90,18 @@ void Character::AddCredits(unsigned_numeric Credits)
 void Character::AddObserver(CharacterObserver * CharacterObserver)
 {
 	m_Observers.insert(CharacterObserver);
+}
+
+Ship * Character::GetShip(void)
+{
+	auto Container(GetContainer());
+	
+	while((Container != nullptr) && (Container->GetTypeIdentifier() != "ship"))
+	{
+		Container = Container->GetContainer();
+	}
+	
+	return dynamic_cast< Ship * >(Container);
 }
 
 bool Character::RemoveCredits(unsigned_numeric Credits)

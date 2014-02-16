@@ -1261,7 +1261,6 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 		NewShip->SetHull(NewShip->GetHullCapacity());
 	}
 	NewShip->SetFuel(GetRandomFloat(0.1f * NewShip->GetFuelCapacity(), 0.8f * NewShip->GetFuelCapacity()));
-	NewCharacter->SetShip(NewShip);
 	if((ShipClassIdentifier == "transporter") || (ShipClassIdentifier == "shuttle"))
 	{
 		StateMachineMind * NewMind(new StateMachineMind());
@@ -1307,6 +1306,22 @@ void PopulateSystem(System * System)
 		
 		SpawnShip(System, IdentifierSuffix.str());
 	}
+}
+
+System * GetObservedSystem(void)
+{
+	System * Result(nullptr);
+	
+	if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != nullptr))
+	{
+		Result = g_CharacterObserver->GetObservedCharacter()->GetShip()->GetSystem();
+	}
+	if(Result == nullptr)
+	{
+		Result = g_CurrentSystem;
+	}
+	
+	return Result;
 }
 
 void OnOutputEnterSystem(System * EnterSystem)
@@ -1435,7 +1450,6 @@ void GameFrame(void)
 	FrameTimeBegin = FrameTimeEnd;
 	
 	double FrameProcessingTimeBegin(RealTime::Get());
-	System * CurrentSystem(g_CurrentSystem);
 	
 	g_GameTimeTimeoutNotifications->Process(GameTime::Get());
 	g_RealTimeTimeoutNotifications->Process(RealTime::Get());
@@ -1462,18 +1476,23 @@ void GameFrame(void)
 	g_GraphicsEngine->Update(Seconds);
 	if(g_Galaxy != nullptr)
 	{
+		auto OldObservedSystem(GetObservedSystem());
+		
 		UpdateObjects(g_Galaxy, Seconds);
-		if(CurrentSystem != nullptr)
+		if(OldObservedSystem != nullptr)
 		{
-			CollisionDetection(CurrentSystem);
+			CollisionDetection(OldObservedSystem);
 		}
-		if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0) && (g_CharacterObserver->GetObservedCharacter()->GetShip()->GetContainer() != g_CurrentSystem))
+		
+		auto NewObservedSystem(GetObservedSystem());
+		
+		if(OldObservedSystem != NewObservedSystem)
 		{
-			OnOutputLeaveSystem(g_CurrentSystem);
-			g_CurrentSystem = dynamic_cast< System * >(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetContainer());
+			OnOutputLeaveSystem(OldObservedSystem);
+			g_CurrentSystem = NewObservedSystem;
 			assert(g_CurrentSystem != 0);
-			OnOutputEnterSystem(g_CurrentSystem);
-			PopulateSystem(g_CurrentSystem);
+			OnOutputEnterSystem(NewObservedSystem);
+			PopulateSystem(NewObservedSystem);
 		}
 		EmptyUnwatchedSystems(g_Galaxy);
 		UpdateVisualizations(g_Galaxy);
@@ -1892,11 +1911,6 @@ void LoadGameFromElement(const Element * SaveElement)
 									}
 								}
 							}
-							else if((*TypeSpecificChild)->GetName() == "ship")
-							{
-								assert((*TypeSpecificChild)->HasAttribute("object-identifier") == true);
-								// read in second pass
-							}
 							else
 							{
 								throw std::runtime_error("The \"" + (*ObjectChild)->GetName() + "\" element for the object \"" + (*SaveChild)->GetAttribute("object-identifier") + "\" contains an unknown element \"" + (*TypeSpecificChild)->GetName() + "\".");
@@ -2154,14 +2168,6 @@ void LoadGameFromElement(const Element * SaveElement)
 										TheCharacter->GetMapKnowledge()->AddExploredSystem(dynamic_cast< System * >(ExploredSystem));
 									}
 								}
-							}
-							else if((*TypeSpecificChild)->GetName() == "ship")
-							{
-								Object * TheShip(Object::GetObject((*TypeSpecificChild)->GetAttribute("object-identifier")));
-								
-								assert(TheShip != 0);
-								assert(dynamic_cast< Ship * >(TheShip) != 0);
-								TheCharacter->SetShip(dynamic_cast< Ship * >(TheShip));
 							}
 						}
 					}

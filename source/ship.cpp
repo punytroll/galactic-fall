@@ -109,6 +109,18 @@ Battery * Ship::GetBattery(void)
 	return _Battery;
 }
 
+System * Ship::GetSystem(void)
+{
+	auto Container(GetContainer());
+	
+	while((Container != nullptr) && (Container->GetTypeIdentifier() != "system"))
+	{
+		Container = Container->GetContainer();
+	}
+	
+	return dynamic_cast< System * >(Container);
+}
+
 void Ship::SetFire(bool Fire)
 {
 	for(std::map< std::string, Slot * >::const_iterator SlotIterator = GetAspectOutfitting()->GetSlots().begin(); SlotIterator != GetAspectOutfitting()->GetSlots().end(); ++SlotIterator)
@@ -181,6 +193,8 @@ bool Ship::Update(float Seconds)
 		assert(ThePlanet != 0);
 		assert(ThePlanet->GetTypeIdentifier() == "planet");
 		dynamic_cast< Planet * >(ThePlanet)->Land(this);
+		SetTarget(0);
+		SetLinkedSystemTarget(0);
 		m_Accelerate = false;
 		m_TurnLeft = 0.0f;
 		m_TurnRight = 0.0f;
@@ -189,13 +203,11 @@ bool Ship::Update(float Seconds)
 	{
 		m_TakeOff = false;
 		
-		Object * ThePlanet(GetTarget().Get());
+		auto ThePlanet(GetContainer());
 		
 		assert(ThePlanet != 0);
 		assert(ThePlanet->GetTypeIdentifier() == "planet");
 		dynamic_cast< Planet * >(ThePlanet)->TakeOff(this);
-		SetTarget(0);
-		SetLinkedSystemTarget(0);
 	}
 	else
 	{

@@ -103,6 +103,7 @@ character_cpp = \
 	$(mind_h) \
 	$(object_aspect_messages_h) \
 	$(object_aspect_object_container_h) \
+	$(ship_h) \
 	$(threat_h)
 
 character_h = \
