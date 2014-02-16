@@ -57,7 +57,6 @@ public:
 	void TargetNextPlanet(void);
 	void TargetPreviousShip(void);
 	void TargetNextShip(void);
-	void TargetPhysicalObject(Reference< PhysicalObject > & PhysicalObject);
 };
 
 #endif
