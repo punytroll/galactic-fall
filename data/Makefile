@@ -253,6 +253,10 @@ mesh_%.xml: meshes/generated/littlem/%.xml $(littlem_to_xml_xsl)
 meshes-all-recursive:
 	@$(MAKE) -C meshes all-recursive
 
+.data/scenario_new_game.data: savegame_new_game.xml
+
+.data/scenario_sol_spectator.data: savegame_sol_spectator.xml
+
 textures-all-recursive:
 	@$(MAKE) -C textures all-recursive
 
