@@ -19,7 +19,6 @@
 
 #include "character.h"
 #include "character_observer.h"
-#include "message.h"
 
 CharacterObserver::CharacterObserver(void)
 {
@@ -27,22 +26,22 @@ CharacterObserver::CharacterObserver(void)
 
 CharacterObserver::~CharacterObserver(void)
 {
-	if(m_ObservedCharacter.IsValid() == true)
+	if(_ObservedCharacter.IsValid() == true)
 	{
-		m_ObservedCharacter->RemoveObserver(this);
+		_ObservedCharacter->RemoveObserver(this);
 	}
 }
 
 void CharacterObserver::SetObservedCharacter(Reference< Character > ObservedCharacter)
 {
-	if(m_ObservedCharacter.IsValid() == true)
+	if(_ObservedCharacter.IsValid() == true)
 	{
-		m_ObservedCharacter->RemoveObserver(this);
+		_ObservedCharacter->RemoveObserver(this);
 	}
-	m_ObservedCharacter = ObservedCharacter;
-	if(m_ObservedCharacter.IsValid() == true)
+	_ObservedCharacter = ObservedCharacter;
+	if(_ObservedCharacter.IsValid() == true)
 	{
-		m_ObservedCharacter->AddObserver(this);
+		_ObservedCharacter->AddObserver(this);
 	}
 }
 
