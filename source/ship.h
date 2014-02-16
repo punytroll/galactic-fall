@@ -63,6 +63,7 @@ public:
 	float GetMaximumForwardThrust(void) const;
 	float GetMaximumSpeed(void) const;
 	float GetMaximumTurnSpeed(void) const;
+	System * GetSystem(void);
 	Reference< Object > & GetTarget(void);
 	const Reference< Object > & GetTarget(void) const;
 	const Vector3f & GetVelocity(void) const;

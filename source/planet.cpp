@@ -54,6 +54,7 @@ Planet::Planet(const std::string & Identifier) :
 {
 	// initialize object aspects
 	AddAspectName();
+	AddAspectObjectContainer();
 	AddAspectPhysical();
 	AddAspectPosition();
 	AddAspectVisualization();
@@ -90,7 +91,13 @@ PlanetAssetClass * Planet::CreatePlanetAssetClass(const AssetClass * AssetClass)
 
 void Planet::Land(Ship * Ship)
 {
+	assert(Ship != nullptr);
 	Ship->SetVelocity(Vector3f(0.0f, 0.0f, 0.0f));
+	assert(Ship->GetContainer() != nullptr);
+	assert(Ship->GetContainer()->GetAspectObjectContainer() != nullptr);
+	Ship->GetContainer()->GetAspectObjectContainer()->RemoveContent(Ship);
+	assert(GetAspectObjectContainer() != nullptr);
+	GetAspectObjectContainer()->AddContent(Ship);
 	
 	assert(Ship->GetAspectObjectContainer() != 0);
 	
@@ -172,7 +179,12 @@ void Planet::Repair(Ship * Ship, Character * Character)
 
 void Planet::TakeOff(Ship * Ship)
 {
-	assert(Ship->GetAspectObjectContainer() != 0);
+	assert(Ship != nullptr);
+	assert(GetAspectObjectContainer() != nullptr);
+	GetAspectObjectContainer()->RemoveContent(Ship);
+	assert(GetContainer() != nullptr);
+	assert(GetContainer()->GetAspectObjectContainer() != nullptr);
+	GetContainer()->GetAspectObjectContainer()->AddContent(Ship);
 	
 	// send message to all characters on the ship that took off
 	const std::set< Object * > & ShipContent(Ship->GetAspectObjectContainer()->GetContent());

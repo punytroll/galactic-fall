@@ -151,50 +151,46 @@ void UI::MiniMapDisplay::_OnDraw(void)
 {
 	if(_Owner.IsValid() == true)
 	{
+		assert(_Owner->GetAspectPosition() != nullptr);
 		GLTranslatef(-_Owner->GetAspectPosition()->GetPosition()[0], -_Owner->GetAspectPosition()->GetPosition()[1], 0);
 		
-		const System * CurrentSystem(dynamic_cast< const System * >(_Owner->GetContainer()));
+		auto TheSystem(_Owner->GetSystem());
 		
-		assert(CurrentSystem != 0);
-		
-		const std::vector< Planet * > & Planets(CurrentSystem->GetPlanets());
-		const std::list< Ship * > & Ships(CurrentSystem->GetShips());
-		const std::list< Commodity * > & Commodities(CurrentSystem->GetCommodities());
-		
+		assert(TheSystem != nullptr);
 		GLBegin(GL_POINTS);
 		GLColor3f(0.8f, 0.8f, 0.8f);
-		for(std::vector< Planet * >::const_iterator PlanetIterator = Planets.begin(); PlanetIterator != Planets.end(); ++PlanetIterator)
+		for(auto Planet : TheSystem->GetPlanets())
 		{
-			if(*PlanetIterator == _Owner->GetTarget().Get())
+			if(Planet == _Owner->GetTarget().Get())
 			{
 				GLColor3f(0.2f, 1.0f, 0.0f);
 			}
-			GLVertex2f((*PlanetIterator)->GetAspectPosition()->GetPosition()[0], (*PlanetIterator)->GetAspectPosition()->GetPosition()[1]);
-			if(*PlanetIterator == _Owner->GetTarget().Get())
+			GLVertex2f(Planet->GetAspectPosition()->GetPosition()[0], Planet->GetAspectPosition()->GetPosition()[1]);
+			if(Planet == _Owner->GetTarget().Get())
 			{
 				GLColor3f(0.8f, 0.8f, 0.8f);
 			}
 		}
-		for(std::list< Ship * >::const_iterator ShipIterator = Ships.begin(); ShipIterator != Ships.end(); ++ShipIterator)
+		for(auto Ship : TheSystem->GetShips())
 		{
-			if(*ShipIterator == _Owner->GetTarget().Get())
+			if(Ship == _Owner->GetTarget().Get())
 			{
 				GLColor3f(0.2f, 1.0f, 0.0f);
 			}
-			GLVertex2f((*ShipIterator)->GetAspectPosition()->GetPosition()[0], (*ShipIterator)->GetAspectPosition()->GetPosition()[1]);
-			if(*ShipIterator == _Owner->GetTarget().Get())
+			GLVertex2f(Ship->GetAspectPosition()->GetPosition()[0], Ship->GetAspectPosition()->GetPosition()[1]);
+			if(Ship == _Owner->GetTarget().Get())
 			{
 				GLColor3f(0.8f, 0.8f, 0.8f);
 			}
 		}
-		for(std::list< Commodity * >::const_iterator CommodityIterator = Commodities.begin(); CommodityIterator != Commodities.end(); ++CommodityIterator)
+		for(auto Commodity : TheSystem->GetCommodities())
 		{
-			if(*CommodityIterator == _Owner->GetTarget().Get())
+			if(Commodity == _Owner->GetTarget().Get())
 			{
 				GLColor3f(0.2f, 1.0f, 0.0f);
 			}
-			GLVertex2f((*CommodityIterator)->GetAspectPosition()->GetPosition()[0], (*CommodityIterator)->GetAspectPosition()->GetPosition()[1]);
-			if(*CommodityIterator == _Owner->GetTarget().Get())
+			GLVertex2f(Commodity->GetAspectPosition()->GetPosition()[0], Commodity->GetAspectPosition()->GetPosition()[1]);
+			if(Commodity == _Owner->GetTarget().Get())
 			{
 				GLColor3f(0.8f, 0.8f, 0.8f);
 			}

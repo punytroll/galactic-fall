@@ -222,10 +222,6 @@ static void WriteCharacterToXMLStream(XMLStream & XMLStream, Character * TheChar
 		XMLStream << element << "explored-system" << attribute << "object-identifier" << value << (*ExploredSystemIterator)->GetObjectIdentifier() << end;
 	}
 	XMLStream << end;
-	if(TheCharacter->GetShip() != 0)
-	{
-		XMLStream << element << "ship" << attribute << "object-identifier" << value << TheCharacter->GetShip()->GetObjectIdentifier() << end;
-	}
 }
 
 static void WriteCommodityToXMLStream(XMLStream & XMLStream, Commodity * TheCommodity)

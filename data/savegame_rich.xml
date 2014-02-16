@@ -313,7 +313,6 @@
 			<map-knowledge>
 				<explored-system object-identifier="::system(sol)"/>
 			</map-knowledge>
-			<ship object-identifier="::ship(shuttle)::player_ship"/>
 		</type-specific>
 	</object>
 	<object type-identifier="mind" class-identifier="command_mind" object-identifier="::player_mind">

@@ -50,12 +50,10 @@ public:
 	MapKnowledge * GetMapKnowledge(void);
 	const MapKnowledge * GetMapKnowledge(void) const;
 	Ship * GetShip(void);
-	const Ship * GetShip(void) const;
 	Threat * GetThreat(void);
 	const Threat * GetThreat(void) const;
 	// setters
 	void SetCredits(unsigned_numeric Credits);
-	void SetShip(Ship * Ship);
 	// modifiers
 	void Update(void);
 	void AddCredits(unsigned_numeric Credits);
@@ -69,7 +67,6 @@ private:
 	std::set< CharacterObserver * > m_Observers;
 	unsigned_numeric m_Credits;
 	MapKnowledge * m_MapKnowledge;
-	Ship * m_Ship;
 	Threat * m_Threat;
 };
 
@@ -105,16 +102,6 @@ inline const MapKnowledge * Character::GetMapKnowledge(void) const
 	return m_MapKnowledge;
 }
 
-inline Ship * Character::GetShip(void)
-{
-	return m_Ship;
-}
-
-inline const Ship * Character::GetShip(void) const
-{
-	return m_Ship;
-}
-
 inline Threat * Character::GetThreat(void)
 {
 	return m_Threat;
@@ -128,11 +115,6 @@ inline const Threat * Character::GetThreat(void) const
 inline void Character::SetCredits(unsigned_numeric Credits)
 {
 	m_Credits = Credits;
-}
-
-inline void Character::SetShip(Ship * Ship)
-{
-	m_Ship = Ship;
 }
 
 #endif
