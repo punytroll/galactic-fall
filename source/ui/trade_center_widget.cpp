@@ -27,6 +27,7 @@
 #include "../graphics/camera.h"
 #include "../graphics/engine.h"
 #include "../graphics/light.h"
+#include "../graphics/model.h"
 #include "../graphics/node.h"
 #include "../graphics/scene.h"
 #include "../graphics/perspective_projection.h"
@@ -267,9 +268,11 @@ bool UI::TradeCenterWidget::_OnAssetClassMouseButton(TradeCenterAssetClass * Tra
 			
 			if(VisualizationNode != 0)
 			{
+				float RadialSize(VisualizationPrototype->GetModel()->GetRadialSize());
+				float ExtendedRadialSize((5.0f / 4.0f) * RadialSize);
 				Graphics::PerspectiveProjection * PerspectiveProjection(new Graphics::PerspectiveProjection());
 				
-				PerspectiveProjection->SetFieldOfViewY(0.8f);
+				PerspectiveProjection->SetFieldOfViewY(asinf(ExtendedRadialSize / sqrtf(ExtendedRadialSize * ExtendedRadialSize + 16 * RadialSize * RadialSize)) * 2.0f);
 				PerspectiveProjection->SetAspect(_AssetClassViewDisplay->GetSize()[0] / _AssetClassViewDisplay->GetSize()[1]);
 				PerspectiveProjection->SetNearClippingPlane(0.1f);
 				PerspectiveProjection->SetFarClippingPlane(100.0f);
@@ -280,7 +283,7 @@ bool UI::TradeCenterWidget::_OnAssetClassMouseButton(TradeCenterAssetClass * Tra
 				View->SetClearColor(Color(1.0f, 1.0f, 1.0f, 0.0f));
 				assert(View->GetCamera() != 0);
 				View->GetCamera()->SetProjection(PerspectiveProjection);
-				View->GetCamera()->SetSpacialMatrix(Matrix4f::CreateFromTranslationComponents(0.0f, -2.5f, 1.4f).RotateX(1.05f));
+				View->GetCamera()->SetSpacialMatrix(Matrix4f::CreateFromTranslationVector(Vector3f(0.0f, -2.5f, 1.4f).Normalize() * 4.0f * RadialSize).RotateX(1.05f));
 				
 				Graphics::Scene * Scene(new Graphics::Scene());
 				
