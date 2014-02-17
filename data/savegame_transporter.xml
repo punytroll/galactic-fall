@@ -78,7 +78,7 @@
 			<content object-identifier="::player_mind"/>
 		</aspect-object-container>
 		<type-specific>
-			<credits value="12953"/>
+			<credits value="129153"/>
 			<map-knowledge>
 				<explored-system object-identifier="::system(sol)"/>
 				<explored-system object-identifier="::system(rigel)"/>

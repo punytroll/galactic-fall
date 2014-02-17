@@ -15,6 +15,7 @@ data_arx = \
 all_data = \
 	.data \
 	.data/asset_class_equipment.data \
+	.data/asset_class_fighter.data \
 	.data/asset_class_food.data \
 	.data/asset_class_fuel.data \
 	.data/asset_class_industrial.data \
@@ -24,7 +25,9 @@ all_data = \
 	.data/asset_class_medical_supplies.data \
 	.data/asset_class_medium_laser.data \
 	.data/asset_class_metal.data \
+	.data/asset_class_shuttle.data \
 	.data/asset_class_small_generator.data \
+	.data/asset_class_transporter.data \
 	.data/battery_class_light_battery.data \
 	.data/commodity_class_equipment.data \
 	.data/commodity_class_food.data \
@@ -181,6 +184,7 @@ data.arx: $(data_arx) $(arxtouch_dependencies) $(arxadd_dependencies)
 	$(command_arxadd) $@ --name="Transporter" --type=3 --sub-type=0 --relation="/Ship Classes::child" --data-file=.data/ship_class_transporter.data
 	@echo "\n\nAdding asset classes ...\n"
 	$(command_arxadd) $@ --name="Equipment" --type=4 --sub-type=0 --relation="/Asset Classes::child" --data-file=.data/asset_class_equipment.data
+	$(command_arxadd) $@ --name="Fighter" --type=4 --sub-type=0 --relation="/Asset Classes::child" --data-file=.data/asset_class_fighter.data
 	$(command_arxadd) $@ --name="Food" --type=4 --sub-type=0 --relation="/Asset Classes::child" --data-file=.data/asset_class_food.data
 	$(command_arxadd) $@ --name="Fuel" --type=4 --sub-type=0 --relation="/Asset Classes::child" --data-file=.data/asset_class_fuel.data
 	$(command_arxadd) $@ --name="Industrial" --type=4 --sub-type=0 --relation="/Asset Classes::child" --data-file=.data/asset_class_industrial.data
@@ -190,7 +194,9 @@ data.arx: $(data_arx) $(arxtouch_dependencies) $(arxadd_dependencies)
 	$(command_arxadd) $@ --name="Medical Supplies" --type=4 --sub-type=0 --relation="/Asset Classes::child" --data-file=.data/asset_class_medical_supplies.data
 	$(command_arxadd) $@ --name="Medium Laser" --type=4 --sub-type=0 --relation="/Asset Classes::child" --data-file=.data/asset_class_medium_laser.data
 	$(command_arxadd) $@ --name="Metal" --type=4 --sub-type=0 --relation="/Asset Classes::child" --data-file=.data/asset_class_metal.data
+	$(command_arxadd) $@ --name="Shuttle" --type=4 --sub-type=0 --relation="/Asset Classes::child" --data-file=.data/asset_class_shuttle.data
 	$(command_arxadd) $@ --name="Small Generator" --type=4 --sub-type=0 --relation="/Asset Classes::child" --data-file=.data/asset_class_small_generator.data
+	$(command_arxadd) $@ --name="Transporter" --type=4 --sub-type=0 --relation="/Asset Classes::child" --data-file=.data/asset_class_transporter.data
 	@echo "\n\nAdding commodity classes ...\n"
 	$(command_arxadd) $@ --name="Equipment" --type=8 --sub-type=0 --relation="/Commodity Classes::child" --data-file=.data/commodity_class_equipment.data
 	$(command_arxadd) $@ --name="Food" --type=8 --sub-type=0 --relation="/Commodity Classes::child" --data-file=.data/commodity_class_food.data

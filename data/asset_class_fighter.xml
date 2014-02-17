@@ -1,0 +1,7 @@
+<asset-class>
+	<identifier>fighter</identifier>
+	<name>Fighter</name>
+	<base-price>22000</base-price>
+	<object-type>ship</object-type>
+	<object-class>fighter</object-class>
+</asset-class>

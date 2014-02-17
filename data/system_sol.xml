@@ -94,6 +94,18 @@
 					<identifier>medium_laser</identifier>
 					<base-price-modifier>0.91</base-price-modifier>
 				</offered-asset-class>
+				<offered-asset-class>
+					<identifier>fighter</identifier>
+					<base-price-modifier>0.945</base-price-modifier>
+				</offered-asset-class>
+				<offered-asset-class>
+					<identifier>shuttle</identifier>
+					<base-price-modifier>0.943</base-price-modifier>
+				</offered-asset-class>
+				<offered-asset-class>
+					<identifier>transporter</identifier>
+					<base-price-modifier>0.948</base-price-modifier>
+				</offered-asset-class>
 			</offered-asset-classes>
 			<landing-fee-per-space>1.0</landing-fee-per-space>
 			<offers-recharging>true</offers-recharging>
@@ -163,6 +175,10 @@
 				<offered-asset-class>
 					<identifier>light_battery</identifier>
 					<base-price-modifier>0.94</base-price-modifier>
+				</offered-asset-class>
+				<offered-asset-class>
+					<identifier>shuttle</identifier>
+					<base-price-modifier>0.91</base-price-modifier>
 				</offered-asset-class>
 			</offered-asset-classes>
 			<landing-fee-per-space>0.95</landing-fee-per-space>
@@ -237,6 +253,10 @@
 				<offered-asset-class>
 					<identifier>light_battery</identifier>
 					<base-price-modifier>0.96</base-price-modifier>
+				</offered-asset-class>
+				<offered-asset-class>
+					<identifier>transporter</identifier>
+					<base-price-modifier>0.92</base-price-modifier>
 				</offered-asset-class>
 			</offered-asset-classes>
 			<landing-fee-per-space>1.1</landing-fee-per-space>
