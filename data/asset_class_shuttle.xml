@@ -1,0 +1,7 @@
+<asset-class>
+	<identifier>shuttle</identifier>
+	<name>Shuttle</name>
+	<base-price>18000</base-price>
+	<object-type>ship</object-type>
+	<object-class>shuttle</object-class>
+</asset-class>

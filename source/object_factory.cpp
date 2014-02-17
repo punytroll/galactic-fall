@@ -256,6 +256,10 @@ unsigned_numeric ObjectFactory::GetSpaceRequirement(const std::string & TypeIden
 	{
 		return g_GeneratorClassManager->Get(ClassIdentifier)->GetSpaceRequirement();
 	}
+	else if(TypeIdentifier == "ship")
+	{
+		return g_ShipClassManager->Get(ClassIdentifier)->GetSpaceRequirement();
+	}
 	else if(TypeIdentifier == "weapon")
 	{
 		return g_WeaponClassManager->Get(ClassIdentifier)->GetSpaceRequirement();
@@ -279,6 +283,10 @@ const VisualizationPrototype * ObjectFactory::GetVisualizationPrototype(const st
 	else if(TypeIdentifier == "generator")
 	{
 		return 0;
+	}
+	else if(TypeIdentifier == "ship")
+	{
+		return g_ShipClassManager->Get(ClassIdentifier)->GetVisualizationPrototype();
 	}
 	else if(TypeIdentifier == "weapon")
 	{
