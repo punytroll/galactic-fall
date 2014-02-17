@@ -77,7 +77,7 @@ void Planet::SetDescription(const std::string & Description)
 void Planet::SetSize(const float & Size)
 {
 	_Size = Size;
-	assert(GetAspectPhysical() != 0);
+	assert(GetAspectPhysical() != nullptr);
 	GetAspectPhysical()->SetRadialSize(_Size / 2.0f);
 }
 
@@ -98,16 +98,9 @@ void Planet::Land(Ship * Ship)
 	Ship->GetContainer()->GetAspectObjectContainer()->RemoveContent(Ship);
 	assert(GetAspectObjectContainer() != nullptr);
 	GetAspectObjectContainer()->AddContent(Ship);
-	
-	assert(Ship->GetAspectObjectContainer() != 0);
-	
-	// send message to all characters on the landed ship
-	const std::set< Object * > & ShipContent(Ship->GetAspectObjectContainer()->GetContent());
-	
-	for(std::set< Object * >::iterator ContentIterator = ShipContent.begin(); ContentIterator != ShipContent.end(); ++ContentIterator)
+	assert(Ship->GetAspectObjectContainer() != nullptr);
+	for(auto Content : Ship->GetAspectObjectContainer()->GetContent())
 	{
-		Object * Content(*ContentIterator);
-		
 		if(Content->GetTypeIdentifier() == "character")
 		{
 			g_MessageDispatcher->PushMessage(new Message("landed", GetReference(), Content->GetReference()));
@@ -119,10 +112,10 @@ void Planet::Recharge(Ship * Ship, Character * Character)
 {
 	if(_OffersRecharging == true)
 	{
-		assert(Ship != 0);
-		if(Ship->GetBattery() != 0)
+		assert(Ship != nullptr);
+		if(Ship->GetBattery() != nullptr)
 		{
-			assert(Character != 0);
+			assert(Character != nullptr);
 			
 			float CanBuy(Character->GetCredits() / _RechargingFeePerEnergy);
 			float Need(Ship->GetBattery()->GetEnergyCapacity() - Ship->GetBattery()->GetEnergy());
@@ -136,17 +129,17 @@ void Planet::Recharge(Ship * Ship, Character * Character)
 
 void Planet::Refuel(Ship * Ship, Character * Character)
 {
-	for(std::vector< PlanetAssetClass * >::iterator PlanetAssetClassIterator = _PlanetAssetClasses.begin(); PlanetAssetClassIterator != _PlanetAssetClasses.end(); ++PlanetAssetClassIterator)
+	for(auto PlanetAssetClass : _PlanetAssetClasses)
 	{
-		if((*PlanetAssetClassIterator)->GetAssetClass()->GetIdentifier() == "fuel")
+		if(PlanetAssetClass->GetAssetClass()->GetIdentifier() == "fuel")
 		{
-			unsigned_numeric FuelPrice((*PlanetAssetClassIterator)->GetPrice());
+			unsigned_numeric FuelPrice(PlanetAssetClass->GetPrice());
 			
-			assert(Character != 0);
+			assert(Character != nullptr);
 			
 			float CanBuy(Character->GetCredits() / FuelPrice);
 			
-			assert(Ship != 0);
+			assert(Ship != nullptr);
 			
 			float Need(Ship->GetFuelCapacity() - Ship->GetFuel());
 			float Buy((CanBuy > Need) ? (Need) : (CanBuy));
@@ -163,11 +156,11 @@ void Planet::Repair(Ship * Ship, Character * Character)
 {
 	if(_OffersRepairing == true)
 	{
-		assert(Character != 0);
+		assert(Character != nullptr);
 		
 		float CanBuy(Character->GetCredits() / _RepairingFeePerHull);
 		
-		assert(Ship != 0);
+		assert(Ship != nullptr);
 		
 		float Need(Ship->GetHullCapacity() - Ship->GetHull());
 		float Buy((CanBuy > Need) ? (Need) : (CanBuy));
@@ -185,14 +178,9 @@ void Planet::TakeOff(Ship * Ship)
 	assert(GetContainer() != nullptr);
 	assert(GetContainer()->GetAspectObjectContainer() != nullptr);
 	GetContainer()->GetAspectObjectContainer()->AddContent(Ship);
-	
-	// send message to all characters on the ship that took off
-	const std::set< Object * > & ShipContent(Ship->GetAspectObjectContainer()->GetContent());
-	
-	for(std::set< Object * >::iterator ContentIterator = ShipContent.begin(); ContentIterator != ShipContent.end(); ++ContentIterator)
+	assert(Ship->GetAspectObjectContainer() != nullptr);
+	for(auto Content : Ship->GetAspectObjectContainer()->GetContent())
 	{
-		Object * Content(*ContentIterator);
-		
 		if(Content->GetTypeIdentifier() == "character")
 		{
 			g_MessageDispatcher->PushMessage(new Message("taken_off", GetReference(), Content->GetReference()));
