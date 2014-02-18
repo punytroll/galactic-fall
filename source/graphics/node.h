@@ -69,6 +69,8 @@ namespace Graphics
 		virtual void Destroy(void);
 		virtual void Draw(void);
 		virtual void End(void);
+	protected:
+		static void _Destroy(Graphics::Node * Node);
 	private:
 		void _SetContainer(Graphics::Node * Container);
 		void _SetScene(Graphics::Scene * Scene);
