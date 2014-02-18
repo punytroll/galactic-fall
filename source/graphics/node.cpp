@@ -186,19 +186,10 @@ void Graphics::Node::Begin(void)
 void Graphics::Node::Destroy(void)
 {
 	assert(_Scene != nullptr);
-	while(_Content.empty() == false)
-	{
-		_Content.back()->Destroy();
-	}
-	if(_Container != nullptr)
-	{
-		_Container->_Content.erase(std::find(_Container->_Content.begin(), _Container->_Content.end(), this));
-		_Container = nullptr;
-	}
 	
-	Graphics::Scene * Scene(_Scene);
+	auto Scene(_Scene);
 	
-	_Scene = nullptr;
+	Graphics::Node::_Destroy(this);
 	Scene->OnDestroy(this);
 }
 
@@ -216,4 +207,18 @@ void Graphics::Node::End(void)
 {
 	GLPopAttrib();
 	GLPopMatrix();
+}
+
+void Graphics::Node::_Destroy(Graphics::Node * Node)
+{
+	while(Node->_Content.empty() == false)
+	{
+		Node->_Content.back()->Destroy();
+	}
+	if(Node->_Container != nullptr)
+	{
+		Node->_Container->_Content.erase(std::find(Node->_Container->_Content.begin(), Node->_Container->_Content.end(), Node));
+		Node->_Container = nullptr;
+	}
+	Node->_Scene = nullptr;
 }

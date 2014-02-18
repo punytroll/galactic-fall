@@ -49,14 +49,24 @@ Graphics::SystemNode::~SystemNode(void)
 void Graphics::SystemNode::Destroy(void)
 {
 	assert(_CommodityLayer != nullptr);
+	Node::_Destroy(_CommodityLayer);
+	delete _CommodityLayer;
 	_CommodityLayer = nullptr;
 	assert(_ParticleSystemLayer != nullptr);
+	Node::_Destroy(_ParticleSystemLayer);
+	delete _ParticleSystemLayer;
 	_ParticleSystemLayer = nullptr;
 	assert(_PlanetLayer != nullptr);
+	Node::_Destroy(_PlanetLayer);
+	delete _PlanetLayer;
 	_PlanetLayer = nullptr;
 	assert(_ShipLayer != nullptr);
+	Node::_Destroy(_ShipLayer);
+	delete _ShipLayer;
 	_ShipLayer = nullptr;
 	assert(_ShotLayer != nullptr);
+	Node::_Destroy(_ShotLayer);
+	delete _ShotLayer;
 	_ShotLayer = nullptr;
 	Graphics::Node::Destroy();
 }
