@@ -40,6 +40,7 @@ const Arxx::u4byte ARX_TYPE_SYSTEM_LINK = 6;
 const Arxx::u4byte ARX_TYPE_TEXTURE = 10;
 const Arxx::u4byte ARX_TYPE_WEAPON_CLASS = 7;
 const Arxx::u4byte ARX_TYPE_WIDGET = 1;
+const Arxx::u4byte ARX_TYPE_WIDGET_SUB_TYPE_BORDER = 4;
 const Arxx::u4byte ARX_TYPE_WIDGET_SUB_TYPE_LABEL = 1;
 const Arxx::u4byte ARX_TYPE_WIDGET_SUB_TYPE_MINI_MAP_DISPLAY = 2;
 const Arxx::u4byte ARX_TYPE_WIDGET_SUB_TYPE_SCANNER_DISPLAY = 3;

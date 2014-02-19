@@ -19,6 +19,12 @@
 		<string identifier="slot-class-identifier"/>
 	</battery-class>
 	
+	<border type="1" sub-type="4">
+		<widget identifier="widget"/>
+		<float identifier="width"/>
+		<color4f identifier="color"/>
+	</border>
+	
 	<color4f>
 		<float identifier="red"/>
 		<float identifier="green"/>
