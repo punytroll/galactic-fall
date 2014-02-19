@@ -17,8 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef TEXT_BUTTON_H
-#define TEXT_BUTTON_H
+#ifndef UI_TEXT_BUTTON_H
+#define UI_TEXT_BUTTON_H
 
 #include "button.h"
 
@@ -26,7 +26,7 @@ namespace UI
 {
 	class Label;
 	
-	class TextButton: public UI::Button
+	class TextButton : public UI::Button
 	{
 	public:
 		TextButton(UI::Widget * SupWidget, const std::string & Text);
