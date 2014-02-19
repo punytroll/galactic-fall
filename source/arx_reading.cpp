@@ -59,6 +59,7 @@
 #include "star.h"
 #include "string_cast.h"
 #include "system.h"
+#include "ui/border.h"
 #include "ui/label.h"
 #include "ui/mini_map_display.h"
 #include "ui/scanner_display.h"
@@ -86,6 +87,7 @@ static void ReadVisualizationPrototype(Arxx::BufferReader & Reader, Visualizatio
 static void ReadWeaponClass(Arxx::Reference & Reference);
 static void ReadWidget(Arxx::Reference & Reference);
 static UI::Widget * ReadWidget(Arxx::BufferReader & Reader, Arxx::u4byte Type, Arxx::u4byte SubType);
+static void ReadWidgetBorder(Arxx::BufferReader & Reader, UI::Border * ReadBorder);
 static void ReadWidgetLabel(Arxx::BufferReader & Reader, UI::Label * ReadLabel);
 static void ReadWidgetMiniMapDisplay(Arxx::BufferReader & Reader, UI::MiniMapDisplay * ReadMiniMapDisplay);
 static void ReadWidgetScannerDisplay(Arxx::BufferReader & Reader, UI::ScannerDisplay * ReadScannerDisplay);
@@ -1061,6 +1063,16 @@ static UI::Widget * ReadWidget(Arxx::BufferReader & Reader, Arxx::u4byte Type, A
 	
 	switch(SubType)
 	{
+	case ARX_TYPE_WIDGET_SUB_TYPE_BORDER:
+		{
+			UI::Border * Border(new UI::Border());
+			
+			ReadWidgetWidget(Reader, Border);
+			ReadWidgetBorder(Reader, Border);
+			Result = Border;
+			
+			break;
+		}
 	case ARX_TYPE_WIDGET_SUB_TYPE_LABEL:
 		{
 			UI::Label * Label(new UI::Label());
@@ -1107,6 +1119,16 @@ static UI::Widget * ReadWidget(Arxx::BufferReader & Reader, Arxx::u4byte Type, A
 	}
 	
 	return Result;
+}
+
+static void ReadWidgetBorder(Arxx::BufferReader & Reader, UI::Border * Border)
+{
+	float Width;
+	Color BorderColor;
+	
+	Reader >> Width >> BorderColor;
+	Border->SetWidth(Width);
+	Border->SetColor(BorderColor);
 }
 
 static void ReadWidgetLabel(Arxx::BufferReader & Reader, UI::Label * Label)

@@ -89,5 +89,40 @@
 				<sub-widgets/>
 			</widget>
 		</mini-map-display>
+		<border>
+			<widget>
+				<widget-path></widget-path>
+				<name>border</name>
+				<position>
+					<x>0.0</x>
+					<y>0.0</y>
+				</position>
+				<use-size>true</use-size>
+				<size>
+					<x>220.0</x>
+					<y>240.0</y>
+				</size>
+				<use-background-color>false</use-background-color>
+				<background-color>
+					<red>0</red>
+					<green>0</green>
+					<blue>0</blue>
+					<alpha>0</alpha>
+				</background-color>
+				<visible>true</visible>
+				<anchor-bottom>true</anchor-bottom>
+				<anchor-left>true</anchor-left>
+				<anchor-right>true</anchor-right>
+				<anchor-top>true</anchor-top>
+				<sub-widgets/>
+			</widget>
+			<width>1.0</width>
+			<color>
+				<red>0.1</red>
+				<green>0.2</green>
+				<blue>0.3</blue>
+				<alpha>1.0</alpha>
+			</color>
+		</border>
 	</sub-widgets>
 </widget>
