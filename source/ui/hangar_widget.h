@@ -17,8 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef UI_SPACE_DOCK_WIDGET_H
-#define UI_SPACE_DOCK_WIDGET_H
+#ifndef UI_HANGAR_WIDGET_H
+#define UI_HANGAR_WIDGET_H
 
 #include "../referencing.h"
 #include "widget.h"
@@ -31,10 +31,10 @@ namespace UI
 	class Button;
 	class Label;
 	
-	class SpaceDockWidget : public UI::Widget
+	class HangarWidget : public UI::Widget
 	{
 	public:
-		SpaceDockWidget(UI::Widget * SupWidget, Reference< Planet > Planet, Reference< Character > Character);
+		HangarWidget(UI::Widget * SupWidget, Reference< Planet > Planet, Reference< Character > Character);
 	private:
 		// callbacks
 		void _OnEnergyStateBarUpdating(UI::Widget * EnergyStateBarFill, UI::Label * EnergyStateBarLabel, float RealTimeSeconds, float GameTimeSeconds);

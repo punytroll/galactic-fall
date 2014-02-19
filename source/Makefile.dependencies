@@ -1068,6 +1068,26 @@ ui_dialog_h = \
 	ui/dialog.h \
 	$(ui_window_h)
 
+ui_hangar_widget_cpp = \
+	ui/hangar_widget.cpp \
+	$(asset_class_h) \
+	$(battery_h) \
+	$(callbacks_callbacks_h) \
+	$(character_h) \
+	$(color_h) \
+	$(planet_h) \
+	$(ship_h) \
+	$(string_cast_h) \
+	$(ui_border_h) \
+	$(ui_hangar_widget_h) \
+	$(ui_label_h) \
+	$(ui_text_button_h)
+
+ui_hangar_widget_h = \
+	ui/hangar_widget.h \
+	$(referencing_h) \
+	$(ui_widget_h)
+
 ui_image_cpp = \
 	ui/image.cpp \
 	$(color_h) \
@@ -1247,9 +1267,9 @@ ui_planet_window_cpp = \
 	$(key_event_information_h) \
 	$(object_aspect_name_h) \
 	$(planet_h) \
+	$(ui_hangar_widget_h) \
 	$(ui_label_h) \
 	$(ui_planet_window_h) \
-	$(ui_space_dock_widget_h) \
 	$(ui_text_button_h) \
 	$(ui_trade_center_widget_h)
 
@@ -1326,26 +1346,6 @@ ui_scroll_box_h = \
 	ui/scroll_box.h \
 	$(ui_widget_h)
 
-ui_space_dock_widget_cpp = \
-	ui/space_dock_widget.cpp \
-	$(asset_class_h) \
-	$(battery_h) \
-	$(callbacks_callbacks_h) \
-	$(character_h) \
-	$(color_h) \
-	$(planet_h) \
-	$(ship_h) \
-	$(string_cast_h) \
-	$(ui_border_h) \
-	$(ui_label_h) \
-	$(ui_space_dock_widget_h) \
-	$(ui_text_button_h)
-
-ui_space_dock_widget_h = \
-	ui/space_dock_widget.h \
-	$(referencing_h) \
-	$(ui_widget_h)
-
 ui_star_map_display_cpp = \
 	ui/star_map_display.cpp \
 	$(callbacks_callbacks_h) \
@@ -1400,6 +1400,7 @@ ui_trade_center_widget_cpp = \
 	$(graphics_camera_h) \
 	$(graphics_engine_h) \
 	$(graphics_light_h) \
+	$(graphics_model_h) \
 	$(graphics_node_h) \
 	$(graphics_perspective_projection_h) \
 	$(graphics_scene_h) \

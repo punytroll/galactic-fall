@@ -28,7 +28,7 @@ class Planet;
 namespace UI
 {
 	class Label;
-	class SpaceDockWidget;
+	class HangarWidget;
 	class TradeCenterWidget;
 	
 	class PlanetWindow : public UI::Window
@@ -38,19 +38,19 @@ namespace UI
 	private:
 		// callbacks
 		void _OnDestroying(void);
+		void _OnHangarButtonClicked(void);
 		void _OnHomeButtonClicked(void);
 		bool _OnKey(const KeyEventInformation & KeyEventInformation);
-		void _OnSpaceDockButtonClicked(void);
 		void _OnTradeCenterButtonClicked(void);
 		// helper functions & actions
+		void _OpenHangar(void);
 		void _OpenHomeScreen(void);
-		void _OpenSpaceDock(void);
 		void _OpenTradeCenter(void);
 		// member variables
 		Reference< Character > _Character;
 		UI::Label * _DescriptionLabel;
+		UI::HangarWidget * _HangarWidget;
 		Reference< Planet > _Planet;
-		UI::SpaceDockWidget * _SpaceDockWidget;
 		UI::TradeCenterWidget * _TradeCenterWidget;
 	};
 }
