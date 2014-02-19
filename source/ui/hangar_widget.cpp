@@ -26,11 +26,11 @@
 #include "../ship.h"
 #include "../string_cast.h"
 #include "border.h"
+#include "hangar_widget.h"
 #include "label.h"
-#include "space_dock_widget.h"
 #include "text_button.h"
 
-UI::SpaceDockWidget::SpaceDockWidget(UI::Widget * SupWidget, Reference< Planet > Planet, Reference< Character > Character) :
+UI::HangarWidget::HangarWidget(UI::Widget * SupWidget, Reference< Planet > Planet, Reference< Character > Character) :
 	UI::Widget(SupWidget),
 	_Character(Character),
 	_Planet(Planet)
@@ -43,8 +43,8 @@ UI::SpaceDockWidget::SpaceDockWidget(UI::Widget * SupWidget, Reference< Planet >
 	
 	RepairButton->SetPosition(Vector2f(0.0f, 0.0f));
 	RepairButton->SetSize(Vector2f(180.0f, 20.0f));
-	RepairButton->ConnectClickedCallback(Callback(this, &UI::SpaceDockWidget::_OnRepairButtonClicked));
-	RepairButton->ConnectUpdatingCallback(Bind1(Callback(this, &UI::SpaceDockWidget::_OnRepairButtonUpdating), RepairButton));
+	RepairButton->ConnectClickedCallback(Callback(this, &UI::HangarWidget::_OnRepairButtonClicked));
+	RepairButton->ConnectUpdatingCallback(Bind1(Callback(this, &UI::HangarWidget::_OnRepairButtonUpdating), RepairButton));
 	
 	UI::Widget * HullStateBar(new UI::Widget(this));
 	
@@ -67,7 +67,7 @@ UI::SpaceDockWidget::SpaceDockWidget(UI::Widget * SupWidget, Reference< Planet >
 	HullStateBarLabel->SetAnchorLeft(true);
 	HullStateBarLabel->SetAnchorRight(true);
 	HullStateBarLabel->SetAnchorTop(true);
-	HullStateBar->ConnectUpdatingCallback(Bind1(Bind1(Callback(this, &UI::SpaceDockWidget::_OnHullStateBarUpdating), HullStateBarFill), HullStateBarLabel));
+	HullStateBar->ConnectUpdatingCallback(Bind1(Bind1(Callback(this, &UI::HangarWidget::_OnHullStateBarUpdating), HullStateBarFill), HullStateBarLabel));
 	
 	UI::Border * HullStateBarBorder(new UI::Border(HullStateBar));
 	
@@ -84,8 +84,8 @@ UI::SpaceDockWidget::SpaceDockWidget(UI::Widget * SupWidget, Reference< Planet >
 	
 	RechargeButton->SetPosition(Vector2f(0.0f, 30.0f));
 	RechargeButton->SetSize(Vector2f(180.0f, 20.0f));
-	RechargeButton->ConnectClickedCallback(Callback(this, &UI::SpaceDockWidget::_OnRechargeButtonClicked));
-	RechargeButton->ConnectUpdatingCallback(Bind1(Callback(this, &UI::SpaceDockWidget::_OnRechargeButtonUpdating), RechargeButton));
+	RechargeButton->ConnectClickedCallback(Callback(this, &UI::HangarWidget::_OnRechargeButtonClicked));
+	RechargeButton->ConnectUpdatingCallback(Bind1(Callback(this, &UI::HangarWidget::_OnRechargeButtonUpdating), RechargeButton));
 	
 	UI::Widget * EnergyStateBar(new UI::Widget(this));
 	
@@ -108,7 +108,7 @@ UI::SpaceDockWidget::SpaceDockWidget(UI::Widget * SupWidget, Reference< Planet >
 	EnergyStateBarLabel->SetAnchorLeft(true);
 	EnergyStateBarLabel->SetAnchorRight(true);
 	EnergyStateBarLabel->SetAnchorTop(true);
-	EnergyStateBar->ConnectUpdatingCallback(Bind1(Bind1(Callback(this, &UI::SpaceDockWidget::_OnEnergyStateBarUpdating), EnergyStateBarFill), EnergyStateBarLabel));
+	EnergyStateBar->ConnectUpdatingCallback(Bind1(Bind1(Callback(this, &UI::HangarWidget::_OnEnergyStateBarUpdating), EnergyStateBarFill), EnergyStateBarLabel));
 	
 	UI::Border * EnergyStateBarBorder(new UI::Border(EnergyStateBar));
 	
@@ -125,8 +125,8 @@ UI::SpaceDockWidget::SpaceDockWidget(UI::Widget * SupWidget, Reference< Planet >
 	
 	RefuelButton->SetPosition(Vector2f(0.0f, 60.0f));
 	RefuelButton->SetSize(Vector2f(180.0f, 20.0f));
-	RefuelButton->ConnectClickedCallback(Callback(this, &UI::SpaceDockWidget::_OnRefuelButtonClicked));
-	RefuelButton->ConnectUpdatingCallback(Bind1(Callback(this, &UI::SpaceDockWidget::_OnRefuelButtonUpdating), RefuelButton));
+	RefuelButton->ConnectClickedCallback(Callback(this, &UI::HangarWidget::_OnRefuelButtonClicked));
+	RefuelButton->ConnectUpdatingCallback(Bind1(Callback(this, &UI::HangarWidget::_OnRefuelButtonUpdating), RefuelButton));
 	
 	UI::Widget * FuelStateBar(new UI::Widget(this));
 	
@@ -149,7 +149,7 @@ UI::SpaceDockWidget::SpaceDockWidget(UI::Widget * SupWidget, Reference< Planet >
 	FuelStateBarLabel->SetAnchorLeft(true);
 	FuelStateBarLabel->SetAnchorRight(true);
 	FuelStateBarLabel->SetAnchorTop(true);
-	FuelStateBar->ConnectUpdatingCallback(Bind1(Bind1(Callback(this, &UI::SpaceDockWidget::_OnFuelStateBarUpdating), FuelStateBarFill), FuelStateBarLabel));
+	FuelStateBar->ConnectUpdatingCallback(Bind1(Bind1(Callback(this, &UI::HangarWidget::_OnFuelStateBarUpdating), FuelStateBarFill), FuelStateBarLabel));
 	
 	UI::Border * FuelStateBarBorder(new UI::Border(FuelStateBar));
 	
@@ -166,10 +166,10 @@ UI::SpaceDockWidget::SpaceDockWidget(UI::Widget * SupWidget, Reference< Planet >
 	
 	TakeOffButton->SetPosition(Vector2f(0.0f, 90.0f));
 	TakeOffButton->SetSize(Vector2f(180.0f, 20.0f));
-	TakeOffButton->ConnectClickedCallback(Callback(this, &UI::SpaceDockWidget::_OnTakeOffButtonClicked));
+	TakeOffButton->ConnectClickedCallback(Callback(this, &UI::HangarWidget::_OnTakeOffButtonClicked));
 }
 
-void UI::SpaceDockWidget::_OnEnergyStateBarUpdating(UI::Widget * EnergyStateBarFill, UI::Label * EnergyStateBarLabel, float RealTimeSeconds, float GameTimeSeconds)
+void UI::HangarWidget::_OnEnergyStateBarUpdating(UI::Widget * EnergyStateBarFill, UI::Label * EnergyStateBarLabel, float RealTimeSeconds, float GameTimeSeconds)
 {
 	assert(_Character.IsValid() == true);
 	assert(_Character->GetShip() != 0);
@@ -191,7 +191,7 @@ void UI::SpaceDockWidget::_OnEnergyStateBarUpdating(UI::Widget * EnergyStateBarF
 	EnergyStateBarFill->SetBackgroundColor(Color(1.0f - EnergyPercentage, EnergyPercentage, 0.0f, 1.0f));
 }
 
-void UI::SpaceDockWidget::_OnFuelStateBarUpdating(UI::Widget * FuelStateBarFill, UI::Label * FuelStateBarLabel, float RealTimeSeconds, float GameTimeSeconds)
+void UI::HangarWidget::_OnFuelStateBarUpdating(UI::Widget * FuelStateBarFill, UI::Label * FuelStateBarLabel, float RealTimeSeconds, float GameTimeSeconds)
 {
 	assert(_Character.IsValid() == true);
 	assert(_Character->GetShip() != 0);
@@ -205,7 +205,7 @@ void UI::SpaceDockWidget::_OnFuelStateBarUpdating(UI::Widget * FuelStateBarFill,
 	FuelStateBarFill->SetBackgroundColor(Color(1.0f - FuelPercentage, FuelPercentage, 0.0f, 1.0f));
 }
 
-void UI::SpaceDockWidget::_OnHullStateBarUpdating(UI::Widget * HullStateBarFill, UI::Label * HullStateBarLabel, float RealTimeSeconds, float GameTimeSeconds)
+void UI::HangarWidget::_OnHullStateBarUpdating(UI::Widget * HullStateBarFill, UI::Label * HullStateBarLabel, float RealTimeSeconds, float GameTimeSeconds)
 {
 	assert(_Character.IsValid() == true);
 	assert(_Character->GetShip() != 0);
@@ -219,7 +219,7 @@ void UI::SpaceDockWidget::_OnHullStateBarUpdating(UI::Widget * HullStateBarFill,
 	HullStateBarFill->SetBackgroundColor(Color(1.0f - HullPercentage, HullPercentage, 0.0f, 1.0f));
 }
 
-void UI::SpaceDockWidget::_OnRechargeButtonClicked(void)
+void UI::HangarWidget::_OnRechargeButtonClicked(void)
 {
 	assert(_Planet.IsValid() == true);
 	assert(_Character.IsValid() == true);
@@ -227,14 +227,14 @@ void UI::SpaceDockWidget::_OnRechargeButtonClicked(void)
 	_Planet->Recharge(_Character->GetShip(), _Character.Get());
 }
 
-void UI::SpaceDockWidget::_OnRechargeButtonUpdating(UI::Button * RechargeButton, float RealTimeSeconds, float GameTimeSeconds)
+void UI::HangarWidget::_OnRechargeButtonUpdating(UI::Button * RechargeButton, float RealTimeSeconds, float GameTimeSeconds)
 {
 	assert(_Character.IsValid() == true);
 	assert(_Planet.IsValid() == true);
 	RechargeButton->SetEnabled((_Planet->GetOffersRecharging() == true) && (_Character->GetShip() != 0) && (_Character->GetShip()->GetBattery() != 0) && (_Character->GetShip()->GetBattery()->GetEnergy() < _Character->GetShip()->GetBattery()->GetEnergyCapacity()));
 }
 
-void UI::SpaceDockWidget::_OnRefuelButtonClicked(void)
+void UI::HangarWidget::_OnRefuelButtonClicked(void)
 {
 	assert(_Planet.IsValid() == true);
 	assert(_Character.IsValid() == true);
@@ -242,7 +242,7 @@ void UI::SpaceDockWidget::_OnRefuelButtonClicked(void)
 	_Planet->Refuel(_Character->GetShip(), _Character.Get());
 }
 
-void UI::SpaceDockWidget::_OnRefuelButtonUpdating(UI::Button * RefuelButton, float RealTimeSeconds, float GameTimeSeconds)
+void UI::HangarWidget::_OnRefuelButtonUpdating(UI::Button * RefuelButton, float RealTimeSeconds, float GameTimeSeconds)
 {
 	assert(_Character.IsValid() == true);
 	assert(_Planet.IsValid() == true);
@@ -262,7 +262,7 @@ void UI::SpaceDockWidget::_OnRefuelButtonUpdating(UI::Button * RefuelButton, flo
 	RefuelButton->SetEnabled((OffersRefueling == true) && (_Character->GetShip() != 0) && (_Character->GetShip()->GetFuel() < _Character->GetShip()->GetFuelCapacity()));
 }
 
-void UI::SpaceDockWidget::_OnRepairButtonClicked(void)
+void UI::HangarWidget::_OnRepairButtonClicked(void)
 {
 	assert(_Planet.IsValid() == true);
 	assert(_Character.IsValid() == true);
@@ -270,14 +270,14 @@ void UI::SpaceDockWidget::_OnRepairButtonClicked(void)
 	_Planet->Repair(_Character->GetShip(), _Character.Get());
 }
 
-void UI::SpaceDockWidget::_OnRepairButtonUpdating(UI::Button * RepairButton, float RealTimeSeconds, float GameTimeSeconds)
+void UI::HangarWidget::_OnRepairButtonUpdating(UI::Button * RepairButton, float RealTimeSeconds, float GameTimeSeconds)
 {
 	assert(_Character.IsValid() == true);
 	assert(_Planet.IsValid() == true);
 	RepairButton->SetEnabled((_Planet->GetOffersRepairing() == true) && (_Character->GetShip() != 0) && (_Character->GetShip()->GetHull() < _Character->GetShip()->GetHullCapacity()));
 }
 
-void UI::SpaceDockWidget::_OnTakeOffButtonClicked(void)
+void UI::HangarWidget::_OnTakeOffButtonClicked(void)
 {
 	assert(_Character.IsValid() == true);
 	assert(_Character->GetShip() != 0);

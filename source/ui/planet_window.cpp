@@ -21,46 +21,51 @@
 #include "../key_event_information.h"
 #include "../object_aspect_name.h"
 #include "../planet.h"
+#include "hangar_widget.h"
 #include "label.h"
 #include "planet_window.h"
-#include "space_dock_widget.h"
 #include "text_button.h"
 #include "trade_center_widget.h"
 
 UI::PlanetWindow::PlanetWindow(UI::Widget * SupWidget, Reference< Planet > Planet, Reference< Character > Character) :
 	UI::Window(SupWidget),
 	_Character(Character),
-	_DescriptionLabel(0),
+	_DescriptionLabel(nullptr),
+	_HangarWidget(nullptr),
 	_Planet(Planet),
-	_SpaceDockWidget(0),
-	_TradeCenterWidget(0)
+	_TradeCenterWidget(nullptr)
 {
 	assert(_Character.IsValid() == true);
 	assert(_Planet.IsValid() == true);
-	assert(_Planet->GetAspectName() != 0);
+	assert(_Planet->GetAspectName() != nullptr);
 	GetTitleLabel()->SetText("Planet: " + _Planet->GetAspectName()->GetName());
 	SetPosition(Vector2f(50.0f, 50.0f));
 	SetSize(Vector2f(700.0f, 400.0f));
-	ConnectKeyCallback(Callback(this, &PlanetWindow::_OnKey));
+	ConnectKeyCallback(Callback(this, &UI::PlanetWindow::_OnKey));
 	
 	UI::Button * HomeButton(new UI::TextButton(this, "Home"));
 	
 	HomeButton->SetPosition(Vector2f(10.0f, 40.0f));
 	HomeButton->SetSize(Vector2f(100.0f, 20.0f));
-	HomeButton->ConnectClickedCallback(Callback(this, &PlanetWindow::_OnHomeButtonClicked));
+	HomeButton->ConnectClickedCallback(Callback(this, &UI::PlanetWindow::_OnHomeButtonClicked));
 	
 	UI::Button * TradeCenterButton(new UI::TextButton(this, "Trade Center"));
 	
 	TradeCenterButton->SetPosition(Vector2f(10.0f, 70.0f));
 	TradeCenterButton->SetSize(Vector2f(100.0f, 20.0f));
-	TradeCenterButton->ConnectClickedCallback(Callback(this, &PlanetWindow::_OnTradeCenterButtonClicked));
+	TradeCenterButton->ConnectClickedCallback(Callback(this, &UI::PlanetWindow::_OnTradeCenterButtonClicked));
 	
-	UI::Button * SpaceDockButton(new UI::TextButton(this, "Space Dock"));
+	UI::Button * HangarButton(new UI::TextButton(this, "Hangar"));
 	
-	SpaceDockButton->SetPosition(Vector2f(10.0f, 100.0f));
-	SpaceDockButton->SetSize(Vector2f(100.0f, 20.0f));
-	SpaceDockButton->ConnectClickedCallback(Callback(this, &PlanetWindow::_OnSpaceDockButtonClicked));
+	HangarButton->SetPosition(Vector2f(10.0f, 100.0f));
+	HangarButton->SetSize(Vector2f(100.0f, 20.0f));
+	HangarButton->ConnectClickedCallback(Callback(this, &UI::PlanetWindow::_OnHangarButtonClicked));
 	_OpenHomeScreen();
+}
+
+void UI::PlanetWindow::_OnHangarButtonClicked(void)
+{
+	_OpenHangar();
 }
 
 void UI::PlanetWindow::_OnHomeButtonClicked(void)
@@ -70,22 +75,17 @@ void UI::PlanetWindow::_OnHomeButtonClicked(void)
 
 bool UI::PlanetWindow::_OnKey(const KeyEventInformation & KeyEventInformation)
 {
-	if((KeyEventInformation.GetKeyCode() == 39 /* S */) && (KeyEventInformation.IsDown() == true))
-	{
-		_OpenSpaceDock();
-	}
-	else if((KeyEventInformation.GetKeyCode() == 28 /* T */) && (KeyEventInformation.IsDown() == true))
+	if((KeyEventInformation.GetKeyCode() == 28 /* T */) && (KeyEventInformation.IsDown() == true))
 	{
 		_OpenTradeCenter();
+	}
+	else if((KeyEventInformation.GetKeyCode() == 43 /* H */) && (KeyEventInformation.IsDown() == true))
+	{
+		_OpenHangar();
 	}
 	
 	// eat all input
 	return true;
-}
-
-void UI::PlanetWindow::_OnSpaceDockButtonClicked(void)
-{
-	_OpenSpaceDock();
 }
 
 void UI::PlanetWindow::_OnTradeCenterButtonClicked(void)
@@ -93,23 +93,50 @@ void UI::PlanetWindow::_OnTradeCenterButtonClicked(void)
 	_OpenTradeCenter();
 }
 
+void UI::PlanetWindow::_OpenHangar(void)
+{
+	if(_DescriptionLabel != nullptr)
+	{
+		assert(_TradeCenterWidget == nullptr);
+		assert(_HangarWidget == nullptr);
+		_DescriptionLabel->Destroy();
+		_DescriptionLabel = nullptr;
+	}
+	if(_TradeCenterWidget != nullptr)
+	{
+		assert(_DescriptionLabel == nullptr);
+		assert(_HangarWidget == nullptr);
+		_TradeCenterWidget->Destroy();
+		_TradeCenterWidget = nullptr;
+	}
+	if(_HangarWidget == nullptr)
+	{
+		_HangarWidget = new UI::HangarWidget(this, _Planet, _Character);
+		_HangarWidget->SetPosition(Vector2f(120.0f, 40.0f));
+		_HangarWidget->SetSize(Vector2f(GetSize()[0] - 130.0f, GetSize()[1] - 50.0f));
+		_HangarWidget->SetAnchorBottom(true);
+		_HangarWidget->SetAnchorRight(true);
+	}
+	_HangarWidget->GrabKeyFocus();
+}
+
 void UI::PlanetWindow::_OpenHomeScreen(void)
 {
-	if(_SpaceDockWidget != 0)
+	if(_HangarWidget != nullptr)
 	{
-		assert(_DescriptionLabel == 0);
-		assert(_TradeCenterWidget == 0);
-		_SpaceDockWidget->Destroy();
-		_SpaceDockWidget = 0;
+		assert(_DescriptionLabel == nullptr);
+		assert(_TradeCenterWidget == nullptr);
+		_HangarWidget->Destroy();
+		_HangarWidget = nullptr;
 	}
-	if(_TradeCenterWidget != 0)
+	if(_TradeCenterWidget != nullptr)
 	{
-		assert(_DescriptionLabel == 0);
-		assert(_SpaceDockWidget == 0);
+		assert(_DescriptionLabel == nullptr);
+		assert(_HangarWidget == nullptr);
 		_TradeCenterWidget->Destroy();
-		_TradeCenterWidget = 0;
+		_TradeCenterWidget = nullptr;
 	}
-	if(_DescriptionLabel == 0)
+	if(_DescriptionLabel == nullptr)
 	{
 		_DescriptionLabel = new UI::Label(this, _Planet->GetDescription());
 		_DescriptionLabel->SetPosition(Vector2f(120.0f, 40.0f));
@@ -118,53 +145,26 @@ void UI::PlanetWindow::_OpenHomeScreen(void)
 		_DescriptionLabel->SetWordWrap(true);
 		_DescriptionLabel->SetAnchorRight(true);
 	}
-	SetKeyFocus(0);
-}
-
-void UI::PlanetWindow::_OpenSpaceDock(void)
-{
-	if(_DescriptionLabel != 0)
-	{
-		assert(_TradeCenterWidget == 0);
-		assert(_SpaceDockWidget == 0);
-		_DescriptionLabel->Destroy();
-		_DescriptionLabel = 0;
-	}
-	if(_TradeCenterWidget != 0)
-	{
-		assert(_DescriptionLabel == 0);
-		assert(_SpaceDockWidget == 0);
-		_TradeCenterWidget->Destroy();
-		_TradeCenterWidget = 0;
-	}
-	if(_SpaceDockWidget == 0)
-	{
-		_SpaceDockWidget = new UI::SpaceDockWidget(this, _Planet, _Character);
-		_SpaceDockWidget->SetPosition(Vector2f(120.0f, 40.0f));
-		_SpaceDockWidget->SetSize(Vector2f(GetSize()[0] - 130.0f, GetSize()[1] - 50.0f));
-		_SpaceDockWidget->SetAnchorBottom(true);
-		_SpaceDockWidget->SetAnchorRight(true);
-	}
-	_SpaceDockWidget->GrabKeyFocus();
+	SetKeyFocus(nullptr);
 }
 
 void UI::PlanetWindow::_OpenTradeCenter(void)
 {
-	if(_DescriptionLabel != 0)
+	if(_DescriptionLabel != nullptr)
 	{
-		assert(_SpaceDockWidget == 0);
-		assert(_TradeCenterWidget == 0);
+		assert(_HangarWidget == nullptr);
+		assert(_TradeCenterWidget == nullptr);
 		_DescriptionLabel->Destroy();
-		_DescriptionLabel = 0;
+		_DescriptionLabel = nullptr;
 	}
-	if(_SpaceDockWidget != 0)
+	if(_HangarWidget != nullptr)
 	{
-		assert(_DescriptionLabel == 0);
-		assert(_TradeCenterWidget == 0);
-		_SpaceDockWidget->Destroy();
-		_SpaceDockWidget = 0;
+		assert(_DescriptionLabel == nullptr);
+		assert(_TradeCenterWidget == nullptr);
+		_HangarWidget->Destroy();
+		_HangarWidget = nullptr;
 	}
-	if(_TradeCenterWidget == 0)
+	if(_TradeCenterWidget == nullptr)
 	{
 		_TradeCenterWidget = new UI::TradeCenterWidget(this, _Planet, _Character);
 		_TradeCenterWidget->SetPosition(Vector2f(120.0f, 40.0f));
