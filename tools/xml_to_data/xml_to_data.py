@@ -175,10 +175,10 @@ def out(data_type, node):
 					raise ConvertException()
 				declaration = declarations[data_type]
 				if declaration.type == None:
-					print LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " for " + LightYellow + stack_path + "/" + data_type + White + " no type was defined for the declaration of " + DarkYellow + data_type + White + "."
+					print LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " for the array with types " + LightYellow + stack_path + White + " no type was defined in the declaration of " + DarkYellow + data_type + White + "."
 					raise ConvertException()
 				if declaration.sub_type == None:
-					print LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " for " + LightYellow + stack_path + "/" + data_type + White + " no sub-type was defined for the declaration of " + DarkYellow + data_type + White + "."
+					print LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " for the array with types " + LightYellow + stack_path + White + " no sub-type was defined in the declaration of " + DarkYellow + data_type + White + "."
 					raise ConvertException()
 				out_file.write(pack('II', long(declaration.type), long(declaration.sub_type)))
 				out(node_part.tagName, node_part)
