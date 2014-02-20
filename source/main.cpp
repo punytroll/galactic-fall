@@ -319,6 +319,7 @@ float CalculateTime(void)
 	{
 		DeltaSeconds *= g_TimeWarp;
 		GameTime::Set(GameTime::Get() + DeltaSeconds);
+		std::cout << DeltaSeconds << std::endl;
 		
 		return DeltaSeconds;
 	}
@@ -1841,16 +1842,16 @@ void LoadGameFromElement(const Element * SaveElement)
 									assert((*PartChild)->HasAttribute("red") == true);
 									assert((*PartChild)->HasAttribute("green") == true);
 									assert((*PartChild)->HasAttribute("blue") == true);
-									assert((*PartChild)->HasAttribute("alpha") == true);
-									NewPartMaterial->SetDiffuseColor(new Color(from_string_cast< float >((*PartChild)->GetAttribute("red")), from_string_cast< float >((*PartChild)->GetAttribute("green")), from_string_cast< float >((*PartChild)->GetAttribute("blue")), from_string_cast< float >((*PartChild)->GetAttribute("alpha"))));
+									assert((*PartChild)->HasAttribute("opacity") == true);
+									NewPartMaterial->SetDiffuseColor(new Color(from_string_cast< float >((*PartChild)->GetAttribute("red")), from_string_cast< float >((*PartChild)->GetAttribute("green")), from_string_cast< float >((*PartChild)->GetAttribute("blue")), from_string_cast< float >((*PartChild)->GetAttribute("opacity"))));
 								}
 								else if((*PartChild)->GetName() == "material-specular-color")
 								{
 									assert((*PartChild)->HasAttribute("red") == true);
 									assert((*PartChild)->HasAttribute("green") == true);
 									assert((*PartChild)->HasAttribute("blue") == true);
-									assert((*PartChild)->HasAttribute("alpha") == true);
-									NewPartMaterial->SetSpecularColor(new Color(from_string_cast< float >((*PartChild)->GetAttribute("red")), from_string_cast< float >((*PartChild)->GetAttribute("green")), from_string_cast< float >((*PartChild)->GetAttribute("blue")), from_string_cast< float >((*PartChild)->GetAttribute("alpha"))));
+									assert((*PartChild)->HasAttribute("opacity") == true);
+									NewPartMaterial->SetSpecularColor(new Color(from_string_cast< float >((*PartChild)->GetAttribute("red")), from_string_cast< float >((*PartChild)->GetAttribute("green")), from_string_cast< float >((*PartChild)->GetAttribute("blue")), from_string_cast< float >((*PartChild)->GetAttribute("opacity"))));
 								}
 								else if((*PartChild)->GetName() == "material-shininess")
 								{

@@ -29,7 +29,7 @@
 		<float identifier="red"/>
 		<float identifier="green"/>
 		<float identifier="blue"/>
-		<float identifier="alpha"/>
+		<float identifier="opacity"/>
 	</color4f>
 	
 	<commodity-class>

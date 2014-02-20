@@ -13,13 +13,13 @@
 						<red>0.25</red>
 						<green>0.13</green>
 						<blue>0.6</blue>
-						<alpha>1.0</alpha>
+						<opacity>1.0</opacity>
 					</diffuse-color>
 					<specular-color>
 						<red>0.4</red>
 						<green>0.8</green>
-						<blue>1</blue>
-						<alpha>1</alpha>
+						<blue>1.0</blue>
+						<opacity>1.0</opacity>
 					</specular-color>
 					<shininess>80</shininess>
 				</material>

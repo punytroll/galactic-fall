@@ -149,11 +149,11 @@ void WriteToXMLStream(XMLStream & XMLStream, Object * TheObject)
 			XMLStream << element << "part" << attribute << "identifier" << value << PartMaterialIterator->first;
 			if(PartMaterialIterator->second->GetDiffuseColor() != 0)
 			{
-				XMLStream << element << "material-diffuse-color" << attribute << "red" << value << PartMaterialIterator->second->GetDiffuseColor()->GetColor()[0] << attribute << "green" << value << PartMaterialIterator->second->GetDiffuseColor()->GetColor()[1] << attribute << "blue" << value << PartMaterialIterator->second->GetDiffuseColor()->GetColor()[2] << attribute << "alpha" << value << PartMaterialIterator->second->GetDiffuseColor()->GetColor()[3] << end;
+				XMLStream << element << "material-diffuse-color" << attribute << "red" << value << PartMaterialIterator->second->GetDiffuseColor()->GetColor()[0] << attribute << "green" << value << PartMaterialIterator->second->GetDiffuseColor()->GetColor()[1] << attribute << "blue" << value << PartMaterialIterator->second->GetDiffuseColor()->GetColor()[2] << attribute << "opacity" << value << PartMaterialIterator->second->GetDiffuseColor()->GetColor()[3] << end;
 			}
 			if(PartMaterialIterator->second->GetSpecularColor() != 0)
 			{
-				XMLStream << element << "material-specular-color" << attribute << "red" << value << PartMaterialIterator->second->GetSpecularColor()->GetColor()[0] << attribute << "green" << value << PartMaterialIterator->second->GetSpecularColor()->GetColor()[1] << attribute << "blue" << value << PartMaterialIterator->second->GetSpecularColor()->GetColor()[2] << attribute << "alpha" << value << PartMaterialIterator->second->GetSpecularColor()->GetColor()[3] << end;
+				XMLStream << element << "material-specular-color" << attribute << "red" << value << PartMaterialIterator->second->GetSpecularColor()->GetColor()[0] << attribute << "green" << value << PartMaterialIterator->second->GetSpecularColor()->GetColor()[1] << attribute << "blue" << value << PartMaterialIterator->second->GetSpecularColor()->GetColor()[2] << attribute << "opacity" << value << PartMaterialIterator->second->GetSpecularColor()->GetColor()[3] << end;
 			}
 			XMLStream << element << "material-shininess" << attribute << "value" << value << PartMaterialIterator->second->GetShininess() << end;
 			XMLStream << end;

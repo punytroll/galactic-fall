@@ -16,7 +16,7 @@
 			<red>0.8</red>
 			<green>0.95</green>
 			<blue>1.0</blue>
-			<alpha>1.0</alpha>
+			<opacity>1.0</opacity>
 		</color>
 	</star>
 	<planets>
@@ -35,13 +35,13 @@
 								<red>0.8</red>
 								<green>0.6</green>
 								<blue>1.0</blue>
-								<alpha>1.0</alpha>
+								<opacity>1.0</opacity>
 							</diffuse-color>
 							<specular-color>
 								<red>0.25</red>
 								<green>0.25</green>
 								<blue>0.25</blue>
-								<alpha>1</alpha>
+								<opacity>1.0</opacity>
 							</specular-color>
 							<shininess>10</shininess>
 						</material>
@@ -113,13 +113,13 @@
 								<red>0.8</red>
 								<green>0.6</green>
 								<blue>0.8</blue>
-								<alpha>1.0</alpha>
+								<opacity>1.0</opacity>
 							</diffuse-color>
 							<specular-color>
 								<red>0.25</red>
 								<green>0.25</green>
 								<blue>0.25</blue>
-								<alpha>1</alpha>
+								<opacity>1.0</opacity>
 							</specular-color>
 							<shininess>10</shininess>
 						</material>
