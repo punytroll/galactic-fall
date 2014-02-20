@@ -25,9 +25,8 @@
 #include "../planet.h"
 #include "../ship.h"
 #include "../string_cast.h"
-#include "border.h"
 #include "hangar_widget.h"
-#include "label.h"
+#include "progress_bar.h"
 #include "text_button.h"
 
 UI::HangarWidget::HangarWidget(UI::Widget * SupWidget, Reference< Planet > Planet, Reference< Character > Character) :
@@ -46,39 +45,12 @@ UI::HangarWidget::HangarWidget(UI::Widget * SupWidget, Reference< Planet > Plane
 	RepairButton->ConnectClickedCallback(Callback(this, &UI::HangarWidget::_OnRepairButtonClicked));
 	RepairButton->ConnectUpdatingCallback(Bind1(Callback(this, &UI::HangarWidget::_OnRepairButtonUpdating), RepairButton));
 	
-	UI::Widget * HullStateBar(new UI::Widget(this));
+	UI::ProgressBar * HullStateProgressBar(new UI::ProgressBar(this));
 	
-	HullStateBar->SetPosition(Vector2f(190.0f, 0.0f));
-	HullStateBar->SetSize(Vector2f(410.0f, 20.0f));
-	HullStateBar->SetAnchorRight(true);
-	
-	UI::Widget * HullStateBarFill(new UI::Widget(HullStateBar));
-	
-	HullStateBarFill->SetPosition(Vector2f(0.0f, 0.0f));
-	HullStateBarFill->SetSize(HullStateBar->GetSize());
-	
-	UI::Label * HullStateBarLabel(new UI::Label(HullStateBar));
-	
-	HullStateBarLabel->SetPosition(Vector2f(0.0f, 0.0f));
-	HullStateBarLabel->SetSize(HullStateBar->GetSize());
-	HullStateBarLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
-	HullStateBarLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
-	HullStateBarLabel->SetAnchorBottom(true);
-	HullStateBarLabel->SetAnchorLeft(true);
-	HullStateBarLabel->SetAnchorRight(true);
-	HullStateBarLabel->SetAnchorTop(true);
-	HullStateBar->ConnectUpdatingCallback(Bind1(Bind1(Callback(this, &UI::HangarWidget::_OnHullStateBarUpdating), HullStateBarFill), HullStateBarLabel));
-	
-	UI::Border * HullStateBarBorder(new UI::Border(HullStateBar));
-	
-	HullStateBarBorder->SetPosition(Vector2f(0.0f, 0.0f));
-	HullStateBarBorder->SetSize(HullStateBar->GetSize());
-	HullStateBarBorder->SetWidth(1.0f);
-	HullStateBarBorder->SetColor(Color(1.0f, 1.0f, 1.0f, 1.0f));
-	HullStateBarBorder->SetAnchorBottom(true);
-	HullStateBarBorder->SetAnchorLeft(true);
-	HullStateBarBorder->SetAnchorRight(true);
-	HullStateBarBorder->SetAnchorTop(true);
+	HullStateProgressBar->SetPosition(Vector2f(190.0f, 0.0f));
+	HullStateProgressBar->SetSize(Vector2f(410.0f, 20.0f));
+	HullStateProgressBar->SetAnchorRight(true);
+	HullStateProgressBar->ConnectUpdatingCallback(Bind1(Callback(this, &UI::HangarWidget::_OnHullStateProgressBarUpdating), HullStateProgressBar));
 	
 	UI::Button * RechargeButton(new UI::TextButton(this, "Recharge"));
 	
@@ -87,39 +59,12 @@ UI::HangarWidget::HangarWidget(UI::Widget * SupWidget, Reference< Planet > Plane
 	RechargeButton->ConnectClickedCallback(Callback(this, &UI::HangarWidget::_OnRechargeButtonClicked));
 	RechargeButton->ConnectUpdatingCallback(Bind1(Callback(this, &UI::HangarWidget::_OnRechargeButtonUpdating), RechargeButton));
 	
-	UI::Widget * EnergyStateBar(new UI::Widget(this));
+	UI::ProgressBar * EnergyStateProgressBar(new UI::ProgressBar(this));
 	
-	EnergyStateBar->SetPosition(Vector2f(190.0f, 30.0f));
-	EnergyStateBar->SetSize(Vector2f(410.0f, 20.0f));
-	EnergyStateBar->SetAnchorRight(true);
-	
-	UI::Widget * EnergyStateBarFill(new UI::Widget(EnergyStateBar));
-	
-	EnergyStateBarFill->SetPosition(Vector2f(0.0f, 0.0f));
-	EnergyStateBarFill->SetSize(EnergyStateBar->GetSize());
-	
-	UI::Label * EnergyStateBarLabel(new UI::Label(EnergyStateBar));
-	
-	EnergyStateBarLabel->SetPosition(Vector2f(0.0f, 0.0f));
-	EnergyStateBarLabel->SetSize(EnergyStateBar->GetSize());
-	EnergyStateBarLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
-	EnergyStateBarLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
-	EnergyStateBarLabel->SetAnchorBottom(true);
-	EnergyStateBarLabel->SetAnchorLeft(true);
-	EnergyStateBarLabel->SetAnchorRight(true);
-	EnergyStateBarLabel->SetAnchorTop(true);
-	EnergyStateBar->ConnectUpdatingCallback(Bind1(Bind1(Callback(this, &UI::HangarWidget::_OnEnergyStateBarUpdating), EnergyStateBarFill), EnergyStateBarLabel));
-	
-	UI::Border * EnergyStateBarBorder(new UI::Border(EnergyStateBar));
-	
-	EnergyStateBarBorder->SetPosition(Vector2f(0.0f, 0.0f));
-	EnergyStateBarBorder->SetSize(EnergyStateBar->GetSize());
-	EnergyStateBarBorder->SetWidth(1.0f);
-	EnergyStateBarBorder->SetColor(Color(1.0f, 1.0f, 1.0f, 1.0f));
-	EnergyStateBarBorder->SetAnchorBottom(true);
-	EnergyStateBarBorder->SetAnchorLeft(true);
-	EnergyStateBarBorder->SetAnchorRight(true);
-	EnergyStateBarBorder->SetAnchorTop(true);
+	EnergyStateProgressBar->SetPosition(Vector2f(190.0f, 30.0f));
+	EnergyStateProgressBar->SetSize(Vector2f(410.0f, 20.0f));
+	EnergyStateProgressBar->SetAnchorRight(true);
+	EnergyStateProgressBar->ConnectUpdatingCallback(Bind1(Callback(this, &UI::HangarWidget::_OnEnergyStateProgressBarUpdating), EnergyStateProgressBar));
 	
 	UI::Button * RefuelButton(new UI::TextButton(this, "Refuel"));
 	
@@ -128,39 +73,12 @@ UI::HangarWidget::HangarWidget(UI::Widget * SupWidget, Reference< Planet > Plane
 	RefuelButton->ConnectClickedCallback(Callback(this, &UI::HangarWidget::_OnRefuelButtonClicked));
 	RefuelButton->ConnectUpdatingCallback(Bind1(Callback(this, &UI::HangarWidget::_OnRefuelButtonUpdating), RefuelButton));
 	
-	UI::Widget * FuelStateBar(new UI::Widget(this));
+	UI::ProgressBar * FuelStateProgressBar(new UI::ProgressBar(this));
 	
-	FuelStateBar->SetPosition(Vector2f(190.0f, 60.0f));
-	FuelStateBar->SetSize(Vector2f(410.0f, 20.0f));
-	FuelStateBar->SetAnchorRight(true);
-	
-	UI::Widget * FuelStateBarFill(new UI::Widget(FuelStateBar));
-	
-	FuelStateBarFill->SetPosition(Vector2f(0.0f, 0.0f));
-	FuelStateBarFill->SetSize(FuelStateBar->GetSize());
-	
-	UI::Label * FuelStateBarLabel(new UI::Label(FuelStateBar));
-	
-	FuelStateBarLabel->SetPosition(Vector2f(0.0f, 0.0f));
-	FuelStateBarLabel->SetSize(FuelStateBar->GetSize());
-	FuelStateBarLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
-	FuelStateBarLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
-	FuelStateBarLabel->SetAnchorBottom(true);
-	FuelStateBarLabel->SetAnchorLeft(true);
-	FuelStateBarLabel->SetAnchorRight(true);
-	FuelStateBarLabel->SetAnchorTop(true);
-	FuelStateBar->ConnectUpdatingCallback(Bind1(Bind1(Callback(this, &UI::HangarWidget::_OnFuelStateBarUpdating), FuelStateBarFill), FuelStateBarLabel));
-	
-	UI::Border * FuelStateBarBorder(new UI::Border(FuelStateBar));
-	
-	FuelStateBarBorder->SetPosition(Vector2f(0.0f, 0.0f));
-	FuelStateBarBorder->SetSize(FuelStateBar->GetSize());
-	FuelStateBarBorder->SetWidth(1.0f);
-	FuelStateBarBorder->SetColor(Color(1.0f, 1.0f, 1.0f, 1.0f));
-	FuelStateBarBorder->SetAnchorBottom(true);
-	FuelStateBarBorder->SetAnchorLeft(true);
-	FuelStateBarBorder->SetAnchorRight(true);
-	FuelStateBarBorder->SetAnchorTop(true);
+	FuelStateProgressBar->SetPosition(Vector2f(190.0f, 60.0f));
+	FuelStateProgressBar->SetSize(Vector2f(410.0f, 20.0f));
+	FuelStateProgressBar->SetAnchorRight(true);
+	FuelStateProgressBar->ConnectUpdatingCallback(Bind1(Callback(this, &UI::HangarWidget::_OnFuelStateProgressBarUpdating), FuelStateProgressBar));
 	
 	UI::Button * TakeOffButton(new UI::TextButton(this, "Take Off"));
 	
@@ -169,54 +87,51 @@ UI::HangarWidget::HangarWidget(UI::Widget * SupWidget, Reference< Planet > Plane
 	TakeOffButton->ConnectClickedCallback(Callback(this, &UI::HangarWidget::_OnTakeOffButtonClicked));
 }
 
-void UI::HangarWidget::_OnEnergyStateBarUpdating(UI::Widget * EnergyStateBarFill, UI::Label * EnergyStateBarLabel, float RealTimeSeconds, float GameTimeSeconds)
+void UI::HangarWidget::_OnEnergyStateProgressBarUpdating(UI::ProgressBar * EnergyStateProgressBar, float RealTimeSeconds, float GameTimeSeconds)
 {
 	assert(_Character.IsValid() == true);
-	assert(_Character->GetShip() != 0);
-	assert(EnergyStateBarLabel != 0);
-	assert(EnergyStateBarFill != 0);
+	assert(_Character->GetShip() != nullptr);
+	assert(EnergyStateProgressBar != nullptr);
 	
 	float EnergyPercentage(0.0f);
 	
 	if(_Character->GetShip()->GetBattery() != 0)
 	{
-		EnergyStateBarLabel->SetText(to_string_cast(_Character->GetShip()->GetBattery()->GetEnergy(), 2));
+		EnergyStateProgressBar->SetText(to_string_cast(_Character->GetShip()->GetBattery()->GetEnergy(), 2));
 		EnergyPercentage = _Character->GetShip()->GetBattery()->GetEnergy() / _Character->GetShip()->GetBattery()->GetEnergyCapacity();
 	}
 	else
 	{
-		EnergyStateBarLabel->SetText("n/a");
+		EnergyStateProgressBar->SetText("n/a");
 	}
-	EnergyStateBarFill->SetSize(Vector2f(EnergyPercentage * EnergyStateBarLabel->GetSize()[0], EnergyStateBarFill->GetSize()[1]));
-	EnergyStateBarFill->SetBackgroundColor(Color(1.0f - EnergyPercentage, EnergyPercentage, 0.0f, 1.0f));
+	EnergyStateProgressBar->SetFillLevel(EnergyPercentage);
+	EnergyStateProgressBar->SetColor(Color(1.0f - EnergyPercentage, EnergyPercentage, 0.0f, 1.0f));
 }
 
-void UI::HangarWidget::_OnFuelStateBarUpdating(UI::Widget * FuelStateBarFill, UI::Label * FuelStateBarLabel, float RealTimeSeconds, float GameTimeSeconds)
+void UI::HangarWidget::_OnFuelStateProgressBarUpdating(UI::ProgressBar * FuelStateProgressBar, float RealTimeSeconds, float GameTimeSeconds)
 {
 	assert(_Character.IsValid() == true);
-	assert(_Character->GetShip() != 0);
-	assert(FuelStateBarLabel != 0);
-	FuelStateBarLabel->SetText(to_string_cast(_Character->GetShip()->GetFuel(), 2));
-	assert(FuelStateBarFill != 0);
+	assert(_Character->GetShip() != nullptr);
+	assert(FuelStateProgressBar != nullptr);
+	FuelStateProgressBar->SetText(to_string_cast(_Character->GetShip()->GetFuel(), 2));
 	
 	float FuelPercentage(_Character->GetShip()->GetFuel() / _Character->GetShip()->GetFuelCapacity());
 	
-	FuelStateBarFill->SetSize(Vector2f(FuelPercentage * FuelStateBarLabel->GetSize()[0], FuelStateBarFill->GetSize()[1]));
-	FuelStateBarFill->SetBackgroundColor(Color(1.0f - FuelPercentage, FuelPercentage, 0.0f, 1.0f));
+	FuelStateProgressBar->SetFillLevel(FuelPercentage);
+	FuelStateProgressBar->SetColor(Color(1.0f - FuelPercentage, FuelPercentage, 0.0f, 1.0f));
 }
 
-void UI::HangarWidget::_OnHullStateBarUpdating(UI::Widget * HullStateBarFill, UI::Label * HullStateBarLabel, float RealTimeSeconds, float GameTimeSeconds)
+void UI::HangarWidget::_OnHullStateProgressBarUpdating(UI::ProgressBar * HullStateProgressBar, float RealTimeSeconds, float GameTimeSeconds)
 {
 	assert(_Character.IsValid() == true);
-	assert(_Character->GetShip() != 0);
-	assert(HullStateBarLabel != 0);
-	HullStateBarLabel->SetText(to_string_cast(_Character->GetShip()->GetHull(), 2));
-	assert(HullStateBarFill != 0);
+	assert(_Character->GetShip() != nullptr);
+	assert(HullStateProgressBar != nullptr);
+	HullStateProgressBar->SetText(to_string_cast(_Character->GetShip()->GetHull(), 2));
 	
 	float HullPercentage(_Character->GetShip()->GetHull() / _Character->GetShip()->GetHullCapacity());
 	
-	HullStateBarFill->SetSize(Vector2f(HullPercentage * HullStateBarLabel->GetSize()[0], HullStateBarFill->GetSize()[1]));
-	HullStateBarFill->SetBackgroundColor(Color(1.0f - HullPercentage, HullPercentage, 0.0f, 1.0f));
+	HullStateProgressBar->SetFillLevel(HullPercentage);
+	HullStateProgressBar->SetColor(Color(1.0f - HullPercentage, HullPercentage, 0.0f, 1.0f));
 }
 
 void UI::HangarWidget::_OnRechargeButtonClicked(void)
