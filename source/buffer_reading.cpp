@@ -24,10 +24,10 @@ Arxx::BufferReader & operator>>(Arxx::BufferReader & BufferReader, Color & Color
 	float Red;
 	float Green;
 	float Blue;
-	float Alpha;
+	float Opacity;
 	
-	BufferReader >> Red >> Green >> Blue >> Alpha;
-	Color.Set(Red, Green, Blue, Alpha);
+	BufferReader >> Red >> Green >> Blue >> Opacity;
+	Color.Set(Red, Green, Blue, Opacity);
 	
 	return BufferReader;
 }

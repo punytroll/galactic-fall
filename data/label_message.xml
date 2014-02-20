@@ -16,7 +16,7 @@
 			<red>0.0</red>
 			<green>0.0</green>
 			<blue>0.0</blue>
-			<alpha>0.0</alpha>
+			<opacity>0.0</opacity>
 		</background-color>
 		<visible>false</visible>
 		<anchor-bottom>false</anchor-bottom>
@@ -31,7 +31,7 @@
 		<red>1.0</red>
 		<green>0.3</green>
 		<blue>0.3</blue>
-		<alpha>1.0</alpha>
+		<opacity>1.0</opacity>
 	</text-color>
 	<horizontal-alignment>2</horizontal-alignment>
 	<vertical-alignment>0</vertical-alignment>

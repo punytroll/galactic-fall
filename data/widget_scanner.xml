@@ -15,7 +15,7 @@
 		<red>0.0</red>
 		<green>0.1</green>
 		<blue>0.17</blue>
-		<alpha>0.8</alpha>
+		<opacity>0.8</opacity>
 	</background-color>
 	<visible>true</visible>
 	<anchor-bottom>true</anchor-bottom>
@@ -41,7 +41,7 @@
 					<red>0.0</red>
 					<green>0.1</green>
 					<blue>0.17</blue>
-					<alpha>0.8</alpha>
+					<opacity>0.8</opacity>
 				</background-color>
 				<visible>true</visible>
 				<anchor-bottom>true</anchor-bottom>
@@ -69,7 +69,7 @@
 					<red>0.0</red>
 					<green>0.0</green>
 					<blue>0.0</blue>
-					<alpha>0.0</alpha>
+					<opacity>0.0</opacity>
 				</background-color>
 				<visible>true</visible>
 				<anchor-bottom>false</anchor-bottom>
@@ -84,7 +84,7 @@
 				<red>0.7</red>
 				<green>0.8</green>
 				<blue>1.0</blue>
-				<alpha>1.0</alpha>
+				<opacity>1.0</opacity>
 			</text-color>
 			<horizontal-alignment>2</horizontal-alignment>
 			<vertical-alignment>2</vertical-alignment>
@@ -107,7 +107,7 @@
 					<red>0.0</red>
 					<green>0.0</green>
 					<blue>0.0</blue>
-					<alpha>0.0</alpha>
+					<opacity>0.0</opacity>
 				</background-color>
 				<visible>true</visible>
 				<anchor-bottom>false</anchor-bottom>
@@ -122,7 +122,7 @@
 				<red>0.7</red>
 				<green>0.8</green>
 				<blue>1.0</blue>
-				<alpha>1.0</alpha>
+				<opacity>1.0</opacity>
 			</text-color>
 			<horizontal-alignment>2</horizontal-alignment>
 			<vertical-alignment>2</vertical-alignment>
@@ -145,7 +145,7 @@
 					<red>0.0</red>
 					<green>0.0</green>
 					<blue>0.0</blue>
-					<alpha>0.0</alpha>
+					<opacity>0.0</opacity>
 				</background-color>
 				<visible>true</visible>
 				<anchor-bottom>true</anchor-bottom>
@@ -159,7 +159,7 @@
 				<red>0.1</red>
 				<green>0.2</green>
 				<blue>0.3</blue>
-				<alpha>1.0</alpha>
+				<opacity>1.0</opacity>
 			</color>
 		</border>
 	</sub-widgets>
