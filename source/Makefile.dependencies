@@ -35,6 +35,7 @@ arx_reading_cpp = \
 	$(star_h) \
 	$(string_cast_h) \
 	$(system_h) \
+	$(ui_border_h) \
 	$(ui_label_h) \
 	$(ui_mini_map_display_h) \
 	$(ui_scanner_display_h) \
@@ -1078,9 +1079,8 @@ ui_hangar_widget_cpp = \
 	$(planet_h) \
 	$(ship_h) \
 	$(string_cast_h) \
-	$(ui_border_h) \
 	$(ui_hangar_widget_h) \
-	$(ui_label_h) \
+	$(ui_progress_bar_h) \
 	$(ui_text_button_h)
 
 ui_hangar_widget_h = \
@@ -1276,6 +1276,18 @@ ui_planet_window_cpp = \
 ui_planet_window_h = \
 	ui/planet_window.h \
 	$(ui_window_h)
+
+ui_progress_bar_cpp = \
+	ui/progress_bar.cpp \
+	$(callbacks_callbacks_h) \
+	$(color_h) \
+	$(ui_border_h) \
+	$(ui_label_h) \
+	$(ui_progress_bar_h)
+
+ui_progress_bar_h = \
+	ui/progress_bar.h \
+	$(ui_widget_h)
 
 ui_save_game_dialog_cpp = \
 	ui/save_game_dialog.cpp \
