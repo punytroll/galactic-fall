@@ -155,9 +155,9 @@ TransporterPhase1::TransporterPhase1(StateMachineMind * Mind) :
 
 void TransporterPhase1::Enter(void)
 {
-	const System * CurrentSystem(dynamic_cast< System * >(GetMind()->GetCharacter()->GetShip()->GetContainer()));
+	auto CurrentSystem(GetMind()->GetCharacter()->GetShip()->GetSystem());
 	
-	assert(CurrentSystem != 0);
+	assert(CurrentSystem != nullptr);
 	
 	const std::vector< Planet * > & Planets(CurrentSystem->GetPlanets());
 	
@@ -384,9 +384,9 @@ TransporterPhase4::TransporterPhase4(StateMachineMind * Mind) :
 
 void TransporterPhase4::Enter(void)
 {
-	const System * CurrentSystem(dynamic_cast< System * >(GetMind()->GetCharacter()->GetShip()->GetContainer()));
+	auto CurrentSystem(GetMind()->GetCharacter()->GetShip()->GetSystem());
 	
-	assert(CurrentSystem != 0);
+	assert(CurrentSystem != nullptr);
 	
 	const std::list< System * > & Systems(CurrentSystem->GetLinkedSystems());
 	
@@ -455,9 +455,9 @@ Fight::Fight(StateMachineMind * Mind) :
 
 void Fight::Enter(void)
 {
-	const System * CurrentSystem(dynamic_cast< System * >(GetMind()->GetCharacter()->GetShip()->GetContainer()));
+	auto CurrentSystem(GetMind()->GetCharacter()->GetShip()->GetSystem());
 	
-	assert(CurrentSystem != 0);
+	assert(CurrentSystem != nullptr);
 	
 	const std::list< Ship * > & Ships(CurrentSystem->GetShips());
 	std::vector< Ship * > AttackPossibilities;
@@ -522,9 +522,9 @@ ShootFarthestCargo::ShootFarthestCargo(StateMachineMind * Mind) :
 
 void ShootFarthestCargo::Enter(void)
 {
-	const System * CurrentSystem(dynamic_cast< System * >(GetMind()->GetCharacter()->GetShip()->GetContainer()));
+	auto CurrentSystem(GetMind()->GetCharacter()->GetShip()->GetSystem());
 	
-	assert(CurrentSystem != 0);
+	assert(CurrentSystem != nullptr);
 	
 	const std::list< Commodity * > & Commodities(CurrentSystem->GetCommodities());
 	float MaximumDistance(FLT_MIN);
@@ -625,9 +625,9 @@ RefuelPhase1::RefuelPhase1(StateMachineMind * Mind) :
 
 void RefuelPhase1::Enter(void)
 {
-	const System * CurrentSystem(dynamic_cast< System * >(GetMind()->GetCharacter()->GetShip()->GetContainer()));
+	auto CurrentSystem(GetMind()->GetCharacter()->GetShip()->GetSystem());
 	
-	assert(CurrentSystem != 0);
+	assert(CurrentSystem != nullptr);
 	
 	const std::vector< Planet * > & Planets(CurrentSystem->GetPlanets());
 	float MinimumDistance(FLT_MAX);

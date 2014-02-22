@@ -319,7 +319,6 @@ float CalculateTime(void)
 	{
 		DeltaSeconds *= g_TimeWarp;
 		GameTime::Set(GameTime::Get() + DeltaSeconds);
-		std::cout << DeltaSeconds << std::endl;
 		
 		return DeltaSeconds;
 	}
