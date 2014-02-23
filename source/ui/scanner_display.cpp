@@ -45,15 +45,23 @@ UI::ScannerDisplay::ScannerDisplay(UI::Widget * SupWidget) :
 	ConnectUpdatingCallback(Callback(this, &UI::ScannerDisplay::_OnUpdating));
 }
 
-void UI::ScannerDisplay::SetTarget(Reference< Object > Target)
+void UI::ScannerDisplay::SetTarget(Object * Target)
 {
-	assert(Target.IsValid() == true);
-	assert(Target->GetAspectVisualization());
+	assert((Target == nullptr) || (Target->GetAspectVisualization() != nullptr));
 	if(Target != _Target)
 	{
-		_Target = Target;
-		_Clear();
-		_Setup();
+		if(_Target != nullptr)
+		{
+			_Clear();
+			_Target->DisconnectDestroyingCallback(_TargetDestroyingConnectionHandle);
+			_Target = nullptr;
+		}
+		if(Target != nullptr)
+		{
+			_Target = Target;
+			_TargetDestroyingConnectionHandle = _Target->ConnectDestroyingCallback(Callback(this, &UI::ScannerDisplay::_OnTargetDestroying));
+			_Setup();
+		}
 	}
 }
 
@@ -94,10 +102,39 @@ void UI::ScannerDisplay::_Clear(void)
 	}
 }
 
+void UI::ScannerDisplay::_OnDestroying(void)
+{
+	_Clear();
+}
+
+void UI::ScannerDisplay::_OnDestroyInScene(Graphics::Node * Node)
+{
+	InvalidateVisualizationReference(Node);
+	delete Node;
+}
+
+void UI::ScannerDisplay::_OnUpdating(float RealTimeSeconds, float GameTimeSeconds)
+{
+	if(_Target != nullptr)
+	{
+		assert(_Target->GetAspectPhysical() != nullptr);
+		assert(_Target->GetAspectPosition() != nullptr);
+		assert(GetView() != nullptr);
+		assert(GetView()->GetCamera() != nullptr);
+		GetView()->GetCamera()->SetSpacialMatrix(Matrix4f::CreateFromTranslationComponents(_Target->GetAspectPosition()->GetPosition()[0], _Target->GetAspectPosition()->GetPosition()[1], 4.0f * _Target->GetAspectPhysical()->GetRadialSize()));
+	}
+}
+
+void UI::ScannerDisplay::_OnTargetDestroying(void)
+{
+	_Clear();
+	_Target = nullptr;
+}
+
 void UI::ScannerDisplay::_Setup(void)
 {
-	assert(_Target.IsValid() == true);
-	assert(_Target->GetAspectPhysical() != 0);
+	assert(_Target != nullptr);
+	assert(_Target->GetAspectPhysical() != nullptr);
 	
 	Graphics::PerspectiveProjection * PerspectiveProjection(new Graphics::PerspectiveProjection());
 	float RadialSize(_Target->GetAspectPhysical()->GetRadialSize());
@@ -149,29 +186,6 @@ void UI::ScannerDisplay::_Setup(void)
 	RootNode->SetUseLighting(true);
 	RootNode->SetUseDepthTest(true);
 	Scene->SetRootNode(RootNode);
-	VisualizeObject(_Target.Get(), RootNode);
+	VisualizeObject(_Target, RootNode);
 	SetView(View);
-}
-
-void UI::ScannerDisplay::_OnDestroying(void)
-{
-	_Clear();
-}
-
-void UI::ScannerDisplay::_OnDestroyInScene(Graphics::Node * Node)
-{
-	InvalidateVisualizationReference(Node);
-	delete Node;
-}
-
-void UI::ScannerDisplay::_OnUpdating(float RealTimeSeconds, float GameTimeSeconds)
-{
-	if(_Target.IsValid() == true)
-	{
-		assert(_Target->GetAspectPhysical() != nullptr);
-		assert(_Target->GetAspectPosition() != nullptr);
-		assert(GetView() != nullptr);
-		assert(GetView()->GetCamera() != nullptr);
-		GetView()->GetCamera()->SetSpacialMatrix(Matrix4f::CreateFromTranslationComponents(_Target->GetAspectPosition()->GetPosition()[0], _Target->GetAspectPosition()->GetPosition()[1], 4.0f * _Target->GetAspectPhysical()->GetRadialSize()));
-	}
 }

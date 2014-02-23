@@ -163,7 +163,7 @@ void TransporterPhase1::Enter(void)
 	
 	if(Planets.size() != 0)
 	{
-		GetMind()->GetCharacter()->GetShip()->SetTarget((*(Planets.begin() + GetRandomInteger(Planets.size() - 1)))->GetReference());
+		GetMind()->GetCharacter()->GetShip()->SetTarget((*(Planets.begin() + GetRandomInteger(Planets.size() - 1))));
 	}
 	else
 	{
@@ -220,11 +220,11 @@ void TransporterPhase2::Execute(void)
 	}
 	else
 	{
-		Reference< Planet > Planet(GetMind()->GetCharacter()->GetShip()->GetTarget());
+		auto ThePlanet(dynamic_cast< Planet * >(GetMind()->GetCharacter()->GetShip()->GetTarget()));
 		
-		if(GetMind()->GetCharacter()->GetCredits() >= (Planet->GetLandingFeePerSpace() * GetMind()->GetCharacter()->GetShip()->GetAspectPhysical()->GetSpaceRequirement()))
+		if(GetMind()->GetCharacter()->GetCredits() >= (ThePlanet->GetLandingFeePerSpace() * GetMind()->GetCharacter()->GetShip()->GetAspectPhysical()->GetSpaceRequirement()))
 		{
-			GetMind()->GetCharacter()->RemoveCredits(Planet->GetLandingFeePerSpace() * GetMind()->GetCharacter()->GetShip()->GetAspectPhysical()->GetSpaceRequirement());
+			GetMind()->GetCharacter()->RemoveCredits(ThePlanet->GetLandingFeePerSpace() * GetMind()->GetCharacter()->GetShip()->GetAspectPhysical()->GetSpaceRequirement());
 			GetMind()->GetCharacter()->GetShip()->SetLand(true);
 			GetMind()->GetStateMachine()->SetState(new TransporterPhase3(GetMind()));
 			delete this;
@@ -255,14 +255,14 @@ TransporterPhase3::TransporterPhase3(StateMachineMind * Mind) :
 void TransporterPhase3::Enter(void)
 {
 	// ATTENTION: the target is only valid because this Enter() function is called before the setting of m_Land is processed in the ship which invalidates the ship's target
-	Reference< Planet > Planet(GetMind()->GetCharacter()->GetShip()->GetTarget());
+	auto ThePlanet(dynamic_cast< Planet * >(GetMind()->GetCharacter()->GetShip()->GetTarget()));
 	
 	// build a lookup map for asset classes
 	std::map< std::string, PlanetAssetClass * > PlanetAssetClasses;
 	std::vector< PlanetAssetClass * > BuyPlanetAssetClasses;
 	
 	{
-		const std::vector< PlanetAssetClass * > & OfferedPlanetAssetClasses(Planet->GetPlanetAssetClasses());
+		const std::vector< PlanetAssetClass * > & OfferedPlanetAssetClasses(ThePlanet->GetPlanetAssetClasses());
 		
 		for(std::vector< PlanetAssetClass * >::size_type Index = 0; Index < OfferedPlanetAssetClasses.size(); ++Index)
 		{
@@ -325,7 +325,7 @@ void TransporterPhase3::Enter(void)
 						
 						Object * NewCommodity(g_ObjectFactory->Create(PlanetAssetClassToBuy->GetAssetClass()->GetObjectTypeIdentifier(), PlanetAssetClassToBuy->GetAssetClass()->GetObjectClassIdentifier()));
 						
-						NewCommodity->SetObjectIdentifier("::" + PlanetAssetClassToBuy->GetAssetClass()->GetObjectTypeIdentifier() + "(" + PlanetAssetClassToBuy->GetAssetClass()->GetObjectClassIdentifier() + ")::buy_index(" + to_string_cast(NumberOfPlanetAssetClassesToBuy) + "|" + to_string_cast(NumberOfAssetsToBuy) + ")::bought_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::bought_by(" + GetMind()->GetObjectIdentifier() + ")::bought_on(" + Planet->GetObjectIdentifier() + ")");
+						NewCommodity->SetObjectIdentifier("::" + PlanetAssetClassToBuy->GetAssetClass()->GetObjectTypeIdentifier() + "(" + PlanetAssetClassToBuy->GetAssetClass()->GetObjectClassIdentifier() + ")::buy_index(" + to_string_cast(NumberOfPlanetAssetClassesToBuy) + "|" + to_string_cast(NumberOfAssetsToBuy) + ")::bought_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::bought_by(" + GetMind()->GetObjectIdentifier() + ")::bought_on(" + ThePlanet->GetObjectIdentifier() + ")");
 						GetMind()->GetCharacter()->GetShip()->GetCargoHold()->GetAspectObjectContainer()->AddContent(NewCommodity);
 					}
 					else
@@ -471,7 +471,7 @@ void Fight::Enter(void)
 	}
 	if(AttackPossibilities.size() > 0)
 	{
-		GetMind()->GetCharacter()->GetShip()->SetTarget(AttackPossibilities[GetRandomInteger(AttackPossibilities.size() - 1)]->GetReference());
+		GetMind()->GetCharacter()->GetShip()->SetTarget(AttackPossibilities[GetRandomInteger(AttackPossibilities.size() - 1)]);
 	}
 	else
 	{
@@ -482,7 +482,7 @@ void Fight::Enter(void)
 
 void Fight::Execute(void)
 {
-	if(GetMind()->GetCharacter()->GetShip()->GetTarget().IsValid() == true)
+	if(GetMind()->GetCharacter()->GetShip()->GetTarget() != nullptr)
 	{
 		Vector3f ToDestination(GetMind()->GetCharacter()->GetShip()->GetTarget()->GetAspectPosition()->GetPosition() - GetMind()->GetCharacter()->GetShip()->GetAspectPosition()->GetPosition());
 		float Length(ToDestination.Length());
@@ -542,7 +542,7 @@ void ShootFarthestCargo::Enter(void)
 	}
 	if(FarthestCommodity != 0)
 	{
-		GetMind()->GetCharacter()->GetShip()->SetTarget(FarthestCommodity->GetReference());
+		GetMind()->GetCharacter()->GetShip()->SetTarget(FarthestCommodity);
 	}
 	else
 	{
@@ -553,7 +553,7 @@ void ShootFarthestCargo::Enter(void)
 
 void ShootFarthestCargo::Execute(void)
 {
-	if(GetMind()->GetCharacter()->GetShip()->GetTarget().IsValid() == true)
+	if(GetMind()->GetCharacter()->GetShip()->GetTarget() != nullptr)
 	{
 		Vector3f ToDestination(GetMind()->GetCharacter()->GetShip()->GetTarget()->GetAspectPosition()->GetPosition() - GetMind()->GetCharacter()->GetShip()->GetAspectPosition()->GetPosition());
 		float Length(ToDestination.Length());
@@ -645,7 +645,7 @@ void RefuelPhase1::Enter(void)
 	}
 	if(NearestPlanet != 0)
 	{
-		GetMind()->GetCharacter()->GetShip()->SetTarget(NearestPlanet->GetReference());
+		GetMind()->GetCharacter()->GetShip()->SetTarget(NearestPlanet);
 	}
 	else
 	{
@@ -702,11 +702,11 @@ void RefuelPhase2::Execute(void)
 	}
 	else
 	{
-		Reference< Planet > Planet(GetMind()->GetCharacter()->GetShip()->GetTarget());
+		auto ThePlanet(dynamic_cast< Planet * >(GetMind()->GetCharacter()->GetShip()->GetTarget()));
 		
-		if(GetMind()->GetCharacter()->GetCredits() >= (Planet->GetLandingFeePerSpace() * GetMind()->GetCharacter()->GetShip()->GetAspectPhysical()->GetSpaceRequirement()))
+		if(GetMind()->GetCharacter()->GetCredits() >= (ThePlanet->GetLandingFeePerSpace() * GetMind()->GetCharacter()->GetShip()->GetAspectPhysical()->GetSpaceRequirement()))
 		{
-			GetMind()->GetCharacter()->RemoveCredits((Planet->GetLandingFeePerSpace() * GetMind()->GetCharacter()->GetShip()->GetAspectPhysical()->GetSpaceRequirement()));
+			GetMind()->GetCharacter()->RemoveCredits((ThePlanet->GetLandingFeePerSpace() * GetMind()->GetCharacter()->GetShip()->GetAspectPhysical()->GetSpaceRequirement()));
 			GetMind()->GetCharacter()->GetShip()->SetLand(true);
 			GetMind()->GetStateMachine()->SetState(new RefuelPhase3(GetMind()));
 			delete this;
@@ -740,9 +740,9 @@ RefuelPhase3::RefuelPhase3(StateMachineMind * Mind) :
 void RefuelPhase3::Enter(void)
 {
 	// ATTENTION: the target is only valid because this Enter() function is called before the setting of m_Land is processed in the ship which invalidates the ship's target
-	Reference< Planet > Planet(GetMind()->GetCharacter()->GetShip()->GetTarget());
+	auto ThePlanet(dynamic_cast< Planet * >(GetMind()->GetCharacter()->GetShip()->GetTarget()));
 	
-	const std::vector< PlanetAssetClass * > & PlanetAssetClasses(Planet->GetPlanetAssetClasses());
+	const std::vector< PlanetAssetClass * > & PlanetAssetClasses(ThePlanet->GetPlanetAssetClasses());
 	
 	for(std::vector< PlanetAssetClass * >::const_iterator PlanetAssetClassIterator = PlanetAssetClasses.begin(); PlanetAssetClassIterator != PlanetAssetClasses.end(); ++PlanetAssetClassIterator)
 	{

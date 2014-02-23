@@ -939,7 +939,7 @@ void UpdateScanner(UI::Widget * Scanner, float RealTimeSeconds, float GameTimeSe
 
 void UpdateScannerDisplay(UI::ScannerDisplay * ScannerDisplay, float RealTimeSeconds, float GameTimeSeconds)
 {
-	if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != nullptr) && (g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget().IsValid() == true))
+	if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != nullptr) && (g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget() != nullptr))
 	{
 		ScannerDisplay->SetVisible(true);
 		ScannerDisplay->SetTarget(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget());
@@ -967,10 +967,10 @@ void UpdateSystemNameLabel(UI::Label * SystemNameLabel, float RealTimeSeconds, f
 
 void UpdateTargetNameLabel(UI::Label * TargetNameLabel, float RealTimeSeconds, float GameTimeSeconds)
 {
-	if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0) && (g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget().IsValid() == true))
+	if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0) && (g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget() != nullptr))
 	{
 		TargetNameLabel->SetVisible(true);
-		assert(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget()->GetAspectName() != 0);
+		assert(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget()->GetAspectName() != nullptr);
 		TargetNameLabel->SetText(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget()->GetAspectName()->GetName());
 	}
 	else
@@ -981,13 +981,13 @@ void UpdateTargetNameLabel(UI::Label * TargetNameLabel, float RealTimeSeconds, f
 
 void UpdateTargetFactionNameLabel(UI::Label * TargetFactionNameLabel, float RealTimeSeconds, float GameTimeSeconds)
 {
-	if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0) && (g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget().IsValid() == true))
+	if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0) && (g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget() != nullptr))
 	{
 		if(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget()->GetTypeIdentifier() == "ship")
 		{
 			TargetFactionNameLabel->SetVisible(true);
 			
-			Ship * TargetedShip(dynamic_cast< Ship * >(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget().Get()));
+			Ship * TargetedShip(dynamic_cast< Ship * >(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget()));
 			
 			assert(TargetedShip != 0);
 			assert(TargetedShip->GetFaction() != 0);
@@ -998,7 +998,7 @@ void UpdateTargetFactionNameLabel(UI::Label * TargetFactionNameLabel, float Real
 		{
 			TargetFactionNameLabel->SetVisible(true);
 			
-			Planet * TargetedPlanet(dynamic_cast< Planet * >(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget().Get()));
+			Planet * TargetedPlanet(dynamic_cast< Planet * >(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget()));
 			
 			assert(TargetedPlanet != 0);
 			assert(TargetedPlanet->GetFaction() != 0);
@@ -1053,13 +1053,13 @@ void DisplayMainView(void)
 {
 	g_MainView->Render();
 	// HUD
-	if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0) && (g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget().IsValid() == true))
+	if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0) && (g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget() != nullptr))
 	{
 		Color Color(1.0f, 0.0f, 0.0f, 1.0f);
 		
 		GLClear(GL_DEPTH_BUFFER_BIT);
 		assert(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget()->GetAspectPhysical() != 0);
-		DrawSelection(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget().Get(), g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget()->GetAspectPhysical()->GetRadialSize(), Color);
+		DrawSelection(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget(), g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget()->GetAspectPhysical()->GetRadialSize(), Color);
 		
 		assert(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget()->GetAspectPosition() != 0);
 		Vector3f RelativePosition(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget()->GetAspectPosition()->GetPosition() - g_CharacterObserver->GetObservedCharacter()->GetShip()->GetAspectPosition()->GetPosition());
@@ -2589,7 +2589,7 @@ void ActionLand(void)
 {
 	if(g_InputMind.IsValid() == true)
 	{
-		const Planet * SelectedPlanet(dynamic_cast< const Planet * >(g_InputMind->GetCharacter()->GetShip()->GetTarget().Get()));
+		const Planet * SelectedPlanet(dynamic_cast< const Planet * >(g_InputMind->GetCharacter()->GetShip()->GetTarget()));
 		
 		switch(WantToLand(g_InputMind->GetCharacter(), g_InputMind->GetCharacter()->GetShip(), SelectedPlanet))
 		{
@@ -2795,7 +2795,7 @@ void ActionScoop(void)
 {
 	if(g_InputMind.IsValid() == true)
 	{
-		switch(WantToScoop(g_InputMind->GetCharacter()->GetShip(), dynamic_cast< const Commodity * >(g_InputMind->GetCharacter()->GetShip()->GetTarget().Get())))
+		switch(WantToScoop(g_InputMind->GetCharacter()->GetShip(), dynamic_cast< const Commodity * >(g_InputMind->GetCharacter()->GetShip()->GetTarget())))
 		{
 		case OK:
 			{

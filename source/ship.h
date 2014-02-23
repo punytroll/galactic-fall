@@ -64,8 +64,7 @@ public:
 	float GetMaximumSpeed(void) const;
 	float GetMaximumTurnSpeed(void) const;
 	System * GetSystem(void);
-	Reference< Object > & GetTarget(void);
-	const Reference< Object > & GetTarget(void) const;
+	Object * GetTarget(void);
 	const Vector3f & GetVelocity(void) const;
 	// setters
 	void SetAccelerate(bool Accelerate);
@@ -91,18 +90,17 @@ public:
 	void SetRefuel(bool Refuel);
 	void SetScoop(bool Scoop);
 	void SetTakeOff(bool TakeOff);
-	void SetTarget(Reference< Object > Target);
+	void SetTarget(Object * Target);
 	void SetTurnLeft(float TurnLeft);
 	void SetTurnRight(float TurnRight);
 	void SetVelocity(const Vector3f & Velocity);
-	// modifiers
-	void UnsetTarget(void);
 private:
 	// slot for the update aspect
 	bool Update(float Seconds);
 	// slots for the object container update
 	void OnAdded(Object * Content);
 	void OnRemoved(Object * Content);
+	void _OnTargetDestroying(void);
 private:
 	// ship class
 	bool m_Accelerate;
@@ -130,7 +128,8 @@ private:
 	bool m_Refuel;
 	bool m_Scoop;
 	bool m_TakeOff;
-	Reference< Object > _Target;
+	Object * _Target;
+	ConnectionHandle _TargetDestroyingConnectionHandle;
 	float m_TurnLeft;
 	float m_TurnRight;
 	Vector3f m_Velocity;
@@ -231,12 +230,7 @@ inline const System * Ship::GetLinkedSystemTarget(void) const
 	return m_LinkedSystemTarget;
 }
 
-inline Reference< Object > & Ship::GetTarget(void)
-{
-	return _Target;
-}
-
-inline const Reference< Object > & Ship::GetTarget(void) const
+inline Object * Ship::GetTarget(void)
 {
 	return _Target;
 }
@@ -346,11 +340,6 @@ inline void Ship::SetTakeOff(bool TakeOff)
 	m_TakeOff = TakeOff;
 }
 
-inline void Ship::SetTarget(Reference< Object > Target)
-{
-	_Target = Target;
-}
-
 inline void Ship::SetTurnLeft(float TurnLeft)
 {
 	assert((TurnLeft >= 0.0f) && (TurnLeft <= 1.0f));
@@ -366,11 +355,6 @@ inline void Ship::SetTurnRight(float TurnRight)
 inline void Ship::SetVelocity(const Vector3f & Velocity)
 {
 	m_Velocity = Velocity;
-}
-
-inline void Ship::UnsetTarget(void)
-{
-	_Target.Clear();
 }
 
 #endif

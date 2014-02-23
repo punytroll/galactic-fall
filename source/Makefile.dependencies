@@ -671,6 +671,7 @@ object_cpp = \
 
 object_h = \
 	object.h \
+	$(callbacks_events_h) \
 	$(referencing_h)
 
 object_aspect_accessory_cpp = \
@@ -1331,7 +1332,6 @@ ui_scanner_display_cpp = \
 
 ui_scanner_display_h = \
 	ui/scanner_display.h \
-	$(referencing_h) \
 	$(ui_view_display_h)
 
 ui_scroll_bar_cpp = \
