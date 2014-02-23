@@ -161,36 +161,36 @@ void UI::MiniMapDisplay::_OnDraw(void)
 		GLColor3f(0.8f, 0.8f, 0.8f);
 		for(auto Planet : TheSystem->GetPlanets())
 		{
-			if(Planet == _Owner->GetTarget().Get())
+			if(Planet == _Owner->GetTarget())
 			{
 				GLColor3f(0.2f, 1.0f, 0.0f);
 			}
 			GLVertex2f(Planet->GetAspectPosition()->GetPosition()[0], Planet->GetAspectPosition()->GetPosition()[1]);
-			if(Planet == _Owner->GetTarget().Get())
+			if(Planet == _Owner->GetTarget())
 			{
 				GLColor3f(0.8f, 0.8f, 0.8f);
 			}
 		}
 		for(auto Ship : TheSystem->GetShips())
 		{
-			if(Ship == _Owner->GetTarget().Get())
+			if(Ship == _Owner->GetTarget())
 			{
 				GLColor3f(0.2f, 1.0f, 0.0f);
 			}
 			GLVertex2f(Ship->GetAspectPosition()->GetPosition()[0], Ship->GetAspectPosition()->GetPosition()[1]);
-			if(Ship == _Owner->GetTarget().Get())
+			if(Ship == _Owner->GetTarget())
 			{
 				GLColor3f(0.8f, 0.8f, 0.8f);
 			}
 		}
 		for(auto Commodity : TheSystem->GetCommodities())
 		{
-			if(Commodity == _Owner->GetTarget().Get())
+			if(Commodity == _Owner->GetTarget())
 			{
 				GLColor3f(0.2f, 1.0f, 0.0f);
 			}
 			GLVertex2f(Commodity->GetAspectPosition()->GetPosition()[0], Commodity->GetAspectPosition()->GetPosition()[1]);
-			if(Commodity == _Owner->GetTarget().Get())
+			if(Commodity == _Owner->GetTarget())
 			{
 				GLColor3f(0.8f, 0.8f, 0.8f);
 			}

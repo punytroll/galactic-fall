@@ -30,7 +30,7 @@ class Threat
 {
 public:
 	// getters
-	const Reference< Object > * GetObjectWithHighestThreat(void);
+	Reference< Object > * GetObjectWithHighestThreat(void);
 	// modifiers
 	void ModifyThreat(const Reference< Object > & ThreateningObject, float DeltaThreat);
 private:

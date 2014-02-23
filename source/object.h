@@ -25,6 +25,7 @@
 #include <set>
 #include <string>
 
+#include "callbacks/events.h"
 #include "referencing.h"
 
 class Message;
@@ -91,7 +92,9 @@ public:
 	void AddAspectVisualization(void);
 	void Destroy(void);
 	void GenerateObjectIdentifier(void);
-	
+	// events
+	ConnectionHandle ConnectDestroyingCallback(Callback0< void > Callback);
+	void DisconnectDestroyingCallback(ConnectionHandle & ConnectionHandle);
 	// static methods
 	static Object * GetObject(const std::string & ObjectIdentifier);
 	static void Dump(std::ostream & OStream);
@@ -110,6 +113,7 @@ private:
 	// other
 	std::string _ClassIdentifier;
 	Object * _Container;
+	Event0< void > _DestroyingEvent;
 	std::string _ObjectIdentifier;
 	Reference< Object > _Reference;
 	std::string _TypeIdentifier;

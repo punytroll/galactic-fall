@@ -71,6 +71,7 @@ Ship::Ship(void) :
 	m_Refuel(false),
 	m_Scoop(false),
 	m_TakeOff(false),
+	_Target(nullptr),
 	m_TurnLeft(0.0f),
 	m_TurnRight(0.0f),
 	m_Velocity(true)
@@ -188,7 +189,7 @@ bool Ship::Update(float Seconds)
 	{
 		m_Land = false;
 		
-		Object * ThePlanet(GetTarget().Get());
+		Object * ThePlanet(GetTarget());
 		
 		assert(ThePlanet != 0);
 		assert(ThePlanet->GetTypeIdentifier() == "planet");
@@ -339,11 +340,11 @@ bool Ship::Update(float Seconds)
 		}
 		if(m_Scoop == true)
 		{
-			if((_CargoHold != nullptr) && (_Target.IsValid() == true))
+			if((_CargoHold != nullptr) && (_Target != nullptr))
 			{
 				assert(_CargoHold->GetAspectObjectContainer() != nullptr);
 				
-				auto Target(_Target.Get());
+				auto Target(_Target);
 				
 				assert(Target != nullptr);
 				if((Target->GetAspectPhysical() != nullptr) && (Target->GetAspectPhysical()->GetSpaceRequirement() <= _CargoHold->GetSpace()))
@@ -411,6 +412,23 @@ void Ship::SetHull(float Hull)
 	}
 }
 
+void Ship::SetTarget(Object * Target)
+{
+	if(_Target != Target)
+	{
+		if(_Target != nullptr)
+		{
+			_Target->DisconnectDestroyingCallback(_TargetDestroyingConnectionHandle);
+			_Target = nullptr;
+		}
+		if(Target != nullptr)
+		{
+			_Target = Target;
+			_TargetDestroyingConnectionHandle = _Target->ConnectDestroyingCallback(Callback(this, &Ship::_OnTargetDestroying));
+		}
+	}
+}
+
 void Ship::OnAdded(Object * Content)
 {
 	assert(Content != nullptr);
@@ -461,4 +479,10 @@ void Ship::OnRemoved(Object * Content)
 		assert(_CargoHold == Content);
 		_CargoHold = nullptr;
 	}
+}
+
+void Ship::_OnTargetDestroying(void)
+{
+	assert(_Target != nullptr);
+	_Target = nullptr;
 }

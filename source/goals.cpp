@@ -111,7 +111,7 @@ void GoalDestroyTarget::Activate(void)
 void GoalDestroyTarget::Process(void)
 {
 	assert(GetState() == Goal::ACTIVE);
-	if(GetMind()->GetCharacter()->GetShip()->GetTarget().IsValid() == true)
+	if(GetMind()->GetCharacter()->GetShip()->GetTarget() != nullptr)
 	{
 		Vector3f ToDestination(GetMind()->GetCharacter()->GetShip()->GetTarget()->GetAspectPosition()->GetPosition() - GetMind()->GetCharacter()->GetShip()->GetAspectPosition()->GetPosition());
 		float Length(ToDestination.Length());
@@ -268,11 +268,11 @@ void GoalFightSomeTarget::Process(void)
 	assert(GetState() == Goal::ACTIVE);
 	assert(GetSubGoals().empty() == false);
 	
-	const Reference< Object > * ObjectWithHighestThreat(GetMind()->GetCharacter()->GetThreat()->GetObjectWithHighestThreat());
+	Reference< Object > * ObjectWithHighestThreat(GetMind()->GetCharacter()->GetThreat()->GetObjectWithHighestThreat());
 	
 	if(ObjectWithHighestThreat != 0)
 	{
-		GetMind()->GetCharacter()->GetShip()->SetTarget(*ObjectWithHighestThreat);
+		GetMind()->GetCharacter()->GetShip()->SetTarget((*ObjectWithHighestThreat).Get());
 	}
 	
 	Goal * SubGoal(GetSubGoals().front());
@@ -777,7 +777,7 @@ void GoalSelectEnemy::Process(void)
 	}
 	if(AttackPossibilities.size() > 0)
 	{
-		GetMind()->GetCharacter()->GetShip()->SetTarget(AttackPossibilities[GetRandomInteger(AttackPossibilities.size() - 1)]->GetReference());
+		GetMind()->GetCharacter()->GetShip()->SetTarget(AttackPossibilities[GetRandomInteger(AttackPossibilities.size() - 1)]);
 		SetState(Goal::COMPLETED);
 	}
 	else
@@ -825,9 +825,9 @@ void GoalSelectMeasuredCargo::Process(void)
 			MinimumCost = Cost;
 		}
 	}
-	if(MinimumCostCommodity != 0)
+	if(MinimumCostCommodity != nullptr)
 	{
-		GetMind()->GetCharacter()->GetShip()->SetTarget(MinimumCostCommodity->GetReference());
+		GetMind()->GetCharacter()->GetShip()->SetTarget(MinimumCostCommodity);
 		SetState(Goal::COMPLETED);
 	}
 	else
@@ -873,9 +873,9 @@ void GoalSelectNearestPlanetInSystem::Process(void)
 			MinimumDistance = Distance;
 		}
 	}
-	if(NearestPlanet != 0)
+	if(NearestPlanet != nullptr)
 	{
-		GetMind()->GetCharacter()->GetShip()->SetTarget(NearestPlanet->GetReference());
+		GetMind()->GetCharacter()->GetShip()->SetTarget(NearestPlanet);
 		SetState(Goal::COMPLETED);
 	}
 	else
@@ -962,7 +962,7 @@ void GoalSelectStrandedShip::Process(void)
 	}
 	if(AttackPossibilities.size() > 0)
 	{
-		GetMind()->GetCharacter()->GetShip()->SetTarget(AttackPossibilities[GetRandomInteger(AttackPossibilities.size() - 1)]->GetReference());
+		GetMind()->GetCharacter()->GetShip()->SetTarget(AttackPossibilities[GetRandomInteger(AttackPossibilities.size() - 1)]);
 		SetState(Goal::COMPLETED);
 	}
 	else

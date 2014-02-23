@@ -20,7 +20,6 @@
 #ifndef SCANNER_DISPLAY_H
 #define SCANNER_DISPLAY_H
 
-#include "../referencing.h"
 #include "view_display.h"
 
 class Object;
@@ -38,21 +37,23 @@ namespace UI
 		// constructor & destructor
 		ScannerDisplay(UI::Widget * SupWidget = 0);
 		// getters
-		const Reference< Object > & GetTarget(void) const;
+		Object * GetTarget(void);
 		// setters
-		void SetTarget(Reference< Object > Target);
+		void SetTarget(Object * Target);
 	private:
 		// modifiers
 		void _Clear(void);
 		void _OnDestroying(void);
 		void _OnDestroyInScene(Graphics::Node * Node);
 		void _OnUpdating(float RealTimeSeconds, float GameTimeSeconds);
+		void _OnTargetDestroying(void);
 		void _Setup(void);
 		// variables
-		Reference< Object > _Target;
+		Object * _Target;
+		ConnectionHandle _TargetDestroyingConnectionHandle;
 	};
 
-	inline const Reference< Object > & ScannerDisplay::GetTarget(void) const
+	inline Object * ScannerDisplay::GetTarget(void)
 	{
 		return _Target;
 	}

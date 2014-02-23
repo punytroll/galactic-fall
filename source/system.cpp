@@ -204,7 +204,7 @@ void System::_OnRemoved(Object * Content)
 	{
 		if(ShipIterator->GetTarget() == Content)
 		{
-			ShipIterator->UnsetTarget();
+			ShipIterator->SetTarget(nullptr);
 		}
 	}
 }

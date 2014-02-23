@@ -21,7 +21,7 @@
 
 #include "threat.h"
 
-const Reference< Object > * Threat::GetObjectWithHighestThreat(void)
+Reference< Object > * Threat::GetObjectWithHighestThreat(void)
 {
 	Reference< Object > * ObjectWithHighestThreat(0);
 	float HighestThreat(FLT_MIN);
@@ -43,6 +43,7 @@ const Reference< Object > * Threat::GetObjectWithHighestThreat(void)
 			ThreatIterator = m_Threats.erase(ThreatIterator);
 		}
 	}
+	
 	return ObjectWithHighestThreat;
 }
 
