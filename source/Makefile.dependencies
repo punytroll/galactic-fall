@@ -666,8 +666,7 @@ object_cpp = \
 	$(object_aspect_update_h) \
 	$(object_aspect_visualization_h) \
 	$(real_time_h) \
-	$(string_cast_h) \
-	$(xml_stream_h)
+	$(string_cast_h)
 
 object_h = \
 	object.h \
