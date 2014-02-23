@@ -955,9 +955,9 @@ void UpdateSystemNameLabel(UI::Label * SystemNameLabel, float RealTimeSeconds, f
 	if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0))
 	{
 		SystemNameLabel->SetVisible(true);
-		assert(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetContainer() != 0);
-		assert(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetContainer()->GetAspectName() != 0);
-		SystemNameLabel->SetText(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetContainer()->GetAspectName()->GetName());
+		assert(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetSystem() != 0);
+		assert(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetSystem()->GetAspectName() != 0);
+		SystemNameLabel->SetText(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetSystem()->GetAspectName()->GetName());
 	}
 	else
 	{
