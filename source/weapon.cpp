@@ -74,14 +74,9 @@ bool Weapon::_Update(float Seconds)
 			assert(Container->GetAspectPosition() != 0);
 			assert(Container->GetContainer() != 0);
 			
-			std::stringstream IdentifierStream;
-			
-			IdentifierStream << "::shot::created_at_game_time(" << to_string_cast(GameTime::Get(), 2) << ")::created_by(" << GetContainer()->GetObjectIdentifier() << ")::in_system(" << Container->GetContainer()->GetObjectIdentifier() << ")";
-			
 			Shot * NewShot(dynamic_cast< Shot * >(g_ObjectFactory->Create("shot", m_ShotClassIdentifier)));
 			
 			assert(NewShot->GetAspectPosition() != 0);
-			NewShot->SetObjectIdentifier(IdentifierStream.str());
 			NewShot->SetShooter(Container->GetReference());
 			
 			// calculating the shot's position in the world coordinate system
