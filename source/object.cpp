@@ -229,14 +229,14 @@ void Object::Dump(std::ostream & OStream)
 	OStream << std::endl;
 }
 
-void DumpObjectHierarchy(XMLStream & XML, Object * Container)
+void Object::Dump(XMLStream & XML, Object * Container)
 {
-	XML << element << "object" << attribute << "address" << value << Container << attribute << "type-identifier" << value << Container->GetTypeIdentifier() << attribute << "class-identifier" << value << Container->GetClassIdentifier() << attribute << "identifier" << value << Container->GetObjectIdentifier();
-	if(Container->GetAspectObjectContainer() != nullptr)
+	XML << element << "object" << attribute << "address" << value << Container << attribute << "type-identifier" << value << Container->_TypeIdentifier << attribute << "class-identifier" << value << Container->_ClassIdentifier << attribute << "identifier" << value << Container->_ObjectIdentifier;
+	if(Container->_AspectObjectContainer != nullptr)
 	{
-		for(auto Content : Container->GetAspectObjectContainer()->GetContent())
+		for(auto Content : Container->_AspectObjectContainer->GetContent())
 		{
-			DumpObjectHierarchy(XML, Content);
+			Dump(XML, Content);
 		}
 	}
 	XML << end;
@@ -262,7 +262,7 @@ void Object::Dump(XMLStream & XML)
 	{
 		if(Object->GetContainer() == nullptr)
 		{
-			DumpObjectHierarchy(XML, Object);
+			Dump(XML, Object);
 		}
 	}
 	XML << end;

@@ -98,6 +98,7 @@ public:
 	// static methods
 	static Object * GetObject(const std::string & ObjectIdentifier);
 	static void Dump(std::ostream & OStream);
+	static void Dump(XMLStream & XML, Object * Container);
 	static void Dump(XMLStream & XML);
 private:
 	// aspects
