@@ -22,10 +22,12 @@
 #include "character.h"
 #include "color.h"
 #include "globals.h"
+#include "hangar.h"
 #include "message.h"
 #include "message_dispatcher.h"
 #include "object_aspect_object_container.h"
 #include "object_aspect_physical.h"
+#include "object_factory.h"
 #include "planet.h"
 #include "ship.h"
 
@@ -89,15 +91,26 @@ PlanetAssetClass * Planet::CreatePlanetAssetClass(const AssetClass * AssetClass)
 	return _PlanetAssetClasses.back();
 }
 
-void Planet::Land(Ship * Ship)
+void Planet::Land(Ship * Ship, Character * Character)
 {
+	assert(Character != nullptr);
 	assert(Ship != nullptr);
 	Ship->SetVelocity(Vector3f(0.0f, 0.0f, 0.0f));
 	assert(Ship->GetContainer() != nullptr);
 	assert(Ship->GetContainer()->GetAspectObjectContainer() != nullptr);
 	Ship->GetContainer()->GetAspectObjectContainer()->RemoveContent(Ship);
-	assert(GetAspectObjectContainer() != nullptr);
-	GetAspectObjectContainer()->AddContent(Ship);
+	
+	auto Hangar(_GetHangar(Character));
+	
+	if(Hangar == nullptr)
+	{
+		Hangar = _CreateHangar(Character);
+		assert(Hangar != nullptr);
+		assert(GetAspectObjectContainer() != nullptr);
+		GetAspectObjectContainer()->AddContent(Hangar);
+	}
+	assert(Hangar->GetAspectObjectContainer() != nullptr);
+	Hangar->GetAspectObjectContainer()->AddContent(Ship);
 	assert(Ship->GetAspectObjectContainer() != nullptr);
 	for(auto Content : Ship->GetAspectObjectContainer()->GetContent())
 	{
@@ -170,11 +183,19 @@ void Planet::Repair(Ship * Ship, Character * Character)
 	}
 }
 
-void Planet::TakeOff(Ship * Ship)
+void Planet::TakeOff(Ship * Ship, Character * Character)
 {
+	assert(Character != nullptr);
 	assert(Ship != nullptr);
-	assert(GetAspectObjectContainer() != nullptr);
-	GetAspectObjectContainer()->RemoveContent(Ship);
+	
+	auto Hangar(_GetHangar(Character));
+	
+	assert(Hangar != nullptr);
+	assert(Hangar->GetAspectObjectContainer() != nullptr);
+	Hangar->GetAspectObjectContainer()->RemoveContent(Ship);
+	assert(Hangar->GetAspectObjectContainer()->GetContent().size() == 0);
+	Hangar->Destroy();
+	delete Hangar;
 	assert(GetContainer() != nullptr);
 	assert(GetContainer()->GetAspectObjectContainer() != nullptr);
 	GetContainer()->GetAspectObjectContainer()->AddContent(Ship);
@@ -186,4 +207,40 @@ void Planet::TakeOff(Ship * Ship)
 			g_MessageDispatcher->PushMessage(new Message("taken_off", GetReference(), Content->GetReference()));
 		}
 	}
+}
+
+Hangar * Planet::_CreateHangar(Character * Character)
+{
+	assert(g_ObjectFactory != nullptr);
+	
+	auto Result(dynamic_cast< Hangar * >(g_ObjectFactory->Create("hangar", "")));
+	
+	Result->SetCharacter(Character);
+	
+	return Result;
+}
+
+Hangar * Planet::_GetHangar(Character * Character)
+{
+	Hangar * Result(nullptr);
+	
+	assert(Character != nullptr);
+	assert(GetAspectObjectContainer() != nullptr);
+	for(auto Content : GetAspectObjectContainer()->GetContent())
+	{
+		if(Content->GetTypeIdentifier() == "hangar")
+		{
+			auto AHangar(dynamic_cast< Hangar * >(Content));
+			
+			assert(AHangar != nullptr);
+			if(AHangar->GetCharacter() == Character)
+			{
+				Result = AHangar;
+				
+				break;
+			}
+		}
+	}
+	
+	return Result;
 }

@@ -193,14 +193,25 @@ bool Ship::Update(float Seconds)
 	else if(m_Land == true)
 	{
 		m_Land = false;
+		assert(_Target != nullptr);
+		assert(_Target->GetTypeIdentifier() == "planet");
+		assert(GetAspectObjectContainer() != nullptr);
 		
-		Object * ThePlanet(GetTarget());
+		Character * TheCharacter(nullptr);
 		
-		assert(ThePlanet != 0);
-		assert(ThePlanet->GetTypeIdentifier() == "planet");
-		dynamic_cast< Planet * >(ThePlanet)->Land(this);
-		SetTarget(0);
-		SetLinkedSystemTarget(0);
+		for(auto Content : GetAspectObjectContainer()->GetContent())
+		{
+			if(Content->GetTypeIdentifier() == "character")
+			{
+				TheCharacter = dynamic_cast< Character * >(Content);
+				
+				break;
+			}
+		}
+		dynamic_cast< Planet * >(_Target)->Land(this, TheCharacter);
+		SetTarget(nullptr);
+		SetLinkedSystemTarget(nullptr);
+		SetFire(false);
 		m_Accelerate = false;
 		m_TurnLeft = 0.0f;
 		m_TurnRight = 0.0f;
@@ -209,11 +220,27 @@ bool Ship::Update(float Seconds)
 	{
 		m_TakeOff = false;
 		
-		auto ThePlanet(GetContainer());
+		auto Container(GetContainer());
 		
-		assert(ThePlanet != 0);
-		assert(ThePlanet->GetTypeIdentifier() == "planet");
-		dynamic_cast< Planet * >(ThePlanet)->TakeOff(this);
+		while((Container != nullptr) && (Container->GetTypeIdentifier() != "planet"))
+		{
+			Container = Container->GetContainer();
+		}
+		assert(Container != nullptr);
+		assert(Container->GetTypeIdentifier() == "planet");
+		
+		Character * TheCharacter(nullptr);
+		
+		for(auto Content : GetAspectObjectContainer()->GetContent())
+		{
+			if(Content->GetTypeIdentifier() == "character")
+			{
+				TheCharacter = dynamic_cast< Character * >(Content);
+				
+				break;
+			}
+		}
+		dynamic_cast< Planet * >(Container)->TakeOff(this, TheCharacter);
 	}
 	else
 	{
