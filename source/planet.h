@@ -30,6 +30,7 @@ class AssetClass;
 class Character;
 class Color;
 class Faction;
+class Hangar;
 class Ship;
 
 class PlanetAssetClass
@@ -90,12 +91,16 @@ public:
 	void SetSize(const float & Size);
 	// modifiers
 	PlanetAssetClass * CreatePlanetAssetClass(const AssetClass * AssetClass);
-	void Land(Ship * Ship);
+	void Land(Ship * Ship, Character * Character);
 	void Recharge(Ship * Ship, Character * Character);
 	void Refuel(Ship * Ship, Character * Character);
 	void Repair(Ship * Ship, Character * Character);
-	void TakeOff(Ship * Ship);
+	void TakeOff(Ship * Ship, Character * Character);
 private:
+	// helper functions
+	Hangar * _CreateHangar(Character * Character);
+	Hangar * _GetHangar(Character * Character);
+	// member variables
 	std::string _Description;
 	Reference< Faction > _Faction;
 	std::string _Identifier;

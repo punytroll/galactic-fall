@@ -33,6 +33,7 @@
 #include "globals.h"
 #include "graphics/model.h"
 #include "graphics/particle_system.h"
+#include "hangar.h"
 #include "object_aspect_accessory.h"
 #include "object_aspect_name.h"
 #include "object_aspect_outfitting.h"
@@ -122,6 +123,10 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		assert(NewGenerator->GetAspectPhysical() != 0);
 		NewGenerator->GetAspectPhysical()->SetSpaceRequirement(GeneratorClass->GetSpaceRequirement());
 		Result = NewGenerator;
+	}
+	else if(TypeIdentifier == "hangar")
+	{
+		Result = new Hangar();
 	}
 	else if(TypeIdentifier == "mind")
 	{

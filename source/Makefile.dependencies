@@ -496,6 +496,17 @@ graphics_view_cpp = \
 graphics_view_h = \
 	graphics/view.h
 
+hangar_cpp = \
+	hangar.cpp \
+	$(character_h) \
+	$(hangar_h) \
+	$(object_aspect_object_container_h)
+
+hangar_h = \
+	hangar.h \
+	$(object_h) \
+	$(type_definitions_h)
+
 key_event_information_cpp = \
 	key_event_information.cpp \
 	$(key_event_information_h)
@@ -756,6 +767,7 @@ object_factory_cpp = \
 	$(globals_h) \
 	$(graphics_model_h) \
 	$(graphics_particle_system_h) \
+	$(hangar_h) \
 	$(object_aspect_accessory_h) \
 	$(object_aspect_name_h) \
 	$(object_aspect_outfitting_h) \
@@ -797,10 +809,12 @@ planet_cpp = \
 	$(character_h) \
 	$(color_h) \
 	$(globals_h) \
+	$(hangar_h) \
 	$(message_h) \
 	$(message_dispatcher_h) \
 	$(object_aspect_object_container_h) \
 	$(object_aspect_physical_h) \
+	$(object_factory_h) \
 	$(planet_h) \
 	$(ship_h)
 
