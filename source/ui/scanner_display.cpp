@@ -39,7 +39,8 @@
 #include "scanner_display.h"
 
 UI::ScannerDisplay::ScannerDisplay(UI::Widget * SupWidget) :
-	UI::ViewDisplay(SupWidget)
+	UI::ViewDisplay(SupWidget),
+	_Target(nullptr)
 {
 	ConnectDestroyingCallback(Callback(this, &UI::ScannerDisplay::_OnDestroying));
 	ConnectUpdatingCallback(Callback(this, &UI::ScannerDisplay::_OnUpdating));
