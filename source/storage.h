@@ -28,7 +28,7 @@ class Storage : public Object
 public:
 	// constructor & destructor
 	Storage(void);
-	~Storage(void);
+	virtual ~Storage(void) override;
 	// getters
 	unsigned_numeric GetAmount(const std::string & TypeIdentifier, const std::string & ClassIdentifier) const;
 	unsigned_numeric GetSpace(void) const;
@@ -36,20 +36,20 @@ public:
 	// setters
 	void SetSpaceCapacity(unsigned_numeric SpaceCapacity);
 private:
-	void OnAdded(Object * Content);
-	void OnRemoved(Object * Content);
-	unsigned_numeric m_Space;
-	unsigned_numeric m_SpaceCapacity;
+	void _OnAdded(Object * Content);
+	void _OnRemoved(Object * Content);
+	unsigned_numeric _Space;
+	unsigned_numeric _SpaceCapacity;
 };
 
 inline unsigned_numeric Storage::GetSpace(void) const
 {
-	return m_Space;
+	return _Space;
 }
 
 inline unsigned_numeric Storage::GetSpaceCapacity(void) const
 {
-	return m_SpaceCapacity;
+	return _SpaceCapacity;
 }
 
 #endif
