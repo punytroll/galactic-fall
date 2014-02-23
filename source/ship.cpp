@@ -94,6 +94,10 @@ Ship::~Ship(void)
 	assert(_Battery == nullptr);
 	assert(_CargoHold == nullptr);
 	assert(_Generator == nullptr);
+	if(_Target != nullptr)
+	{
+		_Target->DisconnectDestroyingCallback(_TargetDestroyingConnectionHandle);
+	}
 	g_GraphicsEngine->RemoveParticleSystem(_EngineGlowParticleSystem);
 	delete _EngineGlowParticleSystem;
 	_EngineGlowParticleSystem = 0;
