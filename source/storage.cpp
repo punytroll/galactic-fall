@@ -22,13 +22,13 @@
 #include "storage.h"
 
 Storage::Storage(void) :
-	m_Space(0),
-	m_SpaceCapacity(0)
+	_Space(0),
+	_SpaceCapacity(0)
 {
 	// initialize object aspects
 	AddAspectObjectContainer();
-	GetAspectObjectContainer()->SetOnAddedCallback(Callback(this, &Storage::OnAdded));
-	GetAspectObjectContainer()->SetOnRemovedCallback(Callback(this, &Storage::OnRemoved));
+	GetAspectObjectContainer()->SetOnAddedCallback(Callback(this, &Storage::_OnAdded));
+	GetAspectObjectContainer()->SetOnRemovedCallback(Callback(this, &Storage::_OnRemoved));
 }
 
 Storage::~Storage(void)
@@ -37,15 +37,12 @@ Storage::~Storage(void)
 
 unsigned_numeric Storage::GetAmount(const std::string & TypeIdentifier, const std::string & ClassIdentifier) const
 {
-	assert(GetAspectObjectContainer() != 0);
+	assert(GetAspectObjectContainer() != nullptr);
 	
 	unsigned_numeric Amount(0);
-	const std::set< Object * > & Content(GetAspectObjectContainer()->GetContent());
 	
-	for(std::set< Object * >::const_iterator ContentIterator = Content.begin(); ContentIterator != Content.end(); ++ContentIterator)
+	for(auto Content : GetAspectObjectContainer()->GetContent())
 	{
-		Object * Content(*ContentIterator);
-		
 		if((Content->GetTypeIdentifier() == TypeIdentifier) && (Content->GetClassIdentifier() == ClassIdentifier))
 		{
 			Amount += 1;
@@ -57,26 +54,26 @@ unsigned_numeric Storage::GetAmount(const std::string & TypeIdentifier, const st
 
 void Storage::SetSpaceCapacity(unsigned_numeric SpaceCapacity)
 {
-	signed_numeric SpaceDifference(SpaceCapacity - GetSpaceCapacity());
+	signed_numeric SpaceDifference(SpaceCapacity - _SpaceCapacity);
 	
-	m_SpaceCapacity = SpaceCapacity;
-	m_Space += SpaceDifference;
+	_SpaceCapacity = SpaceCapacity;
+	_Space += SpaceDifference;
 }
 
-void Storage::OnAdded(Object * Content)
+void Storage::_OnAdded(Object * Content)
 {
 	if(Content->GetAspectPhysical() != nullptr)
 	{
-		assert(GetSpace() >= Content->GetAspectPhysical()->GetSpaceRequirement());
-		m_Space -= Content->GetAspectPhysical()->GetSpaceRequirement();
+		assert(_Space >= Content->GetAspectPhysical()->GetSpaceRequirement());
+		_Space -= Content->GetAspectPhysical()->GetSpaceRequirement();
 	}
 }
 
-void Storage::OnRemoved(Object * Content)
+void Storage::_OnRemoved(Object * Content)
 {
 	if(Content->GetAspectPhysical() != nullptr)
 	{
-		m_Space += Content->GetAspectPhysical()->GetSpaceRequirement();
+		_Space += Content->GetAspectPhysical()->GetSpaceRequirement();
 	}
-	assert(GetSpace() <= GetSpaceCapacity());
+	assert(_Space <= _SpaceCapacity);
 }
