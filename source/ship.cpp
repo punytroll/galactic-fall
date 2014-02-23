@@ -128,10 +128,11 @@ System * Ship::GetSystem(void)
 
 void Ship::SetFire(bool Fire)
 {
-	for(std::map< std::string, Slot * >::const_iterator SlotIterator = GetAspectOutfitting()->GetSlots().begin(); SlotIterator != GetAspectOutfitting()->GetSlots().end(); ++SlotIterator)
+	assert(GetAspectOutfitting() != nullptr);
+	for(auto & SlotPair : GetAspectOutfitting()->GetSlots())
 	{
 		// only update *mounted* *weapons*
-		Object * MountedObject(SlotIterator->second->GetMountedObject().Get());
+		auto MountedObject(SlotPair.second->GetMountedObject().Get());
 		
 		if((MountedObject != 0) && (MountedObject->GetTypeIdentifier() == "weapon"))
 		{
