@@ -98,154 +98,154 @@ public:
 	static void Dump(XMLStream & XML);
 private:
 	// aspects
-	ObjectAspectAccessory * m_AspectAccessory;
-	ObjectAspectMessages * m_AspectMessages;
-	ObjectAspectName * m_AspectName;
-	ObjectAspectObjectContainer * m_AspectObjectContainer;
-	ObjectAspectOutfitting * m_AspectOutfitting;
-	ObjectAspectPhysical * m_AspectPhysical;
-	ObjectAspectPosition * m_AspectPosition;
-	ObjectAspectUpdate * m_AspectUpdate;
-	ObjectAspectVisualization * m_AspectVisualization;
+	ObjectAspectAccessory * _AspectAccessory;
+	ObjectAspectMessages * _AspectMessages;
+	ObjectAspectName * _AspectName;
+	ObjectAspectObjectContainer * _AspectObjectContainer;
+	ObjectAspectOutfitting * _AspectOutfitting;
+	ObjectAspectPhysical * _AspectPhysical;
+	ObjectAspectPosition * _AspectPosition;
+	ObjectAspectUpdate * _AspectUpdate;
+	ObjectAspectVisualization * _AspectVisualization;
 	// other
-	std::string m_ClassIdentifier;
-	Object * m_Container;
-	std::string m_ObjectIdentifier;
-	Reference< Object > m_Reference;
-	std::string m_TypeIdentifier;
+	std::string _ClassIdentifier;
+	Object * _Container;
+	std::string _ObjectIdentifier;
+	Reference< Object > _Reference;
+	std::string _TypeIdentifier;
 	
-	static std::set< Object * > m_Objects;
-	static std::map< std::string, Object * > m_IdentifiedObjects;
+	static std::set< Object * > _Objects;
+	static std::map< std::string, Object * > _IdentifiedObjects;
 };
 
 inline ObjectAspectAccessory * Object::GetAspectAccessory(void)
 {
-	return m_AspectAccessory;
+	return _AspectAccessory;
 }
 
 inline const ObjectAspectAccessory * Object::GetAspectAccessory(void) const
 {
-	return m_AspectAccessory;
+	return _AspectAccessory;
 }
 
 inline ObjectAspectMessages * Object::GetAspectMessages(void)
 {
-	return m_AspectMessages;
+	return _AspectMessages;
 }
 
 inline const ObjectAspectMessages * Object::GetAspectMessages(void) const
 {
-	return m_AspectMessages;
+	return _AspectMessages;
 }
 
 inline ObjectAspectName * Object::GetAspectName(void)
 {
-	return m_AspectName;
+	return _AspectName;
 }
 
 inline const ObjectAspectName * Object::GetAspectName(void) const
 {
-	return m_AspectName;
+	return _AspectName;
 }
 
 inline ObjectAspectObjectContainer * Object::GetAspectObjectContainer(void)
 {
-	return m_AspectObjectContainer;
+	return _AspectObjectContainer;
 }
 
 inline const ObjectAspectObjectContainer * Object::GetAspectObjectContainer(void) const
 {
-	return m_AspectObjectContainer;
+	return _AspectObjectContainer;
 }
 
 inline ObjectAspectOutfitting * Object::GetAspectOutfitting(void)
 {
-	return m_AspectOutfitting;
+	return _AspectOutfitting;
 }
 
 inline const ObjectAspectOutfitting * Object::GetAspectOutfitting(void) const
 {
-	return m_AspectOutfitting;
+	return _AspectOutfitting;
 }
 
 inline ObjectAspectPhysical * Object::GetAspectPhysical(void)
 {
-	return m_AspectPhysical;
+	return _AspectPhysical;
 }
 
 inline const ObjectAspectPhysical * Object::GetAspectPhysical(void) const
 {
-	return m_AspectPhysical;
+	return _AspectPhysical;
 }
 
 inline ObjectAspectPosition * Object::GetAspectPosition(void)
 {
-	return m_AspectPosition;
+	return _AspectPosition;
 }
 
 inline const ObjectAspectPosition * Object::GetAspectPosition(void) const
 {
-	return m_AspectPosition;
+	return _AspectPosition;
 }
 
 inline ObjectAspectUpdate * Object::GetAspectUpdate(void)
 {
-	return m_AspectUpdate;
+	return _AspectUpdate;
 }
 
 inline const ObjectAspectUpdate * Object::GetAspectUpdate(void) const
 {
-	return m_AspectUpdate;
+	return _AspectUpdate;
 }
 
 inline ObjectAspectVisualization * Object::GetAspectVisualization(void)
 {
-	return m_AspectVisualization;
+	return _AspectVisualization;
 }
 
 inline const ObjectAspectVisualization * Object::GetAspectVisualization(void) const
 {
-	return m_AspectVisualization;
+	return _AspectVisualization;
 }
 
 inline const std::string & Object::GetClassIdentifier(void) const
 {
-	return m_ClassIdentifier;
+	return _ClassIdentifier;
 }
 
 inline Object * Object::GetContainer(void)
 {
-	return m_Container;
+	return _Container;
 }
 
 inline const Object * Object::GetContainer(void) const
 {
-	return m_Container;
+	return _Container;
 }
 
 inline const std::string & Object::GetObjectIdentifier(void) const
 {
-	return m_ObjectIdentifier;
+	return _ObjectIdentifier;
 }
 
 inline const Reference< Object > & Object::GetReference(void) const
 {
-	return m_Reference;
+	return _Reference;
 }
 
 inline const std::string & Object::GetTypeIdentifier(void) const
 {
-	return m_TypeIdentifier;
+	return _TypeIdentifier;
 }
 
 inline void Object::SetClassIdentifier(const std::string & ClassIdentifier)
 {
-	m_ClassIdentifier = ClassIdentifier;
+	_ClassIdentifier = ClassIdentifier;
 }
 
 inline void Object::SetTypeIdentifier(const std::string & TypeIdentifier)
 {
-	m_TypeIdentifier = TypeIdentifier;
+	_TypeIdentifier = TypeIdentifier;
 }
 
 #endif

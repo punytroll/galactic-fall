@@ -35,182 +35,184 @@
 #include "string_cast.h"
 #include "xml_stream.h"
 
-std::set< Object * > Object::m_Objects;
-std::map< std::string, Object * > Object::m_IdentifiedObjects;
+std::set< Object * > Object::_Objects;
+std::map< std::string, Object * > Object::_IdentifiedObjects;
 
 Object::Object(void) :
-	m_AspectAccessory(0),
-	m_AspectMessages(0),
-	m_AspectName(0),
-	m_AspectObjectContainer(0),
-	m_AspectOutfitting(0),
-	m_AspectPhysical(0),
-	m_AspectPosition(0),
-	m_AspectUpdate(0),
-	m_AspectVisualization(0),
-	m_Container(0),
-	m_Reference(*this)
+	_AspectAccessory(nullptr),
+	_AspectMessages(nullptr),
+	_AspectName(nullptr),
+	_AspectObjectContainer(nullptr),
+	_AspectOutfitting(nullptr),
+	_AspectPhysical(nullptr),
+	_AspectPosition(nullptr),
+	_AspectUpdate(nullptr),
+	_AspectVisualization(nullptr),
+	_Container(nullptr),
+	_Reference(*this)
 {
-	m_Objects.insert(this);
+	_Objects.insert(this);
 }
 
 Object::~Object(void)
 {
 	// make some object hierarchy integrity checks first
-	assert(m_Container == 0);
+	assert(_Container == nullptr);
 	// aspects
-	delete m_AspectAccessory;
-	m_AspectAccessory = 0;
-	delete m_AspectMessages;
-	m_AspectMessages = 0;
-	delete m_AspectName;
-	m_AspectName = 0;
-	delete m_AspectObjectContainer;
-	m_AspectObjectContainer = 0;
-	delete m_AspectOutfitting;
-	m_AspectOutfitting = 0;
-	delete m_AspectPhysical;
-	m_AspectPhysical = 0;
-	delete m_AspectPosition;
-	m_AspectPosition = 0;
-	delete m_AspectUpdate;
-	m_AspectUpdate = 0;
-	delete m_AspectVisualization;
-	m_AspectVisualization = 0;
+	delete _AspectAccessory;
+	_AspectAccessory = nullptr;
+	delete _AspectMessages;
+	_AspectMessages = nullptr;
+	delete _AspectName;
+	_AspectName = nullptr;
+	delete _AspectObjectContainer;
+	_AspectObjectContainer = nullptr;
+	delete _AspectOutfitting;
+	_AspectOutfitting = nullptr;
+	delete _AspectPhysical;
+	_AspectPhysical = nullptr;
+	delete _AspectPosition;
+	_AspectPosition = nullptr;
+	delete _AspectUpdate;
+	_AspectUpdate = nullptr;
+	delete _AspectVisualization;
+	_AspectVisualization = nullptr;
 	// invalidate reference first, so no one accesses this object
-	m_Reference.Invalidate();
+	_Reference.Invalidate();
 	SetObjectIdentifier("");
-	m_Objects.erase(m_Objects.find(this));
+	_Objects.erase(_Objects.find(this));
 }
 
 void Object::AddAspectAccessory(void)
 {
-	assert(m_AspectAccessory == 0);
-	m_AspectAccessory = new ObjectAspectAccessory();
+	assert(_AspectAccessory == nullptr);
+	_AspectAccessory = new ObjectAspectAccessory();
 }
 
 void Object::AddAspectMessages(void)
 {
-	assert(m_AspectMessages == 0);
-	m_AspectMessages = new ObjectAspectMessages();
+	assert(_AspectMessages == nullptr);
+	_AspectMessages = new ObjectAspectMessages();
 }
 
 void Object::AddAspectName(void)
 {
-	assert(m_AspectName == 0);
-	m_AspectName = new ObjectAspectName();
+	assert(_AspectName == nullptr);
+	_AspectName = new ObjectAspectName();
 }
 
 void Object::AddAspectObjectContainer(void)
 {
-	assert(m_AspectObjectContainer == 0);
-	m_AspectObjectContainer = new ObjectAspectObjectContainer(this);
+	assert(_AspectObjectContainer == nullptr);
+	_AspectObjectContainer = new ObjectAspectObjectContainer(this);
 }
 
 void Object::AddAspectOutfitting(void)
 {
-	assert(m_AspectOutfitting == 0);
-	m_AspectOutfitting = new ObjectAspectOutfitting();
+	assert(_AspectOutfitting == nullptr);
+	_AspectOutfitting = new ObjectAspectOutfitting();
 }
 
 void Object::AddAspectPhysical(void)
 {
-	assert(m_AspectPhysical == 0);
-	m_AspectPhysical = new ObjectAspectPhysical();
+	assert(_AspectPhysical == nullptr);
+	_AspectPhysical = new ObjectAspectPhysical();
 }
 
 void Object::AddAspectPosition(void)
 {
-	assert(m_AspectPosition == 0);
-	m_AspectPosition = new ObjectAspectPosition();
+	assert(_AspectPosition == nullptr);
+	_AspectPosition = new ObjectAspectPosition();
 }
 
 void Object::AddAspectUpdate(void)
 {
-	assert(m_AspectUpdate == 0);
-	m_AspectUpdate = new ObjectAspectUpdate();
+	assert(_AspectUpdate == nullptr);
+	_AspectUpdate = new ObjectAspectUpdate();
 }
 
 void Object::AddAspectVisualization(void)
 {
-	assert(m_AspectVisualization == 0);
-	m_AspectVisualization = new ObjectAspectVisualization();
+	assert(_AspectVisualization == nullptr);
+	_AspectVisualization = new ObjectAspectVisualization();
 }
 
 void Object::SetContainer(Object * Container)
 {
-	assert(((m_Container == 0) || (Container == 0)) && (m_Container != Container));
-	m_Container = Container;
+	assert(((_Container == nullptr) || (Container == nullptr)) && (_Container != Container));
+	_Container = Container;
 }
 
 void Object::SetObjectIdentifier(const std::string & ObjectIdentifier)
 {
-	if(m_ObjectIdentifier.empty() == false)
+	if(_ObjectIdentifier.empty() == false)
 	{
-		m_IdentifiedObjects.erase(m_IdentifiedObjects.find(m_ObjectIdentifier));
-		m_ObjectIdentifier = "";
+		auto IdentifiedObjectIterator(_IdentifiedObjects.find(_ObjectIdentifier));
+		
+		assert(IdentifiedObjectIterator != _IdentifiedObjects.end());
+		_IdentifiedObjects.erase(IdentifiedObjectIterator);
+		_ObjectIdentifier = "";
 	}
-	if((ObjectIdentifier.empty() == false) && (m_IdentifiedObjects.find(ObjectIdentifier) == m_IdentifiedObjects.end()))
+	if(ObjectIdentifier.empty() == false)
 	{
-		m_ObjectIdentifier = ObjectIdentifier;
-		m_IdentifiedObjects[m_ObjectIdentifier] = this;
+		assert(_IdentifiedObjects.find(ObjectIdentifier) == _IdentifiedObjects.end());
+		_ObjectIdentifier = ObjectIdentifier;
+		_IdentifiedObjects[_ObjectIdentifier] = this;
 	}
 }
 
 void Object::GenerateObjectIdentifier(void)
 {
-	if(m_ObjectIdentifier.empty() == true)
-	{
-		SetObjectIdentifier(std::string("::") + typeid(*this).name() + "::" + to_string_cast(reinterpret_cast< void * >(this)) + "(" + to_string_cast(RealTime::Get()) + ")");
-	}
+	assert(_ObjectIdentifier.empty() == true);
+	SetObjectIdentifier("::" + _TypeIdentifier + "(" + _ClassIdentifier + ")::" + to_string_cast(reinterpret_cast< void * >(this)) + "(" + to_string_cast(RealTime::Get()) + ")");
 }
 
 void Object::Destroy(void)
 {
 	// remove from object hierarchy
-	if(m_Container != 0)
+	if(_Container != nullptr)
 	{
-		assert(m_Container->GetAspectObjectContainer() != 0);
-		m_Container->GetAspectObjectContainer()->RemoveContent(this);
+		assert(_Container->GetAspectObjectContainer() != nullptr);
+		_Container->GetAspectObjectContainer()->RemoveContent(this);
 	}
 	// call destroy on all relevant aspects
-	if(m_AspectVisualization != 0)
+	if(_AspectVisualization != nullptr)
 	{
-		m_AspectVisualization->Destroy();
+		_AspectVisualization->Destroy();
 	}
-	if(m_AspectObjectContainer != 0)
+	if(_AspectObjectContainer != nullptr)
 	{
-		m_AspectObjectContainer->Destroy();
+		_AspectObjectContainer->Destroy();
 	}
 }
 
 Object * Object::GetObject(const std::string & ObjectIdentifier)
 {
-	std::map< std::string, Object * >::iterator ObjectIterator(m_IdentifiedObjects.find(ObjectIdentifier));
+	auto ObjectIterator(_IdentifiedObjects.find(ObjectIdentifier));
 	
-	if(ObjectIterator != m_IdentifiedObjects.end())
+	if(ObjectIterator != _IdentifiedObjects.end())
 	{
 		return ObjectIterator->second;
 	}
 	else
 	{
-		return 0;
+		return nullptr;
 	}
 }
 
 void Object::Dump(std::ostream & OStream)
 {
-	OStream << "Objects (Count " << m_Objects.size() << "): \n";
+	OStream << "Objects (Count " << _Objects.size() << "): \n";
 	
-	for(std::set< Object * >::const_iterator ObjectIterator = m_Objects.begin(); ObjectIterator != m_Objects.end(); ++ObjectIterator)
+	for(auto Object : _Objects)
 	{
-		OStream << "  " << *ObjectIterator << '\n';
+		OStream << "  " << Object << '\n';
 	}
 	OStream << '\n';
-	OStream << "Identified Objects (Count " << m_IdentifiedObjects.size() << "): \n";
-	for(std::map< std::string, Object * >::const_iterator ObjectIterator = m_IdentifiedObjects.begin(); ObjectIterator != m_IdentifiedObjects.end(); ++ObjectIterator)
+	OStream << "Identified Objects (Count " << _IdentifiedObjects.size() << "): \n";
+	for(auto & ObjectPair : _IdentifiedObjects)
 	{
-		OStream << "  " << ObjectIterator->second << " = '" << ObjectIterator->first << "'\n";
+		OStream << "  " << ObjectPair.second << " = '" << ObjectPair.first << "'\n";
 	}
 	OStream << std::endl;
 }
@@ -218,11 +220,11 @@ void Object::Dump(std::ostream & OStream)
 void DumpObjectHierarchy(XMLStream & XML, Object * Container)
 {
 	XML << element << "object" << attribute << "address" << value << Container << attribute << "type-identifier" << value << Container->GetTypeIdentifier() << attribute << "class-identifier" << value << Container->GetClassIdentifier() << attribute << "identifier" << value << Container->GetObjectIdentifier();
-	if(Container->GetAspectObjectContainer() != 0)
+	if(Container->GetAspectObjectContainer() != nullptr)
 	{
-		for(std::set< Object * >::const_iterator ObjectIterator = Container->GetAspectObjectContainer()->GetContent().begin(); ObjectIterator != Container->GetAspectObjectContainer()->GetContent().end(); ++ObjectIterator)
+		for(auto Content : Container->GetAspectObjectContainer()->GetContent())
 		{
-			DumpObjectHierarchy(XML, *ObjectIterator);
+			DumpObjectHierarchy(XML, Content);
 		}
 	}
 	XML << end;
@@ -231,24 +233,24 @@ void DumpObjectHierarchy(XMLStream & XML, Object * Container)
 void Object::Dump(XMLStream & XML)
 {
 	XML << element << "object-report";
-	XML << element << "objects" << attribute << "count" << value << static_cast< int >(m_Objects.size());
-	for(std::set< Object * >::const_iterator ObjectIterator = m_Objects.begin(); ObjectIterator != m_Objects.end(); ++ObjectIterator)
+	XML << element << "objects" << attribute << "count" << value << static_cast< int >(_Objects.size());
+	for(auto Object : _Objects)
 	{
-		XML << element << "object" << attribute << "address" << value << *ObjectIterator << end;
+		XML << element << "object" << attribute << "address" << value << Object << end;
 	}
 	XML << end;
-	XML << element << "identified-objects" << attribute << "count" << value << static_cast< int >(m_IdentifiedObjects.size());
-	for(std::map< std::string, Object * >::const_iterator ObjectIterator = m_IdentifiedObjects.begin(); ObjectIterator != m_IdentifiedObjects.end(); ++ObjectIterator)
+	XML << element << "identified-objects" << attribute << "count" << value << static_cast< int >(_IdentifiedObjects.size());
+	for(auto & ObjectPair : _IdentifiedObjects)
 	{
-		XML << element << "object" << attribute << "address" << value << ObjectIterator->second << attribute << "identifier" << value << ObjectIterator->first << end;
+		XML << element << "object" << attribute << "address" << value << ObjectPair.second << attribute << "identifier" << value << ObjectPair.first << end;
 	}
 	XML << end;
 	XML << element << "object-hierarchy";
-	for(std::set< Object * >::const_iterator ObjectIterator = m_Objects.begin(); ObjectIterator != m_Objects.end(); ++ObjectIterator)
+	for(auto Object : _Objects)
 	{
-		if((*ObjectIterator)->GetContainer() == 0)
+		if(Object->GetContainer() == nullptr)
 		{
-			DumpObjectHierarchy(XML, *ObjectIterator);
+			DumpObjectHierarchy(XML, Object);
 		}
 	}
 	XML << end;
