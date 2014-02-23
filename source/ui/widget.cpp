@@ -247,7 +247,7 @@ void UI::Widget::RaiseSubWidget(UI::Widget * SubWidget)
 
 void UI::Widget::Destroy(void)
 {
-	// fire Destroy event before aything is actually destroyed
+	// fire destroying event before aything is actually destroyed
 	_DestroyingEvent();
 	// now destroy
 	// first the sub widgets, they will remove themselves from this widget
