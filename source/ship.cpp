@@ -219,21 +219,19 @@ bool Ship::Update(float Seconds)
 		}
 		if(m_Refuel == true)
 		{
-			assert(GetAspectObjectContainer() != 0);
-			
-			const std::set< Object * > & Content(GetAspectObjectContainer()->GetContent());
-			
-			for(std::set< Object * >::const_iterator ContentIterator = Content.begin(); ContentIterator != Content.end(); ++ContentIterator)
+			if(_CargoHold != nullptr)
 			{
-				Object * Content(*ContentIterator);
-				
-				if((Content->GetTypeIdentifier() == "commodity") && (Content->GetClassIdentifier() == "fuel"))
+				assert(_CargoHold->GetAspectObjectContainer() != nullptr);
+				for(auto Content : _CargoHold->GetAspectObjectContainer()->GetContent())
 				{
-					SetFuel(Clamp(GetFuel() + 1.0f, 0.0f, GetFuelCapacity()));
-					Content->Destroy();
-					delete Content;
-					
-					break;
+					if((Content->GetTypeIdentifier() == "commodity") && (Content->GetClassIdentifier() == "fuel"))
+					{
+						SetFuel(Clamp(GetFuel() + 1.0f, 0.0f, GetFuelCapacity()));
+						Content->Destroy();
+						delete Content;
+						
+						break;
+					}
 				}
 			}
 			m_Refuel = false;
