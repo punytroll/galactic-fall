@@ -48,10 +48,8 @@ public:
 	Mind * GetActiveMind(void);
 	unsigned_numeric GetCredits(void) const;
 	MapKnowledge * GetMapKnowledge(void);
-	const MapKnowledge * GetMapKnowledge(void) const;
 	Ship * GetShip(void);
 	Threat * GetThreat(void);
-	const Threat * GetThreat(void) const;
 	// setters
 	void SetCredits(unsigned_numeric Credits);
 	// modifiers
@@ -97,17 +95,7 @@ inline MapKnowledge * Character::GetMapKnowledge(void)
 	return m_MapKnowledge;
 }
 
-inline const MapKnowledge * Character::GetMapKnowledge(void) const
-{
-	return m_MapKnowledge;
-}
-
 inline Threat * Character::GetThreat(void)
-{
-	return m_Threat;
-}
-
-inline const Threat * Character::GetThreat(void) const
 {
 	return m_Threat;
 }
