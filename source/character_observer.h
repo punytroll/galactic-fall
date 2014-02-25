@@ -32,7 +32,6 @@ public:
 	virtual ~CharacterObserver(void);
 	// getters
 	Reference< Character > & GetObservedCharacter(void);
-	const Reference< Character > & GetObservedCharacter(void) const;
 	// setters
 	void SetObservedCharacter(Reference< Character > ObservedCharacter);
 	// modifiers
@@ -42,11 +41,6 @@ private:
 };
 
 inline Reference< Character > & CharacterObserver::GetObservedCharacter(void)
-{
-	return _ObservedCharacter;
-}
-
-inline const Reference< Character > & CharacterObserver::GetObservedCharacter(void) const
 {
 	return _ObservedCharacter;
 }
