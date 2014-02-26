@@ -18,6 +18,7 @@
 **/
 
 #include "../asset_class.h"
+#include "../callbacks/callbacks.h"
 #include "../character.h"
 #include "../color.h"
 #include "../commodity.h"
@@ -289,7 +290,7 @@ bool UI::TradeCenterWidget::_OnAssetClassMouseButton(TradeCenterAssetClass * Tra
 				
 				Graphics::Scene * Scene(new Graphics::Scene());
 				
-				Scene->SetDestroyCallback(Callback(this, &UI::TradeCenterWidget::_OnDestroyInScene));
+				Scene->SetDestroyCallback(std::bind(&UI::TradeCenterWidget::_OnDestroyInScene, this, std::placeholders::_1));
 				Scene->ActivateLight();
 				assert(Scene->GetLight() != 0);
 				Scene->GetLight()->SetPosition(-20.0f, -10.0f, 20.0f);

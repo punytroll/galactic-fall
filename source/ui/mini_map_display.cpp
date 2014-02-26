@@ -19,6 +19,7 @@
 
 #include <algebra/matrix4f.h>
 
+#include "../callbacks/callbacks.h"
 #include "../color.h"
 #include "../commodity.h"
 #include "../globals.h"
@@ -112,7 +113,7 @@ void UI::MiniMapDisplay::_SetupView(void)
 	
 	Graphics::Scene * Scene(new Graphics::Scene());
 	
-	Scene->SetDestroyCallback(Callback(this, &UI::MiniMapDisplay::_OnDestroyInScene));
+	Scene->SetDestroyCallback(std::bind(&UI::MiniMapDisplay::_OnDestroyInScene, this, std::placeholders::_1));
 	View->SetScene(Scene);
 	
 	Graphics::Texture * Texture(g_GraphicsEngine->GetTextureManager()->Create("mini-map-display"));

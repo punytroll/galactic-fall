@@ -1343,7 +1343,7 @@ void OnOutputEnterSystem(System * EnterSystem)
 	// build the static setup of the scene
 	Graphics::Scene * MainScene(new Graphics::Scene());
 	
-	MainScene->SetDestroyCallback(Callback(OnMainSceneNodeDestroy));
+	MainScene->SetDestroyCallback(OnMainSceneNodeDestroy);
 	
 	const Star * Star(EnterSystem->GetStar());
 	
@@ -3701,7 +3701,7 @@ int main(int argc, char ** argv)
 	
 	Graphics::Scene * UIScene(new Graphics::Scene());
 	
-	UIScene->SetDestroyCallback(Callback(OnUISceneNodeDestroy));
+	UIScene->SetDestroyCallback(OnUISceneNodeDestroy);
 	g_UIView->SetScene(UIScene);
 	
 	Graphics::UIRootNode * UIRootNode(new Graphics::UIRootNode());

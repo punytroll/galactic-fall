@@ -157,7 +157,7 @@ void UI::ScannerDisplay::_Setup(void)
 	
 	Graphics::Scene * Scene(new Graphics::Scene());
 	
-	Scene->SetDestroyCallback(Callback(this, &UI::ScannerDisplay::_OnDestroyInScene));
+	Scene->SetDestroyCallback(std::bind(&UI::ScannerDisplay::_OnDestroyInScene, this, std::placeholders::_1));
 	Scene->ActivateLight();
 	assert(Scene->GetLight() != nullptr);
 	
