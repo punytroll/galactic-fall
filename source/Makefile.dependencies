@@ -504,8 +504,7 @@ hangar_cpp = \
 
 hangar_h = \
 	hangar.h \
-	$(object_h) \
-	$(type_definitions_h)
+	$(object_h)
 
 key_event_information_cpp = \
 	key_event_information.cpp \
@@ -708,7 +707,8 @@ object_aspect_object_container_cpp = \
 
 object_aspect_object_container_h = \
 	object_aspect_object_container.h \
-	$(callbacks_callbacks_h)
+	$(callbacks_callbacks_h) \
+	$(type_definitions_h)
 
 object_aspect_outfitting_cpp = \
 	object_aspect_outfitting.cpp \
