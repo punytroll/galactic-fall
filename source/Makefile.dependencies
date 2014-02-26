@@ -48,7 +48,8 @@ arx_reading_h = \
 	arx_reading.h
 
 arx_resources_h = \
-	arx_resources.h
+	arx_resources.h \
+	$(type_definitions_h)
 
 asset_class_cpp = \
 	asset_class.cpp \
