@@ -20,7 +20,8 @@
 #ifndef GRAPHICS_CALLBACK_NODE_H
 #define GRAPHICS_CALLBACK_NODE_H
 
-#include "../callbacks/callbacks.h"
+#include <functional>
+
 #include "node.h"
 
 namespace Graphics
@@ -32,14 +33,14 @@ namespace Graphics
 		CallbackNode(void);
 		virtual ~CallbackNode(void);
 		// setters
-		void SetDrawCallback(Callback0< void > Callback);
+		void SetDrawCallback(std::function< void (void) > Callback);
 		// modifiers
 		virtual void Draw(void);
 	private:
-		Callback0< void > _DrawCallback;
+		std::function< void (void) > _DrawCallback;
 	};
 	
-	inline void CallbackNode::SetDrawCallback(Callback0< void > Callback)
+	inline void CallbackNode::SetDrawCallback(std::function< void (void) > Callback)
 	{
 		_DrawCallback = Callback;
 	}
