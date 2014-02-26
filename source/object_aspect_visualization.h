@@ -48,6 +48,7 @@ public:
 	void AddGraphics(Graphics::Node * Graphics);
 	void Destroy(void);
 	void DestroyVisualization(Graphics::Node * Container);
+	void DestroyVisualization(Visualization * Visualization);
 	void RemoveGraphics(Graphics::Node * Graphics);
 private:
 	std::list< Visualization * > _Visualizations;

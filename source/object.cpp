@@ -182,12 +182,6 @@ void Object::Destroy(void)
 {
 	// fire destroying event before aything is actually destroyed
 	_DestroyingEvent();
-	// remove from object hierarchy
-	if(_Container != nullptr)
-	{
-		assert(_Container->GetAspectObjectContainer() != nullptr);
-		_Container->GetAspectObjectContainer()->RemoveContent(this);
-	}
 	// call destroy on all relevant aspects
 	if(_AspectVisualization != nullptr)
 	{
@@ -196,6 +190,12 @@ void Object::Destroy(void)
 	if(_AspectObjectContainer != nullptr)
 	{
 		_AspectObjectContainer->Destroy();
+	}
+	// remove from object hierarchy
+	if(_Container != nullptr)
+	{
+		assert(_Container->GetAspectObjectContainer() != nullptr);
+		_Container->GetAspectObjectContainer()->RemoveContent(this);
 	}
 }
 

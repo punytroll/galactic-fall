@@ -34,6 +34,25 @@
 #include "visualization.h"
 #include "visualizations.h"
 
+namespace std
+{
+	template< typename Type1, typename Type2 >
+	std::list< std::pair< Type1, Type2 > > tuples(const std::list< Type1 > & One, const std::list< Type2 > & Two)
+	{
+		std::list< std::pair< Type1, Type2 > > Result;
+		
+		for(auto ValueOne : One)
+		{
+			for(auto ValueTwo : Two)
+			{
+				Result.push_back(std::make_pair(ValueOne, ValueTwo));
+			}
+		}
+		
+		return Result;
+	}
+}
+
 System::System(const std::string & Identifier) :
 	_Identifier(Identifier),
 	_TrafficDensity(FLT_MAX),
@@ -149,11 +168,14 @@ void System::_OnRemoved(Object * Content)
 		
 		assert(CommodityIterator != _Commodities.end());
 		_Commodities.erase(CommodityIterator);
-		assert(Content->GetAspectVisualization() != nullptr);
 		assert(GetAspectVisualization() != nullptr);
-		for(auto Visualization : GetAspectVisualization()->GetVisualizations())
+		assert(Content->GetAspectVisualization() != nullptr);
+		for(auto Visualizations : std::tuples(Content->GetAspectVisualization()->GetVisualizations(), GetAspectVisualization()->GetVisualizations()))
 		{
-			Content->GetAspectVisualization()->DestroyVisualization((static_cast< Graphics::SystemNode * >(Visualization->GetGraphics()))->GetCommodityLayer());
+			if(Visualizations.first->GetGraphics()->GetContainer() == (static_cast< Graphics::SystemNode * >(Visualizations.second->GetGraphics()))->GetCommodityLayer())
+			{
+				Content->GetAspectVisualization()->DestroyVisualization(Visualizations.first);
+			}
 		}
 	}
 	else if(Content->GetTypeIdentifier() == "planet")
@@ -162,11 +184,14 @@ void System::_OnRemoved(Object * Content)
 		
 		assert(PlanetIterator != _Planets.end());
 		_Planets.erase(PlanetIterator);
-		assert(Content->GetAspectVisualization() != nullptr);
 		assert(GetAspectVisualization() != nullptr);
-		for(auto Visualization : GetAspectVisualization()->GetVisualizations())
+		assert(Content->GetAspectVisualization() != nullptr);
+		for(auto Visualizations : std::tuples(Content->GetAspectVisualization()->GetVisualizations(), GetAspectVisualization()->GetVisualizations()))
 		{
-			Content->GetAspectVisualization()->DestroyVisualization((static_cast< Graphics::SystemNode * >(Visualization->GetGraphics()))->GetPlanetLayer());
+			if(Visualizations.first->GetGraphics()->GetContainer() == (static_cast< Graphics::SystemNode * >(Visualizations.second->GetGraphics()))->GetPlanetLayer())
+			{
+				Content->GetAspectVisualization()->DestroyVisualization(Visualizations.first);
+			}
 		}
 	}
 	else if(Content->GetTypeIdentifier() == "ship")
@@ -175,11 +200,14 @@ void System::_OnRemoved(Object * Content)
 		
 		assert(ShipIterator != _Ships.end());
 		_Ships.erase(ShipIterator);
-		assert(Content->GetAspectVisualization() != nullptr);
 		assert(GetAspectVisualization() != nullptr);
-		for(auto Visualization : GetAspectVisualization()->GetVisualizations())
+		assert(Content->GetAspectVisualization() != nullptr);
+		for(auto Visualizations : std::tuples(Content->GetAspectVisualization()->GetVisualizations(), GetAspectVisualization()->GetVisualizations()))
 		{
-			Content->GetAspectVisualization()->DestroyVisualization((static_cast< Graphics::SystemNode * >(Visualization->GetGraphics()))->GetShipLayer());
+			if(Visualizations.first->GetGraphics()->GetContainer() == (static_cast< Graphics::SystemNode * >(Visualizations.second->GetGraphics()))->GetShipLayer())
+			{
+				Content->GetAspectVisualization()->DestroyVisualization(Visualizations.first);
+			}
 		}
 	}
 	else if(Content->GetTypeIdentifier() == "shot")
@@ -188,11 +216,14 @@ void System::_OnRemoved(Object * Content)
 		
 		assert(ShotIterator != _Shots.end());
 		_Shots.erase(ShotIterator);
-		assert(Content->GetAspectVisualization() != nullptr);
 		assert(GetAspectVisualization() != nullptr);
-		for(auto Visualization : GetAspectVisualization()->GetVisualizations())
+		assert(Content->GetAspectVisualization() != nullptr);
+		for(auto Visualizations : std::tuples(Content->GetAspectVisualization()->GetVisualizations(), GetAspectVisualization()->GetVisualizations()))
 		{
-			Content->GetAspectVisualization()->DestroyVisualization((static_cast< Graphics::SystemNode * >(Visualization->GetGraphics()))->GetShotLayer());
+			if(Visualizations.first->GetGraphics()->GetContainer() == (static_cast< Graphics::SystemNode * >(Visualizations.second->GetGraphics()))->GetShotLayer())
+			{
+				Content->GetAspectVisualization()->DestroyVisualization(Visualizations.first);
+			}
 		}
 	}
 	else if(Content->GetTypeIdentifier() == "star")
