@@ -29,8 +29,8 @@ Goal::Goal(GoalMind * GoalMind, const std::string & Name) :
 {
 	// initialize object aspects
 	AddAspectObjectContainer();
-	GetAspectObjectContainer()->SetOnAddedCallback(Callback(this, &Goal::OnAdded));
-	GetAspectObjectContainer()->SetOnRemovedCallback(Callback(this, &Goal::OnRemoved));
+	GetAspectObjectContainer()->SetOnAddedCallback(std::bind(&Goal::OnAdded, this, std::placeholders::_1));
+	GetAspectObjectContainer()->SetOnRemovedCallback(std::bind(&Goal::OnRemoved, this, std::placeholders::_1));
 }
 
 Goal::~Goal(void)
