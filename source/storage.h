@@ -30,7 +30,6 @@ public:
 	Storage(void);
 	virtual ~Storage(void) override;
 	// getters
-	unsigned_numeric GetAmount(const std::string & TypeIdentifier, const std::string & ClassIdentifier) const;
 	unsigned_numeric GetSpace(void) const;
 	unsigned_numeric GetSpaceCapacity(void) const;
 	// setters

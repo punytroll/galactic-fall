@@ -32,36 +32,31 @@ Hangar::~Hangar(void)
 {
 	if(_Character != nullptr)
 	{
+		assert(_CharacterDestroyingConnectionHandle.IsValid() == true);
 		_Character->DisconnectDestroyingCallback(_CharacterDestroyingConnectionHandle);
+		_Character = nullptr;
 	}
-}
-
-unsigned_numeric Hangar::GetAmount(const std::string & TypeIdentifier, const std::string & ClassIdentifier) const
-{
-	assert(GetAspectObjectContainer() != nullptr);
-	
-	unsigned_numeric Amount(0);
-	
-	for(auto Content : GetAspectObjectContainer()->GetContent())
-	{
-		if((Content->GetTypeIdentifier() == TypeIdentifier) && (Content->GetClassIdentifier() == ClassIdentifier))
-		{
-			Amount += 1;
-		}
-	}
-	
-	return Amount;
 }
 
 void Hangar::SetCharacter(Character * Character)
 {
-	assert(_Character == nullptr);
-	assert(Character != nullptr);
-	_Character = Character;
-	_CharacterDestroyingConnectionHandle = _Character->ConnectDestroyingCallback(Callback(this, &Hangar::_OnCharacterDestroying));
+	if(_Character != nullptr)
+	{
+		assert(_CharacterDestroyingConnectionHandle.IsValid() == true);
+		_Character->DisconnectDestroyingCallback(_CharacterDestroyingConnectionHandle);
+		_Character = nullptr;
+	}
+	if(Character != nullptr)
+	{
+		_Character = Character;
+		_CharacterDestroyingConnectionHandle = _Character->ConnectDestroyingCallback(Callback(this, &Hangar::_OnCharacterDestroying));
+	}
 }
 
 void Hangar::_OnCharacterDestroying(void)
 {
+	assert(_Character != nullptr);
+	assert(_CharacterDestroyingConnectionHandle.IsValid() == true);
+	_Character->DisconnectDestroyingCallback(_CharacterDestroyingConnectionHandle);
 	_Character = nullptr;
 }

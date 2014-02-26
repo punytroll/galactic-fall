@@ -35,23 +35,6 @@ Storage::~Storage(void)
 {
 }
 
-unsigned_numeric Storage::GetAmount(const std::string & TypeIdentifier, const std::string & ClassIdentifier) const
-{
-	assert(GetAspectObjectContainer() != nullptr);
-	
-	unsigned_numeric Amount(0);
-	
-	for(auto Content : GetAspectObjectContainer()->GetContent())
-	{
-		if((Content->GetTypeIdentifier() == TypeIdentifier) && (Content->GetClassIdentifier() == ClassIdentifier))
-		{
-			Amount += 1;
-		}
-	}
-	
-	return Amount;
-}
-
 void Storage::SetSpaceCapacity(unsigned_numeric SpaceCapacity)
 {
 	signed_numeric SpaceDifference(SpaceCapacity - _SpaceCapacity);
