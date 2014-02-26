@@ -5,7 +5,6 @@ arx_reading_cpp = \
 	$(asset_class_h) \
 	$(battery_class_h) \
 	$(buffer_reading_h) \
-	$(callbacks_callbacks_h) \
 	$(class_manager_h) \
 	$(commodity_class_h) \
 	$(faction_h) \
@@ -270,7 +269,6 @@ graphics_callback_node_cpp = \
 
 graphics_callback_node_h = \
 	graphics/callback_node.h \
-	$(callbacks_callbacks_h) \
 	$(graphics_node_h)
 
 graphics_camera_cpp = \
