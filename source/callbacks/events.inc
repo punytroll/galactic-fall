@@ -11,7 +11,7 @@ public:
 	class CallbackIterator
 	{
 	public:
-		CallbackIterator(Node< Callback0< ReturnType > > * CallbackNode) :
+		CallbackIterator(Node< std::function< ReturnType (void) > > * CallbackNode) :
 			_CallbackNode(CallbackNode)
 		{
 		}
@@ -45,17 +45,17 @@ public:
 			return _CallbackNode->GetValue()();
 		}
 	private:
-		Node< Callback0< ReturnType > > * _CallbackNode;
+		Node< std::function< ReturnType (void) > > * _CallbackNode;
 	};
 	
-	ConnectionHandle Connect(Callback0< ReturnType > Callback)
+	ConnectionHandle Connect(std::function< ReturnType (void) > Callback)
 	{
 		return ConnectionHandle(_Callbacks.Append(Callback));
 	}
 	
 	void Disconnect(ConnectionHandle & ConnectionHandle)
 	{
-		_Callbacks.Remove(static_cast< Node< Callback0< ReturnType > > * >(ConnectionHandle.GetHandle()));
+		_Callbacks.Remove(static_cast< Node< std::function< ReturnType (void) > > * >(ConnectionHandle.GetHandle()));
 		ConnectionHandle.Invalidate();
 	}
 	
@@ -66,9 +66,9 @@ public:
 	
 	void operator()(void)
 	{
-		std::list< Callback0< ReturnType > > Callbacks;
+		std::list< std::function< ReturnType (void) > > Callbacks;
 		
-		for(Node< Callback0< ReturnType > > * CallbackNode = _Callbacks.GetHead(); CallbackNode != 0; CallbackNode = CallbackNode->GetNext())
+		for(Node< std::function< ReturnType (void) > > * CallbackNode = _Callbacks.GetHead(); CallbackNode != 0; CallbackNode = CallbackNode->GetNext())
 		{
 			Callbacks.push_back(CallbackNode->GetValue());
 		}
@@ -78,7 +78,7 @@ public:
 		}
 	}
 private:
-	List< Callback0< ReturnType > > _Callbacks;
+	List< std::function< ReturnType (void) > > _Callbacks;
 };
 /////////  end    1b679b70-2a62-11de-8c30-0800200c9a66  ///////////////////////
 
@@ -95,7 +95,7 @@ public:
 	class CallbackIterator
 	{
 	public:
-		CallbackIterator(Node< Callback1< ReturnType, Argument1Type > > * CallbackNode) :
+		CallbackIterator(Node< std::function< ReturnType (Argument1Type) > > * CallbackNode) :
 			_CallbackNode(CallbackNode)
 		{
 		}
@@ -129,17 +129,17 @@ public:
 			return _CallbackNode->GetValue()(Argument1);
 		}
 	private:
-		Node< Callback1< ReturnType, Argument1Type > > * _CallbackNode;
+		Node< std::function< ReturnType (Argument1Type) > > * _CallbackNode;
 	};
 	
-	ConnectionHandle Connect(Callback1< ReturnType, Argument1Type > Callback)
+	ConnectionHandle Connect(std::function< ReturnType (Argument1Type) > Callback)
 	{
 		return ConnectionHandle(_Callbacks.Append(Callback));
 	}
 	
 	void Disconnect(ConnectionHandle & ConnectionHandle)
 	{
-		_Callbacks.Remove(static_cast< Node< Callback1< ReturnType, Argument1Type > > * >(ConnectionHandle.GetHandle()));
+		_Callbacks.Remove(static_cast< Node< std::function< ReturnType (Argument1Type) > > * >(ConnectionHandle.GetHandle()));
 		ConnectionHandle.Invalidate();
 	}
 	
@@ -150,9 +150,9 @@ public:
 	
 	void operator()(Argument1Type Argument1)
 	{
-		std::list< Callback1< ReturnType, Argument1Type > > Callbacks;
+		std::list< std::function< ReturnType (Argument1Type) > > Callbacks;
 		
-		for(Node< Callback1< ReturnType, Argument1Type > > * CallbackNode = _Callbacks.GetHead(); CallbackNode != 0; CallbackNode = CallbackNode->GetNext())
+		for(Node< std::function< ReturnType (Argument1Type) > > * CallbackNode = _Callbacks.GetHead(); CallbackNode != 0; CallbackNode = CallbackNode->GetNext())
 		{
 			Callbacks.push_back(CallbackNode->GetValue());
 		}
@@ -162,7 +162,7 @@ public:
 		}
 	}
 private:
-	List< Callback1< ReturnType, Argument1Type > > _Callbacks;
+	List< std::function< ReturnType (Argument1Type) > > _Callbacks;
 };
 /////////  end    1b679b70-2a62-11de-8c30-0800200c9a66  ///////////////////////
 
@@ -179,7 +179,7 @@ public:
 	class CallbackIterator
 	{
 	public:
-		CallbackIterator(Node< Callback2< ReturnType, Argument1Type, Argument2Type > > * CallbackNode) :
+		CallbackIterator(Node< std::function< ReturnType (Argument1Type, Argument2Type) > > * CallbackNode) :
 			_CallbackNode(CallbackNode)
 		{
 		}
@@ -213,17 +213,17 @@ public:
 			return _CallbackNode->GetValue()(Argument1, Argument2);
 		}
 	private:
-		Node< Callback2< ReturnType, Argument1Type, Argument2Type > > * _CallbackNode;
+		Node< std::function< ReturnType (Argument1Type, Argument2Type) > > * _CallbackNode;
 	};
 	
-	ConnectionHandle Connect(Callback2< ReturnType, Argument1Type, Argument2Type > Callback)
+	ConnectionHandle Connect(std::function< ReturnType (Argument1Type, Argument2Type) > Callback)
 	{
 		return ConnectionHandle(_Callbacks.Append(Callback));
 	}
 	
 	void Disconnect(ConnectionHandle & ConnectionHandle)
 	{
-		_Callbacks.Remove(static_cast< Node< Callback2< ReturnType, Argument1Type, Argument2Type > > * >(ConnectionHandle.GetHandle()));
+		_Callbacks.Remove(static_cast< Node< std::function< ReturnType (Argument1Type, Argument2Type) > > * >(ConnectionHandle.GetHandle()));
 		ConnectionHandle.Invalidate();
 	}
 	
@@ -234,9 +234,9 @@ public:
 	
 	void operator()(Argument1Type Argument1, Argument2Type Argument2)
 	{
-		std::list< Callback2< ReturnType, Argument1Type, Argument2Type > > Callbacks;
+		std::list< std::function< ReturnType (Argument1Type, Argument2Type) > > Callbacks;
 		
-		for(Node< Callback2< ReturnType, Argument1Type, Argument2Type > > * CallbackNode = _Callbacks.GetHead(); CallbackNode != 0; CallbackNode = CallbackNode->GetNext())
+		for(Node< std::function< ReturnType (Argument1Type, Argument2Type) > > * CallbackNode = _Callbacks.GetHead(); CallbackNode != 0; CallbackNode = CallbackNode->GetNext())
 		{
 			Callbacks.push_back(CallbackNode->GetValue());
 		}
@@ -246,7 +246,7 @@ public:
 		}
 	}
 private:
-	List< Callback2< ReturnType, Argument1Type, Argument2Type > > _Callbacks;
+	List< std::function< ReturnType (Argument1Type, Argument2Type) > > _Callbacks;
 };
 /////////  end    1b679b70-2a62-11de-8c30-0800200c9a66  ///////////////////////
 
@@ -263,7 +263,7 @@ public:
 	class CallbackIterator
 	{
 	public:
-		CallbackIterator(Node< Callback4< ReturnType, Argument1Type, Argument2Type, Argument3Type, Argument4Type > > * CallbackNode) :
+		CallbackIterator(Node< std::function< ReturnType (Argument1Type, Argument2Type, Argument3Type, Argument4Type) > > * CallbackNode) :
 			_CallbackNode(CallbackNode)
 		{
 		}
@@ -297,17 +297,17 @@ public:
 			return _CallbackNode->GetValue()(Argument1, Argument2, Argument3, Argument4);
 		}
 	private:
-		Node< Callback4< ReturnType, Argument1Type, Argument2Type, Argument3Type, Argument4Type > > * _CallbackNode;
+		Node< std::function< ReturnType (Argument1Type, Argument2Type, Argument3Type, Argument4Type) > > * _CallbackNode;
 	};
 	
-	ConnectionHandle Connect(Callback4< ReturnType, Argument1Type, Argument2Type, Argument3Type, Argument4Type > Callback)
+	ConnectionHandle Connect(std::function< ReturnType (Argument1Type, Argument2Type, Argument3Type, Argument4Type) > Callback)
 	{
 		return ConnectionHandle(_Callbacks.Append(Callback));
 	}
 	
 	void Disconnect(ConnectionHandle & ConnectionHandle)
 	{
-		_Callbacks.Remove(static_cast< Node< Callback4< ReturnType, Argument1Type, Argument2Type, Argument3Type, Argument4Type > > * >(ConnectionHandle.GetHandle()));
+		_Callbacks.Remove(static_cast< Node< std::function< ReturnType (Argument1Type, Argument2Type, Argument3Type, Argument4Type) > > * >(ConnectionHandle.GetHandle()));
 		ConnectionHandle.Invalidate();
 	}
 	
@@ -318,9 +318,9 @@ public:
 	
 	void operator()(Argument1Type Argument1, Argument2Type Argument2, Argument3Type Argument3, Argument4Type Argument4)
 	{
-		std::list< Callback4< ReturnType, Argument1Type, Argument2Type, Argument3Type, Argument4Type > > Callbacks;
+		std::list< std::function< ReturnType (Argument1Type, Argument2Type, Argument3Type, Argument4Type) > > Callbacks;
 		
-		for(Node< Callback4< ReturnType, Argument1Type, Argument2Type, Argument3Type, Argument4Type > > * CallbackNode = _Callbacks.GetHead(); CallbackNode != 0; CallbackNode = CallbackNode->GetNext())
+		for(Node< std::function< ReturnType (Argument1Type, Argument2Type, Argument3Type, Argument4Type) > > * CallbackNode = _Callbacks.GetHead(); CallbackNode != 0; CallbackNode = CallbackNode->GetNext())
 		{
 			Callbacks.push_back(CallbackNode->GetValue());
 		}
@@ -330,7 +330,7 @@ public:
 		}
 	}
 private:
-	List< Callback4< ReturnType, Argument1Type, Argument2Type, Argument3Type, Argument4Type > > _Callbacks;
+	List< std::function< ReturnType (Argument1Type, Argument2Type, Argument3Type, Argument4Type) > > _Callbacks;
 };
 /////////  end    1b679b70-2a62-11de-8c30-0800200c9a66  ///////////////////////
 
