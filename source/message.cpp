@@ -20,9 +20,9 @@
 #include "message.h"
 
 Message::Message(const std::string & TypeIdentifier, Reference< Object > Sender, Reference< Object > Receiver) :
-	m_Receiver(Receiver),
-	m_Sender(Sender),
-	m_TypeIdentifier(TypeIdentifier)
+	_Receiver(Receiver),
+	_Sender(Sender),
+	_TypeIdentifier(TypeIdentifier)
 {
 }
 

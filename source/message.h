@@ -33,39 +33,27 @@ public:
 	virtual ~Message(void);
 	// getters
 	Reference< Object > & GetReceiver(void);
-	const Reference< Object > & GetReceiver(void) const;
 	Reference< Object > & GetSender(void);
-	const Reference< Object > & GetSender(void) const;
 	const std::string & GetTypeIdentifier(void) const;
 private:
-	Reference< Object > m_Receiver;
-	Reference< Object > m_Sender;
-	std::string m_TypeIdentifier;
+	Reference< Object > _Receiver;
+	Reference< Object > _Sender;
+	std::string _TypeIdentifier;
 };
 
 inline Reference< Object > & Message::GetReceiver(void)
 {
-	return m_Receiver;
-}
-
-inline const Reference< Object > & Message::GetReceiver(void) const
-{
-	return m_Receiver;
+	return _Receiver;
 }
 
 inline Reference< Object > & Message::GetSender(void)
 {
-	return m_Sender;
-}
-
-inline const Reference< Object > & Message::GetSender(void) const
-{
-	return m_Sender;
+	return _Sender;
 }
 
 inline const std::string & Message::GetTypeIdentifier(void) const
 {
-	return m_TypeIdentifier;
+	return _TypeIdentifier;
 }
 
 #endif
