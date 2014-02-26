@@ -22,8 +22,15 @@
 #include "../source/callbacks/callbacks.h"
 #include "../source/callbacks/events.h"
 
+int g_Global;
+
 void EmptyFunction(void)
 {
+}
+
+void IncrementingFunction(int Value)
+{
+	g_Global += Value;
 }
 
 class SelfDisconnecting
@@ -61,6 +68,39 @@ int main(int argc, char ** argv)
 		
 		Event.Connect(Callback(EmptyFunction));
 		Event();
+	}
+	
+	std::cout << "-----------------------------" << std::endl;
+	
+	{
+		g_Global = 32;
+		
+		Event0< void > Event;
+		
+		Event.Connect(Bind1(Callback(IncrementingFunction), 8));
+		Event();
+		assert(g_Global == 40);
+		Event();
+		assert(g_Global == 48);
+	}
+	
+	std::cout << "-----------------------------" << std::endl;
+	
+	{
+		g_Global = 64;
+		
+		Event0< void > Event;
+		ConnectionHandle Handle1(Event.Connect(Bind1(Callback(IncrementingFunction), 8)));
+		ConnectionHandle Handle2(Event.Connect(Bind1(Callback(IncrementingFunction), 12)));
+		
+		Event();
+		assert(g_Global == 84);
+		Event.Disconnect(Handle1);
+		Event();
+		assert(g_Global == 96);
+		Event.Disconnect(Handle2);
+		Event();
+		assert(g_Global == 96);
 	}
 	
 	std::cout << "-----------------------------" << std::endl;
