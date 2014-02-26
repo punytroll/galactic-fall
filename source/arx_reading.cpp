@@ -19,6 +19,7 @@
 
 #include <arpa/inet.h>
 
+#include <functional>
 #include <iostream>
 
 #include <Archive.h>
@@ -29,7 +30,6 @@
 #include "asset_class.h"
 #include "battery_class.h"
 #include "buffer_reading.h"
-#include "callbacks/callbacks.h"
 #include "class_manager.h"
 #include "commodity_class.h"
 #include "faction.h"
@@ -86,7 +86,7 @@ static void ReadTexture(Arxx::Reference & Reference);
 static void ReadVisualizationPrototype(Arxx::BufferReader & Reader, VisualizationPrototype * VisualizationPrototype);
 static void ReadWeaponClass(Arxx::Reference & Reference);
 static void ReadWidget(Arxx::Reference & Reference);
-static UI::Widget * ReadWidget(Arxx::BufferReader & Reader, Arxx::u4byte Type, Arxx::u4byte SubType);
+static UI::Widget * ReadTypedWidget(Arxx::BufferReader & Reader, Arxx::u4byte Type, Arxx::u4byte SubType);
 static void ReadWidgetBorder(Arxx::BufferReader & Reader, UI::Border * ReadBorder);
 static void ReadWidgetLabel(Arxx::BufferReader & Reader, UI::Label * ReadLabel);
 static void ReadWidgetMiniMapDisplay(Arxx::BufferReader & Reader, UI::MiniMapDisplay * ReadMiniMapDisplay);
@@ -130,7 +130,7 @@ static Arxx::Item * Resolve(Arxx::Reference & Reference)
 	return Item;
 }
 
-void ReadItems(Arxx::Archive * Archive, const std::string & Path, const Callback1< void, Arxx::Reference & > Reader)
+void ReadItems(Arxx::Archive * Archive, const std::string & Path, std::function< void (Arxx::Reference &) > Reader)
 {
 	Arxx::Item * Directory(Archive->GetItem(Path));
 	
@@ -180,42 +180,42 @@ bool ResourceReader::LoadArchive(const std::string & ArchivePath)
 
 void ResourceReader::ReadAssetClasses(void)
 {
-	ReadItems(m_Archive, "/Asset Classes", Callback(ReadAssetClass));
+	ReadItems(m_Archive, "/Asset Classes", ReadAssetClass);
 }
 
 void ResourceReader::ReadBatteryClasses(void)
 {
-	ReadItems(m_Archive, "/Battery Classes", Callback(ReadBatteryClass));
+	ReadItems(m_Archive, "/Battery Classes", ReadBatteryClass);
 }
 
 void ResourceReader::ReadCommodityClasses(void)
 {
-	ReadItems(m_Archive, "/Commodity Classes", Callback(ReadCommodityClass));
+	ReadItems(m_Archive, "/Commodity Classes", ReadCommodityClass);
 }
 
 void ResourceReader::ReadFactions(void)
 {
-	ReadItems(m_Archive, "/Factions", Callback(ReadFaction));
+	ReadItems(m_Archive, "/Factions", ReadFaction);
 }
 
 void ResourceReader::ReadGeneratorClasses(void)
 {
-	ReadItems(m_Archive, "/Generator Classes", Callback(ReadGeneratorClass));
+	ReadItems(m_Archive, "/Generator Classes", ReadGeneratorClass);
 }
 
 void ResourceReader::ReadMeshes(void)
 {
-	ReadItems(m_Archive, "/Meshes", Callback(ReadMesh));
+	ReadItems(m_Archive, "/Meshes", ReadMesh);
 }
 
 void ResourceReader::ReadModels(void)
 {
-	ReadItems(m_Archive, "/Models", Callback(ReadModel));
+	ReadItems(m_Archive, "/Models", ReadModel);
 }
 
 void ResourceReader::ReadScenarios(ScenarioManager * ScenarioManager)
 {
-	ReadItems(m_Archive, "/Scenarios", Bind2(Callback(ReadScenario), ScenarioManager));
+	ReadItems(m_Archive, "/Scenarios", std::bind(ReadScenario, std::placeholders::_1, ScenarioManager));
 }
 
 void ResourceReader::ReadSettings(Settings * Settings)
@@ -231,37 +231,37 @@ void ResourceReader::ReadSettings(Settings * Settings)
 
 void ResourceReader::ReadShipClasses(void)
 {
-	ReadItems(m_Archive, "/Ship Classes", Callback(ReadShipClass));
+	ReadItems(m_Archive, "/Ship Classes", ReadShipClass);
 }
 
 void ResourceReader::ReadSlotClasses(void)
 {
-	ReadItems(m_Archive, "/Slot Classes", Callback(ReadSlotClass));
+	ReadItems(m_Archive, "/Slot Classes", ReadSlotClass);
 }
 
 void ResourceReader::ReadSystems(void)
 {
-	ReadItems(m_Archive, "/Systems", Callback(ReadSystem));
+	ReadItems(m_Archive, "/Systems", ReadSystem);
 }
 
 void ResourceReader::ReadSystemLinks(void)
 {
-	ReadItems(m_Archive, "/System Links", Callback(ReadSystemLink));
+	ReadItems(m_Archive, "/System Links", ReadSystemLink);
 }
 
 void ResourceReader::ReadTextures(void)
 {
-	ReadItems(m_Archive, "/Textures", Callback(ReadTexture));
+	ReadItems(m_Archive, "/Textures", ReadTexture);
 }
 
 void ResourceReader::ReadUserInterface(void)
 {
-	ReadItems(m_Archive, "/User Interface", Callback<void, Arxx::Reference &>(ReadWidget));
+	ReadItems(m_Archive, "/User Interface", ReadWidget);
 }
 
 void ResourceReader::ReadWeaponClasses(void)
 {
-	ReadItems(m_Archive, "/Weapon Classes", Callback(ReadWeaponClass));
+	ReadItems(m_Archive, "/Weapon Classes", ReadWeaponClass);
 }
 
 std::string ResourceReader::ReadSavegameFromScenarioPath(const std::string & ScenarioPath)
@@ -1050,14 +1050,14 @@ static void ReadWidget(Arxx::Reference & Reference)
 	
 	Arxx::BufferReader Reader(*Item);
 	
-	ReadWidget(Reader, Item->GetType(), Item->GetSubType());
+	ReadTypedWidget(Reader, Item->GetType(), Item->GetSubType());
 	if(Reader.stGetPosition() != Item->GetDecompressedLength())
 	{
 		throw std::runtime_error("For the widget '" + Item->GetName() + "' the reader functions did not read the expected amount of data. Should be '" + to_string_cast(Item->GetDecompressedLength()) + "' not '" + to_string_cast(Reader.stGetPosition()) + "'.");
 	}
 }
 	
-static UI::Widget * ReadWidget(Arxx::BufferReader & Reader, Arxx::u4byte Type, Arxx::u4byte SubType)
+static UI::Widget * ReadTypedWidget(Arxx::BufferReader & Reader, Arxx::u4byte Type, Arxx::u4byte SubType)
 {
 	UI::Widget * Result(0);
 	
@@ -1228,7 +1228,7 @@ static void ReadWidgetWidget(Arxx::BufferReader & Reader, UI::Widget * Widget)
 		
 		Reader >> Type >> SubType;
 		
-		UI::Widget * SubWidget(ReadWidget(Reader, Type, SubType));
+		UI::Widget * SubWidget(ReadTypedWidget(Reader, Type, SubType));
 		
 		Widget->AddSubWidget(SubWidget);
 	}
