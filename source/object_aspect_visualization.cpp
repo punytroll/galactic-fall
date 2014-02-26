@@ -19,6 +19,8 @@
 
 #include <assert.h>
 
+#include <algorithm>
+
 #include "graphics/node.h"
 #include "object_aspect_visualization.h"
 #include "visualization.h"
@@ -87,6 +89,20 @@ void ObjectAspectVisualization::DestroyVisualization(Graphics::Node * Container)
 		}
 	}
 	assert(Found == true);
+}
+
+void ObjectAspectVisualization::DestroyVisualization(Visualization * Visualization)
+{
+	assert(Visualization != nullptr);
+	
+	auto VisualizationIterator(std::find(_Visualizations.begin(), _Visualizations.end(), Visualization));
+	
+	assert(VisualizationIterator != _Visualizations.end());
+	
+	auto OldCount(_Visualizations.size());
+	
+	(*VisualizationIterator)->GetGraphics()->Destroy();
+	assert(_Visualizations.size() + 1 == OldCount);
 }
 
 void ObjectAspectVisualization::RemoveGraphics(Graphics::Node * Graphics)
