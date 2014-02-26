@@ -2716,7 +2716,7 @@ void ActionOpenMainMenuWindow(void)
 		}
 		g_MainMenuWindow->SetPosition(Vector2f((g_UserInterface->GetRootWidget()->GetSize()[0] - g_MainMenuWindow->GetSize()[0]) / 2.0f, (g_UserInterface->GetRootWidget()->GetSize()[1] - g_MainMenuWindow->GetSize()[1]) / 2.0f));
 		g_MainMenuWindow->GrabKeyFocus();
-		g_MainMenuWindow->ConnectDestroyingCallback(Callback(OnMainMenuDestroying));
+		g_MainMenuWindow->ConnectDestroyingCallback(OnMainMenuDestroying);
 	}
 }
 
@@ -2729,7 +2729,7 @@ void ActionOpenMapDialog(void)
 		assert(CurrentSystem != 0);
 		g_MapDialog = new UI::MapDialog(g_UserInterface->GetRootWidget(), CurrentSystem, g_CharacterObserver->GetObservedCharacter().Get());
 		g_MapDialog->GrabKeyFocus();
-		g_MapDialog->ConnectDestroyingCallback(Callback(OnMapDialogDestroying));
+		g_MapDialog->ConnectDestroyingCallback(OnMapDialogDestroying);
 		if(g_InputMind.IsValid() == true)
 		{
 			g_InputMind->DisableAccelerate();
@@ -2752,7 +2752,7 @@ void ActionOpenOutfitShipDialog(void)
 	{
 		g_OutfitShipDialog = new UI::OutfitShipDialog(g_UserInterface->GetRootWidget(), g_CharacterObserver->GetObservedCharacter()->GetShip()->GetReference());
 		g_OutfitShipDialog->GrabKeyFocus();
-		g_OutfitShipDialog->ConnectDestroyingCallback(Callback(OnOutfitShipDialogDestroying));
+		g_OutfitShipDialog->ConnectDestroyingCallback(OnOutfitShipDialogDestroying);
 	}
 }
 
@@ -2927,7 +2927,7 @@ void ActionToggleTimingDialog(void)
 	{
 		g_TimingDialog = new UI::TimingDialog(g_UserInterface->GetRootWidget());
 		g_TimingDialog->GrabKeyFocus();
-		g_TimingDialog->ConnectDestroyingCallback(Callback(OnTimingDialogDestroying));
+		g_TimingDialog->ConnectDestroyingCallback(OnTimingDialogDestroying);
 	}
 	else
 	{

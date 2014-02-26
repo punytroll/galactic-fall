@@ -42,7 +42,7 @@ UI::MiniMapDisplay::MiniMapDisplay(UI::Widget * SupWidget) :
 	UI::ViewDisplay(SupWidget)
 {
 	SetSize(Vector2f(100.0f, 100.0f));
-	ConnectDestroyingCallback(Callback(this, &UI::MiniMapDisplay::_OnDestroying));
+	ConnectDestroyingCallback(std::bind(&UI::MiniMapDisplay::_OnDestroying, this));
 	ConnectSizeChangedCallback(Callback(this, &UI::MiniMapDisplay::_OnSizeChanged));
 	_SetupView();
 }

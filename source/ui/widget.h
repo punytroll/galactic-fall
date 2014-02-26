@@ -95,7 +95,7 @@ namespace UI
 		// MouseLeave on the old hover widget is called before MouseEnter on the new hover widget
 		void MouseLeave(void);
 		// connect and disconnect events
-		ConnectionHandle ConnectDestroyingCallback(Callback0< void > Callback);
+		ConnectionHandle ConnectDestroyingCallback(std::function< void (void) > Callback);
 		ConnectionHandle ConnectKeyCallback(Callback1< bool, const KeyEventInformation & > Callback);
 		ConnectionHandle ConnectMouseButtonCallback(Callback4< bool, int, int, float, float > Callback);
 		ConnectionHandle ConnectMouseEnterCallback(Callback0< void > Callback);

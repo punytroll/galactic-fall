@@ -93,7 +93,7 @@ public:
 	void Destroy(void);
 	void GenerateObjectIdentifier(void);
 	// events
-	ConnectionHandle ConnectDestroyingCallback(Callback0< void > Callback);
+	ConnectionHandle ConnectDestroyingCallback(std::function< void (void) > Callback);
 	void DisconnectDestroyingCallback(ConnectionHandle & ConnectionHandle);
 	// static methods
 	static Object * GetObject(const std::string & ObjectIdentifier);

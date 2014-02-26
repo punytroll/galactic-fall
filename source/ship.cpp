@@ -18,7 +18,6 @@
 **/
 
 #include "battery.h"
-#include "callbacks/callbacks.h"
 #include "character.h"
 #include "commodity.h"
 #include "game_time.h"
@@ -457,7 +456,7 @@ void Ship::SetTarget(Object * Target)
 		if(Target != nullptr)
 		{
 			_Target = Target;
-			_TargetDestroyingConnectionHandle = _Target->ConnectDestroyingCallback(Callback(this, &Ship::_OnTargetDestroying));
+			_TargetDestroyingConnectionHandle = _Target->ConnectDestroyingCallback(std::bind(&Ship::_OnTargetDestroying, this));
 		}
 	}
 }

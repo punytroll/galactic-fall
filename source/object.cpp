@@ -22,7 +22,6 @@
 
 #include <xml_stream/xml_stream.h>
 
-#include "callbacks/callbacks.h"
 #include "message.h"
 #include "object.h"
 #include "object_aspect_accessory.h"
@@ -139,7 +138,7 @@ void Object::AddAspectVisualization(void)
 	_AspectVisualization = new ObjectAspectVisualization();
 }
 
-ConnectionHandle Object::ConnectDestroyingCallback(Callback0< void > Callback)
+ConnectionHandle Object::ConnectDestroyingCallback(std::function< void (void) > Callback)
 {
 	return _DestroyingEvent.Connect(Callback);
 }

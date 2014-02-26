@@ -42,7 +42,7 @@ UI::ScannerDisplay::ScannerDisplay(UI::Widget * SupWidget) :
 	UI::ViewDisplay(SupWidget),
 	_Target(nullptr)
 {
-	ConnectDestroyingCallback(Callback(this, &UI::ScannerDisplay::_OnDestroying));
+	ConnectDestroyingCallback(std::bind(&UI::ScannerDisplay::_OnDestroying, this));
 	ConnectUpdatingCallback(Callback(this, &UI::ScannerDisplay::_OnUpdating));
 }
 
@@ -60,7 +60,7 @@ void UI::ScannerDisplay::SetTarget(Object * Target)
 		if(Target != nullptr)
 		{
 			_Target = Target;
-			_TargetDestroyingConnectionHandle = _Target->ConnectDestroyingCallback(Callback(this, &UI::ScannerDisplay::_OnTargetDestroying));
+			_TargetDestroyingConnectionHandle = _Target->ConnectDestroyingCallback(std::bind(&UI::ScannerDisplay::_OnTargetDestroying, this));
 			_Setup();
 		}
 	}

@@ -17,7 +17,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include "callbacks/callbacks.h"
 #include "character.h"
 #include "hangar.h"
 #include "object_aspect_object_container.h"
@@ -50,7 +49,7 @@ void Hangar::SetCharacter(Character * Character)
 	if(Character != nullptr)
 	{
 		_Character = Character;
-		_CharacterDestroyingConnectionHandle = _Character->ConnectDestroyingCallback(Callback(this, &Hangar::_OnCharacterDestroying));
+		_CharacterDestroyingConnectionHandle = _Character->ConnectDestroyingCallback(std::bind(&Hangar::_OnCharacterDestroying, this));
 	}
 }
 

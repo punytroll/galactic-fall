@@ -140,7 +140,7 @@ void UI::MainMenuWindow::_OnLoadGameButtonClicked(void)
 		_LoadGameDialog = new UI::LoadGameDialog(GetRootWidget());
 		_LoadGameDialog->GrabKeyFocus();
 		_LoadGameDialog->ConnectClosingCallback(Callback(this, &UI::MainMenuWindow::_OnLoadGameDialogClosing));
-		_LoadGameDialog->ConnectDestroyingCallback(Callback(this, &UI::MainMenuWindow::_OnLoadGameDialogDestroying));
+		_LoadGameDialog->ConnectDestroyingCallback(std::bind(&UI::MainMenuWindow::_OnLoadGameDialogDestroying, this));
 		
 		std::string DirectoryPath(getenv("HOME"));
 		
@@ -223,7 +223,7 @@ void UI::MainMenuWindow::_OnLoadScenarioButtonClicked(void)
 		_LoadScenarioDialog = new UI::LoadScenarioDialog(GetRootWidget(), _ScenarioManager);
 		_LoadScenarioDialog->GrabKeyFocus();
 		_LoadScenarioDialog->ConnectClosingCallback(Callback(this, &UI::MainMenuWindow::_OnLoadScenarioDialogClosing));
-		_LoadScenarioDialog->ConnectDestroyingCallback(Callback(this, &UI::MainMenuWindow::_OnLoadScenarioDialogDestroying));
+		_LoadScenarioDialog->ConnectDestroyingCallback(std::bind(&UI::MainMenuWindow::_OnLoadScenarioDialogDestroying, this));
 		_DestroyOnLoadScenarioDialogDestroy = false;
 	}
 }
@@ -296,7 +296,7 @@ void UI::MainMenuWindow::_OnSaveGameButtonClicked(void)
 		_SaveGameDialog = new UI::SaveGameDialog(GetRootWidget());
 		_SaveGameDialog->GrabKeyFocus();
 		_SaveGameDialog->ConnectClosingCallback(Callback(this, &UI::MainMenuWindow::_OnSaveGameDialogClosing));
-		_SaveGameDialog->ConnectDestroyingCallback(Callback(this, &UI::MainMenuWindow::_OnSaveGameDialogDestroying));
+		_SaveGameDialog->ConnectDestroyingCallback(std::bind(&UI::MainMenuWindow::_OnSaveGameDialogDestroying, this));
 		
 		std::string DirectoryPath(getenv("HOME"));
 		
