@@ -105,7 +105,9 @@ UI::TradeCenterAssetClass::TradeCenterAssetClass(UI::Widget * SupWidget, PlanetA
 void UI::TradeCenterAssetClass::_OnUpdating(float RealTimeSeconds, float GameTimeSeconds)
 {
 	assert(_Ship.IsValid() == true);
-	_CharacterAmountLabel->SetText(to_string_cast(_Ship->GetCargoHold()->GetAmount(_PlanetAssetClass->GetAssetClass()->GetObjectTypeIdentifier(), _PlanetAssetClass->GetAssetClass()->GetObjectClassIdentifier())));
+	assert(_Ship->GetCargoHold() != nullptr);
+	assert(_Ship->GetCargoHold()->GetAspectObjectContainer() != nullptr);
+	_CharacterAmountLabel->SetText(to_string_cast(_Ship->GetCargoHold()->GetAspectObjectContainer()->GetAmount(_PlanetAssetClass->GetAssetClass()->GetObjectTypeIdentifier(), _PlanetAssetClass->GetAssetClass()->GetObjectClassIdentifier())));
 }
 
 const PlanetAssetClass * UI::TradeCenterAssetClass::GetPlanetAssetClass(void) const

@@ -21,7 +21,6 @@
 #define HANGAR_H
 
 #include "object.h"
-#include "type_definitions.h"
 
 class Character;
 
@@ -32,7 +31,6 @@ public:
 	Hangar(void);
 	virtual ~Hangar(void) override;
 	// getters
-	unsigned_numeric GetAmount(const std::string & TypeIdentifier, const std::string & ClassIdentifier) const;
 	Character * GetCharacter(void);
 	// setters
 	void SetCharacter(Character * Character);

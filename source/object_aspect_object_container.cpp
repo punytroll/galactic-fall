@@ -48,6 +48,21 @@ void ObjectAspectObjectContainer::AddContent(Object * Content)
 	}
 }
 
+unsigned_numeric ObjectAspectObjectContainer::GetAmount(const std::string & TypeIdentifier, const std::string & ClassIdentifier) const
+{
+	unsigned_numeric Amount(0);
+	
+	for(auto Content : _Content)
+	{
+		if((Content->GetTypeIdentifier() == TypeIdentifier) && (Content->GetClassIdentifier() == ClassIdentifier))
+		{
+			Amount += 1;
+		}
+	}
+	
+	return Amount;
+}
+
 void ObjectAspectObjectContainer::RemoveContent(Object * Content)
 {
 	assert(Content != nullptr);
