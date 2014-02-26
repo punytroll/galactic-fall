@@ -20,6 +20,8 @@
 #ifndef CONNECTION_HANDLE_H
 #define CONNECTION_HANDLE_H
 
+#include <assert.h>
+
 class ConnectionHandle
 {
 public:

@@ -66,9 +66,15 @@ public:
 	
 	void operator()(void)
 	{
+		std::list< Callback0< ReturnType > > Callbacks;
+		
 		for(Node< Callback0< ReturnType > > * CallbackNode = _Callbacks.GetHead(); CallbackNode != 0; CallbackNode = CallbackNode->GetNext())
 		{
-			CallbackNode->GetValue()();
+			Callbacks.push_back(CallbackNode->GetValue());
+		}
+		for(auto & Callback : Callbacks)
+		{
+			Callback();
 		}
 	}
 private:
@@ -144,9 +150,15 @@ public:
 	
 	void operator()(Argument1Type Argument1)
 	{
+		std::list< Callback1< ReturnType, Argument1Type > > Callbacks;
+		
 		for(Node< Callback1< ReturnType, Argument1Type > > * CallbackNode = _Callbacks.GetHead(); CallbackNode != 0; CallbackNode = CallbackNode->GetNext())
 		{
-			CallbackNode->GetValue()(Argument1);
+			Callbacks.push_back(CallbackNode->GetValue());
+		}
+		for(auto & Callback : Callbacks)
+		{
+			Callback(Argument1);
 		}
 	}
 private:
@@ -222,9 +234,15 @@ public:
 	
 	void operator()(Argument1Type Argument1, Argument2Type Argument2)
 	{
+		std::list< Callback2< ReturnType, Argument1Type, Argument2Type > > Callbacks;
+		
 		for(Node< Callback2< ReturnType, Argument1Type, Argument2Type > > * CallbackNode = _Callbacks.GetHead(); CallbackNode != 0; CallbackNode = CallbackNode->GetNext())
 		{
-			CallbackNode->GetValue()(Argument1, Argument2);
+			Callbacks.push_back(CallbackNode->GetValue());
+		}
+		for(auto & Callback : Callbacks)
+		{
+			Callback(Argument1, Argument2);
 		}
 	}
 private:
@@ -300,9 +318,15 @@ public:
 	
 	void operator()(Argument1Type Argument1, Argument2Type Argument2, Argument3Type Argument3, Argument4Type Argument4)
 	{
+		std::list< Callback4< ReturnType, Argument1Type, Argument2Type, Argument3Type, Argument4Type > > Callbacks;
+		
 		for(Node< Callback4< ReturnType, Argument1Type, Argument2Type, Argument3Type, Argument4Type > > * CallbackNode = _Callbacks.GetHead(); CallbackNode != 0; CallbackNode = CallbackNode->GetNext())
 		{
-			CallbackNode->GetValue()(Argument1, Argument2, Argument3, Argument4);
+			Callbacks.push_back(CallbackNode->GetValue());
+		}
+		for(auto & Callback : Callbacks)
+		{
+			Callback(Argument1, Argument2, Argument3, Argument4);
 		}
 	}
 private:

@@ -76,9 +76,15 @@ public:
 	
 	void operator()(<if><condition><greater><variable>NumberOfArguments</variable><to-integer>0</to-integer></greater></condition><then><foreach name="Loop"><over><range><to-integer>1</to-integer><variable>NumberOfArguments</variable></range></over><do><if><condition><greater><variable>Loop</variable><to-integer>1</to-integer></greater></condition><then>, </then></if>Argument<to-string><variable>Loop</variable></to-string>Type Argument<to-string><variable>Loop</variable></to-string></do></foreach></then><else>void</else></if>)
 	{
+		std::list&lt; Callback<to-string><variable>NumberOfArguments</variable></to-string>&lt; ReturnType<foreach name="Loop"><over><range><to-integer>1</to-integer><variable>NumberOfArguments</variable></range></over><do>, Argument<to-string><variable>Loop</variable></to-string>Type</do></foreach> &gt; &gt; Callbacks;
+		
 		for(Node&lt; Callback<to-string><variable>NumberOfArguments</variable></to-string>&lt; ReturnType<foreach name="Loop"><over><range><to-integer>1</to-integer><variable>NumberOfArguments</variable></range></over><do>, Argument<to-string><variable>Loop</variable></to-string>Type</do></foreach> &gt; &gt; * CallbackNode = _Callbacks.GetHead(); CallbackNode != 0; CallbackNode = CallbackNode-&gt;GetNext())
 		{
-			CallbackNode-&gt;GetValue()(<foreach name="Loop"><over><range><to-integer>1</to-integer><variable>NumberOfArguments</variable></range></over><do><if><condition><greater><variable>Loop</variable><to-integer>1</to-integer></greater></condition><then>, </then></if>Argument<to-string><variable>Loop</variable></to-string></do></foreach>);
+			Callbacks.push_back(CallbackNode-&gt;GetValue());
+		}
+		for(auto &amp; Callback : Callbacks)
+		{
+			Callback(<foreach name="Loop"><over><range><to-integer>1</to-integer><variable>NumberOfArguments</variable></range></over><do><if><condition><greater><variable>Loop</variable><to-integer>1</to-integer></greater></condition><then>, </then></if>Argument<to-string><variable>Loop</variable></to-string></do></foreach>);
 		}
 	}
 private:
