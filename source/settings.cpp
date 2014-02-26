@@ -57,17 +57,17 @@ Settings::KeyBinding::KeyBinding(int Code, const std::string & Event, const std:
 }
 
 Settings::Settings(void) :
-	_KeyBindings(0),
-	_WindowDimensions(0)
+	_KeyBindings(nullptr),
+	_WindowDimensions(nullptr)
 {
 }
 
 Settings::~Settings(void)
 {
 	delete _KeyBindings;
-	_KeyBindings = 0;
+	_KeyBindings = nullptr;
 	delete _WindowDimensions;
-	_WindowDimensions = 0;
+	_WindowDimensions = nullptr;
 }
 
 void Settings::SetKeyBindings(const std::list< KeyBinding > & KeyBindings)
