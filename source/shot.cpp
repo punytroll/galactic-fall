@@ -31,7 +31,7 @@ Shot::Shot(void) :
 	AddAspectPhysical();
 	AddAspectPosition();
 	AddAspectUpdate();
-	GetAspectUpdate()->SetCallback(Callback(this, &Shot::_Update));
+	GetAspectUpdate()->SetCallback(std::bind(&Shot::_Update, this, std::placeholders::_1));
 	AddAspectVisualization();
 }
 

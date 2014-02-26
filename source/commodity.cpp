@@ -33,7 +33,7 @@ Commodity::Commodity(void) :
 	AddAspectPhysical();
 	AddAspectPosition();
 	AddAspectUpdate();
-	GetAspectUpdate()->SetCallback(Callback(this, &Commodity::Update));
+	GetAspectUpdate()->SetCallback(std::bind(&Commodity::Update, this, std::placeholders::_1));
 	AddAspectVisualization();
 }
 

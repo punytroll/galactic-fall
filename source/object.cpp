@@ -22,6 +22,7 @@
 
 #include <xml_stream/xml_stream.h>
 
+#include "callbacks/callbacks.h"
 #include "message.h"
 #include "object.h"
 #include "object_aspect_accessory.h"
