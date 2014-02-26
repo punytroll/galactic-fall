@@ -41,8 +41,8 @@ Character::Character(void) :
 	// initialize object aspects
 	AddAspectMessages();
 	AddAspectObjectContainer();
-	GetAspectObjectContainer()->SetOnAddedCallback(Callback(this, &Character::OnAdded));
-	GetAspectObjectContainer()->SetOnRemovedCallback(Callback(this, &Character::OnRemoved));
+	GetAspectObjectContainer()->SetOnAddedCallback(std::bind(&Character::OnAdded, this, std::placeholders::_1));
+	GetAspectObjectContainer()->SetOnRemovedCallback(std::bind(&Character::OnRemoved, this, std::placeholders::_1));
 }
 
 Character::~Character(void)

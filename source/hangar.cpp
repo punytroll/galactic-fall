@@ -17,6 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include "callbacks/callbacks.h"
 #include "character.h"
 #include "hangar.h"
 #include "object_aspect_object_container.h"

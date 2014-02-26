@@ -42,7 +42,7 @@ void ObjectAspectObjectContainer::AddContent(Object * Content)
 	
 	assert(InsertionResult.second == true);
 	Content->SetContainer(_Object);
-	if(_OnAddedCallback.IsValid() == true)
+	if(_OnAddedCallback)
 	{
 		_OnAddedCallback(Content);
 	}
@@ -73,7 +73,7 @@ void ObjectAspectObjectContainer::RemoveContent(Object * Content)
 	assert(ContentIterator != _Content.end());
 	Content->SetContainer(0);
 	_Content.erase(ContentIterator);
-	if(_OnRemovedCallback.IsValid() == true)
+	if(_OnRemovedCallback)
 	{
 		_OnRemovedCallback(Content);
 	}

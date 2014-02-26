@@ -20,9 +20,9 @@
 #ifndef OBJECT_ASPECT_OBJECT_CONTAINER_H
 #define OBJECT_ASPECT_OBJECT_CONTAINER_H
 
+#include <functional>
 #include <set>
 
-#include "callbacks/callbacks.h"
 #include "type_definitions.h"
 
 class Object;
@@ -43,13 +43,13 @@ public:
 	void Destroy(void);
 	void RemoveContent(Object * Content);
 	// setters
-	void SetOnAddedCallback(Callback1< void, Object * > OnAddedCallback);
-	void SetOnRemovedCallback(Callback1< void, Object * > OnRemovedCallback);
+	void SetOnAddedCallback(std::function< void (Object *) > OnAddedCallback);
+	void SetOnRemovedCallback(std::function< void (Object *) > OnRemovedCallback);
 private:
 	std::set< Object * > _Content;
 	Object * _Object;
-	Callback1< void, Object * > _OnAddedCallback;
-	Callback1< void, Object * > _OnRemovedCallback;
+	std::function< void (Object *) > _OnAddedCallback;
+	std::function< void (Object *) > _OnRemovedCallback;
 };
 
 inline const std::set< Object * > & ObjectAspectObjectContainer::GetContent(void) const
@@ -67,12 +67,12 @@ inline const Object * ObjectAspectObjectContainer::GetObject(void) const
 	return _Object;
 }
 
-inline void ObjectAspectObjectContainer::SetOnAddedCallback(Callback1< void, Object * > OnAddedCallback)
+inline void ObjectAspectObjectContainer::SetOnAddedCallback(std::function< void (Object *) > OnAddedCallback)
 {
 	_OnAddedCallback = OnAddedCallback;
 }
 
-inline void ObjectAspectObjectContainer::SetOnRemovedCallback(Callback1< void, Object * > OnRemovedCallback)
+inline void ObjectAspectObjectContainer::SetOnRemovedCallback(std::function< void (Object *) > OnRemovedCallback)
 {
 	_OnRemovedCallback = OnRemovedCallback;
 }

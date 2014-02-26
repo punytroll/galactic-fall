@@ -27,8 +27,8 @@ Storage::Storage(void) :
 {
 	// initialize object aspects
 	AddAspectObjectContainer();
-	GetAspectObjectContainer()->SetOnAddedCallback(Callback(this, &Storage::_OnAdded));
-	GetAspectObjectContainer()->SetOnRemovedCallback(Callback(this, &Storage::_OnRemoved));
+	GetAspectObjectContainer()->SetOnAddedCallback(std::bind(&Storage::_OnAdded, this, std::placeholders::_1));
+	GetAspectObjectContainer()->SetOnRemovedCallback(std::bind(&Storage::_OnRemoved, this, std::placeholders::_1));
 }
 
 Storage::~Storage(void)

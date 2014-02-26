@@ -497,6 +497,7 @@ graphics_view_h = \
 
 hangar_cpp = \
 	hangar.cpp \
+	$(callbacks_callbacks_h) \
 	$(character_h) \
 	$(hangar_h) \
 	$(object_aspect_object_container_h)
@@ -706,7 +707,6 @@ object_aspect_object_container_cpp = \
 
 object_aspect_object_container_h = \
 	object_aspect_object_container.h \
-	$(callbacks_callbacks_h) \
 	$(type_definitions_h)
 
 object_aspect_outfitting_cpp = \
@@ -1222,6 +1222,7 @@ ui_mini_map_display_h = \
 
 ui_object_information_dialog_cpp = \
 	ui/object_information_dialog.cpp \
+	$(callbacks_callbacks_h) \
 	$(color_h) \
 	$(globals_h) \
 	$(message_h) \
@@ -1250,6 +1251,7 @@ ui_object_information_dialog_h = \
 
 ui_outfit_ship_dialog_cpp = \
 	ui/outfit_ship_dialog.cpp \
+	$(callbacks_callbacks_h) \
 	$(class_manager_h) \
 	$(color_h) \
 	$(globals_h) \
