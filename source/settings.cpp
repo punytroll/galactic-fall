@@ -98,9 +98,9 @@ void Settings::LoadFromItem(Arxx::Item * Item)
 	{
 		Arxx::Item * KeyBindingProfileItem(KeyBindingProfileItems.front());
 		
-		if(KeyBindingProfileItem->GetType() != ARX_TYPE_KEY_BINDING_PROFILE)
+		if(KeyBindingProfileItem->GetType() != DATA_TYPE_KEY_BINDING_PROFILE)
 		{
-			throw std::runtime_error("The item '" + KeyBindingProfileItem->GetName() + "' does not have the type '" + to_string_cast(ARX_TYPE_KEY_BINDING_PROFILE) + "' but the type '" + to_string_cast(KeyBindingProfileItem->GetType()) + "'.");
+			throw std::runtime_error("The item '" + KeyBindingProfileItem->GetName() + "' does not have the type '" + to_string_cast(DATA_TYPE_KEY_BINDING_PROFILE) + "' but the type '" + to_string_cast(KeyBindingProfileItem->GetType()) + "'.");
 		}
 		if(KeyBindingProfileItem->GetSubType() != 0)
 		{
@@ -132,13 +132,13 @@ void Settings::LoadFromItem(Arxx::Item * Item)
 	{
 		Arxx::Item * WindowDimensionsItem(WindowDimensionsItems.front());
 		
-		if(WindowDimensionsItem->GetType() != ARX_TYPE_DIMENSIONS)
+		if(WindowDimensionsItem->GetType() != DATA_TYPE_DIMENSIONS)
 		{
-			throw std::runtime_error("The item '" + WindowDimensionsItem->GetName() + "' does not have the type '" + to_string_cast(ARX_TYPE_DIMENSIONS) + "' but the type '" + to_string_cast(WindowDimensionsItem->GetType()) + "'.");
+			throw std::runtime_error("The item '" + WindowDimensionsItem->GetName() + "' does not have the type '" + to_string_cast(DATA_TYPE_DIMENSIONS) + "' but the type '" + to_string_cast(WindowDimensionsItem->GetType()) + "'.");
 		}
-		if(WindowDimensionsItem->GetSubType() != ARX_TYPE_DIMENSIONS_SUB_TYPE_2_FLOATS)
+		if(WindowDimensionsItem->GetSubType() != DATA_TYPE_DIMENSIONS_SUB_TYPE_2_FLOATS)
 		{
-			throw std::runtime_error("The item '" + WindowDimensionsItem->GetName() + "' does not have the sub type '" + to_string_cast(ARX_TYPE_DIMENSIONS_SUB_TYPE_2_FLOATS) + "' but the sub type '" + to_string_cast(WindowDimensionsItem->GetSubType()) + "'.");
+			throw std::runtime_error("The item '" + WindowDimensionsItem->GetName() + "' does not have the sub type '" + to_string_cast(DATA_TYPE_DIMENSIONS_SUB_TYPE_2_FLOATS) + "' but the sub type '" + to_string_cast(WindowDimensionsItem->GetSubType()) + "'.");
 		}
 		MakeItemAvailable(WindowDimensionsItem);
 		
