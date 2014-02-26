@@ -443,8 +443,7 @@ graphics_scene_cpp = \
 	$(graphics_scene_h)
 
 graphics_scene_h = \
-	graphics/scene.h \
-	$(callbacks_callbacks_h)
+	graphics/scene.h
 
 graphics_system_node_cpp = \
 	graphics/system_node.cpp \
@@ -1197,6 +1196,7 @@ ui_map_dialog_h = \
 
 ui_mini_map_display_cpp = \
 	ui/mini_map_display.cpp \
+	$(callbacks_callbacks_h) \
 	$(color_h) \
 	$(commodity_h) \
 	$(globals_h) \
@@ -1417,6 +1417,7 @@ ui_timing_dialog_h = \
 ui_trade_center_widget_cpp = \
 	ui/trade_center_widget.cpp \
 	$(asset_class_h) \
+	$(callbacks_callbacks_h) \
 	$(character_h) \
 	$(color_h) \
 	$(commodity_h) \

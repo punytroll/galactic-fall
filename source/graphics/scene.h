@@ -20,7 +20,7 @@
 #ifndef GRAPHICS_SCENE_H
 #define GRAPHICS_SCENE_H
 
-#include "../callbacks/callbacks.h"
+#include <functional>
 
 namespace Graphics
 {
@@ -36,14 +36,12 @@ namespace Graphics
 		Scene(void);
 		~Scene(void);
 		// getters
-		Callback1< void, Graphics::Node * > GetDestroyCallback(void);
 		Graphics::Engine * GetEngine(void);
 		Graphics::Light * GetLight(void);
 		Graphics::Node * GetRootNode(void);
 		// setters
 		void SetRootNode(Graphics::Node * RootNode);
-		void SetDestroyCallback(Callback1< void, Graphics::Node * > Callback);
-		void UnsetDestroyCallback(void);
+		void SetDestroyCallback(std::function< void (Graphics::Node *) > Callback);
 		// modifiers
 		void ActivateLight(void);
 		void DeactivateLight(void);
@@ -51,16 +49,11 @@ namespace Graphics
 		void OnDestroy(Graphics::Node * Node);
 	private:
 		void _SetEngine(Graphics::Engine * Engine);
-		Callback1< void, Graphics::Node * > _DestroyCallback;
+		std::function< void (Graphics::Node *) > _DestroyCallback;
 		Graphics::Engine * _Engine;
 		Graphics::Light * _Light;
 		Graphics::Node * _RootNode;
 	};
-	
-	inline Callback1< void, Graphics::Node * > Scene::GetDestroyCallback(void)
-	{
-		return _DestroyCallback;
-	}
 	
 	inline Graphics::Engine * Scene::GetEngine(void)
 	{
@@ -77,7 +70,7 @@ namespace Graphics
 		return _RootNode;
 	}
 	
-	inline void Scene::SetDestroyCallback(Callback1< void, Graphics::Node * > Callback)
+	inline void Scene::SetDestroyCallback(std::function< void (Graphics::Node *) > Callback)
 	{
 		_DestroyCallback = Callback;
 	}

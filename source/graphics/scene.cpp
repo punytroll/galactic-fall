@@ -91,7 +91,7 @@ void Graphics::Scene::OnDestroy(Graphics::Node * Node)
 	assert(Node->GetContainer() == 0);
 	assert(Node->GetScene() == 0);
 	assert(Node->GetContent().empty() == true);
-	if(_DestroyCallback.IsValid() == true)
+	if(_DestroyCallback)
 	{
 		_DestroyCallback(Node);
 	}
