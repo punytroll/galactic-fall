@@ -53,7 +53,7 @@ Weapon::Weapon(void) :
 	AddAspectPosition();
 	AddAspectVisualization();
 	AddAspectUpdate();
-	GetAspectUpdate()->SetCallback(Callback(this, &Weapon::_Update));
+	GetAspectUpdate()->SetCallback(std::bind(&Weapon::_Update, this, std::placeholders::_1));
 }
 
 bool Weapon::_Update(float Seconds)

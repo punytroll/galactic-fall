@@ -20,7 +20,7 @@
 #ifndef OBJECT_ASPECT_UPDATE_H
 #define OBJECT_ASPECT_UPDATE_H
 
-#include "callbacks/callbacks.h"
+#include <functional>
 
 class ObjectAspectUpdate
 {
@@ -28,9 +28,14 @@ public:
 	// caller
 	bool Update(float Seconds);
 	// setters
-	void SetCallback(Callback1< bool, float > Callback);
+	void SetCallback(std::function< bool (float) > Callback);
 private:
-	Callback1< bool, float > m_Callback;
+	std::function< bool (float) > _Callback;
 };
+
+inline void ObjectAspectUpdate::SetCallback(std::function< bool (float) > Callback)
+{
+	_Callback = Callback;
+}
 
 #endif

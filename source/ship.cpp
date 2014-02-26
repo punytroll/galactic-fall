@@ -18,6 +18,7 @@
 **/
 
 #include "battery.h"
+#include "callbacks/callbacks.h"
 #include "character.h"
 #include "commodity.h"
 #include "game_time.h"
@@ -79,13 +80,13 @@ Ship::Ship(void) :
 	// initialize object aspects
 	AddAspectName();
 	AddAspectObjectContainer();
-	GetAspectObjectContainer()->SetOnAddedCallback(Callback(this, &Ship::OnAdded));
-	GetAspectObjectContainer()->SetOnRemovedCallback(Callback(this, &Ship::OnRemoved));
+	GetAspectObjectContainer()->SetOnAddedCallback(std::bind(&Ship::OnAdded, this, std::placeholders::_1));
+	GetAspectObjectContainer()->SetOnRemovedCallback(std::bind(&Ship::OnRemoved, this, std::placeholders::_1));
 	AddAspectOutfitting();
 	AddAspectPhysical();
 	AddAspectPosition();
 	AddAspectUpdate();
-	GetAspectUpdate()->SetCallback(Callback(this, &Ship::Update));
+	GetAspectUpdate()->SetCallback(std::bind(&Ship::Update, this, std::placeholders::_1));
 	AddAspectVisualization();
 }
 

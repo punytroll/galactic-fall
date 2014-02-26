@@ -17,23 +17,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include <assert.h>
-
 #include "object_aspect_update.h"
 
 bool ObjectAspectUpdate::Update(float Seconds)
 {
-	if(m_Callback.IsValid() == true)
+	if(_Callback)
 	{
-		return m_Callback(Seconds);
+		return _Callback(Seconds);
 	}
 	else
 	{
 		return true;
 	}
-}
-
-void ObjectAspectUpdate::SetCallback(Callback1< bool, float > Callback)
-{
-	m_Callback = Callback;
 }
