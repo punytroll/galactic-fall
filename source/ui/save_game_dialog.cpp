@@ -21,6 +21,7 @@
 
 #include <fstream>
 
+#include "../callbacks/callbacks.h"
 #include "../color.h"
 #include "../file_handling.h"
 #include "../globals.h"
@@ -201,7 +202,7 @@ void UI::SaveGameDialog::ShowErrorMessage(const std::string & ErrorMessage)
 	}
 	m_ErrorMessage->SetVisible(true);
 	m_ErrorMessage->SetText(ErrorMessage);
-	m_ErrorMessageTimeoutNotification = g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 2.0f, Callback(this, &SaveGameDialog::HideErrorMessage));
+	m_ErrorMessageTimeoutNotification = g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 2.0f, std::bind(&SaveGameDialog::HideErrorMessage, this));
 }
 
 void UI::SaveGameDialog::HideErrorMessage(void)
