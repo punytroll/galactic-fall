@@ -520,6 +520,7 @@ main_cpp = \
 	$(asset_class_h) \
 	$(battery_h) \
 	$(battery_class_h) \
+	$(callbacks_callbacks_h) \
 	$(character_h) \
 	$(class_manager_h) \
 	$(color_h) \
@@ -1041,8 +1042,7 @@ timeout_notifications_cpp = \
 	$(type_definitions_h)
 
 timeout_notifications_h = \
-	timeout_notifications.h \
-	$(callbacks_callbacks_h)
+	timeout_notifications.h
 
 type_definitions_h = \
 	type_definitions.h
@@ -1125,6 +1125,7 @@ ui_label_h = \
 
 ui_load_game_dialog_cpp = \
 	ui/load_game_dialog.cpp \
+	$(callbacks_callbacks_h) \
 	$(color_h) \
 	$(file_handling_h) \
 	$(globals_h) \
@@ -1142,6 +1143,7 @@ ui_load_game_dialog_h = \
 
 ui_load_scenario_dialog_cpp = \
 	ui/load_scenario_dialog.cpp \
+	$(callbacks_callbacks_h) \
 	$(color_h) \
 	$(globals_h) \
 	$(key_event_information_h) \
@@ -1304,6 +1306,7 @@ ui_progress_bar_h = \
 
 ui_save_game_dialog_cpp = \
 	ui/save_game_dialog.cpp \
+	$(callbacks_callbacks_h) \
 	$(color_h) \
 	$(file_handling_h) \
 	$(globals_h) \

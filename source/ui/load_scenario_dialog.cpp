@@ -17,6 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include "../callbacks/callbacks.h"
 #include "../color.h"
 #include "../globals.h"
 #include "../key_event_information.h"
@@ -180,7 +181,7 @@ void UI::LoadScenarioDialog::ShowErrorMessage(const std::string & ErrorMessage)
 	}
 	_ErrorMessage->SetVisible(true);
 	_ErrorMessage->SetText(ErrorMessage);
-	_ErrorMessageTimeoutNotification = g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 2.0f, Callback(this, &LoadScenarioDialog::_HideErrorMessage));
+	_ErrorMessageTimeoutNotification = g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 2.0f, std::bind(&LoadScenarioDialog::_HideErrorMessage, this));
 }
 
 void UI::LoadScenarioDialog::_HideErrorMessage(void)

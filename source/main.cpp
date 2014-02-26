@@ -39,6 +39,7 @@
 #include "asset_class.h"
 #include "battery.h"
 #include "battery_class.h"
+#include "callbacks/callbacks.h"
 #include "character.h"
 #include "class_manager.h"
 #include "color.h"
@@ -345,7 +346,7 @@ void SetMessage(const std::string & Message)
 	{
 		g_MessageTimeoutNotification.Dismiss();
 	}
-	g_MessageTimeoutNotification = g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 2.0f, Callback(HideMessage));
+	g_MessageTimeoutNotification = g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 2.0f, HideMessage);
 }
 
 void DrawSelection(const Object * Object, float RadialSize, const Color & Color)
@@ -399,7 +400,7 @@ void CollectWidgetsRecurrent(void)
 {
 	CollectWidgets();
 	/// TODO: Make the 5.0f seconds timeout configurable via the game configuration archive.
-	g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 5.0f, Callback(CollectWidgetsRecurrent));
+	g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 5.0f, CollectWidgetsRecurrent);
 }
 
 void DeleteObject(Object * Object)
@@ -1302,7 +1303,7 @@ void SpawnShipOnTimeout(System * SpawnInSystem)
 	IdentifierSuffix << "::created_at_game_time(" << std::fixed << GameTime::Get() << ")::in_system(" << SpawnInSystem->GetIdentifier() << ")";
 	
 	SpawnShip(SpawnInSystem, IdentifierSuffix.str());
-	g_SpawnShipTimeoutNotification = g_GameTimeTimeoutNotifications->Add(GameTime::Get() + GetRandomFloatFromExponentialDistribution(1.0f / SpawnInSystem->GetTrafficDensity()), Bind1(Callback(SpawnShipOnTimeout), SpawnInSystem));
+	g_SpawnShipTimeoutNotification = g_GameTimeTimeoutNotifications->Add(GameTime::Get() + GetRandomFloatFromExponentialDistribution(1.0f / SpawnInSystem->GetTrafficDensity()), std::bind(SpawnShipOnTimeout, SpawnInSystem));
 }
 
 void PopulateSystem(System * System)
@@ -1371,7 +1372,7 @@ void OnOutputEnterSystem(System * EnterSystem)
 	assert(g_UIView->GetScene() != 0);
 	assert(g_UIView->GetScene()->GetRootNode() != 0);
 	g_UIView->GetScene()->GetRootNode()->SetClearColorBuffer(false);
-	g_SpawnShipTimeoutNotification = g_GameTimeTimeoutNotifications->Add(GameTime::Get() + GetRandomFloatFromExponentialDistribution(1.0f / EnterSystem->GetTrafficDensity()), Bind1(Callback(SpawnShipOnTimeout), EnterSystem));
+	g_SpawnShipTimeoutNotification = g_GameTimeTimeoutNotifications->Add(GameTime::Get() + GetRandomFloatFromExponentialDistribution(1.0f / EnterSystem->GetTrafficDensity()), std::bind(SpawnShipOnTimeout, EnterSystem));
 }
 
 void OnOutputLeaveSystem(System * System)
@@ -3733,7 +3734,7 @@ int main(int argc, char ** argv)
 	// user interface
 	g_UserInterface = new UI::UserInterface();
 	// set first timeout for widget collector, it will reinsert itself on callback
-	g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 5.0f, Callback(CollectWidgetsRecurrent));
+	g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 5.0f, CollectWidgetsRecurrent);
 	// the user interface widgets must be loaded before the first Resize() call
 	g_ResourceReader->ReadUserInterface();
 	
