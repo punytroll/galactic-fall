@@ -663,6 +663,7 @@ mind_h = \
 
 object_cpp = \
 	object.cpp \
+	$(callbacks_callbacks_h) \
 	$(message_h) \
 	$(object_h) \
 	$(object_aspect_accessory_h) \
@@ -736,8 +737,7 @@ object_aspect_update_cpp = \
 	$(object_aspect_update_h)
 
 object_aspect_update_h = \
-	object_aspect_update.h \
-	$(callbacks_callbacks_h)
+	object_aspect_update.h
 
 object_aspect_visualization_cpp = \
 	object_aspect_visualization.cpp \
@@ -859,6 +859,7 @@ settings_h = \
 ship_cpp = \
 	ship.cpp \
 	$(battery_h) \
+	$(callbacks_callbacks_h) \
 	$(character_h) \
 	$(commodity_h) \
 	$(game_time_h) \
