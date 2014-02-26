@@ -14,3 +14,4 @@ data/textures/generated/tex/*.tex
 test/callbacks
 test/referencing
 libraries/xml_stream/test/test
+test/events

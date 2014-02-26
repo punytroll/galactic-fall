@@ -7,11 +7,16 @@ OBJECT_FILES = $(patsubst %.cpp,%.o,$(SOURCE_FILES))
 
 TEST_PROGRAMS = \
 	callbacks \
+	events \
 	referencing
 
 callbacks_test = \
 	$(root)/source/callbacks/callbacks.h \
 	$(root)/source/callbacks/callbacks.inc
+
+events_test = \
+	$(root)/source/callbacks/events.h \
+	$(root)/source/callbacks/events.inc
 
 referencing_test = \
 	$(root)/source/referencing.h
@@ -40,6 +45,12 @@ callbacks: callbacks.o
 	$(CXX) $(LDFLAGS) $^ -o $@
 
 callbacks.o: callbacks.cpp $(callbacks_test)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+events: events.o
+	$(CXX) $(LDFLAGS) $^ -o $@
+
+events.o: events.cpp $(callbacks_test)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 referencing: referencing.o

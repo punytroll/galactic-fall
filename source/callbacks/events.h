@@ -1,9 +1,7 @@
 #ifndef EVENTS_H
 #define EVENTS_H
 
-#include <assert.h>
-
-#include <iostream>
+#include <list>
 
 #include "connection_handle.h"
 
