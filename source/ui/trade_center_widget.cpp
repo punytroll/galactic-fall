@@ -123,7 +123,7 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Reference< Plan
 	_SelectedTradeCenterAssetClass(0)
 {
 	SetSize(Vector2f(600.0f, 300.0f));
-	ConnectDestroyingCallback(Callback(this, &UI::TradeCenterWidget::_OnDestroying));
+	ConnectDestroyingCallback(std::bind(&UI::TradeCenterWidget::_OnDestroying, this));
 	ConnectKeyCallback(Callback(this, &UI::TradeCenterWidget::_OnKey));
 	ConnectUpdatingCallback(Callback(this, &UI::TradeCenterWidget::_OnUpdating));
 	

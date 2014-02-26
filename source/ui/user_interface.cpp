@@ -30,7 +30,7 @@ UI::UserInterface::UserInterface(void) :
 	m_RootWidget(new UI::Widget(0))
 {
 	m_RootWidget->SetSize(Vector2f(1280.0f, 1024.0f));
-	m_RootWidget->ConnectDestroyingCallback(Callback(this, &UI::UserInterface::OnRootWidgetDestroying));
+	m_RootWidget->ConnectDestroyingCallback(std::bind(&UI::UserInterface::OnRootWidgetDestroying, this));
 }
 
 UI::UserInterface::~UserInterface(void)
@@ -67,7 +67,7 @@ void UI::UserInterface::SetCaptureWidget(UI::Widget * Widget)
 	assert(Widget != 0);
 	assert(m_CaptureWidget == 0);
 	m_CaptureWidget = Widget;
-	m_CaptureWidgetDestroyingCallbackConnectionHandle = m_CaptureWidget->ConnectDestroyingCallback(Callback(this, &UI::UserInterface::OnCaptureWidgetDestroying));
+	m_CaptureWidgetDestroyingCallbackConnectionHandle = m_CaptureWidget->ConnectDestroyingCallback(std::bind(&UI::UserInterface::OnCaptureWidgetDestroying, this));
 }
 
 void UI::UserInterface::ReleaseCaptureWidget(void)

@@ -375,7 +375,7 @@ void UI::Widget::MouseLeave(void)
 	_MouseLeaveEvent();
 }
 
-ConnectionHandle UI::Widget::ConnectDestroyingCallback(Callback0< void > Callback)
+ConnectionHandle UI::Widget::ConnectDestroyingCallback(std::function< void (void) > Callback)
 {
 	return _DestroyingEvent.Connect(Callback);
 }

@@ -496,7 +496,6 @@ graphics_view_h = \
 
 hangar_cpp = \
 	hangar.cpp \
-	$(callbacks_callbacks_h) \
 	$(character_h) \
 	$(hangar_h) \
 	$(object_aspect_object_container_h)
@@ -663,7 +662,6 @@ mind_h = \
 
 object_cpp = \
 	object.cpp \
-	$(callbacks_callbacks_h) \
 	$(message_h) \
 	$(object_h) \
 	$(object_aspect_accessory_h) \
@@ -859,7 +857,6 @@ settings_h = \
 ship_cpp = \
 	ship.cpp \
 	$(battery_h) \
-	$(callbacks_callbacks_h) \
 	$(character_h) \
 	$(commodity_h) \
 	$(game_time_h) \
