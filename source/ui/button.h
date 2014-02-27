@@ -22,7 +22,6 @@
 
 #include <string>
 
-#include "../callbacks/events.h"
 #include "widget.h"
 
 namespace UI
@@ -34,7 +33,7 @@ namespace UI
 		Button(UI::Widget * SupWidget);
 		virtual ~Button(void);
 		// connect and disconnect events
-		ConnectionHandle ConnectClickedCallback(Callback0< void > ClickedHandler);
+		ConnectionHandle ConnectClickedCallback(std::function< void (void) > ClickedHandler);
 		void DisconnectClickedCallback(ConnectionHandle & ConnectionHandle);
 	private:
 		// callbacks

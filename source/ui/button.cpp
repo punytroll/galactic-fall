@@ -37,7 +37,7 @@ UI::Button::~Button(void)
 {
 }
 
-ConnectionHandle UI::Button::ConnectClickedCallback(Callback0< void > ClickedHandler)
+ConnectionHandle UI::Button::ConnectClickedCallback(std::function< void (void) > ClickedHandler)
 {
 	return _ClickedEvent.Connect(ClickedHandler);
 }

@@ -17,7 +17,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include "../callbacks/callbacks.h"
 #include "../key_event_information.h"
 #include "../object_aspect_name.h"
 #include "../planet.h"
@@ -47,19 +46,19 @@ UI::PlanetWindow::PlanetWindow(UI::Widget * SupWidget, Reference< Planet > Plane
 	
 	HomeButton->SetPosition(Vector2f(10.0f, 40.0f));
 	HomeButton->SetSize(Vector2f(100.0f, 20.0f));
-	HomeButton->ConnectClickedCallback(Callback(this, &UI::PlanetWindow::_OnHomeButtonClicked));
+	HomeButton->ConnectClickedCallback(std::bind(&UI::PlanetWindow::_OnHomeButtonClicked, this));
 	
 	UI::Button * TradeCenterButton(new UI::TextButton(this, "Trade Center"));
 	
 	TradeCenterButton->SetPosition(Vector2f(10.0f, 70.0f));
 	TradeCenterButton->SetSize(Vector2f(100.0f, 20.0f));
-	TradeCenterButton->ConnectClickedCallback(Callback(this, &UI::PlanetWindow::_OnTradeCenterButtonClicked));
+	TradeCenterButton->ConnectClickedCallback(std::bind(&UI::PlanetWindow::_OnTradeCenterButtonClicked, this));
 	
 	UI::Button * HangarButton(new UI::TextButton(this, "Hangar"));
 	
 	HangarButton->SetPosition(Vector2f(10.0f, 100.0f));
 	HangarButton->SetSize(Vector2f(100.0f, 20.0f));
-	HangarButton->ConnectClickedCallback(Callback(this, &UI::PlanetWindow::_OnHangarButtonClicked));
+	HangarButton->ConnectClickedCallback(std::bind(&UI::PlanetWindow::_OnHangarButtonClicked, this));
 	_OpenHomeScreen();
 }
 

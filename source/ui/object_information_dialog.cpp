@@ -56,7 +56,7 @@ UI::ObjectInformationDialog::ObjectInformationDialog(UI::Widget * SupWidget, con
 	_CloseButton->SetAnchorLeft(false);
 	_CloseButton->SetAnchorRight(true);
 	_CloseButton->SetAnchorTop(false);
-	_CloseButton->ConnectClickedCallback(Callback(this, &ObjectInformationDialog::_OnCloseClicked));
+	_CloseButton->ConnectClickedCallback(std::bind(&ObjectInformationDialog::_OnCloseClicked, this));
 	_PropertiesScrollBox = new UI::ScrollBox(this);
 	_PropertiesScrollBox->SetPosition(Vector2f(10.0f, 40.0f));
 	_PropertiesScrollBox->SetSize(Vector2f(GetSize()[0] - 20.0f, GetSize()[1] - 80.0f));
@@ -70,7 +70,7 @@ UI::ObjectInformationDialog::ObjectInformationDialog(UI::Widget * SupWidget, con
 	_RefreshButton->SetAnchorLeft(false);
 	_RefreshButton->SetAnchorRight(true);
 	_RefreshButton->SetAnchorTop(false);
-	_RefreshButton->ConnectClickedCallback(Callback(this, &ObjectInformationDialog::_OnRefreshClicked));
+	_RefreshButton->ConnectClickedCallback(std::bind(&ObjectInformationDialog::_OnRefreshClicked, this));
 	_Refresh();
 }
 
@@ -87,7 +87,7 @@ float UI::ObjectInformationDialog::_AddObjectProperty(float Top, float Indentati
 	ObjectButton->SetPosition(Vector2f(Indentation, 5.0f));
 	ObjectButton->SetSize(Vector2f(PropertyDisplay->GetSize()[0] - Indentation, 20.0f));
 	ObjectButton->SetAnchorRight(true);
-	ObjectButton->ConnectClickedCallback(Bind1(Callback(this, &ObjectInformationDialog::_OnObjectClicked), Object));
+	ObjectButton->ConnectClickedCallback(std::bind(&ObjectInformationDialog::_OnObjectClicked, this, Object));
 	
 	return PropertyDisplay->GetSize()[1];
 }

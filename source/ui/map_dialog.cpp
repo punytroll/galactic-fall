@@ -21,7 +21,6 @@
 
 #include <GL/gl.h>
 
-#include "../callbacks/callbacks.h"
 #include "../color.h"
 #include "../globals.h"
 #include "../key_event_information.h"
@@ -40,7 +39,7 @@ UI::MapDialog::MapDialog(UI::Widget * SupWidget, System * System, Character * Ch
 	m_OKButton = new UI::TextButton(this, "OK");
 	m_OKButton->SetPosition(Vector2f(390.0f, 500.0f));
 	m_OKButton->SetSize(Vector2f(100.0f, 20.0f));
-	m_OKButton->ConnectClickedCallback(Callback(this, &UI::MapDialog::OnOKClicked));
+	m_OKButton->ConnectClickedCallback(std::bind(&UI::MapDialog::OnOKClicked, this));
 	m_StarMapDisplay = new UI::StarMapDisplay(this, System, Character);
 	m_StarMapDisplay->SetPosition(Vector2f(10.0f, 40.0f));
 	m_StarMapDisplay->SetSize(Vector2f(480.0f, 450.0f));

@@ -108,7 +108,7 @@ UI::SaveGameDialog::SaveGameDialog(UI::Widget * SupWidget) :
 	GetTitleLabel()->SetText("Save Game");
 	SetPosition(Vector2f(120.0f, 200.0f));
 	SetSize(Vector2f(300.0f, 400.0f));
-	ConnectKeyCallback(std::bind(&SaveGameDialog::OnKey, this, std::placeholders::_1));
+	ConnectKeyCallback(std::bind(&UI::SaveGameDialog::OnKey, this, std::placeholders::_1));
 	m_OKButton = new UI::TextButton(this, "OK");
 	m_OKButton->SetSize(Vector2f(100.0f, 20.0f));
 	m_OKButton->SetPosition(Vector2f(GetSize()[0] - 10.0f - m_OKButton->GetSize()[0], GetSize()[1] - 10.0f - m_OKButton->GetSize()[1]));
@@ -116,7 +116,7 @@ UI::SaveGameDialog::SaveGameDialog(UI::Widget * SupWidget) :
 	m_OKButton->SetAnchorLeft(false);
 	m_OKButton->SetAnchorRight(true);
 	m_OKButton->SetAnchorTop(false);
-	m_OKButton->ConnectClickedCallback(Bind1(Callback(dynamic_cast< Dialog * >(this), &SaveGameDialog::_Close), Dialog::OK_BUTTON));
+	m_OKButton->ConnectClickedCallback(std::bind(&UI::SaveGameDialog::_Close, this, UI::Dialog::OK_BUTTON));
 	m_CancelButton = new UI::TextButton(this, "Cancel");
 	m_CancelButton->SetSize(Vector2f(100.0f, 20.0f));
 	m_CancelButton->SetPosition(Vector2f(GetSize()[0] - 10.0f - m_OKButton->GetSize()[0] - 10.0f - m_CancelButton->GetSize()[0], GetSize()[1] - 10.0f - m_CancelButton->GetSize()[1]));
@@ -124,7 +124,7 @@ UI::SaveGameDialog::SaveGameDialog(UI::Widget * SupWidget) :
 	m_CancelButton->SetAnchorLeft(false);
 	m_CancelButton->SetAnchorRight(true);
 	m_CancelButton->SetAnchorTop(false);
-	m_CancelButton->ConnectClickedCallback(Bind1(Callback(dynamic_cast< Dialog * >(this), &SaveGameDialog::_Close), Dialog::CANCEL_BUTTON));
+	m_CancelButton->ConnectClickedCallback(std::bind(&UI::SaveGameDialog::_Close, this, UI::Dialog::CANCEL_BUTTON));
 	m_ErrorMessage = new UI::Label(this);
 	m_ErrorMessage->SetPosition(Vector2f(10.0f, 40.0f));
 	m_ErrorMessage->SetSize(Vector2f(GetSize()[0] - 10.0f - 10.0f, 30.0f));
@@ -143,7 +143,7 @@ UI::SaveGameDialog::SaveGameDialog(UI::Widget * SupWidget) :
 	m_FileNameLabel->SetBackgroundColor(Color(0.1f, 0.1f, 0.1f, 1.0f));
 	m_FileNameLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	m_FileNameLabel->SetAnchorRight(true);
-	m_FileNameLabel->ConnectKeyCallback(std::bind(&SaveGameDialog::OnFileNameLabelKey, this, std::placeholders::_1));
+	m_FileNameLabel->ConnectKeyCallback(std::bind(&UI::SaveGameDialog::OnFileNameLabelKey, this, std::placeholders::_1));
 	m_FileNameLabel->GrabKeyFocus();
 	m_FileScrollBox = new UI::ScrollBox(this);
 	m_FileScrollBox->SetPosition(Vector2f(10.0f, 110.0f));
