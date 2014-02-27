@@ -19,7 +19,6 @@
 
 #include <algebra/matrix4f.h>
 
-#include "../callbacks/callbacks.h"
 #include "../color.h"
 #include "../commodity.h"
 #include "../globals.h"
@@ -43,7 +42,7 @@ UI::MiniMapDisplay::MiniMapDisplay(UI::Widget * SupWidget) :
 {
 	SetSize(Vector2f(100.0f, 100.0f));
 	ConnectDestroyingCallback(std::bind(&UI::MiniMapDisplay::_OnDestroying, this));
-	ConnectSizeChangedCallback(Callback(this, &UI::MiniMapDisplay::_OnSizeChanged));
+	ConnectSizeChangedCallback(std::bind(&UI::MiniMapDisplay::_OnSizeChanged, this));
 	_SetupView();
 }
 
@@ -128,7 +127,7 @@ void UI::MiniMapDisplay::_SetupView(void)
 	
 	Graphics::CallbackNode * RootNode(new Graphics::CallbackNode());
 	
-	RootNode->SetDrawCallback(Callback(this, &UI::MiniMapDisplay::_OnDraw));
+	RootNode->SetDrawCallback(std::bind(&UI::MiniMapDisplay::_OnDraw, this));
 	RootNode->SetClearColorBuffer(true);
 	RootNode->SetClearDepthBuffer(true);
 	RootNode->SetUseBlending(false);

@@ -1195,7 +1195,6 @@ ui_map_dialog_h = \
 
 ui_mini_map_display_cpp = \
 	ui/mini_map_display.cpp \
-	$(callbacks_callbacks_h) \
 	$(color_h) \
 	$(commodity_h) \
 	$(globals_h) \
@@ -1293,7 +1292,6 @@ ui_planet_window_h = \
 
 ui_progress_bar_cpp = \
 	ui/progress_bar.cpp \
-	$(callbacks_callbacks_h) \
 	$(color_h) \
 	$(ui_border_h) \
 	$(ui_label_h) \

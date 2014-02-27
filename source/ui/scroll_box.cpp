@@ -32,11 +32,11 @@ UI::ScrollBox::ScrollBox(UI::Widget * SupWidget) :
 	m_View->SetAnchorLeft(true);
 	m_View->SetAnchorRight(true);
 	m_View->SetAnchorTop(true);
-	m_View->ConnectSizeChangedCallback(Callback(this, &ScrollBox::OnContentOrViewSizeChanged));
+	m_View->ConnectSizeChangedCallback(std::bind(&ScrollBox::OnContentOrViewSizeChanged, this));
 	m_Content = new UI::Widget(m_View);
 	m_Content->SetPosition(Vector2f(0.0f, 0.0f));
 	m_Content->SetBackgroundColor(Color(0.15f, 0.15f, 0.15f, 1.0f));
-	m_Content->ConnectSizeChangedCallback(Callback(this, &ScrollBox::OnContentOrViewSizeChanged));
+	m_Content->ConnectSizeChangedCallback(std::bind(&ScrollBox::OnContentOrViewSizeChanged, this));
 	m_HorizontalScrollBar = new UI::ScrollBar(this, UI::ScrollBar::HORIZONTAL);
 	m_HorizontalScrollBar->SetPosition(Vector2f(0.0f, GetSize()[1] - 20.0f));
 	m_HorizontalScrollBar->SetSize(Vector2f(GetSize()[0] - 20.0f, 20.0f));

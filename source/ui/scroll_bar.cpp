@@ -31,7 +31,7 @@ UI::ScrollBar::ScrollBar(Widget * SupWidget, UI::ScrollBar::Alignment Alignment)
 	m_Alignment(UI::ScrollBar::UNDEFINED),
 	m_CurrentPosition(0.0f)
 {
-	ConnectSizeChangedCallback(Callback(this, &ScrollBar::OnSizeChanged));
+	ConnectSizeChangedCallback(std::bind(&ScrollBar::OnSizeChanged, this));
 	SetBackgroundColor(Color(0.23f, 0.23f, 0.23f, 1.0f));
 	m_LessButton = new UI::Button(this);
 	m_LessButton->ConnectClickedCallback(Callback(this, &ScrollBar::OnLessClicked));
