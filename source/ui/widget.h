@@ -43,7 +43,7 @@ namespace UI
 		
 		Widget(Widget * SupWidget = 0, const std::string & Name = "");
 		virtual ~Widget(void);
-		virtual void Draw(void) const;
+		virtual void Draw(void);
 		void SetBackgroundColor(const Color & BackgroundColor);
 		void SetDisabledBackgroundColor(const Color & DisabledBackgroundColor);
 		void UnsetBackgroundColor(void);
@@ -69,11 +69,8 @@ namespace UI
 		const Vector2f & GetSize(void) const;
 		const std::string & GetName(void) const;
 		Widget * GetRootWidget(void);
-		const Widget * GetRootWidget(void) const;
 		Widget * GetSupWidget(void);
-		const Widget * GetSupWidget(void) const;
 		Widget * GetSubWidget(const std::string & Name);
-		const Widget * GetSubWidget(const std::string & Name) const;
 		const std::list< Widget * > & GetSubWidgets(void) const;
 		Widget * GetKeyFocus(void);
 		bool IsVisible(void) const;
@@ -212,24 +209,7 @@ namespace UI
 		return SupWidget;
 	}
 
-	inline const Widget * Widget::GetRootWidget(void) const
-	{
-		const Widget * SupWidget(this);
-		
-		while(SupWidget->m_SupWidget != 0)
-		{
-			SupWidget = SupWidget->m_SupWidget;
-		}
-		
-		return SupWidget;
-	}
-
 	inline Widget * Widget::GetSupWidget(void)
-	{
-		return m_SupWidget;
-	}
-
-	inline const Widget * Widget::GetSupWidget(void) const
 	{
 		return m_SupWidget;
 	}
@@ -237,19 +217,6 @@ namespace UI
 	inline Widget * Widget::GetSubWidget(const std::string & Name)
 	{
 		for(std::list< Widget * >::iterator Iterator = _SubWidgets.begin(); Iterator != _SubWidgets.end(); ++Iterator)
-		{
-			if((*Iterator)->GetName() == Name)
-			{
-				return *Iterator;
-			}
-		}
-		
-		return 0;
-	}
-
-	inline const Widget * Widget::GetSubWidget(const std::string & Name) const
-	{
-		for(std::list< Widget * >::const_iterator Iterator = _SubWidgets.begin(); Iterator != _SubWidgets.end(); ++Iterator)
 		{
 			if((*Iterator)->GetName() == Name)
 			{

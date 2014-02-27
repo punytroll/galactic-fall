@@ -52,7 +52,7 @@ void UI::Image::UnsetTexture(void)
 	}
 }
 
-void UI::Image::Draw(void) const
+void UI::Image::Draw(void)
 {
 	Widget::Draw();
 	if(_TextureIdentifier != 0)

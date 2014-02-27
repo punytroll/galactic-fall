@@ -47,7 +47,7 @@ void UI::Label::SetTextColor(const Color & TextColor)
 	m_TextColor = new Color(TextColor);
 }
 
-void UI::Label::Draw(void) const
+void UI::Label::Draw(void)
 {
 	float Width(GetSize()[0]);
 	

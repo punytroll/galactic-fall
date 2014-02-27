@@ -34,7 +34,7 @@ UI::Border::~Border(void)
 	_Color = 0;
 }
 
-void UI::Border::Draw(void) const
+void UI::Border::Draw(void)
 {
 	Widget::Draw();
 	if(_Color != 0)

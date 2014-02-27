@@ -59,7 +59,7 @@ void UI::ViewDisplay::SetView(Graphics::View * View)
 	}
 }
 
-void UI::ViewDisplay::Draw(void) const
+void UI::ViewDisplay::Draw(void)
 {
 	Widget::Draw();
 	if(_View != 0)

@@ -41,7 +41,7 @@ namespace UI
 		// setters
 		void SetView(Graphics::View * View);
 		// draw
-		virtual void Draw(void) const;
+		virtual void Draw(void) override;
 	private:
 		Graphics::View * _View;
 	};
