@@ -17,7 +17,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include "../callbacks/callbacks.h"
 #include "../color.h"
 #include "../globals.h"
 #include "../graphics/camera.h"
@@ -43,7 +42,7 @@ UI::ScannerDisplay::ScannerDisplay(UI::Widget * SupWidget) :
 	_Target(nullptr)
 {
 	ConnectDestroyingCallback(std::bind(&UI::ScannerDisplay::_OnDestroying, this));
-	ConnectUpdatingCallback(Callback(this, &UI::ScannerDisplay::_OnUpdating));
+	ConnectUpdatingCallback(std::bind(&UI::ScannerDisplay::_OnUpdating, this, std::placeholders::_1, std::placeholders::_2));
 }
 
 void UI::ScannerDisplay::SetTarget(Object * Target)

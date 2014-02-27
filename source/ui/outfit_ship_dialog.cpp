@@ -278,7 +278,7 @@ UI::OutfitShipDialog::OutfitShipDialog(UI::Widget * SupWidget, Reference< Ship >
 	MountButton->SetSize(Vector2f(_CenterPane->GetSize()[0], 20.0f));
 	MountButton->SetAnchorRight(true);
 	MountButton->ConnectClickedCallback(Callback(this, &UI::OutfitShipDialog::_OnMountButtonClicked));
-	MountButton->ConnectUpdatingCallback(Bind1(Callback(this, &UI::OutfitShipDialog::_OnMountButtonUpdating), MountButton));
+	MountButton->ConnectUpdatingCallback(std::bind(&UI::OutfitShipDialog::_OnMountButtonUpdating, this, MountButton, std::placeholders::_1, std::placeholders::_2));
 	
 	UI::Button * UnmountButton(new UI::TextButton(_CenterPane, "Unmount"));
 	
@@ -286,7 +286,7 @@ UI::OutfitShipDialog::OutfitShipDialog(UI::Widget * SupWidget, Reference< Ship >
 	UnmountButton->SetSize(Vector2f(_CenterPane->GetSize()[0], 20.0f));
 	UnmountButton->SetAnchorRight(true);
 	UnmountButton->ConnectClickedCallback(Callback(this, &UI::OutfitShipDialog::_OnUnmountButtonClicked));
-	UnmountButton->ConnectUpdatingCallback(Bind1(Callback(this, &UI::OutfitShipDialog::_OnUnmountButtonUpdating), UnmountButton));
+	UnmountButton->ConnectUpdatingCallback(std::bind(&UI::OutfitShipDialog::_OnUnmountButtonUpdating, this, UnmountButton, std::placeholders::_1, std::placeholders::_2));
 	
 	UI::Button * OKButton(new UI::TextButton(_CenterPane, "OK"));
 	

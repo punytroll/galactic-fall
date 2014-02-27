@@ -103,7 +103,7 @@ namespace UI
 		ConnectionHandle ConnectMouseMovedCallback(Callback2< void, float, float > Callback);
 		ConnectionHandle ConnectPositionChangedCallback(Callback0< void > Callback);
 		ConnectionHandle ConnectSizeChangedCallback(Callback0< void > Callback);
-		ConnectionHandle ConnectUpdatingCallback(Callback2< void, float, float > Callback);
+		ConnectionHandle ConnectUpdatingCallback(std::function< void (float, float) > Callback);
 		void DisconnectDestroyingCallback(ConnectionHandle & ConnectionHandle);
 		void DisconnectKeyCallback(ConnectionHandle & ConnectionHandle);
 		void DisconnectMouseButtonCallback(ConnectionHandle & ConnectionHandle);
