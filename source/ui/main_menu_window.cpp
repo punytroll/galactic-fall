@@ -66,7 +66,7 @@ UI::MainMenuWindow::MainMenuWindow(UI::Widget * SupWidget, ScenarioManager * Sce
 	_ResumeGameButton->SetAnchorLeft(true);
 	_ResumeGameButton->SetAnchorRight(true);
 	_ResumeGameButton->SetAnchorTop(true);
-	_ResumeGameButton->ConnectClickedCallback(Callback(this, &UI::MainMenuWindow::_OnResumeGameButtonClicked));
+	_ResumeGameButton->ConnectClickedCallback(std::bind(&UI::MainMenuWindow::_OnResumeGameButtonClicked, this));
 	
 	// "New Game" button
 	_NewGameButton = new UI::TextButton(this, "New Game");
@@ -76,7 +76,7 @@ UI::MainMenuWindow::MainMenuWindow(UI::Widget * SupWidget, ScenarioManager * Sce
 	_NewGameButton->SetAnchorLeft(true);
 	_NewGameButton->SetAnchorRight(true);
 	_NewGameButton->SetAnchorTop(true);
-	_NewGameButton->ConnectClickedCallback(Callback(this, &UI::MainMenuWindow::_OnNewGameButtonClicked));
+	_NewGameButton->ConnectClickedCallback(std::bind(&UI::MainMenuWindow::_OnNewGameButtonClicked, this));
 	
 	// "Load Scenario" button
 	_LoadScenarioButton = new UI::TextButton(this, "Load Scenario");
@@ -86,7 +86,7 @@ UI::MainMenuWindow::MainMenuWindow(UI::Widget * SupWidget, ScenarioManager * Sce
 	_LoadScenarioButton->SetAnchorLeft(true);
 	_LoadScenarioButton->SetAnchorRight(true);
 	_LoadScenarioButton->SetAnchorTop(true);
-	_LoadScenarioButton->ConnectClickedCallback(Callback(this, &UI::MainMenuWindow::_OnLoadScenarioButtonClicked));
+	_LoadScenarioButton->ConnectClickedCallback(std::bind(&UI::MainMenuWindow::_OnLoadScenarioButtonClicked, this));
 	
 	// "Load Game" button
 	_LoadGameButton = new UI::TextButton(this, "Load Game");
@@ -96,7 +96,7 @@ UI::MainMenuWindow::MainMenuWindow(UI::Widget * SupWidget, ScenarioManager * Sce
 	_LoadGameButton->SetAnchorLeft(true);
 	_LoadGameButton->SetAnchorRight(true);
 	_LoadGameButton->SetAnchorTop(true);
-	_LoadGameButton->ConnectClickedCallback(Callback(this, &UI::MainMenuWindow::_OnLoadGameButtonClicked));
+	_LoadGameButton->ConnectClickedCallback(std::bind(&UI::MainMenuWindow::_OnLoadGameButtonClicked, this));
 	
 	// "Save Game" button
 	_SaveGameButton = new UI::TextButton(this, "Save Game");
@@ -106,7 +106,7 @@ UI::MainMenuWindow::MainMenuWindow(UI::Widget * SupWidget, ScenarioManager * Sce
 	_SaveGameButton->SetAnchorLeft(true);
 	_SaveGameButton->SetAnchorRight(true);
 	_SaveGameButton->SetAnchorTop(true);
-	_SaveGameButton->ConnectClickedCallback(Callback(this, &UI::MainMenuWindow::_OnSaveGameButtonClicked));
+	_SaveGameButton->ConnectClickedCallback(std::bind(&UI::MainMenuWindow::_OnSaveGameButtonClicked, this));
 	
 	// "Quit" button
 	_QuitButton = new UI::TextButton(this, "Quit");
@@ -116,7 +116,7 @@ UI::MainMenuWindow::MainMenuWindow(UI::Widget * SupWidget, ScenarioManager * Sce
 	_QuitButton->SetAnchorLeft(true);
 	_QuitButton->SetAnchorRight(true);
 	_QuitButton->SetAnchorTop(true);
-	_QuitButton->ConnectClickedCallback(Callback(this, &UI::MainMenuWindow::_OnQuitButtonClicked));
+	_QuitButton->ConnectClickedCallback(std::bind(&UI::MainMenuWindow::_OnQuitButtonClicked, this));
 }
 
 bool UI::MainMenuWindow::_OnKey(const KeyEventInformation & KeyEventInformation)

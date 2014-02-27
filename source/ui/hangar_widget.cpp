@@ -42,7 +42,7 @@ UI::HangarWidget::HangarWidget(UI::Widget * SupWidget, Reference< Planet > Plane
 	
 	RepairButton->SetPosition(Vector2f(0.0f, 0.0f));
 	RepairButton->SetSize(Vector2f(180.0f, 20.0f));
-	RepairButton->ConnectClickedCallback(Callback(this, &UI::HangarWidget::_OnRepairButtonClicked));
+	RepairButton->ConnectClickedCallback(std::bind(&UI::HangarWidget::_OnRepairButtonClicked, this));
 	RepairButton->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnRepairButtonUpdating, this, RepairButton, std::placeholders::_1, std::placeholders::_2));
 	
 	UI::ProgressBar * HullStateProgressBar(new UI::ProgressBar(this));
@@ -56,7 +56,7 @@ UI::HangarWidget::HangarWidget(UI::Widget * SupWidget, Reference< Planet > Plane
 	
 	RechargeButton->SetPosition(Vector2f(0.0f, 30.0f));
 	RechargeButton->SetSize(Vector2f(180.0f, 20.0f));
-	RechargeButton->ConnectClickedCallback(Callback(this, &UI::HangarWidget::_OnRechargeButtonClicked));
+	RechargeButton->ConnectClickedCallback(std::bind(&UI::HangarWidget::_OnRechargeButtonClicked, this));
 	RechargeButton->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnRechargeButtonUpdating, this, RechargeButton, std::placeholders::_1, std::placeholders::_2));
 	
 	UI::ProgressBar * EnergyStateProgressBar(new UI::ProgressBar(this));
@@ -70,7 +70,7 @@ UI::HangarWidget::HangarWidget(UI::Widget * SupWidget, Reference< Planet > Plane
 	
 	RefuelButton->SetPosition(Vector2f(0.0f, 60.0f));
 	RefuelButton->SetSize(Vector2f(180.0f, 20.0f));
-	RefuelButton->ConnectClickedCallback(Callback(this, &UI::HangarWidget::_OnRefuelButtonClicked));
+	RefuelButton->ConnectClickedCallback(std::bind(&UI::HangarWidget::_OnRefuelButtonClicked, this));
 	RefuelButton->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnRefuelButtonUpdating, this, RefuelButton, std::placeholders::_1, std::placeholders::_2));
 	
 	UI::ProgressBar * FuelStateProgressBar(new UI::ProgressBar(this));
@@ -84,7 +84,7 @@ UI::HangarWidget::HangarWidget(UI::Widget * SupWidget, Reference< Planet > Plane
 	
 	TakeOffButton->SetPosition(Vector2f(0.0f, 90.0f));
 	TakeOffButton->SetSize(Vector2f(180.0f, 20.0f));
-	TakeOffButton->ConnectClickedCallback(Callback(this, &UI::HangarWidget::_OnTakeOffButtonClicked));
+	TakeOffButton->ConnectClickedCallback(std::bind(&UI::HangarWidget::_OnTakeOffButtonClicked, this));
 }
 
 void UI::HangarWidget::_OnEnergyStateProgressBarUpdating(UI::ProgressBar * EnergyStateProgressBar, float RealTimeSeconds, float GameTimeSeconds)

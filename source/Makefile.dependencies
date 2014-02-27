@@ -1066,7 +1066,6 @@ ui_button_cpp = \
 
 ui_button_h = \
 	ui/button.h \
-	$(callbacks_events_h) \
 	$(ui_widget_h)
 
 ui_dialog_cpp = \
@@ -1179,7 +1178,6 @@ ui_main_menu_window_h = \
 
 ui_map_dialog_cpp = \
 	ui/map_dialog.cpp \
-	$(callbacks_callbacks_h) \
 	$(color_h) \
 	$(globals_h) \
 	$(key_event_information_h) \
@@ -1276,7 +1274,6 @@ ui_outfit_ship_dialog_h = \
 
 ui_planet_window_cpp = \
 	ui/planet_window.cpp \
-	$(callbacks_callbacks_h) \
 	$(key_event_information_h) \
 	$(object_aspect_name_h) \
 	$(planet_h) \

@@ -109,7 +109,7 @@ UI::LoadScenarioDialog::LoadScenarioDialog(UI::Widget * SupWidget, ScenarioManag
 	GetTitleLabel()->SetText("Load Scenario");
 	SetPosition(Vector2f(120.0f, 200.0f));
 	SetSize(Vector2f(300.0f, 400.0f));
-	ConnectKeyCallback(std::bind(&LoadScenarioDialog::_OnKey, this, std::placeholders::_1));
+	ConnectKeyCallback(std::bind(&UI::LoadScenarioDialog::_OnKey, this, std::placeholders::_1));
 	_OKButton = new UI::TextButton(this, "OK");
 	_OKButton->SetSize(Vector2f(100.0f, 20.0f));
 	_OKButton->SetPosition(Vector2f(GetSize()[0] - 10.0f - _OKButton->GetSize()[0], GetSize()[1] - 10.0f - _OKButton->GetSize()[1]));
@@ -117,7 +117,7 @@ UI::LoadScenarioDialog::LoadScenarioDialog(UI::Widget * SupWidget, ScenarioManag
 	_OKButton->SetAnchorLeft(false);
 	_OKButton->SetAnchorRight(true);
 	_OKButton->SetAnchorTop(false);
-	_OKButton->ConnectClickedCallback(Bind1(Callback(dynamic_cast< Dialog * >(this), &LoadScenarioDialog::_Close), Dialog::OK_BUTTON));
+	_OKButton->ConnectClickedCallback(std::bind(&UI::LoadScenarioDialog::_Close, this, UI::Dialog::OK_BUTTON));
 	_CancelButton = new UI::TextButton(this, "Cancel");
 	_CancelButton->SetSize(Vector2f(100.0f, 20.0f));
 	_CancelButton->SetPosition(Vector2f(GetSize()[0] - 10.0f - _OKButton->GetSize()[0] - 10.0f - _CancelButton->GetSize()[0], GetSize()[1] - 10.0f - _CancelButton->GetSize()[1]));
@@ -125,7 +125,7 @@ UI::LoadScenarioDialog::LoadScenarioDialog(UI::Widget * SupWidget, ScenarioManag
 	_CancelButton->SetAnchorLeft(false);
 	_CancelButton->SetAnchorRight(true);
 	_CancelButton->SetAnchorTop(false);
-	_CancelButton->ConnectClickedCallback(Bind1(Callback(dynamic_cast< Dialog * >(this), &LoadScenarioDialog::_Close), Dialog::CANCEL_BUTTON));
+	_CancelButton->ConnectClickedCallback(std::bind(&UI::LoadScenarioDialog::_Close, this, UI::Dialog::CANCEL_BUTTON));
 	_ErrorMessage = new UI::Label(this);
 	_ErrorMessage->SetPosition(Vector2f(10.0f, 40.0f));
 	_ErrorMessage->SetSize(Vector2f(GetSize()[0] - 10.0f - 10.0f, 30.0f));
