@@ -109,7 +109,7 @@ UI::LoadScenarioDialog::LoadScenarioDialog(UI::Widget * SupWidget, ScenarioManag
 	GetTitleLabel()->SetText("Load Scenario");
 	SetPosition(Vector2f(120.0f, 200.0f));
 	SetSize(Vector2f(300.0f, 400.0f));
-	ConnectKeyCallback(Callback(this, &LoadScenarioDialog::_OnKey));
+	ConnectKeyCallback(std::bind(&LoadScenarioDialog::_OnKey, this, std::placeholders::_1));
 	_OKButton = new UI::TextButton(this, "OK");
 	_OKButton->SetSize(Vector2f(100.0f, 20.0f));
 	_OKButton->SetPosition(Vector2f(GetSize()[0] - 10.0f - _OKButton->GetSize()[0], GetSize()[1] - 10.0f - _OKButton->GetSize()[1]));

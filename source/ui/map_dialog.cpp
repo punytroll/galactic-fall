@@ -36,7 +36,7 @@ UI::MapDialog::MapDialog(UI::Widget * SupWidget, System * System, Character * Ch
 {
 	SetPosition(Vector2f(70.0f, 200.0f));
 	SetSize(Vector2f(500.0f, 530.0f));
-	ConnectKeyCallback(Callback(this, &UI::MapDialog::OnKey));
+	ConnectKeyCallback(std::bind(&UI::MapDialog::OnKey, this, std::placeholders::_1));
 	m_OKButton = new UI::TextButton(this, "OK");
 	m_OKButton->SetPosition(Vector2f(390.0f, 500.0f));
 	m_OKButton->SetSize(Vector2f(100.0f, 20.0f));

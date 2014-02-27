@@ -96,7 +96,7 @@ namespace UI
 		void MouseLeave(void);
 		// connect and disconnect events
 		ConnectionHandle ConnectDestroyingCallback(std::function< void (void) > Callback);
-		ConnectionHandle ConnectKeyCallback(Callback1< bool, const KeyEventInformation & > Callback);
+		ConnectionHandle ConnectKeyCallback(std::function< bool (const KeyEventInformation &) > Callback);
 		ConnectionHandle ConnectMouseButtonCallback(Callback4< bool, int, int, float, float > Callback);
 		ConnectionHandle ConnectMouseEnterCallback(Callback0< void > Callback);
 		ConnectionHandle ConnectMouseLeaveCallback(Callback0< void > Callback);

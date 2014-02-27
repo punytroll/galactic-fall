@@ -380,7 +380,7 @@ ConnectionHandle UI::Widget::ConnectDestroyingCallback(std::function< void (void
 	return _DestroyingEvent.Connect(Callback);
 }
 
-ConnectionHandle UI::Widget::ConnectKeyCallback(Callback1< bool, const KeyEventInformation & > Callback)
+ConnectionHandle UI::Widget::ConnectKeyCallback(std::function< bool (const KeyEventInformation &) > Callback)
 {
 	return _KeyEvent.Connect(Callback);
 }

@@ -41,7 +41,7 @@ UI::PlanetWindow::PlanetWindow(UI::Widget * SupWidget, Reference< Planet > Plane
 	GetTitleLabel()->SetText("Planet: " + _Planet->GetAspectName()->GetName());
 	SetPosition(Vector2f(50.0f, 50.0f));
 	SetSize(Vector2f(700.0f, 400.0f));
-	ConnectKeyCallback(Callback(this, &UI::PlanetWindow::_OnKey));
+	ConnectKeyCallback(std::bind(&UI::PlanetWindow::_OnKey, this, std::placeholders::_1));
 	
 	UI::Button * HomeButton(new UI::TextButton(this, "Home"));
 	

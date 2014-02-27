@@ -124,7 +124,7 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Reference< Plan
 {
 	SetSize(Vector2f(600.0f, 300.0f));
 	ConnectDestroyingCallback(std::bind(&UI::TradeCenterWidget::_OnDestroying, this));
-	ConnectKeyCallback(Callback(this, &UI::TradeCenterWidget::_OnKey));
+	ConnectKeyCallback(std::bind(&UI::TradeCenterWidget::_OnKey, this, std::placeholders::_1));
 	ConnectUpdatingCallback(std::bind(&UI::TradeCenterWidget::_OnUpdating, this, std::placeholders::_1, std::placeholders::_2));
 	
 	UI::Button * BuyButton(new UI::TextButton(this, "Buy"));
