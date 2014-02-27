@@ -38,7 +38,7 @@ private:
 	void _OnCharacterDestroying(void);
 	// variables
 	Character * _Character;
-	ConnectionHandle _CharacterDestroyingConnectionHandle;
+	Connection _CharacterDestroyingConnection;
 };
 
 inline Character * Hangar::GetCharacter(void)

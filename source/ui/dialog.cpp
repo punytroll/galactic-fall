@@ -24,23 +24,23 @@ UI::Dialog::Dialog(Widget * SupWidget) :
 {
 }
 
-ConnectionHandle UI::Dialog::ConnectClosingCallback(std::function< bool (UI::Dialog::ClosingReason) > Callback)
+Connection UI::Dialog::ConnectClosingCallback(std::function< bool (UI::Dialog::ClosingReason) > Callback)
 {
 	return _ClosingEvent.Connect(Callback);
 }
 
-void UI::Dialog::DisconnectClosingCallback(ConnectionHandle & ConnectionHandle)
+void UI::Dialog::DisconnectClosingCallback(Connection & Connection)
 {
-	_ClosingEvent.Disconnect(ConnectionHandle);
+	_ClosingEvent.Disconnect(Connection);
 }
 
 void UI::Dialog::_Close(UI::Dialog::ClosingReason ClosingReason)
 {
 	bool CallDestroy(true);
 	
-	for(Event1< bool, UI::Dialog::ClosingReason >::CallbackIterator CallbackIterator = _ClosingEvent.GetCallbackIterator(); CallbackIterator.IsValid() == true; ++CallbackIterator)
+	for(auto & Callback : _ClosingEvent.GetCallbacks())
 	{
-		CallDestroy &= CallbackIterator(ClosingReason);
+		CallDestroy &= Callback(ClosingReason);
 	}
 	if(CallDestroy == true)
 	{

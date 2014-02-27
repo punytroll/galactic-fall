@@ -32,8 +32,8 @@ Hangar::~Hangar(void)
 {
 	if(_Character != nullptr)
 	{
-		assert(_CharacterDestroyingConnectionHandle.IsValid() == true);
-		_Character->DisconnectDestroyingCallback(_CharacterDestroyingConnectionHandle);
+		assert(_CharacterDestroyingConnection.IsValid() == true);
+		_Character->DisconnectDestroyingCallback(_CharacterDestroyingConnection);
 		_Character = nullptr;
 	}
 }
@@ -42,21 +42,21 @@ void Hangar::SetCharacter(Character * Character)
 {
 	if(_Character != nullptr)
 	{
-		assert(_CharacterDestroyingConnectionHandle.IsValid() == true);
-		_Character->DisconnectDestroyingCallback(_CharacterDestroyingConnectionHandle);
+		assert(_CharacterDestroyingConnection.IsValid() == true);
+		_Character->DisconnectDestroyingCallback(_CharacterDestroyingConnection);
 		_Character = nullptr;
 	}
 	if(Character != nullptr)
 	{
 		_Character = Character;
-		_CharacterDestroyingConnectionHandle = _Character->ConnectDestroyingCallback(std::bind(&Hangar::_OnCharacterDestroying, this));
+		_CharacterDestroyingConnection= _Character->ConnectDestroyingCallback(std::bind(&Hangar::_OnCharacterDestroying, this));
 	}
 }
 
 void Hangar::_OnCharacterDestroying(void)
 {
 	assert(_Character != nullptr);
-	assert(_CharacterDestroyingConnectionHandle.IsValid() == true);
-	_Character->DisconnectDestroyingCallback(_CharacterDestroyingConnectionHandle);
+	assert(_CharacterDestroyingConnection.IsValid() == true);
+	_Character->DisconnectDestroyingCallback(_CharacterDestroyingConnection);
 	_Character = nullptr;
 }

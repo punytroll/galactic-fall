@@ -25,7 +25,7 @@
 #include <set>
 #include <string>
 
-#include "callbacks/events.h"
+#include "events.h"
 #include "referencing.h"
 
 class Message;
@@ -93,8 +93,8 @@ public:
 	void Destroy(void);
 	void GenerateObjectIdentifier(void);
 	// events
-	ConnectionHandle ConnectDestroyingCallback(std::function< void (void) > Callback);
-	void DisconnectDestroyingCallback(ConnectionHandle & ConnectionHandle);
+	Connection ConnectDestroyingCallback(std::function< void (void) > Callback);
+	void DisconnectDestroyingCallback(Connection & Connection);
 	// static methods
 	static Object * GetObject(const std::string & ObjectIdentifier);
 	static void Dump(std::ostream & OStream);
@@ -114,7 +114,7 @@ private:
 	// other
 	std::string _ClassIdentifier;
 	Object * _Container;
-	Event0< void > _DestroyingEvent;
+	Event< void > _DestroyingEvent;
 	std::string _ObjectIdentifier;
 	Reference< Object > _Reference;
 	std::string _TypeIdentifier;

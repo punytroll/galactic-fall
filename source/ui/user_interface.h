@@ -22,7 +22,7 @@
 
 #include <string>
 
-#include "../callbacks/connection_handle.h"
+#include "../connection.h"
 
 class KeyEventInformation;
 
@@ -49,24 +49,24 @@ namespace UI
 		UI::Widget * GetCaptureWidget(void);
 	private:
 		// callbacks
-		void OnCaptureWidgetDestroying(void);
-		void OnHoverWidgetDestroying(void);
-		void OnRootWidgetDestroying(void);
+		void _OnCaptureWidgetDestroying(void);
+		void _OnHoverWidgetDestroying(void);
+		void _OnRootWidgetDestroying(void);
 		// member variables
-		UI::Widget * m_CaptureWidget;
-		ConnectionHandle m_CaptureWidgetDestroyingCallbackConnectionHandle;
-		UI::Widget * m_HoverWidget;
-		UI::Widget * m_RootWidget;
+		UI::Widget * _CaptureWidget;
+		Connection _CaptureWidgetDestroyingCallbackConnection;
+		UI::Widget * _HoverWidget;
+		UI::Widget * _RootWidget;
 	};
 
 	inline UI::Widget * UserInterface::GetCaptureWidget(void)
 	{
-		return m_CaptureWidget;
+		return _CaptureWidget;
 	}
 
 	inline UI::Widget * UserInterface::GetRootWidget(void)
 	{
-		return m_RootWidget;
+		return _RootWidget;
 	}
 }
 

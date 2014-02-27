@@ -24,38 +24,38 @@
 #include "widget.h"
 
 UI::UserInterface::UserInterface(void) :
-	m_CaptureWidget(0),
-	m_HoverWidget(0),
-	m_RootWidget(new UI::Widget(0))
+	_CaptureWidget(nullptr),
+	_HoverWidget(nullptr),
+	_RootWidget(new UI::Widget(0))
 {
-	m_RootWidget->SetSize(Vector2f(1280.0f, 1024.0f));
-	m_RootWidget->ConnectDestroyingCallback(std::bind(&UI::UserInterface::OnRootWidgetDestroying, this));
+	_RootWidget->SetSize(Vector2f(1280.0f, 1024.0f));
+	_RootWidget->ConnectDestroyingCallback(std::bind(&UI::UserInterface::_OnRootWidgetDestroying, this));
 }
 
 UI::UserInterface::~UserInterface(void)
 {
-	if(m_CaptureWidgetDestroyingCallbackConnectionHandle.IsValid() == true)
+	if(_CaptureWidgetDestroyingCallbackConnection.IsValid() == true)
 	{
-		assert(m_CaptureWidget != 0);
-		m_CaptureWidget->DisconnectDestroyingCallback(m_CaptureWidgetDestroyingCallbackConnectionHandle);
+		assert(_CaptureWidget != nullptr);
+		_CaptureWidget->DisconnectDestroyingCallback(_CaptureWidgetDestroyingCallbackConnection);
 	}
 	else
 	{
-		assert(m_CaptureWidget == 0);
+		assert(_CaptureWidget == nullptr);
 	}
-	m_RootWidget->Destroy();
-	m_RootWidget = 0;
+	_RootWidget->Destroy();
+	_RootWidget = nullptr;
 }
 
 void UI::UserInterface::Draw(void) const
 {
-	if((m_RootWidget != 0) && (m_RootWidget->IsVisible() == true))
+	if((_RootWidget != nullptr) && (_RootWidget->IsVisible() == true))
 	{
 		GLPushMatrix();
-		UI::Widget::PushClippingRectangle(m_RootWidget->GetPosition(), m_RootWidget->GetSize());
-		GLTranslatef(m_RootWidget->GetPosition()[0], m_RootWidget->GetPosition()[1], 0.0f);
+		UI::Widget::PushClippingRectangle(_RootWidget->GetPosition(), _RootWidget->GetSize());
+		GLTranslatef(_RootWidget->GetPosition()[0], _RootWidget->GetPosition()[1], 0.0f);
 		UI::Widget::DrawClippingRectangle();
-		m_RootWidget->Draw();
+		_RootWidget->Draw();
 		UI::Widget::PopClippingRectangle();
 		GLPopMatrix();
 	}
@@ -64,17 +64,18 @@ void UI::UserInterface::Draw(void) const
 void UI::UserInterface::SetCaptureWidget(UI::Widget * Widget)
 {
 	assert(Widget != 0);
-	assert(m_CaptureWidget == 0);
-	m_CaptureWidget = Widget;
-	m_CaptureWidgetDestroyingCallbackConnectionHandle = m_CaptureWidget->ConnectDestroyingCallback(std::bind(&UI::UserInterface::OnCaptureWidgetDestroying, this));
+	assert(_CaptureWidget == 0);
+	_CaptureWidget = Widget;
+	_CaptureWidgetDestroyingCallbackConnection = _CaptureWidget->ConnectDestroyingCallback(std::bind(&UI::UserInterface::_OnCaptureWidgetDestroying, this));
 }
 
 void UI::UserInterface::ReleaseCaptureWidget(void)
 {
-	if(m_CaptureWidget != 0)
+	if(_CaptureWidget != 0)
 	{
-		m_CaptureWidget->DisconnectDestroyingCallback(m_CaptureWidgetDestroyingCallbackConnectionHandle);
-		m_CaptureWidget = 0;
+		assert(_CaptureWidgetDestroyingCallbackConnection.IsValid() == true);
+		_CaptureWidget->DisconnectDestroyingCallback(_CaptureWidgetDestroyingCallbackConnection);
+		_CaptureWidget = 0;
 	}
 }
 
@@ -86,7 +87,7 @@ UI::Widget * UI::UserInterface::GetWidget(const std::string & Path)
 	}
 	
 	std::string::size_type Position(1);
-	UI::Widget * Root(m_RootWidget);
+	UI::Widget * Root(_RootWidget);
 	
 	while((Root != 0) && (Position < Path.length()))
 	{
@@ -101,27 +102,27 @@ UI::Widget * UI::UserInterface::GetWidget(const std::string & Path)
 
 bool UI::UserInterface::MouseButton(int Button, int State, float X, float Y)
 {
-	if(m_CaptureWidget == 0)
+	if(_CaptureWidget == 0)
 	{
-		assert(m_RootWidget != 0);
-		if(m_RootWidget->GetEnabled() == true)
+		assert(_RootWidget != 0);
+		if(_RootWidget->GetEnabled() == true)
 		{
-			const Vector2f & LeftTopCorner(m_RootWidget->GetPosition());
-			Vector2f RightBottomCorner(LeftTopCorner + m_RootWidget->GetSize());
+			const Vector2f & LeftTopCorner(_RootWidget->GetPosition());
+			Vector2f RightBottomCorner(LeftTopCorner + _RootWidget->GetSize());
 			
 			if((X >= LeftTopCorner[0]) && (X < RightBottomCorner[0]) && (Y >= LeftTopCorner[1]) && (Y < RightBottomCorner[1]))
 			{
-				return m_RootWidget->MouseButton(Button, State, X - LeftTopCorner[0], Y - LeftTopCorner[1]);
+				return _RootWidget->MouseButton(Button, State, X - LeftTopCorner[0], Y - LeftTopCorner[1]);
 			}
 		}
 	}
 	else
 	{
-		if(m_CaptureWidget->GetEnabled() == true)
+		if(_CaptureWidget->GetEnabled() == true)
 		{
-			Vector2f TopLeftCorner(m_CaptureWidget->GetGlobalPosition());
+			Vector2f TopLeftCorner(_CaptureWidget->GetGlobalPosition());
 			
-			return m_CaptureWidget->MouseButton(Button, State, X - TopLeftCorner[0], Y - TopLeftCorner[1]);
+			return _CaptureWidget->MouseButton(Button, State, X - TopLeftCorner[0], Y - TopLeftCorner[1]);
 		}
 	}
 	
@@ -130,10 +131,10 @@ bool UI::UserInterface::MouseButton(int Button, int State, float X, float Y)
 
 bool UI::UserInterface::Key(const KeyEventInformation & KeyEventInformation)
 {
-	assert(m_RootWidget != 0);
-	if(m_RootWidget->GetEnabled() == true)
+	assert(_RootWidget != 0);
+	if(_RootWidget->GetEnabled() == true)
 	{
-		return m_RootWidget->Key(KeyEventInformation);
+		return _RootWidget->Key(KeyEventInformation);
 	}
 	
 	return false;
@@ -141,50 +142,50 @@ bool UI::UserInterface::Key(const KeyEventInformation & KeyEventInformation)
 
 void UI::UserInterface::MouseMoved(float X, float Y)
 {
-	if(m_CaptureWidget == 0)
+	if(_CaptureWidget == 0)
 	{
-		assert(m_RootWidget != 0);
-		if(m_RootWidget->GetEnabled() == true)
+		assert(_RootWidget != 0);
+		if(_RootWidget->GetEnabled() == true)
 		{
-			const Vector2f & LeftTopCorner(m_RootWidget->GetPosition());
-			Vector2f RightBottomCorner(LeftTopCorner + m_RootWidget->GetSize());
+			const Vector2f & LeftTopCorner(_RootWidget->GetPosition());
+			Vector2f RightBottomCorner(LeftTopCorner + _RootWidget->GetSize());
 			
 			if((X >= LeftTopCorner[0]) && (X < RightBottomCorner[0]) && (Y >= LeftTopCorner[1]) && (Y < RightBottomCorner[1]))
 			{
-				if(m_HoverWidget != m_RootWidget)
+				if(_HoverWidget != _RootWidget)
 				{
-					m_HoverWidget = m_RootWidget;
-					m_RootWidget->MouseEnter();
+					_HoverWidget = _RootWidget;
+					_RootWidget->MouseEnter();
 				}
-				m_RootWidget->MouseMoved(X, Y);
+				_RootWidget->MouseMoved(X, Y);
 			}
 			else
 			{
-				if(m_HoverWidget == m_RootWidget)
+				if(_HoverWidget == _RootWidget)
 				{
-					m_HoverWidget = 0;
-					m_RootWidget->MouseLeave();
+					_HoverWidget = 0;
+					_RootWidget->MouseLeave();
 				}
 			}
 		}
 	}
 	else
 	{
-		if(m_CaptureWidget->GetEnabled() == true)
+		if(_CaptureWidget->GetEnabled() == true)
 		{
-			Vector2f LeftTopCorner(m_CaptureWidget->GetGlobalPosition());
-			Vector2f RightBottomCorner(LeftTopCorner + m_CaptureWidget->GetSize());
+			Vector2f LeftTopCorner(_CaptureWidget->GetGlobalPosition());
+			Vector2f RightBottomCorner(LeftTopCorner + _CaptureWidget->GetSize());
 			
-			if((X >= LeftTopCorner[0]) && (X < RightBottomCorner[0]) && (Y >= LeftTopCorner[1]) && (Y < RightBottomCorner[1]) && (m_CaptureWidget->m_SupWidget->m_HoverWidget != m_CaptureWidget))
+			if((X >= LeftTopCorner[0]) && (X < RightBottomCorner[0]) && (Y >= LeftTopCorner[1]) && (Y < RightBottomCorner[1]) && (_CaptureWidget->m_SupWidget->m_HoverWidget != _CaptureWidget))
 			{
-				m_CaptureWidget->m_SupWidget->m_HoverWidget = m_CaptureWidget;
-				m_CaptureWidget->MouseEnter();
+				_CaptureWidget->m_SupWidget->m_HoverWidget = _CaptureWidget;
+				_CaptureWidget->MouseEnter();
 			}
-			m_CaptureWidget->MouseMoved(X - LeftTopCorner[0], Y - LeftTopCorner[1]);
-			if(((X < LeftTopCorner[0]) || (X >= RightBottomCorner[0]) || (Y < LeftTopCorner[1]) || (Y >= RightBottomCorner[1])) && (m_CaptureWidget->m_SupWidget->m_HoverWidget == m_CaptureWidget))
+			_CaptureWidget->MouseMoved(X - LeftTopCorner[0], Y - LeftTopCorner[1]);
+			if(((X < LeftTopCorner[0]) || (X >= RightBottomCorner[0]) || (Y < LeftTopCorner[1]) || (Y >= RightBottomCorner[1])) && (_CaptureWidget->m_SupWidget->m_HoverWidget == _CaptureWidget))
 			{
-				m_CaptureWidget->m_SupWidget->m_HoverWidget = 0;
-				m_CaptureWidget->MouseLeave();
+				_CaptureWidget->m_SupWidget->m_HoverWidget = 0;
+				_CaptureWidget->MouseLeave();
 			}
 		}
 	}
@@ -192,11 +193,11 @@ void UI::UserInterface::MouseMoved(float X, float Y)
 
 void UI::UserInterface::Update(float RealTimeSeconds, float GameTimeSeconds)
 {
-	assert(m_RootWidget != 0);
+	assert(_RootWidget != 0);
 	
 	std::stack< std::pair< UI::Widget *, bool > > ToDo;
 	
-	ToDo.push(std::make_pair(m_RootWidget, false));
+	ToDo.push(std::make_pair(_RootWidget, false));
 	while(ToDo.size() > 0)
 	{
 		std::pair< UI::Widget *, bool > & Widget(ToDo.top());
@@ -217,18 +218,20 @@ void UI::UserInterface::Update(float RealTimeSeconds, float GameTimeSeconds)
 	}
 }
 
-void UI::UserInterface::OnCaptureWidgetDestroying(void)
+void UI::UserInterface::_OnCaptureWidgetDestroying(void)
 {
-	m_CaptureWidget->DisconnectDestroyingCallback(m_CaptureWidgetDestroyingCallbackConnectionHandle);
-	m_CaptureWidget = 0;
+	assert(_CaptureWidget != nullptr);
+	assert(_CaptureWidgetDestroyingCallbackConnection.IsValid() == true);
+	_CaptureWidget->DisconnectDestroyingCallback(_CaptureWidgetDestroyingCallbackConnection);
+	_CaptureWidget = 0;
 }
 
-void UI::UserInterface::OnHoverWidgetDestroying(void)
+void UI::UserInterface::_OnHoverWidgetDestroying(void)
 {
-	m_HoverWidget = 0;
+	_HoverWidget = 0;
 }
 
-void UI::UserInterface::OnRootWidgetDestroying(void)
+void UI::UserInterface::_OnRootWidgetDestroying(void)
 {
-	m_RootWidget = 0;
+	_RootWidget = 0;
 }

@@ -53,14 +53,14 @@ UI::ScrollBar::~ScrollBar(void)
 {
 }
 
-ConnectionHandle UI::ScrollBar::ConnectScrollPositionChangedCallback(std::function< void (void) > Callback)
+Connection UI::ScrollBar::ConnectScrollPositionChangedCallback(std::function< void (void) > Callback)
 {
 	return _ScrollPositionChangedEvent.Connect(Callback);
 }
 
-void UI::ScrollBar::DisconnectScrollPositionChangedCallback(ConnectionHandle ConnectionHandle)
+void UI::ScrollBar::DisconnectScrollPositionChangedCallback(Connection & Connection)
 {
-	_ScrollPositionChangedEvent.Disconnect(ConnectionHandle);
+	_ScrollPositionChangedEvent.Disconnect(Connection);
 }
 
 void UI::ScrollBar::OnLessClicked(void)

@@ -37,15 +37,15 @@ namespace UI
 		// constructors & destructor
 		Dialog(Widget * SupWidget);
 		// connecting and disconnecting event callbacks
-		ConnectionHandle ConnectClosingCallback(std::function< bool (UI::Dialog::ClosingReason) > Callback);
-		void DisconnectClosingCallback(ConnectionHandle & ConnectionHandle);
+		Connection ConnectClosingCallback(std::function< bool (UI::Dialog::ClosingReason) > Callback);
+		void DisconnectClosingCallback(Connection & Connection);
 	protected:
 		// helper functions and actions
 		void _Close(UI::Dialog::ClosingReason ClosingReason);
 	private:
 		// member variables
 		//events
-		Event1< bool, UI::Dialog::ClosingReason > _ClosingEvent;
+		Event< bool, UI::Dialog::ClosingReason > _ClosingEvent;
 	};
 }
 

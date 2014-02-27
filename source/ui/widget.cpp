@@ -275,9 +275,9 @@ bool UI::Widget::Key(const KeyEventInformation & TheKeyEventInformation)
 	
 	bool Result(false);
 	
-	for(Event1< bool, const KeyEventInformation & >::CallbackIterator CallbackIterator = _KeyEvent.GetCallbackIterator(); CallbackIterator.IsValid() == true; ++CallbackIterator)
+	for(auto & Callback : _KeyEvent.GetCallbacks())
 	{
-		if(CallbackIterator(TheKeyEventInformation) == true)
+		if(Callback(TheKeyEventInformation) == true)
 		{
 			Result = true;
 		}
@@ -305,9 +305,9 @@ bool UI::Widget::MouseButton(int Button, int State, float X, float Y)
 	
 	bool Result(false);
 	
-	for(Event4< bool, int, int, float, float >::CallbackIterator CallbackIterator = _MouseButtonEvent.GetCallbackIterator(); CallbackIterator.IsValid() == true; ++CallbackIterator)
+	for(auto Callback : _MouseButtonEvent.GetCallbacks())
 	{
-		if(CallbackIterator(Button, State, X, Y) == true)
+		if(Callback(Button, State, X, Y) == true)
 		{
 			Result = true;
 		}
@@ -374,94 +374,94 @@ void UI::Widget::MouseLeave(void)
 	_MouseLeaveEvent();
 }
 
-ConnectionHandle UI::Widget::ConnectDestroyingCallback(std::function< void (void) > Callback)
+Connection UI::Widget::ConnectDestroyingCallback(std::function< void (void) > Callback)
 {
 	return _DestroyingEvent.Connect(Callback);
 }
 
-ConnectionHandle UI::Widget::ConnectKeyCallback(std::function< bool (const KeyEventInformation &) > Callback)
+Connection UI::Widget::ConnectKeyCallback(std::function< bool (const KeyEventInformation &) > Callback)
 {
 	return _KeyEvent.Connect(Callback);
 }
 
-ConnectionHandle UI::Widget::ConnectMouseButtonCallback(std::function< bool (int, int, float, float) > Callback)
+Connection UI::Widget::ConnectMouseButtonCallback(std::function< bool (int, int, float, float) > Callback)
 {
 	return _MouseButtonEvent.Connect(Callback);
 }
 
-ConnectionHandle UI::Widget::ConnectMouseEnterCallback(std::function< void (void) > Callback)
+Connection UI::Widget::ConnectMouseEnterCallback(std::function< void (void) > Callback)
 {
 	return _MouseEnterEvent.Connect(Callback);
 }
 
-ConnectionHandle UI::Widget::ConnectMouseLeaveCallback(std::function< void (void) > Callback)
+Connection UI::Widget::ConnectMouseLeaveCallback(std::function< void (void) > Callback)
 {
 	return _MouseLeaveEvent.Connect(Callback);
 }
 
-ConnectionHandle UI::Widget::ConnectMouseMovedCallback(std::function< void (float, float) > Callback)
+Connection UI::Widget::ConnectMouseMovedCallback(std::function< void (float, float) > Callback)
 {
 	return _MouseMovedEvent.Connect(Callback);
 }
 
-ConnectionHandle UI::Widget::ConnectPositionChangedCallback(std::function< void (void) > Callback)
+Connection UI::Widget::ConnectPositionChangedCallback(std::function< void (void) > Callback)
 {
 	return _PositionChangedEvent.Connect(Callback);
 }
 
-ConnectionHandle UI::Widget::ConnectSizeChangedCallback(std::function< void (void) > Callback)
+Connection UI::Widget::ConnectSizeChangedCallback(std::function< void (void) > Callback)
 {
 	return _SizeChangedEvent.Connect(Callback);
 }
 
-ConnectionHandle UI::Widget::ConnectUpdatingCallback(std::function< void (float, float) > Callback)
+Connection UI::Widget::ConnectUpdatingCallback(std::function< void (float, float) > Callback)
 {
 	return _UpdatingEvent.Connect(Callback);
 }
 
-void UI::Widget::DisconnectDestroyingCallback(ConnectionHandle & ConnectionHandle)
+void UI::Widget::DisconnectDestroyingCallback(Connection & Connection)
 {
-	_DestroyingEvent.Disconnect(ConnectionHandle);
+	_DestroyingEvent.Disconnect(Connection);
 }
 
-void UI::Widget::DisconnectKeyCallback(ConnectionHandle & ConnectionHandle)
+void UI::Widget::DisconnectKeyCallback(Connection & Connection)
 {
-	_KeyEvent.Disconnect(ConnectionHandle);
+	_KeyEvent.Disconnect(Connection);
 }
 
-void UI::Widget::DisconnectMouseButtonCallback(ConnectionHandle & ConnectionHandle)
+void UI::Widget::DisconnectMouseButtonCallback(Connection & Connection)
 {
-	_MouseButtonEvent.Disconnect(ConnectionHandle);
+	_MouseButtonEvent.Disconnect(Connection);
 }
 
-void UI::Widget::DisconnectMouseEnterCallback(ConnectionHandle & ConnectionHandle)
+void UI::Widget::DisconnectMouseEnterCallback(Connection & Connection)
 {
-	_MouseEnterEvent.Disconnect(ConnectionHandle);
+	_MouseEnterEvent.Disconnect(Connection);
 }
 
-void UI::Widget::DisconnectMouseLeaveCallback(ConnectionHandle & ConnectionHandle)
+void UI::Widget::DisconnectMouseLeaveCallback(Connection & Connection)
 {
-	_MouseLeaveEvent.Disconnect(ConnectionHandle);
+	_MouseLeaveEvent.Disconnect(Connection);
 }
 
-void UI::Widget::DisconnectMouseMovedCallback(ConnectionHandle & ConnectionHandle)
+void UI::Widget::DisconnectMouseMovedCallback(Connection & Connection)
 {
-	_MouseMovedEvent.Disconnect(ConnectionHandle);
+	_MouseMovedEvent.Disconnect(Connection);
 }
 
-void UI::Widget::DisconnectPositionChangedCallback(ConnectionHandle & ConnectionHandle)
+void UI::Widget::DisconnectPositionChangedCallback(Connection & Connection)
 {
-	_PositionChangedEvent.Disconnect(ConnectionHandle);
+	_PositionChangedEvent.Disconnect(Connection);
 }
 
-void UI::Widget::DisconnectSizeChangedCallback(ConnectionHandle & ConnectionHandle)
+void UI::Widget::DisconnectSizeChangedCallback(Connection & Connection)
 {
-	_SizeChangedEvent.Disconnect(ConnectionHandle);
+	_SizeChangedEvent.Disconnect(Connection);
 }
 
-void UI::Widget::DisconnectUpdatingCallback(ConnectionHandle & ConnectionHandle)
+void UI::Widget::DisconnectUpdatingCallback(Connection & Connection)
 {
-	_UpdatingEvent.Disconnect(ConnectionHandle);
+	_UpdatingEvent.Disconnect(Connection);
 }
 
 void UI::Widget::PushClippingRectangle(const Vector2f & Position, const Vector2f & Size)

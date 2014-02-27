@@ -27,7 +27,7 @@
 
 #include <algebra/vector2f.h>
 
-#include "../callbacks/events.h"
+#include "../events.h"
 
 class Color;
 class KeyEventInformation;
@@ -95,24 +95,24 @@ namespace UI
 		// MouseLeave on the old hover widget is called before MouseEnter on the new hover widget
 		void MouseLeave(void);
 		// connect and disconnect events
-		ConnectionHandle ConnectDestroyingCallback(std::function< void (void) > Callback);
-		ConnectionHandle ConnectKeyCallback(std::function< bool (const KeyEventInformation &) > Callback);
-		ConnectionHandle ConnectMouseButtonCallback(std::function< bool (int, int, float, float) > Callback);
-		ConnectionHandle ConnectMouseEnterCallback(std::function< void (void) > Callback);
-		ConnectionHandle ConnectMouseLeaveCallback(std::function< void (void) > Callback);
-		ConnectionHandle ConnectMouseMovedCallback(std::function< void (float, float) > Callback);
-		ConnectionHandle ConnectPositionChangedCallback(std::function< void (void) > Callback);
-		ConnectionHandle ConnectSizeChangedCallback(std::function< void (void) > Callback);
-		ConnectionHandle ConnectUpdatingCallback(std::function< void (float, float) > Callback);
-		void DisconnectDestroyingCallback(ConnectionHandle & ConnectionHandle);
-		void DisconnectKeyCallback(ConnectionHandle & ConnectionHandle);
-		void DisconnectMouseButtonCallback(ConnectionHandle & ConnectionHandle);
-		void DisconnectMouseEnterCallback(ConnectionHandle & ConnectionHandle);
-		void DisconnectMouseLeaveCallback(ConnectionHandle & ConnectionHandle);
-		void DisconnectMouseMovedCallback(ConnectionHandle & ConnectionHandle);
-		void DisconnectPositionChangedCallback(ConnectionHandle & ConnectionHandle);
-		void DisconnectSizeChangedCallback(ConnectionHandle & ConnectionHandle);
-		void DisconnectUpdatingCallback(ConnectionHandle & ConnectionHandle);
+		Connection ConnectDestroyingCallback(std::function< void (void) > Callback);
+		Connection ConnectKeyCallback(std::function< bool (const KeyEventInformation &) > Callback);
+		Connection ConnectMouseButtonCallback(std::function< bool (int, int, float, float) > Callback);
+		Connection ConnectMouseEnterCallback(std::function< void (void) > Callback);
+		Connection ConnectMouseLeaveCallback(std::function< void (void) > Callback);
+		Connection ConnectMouseMovedCallback(std::function< void (float, float) > Callback);
+		Connection ConnectPositionChangedCallback(std::function< void (void) > Callback);
+		Connection ConnectSizeChangedCallback(std::function< void (void) > Callback);
+		Connection ConnectUpdatingCallback(std::function< void (float, float) > Callback);
+		void DisconnectDestroyingCallback(Connection & Connection);
+		void DisconnectKeyCallback(Connection & Connection);
+		void DisconnectMouseButtonCallback(Connection & Connection);
+		void DisconnectMouseEnterCallback(Connection & Connection);
+		void DisconnectMouseLeaveCallback(Connection & Connection);
+		void DisconnectMouseMovedCallback(Connection & Connection);
+		void DisconnectPositionChangedCallback(Connection & Connection);
+		void DisconnectSizeChangedCallback(Connection & Connection);
+		void DisconnectUpdatingCallback(Connection & Connection);
 		// static manager functions
 		static std::list< Widget * > & GetDestroyedWidgets(void);
 	protected:
@@ -136,15 +136,15 @@ namespace UI
 		bool m_AnchorTop;
 		Widget * m_KeyFocus;
 		// events
-		Event0< void > _DestroyingEvent;
-		Event1< bool, const KeyEventInformation & > _KeyEvent;
-		Event4< bool, int, int, float, float > _MouseButtonEvent;
-		Event0< void > _MouseEnterEvent;
-		Event0< void > _MouseLeaveEvent;
-		Event2< void, float, float > _MouseMovedEvent;
-		Event0< void > _PositionChangedEvent;
-		Event0< void > _SizeChangedEvent;
-		Event2< void, float, float > _UpdatingEvent;
+		Event< void > _DestroyingEvent;
+		Event< bool, const KeyEventInformation & > _KeyEvent;
+		Event< bool, int, int, float, float > _MouseButtonEvent;
+		Event< void > _MouseEnterEvent;
+		Event< void > _MouseLeaveEvent;
+		Event< void, float, float > _MouseMovedEvent;
+		Event< void > _PositionChangedEvent;
+		Event< void > _SizeChangedEvent;
+		Event< void, float, float > _UpdatingEvent;
 		// static manager properties
 		static std::list< Widget * > m_DestroyedWidgets;
 		static std::stack< std::pair< Vector2f, Vector2f > > m_ClippingRectangles;

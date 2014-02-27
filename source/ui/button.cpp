@@ -36,14 +36,14 @@ UI::Button::~Button(void)
 {
 }
 
-ConnectionHandle UI::Button::ConnectClickedCallback(std::function< void (void) > ClickedHandler)
+Connection UI::Button::ConnectClickedCallback(std::function< void (void) > ClickedHandler)
 {
 	return _ClickedEvent.Connect(ClickedHandler);
 }
 
-void UI::Button::DisconnectClickedCallback(ConnectionHandle & ConnectionHandle)
+void UI::Button::DisconnectClickedCallback(Connection & Connection)
 {
-	_ClickedEvent.Disconnect(ConnectionHandle);
+	_ClickedEvent.Disconnect(Connection);
 }
 
 bool UI::Button::_OnMouseButton(int Button, int State, float X, float Y)

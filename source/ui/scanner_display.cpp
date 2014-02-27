@@ -53,13 +53,13 @@ void UI::ScannerDisplay::SetTarget(Object * Target)
 		if(_Target != nullptr)
 		{
 			_Clear();
-			_Target->DisconnectDestroyingCallback(_TargetDestroyingConnectionHandle);
+			_Target->DisconnectDestroyingCallback(_TargetDestroyingConnection);
 			_Target = nullptr;
 		}
 		if(Target != nullptr)
 		{
 			_Target = Target;
-			_TargetDestroyingConnectionHandle = _Target->ConnectDestroyingCallback(std::bind(&UI::ScannerDisplay::_OnTargetDestroying, this));
+			_TargetDestroyingConnection = _Target->ConnectDestroyingCallback(std::bind(&UI::ScannerDisplay::_OnTargetDestroying, this));
 			_Setup();
 		}
 	}

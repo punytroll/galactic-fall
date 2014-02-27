@@ -27,7 +27,7 @@ all: all-recursive
 
 all-here: check-dependencies prepare-build binary
 
-all-recursive: callbacks-all-recursive all-here
+all-recursive: all-here
 
 clean: clean-recursive
 
@@ -46,13 +46,7 @@ clean-here:
 	$(RM) $(DEPENDENCY_FILES)
 	$(RM) -r $(DEPENDENCY_DIRECTORY)
 
-clean-recursive: callbacks-clean-recursive clean-here
-
-callbacks-all-recursive:
-	@$(MAKE) -C callbacks all-recursive
-
-callbacks-clean-recursive:
-	@$(MAKE) -C callbacks clean-recursive
+clean-recursive: clean-here
 
 check-dependencies: cpp_includes_to_makefile-check-dependencies
 	@if [ x`which pkg-config` = x ]; then \
