@@ -17,7 +17,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include "../callbacks/callbacks.h"
 #include "../color.h"
 #include "border.h"
 #include "label.h"
@@ -30,7 +29,7 @@ UI::ProgressBar::ProgressBar(UI::Widget * SupWidget) :
 	_Label(nullptr)
 {
 	SetSize(Vector2f(100.0f, 20.0f));
-	ConnectSizeChangedCallback(Callback(this, &UI::ProgressBar::_OnSizeChanged));
+	ConnectSizeChangedCallback(std::bind(&UI::ProgressBar::_OnSizeChanged, this));
 	_Fill = new UI::Widget(this);
 	_Fill->SetPosition(Vector2f(0.0f, 0.0f));
 	_Fill->SetSize(GetSize());

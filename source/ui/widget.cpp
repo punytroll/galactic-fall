@@ -410,7 +410,7 @@ ConnectionHandle UI::Widget::ConnectPositionChangedCallback(Callback0< void > Ca
 	return _PositionChangedEvent.Connect(Callback);
 }
 
-ConnectionHandle UI::Widget::ConnectSizeChangedCallback(Callback0< void > Callback)
+ConnectionHandle UI::Widget::ConnectSizeChangedCallback(std::function< void (void) > Callback)
 {
 	return _SizeChangedEvent.Connect(Callback);
 }
