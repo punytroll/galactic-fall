@@ -19,7 +19,8 @@
 
 #include <assert.h>
 
-#include "../source/callbacks/callbacks.h"
+#include <iostream>
+
 #include "../source/callbacks/events.h"
 
 int g_Global;
@@ -38,7 +39,7 @@ class SelfDisconnecting
 public:
 	void Register(Event0< void > & Event)
 	{
-		_ConnectionHandle = Event.Connect(Callback(this, &SelfDisconnecting::_Notify));
+		_ConnectionHandle = Event.Connect(std::bind(&SelfDisconnecting::_Notify, this));
 		_Event = &Event;
 	}
 private:
@@ -66,7 +67,7 @@ int main(int argc, char ** argv)
 	{
 		Event0< void > Event;
 		
-		Event.Connect(Callback(EmptyFunction));
+		Event.Connect(EmptyFunction);
 		Event();
 	}
 	
@@ -77,7 +78,7 @@ int main(int argc, char ** argv)
 		
 		Event0< void > Event;
 		
-		Event.Connect(Bind1(Callback(IncrementingFunction), 8));
+		Event.Connect(std::bind(IncrementingFunction, 8));
 		Event();
 		assert(g_Global == 40);
 		Event();
@@ -90,8 +91,8 @@ int main(int argc, char ** argv)
 		g_Global = 64;
 		
 		Event0< void > Event;
-		ConnectionHandle Handle1(Event.Connect(Bind1(Callback(IncrementingFunction), 8)));
-		ConnectionHandle Handle2(Event.Connect(Bind1(Callback(IncrementingFunction), 12)));
+		ConnectionHandle Handle1(Event.Connect(std::bind(IncrementingFunction, 8)));
+		ConnectionHandle Handle2(Event.Connect(std::bind(IncrementingFunction, 12)));
 		
 		Event();
 		assert(g_Global == 84);

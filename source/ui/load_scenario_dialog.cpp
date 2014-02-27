@@ -17,7 +17,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include "../callbacks/callbacks.h"
 #include "../color.h"
 #include "../globals.h"
 #include "../key_event_information.h"
@@ -54,8 +53,8 @@ UI::ScenarioItem::ScenarioItem(UI::Widget * SupWidget, Scenario * Scenario) :
 	_Scenario(Scenario),
 	_Selected(false)
 {
-	ConnectMouseEnterCallback(Callback(this, &UI::ScenarioItem::_OnMouseEnter));
-	ConnectMouseLeaveCallback(Callback(this, &UI::ScenarioItem::_OnMouseLeave));
+	ConnectMouseEnterCallback(std::bind(&UI::ScenarioItem::_OnMouseEnter, this));
+	ConnectMouseLeaveCallback(std::bind(&UI::ScenarioItem::_OnMouseLeave, this));
 	
 	UI::Label * CaptionLabel(new UI::Label(this, Scenario->GetName()));
 	
@@ -155,7 +154,7 @@ UI::LoadScenarioDialog::LoadScenarioDialog(UI::Widget * SupWidget, ScenarioManag
 		ScenarioItem->SetPosition(Vector2f(5.0f, Top));
 		ScenarioItem->SetSize(Vector2f(_ScenarioScrollBox->GetContent()->GetSize()[0] - 10.0f, 20.0f));
 		ScenarioItem->SetAnchorRight(true);
-		ScenarioItem->ConnectMouseButtonCallback(Bind1(Callback(this, &LoadScenarioDialog::_OnScenarioItemMouseButton), ScenarioItem));
+		ScenarioItem->ConnectMouseButtonCallback(std::bind(&UI::LoadScenarioDialog::_OnScenarioItemMouseButton, this, ScenarioItem, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4));
 		Top += 25.0f;
 	}
 	_ScenarioScrollBox->GetContent()->SetSize(Vector2f(_ScenarioScrollBox->GetView()->GetSize()[0], std::max(Top, _ScenarioScrollBox->GetView()->GetSize()[1])));

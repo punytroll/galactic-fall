@@ -21,7 +21,6 @@
 
 #include <fstream>
 
-#include "../callbacks/callbacks.h"
 #include "../color.h"
 #include "../file_handling.h"
 #include "../globals.h"
@@ -140,7 +139,7 @@ void UI::LoadGameDialog::SetDirectoryPath(const std::string & DirectoryPath)
 		EntryLabel->SetPosition(Vector2f(5.0f, Top));
 		EntryLabel->SetSize(Vector2f(m_FileScrollBox->GetContent()->GetSize()[0] - 10.0f, 20.0f));
 		EntryLabel->SetAnchorRight(true);
-		EntryLabel->ConnectMouseButtonCallback(Bind1(Callback(this, &UI::LoadGameDialog::OnDirectoryEntryItemMouseButton), EntryLabel));
+		EntryLabel->ConnectMouseButtonCallback(std::bind(&UI::LoadGameDialog::OnDirectoryEntryItemMouseButton, this, EntryLabel, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4));
 		Top += 25.0f;
 	}
 	m_FileScrollBox->GetContent()->SetSize(Vector2f(m_FileScrollBox->GetView()->GetSize()[0], std::max(Top, m_FileScrollBox->GetView()->GetSize()[1])));

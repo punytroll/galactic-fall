@@ -17,7 +17,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include "../callbacks/callbacks.h"
 #include "../globals.h"
 #include "../key_event_information.h"
 #include "../string_cast.h"

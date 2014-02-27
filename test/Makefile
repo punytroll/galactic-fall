@@ -6,13 +6,8 @@ SOURCE_FILES = $(wildcard *.cpp)
 OBJECT_FILES = $(patsubst %.cpp,%.o,$(SOURCE_FILES))
 
 TEST_PROGRAMS = \
-	callbacks \
 	events \
 	referencing
-
-callbacks_test = \
-	$(root)/source/callbacks/callbacks.h \
-	$(root)/source/callbacks/callbacks.inc
 
 events_test = \
 	$(root)/source/callbacks/events.h \
@@ -40,12 +35,6 @@ clean:
 	$(RM) $(TEST_PROGRAMS)
 
 clean-recursive: clean
-
-callbacks: callbacks.o
-	$(CXX) $(LDFLAGS) $^ -o $@
-
-callbacks.o: callbacks.cpp $(callbacks_test)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 events: events.o
 	$(CXX) $(LDFLAGS) $^ -o $@

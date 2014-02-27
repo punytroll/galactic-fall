@@ -21,7 +21,6 @@
 
 #include <algorithm>
 
-#include "../callbacks/callbacks.h"
 #include "../color.h"
 #include "../graphics/gl.h"
 #include "../math.h"
@@ -385,27 +384,27 @@ ConnectionHandle UI::Widget::ConnectKeyCallback(std::function< bool (const KeyEv
 	return _KeyEvent.Connect(Callback);
 }
 
-ConnectionHandle UI::Widget::ConnectMouseButtonCallback(Callback4< bool, int, int, float, float > Callback)
+ConnectionHandle UI::Widget::ConnectMouseButtonCallback(std::function< bool (int, int, float, float) > Callback)
 {
 	return _MouseButtonEvent.Connect(Callback);
 }
 
-ConnectionHandle UI::Widget::ConnectMouseEnterCallback(Callback0< void > Callback)
+ConnectionHandle UI::Widget::ConnectMouseEnterCallback(std::function< void (void) > Callback)
 {
 	return _MouseEnterEvent.Connect(Callback);
 }
 
-ConnectionHandle UI::Widget::ConnectMouseLeaveCallback(Callback0< void > Callback)
+ConnectionHandle UI::Widget::ConnectMouseLeaveCallback(std::function< void (void) > Callback)
 {
 	return _MouseLeaveEvent.Connect(Callback);
 }
 
-ConnectionHandle UI::Widget::ConnectMouseMovedCallback(Callback2< void, float, float > Callback)
+ConnectionHandle UI::Widget::ConnectMouseMovedCallback(std::function< void (float, float) > Callback)
 {
 	return _MouseMovedEvent.Connect(Callback);
 }
 
-ConnectionHandle UI::Widget::ConnectPositionChangedCallback(Callback0< void > Callback)
+ConnectionHandle UI::Widget::ConnectPositionChangedCallback(std::function< void (void) > Callback)
 {
 	return _PositionChangedEvent.Connect(Callback);
 }

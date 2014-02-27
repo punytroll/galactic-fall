@@ -21,7 +21,6 @@
 
 #include <fstream>
 
-#include "../callbacks/callbacks.h"
 #include "../color.h"
 #include "../file_handling.h"
 #include "../globals.h"
@@ -56,8 +55,8 @@ UI::DirectoryEntryItem::DirectoryEntryItem(UI::Widget * SupWidget, const std::st
 	UI::Widget(SupWidget),
 	_Selected(false)
 {
-	ConnectMouseEnterCallback(Callback(this, &UI::DirectoryEntryItem::_OnMouseEnter));
-	ConnectMouseLeaveCallback(Callback(this, &UI::DirectoryEntryItem::_OnMouseLeave));
+	ConnectMouseEnterCallback(std::bind(&UI::DirectoryEntryItem::_OnMouseEnter, this));
+	ConnectMouseLeaveCallback(std::bind(&UI::DirectoryEntryItem::_OnMouseLeave, this));
 	_CaptionLabel = new UI::Label(this, Caption);
 	_CaptionLabel->SetPosition(Vector2f(5.0f, 0.0f));
 	_CaptionLabel->SetSize(Vector2f(GetSize()[0] - 10.0f, 20.0f));
@@ -188,7 +187,7 @@ void UI::SaveGameDialog::SetDirectoryPath(const std::string & DirectoryPath)
 		EntryLabel->SetPosition(Vector2f(5.0f, Top));
 		EntryLabel->SetSize(Vector2f(m_FileScrollBox->GetContent()->GetSize()[0] - 10.0f, 20.0f));
 		EntryLabel->SetAnchorRight(true);
-		EntryLabel->ConnectMouseButtonCallback(Bind1(Callback(this, &SaveGameDialog::OnDirectoryEntryItemMouseButton), EntryLabel));
+		EntryLabel->ConnectMouseButtonCallback(std::bind(&UI::SaveGameDialog::OnDirectoryEntryItemMouseButton, this, EntryLabel, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4));
 		Top += 25.0f;
 	}
 	m_FileScrollBox->GetContent()->SetSize(Vector2f(m_FileScrollBox->GetView()->GetSize()[0], std::max(Top, m_FileScrollBox->GetView()->GetSize()[1])));

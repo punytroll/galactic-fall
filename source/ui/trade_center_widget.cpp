@@ -18,7 +18,6 @@
 **/
 
 #include "../asset_class.h"
-#include "../callbacks/callbacks.h"
 #include "../character.h"
 #include "../color.h"
 #include "../commodity.h"
@@ -150,7 +149,7 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Reference< Plan
 	_AssetClassScrollBox->SetHorizontalScrollBarVisible(false);
 	_AssetClassScrollBox->SetAnchorRight(true);
 	_AssetClassScrollBox->SetAnchorBottom(true);
-	_AssetClassScrollBox->ConnectMouseButtonCallback(Callback(this, &UI::TradeCenterWidget::_OnAssetClassScrollBoxMouseButton));
+	_AssetClassScrollBox->ConnectMouseButtonCallback(std::bind(&UI::TradeCenterWidget::_OnAssetClassScrollBoxMouseButton, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4));
 	
 	const std::vector< PlanetAssetClass * > & PlanetAssetClasses(Planet->GetPlanetAssetClasses());
 	std::vector< PlanetAssetClass * >::const_iterator PlanetAssetClassIterator(PlanetAssetClasses.begin());
@@ -163,9 +162,9 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Reference< Plan
 		NewTradeCenterAssetClass->SetPosition(Vector2f(5.0f, Top));
 		NewTradeCenterAssetClass->SetSize(Vector2f(_AssetClassScrollBox->GetContent()->GetSize()[0] - 10.0f, 20.0f));
 		NewTradeCenterAssetClass->SetAnchorRight(true);
-		NewTradeCenterAssetClass->ConnectMouseButtonCallback(Bind1(Callback(this, &UI::TradeCenterWidget::_OnAssetClassMouseButton), NewTradeCenterAssetClass));
-		NewTradeCenterAssetClass->ConnectMouseEnterCallback(Bind1(Callback(this, &UI::TradeCenterWidget::_OnAssetClassMouseEnter), NewTradeCenterAssetClass));
-		NewTradeCenterAssetClass->ConnectMouseLeaveCallback(Bind1(Callback(this, &UI::TradeCenterWidget::_OnAssetClassMouseLeave), NewTradeCenterAssetClass));
+		NewTradeCenterAssetClass->ConnectMouseButtonCallback(std::bind(&UI::TradeCenterWidget::_OnAssetClassMouseButton, this, NewTradeCenterAssetClass, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4));
+		NewTradeCenterAssetClass->ConnectMouseEnterCallback(std::bind(&UI::TradeCenterWidget::_OnAssetClassMouseEnter, this, NewTradeCenterAssetClass));
+		NewTradeCenterAssetClass->ConnectMouseLeaveCallback(std::bind(&UI::TradeCenterWidget::_OnAssetClassMouseLeave, this, NewTradeCenterAssetClass));
 		Top += 25.0f;
 		++PlanetAssetClassIterator;
 	}

@@ -17,7 +17,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include "../callbacks/callbacks.h"
 #include "../class_manager.h"
 #include "../color.h"
 #include "../globals.h"
@@ -84,8 +83,8 @@ UI::AccessoryListItem::AccessoryListItem(UI::Widget * SupWidget, Reference< Obje
 	_Accessory(Accessory),
 	_Selected(false)
 {
-	ConnectMouseEnterCallback(Callback(this, &AccessoryListItem::_OnMouseEnter));
-	ConnectMouseLeaveCallback(Callback(this, &AccessoryListItem::_OnMouseLeave));
+	ConnectMouseEnterCallback(std::bind(&UI::AccessoryListItem::_OnMouseEnter, this));
+	ConnectMouseLeaveCallback(std::bind(&UI::AccessoryListItem::_OnMouseLeave, this));
 	// set to arbitrary design size
 	SetSize(Vector2f(100.0f, 100.0f));
 	// safe-guard: only accept objects with a name aspect
@@ -151,8 +150,8 @@ UI::SlotListItem::SlotListItem(UI::Widget * SupWidget, Reference< Slot > Slot) :
 	_Selected(false),
 	_Slot(Slot)
 {
-	ConnectMouseEnterCallback(Callback(this, &SlotListItem::_OnMouseEnter));
-	ConnectMouseLeaveCallback(Callback(this, &SlotListItem::_OnMouseLeave));
+	ConnectMouseEnterCallback(std::bind(&UI::SlotListItem::_OnMouseEnter, this));
+	ConnectMouseLeaveCallback(std::bind(&UI::SlotListItem::_OnMouseLeave, this));
 	// set to arbitrary design size
 	SetSize(Vector2f(100.0f, 100.0f));
 	
@@ -261,7 +260,7 @@ UI::OutfitShipDialog::OutfitShipDialog(UI::Widget * SupWidget, Reference< Ship >
 		NewSlotListItem->SetPosition(Vector2f(5.0f, Top));
 		NewSlotListItem->SetSize(Vector2f(_SlotScrollBox->GetContent()->GetSize()[0] - 10.0f, 50.0f));
 		NewSlotListItem->SetAnchorRight(true);
-		NewSlotListItem->ConnectMouseButtonCallback(Bind1(Callback(this, &OutfitShipDialog::_OnSlotListItemMouseButton), NewSlotListItem));
+		NewSlotListItem->ConnectMouseButtonCallback(std::bind(&UI::OutfitShipDialog::_OnSlotListItemMouseButton, this, NewSlotListItem, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4));
 		Top += 55.0f;
 	}
 	_SlotScrollBox->GetContent()->SetSize(Vector2f(180.0f, std::max(Top, _SlotScrollBox->GetView()->GetSize()[1])));
@@ -354,7 +353,7 @@ void UI::OutfitShipDialog::_RebuildAccessoryList(void)
 			NewAccessoryListItem->SetPosition(Vector2f(5.0f, Top));
 			NewAccessoryListItem->SetSize(Vector2f(_AccessoryScrollBox->GetContent()->GetSize()[0] - 10.0f, 50.0f));
 			NewAccessoryListItem->SetAnchorRight(true);
-			NewAccessoryListItem->ConnectMouseButtonCallback(Bind1(Callback(this, &OutfitShipDialog::_OnAccessoryListItemMouseButton), NewAccessoryListItem));
+			NewAccessoryListItem->ConnectMouseButtonCallback(std::bind(&UI::OutfitShipDialog::_OnAccessoryListItemMouseButton, this, NewAccessoryListItem, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4));
 			if(ContentObject == SelectedAccessory)
 			{
 				_SelectedAccessoryListItem = NewAccessoryListItem;

@@ -19,7 +19,6 @@
 
 #include <map>
 
-#include "../callbacks/callbacks.h"
 #include "../character.h"
 #include "../draw_text.h"
 #include "../galaxy.h"
@@ -40,8 +39,8 @@ UI::StarMapDisplay::StarMapDisplay(Widget * SupWidget, System * System, Characte
 	m_Scale(5.0f),
 	m_OffsetPosition(true)
 {
-	ConnectMouseButtonCallback(Callback(this, &UI::StarMapDisplay::OnMouseButton));
-	ConnectMouseMovedCallback(Callback(this, &UI::StarMapDisplay::OnMouseMoved));
+	ConnectMouseButtonCallback(std::bind(&UI::StarMapDisplay::OnMouseButton, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4));
+	ConnectMouseMovedCallback(std::bind(&UI::StarMapDisplay::OnMouseMoved, this, std::placeholders::_1, std::placeholders::_2));
 }
 
 void UI::StarMapDisplay::Draw(void) const
