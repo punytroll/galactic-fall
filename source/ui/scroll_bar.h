@@ -29,7 +29,7 @@ namespace UI
 	class ScrollBar : public UI::Widget
 	{
 	public:
-		enum Alignment
+		enum class Alignment
 		{
 			UNDEFINED,
 			HORIZONTAL,
@@ -39,7 +39,7 @@ namespace UI
 		ScrollBar(UI::Widget * SupWidget, ScrollBar::Alignment Alignment);
 		virtual ~ScrollBar(void);
 		// events
-		ConnectionHandle ConnectScrollPositionChangedCallback(Callback0< void > Callback);
+		ConnectionHandle ConnectScrollPositionChangedCallback(std::function< void (void) > Callback);
 		void DisconnectScrollPositionChangedCallback(ConnectionHandle ConnectionHandle);
 		// getters
 		UI::ScrollBar::Alignment GetAlignment(void) const;
@@ -72,7 +72,7 @@ namespace UI
 		UI::Button * m_LessButton;
 		UI::Button * m_MoreButton;
 		UI::Widget * m_Tracker;
-		ScrollBar::Alignment m_Alignment;
+		UI::ScrollBar::Alignment m_Alignment;
 		float m_CurrentPosition;
 		float m_MinimumPosition;
 		float m_MaximumPosition;
