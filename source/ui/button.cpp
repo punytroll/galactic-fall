@@ -17,7 +17,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include "../callbacks/callbacks.h"
 #include "../color.h"
 #include "../globals.h"
 #include "button.h"
@@ -28,9 +27,9 @@ UI::Button::Button(Widget * SupWidget) :
 {
 	SetBackgroundColor(Color(0.3f, 0.3f, 0.3f, 1.0f));
 	SetDisabledBackgroundColor(Color(0.23f, 0.23f, 0.23f, 1.0f));
-	ConnectMouseButtonCallback(Callback(this, &Button::_OnMouseButton));
-	ConnectMouseEnterCallback(Callback(this, &Button::_OnMouseEnter));
-	ConnectMouseLeaveCallback(Callback(this, &Button::_OnMouseLeave));
+	ConnectMouseButtonCallback(std::bind(&Button::_OnMouseButton, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4));
+	ConnectMouseEnterCallback(std::bind(&Button::_OnMouseEnter, this));
+	ConnectMouseLeaveCallback(std::bind(&Button::_OnMouseLeave, this));
 }
 
 UI::Button::~Button(void)

@@ -17,7 +17,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include "../callbacks/callbacks.h"
 #include "../color.h"
 #include "../globals.h"
 #include "border.h"
@@ -43,8 +42,8 @@ UI::Window::Window(Widget * SupWidget, const std::string & Title) :
 	m_TitleLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
 	m_TitleLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	m_TitleLabel->SetBackgroundColor(Color(0.2f, 0.2f, 0.4f, 1.0f));
-	m_TitleLabel->ConnectMouseButtonCallback(Callback(this, &UI::Window::OnTitleLabelMouseButton));
-	m_TitleLabel->ConnectMouseMovedCallback(Callback(this, &UI::Window::OnTitleLabelMouseMoved));
+	m_TitleLabel->ConnectMouseButtonCallback(std::bind(&UI::Window::OnTitleLabelMouseButton, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4));
+	m_TitleLabel->ConnectMouseMovedCallback(std::bind(&UI::Window::OnTitleLabelMouseMoved, this, std::placeholders::_1, std::placeholders::_2));
 	m_ResizeDragBox = new Widget(this);
 	m_ResizeDragBox->SetPosition(Vector2f(GetSize()[0] - 9.0f, GetSize()[1] - 9.0f));
 	m_ResizeDragBox->SetSize(Vector2f(7.0f, 7.0f));
@@ -53,8 +52,8 @@ UI::Window::Window(Widget * SupWidget, const std::string & Title) :
 	m_ResizeDragBox->SetAnchorRight(true);
 	m_ResizeDragBox->SetAnchorTop(false);
 	m_ResizeDragBox->SetBackgroundColor(Color(0.2f, 0.2f, 0.4f, 1.0f));
-	m_ResizeDragBox->ConnectMouseButtonCallback(Callback(this, &UI::Window::OnResizeDragBoxMouseButton));
-	m_ResizeDragBox->ConnectMouseMovedCallback(Callback(this, &UI::Window::OnResizeDragBoxMouseMoved));
+	m_ResizeDragBox->ConnectMouseButtonCallback(std::bind(&UI::Window::OnResizeDragBoxMouseButton, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4));
+	m_ResizeDragBox->ConnectMouseMovedCallback(std::bind(&UI::Window::OnResizeDragBoxMouseMoved, this, std::placeholders::_1, std::placeholders::_2));
 }
 
 bool UI::Window::OnTitleLabelMouseButton(int Button, int State, float X, float Y)

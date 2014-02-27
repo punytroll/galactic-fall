@@ -17,7 +17,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include "../callbacks/callbacks.h"
 #include "../color.h"
 #include "../globals.h"
 #include "../message.h"
@@ -47,7 +46,7 @@ UI::ObjectInformationDialog::ObjectInformationDialog(UI::Widget * SupWidget, con
 {
 	SetPosition(Vector2f(100.0f, 400.0f));
 	SetSize(Vector2f(500.0f, 300.0f));
-	ConnectMouseButtonCallback(Callback(this, &ObjectInformationDialog::_OnMouseButton));
+	ConnectMouseButtonCallback(std::bind(&UI::ObjectInformationDialog::_OnMouseButton, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4));
 	// set up widgets
 	_CloseButton = new UI::TextButton(this, "Close");
 	_CloseButton->SetSize(Vector2f(100.0f, 20.0f));

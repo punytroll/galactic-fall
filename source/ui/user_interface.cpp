@@ -19,7 +19,6 @@
 
 #include <assert.h>
 
-#include "../callbacks/callbacks.h"
 #include "../graphics/gl.h"
 #include "user_interface.h"
 #include "widget.h"

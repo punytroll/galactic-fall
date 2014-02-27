@@ -17,7 +17,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include "../callbacks/callbacks.h"
 #include "../color.h"
 #include "../globals.h"
 #include "button.h"
@@ -39,10 +38,10 @@ UI::ScrollBar::ScrollBar(Widget * SupWidget, UI::ScrollBar::Alignment Alignment)
 	m_MoreButton->ConnectClickedCallback(std::bind(&UI::ScrollBar::OnMoreClicked, this));
 	m_Tracker = new UI::Widget(this);
 	m_Tracker->SetBackgroundColor(Color(0.3f, 0.3f, 0.3f, 1.0f));
-	m_Tracker->ConnectMouseEnterCallback(Callback(this, &UI::ScrollBar::OnTrackerMouseEnter));
-	m_Tracker->ConnectMouseLeaveCallback(Callback(this, &UI::ScrollBar::OnTrackerMouseLeave));
-	m_Tracker->ConnectMouseButtonCallback(Callback(this, &UI::ScrollBar::OnTrackerMouseButton));
-	m_Tracker->ConnectMouseMovedCallback(Callback(this, &UI::ScrollBar::OnTrackerMouseMoved));
+	m_Tracker->ConnectMouseEnterCallback(std::bind(&UI::ScrollBar::OnTrackerMouseEnter, this));
+	m_Tracker->ConnectMouseLeaveCallback(std::bind(&UI::ScrollBar::OnTrackerMouseLeave, this));
+	m_Tracker->ConnectMouseButtonCallback(std::bind(&UI::ScrollBar::OnTrackerMouseButton, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4));
+	m_Tracker->ConnectMouseMovedCallback(std::bind(&UI::ScrollBar::OnTrackerMouseMoved, this, std::placeholders::_1, std::placeholders::_2));
 	SetAlignment(Alignment);
 	SetMinimumPosition(0.0f);
 	SetMaximumPosition(1.0f);
