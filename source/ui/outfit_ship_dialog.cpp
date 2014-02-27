@@ -175,7 +175,7 @@ UI::SlotListItem::SlotListItem(UI::Widget * SupWidget, Reference< Slot > Slot) :
 
 void UI::SlotListItem::Update(void)
 {
-	Object * MountedObject(dynamic_cast< Object * >(_Slot->GetMountedObject().Get()));
+	Object * MountedObject(dynamic_cast< Object * >(_Slot->GetMountedObject()));
 	
 	if(MountedObject != 0)
 	{
@@ -371,7 +371,7 @@ void UI::OutfitShipDialog::_OnMountButtonUpdating(UI::Button * MountButton, floa
 	if(_SelectedSlotListItem != 0)
 	{
 		assert(_SelectedSlotListItem->GetSlot().IsValid() == true);
-		MountButton->SetEnabled((_SelectedSlotListItem->GetSlot()->GetMountedObject().IsValid() == false) && (_SelectedAccessoryListItem != 0) && (_SelectedSlotListItem->GetSlot()->GetSlotClass()->AcceptsSlotClassIdentifier(_SelectedAccessoryListItem->GetAccessory()->GetAspectAccessory()->GetSlotClassIdentifier()) == true));
+		MountButton->SetEnabled((_SelectedSlotListItem->GetSlot()->GetMountedObject() == nullptr) && (_SelectedAccessoryListItem != 0) && (_SelectedSlotListItem->GetSlot()->GetSlotClass()->AcceptsSlotClassIdentifier(_SelectedAccessoryListItem->GetAccessory()->GetAspectAccessory()->GetSlotClassIdentifier()) == true));
 	}
 	else
 	{
@@ -384,7 +384,7 @@ void UI::OutfitShipDialog::_OnUnmountButtonUpdating(UI::Button * UnmountButton, 
 	if(_SelectedSlotListItem != 0)
 	{
 		assert(_SelectedSlotListItem->GetSlot().IsValid() == true);
-		if(_SelectedSlotListItem->GetSlot()->GetMountedObject().IsValid() == true)
+		if(_SelectedSlotListItem->GetSlot()->GetMountedObject() != nullptr)
 		{
 			assert(_SelectedSlotListItem->GetSlot()->GetMountedObject()->GetAspectPhysical() != 0);
 			UnmountButton->SetEnabled((_Ship->GetCargoHold()->GetSpace() >= _SelectedSlotListItem->GetSlot()->GetMountedObject()->GetAspectPhysical()->GetSpaceRequirement()));
@@ -411,7 +411,7 @@ void UI::OutfitShipDialog::_OnMountButtonClicked()
 	assert(_Ship.IsValid() == true);
 	_Ship->GetCargoHold()->GetAspectObjectContainer()->RemoveContent(Accessory.Get());
 	_Ship->GetAspectObjectContainer()->AddContent(Accessory.Get());
-	_SelectedSlotListItem->GetSlot()->Mount(Accessory);
+	_SelectedSlotListItem->GetSlot()->Mount(Accessory.Get());
 	_SelectedSlotListItem->Update();
 	_RebuildAccessoryList();
 }
@@ -425,17 +425,17 @@ void UI::OutfitShipDialog::_OnUnmountButtonClicked()
 {
 	assert(_SelectedSlotListItem != 0);
 	
-	Reference< Object > Accessory(_SelectedSlotListItem->GetSlot()->GetMountedObject());
+	Object * Accessory(_SelectedSlotListItem->GetSlot()->GetMountedObject());
 	
 	assert(_Ship.IsValid() == true);
-	assert(Accessory.IsValid() == true);
+	assert(Accessory != nullptr);
 	if(Accessory->GetAspectPhysical() != 0)
 	{
 		assert(_Ship->GetCargoHold()->GetSpace() >= Accessory->GetAspectPhysical()->GetSpaceRequirement());
 	}
 	_SelectedSlotListItem->GetSlot()->Unmount();
-	_Ship->GetAspectObjectContainer()->RemoveContent(Accessory.Get());
-	_Ship->GetCargoHold()->GetAspectObjectContainer()->AddContent(Accessory.Get());
+	_Ship->GetAspectObjectContainer()->RemoveContent(Accessory);
+	_Ship->GetCargoHold()->GetAspectObjectContainer()->AddContent(Accessory);
 	_SelectedSlotListItem->Update();
 	_RebuildAccessoryList();
 }

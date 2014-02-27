@@ -25,6 +25,7 @@
 #include <algebra/quaternion.h>
 #include <algebra/vector3f.h>
 
+#include "connection.h"
 #include "referencing.h"
 
 class Object;
@@ -37,8 +38,7 @@ public:
 	~Slot(void);
 	// getters
 	const std::string & GetIdentifier(void) const;
-	Reference< Object > & GetMountedObject(void);
-	const Reference< Object > & GetMountedObject(void) const;
+	Object * GetMountedObject(void);
 	const std::string & GetName(void) const;
 	const Quaternion & GetOrientation(void) const;
 	const Vector3f & GetPosition(void) const;
@@ -51,13 +51,15 @@ public:
 	void SetPosition(const Vector3f & Position);
 	void SetVisualizeAccessory(bool VisualizeAccessory);
 	// modifiers
-	void Mount(Reference< Object > TheObject);
+	void Mount(Object * TheObject);
 	void Unmount(void);
 private:
+	void _OnMountedObjectDestroying(void);
 	const SlotClass * _SlotClass;
 	std::string _Identifier;
 	std::string _Name;
-	Reference< Object > _MountedObject;
+	Object * _MountedObject;
+	Connection _MountedObjectDestroyingConnection;
 	Quaternion _Orientation;
 	Vector3f _Position;
 	Reference< Slot > _SelfReference;
@@ -69,12 +71,7 @@ inline const std::string & Slot::GetIdentifier(void) const
 	return _Identifier;
 }
 
-inline Reference< Object > & Slot::GetMountedObject(void)
-{
-	return _MountedObject;
-}
-
-inline const Reference< Object > & Slot::GetMountedObject(void) const
+inline Object * Slot::GetMountedObject(void)
 {
 	return _MountedObject;
 }

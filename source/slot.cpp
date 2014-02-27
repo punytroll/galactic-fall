@@ -28,7 +28,7 @@
 Slot::Slot(const SlotClass * SlotClass, const std::string & Identifier) :
 	_SlotClass(SlotClass),
 	_Identifier(Identifier),
-	_MountedObject(0),
+	_MountedObject(nullptr),
 	_SelfReference(*this),
 	_VisualizeAccessory(false)
 {
@@ -36,16 +36,21 @@ Slot::Slot(const SlotClass * SlotClass, const std::string & Identifier) :
 
 Slot::~Slot(void)
 {
+	assert(_MountedObject == nullptr);
+	assert(_MountedObjectDestroyingConnection.IsValid() == false);
 	_SelfReference.Invalidate();
 }
 
-void Slot::Mount(Reference< Object > TheObject)
+void Slot::Mount(Object * TheObject)
 {
-	assert(TheObject.IsValid() == true);
+	assert(_MountedObject == nullptr);
+	assert(_MountedObjectDestroyingConnection.IsValid() == false);
+	assert(TheObject != nullptr);
 	assert(TheObject->GetAspectAccessory() != 0);
 	assert(_SlotClass->AcceptsSlotClassIdentifier(TheObject->GetAspectAccessory()->GetSlotClassIdentifier()) == true);
 	_MountedObject = TheObject;
-	TheObject->GetAspectAccessory()->SetSlot(this);
+	_MountedObjectDestroyingConnection = _MountedObject->ConnectDestroyingCallback(std::bind(&Slot::_OnMountedObjectDestroying, this));
+	_MountedObject->GetAspectAccessory()->SetSlot(this);
 	if(_VisualizeAccessory == true)
 	{
 		assert(_MountedObject->GetAspectVisualization() != 0);
@@ -54,14 +59,23 @@ void Slot::Mount(Reference< Object > TheObject)
 		// only visualize if the parent object is visualized
 		for(auto Visualization : _MountedObject->GetContainer()->GetAspectVisualization()->GetVisualizations())
 		{
-			VisualizeObject(_MountedObject.Get(), Visualization->GetGraphics());
+			VisualizeObject(_MountedObject, Visualization->GetGraphics());
 		}
 	}
 }
 
+void Slot::_OnMountedObjectDestroying(void)
+{
+	assert(_MountedObject != nullptr);
+	assert(_MountedObjectDestroyingConnection.IsValid() == true);
+	_MountedObject->DisconnectDestroyingCallback(_MountedObjectDestroyingConnection);
+	assert(_MountedObjectDestroyingConnection.IsValid() == false);
+	_MountedObject = nullptr;
+}
+
 void Slot::Unmount(void)
 {
-	assert(_MountedObject.IsValid() == true);
+	assert(_MountedObject != nullptr);
 	if(_VisualizeAccessory == true)
 	{
 		assert(_MountedObject->GetAspectVisualization() != 0);
@@ -72,6 +86,9 @@ void Slot::Unmount(void)
 			_MountedObject->GetAspectVisualization()->DestroyVisualization(Visualization->GetGraphics());
 		}
 	}
+	assert(_MountedObjectDestroyingConnection.IsValid() == true);
+	_MountedObject->DisconnectDestroyingCallback(_MountedObjectDestroyingConnection);
+	assert(_MountedObjectDestroyingConnection.IsValid() == false);
 	_MountedObject->GetAspectAccessory()->SetSlot(0);
-	_MountedObject.Clear();
+	_MountedObject = nullptr;
 }

@@ -132,7 +132,7 @@ void Ship::SetFire(bool Fire)
 	for(auto & SlotPair : GetAspectOutfitting()->GetSlots())
 	{
 		// only update *mounted* *weapons*
-		auto MountedObject(SlotPair.second->GetMountedObject().Get());
+		auto MountedObject(SlotPair.second->GetMountedObject());
 		
 		if((MountedObject != 0) && (MountedObject->GetTypeIdentifier() == "weapon"))
 		{

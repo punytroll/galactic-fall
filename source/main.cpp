@@ -1222,7 +1222,7 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 	
 	NewBattery->SetObjectIdentifier("::battery(" + NewBattery->GetClassIdentifier() + ")::created_for(" + NewShip->GetObjectIdentifier() + ")" + IdentifierSuffix);
 	NewShip->GetAspectObjectContainer()->AddContent(NewBattery);
-	NewShip->GetAspectOutfitting()->GetSlot("battery")->Mount(NewBattery->GetReference());
+	NewShip->GetAspectOutfitting()->GetSlot("battery")->Mount(NewBattery);
 	
 	Character * NewCharacter(dynamic_cast< Character * >(g_ObjectFactory->Create("character", "")));
 	
@@ -1236,7 +1236,7 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 		
 		NewWeapon->SetObjectIdentifier("::weapon(" + NewWeapon->GetClassIdentifier() + ")::created_for(" + NewShip->GetObjectIdentifier() + ")" + IdentifierSuffix);
 		NewShip->GetAspectObjectContainer()->AddContent(NewWeapon);
-		NewShip->GetAspectOutfitting()->GetSlot("front_gun")->Mount(NewWeapon->GetReference());
+		NewShip->GetAspectOutfitting()->GetSlot("front_gun")->Mount(NewWeapon);
 	}
 	else if((ShipClassIdentifier == "transporter") || (ShipClassIdentifier == "shuttle"))
 	{
@@ -2234,7 +2234,7 @@ void LoadGameFromElement(const Element * SaveElement)
 							
 							assert(TheShip != 0);
 							assert(TheShip->GetAspectOutfitting() != 0);
-							TheShip->GetAspectOutfitting()->GetSlot((*AspectChild)->GetAttribute("slot-identifier"))->Mount(TheObject->GetReference());
+							TheShip->GetAspectOutfitting()->GetSlot((*AspectChild)->GetAttribute("slot-identifier"))->Mount(TheObject);
 						}
 					}
 				}

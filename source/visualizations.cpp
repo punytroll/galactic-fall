@@ -191,9 +191,9 @@ void VisualizeShip(Ship * Ship, Graphics::Node * Container)
 	
 	for(std::map< std::string, Slot * >::const_iterator SlotIterator = Slots.begin(); SlotIterator != Slots.end(); ++SlotIterator)
 	{
-		if((SlotIterator->second->GetVisualizeAccessory() == true) && (SlotIterator->second->GetMountedObject().IsValid() == true))
+		if((SlotIterator->second->GetVisualizeAccessory() == true) && (SlotIterator->second->GetMountedObject() != nullptr))
 		{
-			VisualizeObject(SlotIterator->second->GetMountedObject().Get(), Graphics);
+			VisualizeObject(SlotIterator->second->GetMountedObject(), Graphics);
 		}
 	}
 	// add engine glow particle system
