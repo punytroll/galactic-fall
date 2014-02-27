@@ -1070,7 +1070,6 @@ ui_button_h = \
 
 ui_dialog_cpp = \
 	ui/dialog.cpp \
-	$(callbacks_callbacks_h) \
 	$(ui_dialog_h)
 
 ui_dialog_h = \
@@ -1160,7 +1159,6 @@ ui_load_scenario_dialog_h = \
 
 ui_main_menu_window_cpp = \
 	ui/main_menu_window.cpp \
-	$(callbacks_callbacks_h) \
 	$(file_handling_h) \
 	$(key_event_information_h) \
 	$(scenario_h) \

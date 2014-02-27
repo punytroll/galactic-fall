@@ -17,7 +17,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include "../callbacks/callbacks.h"
 #include "dialog.h"
 
 UI::Dialog::Dialog(Widget * SupWidget) :
@@ -25,7 +24,7 @@ UI::Dialog::Dialog(Widget * SupWidget) :
 {
 }
 
-ConnectionHandle UI::Dialog::ConnectClosingCallback(Callback1< bool, UI::Dialog::ClosingReason > Callback)
+ConnectionHandle UI::Dialog::ConnectClosingCallback(std::function< bool (UI::Dialog::ClosingReason) > Callback)
 {
 	return _ClosingEvent.Connect(Callback);
 }

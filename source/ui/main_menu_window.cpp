@@ -20,7 +20,6 @@
 
 #include <fstream>
 
-#include "../callbacks/callbacks.h"
 #include "../file_handling.h"
 #include "../key_event_information.h"
 #include "../scenario.h"
@@ -139,7 +138,7 @@ void UI::MainMenuWindow::_OnLoadGameButtonClicked(void)
 	{
 		_LoadGameDialog = new UI::LoadGameDialog(GetRootWidget());
 		_LoadGameDialog->GrabKeyFocus();
-		_LoadGameDialog->ConnectClosingCallback(Callback(this, &UI::MainMenuWindow::_OnLoadGameDialogClosing));
+		_LoadGameDialog->ConnectClosingCallback(std::bind(&UI::MainMenuWindow::_OnLoadGameDialogClosing, this, std::placeholders::_1));
 		_LoadGameDialog->ConnectDestroyingCallback(std::bind(&UI::MainMenuWindow::_OnLoadGameDialogDestroying, this));
 		
 		std::string DirectoryPath(getenv("HOME"));
@@ -156,11 +155,11 @@ void UI::MainMenuWindow::_OnLoadGameButtonClicked(void)
 
 bool UI::MainMenuWindow::_OnLoadGameDialogClosing(UI::Dialog::ClosingReason ClosingReason)
 {
-	if((ClosingReason == UI::Dialog::CANCEL_BUTTON) || (ClosingReason == UI::Dialog::ESCAPE_KEY))
+	if((ClosingReason == UI::Dialog::ClosingReason::CANCEL_BUTTON) || (ClosingReason == UI::Dialog::ClosingReason::ESCAPE_KEY))
 	{
 		return true;
 	}
-	else if((ClosingReason == UI::Dialog::OK_BUTTON) || (ClosingReason == UI::Dialog::RETURN_KEY))
+	else if((ClosingReason == UI::Dialog::ClosingReason::OK_BUTTON) || (ClosingReason == UI::Dialog::ClosingReason::RETURN_KEY))
 	{
 		std::string FilePath(_LoadGameDialog->GetFilePath());
 		
@@ -200,7 +199,7 @@ bool UI::MainMenuWindow::_OnLoadGameDialogClosing(UI::Dialog::ClosingReason Clos
 	}
 	else
 	{
-		std::cerr << "Unknown closing reason '" << ClosingReason << "'." << std::endl;
+		std::cerr << "Unknown closing reason '" << static_cast< std::underlying_type< UI::Dialog::ClosingReason >::type >(ClosingReason) << "'." << std::endl;
 		assert(false);
 	}
 	
@@ -222,7 +221,7 @@ void UI::MainMenuWindow::_OnLoadScenarioButtonClicked(void)
 	{
 		_LoadScenarioDialog = new UI::LoadScenarioDialog(GetRootWidget(), _ScenarioManager);
 		_LoadScenarioDialog->GrabKeyFocus();
-		_LoadScenarioDialog->ConnectClosingCallback(Callback(this, &UI::MainMenuWindow::_OnLoadScenarioDialogClosing));
+		_LoadScenarioDialog->ConnectClosingCallback(std::bind(&UI::MainMenuWindow::_OnLoadScenarioDialogClosing, this, std::placeholders::_1));
 		_LoadScenarioDialog->ConnectDestroyingCallback(std::bind(&UI::MainMenuWindow::_OnLoadScenarioDialogDestroying, this));
 		_DestroyOnLoadScenarioDialogDestroy = false;
 	}
@@ -230,11 +229,11 @@ void UI::MainMenuWindow::_OnLoadScenarioButtonClicked(void)
 
 bool UI::MainMenuWindow::_OnLoadScenarioDialogClosing(UI::Dialog::ClosingReason ClosingReason)
 {
-	if((ClosingReason == UI::Dialog::CANCEL_BUTTON) || (ClosingReason == UI::Dialog::ESCAPE_KEY))
+	if((ClosingReason == UI::Dialog::ClosingReason::CANCEL_BUTTON) || (ClosingReason == UI::Dialog::ClosingReason::ESCAPE_KEY))
 	{
 		return true;
 	}
-	else if((ClosingReason == UI::Dialog::OK_BUTTON) || (ClosingReason == UI::Dialog::RETURN_KEY))
+	else if((ClosingReason == UI::Dialog::ClosingReason::OK_BUTTON) || (ClosingReason == UI::Dialog::ClosingReason::RETURN_KEY))
 	{
 		Scenario * Scenario(_LoadScenarioDialog->GetScenario());
 		
@@ -262,7 +261,7 @@ bool UI::MainMenuWindow::_OnLoadScenarioDialogClosing(UI::Dialog::ClosingReason 
 	}
 	else
 	{
-		std::cerr << "Unknown closing reason '" << ClosingReason << "'." << std::endl;
+		std::cerr << "Unknown closing reason '" << static_cast< std::underlying_type< UI::Dialog::ClosingReason >::type >(ClosingReason) << "'." << std::endl;
 		assert(false);
 	}
 	
@@ -295,7 +294,7 @@ void UI::MainMenuWindow::_OnSaveGameButtonClicked(void)
 	{
 		_SaveGameDialog = new UI::SaveGameDialog(GetRootWidget());
 		_SaveGameDialog->GrabKeyFocus();
-		_SaveGameDialog->ConnectClosingCallback(Callback(this, &UI::MainMenuWindow::_OnSaveGameDialogClosing));
+		_SaveGameDialog->ConnectClosingCallback(std::bind(&UI::MainMenuWindow::_OnSaveGameDialogClosing, this, std::placeholders::_1));
 		_SaveGameDialog->ConnectDestroyingCallback(std::bind(&UI::MainMenuWindow::_OnSaveGameDialogDestroying, this));
 		
 		std::string DirectoryPath(getenv("HOME"));
@@ -312,11 +311,11 @@ void UI::MainMenuWindow::_OnSaveGameButtonClicked(void)
 
 bool UI::MainMenuWindow::_OnSaveGameDialogClosing(UI::Dialog::ClosingReason ClosingReason)
 {
-	if((ClosingReason == UI::Dialog::CANCEL_BUTTON) || (ClosingReason == UI::Dialog::ESCAPE_KEY))
+	if((ClosingReason == UI::Dialog::ClosingReason::CANCEL_BUTTON) || (ClosingReason == UI::Dialog::ClosingReason::ESCAPE_KEY))
 	{
 		return true;
 	}
-	else if((ClosingReason == UI::Dialog::OK_BUTTON) || (ClosingReason == UI::Dialog::RETURN_KEY))
+	else if((ClosingReason == UI::Dialog::ClosingReason::OK_BUTTON) || (ClosingReason == UI::Dialog::ClosingReason::RETURN_KEY))
 	{
 		std::string FilePath(_SaveGameDialog->GetFilePath());
 		
@@ -348,7 +347,7 @@ bool UI::MainMenuWindow::_OnSaveGameDialogClosing(UI::Dialog::ClosingReason Clos
 	}
 	else
 	{
-		std::cerr << "Unknown closing reason '" << ClosingReason << "'." << std::endl;
+		std::cerr << "Unknown closing reason '" << static_cast< std::underlying_type< UI::Dialog::ClosingReason >::type >(ClosingReason) << "'." << std::endl;
 		assert(false);
 	}
 	
