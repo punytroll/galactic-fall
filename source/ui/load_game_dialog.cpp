@@ -68,7 +68,7 @@ UI::LoadGameDialog::LoadGameDialog(UI::Widget * SupWidget) :
 	m_OKButton->SetAnchorLeft(false);
 	m_OKButton->SetAnchorRight(true);
 	m_OKButton->SetAnchorTop(false);
-	m_OKButton->ConnectClickedCallback(std::bind(&UI::LoadGameDialog::_Close, this, UI::Dialog::OK_BUTTON));
+	m_OKButton->ConnectClickedCallback(std::bind(&UI::LoadGameDialog::_Close, this, UI::Dialog::ClosingReason::OK_BUTTON));
 	m_CancelButton = new UI::TextButton(this, "Cancel");
 	m_CancelButton->SetSize(Vector2f(100.0f, 20.0f));
 	m_CancelButton->SetPosition(Vector2f(GetSize()[0] - 10.0f - m_OKButton->GetSize()[0] - 10.0f - m_CancelButton->GetSize()[0], GetSize()[1] - 10.0f - m_CancelButton->GetSize()[1]));
@@ -76,7 +76,7 @@ UI::LoadGameDialog::LoadGameDialog(UI::Widget * SupWidget) :
 	m_CancelButton->SetAnchorLeft(false);
 	m_CancelButton->SetAnchorRight(true);
 	m_CancelButton->SetAnchorTop(false);
-	m_CancelButton->ConnectClickedCallback(std::bind(&UI::LoadGameDialog::_Close, this, UI::Dialog::CANCEL_BUTTON));
+	m_CancelButton->ConnectClickedCallback(std::bind(&UI::LoadGameDialog::_Close, this, UI::Dialog::ClosingReason::CANCEL_BUTTON));
 	m_ErrorMessage = new UI::Label(this);
 	m_ErrorMessage->SetPosition(Vector2f(10.0f, 40.0f));
 	m_ErrorMessage->SetSize(Vector2f(GetSize()[0] - 10.0f - 10.0f, 30.0f));
@@ -218,13 +218,13 @@ bool UI::LoadGameDialog::OnKey(const KeyEventInformation & KeyEventInformation)
 {
 	if((KeyEventInformation.GetKeyCode() == 9 /* ESCAPE */) && (KeyEventInformation.IsDown() == true))
 	{
-		_Close(ESCAPE_KEY);
+		_Close(UI::Dialog::ClosingReason::ESCAPE_KEY);
 		
 		return true;
 	}
 	else if((KeyEventInformation.GetKeyCode() == 36 /* RETURN */) && (KeyEventInformation.IsDown() == true))
 	{
-		_Close(RETURN_KEY);
+		_Close(UI::Dialog::ClosingReason::RETURN_KEY);
 		
 		return true;
 	}

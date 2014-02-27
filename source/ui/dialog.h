@@ -22,15 +22,12 @@
 
 #include "window.h"
 
-template < typename ReturnType, typename Argument1Type >
-class Callback1;
-
 namespace UI
 {
 	class Dialog : public Window
 	{
 	public:
-		enum ClosingReason
+		enum class ClosingReason
 		{
 			OK_BUTTON,
 			CANCEL_BUTTON,
@@ -40,15 +37,15 @@ namespace UI
 		// constructors & destructor
 		Dialog(Widget * SupWidget);
 		// connecting and disconnecting event callbacks
-		ConnectionHandle ConnectClosingCallback(Callback1< bool, Dialog::ClosingReason > Callback);
+		ConnectionHandle ConnectClosingCallback(std::function< bool (UI::Dialog::ClosingReason) > Callback);
 		void DisconnectClosingCallback(ConnectionHandle & ConnectionHandle);
 	protected:
 		// helper functions and actions
-		void _Close(Dialog::ClosingReason ClosingReason);
+		void _Close(UI::Dialog::ClosingReason ClosingReason);
 	private:
 		// member variables
 		//events
-		Event1< bool, Dialog::ClosingReason > _ClosingEvent;
+		Event1< bool, UI::Dialog::ClosingReason > _ClosingEvent;
 	};
 }
 
