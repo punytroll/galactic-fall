@@ -36,7 +36,7 @@ namespace UI
 		// modifiers
 		void UnsetTexture(void);
 		// draw
-		virtual void Draw(void) const;
+		virtual void Draw(void) override;
 	private:
 		std::string * _TextureIdentifier;
 	};

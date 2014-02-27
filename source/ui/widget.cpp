@@ -61,7 +61,7 @@ UI::Widget::~Widget(void)
 	m_DisabledBackgroundColor = 0;
 }
 
-void UI::Widget::Draw(void) const
+void UI::Widget::Draw(void)
 {
 	Color * Color((GetEnabled() == true) ? (m_BackgroundColor) : (m_DisabledBackgroundColor));
 	

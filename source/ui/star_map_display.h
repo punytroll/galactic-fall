@@ -31,7 +31,7 @@ namespace UI
 	{
 	public:
 		StarMapDisplay(UI::Widget * SupWidget, System * System, Character * Character);
-		virtual void Draw(void) const;
+		virtual void Draw(void) override;
 		System * GetSelectedSystem(void);
 	private:
 		// callbacks

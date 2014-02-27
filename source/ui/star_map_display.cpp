@@ -43,7 +43,7 @@ UI::StarMapDisplay::StarMapDisplay(Widget * SupWidget, System * System, Characte
 	ConnectMouseMovedCallback(std::bind(&UI::StarMapDisplay::OnMouseMoved, this, std::placeholders::_1, std::placeholders::_2));
 }
 
-void UI::StarMapDisplay::Draw(void) const
+void UI::StarMapDisplay::Draw(void)
 {
 	Widget::Draw();
 	

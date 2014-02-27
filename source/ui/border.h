@@ -38,7 +38,7 @@ namespace UI
 		void SetColor(const Color & Color);
 		void SetWidth(float Width);
 		// draw
-		virtual void Draw(void) const;
+		virtual void Draw(void) override;
 	private:
 		Color * _Color;
 		float _Width;

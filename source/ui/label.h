@@ -63,7 +63,7 @@ namespace UI
 		void SetHorizontalAlignment(UI::Label::HorizontalAlignment HorizontalAlignment);
 		void SetVerticalAlignment(UI::Label::VerticalAlignment VerticalAlignment);
 		// modifiers
-		virtual void Draw(void) const;
+		virtual void Draw(void) override;
 	private:
 		UI::Label::HorizontalAlignment m_HorizontalAlignment;
 		std::string m_Text;
