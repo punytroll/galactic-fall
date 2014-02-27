@@ -39,7 +39,6 @@
 #include "asset_class.h"
 #include "battery.h"
 #include "battery_class.h"
-#include "callbacks/callbacks.h"
 #include "character.h"
 #include "class_manager.h"
 #include "color.h"
@@ -3742,67 +3741,67 @@ int main(int argc, char ** argv)
 	UI::Label * CreditsLabel(dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/credits")));
 	
 	assert(CreditsLabel != 0);
-	CreditsLabel->ConnectUpdatingCallback(Bind1(Callback(UpdateCreditsLabel), CreditsLabel));
+	CreditsLabel->ConnectUpdatingCallback(std::bind(UpdateCreditsLabel, CreditsLabel, std::placeholders::_1, std::placeholders::_2));
 	
 	UI::Label * EnergyLabel(dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/energy")));
 	
 	assert(EnergyLabel != 0);
-	EnergyLabel->ConnectUpdatingCallback(Bind1(Callback(UpdateEnergyLabel), EnergyLabel));
+	EnergyLabel->ConnectUpdatingCallback(std::bind(UpdateEnergyLabel, EnergyLabel, std::placeholders::_1, std::placeholders::_2));
 	
 	UI::Label * FuelLabel(dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/fuel")));
 	
 	assert(FuelLabel != 0);
-	FuelLabel->ConnectUpdatingCallback(Bind1(Callback(UpdateFuelLabel), FuelLabel));
+	FuelLabel->ConnectUpdatingCallback(std::bind(UpdateFuelLabel, FuelLabel, std::placeholders::_1, std::placeholders::_2));
 	
 	UI::Label * HullLabel(dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/hull")));
 	
 	assert(HullLabel != 0);
-	HullLabel->ConnectUpdatingCallback(Bind1(Callback(UpdateHullLabel), HullLabel));
+	HullLabel->ConnectUpdatingCallback(std::bind(UpdateHullLabel, HullLabel, std::placeholders::_1, std::placeholders::_2));
 	
 	UI::Label * LinkedSystemTargetLabel(dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/system")));
 	
 	assert(LinkedSystemTargetLabel != 0);
-	LinkedSystemTargetLabel->ConnectUpdatingCallback(Bind1(Callback(UpdateLinkedSystemTargetLabel), LinkedSystemTargetLabel));
+	LinkedSystemTargetLabel->ConnectUpdatingCallback(std::bind(UpdateLinkedSystemTargetLabel, LinkedSystemTargetLabel, std::placeholders::_1, std::placeholders::_2));
 	
 	UI::Widget * MiniMap(g_UserInterface->GetWidget("/mini_map"));
 	
 	assert(MiniMap != 0);
-	MiniMap->ConnectUpdatingCallback(Bind1(Callback(UpdateMiniMap), MiniMap));
+	MiniMap->ConnectUpdatingCallback(std::bind(UpdateMiniMap, MiniMap, std::placeholders::_1, std::placeholders::_2));
 	
 	UI::MiniMapDisplay * MiniMapDisplay(dynamic_cast< UI::MiniMapDisplay * >(g_UserInterface->GetWidget("/mini_map/display")));
 	
 	assert(MiniMapDisplay != 0);
-	MiniMapDisplay->ConnectUpdatingCallback(Bind1(Callback(UpdateMiniMapDisplay), MiniMapDisplay));
+	MiniMapDisplay->ConnectUpdatingCallback(std::bind(UpdateMiniMapDisplay, MiniMapDisplay, std::placeholders::_1, std::placeholders::_2));
 	
 	UI::Widget * Scanner(g_UserInterface->GetWidget("/scanner"));
 	
 	assert(Scanner != 0);
-	Scanner->ConnectUpdatingCallback(Bind1(Callback(UpdateScanner), Scanner));
+	Scanner->ConnectUpdatingCallback(std::bind(UpdateScanner, Scanner, std::placeholders::_1, std::placeholders::_2));
 	
 	UI::ScannerDisplay * ScannerDisplay(dynamic_cast< UI::ScannerDisplay * >(g_UserInterface->GetWidget("/scanner/display")));
 	
 	assert(ScannerDisplay != 0);
-	ScannerDisplay->ConnectUpdatingCallback(Bind1(Callback(UpdateScannerDisplay), ScannerDisplay));
+	ScannerDisplay->ConnectUpdatingCallback(std::bind(UpdateScannerDisplay, ScannerDisplay, std::placeholders::_1, std::placeholders::_2));
 	
 	UI::Label * SystemNameLabel(dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/mini_map/current_system")));
 	
 	assert(SystemNameLabel != 0);
-	SystemNameLabel->ConnectUpdatingCallback(Bind1(Callback(UpdateSystemNameLabel), SystemNameLabel));
+	SystemNameLabel->ConnectUpdatingCallback(std::bind(UpdateSystemNameLabel, SystemNameLabel, std::placeholders::_1, std::placeholders::_2));
 	
 	UI::Label * TargetFactionNameLabel(dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/scanner/target_faction")));
 	
 	assert(TargetFactionNameLabel != 0);
-	TargetFactionNameLabel->ConnectUpdatingCallback(Bind1(Callback(UpdateTargetFactionNameLabel), TargetFactionNameLabel));
+	TargetFactionNameLabel->ConnectUpdatingCallback(std::bind(UpdateTargetFactionNameLabel, TargetFactionNameLabel, std::placeholders::_1, std::placeholders::_2));
 	
 	UI::Label * TargetNameLabel(dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/scanner/target")));
 	
 	assert(TargetNameLabel != 0);
-	TargetNameLabel->ConnectUpdatingCallback(Bind1(Callback(UpdateTargetNameLabel), TargetNameLabel));
+	TargetNameLabel->ConnectUpdatingCallback(std::bind(UpdateTargetNameLabel, TargetNameLabel, std::placeholders::_1, std::placeholders::_2));
 	
 	UI::Label * TimeWarpLabel(dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/time_warp")));
 	
 	assert(TimeWarpLabel != 0);
-	TimeWarpLabel->ConnectUpdatingCallback(Bind1(Callback(UpdateTimeWarpLabel), TimeWarpLabel));
+	TimeWarpLabel->ConnectUpdatingCallback(std::bind(UpdateTimeWarpLabel, TimeWarpLabel, std::placeholders::_1, std::placeholders::_2));
 	
 	// resize here after the graphics have been set up
 	Resize();

@@ -520,7 +520,6 @@ main_cpp = \
 	$(asset_class_h) \
 	$(battery_h) \
 	$(battery_class_h) \
-	$(callbacks_callbacks_h) \
 	$(character_h) \
 	$(class_manager_h) \
 	$(color_h) \
@@ -1324,7 +1323,6 @@ ui_save_game_dialog_h = \
 
 ui_scanner_display_cpp = \
 	ui/scanner_display.cpp \
-	$(callbacks_callbacks_h) \
 	$(color_h) \
 	$(globals_h) \
 	$(graphics_camera_h) \

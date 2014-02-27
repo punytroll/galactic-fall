@@ -77,7 +77,7 @@ UI::TradeCenterAssetClass::TradeCenterAssetClass(UI::Widget * SupWidget, PlanetA
 	_PlanetAssetClass(PlanetAssetClass),
 	_Ship(Ship)
 {
-	ConnectUpdatingCallback(Callback(this, &UI::TradeCenterAssetClass::_OnUpdating));
+	ConnectUpdatingCallback(std::bind(&UI::TradeCenterAssetClass::_OnUpdating, this, std::placeholders::_1, std::placeholders::_2));
 	
 	UI::Label * PlanetAssetClassNameLabel(new UI::Label(this, PlanetAssetClass->GetAssetClass()->GetName()));
 	
@@ -125,7 +125,7 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Reference< Plan
 	SetSize(Vector2f(600.0f, 300.0f));
 	ConnectDestroyingCallback(std::bind(&UI::TradeCenterWidget::_OnDestroying, this));
 	ConnectKeyCallback(Callback(this, &UI::TradeCenterWidget::_OnKey));
-	ConnectUpdatingCallback(Callback(this, &UI::TradeCenterWidget::_OnUpdating));
+	ConnectUpdatingCallback(std::bind(&UI::TradeCenterWidget::_OnUpdating, this, std::placeholders::_1, std::placeholders::_2));
 	
 	UI::Button * BuyButton(new UI::TextButton(this, "Buy"));
 	
@@ -134,7 +134,7 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Reference< Plan
 	BuyButton->SetAnchorBottom(true);
 	BuyButton->SetAnchorTop(false);
 	BuyButton->ConnectClickedCallback(Callback(this, &UI::TradeCenterWidget::_OnBuyButtonClicked));
-	BuyButton->ConnectUpdatingCallback(Bind1(Callback(this, &UI::TradeCenterWidget::_OnBuyButtonUpdating), BuyButton));
+	BuyButton->ConnectUpdatingCallback(std::bind(&UI::TradeCenterWidget::_OnBuyButtonUpdating, this, BuyButton, std::placeholders::_1, std::placeholders::_2));
 	
 	UI::Button * SellButton(new UI::TextButton(this, "Sell"));
 	
@@ -143,7 +143,7 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Reference< Plan
 	SellButton->SetAnchorBottom(true);
 	SellButton->SetAnchorTop(false);
 	SellButton->ConnectClickedCallback(Callback(this, &UI::TradeCenterWidget::_OnSellButtonClicked));
-	SellButton->ConnectUpdatingCallback(Bind1(Callback(this, &UI::TradeCenterWidget::_OnSellButtonUpdating), SellButton));
+	SellButton->ConnectUpdatingCallback(std::bind(&UI::TradeCenterWidget::_OnSellButtonUpdating, this, SellButton, std::placeholders::_1, std::placeholders::_2));
 	_AssetClassScrollBox = new UI::ScrollBox(this);
 	_AssetClassScrollBox->SetPosition(Vector2f(0.0f, 0.0f));
 	_AssetClassScrollBox->SetSize(Vector2f(490.0f, 210.0f));

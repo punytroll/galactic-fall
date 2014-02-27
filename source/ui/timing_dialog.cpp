@@ -31,7 +31,7 @@ UI::TimingDialog::TimingDialog(UI::Widget * SupWidget) :
 	SetPosition(Vector2f(300.0f, 300.0f));
 	SetSize(Vector2f(350.0f, 400.0f));
 	ConnectKeyCallback(Callback(this, &UI::TimingDialog::_OnKey));
-	ConnectUpdatingCallback(Callback(this, &UI::TimingDialog::_OnUpdating));
+	ConnectUpdatingCallback(std::bind(&UI::TimingDialog::_OnUpdating, this, std::placeholders::_1, std::placeholders::_2));
 	
 	UI::Label * FramesPerSecondCaptionLabel(new UI::Label(this, "Frames per Second:"));
 	

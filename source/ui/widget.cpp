@@ -415,7 +415,7 @@ ConnectionHandle UI::Widget::ConnectSizeChangedCallback(Callback0< void > Callba
 	return _SizeChangedEvent.Connect(Callback);
 }
 
-ConnectionHandle UI::Widget::ConnectUpdatingCallback(Callback2< void, float, float > Callback)
+ConnectionHandle UI::Widget::ConnectUpdatingCallback(std::function< void (float, float) > Callback)
 {
 	return _UpdatingEvent.Connect(Callback);
 }
