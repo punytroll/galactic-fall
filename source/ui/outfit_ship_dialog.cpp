@@ -43,48 +43,56 @@ namespace UI
 	class AccessoryListItem : public UI::Widget
 	{
 	public:
-		AccessoryListItem(UI::Widget * SupWidget, Reference< Object > Accessory);
+		AccessoryListItem(UI::Widget * SupWidget, Object * Accessory);
+		virtual ~AccessoryListItem(void);
 		void Update(void);
 		// getters
-		Reference< Object > GetAccessory(void);
+		Object * GetAccessory(void);
 		// setters
 		void SetSelected(bool Selected);
 	private:
 		// callbacks
 		void _OnMouseEnter(void);
 		void _OnMouseLeave(void);
+		void _OnAccessoryDestroying(void);
 		// member variables
-		Reference< Object > _Accessory;
+		Object * _Accessory;
+		Connection _AccessoryDestroyingConnection;
 		bool _Selected;
 	};
 	
 	class SlotListItem : public UI::Widget
 	{
 	public:
-		SlotListItem(UI::Widget * SupWidget, Reference< Slot > Slot);
+		SlotListItem(UI::Widget * SupWidget, Slot * Slot);
+		virtual ~SlotListItem(void);
 		void Update(void);
 		// getters
-		Reference< Slot > GetSlot(void);
+		Slot * GetSlot(void);
 		// setters
 		void SetSelected(bool Selected);
 	private:
 		// callbacks
 		void _OnMouseEnter(void);
 		void _OnMouseLeave(void);
+		void _OnSlotDestroying(void);
 		// member variables
 		bool _Selected;
-		Reference< Slot> _Slot;
+		Slot * _Slot;
+		Connection _SlotDestroyingConnection;
 		UI::Label * _TypeOrWeaponLabel;
 	};
 }
 
-UI::AccessoryListItem::AccessoryListItem(UI::Widget * SupWidget, Reference< Object > Accessory) :
+UI::AccessoryListItem::AccessoryListItem(UI::Widget * SupWidget, Object * Accessory) :
 	UI::Widget(SupWidget),
 	_Accessory(Accessory),
 	_Selected(false)
 {
+	assert(_Accessory != nullptr);
 	ConnectMouseEnterCallback(std::bind(&UI::AccessoryListItem::_OnMouseEnter, this));
 	ConnectMouseLeaveCallback(std::bind(&UI::AccessoryListItem::_OnMouseLeave, this));
+	_AccessoryDestroyingConnection = _Accessory->ConnectDestroyingCallback(std::bind(&UI::AccessoryListItem::_OnAccessoryDestroying, this));
 	// set to arbitrary design size
 	SetSize(Vector2f(100.0f, 100.0f));
 	// safe-guard: only accept objects with a name aspect
@@ -111,7 +119,18 @@ UI::AccessoryListItem::AccessoryListItem(UI::Widget * SupWidget, Reference< Obje
 	SlotTypeLabel->SetAnchorTop(true);
 }
 
-Reference< Object > UI::AccessoryListItem::GetAccessory(void)
+UI::AccessoryListItem::~AccessoryListItem(void)
+{
+	if(_Accessory != nullptr)
+	{
+		assert(_AccessoryDestroyingConnection.IsValid() == true);
+		_Accessory->DisconnectDestroyingCallback(_AccessoryDestroyingConnection);
+		assert(_AccessoryDestroyingConnection.IsValid() == false);
+		_Accessory = nullptr;
+	}
+}
+
+Object * UI::AccessoryListItem::GetAccessory(void)
 {
 	return _Accessory;
 }
@@ -145,13 +164,24 @@ void UI::AccessoryListItem::_OnMouseLeave(void)
 	}
 }
 
-UI::SlotListItem::SlotListItem(UI::Widget * SupWidget, Reference< Slot > Slot) :
+void UI::AccessoryListItem::_OnAccessoryDestroying(void)
+{
+	assert(_Accessory != nullptr);
+	assert(_AccessoryDestroyingConnection.IsValid() == true);
+	_Accessory->DisconnectDestroyingCallback(_AccessoryDestroyingConnection);
+	assert(_AccessoryDestroyingConnection.IsValid() == false);
+	_Accessory = nullptr;
+}
+
+UI::SlotListItem::SlotListItem(UI::Widget * SupWidget, Slot * Slot) :
 	UI::Widget(SupWidget),
 	_Selected(false),
 	_Slot(Slot)
 {
+	assert(_Slot != nullptr);
 	ConnectMouseEnterCallback(std::bind(&UI::SlotListItem::_OnMouseEnter, this));
 	ConnectMouseLeaveCallback(std::bind(&UI::SlotListItem::_OnMouseLeave, this));
+	_SlotDestroyingConnection = _Slot->ConnectDestroyingCallback(std::bind(&UI::SlotListItem::_OnSlotDestroying, this));
 	// set to arbitrary design size
 	SetSize(Vector2f(100.0f, 100.0f));
 	
@@ -173,23 +203,44 @@ UI::SlotListItem::SlotListItem(UI::Widget * SupWidget, Reference< Slot > Slot) :
 	Update();
 }
 
-void UI::SlotListItem::Update(void)
+UI::SlotListItem::~SlotListItem(void)
 {
-	Object * MountedObject(dynamic_cast< Object * >(_Slot->GetMountedObject()));
-	
-	if(MountedObject != 0)
+	if(_Slot != nullptr)
 	{
-		_TypeOrWeaponLabel->SetText(MountedObject->GetAspectName()->GetName());
-		_TypeOrWeaponLabel->SetTextColor(Color(0.6f, 0.8f, 0.6f, 1.0f));
-	}
-	else
-	{
-		_TypeOrWeaponLabel->SetText(_Slot->GetSlotClass()->GetName());
-		_TypeOrWeaponLabel->SetTextColor(Color(0.8f, 0.6f, 0.6f, 1.0f));
+		assert(_SlotDestroyingConnection.IsValid() == true);
+		_Slot->DisconnectDestroyingCallback(_SlotDestroyingConnection);
+		assert(_SlotDestroyingConnection.IsValid() == false);
+		_Slot = nullptr;
 	}
 }
 
-Reference< Slot > UI::SlotListItem::GetSlot(void)
+void UI::SlotListItem::Update(void)
+{
+	if(_Slot != nullptr)
+	{
+		Object * MountedObject(_Slot->GetMountedObject());
+		
+		if(MountedObject != nullptr)
+		{
+			assert(MountedObject->GetAspectName() != nullptr);
+			_TypeOrWeaponLabel->SetText(MountedObject->GetAspectName()->GetName());
+			_TypeOrWeaponLabel->SetTextColor(Color(0.6f, 0.8f, 0.6f, 1.0f));
+		}
+		else
+		{
+			assert(_Slot->GetSlotClass() != nullptr);
+			_TypeOrWeaponLabel->SetText(_Slot->GetSlotClass()->GetName());
+			_TypeOrWeaponLabel->SetTextColor(Color(0.8f, 0.6f, 0.6f, 1.0f));
+		}
+	}
+	else
+	{
+		_TypeOrWeaponLabel->SetText("<slot destroyed>");
+		_TypeOrWeaponLabel->SetTextColor(Color(1.0f, 0.0f, 0.0f, 1.0f));
+	}
+}
+
+Slot * UI::SlotListItem::GetSlot(void)
 {
 	return _Slot;
 }
@@ -221,6 +272,15 @@ void UI::SlotListItem::_OnMouseLeave(void)
 	{
 		UnsetBackgroundColor();
 	}
+}
+
+void UI::SlotListItem::_OnSlotDestroying(void)
+{
+	assert(_Slot != nullptr);
+	assert(_SlotDestroyingConnection.IsValid() == true);
+	_Slot->DisconnectDestroyingCallback(_SlotDestroyingConnection);
+	assert(_SlotDestroyingConnection.IsValid() == false);
+	_Slot = nullptr;
 }
 
 UI::OutfitShipDialog::OutfitShipDialog(UI::Widget * SupWidget, Reference< Ship > Ship) :
@@ -255,7 +315,7 @@ UI::OutfitShipDialog::OutfitShipDialog(UI::Widget * SupWidget, Reference< Ship >
 	
 	for(std::map< std::string, Slot * >::const_iterator SlotIterator = Slots.begin(); SlotIterator != Slots.end(); ++SlotIterator)
 	{
-		SlotListItem * NewSlotListItem(new SlotListItem(_SlotScrollBox->GetContent(), SlotIterator->second->GetReference()));
+		SlotListItem * NewSlotListItem(new SlotListItem(_SlotScrollBox->GetContent(), SlotIterator->second));
 		
 		NewSlotListItem->SetPosition(Vector2f(5.0f, Top));
 		NewSlotListItem->SetSize(Vector2f(_SlotScrollBox->GetContent()->GetSize()[0] - 10.0f, 50.0f));
@@ -323,12 +383,12 @@ void UI::OutfitShipDialog::_RebuildAccessoryList(void)
 {
 	// empty the weapon list first
 	// save the selected weapon so we can reselect it if it is available after the rebuild
-	Reference< Object > SelectedAccessory;
+	Object * SelectedAccessory(nullptr);
 	
-	if(_SelectedAccessoryListItem != 0)
+	if(_SelectedAccessoryListItem != nullptr)
 	{
 		SelectedAccessory = _SelectedAccessoryListItem->GetAccessory();
-		_SelectedAccessoryListItem = 0;
+		_SelectedAccessoryListItem = nullptr;
 	}
 	while(_AccessoryScrollBox->GetContent()->GetSubWidgets().empty() == false)
 	{
@@ -339,22 +399,19 @@ void UI::OutfitShipDialog::_RebuildAccessoryList(void)
 	assert(_Ship->GetCargoHold() != 0);
 	assert(_Ship->GetCargoHold()->GetAspectObjectContainer() != 0);
 	
-	const std::set< Object * > & Content(_Ship->GetCargoHold()->GetAspectObjectContainer()->GetContent());
 	float Top(5.0f);
 	
-	for(std::set< Object * >::iterator ContentIterator = Content.begin(); ContentIterator != Content.end(); ++ContentIterator)
+	for(auto Content : _Ship->GetCargoHold()->GetAspectObjectContainer()->GetContent())
 	{
-		Reference< Object > ContentObject((*ContentIterator)->GetReference());
-		
-		if((ContentObject->GetAspectAccessory() != 0) && (ContentObject->GetAspectAccessory()->GetSlot() == 0))
+		if((Content->GetAspectAccessory() != 0) && (Content->GetAspectAccessory()->GetSlot() == 0))
 		{
-			AccessoryListItem * NewAccessoryListItem(new UI::AccessoryListItem(_AccessoryScrollBox->GetContent(), ContentObject));
+			AccessoryListItem * NewAccessoryListItem(new UI::AccessoryListItem(_AccessoryScrollBox->GetContent(), Content));
 			
 			NewAccessoryListItem->SetPosition(Vector2f(5.0f, Top));
 			NewAccessoryListItem->SetSize(Vector2f(_AccessoryScrollBox->GetContent()->GetSize()[0] - 10.0f, 50.0f));
 			NewAccessoryListItem->SetAnchorRight(true);
 			NewAccessoryListItem->ConnectMouseButtonCallback(std::bind(&UI::OutfitShipDialog::_OnAccessoryListItemMouseButton, this, NewAccessoryListItem, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4));
-			if(ContentObject == SelectedAccessory)
+			if(Content== SelectedAccessory)
 			{
 				_SelectedAccessoryListItem = NewAccessoryListItem;
 				_SelectedAccessoryListItem->SetSelected(true);
@@ -370,7 +427,7 @@ void UI::OutfitShipDialog::_OnMountButtonUpdating(UI::Button * MountButton, floa
 {
 	if(_SelectedSlotListItem != 0)
 	{
-		assert(_SelectedSlotListItem->GetSlot().IsValid() == true);
+		assert(_SelectedSlotListItem->GetSlot() != nullptr);
 		MountButton->SetEnabled((_SelectedSlotListItem->GetSlot()->GetMountedObject() == nullptr) && (_SelectedAccessoryListItem != 0) && (_SelectedSlotListItem->GetSlot()->GetSlotClass()->AcceptsSlotClassIdentifier(_SelectedAccessoryListItem->GetAccessory()->GetAspectAccessory()->GetSlotClassIdentifier()) == true));
 	}
 	else
@@ -383,7 +440,7 @@ void UI::OutfitShipDialog::_OnUnmountButtonUpdating(UI::Button * UnmountButton, 
 {
 	if(_SelectedSlotListItem != 0)
 	{
-		assert(_SelectedSlotListItem->GetSlot().IsValid() == true);
+		assert(_SelectedSlotListItem->GetSlot() != nullptr);
 		if(_SelectedSlotListItem->GetSlot()->GetMountedObject() != nullptr)
 		{
 			assert(_SelectedSlotListItem->GetSlot()->GetMountedObject()->GetAspectPhysical() != 0);
@@ -405,13 +462,13 @@ void UI::OutfitShipDialog::_OnMountButtonClicked()
 	assert(_SelectedAccessoryListItem != 0);
 	assert(_SelectedSlotListItem != 0);
 	
-	Reference< Object > Accessory(_SelectedAccessoryListItem->GetAccessory());
+	Object * Accessory(_SelectedAccessoryListItem->GetAccessory());
 	
-	assert(Accessory.IsValid() == true);
+	assert(Accessory != nullptr);
 	assert(_Ship.IsValid() == true);
-	_Ship->GetCargoHold()->GetAspectObjectContainer()->RemoveContent(Accessory.Get());
-	_Ship->GetAspectObjectContainer()->AddContent(Accessory.Get());
-	_SelectedSlotListItem->GetSlot()->Mount(Accessory.Get());
+	_Ship->GetCargoHold()->GetAspectObjectContainer()->RemoveContent(Accessory);
+	_Ship->GetAspectObjectContainer()->AddContent(Accessory);
+	_SelectedSlotListItem->GetSlot()->Mount(Accessory);
 	_SelectedSlotListItem->Update();
 	_RebuildAccessoryList();
 }

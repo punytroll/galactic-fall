@@ -26,10 +26,9 @@
 #include "visualizations.h"
 
 Slot::Slot(const SlotClass * SlotClass, const std::string & Identifier) :
-	_SlotClass(SlotClass),
 	_Identifier(Identifier),
 	_MountedObject(nullptr),
-	_SelfReference(*this),
+	_SlotClass(SlotClass),
 	_VisualizeAccessory(false)
 {
 }
@@ -38,7 +37,7 @@ Slot::~Slot(void)
 {
 	assert(_MountedObject == nullptr);
 	assert(_MountedObjectDestroyingConnection.IsValid() == false);
-	_SelfReference.Invalidate();
+	_DestroyingEvent();
 }
 
 void Slot::Mount(Object * TheObject)
@@ -91,4 +90,14 @@ void Slot::Unmount(void)
 	assert(_MountedObjectDestroyingConnection.IsValid() == false);
 	_MountedObject->GetAspectAccessory()->SetSlot(0);
 	_MountedObject = nullptr;
+}
+
+Connection Slot::ConnectDestroyingCallback(std::function< void (void) > Callback)
+{
+	return _DestroyingEvent.Connect(Callback);
+}
+
+void Slot::DisconnectDestroyingCallback(Connection & Connection)
+{
+	_DestroyingEvent.Disconnect(Connection);
 }
