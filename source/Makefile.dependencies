@@ -509,9 +509,6 @@ key_event_information_cpp = \
 key_event_information_h = \
 	key_event_information.h
 
-list_h = \
-	list.h
-
 main_cpp = \
 	main.cpp \
 	$(arx_reading_h) \
