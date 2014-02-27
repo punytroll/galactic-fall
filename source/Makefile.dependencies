@@ -82,15 +82,6 @@ buffer_reading_h = \
 	buffer_reading.h \
 	$(color_h)
 
-callbacks_connection_handle_h = \
-	callbacks/connection_handle.h
-
-callbacks_events_h = \
-	callbacks/events.h \
-	$(callbacks_connection_handle_h) \
-	$(callbacks_events_inc) \
-	$(list_h)
-
 character_cpp = \
 	character.cpp \
 	$(character_h) \
@@ -160,6 +151,13 @@ commodity_class_h = \
 	commodity_class.h \
 	$(type_definitions_h)
 
+connection_cpp = \
+	connection.cpp \
+	$(connection_h)
+
+connection_h = \
+	connection.h
+
 draw_text_cpp = \
 	draw_text.cpp \
 	$(globals_h) \
@@ -172,6 +170,10 @@ draw_text_cpp = \
 
 draw_text_h = \
 	draw_text.h
+
+events_h = \
+	events.h \
+	$(connection_h)
 
 faction_cpp = \
 	faction.cpp \
@@ -674,7 +676,7 @@ object_cpp = \
 
 object_h = \
 	object.h \
-	$(callbacks_events_h) \
+	$(events_h) \
 	$(referencing_h)
 
 object_aspect_accessory_cpp = \
@@ -1444,7 +1446,7 @@ ui_user_interface_cpp = \
 
 ui_user_interface_h = \
 	ui/user_interface.h \
-	$(callbacks_connection_handle_h)
+	$(connection_h)
 
 ui_view_display_cpp = \
 	ui/view_display.cpp \
@@ -1469,7 +1471,7 @@ ui_widget_cpp = \
 
 ui_widget_h = \
 	ui/widget.h \
-	$(callbacks_events_h)
+	$(events_h)
 
 ui_window_cpp = \
 	ui/window.cpp \

@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2009  Hagen Möbius
+ * Copyright (C) 2014  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,41 +17,30 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef CONNECTION_HANDLE_H
-#define CONNECTION_HANDLE_H
+#ifndef CONNECTION_H
+#define CONNECTION_H
 
-#include <assert.h>
-
-class ConnectionHandle
+class Connection
 {
 public:
-	ConnectionHandle(void) :
-		_Handle(0)
+	class Core
 	{
-	}
+	public:
+		Core(void);
+		~Core(void);
+		int _References;
+	};
 	
-	ConnectionHandle(void * Handle) :
-		_Handle(Handle)
-	{
-	}
-	
-	bool IsValid(void) const
-	{
-		return _Handle != 0;
-	}
-	
-	void * GetHandle(void)
-	{
-		return _Handle;
-	}
-	
-	void Invalidate(void)
-	{
-		assert(_Handle != 0);
-		_Handle = 0;
-	}
+	Connection(void);
+	Connection(Core * Core);
+	Connection(const Connection & Connection);
+	Connection & operator=(const Connection & Other);
+	~Connection(void);
+	bool IsValid(void);
+	void * GetCore(void);
+	void Invalidate(void);
 private:
-	void * _Handle;
+	Core * _Core;
 };
 
 #endif

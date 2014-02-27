@@ -33,8 +33,8 @@ namespace UI
 		Button(UI::Widget * SupWidget);
 		virtual ~Button(void);
 		// connect and disconnect events
-		ConnectionHandle ConnectClickedCallback(std::function< void (void) > ClickedHandler);
-		void DisconnectClickedCallback(ConnectionHandle & ConnectionHandle);
+		Connection ConnectClickedCallback(std::function< void (void) > ClickedHandler);
+		void DisconnectClickedCallback(Connection & Connection);
 	private:
 		// callbacks
 		bool _OnMouseButton(int Button, int State, float X, float Y);
@@ -42,7 +42,7 @@ namespace UI
 		void _OnMouseLeave(void);
 		// member variables
 		// events
-		Event0< void > _ClickedEvent;
+		Event< void > _ClickedEvent;
 	};
 }
 

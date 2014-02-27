@@ -96,7 +96,7 @@ Ship::~Ship(void)
 	assert(_Generator == nullptr);
 	if(_Target != nullptr)
 	{
-		_Target->DisconnectDestroyingCallback(_TargetDestroyingConnectionHandle);
+		_Target->DisconnectDestroyingCallback(_TargetDestroyingConnection);
 	}
 	g_GraphicsEngine->RemoveParticleSystem(_EngineGlowParticleSystem);
 	delete _EngineGlowParticleSystem;
@@ -450,13 +450,13 @@ void Ship::SetTarget(Object * Target)
 	{
 		if(_Target != nullptr)
 		{
-			_Target->DisconnectDestroyingCallback(_TargetDestroyingConnectionHandle);
+			_Target->DisconnectDestroyingCallback(_TargetDestroyingConnection);
 			_Target = nullptr;
 		}
 		if(Target != nullptr)
 		{
 			_Target = Target;
-			_TargetDestroyingConnectionHandle = _Target->ConnectDestroyingCallback(std::bind(&Ship::_OnTargetDestroying, this));
+			_TargetDestroyingConnection = _Target->ConnectDestroyingCallback(std::bind(&Ship::_OnTargetDestroying, this));
 		}
 	}
 }

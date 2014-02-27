@@ -39,8 +39,8 @@ namespace UI
 		ScrollBar(UI::Widget * SupWidget, ScrollBar::Alignment Alignment);
 		virtual ~ScrollBar(void);
 		// events
-		ConnectionHandle ConnectScrollPositionChangedCallback(std::function< void (void) > Callback);
-		void DisconnectScrollPositionChangedCallback(ConnectionHandle ConnectionHandle);
+		Connection ConnectScrollPositionChangedCallback(std::function< void (void) > Callback);
+		void DisconnectScrollPositionChangedCallback(Connection & Connection);
 		// getters
 		UI::ScrollBar::Alignment GetAlignment(void) const;
 		float GetCurrentPosition(void) const;
@@ -78,7 +78,7 @@ namespace UI
 		float m_MaximumPosition;
 		float m_StepSize;
 		// events
-		Event0< void > _ScrollPositionChangedEvent;
+		Event< void > _ScrollPositionChangedEvent;
 	};
 
 	inline ScrollBar::Alignment ScrollBar::GetAlignment(void) const

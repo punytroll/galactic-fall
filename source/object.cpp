@@ -138,14 +138,14 @@ void Object::AddAspectVisualization(void)
 	_AspectVisualization = new ObjectAspectVisualization();
 }
 
-ConnectionHandle Object::ConnectDestroyingCallback(std::function< void (void) > Callback)
+Connection Object::ConnectDestroyingCallback(std::function< void (void) > Callback)
 {
 	return _DestroyingEvent.Connect(Callback);
 }
 
-void Object::DisconnectDestroyingCallback(ConnectionHandle & ConnectionHandle)
+void Object::DisconnectDestroyingCallback(Connection & Connection)
 {
-	_DestroyingEvent.Disconnect(ConnectionHandle);
+	_DestroyingEvent.Disconnect(Connection);
 }
 
 void Object::SetContainer(Object * Container)

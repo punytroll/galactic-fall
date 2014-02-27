@@ -129,7 +129,7 @@ private:
 	bool m_Scoop;
 	bool m_TakeOff;
 	Object * _Target;
-	ConnectionHandle _TargetDestroyingConnectionHandle;
+	Connection _TargetDestroyingConnection;
 	float m_TurnLeft;
 	float m_TurnRight;
 	Vector3f m_Velocity;
