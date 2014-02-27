@@ -55,7 +55,7 @@ UI::MainMenuWindow::MainMenuWindow(UI::Widget * SupWidget, ScenarioManager * Sce
 	_SaveGameDialog(0),
 	_ScenarioManager(ScenarioManager)
 {
-	ConnectKeyCallback(Callback(this, &UI::MainMenuWindow::_OnKey));
+	ConnectKeyCallback(std::bind(&UI::MainMenuWindow::_OnKey, this, std::placeholders::_1));
 	SetSize(Vector2f(200.0f, 300.0f));
 	
 	// "Resume Game" button

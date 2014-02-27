@@ -231,7 +231,7 @@ UI::OutfitShipDialog::OutfitShipDialog(UI::Widget * SupWidget, Reference< Ship >
 	_Ship(Ship)
 {
 	ConnectSizeChangedCallback(std::bind(&UI::OutfitShipDialog::_OnSizeChanged, this));
-	ConnectKeyCallback(Callback(this, &UI::OutfitShipDialog::_OnKey));
+	ConnectKeyCallback(std::bind(&UI::OutfitShipDialog::_OnKey, this, std::placeholders::_1));
 	_LeftPane = new UI::Widget(this);
 	_LeftPane->SetPosition(Vector2f(10.0f, 40.0f));
 	_LeftPane->SetSize(Vector2f(200.0f, GetSize()[1] - 50.0f));
