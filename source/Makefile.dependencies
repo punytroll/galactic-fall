@@ -916,7 +916,8 @@ slot_cpp = \
 
 slot_h = \
 	slot.h \
-	$(referencing_h)
+	$(connection_h) \
+	$(events_h)
 
 slot_class_cpp = \
 	slot_class.cpp \
