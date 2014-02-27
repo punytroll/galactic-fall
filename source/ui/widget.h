@@ -128,7 +128,7 @@ namespace UI
 		Color * m_BackgroundColor;
 		Vector2f m_Position;
 		Vector2f m_Size;
-		std::list< Widget * > m_SubWidgets;
+		std::list< Widget * > _SubWidgets;
 		bool m_Visible;
 		bool m_AnchorBottom;
 		bool m_AnchorLeft;
@@ -236,7 +236,7 @@ namespace UI
 
 	inline Widget * Widget::GetSubWidget(const std::string & Name)
 	{
-		for(std::list< Widget * >::iterator Iterator = m_SubWidgets.begin(); Iterator != m_SubWidgets.end(); ++Iterator)
+		for(std::list< Widget * >::iterator Iterator = _SubWidgets.begin(); Iterator != _SubWidgets.end(); ++Iterator)
 		{
 			if((*Iterator)->GetName() == Name)
 			{
@@ -249,7 +249,7 @@ namespace UI
 
 	inline const Widget * Widget::GetSubWidget(const std::string & Name) const
 	{
-		for(std::list< Widget * >::const_iterator Iterator = m_SubWidgets.begin(); Iterator != m_SubWidgets.end(); ++Iterator)
+		for(std::list< Widget * >::const_iterator Iterator = _SubWidgets.begin(); Iterator != _SubWidgets.end(); ++Iterator)
 		{
 			if((*Iterator)->GetName() == Name)
 			{
@@ -262,7 +262,7 @@ namespace UI
 
 	inline const std::list< Widget * > & Widget::GetSubWidgets(void) const
 	{
-		return m_SubWidgets;
+		return _SubWidgets;
 	}
 
 	inline Widget * Widget::GetKeyFocus(void)

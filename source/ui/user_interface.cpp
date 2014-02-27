@@ -202,7 +202,7 @@ void UI::UserInterface::Update(float RealTimeSeconds, float GameTimeSeconds)
 	{
 		std::pair< UI::Widget *, bool > & Widget(ToDo.top());
 		
-		if((Widget.first->m_SubWidgets.size() == 0) || (Widget.second == true))
+		if((Widget.first->_SubWidgets.size() == 0) || (Widget.second == true))
 		{
 			Widget.first->_UpdatingEvent(RealTimeSeconds, GameTimeSeconds);
 			ToDo.pop();
@@ -210,7 +210,7 @@ void UI::UserInterface::Update(float RealTimeSeconds, float GameTimeSeconds)
 		else
 		{
 			Widget.second = true;
-			for(std::list< UI::Widget * >::reverse_iterator SubWidgetIterator = Widget.first->m_SubWidgets.rbegin(); SubWidgetIterator != Widget.first->m_SubWidgets.rend(); ++SubWidgetIterator)
+			for(std::list< UI::Widget * >::reverse_iterator SubWidgetIterator = Widget.first->_SubWidgets.rbegin(); SubWidgetIterator != Widget.first->_SubWidgets.rend(); ++SubWidgetIterator)
 			{
 				ToDo.push(std::make_pair(*SubWidgetIterator, false));
 			}
