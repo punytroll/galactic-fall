@@ -54,7 +54,7 @@ UI::Widget::Widget(UI::Widget * SupWidget, const std::string & Name) :
 UI::Widget::~Widget(void)
 {
 	assert(m_SupWidget == 0);
-	assert(m_SubWidgets.size() == 0);
+	assert(_SubWidgets.size() == 0);
 	delete m_BackgroundColor;
 	m_BackgroundColor = 0;
 	delete m_DisabledBackgroundColor;
@@ -75,9 +75,9 @@ void UI::Widget::Draw(void) const
 		GLVertex2f(m_Size[0], 0.0f);
 		GLEnd();
 	}
-	if(m_SubWidgets.empty() == false)
+	if(_SubWidgets.empty() == false)
 	{
-		for(std::list< Widget * >::const_reverse_iterator SubWidgetIterator = m_SubWidgets.rbegin(); SubWidgetIterator != m_SubWidgets.rend(); ++SubWidgetIterator)
+		for(std::list< Widget * >::const_reverse_iterator SubWidgetIterator = _SubWidgets.rbegin(); SubWidgetIterator != _SubWidgets.rend(); ++SubWidgetIterator)
 		{
 			Widget * SubWidget(*SubWidgetIterator);
 			
@@ -153,10 +153,10 @@ void UI::Widget::SetSize(const Vector2f & Size)
 	
 	m_Size = Size;
 	
-	std::list< Widget * >::iterator SubWidgetIterator(m_SubWidgets.begin());
+	std::list< Widget * >::iterator SubWidgetIterator(_SubWidgets.begin());
 	
 	// iterate through the list of sub widgets and correct widget positions and sizes
-	while(SubWidgetIterator != m_SubWidgets.end())
+	while(SubWidgetIterator != _SubWidgets.end())
 	{
 		Widget * SubWidget(*SubWidgetIterator);
 		Vector2f SubWidgetNewPosition(SubWidget->GetPosition());
@@ -200,7 +200,7 @@ void UI::Widget::SetKeyFocus(UI::Widget * KeyFocus)
 {
 	if(KeyFocus != 0)
 	{
-		assert(find(m_SubWidgets.begin(), m_SubWidgets.end(), KeyFocus) != m_SubWidgets.end());
+		assert(std::find(_SubWidgets.begin(), _SubWidgets.end(), KeyFocus) != _SubWidgets.end());
 		assert(KeyFocus->m_SupWidget == this);
 	}
 	m_KeyFocus = KeyFocus;
@@ -219,14 +219,14 @@ void UI::Widget::AddSubWidget(UI::Widget * SubWidget)
 {
 	assert(SubWidget->m_SupWidget == 0);
 	SubWidget->m_SupWidget = this;
-	m_SubWidgets.push_front(SubWidget);
+	_SubWidgets.push_front(SubWidget);
 }
 
 void UI::Widget::RemoveSubWidget(UI::Widget * SubWidget)
 {
 	assert(SubWidget->m_SupWidget == this);
 	SubWidget->m_SupWidget = 0;
-	m_SubWidgets.erase(find(m_SubWidgets.begin(), m_SubWidgets.end(), SubWidget));
+	_SubWidgets.erase(std::find(_SubWidgets.begin(), _SubWidgets.end(), SubWidget));
 	if(SubWidget == m_KeyFocus)
 	{
 		m_KeyFocus = 0;
@@ -240,8 +240,8 @@ void UI::Widget::RemoveSubWidget(UI::Widget * SubWidget)
 void UI::Widget::RaiseSubWidget(UI::Widget * SubWidget)
 {
 	assert(SubWidget->m_SupWidget == this);
-	m_SubWidgets.remove(SubWidget);
-	m_SubWidgets.push_front(SubWidget);
+	_SubWidgets.remove(SubWidget);
+	_SubWidgets.push_front(SubWidget);
 }
 
 void UI::Widget::Destroy(void)
@@ -250,9 +250,9 @@ void UI::Widget::Destroy(void)
 	_DestroyingEvent();
 	// now destroy
 	// first the sub widgets, they will remove themselves from this widget
-	while(m_SubWidgets.size() > 0)
+	while(_SubWidgets.size() > 0)
 	{
-		m_SubWidgets.front()->Destroy();
+		_SubWidgets.front()->Destroy();
 	}
 	// now remove ourself from the sup widget
 	if(m_SupWidget != 0)
@@ -289,7 +289,7 @@ bool UI::Widget::Key(const KeyEventInformation & TheKeyEventInformation)
 bool UI::Widget::MouseButton(int Button, int State, float X, float Y)
 {
 	// iterate all sub widgets, look for an intersection and propagate the mouse event with corrected coordinates
-	for(std::list< Widget * >::iterator SubWidgetIterator = m_SubWidgets.begin(); SubWidgetIterator != m_SubWidgets.end(); ++SubWidgetIterator)
+	for(std::list< Widget * >::iterator SubWidgetIterator = _SubWidgets.begin(); SubWidgetIterator != _SubWidgets.end(); ++SubWidgetIterator)
 	{
 		const Vector2f & SubWidgetPosition((*SubWidgetIterator)->GetPosition());
 		const Vector2f & SubWidgetSize((*SubWidgetIterator)->GetSize());
@@ -318,10 +318,10 @@ bool UI::Widget::MouseButton(int Button, int State, float X, float Y)
 
 void UI::Widget::MouseMoved(float X, float Y)
 {
-	std::list< Widget * >::iterator SubWidgetIterator(m_SubWidgets.begin());
+	std::list< Widget * >::iterator SubWidgetIterator(_SubWidgets.begin());
 	
 	// iterate all sub widgets, look for an intersection and propagate the mouse event with corrected coordinates
-	while(SubWidgetIterator != m_SubWidgets.end())
+	while(SubWidgetIterator != _SubWidgets.end())
 	{
 		const Vector2f & LeftTopCorner((*SubWidgetIterator)->GetPosition());
 		Vector2f RightBottomCorner(LeftTopCorner + (*SubWidgetIterator)->GetSize());
@@ -348,7 +348,7 @@ void UI::Widget::MouseMoved(float X, float Y)
 		++SubWidgetIterator;
 	}
 	// if all sub widget have been iterated through, the old hover widget has been left by the mouse cursor
-	if((SubWidgetIterator == m_SubWidgets.end()) && (m_HoverWidget != 0))
+	if((SubWidgetIterator == _SubWidgets.end()) && (m_HoverWidget != 0))
 	{
 		m_HoverWidget->MouseLeave();
 		m_HoverWidget = 0;
