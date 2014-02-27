@@ -17,7 +17,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include "../callbacks/callbacks.h"
 #include "../color.h"
 #include "scroll_bar.h"
 #include "scroll_box.h"
@@ -32,15 +31,15 @@ UI::ScrollBox::ScrollBox(UI::Widget * SupWidget) :
 	m_View->SetAnchorLeft(true);
 	m_View->SetAnchorRight(true);
 	m_View->SetAnchorTop(true);
-	m_View->ConnectSizeChangedCallback(std::bind(&ScrollBox::OnContentOrViewSizeChanged, this));
+	m_View->ConnectSizeChangedCallback(std::bind(&UI::ScrollBox::OnContentOrViewSizeChanged, this));
 	m_Content = new UI::Widget(m_View);
 	m_Content->SetPosition(Vector2f(0.0f, 0.0f));
 	m_Content->SetBackgroundColor(Color(0.15f, 0.15f, 0.15f, 1.0f));
-	m_Content->ConnectSizeChangedCallback(std::bind(&ScrollBox::OnContentOrViewSizeChanged, this));
-	m_HorizontalScrollBar = new UI::ScrollBar(this, UI::ScrollBar::HORIZONTAL);
+	m_Content->ConnectSizeChangedCallback(std::bind(&UI::ScrollBox::OnContentOrViewSizeChanged, this));
+	m_HorizontalScrollBar = new UI::ScrollBar(this, UI::ScrollBar::Alignment::HORIZONTAL);
 	m_HorizontalScrollBar->SetPosition(Vector2f(0.0f, GetSize()[1] - 20.0f));
 	m_HorizontalScrollBar->SetSize(Vector2f(GetSize()[0] - 20.0f, 20.0f));
-	m_HorizontalScrollBar->ConnectScrollPositionChangedCallback(Callback(this, &ScrollBox::OnHorizontalScrollPositionChanged));
+	m_HorizontalScrollBar->ConnectScrollPositionChangedCallback(std::bind(&UI::ScrollBox::OnHorizontalScrollPositionChanged, this));
 	m_HorizontalScrollBar->SetAnchorBottom(true);
 	m_HorizontalScrollBar->SetAnchorLeft(true);
 	m_HorizontalScrollBar->SetAnchorRight(true);
@@ -49,10 +48,10 @@ UI::ScrollBox::ScrollBox(UI::Widget * SupWidget) :
 	m_HorizontalScrollBar->SetMaximumPosition(std::max(0.0f, GetContent()->GetSize()[0] - GetView()->GetSize()[0]));
 	m_HorizontalScrollBar->SetCurrentPosition(0.0f);
 	m_HorizontalScrollBar->SetStepSize(m_HorizontalScrollBar->GetMaximumPosition() / 10.0f);
-	m_VerticalScrollBar = new UI::ScrollBar(this, UI::ScrollBar::VERTICAL);
+	m_VerticalScrollBar = new UI::ScrollBar(this, UI::ScrollBar::Alignment::VERTICAL);
 	m_VerticalScrollBar->SetPosition(Vector2f(GetSize()[0] - 20.0f, 0.0f));
 	m_VerticalScrollBar->SetSize(Vector2f(20.0f, GetSize()[1] - 20.0f));
-	m_VerticalScrollBar->ConnectScrollPositionChangedCallback(Callback(this, &ScrollBox::OnVerticalScrollPositionChanged));
+	m_VerticalScrollBar->ConnectScrollPositionChangedCallback(std::bind(&UI::ScrollBox::OnVerticalScrollPositionChanged, this));
 	m_VerticalScrollBar->SetAnchorBottom(true);
 	m_VerticalScrollBar->SetAnchorLeft(false);
 	m_VerticalScrollBar->SetAnchorRight(true);
