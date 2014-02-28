@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 1.8.2 of algebra.
+ * This is part of version 1.8.3 of algebra.
  **/
 
 #ifndef ALGEBRA_VECTOR2F_H
@@ -222,6 +222,11 @@ public:
 	bool operator==(const Vector2f & Other) const
 	{
 		return (_[0] == Other._[0]) && (_[1] == Other._[1]);
+	}
+	
+	bool operator!=(const Vector2f & Other) const
+	{
+		return (_[0] != Other._[0]) || (_[1] != Other._[1]);
 	}
 };
 
