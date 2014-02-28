@@ -30,12 +30,12 @@ std::list< UI::Widget * > UI::Widget::m_DestroyedWidgets;
 std::stack< std::pair< Vector2f, Vector2f > > UI::Widget::m_ClippingRectangles;
 
 UI::Widget::Widget(UI::Widget * SupWidget, const std::string & Name) :
-	m_Enabled(true),
-	m_DisabledBackgroundColor(0),
+	_BackgroundColor(nullptr),
+	_DisabledBackgroundColor(nullptr),
+	_Enabled(true),
 	m_Name(Name),
 	m_SupWidget(0),
 	m_HoverWidget(0),
-	m_BackgroundColor(0),
 	m_Position(true),
 	m_Size(true),
 	m_Visible(true),
@@ -55,17 +55,17 @@ UI::Widget::~Widget(void)
 {
 	assert(m_SupWidget == 0);
 	assert(_SubWidgets.size() == 0);
-	delete m_BackgroundColor;
-	m_BackgroundColor = 0;
-	delete m_DisabledBackgroundColor;
-	m_DisabledBackgroundColor = 0;
+	delete _BackgroundColor;
+	_BackgroundColor = nullptr;
+	delete _DisabledBackgroundColor;
+	_DisabledBackgroundColor = nullptr;
 }
 
 void UI::Widget::Draw(void)
 {
-	Color * Color((GetEnabled() == true) ? (m_BackgroundColor) : (m_DisabledBackgroundColor));
+	auto Color((_Enabled == true) ? (_BackgroundColor) : (_DisabledBackgroundColor));
 	
-	if(Color != 0)
+	if(Color != nullptr)
 	{
 		GLColor4fv(Color->GetColor().GetPointer());
 		GLBegin(GL_QUADS);
@@ -113,26 +113,26 @@ Vector2f UI::Widget::GetGlobalPosition(void) const
 
 void UI::Widget::SetBackgroundColor(const Color & BackgroundColor)
 {
-	delete m_BackgroundColor;
-	m_BackgroundColor = new Color(BackgroundColor);
+	delete _BackgroundColor;
+	_BackgroundColor = new Color(BackgroundColor);
 }
 
 void UI::Widget::SetDisabledBackgroundColor(const Color & DisabledBackgroundColor)
 {
-	delete m_DisabledBackgroundColor;
-	m_DisabledBackgroundColor = new Color(DisabledBackgroundColor);
+	delete _DisabledBackgroundColor;
+	_DisabledBackgroundColor = new Color(DisabledBackgroundColor);
 }
 
 void UI::Widget::UnsetBackgroundColor(void)
 {
-	delete m_BackgroundColor;
-	m_BackgroundColor = 0;
+	delete _BackgroundColor;
+	_BackgroundColor = nullptr;
 }
 
 void UI::Widget::UnsetDisabledBackgroundColor(void)
 {
-	delete m_DisabledBackgroundColor;
-	m_DisabledBackgroundColor = 0;
+	delete _DisabledBackgroundColor;
+	_DisabledBackgroundColor = nullptr;
 }
 
 void UI::Widget::SetPosition(const Vector2f & Position)

@@ -117,12 +117,12 @@ namespace UI
 		static void PopClippingRectangle(void);
 		static void DrawClippingRectangle(void);
 	private:
-		bool m_Enabled;
-		Color * m_DisabledBackgroundColor;
+		Color * _BackgroundColor;
+		Color * _DisabledBackgroundColor;
+		bool _Enabled;
 		std::string m_Name;
 		Widget * m_SupWidget;
 		Widget * m_HoverWidget;
-		Color * m_BackgroundColor;
 		Vector2f m_Position;
 		Vector2f m_Size;
 		std::list< Widget * > _SubWidgets;
@@ -167,14 +167,9 @@ namespace UI
 		return m_AnchorTop;
 	}
 
-	inline const Color * Widget::GetBackgroundColor(void) const
-	{
-		return m_BackgroundColor;
-	}
-
 	inline bool Widget::GetEnabled(void) const
 	{
-		return m_Enabled;
+		return _Enabled;
 	}
 
 	inline const Vector2f & Widget::GetPosition(void) const
@@ -264,7 +259,7 @@ namespace UI
 
 	inline void Widget::SetEnabled(bool Enabled)
 	{
-		m_Enabled = Enabled;
+		_Enabled = Enabled;
 	}
 
 	inline void Widget::SetVisible(bool Visible)
