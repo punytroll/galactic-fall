@@ -126,7 +126,7 @@ namespace UI
 		Vector2f m_Size;
 		std::list< Widget * > _SubWidgets;
 		Widget * _SupWidget;
-		bool m_Visible;
+		bool _Visible;
 		// events
 		Event< void > _DestroyingEvent;
 		Event< bool, const KeyEventInformation & > _KeyEvent;
@@ -181,15 +181,15 @@ namespace UI
 
 	inline Widget * Widget::GetSubWidget(const std::string & Name)
 	{
-		for(std::list< Widget * >::iterator Iterator = _SubWidgets.begin(); Iterator != _SubWidgets.end(); ++Iterator)
+		for(auto Widget : _SubWidgets)
 		{
-			if((*Iterator)->GetName() == Name)
+			if(Widget->GetName() == Name)
 			{
-				return *Iterator;
+				return Widget;
 			}
 		}
 		
-		return 0;
+		return nullptr;
 	}
 
 	inline const std::list< Widget * > & Widget::GetSubWidgets(void) const
@@ -204,7 +204,7 @@ namespace UI
 
 	inline bool Widget::IsVisible(void) const
 	{
-		return m_Visible;
+		return _Visible;
 	}
 
 	inline void Widget::SetAnchorBottom(bool AnchorBottom)
@@ -234,7 +234,7 @@ namespace UI
 
 	inline void Widget::SetVisible(bool Visible)
 	{
-		m_Visible = Visible;
+		_Visible = Visible;
 	}
 }
 

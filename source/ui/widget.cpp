@@ -43,7 +43,7 @@ UI::Widget::Widget(UI::Widget * SupWidget, const std::string & Name) :
 	m_Position(true),
 	m_Size(true),
 	_SupWidget(nullptr),
-	m_Visible(true)
+	_Visible(true)
 {
 	if(SupWidget != nullptr)
 	{
@@ -153,12 +153,9 @@ void UI::Widget::SetSize(const Vector2f & Size)
 	
 	m_Size = Size;
 	
-	std::list< Widget * >::iterator SubWidgetIterator(_SubWidgets.begin());
-	
 	// iterate through the list of sub widgets and correct widget positions and sizes
-	while(SubWidgetIterator != _SubWidgets.end())
+	for(auto SubWidget : _SubWidgets)
 	{
-		Widget * SubWidget(*SubWidgetIterator);
 		Vector2f SubWidgetNewPosition(SubWidget->GetPosition());
 		Vector2f SubWidgetNewSize(SubWidget->GetSize());
 		
@@ -186,7 +183,6 @@ void UI::Widget::SetSize(const Vector2f & Size)
 		}
 		SubWidget->SetPosition(SubWidgetNewPosition);
 		SubWidget->SetSize(SubWidgetNewSize);
-		++SubWidgetIterator;
 	}
 	_SizeChangedEvent();
 }
@@ -289,14 +285,14 @@ bool UI::Widget::Key(const KeyEventInformation & TheKeyEventInformation)
 bool UI::Widget::MouseButton(int Button, int State, float X, float Y)
 {
 	// iterate all sub widgets, look for an intersection and propagate the mouse event with corrected coordinates
-	for(std::list< Widget * >::iterator SubWidgetIterator = _SubWidgets.begin(); SubWidgetIterator != _SubWidgets.end(); ++SubWidgetIterator)
+	for(auto SubWidget : _SubWidgets)
 	{
-		const Vector2f & SubWidgetPosition((*SubWidgetIterator)->GetPosition());
-		const Vector2f & SubWidgetSize((*SubWidgetIterator)->GetSize());
+		const Vector2f & SubWidgetPosition(SubWidget->GetPosition());
+		const Vector2f & SubWidgetSize(SubWidget->GetSize());
 		
-		if(((*SubWidgetIterator)->IsVisible() == true) && ((*SubWidgetIterator)->_Enabled == true) && (X >= SubWidgetPosition[0]) && (X < SubWidgetPosition[0] + SubWidgetSize[0]) && (Y >= SubWidgetPosition[1]) && (Y < SubWidgetPosition[1] + SubWidgetSize[1]))
+		if((SubWidget->_Visible == true) && (SubWidget->_Enabled == true) && (X >= SubWidgetPosition[0]) && (X < SubWidgetPosition[0] + SubWidgetSize[0]) && (Y >= SubWidgetPosition[1]) && (Y < SubWidgetPosition[1] + SubWidgetSize[1]))
 		{
-			if((*SubWidgetIterator)->MouseButton(Button, State, X - SubWidgetPosition[0], Y - SubWidgetPosition[1]) == true)
+			if(SubWidget->MouseButton(Button, State, X - SubWidgetPosition[0], Y - SubWidgetPosition[1]) == true)
 			{
 				return true;
 			}
@@ -318,18 +314,18 @@ bool UI::Widget::MouseButton(int Button, int State, float X, float Y)
 
 void UI::Widget::MouseMoved(float X, float Y)
 {
-	std::list< Widget * >::iterator SubWidgetIterator(_SubWidgets.begin());
+	bool FoundSubWidget(false);
 	
 	// iterate all sub widgets, look for an intersection and propagate the mouse event with corrected coordinates
-	while(SubWidgetIterator != _SubWidgets.end())
+	for(auto SubWidget : _SubWidgets)
 	{
-		const Vector2f & LeftTopCorner((*SubWidgetIterator)->GetPosition());
-		Vector2f RightBottomCorner(LeftTopCorner + (*SubWidgetIterator)->GetSize());
+		const Vector2f & LeftTopCorner(SubWidget->GetPosition());
+		Vector2f RightBottomCorner(LeftTopCorner + SubWidget->GetSize());
 		
-		if(((*SubWidgetIterator)->IsVisible() == true) && ((*SubWidgetIterator)->_Enabled == true) && (X >= LeftTopCorner[0]) && (X < RightBottomCorner[0]) && (Y >= LeftTopCorner[1]) && (Y < RightBottomCorner[1]))
+		if((SubWidget->IsVisible() == true) && (SubWidget->_Enabled == true) && (X >= LeftTopCorner[0]) && (X < RightBottomCorner[0]) && (Y >= LeftTopCorner[1]) && (Y < RightBottomCorner[1]))
 		{
 			// test whether the new hover widget equals the old
-			if(_HoverWidget != *SubWidgetIterator)
+			if(_HoverWidget != SubWidget)
 			{
 				// befor unsetting the hover widget inform the old hover widget that the mouse cursor is leaving
 				if(_HoverWidget != nullptr)
@@ -337,18 +333,18 @@ void UI::Widget::MouseMoved(float X, float Y)
 					_HoverWidget->MouseLeave();
 				}
 				// now set the new hover widget
-				_HoverWidget = *SubWidgetIterator;
+				_HoverWidget = SubWidget;
 				// inform the new hover widget about the entering of the mouse cursor
 				_HoverWidget->MouseEnter();
 			}
-			(*SubWidgetIterator)->MouseMoved(X - LeftTopCorner[0], Y - LeftTopCorner[1]);
+			SubWidget->MouseMoved(X - LeftTopCorner[0], Y - LeftTopCorner[1]);
+			FoundSubWidget = true;
 			
 			break;
 		}
-		++SubWidgetIterator;
 	}
 	// if all sub widget have been iterated through, the old hover widget has been left by the mouse cursor
-	if((SubWidgetIterator == _SubWidgets.end()) && (_HoverWidget != nullptr))
+	if((FoundSubWidget == false) && (_HoverWidget != nullptr))
 	{
 		_HoverWidget->MouseLeave();
 		_HoverWidget = nullptr;
