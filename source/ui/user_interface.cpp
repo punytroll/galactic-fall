@@ -52,11 +52,11 @@ void UI::UserInterface::Draw(void) const
 	if((_RootWidget != nullptr) && (_RootWidget->IsVisible() == true))
 	{
 		GLPushMatrix();
-		UI::Widget::PushClippingRectangle(_RootWidget->GetPosition(), _RootWidget->GetSize());
-		GLTranslatef(_RootWidget->GetPosition()[0], _RootWidget->GetPosition()[1], 0.0f);
-		UI::Widget::DrawClippingRectangle();
+		UI::Widget::_PushClippingRectangle(_RootWidget->_Position, _RootWidget->_Size);
+		GLTranslatef(_RootWidget->_Position[0], _RootWidget->_Position[1], 0.0f);
+		UI::Widget::_DrawClippingRectangle();
 		_RootWidget->Draw();
-		UI::Widget::PopClippingRectangle();
+		UI::Widget::_PopClippingRectangle();
 		GLPopMatrix();
 	}
 }
@@ -107,8 +107,8 @@ bool UI::UserInterface::MouseButton(int Button, int State, float X, float Y)
 		assert(_RootWidget != 0);
 		if(_RootWidget->_Enabled == true)
 		{
-			const Vector2f & LeftTopCorner(_RootWidget->GetPosition());
-			Vector2f RightBottomCorner(LeftTopCorner + _RootWidget->GetSize());
+			const Vector2f & LeftTopCorner(_RootWidget->_Position);
+			Vector2f RightBottomCorner(LeftTopCorner + _RootWidget->_Size);
 			
 			if((X >= LeftTopCorner[0]) && (X < RightBottomCorner[0]) && (Y >= LeftTopCorner[1]) && (Y < RightBottomCorner[1]))
 			{
@@ -147,8 +147,8 @@ void UI::UserInterface::MouseMoved(float X, float Y)
 		assert(_RootWidget != nullptr);
 		if(_RootWidget->_Enabled == true)
 		{
-			const Vector2f & LeftTopCorner(_RootWidget->GetPosition());
-			Vector2f RightBottomCorner(LeftTopCorner + _RootWidget->GetSize());
+			const Vector2f & LeftTopCorner(_RootWidget->_Position);
+			Vector2f RightBottomCorner(LeftTopCorner + _RootWidget->_Size);
 			
 			if((X >= LeftTopCorner[0]) && (X < RightBottomCorner[0]) && (Y >= LeftTopCorner[1]) && (Y < RightBottomCorner[1]))
 			{
@@ -174,7 +174,7 @@ void UI::UserInterface::MouseMoved(float X, float Y)
 		if(_CaptureWidget->_Enabled == true)
 		{
 			Vector2f LeftTopCorner(_CaptureWidget->GetGlobalPosition());
-			Vector2f RightBottomCorner(LeftTopCorner + _CaptureWidget->GetSize());
+			Vector2f RightBottomCorner(LeftTopCorner + _CaptureWidget->_Size);
 			
 			if((X >= LeftTopCorner[0]) && (X < RightBottomCorner[0]) && (Y >= LeftTopCorner[1]) && (Y < RightBottomCorner[1]) && (_CaptureWidget->_SupWidget->_HoverWidget != _CaptureWidget))
 			{

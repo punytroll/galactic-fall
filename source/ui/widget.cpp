@@ -26,8 +26,8 @@
 #include "../math.h"
 #include "widget.h"
 
-std::list< UI::Widget * > UI::Widget::m_DestroyedWidgets;
-std::stack< std::pair< Vector2f, Vector2f > > UI::Widget::m_ClippingRectangles;
+std::list< UI::Widget * > UI::Widget::_DestroyedWidgets;
+std::stack< std::pair< Vector2f, Vector2f > > UI::Widget::_ClippingRectangles;
 
 UI::Widget::Widget(UI::Widget * SupWidget, const std::string & Name) :
 	_AnchorBottom(false),
@@ -39,9 +39,9 @@ UI::Widget::Widget(UI::Widget * SupWidget, const std::string & Name) :
 	_Enabled(true),
 	_HoverWidget(nullptr),
 	_KeyFocus(nullptr),
-	m_Name(Name),
-	m_Position(true),
-	m_Size(true),
+	_Name(Name),
+	_Position(true),
+	_Size(true),
 	_SupWidget(nullptr),
 	_Visible(true)
 {
@@ -70,9 +70,9 @@ void UI::Widget::Draw(void)
 		GLColor4fv(Color->GetColor().GetPointer());
 		GLBegin(GL_QUADS);
 		GLVertex2f(0.0f, 0.0f);
-		GLVertex2f(0.0f, m_Size[1]);
-		GLVertex2f(m_Size[0], m_Size[1]);
-		GLVertex2f(m_Size[0], 0.0f);
+		GLVertex2f(0.0f, _Size[1]);
+		GLVertex2f(_Size[0], _Size[1]);
+		GLVertex2f(_Size[0], 0.0f);
 		GLEnd();
 	}
 	if(_SubWidgets.empty() == false)
@@ -81,19 +81,19 @@ void UI::Widget::Draw(void)
 		{
 			Widget * SubWidget(*SubWidgetIterator);
 			
-			if(SubWidget->IsVisible() == true)
+			if(SubWidget->_Visible == true)
 			{
 				GLPushMatrix();
-				PushClippingRectangle(SubWidget->GetPosition(), SubWidget->GetSize());
-				GLTranslatef(SubWidget->m_Position[0], SubWidget->m_Position[1], 0.0f);
-				DrawClippingRectangle();
+				_PushClippingRectangle(SubWidget->_Position, SubWidget->_Size);
+				GLTranslatef(SubWidget->_Position[0], SubWidget->_Position[1], 0.0f);
+				_DrawClippingRectangle();
 				SubWidget->Draw();
-				PopClippingRectangle();
+				_PopClippingRectangle();
 				GLPopMatrix();
 			}
 		}
 		// restore the clipping rectangle for this widget
-		DrawClippingRectangle();
+		_DrawClippingRectangle();
 	}
 }
 
@@ -102,7 +102,7 @@ Vector2f UI::Widget::GetGlobalPosition(void) const
 	const UI::Widget * CurrentWidget(this);
 	Vector2f Result(true);
 	
-	while(CurrentWidget != 0)
+	while(CurrentWidget != nullptr)
 	{
 		Result += CurrentWidget->GetPosition();
 		CurrentWidget = CurrentWidget->_SupWidget;
@@ -137,59 +137,54 @@ void UI::Widget::UnsetDisabledBackgroundColor(void)
 
 void UI::Widget::SetPosition(const Vector2f & Position)
 {
-	m_Position = Position;
-	_PositionChangedEvent();
+	if(Position != _Position)
+	{
+		_Position = Position;
+		_PositionChangedEvent();
+	}
 }
 
 void UI::Widget::SetSize(const Vector2f & Size)
 {
 	// early bailing out if this is a no-op
-	if(Size == m_Size)
+	if(Size != _Size)
 	{
-		return;
-	}
-	
-	Vector2f Offset(GetSize() - Size);
-	
-	m_Size = Size;
-	
-	// iterate through the list of sub widgets and correct widget positions and sizes
-	for(auto SubWidget : _SubWidgets)
-	{
-		Vector2f SubWidgetNewPosition(SubWidget->GetPosition());
-		Vector2f SubWidgetNewSize(SubWidget->GetSize());
+		Vector2f Offset(GetSize() - Size);
 		
-		if(SubWidget->_AnchorRight == true)
+		_Size = Size;
+		// iterate through the list of sub widgets and correct widget positions and sizes
+		for(auto SubWidget : _SubWidgets)
 		{
-			if(SubWidget->_AnchorLeft == true)
+			Vector2f SubWidgetNewPosition(SubWidget->GetPosition());
+			Vector2f SubWidgetNewSize(SubWidget->GetSize());
+			
+			if(SubWidget->_AnchorRight == true)
 			{
-				SubWidgetNewSize[0] -= Offset[0];
+				if(SubWidget->_AnchorLeft == true)
+				{
+					SubWidgetNewSize[0] -= Offset[0];
+				}
+				else
+				{
+					SubWidgetNewPosition[0] -= Offset[0];
+				}
 			}
-			else
+			if(SubWidget->_AnchorBottom == true)
 			{
-				SubWidgetNewPosition[0] -= Offset[0];
+				if(SubWidget->_AnchorTop == true)
+				{
+					SubWidgetNewSize[1] -= Offset[1];
+				}
+				else
+				{
+					SubWidgetNewPosition[1] -= Offset[1];
+				}
 			}
+			SubWidget->SetPosition(SubWidgetNewPosition);
+			SubWidget->SetSize(SubWidgetNewSize);
 		}
-		if(SubWidget->_AnchorBottom == true)
-		{
-			if(SubWidget->_AnchorTop == true)
-			{
-				SubWidgetNewSize[1] -= Offset[1];
-			}
-			else
-			{
-				SubWidgetNewPosition[1] -= Offset[1];
-			}
-		}
-		SubWidget->SetPosition(SubWidgetNewPosition);
-		SubWidget->SetSize(SubWidgetNewSize);
+		_SizeChangedEvent();
 	}
-	_SizeChangedEvent();
-}
-
-void UI::Widget::SetName(const std::string & Name)
-{
-	m_Name = Name;
 }
 
 void UI::Widget::SetKeyFocus(UI::Widget * KeyFocus)
@@ -256,7 +251,7 @@ void UI::Widget::Destroy(void)
 		_SupWidget->RemoveSubWidget(this);
 	}
 	// now append ourself to the list of destroyed widgets to be delete'd by the garbage collection
-	m_DestroyedWidgets.push_back(this);
+	_DestroyedWidgets.push_back(this);
 }
 
 bool UI::Widget::Key(const KeyEventInformation & TheKeyEventInformation)
@@ -460,32 +455,32 @@ void UI::Widget::DisconnectUpdatingCallback(Connection & Connection)
 	_UpdatingEvent.Disconnect(Connection);
 }
 
-void UI::Widget::PushClippingRectangle(const Vector2f & Position, const Vector2f & Size)
+void UI::Widget::_PushClippingRectangle(const Vector2f & Position, const Vector2f & Size)
 {
 	Vector2f LeftTop(true);
 	Vector2f RightBottom(Size);
 	
-	if(m_ClippingRectangles.empty() == false)
+	if(_ClippingRectangles.empty() == false)
 	{
-		LeftTop[0] = std::max(0.0f, m_ClippingRectangles.top().first[0] - Position[0]);
-		LeftTop[1] = std::max(0.0f, m_ClippingRectangles.top().first[1] - Position[1]);
-		RightBottom[0] = std::min(RightBottom[0], m_ClippingRectangles.top().second[0] - Position[0]);
-		RightBottom[1] = std::min(RightBottom[1], m_ClippingRectangles.top().second[1] - Position[1]);
+		LeftTop[0] = std::max(0.0f, _ClippingRectangles.top().first[0] - Position[0]);
+		LeftTop[1] = std::max(0.0f, _ClippingRectangles.top().first[1] - Position[1]);
+		RightBottom[0] = std::min(RightBottom[0], _ClippingRectangles.top().second[0] - Position[0]);
+		RightBottom[1] = std::min(RightBottom[1], _ClippingRectangles.top().second[1] - Position[1]);
 	}
-	m_ClippingRectangles.push(std::make_pair(LeftTop, RightBottom));
+	_ClippingRectangles.push(std::make_pair(LeftTop, RightBottom));
 }
 
-void UI::Widget::PopClippingRectangle(void)
+void UI::Widget::_PopClippingRectangle(void)
 {
-	m_ClippingRectangles.pop();
+	_ClippingRectangles.pop();
 }
 
-void UI::Widget::DrawClippingRectangle(void)
+void UI::Widget::_DrawClippingRectangle(void)
 {
-	double LeftPlane[4] = { 1.0, 0.0, 0.0, -m_ClippingRectangles.top().first[0] };
-	double TopPlane[4] = { 0.0, 1.0, 0.0, -m_ClippingRectangles.top().first[1] };
-	double RightPlane[4] = { -1.0, 0.0, 0.0, m_ClippingRectangles.top().second[0] };
-	double BottomPlane[4] = { 0.0, -1.0, 0.0, m_ClippingRectangles.top().second[1] };
+	double LeftPlane[4] = { 1.0, 0.0, 0.0, -_ClippingRectangles.top().first[0] };
+	double TopPlane[4] = { 0.0, 1.0, 0.0, -_ClippingRectangles.top().first[1] };
+	double RightPlane[4] = { -1.0, 0.0, 0.0, _ClippingRectangles.top().second[0] };
+	double BottomPlane[4] = { 0.0, -1.0, 0.0, _ClippingRectangles.top().second[1] };
 	
 	GLClipPlane(GL_CLIP_PLANE0, LeftPlane);
 	GLClipPlane(GL_CLIP_PLANE1, TopPlane);

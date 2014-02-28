@@ -108,9 +108,9 @@ namespace UI
 		// static manager functions
 		static std::list< Widget * > & GetDestroyedWidgets(void);
 	protected:
-		static void PushClippingRectangle(const Vector2f & Position, const Vector2f & Size);
-		static void PopClippingRectangle(void);
-		static void DrawClippingRectangle(void);
+		static void _PushClippingRectangle(const Vector2f & Position, const Vector2f & Size);
+		static void _PopClippingRectangle(void);
+		static void _DrawClippingRectangle(void);
 	private:
 		bool _AnchorBottom;
 		bool _AnchorLeft;
@@ -121,9 +121,9 @@ namespace UI
 		bool _Enabled;
 		Widget * _HoverWidget;
 		Widget * _KeyFocus;
-		std::string m_Name;
-		Vector2f m_Position;
-		Vector2f m_Size;
+		std::string _Name;
+		Vector2f _Position;
+		Vector2f _Size;
 		std::list< Widget * > _SubWidgets;
 		Widget * _SupWidget;
 		bool _Visible;
@@ -138,28 +138,28 @@ namespace UI
 		Event< void > _SizeChangedEvent;
 		Event< void, float, float > _UpdatingEvent;
 		// static manager properties
-		static std::list< Widget * > m_DestroyedWidgets;
-		static std::stack< std::pair< Vector2f, Vector2f > > m_ClippingRectangles;
+		static std::list< Widget * > _DestroyedWidgets;
+		static std::stack< std::pair< Vector2f, Vector2f > > _ClippingRectangles;
 	};
 
 	inline const Vector2f & Widget::GetPosition(void) const
 	{
-		return m_Position;
+		return _Position;
 	}
 
 	inline const Vector2f & Widget::GetSize(void) const
 	{
-		return m_Size;
+		return _Size;
 	}
 
 	inline const std::string & Widget::GetName(void) const
 	{
-		return m_Name;
+		return _Name;
 	}
 
 	inline std::list< Widget * > & Widget::GetDestroyedWidgets(void)
 	{
-		return m_DestroyedWidgets;
+		return _DestroyedWidgets;
 	}
 
 	inline Widget * Widget::GetRootWidget(void)
@@ -230,6 +230,11 @@ namespace UI
 	inline void Widget::SetEnabled(bool Enabled)
 	{
 		_Enabled = Enabled;
+	}
+
+	inline void Widget::SetName(const std::string & Name)
+	{
+		_Name = Name;
 	}
 
 	inline void Widget::SetVisible(bool Visible)
