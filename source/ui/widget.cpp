@@ -33,19 +33,19 @@ UI::Widget::Widget(UI::Widget * SupWidget, const std::string & Name) :
 	_BackgroundColor(nullptr),
 	_DisabledBackgroundColor(nullptr),
 	_Enabled(true),
+	_HoverWidget(nullptr),
+	_KeyFocus(nullptr),
 	m_Name(Name),
-	m_SupWidget(0),
-	m_HoverWidget(0),
 	m_Position(true),
 	m_Size(true),
+	_SupWidget(nullptr),
 	m_Visible(true),
 	m_AnchorBottom(false),
 	m_AnchorLeft(true),
 	m_AnchorRight(false),
-	m_AnchorTop(true),
-	m_KeyFocus(0)
+	m_AnchorTop(true)
 {
-	if(SupWidget != 0)
+	if(SupWidget != nullptr)
 	{
 		SupWidget->AddSubWidget(this);
 	}
@@ -53,7 +53,7 @@ UI::Widget::Widget(UI::Widget * SupWidget, const std::string & Name) :
 
 UI::Widget::~Widget(void)
 {
-	assert(m_SupWidget == 0);
+	assert(_SupWidget == nullptr);
 	assert(_SubWidgets.size() == 0);
 	delete _BackgroundColor;
 	_BackgroundColor = nullptr;
@@ -105,7 +105,7 @@ Vector2f UI::Widget::GetGlobalPosition(void) const
 	while(CurrentWidget != 0)
 	{
 		Result += CurrentWidget->GetPosition();
-		CurrentWidget = CurrentWidget->m_SupWidget;
+		CurrentWidget = CurrentWidget->_SupWidget;
 	}
 	
 	return Result;
@@ -198,48 +198,48 @@ void UI::Widget::SetName(const std::string & Name)
 
 void UI::Widget::SetKeyFocus(UI::Widget * KeyFocus)
 {
-	if(KeyFocus != 0)
+	if(KeyFocus != nullptr)
 	{
 		assert(std::find(_SubWidgets.begin(), _SubWidgets.end(), KeyFocus) != _SubWidgets.end());
-		assert(KeyFocus->m_SupWidget == this);
+		assert(KeyFocus->_SupWidget == this);
 	}
-	m_KeyFocus = KeyFocus;
+	_KeyFocus = KeyFocus;
 }
 
 void UI::Widget::GrabKeyFocus(void)
 {
-	if(m_SupWidget != 0)
+	if(_SupWidget != nullptr)
 	{
-		m_SupWidget->m_KeyFocus = this;
-		m_SupWidget->GrabKeyFocus();
+		_SupWidget->_KeyFocus = this;
+		_SupWidget->GrabKeyFocus();
 	}
 }
 
 void UI::Widget::AddSubWidget(UI::Widget * SubWidget)
 {
-	assert(SubWidget->m_SupWidget == 0);
-	SubWidget->m_SupWidget = this;
+	assert(SubWidget->_SupWidget == nullptr);
+	SubWidget->_SupWidget = this;
 	_SubWidgets.push_front(SubWidget);
 }
 
 void UI::Widget::RemoveSubWidget(UI::Widget * SubWidget)
 {
-	assert(SubWidget->m_SupWidget == this);
-	SubWidget->m_SupWidget = 0;
+	assert(SubWidget->_SupWidget == this);
+	SubWidget->_SupWidget = nullptr;
 	_SubWidgets.erase(std::find(_SubWidgets.begin(), _SubWidgets.end(), SubWidget));
-	if(SubWidget == m_KeyFocus)
+	if(SubWidget == _KeyFocus)
 	{
-		m_KeyFocus = 0;
+		_KeyFocus = nullptr;
 	}
-	if(SubWidget == m_HoverWidget)
+	if(SubWidget == _HoverWidget)
 	{
-		m_HoverWidget = 0;
+		_HoverWidget = nullptr;
 	}
 }
 
 void UI::Widget::RaiseSubWidget(UI::Widget * SubWidget)
 {
-	assert(SubWidget->m_SupWidget == this);
+	assert(SubWidget->_SupWidget == this);
 	_SubWidgets.remove(SubWidget);
 	_SubWidgets.push_front(SubWidget);
 }
@@ -255,9 +255,9 @@ void UI::Widget::Destroy(void)
 		_SubWidgets.front()->Destroy();
 	}
 	// now remove ourself from the sup widget
-	if(m_SupWidget != 0)
+	if(_SupWidget != nullptr)
 	{
-		m_SupWidget->RemoveSubWidget(this);
+		_SupWidget->RemoveSubWidget(this);
 	}
 	// now append ourself to the list of destroyed widgets to be delete'd by the garbage collection
 	m_DestroyedWidgets.push_back(this);
@@ -265,9 +265,9 @@ void UI::Widget::Destroy(void)
 
 bool UI::Widget::Key(const KeyEventInformation & TheKeyEventInformation)
 {
-	if((m_KeyFocus != 0) && (m_KeyFocus->GetEnabled() == true))
+	if((_KeyFocus != nullptr) && (_KeyFocus->_Enabled == true))
 	{
-		if(m_KeyFocus->Key(TheKeyEventInformation) == true)
+		if(_KeyFocus->Key(TheKeyEventInformation) == true)
 		{
 			return true;
 		}
@@ -294,7 +294,7 @@ bool UI::Widget::MouseButton(int Button, int State, float X, float Y)
 		const Vector2f & SubWidgetPosition((*SubWidgetIterator)->GetPosition());
 		const Vector2f & SubWidgetSize((*SubWidgetIterator)->GetSize());
 		
-		if(((*SubWidgetIterator)->IsVisible() == true) && ((*SubWidgetIterator)->GetEnabled() == true) && (X >= SubWidgetPosition[0]) && (X < SubWidgetPosition[0] + SubWidgetSize[0]) && (Y >= SubWidgetPosition[1]) && (Y < SubWidgetPosition[1] + SubWidgetSize[1]))
+		if(((*SubWidgetIterator)->IsVisible() == true) && ((*SubWidgetIterator)->_Enabled == true) && (X >= SubWidgetPosition[0]) && (X < SubWidgetPosition[0] + SubWidgetSize[0]) && (Y >= SubWidgetPosition[1]) && (Y < SubWidgetPosition[1] + SubWidgetSize[1]))
 		{
 			if((*SubWidgetIterator)->MouseButton(Button, State, X - SubWidgetPosition[0], Y - SubWidgetPosition[1]) == true)
 			{
@@ -326,20 +326,20 @@ void UI::Widget::MouseMoved(float X, float Y)
 		const Vector2f & LeftTopCorner((*SubWidgetIterator)->GetPosition());
 		Vector2f RightBottomCorner(LeftTopCorner + (*SubWidgetIterator)->GetSize());
 		
-		if(((*SubWidgetIterator)->IsVisible() == true) && ((*SubWidgetIterator)->GetEnabled() == true) && (X >= LeftTopCorner[0]) && (X < RightBottomCorner[0]) && (Y >= LeftTopCorner[1]) && (Y < RightBottomCorner[1]))
+		if(((*SubWidgetIterator)->IsVisible() == true) && ((*SubWidgetIterator)->_Enabled == true) && (X >= LeftTopCorner[0]) && (X < RightBottomCorner[0]) && (Y >= LeftTopCorner[1]) && (Y < RightBottomCorner[1]))
 		{
 			// test whether the new hover widget equals the old
-			if(m_HoverWidget != *SubWidgetIterator)
+			if(_HoverWidget != *SubWidgetIterator)
 			{
 				// befor unsetting the hover widget inform the old hover widget that the mouse cursor is leaving
-				if(m_HoverWidget != 0)
+				if(_HoverWidget != nullptr)
 				{
-					m_HoverWidget->MouseLeave();
+					_HoverWidget->MouseLeave();
 				}
 				// now set the new hover widget
-				m_HoverWidget = *SubWidgetIterator;
+				_HoverWidget = *SubWidgetIterator;
 				// inform the new hover widget about the entering of the mouse cursor
-				m_HoverWidget->MouseEnter();
+				_HoverWidget->MouseEnter();
 			}
 			(*SubWidgetIterator)->MouseMoved(X - LeftTopCorner[0], Y - LeftTopCorner[1]);
 			
@@ -348,10 +348,10 @@ void UI::Widget::MouseMoved(float X, float Y)
 		++SubWidgetIterator;
 	}
 	// if all sub widget have been iterated through, the old hover widget has been left by the mouse cursor
-	if((SubWidgetIterator == _SubWidgets.end()) && (m_HoverWidget != 0))
+	if((SubWidgetIterator == _SubWidgets.end()) && (_HoverWidget != nullptr))
 	{
-		m_HoverWidget->MouseLeave();
-		m_HoverWidget = 0;
+		_HoverWidget->MouseLeave();
+		_HoverWidget = nullptr;
 	}
 	// after this we may call all our listeners
 	_MouseMovedEvent(X, Y);
@@ -364,11 +364,11 @@ void UI::Widget::MouseEnter(void)
 
 void UI::Widget::MouseLeave(void)
 {
-	if(m_HoverWidget != 0)
+	if(_HoverWidget != nullptr)
 	{
-		Widget * HoverWidget(m_HoverWidget);
+		auto HoverWidget(_HoverWidget);
 		
-		m_HoverWidget = 0;
+		_HoverWidget = nullptr;
 		HoverWidget->MouseLeave();
 	}
 	_MouseLeaveEvent();

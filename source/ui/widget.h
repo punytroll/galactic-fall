@@ -63,7 +63,6 @@ namespace UI
 		bool GetAnchorRight(void) const;
 		bool GetAnchorTop(void) const;
 		const Color * GetBackgroundColor(void) const;
-		bool GetEnabled(void) const;
 		const Vector2f & GetPosition(void) const;
 		Vector2f GetGlobalPosition(void) const;
 		const Vector2f & GetSize(void) const;
@@ -120,18 +119,18 @@ namespace UI
 		Color * _BackgroundColor;
 		Color * _DisabledBackgroundColor;
 		bool _Enabled;
+		Widget * _HoverWidget;
+		Widget * _KeyFocus;
 		std::string m_Name;
-		Widget * m_SupWidget;
-		Widget * m_HoverWidget;
 		Vector2f m_Position;
 		Vector2f m_Size;
 		std::list< Widget * > _SubWidgets;
+		Widget * _SupWidget;
 		bool m_Visible;
 		bool m_AnchorBottom;
 		bool m_AnchorLeft;
 		bool m_AnchorRight;
 		bool m_AnchorTop;
-		Widget * m_KeyFocus;
 		// events
 		Event< void > _DestroyingEvent;
 		Event< bool, const KeyEventInformation & > _KeyEvent;
@@ -167,11 +166,6 @@ namespace UI
 		return m_AnchorTop;
 	}
 
-	inline bool Widget::GetEnabled(void) const
-	{
-		return _Enabled;
-	}
-
 	inline const Vector2f & Widget::GetPosition(void) const
 	{
 		return m_Position;
@@ -194,11 +188,11 @@ namespace UI
 
 	inline Widget * Widget::GetRootWidget(void)
 	{
-		Widget * SupWidget(this);
+		auto SupWidget(this);
 		
-		while(SupWidget->m_SupWidget != 0)
+		while(SupWidget->_SupWidget != nullptr)
 		{
-			SupWidget = SupWidget->m_SupWidget;
+			SupWidget = SupWidget->_SupWidget;
 		}
 		
 		return SupWidget;
@@ -206,7 +200,7 @@ namespace UI
 
 	inline Widget * Widget::GetSupWidget(void)
 	{
-		return m_SupWidget;
+		return _SupWidget;
 	}
 
 	inline Widget * Widget::GetSubWidget(const std::string & Name)
@@ -229,7 +223,7 @@ namespace UI
 
 	inline Widget * Widget::GetKeyFocus(void)
 	{
-		return m_KeyFocus;
+		return _KeyFocus;
 	}
 
 	inline bool Widget::IsVisible(void) const
