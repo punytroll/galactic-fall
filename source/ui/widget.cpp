@@ -30,6 +30,10 @@ std::list< UI::Widget * > UI::Widget::m_DestroyedWidgets;
 std::stack< std::pair< Vector2f, Vector2f > > UI::Widget::m_ClippingRectangles;
 
 UI::Widget::Widget(UI::Widget * SupWidget, const std::string & Name) :
+	_AnchorBottom(false),
+	_AnchorLeft(true),
+	_AnchorRight(false),
+	_AnchorTop(true),
 	_BackgroundColor(nullptr),
 	_DisabledBackgroundColor(nullptr),
 	_Enabled(true),
@@ -39,11 +43,7 @@ UI::Widget::Widget(UI::Widget * SupWidget, const std::string & Name) :
 	m_Position(true),
 	m_Size(true),
 	_SupWidget(nullptr),
-	m_Visible(true),
-	m_AnchorBottom(false),
-	m_AnchorLeft(true),
-	m_AnchorRight(false),
-	m_AnchorTop(true)
+	m_Visible(true)
 {
 	if(SupWidget != nullptr)
 	{
@@ -162,9 +162,9 @@ void UI::Widget::SetSize(const Vector2f & Size)
 		Vector2f SubWidgetNewPosition(SubWidget->GetPosition());
 		Vector2f SubWidgetNewSize(SubWidget->GetSize());
 		
-		if(SubWidget->GetAnchorRight() == true)
+		if(SubWidget->_AnchorRight == true)
 		{
-			if(SubWidget->GetAnchorLeft() == true)
+			if(SubWidget->_AnchorLeft == true)
 			{
 				SubWidgetNewSize[0] -= Offset[0];
 			}
@@ -173,9 +173,9 @@ void UI::Widget::SetSize(const Vector2f & Size)
 				SubWidgetNewPosition[0] -= Offset[0];
 			}
 		}
-		if(SubWidget->GetAnchorBottom() == true)
+		if(SubWidget->_AnchorBottom == true)
 		{
-			if(SubWidget->GetAnchorTop() == true)
+			if(SubWidget->_AnchorTop == true)
 			{
 				SubWidgetNewSize[1] -= Offset[1];
 			}
