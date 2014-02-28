@@ -58,10 +58,6 @@ namespace UI
 		void GrabKeyFocus(void);
 		void SetName(const std::string & Name);
 		// getters
-		bool GetAnchorBottom(void) const;
-		bool GetAnchorLeft(void) const;
-		bool GetAnchorRight(void) const;
-		bool GetAnchorTop(void) const;
 		const Color * GetBackgroundColor(void) const;
 		const Vector2f & GetPosition(void) const;
 		Vector2f GetGlobalPosition(void) const;
@@ -116,6 +112,10 @@ namespace UI
 		static void PopClippingRectangle(void);
 		static void DrawClippingRectangle(void);
 	private:
+		bool _AnchorBottom;
+		bool _AnchorLeft;
+		bool _AnchorRight;
+		bool _AnchorTop;
 		Color * _BackgroundColor;
 		Color * _DisabledBackgroundColor;
 		bool _Enabled;
@@ -127,10 +127,6 @@ namespace UI
 		std::list< Widget * > _SubWidgets;
 		Widget * _SupWidget;
 		bool m_Visible;
-		bool m_AnchorBottom;
-		bool m_AnchorLeft;
-		bool m_AnchorRight;
-		bool m_AnchorTop;
 		// events
 		Event< void > _DestroyingEvent;
 		Event< bool, const KeyEventInformation & > _KeyEvent;
@@ -145,26 +141,6 @@ namespace UI
 		static std::list< Widget * > m_DestroyedWidgets;
 		static std::stack< std::pair< Vector2f, Vector2f > > m_ClippingRectangles;
 	};
-
-	inline bool Widget::GetAnchorBottom(void) const
-	{
-		return m_AnchorBottom;
-	}
-
-	inline bool Widget::GetAnchorLeft(void) const
-	{
-		return m_AnchorLeft;
-	}
-
-	inline bool Widget::GetAnchorRight(void) const
-	{
-		return m_AnchorRight;
-	}
-
-	inline bool Widget::GetAnchorTop(void) const
-	{
-		return m_AnchorTop;
-	}
 
 	inline const Vector2f & Widget::GetPosition(void) const
 	{
@@ -233,22 +209,22 @@ namespace UI
 
 	inline void Widget::SetAnchorBottom(bool AnchorBottom)
 	{
-		m_AnchorBottom = AnchorBottom;
+		_AnchorBottom = AnchorBottom;
 	}
 
 	inline void Widget::SetAnchorLeft(bool AnchorLeft)
 	{
-		m_AnchorLeft = AnchorLeft;
+		_AnchorLeft = AnchorLeft;
 	}
 
 	inline void Widget::SetAnchorRight(bool AnchorRight)
 	{
-		m_AnchorRight = AnchorRight;
+		_AnchorRight = AnchorRight;
 	}
 
 	inline void Widget::SetAnchorTop(bool AnchorTop)
 	{
-		m_AnchorTop = AnchorTop;
+		_AnchorTop = AnchorTop;
 	}
 
 	inline void Widget::SetEnabled(bool Enabled)
