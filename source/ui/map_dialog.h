@@ -37,7 +37,7 @@ namespace UI
 		System * GetSelectedSystem(void);
 	protected:
 		// callbacks
-		bool _OnKey(const KeyEventInformation & KeyEventInformation);
+		void _OnKey(UI::KeyEvent & KeyEvent);
 	private:
 		UI::StarMapDisplay * _StarMapDisplay;
 	};

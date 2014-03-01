@@ -17,10 +17,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include "../key_event_information.h"
 #include "../object_aspect_name.h"
 #include "../planet.h"
 #include "hangar_widget.h"
+#include "key_event.h"
 #include "label.h"
 #include "planet_window.h"
 #include "text_button.h"
@@ -72,19 +72,16 @@ void UI::PlanetWindow::_OnHomeButtonClicked(void)
 	_OpenHomeScreen();
 }
 
-bool UI::PlanetWindow::_OnKey(const KeyEventInformation & KeyEventInformation)
+void UI::PlanetWindow::_OnKey(UI::KeyEvent & KeyEvent)
 {
-	if((KeyEventInformation.GetKeyCode() == 28 /* T */) && (KeyEventInformation.IsDown() == true))
+	if((KeyEvent.GetPhase() == UI::Event::Phase::Bubbling) && (KeyEvent.GetKeyCode() == 28 /* T */) && (KeyEvent.IsDown() == true))
 	{
 		_OpenTradeCenter();
 	}
-	else if((KeyEventInformation.GetKeyCode() == 43 /* H */) && (KeyEventInformation.IsDown() == true))
+	else if((KeyEvent.GetPhase() == UI::Event::Phase::Bubbling) && (KeyEvent.GetKeyCode() == 43 /* H */) && (KeyEvent.IsDown() == true))
 	{
 		_OpenHangar();
 	}
-	
-	// eat all input
-	return true;
 }
 
 void UI::PlanetWindow::_OnTradeCenterButtonClicked(void)
@@ -144,7 +141,7 @@ void UI::PlanetWindow::_OpenHomeScreen(void)
 		_DescriptionLabel->SetWordWrap(true);
 		_DescriptionLabel->SetAnchorRight(true);
 	}
-	SetKeyFocus(nullptr);
+	_DescriptionLabel->GrabKeyFocus();
 }
 
 void UI::PlanetWindow::_OpenTradeCenter(void)

@@ -35,7 +35,6 @@
 #include "../graphics/texture_manager.h"
 #include "../graphics/texture_render_target.h"
 #include "../graphics/view.h"
-#include "../key_event_information.h"
 #include "../object_aspect_accessory.h"
 #include "../object_aspect_name.h"
 #include "../object_aspect_object_container.h"
@@ -49,6 +48,7 @@
 #include "../weapon.h"
 #include "../weapon_class.h"
 #include "image.h"
+#include "key_event.h"
 #include "label.h"
 #include "scroll_bar.h"
 #include "scroll_box.h"
@@ -378,18 +378,16 @@ void UI::TradeCenterWidget::_OnDestroyInScene(Graphics::Node * Node)
 	delete Node;
 }
 
-bool UI::TradeCenterWidget::_OnKey(const KeyEventInformation & KeyEventInformation)
+void UI::TradeCenterWidget::_OnKey(UI::KeyEvent & KeyEvent)
 {
-	if((KeyEventInformation.GetKeyCode() == 56 /* B */) && (_SelectedTradeCenterAssetClass != 0) && (KeyEventInformation.IsDown() == true))
+	if((KeyEvent.GetPhase() == UI::Event::Phase::Bubbling) && (KeyEvent.GetKeyCode() == 56 /* B */) && (_SelectedTradeCenterAssetClass != 0) && (KeyEvent.IsDown() == true))
 	{
 		_Buy(_SelectedTradeCenterAssetClass->GetPlanetAssetClass());
 	}
-	else if((KeyEventInformation.GetKeyCode() == 39 /* S */) && (_SelectedTradeCenterAssetClass != 0) && (KeyEventInformation.IsDown() == true))
+	else if((KeyEvent.GetPhase() == UI::Event::Phase::Bubbling) && (KeyEvent.GetKeyCode() == 39 /* S */) && (_SelectedTradeCenterAssetClass != 0) && (KeyEvent.IsDown() == true))
 	{
 		_Sell(_SelectedTradeCenterAssetClass->GetPlanetAssetClass());
 	}
-	
-	return false;
 }
 
 void UI::TradeCenterWidget::_OnSellButtonClicked(void)

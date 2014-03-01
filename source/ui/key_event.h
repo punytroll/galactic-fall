@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2013  Hagen Möbius
+ * Copyright (C) 2014  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,39 +17,53 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef UI_LOAD_SCENARIO_DIALOG_H
-#define UI_LOAD_SCENARIO_DIALOG_H
+#ifndef UI_KEY_EVENT_H
+#define UI_KEY_EVENT_H
 
-#include "../timeout_notifications.h"
-#include "dialog.h"
+#include <string>
 
-class ScenarioManager;
+#include <X11/Xlib.h>
+
+#include "event.h"
 
 namespace UI
 {
-	class ScenarioItem;
-	class Label;
-	class ScrollBox;
-	
-	class LoadScenarioDialog : public UI::Dialog
+	class KeyEvent : public UI::Event
 	{
 	public:
-		LoadScenarioDialog(UI::Widget * SupWidget, ScenarioManager * ScenarioManager);
+		KeyEvent(void);
 		// getters
-		Scenario * GetScenario(void);
-		// modifiers
-		void ShowErrorMessage(const std::string & ErrorMessage);
+		bool IsDown(void);
+		bool IsUp(void);
+		unsigned int GetKeyCode(void);
+		const std::string & GetString(void);
+		KeySym GetKeySymbol(void);
+		// setters
+		void SetKeyEvent(XKeyEvent * KeyEvent);
 	private:
-		// callbacks
-		bool _OnScenarioItemMouseButton(UI::ScenarioItem * ScenarioItem, int Button, int State, float X, float Y);
-		void _OnKey(UI::KeyEvent & KeyEvent);
+		// helper functions
+		void _PerformStringLookup(void);
 		// member variables
-		UI::Label * _MessageLabel;
-		TimeoutNotification _MessageTimeoutNotification;
-		ScenarioManager * _ScenarioManager;
-		UI::ScrollBox * _ScenarioScrollBox;
-		UI::ScenarioItem * _SelectedScenarioItem;
+		XKeyEvent * _KeyEvent;
+		KeySym _KeySymbol;
+		bool _LookupStringPerformed;
+		std::string _String;
 	};
+}
+
+inline bool UI::KeyEvent::IsDown(void)
+{
+	return _KeyEvent->type == KeyPress;
+}
+
+inline bool UI::KeyEvent::IsUp(void)
+{
+	return _KeyEvent->type == KeyRelease;
+}
+
+inline unsigned int UI::KeyEvent::GetKeyCode(void)
+{
+	return _KeyEvent->keycode;
 }
 
 #endif

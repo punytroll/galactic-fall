@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2007  Hagen Möbius
+ * Copyright (C) 2014  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,41 +17,49 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include <assert.h>
+
 #include <X11/Xutil.h>
 
-#include "key_event_information.h"
+#include "key_event.h"
 
-KeyEventInformation::KeyEventInformation(XKeyEvent & KeyEvent) :
-	m_KeyEvent(KeyEvent),
-	m_LookupStringPerformed(false)
+UI::KeyEvent::KeyEvent(void) :
+	_KeyEvent(nullptr),
+	_LookupStringPerformed(false)
 {
 }
 
-void KeyEventInformation::PerformStringLookup(void) const
+const std::string & UI::KeyEvent::GetString(void)
+{
+	if(_LookupStringPerformed == false)
+	{
+		_PerformStringLookup();
+	}
+	
+	return _String;
+}
+
+KeySym UI::KeyEvent::GetKeySymbol(void)
+{
+	if(_LookupStringPerformed == false)
+	{
+		_PerformStringLookup();
+	}
+	
+	return _KeySymbol;
+}
+
+void UI::KeyEvent::_PerformStringLookup(void)
 {
 	char String[10];
 	
-	XLookupString(&m_KeyEvent, String, 10, &m_KeySymbol, NULL);
-	m_String = String;
-	m_LookupStringPerformed = true;
+	XLookupString(_KeyEvent, String, 10, &_KeySymbol, NULL);
+	_String = String;
+	_LookupStringPerformed = true;
 }
 
-const std::string & KeyEventInformation::GetString(void) const
+void UI::KeyEvent::SetKeyEvent(XKeyEvent * KeyEvent)
 {
-	if(m_LookupStringPerformed == false)
-	{
-		PerformStringLookup();
-	}
-	
-	return m_String;
-}
-
-KeySym KeyEventInformation::GetKeySymbol(void) const
-{
-	if(m_LookupStringPerformed == false)
-	{
-		PerformStringLookup();
-	}
-	
-	return m_KeySymbol;
+	_KeyEvent = KeyEvent;
+	_LookupStringPerformed = false;
 }

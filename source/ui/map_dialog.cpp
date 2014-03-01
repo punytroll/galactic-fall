@@ -23,9 +23,9 @@
 
 #include "../color.h"
 #include "../globals.h"
-#include "../key_event_information.h"
 #include "../object_aspect_name.h"
 #include "../system.h"
+#include "key_event.h"
 #include "map_dialog.h"
 #include "star_map_display.h"
 #include "text_button.h"
@@ -55,13 +55,10 @@ System * UI::MapDialog::GetSelectedSystem(void)
 	return _StarMapDisplay->GetSelectedSystem();
 }
 
-bool UI::MapDialog::_OnKey(const KeyEventInformation & KeyEventInformation)
+void UI::MapDialog::_OnKey(UI::KeyEvent & KeyEvent)
 {
-	if(((KeyEventInformation.GetKeyCode() == 9 /* ESCAPE */) || (KeyEventInformation.GetKeyCode() == 36 /* RETURN */) || (KeyEventInformation.GetKeyCode() == 58 /* M */)) && (KeyEventInformation.IsDown() == true))
+	if(((KeyEvent.GetKeyCode() == 9 /* ESCAPE */) || (KeyEvent.GetKeyCode() == 36 /* RETURN */) || (KeyEvent.GetKeyCode() == 58 /* M */)) && (KeyEvent.IsDown() == true))
 	{
 		Destroy();
 	}
-	
-	// eat all input
-	return true;
 }

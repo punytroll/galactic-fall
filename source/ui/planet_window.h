@@ -40,7 +40,7 @@ namespace UI
 		void _OnDestroying(void);
 		void _OnHangarButtonClicked(void);
 		void _OnHomeButtonClicked(void);
-		bool _OnKey(const KeyEventInformation & KeyEventInformation);
+		void _OnKey(UI::KeyEvent & KeyEvent);
 		void _OnTradeCenterButtonClicked(void);
 		// helper functions & actions
 		void _OpenHangar(void);

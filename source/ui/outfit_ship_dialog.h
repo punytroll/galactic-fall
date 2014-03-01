@@ -38,7 +38,7 @@ namespace UI
 	private:
 		// callbacks
 		bool _OnAccessoryListItemMouseButton(UI::AccessoryListItem * AccessoryListItem, int Button, int State, float X, float Y);
-		bool _OnKey(const KeyEventInformation & KeyEventInformation);
+		void _OnKey(UI::KeyEvent & KeyEvent);
 		void _OnMountButtonClicked(void);
 		void _OnMountButtonUpdating(UI::Button * MountButton, float RealTimeSeconds, float GameTimeSeconds);
 		void _OnOKButtonClicked(void);

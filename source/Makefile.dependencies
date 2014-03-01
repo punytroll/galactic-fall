@@ -502,13 +502,6 @@ hangar_h = \
 	hangar.h \
 	$(object_h)
 
-key_event_information_cpp = \
-	key_event_information.cpp \
-	$(key_event_information_h)
-
-key_event_information_h = \
-	key_event_information.h
-
 main_cpp = \
 	main.cpp \
 	$(arx_reading_h) \
@@ -548,7 +541,6 @@ main_cpp = \
 	$(graphics_texture_h) \
 	$(graphics_texture_manager_h) \
 	$(graphics_view_h) \
-	$(key_event_information_h) \
 	$(map_knowledge_h) \
 	$(math_h) \
 	$(message_h) \
@@ -584,6 +576,7 @@ main_cpp = \
 	$(system_statistics_h) \
 	$(timeout_notifications_h) \
 	$(ui_button_h) \
+	$(ui_key_event_h) \
 	$(ui_label_h) \
 	$(ui_main_menu_window_h) \
 	$(ui_map_dialog_h) \
@@ -1071,6 +1064,15 @@ ui_dialog_h = \
 	ui/dialog.h \
 	$(ui_window_h)
 
+ui_event_cpp = \
+	ui/event.cpp \
+	$(ui_event_h) \
+	$(ui_widget_h)
+
+ui_event_h = \
+	ui/event.h \
+	$(connection_h)
+
 ui_hangar_widget_cpp = \
 	ui/hangar_widget.cpp \
 	$(asset_class_h) \
@@ -1103,6 +1105,14 @@ ui_image_h = \
 	ui/image.h \
 	$(ui_widget_h)
 
+ui_key_event_cpp = \
+	ui/key_event.cpp \
+	$(ui_key_event_h)
+
+ui_key_event_h = \
+	ui/key_event.h \
+	$(ui_event_h)
+
 ui_label_cpp = \
 	ui/label.cpp \
 	$(color_h) \
@@ -1119,8 +1129,8 @@ ui_load_game_dialog_cpp = \
 	$(color_h) \
 	$(file_handling_h) \
 	$(globals_h) \
-	$(key_event_information_h) \
 	$(real_time_h) \
+	$(ui_key_event_h) \
 	$(ui_label_h) \
 	$(ui_load_game_dialog_h) \
 	$(ui_scroll_box_h) \
@@ -1135,10 +1145,10 @@ ui_load_scenario_dialog_cpp = \
 	ui/load_scenario_dialog.cpp \
 	$(color_h) \
 	$(globals_h) \
-	$(key_event_information_h) \
 	$(real_time_h) \
 	$(scenario_h) \
 	$(scenario_manager_h) \
+	$(ui_key_event_h) \
 	$(ui_label_h) \
 	$(ui_load_scenario_dialog_h) \
 	$(ui_scroll_box_h) \
@@ -1152,8 +1162,8 @@ ui_load_scenario_dialog_h = \
 ui_main_menu_window_cpp = \
 	ui/main_menu_window.cpp \
 	$(file_handling_h) \
-	$(key_event_information_h) \
 	$(scenario_h) \
+	$(ui_key_event_h) \
 	$(ui_label_h) \
 	$(ui_load_game_dialog_h) \
 	$(ui_load_scenario_dialog_h) \
@@ -1170,9 +1180,9 @@ ui_map_dialog_cpp = \
 	ui/map_dialog.cpp \
 	$(color_h) \
 	$(globals_h) \
-	$(key_event_information_h) \
 	$(object_aspect_name_h) \
 	$(system_h) \
+	$(ui_key_event_h) \
 	$(ui_map_dialog_h) \
 	$(ui_star_map_display_h) \
 	$(ui_text_button_h)
@@ -1239,7 +1249,6 @@ ui_outfit_ship_dialog_cpp = \
 	$(class_manager_h) \
 	$(color_h) \
 	$(globals_h) \
-	$(key_event_information_h) \
 	$(object_aspect_accessory_h) \
 	$(object_aspect_name_h) \
 	$(object_aspect_object_container_h) \
@@ -1249,6 +1258,7 @@ ui_outfit_ship_dialog_cpp = \
 	$(slot_h) \
 	$(slot_class_h) \
 	$(storage_h) \
+	$(ui_key_event_h) \
 	$(ui_label_h) \
 	$(ui_outfit_ship_dialog_h) \
 	$(ui_scroll_box_h) \
@@ -1262,10 +1272,10 @@ ui_outfit_ship_dialog_h = \
 
 ui_planet_window_cpp = \
 	ui/planet_window.cpp \
-	$(key_event_information_h) \
 	$(object_aspect_name_h) \
 	$(planet_h) \
 	$(ui_hangar_widget_h) \
+	$(ui_key_event_h) \
 	$(ui_label_h) \
 	$(ui_planet_window_h) \
 	$(ui_text_button_h) \
@@ -1291,8 +1301,8 @@ ui_save_game_dialog_cpp = \
 	$(color_h) \
 	$(file_handling_h) \
 	$(globals_h) \
-	$(key_event_information_h) \
 	$(real_time_h) \
+	$(ui_key_event_h) \
 	$(ui_label_h) \
 	$(ui_save_game_dialog_h) \
 	$(ui_scroll_box_h) \
@@ -1381,9 +1391,9 @@ ui_text_button_h = \
 ui_timing_dialog_cpp = \
 	ui/timing_dialog.cpp \
 	$(globals_h) \
-	$(key_event_information_h) \
 	$(string_cast_h) \
 	$(system_statistics_h) \
+	$(ui_key_event_h) \
 	$(ui_label_h) \
 	$(ui_timing_dialog_h)
 
@@ -1411,7 +1421,6 @@ ui_trade_center_widget_cpp = \
 	$(graphics_texture_manager_h) \
 	$(graphics_texture_render_target_h) \
 	$(graphics_view_h) \
-	$(key_event_information_h) \
 	$(object_aspect_accessory_h) \
 	$(object_aspect_name_h) \
 	$(object_aspect_object_container_h) \
@@ -1421,6 +1430,7 @@ ui_trade_center_widget_cpp = \
 	$(storage_h) \
 	$(string_cast_h) \
 	$(ui_image_h) \
+	$(ui_key_event_h) \
 	$(ui_label_h) \
 	$(ui_scroll_bar_h) \
 	$(ui_scroll_box_h) \
@@ -1439,6 +1449,7 @@ ui_trade_center_widget_h = \
 ui_user_interface_cpp = \
 	ui/user_interface.cpp \
 	$(graphics_gl_h) \
+	$(ui_key_event_h) \
 	$(ui_user_interface_h) \
 	$(ui_widget_h)
 

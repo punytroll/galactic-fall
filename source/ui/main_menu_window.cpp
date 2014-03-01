@@ -22,8 +22,8 @@
 #include <fstream>
 
 #include "../file_handling.h"
-#include "../key_event_information.h"
 #include "../scenario.h"
+#include "key_event.h"
 #include "label.h"
 #include "load_game_dialog.h"
 #include "load_scenario_dialog.h"
@@ -119,18 +119,15 @@ UI::MainMenuWindow::MainMenuWindow(UI::Widget * SupWidget, ScenarioManager * Sce
 	_QuitButton->ConnectClickedCallback(std::bind(&UI::MainMenuWindow::_OnQuitButtonClicked, this));
 }
 
-bool UI::MainMenuWindow::_OnKey(const KeyEventInformation & KeyEventInformation)
+void UI::MainMenuWindow::_OnKey(UI::KeyEvent & KeyEvent)
 {
-	if((KeyEventInformation.GetKeyCode() == 9 /* ESCAPE */) && (KeyEventInformation.IsDown() == true))
+	if((KeyEvent.GetKeyCode() == 9 /* ESCAPE */) && (KeyEvent.IsDown() == true))
 	{
 		if(_DestroyOnESCAPEKey == true)
 		{
 			Destroy();
 		}
 	}
-	
-	// eat all keys
-	return true;
 }
 
 void UI::MainMenuWindow::_OnLoadGameButtonClicked(void)

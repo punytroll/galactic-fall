@@ -24,8 +24,8 @@
 #include "../color.h"
 #include "../file_handling.h"
 #include "../globals.h"
-#include "../key_event_information.h"
 #include "../real_time.h"
+#include "key_event.h"
 #include "label.h"
 #include "load_game_dialog.h"
 #include "scroll_box.h"
@@ -183,47 +183,37 @@ void UI::LoadGameDialog::_OnFileNameLabelTextChanged(void)
 	}
 }
 
-bool UI::LoadGameDialog::_OnFileNameLabelKey(const KeyEventInformation & KeyEventInformation)
+void UI::LoadGameDialog::_OnFileNameLabelKey(UI::KeyEvent & KeyEvent)
 {
-	if((KeyEventInformation.GetKeyCode() == 9 /* ESCAPE */) || (KeyEventInformation.GetKeyCode() == 36 /* RETURN */))
+	if(KeyEvent.GetPhase() == UI::Event::Phase::Target)
 	{
-		// do not eat RETURN or ESCAPE keys
-		return false;
-	}
-	if((KeyEventInformation.GetKeyCode() == 22 /* BACKSPACE */) && (KeyEventInformation.IsDown() == true))
-	{
-		if(_FileNameLabel->GetText().length() > 0)
+		if((KeyEvent.GetKeyCode() == 22 /* BACKSPACE */) && (KeyEvent.IsDown() == true))
 		{
-			_FileNameLabel->SetText(_FileNameLabel->GetText().substr(0, _FileNameLabel->GetText().length() - 1));
+			if(_FileNameLabel->GetText().length() > 0)
+			{
+				_FileNameLabel->SetText(_FileNameLabel->GetText().substr(0, _FileNameLabel->GetText().length() - 1));
+				_OnFileNameLabelTextChanged();
+			}
+		}
+		else if((KeyEvent.GetString().empty() == false) && (KeyEvent.IsDown() == true))
+		{
+			_FileNameLabel->SetText(_FileNameLabel->GetText() + KeyEvent.GetString());
 			_OnFileNameLabelTextChanged();
 		}
+		KeyEvent.StopPropagation();
 	}
-	else if((KeyEventInformation.GetString().empty() == false) && (KeyEventInformation.IsDown() == true))
-	{
-		_FileNameLabel->SetText(_FileNameLabel->GetText() + KeyEventInformation.GetString());
-		_OnFileNameLabelTextChanged();
-	}
-	
-	// eat all input
-	return true;
 }
 
-bool UI::LoadGameDialog::_OnKey(const KeyEventInformation & KeyEventInformation)
+void UI::LoadGameDialog::_OnKey(UI::KeyEvent & KeyEvent)
 {
-	if((KeyEventInformation.GetKeyCode() == 9 /* ESCAPE */) && (KeyEventInformation.IsDown() == true))
+	if((KeyEvent.GetKeyCode() == 9 /* ESCAPE */) && (KeyEvent.IsDown() == true))
 	{
 		_Close(UI::Dialog::ClosingReason::ESCAPE_KEY);
-		
-		return true;
 	}
-	else if((KeyEventInformation.GetKeyCode() == 36 /* RETURN */) && (KeyEventInformation.IsDown() == true))
+	else if((KeyEvent.GetKeyCode() == 36 /* RETURN */) && (KeyEvent.IsDown() == true))
 	{
 		_Close(UI::Dialog::ClosingReason::RETURN_KEY);
-		
-		return true;
 	}
-	
-	return false;
 }
 
 bool UI::LoadGameDialog::_OnDirectoryEntryItemMouseButton(UI::DirectoryEntryItem * DirectoryEntryItem, int Button, int State, float X, float Y)

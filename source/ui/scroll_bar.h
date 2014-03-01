@@ -78,7 +78,7 @@ namespace UI
 		float m_MaximumPosition;
 		float m_StepSize;
 		// events
-		Event< void > _ScrollPositionChangedEvent;
+		::Event< void > _ScrollPositionChangedEvent;
 	};
 
 	inline ScrollBar::Alignment ScrollBar::GetAlignment(void) const

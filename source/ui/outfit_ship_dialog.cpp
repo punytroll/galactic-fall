@@ -20,7 +20,6 @@
 #include "../class_manager.h"
 #include "../color.h"
 #include "../globals.h"
-#include "../key_event_information.h"
 #include "../object_aspect_accessory.h"
 #include "../object_aspect_name.h"
 #include "../object_aspect_object_container.h"
@@ -32,7 +31,7 @@
 #include "../storage.h"
 #include "../weapon.h"
 #include "../weapon_class.h"
-
+#include "key_event.h"
 #include "label.h"
 #include "outfit_ship_dialog.h"
 #include "scroll_box.h"
@@ -497,15 +496,12 @@ void UI::OutfitShipDialog::_OnUnmountButtonClicked()
 	_RebuildAccessoryList();
 }
 
-bool UI::OutfitShipDialog::_OnKey(const KeyEventInformation & KeyEventInformation)
+void UI::OutfitShipDialog::_OnKey(UI::KeyEvent & KeyEvent)
 {
-	if(((KeyEventInformation.GetKeyCode() == 9 /* ESCAPE */) || (KeyEventInformation.GetKeyCode() == 36 /* RETURN */) || (KeyEventInformation.GetKeyCode() == 25 /* W */)) && (KeyEventInformation.IsDown() == true))
+	if(((KeyEvent.GetKeyCode() == 9 /* ESCAPE */) || (KeyEvent.GetKeyCode() == 36 /* RETURN */) || (KeyEvent.GetKeyCode() == 25 /* W */)) && (KeyEvent.IsDown() == true))
 	{
 		Destroy();
 	}
-	
-	// eat all input
-	return true;
 }
 
 bool UI::OutfitShipDialog::_OnSlotListItemMouseButton(UI::SlotListItem * SlotListItem, int Button, int State, float X, float Y)

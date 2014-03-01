@@ -30,10 +30,10 @@
 #include "../events.h"
 
 class Color;
-class KeyEventInformation;
 
 namespace UI
 {
+	class KeyEvent;
 	class UserInterface;
 	
 	class Widget
@@ -54,7 +54,6 @@ namespace UI
 		void RemoveSubWidget(Widget * SubWidget);
 		void RaiseSubWidget(Widget * SubWidget);
 		void Destroy(void);
-		void SetKeyFocus(Widget * KeyFocus);
 		void GrabKeyFocus(void);
 		void SetName(const std::string & Name);
 		// getters
@@ -63,11 +62,11 @@ namespace UI
 		Vector2f GetGlobalPosition(void) const;
 		const Vector2f & GetSize(void) const;
 		const std::string & GetName(void) const;
+		std::string GetPath(void) const;
 		Widget * GetRootWidget(void);
 		Widget * GetSupWidget(void);
 		Widget * GetSubWidget(const std::string & Name);
 		const std::list< Widget * > & GetSubWidgets(void) const;
-		Widget * GetKeyFocus(void);
 		bool IsVisible(void) const;
 		// setters
 		void SetAnchorBottom(bool AnchorBottom);
@@ -78,7 +77,6 @@ namespace UI
 		void SetVisible(bool Visible);
 		// receive input
 		bool MouseButton(int Button, int State, float X, float Y);
-		bool Key(const KeyEventInformation & KeyEventInformation);
 		void MouseMoved(float X, float Y);
 		// MouseEnter may depend on the fact that m_HoverWidget on the m_SupWidget is set to this
 		// MouseEnter on the new hover widget is called after MouseLeave on the old hover widget
@@ -88,7 +86,7 @@ namespace UI
 		void MouseLeave(void);
 		// connect and disconnect events
 		Connection ConnectDestroyingCallback(std::function< void (void) > Callback);
-		Connection ConnectKeyCallback(std::function< bool (const KeyEventInformation &) > Callback);
+		Connection ConnectKeyCallback(std::function< void (UI::KeyEvent &) > Callback);
 		Connection ConnectMouseButtonCallback(std::function< bool (int, int, float, float) > Callback);
 		Connection ConnectMouseEnterCallback(std::function< void (void) > Callback);
 		Connection ConnectMouseLeaveCallback(std::function< void (void) > Callback);
@@ -128,15 +126,15 @@ namespace UI
 		Widget * _SupWidget;
 		bool _Visible;
 		// events
-		Event< void > _DestroyingEvent;
-		Event< bool, const KeyEventInformation & > _KeyEvent;
-		Event< bool, int, int, float, float > _MouseButtonEvent;
-		Event< void > _MouseEnterEvent;
-		Event< void > _MouseLeaveEvent;
-		Event< void, float, float > _MouseMovedEvent;
-		Event< void > _PositionChangedEvent;
-		Event< void > _SizeChangedEvent;
-		Event< void, float, float > _UpdatingEvent;
+		::Event< void > _DestroyingEvent;
+		::Event< void, UI::KeyEvent & > _KeyEvent;
+		::Event< bool, int, int, float, float > _MouseButtonEvent;
+		::Event< void > _MouseEnterEvent;
+		::Event< void > _MouseLeaveEvent;
+		::Event< void, float, float > _MouseMovedEvent;
+		::Event< void > _PositionChangedEvent;
+		::Event< void > _SizeChangedEvent;
+		::Event< void, float, float > _UpdatingEvent;
 		// static manager properties
 		static std::list< Widget * > _DestroyedWidgets;
 		static std::stack< std::pair< Vector2f, Vector2f > > _ClippingRectangles;
@@ -195,11 +193,6 @@ namespace UI
 	inline const std::list< Widget * > & Widget::GetSubWidgets(void) const
 	{
 		return _SubWidgets;
-	}
-
-	inline Widget * Widget::GetKeyFocus(void)
-	{
-		return _KeyFocus;
 	}
 
 	inline bool Widget::IsVisible(void) const

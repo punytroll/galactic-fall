@@ -72,7 +72,6 @@
 #include "graphics/texture.h"
 #include "graphics/texture_manager.h"
 #include "graphics/view.h"
-#include "key_event_information.h"
 #include "map_knowledge.h"
 #include "math.h"
 #include "message.h"
@@ -108,6 +107,7 @@
 #include "system_statistics.h"
 #include "timeout_notifications.h"
 #include "ui/button.h"
+#include "ui/key_event.h"
 #include "ui/label.h"
 #include "ui/main_menu_window.h"
 #include "ui/map_dialog.h"
@@ -2785,6 +2785,8 @@ void ActionSpawnFighter(void)
 
 void ActionSpawnRandomShip(void)
 {
+	assert(g_CurrentSystem != nullptr);
+	
 	std::stringstream IdentifierPrefix;
 	
 	IdentifierPrefix << "::system(" << g_CurrentSystem->GetIdentifier() << ")::created_at_game_time(" << std::fixed << GameTime::Get() << ")";
@@ -2874,13 +2876,13 @@ void ActionToggleTimingDialog(void)
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //  input events for the main view                                                               //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-bool MainViewKeyEvent(const KeyEventInformation & KeyEventInformation)
+void MainViewKeyEvent(UI::KeyEvent & KeyEvent)
 {
-	if((KeyEventInformation.GetKeyCode() >= 0) && (KeyEventInformation.GetKeyCode() < 127))
+	if((KeyEvent.GetPhase() == UI::Event::Phase::Target) && (KeyEvent.GetKeyCode() >= 0) && (KeyEvent.GetKeyCode() < 127))
 	{
 		int EventIndex = -1;
 		
-		if(KeyEventInformation.IsDown() == true)
+		if(KeyEvent.IsDown() == true)
 		{
 			EventIndex = 0;
 		}
@@ -2888,15 +2890,11 @@ bool MainViewKeyEvent(const KeyEventInformation & KeyEventInformation)
 		{
 			EventIndex = 1;
 		}
-		if(g_KeyboardLookupTable[KeyEventInformation.GetKeyCode()][EventIndex] != 0)
+		if(g_KeyboardLookupTable[KeyEvent.GetKeyCode()][EventIndex] != 0)
 		{
-			g_KeyboardLookupTable[KeyEventInformation.GetKeyCode()][EventIndex]();
-			
-			return true;
+			g_KeyboardLookupTable[KeyEvent.GetKeyCode()][EventIndex]();
 		}
 	}
-	
-	return false;
 }
 
 bool MainViewMouseButtonEvent(int MouseButton, int State, int X, int Y)
@@ -3354,13 +3352,14 @@ void ProcessEvents(void)
 		case KeyPress:
 		case KeyRelease:
 			{
-				KeyEventInformation KeyEventInformation(Event.xkey);
+				UI::KeyEvent KeyEvent;
 				
+				KeyEvent.SetKeyEvent(&Event.xkey);
 				if(g_EchoEvents == true)
 				{
-					std::cout << "KeyEvent:       key_state=" << ((KeyEventInformation.IsDown() == true) ? ("down") : ((KeyEventInformation.IsUp() == true) ? ("up  ") : ("unknown"))) << "   modifier_state=" << Event.xkey.state << "   key_code=" << KeyEventInformation.GetKeyCode() << "   string='" << KeyEventInformation.GetString() << "'  string.length=" << KeyEventInformation.GetString().length() << "   key_symbol=" << KeyEventInformation.GetKeySymbol() << std::endl;
+					std::cout << "KeyEvent:       key_state=" << ((KeyEvent.IsDown() == true) ? ("down") : ((KeyEvent.IsUp() == true) ? ("up  ") : ("unknown"))) << "   modifier_state=" << Event.xkey.state << "   key_code=" << KeyEvent.GetKeyCode() << "   string='" << KeyEvent.GetString() << "'  string.length=" << KeyEvent.GetString().length() << "   key_symbol=" << KeyEvent.GetKeySymbol() << std::endl;
 				}
-				g_UserInterface->Key(KeyEventInformation);
+				g_UserInterface->DispatchKeyEvent(KeyEvent);
 				
 				break;
 			}
