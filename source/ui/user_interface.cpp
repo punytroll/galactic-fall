@@ -129,15 +129,13 @@ bool UI::UserInterface::MouseButton(int Button, int State, float X, float Y)
 	return false;
 }
 
-bool UI::UserInterface::Key(const KeyEventInformation & KeyEventInformation)
+void UI::UserInterface::Key(const KeyEventInformation & KeyEventInformation)
 {
 	assert(_RootWidget != nullptr);
 	if(_RootWidget->_Enabled == true)
 	{
-		return _RootWidget->Key(KeyEventInformation);
+		_RootWidget->Key(KeyEventInformation);
 	}
-	
-	return false;
 }
 
 void UI::UserInterface::MouseMoved(float X, float Y)

@@ -1545,70 +1545,6 @@ void GameFrame(void)
 	g_SystemStatistics->SetProcessingSecondsThisFrame(FrameProcessingTimeDelta);
 }
 
-void MouseButtonDown(int MouseButton, int X, int Y)
-{
-	if(g_UserInterface->MouseButton(MouseButton, EV_DOWN, X, Y) == true)
-	{
-		return;
-	}
-	switch(MouseButton)
-	{
-	case 4: // MouseButton: WHEEL_UP
-		{
-			g_CameraPosition[2] *= 0.95f;
-			
-			break;
-		}
-	case 5: // MouseButton: WHEEL_DOWN
-		{
-			g_CameraPosition[2] *= 1.05f;
-			
-			break;
-		}
-	case 2: // MouseButton: MIDDLE
-		{
-			g_LastMotionX = X;
-			g_LastMotionY = Y;
-			g_MouseButton = 2;
-			
-			break;
-		}
-	}
-}
-
-void MouseButtonUp(int MouseButton, int X, int Y)
-{
-	if(g_UserInterface->MouseButton(MouseButton, EV_UP, X, Y) == true)
-	{
-		return;
-	}
-	switch(MouseButton)
-	{
-	case 2: // MouseButton: MIDDLE
-		{
-			g_MouseButton = -1;
-			
-			break;
-		}
-	}
-}
-
-void MouseMoved(int X, int Y)
-{
-	g_UserInterface->MouseMoved(X, Y);
-	
-	int DeltaX(X - g_LastMotionX);
-	int DeltaY(Y - g_LastMotionY);
-	
-	g_LastMotionX = X;
-	g_LastMotionY = Y;
-	if(g_MouseButton == 2) // MouseButton: MIDDLE
-	{
-		g_CameraPosition[0] = g_CameraPosition[0] - static_cast< float >(DeltaX) * 0.0011f * g_CameraPosition[2];
-		g_CameraPosition[1] = g_CameraPosition[1] + static_cast< float >(DeltaY) * 0.0011f * g_CameraPosition[2];
-	}
-}
-
 void PurgeGame(void)
 {
 	if(g_CurrentSystem != 0)
@@ -2935,12 +2871,11 @@ void ActionToggleTimingDialog(void)
 	}
 }
 
-void KeyEvent(const KeyEventInformation & KeyEventInformation)
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//  input events for the main view                                                               //
+///////////////////////////////////////////////////////////////////////////////////////////////////
+bool MainViewKeyEvent(const KeyEventInformation & KeyEventInformation)
 {
-	if(g_UserInterface->Key(KeyEventInformation) == true)
-	{
-		return;
-	}
 	if((KeyEventInformation.GetKeyCode() >= 0) && (KeyEventInformation.GetKeyCode() < 127))
 	{
 		int EventIndex = -1;
@@ -2956,7 +2891,61 @@ void KeyEvent(const KeyEventInformation & KeyEventInformation)
 		if(g_KeyboardLookupTable[KeyEventInformation.GetKeyCode()][EventIndex] != 0)
 		{
 			g_KeyboardLookupTable[KeyEventInformation.GetKeyCode()][EventIndex]();
+			
+			return true;
 		}
+	}
+	
+	return false;
+}
+
+bool MainViewMouseButtonEvent(int MouseButton, int State, int X, int Y)
+{
+	switch(MouseButton)
+	{
+	case 4: // MouseButton: WHEEL_UP
+		{
+			g_CameraPosition[2] *= 0.95f;
+			
+			break;
+		}
+	case 5: // MouseButton: WHEEL_DOWN
+		{
+			g_CameraPosition[2] *= 1.05f;
+			
+			break;
+		}
+	case 2: // MouseButton: MIDDLE
+		{
+			if(State == EV_DOWN)
+			{
+				g_LastMotionX = X;
+				g_LastMotionY = Y;
+				g_MouseButton = 2;
+			}
+			else
+			{
+				g_MouseButton = -1;
+			}
+			
+			break;
+		}
+	}
+	
+	return true;
+}
+
+void MainViewMouseMoved(int X, int Y)
+{
+	int DeltaX(X - g_LastMotionX);
+	int DeltaY(Y - g_LastMotionY);
+	
+	g_LastMotionX = X;
+	g_LastMotionY = Y;
+	if(g_MouseButton == 2) // MouseButton: MIDDLE
+	{
+		g_CameraPosition[0] = g_CameraPosition[0] - static_cast< float >(DeltaX) * 0.0011f * g_CameraPosition[2];
+		g_CameraPosition[1] = g_CameraPosition[1] + static_cast< float >(DeltaY) * 0.0011f * g_CameraPosition[2];
 	}
 }
 
@@ -3338,7 +3327,7 @@ void ProcessEvents(void)
 				{
 					std::cout << "Motion:         x=" << Event.xbutton.x << "   y=" << Event.xbutton.y << std::endl;
 				}
-				MouseMoved(Event.xmotion.x, Event.xmotion.y);
+				g_UserInterface->MouseMoved(Event.xmotion.x, Event.xmotion.y);
 				
 				break;
 			}
@@ -3348,7 +3337,7 @@ void ProcessEvents(void)
 				{
 					std::cout << "ButtonPress:    button=" << Event.xbutton.button << "   x=" << Event.xbutton.x << "   y=" << Event.xbutton.y << std::endl;
 				}
-				MouseButtonDown(Event.xbutton.button, Event.xbutton.x, Event.xbutton.y);
+				g_UserInterface->MouseButton(Event.xbutton.button, EV_DOWN, Event.xbutton.x, Event.xbutton.y);
 				
 				break;
 			}
@@ -3358,7 +3347,7 @@ void ProcessEvents(void)
 				{
 					std::cout << "ButtonRelease:  button=" << Event.xbutton.button << "   x=" << Event.xbutton.x << "   y=" << Event.xbutton.y << std::endl;
 				}
-				MouseButtonUp(Event.xbutton.button, Event.xbutton.x, Event.xbutton.y);
+				g_UserInterface->MouseButton(Event.xbutton.button, EV_UP, Event.xbutton.x, Event.xbutton.y);
 				
 				break;
 			}
@@ -3371,7 +3360,7 @@ void ProcessEvents(void)
 				{
 					std::cout << "KeyEvent:       key_state=" << ((KeyEventInformation.IsDown() == true) ? ("down") : ((KeyEventInformation.IsUp() == true) ? ("up  ") : ("unknown"))) << "   modifier_state=" << Event.xkey.state << "   key_code=" << KeyEventInformation.GetKeyCode() << "   string='" << KeyEventInformation.GetString() << "'  string.length=" << KeyEventInformation.GetString().length() << "   key_symbol=" << KeyEventInformation.GetKeySymbol() << std::endl;
 				}
-				KeyEvent(KeyEventInformation);
+				g_UserInterface->Key(KeyEventInformation);
 				
 				break;
 			}
@@ -3732,6 +3721,9 @@ int main(int argc, char ** argv)
 	
 	// user interface
 	g_UserInterface = new UI::UserInterface();
+	g_UserInterface->GetRootWidget()->ConnectKeyCallback(MainViewKeyEvent);
+	g_UserInterface->GetRootWidget()->ConnectMouseButtonCallback(MainViewMouseButtonEvent);
+	g_UserInterface->GetRootWidget()->ConnectMouseMovedCallback(MainViewMouseMoved);
 	// set first timeout for widget collector, it will reinsert itself on callback
 	g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 5.0f, CollectWidgetsRecurrent);
 	// the user interface widgets must be loaded before the first Resize() call
