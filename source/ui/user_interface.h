@@ -37,7 +37,7 @@ namespace UI
 		virtual ~UserInterface(void);
 		void Draw(void) const;
 		bool MouseButton(int Button, int State, float X, float Y);
-		bool Key(const KeyEventInformation & KeyEventInformation);
+		void Key(const KeyEventInformation & KeyEventInformation);
 		void MouseMoved(float X, float Y);
 		void Update(float RealTimeSeconds, float GameTimeSeconds);
 		// setters
