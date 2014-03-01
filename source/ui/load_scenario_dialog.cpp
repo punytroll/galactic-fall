@@ -109,36 +109,40 @@ UI::LoadScenarioDialog::LoadScenarioDialog(UI::Widget * SupWidget, ScenarioManag
 	SetPosition(Vector2f(120.0f, 200.0f));
 	SetSize(Vector2f(300.0f, 400.0f));
 	ConnectKeyCallback(std::bind(&UI::LoadScenarioDialog::_OnKey, this, std::placeholders::_1));
-	_OKButton = new UI::TextButton(this, "OK");
-	_OKButton->SetSize(Vector2f(100.0f, 20.0f));
-	_OKButton->SetPosition(Vector2f(GetSize()[0] - 10.0f - _OKButton->GetSize()[0], GetSize()[1] - 10.0f - _OKButton->GetSize()[1]));
-	_OKButton->SetAnchorBottom(true);
-	_OKButton->SetAnchorLeft(false);
-	_OKButton->SetAnchorRight(true);
-	_OKButton->SetAnchorTop(false);
-	_OKButton->ConnectClickedCallback(std::bind(&UI::LoadScenarioDialog::_Close, this, UI::Dialog::ClosingReason::OK_BUTTON));
-	_CancelButton = new UI::TextButton(this, "Cancel");
-	_CancelButton->SetSize(Vector2f(100.0f, 20.0f));
-	_CancelButton->SetPosition(Vector2f(GetSize()[0] - 10.0f - _OKButton->GetSize()[0] - 10.0f - _CancelButton->GetSize()[0], GetSize()[1] - 10.0f - _CancelButton->GetSize()[1]));
-	_CancelButton->SetAnchorBottom(true);
-	_CancelButton->SetAnchorLeft(false);
-	_CancelButton->SetAnchorRight(true);
-	_CancelButton->SetAnchorTop(false);
-	_CancelButton->ConnectClickedCallback(std::bind(&UI::LoadScenarioDialog::_Close, this, UI::Dialog::ClosingReason::CANCEL_BUTTON));
-	_ErrorMessage = new UI::Label(this);
-	_ErrorMessage->SetPosition(Vector2f(10.0f, 40.0f));
-	_ErrorMessage->SetSize(Vector2f(GetSize()[0] - 10.0f - 10.0f, 30.0f));
-	_ErrorMessage->SetTextColor(Color(1.0f, 0.3, 0.3f, 1.0f));
-	_ErrorMessage->SetAnchorBottom(false);
-	_ErrorMessage->SetAnchorLeft(true);
-	_ErrorMessage->SetAnchorRight(true);
-	_ErrorMessage->SetAnchorTop(true);
-	_ErrorMessage->SetWrap(true);
-	_ErrorMessage->SetWordWrap(true);
-	_ErrorMessage->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
+
+	auto OKButton(new UI::TextButton(this, "OK"));
+	
+	OKButton->SetSize(Vector2f(100.0f, 20.0f));
+	OKButton->SetPosition(Vector2f(GetSize()[0] - 10.0f - OKButton->GetSize()[0], GetSize()[1] - 10.0f - OKButton->GetSize()[1]));
+	OKButton->SetAnchorBottom(true);
+	OKButton->SetAnchorLeft(false);
+	OKButton->SetAnchorRight(true);
+	OKButton->SetAnchorTop(false);
+	OKButton->ConnectClickedCallback(std::bind(&UI::LoadScenarioDialog::_Close, this, UI::Dialog::ClosingReason::OK_BUTTON));
+	
+	auto CancelButton(new UI::TextButton(this, "Cancel"));
+	
+	CancelButton->SetSize(Vector2f(100.0f, 20.0f));
+	CancelButton->SetPosition(Vector2f(GetSize()[0] - 10.0f - OKButton->GetSize()[0] - 10.0f - CancelButton->GetSize()[0], GetSize()[1] - 10.0f - CancelButton->GetSize()[1]));
+	CancelButton->SetAnchorBottom(true);
+	CancelButton->SetAnchorLeft(false);
+	CancelButton->SetAnchorRight(true);
+	CancelButton->SetAnchorTop(false);
+	CancelButton->ConnectClickedCallback(std::bind(&UI::LoadScenarioDialog::_Close, this, UI::Dialog::ClosingReason::CANCEL_BUTTON));
+	_MessageLabel = new UI::Label(this);
+	_MessageLabel->SetPosition(Vector2f(10.0f, 40.0f));
+	_MessageLabel->SetSize(Vector2f(GetSize()[0] - 10.0f - 10.0f, 30.0f));
+	_MessageLabel->SetTextColor(Color(1.0f, 0.3, 0.3f, 1.0f));
+	_MessageLabel->SetAnchorBottom(false);
+	_MessageLabel->SetAnchorLeft(true);
+	_MessageLabel->SetAnchorRight(true);
+	_MessageLabel->SetAnchorTop(true);
+	_MessageLabel->SetWrap(true);
+	_MessageLabel->SetWordWrap(true);
+	_MessageLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	_ScenarioScrollBox = new UI::ScrollBox(this);
 	_ScenarioScrollBox->SetPosition(Vector2f(10.0f, 110.0f));
-	_ScenarioScrollBox->SetSize(Vector2f(GetSize()[0] - 10.0f - 10.0f, GetSize()[1] - 110.0f - 30.0f - 10.0f - _OKButton->GetSize()[1]));
+	_ScenarioScrollBox->SetSize(Vector2f(GetSize()[0] - 10.0f - 10.0f, GetSize()[1] - 110.0f - 30.0f - 10.0f - OKButton->GetSize()[1]));
 	_ScenarioScrollBox->SetAnchorBottom(true);
 	_ScenarioScrollBox->SetAnchorRight(true);
 	_ScenarioScrollBox->SetAnchorTop(true);
@@ -162,30 +166,25 @@ UI::LoadScenarioDialog::LoadScenarioDialog(UI::Widget * SupWidget, ScenarioManag
 
 Scenario * UI::LoadScenarioDialog::GetScenario(void)
 {
-	if(_SelectedScenarioItem != 0)
+	if(_SelectedScenarioItem != nullptr)
 	{
 		return _SelectedScenarioItem->GetScenario();
 	}
 	else
 	{
-		return 0;
+		return nullptr;
 	}
 }
 
 void UI::LoadScenarioDialog::ShowErrorMessage(const std::string & ErrorMessage)
 {
-	if(_ErrorMessageTimeoutNotification.IsValid() == true)
+	if(_MessageTimeoutNotification.IsValid() == true)
 	{
-		_ErrorMessageTimeoutNotification.Dismiss();
+		_MessageTimeoutNotification.Dismiss();
 	}
-	_ErrorMessage->SetVisible(true);
-	_ErrorMessage->SetText(ErrorMessage);
-	_ErrorMessageTimeoutNotification = g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 2.0f, std::bind(&LoadScenarioDialog::_HideErrorMessage, this));
-}
-
-void UI::LoadScenarioDialog::_HideErrorMessage(void)
-{
-	_ErrorMessage->SetVisible(false);
+	_MessageLabel->SetVisible(true);
+	_MessageLabel->SetText(ErrorMessage);
+	_MessageTimeoutNotification = g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 2.0f, std::bind(&UI::Label::SetVisible, _MessageLabel, false));
 }
 
 bool UI::LoadScenarioDialog::_OnKey(const KeyEventInformation & KeyEventInformation)
@@ -210,7 +209,7 @@ bool UI::LoadScenarioDialog::_OnScenarioItemMouseButton(UI::ScenarioItem * Scena
 {
 	if((Button == 1 /* LEFT */) && (State == EV_DOWN))
 	{
-		if(_SelectedScenarioItem != 0)
+		if(_SelectedScenarioItem != nullptr)
 		{
 			_SelectedScenarioItem->SetSelected(false);
 		}
