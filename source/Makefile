@@ -74,12 +74,13 @@ prepare-build: $(OBJECT_DIRECTORIES)
 
 $(OBJECT_FILES): $(CXXFLAGS_configuration)
 
-$(DEPENDENCY_FILES): $(cpp_includes_to_makefile_dependencies) $(DEPENDENCY_DIRECTORIES)
+$(DEPENDENCY_FILES): $(cpp_includes_to_makefile_dependencies)
 
 binary: $(OBJECT_FILES) $(algebra_object_files) $(arxx_libraries) $(xml_stream_object_files) $(LDFLAGS_configuration)
 	$(CXX) $(LDFLAGS) $(OBJECT_FILES) $(algebra_object-files) $(arxx_linking) $(xml_stream_object_files) -lGL -lX11 -o $@
 
 $(DEPENDENCY_DIRECTORY)/%.dep: %
+	@test -d $(@D) || mkdir $(@D)
 	$(command_cpp_includes_to_makefile) $< > $@
 
 .SECONDEXPANSION:
