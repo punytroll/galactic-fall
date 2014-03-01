@@ -79,7 +79,7 @@ $(DEPENDENCY_FILES): $(cpp_includes_to_makefile_dependencies) $(DEPENDENCY_DIREC
 binary: $(OBJECT_FILES) $(algebra_object_files) $(arxx_libraries) $(xml_stream_object_files) $(LDFLAGS_configuration)
 	$(CXX) $(LDFLAGS) $(OBJECT_FILES) $(algebra_object-files) $(arxx_linking) $(xml_stream_object_files) -lGL -lX11 -o $@
 
-.dependency-files/%.dep: %
+$(DEPENDENCY_DIRECTORY)/%.dep: %
 	$(command_cpp_includes_to_makefile) $< > $@
 
 .SECONDEXPANSION:
