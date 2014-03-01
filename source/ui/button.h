@@ -42,7 +42,7 @@ namespace UI
 		void _OnMouseLeave(void);
 		// member variables
 		// events
-		Event< void > _ClickedEvent;
+		::Event< void > _ClickedEvent;
 	};
 }
 

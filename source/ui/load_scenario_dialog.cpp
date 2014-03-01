@@ -19,10 +19,10 @@
 
 #include "../color.h"
 #include "../globals.h"
-#include "../key_event_information.h"
 #include "../real_time.h"
 #include "../scenario.h"
 #include "../scenario_manager.h"
+#include "key_event.h"
 #include "label.h"
 #include "load_scenario_dialog.h"
 #include "scroll_box.h"
@@ -187,22 +187,16 @@ void UI::LoadScenarioDialog::ShowErrorMessage(const std::string & ErrorMessage)
 	_MessageTimeoutNotification = g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 2.0f, std::bind(&UI::Label::SetVisible, _MessageLabel, false));
 }
 
-bool UI::LoadScenarioDialog::_OnKey(const KeyEventInformation & KeyEventInformation)
+void UI::LoadScenarioDialog::_OnKey(UI::KeyEvent & KeyEvent)
 {
-	if((KeyEventInformation.GetKeyCode() == 9 /* ESCAPE */) && (KeyEventInformation.IsDown() == true))
+	if((KeyEvent.GetKeyCode() == 9 /* ESCAPE */) && (KeyEvent.IsDown() == true))
 	{
 		_Close(UI::Dialog::ClosingReason::ESCAPE_KEY);
-		
-		return true;
 	}
-	else if((KeyEventInformation.GetKeyCode() == 36 /* RETURN */) && (KeyEventInformation.IsDown() == true))
+	else if((KeyEvent.GetKeyCode() == 36 /* RETURN */) && (KeyEvent.IsDown() == true))
 	{
 		_Close(UI::Dialog::ClosingReason::RETURN_KEY);
-		
-		return true;
 	}
-	
-	return false;
 }
 
 bool UI::LoadScenarioDialog::_OnScenarioItemMouseButton(UI::ScenarioItem * ScenarioItem, int Button, int State, float X, float Y)

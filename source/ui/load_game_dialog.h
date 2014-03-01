@@ -42,8 +42,8 @@ namespace UI
 	private:
 		// callbacks
 		bool _OnDirectoryEntryItemMouseButton(UI::DirectoryEntryItem * DirectoryEntryItem, int Button, int State, float X, float Y);
-		bool _OnFileNameLabelKey(const KeyEventInformation & KeyEventInformation);
-		bool _OnKey(const KeyEventInformation & KeyEventInformation);
+		void _OnFileNameLabelKey(UI::KeyEvent & KeyEvent);
+		void _OnKey(UI::KeyEvent & KeyEvent);
 		// helper functions and actions
 		void _OnFileNameLabelTextChanged(void);
 		// member variables

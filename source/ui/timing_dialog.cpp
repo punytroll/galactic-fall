@@ -18,9 +18,9 @@
 **/
 
 #include "../globals.h"
-#include "../key_event_information.h"
 #include "../string_cast.h"
 #include "../system_statistics.h"
+#include "key_event.h"
 #include "label.h"
 #include "timing_dialog.h"
 
@@ -225,16 +225,12 @@ UI::TimingDialog::TimingDialog(UI::Widget * SupWidget) :
 	_FontSecondsLastFrameLabel->SetHorizontalAlignment(UI::Label::ALIGN_RIGHT);
 }
 
-bool UI::TimingDialog::_OnKey(const KeyEventInformation & KeyEventInformation)
+void UI::TimingDialog::_OnKey(UI::KeyEvent & KeyEvent)
 {
-	if((KeyEventInformation.GetKeyCode() == 9 /* ESCAPE */) && (KeyEventInformation.IsDown() == true))
+	if((KeyEvent.GetKeyCode() == 9 /* ESCAPE */) && (KeyEvent.IsDown() == true))
 	{
 		Destroy();
-		
-		return true;
 	}
-	
-	return false;
 }
 
 void UI::TimingDialog::_OnUpdating(float RealTimeSeconds, float GameTimeSeconds)

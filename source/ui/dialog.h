@@ -45,7 +45,7 @@ namespace UI
 	private:
 		// member variables
 		//events
-		Event< bool, UI::Dialog::ClosingReason > _ClosingEvent;
+		::Event< bool, UI::Dialog::ClosingReason > _ClosingEvent;
 	};
 }
 

@@ -32,7 +32,7 @@ namespace UI
 		TimingDialog(UI::Widget * SupWidget);
 	private:
 		// callbacks
-		bool _OnKey(const KeyEventInformation & KeyEventInformation);
+		void _OnKey(UI::KeyEvent & KeyEvent);
 		void _OnUpdating(float RealTimeSeconds, float GameTimeSeconds);
 		// member variables
 		UI::Label * _AISecondsThisFrameLabel;

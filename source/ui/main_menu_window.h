@@ -47,7 +47,7 @@ namespace UI
 		void SetDestroyOnESCAPEKey(bool DestroyOnESCAPEKey);
 	private:
 		// callbacks
-		bool _OnKey(const KeyEventInformation & KeyEventInformation);
+		void _OnKey(UI::KeyEvent & KeyEvent);
 		void _OnLoadGameButtonClicked(void);
 		bool _OnLoadGameDialogClosing(UI::Dialog::ClosingReason ClosingReason);
 		void _OnLoadGameDialogDestroying(void);

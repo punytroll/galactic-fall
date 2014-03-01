@@ -111,6 +111,20 @@ Vector2f UI::Widget::GetGlobalPosition(void) const
 	return Result;
 }
 
+std::string UI::Widget::GetPath(void) const
+{
+	std::string Result;
+	auto Widget(this);
+	
+	while(Widget != nullptr)
+	{
+		Result = "/" + _Name + Result;
+		Widget = Widget->_SupWidget;
+	}
+	
+	return Result;
+}
+
 void UI::Widget::SetBackgroundColor(const Color & BackgroundColor)
 {
 	delete _BackgroundColor;
@@ -187,16 +201,6 @@ void UI::Widget::SetSize(const Vector2f & Size)
 	}
 }
 
-void UI::Widget::SetKeyFocus(UI::Widget * KeyFocus)
-{
-	if(KeyFocus != nullptr)
-	{
-		assert(std::find(_SubWidgets.begin(), _SubWidgets.end(), KeyFocus) != _SubWidgets.end());
-		assert(KeyFocus->_SupWidget == this);
-	}
-	_KeyFocus = KeyFocus;
-}
-
 void UI::Widget::GrabKeyFocus(void)
 {
 	if(_SupWidget != nullptr)
@@ -252,29 +256,6 @@ void UI::Widget::Destroy(void)
 	}
 	// now append ourself to the list of destroyed widgets to be delete'd by the garbage collection
 	_DestroyedWidgets.push_back(this);
-}
-
-bool UI::Widget::Key(const KeyEventInformation & TheKeyEventInformation)
-{
-	if((_KeyFocus != nullptr) && (_KeyFocus->_Enabled == true))
-	{
-		if(_KeyFocus->Key(TheKeyEventInformation) == true)
-		{
-			return true;
-		}
-	}
-	
-	bool Result(false);
-	
-	for(auto & Callback : _KeyEvent.GetCallbacks())
-	{
-		if(Callback(TheKeyEventInformation) == true)
-		{
-			Result = true;
-		}
-	}
-	
-	return Result;
 }
 
 bool UI::Widget::MouseButton(int Button, int State, float X, float Y)
@@ -370,7 +351,7 @@ Connection UI::Widget::ConnectDestroyingCallback(std::function< void (void) > Ca
 	return _DestroyingEvent.Connect(Callback);
 }
 
-Connection UI::Widget::ConnectKeyCallback(std::function< bool (const KeyEventInformation &) > Callback)
+Connection UI::Widget::ConnectKeyCallback(std::function< void (UI::KeyEvent &) > Callback)
 {
 	return _KeyEvent.Connect(Callback);
 }

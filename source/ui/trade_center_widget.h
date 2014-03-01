@@ -52,7 +52,7 @@ namespace UI
 		void _OnBuyButtonUpdating(UI::Button * BuyButton, float RealTimeSeconds, float GameTimeSeconds);
 		void _OnDestroying(void);
 		void _OnDestroyInScene(Graphics::Node * Node);
-		bool _OnKey(const KeyEventInformation & KeyEventInformation);
+		void _OnKey(UI::KeyEvent & KeyEvent);
 		void _OnSellButtonClicked(void);
 		void _OnSellButtonUpdating(UI::Button * BuyButton, float RealTimeSeconds, float GameTimeSeconds);
 		void _OnUpdating(float RealTimeSeconds, float GameTimeSeconds);

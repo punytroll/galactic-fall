@@ -19,7 +19,10 @@
 
 #include <assert.h>
 
+#include <vector>
+
 #include "../graphics/gl.h"
+#include "key_event.h"
 #include "user_interface.h"
 #include "widget.h"
 
@@ -129,12 +132,65 @@ bool UI::UserInterface::MouseButton(int Button, int State, float X, float Y)
 	return false;
 }
 
-void UI::UserInterface::Key(const KeyEventInformation & KeyEventInformation)
+struct PropagationPathWidget
 {
-	assert(_RootWidget != nullptr);
-	if(_RootWidget->_Enabled == true)
+	UI::Widget * _Widget;
+	UI::Event::Phase _Phase;
+};
+
+void UI::UserInterface::DispatchKeyEvent(UI::KeyEvent & KeyEvent)
+{
+	std::vector< PropagationPathWidget > PropagationPath;
+	auto PathWidget(_RootWidget);
+	
+	while(PathWidget != nullptr)
 	{
-		_RootWidget->Key(KeyEventInformation);
+		assert(PathWidget->_Enabled == true);
+		
+		PropagationPathWidget CapturingWidget;
+		
+		CapturingWidget._Widget = PathWidget;
+		CapturingWidget._Phase = UI::Event::Phase::Capturing;
+		PropagationPath.push_back(CapturingWidget);
+		PathWidget = PathWidget->_KeyFocus;
+	}
+	if(PropagationPath.size() > 0)
+	{
+		PropagationPathWidget TargetWidget;
+		
+		TargetWidget._Widget = PropagationPath[PropagationPath.size() - 1]._Widget;
+		TargetWidget._Phase = UI::Event::Phase::Target;
+		PropagationPath.push_back(TargetWidget);
+		PathWidget = PropagationPath[PropagationPath.size() - 1]._Widget;
+		while(PathWidget != nullptr)
+		{
+			assert(PathWidget->_Enabled == true);
+			
+			PropagationPathWidget BubblingWidget;
+			
+			BubblingWidget._Widget = PathWidget;
+			BubblingWidget._Phase = UI::Event::Phase::Bubbling;
+			PropagationPath.push_back(BubblingWidget);
+			PathWidget = PathWidget->_SupWidget;
+		}
+	}
+	for(auto PropagationPathWidget : PropagationPath)
+	{
+		KeyEvent.SetCurrentTarget(PropagationPathWidget._Widget);
+		KeyEvent.SetPhase(PropagationPathWidget._Phase);
+		KeyEvent.ResumeCallbacks();
+		for(auto & Callback : PropagationPathWidget._Widget->_KeyEvent.CopyCallbacks())
+		{
+			Callback(KeyEvent);
+			if(KeyEvent.GetStopCallbacks() == true)
+			{
+				break;
+			}
+		}
+		if(KeyEvent.GetStopPropagation() == true)
+		{
+			break;
+		}
 	}
 }
 
