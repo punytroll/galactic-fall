@@ -20,6 +20,8 @@
 #ifndef OBJECT_ASPECT_NAME_H
 #define OBJECT_ASPECT_NAME_H
 
+#include <string>
+
 class ObjectAspectName
 {
 public:
@@ -28,17 +30,17 @@ public:
 	// setters
 	void SetName(const std::string & Name);
 private:
-	std::string m_Name;
+	std::string _Name;
 };
 
 inline const std::string & ObjectAspectName::GetName(void) const
 {
-	return m_Name;
+	return _Name;
 }
 
 inline void ObjectAspectName::SetName(const std::string & Name)
 {
-	m_Name = Name;
+	_Name = Name;
 }
 
 #endif
