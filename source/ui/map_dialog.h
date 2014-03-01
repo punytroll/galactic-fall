@@ -34,20 +34,13 @@ namespace UI
 	{
 	public:
 		MapDialog(UI::Widget * SupWidget, System * System, Character * Character);
-		UI::StarMapDisplay * GetStarMapDisplay(void);
+		System * GetSelectedSystem(void);
 	protected:
 		// callbacks
-		bool OnKey(const KeyEventInformation & KeyEventInformation);
-		void OnOKClicked(void);
+		bool _OnKey(const KeyEventInformation & KeyEventInformation);
 	private:
-		UI::Button * m_OKButton;
-		UI::StarMapDisplay * m_StarMapDisplay;
+		UI::StarMapDisplay * _StarMapDisplay;
 	};
-
-	inline UI::StarMapDisplay * MapDialog::GetStarMapDisplay(void)
-	{
-		return m_StarMapDisplay;
-	}
 }
 
 #endif
