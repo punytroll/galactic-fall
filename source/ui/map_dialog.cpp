@@ -35,23 +35,27 @@ UI::MapDialog::MapDialog(UI::Widget * SupWidget, System * System, Character * Ch
 {
 	SetPosition(Vector2f(70.0f, 200.0f));
 	SetSize(Vector2f(500.0f, 530.0f));
-	ConnectKeyCallback(std::bind(&UI::MapDialog::OnKey, this, std::placeholders::_1));
-	m_OKButton = new UI::TextButton(this, "OK");
-	m_OKButton->SetPosition(Vector2f(390.0f, 500.0f));
-	m_OKButton->SetSize(Vector2f(100.0f, 20.0f));
-	m_OKButton->ConnectClickedCallback(std::bind(&UI::MapDialog::OnOKClicked, this));
-	m_StarMapDisplay = new UI::StarMapDisplay(this, System, Character);
-	m_StarMapDisplay->SetPosition(Vector2f(10.0f, 40.0f));
-	m_StarMapDisplay->SetSize(Vector2f(480.0f, 450.0f));
-	m_StarMapDisplay->SetBackgroundColor(Color(0.15f, 0.15f, 0.15f, 1.0f));
+	ConnectKeyCallback(std::bind(&UI::MapDialog::_OnKey, this, std::placeholders::_1));
+	
+	auto OKButton(new UI::TextButton(this, "OK"));
+	
+	OKButton->SetPosition(Vector2f(390.0f, 500.0f));
+	OKButton->SetSize(Vector2f(100.0f, 20.0f));
+	OKButton->ConnectClickedCallback(std::bind(&UI::MapDialog::Destroy, this));
+	_StarMapDisplay = new UI::StarMapDisplay(this, System, Character);
+	_StarMapDisplay->SetPosition(Vector2f(10.0f, 40.0f));
+	_StarMapDisplay->SetSize(Vector2f(480.0f, 450.0f));
+	_StarMapDisplay->SetBackgroundColor(Color(0.15f, 0.15f, 0.15f, 1.0f));
 }
 
-void UI::MapDialog::OnOKClicked(void)
+System * UI::MapDialog::GetSelectedSystem(void)
 {
-	Destroy();
+	assert(_StarMapDisplay != nullptr);
+	
+	return _StarMapDisplay->GetSelectedSystem();
 }
 
-bool UI::MapDialog::OnKey(const KeyEventInformation & KeyEventInformation)
+bool UI::MapDialog::_OnKey(const KeyEventInformation & KeyEventInformation)
 {
 	if(((KeyEventInformation.GetKeyCode() == 9 /* ESCAPE */) || (KeyEventInformation.GetKeyCode() == 36 /* RETURN */) || (KeyEventInformation.GetKeyCode() == 58 /* M */)) && (KeyEventInformation.IsDown() == true))
 	{

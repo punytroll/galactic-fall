@@ -1143,9 +1143,9 @@ void OnMapDialogDestroying(void)
 		const System * CurrentSystem(dynamic_cast< System * >(g_InputMind->GetCharacter()->GetShip()->GetContainer()));
 		
 		assert(CurrentSystem != 0);
-		if(CurrentSystem->IsLinkedToSystem(g_MapDialog->GetStarMapDisplay()->GetSelectedSystem()) == true)
+		if(CurrentSystem->IsLinkedToSystem(g_MapDialog->GetSelectedSystem()) == true)
 		{
-			g_InputMind->SelectLinkedSystem(g_MapDialog->GetStarMapDisplay()->GetSelectedSystem());
+			g_InputMind->SelectLinkedSystem(g_MapDialog->GetSelectedSystem());
 		}
 	}
 	g_MapDialog = 0;
