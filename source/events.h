@@ -58,15 +58,14 @@ public:
 		return _Callbacks;
 	}
 	
+	std::list< std::function< ReturnType (Types ...) > > CopyCallbacks(void)
+	{
+		return _Callbacks;
+	}
+	
 	void operator()(Types ... Arguments)
 	{
-		decltype(_Callbacks) Callbacks;
-		
-		for(auto & Callback : _Callbacks)
-		{
-			Callbacks.push_back(Callback);
-		}
-		for(auto & Callback : Callbacks)
+		for(auto & Callback : CopyCallbacks())
 		{
 			Callback(Arguments ...);
 		}
