@@ -25,7 +25,7 @@ arxx_linking = $(shell pkg-config --libs libarxx)
 
 all: all-recursive
 
-all-here: check-dependencies prepare-build binary
+all-here: check-dependencies binary
 
 all-recursive: all-here
 
@@ -67,11 +67,6 @@ dependencies: $(DEPENDENCY_FILES)
 		echo >> Makefile.dependencies; \
 	done
 
-$(OBJECT_DIRECTORIES) $(DEPENDENCY_DIRECTORIES):
-	mkdir $@
-
-prepare-build: $(OBJECT_DIRECTORIES)
-
 $(OBJECT_FILES): $(CXXFLAGS_configuration)
 
 $(DEPENDENCY_FILES): $(cpp_includes_to_makefile_dependencies)
@@ -85,6 +80,7 @@ $(DEPENDENCY_DIRECTORY)/%.dep: %
 
 .SECONDEXPANSION:
 $(OBJECT_DIRECTORY)/%.o: $$($$(subst /,_,$$*)_cpp)
+	@test -d $(@D) || mkdir $(@D)
 	$(CXX) $(CXXFLAGS) $(algebra_include) $(arxx_include) $(xml_stream_include) -c $< -o $@
 
 .PHONY: dependencies
