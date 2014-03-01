@@ -17,15 +17,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef LOAD_GAME_DIALOG_H
-#define LOAD_GAME_DIALOG_H
+#ifndef UI_LOAD_GAME_DIALOG_H
+#define UI_LOAD_GAME_DIALOG_H
 
 #include "../timeout_notifications.h"
 #include "dialog.h"
 
 namespace UI
 {
-	class Button;
 	class DirectoryEntryItem;
 	class Label;
 	class ScrollBox;

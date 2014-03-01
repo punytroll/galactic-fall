@@ -17,8 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef LOAD_SCENARIO_DIALOG_H
-#define LOAD_SCENARIO_DIALOG_H
+#ifndef UI_LOAD_SCENARIO_DIALOG_H
+#define UI_LOAD_SCENARIO_DIALOG_H
 
 #include "../timeout_notifications.h"
 #include "dialog.h"
@@ -27,7 +27,6 @@ class ScenarioManager;
 
 namespace UI
 {
-	class Button;
 	class ScenarioItem;
 	class Label;
 	class ScrollBox;
@@ -44,13 +43,9 @@ namespace UI
 		// callbacks
 		bool _OnScenarioItemMouseButton(UI::ScenarioItem * ScenarioItem, int Button, int State, float X, float Y);
 		bool _OnKey(const KeyEventInformation & KeyEventInformation);
-		// helper functions and actions
-		void _HideErrorMessage(void);
 		// member variables
-		UI::Button * _CancelButton;
-		UI::Label * _ErrorMessage;
-		TimeoutNotification _ErrorMessageTimeoutNotification;
-		UI::Button * _OKButton;
+		UI::Label * _MessageLabel;
+		TimeoutNotification _MessageTimeoutNotification;
 		ScenarioManager * _ScenarioManager;
 		UI::ScrollBox * _ScenarioScrollBox;
 		UI::ScenarioItem * _SelectedScenarioItem;
