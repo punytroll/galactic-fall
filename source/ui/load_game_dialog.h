@@ -42,21 +42,18 @@ namespace UI
 		void ShowErrorMessage(const std::string & ErrorMessage);
 	private:
 		// callbacks
-		bool OnDirectoryEntryItemMouseButton(UI::DirectoryEntryItem * DirectoryEntryItem, int Button, int State, float X, float Y);
-		bool OnFileNameLabelKey(const KeyEventInformation & KeyEventInformation);
-		bool OnKey(const KeyEventInformation & KeyEventInformation);
+		bool _OnDirectoryEntryItemMouseButton(UI::DirectoryEntryItem * DirectoryEntryItem, int Button, int State, float X, float Y);
+		bool _OnFileNameLabelKey(const KeyEventInformation & KeyEventInformation);
+		bool _OnKey(const KeyEventInformation & KeyEventInformation);
 		// helper functions and actions
-		void HideErrorMessage(void);
 		void _OnFileNameLabelTextChanged(void);
 		// member variables
 		std::string _DirectoryPath;
-		UI::Button * m_CancelButton;
-		UI::Button * m_OKButton;
-		UI::Label * m_ErrorMessage;
-		TimeoutNotification m_ErrorMessageTimeoutNotification;
-		UI::Label * m_FileNameLabel;
-		UI::ScrollBox * m_FileScrollBox;
-		UI::DirectoryEntryItem * m_SelectedDirectoryEntryItem;
+		UI::Label * _MessageLabel;
+		TimeoutNotification _MessageTimeoutNotification;
+		UI::Label * _FileNameLabel;
+		UI::ScrollBox * _FileScrollBox;
+		UI::DirectoryEntryItem * _SelectedDirectoryEntryItem;
 	};
 }
 
