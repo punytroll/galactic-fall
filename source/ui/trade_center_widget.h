@@ -44,10 +44,10 @@ namespace UI
 		TradeCenterWidget(UI::Widget * SupWidget, Reference< Planet > Planet, Reference< Character > Character);
 	private:
 		// callbacks
-		bool _OnAssetClassMouseButton(UI::TradeCenterAssetClass * TradeCenterAssetClass, int Button, int State, float X, float Y);
+		void _OnAssetClassMouseButton(UI::TradeCenterAssetClass * TradeCenterAssetClass, UI::MouseButtonEvent & MouseButtonEvent);
 		void _OnAssetClassMouseEnter(UI::TradeCenterAssetClass * AssetClassWidget);
 		void _OnAssetClassMouseLeave(UI::TradeCenterAssetClass * AssetClassWidget);
-		bool _OnAssetClassScrollBoxMouseButton(int Button, int State, float X, float Y);
+		void _OnAssetClassScrollBoxMouseButton(UI::MouseButtonEvent & MouseButtonEvent);
 		void _OnBuyButtonClicked(void);
 		void _OnBuyButtonUpdating(UI::Button * BuyButton, float RealTimeSeconds, float GameTimeSeconds);
 		void _OnDestroying(void);

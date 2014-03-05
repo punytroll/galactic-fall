@@ -34,6 +34,7 @@ class Color;
 namespace UI
 {
 	class KeyEvent;
+	class MouseButtonEvent;
 	class UserInterface;
 	
 	class Widget
@@ -76,7 +77,6 @@ namespace UI
 		void SetEnabled(bool Enabled);
 		void SetVisible(bool Visible);
 		// receive input
-		bool MouseButton(int Button, int State, float X, float Y);
 		void MouseMoved(float X, float Y);
 		// MouseEnter may depend on the fact that m_HoverWidget on the m_SupWidget is set to this
 		// MouseEnter on the new hover widget is called after MouseLeave on the old hover widget
@@ -87,7 +87,7 @@ namespace UI
 		// connect and disconnect events
 		Connection ConnectDestroyingCallback(std::function< void (void) > Callback);
 		Connection ConnectKeyCallback(std::function< void (UI::KeyEvent &) > Callback);
-		Connection ConnectMouseButtonCallback(std::function< bool (int, int, float, float) > Callback);
+		Connection ConnectMouseButtonCallback(std::function< void (UI::MouseButtonEvent &) > Callback);
 		Connection ConnectMouseEnterCallback(std::function< void (void) > Callback);
 		Connection ConnectMouseLeaveCallback(std::function< void (void) > Callback);
 		Connection ConnectMouseMovedCallback(std::function< void (float, float) > Callback);
@@ -128,7 +128,7 @@ namespace UI
 		// events
 		::Event< void > _DestroyingEvent;
 		::Event< void, UI::KeyEvent & > _KeyEvent;
-		::Event< bool, int, int, float, float > _MouseButtonEvent;
+		::Event< void, UI::MouseButtonEvent & > _MouseButtonEvent;
 		::Event< void > _MouseEnterEvent;
 		::Event< void > _MouseLeaveEvent;
 		::Event< void, float, float > _MouseMovedEvent;

@@ -37,7 +37,7 @@ UI::PlanetWindow::PlanetWindow(UI::Widget * SupWidget, Reference< Planet > Plane
 	assert(_Character.IsValid() == true);
 	assert(_Planet.IsValid() == true);
 	assert(_Planet->GetAspectName() != nullptr);
-	GetTitleLabel()->SetText("Planet: " + _Planet->GetAspectName()->GetName());
+	SetTitle("Planet: " + _Planet->GetAspectName()->GetName());
 	SetPosition(Vector2f(50.0f, 50.0f));
 	SetSize(Vector2f(700.0f, 400.0f));
 	ConnectKeyCallback(std::bind(&UI::PlanetWindow::_OnKey, this, std::placeholders::_1));

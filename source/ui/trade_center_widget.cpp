@@ -50,6 +50,7 @@
 #include "image.h"
 #include "key_event.h"
 #include "label.h"
+#include "mouse_button_event.h"
 #include "scroll_bar.h"
 #include "scroll_box.h"
 #include "text_button.h"
@@ -149,7 +150,7 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Reference< Plan
 	_AssetClassScrollBox->SetHorizontalScrollBarVisible(false);
 	_AssetClassScrollBox->SetAnchorRight(true);
 	_AssetClassScrollBox->SetAnchorBottom(true);
-	_AssetClassScrollBox->ConnectMouseButtonCallback(std::bind(&UI::TradeCenterWidget::_OnAssetClassScrollBoxMouseButton, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4));
+	_AssetClassScrollBox->ConnectMouseButtonCallback(std::bind(&UI::TradeCenterWidget::_OnAssetClassScrollBoxMouseButton, this, std::placeholders::_1));
 	
 	const std::vector< PlanetAssetClass * > & PlanetAssetClasses(Planet->GetPlanetAssetClasses());
 	std::vector< PlanetAssetClass * >::const_iterator PlanetAssetClassIterator(PlanetAssetClasses.begin());
@@ -162,7 +163,7 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Reference< Plan
 		NewTradeCenterAssetClass->SetPosition(Vector2f(5.0f, Top));
 		NewTradeCenterAssetClass->SetSize(Vector2f(_AssetClassScrollBox->GetContent()->GetSize()[0] - 10.0f, 20.0f));
 		NewTradeCenterAssetClass->SetAnchorRight(true);
-		NewTradeCenterAssetClass->ConnectMouseButtonCallback(std::bind(&UI::TradeCenterWidget::_OnAssetClassMouseButton, this, NewTradeCenterAssetClass, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4));
+		NewTradeCenterAssetClass->ConnectMouseButtonCallback(std::bind(&UI::TradeCenterWidget::_OnAssetClassMouseButton, this, NewTradeCenterAssetClass, std::placeholders::_1));
 		NewTradeCenterAssetClass->ConnectMouseEnterCallback(std::bind(&UI::TradeCenterWidget::_OnAssetClassMouseEnter, this, NewTradeCenterAssetClass));
 		NewTradeCenterAssetClass->ConnectMouseLeaveCallback(std::bind(&UI::TradeCenterWidget::_OnAssetClassMouseLeave, this, NewTradeCenterAssetClass));
 		Top += 25.0f;
@@ -250,9 +251,9 @@ void UI::TradeCenterWidget::_ClearAssetClassViewDisplay(void)
 	}
 }
 
-bool UI::TradeCenterWidget::_OnAssetClassMouseButton(TradeCenterAssetClass * TradeCenterAssetClass, int Button, int State, float X, float Y)
+void UI::TradeCenterWidget::_OnAssetClassMouseButton(TradeCenterAssetClass * TradeCenterAssetClass, UI::MouseButtonEvent & MouseButtonEvent)
 {
-	if((Button == 1 /* LEFT */) && (State == EV_DOWN))
+	if((MouseButtonEvent.GetMouseButton() == UI::MouseButtonEvent::MouseButton::Left) && (MouseButtonEvent.IsDown() == true))
 	{
 		if(_SelectedTradeCenterAssetClass != 0)
 		{
@@ -313,11 +314,7 @@ bool UI::TradeCenterWidget::_OnAssetClassMouseButton(TradeCenterAssetClass * Tra
 				_AssetClassViewDisplay->SetView(View);
 			}
 		}
-		
-		return true;
 	}
-	
-	return false;
 }
 
 void UI::TradeCenterWidget::_OnAssetClassMouseEnter(TradeCenterAssetClass * AssetClassWidget)
@@ -336,22 +333,16 @@ void UI::TradeCenterWidget::_OnAssetClassMouseLeave(TradeCenterAssetClass * Asse
 	}
 }
 
-bool UI::TradeCenterWidget::_OnAssetClassScrollBoxMouseButton(int Button, int State, float X, float Y)
+void UI::TradeCenterWidget::_OnAssetClassScrollBoxMouseButton(UI::MouseButtonEvent & MouseButtonEvent)
 {
-	if((Button == 4 /* WHEEL_UP */) && (State == EV_DOWN))
+	if((MouseButtonEvent.GetMouseButton() == UI::MouseButtonEvent::MouseButton::WheelUp) && (MouseButtonEvent.IsDown() == true))
 	{
 		_AssetClassScrollBox->GetVerticalScrollBar()->StepLess();
-		
-		return true;
 	}
-	else if((Button == 5 /* WHEEL_DOWN */) && (State == EV_DOWN))
+	else if((MouseButtonEvent.GetMouseButton() == UI::MouseButtonEvent::MouseButton::WheelDown) && (MouseButtonEvent.IsDown() == true))
 	{
 		_AssetClassScrollBox->GetVerticalScrollBar()->StepMore();
-		
-		return true;
 	}
-	
-	return false;
 }
 
 void UI::TradeCenterWidget::_OnBuyButtonClicked(void)

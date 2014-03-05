@@ -112,6 +112,7 @@
 #include "ui/main_menu_window.h"
 #include "ui/map_dialog.h"
 #include "ui/mini_map_display.h"
+#include "ui/mouse_button_event.h"
 #include "ui/object_information_dialog.h"
 #include "ui/outfit_ship_dialog.h"
 #include "ui/scanner_display.h"
@@ -162,7 +163,7 @@ UI::TimingDialog * g_TimingDialog(0);
 
 int g_LastMotionX(-1);
 int g_LastMotionY(-1);
-int g_MouseButton(-1);
+UI::MouseButtonEvent::MouseButton g_MouseButton(UI::MouseButtonEvent::MouseButton::Unspecified);
 Vector3f g_CameraPosition;
 Reference< Object > g_CameraFocus;
 bool g_FirstPersonCameraMode(false);
@@ -2897,35 +2898,39 @@ void MainViewKeyEvent(UI::KeyEvent & KeyEvent)
 	}
 }
 
-bool MainViewMouseButtonEvent(int MouseButton, int State, int X, int Y)
+bool MainViewMouseButtonEvent(UI::MouseButtonEvent & MouseButtonEvent)
 {
-	switch(MouseButton)
+	switch(MouseButtonEvent.GetMouseButton())
 	{
-	case 4: // MouseButton: WHEEL_UP
+	case UI::MouseButtonEvent::MouseButton::Middle:
+		{
+			if(MouseButtonEvent.IsDown() == true)
+			{
+				g_LastMotionX = MouseButtonEvent.GetPosition()[0];
+				g_LastMotionY = MouseButtonEvent.GetPosition()[1];
+				g_MouseButton = UI::MouseButtonEvent::MouseButton::Middle;
+			}
+			else
+			{
+				g_MouseButton = UI::MouseButtonEvent::MouseButton::Unspecified;
+			}
+			
+			break;
+		}
+	case UI::MouseButtonEvent::MouseButton::WheelUp:
 		{
 			g_CameraPosition[2] *= 0.95f;
 			
 			break;
 		}
-	case 5: // MouseButton: WHEEL_DOWN
+	case UI::MouseButtonEvent::MouseButton::WheelDown:
 		{
 			g_CameraPosition[2] *= 1.05f;
 			
 			break;
 		}
-	case 2: // MouseButton: MIDDLE
+	default:
 		{
-			if(State == EV_DOWN)
-			{
-				g_LastMotionX = X;
-				g_LastMotionY = Y;
-				g_MouseButton = 2;
-			}
-			else
-			{
-				g_MouseButton = -1;
-			}
-			
 			break;
 		}
 	}
@@ -2940,7 +2945,7 @@ void MainViewMouseMoved(int X, int Y)
 	
 	g_LastMotionX = X;
 	g_LastMotionY = Y;
-	if(g_MouseButton == 2) // MouseButton: MIDDLE
+	if(g_MouseButton == UI::MouseButtonEvent::MouseButton::Middle)
 	{
 		g_CameraPosition[0] = g_CameraPosition[0] - static_cast< float >(DeltaX) * 0.0011f * g_CameraPosition[2];
 		g_CameraPosition[1] = g_CameraPosition[1] + static_cast< float >(DeltaY) * 0.0011f * g_CameraPosition[2];
@@ -3330,22 +3335,16 @@ void ProcessEvents(void)
 				break;
 			}
 		case ButtonPress:
-			{
-				if(g_EchoEvents == true)
-				{
-					std::cout << "ButtonPress:    button=" << Event.xbutton.button << "   x=" << Event.xbutton.x << "   y=" << Event.xbutton.y << std::endl;
-				}
-				g_UserInterface->MouseButton(Event.xbutton.button, EV_DOWN, Event.xbutton.x, Event.xbutton.y);
-				
-				break;
-			}
 		case ButtonRelease:
 			{
+				UI::MouseButtonEvent MouseButtonEvent;
+				
+				MouseButtonEvent.SetButtonEvent(&Event.xbutton);
 				if(g_EchoEvents == true)
 				{
-					std::cout << "ButtonRelease:  button=" << Event.xbutton.button << "   x=" << Event.xbutton.x << "   y=" << Event.xbutton.y << std::endl;
+					std::cout << "ButtonEvent:    state=" << ((MouseButtonEvent.IsDown() == true) ? ("down") : ((MouseButtonEvent.IsUp() == true) ? ("up  ") : ("unknown"))) << "   button=" << Event.xbutton.button << "   x=" << Event.xbutton.x << "   y=" << Event.xbutton.y << std::endl;
 				}
-				g_UserInterface->MouseButton(Event.xbutton.button, EV_UP, Event.xbutton.x, Event.xbutton.y);
+				g_UserInterface->DispatchMouseButtonEvent(MouseButtonEvent);
 				
 				break;
 			}

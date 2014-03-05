@@ -20,6 +20,7 @@
 #include "../color.h"
 #include "../globals.h"
 #include "button.h"
+#include "mouse_button_event.h"
 #include "user_interface.h"
 
 UI::Button::Button(Widget * SupWidget) :
@@ -27,7 +28,7 @@ UI::Button::Button(Widget * SupWidget) :
 {
 	SetBackgroundColor(Color(0.3f, 0.3f, 0.3f, 1.0f));
 	SetDisabledBackgroundColor(Color(0.23f, 0.23f, 0.23f, 1.0f));
-	ConnectMouseButtonCallback(std::bind(&Button::_OnMouseButton, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4));
+	ConnectMouseButtonCallback(std::bind(&Button::_OnMouseButton, this, std::placeholders::_1));
 	ConnectMouseEnterCallback(std::bind(&Button::_OnMouseEnter, this));
 	ConnectMouseLeaveCallback(std::bind(&Button::_OnMouseLeave, this));
 }
@@ -46,29 +47,23 @@ void UI::Button::DisconnectClickedCallback(Connection & Connection)
 	_ClickedEvent.Disconnect(Connection);
 }
 
-bool UI::Button::_OnMouseButton(int Button, int State, float X, float Y)
+void UI::Button::_OnMouseButton(UI::MouseButtonEvent & MouseButtonEvent)
 {
-	if(Button == EV_MOUSE_BUTTON_LEFT)
+	if((MouseButtonEvent.GetPhase() == UI::MouseButtonEvent::Phase::Capturing) && (MouseButtonEvent.GetMouseButton() == UI::MouseButtonEvent::MouseButton::Left))
 	{
-		if(State == EV_DOWN)
+		if(MouseButtonEvent.IsDown() == true)
 		{
 			g_UserInterface->SetCaptureWidget(this);
-			
-			return true;
 		}
-		else if((State == EV_UP) && (g_UserInterface->GetCaptureWidget() == this))
+		else if((MouseButtonEvent.IsUp() == true) && (g_UserInterface->GetCaptureWidget() == this))
 		{
 			g_UserInterface->ReleaseCaptureWidget();
-			if((X >= 0) && (X <= GetSize()[0]) && (Y >= 0) && (Y <= GetSize()[1]))
+			if((MouseButtonEvent.GetPosition()[0] >= 0) && (MouseButtonEvent.GetPosition()[0] <= GetSize()[0]) && (MouseButtonEvent.GetPosition()[1] >= 0) && (MouseButtonEvent.GetPosition()[1] <= GetSize()[1]))
 			{
 				_ClickedEvent();
 			}
-			
-			return true;
 		}
 	}
-	
-	return false;
 }
 
 void UI::Button::_OnMouseEnter(void)

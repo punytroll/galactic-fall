@@ -41,7 +41,7 @@ namespace UI
 		void ShowErrorMessage(const std::string & ErrorMessage);
 	private:
 		// callbacks
-		bool _OnScenarioItemMouseButton(UI::ScenarioItem * ScenarioItem, int Button, int State, float X, float Y);
+		void _OnScenarioItemMouseButton(UI::ScenarioItem * ScenarioItem, UI::MouseButtonEvent & MouseButtonEvent);
 		void _OnKey(UI::KeyEvent & KeyEvent);
 		// member variables
 		UI::Label * _MessageLabel;

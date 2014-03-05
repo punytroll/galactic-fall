@@ -581,6 +581,7 @@ main_cpp = \
 	$(ui_main_menu_window_h) \
 	$(ui_map_dialog_h) \
 	$(ui_mini_map_display_h) \
+	$(ui_mouse_button_event_h) \
 	$(ui_object_information_dialog_h) \
 	$(ui_outfit_ship_dialog_h) \
 	$(ui_scanner_display_h) \
@@ -1050,6 +1051,7 @@ ui_button_cpp = \
 	$(color_h) \
 	$(globals_h) \
 	$(ui_button_h) \
+	$(ui_mouse_button_event_h) \
 	$(ui_user_interface_h)
 
 ui_button_h = \
@@ -1133,6 +1135,7 @@ ui_load_game_dialog_cpp = \
 	$(ui_key_event_h) \
 	$(ui_label_h) \
 	$(ui_load_game_dialog_h) \
+	$(ui_mouse_button_event_h) \
 	$(ui_scroll_box_h) \
 	$(ui_text_button_h)
 
@@ -1151,6 +1154,7 @@ ui_load_scenario_dialog_cpp = \
 	$(ui_key_event_h) \
 	$(ui_label_h) \
 	$(ui_load_scenario_dialog_h) \
+	$(ui_mouse_button_event_h) \
 	$(ui_scroll_box_h) \
 	$(ui_text_button_h)
 
@@ -1216,6 +1220,14 @@ ui_mini_map_display_h = \
 	$(referencing_h) \
 	$(ui_view_display_h)
 
+ui_mouse_button_event_cpp = \
+	ui/mouse_button_event.cpp \
+	$(ui_mouse_button_event_h)
+
+ui_mouse_button_event_h = \
+	ui/mouse_button_event.h \
+	$(ui_event_h)
+
 ui_object_information_dialog_cpp = \
 	ui/object_information_dialog.cpp \
 	$(color_h) \
@@ -1234,6 +1246,7 @@ ui_object_information_dialog_cpp = \
 	$(slot_class_h) \
 	$(string_cast_h) \
 	$(ui_label_h) \
+	$(ui_mouse_button_event_h) \
 	$(ui_object_information_dialog_h) \
 	$(ui_scroll_bar_h) \
 	$(ui_scroll_box_h) \
@@ -1260,6 +1273,7 @@ ui_outfit_ship_dialog_cpp = \
 	$(storage_h) \
 	$(ui_key_event_h) \
 	$(ui_label_h) \
+	$(ui_mouse_button_event_h) \
 	$(ui_outfit_ship_dialog_h) \
 	$(ui_scroll_box_h) \
 	$(ui_text_button_h) \
@@ -1304,6 +1318,7 @@ ui_save_game_dialog_cpp = \
 	$(real_time_h) \
 	$(ui_key_event_h) \
 	$(ui_label_h) \
+	$(ui_mouse_button_event_h) \
 	$(ui_save_game_dialog_h) \
 	$(ui_scroll_box_h) \
 	$(ui_text_button_h)
@@ -1344,6 +1359,7 @@ ui_scroll_bar_cpp = \
 	$(color_h) \
 	$(globals_h) \
 	$(ui_button_h) \
+	$(ui_mouse_button_event_h) \
 	$(ui_scroll_bar_h) \
 	$(ui_user_interface_h)
 
@@ -1372,6 +1388,7 @@ ui_star_map_display_cpp = \
 	$(object_aspect_name_h) \
 	$(object_aspect_position_h) \
 	$(system_h) \
+	$(ui_mouse_button_event_h) \
 	$(ui_star_map_display_h) \
 	$(ui_user_interface_h)
 
@@ -1432,6 +1449,7 @@ ui_trade_center_widget_cpp = \
 	$(ui_image_h) \
 	$(ui_key_event_h) \
 	$(ui_label_h) \
+	$(ui_mouse_button_event_h) \
 	$(ui_scroll_bar_h) \
 	$(ui_scroll_box_h) \
 	$(ui_text_button_h) \
@@ -1450,6 +1468,7 @@ ui_user_interface_cpp = \
 	ui/user_interface.cpp \
 	$(graphics_gl_h) \
 	$(ui_key_event_h) \
+	$(ui_mouse_button_event_h) \
 	$(ui_user_interface_h) \
 	$(ui_widget_h)
 
@@ -1488,6 +1507,7 @@ ui_window_cpp = \
 	$(globals_h) \
 	$(ui_border_h) \
 	$(ui_label_h) \
+	$(ui_mouse_button_event_h) \
 	$(ui_user_interface_h) \
 	$(ui_window_h)
 
