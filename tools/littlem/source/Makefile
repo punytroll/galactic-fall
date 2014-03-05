@@ -40,6 +40,8 @@ clean-here:
 		echo ""; \
 	fi
 	$(RM) -r $(OBJECT_DIRECTORY)
+	$(RM) $(DEPENDENCY_FILES)
+	$(RM) -r $(DEPENDENCY_DIRECTORY)
 
 clean-recursive: clean-here
 

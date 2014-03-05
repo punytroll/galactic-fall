@@ -18,6 +18,7 @@ clean: clean-recursive
 clean-here: 
 	$(RM) source/xml_stream.o
 	$(RM) test/test
+	$(RM) test/test.o
 
 clean-recursive: clean-here
 
