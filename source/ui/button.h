@@ -26,6 +26,8 @@
 
 namespace UI
 {
+	class MouseButtonEvent;
+	
 	class Button : public UI::Widget
 	{
 	public:
@@ -37,7 +39,7 @@ namespace UI
 		void DisconnectClickedCallback(Connection & Connection);
 	private:
 		// callbacks
-		bool _OnMouseButton(int Button, int State, float X, float Y);
+		void _OnMouseButton(UI::MouseButtonEvent & MouseBUttonEvent);
 		void _OnMouseEnter(void);
 		void _OnMouseLeave(void);
 		// member variables

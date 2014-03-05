@@ -258,36 +258,6 @@ void UI::Widget::Destroy(void)
 	_DestroyedWidgets.push_back(this);
 }
 
-bool UI::Widget::MouseButton(int Button, int State, float X, float Y)
-{
-	// iterate all sub widgets, look for an intersection and propagate the mouse event with corrected coordinates
-	for(auto SubWidget : _SubWidgets)
-	{
-		const Vector2f & SubWidgetPosition(SubWidget->GetPosition());
-		const Vector2f & SubWidgetSize(SubWidget->GetSize());
-		
-		if((SubWidget->_Visible == true) && (SubWidget->_Enabled == true) && (X >= SubWidgetPosition[0]) && (X < SubWidgetPosition[0] + SubWidgetSize[0]) && (Y >= SubWidgetPosition[1]) && (Y < SubWidgetPosition[1] + SubWidgetSize[1]))
-		{
-			if(SubWidget->MouseButton(Button, State, X - SubWidgetPosition[0], Y - SubWidgetPosition[1]) == true)
-			{
-				return true;
-			}
-		}
-	}
-	
-	bool Result(false);
-	
-	for(auto Callback : _MouseButtonEvent.GetCallbacks())
-	{
-		if(Callback(Button, State, X, Y) == true)
-		{
-			Result = true;
-		}
-	}
-	
-	return Result;
-}
-
 void UI::Widget::MouseMoved(float X, float Y)
 {
 	bool FoundSubWidget(false);
@@ -356,7 +326,7 @@ Connection UI::Widget::ConnectKeyCallback(std::function< void (UI::KeyEvent &) >
 	return _KeyEvent.Connect(Callback);
 }
 
-Connection UI::Widget::ConnectMouseButtonCallback(std::function< bool (int, int, float, float) > Callback)
+Connection UI::Widget::ConnectMouseButtonCallback(std::function< void (UI::MouseButtonEvent &) > Callback)
 {
 	return _MouseButtonEvent.Connect(Callback);
 }

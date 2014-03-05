@@ -33,6 +33,7 @@
 #include "../weapon_class.h"
 #include "key_event.h"
 #include "label.h"
+#include "mouse_button_event.h"
 #include "outfit_ship_dialog.h"
 #include "scroll_box.h"
 #include "text_button.h"
@@ -319,7 +320,7 @@ UI::OutfitShipDialog::OutfitShipDialog(UI::Widget * SupWidget, Reference< Ship >
 		NewSlotListItem->SetPosition(Vector2f(5.0f, Top));
 		NewSlotListItem->SetSize(Vector2f(_SlotScrollBox->GetContent()->GetSize()[0] - 10.0f, 50.0f));
 		NewSlotListItem->SetAnchorRight(true);
-		NewSlotListItem->ConnectMouseButtonCallback(std::bind(&UI::OutfitShipDialog::_OnSlotListItemMouseButton, this, NewSlotListItem, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4));
+		NewSlotListItem->ConnectMouseButtonCallback(std::bind(&UI::OutfitShipDialog::_OnSlotListItemMouseButton, this, NewSlotListItem, std::placeholders::_1));
 		Top += 55.0f;
 	}
 	_SlotScrollBox->GetContent()->SetSize(Vector2f(180.0f, std::max(Top, _SlotScrollBox->GetView()->GetSize()[1])));
@@ -409,7 +410,7 @@ void UI::OutfitShipDialog::_RebuildAccessoryList(void)
 			NewAccessoryListItem->SetPosition(Vector2f(5.0f, Top));
 			NewAccessoryListItem->SetSize(Vector2f(_AccessoryScrollBox->GetContent()->GetSize()[0] - 10.0f, 50.0f));
 			NewAccessoryListItem->SetAnchorRight(true);
-			NewAccessoryListItem->ConnectMouseButtonCallback(std::bind(&UI::OutfitShipDialog::_OnAccessoryListItemMouseButton, this, NewAccessoryListItem, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4));
+			NewAccessoryListItem->ConnectMouseButtonCallback(std::bind(&UI::OutfitShipDialog::_OnAccessoryListItemMouseButton, this, NewAccessoryListItem, std::placeholders::_1));
 			if(Content== SelectedAccessory)
 			{
 				_SelectedAccessoryListItem = NewAccessoryListItem;
@@ -504,38 +505,30 @@ void UI::OutfitShipDialog::_OnKey(UI::KeyEvent & KeyEvent)
 	}
 }
 
-bool UI::OutfitShipDialog::_OnSlotListItemMouseButton(UI::SlotListItem * SlotListItem, int Button, int State, float X, float Y)
+void UI::OutfitShipDialog::_OnSlotListItemMouseButton(UI::SlotListItem * SlotListItem, UI::MouseButtonEvent & MouseButtonEvent)
 {
-	if((Button == 1 /* LEFT */) && (State == EV_DOWN))
+	if((MouseButtonEvent.GetMouseButton() == UI::MouseButtonEvent::MouseButton::Left) && (MouseButtonEvent.IsDown() == true))
 	{
-		if(_SelectedSlotListItem != 0)
+		if(_SelectedSlotListItem != nullptr)
 		{
 			_SelectedSlotListItem->SetSelected(false);
 		}
 		_SelectedSlotListItem = SlotListItem;
 		_SelectedSlotListItem->SetSelected(true);
-		
-		return true;
 	}
-	
-	return false;
 }
 
-bool UI::OutfitShipDialog::_OnAccessoryListItemMouseButton(UI::AccessoryListItem * AccessoryListItem, int Button, int State, float X, float Y)
+void UI::OutfitShipDialog::_OnAccessoryListItemMouseButton(UI::AccessoryListItem * AccessoryListItem, UI::MouseButtonEvent & MouseButtonEvent)
 {
-	if((Button == 1 /* LEFT */) && (State == EV_DOWN))
+	if((MouseButtonEvent.GetMouseButton() == UI::MouseButtonEvent::MouseButton::Left) && (MouseButtonEvent.IsDown() == true))
 	{
-		if(_SelectedAccessoryListItem != 0)
+		if(_SelectedAccessoryListItem != nullptr)
 		{
 			_SelectedAccessoryListItem->SetSelected(false);
 		}
 		_SelectedAccessoryListItem = AccessoryListItem;
 		_SelectedAccessoryListItem->SetSelected(true);
-		
-		return true;
 	}
-	
-	return false;
 }
 
 void UI::OutfitShipDialog::_OnSizeChanged(void)

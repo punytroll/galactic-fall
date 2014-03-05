@@ -27,6 +27,7 @@
 #include "../real_time.h"
 #include "key_event.h"
 #include "label.h"
+#include "mouse_button_event.h"
 #include "save_game_dialog.h"
 #include "scroll_box.h"
 #include "text_button.h"
@@ -104,7 +105,7 @@ UI::SaveGameDialog::SaveGameDialog(UI::Widget * SupWidget) :
 	UI::Dialog(SupWidget),
 	_SelectedDirectoryEntryItem(nullptr)
 {
-	GetTitleLabel()->SetText("Save Game");
+	SetTitle("Save Game");
 	SetPosition(Vector2f(120.0f, 200.0f));
 	SetSize(Vector2f(300.0f, 400.0f));
 	ConnectKeyCallback(std::bind(&UI::SaveGameDialog::_OnKey, this, std::placeholders::_1));
@@ -190,7 +191,7 @@ void UI::SaveGameDialog::SetDirectoryPath(const std::string & DirectoryPath)
 		EntryLabel->SetPosition(Vector2f(5.0f, Top));
 		EntryLabel->SetSize(Vector2f(_FileScrollBox->GetContent()->GetSize()[0] - 10.0f, 20.0f));
 		EntryLabel->SetAnchorRight(true);
-		EntryLabel->ConnectMouseButtonCallback(std::bind(&UI::SaveGameDialog::_OnDirectoryEntryItemMouseButton, this, EntryLabel, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4));
+		EntryLabel->ConnectMouseButtonCallback(std::bind(&UI::SaveGameDialog::_OnDirectoryEntryItemMouseButton, this, EntryLabel, std::placeholders::_1));
 		Top += 25.0f;
 	}
 	_FileScrollBox->GetContent()->SetSize(Vector2f(_FileScrollBox->GetView()->GetSize()[0], std::max(Top, _FileScrollBox->GetView()->GetSize()[1])));
@@ -264,9 +265,9 @@ void UI::SaveGameDialog::_OnKey(UI::KeyEvent & KeyEvent)
 	}
 }
 
-bool UI::SaveGameDialog::_OnDirectoryEntryItemMouseButton(UI::DirectoryEntryItem * DirectoryEntryItem, int Button, int State, float X, float Y)
+void UI::SaveGameDialog::_OnDirectoryEntryItemMouseButton(UI::DirectoryEntryItem * DirectoryEntryItem, UI::MouseButtonEvent & MouseButtonEvent)
 {
-	if((Button == 1 /* LEFT */) && (State == EV_DOWN))
+	if((MouseButtonEvent.GetMouseButton() == UI::MouseButtonEvent::MouseButton::Left) && (MouseButtonEvent.IsDown() == true))
 	{
 		if(_SelectedDirectoryEntryItem != nullptr)
 		{
@@ -275,9 +276,5 @@ bool UI::SaveGameDialog::_OnDirectoryEntryItemMouseButton(UI::DirectoryEntryItem
 		_SelectedDirectoryEntryItem = DirectoryEntryItem;
 		_SelectedDirectoryEntryItem->SetSelected(true);
 		_FileNameLabel->SetText(_SelectedDirectoryEntryItem->GetCaption());
-		
-		return true;
 	}
-	
-	return false;
 }

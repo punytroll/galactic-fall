@@ -29,6 +29,7 @@ class KeyEventInformation;
 namespace UI
 {
 	class KeyEvent;
+	class MouseButtonEvent;
 	class Widget;
 	
 	class UserInterface
@@ -37,7 +38,7 @@ namespace UI
 		UserInterface(void);
 		virtual ~UserInterface(void);
 		void Draw(void) const;
-		bool MouseButton(int Button, int State, float X, float Y);
+		void DispatchMouseButtonEvent(UI::MouseButtonEvent & MouseButtonEvent);
 		void DispatchKeyEvent(UI::KeyEvent & KeyEvent);
 		void MouseMoved(float X, float Y);
 		void Update(float RealTimeSeconds, float GameTimeSeconds);

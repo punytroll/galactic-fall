@@ -23,8 +23,35 @@
 
 #include "../graphics/gl.h"
 #include "key_event.h"
+#include "mouse_button_event.h"
 #include "user_interface.h"
 #include "widget.h"
+
+struct EventPropagationPathItem
+{
+	Connection _Connection;
+	UI::Event::Phase _Phase;
+	UI::Widget * _Widget;
+};
+
+void DestroyingPropagationPathItem(EventPropagationPathItem * EventPropagationPathItem)
+{
+	assert(EventPropagationPathItem != nullptr);
+	assert(EventPropagationPathItem->_Widget != nullptr);
+	assert(EventPropagationPathItem->_Connection.IsValid() == true);
+	EventPropagationPathItem->_Widget->DisconnectDestroyingCallback(EventPropagationPathItem->_Connection);
+	assert(EventPropagationPathItem->_Connection.IsValid() == false);
+	EventPropagationPathItem->_Widget = nullptr;
+}
+
+struct KeyEventPropagationPathItem : EventPropagationPathItem
+{
+};
+
+struct MouseButtonEventPropagationPathItem : EventPropagationPathItem
+{
+	Vector2f _Position;
+};
 
 UI::UserInterface::UserInterface(void) :
 	_CaptureWidget(nullptr),
@@ -103,54 +130,140 @@ UI::Widget * UI::UserInterface::GetWidget(const std::string & Path)
 	return Root;
 }
 
-bool UI::UserInterface::MouseButton(int Button, int State, float X, float Y)
+void UI::UserInterface::DispatchMouseButtonEvent(UI::MouseButtonEvent & MouseButtonEvent)
 {
-	if(_CaptureWidget == 0)
+	std::list< MouseButtonEventPropagationPathItem * > PropagationPath;
+	
+	if(_CaptureWidget == nullptr)
 	{
-		assert(_RootWidget != 0);
-		if(_RootWidget->_Enabled == true)
+		if((_RootWidget != nullptr) && (_RootWidget->_Visible == true) && (_RootWidget->_Enabled == true))
 		{
-			const Vector2f & LeftTopCorner(_RootWidget->_Position);
-			Vector2f RightBottomCorner(LeftTopCorner + _RootWidget->_Size);
+			auto Position(MouseButtonEvent.GetPosition() - _RootWidget->_Position);
 			
-			if((X >= LeftTopCorner[0]) && (X < RightBottomCorner[0]) && (Y >= LeftTopCorner[1]) && (Y < RightBottomCorner[1]))
+			if((Position[0] >= 0.0f) && (Position[0] <= _RootWidget->_Size[0]) && (Position[1] >= 0.0f) && (Position[1] <= _RootWidget->_Size[1]))
 			{
-				return _RootWidget->MouseButton(Button, State, X - LeftTopCorner[0], Y - LeftTopCorner[1]);
+				auto PathWidget(_RootWidget);
+				
+				while(PathWidget != nullptr)
+				{
+					auto CapturingWidget(new MouseButtonEventPropagationPathItem());
+					
+					CapturingWidget->_Widget = PathWidget;
+					CapturingWidget->_Phase = UI::Event::Phase::Capturing;
+					CapturingWidget->_Position = Position;
+					CapturingWidget->_Connection = PathWidget->ConnectDestroyingCallback(std::bind(DestroyingPropagationPathItem, CapturingWidget));
+					PropagationPath.push_back(CapturingWidget);
+					
+					Widget * NextWidget(nullptr);
+					
+					for(auto SubWidget : PathWidget->_SubWidgets)
+					{
+						const Vector2f & SubWidgetPosition(SubWidget->GetPosition());
+						const Vector2f & SubWidgetSize(SubWidget->GetSize());
+						
+						if((SubWidget->_Visible == true) && (SubWidget->_Enabled == true) && (Position[0] >= SubWidgetPosition[0]) && (Position[0] < SubWidgetPosition[0] + SubWidgetSize[0]) && (Position[1] >= SubWidgetPosition[1]) && (Position[1] < SubWidgetPosition[1] + SubWidgetSize[1]))
+						{
+							Position -= SubWidgetPosition;
+							NextWidget = SubWidget;
+							
+							break;
+						}
+					}
+					PathWidget = NextWidget;
+				}
 			}
 		}
 	}
 	else
 	{
-		if(_CaptureWidget->_Enabled == true)
+		Vector2f GlobalPosition(_CaptureWidget->GetGlobalPosition());
+		auto PathWidget(_CaptureWidget);
+		
+		while(PathWidget != nullptr)
 		{
-			Vector2f TopLeftCorner(_CaptureWidget->GetGlobalPosition());
+			auto CapturingWidget(new MouseButtonEventPropagationPathItem());
 			
-			return _CaptureWidget->MouseButton(Button, State, X - TopLeftCorner[0], Y - TopLeftCorner[1]);
+			CapturingWidget->_Widget = PathWidget;
+			CapturingWidget->_Phase = UI::Event::Phase::Capturing;
+			CapturingWidget->_Position = MouseButtonEvent.GetPosition() - GlobalPosition;
+			CapturingWidget->_Connection = PathWidget->ConnectDestroyingCallback(std::bind(DestroyingPropagationPathItem, CapturingWidget));
+			PropagationPath.push_back(CapturingWidget);
+			GlobalPosition -= PathWidget->GetPosition();
+			PathWidget = PathWidget->_SupWidget;
 		}
 	}
-	
-	return false;
-}
-
-struct EventPropagationPathItem
-{
-	Connection _Connection;
-	UI::Event::Phase _Phase;
-	UI::Widget * _Widget;
-};
-
-struct KeyEventPropagationPathItem : EventPropagationPathItem
-{
-};
-
-void DestroyingPropagationPathItem(EventPropagationPathItem * EventPropagationPathItem)
-{
-	assert(EventPropagationPathItem != nullptr);
-	assert(EventPropagationPathItem->_Widget != nullptr);
-	assert(EventPropagationPathItem->_Connection.IsValid() == true);
-	EventPropagationPathItem->_Widget->DisconnectDestroyingCallback(EventPropagationPathItem->_Connection);
-	assert(EventPropagationPathItem->_Connection.IsValid() == false);
-	EventPropagationPathItem->_Widget = nullptr;
+	if(PropagationPath.size() > 0)
+	{
+		auto TargetWidget(new MouseButtonEventPropagationPathItem());
+		
+		TargetWidget->_Widget = PropagationPath.back()->_Widget;
+		TargetWidget->_Phase = UI::Event::Phase::Target;
+		TargetWidget->_Position = PropagationPath.back()->_Position;
+		TargetWidget->_Connection = PropagationPath.back()->_Widget->ConnectDestroyingCallback(std::bind(DestroyingPropagationPathItem, TargetWidget));
+		PropagationPath.push_back(TargetWidget);
+		
+		auto Iterator(PropagationPath.end());
+		
+		--Iterator;
+		do
+		{
+			--Iterator;
+			
+			auto BubblingWidget((new MouseButtonEventPropagationPathItem()));
+			
+			BubblingWidget->_Widget = (*Iterator)->_Widget;
+			BubblingWidget->_Phase = UI::Event::Phase::Bubbling;
+			BubblingWidget->_Position = (*Iterator)->_Position;
+			BubblingWidget->_Connection = BubblingWidget->_Widget->ConnectDestroyingCallback(std::bind(DestroyingPropagationPathItem, BubblingWidget));
+			PropagationPath.push_back(BubblingWidget);
+		} while(Iterator != PropagationPath.begin());
+	}
+	for(auto PropagationPathItem : PropagationPath)
+	{
+		assert(PropagationPathItem != nullptr);
+		if(PropagationPathItem->_Widget != nullptr)
+		{
+			assert(PropagationPathItem->_Connection.IsValid() == true);
+			MouseButtonEvent.SetCurrentTarget(PropagationPathItem->_Widget);
+			MouseButtonEvent.SetPhase(PropagationPathItem->_Phase);
+			MouseButtonEvent.SetPosition(PropagationPathItem->_Position);
+			MouseButtonEvent.ResumeCallbacks();
+			for(auto & Callback : PropagationPathItem->_Widget->_MouseButtonEvent.CopyCallbacks())
+			{
+				Callback(MouseButtonEvent);
+				if(MouseButtonEvent.GetStopCallbacks() == true)
+				{
+					break;
+				}
+			}
+			if(MouseButtonEvent.GetStopPropagation() == true)
+			{
+				break;
+			}
+		}
+		else
+		{
+			assert(PropagationPathItem->_Connection.IsValid() == false);
+		}
+	}
+	while(PropagationPath.empty() == false)
+	{
+		auto PropagationPathItem(PropagationPath.front());
+		
+		PropagationPath.pop_front();
+		assert(PropagationPathItem != nullptr);
+		if(PropagationPathItem->_Widget != nullptr)
+		{
+			assert(PropagationPathItem->_Connection.IsValid() == true);
+			PropagationPathItem->_Widget->DisconnectDestroyingCallback(PropagationPathItem->_Connection);
+			assert(PropagationPathItem->_Connection.IsValid() == false);
+		}
+		else
+		{
+			assert(PropagationPathItem->_Connection.IsValid() == false);
+		}
+		delete PropagationPathItem;
+	}
 }
 
 void UI::UserInterface::DispatchKeyEvent(UI::KeyEvent & KeyEvent)

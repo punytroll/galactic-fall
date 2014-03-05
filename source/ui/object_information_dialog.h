@@ -38,7 +38,7 @@ namespace UI
 		ObjectInformationDialog(UI::Widget * SupWidget, const Reference< Object > & Object);
 	private:
 		// callbacks
-		bool _OnMouseButton(int Button, int State, float X, float Y);
+		void _OnMouseButton(UI::MouseButtonEvent & MouseButtonEvent);
 		void _OnObjectClicked(const Reference< Object > Object);
 		void _OnCloseClicked(void);
 		void _OnRefreshClicked(void);

@@ -33,6 +33,7 @@
 #include "../slot_class.h"
 #include "../string_cast.h"
 #include "label.h"
+#include "mouse_button_event.h"
 #include "object_information_dialog.h"
 #include "scroll_bar.h"
 #include "scroll_box.h"
@@ -46,7 +47,7 @@ UI::ObjectInformationDialog::ObjectInformationDialog(UI::Widget * SupWidget, con
 {
 	SetPosition(Vector2f(100.0f, 400.0f));
 	SetSize(Vector2f(500.0f, 300.0f));
-	ConnectMouseButtonCallback(std::bind(&UI::ObjectInformationDialog::_OnMouseButton, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4));
+	ConnectMouseButtonCallback(std::bind(&UI::ObjectInformationDialog::_OnMouseButton, this, std::placeholders::_1));
 	// set up widgets
 	_CloseButton = new UI::TextButton(this, "Close");
 	_CloseButton->SetSize(Vector2f(100.0f, 20.0f));
@@ -184,11 +185,11 @@ void UI::ObjectInformationDialog::_Refresh(void)
 		{
 			Top += _AddSeparator(Top, 0.0f, "Name Aspect");
 			Top += _AddStringProperty(Top, 20.0f, "Name", _Object->GetAspectName()->GetName());
-			GetTitleLabel()->SetText("Object Information: " + _Object->GetAspectName()->GetName());
+			SetTitle("Object Information: " + _Object->GetAspectName()->GetName());
 		}
 		else
 		{
-			GetTitleLabel()->SetText("Object Information");
+			SetTitle("Object Information");
 		}
 		if(_Object->GetAspectObjectContainer() != 0)
 		{
@@ -267,22 +268,16 @@ void UI::ObjectInformationDialog::_Refresh(void)
 	_PropertiesScrollBox->GetContent()->SetAnchorRight(true);
 }
 
-bool UI::ObjectInformationDialog::_OnMouseButton(int Button, int State, float X, float Y)
+void UI::ObjectInformationDialog::_OnMouseButton(UI::MouseButtonEvent & MouseButtonEvent)
 {
-	if((Button == 4 /* WHEEL_UP */) && (State == EV_DOWN))
+	if((MouseButtonEvent.GetMouseButton() == UI::MouseButtonEvent::MouseButton::WheelUp) && (MouseButtonEvent.IsDown() == true))
 	{
 		_PropertiesScrollBox->GetVerticalScrollBar()->StepLess();
-		
-		return true;
 	}
-	else if((Button == 5 /* WHEEL_DOWN */) && (State == EV_DOWN))
+	else if((MouseButtonEvent.GetMouseButton() == UI::MouseButtonEvent::MouseButton::WheelDown) && (MouseButtonEvent.IsDown() == true))
 	{
 		_PropertiesScrollBox->GetVerticalScrollBar()->StepMore();
-		
-		return true;
 	}
-	
-	return false;
 }
 
 void UI::ObjectInformationDialog::_OnObjectClicked(const Reference< Object > Object)

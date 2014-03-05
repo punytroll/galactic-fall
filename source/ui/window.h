@@ -31,31 +31,18 @@ namespace UI
 	{
 	public:
 		Window(UI::Widget * SupWidget, const std::string & Title = "");
-		// getters
-		UI::Border * GetBorder(void);
-		UI::Label * GetTitleLabel(void);
+		// setters
+		void SetTitle(const std::string & Title);
 	private:
 		// callbacks
-		bool OnTitleLabelMouseButton(int Button, int State, float X, float Y);
-		void OnTitleLabelMouseMoved(float X, float Y);
-		bool OnResizeDragBoxMouseButton(int Button, int State, float X, float Y);
-		void OnResizeDragBoxMouseMoved(float X, float Y);
+		void _OnTitleLabelMouseButton(UI::MouseButtonEvent & MouseButtonEvent);
+		void _OnTitleLabelMouseMoved(float X, float Y);
+		void _OnResizeDragBoxMouseButton(UI::MouseButtonEvent & MouseButtonEvent, Widget * ResizeDragBox);
+		void _OnResizeDragBoxMouseMoved(float X, float Y, Widget * ResizeDragBox);
 		// member variables
-		UI::Border * m_Border;
-		UI::Label * m_TitleLabel;
-		UI::Widget * m_ResizeDragBox;
-		Vector2f m_GrabPosition;
+		UI::Label * _TitleLabel;
+		Vector2f _GrabPosition;
 	};
-
-	inline UI::Border * UI::Window::GetBorder(void)
-	{
-		return m_Border;
-	}
-
-	inline UI::Label * UI::Window::GetTitleLabel(void)
-	{
-		return m_TitleLabel;
-	}
 }
 
 #endif

@@ -20,6 +20,7 @@
 #include "../color.h"
 #include "../globals.h"
 #include "button.h"
+#include "mouse_button_event.h"
 #include "scroll_bar.h"
 #include "user_interface.h"
 
@@ -40,7 +41,7 @@ UI::ScrollBar::ScrollBar(Widget * SupWidget, UI::ScrollBar::Alignment Alignment)
 	m_Tracker->SetBackgroundColor(Color(0.3f, 0.3f, 0.3f, 1.0f));
 	m_Tracker->ConnectMouseEnterCallback(std::bind(&UI::ScrollBar::OnTrackerMouseEnter, this));
 	m_Tracker->ConnectMouseLeaveCallback(std::bind(&UI::ScrollBar::OnTrackerMouseLeave, this));
-	m_Tracker->ConnectMouseButtonCallback(std::bind(&UI::ScrollBar::OnTrackerMouseButton, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4));
+	m_Tracker->ConnectMouseButtonCallback(std::bind(&UI::ScrollBar::OnTrackerMouseButton, this, std::placeholders::_1));
 	m_Tracker->ConnectMouseMovedCallback(std::bind(&UI::ScrollBar::OnTrackerMouseMoved, this, std::placeholders::_1, std::placeholders::_2));
 	SetAlignment(Alignment);
 	SetMinimumPosition(0.0f);
@@ -78,25 +79,21 @@ void UI::ScrollBar::OnSizeChanged(void)
 	AdjustTrackerPosition();
 }
 
-bool UI::ScrollBar::OnTrackerMouseButton(int Button, int State, float X, float Y)
+void UI::ScrollBar::OnTrackerMouseButton(UI::MouseButtonEvent & MouseButtonEvent)
 {
 	GetSupWidget()->RaiseSubWidget(this);
-	if(Button == 1)
+	if(MouseButtonEvent.GetMouseButton() == UI::MouseButtonEvent::MouseButton::Left)
 	{
-		if(State == EV_DOWN)
+		if(MouseButtonEvent.IsDown() == true)
 		{
-			m_GrabPosition.Set(X, Y);
+			m_GrabPosition = MouseButtonEvent.GetPosition();
 			g_UserInterface->SetCaptureWidget(m_Tracker);
 		}
-		else
+		else if(MouseButtonEvent.IsUp() == true)
 		{
 			g_UserInterface->ReleaseCaptureWidget();
 		}
-		
-		return true;
 	}
-	
-	return false;
 }
 
 void UI::ScrollBar::OnTrackerMouseEnter(void)

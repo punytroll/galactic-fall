@@ -28,6 +28,7 @@
 #include "../object_aspect_name.h"
 #include "../object_aspect_position.h"
 #include "../system.h"
+#include "mouse_button_event.h"
 #include "star_map_display.h"
 #include "user_interface.h"
 
@@ -39,7 +40,7 @@ UI::StarMapDisplay::StarMapDisplay(Widget * SupWidget, System * System, Characte
 	m_Scale(5.0f),
 	m_OffsetPosition(true)
 {
-	ConnectMouseButtonCallback(std::bind(&UI::StarMapDisplay::OnMouseButton, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4));
+	ConnectMouseButtonCallback(std::bind(&UI::StarMapDisplay::OnMouseButton, this, std::placeholders::_1));
 	ConnectMouseMovedCallback(std::bind(&UI::StarMapDisplay::OnMouseMoved, this, std::placeholders::_1, std::placeholders::_2));
 }
 
@@ -166,25 +167,19 @@ void UI::StarMapDisplay::Draw(void)
 	GLPopAttrib();
 }
 
-bool UI::StarMapDisplay::OnMouseButton(int Button, int State, float X, float Y)
+void UI::StarMapDisplay::OnMouseButton(UI::MouseButtonEvent & MouseButtonEvent)
 {
-	if((Button == 4 /* WHEEL_UP */) && (State == EV_DOWN))
+	if((MouseButtonEvent.GetMouseButton() == UI::MouseButtonEvent::MouseButton::WheelUp) && (MouseButtonEvent.IsDown() == true))
 	{
 		m_Scale *= 1.1f;
-		
-		return true;
 	}
-	else if((Button == 5 /* WHEEL_DOWN */) && (State == EV_DOWN))
+	else if((MouseButtonEvent.GetMouseButton() == UI::MouseButtonEvent::MouseButton::WheelDown) && (MouseButtonEvent.IsDown() == true))
 	{
 		m_Scale *= 0.9f;
-		
-		return true;
 	}
-	else if((Button == 1 /* LEFT */) && (State == EV_UP))
+	else if((MouseButtonEvent.GetMouseButton() == UI::MouseButtonEvent::MouseButton::Left) && (MouseButtonEvent.IsDown() == true))
 	{
-		X -= GetSize()[0] / 2;
-		Y -= GetSize()[1] / 2;
-		
+		Vector2f NormalizedPosition(MouseButtonEvent.GetPosition() - GetSize() / 2.0f);
 		const std::map< std::string, System * > & Systems(g_Galaxy->GetSystems());
 		
 		for(std::map< std::string, System * >::const_iterator SystemIterator = Systems.begin(); SystemIterator != Systems.end(); ++SystemIterator)
@@ -192,8 +187,8 @@ bool UI::StarMapDisplay::OnMouseButton(int Button, int State, float X, float Y)
 			Vector3f Position(SystemIterator->second->GetAspectPosition()->GetPosition() - m_System->GetAspectPosition()->GetPosition());
 			
 			Position *= m_Scale;
-			Position[0] -= X - m_OffsetPosition[0];
-			Position[1] += Y - m_OffsetPosition[1];
+			Position[0] -= NormalizedPosition[0] - m_OffsetPosition[0];
+			Position[1] += NormalizedPosition[1] - m_OffsetPosition[1];
 			if(Position.SquaredLength() < 40.0f)
 			{
 				m_SelectedSystem = SystemIterator->second;
@@ -201,25 +196,19 @@ bool UI::StarMapDisplay::OnMouseButton(int Button, int State, float X, float Y)
 				break;
 			}
 		}
-		
-		return true;
 	}
-	else if(Button == 2 /* MIDDLE */)
+	else if(MouseButtonEvent.GetMouseButton() == UI::MouseButtonEvent::MouseButton::Middle)
 	{
-		if(State == EV_DOWN)
+		if(MouseButtonEvent.IsDown() == true)
 		{
-			m_GrabPosition.Set(X, Y);
+			m_GrabPosition = MouseButtonEvent.GetPosition();
 			g_UserInterface->SetCaptureWidget(this);
 		}
-		else
+		else if(MouseButtonEvent.IsUp() == true)
 		{
 			g_UserInterface->ReleaseCaptureWidget();
 		}
-		
-		return true;
 	}
-	
-	return false;
 }
 
 void UI::StarMapDisplay::OnMouseMoved(float X, float Y)

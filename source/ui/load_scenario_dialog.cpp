@@ -25,6 +25,7 @@
 #include "key_event.h"
 #include "label.h"
 #include "load_scenario_dialog.h"
+#include "mouse_button_event.h"
 #include "scroll_box.h"
 #include "text_button.h"
 
@@ -105,7 +106,7 @@ UI::LoadScenarioDialog::LoadScenarioDialog(UI::Widget * SupWidget, ScenarioManag
 	_ScenarioManager(ScenarioManager),
 	_SelectedScenarioItem(0)
 {
-	GetTitleLabel()->SetText("Load Scenario");
+	SetTitle("Load Scenario");
 	SetPosition(Vector2f(120.0f, 200.0f));
 	SetSize(Vector2f(300.0f, 400.0f));
 	ConnectKeyCallback(std::bind(&UI::LoadScenarioDialog::_OnKey, this, std::placeholders::_1));
@@ -158,7 +159,7 @@ UI::LoadScenarioDialog::LoadScenarioDialog(UI::Widget * SupWidget, ScenarioManag
 		ScenarioItem->SetPosition(Vector2f(5.0f, Top));
 		ScenarioItem->SetSize(Vector2f(_ScenarioScrollBox->GetContent()->GetSize()[0] - 10.0f, 20.0f));
 		ScenarioItem->SetAnchorRight(true);
-		ScenarioItem->ConnectMouseButtonCallback(std::bind(&UI::LoadScenarioDialog::_OnScenarioItemMouseButton, this, ScenarioItem, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4));
+		ScenarioItem->ConnectMouseButtonCallback(std::bind(&UI::LoadScenarioDialog::_OnScenarioItemMouseButton, this, ScenarioItem, std::placeholders::_1));
 		Top += 25.0f;
 	}
 	_ScenarioScrollBox->GetContent()->SetSize(Vector2f(_ScenarioScrollBox->GetView()->GetSize()[0], std::max(Top, _ScenarioScrollBox->GetView()->GetSize()[1])));
@@ -199,9 +200,9 @@ void UI::LoadScenarioDialog::_OnKey(UI::KeyEvent & KeyEvent)
 	}
 }
 
-bool UI::LoadScenarioDialog::_OnScenarioItemMouseButton(UI::ScenarioItem * ScenarioItem, int Button, int State, float X, float Y)
+void UI::LoadScenarioDialog::_OnScenarioItemMouseButton(UI::ScenarioItem * ScenarioItem, UI::MouseButtonEvent & MouseButtonEvent)
 {
-	if((Button == 1 /* LEFT */) && (State == EV_DOWN))
+	if((MouseButtonEvent.GetMouseButton() == UI::MouseButtonEvent::MouseButton::Left) && (MouseButtonEvent.IsDown() == true))
 	{
 		if(_SelectedScenarioItem != nullptr)
 		{
@@ -209,9 +210,5 @@ bool UI::LoadScenarioDialog::_OnScenarioItemMouseButton(UI::ScenarioItem * Scena
 		}
 		_SelectedScenarioItem = ScenarioItem;
 		_SelectedScenarioItem->SetSelected(true);
-		
-		return true;
 	}
-	
-	return false;
 }

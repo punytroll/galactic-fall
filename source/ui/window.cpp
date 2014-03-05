@@ -21,6 +21,7 @@
 #include "../globals.h"
 #include "border.h"
 #include "label.h"
+#include "mouse_button_event.h"
 #include "user_interface.h"
 #include "window.h"
 
@@ -28,88 +29,87 @@ UI::Window::Window(Widget * SupWidget, const std::string & Title) :
 	Widget(SupWidget)
 {
 	SetBackgroundColor(Color(0.2f, 0.2f, 0.2f, 1.0f));
-	m_Border = new UI::Border(this);
-	m_Border->SetPosition(Vector2f(0.0f, 0.0f));
-	m_Border->SetSize(GetSize());
-	m_Border->SetAnchorBottom(true);
-	m_Border->SetAnchorRight(true);
-	m_Border->SetWidth(1.0f);
-	m_Border->SetColor(Color(0.4f, 0.4f, 0.4f, 1.0f));
-	m_TitleLabel = new UI::Label(this, Title);
-	m_TitleLabel->SetPosition(Vector2f(10.0f, 10.0f));
-	m_TitleLabel->SetSize(Vector2f(GetSize()[0] - 20.0f, 20.0f));
-	m_TitleLabel->SetAnchorRight(true);
-	m_TitleLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
-	m_TitleLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
-	m_TitleLabel->SetBackgroundColor(Color(0.2f, 0.2f, 0.4f, 1.0f));
-	m_TitleLabel->ConnectMouseButtonCallback(std::bind(&UI::Window::OnTitleLabelMouseButton, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4));
-	m_TitleLabel->ConnectMouseMovedCallback(std::bind(&UI::Window::OnTitleLabelMouseMoved, this, std::placeholders::_1, std::placeholders::_2));
-	m_ResizeDragBox = new Widget(this);
-	m_ResizeDragBox->SetPosition(Vector2f(GetSize()[0] - 9.0f, GetSize()[1] - 9.0f));
-	m_ResizeDragBox->SetSize(Vector2f(7.0f, 7.0f));
-	m_ResizeDragBox->SetAnchorBottom(true);
-	m_ResizeDragBox->SetAnchorLeft(false);
-	m_ResizeDragBox->SetAnchorRight(true);
-	m_ResizeDragBox->SetAnchorTop(false);
-	m_ResizeDragBox->SetBackgroundColor(Color(0.2f, 0.2f, 0.4f, 1.0f));
-	m_ResizeDragBox->ConnectMouseButtonCallback(std::bind(&UI::Window::OnResizeDragBoxMouseButton, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3, std::placeholders::_4));
-	m_ResizeDragBox->ConnectMouseMovedCallback(std::bind(&UI::Window::OnResizeDragBoxMouseMoved, this, std::placeholders::_1, std::placeholders::_2));
+	
+	auto Border(new UI::Border(this));
+	
+	Border->SetPosition(Vector2f(0.0f, 0.0f));
+	Border->SetSize(GetSize());
+	Border->SetAnchorBottom(true);
+	Border->SetAnchorRight(true);
+	Border->SetWidth(1.0f);
+	Border->SetColor(Color(0.4f, 0.4f, 0.4f, 1.0f));
+	_TitleLabel = new UI::Label(this, Title);
+	_TitleLabel->SetPosition(Vector2f(10.0f, 10.0f));
+	_TitleLabel->SetSize(Vector2f(GetSize()[0] - 20.0f, 20.0f));
+	_TitleLabel->SetAnchorRight(true);
+	_TitleLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
+	_TitleLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
+	_TitleLabel->SetBackgroundColor(Color(0.2f, 0.2f, 0.4f, 1.0f));
+	_TitleLabel->ConnectMouseButtonCallback(std::bind(&UI::Window::_OnTitleLabelMouseButton, this, std::placeholders::_1));
+	_TitleLabel->ConnectMouseMovedCallback(std::bind(&UI::Window::_OnTitleLabelMouseMoved, this, std::placeholders::_1, std::placeholders::_2));
+	
+	auto ResizeDragBox(new Widget(this));
+	
+	ResizeDragBox->SetPosition(Vector2f(GetSize()[0] - 9.0f, GetSize()[1] - 9.0f));
+	ResizeDragBox->SetSize(Vector2f(7.0f, 7.0f));
+	ResizeDragBox->SetAnchorBottom(true);
+	ResizeDragBox->SetAnchorLeft(false);
+	ResizeDragBox->SetAnchorRight(true);
+	ResizeDragBox->SetAnchorTop(false);
+	ResizeDragBox->SetBackgroundColor(Color(0.2f, 0.2f, 0.4f, 1.0f));
+	ResizeDragBox->ConnectMouseButtonCallback(std::bind(&UI::Window::_OnResizeDragBoxMouseButton, this, std::placeholders::_1, ResizeDragBox));
+	ResizeDragBox->ConnectMouseMovedCallback(std::bind(&UI::Window::_OnResizeDragBoxMouseMoved, this, std::placeholders::_1, std::placeholders::_2, ResizeDragBox));
 }
 
-bool UI::Window::OnTitleLabelMouseButton(int Button, int State, float X, float Y)
+void UI::Window::SetTitle(const std::string & Title)
 {
-	GetSupWidget()->RaiseSubWidget(this);
-	if(Button == 1)
+	_TitleLabel->SetText(Title);
+}
+
+void UI::Window::_OnTitleLabelMouseButton(UI::MouseButtonEvent & MouseButtonEvent)
+{
+	if((MouseButtonEvent.GetPhase() == UI::Event::Phase::Bubbling) && (MouseButtonEvent.GetMouseButton() == UI::MouseButtonEvent::MouseButton::Left))
 	{
-		if(State == EV_DOWN)
+		if(MouseButtonEvent.IsDown() == true)
 		{
-			m_GrabPosition.Set(X, Y);
-			g_UserInterface->SetCaptureWidget(m_TitleLabel);
+			_GrabPosition = MouseButtonEvent.GetPosition();
+			g_UserInterface->SetCaptureWidget(_TitleLabel);
 		}
 		else
 		{
 			g_UserInterface->ReleaseCaptureWidget();
 		}
-		
-		return true;
 	}
-	
-	return false;
 }
 
-bool UI::Window::OnResizeDragBoxMouseButton(int Button, int State, float X, float Y)
+void UI::Window::_OnResizeDragBoxMouseButton(UI::MouseButtonEvent & MouseButtonEvent, Widget * ResizeDragBox)
 {
-	GetSupWidget()->RaiseSubWidget(this);
-	if(Button == 1)
+	if((MouseButtonEvent.GetPhase() == UI::Event::Phase::Bubbling) && (MouseButtonEvent.GetMouseButton() == UI::MouseButtonEvent::MouseButton::Left))
 	{
-		if(State == EV_DOWN)
+		if(MouseButtonEvent.IsDown() == true)
 		{
-			m_GrabPosition.Set(X, Y);
-			g_UserInterface->SetCaptureWidget(m_ResizeDragBox);
+			_GrabPosition = MouseButtonEvent.GetPosition();
+			g_UserInterface->SetCaptureWidget(ResizeDragBox);
 		}
 		else
 		{
 			g_UserInterface->ReleaseCaptureWidget();
 		}
-		
-		return true;
-	}
-	
-	return false;
-}
-
-void UI::Window::OnTitleLabelMouseMoved(float X, float Y)
-{
-	if(g_UserInterface->GetCaptureWidget() == m_TitleLabel)
-	{
-		SetPosition(GetPosition() + Vector2f(X, Y) - m_GrabPosition);
 	}
 }
 
-void UI::Window::OnResizeDragBoxMouseMoved(float X, float Y)
+void UI::Window::_OnTitleLabelMouseMoved(float X, float Y)
 {
-	if(g_UserInterface->GetCaptureWidget() == m_ResizeDragBox)
+	if(g_UserInterface->GetCaptureWidget() == _TitleLabel)
 	{
-		SetSize(GetSize() + Vector2f(X, Y) - m_GrabPosition);
+		SetPosition(GetPosition() + Vector2f(X, Y) - _GrabPosition);
+	}
+}
+
+void UI::Window::_OnResizeDragBoxMouseMoved(float X, float Y, Widget * ResizeDragBox)
+{
+	if(g_UserInterface->GetCaptureWidget() == ResizeDragBox)
+	{
+		SetSize(GetSize() + Vector2f(X, Y) - _GrabPosition);
 	}
 }

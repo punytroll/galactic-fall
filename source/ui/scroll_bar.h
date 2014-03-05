@@ -61,7 +61,7 @@ namespace UI
 		void OnLessClicked(void);
 		void OnMoreClicked(void);
 		void OnSizeChanged(void);
-		bool OnTrackerMouseButton(int Button, int State, float X, float Y);
+		void OnTrackerMouseButton(UI::MouseButtonEvent & MouseButtonEvent);
 		void OnTrackerMouseEnter(void);
 		void OnTrackerMouseLeave(void);
 		void OnTrackerMouseMoved(float X, float Y);

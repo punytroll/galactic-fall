@@ -41,7 +41,7 @@ namespace UI
 		void ShowErrorMessage(const std::string & ErrorMessage);
 	private:
 		// callbacks
-		bool _OnDirectoryEntryItemMouseButton(UI::DirectoryEntryItem * DirectoryEntryItem, int Button, int State, float X, float Y);
+		void _OnDirectoryEntryItemMouseButton(UI::DirectoryEntryItem * DirectoryEntryItem, UI::MouseButtonEvent & MouseButtonEvent);
 		void _OnFileNameLabelKey(UI::KeyEvent & KeyEvent);
 		void _OnKey(UI::KeyEvent & KeyEvent);
 		// helper functions and actions
