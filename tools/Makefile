@@ -18,6 +18,7 @@ clean-recursive: clean-here
 	@$(MAKE) -C analyze_littlem clean-recursive
 	@$(MAKE) -C list_glx_fb_configurations clean-recursive
 	@$(MAKE) -C littlem clean-recursive
+	@$(MAKE) -C pyarx clean-recursive
 	@$(MAKE) -C rasterizer clean-recursive
 	@$(MAKE) -C raw_to_littlem clean-recursive
 	@$(MAKE) -C view_texture clean-recursive
