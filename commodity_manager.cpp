@@ -86,28 +86,26 @@ void LoadCommoditiesFromFile(CommodityManager * CommodityManager, const std::str
 {
 	std::ifstream FileStream(FileName.c_str());
 	
-	if(FileStream == false)
+	if(FileStream)
 	{
-		return;
-	}
-	
-	Document Document(FileStream);
-	const Element * RootElement(Document.GetRootElement());
-	
-	if(RootElement == 0)
-	{
-		return;
-	}
-	
-	const std::vector< Element * > & RootElementChilds(RootElement->GetChilds());
-	std::vector< Element * >::const_iterator RootElementChild(RootElementChilds.begin());
-	
-	while(RootElementChild != RootElementChilds.end())
-	{
-		if((*RootElementChild)->GetName() == "commodity")
+		Document Document(FileStream);
+		const Element * RootElement(Document.GetRootElement());
+		
+		if(RootElement == 0)
 		{
-			LoadCommodityFromElement(CommodityManager, *RootElementChild);
+			return;
 		}
-		++RootElementChild;
+		
+		const std::vector< Element * > & RootElementChilds(RootElement->GetChilds());
+		std::vector< Element * >::const_iterator RootElementChild(RootElementChilds.begin());
+		
+		while(RootElementChild != RootElementChilds.end())
+		{
+			if((*RootElementChild)->GetName() == "commodity")
+			{
+				LoadCommodityFromElement(CommodityManager, *RootElementChild);
+			}
+			++RootElementChild;
+		}
 	}
 }
