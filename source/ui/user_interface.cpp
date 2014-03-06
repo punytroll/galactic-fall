@@ -187,7 +187,7 @@ void UI::UserInterface::DispatchMouseButtonEvent(UI::MouseButtonEvent & MouseBut
 			CapturingWidget->_Phase = UI::Event::Phase::Capturing;
 			CapturingWidget->_Position = MouseButtonEvent.GetPosition() - GlobalPosition;
 			CapturingWidget->_Connection = PathWidget->ConnectDestroyingCallback(std::bind(DestroyingPropagationPathItem, CapturingWidget));
-			PropagationPath.push_back(CapturingWidget);
+			PropagationPath.push_front(CapturingWidget);
 			GlobalPosition -= PathWidget->GetPosition();
 			PathWidget = PathWidget->_SupWidget;
 		}
