@@ -82,7 +82,7 @@ void UI::ScrollBar::OnSizeChanged(void)
 void UI::ScrollBar::OnTrackerMouseButton(UI::MouseButtonEvent & MouseButtonEvent)
 {
 	GetSupWidget()->RaiseSubWidget(this);
-	if(MouseButtonEvent.GetMouseButton() == UI::MouseButtonEvent::MouseButton::Left)
+	if((MouseButtonEvent.GetPhase() == UI::Event::Phase::Target) && (MouseButtonEvent.GetMouseButton() == UI::MouseButtonEvent::MouseButton::Left))
 	{
 		if(MouseButtonEvent.IsDown() == true)
 		{
