@@ -138,29 +138,27 @@ void LoadSystemsFromFile(SystemManager * SystemManager, const std::string & File
 {
 	std::ifstream FileStream(FileName.c_str());
 	
-	if(FileStream == false)
+	if(FileStream)
 	{
-		return;
-	}
-	
-	Document Document(FileStream);
-	const Element * RootElement(Document.GetRootElement());
-	
-	if(RootElement == 0)
-	{
-		return;
-	}
-	
-	const std::vector< Element * > & RootElementChilds(RootElement->GetChilds());
-	std::vector< Element * >::const_iterator RootElementChild(RootElementChilds.begin());
-	
-	while(RootElementChild != RootElementChilds.end())
-	{
-		if((*RootElementChild)->GetName() == "system")
+		Document Document(FileStream);
+		const Element * RootElement(Document.GetRootElement());
+		
+		if(RootElement == 0)
 		{
-			LoadSystemFromElement(SystemManager, *RootElementChild);
+			return;
 		}
-		++RootElementChild;
+		
+		const std::vector< Element * > & RootElementChilds(RootElement->GetChilds());
+		std::vector< Element * >::const_iterator RootElementChild(RootElementChilds.begin());
+		
+		while(RootElementChild != RootElementChilds.end())
+		{
+			if((*RootElementChild)->GetName() == "system")
+			{
+				LoadSystemFromElement(SystemManager, *RootElementChild);
+			}
+			++RootElementChild;
+		}
 	}
 }
 
@@ -200,28 +198,26 @@ void LoadSystemLinksFromFile(SystemManager * SystemManager, const std::string & 
 {
 	std::ifstream FileStream(FileName.c_str());
 	
-	if(FileStream == false)
+	if(FileStream)
 	{
-		return;
-	}
-	
-	Document Document(FileStream);
-	const Element * RootElement(Document.GetRootElement());
-	
-	if(RootElement == 0)
-	{
-		return;
-	}
-	
-	const std::vector< Element * > & RootElementChilds(RootElement->GetChilds());
-	std::vector< Element * >::const_iterator RootElementChild(RootElementChilds.begin());
-	
-	while(RootElementChild != RootElementChilds.end())
-	{
-		if((*RootElementChild)->GetName() == "system-link")
+		Document Document(FileStream);
+		const Element * RootElement(Document.GetRootElement());
+		
+		if(RootElement == 0)
 		{
-			LoadSystemLinkFromElement(SystemManager, *RootElementChild);
+			return;
 		}
-		++RootElementChild;
+		
+		const std::vector< Element * > & RootElementChilds(RootElement->GetChilds());
+		std::vector< Element * >::const_iterator RootElementChild(RootElementChilds.begin());
+		
+		while(RootElementChild != RootElementChilds.end())
+		{
+			if((*RootElementChild)->GetName() == "system-link")
+			{
+				LoadSystemLinkFromElement(SystemManager, *RootElementChild);
+			}
+			++RootElementChild;
+		}
 	}
 }

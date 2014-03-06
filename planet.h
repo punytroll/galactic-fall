@@ -24,7 +24,7 @@ class Planet : public Position
 {
 public:
 	Planet(const std::string & Identifier);
-	Planet::~Planet(void);
+	~Planet(void);
 	const std::string & GetIdentifier(void) const;
 	const std::string & GetName(void) const;
 	const std::string & GetDescription(void) const;

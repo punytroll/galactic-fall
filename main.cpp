@@ -3,6 +3,7 @@
 #include <sys/time.h>
 #include <time.h>
 
+#include <algorithm>
 #include <iostream>
 #include <list>
 #include <sstream>
@@ -133,9 +134,9 @@ void Render(void)
 	
 	if(g_CurrentSystem != 0)
 	{
-		for(std::list< Ship * >::const_iterator ShipIterator = g_CurrentSystem->GetShips().begin(); ShipIterator != g_CurrentSystem->GetShips().end(); ++ShipIterator)
+		for(const auto Ship : g_CurrentSystem->GetShips())
 		{
-			(*ShipIterator)->Move(Seconds);
+			Ship->Move(Seconds);
 		}
 	}
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -450,7 +451,7 @@ void Key(unsigned char Key, int X, int Y)
 			
 			if(g_SelectedLinkedSystem != 0)
 			{
-				std::list< System * >::const_iterator SystemIterator(find(LinkedSystems.begin(), LinkedSystems.end(), g_SelectedLinkedSystem));
+				std::list< System * >::const_iterator SystemIterator(std::find(LinkedSystems.begin(), LinkedSystems.end(), g_SelectedLinkedSystem));
 				
 				if(SystemIterator == LinkedSystems.end())
 				{
