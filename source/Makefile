@@ -67,6 +67,8 @@ dependencies: $(DEPENDENCY_FILES)
 		echo >> Makefile.dependencies; \
 	done
 
+%.o: %.cpp
+
 $(OBJECT_FILES): $(CXXFLAGS_configuration)
 
 $(DEPENDENCY_FILES): $(cpp_includes_to_makefile_dependencies)
