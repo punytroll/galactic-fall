@@ -132,6 +132,8 @@ UI::Widget * UI::UserInterface::GetWidget(const std::string & Path)
 
 void UI::UserInterface::DispatchMouseButtonEvent(UI::MouseButtonEvent & MouseButtonEvent)
 {
+	assert(MouseButtonEvent.GetTarget() == nullptr);
+	
 	std::list< MouseButtonEventPropagationPathItem * > PropagationPath;
 	
 	if(_CaptureWidget == nullptr)
@@ -266,8 +268,15 @@ void UI::UserInterface::DispatchMouseButtonEvent(UI::MouseButtonEvent & MouseBut
 	}
 }
 
+void UI::UserInterface::DispatchMouseEnterEvent(UI::Event & MouseEnterEvent)
+{
+	assert(MouseEnterEvent.GetTarget() != nullptr);
+}
+
 void UI::UserInterface::DispatchKeyEvent(UI::KeyEvent & KeyEvent)
 {
+	assert(KeyEvent.GetTarget() == nullptr);
+	
 	std::list< KeyEventPropagationPathItem * > PropagationPath;
 	auto PathWidget(_RootWidget);
 	
