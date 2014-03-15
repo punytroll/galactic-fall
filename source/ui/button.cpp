@@ -28,9 +28,9 @@ UI::Button::Button(Widget * SupWidget) :
 {
 	SetBackgroundColor(Color(0.3f, 0.3f, 0.3f, 1.0f));
 	SetDisabledBackgroundColor(Color(0.23f, 0.23f, 0.23f, 1.0f));
-	ConnectMouseButtonCallback(std::bind(&Button::_OnMouseButton, this, std::placeholders::_1));
-	ConnectMouseEnterCallback(std::bind(&Button::_OnMouseEnter, this));
-	ConnectMouseLeaveCallback(std::bind(&Button::_OnMouseLeave, this));
+	ConnectMouseButtonCallback(std::bind(&UI::Button::_OnMouseButton, this, std::placeholders::_1));
+	ConnectMouseEnterCallback(std::bind(&UI::Button::_OnMouseEnter, this));
+	ConnectMouseLeaveCallback(std::bind(&UI::Button::_OnMouseLeave, this));
 }
 
 UI::Button::~Button(void)
