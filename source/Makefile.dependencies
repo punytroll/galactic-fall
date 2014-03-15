@@ -1493,8 +1493,11 @@ ui_view_display_h = \
 ui_widget_cpp = \
 	ui/widget.cpp \
 	$(color_h) \
+	$(globals_h) \
 	$(graphics_gl_h) \
 	$(math_h) \
+	$(ui_event_h) \
+	$(ui_user_interface_h) \
 	$(ui_widget_h)
 
 ui_widget_h = \

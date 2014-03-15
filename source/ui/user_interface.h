@@ -41,6 +41,7 @@ namespace UI
 		void Draw(void) const;
 		void DispatchMouseButtonEvent(UI::MouseButtonEvent & MouseButtonEvent);
 		void DispatchMouseEnterEvent(UI::Event & MouseEnterEvent);
+		void DispatchMouseLeaveEvent(UI::Event & MouseLeaveEvent);
 		void DispatchKeyEvent(UI::KeyEvent & KeyEvent);
 		void MouseMoved(float X, float Y);
 		void Update(float RealTimeSeconds, float GameTimeSeconds);

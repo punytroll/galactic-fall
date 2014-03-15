@@ -22,8 +22,11 @@
 #include <algorithm>
 
 #include "../color.h"
+#include "../globals.h"
 #include "../graphics/gl.h"
 #include "../math.h"
+#include "event.h"
+#include "user_interface.h"
 #include "widget.h"
 
 std::list< UI::Widget * > UI::Widget::_DestroyedWidgets;
@@ -274,14 +277,15 @@ void UI::Widget::MouseMoved(float X, float Y)
 			if(_HoverWidget != SubWidget)
 			{
 				// befor unsetting the hover widget inform the old hover widget that the mouse cursor is leaving
-				if(_HoverWidget != nullptr)
-				{
-					_HoverWidget->MouseLeave();
-				}
+				_UnsetHoverWidget();
 				// now set the new hover widget
 				_HoverWidget = SubWidget;
+				
 				// inform the new hover widget about the entering of the mouse cursor
-				_HoverWidget->MouseEnter();
+				UI::Event MouseEnterEvent;
+				
+				MouseEnterEvent.SetTarget(_HoverWidget);
+				g_UserInterface->DispatchMouseEnterEvent(MouseEnterEvent);
 			}
 			SubWidget->MouseMoved(X - LeftTopCorner[0], Y - LeftTopCorner[1]);
 			FoundSubWidget = true;
@@ -292,28 +296,24 @@ void UI::Widget::MouseMoved(float X, float Y)
 	// if all sub widget have been iterated through, the old hover widget has been left by the mouse cursor
 	if((FoundSubWidget == false) && (_HoverWidget != nullptr))
 	{
-		_HoverWidget->MouseLeave();
-		_HoverWidget = nullptr;
+		_UnsetHoverWidget();
 	}
 	// after this we may call all our listeners
 	_MouseMovedEvent(X, Y);
 }
 
-void UI::Widget::MouseEnter(void)
-{
-	_MouseEnterEvent();
-}
-
-void UI::Widget::MouseLeave(void)
+void UI::Widget::_UnsetHoverWidget(void)
 {
 	if(_HoverWidget != nullptr)
 	{
-		auto HoverWidget(_HoverWidget);
+		_HoverWidget->_UnsetHoverWidget();
 		
+		UI::Event MouseLeaveEvent;
+		
+		MouseLeaveEvent.SetTarget(_HoverWidget);
+		g_UserInterface->DispatchMouseLeaveEvent(MouseLeaveEvent);
 		_HoverWidget = nullptr;
-		HoverWidget->MouseLeave();
 	}
-	_MouseLeaveEvent();
 }
 
 Connection UI::Widget::ConnectDestroyingCallback(std::function< void (void) > Callback)
@@ -331,12 +331,12 @@ Connection UI::Widget::ConnectMouseButtonCallback(std::function< void (UI::Mouse
 	return _MouseButtonEvent.Connect(Callback);
 }
 
-Connection UI::Widget::ConnectMouseEnterCallback(std::function< void (void) > Callback)
+Connection UI::Widget::ConnectMouseEnterCallback(std::function< void (UI::Event &) > Callback)
 {
 	return _MouseEnterEvent.Connect(Callback);
 }
 
-Connection UI::Widget::ConnectMouseLeaveCallback(std::function< void (void) > Callback)
+Connection UI::Widget::ConnectMouseLeaveCallback(std::function< void (UI::Event &) > Callback)
 {
 	return _MouseLeaveEvent.Connect(Callback);
 }
