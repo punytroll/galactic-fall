@@ -33,6 +33,7 @@ class Color;
 
 namespace UI
 {
+	class Event;
 	class KeyEvent;
 	class MouseButtonEvent;
 	class UserInterface;
@@ -78,18 +79,12 @@ namespace UI
 		void SetVisible(bool Visible);
 		// receive input
 		void MouseMoved(float X, float Y);
-		// MouseEnter may depend on the fact that m_HoverWidget on the m_SupWidget is set to this
-		// MouseEnter on the new hover widget is called after MouseLeave on the old hover widget
-		void MouseEnter(void);
-		// MouseLeave may depend on the fact that m_HoverWidget on the m_SupWidget is still set to this
-		// MouseLeave on the old hover widget is called before MouseEnter on the new hover widget
-		void MouseLeave(void);
 		// connect and disconnect events
 		Connection ConnectDestroyingCallback(std::function< void (void) > Callback);
 		Connection ConnectKeyCallback(std::function< void (UI::KeyEvent &) > Callback);
 		Connection ConnectMouseButtonCallback(std::function< void (UI::MouseButtonEvent &) > Callback);
-		Connection ConnectMouseEnterCallback(std::function< void (void) > Callback);
-		Connection ConnectMouseLeaveCallback(std::function< void (void) > Callback);
+		Connection ConnectMouseEnterCallback(std::function< void (UI::Event &) > Callback);
+		Connection ConnectMouseLeaveCallback(std::function< void (UI::Event &) > Callback);
 		Connection ConnectMouseMovedCallback(std::function< void (float, float) > Callback);
 		Connection ConnectPositionChangedCallback(std::function< void (void) > Callback);
 		Connection ConnectSizeChangedCallback(std::function< void (void) > Callback);
@@ -110,6 +105,7 @@ namespace UI
 		static void _PopClippingRectangle(void);
 		static void _DrawClippingRectangle(void);
 	private:
+		void _UnsetHoverWidget(void);
 		bool _AnchorBottom;
 		bool _AnchorLeft;
 		bool _AnchorRight;
@@ -129,8 +125,8 @@ namespace UI
 		::Event< void > _DestroyingEvent;
 		::Event< void, UI::KeyEvent & > _KeyEvent;
 		::Event< void, UI::MouseButtonEvent & > _MouseButtonEvent;
-		::Event< void > _MouseEnterEvent;
-		::Event< void > _MouseLeaveEvent;
+		::Event< void, UI::Event & > _MouseEnterEvent;
+		::Event< void, UI::Event & > _MouseLeaveEvent;
 		::Event< void, float, float > _MouseMovedEvent;
 		::Event< void > _PositionChangedEvent;
 		::Event< void > _SizeChangedEvent;
