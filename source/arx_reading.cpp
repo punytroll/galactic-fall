@@ -313,15 +313,13 @@ static void ReadAssetClass(Arxx::Reference & Reference)
 	float BasePrice;
 	std::string ObjectTypeIdentifier;
 	std::string ObjectClassIdentifier;
-	std::string ImageIdentifier;
 	
-	Reader >> Name >> BasePrice >> ObjectTypeIdentifier >> ObjectClassIdentifier >> ImageIdentifier;
+	Reader >> Name >> BasePrice >> ObjectTypeIdentifier >> ObjectClassIdentifier;
 	
 	NewAssetClass->SetName(Name);
 	NewAssetClass->SetBasePrice(BasePrice);
 	NewAssetClass->SetObjectTypeIdentifier(ObjectTypeIdentifier);
 	NewAssetClass->SetObjectClassIdentifier(ObjectClassIdentifier);
-	NewAssetClass->SetImageIdentifier(ImageIdentifier);
 }
 
 static void ReadBatteryClass(Arxx::Reference & Reference)

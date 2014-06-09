@@ -34,20 +34,17 @@ public:
 	// getters
 	float GetBasePrice(void) const;
 	const std::string & GetIdentifier(void) const;
-	const std::string & GetImageIdentifier(void) const;
 	const std::string & GetName(void) const;
 	const std::string & GetObjectClassIdentifier(void) const;
 	const std::string & GetObjectTypeIdentifier(void) const;
 	// setters
 	void SetBasePrice(float BasePrice);
-	void SetImageIdentifier(const std::string & ImageIdentifier);
 	void SetName(const std::string & Name);
 	void SetObjectClassIdentifier(const std::string & ObjectClassIdentifier);
 	void SetObjectTypeIdentifier(const std::string & ObjectTypeIdentifier);
 private:
 	float _BasePrice;
 	std::string _Identifier;
-	std::string _ImageIdentifier;
 	std::string _Name;
 	std::string _ObjectClassIdentifier;
 	std::string _ObjectTypeIdentifier;
@@ -61,11 +58,6 @@ inline float AssetClass::GetBasePrice(void) const
 inline const std::string & AssetClass::GetIdentifier(void) const
 {
 	return _Identifier;
-}
-
-inline const std::string & AssetClass::GetImageIdentifier(void) const
-{
-	return _ImageIdentifier;
 }
 
 inline const std::string & AssetClass::GetName(void) const
@@ -86,11 +78,6 @@ inline const std::string & AssetClass::GetObjectTypeIdentifier(void) const
 inline void AssetClass::SetBasePrice(float BasePrice)
 {
 	_BasePrice = BasePrice;
-}
-
-inline void AssetClass::SetImageIdentifier(const std::string & ImageIdentifier)
-{
-	_ImageIdentifier = ImageIdentifier;
 }
 
 inline void AssetClass::SetName(const std::string & Name)
