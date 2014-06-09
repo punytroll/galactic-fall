@@ -36,7 +36,7 @@ namespace UI
 	class Label;
 	class ViewDisplay;
 	class ScrollBox;
-	class TradeCenterAssetClass;
+	class TradeCenterAssetClassListWidget;
 
 	class TradeCenterWidget : public UI::Widget
 	{
@@ -44,9 +44,9 @@ namespace UI
 		TradeCenterWidget(UI::Widget * SupWidget, Reference< Planet > Planet, Reference< Character > Character);
 	private:
 		// callbacks
-		void _OnAssetClassMouseButton(UI::TradeCenterAssetClass * TradeCenterAssetClass, UI::MouseButtonEvent & MouseButtonEvent);
-		void _OnAssetClassMouseEnter(UI::TradeCenterAssetClass * AssetClassWidget);
-		void _OnAssetClassMouseLeave(UI::TradeCenterAssetClass * AssetClassWidget);
+		void _OnAssetClassMouseButton(UI::TradeCenterAssetClassListWidget * TradeCenterAssetClassListWidget, UI::MouseButtonEvent & MouseButtonEvent);
+		void _OnAssetClassMouseEnter(UI::TradeCenterAssetClassListWidget * TradeCenterAssetClassListWidget);
+		void _OnAssetClassMouseLeave(UI::TradeCenterAssetClassListWidget * TradeCenterAssetClassListWidget);
 		void _OnAssetClassScrollBoxMouseButton(UI::MouseButtonEvent & MouseButtonEvent);
 		void _OnBuyButtonClicked(void);
 		void _OnBuyButtonUpdating(UI::Button * BuyButton, float RealTimeSeconds, float GameTimeSeconds);
@@ -65,7 +65,7 @@ namespace UI
 		UI::ViewDisplay * _AssetClassViewDisplay;
 		Reference< Character > _Character;
 		Reference< Planet > _Planet;
-		UI::TradeCenterAssetClass * _SelectedTradeCenterAssetClass;
+		UI::TradeCenterAssetClassListWidget * _SelectedTradeCenterAssetClassListWidget;
 		UI::Label * _TraderAvailableSpaceLabel;
 		UI::Label * _TraderCreditsLabel;
 	};
