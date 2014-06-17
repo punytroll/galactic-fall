@@ -80,37 +80,37 @@ UI::TradeCenterAssetClassListWidget::TradeCenterAssetClassListWidget(UI::Widget 
 	SetSize(Vector2f(200.0f, 20.0f));
 	ConnectUpdatingCallback(std::bind(&UI::TradeCenterAssetClassListWidget::_OnUpdating, this, std::placeholders::_1, std::placeholders::_2));
 	
-	UI::Label * PlanetAssetClassNameLabel(new UI::Label(this, PlanetAssetClass->GetAssetClass()->GetName()));
+	auto NameLabel(new UI::Label(this, PlanetAssetClass->GetAssetClass()->GetName()));
 	
-	PlanetAssetClassNameLabel->SetPosition(Vector2f(10.0f, 0.0f));
-	PlanetAssetClassNameLabel->SetSize(Vector2f(80.0f, 20.0f));
-	PlanetAssetClassNameLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
-	PlanetAssetClassNameLabel->SetAnchorRight(true);
+	NameLabel->SetPosition(Vector2f(10.0f, 0.0f));
+	NameLabel->SetSize(Vector2f(30.0f, 20.0f));
+	NameLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
+	NameLabel->SetAnchorRight(true);
 	_CharacterAmountLabel = new UI::Label(this, "");
-	_CharacterAmountLabel->SetPosition(Vector2f(70.0f, 0.0f));
-	_CharacterAmountLabel->SetSize(Vector2f(20.0f, 20.0f));
+	_CharacterAmountLabel->SetPosition(Vector2f(50.0f, 0.0f));
+	_CharacterAmountLabel->SetSize(Vector2f(40.0f, 20.0f));
 	_CharacterAmountLabel->SetHorizontalAlignment(UI::Label::ALIGN_RIGHT);
 	_CharacterAmountLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	_CharacterAmountLabel->SetAnchorLeft(false);
 	_CharacterAmountLabel->SetAnchorRight(true);
 	
-	UI::Label * PlanetAssetClassSizeRequirementLabel(new UI::Label(this, to_string_cast(0.001 * g_ObjectFactory->GetSpaceRequirement(PlanetAssetClass->GetAssetClass()->GetObjectTypeIdentifier(), PlanetAssetClass->GetAssetClass()->GetObjectClassIdentifier()), 3)));
+	auto SizeRequirementLabel(new UI::Label(this, to_string_cast(0.001 * g_ObjectFactory->GetSpaceRequirement(PlanetAssetClass->GetAssetClass()->GetObjectTypeIdentifier(), PlanetAssetClass->GetAssetClass()->GetObjectClassIdentifier()), 3)));
 	
-	PlanetAssetClassSizeRequirementLabel->SetPosition(Vector2f(100.0f, 0.0f));
-	PlanetAssetClassSizeRequirementLabel->SetSize(Vector2f(40.0f, 20.0f));
-	PlanetAssetClassSizeRequirementLabel->SetHorizontalAlignment(UI::Label::ALIGN_RIGHT);
-	PlanetAssetClassSizeRequirementLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
-	PlanetAssetClassSizeRequirementLabel->SetAnchorLeft(false);
-	PlanetAssetClassSizeRequirementLabel->SetAnchorRight(true);
+	SizeRequirementLabel->SetPosition(Vector2f(100.0f, 0.0f));
+	SizeRequirementLabel->SetSize(Vector2f(40.0f, 20.0f));
+	SizeRequirementLabel->SetHorizontalAlignment(UI::Label::ALIGN_RIGHT);
+	SizeRequirementLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
+	SizeRequirementLabel->SetAnchorLeft(false);
+	SizeRequirementLabel->SetAnchorRight(true);
 	
-	UI::Label * PlanetAssetClassPriceLabel(new UI::Label(this, to_string_cast(PlanetAssetClass->GetPrice())));
+	auto PriceLabel(new UI::Label(this, to_string_cast(PlanetAssetClass->GetPrice())));
 	
-	PlanetAssetClassPriceLabel->SetPosition(Vector2f(150.0f, 0.0f));
-	PlanetAssetClassPriceLabel->SetSize(Vector2f(40.0f, 20.0f));
-	PlanetAssetClassPriceLabel->SetHorizontalAlignment(UI::Label::ALIGN_RIGHT);
-	PlanetAssetClassPriceLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
-	PlanetAssetClassPriceLabel->SetAnchorLeft(false);
-	PlanetAssetClassPriceLabel->SetAnchorRight(true);
+	PriceLabel->SetPosition(Vector2f(150.0f, 0.0f));
+	PriceLabel->SetSize(Vector2f(40.0f, 20.0f));
+	PriceLabel->SetHorizontalAlignment(UI::Label::ALIGN_RIGHT);
+	PriceLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
+	PriceLabel->SetAnchorLeft(false);
+	PriceLabel->SetAnchorRight(true);
 }
 
 void UI::TradeCenterAssetClassListWidget::_OnUpdating(float RealTimeSeconds, float GameTimeSeconds)
@@ -137,7 +137,7 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Reference< Plan
 	ConnectKeyCallback(std::bind(&UI::TradeCenterWidget::_OnKey, this, std::placeholders::_1));
 	ConnectUpdatingCallback(std::bind(&UI::TradeCenterWidget::_OnUpdating, this, std::placeholders::_1, std::placeholders::_2));
 	
-	UI::Button * BuyButton(new UI::TextButton(this, "Buy"));
+	auto BuyButton(new UI::TextButton(this, "Buy"));
 	
 	BuyButton->SetPosition(Vector2f(0.0f, 280.0f));
 	BuyButton->SetSize(Vector2f(100.0f, 20.0f));
@@ -146,7 +146,7 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Reference< Plan
 	BuyButton->ConnectClickedCallback(std::bind(&UI::TradeCenterWidget::_OnBuyButtonClicked, this));
 	BuyButton->ConnectUpdatingCallback(std::bind(&UI::TradeCenterWidget::_OnBuyButtonUpdating, this, BuyButton, std::placeholders::_1, std::placeholders::_2));
 	
-	UI::Button * SellButton(new UI::TextButton(this, "Sell"));
+	auto SellButton(new UI::TextButton(this, "Sell"));
 	
 	SellButton->SetPosition(Vector2f(110.0f, 280.0f));
 	SellButton->SetSize(Vector2f(100.0f, 20.0f));
@@ -154,9 +154,51 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Reference< Plan
 	SellButton->SetAnchorTop(false);
 	SellButton->ConnectClickedCallback(std::bind(&UI::TradeCenterWidget::_OnSellButtonClicked, this));
 	SellButton->ConnectUpdatingCallback(std::bind(&UI::TradeCenterWidget::_OnSellButtonUpdating, this, SellButton, std::placeholders::_1, std::placeholders::_2));
+	
+	auto HeaderRow(new UI::Widget(this));
+	
+	HeaderRow->SetPosition(Vector2f(0.0f, 0.0f));
+	HeaderRow->SetSize(Vector2f(470.0f, 20.0f));
+	HeaderRow->SetBackgroundColor(Color(0.3f, 0.3f, 0.3f, 1.0f));
+	HeaderRow->SetAnchorRight(true);
+	
+	auto NameColumnHeader(new UI::Label(HeaderRow, "Name"));
+	
+	NameColumnHeader->SetPosition(Vector2f(15.0f, 0.0f));
+	NameColumnHeader->SetSize(Vector2f(290.0f, 20.0f));
+	NameColumnHeader->SetHorizontalAlignment(UI::Label::ALIGN_LEFT);
+	NameColumnHeader->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
+	NameColumnHeader->SetAnchorRight(true);
+	
+	auto CharacterAmountColumnHeader(new UI::Label(HeaderRow, "Amount"));
+	
+	CharacterAmountColumnHeader->SetPosition(Vector2f(315.0f, 0.0f));
+	CharacterAmountColumnHeader->SetSize(Vector2f(40.0f, 20.0f));
+	CharacterAmountColumnHeader->SetHorizontalAlignment(UI::Label::ALIGN_RIGHT);
+	CharacterAmountColumnHeader->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
+	CharacterAmountColumnHeader->SetAnchorLeft(false);
+	CharacterAmountColumnHeader->SetAnchorRight(true);
+	
+	auto SizeColumnHeader(new UI::Label(HeaderRow, "Size"));
+	
+	SizeColumnHeader->SetPosition(Vector2f(365.0f, 0.0f));
+	SizeColumnHeader->SetSize(Vector2f(40.0f, 20.0f));
+	SizeColumnHeader->SetHorizontalAlignment(UI::Label::ALIGN_RIGHT);
+	SizeColumnHeader->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
+	SizeColumnHeader->SetAnchorLeft(false);
+	SizeColumnHeader->SetAnchorRight(true);
+	
+	auto PriceColumnHeader(new UI::Label(HeaderRow, "Price"));
+	
+	PriceColumnHeader->SetPosition(Vector2f(415.0f, 0.0f));
+	PriceColumnHeader->SetSize(Vector2f(40.0f, 20.0f));
+	PriceColumnHeader->SetHorizontalAlignment(UI::Label::ALIGN_RIGHT);
+	PriceColumnHeader->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
+	PriceColumnHeader->SetAnchorLeft(false);
+	PriceColumnHeader->SetAnchorRight(true);
 	_AssetClassScrollBox = new UI::ScrollBox(this);
-	_AssetClassScrollBox->SetPosition(Vector2f(0.0f, 0.0f));
-	_AssetClassScrollBox->SetSize(Vector2f(490.0f, 210.0f));
+	_AssetClassScrollBox->SetPosition(Vector2f(0.0f, 20.0f));
+	_AssetClassScrollBox->SetSize(Vector2f(490.0f, 190.0f));
 	_AssetClassScrollBox->SetHorizontalScrollBarVisible(false);
 	_AssetClassScrollBox->SetAnchorRight(true);
 	_AssetClassScrollBox->SetAnchorBottom(true);
@@ -348,10 +390,12 @@ void UI::TradeCenterWidget::_OnAssetClassScrollBoxMouseButton(UI::MouseButtonEve
 	if((MouseButtonEvent.GetMouseButton() == UI::MouseButtonEvent::MouseButton::WheelUp) && (MouseButtonEvent.IsDown() == true))
 	{
 		_AssetClassScrollBox->GetVerticalScrollBar()->StepLess();
+		MouseButtonEvent.StopPropagation();
 	}
 	else if((MouseButtonEvent.GetMouseButton() == UI::MouseButtonEvent::MouseButton::WheelDown) && (MouseButtonEvent.IsDown() == true))
 	{
 		_AssetClassScrollBox->GetVerticalScrollBar()->StepMore();
+		MouseButtonEvent.StopPropagation();
 	}
 }
 
