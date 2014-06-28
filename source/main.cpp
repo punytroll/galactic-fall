@@ -2898,44 +2898,51 @@ void MainViewKeyEvent(UI::KeyEvent & KeyEvent)
 	}
 }
 
-bool MainViewMouseButtonEvent(UI::MouseButtonEvent & MouseButtonEvent)
+void MainViewMouseButtonEvent(UI::MouseButtonEvent & MouseButtonEvent)
 {
-	switch(MouseButtonEvent.GetMouseButton())
+	if((MouseButtonEvent.GetPhase() == UI::Event::Phase::Target) || (MouseButtonEvent.GetPhase() == UI::Event::Phase::Bubbling))
 	{
-	case UI::MouseButtonEvent::MouseButton::Middle:
+		switch(MouseButtonEvent.GetMouseButton())
 		{
-			if(MouseButtonEvent.IsDown() == true)
+		case UI::MouseButtonEvent::MouseButton::Middle:
 			{
-				g_LastMotionX = MouseButtonEvent.GetPosition()[0];
-				g_LastMotionY = MouseButtonEvent.GetPosition()[1];
-				g_MouseButton = UI::MouseButtonEvent::MouseButton::Middle;
+				if(MouseButtonEvent.IsDown() == true)
+				{
+					g_LastMotionX = MouseButtonEvent.GetPosition()[0];
+					g_LastMotionY = MouseButtonEvent.GetPosition()[1];
+					g_MouseButton = UI::MouseButtonEvent::MouseButton::Middle;
+				}
+				else
+				{
+					g_MouseButton = UI::MouseButtonEvent::MouseButton::Unspecified;
+				}
+				
+				break;
 			}
-			else
+		case UI::MouseButtonEvent::MouseButton::WheelUp:
 			{
-				g_MouseButton = UI::MouseButtonEvent::MouseButton::Unspecified;
+				if(MouseButtonEvent.IsDown() == true)
+				{
+					g_CameraPosition[2] *= 0.95f;
+				}
+				
+				break;
 			}
-			
-			break;
-		}
-	case UI::MouseButtonEvent::MouseButton::WheelUp:
-		{
-			g_CameraPosition[2] *= 0.95f;
-			
-			break;
-		}
-	case UI::MouseButtonEvent::MouseButton::WheelDown:
-		{
-			g_CameraPosition[2] *= 1.05f;
-			
-			break;
-		}
-	default:
-		{
-			break;
+		case UI::MouseButtonEvent::MouseButton::WheelDown:
+			{
+				if(MouseButtonEvent.IsDown() == true)
+				{
+					g_CameraPosition[2] *= 1.05f;
+				}
+				
+				break;
+			}
+		default:
+			{
+				break;
+			}
 		}
 	}
-	
-	return true;
 }
 
 void MainViewMouseMoved(int X, int Y)
