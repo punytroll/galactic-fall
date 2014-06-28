@@ -2,6 +2,7 @@
 	<identifier>equipment</identifier>
 	<name>Equipment</name>
 	<base-price>210</base-price>
+	<description>Equipment is traded from and to industrial planets.</description>
 	<object-type>commodity</object-type>
 	<object-class>equipment</object-class>
 </asset-class>

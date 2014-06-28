@@ -2,6 +2,7 @@
 	<identifier>transporter</identifier>
 	<name>Transporter</name>
 	<base-price>73000</base-price>
+	<description>The transporter is the backbone of agriculture and industry, used to transport goods from producer to consumer.</description>
 	<object-type>ship</object-type>
 	<object-class>transporter</object-class>
 </asset-class>

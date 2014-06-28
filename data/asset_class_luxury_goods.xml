@@ -2,6 +2,7 @@
 	<identifier>luxury_goods</identifier>
 	<name>Luxury Goods</name>
 	<base-price>500</base-price>
+	<description>Luxury goods are generally produced and consumed on secure and long-term established colonies.</description>
 	<object-type>commodity</object-type>
 	<object-class>luxury_goods</object-class>
 </asset-class>

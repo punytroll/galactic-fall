@@ -6,6 +6,7 @@
 		<string identifier="identifier"/>
 		<string identifier="name"/>
 		<float identifier="base-price"/>
+		<string identifier="description"/>
 		<string identifier="object-type"/>
 		<string identifier="object-class"/>
 	</asset-class>

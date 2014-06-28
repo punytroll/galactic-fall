@@ -33,17 +33,20 @@ public:
 	~AssetClass(void);
 	// getters
 	float GetBasePrice(void) const;
+	const std::string & GetDescription(void) const;
 	const std::string & GetIdentifier(void) const;
 	const std::string & GetName(void) const;
 	const std::string & GetObjectClassIdentifier(void) const;
 	const std::string & GetObjectTypeIdentifier(void) const;
 	// setters
 	void SetBasePrice(float BasePrice);
+	void SetDescription(const std::string & Description);
 	void SetName(const std::string & Name);
 	void SetObjectClassIdentifier(const std::string & ObjectClassIdentifier);
 	void SetObjectTypeIdentifier(const std::string & ObjectTypeIdentifier);
 private:
 	float _BasePrice;
+	std::string _Description;
 	std::string _Identifier;
 	std::string _Name;
 	std::string _ObjectClassIdentifier;
@@ -53,6 +56,11 @@ private:
 inline float AssetClass::GetBasePrice(void) const
 {
 	return _BasePrice;
+}
+
+inline const std::string & AssetClass::GetDescription(void) const
+{
+	return _Description;
 }
 
 inline const std::string & AssetClass::GetIdentifier(void) const
@@ -78,6 +86,11 @@ inline const std::string & AssetClass::GetObjectTypeIdentifier(void) const
 inline void AssetClass::SetBasePrice(float BasePrice)
 {
 	_BasePrice = BasePrice;
+}
+
+inline void AssetClass::SetDescription(const std::string & Description)
+{
+	_Description = Description;
 }
 
 inline void AssetClass::SetName(const std::string & Name)
