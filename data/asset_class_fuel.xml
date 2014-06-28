@@ -2,6 +2,7 @@
 	<identifier>fuel</identifier>
 	<name>Fuel</name>
 	<base-price>200</base-price>
+	<description>Fuel is used everywhere, especially on industrial planets and large trade hubs.</description>
 	<object-type>commodity</object-type>
 	<object-class>fuel</object-class>
 </asset-class>

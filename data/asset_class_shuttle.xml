@@ -2,6 +2,7 @@
 	<identifier>shuttle</identifier>
 	<name>Shuttle</name>
 	<base-price>18000</base-price>
+	<description>The small shuttle is the entry into space trade for most aspiring entrepreneurs.</description>
 	<object-type>ship</object-type>
 	<object-class>shuttle</object-class>
 </asset-class>

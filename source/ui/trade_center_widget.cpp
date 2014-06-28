@@ -132,7 +132,7 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Reference< Plan
 	_Planet(Planet),
 	_SelectedTradeCenterAssetClassListWidget(nullptr)
 {
-	SetSize(Vector2f(600.0f, 300.0f));
+	SetSize(Vector2f(650.0f, 300.0f));
 	ConnectDestroyingCallback(std::bind(&UI::TradeCenterWidget::_OnDestroying, this));
 	ConnectKeyCallback(std::bind(&UI::TradeCenterWidget::_OnKey, this, std::placeholders::_1));
 	ConnectUpdatingCallback(std::bind(&UI::TradeCenterWidget::_OnUpdating, this, std::placeholders::_1, std::placeholders::_2));
@@ -198,7 +198,7 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Reference< Plan
 	PriceColumnHeader->SetAnchorRight(true);
 	_AssetClassScrollBox = new UI::ScrollBox(this);
 	_AssetClassScrollBox->SetPosition(Vector2f(0.0f, 20.0f));
-	_AssetClassScrollBox->SetSize(Vector2f(490.0f, 190.0f));
+	_AssetClassScrollBox->SetSize(Vector2f(490.0f, 230.0f));
 	_AssetClassScrollBox->SetHorizontalScrollBarVisible(false);
 	_AssetClassScrollBox->SetAnchorRight(true);
 	_AssetClassScrollBox->SetAnchorBottom(true);
@@ -225,20 +225,76 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Reference< Plan
 	_AssetClassScrollBox->GetContent()->SetAnchorRight(true);
 	_AssetClassViewDisplay = new UI::ViewDisplay(this);
 	_AssetClassViewDisplay->SetPosition(Vector2f(500.0f, 0.0f));
-	_AssetClassViewDisplay->SetSize(Vector2f(100.0f, 100.0f));
+	_AssetClassViewDisplay->SetSize(Vector2f(150.0f, 150.0f));
 	_AssetClassViewDisplay->SetAnchorLeft(false);
 	_AssetClassViewDisplay->SetAnchorRight(true);
 	_AssetClassViewDisplay->SetBackgroundColor(Color(0.15f, 0.15f, 0.15f, 1.0f));
-	_TraderCreditsLabel = new UI::Label(this, "");
-	_TraderCreditsLabel->SetPosition(Vector2f(0.0f, 230.0f));
-	_TraderCreditsLabel->SetSize(Vector2f(200.0f, 20.0f));
-	_TraderCreditsLabel->SetAnchorBottom(true);
-	_TraderCreditsLabel->SetAnchorTop(false);
-	_TraderAvailableSpaceLabel = new UI::Label(this, "");
-	_TraderAvailableSpaceLabel->SetPosition(Vector2f(0.0f, 250.0f));
-	_TraderAvailableSpaceLabel->SetSize(Vector2f(200.0f, 20.0f));
-	_TraderAvailableSpaceLabel->SetAnchorBottom(true);
-	_TraderAvailableSpaceLabel->SetAnchorTop(false);
+	
+	auto TraderAvailableSpaceLabel = new UI::Label(this, "");
+	
+	TraderAvailableSpaceLabel->SetPosition(Vector2f(0.0f, 260.0f));
+	TraderAvailableSpaceLabel->SetSize(Vector2f(200.0f, 20.0f));
+	TraderAvailableSpaceLabel->SetAnchorBottom(true);
+	TraderAvailableSpaceLabel->SetAnchorTop(false);
+	TraderAvailableSpaceLabel->ConnectUpdatingCallback(std::bind(&UI::TradeCenterWidget::_OnTraderAvailableSpaceLabelUpdating, this, TraderAvailableSpaceLabel, std::placeholders::_1, std::placeholders::_2));
+	
+	auto AssetClassPriceCaptionLabel(new UI::Label(this, "Price:"));
+	
+	AssetClassPriceCaptionLabel->SetPosition(Vector2f(500.0f, 160.0f));
+	AssetClassPriceCaptionLabel->SetSize(Vector2f(150.0f, 20.0f));
+	AssetClassPriceCaptionLabel->SetAnchorLeft(false);
+	AssetClassPriceCaptionLabel->SetAnchorRight(true);
+	AssetClassPriceCaptionLabel->SetVisible(false);
+	AssetClassPriceCaptionLabel->ConnectUpdatingCallback(std::bind(&UI::TradeCenterWidget::_OnAssetClassPriceCaptionLabelUpdating, this, AssetClassPriceCaptionLabel, std::placeholders::_1, std::placeholders::_2));
+	
+	auto AssetClassPriceLabel(new UI::Label(this, ""));
+	
+	AssetClassPriceLabel->SetPosition(Vector2f(500.0f, 160.0f));
+	AssetClassPriceLabel->SetSize(Vector2f(150.0f, 20.0f));
+	AssetClassPriceLabel->SetAnchorLeft(false);
+	AssetClassPriceLabel->SetAnchorRight(true);
+	AssetClassPriceLabel->SetVisible(false);
+	AssetClassPriceLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::ALIGN_RIGHT);
+	AssetClassPriceLabel->ConnectUpdatingCallback(std::bind(&UI::TradeCenterWidget::_OnAssetClassPriceLabelUpdating, this, AssetClassPriceLabel, std::placeholders::_1, std::placeholders::_2));
+	
+	auto AssetClassSizeCaptionLabel(new UI::Label(this, "Size:"));
+	
+	AssetClassSizeCaptionLabel->SetPosition(Vector2f(500.0f, 180.0f));
+	AssetClassSizeCaptionLabel->SetSize(Vector2f(150.0f, 20.0f));
+	AssetClassSizeCaptionLabel->SetAnchorLeft(false);
+	AssetClassSizeCaptionLabel->SetAnchorRight(true);
+	AssetClassSizeCaptionLabel->SetVisible(false);
+	AssetClassSizeCaptionLabel->ConnectUpdatingCallback(std::bind(&UI::TradeCenterWidget::_OnAssetClassSizeCaptionLabelUpdating, this, AssetClassSizeCaptionLabel, std::placeholders::_1, std::placeholders::_2));
+	
+	auto AssetClassSizeLabel(new UI::Label(this, ""));
+	
+	AssetClassSizeLabel->SetPosition(Vector2f(500.0f, 180.0f));
+	AssetClassSizeLabel->SetSize(Vector2f(150.0f, 20.0f));
+	AssetClassSizeLabel->SetAnchorLeft(false);
+	AssetClassSizeLabel->SetAnchorRight(true);
+	AssetClassSizeLabel->SetVisible(false);
+	AssetClassSizeLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::ALIGN_RIGHT);
+	AssetClassSizeLabel->ConnectUpdatingCallback(std::bind(&UI::TradeCenterWidget::_OnAssetClassSizeLabelUpdating, this, AssetClassSizeLabel, std::placeholders::_1, std::placeholders::_2));
+	
+	auto AssetClassDescriptionCaptionLabel(new UI::Label(this, "Description:"));
+	
+	AssetClassDescriptionCaptionLabel->SetPosition(Vector2f(500.0f, 200.0f));
+	AssetClassDescriptionCaptionLabel->SetSize(Vector2f(150.0f, 20.0f));
+	AssetClassDescriptionCaptionLabel->SetAnchorLeft(false);
+	AssetClassDescriptionCaptionLabel->SetAnchorRight(true);
+	AssetClassDescriptionCaptionLabel->SetVisible(false);
+	AssetClassDescriptionCaptionLabel->ConnectUpdatingCallback(std::bind(&UI::TradeCenterWidget::_OnAssetClassDescriptionCaptionLabelUpdating, this, AssetClassDescriptionCaptionLabel, std::placeholders::_1, std::placeholders::_2));
+	
+	auto AssetClassDescriptionLabel(new UI::Label(this, ""));
+	
+	AssetClassDescriptionLabel->SetPosition(Vector2f(500.0f, 220.0f));
+	AssetClassDescriptionLabel->SetSize(Vector2f(150.0f, 30.0f));
+	AssetClassDescriptionLabel->SetAnchorLeft(false);
+	AssetClassDescriptionLabel->SetAnchorRight(true);
+	AssetClassDescriptionLabel->SetAnchorBottom(true);
+	AssetClassDescriptionLabel->SetWrap(true);
+	AssetClassDescriptionLabel->SetWordWrap(true);
+	AssetClassDescriptionLabel->ConnectUpdatingCallback(std::bind(&UI::TradeCenterWidget::_OnAssetClassDescriptionLabelUpdating, this, AssetClassDescriptionLabel, std::placeholders::_1, std::placeholders::_2));
 }
 
 void UI::TradeCenterWidget::_Buy(const PlanetAssetClass * PlanetAssetClass)
@@ -300,6 +356,25 @@ void UI::TradeCenterWidget::_ClearAssetClassViewDisplay(void)
 		g_GraphicsEngine->GetTextureManager()->Destroy(Texture->GetIdentifier());
 		g_GraphicsEngine->RemoveView(OldView);
 		delete OldView;
+	}
+}
+
+void UI::TradeCenterWidget::_OnAssetClassDescriptionCaptionLabelUpdating(UI::Label * AssetClassDescriptionCaptionLabel, float RealTimeSeconds, float GameTimeSeconds)
+{
+	assert(AssetClassDescriptionCaptionLabel != nullptr);
+	AssetClassDescriptionCaptionLabel->SetVisible(_SelectedTradeCenterAssetClassListWidget != nullptr);
+}
+
+void UI::TradeCenterWidget::_OnAssetClassDescriptionLabelUpdating(UI::Label * AssetClassDescriptionLabel, float RealTimeSeconds, float GameTimeSeconds)
+{
+	if(_SelectedTradeCenterAssetClassListWidget != nullptr)
+	{
+		AssetClassDescriptionLabel->SetVisible(true);
+		AssetClassDescriptionLabel->SetText(_SelectedTradeCenterAssetClassListWidget->GetPlanetAssetClass()->GetAssetClass()->GetDescription());
+	}
+	else
+	{
+		AssetClassDescriptionLabel->SetVisible(false);
 	}
 }
 
@@ -385,6 +460,27 @@ void UI::TradeCenterWidget::_OnAssetClassMouseLeave(TradeCenterAssetClassListWid
 	}
 }
 
+void UI::TradeCenterWidget::_OnAssetClassPriceCaptionLabelUpdating(UI::Label * AssetClassPriceCaptionLabel, float RealTimeSeconds, float GameTimeSeconds)
+{
+	assert(AssetClassPriceCaptionLabel != nullptr);
+	AssetClassPriceCaptionLabel->SetVisible(_SelectedTradeCenterAssetClassListWidget != nullptr);
+}
+
+void UI::TradeCenterWidget::_OnAssetClassPriceLabelUpdating(UI::Label * AssetClassPriceLabel, float RealTimeSeconds, float GameTimeSeconds)
+{
+	assert(AssetClassPriceLabel != nullptr);
+	if(_SelectedTradeCenterAssetClassListWidget != nullptr)
+	{
+		AssetClassPriceLabel->SetVisible(true);
+		AssetClassPriceLabel->SetText(to_string_cast(_SelectedTradeCenterAssetClassListWidget->GetPlanetAssetClass()->GetPrice()));
+	}
+	else
+	{
+		AssetClassPriceLabel->SetText("");
+		AssetClassPriceLabel->SetVisible(false);
+	}
+}
+
 void UI::TradeCenterWidget::_OnAssetClassScrollBoxMouseButton(UI::MouseButtonEvent & MouseButtonEvent)
 {
 	if((MouseButtonEvent.GetMouseButton() == UI::MouseButtonEvent::MouseButton::WheelUp) && (MouseButtonEvent.IsDown() == true))
@@ -396,6 +492,27 @@ void UI::TradeCenterWidget::_OnAssetClassScrollBoxMouseButton(UI::MouseButtonEve
 	{
 		_AssetClassScrollBox->GetVerticalScrollBar()->StepMore();
 		MouseButtonEvent.StopPropagation();
+	}
+}
+
+void UI::TradeCenterWidget::_OnAssetClassSizeCaptionLabelUpdating(UI::Label * AssetClassSizeCaptionLabel, float RealTimeSeconds, float GameTimeSeconds)
+{
+	assert(AssetClassSizeCaptionLabel != nullptr);
+	AssetClassSizeCaptionLabel->SetVisible(_SelectedTradeCenterAssetClassListWidget != nullptr);
+}
+
+void UI::TradeCenterWidget::_OnAssetClassSizeLabelUpdating(UI::Label * AssetClassSizeLabel, float RealTimeSeconds, float GameTimeSeconds)
+{
+	assert(AssetClassSizeLabel != nullptr);
+	if(_SelectedTradeCenterAssetClassListWidget != nullptr)
+	{
+		AssetClassSizeLabel->SetVisible(true);
+		AssetClassSizeLabel->SetText(to_string_cast(0.001 * g_ObjectFactory->GetSpaceRequirement(_SelectedTradeCenterAssetClassListWidget->GetPlanetAssetClass()->GetAssetClass()->GetObjectTypeIdentifier(), _SelectedTradeCenterAssetClassListWidget->GetPlanetAssetClass()->GetAssetClass()->GetObjectClassIdentifier()), 3));
+	}
+	else
+	{
+		AssetClassSizeLabel->SetText("");
+		AssetClassSizeLabel->SetVisible(false);
 	}
 }
 
@@ -474,20 +591,22 @@ void UI::TradeCenterWidget::_OnSellButtonUpdating(UI::Button * SellButton, float
 	SellButton->SetEnabled(Enabled);
 }
 
-void UI::TradeCenterWidget::_OnUpdating(float RealTimeSeconds, float GameTimeSeconds)
+void UI::TradeCenterWidget::_OnTraderAvailableSpaceLabelUpdating(UI::Label * TraderAvailableSpaceLabel, float RealTimeSeconds, float GameTimeSeconds)
 {
 	assert(_Character.IsValid() == true);
-	assert(_TraderCreditsLabel != 0);
-	_TraderCreditsLabel->SetText("Credits: " + to_string_cast(_Character->GetCredits()));
-	assert(_Character->GetShip() != 0);
-	assert(_Character->GetShip()->GetCargoHold() != 0);
-	assert(_TraderAvailableSpaceLabel != 0);
-	_TraderAvailableSpaceLabel->SetText("Available Space: " + to_string_cast(0.001 * _Character->GetShip()->GetCargoHold()->GetSpace(), 3));
-	assert(_AssetClassViewDisplay != 0);
-	if(_AssetClassViewDisplay->GetView() != 0)
+	assert(_Character->GetShip() != nullptr);
+	assert(_Character->GetShip()->GetCargoHold() != nullptr);
+	assert(TraderAvailableSpaceLabel != nullptr);
+	TraderAvailableSpaceLabel->SetText("Available Space: " + to_string_cast(0.001 * _Character->GetShip()->GetCargoHold()->GetSpace(), 3));
+}
+
+void UI::TradeCenterWidget::_OnUpdating(float RealTimeSeconds, float GameTimeSeconds)
+{
+	assert(_AssetClassViewDisplay != nullptr);
+	if(_AssetClassViewDisplay->GetView() != nullptr)
 	{
-		assert(_AssetClassViewDisplay->GetView()->GetScene() != 0);
-		assert(_AssetClassViewDisplay->GetView()->GetScene()->GetRootNode() != 0);
+		assert(_AssetClassViewDisplay->GetView()->GetScene() != nullptr);
+		assert(_AssetClassViewDisplay->GetView()->GetScene()->GetRootNode() != nullptr);
 		_AssetClassViewDisplay->GetView()->GetScene()->GetRootNode()->SetOrientation(_AssetClassViewDisplay->GetView()->GetScene()->GetRootNode()->GetOrientation().RotatedZ(-RealTimeSeconds * M_PI / 4.0f));
 	}
 }

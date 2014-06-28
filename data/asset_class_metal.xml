@@ -2,6 +2,7 @@
 	<identifier>metal</identifier>
 	<name>Metal</name>
 	<base-price>90</base-price>
+	<description>Metal is the raw material that is required in every production project, mainly on industrial planets and produced by mining stations.</description>
 	<object-type>commodity</object-type>
 	<object-class>metal</object-class>
 </asset-class>

@@ -2,6 +2,7 @@
 	<identifier>small_generator</identifier>
 	<name>Small Generator</name>
 	<base-price>2500</base-price>
+	<description>The small generator provides barely enough energy to keep a small space craft running and occasionally firing a cannon for self defense.</description>
 	<object-type>generator</object-type>
 	<object-class>small_generator</object-class>
 </asset-class>

@@ -44,10 +44,16 @@ namespace UI
 		TradeCenterWidget(UI::Widget * SupWidget, Reference< Planet > Planet, Reference< Character > Character);
 	private:
 		// callbacks
+		void _OnAssetClassDescriptionCaptionLabelUpdating(UI::Label * AssetClassDescriptionCaptionLabel, float RealTimeSeconds, float GameTimeSeconds);
+		void _OnAssetClassDescriptionLabelUpdating(UI::Label * AssetClassDescriptionLabel, float RealTimeSeconds, float GameTimeSeconds);
 		void _OnAssetClassMouseButton(UI::TradeCenterAssetClassListWidget * TradeCenterAssetClassListWidget, UI::MouseButtonEvent & MouseButtonEvent);
 		void _OnAssetClassMouseEnter(UI::TradeCenterAssetClassListWidget * TradeCenterAssetClassListWidget);
 		void _OnAssetClassMouseLeave(UI::TradeCenterAssetClassListWidget * TradeCenterAssetClassListWidget);
+		void _OnAssetClassPriceCaptionLabelUpdating(UI::Label * AssetClassPriceCaptionLabel, float RealTimeSeconds, float GameTimeSeconds);
+		void _OnAssetClassPriceLabelUpdating(UI::Label * AssetClassPriceLabel, float RealTimeSeconds, float GameTimeSeconds);
 		void _OnAssetClassScrollBoxMouseButton(UI::MouseButtonEvent & MouseButtonEvent);
+		void _OnAssetClassSizeCaptionLabelUpdating(UI::Label * AssetClassSizeCaptionLabel, float RealTimeSeconds, float GameTimeSeconds);
+		void _OnAssetClassSizeLabelUpdating(UI::Label * AssetClassSizeLabel, float RealTimeSeconds, float GameTimeSeconds);
 		void _OnBuyButtonClicked(void);
 		void _OnBuyButtonUpdating(UI::Button * BuyButton, float RealTimeSeconds, float GameTimeSeconds);
 		void _OnDestroying(void);
@@ -55,6 +61,7 @@ namespace UI
 		void _OnKey(UI::KeyEvent & KeyEvent);
 		void _OnSellButtonClicked(void);
 		void _OnSellButtonUpdating(UI::Button * BuyButton, float RealTimeSeconds, float GameTimeSeconds);
+		void _OnTraderAvailableSpaceLabelUpdating(UI::Label * AssetClassSizeLabel, float RealTimeSeconds, float GameTimeSeconds);
 		void _OnUpdating(float RealTimeSeconds, float GameTimeSeconds);
 		// helper functions and actions
 		void _Buy(const PlanetAssetClass * PlanetAssetClass);
@@ -66,8 +73,6 @@ namespace UI
 		Reference< Character > _Character;
 		Reference< Planet > _Planet;
 		UI::TradeCenterAssetClassListWidget * _SelectedTradeCenterAssetClassListWidget;
-		UI::Label * _TraderAvailableSpaceLabel;
-		UI::Label * _TraderCreditsLabel;
 	};
 }
 
