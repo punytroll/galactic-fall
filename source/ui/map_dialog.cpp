@@ -41,10 +41,18 @@ UI::MapDialog::MapDialog(UI::Widget * SupWidget, System * System, Character * Ch
 	
 	OKButton->SetPosition(Vector2f(390.0f, 500.0f));
 	OKButton->SetSize(Vector2f(100.0f, 20.0f));
+	OKButton->SetAnchorBottom(true);
+	OKButton->SetAnchorLeft(false);
+	OKButton->SetAnchorRight(true);
+	OKButton->SetAnchorTop(false);
 	OKButton->ConnectClickedCallback(std::bind(&UI::MapDialog::Destroy, this));
 	_StarMapDisplay = new UI::StarMapDisplay(this, System, Character);
 	_StarMapDisplay->SetPosition(Vector2f(10.0f, 40.0f));
 	_StarMapDisplay->SetSize(Vector2f(480.0f, 450.0f));
+	_StarMapDisplay->SetAnchorBottom(true);
+	_StarMapDisplay->SetAnchorLeft(true);
+	_StarMapDisplay->SetAnchorRight(true);
+	_StarMapDisplay->SetAnchorTop(true);
 	_StarMapDisplay->SetBackgroundColor(Color(0.15f, 0.15f, 0.15f, 1.0f));
 }
 
