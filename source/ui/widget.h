@@ -36,6 +36,7 @@ namespace UI
 	class Event;
 	class KeyEvent;
 	class MouseButtonEvent;
+	class MouseMoveEvent;
 	class UserInterface;
 	
 	class Widget
@@ -69,6 +70,7 @@ namespace UI
 		Widget * GetSupWidget(void);
 		Widget * GetSubWidget(const std::string & Name);
 		const std::list< Widget * > & GetSubWidgets(void) const;
+		bool IsEnabled(void) const;
 		bool IsVisible(void) const;
 		// setters
 		void SetAnchorBottom(bool AnchorBottom);
@@ -77,15 +79,13 @@ namespace UI
 		void SetAnchorTop(bool AnchorTop);
 		void SetEnabled(bool Enabled);
 		void SetVisible(bool Visible);
-		// receive input
-		void MouseMoved(float X, float Y);
 		// connect and disconnect events
 		Connection ConnectDestroyingCallback(std::function< void (void) > Callback);
 		Connection ConnectKeyCallback(std::function< void (UI::KeyEvent &) > Callback);
 		Connection ConnectMouseButtonCallback(std::function< void (UI::MouseButtonEvent &) > Callback);
 		Connection ConnectMouseEnterCallback(std::function< void (UI::Event &) > Callback);
 		Connection ConnectMouseLeaveCallback(std::function< void (UI::Event &) > Callback);
-		Connection ConnectMouseMovedCallback(std::function< void (float, float) > Callback);
+		Connection ConnectMouseMoveCallback(std::function< void (UI::MouseMoveEvent &) > Callback);
 		Connection ConnectPositionChangedCallback(std::function< void (void) > Callback);
 		Connection ConnectSizeChangedCallback(std::function< void (void) > Callback);
 		Connection ConnectUpdatingCallback(std::function< void (float, float) > Callback);
@@ -94,7 +94,7 @@ namespace UI
 		void DisconnectMouseButtonCallback(Connection & Connection);
 		void DisconnectMouseEnterCallback(Connection & Connection);
 		void DisconnectMouseLeaveCallback(Connection & Connection);
-		void DisconnectMouseMovedCallback(Connection & Connection);
+		void DisconnectMouseMoveCallback(Connection & Connection);
 		void DisconnectPositionChangedCallback(Connection & Connection);
 		void DisconnectSizeChangedCallback(Connection & Connection);
 		void DisconnectUpdatingCallback(Connection & Connection);
@@ -128,7 +128,7 @@ namespace UI
 		::Event< void, UI::MouseButtonEvent & > _MouseButtonEvent;
 		::Event< void, UI::Event & > _MouseEnterEvent;
 		::Event< void, UI::Event & > _MouseLeaveEvent;
-		::Event< void, float, float > _MouseMovedEvent;
+		::Event< void, UI::MouseMoveEvent & > _MouseMoveEvent;
 		::Event< void > _PositionChangedEvent;
 		::Event< void > _SizeChangedEvent;
 		::Event< void, float, float > _UpdatingEvent;
@@ -190,6 +190,11 @@ namespace UI
 	inline const std::list< Widget * > & Widget::GetSubWidgets(void) const
 	{
 		return _SubWidgets;
+	}
+	
+	inline bool Widget::IsEnabled(void) const
+	{
+		return _Enabled;
 	}
 
 	inline bool Widget::IsVisible(void) const

@@ -35,8 +35,8 @@ namespace UI
 		System * GetSelectedSystem(void);
 	private:
 		// callbacks
-		void OnMouseButton(UI::MouseButtonEvent & MouseButtonEvent);
-		void OnMouseMoved(float X, float Y);
+		void _OnMouseButton(UI::MouseButtonEvent & MouseButtonEvent);
+		void _OnMouseMove(UI::MouseMoveEvent & MouseMoveEvent);
 		// member variables
 		Character * m_Character;
 		System * m_System;

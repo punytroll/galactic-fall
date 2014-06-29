@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006  Hagen Möbius
+ * Copyright (C) 2014  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,32 +17,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef UI_WINDOW_H
-#define UI_WINDOW_H
+#include <assert.h>
 
-#include "widget.h"
+#include "mouse_move_event.h"
 
-namespace UI
+UI::MouseMoveEvent::MouseMoveEvent(void)
 {
-	class Border;
-	class Label;
-
-	class Window : public UI::Widget
-	{
-	public:
-		Window(UI::Widget * SupWidget, const std::string & Title = "");
-		// setters
-		void SetTitle(const std::string & Title);
-	private:
-		// callbacks
-		void _OnTitleLabelMouseButton(UI::MouseButtonEvent & MouseButtonEvent);
-		void _OnTitleLabelMouseMove(UI::MouseMoveEvent & MouseMoveEvent);
-		void _OnResizeDragBoxMouseButton(UI::MouseButtonEvent & MouseButtonEvent, Widget * ResizeDragBox);
-		void _OnResizeDragBoxMouseMove(UI::MouseMoveEvent & MouseMoveEvent, Widget * ResizeDragBox);
-		// member variables
-		UI::Label * _TitleLabel;
-		Vector2f _GrabPosition;
-	};
 }
 
-#endif
+void UI::MouseMoveEvent::SetButtonEvent(XButtonEvent * ButtonEvent)
+{
+	assert(ButtonEvent != nullptr);
+	_Position = Vector2f(static_cast< float >(ButtonEvent->x), static_cast< float >(ButtonEvent->y));
+}
