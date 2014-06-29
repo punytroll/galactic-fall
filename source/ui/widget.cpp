@@ -279,13 +279,7 @@ void UI::Widget::MouseMoved(float X, float Y)
 				// befor unsetting the hover widget inform the old hover widget that the mouse cursor is leaving
 				_UnsetHoverWidget();
 				// now set the new hover widget
-				_HoverWidget = SubWidget;
-				
-				// inform the new hover widget about the entering of the mouse cursor
-				UI::Event MouseEnterEvent;
-				
-				MouseEnterEvent.SetTarget(_HoverWidget);
-				g_UserInterface->DispatchMouseEnterEvent(MouseEnterEvent);
+				_SetHoverWidget(SubWidget);
 			}
 			SubWidget->MouseMoved(X - LeftTopCorner[0], Y - LeftTopCorner[1]);
 			FoundSubWidget = true;
@@ -300,6 +294,18 @@ void UI::Widget::MouseMoved(float X, float Y)
 	}
 	// after this we may call all our listeners
 	_MouseMovedEvent(X, Y);
+}
+
+void UI::Widget::_SetHoverWidget(UI::Widget * HoverWidget)
+{
+	assert(_HoverWidget == nullptr);
+	_HoverWidget = HoverWidget;
+	
+	// inform the new hover widget about the entering of the mouse cursor
+	UI::Event MouseEnterEvent;
+	
+	MouseEnterEvent.SetTarget(_HoverWidget);
+	g_UserInterface->DispatchMouseEnterEvent(MouseEnterEvent);
 }
 
 void UI::Widget::_UnsetHoverWidget(void)
