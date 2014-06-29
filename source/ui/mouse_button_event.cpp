@@ -19,8 +19,6 @@
 
 #include <assert.h>
 
-#include <iostream>
-
 #include "mouse_button_event.h"
 
 UI::MouseButtonEvent::MouseButtonEvent(void) :
