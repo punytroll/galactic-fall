@@ -113,6 +113,7 @@
 #include "ui/map_dialog.h"
 #include "ui/mini_map_display.h"
 #include "ui/mouse_button_event.h"
+#include "ui/mouse_move_event.h"
 #include "ui/object_information_dialog.h"
 #include "ui/outfit_ship_dialog.h"
 #include "ui/scanner_display.h"
@@ -161,8 +162,7 @@ UI::MapDialog * g_MapDialog(0);
 UI::OutfitShipDialog * g_OutfitShipDialog(0);
 UI::TimingDialog * g_TimingDialog(0);
 
-int g_LastMotionX(-1);
-int g_LastMotionY(-1);
+Vector2f g_LastMotion(-1.0f, -1.0f);
 UI::MouseButtonEvent::MouseButton g_MouseButton(UI::MouseButtonEvent::MouseButton::Unspecified);
 Vector3f g_CameraPosition;
 Reference< Object > g_CameraFocus;
@@ -2908,8 +2908,7 @@ void MainViewMouseButtonEvent(UI::MouseButtonEvent & MouseButtonEvent)
 			{
 				if(MouseButtonEvent.IsDown() == true)
 				{
-					g_LastMotionX = MouseButtonEvent.GetPosition()[0];
-					g_LastMotionY = MouseButtonEvent.GetPosition()[1];
+					g_LastMotion = MouseButtonEvent.GetPosition();
 					g_MouseButton = UI::MouseButtonEvent::MouseButton::Middle;
 				}
 				else
@@ -2945,17 +2944,18 @@ void MainViewMouseButtonEvent(UI::MouseButtonEvent & MouseButtonEvent)
 	}
 }
 
-void MainViewMouseMoved(int X, int Y)
+void MainViewMouseMove(UI::MouseMoveEvent & MouseMoveEvent)
 {
-	int DeltaX(X - g_LastMotionX);
-	int DeltaY(Y - g_LastMotionY);
-	
-	g_LastMotionX = X;
-	g_LastMotionY = Y;
-	if(g_MouseButton == UI::MouseButtonEvent::MouseButton::Middle)
+	if(MouseMoveEvent.GetPhase() == UI::Event::Phase::Target)
 	{
-		g_CameraPosition[0] = g_CameraPosition[0] - static_cast< float >(DeltaX) * 0.0011f * g_CameraPosition[2];
-		g_CameraPosition[1] = g_CameraPosition[1] + static_cast< float >(DeltaY) * 0.0011f * g_CameraPosition[2];
+		auto Delta(MouseMoveEvent.GetPosition() - g_LastMotion);
+		
+		g_LastMotion = MouseMoveEvent.GetPosition();
+		if(g_MouseButton == UI::MouseButtonEvent::MouseButton::Middle)
+		{
+			g_CameraPosition[0] = g_CameraPosition[0] - Delta[0] * 0.0011f * g_CameraPosition[2];
+			g_CameraPosition[1] = g_CameraPosition[1] + Delta[1] * 0.0011f * g_CameraPosition[2];
+		}
 	}
 }
 
@@ -3333,11 +3333,14 @@ void ProcessEvents(void)
 			}
 		case MotionNotify:
 			{
+				UI::MouseMoveEvent MouseMoveEvent;
+				
+				MouseMoveEvent.SetButtonEvent(&Event.xbutton);
 				if(g_EchoEvents == true)
 				{
-					std::cout << "Motion:         x=" << Event.xbutton.x << "   y=" << Event.xbutton.y << std::endl;
+					std::cout << "Motion:         x=" << MouseMoveEvent.GetPosition()[0] << "   y=" << MouseMoveEvent.GetPosition()[1] << std::endl;
 				}
-				g_UserInterface->MouseMoved(Event.xmotion.x, Event.xmotion.y);
+				g_UserInterface->DispatchMouseMoveEvent(MouseMoveEvent);
 				
 				break;
 			}
@@ -3728,7 +3731,7 @@ int main(int argc, char ** argv)
 	g_UserInterface = new UI::UserInterface();
 	g_UserInterface->GetRootWidget()->ConnectKeyCallback(MainViewKeyEvent);
 	g_UserInterface->GetRootWidget()->ConnectMouseButtonCallback(MainViewMouseButtonEvent);
-	g_UserInterface->GetRootWidget()->ConnectMouseMovedCallback(MainViewMouseMoved);
+	g_UserInterface->GetRootWidget()->ConnectMouseMoveCallback(MainViewMouseMove);
 	// set first timeout for widget collector, it will reinsert itself on callback
 	g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 5.0f, CollectWidgetsRecurrent);
 	// the user interface widgets must be loaded before the first Resize() call

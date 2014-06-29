@@ -29,6 +29,7 @@
 #include "../object_aspect_position.h"
 #include "../system.h"
 #include "mouse_button_event.h"
+#include "mouse_move_event.h"
 #include "star_map_display.h"
 #include "user_interface.h"
 
@@ -40,8 +41,8 @@ UI::StarMapDisplay::StarMapDisplay(Widget * SupWidget, System * System, Characte
 	m_Scale(5.0f),
 	m_OffsetPosition(true)
 {
-	ConnectMouseButtonCallback(std::bind(&UI::StarMapDisplay::OnMouseButton, this, std::placeholders::_1));
-	ConnectMouseMovedCallback(std::bind(&UI::StarMapDisplay::OnMouseMoved, this, std::placeholders::_1, std::placeholders::_2));
+	ConnectMouseButtonCallback(std::bind(&UI::StarMapDisplay::_OnMouseButton, this, std::placeholders::_1));
+	ConnectMouseMoveCallback(std::bind(&UI::StarMapDisplay::_OnMouseMove, this, std::placeholders::_1));
 }
 
 void UI::StarMapDisplay::Draw(void)
@@ -167,55 +168,60 @@ void UI::StarMapDisplay::Draw(void)
 	GLPopAttrib();
 }
 
-void UI::StarMapDisplay::OnMouseButton(UI::MouseButtonEvent & MouseButtonEvent)
+void UI::StarMapDisplay::_OnMouseButton(UI::MouseButtonEvent & MouseButtonEvent)
 {
-	if((MouseButtonEvent.GetMouseButton() == UI::MouseButtonEvent::MouseButton::WheelUp) && (MouseButtonEvent.IsDown() == true))
+	if(MouseButtonEvent.GetPhase() == UI::Event::Phase::Target)
 	{
-		m_Scale *= 1.1f;
-	}
-	else if((MouseButtonEvent.GetMouseButton() == UI::MouseButtonEvent::MouseButton::WheelDown) && (MouseButtonEvent.IsDown() == true))
-	{
-		m_Scale *= 0.9f;
-	}
-	else if((MouseButtonEvent.GetMouseButton() == UI::MouseButtonEvent::MouseButton::Left) && (MouseButtonEvent.IsDown() == true))
-	{
-		Vector2f NormalizedPosition(MouseButtonEvent.GetPosition() - GetSize() / 2.0f);
-		const std::map< std::string, System * > & Systems(g_Galaxy->GetSystems());
-		
-		for(std::map< std::string, System * >::const_iterator SystemIterator = Systems.begin(); SystemIterator != Systems.end(); ++SystemIterator)
+		if((MouseButtonEvent.GetMouseButton() == UI::MouseButtonEvent::MouseButton::WheelUp) && (MouseButtonEvent.IsDown() == true))
 		{
-			Vector3f Position(SystemIterator->second->GetAspectPosition()->GetPosition() - m_System->GetAspectPosition()->GetPosition());
+			m_Scale *= 1.1f;
+			MouseButtonEvent.StopPropagation();
+		}
+		else if((MouseButtonEvent.GetMouseButton() == UI::MouseButtonEvent::MouseButton::WheelDown) && (MouseButtonEvent.IsDown() == true))
+		{
+			m_Scale *= 0.9f;
+			MouseButtonEvent.StopPropagation();
+		}
+		else if((MouseButtonEvent.GetMouseButton() == UI::MouseButtonEvent::MouseButton::Left) && (MouseButtonEvent.IsDown() == true))
+		{
+			Vector2f NormalizedPosition(MouseButtonEvent.GetPosition() - GetSize() / 2.0f);
+			const std::map< std::string, System * > & Systems(g_Galaxy->GetSystems());
 			
-			Position *= m_Scale;
-			Position[0] -= NormalizedPosition[0] - m_OffsetPosition[0];
-			Position[1] += NormalizedPosition[1] - m_OffsetPosition[1];
-			if(Position.SquaredLength() < 40.0f)
+			for(std::map< std::string, System * >::const_iterator SystemIterator = Systems.begin(); SystemIterator != Systems.end(); ++SystemIterator)
 			{
-				m_SelectedSystem = SystemIterator->second;
+				Vector3f Position(SystemIterator->second->GetAspectPosition()->GetPosition() - m_System->GetAspectPosition()->GetPosition());
 				
-				break;
+				Position *= m_Scale;
+				Position[0] -= NormalizedPosition[0] - m_OffsetPosition[0];
+				Position[1] += NormalizedPosition[1] - m_OffsetPosition[1];
+				if(Position.SquaredLength() < 40.0f)
+				{
+					m_SelectedSystem = SystemIterator->second;
+					
+					break;
+				}
 			}
 		}
-	}
-	else if(MouseButtonEvent.GetMouseButton() == UI::MouseButtonEvent::MouseButton::Middle)
-	{
-		if(MouseButtonEvent.IsDown() == true)
+		else if(MouseButtonEvent.GetMouseButton() == UI::MouseButtonEvent::MouseButton::Middle)
 		{
-			m_GrabPosition = MouseButtonEvent.GetPosition();
-			g_UserInterface->SetCaptureWidget(this);
-		}
-		else if(MouseButtonEvent.IsUp() == true)
-		{
-			g_UserInterface->ReleaseCaptureWidget();
+			if(MouseButtonEvent.IsDown() == true)
+			{
+				m_GrabPosition = MouseButtonEvent.GetPosition();
+				g_UserInterface->SetCaptureWidget(this);
+			}
+			else if(MouseButtonEvent.IsUp() == true)
+			{
+				g_UserInterface->ReleaseCaptureWidget();
+			}
 		}
 	}
 }
 
-void UI::StarMapDisplay::OnMouseMoved(float X, float Y)
+void UI::StarMapDisplay::_OnMouseMove(UI::MouseMoveEvent & MouseMoveEvent)
 {
-	if(g_UserInterface->GetCaptureWidget() == this)
+	if((MouseMoveEvent.GetPhase() == UI::Event::Phase::Target) && (g_UserInterface->GetCaptureWidget() == this))
 	{
-		m_OffsetPosition += (Vector2f(X, Y) - m_GrabPosition);
-		m_GrabPosition = Vector2f(X, Y);
+		m_OffsetPosition += (MouseMoveEvent.GetPosition() - m_GrabPosition);
+		m_GrabPosition = MouseMoveEvent.GetPosition();
 	}
 }

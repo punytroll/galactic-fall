@@ -21,6 +21,7 @@
 #include "../globals.h"
 #include "button.h"
 #include "mouse_button_event.h"
+#include "mouse_move_event.h"
 #include "scroll_bar.h"
 #include "user_interface.h"
 
@@ -42,7 +43,7 @@ UI::ScrollBar::ScrollBar(Widget * SupWidget, UI::ScrollBar::Alignment Alignment)
 	m_Tracker->ConnectMouseEnterCallback(std::bind(&UI::ScrollBar::OnTrackerMouseEnter, this));
 	m_Tracker->ConnectMouseLeaveCallback(std::bind(&UI::ScrollBar::OnTrackerMouseLeave, this));
 	m_Tracker->ConnectMouseButtonCallback(std::bind(&UI::ScrollBar::OnTrackerMouseButton, this, std::placeholders::_1));
-	m_Tracker->ConnectMouseMovedCallback(std::bind(&UI::ScrollBar::OnTrackerMouseMoved, this, std::placeholders::_1, std::placeholders::_2));
+	m_Tracker->ConnectMouseMoveCallback(std::bind(&UI::ScrollBar::OnTrackerMouseMove, this, std::placeholders::_1));
 	SetAlignment(Alignment);
 	SetMinimumPosition(0.0f);
 	SetMaximumPosition(1.0f);
@@ -106,21 +107,24 @@ void UI::ScrollBar::OnTrackerMouseLeave(void)
 	m_Tracker->SetBackgroundColor(Color(0.3f, 0.3f, 0.3f, 1.0f));
 }
 
-void UI::ScrollBar::OnTrackerMouseMoved(float X, float Y)
+void UI::ScrollBar::OnTrackerMouseMove(UI::MouseMoveEvent & MouseMoveEvent)
 {
-	if(g_UserInterface->GetCaptureWidget() == m_Tracker)
+	if(MouseMoveEvent.GetPhase() == UI::Event::Phase::Target)
 	{
-		if(m_Alignment == ScrollBar::Alignment::HORIZONTAL)
+		if(g_UserInterface->GetCaptureWidget() == m_Tracker)
 		{
-			float AvailableRange = GetSize()[0] - m_LessButton->GetSize()[0] - g_ScrollBarTrackerBorderWidth - m_Tracker->GetSize()[0] - g_ScrollBarTrackerBorderWidth - m_MoreButton->GetSize()[0];
-			
-			SetCurrentPosition(GetCurrentPosition() + (((X - m_GrabPosition[0]) * (GetMaximumPosition() - GetMinimumPosition()) / AvailableRange)));
-		}
-		else if(m_Alignment == ScrollBar::Alignment::VERTICAL)
-		{
-			float AvailableRange = GetSize()[1] - m_LessButton->GetSize()[1] - g_ScrollBarTrackerBorderWidth - m_Tracker->GetSize()[1] - g_ScrollBarTrackerBorderWidth - m_MoreButton->GetSize()[1];
-			
-			SetCurrentPosition(GetCurrentPosition() + (((Y - m_GrabPosition[1]) * (GetMaximumPosition() - GetMinimumPosition()) / AvailableRange)));
+			if(m_Alignment == ScrollBar::Alignment::HORIZONTAL)
+			{
+				float AvailableRange = GetSize()[0] - m_LessButton->GetSize()[0] - g_ScrollBarTrackerBorderWidth - m_Tracker->GetSize()[0] - g_ScrollBarTrackerBorderWidth - m_MoreButton->GetSize()[0];
+				
+				SetCurrentPosition(GetCurrentPosition() + (((MouseMoveEvent.GetPosition()[0] - m_GrabPosition[0]) * (GetMaximumPosition() - GetMinimumPosition()) / AvailableRange)));
+			}
+			else if(m_Alignment == ScrollBar::Alignment::VERTICAL)
+			{
+				float AvailableRange = GetSize()[1] - m_LessButton->GetSize()[1] - g_ScrollBarTrackerBorderWidth - m_Tracker->GetSize()[1] - g_ScrollBarTrackerBorderWidth - m_MoreButton->GetSize()[1];
+				
+				SetCurrentPosition(GetCurrentPosition() + (((MouseMoveEvent.GetPosition()[1] - m_GrabPosition[1]) * (GetMaximumPosition() - GetMinimumPosition()) / AvailableRange)));
+			}
 		}
 	}
 }

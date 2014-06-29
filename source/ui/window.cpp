@@ -22,6 +22,7 @@
 #include "border.h"
 #include "label.h"
 #include "mouse_button_event.h"
+#include "mouse_move_event.h"
 #include "user_interface.h"
 #include "window.h"
 
@@ -46,7 +47,7 @@ UI::Window::Window(Widget * SupWidget, const std::string & Title) :
 	_TitleLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	_TitleLabel->SetBackgroundColor(Color(0.2f, 0.2f, 0.4f, 1.0f));
 	_TitleLabel->ConnectMouseButtonCallback(std::bind(&UI::Window::_OnTitleLabelMouseButton, this, std::placeholders::_1));
-	_TitleLabel->ConnectMouseMovedCallback(std::bind(&UI::Window::_OnTitleLabelMouseMoved, this, std::placeholders::_1, std::placeholders::_2));
+	_TitleLabel->ConnectMouseMoveCallback(std::bind(&UI::Window::_OnTitleLabelMouseMove, this, std::placeholders::_1));
 	
 	auto ResizeDragBox(new Widget(this));
 	
@@ -58,7 +59,7 @@ UI::Window::Window(Widget * SupWidget, const std::string & Title) :
 	ResizeDragBox->SetAnchorTop(false);
 	ResizeDragBox->SetBackgroundColor(Color(0.2f, 0.2f, 0.4f, 1.0f));
 	ResizeDragBox->ConnectMouseButtonCallback(std::bind(&UI::Window::_OnResizeDragBoxMouseButton, this, std::placeholders::_1, ResizeDragBox));
-	ResizeDragBox->ConnectMouseMovedCallback(std::bind(&UI::Window::_OnResizeDragBoxMouseMoved, this, std::placeholders::_1, std::placeholders::_2, ResizeDragBox));
+	ResizeDragBox->ConnectMouseMoveCallback(std::bind(&UI::Window::_OnResizeDragBoxMouseMove, this, std::placeholders::_1, ResizeDragBox));
 }
 
 void UI::Window::SetTitle(const std::string & Title)
@@ -98,18 +99,18 @@ void UI::Window::_OnResizeDragBoxMouseButton(UI::MouseButtonEvent & MouseButtonE
 	}
 }
 
-void UI::Window::_OnTitleLabelMouseMoved(float X, float Y)
+void UI::Window::_OnTitleLabelMouseMove(UI::MouseMoveEvent & MouseMoveEvent)
 {
-	if(g_UserInterface->GetCaptureWidget() == _TitleLabel)
+	if((MouseMoveEvent.GetPhase() == UI::Event::Phase::Target) && (g_UserInterface->GetCaptureWidget() == _TitleLabel))
 	{
-		SetPosition(GetPosition() + Vector2f(X, Y) - _GrabPosition);
+		SetPosition(GetPosition() + MouseMoveEvent.GetPosition() - _GrabPosition);
 	}
 }
 
-void UI::Window::_OnResizeDragBoxMouseMoved(float X, float Y, Widget * ResizeDragBox)
+void UI::Window::_OnResizeDragBoxMouseMove(UI::MouseMoveEvent & MouseMoveEvent, Widget * ResizeDragBox)
 {
-	if(g_UserInterface->GetCaptureWidget() == ResizeDragBox)
+	if((MouseMoveEvent.GetPhase() == UI::Event::Phase::Target) && (g_UserInterface->GetCaptureWidget() == ResizeDragBox))
 	{
-		SetSize(GetSize() + Vector2f(X, Y) - _GrabPosition);
+		SetSize(GetSize() + MouseMoveEvent.GetPosition() - _GrabPosition);
 	}
 }

@@ -261,41 +261,6 @@ void UI::Widget::Destroy(void)
 	_DestroyedWidgets.push_back(this);
 }
 
-void UI::Widget::MouseMoved(float X, float Y)
-{
-	bool FoundSubWidget(false);
-	
-	// iterate all sub widgets, look for an intersection and propagate the mouse event with corrected coordinates
-	for(auto SubWidget : _SubWidgets)
-	{
-		const Vector2f & LeftTopCorner(SubWidget->GetPosition());
-		Vector2f RightBottomCorner(LeftTopCorner + SubWidget->GetSize());
-		
-		if((SubWidget->IsVisible() == true) && (SubWidget->_Enabled == true) && (X >= LeftTopCorner[0]) && (X < RightBottomCorner[0]) && (Y >= LeftTopCorner[1]) && (Y < RightBottomCorner[1]))
-		{
-			// test whether the new hover widget equals the old
-			if(_HoverWidget != SubWidget)
-			{
-				// befor unsetting the hover widget inform the old hover widget that the mouse cursor is leaving
-				_UnsetHoverWidget();
-				// now set the new hover widget
-				_SetHoverWidget(SubWidget);
-			}
-			SubWidget->MouseMoved(X - LeftTopCorner[0], Y - LeftTopCorner[1]);
-			FoundSubWidget = true;
-			
-			break;
-		}
-	}
-	// if all sub widget have been iterated through, the old hover widget has been left by the mouse cursor
-	if((FoundSubWidget == false) && (_HoverWidget != nullptr))
-	{
-		_UnsetHoverWidget();
-	}
-	// after this we may call all our listeners
-	_MouseMovedEvent(X, Y);
-}
-
 void UI::Widget::_SetHoverWidget(UI::Widget * HoverWidget)
 {
 	assert(_HoverWidget == nullptr);
@@ -347,9 +312,9 @@ Connection UI::Widget::ConnectMouseLeaveCallback(std::function< void (UI::Event 
 	return _MouseLeaveEvent.Connect(Callback);
 }
 
-Connection UI::Widget::ConnectMouseMovedCallback(std::function< void (float, float) > Callback)
+Connection UI::Widget::ConnectMouseMoveCallback(std::function< void (UI::MouseMoveEvent &) > Callback)
 {
-	return _MouseMovedEvent.Connect(Callback);
+	return _MouseMoveEvent.Connect(Callback);
 }
 
 Connection UI::Widget::ConnectPositionChangedCallback(std::function< void (void) > Callback)
@@ -392,9 +357,9 @@ void UI::Widget::DisconnectMouseLeaveCallback(Connection & Connection)
 	_MouseLeaveEvent.Disconnect(Connection);
 }
 
-void UI::Widget::DisconnectMouseMovedCallback(Connection & Connection)
+void UI::Widget::DisconnectMouseMoveCallback(Connection & Connection)
 {
-	_MouseMovedEvent.Disconnect(Connection);
+	_MouseMoveEvent.Disconnect(Connection);
 }
 
 void UI::Widget::DisconnectPositionChangedCallback(Connection & Connection)

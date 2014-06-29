@@ -31,6 +31,7 @@ namespace UI
 	class Event;
 	class KeyEvent;
 	class MouseButtonEvent;
+	class MouseMoveEvent;
 	class Widget;
 	
 	class UserInterface
@@ -39,11 +40,11 @@ namespace UI
 		UserInterface(void);
 		virtual ~UserInterface(void);
 		void Draw(void) const;
+		void DispatchKeyEvent(UI::KeyEvent & KeyEvent);
 		void DispatchMouseButtonEvent(UI::MouseButtonEvent & MouseButtonEvent);
 		void DispatchMouseEnterEvent(UI::Event & MouseEnterEvent);
 		void DispatchMouseLeaveEvent(UI::Event & MouseLeaveEvent);
-		void DispatchKeyEvent(UI::KeyEvent & KeyEvent);
-		void MouseMoved(float X, float Y);
+		void DispatchMouseMoveEvent(UI::MouseMoveEvent & MouseMoveEvent);
 		void Update(float RealTimeSeconds, float GameTimeSeconds);
 		// setters
 		void SetCaptureWidget(UI::Widget * Widget);

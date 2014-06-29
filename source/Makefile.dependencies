@@ -582,6 +582,7 @@ main_cpp = \
 	$(ui_map_dialog_h) \
 	$(ui_mini_map_display_h) \
 	$(ui_mouse_button_event_h) \
+	$(ui_mouse_move_event_h) \
 	$(ui_object_information_dialog_h) \
 	$(ui_outfit_ship_dialog_h) \
 	$(ui_scanner_display_h) \
@@ -1228,6 +1229,14 @@ ui_mouse_button_event_h = \
 	ui/mouse_button_event.h \
 	$(ui_event_h)
 
+ui_mouse_move_event_cpp = \
+	ui/mouse_move_event.cpp \
+	$(ui_mouse_move_event_h)
+
+ui_mouse_move_event_h = \
+	ui/mouse_move_event.h \
+	$(ui_event_h)
+
 ui_object_information_dialog_cpp = \
 	ui/object_information_dialog.cpp \
 	$(color_h) \
@@ -1360,6 +1369,7 @@ ui_scroll_bar_cpp = \
 	$(globals_h) \
 	$(ui_button_h) \
 	$(ui_mouse_button_event_h) \
+	$(ui_mouse_move_event_h) \
 	$(ui_scroll_bar_h) \
 	$(ui_user_interface_h)
 
@@ -1389,6 +1399,7 @@ ui_star_map_display_cpp = \
 	$(object_aspect_position_h) \
 	$(system_h) \
 	$(ui_mouse_button_event_h) \
+	$(ui_mouse_move_event_h) \
 	$(ui_star_map_display_h) \
 	$(ui_user_interface_h)
 
@@ -1469,6 +1480,7 @@ ui_user_interface_cpp = \
 	$(graphics_gl_h) \
 	$(ui_key_event_h) \
 	$(ui_mouse_button_event_h) \
+	$(ui_mouse_move_event_h) \
 	$(ui_user_interface_h) \
 	$(ui_widget_h)
 
@@ -1511,6 +1523,7 @@ ui_window_cpp = \
 	$(ui_border_h) \
 	$(ui_label_h) \
 	$(ui_mouse_button_event_h) \
+	$(ui_mouse_move_event_h) \
 	$(ui_user_interface_h) \
 	$(ui_window_h)
 

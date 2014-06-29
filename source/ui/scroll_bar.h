@@ -64,7 +64,7 @@ namespace UI
 		void OnTrackerMouseButton(UI::MouseButtonEvent & MouseButtonEvent);
 		void OnTrackerMouseEnter(void);
 		void OnTrackerMouseLeave(void);
-		void OnTrackerMouseMoved(float X, float Y);
+		void OnTrackerMouseMove(UI::MouseMoveEvent & MouseMoveEvent);
 		// helper functions and actions
 		void AdjustTrackerPosition(void);
 		// member variables

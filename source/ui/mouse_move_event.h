@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006  Hagen Möbius
+ * Copyright (C) 2014  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,32 +17,40 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef UI_WINDOW_H
-#define UI_WINDOW_H
+#ifndef UI_MOUSE_MOVE_EVENT_H
+#define UI_MOUSE_MOVE_EVENT_H
 
-#include "widget.h"
+#include <X11/Xlib.h>
+
+#include <algebra/vector2f.h>
+
+#include "event.h"
 
 namespace UI
 {
-	class Border;
-	class Label;
-
-	class Window : public UI::Widget
+	class MouseMoveEvent : public UI::Event
 	{
 	public:
-		Window(UI::Widget * SupWidget, const std::string & Title = "");
+		MouseMoveEvent(void);
+		// getters
+		const Vector2f & GetPosition(void) const;
 		// setters
-		void SetTitle(const std::string & Title);
+		void SetButtonEvent(XButtonEvent * ButtonEvent);
+		void SetPosition(const Vector2f & Position);
 	private:
-		// callbacks
-		void _OnTitleLabelMouseButton(UI::MouseButtonEvent & MouseButtonEvent);
-		void _OnTitleLabelMouseMove(UI::MouseMoveEvent & MouseMoveEvent);
-		void _OnResizeDragBoxMouseButton(UI::MouseButtonEvent & MouseButtonEvent, Widget * ResizeDragBox);
-		void _OnResizeDragBoxMouseMove(UI::MouseMoveEvent & MouseMoveEvent, Widget * ResizeDragBox);
 		// member variables
-		UI::Label * _TitleLabel;
-		Vector2f _GrabPosition;
+		Vector2f _Position;
 	};
+}
+
+inline const Vector2f & UI::MouseMoveEvent::GetPosition(void) const
+{
+	return _Position;
+}
+
+inline void UI::MouseMoveEvent::SetPosition(const Vector2f & Position)
+{
+	_Position = Position;
 }
 
 #endif
