@@ -46,9 +46,9 @@ namespace UI
 		// callbacks
 		void _OnAssetClassDescriptionCaptionLabelUpdating(UI::Label * AssetClassDescriptionCaptionLabel, float RealTimeSeconds, float GameTimeSeconds);
 		void _OnAssetClassDescriptionLabelUpdating(UI::Label * AssetClassDescriptionLabel, float RealTimeSeconds, float GameTimeSeconds);
-		void _OnAssetClassMouseButton(UI::TradeCenterAssetClassListWidget * TradeCenterAssetClassListWidget, UI::MouseButtonEvent & MouseButtonEvent);
-		void _OnAssetClassMouseEnter(UI::TradeCenterAssetClassListWidget * TradeCenterAssetClassListWidget);
-		void _OnAssetClassMouseLeave(UI::TradeCenterAssetClassListWidget * TradeCenterAssetClassListWidget);
+		void _OnAssetClassMouseButton(UI::MouseButtonEvent & MouseButtonEvent, UI::TradeCenterAssetClassListWidget * TradeCenterAssetClassListWidget);
+		void _OnAssetClassMouseEnter(UI::Event & MouseEnterEvent, UI::TradeCenterAssetClassListWidget * TradeCenterAssetClassListWidget);
+		void _OnAssetClassMouseLeave(UI::Event & MouseEnterEvent, UI::TradeCenterAssetClassListWidget * TradeCenterAssetClassListWidget);
 		void _OnAssetClassPriceCaptionLabelUpdating(UI::Label * AssetClassPriceCaptionLabel, float RealTimeSeconds, float GameTimeSeconds);
 		void _OnAssetClassPriceLabelUpdating(UI::Label * AssetClassPriceLabel, float RealTimeSeconds, float GameTimeSeconds);
 		void _OnAssetClassScrollBoxMouseButton(UI::MouseButtonEvent & MouseButtonEvent);

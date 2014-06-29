@@ -215,9 +215,9 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Reference< Plan
 		NewTradeCenterAssetClassListWidget->SetPosition(Vector2f(5.0f, Top));
 		NewTradeCenterAssetClassListWidget->SetSize(Vector2f(_AssetClassScrollBox->GetContent()->GetSize()[0] - 10.0f, 20.0f));
 		NewTradeCenterAssetClassListWidget->SetAnchorRight(true);
-		NewTradeCenterAssetClassListWidget->ConnectMouseButtonCallback(std::bind(&UI::TradeCenterWidget::_OnAssetClassMouseButton, this, NewTradeCenterAssetClassListWidget, std::placeholders::_1));
-		NewTradeCenterAssetClassListWidget->ConnectMouseEnterCallback(std::bind(&UI::TradeCenterWidget::_OnAssetClassMouseEnter, this, NewTradeCenterAssetClassListWidget));
-		NewTradeCenterAssetClassListWidget->ConnectMouseLeaveCallback(std::bind(&UI::TradeCenterWidget::_OnAssetClassMouseLeave, this, NewTradeCenterAssetClassListWidget));
+		NewTradeCenterAssetClassListWidget->ConnectMouseButtonCallback(std::bind(&UI::TradeCenterWidget::_OnAssetClassMouseButton, this, std::placeholders::_1, NewTradeCenterAssetClassListWidget));
+		NewTradeCenterAssetClassListWidget->ConnectMouseEnterCallback(std::bind(&UI::TradeCenterWidget::_OnAssetClassMouseEnter, this, std::placeholders::_1, NewTradeCenterAssetClassListWidget));
+		NewTradeCenterAssetClassListWidget->ConnectMouseLeaveCallback(std::bind(&UI::TradeCenterWidget::_OnAssetClassMouseLeave, this, std::placeholders::_1, NewTradeCenterAssetClassListWidget));
 		Top += 25.0f;
 		++PlanetAssetClassIterator;
 	}
@@ -378,7 +378,7 @@ void UI::TradeCenterWidget::_OnAssetClassDescriptionLabelUpdating(UI::Label * As
 	}
 }
 
-void UI::TradeCenterWidget::_OnAssetClassMouseButton(TradeCenterAssetClassListWidget * TradeCenterAssetClassListWidget, UI::MouseButtonEvent & MouseButtonEvent)
+void UI::TradeCenterWidget::_OnAssetClassMouseButton(UI::MouseButtonEvent & MouseButtonEvent, TradeCenterAssetClassListWidget * TradeCenterAssetClassListWidget)
 {
 	if((MouseButtonEvent.GetMouseButton() == UI::MouseButtonEvent::MouseButton::Left) && (MouseButtonEvent.IsDown() == true))
 	{
@@ -444,17 +444,17 @@ void UI::TradeCenterWidget::_OnAssetClassMouseButton(TradeCenterAssetClassListWi
 	}
 }
 
-void UI::TradeCenterWidget::_OnAssetClassMouseEnter(TradeCenterAssetClassListWidget * TradeCenterAssetClassListWidget)
+void UI::TradeCenterWidget::_OnAssetClassMouseEnter(UI::Event & MouseEnterEvent, TradeCenterAssetClassListWidget * TradeCenterAssetClassListWidget)
 {
-	if(TradeCenterAssetClassListWidget != _SelectedTradeCenterAssetClassListWidget)
+	if((MouseEnterEvent.GetPhase() == UI::Event::Phase::Target) && (TradeCenterAssetClassListWidget != _SelectedTradeCenterAssetClassListWidget))
 	{
 		TradeCenterAssetClassListWidget->SetBackgroundColor(Color(0.3f, 0.2f, 0.2f, 1.0f));
 	}
 }
 
-void UI::TradeCenterWidget::_OnAssetClassMouseLeave(TradeCenterAssetClassListWidget * TradeCenterAssetClassListWidget)
+void UI::TradeCenterWidget::_OnAssetClassMouseLeave(UI::Event & MouseEnterEvent, TradeCenterAssetClassListWidget * TradeCenterAssetClassListWidget)
 {
-	if(TradeCenterAssetClassListWidget != _SelectedTradeCenterAssetClassListWidget)
+	if((MouseEnterEvent.GetPhase() == UI::Event::Phase::Target) && (TradeCenterAssetClassListWidget != _SelectedTradeCenterAssetClassListWidget))
 	{
 		TradeCenterAssetClassListWidget->UnsetBackgroundColor();
 	}
