@@ -106,6 +106,7 @@ namespace UI
 		static void _DrawClippingRectangle(void);
 	private:
 		void _UnsetHoverWidget(void);
+		void _SetHoverWidget(UI::Widget * HoverWidget);
 		bool _AnchorBottom;
 		bool _AnchorLeft;
 		bool _AnchorRight;
