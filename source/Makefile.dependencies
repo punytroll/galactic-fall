@@ -1086,6 +1086,7 @@ ui_hangar_widget_cpp = \
 	$(ship_h) \
 	$(string_cast_h) \
 	$(ui_hangar_widget_h) \
+	$(ui_outfit_ship_dialog_h) \
 	$(ui_progress_bar_h) \
 	$(ui_text_button_h)
 
@@ -1214,6 +1215,7 @@ ui_mini_map_display_cpp = \
 	$(planet_h) \
 	$(ship_h) \
 	$(system_h) \
+	$(ui_event_h) \
 	$(ui_mini_map_display_h)
 
 ui_mini_map_display_h = \
@@ -1312,6 +1314,7 @@ ui_progress_bar_cpp = \
 	ui/progress_bar.cpp \
 	$(color_h) \
 	$(ui_border_h) \
+	$(ui_event_h) \
 	$(ui_label_h) \
 	$(ui_progress_bar_h)
 
@@ -1380,6 +1383,7 @@ ui_scroll_bar_h = \
 ui_scroll_box_cpp = \
 	ui/scroll_box.cpp \
 	$(color_h) \
+	$(ui_event_h) \
 	$(ui_scroll_bar_h) \
 	$(ui_scroll_box_h)
 

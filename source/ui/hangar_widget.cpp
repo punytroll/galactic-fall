@@ -21,7 +21,6 @@
 #include "../battery.h"
 #include "../character.h"
 #include "../color.h"
-#include "../globals.h"
 #include "../planet.h"
 #include "../ship.h"
 #include "../string_cast.h"
@@ -29,7 +28,6 @@
 #include "outfit_ship_dialog.h"
 #include "progress_bar.h"
 #include "text_button.h"
-#include "user_interface.h"
 
 UI::HangarWidget::HangarWidget(UI::Widget * SupWidget, Reference< Planet > Planet, Reference< Character > Character) :
 	UI::Widget(SupWidget),
@@ -159,12 +157,12 @@ void UI::HangarWidget::_OnOutfitButtonClicked(void)
 		assert(_Planet.IsValid() == true);
 		assert(_Character.IsValid() == true);
 		assert(_Character->GetShip() != nullptr);
-		_OutfitShipDialog = new UI::OutfitShipDialog(g_UserInterface->GetRootWidget(), _Character->GetShip()->GetReference());
+		_OutfitShipDialog = new UI::OutfitShipDialog(GetRootWidget(), _Character->GetShip()->GetReference());
 		_OutfitShipDialog->ConnectDestroyingCallback(std::bind(&UI::HangarWidget::_OnOutfitShipDialogDestroying, this));
 	}
 	else
 	{
-		g_UserInterface->GetRootWidget()->RaiseSubWidget(_OutfitShipDialog);
+		GetRootWidget()->RaiseSubWidget(_OutfitShipDialog);
 	}
 }
 
