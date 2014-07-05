@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 1.8.3 of algebra.
+ * This is part of version 1.8.4 of algebra.
  **/
 
 #ifndef ALGEBRA_MATRIX4F_H
@@ -210,19 +210,19 @@ public:
 	{
 		float Sin(sin(Radians));
 		float Cos(cos(Radians));
-		float Value0(Cos * _[0] - Sin * _[8]);
-		float Value1(Cos * _[1] - Sin * _[9]);
-		float Value2(Cos * _[2] - Sin * _[10]);
-		float Value3(Cos * _[3] - Sin * _[11]);
+		float Value8(Cos * _[8] + Sin * _[0]);
+		float Value9(Cos * _[9] + Sin * _[1]);
+		float Value10(Cos * _[10] + Sin * _[2]);
+		float Value11(Cos * _[11] + Sin * _[3]);
 		
-		_[0] = Value0;
-		_[1] = Value1;
-		_[2] = Value2;
-		_[3] = Value3;
-		_[8] = Cos * _[8] + Sin * _[0];
-		_[9] = Cos * _[9] + Sin * _[1];
-		_[10] = Cos * _[10] + Sin * _[2];
-		_[11] = Cos * _[11] + Sin * _[3];
+		_[0] = Cos * _[0] - Sin * _[8];
+		_[1] = Cos * _[1] - Sin * _[9];
+		_[2] = Cos * _[2] - Sin * _[10];
+		_[3] = Cos * _[3] - Sin * _[11];
+		_[8] = Value8;
+		_[9] = Value9;
+		_[10] = Value10;
+		_[11] = Value11;
 		
 		return *this;
 	}
