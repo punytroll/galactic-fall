@@ -21,69 +21,88 @@
 #include "../battery.h"
 #include "../character.h"
 #include "../color.h"
+#include "../globals.h"
 #include "../planet.h"
 #include "../ship.h"
 #include "../string_cast.h"
 #include "hangar_widget.h"
+#include "outfit_ship_dialog.h"
 #include "progress_bar.h"
 #include "text_button.h"
+#include "user_interface.h"
 
 UI::HangarWidget::HangarWidget(UI::Widget * SupWidget, Reference< Planet > Planet, Reference< Character > Character) :
 	UI::Widget(SupWidget),
 	_Character(Character),
+	_OutfitShipDialog(nullptr),
 	_Planet(Planet)
 {
 	assert(_Character.IsValid() == true);
 	assert(_Planet.IsValid() == true);
+	ConnectDestroyingCallback(std::bind(&UI::HangarWidget::_OnDestroying, this));
 	SetSize(Vector2f(600.0f, 300.0f));
+	
+	UI::Button * OutfitButton(new UI::TextButton(this, "Outfit"));
+	
+	OutfitButton->SetPosition(Vector2f(0.0f, 0.0f));
+	OutfitButton->SetSize(Vector2f(180.0f, 20.0f));
+	OutfitButton->ConnectClickedCallback(std::bind(&UI::HangarWidget::_OnOutfitButtonClicked, this));
 	
 	UI::Button * RepairButton(new UI::TextButton(this, "Repair"));
 	
-	RepairButton->SetPosition(Vector2f(0.0f, 0.0f));
+	RepairButton->SetPosition(Vector2f(0.0f, 30.0f));
 	RepairButton->SetSize(Vector2f(180.0f, 20.0f));
 	RepairButton->ConnectClickedCallback(std::bind(&UI::HangarWidget::_OnRepairButtonClicked, this));
 	RepairButton->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnRepairButtonUpdating, this, RepairButton, std::placeholders::_1, std::placeholders::_2));
 	
 	UI::ProgressBar * HullStateProgressBar(new UI::ProgressBar(this));
 	
-	HullStateProgressBar->SetPosition(Vector2f(190.0f, 0.0f));
+	HullStateProgressBar->SetPosition(Vector2f(190.0f, 30.0f));
 	HullStateProgressBar->SetSize(Vector2f(410.0f, 20.0f));
 	HullStateProgressBar->SetAnchorRight(true);
 	HullStateProgressBar->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnHullStateProgressBarUpdating, this, HullStateProgressBar, std::placeholders::_1, std::placeholders::_2));
 	
 	UI::Button * RechargeButton(new UI::TextButton(this, "Recharge"));
 	
-	RechargeButton->SetPosition(Vector2f(0.0f, 30.0f));
+	RechargeButton->SetPosition(Vector2f(0.0f, 60.0f));
 	RechargeButton->SetSize(Vector2f(180.0f, 20.0f));
 	RechargeButton->ConnectClickedCallback(std::bind(&UI::HangarWidget::_OnRechargeButtonClicked, this));
 	RechargeButton->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnRechargeButtonUpdating, this, RechargeButton, std::placeholders::_1, std::placeholders::_2));
 	
 	UI::ProgressBar * EnergyStateProgressBar(new UI::ProgressBar(this));
 	
-	EnergyStateProgressBar->SetPosition(Vector2f(190.0f, 30.0f));
+	EnergyStateProgressBar->SetPosition(Vector2f(190.0f, 60.0f));
 	EnergyStateProgressBar->SetSize(Vector2f(410.0f, 20.0f));
 	EnergyStateProgressBar->SetAnchorRight(true);
 	EnergyStateProgressBar->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnEnergyStateProgressBarUpdating, this, EnergyStateProgressBar, std::placeholders::_1, std::placeholders::_2));
 	
 	UI::Button * RefuelButton(new UI::TextButton(this, "Refuel"));
 	
-	RefuelButton->SetPosition(Vector2f(0.0f, 60.0f));
+	RefuelButton->SetPosition(Vector2f(0.0f, 90.0f));
 	RefuelButton->SetSize(Vector2f(180.0f, 20.0f));
 	RefuelButton->ConnectClickedCallback(std::bind(&UI::HangarWidget::_OnRefuelButtonClicked, this));
 	RefuelButton->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnRefuelButtonUpdating, this, RefuelButton, std::placeholders::_1, std::placeholders::_2));
 	
 	UI::ProgressBar * FuelStateProgressBar(new UI::ProgressBar(this));
 	
-	FuelStateProgressBar->SetPosition(Vector2f(190.0f, 60.0f));
+	FuelStateProgressBar->SetPosition(Vector2f(190.0f, 90.0f));
 	FuelStateProgressBar->SetSize(Vector2f(410.0f, 20.0f));
 	FuelStateProgressBar->SetAnchorRight(true);
 	FuelStateProgressBar->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnFuelStateProgressBarUpdating, this, FuelStateProgressBar, std::placeholders::_1, std::placeholders::_2));
 	
 	UI::Button * TakeOffButton(new UI::TextButton(this, "Take Off"));
 	
-	TakeOffButton->SetPosition(Vector2f(0.0f, 90.0f));
+	TakeOffButton->SetPosition(Vector2f(0.0f, 120.0f));
 	TakeOffButton->SetSize(Vector2f(180.0f, 20.0f));
 	TakeOffButton->ConnectClickedCallback(std::bind(&UI::HangarWidget::_OnTakeOffButtonClicked, this));
+}
+
+void UI::HangarWidget::_OnDestroying(void)
+{
+	if(_OutfitShipDialog != nullptr)
+	{
+		_OutfitShipDialog->Destroy();
+	}
 }
 
 void UI::HangarWidget::_OnEnergyStateProgressBarUpdating(UI::ProgressBar * EnergyStateProgressBar, float RealTimeSeconds, float GameTimeSeconds)
@@ -131,6 +150,27 @@ void UI::HangarWidget::_OnHullStateProgressBarUpdating(UI::ProgressBar * HullSta
 	
 	HullStateProgressBar->SetFillLevel(HullPercentage);
 	HullStateProgressBar->SetColor(Color(1.0f - HullPercentage, HullPercentage, 0.0f, 1.0f));
+}
+
+void UI::HangarWidget::_OnOutfitButtonClicked(void)
+{
+	if(_OutfitShipDialog == nullptr)
+	{
+		assert(_Planet.IsValid() == true);
+		assert(_Character.IsValid() == true);
+		assert(_Character->GetShip() != nullptr);
+		_OutfitShipDialog = new UI::OutfitShipDialog(g_UserInterface->GetRootWidget(), _Character->GetShip()->GetReference());
+		_OutfitShipDialog->ConnectDestroyingCallback(std::bind(&UI::HangarWidget::_OnOutfitShipDialogDestroying, this));
+	}
+	else
+	{
+		g_UserInterface->GetRootWidget()->RaiseSubWidget(_OutfitShipDialog);
+	}
+}
+
+void UI::HangarWidget::_OnOutfitShipDialogDestroying(void)
+{
+	_OutfitShipDialog = nullptr;
 }
 
 void UI::HangarWidget::_OnRechargeButtonClicked(void)
