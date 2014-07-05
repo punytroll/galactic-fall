@@ -3847,7 +3847,7 @@ int main(int argc, char ** argv)
 	}
 	else
 	{
-		assert(g_MainMenuWindow == 0);
+		assert(g_MainMenuWindow == nullptr);
 		ActionOpenMainMenuWindow();
 		g_MainMenuWindow->SetDestroyOnESCAPEKey(false);
 	}
