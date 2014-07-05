@@ -18,6 +18,7 @@
 **/
 
 #include "../color.h"
+#include "event.h"
 #include "scroll_bar.h"
 #include "scroll_box.h"
 
@@ -31,11 +32,11 @@ UI::ScrollBox::ScrollBox(UI::Widget * SupWidget) :
 	m_View->SetAnchorLeft(true);
 	m_View->SetAnchorRight(true);
 	m_View->SetAnchorTop(true);
-	m_View->ConnectSizeChangedCallback(std::bind(&UI::ScrollBox::OnContentOrViewSizeChanged, this));
+	m_View->ConnectSizeChangedCallback(std::bind(&UI::ScrollBox::OnContentOrViewSizeChanged, this, std::placeholders::_1));
 	m_Content = new UI::Widget(m_View);
 	m_Content->SetPosition(Vector2f(0.0f, 0.0f));
 	m_Content->SetBackgroundColor(Color(0.15f, 0.15f, 0.15f, 1.0f));
-	m_Content->ConnectSizeChangedCallback(std::bind(&UI::ScrollBox::OnContentOrViewSizeChanged, this));
+	m_Content->ConnectSizeChangedCallback(std::bind(&UI::ScrollBox::OnContentOrViewSizeChanged, this, std::placeholders::_1));
 	m_HorizontalScrollBar = new UI::ScrollBar(this, UI::ScrollBar::Alignment::HORIZONTAL);
 	m_HorizontalScrollBar->SetPosition(Vector2f(0.0f, GetSize()[1] - 20.0f));
 	m_HorizontalScrollBar->SetSize(Vector2f(GetSize()[0] - 20.0f, 20.0f));
@@ -66,47 +67,50 @@ UI::ScrollBox::~ScrollBox(void)
 {
 }
 
-void UI::ScrollBox::OnContentOrViewSizeChanged(void)
+void UI::ScrollBox::OnContentOrViewSizeChanged(UI::Event & SizeChangedEvent)
 {
-	// setting the position
-	Vector2f NewContentPosition(GetContent()->GetPosition());
-	bool SetContentPosition(false);
-	
-	if(GetContent()->GetPosition()[0] + GetContent()->GetSize()[0] < GetView()->GetSize()[0])
+	if(SizeChangedEvent.GetPhase() == UI::Event::Phase::Target)
 	{
-		NewContentPosition[0] = std::min(0.0f, GetView()->GetSize()[0] - GetContent()->GetSize()[0]);
-		SetContentPosition = true;
+		// setting the position
+		Vector2f NewContentPosition(GetContent()->GetPosition());
+		bool SetContentPosition(false);
+		
+		if(GetContent()->GetPosition()[0] + GetContent()->GetSize()[0] < GetView()->GetSize()[0])
+		{
+			NewContentPosition[0] = std::min(0.0f, GetView()->GetSize()[0] - GetContent()->GetSize()[0]);
+			SetContentPosition = true;
+		}
+		if(GetContent()->GetPosition()[1] + GetContent()->GetSize()[1] < GetView()->GetSize()[1])
+		{
+			NewContentPosition[1] = std::min(0.0f, GetView()->GetSize()[1] - GetContent()->GetSize()[1]);
+			SetContentPosition = true;
+		}
+		if(SetContentPosition == true)
+		{
+			GetContent()->SetPosition(NewContentPosition);
+		}
+		
+		// setting the position
+		const std::list< Widget * > & ContentWidgets(GetContent()->GetSubWidgets());
+		float Bottom(0.0f);
+		float Right(0.0f);
+		
+		for(std::list< Widget * >::const_iterator ContentWidgetIterator = ContentWidgets.begin(); ContentWidgetIterator != ContentWidgets.end(); ++ContentWidgetIterator)
+		{
+			Bottom = std::max(Bottom, (*ContentWidgetIterator)->GetPosition()[1] + (*ContentWidgetIterator)->GetSize()[1]);
+			Right = std::max(Right, (*ContentWidgetIterator)->GetPosition()[0] + (*ContentWidgetIterator)->GetSize()[0]);
+		}
+		//~ // add padding at the bottom and the right
+		//~ /// @todo This has to leave eventually since it is not general.
+		Bottom += 5.0f;
+		Right += 5.0f;
+		GetContent()->SetSize(Vector2f(std::max(Right, GetView()->GetSize()[0]), std::max(Bottom, GetView()->GetSize()[1])));
+		
+		m_HorizontalScrollBar->SetMaximumPosition(std::max(0.0f, GetContent()->GetSize()[0] - GetView()->GetSize()[0]));
+		m_HorizontalScrollBar->SetStepSize(m_HorizontalScrollBar->GetMaximumPosition() / 10.0f);
+		m_VerticalScrollBar->SetMaximumPosition(std::max(0.0f, GetContent()->GetSize()[1] - GetView()->GetSize()[1]));
+		m_VerticalScrollBar->SetStepSize(m_VerticalScrollBar->GetMaximumPosition() / 10.0f);
 	}
-	if(GetContent()->GetPosition()[1] + GetContent()->GetSize()[1] < GetView()->GetSize()[1])
-	{
-		NewContentPosition[1] = std::min(0.0f, GetView()->GetSize()[1] - GetContent()->GetSize()[1]);
-		SetContentPosition = true;
-	}
-	if(SetContentPosition == true)
-	{
-		GetContent()->SetPosition(NewContentPosition);
-	}
-	
-	// setting the position
-	const std::list< Widget * > & ContentWidgets(GetContent()->GetSubWidgets());
-	float Bottom(0.0f);
-	float Right(0.0f);
-	
-	for(std::list< Widget * >::const_iterator ContentWidgetIterator = ContentWidgets.begin(); ContentWidgetIterator != ContentWidgets.end(); ++ContentWidgetIterator)
-	{
-		Bottom = std::max(Bottom, (*ContentWidgetIterator)->GetPosition()[1] + (*ContentWidgetIterator)->GetSize()[1]);
-		Right = std::max(Right, (*ContentWidgetIterator)->GetPosition()[0] + (*ContentWidgetIterator)->GetSize()[0]);
-	}
-	//~ // add padding at the bottom and the right
-	//~ /// @todo This has to leave eventually since it is not general.
-	Bottom += 5.0f;
-	Right += 5.0f;
-	GetContent()->SetSize(Vector2f(std::max(Right, GetView()->GetSize()[0]), std::max(Bottom, GetView()->GetSize()[1])));
-	
-	m_HorizontalScrollBar->SetMaximumPosition(std::max(0.0f, GetContent()->GetSize()[0] - GetView()->GetSize()[0]));
-	m_HorizontalScrollBar->SetStepSize(m_HorizontalScrollBar->GetMaximumPosition() / 10.0f);
-	m_VerticalScrollBar->SetMaximumPosition(std::max(0.0f, GetContent()->GetSize()[1] - GetView()->GetSize()[1]));
-	m_VerticalScrollBar->SetStepSize(m_VerticalScrollBar->GetMaximumPosition() / 10.0f);
 }
 
 void UI::ScrollBox::OnHorizontalScrollPositionChanged(void)

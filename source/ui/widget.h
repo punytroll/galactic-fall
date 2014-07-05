@@ -87,7 +87,7 @@ namespace UI
 		Connection ConnectMouseLeaveCallback(std::function< void (UI::Event &) > Callback);
 		Connection ConnectMouseMoveCallback(std::function< void (UI::MouseMoveEvent &) > Callback);
 		Connection ConnectPositionChangedCallback(std::function< void (void) > Callback);
-		Connection ConnectSizeChangedCallback(std::function< void (void) > Callback);
+		Connection ConnectSizeChangedCallback(std::function< void (UI::Event &) > Callback);
 		Connection ConnectUpdatingCallback(std::function< void (float, float) > Callback);
 		void DisconnectDestroyingCallback(Connection & Connection);
 		void DisconnectKeyCallback(Connection & Connection);
@@ -130,7 +130,7 @@ namespace UI
 		::Event< void, UI::Event & > _MouseLeaveEvent;
 		::Event< void, UI::MouseMoveEvent & > _MouseMoveEvent;
 		::Event< void > _PositionChangedEvent;
-		::Event< void > _SizeChangedEvent;
+		::Event< void, UI::Event & > _SizeChangedEvent;
 		::Event< void, float, float > _UpdatingEvent;
 		// static manager properties
 		static std::list< Widget * > _DestroyedWidgets;

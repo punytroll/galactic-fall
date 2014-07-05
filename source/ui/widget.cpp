@@ -200,7 +200,11 @@ void UI::Widget::SetSize(const Vector2f & Size)
 			SubWidget->SetPosition(SubWidgetNewPosition);
 			SubWidget->SetSize(SubWidgetNewSize);
 		}
-		_SizeChangedEvent();
+		
+		UI::Event SizeChangedEvent;
+		
+		SizeChangedEvent.SetTarget(this);
+		g_UserInterface->DispatchSizeChangedEvent(SizeChangedEvent);
 	}
 }
 
@@ -322,7 +326,7 @@ Connection UI::Widget::ConnectPositionChangedCallback(std::function< void (void)
 	return _PositionChangedEvent.Connect(Callback);
 }
 
-Connection UI::Widget::ConnectSizeChangedCallback(std::function< void (void) > Callback)
+Connection UI::Widget::ConnectSizeChangedCallback(std::function< void (UI::Event & ) > Callback)
 {
 	return _SizeChangedEvent.Connect(Callback);
 }

@@ -24,6 +24,7 @@
 
 namespace UI
 {
+	class Event;
 	class Label;
 	
 	class ProgressBar : public UI::Widget
@@ -35,7 +36,7 @@ namespace UI
 		void SetFillLevel(float FillLevel);
 		void SetText(const std::string & Text);
 	private:
-		void _OnSizeChanged(void);
+		void _OnSizeChanged(UI::Event & SizeChangedEvent);
 		void _ResizeFill(void);
 		// variables
 		UI::Widget * _Fill;

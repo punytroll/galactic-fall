@@ -27,6 +27,8 @@ class Ship;
 
 namespace UI
 {
+	class Event;
+	
 	class MiniMapDisplay : public UI::ViewDisplay
 	{
 	public:
@@ -43,7 +45,7 @@ namespace UI
 		void _OnDestroying(void);
 		void _OnDestroyInScene(Graphics::Node * Node);
 		void _OnDraw(void);
-		void _OnSizeChanged(void);
+		void _OnSizeChanged(UI::Event & SizeChangedEvent);
 		Reference< Ship > _Owner;
 	};
 }

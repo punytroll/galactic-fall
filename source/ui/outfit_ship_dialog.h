@@ -42,7 +42,7 @@ namespace UI
 		void _OnMountButtonClicked(void);
 		void _OnMountButtonUpdating(UI::Button * MountButton, float RealTimeSeconds, float GameTimeSeconds);
 		void _OnOKButtonClicked(void);
-		void _OnSizeChanged(void);
+		void _OnSizeChanged(UI::Event & SizeChangedEvent);
 		void _OnSlotListItemMouseButton(UI::SlotListItem * SlotListItem, UI::MouseButtonEvent & MouseButtonEvent);
 		void _OnUnmountButtonClicked(void);
 		void _OnUnmountButtonUpdating(UI::Button * UnmountButton, float RealTimeSeconds, float GameTimeSeconds);

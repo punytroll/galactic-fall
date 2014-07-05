@@ -289,7 +289,7 @@ UI::OutfitShipDialog::OutfitShipDialog(UI::Widget * SupWidget, Reference< Ship >
 	_SelectedSlotListItem(0),
 	_Ship(Ship)
 {
-	ConnectSizeChangedCallback(std::bind(&UI::OutfitShipDialog::_OnSizeChanged, this));
+	ConnectSizeChangedCallback(std::bind(&UI::OutfitShipDialog::_OnSizeChanged, this, std::placeholders::_1));
 	ConnectKeyCallback(std::bind(&UI::OutfitShipDialog::_OnKey, this, std::placeholders::_1));
 	_LeftPane = new UI::Widget(this);
 	_LeftPane->SetPosition(Vector2f(10.0f, 40.0f));
@@ -531,16 +531,19 @@ void UI::OutfitShipDialog::_OnAccessoryListItemMouseButton(UI::AccessoryListItem
 	}
 }
 
-void UI::OutfitShipDialog::_OnSizeChanged(void)
+void UI::OutfitShipDialog::_OnSizeChanged(UI::Event & SizeChangedEvent)
 {
-	float AvailableWidth(GetSize()[0]);
-	
-	// substract 10.0f for each border: left of left, between left and center, between center and right, right of right
-	AvailableWidth -= 10.0f + 10.0f + 10.0f + 10.0f;
-	AvailableWidth -= _CenterPane->GetSize()[0];
-	AvailableWidth /= 2.0f;
-	_LeftPane->SetSize(Vector2f(AvailableWidth, _LeftPane->GetSize()[1]));
-	_CenterPane->SetPosition(Vector2f(10.0f + _LeftPane->GetSize()[0] + 10.0f, _CenterPane->GetPosition()[1]));
-	_RightPane->SetSize(Vector2f(AvailableWidth, _RightPane->GetSize()[1]));
-	_RightPane->SetPosition(Vector2f(10.0f + _LeftPane->GetSize()[0] + 10.0f + _CenterPane->GetSize()[0] + 10.0f, _RightPane->GetPosition()[1]));
+	if(SizeChangedEvent.GetPhase() == UI::Event::Phase::Target)
+	{
+		float AvailableWidth(GetSize()[0]);
+		
+		// substract 10.0f for each border: left of left, between left and center, between center and right, right of right
+		AvailableWidth -= 10.0f + 10.0f + 10.0f + 10.0f;
+		AvailableWidth -= _CenterPane->GetSize()[0];
+		AvailableWidth /= 2.0f;
+		_LeftPane->SetSize(Vector2f(AvailableWidth, _LeftPane->GetSize()[1]));
+		_CenterPane->SetPosition(Vector2f(10.0f + _LeftPane->GetSize()[0] + 10.0f, _CenterPane->GetPosition()[1]));
+		_RightPane->SetSize(Vector2f(AvailableWidth, _RightPane->GetSize()[1]));
+		_RightPane->SetPosition(Vector2f(10.0f + _LeftPane->GetSize()[0] + 10.0f + _CenterPane->GetSize()[0] + 10.0f, _RightPane->GetPosition()[1]));
+	}
 }
