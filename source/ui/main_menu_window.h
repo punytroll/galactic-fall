@@ -46,6 +46,9 @@ namespace UI
 		// setters
 		void SetDestroyOnESCAPEKey(bool DestroyOnESCAPEKey);
 	private:
+		// actions
+		void _ActionNewGame(void);
+		void _ActionQuit(void);
 		// callbacks
 		void _OnKey(UI::KeyEvent & KeyEvent);
 		void _OnLoadGameButtonClicked(void);
