@@ -30,6 +30,7 @@ namespace UI
 {
 	class Button;
 	class Label;
+	class OutfitShipDialog;
 	class ProgressBar;
 	
 	class HangarWidget : public UI::Widget
@@ -38,9 +39,12 @@ namespace UI
 		HangarWidget(UI::Widget * SupWidget, Reference< Planet > Planet, Reference< Character > Character);
 	private:
 		// callbacks
+		void _OnDestroying(void);
 		void _OnEnergyStateProgressBarUpdating(UI::ProgressBar * EnergyStateProgressBar, float RealTimeSeconds, float GameTimeSeconds);
 		void _OnFuelStateProgressBarUpdating(UI::ProgressBar * FuelStateProgressBar, float RealTimeSeconds, float GameTimeSeconds);
 		void _OnHullStateProgressBarUpdating(UI::ProgressBar * HullStateProgressBar, float RealTimeSeconds, float GameTimeSeconds);
+		void _OnOutfitButtonClicked(void);
+		void _OnOutfitShipDialogDestroying(void);
 		void _OnRechargeButtonClicked(void);
 		void _OnRechargeButtonUpdating(UI::Button * RechargeButton, float RealTimeSeconds, float GameTimeSeconds);
 		void _OnRefuelButtonClicked(void);
@@ -50,6 +54,7 @@ namespace UI
 		void _OnTakeOffButtonClicked(void);
 		// member variables
 		Reference< Character > _Character;
+		UI::OutfitShipDialog * _OutfitShipDialog;
 		Reference< Planet > _Planet;
 	};
 }
