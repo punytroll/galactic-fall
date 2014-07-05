@@ -45,6 +45,7 @@ UI::HangarWidget::HangarWidget(UI::Widget * SupWidget, Reference< Planet > Plane
 	OutfitButton->SetPosition(Vector2f(0.0f, 0.0f));
 	OutfitButton->SetSize(Vector2f(180.0f, 20.0f));
 	OutfitButton->ConnectClickedCallback(std::bind(&UI::HangarWidget::_OnOutfitButtonClicked, this));
+	OutfitButton->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnOutfitButtonUpdating, this, OutfitButton, std::placeholders::_1, std::placeholders::_2));
 	
 	UI::Button * RepairButton(new UI::TextButton(this, "Repair"));
 	
@@ -93,6 +94,7 @@ UI::HangarWidget::HangarWidget(UI::Widget * SupWidget, Reference< Planet > Plane
 	TakeOffButton->SetPosition(Vector2f(0.0f, 120.0f));
 	TakeOffButton->SetSize(Vector2f(180.0f, 20.0f));
 	TakeOffButton->ConnectClickedCallback(std::bind(&UI::HangarWidget::_OnTakeOffButtonClicked, this));
+	TakeOffButton->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnTakeOffButtonUpdating, this, TakeOffButton, std::placeholders::_1, std::placeholders::_2));
 }
 
 void UI::HangarWidget::_OnDestroying(void)
@@ -105,13 +107,12 @@ void UI::HangarWidget::_OnDestroying(void)
 
 void UI::HangarWidget::_OnEnergyStateProgressBarUpdating(UI::ProgressBar * EnergyStateProgressBar, float RealTimeSeconds, float GameTimeSeconds)
 {
-	assert(_Character.IsValid() == true);
-	assert(_Character->GetShip() != nullptr);
 	assert(EnergyStateProgressBar != nullptr);
+	assert(_Character.IsValid() == true);
 	
 	float EnergyPercentage(0.0f);
 	
-	if(_Character->GetShip()->GetBattery() != 0)
+	if((_Character->GetShip() != nullptr) && (_Character->GetShip()->GetBattery() != nullptr))
 	{
 		EnergyStateProgressBar->SetText(to_string_cast(_Character->GetShip()->GetBattery()->GetEnergy(), 2));
 		EnergyPercentage = _Character->GetShip()->GetBattery()->GetEnergy() / _Character->GetShip()->GetBattery()->GetEnergyCapacity();
@@ -126,26 +127,40 @@ void UI::HangarWidget::_OnEnergyStateProgressBarUpdating(UI::ProgressBar * Energ
 
 void UI::HangarWidget::_OnFuelStateProgressBarUpdating(UI::ProgressBar * FuelStateProgressBar, float RealTimeSeconds, float GameTimeSeconds)
 {
-	assert(_Character.IsValid() == true);
-	assert(_Character->GetShip() != nullptr);
 	assert(FuelStateProgressBar != nullptr);
-	FuelStateProgressBar->SetText(to_string_cast(_Character->GetShip()->GetFuel(), 2));
+	assert(_Character.IsValid() == true);
 	
-	float FuelPercentage(_Character->GetShip()->GetFuel() / _Character->GetShip()->GetFuelCapacity());
+	float FuelPercentage(0.0f);
 	
+	if(_Character->GetShip() != nullptr)
+	{
+		FuelStateProgressBar->SetText(to_string_cast(_Character->GetShip()->GetFuel(), 2));
+		FuelPercentage = _Character->GetShip()->GetFuel() / _Character->GetShip()->GetFuelCapacity();
+	}
+	else
+	{
+		FuelStateProgressBar->SetText("n/a");
+	}
 	FuelStateProgressBar->SetFillLevel(FuelPercentage);
 	FuelStateProgressBar->SetColor(Color(1.0f - FuelPercentage, FuelPercentage, 0.0f, 1.0f));
 }
 
 void UI::HangarWidget::_OnHullStateProgressBarUpdating(UI::ProgressBar * HullStateProgressBar, float RealTimeSeconds, float GameTimeSeconds)
 {
-	assert(_Character.IsValid() == true);
-	assert(_Character->GetShip() != nullptr);
 	assert(HullStateProgressBar != nullptr);
-	HullStateProgressBar->SetText(to_string_cast(_Character->GetShip()->GetHull(), 2));
+	assert(_Character.IsValid() == true);
 	
-	float HullPercentage(_Character->GetShip()->GetHull() / _Character->GetShip()->GetHullCapacity());
+	float HullPercentage(0.0f);
 	
+	if(_Character->GetShip() != nullptr)
+	{
+		HullStateProgressBar->SetText(to_string_cast(_Character->GetShip()->GetHull(), 2));
+		HullPercentage = _Character->GetShip()->GetHull() / _Character->GetShip()->GetHullCapacity();
+	}
+	else
+	{
+		HullStateProgressBar->SetText("n/a");
+	}
 	HullStateProgressBar->SetFillLevel(HullPercentage);
 	HullStateProgressBar->SetColor(Color(1.0f - HullPercentage, HullPercentage, 0.0f, 1.0f));
 }
@@ -154,7 +169,6 @@ void UI::HangarWidget::_OnOutfitButtonClicked(void)
 {
 	if(_OutfitShipDialog == nullptr)
 	{
-		assert(_Planet.IsValid() == true);
 		assert(_Character.IsValid() == true);
 		assert(_Character->GetShip() != nullptr);
 		_OutfitShipDialog = new UI::OutfitShipDialog(GetRootWidget(), _Character->GetShip()->GetReference());
@@ -166,6 +180,13 @@ void UI::HangarWidget::_OnOutfitButtonClicked(void)
 	}
 }
 
+void UI::HangarWidget::_OnOutfitButtonUpdating(UI::Button * OutfitButton, float RealTimeSeconds, float GameTimeSeconds)
+{
+	assert(OutfitButton != nullptr);
+	assert(_Character.IsValid());
+	OutfitButton->SetEnabled(_Character->GetShip() != nullptr);
+}
+
 void UI::HangarWidget::_OnOutfitShipDialogDestroying(void)
 {
 	_OutfitShipDialog = nullptr;
@@ -175,7 +196,7 @@ void UI::HangarWidget::_OnRechargeButtonClicked(void)
 {
 	assert(_Planet.IsValid() == true);
 	assert(_Character.IsValid() == true);
-	assert(_Character->GetShip() != 0);
+	assert(_Character->GetShip() != nullptr);
 	_Planet->Recharge(_Character->GetShip(), _Character.Get());
 }
 
@@ -183,14 +204,14 @@ void UI::HangarWidget::_OnRechargeButtonUpdating(UI::Button * RechargeButton, fl
 {
 	assert(_Character.IsValid() == true);
 	assert(_Planet.IsValid() == true);
-	RechargeButton->SetEnabled((_Planet->GetOffersRecharging() == true) && (_Character->GetShip() != 0) && (_Character->GetShip()->GetBattery() != 0) && (_Character->GetShip()->GetBattery()->GetEnergy() < _Character->GetShip()->GetBattery()->GetEnergyCapacity()));
+	RechargeButton->SetEnabled((_Planet->GetOffersRecharging() == true) && (_Character->GetShip() != nullptr) && (_Character->GetShip()->GetBattery() != nullptr) && (_Character->GetShip()->GetBattery()->GetEnergy() < _Character->GetShip()->GetBattery()->GetEnergyCapacity()));
 }
 
 void UI::HangarWidget::_OnRefuelButtonClicked(void)
 {
 	assert(_Planet.IsValid() == true);
 	assert(_Character.IsValid() == true);
-	assert(_Character->GetShip() != 0);
+	assert(_Character->GetShip() != nullptr);
 	_Planet->Refuel(_Character->GetShip(), _Character.Get());
 }
 
@@ -211,14 +232,14 @@ void UI::HangarWidget::_OnRefuelButtonUpdating(UI::Button * RefuelButton, float 
 			break;
 		}
 	}
-	RefuelButton->SetEnabled((OffersRefueling == true) && (_Character->GetShip() != 0) && (_Character->GetShip()->GetFuel() < _Character->GetShip()->GetFuelCapacity()));
+	RefuelButton->SetEnabled((OffersRefueling == true) && (_Character->GetShip() != nullptr) && (_Character->GetShip()->GetFuel() < _Character->GetShip()->GetFuelCapacity()));
 }
 
 void UI::HangarWidget::_OnRepairButtonClicked(void)
 {
 	assert(_Planet.IsValid() == true);
 	assert(_Character.IsValid() == true);
-	assert(_Character->GetShip() != 0);
+	assert(_Character->GetShip() != nullptr);
 	_Planet->Repair(_Character->GetShip(), _Character.Get());
 }
 
@@ -226,12 +247,19 @@ void UI::HangarWidget::_OnRepairButtonUpdating(UI::Button * RepairButton, float 
 {
 	assert(_Character.IsValid() == true);
 	assert(_Planet.IsValid() == true);
-	RepairButton->SetEnabled((_Planet->GetOffersRepairing() == true) && (_Character->GetShip() != 0) && (_Character->GetShip()->GetHull() < _Character->GetShip()->GetHullCapacity()));
+	RepairButton->SetEnabled((_Planet->GetOffersRepairing() == true) && (_Character->GetShip() != nullptr) && (_Character->GetShip()->GetHull() < _Character->GetShip()->GetHullCapacity()));
 }
 
 void UI::HangarWidget::_OnTakeOffButtonClicked(void)
 {
 	assert(_Character.IsValid() == true);
-	assert(_Character->GetShip() != 0);
+	assert(_Character->GetShip() != nullptr);
 	_Character->GetShip()->SetTakeOff(true);
+}
+
+void UI::HangarWidget::_OnTakeOffButtonUpdating(UI::Button * TakeOffButton, float RealTimeSeconds, float GameTimeSeconds)
+{
+	assert(TakeOffButton != nullptr);
+	assert(_Character.IsValid());
+	TakeOffButton->SetEnabled(_Character->GetShip() != nullptr);
 }

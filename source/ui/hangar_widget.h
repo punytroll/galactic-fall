@@ -44,6 +44,7 @@ namespace UI
 		void _OnFuelStateProgressBarUpdating(UI::ProgressBar * FuelStateProgressBar, float RealTimeSeconds, float GameTimeSeconds);
 		void _OnHullStateProgressBarUpdating(UI::ProgressBar * HullStateProgressBar, float RealTimeSeconds, float GameTimeSeconds);
 		void _OnOutfitButtonClicked(void);
+		void _OnOutfitButtonUpdating(UI::Button * OutfitButton, float RealTimeSeconds, float GameTimeSeconds);
 		void _OnOutfitShipDialogDestroying(void);
 		void _OnRechargeButtonClicked(void);
 		void _OnRechargeButtonUpdating(UI::Button * RechargeButton, float RealTimeSeconds, float GameTimeSeconds);
@@ -52,6 +53,7 @@ namespace UI
 		void _OnRepairButtonClicked(void);
 		void _OnRepairButtonUpdating(UI::Button * RechargeButton, float RealTimeSeconds, float GameTimeSeconds);
 		void _OnTakeOffButtonClicked(void);
+		void _OnTakeOffButtonUpdating(UI::Button * TakeOffButton, float RealTimeSeconds, float GameTimeSeconds);
 		// member variables
 		Reference< Character > _Character;
 		UI::OutfitShipDialog * _OutfitShipDialog;
