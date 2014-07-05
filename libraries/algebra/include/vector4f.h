@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 1.8.4 of algebra.
+ * This is part of version 1.8.5 of algebra.
  **/
 
 #ifndef ALGEBRA_VECTOR4F_H
