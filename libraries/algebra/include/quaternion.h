@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 1.8.4 of algebra.
+ * This is part of version 1.8.5 of algebra.
  **/
 
 #ifndef ALGEBRA_QUATERNION_H
@@ -64,6 +64,8 @@ public:
 	{
 		return Quaternion().Rotation(AxisAngle);
 	}
+	
+	static Quaternion CreateFromAxisAndAngle(const Vector3f & Axis, float AngleInRadians);
 	
 	static Quaternion CreateFromAxisComponentsAndAngle(float X, float Y, float Z, float AngleInRadians)
 	{
@@ -272,5 +274,16 @@ public:
 		return _[Index];
 	}
 };
+
+/**
+ * IMPLEMENTATION
+ **/
+
+#include "vector3f.h"
+
+inline Quaternion Quaternion::CreateFromAxisAndAngle(const Vector3f & Axis, float AngleInRadians)
+{
+	return Quaternion().Rotation(Axis._[0], Axis._[1], Axis._[2], AngleInRadians);
+}
 
 #endif
