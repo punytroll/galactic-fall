@@ -375,7 +375,7 @@ UI::OutfitShipDialog::OutfitShipDialog(UI::Widget * SupWidget, Reference< Ship >
 	_AccessoryScrollBox->SetAnchorBottom(true);
 	_AccessoryScrollBox->SetAnchorRight(true);
 	_RebuildAccessoryList();
-	SetPosition(Vector2f(70.0f, 400.0f));
+	SetPosition(Vector2f(70.0f, 280.0f));
 	SetSize(Vector2f(600.0f, 400.0f));
 }
 
