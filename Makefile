@@ -1,3 +1,5 @@
+CXXFLAGS = -std=c++11
+
 button_h = \
 	button.h \
 	$(mouse_button_listener_h) \
