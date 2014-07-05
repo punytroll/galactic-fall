@@ -119,13 +119,36 @@ UI::MainMenuWindow::MainMenuWindow(UI::Widget * SupWidget, ScenarioManager * Sce
 	_QuitButton->ConnectClickedCallback(std::bind(&UI::MainMenuWindow::_OnQuitButtonClicked, this));
 }
 
+void UI::MainMenuWindow::_ActionNewGame(void)
+{
+	LoadScenarioFromScenarioIdentifier("new_game");
+	Destroy();
+}
+
+void UI::MainMenuWindow::_ActionQuit(void)
+{
+	ActionQuitGameLoop();
+	Destroy();
+}
+
 void UI::MainMenuWindow::_OnKey(UI::KeyEvent & KeyEvent)
 {
-	if((KeyEvent.GetKeyCode() == 9 /* ESCAPE */) && (KeyEvent.IsDown() == true))
+	if(KeyEvent.GetPhase() == UI::Event::Phase::Target)
 	{
-		if(_DestroyOnESCAPEKey == true)
+		if((KeyEvent.GetKeyCode() == 9 /* ESCAPE */) && (KeyEvent.IsDown() == true))
 		{
-			Destroy();
+			if(_DestroyOnESCAPEKey == true)
+			{
+				Destroy();
+			}
+		}
+		else if((KeyEvent.GetKeyCode() == 24 /* Q */) && (KeyEvent.IsDown() == true))
+		{
+			_ActionQuit();
+		}
+		else if((KeyEvent.GetKeyCode() == 57 /* N */) && (KeyEvent.IsDown() == true))
+		{
+			_ActionNewGame();
 		}
 	}
 }
@@ -277,8 +300,7 @@ void UI::MainMenuWindow::_OnLoadScenarioDialogDestroying(void)
 
 void UI::MainMenuWindow::_OnNewGameButtonClicked(void)
 {
-	LoadScenarioFromScenarioIdentifier("new_game");
-	Destroy();
+	_ActionNewGame();
 }
 
 void UI::MainMenuWindow::_OnResumeGameButtonClicked(void)
@@ -363,6 +385,5 @@ void UI::MainMenuWindow::_OnSaveGameDialogDestroying(void)
 
 void UI::MainMenuWindow::_OnQuitButtonClicked(void)
 {
-	ActionQuitGameLoop();
-	Destroy();
+	_ActionQuit();
 }
