@@ -25,6 +25,7 @@
 namespace UI
 {
 	class Button;
+	class Event;
 	
 	class ScrollBar : public UI::Widget
 	{
@@ -60,7 +61,7 @@ namespace UI
 		// callbacks
 		void OnLessClicked(void);
 		void OnMoreClicked(void);
-		void OnSizeChanged(void);
+		void OnSizeChanged(UI::Event & SizeChangedEvent);
 		void OnTrackerMouseButton(UI::MouseButtonEvent & MouseButtonEvent);
 		void OnTrackerMouseEnter(void);
 		void OnTrackerMouseLeave(void);

@@ -21,6 +21,7 @@
 
 #include "../color.h"
 #include "border.h"
+#include "event.h"
 #include "label.h"
 #include "progress_bar.h"
 
@@ -31,7 +32,7 @@ UI::ProgressBar::ProgressBar(UI::Widget * SupWidget) :
 	_Label(nullptr)
 {
 	SetSize(Vector2f(100.0f, 20.0f));
-	ConnectSizeChangedCallback(std::bind(&UI::ProgressBar::_OnSizeChanged, this));
+	ConnectSizeChangedCallback(std::bind(&UI::ProgressBar::_OnSizeChanged, this, std::placeholders::_1));
 	_Fill = new UI::Widget(this);
 	_Fill->SetPosition(Vector2f(0.0f, 0.0f));
 	_Fill->SetSize(GetSize());
@@ -57,9 +58,12 @@ UI::ProgressBar::ProgressBar(UI::Widget * SupWidget) :
 	Border->SetAnchorTop(true);
 }
 
-void UI::ProgressBar::_OnSizeChanged(void)
+void UI::ProgressBar::_OnSizeChanged(UI::Event & SizeChangedEvent)
 {
-	_ResizeFill();
+	if(SizeChangedEvent.GetPhase() == UI::Event::Phase::Target)
+	{
+		_ResizeFill();
+	}
 }
 
 void UI::ProgressBar::_ResizeFill(void)

@@ -32,7 +32,7 @@ UI::ScrollBar::ScrollBar(Widget * SupWidget, UI::ScrollBar::Alignment Alignment)
 	m_Alignment(UI::ScrollBar::Alignment::UNDEFINED),
 	m_CurrentPosition(0.0f)
 {
-	ConnectSizeChangedCallback(std::bind(&ScrollBar::OnSizeChanged, this));
+	ConnectSizeChangedCallback(std::bind(&ScrollBar::OnSizeChanged, this, std::placeholders::_1));
 	SetBackgroundColor(Color(0.23f, 0.23f, 0.23f, 1.0f));
 	m_LessButton = new UI::Button(this);
 	m_LessButton->ConnectClickedCallback(std::bind(&UI::ScrollBar::OnLessClicked, this));
@@ -75,9 +75,12 @@ void UI::ScrollBar::OnMoreClicked(void)
 	SetCurrentPosition(GetCurrentPosition() + GetStepSize());
 }
 
-void UI::ScrollBar::OnSizeChanged(void)
+void UI::ScrollBar::OnSizeChanged(UI::Event & SizeChangedEvent)
 {
-	AdjustTrackerPosition();
+	if(SizeChangedEvent.GetPhase() == UI::Event::Phase::Target)
+	{
+		AdjustTrackerPosition();
+	}
 }
 
 void UI::ScrollBar::OnTrackerMouseButton(UI::MouseButtonEvent & MouseButtonEvent)

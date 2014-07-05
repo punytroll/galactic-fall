@@ -35,6 +35,7 @@
 #include "../planet.h"
 #include "../ship.h"
 #include "../system.h"
+#include "event.h"
 #include "mini_map_display.h"
 
 UI::MiniMapDisplay::MiniMapDisplay(UI::Widget * SupWidget) :
@@ -42,7 +43,7 @@ UI::MiniMapDisplay::MiniMapDisplay(UI::Widget * SupWidget) :
 {
 	SetSize(Vector2f(100.0f, 100.0f));
 	ConnectDestroyingCallback(std::bind(&UI::MiniMapDisplay::_OnDestroying, this));
-	ConnectSizeChangedCallback(std::bind(&UI::MiniMapDisplay::_OnSizeChanged, this));
+	ConnectSizeChangedCallback(std::bind(&UI::MiniMapDisplay::_OnSizeChanged, this, std::placeholders::_1));
 	_SetupView();
 }
 
@@ -199,8 +200,11 @@ void UI::MiniMapDisplay::_OnDraw(void)
 	}
 }
 
-void UI::MiniMapDisplay::_OnSizeChanged(void)
+void UI::MiniMapDisplay::_OnSizeChanged(UI::Event & SizeChangedEvent)
 {
-	_ClearView();
-	_SetupView();
+	if(SizeChangedEvent.GetPhase() == UI::Event::Phase::Target)
+	{
+		_ClearView();
+		_SetupView();
+	}
 }

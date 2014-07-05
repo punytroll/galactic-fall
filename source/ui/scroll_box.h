@@ -25,6 +25,7 @@
 namespace UI
 {
 	class Button;
+	class Event;
 	class ScrollBar;
 	
 	class ScrollBox : public UI::Widget
@@ -44,7 +45,7 @@ namespace UI
 		void SetVerticalScrollBarVisible(bool Visible);
 	protected:
 		// callbacks
-		void OnContentOrViewSizeChanged(void);
+		void OnContentOrViewSizeChanged(UI::Event & SizeChangedEvent);
 		void OnHorizontalScrollPositionChanged(void);
 		void OnVerticalScrollPositionChanged(void);
 	private:
