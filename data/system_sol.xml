@@ -106,6 +106,10 @@
 					<identifier>transporter</identifier>
 					<base-price-modifier>0.948</base-price-modifier>
 				</offered-asset-class>
+				<offered-asset-class>
+					<identifier>small_generator</identifier>
+					<base-price-modifier>0.85</base-price-modifier>
+				</offered-asset-class>
 			</offered-asset-classes>
 			<landing-fee-per-space>1.0</landing-fee-per-space>
 			<offers-recharging>true</offers-recharging>
@@ -179,6 +183,10 @@
 				<offered-asset-class>
 					<identifier>shuttle</identifier>
 					<base-price-modifier>0.91</base-price-modifier>
+				</offered-asset-class>
+				<offered-asset-class>
+					<identifier>small_generator</identifier>
+					<base-price-modifier>0.96</base-price-modifier>
 				</offered-asset-class>
 			</offered-asset-classes>
 			<landing-fee-per-space>0.95</landing-fee-per-space>
@@ -257,6 +265,10 @@
 				<offered-asset-class>
 					<identifier>transporter</identifier>
 					<base-price-modifier>0.92</base-price-modifier>
+				</offered-asset-class>
+				<offered-asset-class>
+					<identifier>small_generator</identifier>
+					<base-price-modifier>1.04</base-price-modifier>
 				</offered-asset-class>
 			</offered-asset-classes>
 			<landing-fee-per-space>1.1</landing-fee-per-space>
