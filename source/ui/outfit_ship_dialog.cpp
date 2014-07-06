@@ -457,7 +457,7 @@ void UI::OutfitShipDialog::_OnUnmountButtonUpdating(UI::Button * UnmountButton, 
 	}
 }
 
-void UI::OutfitShipDialog::_OnMountButtonClicked()
+void UI::OutfitShipDialog::_OnMountButtonClicked(void)
 {
 	assert(_SelectedAccessoryListItem != 0);
 	assert(_SelectedSlotListItem != 0);
@@ -473,12 +473,12 @@ void UI::OutfitShipDialog::_OnMountButtonClicked()
 	_RebuildAccessoryList();
 }
 
-void UI::OutfitShipDialog::_OnOKButtonClicked()
+void UI::OutfitShipDialog::_OnOKButtonClicked(void)
 {
 	Destroy();
 }
 
-void UI::OutfitShipDialog::_OnUnmountButtonClicked()
+void UI::OutfitShipDialog::_OnUnmountButtonClicked(void)
 {
 	assert(_SelectedSlotListItem != 0);
 	
