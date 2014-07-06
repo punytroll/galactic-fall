@@ -71,6 +71,31 @@ Planet::~Planet(void)
 	}
 }
 
+Hangar * Planet::GetHangar(Character * Character)
+{
+	Hangar * Result(nullptr);
+	
+	assert(Character != nullptr);
+	assert(GetAspectObjectContainer() != nullptr);
+	for(auto Content : GetAspectObjectContainer()->GetContent())
+	{
+		if(Content->GetTypeIdentifier() == "hangar")
+		{
+			auto AHangar(dynamic_cast< Hangar * >(Content));
+			
+			assert(AHangar != nullptr);
+			if(AHangar->GetCharacter() == Character)
+			{
+				Result = AHangar;
+				
+				break;
+			}
+		}
+	}
+	
+	return Result;
+}
+
 void Planet::SetDescription(const std::string & Description)
 {
 	_Description = Description;
@@ -100,7 +125,7 @@ void Planet::Land(Ship * Ship, Character * Character)
 	assert(Ship->GetContainer()->GetAspectObjectContainer() != nullptr);
 	Ship->GetContainer()->GetAspectObjectContainer()->RemoveContent(Ship);
 	
-	auto Hangar(_GetHangar(Character));
+	auto Hangar(GetHangar(Character));
 	
 	if(Hangar == nullptr)
 	{
@@ -188,7 +213,7 @@ void Planet::TakeOff(Ship * Ship, Character * Character)
 	assert(Character != nullptr);
 	assert(Ship != nullptr);
 	
-	auto Hangar(_GetHangar(Character));
+	auto Hangar(GetHangar(Character));
 	
 	assert(Hangar != nullptr);
 	assert(Hangar->GetAspectObjectContainer() != nullptr);
@@ -216,31 +241,6 @@ Hangar * Planet::_CreateHangar(Character * Character)
 	auto Result(dynamic_cast< Hangar * >(g_ObjectFactory->Create("hangar", "")));
 	
 	Result->SetCharacter(Character);
-	
-	return Result;
-}
-
-Hangar * Planet::_GetHangar(Character * Character)
-{
-	Hangar * Result(nullptr);
-	
-	assert(Character != nullptr);
-	assert(GetAspectObjectContainer() != nullptr);
-	for(auto Content : GetAspectObjectContainer()->GetContent())
-	{
-		if(Content->GetTypeIdentifier() == "hangar")
-		{
-			auto AHangar(dynamic_cast< Hangar * >(Content));
-			
-			assert(AHangar != nullptr);
-			if(AHangar->GetCharacter() == Character)
-			{
-				Result = AHangar;
-				
-				break;
-			}
-		}
-	}
 	
 	return Result;
 }

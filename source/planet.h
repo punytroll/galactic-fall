@@ -74,6 +74,7 @@ public:
 	// getters
 	const std::string & GetDescription(void) const;
 	Reference< Faction > GetFaction(void) const;
+	Hangar * GetHangar(Character * Character);
 	const std::string & GetIdentifier(void) const;
 	float GetLandingFeePerSpace(void) const;
 	bool GetOffersRecharging(void) const;
@@ -99,7 +100,6 @@ public:
 private:
 	// helper functions
 	Hangar * _CreateHangar(Character * Character);
-	Hangar * _GetHangar(Character * Character);
 	// member variables
 	std::string _Description;
 	Reference< Faction > _Faction;
