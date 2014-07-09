@@ -42,7 +42,7 @@ UI::MiniMapDisplay::MiniMapDisplay(UI::Widget * SupWidget) :
 	UI::ViewDisplay(SupWidget)
 {
 	SetSize(Vector2f(100.0f, 100.0f));
-	ConnectDestroyingCallback(std::bind(&UI::MiniMapDisplay::_OnDestroying, this));
+	ConnectDestroyingCallback(std::bind(&UI::MiniMapDisplay::_OnDestroying, this, std::placeholders::_1));
 	ConnectSizeChangedCallback(std::bind(&UI::MiniMapDisplay::_OnSizeChanged, this, std::placeholders::_1));
 	_SetupView();
 }
@@ -138,9 +138,12 @@ void UI::MiniMapDisplay::_SetupView(void)
 	SetView(View);
 }
 
-void UI::MiniMapDisplay::_OnDestroying(void)
+void UI::MiniMapDisplay::_OnDestroying(UI::Event & DestroyingEvent)
 {
-	_ClearView();
+	if(DestroyingEvent.GetPhase() == UI::Event::Phase::Target)
+	{
+		_ClearView();
+	}
 }
 
 void UI::MiniMapDisplay::_OnDestroyInScene(Graphics::Node * Node)

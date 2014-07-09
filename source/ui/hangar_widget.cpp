@@ -24,6 +24,7 @@
 #include "../planet.h"
 #include "../ship.h"
 #include "../string_cast.h"
+#include "event.h"
 #include "hangar_widget.h"
 #include "outfit_ship_dialog.h"
 #include "progress_bar.h"
@@ -37,7 +38,7 @@ UI::HangarWidget::HangarWidget(UI::Widget * SupWidget, Reference< Planet > Plane
 {
 	assert(_Character.IsValid() == true);
 	assert(_Planet.IsValid() == true);
-	ConnectDestroyingCallback(std::bind(&UI::HangarWidget::_OnDestroying, this));
+	ConnectDestroyingCallback(std::bind(&UI::HangarWidget::_OnDestroying, this, std::placeholders::_1));
 	SetSize(Vector2f(600.0f, 300.0f));
 	
 	UI::Button * OutfitButton(new UI::TextButton(this, "Outfit"));
@@ -97,11 +98,14 @@ UI::HangarWidget::HangarWidget(UI::Widget * SupWidget, Reference< Planet > Plane
 	TakeOffButton->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnTakeOffButtonUpdating, this, TakeOffButton, std::placeholders::_1, std::placeholders::_2));
 }
 
-void UI::HangarWidget::_OnDestroying(void)
+void UI::HangarWidget::_OnDestroying(UI::Event & DestroyingEvent)
 {
-	if(_OutfitShipDialog != nullptr)
+	if(DestroyingEvent.GetPhase() == UI::Event::Phase::Target)
 	{
-		_OutfitShipDialog->Destroy();
+		if(_OutfitShipDialog != nullptr)
+		{
+			_OutfitShipDialog->Destroy();
+		}
 	}
 }
 
@@ -172,7 +176,7 @@ void UI::HangarWidget::_OnOutfitButtonClicked(void)
 		assert(_Character.IsValid() == true);
 		assert(_Character->GetShip() != nullptr);
 		_OutfitShipDialog = new UI::OutfitShipDialog(GetRootWidget(), _Character->GetShip()->GetReference());
-		_OutfitShipDialog->ConnectDestroyingCallback(std::bind(&UI::HangarWidget::_OnOutfitShipDialogDestroying, this));
+		_OutfitShipDialog->ConnectDestroyingCallback(std::bind(&UI::HangarWidget::_OnOutfitShipDialogDestroying, this, std::placeholders::_1));
 	}
 	else
 	{
@@ -187,9 +191,12 @@ void UI::HangarWidget::_OnOutfitButtonUpdating(UI::Button * OutfitButton, float 
 	OutfitButton->SetEnabled(_Character->GetShip() != nullptr);
 }
 
-void UI::HangarWidget::_OnOutfitShipDialogDestroying(void)
+void UI::HangarWidget::_OnOutfitShipDialogDestroying(UI::Event & DestroyingEvent)
 {
-	_OutfitShipDialog = nullptr;
+	if(DestroyingEvent.GetPhase() == UI::Event::Phase::Target)
+	{
+		_OutfitShipDialog = nullptr;
+	}
 }
 
 void UI::HangarWidget::_OnRechargeButtonClicked(void)

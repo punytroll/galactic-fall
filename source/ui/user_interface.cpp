@@ -35,14 +35,17 @@ struct EventPropagationPathItem
 	UI::Widget * _Widget;
 };
 
-void DestroyingPropagationPathItem(EventPropagationPathItem * EventPropagationPathItem)
+void DestroyingPropagationPathItem(UI::Event & DestroyingEvent, EventPropagationPathItem * EventPropagationPathItem)
 {
-	assert(EventPropagationPathItem != nullptr);
-	assert(EventPropagationPathItem->_Widget != nullptr);
-	assert(EventPropagationPathItem->_Connection.IsValid() == true);
-	EventPropagationPathItem->_Widget->DisconnectDestroyingCallback(EventPropagationPathItem->_Connection);
-	assert(EventPropagationPathItem->_Connection.IsValid() == false);
-	EventPropagationPathItem->_Widget = nullptr;
+	if(DestroyingEvent.GetPhase() == UI::Event::Phase::Target)
+	{
+		assert(EventPropagationPathItem != nullptr);
+		assert(EventPropagationPathItem->_Widget != nullptr);
+		assert(EventPropagationPathItem->_Connection.IsValid() == true);
+		EventPropagationPathItem->_Widget->DisconnectDestroyingCallback(EventPropagationPathItem->_Connection);
+		assert(EventPropagationPathItem->_Connection.IsValid() == false);
+		EventPropagationPathItem->_Widget = nullptr;
+	}
 }
 
 struct KeyEventPropagationPathItem : EventPropagationPathItem
@@ -62,10 +65,10 @@ struct MouseMoveEventPropagationPathItem : EventPropagationPathItem
 UI::UserInterface::UserInterface(void) :
 	_CaptureWidget(nullptr),
 	_HoverWidget(nullptr),
-	_RootWidget(new UI::Widget(0))
+	_RootWidget(new UI::Widget(nullptr))
 {
 	_RootWidget->SetSize(Vector2f(1280.0f, 1024.0f));
-	_RootWidget->ConnectDestroyingCallback(std::bind(&UI::UserInterface::_OnRootWidgetDestroying, this));
+	_RootWidget->ConnectDestroyingCallback(std::bind(&UI::UserInterface::_OnRootWidgetDestroying, this, std::placeholders::_1));
 }
 
 UI::UserInterface::~UserInterface(void)
@@ -102,7 +105,7 @@ void UI::UserInterface::SetCaptureWidget(UI::Widget * Widget)
 	assert(Widget != 0);
 	assert(_CaptureWidget == 0);
 	_CaptureWidget = Widget;
-	_CaptureWidgetDestroyingCallbackConnection = _CaptureWidget->ConnectDestroyingCallback(std::bind(&UI::UserInterface::_OnCaptureWidgetDestroying, this));
+	_CaptureWidgetDestroyingCallbackConnection = _CaptureWidget->ConnectDestroyingCallback(std::bind(&UI::UserInterface::_OnCaptureWidgetDestroying, this, std::placeholders::_1));
 }
 
 void UI::UserInterface::ReleaseCaptureWidget(void)
@@ -136,6 +139,84 @@ UI::Widget * UI::UserInterface::GetWidget(const std::string & Path)
 	return Root;
 }
 
+void UI::UserInterface::DispatchDestroyingEvent(UI::Event & DestroyingEvent)
+{
+	assert(DestroyingEvent.GetTarget() != nullptr);
+	
+	std::list< EventPropagationPathItem * > PropagationPath;
+	auto TargetPathItem(new EventPropagationPathItem());
+		
+	TargetPathItem->_Widget = DestroyingEvent.GetTarget();
+	TargetPathItem->_Phase = UI::Event::Phase::Target;
+	TargetPathItem->_Connection = TargetPathItem->_Widget->ConnectDestroyingCallback(std::bind(DestroyingPropagationPathItem, std::placeholders::_1, TargetPathItem));
+	PropagationPath.push_back(TargetPathItem);
+	
+	auto PathWidget(TargetPathItem->_Widget);
+	
+	while(PathWidget != nullptr)
+	{
+		auto CapturingPathItem(new EventPropagationPathItem());
+		
+		CapturingPathItem->_Widget = PathWidget;
+		CapturingPathItem->_Phase = UI::Event::Phase::Capturing;
+		CapturingPathItem->_Connection = PathWidget->ConnectDestroyingCallback(std::bind(DestroyingPropagationPathItem, std::placeholders::_1, CapturingPathItem));
+		PropagationPath.push_front(CapturingPathItem);
+	
+		auto BubblingPathItem(new EventPropagationPathItem());
+		
+		BubblingPathItem->_Widget = PathWidget;
+		BubblingPathItem->_Phase = UI::Event::Phase::Bubbling;
+		BubblingPathItem->_Connection = PathWidget->ConnectDestroyingCallback(std::bind(DestroyingPropagationPathItem, std::placeholders::_1, BubblingPathItem));
+		PropagationPath.push_back(BubblingPathItem);
+		PathWidget = PathWidget->_SupWidget;
+	}
+	for(auto PropagationPathItem : PropagationPath)
+	{
+		assert(PropagationPathItem != nullptr);
+		if(PropagationPathItem->_Widget != nullptr)
+		{
+			assert(PropagationPathItem->_Connection.IsValid() == true);
+			DestroyingEvent.SetCurrentTarget(PropagationPathItem->_Widget);
+			DestroyingEvent.SetPhase(PropagationPathItem->_Phase);
+			DestroyingEvent.ResumeCallbacks();
+			for(auto & Callback : PropagationPathItem->_Widget->_DestroyingEvent.CopyCallbacks())
+			{
+				Callback(DestroyingEvent);
+				if(DestroyingEvent.GetStopCallbacks() == true)
+				{
+					break;
+				}
+			}
+			if(DestroyingEvent.GetStopPropagation() == true)
+			{
+				break;
+			}
+		}
+		else
+		{
+			assert(PropagationPathItem->_Connection.IsValid() == false);
+		}
+	}
+	while(PropagationPath.empty() == false)
+	{
+		auto PropagationPathItem(PropagationPath.front());
+		
+		PropagationPath.pop_front();
+		assert(PropagationPathItem != nullptr);
+		if(PropagationPathItem->_Widget != nullptr)
+		{
+			assert(PropagationPathItem->_Connection.IsValid() == true);
+			PropagationPathItem->_Widget->DisconnectDestroyingCallback(PropagationPathItem->_Connection);
+			assert(PropagationPathItem->_Connection.IsValid() == false);
+		}
+		else
+		{
+			assert(PropagationPathItem->_Connection.IsValid() == false);
+		}
+		delete PropagationPathItem;
+	}
+}
+
 void UI::UserInterface::DispatchKeyEvent(UI::KeyEvent & KeyEvent)
 {
 	assert(KeyEvent.GetTarget() == nullptr);
@@ -151,7 +232,7 @@ void UI::UserInterface::DispatchKeyEvent(UI::KeyEvent & KeyEvent)
 		
 		CapturingItem->_Widget = PathWidget;
 		CapturingItem->_Phase = UI::Event::Phase::Capturing;
-		CapturingItem->_Connection = CapturingItem->_Widget->ConnectDestroyingCallback(std::bind(DestroyingPropagationPathItem, CapturingItem));
+		CapturingItem->_Connection = CapturingItem->_Widget->ConnectDestroyingCallback(std::bind(DestroyingPropagationPathItem, std::placeholders::_1, CapturingItem));
 		PropagationPath.push_back(CapturingItem);
 		PathWidget = PathWidget->_KeyFocus;
 	}
@@ -161,7 +242,7 @@ void UI::UserInterface::DispatchKeyEvent(UI::KeyEvent & KeyEvent)
 		
 		TargetItem->_Widget = PropagationPath.back()->_Widget;
 		TargetItem->_Phase = UI::Event::Phase::Target;
-		TargetItem->_Connection = TargetItem->_Widget->ConnectDestroyingCallback(std::bind(DestroyingPropagationPathItem, TargetItem));
+		TargetItem->_Connection = TargetItem->_Widget->ConnectDestroyingCallback(std::bind(DestroyingPropagationPathItem, std::placeholders::_1, TargetItem));
 		PropagationPath.push_back(TargetItem);
 		PathWidget = PropagationPath.back()->_Widget;
 		while(PathWidget != nullptr)
@@ -172,7 +253,7 @@ void UI::UserInterface::DispatchKeyEvent(UI::KeyEvent & KeyEvent)
 			
 			BubblingItem->_Widget = PathWidget;
 			BubblingItem->_Phase = UI::Event::Phase::Bubbling;
-			BubblingItem->_Connection = BubblingItem->_Widget->ConnectDestroyingCallback(std::bind(DestroyingPropagationPathItem, BubblingItem));
+			BubblingItem->_Connection = BubblingItem->_Widget->ConnectDestroyingCallback(std::bind(DestroyingPropagationPathItem, std::placeholders::_1, BubblingItem));
 			PropagationPath.push_back(BubblingItem);
 			PathWidget = PathWidget->_SupWidget;
 		}
@@ -257,7 +338,7 @@ void UI::UserInterface::DispatchMouseButtonEvent(UI::MouseButtonEvent & MouseBut
 					CapturingWidget->_Widget = PathWidget;
 					CapturingWidget->_Phase = UI::Event::Phase::Capturing;
 					CapturingWidget->_Position = Position;
-					CapturingWidget->_Connection = PathWidget->ConnectDestroyingCallback(std::bind(DestroyingPropagationPathItem, CapturingWidget));
+					CapturingWidget->_Connection = PathWidget->ConnectDestroyingCallback(std::bind(DestroyingPropagationPathItem, std::placeholders::_1, CapturingWidget));
 					PropagationPath.push_back(CapturingWidget);
 					
 					Widget * NextWidget(nullptr);
@@ -289,7 +370,7 @@ void UI::UserInterface::DispatchMouseButtonEvent(UI::MouseButtonEvent & MouseBut
 			CapturingWidget->_Widget = PathWidget;
 			CapturingWidget->_Phase = UI::Event::Phase::Capturing;
 			CapturingWidget->_Position = MouseButtonEvent.GetPosition() - GlobalPosition;
-			CapturingWidget->_Connection = PathWidget->ConnectDestroyingCallback(std::bind(DestroyingPropagationPathItem, CapturingWidget));
+			CapturingWidget->_Connection = PathWidget->ConnectDestroyingCallback(std::bind(DestroyingPropagationPathItem, std::placeholders::_1, CapturingWidget));
 			PropagationPath.push_front(CapturingWidget);
 			GlobalPosition -= PathWidget->GetPosition();
 			PathWidget = PathWidget->_SupWidget;
@@ -302,7 +383,7 @@ void UI::UserInterface::DispatchMouseButtonEvent(UI::MouseButtonEvent & MouseBut
 		TargetWidget->_Widget = PropagationPath.back()->_Widget;
 		TargetWidget->_Phase = UI::Event::Phase::Target;
 		TargetWidget->_Position = PropagationPath.back()->_Position;
-		TargetWidget->_Connection = PropagationPath.back()->_Widget->ConnectDestroyingCallback(std::bind(DestroyingPropagationPathItem, TargetWidget));
+		TargetWidget->_Connection = PropagationPath.back()->_Widget->ConnectDestroyingCallback(std::bind(DestroyingPropagationPathItem, std::placeholders::_1, TargetWidget));
 		PropagationPath.push_back(TargetWidget);
 		
 		auto Iterator(PropagationPath.end());
@@ -317,7 +398,7 @@ void UI::UserInterface::DispatchMouseButtonEvent(UI::MouseButtonEvent & MouseBut
 			BubblingWidget->_Widget = (*Iterator)->_Widget;
 			BubblingWidget->_Phase = UI::Event::Phase::Bubbling;
 			BubblingWidget->_Position = (*Iterator)->_Position;
-			BubblingWidget->_Connection = BubblingWidget->_Widget->ConnectDestroyingCallback(std::bind(DestroyingPropagationPathItem, BubblingWidget));
+			BubblingWidget->_Connection = BubblingWidget->_Widget->ConnectDestroyingCallback(std::bind(DestroyingPropagationPathItem, std::placeholders::_1, BubblingWidget));
 			PropagationPath.push_back(BubblingWidget);
 		} while(Iterator != PropagationPath.begin());
 	}
@@ -378,7 +459,7 @@ void UI::UserInterface::DispatchMouseEnterEvent(UI::Event & MouseEnterEvent)
 		
 	TargetPathItem->_Widget = MouseEnterEvent.GetTarget();
 	TargetPathItem->_Phase = UI::Event::Phase::Target;
-	TargetPathItem->_Connection = TargetPathItem->_Widget->ConnectDestroyingCallback(std::bind(DestroyingPropagationPathItem, TargetPathItem));
+	TargetPathItem->_Connection = TargetPathItem->_Widget->ConnectDestroyingCallback(std::bind(DestroyingPropagationPathItem, std::placeholders::_1, TargetPathItem));
 	PropagationPath.push_back(TargetPathItem);
 	
 	auto PathWidget(TargetPathItem->_Widget);
@@ -389,14 +470,14 @@ void UI::UserInterface::DispatchMouseEnterEvent(UI::Event & MouseEnterEvent)
 		
 		CapturingPathItem->_Widget = PathWidget;
 		CapturingPathItem->_Phase = UI::Event::Phase::Capturing;
-		CapturingPathItem->_Connection = PathWidget->ConnectDestroyingCallback(std::bind(DestroyingPropagationPathItem, CapturingPathItem));
+		CapturingPathItem->_Connection = PathWidget->ConnectDestroyingCallback(std::bind(DestroyingPropagationPathItem, std::placeholders::_1, CapturingPathItem));
 		PropagationPath.push_front(CapturingPathItem);
 	
 		auto BubblingPathItem(new EventPropagationPathItem());
 		
 		BubblingPathItem->_Widget = PathWidget;
 		BubblingPathItem->_Phase = UI::Event::Phase::Bubbling;
-		BubblingPathItem->_Connection = PathWidget->ConnectDestroyingCallback(std::bind(DestroyingPropagationPathItem, BubblingPathItem));
+		BubblingPathItem->_Connection = PathWidget->ConnectDestroyingCallback(std::bind(DestroyingPropagationPathItem, std::placeholders::_1, BubblingPathItem));
 		PropagationPath.push_back(BubblingPathItem);
 		PathWidget = PathWidget->_SupWidget;
 	}
@@ -456,7 +537,7 @@ void UI::UserInterface::DispatchMouseLeaveEvent(UI::Event & MouseLeaveEvent)
 		
 	TargetPathItem->_Widget = MouseLeaveEvent.GetTarget();
 	TargetPathItem->_Phase = UI::Event::Phase::Target;
-	TargetPathItem->_Connection = TargetPathItem->_Widget->ConnectDestroyingCallback(std::bind(DestroyingPropagationPathItem, TargetPathItem));
+	TargetPathItem->_Connection = TargetPathItem->_Widget->ConnectDestroyingCallback(std::bind(DestroyingPropagationPathItem, std::placeholders::_1, TargetPathItem));
 	PropagationPath.push_back(TargetPathItem);
 	
 	auto PathWidget(TargetPathItem->_Widget);
@@ -467,14 +548,14 @@ void UI::UserInterface::DispatchMouseLeaveEvent(UI::Event & MouseLeaveEvent)
 		
 		CapturingPathItem->_Widget = PathWidget;
 		CapturingPathItem->_Phase = UI::Event::Phase::Capturing;
-		CapturingPathItem->_Connection = PathWidget->ConnectDestroyingCallback(std::bind(DestroyingPropagationPathItem, CapturingPathItem));
+		CapturingPathItem->_Connection = PathWidget->ConnectDestroyingCallback(std::bind(DestroyingPropagationPathItem, std::placeholders::_1, CapturingPathItem));
 		PropagationPath.push_front(CapturingPathItem);
 	
 		auto BubblingPathItem(new EventPropagationPathItem());
 		
 		BubblingPathItem->_Widget = PathWidget;
 		BubblingPathItem->_Phase = UI::Event::Phase::Bubbling;
-		BubblingPathItem->_Connection = PathWidget->ConnectDestroyingCallback(std::bind(DestroyingPropagationPathItem, BubblingPathItem));
+		BubblingPathItem->_Connection = PathWidget->ConnectDestroyingCallback(std::bind(DestroyingPropagationPathItem, std::placeholders::_1, BubblingPathItem));
 		PropagationPath.push_back(BubblingPathItem);
 		PathWidget = PathWidget->_SupWidget;
 	}
@@ -565,7 +646,7 @@ void UI::UserInterface::DispatchMouseMoveEvent(UI::MouseMoveEvent & MouseMoveEve
 					BubblingItem->_Widget = CurrentWidget;
 					BubblingItem->_Phase = UI::Event::Phase::Bubbling;
 					BubblingItem->_Position = Position;
-					BubblingItem->_Connection = CurrentWidget->ConnectDestroyingCallback(std::bind(DestroyingPropagationPathItem, BubblingItem));
+					BubblingItem->_Connection = CurrentWidget->ConnectDestroyingCallback(std::bind(DestroyingPropagationPathItem, std::placeholders::_1, BubblingItem));
 					InsertIterator = PropagationPath.insert(InsertIterator, BubblingItem);
 					
 					// calculate next widget
@@ -597,7 +678,7 @@ void UI::UserInterface::DispatchMouseMoveEvent(UI::MouseMoveEvent & MouseMoveEve
 						TargetItem->_Widget = CurrentWidget;
 						TargetItem->_Phase = UI::Event::Phase::Target;
 						TargetItem->_Position = Position;
-						TargetItem->_Connection = CurrentWidget->ConnectDestroyingCallback(std::bind(DestroyingPropagationPathItem, TargetItem));
+						TargetItem->_Connection = CurrentWidget->ConnectDestroyingCallback(std::bind(DestroyingPropagationPathItem, std::placeholders::_1, TargetItem));
 						InsertIterator = PropagationPath.insert(InsertIterator, TargetItem);
 					}
 					
@@ -607,7 +688,7 @@ void UI::UserInterface::DispatchMouseMoveEvent(UI::MouseMoveEvent & MouseMoveEve
 					CapturingItem->_Widget = CurrentWidget;
 					CapturingItem->_Phase = UI::Event::Phase::Capturing;
 					CapturingItem->_Position = Position;
-					CapturingItem->_Connection = CurrentWidget->ConnectDestroyingCallback(std::bind(DestroyingPropagationPathItem, CapturingItem));
+					CapturingItem->_Connection = CurrentWidget->ConnectDestroyingCallback(std::bind(DestroyingPropagationPathItem, std::placeholders::_1, CapturingItem));
 					InsertIterator = PropagationPath.insert(InsertIterator, CapturingItem);
 					CurrentWidget = NextWidget;
 				}
@@ -636,7 +717,7 @@ void UI::UserInterface::DispatchMouseMoveEvent(UI::MouseMoveEvent & MouseMoveEve
 					TargetItem->_Widget = CurrentWidget;
 					TargetItem->_Phase = UI::Event::Phase::Target;
 					TargetItem->_Position = Position;
-					TargetItem->_Connection = CurrentWidget->ConnectDestroyingCallback(std::bind(DestroyingPropagationPathItem, TargetItem));
+					TargetItem->_Connection = CurrentWidget->ConnectDestroyingCallback(std::bind(DestroyingPropagationPathItem, std::placeholders::_1, TargetItem));
 					PropagationPath.push_back(TargetItem);
 				}
 				if(CurrentWidget->_SupWidget != nullptr)
@@ -657,7 +738,7 @@ void UI::UserInterface::DispatchMouseMoveEvent(UI::MouseMoveEvent & MouseMoveEve
 				CapturingItem->_Widget = CurrentWidget;
 				CapturingItem->_Phase = UI::Event::Phase::Capturing;
 				CapturingItem->_Position = Position;
-				CapturingItem->_Connection = CurrentWidget->ConnectDestroyingCallback(std::bind(DestroyingPropagationPathItem, CapturingItem));
+				CapturingItem->_Connection = CurrentWidget->ConnectDestroyingCallback(std::bind(DestroyingPropagationPathItem, std::placeholders::_1, CapturingItem));
 				PropagationPath.push_front(CapturingItem);
 				
 				// insert bubbling phase item
@@ -666,7 +747,7 @@ void UI::UserInterface::DispatchMouseMoveEvent(UI::MouseMoveEvent & MouseMoveEve
 				BubblingItem->_Widget = CurrentWidget;
 				BubblingItem->_Phase = UI::Event::Phase::Bubbling;
 				BubblingItem->_Position = Position;
-				BubblingItem->_Connection = CurrentWidget->ConnectDestroyingCallback(std::bind(DestroyingPropagationPathItem, BubblingItem));
+				BubblingItem->_Connection = CurrentWidget->ConnectDestroyingCallback(std::bind(DestroyingPropagationPathItem, std::placeholders::_1, BubblingItem));
 				PropagationPath.push_back(BubblingItem);
 				Position = Position + CurrentWidget->GetPosition();
 				CurrentWidget = CurrentWidget->_SupWidget;
@@ -730,7 +811,7 @@ void UI::UserInterface::DispatchPositionChangedEvent(UI::Event & PositionChanged
 		
 	TargetPathItem->_Widget = PositionChangedEvent.GetTarget();
 	TargetPathItem->_Phase = UI::Event::Phase::Target;
-	TargetPathItem->_Connection = TargetPathItem->_Widget->ConnectDestroyingCallback(std::bind(DestroyingPropagationPathItem, TargetPathItem));
+	TargetPathItem->_Connection = TargetPathItem->_Widget->ConnectDestroyingCallback(std::bind(DestroyingPropagationPathItem, std::placeholders::_1, TargetPathItem));
 	PropagationPath.push_back(TargetPathItem);
 	
 	auto PathWidget(TargetPathItem->_Widget);
@@ -741,14 +822,14 @@ void UI::UserInterface::DispatchPositionChangedEvent(UI::Event & PositionChanged
 		
 		CapturingPathItem->_Widget = PathWidget;
 		CapturingPathItem->_Phase = UI::Event::Phase::Capturing;
-		CapturingPathItem->_Connection = PathWidget->ConnectDestroyingCallback(std::bind(DestroyingPropagationPathItem, CapturingPathItem));
+		CapturingPathItem->_Connection = PathWidget->ConnectDestroyingCallback(std::bind(DestroyingPropagationPathItem, std::placeholders::_1, CapturingPathItem));
 		PropagationPath.push_front(CapturingPathItem);
 	
 		auto BubblingPathItem(new EventPropagationPathItem());
 		
 		BubblingPathItem->_Widget = PathWidget;
 		BubblingPathItem->_Phase = UI::Event::Phase::Bubbling;
-		BubblingPathItem->_Connection = PathWidget->ConnectDestroyingCallback(std::bind(DestroyingPropagationPathItem, BubblingPathItem));
+		BubblingPathItem->_Connection = PathWidget->ConnectDestroyingCallback(std::bind(DestroyingPropagationPathItem, std::placeholders::_1, BubblingPathItem));
 		PropagationPath.push_back(BubblingPathItem);
 		PathWidget = PathWidget->_SupWidget;
 	}
@@ -808,7 +889,7 @@ void UI::UserInterface::DispatchSizeChangedEvent(UI::Event & SizeChangedEvent)
 		
 	TargetPathItem->_Widget = SizeChangedEvent.GetTarget();
 	TargetPathItem->_Phase = UI::Event::Phase::Target;
-	TargetPathItem->_Connection = TargetPathItem->_Widget->ConnectDestroyingCallback(std::bind(DestroyingPropagationPathItem, TargetPathItem));
+	TargetPathItem->_Connection = TargetPathItem->_Widget->ConnectDestroyingCallback(std::bind(DestroyingPropagationPathItem, std::placeholders::_1, TargetPathItem));
 	PropagationPath.push_back(TargetPathItem);
 	
 	auto PathWidget(TargetPathItem->_Widget);
@@ -819,14 +900,14 @@ void UI::UserInterface::DispatchSizeChangedEvent(UI::Event & SizeChangedEvent)
 		
 		CapturingPathItem->_Widget = PathWidget;
 		CapturingPathItem->_Phase = UI::Event::Phase::Capturing;
-		CapturingPathItem->_Connection = PathWidget->ConnectDestroyingCallback(std::bind(DestroyingPropagationPathItem, CapturingPathItem));
+		CapturingPathItem->_Connection = PathWidget->ConnectDestroyingCallback(std::bind(DestroyingPropagationPathItem, std::placeholders::_1, CapturingPathItem));
 		PropagationPath.push_front(CapturingPathItem);
 	
 		auto BubblingPathItem(new EventPropagationPathItem());
 		
 		BubblingPathItem->_Widget = PathWidget;
 		BubblingPathItem->_Phase = UI::Event::Phase::Bubbling;
-		BubblingPathItem->_Connection = PathWidget->ConnectDestroyingCallback(std::bind(DestroyingPropagationPathItem, BubblingPathItem));
+		BubblingPathItem->_Connection = PathWidget->ConnectDestroyingCallback(std::bind(DestroyingPropagationPathItem, std::placeholders::_1, BubblingPathItem));
 		PropagationPath.push_back(BubblingPathItem);
 		PathWidget = PathWidget->_SupWidget;
 	}
@@ -904,20 +985,31 @@ void UI::UserInterface::Update(float RealTimeSeconds, float GameTimeSeconds)
 	}
 }
 
-void UI::UserInterface::_OnCaptureWidgetDestroying(void)
+void UI::UserInterface::_OnCaptureWidgetDestroying(UI::Event & DestroyingEvent)
 {
-	assert(_CaptureWidget != nullptr);
-	assert(_CaptureWidgetDestroyingCallbackConnection.IsValid() == true);
-	_CaptureWidget->DisconnectDestroyingCallback(_CaptureWidgetDestroyingCallbackConnection);
-	_CaptureWidget = nullptr;
+	if(DestroyingEvent.GetPhase() == UI::Event::Phase::Target)
+	{
+		assert(_CaptureWidget != nullptr);
+		assert(_CaptureWidgetDestroyingCallbackConnection.IsValid() == true);
+		_CaptureWidget->DisconnectDestroyingCallback(_CaptureWidgetDestroyingCallbackConnection);
+		_CaptureWidget = nullptr;
+	}
 }
 
-void UI::UserInterface::_OnHoverWidgetDestroying(void)
+void UI::UserInterface::_OnHoverWidgetDestroying(UI::Event & DestroyingEvent)
 {
-	_HoverWidget = nullptr;
+	if(DestroyingEvent.GetPhase() == UI::Event::Phase::Target)
+	{
+		assert(_HoverWidget != nullptr);
+		_HoverWidget = nullptr;
+	}
 }
 
-void UI::UserInterface::_OnRootWidgetDestroying(void)
+void UI::UserInterface::_OnRootWidgetDestroying(UI::Event & DestroyingEvent)
 {
-	_RootWidget = nullptr;
+	if(DestroyingEvent.GetPhase() == UI::Event::Phase::Target)
+	{
+		assert(_RootWidget != nullptr);
+		_RootWidget = nullptr;
+	}
 }

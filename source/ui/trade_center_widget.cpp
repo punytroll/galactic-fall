@@ -133,7 +133,7 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Reference< Plan
 	_SelectedTradeCenterAssetClassListWidget(nullptr)
 {
 	SetSize(Vector2f(650.0f, 300.0f));
-	ConnectDestroyingCallback(std::bind(&UI::TradeCenterWidget::_OnDestroying, this));
+	ConnectDestroyingCallback(std::bind(&UI::TradeCenterWidget::_OnDestroying, this, std::placeholders::_1));
 	ConnectKeyCallback(std::bind(&UI::TradeCenterWidget::_OnKey, this, std::placeholders::_1));
 	ConnectUpdatingCallback(std::bind(&UI::TradeCenterWidget::_OnUpdating, this, std::placeholders::_1, std::placeholders::_2));
 	
@@ -530,9 +530,12 @@ void UI::TradeCenterWidget::_OnBuyButtonUpdating(UI::Button * BuyButton, float R
 	BuyButton->SetEnabled((_SelectedTradeCenterAssetClassListWidget != 0) && (_Character->GetCredits() >= _SelectedTradeCenterAssetClassListWidget->GetPlanetAssetClass()->GetPrice()) && (_Character->GetShip() != 0) && (_Character->GetShip()->GetCargoHold()->GetSpace() >= g_ObjectFactory->GetSpaceRequirement(_SelectedTradeCenterAssetClassListWidget->GetPlanetAssetClass()->GetAssetClass()->GetObjectTypeIdentifier(), _SelectedTradeCenterAssetClassListWidget->GetPlanetAssetClass()->GetAssetClass()->GetObjectClassIdentifier())));
 }
 
-void UI::TradeCenterWidget::_OnDestroying(void)
+void UI::TradeCenterWidget::_OnDestroying(UI::Event & DestroyingEvent)
 {
-	_ClearAssetClassViewDisplay();
+	if(DestroyingEvent.GetPhase() == UI::Event::Phase::Target)
+	{
+		_ClearAssetClassViewDisplay();
+	}
 }
 
 void UI::TradeCenterWidget::_OnDestroyInScene(Graphics::Node * Node)

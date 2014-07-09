@@ -80,7 +80,7 @@ namespace UI
 		void SetEnabled(bool Enabled);
 		void SetVisible(bool Visible);
 		// connect and disconnect events
-		Connection ConnectDestroyingCallback(std::function< void (void) > Callback);
+		Connection ConnectDestroyingCallback(std::function< void (UI::Event &) > Callback);
 		Connection ConnectKeyCallback(std::function< void (UI::KeyEvent &) > Callback);
 		Connection ConnectMouseButtonCallback(std::function< void (UI::MouseButtonEvent &) > Callback);
 		Connection ConnectMouseEnterCallback(std::function< void (UI::Event &) > Callback);
@@ -123,7 +123,7 @@ namespace UI
 		Widget * _SupWidget;
 		bool _Visible;
 		// events
-		::Event< void > _DestroyingEvent;
+		::Event< void, UI::Event & > _DestroyingEvent;
 		::Event< void, UI::KeyEvent & > _KeyEvent;
 		::Event< void, UI::MouseButtonEvent & > _MouseButtonEvent;
 		::Event< void, UI::Event & > _MouseEnterEvent;

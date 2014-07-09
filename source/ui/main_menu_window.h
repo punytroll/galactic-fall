@@ -53,16 +53,16 @@ namespace UI
 		void _OnKey(UI::KeyEvent & KeyEvent);
 		void _OnLoadGameButtonClicked(void);
 		bool _OnLoadGameDialogClosing(UI::Dialog::ClosingReason ClosingReason);
-		void _OnLoadGameDialogDestroying(void);
+		void _OnLoadGameDialogDestroying(UI::Event & DestroyingEvent);
 		void _OnLoadScenarioButtonClicked(void);
 		bool _OnLoadScenarioDialogClosing(UI::Dialog::ClosingReason ClosingReason);
-		void _OnLoadScenarioDialogDestroying(void);
+		void _OnLoadScenarioDialogDestroying(UI::Event & DestroyingEvent);
 		void _OnNewGameButtonClicked(void);
 		void _OnQuitButtonClicked(void);
 		void _OnResumeGameButtonClicked(void);
 		void _OnSaveGameButtonClicked(void);
 		bool _OnSaveGameDialogClosing(UI::Dialog::ClosingReason ClosingReasong);
-		void _OnSaveGameDialogDestroying(void);
+		void _OnSaveGameDialogDestroying(UI::Event & DestroyingEvent);
 		// member variables
 		bool _DestroyOnESCAPEKey;
 		bool _DestroyOnLoadGameDialogDestroy;

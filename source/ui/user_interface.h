@@ -40,6 +40,7 @@ namespace UI
 		UserInterface(void);
 		virtual ~UserInterface(void);
 		void Draw(void) const;
+		void DispatchDestroyingEvent(UI::Event & DestroyingEvent);
 		void DispatchKeyEvent(UI::KeyEvent & KeyEvent);
 		void DispatchMouseButtonEvent(UI::MouseButtonEvent & MouseButtonEvent);
 		void DispatchMouseEnterEvent(UI::Event & MouseEnterEvent);
@@ -57,9 +58,9 @@ namespace UI
 		UI::Widget * GetCaptureWidget(void);
 	private:
 		// callbacks
-		void _OnCaptureWidgetDestroying(void);
-		void _OnHoverWidgetDestroying(void);
-		void _OnRootWidgetDestroying(void);
+		void _OnCaptureWidgetDestroying(UI::Event & DestroyingEvent);
+		void _OnHoverWidgetDestroying(UI::Event & DestroyingEvent);
+		void _OnRootWidgetDestroying(UI::Event & DestroyingEvent);
 		// member variables
 		UI::Widget * _CaptureWidget;
 		Connection _CaptureWidgetDestroyingCallbackConnection;
