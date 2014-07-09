@@ -75,8 +75,8 @@ namespace UI
 		UI::Widget * m_Tracker;
 		UI::ScrollBar::Alignment m_Alignment;
 		float m_CurrentPosition;
-		float m_MinimumPosition;
 		float m_MaximumPosition;
+		float m_MinimumPosition;
 		float m_StepSize;
 		// events
 		::Event< void > _ScrollPositionChangedEvent;

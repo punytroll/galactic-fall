@@ -30,7 +30,9 @@ static const float g_ScrollBarTrackerBorderWidth = 4.0f;
 UI::ScrollBar::ScrollBar(Widget * SupWidget, UI::ScrollBar::Alignment Alignment) :
 	Widget(SupWidget),
 	m_Alignment(UI::ScrollBar::Alignment::UNDEFINED),
-	m_CurrentPosition(0.0f)
+	m_CurrentPosition(0.0f),
+	m_MaximumPosition(0.0f),
+	m_MinimumPosition(0.0f)
 {
 	ConnectSizeChangedCallback(std::bind(&ScrollBar::OnSizeChanged, this, std::placeholders::_1));
 	SetBackgroundColor(Color(0.23f, 0.23f, 0.23f, 1.0f));
