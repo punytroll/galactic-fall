@@ -86,7 +86,7 @@ namespace UI
 		Connection ConnectMouseEnterCallback(std::function< void (UI::Event &) > Callback);
 		Connection ConnectMouseLeaveCallback(std::function< void (UI::Event &) > Callback);
 		Connection ConnectMouseMoveCallback(std::function< void (UI::MouseMoveEvent &) > Callback);
-		Connection ConnectPositionChangedCallback(std::function< void (void) > Callback);
+		Connection ConnectPositionChangedCallback(std::function< void (UI::Event &) > Callback);
 		Connection ConnectSizeChangedCallback(std::function< void (UI::Event &) > Callback);
 		Connection ConnectUpdatingCallback(std::function< void (float, float) > Callback);
 		void DisconnectDestroyingCallback(Connection & Connection);
@@ -129,7 +129,7 @@ namespace UI
 		::Event< void, UI::Event & > _MouseEnterEvent;
 		::Event< void, UI::Event & > _MouseLeaveEvent;
 		::Event< void, UI::MouseMoveEvent & > _MouseMoveEvent;
-		::Event< void > _PositionChangedEvent;
+		::Event< void, UI::Event & > _PositionChangedEvent;
 		::Event< void, UI::Event & > _SizeChangedEvent;
 		::Event< void, float, float > _UpdatingEvent;
 		// static manager properties

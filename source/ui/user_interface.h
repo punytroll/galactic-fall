@@ -45,6 +45,7 @@ namespace UI
 		void DispatchMouseEnterEvent(UI::Event & MouseEnterEvent);
 		void DispatchMouseLeaveEvent(UI::Event & MouseLeaveEvent);
 		void DispatchMouseMoveEvent(UI::MouseMoveEvent & MouseMoveEvent);
+		void DispatchPositionChangedEvent(UI::Event & PositionChangedEvent);
 		void DispatchSizeChangedEvent(UI::Event & SizeChangedEvent);
 		void Update(float RealTimeSeconds, float GameTimeSeconds);
 		// setters

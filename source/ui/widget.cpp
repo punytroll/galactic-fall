@@ -157,7 +157,11 @@ void UI::Widget::SetPosition(const Vector2f & Position)
 	if(Position != _Position)
 	{
 		_Position = Position;
-		_PositionChangedEvent();
+		
+		UI::Event PositionChangedEvent;
+		
+		PositionChangedEvent.SetTarget(this);
+		g_UserInterface->DispatchPositionChangedEvent(PositionChangedEvent);
 	}
 }
 
@@ -321,12 +325,12 @@ Connection UI::Widget::ConnectMouseMoveCallback(std::function< void (UI::MouseMo
 	return _MouseMoveEvent.Connect(Callback);
 }
 
-Connection UI::Widget::ConnectPositionChangedCallback(std::function< void (void) > Callback)
+Connection UI::Widget::ConnectPositionChangedCallback(std::function< void (UI::Event &) > Callback)
 {
 	return _PositionChangedEvent.Connect(Callback);
 }
 
-Connection UI::Widget::ConnectSizeChangedCallback(std::function< void (UI::Event & ) > Callback)
+Connection UI::Widget::ConnectSizeChangedCallback(std::function< void (UI::Event &) > Callback)
 {
 	return _SizeChangedEvent.Connect(Callback);
 }
