@@ -56,7 +56,7 @@ namespace UI
 		void _OnAssetClassSizeLabelUpdating(UI::Label * AssetClassSizeLabel, float RealTimeSeconds, float GameTimeSeconds);
 		void _OnBuyButtonClicked(void);
 		void _OnBuyButtonUpdating(UI::Button * BuyButton, float RealTimeSeconds, float GameTimeSeconds);
-		void _OnDestroying(void);
+		void _OnDestroying(UI::Event & DestroyingEvent);
 		void _OnDestroyInScene(Graphics::Node * Node);
 		void _OnKey(UI::KeyEvent & KeyEvent);
 		void _OnSellButtonClicked(void);

@@ -42,7 +42,7 @@ namespace UI
 		void _ClearView(void);
 		void _SetupView(void);
 		// callback handlers
-		void _OnDestroying(void);
+		void _OnDestroying(UI::Event & DestroyingEvent);
 		void _OnDestroyInScene(Graphics::Node * Node);
 		void _OnDraw(void);
 		void _OnSizeChanged(UI::Event & SizeChangedEvent);

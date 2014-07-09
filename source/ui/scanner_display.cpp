@@ -35,13 +35,14 @@
 #include "../star.h"
 #include "../system.h"
 #include "../visualizations.h"
+#include "event.h"
 #include "scanner_display.h"
 
 UI::ScannerDisplay::ScannerDisplay(UI::Widget * SupWidget) :
 	UI::ViewDisplay(SupWidget),
 	_Target(nullptr)
 {
-	ConnectDestroyingCallback(std::bind(&UI::ScannerDisplay::_OnDestroying, this));
+	ConnectDestroyingCallback(std::bind(&UI::ScannerDisplay::_OnDestroying, this, std::placeholders::_1));
 	ConnectUpdatingCallback(std::bind(&UI::ScannerDisplay::_OnUpdating, this, std::placeholders::_1, std::placeholders::_2));
 }
 
@@ -102,9 +103,12 @@ void UI::ScannerDisplay::_Clear(void)
 	}
 }
 
-void UI::ScannerDisplay::_OnDestroying(void)
+void UI::ScannerDisplay::_OnDestroying(UI::Event & DestroyingEvent)
 {
-	_Clear();
+	if(DestroyingEvent.GetPhase() == UI::Event::Phase::Target)
+	{
+		_Clear();
+	}
 }
 
 void UI::ScannerDisplay::_OnDestroyInScene(Graphics::Node * Node)

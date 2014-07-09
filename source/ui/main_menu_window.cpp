@@ -160,7 +160,7 @@ void UI::MainMenuWindow::_OnLoadGameButtonClicked(void)
 		_LoadGameDialog = new UI::LoadGameDialog(GetRootWidget());
 		_LoadGameDialog->GrabKeyFocus();
 		_LoadGameDialog->ConnectClosingCallback(std::bind(&UI::MainMenuWindow::_OnLoadGameDialogClosing, this, std::placeholders::_1));
-		_LoadGameDialog->ConnectDestroyingCallback(std::bind(&UI::MainMenuWindow::_OnLoadGameDialogDestroying, this));
+		_LoadGameDialog->ConnectDestroyingCallback(std::bind(&UI::MainMenuWindow::_OnLoadGameDialogDestroying, this, std::placeholders::_1));
 		
 		std::string DirectoryPath(getenv("HOME"));
 		
@@ -227,12 +227,15 @@ bool UI::MainMenuWindow::_OnLoadGameDialogClosing(UI::Dialog::ClosingReason Clos
 	return false;
 }
 
-void UI::MainMenuWindow::_OnLoadGameDialogDestroying(void)
+void UI::MainMenuWindow::_OnLoadGameDialogDestroying(UI::Event & DestroyingEvent)
 {
-	_LoadGameDialog = 0;
-	if(_DestroyOnLoadGameDialogDestroy == true)
+	if(DestroyingEvent.GetPhase() == UI::Event::Phase::Target)
 	{
-		Destroy();
+		_LoadGameDialog = 0;
+		if(_DestroyOnLoadGameDialogDestroy == true)
+		{
+			Destroy();
+		}
 	}
 }
 
@@ -243,7 +246,7 @@ void UI::MainMenuWindow::_OnLoadScenarioButtonClicked(void)
 		_LoadScenarioDialog = new UI::LoadScenarioDialog(GetRootWidget(), _ScenarioManager);
 		_LoadScenarioDialog->GrabKeyFocus();
 		_LoadScenarioDialog->ConnectClosingCallback(std::bind(&UI::MainMenuWindow::_OnLoadScenarioDialogClosing, this, std::placeholders::_1));
-		_LoadScenarioDialog->ConnectDestroyingCallback(std::bind(&UI::MainMenuWindow::_OnLoadScenarioDialogDestroying, this));
+		_LoadScenarioDialog->ConnectDestroyingCallback(std::bind(&UI::MainMenuWindow::_OnLoadScenarioDialogDestroying, this, std::placeholders::_1));
 		_DestroyOnLoadScenarioDialogDestroy = false;
 	}
 }
@@ -289,12 +292,15 @@ bool UI::MainMenuWindow::_OnLoadScenarioDialogClosing(UI::Dialog::ClosingReason 
 	return false;
 }
 
-void UI::MainMenuWindow::_OnLoadScenarioDialogDestroying(void)
+void UI::MainMenuWindow::_OnLoadScenarioDialogDestroying(UI::Event & DestroyingEvent)
 {
-	_LoadScenarioDialog = 0;
-	if(_DestroyOnLoadScenarioDialogDestroy == true)
+	if(DestroyingEvent.GetPhase() == UI::Event::Phase::Target)
 	{
-		Destroy();
+		_LoadScenarioDialog = 0;
+		if(_DestroyOnLoadScenarioDialogDestroy == true)
+		{
+			Destroy();
+		}
 	}
 }
 
@@ -315,7 +321,7 @@ void UI::MainMenuWindow::_OnSaveGameButtonClicked(void)
 		_SaveGameDialog = new UI::SaveGameDialog(GetRootWidget());
 		_SaveGameDialog->GrabKeyFocus();
 		_SaveGameDialog->ConnectClosingCallback(std::bind(&UI::MainMenuWindow::_OnSaveGameDialogClosing, this, std::placeholders::_1));
-		_SaveGameDialog->ConnectDestroyingCallback(std::bind(&UI::MainMenuWindow::_OnSaveGameDialogDestroying, this));
+		_SaveGameDialog->ConnectDestroyingCallback(std::bind(&UI::MainMenuWindow::_OnSaveGameDialogDestroying, this, std::placeholders::_1));
 		
 		std::string DirectoryPath(getenv("HOME"));
 		
@@ -374,12 +380,15 @@ bool UI::MainMenuWindow::_OnSaveGameDialogClosing(UI::Dialog::ClosingReason Clos
 	return false;
 }
 
-void UI::MainMenuWindow::_OnSaveGameDialogDestroying(void)
+void UI::MainMenuWindow::_OnSaveGameDialogDestroying(UI::Event & DestroyingEvent)
 {
-	_SaveGameDialog = 0;
-	if(_DestroyOnSaveGameDialogDestroy == true)
+	if(DestroyingEvent.GetPhase() == UI::Event::Phase::Target)
 	{
-		Destroy();
+		_SaveGameDialog = 0;
+		if(_DestroyOnSaveGameDialogDestroy == true)
+		{
+			Destroy();
+		}
 	}
 }
 

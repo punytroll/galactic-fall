@@ -39,13 +39,13 @@ namespace UI
 		HangarWidget(UI::Widget * SupWidget, Reference< Planet > Planet, Reference< Character > Character);
 	private:
 		// callbacks
-		void _OnDestroying(void);
+		void _OnDestroying(UI::Event & DestroyingEvent);
 		void _OnEnergyStateProgressBarUpdating(UI::ProgressBar * EnergyStateProgressBar, float RealTimeSeconds, float GameTimeSeconds);
 		void _OnFuelStateProgressBarUpdating(UI::ProgressBar * FuelStateProgressBar, float RealTimeSeconds, float GameTimeSeconds);
 		void _OnHullStateProgressBarUpdating(UI::ProgressBar * HullStateProgressBar, float RealTimeSeconds, float GameTimeSeconds);
 		void _OnOutfitButtonClicked(void);
 		void _OnOutfitButtonUpdating(UI::Button * OutfitButton, float RealTimeSeconds, float GameTimeSeconds);
-		void _OnOutfitShipDialogDestroying(void);
+		void _OnOutfitShipDialogDestroying(UI::Event & DestroyingEvent);
 		void _OnRechargeButtonClicked(void);
 		void _OnRechargeButtonUpdating(UI::Button * RechargeButton, float RealTimeSeconds, float GameTimeSeconds);
 		void _OnRefuelButtonClicked(void);

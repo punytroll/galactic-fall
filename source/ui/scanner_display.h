@@ -43,7 +43,7 @@ namespace UI
 	private:
 		// modifiers
 		void _Clear(void);
-		void _OnDestroying(void);
+		void _OnDestroying(UI::Event & DestroyingEvent);
 		void _OnDestroyInScene(Graphics::Node * Node);
 		void _OnUpdating(float RealTimeSeconds, float GameTimeSeconds);
 		void _OnTargetDestroying(void);

@@ -253,7 +253,10 @@ void UI::Widget::RaiseSubWidget(UI::Widget * SubWidget)
 void UI::Widget::Destroy(void)
 {
 	// fire destroying event before aything is actually destroyed
-	_DestroyingEvent();
+	UI::Event DestroyingEvent;
+	
+	DestroyingEvent.SetTarget(this);
+	g_UserInterface->DispatchDestroyingEvent(DestroyingEvent);
 	// now destroy
 	// first the sub widgets, they will remove themselves from this widget
 	while(_SubWidgets.size() > 0)
@@ -295,7 +298,7 @@ void UI::Widget::_UnsetHoverWidget(void)
 	}
 }
 
-Connection UI::Widget::ConnectDestroyingCallback(std::function< void (void) > Callback)
+Connection UI::Widget::ConnectDestroyingCallback(std::function< void (UI::Event &) > Callback)
 {
 	return _DestroyingEvent.Connect(Callback);
 }
