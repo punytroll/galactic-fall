@@ -721,6 +721,84 @@ void UI::UserInterface::DispatchMouseMoveEvent(UI::MouseMoveEvent & MouseMoveEve
 	}
 }
 
+void UI::UserInterface::DispatchPositionChangedEvent(UI::Event & PositionChangedEvent)
+{
+	assert(PositionChangedEvent.GetTarget() != nullptr);
+	
+	std::list< EventPropagationPathItem * > PropagationPath;
+	auto TargetPathItem(new EventPropagationPathItem());
+		
+	TargetPathItem->_Widget = PositionChangedEvent.GetTarget();
+	TargetPathItem->_Phase = UI::Event::Phase::Target;
+	TargetPathItem->_Connection = TargetPathItem->_Widget->ConnectDestroyingCallback(std::bind(DestroyingPropagationPathItem, TargetPathItem));
+	PropagationPath.push_back(TargetPathItem);
+	
+	auto PathWidget(TargetPathItem->_Widget);
+	
+	while(PathWidget != nullptr)
+	{
+		auto CapturingPathItem(new EventPropagationPathItem());
+		
+		CapturingPathItem->_Widget = PathWidget;
+		CapturingPathItem->_Phase = UI::Event::Phase::Capturing;
+		CapturingPathItem->_Connection = PathWidget->ConnectDestroyingCallback(std::bind(DestroyingPropagationPathItem, CapturingPathItem));
+		PropagationPath.push_front(CapturingPathItem);
+	
+		auto BubblingPathItem(new EventPropagationPathItem());
+		
+		BubblingPathItem->_Widget = PathWidget;
+		BubblingPathItem->_Phase = UI::Event::Phase::Bubbling;
+		BubblingPathItem->_Connection = PathWidget->ConnectDestroyingCallback(std::bind(DestroyingPropagationPathItem, BubblingPathItem));
+		PropagationPath.push_back(BubblingPathItem);
+		PathWidget = PathWidget->_SupWidget;
+	}
+	for(auto PropagationPathItem : PropagationPath)
+	{
+		assert(PropagationPathItem != nullptr);
+		if(PropagationPathItem->_Widget != nullptr)
+		{
+			assert(PropagationPathItem->_Connection.IsValid() == true);
+			PositionChangedEvent.SetCurrentTarget(PropagationPathItem->_Widget);
+			PositionChangedEvent.SetPhase(PropagationPathItem->_Phase);
+			PositionChangedEvent.ResumeCallbacks();
+			for(auto & Callback : PropagationPathItem->_Widget->_PositionChangedEvent.CopyCallbacks())
+			{
+				Callback(PositionChangedEvent);
+				if(PositionChangedEvent.GetStopCallbacks() == true)
+				{
+					break;
+				}
+			}
+			if(PositionChangedEvent.GetStopPropagation() == true)
+			{
+				break;
+			}
+		}
+		else
+		{
+			assert(PropagationPathItem->_Connection.IsValid() == false);
+		}
+	}
+	while(PropagationPath.empty() == false)
+	{
+		auto PropagationPathItem(PropagationPath.front());
+		
+		PropagationPath.pop_front();
+		assert(PropagationPathItem != nullptr);
+		if(PropagationPathItem->_Widget != nullptr)
+		{
+			assert(PropagationPathItem->_Connection.IsValid() == true);
+			PropagationPathItem->_Widget->DisconnectDestroyingCallback(PropagationPathItem->_Connection);
+			assert(PropagationPathItem->_Connection.IsValid() == false);
+		}
+		else
+		{
+			assert(PropagationPathItem->_Connection.IsValid() == false);
+		}
+		delete PropagationPathItem;
+	}
+}
+
 void UI::UserInterface::DispatchSizeChangedEvent(UI::Event & SizeChangedEvent)
 {
 	assert(SizeChangedEvent.GetTarget() != nullptr);
