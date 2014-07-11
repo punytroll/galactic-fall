@@ -27,8 +27,8 @@ Galaxy::Galaxy(void)
 	// initialize object aspects
 	AddAspectName();
 	AddAspectObjectContainer();
-	GetAspectObjectContainer()->SetOnAddedCallback(std::bind(&Galaxy::OnAdded, this, std::placeholders::_1));
-	GetAspectObjectContainer()->SetOnRemovedCallback(std::bind(&Galaxy::OnRemoved, this, std::placeholders::_1));
+	GetAspectObjectContainer()->ConnectContentAddedCallback(std::bind(&Galaxy::OnAdded, this, std::placeholders::_1));
+	GetAspectObjectContainer()->ConnectContentRemovedCallback(std::bind(&Galaxy::OnRemoved, this, std::placeholders::_1));
 }
 
 Faction * Galaxy::GetFaction(const std::string & Identifier)

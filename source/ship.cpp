@@ -79,8 +79,8 @@ Ship::Ship(void) :
 	// initialize object aspects
 	AddAspectName();
 	AddAspectObjectContainer();
-	GetAspectObjectContainer()->SetOnAddedCallback(std::bind(&Ship::OnAdded, this, std::placeholders::_1));
-	GetAspectObjectContainer()->SetOnRemovedCallback(std::bind(&Ship::OnRemoved, this, std::placeholders::_1));
+	GetAspectObjectContainer()->ConnectContentAddedCallback(std::bind(&Ship::OnAdded, this, std::placeholders::_1));
+	GetAspectObjectContainer()->ConnectContentRemovedCallback(std::bind(&Ship::OnRemoved, this, std::placeholders::_1));
 	AddAspectOutfitting();
 	AddAspectPhysical();
 	AddAspectPosition();

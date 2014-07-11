@@ -23,6 +23,7 @@
 #include <functional>
 #include <set>
 
+#include "events.h"
 #include "type_definitions.h"
 
 class Object;
@@ -42,14 +43,16 @@ public:
 	void AddContent(Object * Content);
 	void Destroy(void);
 	void RemoveContent(Object * Content);
-	// setters
-	void SetOnAddedCallback(std::function< void (Object *) > OnAddedCallback);
-	void SetOnRemovedCallback(std::function< void (Object *) > OnRemovedCallback);
+	// events
+	Connection ConnectContentAddedCallback(std::function< void (Object *) > Callback);
+	Connection ConnectContentRemovedCallback(std::function< void (Object *) > Callback);
+	void DisconnectContentAddedCallback(Connection & Connection);
+	void DisconnectContentRemovedCallback(Connection & Connection);
 private:
 	std::set< Object * > _Content;
 	Object * _Object;
-	std::function< void (Object *) > _OnAddedCallback;
-	std::function< void (Object *) > _OnRemovedCallback;
+	::Event< void, Object * > _ContentAddedEvent;
+	::Event< void, Object * > _ContentRemovedEvent;
 };
 
 inline const std::set< Object * > & ObjectAspectObjectContainer::GetContent(void) const
@@ -65,16 +68,6 @@ inline Object * ObjectAspectObjectContainer::GetObject(void)
 inline const Object * ObjectAspectObjectContainer::GetObject(void) const
 {
 	return _Object;
-}
-
-inline void ObjectAspectObjectContainer::SetOnAddedCallback(std::function< void (Object *) > OnAddedCallback)
-{
-	_OnAddedCallback = OnAddedCallback;
-}
-
-inline void ObjectAspectObjectContainer::SetOnRemovedCallback(std::function< void (Object *) > OnRemovedCallback)
-{
-	_OnRemovedCallback = OnRemovedCallback;
 }
 
 #endif
