@@ -26,6 +26,7 @@
 #include "../graphics/gl.h"
 #include "../math.h"
 #include "event.h"
+#include "sub_widget_event.h"
 #include "user_interface.h"
 #include "widget.h"
 
@@ -226,6 +227,12 @@ void UI::Widget::AddSubWidget(UI::Widget * SubWidget)
 	assert(SubWidget->_SupWidget == nullptr);
 	SubWidget->_SupWidget = this;
 	_SubWidgets.push_front(SubWidget);
+	
+	UI::SubWidgetEvent SubWidgetAddedEvent;
+	
+	SubWidgetAddedEvent.SetTarget(this);
+	SubWidgetAddedEvent.SetSubWidget(SubWidget);
+	g_UserInterface->DispatchSubWidgetAddedEvent(SubWidgetAddedEvent);
 }
 
 void UI::Widget::RemoveSubWidget(UI::Widget * SubWidget)
@@ -241,6 +248,12 @@ void UI::Widget::RemoveSubWidget(UI::Widget * SubWidget)
 	{
 		_HoverWidget = nullptr;
 	}
+	
+	UI::SubWidgetEvent SubWidgetRemovedEvent;
+	
+	SubWidgetRemovedEvent.SetTarget(this);
+	SubWidgetRemovedEvent.SetSubWidget(SubWidget);
+	g_UserInterface->DispatchSubWidgetRemovedEvent(SubWidgetRemovedEvent);
 }
 
 void UI::Widget::RaiseSubWidget(UI::Widget * SubWidget)
@@ -338,6 +351,16 @@ Connection UI::Widget::ConnectSizeChangedCallback(std::function< void (UI::Event
 	return _SizeChangedEvent.Connect(Callback);
 }
 
+Connection UI::Widget::ConnectSubWidgetAddedCallback(std::function< void (UI::SubWidgetEvent &) > Callback)
+{
+	return _SubWidgetAddedEvent.Connect(Callback);
+}
+
+Connection UI::Widget::ConnectSubWidgetRemovedCallback(std::function< void (UI::SubWidgetEvent &) > Callback)
+{
+	return _SubWidgetRemovedEvent.Connect(Callback);
+}
+
 Connection UI::Widget::ConnectUpdatingCallback(std::function< void (float, float) > Callback)
 {
 	return _UpdatingEvent.Connect(Callback);
@@ -381,6 +404,16 @@ void UI::Widget::DisconnectPositionChangedCallback(Connection & Connection)
 void UI::Widget::DisconnectSizeChangedCallback(Connection & Connection)
 {
 	_SizeChangedEvent.Disconnect(Connection);
+}
+
+void UI::Widget::DisconnectSubWidgetAddedCallback(Connection & Connection)
+{
+	_SubWidgetAddedEvent.Disconnect(Connection);
+}
+
+void UI::Widget::DisconnectSubWidgetRemovedCallback(Connection & Connection)
+{
+	_SubWidgetRemovedEvent.Disconnect(Connection);
 }
 
 void UI::Widget::DisconnectUpdatingCallback(Connection & Connection)

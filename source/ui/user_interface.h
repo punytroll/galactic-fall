@@ -32,6 +32,7 @@ namespace UI
 	class KeyEvent;
 	class MouseButtonEvent;
 	class MouseMoveEvent;
+	class SubWidgetEvent;
 	class Widget;
 	
 	class UserInterface
@@ -48,6 +49,8 @@ namespace UI
 		void DispatchMouseMoveEvent(UI::MouseMoveEvent & MouseMoveEvent);
 		void DispatchPositionChangedEvent(UI::Event & PositionChangedEvent);
 		void DispatchSizeChangedEvent(UI::Event & SizeChangedEvent);
+		void DispatchSubWidgetAddedEvent(UI::SubWidgetEvent & SubWidgetAddedEvent);
+		void DispatchSubWidgetRemovedEvent(UI::SubWidgetEvent & SubWidgetRemovedEvent);
 		void Update(float RealTimeSeconds, float GameTimeSeconds);
 		// setters
 		void SetCaptureWidget(UI::Widget * Widget);
