@@ -37,6 +37,7 @@ namespace UI
 	class KeyEvent;
 	class MouseButtonEvent;
 	class MouseMoveEvent;
+	class SubWidgetEvent;
 	class UserInterface;
 	
 	class Widget
@@ -88,6 +89,8 @@ namespace UI
 		Connection ConnectMouseMoveCallback(std::function< void (UI::MouseMoveEvent &) > Callback);
 		Connection ConnectPositionChangedCallback(std::function< void (UI::Event &) > Callback);
 		Connection ConnectSizeChangedCallback(std::function< void (UI::Event &) > Callback);
+		Connection ConnectSubWidgetAddedCallback(std::function< void (UI::SubWidgetEvent &) > Callback);
+		Connection ConnectSubWidgetRemovedCallback(std::function< void (UI::SubWidgetEvent &) > Callback);
 		Connection ConnectUpdatingCallback(std::function< void (float, float) > Callback);
 		void DisconnectDestroyingCallback(Connection & Connection);
 		void DisconnectKeyCallback(Connection & Connection);
@@ -97,6 +100,8 @@ namespace UI
 		void DisconnectMouseMoveCallback(Connection & Connection);
 		void DisconnectPositionChangedCallback(Connection & Connection);
 		void DisconnectSizeChangedCallback(Connection & Connection);
+		void DisconnectSubWidgetAddedCallback(Connection & Connection);
+		void DisconnectSubWidgetRemovedCallback(Connection & Connection);
 		void DisconnectUpdatingCallback(Connection & Connection);
 		// static manager functions
 		static std::list< Widget * > & GetDestroyedWidgets(void);
@@ -131,6 +136,8 @@ namespace UI
 		::Event< void, UI::MouseMoveEvent & > _MouseMoveEvent;
 		::Event< void, UI::Event & > _PositionChangedEvent;
 		::Event< void, UI::Event & > _SizeChangedEvent;
+		::Event< void, UI::SubWidgetEvent & > _SubWidgetAddedEvent;
+		::Event< void, UI::SubWidgetEvent & > _SubWidgetRemovedEvent;
 		::Event< void, float, float > _UpdatingEvent;
 		// static manager properties
 		static std::list< Widget * > _DestroyedWidgets;
