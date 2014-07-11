@@ -61,8 +61,8 @@ System::System(const std::string & Identifier) :
 	// initialize object aspects
 	AddAspectName();
 	AddAspectObjectContainer();
-	GetAspectObjectContainer()->SetOnAddedCallback(std::bind(&System::_OnAdded, this, std::placeholders::_1));
-	GetAspectObjectContainer()->SetOnRemovedCallback(std::bind(&System::_OnRemoved, this, std::placeholders::_1));
+	GetAspectObjectContainer()->ConnectContentAddedCallback(std::bind(&System::_OnAdded, this, std::placeholders::_1));
+	GetAspectObjectContainer()->ConnectContentRemovedCallback(std::bind(&System::_OnRemoved, this, std::placeholders::_1));
 	AddAspectPosition();
 	AddAspectVisualization();
 }

@@ -48,8 +48,8 @@ GoalMind::GoalMind(void) :
 {
 	// initialize object aspects
 	AddAspectObjectContainer();
-	GetAspectObjectContainer()->SetOnAddedCallback(std::bind(&GoalMind::OnAdded, this, std::placeholders::_1));
-	GetAspectObjectContainer()->SetOnRemovedCallback(std::bind(&GoalMind::OnRemoved, this, std::placeholders::_1));
+	GetAspectObjectContainer()->ConnectContentAddedCallback(std::bind(&GoalMind::OnAdded, this, std::placeholders::_1));
+	GetAspectObjectContainer()->ConnectContentRemovedCallback(std::bind(&GoalMind::OnRemoved, this, std::placeholders::_1));
 }
 
 GoalMind::~GoalMind(void)
