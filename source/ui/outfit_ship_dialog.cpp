@@ -33,6 +33,7 @@
 #include "../weapon_class.h"
 #include "key_event.h"
 #include "label.h"
+#include "list_box_item.h"
 #include "mouse_button_event.h"
 #include "outfit_ship_dialog.h"
 #include "scroll_box.h"
@@ -40,7 +41,7 @@
 
 namespace UI
 {
-	class AccessoryListItem : public UI::Widget
+	class AccessoryListItem : public UI::ListBoxItem
 	{
 	public:
 		AccessoryListItem(UI::Widget * SupWidget, Object * Accessory);
@@ -49,19 +50,15 @@ namespace UI
 		// getters
 		Object * GetAccessory(void);
 		// setters
-		void SetSelected(bool Selected);
 	private:
 		// callbacks
-		void _OnMouseEnter(void);
-		void _OnMouseLeave(void);
 		void _OnAccessoryDestroying(void);
 		// member variables
 		Object * _Accessory;
 		Connection _AccessoryDestroyingConnection;
-		bool _Selected;
 	};
 	
-	class SlotListItem : public UI::Widget
+	class SlotListItem : public UI::ListBoxItem
 	{
 	public:
 		SlotListItem(UI::Widget * SupWidget, Slot * Slot);
@@ -70,14 +67,10 @@ namespace UI
 		// getters
 		Slot * GetSlot(void);
 		// setters
-		void SetSelected(bool Selected);
 	private:
 		// callbacks
-		void _OnMouseEnter(void);
-		void _OnMouseLeave(void);
 		void _OnSlotDestroying(void);
 		// member variables
-		bool _Selected;
 		Slot * _Slot;
 		Connection _SlotDestroyingConnection;
 		UI::Label * _TypeOrWeaponLabel;
@@ -85,13 +78,10 @@ namespace UI
 }
 
 UI::AccessoryListItem::AccessoryListItem(UI::Widget * SupWidget, Object * Accessory) :
-	UI::Widget(SupWidget),
-	_Accessory(Accessory),
-	_Selected(false)
+	UI::ListBoxItem(SupWidget),
+	_Accessory(Accessory)
 {
 	assert(_Accessory != nullptr);
-	ConnectMouseEnterCallback(std::bind(&UI::AccessoryListItem::_OnMouseEnter, this));
-	ConnectMouseLeaveCallback(std::bind(&UI::AccessoryListItem::_OnMouseLeave, this));
 	_AccessoryDestroyingConnection = _Accessory->ConnectDestroyingCallback(std::bind(&UI::AccessoryListItem::_OnAccessoryDestroying, this));
 	// set to arbitrary design size
 	SetSize(Vector2f(100.0f, 100.0f));
@@ -135,35 +125,6 @@ Object * UI::AccessoryListItem::GetAccessory(void)
 	return _Accessory;
 }
 
-void UI::AccessoryListItem::SetSelected(bool Selected)
-{
-	_Selected = Selected;
-	if(_Selected == false)
-	{
-		UnsetBackgroundColor();
-	}
-	else
-	{
-		SetBackgroundColor(Color(0.4f, 0.1f, 0.1f, 1.0f));
-	}
-}
-
-void UI::AccessoryListItem::_OnMouseEnter(void)
-{
-	if(_Selected == false)
-	{
-		SetBackgroundColor(Color(0.3f, 0.2f, 0.2f, 1.0f));
-	}
-}
-
-void UI::AccessoryListItem::_OnMouseLeave(void)
-{
-	if(_Selected == false)
-	{
-		UnsetBackgroundColor();
-	}
-}
-
 void UI::AccessoryListItem::_OnAccessoryDestroying(void)
 {
 	assert(_Accessory != nullptr);
@@ -174,13 +135,10 @@ void UI::AccessoryListItem::_OnAccessoryDestroying(void)
 }
 
 UI::SlotListItem::SlotListItem(UI::Widget * SupWidget, Slot * Slot) :
-	UI::Widget(SupWidget),
-	_Selected(false),
+	UI::ListBoxItem(SupWidget),
 	_Slot(Slot)
 {
 	assert(_Slot != nullptr);
-	ConnectMouseEnterCallback(std::bind(&UI::SlotListItem::_OnMouseEnter, this));
-	ConnectMouseLeaveCallback(std::bind(&UI::SlotListItem::_OnMouseLeave, this));
 	_SlotDestroyingConnection = _Slot->ConnectDestroyingCallback(std::bind(&UI::SlotListItem::_OnSlotDestroying, this));
 	// set to arbitrary design size
 	SetSize(Vector2f(100.0f, 100.0f));
@@ -243,35 +201,6 @@ void UI::SlotListItem::Update(void)
 Slot * UI::SlotListItem::GetSlot(void)
 {
 	return _Slot;
-}
-
-void UI::SlotListItem::SetSelected(bool Selected)
-{
-	_Selected = Selected;
-	if(_Selected == false)
-	{
-		UnsetBackgroundColor();
-	}
-	else
-	{
-		SetBackgroundColor(Color(0.4f, 0.1f, 0.1f, 1.0f));
-	}
-}
-
-void UI::SlotListItem::_OnMouseEnter(void)
-{
-	if(_Selected == false)
-	{
-		SetBackgroundColor(Color(0.3f, 0.2f, 0.2f, 1.0f));
-	}
-}
-
-void UI::SlotListItem::_OnMouseLeave(void)
-{
-	if(_Selected == false)
-	{
-		UnsetBackgroundColor();
-	}
 }
 
 void UI::SlotListItem::_OnSlotDestroying(void)
