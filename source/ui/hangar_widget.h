@@ -30,6 +30,7 @@ namespace UI
 {
 	class Button;
 	class Label;
+	class LoadShipWindow;
 	class OutfitShipDialog;
 	class ProgressBar;
 	
@@ -43,6 +44,9 @@ namespace UI
 		void _OnEnergyStateProgressBarUpdating(UI::ProgressBar * EnergyStateProgressBar, float RealTimeSeconds, float GameTimeSeconds);
 		void _OnFuelStateProgressBarUpdating(UI::ProgressBar * FuelStateProgressBar, float RealTimeSeconds, float GameTimeSeconds);
 		void _OnHullStateProgressBarUpdating(UI::ProgressBar * HullStateProgressBar, float RealTimeSeconds, float GameTimeSeconds);
+		void _OnLoadButtonClicked(void);
+		void _OnLoadButtonUpdating(UI::Button * LoadButton, float RealTimeSeconds, float GameTimeSeconds);
+		void _OnLoadShipWindowDestroying(UI::Event & DestroyingEvent);
 		void _OnOutfitButtonClicked(void);
 		void _OnOutfitButtonUpdating(UI::Button * OutfitButton, float RealTimeSeconds, float GameTimeSeconds);
 		void _OnOutfitShipDialogDestroying(UI::Event & DestroyingEvent);
@@ -56,6 +60,7 @@ namespace UI
 		void _OnTakeOffButtonUpdating(UI::Button * TakeOffButton, float RealTimeSeconds, float GameTimeSeconds);
 		// member variables
 		Reference< Character > _Character;
+		UI::LoadShipWindow * _LoadShipWindow;
 		UI::OutfitShipDialog * _OutfitShipDialog;
 		Reference< Planet > _Planet;
 	};

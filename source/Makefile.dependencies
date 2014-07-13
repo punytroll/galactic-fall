@@ -695,6 +695,7 @@ object_aspect_object_container_cpp = \
 
 object_aspect_object_container_h = \
 	object_aspect_object_container.h \
+	$(events_h) \
 	$(type_definitions_h)
 
 object_aspect_outfitting_cpp = \
@@ -1087,6 +1088,7 @@ ui_hangar_widget_cpp = \
 	$(string_cast_h) \
 	$(ui_event_h) \
 	$(ui_hangar_widget_h) \
+	$(ui_load_ship_window_h) \
 	$(ui_outfit_ship_dialog_h) \
 	$(ui_progress_bar_h) \
 	$(ui_text_button_h)
@@ -1165,6 +1167,29 @@ ui_load_scenario_dialog_h = \
 	ui/load_scenario_dialog.h \
 	$(timeout_notifications_h) \
 	$(ui_dialog_h)
+
+ui_load_ship_window_cpp = \
+	ui/load_ship_window.cpp \
+	$(color_h) \
+	$(hangar_h) \
+	$(object_aspect_name_h) \
+	$(object_aspect_object_container_h) \
+	$(object_aspect_physical_h) \
+	$(ship_h) \
+	$(storage_h) \
+	$(ui_event_h) \
+	$(ui_key_event_h) \
+	$(ui_label_h) \
+	$(ui_load_ship_window_h) \
+	$(ui_mouse_button_event_h) \
+	$(ui_scroll_box_h) \
+	$(ui_sub_widget_event_h) \
+	$(ui_text_button_h)
+
+ui_load_ship_window_h = \
+	ui/load_ship_window.h \
+	$(connection_h) \
+	$(ui_window_h)
 
 ui_main_menu_window_cpp = \
 	ui/main_menu_window.cpp \
