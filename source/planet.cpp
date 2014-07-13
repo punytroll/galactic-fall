@@ -218,9 +218,11 @@ void Planet::TakeOff(Ship * Ship, Character * Character)
 	assert(Hangar != nullptr);
 	assert(Hangar->GetAspectObjectContainer() != nullptr);
 	Hangar->GetAspectObjectContainer()->RemoveContent(Ship);
-	assert(Hangar->GetAspectObjectContainer()->GetContent().size() == 0);
-	Hangar->Destroy();
-	delete Hangar;
+	if(Hangar->GetAspectObjectContainer()->GetContent().size() == 0)
+	{
+		Hangar->Destroy();
+		delete Hangar;
+	}
 	assert(GetContainer() != nullptr);
 	assert(GetContainer()->GetAspectObjectContainer() != nullptr);
 	GetContainer()->GetAspectObjectContainer()->AddContent(Ship);
