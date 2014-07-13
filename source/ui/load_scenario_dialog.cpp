@@ -24,6 +24,7 @@
 #include "../scenario_manager.h"
 #include "key_event.h"
 #include "label.h"
+#include "list_box_item.h"
 #include "load_scenario_dialog.h"
 #include "mouse_button_event.h"
 #include "scroll_box.h"
@@ -31,32 +32,22 @@
 
 namespace UI
 {
-	class ScenarioItem : public UI::Widget
+	class ScenarioItem : public UI::ListBoxItem
 	{
 	public:
 		ScenarioItem(UI::Widget * SupWidget, Scenario * Scenario);
 		// getters
 		Scenario * GetScenario(void);
-		// setters
-		void SetSelected(bool Selected);
 	private:
-		// callbacks
-		void _OnMouseEnter(void);
-		void _OnMouseLeave(void);
 		// member variables
 		Scenario * _Scenario;
-		bool _Selected;
 	};
 }
 
 UI::ScenarioItem::ScenarioItem(UI::Widget * SupWidget, Scenario * Scenario) :
-	UI::Widget(SupWidget),
-	_Scenario(Scenario),
-	_Selected(false)
+	UI::ListBoxItem(SupWidget),
+	_Scenario(Scenario)
 {
-	ConnectMouseEnterCallback(std::bind(&UI::ScenarioItem::_OnMouseEnter, this));
-	ConnectMouseLeaveCallback(std::bind(&UI::ScenarioItem::_OnMouseLeave, this));
-	
 	UI::Label * CaptionLabel(new UI::Label(this, Scenario->GetName()));
 	
 	CaptionLabel->SetPosition(Vector2f(5.0f, 0.0f));
@@ -70,35 +61,6 @@ UI::ScenarioItem::ScenarioItem(UI::Widget * SupWidget, Scenario * Scenario) :
 Scenario * UI::ScenarioItem::GetScenario(void)
 {
 	return _Scenario;
-}
-
-void UI::ScenarioItem::SetSelected(bool Selected)
-{
-	_Selected = Selected;
-	if(_Selected == false)
-	{
-		UnsetBackgroundColor();
-	}
-	else
-	{
-		SetBackgroundColor(Color(0.4f, 0.1f, 0.1f, 1.0f));
-	}
-}
-
-void UI::ScenarioItem::_OnMouseEnter(void)
-{
-	if(_Selected == false)
-	{
-		SetBackgroundColor(Color(0.3f, 0.2f, 0.2f, 1.0f));
-	}
-}
-
-void UI::ScenarioItem::_OnMouseLeave(void)
-{
-	if(_Selected == false)
-	{
-		UnsetBackgroundColor();
-	}
 }
 
 UI::LoadScenarioDialog::LoadScenarioDialog(UI::Widget * SupWidget, ScenarioManager * ScenarioManager) :

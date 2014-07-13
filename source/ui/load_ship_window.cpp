@@ -30,6 +30,7 @@
 #include "event.h"
 #include "key_event.h"
 #include "label.h"
+#include "list_box_item.h"
 #include "load_ship_window.h"
 #include "mouse_button_event.h"
 #include "scroll_box.h"
@@ -38,17 +39,14 @@
 
 namespace UI
 {
-	class ObjectListItem : public UI::Widget
+	class ObjectListItem : public UI::ListBoxItem
 	{
 	public:
 		ObjectListItem(Object * Object) :
-			UI::Widget(),
-			_Object(Object),
-			_Selected(false)
+			UI::ListBoxItem(),
+			_Object(Object)
 		{
 			assert(_Object != nullptr);
-			ConnectMouseEnterCallback(std::bind(&UI::ObjectListItem::_OnMouseEnter, this, std::placeholders::_1));
-			ConnectMouseLeaveCallback(std::bind(&UI::ObjectListItem::_OnMouseLeave, this, std::placeholders::_1));
 			ConnectDestroyingCallback(std::bind(&UI::ObjectListItem::_OnDestroying, this, std::placeholders::_1));
 			_ObjectDestroyingConnection = _Object->ConnectDestroyingCallback(std::bind(&UI::ObjectListItem::_OnObjectDestroying, this));
 			// set design size
@@ -68,37 +66,8 @@ namespace UI
 		{
 			return _Object;
 		}
-
-		void SetSelected(bool Selected)
-		{
-			_Selected = Selected;
-			if(_Selected == false)
-			{
-				UnsetBackgroundColor();
-			}
-			else
-			{
-				SetBackgroundColor(Color(0.4f, 0.1f, 0.1f, 1.0f));
-			}
-		}
 	private:
 		// event handlers
-		void _OnMouseEnter(UI::Event & MouseEnterEvent)
-		{
-			if((MouseEnterEvent.GetPhase() == UI::Event::Phase::Target) && (_Selected == false))
-			{
-				SetBackgroundColor(Color(0.3f, 0.2f, 0.2f, 1.0f));
-			}
-		}
-		
-		void _OnMouseLeave(UI::Event & MouseLeaveEvent)
-		{
-			if((MouseLeaveEvent.GetPhase() == UI::Event::Phase::Target) && (_Selected == false))
-			{
-				UnsetBackgroundColor();
-			}
-		}
-		
 		void _OnDestroying(UI::Event & DestroyingEvent)
 		{
 			if(DestroyingEvent.GetPhase() == UI::Event::Phase::Target)
@@ -118,7 +87,6 @@ namespace UI
 		// member variables
 		Object * _Object;
 		Connection _ObjectDestroyingConnection;
-		bool _Selected;
 	};
 }
 

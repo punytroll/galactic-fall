@@ -1131,6 +1131,16 @@ ui_label_h = \
 	ui/label.h \
 	$(ui_widget_h)
 
+ui_list_box_item_cpp = \
+	ui/list_box_item.cpp \
+	$(color_h) \
+	$(ui_event_h) \
+	$(ui_list_box_item_h)
+
+ui_list_box_item_h = \
+	ui/list_box_item.h \
+	$(ui_widget_h)
+
 ui_load_game_dialog_cpp = \
 	ui/load_game_dialog.cpp \
 	$(color_h) \
@@ -1139,6 +1149,7 @@ ui_load_game_dialog_cpp = \
 	$(real_time_h) \
 	$(ui_key_event_h) \
 	$(ui_label_h) \
+	$(ui_list_box_item_h) \
 	$(ui_load_game_dialog_h) \
 	$(ui_mouse_button_event_h) \
 	$(ui_scroll_box_h) \
@@ -1158,6 +1169,7 @@ ui_load_scenario_dialog_cpp = \
 	$(scenario_manager_h) \
 	$(ui_key_event_h) \
 	$(ui_label_h) \
+	$(ui_list_box_item_h) \
 	$(ui_load_scenario_dialog_h) \
 	$(ui_mouse_button_event_h) \
 	$(ui_scroll_box_h) \
@@ -1180,6 +1192,7 @@ ui_load_ship_window_cpp = \
 	$(ui_event_h) \
 	$(ui_key_event_h) \
 	$(ui_label_h) \
+	$(ui_list_box_item_h) \
 	$(ui_load_ship_window_h) \
 	$(ui_mouse_button_event_h) \
 	$(ui_scroll_box_h) \
@@ -1310,6 +1323,7 @@ ui_outfit_ship_dialog_cpp = \
 	$(storage_h) \
 	$(ui_key_event_h) \
 	$(ui_label_h) \
+	$(ui_list_box_item_h) \
 	$(ui_mouse_button_event_h) \
 	$(ui_outfit_ship_dialog_h) \
 	$(ui_scroll_box_h) \
@@ -1356,6 +1370,7 @@ ui_save_game_dialog_cpp = \
 	$(real_time_h) \
 	$(ui_key_event_h) \
 	$(ui_label_h) \
+	$(ui_list_box_item_h) \
 	$(ui_mouse_button_event_h) \
 	$(ui_save_game_dialog_h) \
 	$(ui_scroll_box_h) \

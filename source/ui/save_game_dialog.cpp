@@ -27,6 +27,7 @@
 #include "../real_time.h"
 #include "key_event.h"
 #include "label.h"
+#include "list_box_item.h"
 #include "mouse_button_event.h"
 #include "save_game_dialog.h"
 #include "scroll_box.h"
@@ -34,30 +35,21 @@
 
 namespace UI
 {
-	class DirectoryEntryItem : public UI::Widget
+	class DirectoryEntryItem : public UI::ListBoxItem
 	{
 	public:
 		DirectoryEntryItem(UI::Widget * SupWidget, const std::string & Caption);
 		// getters
 		const std::string & GetCaption(void) const;
-		// setters
-		void SetSelected(bool Selected);
 	private:
-		// callbacks
-		void _OnMouseEnter(void);
-		void _OnMouseLeave(void);
 		// member variables
-		bool _Selected;
 		UI::Label * _CaptionLabel;
 	};
 }
 
 UI::DirectoryEntryItem::DirectoryEntryItem(UI::Widget * SupWidget, const std::string & Caption) :
-	UI::Widget(SupWidget),
-	_Selected(false)
+	UI::ListBoxItem(SupWidget)
 {
-	ConnectMouseEnterCallback(std::bind(&UI::DirectoryEntryItem::_OnMouseEnter, this));
-	ConnectMouseLeaveCallback(std::bind(&UI::DirectoryEntryItem::_OnMouseLeave, this));
 	_CaptionLabel = new UI::Label(this, Caption);
 	_CaptionLabel->SetPosition(Vector2f(5.0f, 0.0f));
 	_CaptionLabel->SetSize(Vector2f(GetSize()[0] - 10.0f, 20.0f));
@@ -70,35 +62,6 @@ UI::DirectoryEntryItem::DirectoryEntryItem(UI::Widget * SupWidget, const std::st
 const std::string & UI::DirectoryEntryItem::GetCaption(void) const
 {
 	return _CaptionLabel->GetText();
-}
-
-void UI::DirectoryEntryItem::SetSelected(bool Selected)
-{
-	_Selected = Selected;
-	if(_Selected == false)
-	{
-		UnsetBackgroundColor();
-	}
-	else
-	{
-		SetBackgroundColor(Color(0.4f, 0.1f, 0.1f, 1.0f));
-	}
-}
-
-void UI::DirectoryEntryItem::_OnMouseEnter(void)
-{
-	if(_Selected == false)
-	{
-		SetBackgroundColor(Color(0.3f, 0.2f, 0.2f, 1.0f));
-	}
-}
-
-void UI::DirectoryEntryItem::_OnMouseLeave(void)
-{
-	if(_Selected == false)
-	{
-		UnsetBackgroundColor();
-	}
 }
 
 UI::SaveGameDialog::SaveGameDialog(UI::Widget * SupWidget) :

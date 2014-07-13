@@ -27,6 +27,7 @@
 #include "../real_time.h"
 #include "key_event.h"
 #include "label.h"
+#include "list_box_item.h"
 #include "load_game_dialog.h"
 #include "mouse_button_event.h"
 #include "scroll_box.h"
@@ -35,20 +36,14 @@
 // this class is declared here, so we can use it, but defined in save_game_dialog.cpp
 namespace UI
 {
-	class DirectoryEntryItem : public UI::Widget
+	class DirectoryEntryItem : public UI::ListBoxItem
 	{
 	public:
 		DirectoryEntryItem(UI::Widget * SupWidget, const std::string & Caption);
 		// getters
 		const std::string & GetCaption(void) const;
-		// setters
-		void SetSelected(bool Selected);
 	private:
-		// callbacks
-		void _OnMouseEnter(void);
-		void _OnMouseLeave(void);
 		// member variables
-		bool _Selected;
 		UI::Label * _CaptionLabel;
 	};
 }
