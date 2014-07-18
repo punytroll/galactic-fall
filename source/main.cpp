@@ -1453,10 +1453,8 @@ void TakeScreenShot(void)
 
 void PrerenderViews(void)
 {
-	for(std::vector< Graphics::View * >::iterator PrerenderedViewIterator = g_PrerenderedViews.begin(); PrerenderedViewIterator != g_PrerenderedViews.end(); ++PrerenderedViewIterator)
+	for(auto PrerenderedView : g_PrerenderedViews)
 	{
-		Graphics::View * PrerenderedView(*PrerenderedViewIterator);
-		
 		PrerenderedView->Render();
 	}
 }
@@ -1496,7 +1494,7 @@ void GameFrame(void)
 	double PhysicsTimeBegin(RealTime::Get());
 	float Seconds(CalculateTime());
 	
-	assert(g_GraphicsEngine != 0);
+	assert(g_GraphicsEngine != nullptr);
 	g_GraphicsEngine->Update(Seconds);
 	if(g_Galaxy != nullptr)
 	{
@@ -1514,7 +1512,7 @@ void GameFrame(void)
 		{
 			OnOutputLeaveSystem(OldObservedSystem);
 			g_CurrentSystem = NewObservedSystem;
-			assert(g_CurrentSystem != 0);
+			assert(g_CurrentSystem != nullptr);
 			OnOutputEnterSystem(NewObservedSystem);
 			PopulateSystem(NewObservedSystem);
 		}
