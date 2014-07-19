@@ -35,13 +35,12 @@
 #include "../graphics/texture_manager.h"
 #include "../graphics/texture_render_target.h"
 #include "../graphics/view.h"
+#include "../hangar.h"
 #include "../object_aspect_accessory.h"
 #include "../object_aspect_name.h"
 #include "../object_aspect_object_container.h"
 #include "../object_factory.h"
 #include "../planet.h"
-#include "../ship.h"
-#include "../storage.h"
 #include "../string_cast.h"
 #include "../visualization_prototype.h"
 #include "../visualizations.h"
@@ -63,13 +62,13 @@ namespace UI
 	class TradeCenterAssetClassListWidget : public UI::ListBoxItem
 	{
 	public:
-		TradeCenterAssetClassListWidget(UI::Widget * SupWidget, PlanetAssetClass * PlanetAssetClass, Ship * Ship) :
+		TradeCenterAssetClassListWidget(UI::Widget * SupWidget, PlanetAssetClass * PlanetAssetClass, Hangar * Hangar) :
 			UI::ListBoxItem(SupWidget),
 			_PlanetAssetClass(PlanetAssetClass),
-			_Ship(Ship)
+			_Hangar(Hangar)
 		{
-			assert(_Ship != nullptr);
-			_ShipDestroyingConnection = _Ship->ConnectDestroyingCallback(std::bind(&UI::TradeCenterAssetClassListWidget::_OnShipDestroying, this));
+			assert(_Hangar != nullptr);
+			_HangarDestroyingConnection = _Hangar->ConnectDestroyingCallback(std::bind(&UI::TradeCenterAssetClassListWidget::_OnHangarDestroying, this));
 			ConnectDestroyingCallback(std::bind(&UI::TradeCenterAssetClassListWidget::_OnDestroying, this, std::placeholders::_1));
 			SetSize(Vector2f(200.0f, 20.0f));
 			
@@ -80,15 +79,15 @@ namespace UI
 			NameLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 			NameLabel->SetAnchorRight(true);
 			
-			auto CharacterAmountLabel(new UI::Label(this, ""));
+			auto HangarAmountLabel(new UI::Label(this, ""));
 			
-			CharacterAmountLabel->SetPosition(Vector2f(50.0f, 0.0f));
-			CharacterAmountLabel->SetSize(Vector2f(40.0f, 20.0f));
-			CharacterAmountLabel->SetHorizontalAlignment(UI::Label::ALIGN_RIGHT);
-			CharacterAmountLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
-			CharacterAmountLabel->SetAnchorLeft(false);
-			CharacterAmountLabel->SetAnchorRight(true);
-			CharacterAmountLabel->ConnectUpdatingCallback(std::bind(&UI::TradeCenterAssetClassListWidget::_OnCharacterAmountLabelUpdating, this, std::placeholders::_1, std::placeholders::_2, CharacterAmountLabel));
+			HangarAmountLabel->SetPosition(Vector2f(50.0f, 0.0f));
+			HangarAmountLabel->SetSize(Vector2f(40.0f, 20.0f));
+			HangarAmountLabel->SetHorizontalAlignment(UI::Label::ALIGN_RIGHT);
+			HangarAmountLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
+			HangarAmountLabel->SetAnchorLeft(false);
+			HangarAmountLabel->SetAnchorRight(true);
+			HangarAmountLabel->ConnectUpdatingCallback(std::bind(&UI::TradeCenterAssetClassListWidget::_OnHangarAmountLabelUpdating, this, std::placeholders::_1, std::placeholders::_2, HangarAmountLabel));
 			
 			auto SizeRequirementLabel(new UI::Label(this, to_string_cast(0.001 * g_ObjectFactory->GetSpaceRequirement(PlanetAssetClass->GetAssetClass()->GetObjectTypeIdentifier(), PlanetAssetClass->GetAssetClass()->GetObjectClassIdentifier()), 3)));
 			
@@ -115,18 +114,17 @@ namespace UI
 		}
 	private:
 		// event handlers
-		void _OnCharacterAmountLabelUpdating(float RealTimeSeconds, float GameTimeSeconds, UI::Label * CharacterAmountLabel)
+		void _OnHangarAmountLabelUpdating(float RealTimeSeconds, float GameTimeSeconds, UI::Label * HangarAmountLabel)
 		{
-			if(_Ship != nullptr)
+			if(_Hangar != nullptr)
 			{
-				assert(_Ship->GetCargoHold() != nullptr);
-				assert(_Ship->GetCargoHold()->GetAspectObjectContainer() != nullptr);
-				CharacterAmountLabel->SetVisible(true);
-				CharacterAmountLabel->SetText(to_string_cast(_Ship->GetCargoHold()->GetAspectObjectContainer()->GetAmount(_PlanetAssetClass->GetAssetClass()->GetObjectTypeIdentifier(), _PlanetAssetClass->GetAssetClass()->GetObjectClassIdentifier())));
+				assert(_Hangar->GetAspectObjectContainer() != nullptr);
+				HangarAmountLabel->SetVisible(true);
+				HangarAmountLabel->SetText(to_string_cast(_Hangar->GetAspectObjectContainer()->GetAmount(_PlanetAssetClass->GetAssetClass()->GetObjectTypeIdentifier(), _PlanetAssetClass->GetAssetClass()->GetObjectClassIdentifier())));
 			}
 			else
 			{
-				CharacterAmountLabel->SetVisible(false);
+				HangarAmountLabel->SetVisible(false);
 			}
 		}
 		
@@ -134,24 +132,24 @@ namespace UI
 		{
 			if(DestroyingEvent.GetPhase() == UI::Event::Phase::Target)
 			{
-				if(_Ship != nullptr)
+				if(_Hangar != nullptr)
 				{
-					assert(_ShipDestroyingConnection.IsValid() == true);
-					_Ship->DisconnectDestroyingCallback(_ShipDestroyingConnection);
-					_Ship = nullptr;
+					assert(_HangarDestroyingConnection.IsValid() == true);
+					_Hangar->DisconnectDestroyingCallback(_HangarDestroyingConnection);
+					_Hangar = nullptr;
 				}
-				assert(_ShipDestroyingConnection.IsValid() == false);
+				assert(_HangarDestroyingConnection.IsValid() == false);
 			}
 		}
 		
-		void _OnShipDestroying(void)
+		void _OnHangarDestroying(void)
 		{
-			_Ship = nullptr;
+			_Hangar = nullptr;
 		}
 		
 		PlanetAssetClass * _PlanetAssetClass;
-		Ship * _Ship;
-		Connection _ShipDestroyingConnection;
+		Hangar * _Hangar;
+		Connection _HangarDestroyingConnection;
 	};
 }
 
@@ -237,20 +235,21 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet
 	_AssetClassScrollBox->SetAnchorBottom(true);
 	_AssetClassScrollBox->ConnectMouseButtonCallback(std::bind(&UI::TradeCenterWidget::_OnAssetClassScrollBoxMouseButton, this, std::placeholders::_1));
 	
-	const std::vector< PlanetAssetClass * > & PlanetAssetClasses(Planet->GetPlanetAssetClasses());
-	std::vector< PlanetAssetClass * >::const_iterator PlanetAssetClassIterator(PlanetAssetClasses.begin());
+	auto Hangar(_Planet->GetHangar(_Character));
+	
+	assert(Hangar != nullptr);
+	
 	float Top(5.0f);
 	
-	while(PlanetAssetClassIterator != PlanetAssetClasses.end())
+	for(auto PlanetAssetClass : Planet->GetPlanetAssetClasses())
 	{
-		auto NewTradeCenterAssetClassListWidget(new UI::TradeCenterAssetClassListWidget(_AssetClassScrollBox->GetContent(), *PlanetAssetClassIterator, _Character->GetShip()));
+		auto NewTradeCenterAssetClassListWidget(new UI::TradeCenterAssetClassListWidget(_AssetClassScrollBox->GetContent(), PlanetAssetClass, Hangar));
 		
 		NewTradeCenterAssetClassListWidget->SetPosition(Vector2f(5.0f, Top));
 		NewTradeCenterAssetClassListWidget->SetSize(Vector2f(_AssetClassScrollBox->GetContent()->GetSize()[0] - 10.0f, 20.0f));
 		NewTradeCenterAssetClassListWidget->SetAnchorRight(true);
 		NewTradeCenterAssetClassListWidget->ConnectMouseButtonCallback(std::bind(&UI::TradeCenterWidget::_OnAssetClassMouseButton, this, std::placeholders::_1, NewTradeCenterAssetClassListWidget));
 		Top += 25.0f;
-		++PlanetAssetClassIterator;
 	}
 	_AssetClassScrollBox->GetContent()->SetSize(Vector2f(450.0f, Top));
 	_AssetClassScrollBox->GetContent()->SetAnchorRight(true);
@@ -260,14 +259,6 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet
 	_AssetClassViewDisplay->SetAnchorLeft(false);
 	_AssetClassViewDisplay->SetAnchorRight(true);
 	_AssetClassViewDisplay->SetBackgroundColor(Color(0.15f, 0.15f, 0.15f, 1.0f));
-	
-	auto TraderAvailableSpaceLabel = new UI::Label(this, "");
-	
-	TraderAvailableSpaceLabel->SetPosition(Vector2f(0.0f, 260.0f));
-	TraderAvailableSpaceLabel->SetSize(Vector2f(200.0f, 20.0f));
-	TraderAvailableSpaceLabel->SetAnchorBottom(true);
-	TraderAvailableSpaceLabel->SetAnchorTop(false);
-	TraderAvailableSpaceLabel->ConnectUpdatingCallback(std::bind(&UI::TradeCenterWidget::_OnTraderAvailableSpaceLabelUpdating, this, TraderAvailableSpaceLabel, std::placeholders::_1, std::placeholders::_2));
 	
 	auto AssetClassPriceCaptionLabel(new UI::Label(this, "Price:"));
 	
@@ -333,23 +324,19 @@ void UI::TradeCenterWidget::_Buy(const PlanetAssetClass * PlanetAssetClass)
 	assert(PlanetAssetClass != nullptr);
 	assert(PlanetAssetClass->GetAssetClass() != nullptr);
 	assert(_Character != nullptr);
+	assert(_Planet != nullptr);
 	if(_Character->RemoveCredits(PlanetAssetClass->GetPrice()) == true)
 	{
-		assert(_Character->GetShip() != nullptr);
-		assert(_Character->GetShip()->GetCargoHold() != nullptr);
-		if(_Character->GetShip()->GetCargoHold()->GetSpace() >= g_ObjectFactory->GetSpaceRequirement(PlanetAssetClass->GetAssetClass()->GetObjectTypeIdentifier(), PlanetAssetClass->GetAssetClass()->GetObjectClassIdentifier()))
-		{
-			Object * NewCargo(g_ObjectFactory->Create(PlanetAssetClass->GetAssetClass()->GetObjectTypeIdentifier(), PlanetAssetClass->GetAssetClass()->GetObjectClassIdentifier()));
-			
-			assert(NewCargo != nullptr);
-			NewCargo->SetObjectIdentifier("::asset(" + PlanetAssetClass->GetAssetClass()->GetIdentifier() + ")::" + PlanetAssetClass->GetAssetClass()->GetObjectTypeIdentifier() + "(" + PlanetAssetClass->GetAssetClass()->GetObjectClassIdentifier() + ")::created_on(" + _Planet->GetObjectIdentifier() + ")::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::bought_by(" + _Character->GetObjectIdentifier() + ")::created_at_address(" + to_string_cast(reinterpret_cast< void * >(NewCargo)) + ")");
-			assert(_Character->GetShip()->GetCargoHold()->GetAspectObjectContainer() != 0);
-			_Character->GetShip()->GetCargoHold()->GetAspectObjectContainer()->AddContent(NewCargo);
-		}
-		else
-		{
-			_Character->AddCredits(PlanetAssetClass->GetPrice());
-		}
+		auto NewCargo(g_ObjectFactory->Create(PlanetAssetClass->GetAssetClass()->GetObjectTypeIdentifier(), PlanetAssetClass->GetAssetClass()->GetObjectClassIdentifier()));
+		
+		assert(NewCargo != nullptr);
+		NewCargo->SetObjectIdentifier("::asset(" + PlanetAssetClass->GetAssetClass()->GetIdentifier() + ")::" + PlanetAssetClass->GetAssetClass()->GetObjectTypeIdentifier() + "(" + PlanetAssetClass->GetAssetClass()->GetObjectClassIdentifier() + ")::created_on(" + _Planet->GetObjectIdentifier() + ")::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::bought_by(" + _Character->GetObjectIdentifier() + ")::created_at_address(" + to_string_cast(reinterpret_cast< void * >(NewCargo)) + ")");
+		
+		auto Hangar(_Planet->GetHangar(_Character));
+		
+		assert(Hangar != nullptr);
+		assert(Hangar->GetAspectObjectContainer() != nullptr);
+		Hangar->GetAspectObjectContainer()->AddContent(NewCargo);
 	}
 }
 
@@ -541,7 +528,7 @@ void UI::TradeCenterWidget::_OnBuyButtonClicked(void)
 
 void UI::TradeCenterWidget::_OnBuyButtonUpdating(UI::Button * BuyButton, float RealTimeSeconds, float GameTimeSeconds)
 {
-	BuyButton->SetEnabled((_SelectedTradeCenterAssetClassListWidget != nullptr) && (_Character != nullptr) && (_Character->GetCredits() >= _SelectedTradeCenterAssetClassListWidget->GetPlanetAssetClass()->GetPrice()) && (_Character->GetShip() != nullptr) && (_Character->GetShip()->GetCargoHold()->GetSpace() >= g_ObjectFactory->GetSpaceRequirement(_SelectedTradeCenterAssetClassListWidget->GetPlanetAssetClass()->GetAssetClass()->GetObjectTypeIdentifier(), _SelectedTradeCenterAssetClassListWidget->GetPlanetAssetClass()->GetAssetClass()->GetObjectClassIdentifier())));
+	BuyButton->SetEnabled((_SelectedTradeCenterAssetClassListWidget != nullptr) && (_Character != nullptr) && (_Character->GetCredits() >= _SelectedTradeCenterAssetClassListWidget->GetPlanetAssetClass()->GetPrice()) && (_Planet != nullptr) && (_Planet->GetHangar(_Character) != nullptr));
 }
 
 void UI::TradeCenterWidget::_OnDestroying(UI::Event & DestroyingEvent)
@@ -611,12 +598,16 @@ void UI::TradeCenterWidget::_OnSellButtonUpdating(UI::Button * SellButton, float
 {
 	bool Enabled(false);
 	
-	if((_SelectedTradeCenterAssetClassListWidget != nullptr) && (_Character != nullptr) && (_Character->GetShip() != nullptr) && (_Character->GetShip()->GetCargoHold() != nullptr))
+	if((_SelectedTradeCenterAssetClassListWidget != nullptr) && (_Character != nullptr) && (_Planet != nullptr))
 	{
 		assert(_SelectedTradeCenterAssetClassListWidget->GetPlanetAssetClass() != nullptr);
 		assert(_SelectedTradeCenterAssetClassListWidget->GetPlanetAssetClass()->GetAssetClass() != nullptr);
-		assert(_Character->GetShip()->GetCargoHold()->GetAspectObjectContainer() != nullptr);
-		for(auto Content : _Character->GetShip()->GetCargoHold()->GetAspectObjectContainer()->GetContent())
+		
+		auto Hangar(_Planet->GetHangar(_Character));
+		
+		assert(Hangar != nullptr);
+		assert(Hangar->GetAspectObjectContainer() != nullptr);
+		for(auto Content : Hangar->GetAspectObjectContainer()->GetContent())
 		{
 			if((Content->GetTypeIdentifier() == _SelectedTradeCenterAssetClassListWidget->GetPlanetAssetClass()->GetAssetClass()->GetObjectTypeIdentifier()) && (Content->GetClassIdentifier() == _SelectedTradeCenterAssetClassListWidget->GetPlanetAssetClass()->GetAssetClass()->GetObjectClassIdentifier()))
 			{
@@ -627,15 +618,6 @@ void UI::TradeCenterWidget::_OnSellButtonUpdating(UI::Button * SellButton, float
 		}
 	}
 	SellButton->SetEnabled(Enabled);
-}
-
-void UI::TradeCenterWidget::_OnTraderAvailableSpaceLabelUpdating(UI::Label * TraderAvailableSpaceLabel, float RealTimeSeconds, float GameTimeSeconds)
-{
-	assert(_Character != nullptr);
-	assert(_Character->GetShip() != nullptr);
-	assert(_Character->GetShip()->GetCargoHold() != nullptr);
-	assert(TraderAvailableSpaceLabel != nullptr);
-	TraderAvailableSpaceLabel->SetText("Available Space: " + to_string_cast(0.001 * _Character->GetShip()->GetCargoHold()->GetSpace(), 3));
 }
 
 void UI::TradeCenterWidget::_OnUpdating(float RealTimeSeconds, float GameTimeSeconds)
@@ -654,25 +636,21 @@ void UI::TradeCenterWidget::_Sell(const PlanetAssetClass * PlanetAssetClass)
 	assert(PlanetAssetClass != nullptr);
 	assert(PlanetAssetClass->GetAssetClass() != nullptr);
 	assert(_Character != nullptr);
-	assert(_Character->GetShip() != nullptr);
-	assert(_Character->GetShip()->GetCargoHold() != nullptr);
-	assert(_Character->GetShip()->GetCargoHold()->GetAspectObjectContainer() != nullptr);
+	assert(_Planet != nullptr);
 	
-	const std::set< Object * > & Content(_Character->GetShip()->GetCargoHold()->GetAspectObjectContainer()->GetContent());
-	std::set< Object * >::const_iterator ContentIterator(Content.begin());
+	auto Hangar(_Planet->GetHangar(_Character));
 	
-	while(ContentIterator != Content.end())
+	assert(Hangar != nullptr);
+	assert(Hangar->GetAspectObjectContainer() != nullptr);
+	for(auto Content : Hangar->GetAspectObjectContainer()->GetContent())
 	{
-		Object * Content(*ContentIterator);
-		
 		if((Content->GetTypeIdentifier() == PlanetAssetClass->GetAssetClass()->GetObjectTypeIdentifier()) && (Content->GetClassIdentifier() == PlanetAssetClass->GetAssetClass()->GetObjectClassIdentifier()))
 		{
-			_Character->GetShip()->GetCargoHold()->GetAspectObjectContainer()->RemoveContent(Content);
+			Hangar->GetAspectObjectContainer()->RemoveContent(Content);
 			delete Content;
 			_Character->AddCredits(PlanetAssetClass->GetPrice());
 			
 			break;
 		}
-		++ContentIterator;
 	}
 }
