@@ -1,5 +1,8 @@
 <ship-class>
 	<identifier>transporter</identifier>
+	<name-aspect>
+		<name>Transporter</name>
+	</name-aspect>
 	<physical-aspect>
 		<space-requirement>160000</space-requirement>
 	</physical-aspect>

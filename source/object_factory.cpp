@@ -165,6 +165,9 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		EngineGlowParticleSystem->SetPosition(Vector3f(ShipClass->GetExhaustOffset()));
 		NewShip->SetEngineGlowParticleSystem(EngineGlowParticleSystem);
 		// set up aspects
+		// set up name aspect
+		assert(NewShip->GetAspectName() != 0);
+		NewShip->GetAspectName()->SetName(ShipClass->GetName());
 		// set up outfitting aspect
 		assert(NewShip->GetAspectOutfitting() != 0);
 		

@@ -652,6 +652,12 @@ static void ReadShipClass(Arxx::Reference & Reference)
 	{
 		throw std::runtime_error("Could not create ship class '" + Identifier + "'.");
 	}
+	// read the name aspect
+	std::string Name;
+	
+	Reader >> Name;
+	NewShipClass->SetName(Name);
+	
 	// read the physical aspect
 	Arxx::u4byte SpaceRequirement;
 	
