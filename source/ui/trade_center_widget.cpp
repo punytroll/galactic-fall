@@ -68,9 +68,9 @@ namespace UI
 			_PlanetAssetClass(PlanetAssetClass),
 			_Ship(Ship)
 		{
-			ConnectDestroyingCallback(std::bind(&UI::TradeCenterAssetClassListWidget::_OnDestroying, this, std::placeholders::_1));
 			assert(_Ship != nullptr);
 			_ShipDestroyingConnection = _Ship->ConnectDestroyingCallback(std::bind(&UI::TradeCenterAssetClassListWidget::_OnShipDestroying, this));
+			ConnectDestroyingCallback(std::bind(&UI::TradeCenterAssetClassListWidget::_OnDestroying, this, std::placeholders::_1));
 			SetSize(Vector2f(200.0f, 20.0f));
 			
 			auto NameLabel(new UI::Label(this, PlanetAssetClass->GetAssetClass()->GetName()));
@@ -155,14 +155,18 @@ namespace UI
 	};
 }
 
-UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Reference< Planet > Planet, Reference< Character > Character) :
+UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet, Character * Character) :
 	UI::Widget(SupWidget),
 	_Character(Character),
 	_Planet(Planet),
 	_SelectedTradeCenterAssetClassListWidget(nullptr)
 {
-	SetSize(Vector2f(650.0f, 300.0f));
+	assert(_Character != nullptr);
+	_CharacterDestroyingConnection = _Character->ConnectDestroyingCallback(std::bind(&UI::TradeCenterWidget::_OnCharacterDestroying, this));
+	assert(_Planet != nullptr);
+	_PlanetDestroyingConnection = _Planet->ConnectDestroyingCallback(std::bind(&UI::TradeCenterWidget::_OnPlanetDestroying, this));
 	ConnectDestroyingCallback(std::bind(&UI::TradeCenterWidget::_OnDestroying, this, std::placeholders::_1));
+	SetSize(Vector2f(650.0f, 300.0f));
 	ConnectKeyCallback(std::bind(&UI::TradeCenterWidget::_OnKey, this, std::placeholders::_1));
 	ConnectUpdatingCallback(std::bind(&UI::TradeCenterWidget::_OnUpdating, this, std::placeholders::_1, std::placeholders::_2));
 	
@@ -326,18 +330,18 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Reference< Plan
 
 void UI::TradeCenterWidget::_Buy(const PlanetAssetClass * PlanetAssetClass)
 {
-	assert(PlanetAssetClass != 0);
-	assert(PlanetAssetClass->GetAssetClass() != 0);
-	assert(_Character.IsValid() == true);
+	assert(PlanetAssetClass != nullptr);
+	assert(PlanetAssetClass->GetAssetClass() != nullptr);
+	assert(_Character != nullptr);
 	if(_Character->RemoveCredits(PlanetAssetClass->GetPrice()) == true)
 	{
-		assert(_Character->GetShip() != 0);
-		assert(_Character->GetShip()->GetCargoHold() != 0);
+		assert(_Character->GetShip() != nullptr);
+		assert(_Character->GetShip()->GetCargoHold() != nullptr);
 		if(_Character->GetShip()->GetCargoHold()->GetSpace() >= g_ObjectFactory->GetSpaceRequirement(PlanetAssetClass->GetAssetClass()->GetObjectTypeIdentifier(), PlanetAssetClass->GetAssetClass()->GetObjectClassIdentifier()))
 		{
 			Object * NewCargo(g_ObjectFactory->Create(PlanetAssetClass->GetAssetClass()->GetObjectTypeIdentifier(), PlanetAssetClass->GetAssetClass()->GetObjectClassIdentifier()));
 			
-			assert(NewCargo != 0);
+			assert(NewCargo != nullptr);
 			NewCargo->SetObjectIdentifier("::asset(" + PlanetAssetClass->GetAssetClass()->GetIdentifier() + ")::" + PlanetAssetClass->GetAssetClass()->GetObjectTypeIdentifier() + "(" + PlanetAssetClass->GetAssetClass()->GetObjectClassIdentifier() + ")::created_on(" + _Planet->GetObjectIdentifier() + ")::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::bought_by(" + _Character->GetObjectIdentifier() + ")::created_at_address(" + to_string_cast(reinterpret_cast< void * >(NewCargo)) + ")");
 			assert(_Character->GetShip()->GetCargoHold()->GetAspectObjectContainer() != 0);
 			_Character->GetShip()->GetCargoHold()->GetAspectObjectContainer()->AddContent(NewCargo);
@@ -351,34 +355,34 @@ void UI::TradeCenterWidget::_Buy(const PlanetAssetClass * PlanetAssetClass)
 
 void UI::TradeCenterWidget::_ClearAssetClassViewDisplay(void)
 {
-	Graphics::View * OldView(_AssetClassViewDisplay->GetView());
+	auto OldView(_AssetClassViewDisplay->GetView());
 	
-	if(OldView != 0)
+	if(OldView != nullptr)
 	{
-		_AssetClassViewDisplay->SetView(0);
-		assert(OldView->GetScene() != 0);
+		_AssetClassViewDisplay->SetView(nullptr);
+		assert(OldView->GetScene() != nullptr);
 		
-		Graphics::Scene * Scene(OldView->GetScene());
+		auto Scene(OldView->GetScene());
 		
-		OldView->SetScene(0);
+		OldView->SetScene(nullptr);
 		delete Scene;
 		
-		assert(OldView->GetCamera() != 0);
-		assert(OldView->GetCamera()->GetProjection() != 0);
+		assert(OldView->GetCamera() != nullptr);
+		assert(OldView->GetCamera()->GetProjection() != nullptr);
 		
-		Graphics::Projection * Projection(OldView->GetCamera()->GetProjection());
+		auto Projection(OldView->GetCamera()->GetProjection());
 		
-		OldView->GetCamera()->SetProjection(0);
+		OldView->GetCamera()->SetProjection(nullptr);
 		delete Projection;
 		
-		Graphics::TextureRenderTarget * TextureRenderTarget(dynamic_cast< Graphics::TextureRenderTarget * >(OldView->GetRenderTarget()));
+		auto TextureRenderTarget(dynamic_cast< Graphics::TextureRenderTarget * >(OldView->GetRenderTarget()));
 		
-		assert(TextureRenderTarget != 0);
-		OldView->SetRenderTarget(0);
+		assert(TextureRenderTarget != nullptr);
+		OldView->SetRenderTarget(nullptr);
 		
-		Graphics::Texture * Texture(TextureRenderTarget->GetTexture());
+		auto Texture(TextureRenderTarget->GetTexture());
 		
-		TextureRenderTarget->SetTexture(0);
+		TextureRenderTarget->SetTexture(nullptr);
 		delete TextureRenderTarget;
 		g_GraphicsEngine->GetTextureManager()->Destroy(Texture->GetIdentifier());
 		g_GraphicsEngine->RemoveView(OldView);
@@ -529,7 +533,7 @@ void UI::TradeCenterWidget::_OnAssetClassSizeLabelUpdating(UI::Label * AssetClas
 
 void UI::TradeCenterWidget::_OnBuyButtonClicked(void)
 {
-	if(_SelectedTradeCenterAssetClassListWidget != 0)
+	if(_SelectedTradeCenterAssetClassListWidget != nullptr)
 	{
 		_Buy(_SelectedTradeCenterAssetClassListWidget->GetPlanetAssetClass());
 	}
@@ -537,8 +541,7 @@ void UI::TradeCenterWidget::_OnBuyButtonClicked(void)
 
 void UI::TradeCenterWidget::_OnBuyButtonUpdating(UI::Button * BuyButton, float RealTimeSeconds, float GameTimeSeconds)
 {
-	assert(_Character.IsValid() == true);
-	BuyButton->SetEnabled((_SelectedTradeCenterAssetClassListWidget != 0) && (_Character->GetCredits() >= _SelectedTradeCenterAssetClassListWidget->GetPlanetAssetClass()->GetPrice()) && (_Character->GetShip() != 0) && (_Character->GetShip()->GetCargoHold()->GetSpace() >= g_ObjectFactory->GetSpaceRequirement(_SelectedTradeCenterAssetClassListWidget->GetPlanetAssetClass()->GetAssetClass()->GetObjectTypeIdentifier(), _SelectedTradeCenterAssetClassListWidget->GetPlanetAssetClass()->GetAssetClass()->GetObjectClassIdentifier())));
+	BuyButton->SetEnabled((_SelectedTradeCenterAssetClassListWidget != nullptr) && (_Character != nullptr) && (_Character->GetCredits() >= _SelectedTradeCenterAssetClassListWidget->GetPlanetAssetClass()->GetPrice()) && (_Character->GetShip() != nullptr) && (_Character->GetShip()->GetCargoHold()->GetSpace() >= g_ObjectFactory->GetSpaceRequirement(_SelectedTradeCenterAssetClassListWidget->GetPlanetAssetClass()->GetAssetClass()->GetObjectTypeIdentifier(), _SelectedTradeCenterAssetClassListWidget->GetPlanetAssetClass()->GetAssetClass()->GetObjectClassIdentifier())));
 }
 
 void UI::TradeCenterWidget::_OnDestroying(UI::Event & DestroyingEvent)
@@ -546,7 +549,29 @@ void UI::TradeCenterWidget::_OnDestroying(UI::Event & DestroyingEvent)
 	if(DestroyingEvent.GetPhase() == UI::Event::Phase::Target)
 	{
 		_ClearAssetClassViewDisplay();
+		if(_Planet != nullptr)
+		{
+			assert(_PlanetDestroyingConnection.IsValid() == true);
+			_Planet->DisconnectDestroyingCallback(_PlanetDestroyingConnection);
+			_Planet = nullptr;
+		}
+		assert(_PlanetDestroyingConnection.IsValid() == false);
+		if(_Character != nullptr)
+		{
+			assert(_CharacterDestroyingConnection.IsValid() == true);
+			_Character->DisconnectDestroyingCallback(_CharacterDestroyingConnection);
+			_Character = nullptr;
+		}
+		assert(_CharacterDestroyingConnection.IsValid() == false);
 	}
+}
+
+void UI::TradeCenterWidget::_OnCharacterDestroying(void)
+{
+	assert(_CharacterDestroyingConnection.IsValid() == true);
+	_CharacterDestroyingConnection.Invalidate();
+	assert(_Character != nullptr);
+	_Character = nullptr;
 }
 
 void UI::TradeCenterWidget::_OnDestroyInScene(Graphics::Node * Node)
@@ -566,9 +591,17 @@ void UI::TradeCenterWidget::_OnKey(UI::KeyEvent & KeyEvent)
 	}
 }
 
+void UI::TradeCenterWidget::_OnPlanetDestroying(void)
+{
+	assert(_PlanetDestroyingConnection.IsValid() == true);
+	_PlanetDestroyingConnection.Invalidate();
+	assert(_Planet != nullptr);
+	_Planet = nullptr;
+}
+
 void UI::TradeCenterWidget::_OnSellButtonClicked(void)
 {
-	if(_SelectedTradeCenterAssetClassListWidget != 0)
+	if(_SelectedTradeCenterAssetClassListWidget != nullptr)
 	{
 		_Sell(_SelectedTradeCenterAssetClassListWidget->GetPlanetAssetClass());
 	}
@@ -576,30 +609,21 @@ void UI::TradeCenterWidget::_OnSellButtonClicked(void)
 
 void UI::TradeCenterWidget::_OnSellButtonUpdating(UI::Button * SellButton, float RealTimeSeconds, float GameTimeSeconds)
 {
-	assert(_Character.IsValid() == true);
-	
 	bool Enabled(false);
 	
-	if((_SelectedTradeCenterAssetClassListWidget != 0) && (_Character->GetShip() != 0) && (_Character->GetShip()->GetCargoHold() != 0))
+	if((_SelectedTradeCenterAssetClassListWidget != nullptr) && (_Character != nullptr) && (_Character->GetShip() != nullptr) && (_Character->GetShip()->GetCargoHold() != nullptr))
 	{
-		assert(_SelectedTradeCenterAssetClassListWidget->GetPlanetAssetClass() != 0);
-		assert(_SelectedTradeCenterAssetClassListWidget->GetPlanetAssetClass()->GetAssetClass() != 0);
-		assert(_Character->GetShip()->GetCargoHold()->GetAspectObjectContainer() != 0);
-		
-		const std::set< Object * > & Content(_Character->GetShip()->GetCargoHold()->GetAspectObjectContainer()->GetContent());
-		std::set< Object * >::const_iterator ContentIterator(Content.begin());
-		
-		while(ContentIterator != Content.end())
+		assert(_SelectedTradeCenterAssetClassListWidget->GetPlanetAssetClass() != nullptr);
+		assert(_SelectedTradeCenterAssetClassListWidget->GetPlanetAssetClass()->GetAssetClass() != nullptr);
+		assert(_Character->GetShip()->GetCargoHold()->GetAspectObjectContainer() != nullptr);
+		for(auto Content : _Character->GetShip()->GetCargoHold()->GetAspectObjectContainer()->GetContent())
 		{
-			Object * Content(*ContentIterator);
-			
-			if((Content->GetTypeIdentifier() == _SelectedTradeCenterAssetClassListWidget->GetPlanetAssetClass()->GetAssetClass()->GetObjectTypeIdentifier()) && (Content->GetClassIdentifier() == _SelectedTradeCenterAssetClassListWidget->GetPlanetAssetClass()->GetAssetClass()->GetObjectClassIdentifier()) && ((Content->GetAspectAccessory() == 0) || (Content->GetAspectAccessory()->GetSlot() == 0)))
+			if((Content->GetTypeIdentifier() == _SelectedTradeCenterAssetClassListWidget->GetPlanetAssetClass()->GetAssetClass()->GetObjectTypeIdentifier()) && (Content->GetClassIdentifier() == _SelectedTradeCenterAssetClassListWidget->GetPlanetAssetClass()->GetAssetClass()->GetObjectClassIdentifier()))
 			{
 				Enabled = true;
 				
 				break;
 			}
-			++ContentIterator;
 		}
 	}
 	SellButton->SetEnabled(Enabled);
@@ -607,7 +631,7 @@ void UI::TradeCenterWidget::_OnSellButtonUpdating(UI::Button * SellButton, float
 
 void UI::TradeCenterWidget::_OnTraderAvailableSpaceLabelUpdating(UI::Label * TraderAvailableSpaceLabel, float RealTimeSeconds, float GameTimeSeconds)
 {
-	assert(_Character.IsValid() == true);
+	assert(_Character != nullptr);
 	assert(_Character->GetShip() != nullptr);
 	assert(_Character->GetShip()->GetCargoHold() != nullptr);
 	assert(TraderAvailableSpaceLabel != nullptr);
@@ -627,12 +651,12 @@ void UI::TradeCenterWidget::_OnUpdating(float RealTimeSeconds, float GameTimeSec
 
 void UI::TradeCenterWidget::_Sell(const PlanetAssetClass * PlanetAssetClass)
 {
-	assert(PlanetAssetClass != 0);
-	assert(PlanetAssetClass->GetAssetClass() != 0);
-	assert(_Character.IsValid() == true);
-	assert(_Character->GetShip() != 0);
-	assert(_Character->GetShip()->GetCargoHold() != 0);
-	assert(_Character->GetShip()->GetCargoHold()->GetAspectObjectContainer() != 0);
+	assert(PlanetAssetClass != nullptr);
+	assert(PlanetAssetClass->GetAssetClass() != nullptr);
+	assert(_Character != nullptr);
+	assert(_Character->GetShip() != nullptr);
+	assert(_Character->GetShip()->GetCargoHold() != nullptr);
+	assert(_Character->GetShip()->GetCargoHold()->GetAspectObjectContainer() != nullptr);
 	
 	const std::set< Object * > & Content(_Character->GetShip()->GetCargoHold()->GetAspectObjectContainer()->GetContent());
 	std::set< Object * >::const_iterator ContentIterator(Content.begin());
@@ -641,7 +665,7 @@ void UI::TradeCenterWidget::_Sell(const PlanetAssetClass * PlanetAssetClass)
 	{
 		Object * Content(*ContentIterator);
 		
-		if((Content->GetTypeIdentifier() == PlanetAssetClass->GetAssetClass()->GetObjectTypeIdentifier()) && (Content->GetClassIdentifier() == PlanetAssetClass->GetAssetClass()->GetObjectClassIdentifier()) && ((Content->GetAspectAccessory() == 0) || (Content->GetAspectAccessory()->GetSlot() == 0)))
+		if((Content->GetTypeIdentifier() == PlanetAssetClass->GetAssetClass()->GetObjectTypeIdentifier()) && (Content->GetClassIdentifier() == PlanetAssetClass->GetAssetClass()->GetObjectClassIdentifier()))
 		{
 			_Character->GetShip()->GetCargoHold()->GetAspectObjectContainer()->RemoveContent(Content);
 			delete Content;
