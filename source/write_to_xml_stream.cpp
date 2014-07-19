@@ -116,12 +116,9 @@ void WriteToXMLStream(XMLStream & XMLStream, Object * TheObject)
 	if(TheObject->GetAspectObjectContainer() != nullptr)
 	{
 		XMLStream << element << "aspect-object-container";
-		
-		const std::set< Object * > & Content(TheObject->GetAspectObjectContainer()->GetContent());
-		
-		for(std::set< Object * >::const_iterator ContentIterator = Content.begin(); ContentIterator != Content.end(); ++ContentIterator)
+		for(auto Content : TheObject->GetAspectObjectContainer()->GetContent())
 		{
-			XMLStream << element << "content" << attribute << "object-identifier" << value << (*ContentIterator)->GetObjectIdentifier() << end;
+			XMLStream << element << "content" << attribute << "object-identifier" << value << Content->GetObjectIdentifier() << end;
 		}
 		XMLStream << end;
 	}
@@ -143,20 +140,20 @@ void WriteToXMLStream(XMLStream & XMLStream, Object * TheObject)
 	{
 		XMLStream << element << "aspect-visualization";
 		
-		const std::map< std::string, Graphics::Material * > & PartMaterials(TheObject->GetAspectVisualization()->GetVisualizationPrototype()->GetPartMaterials());
+		const std::map< std::string, Graphics::Material * > & PartMaterials();
 		
-		for(std::map< std::string, Graphics::Material * >::const_iterator PartMaterialIterator = PartMaterials.begin(); PartMaterialIterator != PartMaterials.end(); ++PartMaterialIterator)
+		for(auto PartMaterial : TheObject->GetAspectVisualization()->GetVisualizationPrototype()->GetPartMaterials())
 		{
-			XMLStream << element << "part" << attribute << "identifier" << value << PartMaterialIterator->first;
-			if(PartMaterialIterator->second->GetDiffuseColor() != nullptr)
+			XMLStream << element << "part" << attribute << "identifier" << value << PartMaterial.first;
+			if(PartMaterial.second->GetDiffuseColor() != nullptr)
 			{
-				XMLStream << element << "material-diffuse-color" << attribute << "red" << value << PartMaterialIterator->second->GetDiffuseColor()->GetColor()[0] << attribute << "green" << value << PartMaterialIterator->second->GetDiffuseColor()->GetColor()[1] << attribute << "blue" << value << PartMaterialIterator->second->GetDiffuseColor()->GetColor()[2] << attribute << "opacity" << value << PartMaterialIterator->second->GetDiffuseColor()->GetColor()[3] << end;
+				XMLStream << element << "material-diffuse-color" << attribute << "red" << value << PartMaterial.second->GetDiffuseColor()->GetColor()[0] << attribute << "green" << value << PartMaterial.second->GetDiffuseColor()->GetColor()[1] << attribute << "blue" << value << PartMaterial.second->GetDiffuseColor()->GetColor()[2] << attribute << "opacity" << value << PartMaterial.second->GetDiffuseColor()->GetColor()[3] << end;
 			}
-			if(PartMaterialIterator->second->GetSpecularColor() != nullptr)
+			if(PartMaterial.second->GetSpecularColor() != nullptr)
 			{
-				XMLStream << element << "material-specular-color" << attribute << "red" << value << PartMaterialIterator->second->GetSpecularColor()->GetColor()[0] << attribute << "green" << value << PartMaterialIterator->second->GetSpecularColor()->GetColor()[1] << attribute << "blue" << value << PartMaterialIterator->second->GetSpecularColor()->GetColor()[2] << attribute << "opacity" << value << PartMaterialIterator->second->GetSpecularColor()->GetColor()[3] << end;
+				XMLStream << element << "material-specular-color" << attribute << "red" << value << PartMaterial.second->GetSpecularColor()->GetColor()[0] << attribute << "green" << value << PartMaterial.second->GetSpecularColor()->GetColor()[1] << attribute << "blue" << value << PartMaterial.second->GetSpecularColor()->GetColor()[2] << attribute << "opacity" << value << PartMaterial.second->GetSpecularColor()->GetColor()[3] << end;
 			}
-			XMLStream << element << "material-shininess" << attribute << "value" << value << PartMaterialIterator->second->GetShininess() << end;
+			XMLStream << element << "material-shininess" << attribute << "value" << value << PartMaterial.second->GetShininess() << end;
 			XMLStream << end;
 		}
 		XMLStream << end;
@@ -209,29 +206,26 @@ void WriteToXMLStream(XMLStream & XMLStream, Object * TheObject)
 
 static void WriteBatteryToXMLStream(XMLStream & XMLStream, Battery * TheBattery)
 {
-	assert(TheBattery != 0);
+	assert(TheBattery != nullptr);
 	XMLStream << element << "energy" << attribute << "value" << value << TheBattery->GetEnergy() << end;
 	XMLStream << element << "energy-capacity" << attribute << "value" << value << TheBattery->GetEnergyCapacity() << end;
 }
 
 static void WriteCharacterToXMLStream(XMLStream & XMLStream, Character * TheCharacter)
 {
-	assert(TheCharacter != 0);
+	assert(TheCharacter != nullptr);
 	XMLStream << element << "credits" << attribute << "value" << value << TheCharacter->GetCredits() << end;
 	XMLStream << element << "map-knowledge";
-	
-	const std::set< System * > & ExploredSystems(TheCharacter->GetMapKnowledge()->GetExploredSystems());
-	
-	for(std::set< System * >::const_iterator ExploredSystemIterator = ExploredSystems.begin(); ExploredSystemIterator != ExploredSystems.end(); ++ExploredSystemIterator)
+	for(auto ExploredSystem : TheCharacter->GetMapKnowledge()->GetExploredSystems())
 	{
-		XMLStream << element << "explored-system" << attribute << "object-identifier" << value << (*ExploredSystemIterator)->GetObjectIdentifier() << end;
+		XMLStream << element << "explored-system" << attribute << "object-identifier" << value << ExploredSystem->GetObjectIdentifier() << end;
 	}
 	XMLStream << end;
 }
 
 static void WriteCommodityToXMLStream(XMLStream & XMLStream, Commodity * TheCommodity)
 {
-	assert(TheCommodity != 0);
+	assert(TheCommodity != nullptr);
 	XMLStream << element << "angular-velocity" << attribute << "axis-x" << value << TheCommodity->GetAngularVelocity()[0] << attribute << "axis-y" << value << TheCommodity->GetAngularVelocity()[1] << attribute << "axis-z" << value << TheCommodity->GetAngularVelocity()[2] << attribute << "angle" << value << TheCommodity->GetAngularVelocity()[3] << end;
 	XMLStream << element << "hull" << attribute << "value" << value << TheCommodity->GetHull() << end;
 	XMLStream << element << "velocity" << attribute << "x" << value << TheCommodity->GetVelocity()[0] << attribute << "y" << value << TheCommodity->GetVelocity()[1] << attribute << "z" << value << TheCommodity->GetVelocity()[2] << end;
@@ -239,7 +233,7 @@ static void WriteCommodityToXMLStream(XMLStream & XMLStream, Commodity * TheComm
 
 static void WriteGeneratorToXMLStream(XMLStream & XMLStream, Generator * TheGenerator)
 {
-	assert(TheGenerator != 0);
+	assert(TheGenerator != nullptr);
 	XMLStream << element << "energy-provision-per-second" << attribute << "value" << value << TheGenerator->GetEnergyProvisionPerSecond() << end;
 }
 
@@ -251,13 +245,13 @@ static void WriteHangarToXMLStream(XMLStream & XMLStream, Hangar * Hangar)
 
 static void WriteMindToXMLStream(XMLStream & XMLStream, Mind * TheMind)
 {
-	assert(TheMind != 0);
+	assert(TheMind != nullptr);
 	XMLStream << element << "character" << attribute << "object-identifier" << value << TheMind->GetCharacter()->GetObjectIdentifier() << end;
 }
 
 static void WriteShipToXMLStream(XMLStream & XMLStream, Ship * TheShip)
 {
-	assert(TheShip != 0);
+	assert(TheShip != nullptr);
 	// save maximum & capacity values
 	XMLStream << element << "exhaust-offset" << attribute << "x" << value << TheShip->GetExhaustOffset()[0] << attribute << "y" << value << TheShip->GetExhaustOffset()[1] << attribute << "z" << value << TheShip->GetExhaustOffset()[2] << end;
 	XMLStream << element << "fuel-capacity" << attribute << "value" << value << TheShip->GetFuelCapacity() << end;
@@ -276,11 +270,11 @@ static void WriteShipToXMLStream(XMLStream & XMLStream, Ship * TheShip)
 
 static void WriteStorageToXMLStream(XMLStream & XMLStream, Storage * TheStorage)
 {
-	assert(TheStorage != 0);
+	assert(TheStorage != nullptr);
 	XMLStream << element << "space-capacity" << attribute << "value" << value << TheStorage->GetSpaceCapacity() << end;
 }
 
 static void WriteWeaponToXMLStream(XMLStream & XMLStream, Weapon * TheWeapon)
 {
-	assert(TheWeapon != 0);
+	assert(TheWeapon != nullptr);
 }

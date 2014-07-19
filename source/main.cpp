@@ -1597,7 +1597,6 @@ void LoadGameFromElement(const Element * SaveElement)
 		throw std::runtime_error("The savegame is not rooted at a \"save\" element.");
 	}
 	
-	const std::vector< Element * > & SaveChilds(SaveElement->GetChilds());
 	std::string CurrentSystem;
 	std::string InputMindObjectIdentifier;
 	std::string ObservedCharacterObjectIdentifier;
@@ -1605,270 +1604,271 @@ void LoadGameFromElement(const Element * SaveElement)
 	// setup the game world
 	PurgeGame();
 	SetupInitialGalaxyState();
-	for(std::vector< Element * >::const_iterator SaveChild = SaveChilds.begin(); SaveChild != SaveChilds.end(); ++SaveChild)
+	for(auto SaveChild : SaveElement->GetChilds())
 	{
-		if((*SaveChild)->GetName() == "game-time")
+		if(SaveChild->GetName() == "game-time")
 		{
-			GameTime::Set(from_string_cast< double >((*SaveChild)->GetAttribute("value")));
+			GameTime::Set(from_string_cast< double >(SaveChild->GetAttribute("value")));
 		}
-		else if((*SaveChild)->GetName() == "current-system")
+		else if(SaveChild->GetName() == "current-system")
 		{
-			CurrentSystem = (*SaveChild)->GetAttribute("identifier");
+			CurrentSystem = SaveChild->GetAttribute("identifier");
 		}
-		else if((*SaveChild)->GetName() == "time-warp")
+		else if(SaveChild->GetName() == "time-warp")
 		{
-			g_TimeWarp = from_string_cast< float >((*SaveChild)->GetAttribute("value"));
+			g_TimeWarp = from_string_cast< float >(SaveChild->GetAttribute("value"));
 		}
-		else if((*SaveChild)->GetName() == "input-mind")
+		else if(SaveChild->GetName() == "input-mind")
 		{
-			InputMindObjectIdentifier = (*SaveChild)->GetAttribute("object-identifier");
+			InputMindObjectIdentifier = SaveChild->GetAttribute("object-identifier");
 		}
-		else if((*SaveChild)->GetName() == "observed-character")
+		else if(SaveChild->GetName() == "observed-character")
 		{
-			ObservedCharacterObjectIdentifier = (*SaveChild)->GetAttribute("object-identifier");
+			ObservedCharacterObjectIdentifier = SaveChild->GetAttribute("object-identifier");
 		}
-		else if((*SaveChild)->GetName() == "main-camera")
+		else if(SaveChild->GetName() == "main-camera")
 		{
-			for(std::vector< Element * >::const_iterator CameraChild = (*SaveChild)->GetChilds().begin(); CameraChild != (*SaveChild)->GetChilds().end(); ++CameraChild)
+			for(auto CameraChild : SaveChild->GetChilds())
 			{
-				if((*CameraChild)->GetName() == "position")
+				if(CameraChild->GetName() == "position")
 				{
-					g_CameraPosition.Set(from_string_cast< float >((*CameraChild)->GetAttribute("x")), from_string_cast< float >((*CameraChild)->GetAttribute("y")), from_string_cast< float >((*CameraChild)->GetAttribute("z")));
+					g_CameraPosition.Set(from_string_cast< float >(CameraChild->GetAttribute("x")), from_string_cast< float >(CameraChild->GetAttribute("y")), from_string_cast< float >(CameraChild->GetAttribute("z")));
 				}
-				else if((*CameraChild)->GetName() == "focus")
+				else if(CameraChild->GetName() == "focus")
 				{
+					assert(CameraChild->HasAttribute("object-identifier") == true);
 					// read in second pass
 				}
-				else if((*CameraChild)->GetName() == "field-of-view-y")
+				else if(CameraChild->GetName() == "field-of-view-y")
 				{
-					if((*CameraChild)->HasAttribute("radians") == true)
+					if(CameraChild->HasAttribute("radians") == true)
 					{
-						assert(g_MainProjection != 0);
-						g_MainProjection->SetFieldOfViewY(from_string_cast< float >((*CameraChild)->GetAttribute("radians")));
+						assert(g_MainProjection != nullptr);
+						g_MainProjection->SetFieldOfViewY(from_string_cast< float >(CameraChild->GetAttribute("radians")));
 					}
 				}
 				else
 				{
-					throw std::runtime_error("The \"main-camera\" element contains an unidentified child element \"" + (*CameraChild)->GetName() + "\".");
+					throw std::runtime_error("The \"main-camera\" element contains an unidentified child element \"" + CameraChild->GetName() + "\".");
 				}
 			}
 		}
-		else if((*SaveChild)->GetName() == "object")
+		else if(SaveChild->GetName() == "object")
 		{
-			assert((*SaveChild)->HasAttribute("object-identifier") == true);
+			assert(SaveChild->HasAttribute("object-identifier") == true);
 			
-			Object * NewObject(Object::GetObject((*SaveChild)->GetAttribute("object-identifier")));
+			Object * NewObject(Object::GetObject(SaveChild->GetAttribute("object-identifier")));
 			
 			if(NewObject == nullptr)
 			{
-				assert((*SaveChild)->HasAttribute("type-identifier") == true);
-				assert((*SaveChild)->HasAttribute("class-identifier") == true);
-				NewObject = g_ObjectFactory->Create((*SaveChild)->GetAttribute("type-identifier"), (*SaveChild)->GetAttribute("class-identifier"));
-				NewObject->SetObjectIdentifier((*SaveChild)->GetAttribute("object-identifier"));
+				assert(SaveChild->HasAttribute("type-identifier") == true);
+				assert(SaveChild->HasAttribute("class-identifier") == true);
+				NewObject = g_ObjectFactory->Create(SaveChild->GetAttribute("type-identifier"), SaveChild->GetAttribute("class-identifier"));
+				NewObject->SetObjectIdentifier(SaveChild->GetAttribute("object-identifier"));
 			}
 			else
 			{
-				assert((*SaveChild)->HasAttribute("type-identifier") == true);
-				assert((*SaveChild)->GetAttribute("type-identifier") == NewObject->GetTypeIdentifier());
-				assert((*SaveChild)->HasAttribute("class-identifier") == true);
-				assert((*SaveChild)->GetAttribute("class-identifier") == NewObject->GetClassIdentifier());
+				assert(SaveChild->HasAttribute("type-identifier") == true);
+				assert(SaveChild->GetAttribute("type-identifier") == NewObject->GetTypeIdentifier());
+				assert(SaveChild->HasAttribute("class-identifier") == true);
+				assert(SaveChild->GetAttribute("class-identifier") == NewObject->GetClassIdentifier());
 			}
-			for(std::vector< Element * >::const_iterator ObjectChild = (*SaveChild)->GetChilds().begin(); ObjectChild != (*SaveChild)->GetChilds().end(); ++ObjectChild)
+			for(auto ObjectChild : SaveChild->GetChilds())
 			{
-				if((*ObjectChild)->GetName() == "aspect-accessory")
+				if(ObjectChild->GetName() == "aspect-accessory")
 				{
 					// assert that the object supports the name aspect
-					assert(NewObject->GetAspectAccessory() != 0);
+					assert(NewObject->GetAspectAccessory() != nullptr);
 					// read data related to the name aspect
-					for(std::vector< Element * >::const_iterator AspectChild = (*ObjectChild)->GetChilds().begin(); AspectChild != (*ObjectChild)->GetChilds().end(); ++AspectChild)
+					for(auto AspectChild : ObjectChild->GetChilds())
 					{
-						if((*AspectChild)->GetName() == "slot")
+						if(AspectChild->GetName() == "slot")
 						{
-							assert((*AspectChild)->HasAttribute("slot-identifier") == true);
+							assert(AspectChild->HasAttribute("slot-identifier") == true);
 							// read in third pass
 						}
 						else
 						{
-							throw std::runtime_error("The \"" + (*ObjectChild)->GetName() + "\" element for the object \"" + (*SaveChild)->GetAttribute("object-identifier") + "\" contains an unknown element \"" + (*AspectChild)->GetName() + "\".");
+							throw std::runtime_error("The \"" + ObjectChild->GetName() + "\" element for the object \"" + SaveChild->GetAttribute("object-identifier") + "\" contains an unknown element \"" + AspectChild->GetName() + "\".");
 						}
 					}
 				}
-				else if((*ObjectChild)->GetName() == "aspect-name")
+				else if(ObjectChild->GetName() == "aspect-name")
 				{
 					// assert that the object supports the name aspect
-					assert(NewObject->GetAspectName() != 0);
+					assert(NewObject->GetAspectName() != nullptr);
 					// read data related to the name aspect
-					for(std::vector< Element * >::const_iterator AspectChild = (*ObjectChild)->GetChilds().begin(); AspectChild != (*ObjectChild)->GetChilds().end(); ++AspectChild)
+					for(auto AspectChild : ObjectChild->GetChilds())
 					{
-						if((*AspectChild)->GetName() == "name")
+						if(AspectChild->GetName() == "name")
 						{
-							assert((*AspectChild)->HasAttribute("value") == true);
-							NewObject->GetAspectName()->SetName((*AspectChild)->GetAttribute("value"));
+							assert(AspectChild->HasAttribute("value") == true);
+							NewObject->GetAspectName()->SetName(AspectChild->GetAttribute("value"));
 						}
 						else
 						{
-							throw std::runtime_error("The \"" + (*ObjectChild)->GetName() + "\" element for the object \"" + (*SaveChild)->GetAttribute("object-identifier") + "\" contains an unknown element \"" + (*AspectChild)->GetName() + "\".");
+							throw std::runtime_error("The \"" + ObjectChild->GetName() + "\" element for the object \"" + SaveChild->GetAttribute("object-identifier") + "\" contains an unknown element \"" + AspectChild->GetName() + "\".");
 						}
 					}
 				}
-				else if((*ObjectChild)->GetName() == "aspect-object-container")
+				else if(ObjectChild->GetName() == "aspect-object-container")
 				{
 					// assert that the object supports the object container aspect
-					assert(NewObject->GetAspectObjectContainer() != 0);
+					assert(NewObject->GetAspectObjectContainer() != nullptr);
 					// read data related to the object container aspect
-					for(std::vector< Element * >::const_iterator AspectChild = (*ObjectChild)->GetChilds().begin(); AspectChild != (*ObjectChild)->GetChilds().end(); ++AspectChild)
+					for(auto AspectChild : ObjectChild->GetChilds())
 					{
-						if((*AspectChild)->GetName() == "content")
+						if(AspectChild->GetName() == "content")
 						{
-							assert((*AspectChild)->HasAttribute("object-identifier") == true);
+							assert(AspectChild->HasAttribute("object-identifier") == true);
 							// read in second pass
 						}
 						else
 						{
-							throw std::runtime_error("The \"" + (*ObjectChild)->GetName() + "\" element for the object \"" + (*SaveChild)->GetAttribute("object-identifier") + "\" contains an unknown element \"" + (*AspectChild)->GetName() + "\".");
+							throw std::runtime_error("The \"" + ObjectChild->GetName() + "\" element for the object \"" + SaveChild->GetAttribute("object-identifier") + "\" contains an unknown element \"" + AspectChild->GetName() + "\".");
 						}
 					}
 				}
-				else if((*ObjectChild)->GetName() == "aspect-physical")
+				else if(ObjectChild->GetName() == "aspect-physical")
 				{
 					// assert that the object supports the physical aspect
-					assert(NewObject->GetAspectPhysical() != 0);
+					assert(NewObject->GetAspectPhysical() != nullptr);
 					// read data related to the physical aspect
-					for(std::vector< Element * >::const_iterator AspectChild = (*ObjectChild)->GetChilds().begin(); AspectChild != (*ObjectChild)->GetChilds().end(); ++AspectChild)
+					for(auto AspectChild : ObjectChild->GetChilds())
 					{
-						if((*AspectChild)->GetName() == "radial-size")
+						if(AspectChild->GetName() == "radial-size")
 						{
-							assert((*AspectChild)->HasAttribute("value") == true);
-							NewObject->GetAspectPhysical()->SetRadialSize(from_string_cast< float >((*AspectChild)->GetAttribute("value")));
+							assert(AspectChild->HasAttribute("value") == true);
+							NewObject->GetAspectPhysical()->SetRadialSize(from_string_cast< float >(AspectChild->GetAttribute("value")));
 						}
-						else if((*AspectChild)->GetName() == "space-requirement")
+						else if(AspectChild->GetName() == "space-requirement")
 						{
-							assert((*AspectChild)->HasAttribute("value") == true);
-							NewObject->GetAspectPhysical()->SetSpaceRequirement(from_string_cast< float >((*AspectChild)->GetAttribute("value")));
+							assert(AspectChild->HasAttribute("value") == true);
+							NewObject->GetAspectPhysical()->SetSpaceRequirement(from_string_cast< float >(AspectChild->GetAttribute("value")));
 						}
 						else
 						{
-							throw std::runtime_error("The \"" + (*ObjectChild)->GetName() + "\" element for the object \"" + (*SaveChild)->GetAttribute("object-identifier") + "\" contains an unknown element \"" + (*AspectChild)->GetName() + "\".");
+							throw std::runtime_error("The \"" + ObjectChild->GetName() + "\" element for the object \"" + SaveChild->GetAttribute("object-identifier") + "\" contains an unknown element \"" + AspectChild->GetName() + "\".");
 						}
 					}
 				}
-				else if((*ObjectChild)->GetName() == "aspect-position")
+				else if(ObjectChild->GetName() == "aspect-position")
 				{
 					// assert that the object supports the position aspect
-					assert(NewObject->GetAspectPosition() != 0);
+					assert(NewObject->GetAspectPosition() != nullptr);
 					// read data related to the position aspect
-					for(std::vector< Element * >::const_iterator AspectChild = (*ObjectChild)->GetChilds().begin(); AspectChild != (*ObjectChild)->GetChilds().end(); ++AspectChild)
+					for(auto AspectChild : ObjectChild->GetChilds())
 					{
-						if((*AspectChild)->GetName() == "orientation")
+						if(AspectChild->GetName() == "orientation")
 						{
-							assert((*AspectChild)->HasAttribute("w") == true);
-							assert((*AspectChild)->HasAttribute("x") == true);
-							assert((*AspectChild)->HasAttribute("y") == true);
-							assert((*AspectChild)->HasAttribute("z") == true);
-							NewObject->GetAspectPosition()->SetOrientation(Quaternion(from_string_cast< float >((*AspectChild)->GetAttribute("w")), from_string_cast< float >((*AspectChild)->GetAttribute("x")), from_string_cast< float >((*AspectChild)->GetAttribute("y")), from_string_cast< float >((*AspectChild)->GetAttribute("z"))));
+							assert(AspectChild->HasAttribute("w") == true);
+							assert(AspectChild->HasAttribute("x") == true);
+							assert(AspectChild->HasAttribute("y") == true);
+							assert(AspectChild->HasAttribute("z") == true);
+							NewObject->GetAspectPosition()->SetOrientation(Quaternion(from_string_cast< float >(AspectChild->GetAttribute("w")), from_string_cast< float >(AspectChild->GetAttribute("x")), from_string_cast< float >(AspectChild->GetAttribute("y")), from_string_cast< float >(AspectChild->GetAttribute("z"))));
 						}
-						else if((*AspectChild)->GetName() == "position")
+						else if(AspectChild->GetName() == "position")
 						{
-							assert((*AspectChild)->HasAttribute("x") == true);
-							assert((*AspectChild)->HasAttribute("y") == true);
-							assert((*AspectChild)->HasAttribute("z") == true);
-							NewObject->GetAspectPosition()->SetPosition(Vector3f(from_string_cast< float >((*AspectChild)->GetAttribute("x")), from_string_cast< float >((*AspectChild)->GetAttribute("y")), from_string_cast< float >((*AspectChild)->GetAttribute("z"))));
+							assert(AspectChild->HasAttribute("x") == true);
+							assert(AspectChild->HasAttribute("y") == true);
+							assert(AspectChild->HasAttribute("z") == true);
+							NewObject->GetAspectPosition()->SetPosition(Vector3f(from_string_cast< float >(AspectChild->GetAttribute("x")), from_string_cast< float >(AspectChild->GetAttribute("y")), from_string_cast< float >(AspectChild->GetAttribute("z"))));
 						}
 						else
 						{
-							throw std::runtime_error("The \"" + (*ObjectChild)->GetName() + "\" element for the object \"" + (*SaveChild)->GetAttribute("object-identifier") + "\" contains an unknown element \"" + (*AspectChild)->GetName() + "\".");
+							throw std::runtime_error("The \"" + ObjectChild->GetName() + "\" element for the object \"" + SaveChild->GetAttribute("object-identifier") + "\" contains an unknown element \"" + AspectChild->GetName() + "\".");
 						}
 					}
 				}
-				else if((*ObjectChild)->GetName() == "aspect-visualization")
+				else if(ObjectChild->GetName() == "aspect-visualization")
 				{
 					// assert that the object supports the visualization aspect
-					assert(NewObject->GetAspectVisualization() != 0);
+					assert(NewObject->GetAspectVisualization() != nullptr);
 					// read data related to the visualization aspect
-					for(std::vector< Element * >::const_iterator AspectChild = (*ObjectChild)->GetChilds().begin(); AspectChild != (*ObjectChild)->GetChilds().end(); ++AspectChild)
+					for(auto AspectChild : ObjectChild->GetChilds())
 					{
-						if((*AspectChild)->GetName() == "part")
+						if(AspectChild->GetName() == "part")
 						{
-							assert((*AspectChild)->HasAttribute("identifier") == true);
+							assert(AspectChild->HasAttribute("identifier") == true);
 							
 							Graphics::Material * NewPartMaterial(new Graphics::Material());
 							
-							for(std::vector< Element * >::const_iterator PartChild = (*AspectChild)->GetChilds().begin(); PartChild != (*AspectChild)->GetChilds().end(); ++PartChild)
+							for(auto PartChild : AspectChild->GetChilds())
 							{
-								if((*PartChild)->GetName() == "material-diffuse-color")
+								if(PartChild->GetName() == "material-diffuse-color")
 								{
-									assert((*PartChild)->HasAttribute("red") == true);
-									assert((*PartChild)->HasAttribute("green") == true);
-									assert((*PartChild)->HasAttribute("blue") == true);
-									assert((*PartChild)->HasAttribute("opacity") == true);
-									NewPartMaterial->SetDiffuseColor(new Color(from_string_cast< float >((*PartChild)->GetAttribute("red")), from_string_cast< float >((*PartChild)->GetAttribute("green")), from_string_cast< float >((*PartChild)->GetAttribute("blue")), from_string_cast< float >((*PartChild)->GetAttribute("opacity"))));
+									assert(PartChild->HasAttribute("red") == true);
+									assert(PartChild->HasAttribute("green") == true);
+									assert(PartChild->HasAttribute("blue") == true);
+									assert(PartChild->HasAttribute("opacity") == true);
+									NewPartMaterial->SetDiffuseColor(new Color(from_string_cast< float >(PartChild->GetAttribute("red")), from_string_cast< float >(PartChild->GetAttribute("green")), from_string_cast< float >(PartChild->GetAttribute("blue")), from_string_cast< float >(PartChild->GetAttribute("opacity"))));
 								}
-								else if((*PartChild)->GetName() == "material-specular-color")
+								else if(PartChild->GetName() == "material-specular-color")
 								{
-									assert((*PartChild)->HasAttribute("red") == true);
-									assert((*PartChild)->HasAttribute("green") == true);
-									assert((*PartChild)->HasAttribute("blue") == true);
-									assert((*PartChild)->HasAttribute("opacity") == true);
-									NewPartMaterial->SetSpecularColor(new Color(from_string_cast< float >((*PartChild)->GetAttribute("red")), from_string_cast< float >((*PartChild)->GetAttribute("green")), from_string_cast< float >((*PartChild)->GetAttribute("blue")), from_string_cast< float >((*PartChild)->GetAttribute("opacity"))));
+									assert(PartChild->HasAttribute("red") == true);
+									assert(PartChild->HasAttribute("green") == true);
+									assert(PartChild->HasAttribute("blue") == true);
+									assert(PartChild->HasAttribute("opacity") == true);
+									NewPartMaterial->SetSpecularColor(new Color(from_string_cast< float >(PartChild->GetAttribute("red")), from_string_cast< float >(PartChild->GetAttribute("green")), from_string_cast< float >(PartChild->GetAttribute("blue")), from_string_cast< float >(PartChild->GetAttribute("opacity"))));
 								}
-								else if((*PartChild)->GetName() == "material-shininess")
+								else if(PartChild->GetName() == "material-shininess")
 								{
-									assert((*PartChild)->HasAttribute("value") == true);
-									NewPartMaterial->SetShininess(from_string_cast< float >((*PartChild)->GetAttribute("value")));
+									assert(PartChild->HasAttribute("value") == true);
+									NewPartMaterial->SetShininess(from_string_cast< float >(PartChild->GetAttribute("value")));
 								}
 								else
 								{
-									throw std::runtime_error("The \"" + (*ObjectChild)->GetName() + "\" element for the object \"" + (*SaveChild)->GetAttribute("object-identifier") + "\" contains an unknown element \"" + (*PartChild)->GetName() + "\".");
+									throw std::runtime_error("The \"" + ObjectChild->GetName() + "\" element for the object \"" + SaveChild->GetAttribute("object-identifier") + "\" contains an unknown element \"" + PartChild->GetName() + "\".");
 								}
 							}
-							NewObject->GetAspectVisualization()->GetVisualizationPrototype()->SetPartMaterial((*AspectChild)->GetAttribute("identifier"), NewPartMaterial);
+							NewObject->GetAspectVisualization()->GetVisualizationPrototype()->SetPartMaterial(AspectChild->GetAttribute("identifier"), NewPartMaterial);
 						}
 						else
 						{
-							throw std::runtime_error("The \"" + (*ObjectChild)->GetName() + "\" element for the object \"" + (*SaveChild)->GetAttribute("object-identifier") + "\" contains an unknown element \"" + (*AspectChild)->GetName() + "\".");
+							throw std::runtime_error("The \"" + ObjectChild->GetName() + "\" element for the object \"" + SaveChild->GetAttribute("object-identifier") + "\" contains an unknown element \"" + AspectChild->GetName() + "\".");
 						}
 					}
 				}
-				else if((*ObjectChild)->GetName() == "type-specific")
+				else if(ObjectChild->GetName() == "type-specific")
 				{
-					if((*SaveChild)->GetAttribute("type-identifier") == "battery")
+					if(SaveChild->GetAttribute("type-identifier") == "battery")
 					{
 						Battery * NewBattery(dynamic_cast< Battery * >(NewObject));
 						
-						assert(NewBattery != 0);
-						for(std::vector< Element * >::const_iterator TypeSpecificChild = (*ObjectChild)->GetChilds().begin(); TypeSpecificChild != (*ObjectChild)->GetChilds().end(); ++TypeSpecificChild)
+						assert(NewBattery != nullptr);
+						for(auto TypeSpecificChild : ObjectChild->GetChilds())
 						{
-							if((*TypeSpecificChild)->GetName() == "energy")
+							if(TypeSpecificChild->GetName() == "energy")
 							{
-								assert((*TypeSpecificChild)->HasAttribute("value") == true);
-								NewBattery->SetEnergy(from_string_cast< float >((*TypeSpecificChild)->GetAttribute("value")));
+								assert(TypeSpecificChild->HasAttribute("value") == true);
+								NewBattery->SetEnergy(from_string_cast< float >(TypeSpecificChild->GetAttribute("value")));
 							}
-							else if((*TypeSpecificChild)->GetName() == "energy-capacity")
+							else if(TypeSpecificChild->GetName() == "energy-capacity")
 							{
-								assert((*TypeSpecificChild)->HasAttribute("value") == true);
-								NewBattery->SetEnergyCapacity(from_string_cast< float >((*TypeSpecificChild)->GetAttribute("value")));
+								assert(TypeSpecificChild->HasAttribute("value") == true);
+								NewBattery->SetEnergyCapacity(from_string_cast< float >(TypeSpecificChild->GetAttribute("value")));
 							}
 							else
 							{
-								throw std::runtime_error("The \"" + (*ObjectChild)->GetName() + "\" element for the object \"" + (*SaveChild)->GetAttribute("object-identifier") + "\" contains an unknown element \"" + (*TypeSpecificChild)->GetName() + "\".");
+								throw std::runtime_error("The \"" + ObjectChild->GetName() + "\" element for the object \"" + SaveChild->GetAttribute("object-identifier") + "\" contains an unknown element \"" + TypeSpecificChild->GetName() + "\".");
 							}
 						}
 					}
-					else if((*SaveChild)->GetAttribute("type-identifier") == "character")
+					else if(SaveChild->GetAttribute("type-identifier") == "character")
 					{
 						Character * NewCharacter(dynamic_cast< Character * >(NewObject));
 						
-						assert(NewCharacter != 0);
-						for(std::vector< Element * >::const_iterator TypeSpecificChild = (*ObjectChild)->GetChilds().begin(); TypeSpecificChild != (*ObjectChild)->GetChilds().end(); ++TypeSpecificChild)
+						assert(NewCharacter != nullptr);
+						for(auto TypeSpecificChild : ObjectChild->GetChilds())
 						{
-							if((*TypeSpecificChild)->GetName() == "credits")
+							if(TypeSpecificChild->GetName() == "credits")
 							{
-								assert((*TypeSpecificChild)->HasAttribute("value") == true);
-								NewCharacter->SetCredits(from_string_cast< unsigned_numeric >((*TypeSpecificChild)->GetAttribute("value")));
+								assert(TypeSpecificChild->HasAttribute("value") == true);
+								NewCharacter->SetCredits(from_string_cast< unsigned_numeric >(TypeSpecificChild->GetAttribute("value")));
 							}
-							else if((*TypeSpecificChild)->GetName() == "map-knowledge")
+							else if(TypeSpecificChild->GetName() == "map-knowledge")
 							{
-								for(std::vector< Element * >::const_iterator MapKnowledgeChild = (*TypeSpecificChild)->GetChilds().begin(); MapKnowledgeChild != (*TypeSpecificChild)->GetChilds().end(); ++MapKnowledgeChild)
+								for(std::vector< Element * >::const_iterator MapKnowledgeChild = TypeSpecificChild->GetChilds().begin(); MapKnowledgeChild != TypeSpecificChild->GetChilds().end(); ++MapKnowledgeChild)
 								{
 									if((*MapKnowledgeChild)->GetName() == "explored-system")
 									{
@@ -1877,298 +1877,298 @@ void LoadGameFromElement(const Element * SaveElement)
 									}
 									else
 									{
-										throw std::runtime_error("The \"" + (*TypeSpecificChild)->GetName() + "\" element for the object \"" + (*SaveChild)->GetAttribute("object-identifier") + "\" contains an unknown element \"" + (*MapKnowledgeChild)->GetName() + "\".");
+										throw std::runtime_error("The \"" + TypeSpecificChild->GetName() + "\" element for the object \"" + SaveChild->GetAttribute("object-identifier") + "\" contains an unknown element \"" + (*MapKnowledgeChild)->GetName() + "\".");
 									}
 								}
 							}
 							else
 							{
-								throw std::runtime_error("The \"" + (*ObjectChild)->GetName() + "\" element for the object \"" + (*SaveChild)->GetAttribute("object-identifier") + "\" contains an unknown element \"" + (*TypeSpecificChild)->GetName() + "\".");
+								throw std::runtime_error("The \"" + ObjectChild->GetName() + "\" element for the object \"" + SaveChild->GetAttribute("object-identifier") + "\" contains an unknown element \"" + TypeSpecificChild->GetName() + "\".");
 							}
 						}
 					}
-					else if((*SaveChild)->GetAttribute("type-identifier") == "commodity")
+					else if(SaveChild->GetAttribute("type-identifier") == "commodity")
 					{
 						Commodity * NewCommodity(dynamic_cast< Commodity * >(NewObject));
 						
 						assert(NewCommodity != 0);
-						for(std::vector< Element * >::const_iterator TypeSpecificChild = (*ObjectChild)->GetChilds().begin(); TypeSpecificChild != (*ObjectChild)->GetChilds().end(); ++TypeSpecificChild)
+						for(auto TypeSpecificChild : ObjectChild->GetChilds())
 						{
-							if((*TypeSpecificChild)->GetName() == "angular-velocity")
+							if(TypeSpecificChild->GetName() == "angular-velocity")
 							{
-								assert((*TypeSpecificChild)->HasAttribute("axis-x") == true);
-								assert((*TypeSpecificChild)->HasAttribute("axis-y") == true);
-								assert((*TypeSpecificChild)->HasAttribute("axis-z") == true);
-								assert((*TypeSpecificChild)->HasAttribute("angle") == true);
-								NewCommodity->SetAngularVelocity(AxisAngle(from_string_cast< float >((*TypeSpecificChild)->GetAttribute("axis-x")), from_string_cast< float >((*TypeSpecificChild)->GetAttribute("axis-y")), from_string_cast< float >((*TypeSpecificChild)->GetAttribute("axis-z")), from_string_cast< float >((*TypeSpecificChild)->GetAttribute("angle"))));
+								assert(TypeSpecificChild->HasAttribute("axis-x") == true);
+								assert(TypeSpecificChild->HasAttribute("axis-y") == true);
+								assert(TypeSpecificChild->HasAttribute("axis-z") == true);
+								assert(TypeSpecificChild->HasAttribute("angle") == true);
+								NewCommodity->SetAngularVelocity(AxisAngle(from_string_cast< float >(TypeSpecificChild->GetAttribute("axis-x")), from_string_cast< float >(TypeSpecificChild->GetAttribute("axis-y")), from_string_cast< float >(TypeSpecificChild->GetAttribute("axis-z")), from_string_cast< float >(TypeSpecificChild->GetAttribute("angle"))));
 							}
-							else if((*TypeSpecificChild)->GetName() == "hull")
+							else if(TypeSpecificChild->GetName() == "hull")
 							{
-								assert((*TypeSpecificChild)->HasAttribute("value") == true);
-								NewCommodity->SetHull(from_string_cast< float >((*TypeSpecificChild)->GetAttribute("value")));
+								assert(TypeSpecificChild->HasAttribute("value") == true);
+								NewCommodity->SetHull(from_string_cast< float >(TypeSpecificChild->GetAttribute("value")));
 							}
-							else if((*TypeSpecificChild)->GetName() == "velocity")
+							else if(TypeSpecificChild->GetName() == "velocity")
 							{
-								assert((*TypeSpecificChild)->HasAttribute("x") == true);
-								assert((*TypeSpecificChild)->HasAttribute("y") == true);
-								assert((*TypeSpecificChild)->HasAttribute("z") == true);
-								NewCommodity->SetVelocity(Vector3f(from_string_cast< float >((*TypeSpecificChild)->GetAttribute("x")), from_string_cast< float >((*TypeSpecificChild)->GetAttribute("y")), from_string_cast< float >((*TypeSpecificChild)->GetAttribute("z"))));
+								assert(TypeSpecificChild->HasAttribute("x") == true);
+								assert(TypeSpecificChild->HasAttribute("y") == true);
+								assert(TypeSpecificChild->HasAttribute("z") == true);
+								NewCommodity->SetVelocity(Vector3f(from_string_cast< float >(TypeSpecificChild->GetAttribute("x")), from_string_cast< float >(TypeSpecificChild->GetAttribute("y")), from_string_cast< float >(TypeSpecificChild->GetAttribute("z"))));
 							}
 							else
 							{
-								throw std::runtime_error("The \"" + (*ObjectChild)->GetName() + "\" element for the object \"" + (*SaveChild)->GetAttribute("object-identifier") + "\" contains an unknown element \"" + (*TypeSpecificChild)->GetName() + "\".");
+								throw std::runtime_error("The \"" + ObjectChild->GetName() + "\" element for the object \"" + SaveChild->GetAttribute("object-identifier") + "\" contains an unknown element \"" + TypeSpecificChild->GetName() + "\".");
 							}
 						}
 					}
-					else if((*SaveChild)->GetAttribute("type-identifier") == "generator")
+					else if(SaveChild->GetAttribute("type-identifier") == "generator")
 					{
 						Generator * NewGenerator(dynamic_cast< Generator * >(NewObject));
 						
 						assert(NewGenerator != 0);
-						for(std::vector< Element * >::const_iterator TypeSpecificChild = (*ObjectChild)->GetChilds().begin(); TypeSpecificChild != (*ObjectChild)->GetChilds().end(); ++TypeSpecificChild)
+						for(auto TypeSpecificChild : ObjectChild->GetChilds())
 						{
-							if((*TypeSpecificChild)->GetName() == "energy-provision-per-second")
+							if(TypeSpecificChild->GetName() == "energy-provision-per-second")
 							{
-								assert((*TypeSpecificChild)->HasAttribute("value") == true);
-								NewGenerator->SetEnergyProvisionPerSecond(from_string_cast< float >((*TypeSpecificChild)->GetAttribute("value")));
+								assert(TypeSpecificChild->HasAttribute("value") == true);
+								NewGenerator->SetEnergyProvisionPerSecond(from_string_cast< float >(TypeSpecificChild->GetAttribute("value")));
 							}
 							else
 							{
-								throw std::runtime_error("The \"" + (*ObjectChild)->GetName() + "\" element for the object \"" + (*SaveChild)->GetAttribute("object-identifier") + "\" contains an unknown element \"" + (*TypeSpecificChild)->GetName() + "\".");
+								throw std::runtime_error("The \"" + ObjectChild->GetName() + "\" element for the object \"" + SaveChild->GetAttribute("object-identifier") + "\" contains an unknown element \"" + TypeSpecificChild->GetName() + "\".");
 							}
 						}
 					}
-					else if((*SaveChild)->GetAttribute("type-identifier") == "hangar")
+					else if(SaveChild->GetAttribute("type-identifier") == "hangar")
 					{
 						Hangar * NewHangar(dynamic_cast< Hangar * >(NewObject));
 						
 						assert(NewHangar != nullptr);
-						for(std::vector< Element * >::const_iterator TypeSpecificChild = (*ObjectChild)->GetChilds().begin(); TypeSpecificChild != (*ObjectChild)->GetChilds().end(); ++TypeSpecificChild)
+						for(auto TypeSpecificChild : ObjectChild->GetChilds())
 						{
-							if((*TypeSpecificChild)->GetName() == "character")
+							if(TypeSpecificChild->GetName() == "character")
 							{
-								assert((*TypeSpecificChild)->HasAttribute("object-identifier") == true);
+								assert(TypeSpecificChild->HasAttribute("object-identifier") == true);
 								// read in second pass
 							}
 							else
 							{
-								throw std::runtime_error("The \"" + (*ObjectChild)->GetName() + "\" element for the object \"" + (*SaveChild)->GetAttribute("object-identifier") + "\" contains an unknown element \"" + (*TypeSpecificChild)->GetName() + "\".");
+								throw std::runtime_error("The \"" + ObjectChild->GetName() + "\" element for the object \"" + SaveChild->GetAttribute("object-identifier") + "\" contains an unknown element \"" + TypeSpecificChild->GetName() + "\".");
 							}
 						}
 					}
-					else if((*SaveChild)->GetAttribute("type-identifier") == "mind")
+					else if(SaveChild->GetAttribute("type-identifier") == "mind")
 					{
 						Mind * NewMind(dynamic_cast< Mind * >(NewObject));
 						
-						assert(NewMind != 0);
-						for(std::vector< Element * >::const_iterator TypeSpecificChild = (*ObjectChild)->GetChilds().begin(); TypeSpecificChild != (*ObjectChild)->GetChilds().end(); ++TypeSpecificChild)
+						assert(NewMind != nullptr);
+						for(auto TypeSpecificChild : ObjectChild->GetChilds())
 						{
-							if((*TypeSpecificChild)->GetName() == "character")
+							if(TypeSpecificChild->GetName() == "character")
 							{
-								assert((*TypeSpecificChild)->HasAttribute("object-identifier") == true);
+								assert(TypeSpecificChild->HasAttribute("object-identifier") == true);
 								// read in second pass
 							}
 							else
 							{
-								throw std::runtime_error("The \"" + (*ObjectChild)->GetName() + "\" element for the object \"" + (*SaveChild)->GetAttribute("object-identifier") + "\" contains an unknown element \"" + (*TypeSpecificChild)->GetName() + "\".");
+								throw std::runtime_error("The \"" + ObjectChild->GetName() + "\" element for the object \"" + SaveChild->GetAttribute("object-identifier") + "\" contains an unknown element \"" + TypeSpecificChild->GetName() + "\".");
 							}
 						}
 					}
-					else if((*SaveChild)->GetAttribute("type-identifier") == "ship")
+					else if(SaveChild->GetAttribute("type-identifier") == "ship")
 					{
 						Ship * NewShip(dynamic_cast< Ship * >(NewObject));
 						
-						assert(NewShip != 0);
-						for(std::vector< Element * >::const_iterator TypeSpecificChild = (*ObjectChild)->GetChilds().begin(); TypeSpecificChild != (*ObjectChild)->GetChilds().end(); ++TypeSpecificChild)
+						assert(NewShip != nullptr);
+						for(auto TypeSpecificChild : ObjectChild->GetChilds())
 						{
-							if((*TypeSpecificChild)->GetName() == "exhaust-offset")
+							if(TypeSpecificChild->GetName() == "exhaust-offset")
 							{
-								assert((*TypeSpecificChild)->HasAttribute("x") == true);
-								assert((*TypeSpecificChild)->HasAttribute("y") == true);
-								assert((*TypeSpecificChild)->HasAttribute("z") == true);
-								NewShip->SetExhaustOffset(Vector3f(from_string_cast< float >((*TypeSpecificChild)->GetAttribute("x")), from_string_cast< float >((*TypeSpecificChild)->GetAttribute("y")), from_string_cast< float >((*TypeSpecificChild)->GetAttribute("z"))));
+								assert(TypeSpecificChild->HasAttribute("x") == true);
+								assert(TypeSpecificChild->HasAttribute("y") == true);
+								assert(TypeSpecificChild->HasAttribute("z") == true);
+								NewShip->SetExhaustOffset(Vector3f(from_string_cast< float >(TypeSpecificChild->GetAttribute("x")), from_string_cast< float >(TypeSpecificChild->GetAttribute("y")), from_string_cast< float >(TypeSpecificChild->GetAttribute("z"))));
 							}
-							else if((*TypeSpecificChild)->GetName() == "faction")
+							else if(TypeSpecificChild->GetName() == "faction")
 							{
-								assert((*TypeSpecificChild)->HasAttribute("identifier") == true);
-								NewShip->SetFaction(g_Galaxy->GetFaction((*TypeSpecificChild)->GetAttribute("identifier"))->GetReference());
+								assert(TypeSpecificChild->HasAttribute("identifier") == true);
+								NewShip->SetFaction(g_Galaxy->GetFaction(TypeSpecificChild->GetAttribute("identifier"))->GetReference());
 							}
-							else if((*TypeSpecificChild)->GetName() == "fuel")
+							else if(TypeSpecificChild->GetName() == "fuel")
 							{
-								assert((*TypeSpecificChild)->HasAttribute("value") == true);
-								NewShip->SetFuel(from_string_cast< float >((*TypeSpecificChild)->GetAttribute("value")));
+								assert(TypeSpecificChild->HasAttribute("value") == true);
+								NewShip->SetFuel(from_string_cast< float >(TypeSpecificChild->GetAttribute("value")));
 							}
-							else if((*TypeSpecificChild)->GetName() == "fuel-capacity")
+							else if(TypeSpecificChild->GetName() == "fuel-capacity")
 							{
-								assert((*TypeSpecificChild)->HasAttribute("value") == true);
-								NewShip->SetFuelCapacity(from_string_cast< float >((*TypeSpecificChild)->GetAttribute("value")));
+								assert(TypeSpecificChild->HasAttribute("value") == true);
+								NewShip->SetFuelCapacity(from_string_cast< float >(TypeSpecificChild->GetAttribute("value")));
 							}
-							else if((*TypeSpecificChild)->GetName() == "fuel-needed-to-jump")
+							else if(TypeSpecificChild->GetName() == "fuel-needed-to-jump")
 							{
-								assert((*TypeSpecificChild)->HasAttribute("value") == true);
-								NewShip->SetFuelNeededToJump(from_string_cast< float >((*TypeSpecificChild)->GetAttribute("value")));
+								assert(TypeSpecificChild->HasAttribute("value") == true);
+								NewShip->SetFuelNeededToJump(from_string_cast< float >(TypeSpecificChild->GetAttribute("value")));
 							}
-							else if((*TypeSpecificChild)->GetName() == "hull")
+							else if(TypeSpecificChild->GetName() == "hull")
 							{
-								assert((*TypeSpecificChild)->HasAttribute("value") == true);
-								NewShip->SetHull(from_string_cast< float >((*TypeSpecificChild)->GetAttribute("value")));
+								assert(TypeSpecificChild->HasAttribute("value") == true);
+								NewShip->SetHull(from_string_cast< float >(TypeSpecificChild->GetAttribute("value")));
 							}
-							else if((*TypeSpecificChild)->GetName() == "hull-capacity")
+							else if(TypeSpecificChild->GetName() == "hull-capacity")
 							{
-								assert((*TypeSpecificChild)->HasAttribute("value") == true);
-								NewShip->SetHullCapacity(from_string_cast< float >((*TypeSpecificChild)->GetAttribute("value")));
+								assert(TypeSpecificChild->HasAttribute("value") == true);
+								NewShip->SetHullCapacity(from_string_cast< float >(TypeSpecificChild->GetAttribute("value")));
 							}
-							else if((*TypeSpecificChild)->GetName() == "maximum-forward-thrust")
+							else if(TypeSpecificChild->GetName() == "maximum-forward-thrust")
 							{
-								assert((*TypeSpecificChild)->HasAttribute("value") == true);
-								NewShip->SetMaximumForwardThrust(from_string_cast< float >((*TypeSpecificChild)->GetAttribute("value")));
+								assert(TypeSpecificChild->HasAttribute("value") == true);
+								NewShip->SetMaximumForwardThrust(from_string_cast< float >(TypeSpecificChild->GetAttribute("value")));
 							}
-							else if((*TypeSpecificChild)->GetName() == "maximum-speed")
+							else if(TypeSpecificChild->GetName() == "maximum-speed")
 							{
-								assert((*TypeSpecificChild)->HasAttribute("value") == true);
-								NewShip->SetMaximumSpeed(from_string_cast< float >((*TypeSpecificChild)->GetAttribute("value")));
+								assert(TypeSpecificChild->HasAttribute("value") == true);
+								NewShip->SetMaximumSpeed(from_string_cast< float >(TypeSpecificChild->GetAttribute("value")));
 							}
-							else if((*TypeSpecificChild)->GetName() == "maximum-turn-speed")
+							else if(TypeSpecificChild->GetName() == "maximum-turn-speed")
 							{
-								assert((*TypeSpecificChild)->HasAttribute("value") == true);
-								NewShip->SetMaximumTurnSpeed(from_string_cast< float >((*TypeSpecificChild)->GetAttribute("value")));
+								assert(TypeSpecificChild->HasAttribute("value") == true);
+								NewShip->SetMaximumTurnSpeed(from_string_cast< float >(TypeSpecificChild->GetAttribute("value")));
 							}
-							else if((*TypeSpecificChild)->GetName() == "velocity")
+							else if(TypeSpecificChild->GetName() == "velocity")
 							{
-								assert((*TypeSpecificChild)->HasAttribute("x") == true);
-								assert((*TypeSpecificChild)->HasAttribute("y") == true);
-								assert((*TypeSpecificChild)->HasAttribute("z") == true);
-								NewShip->SetVelocity(Vector3f(from_string_cast< float >((*TypeSpecificChild)->GetAttribute("x")), from_string_cast< float >((*TypeSpecificChild)->GetAttribute("y")), from_string_cast< float >((*TypeSpecificChild)->GetAttribute("z"))));
+								assert(TypeSpecificChild->HasAttribute("x") == true);
+								assert(TypeSpecificChild->HasAttribute("y") == true);
+								assert(TypeSpecificChild->HasAttribute("z") == true);
+								NewShip->SetVelocity(Vector3f(from_string_cast< float >(TypeSpecificChild->GetAttribute("x")), from_string_cast< float >(TypeSpecificChild->GetAttribute("y")), from_string_cast< float >(TypeSpecificChild->GetAttribute("z"))));
 							}
 							else
 							{
-								throw std::runtime_error("The \"" + (*ObjectChild)->GetName() + "\" element for the object \"" + (*SaveChild)->GetAttribute("object-identifier") + "\" contains an unknown element \"" + (*TypeSpecificChild)->GetName() + "\".");
+								throw std::runtime_error("The \"" + ObjectChild->GetName() + "\" element for the object \"" + SaveChild->GetAttribute("object-identifier") + "\" contains an unknown element \"" + TypeSpecificChild->GetName() + "\".");
 							}
 						}
 					}
-					else if((*SaveChild)->GetAttribute("type-identifier") == "storage")
+					else if(SaveChild->GetAttribute("type-identifier") == "storage")
 					{
 						Storage * NewStorage(dynamic_cast< Storage * >(NewObject));
 						
-						assert(NewStorage != 0);
-						for(std::vector< Element * >::const_iterator TypeSpecificChild = (*ObjectChild)->GetChilds().begin(); TypeSpecificChild != (*ObjectChild)->GetChilds().end(); ++TypeSpecificChild)
+						assert(NewStorage != nullptr);
+						for(auto TypeSpecificChild : ObjectChild->GetChilds())
 						{
-							if((*TypeSpecificChild)->GetName() == "space-capacity")
+							if(TypeSpecificChild->GetName() == "space-capacity")
 							{
-								assert((*TypeSpecificChild)->HasAttribute("value") == true);
-								NewStorage->SetSpaceCapacity(from_string_cast< unsigned_numeric >((*TypeSpecificChild)->GetAttribute("value")));
+								assert(TypeSpecificChild->HasAttribute("value") == true);
+								NewStorage->SetSpaceCapacity(from_string_cast< unsigned_numeric >(TypeSpecificChild->GetAttribute("value")));
 							}
 							else
 							{
-								throw std::runtime_error("The \"" + (*ObjectChild)->GetName() + "\" element for the object \"" + (*SaveChild)->GetAttribute("object-identifier") + "\" contains an unknown element \"" + (*TypeSpecificChild)->GetName() + "\".");
+								throw std::runtime_error("The \"" + ObjectChild->GetName() + "\" element for the object \"" + SaveChild->GetAttribute("object-identifier") + "\" contains an unknown element \"" + TypeSpecificChild->GetName() + "\".");
 							}
 						}
 					}
-					else if((*SaveChild)->GetAttribute("type-identifier") == "weapon")
+					else if(SaveChild->GetAttribute("type-identifier") == "weapon")
 					{
 						Weapon * NewWeapon(dynamic_cast< Weapon * >(NewObject));
 						
-						assert(NewWeapon != 0);
-						for(std::vector< Element * >::const_iterator TypeSpecificChild = (*ObjectChild)->GetChilds().begin(); TypeSpecificChild != (*ObjectChild)->GetChilds().end(); ++TypeSpecificChild)
+						assert(NewWeapon != nullptr);
+						for(auto TypeSpecificChild : ObjectChild->GetChilds())
 						{
-							throw std::runtime_error("The \"" + (*ObjectChild)->GetName() + "\" element for the object \"" + (*SaveChild)->GetAttribute("object-identifier") + "\" contains an unknown element \"" + (*TypeSpecificChild)->GetName() + "\".");
+							throw std::runtime_error("The \"" + ObjectChild->GetName() + "\" element for the object \"" + SaveChild->GetAttribute("object-identifier") + "\" contains an unknown element \"" + TypeSpecificChild->GetName() + "\".");
 						}
 					}
 					else
 					{
-						throw std::runtime_error("The object \"" + (*SaveChild)->GetAttribute("object-identifier") + "\" requests a type-specific setup for the unknown type \"" + (*SaveChild)->GetAttribute("type-identifier") + "\".");
+						throw std::runtime_error("The object \"" + SaveChild->GetAttribute("object-identifier") + "\" requests a type-specific setup for the unknown type \"" + SaveChild->GetAttribute("type-identifier") + "\".");
 					}
 				}
 				else
 				{
-					throw std::runtime_error("The object \"" + (*SaveChild)->GetAttribute("object-identifier") + "\" contains an unidentified child element \"" + (*ObjectChild)->GetName() + "\".");
+					throw std::runtime_error("The object \"" + SaveChild->GetAttribute("object-identifier") + "\" contains an unidentified child element \"" + ObjectChild->GetName() + "\".");
 				}
 			}
 		}
 		else
 		{
-			throw std::runtime_error("The \"save\" element contains an unidentified child element \"" + (*SaveChild)->GetName() + "\".");
+			throw std::runtime_error("The \"save\" element contains an unidentified child element \"" + SaveChild->GetName() + "\".");
 		}
 	}
 	// this is a hack
 	assert(CurrentSystem.empty() == false);
 	g_CurrentSystem = g_Galaxy->GetSystem(CurrentSystem);
-	assert(g_CurrentSystem != 0);
+	assert(g_CurrentSystem != nullptr);
 	// in the second pass we do a fast skip over the childs to resolve any object references
 	// no errors except resolving errors will be displayed
 	// at the moment this also resolves back references/containments
-	for(std::vector< Element * >::const_iterator SaveChild = SaveChilds.begin(); SaveChild != SaveChilds.end(); ++SaveChild)
+	for(auto SaveChild : SaveElement->GetChilds())
 	{
-		if((*SaveChild)->GetName() == "main-camera")
+		if(SaveChild->GetName() == "main-camera")
 		{
-			for(std::vector< Element * >::const_iterator CameraChild = (*SaveChild)->GetChilds().begin(); CameraChild != (*SaveChild)->GetChilds().end(); ++CameraChild)
+			for(auto CameraChild : SaveChild->GetChilds())
 			{
-				if((*CameraChild)->GetName() == "focus")
+				if(CameraChild->GetName() == "focus")
 				{
-					Object * FocusObject(Object::GetObject((*CameraChild)->GetAttribute("object-identifier")));
+					Object * FocusObject(Object::GetObject(CameraChild->GetAttribute("object-identifier")));
 					
-					assert(FocusObject != 0);
+					assert(FocusObject != nullptr);
 					g_CameraFocus = FocusObject->GetReference();
 				}
 			}
 		}
-		else if((*SaveChild)->GetName() == "object")
+		else if(SaveChild->GetName() == "object")
 		{
-			assert((*SaveChild)->HasAttribute("object-identifier"));
+			assert(SaveChild->HasAttribute("object-identifier"));
 			
-			Object * TheObject(Object::GetObject((*SaveChild)->GetAttribute("object-identifier")));
+			Object * TheObject(Object::GetObject(SaveChild->GetAttribute("object-identifier")));
 			
-			assert(TheObject != 0);
-			for(std::vector< Element * >::const_iterator ObjectChild = (*SaveChild)->GetChilds().begin(); ObjectChild != (*SaveChild)->GetChilds().end(); ++ObjectChild)
+			assert(TheObject != nullptr);
+			for(auto ObjectChild : SaveChild->GetChilds())
 			{
-				if((*ObjectChild)->GetName() == "aspect-object-container")
+				if(ObjectChild->GetName() == "aspect-object-container")
 				{
-					for(std::vector< Element * >::const_iterator AspectChild = (*ObjectChild)->GetChilds().begin(); AspectChild != (*ObjectChild)->GetChilds().end(); ++AspectChild)
+					for(auto AspectChild : ObjectChild->GetChilds())
 					{
-						if((*AspectChild)->GetName() == "content")
+						if(AspectChild->GetName() == "content")
 						{
-							Object * Content(Object::GetObject((*AspectChild)->GetAttribute("object-identifier")));
+							Object * Content(Object::GetObject(AspectChild->GetAttribute("object-identifier")));
 							
-							assert(Content != 0);
+							assert(Content != nullptr);
 							TheObject->GetAspectObjectContainer()->AddContent(Content);
 						}
 					}
 				}
-				else if((*ObjectChild)->GetName() == "type-specific")
+				else if(ObjectChild->GetName() == "type-specific")
 				{
-					if((*SaveChild)->GetAttribute("type-identifier") == "character")
+					if(SaveChild->GetAttribute("type-identifier") == "character")
 					{
 						Character * TheCharacter(dynamic_cast< Character * >(TheObject));
 						
-						assert(TheCharacter != 0);
-						for(std::vector< Element * >::const_iterator TypeSpecificChild = (*ObjectChild)->GetChilds().begin(); TypeSpecificChild != (*ObjectChild)->GetChilds().end(); ++TypeSpecificChild)
+						assert(TheCharacter != nullptr);
+						for(auto TypeSpecificChild : ObjectChild->GetChilds())
 						{
-							if((*TypeSpecificChild)->GetName() == "map-knowledge")
+							if(TypeSpecificChild->GetName() == "map-knowledge")
 							{
-								for(std::vector< Element * >::const_iterator MapKnowledgeChild = (*TypeSpecificChild)->GetChilds().begin(); MapKnowledgeChild != (*TypeSpecificChild)->GetChilds().end(); ++MapKnowledgeChild)
+								for(auto MapKnowledgeChild : TypeSpecificChild->GetChilds())
 								{
-									if((*MapKnowledgeChild)->GetName() == "explored-system")
+									if(MapKnowledgeChild->GetName() == "explored-system")
 									{
-										Object * ExploredSystem(Object::GetObject((*MapKnowledgeChild)->GetAttribute("object-identifier")));
+										Object * ExploredSystem(Object::GetObject(MapKnowledgeChild->GetAttribute("object-identifier")));
 										
-										assert(ExploredSystem != 0);
-										assert(dynamic_cast< System * >(ExploredSystem) != 0);
+										assert(ExploredSystem != nullptr);
+										assert(dynamic_cast< System * >(ExploredSystem) != nullptr);
 										TheCharacter->GetMapKnowledge()->AddExploredSystem(dynamic_cast< System * >(ExploredSystem));
 									}
 								}
 							}
 						}
 					}
-					else if((*SaveChild)->GetAttribute("type-identifier") == "hangar")
+					else if(SaveChild->GetAttribute("type-identifier") == "hangar")
 					{
 						Hangar * TheHangar(dynamic_cast< Hangar * >(TheObject));
 						
 						assert(TheHangar != nullptr);
-						for(std::vector< Element * >::const_iterator TypeSpecificChild = (*ObjectChild)->GetChilds().begin(); TypeSpecificChild != (*ObjectChild)->GetChilds().end(); ++TypeSpecificChild)
+						for(auto TypeSpecificChild : ObjectChild->GetChilds())
 						{
-							if((*TypeSpecificChild)->GetName() == "character")
+							if(TypeSpecificChild->GetName() == "character")
 							{
-								Object * TheCharacter(Object::GetObject((*TypeSpecificChild)->GetAttribute("object-identifier")));
+								Object * TheCharacter(Object::GetObject(TypeSpecificChild->GetAttribute("object-identifier")));
 								
 								assert(TheCharacter != nullptr);
 								assert(dynamic_cast< Character * >(TheCharacter) != nullptr);
@@ -2176,30 +2176,30 @@ void LoadGameFromElement(const Element * SaveElement)
 							}
 						}
 					}
-					else if((*SaveChild)->GetAttribute("type-identifier") == "mind")
+					else if(SaveChild->GetAttribute("type-identifier") == "mind")
 					{
 						Mind * TheMind(dynamic_cast< Mind * >(TheObject));
 						
-						assert(TheMind != 0);
-						for(std::vector< Element * >::const_iterator TypeSpecificChild = (*ObjectChild)->GetChilds().begin(); TypeSpecificChild != (*ObjectChild)->GetChilds().end(); ++TypeSpecificChild)
+						assert(TheMind != nullptr);
+						for(auto TypeSpecificChild : ObjectChild->GetChilds())
 						{
-							if((*TypeSpecificChild)->GetName() == "character")
+							if(TypeSpecificChild->GetName() == "character")
 							{
-								Object * TheCharacter(Object::GetObject((*TypeSpecificChild)->GetAttribute("object-identifier")));
+								Object * TheCharacter(Object::GetObject(TypeSpecificChild->GetAttribute("object-identifier")));
 								
-								assert(TheCharacter != 0);
-								assert(dynamic_cast< Character * >(TheCharacter) != 0);
+								assert(TheCharacter != nullptr);
+								assert(dynamic_cast< Character * >(TheCharacter) != nullptr);
 								TheMind->SetCharacter(dynamic_cast< Character * >(TheCharacter));
 							}
 						}
 					}
-					else if((*SaveChild)->GetAttribute("type-identifier") == "ship")
+					else if(SaveChild->GetAttribute("type-identifier") == "ship")
 					{
 						// the current system has been read in the first pass
 						// now we can place all the ships in the current system
 						Ship * TheShip(dynamic_cast< Ship * >(TheObject));
 						
-						assert(TheShip != 0);
+						assert(TheShip != nullptr);
 						g_CurrentSystem->GetAspectObjectContainer()->AddContent(TheShip);
 					}
 				}
@@ -2207,28 +2207,28 @@ void LoadGameFromElement(const Element * SaveElement)
 		}
 	}
 	// in the third pass we do a fast skip over the elements and mount the objects that have an accessory aspect and are mounted
-	for(std::vector< Element * >::const_iterator SaveChild = SaveChilds.begin(); SaveChild != SaveChilds.end(); ++SaveChild)
+	for(auto SaveChild : SaveElement->GetChilds())
 	{
-		if((*SaveChild)->GetName() == "object")
+		if(SaveChild->GetName() == "object")
 		{
-			assert((*SaveChild)->HasAttribute("object-identifier"));
+			assert(SaveChild->HasAttribute("object-identifier"));
 			
-			Object * TheObject(Object::GetObject((*SaveChild)->GetAttribute("object-identifier")));
+			Object * TheObject(Object::GetObject(SaveChild->GetAttribute("object-identifier")));
 			
-			assert(TheObject != 0);
-			for(std::vector< Element * >::const_iterator ObjectChild = (*SaveChild)->GetChilds().begin(); ObjectChild != (*SaveChild)->GetChilds().end(); ++ObjectChild)
+			assert(TheObject != nullptr);
+			for(auto ObjectChild : SaveChild->GetChilds())
 			{
-				if((*ObjectChild)->GetName() == "aspect-accessory")
+				if(ObjectChild->GetName() == "aspect-accessory")
 				{
-					for(std::vector< Element * >::const_iterator AspectChild = (*ObjectChild)->GetChilds().begin(); AspectChild != (*ObjectChild)->GetChilds().end(); ++AspectChild)
+					for(auto AspectChild : ObjectChild->GetChilds())
 					{
-						if((*AspectChild)->GetName() == "slot")
+						if(AspectChild->GetName() == "slot")
 						{
 							Object * TheShip(TheObject->GetContainer());
 							
-							assert(TheShip != 0);
-							assert(TheShip->GetAspectOutfitting() != 0);
-							TheShip->GetAspectOutfitting()->GetSlot((*AspectChild)->GetAttribute("slot-identifier"))->Mount(TheObject);
+							assert(TheShip != nullptr);
+							assert(TheShip->GetAspectOutfitting() != nullptr);
+							TheShip->GetAspectOutfitting()->GetSlot(AspectChild->GetAttribute("slot-identifier"))->Mount(TheObject);
 						}
 					}
 				}
