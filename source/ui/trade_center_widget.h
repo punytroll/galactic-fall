@@ -41,7 +41,7 @@ namespace UI
 	class TradeCenterWidget : public UI::Widget
 	{
 	public:
-		TradeCenterWidget(UI::Widget * SupWidget, Reference< Planet > Planet, Reference< Character > Character);
+		TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet, Character * Character);
 	private:
 		// callbacks
 		void _OnAssetClassDescriptionCaptionLabelUpdating(UI::Label * AssetClassDescriptionCaptionLabel, float RealTimeSeconds, float GameTimeSeconds);
@@ -56,9 +56,11 @@ namespace UI
 		void _OnAssetClassSizeLabelUpdating(UI::Label * AssetClassSizeLabel, float RealTimeSeconds, float GameTimeSeconds);
 		void _OnBuyButtonClicked(void);
 		void _OnBuyButtonUpdating(UI::Button * BuyButton, float RealTimeSeconds, float GameTimeSeconds);
+		void _OnCharacterDestroying(void);
 		void _OnDestroying(UI::Event & DestroyingEvent);
 		void _OnDestroyInScene(Graphics::Node * Node);
 		void _OnKey(UI::KeyEvent & KeyEvent);
+		void _OnPlanetDestroying(void);
 		void _OnSellButtonClicked(void);
 		void _OnSellButtonUpdating(UI::Button * BuyButton, float RealTimeSeconds, float GameTimeSeconds);
 		void _OnTraderAvailableSpaceLabelUpdating(UI::Label * AssetClassSizeLabel, float RealTimeSeconds, float GameTimeSeconds);
@@ -70,8 +72,10 @@ namespace UI
 		// member variables
 		UI::ScrollBox * _AssetClassScrollBox;
 		UI::ViewDisplay * _AssetClassViewDisplay;
-		Reference< Character > _Character;
-		Reference< Planet > _Planet;
+		Character * _Character;
+		Connection _CharacterDestroyingConnection;
+		Planet * _Planet;
+		Connection _PlanetDestroyingConnection;
 		UI::TradeCenterAssetClassListWidget * _SelectedTradeCenterAssetClassListWidget;
 	};
 }
