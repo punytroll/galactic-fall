@@ -66,10 +66,9 @@ namespace UI
 		TradeCenterAssetClassListWidget(UI::Widget * SupWidget, PlanetAssetClass * PlanetAssetClass, Reference< Ship > Ship);
 		const PlanetAssetClass * GetPlanetAssetClass(void) const;
 	private:
-		void _OnUpdating(float RealTimeSeconds, float GameTimeSeconds);
+		void _OnCharacterAmountLabelUpdating(float RealTimeSeconds, float GameTimeSeconds, UI::Label * CharacterAmountLabel);
 		PlanetAssetClass * _PlanetAssetClass;
 		Reference< Ship > _Ship;
-		UI::Label * _CharacterAmountLabel;
 	};
 }
 
@@ -79,7 +78,6 @@ UI::TradeCenterAssetClassListWidget::TradeCenterAssetClassListWidget(UI::Widget 
 	_Ship(Ship)
 {
 	SetSize(Vector2f(200.0f, 20.0f));
-	ConnectUpdatingCallback(std::bind(&UI::TradeCenterAssetClassListWidget::_OnUpdating, this, std::placeholders::_1, std::placeholders::_2));
 	
 	auto NameLabel(new UI::Label(this, PlanetAssetClass->GetAssetClass()->GetName()));
 	
@@ -87,13 +85,16 @@ UI::TradeCenterAssetClassListWidget::TradeCenterAssetClassListWidget(UI::Widget 
 	NameLabel->SetSize(Vector2f(30.0f, 20.0f));
 	NameLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	NameLabel->SetAnchorRight(true);
-	_CharacterAmountLabel = new UI::Label(this, "");
-	_CharacterAmountLabel->SetPosition(Vector2f(50.0f, 0.0f));
-	_CharacterAmountLabel->SetSize(Vector2f(40.0f, 20.0f));
-	_CharacterAmountLabel->SetHorizontalAlignment(UI::Label::ALIGN_RIGHT);
-	_CharacterAmountLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
-	_CharacterAmountLabel->SetAnchorLeft(false);
-	_CharacterAmountLabel->SetAnchorRight(true);
+	
+	auto CharacterAmountLabel(new UI::Label(this, ""));
+	
+	CharacterAmountLabel->SetPosition(Vector2f(50.0f, 0.0f));
+	CharacterAmountLabel->SetSize(Vector2f(40.0f, 20.0f));
+	CharacterAmountLabel->SetHorizontalAlignment(UI::Label::ALIGN_RIGHT);
+	CharacterAmountLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
+	CharacterAmountLabel->SetAnchorLeft(false);
+	CharacterAmountLabel->SetAnchorRight(true);
+	CharacterAmountLabel->ConnectUpdatingCallback(std::bind(&UI::TradeCenterAssetClassListWidget::_OnCharacterAmountLabelUpdating, this, std::placeholders::_1, std::placeholders::_2, CharacterAmountLabel));
 	
 	auto SizeRequirementLabel(new UI::Label(this, to_string_cast(0.001 * g_ObjectFactory->GetSpaceRequirement(PlanetAssetClass->GetAssetClass()->GetObjectTypeIdentifier(), PlanetAssetClass->GetAssetClass()->GetObjectClassIdentifier()), 3)));
 	
@@ -114,12 +115,12 @@ UI::TradeCenterAssetClassListWidget::TradeCenterAssetClassListWidget(UI::Widget 
 	PriceLabel->SetAnchorRight(true);
 }
 
-void UI::TradeCenterAssetClassListWidget::_OnUpdating(float RealTimeSeconds, float GameTimeSeconds)
+void UI::TradeCenterAssetClassListWidget::_OnCharacterAmountLabelUpdating(float RealTimeSeconds, float GameTimeSeconds, UI::Label * CharacterAmountLabel)
 {
 	assert(_Ship.IsValid() == true);
 	assert(_Ship->GetCargoHold() != nullptr);
 	assert(_Ship->GetCargoHold()->GetAspectObjectContainer() != nullptr);
-	_CharacterAmountLabel->SetText(to_string_cast(_Ship->GetCargoHold()->GetAspectObjectContainer()->GetAmount(_PlanetAssetClass->GetAssetClass()->GetObjectTypeIdentifier(), _PlanetAssetClass->GetAssetClass()->GetObjectClassIdentifier())));
+	CharacterAmountLabel->SetText(to_string_cast(_Ship->GetCargoHold()->GetAspectObjectContainer()->GetAmount(_PlanetAssetClass->GetAssetClass()->GetObjectTypeIdentifier(), _PlanetAssetClass->GetAssetClass()->GetObjectClassIdentifier())));
 }
 
 const PlanetAssetClass * UI::TradeCenterAssetClassListWidget::GetPlanetAssetClass(void) const
