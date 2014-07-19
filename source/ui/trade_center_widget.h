@@ -63,7 +63,6 @@ namespace UI
 		void _OnPlanetDestroying(void);
 		void _OnSellButtonClicked(void);
 		void _OnSellButtonUpdating(UI::Button * BuyButton, float RealTimeSeconds, float GameTimeSeconds);
-		void _OnTraderAvailableSpaceLabelUpdating(UI::Label * AssetClassSizeLabel, float RealTimeSeconds, float GameTimeSeconds);
 		void _OnUpdating(float RealTimeSeconds, float GameTimeSeconds);
 		// helper functions and actions
 		void _Buy(const PlanetAssetClass * PlanetAssetClass);
