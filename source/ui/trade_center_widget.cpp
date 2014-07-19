@@ -646,7 +646,7 @@ void UI::TradeCenterWidget::_Sell(const PlanetAssetClass * PlanetAssetClass)
 	{
 		if((Content->GetTypeIdentifier() == PlanetAssetClass->GetAssetClass()->GetObjectTypeIdentifier()) && (Content->GetClassIdentifier() == PlanetAssetClass->GetAssetClass()->GetObjectClassIdentifier()))
 		{
-			Hangar->GetAspectObjectContainer()->RemoveContent(Content);
+			Content->Destroy();
 			delete Content;
 			_Character->AddCredits(PlanetAssetClass->GetPrice());
 			
