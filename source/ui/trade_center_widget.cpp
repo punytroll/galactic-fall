@@ -63,11 +63,14 @@ namespace UI
 	class TradeCenterAssetClassListWidget : public UI::ListBoxItem
 	{
 	public:
-		TradeCenterAssetClassListWidget(UI::Widget * SupWidget, PlanetAssetClass * PlanetAssetClass, Reference< Ship > Ship) :
+		TradeCenterAssetClassListWidget(UI::Widget * SupWidget, PlanetAssetClass * PlanetAssetClass, Ship * Ship) :
 			UI::ListBoxItem(SupWidget),
 			_PlanetAssetClass(PlanetAssetClass),
 			_Ship(Ship)
 		{
+			ConnectDestroyingCallback(std::bind(&UI::TradeCenterAssetClassListWidget::_OnDestroying, this, std::placeholders::_1));
+			assert(_Ship != nullptr);
+			_ShipDestroyingConnection = _Ship->ConnectDestroyingCallback(std::bind(&UI::TradeCenterAssetClassListWidget::_OnShipDestroying, this));
 			SetSize(Vector2f(200.0f, 20.0f));
 			
 			auto NameLabel(new UI::Label(this, PlanetAssetClass->GetAssetClass()->GetName()));
@@ -111,16 +114,44 @@ namespace UI
 			return _PlanetAssetClass;
 		}
 	private:
+		// event handlers
 		void _OnCharacterAmountLabelUpdating(float RealTimeSeconds, float GameTimeSeconds, UI::Label * CharacterAmountLabel)
 		{
-			assert(_Ship.IsValid() == true);
-			assert(_Ship->GetCargoHold() != nullptr);
-			assert(_Ship->GetCargoHold()->GetAspectObjectContainer() != nullptr);
-			CharacterAmountLabel->SetText(to_string_cast(_Ship->GetCargoHold()->GetAspectObjectContainer()->GetAmount(_PlanetAssetClass->GetAssetClass()->GetObjectTypeIdentifier(), _PlanetAssetClass->GetAssetClass()->GetObjectClassIdentifier())));
+			if(_Ship != nullptr)
+			{
+				assert(_Ship->GetCargoHold() != nullptr);
+				assert(_Ship->GetCargoHold()->GetAspectObjectContainer() != nullptr);
+				CharacterAmountLabel->SetVisible(true);
+				CharacterAmountLabel->SetText(to_string_cast(_Ship->GetCargoHold()->GetAspectObjectContainer()->GetAmount(_PlanetAssetClass->GetAssetClass()->GetObjectTypeIdentifier(), _PlanetAssetClass->GetAssetClass()->GetObjectClassIdentifier())));
+			}
+			else
+			{
+				CharacterAmountLabel->SetVisible(false);
+			}
+		}
+		
+		void _OnDestroying(UI::Event & DestroyingEvent)
+		{
+			if(DestroyingEvent.GetPhase() == UI::Event::Phase::Target)
+			{
+				if(_Ship != nullptr)
+				{
+					assert(_ShipDestroyingConnection.IsValid() == true);
+					_Ship->DisconnectDestroyingCallback(_ShipDestroyingConnection);
+					_Ship = nullptr;
+				}
+				assert(_ShipDestroyingConnection.IsValid() == false);
+			}
+		}
+		
+		void _OnShipDestroying(void)
+		{
+			_Ship = nullptr;
 		}
 		
 		PlanetAssetClass * _PlanetAssetClass;
-		Reference< Ship > _Ship;
+		Ship * _Ship;
+		Connection _ShipDestroyingConnection;
 	};
 }
 
@@ -208,7 +239,7 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Reference< Plan
 	
 	while(PlanetAssetClassIterator != PlanetAssetClasses.end())
 	{
-		auto NewTradeCenterAssetClassListWidget(new UI::TradeCenterAssetClassListWidget(_AssetClassScrollBox->GetContent(), *PlanetAssetClassIterator, _Character->GetShip()->GetReference()));
+		auto NewTradeCenterAssetClassListWidget(new UI::TradeCenterAssetClassListWidget(_AssetClassScrollBox->GetContent(), *PlanetAssetClassIterator, _Character->GetShip()));
 		
 		NewTradeCenterAssetClassListWidget->SetPosition(Vector2f(5.0f, Top));
 		NewTradeCenterAssetClassListWidget->SetSize(Vector2f(_AssetClassScrollBox->GetContent()->GetSize()[0] - 10.0f, 20.0f));
