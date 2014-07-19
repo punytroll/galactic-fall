@@ -72,6 +72,7 @@
 #include "graphics/texture.h"
 #include "graphics/texture_manager.h"
 #include "graphics/view.h"
+#include "hangar.h"
 #include "map_knowledge.h"
 #include "math.h"
 #include "message.h"
@@ -1654,13 +1655,24 @@ void LoadGameFromElement(const Element * SaveElement)
 		}
 		else if((*SaveChild)->GetName() == "object")
 		{
-			assert((*SaveChild)->HasAttribute("type-identifier") == true);
-			assert((*SaveChild)->HasAttribute("class-identifier") == true);
-			
-			Object * NewObject(g_ObjectFactory->Create((*SaveChild)->GetAttribute("type-identifier"), (*SaveChild)->GetAttribute("class-identifier")));
-			
 			assert((*SaveChild)->HasAttribute("object-identifier") == true);
-			NewObject->SetObjectIdentifier((*SaveChild)->GetAttribute("object-identifier"));
+			
+			Object * NewObject(Object::GetObject((*SaveChild)->GetAttribute("object-identifier")));
+			
+			if(NewObject == nullptr)
+			{
+				assert((*SaveChild)->HasAttribute("type-identifier") == true);
+				assert((*SaveChild)->HasAttribute("class-identifier") == true);
+				NewObject = g_ObjectFactory->Create((*SaveChild)->GetAttribute("type-identifier"), (*SaveChild)->GetAttribute("class-identifier"));
+				NewObject->SetObjectIdentifier((*SaveChild)->GetAttribute("object-identifier"));
+			}
+			else
+			{
+				assert((*SaveChild)->HasAttribute("type-identifier") == true);
+				assert((*SaveChild)->GetAttribute("type-identifier") == NewObject->GetTypeIdentifier());
+				assert((*SaveChild)->HasAttribute("class-identifier") == true);
+				assert((*SaveChild)->GetAttribute("class-identifier") == NewObject->GetClassIdentifier());
+			}
 			for(std::vector< Element * >::const_iterator ObjectChild = (*SaveChild)->GetChilds().begin(); ObjectChild != (*SaveChild)->GetChilds().end(); ++ObjectChild)
 			{
 				if((*ObjectChild)->GetName() == "aspect-accessory")
@@ -1926,6 +1938,24 @@ void LoadGameFromElement(const Element * SaveElement)
 							}
 						}
 					}
+					else if((*SaveChild)->GetAttribute("type-identifier") == "hangar")
+					{
+						Hangar * NewHangar(dynamic_cast< Hangar * >(NewObject));
+						
+						assert(NewHangar != nullptr);
+						for(std::vector< Element * >::const_iterator TypeSpecificChild = (*ObjectChild)->GetChilds().begin(); TypeSpecificChild != (*ObjectChild)->GetChilds().end(); ++TypeSpecificChild)
+						{
+							if((*TypeSpecificChild)->GetName() == "character")
+							{
+								assert((*TypeSpecificChild)->HasAttribute("object-identifier") == true);
+								// read in second pass
+							}
+							else
+							{
+								throw std::runtime_error("The \"" + (*ObjectChild)->GetName() + "\" element for the object \"" + (*SaveChild)->GetAttribute("object-identifier") + "\" contains an unknown element \"" + (*TypeSpecificChild)->GetName() + "\".");
+							}
+						}
+					}
 					else if((*SaveChild)->GetAttribute("type-identifier") == "mind")
 					{
 						Mind * NewMind(dynamic_cast< Mind * >(NewObject));
@@ -2129,6 +2159,23 @@ void LoadGameFromElement(const Element * SaveElement)
 							}
 						}
 					}
+					else if((*SaveChild)->GetAttribute("type-identifier") == "hangar")
+					{
+						Hangar * TheHangar(dynamic_cast< Hangar * >(TheObject));
+						
+						assert(TheHangar != nullptr);
+						for(std::vector< Element * >::const_iterator TypeSpecificChild = (*ObjectChild)->GetChilds().begin(); TypeSpecificChild != (*ObjectChild)->GetChilds().end(); ++TypeSpecificChild)
+						{
+							if((*TypeSpecificChild)->GetName() == "character")
+							{
+								Object * TheCharacter(Object::GetObject((*TypeSpecificChild)->GetAttribute("object-identifier")));
+								
+								assert(TheCharacter != nullptr);
+								assert(dynamic_cast< Character * >(TheCharacter) != nullptr);
+								TheHangar->SetCharacter(dynamic_cast< Character * >(TheCharacter));
+							}
+						}
+					}
 					else if((*SaveChild)->GetAttribute("type-identifier") == "mind")
 					{
 						Mind * TheMind(dynamic_cast< Mind * >(TheObject));
@@ -2274,7 +2321,7 @@ void SaveGame(std::ostream & OStream)
 	XML << element << "save";
 	
 	XML << element << "game-time" << attribute << "value" << value << GameTime::Get() << end;
-	if(g_CurrentSystem != 0)
+	if(g_CurrentSystem != nullptr)
 	{
 		XML << element << "current-system" << attribute << "identifier" << value << g_CurrentSystem->GetIdentifier() << end;
 	}
@@ -2290,7 +2337,7 @@ void SaveGame(std::ostream & OStream)
 	// save main camera properties
 	XML << element << "main-camera";
 	XML << element << "position" << attribute << "x" << value << g_CameraPosition[0] << attribute << "y" << value << g_CameraPosition[1] << attribute << "z" << value << g_CameraPosition[2] << end;
-	if(g_CameraFocus.IsValid() != 0)
+	if(g_CameraFocus.IsValid() == true)
 	{
 		if(g_CameraFocus->GetObjectIdentifier() == "")
 		{
@@ -2298,14 +2345,14 @@ void SaveGame(std::ostream & OStream)
 		}
 		XML << element << "focus" << attribute << "object-identifier" << value << g_CameraFocus->GetObjectIdentifier() << end;
 	}
-	assert(g_MainProjection != 0);
+	assert(g_MainProjection != nullptr);
 	XML << element << "field-of-view-y" << attribute << "radians" << value << g_MainProjection->GetFieldOfViewY() << end;
 	XML << end; // camera
 	// now save the impoartant objects
 	if(g_InputMind.IsValid() == true)
 	{
 		// if no character is available
-		if(g_InputMind->GetCharacter() == 0)
+		if(g_InputMind->GetCharacter() == nullptr)
 		{
 			// only save the input mind
 			WriteToXMLStream(XML, g_InputMind.Get(), true);
@@ -2313,7 +2360,7 @@ void SaveGame(std::ostream & OStream)
 		else
 		{
 			// if no ship is available
-			if(g_InputMind->GetCharacter()->GetShip() == 0)
+			if(g_InputMind->GetCharacter()->GetShip() == nullptr)
 			{
 				// only save the character
 				WriteToXMLStream(XML, g_InputMind->GetCharacter(), true);
@@ -2322,6 +2369,25 @@ void SaveGame(std::ostream & OStream)
 			{
 				// save the complete ship
 				WriteToXMLStream(XML, g_InputMind->GetCharacter()->GetShip(), true);
+			}
+			// save hangars
+			for(auto System : g_Galaxy->GetSystems())
+			{
+				for(auto Planet : System.second->GetPlanets())
+				{
+					auto Hangar(Planet->GetHangar(g_InputMind->GetCharacter()));
+					
+					if(Hangar != nullptr)
+					{
+						assert(Planet->GetAspectObjectContainer() != nullptr);
+						XML << element << "object" << attribute << "type-identifier" << value << Planet->GetTypeIdentifier() << attribute << "class-identifier" << value << Planet->GetClassIdentifier() << attribute << "object-identifier" << value << Planet->GetObjectIdentifier();
+						XML << element << "aspect-object-container";
+						XML << element << "content" << attribute << "object-identifier" << value << Hangar->GetObjectIdentifier() << end;
+						XML << end;
+						XML << end;
+						WriteToXMLStream(XML, Hangar, true);
+					}
+				}
 			}
 		}
 	}

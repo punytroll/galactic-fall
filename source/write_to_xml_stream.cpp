@@ -28,6 +28,7 @@
 #include "faction.h"
 #include "generator.h"
 #include "graphics/material.h"
+#include "hangar.h"
 #include "map_knowledge.h"
 #include "mind.h"
 #include "object.h"
@@ -53,6 +54,7 @@ static void WriteBatteryToXMLStream(XMLStream & XMLStream, Battery * TheBattery)
 static void WriteCharacterToXMLStream(XMLStream & XMLStream, Character * TheCharacter);
 static void WriteCommodityToXMLStream(XMLStream & XMLStream, Commodity * TheCommodity);
 static void WriteGeneratorToXMLStream(XMLStream & XMLStream, Generator * TheGenerator);
+static void WriteHangarToXMLStream(XMLStream & XMLStream, Hangar * Hangar);
 static void WriteMindToXMLStream(XMLStream & XMLStream, Mind * TheMind);
 static void WriteShipToXMLStream(XMLStream & XMLStream, Ship * TheShip);
 static void WriteStorageToXMLStream(XMLStream & XMLStream, Storage * TheStorage);
@@ -60,6 +62,7 @@ static void WriteWeaponToXMLStream(XMLStream & XMLStream, Weapon * TheWeapon);
 
 void WriteToXMLStream(XMLStream & XMLStream, Object * TheObject, bool Recursive)
 {
+	assert(TheObject != nullptr);
 	if(Recursive == true)
 	{
 		std::stack< Object * > ObjectStack;
@@ -81,13 +84,11 @@ void WriteToXMLStream(XMLStream & XMLStream, Object * TheObject, bool Recursive)
 
 static void WriteToXMLStream(XMLStream & XMLStream, Object * TheObject, std::stack< Object * > & ObjectStack)
 {
-	if(TheObject->GetAspectObjectContainer() != 0)
+	if(TheObject->GetAspectObjectContainer() != nullptr)
 	{
-		const std::set< Object * > & Content(TheObject->GetAspectObjectContainer()->GetContent());
-		
-		for(std::set< Object * >::const_iterator ContentIterator =  Content.begin(); ContentIterator != Content.end(); ++ContentIterator)
+		for(auto Content : TheObject->GetAspectObjectContainer()->GetContent())
 		{
-			ObjectStack.push(*ContentIterator);
+			ObjectStack.push(Content);
 		}
 	}
 	WriteToXMLStream(XMLStream, TheObject);
@@ -95,24 +96,24 @@ static void WriteToXMLStream(XMLStream & XMLStream, Object * TheObject, std::sta
 
 void WriteToXMLStream(XMLStream & XMLStream, Object * TheObject)
 {
-	assert(TheObject != 0);
+	assert(TheObject != nullptr);
 	XMLStream << element << "object" << attribute << "type-identifier" << value << TheObject->GetTypeIdentifier() << attribute << "class-identifier" << value << TheObject->GetClassIdentifier() << attribute << "object-identifier" << value << TheObject->GetObjectIdentifier();
-	if(TheObject->GetAspectAccessory() != 0)
+	if(TheObject->GetAspectAccessory() != nullptr)
 	{
 		XMLStream << element << "aspect-accessory";
-		if(TheObject->GetAspectAccessory()->GetSlot() != 0)
+		if(TheObject->GetAspectAccessory()->GetSlot() != nullptr)
 		{
 			XMLStream << element << "slot" << attribute << "slot-identifier" << value << TheObject->GetAspectAccessory()->GetSlot()->GetIdentifier() << end;
 		}
 		XMLStream << end;
 	}
-	if(TheObject->GetAspectName() != 0)
+	if(TheObject->GetAspectName() != nullptr)
 	{
 		XMLStream << element << "aspect-name";
 		XMLStream << element << "name" << attribute << "value" << value << TheObject->GetAspectName()->GetName() << end;
 		XMLStream << end;
 	}
-	if(TheObject->GetAspectObjectContainer() != 0)
+	if(TheObject->GetAspectObjectContainer() != nullptr)
 	{
 		XMLStream << element << "aspect-object-container";
 		
@@ -124,21 +125,21 @@ void WriteToXMLStream(XMLStream & XMLStream, Object * TheObject)
 		}
 		XMLStream << end;
 	}
-	if(TheObject->GetAspectPhysical() != 0)
+	if(TheObject->GetAspectPhysical() != nullptr)
 	{
 		XMLStream << element << "aspect-physical";
 		XMLStream << element << "radial-size" << attribute << "value" << value << TheObject->GetAspectPhysical()->GetRadialSize() << end;
 		XMLStream << element << "space-requirement" << attribute << "value" << value << TheObject->GetAspectPhysical()->GetSpaceRequirement() << end;
 		XMLStream << end;
 	}
-	if(TheObject->GetAspectPosition() != 0)
+	if(TheObject->GetAspectPosition() != nullptr)
 	{
 		XMLStream << element << "aspect-position";
 		XMLStream << element << "orientation" << attribute << "w" << value << TheObject->GetAspectPosition()->GetOrientation()[0] << attribute << "x" << value << TheObject->GetAspectPosition()->GetOrientation()[1] << attribute << "y" << value << TheObject->GetAspectPosition()->GetOrientation()[2] << attribute << "z" << value << TheObject->GetAspectPosition()->GetOrientation()[3] << end;
 		XMLStream << element << "position" << attribute << "x" << value << TheObject->GetAspectPosition()->GetPosition()[0] << attribute << "y" << value << TheObject->GetAspectPosition()->GetPosition()[1] << attribute << "z" << value << TheObject->GetAspectPosition()->GetPosition()[2] << end;
 		XMLStream << end;
 	}
-	if(TheObject->GetAspectVisualization() != 0)
+	if(TheObject->GetAspectVisualization() != nullptr)
 	{
 		XMLStream << element << "aspect-visualization";
 		
@@ -147,11 +148,11 @@ void WriteToXMLStream(XMLStream & XMLStream, Object * TheObject)
 		for(std::map< std::string, Graphics::Material * >::const_iterator PartMaterialIterator = PartMaterials.begin(); PartMaterialIterator != PartMaterials.end(); ++PartMaterialIterator)
 		{
 			XMLStream << element << "part" << attribute << "identifier" << value << PartMaterialIterator->first;
-			if(PartMaterialIterator->second->GetDiffuseColor() != 0)
+			if(PartMaterialIterator->second->GetDiffuseColor() != nullptr)
 			{
 				XMLStream << element << "material-diffuse-color" << attribute << "red" << value << PartMaterialIterator->second->GetDiffuseColor()->GetColor()[0] << attribute << "green" << value << PartMaterialIterator->second->GetDiffuseColor()->GetColor()[1] << attribute << "blue" << value << PartMaterialIterator->second->GetDiffuseColor()->GetColor()[2] << attribute << "opacity" << value << PartMaterialIterator->second->GetDiffuseColor()->GetColor()[3] << end;
 			}
-			if(PartMaterialIterator->second->GetSpecularColor() != 0)
+			if(PartMaterialIterator->second->GetSpecularColor() != nullptr)
 			{
 				XMLStream << element << "material-specular-color" << attribute << "red" << value << PartMaterialIterator->second->GetSpecularColor()->GetColor()[0] << attribute << "green" << value << PartMaterialIterator->second->GetSpecularColor()->GetColor()[1] << attribute << "blue" << value << PartMaterialIterator->second->GetSpecularColor()->GetColor()[2] << attribute << "opacity" << value << PartMaterialIterator->second->GetSpecularColor()->GetColor()[3] << end;
 			}
@@ -176,6 +177,10 @@ void WriteToXMLStream(XMLStream & XMLStream, Object * TheObject)
 	else if(TheObject->GetTypeIdentifier() == "generator")
 	{
 		WriteGeneratorToXMLStream(XMLStream, dynamic_cast< Generator * >(TheObject));
+	}
+	else if(TheObject->GetTypeIdentifier() == "hangar")
+	{
+		WriteHangarToXMLStream(XMLStream, dynamic_cast< Hangar * >(TheObject));
 	}
 	else if(TheObject->GetTypeIdentifier() == "mind")
 	{
@@ -236,6 +241,12 @@ static void WriteGeneratorToXMLStream(XMLStream & XMLStream, Generator * TheGene
 {
 	assert(TheGenerator != 0);
 	XMLStream << element << "energy-provision-per-second" << attribute << "value" << value << TheGenerator->GetEnergyProvisionPerSecond() << end;
+}
+
+static void WriteHangarToXMLStream(XMLStream & XMLStream, Hangar * Hangar)
+{
+	assert(Hangar != nullptr);
+	XMLStream << element << "character" << attribute << "object-identifier" << value << Hangar->GetCharacter()->GetObjectIdentifier() << end;
 }
 
 static void WriteMindToXMLStream(XMLStream & XMLStream, Mind * TheMind)
