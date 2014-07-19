@@ -106,6 +106,10 @@
 		<array identifier="mesh-parts"/>
 	</model>
 	
+	<name-aspect>
+		<string identifier="name"/>
+	</name-aspect>
+	
 	<offered-asset-class>
 		<string identifier="identifier"/>
 		<float identifier="base-price-modifier"/>
@@ -165,6 +169,7 @@
 	
 	<ship-class>
 		<string identifier="identifier"/>
+		<name-aspect identifier="name-aspect"/>
 		<physical-aspect identifier="physical-aspect"/>
 		<visualization identifier="visualization"/>
 		<float identifier="forward-thrust"/>

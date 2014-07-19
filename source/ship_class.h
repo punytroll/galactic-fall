@@ -42,6 +42,7 @@ public:
 	float GetExhaustRadius(void) const;
 	float GetFuelCapacity(void) const;
 	const std::string & GetIdentifier(void) const;
+	const std::string & GetName(void) const;
 	unsigned_numeric GetSpaceRequirement(void) const;
 	float GetForwardThrust(void) const;
 	float GetTurnSpeed(void) const;
@@ -59,6 +60,7 @@ public:
 	void SetExhaustRadius(float ExhaustRadius);
 	void SetFuelCapacity(float FuelCapacity);
 	void SetForwardThrust(float ForwardThrust);
+	void SetName(const std::string & Name);
 	void SetSpaceRequirement(unsigned_numeric SpaceRequirement);
 	void SetTurnSpeed(float TurnSpeed);
 	void SetMaximumSpeed(float MaximumSpeed);
@@ -78,6 +80,7 @@ private:
 	float m_ExhaustRadius;
 	float m_FuelCapacity;
 	std::string m_Identifier;
+	std::string _Name;
 	unsigned_numeric m_SpaceRequirement;
 	float m_ForwardThrust;
 	float m_TurnSpeed;
@@ -109,6 +112,11 @@ inline float ShipClass::GetFuelCapacity(void) const
 inline const std::string & ShipClass::GetIdentifier(void) const
 {
 	return m_Identifier;
+}
+
+inline const std::string & ShipClass::GetName(void) const
+{
+	return _Name;
 }
 
 inline unsigned_numeric ShipClass::GetSpaceRequirement(void) const
@@ -189,6 +197,11 @@ inline void ShipClass::SetFuelCapacity(float FuelCapacity)
 inline void ShipClass::SetForwardThrust(float ForwardThrust)
 {
 	m_ForwardThrust = ForwardThrust;
+}
+
+inline void ShipClass::SetName(const std::string & Name)
+{
+	_Name = Name;
 }
 
 inline void ShipClass::SetSpaceRequirement(unsigned_numeric SpaceRequirement)
