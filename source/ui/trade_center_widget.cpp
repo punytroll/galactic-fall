@@ -63,69 +63,65 @@ namespace UI
 	class TradeCenterAssetClassListWidget : public UI::ListBoxItem
 	{
 	public:
-		TradeCenterAssetClassListWidget(UI::Widget * SupWidget, PlanetAssetClass * PlanetAssetClass, Reference< Ship > Ship);
-		const PlanetAssetClass * GetPlanetAssetClass(void) const;
+		TradeCenterAssetClassListWidget(UI::Widget * SupWidget, PlanetAssetClass * PlanetAssetClass, Reference< Ship > Ship) :
+			UI::ListBoxItem(SupWidget),
+			_PlanetAssetClass(PlanetAssetClass),
+			_Ship(Ship)
+		{
+			SetSize(Vector2f(200.0f, 20.0f));
+			
+			auto NameLabel(new UI::Label(this, PlanetAssetClass->GetAssetClass()->GetName()));
+			
+			NameLabel->SetPosition(Vector2f(10.0f, 0.0f));
+			NameLabel->SetSize(Vector2f(30.0f, 20.0f));
+			NameLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
+			NameLabel->SetAnchorRight(true);
+			
+			auto CharacterAmountLabel(new UI::Label(this, ""));
+			
+			CharacterAmountLabel->SetPosition(Vector2f(50.0f, 0.0f));
+			CharacterAmountLabel->SetSize(Vector2f(40.0f, 20.0f));
+			CharacterAmountLabel->SetHorizontalAlignment(UI::Label::ALIGN_RIGHT);
+			CharacterAmountLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
+			CharacterAmountLabel->SetAnchorLeft(false);
+			CharacterAmountLabel->SetAnchorRight(true);
+			CharacterAmountLabel->ConnectUpdatingCallback(std::bind(&UI::TradeCenterAssetClassListWidget::_OnCharacterAmountLabelUpdating, this, std::placeholders::_1, std::placeholders::_2, CharacterAmountLabel));
+			
+			auto SizeRequirementLabel(new UI::Label(this, to_string_cast(0.001 * g_ObjectFactory->GetSpaceRequirement(PlanetAssetClass->GetAssetClass()->GetObjectTypeIdentifier(), PlanetAssetClass->GetAssetClass()->GetObjectClassIdentifier()), 3)));
+			
+			SizeRequirementLabel->SetPosition(Vector2f(100.0f, 0.0f));
+			SizeRequirementLabel->SetSize(Vector2f(40.0f, 20.0f));
+			SizeRequirementLabel->SetHorizontalAlignment(UI::Label::ALIGN_RIGHT);
+			SizeRequirementLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
+			SizeRequirementLabel->SetAnchorLeft(false);
+			SizeRequirementLabel->SetAnchorRight(true);
+			
+			auto PriceLabel(new UI::Label(this, to_string_cast(PlanetAssetClass->GetPrice())));
+			
+			PriceLabel->SetPosition(Vector2f(150.0f, 0.0f));
+			PriceLabel->SetSize(Vector2f(40.0f, 20.0f));
+			PriceLabel->SetHorizontalAlignment(UI::Label::ALIGN_RIGHT);
+			PriceLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
+			PriceLabel->SetAnchorLeft(false);
+			PriceLabel->SetAnchorRight(true);
+		}
+		
+		const PlanetAssetClass * GetPlanetAssetClass(void) const
+		{
+			return _PlanetAssetClass;
+		}
 	private:
-		void _OnCharacterAmountLabelUpdating(float RealTimeSeconds, float GameTimeSeconds, UI::Label * CharacterAmountLabel);
+		void _OnCharacterAmountLabelUpdating(float RealTimeSeconds, float GameTimeSeconds, UI::Label * CharacterAmountLabel)
+		{
+			assert(_Ship.IsValid() == true);
+			assert(_Ship->GetCargoHold() != nullptr);
+			assert(_Ship->GetCargoHold()->GetAspectObjectContainer() != nullptr);
+			CharacterAmountLabel->SetText(to_string_cast(_Ship->GetCargoHold()->GetAspectObjectContainer()->GetAmount(_PlanetAssetClass->GetAssetClass()->GetObjectTypeIdentifier(), _PlanetAssetClass->GetAssetClass()->GetObjectClassIdentifier())));
+		}
+		
 		PlanetAssetClass * _PlanetAssetClass;
 		Reference< Ship > _Ship;
 	};
-}
-
-UI::TradeCenterAssetClassListWidget::TradeCenterAssetClassListWidget(UI::Widget * SupWidget, PlanetAssetClass * PlanetAssetClass, Reference< Ship > Ship) :
-	UI::ListBoxItem(SupWidget),
-	_PlanetAssetClass(PlanetAssetClass),
-	_Ship(Ship)
-{
-	SetSize(Vector2f(200.0f, 20.0f));
-	
-	auto NameLabel(new UI::Label(this, PlanetAssetClass->GetAssetClass()->GetName()));
-	
-	NameLabel->SetPosition(Vector2f(10.0f, 0.0f));
-	NameLabel->SetSize(Vector2f(30.0f, 20.0f));
-	NameLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
-	NameLabel->SetAnchorRight(true);
-	
-	auto CharacterAmountLabel(new UI::Label(this, ""));
-	
-	CharacterAmountLabel->SetPosition(Vector2f(50.0f, 0.0f));
-	CharacterAmountLabel->SetSize(Vector2f(40.0f, 20.0f));
-	CharacterAmountLabel->SetHorizontalAlignment(UI::Label::ALIGN_RIGHT);
-	CharacterAmountLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
-	CharacterAmountLabel->SetAnchorLeft(false);
-	CharacterAmountLabel->SetAnchorRight(true);
-	CharacterAmountLabel->ConnectUpdatingCallback(std::bind(&UI::TradeCenterAssetClassListWidget::_OnCharacterAmountLabelUpdating, this, std::placeholders::_1, std::placeholders::_2, CharacterAmountLabel));
-	
-	auto SizeRequirementLabel(new UI::Label(this, to_string_cast(0.001 * g_ObjectFactory->GetSpaceRequirement(PlanetAssetClass->GetAssetClass()->GetObjectTypeIdentifier(), PlanetAssetClass->GetAssetClass()->GetObjectClassIdentifier()), 3)));
-	
-	SizeRequirementLabel->SetPosition(Vector2f(100.0f, 0.0f));
-	SizeRequirementLabel->SetSize(Vector2f(40.0f, 20.0f));
-	SizeRequirementLabel->SetHorizontalAlignment(UI::Label::ALIGN_RIGHT);
-	SizeRequirementLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
-	SizeRequirementLabel->SetAnchorLeft(false);
-	SizeRequirementLabel->SetAnchorRight(true);
-	
-	auto PriceLabel(new UI::Label(this, to_string_cast(PlanetAssetClass->GetPrice())));
-	
-	PriceLabel->SetPosition(Vector2f(150.0f, 0.0f));
-	PriceLabel->SetSize(Vector2f(40.0f, 20.0f));
-	PriceLabel->SetHorizontalAlignment(UI::Label::ALIGN_RIGHT);
-	PriceLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
-	PriceLabel->SetAnchorLeft(false);
-	PriceLabel->SetAnchorRight(true);
-}
-
-void UI::TradeCenterAssetClassListWidget::_OnCharacterAmountLabelUpdating(float RealTimeSeconds, float GameTimeSeconds, UI::Label * CharacterAmountLabel)
-{
-	assert(_Ship.IsValid() == true);
-	assert(_Ship->GetCargoHold() != nullptr);
-	assert(_Ship->GetCargoHold()->GetAspectObjectContainer() != nullptr);
-	CharacterAmountLabel->SetText(to_string_cast(_Ship->GetCargoHold()->GetAspectObjectContainer()->GetAmount(_PlanetAssetClass->GetAssetClass()->GetObjectTypeIdentifier(), _PlanetAssetClass->GetAssetClass()->GetObjectClassIdentifier())));
-}
-
-const PlanetAssetClass * UI::TradeCenterAssetClassListWidget::GetPlanetAssetClass(void) const
-{
-	return _PlanetAssetClass;
 }
 
 UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Reference< Planet > Planet, Reference< Character > Character) :
