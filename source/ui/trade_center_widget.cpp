@@ -39,8 +39,10 @@
 #include "../object_aspect_accessory.h"
 #include "../object_aspect_name.h"
 #include "../object_aspect_object_container.h"
+#include "../object_aspect_outfitting.h"
 #include "../object_factory.h"
 #include "../planet.h"
+#include "../slot.h"
 #include "../string_cast.h"
 #include "../visualization_prototype.h"
 #include "../visualizations.h"
@@ -639,6 +641,7 @@ void UI::TradeCenterWidget::_Sell(const PlanetAssetClass * PlanetAssetClass)
 	assert(_Planet != nullptr);
 	
 	auto Hangar(_Planet->GetHangar(_Character));
+	std::list< Object * > ToAdd;
 	
 	assert(Hangar != nullptr);
 	assert(Hangar->GetAspectObjectContainer() != nullptr);
@@ -646,11 +649,50 @@ void UI::TradeCenterWidget::_Sell(const PlanetAssetClass * PlanetAssetClass)
 	{
 		if((Content->GetTypeIdentifier() == PlanetAssetClass->GetAssetClass()->GetObjectTypeIdentifier()) && (Content->GetClassIdentifier() == PlanetAssetClass->GetAssetClass()->GetObjectClassIdentifier()))
 		{
+			if(Content->GetAspectOutfitting() != nullptr)
+			{
+				for(auto Slot : Content->GetAspectOutfitting()->GetSlots())
+				{
+					if(Slot.second->GetMountedObject() != nullptr)
+					{
+						Slot.second->Unmount();
+					}
+				}
+			}
+			if(Content->GetAspectObjectContainer() != nullptr)
+			{
+				while(Content->GetAspectObjectContainer()->GetContent().empty() == false)
+				{
+					auto InnerContent(*(Content->GetAspectObjectContainer()->GetContent().begin()));
+					
+					Content->GetAspectObjectContainer()->RemoveContent(InnerContent);
+					if(InnerContent->GetTypeIdentifier() != "storage")
+					{
+						ToAdd.push_back(InnerContent);
+					}
+					else
+					{
+						assert(InnerContent->GetAspectObjectContainer() != nullptr);
+						while(InnerContent->GetAspectObjectContainer()->GetContent().empty() == false)
+						{
+							auto StorageContent(*(InnerContent->GetAspectObjectContainer()->GetContent().begin()));
+							
+							InnerContent->GetAspectObjectContainer()->RemoveContent(StorageContent);
+							ToAdd.push_back(StorageContent);
+						}
+					}
+				}
+			}
 			Content->Destroy();
 			delete Content;
+			assert(_Character != nullptr);
 			_Character->AddCredits(PlanetAssetClass->GetPrice());
 			
 			break;
 		}
+	}
+	for(auto Object : ToAdd)
+	{
+		Hangar->GetAspectObjectContainer()->AddContent(Object);
 	}
 }

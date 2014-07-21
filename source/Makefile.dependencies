@@ -541,6 +541,7 @@ main_cpp = \
 	$(graphics_texture_h) \
 	$(graphics_texture_manager_h) \
 	$(graphics_view_h) \
+	$(hangar_h) \
 	$(map_knowledge_h) \
 	$(math_h) \
 	$(message_h) \
@@ -1504,17 +1505,19 @@ ui_trade_center_widget_cpp = \
 	$(graphics_texture_manager_h) \
 	$(graphics_texture_render_target_h) \
 	$(graphics_view_h) \
+	$(hangar_h) \
 	$(object_aspect_accessory_h) \
 	$(object_aspect_name_h) \
 	$(object_aspect_object_container_h) \
+	$(object_aspect_outfitting_h) \
 	$(object_factory_h) \
 	$(planet_h) \
-	$(ship_h) \
-	$(storage_h) \
+	$(slot_h) \
 	$(string_cast_h) \
 	$(ui_image_h) \
 	$(ui_key_event_h) \
 	$(ui_label_h) \
+	$(ui_list_box_item_h) \
 	$(ui_mouse_button_event_h) \
 	$(ui_scroll_bar_h) \
 	$(ui_scroll_box_h) \
@@ -1675,6 +1678,7 @@ write_to_xml_stream_cpp = \
 	$(faction_h) \
 	$(generator_h) \
 	$(graphics_material_h) \
+	$(hangar_h) \
 	$(map_knowledge_h) \
 	$(mind_h) \
 	$(object_h) \
