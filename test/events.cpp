@@ -21,7 +21,7 @@
 
 #include <iostream>
 
-#include "../source/events.h"
+#include "../source/event.h"
 
 int g_Global;
 
@@ -59,6 +59,15 @@ int main(int argc, char ** argv)
 	{
 		Event< void > Event;
 		
+		assert(Event.GetCallbacks().empty() == true);
+		assert(Event.CopyCallbacks().empty() == true);
+	}
+	
+	std::cout << "-----------------------------" << std::endl;
+	
+	{
+		Event< void > Event;
+		
 		Event();
 	}
 	
@@ -69,6 +78,88 @@ int main(int argc, char ** argv)
 		
 		Event.Connect(EmptyFunction);
 		Event();
+	}
+	
+	std::cout << "-----------------------------" << std::endl;
+	
+	{
+		Event< void > Event;
+		auto Connection(Event.Connect(EmptyFunction));
+		
+		assert(Connection.IsValid() == true);
+	}
+	
+	std::cout << "-----------------------------" << std::endl;
+	
+	{
+		Event< void > Event;
+		Connection Connection;
+		
+		Connection = Event.Connect(EmptyFunction);
+		assert(Connection.IsValid() == true);
+	}
+	
+	std::cout << "-----------------------------" << std::endl;
+	
+	{
+		Event< void > Event;
+		auto Connection(Event.Connect(EmptyFunction));
+		
+		Event.Disconnect(Connection);
+		assert(Connection.IsValid() == false);
+	}
+	
+	std::cout << "-----------------------------" << std::endl;
+	
+	{
+		Event< void > Event;
+		Connection Connection;
+		
+		Connection = Event.Connect(EmptyFunction);
+		Event.Disconnect(Connection);
+		assert(Connection.IsValid() == false);
+	}
+	
+	std::cout << "-----------------------------" << std::endl;
+	
+	{
+		Event< void > Event;
+		auto Connection1(Event.Connect(EmptyFunction));
+		auto Connection2(Connection1);
+		
+		assert(Connection2.IsValid() == true);
+	}
+	
+	std::cout << "-----------------------------" << std::endl;
+	
+	{
+		Event< void > Event;
+		auto Connection1(Event.Connect(EmptyFunction));
+		auto Connection2(Connection1);
+		
+		Event();
+	}
+	
+	std::cout << "-----------------------------" << std::endl;
+	
+	{
+		Event< void > Event;
+		auto Connection1(Event.Connect(EmptyFunction));
+		auto Connection2(Connection1);
+		
+		Event.Disconnect(Connection1);
+		assert(Connection1.IsValid() == false);
+	}
+	
+	std::cout << "-----------------------------" << std::endl;
+	
+	{
+		Event< void > Event;
+		auto Connection1(Event.Connect(EmptyFunction));
+		auto Connection2(Connection1);
+		
+		Event.Disconnect(Connection2);
+		assert(Connection2.IsValid() == false);
 	}
 	
 	std::cout << "-----------------------------" << std::endl;
