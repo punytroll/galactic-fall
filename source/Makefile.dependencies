@@ -171,8 +171,8 @@ draw_text_cpp = \
 draw_text_h = \
 	draw_text.h
 
-events_h = \
-	events.h \
+event_h = \
+	event.h \
 	$(connection_h)
 
 faction_cpp = \
@@ -669,7 +669,7 @@ object_cpp = \
 
 object_h = \
 	object.h \
-	$(events_h) \
+	$(event_h) \
 	$(referencing_h)
 
 object_aspect_accessory_cpp = \
@@ -696,7 +696,7 @@ object_aspect_object_container_cpp = \
 
 object_aspect_object_container_h = \
 	object_aspect_object_container.h \
-	$(events_h) \
+	$(event_h) \
 	$(type_definitions_h)
 
 object_aspect_outfitting_cpp = \
@@ -914,7 +914,7 @@ slot_cpp = \
 slot_h = \
 	slot.h \
 	$(connection_h) \
-	$(events_h)
+	$(event_h)
 
 slot_class_cpp = \
 	slot_class.cpp \
@@ -1584,7 +1584,7 @@ ui_widget_cpp = \
 
 ui_widget_h = \
 	ui/widget.h \
-	$(events_h)
+	$(event_h)
 
 ui_window_cpp = \
 	ui/window.cpp \

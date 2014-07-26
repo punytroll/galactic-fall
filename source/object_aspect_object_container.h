@@ -23,7 +23,7 @@
 #include <functional>
 #include <set>
 
-#include "events.h"
+#include "event.h"
 #include "type_definitions.h"
 
 class Object;

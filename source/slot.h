@@ -25,7 +25,7 @@
 #include <algebra/quaternion.h>
 #include <algebra/vector3f.h>
 
-#include "events.h"
+#include "event.h"
 #include "connection.h"
 
 class Object;
