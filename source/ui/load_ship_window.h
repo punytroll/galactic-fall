@@ -29,7 +29,7 @@ namespace UI
 {
 	class Button;
 	class ObjectListItem;
-	class ScrollBox;
+	class ListBox;
 	
 	class LoadShipWindow : public UI::Window
 	{
@@ -42,9 +42,6 @@ namespace UI
 		void _OnHangarContentAdded(Object * Content);
 		void _OnHangarContentRemoved(Object * Content);
 		void _OnHangarDestroying(void);
-		void _OnHangarItemMouseButton(UI::MouseButtonEvent & MouseButtonEvent, UI::ObjectListItem * HangarItem);
-		void _OnHangarScrollBoxSubWidgetAdded(UI::SubWidgetEvent & SubWidgetEvent);
-		void _OnHangarScrollBoxSubWidgetRemoved(UI::SubWidgetEvent & SubWidgetEvent);
 		void _OnKey(UI::KeyEvent & KeyEvent);
 		void _OnMoveToHangarButtonClicked(void);
 		void _OnMoveToHangarButtonUpdating(float RealTimeSeconds, float GameTimeSeconds, UI::Button * MoveToHangarButton);
@@ -54,23 +51,18 @@ namespace UI
 		void _OnShipContentAdded(Object * Content);
 		void _OnShipContentRemoved(Object * Content);
 		void _OnShipDestroying(void);
-		void _OnShipItemMouseButton(UI::MouseButtonEvent & MouseButtonEvent, UI::ObjectListItem * ShipItem);
-		void _OnShipScrollBoxSubWidgetAdded(UI::SubWidgetEvent & SubWidgetEvent);
-		void _OnShipScrollBoxSubWidgetRemoved(UI::SubWidgetEvent & SubWidgetEvent);
 		void _OnSizeChanged(UI::Event & SizeChangedEvent, UI::Widget * LeftPane, UI::Widget * CenterPane, UI::Widget * RightPane);
 		// member variables
 		Hangar * _Hangar;
 		Connection _HangarContentAddedCallbackConnection;
 		Connection _HangarContentRemovedCallbackConnection;
 		Connection _HangarDestroyingCallbackConnection;
-		UI::ScrollBox * _HangarScrollBox;
-		UI::ObjectListItem * _SelectedHangarItem;
-		UI::ObjectListItem * _SelectedShipItem;
+		UI::ListBox * _HangarListBox;
 		Ship * _Ship;
 		Connection _ShipContentAddedCallbackConnection;
 		Connection _ShipContentRemovedCallbackConnection;
 		Connection _ShipDestroyingCallbackConnection;
-		UI::ScrollBox * _ShipScrollBox;
+		UI::ListBox * _ShipListBox;
 	};
 }
 

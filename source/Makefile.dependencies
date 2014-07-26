@@ -1132,6 +1132,17 @@ ui_label_h = \
 	ui/label.h \
 	$(ui_widget_h)
 
+ui_list_box_cpp = \
+	ui/list_box.cpp \
+	$(ui_list_box_h) \
+	$(ui_list_box_item_h) \
+	$(ui_mouse_button_event_h) \
+	$(ui_sub_widget_event_h)
+
+ui_list_box_h = \
+	ui/list_box.h \
+	$(ui_scroll_box_h)
+
 ui_list_box_item_cpp = \
 	ui/list_box_item.cpp \
 	$(color_h) \
@@ -1183,7 +1194,6 @@ ui_load_scenario_dialog_h = \
 
 ui_load_ship_window_cpp = \
 	ui/load_ship_window.cpp \
-	$(color_h) \
 	$(hangar_h) \
 	$(object_aspect_name_h) \
 	$(object_aspect_object_container_h) \
@@ -1193,10 +1203,10 @@ ui_load_ship_window_cpp = \
 	$(ui_event_h) \
 	$(ui_key_event_h) \
 	$(ui_label_h) \
+	$(ui_list_box_h) \
 	$(ui_list_box_item_h) \
 	$(ui_load_ship_window_h) \
 	$(ui_mouse_button_event_h) \
-	$(ui_scroll_box_h) \
 	$(ui_sub_widget_event_h) \
 	$(ui_text_button_h)
 

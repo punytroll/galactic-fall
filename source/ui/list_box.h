@@ -17,23 +17,31 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef UI_LIST_BOX_ITEM_H
-#define UI_LIST_BOX_ITEM_H
+#ifndef UI_LIST_BOX_H
+#define UI_LIST_BOX_H
 
-#include "widget.h"
+#include "scroll_box.h"
 
 namespace UI
 {
-	class ListBoxItem : public UI::Widget
+	class ListBoxItem;
+	
+	class ListBox : public UI::ScrollBox
 	{
 	public:
-		ListBoxItem(UI::Widget * SupWidget = nullptr);
-		void SetSelected(bool Selected);
+		ListBox(UI::Widget * SupWidget = nullptr);
+		UI::ListBoxItem * GetSelectedItem(void);
 	private:
-		void _OnMouseEnter(UI::Event & MouseEnterEvent);
-		void _OnMouseLeave(UI::Event & MouseLeaveEvent);
-		bool _Selected;
+		void _OnItemMouseButton(UI::MouseButtonEvent & MouseButtonEvent, UI::ListBoxItem * Item);
+		void _OnSubWidgetAdded(UI::SubWidgetEvent & SubWidgetEvent);
+		void _OnSubWidgetRemoved(UI::SubWidgetEvent & SubWidgetEvent);
+		UI::ListBoxItem * _SelectedItem;
 	};
+}
+
+inline UI::ListBoxItem * UI::ListBox::GetSelectedItem(void)
+{
+	return _SelectedItem;
 }
 
 #endif
