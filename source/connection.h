@@ -23,11 +23,15 @@
 class Connection
 {
 public:
+	template < typename ReturnType, typename ... Types >
+	friend class Event;
+	
 	class Core
 	{
 	public:
 		Core(void);
 		~Core(void);
+		bool _IsValid;
 		int _References;
 	};
 	
@@ -36,11 +40,22 @@ public:
 	Connection(const Connection & Connection);
 	Connection & operator=(const Connection & Other);
 	~Connection(void);
+	void Clear(void);
 	bool IsValid(void);
-	void * GetCore(void);
-	void Invalidate(void);
+	Core * GetCore(void);
 private:
+	void _Invalidate(void);
 	Core * _Core;
 };
+
+inline bool Connection::IsValid(void)
+{
+	return (_Core != nullptr) && (_Core->_IsValid == true);
+}
+
+inline Connection::Core * Connection::GetCore(void)
+{
+	return _Core;
+}
 
 #endif

@@ -50,7 +50,7 @@ public:
 	void Disconnect(Connection & Connection)
 	{
 		_Callbacks.erase(static_cast< Core * >(Connection.GetCore())->_Iterator);
-		Connection.Invalidate();
+		Connection._Invalidate();
 	}
 	
 	const std::list< std::function< ReturnType (Types ...) > > & GetCallbacks(void)

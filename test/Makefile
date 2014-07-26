@@ -11,7 +11,7 @@ TEST_PROGRAMS = \
 
 events_test = \
 	$(root)/source/connection.h \
-	$(root)/source/events.h
+	$(root)/source/event.h
 
 referencing_test = \
 	$(root)/source/referencing.h
@@ -39,7 +39,7 @@ clean-recursive: clean
 events: events.o ../source/connection.o
 	$(CXX) $(LDFLAGS) $^ -o $@
 
-events.o: events.cpp $(callbacks_test)
+events.o: events.cpp $(events_test)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 referencing: referencing.o

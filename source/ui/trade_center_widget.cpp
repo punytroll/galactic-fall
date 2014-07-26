@@ -558,8 +558,9 @@ void UI::TradeCenterWidget::_OnDestroying(UI::Event & DestroyingEvent)
 void UI::TradeCenterWidget::_OnCharacterDestroying(void)
 {
 	assert(_CharacterDestroyingConnection.IsValid() == true);
-	_CharacterDestroyingConnection.Invalidate();
 	assert(_Character != nullptr);
+	_Character->DisconnectDestroyingCallback(_CharacterDestroyingConnection);
+	assert(_CharacterDestroyingConnection.IsValid() == false);
 	_Character = nullptr;
 }
 
@@ -583,8 +584,9 @@ void UI::TradeCenterWidget::_OnKey(UI::KeyEvent & KeyEvent)
 void UI::TradeCenterWidget::_OnPlanetDestroying(void)
 {
 	assert(_PlanetDestroyingConnection.IsValid() == true);
-	_PlanetDestroyingConnection.Invalidate();
 	assert(_Planet != nullptr);
+	_Planet->DisconnectDestroyingCallback(_PlanetDestroyingConnection);
+	assert(_PlanetDestroyingConnection.IsValid() == false);
 	_Planet = nullptr;
 }
 
