@@ -57,6 +57,23 @@ int main(int argc, char ** argv)
 	std::cout << "-----------------------------" << std::endl;
 	
 	{
+		Connection Connection;
+		
+		assert(Connection.IsValid() == false);
+	}
+	
+	std::cout << "-----------------------------" << std::endl;
+	
+	{
+		Connection Connection;
+		
+		Connection.Clear();
+		assert(Connection.IsValid() == false);
+	}
+	
+	std::cout << "-----------------------------" << std::endl;
+	
+	{
 		Event< void > Event;
 		
 		assert(Event.GetCallbacks().empty() == true);
@@ -160,6 +177,58 @@ int main(int argc, char ** argv)
 		
 		Event.Disconnect(Connection2);
 		assert(Connection2.IsValid() == false);
+	}
+	
+	std::cout << "-----------------------------" << std::endl;
+	
+	{
+		Event< void > Event;
+		auto Connection1(Event.Connect(EmptyFunction));
+		auto Connection2(Connection1);
+		
+		Event.Disconnect(Connection1);
+		assert(Connection2.IsValid() == false);
+	}
+	
+	std::cout << "-----------------------------" << std::endl;
+	
+	{
+		Event< void > Event;
+		auto Connection1(Event.Connect(EmptyFunction));
+		auto Connection2(Connection1);
+		
+		Event.Disconnect(Connection2);
+		assert(Connection1.IsValid() == false);
+	}
+	
+	std::cout << "-----------------------------" << std::endl;
+	
+	{
+		Event< void > Event;
+		auto Connection1(Event.Connect(EmptyFunction));
+		auto Connection2(Connection1);
+		Connection Connection3;
+		
+		Connection3 = Connection2;
+		Event.Disconnect(Connection2);
+		assert(Connection1.IsValid() == false);
+		assert(Connection2.IsValid() == false);
+		assert(Connection3.IsValid() == false);
+	}
+	
+	std::cout << "-----------------------------" << std::endl;
+	
+	{
+		Event< void > Event;
+		auto Connection1(Event.Connect(EmptyFunction));
+		auto Connection2(Connection1);
+		Connection Connection3;
+		
+		Connection3 = Connection2;
+		Event.Disconnect(Connection3);
+		assert(Connection1.IsValid() == false);
+		assert(Connection2.IsValid() == false);
+		assert(Connection3.IsValid() == false);
 	}
 	
 	std::cout << "-----------------------------" << std::endl;

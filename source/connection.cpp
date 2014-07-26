@@ -22,12 +22,14 @@
 #include "connection.h"
 
 Connection::Core::Core(void) :
+	_IsValid(false),
 	_References(0)
 {
 }
 
 Connection::Core::~Core(void)
 {
+	assert(_IsValid == false);
 	assert(_References == 0);
 }
 
@@ -40,6 +42,7 @@ Connection::Connection(Core * Core) :
 	_Core(Core)
 {
 	assert(_Core != nullptr);
+	_Core->_IsValid = true;
 	_Core->_References += 1;
 }
 
@@ -48,6 +51,7 @@ Connection::Connection(const Connection & Connection) :
 {
 	if(_Core != nullptr)
 	{
+		assert(_Core->_References > 0);
 		_Core->_References += 1;
 	}
 }
@@ -62,6 +66,7 @@ Connection & Connection::operator=(const Connection & Other)
 			_Core->_References -= 1;
 			if(_Core->_References == 0)
 			{
+				_Core->_IsValid = false;
 				delete _Core;
 			}
 			_Core = nullptr;
@@ -85,30 +90,39 @@ Connection::~Connection(void)
 		_Core->_References -= 1;
 		if(_Core->_References == 0)
 		{
+			_Core->_IsValid = false;
 			delete _Core;
 		}
 		_Core = nullptr;
 	}
 }
 
-bool Connection::IsValid(void)
+void Connection::Clear(void)
 {
-	return _Core != nullptr;
-}
-
-void * Connection::GetCore(void)
-{
-	return _Core;
-}
-
-void Connection::Invalidate(void)
-{
-	assert(_Core != nullptr);
-	assert(_Core->_References > 0);
-	_Core->_References -= 1;
-	if(_Core->_References == 0)
+	if(_Core != nullptr)
 	{
-		delete _Core;
+		assert(_Core->_References > 0);
+		_Core->_References -= 1;
+		if(_Core->_References == 0)
+		{
+			_Core->_IsValid = false;
+			delete _Core;
+		}
+		_Core = nullptr;
 	}
-	_Core = nullptr;
+}
+
+void Connection::_Invalidate(void)
+{
+	if(_Core != nullptr)
+	{
+		assert(_Core->_References > 0);
+		_Core->_IsValid = false;
+		_Core->_References -= 1;
+		if(_Core->_References == 0)
+		{
+			delete _Core;
+		}
+		_Core = nullptr;
+	}
 }
