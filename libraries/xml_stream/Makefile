@@ -11,7 +11,7 @@ all-here: source/xml_stream.o
 all-recursive: all-here
 
 check: test/test
-	./test/test
+	./test/test > /dev/null
 
 clean: clean-recursive
 
