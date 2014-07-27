@@ -22,7 +22,7 @@
 
 #include <string>
 
-#include "../connection.h"
+#include <events/connection.h>
 
 class KeyEventInformation;
 

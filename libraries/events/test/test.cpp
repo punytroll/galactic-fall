@@ -21,7 +21,7 @@
 
 #include <iostream>
 
-#include "../source/event.h"
+#include "event.h"
 
 int g_Global;
 

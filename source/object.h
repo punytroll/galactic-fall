@@ -25,7 +25,8 @@
 #include <set>
 #include <string>
 
-#include "event.h"
+#include <events/event.h>
+
 #include "referencing.h"
 
 class Message;

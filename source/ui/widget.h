@@ -27,7 +27,7 @@
 
 #include <algebra/vector2f.h>
 
-#include "../event.h"
+#include <events/event.h>
 
 class Color;
 
