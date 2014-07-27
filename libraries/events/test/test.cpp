@@ -40,15 +40,13 @@ public:
 	void Register(Event< void > & Event)
 	{
 		_Connection = Event.Connect(std::bind(&SelfDisconnecting::_Notify, this));
-		_Event = &Event;
 	}
 private:
 	void _Notify(void)
 	{
-		_Event->Disconnect(_Connection);
-		_Event = nullptr;
+		_Connection.Disconnect();
 	}
-	Event< void > * _Event;
+	
 	Connection _Connection;
 };
 
@@ -133,6 +131,27 @@ int main(int argc, char ** argv)
 		
 		Connection = Event.Connect(EmptyFunction);
 		Event.Disconnect(Connection);
+		assert(Connection.IsValid() == false);
+	}
+	
+	std::cout << "-----------------------------" << std::endl;
+	
+	{
+		Event< void > Event;
+		auto Connection(Event.Connect(EmptyFunction));
+		
+		Connection.Disconnect();
+		assert(Connection.IsValid() == false);
+	}
+	
+	std::cout << "-----------------------------" << std::endl;
+	
+	{
+		Event< void > Event;
+		Connection Connection;
+		
+		Connection = Event.Connect(EmptyFunction);
+		Connection.Disconnect();
 		assert(Connection.IsValid() == false);
 	}
 	
@@ -242,6 +261,36 @@ int main(int argc, char ** argv)
 		assert(g_Global == 40);
 		Event();
 		assert(g_Global == 48);
+	}
+	
+	std::cout << "-----------------------------" << std::endl;
+	
+	{
+		g_Global = 32;
+		
+		Event< void > Event;
+		auto Connection(Event.Connect(std::bind(IncrementingFunction, 8)));
+		
+		Event();
+		assert(g_Global == 40);
+		Event.Disconnect(Connection);
+		Event();
+		assert(g_Global == 40);
+	}
+	
+	std::cout << "-----------------------------" << std::endl;
+	
+	{
+		g_Global = 32;
+		
+		Event< void > Event;
+		auto Connection(Event.Connect(std::bind(IncrementingFunction, 8)));
+		
+		Event();
+		assert(g_Global == 40);
+		Connection.Disconnect();
+		Event();
+		assert(g_Global == 40);
 	}
 	
 	std::cout << "-----------------------------" << std::endl;
