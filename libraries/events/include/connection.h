@@ -30,7 +30,7 @@ public:
 	{
 	public:
 		Core(void);
-		~Core(void);
+		virtual ~Core(void);
 		bool _IsValid;
 		int _References;
 	};
