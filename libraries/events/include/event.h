@@ -27,8 +27,18 @@
 
 #include "connection.h"
 
+class EventBase
+{
+public:
+	virtual ~EventBase(void)
+	{
+	}
+	
+	virtual void Disconnect(Connection & Connection) = 0;
+};
+
 template < typename ReturnType, typename ... Types >
-class Event
+class Event : public EventBase
 {
 private:
 	class Core : public Connection::Core
@@ -42,13 +52,15 @@ private:
 		typename std::list< Event::Core * >::iterator _Iterator;
 	};
 public:
-	~Event(void)
+	virtual ~Event(void) override
 	{
 		while(_Cores.empty() == false)
 		{
 			auto Core(_Cores.back());
 			
 			_Cores.pop_back();
+			assert(Core->_Event == this);
+			Core->_Event = nullptr;
 			Core->_IsValid = false;
 			Core->_References -= 1;
 			if(Core->_References == 0)
@@ -63,6 +75,7 @@ public:
 		auto Core(new Event::Core());
 		
 		Core->_Callback = Callback;
+		Core->_Event = this;
 		Core->_IsValid = true;
 		Core->_References += 1;
 		_Cores.push_back(Core);
@@ -71,7 +84,7 @@ public:
 		return Connection(Core);
 	}
 	
-	void Disconnect(Connection & Connection)
+	virtual void Disconnect(Connection & Connection) override
 	{
 		auto Core(static_cast< Event::Core * >(Connection.GetCore()));
 		

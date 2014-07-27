@@ -20,6 +20,8 @@
 #ifndef CONNECTION_H
 #define CONNECTION_H
 
+class EventBase;
+
 class Connection
 {
 public:
@@ -31,6 +33,7 @@ public:
 	public:
 		Core(void);
 		virtual ~Core(void);
+		EventBase * _Event;
 		bool _IsValid;
 		int _References;
 	};
@@ -41,6 +44,7 @@ public:
 	Connection & operator=(const Connection & Other);
 	~Connection(void);
 	void Clear(void);
+	void Disconnect(void);
 	bool IsValid(void);
 	Core * GetCore(void);
 private:

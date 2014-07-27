@@ -20,8 +20,10 @@
 #include <assert.h>
 
 #include "connection.h"
+#include "event.h"
 
 Connection::Core::Core(void) :
+	_Event(nullptr),
 	_IsValid(false),
 	_References(0)
 {
@@ -112,11 +114,20 @@ void Connection::Clear(void)
 	}
 }
 
+void Connection::Disconnect(void)
+{
+	assert(_Core != nullptr);
+	assert(_Core->_Event != nullptr);
+	assert(_Core->_IsValid == true);
+	_Core->_Event->Disconnect(*this);
+}
+
 void Connection::_Invalidate(void)
 {
 	if(_Core != nullptr)
 	{
 		assert(_Core->_References > 0);
+		_Core->_Event = nullptr;
 		_Core->_IsValid = false;
 		_Core->_References -= 1;
 		if(_Core->_References == 0)
