@@ -73,7 +73,12 @@ public:
 	
 	void Disconnect(Connection & Connection)
 	{
-		_Cores.erase(static_cast< Event::Core * >(Connection.GetCore())->_Iterator);
+		auto Core(static_cast< Event::Core * >(Connection.GetCore()));
+		
+		assert(Core->_References > 0);
+		Core->_References -= 1;
+		assert(Core->_References > 0);
+		_Cores.erase(Core->_Iterator);
 		Connection._Invalidate();
 	}
 	
