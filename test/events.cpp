@@ -77,7 +77,6 @@ int main(int argc, char ** argv)
 		Event< void > Event;
 		
 		assert(Event.GetCallbacks().empty() == true);
-		assert(Event.CopyCallbacks().empty() == true);
 	}
 	
 	std::cout << "-----------------------------" << std::endl;
@@ -298,5 +297,18 @@ int main(int argc, char ** argv)
 		SelfDisconnecting.Register(Event);
 		Event();
 		Event();
+	}
+	
+	std::cout << "-----------------------------" << std::endl;
+	
+	{
+		Connection Connection;
+		
+		{
+			Event< void > Event;
+			
+			Connection = Event.Connect(EmptyFunction);
+		}
+		assert(Connection.IsValid() == false);
 	}
 }
