@@ -32,8 +32,7 @@ private:
 	class Core : public Connection::Core
 	{
 	public:
-		Core(std::function < ReturnType (Types ...) > Callback) :
-			_Callback(Callback)
+		Core(void)
 		{
 		}
 		

@@ -6,12 +6,7 @@ SOURCE_FILES = $(wildcard *.cpp)
 OBJECT_FILES = $(patsubst %.cpp,%.o,$(SOURCE_FILES))
 
 TEST_PROGRAMS = \
-	events \
 	referencing
-
-events_test = \
-	$(root)/source/connection.h \
-	$(root)/source/event.h
 
 referencing_test = \
 	$(root)/source/referencing.h
@@ -35,12 +30,6 @@ clean:
 	$(RM) $(TEST_PROGRAMS)
 
 clean-recursive: clean
-
-events: events.o ../source/connection.o
-	$(CXX) $(LDFLAGS) $^ -o $@
-
-events.o: events.cpp $(events_test)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 referencing: referencing.o
 	$(CXX) $(LDFLAGS) $^ -o $@

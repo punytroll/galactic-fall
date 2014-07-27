@@ -20,7 +20,7 @@
 #ifndef UI_EVENT_H
 #define UI_EVENT_H
 
-#include "../connection.h"
+#include <events/connection.h>
 
 namespace UI
 {

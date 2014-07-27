@@ -19,7 +19,8 @@
 #ifndef LOAD_SHIP_WINDOW_H
 #define LOAD_SHIP_WINDOW_H
 
-#include "../connection.h"
+#include <events/connection.h>
+
 #include "window.h"
 
 class Hangar;

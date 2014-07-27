@@ -151,13 +151,6 @@ commodity_class_h = \
 	commodity_class.h \
 	$(type_definitions_h)
 
-connection_cpp = \
-	connection.cpp \
-	$(connection_h)
-
-connection_h = \
-	connection.h
-
 draw_text_cpp = \
 	draw_text.cpp \
 	$(globals_h) \
@@ -170,10 +163,6 @@ draw_text_cpp = \
 
 draw_text_h = \
 	draw_text.h
-
-event_h = \
-	event.h \
-	$(connection_h)
 
 faction_cpp = \
 	faction.cpp \
@@ -669,7 +658,6 @@ object_cpp = \
 
 object_h = \
 	object.h \
-	$(event_h) \
 	$(referencing_h)
 
 object_aspect_accessory_cpp = \
@@ -1075,8 +1063,7 @@ ui_event_cpp = \
 	$(ui_widget_h)
 
 ui_event_h = \
-	ui/event.h \
-	$(connection_h)
+	ui/event.h
 
 ui_hangar_widget_cpp = \
 	ui/hangar_widget.cpp \
@@ -1212,7 +1199,6 @@ ui_load_ship_window_cpp = \
 
 ui_load_ship_window_h = \
 	ui/load_ship_window.h \
-	$(connection_h) \
 	$(ui_window_h)
 
 ui_main_menu_window_cpp = \
@@ -1470,7 +1456,6 @@ ui_sub_widget_event_cpp = \
 
 ui_sub_widget_event_h = \
 	ui/sub_widget_event.h \
-	$(connection_h) \
 	$(ui_event_h)
 
 ui_text_button_cpp = \
@@ -1554,8 +1539,7 @@ ui_user_interface_cpp = \
 	$(ui_widget_h)
 
 ui_user_interface_h = \
-	ui/user_interface.h \
-	$(connection_h)
+	ui/user_interface.h
 
 ui_view_display_cpp = \
 	ui/view_display.cpp \
@@ -1583,8 +1567,7 @@ ui_widget_cpp = \
 	$(ui_widget_h)
 
 ui_widget_h = \
-	ui/widget.h \
-	$(event_h)
+	ui/widget.h
 
 ui_window_cpp = \
 	ui/window.cpp \

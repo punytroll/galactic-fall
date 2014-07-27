@@ -6,6 +6,7 @@ default: all
 
 include $(root)/tools/cpp_includes_to_makefile/Makefile.include
 include $(root)/libraries/algebra/Makefile.include
+include $(root)/libraries/events/Makefile.include
 include $(root)/libraries/xml_stream/Makefile.include
 include Makefile.dependencies
 
@@ -73,8 +74,8 @@ $(OBJECT_FILES): $(CXXFLAGS_configuration)
 
 $(DEPENDENCY_FILES): $(cpp_includes_to_makefile_dependencies)
 
-binary: $(OBJECT_FILES) $(algebra_object_files) $(arxx_libraries) $(xml_stream_object_files) $(LDFLAGS_configuration)
-	$(CXX) $(LDFLAGS) $(OBJECT_FILES) $(algebra_object-files) $(arxx_linking) $(xml_stream_object_files) -lGL -lX11 -o $@
+binary: $(OBJECT_FILES) $(algebra_object_files) $(arxx_libraries) $(events_object_files) $(xml_stream_object_files) $(LDFLAGS_configuration)
+	$(CXX) $(LDFLAGS) $(OBJECT_FILES) $(algebra_object-files) $(arxx_linking) $(events_object_files) $(xml_stream_object_files) -lGL -lX11 -o $@
 
 $(DEPENDENCY_DIRECTORY)/%.dep: %
 	@test -d $(@D) || mkdir $(@D)
@@ -83,6 +84,6 @@ $(DEPENDENCY_DIRECTORY)/%.dep: %
 .SECONDEXPANSION:
 $(OBJECT_DIRECTORY)/%.o: $$($$(subst /,_,$$*)_cpp)
 	@test -d $(@D) || mkdir $(@D)
-	$(CXX) $(CXXFLAGS) $(algebra_include) $(arxx_include) $(xml_stream_include) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(algebra_include) $(arxx_include) $(events_include) $(xml_stream_include) -c $< -o $@
 
 .PHONY: dependencies

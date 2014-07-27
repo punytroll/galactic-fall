@@ -11,7 +11,6 @@ configuration
 .configuration.d
 data/meshes/generated/littlem/*.xml
 data/textures/generated/tex/*.tex
-test/callbacks
 test/referencing
 libraries/xml_stream/test/test
-test/events
+libraries/events/test/test
