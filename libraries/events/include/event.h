@@ -20,6 +20,8 @@
 #ifndef EVENT_H
 #define EVENT_H
 
+#include <assert.h>
+
 #include <functional>
 #include <list>
 
