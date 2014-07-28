@@ -1,2 +1,5 @@
-algebra_include = \
+ALGEBRA_INCLUDE = \
 	-I$(root)/libraries/algebra/include
+
+ALGEBRA_OBJECT_FILES = \
+	

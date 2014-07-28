@@ -17,6 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include <string_cast/string_cast.h>
+
 #include "../asset_class.h"
 #include "../character.h"
 #include "../color.h"
@@ -43,7 +45,6 @@
 #include "../object_factory.h"
 #include "../planet.h"
 #include "../slot.h"
-#include "../string_cast.h"
 #include "../visualization_prototype.h"
 #include "../visualizations.h"
 #include "../weapon.h"

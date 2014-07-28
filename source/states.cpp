@@ -23,6 +23,8 @@
 #include <list>
 #include <stdexcept>
 
+#include <string_cast/string_cast.h>
+
 #include "asset_class.h"
 #include "character.h"
 #include "commodity.h"
@@ -41,7 +43,6 @@
 #include "state_machine.h"
 #include "states.h"
 #include "storage.h"
-#include "string_cast.h"
 #include "system.h"
 
 int WantToJump(Ship * Ship, System * System);

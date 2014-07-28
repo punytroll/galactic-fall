@@ -17,7 +17,7 @@
 **/
 
 /**
- * This is version 1.1.5 of the string cast.
+ * This is version 1.1.6 of the string cast.
  **/
 
 #include <iomanip>
@@ -164,4 +164,17 @@ std::string to_string_cast< void * >(void * const & Value)
 	StringStream << Value;
 	
 	return StringStream.str();
+}
+
+template < >
+std::string to_string_cast< bool >(const bool & Value)
+{
+	if(Value == true)
+	{
+		return "true";
+	}
+	else
+	{
+		return "false";
+	}
 }

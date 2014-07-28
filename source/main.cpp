@@ -33,6 +33,8 @@
 
 #include <algebra/matrix4f.h>
 
+#include <string_cast/string_cast.h>
+
 #include <xml_stream/xml_stream.h>
 
 #include "arx_reading.h"
@@ -103,7 +105,6 @@
 #include "state_machine.h"
 #include "states.h"
 #include "storage.h"
-#include "string_cast.h"
 #include "system.h"
 #include "system_statistics.h"
 #include "timeout_notifications.h"
@@ -3694,6 +3695,7 @@ void PrintSettings(void)
 
 int main(int argc, char ** argv)
 {
+	ON_DEBUG(std::cout << to_string_cast(true) << std::endl);
 	// setup the random number generator for everyday use
 	srand(time(0));
 	// parse command line

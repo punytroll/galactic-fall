@@ -25,6 +25,8 @@
 #include <Archive.h>
 #include <Item.h>
 
+#include <string_cast/string_cast.h>
+
 #include "arx_reading.h"
 #include "arx_resources.h"
 #include "asset_class.h"
@@ -57,7 +59,6 @@
 #include "slot.h"
 #include "slot_class.h"
 #include "star.h"
-#include "string_cast.h"
 #include "system.h"
 #include "ui/border.h"
 #include "ui/label.h"

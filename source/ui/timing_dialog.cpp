@@ -17,8 +17,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include <string_cast/string_cast.h>
+
 #include "../globals.h"
-#include "../string_cast.h"
 #include "../system_statistics.h"
 #include "key_event.h"
 #include "label.h"

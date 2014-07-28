@@ -21,6 +21,8 @@
 
 #include <list>
 
+#include <string_cast/string_cast.h>
+
 #include "asset_class.h"
 #include "character.h"
 #include "commodity.h"
@@ -35,7 +37,6 @@
 #include "object_aspect_position.h"
 #include "planet.h"
 #include "ship.h"
-#include "string_cast.h"
 #include "system.h"
 #include "threat.h"
 
