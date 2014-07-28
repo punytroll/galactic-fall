@@ -17,7 +17,7 @@
 **/
 
 /**
- * This is version 1.1.5 of the string cast.
+ * This is version 1.1.6 of the string cast.
  **/
 
 #ifndef STRING_CAST_H

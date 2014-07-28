@@ -17,13 +17,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include <string_cast/string_cast.h>
+
 #include "../asset_class.h"
 #include "../battery.h"
 #include "../character.h"
 #include "../color.h"
 #include "../planet.h"
 #include "../ship.h"
-#include "../string_cast.h"
 #include "event.h"
 #include "hangar_widget.h"
 #include "load_ship_window.h"

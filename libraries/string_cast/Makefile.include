@@ -1,0 +1,5 @@
+STRING_CAST_INCLUDE = \
+	-I$(root)/libraries/string_cast/include
+
+STRING_CAST_OBJECT_FILES = \
+	$(root)/libraries/string_cast/source/string_cast.o

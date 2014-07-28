@@ -17,6 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include <string_cast/string_cast.h>
+
 #include "../color.h"
 #include "../globals.h"
 #include "../message.h"
@@ -31,7 +33,6 @@
 #include "../object_aspect_visualization.h"
 #include "../slot.h"
 #include "../slot_class.h"
-#include "../string_cast.h"
 #include "label.h"
 #include "mouse_button_event.h"
 #include "object_information_dialog.h"

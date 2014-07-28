@@ -7,6 +7,7 @@ default: all
 include $(root)/tools/cpp_includes_to_makefile/Makefile.include
 include $(root)/libraries/algebra/Makefile.include
 include $(root)/libraries/events/Makefile.include
+include $(root)/libraries/string_cast/Makefile.include
 include $(root)/libraries/xml_stream/Makefile.include
 include Makefile.dependencies
 
@@ -21,8 +22,8 @@ DEPENDENCY_DIRECTORY := .dependency-files
 DEPENDENCY_DIRECTORIES := $(sort $(patsubst .%, $(DEPENDENCY_DIRECTORY)%, $(HEADER_DIRECTORIES) $(SOURCE_DIRECTORIES)))
 DEPENDENCY_FILES := $(sort $(foreach file,$(HEADER_FILES) $(SOURCE_FILES),$(DEPENDENCY_DIRECTORY)/$(file).dep))
 
-arxx_include = $(shell pkg-config --cflags libarxx)
-arxx_linking = $(shell pkg-config --libs libarxx)
+ARXX_INCLUDE = $(shell pkg-config --cflags libarxx)
+ARXX_LIBRARIES = $(shell pkg-config --libs libarxx)
 
 all: all-recursive
 
@@ -74,8 +75,8 @@ $(OBJECT_FILES): $(CXXFLAGS_configuration)
 
 $(DEPENDENCY_FILES): $(cpp_includes_to_makefile_dependencies)
 
-binary: $(OBJECT_FILES) $(algebra_object_files) $(arxx_libraries) $(events_object_files) $(xml_stream_object_files) $(LDFLAGS_configuration)
-	$(CXX) $(LDFLAGS) $(OBJECT_FILES) $(algebra_object-files) $(arxx_linking) $(events_object_files) $(xml_stream_object_files) -lGL -lX11 -o $@
+binary: $(OBJECT_FILES) $(ALGEBRA_OBJECT_FILES) $(EVENTS_OBJECT_FILES) $(STRING_CAST_OBJECT_FILES) $(XML_STREAM_OBJECT_FILES) $(LDFLAGS_configuration)
+	$(CXX) $(LDFLAGS) $(OBJECT_FILES) $(ALGEBRA_OBJECT_FILES) $(ARXX_LIBRARIES) $(EVENTS_OBJECT_FILES) $(STRING_CAST_OBJECT_FILES) $(XML_STREAM_OBJECT_FILES) -lGL -lX11 -o $@
 
 $(DEPENDENCY_DIRECTORY)/%.dep: %
 	@test -d $(@D) || mkdir $(@D)
@@ -84,6 +85,6 @@ $(DEPENDENCY_DIRECTORY)/%.dep: %
 .SECONDEXPANSION:
 $(OBJECT_DIRECTORY)/%.o: $$($$(subst /,_,$$*)_cpp)
 	@test -d $(@D) || mkdir $(@D)
-	$(CXX) $(CXXFLAGS) $(algebra_include) $(arxx_include) $(events_include) $(xml_stream_include) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(ALGEBRA_INCLUDE) $(ARXX_INCLUDE) $(EVENTS_INCLUDE) $(STRING_CAST_INCLUDE) $(XML_STREAM_INCLUDE) -c $< -o $@
 
 .PHONY: dependencies

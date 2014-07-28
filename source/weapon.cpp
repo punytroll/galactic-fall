@@ -23,6 +23,8 @@
 
 #include <algebra/quaternion.h>
 
+#include <string_cast/string_cast.h>
+
 #include "battery.h"
 #include "game_time.h"
 #include "globals.h"
@@ -35,7 +37,6 @@
 #include "ship.h"
 #include "shot.h"
 #include "slot.h"
-#include "string_cast.h"
 #include "weapon.h"
 
 Weapon::Weapon(void) :

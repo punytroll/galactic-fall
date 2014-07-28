@@ -20,6 +20,8 @@
 #include <stdexcept>
 #include <typeinfo>
 
+#include <string_cast/string_cast.h>
+
 #include <xml_stream/xml_stream.h>
 
 #include "message.h"
@@ -34,7 +36,6 @@
 #include "object_aspect_update.h"
 #include "object_aspect_visualization.h"
 #include "real_time.h"
-#include "string_cast.h"
 
 std::set< Object * > Object::_Objects;
 std::map< std::string, Object * > Object::_IdentifiedObjects;

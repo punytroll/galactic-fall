@@ -21,10 +21,11 @@
 #include <BufferReader.h>
 #include <Item.h>
 
+#include <string_cast/string_cast.h>
+
 #include "arx_resources.h"
 #include "buffer_reading.h"
 #include "settings.h"
-#include "string_cast.h"
 
 static void MakeItemAvailable(Arxx::Item * Item)
 {

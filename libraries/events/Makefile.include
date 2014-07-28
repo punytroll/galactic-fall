@@ -1,5 +1,5 @@
-events_include = \
+EVENTS_INCLUDE = \
 	-I$(root)/libraries/events/include
 
-events_object_files = \
+EVENTS_OBJECT_FILES = \
 	$(root)/libraries/events/source/connection.o
