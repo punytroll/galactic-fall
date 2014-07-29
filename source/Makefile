@@ -8,6 +8,7 @@ include $(root)/tools/cpp_includes_to_makefile/Makefile.include
 include $(root)/libraries/algebra/Makefile.include
 include $(root)/libraries/events/Makefile.include
 include $(root)/libraries/string_cast/Makefile.include
+include $(root)/libraries/xml_parser/Makefile.include
 include $(root)/libraries/xml_stream/Makefile.include
 include Makefile.dependencies
 
@@ -75,8 +76,8 @@ $(OBJECT_FILES): $(CXXFLAGS_configuration)
 
 $(DEPENDENCY_FILES): $(cpp_includes_to_makefile_dependencies)
 
-binary: $(OBJECT_FILES) $(ALGEBRA_OBJECT_FILES) $(EVENTS_OBJECT_FILES) $(STRING_CAST_OBJECT_FILES) $(XML_STREAM_OBJECT_FILES) $(LDFLAGS_configuration)
-	$(CXX) $(LDFLAGS) $(OBJECT_FILES) $(ALGEBRA_OBJECT_FILES) $(ARXX_LIBRARIES) $(EVENTS_OBJECT_FILES) $(STRING_CAST_OBJECT_FILES) $(XML_STREAM_OBJECT_FILES) -lGL -lX11 -o $@
+binary: $(OBJECT_FILES) $(ALGEBRA_OBJECT_FILES) $(EVENTS_OBJECT_FILES) $(STRING_CAST_OBJECT_FILES) $(XML_PARSER_OBJECT_FILES) $(XML_STREAM_OBJECT_FILES) $(LDFLAGS_configuration)
+	$(CXX) $(LDFLAGS) $(OBJECT_FILES) $(ALGEBRA_OBJECT_FILES) $(ARXX_LIBRARIES) $(EVENTS_OBJECT_FILES) $(STRING_CAST_OBJECT_FILES) $(XML_PARSER_OBJECT_FILES) $(XML_STREAM_OBJECT_FILES) -lGL -lX11 -o $@
 
 $(DEPENDENCY_DIRECTORY)/%.dep: %
 	@test -d $(@D) || mkdir $(@D)
@@ -85,6 +86,6 @@ $(DEPENDENCY_DIRECTORY)/%.dep: %
 .SECONDEXPANSION:
 $(OBJECT_DIRECTORY)/%.o: $$($$(subst /,_,$$*)_cpp)
 	@test -d $(@D) || mkdir $(@D)
-	$(CXX) $(CXXFLAGS) $(ALGEBRA_INCLUDE) $(ARXX_INCLUDE) $(EVENTS_INCLUDE) $(STRING_CAST_INCLUDE) $(XML_STREAM_INCLUDE) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(ALGEBRA_INCLUDE) $(ARXX_INCLUDE) $(EVENTS_INCLUDE) $(STRING_CAST_INCLUDE) $(XML_PARSER_INCLUDE) $(XML_STREAM_INCLUDE) -c $< -o $@
 
 .PHONY: dependencies

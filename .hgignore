@@ -15,4 +15,4 @@ test/referencing
 libraries/xml_stream/test/test
 libraries/events/test/test
 libraries/string_cast/test/test
-libraries/string_cast/include/string_cast
+libraries/xml_parser/test/test
