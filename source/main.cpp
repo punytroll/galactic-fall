@@ -35,6 +35,8 @@
 
 #include <string_cast/string_cast.h>
 
+#include <xml_puny_dom/xml_puny_dom.h>
+
 #include <xml_stream/xml_stream.h>
 
 #include "arx_reading.h"
@@ -129,7 +131,6 @@
 #include "weapon.h"
 #include "weapon_class.h"
 #include "write_to_xml_stream.h"
-#include "xml_puny_dom.h"
 
 #ifndef NDEBUG
 #define ON_DEBUG(A) (A)
