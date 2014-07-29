@@ -1675,13 +1675,6 @@ write_to_xml_stream_cpp = \
 write_to_xml_stream_h = \
 	write_to_xml_stream.h
 
-xml_parser_cpp = \
-	xml_parser.cpp \
-	$(xml_parser_h)
-
-xml_parser_h = \
-	xml_parser.h
-
 xml_puny_dom_cpp = \
 	xml_puny_dom.cpp \
 	$(xml_parser_h) \
