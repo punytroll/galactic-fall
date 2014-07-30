@@ -1,5 +1,5 @@
 EVENTS_INCLUDE = \
 	-I$(root)/libraries/events/include
 
-EVENTS_OBJECT_FILES = \
-	$(root)/libraries/events/source/connection.o
+EVENTS_LIBRARY = \
+	$(root)/libraries/events/libevents.a

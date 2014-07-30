@@ -62,8 +62,8 @@ $(OBJECT_FILES): $(CXXFLAGS_configuration)
 
 $(DEPENDENCY_FILES): $(cpp_includes_to_makefile_dependencies) $(DEPENDENCY_DIRECTORIES)
 
-binary: $(OBJECT_FILES) $(LDFLAGS_configuration)
-	$(CXX) $(LDFLAGS) $(OBJECT_FILES) $(ALGEBRA_OBJECT_FILES) $(XML_STREAM_OBJECT_FILES) -lGL -lX11 -lglut -lGLU -o $@
+binary: $(OBJECT_FILES) $(XML_STREAM_LIBRARY) $(LDFLAGS_configuration)
+	$(CXX) $(LDFLAGS) $(OBJECT_FILES) $(XML_STREAM_LIBRARY) -lGL -lX11 -lglut -lGLU -o $@
 
 .dependency-files/%.dep: %
 	$(command_cpp_includes_to_makefile) $< > $@

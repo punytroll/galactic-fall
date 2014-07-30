@@ -1,5 +1,5 @@
 XML_PUNY_DOM_INCLUDE = \
 	-I$(root)/libraries/xml_puny_dom/include
 
-XML_PUNY_DOM_OBJECT_FILES = \
-	$(root)/libraries/xml_puny_dom/source/xml_puny_dom.o
+XML_PUNY_DOM_LIBRARY = \
+	$(root)/libraries/xml_puny_dom/libxmlpunydom.a

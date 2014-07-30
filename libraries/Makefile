@@ -36,7 +36,7 @@ string_cast: string_cast-all-recursive
 
 xml_parser: xml_parser-all-recursive
 
-xml_puny_dom: xml_puny_dom-all-recursive
+xml_puny_dom: xml_parser xml_puny_dom-all-recursive
 
 xml_stream: xml_stream-all-recursive
 
