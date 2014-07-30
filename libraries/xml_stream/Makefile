@@ -6,7 +6,7 @@ default: all
 
 all: all-recursive
 
-all-here: source/xml_stream.o
+all-here: libxmlstream.a
 
 all-recursive: all-here
 
@@ -16,17 +16,21 @@ check: test/test
 clean: clean-recursive
 
 clean-here: 
+	$(RM) libxmlstream.a
 	$(RM) source/xml_stream.o
 	$(RM) test/test
 	$(RM) test/test.o
 
 clean-recursive: clean-here
 
+libxmlstream.a: source/xml_stream.o
+	ar -rcsv $@ $^
+
 source/xml_stream.o: source/xml_stream.cpp include/xml_stream.h $(CXXFLAGS_configuration)
 	$(CXX) $(CXXFLAGS) -Iinclude -c $< -o $@
 
-test/test: test/test.o source/xml_stream.o $(LDFLAGS_configuration)
-	$(CXX) $(LDFLAGS) test/test.o source/xml_stream.o -o $@
+test/test: test/test.o libxmlstream.a $(LDFLAGS_configuration)
+	$(CXX) $(LDFLAGS) test/test.o libxmlstream.a -o $@
 
 test/test.o: test/test.cpp include/xml_stream.h $(CXXFLAGS_configuration)
 	$(CXX) $(CXXFLAGS) -Iinclude -c $< -o $@

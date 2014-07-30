@@ -7,7 +7,7 @@ include $(root)/libraries/xml_parser/Makefile.include
 
 all: all-recursive
 
-all-here: source/xml_puny_dom.o
+all-here: libxmlpunydom.a
 
 all-recursive: all-here
 
@@ -15,10 +15,14 @@ check:
 
 clean: clean-recursive
 
-clean-here: 
+clean-here:
+	$(RM) libxmlpunydom.a
 	$(RM) source/xml_puny_dom.o
 
 clean-recursive: clean-here
+
+libxmlpunydom.a: source/xml_puny_dom.o $(XML_PARSER_OBJECT_FILES)
+	ar rcs $@ $^
 
 source/xml_puny_dom.o: source/xml_puny_dom.cpp include/xml_puny_dom.h $(CXXFLAGS_configuration)
 	$(CXX) $(CXXFLAGS) $(XML_PARSER_INCLUDE) -Iinclude -c $< -o $@

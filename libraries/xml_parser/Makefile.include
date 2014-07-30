@@ -1,5 +1,8 @@
 XML_PARSER_INCLUDE = \
 	-I$(root)/libraries/xml_parser/include
 
+XML_PARSER_LIBRARY = \
+	$(root)/libraries/xml_parser/libxmlparser.a
+
 XML_PARSER_OBJECT_FILES = \
 	$(root)/libraries/xml_parser/source/xml_parser.o

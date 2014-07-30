@@ -6,7 +6,7 @@ default: all
 
 all: all-recursive
 
-all-here: source/connection.o
+all-here: libevents.a
 
 all-recursive: all-here
 
@@ -15,18 +15,22 @@ check: test/test
 
 clean: clean-recursive
 
-clean-here: 
+clean-here:
+	$(RM) libevents.a
 	$(RM) source/connection.o
 	$(RM) test/test
 	$(RM) test/test.o
 
 clean-recursive: clean-here
 
+libevents.a: source/connection.o
+	ar rcs $@ $^
+
 source/connection.o: source/connection.cpp include/connection.h $(CXXFLAGS_configuration)
 	$(CXX) $(CXXFLAGS) -Iinclude -c $< -o $@
 
-test/test: source/connection.o test/test.o $(LDFLAGS_configuration)
-	$(CXX) $(LDFLAGS) source/connection.o test/test.o -o $@
+test/test: libevents.a test/test.o $(LDFLAGS_configuration)
+	$(CXX) $(LDFLAGS) test/test.o libevents.a -o $@
 
 test/test.o: test/test.cpp include/connection.h include/event.h $(CXXFLAGS_configuration)
 	$(CXX) $(CXXFLAGS) -Iinclude -c $< -o $@
