@@ -34,9 +34,8 @@ namespace UI
 		// constructors and deconstructors
 		Button(UI::Widget * SupWidget);
 		virtual ~Button(void);
-		// connect and disconnect events
+		// connect events
 		Connection ConnectClickedCallback(std::function< void (void) > ClickedHandler);
-		void DisconnectClickedCallback(Connection & Connection);
 	private:
 		// callbacks
 		void _OnMouseButton(UI::MouseButtonEvent & MouseBUttonEvent);
