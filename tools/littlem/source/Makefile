@@ -4,10 +4,8 @@ root = ../../..
 
 default: all
 
-include $(root)/tools/cpp_includes_to_makefile/Makefile.include
 include $(root)/libraries/algebra/Makefile.include
 include $(root)/libraries/xml_stream/Makefile.include
-include Makefile.dependencies
 
 HEADER_DIRECTORIES := $(patsubst %/,%,$(sort $(dir $(shell find . -name '*.h'))))
 HEADER_FILES := $(patsubst ./%,%,$(foreach HEADER_DIRECTORY,$(HEADER_DIRECTORIES),$(wildcard $(HEADER_DIRECTORY)/*.h)))
@@ -17,12 +15,16 @@ OBJECT_DIRECTORY := .object-files
 OBJECT_DIRECTORIES := $(patsubst .%, $(OBJECT_DIRECTORY)%, $(SOURCE_DIRECTORIES))
 OBJECT_FILES := $(sort $(patsubst %.cpp,$(OBJECT_DIRECTORY)/%.o,$(SOURCE_FILES)))
 DEPENDENCY_DIRECTORY := .dependency-files
-DEPENDENCY_DIRECTORIES := $(sort $(patsubst .%, $(DEPENDENCY_DIRECTORY)%, $(HEADER_DIRECTORIES) $(SOURCE_DIRECTORIES)))
-DEPENDENCY_FILES := $(sort $(foreach file,$(HEADER_FILES) $(SOURCE_FILES),$(DEPENDENCY_DIRECTORY)/$(file).dep))
+DEPENDENCY_DIRECTORIES := $(sort $(patsubst .%, $(DEPENDENCY_DIRECTORY)%, $(SOURCE_DIRECTORIES)))
+DEPENDENCY_FILES := $(sort $(foreach file,$(SOURCE_FILES),$(DEPENDENCY_DIRECTORY)/$(file).dep))
+
+ifeq (0, $(words $(findstring $(MAKECMDGOALS), clean clean-recursive clean-here)))
+    -include $(DEPENDENCY_FILES)
+endif
 
 all: all-recursive
 
-all-here: prepare-build binary
+all-here: binary
 
 all-recursive: all-here
 
@@ -45,31 +47,17 @@ clean-here:
 
 clean-recursive: clean-here
 
-dependencies: $(DEPENDENCY_FILES)
-	$(RM) Makefile.dependencies
-	@for FILE in $(DEPENDENCY_FILES); do \
-		echo "cat $${FILE} >> Makefile.dependencies"; \
-		cat $${FILE} >> Makefile.dependencies; \
-		echo >> Makefile.dependencies; \
-	done
-
-$(OBJECT_DIRECTORIES) $(DEPENDENCY_DIRECTORIES):
-	mkdir $@
-
-prepare-build: $(OBJECT_DIRECTORIES)
-
 $(OBJECT_FILES): $(CXXFLAGS_configuration)
-
-$(DEPENDENCY_FILES): $(cpp_includes_to_makefile_dependencies) $(DEPENDENCY_DIRECTORIES)
 
 binary: $(OBJECT_FILES) $(XML_STREAM_LIBRARY) $(LDFLAGS_configuration)
 	$(CXX) $(LDFLAGS) $(OBJECT_FILES) $(XML_STREAM_LIBRARY) -lGL -lX11 -lglut -lGLU -o $@
 
-.dependency-files/%.dep: %
-	$(command_cpp_includes_to_makefile) $< > $@
+$(DEPENDENCY_DIRECTORY)/%.dep: %
+	@test -d $(@D) || mkdir $(@D)
+	$(CXX) $(CXXFLAGS) $(ALGEBRA_INCLUDE) $(XML_STREAM_INCLUDE) -MM $< | sed 's/^\(.*\.o\):/$(OBJECT_DIRECTORY)\/\1 $(subst /,\/,$@):/g' > $@
 
-.SECONDEXPANSION:
-$(OBJECT_DIRECTORY)/%.o: $$($$(subst /,_,$$*)_cpp)
+$(OBJECT_DIRECTORY)/%.o: %.cpp
+	@test -d $(@D) || mkdir $(@D)
 	$(CXX) $(CXXFLAGS) $(ALGEBRA_INCLUDE) $(XML_STREAM_INCLUDE)	-c $< -o $@
 
-.PHONY: dependencies
+.PHONY: all all-here all-recursive clean clean-here clean-recursive check-dependencies default

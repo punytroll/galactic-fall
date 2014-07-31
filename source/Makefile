@@ -4,14 +4,12 @@ root = ..
 
 default: all
 
-include $(root)/tools/cpp_includes_to_makefile/Makefile.include
 include $(root)/libraries/algebra/Makefile.include
 include $(root)/libraries/events/Makefile.include
 include $(root)/libraries/string_cast/Makefile.include
 include $(root)/libraries/xml_parser/Makefile.include
 include $(root)/libraries/xml_puny_dom/Makefile.include
 include $(root)/libraries/xml_stream/Makefile.include
-include Makefile.dependencies
 
 HEADER_DIRECTORIES := $(patsubst %/,%,$(sort $(dir $(shell find . -name '*.h'))))
 HEADER_FILES := $(patsubst ./%,%,$(foreach HEADER_DIRECTORY,$(HEADER_DIRECTORIES),$(wildcard $(HEADER_DIRECTORY)/*.h)))
@@ -21,8 +19,12 @@ OBJECT_DIRECTORY := .object-files
 OBJECT_DIRECTORIES := $(patsubst .%, $(OBJECT_DIRECTORY)%, $(SOURCE_DIRECTORIES))
 OBJECT_FILES := $(sort $(patsubst %.cpp,$(OBJECT_DIRECTORY)/%.o,$(SOURCE_FILES)))
 DEPENDENCY_DIRECTORY := .dependency-files
-DEPENDENCY_DIRECTORIES := $(sort $(patsubst .%, $(DEPENDENCY_DIRECTORY)%, $(HEADER_DIRECTORIES) $(SOURCE_DIRECTORIES)))
-DEPENDENCY_FILES := $(sort $(foreach file,$(HEADER_FILES) $(SOURCE_FILES),$(DEPENDENCY_DIRECTORY)/$(file).dep))
+DEPENDENCY_DIRECTORIES := $(sort $(patsubst .%, $(DEPENDENCY_DIRECTORY)%, $(SOURCE_DIRECTORIES)))
+DEPENDENCY_FILES := $(sort $(foreach file,$(SOURCE_FILES),$(DEPENDENCY_DIRECTORY)/$(file).dep))
+
+ifeq (0, $(words $(findstring $(MAKECMDGOALS), clean clean-recursive clean-here)))
+    -include $(DEPENDENCY_FILES)
+endif
 
 ARXX_INCLUDE = $(shell pkg-config --cflags libarxx)
 ARXX_LIBRARIES = $(shell pkg-config --libs libarxx)
@@ -52,7 +54,7 @@ clean-here:
 
 clean-recursive: clean-here
 
-check-dependencies: cpp_includes_to_makefile-check-dependencies
+check-dependencies:
 	@if [ x`which pkg-config` = x ]; then \
 		echo -e "\nYour system is missing the \"pkg-config\" tool.\nThis tool is needed and you will need to install it in order to build the program.\n"; false; \
 	fi
@@ -63,30 +65,17 @@ check-dependencies: cpp_includes_to_makefile-check-dependencies
 		echo -e "\nThe library \"libarxx\" that is installed on your system is too old.\nYou have: Version `pkg-config --modversion libarxx`\nYou need: Version 0.8.9\nYou can get the most recent library from \"http://libarxx.sourceforge.net\"./\n"; false; \
 	fi
 
-dependencies: $(DEPENDENCY_FILES)
-	$(RM) Makefile.dependencies
-	@for FILE in $(DEPENDENCY_FILES); do \
-		echo "cat $${FILE} >> Makefile.dependencies"; \
-		cat $${FILE} >> Makefile.dependencies; \
-		echo >> Makefile.dependencies; \
-	done
-
-%.o: %.cpp
-
 $(OBJECT_FILES): $(CXXFLAGS_configuration)
-
-$(DEPENDENCY_FILES): $(cpp_includes_to_makefile_dependencies)
 
 binary: $(OBJECT_FILES) $(EVENTS_LIBRARY) $(STRING_CAST_LIBRARY) $(XML_PUNY_DOM_LIBRARY) $(XML_STREAM_LIBRARY) $(LDFLAGS_configuration)
 	$(CXX) $(LDFLAGS) $(OBJECT_FILES) $(ARXX_LIBRARIES) $(EVENTS_LIBRARY) $(STRING_CAST_LIBRARY) $(XML_PUNY_DOM_LIBRARY) $(XML_STREAM_LIBRARY) -lGL -lX11 -o $@
 
 $(DEPENDENCY_DIRECTORY)/%.dep: %
 	@test -d $(@D) || mkdir $(@D)
-	$(command_cpp_includes_to_makefile) $< > $@
+	$(CXX) $(CXXFLAGS) $(ALGEBRA_INCLUDE) $(ARXX_INCLUDE) $(EVENTS_INCLUDE) $(STRING_CAST_INCLUDE) $(XML_PUNY_DOM_INCLUDE) $(XML_STREAM_INCLUDE) -MM $< | sed 's/^\(.*\.o\):/$(OBJECT_DIRECTORY)\/\1 $(subst /,\/,$@):/g' > $@
 
-.SECONDEXPANSION:
-$(OBJECT_DIRECTORY)/%.o: $$($$(subst /,_,$$*)_cpp)
+$(OBJECT_DIRECTORY)/%.o: %.cpp
 	@test -d $(@D) || mkdir $(@D)
 	$(CXX) $(CXXFLAGS) $(ALGEBRA_INCLUDE) $(ARXX_INCLUDE) $(EVENTS_INCLUDE) $(STRING_CAST_INCLUDE) $(XML_PUNY_DOM_INCLUDE) $(XML_STREAM_INCLUDE) -c $< -o $@
 
-.PHONY: dependencies
+.PHONY: all all-here all-recursive clean clean-here clean-recursive check-dependencies default
