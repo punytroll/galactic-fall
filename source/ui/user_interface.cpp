@@ -41,11 +41,8 @@ void DestroyingPropagationPathItem(UI::Event & DestroyingEvent, EventPropagation
 	if(DestroyingEvent.GetPhase() == UI::Event::Phase::Target)
 	{
 		assert(EventPropagationPathItem != nullptr);
-		assert(EventPropagationPathItem->_Widget != nullptr);
-		assert(EventPropagationPathItem->_Connection.IsValid() == true);
-		EventPropagationPathItem->_Widget->DisconnectDestroyingCallback(EventPropagationPathItem->_Connection);
-		assert(EventPropagationPathItem->_Connection.IsValid() == false);
 		EventPropagationPathItem->_Widget = nullptr;
+		EventPropagationPathItem->_Connection.Disconnect();
 	}
 }
 
@@ -74,14 +71,10 @@ UI::UserInterface::UserInterface(void) :
 
 UI::UserInterface::~UserInterface(void)
 {
-	if(_CaptureWidgetDestroyingCallbackConnection.IsValid() == true)
+	if(_CaptureWidget != nullptr)
 	{
-		assert(_CaptureWidget != nullptr);
-		_CaptureWidget->DisconnectDestroyingCallback(_CaptureWidgetDestroyingCallbackConnection);
-	}
-	else
-	{
-		assert(_CaptureWidget == nullptr);
+		_CaptureWidget = nullptr;
+		_CaptureWidgetDestroyingCallbackConnection.Disconnect();
 	}
 	_RootWidget->Destroy();
 	_RootWidget = nullptr;
@@ -103,19 +96,18 @@ void UI::UserInterface::Draw(void) const
 
 void UI::UserInterface::SetCaptureWidget(UI::Widget * Widget)
 {
-	assert(Widget != 0);
-	assert(_CaptureWidget == 0);
+	assert(Widget != nullptr);
+	assert(_CaptureWidget == nullptr);
 	_CaptureWidget = Widget;
 	_CaptureWidgetDestroyingCallbackConnection = _CaptureWidget->ConnectDestroyingCallback(std::bind(&UI::UserInterface::_OnCaptureWidgetDestroying, this, std::placeholders::_1));
 }
 
 void UI::UserInterface::ReleaseCaptureWidget(void)
 {
-	if(_CaptureWidget != 0)
+	if(_CaptureWidget != nullptr)
 	{
-		assert(_CaptureWidgetDestroyingCallbackConnection.IsValid() == true);
-		_CaptureWidget->DisconnectDestroyingCallback(_CaptureWidgetDestroyingCallbackConnection);
-		_CaptureWidget = 0;
+		_CaptureWidget = nullptr;
+		_CaptureWidgetDestroyingCallbackConnection.Disconnect();
 	}
 }
 
@@ -123,13 +115,13 @@ UI::Widget * UI::UserInterface::GetWidget(const std::string & Path)
 {
 	if(Path[0] != '/')
 	{
-		return 0;
+		return nullptr;
 	}
 	
 	std::string::size_type Position(1);
-	UI::Widget * Root(_RootWidget);
+	auto * Root(_RootWidget);
 	
-	while((Root != 0) && (Position < Path.length()))
+	while((Root != nullptr) && (Position < Path.length()))
 	{
 		std::string::size_type SlashPosition(Path.find('/', Position));
 		
@@ -206,13 +198,7 @@ void UI::UserInterface::DispatchDestroyingEvent(UI::Event & DestroyingEvent)
 		assert(PropagationPathItem != nullptr);
 		if(PropagationPathItem->_Widget != nullptr)
 		{
-			assert(PropagationPathItem->_Connection.IsValid() == true);
-			PropagationPathItem->_Widget->DisconnectDestroyingCallback(PropagationPathItem->_Connection);
-			assert(PropagationPathItem->_Connection.IsValid() == false);
-		}
-		else
-		{
-			assert(PropagationPathItem->_Connection.IsValid() == false);
+			PropagationPathItem->_Connection.Disconnect();
 		}
 		delete PropagationPathItem;
 	}
@@ -294,13 +280,7 @@ void UI::UserInterface::DispatchKeyEvent(UI::KeyEvent & KeyEvent)
 		assert(PropagationPathItem != nullptr);
 		if(PropagationPathItem->_Widget != nullptr)
 		{
-			assert(PropagationPathItem->_Connection.IsValid() == true);
-			PropagationPathItem->_Widget->DisconnectDestroyingCallback(PropagationPathItem->_Connection);
-			assert(PropagationPathItem->_Connection.IsValid() == false);
-		}
-		else
-		{
-			assert(PropagationPathItem->_Connection.IsValid() == false);
+			PropagationPathItem->_Connection.Disconnect();
 		}
 		delete PropagationPathItem;
 	}
@@ -439,13 +419,7 @@ void UI::UserInterface::DispatchMouseButtonEvent(UI::MouseButtonEvent & MouseBut
 		assert(PropagationPathItem != nullptr);
 		if(PropagationPathItem->_Widget != nullptr)
 		{
-			assert(PropagationPathItem->_Connection.IsValid() == true);
-			PropagationPathItem->_Widget->DisconnectDestroyingCallback(PropagationPathItem->_Connection);
-			assert(PropagationPathItem->_Connection.IsValid() == false);
-		}
-		else
-		{
-			assert(PropagationPathItem->_Connection.IsValid() == false);
+			PropagationPathItem->_Connection.Disconnect();
 		}
 		delete PropagationPathItem;
 	}
@@ -517,13 +491,7 @@ void UI::UserInterface::DispatchMouseEnterEvent(UI::Event & MouseEnterEvent)
 		assert(PropagationPathItem != nullptr);
 		if(PropagationPathItem->_Widget != nullptr)
 		{
-			assert(PropagationPathItem->_Connection.IsValid() == true);
-			PropagationPathItem->_Widget->DisconnectDestroyingCallback(PropagationPathItem->_Connection);
-			assert(PropagationPathItem->_Connection.IsValid() == false);
-		}
-		else
-		{
-			assert(PropagationPathItem->_Connection.IsValid() == false);
+			PropagationPathItem->_Connection.Disconnect();
 		}
 		delete PropagationPathItem;
 	}
@@ -595,13 +563,7 @@ void UI::UserInterface::DispatchMouseLeaveEvent(UI::Event & MouseLeaveEvent)
 		assert(PropagationPathItem != nullptr);
 		if(PropagationPathItem->_Widget != nullptr)
 		{
-			assert(PropagationPathItem->_Connection.IsValid() == true);
-			PropagationPathItem->_Widget->DisconnectDestroyingCallback(PropagationPathItem->_Connection);
-			assert(PropagationPathItem->_Connection.IsValid() == false);
-		}
-		else
-		{
-			assert(PropagationPathItem->_Connection.IsValid() == false);
+			PropagationPathItem->_Connection.Disconnect();
 		}
 		delete PropagationPathItem;
 	}
@@ -791,13 +753,7 @@ void UI::UserInterface::DispatchMouseMoveEvent(UI::MouseMoveEvent & MouseMoveEve
 		assert(PropagationPathItem != nullptr);
 		if(PropagationPathItem->_Widget != nullptr)
 		{
-			assert(PropagationPathItem->_Connection.IsValid() == true);
-			PropagationPathItem->_Widget->DisconnectDestroyingCallback(PropagationPathItem->_Connection);
-			assert(PropagationPathItem->_Connection.IsValid() == false);
-		}
-		else
-		{
-			assert(PropagationPathItem->_Connection.IsValid() == false);
+			PropagationPathItem->_Connection.Disconnect();
 		}
 		delete PropagationPathItem;
 	}
@@ -869,13 +825,7 @@ void UI::UserInterface::DispatchPositionChangedEvent(UI::Event & PositionChanged
 		assert(PropagationPathItem != nullptr);
 		if(PropagationPathItem->_Widget != nullptr)
 		{
-			assert(PropagationPathItem->_Connection.IsValid() == true);
-			PropagationPathItem->_Widget->DisconnectDestroyingCallback(PropagationPathItem->_Connection);
-			assert(PropagationPathItem->_Connection.IsValid() == false);
-		}
-		else
-		{
-			assert(PropagationPathItem->_Connection.IsValid() == false);
+			PropagationPathItem->_Connection.Disconnect();
 		}
 		delete PropagationPathItem;
 	}
@@ -947,13 +897,7 @@ void UI::UserInterface::DispatchSizeChangedEvent(UI::Event & SizeChangedEvent)
 		assert(PropagationPathItem != nullptr);
 		if(PropagationPathItem->_Widget != nullptr)
 		{
-			assert(PropagationPathItem->_Connection.IsValid() == true);
-			PropagationPathItem->_Widget->DisconnectDestroyingCallback(PropagationPathItem->_Connection);
-			assert(PropagationPathItem->_Connection.IsValid() == false);
-		}
-		else
-		{
-			assert(PropagationPathItem->_Connection.IsValid() == false);
+			PropagationPathItem->_Connection.Disconnect();
 		}
 		delete PropagationPathItem;
 	}
@@ -1025,13 +969,7 @@ void UI::UserInterface::DispatchSubWidgetAddedEvent(UI::SubWidgetEvent & SubWidg
 		assert(PropagationPathItem != nullptr);
 		if(PropagationPathItem->_Widget != nullptr)
 		{
-			assert(PropagationPathItem->_Connection.IsValid() == true);
-			PropagationPathItem->_Widget->DisconnectDestroyingCallback(PropagationPathItem->_Connection);
-			assert(PropagationPathItem->_Connection.IsValid() == false);
-		}
-		else
-		{
-			assert(PropagationPathItem->_Connection.IsValid() == false);
+			PropagationPathItem->_Connection.Disconnect();
 		}
 		delete PropagationPathItem;
 	}
@@ -1103,13 +1041,7 @@ void UI::UserInterface::DispatchSubWidgetRemovedEvent(UI::SubWidgetEvent & SubWi
 		assert(PropagationPathItem != nullptr);
 		if(PropagationPathItem->_Widget != nullptr)
 		{
-			assert(PropagationPathItem->_Connection.IsValid() == true);
-			PropagationPathItem->_Widget->DisconnectDestroyingCallback(PropagationPathItem->_Connection);
-			assert(PropagationPathItem->_Connection.IsValid() == false);
-		}
-		else
-		{
-			assert(PropagationPathItem->_Connection.IsValid() == false);
+			PropagationPathItem->_Connection.Disconnect();
 		}
 		delete PropagationPathItem;
 	}
@@ -1147,9 +1079,8 @@ void UI::UserInterface::_OnCaptureWidgetDestroying(UI::Event & DestroyingEvent)
 	if(DestroyingEvent.GetPhase() == UI::Event::Phase::Target)
 	{
 		assert(_CaptureWidget != nullptr);
-		assert(_CaptureWidgetDestroyingCallbackConnection.IsValid() == true);
-		_CaptureWidget->DisconnectDestroyingCallback(_CaptureWidgetDestroyingCallbackConnection);
 		_CaptureWidget = nullptr;
+		_CaptureWidgetDestroyingCallbackConnection.Disconnect();
 	}
 }
 

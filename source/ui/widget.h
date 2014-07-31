@@ -80,7 +80,7 @@ namespace UI
 		void SetAnchorTop(bool AnchorTop);
 		void SetEnabled(bool Enabled);
 		void SetVisible(bool Visible);
-		// connect and disconnect events
+		// connect events
 		Connection ConnectDestroyingCallback(std::function< void (UI::Event &) > Callback);
 		Connection ConnectKeyCallback(std::function< void (UI::KeyEvent &) > Callback);
 		Connection ConnectMouseButtonCallback(std::function< void (UI::MouseButtonEvent &) > Callback);
@@ -92,17 +92,6 @@ namespace UI
 		Connection ConnectSubWidgetAddedCallback(std::function< void (UI::SubWidgetEvent &) > Callback);
 		Connection ConnectSubWidgetRemovedCallback(std::function< void (UI::SubWidgetEvent &) > Callback);
 		Connection ConnectUpdatingCallback(std::function< void (float, float) > Callback);
-		void DisconnectDestroyingCallback(Connection & Connection);
-		void DisconnectKeyCallback(Connection & Connection);
-		void DisconnectMouseButtonCallback(Connection & Connection);
-		void DisconnectMouseEnterCallback(Connection & Connection);
-		void DisconnectMouseLeaveCallback(Connection & Connection);
-		void DisconnectMouseMoveCallback(Connection & Connection);
-		void DisconnectPositionChangedCallback(Connection & Connection);
-		void DisconnectSizeChangedCallback(Connection & Connection);
-		void DisconnectSubWidgetAddedCallback(Connection & Connection);
-		void DisconnectSubWidgetRemovedCallback(Connection & Connection);
-		void DisconnectUpdatingCallback(Connection & Connection);
 		// static manager functions
 		static std::list< Widget * > & GetDestroyedWidgets(void);
 	protected:

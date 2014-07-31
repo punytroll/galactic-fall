@@ -42,11 +42,6 @@ Connection UI::Button::ConnectClickedCallback(std::function< void (void) > Click
 	return _ClickedEvent.Connect(ClickedHandler);
 }
 
-void UI::Button::DisconnectClickedCallback(Connection & Connection)
-{
-	_ClickedEvent.Disconnect(Connection);
-}
-
 void UI::Button::_OnMouseButton(UI::MouseButtonEvent & MouseButtonEvent)
 {
 	if((MouseButtonEvent.GetPhase() == UI::MouseButtonEvent::Phase::Capturing) && (MouseButtonEvent.GetMouseButton() == UI::MouseButtonEvent::MouseButton::Left))

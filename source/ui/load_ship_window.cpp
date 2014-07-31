@@ -72,9 +72,7 @@ namespace UI
 			if(DestroyingEvent.GetPhase() == UI::Event::Phase::Target)
 			{
 				assert(_Object != nullptr);
-				assert(_ObjectDestroyingConnection.IsValid() == true);
-				_Object->DisconnectDestroyingCallback(_ObjectDestroyingConnection);
-				assert(_ObjectDestroyingConnection.IsValid() == false);
+				_ObjectDestroyingConnection.Disconnect();
 				_Object = nullptr;
 			}
 		}

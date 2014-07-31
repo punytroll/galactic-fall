@@ -366,61 +366,6 @@ Connection UI::Widget::ConnectUpdatingCallback(std::function< void (float, float
 	return _UpdatingEvent.Connect(Callback);
 }
 
-void UI::Widget::DisconnectDestroyingCallback(Connection & Connection)
-{
-	_DestroyingEvent.Disconnect(Connection);
-}
-
-void UI::Widget::DisconnectKeyCallback(Connection & Connection)
-{
-	_KeyEvent.Disconnect(Connection);
-}
-
-void UI::Widget::DisconnectMouseButtonCallback(Connection & Connection)
-{
-	_MouseButtonEvent.Disconnect(Connection);
-}
-
-void UI::Widget::DisconnectMouseEnterCallback(Connection & Connection)
-{
-	_MouseEnterEvent.Disconnect(Connection);
-}
-
-void UI::Widget::DisconnectMouseLeaveCallback(Connection & Connection)
-{
-	_MouseLeaveEvent.Disconnect(Connection);
-}
-
-void UI::Widget::DisconnectMouseMoveCallback(Connection & Connection)
-{
-	_MouseMoveEvent.Disconnect(Connection);
-}
-
-void UI::Widget::DisconnectPositionChangedCallback(Connection & Connection)
-{
-	_PositionChangedEvent.Disconnect(Connection);
-}
-
-void UI::Widget::DisconnectSizeChangedCallback(Connection & Connection)
-{
-	_SizeChangedEvent.Disconnect(Connection);
-}
-
-void UI::Widget::DisconnectSubWidgetAddedCallback(Connection & Connection)
-{
-	_SubWidgetAddedEvent.Disconnect(Connection);
-}
-
-void UI::Widget::DisconnectSubWidgetRemovedCallback(Connection & Connection)
-{
-	_SubWidgetRemovedEvent.Disconnect(Connection);
-}
-
-void UI::Widget::DisconnectUpdatingCallback(Connection & Connection)
-{
-	_UpdatingEvent.Disconnect(Connection);
-}
-
 void UI::Widget::_PushClippingRectangle(const Vector2f & Position, const Vector2f & Size)
 {
 	Vector2f LeftTop(true);

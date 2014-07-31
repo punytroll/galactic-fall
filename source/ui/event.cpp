@@ -40,9 +40,7 @@ void UI::Event::SetCurrentTarget(UI::Widget * CurrentTarget)
 {
 	if(_CurrentTarget != nullptr)
 	{
-		assert(_CurrentTargetDestroyingConnection.IsValid() == true);
-		_CurrentTarget->DisconnectDestroyingCallback(_CurrentTargetDestroyingConnection);
-		assert(_CurrentTargetDestroyingConnection.IsValid() == false);
+		_CurrentTargetDestroyingConnection.Disconnect();
 		_CurrentTarget = nullptr;
 	}
 	_CurrentTarget = CurrentTarget;
@@ -58,9 +56,7 @@ void UI::Event::SetTarget(UI::Widget * Target)
 {
 	if(_Target != nullptr)
 	{
-		assert(_TargetDestroyingConnection.IsValid() == true);
-		_Target->DisconnectDestroyingCallback(_TargetDestroyingConnection);
-		assert(_TargetDestroyingConnection.IsValid() == false);
+		_TargetDestroyingConnection.Disconnect();
 		_Target = nullptr;
 	}
 	_Target = Target;
