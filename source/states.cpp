@@ -324,7 +324,7 @@ void TransporterPhase3::Enter(void)
 					{
 						GetMind()->GetCharacter()->RemoveCredits(PlanetAssetClassToBuy->GetPrice());
 						
-						Object * NewCommodity(g_ObjectFactory->Create(PlanetAssetClassToBuy->GetAssetClass()->GetObjectTypeIdentifier(), PlanetAssetClassToBuy->GetAssetClass()->GetObjectClassIdentifier()));
+						Object * NewCommodity(g_ObjectFactory->Create(PlanetAssetClassToBuy->GetAssetClass()->GetObjectTypeIdentifier(), PlanetAssetClassToBuy->GetAssetClass()->GetObjectClassIdentifier(), true));
 						
 						NewCommodity->SetObjectIdentifier("::" + PlanetAssetClassToBuy->GetAssetClass()->GetObjectTypeIdentifier() + "(" + PlanetAssetClassToBuy->GetAssetClass()->GetObjectClassIdentifier() + ")::buy_index(" + to_string_cast(NumberOfPlanetAssetClassesToBuy) + "|" + to_string_cast(NumberOfAssetsToBuy) + ")::bought_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::bought_by(" + GetMind()->GetObjectIdentifier() + ")::bought_on(" + ThePlanet->GetObjectIdentifier() + ")");
 						GetMind()->GetCharacter()->GetShip()->GetCargoHold()->GetAspectObjectContainer()->AddContent(NewCommodity);

@@ -75,7 +75,7 @@ bool Weapon::_Update(float Seconds)
 			assert(Container->GetAspectPosition() != 0);
 			assert(Container->GetContainer() != 0);
 			
-			Shot * NewShot(dynamic_cast< Shot * >(g_ObjectFactory->Create("shot", m_ShotClassIdentifier)));
+			Shot * NewShot(dynamic_cast< Shot * >(g_ObjectFactory->Create("shot", m_ShotClassIdentifier, true)));
 			
 			assert(NewShot->GetAspectPosition() != 0);
 			NewShot->SetShooter(Container->GetReference());

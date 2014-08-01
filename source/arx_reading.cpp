@@ -425,7 +425,7 @@ static void ReadFaction(Arxx::Reference & Reference)
 	
 	Reader >> Identifier;
 	
-	Faction * NewFaction(dynamic_cast< Faction * >(g_ObjectFactory->Create("faction", Identifier)));
+	Faction * NewFaction(dynamic_cast< Faction * >(g_ObjectFactory->Create("faction", Identifier, false)));
 	
 	if(NewFaction == 0)
 	{
@@ -818,7 +818,7 @@ static void ReadSystem(Arxx::Reference & Reference)
 		
 		Reader >> PlanetIdentifier;
 		
-		Planet * NewPlanet(dynamic_cast< Planet * >(g_ObjectFactory->Create("planet", PlanetIdentifier)));
+		Planet * NewPlanet(dynamic_cast< Planet * >(g_ObjectFactory->Create("planet", PlanetIdentifier, false)));
 		
 		NewPlanet->SetObjectIdentifier("::planet(" + NewPlanet->GetIdentifier() + ")::in_system(" + NewSystem->GetIdentifier() + ")");
 		
