@@ -1197,7 +1197,7 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 		}
 	}
 	
-	Ship * NewShip(dynamic_cast< Ship * >(g_ObjectFactory->Create("ship", ShipClassIdentifier)));
+	Ship * NewShip(dynamic_cast< Ship * >(g_ObjectFactory->Create("ship", ShipClassIdentifier, true)));
 	
 	NewShip->SetObjectIdentifier("::ship(" + NewShip->GetClassIdentifier() + ")" + IdentifierSuffix);
 	
@@ -1227,20 +1227,13 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 	NewShip->SetVelocity(Vector3f(Velocity[0], Velocity[1], 0.0f));
 	NewShip->SetFuel(NewShip->GetFuelCapacity());
 	
-	const ShipClass * ShipClass(g_ShipClassManager->Get(ShipClassIdentifier));
-	Storage * ShipStorage(dynamic_cast< Storage * >(g_ObjectFactory->Create("storage", "")));
-	
-	ShipStorage->SetObjectIdentifier("::storage(" + NewShip->GetObjectIdentifier() + ")");
-	ShipStorage->SetSpaceCapacity(ShipClass->GetMaximumAvailableSpace());
-	NewShip->GetAspectObjectContainer()->AddContent(ShipStorage);
-	
-	Object * NewBattery(g_ObjectFactory->Create("battery", "light_battery"));
+	Object * NewBattery(g_ObjectFactory->Create("battery", "light_battery", true));
 	
 	NewBattery->SetObjectIdentifier("::battery(" + NewBattery->GetClassIdentifier() + ")::created_for(" + NewShip->GetObjectIdentifier() + ")" + IdentifierSuffix);
 	NewShip->GetAspectObjectContainer()->AddContent(NewBattery);
 	NewShip->GetAspectOutfitting()->GetSlot("battery")->Mount(NewBattery);
 	
-	Character * NewCharacter(dynamic_cast< Character * >(g_ObjectFactory->Create("character", "")));
+	Character * NewCharacter(dynamic_cast< Character * >(g_ObjectFactory->Create("character", "", true)));
 	
 	NewCharacter->SetObjectIdentifier("::character(" + NewShip->GetClassIdentifier() + ")" + IdentifierSuffix);
 	NewCharacter->GetMapKnowledge()->AddExploredSystem(System);
@@ -1248,7 +1241,7 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 	{
 		NewCharacter->SetCredits(200 + GetRandomU4Byte(50, 250));
 		
-		Object * NewWeapon(g_ObjectFactory->Create("weapon", "light_laser"));
+		Object * NewWeapon(g_ObjectFactory->Create("weapon", "light_laser", true));
 		
 		NewWeapon->SetObjectIdentifier("::weapon(" + NewWeapon->GetClassIdentifier() + ")::created_for(" + NewShip->GetObjectIdentifier() + ")" + IdentifierSuffix);
 		NewShip->GetAspectObjectContainer()->AddContent(NewWeapon);
@@ -1271,7 +1264,7 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 			
 			while((AmountOfAssets > 0) && (NewShip->GetCargoHold()->GetSpace() >= g_ObjectFactory->GetSpaceRequirement(AssetClassIterator->second->GetObjectTypeIdentifier(), AssetClassIterator->second->GetObjectClassIdentifier())))
 			{
-				Object * NewCommodity(g_ObjectFactory->Create(AssetClassIterator->second->GetObjectTypeIdentifier(), AssetClassIterator->second->GetObjectClassIdentifier()));
+				Object * NewCommodity(g_ObjectFactory->Create(AssetClassIterator->second->GetObjectTypeIdentifier(), AssetClassIterator->second->GetObjectClassIdentifier(), true));
 				
 				NewCommodity->SetObjectIdentifier("::" + AssetClassIterator->second->GetObjectTypeIdentifier() + "(" + AssetClassIterator->second->GetIdentifier() + ")::(" + to_string_cast(NumberOfAssetClasses) + "|" + to_string_cast(AmountOfAssets) + ")" + IdentifierSuffix);
 				NewShip->GetCargoHold()->GetAspectObjectContainer()->AddContent(NewCommodity);
@@ -1665,7 +1658,7 @@ void LoadGameFromElement(const Element * SaveElement)
 			{
 				assert(SaveChild->HasAttribute("type-identifier") == true);
 				assert(SaveChild->HasAttribute("class-identifier") == true);
-				NewObject = g_ObjectFactory->Create(SaveChild->GetAttribute("type-identifier"), SaveChild->GetAttribute("class-identifier"));
+				NewObject = g_ObjectFactory->Create(SaveChild->GetAttribute("type-identifier"), SaveChild->GetAttribute("class-identifier"), false);
 				NewObject->SetObjectIdentifier(SaveChild->GetAttribute("object-identifier"));
 			}
 			else

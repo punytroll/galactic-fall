@@ -28,7 +28,7 @@ class VisualizationPrototype;
 class ObjectFactory
 {
 public:
-	Object * Create(const std::string & TypeIdentifier, const std::string & ClassIdentifier) const;
+	Object * Create(const std::string & TypeIdentifier, const std::string & ClassIdentifier, bool CreateNestedObjects) const;
 	unsigned_numeric GetSpaceRequirement(const std::string & TypeIdentifier, const std::string & ClassIdentifier) const;
 	const VisualizationPrototype * GetVisualizationPrototype(const std::string & TypeIdentifier, const std::string & ClassIdentifier) const;
 };

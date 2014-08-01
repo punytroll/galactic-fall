@@ -36,6 +36,7 @@
 #include "hangar.h"
 #include "object_aspect_accessory.h"
 #include "object_aspect_name.h"
+#include "object_aspect_object_container.h"
 #include "object_aspect_outfitting.h"
 #include "object_aspect_physical.h"
 #include "object_aspect_position.h"
@@ -53,7 +54,7 @@
 
 Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSystemClassIdentifier);
 
-Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::string & ClassIdentifier) const
+Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::string & ClassIdentifier, bool CreateNestedObjects) const
 {
 	Object * Result(0);
 	
@@ -145,8 +146,8 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 	}
 	else if(TypeIdentifier == "ship")
 	{
-		const ShipClass * ShipClass(g_ShipClassManager->Get(ClassIdentifier));
-		Ship * NewShip(new Ship());
+		auto ShipClass(g_ShipClassManager->Get(ClassIdentifier));
+		auto NewShip(new Ship());
 		
 		// set up type specific things
 		NewShip->SetExhaustOffset(ShipClass->GetExhaustOffset());
@@ -160,36 +161,42 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		NewShip->SetMaximumSpeed(ShipClass->GetMaximumSpeed());
 		NewShip->SetMaximumTurnSpeed(ShipClass->GetTurnSpeed());
 		
-		Graphics::ParticleSystem * EngineGlowParticleSystem(CreateParticleSystem("engine_glow"));
+		auto EngineGlowParticleSystem(CreateParticleSystem("engine_glow"));
 		
 		EngineGlowParticleSystem->SetPosition(Vector3f(ShipClass->GetExhaustOffset()));
 		NewShip->SetEngineGlowParticleSystem(EngineGlowParticleSystem);
 		// set up aspects
 		// set up name aspect
-		assert(NewShip->GetAspectName() != 0);
+		assert(NewShip->GetAspectName() != nullptr);
 		NewShip->GetAspectName()->SetName(ShipClass->GetName());
 		// set up outfitting aspect
-		assert(NewShip->GetAspectOutfitting() != 0);
-		
-		const std::map< std::string, Slot * > & ShipClassSlots(ShipClass->GetSlots());
-		
-		for(std::map< std::string, Slot * >::const_iterator SlotIterator = ShipClassSlots.begin(); SlotIterator != ShipClassSlots.end(); ++SlotIterator)
+		assert(NewShip->GetAspectOutfitting() != nullptr);
+		for(auto SlotPair : ShipClass->GetSlots())
 		{
-			Slot * NewSlot(new Slot(SlotIterator->second->GetSlotClass(), SlotIterator->first));
+			auto NewSlot(new Slot(SlotPair.second->GetSlotClass(), SlotPair.first));
 			
-			NewSlot->SetName(SlotIterator->second->GetName());
-			NewSlot->SetPosition(SlotIterator->second->GetPosition());
-			NewSlot->SetOrientation(SlotIterator->second->GetOrientation());
-			NewSlot->SetVisualizeAccessory(SlotIterator->second->GetVisualizeAccessory());
+			NewSlot->SetName(SlotPair.second->GetName());
+			NewSlot->SetPosition(SlotPair.second->GetPosition());
+			NewSlot->SetOrientation(SlotPair.second->GetOrientation());
+			NewSlot->SetVisualizeAccessory(SlotPair.second->GetVisualizeAccessory());
 			NewShip->GetAspectOutfitting()->AddSlot(NewSlot);
 		}
 		// set up physical aspect
-		assert(NewShip->GetAspectPhysical() != 0);
+		assert(NewShip->GetAspectPhysical() != nullptr);
 		NewShip->GetAspectPhysical()->SetRadialSize(ShipClass->GetVisualizationPrototype()->GetModel()->GetRadialSize());
 		NewShip->GetAspectPhysical()->SetSpaceRequirement(ShipClass->GetSpaceRequirement());
 		// set up visualization aspect
-		assert(NewShip->GetAspectVisualization() != 0);
+		assert(NewShip->GetAspectVisualization() != nullptr);
 		NewShip->GetAspectVisualization()->SetVisualizationPrototype(new VisualizationPrototype(ShipClass->GetVisualizationPrototype()));
+		// set up storage if required
+		if(CreateNestedObjects == true)
+		{
+			auto NewStorage(dynamic_cast< Storage * >(Create("storage", "", CreateNestedObjects)));
+			
+			NewStorage->SetSpaceCapacity(ShipClass->GetMaximumAvailableSpace());
+			assert(NewShip->GetAspectObjectContainer() != nullptr);
+			NewShip->GetAspectObjectContainer()->AddContent(NewStorage);
+		}
 		Result = NewShip;
 	}
 	else if(TypeIdentifier == "shot")
