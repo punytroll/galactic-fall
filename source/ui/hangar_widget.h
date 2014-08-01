@@ -32,6 +32,8 @@ namespace UI
 	class LoadShipWindow;
 	class OutfitShipDialog;
 	class ProgressBar;
+	class ScrollBox;
+	class ShipListItem;
 	
 	class HangarWidget : public UI::Widget
 	{
@@ -39,10 +41,14 @@ namespace UI
 		HangarWidget(UI::Widget * SupWidget, Planet * Planet, Character * Character);
 	private:
 		// callbacks
+		void _OnBoardButtonClicked(void);
+		void _OnBoardButtonUpdating(UI::Button * BoardButton, float RealTimeSeconds, float GameTimeSeconds);
 		void _OnCharacterDestroying(void);
 		void _OnDestroying(UI::Event & DestroyingEvent);
 		void _OnEnergyStateProgressBarUpdating(UI::ProgressBar * EnergyStateProgressBar, float RealTimeSeconds, float GameTimeSeconds);
 		void _OnFuelStateProgressBarUpdating(UI::ProgressBar * FuelStateProgressBar, float RealTimeSeconds, float GameTimeSeconds);
+		void _OnHangarContentAdded(Object * Content);
+		void _OnHangarContentRemoved(Object * Content);
 		void _OnHullStateProgressBarUpdating(UI::ProgressBar * HullStateProgressBar, float RealTimeSeconds, float GameTimeSeconds);
 		void _OnLoadButtonClicked(void);
 		void _OnLoadButtonUpdating(UI::Button * LoadButton, float RealTimeSeconds, float GameTimeSeconds);
@@ -57,15 +63,22 @@ namespace UI
 		void _OnRefuelButtonUpdating(UI::Button * RefuelButton, float RealTimeSeconds, float GameTimeSeconds);
 		void _OnRepairButtonClicked(void);
 		void _OnRepairButtonUpdating(UI::Button * RechargeButton, float RealTimeSeconds, float GameTimeSeconds);
+		void _OnShipListItemMouseButton(UI::MouseButtonEvent & MouseButtonEvent, UI::ShipListItem * ShipListItem);
+		void _OnShipScrollBoxSubWidgetAdded(UI::SubWidgetEvent & SubWidgetEvent);
+		void _OnShipScrollBoxSubWidgetRemoved(UI::SubWidgetEvent & SubWidgetEvent);
 		void _OnTakeOffButtonClicked(void);
 		void _OnTakeOffButtonUpdating(UI::Button * TakeOffButton, float RealTimeSeconds, float GameTimeSeconds);
 		// member variables
 		Character * _Character;
 		Connection _CharacterDestroyingConnection;
+		Connection _HangarContentAddedConnection;
+		Connection _HangarContentRemovedConnection;
 		UI::LoadShipWindow * _LoadShipWindow;
 		UI::OutfitShipDialog * _OutfitShipDialog;
 		Planet * _Planet;
 		Connection _PlanetDestroyingConnection;
+		UI::ShipListItem * _SelectedShipListItem;
+		UI::ScrollBox * _ShipScrollBox;
 	};
 }
 
