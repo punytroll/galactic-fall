@@ -107,7 +107,7 @@ void UI::PlanetWindow::_OpenHangar(void)
 	}
 	if(_HangarWidget == nullptr)
 	{
-		_HangarWidget = new UI::HangarWidget(this, _Planet, _Character);
+		_HangarWidget = new UI::HangarWidget(this, _Planet.Get(), _Character.Get());
 		_HangarWidget->SetPosition(Vector2f(120.0f, 40.0f));
 		_HangarWidget->SetSize(Vector2f(GetSize()[0] - 130.0f, GetSize()[1] - 50.0f));
 		_HangarWidget->SetAnchorBottom(true);

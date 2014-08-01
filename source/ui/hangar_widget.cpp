@@ -32,16 +32,18 @@
 #include "progress_bar.h"
 #include "text_button.h"
 
-UI::HangarWidget::HangarWidget(UI::Widget * SupWidget, Reference< Planet > Planet, Reference< Character > Character) :
+UI::HangarWidget::HangarWidget(UI::Widget * SupWidget, Planet * Planet, Character * Character) :
 	UI::Widget(SupWidget),
 	_Character(Character),
 	_LoadShipWindow(nullptr),
 	_OutfitShipDialog(nullptr),
 	_Planet(Planet)
 {
-	assert(_Character.IsValid() == true);
-	assert(_Planet.IsValid() == true);
 	ConnectDestroyingCallback(std::bind(&UI::HangarWidget::_OnDestroying, this, std::placeholders::_1));
+	assert(_Character != nullptr);
+	_CharacterDestroyingConnection = _Character->ConnectDestroyingCallback(std::bind(&UI::HangarWidget::_OnCharacterDestroying, this));
+	assert(_Planet != nullptr);
+	_PlanetDestroyingConnection = _Planet->ConnectDestroyingCallback(std::bind(&UI::HangarWidget::_OnPlanetDestroying, this));
 	SetSize(Vector2f(600.0f, 300.0f));
 	
 	UI::Button * LoadButton(new UI::TextButton(this, "Load"));
@@ -108,25 +110,38 @@ UI::HangarWidget::HangarWidget(UI::Widget * SupWidget, Reference< Planet > Plane
 	TakeOffButton->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnTakeOffButtonUpdating, this, TakeOffButton, std::placeholders::_1, std::placeholders::_2));
 }
 
+void UI::HangarWidget::_OnCharacterDestroying(void)
+{
+	assert(false);
+}
+
 void UI::HangarWidget::_OnDestroying(UI::Event & DestroyingEvent)
 {
 	if(DestroyingEvent.GetPhase() == UI::Event::Phase::Target)
 	{
+		assert(_Character != nullptr);
+		_CharacterDestroyingConnection.Disconnect();
+		_Character = nullptr;
+		assert(_Planet != nullptr);
+		_PlanetDestroyingConnection.Disconnect();
+		_Planet = nullptr;
 		if(_OutfitShipDialog != nullptr)
 		{
 			_OutfitShipDialog->Destroy();
+			assert(_OutfitShipDialog == nullptr);
 		}
-	}
-	if(_LoadShipWindow != nullptr)
-	{
-		_LoadShipWindow->Destroy();
+		if(_LoadShipWindow != nullptr)
+		{
+			_LoadShipWindow->Destroy();
+			assert(_OutfitShipDialog == nullptr);
+		}
 	}
 }
 
 void UI::HangarWidget::_OnEnergyStateProgressBarUpdating(UI::ProgressBar * EnergyStateProgressBar, float RealTimeSeconds, float GameTimeSeconds)
 {
 	assert(EnergyStateProgressBar != nullptr);
-	assert(_Character.IsValid() == true);
+	assert(_Character != nullptr);
 	
 	float EnergyPercentage(0.0f);
 	
@@ -146,7 +161,7 @@ void UI::HangarWidget::_OnEnergyStateProgressBarUpdating(UI::ProgressBar * Energ
 void UI::HangarWidget::_OnFuelStateProgressBarUpdating(UI::ProgressBar * FuelStateProgressBar, float RealTimeSeconds, float GameTimeSeconds)
 {
 	assert(FuelStateProgressBar != nullptr);
-	assert(_Character.IsValid() == true);
+	assert(_Character != nullptr);
 	
 	float FuelPercentage(0.0f);
 	
@@ -166,7 +181,7 @@ void UI::HangarWidget::_OnFuelStateProgressBarUpdating(UI::ProgressBar * FuelSta
 void UI::HangarWidget::_OnHullStateProgressBarUpdating(UI::ProgressBar * HullStateProgressBar, float RealTimeSeconds, float GameTimeSeconds)
 {
 	assert(HullStateProgressBar != nullptr);
-	assert(_Character.IsValid() == true);
+	assert(_Character != nullptr);
 	
 	float HullPercentage(0.0f);
 	
@@ -187,9 +202,9 @@ void UI::HangarWidget::_OnLoadButtonClicked(void)
 {
 	if(_LoadShipWindow == nullptr)
 	{
-		assert(_Character.IsValid() == true);
+		assert(_Character != nullptr);
 		assert(_Character->GetShip() != nullptr);
-		_LoadShipWindow = new UI::LoadShipWindow(GetRootWidget(), _Planet->GetHangar(_Character.Get()), _Character->GetShip());
+		_LoadShipWindow = new UI::LoadShipWindow(GetRootWidget(), _Planet->GetHangar(_Character), _Character->GetShip());
 		_LoadShipWindow->ConnectDestroyingCallback(std::bind(&UI::HangarWidget::_OnLoadShipWindowDestroying, this, std::placeholders::_1));
 		_LoadShipWindow->GrabKeyFocus();
 	}
@@ -202,7 +217,7 @@ void UI::HangarWidget::_OnLoadButtonClicked(void)
 void UI::HangarWidget::_OnLoadButtonUpdating(UI::Button * LoadButton, float RealTimeSeconds, float GameTimeSeconds)
 {
 	assert(LoadButton != nullptr);
-	assert(_Character.IsValid());
+	assert(_Character != nullptr);
 	LoadButton->SetEnabled(_Character->GetShip() != nullptr);
 }
 
@@ -218,7 +233,7 @@ void UI::HangarWidget::_OnOutfitButtonClicked(void)
 {
 	if(_OutfitShipDialog == nullptr)
 	{
-		assert(_Character.IsValid() == true);
+		assert(_Character != nullptr);
 		assert(_Character->GetShip() != nullptr);
 		_OutfitShipDialog = new UI::OutfitShipDialog(GetRootWidget(), _Character->GetShip()->GetReference());
 		_OutfitShipDialog->ConnectDestroyingCallback(std::bind(&UI::HangarWidget::_OnOutfitShipDialogDestroying, this, std::placeholders::_1));
@@ -232,7 +247,7 @@ void UI::HangarWidget::_OnOutfitButtonClicked(void)
 void UI::HangarWidget::_OnOutfitButtonUpdating(UI::Button * OutfitButton, float RealTimeSeconds, float GameTimeSeconds)
 {
 	assert(OutfitButton != nullptr);
-	assert(_Character.IsValid());
+	assert(_Character != nullptr);
 	OutfitButton->SetEnabled(_Character->GetShip() != nullptr);
 }
 
@@ -244,33 +259,38 @@ void UI::HangarWidget::_OnOutfitShipDialogDestroying(UI::Event & DestroyingEvent
 	}
 }
 
+void UI::HangarWidget::_OnPlanetDestroying(void)
+{
+	assert(false);
+}
+
 void UI::HangarWidget::_OnRechargeButtonClicked(void)
 {
-	assert(_Planet.IsValid() == true);
-	assert(_Character.IsValid() == true);
+	assert(_Planet != nullptr);
+	assert(_Character != nullptr);
 	assert(_Character->GetShip() != nullptr);
-	_Planet->Recharge(_Character->GetShip(), _Character.Get());
+	_Planet->Recharge(_Character->GetShip(), _Character);
 }
 
 void UI::HangarWidget::_OnRechargeButtonUpdating(UI::Button * RechargeButton, float RealTimeSeconds, float GameTimeSeconds)
 {
-	assert(_Character.IsValid() == true);
-	assert(_Planet.IsValid() == true);
+	assert(_Character != nullptr);
+	assert(_Planet != nullptr);
 	RechargeButton->SetEnabled((_Planet->GetOffersRecharging() == true) && (_Character->GetShip() != nullptr) && (_Character->GetShip()->GetBattery() != nullptr) && (_Character->GetShip()->GetBattery()->GetEnergy() < _Character->GetShip()->GetBattery()->GetEnergyCapacity()));
 }
 
 void UI::HangarWidget::_OnRefuelButtonClicked(void)
 {
-	assert(_Planet.IsValid() == true);
-	assert(_Character.IsValid() == true);
+	assert(_Planet != nullptr);
+	assert(_Character != nullptr);
 	assert(_Character->GetShip() != nullptr);
-	_Planet->Refuel(_Character->GetShip(), _Character.Get());
+	_Planet->Refuel(_Character->GetShip(), _Character);
 }
 
 void UI::HangarWidget::_OnRefuelButtonUpdating(UI::Button * RefuelButton, float RealTimeSeconds, float GameTimeSeconds)
 {
-	assert(_Character.IsValid() == true);
-	assert(_Planet.IsValid() == true);
+	assert(_Character != nullptr);
+	assert(_Planet != nullptr);
 	
 	const std::vector< PlanetAssetClass * > & PlanetAssetClasses(_Planet->GetPlanetAssetClasses());
 	bool OffersRefueling(false);
@@ -289,22 +309,22 @@ void UI::HangarWidget::_OnRefuelButtonUpdating(UI::Button * RefuelButton, float 
 
 void UI::HangarWidget::_OnRepairButtonClicked(void)
 {
-	assert(_Planet.IsValid() == true);
-	assert(_Character.IsValid() == true);
+	assert(_Planet != nullptr);
+	assert(_Character != nullptr);
 	assert(_Character->GetShip() != nullptr);
-	_Planet->Repair(_Character->GetShip(), _Character.Get());
+	_Planet->Repair(_Character->GetShip(), _Character);
 }
 
 void UI::HangarWidget::_OnRepairButtonUpdating(UI::Button * RepairButton, float RealTimeSeconds, float GameTimeSeconds)
 {
-	assert(_Character.IsValid() == true);
-	assert(_Planet.IsValid() == true);
+	assert(_Character != nullptr);
+	assert(_Planet != nullptr);
 	RepairButton->SetEnabled((_Planet->GetOffersRepairing() == true) && (_Character->GetShip() != nullptr) && (_Character->GetShip()->GetHull() < _Character->GetShip()->GetHullCapacity()));
 }
 
 void UI::HangarWidget::_OnTakeOffButtonClicked(void)
 {
-	assert(_Character.IsValid() == true);
+	assert(_Character != nullptr);
 	assert(_Character->GetShip() != nullptr);
 	_Character->GetShip()->SetTakeOff(true);
 }
@@ -312,6 +332,6 @@ void UI::HangarWidget::_OnTakeOffButtonClicked(void)
 void UI::HangarWidget::_OnTakeOffButtonUpdating(UI::Button * TakeOffButton, float RealTimeSeconds, float GameTimeSeconds)
 {
 	assert(TakeOffButton != nullptr);
-	assert(_Character.IsValid());
+	assert(_Character != nullptr);
 	TakeOffButton->SetEnabled(_Character->GetShip() != nullptr);
 }

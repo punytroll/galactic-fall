@@ -20,7 +20,6 @@
 #ifndef UI_HANGAR_WIDGET_H
 #define UI_HANGAR_WIDGET_H
 
-#include "../referencing.h"
 #include "widget.h"
 
 class Character;
@@ -37,9 +36,10 @@ namespace UI
 	class HangarWidget : public UI::Widget
 	{
 	public:
-		HangarWidget(UI::Widget * SupWidget, Reference< Planet > Planet, Reference< Character > Character);
+		HangarWidget(UI::Widget * SupWidget, Planet * Planet, Character * Character);
 	private:
 		// callbacks
+		void _OnCharacterDestroying(void);
 		void _OnDestroying(UI::Event & DestroyingEvent);
 		void _OnEnergyStateProgressBarUpdating(UI::ProgressBar * EnergyStateProgressBar, float RealTimeSeconds, float GameTimeSeconds);
 		void _OnFuelStateProgressBarUpdating(UI::ProgressBar * FuelStateProgressBar, float RealTimeSeconds, float GameTimeSeconds);
@@ -50,6 +50,7 @@ namespace UI
 		void _OnOutfitButtonClicked(void);
 		void _OnOutfitButtonUpdating(UI::Button * OutfitButton, float RealTimeSeconds, float GameTimeSeconds);
 		void _OnOutfitShipDialogDestroying(UI::Event & DestroyingEvent);
+		void _OnPlanetDestroying(void);
 		void _OnRechargeButtonClicked(void);
 		void _OnRechargeButtonUpdating(UI::Button * RechargeButton, float RealTimeSeconds, float GameTimeSeconds);
 		void _OnRefuelButtonClicked(void);
@@ -59,10 +60,12 @@ namespace UI
 		void _OnTakeOffButtonClicked(void);
 		void _OnTakeOffButtonUpdating(UI::Button * TakeOffButton, float RealTimeSeconds, float GameTimeSeconds);
 		// member variables
-		Reference< Character > _Character;
+		Character * _Character;
+		Connection _CharacterDestroyingConnection;
 		UI::LoadShipWindow * _LoadShipWindow;
 		UI::OutfitShipDialog * _OutfitShipDialog;
-		Reference< Planet > _Planet;
+		Planet * _Planet;
+		Connection _PlanetDestroyingConnection;
 	};
 }
 
