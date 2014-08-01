@@ -50,6 +50,7 @@ namespace UI
 			_ObjectDestroyingConnection = _Object->ConnectDestroyingCallback(std::bind(&UI::ObjectListItem::_OnObjectDestroying, this));
 			// set design size
 			SetSize(Vector2f(100.0f, 20.0f));
+			assert(_Object->GetAspectName() != nullptr);
 			
 			auto NameLabel(new UI::Label(this, _Object->GetAspectName()->GetName()));
 			
@@ -130,7 +131,10 @@ UI::LoadShipWindow::LoadShipWindow(UI::Widget * SupWidget, Hangar * Hangar, Ship
 	assert(_Hangar->GetAspectObjectContainer() != nullptr);
 	for(auto HangarObject : _Hangar->GetAspectObjectContainer()->GetContent())
 	{
-		_HangarListBox->GetContent()->AddSubWidget(new ObjectListItem(HangarObject));
+		if(HangarObject->GetAspectName() != nullptr)
+		{
+			_HangarListBox->GetContent()->AddSubWidget(new ObjectListItem(HangarObject));
+		}
 	}
 	
 	auto CenterPane(new UI::Widget(this));
@@ -229,11 +233,21 @@ void UI::LoadShipWindow::_OnDestroying(UI::Event & DestroyingEvent)
 
 void UI::LoadShipWindow::_OnHangarContentAdded(Object * Content)
 {
-	_HangarListBox->GetContent()->AddSubWidget(new UI::ObjectListItem(Content));
+	assert(Content != nullptr);
+	if(Content->GetAspectName() != nullptr)
+	{
+		assert(_HangarListBox != nullptr);
+		assert(_HangarListBox->GetContent() != nullptr);
+		_HangarListBox->GetContent()->AddSubWidget(new UI::ObjectListItem(Content));
+	}
 }
 
 void UI::LoadShipWindow::_OnHangarContentRemoved(Object * Content)
 {
+	assert(Content != nullptr);
+	assert(_HangarListBox != nullptr);
+	assert(_HangarListBox->GetContent() != nullptr);
+	
 	auto HangarWidgetIterator(std::find_if(_HangarListBox->GetContent()->GetSubWidgets().begin(), _HangarListBox->GetContent()->GetSubWidgets().end(), [Content](UI::Widget * Widget) { return dynamic_cast< UI::ObjectListItem * >(Widget)->GetObject() == Content; }));
 	
 	if(HangarWidgetIterator != _HangarListBox->GetContent()->GetSubWidgets().end())
