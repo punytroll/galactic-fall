@@ -51,7 +51,6 @@ namespace UI
 		void _OnAssetClassMouseLeave(UI::Event & MouseEnterEvent, UI::TradeCenterAssetClassListWidget * TradeCenterAssetClassListWidget);
 		void _OnAssetClassPriceCaptionLabelUpdating(UI::Label * AssetClassPriceCaptionLabel, float RealTimeSeconds, float GameTimeSeconds);
 		void _OnAssetClassPriceLabelUpdating(UI::Label * AssetClassPriceLabel, float RealTimeSeconds, float GameTimeSeconds);
-		void _OnAssetClassScrollBoxMouseButton(UI::MouseButtonEvent & MouseButtonEvent);
 		void _OnAssetClassSizeCaptionLabelUpdating(UI::Label * AssetClassSizeCaptionLabel, float RealTimeSeconds, float GameTimeSeconds);
 		void _OnAssetClassSizeLabelUpdating(UI::Label * AssetClassSizeLabel, float RealTimeSeconds, float GameTimeSeconds);
 		void _OnBuyButtonClicked(void);

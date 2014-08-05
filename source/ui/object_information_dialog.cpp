@@ -63,7 +63,6 @@ UI::ObjectInformationDialog::ObjectInformationDialog(UI::Widget * SupWidget, con
 	_PropertiesScrollBox->SetHorizontalScrollBarVisible(false);
 	_PropertiesScrollBox->SetAnchorBottom(true);
 	_PropertiesScrollBox->SetAnchorRight(true);
-	_PropertiesScrollBox->ConnectMouseButtonCallback(std::bind(&UI::ObjectInformationDialog::_OnPropertiesScrollBoxMouseButton, this, std::placeholders::_1));
 	_RefreshButton = new UI::TextButton(this, "Refresh");
 	_RefreshButton->SetSize(Vector2f(100.0f, 20.0f));
 	_RefreshButton->SetPosition(Vector2f(_CloseButton->GetPosition()[0] - 10.0f - _RefreshButton->GetSize()[0], GetSize()[1] - 10.0f - _RefreshButton->GetSize()[1]));
@@ -175,20 +174,6 @@ void UI::ObjectInformationDialog::_OnCloseClicked(void)
 void UI::ObjectInformationDialog::_OnObjectClicked(const Reference< Object > Object)
 {
 	new UI::ObjectInformationDialog(GetRootWidget(), Object);
-}
-
-void UI::ObjectInformationDialog::_OnPropertiesScrollBoxMouseButton(UI::MouseButtonEvent & MouseButtonEvent)
-{
-	if((MouseButtonEvent.GetPhase() == UI::Event::Phase::Bubbling) && (MouseButtonEvent.GetMouseButton() == UI::MouseButtonEvent::MouseButton::WheelUp) && (MouseButtonEvent.IsDown() == true))
-	{
-		_PropertiesScrollBox->GetVerticalScrollBar()->StepLess();
-		MouseButtonEvent.StopPropagation();
-	}
-	else if((MouseButtonEvent.GetPhase() == UI::Event::Phase::Bubbling) && (MouseButtonEvent.GetMouseButton() == UI::MouseButtonEvent::MouseButton::WheelDown) && (MouseButtonEvent.IsDown() == true))
-	{
-		_PropertiesScrollBox->GetVerticalScrollBar()->StepMore();
-		MouseButtonEvent.StopPropagation();
-	}
 }
 
 void UI::ObjectInformationDialog::_OnRefreshClicked(void)

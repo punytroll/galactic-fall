@@ -39,7 +39,6 @@ namespace UI
 	private:
 		// callbacks
 		void _OnObjectClicked(const Reference< Object > Object);
-		void _OnPropertiesScrollBoxMouseButton(UI::MouseButtonEvent & MouseButtonEvent);
 		void _OnCloseClicked(void);
 		void _OnRefreshClicked(void);
 		// helper functions and actions
