@@ -1198,19 +1198,24 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 		}
 	}
 	
-	Ship * NewShip(dynamic_cast< Ship * >(g_ObjectFactory->Create("ship", ShipClassIdentifier, true)));
+	auto NewShip(dynamic_cast< Ship * >(g_ObjectFactory->Create("ship", ShipClassIdentifier, true)));
 	
 	NewShip->SetObjectIdentifier("::ship(" + NewShip->GetClassIdentifier() + ")" + IdentifierSuffix);
 	
-	Faction * Faction(0);
+	float Random(GetRandomUniform());
+	Faction * Faction(nullptr);
 	
-	if(GetRandomUniform() < 0.2f)
+	if(Random < 0.2f)
 	{
 		Faction = g_Galaxy->GetFactions().find("pirates")->second;
 	}
-	else
+	else if(Random < 0.8f)
 	{
 		Faction = g_Galaxy->GetFactions().find("earth")->second;
+	}
+	else
+	{
+		Faction = g_Galaxy->GetFactions().find("neutral")->second;
 	}
 	NewShip->SetFaction(Faction->GetReference());
 	

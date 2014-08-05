@@ -27,10 +27,12 @@
 #include "commodity.h"
 #include "commodity_class.h"
 #include "faction.h"
+#include "galaxy.h"
 #include "game_time.h"
 #include "generator.h"
 #include "generator_class.h"
 #include "globals.h"
+#include "graphics/material.h"
 #include "graphics/model.h"
 #include "graphics/particle_system.h"
 #include "hangar.h"
@@ -160,6 +162,8 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		NewShip->SetMaximumForwardThrust(ShipClass->GetForwardThrust());
 		NewShip->SetMaximumSpeed(ShipClass->GetMaximumSpeed());
 		NewShip->SetMaximumTurnSpeed(ShipClass->GetTurnSpeed());
+		NewShip->SetFaction(g_Galaxy->GetFaction("neutral")->GetReference());
+		NewShip->SetHull(ShipClass->GetHull());
 		
 		auto EngineGlowParticleSystem(CreateParticleSystem("engine_glow"));
 		
@@ -188,6 +192,13 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		// set up visualization aspect
 		assert(NewShip->GetAspectVisualization() != nullptr);
 		NewShip->GetAspectVisualization()->SetVisualizationPrototype(new VisualizationPrototype(ShipClass->GetVisualizationPrototype()));
+		
+		std::map< std::string, Graphics::Material * > & PartMaterials(NewShip->GetAspectVisualization()->GetVisualizationPrototype()->GetPartMaterials());
+		
+		if(PartMaterials.find("faction") != PartMaterials.end())
+		{
+			PartMaterials["faction"]->SetDiffuseColor(new Color(g_Galaxy->GetFaction("neutral")->GetColor()));
+		}
 		// set up storage if required
 		if(CreateNestedObjects == true)
 		{
