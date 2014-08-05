@@ -54,17 +54,17 @@
 			<event>down</event>
 			<action>target_next_planet</action>
 		</key-binding>
-		<!-- [: focus camera on previous ship -->
+		<!-- [: observe previous character -->
 		<key-binding>
 			<code>34</code>
 			<event>down</event>
-			<action>focus_camera_on_previous_ship</action>
+			<action>observe_previous_character</action>
 		</key-binding>
-		<!-- ]: focus camera on next ship -->
+		<!-- ]: observe next character -->
 		<key-binding>
 			<code>35</code>
 			<event>down</event>
-			<action>focus_camera_on_next_ship</action>
+			<action>observe_next_character</action>
 		</key-binding>
 		<!-- LEFT CONTROL: spawn fighter -->
 		<key-binding>
@@ -222,12 +222,6 @@
 			<event>up</event>
 			<action>disable_accelerate</action>
 		</key-binding>
-		<!-- PAGE UP: observe previous character -->
-		<key-binding>
-			<code>112</code>
-			<event>down</event>
-			<action>observe_previous_character</action>
-		</key-binding>
 		<!-- LEFT: enable/disable turn left -->
 		<key-binding>
 			<code>113</code>
@@ -251,12 +245,6 @@
 			<code>114</code>
 			<event>up</event>
 			<action>disable_turn_right</action>
-		</key-binding>
-		<!-- PAGE DOWN: observe next character -->
-		<key-binding>
-			<code>117</code>
-			<event>down</event>
-			<action>observe_next_character</action>
 		</key-binding>
 		<!-- DELETE: toggle first person camera mode -->
 		<key-binding>

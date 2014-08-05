@@ -45,12 +45,12 @@ On key down:
 	Acts upon InputMind.Character.Ship.
 
 34 (OPENING BRACKET)
-	Moves the camera focus to the previous ship or to the last one if the first ship was focused.
-	Acts upon the camera focus.
+	Cycles the output mind backward through the set of characters in the game or to no output if the first one was selected.
+	Only works with no input mind set.
 
 35 (CLOSING BRACKET)
-	Moves the camera focus to the next ship or to the first one if the last ship was focused.
-	Acts upon the camera focus.
+	Cycles the output mind forward through the set of characters in the game or to no output if the last one was selected.
+	Only works with no input mind set.
 
 37 (LEFT CONTROL)
 	Spawn a new fighter ship.
@@ -129,10 +129,6 @@ On key down:
 	Turns on thrusters of the controlled ship.
 	Acts upon InputMind.Character.Ship.
 
-112 (PAGE UP)
-	Cycles the output mind backward through the set of characters in the game or to no output if the first one was selected.
-	Only works with no input mind set.
-
 113 (ARROW LEFT)
 	Turns the controlled ship to the left.
 	Acts upon InputMind.Character.Ship.
@@ -140,10 +136,6 @@ On key down:
 114 (ARROW RIGHT)
 	Turns the controlled ship to the right.
 	Acts upon InputMind.Character.Ship.
-
-117 (PAGE DOWN)
-	Cycles the output mind forward through the set of characters in the game or to no output if the last one was selected.
-	Only works with no input mind set.
 
 119 (DELETE)
 	Toggles the first person camera mode. You will not look out of the ship, but the ship will remain stationary in relation to the camera.
