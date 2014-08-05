@@ -37,6 +37,7 @@ all_data = \
 	.data/commodity_class_medical_supplies.data \
 	.data/commodity_class_metal.data \
 	.data/faction_earth.data \
+	.data/faction_neutral.data \
 	.data/faction_pirates.data \
 	.data/generator_class_small_generator.data \
 	.data/label_credits.data \
@@ -154,6 +155,7 @@ data.arx: $(data_arx) $(arxtouch_dependencies) $(arxadd_dependencies)
 	$(command_arxadd) $@ --name="Window Dimensions" --type=f --sub-type=1 --relation="/Settings::child" --data-file=.data/setting_window_dimensions.data
 	@echo "\n\nAdding factions ...\n"
 	$(command_arxadd) $@ --name="Earth Faction" --type=e --sub-type=0 --relation="/Factions::child" --data-file=.data/faction_earth.data
+	$(command_arxadd) $@ --name="Neutral Faction" --type=e --sub-type=0 --relation="/Factions::child" --data-file=.data/faction_neutral.data
 	$(command_arxadd) $@ --name="Pirates Faction" --type=e --sub-type=0 --relation="/Factions::child" --data-file=.data/faction_pirates.data
 	@echo "\n\nAdding widgets ...\n"
 	@echo "\nThe widgets will be read in uid order, so assign proper uids so that superior widgets are read before sub widgets.\n"
