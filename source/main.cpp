@@ -168,7 +168,6 @@ UI::TimingDialog * g_TimingDialog(0);
 Vector2f g_LastMotion(-1.0f, -1.0f);
 UI::MouseButtonEvent::MouseButton g_MouseButton(UI::MouseButtonEvent::MouseButton::Unspecified);
 Vector3f g_CameraPosition;
-Reference< Object > g_CameraFocus;
 bool g_FirstPersonCameraMode(false);
 Reference< CommandMind > g_InputMind;
 OutputObserver * g_CharacterObserver;
@@ -1037,14 +1036,16 @@ void UpdateMainViewCamera(void)
 {
 	Matrix4f SpacialMatrix(true);
 
-	if(g_CameraFocus.IsValid() == true)
+	if((g_CharacterObserver != nullptr) && (g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != nullptr))
 	{
-		assert(g_CameraFocus->GetAspectPosition() != 0);
-		SpacialMatrix.Translate(g_CameraFocus->GetAspectPosition()->GetPosition()[0], g_CameraFocus->GetAspectPosition()->GetPosition()[1], 0.0f);
+		auto Focus(g_CharacterObserver->GetObservedCharacter()->GetShip());
+		
+		assert(Focus->GetAspectPosition() != nullptr);
+		SpacialMatrix.Translate(Focus->GetAspectPosition()->GetPosition()[0], Focus->GetAspectPosition()->GetPosition()[1], 0.0f);
 		if(g_FirstPersonCameraMode == true)
 		{
 			SpacialMatrix.RotateZ(-M_PI / 2.0f);
-			SpacialMatrix.Rotate(g_CameraFocus->GetAspectPosition()->GetOrientation());
+			SpacialMatrix.Rotate(Focus->GetAspectPosition()->GetOrientation());
 		}
 	}
 	SpacialMatrix.Translate(g_CameraPosition);
@@ -1629,11 +1630,6 @@ void LoadGameFromElement(const Element * SaveElement)
 				{
 					g_CameraPosition.Set(from_string_cast< float >(CameraChild->GetAttribute("x")), from_string_cast< float >(CameraChild->GetAttribute("y")), from_string_cast< float >(CameraChild->GetAttribute("z")));
 				}
-				else if(CameraChild->GetName() == "focus")
-				{
-					assert(CameraChild->HasAttribute("object-identifier") == true);
-					// read in second pass
-				}
 				else if(CameraChild->GetName() == "field-of-view-y")
 				{
 					if(CameraChild->HasAttribute("radians") == true)
@@ -2094,20 +2090,7 @@ void LoadGameFromElement(const Element * SaveElement)
 	// at the moment this also resolves back references/containments
 	for(auto SaveChild : SaveElement->GetChilds())
 	{
-		if(SaveChild->GetName() == "main-camera")
-		{
-			for(auto CameraChild : SaveChild->GetChilds())
-			{
-				if(CameraChild->GetName() == "focus")
-				{
-					Object * FocusObject(Object::GetObject(CameraChild->GetAttribute("object-identifier")));
-					
-					assert(FocusObject != nullptr);
-					g_CameraFocus = FocusObject->GetReference();
-				}
-			}
-		}
-		else if(SaveChild->GetName() == "object")
+		if(SaveChild->GetName() == "object")
 		{
 			assert(SaveChild->HasAttribute("object-identifier"));
 			
@@ -2332,14 +2315,6 @@ void SaveGame(std::ostream & OStream)
 	// save main camera properties
 	XML << element << "main-camera";
 	XML << element << "position" << attribute << "x" << value << g_CameraPosition[0] << attribute << "y" << value << g_CameraPosition[1] << attribute << "z" << value << g_CameraPosition[2] << end;
-	if(g_CameraFocus.IsValid() == true)
-	{
-		if(g_CameraFocus->GetObjectIdentifier() == "")
-		{
-			g_CameraFocus->GenerateObjectIdentifier();
-		}
-		XML << element << "focus" << attribute << "object-identifier" << value << g_CameraFocus->GetObjectIdentifier() << end;
-	}
 	assert(g_MainProjection != nullptr);
 	XML << element << "field-of-view-y" << attribute << "radians" << value << g_MainProjection->GetFieldOfViewY() << end;
 	XML << end; // camera
@@ -2493,52 +2468,6 @@ void ActionEnableTurnRight(void)
 	}
 }
 
-void ActionFocusCameraOnNextShip(void)
-{
-	const std::list< Ship * > & Ships(g_CurrentSystem->GetShips());
-	
-	if(Ships.empty() == false)
-	{
-		const Ship * FocusShip(dynamic_cast< const Ship * >(g_CameraFocus.Get()));
-		
-		std::list< Ship * >::const_iterator ShipIterator(find(Ships.begin(), Ships.end(), FocusShip));
-		
-		if((ShipIterator == Ships.end()) || (++ShipIterator == Ships.end()))
-		{
-			g_CameraFocus = Ships.front()->GetReference();
-		}
-		else
-		{
-			g_CameraFocus = (*ShipIterator)->GetReference();
-		}
-		g_CameraPosition[0] = 0.0f;
-		g_CameraPosition[1] = 0.0f;
-	}
-}
-
-void ActionFocusCameraOnPreviousShip(void)
-{
-	const std::list< Ship * > & Ships(g_CurrentSystem->GetShips());
-	
-	if(Ships.empty() == false)
-	{
-		const Ship * FocusShip(dynamic_cast< const Ship * >(g_CameraFocus.Get()));
-		
-		std::list< Ship * >::const_reverse_iterator ShipIterator(find(Ships.rbegin(), Ships.rend(), FocusShip));
-		
-		if((ShipIterator == Ships.rend()) || (++ShipIterator == Ships.rend()))
-		{
-			g_CameraFocus = Ships.back()->GetReference();
-		}
-		else
-		{
-			g_CameraFocus = (*ShipIterator)->GetReference();
-		}
-		g_CameraPosition[0] = 0.0f;
-		g_CameraPosition[1] = 0.0f;
-	}
-}
-
 void ActionIncreaseFieldOfView(void)
 {
 	assert(g_MainProjection != 0);
@@ -2666,7 +2595,6 @@ void ActionObserveNextCharacter(void)
 		}
 		if(g_CharacterObserver->GetObservedCharacter().IsValid() == true)
 		{
-			g_CameraFocus = g_CharacterObserver->GetObservedCharacter()->GetShip()->GetReference();
 			g_CameraPosition[0] = 0.0f;
 			g_CameraPosition[1] = 0.0f;
 		}
@@ -2703,7 +2631,6 @@ void ActionObservePreviousCharacter(void)
 		}
 		if(g_CharacterObserver->GetObservedCharacter().IsValid() == true)
 		{
-			g_CameraFocus = g_CharacterObserver->GetObservedCharacter()->GetShip()->GetReference();
 			g_CameraPosition[0] = 0.0f;
 			g_CameraPosition[1] = 0.0f;
 		}
@@ -3539,14 +3466,6 @@ void LoadKeyboardLookupTable(const std::list< Settings::KeyBinding > * KeyBindin
 				else if(KeyBindingIterator->Action == "enable_turn_right")
 				{
 					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionEnableTurnRight;
-				}
-				else if(KeyBindingIterator->Action == "focus_camera_on_next_ship")
-				{
-					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionFocusCameraOnNextShip;
-				}
-				else if(KeyBindingIterator->Action == "focus_camera_on_previous_ship")
-				{
-					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionFocusCameraOnPreviousShip;
 				}
 				else if(KeyBindingIterator->Action == "increase_field_of_view")
 				{
