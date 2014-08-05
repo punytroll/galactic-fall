@@ -19,154 +19,179 @@
 
 #include "../color.h"
 #include "event.h"
+#include "mouse_button_event.h"
 #include "scroll_bar.h"
 #include "scroll_box.h"
 
 UI::ScrollBox::ScrollBox(UI::Widget * SupWidget) :
 	UI::Widget(SupWidget)
 {
-	m_View = new UI::Widget(this);
-	m_View->SetPosition(Vector2f(0.0f, 0.0f));
-	m_View->SetSize(Vector2f(GetSize()[0] - 20.0f, GetSize()[1] - 20.0f));
-	m_View->SetAnchorBottom(true);
-	m_View->SetAnchorLeft(true);
-	m_View->SetAnchorRight(true);
-	m_View->SetAnchorTop(true);
-	m_View->ConnectSizeChangedCallback(std::bind(&UI::ScrollBox::OnContentOrViewSizeChanged, this, std::placeholders::_1));
-	m_Content = new UI::Widget(m_View);
-	m_Content->SetPosition(Vector2f(0.0f, 0.0f));
-	m_Content->SetBackgroundColor(Color(0.15f, 0.15f, 0.15f, 1.0f));
-	m_Content->ConnectSizeChangedCallback(std::bind(&UI::ScrollBox::OnContentOrViewSizeChanged, this, std::placeholders::_1));
-	m_HorizontalScrollBar = new UI::ScrollBar(this, UI::ScrollBar::Alignment::HORIZONTAL);
-	m_HorizontalScrollBar->SetPosition(Vector2f(0.0f, GetSize()[1] - 20.0f));
-	m_HorizontalScrollBar->SetSize(Vector2f(GetSize()[0] - 20.0f, 20.0f));
-	m_HorizontalScrollBar->ConnectScrollPositionChangedCallback(std::bind(&UI::ScrollBox::OnHorizontalScrollPositionChanged, this));
-	m_HorizontalScrollBar->SetAnchorBottom(true);
-	m_HorizontalScrollBar->SetAnchorLeft(true);
-	m_HorizontalScrollBar->SetAnchorRight(true);
-	m_HorizontalScrollBar->SetAnchorTop(false);
-	m_HorizontalScrollBar->SetMinimumPosition(0.0f);
-	m_HorizontalScrollBar->SetMaximumPosition(std::max(0.0f, GetContent()->GetSize()[0] - GetView()->GetSize()[0]));
-	m_HorizontalScrollBar->SetCurrentPosition(0.0f);
-	m_HorizontalScrollBar->SetStepSize(m_HorizontalScrollBar->GetMaximumPosition() / 10.0f);
-	m_VerticalScrollBar = new UI::ScrollBar(this, UI::ScrollBar::Alignment::VERTICAL);
-	m_VerticalScrollBar->SetPosition(Vector2f(GetSize()[0] - 20.0f, 0.0f));
-	m_VerticalScrollBar->SetSize(Vector2f(20.0f, GetSize()[1] - 20.0f));
-	m_VerticalScrollBar->ConnectScrollPositionChangedCallback(std::bind(&UI::ScrollBox::OnVerticalScrollPositionChanged, this));
-	m_VerticalScrollBar->SetAnchorBottom(true);
-	m_VerticalScrollBar->SetAnchorLeft(false);
-	m_VerticalScrollBar->SetAnchorRight(true);
-	m_VerticalScrollBar->SetAnchorTop(true);
-	m_VerticalScrollBar->SetMinimumPosition(0.0f);
-	m_VerticalScrollBar->SetMaximumPosition(std::max(0.0f, GetContent()->GetSize()[1] - GetView()->GetSize()[1]));
-	m_VerticalScrollBar->SetCurrentPosition(0.0f);
-	m_VerticalScrollBar->SetStepSize(m_VerticalScrollBar->GetMaximumPosition() / 10.0f);
+	ConnectMouseButtonCallback(std::bind(&UI::ScrollBox::_OnMouseButton, this, std::placeholders::_1));
+	_View = new UI::Widget(this);
+	_View->SetPosition(Vector2f(0.0f, 0.0f));
+	_View->SetSize(Vector2f(GetSize()[0] - 20.0f, GetSize()[1] - 20.0f));
+	_View->SetAnchorBottom(true);
+	_View->SetAnchorLeft(true);
+	_View->SetAnchorRight(true);
+	_View->SetAnchorTop(true);
+	_View->ConnectSizeChangedCallback(std::bind(&UI::ScrollBox::_OnContentOrViewSizeChanged, this, std::placeholders::_1));
+	_Content = new UI::Widget(_View);
+	_Content->SetPosition(Vector2f(0.0f, 0.0f));
+	_Content->SetBackgroundColor(Color(0.15f, 0.15f, 0.15f, 1.0f));
+	_Content->ConnectSizeChangedCallback(std::bind(&UI::ScrollBox::_OnContentOrViewSizeChanged, this, std::placeholders::_1));
+	_HorizontalScrollBar = new UI::ScrollBar(this, UI::ScrollBar::Alignment::HORIZONTAL);
+	_HorizontalScrollBar->SetPosition(Vector2f(0.0f, GetSize()[1] - 20.0f));
+	_HorizontalScrollBar->SetSize(Vector2f(GetSize()[0] - 20.0f, 20.0f));
+	_HorizontalScrollBar->ConnectScrollPositionChangedCallback(std::bind(&UI::ScrollBox::_OnHorizontalScrollPositionChanged, this));
+	_HorizontalScrollBar->SetAnchorBottom(true);
+	_HorizontalScrollBar->SetAnchorLeft(true);
+	_HorizontalScrollBar->SetAnchorRight(true);
+	_HorizontalScrollBar->SetAnchorTop(false);
+	_HorizontalScrollBar->SetMinimumPosition(0.0f);
+	_HorizontalScrollBar->SetMaximumPosition(std::max(0.0f, _Content->GetSize()[0] - _View->GetSize()[0]));
+	_HorizontalScrollBar->SetCurrentPosition(0.0f);
+	_HorizontalScrollBar->SetStepSize(_HorizontalScrollBar->GetMaximumPosition() / 10.0f);
+	_VerticalScrollBar = new UI::ScrollBar(this, UI::ScrollBar::Alignment::VERTICAL);
+	_VerticalScrollBar->SetPosition(Vector2f(GetSize()[0] - 20.0f, 0.0f));
+	_VerticalScrollBar->SetSize(Vector2f(20.0f, GetSize()[1] - 20.0f));
+	_VerticalScrollBar->ConnectScrollPositionChangedCallback(std::bind(&UI::ScrollBox::_OnVerticalScrollPositionChanged, this));
+	_VerticalScrollBar->SetAnchorBottom(true);
+	_VerticalScrollBar->SetAnchorLeft(false);
+	_VerticalScrollBar->SetAnchorRight(true);
+	_VerticalScrollBar->SetAnchorTop(true);
+	_VerticalScrollBar->SetMinimumPosition(0.0f);
+	_VerticalScrollBar->SetMaximumPosition(std::max(0.0f, _Content->GetSize()[1] - _View->GetSize()[1]));
+	_VerticalScrollBar->SetCurrentPosition(0.0f);
+	_VerticalScrollBar->SetStepSize(_VerticalScrollBar->GetMaximumPosition() / 10.0f);
 }
 
 UI::ScrollBox::~ScrollBox(void)
 {
 }
 
-void UI::ScrollBox::OnContentOrViewSizeChanged(UI::Event & SizeChangedEvent)
+void UI::ScrollBox::_OnContentOrViewSizeChanged(UI::Event & SizeChangedEvent)
 {
 	if(SizeChangedEvent.GetPhase() == UI::Event::Phase::Target)
 	{
 		// setting the position
-		Vector2f NewContentPosition(GetContent()->GetPosition());
+		Vector2f NewContentPosition(_Content->GetPosition());
 		bool SetContentPosition(false);
 		
-		if(GetContent()->GetPosition()[0] + GetContent()->GetSize()[0] < GetView()->GetSize()[0])
+		if(_Content->GetPosition()[0] + _Content->GetSize()[0] < _View->GetSize()[0])
 		{
-			NewContentPosition[0] = std::min(0.0f, GetView()->GetSize()[0] - GetContent()->GetSize()[0]);
+			NewContentPosition[0] = std::min(0.0f, _View->GetSize()[0] - _Content->GetSize()[0]);
 			SetContentPosition = true;
 		}
-		if(GetContent()->GetPosition()[1] + GetContent()->GetSize()[1] < GetView()->GetSize()[1])
+		if(_Content->GetPosition()[1] + _Content->GetSize()[1] < _View->GetSize()[1])
 		{
-			NewContentPosition[1] = std::min(0.0f, GetView()->GetSize()[1] - GetContent()->GetSize()[1]);
+			NewContentPosition[1] = std::min(0.0f, _View->GetSize()[1] - _Content->GetSize()[1]);
 			SetContentPosition = true;
 		}
 		if(SetContentPosition == true)
 		{
-			GetContent()->SetPosition(NewContentPosition);
+			_Content->SetPosition(NewContentPosition);
 		}
 		
 		// setting the position
-		const std::list< Widget * > & ContentWidgets(GetContent()->GetSubWidgets());
 		float Bottom(0.0f);
 		float Right(0.0f);
 		
-		for(std::list< Widget * >::const_iterator ContentWidgetIterator = ContentWidgets.begin(); ContentWidgetIterator != ContentWidgets.end(); ++ContentWidgetIterator)
+		for(auto ContentWidget : _Content->GetSubWidgets())
 		{
-			Bottom = std::max(Bottom, (*ContentWidgetIterator)->GetPosition()[1] + (*ContentWidgetIterator)->GetSize()[1]);
-			Right = std::max(Right, (*ContentWidgetIterator)->GetPosition()[0] + (*ContentWidgetIterator)->GetSize()[0]);
+			Bottom = std::max(Bottom, ContentWidget->GetPosition()[1] + ContentWidget->GetSize()[1]);
+			Right = std::max(Right, ContentWidget->GetPosition()[0] + ContentWidget->GetSize()[0]);
 		}
 		//~ // add padding at the bottom and the right
 		//~ /// @todo This has to leave eventually since it is not general.
 		Bottom += 5.0f;
 		Right += 5.0f;
-		GetContent()->SetSize(Vector2f(std::max(Right, GetView()->GetSize()[0]), std::max(Bottom, GetView()->GetSize()[1])));
+		_Content->SetSize(Vector2f(std::max(Right, _View->GetSize()[0]), std::max(Bottom, _View->GetSize()[1])));
 		
-		m_HorizontalScrollBar->SetMaximumPosition(std::max(0.0f, GetContent()->GetSize()[0] - GetView()->GetSize()[0]));
-		m_HorizontalScrollBar->SetStepSize(m_HorizontalScrollBar->GetMaximumPosition() / 10.0f);
-		m_VerticalScrollBar->SetMaximumPosition(std::max(0.0f, GetContent()->GetSize()[1] - GetView()->GetSize()[1]));
-		m_VerticalScrollBar->SetStepSize(m_VerticalScrollBar->GetMaximumPosition() / 10.0f);
+		_HorizontalScrollBar->SetMaximumPosition(std::max(0.0f, _Content->GetSize()[0] - _View->GetSize()[0]));
+		_HorizontalScrollBar->SetStepSize(_HorizontalScrollBar->GetMaximumPosition() / 10.0f);
+		_VerticalScrollBar->SetMaximumPosition(std::max(0.0f, _Content->GetSize()[1] - _View->GetSize()[1]));
+		_VerticalScrollBar->SetStepSize(_VerticalScrollBar->GetMaximumPosition() / 10.0f);
 	}
 }
 
-void UI::ScrollBox::OnHorizontalScrollPositionChanged(void)
+void UI::ScrollBox::_OnHorizontalScrollPositionChanged(void)
 {
-	float ViewSize(m_View->GetSize()[0]);
-	float ContentSize(m_Content->GetSize()[0]);
-	
-	if(ContentSize > ViewSize)
+	if(_Content->GetSize()[0] > _View->GetSize()[0])
 	{
-		m_Content->SetPosition(Vector2f(-m_HorizontalScrollBar->GetCurrentPosition(), m_Content->GetPosition()[1]));
+		_Content->SetPosition(Vector2f(-_HorizontalScrollBar->GetCurrentPosition(), _Content->GetPosition()[1]));
 	}
 }
 
-void UI::ScrollBox::OnVerticalScrollPositionChanged(void)
+void UI::ScrollBox::_OnMouseButton(UI::MouseButtonEvent & MouseButtonEvent)
 {
-	float ViewSize(m_View->GetSize()[1]);
-	float ContentSize(m_Content->GetSize()[1]);
-	
-	if(ContentSize > ViewSize)
+	if((MouseButtonEvent.GetMouseButton() == UI::MouseButtonEvent::MouseButton::WheelUp) && (MouseButtonEvent.IsDown() == true))
 	{
-		m_Content->SetPosition(Vector2f(m_Content->GetPosition()[0], -m_VerticalScrollBar->GetCurrentPosition()));
+		if(_VerticalScrollBar->IsVisible() == true)
+		{
+			_VerticalScrollBar->StepLess();
+			MouseButtonEvent.StopPropagation();
+		}
+		else if(_HorizontalScrollBar->IsVisible() == true)
+		{
+			_HorizontalScrollBar->StepLess();
+			MouseButtonEvent.StopPropagation();
+		}
+	}
+	else if((MouseButtonEvent.GetMouseButton() == UI::MouseButtonEvent::MouseButton::WheelDown) && (MouseButtonEvent.IsDown() == true))
+	{
+		if(_VerticalScrollBar->IsVisible() == true)
+		{
+			_VerticalScrollBar->StepMore();
+			MouseButtonEvent.StopPropagation();
+		}
+		else if(_HorizontalScrollBar->IsVisible() == true)
+		{
+			_HorizontalScrollBar->StepMore();
+			MouseButtonEvent.StopPropagation();
+		}
+	}
+}
+
+void UI::ScrollBox::_OnVerticalScrollPositionChanged(void)
+{
+	if(_Content->GetSize()[1] > _View->GetSize()[1])
+	{
+		_Content->SetPosition(Vector2f(_Content->GetPosition()[0], -_VerticalScrollBar->GetCurrentPosition()));
 	}
 }
 
 void UI::ScrollBox::SetHorizontalScrollBarVisible(bool Visible)
 {
-	if(Visible != m_HorizontalScrollBar->IsVisible())
+	if(Visible != _HorizontalScrollBar->IsVisible())
 	{
 		if(Visible == true)
 		{
-			m_View->SetSize(Vector2f(m_View->GetSize()[0], GetSize()[1] - 20.0f));
-			m_VerticalScrollBar->SetSize(Vector2f(m_VerticalScrollBar->GetSize()[0], GetSize()[1] - 20.0f));
+			_View->SetSize(Vector2f(_View->GetSize()[0], GetSize()[1] - 20.0f));
+			_VerticalScrollBar->SetSize(Vector2f(_VerticalScrollBar->GetSize()[0], GetSize()[1] - 20.0f));
 		}
 		else
 		{
-			m_View->SetSize(Vector2f(m_View->GetSize()[0], GetSize()[1]));
-			m_VerticalScrollBar->SetSize(Vector2f(m_VerticalScrollBar->GetSize()[0], GetSize()[1]));
+			_View->SetSize(Vector2f(_View->GetSize()[0], GetSize()[1]));
+			_VerticalScrollBar->SetSize(Vector2f(_VerticalScrollBar->GetSize()[0], GetSize()[1]));
 		}
-		m_HorizontalScrollBar->SetVisible(Visible);
+		_HorizontalScrollBar->SetVisible(Visible);
 	}
 }
 
 void UI::ScrollBox::SetVerticalScrollBarVisible(bool Visible)
 {
-	if(Visible != m_VerticalScrollBar->IsVisible())
+	if(Visible != _VerticalScrollBar->IsVisible())
 	{
 		if(Visible == true)
 		{
-			m_View->SetSize(Vector2f(GetSize()[0] - 20.0f, m_View->GetSize()[1]));
-			m_HorizontalScrollBar->SetSize(Vector2f(GetSize()[0] - 20.0f, m_HorizontalScrollBar->GetSize()[1]));
+			_View->SetSize(Vector2f(GetSize()[0] - 20.0f, _View->GetSize()[1]));
+			_HorizontalScrollBar->SetSize(Vector2f(GetSize()[0] - 20.0f, _HorizontalScrollBar->GetSize()[1]));
 		}
 		else
 		{
-			m_View->SetSize(Vector2f(GetSize()[0], m_View->GetSize()[1]));
-			m_HorizontalScrollBar->SetSize(Vector2f(GetSize()[0], m_HorizontalScrollBar->GetSize()[1]));
+			_View->SetSize(Vector2f(GetSize()[0], _View->GetSize()[1]));
+			_HorizontalScrollBar->SetSize(Vector2f(GetSize()[0], _HorizontalScrollBar->GetSize()[1]));
 		}
-		m_VerticalScrollBar->SetVisible(Visible);
+		_VerticalScrollBar->SetVisible(Visible);
 	}
 }

@@ -236,7 +236,6 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet
 	_AssetClassScrollBox->SetHorizontalScrollBarVisible(false);
 	_AssetClassScrollBox->SetAnchorRight(true);
 	_AssetClassScrollBox->SetAnchorBottom(true);
-	_AssetClassScrollBox->ConnectMouseButtonCallback(std::bind(&UI::TradeCenterWidget::_OnAssetClassScrollBoxMouseButton, this, std::placeholders::_1));
 	
 	auto Hangar(_Planet->GetHangar(_Character));
 	
@@ -483,20 +482,6 @@ void UI::TradeCenterWidget::_OnAssetClassPriceLabelUpdating(UI::Label * AssetCla
 	{
 		AssetClassPriceLabel->SetText("");
 		AssetClassPriceLabel->SetVisible(false);
-	}
-}
-
-void UI::TradeCenterWidget::_OnAssetClassScrollBoxMouseButton(UI::MouseButtonEvent & MouseButtonEvent)
-{
-	if((MouseButtonEvent.GetMouseButton() == UI::MouseButtonEvent::MouseButton::WheelUp) && (MouseButtonEvent.IsDown() == true))
-	{
-		_AssetClassScrollBox->GetVerticalScrollBar()->StepLess();
-		MouseButtonEvent.StopPropagation();
-	}
-	else if((MouseButtonEvent.GetMouseButton() == UI::MouseButtonEvent::MouseButton::WheelDown) && (MouseButtonEvent.IsDown() == true))
-	{
-		_AssetClassScrollBox->GetVerticalScrollBar()->StepMore();
-		MouseButtonEvent.StopPropagation();
 	}
 }
 

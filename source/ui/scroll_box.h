@@ -35,9 +35,7 @@ namespace UI
 		virtual ~ScrollBox(void);
 		// getters
 		UI::Widget * GetContent(void);
-		const UI::Widget * GetContent(void) const;
 		UI::Widget * GetView(void);
-		const UI::Widget * GetView(void) const;
 		UI::ScrollBar * GetHorizontalScrollBar(void);
 		UI::ScrollBar * GetVerticalScrollBar(void);
 		// setters
@@ -45,44 +43,35 @@ namespace UI
 		void SetVerticalScrollBarVisible(bool Visible);
 	protected:
 		// callbacks
-		void OnContentOrViewSizeChanged(UI::Event & SizeChangedEvent);
-		void OnHorizontalScrollPositionChanged(void);
-		void OnVerticalScrollPositionChanged(void);
+		void _OnContentOrViewSizeChanged(UI::Event & SizeChangedEvent);
+		void _OnHorizontalScrollPositionChanged(void);
+		void _OnMouseButton(UI::MouseButtonEvent & MouseButtonEvent);
+		void _OnVerticalScrollPositionChanged(void);
 	private:
-		UI::Widget * m_Content;
-		UI::Widget * m_View;
-		UI::ScrollBar * m_HorizontalScrollBar;
-		UI::ScrollBar * m_VerticalScrollBar;
+		UI::Widget * _Content;
+		UI::Widget * _View;
+		UI::ScrollBar * _HorizontalScrollBar;
+		UI::ScrollBar * _VerticalScrollBar;
 	};
 
 	inline UI::Widget * ScrollBox::GetContent(void)
 	{
-		return m_Content;
-	}
-
-	inline const UI::Widget * ScrollBox::GetContent(void) const
-	{
-		return m_Content;
+		return _Content;
 	}
 
 	inline UI::Widget * ScrollBox::GetView(void)
 	{
-		return m_View;
-	}
-
-	inline const UI::Widget * ScrollBox::GetView(void) const
-	{
-		return m_View;
+		return _View;
 	}
 
 	inline UI::ScrollBar * ScrollBox::GetHorizontalScrollBar(void)
 	{
-		return m_HorizontalScrollBar;
+		return _HorizontalScrollBar;
 	}
 
 	inline UI::ScrollBar * ScrollBox::GetVerticalScrollBar(void)
 	{
-		return m_VerticalScrollBar;
+		return _VerticalScrollBar;
 	}
 }
 
