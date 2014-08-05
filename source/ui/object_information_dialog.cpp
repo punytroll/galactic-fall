@@ -48,7 +48,6 @@ UI::ObjectInformationDialog::ObjectInformationDialog(UI::Widget * SupWidget, con
 {
 	SetPosition(Vector2f(100.0f, 400.0f));
 	SetSize(Vector2f(500.0f, 300.0f));
-	ConnectMouseButtonCallback(std::bind(&UI::ObjectInformationDialog::_OnMouseButton, this, std::placeholders::_1));
 	// set up widgets
 	_CloseButton = new UI::TextButton(this, "Close");
 	_CloseButton->SetSize(Vector2f(100.0f, 20.0f));
@@ -64,6 +63,7 @@ UI::ObjectInformationDialog::ObjectInformationDialog(UI::Widget * SupWidget, con
 	_PropertiesScrollBox->SetHorizontalScrollBarVisible(false);
 	_PropertiesScrollBox->SetAnchorBottom(true);
 	_PropertiesScrollBox->SetAnchorRight(true);
+	_PropertiesScrollBox->ConnectMouseButtonCallback(std::bind(&UI::ObjectInformationDialog::_OnPropertiesScrollBoxMouseButton, this, std::placeholders::_1));
 	_RefreshButton = new UI::TextButton(this, "Refresh");
 	_RefreshButton->SetSize(Vector2f(100.0f, 20.0f));
 	_RefreshButton->SetPosition(Vector2f(_CloseButton->GetPosition()[0] - 10.0f - _RefreshButton->GetSize()[0], GetSize()[1] - 10.0f - _RefreshButton->GetSize()[1]));
@@ -155,6 +155,45 @@ float UI::ObjectInformationDialog::_AddStringProperty(float Top, float Indentati
 	PropertyValueLabel->SetAnchorBottom(true);
 	
 	return PropertyDisplay->GetSize()[1];
+}
+
+std::string UI::ObjectInformationDialog::_GetPositionString(const Vector3f & Position)
+{
+	return "x=" + to_string_cast(Position[0]) + "; y=" + to_string_cast(Position[1]) + "; z=" + to_string_cast(Position[2]);
+}
+
+std::string UI::ObjectInformationDialog::_GetOrientationString(const Quaternion & Orientation)
+{
+	return "w=" + to_string_cast(Orientation[0]) + "; x=" + to_string_cast(Orientation[1]) + "; y=" + to_string_cast(Orientation[2]) + "; z=" + to_string_cast(Orientation[3]);
+}
+
+void UI::ObjectInformationDialog::_OnCloseClicked(void)
+{
+	Destroy();
+}
+
+void UI::ObjectInformationDialog::_OnObjectClicked(const Reference< Object > Object)
+{
+	new UI::ObjectInformationDialog(GetRootWidget(), Object);
+}
+
+void UI::ObjectInformationDialog::_OnPropertiesScrollBoxMouseButton(UI::MouseButtonEvent & MouseButtonEvent)
+{
+	if((MouseButtonEvent.GetPhase() == UI::Event::Phase::Bubbling) && (MouseButtonEvent.GetMouseButton() == UI::MouseButtonEvent::MouseButton::WheelUp) && (MouseButtonEvent.IsDown() == true))
+	{
+		_PropertiesScrollBox->GetVerticalScrollBar()->StepLess();
+		MouseButtonEvent.StopPropagation();
+	}
+	else if((MouseButtonEvent.GetPhase() == UI::Event::Phase::Bubbling) && (MouseButtonEvent.GetMouseButton() == UI::MouseButtonEvent::MouseButton::WheelDown) && (MouseButtonEvent.IsDown() == true))
+	{
+		_PropertiesScrollBox->GetVerticalScrollBar()->StepMore();
+		MouseButtonEvent.StopPropagation();
+	}
+}
+
+void UI::ObjectInformationDialog::_OnRefreshClicked(void)
+{
+	_Refresh();
 }
 
 void UI::ObjectInformationDialog::_Refresh(void)
@@ -267,41 +306,4 @@ void UI::ObjectInformationDialog::_Refresh(void)
 	}
 	_PropertiesScrollBox->GetContent()->SetSize(Vector2f(_PropertiesScrollBox->GetView()->GetSize()[0], std::max(Top, _PropertiesScrollBox->GetView()->GetSize()[1])));
 	_PropertiesScrollBox->GetContent()->SetAnchorRight(true);
-}
-
-void UI::ObjectInformationDialog::_OnMouseButton(UI::MouseButtonEvent & MouseButtonEvent)
-{
-	if((MouseButtonEvent.GetMouseButton() == UI::MouseButtonEvent::MouseButton::WheelUp) && (MouseButtonEvent.IsDown() == true))
-	{
-		_PropertiesScrollBox->GetVerticalScrollBar()->StepLess();
-	}
-	else if((MouseButtonEvent.GetMouseButton() == UI::MouseButtonEvent::MouseButton::WheelDown) && (MouseButtonEvent.IsDown() == true))
-	{
-		_PropertiesScrollBox->GetVerticalScrollBar()->StepMore();
-	}
-}
-
-void UI::ObjectInformationDialog::_OnObjectClicked(const Reference< Object > Object)
-{
-	new UI::ObjectInformationDialog(GetRootWidget(), Object);
-}
-
-void UI::ObjectInformationDialog::_OnCloseClicked(void)
-{
-	Destroy();
-}
-
-void UI::ObjectInformationDialog::_OnRefreshClicked(void)
-{
-	_Refresh();
-}
-
-std::string UI::ObjectInformationDialog::_GetPositionString(const Vector3f & Position)
-{
-	return "x=" + to_string_cast(Position[0]) + "; y=" + to_string_cast(Position[1]) + "; z=" + to_string_cast(Position[2]);
-}
-
-std::string UI::ObjectInformationDialog::_GetOrientationString(const Quaternion & Orientation)
-{
-	return "w=" + to_string_cast(Orientation[0]) + "; x=" + to_string_cast(Orientation[1]) + "; y=" + to_string_cast(Orientation[2]) + "; z=" + to_string_cast(Orientation[3]);
 }
