@@ -176,7 +176,7 @@ void Object::SetObjectIdentifier(const std::string & ObjectIdentifier)
 void Object::GenerateObjectIdentifier(void)
 {
 	assert(_ObjectIdentifier.empty() == true);
-	SetObjectIdentifier("::" + _TypeIdentifier + "(" + _ClassIdentifier + ")::" + to_string_cast(reinterpret_cast< void * >(this)) + "(" + to_string_cast(RealTime::Get()) + ")");
+	SetObjectIdentifier("::" + _TypeIdentifier + "(" + _ClassIdentifier + ")::" + to_string_cast(reinterpret_cast< void * >(this)) + "(" + to_string_cast(RealTime::Get(), 3) + ")");
 }
 
 void Object::Destroy(void)
