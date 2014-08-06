@@ -58,36 +58,36 @@ void UI::MiniMapDisplay::SetOwner(Reference< Ship > Owner)
 
 void UI::MiniMapDisplay::_ClearView(void)
 {
-	Graphics::View * OldView(GetView());
+	auto OldView(GetView());
 	
-	if(OldView != 0)
+	if(OldView != nullptr)
 	{
-		SetView(0);
-		assert(OldView->GetScene() != 0);
+		SetView(nullptr);
+		assert(OldView->GetScene() != nullptr);
 		
-		Graphics::Scene * Scene(OldView->GetScene());
+		auto Scene(OldView->GetScene());
 		
-		OldView->SetScene(0);
+		OldView->SetScene(nullptr);
 		delete Scene;
 		
-		assert(OldView->GetCamera() != 0);
-		assert(OldView->GetCamera()->GetProjection() != 0);
+		assert(OldView->GetCamera() != nullptr);
+		assert(OldView->GetCamera()->GetProjection() != nullptr);
 		
-		Graphics::Projection * Projection(OldView->GetCamera()->GetProjection());
+		auto Projection(OldView->GetCamera()->GetProjection());
 		
-		OldView->GetCamera()->SetProjection(0);
+		OldView->GetCamera()->SetProjection(nullptr);
 		delete Projection;
 		
-		Graphics::TextureRenderTarget * TextureRenderTarget(dynamic_cast< Graphics::TextureRenderTarget * >(OldView->GetRenderTarget()));
+		auto TextureRenderTarget(dynamic_cast< Graphics::TextureRenderTarget * >(OldView->GetRenderTarget()));
 		
-		assert(TextureRenderTarget != 0);
-		OldView->SetRenderTarget(0);
+		assert(TextureRenderTarget != nullptr);
+		OldView->SetRenderTarget(nullptr);
 		
-		Graphics::Texture * Texture(TextureRenderTarget->GetTexture());
+		auto Texture(TextureRenderTarget->GetTexture());
 		
-		TextureRenderTarget->SetTexture(0);
+		TextureRenderTarget->SetTexture(nullptr);
 		delete TextureRenderTarget;
-		g_GraphicsEngine->GetTextureManager()->Destroy(Texture->GetIdentifier());
+		delete Texture;
 		g_GraphicsEngine->RemoveView(OldView);
 		delete OldView;
 	}
@@ -102,31 +102,30 @@ void UI::MiniMapDisplay::_SetupView(void)
 	PerspectiveProjection->SetNearClippingPlane(1.0f);
 	PerspectiveProjection->SetFarClippingPlane(10000.0f);
 	
-	Graphics::View * View(new Graphics::View());
+	auto View(new Graphics::View());
 	
 	View->SetClearColor(Color(1.0f, 1.0f, 1.0f, 0.0f));
-	assert(View->GetCamera() != 0);
+	assert(View->GetCamera() != nullptr);
 	View->GetCamera()->SetProjection(PerspectiveProjection);
 	View->GetCamera()->SetSpacialMatrix(Matrix4f::CreateFromTranslationComponents(0.0f, 0.0f, 1500.0f));
-	assert(g_GraphicsEngine != 0);
+	assert(g_GraphicsEngine != nullptr);
 	g_GraphicsEngine->AddView(View);
 	
-	Graphics::Scene * Scene(new Graphics::Scene());
+	auto Scene(new Graphics::Scene());
 	
 	Scene->SetDestroyCallback(std::bind(&UI::MiniMapDisplay::_OnDestroyInScene, this, std::placeholders::_1));
 	View->SetScene(Scene);
 	
-	Graphics::Texture * Texture(g_GraphicsEngine->GetTextureManager()->Create("mini-map-display"));
+	auto Texture(new Graphics::Texture());
 	
-	assert(Texture != 0);
 	Texture->Create(GetSize()[0], GetSize()[1], 1);
 	
-	Graphics::TextureRenderTarget * RenderTarget(new Graphics::TextureRenderTarget());
+	auto RenderTarget(new Graphics::TextureRenderTarget());
 	
 	RenderTarget->SetTexture(Texture);
 	View->SetRenderTarget(RenderTarget);
 	
-	Graphics::CallbackNode * RootNode(new Graphics::CallbackNode());
+	auto RootNode(new Graphics::CallbackNode());
 	
 	RootNode->SetDrawCallback(std::bind(&UI::MiniMapDisplay::_OnDraw, this));
 	RootNode->SetClearColorBuffer(true);
