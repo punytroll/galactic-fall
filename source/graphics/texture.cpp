@@ -24,9 +24,17 @@
 #include "gl.h"
 #include "texture.h"
 
+Graphics::Texture::Texture(void) :
+	_Height(0),
+	_Identifier(nullptr),
+	_TextureName(0),
+	_Width(0)
+{
+}
+
 Graphics::Texture::Texture(const std::string & Identifier) :
 	_Height(0),
-	_Identifier(Identifier),
+	_Identifier(new std::string(Identifier)),
 	_TextureName(0),
 	_Width(0)
 {
@@ -38,6 +46,11 @@ Graphics::Texture::~Texture(void)
 	{
 		GLDeleteTextures(1, &_TextureName);
 		_TextureName = 0;
+	}
+	if(_Identifier != nullptr)
+	{
+		delete _Identifier;
+		_Identifier = nullptr;
 	}
 }
 
@@ -89,4 +102,11 @@ void Graphics::Texture::Create(unsigned_numeric Width, unsigned_numeric Height, 
 	GLTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	_Width = Width;
 	_Height = Height;
+}
+	
+const std::string & Graphics::Texture::GetIdentifier(void)
+{
+	assert(_Identifier != nullptr);
+	
+	return *_Identifier;
 }

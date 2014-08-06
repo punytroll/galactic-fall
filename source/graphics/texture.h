@@ -32,13 +32,14 @@ namespace Graphics
 	{
 	public:
 		// constructor & destructor
+		Texture(void);
 		Texture(const std::string & Identifier);
 		~Texture(void);
 		// getters
-		unsigned_numeric GetHeight(void) const;
-		const std::string & GetIdentifier(void) const;
-		GLuint GetTextureName(void) const;
-		unsigned_numeric GetWidth(void) const;
+		unsigned_numeric GetHeight(void);
+		const std::string & GetIdentifier(void);
+		GLuint GetTextureName(void);
+		unsigned_numeric GetWidth(void);
 		// setters
 		void SetData(unsigned_numeric Width, unsigned_numeric Height, unsigned_numeric Format, const unsigned char * Data);
 		// modifiers
@@ -46,27 +47,22 @@ namespace Graphics
 		void Create(unsigned_numeric Width, unsigned_numeric Height, unsigned_numeric Format);
 	private:
 		unsigned_numeric _Height;
-		std::string _Identifier;
+		std::string * _Identifier;
 		GLuint _TextureName;
 		unsigned_numeric _Width;
 	};
 	
-	inline unsigned_numeric Texture::GetHeight(void) const
+	inline unsigned_numeric Texture::GetHeight(void)
 	{
 		return _Height;
 	}
 	
-	inline const std::string & Texture::GetIdentifier(void) const
-	{
-		return _Identifier;
-	}
-	
-	inline GLuint Texture::GetTextureName(void) const
+	inline GLuint Texture::GetTextureName(void)
 	{
 		return _TextureName;
 	}
 	
-	inline unsigned_numeric Texture::GetWidth(void) const
+	inline unsigned_numeric Texture::GetWidth(void)
 	{
 		return _Width;
 	}

@@ -373,7 +373,7 @@ void UI::TradeCenterWidget::_ClearAssetClassViewDisplay(void)
 		
 		TextureRenderTarget->SetTexture(nullptr);
 		delete TextureRenderTarget;
-		g_GraphicsEngine->GetTextureManager()->Destroy(Texture->GetIdentifier());
+		delete Texture;
 		g_GraphicsEngine->RemoveView(OldView);
 		delete OldView;
 	}
@@ -412,11 +412,11 @@ void UI::TradeCenterWidget::_OnAssetClassMouseButton(UI::MouseButtonEvent & Mous
 		
 		const VisualizationPrototype * VisualizationPrototype(g_ObjectFactory->GetVisualizationPrototype(_SelectedTradeCenterAssetClassListWidget->GetPlanetAssetClass()->GetAssetClass()->GetObjectTypeIdentifier(), _SelectedTradeCenterAssetClassListWidget->GetPlanetAssetClass()->GetAssetClass()->GetObjectClassIdentifier()));
 		
-		if(VisualizationPrototype != 0)
+		if(VisualizationPrototype != nullptr)
 		{
-			Graphics::Node * VisualizationNode(VisualizePrototype(VisualizationPrototype));
+			auto VisualizationNode(VisualizePrototype(VisualizationPrototype));
 			
-			if(VisualizationNode != 0)
+			if(VisualizationNode != nullptr)
 			{
 				float RadialSize(VisualizationPrototype->GetModel()->GetRadialSize());
 				float ExtendedRadialSize((5.0f / 4.0f) * RadialSize);
@@ -427,7 +427,7 @@ void UI::TradeCenterWidget::_OnAssetClassMouseButton(UI::MouseButtonEvent & Mous
 				PerspectiveProjection->SetNearClippingPlane(0.1f);
 				PerspectiveProjection->SetFarClippingPlane(100.0f);
 				
-				Graphics::View * View(new Graphics::View());
+				auto View(new Graphics::View());
 				
 				g_GraphicsEngine->AddView(View);
 				View->SetClearColor(Color(1.0f, 1.0f, 1.0f, 0.0f));
@@ -435,21 +435,20 @@ void UI::TradeCenterWidget::_OnAssetClassMouseButton(UI::MouseButtonEvent & Mous
 				View->GetCamera()->SetProjection(PerspectiveProjection);
 				View->GetCamera()->SetSpacialMatrix(Matrix4f::CreateFromTranslationVector(Vector3f(0.0f, -2.5f, 1.4f).Normalize() * 4.0f * RadialSize).RotateX(1.05f));
 				
-				Graphics::Scene * Scene(new Graphics::Scene());
+				auto Scene(new Graphics::Scene());
 				
 				Scene->SetDestroyCallback(std::bind(&UI::TradeCenterWidget::_OnDestroyInScene, this, std::placeholders::_1));
 				Scene->ActivateLight();
-				assert(Scene->GetLight() != 0);
+				assert(Scene->GetLight() != nullptr);
 				Scene->GetLight()->SetPosition(-20.0f, -10.0f, 20.0f);
 				Scene->GetLight()->SetDiffuseColor(1.0f, 1.0f, 1.0f, 0.0f);
 				View->SetScene(Scene);
 				
-				Graphics::Texture * Texture(g_GraphicsEngine->GetTextureManager()->Create("trade-center-widget-commodity-view"));
+				auto Texture(new Graphics::Texture());
 				
-				assert(Texture != 0);
 				Texture->Create(_AssetClassViewDisplay->GetSize()[0], _AssetClassViewDisplay->GetSize()[1], 1);
 				
-				Graphics::TextureRenderTarget * RenderTarget(new Graphics::TextureRenderTarget());
+				auto RenderTarget(new Graphics::TextureRenderTarget());
 				
 				RenderTarget->SetTexture(Texture);
 				View->SetRenderTarget(RenderTarget);

@@ -97,7 +97,7 @@ void UI::ScannerDisplay::_Clear(void)
 		
 		TextureRenderTarget->SetTexture(nullptr);
 		delete TextureRenderTarget;
-		g_GraphicsEngine->GetTextureManager()->Destroy(Texture->GetIdentifier());
+		delete Texture;
 		g_GraphicsEngine->RemoveView(OldView);
 		delete OldView;
 	}
@@ -149,16 +149,16 @@ void UI::ScannerDisplay::_Setup(void)
 	PerspectiveProjection->SetNearClippingPlane(1.0f);
 	PerspectiveProjection->SetFarClippingPlane(1000.0f);
 	
-	Graphics::View * View(new Graphics::View());
+	auto View(new Graphics::View());
 	
 	g_GraphicsEngine->AddView(View);
 	View->SetClearColor(Color(1.0f, 1.0f, 1.0f, 0.0f));
-	assert(View->GetCamera() != 0);
+	assert(View->GetCamera() != nullptr);
 	View->GetCamera()->SetProjection(PerspectiveProjection);
 	assert(_Target->GetAspectPosition() != nullptr);
 	View->GetCamera()->SetSpacialMatrix(Matrix4f::CreateFromTranslationComponents(_Target->GetAspectPosition()->GetPosition()[0], _Target->GetAspectPosition()->GetPosition()[1], 4.0f * RadialSize));
 	
-	Graphics::Scene * Scene(new Graphics::Scene());
+	auto Scene(new Graphics::Scene());
 	
 	Scene->SetDestroyCallback(std::bind(&UI::ScannerDisplay::_OnDestroyInScene, this, std::placeholders::_1));
 	Scene->ActivateLight();
@@ -173,12 +173,11 @@ void UI::ScannerDisplay::_Setup(void)
 	Scene->GetLight()->SetDiffuseColor(TheSystem->GetStar()->GetColor().GetColor()[0], TheSystem->GetStar()->GetColor().GetColor()[1], TheSystem->GetStar()->GetColor().GetColor()[2], TheSystem->GetStar()->GetColor().GetColor()[3]);
 	View->SetScene(Scene);
 	
-	Graphics::Texture * Texture(g_GraphicsEngine->GetTextureManager()->Create("scanner-display-view"));
+	auto Texture(new Graphics::Texture());
 	
-	assert(Texture != 0);
 	Texture->Create(GetSize()[0], GetSize()[1], 1);
 	
-	Graphics::TextureRenderTarget * RenderTarget(new Graphics::TextureRenderTarget());
+	auto RenderTarget(new Graphics::TextureRenderTarget());
 	
 	RenderTarget->SetTexture(Texture);
 	View->SetRenderTarget(RenderTarget);
