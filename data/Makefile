@@ -68,6 +68,7 @@ all_data = \
 	.data/model_shuttle.data \
 	.data/model_transporter.data \
 	.data/scenario_new_game.data \
+	.data/scenario_rich_game.data \
 	.data/scenario_sol_spectator.data \
 	.data/setting_key_binding_profile.data \
 	.data/setting_window_dimensions.data \
@@ -244,6 +245,7 @@ data.arx: $(data_arx) $(arxtouch_dependencies) $(arxadd_dependencies)
 	$(command_arxadd) $@ --name="Particle" --type=a --sub-type=0 --relation="/Textures::child" --data-file=.data/texture_particle.data
 	@echo "\n\nAdding scenarios ...\n"
 	$(command_arxadd) $@ --name="New Game" --type=11 --sub-type=0 --relation="/Scenarios::child" --data-file=.data/scenario_new_game.data
+	$(command_arxadd) $@ --name="Rich Game" --type=11 --sub-type=0 --relation="/Scenarios::child" --data-file=.data/scenario_rich_game.data
 	$(command_arxadd) $@ --name="Sol Spectator" --type=11 --sub-type=0 --relation="/Scenarios::child" --data-file=.data/scenario_sol_spectator.data
 
 .data:
