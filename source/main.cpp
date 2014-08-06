@@ -2183,7 +2183,10 @@ void LoadGameFromElement(const Element * SaveElement)
 						Ship * TheShip(dynamic_cast< Ship * >(TheObject));
 						
 						assert(TheShip != nullptr);
-						g_CurrentSystem->GetAspectObjectContainer()->AddContent(TheShip);
+						if(TheShip->GetContainer() == nullptr)
+						{
+							g_CurrentSystem->GetAspectObjectContainer()->AddContent(TheShip);
+						}
 					}
 				}
 			}
