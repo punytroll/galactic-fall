@@ -97,6 +97,7 @@ static void WriteToXMLStream(XMLStream & XMLStream, Object * TheObject, std::sta
 void WriteToXMLStream(XMLStream & XMLStream, Object * TheObject)
 {
 	assert(TheObject != nullptr);
+	assert(TheObject->GetObjectIdentifier().empty() == false);
 	XMLStream << element << "object" << attribute << "type-identifier" << value << TheObject->GetTypeIdentifier() << attribute << "class-identifier" << value << TheObject->GetClassIdentifier() << attribute << "object-identifier" << value << TheObject->GetObjectIdentifier();
 	if(TheObject->GetAspectAccessory() != nullptr)
 	{
@@ -118,6 +119,10 @@ void WriteToXMLStream(XMLStream & XMLStream, Object * TheObject)
 		XMLStream << element << "aspect-object-container";
 		for(auto Content : TheObject->GetAspectObjectContainer()->GetContent())
 		{
+			if(Content->GetObjectIdentifier().empty() == true)
+			{
+				Content->GenerateObjectIdentifier();
+			}
 			XMLStream << element << "content" << attribute << "object-identifier" << value << Content->GetObjectIdentifier() << end;
 		}
 		XMLStream << end;
