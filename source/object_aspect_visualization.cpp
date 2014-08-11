@@ -124,3 +124,14 @@ void ObjectAspectVisualization::RemoveGraphics(Graphics::Node * Graphics)
 	}
 	assert(_Visualizations.size() + 1 == OldCount);
 }
+
+void ObjectAspectVisualization::UpdateVisualizations(void)
+{
+	if(_UpdateVisualizationCallback)
+	{
+		for(auto Visualization : _Visualizations)
+		{
+			_UpdateVisualizationCallback(Visualization);
+		}
+	}
+}

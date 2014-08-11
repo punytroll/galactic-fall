@@ -598,24 +598,9 @@ void UpdateVisualizations(Galaxy * Galaxy)
 		{
 			ToDo.insert(ToDo.end(), TheObject->GetAspectObjectContainer()->GetContent().begin(), TheObject->GetAspectObjectContainer()->GetContent().end());
 		}
-		if((TheObject->GetAspectVisualization() != nullptr) && (TheObject->GetAspectPosition() != nullptr))
+		if(TheObject->GetAspectVisualization() != nullptr)
 		{
-			if((TheObject->GetAspectAccessory() == nullptr) || (TheObject->GetAspectAccessory()->GetSlot() == nullptr))
-			{
-				for(auto Visualization : TheObject->GetAspectVisualization()->GetVisualizations())
-				{
-					Visualization->GetGraphics()->SetOrientation(TheObject->GetAspectPosition()->GetOrientation());
-					Visualization->GetGraphics()->SetPosition(TheObject->GetAspectPosition()->GetPosition());
-				}
-			}
-			else
-			{
-				for(auto Visualization : TheObject->GetAspectVisualization()->GetVisualizations())
-				{
-					Visualization->GetGraphics()->SetOrientation(TheObject->GetAspectAccessory()->GetSlot()->GetOrientation() * TheObject->GetAspectPosition()->GetOrientation());
-					Visualization->GetGraphics()->SetPosition(TheObject->GetAspectAccessory()->GetSlot()->GetPosition() + TheObject->GetAspectPosition()->GetPosition());
-				}
-			}
+			TheObject->GetAspectVisualization()->UpdateVisualizations();
 		}
 	}
 }

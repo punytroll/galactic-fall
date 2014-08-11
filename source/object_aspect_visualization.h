@@ -20,6 +20,7 @@
 #ifndef OBJECT_ASPECT_VISUALIZATION_H
 #define OBJECT_ASPECT_VISUALIZATION_H
 
+#include <functional>
 #include <list>
 
 class Visualization;
@@ -40,6 +41,7 @@ public:
 	VisualizationPrototype * GetVisualizationPrototype(void);
 	const std::list< Visualization * > & GetVisualizations(void) const;
 	// setters
+	void SetUpdateVisualizationCallback(std::function< void (Visualization *) > Callback);
 	/**
 	 * @note Passes memory management reponsibility of the VisualizationPrototype to this ObjectAspectVisualization.
 	 **/
@@ -50,7 +52,9 @@ public:
 	void DestroyVisualization(Graphics::Node * Container);
 	void DestroyVisualization(Visualization * Visualization);
 	void RemoveGraphics(Graphics::Node * Graphics);
+	void UpdateVisualizations(void);
 private:
+	std::function< void (Visualization *) > _UpdateVisualizationCallback;
 	std::list< Visualization * > _Visualizations;
 	VisualizationPrototype * _VisualizationPrototype;
 };
@@ -63,6 +67,11 @@ inline VisualizationPrototype * ObjectAspectVisualization::GetVisualizationProto
 inline const std::list< Visualization * > & ObjectAspectVisualization::GetVisualizations(void) const
 {
 	return _Visualizations;
+}
+
+inline void ObjectAspectVisualization::SetUpdateVisualizationCallback(std::function< void (Visualization *) > Callback)
+{
+	_UpdateVisualizationCallback = Callback;
 }
 
 #endif

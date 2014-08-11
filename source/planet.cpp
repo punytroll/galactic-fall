@@ -22,14 +22,18 @@
 #include "character.h"
 #include "color.h"
 #include "globals.h"
+#include "graphics/node.h"
 #include "hangar.h"
 #include "message.h"
 #include "message_dispatcher.h"
 #include "object_aspect_object_container.h"
 #include "object_aspect_physical.h"
+#include "object_aspect_position.h"
+#include "object_aspect_visualization.h"
 #include "object_factory.h"
 #include "planet.h"
 #include "ship.h"
+#include "visualization.h"
 
 PlanetAssetClass::PlanetAssetClass(const AssetClass * AssetClass) :
 	_AssetClass(AssetClass),
@@ -60,6 +64,7 @@ Planet::Planet(const std::string & Identifier) :
 	AddAspectPhysical();
 	AddAspectPosition();
 	AddAspectVisualization();
+	GetAspectVisualization()->SetUpdateVisualizationCallback(std::bind(&Planet::_UpdateVisualization, this, std::placeholders::_1));
 }
 
 Planet::~Planet(void)
@@ -247,4 +252,13 @@ Hangar * Planet::_CreateHangar(Character * Character)
 	Result->SetCharacter(Character);
 	
 	return Result;
+}
+
+void Planet::_UpdateVisualization(Visualization * Visualization)
+{
+	assert(Visualization != nullptr);
+	assert(Visualization->GetGraphics() != nullptr);
+	assert(GetAspectPosition() != nullptr);
+	Visualization->GetGraphics()->SetOrientation(GetAspectPosition()->GetOrientation());
+	Visualization->GetGraphics()->SetPosition(GetAspectPosition()->GetPosition());
 }

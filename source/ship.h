@@ -31,6 +31,7 @@ class Slot;
 class SlotClass;
 class Storage;
 class System;
+class Visualization;
 
 namespace Graphics
 {
@@ -101,6 +102,7 @@ private:
 	void OnAdded(Object * Content);
 	void OnRemoved(Object * Content);
 	void _OnTargetDestroying(void);
+	void _UpdateVisualization(Visualization * Visualization);
 private:
 	// ship class
 	bool m_Accelerate;

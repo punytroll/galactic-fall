@@ -25,5 +25,4 @@ Battery::Battery(void)
 	AddAspectAccessory();
 	AddAspectName();
 	AddAspectPhysical();
-	AddAspectVisualization();
 }
