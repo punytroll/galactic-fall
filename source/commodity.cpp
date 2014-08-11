@@ -20,8 +20,11 @@
 #include <algebra/vector4f.h>
 
 #include "commodity.h"
+#include "graphics/node.h"
 #include "object_aspect_position.h"
 #include "object_aspect_update.h"
+#include "object_aspect_visualization.h"
+#include "visualization.h"
 
 Commodity::Commodity(void) :
 	m_AngularVelocity(true),
@@ -35,6 +38,7 @@ Commodity::Commodity(void) :
 	AddAspectUpdate();
 	GetAspectUpdate()->SetCallback(std::bind(&Commodity::Update, this, std::placeholders::_1));
 	AddAspectVisualization();
+	GetAspectVisualization()->SetUpdateVisualizationCallback(std::bind(&Commodity::_UpdateVisualization, this, std::placeholders::_1));
 }
 
 Commodity::~Commodity(void)
@@ -47,4 +51,13 @@ bool Commodity::Update(float Seconds)
 	GetAspectPosition()->ModifyPosition(m_Velocity * Seconds);
 	
 	return true;
+}
+
+void Commodity::_UpdateVisualization(Visualization * Visualization)
+{
+	assert(Visualization != nullptr);
+	assert(Visualization->GetGraphics() != nullptr);
+	assert(GetAspectPosition() != nullptr);
+	Visualization->GetGraphics()->SetOrientation(GetAspectPosition()->GetOrientation());
+	Visualization->GetGraphics()->SetPosition(GetAspectPosition()->GetPosition());
 }

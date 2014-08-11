@@ -24,6 +24,7 @@
 #include "generator.h"
 #include "globals.h"
 #include "graphics/engine.h"
+#include "graphics/node.h"
 #include "graphics/particle_system.h"
 #include "map_knowledge.h"
 #include "math.h"
@@ -35,12 +36,14 @@
 #include "object_aspect_physical.h"
 #include "object_aspect_position.h"
 #include "object_aspect_update.h"
+#include "object_aspect_visualization.h"
 #include "planet.h"
 #include "ship.h"
 #include "slot.h"
 #include "slot_class.h"
 #include "storage.h"
 #include "system.h"
+#include "visualization.h"
 #include "visualizations.h"
 #include "weapon.h"
 
@@ -87,6 +90,7 @@ Ship::Ship(void) :
 	AddAspectUpdate();
 	GetAspectUpdate()->SetCallback(std::bind(&Ship::Update, this, std::placeholders::_1));
 	AddAspectVisualization();
+	GetAspectVisualization()->SetUpdateVisualizationCallback(std::bind(&Ship::_UpdateVisualization, this, std::placeholders::_1));
 }
 
 Ship::~Ship(void)
@@ -517,4 +521,13 @@ void Ship::_OnTargetDestroying(void)
 {
 	assert(_Target != nullptr);
 	_Target = nullptr;
+}
+
+void Ship::_UpdateVisualization(Visualization * Visualization)
+{
+	assert(Visualization != nullptr);
+	assert(Visualization->GetGraphics() != nullptr);
+	assert(GetAspectPosition() != nullptr);
+	Visualization->GetGraphics()->SetOrientation(GetAspectPosition()->GetOrientation());
+	Visualization->GetGraphics()->SetPosition(GetAspectPosition()->GetPosition());
 }

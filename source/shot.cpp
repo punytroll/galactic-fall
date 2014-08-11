@@ -18,9 +18,12 @@
 **/
 
 #include "game_time.h"
+#include "graphics/node.h"
 #include "object_aspect_position.h"
 #include "object_aspect_update.h"
+#include "object_aspect_visualization.h"
 #include "shot.h"
+#include "visualization.h"
 
 Shot::Shot(void) :
 	_TimeOfDeath(0.0),
@@ -33,6 +36,7 @@ Shot::Shot(void) :
 	AddAspectUpdate();
 	GetAspectUpdate()->SetCallback(std::bind(&Shot::_Update, this, std::placeholders::_1));
 	AddAspectVisualization();
+	GetAspectVisualization()->SetUpdateVisualizationCallback(std::bind(&Shot::_UpdateVisualization, this, std::placeholders::_1));
 }
 
 Shot::~Shot(void)
@@ -52,4 +56,13 @@ bool Shot::_Update(float Seconds)
 	{
 		return false;
 	}
+}
+
+void Shot::_UpdateVisualization(Visualization * Visualization)
+{
+	assert(Visualization != nullptr);
+	assert(Visualization->GetGraphics() != nullptr);
+	assert(GetAspectPosition() != nullptr);
+	Visualization->GetGraphics()->SetOrientation(GetAspectPosition()->GetOrientation());
+	Visualization->GetGraphics()->SetPosition(GetAspectPosition()->GetPosition());
 }

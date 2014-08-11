@@ -65,6 +65,7 @@ System::System(const std::string & Identifier) :
 	GetAspectObjectContainer()->ConnectContentRemovedCallback(std::bind(&System::_OnRemoved, this, std::placeholders::_1));
 	AddAspectPosition();
 	AddAspectVisualization();
+	GetAspectVisualization()->SetUpdateVisualizationCallback(std::bind(&System::_UpdateVisualization, this, std::placeholders::_1));
 }
 
 System::~System(void)
@@ -243,4 +244,9 @@ void System::_OnRemoved(Object * Content)
 void System::AddLinkedSystem(System * LinkedSystem)
 {
 	_LinkedSystems.push_back(LinkedSystem);
+}
+
+void System::_UpdateVisualization(Visualization * Visualization)
+{
+	// intentionally left empty: visualizations of systems don't get their positions updated
 }

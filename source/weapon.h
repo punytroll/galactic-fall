@@ -22,6 +22,7 @@
 
 #include "object.h"
 
+class Visualization;
 class WeaponClass;
 
 class Weapon : public Object
@@ -43,6 +44,7 @@ public:
 private:
 	// modifiers
 	bool _Update(float Seconds);
+	void _UpdateVisualization(Visualization * Visualization);
 	// variables
 	float m_EnergyUsagePerShot;
 	bool m_Fire;

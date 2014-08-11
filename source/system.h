@@ -53,6 +53,7 @@ public:
 private:
 	void _OnAdded(Object * Content);
 	void _OnRemoved(Object * Content);
+	void _UpdateVisualization(Visualization * Visualization);
 	std::string _Identifier;
 	float _TrafficDensity;
 	Star * _Star;

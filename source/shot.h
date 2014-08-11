@@ -24,6 +24,8 @@
 
 #include "object.h"
 
+class Visualization;
+
 class Shot : public Object
 {
 public:
@@ -41,6 +43,7 @@ public:
 private:
 	// modifers
 	bool _Update(float Seconds);
+	void _UpdateVisualization(Visualization * Visualization);
 	// variables
 	Reference< Object > _Shooter;
 	double _TimeOfDeath;

@@ -28,15 +28,18 @@
 #include "battery.h"
 #include "game_time.h"
 #include "globals.h"
+#include "graphics/node.h"
 #include "math.h"
 #include "object_aspect_accessory.h"
 #include "object_aspect_object_container.h"
 #include "object_aspect_position.h"
 #include "object_aspect_update.h"
+#include "object_aspect_visualization.h"
 #include "object_factory.h"
 #include "ship.h"
 #include "shot.h"
 #include "slot.h"
+#include "visualization.h"
 #include "weapon.h"
 
 Weapon::Weapon(void) :
@@ -52,9 +55,10 @@ Weapon::Weapon(void) :
 	AddAspectName();
 	AddAspectPhysical();
 	AddAspectPosition();
-	AddAspectVisualization();
 	AddAspectUpdate();
 	GetAspectUpdate()->SetCallback(std::bind(&Weapon::_Update, this, std::placeholders::_1));
+	AddAspectVisualization();
+	GetAspectVisualization()->SetUpdateVisualizationCallback(std::bind(&Weapon::_UpdateVisualization, this, std::placeholders::_1));
 }
 
 bool Weapon::_Update(float Seconds)
@@ -115,4 +119,17 @@ bool Weapon::_Update(float Seconds)
 	}
 	
 	return true;
+}
+
+void Weapon::_UpdateVisualization(Visualization * Visualization)
+{
+	assert(GetAspectAccessory() != nullptr);
+	if(GetAspectAccessory()->GetSlot() != nullptr)
+	{
+		assert(Visualization != nullptr);
+		assert(Visualization->GetGraphics() != nullptr);
+		assert(GetAspectPosition() != nullptr);
+		Visualization->GetGraphics()->SetOrientation(GetAspectAccessory()->GetSlot()->GetOrientation() * GetAspectPosition()->GetOrientation());
+		Visualization->GetGraphics()->SetPosition(GetAspectAccessory()->GetSlot()->GetPosition() + GetAspectPosition()->GetPosition());
+	}
 }

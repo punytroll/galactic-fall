@@ -32,6 +32,7 @@ class Color;
 class Faction;
 class Hangar;
 class Ship;
+class Visualization;
 
 class PlanetAssetClass
 {
@@ -100,6 +101,7 @@ public:
 private:
 	// helper functions
 	Hangar * _CreateHangar(Character * Character);
+	void _UpdateVisualization(Visualization * Visualization);
 	// member variables
 	std::string _Description;
 	Reference< Faction > _Faction;

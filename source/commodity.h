@@ -25,6 +25,8 @@
 
 #include "object.h"
 
+class Visualization;
+
 class Commodity : public Object
 {
 public:
@@ -41,6 +43,7 @@ public:
 private:
 	// slot for the object aspect Update
 	bool Update(float Seconds);
+	void _UpdateVisualization(Visualization * Visualization);
 private:
 	AxisAngle m_AngularVelocity;
 	float m_Hull;
