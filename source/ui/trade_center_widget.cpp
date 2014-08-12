@@ -400,7 +400,7 @@ void UI::TradeCenterWidget::_OnAssetClassDescriptionLabelUpdating(UI::Label * As
 
 void UI::TradeCenterWidget::_OnAssetClassMouseButton(UI::MouseButtonEvent & MouseButtonEvent, TradeCenterAssetClassListWidget * TradeCenterAssetClassListWidget)
 {
-	if((MouseButtonEvent.GetMouseButton() == UI::MouseButtonEvent::MouseButton::Left) && (MouseButtonEvent.IsDown() == true))
+	if((MouseButtonEvent.GetPhase() == UI::Event::Phase::Bubbling) && (MouseButtonEvent.GetMouseButton() == UI::MouseButtonEvent::MouseButton::Left) && (MouseButtonEvent.IsDown() == true))
 	{
 		if(_SelectedTradeCenterAssetClassListWidget != nullptr)
 		{
@@ -460,6 +460,7 @@ void UI::TradeCenterWidget::_OnAssetClassMouseButton(UI::MouseButtonEvent & Mous
 				_AssetClassViewDisplay->SetView(View);
 			}
 		}
+		MouseButtonEvent.StopPropagation();
 	}
 }
 
