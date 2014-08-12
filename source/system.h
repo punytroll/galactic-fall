@@ -31,6 +31,7 @@ class Planet;
 class Ship;
 class Shot;
 class Star;
+class Visualization;
 
 class System : public Object
 {
