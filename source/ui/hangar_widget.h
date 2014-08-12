@@ -64,6 +64,7 @@ namespace UI
 		void _OnRepairButtonClicked(void);
 		void _OnRepairButtonUpdating(UI::Button * RechargeButton, float RealTimeSeconds, float GameTimeSeconds);
 		void _OnShipListItemMouseButton(UI::MouseButtonEvent & MouseButtonEvent, UI::ShipListItem * ShipListItem);
+		void _OnShipListItemUpdating(float RealTimeSeconds, float GameTimeSeconds, UI::ShipListItem * ShipListItem);
 		void _OnShipScrollBoxSubWidgetAdded(UI::SubWidgetEvent & SubWidgetEvent);
 		void _OnShipScrollBoxSubWidgetRemoved(UI::SubWidgetEvent & SubWidgetEvent);
 		void _OnTakeOffButtonClicked(void);

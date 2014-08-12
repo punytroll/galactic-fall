@@ -30,6 +30,7 @@
 #include "../object_aspect_object_container.h"
 #include "../planet.h"
 #include "../ship.h"
+#include "border.h"
 #include "event.h"
 #include "hangar_widget.h"
 #include "label.h"
@@ -49,6 +50,7 @@ namespace UI
 	public:
 		ShipListItem(Ship * Ship) :
 			UI::ListBoxItem(),
+			_Border(nullptr),
 			_Ship(Ship)
 		{
 			assert(_Ship != nullptr);
@@ -71,6 +73,31 @@ namespace UI
 		{
 			return _Ship;
 		}
+		
+		void ShowBorder(bool Show)
+		{
+			if(Show == true)
+			{
+				if(_Border == nullptr)
+				{
+					_Border = new UI::Border(this);
+					_Border->SetPosition(Vector2f(0.0f, 0.0f));
+					_Border->SetSize(GetSize());
+					_Border->SetAnchorBottom(true);
+					_Border->SetAnchorRight(true);
+					_Border->SetWidth(1.0f);
+					_Border->SetColor(Color(1.0f, 1.0f, 1.0f, 1.0f));
+				}
+			}
+			else
+			{
+				if(_Border != nullptr)
+				{
+					_Border->Destroy();
+					_Border = nullptr;
+				}
+			}
+		}
 	private:
 		// event handlers
 		void _OnDestroying(UI::Event & DestroyingEvent)
@@ -89,6 +116,7 @@ namespace UI
 			Destroy();
 		}
 		
+		UI::Border * _Border;
 		Ship * _Ship;
 		Connection _ShipDestroyingConnection;
 	};
@@ -518,6 +546,13 @@ void UI::HangarWidget::_OnShipListItemMouseButton(UI::MouseButtonEvent & MouseBu
 	}
 }
 
+void UI::HangarWidget::_OnShipListItemUpdating(float RealTimeSeconds, float GameTimeSeconds, UI::ShipListItem * ShipListItem)
+{
+	assert(_Character != nullptr);
+	assert(ShipListItem != nullptr);
+	ShipListItem->ShowBorder(ShipListItem->GetShip() == _Character->GetShip());
+}
+
 void UI::HangarWidget::_OnShipScrollBoxSubWidgetAdded(UI::SubWidgetEvent & SubWidgetEvent)
 {
 	if(SubWidgetEvent.GetPhase() == UI::Event::Phase::Target)
@@ -539,6 +574,7 @@ void UI::HangarWidget::_OnShipScrollBoxSubWidgetAdded(UI::SubWidgetEvent & SubWi
 		NewItem->SetPosition(Vector2f(Left, 5.0f));
 		NewItem->SetSize(Vector2f(100.0f, 100.0f));
 		NewItem->ConnectMouseButtonCallback(std::bind(&UI::HangarWidget::_OnShipListItemMouseButton, this, std::placeholders::_1, NewItem));
+		NewItem->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnShipListItemUpdating, this, std::placeholders::_1, std::placeholders::_2, NewItem));
 		_ShipScrollBox->GetContent()->SetSize(Vector2f(std::max(NewItem->GetPosition()[0] + NewItem->GetSize()[0], _ShipScrollBox->GetView()->GetSize()[0]), _ShipScrollBox->GetView()->GetSize()[1]));
 	}
 }
