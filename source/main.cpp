@@ -413,11 +413,9 @@ void DeleteObject(Object * Object)
 
 void CalculateCharacters(void)
 {
-	std::set< Character * > & Characters(Character::GetCharacters());
-	
-	for(std::set< Character * >::iterator CharacterIterator = Characters.begin(); CharacterIterator != Characters.end(); ++CharacterIterator)
+	for(auto Character : Character::GetCharacters())
 	{
-		(*CharacterIterator)->Update();
+		Character->Update();
 	}
 }
 
