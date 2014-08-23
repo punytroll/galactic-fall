@@ -19,40 +19,31 @@
 
 #include <iostream>
 
-#include "command_mind.h"
 #include "globals.h"
 #include "message.h"
+#include "object.h"
 #include "output_observer.h"
-#include "planet.h"
 #include "ui/planet_window.h"
 #include "ui/user_interface.h"
 
-/// @todo evil hack
-class CommandMind;
-
-extern Reference< CommandMind > g_InputMind;
-
 OutputObserver::OutputObserver(void) :
-	_PlanetWindow(0)
+	_PlanetWindow(nullptr)
 {
 }
 
 void OutputObserver::HandleMessage(Message * Message)
 {
-	if((g_InputMind.IsValid() == true) && (GetObservedCharacter().Get() == g_InputMind->GetCharacter()))
+	if(Message->GetTypeIdentifier() == "landed")
 	{
-		if(Message->GetTypeIdentifier() == "landed")
-		{
-			assert(_PlanetWindow == 0);
-			assert(Message->GetSender()->GetTypeIdentifier() == "planet");
-			_PlanetWindow = new UI::PlanetWindow(g_UserInterface->GetRootWidget(), Message->GetSender(), GetObservedCharacter());
-			_PlanetWindow->GrabKeyFocus();
-		}
-		else if(Message->GetTypeIdentifier() == "taken_off")
-		{
-			assert(_PlanetWindow != 0);
-			_PlanetWindow->Destroy();
-			_PlanetWindow = 0;
-		}
+		assert(_PlanetWindow == nullptr);
+		assert(Message->GetSender()->GetTypeIdentifier() == "planet");
+		_PlanetWindow = new UI::PlanetWindow(g_UserInterface->GetRootWidget(), Message->GetSender(), GetObservedCharacter());
+		_PlanetWindow->GrabKeyFocus();
+	}
+	else if(Message->GetTypeIdentifier() == "taken_off")
+	{
+		assert(_PlanetWindow != nullptr);
+		_PlanetWindow->Destroy();
+		_PlanetWindow = nullptr;
 	}
 }
