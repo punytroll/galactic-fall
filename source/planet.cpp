@@ -50,8 +50,7 @@ unsigned_numeric PlanetAssetClass::GetPrice(void) const
 	return static_cast< unsigned_numeric >(_AssetClass->GetBasePrice() * _BasePriceModifier);
 }
 
-Planet::Planet(const std::string & Identifier) :
-	_Identifier(Identifier),
+Planet::Planet(void) :
 	_LandingFeePerSpace(0.0f),
 	_OffersRecharging(false),
 	_OffersRepairing(false),

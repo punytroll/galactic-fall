@@ -26,6 +26,7 @@ class Battery : public Object
 {
 public:
 	Battery(void);
+	virtual ~Battery(void) override;
 	// getters
 	float GetEnergy(void) const;
 	float GetEnergyCapacity(void) const;
@@ -33,28 +34,28 @@ public:
 	void SetEnergy(float Energy);
 	void SetEnergyCapacity(float EnergyCapacity);
 private:
-	float m_Energy;
-	float m_EnergyCapacity;
+	float _Energy;
+	float _EnergyCapacity;
 };
 
 inline float Battery::GetEnergy(void) const
 {
-	return m_Energy;
+	return _Energy;
 }
 
 inline float Battery::GetEnergyCapacity(void) const
 {
-	return m_EnergyCapacity;
+	return _EnergyCapacity;
 }
 
 inline void Battery::SetEnergy(float Energy)
 {
-	m_Energy = Energy;
+	_Energy = Energy;
 }
 
 inline void Battery::SetEnergyCapacity(float EnergyCapacity)
 {
-	m_EnergyCapacity = EnergyCapacity;
+	_EnergyCapacity = EnergyCapacity;
 }
 
 #endif

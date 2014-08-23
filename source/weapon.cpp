@@ -61,6 +61,10 @@ Weapon::Weapon(void) :
 	GetAspectVisualization()->SetUpdateVisualizationCallback(std::bind(&Weapon::_UpdateVisualization, this, std::placeholders::_1));
 }
 
+Weapon::~Weapon(void)
+{
+}
+
 bool Weapon::_Update(float Seconds)
 {
 	if((m_Fire == true) && (m_NextTimeToFire <= GameTime::Get()))

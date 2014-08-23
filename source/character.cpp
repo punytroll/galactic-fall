@@ -48,19 +48,19 @@ Character::Character(void) :
 Character::~Character(void)
 {
 	delete m_MapKnowledge;
-	m_MapKnowledge = 0;
+	m_MapKnowledge = nullptr;
 	delete m_Threat;
-	m_Threat = 0;
+	m_Threat = nullptr;
 	m_Characters.erase(m_Characters.find(this));
 }
 
 void Character::Update(void)
 {
 	// forward all messages in the message queue
-	Message * Message(0);
+	Message * Message(nullptr);
 	
 	// take responsibility for the popped message
-	while((Message = GetAspectMessages()->PopMessage()) != 0)
+	while((Message = GetAspectMessages()->PopMessage()) != nullptr)
 	{
 		// forward message to all registered CharacterObservers
 		for(std::set< CharacterObserver * >::iterator ObserverIterator = m_Observers.begin(); ObserverIterator != m_Observers.end(); ++ObserverIterator)
@@ -129,7 +129,7 @@ void Character::OnAdded(Object * Content)
 	
 	Mind * TheMind(dynamic_cast< Mind * >(Content));
 	
-	assert(TheMind != 0);
+	assert(TheMind != nullptr);
 	m_Minds.push_front(TheMind);
 }
 
@@ -139,7 +139,7 @@ void Character::OnRemoved(Object * Content)
 	
 	Mind * TheMind(dynamic_cast< Mind * >(Content));
 	
-	assert(TheMind != 0);
+	assert(TheMind != nullptr);
 	
 	std::deque< Mind * >::iterator MindIterator(std::find(m_Minds.begin(), m_Minds.end(), TheMind));
 	

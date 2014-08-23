@@ -24,3 +24,7 @@ Star::Star(void)
 	// initialize object aspects
 	AddAspectPosition();
 }
+
+Star::~Star(void)
+{
+}

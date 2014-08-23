@@ -43,7 +43,7 @@ private:
 /** individual **/
 public:
 	Character(void);
-	virtual ~Character(void);
+	virtual ~Character(void) override;
 	// getters
 	Mind * GetActiveMind(void);
 	unsigned_numeric GetCredits(void) const;

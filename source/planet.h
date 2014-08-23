@@ -70,13 +70,12 @@ class Planet : public Object
 {
 public:
 	// constructor & destructor
-	Planet(const std::string & Identifier);
-	~Planet(void);
+	Planet(void);
+	virtual ~Planet(void) override;
 	// getters
 	const std::string & GetDescription(void) const;
 	Reference< Faction > GetFaction(void) const;
 	Hangar * GetHangar(Character * Character);
-	const std::string & GetIdentifier(void) const;
 	float GetLandingFeePerSpace(void) const;
 	bool GetOffersRecharging(void) const;
 	bool GetOffersRepairing(void) const;
@@ -105,7 +104,6 @@ private:
 	// member variables
 	std::string _Description;
 	Reference< Faction > _Faction;
-	std::string _Identifier;
 	float _LandingFeePerSpace;
 	bool _OffersRecharging;
 	bool _OffersRepairing;
@@ -123,11 +121,6 @@ inline const std::string & Planet::GetDescription(void) const
 inline Reference< Faction > Planet::GetFaction(void) const
 {
 	return _Faction;
-}
-
-inline const std::string & Planet::GetIdentifier(void) const
-{
-	return _Identifier;
 }
 
 inline float Planet::GetLandingFeePerSpace(void) const

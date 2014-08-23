@@ -49,7 +49,9 @@
 #include "ship_class.h"
 #include "shot.h"
 #include "slot.h"
+#include "star.h"
 #include "storage.h"
+#include "system.h"
 #include "weapon.h"
 #include "weapon_class.h"
 #include "visualization_prototype.h"
@@ -103,7 +105,8 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 	}
 	else if(TypeIdentifier == "faction")
 	{
-		Result = new Faction(ClassIdentifier);
+		assert(ClassIdentifier.empty() == false);
+		Result = new Faction();
 	}
 	else if(TypeIdentifier == "generator")
 	{
@@ -126,6 +129,7 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 	}
 	else if(TypeIdentifier == "hangar")
 	{
+		assert(ClassIdentifier.empty() == true);
 		Result = new Hangar();
 	}
 	else if(TypeIdentifier == "mind")
@@ -141,7 +145,8 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 	}
 	else if(TypeIdentifier == "planet")
 	{
-		Result = new Planet(ClassIdentifier);
+		assert(ClassIdentifier.empty() == false);
+		Result = new Planet();
 	}
 	else if(TypeIdentifier == "ship")
 	{
@@ -223,10 +228,20 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		NewShot->GetAspectVisualization()->SetVisualizationPrototype(new VisualizationPrototype(WeaponClass->GetParticleVisualizationPrototype()));
 		Result = NewShot;
 	}
+	else if(TypeIdentifier == "star")
+	{
+		assert(ClassIdentifier.empty() == false);
+		Result = new Star();
+	}
 	else if(TypeIdentifier == "storage")
 	{
 		assert(ClassIdentifier.empty() == true);
 		Result = new Storage();
+	}
+	else if(TypeIdentifier == "system")
+	{
+		assert(ClassIdentifier.empty() == false);
+		Result = new System();
 	}
 	else if(TypeIdentifier == "weapon")
 	{

@@ -29,6 +29,7 @@ class Weapon : public Object
 {
 public:
 	Weapon(void);
+	virtual ~Weapon(void) override;
 	// getters
 	float GetEnergyUsagePerShot(void) const;
 	const Vector3f & GetParticleExitPosition(void) const;
