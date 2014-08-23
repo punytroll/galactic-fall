@@ -21,35 +21,35 @@
 #include "material.h"
 
 Graphics::Material::Material(void) :
-	m_DiffuseColor(0),
-	m_Shininess(0.0f),
-	m_SpecularColor(0)
+	_DiffuseColor(nullptr),
+	_Shininess(0.0f),
+	_SpecularColor(nullptr)
 {
 }
 
 Graphics::Material::Material(const Graphics::Material * Material) :
-	m_DiffuseColor((Material->m_DiffuseColor != 0) ? (new Color(Material->m_DiffuseColor)) : (0)),
-	m_Shininess(Material->m_Shininess),
-	m_SpecularColor((Material->m_SpecularColor != 0) ? (new Color(Material->m_SpecularColor)) : (0))
+	_DiffuseColor((Material->_DiffuseColor != nullptr) ? (new Color(Material->_DiffuseColor)) : (nullptr)),
+	_Shininess(Material->_Shininess),
+	_SpecularColor((Material->_SpecularColor != nullptr) ? (new Color(Material->_SpecularColor)) : (nullptr))
 {
 }
 
 Graphics::Material::~Material(void)
 {
-	delete m_DiffuseColor;
-	m_DiffuseColor = 0;
-	delete m_SpecularColor;
-	m_SpecularColor = 0;
+	delete _DiffuseColor;
+	_DiffuseColor = nullptr;
+	delete _SpecularColor;
+	_SpecularColor = nullptr;
 }
 
-void Graphics::Material::SetDiffuseColor(Color * DiffuseColor)
+void Graphics::Material::SetDiffuseColor(const Color & DiffuseColor)
 {
-	delete m_DiffuseColor;
-	m_DiffuseColor = DiffuseColor;
+	delete _DiffuseColor;
+	_DiffuseColor = new Color(DiffuseColor);
 }
 
-void Graphics::Material::SetSpecularColor(Color * SpecularColor)
+void Graphics::Material::SetSpecularColor(const Color & SpecularColor)
 {
-	delete m_SpecularColor;
-	m_SpecularColor = SpecularColor;
+	delete _SpecularColor;
+	_SpecularColor = new Color(SpecularColor);
 }

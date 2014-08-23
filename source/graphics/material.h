@@ -38,19 +38,13 @@ namespace Graphics
 		float GetShininess(void) const;
 		const Color * GetSpecularColor(void) const;
 		// setters
-		/**
-		 * @note This function transfers memory management responsibility for the @a DiffuseColor to the @a Graphics::Material.
-		 **/
-		void SetDiffuseColor(Color * DiffuseColor);
+		void SetDiffuseColor(const Color & DiffuseColor);
 		void SetShininess(float Shininess);
-		/**
-		 * @note This function transfers memory management responsibility for the @a SpecularColor to the @a Graphics::Material.
-		 **/
-		void SetSpecularColor(Color * SpecularColor);
+		void SetSpecularColor(const Color & SpecularColor);
 	private:
-		Color * m_DiffuseColor;
-		float m_Shininess;
-		Color * m_SpecularColor;
+		Color * _DiffuseColor;
+		float _Shininess;
+		Color * _SpecularColor;
 	private:
 		/**
 		 * @brief Hidden copy constructor.
@@ -65,22 +59,22 @@ namespace Graphics
 	
 	inline const Color * Material::GetDiffuseColor(void) const
 	{
-		return m_DiffuseColor;
+		return _DiffuseColor;
 	}
 	
 	inline float Material::GetShininess(void) const
 	{
-		return m_Shininess;
+		return _Shininess;
 	}
 	
 	inline const Color * Material::GetSpecularColor(void) const
 	{
-		return m_SpecularColor;
+		return _SpecularColor;
 	}
 	
 	inline void Material::SetShininess(float Shininess)
 	{
-		m_Shininess = Shininess;
+		_Shininess = Shininess;
 	}
 }
 

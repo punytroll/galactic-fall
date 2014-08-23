@@ -199,7 +199,7 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		
 		if(PartMaterials.find("faction") != PartMaterials.end())
 		{
-			PartMaterials["faction"]->SetDiffuseColor(new Color(g_Galaxy->GetFaction("neutral")->GetColor()));
+			PartMaterials["faction"]->SetDiffuseColor(g_Galaxy->GetFaction("neutral")->GetColor());
 		}
 		// set up storage if required
 		if(CreateNestedObjects == true)
