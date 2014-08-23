@@ -17,12 +17,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include "color.h"
 #include "faction.h"
 
-Faction::Faction(const std::string & Identifier) :
-	m_Color(0),
-	m_Identifier(Identifier)
+Faction::Faction(void)
 {
 	// initialize object aspects
 	AddAspectName();
@@ -30,12 +27,4 @@ Faction::Faction(const std::string & Identifier) :
 
 Faction::~Faction(void)
 {
-	delete m_Color;
-	m_Color = 0;
-}
-
-void Faction::SetColor(Color * Color)
-{
-	delete m_Color;
-	m_Color = Color;
 }

@@ -42,7 +42,7 @@ class Ship : public Object
 {
 public:
 	Ship(void);
-	virtual ~Ship(void);
+	virtual ~Ship(void) override;
 	// getters
 	Battery * GetBattery(void);
 	Storage * GetCargoHold(void);

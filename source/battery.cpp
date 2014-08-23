@@ -26,3 +26,7 @@ Battery::Battery(void)
 	AddAspectName();
 	AddAspectPhysical();
 }
+
+Battery::~Battery(void)
+{
+}

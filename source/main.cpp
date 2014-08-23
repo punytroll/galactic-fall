@@ -1299,7 +1299,7 @@ void SpawnShipOnTimeout(System * SpawnInSystem)
 {
 	std::stringstream IdentifierSuffix;
 	
-	IdentifierSuffix << "::created_at_game_time(" << std::fixed << GameTime::Get() << ")::in_system(" << SpawnInSystem->GetIdentifier() << ")";
+	IdentifierSuffix << "::created_at_game_time(" << std::fixed << GameTime::Get() << ")::in_system(" << SpawnInSystem->GetClassIdentifier() << ")";
 	
 	SpawnShip(SpawnInSystem, IdentifierSuffix.str());
 	g_SpawnShipTimeoutNotification = g_GameTimeTimeoutNotifications->Add(GameTime::Get() + GetRandomFloatFromExponentialDistribution(1.0f / SpawnInSystem->GetTrafficDensity()), std::bind(SpawnShipOnTimeout, SpawnInSystem));
@@ -1313,7 +1313,7 @@ void PopulateSystem(System * System)
 	{
 		std::stringstream IdentifierSuffix;
 		
-		IdentifierSuffix << "::created_at_game_time(" << std::fixed << GameTime::Get() << "[" << ShipNumber << "])::in_system(" << System->GetIdentifier() << ")";
+		IdentifierSuffix << "::created_at_game_time(" << std::fixed << GameTime::Get() << "[" << ShipNumber << "])::in_system(" << System->GetClassIdentifier() << ")";
 		
 		SpawnShip(System, IdentifierSuffix.str());
 	}
@@ -2294,7 +2294,7 @@ void SaveGame(std::ostream & OStream)
 	XML << element << "game-time" << attribute << "value" << value << GameTime::Get() << end;
 	if(g_CurrentSystem != nullptr)
 	{
-		XML << element << "current-system" << attribute << "identifier" << value << g_CurrentSystem->GetIdentifier() << end;
+		XML << element << "current-system" << attribute << "identifier" << value << g_CurrentSystem->GetClassIdentifier() << end;
 	}
 	XML << element << "time-warp" << attribute << "value" << value << g_TimeWarp << end;
 	if(g_InputMind.IsValid() == true)
@@ -2771,7 +2771,7 @@ void ActionSpawnFighter(void)
 {
 	std::stringstream IdentifierPrefix;
 	
-	IdentifierPrefix << "::system(" << g_CurrentSystem->GetIdentifier() << ")::created_at_game_time(" << std::fixed << GameTime::Get() << ")";
+	IdentifierPrefix << "::system(" << g_CurrentSystem->GetClassIdentifier() << ")::created_at_game_time(" << std::fixed << GameTime::Get() << ")";
 	SpawnShip(g_CurrentSystem, IdentifierPrefix.str(), "fighter");
 }
 
@@ -2781,7 +2781,7 @@ void ActionSpawnRandomShip(void)
 	
 	std::stringstream IdentifierPrefix;
 	
-	IdentifierPrefix << "::system(" << g_CurrentSystem->GetIdentifier() << ")::created_at_game_time(" << std::fixed << GameTime::Get() << ")";
+	IdentifierPrefix << "::system(" << g_CurrentSystem->GetClassIdentifier() << ")::created_at_game_time(" << std::fixed << GameTime::Get() << ")";
 	SpawnShip(g_CurrentSystem, IdentifierPrefix.str());
 }
 

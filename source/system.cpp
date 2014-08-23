@@ -53,8 +53,7 @@ namespace std
 	}
 }
 
-System::System(const std::string & Identifier) :
-	_Identifier(Identifier),
+System::System(void) :
 	_TrafficDensity(FLT_MAX),
 	_Star(nullptr)
 {
@@ -113,7 +112,7 @@ void System::_OnAdded(Object * Content)
 		assert(ThePlanet != nullptr);
 		for(auto Planet : _Planets)
 		{
-			if(Planet->GetIdentifier() == ThePlanet->GetClassIdentifier())
+			if(Planet->GetClassIdentifier() == ThePlanet->GetClassIdentifier())
 			{
 				assert(false);
 			}

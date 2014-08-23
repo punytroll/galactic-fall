@@ -36,9 +36,8 @@ class Visualization;
 class System : public Object
 {
 public:
-	System(const std::string & Identifier);
-	virtual ~System(void);
-	const std::string & GetIdentifier(void) const;
+	System(void);
+	virtual ~System(void) override;
 	const std::list< Commodity * > & GetCommodities(void) const;
 	const std::vector< Planet * > & GetPlanets(void) const;
 	const std::list< Ship * > & GetShips(void) const;
@@ -55,7 +54,6 @@ private:
 	void _OnAdded(Object * Content);
 	void _OnRemoved(Object * Content);
 	void _UpdateVisualization(Visualization * Visualization);
-	std::string _Identifier;
 	float _TrafficDensity;
 	Star * _Star;
 	std::vector< Planet * > _Planets;
@@ -64,11 +62,6 @@ private:
 	std::list< Commodity * > _Commodities;
 	std::list< Shot * > _Shots;
 };
-
-inline const std::string & System::GetIdentifier(void) const
-{
-	return _Identifier;
-}
 
 inline const std::list< Commodity * > & System::GetCommodities(void) const
 {

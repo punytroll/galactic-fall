@@ -27,22 +27,23 @@ class Star : public Object
 {
 public:
 	Star(void);
+	virtual ~Star(void) override;
 	// getters
 	const Color & GetColor(void) const;
 	// setters
 	void SetColor(const Color & Color);
 private:
-	Color m_Color;
+	Color _Color;
 };
 
 inline const Color & Star::GetColor(void) const
 {
-	return m_Color;
+	return _Color;
 }
 
 inline void Star::SetColor(const Color & Color)
 {
-	m_Color = Color;
+	_Color = Color;
 }
 
 #endif

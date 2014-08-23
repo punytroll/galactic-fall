@@ -20,8 +20,7 @@
 #ifndef FACTION_H
 #define FACTION_H
 
-#include <string>
-
+#include "color.h"
 #include "object.h"
 
 class Color;
@@ -29,29 +28,24 @@ class Color;
 class Faction : public Object
 {
 public:
-	Faction(const std::string & Identifier);
-	~Faction(void);
+	Faction(void);
+	virtual ~Faction(void) override;
 	// getters
-	Color * GetColor(void);
-	const std::string & GetIdentifier(void) const;
+	const Color & GetColor(void) const;
 	// setters
-	/**
-	 * @note This function passes memory management responsibility for the @a Color object to this faction object.
-	 **/
-	void SetColor(Color * Color);
+	void SetColor(const Color & Color);
 private:
-	Color * m_Color;
-	std::string m_Identifier;
+	Color _Color;
 };
 
-inline Color * Faction::GetColor(void)
+inline const Color & Faction::GetColor(void) const
 {
-	return m_Color;
+	return _Color;
 }
 
-inline const std::string & Faction::GetIdentifier(void) const
+inline void Faction::SetColor(const Color & Color)
 {
-	return m_Identifier;
+	_Color = Color;
 }
 
 #endif

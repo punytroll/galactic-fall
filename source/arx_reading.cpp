@@ -438,7 +438,7 @@ static void ReadFaction(Arxx::Reference & Reference)
 	
 	Reader >> Name >> FactionColor;
 	NewFaction->GetAspectName()->SetName(Name);
-	NewFaction->SetColor(new Color(&FactionColor));
+	NewFaction->SetColor(FactionColor);
 	g_Galaxy->GetAspectObjectContainer()->AddContent(NewFaction);
 }
 
@@ -785,11 +785,9 @@ static void ReadSystem(Arxx::Reference & Reference)
 	
 	Reader >> Identifier;
 	
-	System * NewSystem(new System(Identifier));
+	System * NewSystem(dynamic_cast< System * >(g_ObjectFactory->Create("system", Identifier, false)));
 	
-	NewSystem->SetTypeIdentifier("system");
-	NewSystem->SetClassIdentifier(Identifier);
-	NewSystem->SetObjectIdentifier("::system(" + NewSystem->GetIdentifier() + ")");
+	NewSystem->SetObjectIdentifier("::system(" + NewSystem->GetClassIdentifier() + ")");
 	
 	std::string Name;
 	Vector2f Position;
@@ -804,11 +802,9 @@ static void ReadSystem(Arxx::Reference & Reference)
 	NewSystem->GetAspectPosition()->SetPosition(Vector3f(Position[0], Position[1], 0.0f));
 	NewSystem->SetTrafficDensity(TrafficDensity);
 	
-	Star * NewStar(new Star());
+	Star * NewStar(dynamic_cast< Star * >(g_ObjectFactory->Create("star", StarIdentifier, false)));
 	
-	NewStar->SetTypeIdentifier("star");
-	NewStar->SetClassIdentifier(StarIdentifier);
-	NewStar->SetObjectIdentifier("::star(" + StarIdentifier + ")::in_system(" + NewSystem->GetIdentifier() + ")");
+	NewStar->SetObjectIdentifier("::star(" + StarIdentifier + ")::in_system(" + NewSystem->GetClassIdentifier() + ")");
 	NewStar->GetAspectPosition()->SetPosition(Vector3f(StarPosition[0], StarPosition[1], 0.0f));
 	NewStar->SetColor(StarColor);
 	NewSystem->GetAspectObjectContainer()->AddContent(NewStar);
@@ -820,7 +816,7 @@ static void ReadSystem(Arxx::Reference & Reference)
 		
 		Planet * NewPlanet(dynamic_cast< Planet * >(g_ObjectFactory->Create("planet", PlanetIdentifier, false)));
 		
-		NewPlanet->SetObjectIdentifier("::planet(" + NewPlanet->GetIdentifier() + ")::in_system(" + NewSystem->GetIdentifier() + ")");
+		NewPlanet->SetObjectIdentifier("::planet(" + NewPlanet->GetClassIdentifier() + ")::in_system(" + NewSystem->GetClassIdentifier() + ")");
 		
 		std::string Name;
 		std::string Description;
