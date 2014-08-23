@@ -974,10 +974,10 @@ static void ReadVisualizationPrototype(Arxx::BufferReader & Reader, Visualizatio
 		
 		Graphics::Material * PartMaterial(new Graphics::Material());
 		
-		PartMaterial->SetDiffuseColor(new Color(PartDiffuseColor));
+		PartMaterial->SetDiffuseColor(PartDiffuseColor);
 		if(PartUseSpecularColor == true)
 		{
-			PartMaterial->SetSpecularColor(new Color(PartSpecularColor));
+			PartMaterial->SetSpecularColor(PartSpecularColor);
 		}
 		PartMaterial->SetShininess(PartShininess);
 		VisualizationPrototype->SetPartMaterial(PartIdentifier, PartMaterial);

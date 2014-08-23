@@ -1208,7 +1208,7 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 	
 	if(PartMaterials.find("faction") != PartMaterials.end())
 	{
-		PartMaterials["faction"]->SetDiffuseColor(new Color(Faction->GetColor()));
+		PartMaterials["faction"]->SetDiffuseColor(Faction->GetColor());
 	}
 	NewShip->GetAspectPosition()->SetPosition(Vector3f(GetRandomFloat(-200.0f, 200.0f), GetRandomFloat(-200.0f, 200.0f), 0.0f));
 	NewShip->GetAspectPosition()->SetOrientation(Quaternion::CreateAsRotationZ(GetRandomFloat(0.0f, 2.0f * M_PI)));
@@ -1782,7 +1782,7 @@ void LoadGameFromElement(const Element * SaveElement)
 									assert(PartChild->HasAttribute("green") == true);
 									assert(PartChild->HasAttribute("blue") == true);
 									assert(PartChild->HasAttribute("opacity") == true);
-									NewPartMaterial->SetDiffuseColor(new Color(from_string_cast< float >(PartChild->GetAttribute("red")), from_string_cast< float >(PartChild->GetAttribute("green")), from_string_cast< float >(PartChild->GetAttribute("blue")), from_string_cast< float >(PartChild->GetAttribute("opacity"))));
+									NewPartMaterial->SetDiffuseColor(Color(from_string_cast< float >(PartChild->GetAttribute("red")), from_string_cast< float >(PartChild->GetAttribute("green")), from_string_cast< float >(PartChild->GetAttribute("blue")), from_string_cast< float >(PartChild->GetAttribute("opacity"))));
 								}
 								else if(PartChild->GetName() == "material-specular-color")
 								{
@@ -1790,7 +1790,7 @@ void LoadGameFromElement(const Element * SaveElement)
 									assert(PartChild->HasAttribute("green") == true);
 									assert(PartChild->HasAttribute("blue") == true);
 									assert(PartChild->HasAttribute("opacity") == true);
-									NewPartMaterial->SetSpecularColor(new Color(from_string_cast< float >(PartChild->GetAttribute("red")), from_string_cast< float >(PartChild->GetAttribute("green")), from_string_cast< float >(PartChild->GetAttribute("blue")), from_string_cast< float >(PartChild->GetAttribute("opacity"))));
+									NewPartMaterial->SetSpecularColor(Color(from_string_cast< float >(PartChild->GetAttribute("red")), from_string_cast< float >(PartChild->GetAttribute("green")), from_string_cast< float >(PartChild->GetAttribute("blue")), from_string_cast< float >(PartChild->GetAttribute("opacity"))));
 								}
 								else if(PartChild->GetName() == "material-shininess")
 								{
