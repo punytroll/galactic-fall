@@ -2646,32 +2646,26 @@ public:
 					copy(Points.begin(), Points.end(), back_inserter(g_Points));
 					copy(TrianglePoints.begin(), TrianglePoints.end(), back_inserter(g_TrianglePoints));
 					copy(Triangles.begin(), Triangles.end(), back_inserter(g_Triangles));
-					
-					const std::vector< LightDescription > & LightDescriptions(SceneReader.GetLightDescriptions());
-					
-					for(std::vector< LightDescription >::size_type stLightDescription = 0; stLightDescription < LightDescriptions.size(); ++stLightDescription)
+					for(auto & LightDescription : SceneReader.GetLightDescriptions())
 					{
-						Light * pLight(new Light());
+						auto NewLight(new Light());
 						
-						g_Lights.push_back(pLight);
-						pLight->SetPosition(LightDescriptions[stLightDescription].m_Position[0], LightDescriptions[stLightDescription].m_Position[1], LightDescriptions[stLightDescription].m_Position[2]);
-						pLight->vSetDiffuseColor(LightDescriptions[stLightDescription].m_DiffuseColor[0], LightDescriptions[stLightDescription].m_DiffuseColor[1], LightDescriptions[stLightDescription].m_DiffuseColor[2], LightDescriptions[stLightDescription].m_DiffuseColor[3]);
-						if(LightDescriptions[stLightDescription].m_bEnabled == true)
+						NewLight->SetPosition(LightDescription.m_Position[0], LightDescription.m_Position[1], LightDescription.m_Position[2]);
+						NewLight->vSetDiffuseColor(LightDescription.m_DiffuseColor[0], LightDescription.m_DiffuseColor[1], LightDescription.m_DiffuseColor[2], LightDescription.m_DiffuseColor[3]);
+						if(LightDescription.m_bEnabled == true)
 						{
-							pLight->vEnable();
+							NewLight->vEnable();
 						}
+						g_Lights.push_back(NewLight);
 					}
-					
-					const std::vector< CameraDescription > & CameraDescriptions(SceneReader.GetCameraDescriptions());
-					
-					for(std::vector< CameraDescription >::size_type stCameraDescription = 0; stCameraDescription < CameraDescriptions.size(); ++stCameraDescription)
+					for(auto & CameraDescription : SceneReader.GetCameraDescriptions())
 					{
-						Camera * pCamera(new Camera());
+						auto NewCamera(new Camera());
 						
-						pCamera->SetPosition(CameraDescriptions[stCameraDescription].Position[0], CameraDescriptions[stCameraDescription].Position[1], CameraDescriptions[stCameraDescription].Position[2]);
-						pCamera->m_Orientation = CameraDescriptions[stCameraDescription].Orientation;
-						pCamera->m_fFieldOfView = CameraDescriptions[stCameraDescription].FieldOfView;
-						g_Cameras.push_back(pCamera);
+						NewCamera->SetPosition(CameraDescription.Position[0], CameraDescription.Position[1], CameraDescription.Position[2]);
+						NewCamera->m_Orientation = CameraDescription.Orientation;
+						NewCamera->m_fFieldOfView = CameraDescription.FieldOfView;
+						g_Cameras.push_back(NewCamera);
 					}
 					if(g_Cameras.size() > 0)
 					{
@@ -2730,13 +2724,13 @@ public:
 					XMLStream XMLStream(OutputFileStream);
 					
 					XMLStream << element << "scene" << mesh(g_Points, g_TrianglePoints, g_Triangles) << end;
-					for(std::vector< Light * >::size_type stLight = 0; stLight < g_Lights.size(); ++stLight)
+					for(auto Light : g_Lights)
 					{
-						XMLStream << light(g_Lights[stLight]) << end;
+						XMLStream << light(Light) << end;
 					}
-					for(std::vector< Camera * >::size_type stCamera = 0; stCamera < g_Cameras.size(); ++stCamera)
+					for(auto Camera : g_Cameras)
 					{
-						XMLStream << camera(g_Cameras[stCamera]) << end;
+						XMLStream << camera(Camera) << end;
 					}
 				}
 				
@@ -3332,30 +3326,30 @@ int main(int argc, char ** argv)
 			OpenGLExtension.vActivate();
 		}
 	}
-	if((argc >= 2) && (std::string(argv[1]) == "--info"))
+	for(auto Argument : std::vector< std::string >(argv + 1, argv + argc))
 	{
-		std::cout << "Vendor: " << glGetString(GL_VENDOR) << std::endl;
-		std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
-		std::cout << "Version: " << glGetString(GL_VERSION) << std::endl;
-		std::cout << "Extensions: " << glGetString(GL_EXTENSIONS) << std::endl;
-		std::cout << std::endl << "littleM Extension Status:" << std::endl;
-		for(std::vector< OpenGLExtension >::iterator iOpenGLExtension = g_OpenGLExtensions.begin(); iOpenGLExtension != g_OpenGLExtensions.end(); ++iOpenGLExtension)
+		if(Argument == "--info")
 		{
-			std::cout << '\t' << iOpenGLExtension->sGetName() << ": ";
-			if(iOpenGLExtension->bIsActivated() == true)
+			std::cout << "Vendor: " << glGetString(GL_VENDOR) << std::endl;
+			std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
+			std::cout << "Version: " << glGetString(GL_VERSION) << std::endl;
+			std::cout << "Extensions: " << glGetString(GL_EXTENSIONS) << std::endl;
+			std::cout << std::endl << "littleM Extension Status:" << std::endl;
+			for(std::vector< OpenGLExtension >::iterator iOpenGLExtension = g_OpenGLExtensions.begin(); iOpenGLExtension != g_OpenGLExtensions.end(); ++iOpenGLExtension)
 			{
-				std::cout << "active" << std::endl;
-			}
-			else
-			{
-				std::cout << "inactive" << std::endl;
+				std::cout << '\t' << iOpenGLExtension->sGetName() << ": ";
+				if(iOpenGLExtension->bIsActivated() == true)
+				{
+					std::cout << "active" << std::endl;
+				}
+				else
+				{
+					std::cout << "inactive" << std::endl;
+				}
 			}
 		}
 	}
-	else
-	{
-		glutMainLoop();
-	}
+	glutMainLoop();
 	
 	return 0;
 }
