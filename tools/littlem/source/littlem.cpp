@@ -3325,11 +3325,11 @@ int main(int argc, char ** argv)
 	glutReshapeFunc(vReshape);
 	vSetupUserInterface();
 	g_sExtensionString = reinterpret_cast< const char * >(glGetString(GL_EXTENSIONS));
-	for(std::vector< OpenGLExtension >::iterator iOpenGLExtension = g_OpenGLExtensions.begin(); iOpenGLExtension != g_OpenGLExtensions.end(); ++iOpenGLExtension)
+	for(auto & OpenGLExtension : g_OpenGLExtensions)
 	{
-		if(bIsExtensionAvailable(iOpenGLExtension->sGetName()) == true)
+		if(bIsExtensionAvailable(OpenGLExtension.sGetName()) == true)
 		{
-			iOpenGLExtension->vActivate();
+			OpenGLExtension.vActivate();
 		}
 	}
 	if((argc >= 2) && (std::string(argv[1]) == "--info"))
