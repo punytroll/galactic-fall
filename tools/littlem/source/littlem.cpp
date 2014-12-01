@@ -1922,6 +1922,7 @@ public:
 	virtual bool bAcceptKey(int iKeyCode)
 	{
 		bool bKeyAccepted(false);
+		int Modifiers(glutGetModifiers());
 		
 		switch(iKeyCode)
 		{
@@ -2007,8 +2008,6 @@ public:
 			}
 		case LITTLEM_KEY_N:
 			{
-				int Modifiers(glutGetModifiers());
-				
 				if(Modifiers == 0)
 				{
 				// create new point at random coordinates within (-1.0 .. 1.0, -1.0 .. 1.0, -1.0 .. 1.0)
@@ -2027,7 +2026,7 @@ public:
 		case LITTLEM_KEY_T:
 			{
 				// select all triangles which contain the selected points
-				if(glutGetModifiers() == 0)
+				if(Modifiers == 0)
 				{
 					if(g_SelectedPoints.size() > 0)
 					{
@@ -2159,13 +2158,14 @@ public:
 	virtual bool bAcceptKey(int iKeyCode)
 	{
 		bool bKeyAccepted(false);
+		int Modifiers(glutGetModifiers());
 		
 		switch(iKeyCode)
 		{
 		case LITTLEM_KEY_I:
 			{
 				// change triangle front and back
-				if(glutGetModifiers() == 0)
+				if(Modifiers == 0)
 				{
 					if(g_SelectedTriangles.size() > 0)
 					{
@@ -2182,7 +2182,7 @@ public:
 			}
 		case LITTLEM_KEY_S:
 			{
-				if(glutGetModifiers() == 0)
+				if(Modifiers == 0)
 				{
 					for(std::vector< Point * >::size_type stPoint = 0; stPoint < g_SelectedPoints.size(); ++stPoint)
 					{
@@ -2209,7 +2209,7 @@ public:
 			}
 		case LITTLEM_KEY_T:
 			{
-				if(glutGetModifiers() == 0)
+				if(Modifiers == 0)
 				{
 					if(g_SelectedTriangles.size() > 0)
 					{
@@ -2305,12 +2305,13 @@ public:
 	virtual bool bAcceptKey(int iKeyCode)
 	{
 		bool bKeyAccepted(false);
+		int Modifiers(glutGetModifiers());
 		
 		switch(iKeyCode)
 		{
 		case LITTLEM_KEY_C:
 			{
-				if(glutGetModifiers() == 0)
+				if(Modifiers == 0)
 				{
 					Camera * pCamera(new Camera());
 					
@@ -2326,7 +2327,7 @@ public:
 			}
 		case LITTLEM_KEY_SPACE:
 			{
-				if(glutGetModifiers() == 0)
+				if(Modifiers == 0)
 				{
 					if(g_pHoveredCamera != 0)
 					{
@@ -2538,18 +2539,17 @@ public:
 	virtual bool bAcceptKey(int iKeyCode)
 	{
 		bool bKeyAccepted(true);
+		int Modifiers(glutGetModifiers());
 		
 		switch(iKeyCode)
 		{
 		case LITTLEM_KEY_C:
 			{
-				int iModifiers(glutGetModifiers());
-				
-				if(iModifiers == GLUT_ACTIVE_ALT)
+				if(Modifiers == GLUT_ACTIVE_ALT)
 				{
 					vToggleCullFace();
 				}
-				else if(iModifiers == GLUT_ACTIVE_SHIFT)
+				else if(Modifiers == GLUT_ACTIVE_SHIFT)
 				{
 					vSetKeyAcceptor(&m_CameraView);
 					g_CurrentView.vSetString("Camera View");
@@ -2560,9 +2560,7 @@ public:
 			}
 		case LITTLEM_KEY_D:
 			{
-				int iModifiers(glutGetModifiers());
-				
-				if(iModifiers == GLUT_ACTIVE_ALT)
+				if(Modifiers == GLUT_ACTIVE_ALT)
 				{
 					vToggleDepthTest();
 				}
@@ -2571,9 +2569,7 @@ public:
 			}
 		case LITTLEM_KEY_E:
 			{
-				int iModifiers(glutGetModifiers());
-				
-				if(iModifiers == GLUT_ACTIVE_ALT)
+				if(Modifiers == GLUT_ACTIVE_ALT)
 				{
 					std::cout << "Exporting to mesh.xml." << std::endl;
 					
@@ -2587,9 +2583,7 @@ public:
 			}
 		case LITTLEM_KEY_F:
 			{
-				int iModifiers(glutGetModifiers());
-				
-				if(iModifiers == GLUT_ACTIVE_ALT)
+				if(Modifiers == GLUT_ACTIVE_ALT)
 				{
 					vToggleFrontFace();
 				}
@@ -2598,9 +2592,7 @@ public:
 			}
 		case LITTLEM_KEY_I:
 			{
-				int iModifiers(glutGetModifiers());
-				
-				if(iModifiers == GLUT_ACTIVE_ALT)
+				if(Modifiers == GLUT_ACTIVE_ALT)
 				{
 					std::cout << "Importing from mesh.xml." << std::endl;
 					
@@ -2623,13 +2615,11 @@ public:
 			}
 		case LITTLEM_KEY_L:
 			{
-				int iModifiers(glutGetModifiers());
-				
-				if(iModifiers == GLUT_ACTIVE_ALT)
+				if(Modifiers == GLUT_ACTIVE_ALT)
 				{
 					vToggleLighting();
 				}
-				else if(iModifiers == GLUT_ACTIVE_SHIFT)
+				else if(Modifiers == GLUT_ACTIVE_SHIFT)
 				{
 					std::cout << "Loading scene.xml." << std::endl;
 					vClearScene();
@@ -2688,7 +2678,7 @@ public:
 			}
 		case LITTLEM_KEY_M:
 			{
-				if(glutGetModifiers() == GLUT_ACTIVE_SHIFT)
+				if(Modifiers == GLUT_ACTIVE_SHIFT)
 				{
 					vSetKeyAcceptor(0);
 					g_CurrentView.vSetString("Model View");
@@ -2699,7 +2689,7 @@ public:
 			}
 		case LITTLEM_KEY_P:
 			{
-				if(glutGetModifiers() == GLUT_ACTIVE_SHIFT)
+				if(Modifiers == GLUT_ACTIVE_SHIFT)
 				{
 					vSetKeyAcceptor(&m_PointView);
 					g_CurrentView.vSetString("Point View");
@@ -2710,13 +2700,11 @@ public:
 			}
 		case LITTLEM_KEY_S:
 			{
-				int iModifiers(glutGetModifiers());
-				
-				if(iModifiers == GLUT_ACTIVE_ALT)
+				if(Modifiers == GLUT_ACTIVE_ALT)
 				{
 					vToggleSnapping();
 				}
-				else if(iModifiers == GLUT_ACTIVE_SHIFT)
+				else if(Modifiers == GLUT_ACTIVE_SHIFT)
 				{
 					std::cout << "Saving scene.xml." << std::endl;
 					
@@ -2738,7 +2726,7 @@ public:
 			}
 		case LITTLEM_KEY_T:
 			{
-				if(glutGetModifiers() == GLUT_ACTIVE_SHIFT)
+				if(Modifiers == GLUT_ACTIVE_SHIFT)
 				{
 					vSetKeyAcceptor(&m_TriangleView);
 					g_CurrentView.vSetString("Triangle View");
@@ -2804,9 +2792,7 @@ public:
 			}
 		case LITTLEM_KEY_ASTERISK:
 			{
-				int iModifiers(glutGetModifiers());
-				
-				if(iModifiers == GLUT_ACTIVE_ALT)
+				if(Modifiers == GLUT_ACTIVE_ALT)
 				{
 					vTogglePointSmooth();
 				}
