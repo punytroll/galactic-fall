@@ -3321,10 +3321,10 @@ int main(int argc, char ** argv)
 			std::cout << "Version: " << glGetString(GL_VERSION) << std::endl;
 			std::cout << "Extensions: " << glGetString(GL_EXTENSIONS) << std::endl;
 			std::cout << std::endl << "littleM Extension Status:" << std::endl;
-			for(std::vector< OpenGLExtension >::iterator iOpenGLExtension = g_OpenGLExtensions.begin(); iOpenGLExtension != g_OpenGLExtensions.end(); ++iOpenGLExtension)
+			for(auto & Extension : g_OpenGLExtensions)
 			{
-				std::cout << '\t' << iOpenGLExtension->sGetName() << ": ";
-				if(iOpenGLExtension->bIsActivated() == true)
+				std::cout << '\t' << Extension.sGetName() << ": ";
+				if(Extension.bIsActivated() == true)
 				{
 					std::cout << "active" << std::endl;
 				}
