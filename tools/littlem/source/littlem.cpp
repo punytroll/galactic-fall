@@ -23,6 +23,7 @@
 #include <xml_stream/xml_stream.h>
 
 #include "widgets/widgets.h"
+#include "xmlparser.h"
 
 // define names for keys which are not yet defined by GLUT
 #define GLUT_KEY_BACKSPACE 8
@@ -118,121 +119,11 @@
 
 #define CHECK_GL_ERROR() vCheckGLError(__FILE__, __LINE__)
 
-// XML writing
-struct XMLPoint
-{
-	unsigned long m_Identifier;
-	Vector3f m_Position;
-	std::string m_Name;
-};
-
-inline XMLPoint point(unsigned long Identifier, const Vector3f & Position, const std::string & Name)
-{
-	XMLPoint Point;
-	
-	Point.m_Identifier = Identifier;
-	Point.m_Position = Position;
-	Point.m_Name = Name;
-	
-	return Point;
-}
-
-XMLStream & operator<<(XMLStream & XMLStream, const XMLPoint & Point)
-{
-	XMLStream << element << "point" << attribute << "identifier" << value << Point.m_Identifier << attribute << "position-x" << value << Point.m_Position[0] << attribute << "position-y" << value << Point.m_Position[1] << attribute << "position-z" << value << Point.m_Position[2] << attribute << "name" << value << Point.m_Name;
-	
-	return XMLStream;
-}
-
-struct XMLPointReference
-{
-	unsigned long m_PointIdentifier;
-};
-
-inline XMLPointReference point(unsigned long PointIdentifier)
-{
-	XMLPointReference Point;
-	
-	Point.m_PointIdentifier = PointIdentifier;
-	
-	return Point;
-}
-
-XMLStream & operator<<(XMLStream & XMLStream, const XMLPointReference & PointReference)
-{
-	XMLStream << element << "point" << attribute << "point-identifier" << value <<PointReference.m_PointIdentifier;
-	
-	return XMLStream;
-}
-
-struct XMLTriangle
-{
-	unsigned long m_Identifier;
-	std::string m_Name;
-};
-
-inline XMLTriangle triangle(unsigned long Identifier, const std::string & Name)
-{
-	XMLTriangle Triangle;
-	
-	Triangle.m_Identifier = Identifier;
-	Triangle.m_Name = Name;
-	
-	return Triangle;
-}
-
-XMLStream & operator<<(XMLStream & XMLStream, const XMLTriangle & Triangle)
-{
-	XMLStream << element << "triangle" << attribute << "identifier" << value << Triangle.m_Identifier << attribute << "name" << value << Triangle.m_Name;
-	
-	return XMLStream;
-}
-
-struct XMLTrianglePoint
-{
-	unsigned long m_TrianglePointIdentifier;
-	Vector3f m_Normal;
-};
-
-inline XMLTrianglePoint trianglepoint(unsigned long TrianglePointIdentifier, const Vector3f & Normal)
-{
-	XMLTrianglePoint TrianglePoint;
-	
-	TrianglePoint.m_TrianglePointIdentifier = TrianglePointIdentifier;
-	TrianglePoint.m_Normal = Normal;
-	
-	return TrianglePoint;
-}
-
-XMLStream & operator<<(XMLStream & XMLStream, const XMLTrianglePoint & TrianglePoint)
-{
-	XMLStream << element << "triangle-point" << attribute << "identifier" << value << TrianglePoint.m_TrianglePointIdentifier << attribute << "normal-x" << value << TrianglePoint.m_Normal[0] << attribute << "normal-y" << value << TrianglePoint.m_Normal[1] << attribute << "normal-z" << value << TrianglePoint.m_Normal[2];
-	
-	return XMLStream;
-}
-
-struct XMLTrianglePointReference
-{
-	unsigned long m_TrianglePointIdentifier;
-};
-
-inline XMLTrianglePointReference trianglepoint(unsigned long TrianglePointIdentifier)
-{
-	XMLTrianglePointReference TrianglePointReference;
-	
-	TrianglePointReference.m_TrianglePointIdentifier = TrianglePointIdentifier;
-	
-	return TrianglePointReference;
-}
-
-XMLStream & operator<<(XMLStream & XMLStream, const XMLTrianglePointReference & TrianglePointReference)
-{
-	XMLStream << element << "triangle-point" << attribute << "triangle-point-identifier" << value << TrianglePointReference.m_TrianglePointIdentifier;
-	
-	return XMLStream;
-}
-
-#include "xmlparser.h"
+#ifndef NDEBUG
+#define ON_DEBUG(A) (A)
+#else
+#define ON_DEBUG(A)
+#endif
 
 enum
 {
@@ -261,56 +152,6 @@ int g_FrontAxis;
 #include "point.h"
 #include "triangle.h"
 #include "triangle_point.h"
-
-struct XMLMesh
-{
-	XMLMesh(const std::vector< Point * > & Points, const std::vector< TrianglePoint * > & TrianglePoints, const std::vector< Triangle * > & Triangles) :
-		m_Points(Points),
-		m_TrianglePoints(TrianglePoints),
-		m_Triangles(Triangles)
-	{
-	}
-	
-	const std::vector< Point * > & m_Points;
-	const std::vector< TrianglePoint * > & m_TrianglePoints;
-	const std::vector< Triangle * > & m_Triangles;
-};
-
-inline XMLMesh mesh(const std::vector< Point * > & Points, const std::vector< TrianglePoint * > & TrianglePoints, const std::vector< Triangle * > & Triangles)
-{
-	return XMLMesh(Points, TrianglePoints, Triangles);
-}
-
-XMLStream & operator<<(XMLStream & XMLStream, XMLMesh Mesh)
-{
-	XMLStream << element << "mesh";
-	
-	std::map< Point *, unsigned long > PointMap;
-	std::map< TrianglePoint *, unsigned long > TrianglePointMap;
-	
-	for(std::vector< Point * >::size_type stPoint = 0; stPoint < Mesh.m_Points.size(); ++stPoint)
-	{
-		XMLStream << point(stPoint, Mesh.m_Points[stPoint]->GetPosition(), Mesh.m_Points[stPoint]->sGetName()) << end;
-		PointMap[Mesh.m_Points[stPoint]] = stPoint;
-	}
-	for(std::vector< TrianglePoint * >::size_type stTrianglePoint = 0; stTrianglePoint < Mesh.m_TrianglePoints.size(); ++stTrianglePoint)
-	{
-		XMLStream << trianglepoint(stTrianglePoint, Mesh.m_TrianglePoints[stTrianglePoint]->m_Normal);
-		XMLStream << point(PointMap[Mesh.m_TrianglePoints[stTrianglePoint]->m_pPoint]) << end;
-		XMLStream << end;
-		TrianglePointMap[Mesh.m_TrianglePoints[stTrianglePoint]] = stTrianglePoint;
-	}
-	for(std::vector< Triangle * >::size_type stTriangle = 0; stTriangle < Mesh.m_Triangles.size(); ++stTriangle)
-	{
-		XMLStream << triangle(stTriangle, Mesh.m_Triangles[stTriangle]->sGetName());
-		XMLStream << trianglepoint(TrianglePointMap[Mesh.m_Triangles[stTriangle]->pGetTrianglePoint(1)]) << end;
-		XMLStream << trianglepoint(TrianglePointMap[Mesh.m_Triangles[stTriangle]->pGetTrianglePoint(2)]) << end;
-		XMLStream << trianglepoint(TrianglePointMap[Mesh.m_Triangles[stTriangle]->pGetTrianglePoint(3)]) << end;
-		XMLStream << end;
-	}
-	
-	return XMLStream;
-}
 
 class MeshReader : public XMLParser
 {
@@ -2501,6 +2342,48 @@ public:
 	}
 };
 
+XMLStream & mesh(XMLStream & XMLStream)
+{
+	XMLStream << element << "mesh";
+	
+	std::map< Point *, unsigned long > PointMap;
+	std::map< TrianglePoint *, unsigned long > TrianglePointMap;
+	unsigned long PointIdentifier(0);
+	
+	for(auto Point : g_Points)
+	{
+		XMLStream << element << "point" << attribute << "identifier" << value << PointIdentifier << attribute << "position-x" << value << Point->GetPosition()[0] << attribute << "position-y" << value << Point->GetPosition()[1] << attribute << "position-z" << value << Point->GetPosition()[2] << attribute << "name" << value << Point->sGetName() << end;
+		PointMap[Point] = PointIdentifier;
+		++PointIdentifier;
+	}
+	
+	unsigned long TrianglePointIdentifier(0);
+	
+	for(auto TrianglePoint : g_TrianglePoints)
+	{
+		XMLStream << element << "triangle-point" << attribute << "identifier" << value << TrianglePointIdentifier << attribute << "normal-x" << value << TrianglePoint->m_Normal[0] << attribute << "normal-y" << value << TrianglePoint->m_Normal[1] << attribute << "normal-z" << value << TrianglePoint->m_Normal[2];
+		XMLStream << element << "point" << attribute << "point-identifier" << value << PointMap[TrianglePoint->m_pPoint] << end;
+		XMLStream << end;
+		TrianglePointMap[TrianglePoint] = TrianglePointIdentifier;
+		++TrianglePointIdentifier;
+	}
+	
+	unsigned long TriangleIdentifier(0);
+	
+	for(auto Triangle : g_Triangles)
+	{
+		XMLStream << element << "triangle" << attribute << "identifier" << value << TriangleIdentifier << attribute << "name" << value << Triangle->sGetName();
+		XMLStream << element << "triangle-point" << attribute << "triangle-point-identifier" << value << TrianglePointMap[Triangle->pGetTrianglePoint(1)] << end;
+		XMLStream << element << "triangle-point" << attribute << "triangle-point-identifier" << value << TrianglePointMap[Triangle->pGetTrianglePoint(2)] << end;
+		XMLStream << element << "triangle-point" << attribute << "triangle-point-identifier" << value << TrianglePointMap[Triangle->pGetTrianglePoint(3)] << end;
+		XMLStream << end;
+		++TriangleIdentifier;
+	}
+	XMLStream << end;
+	
+	return XMLStream;
+}
+
 Label g_CurrentView;
 
 class ModelView : public Widget
@@ -2560,7 +2443,7 @@ public:
 					std::ofstream OutputFileStream("mesh.xml");
 					XMLStream XMLStream(OutputFileStream);
 					
-					XMLStream << mesh(g_Points, g_TrianglePoints, g_Triangles) << end;
+					XMLStream << mesh;
 				}
 				
 				break;
@@ -2695,7 +2578,7 @@ public:
 					std::ofstream OutputFileStream("scene.xml");
 					XMLStream XMLStream(OutputFileStream);
 					
-					XMLStream << element << "scene" << mesh(g_Points, g_TrianglePoints, g_Triangles) << end;
+					XMLStream << element << "scene" << mesh;
 					for(auto Light : g_Lights)
 					{
 						XMLStream << light(Light) << end;
