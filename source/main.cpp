@@ -3599,7 +3599,6 @@ void PrintSettings(void)
 
 int main(int argc, char ** argv)
 {
-	ON_DEBUG(std::cout << to_string_cast(true) << std::endl);
 	// setup the random number generator for everyday use
 	srand(time(0));
 	// parse command line
