@@ -1,12 +1,10 @@
 #include <assert.h>
+#include <math.h>
 #include <stdlib.h>
-
-#define GL_GLEXT_PROTOTYPES
 
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <GL/glut.h>
-#include <math.h>
 
 #include <algorithm>
 #include <iostream>
@@ -25,9 +23,6 @@
 #include <xml_stream/xml_stream.h>
 
 #include "widgets/widgets.h"
-
-#define glPointParameterfv(A, B) glPointParameterfvARB((A), (B))
-#define glPointParameterf(A, B) glPointParameterfARB((A), (B))
 
 // define names for keys which are not yet defined by GLUT
 #define GLUT_KEY_BACKSPACE 8
@@ -238,12 +233,6 @@ XMLStream & operator<<(XMLStream & XMLStream, const XMLTrianglePointReference & 
 }
 
 #include "xmlparser.h"
-
-enum
-{
-	LM_OGLE_ARB_point_parameters,
-	LM_OGLE_LM_number_of_extensions
-};
 
 enum
 {
@@ -720,17 +709,12 @@ int g_iLastMotionY = -1;
 int g_iMouseX = 0;
 int g_iMouseY = 0;
 bool g_bMoved = false;
-std::string g_sExtensionString;
 GLuint g_puiSelectionBuffer[1024];
 bool g_bSnapping = false;
 float g_fSnapFactor = 0.1;
 int g_iMouseButtonFlags = 0;
 std::deque< int > g_FreeLights;
 UserInterface g_UserInterface;
-
-#include "opengl_extension.h"
-
-std::vector< OpenGLExtension > g_OpenGLExtensions;
 
 void vCheckGLError(const char * pcFile, int iLine)
 {
@@ -2813,32 +2797,6 @@ public:
 				
 				break;
 			}
-		case LITTLEM_KEY_SLASH:
-			{
-				if(g_OpenGLExtensions[LM_OGLE_ARB_point_parameters].bIsActivated() == true)
-				{
-					GLfloat fPointFadeThresholdSize(0);
-					
-					glGetFloatv(GL_POINT_FADE_THRESHOLD_SIZE, &fPointFadeThresholdSize);
-					if(fPointFadeThresholdSize == 1.0f)
-					{
-						GLfloat pfPointDistanceAttenuation[3] = { 0.01f, 0.009f, 0.3f};
-						
-						glPointParameterfv(GL_POINT_DISTANCE_ATTENUATION, pfPointDistanceAttenuation);
-						glPointParameterf(GL_POINT_FADE_THRESHOLD_SIZE, 3.0f);
-					}
-					else
-					{
-						GLfloat pfPointDistanceAttenuation[3] = { 1.0f, 0.0f, 0.0f};
-						
-						glPointParameterfv(GL_POINT_DISTANCE_ATTENUATION, pfPointDistanceAttenuation);
-						glPointParameterf(GL_POINT_FADE_THRESHOLD_SIZE, 1.0f);
-					}
-					glutPostRedisplay();
-				}
-				
-				break;
-			}
 		case LITTLEM_KEY_LEFT_BRACKET:
 			{
 				if(g_SelectedTriangles.size() == 1)
@@ -2957,32 +2915,6 @@ public:
 					MovePosition(g_pSelectedLight, 2, -0.01);
 					glutPostRedisplay();
 					bKeyAccepted = true;
-				}
-				
-				break;
-			}
-		case LITTLEM_KEY_F12:
-			{
-				if(g_OpenGLExtensions[LM_OGLE_ARB_point_parameters].bIsActivated() == true)
-				{
-					GLfloat fPointSizeMin(0.0f);
-					GLfloat fPointSizeMax(0.0f);
-					GLfloat pfPointDistanceAttenuation[3] = { 0.0f, 0.0f, 0.0f };
-					GLfloat fPointFadeThresholdSize(0.0f);
-					
-					glGetFloatv(GL_POINT_SIZE_MIN, &fPointSizeMin);
-					CHECK_GL_ERROR();
-					glGetFloatv(GL_POINT_SIZE_MAX, &fPointSizeMax);
-					CHECK_GL_ERROR();
-					glGetFloatv(GL_POINT_DISTANCE_ATTENUATION, pfPointDistanceAttenuation);
-					CHECK_GL_ERROR();
-					glGetFloatv(GL_POINT_FADE_THRESHOLD_SIZE, &fPointFadeThresholdSize);
-					CHECK_GL_ERROR();
-					std::cout << "Extension \"" << g_OpenGLExtensions[LM_OGLE_ARB_point_parameters].sGetName() << "\"\n";
-					std::cout << "\tGL_POINT_SIZE_MIN = " << fPointSizeMin << "\n";
-					std::cout << "\tGL_POINT_SIZE_MAX = " << fPointSizeMax << "\n";
-					std::cout << "\tGL_POINT_DISTANCE_ATTENUATION = [ " << pfPointDistanceAttenuation[0] << " , " << pfPointDistanceAttenuation[1] << " , " << pfPointDistanceAttenuation[2] << " ]\n";
-					std::cout << "\tGL_POINT_FADE_THRESHOLD_SIZE = " << fPointFadeThresholdSize << std::endl;
 				}
 				
 				break;
@@ -3216,21 +3148,6 @@ void vReshape(int iWidth, int iHeight)
 	glutPostRedisplay();
 }
 
-bool bIsExtensionAvailable(const std::string & sExtensionName)
-{
-	if((sExtensionName != "") || (sExtensionName.find(' ') == std::string::npos))
-	{
-		std::string::size_type stPos = g_sExtensionString.find(sExtensionName);
-		
-		if((stPos != std::string::npos) && ((stPos == 0) || (g_sExtensionString[stPos - 1] == ' ')))
-		{
-			return true;
-		}
-	}
-	
-	return false;
-}
-
 void vSetupUserInterface(void)
 {
 	Widget * pRootWidget(new Widget());
@@ -3282,8 +3199,6 @@ void vInit(void)
 int main(int argc, char ** argv)
 {
 	// <static-initialization>
-	g_OpenGLExtensions.resize(LM_OGLE_LM_number_of_extensions);
-	g_OpenGLExtensions[LM_OGLE_ARB_point_parameters].vSetName("GL_ARB_point_parameters");
 	g_UpAxis = LITTLEM_AXIS_POSITIVE_Z;
 	g_FrontAxis = LITTLEM_AXIS_NEGATIVE_X;
 	// </static-initialization>
@@ -3304,14 +3219,6 @@ int main(int argc, char ** argv)
 	glutPassiveMotionFunc(vPassiveMouseMotion);
 	glutReshapeFunc(vReshape);
 	vSetupUserInterface();
-	g_sExtensionString = reinterpret_cast< const char * >(glGetString(GL_EXTENSIONS));
-	for(auto & OpenGLExtension : g_OpenGLExtensions)
-	{
-		if(bIsExtensionAvailable(OpenGLExtension.sGetName()) == true)
-		{
-			OpenGLExtension.vActivate();
-		}
-	}
 	for(auto Argument : std::vector< std::string >(argv + 1, argv + argc))
 	{
 		if(Argument == "--info")
@@ -3320,19 +3227,6 @@ int main(int argc, char ** argv)
 			std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
 			std::cout << "Version: " << glGetString(GL_VERSION) << std::endl;
 			std::cout << "Extensions: " << glGetString(GL_EXTENSIONS) << std::endl;
-			std::cout << std::endl << "littleM Extension Status:" << std::endl;
-			for(auto & Extension : g_OpenGLExtensions)
-			{
-				std::cout << '\t' << Extension.sGetName() << ": ";
-				if(Extension.bIsActivated() == true)
-				{
-					std::cout << "active" << std::endl;
-				}
-				else
-				{
-					std::cout << "inactive" << std::endl;
-				}
-			}
 		}
 	}
 	glutMainLoop();
