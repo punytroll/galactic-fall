@@ -137,9 +137,9 @@ void Settings::LoadFromItem(Arxx::Item * Item)
 		{
 			throw std::runtime_error("The item '" + WindowDimensionsItem->GetName() + "' does not have the type '" + to_string_cast(DATA_TYPE_DIMENSIONS) + "' but the type '" + to_string_cast(WindowDimensionsItem->GetType()) + "'.");
 		}
-		if(WindowDimensionsItem->GetSubType() != DATA_TYPE_DIMENSIONS_SUB_TYPE_2_FLOATS)
+		if(WindowDimensionsItem->GetSubType() != DATA_TYPE_DIMENSIONS_SUB_TYPE_DIMENSIONS2F)
 		{
-			throw std::runtime_error("The item '" + WindowDimensionsItem->GetName() + "' does not have the sub type '" + to_string_cast(DATA_TYPE_DIMENSIONS_SUB_TYPE_2_FLOATS) + "' but the sub type '" + to_string_cast(WindowDimensionsItem->GetSubType()) + "'.");
+			throw std::runtime_error("The item '" + WindowDimensionsItem->GetName() + "' does not have the sub type '" + to_string_cast(DATA_TYPE_DIMENSIONS_SUB_TYPE_DIMENSIONS2F) + "' but the sub type '" + to_string_cast(WindowDimensionsItem->GetSubType()) + "'.");
 		}
 		MakeItemAvailable(WindowDimensionsItem);
 		

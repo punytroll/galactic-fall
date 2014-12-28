@@ -2,7 +2,7 @@
 	
 	<accepted-slot-class is="string"/>
 	
-	<asset-class>
+	<asset-class type="4">
 		<string identifier="identifier"/>
 		<string identifier="name"/>
 		<float identifier="base-price"/>
@@ -11,7 +11,7 @@
 		<string identifier="object-class"/>
 	</asset-class>
 	
-	<battery-class>
+	<battery-class type="12">
 		<string identifier="identifier"/>
 		<string identifier="name"/>
 		<visualization identifier="visualization"/>
@@ -33,25 +33,27 @@
 		<float identifier="opacity"/>
 	</color4f>
 	
-	<commodity-class>
+	<commodity-class type="8">
 		<string identifier="identifier"/>
 		<string identifier="name"/>
 		<u4byte identifier="space-requirement"/>
 		<visualization identifier="visualization"/>
 	</commodity-class>
 	
-	<dimensions2f>
+	<dimensions type="15"/>
+	
+	<dimensions2f type="15" sub-type="0">
 		<float identifier="width"/>
 		<float identifier="height"/>
 	</dimensions2f>
 	
-	<faction>
+	<faction type="14">
 		<string identifier="identifier"/>
 		<string identifier="name"/>
 		<color4f identifier="color"/>
 	</faction>
 	
-	<generator-class>
+	<generator-class type="13">
 		<string identifier="identifier"/>
 		<string identifier="name"/>
 		<u4byte identifier="space-requirement"/>
@@ -65,7 +67,7 @@
 		<string identifier="action"/>
 	</key-binding>
 	
-	<key-binding-profile>
+	<key-binding-profile type="16">
 		<array identifier="key-bindings"/>
 	</key-binding-profile>
 	
@@ -85,7 +87,7 @@
 		<float identifier="shininess"/>
 	</material>
 	
-	<mesh>
+	<mesh type="2">
 		<string identifier="identifier"/>
 		<array identifier="points"/>
 		<array identifier="triangle-points"/>
@@ -101,7 +103,7 @@
 		<widget identifier="widget"/>
 	</mini-map-display>
 	
-	<model>
+	<model type="11">
 		<string identifier="identifier"/>
 		<array identifier="mesh-parts"/>
 	</model>
@@ -160,14 +162,14 @@
 		<widget identifier="widget"/>
 	</scanner-display>
 	
-	<scenario>
+	<scenario type="17">
 		<string identifier="identifier"/>
 		<string identifier="name"/>
 		<string identifier="description"/>
 		<file identifier="savegame-file"/>
 	</scenario>
 	
-	<ship-class>
+	<ship-class type="3">
 		<string identifier="identifier"/>
 		<name-aspect identifier="name-aspect"/>
 		<physical-aspect identifier="physical-aspect"/>
@@ -195,7 +197,7 @@
 		<boolean identifier="visualize-accessory"/>
 	</slot>
 	
-	<slot-class>
+	<slot-class type="9">
 		<string identifier="identifier"/>
 		<string identifier="name"/>
 		<array identifier="accepted-slot-classes"/>
@@ -207,7 +209,7 @@
 		<color4f identifier="color"/>
 	</star>
 	
-	<system>
+	<system type="5">
 		<string identifier="identifier"/>
 		<string identifier="name"/>
 		<vector2f identifier="position"/>
@@ -216,12 +218,12 @@
 		<array identifier="planets"/>
 	</system>
 	
-	<system-link>
+	<system-link type="6">
 		<string identifier="system-1-identifier"/>
 		<string identifier="system-2-identifier"/>
 	</system-link>
 	
-	<texture>
+	<texture type="10" sub-type="0">
 		<string identifier="identifier"/>
 		<file identifier="tex-file"/>
 	</texture>
@@ -261,7 +263,7 @@
 		<material identifier="material"/>
 	</visualization-part>
 	
-	<weapon-class>
+	<weapon-class type="7">
 		<string identifier="identifier"/>
 		<string identifier="name"/>
 		<visualization identifier="visualization"/>
@@ -273,7 +275,7 @@
 		<particle identifier="particle"/>
 	</weapon-class>
 	
-	<widget>
+	<widget type="1" sub-type="0">
 		<string identifier="widget-path"/>
 		<string identifier="name"/>
 		<vector2f identifier="position"/>
