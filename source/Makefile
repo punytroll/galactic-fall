@@ -41,6 +41,7 @@ all-recursive: all-here
 clean: clean-recursive
 
 clean-here:
+	$(RM) $(GENERATED_FILES)
 	$(RM) binary
 	$(RM) $(OBJECT_FILES)
 	@MORE_OBJECT_FILES="$(filter-out $(OBJECT_FILES),$(wildcard $(OBJECT_DIRECTORY)/*.o))"; \
