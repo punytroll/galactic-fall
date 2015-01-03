@@ -153,7 +153,7 @@ data.arx: $(data_arx) $(arxtouch_dependencies) $(arxadd_dependencies)
 	$(command_arxadd) $@ --identifier=10 --name="Scenarios" --type=0 --sub-type=0 --relation=0::child
 	@echo "\n\nAdding settings ...\n"
 	$(command_arxadd) $@ --name="Key Binding Profile" --type=10 --sub-type=0 --relation="/Settings::child" --data-file=.data/setting_key_binding_profile.data
-	$(command_arxadd) $@ --name="Window Dimensions" --type=f --sub-type=1 --relation="/Settings::child" --data-file=.data/setting_window_dimensions.data
+	$(command_arxadd) $@ --name="Window Dimensions" --type=f --sub-type=0 --relation="/Settings::child" --data-file=.data/setting_window_dimensions.data
 	@echo "\n\nAdding factions ...\n"
 	$(command_arxadd) $@ --name="Earth Faction" --type=e --sub-type=0 --relation="/Factions::child" --data-file=.data/faction_earth.data
 	$(command_arxadd) $@ --name="Neutral Faction" --type=e --sub-type=0 --relation="/Factions::child" --data-file=.data/faction_neutral.data
