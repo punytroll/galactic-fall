@@ -24,7 +24,7 @@
 Graphics::TextureRenderTarget::TextureRenderTarget(void) :
 	_FramebufferName(0),
 	_RenderbufferName(0),
-	_Texture(0)
+	_Texture(nullptr)
 {
 }
 
@@ -32,23 +32,23 @@ Graphics::TextureRenderTarget::~TextureRenderTarget(void)
 {
 	assert(_FramebufferName == 0);
 	assert(_RenderbufferName == 0);
-	assert(_Texture == 0);
+	assert(_Texture == nullptr);
 }
 
 void Graphics::TextureRenderTarget::Activate(void)
 {
 	assert(_FramebufferName != 0);
 	GLBindFramebuffer(GL_FRAMEBUFFER, _FramebufferName);
-	assert(_Texture != 0);
+	assert(_Texture != nullptr);
 	GLViewport(0, 0, _Texture->GetWidth(), _Texture->GetHeight());
 }
 
 void Graphics::TextureRenderTarget::SetTexture(Graphics::Texture * Texture)
 {
-	if(Texture == 0)
+	if(Texture == nullptr)
 	{
-		assert(_Texture != 0);
-		_Texture = 0;
+		assert(_Texture != nullptr);
+		_Texture = nullptr;
 		GLDeleteRenderbuffers(1, &_RenderbufferName);
 		_RenderbufferName = 0;
 		GLDeleteFramebuffers(1, &_FramebufferName);
@@ -56,7 +56,7 @@ void Graphics::TextureRenderTarget::SetTexture(Graphics::Texture * Texture)
 	}
 	else
 	{
-		assert(_Texture == 0);
+		assert(_Texture == nullptr);
 		_Texture = Texture;
 		_Texture->Activate();
 		assert(_FramebufferName == 0);
