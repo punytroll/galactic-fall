@@ -29,13 +29,13 @@
 
 UI::ViewDisplay::ViewDisplay(Widget * SupWidget) :
 	Widget(SupWidget),
-	_View(0)
+	_View(nullptr)
 {
 }
 
 UI::ViewDisplay::~ViewDisplay(void)
 {
-	assert(_View == 0);
+	assert(_View == nullptr);
 }
 	
 Graphics::View * UI::ViewDisplay::GetView(void)
@@ -45,15 +45,15 @@ Graphics::View * UI::ViewDisplay::GetView(void)
 
 void UI::ViewDisplay::SetView(Graphics::View * View)
 {
-	if(View == 0)
+	if(View == nullptr)
 	{
-		assert(_View != 0);
+		assert(_View != nullptr);
 		g_PrerenderedViews.erase(std::find(g_PrerenderedViews.begin(), g_PrerenderedViews.end(), _View));
-		_View = 0;
+		_View = nullptr;
 	}
 	else
 	{
-		assert(_View == 0);
+		assert(_View == nullptr);
 		_View = View;
 		g_PrerenderedViews.push_back(_View);
 	}
@@ -62,14 +62,14 @@ void UI::ViewDisplay::SetView(Graphics::View * View)
 void UI::ViewDisplay::Draw(void)
 {
 	Widget::Draw();
-	if(_View != 0)
+	if(_View != nullptr)
 	{
-		assert(_View->GetRenderTarget() != 0);
+		assert(_View->GetRenderTarget() != nullptr);
 		
 		Graphics::TextureRenderTarget * TextureRenderTarget(dynamic_cast< Graphics::TextureRenderTarget * >(_View->GetRenderTarget()));
 		
-		assert(TextureRenderTarget != 0);
-		assert(TextureRenderTarget->GetTexture() != 0);
+		assert(TextureRenderTarget != nullptr);
+		assert(TextureRenderTarget->GetTexture() != nullptr);
 		TextureRenderTarget->GetTexture()->Activate();
 		GLPushAttrib(GL_ENABLE_BIT | GL_COLOR_BUFFER_BIT);
 		GLDisable(GL_LIGHTING);
