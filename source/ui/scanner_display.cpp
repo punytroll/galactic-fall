@@ -26,7 +26,6 @@
 #include "../graphics/perspective_projection.h"
 #include "../graphics/scene.h"
 #include "../graphics/texture.h"
-#include "../graphics/texture_manager.h"
 #include "../graphics/texture_render_target.h"
 #include "../graphics/view.h"
 #include "../object.h"
