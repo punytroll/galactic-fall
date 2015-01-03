@@ -2386,6 +2386,24 @@ XMLStream & mesh(XMLStream & XMLStream)
 
 Label g_CurrentView;
 
+void ImportMesh(const std::string & FilePath)
+{
+	std::cout << "Importing from \"" << FilePath << "\"." << std::endl;
+	
+	std::ifstream InputFileStream(FilePath);
+	MeshReader MeshReader(InputFileStream);
+	
+	MeshReader.parse();
+	
+	std::vector< Point * > Points(MeshReader.GetPoints());
+	std::vector< TrianglePoint * > TrianglePoints(MeshReader.GetTrianglePoints());
+	std::vector< Triangle * > Triangles(MeshReader.GetTriangles());
+	
+	copy(Points.begin(), Points.end(), back_inserter(g_Points));
+	copy(TrianglePoints.begin(), TrianglePoints.end(), back_inserter(g_TrianglePoints));
+	copy(Triangles.begin(), Triangles.end(), back_inserter(g_Triangles));
+}
+
 class ModelView : public Widget
 {
 public:
@@ -2461,20 +2479,7 @@ public:
 			{
 				if(Modifiers == GLUT_ACTIVE_ALT)
 				{
-					std::cout << "Importing from mesh.xml." << std::endl;
-					
-					std::ifstream InputFileStream("mesh.xml");
-					MeshReader MeshReader(InputFileStream);
-					
-					MeshReader.parse();
-					
-					std::vector< Point * > Points(MeshReader.GetPoints());
-					std::vector< TrianglePoint * > TrianglePoints(MeshReader.GetTrianglePoints());
-					std::vector< Triangle * > Triangles(MeshReader.GetTriangles());
-					
-					copy(Points.begin(), Points.end(), back_inserter(g_Points));
-					copy(TrianglePoints.begin(), TrianglePoints.end(), back_inserter(g_TrianglePoints));
-					copy(Triangles.begin(), Triangles.end(), back_inserter(g_Triangles));
+					ImportMesh("mesh.xml");
 					glutPostRedisplay();
 				}
 				
@@ -3079,6 +3084,24 @@ void vInit(void)
 	vResetView(LITTLEM_VIEW_FRONT);
 }
 
+bool StartsWith(const std::string & One, const std::string & Two)
+{
+	auto OneIterator(One.begin());
+	auto OneEnd(One.end());
+	auto TwoIterator(Two.begin());
+	auto TwoEnd(Two.end());
+	
+	for(; (OneIterator != OneEnd) && (TwoIterator != TwoEnd); ++OneIterator, ++TwoIterator)
+	{
+		if(*OneIterator != *TwoIterator)
+		{
+			return false;
+		}
+	}
+	
+	return TwoIterator == TwoEnd;
+}
+
 int main(int argc, char ** argv)
 {
 	// <static-initialization>
@@ -3102,6 +3125,13 @@ int main(int argc, char ** argv)
 	glutPassiveMotionFunc(vPassiveMouseMotion);
 	glutReshapeFunc(vReshape);
 	vSetupUserInterface();
+	for(auto Argument : std::vector< std::string >(argv + 1, argv + argc))
+	{
+		if(StartsWith(Argument, "--import-mesh=") == true)
+		{
+			ImportMesh(Argument.substr(14));
+		}
+	}
 	glutMainLoop();
 	
 	return 0;
