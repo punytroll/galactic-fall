@@ -60,9 +60,9 @@ void Graphics::TextureRenderTarget::SetTexture(Graphics::Texture * Texture)
 		_Texture = Texture;
 		_Texture->Activate();
 		assert(_FramebufferName == 0);
-		
 		GLGenFramebuffers(1, &_FramebufferName);
 		GLBindFramebuffer(GL_FRAMEBUFFER, _FramebufferName);
+		assert(_RenderbufferName == 0);
 		GLGenRenderbuffers(1, &_RenderbufferName);
 		GLBindRenderbuffer(GL_RENDERBUFFER, _RenderbufferName);
 		GLRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, _Texture->GetWidth(), _Texture->GetHeight());
