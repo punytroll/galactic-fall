@@ -33,7 +33,6 @@
 #include "object_aspect_accessory.h"
 #include "object_aspect_outfitting.h"
 #include "object_aspect_physical.h"
-#include "object_aspect_position.h"
 #include "object_aspect_visualization.h"
 #include "planet.h"
 #include "ship.h"
@@ -49,12 +48,12 @@
 // This map holds the References to the Graphics::Nodes that have to be referenced in the Game subsystem
 std::map< Graphics::Node *, ObjectAspectVisualization * > g_ObjectVisualizations;
 
-static void VisualizeCommodity(Commodity * Commodity, Graphics::Node * Container);
-static void VisualizePlanet(Planet * Planet, Graphics::Node * Container);
-static void VisualizeShip(Ship * Ship, Graphics::Node * Container);
-static void VisualizeShot(Shot * Shot, Graphics::Node * Container);
-static void VisualizeSystem(System * System, Graphics::Node * Container);
-static void VisualizeWeapon(Weapon * Weapon, Graphics::Node * Container);
+static Visualization * VisualizeCommodity(Commodity * Commodity, Graphics::Node * Container);
+static Visualization * VisualizePlanet(Planet * Planet, Graphics::Node * Container);
+static Visualization * VisualizeShip(Ship * Ship, Graphics::Node * Container);
+static Visualization * VisualizeShot(Shot * Shot, Graphics::Node * Container);
+static Visualization * VisualizeSystem(System * System, Graphics::Node * Container);
+static Visualization * VisualizeWeapon(Weapon * Weapon, Graphics::Node * Container);
 
 void InvalidateVisualizationReference(Graphics::Node * Node)
 {
@@ -67,31 +66,31 @@ void InvalidateVisualizationReference(Graphics::Node * Node)
 	}
 }
 
-void VisualizeObject(Object * Object, Graphics::Node * Container)
+Visualization * VisualizeObject(Object * Object, Graphics::Node * Container)
 {
 	if(Object->GetTypeIdentifier() == "commodity")
 	{
-		VisualizeCommodity(static_cast< Commodity * >(Object), Container);
+		return VisualizeCommodity(static_cast< Commodity * >(Object), Container);
 	}
 	else if(Object->GetTypeIdentifier() == "planet")
 	{
-		VisualizePlanet(static_cast< Planet * >(Object), Container);
+		return VisualizePlanet(static_cast< Planet * >(Object), Container);
 	}
 	else if(Object->GetTypeIdentifier() == "ship")
 	{
-		VisualizeShip(static_cast< Ship * >(Object), Container);
+		return VisualizeShip(static_cast< Ship * >(Object), Container);
 	}
 	else if(Object->GetTypeIdentifier() == "shot")
 	{
-		VisualizeShot(static_cast< Shot * >(Object), Container);
+		return VisualizeShot(static_cast< Shot * >(Object), Container);
 	}
 	else if(Object->GetTypeIdentifier() == "system")
 	{
-		VisualizeSystem(static_cast< System * >(Object), Container);
+		return VisualizeSystem(static_cast< System * >(Object), Container);
 	}
 	else if(Object->GetTypeIdentifier() == "weapon")
 	{
-		VisualizeWeapon(static_cast< Weapon * >(Object), Container);
+		return VisualizeWeapon(static_cast< Weapon * >(Object), Container);
 	}
 	else
 	{
@@ -100,24 +99,25 @@ void VisualizeObject(Object * Object, Graphics::Node * Container)
 	}
 }
 
-void VisualizeCommodity(Commodity * Commodity, Graphics::Node * Container)
+Visualization * VisualizeCommodity(Commodity * Commodity, Graphics::Node * Container)
 {
-	assert(Commodity != 0);
-	assert(Commodity->GetAspectVisualization() != 0);
-	assert(Commodity->GetAspectVisualization()->GetVisualizationPrototype() != 0);
+	assert(Commodity != nullptr);
+	assert(Commodity->GetAspectVisualization() != nullptr);
+	assert(Commodity->GetAspectVisualization()->GetVisualizationPrototype() != nullptr);
 	
 	Graphics::Node * Graphics(VisualizePrototype(Commodity->GetAspectVisualization()->GetVisualizationPrototype()));
 	
 	Graphics->SetUseLighting(true);
-	assert(Commodity->GetAspectPosition() != 0);
-	Graphics->SetOrientation(Commodity->GetAspectPosition()->GetOrientation());
-	Graphics->SetPosition(Commodity->GetAspectPosition()->GetPosition());
 	g_ObjectVisualizations[Graphics] = Commodity->GetAspectVisualization();
+	
 	// set as the object's visualization
-	Commodity->GetAspectVisualization()->AddGraphics(Graphics);
+	auto Visualization(Commodity->GetAspectVisualization()->CreateVisualizationForGraphics(Graphics));
+	
 	// add to the scene
-	assert(Container != 0);
+	assert(Container != nullptr);
 	Container->AddNode(Graphics);
+	
+	return Visualization;
 }
 
 void VisualizeParticleSystem(Graphics::ParticleSystem * ParticleSystem, System * System)
@@ -133,8 +133,8 @@ void VisualizeParticleSystem(Graphics::ParticleSystem * ParticleSystem, System *
 
 void VisualizeParticleSystem(Graphics::ParticleSystem * ParticleSystem, Graphics::Node * Container)
 {
-	assert(ParticleSystem != 0);
-	assert(Container != 0);
+	assert(ParticleSystem != nullptr);
+	assert(Container != nullptr);
 	
 	Graphics::ParticleSystemNode * Graphics(new Graphics::ParticleSystemNode());
 	
@@ -142,50 +142,50 @@ void VisualizeParticleSystem(Graphics::ParticleSystem * ParticleSystem, Graphics
 	Container->AddNode(Graphics);
 }
 
-void VisualizePlanet(Planet * Planet, Graphics::Node * Container)
+Visualization * VisualizePlanet(Planet * Planet, Graphics::Node * Container)
 {
-	assert(Planet != 0);
-	assert(Planet->GetAspectVisualization() != 0);
-	assert(Planet->GetAspectVisualization()->GetVisualizationPrototype() != 0);
+	assert(Planet != nullptr);
+	assert(Planet->GetAspectVisualization() != nullptr);
+	assert(Planet->GetAspectVisualization()->GetVisualizationPrototype() != nullptr);
 	
 	Graphics::Node * Graphics(VisualizePrototype(Planet->GetAspectVisualization()->GetVisualizationPrototype()));
 	
 	Graphics->SetUseLighting(true);
-	Graphics->SetOrientation(Quaternion(true));
-	assert(Planet->GetAspectPosition() != 0);
-	Graphics->SetPosition(Planet->GetAspectPosition()->GetPosition());
-	assert(Planet->GetAspectPhysical() != 0);
+	assert(Planet->GetAspectPhysical() != nullptr);
 	Graphics->SetScale(Planet->GetAspectPhysical()->GetRadialSize());
 	Graphics->SetNormalize(true);
 	g_ObjectVisualizations[Graphics] = Planet->GetAspectVisualization();
+	
 	// set as the object's visualization
-	Planet->GetAspectVisualization()->AddGraphics(Graphics);
+	auto Visualization(Planet->GetAspectVisualization()->CreateVisualizationForGraphics(Graphics));
+	
 	// add to the scene
-	assert(Container != 0);
+	assert(Container != nullptr);
 	Container->AddNode(Graphics);
+	
+	return Visualization;
 }
 
-void VisualizeShip(Ship * Ship, Graphics::Node * Container)
+Visualization * VisualizeShip(Ship * Ship, Graphics::Node * Container)
 {
-	assert(Ship != 0);
-	assert(Ship->GetAspectVisualization() != 0);
-	assert(Ship->GetAspectVisualization()->GetVisualizationPrototype() != 0);
+	assert(Ship != nullptr);
+	assert(Ship->GetAspectVisualization() != nullptr);
+	assert(Ship->GetAspectVisualization()->GetVisualizationPrototype() != nullptr);
 	
 	Graphics::Node * Graphics(VisualizePrototype(Ship->GetAspectVisualization()->GetVisualizationPrototype()));
 	
 	Graphics->SetUseLighting(true);
-	assert(Ship->GetAspectPosition() != 0);
-	Graphics->SetOrientation(Ship->GetAspectPosition()->GetOrientation());
-	Graphics->SetPosition(Ship->GetAspectPosition()->GetPosition());
 	g_ObjectVisualizations[Graphics] = Ship->GetAspectVisualization();
+	
 	// set as the object's visualization
-	Ship->GetAspectVisualization()->AddGraphics(Graphics);
+	auto Visualization(Ship->GetAspectVisualization()->CreateVisualizationForGraphics(Graphics));
+	
 	// add to the scene
-	assert(Container != 0);
+	assert(Container != nullptr);
 	Container->AddNode(Graphics);
 	
 	// add accessory visualizations
-	assert(Ship->GetAspectOutfitting() != 0);
+	assert(Ship->GetAspectOutfitting() != nullptr);
 	
 	const std::map< std::string, Slot * > & Slots(Ship->GetAspectOutfitting()->GetSlots());
 	
@@ -197,32 +197,35 @@ void VisualizeShip(Ship * Ship, Graphics::Node * Container)
 		}
 	}
 	// add engine glow particle system
-	assert(Ship->GetEngineGlowParticleSystem() != 0);
+	assert(Ship->GetEngineGlowParticleSystem() != nullptr);
 	VisualizeParticleSystem(Ship->GetEngineGlowParticleSystem(), Graphics);
+	
+	return Visualization;
 }
 
-void VisualizeShot(Shot * Shot, Graphics::Node * Container)
+Visualization * VisualizeShot(Shot * Shot, Graphics::Node * Container)
 {
-	assert(Shot != 0);
-	assert(Shot->GetAspectVisualization() != 0);
-	assert(Shot->GetAspectVisualization()->GetVisualizationPrototype() != 0);
+	assert(Shot != nullptr);
+	assert(Shot->GetAspectVisualization() != nullptr);
+	assert(Shot->GetAspectVisualization()->GetVisualizationPrototype() != nullptr);
 	
 	Graphics::Node * Graphics(VisualizePrototype(Shot->GetAspectVisualization()->GetVisualizationPrototype()));
 	
 	Graphics->SetUseBlending(true);
 	Graphics->SetUseLighting(false);
-	assert(Shot->GetAspectPosition() != 0);
-	Graphics->SetOrientation(Shot->GetAspectPosition()->GetOrientation());
-	Graphics->SetPosition(Shot->GetAspectPosition()->GetPosition());
 	g_ObjectVisualizations[Graphics] = Shot->GetAspectVisualization();
+	
 	// set as the object's visualization
-	Shot->GetAspectVisualization()->AddGraphics(Graphics);
+	auto Visualization(Shot->GetAspectVisualization()->CreateVisualizationForGraphics(Graphics));
+	
 	// add to the scene
-	assert(Container != 0);
+	assert(Container != nullptr);
 	Container->AddNode(Graphics);
+	
+	return Visualization;
 }
 
-void VisualizeSystem(System * System, Graphics::Node * Container)
+Visualization * VisualizeSystem(System * System, Graphics::Node * Container)
 {
 	assert(System != nullptr);
 	assert(System->GetAspectVisualization() != nullptr);
@@ -230,8 +233,10 @@ void VisualizeSystem(System * System, Graphics::Node * Container)
 	auto Graphics(new Graphics::SystemNode());
 	
 	g_ObjectVisualizations[Graphics] = System->GetAspectVisualization();
+	
 	// set as the object's visualization
-	System->GetAspectVisualization()->AddGraphics(Graphics);
+	auto Visualization(System->GetAspectVisualization()->CreateVisualizationForGraphics(Graphics));
+	
 	// add visualizations for all objects in the system
 	for(auto Planet : System->GetPlanets())
 	{
@@ -247,26 +252,29 @@ void VisualizeSystem(System * System, Graphics::Node * Container)
 	// add to the container node
 	assert(Container != nullptr);
 	Container->AddNode(Graphics);
+	
+	return Visualization;
 }
 
-void VisualizeWeapon(Weapon * Weapon, Graphics::Node * Container)
+Visualization * VisualizeWeapon(Weapon * Weapon, Graphics::Node * Container)
 {
-	assert(Weapon != 0);
-	assert(Weapon->GetAspectVisualization() != 0);
-	assert(Weapon->GetAspectVisualization()->GetVisualizationPrototype() != 0);
+	assert(Weapon != nullptr);
+	assert(Weapon->GetAspectVisualization() != nullptr);
+	assert(Weapon->GetAspectVisualization()->GetVisualizationPrototype() != nullptr);
 	
 	Graphics::Node * Graphics(VisualizePrototype(Weapon->GetAspectVisualization()->GetVisualizationPrototype()));
 	
 	Graphics->SetUseLighting(true);
-	assert(Weapon->GetAspectPosition() != 0);
-	Graphics->SetOrientation(Weapon->GetAspectAccessory()->GetSlot()->GetOrientation() * Weapon->GetAspectPosition()->GetOrientation());
-	Graphics->SetPosition(Weapon->GetAspectAccessory()->GetSlot()->GetPosition() + Weapon->GetAspectPosition()->GetPosition());
 	g_ObjectVisualizations[Graphics] = Weapon->GetAspectVisualization();
+	
 	// set as the object's visualization
-	Weapon->GetAspectVisualization()->AddGraphics(Graphics);
+	auto Visualization(Weapon->GetAspectVisualization()->CreateVisualizationForGraphics(Graphics));
+	
 	// add to the container node
-	assert(Container != 0);
+	assert(Container != nullptr);
 	Container->AddNode(Graphics);
+	
+	return Visualization;
 }
 
 Graphics::Node * VisualizePrototype(const VisualizationPrototype * VisualizationPrototype)

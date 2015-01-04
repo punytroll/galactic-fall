@@ -22,11 +22,13 @@
 #include "visualization.h"
 
 Visualization::Visualization(void) :
-	_Graphics(0)
+	_Graphics(nullptr),
+	_UpdateOrientation(true),
+	_UpdatePosition(true)
 {
 }
 
 Visualization::~Visualization(void)
 {
-	assert(_Graphics == 0);
+	assert(_Graphics == nullptr);
 }

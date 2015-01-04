@@ -33,6 +33,7 @@
 #include "../object_aspect_position.h"
 #include "../star.h"
 #include "../system.h"
+#include "../visualization.h"
 #include "../visualizations.h"
 #include "event.h"
 #include "scanner_display.h"
@@ -42,7 +43,6 @@ UI::ScannerDisplay::ScannerDisplay(UI::Widget * SupWidget) :
 	_Target(nullptr)
 {
 	ConnectDestroyingCallback(std::bind(&UI::ScannerDisplay::_OnDestroying, this, std::placeholders::_1));
-	ConnectUpdatingCallback(std::bind(&UI::ScannerDisplay::_OnUpdating, this, std::placeholders::_1, std::placeholders::_2));
 }
 
 void UI::ScannerDisplay::SetTarget(Object * Target)
@@ -116,18 +116,6 @@ void UI::ScannerDisplay::_OnDestroyInScene(Graphics::Node * Node)
 	delete Node;
 }
 
-void UI::ScannerDisplay::_OnUpdating(float RealTimeSeconds, float GameTimeSeconds)
-{
-	if(_Target != nullptr)
-	{
-		assert(_Target->GetAspectPhysical() != nullptr);
-		assert(_Target->GetAspectPosition() != nullptr);
-		assert(GetView() != nullptr);
-		assert(GetView()->GetCamera() != nullptr);
-		GetView()->GetCamera()->SetSpacialMatrix(Matrix4f::CreateFromTranslationComponents(_Target->GetAspectPosition()->GetPosition()[0], _Target->GetAspectPosition()->GetPosition()[1], 4.0f * _Target->GetAspectPhysical()->GetRadialSize()));
-	}
-}
-
 void UI::ScannerDisplay::_OnTargetDestroying(void)
 {
 	_Clear();
@@ -155,7 +143,7 @@ void UI::ScannerDisplay::_Setup(void)
 	assert(View->GetCamera() != nullptr);
 	View->GetCamera()->SetProjection(PerspectiveProjection);
 	assert(_Target->GetAspectPosition() != nullptr);
-	View->GetCamera()->SetSpacialMatrix(Matrix4f::CreateFromTranslationComponents(_Target->GetAspectPosition()->GetPosition()[0], _Target->GetAspectPosition()->GetPosition()[1], 4.0f * RadialSize));
+	View->GetCamera()->SetSpacialMatrix(Matrix4f::CreateFromTranslationComponents(0.0f, 0.0f, 4.0f * RadialSize));
 	
 	auto Scene(new Graphics::Scene());
 	
@@ -188,6 +176,9 @@ void UI::ScannerDisplay::_Setup(void)
 	RootNode->SetUseLighting(true);
 	RootNode->SetUseDepthTest(true);
 	Scene->SetRootNode(RootNode);
-	VisualizeObject(_Target, RootNode);
+	
+	auto Visualization(VisualizeObject(_Target, RootNode));
+	
+	Visualization->SetUpdatePosition(false);
 	SetView(View);
 }

@@ -33,10 +33,16 @@ public:
 	~Visualization(void);
 	// getters
 	Graphics::Node * GetGraphics(void);
+	bool GetUpdateOrientation(void);
+	bool GetUpdatePosition(void);
 	// setters
 	void SetGraphics(Graphics::Node * Graphics);
+	void SetUpdateOrientation(bool UpdateOrientation);
+	void SetUpdatePosition(bool UpdatePosition);
 private:
 	Graphics::Node * _Graphics;
+	bool _UpdateOrientation;
+	bool _UpdatePosition;
 };
 
 inline Graphics::Node * Visualization::GetGraphics(void)
@@ -44,9 +50,29 @@ inline Graphics::Node * Visualization::GetGraphics(void)
 	return _Graphics;
 }
 
+inline bool Visualization::GetUpdateOrientation(void)
+{
+	return _UpdateOrientation;
+}
+
+inline bool Visualization::GetUpdatePosition(void)
+{
+	return _UpdatePosition;
+}
+
 inline void Visualization::SetGraphics(Graphics::Node * Graphics)
 {
 	_Graphics = Graphics;
+}
+
+inline void Visualization::SetUpdateOrientation(bool UpdateOrientation)
+{
+	_UpdateOrientation = UpdateOrientation;
+}
+
+inline void Visualization::SetUpdatePosition(bool UpdatePosition)
+{
+	_UpdatePosition = UpdatePosition;
 }
 
 #endif
