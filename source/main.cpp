@@ -3005,11 +3005,14 @@ void InitializeOpenGL(void)
 {
 	ON_DEBUG(std::cout << "Loading OpenGL functions." << std::endl);
 	LoadOpenGLFunction(glBegin);
+	LoadOpenGLFunction(glBindBuffer);
 	LoadOpenGLFunction(glBindFramebuffer);
 	LoadOpenGLFunction(glBindRenderbuffer);
 	LoadOpenGLFunction(glBindTexture);
+	LoadOpenGLFunction(glBindVertexArray);
 	LoadOpenGLFunction(glBitmap);
 	LoadOpenGLFunction(glBlendFunc);
+	LoadOpenGLFunction(glBufferData);
 	LoadOpenGLFunction(glCallLists);
 	LoadOpenGLFunction(glCheckFramebufferStatus);
 	LoadOpenGLFunction(glClear);
@@ -3023,17 +3026,21 @@ void InitializeOpenGL(void)
 	LoadOpenGLFunction(glDeleteRenderbuffers);
 	LoadOpenGLFunction(glDeleteTextures);
 	LoadOpenGLFunction(glDisable);
+	LoadOpenGLFunction(glDrawArrays);
 	LoadOpenGLFunction(glEnable);
+	LoadOpenGLFunction(glEnableVertexAttribArray);
 	LoadOpenGLFunction(glEnd);
 	LoadOpenGLFunction(glEndList);
 	LoadOpenGLFunction(glFramebufferRenderbuffer);
 	LoadOpenGLFunction(glFramebufferTexture);
+	LoadOpenGLFunction(glGenBuffers);
 	LoadOpenGLFunction(glGenFramebuffers);
 	LoadOpenGLFunction(glGenLists);
 	LoadOpenGLFunction(glGenRenderbuffers);
 	LoadOpenGLFunction(glGenTextures);
 	LoadOpenGLFunction(glGetIntegerv);
 	LoadOpenGLFunction(glGetString);
+	LoadOpenGLFunction(glGenVertexArrays);
 	LoadOpenGLFunction(glLightfv);
 	LoadOpenGLFunction(glLightModelfv);
 	LoadOpenGLFunction(glListBase);
@@ -3065,6 +3072,7 @@ void InitializeOpenGL(void)
 	LoadOpenGLFunction(glVertex2fv);
 	LoadOpenGLFunction(glVertex3f);
 	LoadOpenGLFunction(glVertex3fv);
+	LoadOpenGLFunction(glVertexAttribPointer);
 	LoadOpenGLFunction(glViewport);
 	
 	ON_DEBUG(std::cout << "OpenGL capabilities:" << std::endl);
