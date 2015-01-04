@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 1.8.5 of algebra.
+ * This is part of version 1.8.7 of algebra.
  **/
 
 #ifndef ALGEBRA_AXIS_ANGLE_H
@@ -60,7 +60,7 @@ public:
 		_[3] = Angle;
 	}
 	
-	float operator[](int Index) const
+	const float & operator[](int Index) const
 	{
 		return _[Index];
 	}
