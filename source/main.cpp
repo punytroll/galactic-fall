@@ -1364,7 +1364,11 @@ void OnOutputEnterSystem(System * EnterSystem)
 	RootNode->SetClearColorBuffer(true);
 	RootNode->SetClearDepthBuffer(true);
 	MainScene->SetRootNode(RootNode);
-	VisualizeObject(EnterSystem, RootNode);
+	
+	auto Visualization(VisualizeObject(EnterSystem, RootNode));
+	
+	Visualization->SetUpdateOrientation(false);
+	Visualization->SetUpdatePosition(false);
 	assert(g_UIView != 0);
 	assert(g_UIView->GetScene() != 0);
 	assert(g_UIView->GetScene()->GetRootNode() != 0);

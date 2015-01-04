@@ -25,6 +25,7 @@
 #include "globals.h"
 #include "graphics/system_node.h"
 #include "object_aspect_object_container.h"
+#include "object_aspect_position.h"
 #include "object_aspect_visualization.h"
 #include "planet.h"
 #include "ship.h"
@@ -247,5 +248,15 @@ void System::AddLinkedSystem(System * LinkedSystem)
 
 void System::_UpdateVisualization(Visualization * Visualization)
 {
-	// intentionally left empty: visualizations of systems don't get their positions updated
+	assert(Visualization != nullptr);
+	assert(Visualization->GetGraphics() != nullptr);
+	assert(GetAspectPosition() != nullptr);
+	if(Visualization->GetUpdateOrientation() == true)
+	{
+		Visualization->GetGraphics()->SetOrientation(GetAspectPosition()->GetOrientation());
+	}
+	if(Visualization->GetUpdatePosition() == true)
+	{
+		Visualization->GetGraphics()->SetPosition(GetAspectPosition()->GetPosition());
+	}
 }

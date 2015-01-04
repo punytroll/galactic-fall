@@ -38,7 +38,7 @@ ObjectAspectVisualization::~ObjectAspectVisualization(void)
 	_VisualizationPrototype = nullptr;
 }
 
-void ObjectAspectVisualization::AddGraphics(Graphics::Node * Graphics)
+Visualization * ObjectAspectVisualization::CreateVisualizationForGraphics(Graphics::Node * Graphics)
 {
 	assert(Graphics != nullptr);
 	
@@ -46,6 +46,8 @@ void ObjectAspectVisualization::AddGraphics(Graphics::Node * Graphics)
 	
 	NewVisualization->SetGraphics(Graphics);
 	_Visualizations.push_back(NewVisualization);
+	
+	return NewVisualization;
 }
 
 void ObjectAspectVisualization::SetVisualizationPrototype(VisualizationPrototype * VisualizationPrototype)

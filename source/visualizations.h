@@ -22,6 +22,7 @@
 
 class Object;
 class System;
+class Visualization;
 class VisualizationPrototype;
 
 namespace Graphics
@@ -31,7 +32,7 @@ namespace Graphics
 }
 
 void InvalidateVisualizationReference(Graphics::Node * Node);
-void VisualizeObject(Object * Object, Graphics::Node * Container);
+Visualization * VisualizeObject(Object * Object, Graphics::Node * Container);
 void VisualizeParticleSystem(Graphics::ParticleSystem * ParticleSystem, System * System);
 void VisualizeParticleSystem(Graphics::ParticleSystem * ParticleSystem, Graphics::Node * Container);
 Graphics::Node * VisualizePrototype(const VisualizationPrototype * VisualizationPrototype);

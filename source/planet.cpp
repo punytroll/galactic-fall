@@ -258,6 +258,12 @@ void Planet::_UpdateVisualization(Visualization * Visualization)
 	assert(Visualization != nullptr);
 	assert(Visualization->GetGraphics() != nullptr);
 	assert(GetAspectPosition() != nullptr);
-	Visualization->GetGraphics()->SetOrientation(GetAspectPosition()->GetOrientation());
-	Visualization->GetGraphics()->SetPosition(GetAspectPosition()->GetPosition());
+	if(Visualization->GetUpdateOrientation() == true)
+	{
+		Visualization->GetGraphics()->SetOrientation(GetAspectPosition()->GetOrientation());
+	}
+	if(Visualization->GetUpdatePosition() == true)
+	{
+		Visualization->GetGraphics()->SetPosition(GetAspectPosition()->GetPosition());
+	}
 }

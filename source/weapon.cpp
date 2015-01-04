@@ -133,7 +133,13 @@ void Weapon::_UpdateVisualization(Visualization * Visualization)
 		assert(Visualization != nullptr);
 		assert(Visualization->GetGraphics() != nullptr);
 		assert(GetAspectPosition() != nullptr);
-		Visualization->GetGraphics()->SetOrientation(GetAspectAccessory()->GetSlot()->GetOrientation() * GetAspectPosition()->GetOrientation());
-		Visualization->GetGraphics()->SetPosition(GetAspectAccessory()->GetSlot()->GetPosition() + GetAspectPosition()->GetPosition());
+		if(Visualization->GetUpdateOrientation() == true)
+		{
+			Visualization->GetGraphics()->SetOrientation(GetAspectAccessory()->GetSlot()->GetOrientation() * GetAspectPosition()->GetOrientation());
+		}
+		if(Visualization->GetUpdatePosition() == true)
+		{
+			Visualization->GetGraphics()->SetPosition(GetAspectAccessory()->GetSlot()->GetPosition() + GetAspectPosition()->GetPosition());
+		}
 	}
 }

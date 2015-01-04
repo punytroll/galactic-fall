@@ -47,7 +47,7 @@ public:
 	 **/
 	void SetVisualizationPrototype(VisualizationPrototype * VisualizationPrototype);
 	// modifiers
-	void AddGraphics(Graphics::Node * Graphics);
+	Visualization * CreateVisualizationForGraphics(Graphics::Node * Graphics);
 	void Destroy(void);
 	void DestroyVisualization(Graphics::Node * Container);
 	void DestroyVisualization(Visualization * Visualization);

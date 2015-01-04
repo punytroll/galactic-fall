@@ -42,6 +42,7 @@
 #include "../object_aspect_position.h"
 #include "../planet.h"
 #include "../ship.h"
+#include "../visualization.h"
 #include "../visualizations.h"
 #include "border.h"
 #include "event.h"
@@ -192,7 +193,11 @@ namespace UI
 			RootNode->SetUseLighting(true);
 			RootNode->SetUseDepthTest(true);
 			Scene->SetRootNode(RootNode);
-			VisualizeObject(_Ship, RootNode);
+			
+			auto Visualization(VisualizeObject(_Ship, RootNode));
+			
+			Visualization->SetUpdateOrientation(false);
+			Visualization->SetUpdatePosition(false);
 			SetView(View);
 		}
 		
