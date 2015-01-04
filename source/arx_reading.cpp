@@ -484,7 +484,7 @@ static void ReadMesh(Arxx::Reference & Reference)
 	
 	if(NewMesh == 0)
 	{
-		throw std::runtime_error("Could not create model '" + Identifier + "'.");
+		throw std::runtime_error("Could not create mesh '" + Identifier + "'.");
 	}
 	
 	std::map< std::string, std::vector< Vector4f >::size_type > Points;
