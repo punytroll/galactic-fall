@@ -57,11 +57,13 @@ namespace UI
 		void AddSubWidget(Widget * SubWidget);
 		void RemoveSubWidget(Widget * SubWidget);
 		void RaiseSubWidget(Widget * SubWidget);
+		void LowerSubWidget(Widget * SubWidget);
 		void Destroy(void);
 		void GrabKeyFocus(void);
 		void SetName(const std::string & Name);
 		// getters
 		const Color * GetBackgroundColor(void) const;
+		Widget * GetHoveredWidget(void);
 		const Vector2f & GetPosition(void) const;
 		Vector2f GetGlobalPosition(void) const;
 		const Vector2f & GetSize(void) const;
@@ -72,6 +74,7 @@ namespace UI
 		Widget * GetSubWidget(const std::string & Name);
 		const std::list< Widget * > & GetSubWidgets(void) const;
 		bool IsEnabled(void) const;
+		bool IsHovered(void) const;
 		bool IsVisible(void) const;
 		// setters
 		void SetAnchorBottom(bool AnchorBottom);
@@ -132,6 +135,11 @@ namespace UI
 		static std::list< Widget * > _DestroyedWidgets;
 		static std::stack< std::pair< Vector2f, Vector2f > > _ClippingRectangles;
 	};
+	
+	inline Widget * Widget::GetHoveredWidget(void)
+	{
+		return _HoverWidget;
+	}
 
 	inline const Vector2f & Widget::GetPosition(void) const
 	{
@@ -191,6 +199,18 @@ namespace UI
 	inline bool Widget::IsEnabled(void) const
 	{
 		return _Enabled;
+	}
+	
+	inline bool Widget::IsHovered(void) const
+	{
+		if(_SupWidget != nullptr)
+		{
+			return this == _SupWidget->_HoverWidget;
+		}
+		else
+		{
+			return false;
+		}
 	}
 
 	inline bool Widget::IsVisible(void) const
