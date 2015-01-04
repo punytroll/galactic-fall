@@ -111,16 +111,15 @@
 #include "system_statistics.h"
 #include "timeout_notifications.h"
 #include "ui/button.h"
+#include "ui/heads_up_display.h"
 #include "ui/key_event.h"
 #include "ui/label.h"
 #include "ui/main_menu_window.h"
 #include "ui/map_dialog.h"
-#include "ui/mini_map_display.h"
 #include "ui/mouse_button_event.h"
 #include "ui/mouse_move_event.h"
 #include "ui/object_information_dialog.h"
 #include "ui/outfit_ship_dialog.h"
-#include "ui/scanner_display.h"
 #include "ui/star_map_display.h"
 #include "ui/timing_dialog.h"
 #include "ui/user_interface.h"
@@ -801,220 +800,6 @@ void CollisionDetection(System * System)
 	}
 }
 
-void UpdateCreditsLabel(UI::Label * CreditsLabel, float RealTimeSeconds, float GameTimeSeconds)
-{
-	if(g_CharacterObserver->GetObservedCharacter().IsValid() == true)
-	{
-		CreditsLabel->SetVisible(true);
-		CreditsLabel->SetText("Credits: " + to_string_cast(g_CharacterObserver->GetObservedCharacter()->GetCredits()));
-	}
-	else
-	{
-		CreditsLabel->SetVisible(false);
-	}
-}
-
-void UpdateEnergyLabel(UI::Label * EnergyLabel, float RealTimeSeconds, float GameTimeSeconds)
-{
-	if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0) && (g_CharacterObserver->GetObservedCharacter()->GetShip()->GetBattery() != 0))
-	{
-		EnergyLabel->SetVisible(true);
-		EnergyLabel->SetText("Energy: " + to_string_cast(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetBattery()->GetEnergy(), 2));
-	}
-	else
-	{
-		EnergyLabel->SetVisible(false);
-	}
-}
-
-void UpdateFuelLabel(UI::Label * FuelLabel, float RealTimeSeconds, float GameTimeSeconds)
-{
-	if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0))
-	{
-		FuelLabel->SetVisible(true);
-		FuelLabel->SetText("Fuel: " + to_string_cast(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetFuel(), 2));
-	}
-	else
-	{
-		FuelLabel->SetVisible(false);
-	}
-}
-
-void UpdateHullLabel(UI::Label * HullLabel, float RealTimeSeconds, float GameTimeSeconds)
-{
-	if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0))
-	{
-		HullLabel->SetVisible(true);
-		HullLabel->SetText("Hull: " + to_string_cast(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetHull(), 2));
-	}
-	else
-	{
-		HullLabel->SetVisible(false);
-	}
-}
-
-void UpdateLinkedSystemTargetLabel(UI::Label * LinkedSystemTargetLabel, float RealTimeSeconds, float GameTimeSeconds)
-{
-	if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0) && (g_CharacterObserver->GetObservedCharacter()->GetShip()->GetLinkedSystemTarget() != 0))
-	{
-		LinkedSystemTargetLabel->SetVisible(true);
-		assert(g_CharacterObserver->GetObservedCharacter()->GetMapKnowledge() != 0);
-		
-		const std::set< System * > UnexploredSystems(g_CharacterObserver->GetObservedCharacter()->GetMapKnowledge()->GetUnexploredSystems());
-		
-		if(UnexploredSystems.find(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetLinkedSystemTarget()) == UnexploredSystems.end())
-		{
-			LinkedSystemTargetLabel->SetText(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetLinkedSystemTarget()->GetAspectName()->GetName());
-		}
-		else
-		{
-			LinkedSystemTargetLabel->SetText("Unknown System");
-		}
-		// set system label color according to jump status
-		if(WantToJump(g_CharacterObserver->GetObservedCharacter()->GetShip(), g_CharacterObserver->GetObservedCharacter()->GetShip()->GetLinkedSystemTarget()) == OK)
-		{
-			LinkedSystemTargetLabel->SetTextColor(Color(0.7f, 0.8f, 1.0f, 1.0f));
-		}
-		else
-		{
-			LinkedSystemTargetLabel->SetTextColor(Color(0.4f, 0.4f, 0.4f, 1.0f));
-		}
-	}
-	else
-	{
-		LinkedSystemTargetLabel->SetVisible(false);
-	}
-}
-
-void UpdateMiniMap(UI::Widget * MiniMap, float RealTimeSeconds, float GameTimeSeconds)
-{
-	if(g_CharacterObserver->GetObservedCharacter().IsValid() == true)
-	{
-		MiniMap->SetVisible(true);
-	}
-	else
-	{
-		MiniMap->SetVisible(false);
-	}
-}
-
-void UpdateMiniMapDisplay(UI::MiniMapDisplay * MiniMapDisplay, float RealTimeSeconds, float GameTimeSeconds)
-{
-	if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0))
-	{
-		MiniMapDisplay->SetVisible(true);
-		MiniMapDisplay->SetOwner(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetReference());
-	}
-	else
-	{
-		MiniMapDisplay->SetVisible(false);
-	}
-}
-
-void UpdateScanner(UI::Widget * Scanner, float RealTimeSeconds, float GameTimeSeconds)
-{
-	if(g_CharacterObserver->GetObservedCharacter().IsValid() == true)
-	{
-		Scanner->SetVisible(true);
-	}
-	else
-	{
-		Scanner->SetVisible(false);
-	}
-}
-
-void UpdateScannerDisplay(UI::ScannerDisplay * ScannerDisplay, float RealTimeSeconds, float GameTimeSeconds)
-{
-	if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != nullptr) && (g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget() != nullptr))
-	{
-		ScannerDisplay->SetVisible(true);
-		ScannerDisplay->SetTarget(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget());
-	}
-	else
-	{
-		ScannerDisplay->SetVisible(false);
-	}
-}
-
-void UpdateSystemNameLabel(UI::Label * SystemNameLabel, float RealTimeSeconds, float GameTimeSeconds)
-{
-	if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0))
-	{
-		SystemNameLabel->SetVisible(true);
-		assert(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetSystem() != 0);
-		assert(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetSystem()->GetAspectName() != 0);
-		SystemNameLabel->SetText(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetSystem()->GetAspectName()->GetName());
-	}
-	else
-	{
-		SystemNameLabel->SetVisible(false);
-	}
-}
-
-void UpdateTargetNameLabel(UI::Label * TargetNameLabel, float RealTimeSeconds, float GameTimeSeconds)
-{
-	if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0) && (g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget() != nullptr))
-	{
-		TargetNameLabel->SetVisible(true);
-		assert(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget()->GetAspectName() != nullptr);
-		TargetNameLabel->SetText(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget()->GetAspectName()->GetName());
-	}
-	else
-	{
-		TargetNameLabel->SetVisible(false);
-	}
-}
-
-void UpdateTargetFactionNameLabel(UI::Label * TargetFactionNameLabel, float RealTimeSeconds, float GameTimeSeconds)
-{
-	if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0) && (g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget() != nullptr))
-	{
-		if(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget()->GetTypeIdentifier() == "ship")
-		{
-			TargetFactionNameLabel->SetVisible(true);
-			
-			Ship * TargetedShip(dynamic_cast< Ship * >(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget()));
-			
-			assert(TargetedShip != 0);
-			assert(TargetedShip->GetFaction() != 0);
-			assert(TargetedShip->GetFaction()->GetAspectName() != 0);
-			TargetFactionNameLabel->SetText(TargetedShip->GetFaction()->GetAspectName()->GetName());
-		}
-		else if(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget()->GetTypeIdentifier() == "planet")
-		{
-			TargetFactionNameLabel->SetVisible(true);
-			
-			Planet * TargetedPlanet(dynamic_cast< Planet * >(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget()));
-			
-			assert(TargetedPlanet != 0);
-			assert(TargetedPlanet->GetFaction() != 0);
-			assert(TargetedPlanet->GetFaction()->GetAspectName() != 0);
-			TargetFactionNameLabel->SetText(TargetedPlanet->GetFaction()->GetAspectName()->GetName());
-		}
-		else
-		{
-			TargetFactionNameLabel->SetVisible(false);
-		}
-	}
-	else
-	{
-		TargetFactionNameLabel->SetVisible(false);
-	}
-}
-
-void UpdateTimeWarpLabel(UI::Label * TimeWarpLabel, float RealTimeSeconds, float GameTimeSeconds)
-{
-	if(g_Galaxy != 0)
-	{
-		TimeWarpLabel->SetVisible(true);
-		TimeWarpLabel->SetText("Time Warp: " + to_string_cast(g_TimeWarp, 2));
-	}
-	else
-	{
-		TimeWarpLabel->SetVisible(false);
-	}
-}
-
 void UpdateMainViewCamera(void)
 {
 	Matrix4f SpacialMatrix(true);
@@ -1336,20 +1121,21 @@ System * GetObservedSystem(void)
 void OnOutputEnterSystem(System * EnterSystem)
 {
 	assert(g_SpawnShipTimeoutNotification.IsValid() == false);
-	assert(g_MainView != 0);
-	assert(g_MainView->GetScene() == 0);
+	assert(g_MainView != nullptr);
+	assert(g_MainView->GetScene() == nullptr);
+	
 	// build the static setup of the scene
-	Graphics::Scene * MainScene(new Graphics::Scene());
+	auto MainScene(new Graphics::Scene());
 	
 	MainScene->SetDestroyCallback(OnMainSceneNodeDestroy);
 	
-	const Star * Star(EnterSystem->GetStar());
+	auto Star(EnterSystem->GetStar());
 	
-	if(Star != 0)
+	if(Star != nullptr)
 	{
 		MainScene->ActivateLight();
-		assert(MainScene->GetLight() != 0);
-		assert(Star->GetAspectPosition() != 0);
+		assert(MainScene->GetLight() != nullptr);
+		assert(Star->GetAspectPosition() != nullptr);
 		MainScene->GetLight()->SetPosition(Star->GetAspectPosition()->GetPosition()[0], Star->GetAspectPosition()->GetPosition()[1], 100.0f);
 		MainScene->GetLight()->SetDiffuseColor(Star->GetColor().GetColor()[0], Star->GetColor().GetColor()[1], Star->GetColor().GetColor()[2], Star->GetColor().GetColor()[3]);
 	}
@@ -1359,7 +1145,7 @@ void OnOutputEnterSystem(System * EnterSystem)
 	}
 	g_MainView->SetScene(MainScene);
 	
-	Graphics::Node * RootNode(new Graphics::Node());
+	auto RootNode(new Graphics::Node());
 	
 	RootNode->SetClearColorBuffer(true);
 	RootNode->SetClearDepthBuffer(true);
@@ -1369,28 +1155,39 @@ void OnOutputEnterSystem(System * EnterSystem)
 	
 	Visualization->SetUpdateOrientation(false);
 	Visualization->SetUpdatePosition(false);
-	assert(g_UIView != 0);
-	assert(g_UIView->GetScene() != 0);
-	assert(g_UIView->GetScene()->GetRootNode() != 0);
+	assert(g_UIView != nullptr);
+	assert(g_UIView->GetScene() != nullptr);
+	assert(g_UIView->GetScene()->GetRootNode() != nullptr);
 	g_UIView->GetScene()->GetRootNode()->SetClearColorBuffer(false);
 	g_SpawnShipTimeoutNotification = g_GameTimeTimeoutNotifications->Add(GameTime::Get() + GetRandomFloatFromExponentialDistribution(1.0f / EnterSystem->GetTrafficDensity()), std::bind(SpawnShipOnTimeout, EnterSystem));
+	
+	auto HeadsUpDisplay(new UI::HeadsUpDisplay(g_UserInterface->GetRootWidget()));
+	
+	HeadsUpDisplay->SetName("heads_up_display");
+	HeadsUpDisplay->SetPosition(Vector2f(0.0f, 0.0f));
+	HeadsUpDisplay->SetSize(Vector2f(g_Width, g_Height));
 }
 
 void OnOutputLeaveSystem(System * System)
 {
-	assert(System != 0);
+	assert(System != nullptr);
+	
+	auto HeadsUpDisplay(g_UserInterface->GetWidget("/heads_up_display"));
+	
+	HeadsUpDisplay->Destroy();
+	HeadsUpDisplay = nullptr;
 	if(g_SpawnShipTimeoutNotification.IsValid() == true)
 	{
 		g_SpawnShipTimeoutNotification.Dismiss();
 	}
 	
-	Graphics::Scene * MainScene(g_MainView->GetScene());
+	auto MainScene(g_MainView->GetScene());
 	
-	g_MainView->SetScene(0);
+	g_MainView->SetScene(nullptr);
 	delete MainScene;
-	assert(g_UIView != 0);
-	assert(g_UIView->GetScene() != 0);
-	assert(g_UIView->GetScene()->GetRootNode() != 0);
+	assert(g_UIView != nullptr);
+	assert(g_UIView->GetScene() != nullptr);
+	assert(g_UIView->GetScene()->GetRootNode() != nullptr);
 	g_UIView->GetScene()->GetRootNode()->SetClearColorBuffer(true);
 }
 
@@ -3712,82 +3509,14 @@ int main(int argc, char ** argv)
 	g_MainView->SetRenderTarget(MainViewRenderTarget);
 	g_GraphicsEngine->AddView(g_MainView);
 	
+	// set first timeout for widget collector, it will reinsert itself on callback
+	g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 5.0f, CollectWidgetsRecurrent);
 	// user interface
 	g_UserInterface = new UI::UserInterface();
+	g_UserInterface->GetRootWidget()->SetSize(Vector2f(g_Width, g_Height));
 	g_UserInterface->GetRootWidget()->ConnectKeyCallback(MainViewKeyEvent);
 	g_UserInterface->GetRootWidget()->ConnectMouseButtonCallback(MainViewMouseButtonEvent);
 	g_UserInterface->GetRootWidget()->ConnectMouseMoveCallback(MainViewMouseMove);
-	// set first timeout for widget collector, it will reinsert itself on callback
-	g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 5.0f, CollectWidgetsRecurrent);
-	// the user interface widgets must be loaded before the first Resize() call
-	g_ResourceReader->ReadUserInterface();
-	
-	// connect updating routines
-	UI::Label * CreditsLabel(dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/credits")));
-	
-	assert(CreditsLabel != 0);
-	CreditsLabel->ConnectUpdatingCallback(std::bind(UpdateCreditsLabel, CreditsLabel, std::placeholders::_1, std::placeholders::_2));
-	
-	UI::Label * EnergyLabel(dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/energy")));
-	
-	assert(EnergyLabel != 0);
-	EnergyLabel->ConnectUpdatingCallback(std::bind(UpdateEnergyLabel, EnergyLabel, std::placeholders::_1, std::placeholders::_2));
-	
-	UI::Label * FuelLabel(dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/fuel")));
-	
-	assert(FuelLabel != 0);
-	FuelLabel->ConnectUpdatingCallback(std::bind(UpdateFuelLabel, FuelLabel, std::placeholders::_1, std::placeholders::_2));
-	
-	UI::Label * HullLabel(dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/hull")));
-	
-	assert(HullLabel != 0);
-	HullLabel->ConnectUpdatingCallback(std::bind(UpdateHullLabel, HullLabel, std::placeholders::_1, std::placeholders::_2));
-	
-	UI::Label * LinkedSystemTargetLabel(dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/system")));
-	
-	assert(LinkedSystemTargetLabel != 0);
-	LinkedSystemTargetLabel->ConnectUpdatingCallback(std::bind(UpdateLinkedSystemTargetLabel, LinkedSystemTargetLabel, std::placeholders::_1, std::placeholders::_2));
-	
-	UI::Widget * MiniMap(g_UserInterface->GetWidget("/mini_map"));
-	
-	assert(MiniMap != 0);
-	MiniMap->ConnectUpdatingCallback(std::bind(UpdateMiniMap, MiniMap, std::placeholders::_1, std::placeholders::_2));
-	
-	UI::MiniMapDisplay * MiniMapDisplay(dynamic_cast< UI::MiniMapDisplay * >(g_UserInterface->GetWidget("/mini_map/display")));
-	
-	assert(MiniMapDisplay != 0);
-	MiniMapDisplay->ConnectUpdatingCallback(std::bind(UpdateMiniMapDisplay, MiniMapDisplay, std::placeholders::_1, std::placeholders::_2));
-	
-	UI::Widget * Scanner(g_UserInterface->GetWidget("/scanner"));
-	
-	assert(Scanner != 0);
-	Scanner->ConnectUpdatingCallback(std::bind(UpdateScanner, Scanner, std::placeholders::_1, std::placeholders::_2));
-	
-	UI::ScannerDisplay * ScannerDisplay(dynamic_cast< UI::ScannerDisplay * >(g_UserInterface->GetWidget("/scanner/display")));
-	
-	assert(ScannerDisplay != 0);
-	ScannerDisplay->ConnectUpdatingCallback(std::bind(UpdateScannerDisplay, ScannerDisplay, std::placeholders::_1, std::placeholders::_2));
-	
-	UI::Label * SystemNameLabel(dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/mini_map/current_system")));
-	
-	assert(SystemNameLabel != 0);
-	SystemNameLabel->ConnectUpdatingCallback(std::bind(UpdateSystemNameLabel, SystemNameLabel, std::placeholders::_1, std::placeholders::_2));
-	
-	UI::Label * TargetFactionNameLabel(dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/scanner/target_faction")));
-	
-	assert(TargetFactionNameLabel != 0);
-	TargetFactionNameLabel->ConnectUpdatingCallback(std::bind(UpdateTargetFactionNameLabel, TargetFactionNameLabel, std::placeholders::_1, std::placeholders::_2));
-	
-	UI::Label * TargetNameLabel(dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/scanner/target")));
-	
-	assert(TargetNameLabel != 0);
-	TargetNameLabel->ConnectUpdatingCallback(std::bind(UpdateTargetNameLabel, TargetNameLabel, std::placeholders::_1, std::placeholders::_2));
-	
-	UI::Label * TimeWarpLabel(dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/time_warp")));
-	
-	assert(TimeWarpLabel != 0);
-	TimeWarpLabel->ConnectUpdatingCallback(std::bind(UpdateTimeWarpLabel, TimeWarpLabel, std::placeholders::_1, std::placeholders::_2));
-	
 	// resize here after the graphics have been set up
 	Resize();
 	g_ScenarioManager = new ScenarioManager();

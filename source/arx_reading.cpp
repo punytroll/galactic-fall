@@ -60,12 +60,6 @@
 #include "slot_class.h"
 #include "star.h"
 #include "system.h"
-#include "ui/border.h"
-#include "ui/label.h"
-#include "ui/mini_map_display.h"
-#include "ui/scanner_display.h"
-#include "ui/user_interface.h"
-#include "ui/widget.h"
 #include "visualization_prototype.h"
 #include "weapon_class.h"
 
@@ -86,13 +80,6 @@ static void ReadSystemLink(Arxx::Reference & Reference);
 static void ReadTexture(Arxx::Reference & Reference);
 static void ReadVisualizationPrototype(Arxx::BufferReader & Reader, VisualizationPrototype * VisualizationPrototype);
 static void ReadWeaponClass(Arxx::Reference & Reference);
-static void ReadWidget(Arxx::Reference & Reference);
-static UI::Widget * ReadTypedWidget(Arxx::BufferReader & Reader, Arxx::u4byte Type, Arxx::u4byte SubType);
-static void ReadWidgetBorder(Arxx::BufferReader & Reader, UI::Border * ReadBorder);
-static void ReadWidgetLabel(Arxx::BufferReader & Reader, UI::Label * ReadLabel);
-static void ReadWidgetMiniMapDisplay(Arxx::BufferReader & Reader, UI::MiniMapDisplay * ReadMiniMapDisplay);
-static void ReadWidgetScannerDisplay(Arxx::BufferReader & Reader, UI::ScannerDisplay * ReadScannerDisplay);
-static void ReadWidgetWidget(Arxx::BufferReader & Reader, UI::Widget * Widget);
 
 static void MakeItemAvailable(Arxx::Item * Item)
 {
@@ -253,11 +240,6 @@ void ResourceReader::ReadSystemLinks(void)
 void ResourceReader::ReadTextures(void)
 {
 	ReadItems(m_Archive, "/Textures", ReadTexture);
-}
-
-void ResourceReader::ReadUserInterface(void)
-{
-	ReadItems(m_Archive, "/User Interface", ReadWidget);
 }
 
 void ResourceReader::ReadWeaponClasses(void)
@@ -1040,199 +1022,4 @@ static void ReadWeaponClass(Arxx::Reference & Reference)
 	NewWeaponClass->SetParticleLifeTime(ParticleLifeTime);
 	NewWeaponClass->AddParticleVisualizationPrototype();
 	ReadVisualizationPrototype(Reader, NewWeaponClass->GetParticleVisualizationPrototype());
-}
-
-static void ReadWidget(Arxx::Reference & Reference)
-{
-	Arxx::Item * Item(Resolve(Reference));
-	
-	if(Item->GetType() != DATA_TYPE_WIDGET)
-	{
-		throw std::runtime_error("Item type for widget '" + Item->GetName() + "' should be '" + to_string_cast(DATA_TYPE_WIDGET) + "' not '" + to_string_cast(Item->GetType()) + "'.");
-	}
-	
-	Arxx::BufferReader Reader(*Item);
-	
-	ReadTypedWidget(Reader, Item->GetType(), Item->GetSubType());
-	if(Reader.stGetPosition() != Item->GetDecompressedLength())
-	{
-		throw std::runtime_error("For the widget '" + Item->GetName() + "' the reader functions did not read the expected amount of data. Should be '" + to_string_cast(Item->GetDecompressedLength()) + "' not '" + to_string_cast(Reader.stGetPosition()) + "'.");
-	}
-}
-	
-static UI::Widget * ReadTypedWidget(Arxx::BufferReader & Reader, Arxx::u4byte Type, Arxx::u4byte SubType)
-{
-	UI::Widget * Result(0);
-	
-	switch(SubType)
-	{
-	case DATA_TYPE_WIDGET_SUB_TYPE_BORDER:
-		{
-			UI::Border * Border(new UI::Border());
-			
-			ReadWidgetWidget(Reader, Border);
-			ReadWidgetBorder(Reader, Border);
-			Result = Border;
-			
-			break;
-		}
-	case DATA_TYPE_WIDGET_SUB_TYPE_LABEL:
-		{
-			UI::Label * Label(new UI::Label());
-			
-			ReadWidgetWidget(Reader, Label);
-			ReadWidgetLabel(Reader, Label);
-			Result = Label;
-			
-			break;
-		}
-	case DATA_TYPE_WIDGET_SUB_TYPE_MINI_MAP_DISPLAY:
-		{
-			UI::MiniMapDisplay * MiniMapDisplay(new UI::MiniMapDisplay());
-			
-			ReadWidgetWidget(Reader, MiniMapDisplay);
-			ReadWidgetMiniMapDisplay(Reader, MiniMapDisplay);
-			Result = MiniMapDisplay;
-			
-			break;
-		}
-	case DATA_TYPE_WIDGET_SUB_TYPE_SCANNER_DISPLAY:
-		{
-			UI::ScannerDisplay * ScannerDisplay(new UI::ScannerDisplay());
-			
-			ReadWidgetWidget(Reader, ScannerDisplay);
-			ReadWidgetScannerDisplay(Reader, ScannerDisplay);
-			Result = ScannerDisplay;
-			
-			break;
-		}
-	case DATA_TYPE_WIDGET_SUB_TYPE_WIDGET:
-		{
-			UI::Widget * Widget(new UI::Widget());
-			
-			ReadWidgetWidget(Reader, Widget);
-			Result = Widget;
-			
-			break;
-		}
-	default:
-		{
-			throw std::runtime_error("Unknown item sub type for widget '" + to_string_cast(SubType) + "'.");
-		}
-	}
-	
-	return Result;
-}
-
-static void ReadWidgetBorder(Arxx::BufferReader & Reader, UI::Border * Border)
-{
-	float Width;
-	Color BorderColor;
-	
-	Reader >> Width >> BorderColor;
-	Border->SetWidth(Width);
-	Border->SetColor(BorderColor);
-}
-
-static void ReadWidgetLabel(Arxx::BufferReader & Reader, UI::Label * Label)
-{
-	std::string Text;
-	bool UseTextColor;
-	Color TextColor;
-	Arxx::u1byte HorizontalAlignment;
-	Arxx::u1byte VerticalAlignment;
-	
-	Reader >> Text >> UseTextColor >> TextColor >> HorizontalAlignment >> VerticalAlignment;
-	Label->SetText(Text);
-	if(UseTextColor == true)
-	{
-		Label->SetTextColor(TextColor);
-	}
-	if(HorizontalAlignment == 0)
-	{
-		Label->SetHorizontalAlignment(UI::Label::ALIGN_LEFT);
-	}
-	else if(HorizontalAlignment == 1)
-	{
-		Label->SetHorizontalAlignment(UI::Label::ALIGN_RIGHT);
-	}
-	else if(HorizontalAlignment == 2)
-	{
-		Label->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
-	}
-	if(VerticalAlignment == 0)
-	{
-		Label->SetVerticalAlignment(UI::Label::ALIGN_TOP);
-	}
-	else if(VerticalAlignment == 1)
-	{
-		Label->SetVerticalAlignment(UI::Label::ALIGN_BOTTOM);
-	}
-	else if(VerticalAlignment == 2)
-	{
-		Label->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
-	}
-}
-
-static void ReadWidgetMiniMapDisplay(Arxx::BufferReader & Reader, UI::MiniMapDisplay * MiniMapDisplay)
-{
-}
-
-static void ReadWidgetScannerDisplay(Arxx::BufferReader & Reader, UI::ScannerDisplay * ScannerDisplay)
-{
-}
-
-static void ReadWidgetWidget(Arxx::BufferReader & Reader, UI::Widget * Widget)
-{
-	std::string Path;
-	std::string Name;
-	Vector2f Position;
-	bool UseSize;
-	Vector2f Size;
-	bool UseBackgroundColor;
-	Color BackgroundColor;
-	bool Visible;
-	bool AnchorBottom;
-	bool AnchorLeft;
-	bool AnchorRight;
-	bool AnchorTop;
-	Arxx::u4byte SubWidgetCount;
-	
-	Reader >> Path >> Name >> Position >> UseSize >> Size >> UseBackgroundColor >> BackgroundColor >> Visible >> AnchorBottom >> AnchorLeft >> AnchorRight >> AnchorTop >> SubWidgetCount;
-	Widget->SetName(Name);
-	if((Path != "") && (Widget->GetSupWidget() == 0))
-	{
-		UI::Widget * SupWidget(g_UserInterface->GetWidget(Path));
-		
-		if(SupWidget == 0)
-		{
-			throw std::runtime_error("For widget '" + Name + "' could not find the superior widget at path '" + Path + "'.");
-		}
-		SupWidget->AddSubWidget(Widget);
-	}
-	Widget->SetPosition(Position);
-	if(UseSize == true)
-	{
-		Widget->SetSize(Size);
-	}
-	if(UseBackgroundColor == true)
-	{
-		Widget->SetBackgroundColor(BackgroundColor);
-	}
-	Widget->SetVisible(Visible);
-	Widget->SetAnchorBottom(AnchorBottom);
-	Widget->SetAnchorLeft(AnchorLeft);
-	Widget->SetAnchorRight(AnchorRight);
-	Widget->SetAnchorTop(AnchorTop);
-	for(Arxx::u4byte SubWidgetNumber = 0; SubWidgetNumber < SubWidgetCount; ++SubWidgetNumber)
-	{
-		Arxx::u4byte Type;
-		Arxx::u4byte SubType;
-		
-		Reader >> Type >> SubType;
-		
-		UI::Widget * SubWidget(ReadTypedWidget(Reader, Type, SubType));
-		
-		Widget->AddSubWidget(SubWidget);
-	}
 }

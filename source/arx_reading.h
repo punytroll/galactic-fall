@@ -48,7 +48,6 @@ public:
 	void ReadSystems(void);
 	void ReadSystemLinks(void);
 	void ReadTextures(void);
-	void ReadUserInterface(void);
 	void ReadWeaponClasses(void);
 	std::string ReadSavegameFromScenarioPath(const std::string & ScenarioPath);
 private:
