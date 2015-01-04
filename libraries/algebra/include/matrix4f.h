@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 1.8.5 of algebra.
+ * This is part of version 1.8.7 of algebra.
  **/
 
 #ifndef ALGEBRA_MATRIX4F_H
@@ -90,6 +90,12 @@ public:
 	static Matrix4f CreateFromTranslationVector(const Vector4f & TranslationVector);
 	
 	static Matrix4f CreateFromQuaternion(const Quaternion & Quaternion);
+	
+	static Matrix4f CreateRotationX(float Angle);
+	
+	static Matrix4f CreateRotationY(float Angle);
+	
+	static Matrix4f CreateRotationZ(float Angle);
 	
 	const float * const GetPointer(void) const
 	{
@@ -450,6 +456,84 @@ inline Matrix4f Matrix4f::CreateFromQuaternion(const Quaternion & Quaternion)
 	Result._[8] = 2.0f * (XZ + WY);
 	Result._[9] = 2.0f * (YZ - WX);
 	Result._[10] = 1.0f - 2.0f * (XX + YY);
+	Result._[11] = 0.0f;
+	Result._[12] = 0.0f;
+	Result._[13] = 0.0f;
+	Result._[14] = 0.0f;
+	Result._[15] = 1.0f;
+	
+	return Result;
+}
+	
+inline Matrix4f Matrix4f::CreateRotationX(float Angle)
+{
+	Matrix4f Result;
+	float Cos(cos(Angle));
+	float Sin(sin(Angle));
+	
+	Result._[0] = 1.0f;
+	Result._[1] = 0.0f;
+	Result._[2] = 0.0f;
+	Result._[3] = 0.0f;
+	Result._[4] = 0.0f;
+	Result._[5] = Cos;
+	Result._[6] = Sin;
+	Result._[7] = 0.0f;
+	Result._[8] = 0.0f;
+	Result._[9] = -Sin;
+	Result._[10] = Cos;
+	Result._[11] = 0.0f;
+	Result._[12] = 0.0f;
+	Result._[13] = 0.0f;
+	Result._[14] = 0.0f;
+	Result._[15] = 1.0f;
+	
+	return Result;
+}
+
+inline Matrix4f Matrix4f::CreateRotationY(float Angle)
+{
+	Matrix4f Result;
+	float Cos(cos(Angle));
+	float Sin(sin(Angle));
+	
+	Result._[0] = Cos;
+	Result._[1] = 0.0f;
+	Result._[2] = -Sin;
+	Result._[3] = 0.0f;
+	Result._[4] = 0.0f;
+	Result._[5] = 1.0f;
+	Result._[6] = 0.0f;
+	Result._[7] = 0.0f;
+	Result._[8] = Sin;
+	Result._[9] = 0.0f;
+	Result._[10] = Cos;
+	Result._[11] = 0.0f;
+	Result._[12] = 0.0f;
+	Result._[13] = 0.0f;
+	Result._[14] = 0.0f;
+	Result._[15] = 1.0f;
+	
+	return Result;
+}
+
+inline Matrix4f Matrix4f::CreateRotationZ(float Angle)
+{
+	Matrix4f Result;
+	float Cos(cos(Angle));
+	float Sin(sin(Angle));
+	
+	Result._[0] = Cos;
+	Result._[1] = Sin;
+	Result._[2] = 0.0f;
+	Result._[3] = 0.0f;
+	Result._[4] = -Sin;
+	Result._[5] = Cos;
+	Result._[6] = 0.0f;
+	Result._[7] = 0.0f;
+	Result._[8] = 0.0f;
+	Result._[9] = 0.0f;
+	Result._[10] = 1.0f;
 	Result._[11] = 0.0f;
 	Result._[12] = 0.0f;
 	Result._[13] = 0.0f;

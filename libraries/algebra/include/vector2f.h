@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 1.8.5 of algebra.
+ * This is part of version 1.8.7 of algebra.
  **/
 
 #ifndef ALGEBRA_VECTOR2F_H
@@ -209,7 +209,7 @@ public:
 		return Vector2f((CosAngle * _[0]) + (-SinAngle * _[1]), (SinAngle * _[0]) + (CosAngle * _[1]));
 	}
 	
-	float operator[](int Index) const
+	const float & operator[](int Index) const
 	{
 		return _[Index];
 	}

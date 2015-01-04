@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 1.8.5 of algebra.
+ * This is part of version 1.8.7 of algebra.
  **/
 
 #ifndef ALGEBRA_VECTOR4D_H
@@ -66,7 +66,7 @@ public:
 		return m_V[0] * m_V[0] + m_V[1] * m_V[1] + m_V[2] * m_V[2] + m_V[3] * m_V[3];
 	}
 	
-	double operator[](int Index) const
+	const double & operator[](int Index) const
 	{
 		return m_V[Index];
 	}
