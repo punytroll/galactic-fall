@@ -25,11 +25,24 @@
 #include "../battery.h"
 #include "../character.h"
 #include "../color.h"
+#include "../globals.h"
+#include "../graphics/camera.h"
+#include "../graphics/engine.h"
+#include "../graphics/light.h"
+#include "../graphics/node.h"
+#include "../graphics/perspective_projection.h"
+#include "../graphics/scene.h"
+#include "../graphics/texture.h"
+#include "../graphics/texture_render_target.h"
+#include "../graphics/view.h"
 #include "../hangar.h"
 #include "../object_aspect_name.h"
 #include "../object_aspect_object_container.h"
+#include "../object_aspect_physical.h"
+#include "../object_aspect_position.h"
 #include "../planet.h"
 #include "../ship.h"
+#include "../visualizations.h"
 #include "border.h"
 #include "event.h"
 #include "hangar_widget.h"
@@ -42,9 +55,151 @@
 #include "scroll_box.h"
 #include "sub_widget_event.h"
 #include "text_button.h"
+#include "view_display.h"
 
 namespace UI
 {
+	class ShipDisplay : public UI::ViewDisplay
+	{
+	public:
+		ShipDisplay(UI::Widget * SupWidget, Ship * Ship) :
+			UI::ViewDisplay(SupWidget),
+			_Ship(Ship)
+		{
+			assert(_Ship != nullptr);
+			ConnectDestroyingCallback(std::bind(&UI::ShipDisplay::_OnDestroying, this, std::placeholders::_1));
+			ConnectUpdatingCallback(std::bind(&UI::ShipDisplay::_OnUpdating, this, std::placeholders::_1, std::placeholders::_2));
+			ConnectSizeChangedCallback(std::bind(&UI::ShipDisplay::_OnSizeChanged, this, std::placeholders::_1));
+			_ShipDestroyingConnection = _Ship->ConnectDestroyingCallback(std::bind(&UI::ShipDisplay::_OnShipDestroying, this));
+		}
+	private:
+		void _Clear(void)
+		{
+			auto OldView(GetView());
+			
+			if(OldView != nullptr)
+			{
+				SetView(nullptr);
+				assert(OldView->GetScene() != nullptr);
+				
+				auto Scene(OldView->GetScene());
+				
+				OldView->SetScene(nullptr);
+				delete Scene;
+				
+				assert(OldView->GetCamera() != nullptr);
+				assert(OldView->GetCamera()->GetProjection() != nullptr);
+				
+				auto Projection(OldView->GetCamera()->GetProjection());
+				
+				OldView->GetCamera()->SetProjection(nullptr);
+				delete Projection;
+				
+				auto TextureRenderTarget(dynamic_cast< Graphics::TextureRenderTarget * >(OldView->GetRenderTarget()));
+				
+				assert(TextureRenderTarget != nullptr);
+				OldView->SetRenderTarget(nullptr);
+				
+				auto Texture(TextureRenderTarget->GetTexture());
+				
+				TextureRenderTarget->SetTexture(nullptr);
+				delete TextureRenderTarget;
+				delete Texture;
+				g_GraphicsEngine->RemoveView(OldView);
+				delete OldView;
+			}
+		}
+		
+		void _OnDestroying(UI::Event & DestroyingEvent)
+		{
+			if(DestroyingEvent.GetPhase() == UI::Event::Phase::Target)
+			{
+				_ShipDestroyingConnection.Disconnect();
+				_Clear();
+			}
+		}
+		
+		void _OnDestroyInScene(Graphics::Node * Node)
+		{
+			InvalidateVisualizationReference(Node);
+			delete Node;
+		}
+		
+		void _OnUpdating(float RealTimeSeconds, float GameTimeSeconds)
+		{
+		}
+		
+		void _OnShipDestroying(void)
+		{
+			_Clear();
+			_Ship = nullptr;
+		}
+		
+		void _OnSizeChanged(UI::Event & SizeChangedEvent)
+		{
+			if(SizeChangedEvent.GetPhase() == UI::Event::Phase::Target)
+			{
+				_Clear();
+				_Setup();
+			}
+		}
+		
+		void _Setup(void)
+		{
+			assert(_Ship != nullptr);
+			assert(_Ship->GetAspectPhysical() != nullptr);
+			
+			Graphics::PerspectiveProjection * PerspectiveProjection(new Graphics::PerspectiveProjection());
+			float RadialSize(_Ship->GetAspectPhysical()->GetRadialSize());
+			float ExtendedRadialSize((5.0f / 4.0f) * RadialSize);
+			
+			PerspectiveProjection->SetFieldOfViewY(asinf(ExtendedRadialSize / sqrtf(ExtendedRadialSize * ExtendedRadialSize + 16 * RadialSize * RadialSize)) * 2.0f);
+			PerspectiveProjection->SetAspect(GetSize()[0] / GetSize()[1]);
+			PerspectiveProjection->SetNearClippingPlane(1.0f);
+			PerspectiveProjection->SetFarClippingPlane(1000.0f);
+			
+			auto View(new Graphics::View());
+			
+			g_GraphicsEngine->AddView(View);
+			View->SetClearColor(Color(1.0f, 1.0f, 1.0f, 0.0f));
+			assert(View->GetCamera() != nullptr);
+			View->GetCamera()->SetProjection(PerspectiveProjection);
+			assert(_Ship->GetAspectPosition() != nullptr);
+			View->GetCamera()->SetSpacialMatrix(Matrix4f::CreateFromTranslationVector(Vector3f(0.0f, -2.5f, 1.4f).Normalize() * 4.0f * RadialSize).RotateX(1.05f));
+			
+			auto Scene(new Graphics::Scene());
+			
+			Scene->SetDestroyCallback(std::bind(&UI::ShipDisplay::_OnDestroyInScene, this, std::placeholders::_1));
+			Scene->ActivateLight();
+			assert(Scene->GetLight() != nullptr);
+			Scene->GetLight()->SetPosition(-20.0f, -10.0f, 20.0f);
+			Scene->GetLight()->SetDiffuseColor(1.0f, 1.0f, 1.0f, 0.0f);
+			View->SetScene(Scene);
+			
+			auto Texture(new Graphics::Texture());
+			
+			Texture->Create(GetSize()[0], GetSize()[1], 1);
+			
+			auto RenderTarget(new Graphics::TextureRenderTarget());
+			
+			RenderTarget->SetTexture(Texture);
+			View->SetRenderTarget(RenderTarget);
+			
+			auto RootNode(new Graphics::Node());
+			
+			RootNode->SetClearColorBuffer(true);
+			RootNode->SetClearDepthBuffer(true);
+			RootNode->SetUseLighting(true);
+			RootNode->SetUseDepthTest(true);
+			Scene->SetRootNode(RootNode);
+			VisualizeObject(_Ship, RootNode);
+			SetView(View);
+		}
+		
+		Ship * _Ship;
+		Connection _ShipDestroyingConnection;
+	};
+	
 	class ShipListItem : public UI::ListBoxItem
 	{
 	public:
@@ -58,15 +213,12 @@ namespace UI
 			ConnectDestroyingCallback(std::bind(&UI::ShipListItem::_OnDestroying, this, std::placeholders::_1));
 			SetSize(Vector2f(100.0f, 100.0f));
 			
-			auto NameLabel(new UI::Label(this, Ship->GetAspectName()->GetName()));
+			auto ShipDisplay(new UI::ShipDisplay(this, Ship));
 			
-			NameLabel->SetPosition(Vector2f(10.0f, 0.0f));
-			NameLabel->SetSize(Vector2f(80.0f, 100.0f));
-			NameLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
-			NameLabel->SetAnchorBottom(true);
-			NameLabel->SetAnchorRight(true);
-			NameLabel->SetWrap(true);
-			NameLabel->SetWordWrap(true);
+			ShipDisplay->SetPosition(Vector2f(0.0f, 0.0f));
+			ShipDisplay->SetSize(GetSize());
+			ShipDisplay->SetAnchorBottom(true);
+			ShipDisplay->SetAnchorRight(true);
 		}
 		
 		Ship * GetShip(void)
