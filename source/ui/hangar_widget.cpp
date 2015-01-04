@@ -184,7 +184,7 @@ namespace UI
 			Scene->SetDestroyCallback(std::bind(&UI::ShipDisplay::_OnDestroyInScene, this, std::placeholders::_1));
 			Scene->ActivateLight();
 			assert(Scene->GetLight() != nullptr);
-			Scene->GetLight()->SetPosition(-20.0f, -10.0f, 20.0f);
+			Scene->GetLight()->SetPosition(15.0f, -10.0f, 20.0f);
 			Scene->GetLight()->SetDiffuseColor(1.0f, 1.0f, 1.0f, 0.0f);
 			View->SetScene(Scene);
 			
@@ -206,6 +206,7 @@ namespace UI
 			Scene->SetRootNode(RootNode);
 			assert(_Visualization == nullptr);
 			_Visualization = VisualizeObject(_Ship, RootNode);
+			_Visualization->GetGraphics()->SetOrientation(Quaternion::CreateAsRotationZ(-2.4f));
 			_Visualization->SetUpdateOrientation(false);
 			_Visualization->SetUpdatePosition(false);
 			SetView(View);
