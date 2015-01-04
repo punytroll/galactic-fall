@@ -40,13 +40,6 @@ all_data = \
 	.data/faction_neutral.data \
 	.data/faction_pirates.data \
 	.data/generator_class_small_generator.data \
-	.data/label_credits.data \
-	.data/label_energy.data \
-	.data/label_fuel.data \
-	.data/label_hull.data \
-	.data/label_message.data \
-	.data/label_system.data \
-	.data/label_time_warp.data \
 	.data/mesh_cargo_cube.data \
 	.data/mesh_fighter_cockpit.data \
 	.data/mesh_fighter_faction.data \
@@ -90,9 +83,7 @@ all_data = \
 	.data/texture_font.data \
 	.data/texture_particle.data \
 	.data/weapon_class_light_laser.data \
-	.data/weapon_class_medium_laser.data \
-	.data/widget_mini_map.data \
-	.data/widget_scanner.data
+	.data/weapon_class_medium_laser.data
 
 declarations_xml = \
 	tools/declarations.xml
@@ -134,23 +125,23 @@ data.arx: $(data_arx) $(arxtouch_dependencies) $(arxadd_dependencies)
 	@$(RM) -f $@
 	@echo "\nPreparing directory structure ...\n"
 	$(command_arxtouch) $@
-	$(command_arxadd) $@ --identifier=0 --name="Root" --type=0 --sub-type=0 --root
-	$(command_arxadd) $@ --identifier=1 --name="User Interface" --type=0 --sub-type=0 --relation=0::child
-	$(command_arxadd) $@ --identifier=2 --name="Meshes" --type=0 --sub-type=0 --relation=0::child
-	$(command_arxadd) $@ --identifier=3 --name="Ship Classes" --type=0 --sub-type=0 --relation=0::child
-	$(command_arxadd) $@ --identifier=4 --name="Asset Classes" --type=0 --sub-type=0 --relation=0::child
-	$(command_arxadd) $@ --identifier=5 --name="Systems" --type=0 --sub-type=0 --relation=0::child
-	$(command_arxadd) $@ --identifier=6 --name="System Links" --type=0 --sub-type=0 --relation=0::child
-	$(command_arxadd) $@ --identifier=7 --name="Weapon Classes" --type=0 --sub-type=0 --relation=0::child
-	$(command_arxadd) $@ --identifier=8 --name="Commodity Classes" --type=0 --sub-type=0 --relation=0::child
-	$(command_arxadd) $@ --identifier=9 --name="Slot Classes" --type=0 --sub-type=0 --relation=0::child
-	$(command_arxadd) $@ --identifier=a --name="Textures" --type=0 --sub-type=0 --relation=0::child
-	$(command_arxadd) $@ --identifier=b --name="Models" --type=0 --sub-type=0 --relation=0::child
-	$(command_arxadd) $@ --identifier=c --name="Battery Classes" --type=0 --sub-type=0 --relation=0::child
-	$(command_arxadd) $@ --identifier=d --name="Generator Classes" --type=0 --sub-type=0 --relation=0::child
-	$(command_arxadd) $@ --identifier=e --name="Factions" --type=0 --sub-type=0 --relation=0::child
-	$(command_arxadd) $@ --identifier=f --name="Settings" --type=0 --sub-type=0 --relation=0::child
-	$(command_arxadd) $@ --identifier=10 --name="Scenarios" --type=0 --sub-type=0 --relation=0::child
+	$(command_arxadd) $@ --name="Root" --type=0 --sub-type=0 --root
+	$(command_arxadd) $@ --name="User Interface" --type=0 --sub-type=0 --relation="::child"
+	$(command_arxadd) $@ --name="Meshes" --type=0 --sub-type=0 --relation="::child"
+	$(command_arxadd) $@ --name="Ship Classes" --type=0 --sub-type=0 --relation="::child"
+	$(command_arxadd) $@ --name="Asset Classes" --type=0 --sub-type=0 --relation="::child"
+	$(command_arxadd) $@ --name="Systems" --type=0 --sub-type=0 --relation="::child"
+	$(command_arxadd) $@ --name="System Links" --type=0 --sub-type=0 --relation="::child"
+	$(command_arxadd) $@ --name="Weapon Classes" --type=0 --sub-type=0 --relation="::child"
+	$(command_arxadd) $@ --name="Commodity Classes" --type=0 --sub-type=0 --relation="::child"
+	$(command_arxadd) $@ --name="Slot Classes" --type=0 --sub-type=0 --relation="::child"
+	$(command_arxadd) $@ --name="Textures" --type=0 --sub-type=0 --relation="::child"
+	$(command_arxadd) $@ --name="Models" --type=0 --sub-type=0 --relation="::child"
+	$(command_arxadd) $@ --name="Battery Classes" --type=0 --sub-type=0 --relation="::child"
+	$(command_arxadd) $@ --name="Generator Classes" --type=0 --sub-type=0 --relation="::child"
+	$(command_arxadd) $@ --name="Factions" --type=0 --sub-type=0 --relation="::child"
+	$(command_arxadd) $@ --name="Settings" --type=0 --sub-type=0 --relation="::child"
+	$(command_arxadd) $@ --name="Scenarios" --type=0 --sub-type=0 --relation="::child"
 	@echo "\n\nAdding settings ...\n"
 	$(command_arxadd) $@ --name="Key Binding Profile" --type=10 --sub-type=0 --relation="/Settings::child" --data-file=.data/setting_key_binding_profile.data
 	$(command_arxadd) $@ --name="Window Dimensions" --type=f --sub-type=0 --relation="/Settings::child" --data-file=.data/setting_window_dimensions.data
@@ -158,17 +149,6 @@ data.arx: $(data_arx) $(arxtouch_dependencies) $(arxadd_dependencies)
 	$(command_arxadd) $@ --name="Earth Faction" --type=e --sub-type=0 --relation="/Factions::child" --data-file=.data/faction_earth.data
 	$(command_arxadd) $@ --name="Neutral Faction" --type=e --sub-type=0 --relation="/Factions::child" --data-file=.data/faction_neutral.data
 	$(command_arxadd) $@ --name="Pirates Faction" --type=e --sub-type=0 --relation="/Factions::child" --data-file=.data/faction_pirates.data
-	@echo "\n\nAdding widgets ...\n"
-	@echo "\nThe widgets will be read in uid order, so assign proper uids so that superior widgets are read before sub widgets.\n"
-	$(command_arxadd) $@ --identifier=103 --name="Credits" --type=1 --sub-type=1 --relation="/User Interface::child" --data-file=.data/label_credits.data
-	$(command_arxadd) $@ --identifier=10A --name="Energy" --type=1 --sub-type=1 --relation="/User Interface::child" --data-file=.data/label_energy.data
-	$(command_arxadd) $@ --identifier=104 --name="Fuel" --type=1 --sub-type=1 --relation="/User Interface::child" --data-file=.data/label_fuel.data
-	$(command_arxadd) $@ --identifier=132 --name="Hull" --type=1 --sub-type=1 --relation="/User Interface::child" --data-file=.data/label_hull.data
-	$(command_arxadd) $@ --identifier=100 --name="Message" --type=1 --sub-type=1 --relation="/User Interface::child" --data-file=.data/label_message.data
-	$(command_arxadd) $@ --identifier=102 --name="System" --type=1 --sub-type=1 --relation="/User Interface::child" --data-file=.data/label_system.data
-	$(command_arxadd) $@ --identifier=101 --name="Time Warp" --type=1 --sub-type=1 --relation="/User Interface::child" --data-file=.data/label_time_warp.data
-	$(command_arxadd) $@ --identifier=106 --name="Mini Map" --type=1 --sub-type=0 --relation="/User Interface::child" --data-file=.data/widget_mini_map.data
-	$(command_arxadd) $@ --identifier=105 --name="Scanner" --type=1 --sub-type=0 --relation="/User Interface::child" --data-file=.data/widget_scanner.data
 	@echo "\n\nAdding slot classes ...\n"
 	$(command_arxadd) $@ --name="Light Battery" --type=9 --sub-type=0 --relation="/Slot Classes::child" --data-file=.data/slot_class_light_battery.data
 	$(command_arxadd) $@ --name="Light Weapon" --type=9 --sub-type=0 --relation="/Slot Classes::child" --data-file=.data/slot_class_light_weapon.data

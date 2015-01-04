@@ -65,7 +65,6 @@ UI::UserInterface::UserInterface(void) :
 	_HoverWidget(nullptr),
 	_RootWidget(new UI::Widget(nullptr))
 {
-	_RootWidget->SetSize(Vector2f(1280.0f, 1024.0f));
 	_RootWidget->ConnectDestroyingCallback(std::bind(&UI::UserInterface::_OnRootWidgetDestroying, this, std::placeholders::_1));
 }
 

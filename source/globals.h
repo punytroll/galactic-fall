@@ -34,6 +34,7 @@ class Galaxy;
 class GeneratorClass;
 class MessageDispatcher;
 class ObjectFactory;
+class OutputObserver;
 class ShipClass;
 class SlotClass;
 class SystemStatistics;
@@ -70,6 +71,7 @@ enum WantReturnCode
 
 extern ClassManager< AssetClass > * g_AssetClassManager;
 extern ClassManager< BatteryClass > * g_BatteryClassManager;
+extern OutputObserver * g_CharacterObserver;
 extern ClassManager< CommodityClass > * g_CommodityClassManager;
 extern Galaxy * g_Galaxy;
 extern TimeoutNotificationManager * g_GameTimeTimeoutNotifications;
@@ -82,6 +84,7 @@ extern TimeoutNotificationManager * g_RealTimeTimeoutNotifications;
 extern ClassManager< ShipClass > * g_ShipClassManager;
 extern ClassManager< SlotClass > * g_SlotClassManager;
 extern SystemStatistics * g_SystemStatistics;
+extern float g_TimeWarp;
 extern UI::UserInterface * g_UserInterface;
 extern ClassManager< WeaponClass > * g_WeaponClassManager;
 
