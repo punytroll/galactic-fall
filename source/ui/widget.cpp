@@ -263,6 +263,13 @@ void UI::Widget::RaiseSubWidget(UI::Widget * SubWidget)
 	_SubWidgets.push_front(SubWidget);
 }
 
+void UI::Widget::LowerSubWidget(UI::Widget * SubWidget)
+{
+	assert(SubWidget->_SupWidget == this);
+	_SubWidgets.remove(SubWidget);
+	_SubWidgets.push_back(SubWidget);
+}
+
 void UI::Widget::Destroy(void)
 {
 	// fire destroying event before aything is actually destroyed
