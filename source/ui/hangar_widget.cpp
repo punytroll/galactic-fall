@@ -65,7 +65,8 @@ namespace UI
 	public:
 		ShipDisplay(UI::Widget * SupWidget, Ship * Ship) :
 			UI::ViewDisplay(SupWidget),
-			_Ship(Ship)
+			_Ship(Ship),
+			_Visualization(nullptr)
 		{
 			assert(_Ship != nullptr);
 			ConnectDestroyingCallback(std::bind(&UI::ShipDisplay::_OnDestroying, this, std::placeholders::_1));
@@ -117,17 +118,28 @@ namespace UI
 			{
 				_ShipDestroyingConnection.Disconnect();
 				_Clear();
+				assert(_Visualization == nullptr);
 			}
 		}
 		
 		void _OnDestroyInScene(Graphics::Node * Node)
 		{
+			if((_Visualization != nullptr) && (Node == _Visualization->GetGraphics()))
+			{
+				_Visualization = nullptr;
+			}
 			InvalidateVisualizationReference(Node);
 			delete Node;
 		}
 		
 		void _OnUpdating(float RealTimeSeconds, float GameTimeSeconds)
 		{
+			if(IsHovered() == true)
+			{
+				assert(_Visualization != nullptr);
+				assert(_Visualization->GetGraphics() != nullptr);
+				_Visualization->GetGraphics()->SetOrientation(_Visualization->GetGraphics()->GetOrientation().RotatedZ(-1.0f * RealTimeSeconds));
+			}
 		}
 		
 		void _OnShipDestroying(void)
@@ -165,7 +177,6 @@ namespace UI
 			View->SetClearColor(Color(1.0f, 1.0f, 1.0f, 0.0f));
 			assert(View->GetCamera() != nullptr);
 			View->GetCamera()->SetProjection(PerspectiveProjection);
-			assert(_Ship->GetAspectPosition() != nullptr);
 			View->GetCamera()->SetSpacialMatrix(Matrix4f::CreateFromTranslationVector(Vector3f(0.0f, -2.5f, 1.4f).Normalize() * 4.0f * RadialSize).RotateX(1.05f));
 			
 			auto Scene(new Graphics::Scene());
@@ -193,16 +204,16 @@ namespace UI
 			RootNode->SetUseLighting(true);
 			RootNode->SetUseDepthTest(true);
 			Scene->SetRootNode(RootNode);
-			
-			auto Visualization(VisualizeObject(_Ship, RootNode));
-			
-			Visualization->SetUpdateOrientation(false);
-			Visualization->SetUpdatePosition(false);
+			assert(_Visualization == nullptr);
+			_Visualization = VisualizeObject(_Ship, RootNode);
+			_Visualization->SetUpdateOrientation(false);
+			_Visualization->SetUpdatePosition(false);
 			SetView(View);
 		}
 		
 		Ship * _Ship;
 		Connection _ShipDestroyingConnection;
+		Visualization * _Visualization;
 	};
 	
 	class ShipListItem : public UI::ListBoxItem
@@ -220,8 +231,8 @@ namespace UI
 			
 			auto ShipDisplay(new UI::ShipDisplay(this, Ship));
 			
-			ShipDisplay->SetPosition(Vector2f(0.0f, 0.0f));
-			ShipDisplay->SetSize(GetSize());
+			ShipDisplay->SetPosition(Vector2f(1.0f, 1.0f));
+			ShipDisplay->SetSize(Vector2f(GetSize()[0] - 2.0f, GetSize()[1] - 2.0f));
 			ShipDisplay->SetAnchorBottom(true);
 			ShipDisplay->SetAnchorRight(true);
 		}
@@ -244,6 +255,7 @@ namespace UI
 					_Border->SetAnchorRight(true);
 					_Border->SetWidth(1.0f);
 					_Border->SetColor(Color(1.0f, 1.0f, 1.0f, 1.0f));
+					LowerSubWidget(_Border);
 				}
 			}
 			else
