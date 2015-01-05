@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 1.8.7 of algebra.
+ * This is part of version 1.8.8 of algebra.
  **/
 
 #ifndef ALGEBRA_VECTOR3F_H
@@ -177,7 +177,9 @@ public:
 	
 	Vector3f & operator*=(const Matrix3f & Matrix);
 	
-	Vector3f & operator*=(const Quaternion & AQuaternion);
+	Vector3f & operator*=(const Quaternion & Quaternion);
+	
+	Vector3f & Transform(const Quaternion & Quaternion);
 	
 	const float & operator[](int Index) const
 	{
@@ -218,6 +220,17 @@ inline Vector3f & Vector3f::operator*=(const Matrix3f & Matrix)
 inline Vector3f & Vector3f::operator*=(const Quaternion & AQuaternion)
 {
 	Quaternion Result(AQuaternion * Quaternion(0.0f, _[0],_[1], _[2]) * AQuaternion.Conjugated());
+	
+	_[0] = Result._[1];
+	_[1] = Result._[2];
+	_[2] = Result._[3];
+	
+	return *this;
+}
+
+inline Vector3f & Vector3f::Transform(const Quaternion & AQuaternion)
+{
+	auto Result(AQuaternion * Quaternion(0.0f, _[0],_[1], _[2]) * AQuaternion.Conjugated());
 	
 	_[0] = Result._[1];
 	_[1] = Result._[2];
