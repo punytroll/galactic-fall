@@ -179,7 +179,6 @@ bool g_Pause(false);
 TimeoutNotificationManager * g_GameTimeTimeoutNotifications;
 TimeoutNotification g_SpawnShipTimeoutNotification;
 TimeoutNotificationManager * g_RealTimeTimeoutNotifications;
-TimeoutNotification g_MessageTimeoutNotification;
 Display * g_Display;
 GLXContext g_GLXContext;
 Window g_Window;
@@ -330,24 +329,12 @@ float CalculateTime(void)
 	}
 }
 
-void HideMessage(void)
-{
-	g_UserInterface->GetWidget("/message")->SetVisible(false);
-}
-
 void SetMessage(const std::string & Message)
 {
-	UI::Label * MessageLabel(dynamic_cast< UI::Label * >(g_UserInterface->GetWidget("/message")));
+	auto HeadsUpDisplay(dynamic_cast< UI::HeadsUpDisplay * >(g_UserInterface->GetWidget("/heads_up_display")));
 	
-	assert(MessageLabel != 0);
-	MessageLabel->SetText(Message);
-	MessageLabel->SetVisible(true);
-	/// TODO: Make the 2.0f seconds timeout configurable via the game configuration archive.
-	if(g_MessageTimeoutNotification.IsValid() == true)
-	{
-		g_MessageTimeoutNotification.Dismiss();
-	}
-	g_MessageTimeoutNotification = g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 2.0f, HideMessage);
+	assert(HeadsUpDisplay != nullptr);
+	HeadsUpDisplay->SetMessage(Message);
 }
 
 void DrawSelection(const Object * Object, float RadialSize, const Color & Color)
