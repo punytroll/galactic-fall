@@ -98,7 +98,6 @@ void Graphics::ParticleSystemNode::Draw(void)
 		GLVertex3f(Position[0] - Size, Position[1] + Size, Position[2]);
 	}
 	GLEnd();
-	Graphics::Node::Draw();
 }
 
 void Graphics::ParticleSystemNode::End(void)

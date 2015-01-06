@@ -195,12 +195,6 @@ void Graphics::Node::Destroy(void)
 
 void Graphics::Node::Draw(void)
 {
-	for(auto Content : _Content)
-	{
-		Content->Begin();
-		Content->Draw();
-		Content->End();
-	}
 }
 
 void Graphics::Node::End(void)
