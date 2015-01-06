@@ -1331,23 +1331,22 @@ void GameFrame(void)
 
 void PurgeGame(void)
 {
-	if(g_CurrentSystem != 0)
+	if(g_CurrentSystem != nullptr)
 	{
 		OnOutputLeaveSystem(g_CurrentSystem);
-		EmptySystem(g_CurrentSystem);
+		g_CurrentSystem = nullptr;
 	}
-	if(g_Galaxy != 0)
+	if(g_Galaxy != nullptr)
 	{
 		g_Galaxy->Destroy();
 		delete g_Galaxy;
+		g_Galaxy = nullptr;
 	}
-	g_CurrentSystem = 0;
-	g_Galaxy = 0;
 }
 
 void SetupInitialGalaxyState(void)
 {
-	assert(g_Galaxy == 0);
+	assert(g_Galaxy == nullptr);
 	// initialize the galaxy object with hard coded properties
 	g_Galaxy = new Galaxy();
 	g_Galaxy->SetTypeIdentifier("galaxy");
