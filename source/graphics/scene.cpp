@@ -19,6 +19,8 @@
 
 #include <assert.h>
 
+#include <stack>
+
 #include "gl.h"
 #include "light.h"
 #include "node.h"
@@ -112,7 +114,28 @@ void Graphics::Scene::Render(void)
 	}
 	// disable lighting by default, nodes have to activate it if they want it
 	GLDisable(GL_LIGHTING);
-	_RootNode->Begin();
-	_RootNode->Draw();
-	_RootNode->End();
+	
+	std::stack< std::pair< bool, Graphics::Node * > > ToDo;
+	
+	ToDo.push(std::make_pair(false, _RootNode));
+	while(ToDo.empty() == false)
+	{
+		auto & Item(ToDo.top());
+		
+		if(Item.first == false)
+		{
+			Item.first = true;
+			Item.second->Begin();
+			Item.second->Draw();
+			for(auto ContentIterator = Item.second->GetContent().rbegin(); ContentIterator != Item.second->GetContent().rend(); ++ContentIterator)
+			{
+				ToDo.push(std::make_pair(false, *ContentIterator));
+			}
+		}
+		else
+		{
+			ToDo.pop();
+			Item.second->End();
+		}
+	}
 }

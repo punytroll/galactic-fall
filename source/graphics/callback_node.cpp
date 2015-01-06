@@ -31,5 +31,4 @@ void Graphics::CallbackNode::Draw(void)
 {
 	assert((bool)_DrawCallback == true);
 	_DrawCallback();
-	Graphics::Node::Draw();
 }

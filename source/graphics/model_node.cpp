@@ -92,7 +92,6 @@ void Graphics::ModelNode::Draw(void)
 			MeshIterator->second->Draw();
 		}
 	}
-	Graphics::Node::Draw();
 }
 
 bool Graphics::ModelNode::AddMaterial(const std::string & MeshName, Graphics::Material * Material)
