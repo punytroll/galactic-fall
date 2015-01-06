@@ -20,12 +20,6 @@
 		<string identifier="slot-class-identifier"/>
 	</battery-class>
 	
-	<border type="1" sub-type="4">
-		<widget identifier="widget"/>
-		<float identifier="width"/>
-		<color4f identifier="color"/>
-	</border>
-	
 	<color type="18"/>
 	
 	<color4f type="18" sub-type="0">
@@ -73,15 +67,6 @@
 		<array identifier="key-bindings"/>
 	</key-binding-profile>
 	
-	<label type="1" sub-type="1">
-		<widget identifier="widget"/>
-		<string identifier="text"/>
-		<boolean identifier="use-text-color"/>
-		<color4f identifier="text-color"/>
-		<u1byte identifier="horizontal-alignment"/>
-		<u1byte identifier="vertical-alignment"/>
-	</label>
-	
 	<material>
 		<color4f identifier="diffuse-color"/>
 		<optional-color4f identifier="specular-color"/>
@@ -99,10 +84,6 @@
 		<string identifier="part-identifier"/>
 		<string identifier="mesh-identifier"/>
 	</mesh-part>
-	
-	<mini-map-display type="1" sub-type="2">
-		<widget identifier="widget"/>
-	</mini-map-display>
 	
 	<model type="11">
 		<string identifier="identifier"/>
@@ -166,10 +147,6 @@
 		<float identifier="y"/>
 		<float identifier="z"/>
 	</quaternion>
-	
-	<scanner-display type="1" sub-type="3">
-		<widget identifier="widget"/>
-	</scanner-display>
 	
 	<scenario type="17">
 		<string identifier="identifier"/>
@@ -251,12 +228,14 @@
 		<string identifier="point-identifier"/>
 	</triangle-point>
 	
-	<vector2f>
+	<vector type="1"/>
+	
+	<vector2f type="1" sub-type="0">
 		<float identifier="x"/>
 		<float identifier="y"/>
 	</vector2f>
 	
-	<vector3f>
+	<vector3f type="1" sub-type="1">
 		<float identifier="x"/>
 		<float identifier="y"/>
 		<float identifier="z"/>
@@ -283,21 +262,5 @@
 		<float identifier="energy-usage-per-shot"/>
 		<particle identifier="particle"/>
 	</weapon-class>
-	
-	<widget type="1" sub-type="0">
-		<string identifier="widget-path"/>
-		<string identifier="name"/>
-		<vector2f identifier="position"/>
-		<boolean identifier="use-size"/>
-		<vector2f identifier="size"/>
-		<boolean identifier="use-background-color"/>
-		<color4f identifier="background-color"/>
-		<boolean identifier="visible"/>
-		<boolean identifier="anchor-bottom"/>
-		<boolean identifier="anchor-left"/>
-		<boolean identifier="anchor-right"/>
-		<boolean identifier="anchor-top"/>
-		<array-with-types identifier="sub-widgets"/>
-	</widget>
 	
 </declarations>
