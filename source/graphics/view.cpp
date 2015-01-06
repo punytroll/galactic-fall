@@ -67,6 +67,7 @@ void Graphics::View::Render(void)
 	GLLoadMatrixf(_Camera->GetSpacialMatrix().Inverted().GetPointer());
 	if(_Scene != nullptr)
 	{
+		_Scene->Update();
 		_Scene->Render();
 	}
 }

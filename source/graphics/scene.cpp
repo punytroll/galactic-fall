@@ -99,6 +99,24 @@ void Graphics::Scene::OnDestroy(Graphics::Node * Node)
 	}
 }
 
+void Graphics::Scene::Update(void)
+{
+	std::stack< Graphics::Node * > ToDo;
+	
+	ToDo.push(_RootNode);
+	while(ToDo.empty() == false)
+	{
+		auto & Item(ToDo.top());
+		
+		ToDo.pop();
+		Item->CalculateModelMatrix();
+		for(auto Content : Item->GetContent())
+		{
+			ToDo.push(Content);
+		}
+	}
+}
+
 void Graphics::Scene::Render(void)
 {
 	assert(_RootNode != nullptr);
@@ -115,27 +133,20 @@ void Graphics::Scene::Render(void)
 	// disable lighting by default, nodes have to activate it if they want it
 	GLDisable(GL_LIGHTING);
 	
-	std::stack< std::pair< bool, Graphics::Node * > > ToDo;
+	std::stack< Graphics::Node * > ToDo;
 	
-	ToDo.push(std::make_pair(false, _RootNode));
+	ToDo.push(_RootNode);
 	while(ToDo.empty() == false)
 	{
-		auto & Item(ToDo.top());
+		auto Item(ToDo.top());
 		
-		if(Item.first == false)
+		ToDo.pop();
+		Item->Begin();
+		Item->Draw();
+		Item->End();
+		for(auto ContentIterator = Item->GetContent().rbegin(); ContentIterator != Item->GetContent().rend(); ++ContentIterator)
 		{
-			Item.first = true;
-			Item.second->Begin();
-			Item.second->Draw();
-			for(auto ContentIterator = Item.second->GetContent().rbegin(); ContentIterator != Item.second->GetContent().rend(); ++ContentIterator)
-			{
-				ToDo.push(std::make_pair(false, *ContentIterator));
-			}
-		}
-		else
-		{
-			ToDo.pop();
-			Item.second->End();
+			ToDo.push(*ContentIterator);
 		}
 	}
 }
