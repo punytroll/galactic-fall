@@ -26,6 +26,7 @@
 #include "../map_knowledge.h"
 #include "../object_aspect_name.h"
 #include "../output_observer.h"
+#include "../real_time.h"
 #include "../ship.h"
 #include "../system.h"
 #include "border.h"
@@ -37,7 +38,8 @@
 int WantToJump(Ship * Ship, System * System);
 
 UI::HeadsUpDisplay::HeadsUpDisplay(UI::Widget * SupWidget) :
-	UI::Widget(SupWidget)
+	UI::Widget(SupWidget),
+	_MessageLabel(nullptr)
 {
 	SetSize(Vector2f(1000.0f, 1000.0f));
 	
@@ -88,16 +90,14 @@ UI::HeadsUpDisplay::HeadsUpDisplay(UI::Widget * SupWidget) :
 	HullLabel->SetSize(Vector2f(200.0f, 20.0f));
 	HullLabel->SetTextColor(Color(0.7f, 0.8f, 1.0f, 1.0f));
 	HullLabel->ConnectUpdatingCallback(std::bind(&UI::HeadsUpDisplay::_UpdateHullLabel, this, HullLabel, std::placeholders::_1, std::placeholders::_2));
-	
-	auto MessageLabel(new UI::Label(this));
-	
-	MessageLabel->SetName("message");
-	MessageLabel->SetPosition(Vector2f(0.0f, 40.0f));
-	MessageLabel->SetSize(Vector2f(GetSize()[0], 12.0f));
-	MessageLabel->SetAnchorRight(true);
-	MessageLabel->SetTextColor(Color(1.0f, 0.3f, 0.3f, 1.0f));
-	MessageLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
-	MessageLabel->SetVisible(false);
+	_MessageLabel = new UI::Label(this);
+	_MessageLabel->SetName("message");
+	_MessageLabel->SetPosition(Vector2f(0.0f, 40.0f));
+	_MessageLabel->SetSize(Vector2f(GetSize()[0], 12.0f));
+	_MessageLabel->SetAnchorRight(true);
+	_MessageLabel->SetTextColor(Color(1.0f, 0.3f, 0.3f, 1.0f));
+	_MessageLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
+	_MessageLabel->SetVisible(false);
 	
 	auto MiniMapWidget(new UI::Widget(this));
 	
@@ -176,6 +176,24 @@ UI::HeadsUpDisplay::HeadsUpDisplay(UI::Widget * SupWidget) :
 	ScannerBorder->SetAnchorRight(true);
 	ScannerBorder->SetWidth(1.0f);
 	ScannerBorder->SetColor(Color(0.1f, 0.2f, 0.3f, 1.0f));
+}
+
+void UI::HeadsUpDisplay::_HideMessage(void)
+{
+	assert(_MessageLabel);
+	_MessageLabel->SetVisible(false);
+}
+
+void UI::HeadsUpDisplay::SetMessage(const std::string & Message)
+{
+	assert(_MessageLabel != nullptr);
+	_MessageLabel->SetText(Message);
+	_MessageLabel->SetVisible(true);
+	if(_MessageTimeoutNotification.IsValid() == true)
+	{
+		_MessageTimeoutNotification.Dismiss();
+	}
+	_MessageTimeoutNotification = g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 2.0f, std::bind(&UI::HeadsUpDisplay::_HideMessage, this));
 }
 
 void UI::HeadsUpDisplay::_UpdateCreditsLabel(UI::Label * CreditsLabel, float RealTimeSeconds, float GameTimeSeconds)

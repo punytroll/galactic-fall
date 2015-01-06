@@ -17,6 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include "../timeout_notifications.h"
 #include "widget.h"
 
 namespace UI
@@ -29,7 +30,9 @@ namespace UI
 	{
 	public:
 		HeadsUpDisplay(UI::Widget * SupWidget);
+		void SetMessage(const std::string & Message);
 	private:
+		void _HideMessage(void);
 		void _UpdateCreditsLabel(UI::Label * CreditsLabel, float RealTimeSeconds, float GameTimeSeconds);
 		void _UpdateEnergyLabel(UI::Label * EnergyLabel, float RealTimeSeconds, float GameTimeSeconds);
 		void _UpdateFuelLabel(UI::Label * EnergyLabel, float RealTimeSeconds, float GameTimeSeconds);
@@ -43,5 +46,7 @@ namespace UI
 		void _UpdateScannerTargetFactionNameLabel(UI::Label * ScannerTargetFactionNameLabel, float RealTimeSeconds, float GameTimeSeconds);
 		void _UpdateScannerWidget(UI::Widget * ScannerWidget, float RealTimeSeconds, float GameTimeSeconds);
 		void _UpdateTimeWarpLabel(UI::Label * TimeWarpLabel, float RealTimeSeconds, float GameTimeSeconds);
+		UI::Label * _MessageLabel;
+		TimeoutNotification _MessageTimeoutNotification;
 	};
 }
