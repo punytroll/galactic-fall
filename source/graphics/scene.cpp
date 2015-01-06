@@ -26,52 +26,52 @@
 #include "scene.h"
 
 Graphics::Scene::Scene(void) :
-	_Engine(0),
-	_Light(0),
-	_RootNode(0)
+	_Engine(nullptr),
+	_Light(nullptr),
+	_RootNode(nullptr)
 {
 }
 
 Graphics::Scene::~Scene(void)
 {
-	if(_Light != 0)
+	if(_Light != nullptr)
 	{
 		delete _Light;
-		_Light = 0;
+		_Light = nullptr;
 	}
-	if(_RootNode != 0)
+	if(_RootNode != nullptr)
 	{
 		_RootNode->Destroy();
-		_RootNode = 0;
+		_RootNode = nullptr;
 	}
 }
 
 void Graphics::Scene::_SetEngine(Graphics::Engine * Engine)
 {
-	if(Engine == 0)
+	if(Engine == nullptr)
 	{
-		assert(_Engine != 0);
-		_Engine = 0;
+		assert(_Engine != nullptr);
+		_Engine = nullptr;
 	}
 	else
 	{
-		assert(_Engine == 0);
+		assert(_Engine == nullptr);
 		_Engine = Engine;
 	}
 }
 
 void Graphics::Scene::SetRootNode(Graphics::Node * RootNode)
 {
-	assert(_RootNode == 0);
-	assert(RootNode != 0);
-	assert(RootNode->GetScene() == 0);
+	assert(_RootNode == nullptr);
+	assert(RootNode != nullptr);
+	assert(RootNode->GetScene() == nullptr);
 	_RootNode = RootNode;
 	_RootNode->_SetScene(this);
 }
 
 void Graphics::Scene::ActivateLight(void)
 {
-	if(_Light == 0)
+	if(_Light == nullptr)
 	{
 		_Light = new Graphics::Light();
 	}
@@ -79,17 +79,17 @@ void Graphics::Scene::ActivateLight(void)
 
 void Graphics::Scene::DeactivateLight(void)
 {
-	if(_Light != 0)
+	if(_Light != nullptr)
 	{
 		delete _Light;
-		_Light = 0;
+		_Light = nullptr;
 	}
 }
 
 void Graphics::Scene::OnDestroy(Graphics::Node * Node)
 {
-	assert(Node->GetContainer() == 0);
-	assert(Node->GetScene() == 0);
+	assert(Node->GetContainer() == nullptr);
+	assert(Node->GetScene() == nullptr);
 	assert(Node->GetContent().empty() == true);
 	if(_DestroyCallback)
 	{
@@ -99,8 +99,8 @@ void Graphics::Scene::OnDestroy(Graphics::Node * Node)
 
 void Graphics::Scene::Render(void)
 {
-	assert(_RootNode != 0);
-	if(_Light != 0)
+	assert(_RootNode != nullptr);
+	if(_Light != nullptr)
 	{
 		GLEnable(GL_LIGHT0);
 		GLLightfv(GL_LIGHT0, GL_POSITION, _Light->GetPosition().GetPointer());
