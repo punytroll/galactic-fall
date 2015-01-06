@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 1.8.8 of algebra.
+ * This is part of version 1.8.9 of algebra.
  **/
 
 #ifndef ALGEBRA_VECTOR3F_H
