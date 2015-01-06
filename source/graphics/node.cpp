@@ -190,7 +190,7 @@ void Graphics::Node::CalculateModelMatrix(void)
 	}
 	else
 	{
-		_ModelMatrix.Identity();
+		_ModelMatrix = Matrix4f(true).Translate(_Position).Rotate(_Orientation);
 	}
 }
 
