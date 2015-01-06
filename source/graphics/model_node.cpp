@@ -27,7 +27,7 @@
 #include "model_node.h"
 
 Graphics::ModelNode::ModelNode(void) :
-	_Model(0)
+	_Model(nullptr)
 {
 	SetUseDepthTest(true);
 }
@@ -43,13 +43,11 @@ Graphics::ModelNode::~ModelNode(void)
 
 void Graphics::ModelNode::Draw(void)
 {
-	if(_Model != 0)
+	if(_Model != nullptr)
 	{
-		const std::map< std::string, const Graphics::Mesh * > & Meshes(_Model->GetMeshes());
-		
-		for(std::map< std::string, const Graphics::Mesh * >::const_iterator MeshIterator = Meshes.begin(); MeshIterator != Meshes.end(); ++MeshIterator)
+		for(auto MeshPart : _Model->GetMeshes())
 		{
-			std::map< std::string, Graphics::Material * >::const_iterator MaterialIterator(_Materials.find(MeshIterator->first));
+			auto MaterialIterator(_Materials.find(MeshPart.first));
 			
 			if(GetUseLighting() == true)
 			{
@@ -89,7 +87,7 @@ void Graphics::ModelNode::Draw(void)
 					GLColor4fv(MaterialIterator->second->GetDiffuseColor()->GetColor().GetPointer());
 				}
 			}
-			MeshIterator->second->Draw();
+			MeshPart.second->Draw();
 		}
 	}
 }
