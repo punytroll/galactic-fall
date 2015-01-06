@@ -24,6 +24,7 @@
 
 #include <vector>
 
+#include <algebra/matrix4f.h>
 #include <algebra/quaternion.h>
 #include <algebra/vector3f.h>
 
@@ -66,6 +67,7 @@ namespace Graphics
 		// modifiers
 		void AddNode(Graphics::Node * Content);
 		virtual void Begin(void);
+		void CalculateModelMatrix(void);
 		virtual void Destroy(void);
 		virtual void Draw(void);
 		virtual void End(void);
@@ -81,6 +83,7 @@ namespace Graphics
 		bool _ClearDepthBuffer;
 		Graphics::Node * _Container;
 		std::vector< Graphics::Node * > _Content;
+		Matrix4f _ModelMatrix;
 		bool _Normalize;
 		Quaternion _Orientation;
 		Vector3f _Position;

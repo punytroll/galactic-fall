@@ -46,6 +46,7 @@ namespace Graphics
 		void ActivateLight(void);
 		void DeactivateLight(void);
 		void Render(void);
+		void Update(void);
 		void OnDestroy(Graphics::Node * Node);
 	private:
 		void _SetEngine(Graphics::Engine * Engine);
