@@ -26,7 +26,9 @@
 		<color4f identifier="color"/>
 	</border>
 	
-	<color4f>
+	<color type="18"/>
+	
+	<color4f type="18" sub-type="0">
 		<float identifier="red"/>
 		<float identifier="green"/>
 		<float identifier="blue"/>
@@ -81,9 +83,8 @@
 	</label>
 	
 	<material>
-		<boolean identifier="use-specular-color"/>
 		<color4f identifier="diffuse-color"/>
-		<color4f identifier="specular-color"/>
+		<optional-color4f identifier="specular-color"/>
 		<float identifier="shininess"/>
 	</material>
 	
@@ -116,6 +117,14 @@
 		<string identifier="identifier"/>
 		<float identifier="base-price-modifier"/>
 	</offered-asset-class>
+	
+	<optional-color4f type="18" sub-type="1">
+		<boolean identifier="valid"/>
+		<float identifier="red"/>
+		<float identifier="green"/>
+		<float identifier="blue"/>
+		<float identifier="opacity"/>
+	</optional-color4f>
 	
 	<particle>
 		<vector3f identifier="exit-position"/>

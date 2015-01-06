@@ -12,7 +12,6 @@
 			<visualization-part>
 				<part-identifier>hull</part-identifier>
 				<material>
-					<use-specular-color>true</use-specular-color>
 					<diffuse-color>
 						<red>0.78</red>
 						<green>0.76</green>
@@ -20,6 +19,7 @@
 						<opacity>1.0</opacity>
 					</diffuse-color>
 					<specular-color>
+						<valid>true</valid>
 						<red>0.65</red>
 						<green>0.65</green>
 						<blue>0.65</blue>
@@ -31,7 +31,6 @@
 			<visualization-part>
 				<part-identifier>cockpit</part-identifier>
 				<material>
-					<use-specular-color>true</use-specular-color>
 					<diffuse-color>
 						<red>0.0</red>
 						<green>0.0</green>
@@ -39,6 +38,7 @@
 						<opacity>1.0</opacity>
 					</diffuse-color>
 					<specular-color>
+						<valid>true</valid>
 						<red>1.0</red>
 						<green>1.0</green>
 						<blue>1.0</blue>
@@ -50,7 +50,6 @@
 			<visualization-part>
 				<part-identifier>faction</part-identifier>
 				<material>
-					<use-specular-color>true</use-specular-color>
 					<diffuse-color>
 						<red>0.0</red>
 						<green>0.0</green>
@@ -58,6 +57,7 @@
 						<opacity>1.0</opacity>
 					</diffuse-color>
 					<specular-color>
+						<valid>true</valid>
 						<red>0.5</red>
 						<green>0.5</green>
 						<blue>0.5</blue>
