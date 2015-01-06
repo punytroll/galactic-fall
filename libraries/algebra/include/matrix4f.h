@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 1.8.8 of algebra.
+ * This is part of version 1.8.9 of algebra.
  **/
 
 #ifndef ALGEBRA_MATRIX4F_H
@@ -308,6 +308,10 @@ public:
 	Matrix4f & Translate(const Vector3f & Translation);
 	
 	Matrix4f & Translate(const Vector4f & Translation);
+	
+	Matrix4f Translated(const Vector3f & Translation) const;
+	
+	Matrix4f Translated(const Vector4f & Translation) const;
 	
 	void Translation(float X, float Y, float Z)
 	{
@@ -615,6 +619,30 @@ inline Matrix4f & Matrix4f::Translate(const Vector4f & Translation)
 	_[15] += _[3] * Translation._[0] + _[7] * Translation._[1] + _[11] * Translation._[2];
 	
 	return *this;
+}
+
+inline Matrix4f Matrix4f::Translated(const Vector3f & Translation) const
+{
+	auto Result(*this);
+	
+	Result._[12] += _[0] * Translation._[0] + _[4] * Translation._[1] + _[8] * Translation._[2];
+	Result._[13] += _[1] * Translation._[0] + _[5] * Translation._[1] + _[9] * Translation._[2];
+	Result._[14] += _[2] * Translation._[0] + _[6] * Translation._[1] + _[10] * Translation._[2];
+	Result._[15] += _[3] * Translation._[0] + _[7] * Translation._[1] + _[11] * Translation._[2];
+	
+	return Result;
+}
+
+inline Matrix4f Matrix4f::Translated(const Vector4f & Translation) const
+{
+	auto Result(*this);
+	
+	Result._[12] += _[0] * Translation._[0] + _[4] * Translation._[1] + _[8] * Translation._[2];
+	Result._[13] += _[1] * Translation._[0] + _[5] * Translation._[1] + _[9] * Translation._[2];
+	Result._[14] += _[2] * Translation._[0] + _[6] * Translation._[1] + _[10] * Translation._[2];
+	Result._[15] += _[3] * Translation._[0] + _[7] * Translation._[1] + _[11] * Translation._[2];
+	
+	return Result;
 }
 
 #endif
