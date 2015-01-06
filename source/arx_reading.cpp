@@ -947,17 +947,17 @@ static void ReadVisualizationPrototype(Arxx::BufferReader & Reader, Visualizatio
 	for(Arxx::u4byte VisualizationPartNumber = 1; VisualizationPartNumber <= VisualizationPartCount; ++VisualizationPartNumber)
 	{
 		std::string PartIdentifier;
-		bool PartUseSpecularColor;
 		Color PartDiffuseColor;
+		bool PartValidSpecularColor;
 		Color PartSpecularColor;
 		float PartShininess;
 		
-		Reader >> PartIdentifier >> PartUseSpecularColor >> PartDiffuseColor >> PartSpecularColor >> PartShininess;
+		Reader >> PartIdentifier >> PartDiffuseColor >> PartValidSpecularColor >> PartSpecularColor >> PartShininess;
 		
 		Graphics::Material * PartMaterial(new Graphics::Material());
 		
 		PartMaterial->SetDiffuseColor(PartDiffuseColor);
-		if(PartUseSpecularColor == true)
+		if(PartValidSpecularColor == true)
 		{
 			PartMaterial->SetSpecularColor(PartSpecularColor);
 		}

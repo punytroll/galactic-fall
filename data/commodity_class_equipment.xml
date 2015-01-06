@@ -8,7 +8,6 @@
 			<visualization-part>
 				<part-identifier>cargo_cube</part-identifier>
 				<material>
-					<use-specular-color>true</use-specular-color>
 					<diffuse-color>
 						<red>0.95</red>
 						<green>0.68</green>
@@ -16,6 +15,7 @@
 						<opacity>1.0</opacity>
 					</diffuse-color>
 					<specular-color>
+						<valid>true</valid>
 						<red>1.0</red>
 						<green>0.9</green>
 						<blue>0.8</blue>
