@@ -21,7 +21,11 @@ DarkBlue = "\033[34m"
 LightBlue = "\033[34;1m"
 
 class ConvertException(Exception):
-	pass
+	def __init__(self, message):
+		self.__message = message
+	
+	def __str__(self):
+		return self.__message
 
 parser = OptionParser()
 parser.add_option("-d", "--declarations", dest="declarations", help="Load the declarations from the file.")
@@ -137,8 +141,7 @@ if options.declarations != None:
 						if declaration_element.attributes.has_key("element-type") == True:
 							declaration.set_element_type_identifier(declaration_element.attributes.get("element-type").nodeValue)
 						else:
-							print LightRed + "Error" + White + ": In file " + LightYellow + options.declarations + White + " the " + LightBlue + declaration_element.tagName + White + " declaration is a " + LightBlue + "collection" + White + " alias but missing the " + LightYellow + "element-type" + White + " attribute."
-							raise ConvertException()
+							raise ConvertException(LightRed + "Error" + White + ": In file " + LightYellow + options.declarations + White + " the " + LightBlue + declaration_element.tagName + White + " declaration is a " + LightBlue + "collection" + White + " alias but missing the " + LightYellow + "element-type" + White + " attribute.")
 				else:
 					for part_element in declaration_element.childNodes:
 						if part_element.nodeType == Node.ELEMENT_NODE:
@@ -146,23 +149,19 @@ if options.declarations != None:
 							if part_element.attributes.has_key("identifier") == True:
 								part = Part(part_element.attributes.get("identifier").nodeValue, part_element.tagName)
 							else:
-								print LightRed + "Error" + White + ": In file " + LightYellow + options.declarations + White + " there is a declaration part without an " + LightYellow + "identifier" + White + " attribute on the " + LightYellow + declaration_element.tagName + White + " declaration."
-								raise ConvertException()
+								raise ConvertException(LightRed + "Error" + White + ": In file " + LightYellow + options.declarations + White + " there is a declaration part without an " + LightYellow + "identifier" + White + " attribute on the " + LightYellow + declaration_element.tagName + White + " declaration.")
 							if part_element.tagName == "collection":
 								if part_element.attributes.has_key("element-type") == True:
 									part.set_element_type_identifier(part_element.attributes.get("element-type").nodeValue)
 								else:
-									print LightRed + "Error" + White + ": In file " + LightYellow + options.declarations + White + " on the " + LightBlue + declaration_element.tagName + White + " declaration, there is a collection " + LightYellow + part.get_name() + White + " declared without an " + LightYellow + "element-type" + White + " attribute."
-									raise ConvertException()
+									raise ConvertException(LightRed + "Error" + White + ": In file " + LightYellow + options.declarations + White + " on the " + LightBlue + declaration_element.tagName + White + " declaration, there is a collection " + LightYellow + part.get_name() + White + " declared without an " + LightYellow + "element-type" + White + " attribute.")
 							declaration.parts.append(part)
 				declarations[declaration.get_name()] = declaration
 			else:
 				if declarations[declaration_element.tagName].get_is_built_in() == True:
-					print LightRed + "Error" + White + ": In file " + LightYellow + options.declarations + White + " there is an invalid re-declaration for the built-in type " + LightBlue + declaration_element.tagName + White + "."
-					raise ConvertException()
+					raise ConvertException(LightRed + "Error" + White + ": In file " + LightYellow + options.declarations + White + " there is an invalid re-declaration for the built-in type " + LightBlue + declaration_element.tagName + White + ".")
 				else:
-					print LightRed + "Error" + White + ": In file " + LightYellow + options.declarations + White + " there is a duplicate declaration for " + LightYellow + declaration_element.tagName + White + "."
-					raise ConvertException()
+					raise ConvertException(LightRed + "Error" + White + ": In file " + LightYellow + options.declarations + White + " there is a duplicate declaration for " + LightYellow + declaration_element.tagName + White + ".")
 
 # now open the out file for writing binary
 out_file = open(options.out_file, "wb")
@@ -186,22 +185,19 @@ def out(data_type, node, element_type = None):
 		elif node.firstChild.nodeValue == "false":
 			out_file.write(pack('B', 0))
 		else:
-			print LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " for " + LightYellow + stack_path + White + " of type " + DarkYellow + data_type + White + " I found an invalid value: " + LightRed + node.firstChild.nodeValue + White
-			raise ConvertException()
+			raise ConvertException(LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " for " + LightYellow + stack_path + White + " of type " + DarkYellow + data_type + White + " I found an invalid value: " + LightRed + node.firstChild.nodeValue + White)
 	elif data_type == "float":
 		out_file.write(pack('f', float(node.firstChild.nodeValue)))
 	elif data_type == "u1byte":
 		try:
 			out_file.write(pack('B', int(node.firstChild.nodeValue)))
 		except ValueError:
-			print LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " for " + LightYellow + stack_path + White + " of type " + DarkYellow + data_type + White + " I found an invalid value: " + LightRed + node.firstChild.nodeValue + White
-			raise ConvertException()
+			raise ConvertException(LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " for " + LightYellow + stack_path + White + " of type " + DarkYellow + data_type + White + " I found an invalid value: " + LightRed + node.firstChild.nodeValue + White)
 	elif data_type == "u4byte":
 		try:
 			out_file.write(pack('I', long(node.firstChild.nodeValue)))
 		except ValueError:
-			print LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " for " + LightYellow + stack_path + White + " of type " + DarkYellow + data_type + White + " I found an invalid value: " + LightRed + node.firstChild.nodeValue + White
-			raise ConvertException()
+			raise ConvertException(LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " for " + LightYellow + stack_path + White + " of type " + DarkYellow + data_type + White + " I found an invalid value: " + LightRed + node.firstChild.nodeValue + White)
 	elif data_type == "collection":
 		count = 0
 		for node_part in node.childNodes:
@@ -214,19 +210,16 @@ def out(data_type, node, element_type = None):
 					if node_part.tagName == element_type:
 						out(node_part.tagName, node_part)
 					else:
-						print LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " for the collection " + LightYellow + stack_path + White + " the element type " + LightBlue + element_type + White + " was declared but not followed by " + LightYellow + node_part.tagName + White + "."
-						raise ConvertException()
+						raise ConvertException(LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " for the collection " + LightYellow + stack_path + White + " the element type " + LightBlue + element_type + White + " was declared but not followed by " + LightYellow + node_part.tagName + White + ".")
 				else:
-					print LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " for the collection " + LightYellow + stack_path + White + " no element type was declared."
-					raise ConvertException()
+					raise ConvertException(LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " for the collection " + LightYellow + stack_path + White + " no element type was declared.")
 	elif data_type == "file":
 		inline_file_name = node.firstChild.nodeValue
 		try:
 			inline_file = open(inline_file_name, "rb")
 			copyfileobj(inline_file, out_file)
 		except IOError:
-			print LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " for " + LightYellow + stack_path + White + " of type " + DarkYellow + data_type + White + " I couldn't open the file: " + LightRed + inline_file_name + White
-			raise ConvertException()
+			raise ConvertException(LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " for " + LightYellow + stack_path + White + " of type " + DarkYellow + data_type + White + " I couldn't open the file: " + LightRed + inline_file_name + White)
 	elif declarations.has_key(data_type) == True:
 		if declarations[data_type].is_declaration != None:
 			out_call_stack.pop()
@@ -242,20 +235,15 @@ def out(data_type, node, element_type = None):
 				# safe-guard
 				assert declaration_part != None or definition_node != None
 				if declaration_part == None:
-					print LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " for " + LightYellow + stack_path + "/" + definition_node.tagName + White + " I could not find any declaration."
-					raise ConvertException()
+					raise ConvertException(LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " for " + LightYellow + stack_path + "/" + definition_node.tagName + White + " I could not find any declaration.")
 				if definition_node == None:
-					print LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " for " + LightYellow + stack_path + "/" + declaration_part.get_name() + White + " of type " + DarkYellow + declaration_part.get_type_identifier() + White + " I could not find any definition."
-					raise ConvertException()
+					raise ConvertException(LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " for " + LightYellow + stack_path + "/" + declaration_part.get_name() + White + " of type " + DarkYellow + declaration_part.get_type_identifier() + White + " I could not find any definition.")
 				if declaration_part.get_name() != definition_node.tagName:
-					print LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " the definition for " + LightYellow + stack_path + "/" + definition_node.tagName + White + " does not belong there."
-					print "       Expected to find a definition for " + LightYellow + stack_path + "/" + declaration_part.name + White + " of type " + LightBlue + declaration_part.type_identifier + White + "."
-					raise ConvertException()
+					raise ConvertException(LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " there is a definition for " + LightYellow + stack_path + "/" + definition_node.tagName + White + " instead of the expected definition for " + LightYellow + stack_path + "/" + declaration_part.get_name() + White + " of type " + LightBlue + declaration_part.get_type_identifier() + White + ".")
 				else:
 					out(declaration_part.get_type_identifier(), definition_node, declaration_part.get_element_type_identifier())
 	else:
-		print LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " for " + LightYellow + stack_path + White + " of type " + DarkYellow + data_type + White + " I could not find a suitable declaration."
-		raise ConvertException()
+		raise ConvertException(LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " for " + LightYellow + stack_path + White + " of type " + DarkYellow + data_type + White + " I could not find a suitable declaration.")
 	out_call_stack.pop()
 
 # now parse the in file
@@ -264,7 +252,8 @@ in_element = in_document.documentElement
 if in_element.nodeType == Node.ELEMENT_NODE:
 	try:
 		out(in_element.tagName, in_element)
-	except ConvertException:
+	except ConvertException as exception:
+		print(exception)
 		out_file.close()
 		remove(options.out_file)
 		exit(1)
