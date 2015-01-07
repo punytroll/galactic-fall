@@ -38,15 +38,23 @@ if options.out_file == None:
 	exit(1)
 
 class Declaration(object):
-	def __init__(self, identifier):
-		self.__identifier = identifier
+	def __init__(self, name):
+		self.__element_type_identifier = None
+		self.__is_built_in = False
 		self.__is_declaration = None
+		self.__name = name
 		self.__parts = list()
 		self.__sub_type = None
 		self.__type = None
 	
-	def __get_identifier(self):
-		return self.__identifier
+	def get_element_type_identifier(self):
+		return self.__element_type_identifier
+	
+	def get_is_built_in(self):
+		return self.__is_built_in
+	
+	def get_name(self):
+		return self.__name
 	
 	def __get_is_declaration(self):
 		return self.__is_declaration
@@ -60,6 +68,12 @@ class Declaration(object):
 	def __get_type(self):
 		return self.__type
 	
+	def set_element_type_identifier(self, element_type_identifier):
+		self.__element_type_identifier = element_type_identifier
+	
+	def set_is_built_in(self, is_built_in):
+		self.__is_built_in = is_built_in
+	
 	def __set_is_declaration(self, is_declaration):
 		self.__is_declaration = is_declaration
 	
@@ -69,7 +83,6 @@ class Declaration(object):
 	def __set_type(self, type):
 		self.__type = type
 	
-	identifier = property(__get_identifier)
 	is_declaration = property(__get_is_declaration, __set_is_declaration)
 	parts = property(__get_parts)
 	sub_type = property(__get_sub_type, __set_sub_type)
@@ -77,20 +90,36 @@ class Declaration(object):
 
 class Part(object):
 	def __init__(self, name, type_identifier):
+		self.__element_type_identifier = None
 		self.__type_identifier = type_identifier
 		self.__name = name
 	
-	def __get_type_identifier(self):
+	def get_element_type_identifier(self):
+		return self.__element_type_identifier
+	
+	def get_type_identifier(self):
 		return self.__type_identifier
 	
-	def __get_name(self):
+	def get_name(self):
 		return self.__name
 	
-	type_identifier = property(__get_type_identifier)
-	name = property(__get_name)
+	def set_element_type_identifier(self, element_type_identifier):
+		self.__element_type_identifier = element_type_identifier
+
+def add_built_in_type(name):
+	declaration = Declaration(name)
+	declaration.set_is_built_in(True)
+	declarations[declaration.get_name()] = declaration
 
 # read the declarations first
-declarations = dict();
+declarations = dict()
+add_built_in_type("boolean")
+add_built_in_type("collection")
+add_built_in_type("file")
+add_built_in_type("float")
+add_built_in_type("string")
+add_built_in_type("u1byte")
+add_built_in_type("u4byte")
 if options.declarations != None:
 	declarations_document = parse(options.declarations)
 	declarations_element = declarations_document.documentElement
@@ -104,18 +133,36 @@ if options.declarations != None:
 					declaration.sub_type = int(declaration_element.attributes.get("sub-type").nodeValue)
 				if declaration_element.attributes.has_key("is") == True:
 					declaration.is_declaration = declaration_element.attributes.get("is").nodeValue
+					if declaration.is_declaration == "collection":
+						if declaration_element.attributes.has_key("element-type") == True:
+							declaration.set_element_type_identifier(declaration_element.attributes.get("element-type").nodeValue)
+						else:
+							print LightRed + "Error" + White + ": In file " + LightYellow + options.declarations + White + " the " + LightBlue + declaration_element.tagName + White + " declaration is a " + LightBlue + "collection" + White + " alias but missing the " + LightYellow + "element-type" + White + " attribute."
+							raise ConvertException()
 				else:
 					for part_element in declaration_element.childNodes:
 						if part_element.nodeType == Node.ELEMENT_NODE:
+							part = None
 							if part_element.attributes.has_key("identifier") == True:
-								declaration.parts.append(Part(part_element.attributes.get("identifier").nodeValue, part_element.tagName))
+								part = Part(part_element.attributes.get("identifier").nodeValue, part_element.tagName)
 							else:
 								print LightRed + "Error" + White + ": In file " + LightYellow + options.declarations + White + " there is a declaration part without an " + LightYellow + "identifier" + White + " attribute on the " + LightYellow + declaration_element.tagName + White + " declaration."
 								raise ConvertException()
-				declarations[declaration.identifier] = declaration
+							if part_element.tagName == "collection":
+								if part_element.attributes.has_key("element-type") == True:
+									part.set_element_type_identifier(part_element.attributes.get("element-type").nodeValue)
+								else:
+									print LightRed + "Error" + White + ": In file " + LightYellow + options.declarations + White + " on the " + LightBlue + declaration_element.tagName + White + " declaration, there is a collection " + LightYellow + part.get_name() + White + " declared without an " + LightYellow + "element-type" + White + " attribute."
+									raise ConvertException()
+							declaration.parts.append(part)
+				declarations[declaration.get_name()] = declaration
 			else:
-				print LightRed + "Error" + White + ": In file " + LightYellow + options.declarations + White + " there is a duplicate declaration for " + LightYellow + declaration_element.tagName + White + "."
-				raise ConvertException()
+				if declarations[declaration_element.tagName].get_is_built_in() == True:
+					print LightRed + "Error" + White + ": In file " + LightYellow + options.declarations + White + " there is an invalid re-declaration for the built-in type " + LightBlue + declaration_element.tagName + White + "."
+					raise ConvertException()
+				else:
+					print LightRed + "Error" + White + ": In file " + LightYellow + options.declarations + White + " there is a duplicate declaration for " + LightYellow + declaration_element.tagName + White + "."
+					raise ConvertException()
 
 # now open the out file for writing binary
 out_file = open(options.out_file, "wb")
@@ -124,7 +171,7 @@ out_file = open(options.out_file, "wb")
 out_call_stack = list()
 
 # the recursive output function
-def out(data_type, node):
+def out(data_type, node, element_type = None):
 	out_call_stack.append(node.tagName)
 	stack_path = ""
 	for stack_entry in out_call_stack:
@@ -136,8 +183,11 @@ def out(data_type, node):
 	elif data_type == "boolean":
 		if node.firstChild.nodeValue == "true":
 			out_file.write(pack('B', 1))
-		else:
+		elif node.firstChild.nodeValue == "false":
 			out_file.write(pack('B', 0))
+		else:
+			print LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " for " + LightYellow + stack_path + White + " of type " + DarkYellow + data_type + White + " I found an invalid value: " + LightRed + node.firstChild.nodeValue + White
+			raise ConvertException()
 	elif data_type == "float":
 		out_file.write(pack('f', float(node.firstChild.nodeValue)))
 	elif data_type == "u1byte":
@@ -152,7 +202,7 @@ def out(data_type, node):
 		except ValueError:
 			print LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " for " + LightYellow + stack_path + White + " of type " + DarkYellow + data_type + White + " I found an invalid value: " + LightRed + node.firstChild.nodeValue + White
 			raise ConvertException()
-	elif data_type == "array":
+	elif data_type == "collection":
 		count = 0
 		for node_part in node.childNodes:
 			if node_part.nodeType == Node.ELEMENT_NODE:
@@ -160,28 +210,15 @@ def out(data_type, node):
 		out_file.write(pack('I', long(count)))
 		for node_part in node.childNodes:
 			if node_part.nodeType == Node.ELEMENT_NODE:
-				out(node_part.tagName, node_part)
-	elif data_type == "array-with-types":
-		count = 0
-		for node_part in node.childNodes:
-			if node_part.nodeType == Node.ELEMENT_NODE:
-				count += 1
-		out_file.write(pack('I', long(count)))
-		for node_part in node.childNodes:
-			if node_part.nodeType == Node.ELEMENT_NODE:
-				data_type = node_part.tagName
-				if declarations.has_key(data_type) == False:
-					print LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " in " + LightYellow + stack_path + White + " I could not find any declaration for " + DarkYellow + data_type + White + "."
+				if element_type != None:
+					if node_part.tagName == element_type:
+						out(node_part.tagName, node_part)
+					else:
+						print LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " for the collection " + LightYellow + stack_path + White + " the element type " + LightBlue + element_type + White + " was declared but not followed by " + LightYellow + node_part.tagName + White + "."
+						raise ConvertException()
+				else:
+					print LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " for the collection " + LightYellow + stack_path + White + " no element type was declared."
 					raise ConvertException()
-				declaration = declarations[data_type]
-				if declaration.type == None:
-					print LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " for the array with types " + LightYellow + stack_path + White + " no type was defined in the declaration of " + DarkYellow + data_type + White + "."
-					raise ConvertException()
-				if declaration.sub_type == None:
-					print LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " for the array with types " + LightYellow + stack_path + White + " no sub-type was defined in the declaration of " + DarkYellow + data_type + White + "."
-					raise ConvertException()
-				out_file.write(pack('II', long(declaration.type), long(declaration.sub_type)))
-				out(node_part.tagName, node_part)
 	elif data_type == "file":
 		inline_file_name = node.firstChild.nodeValue
 		try:
@@ -192,7 +229,9 @@ def out(data_type, node):
 			raise ConvertException()
 	elif declarations.has_key(data_type) == True:
 		if declarations[data_type].is_declaration != None:
-			out(declarations[data_type].is_declaration, node)
+			out_call_stack.pop()
+			out(declarations[data_type].is_declaration, node, declarations[data_type].get_element_type_identifier())
+			out_call_stack.append(node.tagName)
 		else:
 			for child_node in node.childNodes:
 				if child_node.nodeType != Node.ELEMENT_NODE:
@@ -206,14 +245,14 @@ def out(data_type, node):
 					print LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " for " + LightYellow + stack_path + "/" + definition_node.tagName + White + " I could not find any declaration."
 					raise ConvertException()
 				if definition_node == None:
-					print LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " for " + LightYellow + stack_path + "/" + declaration_part.name + White + " of type " + DarkYellow + declaration_part.type_identifier + White + " I could not find any definition."
+					print LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " for " + LightYellow + stack_path + "/" + declaration_part.get_name() + White + " of type " + DarkYellow + declaration_part.get_type_identifier() + White + " I could not find any definition."
 					raise ConvertException()
-				if declaration_part.name != definition_node.tagName:
+				if declaration_part.get_name() != definition_node.tagName:
 					print LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " the definition for " + LightYellow + stack_path + "/" + definition_node.tagName + White + " does not belong there."
 					print "       Expected to find a definition for " + LightYellow + stack_path + "/" + declaration_part.name + White + " of type " + LightBlue + declaration_part.type_identifier + White + "."
 					raise ConvertException()
 				else:
-					out(declaration_part.type_identifier, definition_node)
+					out(declaration_part.get_type_identifier(), definition_node, declaration_part.get_element_type_identifier())
 	else:
 		print LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " for " + LightYellow + stack_path + White + " of type " + DarkYellow + data_type + White + " I could not find a suitable declaration."
 		raise ConvertException()
