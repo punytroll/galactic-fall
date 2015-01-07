@@ -117,8 +117,8 @@ def add_built_in_type(name):
 # read the declarations first
 declarations = dict()
 add_built_in_type("boolean")
+add_built_in_type("bytes")
 add_built_in_type("collection")
-add_built_in_type("file")
 add_built_in_type("float")
 add_built_in_type("string")
 add_built_in_type("u1byte")
@@ -219,13 +219,15 @@ def out(data_type, node, element_type = None):
 						raise ConvertException(LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " for the collection " + LightYellow + stack_path + White + " the element type " + LightBlue + element_type + White + " was declared but not followed by " + LightYellow + node_part.tagName + White + ".")
 				else:
 					raise ConvertException(LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " for the collection " + LightYellow + stack_path + White + " no element type was declared.")
-	elif data_type == "file":
-		inline_file_name = node.firstChild.nodeValue
-		try:
-			inline_file = open(inline_file_name, "rb")
-			copyfileobj(inline_file, out_file)
-		except IOError:
-			raise ConvertException(LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " for " + LightYellow + stack_path + White + " of type " + DarkYellow + data_type + White + " I couldn't open the file: " + LightRed + inline_file_name + White)
+	elif data_type == "bytes":
+		if "from-file" in node.attributes:
+			try:
+				binary_file = open(node.attributes.get("from-file").nodeValue, "rb")
+				copyfileobj(binary_file, out_file)
+			except IOError:
+				raise ConvertException(LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " for " + LightYellow + stack_path + White + " of type " + DarkYellow + data_type + White + " I couldn't open the file: " + LightRed + inline_file_name + White)
+		else:
+			raise ConvertException(LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " for " + LightYellow + stack_path + White + " of type " + DarkYellow + data_type + White + " there was no \"from-file\" attribute which is required.")
 	elif data_type in declarations:
 		if declarations[data_type].is_declaration != None:
 			out_call_stack.pop()
