@@ -63,9 +63,7 @@
 		<string identifier="action"/>
 	</key-binding>
 	
-	<key-binding-profile type="16">
-		<array identifier="key-bindings"/>
-	</key-binding-profile>
+	<key-binding-profile type="16" is="collection" element-type="key-binding"/>
 	
 	<material>
 		<color4f identifier="diffuse-color"/>
@@ -75,9 +73,9 @@
 	
 	<mesh type="2">
 		<string identifier="identifier"/>
-		<array identifier="points"/>
-		<array identifier="triangle-points"/>
-		<array identifier="triangles"/>
+		<collection identifier="points" element-type="point"/>
+		<collection identifier="triangle-points" element-type="triangle-point"/>
+		<collection identifier="triangles" element-type="triangle"/>
 	</mesh>
 	
 	<mesh-part>
@@ -87,7 +85,7 @@
 	
 	<model type="11">
 		<string identifier="identifier"/>
-		<array identifier="mesh-parts"/>
+		<collection identifier="mesh-parts" element-type="mesh-part"/>
 	</model>
 	
 	<name-aspect>
@@ -126,7 +124,7 @@
 		<visualization identifier="visualization"/>
 		<vector2f identifier="position"/>
 		<float identifier="size"/>
-		<array identifier="offered-asset-classes"/>
+		<collection identifier="offered-asset-classes" element-type="offered-asset-class"/>
 		<float identifier="landing-fee-per-space"/>
 		<boolean identifier="offers-recharging"/>
 		<float identifier="recharging-fee-per-energy"/>
@@ -140,6 +138,19 @@
 		<string identifier="name"/>
 		<vector3f identifier="position"/>
 	</point>
+	
+	<shader>
+		<string identifier="identifier"/>
+		<shader-type identifier="type"/>
+		<string identifier="source"/>
+	</shader>
+	
+	<shader-identifier is="string"/>
+	
+	<shader-program>
+		<string identifier="identifier"/>
+		<collection identifier="shaders" element-type="shader-identifier"/>
+	</shader-program>
 	
 	<quaternion>
 		<float identifier="w"/>
@@ -171,7 +182,7 @@
 		<float identifier="hull"/>
 		<vector3f identifier="exhaust-offset"/>
 		<float identifier="exhaust-radius"/>
-		<array identifier="slots"/>
+		<collection identifier="slots" element-type="slot"/>
 	</ship-class>
 	
 	<slot>
@@ -186,7 +197,7 @@
 	<slot-class type="9">
 		<string identifier="identifier"/>
 		<string identifier="name"/>
-		<array identifier="accepted-slot-classes"/>
+		<collection identifier="accepted-slot-classes" element-type="accepted-slot-class"/>
 	</slot-class>
 	
 	<star>
@@ -201,7 +212,7 @@
 		<vector2f identifier="position"/>
 		<float identifier="traffic-density"/>
 		<star identifier="star"/>
-		<array identifier="planets"/>
+		<collection identifier="planets" element-type="planet"/>
 	</system>
 	
 	<system-link type="6">
@@ -243,7 +254,7 @@
 	
 	<visualization>
 		<string identifier="model-identifier"/>
-		<array identifier="visualization-parts"/>
+		<collection identifier="visualization-parts" element-type="visualization-part"/>
 	</visualization>
 	
 	<visualization-part>
