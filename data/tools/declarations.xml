@@ -223,7 +223,7 @@
 	
 	<texture type="10" sub-type="0">
 		<string identifier="identifier"/>
-		<file identifier="tex-file"/>
+		<bytes identifier="data"/>
 	</texture>
 	
 	<triangle>

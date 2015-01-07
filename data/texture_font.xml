@@ -1,4 +1,4 @@
 <texture>
 	<identifier>font</identifier>
-	<tex-file>textures/original/tex/font.tex</tex-file>
+	<data from-file="textures/original/tex/font.tex"/>
 </texture>
