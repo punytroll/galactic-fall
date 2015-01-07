@@ -17,8 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef MESH_MANAGER_H
-#define MESH_MANAGER_H
+#ifndef GRAPHICS_MESH_MANAGER_H
+#define GRAPHICS_MESH_MANAGER_H
 
 #include <map>
 #include <string>
@@ -30,12 +30,15 @@ namespace Graphics
 	class MeshManager
 	{
 	public:
+		// destructor
 		~MeshManager(void);
+		// getters
 		const Graphics::Mesh * Get(const std::string & Identifier) const;
+		// modifiers
 		Graphics::Mesh * Create(const std::string & Identifier);
 		void Destroy(const std::string & Identifier);
 	private:
-		std::map< std::string, Graphics::Mesh * > m_Managed;
+		std::map< std::string, Graphics::Mesh * > _Meshes;
 	};
 }
 

@@ -17,54 +17,49 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include <cassert>
+
 #include "mesh.h"
 #include "mesh_manager.h"
 
 Graphics::MeshManager::~MeshManager(void)
 {
-	while(m_Managed.empty() == false)
+	while(_Meshes.empty() == false)
 	{
-		Destroy(m_Managed.begin()->first);
+		Destroy(_Meshes.begin()->first);
 	}
 }
 
 const Graphics::Mesh * Graphics::MeshManager::Get(const std::string & Identifier) const
 {
-	std::map< std::string, Graphics::Mesh * >::const_iterator ManagedIterator(m_Managed.find(Identifier));
+	auto MeshIterator(_Meshes.find(Identifier));
 	
-	if(ManagedIterator == m_Managed.end())
+	if(MeshIterator == _Meshes.end())
 	{
-		return 0;
+		return nullptr;
 	}
 	else
 	{
-		return ManagedIterator->second;
+		return MeshIterator->second;
 	}
 }
 
 Graphics::Mesh * Graphics::MeshManager::Create(const std::string & Identifier)
 {
-	if(m_Managed.find(Identifier) != m_Managed.end())
-	{
-		return 0;
-	}
-	else
-	{
-		Graphics::Mesh * Managed(new Graphics::Mesh(Identifier));
-		
-		m_Managed[Managed->GetIdentifier()] = Managed;
-		
-		return Managed;
-	}
+	assert(_Meshes.find(Identifier) == _Meshes.end());
+	
+	auto Mesh(new Graphics::Mesh(Identifier));
+	
+	_Meshes[Mesh->GetIdentifier()] = Mesh;
+	
+	return Mesh;
 }
 
 void Graphics::MeshManager::Destroy(const std::string & Identifier)
 {
-	std::map< std::string, Graphics::Mesh * >::iterator ManagedIterator(m_Managed.find(Identifier));
+	auto MeshIterator(_Meshes.find(Identifier));
 	
-	if(ManagedIterator != m_Managed.end())
-	{
-		delete ManagedIterator->second;
-		m_Managed.erase(ManagedIterator);
-	}
+	assert(MeshIterator != _Meshes.end());
+	delete MeshIterator->second;
+	_Meshes.erase(MeshIterator);
 }
