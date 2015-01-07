@@ -39,6 +39,7 @@ all_data = \
 	.data/faction_earth.data \
 	.data/faction_neutral.data \
 	.data/faction_pirates.data \
+	.data/fragment_shader_default.data \
 	.data/generator_class_small_generator.data \
 	.data/mesh_cargo_cube.data \
 	.data/mesh_fighter_cockpit.data \
@@ -60,6 +61,7 @@ all_data = \
 	.data/model_planet.data \
 	.data/model_shuttle.data \
 	.data/model_transporter.data \
+	.data/program_default.data \
 	.data/scenario_new_game.data \
 	.data/scenario_rich_game.data \
 	.data/scenario_sol_spectator.data \
@@ -82,6 +84,7 @@ all_data = \
 	.data/system_link_rigel_tichel.data \
 	.data/texture_font.data \
 	.data/texture_particle.data \
+	.data/vertex_shader_default.data \
 	.data/weapon_class_light_laser.data \
 	.data/weapon_class_medium_laser.data
 
@@ -142,6 +145,8 @@ data.arx: $(data_arx) $(arxtouch_dependencies) $(arxadd_dependencies)
 	$(command_arxadd) $@ --name="Factions" --type=0 --sub-type=0 --relation="::child"
 	$(command_arxadd) $@ --name="Settings" --type=0 --sub-type=0 --relation="::child"
 	$(command_arxadd) $@ --name="Scenarios" --type=0 --sub-type=0 --relation="::child"
+	$(command_arxadd) $@ --name="Shaders" --type=0 --sub-type=0 --relation="::child"
+	$(command_arxadd) $@ --name="Programs" --type=0 --sub-type=0 --relation="::child"
 	@echo "\n\nAdding settings ...\n"
 	$(command_arxadd) $@ --name="Key Binding Profile" --type=10 --sub-type=0 --relation="/Settings::child" --data-file=.data/setting_key_binding_profile.data
 	$(command_arxadd) $@ --name="Window Dimensions" --type=f --sub-type=0 --relation="/Settings::child" --data-file=.data/setting_window_dimensions.data
@@ -227,6 +232,11 @@ data.arx: $(data_arx) $(arxtouch_dependencies) $(arxadd_dependencies)
 	$(command_arxadd) $@ --name="New Game" --type=11 --sub-type=0 --relation="/Scenarios::child" --data-file=.data/scenario_new_game.data
 	$(command_arxadd) $@ --name="Rich Game" --type=11 --sub-type=0 --relation="/Scenarios::child" --data-file=.data/scenario_rich_game.data
 	$(command_arxadd) $@ --name="Sol Spectator" --type=11 --sub-type=0 --relation="/Scenarios::child" --data-file=.data/scenario_sol_spectator.data
+	@echo "\n\nAdding shaders ...\n"
+	$(command_arxadd) $@ --name="Default Fragment Shader" --type=19 --sub-type=1 --relation="/Shaders::child" --data-file=.data/fragment_shader_default.data
+	$(command_arxadd) $@ --name="Default Vertex Shader" --type=19 --sub-type=0 --relation="/Shaders::child" --data-file=.data/vertex_shader_default.data
+	@echo "\n\nAdding programs ...\n"
+	$(command_arxadd) $@ --name="Default Program" --type=20 --sub-type=0 --relation="/Programs::child" --data-file=.data/program_default.data
 
 .data:
 	mkdir $@

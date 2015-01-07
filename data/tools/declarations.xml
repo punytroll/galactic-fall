@@ -49,6 +49,11 @@
 		<color4f identifier="color"/>
 	</faction>
 	
+	<fragment-shader type="19" sub-type="1">
+		<string identifier="identifier"/>
+		<string identifier="source"/>
+	</fragment-shader>
+	
 	<generator-class type="13">
 		<string identifier="identifier"/>
 		<string identifier="name"/>
@@ -139,15 +144,11 @@
 		<vector3f identifier="position"/>
 	</point>
 	
-	<shader>
-		<string identifier="identifier"/>
-		<shader-type identifier="type"/>
-		<string identifier="source"/>
-	</shader>
+	<shader type="19"/>
 	
 	<shader-identifier is="string"/>
 	
-	<shader-program>
+	<shader-program type="20" sub-type="0">
 		<string identifier="identifier"/>
 		<collection identifier="shaders" element-type="shader-identifier"/>
 	</shader-program>
@@ -251,6 +252,11 @@
 		<float identifier="y"/>
 		<float identifier="z"/>
 	</vector3f>
+	
+	<vertex-shader type="19" sub-type="0">
+		<string identifier="identifier"/>
+		<string identifier="source"/>
+	</vertex-shader>
 	
 	<visualization>
 		<string identifier="model-identifier"/>
