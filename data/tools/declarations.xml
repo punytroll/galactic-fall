@@ -164,7 +164,7 @@
 		<string identifier="identifier"/>
 		<string identifier="name"/>
 		<string identifier="description"/>
-		<file identifier="savegame-file"/>
+		<string identifier="savegame"/>
 	</scenario>
 	
 	<ship-class type="3">
