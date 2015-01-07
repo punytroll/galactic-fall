@@ -5,7 +5,6 @@ from pprint import pprint
 from shutil import copyfileobj
 from struct import pack
 from sys import exit
-from types import ListType, StringTypes
 from xml.dom.minidom import Node, parse
 from optparse import OptionParser
 
@@ -35,10 +34,10 @@ parser.add_option("-o", "--out", dest="out_file", help="The file to put the bina
 # read the options and validate
 (options, args) = parser.parse_args()
 if options.in_file == None:
-	print LightRed + "Usage" + White + ": Set the file to convert to binary form with " + LightYellow + "--in" + White + "."
+	print(LightRed + "Usage" + White + ": Set the file to convert to binary form with " + LightYellow + "--in" + White + ".")
 	exit(1)
 if options.out_file == None:
-	print LightRed + "Usage" + White + ": Set the file to write the binary form to with " + LightYellow + "--out" + White + "."
+	print(LightRed + "Usage" + White + ": Set the file to write the binary form to with " + LightYellow + "--out" + White + ".")
 	exit(1)
 
 class Declaration(object):
@@ -129,16 +128,16 @@ if options.declarations != None:
 	declarations_element = declarations_document.documentElement
 	for declaration_element in declarations_element.childNodes:
 		if declaration_element.nodeType == Node.ELEMENT_NODE:
-			if declarations.has_key(declaration_element.tagName) == False:
+			if declaration_element.tagName not in declarations:
 				declaration = Declaration(declaration_element.tagName)
-				if declaration_element.attributes.has_key("type") == True:
+				if "type" in declaration_element.attributes:
 					declaration.type = int(declaration_element.attributes.get("type").nodeValue)
-				if declaration_element.attributes.has_key("sub-type") == True:
+				if "sub-type" in declaration_element.attributes:
 					declaration.sub_type = int(declaration_element.attributes.get("sub-type").nodeValue)
-				if declaration_element.attributes.has_key("is") == True:
+				if "is" in declaration_element.attributes:
 					declaration.is_declaration = declaration_element.attributes.get("is").nodeValue
 					if declaration.is_declaration == "collection":
-						if declaration_element.attributes.has_key("element-type") == True:
+						if "element-type" in declaration_element.attributes:
 							declaration.set_element_type_identifier(declaration_element.attributes.get("element-type").nodeValue)
 						else:
 							raise ConvertException(LightRed + "Error" + White + ": In file " + LightYellow + options.declarations + White + " the " + LightBlue + declaration_element.tagName + White + " declaration is a " + LightBlue + "collection" + White + " alias but missing the " + LightYellow + "element-type" + White + " attribute.")
@@ -146,12 +145,12 @@ if options.declarations != None:
 					for part_element in declaration_element.childNodes:
 						if part_element.nodeType == Node.ELEMENT_NODE:
 							part = None
-							if part_element.attributes.has_key("identifier") == True:
+							if "identifier" in part_element.attributes:
 								part = Part(part_element.attributes.get("identifier").nodeValue, part_element.tagName)
 							else:
 								raise ConvertException(LightRed + "Error" + White + ": In file " + LightYellow + options.declarations + White + " there is a declaration part without an " + LightYellow + "identifier" + White + " attribute on the " + LightYellow + declaration_element.tagName + White + " declaration.")
 							if part_element.tagName == "collection":
-								if part_element.attributes.has_key("element-type") == True:
+								if "element-type" in part_element.attributes:
 									part.set_element_type_identifier(part_element.attributes.get("element-type").nodeValue)
 								else:
 									raise ConvertException(LightRed + "Error" + White + ": In file " + LightYellow + options.declarations + White + " on the " + LightBlue + declaration_element.tagName + White + " declaration, there is a collection " + LightYellow + part.get_name() + White + " declared without an " + LightYellow + "element-type" + White + " attribute.")
@@ -176,8 +175,15 @@ def out(data_type, node, element_type = None):
 	for stack_entry in out_call_stack:
 		stack_path += "/" + stack_entry
 	if data_type == "string":
-		if node.firstChild != None:
-			out_file.write(node.firstChild.nodeValue)
+		if "from-file" in node.attributes:
+			try:
+				text_file = open(node.attributes.get("from-file").nodeValue, "rb")
+				out_file.write(text_file.read().decode("utf-8").encode("utf-8"))
+			except IOError:
+				raise ConvertException(LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " for " + LightYellow + stack_path + White + " of type " + DarkYellow + data_type + White + " I couldn't open the file: " + LightRed + inline_file_name + White)
+		else:
+			if node.firstChild != None:
+				out_file.write(node.firstChild.nodeValue.encode("utf-8"))
 		out_file.write(pack('B', 0))
 	elif data_type == "boolean":
 		if node.firstChild.nodeValue == "true":
@@ -195,7 +201,7 @@ def out(data_type, node, element_type = None):
 			raise ConvertException(LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " for " + LightYellow + stack_path + White + " of type " + DarkYellow + data_type + White + " I found an invalid value: " + LightRed + node.firstChild.nodeValue + White)
 	elif data_type == "u4byte":
 		try:
-			out_file.write(pack('I', long(node.firstChild.nodeValue)))
+			out_file.write(pack('I', int(node.firstChild.nodeValue)))
 		except ValueError:
 			raise ConvertException(LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " for " + LightYellow + stack_path + White + " of type " + DarkYellow + data_type + White + " I found an invalid value: " + LightRed + node.firstChild.nodeValue + White)
 	elif data_type == "collection":
@@ -203,7 +209,7 @@ def out(data_type, node, element_type = None):
 		for node_part in node.childNodes:
 			if node_part.nodeType == Node.ELEMENT_NODE:
 				count += 1
-		out_file.write(pack('I', long(count)))
+		out_file.write(pack('I', int(count)))
 		for node_part in node.childNodes:
 			if node_part.nodeType == Node.ELEMENT_NODE:
 				if element_type != None:
@@ -220,7 +226,7 @@ def out(data_type, node, element_type = None):
 			copyfileobj(inline_file, out_file)
 		except IOError:
 			raise ConvertException(LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " for " + LightYellow + stack_path + White + " of type " + DarkYellow + data_type + White + " I couldn't open the file: " + LightRed + inline_file_name + White)
-	elif declarations.has_key(data_type) == True:
+	elif data_type in declarations:
 		if declarations[data_type].is_declaration != None:
 			out_call_stack.pop()
 			out(declarations[data_type].is_declaration, node, declarations[data_type].get_element_type_identifier())
@@ -230,7 +236,7 @@ def out(data_type, node, element_type = None):
 				if child_node.nodeType != Node.ELEMENT_NODE:
 					node.removeChild(child_node)
 			# this fills the parts list with pairs of values from the first and second list extending with None if necessary
-			parts = map(None, declarations[data_type].parts, node.childNodes)
+			parts = zip(declarations[data_type].parts, node.childNodes)
 			for declaration_part, definition_node in parts:
 				# safe-guard
 				assert declaration_part != None or definition_node != None

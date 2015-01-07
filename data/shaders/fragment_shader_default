@@ -1,0 +1,27 @@
+#version 330
+
+uniform vec3 in_CameraPosition;
+uniform vec3 in_LightDirection;
+uniform vec3 in_LightColor;
+uniform vec3 in_MaterialColor;
+uniform float in_MaterialShininess;
+
+in vec3 pass_WorldPosition;
+in vec3 pass_WorldNormal;
+
+out vec4 finalColor;
+
+void main()
+{
+    vec3 surfaceToCamera = normalize(in_CameraPosition - pass_WorldPosition);
+    float diffuseCoefficient = max(0.0, dot(pass_WorldNormal, -in_LightDirection));
+    vec3 diffuse = diffuseCoefficient * in_MaterialColor * in_LightColor;
+    float specularCoefficient = 0.0;
+	
+    if(diffuseCoefficient > 0.0)
+	{
+        specularCoefficient = pow(max(0.0, dot(surfaceToCamera, reflect(in_LightDirection, pass_WorldNormal))), in_MaterialShininess);
+	}
+	vec3 specular = specularCoefficient * in_LightColor;
+	finalColor = vec4(diffuse + specular, 0.6f);
+}
