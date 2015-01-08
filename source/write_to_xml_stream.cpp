@@ -159,6 +159,7 @@ void WriteToXMLStream(XMLStream & XMLStream, Object * TheObject)
 				XMLStream << element << "material-specular-color" << attribute << "red" << value << PartMaterial.second->GetSpecularColor()->GetColor()[0] << attribute << "green" << value << PartMaterial.second->GetSpecularColor()->GetColor()[1] << attribute << "blue" << value << PartMaterial.second->GetSpecularColor()->GetColor()[2] << attribute << "opacity" << value << PartMaterial.second->GetSpecularColor()->GetColor()[3] << end;
 			}
 			XMLStream << element << "material-shininess" << attribute << "value" << value << PartMaterial.second->GetShininess() << end;
+			XMLStream << element << "material-program-identifier" << attribute << "value" << value << PartMaterial.second->GetProgramIdentifier() << end;
 			XMLStream << end;
 		}
 		XMLStream << end;
