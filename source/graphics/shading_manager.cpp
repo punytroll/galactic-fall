@@ -35,6 +35,21 @@ Graphics::ShadingManager::~ShadingManager(void)
 	}
 }
 
+void Graphics::ShadingManager::BuildPrograms(void)
+{
+	for(auto & Program : _Programs)
+	{
+		Program.second->Build(this);
+	}
+	for(auto & Shader : _Shaders)
+	{
+		if(Shader.second->IsBuilt() == true)
+		{
+			Shader.second->Dispose();
+		}
+	}
+}
+
 Graphics::Program * Graphics::ShadingManager::CreateProgram(const std::string & ProgramIdentifier)
 {
 	assert(_Programs.find(ProgramIdentifier) == _Programs.end());
@@ -62,6 +77,10 @@ void Graphics::ShadingManager::DestroyProgram(const std::string & ProgramIdentif
 	auto ProgramIterator(_Programs.find(ProgramIdentifier));
 	
 	assert(ProgramIterator != _Programs.end());
+	if(ProgramIterator->second->IsBuilt() == true)
+	{
+		ProgramIterator->second->Dispose();
+	}
 	delete ProgramIterator->second;
 	_Programs.erase(ProgramIterator);
 }
@@ -71,6 +90,10 @@ void Graphics::ShadingManager::DestroyShader(const std::string & ShaderIdentifie
 	auto ShaderIterator(_Shaders.find(ShaderIdentifier));
 	
 	assert(ShaderIterator != _Shaders.end());
+	if(ShaderIterator->second->IsBuilt() == true)
+	{
+		ShaderIterator->second->Dispose();
+	}
 	delete ShaderIterator->second;
 	_Shaders.erase(ShaderIterator);
 }

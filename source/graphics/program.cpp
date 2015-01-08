@@ -17,14 +17,89 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include <iostream>
+
+#include "../globals.h"
+#include "gl.h"
 #include "program.h"
+#include "shader.h"
+#include "shading_manager.h"
 
 Graphics::Program::Program(const std::string & Identifier) :
+	_Handle(0),
 	_Identifier(Identifier)
 {
+}
+
+Graphics::Program::~Program(void)
+{
+	assert(_Handle == 0);
 }
 
 void Graphics::Program::AddShaderIdentifier(const std::string & ShaderIdentifier)
 {
 	_ShaderIdentifiers.push_back(ShaderIdentifier);
+}
+
+void Graphics::Program::Build(Graphics::ShadingManager * ShadingManager)
+{
+	ON_DEBUG(std::cout << "Building program \"" << _Identifier << "\"." << std::endl);
+	assert(ShadingManager != nullptr);
+	assert(_Handle == 0);
+	_Handle = GLCreateProgram();
+	assert(_Handle != 0);
+	for(auto & ShaderIdentifier : _ShaderIdentifiers)
+	{
+		auto Shader(ShadingManager->GetShader(ShaderIdentifier));
+		
+		if(Shader->IsBuilt() == false)
+		{
+			Shader->Build();
+		}
+		assert(Shader->GetHandle() != 0);
+		GLAttachShader(_Handle, Shader->GetHandle());
+	}
+	GLLinkProgram(_Handle);
+	
+	GLint LinkStatus;
+	
+	GLGetProgramiv(_Handle, GL_LINK_STATUS, &LinkStatus);
+	assert(LinkStatus == GL_TRUE);
+	
+	GLint ActiveAttributes;
+	
+	GLGetProgramiv(_Handle, GL_ACTIVE_ATTRIBUTES, &ActiveAttributes);
+	ON_DEBUG(std::cout << "    Linked program has " << ActiveAttributes << " active attributes." << std::endl);
+	for(auto AttributeIndex = 0; AttributeIndex < ActiveAttributes; ++AttributeIndex)
+	{
+		GLchar Name[1024];
+		GLsizei NameLength;
+		GLint Size;
+		GLenum Type;
+		
+		GLGetActiveAttrib(_Handle, AttributeIndex, 1024, &NameLength, &Size, &Type, Name);
+		ON_DEBUG(std::cout << "        Attribute \"" << Name << "\" with size " << Size << " and type " << Type << "." << std::endl);
+	}
+	
+	GLint ActiveUniforms;
+	
+	GLGetProgramiv(_Handle, GL_ACTIVE_UNIFORMS, &ActiveUniforms);
+	ON_DEBUG(std::cout << "    Linked program has " << ActiveUniforms << " active uniforms." << std::endl);
+	for(auto UniformIndex = 0; UniformIndex < ActiveUniforms; ++UniformIndex)
+	{
+		GLchar Name[1024];
+		GLsizei NameLength;
+		GLint Size;
+		GLenum Type;
+		
+		GLGetActiveUniform(_Handle, UniformIndex, 1024, &NameLength, &Size, &Type, Name);
+		ON_DEBUG(std::cout << "        Uniform \"" << Name << "\" with size " << Size << " and type " << Type << "." << std::endl);
+	}
+}
+
+void Graphics::Program::Dispose(void)
+{
+	assert(_Handle != 0);
+	GLDeleteProgram(_Handle);
+	_Handle = 0;
 }

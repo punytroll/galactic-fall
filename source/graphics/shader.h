@@ -22,6 +22,8 @@
 
 #include <string>
 
+#include "gl.h"
+
 namespace Graphics
 {
 	class Shader
@@ -29,24 +31,37 @@ namespace Graphics
 	public:
 		enum class Type
 		{
+			Undefined,
 			FragmentShader,
 			VertexShader
 		};
 		
 		// constructor
 		Shader(const std::string & Identifier);
+		~Shader(void);
 		// getters
+		GLuint GetHandle(void) const;
 		const std::string & GetIdentifier(void) const;
 		const std::string & GetSource(void) const;
 		Graphics::Shader::Type GetType(void) const;
+		bool IsBuilt(void) const;
 		// setters
 		void SetSource(const std::string & Source);
 		void SetType(Graphics::Shader::Type Type);
+		// modifiers
+		void Build(void);
+		void Dispose(void);
 	private:
+		GLuint _Handle;
 		std::string _Identifier;
 		std::string _Source;
 		Graphics::Shader::Type _Type;
 	};
+	
+	inline GLuint Shader::GetHandle(void) const
+	{
+		return _Handle;
+	}
 	
 	inline const std::string & Shader::GetIdentifier(void) const
 	{
@@ -61,6 +76,11 @@ namespace Graphics
 	inline Graphics::Shader::Type Shader::GetType(void) const
 	{
 		return _Type;
+	}
+	
+	inline bool Shader::IsBuilt(void) const
+	{
+		return _Handle != 0;
 	}
 	
 	inline void Shader::SetSource(const std::string & Source)

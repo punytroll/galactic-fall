@@ -38,6 +38,7 @@ namespace Graphics
 		Graphics::Program * GetProgram(const std::string & ProgramIdentifier);
 		Graphics::Shader * GetShader(const std::string & ShaderIdentifier);
 		// modifiers
+		void BuildPrograms(void);
 		Graphics::Program * CreateProgram(const std::string & ProgramIdentifier);
 		Graphics::Shader * CreateShader(const std::string & ShaderIdentifier);
 		void DestroyProgram(const std::string & ProgramIdentifier);

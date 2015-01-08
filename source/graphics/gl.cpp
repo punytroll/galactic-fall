@@ -19,6 +19,7 @@
 
 #include "gl.h"
 
+glAttachShaderFunction __glAttachShader(nullptr);
 glBeginFunction __glBegin(nullptr);
 glBindBufferFunction __glBindBuffer(nullptr);
 glBindFramebufferFunction __glBindFramebuffer(nullptr);
@@ -36,9 +37,14 @@ glClipPlaneFunction __glClipPlane(nullptr);
 glColor3fFunction __glColor3f(nullptr);
 glColor4fFunction __glColor4f(nullptr);
 glColor4fvFunction __glColor4fv(nullptr);
+glCompileShaderFunction __glCompileShader(nullptr);
+glCreateProgramFunction __glCreateProgram(nullptr);
+glCreateShaderFunction __glCreateShader(nullptr);
 glDeleteFramebuffersFunction __glDeleteFramebuffers(nullptr);
 glDeleteListsFunction __glDeleteLists(nullptr);
+glDeleteProgramFunction __glDeleteProgram(nullptr);
 glDeleteRenderbuffersFunction __glDeleteRenderbuffers(nullptr);
+glDeleteShaderFunction __glDeleteShader(nullptr);
 glDeleteTexturesFunction __glDeleteTextures(nullptr);
 glDisableFunction __glDisable(nullptr);
 glDrawArraysFunction __glDrawArrays(nullptr);
@@ -54,10 +60,15 @@ glGenListsFunction __glGenLists(nullptr);
 glGenRenderbuffersFunction __glGenRenderbuffers(nullptr);
 glGenTexturesFunction __glGenTextures(nullptr);
 glGenVertexArraysFunction __glGenVertexArrays(nullptr);
+glGetActiveAttribFunction __glGetActiveAttrib(nullptr);
+glGetActiveUniformFunction __glGetActiveUniform(nullptr);
 glGetIntegervFunction __glGetIntegerv(nullptr);
+glGetProgramivFunction __glGetProgramiv(nullptr);
+glGetShaderivFunction __glGetShaderiv(nullptr);
 glGetStringFunction __glGetString(nullptr);
 glLightfvFunction __glLightfv(nullptr);
 glLightModelfvFunction __glLightModelfv(nullptr);
+glLinkProgramFunction __glLinkProgram(nullptr);
 glListBaseFunction __glListBase(nullptr);
 glLoadIdentityFunction __glLoadIdentity(nullptr);
 glLoadMatrixfFunction __glLoadMatrixf(nullptr);
@@ -79,6 +90,7 @@ glReadPixelsFunction __glReadPixels(nullptr);
 glRenderbufferStorageFunction __glRenderbufferStorage(nullptr);
 glRotatefFunction __glRotatef(nullptr);
 glScalefFunction __glScalef(nullptr);
+glShaderSourceFunction __glShaderSource(nullptr);
 glTexCoord2fFunction __glTexCoord2f(nullptr);
 glTexImage2DFunction __glTexImage2D(nullptr);
 glTexParameteriFunction __glTexParameteri(nullptr);
