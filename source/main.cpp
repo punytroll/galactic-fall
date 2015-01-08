@@ -1577,6 +1577,11 @@ void LoadGameFromElement(const Element * SaveElement)
 									assert(PartChild->HasAttribute("value") == true);
 									NewPartMaterial->SetShininess(from_string_cast< float >(PartChild->GetAttribute("value")));
 								}
+								else if(PartChild->GetName() == "material-program-identifier")
+								{
+									assert(PartChild->HasAttribute("value") == true);
+									NewPartMaterial->SetProgramIdentifier(PartChild->GetAttribute("value"));
+								}
 								else
 								{
 									throw std::runtime_error("The \"" + ObjectChild->GetName() + "\" element for the object \"" + SaveChild->GetAttribute("object-identifier") + "\" contains an unknown element \"" + PartChild->GetName() + "\".");

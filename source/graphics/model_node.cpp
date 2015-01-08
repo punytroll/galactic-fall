@@ -20,11 +20,14 @@
 #include <algebra/matrix4f.h>
 
 #include "../color.h"
+#include "../globals.h"
+#include "engine.h"
 #include "gl.h"
 #include "material.h"
 #include "mesh.h"
 #include "model.h"
 #include "model_node.h"
+#include "shading_manager.h"
 
 Graphics::ModelNode::ModelNode(void) :
 	_Model(nullptr)
@@ -49,6 +52,11 @@ void Graphics::ModelNode::Draw(void)
 		{
 			auto MaterialIterator(_Materials.find(MeshPart.first));
 			
+			assert(MaterialIterator != _Materials.end());
+			assert(MaterialIterator->second != nullptr);
+			assert(g_GraphicsEngine != nullptr);
+			assert(g_GraphicsEngine->GetShadingManager() != nullptr);
+			assert(g_GraphicsEngine->GetShadingManager()->GetProgram(MaterialIterator->second->GetProgramIdentifier()) != nullptr);
 			if(GetUseLighting() == true)
 			{
 				if(MaterialIterator == _Materials.end())
