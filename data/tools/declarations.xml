@@ -71,6 +71,7 @@
 		<color4f identifier="diffuse-color"/>
 		<optional-color4f identifier="specular-color"/>
 		<float identifier="shininess"/>
+		<string identifier="program-identifier"/>
 	</material>
 	
 	<mesh type="2">
