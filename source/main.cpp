@@ -3530,6 +3530,7 @@ int main(int argc, char ** argv)
 	ON_DEBUG(std::cout << "Reading the data objects from the game archive." << std::endl);
 	g_ResourceReader->ReadMeshes();
 	g_ResourceReader->ReadModels();
+	g_ResourceReader->ReadShadersAndPrograms(g_GraphicsEngine->GetShadingManager());
 	g_ResourceReader->ReadAssetClasses();
 	g_ResourceReader->ReadBatteryClasses();
 	g_ResourceReader->ReadCommodityClasses();

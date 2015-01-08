@@ -44,6 +44,9 @@
 #include "graphics/mesh_manager.h"
 #include "graphics/model.h"
 #include "graphics/model_manager.h"
+#include "graphics/program.h"
+#include "graphics/shader.h"
+#include "graphics/shading_manager.h"
 #include "graphics/texture.h"
 #include "graphics/texture_manager.h"
 #include "object_aspect_name.h"
@@ -72,7 +75,9 @@ static void ReadFaction(Arxx::Reference & Reference);
 static void ReadGeneratorClass(Arxx::Reference & Reference);
 static void ReadMesh(Arxx::Reference & Reference);
 static void ReadModel(Arxx::Reference & Reference);
+static void ReadProgram(Arxx::Reference & Reference, Graphics::ShadingManager * ShadingManager);
 static void ReadScenario(Arxx::Reference & Reference, ScenarioManager * ScenarioManager);
+static void ReadShader(Arxx::Reference & Reference, Graphics::ShadingManager * ShadingManager);
 static void ReadShipClass(Arxx::Reference & Reference);
 static void ReadSlotClass(Arxx::Reference & Reference);
 static void ReadSystem(Arxx::Reference & Reference);
@@ -215,6 +220,12 @@ void ResourceReader::ReadSettings(Settings * Settings)
 		throw std::runtime_error("Could not find an item at the path '/Settings'.");
 	}
 	Settings->LoadFromItem(Item);
+}
+
+void ResourceReader::ReadShadersAndPrograms(Graphics::ShadingManager * ShadingManager)
+{
+	ReadItems(m_Archive, "/Shaders", std::bind(ReadShader, std::placeholders::_1, ShadingManager));
+	ReadItems(m_Archive, "/Programs", std::bind(ReadProgram, std::placeholders::_1, ShadingManager));
 }
 
 void ResourceReader::ReadShipClasses(void)
@@ -577,6 +588,39 @@ static void ReadModel(Arxx::Reference & Reference)
 	}
 }
 
+static void ReadProgram(Arxx::Reference & Reference, Graphics::ShadingManager * ShadingManager)
+{
+	auto Item(Resolve(Reference));
+	
+	if(Item->GetType() != DATA_TYPE_SHADER_PROGRAM)
+	{
+		throw std::runtime_error("Item type for shader '" + Item->GetName() + "' should be '" + to_string_cast(DATA_TYPE_SHADER_PROGRAM) + "' not '" + to_string_cast(Item->GetType()) + "'.");
+	}
+	
+	Arxx::BufferReader Reader(*Item);
+	std::string Identifier;
+	
+	Reader >> Identifier;
+	
+	auto Program(ShadingManager->CreateProgram(Identifier));
+	
+	if(Program == nullptr)
+	{
+		throw std::runtime_error("Could not create program '" + Identifier + "'.");
+	}
+	
+	std::uint32_t NumberOfShaders;
+	
+	Reader >> NumberOfShaders;
+	for(std::uint32_t ShaderNumber = 1; ShaderNumber <= NumberOfShaders; ++ShaderNumber)
+	{
+		std::string ShaderIdentifier;
+		
+		Reader >> ShaderIdentifier;
+		Program->AddShaderIdentifier(ShaderIdentifier);
+	}
+}
+
 static void ReadScenario(Arxx::Reference & Reference, ScenarioManager * ScenarioManager)
 {
 	Arxx::Item * Item(Resolve(Reference));
@@ -609,6 +653,45 @@ static void ReadScenario(Arxx::Reference & Reference, ScenarioManager * Scenario
 	Reader >> Name >> Description;
 	NewScenario->SetName(Name);
 	NewScenario->SetDescription(Description);
+}
+
+static void ReadShader(Arxx::Reference & Reference, Graphics::ShadingManager * ShadingManager)
+{
+	auto Item(Resolve(Reference));
+	
+	if(Item->GetType() != DATA_TYPE_SHADER)
+	{
+		throw std::runtime_error("Item type for shader '" + Item->GetName() + "' should be '" + to_string_cast(DATA_TYPE_SHADER) + "' not '" + to_string_cast(Item->GetType()) + "'.");
+	}
+	
+	Arxx::BufferReader Reader(*Item);
+	std::string Identifier;
+	
+	Reader >> Identifier;
+	
+	auto Shader(ShadingManager->CreateShader(Identifier));
+	
+	if(Shader == nullptr)
+	{
+		throw std::runtime_error("Could not create shader '" + Identifier + "'.");
+	}
+	if(Item->GetSubType() == DATA_TYPE_SHADER_SUB_TYPE_VERTEX_SHADER)
+	{
+		Shader->SetType(Graphics::Shader::Type::VertexShader);
+	}
+	else if(Item->GetSubType() == DATA_TYPE_SHADER_SUB_TYPE_FRAGMENT_SHADER)
+	{
+		Shader->SetType(Graphics::Shader::Type::FragmentShader);
+	}
+	else
+	{
+		throw std::runtime_error("Unknown sub type '" + to_string_cast(Item->GetType()) + "' for shader '" + Item->GetName() + ".");
+	}
+	
+	std::string Source;
+	
+	Reader >> Source;
+	Shader->SetSource(Source);
 }
 
 static void ReadShipClass(Arxx::Reference & Reference)

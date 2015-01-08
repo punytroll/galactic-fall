@@ -25,12 +25,14 @@
 #include "mesh_manager.h"
 #include "model_manager.h"
 #include "particle_system.h"
+#include "shading_manager.h"
 #include "texture_manager.h"
 #include "view.h"
 
 Graphics::Engine::Engine(void) :
 	_MeshManager(new Graphics::MeshManager()),
 	_ModelManager(new Graphics::ModelManager()),
+	_ShadingManager(new Graphics::ShadingManager()),
 	_TextureManager(new Graphics::TextureManager())
 {
 }
@@ -38,10 +40,16 @@ Graphics::Engine::Engine(void) :
 Graphics::Engine::~Engine(void)
 {
 	assert(_Views.empty() == true);
+	assert(_MeshManager != nullptr);
 	delete _MeshManager;
 	_MeshManager = nullptr;
+	assert(_ModelManager != nullptr);
 	delete _ModelManager;
 	_ModelManager = nullptr;
+	assert(_ShadingManager != nullptr);
+	delete _ShadingManager;
+	_ShadingManager = nullptr;
+	assert(_TextureManager != nullptr);
 	delete _TextureManager;
 	_TextureManager = nullptr;
 }
