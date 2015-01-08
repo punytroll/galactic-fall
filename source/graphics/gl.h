@@ -32,6 +32,10 @@
 
 #define CheckGLError assert(glGetError() == GL_NO_ERROR);
 
+typedef void (* glAttachShaderFunction)(GLuint program, GLuint shader);
+extern glAttachShaderFunction __glAttachShader;
+#define GLAttachShader(program, shader) { assert(__glAttachShader != nullptr); __glAttachShader(program, shader); CheckGLError; }
+
 typedef void (* glBeginFunction)(GLenum mode);
 extern glBeginFunction __glBegin;
 #define GLBegin(mode) { assert(__glBegin != nullptr); __glBegin(mode); }
@@ -113,6 +117,44 @@ typedef void (* glColor4fvFunction)(const GLfloat * v);
 extern glColor4fvFunction __glColor4fv;
 #define GLColor4fv(v) { assert(__glColor4fv != nullptr); __glColor4fv(v); }
 
+typedef void (* glCompileShaderFunction)(GLuint shader);
+extern glCompileShaderFunction __glCompileShader;
+#define GLCompileShader(shader) { assert(__glCompileShader != nullptr); __glCompileShader(shader); CheckGLError; }
+
+typedef GLuint (* glCreateProgramFunction)(void);
+extern glCreateProgramFunction __glCreateProgram;
+#ifdef NDEBUG
+#define GLCreateProgram() __glCreateProgram(); CheckGLError;
+#else
+inline GLuint GLCreateProgram(void)
+{
+	GLuint Result;
+	
+	assert(__glCreateProgram != nullptr);
+	Result = __glCreateProgram();
+	CheckGLError;
+	
+	return Result;
+}
+#endif
+
+typedef GLuint (* glCreateShaderFunction)(GLenum shaderType);
+extern glCreateShaderFunction __glCreateShader;
+#ifdef NDEBUG
+#define GLCreateShader(shaderType) __glCreateShader(shaderType); CheckGLError;
+#else
+inline GLuint GLCreateShader(GLenum shaderType)
+{
+	GLuint Result;
+	
+	assert(__glCreateShader != nullptr);
+	Result = __glCreateShader(shaderType);
+	CheckGLError;
+	
+	return Result;
+}
+#endif
+
 typedef void (* glDeleteFramebuffersFunction)(GLsizei n, GLuint * framebuffers);
 extern glDeleteFramebuffersFunction __glDeleteFramebuffers;
 #define GLDeleteFramebuffers(n, framebuffers) { assert(__glDeleteFramebuffers != nullptr); __glDeleteFramebuffers(n, framebuffers); CheckGLError; }
@@ -121,9 +163,17 @@ typedef void (* glDeleteListsFunction)(GLuint list, GLsizei range);;
 extern glDeleteListsFunction __glDeleteLists;
 #define GLDeleteLists(list, range) { assert(__glDeleteLists != nullptr); __glDeleteLists(list, range); CheckGLError; }
 
+typedef void (* glDeleteProgramFunction)(GLuint program);
+extern glDeleteProgramFunction __glDeleteProgram;
+#define GLDeleteProgram(program) { assert(__glDeleteProgram != nullptr); __glDeleteProgram(program); CheckGLError; }
+
 typedef void (* glDeleteRenderbuffersFunction)(GLsizei n, GLuint * renderbuffers);
 extern glDeleteRenderbuffersFunction __glDeleteRenderbuffers;
 #define GLDeleteRenderbuffers(n, renderbuffers) { assert(__glDeleteRenderbuffers != nullptr); __glDeleteRenderbuffers(n, renderbuffers); CheckGLError; }
+
+typedef void (* glDeleteShaderFunction)(GLuint shader);
+extern glDeleteShaderFunction __glDeleteShader;
+#define GLDeleteShader(shader) { assert(__glDeleteShader != nullptr); __glDeleteShader(shader); CheckGLError; }
 
 typedef void (* glDeleteTexturesFunction)(GLsizei n, const GLuint * textures);
 extern glDeleteTexturesFunction __glDeleteTextures;
@@ -198,9 +248,25 @@ typedef void (* glGenVertexArraysFunction)(GLsizei n, GLuint * arrays);
 extern glGenVertexArraysFunction __glGenVertexArrays;
 #define GLGenVertexArrays(n, arrays) { assert(__glGenVertexArrays != nullptr); __glGenVertexArrays(n, arrays); CheckGLError; }
 
+typedef void (* glGetActiveAttribFunction)(GLuint program, GLuint index, GLsizei bufSize, GLsizei * length, GLint * size, GLenum * type, GLchar * name);
+extern glGetActiveAttribFunction __glGetActiveAttrib;
+#define GLGetActiveAttrib(program, index, bufSize, length, size, type, name) { assert(__glGetActiveAttrib != nullptr); __glGetActiveAttrib(program, index, bufSize, length, size, type, name); CheckGLError; }
+
+typedef void (* glGetActiveUniformFunction)(GLuint program, GLuint index, GLsizei bufSize, GLsizei * length, GLint * size, GLenum * type, GLchar * name);
+extern glGetActiveUniformFunction __glGetActiveUniform;
+#define GLGetActiveUniform(program, index, bufSize, length, size, type, name) { assert(__glGetActiveAttrib != nullptr); __glGetActiveUniform(program, index, bufSize, length, size, type, name); CheckGLError; }
+
 typedef void (* glGetIntegervFunction)(GLenum pname, GLint * params);
 extern glGetIntegervFunction __glGetIntegerv;
 #define GLGetIntegerv(pname, params) { assert(__glGetIntegerv != nullptr); __glGetIntegerv(pname, params); CheckGLError; }
+
+typedef void (* glGetProgramivFunction)(GLuint program, GLenum pname, GLint * params);
+extern glGetProgramivFunction __glGetProgramiv;
+#define GLGetProgramiv(program, pname, params) { assert(__glGetProgramiv != nullptr); __glGetProgramiv(program, pname, params); CheckGLError; }
+
+typedef void (* glGetShaderivFunction)(GLuint shader, GLenum pname, GLint * params);
+extern glGetShaderivFunction __glGetShaderiv;
+#define GLGetShaderiv(program, pname, params) { assert(__glGetShaderiv != nullptr); __glGetShaderiv(program, pname, params); CheckGLError; }
 
 typedef const GLubyte * (* glGetStringFunction)(GLenum name);
 extern glGetStringFunction __glGetString;
@@ -226,6 +292,10 @@ extern glLightfvFunction __glLightfv;
 typedef void (* glLightModelfvFunction)(GLenum pname, const GLfloat * params);
 extern glLightModelfvFunction __glLightModelfv;
 #define GLLightModelfv(pname, params) { assert(__glLightModelfv != nullptr); __glLightModelfv(pname, params); CheckGLError; }
+
+typedef void (* glLinkProgramFunction)(GLuint program);
+extern glLinkProgramFunction __glLinkProgram;
+#define GLLinkProgram(program) { assert(__glLinkProgram != nullptr); __glLinkProgram(program); CheckGLError; }
 
 typedef void (* glListBaseFunction)(GLuint base);
 extern glListBaseFunction __glListBase;
@@ -310,6 +380,10 @@ extern glRotatefFunction __glRotatef;
 typedef void (* glScalefFunction)(GLfloat x, GLfloat y, GLfloat z);
 extern glScalefFunction __glScalef;
 #define GLScalef(x, y, z) { assert(__glScalef != nullptr); __glScalef(x, y, z); CheckGLError; }
+
+typedef void (* glShaderSourceFunction)(GLuint shader, GLsizei count, const GLchar ** string, const GLint * length);
+extern glShaderSourceFunction __glShaderSource;
+#define GLShaderSource(shader, count, string, length) { assert(__glShaderSource != nullptr); __glShaderSource(shader, count, string, length); CheckGLError; }
 
 typedef void (* glTexCoord2fFunction)(GLfloat s, GLfloat t);
 extern glTexCoord2fFunction __glTexCoord2f;

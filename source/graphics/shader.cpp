@@ -20,6 +20,47 @@
 #include "shader.h"
 
 Graphics::Shader::Shader(const std::string & Identifier) :
-	_Identifier(Identifier)
+	_Handle(0),
+	_Identifier(Identifier),
+	_Type(Graphics::Shader::Type::Undefined)
 {
+}
+
+Graphics::Shader::~Shader(void)
+{
+	assert(_Handle == 0);
+}
+
+void Graphics::Shader::Build(void)
+{
+	assert(_Handle == 0);
+	if(_Type == Graphics::Shader::Type::FragmentShader)
+	{
+		_Handle = GLCreateShader(GL_FRAGMENT_SHADER);
+	}
+	else if(_Type == Graphics::Shader::Type::VertexShader)
+	{
+		_Handle = GLCreateShader(GL_VERTEX_SHADER);
+	}
+	else
+	{
+		assert(false);
+	}
+	
+	auto Source(_Source.c_str());
+	
+	GLShaderSource(_Handle, 1, &Source, nullptr);
+	GLCompileShader(_Handle);
+	
+	GLint CompileStatus;
+	
+	GLGetShaderiv(_Handle, GL_COMPILE_STATUS, &CompileStatus);
+	assert(CompileStatus == GL_TRUE);
+}
+
+void Graphics::Shader::Dispose(void)
+{
+	assert(_Handle != 0);
+	GLDeleteShader(_Handle);
+	_Handle = 0;
 }

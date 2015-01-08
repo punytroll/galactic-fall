@@ -23,18 +23,27 @@
 #include <list>
 #include <string>
 
+#include "gl.h"
+
 namespace Graphics
 {
+	class ShadingManager;
+	
 	class Program
 	{
 	public:
 		// constructor
 		Program(const std::string & Identifier);
+		~Program(void);
 		// getters
 		const std::string & GetIdentifier(void) const;
+		bool IsBuilt(void) const;
 		// modifiers
 		void AddShaderIdentifier(const std::string & ShaderIdentifier);
+		void Build(Graphics::ShadingManager * ShadingManager);
+		void Dispose(void);
 	private:
+		GLuint _Handle;
 		std::string _Identifier;
 		std::list< std::string > _ShaderIdentifiers;
 	};
@@ -42,6 +51,11 @@ namespace Graphics
 	inline const std::string & Graphics::Program::GetIdentifier(void) const
 	{
 		return _Identifier;
+	}
+	
+	inline bool Graphics::Program::IsBuilt(void) const
+	{
+		return _Handle != 0;
 	}
 }
 

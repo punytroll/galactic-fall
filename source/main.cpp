@@ -72,6 +72,7 @@
 #include "graphics/particle_system.h"
 #include "graphics/perspective_projection.h"
 #include "graphics/scene.h"
+#include "graphics/shading_manager.h"
 #include "graphics/system_node.h"
 #include "graphics/texture.h"
 #include "graphics/texture_manager.h"
@@ -2984,6 +2985,7 @@ void CreateWindow(void)
 void InitializeOpenGL(void)
 {
 	ON_DEBUG(std::cout << "Loading OpenGL functions." << std::endl);
+	LoadOpenGLFunction(glAttachShader);
 	LoadOpenGLFunction(glBegin);
 	LoadOpenGLFunction(glBindBuffer);
 	LoadOpenGLFunction(glBindFramebuffer);
@@ -3001,9 +3003,14 @@ void InitializeOpenGL(void)
 	LoadOpenGLFunction(glColor3f);
 	LoadOpenGLFunction(glColor4f);
 	LoadOpenGLFunction(glColor4fv);
+	LoadOpenGLFunction(glCompileShader);
+	LoadOpenGLFunction(glCreateProgram);
+	LoadOpenGLFunction(glCreateShader);
 	LoadOpenGLFunction(glDeleteFramebuffers);
 	LoadOpenGLFunction(glDeleteLists);
+	LoadOpenGLFunction(glDeleteProgram);
 	LoadOpenGLFunction(glDeleteRenderbuffers);
+	LoadOpenGLFunction(glDeleteShader);
 	LoadOpenGLFunction(glDeleteTextures);
 	LoadOpenGLFunction(glDisable);
 	LoadOpenGLFunction(glDrawArrays);
@@ -3018,11 +3025,16 @@ void InitializeOpenGL(void)
 	LoadOpenGLFunction(glGenLists);
 	LoadOpenGLFunction(glGenRenderbuffers);
 	LoadOpenGLFunction(glGenTextures);
+	LoadOpenGLFunction(glGetActiveAttrib);
+	LoadOpenGLFunction(glGetActiveUniform);
 	LoadOpenGLFunction(glGetIntegerv);
+	LoadOpenGLFunction(glGetProgramiv);
+	LoadOpenGLFunction(glGetShaderiv);
 	LoadOpenGLFunction(glGetString);
 	LoadOpenGLFunction(glGenVertexArrays);
 	LoadOpenGLFunction(glLightfv);
 	LoadOpenGLFunction(glLightModelfv);
+	LoadOpenGLFunction(glLinkProgram);
 	LoadOpenGLFunction(glListBase);
 	LoadOpenGLFunction(glLoadIdentity);
 	LoadOpenGLFunction(glLoadMatrixf);
@@ -3044,6 +3056,7 @@ void InitializeOpenGL(void)
 	LoadOpenGLFunction(glRenderbufferStorage);
 	LoadOpenGLFunction(glRotatef);
 	LoadOpenGLFunction(glScalef);
+	LoadOpenGLFunction(glShaderSource);
 	LoadOpenGLFunction(glTexCoord2f);
 	LoadOpenGLFunction(glTexImage2D);
 	LoadOpenGLFunction(glTexParameteri);
@@ -3524,7 +3537,6 @@ int main(int argc, char ** argv)
 	ON_DEBUG(std::cout << "Reading the data objects from the game archive." << std::endl);
 	g_ResourceReader->ReadMeshes();
 	g_ResourceReader->ReadModels();
-	g_ResourceReader->ReadShadersAndPrograms(g_GraphicsEngine->GetShadingManager());
 	g_ResourceReader->ReadAssetClasses();
 	g_ResourceReader->ReadBatteryClasses();
 	g_ResourceReader->ReadCommodityClasses();
@@ -3533,6 +3545,9 @@ int main(int argc, char ** argv)
 	g_ResourceReader->ReadShipClasses();
 	g_ResourceReader->ReadWeaponClasses();
 	g_ResourceReader->ReadScenarios(g_ScenarioManager);
+	// reading shaders and programs could be done earlier and without OpenGL, but initializing them requires OpenGL
+	g_ResourceReader->ReadShadersAndPrograms(g_GraphicsEngine->GetShadingManager());
+	g_GraphicsEngine->GetShadingManager()->BuildPrograms();
 	// since reading the textures already creates them we have to do this after initializing OpenGL
 	ON_DEBUG(std::cout << "Reading textures from game archive." << std::endl);
 	g_ResourceReader->ReadTextures();
