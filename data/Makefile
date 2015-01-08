@@ -67,9 +67,9 @@ all_data = \
 	.data/scenario_sol_spectator.data \
 	.data/setting_key_binding_profile.data \
 	.data/setting_window_dimensions.data \
+	.data/ship_class_fighter.data \
 	.data/ship_class_shuttle.data \
 	.data/ship_class_transporter.data \
-	.data/ship_class_fighter.data \
 	.data/slot_class_light_battery.data \
 	.data/slot_class_light_weapon.data \
 	.data/slot_class_medium_weapon.data \
