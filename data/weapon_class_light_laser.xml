@@ -5,22 +5,22 @@
 		<model-identifier>light_laser</model-identifier>
 		<visualization-parts>
 			<visualization-part>
-				<part-identifier>hull</part-identifier>
+				<part-identifier>light_laser</part-identifier>
 				<material>
 					<diffuse-color>
-						<red>0.5</red>
-						<green>0.5</green>
-						<blue>0.5</blue>
-						<opacity>1</opacity>
+						<red>0.58</red>
+						<green>0.6</green>
+						<blue>0.58</blue>
+						<opacity>1.0</opacity>
 					</diffuse-color>
 					<specular-color>
 						<valid>true</valid>
-						<red>0</red>
-						<green>0</green>
-						<blue>0</blue>
-						<opacity>1</opacity>
+						<red>1.0</red>
+						<green>1.0</green>
+						<blue>1.0</blue>
+						<opacity>1.0</opacity>
 					</specular-color>
-					<shininess>40</shininess>
+					<shininess>40.0</shininess>
 					<program-identifier>default</program-identifier>
 				</material>
 			</visualization-part>
