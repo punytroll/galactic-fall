@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 
+from itertools import zip_longest
 from os import remove
 from pprint import pprint
 from shutil import copyfileobj
@@ -238,7 +239,7 @@ def out(data_type, node, element_type = None):
 				if child_node.nodeType != Node.ELEMENT_NODE:
 					node.removeChild(child_node)
 			# this fills the parts list with pairs of values from the first and second list extending with None if necessary
-			parts = zip(declarations[data_type].parts, node.childNodes)
+			parts = zip_longest(declarations[data_type].parts, node.childNodes, fillvalue = None)
 			for declaration_part, definition_node in parts:
 				# safe-guard
 				assert declaration_part != None or definition_node != None
