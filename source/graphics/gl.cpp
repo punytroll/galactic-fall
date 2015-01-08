@@ -66,6 +66,7 @@ glGetIntegervFunction __glGetIntegerv(nullptr);
 glGetProgramivFunction __glGetProgramiv(nullptr);
 glGetShaderivFunction __glGetShaderiv(nullptr);
 glGetStringFunction __glGetString(nullptr);
+glGetUniformLocationFunction __glGetUniformLocation(nullptr);
 glLightfvFunction __glLightfv(nullptr);
 glLightModelfvFunction __glLightModelfv(nullptr);
 glLinkProgramFunction __glLinkProgram(nullptr);

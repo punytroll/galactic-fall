@@ -285,6 +285,23 @@ inline const GLubyte * GLGetString(GLenum name)
 }
 #endif
 
+typedef GLint (* glGetUniformLocationFunction)(GLuint program, const GLchar * name);
+extern glGetUniformLocationFunction __glGetUniformLocation;
+#ifdef NDEBUG
+#define GLGetUniformLocation(name) __glGetUniformLocation(name); CheckGLError;
+#else
+inline GLint GLGetUniformLocation(GLuint program, const GLchar * name)
+{
+	GLint Result;
+	
+	assert(__glGetUniformLocation != nullptr);
+	Result = __glGetUniformLocation(program, name);
+	CheckGLError;
+	
+	return Result;
+}
+#endif
+
 typedef void (* glLightfvFunction)(GLenum light, GLenum pname, const GLfloat * params);
 extern glLightfvFunction __glLightfv;
 #define GLLightfv(light, pname, params) { assert(__glLightfv != nullptr); __glLightfv(light, pname, params); CheckGLError; }

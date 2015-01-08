@@ -21,6 +21,7 @@
 #define GRAPHICS_PROGRAM_H
 
 #include <list>
+#include <map>
 #include <string>
 
 #include "gl.h"
@@ -32,11 +33,25 @@ namespace Graphics
 	class Program
 	{
 	public:
+		enum class UniformContent : std::uint32_t
+		{
+			ProjectionMatrix4x4F = 0,
+			ViewMatrix4x4F = 1,
+			ModelMatrix4x4F = 2,
+			NormalMatrix3x3F = 3,
+			CameraPositionVector3F = 4,
+			LightDirectionVector3F = 5,
+			LightColorVector3F = 6,
+			MaterialColorVector3F = 7,
+			MaterialShininessF = 8
+		};
+		
 		// constructor
 		Program(const std::string & Identifier);
 		~Program(void);
 		// getters
 		const std::string & GetIdentifier(void) const;
+		const std::map< GLint, Graphics::Program::UniformContent > & GetUniforms(void) const;
 		bool IsBuilt(void) const;
 		// modifiers
 		void AddShaderIdentifier(const std::string & ShaderIdentifier);
@@ -46,11 +61,17 @@ namespace Graphics
 		GLuint _Handle;
 		std::string _Identifier;
 		std::list< std::string > _ShaderIdentifiers;
+		std::map< GLint, Graphics::Program::UniformContent > _Uniforms;
 	};
 	
 	inline const std::string & Graphics::Program::GetIdentifier(void) const
 	{
 		return _Identifier;
+	}
+	
+	inline const std::map< GLint, Graphics::Program::UniformContent > & Program::GetUniforms(void) const
+	{
+		return _Uniforms;
 	}
 	
 	inline bool Graphics::Program::IsBuilt(void) const
