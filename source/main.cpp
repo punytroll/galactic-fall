@@ -131,12 +131,6 @@
 #include "weapon_class.h"
 #include "write_to_xml_stream.h"
 
-#ifndef NDEBUG
-#define ON_DEBUG(A) (A)
-#else
-#define ON_DEBUG(A)
-#endif
-
 // these objects are exported via globals.h
 ClassManager< AssetClass > * g_AssetClassManager(0);
 ClassManager< BatteryClass > * g_BatteryClassManager(0);
