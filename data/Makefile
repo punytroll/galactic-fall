@@ -233,10 +233,10 @@ data.arx: $(data_arx) $(arxtouch_dependencies) $(arxadd_dependencies)
 	$(command_arxadd) $@ --name="Rich Game" --type=11 --sub-type=0 --relation="/Scenarios::child" --data-file=.data/scenario_rich_game.data
 	$(command_arxadd) $@ --name="Sol Spectator" --type=11 --sub-type=0 --relation="/Scenarios::child" --data-file=.data/scenario_sol_spectator.data
 	@echo "\n\nAdding shaders ...\n"
-	$(command_arxadd) $@ --name="Default Fragment Shader" --type=19 --sub-type=1 --relation="/Shaders::child" --data-file=.data/fragment_shader_default.data
-	$(command_arxadd) $@ --name="Default Vertex Shader" --type=19 --sub-type=0 --relation="/Shaders::child" --data-file=.data/vertex_shader_default.data
+	$(command_arxadd) $@ --name="Default Fragment Shader" --type=13 --sub-type=1 --relation="/Shaders::child" --data-file=.data/fragment_shader_default.data
+	$(command_arxadd) $@ --name="Default Vertex Shader" --type=13 --sub-type=0 --relation="/Shaders::child" --data-file=.data/vertex_shader_default.data
 	@echo "\n\nAdding programs ...\n"
-	$(command_arxadd) $@ --name="Default Program" --type=20 --sub-type=0 --relation="/Programs::child" --data-file=.data/program_default.data
+	$(command_arxadd) $@ --name="Default Program" --type=14 --sub-type=0 --relation="/Programs::child" --data-file=.data/program_default.data
 
 .data:
 	mkdir $@
