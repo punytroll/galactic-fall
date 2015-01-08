@@ -3542,7 +3542,7 @@ int main(int argc, char ** argv)
 	// since reading the textures already creates them we have to do this after initializing OpenGL
 	ON_DEBUG(std::cout << "Reading textures from game archive." << std::endl);
 	g_ResourceReader->ReadTextures();
-	// since initializing the textures uses a texture, we have to do it after reading the textures
+	// since initializing the font uses a texture, we have to do it after reading the textures
 	ON_DEBUG(std::cout << "Initializing font." << std::endl);
 	InitializeFont();
 	// load the specified savegame
