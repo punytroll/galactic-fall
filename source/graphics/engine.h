@@ -29,6 +29,7 @@ namespace Graphics
 	class ModelManager;
 	class Node;
 	class ParticleSystem;
+	class ShadingManager;
 	class TextureManager;
 	class View;
 	
@@ -41,6 +42,7 @@ namespace Graphics
 		// getters
 		Graphics::MeshManager * GetMeshManager(void);
 		Graphics::ModelManager * GetModelManager(void);
+		Graphics::ShadingManager * GetShadingManager(void);
 		Graphics::TextureManager * GetTextureManager(void);
 		// modifiers
 		void AddParticleSystem(Graphics::ParticleSystem * ParticleSystem);
@@ -52,8 +54,9 @@ namespace Graphics
 		Graphics::MeshManager * _MeshManager;
 		Graphics::ModelManager * _ModelManager;
 		std::set< Graphics::ParticleSystem * > _ParticleSystems;
-		std::vector< Graphics::View * > _Views;
+		Graphics::ShadingManager * _ShadingManager;
 		Graphics::TextureManager * _TextureManager;
+		std::vector< Graphics::View * > _Views;
 	};
 	
 	inline Graphics::MeshManager * Engine::GetMeshManager(void)
@@ -64,6 +67,11 @@ namespace Graphics
 	inline Graphics::ModelManager * Engine::GetModelManager(void)
 	{
 		return _ModelManager;
+	}
+	
+	inline Graphics::ShadingManager * Engine::GetShadingManager(void)
+	{
+		return _ShadingManager;
 	}
 	
 	inline Graphics::TextureManager * Engine::GetTextureManager(void)

@@ -25,6 +25,11 @@ namespace Arxx
 	class Archive;
 }
 
+namespace Graphics
+{
+	class ShadingManager;
+}
+
 class ScenarioManager;
 class Settings;
 
@@ -43,6 +48,7 @@ public:
 	void ReadModels(void);
 	void ReadScenarios(ScenarioManager * ScenarioManager);
 	void ReadSettings(Settings * Settings);
+	void ReadShadersAndPrograms(Graphics::ShadingManager * ShadingManager);
 	void ReadShipClasses(void);
 	void ReadSlotClasses(void);
 	void ReadSystems(void);
