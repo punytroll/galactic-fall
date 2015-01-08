@@ -279,14 +279,13 @@ Visualization * VisualizeWeapon(Weapon * Weapon, Graphics::Node * Container)
 
 Graphics::Node * VisualizePrototype(const VisualizationPrototype * VisualizationPrototype)
 {
-	assert(VisualizationPrototype != 0);
+	assert(VisualizationPrototype != nullptr);
 	
-	Graphics::ModelNode * Visualization(new Graphics::ModelNode());
-	const std::map< std::string, Graphics::Material * > & PartMaterials(VisualizationPrototype->GetPartMaterials());
+	auto Visualization(new Graphics::ModelNode());
 	
-	for(std::map< std::string, Graphics::Material * >::const_iterator PartMaterialIterator = PartMaterials.begin(); PartMaterialIterator != PartMaterials.end(); ++PartMaterialIterator)
+	for(auto & PartMaterial : VisualizationPrototype->GetPartMaterials())
 	{
-		Visualization->AddMaterial(PartMaterialIterator->first, new Graphics::Material(PartMaterialIterator->second));
+		Visualization->AddMaterial(PartMaterial.first, new Graphics::Material(PartMaterial.second));
 	}
 	Visualization->SetModel(VisualizationPrototype->GetModel());
 	
