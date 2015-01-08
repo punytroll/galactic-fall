@@ -62,6 +62,7 @@ glGenTexturesFunction __glGenTextures(nullptr);
 glGenVertexArraysFunction __glGenVertexArrays(nullptr);
 glGetActiveAttribFunction __glGetActiveAttrib(nullptr);
 glGetActiveUniformFunction __glGetActiveUniform(nullptr);
+glGetAttribLocationFunction __glGetAttribLocation(nullptr);
 glGetIntegervFunction __glGetIntegerv(nullptr);
 glGetProgramivFunction __glGetProgramiv(nullptr);
 glGetShaderivFunction __glGetShaderiv(nullptr);

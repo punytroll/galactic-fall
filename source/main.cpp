@@ -3028,6 +3028,7 @@ void InitializeOpenGL(void)
 	LoadOpenGLFunction(glGenVertexArrays);
 	LoadOpenGLFunction(glGetActiveAttrib);
 	LoadOpenGLFunction(glGetActiveUniform);
+	LoadOpenGLFunction(glGetAttribLocation);
 	LoadOpenGLFunction(glGetIntegerv);
 	LoadOpenGLFunction(glGetProgramiv);
 	LoadOpenGLFunction(glGetShaderiv);

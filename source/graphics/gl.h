@@ -256,6 +256,23 @@ typedef void (* glGetActiveUniformFunction)(GLuint program, GLuint index, GLsize
 extern glGetActiveUniformFunction __glGetActiveUniform;
 #define GLGetActiveUniform(program, index, bufSize, length, size, type, name) { assert(__glGetActiveAttrib != nullptr); __glGetActiveUniform(program, index, bufSize, length, size, type, name); CheckGLError; }
 
+typedef GLint (* glGetAttribLocationFunction)(GLuint program, const GLchar * name);
+extern glGetAttribLocationFunction __glGetAttribLocation;
+#ifdef NDEBUG
+#define GLGetAttribLocation(name) __glGetAttribLocation(name); CheckGLError;
+#else
+inline GLint GLGetAttribLocation(GLuint program, const GLchar * name)
+{
+	GLint Result;
+	
+	assert(__glGetAttribLocation != nullptr);
+	Result = __glGetAttribLocation(program, name);
+	CheckGLError;
+	
+	return Result;
+}
+#endif
+
 typedef void (* glGetIntegervFunction)(GLenum pname, GLint * params);
 extern glGetIntegervFunction __glGetIntegerv;
 #define GLGetIntegerv(pname, params) { assert(__glGetIntegerv != nullptr); __glGetIntegerv(pname, params); CheckGLError; }

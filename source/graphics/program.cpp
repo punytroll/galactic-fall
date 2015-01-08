@@ -79,7 +79,10 @@ void Graphics::Program::Build(Graphics::ShadingManager * ShadingManager)
 		GLenum Type;
 		
 		GLGetActiveAttrib(_Handle, AttributeIndex, 1024, &NameLength, &Size, &Type, Name);
-		ON_DEBUG(std::cout << "        Attribute \"" << Name << "\" with size " << Size << " and type " << Type << "." << std::endl);
+		
+		GLint Location(GLGetAttribLocation(_Handle, Name));
+		
+		ON_DEBUG(std::cout << "        Attribute \"" << Name << "\" with size " << Size << " and type " << Type << " at location " << Location << "." << std::endl);
 	}
 	
 	GLint ActiveUniforms;
