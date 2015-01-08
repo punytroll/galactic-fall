@@ -22,6 +22,12 @@
 
 #include <vector>
 
+#ifndef NDEBUG
+#define ON_DEBUG(A) (A)
+#else
+#define ON_DEBUG(A)
+#endif
+
 /// DISCLAIMER: The intention of future development is to always create the more general concept of things so this file may someday be empty!
 
 template < class ClassType >
