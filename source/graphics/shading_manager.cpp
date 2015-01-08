@@ -89,18 +89,6 @@ const Graphics::Program * Graphics::ShadingManager::GetProgram(const std::string
 	}
 }
 
-std::vector< std::string > Graphics::ShadingManager::GetProgramIdentifiers(void) const
-{
-	std::vector< std::string > Result;
-	
-	for(auto Program : _Programs)
-	{
-		Result.push_back(Program.first);
-	}
-	
-	return Result;
-}
-
 const Graphics::Shader * Graphics::ShadingManager::GetShader(const std::string & ShaderIdentifier) const
 {
 	auto ShaderIterator(_Shaders.find(ShaderIdentifier));

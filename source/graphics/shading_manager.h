@@ -36,7 +36,6 @@ namespace Graphics
 		~ShadingManager(void);
 		// getters
 		const Graphics::Program * GetProgram(const std::string & ProgramIdentifier) const;
-		std::vector< std::string > GetProgramIdentifiers(void) const;
 		const Graphics::Shader * GetShader(const std::string & ShaderIdentifier) const;
 		// modifiers
 		Graphics::Program * CreateProgram(const std::string & ProgramIdentifier);
