@@ -35,14 +35,17 @@ namespace Graphics
 		~Material(void);
 		// getters
 		const Color * GetDiffuseColor(void) const;
+		const std::string & GetProgramIdentifier(void) const;
 		float GetShininess(void) const;
 		const Color * GetSpecularColor(void) const;
 		// setters
 		void SetDiffuseColor(const Color & DiffuseColor);
+		void SetProgramIdentifier(const std::string & ProgramIdentifier);
 		void SetShininess(float Shininess);
 		void SetSpecularColor(const Color & SpecularColor);
 	private:
 		Color * _DiffuseColor;
+		std::string _ProgramIdentifier;
 		float _Shininess;
 		Color * _SpecularColor;
 	private:
@@ -62,6 +65,11 @@ namespace Graphics
 		return _DiffuseColor;
 	}
 	
+	inline const std::string & Material::GetProgramIdentifier(void) const
+	{
+		return _ProgramIdentifier;
+	}
+	
 	inline float Material::GetShininess(void) const
 	{
 		return _Shininess;
@@ -70,6 +78,11 @@ namespace Graphics
 	inline const Color * Material::GetSpecularColor(void) const
 	{
 		return _SpecularColor;
+	}
+	
+	inline void Material::SetProgramIdentifier(const std::string & ProgramIdentifier)
+	{
+		_ProgramIdentifier = ProgramIdentifier;
 	}
 	
 	inline void Material::SetShininess(float Shininess)

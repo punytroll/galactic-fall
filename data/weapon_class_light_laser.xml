@@ -21,6 +21,7 @@
 						<opacity>1</opacity>
 					</specular-color>
 					<shininess>40</shininess>
+					<program-identifier>default</program-identifier>
 				</material>
 			</visualization-part>
 		</visualization-parts>
@@ -64,6 +65,7 @@
 							<opacity>1</opacity>
 						</specular-color>
 						<shininess>40</shininess>
+						<program-identifier>default</program-identifier>
 					</material>
 				</visualization-part>
 			</visualization-parts>

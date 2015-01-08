@@ -29,6 +29,7 @@ Graphics::Material::Material(void) :
 
 Graphics::Material::Material(const Graphics::Material * Material) :
 	_DiffuseColor((Material->_DiffuseColor != nullptr) ? (new Color(Material->_DiffuseColor)) : (nullptr)),
+	_ProgramIdentifier(Material->_ProgramIdentifier),
 	_Shininess(Material->_Shininess),
 	_SpecularColor((Material->_SpecularColor != nullptr) ? (new Color(Material->_SpecularColor)) : (nullptr))
 {
