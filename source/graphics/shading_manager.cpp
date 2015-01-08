@@ -75,7 +75,7 @@ void Graphics::ShadingManager::DestroyShader(const std::string & ShaderIdentifie
 	_Shaders.erase(ShaderIterator);
 }
 
-const Graphics::Program * Graphics::ShadingManager::GetProgram(const std::string & ProgramIdentifier) const
+Graphics::Program * Graphics::ShadingManager::GetProgram(const std::string & ProgramIdentifier)
 {
 	auto ProgramIterator(_Programs.find(ProgramIdentifier));
 	
@@ -89,7 +89,7 @@ const Graphics::Program * Graphics::ShadingManager::GetProgram(const std::string
 	}
 }
 
-const Graphics::Shader * Graphics::ShadingManager::GetShader(const std::string & ShaderIdentifier) const
+Graphics::Shader * Graphics::ShadingManager::GetShader(const std::string & ShaderIdentifier)
 {
 	auto ShaderIterator(_Shaders.find(ShaderIdentifier));
 	
