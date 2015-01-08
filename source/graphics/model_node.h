@@ -38,6 +38,9 @@ namespace Graphics
 		// setters
 		void SetModel(const Graphics::Model * Model);
 		// modifiers
+		/**
+		 * @note This passes the memory responsibility of the material to the model node.
+		 **/
 		bool AddMaterial(const std::string & MeshIdentifier, Graphics::Material * Material);
 		virtual void Draw(void);
 	private:
