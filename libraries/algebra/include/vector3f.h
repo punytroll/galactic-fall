@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 1.8.9 of algebra.
+ * This is part of version 1.8.10 of algebra.
  **/
 
 #ifndef ALGEBRA_VECTOR3F_H
@@ -177,6 +177,8 @@ public:
 	
 	Vector3f & operator*=(const Matrix3f & Matrix);
 	
+	Vector3f & Transform(const Matrix4f & Matrix);
+	
 	Vector3f & operator*=(const Quaternion & Quaternion);
 	
 	Vector3f & Transform(const Quaternion & Quaternion);
@@ -202,17 +204,31 @@ public:
  **/
 
 #include "matrix3f.h"
+#include "matrix4f.h"
 #include "quaternion.h"
 
 inline Vector3f & Vector3f::operator*=(const Matrix3f & Matrix)
 {
-	float X = (Matrix._[0] * _[0]) + (Matrix._[4] * _[1]) + (Matrix._[6] * _[2]);
-	float Y = (Matrix._[1] * _[0]) + (Matrix._[5] * _[1]) + (Matrix._[7] * _[2]);
-	float Z = (Matrix._[3] * _[0]) + (Matrix._[6] * _[1]) + (Matrix._[8] * _[2]);
+	float Value0((Matrix._[0] * _[0]) + (Matrix._[3] * _[1]) + (Matrix._[6] * _[2]));
+	float Value1((Matrix._[1] * _[0]) + (Matrix._[4] * _[1]) + (Matrix._[7] * _[2]));
+	float Value2((Matrix._[2] * _[0]) + (Matrix._[5] * _[1]) + (Matrix._[8] * _[2]));
 	
-	_[0] = X;
-	_[1] = Y;
-	_[2] = Z;
+	_[0] = Value0;
+	_[1] = Value1;
+	_[2] = Value2;
+	
+	return *this;
+}
+
+inline Vector3f & Vector3f::Transform(const Matrix4f & Matrix)
+{
+	float Value0((Matrix._[0] * _[0]) + (Matrix._[4] * _[1]) + (Matrix._[8] * _[2]) + Matrix._[12]);
+	float Value1((Matrix._[1] * _[0]) + (Matrix._[5] * _[1]) + (Matrix._[9] * _[2]) + Matrix._[13]);
+	float Value2((Matrix._[2] * _[0]) + (Matrix._[6] * _[1]) + (Matrix._[10] * _[2]) + Matrix._[14]);
+	
+	_[0] = Value0;
+	_[1] = Value1;
+	_[2] = Value2;
 	
 	return *this;
 }
