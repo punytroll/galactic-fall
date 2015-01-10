@@ -24,11 +24,11 @@
 #include "commodity_class.h"
 #include "globals.h"
 #include "graphics/engine.h"
-#include "graphics/material.h"
 #include "graphics/model.h"
 #include "graphics/model_manager.h"
 #include "graphics/model_node.h"
 #include "graphics/particle_system_node.h"
+#include "graphics/style.h"
 #include "graphics/system_node.h"
 #include "object_aspect_accessory.h"
 #include "object_aspect_outfitting.h"
@@ -283,9 +283,9 @@ Graphics::Node * VisualizePrototype(const VisualizationPrototype * Visualization
 	
 	auto Visualization(new Graphics::ModelNode());
 	
-	for(auto & PartMaterial : VisualizationPrototype->GetPartMaterials())
+	for(auto & PartStyle : VisualizationPrototype->GetPartStyles())
 	{
-		Visualization->AddMaterial(PartMaterial.first, new Graphics::Material(PartMaterial.second));
+		Visualization->AddStyle(PartStyle.first, new Graphics::Style(PartStyle.second));
 	}
 	Visualization->SetModel(VisualizationPrototype->GetModel());
 	

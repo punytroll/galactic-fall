@@ -26,6 +26,7 @@
 
 #include "gl.h"
 #include "node.h"
+#include "render_context.h"
 #include "scene.h"
 
 Graphics::Node::Node(void) :
@@ -90,7 +91,7 @@ void Graphics::Node::AddNode(Graphics::Node * Content)
 	_Content.push_back(Content);
 }
 
-void Graphics::Node::Begin(void)
+void Graphics::Node::Begin(Graphics::RenderContext * RenderContext)
 {
 	if(_ClearDepthBuffer == true)
 	{
@@ -204,11 +205,11 @@ void Graphics::Node::Destroy(void)
 	Scene->OnDestroy(this);
 }
 
-void Graphics::Node::Draw(void)
+void Graphics::Node::Draw(Graphics::RenderContext * RenderContext)
 {
 }
 
-void Graphics::Node::End(void)
+void Graphics::Node::End(Graphics::RenderContext * RenderContext)
 {
 	GLPopAttrib();
 	GLPopMatrix();

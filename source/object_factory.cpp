@@ -32,9 +32,9 @@
 #include "generator.h"
 #include "generator_class.h"
 #include "globals.h"
-#include "graphics/material.h"
 #include "graphics/model.h"
 #include "graphics/particle_system.h"
+#include "graphics/style.h"
 #include "hangar.h"
 #include "object_aspect_accessory.h"
 #include "object_aspect_name.h"
@@ -195,11 +195,11 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		assert(NewShip->GetAspectVisualization() != nullptr);
 		NewShip->GetAspectVisualization()->SetVisualizationPrototype(new VisualizationPrototype(ShipClass->GetVisualizationPrototype()));
 		
-		std::map< std::string, Graphics::Material * > & PartMaterials(NewShip->GetAspectVisualization()->GetVisualizationPrototype()->GetPartMaterials());
+		auto & PartStyles(NewShip->GetAspectVisualization()->GetVisualizationPrototype()->GetPartStyles());
 		
-		if(PartMaterials.find("faction") != PartMaterials.end())
+		if(PartStyles.find("faction") != PartStyles.end())
 		{
-			PartMaterials["faction"]->SetDiffuseColor(g_Galaxy->GetFaction("neutral")->GetColor());
+			PartStyles["faction"]->SetDiffuseColor(g_Galaxy->GetFaction("neutral")->GetColor());
 		}
 		// set up storage if required
 		if(CreateNestedObjects == true)

@@ -30,6 +30,7 @@
 
 namespace Graphics
 {
+	class RenderContext;
 	class Scene;
 	
 	class Node
@@ -66,11 +67,11 @@ namespace Graphics
 		void SetUse2DTexture(bool Use2DTexture);
 		// modifiers
 		void AddNode(Graphics::Node * Content);
-		virtual void Begin(void);
+		virtual void Begin(Graphics::RenderContext * RenderContext);
 		void CalculateModelMatrix(void);
 		virtual void Destroy(void);
-		virtual void Draw(void);
-		virtual void End(void);
+		virtual void Draw(Graphics::RenderContext * RenderContext);
+		virtual void End(Graphics::RenderContext * RenderContext);
 	protected:
 		static void _Destroy(Graphics::Node * Node);
 	private:

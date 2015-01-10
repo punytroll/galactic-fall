@@ -27,6 +27,8 @@
 
 namespace Graphics
 {
+	class RenderContext;
+	
 	class Mesh
 	{
 	public:
@@ -37,7 +39,7 @@ namespace Graphics
 		};
 		
 		Mesh(const std::string & Identifier);
-		void Draw(void) const;
+		void Draw(Graphics::RenderContext * RenderContext) const;
 		const std::string & GetIdentifier(void) const;
 		float GetRadialSize(void) const;
 		std::vector< Vector4f >::size_type AddPoint(const Vector4f & Point);

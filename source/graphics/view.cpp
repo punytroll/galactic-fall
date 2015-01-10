@@ -23,6 +23,7 @@
 #include "camera.h"
 #include "gl.h"
 #include "projection.h"
+#include "render_context.h"
 #include "render_target.h"
 #include "scene.h"
 #include "view.h"
@@ -50,7 +51,10 @@ Graphics::View::~View(void)
 
 void Graphics::View::Render(void)
 {
+	auto RenderContext(new Graphics::RenderContext());
+	
 	assert(_Engine != nullptr);
+	RenderContext->SetEngine(_Engine);
 	if(_RenderTarget != nullptr)
 	{
 		_RenderTarget->Activate();
@@ -60,6 +64,7 @@ void Graphics::View::Render(void)
 		GLClearColor(_ClearColor->GetColor()[0], _ClearColor->GetColor()[1], _ClearColor->GetColor()[2], _ClearColor->GetColor()[3]);
 	}
 	assert(_Camera != nullptr);
+	RenderContext->SetCamera(_Camera);
 	assert(_Camera->GetProjection() != nullptr);
 	GLMatrixMode(GL_PROJECTION);
 	GLLoadMatrixf(_Camera->GetProjection()->GetMatrix().GetPointer());
@@ -68,8 +73,11 @@ void Graphics::View::Render(void)
 	if(_Scene != nullptr)
 	{
 		_Scene->Update();
-		_Scene->Render();
+		_Scene->Render(RenderContext);
 	}
+	RenderContext->SetCamera(nullptr);
+	RenderContext->SetEngine(nullptr);
+	delete RenderContext;
 }
 
 void Graphics::View::SetClearColor(const Color & ClearColor)

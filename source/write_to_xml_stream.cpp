@@ -27,7 +27,7 @@
 #include "commodity.h"
 #include "faction.h"
 #include "generator.h"
-#include "graphics/material.h"
+#include "graphics/style.h"
 #include "hangar.h"
 #include "map_knowledge.h"
 #include "mind.h"
@@ -144,22 +144,19 @@ void WriteToXMLStream(XMLStream & XMLStream, Object * TheObject)
 	if(TheObject->GetAspectVisualization() != nullptr)
 	{
 		XMLStream << element << "aspect-visualization";
-		
-		const std::map< std::string, Graphics::Material * > & PartMaterials();
-		
-		for(auto PartMaterial : TheObject->GetAspectVisualization()->GetVisualizationPrototype()->GetPartMaterials())
+		for(auto PartStyle : TheObject->GetAspectVisualization()->GetVisualizationPrototype()->GetPartStyles())
 		{
-			XMLStream << element << "part" << attribute << "identifier" << value << PartMaterial.first;
-			if(PartMaterial.second->GetDiffuseColor() != nullptr)
+			XMLStream << element << "part" << attribute << "identifier" << value << PartStyle.first;
+			if(PartStyle.second->GetDiffuseColor() != nullptr)
 			{
-				XMLStream << element << "material-diffuse-color" << attribute << "red" << value << PartMaterial.second->GetDiffuseColor()->GetColor()[0] << attribute << "green" << value << PartMaterial.second->GetDiffuseColor()->GetColor()[1] << attribute << "blue" << value << PartMaterial.second->GetDiffuseColor()->GetColor()[2] << attribute << "opacity" << value << PartMaterial.second->GetDiffuseColor()->GetColor()[3] << end;
+				XMLStream << element << "style-diffuse-color" << attribute << "red" << value << PartStyle.second->GetDiffuseColor()->GetColor()[0] << attribute << "green" << value << PartStyle.second->GetDiffuseColor()->GetColor()[1] << attribute << "blue" << value << PartStyle.second->GetDiffuseColor()->GetColor()[2] << attribute << "opacity" << value << PartStyle.second->GetDiffuseColor()->GetColor()[3] << end;
 			}
-			if(PartMaterial.second->GetSpecularColor() != nullptr)
+			if(PartStyle.second->GetSpecularColor() != nullptr)
 			{
-				XMLStream << element << "material-specular-color" << attribute << "red" << value << PartMaterial.second->GetSpecularColor()->GetColor()[0] << attribute << "green" << value << PartMaterial.second->GetSpecularColor()->GetColor()[1] << attribute << "blue" << value << PartMaterial.second->GetSpecularColor()->GetColor()[2] << attribute << "opacity" << value << PartMaterial.second->GetSpecularColor()->GetColor()[3] << end;
+				XMLStream << element << "style-specular-color" << attribute << "red" << value << PartStyle.second->GetSpecularColor()->GetColor()[0] << attribute << "green" << value << PartStyle.second->GetSpecularColor()->GetColor()[1] << attribute << "blue" << value << PartStyle.second->GetSpecularColor()->GetColor()[2] << attribute << "opacity" << value << PartStyle.second->GetSpecularColor()->GetColor()[3] << end;
 			}
-			XMLStream << element << "material-shininess" << attribute << "value" << value << PartMaterial.second->GetShininess() << end;
-			XMLStream << element << "material-program-identifier" << attribute << "value" << value << PartMaterial.second->GetProgramIdentifier() << end;
+			XMLStream << element << "style-shininess" << attribute << "value" << value << PartStyle.second->GetShininess() << end;
+			XMLStream << element << "style-program-identifier" << attribute << "value" << value << PartStyle.second->GetProgramIdentifier() << end;
 			XMLStream << end;
 		}
 		XMLStream << end;

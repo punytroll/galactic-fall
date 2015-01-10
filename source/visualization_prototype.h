@@ -25,8 +25,8 @@
 
 namespace Graphics
 {
-	class Material;
 	class Model;
+	class Style;
 }
 
 class VisualizationPrototype
@@ -38,37 +38,37 @@ public:
 	~VisualizationPrototype(void);
 	// getters
 	const Graphics::Model * GetModel(void) const;
-	std::map< std::string, Graphics::Material * > & GetPartMaterials(void);
-	const std::map< std::string, Graphics::Material * > & GetPartMaterials(void) const;
+	std::map< std::string, Graphics::Style * > & GetPartStyles(void);
+	const std::map< std::string, Graphics::Style * > & GetPartStyles(void) const;
 	// setters
 	void SetModel(const Graphics::Model * Model);
 	/**
 	 * @note Passes memory management responsibility for @a PartMaterial to the visualization prototype.
 	 **/
-	void SetPartMaterial(const std::string & Identifier, Graphics::Material * PartMaterial);
+	void SetPartStyle(const std::string & Identifier, Graphics::Style * PartStyle);
 private:
-	const Graphics::Model * m_Model;
-	std::map< std::string, Graphics::Material * > m_PartMaterials;
+	const Graphics::Model * _Model;
+	std::map< std::string, Graphics::Style * > _PartStyles;
 };
 
 inline const Graphics::Model * VisualizationPrototype::GetModel(void) const
 {
-	return m_Model;
+	return _Model;
 }
 
-inline std::map< std::string, Graphics::Material * > & VisualizationPrototype::GetPartMaterials(void)
+inline std::map< std::string, Graphics::Style * > & VisualizationPrototype::GetPartStyles(void)
 {
-	return m_PartMaterials;
+	return _PartStyles;
 }
 
-inline const std::map< std::string, Graphics::Material * > & VisualizationPrototype::GetPartMaterials(void) const
+inline const std::map< std::string, Graphics::Style * > & VisualizationPrototype::GetPartStyles(void) const
 {
-	return m_PartMaterials;
+	return _PartStyles;
 }
 
 inline void VisualizationPrototype::SetModel(const Graphics::Model * Model)
 {
-	m_Model = Model;
+	_Model = Model;
 }
 
 #endif

@@ -25,6 +25,7 @@
 #include "light.h"
 #include "node.h"
 #include "particle_system.h"
+#include "render_context.h"
 #include "scene.h"
 
 Graphics::Scene::Scene(void) :
@@ -117,9 +118,10 @@ void Graphics::Scene::Update(void)
 	}
 }
 
-void Graphics::Scene::Render(void)
+void Graphics::Scene::Render(Graphics::RenderContext * RenderContext)
 {
 	assert(_RootNode != nullptr);
+	RenderContext->SetLight(_Light);
 	if(_Light != nullptr)
 	{
 		GLEnable(GL_LIGHT0);
@@ -141,12 +143,13 @@ void Graphics::Scene::Render(void)
 		auto Item(ToDo.top());
 		
 		ToDo.pop();
-		Item->Begin();
-		Item->Draw();
-		Item->End();
+		Item->Begin(RenderContext);
+		Item->Draw(RenderContext);
+		Item->End(RenderContext);
 		for(auto ContentIterator = Item->GetContent().rbegin(); ContentIterator != Item->GetContent().rend(); ++ContentIterator)
 		{
 			ToDo.push(*ContentIterator);
 		}
 	}
+	RenderContext->SetLight(nullptr);
 }

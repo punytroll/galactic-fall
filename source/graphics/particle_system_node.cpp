@@ -58,7 +58,7 @@ void Graphics::ParticleSystemNode::SetParticleSystem(Graphics::ParticleSystem * 
 	_ParticleSystem->_ParticleSystemNodes.insert(this);
 }
 
-void Graphics::ParticleSystemNode::Begin(void)
+void Graphics::ParticleSystemNode::Begin(Graphics::RenderContext * RenderContext)
 {
 	if(g_ParticleTexture == 0)
 	{
@@ -67,11 +67,11 @@ void Graphics::ParticleSystemNode::Begin(void)
 	}
 	assert(_ParticleSystem != 0);
 	SetPosition(_ParticleSystem->GetPosition());
-	Graphics::Node::Begin();
+	Graphics::Node::Begin(RenderContext);
 	g_ParticleTexture->Activate();
 }
 
-void Graphics::ParticleSystemNode::Draw(void)
+void Graphics::ParticleSystemNode::Draw(Graphics::RenderContext * RenderContext)
 {
 	g_SystemStatistics->SetParticleSystemsDrawnThisFrame(g_SystemStatistics->GetParticleSystemsDrawnThisFrame() + 1);
 	assert(_ParticleSystem != 0);
@@ -100,7 +100,7 @@ void Graphics::ParticleSystemNode::Draw(void)
 	GLEnd();
 }
 
-void Graphics::ParticleSystemNode::End(void)
+void Graphics::ParticleSystemNode::End(Graphics::RenderContext * RenderContext)
 {
-	Graphics::Node::End();
+	Graphics::Node::End(RenderContext);
 }

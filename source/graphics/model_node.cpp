@@ -23,11 +23,12 @@
 #include "../globals.h"
 #include "engine.h"
 #include "gl.h"
-#include "material.h"
 #include "mesh.h"
 #include "model.h"
 #include "model_node.h"
+#include "render_context.h"
 #include "shading_manager.h"
+#include "style.h"
 
 Graphics::ModelNode::ModelNode(void) :
 	_Model(nullptr)
@@ -37,39 +38,40 @@ Graphics::ModelNode::ModelNode(void) :
 
 Graphics::ModelNode::~ModelNode(void)
 {
-	while(_Materials.empty() == false)
+	while(_Styles.empty() == false)
 	{
-		delete _Materials.begin()->second;
-		_Materials.erase(_Materials.begin());
+		delete _Styles.begin()->second;
+		_Styles.erase(_Styles.begin());
 	}
 }
 
-void Graphics::ModelNode::Draw(void)
+void Graphics::ModelNode::Draw(Graphics::RenderContext * RenderContext)
 {
 	assert(_Model != nullptr);
 	for(auto MeshPart : _Model->GetMeshes())
 	{
-		auto MaterialIterator(_Materials.find(MeshPart.first));
+		auto StyleIterator(_Styles.find(MeshPart.first));
 		
-		assert(MaterialIterator != _Materials.end());
-		assert(MaterialIterator->second != nullptr);
+		assert(StyleIterator != _Styles.end());
+		assert(StyleIterator->second != nullptr);
+		RenderContext->SetStyle(StyleIterator->second);
 		assert(g_GraphicsEngine != nullptr);
 		assert(g_GraphicsEngine->GetShadingManager() != nullptr);
-		assert(g_GraphicsEngine->GetShadingManager()->GetProgram(MaterialIterator->second->GetProgramIdentifier()) != nullptr);
+		assert(g_GraphicsEngine->GetShadingManager()->GetProgram(StyleIterator->second->GetProgramIdentifier()) != nullptr);
 		if(GetUseLighting() == true)
 		{
-			if(MaterialIterator->second->GetDiffuseColor() != nullptr)
+			if(StyleIterator->second->GetDiffuseColor() != nullptr)
 			{
-				GLMaterialfv(GL_FRONT, GL_DIFFUSE, MaterialIterator->second->GetDiffuseColor()->GetColor().GetPointer());
+				GLMaterialfv(GL_FRONT, GL_DIFFUSE, StyleIterator->second->GetDiffuseColor()->GetColor().GetPointer());
 			}
 			else
 			{
 				GLMaterialfv(GL_FRONT, GL_DIFFUSE, Vector4f(1.0f, 1.0f, 1.0f, 1.0f).GetPointer());
 			}
-			if(MaterialIterator->second->GetSpecularColor() != nullptr)
+			if(StyleIterator->second->GetSpecularColor() != nullptr)
 			{
-				GLMaterialf(GL_FRONT, GL_SHININESS, MaterialIterator->second->GetShininess());
-				GLMaterialfv(GL_FRONT, GL_SPECULAR, MaterialIterator->second->GetSpecularColor()->GetColor().GetPointer());
+				GLMaterialf(GL_FRONT, GL_SHININESS, StyleIterator->second->GetShininess());
+				GLMaterialfv(GL_FRONT, GL_SPECULAR, StyleIterator->second->GetSpecularColor()->GetColor().GetPointer());
 			}
 			else
 			{
@@ -79,25 +81,18 @@ void Graphics::ModelNode::Draw(void)
 		}
 		else
 		{
-			if(MaterialIterator->second->GetDiffuseColor() != nullptr)
+			if(StyleIterator->second->GetDiffuseColor() != nullptr)
 			{
-				GLColor4fv(MaterialIterator->second->GetDiffuseColor()->GetColor().GetPointer());
+				GLColor4fv(StyleIterator->second->GetDiffuseColor()->GetColor().GetPointer());
 			}
 		}
-		MeshPart.second->Draw();
+		MeshPart.second->Draw(RenderContext);
+		RenderContext->SetStyle(nullptr);
 	}
 }
 
-bool Graphics::ModelNode::AddMaterial(const std::string & MeshName, Graphics::Material * Material)
+void Graphics::ModelNode::AddStyle(const std::string & MeshName, Graphics::Style * Style)
 {
-	if(_Materials.find(MeshName) == _Materials.end())
-	{
-		_Materials[MeshName] = Material;
-		
-		return true;
-	}
-	else
-	{
-		return false;
-	}
+	assert(_Styles.find(MeshName) == _Styles.end());
+	_Styles[MeshName] = Style;
 }

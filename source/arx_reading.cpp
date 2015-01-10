@@ -39,7 +39,6 @@
 #include "generator_class.h"
 #include "globals.h"
 #include "graphics/engine.h"
-#include "graphics/material.h"
 #include "graphics/mesh.h"
 #include "graphics/mesh_manager.h"
 #include "graphics/model.h"
@@ -47,6 +46,7 @@
 #include "graphics/program.h"
 #include "graphics/shader.h"
 #include "graphics/shading_manager.h"
+#include "graphics/style.h"
 #include "graphics/texture.h"
 #include "graphics/texture_manager.h"
 #include "object_aspect_name.h"
@@ -1038,16 +1038,16 @@ static void ReadVisualizationPrototype(Arxx::BufferReader & Reader, Visualizatio
 		
 		Reader >> PartIdentifier >> PartDiffuseColor >> PartValidSpecularColor >> PartSpecularColor >> PartShininess >> PartProgramIdentifier;
 		
-		Graphics::Material * PartMaterial(new Graphics::Material());
+		auto PartStyle(new Graphics::Style());
 		
-		PartMaterial->SetDiffuseColor(PartDiffuseColor);
+		PartStyle->SetDiffuseColor(PartDiffuseColor);
 		if(PartValidSpecularColor == true)
 		{
-			PartMaterial->SetSpecularColor(PartSpecularColor);
+			PartStyle->SetSpecularColor(PartSpecularColor);
 		}
-		PartMaterial->SetShininess(PartShininess);
-		PartMaterial->SetProgramIdentifier(PartProgramIdentifier);
-		VisualizationPrototype->SetPartMaterial(PartIdentifier, PartMaterial);
+		PartStyle->SetShininess(PartShininess);
+		PartStyle->SetProgramIdentifier(PartProgramIdentifier);
+		VisualizationPrototype->SetPartStyle(PartIdentifier, PartStyle);
 	}
 }
 
