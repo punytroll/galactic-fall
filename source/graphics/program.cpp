@@ -19,6 +19,9 @@
 
 #include <iostream>
 
+#include <algebra/matrix4f.h>
+#include <algebra/vector3f.h>
+
 #include "../globals.h"
 #include "gl.h"
 #include "program.h"
@@ -34,6 +37,12 @@ Graphics::Program::Program(const std::string & Identifier) :
 Graphics::Program::~Program(void)
 {
 	assert(_Handle == 0);
+}
+
+void Graphics::Program::_Activate(void)
+{
+	assert(_Handle != 0);
+	GLUseProgram(_Handle);
 }
 
 void Graphics::Program::AddShaderIdentifier(const std::string & ShaderIdentifier)
@@ -145,10 +154,35 @@ void Graphics::Program::Build(Graphics::ShadingManager * ShadingManager)
 	}
 }
 
+void Graphics::Program::_Deactivate(void)
+{
+	GLUseProgram(0);
+}
+
 void Graphics::Program::Dispose(void)
 {
 	assert(_Handle != 0);
 	GLDeleteProgram(_Handle);
 	_Handle = 0;
 	_Uniforms.clear();
+}
+
+void Graphics::Program::_SetUniform(GLint Location, float Float)
+{
+	GLUniform1f(Location, Float);
+}
+
+void Graphics::Program::_SetUniform(GLint Location, const Matrix3f & Matrix)
+{
+	GLUniformMatrix3fv(Location, 1, false, Matrix.GetPointer());
+}
+
+void Graphics::Program::_SetUniform(GLint Location, const Matrix4f & Matrix)
+{
+	GLUniformMatrix4fv(Location, 1, false, Matrix.GetPointer());
+}
+
+void Graphics::Program::_SetUniform(GLint Location, const Vector3f & Vector)
+{
+	GLUniform3fv(Location, 1, Vector.GetPointer());
 }
