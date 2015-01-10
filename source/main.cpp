@@ -3068,6 +3068,11 @@ void InitializeOpenGL(void)
 	LoadOpenGLFunction(glTexImage2D);
 	LoadOpenGLFunction(glTexParameteri);
 	LoadOpenGLFunction(glTranslatef);
+	LoadOpenGLFunction(glUniform1f);
+	LoadOpenGLFunction(glUniform3fv);
+	LoadOpenGLFunction(glUniformMatrix3fv);
+	LoadOpenGLFunction(glUniformMatrix4fv);
+	LoadOpenGLFunction(glUseProgram);
 	LoadOpenGLFunction(glVertex2f);
 	LoadOpenGLFunction(glVertex2fv);
 	LoadOpenGLFunction(glVertex3f);
