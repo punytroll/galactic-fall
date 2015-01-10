@@ -102,7 +102,7 @@ void Graphics::Node::Begin(Graphics::RenderContext * RenderContext)
 		GLClear(GL_COLOR_BUFFER_BIT);
 	}
 	GLPushMatrix();
-	GLMultMatrixf(_ModelMatrix.GetPointer());
+	GLMultMatrixf(_SpacialMatrix.GetPointer());
 	if(_Scale != 1.0f)
 	{
 		GLScalef(_Scale, _Scale, _Scale);
@@ -183,15 +183,15 @@ void Graphics::Node::Begin(Graphics::RenderContext * RenderContext)
 	GLBlendFunc(_BlendFunctionSourceFactor, _BlendFunctionDestinationFactor);
 }
 
-void Graphics::Node::CalculateModelMatrix(void)
+void Graphics::Node::CalculateSpacialMatrix(void)
 {
 	if(_Container != nullptr)
 	{
-		_ModelMatrix = _Container->_ModelMatrix.Translated(_Position).Rotate(_Orientation);
+		_SpacialMatrix = _Container->_SpacialMatrix.Translated(_Position).Rotate(_Orientation);
 	}
 	else
 	{
-		_ModelMatrix = Matrix4f(true).Translate(_Position).Rotate(_Orientation);
+		_SpacialMatrix = Matrix4f(true).Translate(_Position).Rotate(_Orientation);
 	}
 }
 

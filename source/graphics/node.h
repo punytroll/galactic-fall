@@ -44,6 +44,7 @@ namespace Graphics
 		Graphics::Node * GetContainer(void);
 		const Graphics::Node * GetContainer(void) const;
 		std::vector< Graphics::Node * > & GetContent(void);
+		const Matrix4f & GetSpacialMatrix(void) const;
 		const Quaternion & GetOrientation(void) const;
 		const Vector3f & GetPosition(void) const;
 		float GetScale() const;
@@ -68,7 +69,7 @@ namespace Graphics
 		// modifiers
 		void AddNode(Graphics::Node * Content);
 		virtual void Begin(Graphics::RenderContext * RenderContext);
-		void CalculateModelMatrix(void);
+		void CalculateSpacialMatrix(void);
 		virtual void Destroy(void);
 		virtual void Draw(Graphics::RenderContext * RenderContext);
 		virtual void End(Graphics::RenderContext * RenderContext);
@@ -84,12 +85,12 @@ namespace Graphics
 		bool _ClearDepthBuffer;
 		Graphics::Node * _Container;
 		std::vector< Graphics::Node * > _Content;
-		Matrix4f _ModelMatrix;
 		bool _Normalize;
 		Quaternion _Orientation;
 		Vector3f _Position;
 		float _Scale;
 		Graphics::Scene * _Scene;
+		Matrix4f _SpacialMatrix;
 		bool _UseBlending;
 		bool _UseClipPlane0;
 		bool _UseClipPlane1;
@@ -133,6 +134,11 @@ namespace Graphics
 	inline Graphics::Scene * Node::GetScene(void)
 	{
 		return _Scene;
+	}
+	
+	inline const Matrix4f & Node::GetSpacialMatrix(void) const
+	{
+		return _SpacialMatrix;
 	}
 	
 	inline bool Node::GetUseLighting(void) const
