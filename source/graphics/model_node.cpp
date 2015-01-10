@@ -59,38 +59,28 @@ void Graphics::ModelNode::Draw(void)
 			assert(g_GraphicsEngine->GetShadingManager()->GetProgram(MaterialIterator->second->GetProgramIdentifier()) != nullptr);
 			if(GetUseLighting() == true)
 			{
-				if(MaterialIterator == _Materials.end())
+				if(MaterialIterator->second->GetDiffuseColor() != nullptr)
 				{
-					// if no material is set for this mesh
-					GLMaterialfv(GL_FRONT, GL_DIFFUSE, Vector4f(1.0f, 1.0f, 1.0f, 1.0f).GetPointer());
-					GLMaterialf(GL_FRONT, GL_SHININESS, 0.0f);
-					GLMaterialfv(GL_FRONT, GL_SPECULAR, Vector4f(0.0f, 0.0f, 0.0f, 1.0f).GetPointer());
+					GLMaterialfv(GL_FRONT, GL_DIFFUSE, MaterialIterator->second->GetDiffuseColor()->GetColor().GetPointer());
 				}
 				else
 				{
-					if(MaterialIterator->second->GetDiffuseColor() != 0)
-					{
-						GLMaterialfv(GL_FRONT, GL_DIFFUSE, MaterialIterator->second->GetDiffuseColor()->GetColor().GetPointer());
-					}
-					else
-					{
-						GLMaterialfv(GL_FRONT, GL_DIFFUSE, Vector4f(1.0f, 1.0f, 1.0f, 1.0f).GetPointer());
-					}
-					if(MaterialIterator->second->GetSpecularColor() != 0)
-					{
-						GLMaterialf(GL_FRONT, GL_SHININESS, MaterialIterator->second->GetShininess());
-						GLMaterialfv(GL_FRONT, GL_SPECULAR, MaterialIterator->second->GetSpecularColor()->GetColor().GetPointer());
-					}
-					else
-					{
-						GLMaterialf(GL_FRONT, GL_SHININESS, 0.0f);
-						GLMaterialfv(GL_FRONT, GL_SPECULAR, Vector4f(0.0f, 0.0f, 0.0f, 1.0f).GetPointer());
-					}
+					GLMaterialfv(GL_FRONT, GL_DIFFUSE, Vector4f(1.0f, 1.0f, 1.0f, 1.0f).GetPointer());
+				}
+				if(MaterialIterator->second->GetSpecularColor() != nullptr)
+				{
+					GLMaterialf(GL_FRONT, GL_SHININESS, MaterialIterator->second->GetShininess());
+					GLMaterialfv(GL_FRONT, GL_SPECULAR, MaterialIterator->second->GetSpecularColor()->GetColor().GetPointer());
+				}
+				else
+				{
+					GLMaterialf(GL_FRONT, GL_SHININESS, 0.0f);
+					GLMaterialfv(GL_FRONT, GL_SPECULAR, Vector4f(0.0f, 0.0f, 0.0f, 1.0f).GetPointer());
 				}
 			}
 			else
 			{
-				if((MaterialIterator != _Materials.end()) && (MaterialIterator->second->GetDiffuseColor() != 0))
+				if(MaterialIterator->second->GetDiffuseColor() != nullptr)
 				{
 					GLColor4fv(MaterialIterator->second->GetDiffuseColor()->GetColor().GetPointer());
 				}
