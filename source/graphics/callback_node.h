@@ -35,7 +35,7 @@ namespace Graphics
 		// setters
 		void SetDrawCallback(std::function< void (void) > Callback);
 		// modifiers
-		virtual void Draw(void);
+		virtual void Draw(Graphics::RenderContext * RenderContext) override;
 	private:
 		std::function< void (void) > _DrawCallback;
 	};

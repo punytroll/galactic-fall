@@ -26,7 +26,7 @@ Graphics::Mesh::Mesh(const std::string & Identifier) :
 {
 }
 
-void Graphics::Mesh::Draw(void) const
+void Graphics::Mesh::Draw(Graphics::RenderContext * RenderContext) const
 {
 	GLBegin(GL_TRIANGLES);
 	for(std::vector< Graphics::Mesh::Triangle >::size_type Triangle = 0; Triangle < m_Triangles.size(); ++Triangle)

@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2013  Hagen Möbius
+ * Copyright (C) 2015  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,30 +17,22 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef GRAPHICS_PARTICLE_SYSTEM_NODE_H
-#define GRAPHICS_PARTICLE_SYSTEM_NODE_H
+#include <cassert>
 
-#include "node.h"
+#include "render_context.h"
 
-namespace Graphics
+Graphics::RenderContext::RenderContext(void) :
+	_Camera(nullptr),
+	_Engine(nullptr),
+	_Light(nullptr),
+	_Style(nullptr)
 {
-	class ParticleSystem;
-	
-	class ParticleSystemNode : public Graphics::Node
-	{
-	public:
-		// constructor & destructor
-		ParticleSystemNode(void);
-		virtual ~ParticleSystemNode(void);
-		// setters
-		void SetParticleSystem(Graphics::ParticleSystem * ParticleSystem);
-		// modifiers
-		virtual void Begin(Graphics::RenderContext * RenderContext) override;
-		virtual void Draw(Graphics::RenderContext * RenderContext) override;
-		virtual void End(Graphics::RenderContext * RenderContext) override;
-	private:
-		ParticleSystem * _ParticleSystem;
-	};
 }
 
-#endif
+Graphics::RenderContext::~RenderContext(void)
+{
+	assert(_Camera == nullptr);
+	assert(_Engine == nullptr);
+	assert(_Light == nullptr);
+	assert(_Style== nullptr);
+}

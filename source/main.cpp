@@ -63,7 +63,6 @@
 #include "graphics/engine.h"
 #include "graphics/gl.h"
 #include "graphics/light.h"
-#include "graphics/material.h"
 #include "graphics/mesh_manager.h"
 #include "graphics/model.h"
 #include "graphics/model_manager.h"
@@ -73,6 +72,7 @@
 #include "graphics/perspective_projection.h"
 #include "graphics/scene.h"
 #include "graphics/shading_manager.h"
+#include "graphics/style.h"
 #include "graphics/system_node.h"
 #include "graphics/texture.h"
 #include "graphics/texture_manager.h"
@@ -191,7 +191,7 @@ namespace Graphics
 	class UIRootNode : public Graphics::Node
 	{
 	public:
-		virtual void Draw(void)
+		virtual void Draw(Graphics::RenderContext * RenderContext) override
 		{
 			g_UserInterface->Draw();
 		}
@@ -969,11 +969,11 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 	}
 	NewShip->SetFaction(Faction->GetReference());
 	
-	std::map< std::string, Graphics::Material * > & PartMaterials(NewShip->GetAspectVisualization()->GetVisualizationPrototype()->GetPartMaterials());
+	auto & PartStyles(NewShip->GetAspectVisualization()->GetVisualizationPrototype()->GetPartStyles());
 	
-	if(PartMaterials.find("faction") != PartMaterials.end())
+	if(PartStyles.find("faction") != PartStyles.end())
 	{
-		PartMaterials["faction"]->SetDiffuseColor(Faction->GetColor());
+		PartStyles["faction"]->SetDiffuseColor(Faction->GetColor());
 	}
 	NewShip->GetAspectPosition()->SetPosition(Vector3f(GetRandomFloat(-200.0f, 200.0f), GetRandomFloat(-200.0f, 200.0f), 0.0f));
 	NewShip->GetAspectPosition()->SetOrientation(Quaternion::CreateAsRotationZ(GetRandomFloat(0.0f, 2.0f * M_PI)));
@@ -1552,42 +1552,42 @@ void LoadGameFromElement(const Element * SaveElement)
 						{
 							assert(AspectChild->HasAttribute("identifier") == true);
 							
-							Graphics::Material * NewPartMaterial(new Graphics::Material());
+							auto NewPartStyle(new Graphics::Style());
 							
 							for(auto PartChild : AspectChild->GetChilds())
 							{
-								if(PartChild->GetName() == "material-diffuse-color")
+								if(PartChild->GetName() == "style-diffuse-color")
 								{
 									assert(PartChild->HasAttribute("red") == true);
 									assert(PartChild->HasAttribute("green") == true);
 									assert(PartChild->HasAttribute("blue") == true);
 									assert(PartChild->HasAttribute("opacity") == true);
-									NewPartMaterial->SetDiffuseColor(Color(from_string_cast< float >(PartChild->GetAttribute("red")), from_string_cast< float >(PartChild->GetAttribute("green")), from_string_cast< float >(PartChild->GetAttribute("blue")), from_string_cast< float >(PartChild->GetAttribute("opacity"))));
+									NewPartStyle->SetDiffuseColor(Color(from_string_cast< float >(PartChild->GetAttribute("red")), from_string_cast< float >(PartChild->GetAttribute("green")), from_string_cast< float >(PartChild->GetAttribute("blue")), from_string_cast< float >(PartChild->GetAttribute("opacity"))));
 								}
-								else if(PartChild->GetName() == "material-specular-color")
+								else if(PartChild->GetName() == "style-specular-color")
 								{
 									assert(PartChild->HasAttribute("red") == true);
 									assert(PartChild->HasAttribute("green") == true);
 									assert(PartChild->HasAttribute("blue") == true);
 									assert(PartChild->HasAttribute("opacity") == true);
-									NewPartMaterial->SetSpecularColor(Color(from_string_cast< float >(PartChild->GetAttribute("red")), from_string_cast< float >(PartChild->GetAttribute("green")), from_string_cast< float >(PartChild->GetAttribute("blue")), from_string_cast< float >(PartChild->GetAttribute("opacity"))));
+									NewPartStyle->SetSpecularColor(Color(from_string_cast< float >(PartChild->GetAttribute("red")), from_string_cast< float >(PartChild->GetAttribute("green")), from_string_cast< float >(PartChild->GetAttribute("blue")), from_string_cast< float >(PartChild->GetAttribute("opacity"))));
 								}
-								else if(PartChild->GetName() == "material-shininess")
+								else if(PartChild->GetName() == "style-shininess")
 								{
 									assert(PartChild->HasAttribute("value") == true);
-									NewPartMaterial->SetShininess(from_string_cast< float >(PartChild->GetAttribute("value")));
+									NewPartStyle->SetShininess(from_string_cast< float >(PartChild->GetAttribute("value")));
 								}
-								else if(PartChild->GetName() == "material-program-identifier")
+								else if(PartChild->GetName() == "style-program-identifier")
 								{
 									assert(PartChild->HasAttribute("value") == true);
-									NewPartMaterial->SetProgramIdentifier(PartChild->GetAttribute("value"));
+									NewPartStyle->SetProgramIdentifier(PartChild->GetAttribute("value"));
 								}
 								else
 								{
 									throw std::runtime_error("The \"" + ObjectChild->GetName() + "\" element for the object \"" + SaveChild->GetAttribute("object-identifier") + "\" contains an unknown element \"" + PartChild->GetName() + "\".");
 								}
 							}
-							NewObject->GetAspectVisualization()->GetVisualizationPrototype()->SetPartMaterial(AspectChild->GetAttribute("identifier"), NewPartMaterial);
+							NewObject->GetAspectVisualization()->GetVisualizationPrototype()->SetPartStyle(AspectChild->GetAttribute("identifier"), NewPartStyle);
 						}
 						else
 						{

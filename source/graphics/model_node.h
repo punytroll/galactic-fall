@@ -26,8 +26,8 @@ class Color;
 
 namespace Graphics
 {
-	class Material;
 	class Model;
+	class Style;
 	
 	class ModelNode : public Graphics::Node
 	{
@@ -41,11 +41,11 @@ namespace Graphics
 		/**
 		 * @note This passes the memory responsibility of the material to the model node.
 		 **/
-		bool AddMaterial(const std::string & MeshIdentifier, Graphics::Material * Material);
-		virtual void Draw(void);
+		void AddStyle(const std::string & MeshIdentifier, Graphics::Style * Style);
+		virtual void Draw(Graphics::RenderContext * RenderContext) override;
 	private:
 		const Graphics::Model * _Model;
-		std::map< std::string, Graphics::Material * > _Materials;
+		std::map< std::string, Graphics::Style * > _Styles;
 	};
 	
 	inline void ModelNode::SetModel(const Graphics::Model * Model)

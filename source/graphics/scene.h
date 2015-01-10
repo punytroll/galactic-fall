@@ -27,6 +27,7 @@ namespace Graphics
 	class Engine;
 	class Light;
 	class Node;
+	class RenderContext;
 	class View;
 	
 	class Scene
@@ -45,7 +46,7 @@ namespace Graphics
 		// modifiers
 		void ActivateLight(void);
 		void DeactivateLight(void);
-		void Render(void);
+		void Render(Graphics::RenderContext * RenderContext);
 		void Update(void);
 		void OnDestroy(Graphics::Node * Node);
 	private:

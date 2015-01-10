@@ -17,44 +17,44 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include "graphics/material.h"
+#include "graphics/style.h"
 #include "visualization_prototype.h"
 
 VisualizationPrototype::VisualizationPrototype(void) :
-	m_Model(0)
+	_Model(nullptr)
 {
 }
 
 VisualizationPrototype::VisualizationPrototype(const VisualizationPrototype * VisualizationPrototype) :
-	m_Model(VisualizationPrototype->m_Model)
+	_Model(VisualizationPrototype->_Model)
 {
-	for(std::map< std::string, Graphics::Material * >::const_iterator PartMaterialIterator = VisualizationPrototype->m_PartMaterials.begin(); PartMaterialIterator != VisualizationPrototype->m_PartMaterials.end(); ++PartMaterialIterator)
+	for(auto & PartStyle : VisualizationPrototype->_PartStyles)
 	{
-		m_PartMaterials[PartMaterialIterator->first] = new Graphics::Material(PartMaterialIterator->second);
+		_PartStyles[PartStyle.first] = new Graphics::Style(PartStyle.second);
 	}
 }
 
 VisualizationPrototype::~VisualizationPrototype(void)
 {
-	m_Model = 0;
-	while(m_PartMaterials.empty() == false)
+	_Model = nullptr;
+	while(_PartStyles.empty() == false)
 	{
-		delete m_PartMaterials.begin()->second;
-		m_PartMaterials.erase(m_PartMaterials.begin());
+		delete _PartStyles.begin()->second;
+		_PartStyles.erase(_PartStyles.begin());
 	}
 }
 
-void VisualizationPrototype::SetPartMaterial(const std::string & PartIdentifier, Graphics::Material * PartMaterial)
+void VisualizationPrototype::SetPartStyle(const std::string & PartIdentifier, Graphics::Style * PartStyle)
 {
-	std::map< std::string, Graphics::Material * >::iterator PartIterator(m_PartMaterials.find(PartIdentifier));
+	auto PartStyleIterator(_PartStyles.find(PartIdentifier));
 	
-	if(PartIterator != m_PartMaterials.end())
+	if(PartStyleIterator != _PartStyles.end())
 	{
-		delete PartIterator->second;
-		PartIterator->second = PartMaterial;
+		delete PartStyleIterator->second;
+		PartStyleIterator->second = PartStyle;
 	}
 	else
 	{
-		m_PartMaterials[PartIdentifier] = PartMaterial;
+		_PartStyles[PartIdentifier] = PartStyle;
 	}
 }

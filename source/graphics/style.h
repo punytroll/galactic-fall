@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2007  Hagen Möbius
+ * Copyright (C) 2015  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,8 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef GRAPHICS_MATERIAL_H
-#define GRAPHICS_MATERIAL_H
+#ifndef GRAPHICS_STYLE_H
+#define GRAPHICS_STYLE_H
 
 #include <string>
 
@@ -26,13 +26,13 @@ class Color;
 
 namespace Graphics
 {
-	class Material
+	class Style
 	{
 	public:
 		// constructor & destructor
-		Material(void);
-		explicit Material(const Graphics::Material * Material);
-		~Material(void);
+		Style(void);
+		explicit Style(const Graphics::Style * Style);
+		~Style(void);
 		// getters
 		const Color * GetDiffuseColor(void) const;
 		const std::string & GetProgramIdentifier(void) const;
@@ -52,40 +52,40 @@ namespace Graphics
 		/**
 		 * @brief Hidden copy constructor.
 		 **/
-		Material(const Graphics::Material & Material);
+		Style(const Graphics::Style & Style);
 		
 		/**
 		 * @brief Hidden assignment operator.
 		 **/
-		Graphics::Material & operator=(const Graphics::Material & Material);
+		Graphics::Style & operator=(const Graphics::Style & Style);
 	};
 	
-	inline const Color * Material::GetDiffuseColor(void) const
+	inline const Color * Style::GetDiffuseColor(void) const
 	{
 		return _DiffuseColor;
 	}
 	
-	inline const std::string & Material::GetProgramIdentifier(void) const
+	inline const std::string & Style::GetProgramIdentifier(void) const
 	{
 		return _ProgramIdentifier;
 	}
 	
-	inline float Material::GetShininess(void) const
+	inline float Style::GetShininess(void) const
 	{
 		return _Shininess;
 	}
 	
-	inline const Color * Material::GetSpecularColor(void) const
+	inline const Color * Style::GetSpecularColor(void) const
 	{
 		return _SpecularColor;
 	}
 	
-	inline void Material::SetProgramIdentifier(const std::string & ProgramIdentifier)
+	inline void Style::SetProgramIdentifier(const std::string & ProgramIdentifier)
 	{
 		_ProgramIdentifier = ProgramIdentifier;
 	}
 	
-	inline void Material::SetShininess(float Shininess)
+	inline void Style::SetShininess(float Shininess)
 	{
 		_Shininess = Shininess;
 	}

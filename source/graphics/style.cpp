@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2007  Hagen Möbius
+ * Copyright (C) 2015  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,24 +18,24 @@
 **/
 
 #include "../color.h"
-#include "material.h"
+#include "style.h"
 
-Graphics::Material::Material(void) :
+Graphics::Style::Style(void) :
 	_DiffuseColor(nullptr),
 	_Shininess(0.0f),
 	_SpecularColor(nullptr)
 {
 }
 
-Graphics::Material::Material(const Graphics::Material * Material) :
-	_DiffuseColor((Material->_DiffuseColor != nullptr) ? (new Color(Material->_DiffuseColor)) : (nullptr)),
-	_ProgramIdentifier(Material->_ProgramIdentifier),
-	_Shininess(Material->_Shininess),
-	_SpecularColor((Material->_SpecularColor != nullptr) ? (new Color(Material->_SpecularColor)) : (nullptr))
+Graphics::Style::Style(const Graphics::Style * Style) :
+	_DiffuseColor((Style->_DiffuseColor != nullptr) ? (new Color(Style->_DiffuseColor)) : (nullptr)),
+	_ProgramIdentifier(Style->_ProgramIdentifier),
+	_Shininess(Style->_Shininess),
+	_SpecularColor((Style->_SpecularColor != nullptr) ? (new Color(Style->_SpecularColor)) : (nullptr))
 {
 }
 
-Graphics::Material::~Material(void)
+Graphics::Style::~Style(void)
 {
 	delete _DiffuseColor;
 	_DiffuseColor = nullptr;
@@ -43,13 +43,13 @@ Graphics::Material::~Material(void)
 	_SpecularColor = nullptr;
 }
 
-void Graphics::Material::SetDiffuseColor(const Color & DiffuseColor)
+void Graphics::Style::SetDiffuseColor(const Color & DiffuseColor)
 {
 	delete _DiffuseColor;
 	_DiffuseColor = new Color(DiffuseColor);
 }
 
-void Graphics::Material::SetSpecularColor(const Color & SpecularColor)
+void Graphics::Style::SetSpecularColor(const Color & SpecularColor)
 {
 	delete _SpecularColor;
 	_SpecularColor = new Color(SpecularColor);
