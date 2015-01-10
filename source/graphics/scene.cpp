@@ -120,7 +120,6 @@ void Graphics::Scene::Update(void)
 
 void Graphics::Scene::Render(Graphics::RenderContext * RenderContext)
 {
-	assert(_RootNode != nullptr);
 	RenderContext->SetLight(_Light);
 	if(_Light != nullptr)
 	{
@@ -143,6 +142,7 @@ void Graphics::Scene::Render(Graphics::RenderContext * RenderContext)
 		auto Item(ToDo.top());
 		
 		ToDo.pop();
+		assert(Item != nullptr);
 		Item->Begin(RenderContext);
 		Item->Draw(RenderContext);
 		Item->End(RenderContext);
