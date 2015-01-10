@@ -435,6 +435,26 @@ typedef void (* glTranslatefFunction)(GLfloat x, GLfloat y, GLfloat z);
 extern glTranslatefFunction __glTranslatef;
 #define GLTranslatef(x, y, z) { assert(__glTranslatef != nullptr); __glTranslatef(x, y, z); CheckGLError; }
 
+typedef void (* glUniform1fFunction)(GLint location, GLfloat v0);
+extern glUniform1fFunction __glUniform1f;
+#define GLUniform1f(location, v0) { assert(__glUniform1f != nullptr); __glUniform1f(location, v0); CheckGLError; }
+
+typedef void (* glUniform3fvFunction)(GLint location, GLsizei count, const GLfloat * value);
+extern glUniform3fvFunction __glUniform3fv;
+#define GLUniform3fv(location, count, value) { assert(__glUniform3fv != nullptr); __glUniform3fv(location, count, value); CheckGLError; }
+
+typedef void (* glUniformMatrix3fvFunction)(GLint location, GLsizei count, GLboolean transpose, const GLfloat * value);
+extern glUniformMatrix3fvFunction __glUniformMatrix3fv;
+#define GLUniformMatrix3fv(location, count, transpose, value) { assert(__glUniformMatrix3fv != nullptr); __glUniformMatrix3fv(location, count, transpose, value); CheckGLError; }
+
+typedef void (* glUniformMatrix4fvFunction)(GLint location, GLsizei count, GLboolean transpose, const GLfloat * value);
+extern glUniformMatrix4fvFunction __glUniformMatrix4fv;
+#define GLUniformMatrix4fv(location, count, transpose, value) { assert(__glUniformMatrix4fv != nullptr); __glUniformMatrix4fv(location, count, transpose, value); CheckGLError; }
+
+typedef void (* glUseProgramFunction)(GLuint program);
+extern glUseProgramFunction __glUseProgram;
+#define GLUseProgram(program) { assert(__glUseProgram != nullptr); __glUseProgram(program); CheckGLError; }
+
 typedef void (* glVertex2fFunction)(GLfloat x, GLfloat y);
 extern glVertex2fFunction __glVertex2f;
 #define GLVertex2f(x, y) { assert(__glVertex2f != nullptr); __glVertex2f(x, y); }
