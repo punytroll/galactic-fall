@@ -26,6 +26,10 @@
 
 #include "gl.h"
 
+class Matrix3f;
+class Matrix4f;
+class Vector3f;
+
 namespace Graphics
 {
 	class ShadingManager;
@@ -58,6 +62,12 @@ namespace Graphics
 		void Build(Graphics::ShadingManager * ShadingManager);
 		void Dispose(void);
 	private:
+		void _Activate(void);
+		void _Deactivate(void);
+		void _SetUniform(GLint Location, float Float);
+		void _SetUniform(GLint Location, const Matrix3f & Matrix);
+		void _SetUniform(GLint Location, const Matrix4f & Matrix);
+		void _SetUniform(GLint Location, const Vector3f & Vector);
 		GLuint _Handle;
 		std::string _Identifier;
 		std::list< std::string > _ShaderIdentifiers;
