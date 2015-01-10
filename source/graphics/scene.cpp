@@ -110,7 +110,7 @@ void Graphics::Scene::Update(void)
 		auto & Item(ToDo.top());
 		
 		ToDo.pop();
-		Item->CalculateModelMatrix();
+		Item->CalculateSpacialMatrix();
 		for(auto Content : Item->GetContent())
 		{
 			ToDo.push(Content);
