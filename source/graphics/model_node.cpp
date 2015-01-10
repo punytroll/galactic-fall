@@ -46,47 +46,45 @@ Graphics::ModelNode::~ModelNode(void)
 
 void Graphics::ModelNode::Draw(void)
 {
-	if(_Model != nullptr)
+	assert(_Model != nullptr);
+	for(auto MeshPart : _Model->GetMeshes())
 	{
-		for(auto MeshPart : _Model->GetMeshes())
+		auto MaterialIterator(_Materials.find(MeshPart.first));
+		
+		assert(MaterialIterator != _Materials.end());
+		assert(MaterialIterator->second != nullptr);
+		assert(g_GraphicsEngine != nullptr);
+		assert(g_GraphicsEngine->GetShadingManager() != nullptr);
+		assert(g_GraphicsEngine->GetShadingManager()->GetProgram(MaterialIterator->second->GetProgramIdentifier()) != nullptr);
+		if(GetUseLighting() == true)
 		{
-			auto MaterialIterator(_Materials.find(MeshPart.first));
-			
-			assert(MaterialIterator != _Materials.end());
-			assert(MaterialIterator->second != nullptr);
-			assert(g_GraphicsEngine != nullptr);
-			assert(g_GraphicsEngine->GetShadingManager() != nullptr);
-			assert(g_GraphicsEngine->GetShadingManager()->GetProgram(MaterialIterator->second->GetProgramIdentifier()) != nullptr);
-			if(GetUseLighting() == true)
+			if(MaterialIterator->second->GetDiffuseColor() != nullptr)
 			{
-				if(MaterialIterator->second->GetDiffuseColor() != nullptr)
-				{
-					GLMaterialfv(GL_FRONT, GL_DIFFUSE, MaterialIterator->second->GetDiffuseColor()->GetColor().GetPointer());
-				}
-				else
-				{
-					GLMaterialfv(GL_FRONT, GL_DIFFUSE, Vector4f(1.0f, 1.0f, 1.0f, 1.0f).GetPointer());
-				}
-				if(MaterialIterator->second->GetSpecularColor() != nullptr)
-				{
-					GLMaterialf(GL_FRONT, GL_SHININESS, MaterialIterator->second->GetShininess());
-					GLMaterialfv(GL_FRONT, GL_SPECULAR, MaterialIterator->second->GetSpecularColor()->GetColor().GetPointer());
-				}
-				else
-				{
-					GLMaterialf(GL_FRONT, GL_SHININESS, 0.0f);
-					GLMaterialfv(GL_FRONT, GL_SPECULAR, Vector4f(0.0f, 0.0f, 0.0f, 1.0f).GetPointer());
-				}
+				GLMaterialfv(GL_FRONT, GL_DIFFUSE, MaterialIterator->second->GetDiffuseColor()->GetColor().GetPointer());
 			}
 			else
 			{
-				if(MaterialIterator->second->GetDiffuseColor() != nullptr)
-				{
-					GLColor4fv(MaterialIterator->second->GetDiffuseColor()->GetColor().GetPointer());
-				}
+				GLMaterialfv(GL_FRONT, GL_DIFFUSE, Vector4f(1.0f, 1.0f, 1.0f, 1.0f).GetPointer());
 			}
-			MeshPart.second->Draw();
+			if(MaterialIterator->second->GetSpecularColor() != nullptr)
+			{
+				GLMaterialf(GL_FRONT, GL_SHININESS, MaterialIterator->second->GetShininess());
+				GLMaterialfv(GL_FRONT, GL_SPECULAR, MaterialIterator->second->GetSpecularColor()->GetColor().GetPointer());
+			}
+			else
+			{
+				GLMaterialf(GL_FRONT, GL_SHININESS, 0.0f);
+				GLMaterialfv(GL_FRONT, GL_SPECULAR, Vector4f(0.0f, 0.0f, 0.0f, 1.0f).GetPointer());
+			}
 		}
+		else
+		{
+			if(MaterialIterator->second->GetDiffuseColor() != nullptr)
+			{
+				GLColor4fv(MaterialIterator->second->GetDiffuseColor()->GetColor().GetPointer());
+			}
+		}
+		MeshPart.second->Draw();
 	}
 }
 
