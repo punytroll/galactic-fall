@@ -52,6 +52,7 @@ void Graphics::Program::Build(Graphics::ShadingManager * ShadingManager)
 	{
 		auto Shader(ShadingManager->GetShader(ShaderIdentifier));
 		
+		assert(Shader != nullptr);
 		if(Shader->IsBuilt() == false)
 		{
 			Shader->Build();
