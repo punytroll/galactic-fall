@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 1.8.9 of algebra.
+ * This is part of version 1.8.10 of algebra.
  **/
 
 #ifndef ALGEBRA_MATRIX4F_H
@@ -34,6 +34,7 @@ class Vector4f;
 
 class Matrix4f
 {
+	friend Vector3f;
 private:
 	float _[16];
 public:

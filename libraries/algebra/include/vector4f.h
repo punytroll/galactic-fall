@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 1.8.9 of algebra.
+ * This is part of version 1.8.10 of algebra.
  **/
 
 #ifndef ALGEBRA_VECTOR4F_H
@@ -26,9 +26,8 @@
 
 #include <math.h>
 
-#include "quaternion.h"
-
 class Matrix4f;
+class Quaternion;
 
 class Vector4f
 {
@@ -181,17 +180,7 @@ public:
 		return _[0] * Other._[0] + _[1] * Other._[1] + _[2] * Other._[2] + _[3] * Other._[3];
 	}
 	
-	Vector4f & operator*=(const Quaternion & AQuaternion)
-	{
-		Quaternion Result(AQuaternion * Quaternion(_[3], _[0], _[1], _[2]) * AQuaternion.Conjugated());
-		
-		_[0] = Result._[1];
-		_[1] = Result._[2];
-		_[2] = Result._[3];
-		_[3] = Result._[0];
-		
-		return *this;
-	}
+	Vector4f & operator*=(const Quaternion & Quaternion);
 	
 	const float & operator[](int Index) const
 	{
@@ -208,6 +197,24 @@ public:
 		return _;
 	}
 };
+
+/**
+ * IMPLEMENTATION
+ **/
+
+#include "quaternion.h"
+
+inline Vector4f & Vector4f::operator*=(const Quaternion & AQuaternion)
+{
+	Quaternion Result(AQuaternion * Quaternion(_[3], _[0], _[1], _[2]) * AQuaternion.Conjugated());
+	
+	_[0] = Result._[1];
+	_[1] = Result._[2];
+	_[2] = Result._[3];
+	_[3] = Result._[0];
+	
+	return *this;
+}
 
 inline Vector4f operator*(float Scalar, const Vector4f & Vector)
 {
