@@ -23,7 +23,7 @@
 #include <vector>
 #include <string>
 
-#include <algebra/vector4f.h>
+#include <algebra/vector3f.h>
 
 #include "gl.h"
 
@@ -36,21 +36,21 @@ namespace Graphics
 	public:
 		struct Triangle
 		{
-			std::vector< Vector4f >::size_type Points[3];
-			Vector4f Normals[3];
+			std::vector< Vector3f >::size_type Points[3];
+			Vector3f Normals[3];
 		};
 		
 		Mesh(const std::string & Identifier);
 		void Draw(Graphics::RenderContext * RenderContext) const;
 		const std::string & GetIdentifier(void) const;
 		float GetRadialSize(void) const;
-		std::vector< Vector4f >::size_type AddPoint(const Vector4f & Point);
-		std::vector< Graphics::Mesh::Triangle >::size_type AddTriangle(std::vector< Vector4f >::size_type Point1Index, const Vector4f & Point1Normal, std::vector< Vector4f >::size_type Point2Index, const Vector4f & Point2Normal, std::vector< Vector4f >::size_type Point3Index, const Vector4f & Point3Normal);
+		std::vector< Vector3f >::size_type AddPoint(const Vector3f & Point);
+		std::vector< Graphics::Mesh::Triangle >::size_type AddTriangle(std::vector< Vector3f >::size_type Point1Index, const Vector3f & Point1Normal, std::vector< Vector3f >::size_type Point2Index, const Vector3f & Point2Normal, std::vector< Vector3f >::size_type Point3Index, const Vector3f & Point3Normal);
 		void BuildVertexArray(void);
 	private:
 		std::string _Identifier;
 		GLsizei _NumberOfIndices;
-		std::vector< Vector4f > _Points;
+		std::vector< Vector3f > _Points;
 		mutable float _RadialSize;
 		std::vector< Graphics::Mesh::Triangle > _Triangles;
 		GLuint _VertexArray;

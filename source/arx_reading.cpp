@@ -498,7 +498,7 @@ static void ReadMesh(Arxx::Reference & Reference)
 		throw std::runtime_error("Could not create mesh '" + Identifier + "'.");
 	}
 	
-	std::map< std::string, std::vector< Vector4f >::size_type > Points;
+	std::map< std::string, std::vector< Vector3f >::size_type > Points;
 	Arxx::u4byte Count;
 	
 	Reader >> Count;
@@ -506,27 +506,23 @@ static void ReadMesh(Arxx::Reference & Reference)
 	{
 		std::string PointIdentifier;
 		std::string PointName;
-		float X;
-		float Y;
-		float Z;
+		Vector3f PointCoordinates;
 		
-		Reader >> PointIdentifier >> PointName >> X >> Y >> Z;
-		Points[PointIdentifier] = NewMesh->AddPoint(Vector4f(X, Y, Z, 0.0f));
+		Reader >> PointIdentifier >> PointName >> PointCoordinates;
+		Points[PointIdentifier] = NewMesh->AddPoint(PointCoordinates);
 	}
 	
-	std::map< std::string, std::pair< std::vector< Vector4f >::size_type, Vector4f > > TrianglePoints;
+	std::map< std::string, std::pair< std::vector< Vector3f >::size_type, Vector3f > > TrianglePoints;
 	
 	Reader >> Count;
 	for(Arxx::u4byte Number = 1; Number <= Count; ++Number)
 	{
 		std::string TrianglePointIdentifier;
+		Vector3f TrianglePointNormal;
 		std::string PointIdentifier;
-		float NormalX;
-		float NormalY;
-		float NormalZ;
 		
-		Reader >> TrianglePointIdentifier >> NormalX >> NormalY >> NormalZ >> PointIdentifier;
-		TrianglePoints[TrianglePointIdentifier] = std::make_pair(Points[PointIdentifier], Vector4f(NormalX, NormalY, NormalZ, 0.0f));
+		Reader >> TrianglePointIdentifier >> TrianglePointNormal >> PointIdentifier;
+		TrianglePoints[TrianglePointIdentifier] = std::make_pair(Points[PointIdentifier], TrianglePointNormal);
 	}
 	
 	Reader >> Count;
