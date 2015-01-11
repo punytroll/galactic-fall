@@ -128,14 +128,14 @@ float Graphics::Mesh::GetRadialSize(void) const
 	return _RadialSize;
 }
 
-std::vector< Vector4f >::size_type Graphics::Mesh::AddPoint(const Vector4f & Point)
+std::vector< Vector3f >::size_type Graphics::Mesh::AddPoint(const Vector3f & Point)
 {
 	_Points.push_back(Point);
 	
 	return _Points.size() - 1;
 }
 
-std::vector< Graphics::Mesh::Triangle >::size_type Graphics::Mesh::AddTriangle(std::vector< Vector4f >::size_type Point1Index, const Vector4f & Point1Normal, std::vector< Vector4f >::size_type Point2Index, const Vector4f & Point2Normal, std::vector< Vector4f >::size_type Point3Index, const Vector4f & Point3Normal)
+std::vector< Graphics::Mesh::Triangle >::size_type Graphics::Mesh::AddTriangle(std::vector< Vector3f >::size_type Point1Index, const Vector3f & Point1Normal, std::vector< Vector3f >::size_type Point2Index, const Vector3f & Point2Normal, std::vector< Vector3f >::size_type Point3Index, const Vector3f & Point3Normal)
 {
 	_Triangles.push_back(Triangle());
 	_Triangles.back().Points[0] = Point1Index;
