@@ -1263,8 +1263,6 @@ void GameFrame(void)
 	double PhysicsTimeBegin(RealTime::Get());
 	float Seconds(CalculateTime());
 	
-	assert(g_GraphicsEngine != nullptr);
-	g_GraphicsEngine->Update(Seconds);
 	if(g_Galaxy != nullptr)
 	{
 		auto OldObservedSystem(GetObservedSystem());
@@ -1299,6 +1297,8 @@ void GameFrame(void)
 	
 	double GraphicsTimeBegin(RealTime::Get());
 	
+	assert(g_GraphicsEngine != nullptr);
+	g_GraphicsEngine->Update(Seconds);
 	PrerenderViews();
 	DisplayMainView();
 	g_UIView->Render();
