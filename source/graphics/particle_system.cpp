@@ -107,6 +107,10 @@ void Graphics::ParticleSystem::Update(float Seconds)
 			throw std::runtime_error("Unknown particle system command '" + *ScriptLine + "'.");
 		}
 	}
+	for(auto ParticleSystemNode : _ParticleSystemNodes)
+	{
+		ParticleSystemNode->SetPosition(_Position);
+	}
 }
 
 void Graphics::ParticleSystem::AddParticle(const Graphics::ParticleSystem::Particle & Particle)

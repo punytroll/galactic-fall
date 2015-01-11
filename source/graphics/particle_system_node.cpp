@@ -29,10 +29,10 @@
 #include "texture.h"
 #include "texture_manager.h"
 
-const Graphics::Texture * g_ParticleTexture(0);
+const Graphics::Texture * g_ParticleTexture(nullptr);
 
 Graphics::ParticleSystemNode::ParticleSystemNode(void) :
-	_ParticleSystem(0)
+	_ParticleSystem(nullptr)
 {
 	SetBlendFunction(GL_SRC_ALPHA, GL_ONE);
 	SetUseBlending(true);
@@ -43,32 +43,31 @@ Graphics::ParticleSystemNode::ParticleSystemNode(void) :
 
 Graphics::ParticleSystemNode::~ParticleSystemNode(void)
 {
-	if(_ParticleSystem != 0)
+	if(_ParticleSystem != nullptr)
 	{
 		_ParticleSystem->_ParticleSystemNodes.erase(this);
-		_ParticleSystem = 0;
+		_ParticleSystem = nullptr;
 	}
 }
 	
 void Graphics::ParticleSystemNode::SetParticleSystem(Graphics::ParticleSystem * ParticleSystem)
 {
-	assert(_ParticleSystem == 0);
-	assert(ParticleSystem != 0);
+	assert(_ParticleSystem == nullptr);
+	assert(ParticleSystem != nullptr);
 	_ParticleSystem = ParticleSystem;
 	_ParticleSystem->_ParticleSystemNodes.insert(this);
 }
 
 void Graphics::ParticleSystemNode::Begin(Graphics::RenderContext * RenderContext)
 {
-	GLPushMatrix();
-	GLMultMatrixf(GetSpacialMatrix().GetPointer());
-	if(g_ParticleTexture == 0)
+	if(g_ParticleTexture == nullptr)
 	{
 		g_ParticleTexture = GetScene()->GetEngine()->GetTextureManager()->Get("particle");
-		assert(g_ParticleTexture != 0);
+		assert(g_ParticleTexture != nullptr);
 	}
-	assert(_ParticleSystem != 0);
-	SetPosition(_ParticleSystem->GetPosition());
+	assert(_ParticleSystem != nullptr);
+	GLPushMatrix();
+	GLMultMatrixf(GetSpacialMatrix().GetPointer());
 	Graphics::Node::Begin(RenderContext);
 	g_ParticleTexture->Activate();
 }
@@ -76,18 +75,15 @@ void Graphics::ParticleSystemNode::Begin(Graphics::RenderContext * RenderContext
 void Graphics::ParticleSystemNode::Draw(Graphics::RenderContext * RenderContext)
 {
 	g_SystemStatistics->SetParticleSystemsDrawnThisFrame(g_SystemStatistics->GetParticleSystemsDrawnThisFrame() + 1);
-	assert(_ParticleSystem != 0);
-	
-	const std::list< Graphics::ParticleSystem::Particle > & Particles(_ParticleSystem->GetParticles());
-	
+	assert(_ParticleSystem != nullptr);
 	GLBegin(GL_QUADS);
-	for(std::list< Graphics::ParticleSystem::Particle >::const_iterator ParticleIterator = Particles.begin(); ParticleIterator != Particles.end(); ++ParticleIterator)
+	for(auto Particle : _ParticleSystem->GetParticles())
 	{
 		g_SystemStatistics->SetParticlesDrawnThisFrame(g_SystemStatistics->GetParticlesDrawnThisFrame() + 1);
-		GLColor4fv(ParticleIterator->_Color.GetColor().GetPointer());
+		GLColor4fv(Particle._Color.GetColor().GetPointer());
 		
-		const Vector3f & Position(ParticleIterator->_Position);
-		const float & Size(ParticleIterator->_Size);
+		const Vector3f & Position(Particle._Position);
+		const float & Size(Particle._Size);
 		
 		// TODO: billboarding
 		GLTexCoord2f(0.0f, 0.0f);
