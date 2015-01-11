@@ -18,13 +18,25 @@
 **/
 
 #include <cassert>
+#include <iostream>
 
+#include "../color.h"
+#include "camera.h"
+#include "engine.h"
+#include "light.h"
+#include "node.h"
+#include "program.h"
+#include "projection.h"
 #include "render_context.h"
+#include "shading_manager.h"
+#include "style.h"
 
 Graphics::RenderContext::RenderContext(void) :
 	_Camera(nullptr),
 	_Engine(nullptr),
 	_Light(nullptr),
+	_Node(nullptr),
+	_Program(nullptr),
 	_Style(nullptr)
 {
 }
@@ -34,5 +46,101 @@ Graphics::RenderContext::~RenderContext(void)
 	assert(_Camera == nullptr);
 	assert(_Engine == nullptr);
 	assert(_Light == nullptr);
+	assert(_Node == nullptr);
+	assert(_Program == nullptr);
 	assert(_Style== nullptr);
+}
+
+void Graphics::RenderContext::ActivateProgram(void)
+{
+	assert(_Engine != nullptr);
+	
+	auto ShadingManager(_Engine->GetShadingManager());
+	
+	assert(_Style != nullptr);
+	assert(_Program == nullptr);
+	_Program = ShadingManager->GetProgram(_Style->GetProgramIdentifier());
+	assert(_Program != nullptr);
+	_Program->_Activate();
+	
+	auto Uniforms(_Program->GetUniforms());
+	
+	for(auto & Uniform : Uniforms)
+	{
+		switch(Uniform.second)
+		{
+		case Graphics::Program::UniformContent::ProjectionMatrix4x4F:
+			{
+				assert(_Camera != nullptr);
+				assert(_Camera->GetProjection() != nullptr);
+				_Program->_SetUniform(Uniform.first, _Camera->GetProjection()->GetMatrix());
+				
+				break;
+			}
+		case Graphics::Program::UniformContent::ViewMatrix4x4F:
+			{
+				assert(_Camera != nullptr);
+				_Program->_SetUniform(Uniform.first, _Camera->GetSpacialMatrix().Inverted());
+				
+				break;
+			}
+		case Graphics::Program::UniformContent::ModelMatrix4x4F:
+			{
+				assert(_Node != nullptr);
+				_Program->_SetUniform(Uniform.first, _Node->GetSpacialMatrix().Scaled(_Node->GetScale()));
+				
+				break;
+			}
+		case Graphics::Program::UniformContent::NormalMatrix3x3F:
+			{
+				assert(_Node != nullptr);
+				_Program->_SetUniform(Uniform.first, Matrix3f::CreateFromTopLeftMatrix4f(_Node->GetSpacialMatrix()).Invert().Transpose());
+				
+				break;
+			}
+		case Graphics::Program::UniformContent::CameraPositionVector3F:
+			{
+				assert(_Camera != nullptr);
+				_Program->_SetUniform(Uniform.first, Vector3f(0.0f, 0.0f, 0.0f).Transform(_Camera->GetSpacialMatrix().Inverted()));
+				
+				break;
+			}
+		case Graphics::Program::UniformContent::LightDirectionVector3F:
+			{
+				assert(_Light != nullptr);
+				_Program->_SetUniform(Uniform.first, Vector3f::CreateFromVector4f(_Light->GetPosition()).Normalize().Negate());
+				
+				break;
+			}
+		case Graphics::Program::UniformContent::LightColorVector3F:
+			{
+				assert(_Light != nullptr);
+				_Program->_SetUniform(Uniform.first, Vector3f::CreateFromVector4f(_Light->GetDiffuseColor()));
+				
+				break;
+			}
+		case Graphics::Program::UniformContent::MaterialColorVector3F:
+			{
+				assert(_Style != nullptr);
+				assert(_Style->GetDiffuseColor() != nullptr);
+				_Program->_SetUniform(Uniform.first, Vector3f::CreateFromVector4f(_Style->GetDiffuseColor()->GetColor()));
+				
+				break;
+			}
+		case Graphics::Program::UniformContent::MaterialShininessF:
+			{
+				assert(_Style != nullptr);
+				_Program->_SetUniform(Uniform.first, _Style->GetShininess());
+				
+				break;
+			}
+		}
+	}
+}
+
+void Graphics::RenderContext::DeactivateProgram(void)
+{
+	assert(_Program != nullptr);
+	_Program->_Deactivate();
+	_Program = nullptr;
 }

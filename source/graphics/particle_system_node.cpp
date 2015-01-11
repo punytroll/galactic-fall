@@ -60,6 +60,8 @@ void Graphics::ParticleSystemNode::SetParticleSystem(Graphics::ParticleSystem * 
 
 void Graphics::ParticleSystemNode::Begin(Graphics::RenderContext * RenderContext)
 {
+	GLPushMatrix();
+	GLMultMatrixf(GetSpacialMatrix().GetPointer());
 	if(g_ParticleTexture == 0)
 	{
 		g_ParticleTexture = GetScene()->GetEngine()->GetTextureManager()->Get("particle");
@@ -103,4 +105,5 @@ void Graphics::ParticleSystemNode::Draw(Graphics::RenderContext * RenderContext)
 void Graphics::ParticleSystemNode::End(Graphics::RenderContext * RenderContext)
 {
 	Graphics::Node::End(RenderContext);
+	GLPopMatrix();
 }

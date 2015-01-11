@@ -3106,10 +3106,6 @@ void InitializeOpenGL(void)
 	
 	GLGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &MaximalNumberOfVertexAtributes);
 	ON_DEBUG(std::cout << "  Maximal number of vertex attributes: " << MaximalNumberOfVertexAtributes << std::endl);
-	
-	Vector4f GlobalAmbientLightColor(0.0f, 0.0f, 0.0f, 0.0f);
-	
-	GLLightModelfv(GL_LIGHT_MODEL_AMBIENT, GlobalAmbientLightColor.GetPointer());
 	GLEnable(GL_CULL_FACE);
 	GLEnable(GL_DEPTH_TEST);
 }
