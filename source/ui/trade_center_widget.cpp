@@ -440,8 +440,9 @@ void UI::TradeCenterWidget::_OnAssetClassMouseButton(UI::MouseButtonEvent & Mous
 				Scene->SetDestroyCallback(std::bind(&UI::TradeCenterWidget::_OnDestroyInScene, this, std::placeholders::_1));
 				Scene->ActivateLight();
 				assert(Scene->GetLight() != nullptr);
-				Scene->GetLight()->SetPosition(-20.0f, -10.0f, 20.0f);
-				Scene->GetLight()->SetDiffuseColor(1.0f, 1.0f, 1.0f, 0.0f);
+				Scene->GetLight()->SetType(Graphics::Light::Type::Directional);
+				Scene->GetLight()->SetDirection(Vector3f(20.0f, 10.0f, -20.0f));
+				Scene->GetLight()->SetColor(Color(1.0f, 1.0f, 1.0f, 0.0f));
 				View->SetScene(Scene);
 				
 				auto Texture(new Graphics::Texture());

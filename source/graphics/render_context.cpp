@@ -108,14 +108,16 @@ void Graphics::RenderContext::ActivateProgram(void)
 		case Graphics::Program::UniformContent::LightDirectionVector3F:
 			{
 				assert(_Light != nullptr);
-				_Program->_SetUniform(Uniform.first, Vector3f::CreateFromVector4f(_Light->GetPosition()).Normalize().Negate());
+				assert(_Light->GetType() == Graphics::Light::Type::Directional);
+				_Program->_SetUniform(Uniform.first, _Light->GetDirection());
 				
 				break;
 			}
 		case Graphics::Program::UniformContent::LightColorVector3F:
 			{
 				assert(_Light != nullptr);
-				_Program->_SetUniform(Uniform.first, Vector3f::CreateFromVector4f(_Light->GetDiffuseColor()));
+				assert(_Light->GetColor() != nullptr);
+				_Program->_SetUniform(Uniform.first, Vector3f::CreateFromVector4f(_Light->GetColor()->GetColor()));
 				
 				break;
 			}

@@ -17,34 +17,60 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include <cassert>
+
+#include "../color.h"
 #include "light.h"
 
-Graphics::Light::Light(void)
+Graphics::Light::Light(void) :
+	_Color(nullptr),
+	_Type(Graphics::Light::Type::Undefined)
 {
 }
 
-const Vector4f & Graphics::Light::GetPosition(void) const
+Graphics::Light::~Light(void)
 {
+	delete _Color;
+	_Color = nullptr;
+}
+
+const Vector3f & Graphics::Light::GetDirection(void) const
+{
+	assert(_Type == Graphics::Light::Type::Directional);
+	
+	return _Direction;
+}
+
+const Vector3f & Graphics::Light::GetPosition(void) const
+{
+	assert(_Type == Graphics::Light::Type::Positional);
+	
 	return _Position;
 }
 
-const Vector4f & Graphics::Light::GetDiffuseColor(void) const
+const Color * Graphics::Light::GetColor(void) const
 {
-	return _DiffuseColor;
+	return _Color;
 }
 
-void Graphics::Light::SetPosition(float X, float Y, float Z)
+void Graphics::Light::SetColor(const Color & AColor)
 {
-	_Position[0] = X;
-	_Position[1] = Y;
-	_Position[2] = Z;
-	_Position[3] = 0.0f;
+	if(_Color != nullptr)
+	{
+		delete _Color;
+		_Color = nullptr;
+	}
+	_Color = new Color(AColor);
 }
 
-void Graphics::Light::SetDiffuseColor(float Red, float Green, float Blue, float Alpha)
+void Graphics::Light::SetDirection(const Vector3f & Direction)
 {
-	_DiffuseColor[0] = Red;
-	_DiffuseColor[1] = Green;
-	_DiffuseColor[2] = Blue;
-	_DiffuseColor[3] = Alpha;
+	assert(_Type == Graphics::Light::Type::Directional);
+	_Direction = Direction.Normalized();
+}
+
+void Graphics::Light::SetPosition(const Vector3f & Position)
+{
+	assert(_Type == Graphics::Light::Type::Positional);
+	_Position = Position;
 }

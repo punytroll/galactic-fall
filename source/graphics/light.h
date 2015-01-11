@@ -20,24 +20,50 @@
 #ifndef GRAPHICS_LIGHT_H
 #define GRAPHICS_LIGHT_H
 
-#include <algebra/vector4f.h>
+#include <algebra/vector3f.h>
+
+class Color;
 
 namespace Graphics
 {
 	class Light
 	{
 	public:
+		enum class Type
+		{
+			Undefined,
+			Directional,
+			Positional
+		};
+		
 		Light(void);
+		~Light(void);
 		// getters
-		const Vector4f & GetDiffuseColor(void) const;
-		const Vector4f & GetPosition(void) const;
+		const Color * GetColor(void) const;
+		const Vector3f & GetDirection(void) const;
+		const Vector3f & GetPosition(void) const;
+		Graphics::Light::Type GetType(void) const;
 		// setters
-		void SetPosition(float X, float Y, float Z);
-		void SetDiffuseColor(float Red, float Green, float Blue, float Alpha);
+		void SetColor(const Color & Color);
+		void SetDirection(const Vector3f & Direction);
+		void SetPosition(const Vector3f & Position);
+		void SetType(Graphics::Light::Type Type);
 	private:
-		Vector4f _DiffuseColor;
-		Vector4f _Position;
+		Color * _Color;
+		Vector3f _Direction;
+		Vector3f _Position;
+		Graphics::Light::Type _Type;
 	};
+	
+	inline Graphics::Light::Type Graphics::Light::GetType(void) const
+	{
+		return _Type;
+	}
+	
+	inline void Graphics::Light::SetType(Graphics::Light::Type Type)
+	{
+		_Type = Type;
+	}
 }
 
 #endif

@@ -1117,9 +1117,10 @@ void OnOutputEnterSystem(System * EnterSystem)
 	{
 		MainScene->ActivateLight();
 		assert(MainScene->GetLight() != nullptr);
+		MainScene->GetLight()->SetType(Graphics::Light::Type::Directional);
+		MainScene->GetLight()->SetColor(Star->GetColor());
 		assert(Star->GetAspectPosition() != nullptr);
-		MainScene->GetLight()->SetPosition(Star->GetAspectPosition()->GetPosition()[0], Star->GetAspectPosition()->GetPosition()[1], 100.0f);
-		MainScene->GetLight()->SetDiffuseColor(Star->GetColor().GetColor()[0], Star->GetColor().GetColor()[1], Star->GetColor().GetColor()[2], Star->GetColor().GetColor()[3]);
+		MainScene->GetLight()->SetDirection(Vector3f(-Star->GetAspectPosition()->GetPosition()[0], -Star->GetAspectPosition()->GetPosition()[1], -100.0f));
 	}
 	else
 	{
