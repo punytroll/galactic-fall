@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 1.8.10 of algebra.
+ * This is part of version 1.8.12.2 of algebra.
  **/
 
 #ifndef ALGEBRA_VECTOR3F_H
@@ -29,6 +29,7 @@
 class Matrix3f;
 class Matrix4f;
 class Quaternion;
+class Vector4f;
 
 class Vector3f
 {
@@ -56,6 +57,8 @@ public:
 		_[2] = Value3;
 	}
 	
+	static Vector3f CreateFromVector4f(const Vector4f & Vector);
+	
 	Vector3f & Set(float Value1, float Value2, float Value3)
 	{
 		_[0] = Value1;
@@ -74,6 +77,10 @@ public:
 	{
 		return _[0] * _[0] + _[1] * _[1] + _[2] * _[2];
 	}
+	
+	Vector3f & Negate(void);
+	
+	Vector3f Negated(void) const;
 	
 	Vector3f & Normalize(void)
 	{
@@ -206,6 +213,38 @@ public:
 #include "matrix3f.h"
 #include "matrix4f.h"
 #include "quaternion.h"
+#include "vector4f.h"
+
+inline Vector3f Vector3f::CreateFromVector4f(const Vector4f & Vector)
+{
+	Vector3f Result;
+	
+	Result._[0] = Vector._[0];
+	Result._[1] = Vector._[1];
+	Result._[2] = Vector._[2];
+	
+	return Result;
+}
+
+inline Vector3f & Vector3f::Negate(void)
+{
+	_[0] = -_[0];
+	_[1] = -_[1];
+	_[2] = -_[2];
+	
+	return *this;
+}
+
+inline Vector3f Vector3f::Negated(void) const
+{
+	Vector3f Result;
+	
+	Result._[0] = -_[0];
+	Result._[1] = -_[1];
+	Result._[2] = -_[2];
+	
+	return Result;
+}
 
 inline Vector3f & Vector3f::operator*=(const Matrix3f & Matrix)
 {
