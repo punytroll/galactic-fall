@@ -101,12 +101,6 @@ void Graphics::Node::Begin(Graphics::RenderContext * RenderContext)
 	{
 		GLClear(GL_COLOR_BUFFER_BIT);
 	}
-	GLPushMatrix();
-	GLMultMatrixf(_SpacialMatrix.GetPointer());
-	if(_Scale != 1.0f)
-	{
-		GLScalef(_Scale, _Scale, _Scale);
-	}
 	GLPushAttrib(GL_ENABLE_BIT | GL_COLOR_BUFFER_BIT);
 	if(_Normalize == true)
 	{
@@ -212,7 +206,6 @@ void Graphics::Node::Draw(Graphics::RenderContext * RenderContext)
 void Graphics::Node::End(Graphics::RenderContext * RenderContext)
 {
 	GLPopAttrib();
-	GLPopMatrix();
 }
 
 void Graphics::Node::_Destroy(Graphics::Node * Node)

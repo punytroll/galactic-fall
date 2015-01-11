@@ -28,6 +28,8 @@ namespace Graphics
 	class Camera;
 	class Engine;
 	class Light;
+	class Node;
+	class Program;
 	class Style;
 	
 	class RenderContext
@@ -40,11 +42,17 @@ namespace Graphics
 		void SetCamera(Graphics::Camera * Camera);
 		void SetEngine(Graphics::Engine * Engine);
 		void SetLight(Graphics::Light * Light);
+		void SetNode(Graphics::Node * Node);
 		void SetStyle(Graphics::Style * Style);
+		// modifiers
+		void ActivateProgram(void);
+		void DeactivateProgram(void);
 	private:
 		Graphics::Camera * _Camera;
 		Graphics::Engine * _Engine;
 		Graphics::Light * _Light;
+		Graphics::Node * _Node;
+		Graphics::Program * _Program;
 		Graphics::Style * _Style;
 	};
 	
@@ -61,6 +69,11 @@ namespace Graphics
 	inline void Graphics::RenderContext::SetLight(Graphics::Light * Light)
 	{
 		_Light = Light;
+	}
+	
+	inline void Graphics::RenderContext::SetNode(Graphics::Node * Node)
+	{
+		_Node = Node;
 	}
 	
 	inline void Graphics::RenderContext::SetStyle(Graphics::Style * Style)

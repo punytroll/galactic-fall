@@ -21,61 +21,129 @@
 #include "mesh.h"
 
 Graphics::Mesh::Mesh(const std::string & Identifier) :
-	m_Identifier(Identifier),
-	m_RadialSize(-1.0f)
+	_Identifier(Identifier),
+	_NumberOfIndices(0),
+	_RadialSize(-1.0f),
+	_VertexArray(0)
 {
+}
+
+void Graphics::Mesh::BuildVertexArray(void)
+{
+	_NumberOfIndices = _Triangles.size() * 9;
+	
+	auto Vertices(new GLfloat[_NumberOfIndices]);
+	auto Normals(new GLfloat[_NumberOfIndices]);
+	int Index(0);
+	
+	for(auto & Triangle : _Triangles)
+	{
+		auto & Vertex1(_Points[Triangle.Points[0]]);
+		auto & Normal1(Triangle.Normals[0]);
+		
+		Vertices[Index] = Vertex1[0];
+		Normals[Index] = Normal1[0];
+		++Index;
+		Vertices[Index] = Vertex1[1];
+		Normals[Index] = Normal1[1];
+		++Index;
+		Vertices[Index] = Vertex1[2];
+		Normals[Index] = Normal1[2];
+		++Index;
+		
+		auto & Vertex2(_Points[Triangle.Points[1]]);
+		auto & Normal2(Triangle.Normals[1]);
+		
+		Vertices[Index] = Vertex2[0];
+		Normals[Index] = Normal2[0];
+		++Index;
+		Vertices[Index] = Vertex2[1];
+		Normals[Index] = Normal2[1];
+		++Index;
+		Vertices[Index] = Vertex2[2];
+		Normals[Index] = Normal2[2];
+		++Index;
+		
+		auto & Vertex3(_Points[Triangle.Points[2]]);
+		auto & Normal3(Triangle.Normals[2]);
+		
+		Vertices[Index] = Vertex3[0];
+		Normals[Index] = Normal3[0];
+		++Index;
+		Vertices[Index] = Vertex3[1];
+		Normals[Index] = Normal3[1];
+		++Index;
+		Vertices[Index] = Vertex3[2];
+		Normals[Index] = Normal3[2];
+		++Index;
+	}
+	GLGenVertexArrays(1, &_VertexArray);
+	GLBindVertexArray(_VertexArray);
+	
+	GLuint VertexBuffer(0);
+	
+	GLGenBuffers(1, &VertexBuffer);
+	GLBindBuffer(GL_ARRAY_BUFFER, VertexBuffer);
+	GLBufferData(GL_ARRAY_BUFFER, _NumberOfIndices * sizeof(GLfloat), Vertices, GL_STATIC_DRAW);
+	GLVertexAttribPointer(0, 3, GL_FLOAT, GL_TRUE, 0, nullptr);
+	GLEnableVertexAttribArray(0);
+	
+	GLuint NormalBuffer(0);
+	
+	GLGenBuffers(1, &NormalBuffer);
+	GLBindBuffer(GL_ARRAY_BUFFER, NormalBuffer);
+	GLBufferData(GL_ARRAY_BUFFER, _NumberOfIndices * sizeof(GLfloat), Normals, GL_STATIC_DRAW);
+	GLVertexAttribPointer(1, 3, GL_FLOAT, GL_TRUE, 0, nullptr);
+	GLEnableVertexAttribArray(1);
+	GLBindVertexArray(0);
+	delete[] Normals;
+	delete[] Vertices;
 }
 
 void Graphics::Mesh::Draw(Graphics::RenderContext * RenderContext) const
 {
-	GLBegin(GL_TRIANGLES);
-	for(std::vector< Graphics::Mesh::Triangle >::size_type Triangle = 0; Triangle < m_Triangles.size(); ++Triangle)
-	{
-		GLNormal3fv(m_Triangles[Triangle].Normals[0].GetPointer());
-		GLVertex3fv(m_Points[m_Triangles[Triangle].Points[0]].GetPointer());
-		GLNormal3fv(m_Triangles[Triangle].Normals[1].GetPointer());
-		GLVertex3fv(m_Points[m_Triangles[Triangle].Points[1]].GetPointer());
-		GLNormal3fv(m_Triangles[Triangle].Normals[2].GetPointer());
-		GLVertex3fv(m_Points[m_Triangles[Triangle].Points[2]].GetPointer());
-	}
-	GLEnd();
+	assert(_VertexArray != 0);
+	assert(_NumberOfIndices != 0);
+	GLBindVertexArray(_VertexArray);
+	GLDrawArrays(GL_TRIANGLES, 0, _NumberOfIndices);
+	GLBindVertexArray(0);
 }
 
 float Graphics::Mesh::GetRadialSize(void) const
 {
-	if(m_RadialSize < 0.0f)
+	if(_RadialSize < 0.0f)
 	{
-		for(std::vector< Vector4f >::const_iterator PointInterator = m_Points.begin(); PointInterator != m_Points.end(); ++PointInterator)
+		for(auto & Point : _Points)
 		{
-			float RadialSquare(PointInterator->SquaredLength());
+			float RadialSquare(Point.SquaredLength());
 			
-			if(m_RadialSize < RadialSquare)
+			if(_RadialSize < RadialSquare)
 			{
-				m_RadialSize = RadialSquare;
+				_RadialSize = RadialSquare;
 			}
 		}
-		m_RadialSize = sqrt(m_RadialSize);
+		_RadialSize = sqrt(_RadialSize);
 	}
 	
-	return m_RadialSize;
+	return _RadialSize;
 }
 
 std::vector< Vector4f >::size_type Graphics::Mesh::AddPoint(const Vector4f & Point)
 {
-	m_Points.push_back(Point);
+	_Points.push_back(Point);
 	
-	return m_Points.size() - 1;
+	return _Points.size() - 1;
 }
 
 std::vector< Graphics::Mesh::Triangle >::size_type Graphics::Mesh::AddTriangle(std::vector< Vector4f >::size_type Point1Index, const Vector4f & Point1Normal, std::vector< Vector4f >::size_type Point2Index, const Vector4f & Point2Normal, std::vector< Vector4f >::size_type Point3Index, const Vector4f & Point3Normal)
 {
-	m_Triangles.push_back(Triangle());
-	m_Triangles.back().Points[0] = Point1Index;
-	m_Triangles.back().Normals[0] = Point1Normal;
-	m_Triangles.back().Points[1] = Point2Index;
-	m_Triangles.back().Normals[1] = Point2Normal;
-	m_Triangles.back().Points[2] = Point3Index;
-	m_Triangles.back().Normals[2] = Point3Normal;
+	_Triangles.push_back(Triangle());
+	_Triangles.back().Points[0] = Point1Index;
+	_Triangles.back().Normals[0] = Point1Normal;
+	_Triangles.back().Points[1] = Point2Index;
+	_Triangles.back().Normals[1] = Point2Normal;
+	_Triangles.back().Points[2] = Point3Index;
+	_Triangles.back().Normals[2] = Point3Normal;
 	
-	return m_Triangles.size() - 1;
+	return _Triangles.size() - 1;
 }

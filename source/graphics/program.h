@@ -32,10 +32,12 @@ class Vector3f;
 
 namespace Graphics
 {
+	class RenderContext;
 	class ShadingManager;
 	
 	class Program
 	{
+		friend Graphics::RenderContext;
 	public:
 		enum class UniformContent : std::uint32_t
 		{

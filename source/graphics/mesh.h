@@ -25,6 +25,8 @@
 
 #include <algebra/vector4f.h>
 
+#include "gl.h"
+
 namespace Graphics
 {
 	class RenderContext;
@@ -44,16 +46,19 @@ namespace Graphics
 		float GetRadialSize(void) const;
 		std::vector< Vector4f >::size_type AddPoint(const Vector4f & Point);
 		std::vector< Graphics::Mesh::Triangle >::size_type AddTriangle(std::vector< Vector4f >::size_type Point1Index, const Vector4f & Point1Normal, std::vector< Vector4f >::size_type Point2Index, const Vector4f & Point2Normal, std::vector< Vector4f >::size_type Point3Index, const Vector4f & Point3Normal);
+		void BuildVertexArray(void);
 	private:
-		std::string m_Identifier;
-		std::vector< Vector4f > m_Points;
-		std::vector< Graphics::Mesh::Triangle > m_Triangles;
-		mutable float m_RadialSize;
+		std::string _Identifier;
+		GLsizei _NumberOfIndices;
+		std::vector< Vector4f > _Points;
+		mutable float _RadialSize;
+		std::vector< Graphics::Mesh::Triangle > _Triangles;
+		GLuint _VertexArray;
 	};
 	
 	inline const std::string & Mesh::GetIdentifier(void) const
 	{
-		return m_Identifier;
+		return _Identifier;
 	}
 }
 

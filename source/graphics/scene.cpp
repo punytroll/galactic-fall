@@ -121,18 +121,6 @@ void Graphics::Scene::Update(void)
 void Graphics::Scene::Render(Graphics::RenderContext * RenderContext)
 {
 	RenderContext->SetLight(_Light);
-	if(_Light != nullptr)
-	{
-		GLEnable(GL_LIGHT0);
-		GLLightfv(GL_LIGHT0, GL_POSITION, _Light->GetPosition().GetPointer());
-		GLLightfv(GL_LIGHT0, GL_DIFFUSE, _Light->GetDiffuseColor().GetPointer());
-	}
-	else
-	{
-		GLDisable(GL_LIGHT0);
-	}
-	// disable lighting by default, nodes have to activate it if they want it
-	GLDisable(GL_LIGHTING);
 	
 	std::stack< Graphics::Node * > ToDo;
 	
@@ -142,10 +130,12 @@ void Graphics::Scene::Render(Graphics::RenderContext * RenderContext)
 		auto Item(ToDo.top());
 		
 		ToDo.pop();
+		RenderContext->SetNode(Item);
 		assert(Item != nullptr);
 		Item->Begin(RenderContext);
 		Item->Draw(RenderContext);
 		Item->End(RenderContext);
+		RenderContext->SetNode(nullptr);
 		for(auto ContentIterator = Item->GetContent().rbegin(); ContentIterator != Item->GetContent().rend(); ++ContentIterator)
 		{
 			ToDo.push(*ContentIterator);

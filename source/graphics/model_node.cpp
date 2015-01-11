@@ -86,7 +86,9 @@ void Graphics::ModelNode::Draw(Graphics::RenderContext * RenderContext)
 				GLColor4fv(StyleIterator->second->GetDiffuseColor()->GetColor().GetPointer());
 			}
 		}
+		RenderContext->ActivateProgram();
 		MeshPart.second->Draw(RenderContext);
+		RenderContext->DeactivateProgram();
 		RenderContext->SetStyle(nullptr);
 	}
 }
