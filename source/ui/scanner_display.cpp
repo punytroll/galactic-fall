@@ -156,8 +156,9 @@ void UI::ScannerDisplay::_Setup(void)
 	assert(TheSystem != nullptr);
 	assert(TheSystem->GetStar() != nullptr);
 	assert(TheSystem->GetStar()->GetAspectPosition() != nullptr);
-	Scene->GetLight()->SetPosition(TheSystem->GetStar()->GetAspectPosition()->GetPosition()[0], TheSystem->GetStar()->GetAspectPosition()->GetPosition()[1], 100.0f);
-	Scene->GetLight()->SetDiffuseColor(TheSystem->GetStar()->GetColor().GetColor()[0], TheSystem->GetStar()->GetColor().GetColor()[1], TheSystem->GetStar()->GetColor().GetColor()[2], TheSystem->GetStar()->GetColor().GetColor()[3]);
+	Scene->GetLight()->SetType(Graphics::Light::Type::Directional);
+	Scene->GetLight()->SetDirection(Vector3f(-TheSystem->GetStar()->GetAspectPosition()->GetPosition()[0], -TheSystem->GetStar()->GetAspectPosition()->GetPosition()[1], -100.0f));
+	Scene->GetLight()->SetColor(TheSystem->GetStar()->GetColor());
 	View->SetScene(Scene);
 	
 	auto Texture(new Graphics::Texture());
