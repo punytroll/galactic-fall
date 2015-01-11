@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 1.8.10 of algebra.
+ * This is part of version 1.8.12.2 of algebra.
  **/
 
 #ifndef ALGEBRA_MATRIX4F_H
@@ -28,12 +28,14 @@
 
 #include <utility>
 
+class Matrix3f;
 class Quaternion;
 class Vector3f;
 class Vector4f;
 
 class Matrix4f
 {
+	friend Matrix3f;
 	friend Vector3f;
 private:
 	float _[16];
@@ -192,6 +194,8 @@ public:
 	
 	Matrix4f & Rotate(const Quaternion & Quaternion);
 	
+	Matrix4f Rotated(const Quaternion & Quaternion) const;
+	
 	Matrix4f & RotateX(float Radians)
 	{
 		float Sin(sin(Radians));
@@ -256,6 +260,10 @@ public:
 	}
 	
 	Matrix4f & Scale(const Vector3f & Scale);
+	
+	Matrix4f Scaled(const Vector3f & Scale) const;
+	
+	Matrix4f Scaled(float Scale) const;
 	
 	Matrix4f & Transform(const Matrix4f & Other)
 	{
@@ -584,6 +592,47 @@ inline Matrix4f & Matrix4f::Rotate(const Quaternion & Quaternion)
 	return *this;
 }
 
+inline Matrix4f Matrix4f::Rotated(const Quaternion & Quaternion) const
+{
+	float WX(Quaternion._[0] * Quaternion._[1]);
+	float WY(Quaternion._[0] * Quaternion._[2]);
+	float WZ(Quaternion._[0] * Quaternion._[3]);
+	float XX(Quaternion._[1] * Quaternion._[1]);
+	float XY(Quaternion._[1] * Quaternion._[2]);
+	float XZ(Quaternion._[1] * Quaternion._[3]);
+	float YY(Quaternion._[2] * Quaternion._[2]);
+	float YZ(Quaternion._[2] * Quaternion._[3]);
+	float ZZ(Quaternion._[3] * Quaternion._[3]);
+	float Value4(_[4] + 2 * _[8] * WX - 2 * _[4] * XX + 2 * _[0] * XY - 2 * _[0] * WZ + 2 * _[8] * YZ - 2 * _[4] * ZZ);
+	float Value5(_[5] + 2 * _[9] * WX - 2 * _[5] * XX + 2 * _[1] * XY - 2 * _[1] * WZ + 2 * _[9] * YZ - 2 * _[5] * ZZ);
+	float Value6(_[6] + 2 * _[10] * WX - 2 * _[6] * XX + 2 * _[2] * XY - 2 * _[2] * WZ + 2 * _[10] * YZ - 2 * _[6] * ZZ);
+	float Value7(_[7] + 2 * _[11] * WX - 2 * _[7] * XX + 2 * _[3] * XY - 2 * _[3] * WZ + 2 * _[11] * YZ - 2 * _[7] * ZZ);
+	float Value8(_[8] - 2 * _[4] * WX - 2 * _[8] * XX + 2 * _[0] * WY - 2 * _[8] * YY + 2 * _[0] * XZ + 2 * _[4] * YZ);
+	float Value9(_[9] - 2 * _[5] * WX - 2 * _[9] * XX + 2 * _[1] * WY - 2 * _[9] * YY + 2 * _[1] * XZ + 2 * _[5] * YZ);
+	float Value10(_[10] - 2 * _[6] * WX - 2 * _[10] * XX + 2 * _[2] * WY - 2 * _[10] * YY + 2 * _[2] * XZ + 2 * _[6] * YZ);
+	float Value11(_[11] - 2 * _[7] * WX - 2 * _[11] * XX + 2 * _[3] * WY - 2 * _[11] * YY + 2 * _[3] * XZ + 2 * _[7] * YZ);
+	Matrix4f Result;
+	
+	Result._[0] = _[0] - 2 * _[8] * WY + 2 * _[4] * XY - 2 * _[0] * YY + 2 * _[4] * WZ + 2 * _[8] * XZ - 2 * _[0] * ZZ;
+	Result._[1] = _[1] - 2 * _[9] * WY + 2 * _[5] * XY - 2 * _[1] * YY + 2 * _[5] * WZ + 2 * _[9] * XZ - 2 * _[1] * ZZ;
+	Result._[2] = _[2] - 2 * _[10] * WY + 2 * _[6] * XY - 2 * _[2] * YY + 2 * _[6] * WZ + 2 * _[10] * XZ - 2 * _[2] * ZZ;
+	Result._[3] = _[3] - 2 * _[11] * WY + 2 * _[7] * XY - 2 * _[3] * YY + 2 * _[7] * WZ + 2 * _[11] * XZ - 2 * _[3] * ZZ;
+	Result._[4] = Value4;
+	Result._[5] = Value5;
+	Result._[6] = Value6;
+	Result._[7] = Value7;
+	Result._[8] = Value8;
+	Result._[9] = Value9;
+	Result._[10] = Value10;
+	Result._[11] = Value11;
+	Result._[12] = _[12];
+	Result._[13] = _[13];
+	Result._[14] = _[14];
+	Result._[15] = _[15];
+	
+	return Result;
+}
+
 inline Matrix4f & Matrix4f::Scale(const Vector3f & Scale)
 {
 	_[0] *= Scale._[0];
@@ -600,6 +649,54 @@ inline Matrix4f & Matrix4f::Scale(const Vector3f & Scale)
 	_[11] *= Scale._[2];
 	
 	return *this;
+}
+
+inline Matrix4f Matrix4f::Scaled(float Scale) const
+{
+	Matrix4f Result;
+	
+	Result._[0] = _[0] * Scale;
+	Result._[1] = _[1] * Scale;
+	Result._[2] = _[2] * Scale;
+	Result._[3] = _[3] * Scale;
+	Result._[4] = _[4] * Scale;
+	Result._[5] = _[5] * Scale;
+	Result._[6] = _[6] * Scale;
+	Result._[7] = _[7] * Scale;
+	Result._[8] = _[8] * Scale;
+	Result._[9] = _[9] * Scale;
+	Result._[10] = _[10] * Scale;
+	Result._[11] = _[11] * Scale;
+	Result._[12] = _[12];
+	Result._[13] = _[13];
+	Result._[14] = _[14];
+	Result._[15] = _[15];
+	
+	return Result;
+}
+
+inline Matrix4f Matrix4f::Scaled(const Vector3f & Scale) const
+{
+	Matrix4f Result;
+	
+	Result._[0] = _[0] * Scale._[0];
+	Result._[1] = _[1] * Scale._[0];
+	Result._[2] = _[2] * Scale._[0];
+	Result._[3] = _[3] * Scale._[0];
+	Result._[4] = _[4] * Scale._[1];
+	Result._[5] = _[5] * Scale._[1];
+	Result._[6] = _[6] * Scale._[1];
+	Result._[7] = _[7] * Scale._[1];
+	Result._[8] = _[8] * Scale._[2];
+	Result._[9] = _[9] * Scale._[2];
+	Result._[10] = _[10] * Scale._[2];
+	Result._[11] = _[11] * Scale._[2];
+	Result._[12] = _[12];
+	Result._[13] = _[13];
+	Result._[14] = _[14];
+	Result._[15] = _[15];
+	
+	return Result;
 }
 
 inline Matrix4f & Matrix4f::Translate(const Vector3f & Translation)

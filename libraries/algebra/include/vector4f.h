@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 1.8.10 of algebra.
+ * This is part of version 1.8.12.2 of algebra.
  **/
 
 #ifndef ALGEBRA_VECTOR4F_H
@@ -28,10 +28,12 @@
 
 class Matrix4f;
 class Quaternion;
+class Vector3f;
 
 class Vector4f
 {
 	friend Matrix4f;
+	friend Vector3f;
 	friend Vector4f operator*(float Scalar, const Vector4f & Vector);
 private:
 	float _[4];

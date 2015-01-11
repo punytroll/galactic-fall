@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 1.8.10 of algebra.
+ * This is part of version 1.8.12.2 of algebra.
  **/
 
 #ifndef ALGEBRA_MATRIX3F_H
@@ -28,6 +28,7 @@
 
 #include <utility>
 
+class Matrix4f;
 class Vector3f;
 
 class Matrix3f
@@ -82,6 +83,8 @@ public:
 		
 		return Result;
 	}
+	
+	static Matrix3f CreateFromTopLeftMatrix4f(const Matrix4f & Matrix);
 	
 	static Matrix3f CreateRotationX(float Angle)
 	{
@@ -329,5 +332,24 @@ public:
 		return *this;
 	}
 };
+
+#include "matrix4f.h"
+
+inline Matrix3f Matrix3f::CreateFromTopLeftMatrix4f(const Matrix4f & Matrix)
+{
+	Matrix3f Result;
+	
+	Result._[0] = Matrix._[0];
+	Result._[1] = Matrix._[1];
+	Result._[2] = Matrix._[2];
+	Result._[3] = Matrix._[4];
+	Result._[4] = Matrix._[5];
+	Result._[5] = Matrix._[6];
+	Result._[6] = Matrix._[8];
+	Result._[7] = Matrix._[9];
+	Result._[8] = Matrix._[10];
+	
+	return Result;
+}
 
 #endif
