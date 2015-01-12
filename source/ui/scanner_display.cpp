@@ -143,7 +143,7 @@ void UI::ScannerDisplay::_Setup(void)
 	assert(View->GetCamera() != nullptr);
 	View->GetCamera()->SetProjection(PerspectiveProjection);
 	assert(_Target->GetAspectPosition() != nullptr);
-	View->GetCamera()->SetSpacialMatrix(Matrix4f::CreateFromTranslationComponents(0.0f, 0.0f, 4.0f * RadialSize));
+	View->GetCamera()->SetSpacialMatrix(Matrix4f::CreateTranslation(0.0f, 0.0f, 4.0f * RadialSize));
 	
 	auto Scene(new Graphics::Scene());
 	

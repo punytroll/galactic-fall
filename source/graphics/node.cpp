@@ -185,7 +185,7 @@ void Graphics::Node::CalculateSpacialMatrix(void)
 	}
 	else
 	{
-		_SpacialMatrix = Matrix4f(true).Translate(_Position).Rotate(_Orientation);
+		_SpacialMatrix = Matrix4f::CreateTranslation(_Position).Rotate(_Orientation);
 	}
 }
 

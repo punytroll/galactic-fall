@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 1.8.12.2 of algebra.
+ * This is part of version 1.8.13 of algebra.
  **/
 
 #ifndef ALGEBRA_MATRIX4F_H
@@ -40,343 +40,21 @@ class Matrix4f
 private:
 	float _[16];
 public:
-	Matrix4f(void)
-	{
-	}
+	static Matrix4f CreateIdentity(void);
 	
-	Matrix4f(bool)
-	{
-		_[0] = 1.0f;
-		_[1] = 0.0f;
-		_[2] = 0.0f;
-		_[3] = 0.0f;
-		_[4] = 0.0f;
-		_[5] = 1.0f;
-		_[6] = 0.0f;
-		_[7] = 0.0f;
-		_[8] = 0.0f;
-		_[9] = 0.0f;
-		_[10] = 1.0f;
-		_[11] = 0.0f;
-		_[12] = 0.0f;
-		_[13] = 0.0f;
-		_[14] = 0.0f;
-		_[15] = 1.0f;
-	}
+	static Matrix4f CreateTranslation(float X, float Y, float Z);
 	
-	static Matrix4f CreateFromTranslationComponents(float X, float Y, float Z)
-	{
-		Matrix4f Result;
-		
-		Result._[0] = 1.0f;
-		Result._[1] = 0.0f;
-		Result._[2] = 0.0f;
-		Result._[3] = 0.0f;
-		Result._[4] = 0.0f;
-		Result._[5] = 1.0f;
-		Result._[6] = 0.0f;
-		Result._[7] = 0.0f;
-		Result._[8] = 0.0f;
-		Result._[9] = 0.0f;
-		Result._[10] = 1.0f;
-		Result._[11] = 0.0f;
-		Result._[12] = X;
-		Result._[13] = Y;
-		Result._[14] = Z;
-		Result._[15] = 1.0f;
-		
-		return Result;
-	}
+	static Matrix4f CreateTranslation(const Vector3f & TranslationVector);
 	
-	static Matrix4f CreateFromTranslationVector(const Vector3f & TranslationVector);
+	static Matrix4f CreateTranslation(const Vector4f & TranslationVector);
 	
-	static Matrix4f CreateFromTranslationVector(const Vector4f & TranslationVector);
-	
-	static Matrix4f CreateFromQuaternion(const Quaternion & Quaternion);
+	static Matrix4f CreateRotation(const Quaternion & Quaternion);
 	
 	static Matrix4f CreateRotationX(float Angle);
 	
 	static Matrix4f CreateRotationY(float Angle);
 	
 	static Matrix4f CreateRotationZ(float Angle);
-	
-	const float * const GetPointer(void) const
-	{
-		return _;
-	}
-	
-	Matrix4f & Identity(void)
-	{
-		_[0] = 1.0f;
-		_[1] = 0.0f;
-		_[2] = 0.0f;
-		_[3] = 0.0f;
-		_[4] = 0.0f;
-		_[5] = 1.0f;
-		_[6] = 0.0f;
-		_[7] = 0.0f;
-		_[8] = 0.0f;
-		_[9] = 0.0f;
-		_[10] = 1.0f;
-		_[11] = 0.0f;
-		_[12] = 0.0f;
-		_[13] = 0.0f;
-		_[14] = 0.0f;
-		_[15] = 1.0f;
-		
-		return *this;
-	}
-	
-	Matrix4f & Invert(void)
-	{
-		float Determinant = _[12] * _[9] * _[6] * _[3] - _[8] * _[13] * _[6] * _[3] - _[12] * _[5] * _[10] * _[3] + _[4] * _[13] * _[10] * _[3] + _[8] * _[5] * _[14] * _[3] - _[4] * _[9] * _[14] * _[3] - _[12] * _[9] * _[2] * _[7] + _[8] * _[13] * _[2] * _[7] + _[12] * _[1] * _[10] * _[7] - _[0] * _[13] * _[10] * _[7] - _[8] * _[1] * _[14] * _[7] + _[0] * _[9] * _[14] * _[7] + _[12] * _[5] * _[2] * _[11] - _[4] * _[13] * _[2] * _[11] - _[12] * _[1] * _[6] * _[11] + _[0] * _[13] * _[6] * _[11] + _[4] * _[1] * _[14] * _[11] - _[0] * _[5] * _[14] * _[11] - _[8] * _[5] * _[2] * _[15] + _[4] * _[9] * _[2] * _[15] + _[8] * _[1] * _[6] * _[15] - _[0] * _[9] * _[6] * _[15] - _[4] * _[1] * _[10] * _[15] + _[0] * _[5] * _[10] * _[15];
-		float Value0 = -_[13] * _[10] * _[7] + _[9] * _[14] * _[7] + _[13] * _[6] * _[11] - _[5] * _[14] * _[11] - _[9] * _[6] * _[15] + _[5] * _[10] * _[15];
-		float Value1 = _[13] * _[10] * _[3] - _[9] * _[14] * _[3] - _[13] * _[2] * _[11] + _[1] * _[14] * _[11] + _[9] * _[2] * _[15] - _[1] * _[10] * _[15];
-		float Value2 = -_[13] * _[6] * _[3] + _[5] * _[14] * _[3] + _[13] * _[2] * _[7] - _[1] * _[14] * _[7] - _[5] * _[2] * _[15] + _[1] * _[6] * _[15];
-		float Value3 = _[9] * _[6] * _[3] - _[5] * _[10] * _[3] - _[9] * _[2] * _[7] + _[1] * _[10] * _[7] + _[5] * _[2] * _[11] - _[1] * _[6] * _[11];
-		float Value4 = _[12] * _[10] * _[7] - _[8] * _[14] * _[7] - _[12] * _[6] * _[11] + _[4] * _[14] * _[11] + _[8] * _[6] * _[15] - _[4] * _[10] * _[15];
-		float Value5 = -_[12] * _[10] * _[3] + _[8] * _[14] * _[3] + _[12] * _[2] * _[11] - _[0] * _[14] * _[11] - _[8] * _[2] * _[15] + _[0] * _[10] * _[15];
-		float Value6 = _[12] * _[6] * _[3] - _[4] * _[14] * _[3] - _[12] * _[2] * _[7] + _[0] * _[14] * _[7] + _[4] * _[2] * _[15] - _[0] * _[6] * _[15];
-		float Value7 = -_[8] * _[6] * _[3] + _[4] * _[10] * _[3] + _[8] * _[2] * _[7] - _[0] * _[10] * _[7] - _[4] * _[2] * _[11] + _[0] * _[6] * _[11];
-		float Value8 = -_[12] * _[9] * _[7] + _[8] * _[13] * _[7] + _[12] * _[5] * _[11] - _[4] * _[13] * _[11] - _[8] * _[5] * _[15] + _[4] * _[9] * _[15];
-		float Value9 = _[12] * _[9] * _[3] - _[8] * _[13] * _[3] - _[12] * _[1] * _[11] + _[0] * _[13] * _[11] + _[8] * _[1] * _[15] - _[0] * _[9] * _[15];
-		float Value10 = -_[12] * _[5] * _[3] + _[4] * _[13] * _[3] + _[12] * _[1] * _[7] - _[0] * _[13] * _[7] - _[4] * _[1] * _[15] + _[0] * _[5] * _[15];
-		float Value11 = _[8] * _[5] * _[3] - _[4] * _[9] * _[3] - _[8] * _[1] * _[7] + _[0] * _[9] * _[7] + _[4] * _[1] * _[11] - _[0] * _[5] * _[11];
-		float Value12 = _[12] * _[9] * _[6] - _[8] * _[13] * _[6] - _[12] * _[5] * _[10] + _[4] * _[13] * _[10] + _[8] * _[5] * _[14] - _[4] * _[9] * _[14];
-		float Value13 = -_[12] * _[9] * _[2] + _[8] * _[13] * _[2] + _[12] * _[1] * _[10] - _[0] * _[13] * _[10] - _[8] * _[1] * _[14] + _[0] * _[9] * _[14];
-		float Value14 = _[12] * _[5] * _[2] - _[4] * _[13] * _[2] - _[12] * _[1] * _[6] + _[0] * _[13] * _[6] + _[4] * _[1] * _[14] - _[0] * _[5] * _[14];
-		float Value15 = -_[8] * _[5] * _[2] + _[4] * _[9] * _[2] + _[8] * _[1] * _[6] - _[0] * _[9] * _[6] - _[4] * _[1] * _[10] + _[0] * _[5] * _[10];
-		
-		_[0] = Value0 / Determinant;
-		_[1] = Value1 / Determinant;
-		_[2] = Value2 / Determinant;
-		_[3] = Value3 / Determinant;
-		_[4] = Value4 / Determinant;
-		_[5] = Value5 / Determinant;
-		_[6] = Value6 / Determinant;
-		_[7] = Value7 / Determinant;
-		_[8] = Value8 / Determinant;
-		_[9] = Value9 / Determinant;
-		_[10] = Value10 / Determinant;
-		_[11] = Value11 / Determinant;
-		_[12] = Value12 / Determinant;
-		_[13] = Value13 / Determinant;
-		_[14] = Value14 / Determinant;
-		_[15] = Value15 / Determinant;
-		
-		return *this;
-	}
-	
-	Matrix4f Inverted(void) const
-	{
-		float Determinant = _[12] * _[9] * _[6] * _[3] - _[8] * _[13] * _[6] * _[3] - _[12] * _[5] * _[10] * _[3] + _[4] * _[13] * _[10] * _[3] + _[8] * _[5] * _[14] * _[3] - _[4] * _[9] * _[14] * _[3] - _[12] * _[9] * _[2] * _[7] + _[8] * _[13] * _[2] * _[7] + _[12] * _[1] * _[10] * _[7] - _[0] * _[13] * _[10] * _[7] - _[8] * _[1] * _[14] * _[7] + _[0] * _[9] * _[14] * _[7] + _[12] * _[5] * _[2] * _[11] - _[4] * _[13] * _[2] * _[11] - _[12] * _[1] * _[6] * _[11] + _[0] * _[13] * _[6] * _[11] + _[4] * _[1] * _[14] * _[11] - _[0] * _[5] * _[14] * _[11] - _[8] * _[5] * _[2] * _[15] + _[4] * _[9] * _[2] * _[15] + _[8] * _[1] * _[6] * _[15] - _[0] * _[9] * _[6] * _[15] - _[4] * _[1] * _[10] * _[15] + _[0] * _[5] * _[10] * _[15];
-		Matrix4f Result;
-		
-		Result._[0] = (-_[13] * _[10] * _[7] + _[9] * _[14] * _[7] + _[13] * _[6] * _[11] - _[5] * _[14] * _[11] - _[9] * _[6] * _[15] + _[5] * _[10] * _[15]) / Determinant;
-		Result._[1] = (_[13] * _[10] * _[3] - _[9] * _[14] * _[3] - _[13] * _[2] * _[11] + _[1] * _[14] * _[11] + _[9] * _[2] * _[15] - _[1] * _[10] * _[15]) / Determinant;
-		Result._[2] = (-_[13] * _[6] * _[3] + _[5] * _[14] * _[3] + _[13] * _[2] * _[7] - _[1] * _[14] * _[7] - _[5] * _[2] * _[15] + _[1] * _[6] * _[15]) / Determinant;
-		Result._[3] = (_[9] * _[6] * _[3] - _[5] * _[10] * _[3] - _[9] * _[2] * _[7] + _[1] * _[10] * _[7] + _[5] * _[2] * _[11] - _[1] * _[6] * _[11]) / Determinant;
-		Result._[4] = (_[12] * _[10] * _[7] - _[8] * _[14] * _[7] - _[12] * _[6] * _[11] + _[4] * _[14] * _[11] + _[8] * _[6] * _[15] - _[4] * _[10] * _[15]) / Determinant;
-		Result._[5] = (-_[12] * _[10] * _[3] + _[8] * _[14] * _[3] + _[12] * _[2] * _[11] - _[0] * _[14] * _[11] - _[8] * _[2] * _[15] + _[0] * _[10] * _[15]) / Determinant;
-		Result._[6] = (_[12] * _[6] * _[3] - _[4] * _[14] * _[3] - _[12] * _[2] * _[7] + _[0] * _[14] * _[7] + _[4] * _[2] * _[15] - _[0] * _[6] * _[15]) / Determinant;
-		Result._[7] = (-_[8] * _[6] * _[3] + _[4] * _[10] * _[3] + _[8] * _[2] * _[7] - _[0] * _[10] * _[7] - _[4] * _[2] * _[11] + _[0] * _[6] * _[11]) / Determinant;
-		Result._[8] = (-_[12] * _[9] * _[7] + _[8] * _[13] * _[7] + _[12] * _[5] * _[11] - _[4] * _[13] * _[11] - _[8] * _[5] * _[15] + _[4] * _[9] * _[15]) / Determinant;
-		Result._[9] = (_[12] * _[9] * _[3] - _[8] * _[13] * _[3] - _[12] * _[1] * _[11] + _[0] * _[13] * _[11] + _[8] * _[1] * _[15] - _[0] * _[9] * _[15]) / Determinant;
-		Result._[10] = (-_[12] * _[5] * _[3] + _[4] * _[13] * _[3] + _[12] * _[1] * _[7] - _[0] * _[13] * _[7] - _[4] * _[1] * _[15] + _[0] * _[5] * _[15]) / Determinant;
-		Result._[11] = (_[8] * _[5] * _[3] - _[4] * _[9] * _[3] - _[8] * _[1] * _[7] + _[0] * _[9] * _[7] + _[4] * _[1] * _[11] - _[0] * _[5] * _[11]) / Determinant;
-		Result._[12] = (_[12] * _[9] * _[6] - _[8] * _[13] * _[6] - _[12] * _[5] * _[10] + _[4] * _[13] * _[10] + _[8] * _[5] * _[14] - _[4] * _[9] * _[14]) / Determinant;
-		Result._[13] = (-_[12] * _[9] * _[2] + _[8] * _[13] * _[2] + _[12] * _[1] * _[10] - _[0] * _[13] * _[10] - _[8] * _[1] * _[14] + _[0] * _[9] * _[14]) / Determinant;
-		Result._[14] = (_[12] * _[5] * _[2] - _[4] * _[13] * _[2] - _[12] * _[1] * _[6] + _[0] * _[13] * _[6] + _[4] * _[1] * _[14] - _[0] * _[5] * _[14]) / Determinant;
-		Result._[15] = (-_[8] * _[5] * _[2] + _[4] * _[9] * _[2] + _[8] * _[1] * _[6] - _[0] * _[9] * _[6] - _[4] * _[1] * _[10] + _[0] * _[5] * _[10]) / Determinant;
-		
-		return Result;
-	}
-	
-	Matrix4f & Rotate(const Quaternion & Quaternion);
-	
-	Matrix4f Rotated(const Quaternion & Quaternion) const;
-	
-	Matrix4f & RotateX(float Radians)
-	{
-		float Sin(sin(Radians));
-		float Cos(cos(Radians));
-		float Value8(Cos * _[8] - Sin * _[4]);
-		float Value9(Cos * _[9] - Sin * _[5]);
-		float Value10(Cos * _[10] - Sin * _[6]);
-		float Value11(Cos * _[11] - Sin * _[7]);
-		
-		_[4] = Cos * _[4] + Sin * _[8];
-		_[5] = Cos * _[5] + Sin * _[9];
-		_[6] = Cos * _[6] + Sin * _[10];
-		_[7] = Cos * _[7] + Sin * _[11];
-		_[8] = Value8;
-		_[9] = Value9;
-		_[10] = Value10;
-		_[11] = Value11;
-		
-		return *this;
-	}
-	
-	Matrix4f & RotateY(float Radians)
-	{
-		float Sin(sin(Radians));
-		float Cos(cos(Radians));
-		float Value8(Cos * _[8] + Sin * _[0]);
-		float Value9(Cos * _[9] + Sin * _[1]);
-		float Value10(Cos * _[10] + Sin * _[2]);
-		float Value11(Cos * _[11] + Sin * _[3]);
-		
-		_[0] = Cos * _[0] - Sin * _[8];
-		_[1] = Cos * _[1] - Sin * _[9];
-		_[2] = Cos * _[2] - Sin * _[10];
-		_[3] = Cos * _[3] - Sin * _[11];
-		_[8] = Value8;
-		_[9] = Value9;
-		_[10] = Value10;
-		_[11] = Value11;
-		
-		return *this;
-	}
-	
-	Matrix4f & RotateZ(float Radians)
-	{
-		float Sin(sin(Radians));
-		float Cos(cos(Radians));
-		float Value4(Cos * _[4] - Sin * _[0]);
-		float Value5(Cos * _[5] - Sin * _[1]);
-		float Value6(Cos * _[6] - Sin * _[2]);
-		float Value7(Cos * _[7] - Sin * _[3]);
-		
-		_[0] = Cos * _[0] + Sin * _[4];
-		_[1] = Cos * _[1] + Sin * _[5];
-		_[2] = Cos * _[2] + Sin * _[6];
-		_[3] = Cos * _[3] + Sin * _[7];
-		_[4] = Value4;
-		_[5] = Value5;
-		_[6] = Value6;
-		_[7] = Value7;
-		
-		return *this;
-	}
-	
-	Matrix4f & Scale(const Vector3f & Scale);
-	
-	Matrix4f Scaled(const Vector3f & Scale) const;
-	
-	Matrix4f Scaled(float Scale) const;
-	
-	Matrix4f & Transform(const Matrix4f & Other)
-	{
-		float Value0(_[0] * Other._[0] + _[4] * Other._[1] + _[8] * Other._[2] + _[12] * Other._[3]);
-		float Value1(_[1] * Other._[0] + _[5] * Other._[1] + _[9] * Other._[2] + _[13] * Other._[3]);
-		float Value2(_[2] * Other._[0] + _[6] * Other._[1] + _[10] * Other._[2] + _[14] * Other._[3]);
-		float Value3(_[3] * Other._[0] + _[7] * Other._[1] + _[11] * Other._[2] + _[15] * Other._[3]);
-		float Value4(_[0] * Other._[4] + _[4] * Other._[5] + _[8] * Other._[6] + _[12] * Other._[7]);
-		float Value5(_[1] * Other._[4] + _[5] * Other._[5] + _[9] * Other._[6] + _[13] * Other._[7]);
-		float Value6(_[2] * Other._[4] + _[6] * Other._[5] + _[10] * Other._[6] + _[14] * Other._[7]);
-		float Value7(_[3] * Other._[4] + _[7] * Other._[5] + _[11] * Other._[6] + _[15] * Other._[7]);
-		float Value8(_[0] * Other._[8] + _[4] * Other._[9] + _[8] * Other._[10] + _[12] * Other._[11]);
-		float Value9(_[1] * Other._[8] + _[5] * Other._[9] + _[9] * Other._[10] + _[13] * Other._[11]);
-		float Value11(_[3] * Other._[8] + _[7] * Other._[9] + _[11] * Other._[10] + _[15] * Other._[11]);
-		float Value10(_[2] * Other._[8] + _[6] * Other._[9] + _[10] * Other._[10] + _[14] * Other._[11]);
-		float Value12(_[0] * Other._[12] + _[4] * Other._[13] + _[8] * Other._[14] + _[12] * Other._[15]);
-		float Value13(_[1] * Other._[12] + _[5] * Other._[13] + _[9] * Other._[14] + _[13] * Other._[15]);
-		float Value14(_[2] * Other._[12] + _[6] * Other._[13] + _[10] * Other._[14] + _[14] * Other._[15]);
-		float Value15(_[3] * Other._[12] + _[7] * Other._[13] + _[11] * Other._[14] + _[15] * Other._[15]);
-		
-		_[0] = Value0;
-		_[1] = Value1;
-		_[2] = Value2;
-		_[3] = Value3;
-		_[4] = Value4;
-		_[5] = Value5;
-		_[6] = Value6;
-		_[7] = Value7;
-		_[8] = Value8;
-		_[9] = Value9;
-		_[10] = Value10;
-		_[11] = Value11;
-		_[12] = Value12;
-		_[13] = Value13;
-		_[14] = Value14;
-		_[15] = Value15;
-		
-		return *this;
-	}
-	
-	Matrix4f & Translate(float X, float Y, float Z)
-	{
-		_[12] += _[0] * X + _[4] * Y + _[8] * Z;
-		_[13] += _[1] * X + _[5] * Y + _[9] * Z;
-		_[14] += _[2] * X + _[6] * Y + _[10] * Z;
-		_[15] += _[3] * X + _[7] * Y + _[11] * Z;
-		
-		return *this;
-	}
-	
-	Matrix4f & Translate(const Vector3f & Translation);
-	
-	Matrix4f & Translate(const Vector4f & Translation);
-	
-	Matrix4f Translated(const Vector3f & Translation) const;
-	
-	Matrix4f Translated(const Vector4f & Translation) const;
-	
-	void Translation(float X, float Y, float Z)
-	{
-		_[0] = 1.0f;
-		_[1] = 0.0f;
-		_[2] = 0.0f;
-		_[3] = 0.0f;
-		_[4] = 0.0f;
-		_[5] = 1.0f;
-		_[6] = 0.0f;
-		_[7] = 0.0f;
-		_[8] = 0.0f;
-		_[9] = 0.0f;
-		_[10] = 1.0f;
-		_[11] = 0.0f;
-		_[12] = X;
-		_[13] = Y;
-		_[14] = Z;
-		_[15] = 1.0f;
-	}
-	
-	Matrix4f & Transpose(void)
-	{
-		std::swap(_[1], _[4]);
-		std::swap(_[2], _[8]);
-		std::swap(_[3], _[12]);
-		std::swap(_[6], _[9]);
-		std::swap(_[7], _[13]);
-		std::swap(_[11], _[14]);
-		
-		return *this;
-	}
-	
-	Matrix4f Transposed(void) const
-	{
-		Matrix4f Result;
-		
-		Result._[0] = _[0];
-		Result._[1] = _[4];
-		Result._[2] = _[8];
-		Result._[3] = _[12];
-		Result._[4] = _[1];
-		Result._[5] = _[5];
-		Result._[6] = _[9];
-		Result._[7] = _[13];
-		Result._[8] = _[2];
-		Result._[9] = _[6];
-		Result._[10] = _[10];
-		Result._[11] = _[14];
-		Result._[12] = _[3];
-		Result._[13] = _[7];
-		Result._[14] = _[11];
-		Result._[15] = _[15];
-		
-		return Result;
-	}
 	
 	float operator[](int Index) const
 	{
@@ -387,6 +65,49 @@ public:
 	{
 		return _[Index];
 	}
+	
+	const float * const GetPointer(void) const
+	{
+		return _;
+	}
+	
+	Matrix4f & Invert(void);
+	
+	Matrix4f Inverted(void) const;
+	
+	Matrix4f & Rotate(const Quaternion & Quaternion);
+	
+	Matrix4f Rotated(const Quaternion & Quaternion) const;
+	
+	Matrix4f & RotateX(float Radians);
+	
+	Matrix4f & RotateY(float Radians);
+	
+	Matrix4f & RotateZ(float Radians);
+	
+	Matrix4f & Scale(const Vector3f & Scale);
+	
+	Matrix4f Scaled(const Vector3f & Scale) const;
+	
+	Matrix4f Scaled(float Scale) const;
+	
+	Matrix4f & Transform(const Matrix4f & Other);
+	
+	Matrix4f Transformed(const Matrix4f & Matrix) const;
+	
+	Matrix4f & Translate(float X, float Y, float Z);
+	
+	Matrix4f & Translate(const Vector3f & Translation);
+	
+	Matrix4f & Translate(const Vector4f & Translation);
+	
+	Matrix4f Translated(const Vector3f & Translation) const;
+	
+	Matrix4f Translated(const Vector4f & Translation) const;
+	
+	Matrix4f & Transpose(void);
+	
+	Matrix4f Transposed(void) const;
 };
 
 /**
@@ -397,7 +118,55 @@ public:
 #include "vector3f.h"
 #include "vector4f.h"
 
-inline Matrix4f Matrix4f::CreateFromTranslationVector(const Vector3f & TranslationVector)
+inline Matrix4f Matrix4f::CreateIdentity(void)
+{
+	Matrix4f Result;
+	
+	Result._[0] = 1.0f;
+	Result._[1] = 0.0f;
+	Result._[2] = 0.0f;
+	Result._[3] = 0.0f;
+	Result._[4] = 0.0f;
+	Result._[5] = 1.0f;
+	Result._[6] = 0.0f;
+	Result._[7] = 0.0f;
+	Result._[8] = 0.0f;
+	Result._[9] = 0.0f;
+	Result._[10] = 1.0f;
+	Result._[11] = 0.0f;
+	Result._[12] = 0.0f;
+	Result._[13] = 0.0f;
+	Result._[14] = 0.0f;
+	Result._[15] = 1.0f;
+	
+	return Result;
+}
+
+inline Matrix4f Matrix4f::CreateTranslation(float X, float Y, float Z)
+{
+	Matrix4f Result;
+	
+	Result._[0] = 1.0f;
+	Result._[1] = 0.0f;
+	Result._[2] = 0.0f;
+	Result._[3] = 0.0f;
+	Result._[4] = 0.0f;
+	Result._[5] = 1.0f;
+	Result._[6] = 0.0f;
+	Result._[7] = 0.0f;
+	Result._[8] = 0.0f;
+	Result._[9] = 0.0f;
+	Result._[10] = 1.0f;
+	Result._[11] = 0.0f;
+	Result._[12] = X;
+	Result._[13] = Y;
+	Result._[14] = Z;
+	Result._[15] = 1.0f;
+	
+	return Result;
+}
+
+inline Matrix4f Matrix4f::CreateTranslation(const Vector3f & TranslationVector)
 {
 	Matrix4f Result;
 	
@@ -421,7 +190,7 @@ inline Matrix4f Matrix4f::CreateFromTranslationVector(const Vector3f & Translati
 	return Result;
 }
 
-inline Matrix4f Matrix4f::CreateFromTranslationVector(const Vector4f & TranslationVector)
+inline Matrix4f Matrix4f::CreateTranslation(const Vector4f & TranslationVector)
 {
 	Matrix4f Result;
 	
@@ -445,7 +214,7 @@ inline Matrix4f Matrix4f::CreateFromTranslationVector(const Vector4f & Translati
 	return Result;
 }
 
-inline Matrix4f Matrix4f::CreateFromQuaternion(const Quaternion & Quaternion)
+inline Matrix4f Matrix4f::CreateRotation(const Quaternion & Quaternion)
 {
 	Matrix4f Result;
 	float WX(Quaternion._[0] * Quaternion._[1]);
@@ -556,6 +325,71 @@ inline Matrix4f Matrix4f::CreateRotationZ(float Angle)
 	return Result;
 }
 
+inline Matrix4f & Matrix4f::Invert(void)
+{
+	float Determinant(_[12] * _[9] * _[6] * _[3] - _[8] * _[13] * _[6] * _[3] - _[12] * _[5] * _[10] * _[3] + _[4] * _[13] * _[10] * _[3] + _[8] * _[5] * _[14] * _[3] - _[4] * _[9] * _[14] * _[3] - _[12] * _[9] * _[2] * _[7] + _[8] * _[13] * _[2] * _[7] + _[12] * _[1] * _[10] * _[7] - _[0] * _[13] * _[10] * _[7] - _[8] * _[1] * _[14] * _[7] + _[0] * _[9] * _[14] * _[7] + _[12] * _[5] * _[2] * _[11] - _[4] * _[13] * _[2] * _[11] - _[12] * _[1] * _[6] * _[11] + _[0] * _[13] * _[6] * _[11] + _[4] * _[1] * _[14] * _[11] - _[0] * _[5] * _[14] * _[11] - _[8] * _[5] * _[2] * _[15] + _[4] * _[9] * _[2] * _[15] + _[8] * _[1] * _[6] * _[15] - _[0] * _[9] * _[6] * _[15] - _[4] * _[1] * _[10] * _[15] + _[0] * _[5] * _[10] * _[15]);
+	float Value0(-_[13] * _[10] * _[7] + _[9] * _[14] * _[7] + _[13] * _[6] * _[11] - _[5] * _[14] * _[11] - _[9] * _[6] * _[15] + _[5] * _[10] * _[15]);
+	float Value1(_[13] * _[10] * _[3] - _[9] * _[14] * _[3] - _[13] * _[2] * _[11] + _[1] * _[14] * _[11] + _[9] * _[2] * _[15] - _[1] * _[10] * _[15]);
+	float Value2(-_[13] * _[6] * _[3] + _[5] * _[14] * _[3] + _[13] * _[2] * _[7] - _[1] * _[14] * _[7] - _[5] * _[2] * _[15] + _[1] * _[6] * _[15]);
+	float Value3(_[9] * _[6] * _[3] - _[5] * _[10] * _[3] - _[9] * _[2] * _[7] + _[1] * _[10] * _[7] + _[5] * _[2] * _[11] - _[1] * _[6] * _[11]);
+	float Value4(_[12] * _[10] * _[7] - _[8] * _[14] * _[7] - _[12] * _[6] * _[11] + _[4] * _[14] * _[11] + _[8] * _[6] * _[15] - _[4] * _[10] * _[15]);
+	float Value5(-_[12] * _[10] * _[3] + _[8] * _[14] * _[3] + _[12] * _[2] * _[11] - _[0] * _[14] * _[11] - _[8] * _[2] * _[15] + _[0] * _[10] * _[15]);
+	float Value6(_[12] * _[6] * _[3] - _[4] * _[14] * _[3] - _[12] * _[2] * _[7] + _[0] * _[14] * _[7] + _[4] * _[2] * _[15] - _[0] * _[6] * _[15]);
+	float Value7(-_[8] * _[6] * _[3] + _[4] * _[10] * _[3] + _[8] * _[2] * _[7] - _[0] * _[10] * _[7] - _[4] * _[2] * _[11] + _[0] * _[6] * _[11]);
+	float Value8(-_[12] * _[9] * _[7] + _[8] * _[13] * _[7] + _[12] * _[5] * _[11] - _[4] * _[13] * _[11] - _[8] * _[5] * _[15] + _[4] * _[9] * _[15]);
+	float Value9(_[12] * _[9] * _[3] - _[8] * _[13] * _[3] - _[12] * _[1] * _[11] + _[0] * _[13] * _[11] + _[8] * _[1] * _[15] - _[0] * _[9] * _[15]);
+	float Value10(-_[12] * _[5] * _[3] + _[4] * _[13] * _[3] + _[12] * _[1] * _[7] - _[0] * _[13] * _[7] - _[4] * _[1] * _[15] + _[0] * _[5] * _[15]);
+	float Value11(_[8] * _[5] * _[3] - _[4] * _[9] * _[3] - _[8] * _[1] * _[7] + _[0] * _[9] * _[7] + _[4] * _[1] * _[11] - _[0] * _[5] * _[11]);
+	float Value12(_[12] * _[9] * _[6] - _[8] * _[13] * _[6] - _[12] * _[5] * _[10] + _[4] * _[13] * _[10] + _[8] * _[5] * _[14] - _[4] * _[9] * _[14]);
+	float Value13(-_[12] * _[9] * _[2] + _[8] * _[13] * _[2] + _[12] * _[1] * _[10] - _[0] * _[13] * _[10] - _[8] * _[1] * _[14] + _[0] * _[9] * _[14]);
+	float Value14(_[12] * _[5] * _[2] - _[4] * _[13] * _[2] - _[12] * _[1] * _[6] + _[0] * _[13] * _[6] + _[4] * _[1] * _[14] - _[0] * _[5] * _[14]);
+	float Value15(-_[8] * _[5] * _[2] + _[4] * _[9] * _[2] + _[8] * _[1] * _[6] - _[0] * _[9] * _[6] - _[4] * _[1] * _[10] + _[0] * _[5] * _[10]);
+	
+	_[0] = Value0 / Determinant;
+	_[1] = Value1 / Determinant;
+	_[2] = Value2 / Determinant;
+	_[3] = Value3 / Determinant;
+	_[4] = Value4 / Determinant;
+	_[5] = Value5 / Determinant;
+	_[6] = Value6 / Determinant;
+	_[7] = Value7 / Determinant;
+	_[8] = Value8 / Determinant;
+	_[9] = Value9 / Determinant;
+	_[10] = Value10 / Determinant;
+	_[11] = Value11 / Determinant;
+	_[12] = Value12 / Determinant;
+	_[13] = Value13 / Determinant;
+	_[14] = Value14 / Determinant;
+	_[15] = Value15 / Determinant;
+	
+	return *this;
+}
+
+inline Matrix4f Matrix4f::Inverted(void) const
+{
+	float Determinant(_[12] * _[9] * _[6] * _[3] - _[8] * _[13] * _[6] * _[3] - _[12] * _[5] * _[10] * _[3] + _[4] * _[13] * _[10] * _[3] + _[8] * _[5] * _[14] * _[3] - _[4] * _[9] * _[14] * _[3] - _[12] * _[9] * _[2] * _[7] + _[8] * _[13] * _[2] * _[7] + _[12] * _[1] * _[10] * _[7] - _[0] * _[13] * _[10] * _[7] - _[8] * _[1] * _[14] * _[7] + _[0] * _[9] * _[14] * _[7] + _[12] * _[5] * _[2] * _[11] - _[4] * _[13] * _[2] * _[11] - _[12] * _[1] * _[6] * _[11] + _[0] * _[13] * _[6] * _[11] + _[4] * _[1] * _[14] * _[11] - _[0] * _[5] * _[14] * _[11] - _[8] * _[5] * _[2] * _[15] + _[4] * _[9] * _[2] * _[15] + _[8] * _[1] * _[6] * _[15] - _[0] * _[9] * _[6] * _[15] - _[4] * _[1] * _[10] * _[15] + _[0] * _[5] * _[10] * _[15]);
+	Matrix4f Result;
+	
+	Result._[0] = (-_[13] * _[10] * _[7] + _[9] * _[14] * _[7] + _[13] * _[6] * _[11] - _[5] * _[14] * _[11] - _[9] * _[6] * _[15] + _[5] * _[10] * _[15]) / Determinant;
+	Result._[1] = (_[13] * _[10] * _[3] - _[9] * _[14] * _[3] - _[13] * _[2] * _[11] + _[1] * _[14] * _[11] + _[9] * _[2] * _[15] - _[1] * _[10] * _[15]) / Determinant;
+	Result._[2] = (-_[13] * _[6] * _[3] + _[5] * _[14] * _[3] + _[13] * _[2] * _[7] - _[1] * _[14] * _[7] - _[5] * _[2] * _[15] + _[1] * _[6] * _[15]) / Determinant;
+	Result._[3] = (_[9] * _[6] * _[3] - _[5] * _[10] * _[3] - _[9] * _[2] * _[7] + _[1] * _[10] * _[7] + _[5] * _[2] * _[11] - _[1] * _[6] * _[11]) / Determinant;
+	Result._[4] = (_[12] * _[10] * _[7] - _[8] * _[14] * _[7] - _[12] * _[6] * _[11] + _[4] * _[14] * _[11] + _[8] * _[6] * _[15] - _[4] * _[10] * _[15]) / Determinant;
+	Result._[5] = (-_[12] * _[10] * _[3] + _[8] * _[14] * _[3] + _[12] * _[2] * _[11] - _[0] * _[14] * _[11] - _[8] * _[2] * _[15] + _[0] * _[10] * _[15]) / Determinant;
+	Result._[6] = (_[12] * _[6] * _[3] - _[4] * _[14] * _[3] - _[12] * _[2] * _[7] + _[0] * _[14] * _[7] + _[4] * _[2] * _[15] - _[0] * _[6] * _[15]) / Determinant;
+	Result._[7] = (-_[8] * _[6] * _[3] + _[4] * _[10] * _[3] + _[8] * _[2] * _[7] - _[0] * _[10] * _[7] - _[4] * _[2] * _[11] + _[0] * _[6] * _[11]) / Determinant;
+	Result._[8] = (-_[12] * _[9] * _[7] + _[8] * _[13] * _[7] + _[12] * _[5] * _[11] - _[4] * _[13] * _[11] - _[8] * _[5] * _[15] + _[4] * _[9] * _[15]) / Determinant;
+	Result._[9] = (_[12] * _[9] * _[3] - _[8] * _[13] * _[3] - _[12] * _[1] * _[11] + _[0] * _[13] * _[11] + _[8] * _[1] * _[15] - _[0] * _[9] * _[15]) / Determinant;
+	Result._[10] = (-_[12] * _[5] * _[3] + _[4] * _[13] * _[3] + _[12] * _[1] * _[7] - _[0] * _[13] * _[7] - _[4] * _[1] * _[15] + _[0] * _[5] * _[15]) / Determinant;
+	Result._[11] = (_[8] * _[5] * _[3] - _[4] * _[9] * _[3] - _[8] * _[1] * _[7] + _[0] * _[9] * _[7] + _[4] * _[1] * _[11] - _[0] * _[5] * _[11]) / Determinant;
+	Result._[12] = (_[12] * _[9] * _[6] - _[8] * _[13] * _[6] - _[12] * _[5] * _[10] + _[4] * _[13] * _[10] + _[8] * _[5] * _[14] - _[4] * _[9] * _[14]) / Determinant;
+	Result._[13] = (-_[12] * _[9] * _[2] + _[8] * _[13] * _[2] + _[12] * _[1] * _[10] - _[0] * _[13] * _[10] - _[8] * _[1] * _[14] + _[0] * _[9] * _[14]) / Determinant;
+	Result._[14] = (_[12] * _[5] * _[2] - _[4] * _[13] * _[2] - _[12] * _[1] * _[6] + _[0] * _[13] * _[6] + _[4] * _[1] * _[14] - _[0] * _[5] * _[14]) / Determinant;
+	Result._[15] = (-_[8] * _[5] * _[2] + _[4] * _[9] * _[2] + _[8] * _[1] * _[6] - _[0] * _[9] * _[6] - _[4] * _[1] * _[10] + _[0] * _[5] * _[10]) / Determinant;
+	
+	return Result;
+}
+
 inline Matrix4f & Matrix4f::Rotate(const Quaternion & Quaternion)
 {
 	float WX(Quaternion._[0] * Quaternion._[1]);
@@ -633,6 +467,69 @@ inline Matrix4f Matrix4f::Rotated(const Quaternion & Quaternion) const
 	return Result;
 }
 
+inline Matrix4f & Matrix4f::RotateX(float Radians)
+{
+	float Sin(sin(Radians));
+	float Cos(cos(Radians));
+	float Value8(Cos * _[8] - Sin * _[4]);
+	float Value9(Cos * _[9] - Sin * _[5]);
+	float Value10(Cos * _[10] - Sin * _[6]);
+	float Value11(Cos * _[11] - Sin * _[7]);
+	
+	_[4] = Cos * _[4] + Sin * _[8];
+	_[5] = Cos * _[5] + Sin * _[9];
+	_[6] = Cos * _[6] + Sin * _[10];
+	_[7] = Cos * _[7] + Sin * _[11];
+	_[8] = Value8;
+	_[9] = Value9;
+	_[10] = Value10;
+	_[11] = Value11;
+	
+	return *this;
+}
+
+inline Matrix4f & Matrix4f::RotateY(float Radians)
+{
+	float Sin(sin(Radians));
+	float Cos(cos(Radians));
+	float Value8(Cos * _[8] + Sin * _[0]);
+	float Value9(Cos * _[9] + Sin * _[1]);
+	float Value10(Cos * _[10] + Sin * _[2]);
+	float Value11(Cos * _[11] + Sin * _[3]);
+	
+	_[0] = Cos * _[0] - Sin * _[8];
+	_[1] = Cos * _[1] - Sin * _[9];
+	_[2] = Cos * _[2] - Sin * _[10];
+	_[3] = Cos * _[3] - Sin * _[11];
+	_[8] = Value8;
+	_[9] = Value9;
+	_[10] = Value10;
+	_[11] = Value11;
+	
+	return *this;
+}
+
+inline Matrix4f & Matrix4f::RotateZ(float Radians)
+{
+	float Sin(sin(Radians));
+	float Cos(cos(Radians));
+	float Value4(Cos * _[4] - Sin * _[0]);
+	float Value5(Cos * _[5] - Sin * _[1]);
+	float Value6(Cos * _[6] - Sin * _[2]);
+	float Value7(Cos * _[7] - Sin * _[3]);
+	
+	_[0] = Cos * _[0] + Sin * _[4];
+	_[1] = Cos * _[1] + Sin * _[5];
+	_[2] = Cos * _[2] + Sin * _[6];
+	_[3] = Cos * _[3] + Sin * _[7];
+	_[4] = Value4;
+	_[5] = Value5;
+	_[6] = Value6;
+	_[7] = Value7;
+	
+	return *this;
+}
+
 inline Matrix4f & Matrix4f::Scale(const Vector3f & Scale)
 {
 	_[0] *= Scale._[0];
@@ -699,6 +596,68 @@ inline Matrix4f Matrix4f::Scaled(const Vector3f & Scale) const
 	return Result;
 }
 
+inline Matrix4f & Matrix4f::Transform(const Matrix4f & Matrix)
+{
+	float Value0(_[0] * Matrix._[0] + _[4] * Matrix._[1] + _[8] * Matrix._[2] + _[12] * Matrix._[3]);
+	float Value1(_[1] * Matrix._[0] + _[5] * Matrix._[1] + _[9] * Matrix._[2] + _[13] * Matrix._[3]);
+	float Value2(_[2] * Matrix._[0] + _[6] * Matrix._[1] + _[10] * Matrix._[2] + _[14] * Matrix._[3]);
+	float Value3(_[3] * Matrix._[0] + _[7] * Matrix._[1] + _[11] * Matrix._[2] + _[15] * Matrix._[3]);
+	float Value4(_[0] * Matrix._[4] + _[4] * Matrix._[5] + _[8] * Matrix._[6] + _[12] * Matrix._[7]);
+	float Value5(_[1] * Matrix._[4] + _[5] * Matrix._[5] + _[9] * Matrix._[6] + _[13] * Matrix._[7]);
+	float Value6(_[2] * Matrix._[4] + _[6] * Matrix._[5] + _[10] * Matrix._[6] + _[14] * Matrix._[7]);
+	float Value7(_[3] * Matrix._[4] + _[7] * Matrix._[5] + _[11] * Matrix._[6] + _[15] * Matrix._[7]);
+	float Value8(_[0] * Matrix._[8] + _[4] * Matrix._[9] + _[8] * Matrix._[10] + _[12] * Matrix._[11]);
+	float Value9(_[1] * Matrix._[8] + _[5] * Matrix._[9] + _[9] * Matrix._[10] + _[13] * Matrix._[11]);
+	float Value11(_[3] * Matrix._[8] + _[7] * Matrix._[9] + _[11] * Matrix._[10] + _[15] * Matrix._[11]);
+	float Value10(_[2] * Matrix._[8] + _[6] * Matrix._[9] + _[10] * Matrix._[10] + _[14] * Matrix._[11]);
+	float Value12(_[0] * Matrix._[12] + _[4] * Matrix._[13] + _[8] * Matrix._[14] + _[12] * Matrix._[15]);
+	float Value13(_[1] * Matrix._[12] + _[5] * Matrix._[13] + _[9] * Matrix._[14] + _[13] * Matrix._[15]);
+	float Value14(_[2] * Matrix._[12] + _[6] * Matrix._[13] + _[10] * Matrix._[14] + _[14] * Matrix._[15]);
+	float Value15(_[3] * Matrix._[12] + _[7] * Matrix._[13] + _[11] * Matrix._[14] + _[15] * Matrix._[15]);
+	
+	_[0] = Value0;
+	_[1] = Value1;
+	_[2] = Value2;
+	_[3] = Value3;
+	_[4] = Value4;
+	_[5] = Value5;
+	_[6] = Value6;
+	_[7] = Value7;
+	_[8] = Value8;
+	_[9] = Value9;
+	_[10] = Value10;
+	_[11] = Value11;
+	_[12] = Value12;
+	_[13] = Value13;
+	_[14] = Value14;
+	_[15] = Value15;
+	
+	return *this;
+}
+
+inline Matrix4f Matrix4f::Transformed(const Matrix4f & Matrix) const
+{
+	Matrix4f Result;
+	Result._[0] = _[0] * Matrix._[0] + _[4] * Matrix._[1] + _[8] * Matrix._[2] + _[12] * Matrix._[3];
+	Result._[1] = _[1] * Matrix._[0] + _[5] * Matrix._[1] + _[9] * Matrix._[2] + _[13] * Matrix._[3];
+	Result._[2] = _[2] * Matrix._[0] + _[6] * Matrix._[1] + _[10] * Matrix._[2] + _[14] * Matrix._[3];
+	Result._[3] = _[3] * Matrix._[0] + _[7] * Matrix._[1] + _[11] * Matrix._[2] + _[15] * Matrix._[3];
+	Result._[4] = _[0] * Matrix._[4] + _[4] * Matrix._[5] + _[8] * Matrix._[6] + _[12] * Matrix._[7];
+	Result._[5] = _[1] * Matrix._[4] + _[5] * Matrix._[5] + _[9] * Matrix._[6] + _[13] * Matrix._[7];
+	Result._[6] = _[2] * Matrix._[4] + _[6] * Matrix._[5] + _[10] * Matrix._[6] + _[14] * Matrix._[7];
+	Result._[7] = _[3] * Matrix._[4] + _[7] * Matrix._[5] + _[11] * Matrix._[6] + _[15] * Matrix._[7];
+	Result._[8] = _[0] * Matrix._[8] + _[4] * Matrix._[9] + _[8] * Matrix._[10] + _[12] * Matrix._[11];
+	Result._[9] = _[1] * Matrix._[8] + _[5] * Matrix._[9] + _[9] * Matrix._[10] + _[13] * Matrix._[11];
+	Result._[10] = _[2] * Matrix._[8] + _[6] * Matrix._[9] + _[10] * Matrix._[10] + _[14] * Matrix._[11];
+	Result._[11] = _[3] * Matrix._[8] + _[7] * Matrix._[9] + _[11] * Matrix._[10] + _[15] * Matrix._[11];
+	Result._[12] = _[0] * Matrix._[12] + _[4] * Matrix._[13] + _[8] * Matrix._[14] + _[12] * Matrix._[15];
+	Result._[13] = _[1] * Matrix._[12] + _[5] * Matrix._[13] + _[9] * Matrix._[14] + _[13] * Matrix._[15];
+	Result._[14] = _[2] * Matrix._[12] + _[6] * Matrix._[13] + _[10] * Matrix._[14] + _[14] * Matrix._[15];
+	Result._[15] = _[3] * Matrix._[12] + _[7] * Matrix._[13] + _[11] * Matrix._[14] + _[15] * Matrix._[15];
+	
+	return Result;
+}
+
 inline Matrix4f & Matrix4f::Translate(const Vector3f & Translation)
 {
 	_[12] += _[0] * Translation._[0] + _[4] * Translation._[1] + _[8] * Translation._[2];
@@ -715,6 +674,16 @@ inline Matrix4f & Matrix4f::Translate(const Vector4f & Translation)
 	_[13] += _[1] * Translation._[0] + _[5] * Translation._[1] + _[9] * Translation._[2];
 	_[14] += _[2] * Translation._[0] + _[6] * Translation._[1] + _[10] * Translation._[2];
 	_[15] += _[3] * Translation._[0] + _[7] * Translation._[1] + _[11] * Translation._[2];
+	
+	return *this;
+}
+
+inline Matrix4f & Matrix4f::Translate(float X, float Y, float Z)
+{
+	_[12] += _[0] * X + _[4] * Y + _[8] * Z;
+	_[13] += _[1] * X + _[5] * Y + _[9] * Z;
+	_[14] += _[2] * X + _[6] * Y + _[10] * Z;
+	_[15] += _[3] * X + _[7] * Y + _[11] * Z;
 	
 	return *this;
 }
@@ -739,6 +708,42 @@ inline Matrix4f Matrix4f::Translated(const Vector4f & Translation) const
 	Result._[13] += _[1] * Translation._[0] + _[5] * Translation._[1] + _[9] * Translation._[2];
 	Result._[14] += _[2] * Translation._[0] + _[6] * Translation._[1] + _[10] * Translation._[2];
 	Result._[15] += _[3] * Translation._[0] + _[7] * Translation._[1] + _[11] * Translation._[2];
+	
+	return Result;
+}
+
+inline Matrix4f & Matrix4f::Transpose(void)
+{
+	std::swap(_[1], _[4]);
+	std::swap(_[2], _[8]);
+	std::swap(_[3], _[12]);
+	std::swap(_[6], _[9]);
+	std::swap(_[7], _[13]);
+	std::swap(_[11], _[14]);
+	
+	return *this;
+}
+
+inline Matrix4f Matrix4f::Transposed(void) const
+{
+	Matrix4f Result;
+	
+	Result._[0] = _[0];
+	Result._[1] = _[4];
+	Result._[2] = _[8];
+	Result._[3] = _[12];
+	Result._[4] = _[1];
+	Result._[5] = _[5];
+	Result._[6] = _[9];
+	Result._[7] = _[13];
+	Result._[8] = _[2];
+	Result._[9] = _[6];
+	Result._[10] = _[10];
+	Result._[11] = _[14];
+	Result._[12] = _[3];
+	Result._[13] = _[7];
+	Result._[14] = _[11];
+	Result._[15] = _[15];
 	
 	return Result;
 }

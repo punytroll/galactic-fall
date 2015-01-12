@@ -177,7 +177,7 @@ namespace UI
 			View->SetClearColor(Color(1.0f, 1.0f, 1.0f, 0.0f));
 			assert(View->GetCamera() != nullptr);
 			View->GetCamera()->SetProjection(PerspectiveProjection);
-			View->GetCamera()->SetSpacialMatrix(Matrix4f::CreateFromTranslationVector(Vector3f(0.0f, -2.5f, 1.4f).Normalize() * 4.0f * RadialSize).RotateX(1.05f));
+			View->GetCamera()->SetSpacialMatrix(Matrix4f::CreateTranslation(Vector3f(0.0f, -2.5f, 1.4f).Normalize() * 4.0f * RadialSize).RotateX(1.05f));
 			
 			auto Scene(new Graphics::Scene());
 			
