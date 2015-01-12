@@ -107,7 +107,7 @@ void UI::MiniMapDisplay::_SetupView(void)
 	View->SetClearColor(Color(1.0f, 1.0f, 1.0f, 0.0f));
 	assert(View->GetCamera() != nullptr);
 	View->GetCamera()->SetProjection(PerspectiveProjection);
-	View->GetCamera()->SetSpacialMatrix(Matrix4f::CreateFromTranslationComponents(0.0f, 0.0f, 1500.0f));
+	View->GetCamera()->SetSpacialMatrix(Matrix4f::CreateTranslation(0.0f, 0.0f, 1500.0f));
 	assert(g_GraphicsEngine != nullptr);
 	g_GraphicsEngine->AddView(View);
 	

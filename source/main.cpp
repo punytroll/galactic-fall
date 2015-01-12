@@ -784,7 +784,7 @@ void CollisionDetection(System * System)
 
 void UpdateMainViewCamera(void)
 {
-	Matrix4f SpacialMatrix(true);
+	auto SpacialMatrix(Matrix4f::CreateIdentity());
 
 	if((g_CharacterObserver != nullptr) && (g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != nullptr))
 	{
@@ -3481,11 +3481,7 @@ int main(int argc, char ** argv)
 	g_UIView->SetClearColor(Color(0.0f, 0.0f, 0.0f, 1.0f));
 	assert(g_UIView->GetCamera() != 0);
 	g_UIView->GetCamera()->SetProjection(g_UIProjection);
-	
-	Matrix4f UISpacialMatrix;
-	
-	UISpacialMatrix.Translation(0.0f, 0.0f, 0.0f);
-	g_UIView->GetCamera()->SetSpacialMatrix(UISpacialMatrix);
+	g_UIView->GetCamera()->SetSpacialMatrix(Matrix4f::CreateIdentity());
 	g_GraphicsEngine->AddView(g_UIView);
 	
 	Graphics::Scene * UIScene(new Graphics::Scene());
