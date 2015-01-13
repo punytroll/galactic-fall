@@ -111,21 +111,25 @@ void Graphics::Program::Build(Graphics::ShadingManager * ShadingManager)
 		GLint Location(GLGetUniformLocation(_Handle, Name));
 		
 		ON_DEBUG(std::cout << "        Uniform \"" << Name << "\" with size " << Size << " and type " << Type << " at location " << Location << "." << std::endl);
-		if((Name == std::string("in_ProjectionMatrix")) && (Type == GL_FLOAT_MAT4) && (Size == 1))
+		if((Name == std::string("in_ViewToMonitorMatrix")) && (Type == GL_FLOAT_MAT4) && (Size == 1))
 		{
-			_Uniforms[Location] = Graphics::Program::UniformContent::ProjectionMatrix4x4F;
+			_Uniforms[Location] = Graphics::Program::UniformContent::ViewToMonitorMatrix4x4F;
 		}
-		else if((Name == std::string("in_ViewMatrix")) && (Type == GL_FLOAT_MAT4) && (Size == 1))
+		else if((Name == std::string("in_WorldToViewMatrix")) && (Type == GL_FLOAT_MAT4) && (Size == 1))
 		{
-			_Uniforms[Location] = Graphics::Program::UniformContent::ViewMatrix4x4F;
+			_Uniforms[Location] = Graphics::Program::UniformContent::WorldToViewMatrix4x4F;
 		}
-		else if((Name == std::string("in_ModelMatrix")) && (Type == GL_FLOAT_MAT4) && (Size == 1))
+		else if((Name == std::string("in_ModelToWorldMatrix")) && (Type == GL_FLOAT_MAT4) && (Size == 1))
 		{
-			_Uniforms[Location] = Graphics::Program::UniformContent::ModelMatrix4x4F;
+			_Uniforms[Location] = Graphics::Program::UniformContent::ModelToWorldMatrix4x4F;
 		}
-		else if((Name == std::string("in_NormalMatrix")) && (Type == GL_FLOAT_MAT3) && (Size == 1))
+		else if((Name == std::string("in_WorldToMonitorMatrix")) && (Type == GL_FLOAT_MAT4) && (Size == 1))
 		{
-			_Uniforms[Location] = Graphics::Program::UniformContent::NormalMatrix3x3F;
+			_Uniforms[Location] = Graphics::Program::UniformContent::WorldToMonitorMatrix4x4F;
+		}
+		else if((Name == std::string("in_ModelToWorldNormalMatrix")) && (Type == GL_FLOAT_MAT3) && (Size == 1))
+		{
+			_Uniforms[Location] = Graphics::Program::UniformContent::ModelToWorldNormalMatrix3x3F;
 		}
 		else if((Name == std::string("in_CameraPosition")) && (Type == GL_FLOAT_VEC3) && (Size == 1))
 		{

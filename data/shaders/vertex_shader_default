@@ -1,9 +1,8 @@
 #version 330
 
-uniform mat4 in_ProjectionMatrix;
-uniform mat4 in_ViewMatrix;
-uniform mat4 in_ModelMatrix;
-uniform mat3 in_NormalMatrix;
+uniform mat4 in_WorldToMonitorMatrix;
+uniform mat4 in_ModelToWorldMatrix;
+uniform mat3 in_ModelToWorldNormalMatrix;
 
 layout(location = 0) in vec3 in_ModelPosition;
 layout(location = 1) in vec3 in_ModelNormal;
@@ -13,8 +12,8 @@ out vec3 pass_WorldNormal;
 
 void main()
 {
-    pass_WorldNormal = normalize(in_NormalMatrix * in_ModelNormal);
-	vec4 WorldPosition = in_ModelMatrix * vec4(in_ModelPosition, 1.0f);
+    pass_WorldNormal = in_ModelToWorldNormalMatrix * in_ModelNormal;
+	vec4 WorldPosition = in_ModelToWorldMatrix * vec4(in_ModelPosition, 1.0f);
     pass_WorldPosition = vec3(WorldPosition);
-    gl_Position = in_ProjectionMatrix * in_ViewMatrix * WorldPosition;
+    gl_Position = in_WorldToMonitorMatrix * WorldPosition;
 }
