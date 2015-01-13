@@ -41,15 +41,16 @@ namespace Graphics
 	public:
 		enum class UniformContent : std::uint32_t
 		{
-			ProjectionMatrix4x4F = 0,
-			ViewMatrix4x4F = 1,
-			ModelMatrix4x4F = 2,
-			NormalMatrix3x3F = 3,
-			CameraPositionVector3F = 4,
-			LightDirectionVector3F = 5,
-			LightColorVector3F = 6,
-			MaterialColorVector3F = 7,
-			MaterialShininessF = 8
+			ViewToMonitorMatrix4x4F = 0,
+			WorldToViewMatrix4x4F = 1,
+			ModelToWorldMatrix4x4F = 2,
+			WorldToMonitorMatrix4x4F = 3,
+			ModelToWorldNormalMatrix3x3F = 4,
+			CameraPositionVector3F = 5,
+			LightDirectionVector3F = 6,
+			LightColorVector3F = 7,
+			MaterialColorVector3F = 8,
+			MaterialShininessF = 9
 		};
 		
 		// constructor

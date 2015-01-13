@@ -69,7 +69,7 @@ void Graphics::RenderContext::ActivateProgram(void)
 	{
 		switch(Uniform.second)
 		{
-		case Graphics::Program::UniformContent::ProjectionMatrix4x4F:
+		case Graphics::Program::UniformContent::ViewToMonitorMatrix4x4F:
 			{
 				assert(_Camera != nullptr);
 				assert(_Camera->GetProjection() != nullptr);
@@ -77,21 +77,28 @@ void Graphics::RenderContext::ActivateProgram(void)
 				
 				break;
 			}
-		case Graphics::Program::UniformContent::ViewMatrix4x4F:
+		case Graphics::Program::UniformContent::WorldToViewMatrix4x4F:
 			{
 				assert(_Camera != nullptr);
 				_Program->_SetUniform(Uniform.first, _Camera->GetSpacialMatrix().Inverted());
 				
 				break;
 			}
-		case Graphics::Program::UniformContent::ModelMatrix4x4F:
+		case Graphics::Program::UniformContent::ModelToWorldMatrix4x4F:
 			{
 				assert(_Node != nullptr);
 				_Program->_SetUniform(Uniform.first, _Node->GetSpacialMatrix().Scaled(_Node->GetScale()));
 				
 				break;
 			}
-		case Graphics::Program::UniformContent::NormalMatrix3x3F:
+		case Graphics::Program::UniformContent::WorldToMonitorMatrix4x4F:
+			{
+				assert(_Node != nullptr);
+				_Program->_SetUniform(Uniform.first, _Camera->GetProjection()->GetMatrix().Transformed(_Camera->GetSpacialMatrix().Inverted()));
+				
+				break;
+			}
+		case Graphics::Program::UniformContent::ModelToWorldNormalMatrix3x3F:
 			{
 				assert(_Node != nullptr);
 				_Program->_SetUniform(Uniform.first, Matrix3f::CreateFromTopLeftMatrix4f(_Node->GetSpacialMatrix()).Invert().Transpose());

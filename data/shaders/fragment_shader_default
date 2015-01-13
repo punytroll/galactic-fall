@@ -12,6 +12,7 @@ out vec4 out_FragmentColor;
 
 void main()
 {
-    float DiffuseCoefficient = max(0.0, dot(pass_WorldNormal, -in_LightDirection));
+    float DiffuseCoefficient = max(0.0f, dot(pass_WorldNormal, -in_LightDirection));
+	
 	out_FragmentColor = vec4(DiffuseCoefficient * in_MaterialColor * in_LightColor, 1.0f);
 }
