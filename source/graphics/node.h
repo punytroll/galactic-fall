@@ -49,7 +49,6 @@ namespace Graphics
 		const Vector3f & GetPosition(void) const;
 		float GetScale() const;
 		Graphics::Scene * GetScene(void);
-		bool GetUseLighting(void) const;
 		// setters
 		void SetBlendFunction(int SourceFactor, int DestinationFactor);
 		void SetClearColorBuffer(bool ClearColorBuffer);
@@ -64,7 +63,6 @@ namespace Graphics
 		void SetUseClipPlane2(bool UseClipPlane2);
 		void SetUseClipPlane3(bool UseClipPlane3);
 		void SetUseDepthTest(bool UseDepthTest);
-		void SetUseLighting(bool UseLighting);
 		void SetUse2DTexture(bool Use2DTexture);
 		// modifiers
 		void AddNode(Graphics::Node * Content);
@@ -141,11 +139,6 @@ namespace Graphics
 		return _SpacialMatrix;
 	}
 	
-	inline bool Node::GetUseLighting(void) const
-	{
-		return _UseLighting;
-	}
-	
 	inline void Node::SetBlendFunction(int SourceFactor, int DestinationFactor)
 	{
 		_BlendFunctionSourceFactor = SourceFactor;
@@ -220,11 +213,6 @@ namespace Graphics
 	inline void Node::SetUseDepthTest(bool UseDepthTest)
 	{
 		_UseDepthTest = UseDepthTest;
-	}
-	
-	inline void Node::SetUseLighting(bool UseLighting)
-	{
-		_UseLighting = UseLighting;
 	}
 	
 	inline void Node::SetUse2DTexture(bool Use2DTexture)

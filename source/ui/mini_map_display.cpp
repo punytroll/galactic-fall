@@ -131,7 +131,6 @@ void UI::MiniMapDisplay::_SetupView(void)
 	RootNode->SetClearColorBuffer(true);
 	RootNode->SetClearDepthBuffer(true);
 	RootNode->SetUseBlending(false);
-	RootNode->SetUseLighting(false);
 	RootNode->SetUseDepthTest(true);
 	Scene->SetRootNode(RootNode);
 	SetView(View);

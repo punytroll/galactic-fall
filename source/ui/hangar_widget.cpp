@@ -202,7 +202,6 @@ namespace UI
 			
 			RootNode->SetClearColorBuffer(true);
 			RootNode->SetClearDepthBuffer(true);
-			RootNode->SetUseLighting(true);
 			RootNode->SetUseDepthTest(true);
 			Scene->SetRootNode(RootNode);
 			assert(_Visualization == nullptr);

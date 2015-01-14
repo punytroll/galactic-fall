@@ -3492,7 +3492,6 @@ int main(int argc, char ** argv)
 	Graphics::UIRootNode * UIRootNode(new Graphics::UIRootNode());
 	
 	UIRootNode->SetClearColorBuffer(true);
-	UIRootNode->SetUseLighting(false);
 	UIRootNode->SetUseDepthTest(false);
 	UIRootNode->SetUseBlending(true);
 	UIRootNode->SetUseClipPlane0(true);

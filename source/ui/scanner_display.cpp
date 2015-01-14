@@ -174,7 +174,6 @@ void UI::ScannerDisplay::_Setup(void)
 	
 	RootNode->SetClearColorBuffer(true);
 	RootNode->SetClearDepthBuffer(true);
-	RootNode->SetUseLighting(true);
 	RootNode->SetUseDepthTest(true);
 	Scene->SetRootNode(RootNode);
 	
