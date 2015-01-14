@@ -389,12 +389,7 @@ class Camera : public Position
 public:
 	Matrix4f GetSpacialMatrix(void)
 	{
-		Matrix4f Result(true);
-		
-		Result.Translate(GetPosition());
-		Result.Rotate(m_Orientation);
-		
-		return Result;
+		return Matrix4f::CreateTranslation(GetPosition()).Rotate(m_Orientation);
 	}
 	
 	Quaternion m_Orientation;
@@ -1056,7 +1051,7 @@ void vDisplayModel(void)
 	}
 	if(g_SelectedPoints.size() > 0)
 	{
-		Matrix4f Matrix(Matrix4f::CreateFromQuaternion(g_CurrentCamera->m_Orientation.Conjugated()));
+		Matrix4f Matrix(Matrix4f::CreateRotation(g_CurrentCamera->m_Orientation.Conjugated()));
 		
 		for(std::vector< Point * >::size_type stI = 0; stI < g_SelectedPoints.size(); ++stI)
 		{
@@ -1077,7 +1072,7 @@ void vDisplayModel(void)
 	{
 		glPushMatrix();
 		glTranslatef(g_pSelectedLight->GetX(), g_pSelectedLight->GetY(), g_pSelectedLight->GetZ());
-		glMultMatrixf(Matrix4f::CreateFromQuaternion(g_CurrentCamera->m_Orientation.Conjugated()).GetPointer());
+		glMultMatrixf(Matrix4f::CreateRotation(g_CurrentCamera->m_Orientation.Conjugated()).GetPointer());
 		glBegin(GL_POINTS);
 		glColor3f(1.0f, 1.0f, 0.0f);
 		glVertex3f(-0.05f, -0.05f, 0.0f);
@@ -1092,7 +1087,7 @@ void vDisplayModel(void)
 		glPushMatrix();
 		glTranslatef(g_pSelectedCamera->GetX(), g_pSelectedCamera->GetY(), g_pSelectedCamera->GetZ());
 		glPushMatrix();
-		glMultMatrixf(Matrix4f::CreateFromQuaternion(g_CurrentCamera->m_Orientation.Conjugated()).GetPointer());
+		glMultMatrixf(Matrix4f::CreateRotation(g_CurrentCamera->m_Orientation.Conjugated()).GetPointer());
 		glBegin(GL_POINTS);
 		glColor3f(1.0f, 1.0f, 0.0f);
 		glVertex3f(-0.05f, -0.05f, 0.0f);
@@ -1101,7 +1096,7 @@ void vDisplayModel(void)
 		glVertex3f(-0.05f, 0.05f, 0.0f);
 		glEnd();
 		glPopMatrix();
-		glMultMatrixf(Matrix4f::CreateFromQuaternion(g_pSelectedCamera->m_Orientation.Conjugated()).GetPointer());
+		glMultMatrixf(Matrix4f::CreateRotation(g_pSelectedCamera->m_Orientation.Conjugated()).GetPointer());
 		glColor3f(0.2f, 0.8f, 0.5f);
 		glBegin(GL_LINES);
 		glVertex3f(0.0f, 0.0f, 0.0f);
@@ -1172,7 +1167,7 @@ void vDisplayModel(void)
 		glEnd();
 		glPushMatrix();
 		glTranslatef(g_pHoveredCamera->GetX(), g_pHoveredCamera->GetY(), g_pHoveredCamera->GetZ());
-		glMultMatrixf(Matrix4f::CreateFromQuaternion(g_pHoveredCamera->m_Orientation.Conjugated()).GetPointer());
+		glMultMatrixf(Matrix4f::CreateRotation(g_pHoveredCamera->m_Orientation.Conjugated()).GetPointer());
 		glColor3f(0.0f, 0.5f, 0.5f);
 		glBegin(GL_LINES);
 		glVertex3f(0.0f, 0.0f, 0.0f);
