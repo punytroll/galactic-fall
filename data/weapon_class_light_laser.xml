@@ -65,7 +65,7 @@
 							<opacity>1</opacity>
 						</specular-color>
 						<shininess>40</shininess>
-						<program-identifier>default</program-identifier>
+						<program-identifier>no_lighting</program-identifier>
 					</material>
 				</visualization-part>
 			</visualization-parts>

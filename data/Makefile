@@ -40,6 +40,7 @@ all_data = \
 	.data/faction_neutral.data \
 	.data/faction_pirates.data \
 	.data/fragment_shader_default.data \
+	.data/fragment_shader_no_lighting.data \
 	.data/generator_class_small_generator.data \
 	.data/mesh_cargo_cube.data \
 	.data/mesh_fighter_cockpit.data \
@@ -62,6 +63,7 @@ all_data = \
 	.data/model_shuttle.data \
 	.data/model_transporter.data \
 	.data/program_default.data \
+	.data/program_no_lighting.data \
 	.data/scenario_new_game.data \
 	.data/scenario_rich_game.data \
 	.data/scenario_sol_spectator.data \
@@ -85,6 +87,7 @@ all_data = \
 	.data/texture_font.data \
 	.data/texture_particle.data \
 	.data/vertex_shader_default.data \
+	.data/vertex_shader_no_lighting.data \
 	.data/weapon_class_light_laser.data \
 	.data/weapon_class_medium_laser.data
 
@@ -235,8 +238,11 @@ data.arx: $(data_arx) $(arxtouch_dependencies) $(arxadd_dependencies)
 	@echo "\n\nAdding shaders ...\n"
 	$(command_arxadd) $@ --name="Default Fragment Shader" --type=13 --sub-type=1 --relation="/Shaders::child" --data-file=.data/fragment_shader_default.data
 	$(command_arxadd) $@ --name="Default Vertex Shader" --type=13 --sub-type=0 --relation="/Shaders::child" --data-file=.data/vertex_shader_default.data
+	$(command_arxadd) $@ --name="No Lighting Fragment Shader" --type=13 --sub-type=1 --relation="/Shaders::child" --data-file=.data/fragment_shader_no_lighting.data
+	$(command_arxadd) $@ --name="No Lighting Vertex Shader" --type=13 --sub-type=0 --relation="/Shaders::child" --data-file=.data/vertex_shader_no_lighting.data
 	@echo "\n\nAdding programs ...\n"
 	$(command_arxadd) $@ --name="Default Program" --type=14 --sub-type=0 --relation="/Programs::child" --data-file=.data/program_default.data
+	$(command_arxadd) $@ --name="No Lighting Program" --type=14 --sub-type=0 --relation="/Programs::child" --data-file=.data/program_no_lighting.data
 
 .data:
 	mkdir $@
@@ -255,11 +261,15 @@ meshes-all-recursive:
 
 .data/fragment_shader_default.data: shaders/fragment_shader_default
 
+.data/fragment_shader_no_lighting.data: shaders/fragment_shader_no_lighting
+
 .data/scenario_new_game.data: savegame_new_game.xml
 
 .data/scenario_sol_spectator.data: savegame_sol_spectator.xml
 
 .data/vertex_shader_default.data: shaders/vertex_shader_default
+
+.data/vertex_shader_no_lighting.data: shaders/vertex_shader_no_lighting
 
 textures-all-recursive:
 	@$(MAKE) -C textures all-recursive

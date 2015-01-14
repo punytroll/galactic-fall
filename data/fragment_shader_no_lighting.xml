@@ -1,0 +1,4 @@
+<fragment-shader>
+	<identifier>fragment_shader_no_lighting</identifier>
+	<source from-file="shaders/fragment_shader_no_lighting"/>
+</fragment-shader>

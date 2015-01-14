@@ -1,0 +1,10 @@
+#version 330
+
+uniform vec4 in_MaterialColor;
+
+out vec4 out_FragmentColor;
+
+void main()
+{
+	out_FragmentColor = in_MaterialColor;
+}
