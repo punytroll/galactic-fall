@@ -37,38 +37,38 @@ public:
 	void ModifyOrientation(const Quaternion & DeltaOrientation);
 	void ModifyPosition(const Vector3f & DeltaPosition);
 private:
-	Quaternion m_Orientation;
-	Vector3f m_Position;
+	Quaternion _Orientation;
+	Vector3f _Position;
 };
 
 inline const Quaternion & ObjectAspectPosition::GetOrientation(void) const
 {
-	return m_Orientation;
+	return _Orientation;
 }
 
 inline const Vector3f & ObjectAspectPosition::GetPosition(void) const
 {
-	return m_Position;
+	return _Position;
 }
 
 inline void ObjectAspectPosition::ModifyOrientation(const Quaternion & DeltaOrientation)
 {
-	m_Orientation *= DeltaOrientation;
+	_Orientation.Rotate(DeltaOrientation);
 }
 
 inline void ObjectAspectPosition::ModifyPosition(const Vector3f & DeltaPosition)
 {
-	m_Position += DeltaPosition;
+	_Position.Translate(DeltaPosition);
 }
 
 inline void ObjectAspectPosition::SetOrientation(const Quaternion & Orientation)
 {
-	m_Orientation = Orientation;
+	_Orientation = Orientation;
 }
 
 inline void ObjectAspectPosition::SetPosition(const Vector3f & Position)
 {
-	m_Position = Position;
+	_Position = Position;
 }
 
 #endif

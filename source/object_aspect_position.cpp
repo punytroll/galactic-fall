@@ -20,8 +20,7 @@
 #include "object_aspect_position.h"
 
 ObjectAspectPosition::ObjectAspectPosition(void) :
-	m_Orientation(),
-	m_Position(Vector3f::CreateZero())
+	_Orientation(Quaternion::CreateIdentity()),
+	_Position(Vector3f::CreateZero())
 {
-	m_Orientation.Identity();
 }

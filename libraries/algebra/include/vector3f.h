@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 1.8.16 of algebra.
+ * This is part of version 1.8.17 of algebra.
  **/
 
 #ifndef ALGEBRA_VECTOR3F_H
@@ -131,15 +131,6 @@ public:
 		return *this;
 	}
 	
-	Vector3f & operator+=(const Vector3f & Other)
-	{
-		_[0] += Other._[0];
-		_[1] += Other._[1];
-		_[2] += Other._[2];
-		
-		return *this;
-	}
-	
 	Vector3f & operator-=(const Vector3f & Other)
 	{
 		_[0] -= Other._[0];
@@ -180,6 +171,8 @@ public:
 	Vector3f & operator*=(const Matrix3f & Matrix);
 	
 	Vector3f & Transform(const Matrix4f & Matrix);
+	
+	Vector3f & Translate(const Vector3f & Vector);
 	
 	Vector3f & Rotate(const Quaternion & Quaternion);
 	
@@ -272,6 +265,15 @@ inline Vector3f & Vector3f::Transform(const Matrix4f & Matrix)
 	_[0] = Value0;
 	_[1] = Value1;
 	_[2] = Value2;
+	
+	return *this;
+}
+
+inline Vector3f & Vector3f::Translate(const Vector3f & Vector)
+{
+	_[0] += Vector._[0];
+	_[1] += Vector._[1];
+	_[2] += Vector._[2];
 	
 	return *this;
 }

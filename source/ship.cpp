@@ -304,7 +304,7 @@ bool Ship::Update(float Seconds)
 				
 				ForwardThrust.Rotate(GetAspectPosition()->GetOrientation());
 				ForwardThrust *= Seconds;
-				m_Velocity += Vector3f(ForwardThrust[0], ForwardThrust[1], 0.0f);
+				m_Velocity.Translate(Vector3f(ForwardThrust[0], ForwardThrust[1], 0.0f));
 				ForwardThrust *= 0.5f * Seconds;
 				GetAspectPosition()->ModifyPosition(Vector3f(ForwardThrust[0], ForwardThrust[1], 0.0f));
 				if(m_Velocity.Length() > GetMaximumSpeed())

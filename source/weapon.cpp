@@ -43,12 +43,12 @@
 #include "weapon.h"
 
 Weapon::Weapon(void) :
-	m_EnergyUsagePerShot(0.0f),
-	m_Fire(false),
-	m_NextTimeToFire(0.0),
-	m_ParticleExitPosition(Vector3f::CreateZero()),
-	m_ParticleExitSpeed(0.0f),
-	m_ReloadTime(0.0f)
+	_EnergyUsagePerShot(0.0f),
+	_Fire(false),
+	_NextTimeToFire(0.0),
+	_ParticleExitPosition(Vector3f::CreateZero()),
+	_ParticleExitSpeed(0.0f),
+	_ReloadTime(0.0f)
 {
 	// initialize object aspects
 	AddAspectAccessory();
@@ -67,58 +67,51 @@ Weapon::~Weapon(void)
 
 bool Weapon::_Update(float Seconds)
 {
-	if((m_Fire == true) && (m_NextTimeToFire <= GameTime::Get()))
+	if((_Fire == true) && (_NextTimeToFire <= GameTime::Get()))
 	{
-		Object * Container(GetContainer());
+		auto Container(GetContainer());
 		
-		assert(Container != 0);
+		assert(Container != nullptr);
 		assert(Container->GetTypeIdentifier() == "ship");
 		
-		Ship * TheShip(dynamic_cast< Ship * >(Container));
+		auto TheShip(dynamic_cast< Ship * >(Container));
 		
-		assert(TheShip != 0);
-		if((TheShip->GetBattery() != 0) && (TheShip->GetBattery()->GetEnergy() >= GetEnergyUsagePerShot()))
+		assert(TheShip != nullptr);
+		if((TheShip->GetBattery() != nullptr) && (TheShip->GetBattery()->GetEnergy() >= _EnergyUsagePerShot))
 		{
-			TheShip->GetBattery()->SetEnergy(TheShip->GetBattery()->GetEnergy() - GetEnergyUsagePerShot());
-			assert(Container->GetAspectPosition() != 0);
-			assert(Container->GetContainer() != 0);
+			TheShip->GetBattery()->SetEnergy(TheShip->GetBattery()->GetEnergy() - _EnergyUsagePerShot);
+			assert(Container->GetAspectPosition() != nullptr);
+			assert(Container->GetContainer() != nullptr);
 			
-			Shot * NewShot(dynamic_cast< Shot * >(g_ObjectFactory->Create("shot", m_ShotClassIdentifier, true)));
+			auto NewShot(dynamic_cast< Shot * >(g_ObjectFactory->Create("shot", _ShotClassIdentifier, true)));
 			
-			assert(NewShot->GetAspectPosition() != 0);
+			assert(NewShot->GetAspectPosition() != nullptr);
 			NewShot->SetShooter(Container->GetReference());
 			
 			// calculating the shot's position in the world coordinate system
-			const Vector3f & ParticleExitPosition(GetParticleExitPosition());
-			const Vector3f & SlotPosition(GetAspectAccessory()->GetSlot()->GetPosition());
-			const Vector3f & ShipPosition(Container->GetAspectPosition()->GetPosition());
-			Vector3f ShotPosition(Vector3f::CreateZero());
+			Vector3f ShotPosition(_ParticleExitPosition);
 			
-			ShotPosition += ParticleExitPosition;
 			ShotPosition.Rotate(GetAspectPosition()->GetOrientation());
 			ShotPosition.Rotate(GetAspectAccessory()->GetSlot()->GetOrientation());
-			ShotPosition += SlotPosition;
+			ShotPosition.Translate(GetAspectAccessory()->GetSlot()->GetPosition());
 			ShotPosition.Rotate(Container->GetAspectPosition()->GetOrientation());
-			ShotPosition += ShipPosition;
+			ShotPosition.Translate(Container->GetAspectPosition()->GetPosition());
 			NewShot->GetAspectPosition()->SetPosition(ShotPosition);
 			
 			// calculating the shot's angular position in world coordinate system
-			Quaternion ShotOrientation;
+			Quaternion ShotOrientation(Container->GetAspectPosition()->GetOrientation());
 			
-			ShotOrientation.Identity();
-			ShotOrientation *= Container->GetAspectPosition()->GetOrientation();
-			ShotOrientation *= GetAspectAccessory()->GetSlot()->GetOrientation();
-			ShotOrientation *= GetAspectPosition()->GetOrientation();
+			ShotOrientation.Rotate(GetAspectAccessory()->GetSlot()->GetOrientation());
+			ShotOrientation.Rotate(GetAspectPosition()->GetOrientation());
 			NewShot->GetAspectPosition()->SetOrientation(ShotOrientation);
 			
 			// calculate the shot's velocity
-			Vector3f ParticleVelocity(GetParticleExitSpeed(), 0.0f, 0.0f);
+			Vector3f ParticleVelocity(_ParticleExitSpeed, 0.0f, 0.0f);
 			
 			ParticleVelocity.Rotate(ShotOrientation);
-			assert(dynamic_cast< Ship * >(Container) != 0);
-			NewShot->SetVelocity(dynamic_cast< Ship * >(Container)->GetVelocity() + Vector3f(ParticleVelocity[0], ParticleVelocity[1], 0.0f));
+			NewShot->SetVelocity(TheShip->GetVelocity() + Vector3f(ParticleVelocity[0], ParticleVelocity[1], 0.0f));
 			Container->GetContainer()->GetAspectObjectContainer()->AddContent(NewShot);
-			m_NextTimeToFire = GameTime::Get() + GetReloadTime();
+			_NextTimeToFire = GameTime::Get() + _ReloadTime;
 		}
 	}
 	

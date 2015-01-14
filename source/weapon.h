@@ -47,63 +47,63 @@ private:
 	bool _Update(float Seconds);
 	void _UpdateVisualization(Visualization * Visualization);
 	// variables
-	float m_EnergyUsagePerShot;
-	bool m_Fire;
-	double m_NextTimeToFire;
-	Vector3f m_ParticleExitPosition;
-	float m_ParticleExitSpeed;
-	float m_ReloadTime;
-	std::string m_ShotClassIdentifier;
+	float _EnergyUsagePerShot;
+	bool _Fire;
+	double _NextTimeToFire;
+	Vector3f _ParticleExitPosition;
+	float _ParticleExitSpeed;
+	float _ReloadTime;
+	std::string _ShotClassIdentifier;
 };
 
 inline float Weapon::GetEnergyUsagePerShot(void) const
 {
-	return m_EnergyUsagePerShot;
+	return _EnergyUsagePerShot;
 }
 
 inline const Vector3f & Weapon::GetParticleExitPosition(void) const
 {
-	return m_ParticleExitPosition;
+	return _ParticleExitPosition;
 }
 
 inline float Weapon::GetParticleExitSpeed(void) const
 {
-	return m_ParticleExitSpeed;
+	return _ParticleExitSpeed;
 }
 
 inline float Weapon::GetReloadTime(void) const
 {
-	return m_ReloadTime;
+	return _ReloadTime;
 }
 
 inline void Weapon::SetEnergyUsagePerShot(float EnergyUsagePerShot)
 {
-	m_EnergyUsagePerShot = EnergyUsagePerShot;
+	_EnergyUsagePerShot = EnergyUsagePerShot;
 }
 
 inline void Weapon::SetFire(bool Fire)
 {
-	m_Fire = Fire;
+	_Fire = Fire;
 }
 
 inline void Weapon::SetParticleExitPosition(const Vector3f & ParticleExitPosition)
 {
-	m_ParticleExitPosition = ParticleExitPosition;
+	_ParticleExitPosition = ParticleExitPosition;
 }
 
 inline void Weapon::SetParticleExitSpeed(float ParticleExitSpeed)
 {
-	m_ParticleExitSpeed = ParticleExitSpeed;
+	_ParticleExitSpeed = ParticleExitSpeed;
 }
 
 inline void Weapon::SetReloadTime(float ReloadTime)
 {
-	m_ReloadTime = ReloadTime;
+	_ReloadTime = ReloadTime;
 }
 
 inline void Weapon::SetShotClassIdentifier(const std::string & ShotClassIdentifier)
 {
-	m_ShotClassIdentifier = ShotClassIdentifier;
+	_ShotClassIdentifier = ShotClassIdentifier;
 }
 
 #endif

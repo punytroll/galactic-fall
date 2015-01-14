@@ -2071,7 +2071,7 @@ public:
 								g_TrianglePoints.push_back(pNewTrianglePoint);
 								g_SelectedPoints[stPoint]->m_TrianglePoints.push_back(pNewTrianglePoint);
 							}
-							pNewTrianglePoint->m_Normal += pTrianglePoint->m_Normal;
+							pNewTrianglePoint->m_Normal.Translate(pTrianglePoint->m_Normal);
 							vExchangeTrianglePoint(g_SelectedTriangles[stTriangle], pTrianglePoint, pNewTrianglePoint);
 						}
 					}
