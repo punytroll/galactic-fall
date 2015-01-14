@@ -55,37 +55,6 @@ void Graphics::ModelNode::Draw(Graphics::RenderContext * RenderContext)
 		assert(StyleIterator != _Styles.end());
 		assert(StyleIterator->second != nullptr);
 		RenderContext->SetStyle(StyleIterator->second);
-		assert(g_GraphicsEngine != nullptr);
-		assert(g_GraphicsEngine->GetShadingManager() != nullptr);
-		assert(g_GraphicsEngine->GetShadingManager()->GetProgram(StyleIterator->second->GetProgramIdentifier()) != nullptr);
-		if(GetUseLighting() == true)
-		{
-			if(StyleIterator->second->GetDiffuseColor() != nullptr)
-			{
-				GLMaterialfv(GL_FRONT, GL_DIFFUSE, StyleIterator->second->GetDiffuseColor()->GetColor().GetPointer());
-			}
-			else
-			{
-				GLMaterialfv(GL_FRONT, GL_DIFFUSE, Vector4f(1.0f, 1.0f, 1.0f, 1.0f).GetPointer());
-			}
-			if(StyleIterator->second->GetSpecularColor() != nullptr)
-			{
-				GLMaterialf(GL_FRONT, GL_SHININESS, StyleIterator->second->GetShininess());
-				GLMaterialfv(GL_FRONT, GL_SPECULAR, StyleIterator->second->GetSpecularColor()->GetColor().GetPointer());
-			}
-			else
-			{
-				GLMaterialf(GL_FRONT, GL_SHININESS, 0.0f);
-				GLMaterialfv(GL_FRONT, GL_SPECULAR, Vector4f(0.0f, 0.0f, 0.0f, 1.0f).GetPointer());
-			}
-		}
-		else
-		{
-			if(StyleIterator->second->GetDiffuseColor() != nullptr)
-			{
-				GLColor4fv(StyleIterator->second->GetDiffuseColor()->GetColor().GetPointer());
-			}
-		}
 		RenderContext->ActivateProgram();
 		MeshPart.second->Draw(RenderContext);
 		RenderContext->DeactivateProgram();
