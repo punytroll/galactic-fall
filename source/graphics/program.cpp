@@ -19,8 +19,10 @@
 
 #include <iostream>
 
+#include <algebra/matrix3f.h>
 #include <algebra/matrix4f.h>
 #include <algebra/vector3f.h>
+#include <algebra/vector4f.h>
 
 #include "../globals.h"
 #include "gl.h"
@@ -127,6 +129,10 @@ void Graphics::Program::Build(Graphics::ShadingManager * ShadingManager)
 		{
 			_Uniforms[Location] = Graphics::Program::UniformContent::WorldToMonitorMatrix4x4F;
 		}
+		else if((Name == std::string("in_ModelToMonitorMatrix")) && (Type == GL_FLOAT_MAT4) && (Size == 1))
+		{
+			_Uniforms[Location] = Graphics::Program::UniformContent::ModelToMonitorMatrix4x4F;
+		}
 		else if((Name == std::string("in_ModelToWorldNormalMatrix")) && (Type == GL_FLOAT_MAT3) && (Size == 1))
 		{
 			_Uniforms[Location] = Graphics::Program::UniformContent::ModelToWorldNormalMatrix3x3F;
@@ -146,6 +152,10 @@ void Graphics::Program::Build(Graphics::ShadingManager * ShadingManager)
 		else if((Name == std::string("in_MaterialColor")) && (Type == GL_FLOAT_VEC3) && (Size == 1))
 		{
 			_Uniforms[Location] = Graphics::Program::UniformContent::MaterialColorVector3F;
+		}
+		else if((Name == std::string("in_MaterialColor")) && (Type == GL_FLOAT_VEC4) && (Size == 1))
+		{
+			_Uniforms[Location] = Graphics::Program::UniformContent::MaterialColorVector4F;
 		}
 		else if((Name == std::string("in_MaterialShininess")) && (Type == GL_FLOAT) && (Size == 1))
 		{
@@ -189,4 +199,9 @@ void Graphics::Program::_SetUniform(GLint Location, const Matrix4f & Matrix)
 void Graphics::Program::_SetUniform(GLint Location, const Vector3f & Vector)
 {
 	GLUniform3fv(Location, 1, Vector.GetPointer());
+}
+
+void Graphics::Program::_SetUniform(GLint Location, const Vector4f & Vector)
+{
+	GLUniform4fv(Location, 1, Vector.GetPointer());
 }

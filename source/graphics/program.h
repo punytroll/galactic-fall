@@ -29,6 +29,7 @@
 class Matrix3f;
 class Matrix4f;
 class Vector3f;
+class Vector4f;
 
 namespace Graphics
 {
@@ -41,16 +42,18 @@ namespace Graphics
 	public:
 		enum class UniformContent : std::uint32_t
 		{
-			ViewToMonitorMatrix4x4F = 0,
-			WorldToViewMatrix4x4F = 1,
-			ModelToWorldMatrix4x4F = 2,
-			WorldToMonitorMatrix4x4F = 3,
-			ModelToWorldNormalMatrix3x3F = 4,
-			CameraPositionVector3F = 5,
-			LightDirectionVector3F = 6,
-			LightColorVector3F = 7,
-			MaterialColorVector3F = 8,
-			MaterialShininessF = 9
+			ViewToMonitorMatrix4x4F,
+			WorldToViewMatrix4x4F,
+			ModelToWorldMatrix4x4F,
+			WorldToMonitorMatrix4x4F,
+			ModelToMonitorMatrix4x4F,
+			ModelToWorldNormalMatrix3x3F,
+			CameraPositionVector3F,
+			LightDirectionVector3F,
+			LightColorVector3F,
+			MaterialColorVector3F,
+			MaterialColorVector4F,
+			MaterialShininessF
 		};
 		
 		// constructor
@@ -71,6 +74,7 @@ namespace Graphics
 		void _SetUniform(GLint Location, const Matrix3f & Matrix);
 		void _SetUniform(GLint Location, const Matrix4f & Matrix);
 		void _SetUniform(GLint Location, const Vector3f & Vector);
+		void _SetUniform(GLint Location, const Vector4f & Vector);
 		GLuint _Handle;
 		std::string _Identifier;
 		std::list< std::string > _ShaderIdentifiers;
