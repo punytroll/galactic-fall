@@ -54,7 +54,7 @@ binary: $(OBJECT_FILES) $(XML_STREAM_LIBRARY) $(LDFLAGS_configuration)
 
 $(DEPENDENCY_DIRECTORY)/%.dep: %
 	@test -d $(@D) || mkdir $(@D)
-	$(CXX) $(CXXFLAGS) $(ALGEBRA_INCLUDE) $(XML_STREAM_INCLUDE) -MM $< | sed 's/^\(.*\.o\):/$(OBJECT_DIRECTORY)\/$(subst /,\/,$(dir $<))\1 $(subst /,\/,$@):/g' > $@
+	$(CXX) $(CXXFLAGS) $(ALGEBRA_INCLUDE) $(XML_STREAM_INCLUDE) -MM $< | sed 's/^\(.*\.o\):/$(OBJECT_DIRECTORY)\/$(subst /,\/,$(subst ./,,$(dir $<)))\1 $(subst /,\/,$@):/g' > $@
 
 $(OBJECT_DIRECTORY)/%.o: %.cpp
 	@test -d $(@D) || mkdir $(@D)
