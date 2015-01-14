@@ -66,7 +66,6 @@
 #include "graphics/mesh_manager.h"
 #include "graphics/model.h"
 #include "graphics/model_manager.h"
-#include "graphics/model_node.h"
 #include "graphics/orthogonal_2d_projection.h"
 #include "graphics/particle_system.h"
 #include "graphics/perspective_projection.h"
