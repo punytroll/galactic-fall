@@ -26,9 +26,9 @@
 #include "commodity_class.h"
 #include "globals.h"
 #include "graphics/engine.h"
+#include "graphics/mesh_node.h"
 #include "graphics/model.h"
 #include "graphics/model_manager.h"
-#include "graphics/model_node.h"
 #include "graphics/particle_system_node.h"
 #include "graphics/style.h"
 #include "graphics/system_node.h"
@@ -277,15 +277,36 @@ Visualization * VisualizeWeapon(Weapon * Weapon, Graphics::Node * Container)
 
 Graphics::Node * VisualizePrototype(const VisualizationPrototype * VisualizationPrototype)
 {
+	Graphics::Node * Result(nullptr);
+	
 	assert(VisualizationPrototype != nullptr);
+	assert(VisualizationPrototype->GetModel() != nullptr);
 	
-	auto Visualization(new Graphics::ModelNode());
+	auto Meshes(VisualizationPrototype->GetModel()->GetMeshes());
 	
+	assert(Meshes.size() > 0);
+	if(Meshes.size() > 1)
+	{
+		Result = new Graphics::Node();
+	}
 	for(auto & PartStyle : VisualizationPrototype->GetPartStyles())
 	{
-		Visualization->AddStyle(PartStyle.first, new Graphics::Style(PartStyle.second));
+		auto MeshNode(new Graphics::MeshNode());
+		auto MeshIterator(Meshes.find(PartStyle.first));
+		
+		assert(MeshIterator != Meshes.end());
+		assert(MeshIterator->second != nullptr);
+		MeshNode->SetMesh(MeshIterator->second);
+		MeshNode->SetStyle(new Graphics::Style(PartStyle.second));
+		if(Result == nullptr)
+		{
+			Result = MeshNode;
+		}
+		else
+		{
+			Result->AddNode(MeshNode);
+		}
 	}
-	Visualization->SetModel(VisualizationPrototype->GetModel());
 	
-	return Visualization;
+	return Result;
 }
