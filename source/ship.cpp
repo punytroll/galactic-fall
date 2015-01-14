@@ -77,7 +77,7 @@ Ship::Ship(void) :
 	_Target(nullptr),
 	m_TurnLeft(0.0f),
 	m_TurnRight(0.0f),
-	m_Velocity(true)
+	m_Velocity(Vector3f::CreateZero())
 {
 	// initialize object aspects
 	AddAspectName();
@@ -302,7 +302,7 @@ bool Ship::Update(float Seconds)
 			{
 				Vector3f ForwardThrust(GetMaximumForwardThrust(), 0.0f, 0.0f);
 				
-				ForwardThrust *= GetAspectPosition()->GetOrientation();
+				ForwardThrust.Rotate(GetAspectPosition()->GetOrientation());
 				ForwardThrust *= Seconds;
 				m_Velocity += Vector3f(ForwardThrust[0], ForwardThrust[1], 0.0f);
 				ForwardThrust *= 0.5f * Seconds;

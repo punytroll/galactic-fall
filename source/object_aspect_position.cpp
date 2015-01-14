@@ -21,7 +21,7 @@
 
 ObjectAspectPosition::ObjectAspectPosition(void) :
 	m_Orientation(),
-	m_Position(true)
+	m_Position(Vector3f::CreateZero())
 {
 	m_Orientation.Identity();
 }

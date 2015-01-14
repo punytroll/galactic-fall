@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 1.8.13 of algebra.
+ * This is part of version 1.8.16 of algebra.
  **/
 
 #ifndef ALGEBRA_QUATERNION_H
@@ -44,13 +44,7 @@ public:
 	{
 	}
 	
-	Quaternion(bool)
-	{
-		_[0] = 1.0f;
-		_[1] = 0.0f;
-		_[2] = 0.0f;
-		_[3] = 0.0f;
-	}
+	static Quaternion CreateIdentity(void);
 	
 	Quaternion(float W, float X, float Y, float Z)
 	{
@@ -284,6 +278,18 @@ public:
 inline Quaternion Quaternion::CreateFromAxisAndAngle(const Vector3f & Axis, float AngleInRadians)
 {
 	return Quaternion().Rotation(Axis._[0], Axis._[1], Axis._[2], AngleInRadians);
+}
+
+inline Quaternion Quaternion::CreateIdentity(void)
+{
+	Quaternion Result;
+	
+	Result._[0] = 1.0f;
+	Result._[1] = 0.0f;
+	Result._[2] = 0.0f;
+	Result._[3] = 0.0f;
+	
+	return Result;
 }
 
 #endif

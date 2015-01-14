@@ -2973,7 +2973,7 @@ void vMouse(int iButton, int iState, int iX, int iY)
 			{
 				Vector3f Forward(0.0f, 0.0f, -0.2f);
 				
-				Forward *= g_CurrentCamera->m_Orientation;
+				Forward.Rotate(g_CurrentCamera->m_Orientation);
 				g_CurrentCamera->SetPosition(g_CurrentCamera->GetPosition() + Forward);
 				glutPostRedisplay();
 			}
@@ -2986,7 +2986,7 @@ void vMouse(int iButton, int iState, int iX, int iY)
 			{
 				Vector3f Backward(0.0f, 0.0f, 0.2f);
 				
-				Backward *= g_CurrentCamera->m_Orientation;
+				Backward.Rotate(g_CurrentCamera->m_Orientation);
 				g_CurrentCamera->SetPosition(g_CurrentCamera->GetPosition() + Backward);
 				glutPostRedisplay();
 			}

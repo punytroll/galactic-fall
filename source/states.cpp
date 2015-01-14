@@ -51,7 +51,7 @@ static bool FlyTo(Ship * Ship, const Vector3f & Direction)
 {
 	Vector3f LocalizedDirection(Direction);
 	
-	LocalizedDirection *= Ship->GetAspectPosition()->GetOrientation().Conjugated();
+	LocalizedDirection.Rotate(Ship->GetAspectPosition()->GetOrientation().Conjugated());
 	if((LocalizedDirection[1] > 0.1f) || ((LocalizedDirection[0] < 0.0f) && (LocalizedDirection[1] >= 0.0f)))
 	{
 		Ship->SetTurnLeft(1.0f);

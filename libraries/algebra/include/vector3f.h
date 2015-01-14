@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 1.8.13 of algebra.
+ * This is part of version 1.8.16 of algebra.
  **/
 
 #ifndef ALGEBRA_VECTOR3F_H
@@ -43,12 +43,7 @@ public:
 	{
 	}
 	
-	Vector3f(bool)
-	{
-		_[0] = 0.0f;
-		_[1] = 0.0f;
-		_[2] = 0.0f;
-	}
+	static Vector3f CreateZero(void);
 	
 	Vector3f(float Value1, float Value2, float Value3)
 	{
@@ -186,9 +181,7 @@ public:
 	
 	Vector3f & Transform(const Matrix4f & Matrix);
 	
-	Vector3f & operator*=(const Quaternion & Quaternion);
-	
-	Vector3f & Transform(const Quaternion & Quaternion);
+	Vector3f & Rotate(const Quaternion & Quaternion);
 	
 	const float & operator[](int Index) const
 	{
@@ -222,6 +215,17 @@ inline Vector3f Vector3f::CreateFromVector4f(const Vector4f & Vector)
 	Result._[0] = Vector._[0];
 	Result._[1] = Vector._[1];
 	Result._[2] = Vector._[2];
+	
+	return Result;
+}
+
+inline Vector3f Vector3f::CreateZero(void)
+{
+	Vector3f Result;
+	
+	Result._[0] = 0.0f;
+	Result._[1] = 0.0f;
+	Result._[2] = 0.0f;
 	
 	return Result;
 }
@@ -272,24 +276,16 @@ inline Vector3f & Vector3f::Transform(const Matrix4f & Matrix)
 	return *this;
 }
 
-inline Vector3f & Vector3f::operator*=(const Quaternion & AQuaternion)
+inline Vector3f & Vector3f::Rotate(const Quaternion & Quaternion)
 {
-	Quaternion Result(AQuaternion * Quaternion(0.0f, _[0],_[1], _[2]) * AQuaternion.Conjugated());
+	auto Term1(Quaternion._[3] - _[0] * Quaternion._[2] + _[1] * Quaternion._[1] + _[2] * Quaternion._[0]);
+	auto Term2(Quaternion._[2] + _[0] * Quaternion._[3] + _[1] * Quaternion._[0] - _[2] * Quaternion._[1]);
+	auto Term3(Quaternion._[1] + _[0] * Quaternion._[0] - _[1] * Quaternion._[3] + _[2] * Quaternion._[2]);
+	auto Term4(Quaternion._[0] - _[0] * Quaternion._[1] - _[1] * Quaternion._[2] - _[2] * Quaternion._[3]);
 	
-	_[0] = Result._[1];
-	_[1] = Result._[2];
-	_[2] = Result._[3];
-	
-	return *this;
-}
-
-inline Vector3f & Vector3f::Transform(const Quaternion & AQuaternion)
-{
-	auto Result(AQuaternion * Quaternion(0.0f, _[0],_[1], _[2]) * AQuaternion.Conjugated());
-	
-	_[0] = Result._[1];
-	_[1] = Result._[2];
-	_[2] = Result._[3];
+	_[0] = Quaternion._[2] * Term1 - Quaternion._[3] * Term2 + Quaternion._[0] * Term3 - Quaternion._[1] * Term4;
+	_[1] = -Quaternion._[1] * Term1 + Quaternion._[0] * Term2 + Quaternion._[3] * Term3 - Quaternion._[2] * Term4;
+	_[2] = Quaternion._[0] * Term1 + Quaternion._[1] * Term2 - Quaternion._[2] * Term3 - Quaternion._[3] * Term4;
 	
 	return *this;
 }

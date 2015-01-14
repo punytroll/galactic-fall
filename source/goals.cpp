@@ -316,7 +316,7 @@ void GoalFightSomeTarget::Process(void)
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 GoalFlyInDirection::GoalFlyInDirection(GoalMind * GoalMind) :
 	Goal(GoalMind, "fly_in_direction"),
-	m_Direction(true),
+	m_Direction(Vector3f::CreateZero()),
 	m_FacesDirection(false)
 {
 	SetObjectIdentifier("::goal(fly_in_direction)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
@@ -344,7 +344,7 @@ void GoalFlyInDirection::Process(void)
 	
 	Vector3f LocalizedDirection(m_Direction);
 	
-	LocalizedDirection *= GetMind()->GetCharacter()->GetShip()->GetAspectPosition()->GetOrientation().Conjugated();
+	LocalizedDirection.Rotate(GetMind()->GetCharacter()->GetShip()->GetAspectPosition()->GetOrientation().Conjugated());
 	if((LocalizedDirection[1] > 0.1f) || ((LocalizedDirection[0] < 0.0f) && (LocalizedDirection[1] >= 0.0f)))
 	{
 		GetMind()->GetCharacter()->GetShip()->SetTurnLeft(1.0f);
