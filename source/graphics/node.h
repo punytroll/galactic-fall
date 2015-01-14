@@ -74,7 +74,6 @@ namespace Graphics
 	protected:
 		static void _Destroy(Graphics::Node * Node);
 	private:
-		void _SetContainer(Graphics::Node * Container);
 		void _SetScene(Graphics::Scene * Scene);
 		
 		int _BlendFunctionDestinationFactor;
@@ -173,16 +172,6 @@ namespace Graphics
 	inline void Node::SetScale(float Scale)
 	{
 		_Scale = Scale;
-	}
-	
-	inline void Node::_SetContainer(Graphics::Node * Container)
-	{
-		_Container = Container;
-	}
-	
-	inline void Node::_SetScene(Graphics::Scene * Scene)
-	{
-		_Scene = Scene;
 	}
 	
 	inline void Node::SetUseBlending(bool UseBlending)

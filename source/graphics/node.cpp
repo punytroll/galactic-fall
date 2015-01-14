@@ -20,7 +20,7 @@
 #include <assert.h>
 
 #include <algorithm>
-#include <deque>
+#include <stack>
 
 #include <algebra/matrix4f.h>
 
@@ -61,26 +61,7 @@ void Graphics::Node::AddNode(Graphics::Node * Content)
 	assert(Content->_Container == nullptr);
 	if(_Scene != nullptr)
 	{
-		if(Content->_Content.empty() == true)
-		{
-			assert(Content->_Scene == nullptr);
-			Content->_Scene = _Scene;
-		}
-		else
-		{
-			std::deque< Graphics::Node * > Todo;
-			
-			Todo.push_back(Content);
-			while(Todo.empty() == false)
-			{
-				auto Node(Todo.back());
-				
-				Todo.pop_back();
-				Todo.insert(Todo.end(), Node->_Content.begin(), Node->_Content.end());
-				assert(Node->_Scene == nullptr);
-				Node->_Scene = _Scene;
-			}
-		}
+		Content->_SetScene(_Scene);
 	}
 	else
 	{
@@ -211,4 +192,25 @@ void Graphics::Node::_Destroy(Graphics::Node * Node)
 		Node->_Container = nullptr;
 	}
 	Node->_Scene = nullptr;
+}
+	
+void Graphics::Node::_SetScene(Graphics::Scene * Scene)
+{
+	assert(Scene != nullptr);
+	
+	std::stack< Graphics::Node * > ToDo;
+	
+	ToDo.push(this);
+	while(ToDo.empty() == false)
+	{
+		auto Node(ToDo.top());
+		
+		ToDo.pop();
+		assert(Node->_Scene == nullptr);
+		for(auto ContentNode : Node->_Content)
+		{
+			ToDo.push(ContentNode);
+		}
+		Node->_Scene = Scene;
+	}
 }
