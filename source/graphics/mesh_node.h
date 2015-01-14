@@ -17,40 +17,39 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef GRAPHICS_MODEL_NODE_H
-#define GRAPHICS_MODEL_NODE_H
+#ifndef GRAPHICS_MESH_NODE_H
+#define GRAPHICS_MESH_NODE_H
 
 #include "node.h"
 
-class Color;
-
 namespace Graphics
 {
-	class Model;
+	class Mesh;
+	class RenderContext;
 	class Style;
 	
-	class ModelNode : public Graphics::Node
+	class MeshNode : public Graphics::Node
 	{
 	public:
 		// constructor & destructor
-		ModelNode(void);
-		virtual ~ModelNode(void);
+		MeshNode(void);
+		virtual ~MeshNode(void) override;
 		// setters
-		void SetModel(const Graphics::Model * Model);
-		// modifiers
+		void SetMesh(const Graphics::Mesh * Mesh);
 		/**
-		 * @note This passes the memory responsibility of the material to the model node.
+		 * @note This passes the memory responsibility of the style to the mesh node.
 		 **/
-		void AddStyle(const std::string & MeshIdentifier, Graphics::Style * Style);
+		void SetStyle(const Graphics::Style * Style);
+		// modifiers
 		virtual void Draw(Graphics::RenderContext * RenderContext) override;
 	private:
-		const Graphics::Model * _Model;
-		std::map< std::string, Graphics::Style * > _Styles;
+		const Graphics::Mesh * _Mesh;
+		const Graphics::Style * _Style;
 	};
 	
-	inline void ModelNode::SetModel(const Graphics::Model * Model)
+	inline void MeshNode::SetMesh(const Graphics::Mesh * Mesh)
 	{
-		_Model = Model;
+		_Mesh = Mesh;
 	}
 }
 
