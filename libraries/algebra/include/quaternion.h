@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 1.8.16 of algebra.
+ * This is part of version 1.8.17 of algebra.
  **/
 
 #ifndef ALGEBRA_QUATERNION_H
@@ -208,19 +208,21 @@ public:
 		return Quaternion(_[0] * Cosinus - _[3] * Sinus, _[1] * Cosinus + _[2] * Sinus, _[2] * Cosinus - _[1] * Sinus, _[3] * Cosinus + _[0] * Sinus);
 	}
 	
+	Quaternion & Rotate(const Quaternion & Quaternion);
+	
 	Quaternion & RotateX(float Radians)
 	{
-		return *this *= Quaternion::CreateAsRotationX(Radians);
+		return Rotate(Quaternion::CreateAsRotationX(Radians));
 	}
 	
 	Quaternion & RotateY(float Radians)
 	{
-		return *this *= Quaternion::CreateAsRotationY(Radians);
+		return Rotate(Quaternion::CreateAsRotationY(Radians));
 	}
 	
 	Quaternion & RotateZ(float Radians)
 	{
-		return *this *= Quaternion::CreateAsRotationZ(Radians);
+		return Rotate(Quaternion::CreateAsRotationZ(Radians));
 	}
 	
 	Quaternion operator*(const Quaternion & Other) const
@@ -231,21 +233,6 @@ public:
 			_[2] * Other._[0] + _[3] * Other._[1] + _[0] * Other._[2] - _[1] * Other._[3],
 			_[3] * Other._[0] - _[2] * Other._[1] + _[1] * Other._[2] + _[0] * Other._[3]
 		);
-	}
-	
-	Quaternion & operator*=(const Quaternion & Other)
-	{
-		float W(_[0] * Other._[0] - _[1] * Other._[1] - _[2] * Other._[2] - _[3] * Other._[3]);
-		float X(_[1] * Other._[0] + _[0] * Other._[1] - _[3] * Other._[2] + _[2] * Other._[3]);
-		float Y(_[2] * Other._[0] + _[3] * Other._[1] + _[0] * Other._[2] - _[1] * Other._[3]);
-		float Z(_[3] * Other._[0] - _[2] * Other._[1] + _[1] * Other._[2] + _[0] * Other._[3]);
-		
-		_[0] = W;
-		_[1] = X;
-		_[2] = Y;
-		_[3] = Z;
-		
-		return *this;
 	}
 	
 	Quaternion & Set(float W, float X, float Y, float Z)
@@ -290,6 +277,21 @@ inline Quaternion Quaternion::CreateIdentity(void)
 	Result._[3] = 0.0f;
 	
 	return Result;
+}
+
+inline Quaternion & Quaternion::Rotate(const Quaternion & Quaternion)
+{
+	auto W(_[0] * Quaternion._[0] - _[1] * Quaternion._[1] - _[2] * Quaternion._[2] - _[3] * Quaternion._[3]);
+	auto X(_[1] * Quaternion._[0] + _[0] * Quaternion._[1] - _[3] * Quaternion._[2] + _[2] * Quaternion._[3]);
+	auto Y(_[2] * Quaternion._[0] + _[3] * Quaternion._[1] + _[0] * Quaternion._[2] - _[1] * Quaternion._[3]);
+	auto Z(_[3] * Quaternion._[0] - _[2] * Quaternion._[1] + _[1] * Quaternion._[2] + _[0] * Quaternion._[3]);
+	
+	_[0] = W;
+	_[1] = X;
+	_[2] = Y;
+	_[3] = Z;
+	
+	return *this;
 }
 
 #endif

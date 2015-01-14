@@ -80,7 +80,7 @@ void Graphics::ParticleSystem::Update(float Seconds)
 					}
 					else if(*ScriptLine == "move")
 					{
-						ParticleIterator->_Position += ParticleIterator->_Velocity * Seconds;
+						ParticleIterator->_Position.Translate(ParticleIterator->_Velocity * Seconds);
 					}
 					else
 					{
