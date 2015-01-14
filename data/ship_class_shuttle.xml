@@ -11,7 +11,7 @@
 		<visualization-parts>
 			<visualization-part>
 				<part-identifier>hull</part-identifier>
-				<material>
+				<style>
 					<diffuse-color>
 						<red>0.5</red>
 						<green>0.55</green>
@@ -25,13 +25,16 @@
 						<blue>0.45</blue>
 						<opacity>1.0</opacity>
 					</specular-color>
-					<shininess>40</shininess>
+					<shininess>
+						<valid>true</valid>
+						<value>40.0</value>
+					</shininess>
 					<program-identifier>default</program-identifier>
-				</material>
+				</style>
 			</visualization-part>
 			<visualization-part>
 				<part-identifier>faction</part-identifier>
-				<material>
+				<style>
 					<diffuse-color>
 						<red>0.0</red>
 						<green>0.0</green>
@@ -45,9 +48,12 @@
 						<blue>0.5</blue>
 						<opacity>1.0</opacity>
 					</specular-color>
-					<shininess>80</shininess>
+					<shininess>
+						<valid>true</valid>
+						<value>80.0</value>
+					</shininess>
 					<program-identifier>default</program-identifier>
-				</material>
+				</style>
 			</visualization-part>
 		</visualization-parts>
 	</visualization>

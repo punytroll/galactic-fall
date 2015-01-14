@@ -7,7 +7,7 @@
 		<visualization-parts>
 			<visualization-part>
 				<part-identifier>cargo_cube</part-identifier>
-				<material>
+				<style>
 					<diffuse-color>
 						<red>0.95</red>
 						<green>0.68</green>
@@ -21,9 +21,12 @@
 						<blue>0.8</blue>
 						<opacity>1.0</opacity>
 					</specular-color>
-					<shininess>30</shininess>
+					<shininess>
+						<valid>true</valid>
+						<value>30.0</value>
+					</shininess>
 					<program-identifier>default</program-identifier>
-				</material>
+				</style>
 			</visualization-part>
 		</visualization-parts>
 	</visualization>
