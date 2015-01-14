@@ -98,6 +98,13 @@ void Graphics::RenderContext::ActivateProgram(void)
 				
 				break;
 			}
+		case Graphics::Program::UniformContent::ModelToMonitorMatrix4x4F:
+			{
+				assert(_Node != nullptr);
+				_Program->_SetUniform(Uniform.first, _Camera->GetProjection()->GetMatrix().Transformed(_Camera->GetSpacialMatrix().Inverted()).Transform(_Node->GetSpacialMatrix().Scaled(_Node->GetScale())));
+				
+				break;
+			}
 		case Graphics::Program::UniformContent::ModelToWorldNormalMatrix3x3F:
 			{
 				assert(_Node != nullptr);
@@ -133,6 +140,14 @@ void Graphics::RenderContext::ActivateProgram(void)
 				assert(_Style != nullptr);
 				assert(_Style->GetDiffuseColor() != nullptr);
 				_Program->_SetUniform(Uniform.first, Vector3f::CreateFromVector4f(_Style->GetDiffuseColor()->GetColor()));
+				
+				break;
+			}
+		case Graphics::Program::UniformContent::MaterialColorVector4F:
+			{
+				assert(_Style != nullptr);
+				assert(_Style->GetDiffuseColor() != nullptr);
+				_Program->_SetUniform(Uniform.first, _Style->GetDiffuseColor()->GetColor());
 				
 				break;
 			}
