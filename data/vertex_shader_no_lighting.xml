@@ -1,0 +1,4 @@
+<vertex-shader>
+	<identifier>vertex_shader_no_lighting</identifier>
+	<source from-file="shaders/vertex_shader_no_lighting"/>
+</vertex-shader>

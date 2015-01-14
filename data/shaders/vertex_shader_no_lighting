@@ -1,0 +1,10 @@
+#version 330
+
+uniform mat4 in_ModelToMonitorMatrix;
+
+layout(location = 0) in vec3 in_ModelPosition;
+
+void main()
+{
+    gl_Position = in_ModelToMonitorMatrix * vec4(in_ModelPosition, 1.0f);
+}

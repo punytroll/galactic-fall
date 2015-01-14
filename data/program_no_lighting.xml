@@ -1,0 +1,7 @@
+<shader-program>
+	<identifier>no_lighting</identifier>
+	<shaders>
+		<shader-identifier>vertex_shader_no_lighting</shader-identifier>
+		<shader-identifier>fragment_shader_no_lighting</shader-identifier>
+	</shaders>
+</shader-program>
