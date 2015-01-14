@@ -46,6 +46,7 @@ class Declaration(object):
 		self.__element_type_identifier = None
 		self.__is_built_in = False
 		self.__is_declaration = None
+		self.__is_declared = False
 		self.__name = name
 		self.__parts = list()
 		self.__sub_type = None
@@ -56,6 +57,9 @@ class Declaration(object):
 	
 	def get_is_built_in(self):
 		return self.__is_built_in
+	
+	def get_is_declared(self):
+		return self.__is_declared
 	
 	def get_name(self):
 		return self.__name
@@ -77,6 +81,9 @@ class Declaration(object):
 	
 	def set_is_built_in(self, is_built_in):
 		self.__is_built_in = is_built_in
+	
+	def set_is_declared(self, is_declared):
+		self.__is_declared = is_declared
 	
 	def __set_is_declaration(self, is_declaration):
 		self.__is_declaration = is_declaration
@@ -158,8 +165,19 @@ if options.declarations != None:
 							declaration.parts.append(part)
 				declarations[declaration.get_name()] = declaration
 			else:
-				if declarations[declaration_element.tagName].get_is_built_in() == True:
-					raise ConvertException(LightRed + "Error" + White + ": In file " + LightYellow + options.declarations + White + " there is an invalid re-declaration for the built-in type " + LightBlue + declaration_element.tagName + White + ".")
+				declaration = declarations[declaration_element.tagName]
+				if declaration.get_is_built_in() == True:
+					if declaration.get_is_declared() == True:
+						raise ConvertException(LightRed + "Error" + White + ": In file " + LightYellow + options.declarations + White + " there is an invalid second declaration for the built-in type " + LightBlue + declaration_element.tagName + White + ".")
+					else:
+						declaration.set_is_declared(True)
+						if len(declaration_element.childNodes) > 0:
+							raise ConvertException(LightRed + "Error" + White + ": In file " + LightYellow + options.declarations + White + " there is an invalid re-declaration for the built-in type " + LightBlue + declaration_element.tagName + White + ".")
+						else:
+							if "type" in declaration_element.attributes:
+								declaration.type = int(declaration_element.attributes.get("type").nodeValue)
+							if "sub-type" in declaration_element.attributes:
+								declaration.sub_type = int(declaration_element.attributes.get("sub-type").nodeValue)
 				else:
 					raise ConvertException(LightRed + "Error" + White + ": In file " + LightYellow + options.declarations + White + " there is a duplicate declaration for " + LightYellow + declaration_element.tagName + White + ".")
 
