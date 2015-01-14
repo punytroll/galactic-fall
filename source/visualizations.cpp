@@ -107,7 +107,6 @@ Visualization * VisualizeCommodity(Commodity * Commodity, Graphics::Node * Conta
 	
 	Graphics::Node * Graphics(VisualizePrototype(Commodity->GetAspectVisualization()->GetVisualizationPrototype()));
 	
-	Graphics->SetUseLighting(true);
 	g_ObjectVisualizations[Graphics] = Commodity->GetAspectVisualization();
 	
 	// set as the object's visualization
@@ -150,7 +149,6 @@ Visualization * VisualizePlanet(Planet * Planet, Graphics::Node * Container)
 	
 	Graphics::Node * Graphics(VisualizePrototype(Planet->GetAspectVisualization()->GetVisualizationPrototype()));
 	
-	Graphics->SetUseLighting(true);
 	assert(Planet->GetAspectPhysical() != nullptr);
 	Graphics->SetScale(Planet->GetAspectPhysical()->GetRadialSize());
 	Graphics->SetNormalize(true);
@@ -174,7 +172,6 @@ Visualization * VisualizeShip(Ship * Ship, Graphics::Node * Container)
 	
 	Graphics::Node * Graphics(VisualizePrototype(Ship->GetAspectVisualization()->GetVisualizationPrototype()));
 	
-	Graphics->SetUseLighting(true);
 	g_ObjectVisualizations[Graphics] = Ship->GetAspectVisualization();
 	
 	// set as the object's visualization
@@ -212,7 +209,6 @@ Visualization * VisualizeShot(Shot * Shot, Graphics::Node * Container)
 	Graphics::Node * Graphics(VisualizePrototype(Shot->GetAspectVisualization()->GetVisualizationPrototype()));
 	
 	Graphics->SetUseBlending(true);
-	Graphics->SetUseLighting(false);
 	g_ObjectVisualizations[Graphics] = Shot->GetAspectVisualization();
 	
 	// set as the object's visualization
@@ -264,7 +260,6 @@ Visualization * VisualizeWeapon(Weapon * Weapon, Graphics::Node * Container)
 	
 	Graphics::Node * Graphics(VisualizePrototype(Weapon->GetAspectVisualization()->GetVisualizationPrototype()));
 	
-	Graphics->SetUseLighting(true);
 	g_ObjectVisualizations[Graphics] = Weapon->GetAspectVisualization();
 	
 	// set as the object's visualization

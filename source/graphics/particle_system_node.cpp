@@ -37,7 +37,6 @@ Graphics::ParticleSystemNode::ParticleSystemNode(void) :
 	SetBlendFunction(GL_SRC_ALPHA, GL_ONE);
 	SetUseBlending(true);
 	SetUseDepthTest(false);
-	SetUseLighting(false);
 	SetUse2DTexture(true);
 }
 

@@ -456,7 +456,6 @@ void UI::TradeCenterWidget::_OnAssetClassMouseButton(UI::MouseButtonEvent & Mous
 				Scene->SetRootNode(VisualizationNode);
 				VisualizationNode->SetClearColorBuffer(true);
 				VisualizationNode->SetClearDepthBuffer(true);
-				VisualizationNode->SetUseLighting(true);
 				VisualizationNode->SetUseDepthTest(true);
 				_AssetClassViewDisplay->SetView(View);
 			}

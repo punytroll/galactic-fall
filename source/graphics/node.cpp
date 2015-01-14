@@ -46,7 +46,6 @@ Graphics::Node::Node(void) :
 	_UseClipPlane2(false),
 	_UseClipPlane3(false),
 	_UseDepthTest(false),
-	_UseLighting(false),
 	_Use2DTexture(false)
 {
 }
@@ -157,14 +156,6 @@ void Graphics::Node::Begin(Graphics::RenderContext * RenderContext)
 	else
 	{
 		GLDisable(GL_DEPTH_TEST);
-	}
-	if(_UseLighting == true)
-	{
-		GLEnable(GL_LIGHTING);
-	}
-	else
-	{
-		GLDisable(GL_LIGHTING);
 	}
 	if(_Use2DTexture == true)
 	{
