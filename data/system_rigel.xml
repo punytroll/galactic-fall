@@ -29,7 +29,7 @@
 				<visualization-parts>
 					<visualization-part>
 						<part-identifier>planet</part-identifier>
-						<material>
+						<style>
 							<diffuse-color>
 								<red>0.8</red>
 								<green>0.9</green>
@@ -43,9 +43,12 @@
 								<blue>0.25</blue>
 								<opacity>1.0</opacity>
 							</specular-color>
-							<shininess>10</shininess>
+							<shininess>
+								<valid>true</valid>
+								<value>10.0</value>
+							</shininess>
 							<program-identifier>default</program-identifier>
-						</material>
+						</style>
 					</visualization-part>
 				</visualization-parts>
 			</visualization>

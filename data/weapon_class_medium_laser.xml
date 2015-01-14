@@ -6,7 +6,7 @@
 		<visualization-parts>
 			<visualization-part>
 				<part-identifier>light_laser</part-identifier>
-				<material>
+				<style>
 					<diffuse-color>
 						<red>0.38</red>
 						<green>0.38</green>
@@ -20,9 +20,12 @@
 						<blue>1.0</blue>
 						<opacity>1.0</opacity>
 					</specular-color>
-					<shininess>40.0</shininess>
+					<shininess>
+						<valid>true</valid>
+						<value>40.0</value>
+					</shininess>
 					<program-identifier>default</program-identifier>
-				</material>
+				</style>
 			</visualization-part>
 		</visualization-parts>
 	</visualization>
@@ -50,7 +53,7 @@
 			<visualization-parts>
 				<visualization-part>
 					<part-identifier>laser_shot</part-identifier>
-					<material>
+					<style>
 						<diffuse-color>
 							<red>0.2</red>
 							<green>0.2</green>
@@ -64,9 +67,12 @@
 							<blue>0</blue>
 							<opacity>1</opacity>
 						</specular-color>
-						<shininess>40</shininess>
+						<shininess>
+							<valid>false</valid>
+							<value>0.0</value>
+						</shininess>
 						<program-identifier>no_lighting</program-identifier>
-					</material>
+					</style>
 				</visualization-part>
 			</visualization-parts>
 		</visualization>

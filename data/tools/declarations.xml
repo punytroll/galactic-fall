@@ -49,6 +49,8 @@
 		<color4f identifier="color"/>
 	</faction>
 	
+	<float type="21" sub-type="0"/>
+	
 	<fragment-shader is="shader" type="19" sub-type="1"/>
 	
 	<generator-class type="13">
@@ -67,12 +69,12 @@
 	
 	<key-binding-profile type="16" is="collection" element-type="key-binding"/>
 	
-	<material>
+	<style>
 		<color4f identifier="diffuse-color"/>
 		<optional-color4f identifier="specular-color"/>
-		<float identifier="shininess"/>
+		<optional-float identifier="shininess"/>
 		<string identifier="program-identifier"/>
-	</material>
+	</style>
 	
 	<mesh type="2">
 		<string identifier="identifier"/>
@@ -107,6 +109,11 @@
 		<float identifier="blue"/>
 		<float identifier="opacity"/>
 	</optional-color4f>
+	
+	<optional-float type="21" sub-type="1">
+		<boolean identifier="valid"/>
+		<float identifier="value"/>
+	</optional-float>
 	
 	<particle>
 		<vector3f identifier="exit-position"/>
@@ -263,7 +270,7 @@
 	
 	<visualization-part>
 		<string identifier="part-identifier"/>
-		<material identifier="material"/>
+		<style identifier="style"/>
 	</visualization-part>
 	
 	<weapon-class type="7">

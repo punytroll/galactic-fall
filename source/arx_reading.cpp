@@ -1030,10 +1030,11 @@ static void ReadVisualizationPrototype(Arxx::BufferReader & Reader, Visualizatio
 		Color PartDiffuseColor;
 		bool PartValidSpecularColor;
 		Color PartSpecularColor;
+		bool PartValidShininess;
 		float PartShininess;
 		std::string PartProgramIdentifier;
 		
-		Reader >> PartIdentifier >> PartDiffuseColor >> PartValidSpecularColor >> PartSpecularColor >> PartShininess >> PartProgramIdentifier;
+		Reader >> PartIdentifier >> PartDiffuseColor >> PartValidSpecularColor >> PartSpecularColor >> PartValidShininess >> PartShininess >> PartProgramIdentifier;
 		
 		auto PartStyle(new Graphics::Style());
 		
@@ -1042,7 +1043,10 @@ static void ReadVisualizationPrototype(Arxx::BufferReader & Reader, Visualizatio
 		{
 			PartStyle->SetSpecularColor(PartSpecularColor);
 		}
-		PartStyle->SetShininess(PartShininess);
+		if(PartValidShininess == true)
+		{
+			PartStyle->SetShininess(PartShininess);
+		}
 		PartStyle->SetProgramIdentifier(PartProgramIdentifier);
 		VisualizationPrototype->SetPartStyle(PartIdentifier, PartStyle);
 	}
