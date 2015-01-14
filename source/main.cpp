@@ -3071,6 +3071,7 @@ void InitializeOpenGL(void)
 	LoadOpenGLFunction(glTranslatef);
 	LoadOpenGLFunction(glUniform1f);
 	LoadOpenGLFunction(glUniform3fv);
+	LoadOpenGLFunction(glUniform4fv);
 	LoadOpenGLFunction(glUniformMatrix3fv);
 	LoadOpenGLFunction(glUniformMatrix4fv);
 	LoadOpenGLFunction(glUseProgram);

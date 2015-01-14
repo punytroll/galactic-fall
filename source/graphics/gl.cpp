@@ -99,6 +99,7 @@ glTexParameteriFunction __glTexParameteri(nullptr);
 glTranslatefFunction __glTranslatef(nullptr);
 glUniform1fFunction __glUniform1f(nullptr);
 glUniform3fvFunction __glUniform3fv(nullptr);
+glUniform4fvFunction __glUniform4fv(nullptr);
 glUniformMatrix3fvFunction __glUniformMatrix3fv(nullptr);
 glUniformMatrix4fvFunction __glUniformMatrix4fv(nullptr);
 glUseProgramFunction __glUseProgram(nullptr);
