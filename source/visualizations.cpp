@@ -19,6 +19,8 @@
 
 #include <iostream>
 
+#include <GL/gl.h>
+
 #include "color.h"
 #include "commodity.h"
 #include "commodity_class.h"
@@ -209,6 +211,7 @@ Visualization * VisualizeShot(Shot * Shot, Graphics::Node * Container)
 	Graphics::Node * Graphics(VisualizePrototype(Shot->GetAspectVisualization()->GetVisualizationPrototype()));
 	
 	Graphics->SetUseBlending(true);
+	Graphics->SetBlendFunction(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	g_ObjectVisualizations[Graphics] = Shot->GetAspectVisualization();
 	
 	// set as the object's visualization
