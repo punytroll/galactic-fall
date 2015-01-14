@@ -443,6 +443,10 @@ typedef void (* glUniform3fvFunction)(GLint location, GLsizei count, const GLflo
 extern glUniform3fvFunction __glUniform3fv;
 #define GLUniform3fv(location, count, value) { assert(__glUniform3fv != nullptr); __glUniform3fv(location, count, value); CheckGLError; }
 
+typedef void (* glUniform4fvFunction)(GLint location, GLsizei count, const GLfloat * value);
+extern glUniform4fvFunction __glUniform4fv;
+#define GLUniform4fv(location, count, value) { assert(__glUniform4fv != nullptr); __glUniform4fv(location, count, value); CheckGLError; }
+
 typedef void (* glUniformMatrix3fvFunction)(GLint location, GLsizei count, GLboolean transpose, const GLfloat * value);
 extern glUniformMatrix3fvFunction __glUniformMatrix3fv;
 #define GLUniformMatrix3fv(location, count, transpose, value) { assert(__glUniformMatrix3fv != nullptr); __glUniformMatrix3fv(location, count, transpose, value); CheckGLError; }
