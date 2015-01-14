@@ -36,7 +36,7 @@ Graphics::Node::Node(void) :
 	_ClearDepthBuffer(false),
 	_Container(nullptr),
 	_Normalize(false),
-	_Orientation(true),
+	_Orientation(Quaternion::CreateIdentity()),
 	_Position(0.0f, 0.0f, 0.0f),
 	_Scale(1.0f),
 	_Scene(nullptr),

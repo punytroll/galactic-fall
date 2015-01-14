@@ -27,7 +27,7 @@
 
 Shot::Shot(void) :
 	_TimeOfDeath(0.0),
-	_Velocity(true),
+	_Velocity(Vector3f::CreateZero()),
 	_Damage(0.0)
 {
 	// initialize object aspects

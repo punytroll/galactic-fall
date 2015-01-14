@@ -46,7 +46,7 @@ Weapon::Weapon(void) :
 	m_EnergyUsagePerShot(0.0f),
 	m_Fire(false),
 	m_NextTimeToFire(0.0),
-	m_ParticleExitPosition(true),
+	m_ParticleExitPosition(Vector3f::CreateZero()),
 	m_ParticleExitSpeed(0.0f),
 	m_ReloadTime(0.0f)
 {
@@ -92,13 +92,13 @@ bool Weapon::_Update(float Seconds)
 			const Vector3f & ParticleExitPosition(GetParticleExitPosition());
 			const Vector3f & SlotPosition(GetAspectAccessory()->GetSlot()->GetPosition());
 			const Vector3f & ShipPosition(Container->GetAspectPosition()->GetPosition());
-			Vector3f ShotPosition(true);
+			Vector3f ShotPosition(Vector3f::CreateZero());
 			
 			ShotPosition += ParticleExitPosition;
-			ShotPosition *= GetAspectPosition()->GetOrientation();
-			ShotPosition *= GetAspectAccessory()->GetSlot()->GetOrientation();
+			ShotPosition.Rotate(GetAspectPosition()->GetOrientation());
+			ShotPosition.Rotate(GetAspectAccessory()->GetSlot()->GetOrientation());
 			ShotPosition += SlotPosition;
-			ShotPosition *= Container->GetAspectPosition()->GetOrientation();
+			ShotPosition.Rotate(Container->GetAspectPosition()->GetOrientation());
 			ShotPosition += ShipPosition;
 			NewShot->GetAspectPosition()->SetPosition(ShotPosition);
 			
@@ -114,7 +114,7 @@ bool Weapon::_Update(float Seconds)
 			// calculate the shot's velocity
 			Vector3f ParticleVelocity(GetParticleExitSpeed(), 0.0f, 0.0f);
 			
-			ParticleVelocity *= ShotOrientation;
+			ParticleVelocity.Rotate(ShotOrientation);
 			assert(dynamic_cast< Ship * >(Container) != 0);
 			NewShot->SetVelocity(dynamic_cast< Ship * >(Container)->GetVelocity() + Vector3f(ParticleVelocity[0], ParticleVelocity[1], 0.0f));
 			Container->GetContainer()->GetAspectObjectContainer()->AddContent(NewShot);

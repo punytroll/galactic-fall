@@ -29,7 +29,7 @@
 Commodity::Commodity(void) :
 	m_AngularVelocity(true),
 	m_Hull(20.0f),
-	m_Velocity(true)
+	m_Velocity(Vector3f::CreateZero())
 {
 	// initialize required aspects
 	AddAspectName();

@@ -25,7 +25,7 @@
 #include "visualization_prototype.h"
 
 ShipClass::ShipClass(const std::string & Identifier) :
-	m_ExhaustOffset(true),
+	m_ExhaustOffset(Vector3f::CreateZero()),
 	m_Identifier(Identifier),
 	m_MaximumAvailableSpace(0),
 	m_VisualizationPrototype(0)
