@@ -1,0 +1,122 @@
+<mesh identifier="laser_shot">
+	<point identifier="0" position-x="0.5" position-y="0.0" position-z="0.199565"/>
+	<point identifier="1" position-x="0.5" position-y="0.199565" position-z="-0.0"/>
+	<point identifier="2" position-x="-0.5" position-y="0.199565" position-z="0.0"/>
+	<point identifier="3" position-x="-0.5" position-y="-0.0" position-z="0.199565"/>
+	<point identifier="4" position-x="0.5" position-y="-0.199565" position-z="-0.0"/>
+	<point identifier="5" position-x="-0.5" position-y="-0.199565" position-z="0.0"/>
+	<point identifier="6" position-x="-0.5" position-y="-0.0" position-z="-0.199565"/>
+	<point identifier="7" position-x="0.5" position-y="0.0" position-z="-0.199565"/>
+	<triangle-point identifier="0" normal-x="0.0" normal-y="0.707106781187" normal-z="0.707106781187">
+		<point point-identifier="0"/>
+	</triangle-point>
+	<triangle-point identifier="1" normal-x="0.0" normal-y="0.707106781187" normal-z="0.707106781187">
+		<point point-identifier="1"/>
+	</triangle-point>
+	<triangle-point identifier="2" normal-x="0.0" normal-y="0.707106781187" normal-z="0.707106781187">
+		<point point-identifier="2"/>
+	</triangle-point>
+	<triangle-point identifier="3" normal-x="0.0" normal-y="0.707106781187" normal-z="0.707106781187">
+		<point point-identifier="0"/>
+	</triangle-point>
+	<triangle-point identifier="4" normal-x="0.0" normal-y="0.707106781187" normal-z="0.707106781187">
+		<point point-identifier="2"/>
+	</triangle-point>
+	<triangle-point identifier="5" normal-x="0.0" normal-y="0.707106781187" normal-z="0.707106781187">
+		<point point-identifier="3"/>
+	</triangle-point>
+	<triangle-point identifier="6" normal-x="-0.0" normal-y="-0.707106781187" normal-z="-0.707106781187">
+		<point point-identifier="4"/>
+	</triangle-point>
+	<triangle-point identifier="7" normal-x="-0.0" normal-y="-0.707106781187" normal-z="-0.707106781187">
+		<point point-identifier="5"/>
+	</triangle-point>
+	<triangle-point identifier="8" normal-x="-0.0" normal-y="-0.707106781187" normal-z="-0.707106781187">
+		<point point-identifier="6"/>
+	</triangle-point>
+	<triangle-point identifier="9" normal-x="-0.0" normal-y="-0.707106781187" normal-z="-0.707106781187">
+		<point point-identifier="4"/>
+	</triangle-point>
+	<triangle-point identifier="10" normal-x="-0.0" normal-y="-0.707106781187" normal-z="-0.707106781187">
+		<point point-identifier="6"/>
+	</triangle-point>
+	<triangle-point identifier="11" normal-x="-0.0" normal-y="-0.707106781187" normal-z="-0.707106781187">
+		<point point-identifier="7"/>
+	</triangle-point>
+	<triangle-point identifier="12" normal-x="0.0" normal-y="0.707106781187" normal-z="-0.707106781187">
+		<point point-identifier="1"/>
+	</triangle-point>
+	<triangle-point identifier="13" normal-x="0.0" normal-y="0.707106781187" normal-z="-0.707106781187">
+		<point point-identifier="7"/>
+	</triangle-point>
+	<triangle-point identifier="14" normal-x="0.0" normal-y="0.707106781187" normal-z="-0.707106781187">
+		<point point-identifier="6"/>
+	</triangle-point>
+	<triangle-point identifier="15" normal-x="0.0" normal-y="0.707106781187" normal-z="-0.707106781187">
+		<point point-identifier="1"/>
+	</triangle-point>
+	<triangle-point identifier="16" normal-x="0.0" normal-y="0.707106781187" normal-z="-0.707106781187">
+		<point point-identifier="6"/>
+	</triangle-point>
+	<triangle-point identifier="17" normal-x="0.0" normal-y="0.707106781187" normal-z="-0.707106781187">
+		<point point-identifier="2"/>
+	</triangle-point>
+	<triangle-point identifier="18" normal-x="0.0" normal-y="-0.707106781187" normal-z="0.707106781187">
+		<point point-identifier="4"/>
+	</triangle-point>
+	<triangle-point identifier="19" normal-x="0.0" normal-y="-0.707106781187" normal-z="0.707106781187">
+		<point point-identifier="0"/>
+	</triangle-point>
+	<triangle-point identifier="20" normal-x="0.0" normal-y="-0.707106781187" normal-z="0.707106781187">
+		<point point-identifier="3"/>
+	</triangle-point>
+	<triangle-point identifier="21" normal-x="0.0" normal-y="-0.707106781187" normal-z="0.707106781187">
+		<point point-identifier="4"/>
+	</triangle-point>
+	<triangle-point identifier="22" normal-x="0.0" normal-y="-0.707106781187" normal-z="0.707106781187">
+		<point point-identifier="3"/>
+	</triangle-point>
+	<triangle-point identifier="23" normal-x="0.0" normal-y="-0.707106781187" normal-z="0.707106781187">
+		<point point-identifier="5"/>
+	</triangle-point>
+	<triangle identifier="0">
+		<triangle-point triangle-point-identifier="0"/>
+		<triangle-point triangle-point-identifier="1"/>
+		<triangle-point triangle-point-identifier="2"/>
+	</triangle>
+	<triangle identifier="1">
+		<triangle-point triangle-point-identifier="3"/>
+		<triangle-point triangle-point-identifier="4"/>
+		<triangle-point triangle-point-identifier="5"/>
+	</triangle>
+	<triangle identifier="2">
+		<triangle-point triangle-point-identifier="6"/>
+		<triangle-point triangle-point-identifier="7"/>
+		<triangle-point triangle-point-identifier="8"/>
+	</triangle>
+	<triangle identifier="3">
+		<triangle-point triangle-point-identifier="9"/>
+		<triangle-point triangle-point-identifier="10"/>
+		<triangle-point triangle-point-identifier="11"/>
+	</triangle>
+	<triangle identifier="4">
+		<triangle-point triangle-point-identifier="12"/>
+		<triangle-point triangle-point-identifier="13"/>
+		<triangle-point triangle-point-identifier="14"/>
+	</triangle>
+	<triangle identifier="5">
+		<triangle-point triangle-point-identifier="15"/>
+		<triangle-point triangle-point-identifier="16"/>
+		<triangle-point triangle-point-identifier="17"/>
+	</triangle>
+	<triangle identifier="6">
+		<triangle-point triangle-point-identifier="18"/>
+		<triangle-point triangle-point-identifier="19"/>
+		<triangle-point triangle-point-identifier="20"/>
+	</triangle>
+	<triangle identifier="7">
+		<triangle-point triangle-point-identifier="21"/>
+		<triangle-point triangle-point-identifier="22"/>
+		<triangle-point triangle-point-identifier="23"/>
+	</triangle>
+</mesh>

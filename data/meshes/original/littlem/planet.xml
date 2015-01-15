@@ -1,0 +1,2250 @@
+<mesh identifier="planet">
+	<point identifier="0" position-x="0.381607" position-y="0.723612" position-z="-0.587779"/>
+	<point identifier="1" position-x="0.532557" position-y="0.505727" position-z="-0.693775"/>
+	<point identifier="2" position-x="0.282672" position-y="0.525738" position-z="-0.809012"/>
+	<point identifier="3" position-x="0.616998" position-y="0.674615" position-z="-0.433882"/>
+	<point identifier="4" position-x="0.445126" position-y="0.850654" position-z="-0.309011"/>
+	<point identifier="5" position-x="0.743404" position-y="0.447215" position-z="-0.52572"/>
+	<point identifier="6" position-x="0.158001" position-y="0.89443" position-z="-0.42532"/>
+	<point identifier="7" position-x="0.072594" position-y="0.723612" position-z="-0.688185"/>
+	<point identifier="8" position-x="-0.142652" position-y="0.850654" position-z="-0.499995"/>
+	<point identifier="9" position-x="-0.2083" position-y="0.674615" position-z="-0.702042"/>
+	<point identifier="10" position-x="0.012778" position-y="0.505728" position-z="-0.862665"/>
+	<point identifier="11" position-x="-0.256581" position-y="0.447215" position-z="-0.85064"/>
+	<point identifier="12" position-x="-0.064638" position-y="0.961939" position-z="-0.259889"/>
+	<point identifier="13" position-x="0.240879" position-y="0.961939" position-z="-0.160619"/>
+	<point identifier="14" position-x="0.019804" position-y="1.0" position-z="0.0"/>
+	<point identifier="15" position-x="0.690621" position-y="0.723611" position-z="-0.162457"/>
+	<point identifier="16" position-x="0.870452" position-y="0.525736" position-z="0.0"/>
+	<point identifier="17" position-x="0.838076" position-y="0.505726" position-z="-0.273262"/>
+	<point identifier="18" position-x="0.467013" position-y="0.894429" position-z="0.0"/>
+	<point identifier="19" position-x="0.690621" position-y="0.723611" position-z="0.162457"/>
+	<point identifier="20" position-x="0.445126" position-y="0.850654" position-z="0.309011"/>
+	<point identifier="21" position-x="0.616998" position-y="0.674615" position-z="0.433882"/>
+	<point identifier="22" position-x="0.743404" position-y="0.447215" position-z="0.52572"/>
+	<point identifier="23" position-x="0.838076" position-y="0.505726" position-z="0.273262"/>
+	<point identifier="24" position-x="0.240879" position-y="0.961939" position-z="0.160619"/>
+	<point identifier="25" position-x="-0.427407" position-y="0.723611" position-z="-0.525727"/>
+	<point identifier="26" position-x="-0.481569" position-y="0.505727" position-z="-0.702043"/>
+	<point identifier="27" position-x="-0.668386" position-y="0.525736" position-z="-0.499997"/>
+	<point identifier="28" position-x="-0.341997" position-y="0.894429" position-z="-0.262863"/>
+	<point identifier="29" position-x="-0.618391" position-y="0.723609" position-z="-0.262864"/>
+	<point identifier="30" position-x="-0.505926" position-y="0.850652" position-z="0.0"/>
+	<point identifier="31" position-x="-0.71837" position-y="0.67461" position-z="0.0"/>
+	<point identifier="32" position-x="-0.802814" position-y="0.505724" position-z="-0.25989"/>
+	<point identifier="33" position-x="-0.874621" position-y="0.447215" position-z="0.0"/>
+	<point identifier="34" position-x="-0.253462" position-y="0.961939" position-z="0.0"/>
+	<point identifier="35" position-x="-0.618391" position-y="0.723609" position-z="0.262864"/>
+	<point identifier="36" position-x="-0.802814" position-y="0.505724" position-z="0.25989"/>
+	<point identifier="37" position-x="-0.668386" position-y="0.525736" position-z="0.499997"/>
+	<point identifier="38" position-x="-0.341997" position-y="0.894429" position-z="0.262863"/>
+	<point identifier="39" position-x="-0.427407" position-y="0.723612" position-z="0.525727"/>
+	<point identifier="40" position-x="-0.142652" position-y="0.850654" position-z="0.499995"/>
+	<point identifier="41" position-x="-0.2083" position-y="0.674615" position-z="0.702042"/>
+	<point identifier="42" position-x="-0.481569" position-y="0.505727" position-z="0.702043"/>
+	<point identifier="43" position-x="-0.256581" position-y="0.447215" position-z="0.85064"/>
+	<point identifier="44" position-x="-0.064638" position-y="0.961939" position-z="0.259889"/>
+	<point identifier="45" position-x="0.072594" position-y="0.723612" position-z="0.688185"/>
+	<point identifier="46" position-x="0.012778" position-y="0.505728" position-z="0.862665"/>
+	<point identifier="47" position-x="0.282672" position-y="0.525738" position-z="0.809012"/>
+	<point identifier="48" position-x="0.158001" position-y="0.89443" position-z="0.425319"/>
+	<point identifier="49" position-x="0.381607" position-y="0.723612" position-z="0.587779"/>
+	<point identifier="50" position-x="0.532557" position-y="0.505728" position-z="0.693775"/>
+	<point identifier="51" position-x="0.967017" position-y="0.276396" position-z="-0.162458"/>
+	<point identifier="52" position-x="0.970862" position-y="0.0" position-z="-0.309013"/>
+	<point identifier="53" position-x="0.890269" position-y="0.232456" position-z="-0.433883"/>
+	<point identifier="54" position-x="0.967017" position-y="0.276396" position-z="0.162458"/>
+	<point identifier="55" position-x="1.019804" position-y="0.0" position-z="0.0"/>
+	<point identifier="56" position-x="0.970862" position-y="0.0" position-z="0.309013"/>
+	<point identifier="57" position-x="0.979056" position-y="-0.232455" position-z="0.16062"/>
+	<point identifier="58" position-x="0.914229" position-y="-0.447215" position-z="0.0"/>
+	<point identifier="59" position-x="0.979056" position-y="-0.232455" position-z="-0.16062"/>
+	<point identifier="60" position-x="0.890269" position-y="0.232456" position-z="0.433883"/>
+	<point identifier="61" position-x="0.158002" position-y="0.276397" position-z="-0.951055"/>
+	<point identifier="62" position-x="0.019804" position-y="0.0" position-z="-1.0"/>
+	<point identifier="63" position-x="-0.123858" position-y="0.232456" position-z="-0.961938"/>
+	<point identifier="64" position-x="0.467019" position-y="0.276397" position-z="-0.850648"/>
+	<point identifier="65" position-x="0.328821" position-y="0.0" position-z="-0.951056"/>
+	<point identifier="66" position-x="0.607589" position-y="0.0" position-z="-0.809017"/>
+	<point identifier="67" position-x="0.468989" position-y="-0.232457" position-z="-0.862668"/>
+	<point identifier="68" position-x="0.296189" position-y="-0.447215" position-z="-0.85064"/>
+	<point identifier="69" position-x="0.163465" position-y="-0.232456" position-z="-0.961938"/>
+	<point identifier="70" position-x="0.701445" position-y="0.232457" position-z="-0.693779"/>
+	<point identifier="71" position-x="-0.842" position-y="0.276396" position-z="-0.425322"/>
+	<point identifier="72" position-x="-0.931254" position-y="0.0" position-z="-0.309013"/>
+	<point identifier="73" position-x="-0.939449" position-y="0.232455" position-z="-0.16062"/>
+	<point identifier="74" position-x="-0.651017" position-y="0.276396" position-z="-0.68819"/>
+	<point identifier="75" position-x="-0.789215" position-y="0.0" position-z="-0.587783"/>
+	<point identifier="76" position-x="-0.567982" position-y="0.0" position-z="-0.809017"/>
+	<point identifier="77" position-x="-0.661838" position-y="-0.232457" position-z="-0.693779"/>
+	<point identifier="78" position-x="-0.703796" position-y="-0.447215" position-z="-0.52572"/>
+	<point identifier="79" position-x="-0.850661" position-y="-0.232456" position-z="-0.433883"/>
+	<point identifier="80" position-x="-0.429381" position-y="0.232457" position-z="-0.862668"/>
+	<point identifier="81" position-x="-0.651017" position-y="0.276396" position-z="0.68819"/>
+	<point identifier="82" position-x="-0.567982" position-y="0.0" position-z="0.809017"/>
+	<point identifier="83" position-x="-0.429381" position-y="0.232457" position-z="0.862668"/>
+	<point identifier="84" position-x="-0.842" position-y="0.276396" position-z="0.425322"/>
+	<point identifier="85" position-x="-0.789215" position-y="0.0" position-z="0.587783"/>
+	<point identifier="86" position-x="-0.931254" position-y="0.0" position-z="0.309013"/>
+	<point identifier="87" position-x="-0.850661" position-y="-0.232456" position-z="0.433883"/>
+	<point identifier="88" position-x="-0.703796" position-y="-0.447215" position-z="0.52572"/>
+	<point identifier="89" position-x="-0.661838" position-y="-0.232457" position-z="0.693779"/>
+	<point identifier="90" position-x="-0.939449" position-y="0.232455" position-z="0.16062"/>
+	<point identifier="91" position-x="0.467019" position-y="0.276397" position-z="0.850648"/>
+	<point identifier="92" position-x="0.607589" position-y="0.0" position-z="0.809017"/>
+	<point identifier="93" position-x="0.701445" position-y="0.232457" position-z="0.693779"/>
+	<point identifier="94" position-x="0.158002" position-y="0.276397" position-z="0.951055"/>
+	<point identifier="95" position-x="0.328821" position-y="0.0" position-z="0.951056"/>
+	<point identifier="96" position-x="0.019804" position-y="0.0" position-z="1.0"/>
+	<point identifier="97" position-x="0.163465" position-y="-0.232456" position-z="0.961938"/>
+	<point identifier="98" position-x="0.296189" position-y="-0.447215" position-z="0.85064"/>
+	<point identifier="99" position-x="0.468989" position-y="-0.232457" position-z="0.862668"/>
+	<point identifier="100" position-x="-0.123858" position-y="0.232457" position-z="0.961938"/>
+	<point identifier="101" position-x="0.881608" position-y="-0.276396" position-z="-0.425322"/>
+	<point identifier="102" position-x="0.842421" position-y="-0.505724" position-z="-0.25989"/>
+	<point identifier="103" position-x="0.707993" position-y="-0.525736" position-z="-0.499997"/>
+	<point identifier="104" position-x="0.828822" position-y="0.0" position-z="-0.587783"/>
+	<point identifier="105" position-x="0.690624" position-y="-0.276396" position-z="-0.68819"/>
+	<point identifier="106" position-x="0.521177" position-y="-0.505727" position-z="-0.702043"/>
+	<point identifier="107" position-x="-0.118395" position-y="-0.276397" position-z="-0.951055"/>
+	<point identifier="108" position-x="0.026829" position-y="-0.505728" position-z="-0.862665"/>
+	<point identifier="109" position-x="-0.243065" position-y="-0.525738" position-z="-0.809012"/>
+	<point identifier="110" position-x="-0.289214" position-y="0.0" position-z="-0.951056"/>
+	<point identifier="111" position-x="-0.427412" position-y="-0.276397" position-z="-0.850648"/>
+	<point identifier="112" position-x="-0.492949" position-y="-0.505727" position-z="-0.693775"/>
+	<point identifier="113" position-x="-0.92741" position-y="-0.276396" position-z="-0.162458"/>
+	<point identifier="114" position-x="-0.798468" position-y="-0.505726" position-z="-0.273262"/>
+	<point identifier="115" position-x="-0.830844" position-y="-0.525736" position-z="0.0"/>
+	<point identifier="116" position-x="-0.980196" position-y="0.0" position-z="0.0"/>
+	<point identifier="117" position-x="-0.92741" position-y="-0.276396" position-z="0.162458"/>
+	<point identifier="118" position-x="-0.798468" position-y="-0.505726" position-z="0.273262"/>
+	<point identifier="119" position-x="-0.427412" position-y="-0.276397" position-z="0.850648"/>
+	<point identifier="120" position-x="-0.492949" position-y="-0.505727" position-z="0.693775"/>
+	<point identifier="121" position-x="-0.243065" position-y="-0.525738" position-z="0.809012"/>
+	<point identifier="122" position-x="-0.289214" position-y="0.0" position-z="0.951056"/>
+	<point identifier="123" position-x="-0.118395" position-y="-0.276397" position-z="0.951055"/>
+	<point identifier="124" position-x="0.026829" position-y="-0.505728" position-z="0.862665"/>
+	<point identifier="125" position-x="0.690624" position-y="-0.276396" position-z="0.68819"/>
+	<point identifier="126" position-x="0.521177" position-y="-0.505727" position-z="0.702043"/>
+	<point identifier="127" position-x="0.707993" position-y="-0.525736" position-z="0.499997"/>
+	<point identifier="128" position-x="0.828822" position-y="0.0" position-z="0.587783"/>
+	<point identifier="129" position-x="0.881608" position-y="-0.276396" position-z="0.425322"/>
+	<point identifier="130" position-x="0.842421" position-y="-0.505724" position-z="0.25989"/>
+	<point identifier="131" position-x="0.467014" position-y="-0.723612" position-z="-0.525727"/>
+	<point identifier="132" position-x="0.182259" position-y="-0.850654" position-z="-0.499995"/>
+	<point identifier="133" position-x="0.247907" position-y="-0.674615" position-z="-0.702042"/>
+	<point identifier="134" position-x="0.657998" position-y="-0.723609" position-z="-0.262864"/>
+	<point identifier="135" position-x="0.381604" position-y="-0.894429" position-z="-0.262863"/>
+	<point identifier="136" position-x="0.545533" position-y="-0.850652" position-z="0.0"/>
+	<point identifier="137" position-x="0.293069" position-y="-0.961939" position-z="0.0"/>
+	<point identifier="138" position-x="0.019804" position-y="-1.0" position-z="0.0"/>
+	<point identifier="139" position-x="0.104245" position-y="-0.961939" position-z="-0.259889"/>
+	<point identifier="140" position-x="0.757978" position-y="-0.67461" position-z="0.0"/>
+	<point identifier="141" position-x="-0.342" position-y="-0.723612" position-z="-0.587779"/>
+	<point identifier="142" position-x="-0.405519" position-y="-0.850654" position-z="-0.309011"/>
+	<point identifier="143" position-x="-0.577391" position-y="-0.674615" position-z="-0.433882"/>
+	<point identifier="144" position-x="-0.032987" position-y="-0.723612" position-z="-0.688185"/>
+	<point identifier="145" position-x="-0.118394" position-y="-0.89443" position-z="-0.42532"/>
+	<point identifier="146" position-x="-0.201272" position-y="-0.961939" position-z="-0.160619"/>
+	<point identifier="147" position-x="-0.651013" position-y="-0.723611" position-z="0.162457"/>
+	<point identifier="148" position-x="-0.405519" position-y="-0.850654" position-z="0.309011"/>
+	<point identifier="149" position-x="-0.577391" position-y="-0.674615" position-z="0.433882"/>
+	<point identifier="150" position-x="-0.651013" position-y="-0.723611" position-z="-0.162457"/>
+	<point identifier="151" position-x="-0.427406" position-y="-0.894429" position-z="0.0"/>
+	<point identifier="152" position-x="-0.201272" position-y="-0.961939" position-z="0.160619"/>
+	<point identifier="153" position-x="-0.032987" position-y="-0.723612" position-z="0.688185"/>
+	<point identifier="154" position-x="0.182259" position-y="-0.850654" position-z="0.499995"/>
+	<point identifier="155" position-x="0.247907" position-y="-0.674615" position-z="0.702042"/>
+	<point identifier="156" position-x="-0.342" position-y="-0.723612" position-z="0.587779"/>
+	<point identifier="157" position-x="-0.118394" position-y="-0.89443" position-z="0.42532"/>
+	<point identifier="158" position-x="0.104245" position-y="-0.961939" position-z="0.259889"/>
+	<point identifier="159" position-x="0.657998" position-y="-0.723609" position-z="0.262864"/>
+	<point identifier="160" position-x="0.467014" position-y="-0.723612" position-z="0.525727"/>
+	<point identifier="161" position-x="0.381604" position-y="-0.894429" position-z="0.262863"/>
+	<triangle-point identifier="960" normal-x="0.350020490962" normal-y="0.729425490991" normal-z="-0.587727920895">
+		<point point-identifier="0"/>
+	</triangle-point>
+	<triangle-point identifier="961" normal-x="0.523899229973" normal-y="0.503774334091" normal-z="-0.686834053571">
+		<point point-identifier="1"/>
+	</triangle-point>
+	<triangle-point identifier="962" normal-x="0.262869489258" normal-y="0.52573609492" normal-z="-0.809012478344">
+		<point point-identifier="2"/>
+	</triangle-point>
+	<triangle-point identifier="963" normal-x="0.604386424192" normal-y="0.664755915166" normal-z="-0.43910889709">
+		<point point-identifier="3"/>
+	</triangle-point>
+	<triangle-point identifier="964" normal-x="0.425322530769" normal-y="0.850654197708" normal-z="-0.309011619104">
+		<point point-identifier="4"/>
+	</triangle-point>
+	<triangle-point identifier="965" normal-x="0.723607121538" normal-y="0.447218529505" normal-z="-0.525726469305">
+		<point point-identifier="5"/>
+	</triangle-point>
+	<triangle-point identifier="966" normal-x="0.141816936743" normal-y="0.888476460309" normal-z="-0.436460234076">
+		<point point-identifier="6"/>
+	</triangle-point>
+	<triangle-point identifier="967" normal-x="0.0622925291463" normal-y="0.729426176463" normal-z="-0.681217361716">
+		<point point-identifier="7"/>
+	</triangle-point>
+	<triangle-point identifier="968" normal-x="-0.162457216607" normal-y="0.850653980573" normal-z="-0.499995458088">
+		<point point-identifier="8"/>
+	</triangle-point>
+	<triangle-point identifier="969" normal-x="-0.230852938148" normal-y="0.664755957277" normal-z="-0.710497317527">
+		<point point-identifier="9"/>
+	</triangle-point>
+	<triangle-point identifier="970" normal-x="-0.0201259219539" normal-y="0.503774382337" normal-z="-0.863600786803">
+		<point point-identifier="10"/>
+	</triangle-point>
+	<triangle-point identifier="971" normal-x="-0.276390586729" normal-y="0.447218456196" normal-z="-0.850649102747">
+		<point point-identifier="11"/>
+	</triangle-point>
+	<triangle-point identifier="972" normal-x="-0.0804926621867" normal-y="0.965478720273" normal-z="-0.247733267921">
+		<point point-identifier="12"/>
+	</triangle-point>
+	<triangle-point identifier="973" normal-x="0.210735398824" normal-y="0.965478662769" normal-z="-0.153106314112">
+		<point point-identifier="13"/>
+	</triangle-point>
+	<triangle-point identifier="974" normal-x="8.094589223e-07" normal-y="1.0" normal-z="5.63278252662e-18">
+		<point point-identifier="14"/>
+	</triangle-point>
+	<triangle-point identifier="975" normal-x="0.667126333796" normal-y="0.729425027036" normal-z="-0.151266601371">
+		<point point-identifier="15"/>
+	</triangle-point>
+	<triangle-point identifier="976" normal-x="0.850648734679" normal-y="0.525734467378" normal-z="-4.69746182929e-18">
+		<point point-identifier="16"/>
+	</triangle-point>
+	<triangle-point identifier="977" normal-x="0.815114480228" normal-y="0.50377317059" normal-z="-0.28600870042">
+		<point point-identifier="17"/>
+	</triangle-point>
+	<triangle-point identifier="978" normal-x="0.458922687087" normal-y="0.888476205239" normal-z="0.0">
+		<point point-identifier="18"/>
+	</triangle-point>
+	<triangle-point identifier="979" normal-x="0.667126333796" normal-y="0.729425027036" normal-z="0.151266601371">
+		<point point-identifier="19"/>
+	</triangle-point>
+	<triangle-point identifier="980" normal-x="0.425322169711" normal-y="0.850654320003" normal-z="0.309011779407">
+		<point point-identifier="20"/>
+	</triangle-point>
+	<triangle-point identifier="981" normal-x="0.604386520839" normal-y="0.664756193631" normal-z="0.439108342505">
+		<point point-identifier="21"/>
+	</triangle-point>
+	<triangle-point identifier="982" normal-x="0.72360758474" normal-y="0.447218371765" normal-z="0.52572596594">
+		<point point-identifier="22"/>
+	</triangle-point>
+	<triangle-point identifier="983" normal-x="0.815114480228" normal-y="0.50377317059" normal-z="0.28600870042">
+		<point point-identifier="23"/>
+	</triangle-point>
+	<triangle-point identifier="984" normal-x="0.210735339007" normal-y="0.965478621758" normal-z="0.153106655056">
+		<point point-identifier="24"/>
+	</triangle-point>
+	<triangle-point identifier="985" normal-x="-0.450803157909" normal-y="0.729424842398" normal-z="-0.514505502509">
+		<point point-identifier="25"/>
+	</triangle-point>
+	<triangle-point identifier="986" normal-x="-0.491325103707" normal-y="0.503774844786" normal-z="-0.710500209872">
+		<point point-identifier="26"/>
+	</triangle-point>
+	<triangle-point identifier="987" normal-x="-0.688189453062" normal-y="0.525735257589" normal-z="-0.499997715618">
+		<point point-identifier="27"/>
+	</triangle-point>
+	<triangle-point identifier="988" normal-x="-0.371277246" normal-y="0.888475217045" normal-z="-0.26974987544">
+		<point point-identifier="28"/>
+	</triangle-point>
+	<triangle-point identifier="989" normal-x="-0.628631751224" normal-y="0.729422809459" normal-z="-0.269748932145">
+		<point point-identifier="29"/>
+	</triangle-point>
+	<triangle-point identifier="990" normal-x="-0.525730251977" normal-y="0.850651339948" normal-z="-2.34873125241e-18">
+		<point point-identifier="30"/>
+	</triangle-point>
+	<triangle-point identifier="991" normal-x="-0.747057480416" normal-y="0.664759445931" normal-z="-4.69423096133e-18">
+		<point point-identifier="31"/>
+	</triangle-point>
+	<triangle-point identifier="992" normal-x="-0.827551495785" normal-y="0.503773137249" normal-z="-0.247732008447">
+		<point point-identifier="32"/>
+	</triangle-point>
+	<triangle-point identifier="993" normal-x="-0.894425958524" normal-y="0.447216060443" normal-z="0.0">
+		<point point-identifier="33"/>
+	</triangle-point>
+	<triangle-point identifier="994" normal-x="-0.260482527837" normal-y="0.965478561487" normal-z="-2.34711648551e-18">
+		<point point-identifier="34"/>
+	</triangle-point>
+	<triangle-point identifier="995" normal-x="-0.628632115469" normal-y="0.729422742018" normal-z="0.269748265662">
+		<point point-identifier="35"/>
+	</triangle-point>
+	<triangle-point identifier="996" normal-x="-0.827551495785" normal-y="0.503773137249" normal-z="0.247732008447">
+		<point point-identifier="36"/>
+	</triangle-point>
+	<triangle-point identifier="997" normal-x="-0.688189908167" normal-y="0.525734753035" normal-z="0.499997619743">
+		<point point-identifier="37"/>
+	</triangle-point>
+	<triangle-point identifier="998" normal-x="-0.371276950385" normal-y="0.888475558335" normal-z="0.269749158206">
+		<point point-identifier="38"/>
+	</triangle-point>
+	<triangle-point identifier="999" normal-x="-0.45080300443" normal-y="0.729424925047" normal-z="0.514505519811">
+		<point point-identifier="39"/>
+	</triangle-point>
+	<triangle-point identifier="1000" normal-x="-0.162455905517" normal-y="0.850654354275" normal-z="0.499995248294">
+		<point point-identifier="40"/>
+	</triangle-point>
+	<triangle-point identifier="1001" normal-x="-0.230852305374" normal-y="0.664755682729" normal-z="0.710497779998">
+		<point point-identifier="41"/>
+	</triangle-point>
+	<triangle-point identifier="1002" normal-x="-0.491325095459" normal-y="0.503774244757" normal-z="0.710500641022">
+		<point point-identifier="42"/>
+	</triangle-point>
+	<triangle-point identifier="1003" normal-x="-0.276390788055" normal-y="0.447218831605" normal-z="0.850648839966">
+		<point point-identifier="43"/>
+	</triangle-point>
+	<triangle-point identifier="1004" normal-x="-0.0804923546523" normal-y="0.965478679502" normal-z="0.247733526738">
+		<point point-identifier="44"/>
+	</triangle-point>
+	<triangle-point identifier="1005" normal-x="0.0622926899602" normal-y="0.729426552664" normal-z="0.681216944187">
+		<point point-identifier="45"/>
+	</triangle-point>
+	<triangle-point identifier="1006" normal-x="-0.0201257743714" normal-y="0.503774695526" normal-z="0.863600607546">
+		<point point-identifier="46"/>
+	</triangle-point>
+	<triangle-point identifier="1007" normal-x="0.262868874656" normal-y="0.525736150247" normal-z="0.809012642089">
+		<point point-identifier="47"/>
+	</triangle-point>
+	<triangle-point identifier="1008" normal-x="0.141816983808" normal-y="0.888476544235" normal-z="0.436460047939">
+		<point point-identifier="48"/>
+	</triangle-point>
+	<triangle-point identifier="1009" normal-x="0.350019661351" normal-y="0.729426304899" normal-z="0.587727404832">
+		<point point-identifier="49"/>
+	</triangle-point>
+	<triangle-point identifier="1010" normal-x="0.523899152432" normal-y="0.503774577861" normal-z="0.686833933919">
+		<point point-identifier="50"/>
+	</triangle-point>
+	<triangle-point identifier="1011" normal-x="0.950763105614" normal-y="0.270495751202" normal-z="-0.151266538218">
+		<point point-identifier="51"/>
+	</triangle-point>
+	<triangle-point identifier="1012" normal-x="0.951057346313" normal-y="-6.59618649354e-07" normal-z="-0.309014439829">
+		<point point-identifier="52"/>
+	</triangle-point>
+	<triangle-point identifier="1013" normal-x="0.864862823412" normal-y="0.243298468298" normal-z="-0.439110637543">
+		<point point-identifier="53"/>
+	</triangle-point>
+	<triangle-point identifier="1014" normal-x="0.950763105614" normal-y="0.270495751202" normal-z="0.151266538218">
+		<point point-identifier="54"/>
+	</triangle-point>
+	<triangle-point identifier="1015" normal-x="0.999913680726" normal-y="0.0131389153588" normal-z="0.0">
+		<point point-identifier="55"/>
+	</triangle-point>
+	<triangle-point identifier="1016" normal-x="0.951057346313" normal-y="-6.59618649354e-07" normal-z="0.309014439829">
+		<point point-identifier="56"/>
+	</triangle-point>
+	<triangle-point identifier="1017" normal-x="0.957793450643" normal-y="-0.243290122379" normal-z="0.153106571568">
+		<point point-identifier="57"/>
+	</triangle-point>
+	<triangle-point identifier="1018" normal-x="0.894426571049" normal-y="-0.447214835401" normal-z="2.81639023938e-18">
+		<point point-identifier="58"/>
+	</triangle-point>
+	<triangle-point identifier="1019" normal-x="0.957793450643" normal-y="-0.243290122379" normal-z="-0.153106571568">
+		<point point-identifier="59"/>
+	</triangle-point>
+	<triangle-point identifier="1020" normal-x="0.864862823412" normal-y="0.243298468298" normal-z="0.439110637543">
+		<point point-identifier="60"/>
+	</triangle-point>
+	<triangle-point identifier="1021" normal-x="0.149940220315" normal-y="0.270495565116" normal-z="-0.950973227585">
+		<point point-identifier="61"/>
+	</triangle-point>
+	<triangle-point identifier="1022" normal-x="1.63986223344e-07" normal-y="-1.16431781623e-09" normal-z="-1.0">
+		<point point-identifier="62"/>
+	</triangle-point>
+	<triangle-point identifier="1023" normal-x="-0.150363949697" normal-y="0.24329936815" normal-z="-0.958225495429">
+		<point point-identifier="63"/>
+	</triangle-point>
+	<triangle-point identifier="1024" normal-x="0.437668143225" normal-y="0.270496383322" normal-z="-0.857483704228">
+		<point point-identifier="64"/>
+	</triangle-point>
+	<triangle-point identifier="1025" normal-x="0.308990625813" normal-y="0.0131402731316" normal-z="-0.950974303744">
+		<point point-identifier="65"/>
+	</triangle-point>
+	<triangle-point identifier="1026" normal-x="0.587785374363" normal-y="3.2496245952e-07" normal-z="-0.809016905686">
+		<point point-identifier="66"/>
+	</triangle-point>
+	<triangle-point identifier="1027" normal-x="0.441580809891" normal-y="-0.243300228769" normal-z="-0.863603721053">
+		<point point-identifier="67"/>
+	</triangle-point>
+	<triangle-point identifier="1028" normal-x="0.276390117683" normal-y="-0.447218637454" normal-z="-0.850649159854">
+		<point point-identifier="68"/>
+	</triangle-point>
+	<triangle-point identifier="1029" normal-x="0.15036365229" normal-y="-0.243299158499" normal-z="-0.958225595329">
+		<point point-identifier="69"/>
+	</triangle-point>
+	<triangle-point identifier="1030" normal-x="0.684880344359" normal-y="0.243299182171" normal-z="-0.686836532128">
+		<point point-identifier="70"/>
+	</triangle-point>
+	<triangle-point identifier="1031" normal-x="-0.858098042514" normal-y="0.270495327983" normal-z="-0.436463087755">
+		<point point-identifier="71"/>
+	</triangle-point>
+	<triangle-point identifier="1032" normal-x="-0.95105729958" normal-y="4.96571465068e-07" normal-z="-0.309014583663">
+		<point point-identifier="72"/>
+	</triangle-point>
+	<triangle-point identifier="1033" normal-x="-0.957793589437" normal-y="0.243289193134" normal-z="-0.153107179903">
+		<point point-identifier="73"/>
+	</triangle-point>
+	<triangle-point identifier="1034" normal-x="-0.680270113693" normal-y="0.270496747279" normal-z="-0.681222490914">
+		<point point-identifier="74"/>
+	</triangle-point>
+	<triangle-point identifier="1035" normal-x="-0.808949475792" normal-y="0.0131399815032" normal-z="-0.58773130468">
+		<point point-identifier="75"/>
+	</triangle-point>
+	<triangle-point identifier="1036" normal-x="-0.58778506658" normal-y="1.90518508685e-07" normal-z="-0.809017129303">
+		<point point-identifier="76"/>
+	</triangle-point>
+	<triangle-point identifier="1037" normal-x="-0.684880798016" normal-y="-0.24330049602" normal-z="-0.686835614355">
+		<point point-identifier="77"/>
+	</triangle-point>
+	<triangle-point identifier="1038" normal-x="-0.723607568173" normal-y="-0.447218390535" normal-z="-0.525725972775">
+		<point point-identifier="78"/>
+	</triangle-point>
+	<triangle-point identifier="1039" normal-x="-0.86486276628" normal-y="-0.243299202273" normal-z="-0.439110343395">
+		<point point-identifier="79"/>
+	</triangle-point>
+	<triangle-point identifier="1040" normal-x="-0.441580344969" normal-y="0.243301056311" normal-z="-0.863603725638">
+		<point point-identifier="80"/>
+	</triangle-point>
+	<triangle-point identifier="1041" normal-x="-0.680270113693" normal-y="0.270496747279" normal-z="0.681222490914">
+		<point point-identifier="81"/>
+	</triangle-point>
+	<triangle-point identifier="1042" normal-x="-0.58778506658" normal-y="1.90518508685e-07" normal-z="0.809017129303">
+		<point point-identifier="82"/>
+	</triangle-point>
+	<triangle-point identifier="1043" normal-x="-0.441580557416" normal-y="0.243301092903" normal-z="0.863603606699">
+		<point point-identifier="83"/>
+	</triangle-point>
+	<triangle-point identifier="1044" normal-x="-0.858098042514" normal-y="0.270495327983" normal-z="0.436463087755">
+		<point point-identifier="84"/>
+	</triangle-point>
+	<triangle-point identifier="1045" normal-x="-0.808949475792" normal-y="0.0131399815032" normal-z="0.58773130468">
+		<point point-identifier="85"/>
+	</triangle-point>
+	<triangle-point identifier="1046" normal-x="-0.95105729958" normal-y="4.96571465068e-07" normal-z="0.309014583663">
+		<point point-identifier="86"/>
+	</triangle-point>
+	<triangle-point identifier="1047" normal-x="-0.86486276628" normal-y="-0.243299202273" normal-z="0.439110343395">
+		<point point-identifier="87"/>
+	</triangle-point>
+	<triangle-point identifier="1048" normal-x="-0.723607568173" normal-y="-0.447218390535" normal-z="0.525725972775">
+		<point point-identifier="88"/>
+	</triangle-point>
+	<triangle-point identifier="1049" normal-x="-0.684880798016" normal-y="-0.24330049602" normal-z="0.686835614355">
+		<point point-identifier="89"/>
+	</triangle-point>
+	<triangle-point identifier="1050" normal-x="-0.957793589437" normal-y="0.243289193134" normal-z="0.153107179903">
+		<point point-identifier="90"/>
+	</triangle-point>
+	<triangle-point identifier="1051" normal-x="0.437667918962" normal-y="0.270496031934" normal-z="0.85748392954">
+		<point point-identifier="91"/>
+	</triangle-point>
+	<triangle-point identifier="1052" normal-x="0.587785374363" normal-y="3.24962459515e-07" normal-z="0.809016905686">
+		<point point-identifier="92"/>
+	</triangle-point>
+	<triangle-point identifier="1053" normal-x="0.684880523975" normal-y="0.243298841073" normal-z="0.686836473852">
+		<point point-identifier="93"/>
+	</triangle-point>
+	<triangle-point identifier="1054" normal-x="0.149940517198" normal-y="0.270495610115" normal-z="0.950973167976">
+		<point point-identifier="94"/>
+	</triangle-point>
+	<triangle-point identifier="1055" normal-x="0.308990625813" normal-y="0.0131402731316" normal-z="0.950974303744">
+		<point point-identifier="95"/>
+	</triangle-point>
+	<triangle-point identifier="1056" normal-x="2.73429383606e-07" normal-y="-1.01790537633e-07" normal-z="1.0">
+		<point point-identifier="96"/>
+	</triangle-point>
+	<triangle-point identifier="1057" normal-x="0.15036365229" normal-y="-0.243299158499" normal-z="0.958225595329">
+		<point point-identifier="97"/>
+	</triangle-point>
+	<triangle-point identifier="1058" normal-x="0.276390117683" normal-y="-0.447218637454" normal-z="0.850649159854">
+		<point point-identifier="98"/>
+	</triangle-point>
+	<triangle-point identifier="1059" normal-x="0.441580809891" normal-y="-0.243300228769" normal-z="0.863603721053">
+		<point point-identifier="99"/>
+	</triangle-point>
+	<triangle-point identifier="1060" normal-x="-0.150363941352" normal-y="0.243299683541" normal-z="0.958225416658">
+		<point point-identifier="100"/>
+	</triangle-point>
+	<triangle-point identifier="1061" normal-x="0.858097788702" normal-y="-0.270496205457" normal-z="-0.436463042945">
+		<point point-identifier="101"/>
+	</triangle-point>
+	<triangle-point identifier="1062" normal-x="0.827551078725" normal-y="-0.50377340163" normal-z="-0.24773286401">
+		<point point-identifier="102"/>
+	</triangle-point>
+	<triangle-point identifier="1063" normal-x="0.688189808631" normal-y="-0.525735359431" normal-z="-0.499997119132">
+		<point point-identifier="103"/>
+	</triangle-point>
+	<triangle-point identifier="1064" normal-x="0.808948430353" normal-y="-0.0131400811966" normal-z="-0.587732741384">
+		<point point-identifier="104"/>
+	</triangle-point>
+	<triangle-point identifier="1065" normal-x="0.680270457966" normal-y="-0.27049614235" normal-z="-0.681222387324">
+		<point point-identifier="105"/>
+	</triangle-point>
+	<triangle-point identifier="1066" normal-x="0.491325787309" normal-y="-0.503774589312" normal-z="-0.71049991829">
+		<point point-identifier="106"/>
+	</triangle-point>
+	<triangle-point identifier="1067" normal-x="-0.149940140523" normal-y="-0.270495509157" normal-z="-0.950973256083">
+		<point point-identifier="107"/>
+	</triangle-point>
+	<triangle-point identifier="1068" normal-x="0.0201257518376" normal-y="-0.503774420652" normal-z="-0.863600768417">
+		<point point-identifier="108"/>
+	</triangle-point>
+	<triangle-point identifier="1069" normal-x="-0.262869941457" normal-y="-0.525736105483" normal-z="-0.809012324547">
+		<point point-identifier="109"/>
+	</triangle-point>
+	<triangle-point identifier="1070" normal-x="-0.308990617113" normal-y="-0.0131398465199" normal-z="-0.950974312466">
+		<point point-identifier="110"/>
+	</triangle-point>
+	<triangle-point identifier="1071" normal-x="-0.437668347964" normal-y="-0.270496856728" normal-z="-0.857483450389">
+		<point point-identifier="111"/>
+	</triangle-point>
+	<triangle-point identifier="1072" normal-x="-0.523899614935" normal-y="-0.503774320364" normal-z="-0.686833770001">
+		<point point-identifier="112"/>
+	</triangle-point>
+	<triangle-point identifier="1073" normal-x="-0.950762935757" normal-y="-0.270495722002" normal-z="-0.15126765804">
+		<point point-identifier="113"/>
+	</triangle-point>
+	<triangle-point identifier="1074" normal-x="-0.815114298176" normal-y="-0.503773411382" normal-z="-0.286008795133">
+		<point point-identifier="114"/>
+	</triangle-point>
+	<triangle-point identifier="1075" normal-x="-0.850647832785" normal-y="-0.525735926657" normal-z="0.0">
+		<point point-identifier="115"/>
+	</triangle-point>
+	<triangle-point identifier="1076" normal-x="-0.999913676177" normal-y="-0.0131392615413" normal-z="0.0">
+		<point point-identifier="116"/>
+	</triangle-point>
+	<triangle-point identifier="1077" normal-x="-0.950762935757" normal-y="-0.270495722002" normal-z="0.15126765804">
+		<point point-identifier="117"/>
+	</triangle-point>
+	<triangle-point identifier="1078" normal-x="-0.815114298176" normal-y="-0.503773411382" normal-z="0.286008795133">
+		<point point-identifier="118"/>
+	</triangle-point>
+	<triangle-point identifier="1079" normal-x="-0.437668347964" normal-y="-0.270496856728" normal-z="0.857483450389">
+		<point point-identifier="119"/>
+	</triangle-point>
+	<triangle-point identifier="1080" normal-x="-0.523899614935" normal-y="-0.503774320364" normal-z="0.686833770001">
+		<point point-identifier="120"/>
+	</triangle-point>
+	<triangle-point identifier="1081" normal-x="-0.262869941457" normal-y="-0.525736105483" normal-z="0.809012324547">
+		<point point-identifier="121"/>
+	</triangle-point>
+	<triangle-point identifier="1082" normal-x="-0.308990702782" normal-y="-0.0131399544203" normal-z="0.950974283139">
+		<point point-identifier="122"/>
+	</triangle-point>
+	<triangle-point identifier="1083" normal-x="-0.149940140523" normal-y="-0.270495509157" normal-z="0.950973256083">
+		<point point-identifier="123"/>
+	</triangle-point>
+	<triangle-point identifier="1084" normal-x="0.0201257518376" normal-y="-0.503774420652" normal-z="0.863600768417">
+		<point point-identifier="124"/>
+	</triangle-point>
+	<triangle-point identifier="1085" normal-x="0.680270457966" normal-y="-0.27049614235" normal-z="0.681222387324">
+		<point point-identifier="125"/>
+	</triangle-point>
+	<triangle-point identifier="1086" normal-x="0.491325787309" normal-y="-0.503774589312" normal-z="0.71049991829">
+		<point point-identifier="126"/>
+	</triangle-point>
+	<triangle-point identifier="1087" normal-x="0.688189808631" normal-y="-0.525735359431" normal-z="0.499997119132">
+		<point point-identifier="127"/>
+	</triangle-point>
+	<triangle-point identifier="1088" normal-x="0.808948430353" normal-y="-0.0131400811966" normal-z="0.587732741384">
+		<point point-identifier="128"/>
+	</triangle-point>
+	<triangle-point identifier="1089" normal-x="0.858097788702" normal-y="-0.270496205457" normal-z="0.436463042945">
+		<point point-identifier="129"/>
+	</triangle-point>
+	<triangle-point identifier="1090" normal-x="0.827551078725" normal-y="-0.50377340163" normal-z="0.24773286401">
+		<point point-identifier="130"/>
+	</triangle-point>
+	<triangle-point identifier="1091" normal-x="0.450802978175" normal-y="-0.729425268591" normal-z="-0.514505055767">
+		<point point-identifier="131"/>
+	</triangle-point>
+	<triangle-point identifier="1092" normal-x="0.162456391776" normal-y="-0.850654206068" normal-z="-0.499995342447">
+		<point point-identifier="132"/>
+	</triangle-point>
+	<triangle-point identifier="1093" normal-x="0.230851975826" normal-y="-0.664756087185" normal-z="-0.710497508657">
+		<point point-identifier="133"/>
+	</triangle-point>
+	<triangle-point identifier="1094" normal-x="0.628631687393" normal-y="-0.72942285332" normal-z="-0.269748962298">
+		<point point-identifier="134"/>
+	</triangle-point>
+	<triangle-point identifier="1095" normal-x="0.371276950385" normal-y="-0.888475558335" normal-z="-0.269749158206">
+		<point point-identifier="135"/>
+	</triangle-point>
+	<triangle-point identifier="1096" normal-x="0.525729589963" normal-y="-0.850651749095" normal-z="-7.04619334047e-18">
+		<point point-identifier="136"/>
+	</triangle-point>
+	<triangle-point identifier="1097" normal-x="0.260482690489" normal-y="-0.965478517605" normal-z="-2.3471164642e-18">
+		<point point-identifier="137"/>
+	</triangle-point>
+	<triangle-point identifier="1098" normal-x="-4.31292656223e-07" normal-y="-1.0" normal-z="2.81639126331e-18">
+		<point point-identifier="138"/>
+	</triangle-point>
+	<triangle-point identifier="1099" normal-x="0.0804927565072" normal-y="-0.965478706712" normal-z="-0.247733290123">
+		<point point-identifier="139"/>
+	</triangle-point>
+	<triangle-point identifier="1100" normal-x="0.747056968891" normal-y="-0.664760020783" normal-z="2.3471164957e-18">
+		<point point-identifier="140"/>
+	</triangle-point>
+	<triangle-point identifier="1101" normal-x="-0.350020826282" normal-y="-0.729425153552" normal-z="-0.587728139988">
+		<point point-identifier="141"/>
+	</triangle-point>
+	<triangle-point identifier="1102" normal-x="-0.425323026177" normal-y="-0.850654056364" normal-z="-0.309011326323">
+		<point point-identifier="142"/>
+	</triangle-point>
+	<triangle-point identifier="1103" normal-x="-0.604387446377" normal-y="-0.664755082158" normal-z="-0.43910875123">
+		<point point-identifier="143"/>
+	</triangle-point>
+	<triangle-point identifier="1104" normal-x="-0.0622925291463" normal-y="-0.729426176463" normal-z="-0.681217361716">
+		<point point-identifier="144"/>
+	</triangle-point>
+	<triangle-point identifier="1105" normal-x="-0.141816936743" normal-y="-0.888476460309" normal-z="-0.436460234076">
+		<point point-identifier="145"/>
+	</triangle-point>
+	<triangle-point identifier="1106" normal-x="-0.210735262272" normal-y="-0.965478698271" normal-z="-0.153106278187">
+		<point point-identifier="146"/>
+	</triangle-point>
+	<triangle-point identifier="1107" normal-x="-0.667127175943" normal-y="-0.729424409477" normal-z="0.151265865208">
+		<point point-identifier="147"/>
+	</triangle-point>
+	<triangle-point identifier="1108" normal-x="-0.425323026177" normal-y="-0.850654056364" normal-z="0.309011326323">
+		<point point-identifier="148"/>
+	</triangle-point>
+	<triangle-point identifier="1109" normal-x="-0.604387446377" normal-y="-0.664755082158" normal-z="0.43910875123">
+		<point point-identifier="149"/>
+	</triangle-point>
+	<triangle-point identifier="1110" normal-x="-0.667127175943" normal-y="-0.729424409477" normal-z="-0.151265865208">
+		<point point-identifier="150"/>
+	</triangle-point>
+	<triangle-point identifier="1111" normal-x="-0.458923574422" normal-y="-0.888475746906" normal-z="-1.41006695899e-17">
+		<point point-identifier="151"/>
+	</triangle-point>
+	<triangle-point identifier="1112" normal-x="-0.210735262272" normal-y="-0.965478698271" normal-z="0.153106278187">
+		<point point-identifier="152"/>
+	</triangle-point>
+	<triangle-point identifier="1113" normal-x="-0.0622925291463" normal-y="-0.729426176463" normal-z="0.681217361716">
+		<point point-identifier="153"/>
+	</triangle-point>
+	<triangle-point identifier="1114" normal-x="0.162456391776" normal-y="-0.850654206068" normal-z="0.499995342447">
+		<point point-identifier="154"/>
+	</triangle-point>
+	<triangle-point identifier="1115" normal-x="0.230851975826" normal-y="-0.664756087185" normal-z="0.710497508657">
+		<point point-identifier="155"/>
+	</triangle-point>
+	<triangle-point identifier="1116" normal-x="-0.350020826282" normal-y="-0.729425153552" normal-z="0.587728139988">
+		<point point-identifier="156"/>
+	</triangle-point>
+	<triangle-point identifier="1117" normal-x="-0.141816936743" normal-y="-0.888476460309" normal-z="0.436460234076">
+		<point point-identifier="157"/>
+	</triangle-point>
+	<triangle-point identifier="1118" normal-x="0.0804927565072" normal-y="-0.965478706712" normal-z="0.247733290123">
+		<point point-identifier="158"/>
+	</triangle-point>
+	<triangle-point identifier="1119" normal-x="0.628631687393" normal-y="-0.72942285332" normal-z="0.269748962298">
+		<point point-identifier="159"/>
+	</triangle-point>
+	<triangle-point identifier="1120" normal-x="0.450802978175" normal-y="-0.729425268591" normal-z="0.514505055767">
+		<point point-identifier="160"/>
+	</triangle-point>
+	<triangle-point identifier="1121" normal-x="0.371276950385" normal-y="-0.888475558335" normal-z="0.269749158206">
+		<point point-identifier="161"/>
+	</triangle-point>
+	<triangle identifier="0">
+		<triangle-point triangle-point-identifier="960"/>
+		<triangle-point triangle-point-identifier="961"/>
+		<triangle-point triangle-point-identifier="962"/>
+	</triangle>
+	<triangle identifier="1">
+		<triangle-point triangle-point-identifier="961"/>
+		<triangle-point triangle-point-identifier="960"/>
+		<triangle-point triangle-point-identifier="963"/>
+	</triangle>
+	<triangle identifier="2">
+		<triangle-point triangle-point-identifier="963"/>
+		<triangle-point triangle-point-identifier="960"/>
+		<triangle-point triangle-point-identifier="964"/>
+	</triangle>
+	<triangle identifier="3">
+		<triangle-point triangle-point-identifier="963"/>
+		<triangle-point triangle-point-identifier="965"/>
+		<triangle-point triangle-point-identifier="961"/>
+	</triangle>
+	<triangle identifier="4">
+		<triangle-point triangle-point-identifier="960"/>
+		<triangle-point triangle-point-identifier="966"/>
+		<triangle-point triangle-point-identifier="964"/>
+	</triangle>
+	<triangle identifier="5">
+		<triangle-point triangle-point-identifier="966"/>
+		<triangle-point triangle-point-identifier="960"/>
+		<triangle-point triangle-point-identifier="967"/>
+	</triangle>
+	<triangle identifier="6">
+		<triangle-point triangle-point-identifier="967"/>
+		<triangle-point triangle-point-identifier="960"/>
+		<triangle-point triangle-point-identifier="962"/>
+	</triangle>
+	<triangle identifier="7">
+		<triangle-point triangle-point-identifier="967"/>
+		<triangle-point triangle-point-identifier="968"/>
+		<triangle-point triangle-point-identifier="966"/>
+	</triangle>
+	<triangle identifier="8">
+		<triangle-point triangle-point-identifier="969"/>
+		<triangle-point triangle-point-identifier="970"/>
+		<triangle-point triangle-point-identifier="971"/>
+	</triangle>
+	<triangle identifier="9">
+		<triangle-point triangle-point-identifier="970"/>
+		<triangle-point triangle-point-identifier="969"/>
+		<triangle-point triangle-point-identifier="967"/>
+	</triangle>
+	<triangle identifier="10">
+		<triangle-point triangle-point-identifier="968"/>
+		<triangle-point triangle-point-identifier="967"/>
+		<triangle-point triangle-point-identifier="969"/>
+	</triangle>
+	<triangle identifier="11">
+		<triangle-point triangle-point-identifier="967"/>
+		<triangle-point triangle-point-identifier="962"/>
+		<triangle-point triangle-point-identifier="970"/>
+	</triangle>
+	<triangle identifier="12">
+		<triangle-point triangle-point-identifier="972"/>
+		<triangle-point triangle-point-identifier="966"/>
+		<triangle-point triangle-point-identifier="968"/>
+	</triangle>
+	<triangle identifier="13">
+		<triangle-point triangle-point-identifier="966"/>
+		<triangle-point triangle-point-identifier="972"/>
+		<triangle-point triangle-point-identifier="973"/>
+	</triangle>
+	<triangle identifier="14">
+		<triangle-point triangle-point-identifier="974"/>
+		<triangle-point triangle-point-identifier="973"/>
+		<triangle-point triangle-point-identifier="972"/>
+	</triangle>
+	<triangle identifier="15">
+		<triangle-point triangle-point-identifier="973"/>
+		<triangle-point triangle-point-identifier="964"/>
+		<triangle-point triangle-point-identifier="966"/>
+	</triangle>
+	<triangle identifier="16">
+		<triangle-point triangle-point-identifier="975"/>
+		<triangle-point triangle-point-identifier="976"/>
+		<triangle-point triangle-point-identifier="977"/>
+	</triangle>
+	<triangle identifier="17">
+		<triangle-point triangle-point-identifier="977"/>
+		<triangle-point triangle-point-identifier="963"/>
+		<triangle-point triangle-point-identifier="975"/>
+	</triangle>
+	<triangle identifier="18">
+		<triangle-point triangle-point-identifier="964"/>
+		<triangle-point triangle-point-identifier="975"/>
+		<triangle-point triangle-point-identifier="963"/>
+	</triangle>
+	<triangle identifier="19">
+		<triangle-point triangle-point-identifier="963"/>
+		<triangle-point triangle-point-identifier="977"/>
+		<triangle-point triangle-point-identifier="965"/>
+	</triangle>
+	<triangle identifier="20">
+		<triangle-point triangle-point-identifier="975"/>
+		<triangle-point triangle-point-identifier="964"/>
+		<triangle-point triangle-point-identifier="978"/>
+	</triangle>
+	<triangle identifier="21">
+		<triangle-point triangle-point-identifier="978"/>
+		<triangle-point triangle-point-identifier="979"/>
+		<triangle-point triangle-point-identifier="975"/>
+	</triangle>
+	<triangle identifier="22">
+		<triangle-point triangle-point-identifier="976"/>
+		<triangle-point triangle-point-identifier="975"/>
+		<triangle-point triangle-point-identifier="979"/>
+	</triangle>
+	<triangle identifier="23">
+		<triangle-point triangle-point-identifier="979"/>
+		<triangle-point triangle-point-identifier="978"/>
+		<triangle-point triangle-point-identifier="980"/>
+	</triangle>
+	<triangle identifier="24">
+		<triangle-point triangle-point-identifier="981"/>
+		<triangle-point triangle-point-identifier="982"/>
+		<triangle-point triangle-point-identifier="983"/>
+	</triangle>
+	<triangle identifier="25">
+		<triangle-point triangle-point-identifier="983"/>
+		<triangle-point triangle-point-identifier="979"/>
+		<triangle-point triangle-point-identifier="981"/>
+	</triangle>
+	<triangle identifier="26">
+		<triangle-point triangle-point-identifier="980"/>
+		<triangle-point triangle-point-identifier="981"/>
+		<triangle-point triangle-point-identifier="979"/>
+	</triangle>
+	<triangle identifier="27">
+		<triangle-point triangle-point-identifier="979"/>
+		<triangle-point triangle-point-identifier="983"/>
+		<triangle-point triangle-point-identifier="976"/>
+	</triangle>
+	<triangle identifier="28">
+		<triangle-point triangle-point-identifier="984"/>
+		<triangle-point triangle-point-identifier="980"/>
+		<triangle-point triangle-point-identifier="978"/>
+	</triangle>
+	<triangle identifier="29">
+		<triangle-point triangle-point-identifier="978"/>
+		<triangle-point triangle-point-identifier="973"/>
+		<triangle-point triangle-point-identifier="984"/>
+	</triangle>
+	<triangle identifier="30">
+		<triangle-point triangle-point-identifier="974"/>
+		<triangle-point triangle-point-identifier="984"/>
+		<triangle-point triangle-point-identifier="973"/>
+	</triangle>
+	<triangle identifier="31">
+		<triangle-point triangle-point-identifier="973"/>
+		<triangle-point triangle-point-identifier="978"/>
+		<triangle-point triangle-point-identifier="964"/>
+	</triangle>
+	<triangle identifier="32">
+		<triangle-point triangle-point-identifier="985"/>
+		<triangle-point triangle-point-identifier="986"/>
+		<triangle-point triangle-point-identifier="987"/>
+	</triangle>
+	<triangle identifier="33">
+		<triangle-point triangle-point-identifier="986"/>
+		<triangle-point triangle-point-identifier="985"/>
+		<triangle-point triangle-point-identifier="969"/>
+	</triangle>
+	<triangle identifier="34">
+		<triangle-point triangle-point-identifier="968"/>
+		<triangle-point triangle-point-identifier="969"/>
+		<triangle-point triangle-point-identifier="985"/>
+	</triangle>
+	<triangle identifier="35">
+		<triangle-point triangle-point-identifier="969"/>
+		<triangle-point triangle-point-identifier="971"/>
+		<triangle-point triangle-point-identifier="986"/>
+	</triangle>
+	<triangle identifier="36">
+		<triangle-point triangle-point-identifier="985"/>
+		<triangle-point triangle-point-identifier="988"/>
+		<triangle-point triangle-point-identifier="968"/>
+	</triangle>
+	<triangle identifier="37">
+		<triangle-point triangle-point-identifier="988"/>
+		<triangle-point triangle-point-identifier="985"/>
+		<triangle-point triangle-point-identifier="989"/>
+	</triangle>
+	<triangle identifier="38">
+		<triangle-point triangle-point-identifier="987"/>
+		<triangle-point triangle-point-identifier="989"/>
+		<triangle-point triangle-point-identifier="985"/>
+	</triangle>
+	<triangle identifier="39">
+		<triangle-point triangle-point-identifier="989"/>
+		<triangle-point triangle-point-identifier="990"/>
+		<triangle-point triangle-point-identifier="988"/>
+	</triangle>
+	<triangle identifier="40">
+		<triangle-point triangle-point-identifier="991"/>
+		<triangle-point triangle-point-identifier="992"/>
+		<triangle-point triangle-point-identifier="993"/>
+	</triangle>
+	<triangle identifier="41">
+		<triangle-point triangle-point-identifier="992"/>
+		<triangle-point triangle-point-identifier="991"/>
+		<triangle-point triangle-point-identifier="989"/>
+	</triangle>
+	<triangle identifier="42">
+		<triangle-point triangle-point-identifier="990"/>
+		<triangle-point triangle-point-identifier="989"/>
+		<triangle-point triangle-point-identifier="991"/>
+	</triangle>
+	<triangle identifier="43">
+		<triangle-point triangle-point-identifier="989"/>
+		<triangle-point triangle-point-identifier="987"/>
+		<triangle-point triangle-point-identifier="992"/>
+	</triangle>
+	<triangle identifier="44">
+		<triangle-point triangle-point-identifier="994"/>
+		<triangle-point triangle-point-identifier="988"/>
+		<triangle-point triangle-point-identifier="990"/>
+	</triangle>
+	<triangle identifier="45">
+		<triangle-point triangle-point-identifier="988"/>
+		<triangle-point triangle-point-identifier="994"/>
+		<triangle-point triangle-point-identifier="972"/>
+	</triangle>
+	<triangle identifier="46">
+		<triangle-point triangle-point-identifier="974"/>
+		<triangle-point triangle-point-identifier="972"/>
+		<triangle-point triangle-point-identifier="994"/>
+	</triangle>
+	<triangle identifier="47">
+		<triangle-point triangle-point-identifier="972"/>
+		<triangle-point triangle-point-identifier="968"/>
+		<triangle-point triangle-point-identifier="988"/>
+	</triangle>
+	<triangle identifier="48">
+		<triangle-point triangle-point-identifier="995"/>
+		<triangle-point triangle-point-identifier="996"/>
+		<triangle-point triangle-point-identifier="997"/>
+	</triangle>
+	<triangle identifier="49">
+		<triangle-point triangle-point-identifier="996"/>
+		<triangle-point triangle-point-identifier="995"/>
+		<triangle-point triangle-point-identifier="991"/>
+	</triangle>
+	<triangle identifier="50">
+		<triangle-point triangle-point-identifier="990"/>
+		<triangle-point triangle-point-identifier="991"/>
+		<triangle-point triangle-point-identifier="995"/>
+	</triangle>
+	<triangle identifier="51">
+		<triangle-point triangle-point-identifier="991"/>
+		<triangle-point triangle-point-identifier="993"/>
+		<triangle-point triangle-point-identifier="996"/>
+	</triangle>
+	<triangle identifier="52">
+		<triangle-point triangle-point-identifier="995"/>
+		<triangle-point triangle-point-identifier="998"/>
+		<triangle-point triangle-point-identifier="990"/>
+	</triangle>
+	<triangle identifier="53">
+		<triangle-point triangle-point-identifier="998"/>
+		<triangle-point triangle-point-identifier="995"/>
+		<triangle-point triangle-point-identifier="999"/>
+	</triangle>
+	<triangle identifier="54">
+		<triangle-point triangle-point-identifier="997"/>
+		<triangle-point triangle-point-identifier="999"/>
+		<triangle-point triangle-point-identifier="995"/>
+	</triangle>
+	<triangle identifier="55">
+		<triangle-point triangle-point-identifier="999"/>
+		<triangle-point triangle-point-identifier="1000"/>
+		<triangle-point triangle-point-identifier="998"/>
+	</triangle>
+	<triangle identifier="56">
+		<triangle-point triangle-point-identifier="1001"/>
+		<triangle-point triangle-point-identifier="1002"/>
+		<triangle-point triangle-point-identifier="1003"/>
+	</triangle>
+	<triangle identifier="57">
+		<triangle-point triangle-point-identifier="1002"/>
+		<triangle-point triangle-point-identifier="1001"/>
+		<triangle-point triangle-point-identifier="999"/>
+	</triangle>
+	<triangle identifier="58">
+		<triangle-point triangle-point-identifier="1000"/>
+		<triangle-point triangle-point-identifier="999"/>
+		<triangle-point triangle-point-identifier="1001"/>
+	</triangle>
+	<triangle identifier="59">
+		<triangle-point triangle-point-identifier="999"/>
+		<triangle-point triangle-point-identifier="997"/>
+		<triangle-point triangle-point-identifier="1002"/>
+	</triangle>
+	<triangle identifier="60">
+		<triangle-point triangle-point-identifier="1004"/>
+		<triangle-point triangle-point-identifier="998"/>
+		<triangle-point triangle-point-identifier="1000"/>
+	</triangle>
+	<triangle identifier="61">
+		<triangle-point triangle-point-identifier="998"/>
+		<triangle-point triangle-point-identifier="1004"/>
+		<triangle-point triangle-point-identifier="994"/>
+	</triangle>
+	<triangle identifier="62">
+		<triangle-point triangle-point-identifier="974"/>
+		<triangle-point triangle-point-identifier="994"/>
+		<triangle-point triangle-point-identifier="1004"/>
+	</triangle>
+	<triangle identifier="63">
+		<triangle-point triangle-point-identifier="994"/>
+		<triangle-point triangle-point-identifier="990"/>
+		<triangle-point triangle-point-identifier="998"/>
+	</triangle>
+	<triangle identifier="64">
+		<triangle-point triangle-point-identifier="1005"/>
+		<triangle-point triangle-point-identifier="1006"/>
+		<triangle-point triangle-point-identifier="1007"/>
+	</triangle>
+	<triangle identifier="65">
+		<triangle-point triangle-point-identifier="1006"/>
+		<triangle-point triangle-point-identifier="1005"/>
+		<triangle-point triangle-point-identifier="1001"/>
+	</triangle>
+	<triangle identifier="66">
+		<triangle-point triangle-point-identifier="1000"/>
+		<triangle-point triangle-point-identifier="1001"/>
+		<triangle-point triangle-point-identifier="1005"/>
+	</triangle>
+	<triangle identifier="67">
+		<triangle-point triangle-point-identifier="1001"/>
+		<triangle-point triangle-point-identifier="1003"/>
+		<triangle-point triangle-point-identifier="1006"/>
+	</triangle>
+	<triangle identifier="68">
+		<triangle-point triangle-point-identifier="1005"/>
+		<triangle-point triangle-point-identifier="1008"/>
+		<triangle-point triangle-point-identifier="1000"/>
+	</triangle>
+	<triangle identifier="69">
+		<triangle-point triangle-point-identifier="1008"/>
+		<triangle-point triangle-point-identifier="1005"/>
+		<triangle-point triangle-point-identifier="1009"/>
+	</triangle>
+	<triangle identifier="70">
+		<triangle-point triangle-point-identifier="1007"/>
+		<triangle-point triangle-point-identifier="1009"/>
+		<triangle-point triangle-point-identifier="1005"/>
+	</triangle>
+	<triangle identifier="71">
+		<triangle-point triangle-point-identifier="1009"/>
+		<triangle-point triangle-point-identifier="980"/>
+		<triangle-point triangle-point-identifier="1008"/>
+	</triangle>
+	<triangle identifier="72">
+		<triangle-point triangle-point-identifier="981"/>
+		<triangle-point triangle-point-identifier="1010"/>
+		<triangle-point triangle-point-identifier="982"/>
+	</triangle>
+	<triangle identifier="73">
+		<triangle-point triangle-point-identifier="1010"/>
+		<triangle-point triangle-point-identifier="981"/>
+		<triangle-point triangle-point-identifier="1009"/>
+	</triangle>
+	<triangle identifier="74">
+		<triangle-point triangle-point-identifier="980"/>
+		<triangle-point triangle-point-identifier="1009"/>
+		<triangle-point triangle-point-identifier="981"/>
+	</triangle>
+	<triangle identifier="75">
+		<triangle-point triangle-point-identifier="1009"/>
+		<triangle-point triangle-point-identifier="1007"/>
+		<triangle-point triangle-point-identifier="1010"/>
+	</triangle>
+	<triangle identifier="76">
+		<triangle-point triangle-point-identifier="984"/>
+		<triangle-point triangle-point-identifier="1008"/>
+		<triangle-point triangle-point-identifier="980"/>
+	</triangle>
+	<triangle identifier="77">
+		<triangle-point triangle-point-identifier="1008"/>
+		<triangle-point triangle-point-identifier="984"/>
+		<triangle-point triangle-point-identifier="1004"/>
+	</triangle>
+	<triangle identifier="78">
+		<triangle-point triangle-point-identifier="974"/>
+		<triangle-point triangle-point-identifier="1004"/>
+		<triangle-point triangle-point-identifier="984"/>
+	</triangle>
+	<triangle identifier="79">
+		<triangle-point triangle-point-identifier="1004"/>
+		<triangle-point triangle-point-identifier="1000"/>
+		<triangle-point triangle-point-identifier="1008"/>
+	</triangle>
+	<triangle identifier="80">
+		<triangle-point triangle-point-identifier="1011"/>
+		<triangle-point triangle-point-identifier="1012"/>
+		<triangle-point triangle-point-identifier="1013"/>
+	</triangle>
+	<triangle identifier="81">
+		<triangle-point triangle-point-identifier="1013"/>
+		<triangle-point triangle-point-identifier="977"/>
+		<triangle-point triangle-point-identifier="1011"/>
+	</triangle>
+	<triangle identifier="82">
+		<triangle-point triangle-point-identifier="976"/>
+		<triangle-point triangle-point-identifier="1011"/>
+		<triangle-point triangle-point-identifier="977"/>
+	</triangle>
+	<triangle identifier="83">
+		<triangle-point triangle-point-identifier="977"/>
+		<triangle-point triangle-point-identifier="1013"/>
+		<triangle-point triangle-point-identifier="965"/>
+	</triangle>
+	<triangle identifier="84">
+		<triangle-point triangle-point-identifier="1011"/>
+		<triangle-point triangle-point-identifier="976"/>
+		<triangle-point triangle-point-identifier="1014"/>
+	</triangle>
+	<triangle identifier="85">
+		<triangle-point triangle-point-identifier="1014"/>
+		<triangle-point triangle-point-identifier="1015"/>
+		<triangle-point triangle-point-identifier="1011"/>
+	</triangle>
+	<triangle identifier="86">
+		<triangle-point triangle-point-identifier="1012"/>
+		<triangle-point triangle-point-identifier="1011"/>
+		<triangle-point triangle-point-identifier="1015"/>
+	</triangle>
+	<triangle identifier="87">
+		<triangle-point triangle-point-identifier="1015"/>
+		<triangle-point triangle-point-identifier="1014"/>
+		<triangle-point triangle-point-identifier="1016"/>
+	</triangle>
+	<triangle identifier="88">
+		<triangle-point triangle-point-identifier="1017"/>
+		<triangle-point triangle-point-identifier="1018"/>
+		<triangle-point triangle-point-identifier="1019"/>
+	</triangle>
+	<triangle identifier="89">
+		<triangle-point triangle-point-identifier="1019"/>
+		<triangle-point triangle-point-identifier="1015"/>
+		<triangle-point triangle-point-identifier="1017"/>
+	</triangle>
+	<triangle identifier="90">
+		<triangle-point triangle-point-identifier="1016"/>
+		<triangle-point triangle-point-identifier="1017"/>
+		<triangle-point triangle-point-identifier="1015"/>
+	</triangle>
+	<triangle identifier="91">
+		<triangle-point triangle-point-identifier="1015"/>
+		<triangle-point triangle-point-identifier="1019"/>
+		<triangle-point triangle-point-identifier="1012"/>
+	</triangle>
+	<triangle identifier="92">
+		<triangle-point triangle-point-identifier="1020"/>
+		<triangle-point triangle-point-identifier="1016"/>
+		<triangle-point triangle-point-identifier="1014"/>
+	</triangle>
+	<triangle identifier="93">
+		<triangle-point triangle-point-identifier="1014"/>
+		<triangle-point triangle-point-identifier="983"/>
+		<triangle-point triangle-point-identifier="1020"/>
+	</triangle>
+	<triangle identifier="94">
+		<triangle-point triangle-point-identifier="982"/>
+		<triangle-point triangle-point-identifier="1020"/>
+		<triangle-point triangle-point-identifier="983"/>
+	</triangle>
+	<triangle identifier="95">
+		<triangle-point triangle-point-identifier="983"/>
+		<triangle-point triangle-point-identifier="1014"/>
+		<triangle-point triangle-point-identifier="976"/>
+	</triangle>
+	<triangle identifier="96">
+		<triangle-point triangle-point-identifier="1021"/>
+		<triangle-point triangle-point-identifier="1022"/>
+		<triangle-point triangle-point-identifier="1023"/>
+	</triangle>
+	<triangle identifier="97">
+		<triangle-point triangle-point-identifier="1023"/>
+		<triangle-point triangle-point-identifier="970"/>
+		<triangle-point triangle-point-identifier="1021"/>
+	</triangle>
+	<triangle identifier="98">
+		<triangle-point triangle-point-identifier="962"/>
+		<triangle-point triangle-point-identifier="1021"/>
+		<triangle-point triangle-point-identifier="970"/>
+	</triangle>
+	<triangle identifier="99">
+		<triangle-point triangle-point-identifier="970"/>
+		<triangle-point triangle-point-identifier="1023"/>
+		<triangle-point triangle-point-identifier="971"/>
+	</triangle>
+	<triangle identifier="100">
+		<triangle-point triangle-point-identifier="1021"/>
+		<triangle-point triangle-point-identifier="962"/>
+		<triangle-point triangle-point-identifier="1024"/>
+	</triangle>
+	<triangle identifier="101">
+		<triangle-point triangle-point-identifier="1024"/>
+		<triangle-point triangle-point-identifier="1025"/>
+		<triangle-point triangle-point-identifier="1021"/>
+	</triangle>
+	<triangle identifier="102">
+		<triangle-point triangle-point-identifier="1022"/>
+		<triangle-point triangle-point-identifier="1021"/>
+		<triangle-point triangle-point-identifier="1025"/>
+	</triangle>
+	<triangle identifier="103">
+		<triangle-point triangle-point-identifier="1025"/>
+		<triangle-point triangle-point-identifier="1024"/>
+		<triangle-point triangle-point-identifier="1026"/>
+	</triangle>
+	<triangle identifier="104">
+		<triangle-point triangle-point-identifier="1027"/>
+		<triangle-point triangle-point-identifier="1028"/>
+		<triangle-point triangle-point-identifier="1029"/>
+	</triangle>
+	<triangle identifier="105">
+		<triangle-point triangle-point-identifier="1029"/>
+		<triangle-point triangle-point-identifier="1025"/>
+		<triangle-point triangle-point-identifier="1027"/>
+	</triangle>
+	<triangle identifier="106">
+		<triangle-point triangle-point-identifier="1026"/>
+		<triangle-point triangle-point-identifier="1027"/>
+		<triangle-point triangle-point-identifier="1025"/>
+	</triangle>
+	<triangle identifier="107">
+		<triangle-point triangle-point-identifier="1025"/>
+		<triangle-point triangle-point-identifier="1029"/>
+		<triangle-point triangle-point-identifier="1022"/>
+	</triangle>
+	<triangle identifier="108">
+		<triangle-point triangle-point-identifier="1030"/>
+		<triangle-point triangle-point-identifier="1026"/>
+		<triangle-point triangle-point-identifier="1024"/>
+	</triangle>
+	<triangle identifier="109">
+		<triangle-point triangle-point-identifier="1024"/>
+		<triangle-point triangle-point-identifier="961"/>
+		<triangle-point triangle-point-identifier="1030"/>
+	</triangle>
+	<triangle identifier="110">
+		<triangle-point triangle-point-identifier="965"/>
+		<triangle-point triangle-point-identifier="1030"/>
+		<triangle-point triangle-point-identifier="961"/>
+	</triangle>
+	<triangle identifier="111">
+		<triangle-point triangle-point-identifier="961"/>
+		<triangle-point triangle-point-identifier="1024"/>
+		<triangle-point triangle-point-identifier="962"/>
+	</triangle>
+	<triangle identifier="112">
+		<triangle-point triangle-point-identifier="1031"/>
+		<triangle-point triangle-point-identifier="1032"/>
+		<triangle-point triangle-point-identifier="1033"/>
+	</triangle>
+	<triangle identifier="113">
+		<triangle-point triangle-point-identifier="1033"/>
+		<triangle-point triangle-point-identifier="992"/>
+		<triangle-point triangle-point-identifier="1031"/>
+	</triangle>
+	<triangle identifier="114">
+		<triangle-point triangle-point-identifier="987"/>
+		<triangle-point triangle-point-identifier="1031"/>
+		<triangle-point triangle-point-identifier="992"/>
+	</triangle>
+	<triangle identifier="115">
+		<triangle-point triangle-point-identifier="992"/>
+		<triangle-point triangle-point-identifier="1033"/>
+		<triangle-point triangle-point-identifier="993"/>
+	</triangle>
+	<triangle identifier="116">
+		<triangle-point triangle-point-identifier="1031"/>
+		<triangle-point triangle-point-identifier="987"/>
+		<triangle-point triangle-point-identifier="1034"/>
+	</triangle>
+	<triangle identifier="117">
+		<triangle-point triangle-point-identifier="1034"/>
+		<triangle-point triangle-point-identifier="1035"/>
+		<triangle-point triangle-point-identifier="1031"/>
+	</triangle>
+	<triangle identifier="118">
+		<triangle-point triangle-point-identifier="1032"/>
+		<triangle-point triangle-point-identifier="1031"/>
+		<triangle-point triangle-point-identifier="1035"/>
+	</triangle>
+	<triangle identifier="119">
+		<triangle-point triangle-point-identifier="1035"/>
+		<triangle-point triangle-point-identifier="1034"/>
+		<triangle-point triangle-point-identifier="1036"/>
+	</triangle>
+	<triangle identifier="120">
+		<triangle-point triangle-point-identifier="1037"/>
+		<triangle-point triangle-point-identifier="1038"/>
+		<triangle-point triangle-point-identifier="1039"/>
+	</triangle>
+	<triangle identifier="121">
+		<triangle-point triangle-point-identifier="1039"/>
+		<triangle-point triangle-point-identifier="1035"/>
+		<triangle-point triangle-point-identifier="1037"/>
+	</triangle>
+	<triangle identifier="122">
+		<triangle-point triangle-point-identifier="1036"/>
+		<triangle-point triangle-point-identifier="1037"/>
+		<triangle-point triangle-point-identifier="1035"/>
+	</triangle>
+	<triangle identifier="123">
+		<triangle-point triangle-point-identifier="1035"/>
+		<triangle-point triangle-point-identifier="1039"/>
+		<triangle-point triangle-point-identifier="1032"/>
+	</triangle>
+	<triangle identifier="124">
+		<triangle-point triangle-point-identifier="1040"/>
+		<triangle-point triangle-point-identifier="1036"/>
+		<triangle-point triangle-point-identifier="1034"/>
+	</triangle>
+	<triangle identifier="125">
+		<triangle-point triangle-point-identifier="1034"/>
+		<triangle-point triangle-point-identifier="986"/>
+		<triangle-point triangle-point-identifier="1040"/>
+	</triangle>
+	<triangle identifier="126">
+		<triangle-point triangle-point-identifier="971"/>
+		<triangle-point triangle-point-identifier="1040"/>
+		<triangle-point triangle-point-identifier="986"/>
+	</triangle>
+	<triangle identifier="127">
+		<triangle-point triangle-point-identifier="986"/>
+		<triangle-point triangle-point-identifier="1034"/>
+		<triangle-point triangle-point-identifier="987"/>
+	</triangle>
+	<triangle identifier="128">
+		<triangle-point triangle-point-identifier="1041"/>
+		<triangle-point triangle-point-identifier="1042"/>
+		<triangle-point triangle-point-identifier="1043"/>
+	</triangle>
+	<triangle identifier="129">
+		<triangle-point triangle-point-identifier="1043"/>
+		<triangle-point triangle-point-identifier="1002"/>
+		<triangle-point triangle-point-identifier="1041"/>
+	</triangle>
+	<triangle identifier="130">
+		<triangle-point triangle-point-identifier="997"/>
+		<triangle-point triangle-point-identifier="1041"/>
+		<triangle-point triangle-point-identifier="1002"/>
+	</triangle>
+	<triangle identifier="131">
+		<triangle-point triangle-point-identifier="1002"/>
+		<triangle-point triangle-point-identifier="1043"/>
+		<triangle-point triangle-point-identifier="1003"/>
+	</triangle>
+	<triangle identifier="132">
+		<triangle-point triangle-point-identifier="1041"/>
+		<triangle-point triangle-point-identifier="997"/>
+		<triangle-point triangle-point-identifier="1044"/>
+	</triangle>
+	<triangle identifier="133">
+		<triangle-point triangle-point-identifier="1044"/>
+		<triangle-point triangle-point-identifier="1045"/>
+		<triangle-point triangle-point-identifier="1041"/>
+	</triangle>
+	<triangle identifier="134">
+		<triangle-point triangle-point-identifier="1042"/>
+		<triangle-point triangle-point-identifier="1041"/>
+		<triangle-point triangle-point-identifier="1045"/>
+	</triangle>
+	<triangle identifier="135">
+		<triangle-point triangle-point-identifier="1045"/>
+		<triangle-point triangle-point-identifier="1044"/>
+		<triangle-point triangle-point-identifier="1046"/>
+	</triangle>
+	<triangle identifier="136">
+		<triangle-point triangle-point-identifier="1047"/>
+		<triangle-point triangle-point-identifier="1048"/>
+		<triangle-point triangle-point-identifier="1049"/>
+	</triangle>
+	<triangle identifier="137">
+		<triangle-point triangle-point-identifier="1049"/>
+		<triangle-point triangle-point-identifier="1045"/>
+		<triangle-point triangle-point-identifier="1047"/>
+	</triangle>
+	<triangle identifier="138">
+		<triangle-point triangle-point-identifier="1046"/>
+		<triangle-point triangle-point-identifier="1047"/>
+		<triangle-point triangle-point-identifier="1045"/>
+	</triangle>
+	<triangle identifier="139">
+		<triangle-point triangle-point-identifier="1045"/>
+		<triangle-point triangle-point-identifier="1049"/>
+		<triangle-point triangle-point-identifier="1042"/>
+	</triangle>
+	<triangle identifier="140">
+		<triangle-point triangle-point-identifier="1050"/>
+		<triangle-point triangle-point-identifier="1046"/>
+		<triangle-point triangle-point-identifier="1044"/>
+	</triangle>
+	<triangle identifier="141">
+		<triangle-point triangle-point-identifier="1044"/>
+		<triangle-point triangle-point-identifier="996"/>
+		<triangle-point triangle-point-identifier="1050"/>
+	</triangle>
+	<triangle identifier="142">
+		<triangle-point triangle-point-identifier="993"/>
+		<triangle-point triangle-point-identifier="1050"/>
+		<triangle-point triangle-point-identifier="996"/>
+	</triangle>
+	<triangle identifier="143">
+		<triangle-point triangle-point-identifier="996"/>
+		<triangle-point triangle-point-identifier="1044"/>
+		<triangle-point triangle-point-identifier="997"/>
+	</triangle>
+	<triangle identifier="144">
+		<triangle-point triangle-point-identifier="1051"/>
+		<triangle-point triangle-point-identifier="1052"/>
+		<triangle-point triangle-point-identifier="1053"/>
+	</triangle>
+	<triangle identifier="145">
+		<triangle-point triangle-point-identifier="1053"/>
+		<triangle-point triangle-point-identifier="1010"/>
+		<triangle-point triangle-point-identifier="1051"/>
+	</triangle>
+	<triangle identifier="146">
+		<triangle-point triangle-point-identifier="1007"/>
+		<triangle-point triangle-point-identifier="1051"/>
+		<triangle-point triangle-point-identifier="1010"/>
+	</triangle>
+	<triangle identifier="147">
+		<triangle-point triangle-point-identifier="1010"/>
+		<triangle-point triangle-point-identifier="1053"/>
+		<triangle-point triangle-point-identifier="982"/>
+	</triangle>
+	<triangle identifier="148">
+		<triangle-point triangle-point-identifier="1051"/>
+		<triangle-point triangle-point-identifier="1007"/>
+		<triangle-point triangle-point-identifier="1054"/>
+	</triangle>
+	<triangle identifier="149">
+		<triangle-point triangle-point-identifier="1054"/>
+		<triangle-point triangle-point-identifier="1055"/>
+		<triangle-point triangle-point-identifier="1051"/>
+	</triangle>
+	<triangle identifier="150">
+		<triangle-point triangle-point-identifier="1052"/>
+		<triangle-point triangle-point-identifier="1051"/>
+		<triangle-point triangle-point-identifier="1055"/>
+	</triangle>
+	<triangle identifier="151">
+		<triangle-point triangle-point-identifier="1055"/>
+		<triangle-point triangle-point-identifier="1054"/>
+		<triangle-point triangle-point-identifier="1056"/>
+	</triangle>
+	<triangle identifier="152">
+		<triangle-point triangle-point-identifier="1057"/>
+		<triangle-point triangle-point-identifier="1058"/>
+		<triangle-point triangle-point-identifier="1059"/>
+	</triangle>
+	<triangle identifier="153">
+		<triangle-point triangle-point-identifier="1059"/>
+		<triangle-point triangle-point-identifier="1055"/>
+		<triangle-point triangle-point-identifier="1057"/>
+	</triangle>
+	<triangle identifier="154">
+		<triangle-point triangle-point-identifier="1056"/>
+		<triangle-point triangle-point-identifier="1057"/>
+		<triangle-point triangle-point-identifier="1055"/>
+	</triangle>
+	<triangle identifier="155">
+		<triangle-point triangle-point-identifier="1055"/>
+		<triangle-point triangle-point-identifier="1059"/>
+		<triangle-point triangle-point-identifier="1052"/>
+	</triangle>
+	<triangle identifier="156">
+		<triangle-point triangle-point-identifier="1060"/>
+		<triangle-point triangle-point-identifier="1056"/>
+		<triangle-point triangle-point-identifier="1054"/>
+	</triangle>
+	<triangle identifier="157">
+		<triangle-point triangle-point-identifier="1054"/>
+		<triangle-point triangle-point-identifier="1006"/>
+		<triangle-point triangle-point-identifier="1060"/>
+	</triangle>
+	<triangle identifier="158">
+		<triangle-point triangle-point-identifier="1003"/>
+		<triangle-point triangle-point-identifier="1060"/>
+		<triangle-point triangle-point-identifier="1006"/>
+	</triangle>
+	<triangle identifier="159">
+		<triangle-point triangle-point-identifier="1006"/>
+		<triangle-point triangle-point-identifier="1054"/>
+		<triangle-point triangle-point-identifier="1007"/>
+	</triangle>
+	<triangle identifier="160">
+		<triangle-point triangle-point-identifier="1061"/>
+		<triangle-point triangle-point-identifier="1062"/>
+		<triangle-point triangle-point-identifier="1063"/>
+	</triangle>
+	<triangle identifier="161">
+		<triangle-point triangle-point-identifier="1062"/>
+		<triangle-point triangle-point-identifier="1061"/>
+		<triangle-point triangle-point-identifier="1019"/>
+	</triangle>
+	<triangle identifier="162">
+		<triangle-point triangle-point-identifier="1012"/>
+		<triangle-point triangle-point-identifier="1019"/>
+		<triangle-point triangle-point-identifier="1061"/>
+	</triangle>
+	<triangle identifier="163">
+		<triangle-point triangle-point-identifier="1019"/>
+		<triangle-point triangle-point-identifier="1018"/>
+		<triangle-point triangle-point-identifier="1062"/>
+	</triangle>
+	<triangle identifier="164">
+		<triangle-point triangle-point-identifier="1061"/>
+		<triangle-point triangle-point-identifier="1064"/>
+		<triangle-point triangle-point-identifier="1012"/>
+	</triangle>
+	<triangle identifier="165">
+		<triangle-point triangle-point-identifier="1064"/>
+		<triangle-point triangle-point-identifier="1061"/>
+		<triangle-point triangle-point-identifier="1065"/>
+	</triangle>
+	<triangle identifier="166">
+		<triangle-point triangle-point-identifier="1063"/>
+		<triangle-point triangle-point-identifier="1065"/>
+		<triangle-point triangle-point-identifier="1061"/>
+	</triangle>
+	<triangle identifier="167">
+		<triangle-point triangle-point-identifier="1065"/>
+		<triangle-point triangle-point-identifier="1026"/>
+		<triangle-point triangle-point-identifier="1064"/>
+	</triangle>
+	<triangle identifier="168">
+		<triangle-point triangle-point-identifier="1027"/>
+		<triangle-point triangle-point-identifier="1066"/>
+		<triangle-point triangle-point-identifier="1028"/>
+	</triangle>
+	<triangle identifier="169">
+		<triangle-point triangle-point-identifier="1066"/>
+		<triangle-point triangle-point-identifier="1027"/>
+		<triangle-point triangle-point-identifier="1065"/>
+	</triangle>
+	<triangle identifier="170">
+		<triangle-point triangle-point-identifier="1026"/>
+		<triangle-point triangle-point-identifier="1065"/>
+		<triangle-point triangle-point-identifier="1027"/>
+	</triangle>
+	<triangle identifier="171">
+		<triangle-point triangle-point-identifier="1065"/>
+		<triangle-point triangle-point-identifier="1063"/>
+		<triangle-point triangle-point-identifier="1066"/>
+	</triangle>
+	<triangle identifier="172">
+		<triangle-point triangle-point-identifier="1030"/>
+		<triangle-point triangle-point-identifier="1064"/>
+		<triangle-point triangle-point-identifier="1026"/>
+	</triangle>
+	<triangle identifier="173">
+		<triangle-point triangle-point-identifier="1064"/>
+		<triangle-point triangle-point-identifier="1030"/>
+		<triangle-point triangle-point-identifier="1013"/>
+	</triangle>
+	<triangle identifier="174">
+		<triangle-point triangle-point-identifier="965"/>
+		<triangle-point triangle-point-identifier="1013"/>
+		<triangle-point triangle-point-identifier="1030"/>
+	</triangle>
+	<triangle identifier="175">
+		<triangle-point triangle-point-identifier="1013"/>
+		<triangle-point triangle-point-identifier="1012"/>
+		<triangle-point triangle-point-identifier="1064"/>
+	</triangle>
+	<triangle identifier="176">
+		<triangle-point triangle-point-identifier="1067"/>
+		<triangle-point triangle-point-identifier="1068"/>
+		<triangle-point triangle-point-identifier="1069"/>
+	</triangle>
+	<triangle identifier="177">
+		<triangle-point triangle-point-identifier="1068"/>
+		<triangle-point triangle-point-identifier="1067"/>
+		<triangle-point triangle-point-identifier="1029"/>
+	</triangle>
+	<triangle identifier="178">
+		<triangle-point triangle-point-identifier="1022"/>
+		<triangle-point triangle-point-identifier="1029"/>
+		<triangle-point triangle-point-identifier="1067"/>
+	</triangle>
+	<triangle identifier="179">
+		<triangle-point triangle-point-identifier="1029"/>
+		<triangle-point triangle-point-identifier="1028"/>
+		<triangle-point triangle-point-identifier="1068"/>
+	</triangle>
+	<triangle identifier="180">
+		<triangle-point triangle-point-identifier="1067"/>
+		<triangle-point triangle-point-identifier="1070"/>
+		<triangle-point triangle-point-identifier="1022"/>
+	</triangle>
+	<triangle identifier="181">
+		<triangle-point triangle-point-identifier="1070"/>
+		<triangle-point triangle-point-identifier="1067"/>
+		<triangle-point triangle-point-identifier="1071"/>
+	</triangle>
+	<triangle identifier="182">
+		<triangle-point triangle-point-identifier="1069"/>
+		<triangle-point triangle-point-identifier="1071"/>
+		<triangle-point triangle-point-identifier="1067"/>
+	</triangle>
+	<triangle identifier="183">
+		<triangle-point triangle-point-identifier="1071"/>
+		<triangle-point triangle-point-identifier="1036"/>
+		<triangle-point triangle-point-identifier="1070"/>
+	</triangle>
+	<triangle identifier="184">
+		<triangle-point triangle-point-identifier="1037"/>
+		<triangle-point triangle-point-identifier="1072"/>
+		<triangle-point triangle-point-identifier="1038"/>
+	</triangle>
+	<triangle identifier="185">
+		<triangle-point triangle-point-identifier="1072"/>
+		<triangle-point triangle-point-identifier="1037"/>
+		<triangle-point triangle-point-identifier="1071"/>
+	</triangle>
+	<triangle identifier="186">
+		<triangle-point triangle-point-identifier="1036"/>
+		<triangle-point triangle-point-identifier="1071"/>
+		<triangle-point triangle-point-identifier="1037"/>
+	</triangle>
+	<triangle identifier="187">
+		<triangle-point triangle-point-identifier="1071"/>
+		<triangle-point triangle-point-identifier="1069"/>
+		<triangle-point triangle-point-identifier="1072"/>
+	</triangle>
+	<triangle identifier="188">
+		<triangle-point triangle-point-identifier="1040"/>
+		<triangle-point triangle-point-identifier="1070"/>
+		<triangle-point triangle-point-identifier="1036"/>
+	</triangle>
+	<triangle identifier="189">
+		<triangle-point triangle-point-identifier="1070"/>
+		<triangle-point triangle-point-identifier="1040"/>
+		<triangle-point triangle-point-identifier="1023"/>
+	</triangle>
+	<triangle identifier="190">
+		<triangle-point triangle-point-identifier="971"/>
+		<triangle-point triangle-point-identifier="1023"/>
+		<triangle-point triangle-point-identifier="1040"/>
+	</triangle>
+	<triangle identifier="191">
+		<triangle-point triangle-point-identifier="1023"/>
+		<triangle-point triangle-point-identifier="1022"/>
+		<triangle-point triangle-point-identifier="1070"/>
+	</triangle>
+	<triangle identifier="192">
+		<triangle-point triangle-point-identifier="1073"/>
+		<triangle-point triangle-point-identifier="1074"/>
+		<triangle-point triangle-point-identifier="1075"/>
+	</triangle>
+	<triangle identifier="193">
+		<triangle-point triangle-point-identifier="1074"/>
+		<triangle-point triangle-point-identifier="1073"/>
+		<triangle-point triangle-point-identifier="1039"/>
+	</triangle>
+	<triangle identifier="194">
+		<triangle-point triangle-point-identifier="1032"/>
+		<triangle-point triangle-point-identifier="1039"/>
+		<triangle-point triangle-point-identifier="1073"/>
+	</triangle>
+	<triangle identifier="195">
+		<triangle-point triangle-point-identifier="1039"/>
+		<triangle-point triangle-point-identifier="1038"/>
+		<triangle-point triangle-point-identifier="1074"/>
+	</triangle>
+	<triangle identifier="196">
+		<triangle-point triangle-point-identifier="1073"/>
+		<triangle-point triangle-point-identifier="1076"/>
+		<triangle-point triangle-point-identifier="1032"/>
+	</triangle>
+	<triangle identifier="197">
+		<triangle-point triangle-point-identifier="1076"/>
+		<triangle-point triangle-point-identifier="1073"/>
+		<triangle-point triangle-point-identifier="1077"/>
+	</triangle>
+	<triangle identifier="198">
+		<triangle-point triangle-point-identifier="1075"/>
+		<triangle-point triangle-point-identifier="1077"/>
+		<triangle-point triangle-point-identifier="1073"/>
+	</triangle>
+	<triangle identifier="199">
+		<triangle-point triangle-point-identifier="1077"/>
+		<triangle-point triangle-point-identifier="1046"/>
+		<triangle-point triangle-point-identifier="1076"/>
+	</triangle>
+	<triangle identifier="200">
+		<triangle-point triangle-point-identifier="1047"/>
+		<triangle-point triangle-point-identifier="1078"/>
+		<triangle-point triangle-point-identifier="1048"/>
+	</triangle>
+	<triangle identifier="201">
+		<triangle-point triangle-point-identifier="1078"/>
+		<triangle-point triangle-point-identifier="1047"/>
+		<triangle-point triangle-point-identifier="1077"/>
+	</triangle>
+	<triangle identifier="202">
+		<triangle-point triangle-point-identifier="1046"/>
+		<triangle-point triangle-point-identifier="1077"/>
+		<triangle-point triangle-point-identifier="1047"/>
+	</triangle>
+	<triangle identifier="203">
+		<triangle-point triangle-point-identifier="1077"/>
+		<triangle-point triangle-point-identifier="1075"/>
+		<triangle-point triangle-point-identifier="1078"/>
+	</triangle>
+	<triangle identifier="204">
+		<triangle-point triangle-point-identifier="1050"/>
+		<triangle-point triangle-point-identifier="1076"/>
+		<triangle-point triangle-point-identifier="1046"/>
+	</triangle>
+	<triangle identifier="205">
+		<triangle-point triangle-point-identifier="1076"/>
+		<triangle-point triangle-point-identifier="1050"/>
+		<triangle-point triangle-point-identifier="1033"/>
+	</triangle>
+	<triangle identifier="206">
+		<triangle-point triangle-point-identifier="993"/>
+		<triangle-point triangle-point-identifier="1033"/>
+		<triangle-point triangle-point-identifier="1050"/>
+	</triangle>
+	<triangle identifier="207">
+		<triangle-point triangle-point-identifier="1033"/>
+		<triangle-point triangle-point-identifier="1032"/>
+		<triangle-point triangle-point-identifier="1076"/>
+	</triangle>
+	<triangle identifier="208">
+		<triangle-point triangle-point-identifier="1079"/>
+		<triangle-point triangle-point-identifier="1080"/>
+		<triangle-point triangle-point-identifier="1081"/>
+	</triangle>
+	<triangle identifier="209">
+		<triangle-point triangle-point-identifier="1080"/>
+		<triangle-point triangle-point-identifier="1079"/>
+		<triangle-point triangle-point-identifier="1049"/>
+	</triangle>
+	<triangle identifier="210">
+		<triangle-point triangle-point-identifier="1042"/>
+		<triangle-point triangle-point-identifier="1049"/>
+		<triangle-point triangle-point-identifier="1079"/>
+	</triangle>
+	<triangle identifier="211">
+		<triangle-point triangle-point-identifier="1049"/>
+		<triangle-point triangle-point-identifier="1048"/>
+		<triangle-point triangle-point-identifier="1080"/>
+	</triangle>
+	<triangle identifier="212">
+		<triangle-point triangle-point-identifier="1079"/>
+		<triangle-point triangle-point-identifier="1082"/>
+		<triangle-point triangle-point-identifier="1042"/>
+	</triangle>
+	<triangle identifier="213">
+		<triangle-point triangle-point-identifier="1082"/>
+		<triangle-point triangle-point-identifier="1079"/>
+		<triangle-point triangle-point-identifier="1083"/>
+	</triangle>
+	<triangle identifier="214">
+		<triangle-point triangle-point-identifier="1081"/>
+		<triangle-point triangle-point-identifier="1083"/>
+		<triangle-point triangle-point-identifier="1079"/>
+	</triangle>
+	<triangle identifier="215">
+		<triangle-point triangle-point-identifier="1083"/>
+		<triangle-point triangle-point-identifier="1056"/>
+		<triangle-point triangle-point-identifier="1082"/>
+	</triangle>
+	<triangle identifier="216">
+		<triangle-point triangle-point-identifier="1057"/>
+		<triangle-point triangle-point-identifier="1084"/>
+		<triangle-point triangle-point-identifier="1058"/>
+	</triangle>
+	<triangle identifier="217">
+		<triangle-point triangle-point-identifier="1084"/>
+		<triangle-point triangle-point-identifier="1057"/>
+		<triangle-point triangle-point-identifier="1083"/>
+	</triangle>
+	<triangle identifier="218">
+		<triangle-point triangle-point-identifier="1056"/>
+		<triangle-point triangle-point-identifier="1083"/>
+		<triangle-point triangle-point-identifier="1057"/>
+	</triangle>
+	<triangle identifier="219">
+		<triangle-point triangle-point-identifier="1083"/>
+		<triangle-point triangle-point-identifier="1081"/>
+		<triangle-point triangle-point-identifier="1084"/>
+	</triangle>
+	<triangle identifier="220">
+		<triangle-point triangle-point-identifier="1060"/>
+		<triangle-point triangle-point-identifier="1082"/>
+		<triangle-point triangle-point-identifier="1056"/>
+	</triangle>
+	<triangle identifier="221">
+		<triangle-point triangle-point-identifier="1082"/>
+		<triangle-point triangle-point-identifier="1060"/>
+		<triangle-point triangle-point-identifier="1043"/>
+	</triangle>
+	<triangle identifier="222">
+		<triangle-point triangle-point-identifier="1003"/>
+		<triangle-point triangle-point-identifier="1043"/>
+		<triangle-point triangle-point-identifier="1060"/>
+	</triangle>
+	<triangle identifier="223">
+		<triangle-point triangle-point-identifier="1043"/>
+		<triangle-point triangle-point-identifier="1042"/>
+		<triangle-point triangle-point-identifier="1082"/>
+	</triangle>
+	<triangle identifier="224">
+		<triangle-point triangle-point-identifier="1085"/>
+		<triangle-point triangle-point-identifier="1086"/>
+		<triangle-point triangle-point-identifier="1087"/>
+	</triangle>
+	<triangle identifier="225">
+		<triangle-point triangle-point-identifier="1086"/>
+		<triangle-point triangle-point-identifier="1085"/>
+		<triangle-point triangle-point-identifier="1059"/>
+	</triangle>
+	<triangle identifier="226">
+		<triangle-point triangle-point-identifier="1052"/>
+		<triangle-point triangle-point-identifier="1059"/>
+		<triangle-point triangle-point-identifier="1085"/>
+	</triangle>
+	<triangle identifier="227">
+		<triangle-point triangle-point-identifier="1059"/>
+		<triangle-point triangle-point-identifier="1058"/>
+		<triangle-point triangle-point-identifier="1086"/>
+	</triangle>
+	<triangle identifier="228">
+		<triangle-point triangle-point-identifier="1085"/>
+		<triangle-point triangle-point-identifier="1088"/>
+		<triangle-point triangle-point-identifier="1052"/>
+	</triangle>
+	<triangle identifier="229">
+		<triangle-point triangle-point-identifier="1088"/>
+		<triangle-point triangle-point-identifier="1085"/>
+		<triangle-point triangle-point-identifier="1089"/>
+	</triangle>
+	<triangle identifier="230">
+		<triangle-point triangle-point-identifier="1087"/>
+		<triangle-point triangle-point-identifier="1089"/>
+		<triangle-point triangle-point-identifier="1085"/>
+	</triangle>
+	<triangle identifier="231">
+		<triangle-point triangle-point-identifier="1089"/>
+		<triangle-point triangle-point-identifier="1016"/>
+		<triangle-point triangle-point-identifier="1088"/>
+	</triangle>
+	<triangle identifier="232">
+		<triangle-point triangle-point-identifier="1017"/>
+		<triangle-point triangle-point-identifier="1090"/>
+		<triangle-point triangle-point-identifier="1018"/>
+	</triangle>
+	<triangle identifier="233">
+		<triangle-point triangle-point-identifier="1090"/>
+		<triangle-point triangle-point-identifier="1017"/>
+		<triangle-point triangle-point-identifier="1089"/>
+	</triangle>
+	<triangle identifier="234">
+		<triangle-point triangle-point-identifier="1016"/>
+		<triangle-point triangle-point-identifier="1089"/>
+		<triangle-point triangle-point-identifier="1017"/>
+	</triangle>
+	<triangle identifier="235">
+		<triangle-point triangle-point-identifier="1089"/>
+		<triangle-point triangle-point-identifier="1087"/>
+		<triangle-point triangle-point-identifier="1090"/>
+	</triangle>
+	<triangle identifier="236">
+		<triangle-point triangle-point-identifier="1020"/>
+		<triangle-point triangle-point-identifier="1088"/>
+		<triangle-point triangle-point-identifier="1016"/>
+	</triangle>
+	<triangle identifier="237">
+		<triangle-point triangle-point-identifier="1088"/>
+		<triangle-point triangle-point-identifier="1020"/>
+		<triangle-point triangle-point-identifier="1053"/>
+	</triangle>
+	<triangle identifier="238">
+		<triangle-point triangle-point-identifier="982"/>
+		<triangle-point triangle-point-identifier="1053"/>
+		<triangle-point triangle-point-identifier="1020"/>
+	</triangle>
+	<triangle identifier="239">
+		<triangle-point triangle-point-identifier="1053"/>
+		<triangle-point triangle-point-identifier="1052"/>
+		<triangle-point triangle-point-identifier="1088"/>
+	</triangle>
+	<triangle identifier="240">
+		<triangle-point triangle-point-identifier="1091"/>
+		<triangle-point triangle-point-identifier="1092"/>
+		<triangle-point triangle-point-identifier="1093"/>
+	</triangle>
+	<triangle identifier="241">
+		<triangle-point triangle-point-identifier="1093"/>
+		<triangle-point triangle-point-identifier="1066"/>
+		<triangle-point triangle-point-identifier="1091"/>
+	</triangle>
+	<triangle identifier="242">
+		<triangle-point triangle-point-identifier="1063"/>
+		<triangle-point triangle-point-identifier="1091"/>
+		<triangle-point triangle-point-identifier="1066"/>
+	</triangle>
+	<triangle identifier="243">
+		<triangle-point triangle-point-identifier="1066"/>
+		<triangle-point triangle-point-identifier="1093"/>
+		<triangle-point triangle-point-identifier="1028"/>
+	</triangle>
+	<triangle identifier="244">
+		<triangle-point triangle-point-identifier="1091"/>
+		<triangle-point triangle-point-identifier="1063"/>
+		<triangle-point triangle-point-identifier="1094"/>
+	</triangle>
+	<triangle identifier="245">
+		<triangle-point triangle-point-identifier="1094"/>
+		<triangle-point triangle-point-identifier="1095"/>
+		<triangle-point triangle-point-identifier="1091"/>
+	</triangle>
+	<triangle identifier="246">
+		<triangle-point triangle-point-identifier="1092"/>
+		<triangle-point triangle-point-identifier="1091"/>
+		<triangle-point triangle-point-identifier="1095"/>
+	</triangle>
+	<triangle identifier="247">
+		<triangle-point triangle-point-identifier="1095"/>
+		<triangle-point triangle-point-identifier="1094"/>
+		<triangle-point triangle-point-identifier="1096"/>
+	</triangle>
+	<triangle identifier="248">
+		<triangle-point triangle-point-identifier="1097"/>
+		<triangle-point triangle-point-identifier="1098"/>
+		<triangle-point triangle-point-identifier="1099"/>
+	</triangle>
+	<triangle identifier="249">
+		<triangle-point triangle-point-identifier="1099"/>
+		<triangle-point triangle-point-identifier="1095"/>
+		<triangle-point triangle-point-identifier="1097"/>
+	</triangle>
+	<triangle identifier="250">
+		<triangle-point triangle-point-identifier="1096"/>
+		<triangle-point triangle-point-identifier="1097"/>
+		<triangle-point triangle-point-identifier="1095"/>
+	</triangle>
+	<triangle identifier="251">
+		<triangle-point triangle-point-identifier="1095"/>
+		<triangle-point triangle-point-identifier="1099"/>
+		<triangle-point triangle-point-identifier="1092"/>
+	</triangle>
+	<triangle identifier="252">
+		<triangle-point triangle-point-identifier="1100"/>
+		<triangle-point triangle-point-identifier="1096"/>
+		<triangle-point triangle-point-identifier="1094"/>
+	</triangle>
+	<triangle identifier="253">
+		<triangle-point triangle-point-identifier="1094"/>
+		<triangle-point triangle-point-identifier="1062"/>
+		<triangle-point triangle-point-identifier="1100"/>
+	</triangle>
+	<triangle identifier="254">
+		<triangle-point triangle-point-identifier="1018"/>
+		<triangle-point triangle-point-identifier="1100"/>
+		<triangle-point triangle-point-identifier="1062"/>
+	</triangle>
+	<triangle identifier="255">
+		<triangle-point triangle-point-identifier="1062"/>
+		<triangle-point triangle-point-identifier="1094"/>
+		<triangle-point triangle-point-identifier="1063"/>
+	</triangle>
+	<triangle identifier="256">
+		<triangle-point triangle-point-identifier="1101"/>
+		<triangle-point triangle-point-identifier="1102"/>
+		<triangle-point triangle-point-identifier="1103"/>
+	</triangle>
+	<triangle identifier="257">
+		<triangle-point triangle-point-identifier="1103"/>
+		<triangle-point triangle-point-identifier="1072"/>
+		<triangle-point triangle-point-identifier="1101"/>
+	</triangle>
+	<triangle identifier="258">
+		<triangle-point triangle-point-identifier="1069"/>
+		<triangle-point triangle-point-identifier="1101"/>
+		<triangle-point triangle-point-identifier="1072"/>
+	</triangle>
+	<triangle identifier="259">
+		<triangle-point triangle-point-identifier="1072"/>
+		<triangle-point triangle-point-identifier="1103"/>
+		<triangle-point triangle-point-identifier="1038"/>
+	</triangle>
+	<triangle identifier="260">
+		<triangle-point triangle-point-identifier="1101"/>
+		<triangle-point triangle-point-identifier="1069"/>
+		<triangle-point triangle-point-identifier="1104"/>
+	</triangle>
+	<triangle identifier="261">
+		<triangle-point triangle-point-identifier="1104"/>
+		<triangle-point triangle-point-identifier="1105"/>
+		<triangle-point triangle-point-identifier="1101"/>
+	</triangle>
+	<triangle identifier="262">
+		<triangle-point triangle-point-identifier="1102"/>
+		<triangle-point triangle-point-identifier="1101"/>
+		<triangle-point triangle-point-identifier="1105"/>
+	</triangle>
+	<triangle identifier="263">
+		<triangle-point triangle-point-identifier="1105"/>
+		<triangle-point triangle-point-identifier="1104"/>
+		<triangle-point triangle-point-identifier="1092"/>
+	</triangle>
+	<triangle identifier="264">
+		<triangle-point triangle-point-identifier="1099"/>
+		<triangle-point triangle-point-identifier="1098"/>
+		<triangle-point triangle-point-identifier="1106"/>
+	</triangle>
+	<triangle identifier="265">
+		<triangle-point triangle-point-identifier="1106"/>
+		<triangle-point triangle-point-identifier="1105"/>
+		<triangle-point triangle-point-identifier="1099"/>
+	</triangle>
+	<triangle identifier="266">
+		<triangle-point triangle-point-identifier="1092"/>
+		<triangle-point triangle-point-identifier="1099"/>
+		<triangle-point triangle-point-identifier="1105"/>
+	</triangle>
+	<triangle identifier="267">
+		<triangle-point triangle-point-identifier="1105"/>
+		<triangle-point triangle-point-identifier="1106"/>
+		<triangle-point triangle-point-identifier="1102"/>
+	</triangle>
+	<triangle identifier="268">
+		<triangle-point triangle-point-identifier="1093"/>
+		<triangle-point triangle-point-identifier="1092"/>
+		<triangle-point triangle-point-identifier="1104"/>
+	</triangle>
+	<triangle identifier="269">
+		<triangle-point triangle-point-identifier="1104"/>
+		<triangle-point triangle-point-identifier="1068"/>
+		<triangle-point triangle-point-identifier="1093"/>
+	</triangle>
+	<triangle identifier="270">
+		<triangle-point triangle-point-identifier="1028"/>
+		<triangle-point triangle-point-identifier="1093"/>
+		<triangle-point triangle-point-identifier="1068"/>
+	</triangle>
+	<triangle identifier="271">
+		<triangle-point triangle-point-identifier="1068"/>
+		<triangle-point triangle-point-identifier="1104"/>
+		<triangle-point triangle-point-identifier="1069"/>
+	</triangle>
+	<triangle identifier="272">
+		<triangle-point triangle-point-identifier="1107"/>
+		<triangle-point triangle-point-identifier="1108"/>
+		<triangle-point triangle-point-identifier="1109"/>
+	</triangle>
+	<triangle identifier="273">
+		<triangle-point triangle-point-identifier="1109"/>
+		<triangle-point triangle-point-identifier="1078"/>
+		<triangle-point triangle-point-identifier="1107"/>
+	</triangle>
+	<triangle identifier="274">
+		<triangle-point triangle-point-identifier="1075"/>
+		<triangle-point triangle-point-identifier="1107"/>
+		<triangle-point triangle-point-identifier="1078"/>
+	</triangle>
+	<triangle identifier="275">
+		<triangle-point triangle-point-identifier="1078"/>
+		<triangle-point triangle-point-identifier="1109"/>
+		<triangle-point triangle-point-identifier="1048"/>
+	</triangle>
+	<triangle identifier="276">
+		<triangle-point triangle-point-identifier="1107"/>
+		<triangle-point triangle-point-identifier="1075"/>
+		<triangle-point triangle-point-identifier="1110"/>
+	</triangle>
+	<triangle identifier="277">
+		<triangle-point triangle-point-identifier="1110"/>
+		<triangle-point triangle-point-identifier="1111"/>
+		<triangle-point triangle-point-identifier="1107"/>
+	</triangle>
+	<triangle identifier="278">
+		<triangle-point triangle-point-identifier="1108"/>
+		<triangle-point triangle-point-identifier="1107"/>
+		<triangle-point triangle-point-identifier="1111"/>
+	</triangle>
+	<triangle identifier="279">
+		<triangle-point triangle-point-identifier="1111"/>
+		<triangle-point triangle-point-identifier="1110"/>
+		<triangle-point triangle-point-identifier="1102"/>
+	</triangle>
+	<triangle identifier="280">
+		<triangle-point triangle-point-identifier="1106"/>
+		<triangle-point triangle-point-identifier="1098"/>
+		<triangle-point triangle-point-identifier="1112"/>
+	</triangle>
+	<triangle identifier="281">
+		<triangle-point triangle-point-identifier="1112"/>
+		<triangle-point triangle-point-identifier="1111"/>
+		<triangle-point triangle-point-identifier="1106"/>
+	</triangle>
+	<triangle identifier="282">
+		<triangle-point triangle-point-identifier="1102"/>
+		<triangle-point triangle-point-identifier="1106"/>
+		<triangle-point triangle-point-identifier="1111"/>
+	</triangle>
+	<triangle identifier="283">
+		<triangle-point triangle-point-identifier="1111"/>
+		<triangle-point triangle-point-identifier="1112"/>
+		<triangle-point triangle-point-identifier="1108"/>
+	</triangle>
+	<triangle identifier="284">
+		<triangle-point triangle-point-identifier="1103"/>
+		<triangle-point triangle-point-identifier="1102"/>
+		<triangle-point triangle-point-identifier="1110"/>
+	</triangle>
+	<triangle identifier="285">
+		<triangle-point triangle-point-identifier="1110"/>
+		<triangle-point triangle-point-identifier="1074"/>
+		<triangle-point triangle-point-identifier="1103"/>
+	</triangle>
+	<triangle identifier="286">
+		<triangle-point triangle-point-identifier="1038"/>
+		<triangle-point triangle-point-identifier="1103"/>
+		<triangle-point triangle-point-identifier="1074"/>
+	</triangle>
+	<triangle identifier="287">
+		<triangle-point triangle-point-identifier="1074"/>
+		<triangle-point triangle-point-identifier="1110"/>
+		<triangle-point triangle-point-identifier="1075"/>
+	</triangle>
+	<triangle identifier="288">
+		<triangle-point triangle-point-identifier="1113"/>
+		<triangle-point triangle-point-identifier="1114"/>
+		<triangle-point triangle-point-identifier="1115"/>
+	</triangle>
+	<triangle identifier="289">
+		<triangle-point triangle-point-identifier="1115"/>
+		<triangle-point triangle-point-identifier="1084"/>
+		<triangle-point triangle-point-identifier="1113"/>
+	</triangle>
+	<triangle identifier="290">
+		<triangle-point triangle-point-identifier="1081"/>
+		<triangle-point triangle-point-identifier="1113"/>
+		<triangle-point triangle-point-identifier="1084"/>
+	</triangle>
+	<triangle identifier="291">
+		<triangle-point triangle-point-identifier="1084"/>
+		<triangle-point triangle-point-identifier="1115"/>
+		<triangle-point triangle-point-identifier="1058"/>
+	</triangle>
+	<triangle identifier="292">
+		<triangle-point triangle-point-identifier="1113"/>
+		<triangle-point triangle-point-identifier="1081"/>
+		<triangle-point triangle-point-identifier="1116"/>
+	</triangle>
+	<triangle identifier="293">
+		<triangle-point triangle-point-identifier="1116"/>
+		<triangle-point triangle-point-identifier="1117"/>
+		<triangle-point triangle-point-identifier="1113"/>
+	</triangle>
+	<triangle identifier="294">
+		<triangle-point triangle-point-identifier="1114"/>
+		<triangle-point triangle-point-identifier="1113"/>
+		<triangle-point triangle-point-identifier="1117"/>
+	</triangle>
+	<triangle identifier="295">
+		<triangle-point triangle-point-identifier="1117"/>
+		<triangle-point triangle-point-identifier="1116"/>
+		<triangle-point triangle-point-identifier="1108"/>
+	</triangle>
+	<triangle identifier="296">
+		<triangle-point triangle-point-identifier="1112"/>
+		<triangle-point triangle-point-identifier="1098"/>
+		<triangle-point triangle-point-identifier="1118"/>
+	</triangle>
+	<triangle identifier="297">
+		<triangle-point triangle-point-identifier="1118"/>
+		<triangle-point triangle-point-identifier="1117"/>
+		<triangle-point triangle-point-identifier="1112"/>
+	</triangle>
+	<triangle identifier="298">
+		<triangle-point triangle-point-identifier="1108"/>
+		<triangle-point triangle-point-identifier="1112"/>
+		<triangle-point triangle-point-identifier="1117"/>
+	</triangle>
+	<triangle identifier="299">
+		<triangle-point triangle-point-identifier="1117"/>
+		<triangle-point triangle-point-identifier="1118"/>
+		<triangle-point triangle-point-identifier="1114"/>
+	</triangle>
+	<triangle identifier="300">
+		<triangle-point triangle-point-identifier="1109"/>
+		<triangle-point triangle-point-identifier="1108"/>
+		<triangle-point triangle-point-identifier="1116"/>
+	</triangle>
+	<triangle identifier="301">
+		<triangle-point triangle-point-identifier="1116"/>
+		<triangle-point triangle-point-identifier="1080"/>
+		<triangle-point triangle-point-identifier="1109"/>
+	</triangle>
+	<triangle identifier="302">
+		<triangle-point triangle-point-identifier="1048"/>
+		<triangle-point triangle-point-identifier="1109"/>
+		<triangle-point triangle-point-identifier="1080"/>
+	</triangle>
+	<triangle identifier="303">
+		<triangle-point triangle-point-identifier="1080"/>
+		<triangle-point triangle-point-identifier="1116"/>
+		<triangle-point triangle-point-identifier="1081"/>
+	</triangle>
+	<triangle identifier="304">
+		<triangle-point triangle-point-identifier="1119"/>
+		<triangle-point triangle-point-identifier="1096"/>
+		<triangle-point triangle-point-identifier="1100"/>
+	</triangle>
+	<triangle identifier="305">
+		<triangle-point triangle-point-identifier="1100"/>
+		<triangle-point triangle-point-identifier="1090"/>
+		<triangle-point triangle-point-identifier="1119"/>
+	</triangle>
+	<triangle identifier="306">
+		<triangle-point triangle-point-identifier="1087"/>
+		<triangle-point triangle-point-identifier="1119"/>
+		<triangle-point triangle-point-identifier="1090"/>
+	</triangle>
+	<triangle identifier="307">
+		<triangle-point triangle-point-identifier="1090"/>
+		<triangle-point triangle-point-identifier="1100"/>
+		<triangle-point triangle-point-identifier="1018"/>
+	</triangle>
+	<triangle identifier="308">
+		<triangle-point triangle-point-identifier="1119"/>
+		<triangle-point triangle-point-identifier="1087"/>
+		<triangle-point triangle-point-identifier="1120"/>
+	</triangle>
+	<triangle identifier="309">
+		<triangle-point triangle-point-identifier="1120"/>
+		<triangle-point triangle-point-identifier="1121"/>
+		<triangle-point triangle-point-identifier="1119"/>
+	</triangle>
+	<triangle identifier="310">
+		<triangle-point triangle-point-identifier="1096"/>
+		<triangle-point triangle-point-identifier="1119"/>
+		<triangle-point triangle-point-identifier="1121"/>
+	</triangle>
+	<triangle identifier="311">
+		<triangle-point triangle-point-identifier="1121"/>
+		<triangle-point triangle-point-identifier="1120"/>
+		<triangle-point triangle-point-identifier="1114"/>
+	</triangle>
+	<triangle identifier="312">
+		<triangle-point triangle-point-identifier="1118"/>
+		<triangle-point triangle-point-identifier="1098"/>
+		<triangle-point triangle-point-identifier="1097"/>
+	</triangle>
+	<triangle identifier="313">
+		<triangle-point triangle-point-identifier="1097"/>
+		<triangle-point triangle-point-identifier="1121"/>
+		<triangle-point triangle-point-identifier="1118"/>
+	</triangle>
+	<triangle identifier="314">
+		<triangle-point triangle-point-identifier="1114"/>
+		<triangle-point triangle-point-identifier="1118"/>
+		<triangle-point triangle-point-identifier="1121"/>
+	</triangle>
+	<triangle identifier="315">
+		<triangle-point triangle-point-identifier="1121"/>
+		<triangle-point triangle-point-identifier="1097"/>
+		<triangle-point triangle-point-identifier="1096"/>
+	</triangle>
+	<triangle identifier="316">
+		<triangle-point triangle-point-identifier="1115"/>
+		<triangle-point triangle-point-identifier="1114"/>
+		<triangle-point triangle-point-identifier="1120"/>
+	</triangle>
+	<triangle identifier="317">
+		<triangle-point triangle-point-identifier="1120"/>
+		<triangle-point triangle-point-identifier="1086"/>
+		<triangle-point triangle-point-identifier="1115"/>
+	</triangle>
+	<triangle identifier="318">
+		<triangle-point triangle-point-identifier="1058"/>
+		<triangle-point triangle-point-identifier="1115"/>
+		<triangle-point triangle-point-identifier="1086"/>
+	</triangle>
+	<triangle identifier="319">
+		<triangle-point triangle-point-identifier="1086"/>
+		<triangle-point triangle-point-identifier="1120"/>
+		<triangle-point triangle-point-identifier="1087"/>
+	</triangle>
+</mesh>
