@@ -4,7 +4,7 @@
 
 #include <GL/gl.h>
 #include <GL/glu.h>
-#include <GL/glut.h>
+#include <GL/glx.h>
 
 #include <algorithm>
 #include <iostream>
@@ -25,97 +25,11 @@
 #include "widgets/widgets.h"
 #include "xmlparser.h"
 
-// define names for keys which are not yet defined by GLUT
-#define GLUT_KEY_BACKSPACE 8
-#define GLUT_KEY_TABULATOR 9
-#define GLUT_KEY_ENTER 13
-#define GLUT_KEY_ESCAPE 27
-#define GLUT_KEY_DELETE 127
-
-// define our own key codes
-#define LITTLEM_KEY_NONE -1
-#define LITTLEM_KEY_0 0
-#define LITTLEM_KEY_1 1
-#define LITTLEM_KEY_2 2
-#define LITTLEM_KEY_3 3
-#define LITTLEM_KEY_4 4
-#define LITTLEM_KEY_5 5
-#define LITTLEM_KEY_6 6
-#define LITTLEM_KEY_7 7
-#define LITTLEM_KEY_8 8
-#define LITTLEM_KEY_9 9
-#define LITTLEM_KEY_A 10
-#define LITTLEM_KEY_B 11
-#define LITTLEM_KEY_C 12
-#define LITTLEM_KEY_D 13
-#define LITTLEM_KEY_E 14
-#define LITTLEM_KEY_F 15
-#define LITTLEM_KEY_G 16
-#define LITTLEM_KEY_H 17
-#define LITTLEM_KEY_I 18
-#define LITTLEM_KEY_J 19
-#define LITTLEM_KEY_K 20
-#define LITTLEM_KEY_L 21
-#define LITTLEM_KEY_M 22
-#define LITTLEM_KEY_N 23
-#define LITTLEM_KEY_O 24
-#define LITTLEM_KEY_P 25
-#define LITTLEM_KEY_Q 26
-#define LITTLEM_KEY_R 27
-#define LITTLEM_KEY_S 28
-#define LITTLEM_KEY_T 29
-#define LITTLEM_KEY_U 30
-#define LITTLEM_KEY_V 31
-#define LITTLEM_KEY_W 32
-#define LITTLEM_KEY_X 33
-#define LITTLEM_KEY_Y 34
-#define LITTLEM_KEY_Z 35
-#define LITTLEM_KEY_SPACE 36
-#define LITTLEM_KEY_ENTER 37
-#define LITTLEM_KEY_ESCAPE 38
-#define LITTLEM_KEY_DELETE 39
-#define LITTLEM_KEY_PLUS 40
-#define LITTLEM_KEY_MINUS 41
-#define LITTLEM_KEY_ASTERISK 42
-#define LITTLEM_KEY_LESS_THAN 43
-#define LITTLEM_KEY_GREATER_THAN 44
-#define LITTLEM_KEY_SLASH 45
-#define LITTLEM_KEY_LEFT_BRACKET 46
-#define LITTLEM_KEY_RIGHT_BRACKET 47
-#define LITTLEM_KEY_UP 48
-#define LITTLEM_KEY_DOWN 49
-#define LITTLEM_KEY_LEFT 50
-#define LITTLEM_KEY_RIGHT 51
-#define LITTLEM_KEY_PAGE_UP 52
-#define LITTLEM_KEY_PAGE_DOWN 53
-#define LITTLEM_KEY_HOME 54
-#define LITTLEM_KEY_END 55
-#define LITTLEM_KEY_F1 56
-#define LITTLEM_KEY_F2 57
-#define LITTLEM_KEY_F3 58
-#define LITTLEM_KEY_F4 59
-#define LITTLEM_KEY_F5 60
-#define LITTLEM_KEY_F6 61
-#define LITTLEM_KEY_F12 67
-#define LITTLEM_KEY_BACKTICK 68
-#define LITTLEM_KEY_BACKSPACE 69
-#define LITTLEM_KEY_FULL_STOP 70
-#define LITTLEM_KEY_TABULATOR 71
-
-// define flags for mouse buttons
-#define LITTLEM_LEFT_MOUSE_BUTTON 1
-#define LITTLEM_MIDDLE_MOUSE_BUTTON 2
-#define LITTLEM_RIGHT_MOUSE_BUTTON 4
-
 // types of objects
 #define LITTLEM_CAMERA 0
 #define LITTLEM_LIGHT 1
 #define LITTLEM_POINT 2
 #define LITTLEM_TRIANGLE 3
-
-// define names for mouse buttons 3 and 4 which are mouse wheel up and down respectively
-#define GLUT_WHEEL_UP 3
-#define GLUT_WHEEL_DOWN 4
 
 #define CHECK_GL_ERROR() vCheckGLError(__FILE__, __LINE__)
 
@@ -146,10 +60,23 @@ enum
 	LITTLEM_AXIS_NEGATIVE_Z = 5
 };
 
+enum class MouseButton
+{
+	Undefined,
+	Left,
+	Middle,
+	Right,
+	WheelDown,
+	WheelUp
+};
+
 int g_UpAxis;
 int g_FrontAxis;
 float g_Width(800.0f);
 float g_Height(800.0f);
+bool g_AltActive(false);
+bool g_ShiftActive(false);
+bool g_ControlActive(false);
 
 #include "point.h"
 #include "triangle.h"
@@ -525,6 +452,10 @@ private:
 	std::vector< LightDescription > m_LightDescriptions;
 };
 
+Display * g_Display;
+GLXContext g_GLXContext;
+Window g_Window;
+Colormap g_ColorMap;
 std::vector< Point * > g_Points;
 std::vector< TrianglePoint * > g_TrianglePoints;
 std::vector< Triangle * > g_Triangles;
@@ -545,12 +476,29 @@ int g_iLastMotionY = -1;
 int g_iMouseX = 0;
 int g_iMouseY = 0;
 bool g_bMoved = false;
+bool g_Quit(false);
 GLuint g_puiSelectionBuffer[1024];
 bool g_bSnapping = false;
 float g_fSnapFactor = 0.1;
-int g_iMouseButtonFlags = 0;
+MouseButton g_MouseButton(MouseButton::Undefined);
 std::deque< int > g_FreeLights;
 UserInterface g_UserInterface;
+
+std::vector< std::string > SplitString(const std::string & String, char Delimiter)
+{
+	std::vector< std::string > Result;
+	size_t Begin(0);
+	size_t End(String.find(Delimiter, Begin));
+	
+	while(End != std::string::npos)
+	{
+		Result.push_back(String.substr(Begin, End - Begin));
+		Begin = End + 1;
+		End = String.find(Delimiter, Begin);
+	}
+	
+	return Result;
+}
 
 void vCheckGLError(const char * pcFile, int iLine)
 {
@@ -1212,7 +1160,6 @@ void vDisplay(void)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	vDisplayModelView();
 	vDisplayUserInterface();
-	glutSwapBuffers();
 }
 
 void vDeleteTrianglePoint(TrianglePoint * pTrianglePoint)
@@ -1417,7 +1364,6 @@ void vTogglePointSmooth(void)
 	{
 		glEnable(GL_POINT_SMOOTH);
 	}
-	glutPostRedisplay();
 }
 
 /**
@@ -1435,7 +1381,6 @@ void vToggleCullFace(void)
 	{
 		glEnable(GL_CULL_FACE);
 	}
-	glutPostRedisplay();
 }
 
 /**
@@ -1453,7 +1398,6 @@ void vToggleDepthTest(void)
 	{
 		glEnable(GL_DEPTH_TEST);
 	}
-	glutPostRedisplay();
 }
 
 /**
@@ -1475,7 +1419,6 @@ void vToggleFrontFace(void)
 	{
 		glFrontFace(GL_CCW);
 	}
-	glutPostRedisplay();
 }
 
 /**
@@ -1493,7 +1436,6 @@ void vToggleLighting(void)
 	{
 		glEnable(GL_LIGHTING);
 	}
-	glutPostRedisplay();
 }
 
 /**
@@ -1504,7 +1446,6 @@ void vToggleLighting(void)
 void vToggleSnapping(void)
 {
 	g_bSnapping = !g_bSnapping;
-	glutPostRedisplay();
 }
 
 void vAdjustFloatValue(float & fValue, float fDelta)
@@ -1579,174 +1520,16 @@ void MovePosition(Position * Position, int Axis, float Delta)
 	}
 }
 
-/**
- * @brief Return a littlem key code for the given character.
- **/
-int iGetKeyCodeFromCharacter(unsigned char cKey)
-{
-	switch(cKey)
-	{
-	case GLUT_KEY_BACKSPACE: return LITTLEM_KEY_BACKSPACE;
-	case GLUT_KEY_TABULATOR: return LITTLEM_KEY_TABULATOR;
-	case GLUT_KEY_ENTER: return LITTLEM_KEY_ENTER;
-	case GLUT_KEY_ESCAPE: return LITTLEM_KEY_ESCAPE;
-	case GLUT_KEY_DELETE: return LITTLEM_KEY_DELETE;
-	case ' ': return LITTLEM_KEY_SPACE;
-	case '0': return LITTLEM_KEY_0;
-	case '1': return LITTLEM_KEY_1;
-	case '2': return LITTLEM_KEY_2;
-	case '3': return LITTLEM_KEY_3;
-	case '4': return LITTLEM_KEY_4;
-	case '5': return LITTLEM_KEY_5;
-	case '6': return LITTLEM_KEY_6;
-	case '7': return LITTLEM_KEY_7;
-	case '8': return LITTLEM_KEY_8;
-	case '9': return LITTLEM_KEY_9;
-	case 'a':
-	case 'A': return LITTLEM_KEY_A;
-	case 'b':
-	case 'B': return LITTLEM_KEY_B;
-	case 'c':
-	case 'C': return LITTLEM_KEY_C;
-	case 'd':
-	case 'D': return LITTLEM_KEY_D;
-	case 'e':
-	case 'E': return LITTLEM_KEY_E;
-	case 'f':
-	case 'F': return LITTLEM_KEY_F;
-	case 'g':
-	case 'G': return LITTLEM_KEY_G;
-	case 'h':
-	case 'H': return LITTLEM_KEY_H;
-	case 'i':
-	case 'I': return LITTLEM_KEY_I;
-	case 'j':
-	case 'J': return LITTLEM_KEY_J;
-	case 'k':
-	case 'K': return LITTLEM_KEY_K;
-	case 'l':
-	case 'L': return LITTLEM_KEY_L;
-	case 'm':
-	case 'M': return LITTLEM_KEY_M;
-	case 'n':
-	case 'N': return LITTLEM_KEY_N;
-	case 'o':
-	case 'O': return LITTLEM_KEY_O;
-	case 'p':
-	case 'P': return LITTLEM_KEY_P;
-	case 'q':
-	case 'Q': return LITTLEM_KEY_Q;
-	case 'r':
-	case 'R': return LITTLEM_KEY_R;
-	case 's':
-	case 'S': return LITTLEM_KEY_S;
-	case 't':
-	case 'T': return LITTLEM_KEY_T;
-	case 'u':
-	case 'U': return LITTLEM_KEY_U;
-	case 'v':
-	case 'V': return LITTLEM_KEY_V;
-	case 'w':
-	case 'W': return LITTLEM_KEY_W;
-	case 'x':
-	case 'X': return LITTLEM_KEY_X;
-	case 'y':
-	case 'Y': return LITTLEM_KEY_Y;
-	case 'z':
-	case 'Z': return LITTLEM_KEY_Z;
-	case '+': return LITTLEM_KEY_PLUS;
-	case '-': return LITTLEM_KEY_MINUS;
-	case '*': return LITTLEM_KEY_ASTERISK;
-	case '<': return LITTLEM_KEY_LESS_THAN;
-	case '>': return LITTLEM_KEY_GREATER_THAN;
-	case '/': return LITTLEM_KEY_SLASH;
-	case '[': return LITTLEM_KEY_LEFT_BRACKET;
-	case ']': return LITTLEM_KEY_RIGHT_BRACKET;
-	case '`': return LITTLEM_KEY_BACKTICK;
-	case '.': return LITTLEM_KEY_FULL_STOP;
-	}
-	return LITTLEM_KEY_NONE;
-}
-
-/**
- * @brief Return a littlem key code for the given GLUT key code.
- **/
-int iGetKeyCodeFromSpecialKey(int iKey)
-{
-	switch(iKey)
-	{
-	case GLUT_KEY_LEFT: return LITTLEM_KEY_LEFT;
-	case GLUT_KEY_RIGHT: return LITTLEM_KEY_RIGHT;
-	case GLUT_KEY_UP: return LITTLEM_KEY_UP;
-	case GLUT_KEY_DOWN: return LITTLEM_KEY_DOWN;
-	case GLUT_KEY_PAGE_UP: return LITTLEM_KEY_PAGE_UP;
-	case GLUT_KEY_PAGE_DOWN: return LITTLEM_KEY_PAGE_DOWN;
-	case GLUT_KEY_HOME: return LITTLEM_KEY_HOME;
-	case GLUT_KEY_END: return LITTLEM_KEY_END;
-	case GLUT_KEY_F1: return LITTLEM_KEY_F1;
-	case GLUT_KEY_F2: return LITTLEM_KEY_F2;
-	case GLUT_KEY_F3: return LITTLEM_KEY_F3;
-	case GLUT_KEY_F4: return LITTLEM_KEY_F4;
-	case GLUT_KEY_F5: return LITTLEM_KEY_F5;
-	case GLUT_KEY_F6: return LITTLEM_KEY_F6;
-	case GLUT_KEY_F12: return LITTLEM_KEY_F12;
-	}
-	return LITTLEM_KEY_NONE;
-}
-
-bool bIsAlphabetKeyCode(int iKeyCode)
-{
-	return (iKeyCode >= LITTLEM_KEY_A) && (iKeyCode <= LITTLEM_KEY_Z);
-}
-
-bool bIsDigitKeyCode(int iKeyCode)
-{
-	return (iKeyCode >= LITTLEM_KEY_0) && (iKeyCode <= LITTLEM_KEY_9);
-}
-
-bool bIsFloatNumberKeyCode(int iKeyCode)
-{
-	return bIsDigitKeyCode(iKeyCode) || (iKeyCode == LITTLEM_KEY_FULL_STOP) || (iKeyCode == LITTLEM_KEY_MINUS);
-}
-
-bool bIsAlphaNumericKeyCode(int iKeyCode)
-{
-	return (bIsAlphabetKeyCode(iKeyCode) == true) || (bIsDigitKeyCode(iKeyCode) == true);
-}
-
-char cGetCharacterFromKeyCode(int iKeyCode)
-{
-	if(bIsAlphabetKeyCode(iKeyCode) == true)
-	{
-		return 'a' + iKeyCode - LITTLEM_KEY_A;
-	}
-	else if(bIsDigitKeyCode(iKeyCode) == true)
-	{
-		return '0' + iKeyCode - LITTLEM_KEY_0;
-	}
-	else if(iKeyCode == LITTLEM_KEY_FULL_STOP)
-	{
-		return '.';
-	}
-	else if(iKeyCode == LITTLEM_KEY_MINUS)
-	{
-		return '-';
-	}
-	
-	return '\0';
-}
-
 class PointsView : public KeyAcceptor
 {
 public:
 	virtual bool bAcceptKey(int iKeyCode)
 	{
 		bool bKeyAccepted(false);
-		int Modifiers(glutGetModifiers());
 		
 		switch(iKeyCode)
 		{
-		case LITTLEM_KEY_SPACE:
+		case 65: // SPACE
 			{
 				// create triangle from three selected points
 				if(g_SelectedPoints.size() == 3)
@@ -1775,18 +1558,16 @@ public:
 					g_Triangles.push_back(pNewTriangle);
 					g_SelectedTriangles.push_back(pNewTriangle);
 					g_SelectedPoints.clear();
-					glutPostRedisplay();
 					bKeyAccepted = true;
 				}
 				
 				break;
 			}
-		case LITTLEM_KEY_TABULATOR:
+		case 23: // TABULATOR
 			{
 				// rotate point selection
 				if(g_SelectedPoints.size() > 0)
 				{
-					glutPostRedisplay();
 					bKeyAccepted = true;
 				}
 				
@@ -1806,12 +1587,11 @@ public:
 				
 				break;
 			}
-		case LITTLEM_KEY_D:
+		case 40: // D
 			{
 				// duplicate selected points
 				if(g_SelectedPoints.size() > 0)
 				{
-					glutPostRedisplay();
 					bKeyAccepted = true;
 				}
 				
@@ -1826,63 +1606,57 @@ public:
 				
 				break;
 			}
-		case LITTLEM_KEY_N:
+		case 57: // N
 			{
-				if(Modifiers == 0)
+				if(g_ShiftActive == true)
 				{
-				// create new point at random coordinates within (-1.0 .. 1.0, -1.0 .. 1.0, -1.0 .. 1.0)
-					g_Points.push_back(new Point(-1.0f + 2 * (static_cast< double> (random()) / RAND_MAX), -1.0f + 2 * (static_cast< double> (random()) / RAND_MAX), -1.0f + 2 * (static_cast< double> (random()) / RAND_MAX)));
-				}
-				else if(Modifiers == GLUT_ACTIVE_SHIFT)
-				{
-				// create new point at coordinates (0.0, 0.0, 0.0)
+					// create new point at coordinates (0.0, 0.0, 0.0)
 					g_Points.push_back(new Point(0.0f, 0.0f, 0.0f));
 				}
+				else
+				{
+					// create new point at random coordinates within (-1.0 .. 1.0, -1.0 .. 1.0, -1.0 .. 1.0)
+					g_Points.push_back(new Point(-1.0f + 2 * (static_cast< double> (random()) / RAND_MAX), -1.0f + 2 * (static_cast< double> (random()) / RAND_MAX), -1.0f + 2 * (static_cast< double> (random()) / RAND_MAX)));
+				}
 				bKeyAccepted = true;
-				glutPostRedisplay();
 				
 				break;
 			}
-		case LITTLEM_KEY_T:
+		case 28: // T
 			{
 				// select all triangles which contain the selected points
-				if(Modifiers == 0)
+				if(g_SelectedPoints.size() > 0)
 				{
-					if(g_SelectedPoints.size() > 0)
+					g_SelectedTriangles.clear();
+					
+					std::vector< Triangle * > TrianglesToSelect;
+					
+					for(std::vector< Point * >::size_type stPoint = 0; stPoint < g_SelectedPoints.size(); ++stPoint)
 					{
-						g_SelectedTriangles.clear();
-						
-						std::vector< Triangle * > TrianglesToSelect;
-						
-						for(std::vector< Point * >::size_type stPoint = 0; stPoint < g_SelectedPoints.size(); ++stPoint)
+						for(std::vector< TrianglePoint * >::size_type stTrianglePoint = 0; stTrianglePoint < g_SelectedPoints[stPoint]->m_TrianglePoints.size(); ++stTrianglePoint)
 						{
-							for(std::vector< TrianglePoint * >::size_type stTrianglePoint = 0; stTrianglePoint < g_SelectedPoints[stPoint]->m_TrianglePoints.size(); ++stTrianglePoint)
-							{
-								copy(g_SelectedPoints[stPoint]->m_TrianglePoints[stTrianglePoint]->m_Triangles.begin(), g_SelectedPoints[stPoint]->m_TrianglePoints[stTrianglePoint]->m_Triangles.end(), back_inserter(TrianglesToSelect));
-							}
+							copy(g_SelectedPoints[stPoint]->m_TrianglePoints[stTrianglePoint]->m_Triangles.begin(), g_SelectedPoints[stPoint]->m_TrianglePoints[stTrianglePoint]->m_Triangles.end(), back_inserter(TrianglesToSelect));
 						}
-						std::sort(TrianglesToSelect.begin(), TrianglesToSelect.end());
-						std::unique_copy(TrianglesToSelect.begin(), TrianglesToSelect.end(), back_inserter(g_SelectedTriangles));
-						glutPostRedisplay();
-						bKeyAccepted = true;
 					}
+					std::sort(TrianglesToSelect.begin(), TrianglesToSelect.end());
+					std::unique_copy(TrianglesToSelect.begin(), TrianglesToSelect.end(), back_inserter(g_SelectedTriangles));
+					bKeyAccepted = true;
 				}
 				
 				break;
 			}
-		case LITTLEM_KEY_DELETE:
+		case 119: // DELETE
 			{
 				// delete selected points
 				while(g_SelectedPoints.size() > 0)
 				{
 					vDeletePoint(g_SelectedPoints.front());
 				}
-				glutPostRedisplay();
 				bKeyAccepted = true;
 				
 				break;
 			}
-		case LITTLEM_KEY_RIGHT:
+		case 114: // RIGHT
 			{
 				if(g_SelectedPoints.size() > 0)
 				{
@@ -1890,13 +1664,12 @@ public:
 					{
 						MovePosition(g_SelectedPoints[stI], 0, g_fSnapFactor);
 					}
-					glutPostRedisplay();
 					bKeyAccepted = true;
 				}
 				
 				break;
 			}
-		case LITTLEM_KEY_LEFT:
+		case 113: // LEFT
 			{
 				if(g_SelectedPoints.size() > 0)
 				{
@@ -1904,13 +1677,12 @@ public:
 					{
 						MovePosition(g_SelectedPoints[stI], 0, -g_fSnapFactor);
 					}
-					glutPostRedisplay();
 					bKeyAccepted = true;
 				}
 				
 				break;
 			}
-		case LITTLEM_KEY_UP:
+		case 111: // UP
 			{
 				if(g_SelectedPoints.size() > 0)
 				{
@@ -1918,13 +1690,12 @@ public:
 					{
 						MovePosition(g_SelectedPoints[stI], 1, g_fSnapFactor);
 					}
-					glutPostRedisplay();
 					bKeyAccepted = true;
 				}
 				
 				break;
 			}
-		case LITTLEM_KEY_DOWN:
+		case 116: // DOWN
 			{
 				if(g_SelectedPoints.size() > 0)
 				{
@@ -1932,13 +1703,12 @@ public:
 					{
 						MovePosition(g_SelectedPoints[stI], 1, -g_fSnapFactor);
 					}
-					glutPostRedisplay();
 					bKeyAccepted = true;
 				}
 				
 				break;
 			}
-		case LITTLEM_KEY_PAGE_DOWN:
+		case 117: // PAGE DOWN
 			{
 				if(g_SelectedPoints.size() > 0)
 				{
@@ -1946,13 +1716,12 @@ public:
 					{
 						MovePosition(g_SelectedPoints[stI], 2, g_fSnapFactor);
 					}
-					glutPostRedisplay();
 					bKeyAccepted = true;
 				}
 				
 				break;
 			}
-		case LITTLEM_KEY_PAGE_UP:
+		case 112: // PAGE UP
 			{
 				if(g_SelectedPoints.size() > 0)
 				{
@@ -1960,7 +1729,6 @@ public:
 					{
 						MovePosition(g_SelectedPoints[stI], 2, -g_fSnapFactor);
 					}
-					glutPostRedisplay();
 					bKeyAccepted = true;
 				}
 				
@@ -1978,81 +1746,68 @@ public:
 	virtual bool bAcceptKey(int iKeyCode)
 	{
 		bool bKeyAccepted(false);
-		int Modifiers(glutGetModifiers());
 		
 		switch(iKeyCode)
 		{
-		case LITTLEM_KEY_I:
+		case 31: // I
 			{
 				// change triangle front and back
-				if(Modifiers == 0)
+				if(g_SelectedTriangles.size() > 0)
 				{
-					if(g_SelectedTriangles.size() > 0)
+					for(std::vector< Triangle * >::size_type stTriangle = 0; stTriangle < g_SelectedTriangles.size(); ++stTriangle)
 					{
-						for(std::vector< Triangle * >::size_type stTriangle = 0; stTriangle < g_SelectedTriangles.size(); ++stTriangle)
-						{
-							g_SelectedTriangles[stTriangle]->vInvert();
-						}
-						glutPostRedisplay();
-						bKeyAccepted = true;
+						g_SelectedTriangles[stTriangle]->vInvert();
 					}
-				}
-				
-				break;
-			}
-		case LITTLEM_KEY_S:
-			{
-				if(Modifiers == 0)
-				{
-					for(std::vector< Point * >::size_type stPoint = 0; stPoint < g_SelectedPoints.size(); ++stPoint)
-					{
-						for(std::vector< Triangle * >::size_type stTriangle = 0; stTriangle < g_SelectedTriangles.size(); ++stTriangle)
-						{
-							TrianglePoint * pOldTrianglePoint(g_SelectedTriangles[stTriangle]->pGetTrianglePoint(g_SelectedPoints[stPoint]));
-							
-							if(pOldTrianglePoint != 0)
-							{
-								TrianglePoint * pNewTrianglePoint(new TrianglePoint());
-								
-								pNewTrianglePoint->m_pPoint = g_SelectedPoints[stPoint];
-								pNewTrianglePoint->m_Normal = g_SelectedTriangles[stTriangle]->GetTriangleNormal();
-								g_TrianglePoints.push_back(pNewTrianglePoint);
-								vExchangeTrianglePoint(g_SelectedTriangles[stTriangle], pOldTrianglePoint, pNewTrianglePoint);
-							}
-						}
-					}
-					glutPostRedisplay();
 					bKeyAccepted = true;
 				}
 				
 				break;
 			}
-		case LITTLEM_KEY_T:
+		case 39: // S
 			{
-				if(Modifiers == 0)
+				for(std::vector< Point * >::size_type stPoint = 0; stPoint < g_SelectedPoints.size(); ++stPoint)
 				{
-					if(g_SelectedTriangles.size() > 0)
+					for(std::vector< Triangle * >::size_type stTriangle = 0; stTriangle < g_SelectedTriangles.size(); ++stTriangle)
 					{
-						g_SelectedPoints.clear();
+						TrianglePoint * pOldTrianglePoint(g_SelectedTriangles[stTriangle]->pGetTrianglePoint(g_SelectedPoints[stPoint]));
 						
-						std::vector< Point * > PointsToSelect;
-						
-						for(std::vector< Triangle * >::size_type stTriangle = 0; stTriangle < g_SelectedTriangles.size(); ++stTriangle)
+						if(pOldTrianglePoint != 0)
 						{
-							PointsToSelect.push_back(g_SelectedTriangles[stTriangle]->pGetPoint(1));
-							PointsToSelect.push_back(g_SelectedTriangles[stTriangle]->pGetPoint(2));
-							PointsToSelect.push_back(g_SelectedTriangles[stTriangle]->pGetPoint(3));
+							TrianglePoint * pNewTrianglePoint(new TrianglePoint());
+							
+							pNewTrianglePoint->m_pPoint = g_SelectedPoints[stPoint];
+							pNewTrianglePoint->m_Normal = g_SelectedTriangles[stTriangle]->GetTriangleNormal();
+							g_TrianglePoints.push_back(pNewTrianglePoint);
+							vExchangeTrianglePoint(g_SelectedTriangles[stTriangle], pOldTrianglePoint, pNewTrianglePoint);
 						}
-						std::sort(PointsToSelect.begin(), PointsToSelect.end());
-						std::unique_copy(PointsToSelect.begin(), PointsToSelect.end(), back_inserter(g_SelectedPoints));
-						glutPostRedisplay();
-						bKeyAccepted = true;
 					}
+				}
+				bKeyAccepted = true;
+				
+				break;
+			}
+		case 28: // T
+			{
+				if(g_SelectedTriangles.size() > 0)
+				{
+					g_SelectedPoints.clear();
+					
+					std::vector< Point * > PointsToSelect;
+					
+					for(std::vector< Triangle * >::size_type stTriangle = 0; stTriangle < g_SelectedTriangles.size(); ++stTriangle)
+					{
+						PointsToSelect.push_back(g_SelectedTriangles[stTriangle]->pGetPoint(1));
+						PointsToSelect.push_back(g_SelectedTriangles[stTriangle]->pGetPoint(2));
+						PointsToSelect.push_back(g_SelectedTriangles[stTriangle]->pGetPoint(3));
+					}
+					std::sort(PointsToSelect.begin(), PointsToSelect.end());
+					std::unique_copy(PointsToSelect.begin(), PointsToSelect.end(), back_inserter(g_SelectedPoints));
+					bKeyAccepted = true;
 				}
 				
 				break;
 			}
-		case LITTLEM_KEY_U:
+		case 30: // U
 			{
 				for(std::vector< Point * >::size_type stPoint = 0; stPoint < g_SelectedPoints.size(); ++stPoint)
 				{
@@ -2078,14 +1833,13 @@ public:
 					if(pNewTrianglePoint != 0)
 					{
 						pNewTrianglePoint->m_Normal.Normalize();
-						glutPostRedisplay();
 					}
 				}
 				bKeyAccepted = true;
 				
 				break;
 			}
-		case LITTLEM_KEY_ENTER:
+		case 36: // ENTER
 			{
 				if(g_SelectedTriangles.size() > 0)
 				{
@@ -2093,13 +1847,12 @@ public:
 					{
 						g_SelectedTriangles[stTriangle]->vRealignNormal();
 					}
-					glutPostRedisplay();
 					bKeyAccepted = true;
 				}
 				
 				break;
 			}
-		case LITTLEM_KEY_DELETE:
+		case 119: // DELETE
 			{
 				if(g_SelectedTriangles.size() > 0)
 				{
@@ -2107,7 +1860,6 @@ public:
 					{
 						vDeleteTriangle(g_SelectedTriangles.front());
 					}
-					glutPostRedisplay();
 					bKeyAccepted = true;
 				}
 				
@@ -2125,45 +1877,35 @@ public:
 	virtual bool bAcceptKey(int iKeyCode)
 	{
 		bool bKeyAccepted(false);
-		int Modifiers(glutGetModifiers());
 		
 		switch(iKeyCode)
 		{
-		case LITTLEM_KEY_C:
+		case 54: // C
 			{
-				if(Modifiers == 0)
-				{
-					Camera * pCamera(new Camera());
-					
-					pCamera->SetPosition(0.0f, 0.0f, 0.0f);
-					pCamera->m_Orientation.Identity();
-					pCamera->m_fFieldOfView = 52.0f;
-					g_Cameras.push_back(pCamera);
-					glutPostRedisplay();
-					bKeyAccepted = true;
-				}
+				Camera * pCamera(new Camera());
+				
+				pCamera->SetPosition(0.0f, 0.0f, 0.0f);
+				pCamera->m_Orientation.Identity();
+				pCamera->m_fFieldOfView = 52.0f;
+				g_Cameras.push_back(pCamera);
+				bKeyAccepted = true;
 				
 				break;
 			}
-		case LITTLEM_KEY_SPACE:
+		case 65: // SPACE
 			{
-				if(Modifiers == 0)
+				if(g_pHoveredCamera != 0)
 				{
-					if(g_pHoveredCamera != 0)
-					{
-						g_CurrentCamera = g_pHoveredCamera;
-						glutPostRedisplay();
-						bKeyAccepted = true;
-					}
-					else if(g_pSelectedCamera != 0)
-					{
-						g_CurrentCamera = g_pSelectedCamera;
-						glutPostRedisplay();
-						bKeyAccepted = true;
-					}
+					g_CurrentCamera = g_pHoveredCamera;
+					bKeyAccepted = true;
+				}
+				else if(g_pSelectedCamera != 0)
+				{
+					g_CurrentCamera = g_pSelectedCamera;
+					bKeyAccepted = true;
 				}
 			}
-		case LITTLEM_KEY_RIGHT:
+		case 114: // RIGHT
 			{
 				if(g_pSelectedCamera != 0)
 				{
@@ -2173,12 +1915,11 @@ public:
 				{
 					MovePosition(g_CurrentCamera, 0, 0.01);
 				}
-				glutPostRedisplay();
 				bKeyAccepted = true;
 				
 				break;
 			}
-		case LITTLEM_KEY_LEFT:
+		case 113: // LEFT
 			{
 				if(g_pSelectedCamera != 0)
 				{
@@ -2188,12 +1929,11 @@ public:
 				{
 					MovePosition(g_CurrentCamera, 0, -0.01);
 				}
-				glutPostRedisplay();
 				bKeyAccepted = true;
 				
 				break;
 			}
-		case LITTLEM_KEY_UP:
+		case 111: // UP
 			{
 				if(g_pSelectedCamera != 0)
 				{
@@ -2203,12 +1943,11 @@ public:
 				{
 					MovePosition(g_CurrentCamera, 1, 0.01);
 				}
-				glutPostRedisplay();
 				bKeyAccepted = true;
 				
 				break;
 			}
-		case LITTLEM_KEY_DOWN:
+		case 116: // DOWN
 			{
 				if(g_pSelectedCamera != 0)
 				{
@@ -2218,12 +1957,11 @@ public:
 				{
 					MovePosition(g_CurrentCamera, 1, -0.01);
 				}
-				glutPostRedisplay();
 				bKeyAccepted = true;
 				
 				break;
 			}
-		case LITTLEM_KEY_PAGE_DOWN:
+		case 117: // PAGE DOWN
 			{
 				if(g_pSelectedCamera != 0)
 				{
@@ -2233,12 +1971,11 @@ public:
 				{
 					MovePosition(g_CurrentCamera, 2, 0.01);
 				}
-				glutPostRedisplay();
 				bKeyAccepted = true;
 				
 				break;
 			}
-		case LITTLEM_KEY_PAGE_UP:
+		case 112: // PAGE UP
 			{
 				if(g_pSelectedCamera != 0)
 				{
@@ -2248,12 +1985,11 @@ public:
 				{
 					MovePosition(g_CurrentCamera, 2, -0.01);
 				}
-				glutPostRedisplay();
 				bKeyAccepted = true;
 				
 				break;
 			}
-		case LITTLEM_KEY_HOME:
+		case 110: // HOME
 			{
 				if(g_pSelectedCamera != 0)
 				{
@@ -2264,11 +2000,10 @@ public:
 					g_CurrentCamera->m_fFieldOfView += 1.0f;
 					vSetupProjection();
 				}
-				glutPostRedisplay();
 				
 				break;
 			}
-		case LITTLEM_KEY_END:
+		case 115: // END
 			{
 				if(g_pSelectedCamera != 0)
 				{
@@ -2279,55 +2014,48 @@ public:
 					g_CurrentCamera->m_fFieldOfView -= 1.0f;
 					vSetupProjection();
 				}
-				glutPostRedisplay();
 				
 				break;
 			}
-		case LITTLEM_KEY_F1:
+		case 67: // F!
 			{
 				// switch to normalized front view
 				vResetView(LITTLEM_VIEW_FRONT);
-				glutPostRedisplay();
 				
 				break;
 			}
-		case LITTLEM_KEY_F2:
+		case 68: // F2
 			{
 				// switch to normalized left view
 				vResetView(LITTLEM_VIEW_LEFT);
-				glutPostRedisplay();
 				
 				break;
 			}
-		case LITTLEM_KEY_F3:
+		case 69: // F3
 			{
 				// switch to normalized right view
 				vResetView(LITTLEM_VIEW_RIGHT);
-				glutPostRedisplay();
 				
 				break;
 			}
-		case LITTLEM_KEY_F4:
+		case 70: // F4
 			{
 				// switch to normalized back view
 				vResetView(LITTLEM_VIEW_BACK);
-				glutPostRedisplay();
 				
 				break;
 			}
-		case LITTLEM_KEY_F5:
+		case 71: // F5
 			{
 				// switch to normalized top view
 				vResetView(LITTLEM_VIEW_TOP);
-				glutPostRedisplay();
 				
 				break;
 			}
-		case LITTLEM_KEY_F6:
+		case 72: // F6
 			{
 				// switch to normalized bottom view
 				vResetView(LITTLEM_VIEW_BOTTOM);
-				glutPostRedisplay();
 				
 				break;
 			}
@@ -2419,37 +2147,35 @@ public:
 	virtual bool bAcceptKey(int iKeyCode)
 	{
 		bool bKeyAccepted(true);
-		int Modifiers(glutGetModifiers());
 		
 		switch(iKeyCode)
 		{
-		case LITTLEM_KEY_C:
+		case 54: // C
 			{
-				if(Modifiers == GLUT_ACTIVE_ALT)
+				if(g_AltActive == true)
 				{
 					vToggleCullFace();
 				}
-				else if(Modifiers == GLUT_ACTIVE_SHIFT)
+				else if(g_ShiftActive == true)
 				{
 					vSetKeyAcceptor(&m_CameraView);
 					g_CurrentView.vSetString("Camera View");
-					glutPostRedisplay();
 				}
 				
 				break;
 			}
-		case LITTLEM_KEY_D:
+		case 40: // D
 			{
-				if(Modifiers == GLUT_ACTIVE_ALT)
+				if(g_AltActive == true)
 				{
 					vToggleDepthTest();
 				}
 				
 				break;
 			}
-		case LITTLEM_KEY_E:
+		case 26: // E
 			{
-				if(Modifiers == GLUT_ACTIVE_ALT)
+				if(g_AltActive == true)
 				{
 					std::cout << "Exporting to mesh.xml." << std::endl;
 					
@@ -2461,32 +2187,31 @@ public:
 				
 				break;
 			}
-		case LITTLEM_KEY_F:
+		case 41: // F
 			{
-				if(Modifiers == GLUT_ACTIVE_ALT)
+				if(g_AltActive == true)
 				{
 					vToggleFrontFace();
 				}
 				
 				break;
 			}
-		case LITTLEM_KEY_I:
+		case 31: // I
 			{
-				if(Modifiers == GLUT_ACTIVE_ALT)
+				if(g_AltActive == true)
 				{
 					ImportMesh("mesh.xml");
-					glutPostRedisplay();
 				}
 				
 				break;
 			}
-		case LITTLEM_KEY_L:
+		case 46: // L
 			{
-				if(Modifiers == GLUT_ACTIVE_ALT)
+				if(g_AltActive == true)
 				{
 					vToggleLighting();
 				}
-				else if(Modifiers == GLUT_ACTIVE_SHIFT)
+				else if(g_ShiftActive == true)
 				{
 					std::cout << "Loading scene.xml." << std::endl;
 					vClearScene();
@@ -2529,7 +2254,6 @@ public:
 						g_CurrentCamera = g_Cameras.front();
 						vSetupProjection();
 					}
-					glutPostRedisplay();
 				}
 				else
 				{
@@ -2538,40 +2262,37 @@ public:
 					g_Lights.push_back(pLight);
 					pLight->SetPosition(0.0f, 0.0f, 0.0f);
 					pLight->vSetDiffuseColor(1.0f, 1.0f, 1.0f);
-					glutPostRedisplay();
 				}
 				
 				break;
 			}
-		case LITTLEM_KEY_M:
+		case 58: // M
 			{
-				if(Modifiers == GLUT_ACTIVE_SHIFT)
+				if(g_ShiftActive == true)
 				{
 					vSetKeyAcceptor(0);
 					g_CurrentView.vSetString("Model View");
-					glutPostRedisplay();
 				}
 				
 				break;
 			}
-		case LITTLEM_KEY_P:
+		case 33: // P
 			{
-				if(Modifiers == GLUT_ACTIVE_SHIFT)
+				if(g_ShiftActive == true)
 				{
 					vSetKeyAcceptor(&m_PointView);
 					g_CurrentView.vSetString("Point View");
-					glutPostRedisplay();
 				}
 				
 				break;
 			}
-		case LITTLEM_KEY_S:
+		case 39: // S
 			{
-				if(Modifiers == GLUT_ACTIVE_ALT)
+				if(g_AltActive == true)
 				{
 					vToggleSnapping();
 				}
-				else if(Modifiers == GLUT_ACTIVE_SHIFT)
+				else if(g_ShiftActive == true)
 				{
 					std::cout << "Saving scene.xml." << std::endl;
 					
@@ -2591,18 +2312,17 @@ public:
 				
 				break;
 			}
-		case LITTLEM_KEY_T:
+		case 28: // T
 			{
-				if(Modifiers == GLUT_ACTIVE_SHIFT)
+				if(g_ShiftActive == true)
 				{
 					vSetKeyAcceptor(&m_TriangleView);
 					g_CurrentView.vSetString("Triangle View");
-					glutPostRedisplay();
 				}
 				
 				break;
 			}
-		case LITTLEM_KEY_ENTER:
+		case 36: // ENTER
 			{
 				if(g_pSelectedLight != 0)
 				{
@@ -2614,73 +2334,64 @@ public:
 					{
 						g_pSelectedLight->vEnable();
 					}
-					glutPostRedisplay();
 				}
 				
 				break;
 			}
-		case LITTLEM_KEY_ESCAPE:
+		case 9: // ESCAPE
 			{
-				exit(0);
+				g_Quit = true;
 				
 				break;
 			}
-		case LITTLEM_KEY_DELETE:
+		case 119: // DELETE
 			{
 				if(g_pSelectedLight != 0)
 				{
 					vDeleteLight(g_pSelectedLight);
 				}
-				glutPostRedisplay();
 				
 				break;
 			}
-		case LITTLEM_KEY_PLUS:
+		case 86: // NUMPAD PLUS
 			{
 				GLfloat fPointSize;
 				
 				glGetFloatv(GL_POINT_SIZE, &fPointSize);
 				fPointSize += 1.0f;
 				glPointSize(fPointSize);
-				glutPostRedisplay();
 				
 				break;
 			}
-		case LITTLEM_KEY_MINUS:
+		case 82: // NUMPAD MINUS
 			{
 				GLfloat fPointSize;
 				
 				glGetFloatv(GL_POINT_SIZE, &fPointSize);
 				fPointSize -= 1.0f;
 				glPointSize(fPointSize);
-				glutPostRedisplay();
 				
 				break;
 			}
-		case LITTLEM_KEY_ASTERISK:
+		case 63: // NUMPAD ASTERISK
 			{
-				if(Modifiers == GLUT_ACTIVE_ALT)
-				{
-					vTogglePointSmooth();
-				}
+				vTogglePointSmooth();
 				
 				break;
 			}
-		case LITTLEM_KEY_LESS_THAN:
+		case 59: // COMMA
 			{
 				g_fSnapFactor *= 10;
-				glutPostRedisplay();
 				
 				break;
 			}
-		case LITTLEM_KEY_GREATER_THAN:
+		case 60: // FULL STOP
 			{
 				g_fSnapFactor /= 10;
-				glutPostRedisplay();
 				
 				break;
 			}
-		case LITTLEM_KEY_LEFT_BRACKET:
+		case 34: // LEFT BRACKET
 			{
 				if(g_SelectedTriangles.size() == 1)
 				{
@@ -2703,12 +2414,11 @@ public:
 					{
 						g_SelectedPoints.push_back(g_SelectedTriangles.front()->pGetPoint(3));
 					}
-					glutPostRedisplay();
 				}
 				
 				break;
 			}
-		case LITTLEM_KEY_RIGHT_BRACKET:
+		case 35: // RIGHT BRACKET
 			{
 				if(g_SelectedTriangles.size() == 1)
 				{
@@ -2731,72 +2441,65 @@ public:
 					{
 						g_SelectedPoints.push_back(g_SelectedTriangles.front()->pGetPoint(1));
 					}
-					glutPostRedisplay();
 				}
 				
 				break;
 			}
-		case LITTLEM_KEY_RIGHT:
+		case 114: // RIGHT
 			{
 				if(g_pSelectedLight != 0)
 				{
 					MovePosition(g_pSelectedLight, 0, 0.01);
-					glutPostRedisplay();
 					bKeyAccepted = true;
 				}
 				
 				break;
 			}
-		case LITTLEM_KEY_LEFT:
+		case 113: // LEFT
 			{
 				if(g_pSelectedLight != 0)
 				{
 					MovePosition(g_pSelectedLight, 0, -0.01);
-					glutPostRedisplay();
 					bKeyAccepted = true;
 				}
 				
 				break;
 			}
-		case LITTLEM_KEY_UP:
+		case 111: // UP
 			{
 				if(g_pSelectedLight != 0)
 				{
 					MovePosition(g_pSelectedLight, 1, 0.01);
-					glutPostRedisplay();
 					bKeyAccepted = true;
 				}
 				
 				break;
 			}
-		case LITTLEM_KEY_DOWN:
+		case 116: // DOWN
 			{
 				if(g_pSelectedLight != 0)
 				{
 					MovePosition(g_pSelectedLight, 1, -0.01);
-					glutPostRedisplay();
 					bKeyAccepted = true;
 				}
 				
 				break;
 			}
-		case LITTLEM_KEY_PAGE_DOWN:
+		case 117: // PAGE DOWN
 			{
 				if(g_pSelectedLight != 0)
 				{
 					MovePosition(g_pSelectedLight, 2, 0.01);
-					glutPostRedisplay();
 					bKeyAccepted = true;
 				}
 				
 				break;
 			}
-		case LITTLEM_KEY_PAGE_UP:
+		case 112: // PAGE UP
 			{
 				if(g_pSelectedLight != 0)
 				{
 					MovePosition(g_pSelectedLight, 2, -0.01);
-					glutPostRedisplay();
 					bKeyAccepted = true;
 				}
 				
@@ -2814,40 +2517,23 @@ public:
 
 ModelView g_ModelView;
 
-void vKey(unsigned char cKey, int iX, int iY)
+void KeyEvent(unsigned int KeyCode, bool IsDown)
 {
-	if(g_UserInterface.bAcceptKey(iGetKeyCodeFromCharacter(cKey)) == false)
-	{
-		std::cout << "character key not accepted: " << static_cast< int >(cKey) << " ['" << cKey << "']" << std::endl;
-	}
+	ON_DEBUG(std::cout << "Key event " << KeyCode << " / " << IsDown << "." << std::endl);
+	g_UserInterface.bAcceptKey(KeyCode);
 }
 
-void vSpecialKey(int iKey, int iX, int iY)
+void MouseButtonEvent(MouseButton Button, bool IsDown, const Vector2f & MousePosition)
 {
-	if(g_UserInterface.bAcceptKey(iGetKeyCodeFromSpecialKey(iKey)) == false)
+	switch(Button)
 	{
-		std::cout << "special key not accepted: " << iKey << std::endl;
-	}
-}
-
-void vMouse(int iButton, int iState, int iX, int iY)
-{
-	switch(iButton)
-	{
-	case GLUT_LEFT_BUTTON:
+	case MouseButton::Left:
 		{
-			if(iState == GLUT_DOWN)
+			if(IsDown == false)
 			{
-				g_iMouseButtonFlags |= LITTLEM_LEFT_MOUSE_BUTTON;
-			}
-			else if(iState == GLUT_UP)
-			{
-				g_iMouseButtonFlags &= ~LITTLEM_LEFT_MOUSE_BUTTON;
 				if(g_pHoveredPoint != 0)
 				{
-					int iModifiers(glutGetModifiers());
-					
-					if(iModifiers == GLUT_ACTIVE_SHIFT)
+					if(g_ShiftActive == true)
 					{
 						std::vector< Point * >::iterator iHoveredPoint(std::find(g_SelectedPoints.begin(), g_SelectedPoints.end(), g_pHoveredPoint));
 						
@@ -2875,9 +2561,7 @@ void vMouse(int iButton, int iState, int iX, int iY)
 				}
 				else if(g_pHoveredTriangle != 0)
 				{
-					int iModifiers(glutGetModifiers());
-					
-					if(iModifiers == GLUT_ACTIVE_SHIFT)
+					if(g_ShiftActive == true)
 					{
 						std::vector< Triangle * >::iterator iHoveredTriangle(std::find(g_SelectedTriangles.begin(), g_SelectedTriangles.end(), g_pHoveredTriangle));
 						
@@ -2925,49 +2609,45 @@ void vMouse(int iButton, int iState, int iX, int iY)
 						g_pSelectedCamera = g_pHoveredCamera;
 					}
 				}
-				glutPostRedisplay();
 			}
 			
 			break;
 		}
-	case GLUT_MIDDLE_BUTTON:
+	case MouseButton::Middle:
 		{
-			if(iState == GLUT_DOWN)
+			if(IsDown == true)
 			{
-				g_iMouseButtonFlags |= LITTLEM_MIDDLE_MOUSE_BUTTON;
-				g_iLastMotionX = iX;
-				g_iLastMotionY = iY;
+				g_MouseButton = MouseButton::Middle;
+				g_iLastMotionX = MousePosition[0];
+				g_iLastMotionY = MousePosition[1];
 			}
-			else if(iState == GLUT_UP)
+			else
 			{
-				g_iMouseButtonFlags &= ~LITTLEM_MIDDLE_MOUSE_BUTTON;
+				g_MouseButton = MouseButton::Undefined;
 			}
 			
 			break;
 		}
-	case GLUT_RIGHT_BUTTON:
+	case MouseButton::Right:
 		{
-			if(iState == GLUT_DOWN)
+			if(IsDown == true)
 			{
-				g_iMouseButtonFlags |= LITTLEM_RIGHT_MOUSE_BUTTON;
 				g_bMoved = false;
 			}
-			else if(iState == GLUT_UP)
+			else
 			{
-				g_iMouseButtonFlags &= ~LITTLEM_RIGHT_MOUSE_BUTTON;
 				if(g_bMoved == false)
 				{
 					g_SelectedPoints.clear();
 					g_SelectedTriangles.clear();
 					g_pSelectedLight = 0;
 					g_pSelectedCamera = 0;
-					glutPostRedisplay();
 				}
 			}
 			
 			break;
 		}
-	case GLUT_WHEEL_UP:
+	case MouseButton::WheelUp:
 		{
 			if(g_CurrentCamera != 0)
 			{
@@ -2975,12 +2655,11 @@ void vMouse(int iButton, int iState, int iX, int iY)
 				
 				Forward.Rotate(g_CurrentCamera->m_Orientation);
 				g_CurrentCamera->SetPosition(g_CurrentCamera->GetPosition() + Forward);
-				glutPostRedisplay();
 			}
 			
 			break;
 		}
-	case GLUT_WHEEL_DOWN:
+	case MouseButton::WheelDown:
 		{
 			if(g_CurrentCamera != 0)
 			{
@@ -2988,47 +2667,39 @@ void vMouse(int iButton, int iState, int iX, int iY)
 				
 				Backward.Rotate(g_CurrentCamera->m_Orientation);
 				g_CurrentCamera->SetPosition(g_CurrentCamera->GetPosition() + Backward);
-				glutPostRedisplay();
 			}
 			
 			break;
 		}
+	default:
+		{
+			assert(false);
+		}
 	}
 }
 
-void vPassiveMouseMotion(int iX, int iY)
-{
-	g_iMouseX = iX;
-	g_iMouseY = iY;
-	glutPostRedisplay();
-}
-
-void vMouseMotion(int iX, int iY)
+void MouseMotion(const Vector2f MousePosition)
 {
 	g_bMoved = true;
-	g_iMouseX = iX;
-	g_iMouseY = iY;
+	g_iMouseX = MousePosition[0];
+	g_iMouseY = MousePosition[1];
 	
-	int iDeltaX = iX - g_iLastMotionX;
-	int iDeltaY = iY - g_iLastMotionY;
+	int iDeltaX = MousePosition[0] - g_iLastMotionX;
+	int iDeltaY = MousePosition[1] - g_iLastMotionY;
 	
-	g_iLastMotionX = iX;
-	g_iLastMotionY = iY;
-	if((g_iMouseButtonFlags == LITTLEM_MIDDLE_MOUSE_BUTTON) && (g_CurrentCamera != 0))
+	g_iLastMotionX = MousePosition[0];
+	g_iLastMotionY = MousePosition[1];
+	if((g_MouseButton == MouseButton::Middle) && (g_CurrentCamera != 0))
 	{
 		g_CurrentCamera->m_Orientation.RotateX(-0.005 * iDeltaY);
 		g_CurrentCamera->m_Orientation.RotateY(-0.005 * iDeltaX);
-		glutPostRedisplay();
 	}
 }
 
-void vReshape(int Width, int Height)
+void Resize(void)
 {
-	g_Width = static_cast< float >(Width);
-	g_Height = static_cast< float >(Height);
 	vSetupViewport();
 	vSetupProjection();
-	glutPostRedisplay();
 }
 
 void vSetupUserInterface(void)
@@ -3044,7 +2715,268 @@ void vSetupUserInterface(void)
 	pRootWidget->vAddBox(&g_CurrentView, Boxes::FreeLayout::AddOptions(0.0f, 36.0f));
 }
 
-void vInit(void)
+bool StartsWith(const std::string & One, const std::string & Two)
+{
+	auto OneIterator(One.begin());
+	auto OneEnd(One.end());
+	auto TwoIterator(Two.begin());
+	auto TwoEnd(Two.end());
+	
+	for(; (OneIterator != OneEnd) && (TwoIterator != TwoEnd); ++OneIterator, ++TwoIterator)
+	{
+		if(*OneIterator != *TwoIterator)
+		{
+			return false;
+		}
+	}
+	
+	return TwoIterator == TwoEnd;
+}
+
+typedef GLXContext (* CreateContextWithAttributesFunction)(Display * Display, GLXFBConfig FBConfiguration, GLXContext ShareContext, bool DirectRendering, const int * AttributeList);
+
+void CreateWindow(void)
+{
+	ON_DEBUG(std::cout << "Opening display." << std::endl);
+	g_Display = XOpenDisplay(0);
+	if(g_Display == 0)
+	{
+		std::cerr << "Coud not open the default display." << std::endl;
+		exit(1);
+	}
+	ON_DEBUG(std::cout << "Checking for GLX availability." << std::endl);
+	
+	int ErrorBase(0);
+	int EventBase(0);
+	
+	if(glXQueryExtension(g_Display, &ErrorBase, &EventBase) == true)
+	{
+		ON_DEBUG(std::cout << "  The GLX extension is available." << std::endl);
+	}
+	else
+	{
+		std::cerr << "The GLX extension is not available." << std::endl;
+		exit(1);
+	}
+	ON_DEBUG(std::cout << "Checking for GLX version." << std::endl);
+	
+	int MajorVersionNumber(0);
+	int MinorVersionNumber(0);
+	
+	if(glXQueryVersion(g_Display, &MajorVersionNumber, &MinorVersionNumber) == false)
+	{
+		std::cerr << "Checking the GLX version failed." << std::endl;
+		exit(1);
+	}
+	else
+	{
+		ON_DEBUG(std::cout << "  The GLX version is " << MajorVersionNumber << "." << MinorVersionNumber << "." << std::endl);
+		if((MajorVersionNumber < 1) || ((MajorVersionNumber == 1) && (MinorVersionNumber < 4)))
+		{
+			std::cerr << "The GLX version " << MajorVersionNumber << "." << MinorVersionNumber << " is below the minimal required version number 1.4." << std::endl;
+			exit(1);
+		}
+	}
+	ON_DEBUG(std::cout << "Getting default screen." << std::endl);
+	
+	int ScreenNumber(DefaultScreen(g_Display));
+	
+	ON_DEBUG(std::cout << "Getting the GLX server properties." << std::endl);
+	
+	const char * GLXServerVendor(glXQueryServerString(g_Display, ScreenNumber, GLX_VENDOR));
+	
+	if(GLXServerVendor != 0)
+	{
+		ON_DEBUG(std::cout << "  GLX server vendor: \"" << GLXServerVendor << "\"" << std::endl);
+	}
+	else
+	{
+		std::cerr << "The GLX server vendor string is invalid." << std::endl;
+		exit(1);
+	}
+	
+	const char * GLXServerVersion(glXQueryServerString(g_Display, ScreenNumber, GLX_VERSION));
+	
+	if(GLXServerVersion != 0)
+	{
+		ON_DEBUG(std::cout << "  GLX server version: \"" << GLXServerVersion << "\"" << std::endl);
+	}
+	else
+	{
+		std::cerr << "The GLX server version string is invalid." << std::endl;
+		exit(1);
+	}
+	
+	const char * GLXServerExtensionsString(glXQueryServerString(g_Display, ScreenNumber, GLX_EXTENSIONS));
+	
+	if(GLXServerExtensionsString != 0)
+	{
+		std::vector< std::string > GLXServerExtensions(SplitString(GLXServerExtensionsString, ' '));
+		
+		ON_DEBUG(std::cout << "  GLX server extensions:" << std::endl);
+		for(std::vector< std::string >::iterator Iterator = GLXServerExtensions.begin(); Iterator != GLXServerExtensions.end(); ++Iterator)
+		{
+			ON_DEBUG(std::cout << "    \"" << *Iterator << '"' << std::endl);
+		}
+	}
+	else
+	{
+		std::cerr << "The GLX server extensions string is invalid." << std::endl;
+		exit(1);
+	}
+	ON_DEBUG(std::cout << "Getting the GLX client properties." << std::endl);
+	
+	const char * GLXClientVendor(glXGetClientString(g_Display, GLX_VENDOR));
+	
+	if(GLXClientVendor != 0)
+	{
+		ON_DEBUG(std::cout << "  GLX client vendor: \"" << GLXClientVendor << "\"" << std::endl);
+	}
+	else
+	{
+		std::cerr << "The GLX client vendor string is invalid." << std::endl;
+		exit(1);
+	}
+	
+	const char * GLXClientVersion(glXGetClientString(g_Display, GLX_VERSION));
+	
+	if(GLXClientVersion != 0)
+	{
+		ON_DEBUG(std::cout << "  GLX client version: \"" << GLXClientVersion << "\"" << std::endl);
+	}
+	else
+	{
+		std::cerr << "The GLX client version string is invalid." << std::endl;
+		exit(1);
+	}
+	
+	const char * GLXClientExtensionsString(glXGetClientString(g_Display, GLX_EXTENSIONS));
+	
+	if(GLXClientExtensionsString != 0)
+	{
+		std::vector< std::string > GLXClientExtensions(SplitString(GLXClientExtensionsString, ' '));
+		
+		ON_DEBUG(std::cout << "  GLX client extensions:" << std::endl);
+		for(std::vector< std::string >::iterator Iterator = GLXClientExtensions.begin(); Iterator != GLXClientExtensions.end(); ++Iterator)
+		{
+			ON_DEBUG(std::cout << "    \"" << *Iterator << '"' << std::endl);
+		}
+	}
+	else
+	{
+		std::cerr << "The GLX client extensions string is invalid." << std::endl;
+		exit(1);
+	}
+	ON_DEBUG(std::cout << "Getting the GLX connection extensions." << std::endl);
+	
+	const char * GLXExtensionsString(glXQueryExtensionsString(g_Display, ScreenNumber));
+	std::vector< std::string > ExtensionStrings(SplitString(GLXExtensionsString, ' '));
+	bool GLX_ARB_create_context_Available(false);
+	
+	ON_DEBUG(std::cout << "  GLX connection extensions:" << std::endl);
+	for(std::vector< std::string >::iterator Iterator = ExtensionStrings.begin(); Iterator != ExtensionStrings.end(); ++Iterator)
+	{
+		if(*Iterator == "GLX_ARB_create_context")
+		{
+			GLX_ARB_create_context_Available = true;
+		}
+		ON_DEBUG(std::cout << "    \"" << *Iterator << '"' << std::endl);
+	}
+	if(GLX_ARB_create_context_Available == false)
+	{
+		std::cerr << "Your GLX connection does not support the required extension GLX_ARB_create_context." << std::endl;
+		exit(1);
+	}
+	
+	int NumberOfConfigurations(0);
+	int RequestedAttributes[] =
+	{
+		GLX_RENDER_TYPE, GLX_RGBA_BIT,
+		GLX_DRAWABLE_TYPE, GLX_WINDOW_BIT,
+		GLX_X_RENDERABLE, True,
+		GLX_BUFFER_SIZE, 32,
+		GLX_DOUBLEBUFFER, True,
+		GLX_X_VISUAL_TYPE, GLX_TRUE_COLOR,
+		GLX_RED_SIZE, 8,
+		GLX_GREEN_SIZE, 8,
+		GLX_BLUE_SIZE, 8,
+		GLX_ALPHA_SIZE, 8,
+		GLX_DEPTH_SIZE, 24,
+		0
+	};
+	ON_DEBUG(std::cout << "Choosing a FB configuration." << std::endl);
+	GLXFBConfig * Configurations(glXChooseFBConfig(g_Display, ScreenNumber, RequestedAttributes, &NumberOfConfigurations));
+	
+	if(Configurations == 0)
+	{
+		std::cerr << "Sorry, could not find a suitable FB configuration." << std::endl;
+		exit(1);
+	}
+	ON_DEBUG(std::cout << "Getting display dimensions." << std::endl);
+	g_Width = DisplayWidth(g_Display, ScreenNumber);
+	g_Height = DisplayHeight(g_Display, ScreenNumber);
+	ON_DEBUG(std::cout << "Getting visualization information." << std::endl);
+	
+	XVisualInfo * VisualizationInformation(glXGetVisualFromFBConfig(g_Display, Configurations[0]));
+	
+	ON_DEBUG(std::cout << "Creating an X colormap." << std::endl);
+	g_ColorMap = XCreateColormap(g_Display, RootWindow(g_Display, VisualizationInformation->screen), VisualizationInformation->visual, AllocNone);
+	
+	XSetWindowAttributes WindowAttributes;
+	
+	WindowAttributes.colormap = g_ColorMap;
+	WindowAttributes.border_pixel = 0;
+	WindowAttributes.event_mask = ExposureMask | ButtonPressMask | ButtonReleaseMask | StructureNotifyMask | KeyPressMask | KeyReleaseMask | PointerMotionMask;
+	ON_DEBUG(std::cout << "Creating X window." << std::endl);
+	g_Window = XCreateWindow(g_Display, RootWindow(g_Display, VisualizationInformation->screen), 0, 0, static_cast< unsigned int >(g_Width), static_cast< unsigned int >(g_Height), 0, VisualizationInformation->depth, InputOutput, VisualizationInformation->visual, CWBorderPixel | CWColormap | CWEventMask/* | CWOverrideRedirect*/, &WindowAttributes);
+	if(g_Window == 0)
+	{
+		std::cerr << "Failed to create a window with the specified visualization information." << std::endl;
+		exit(1);
+	}
+	XFree(VisualizationInformation);
+	
+	Atom wmDelete = XInternAtom(g_Display, "WM_DELETE_WINDOW", True);
+	
+	XSetWMProtocols(g_Display, g_Window, &wmDelete, 1);
+	XStoreName(g_Display, g_Window, "galactic-fall 0.2");
+	XMapWindow(g_Display, g_Window);
+	ON_DEBUG(std::cout << "Getting function \"glXCreateContextAttribsARB\"." << std::endl);
+	
+	CreateContextWithAttributesFunction CreateContextWithAttributes(reinterpret_cast< CreateContextWithAttributesFunction >(glXGetProcAddressARB(reinterpret_cast< const GLubyte * >("glXCreateContextAttribsARB"))));
+	
+	if(CreateContextWithAttributes == 0)
+	{
+		std::cerr << "Failed to get the function \"glXCreateContextAttribsARB\"." << std::endl;
+		exit(1);
+	}
+	
+	int RequestedContextAttributes[] =
+	{
+		GLX_CONTEXT_MAJOR_VERSION_ARB, 3,
+		GLX_CONTEXT_MINOR_VERSION_ARB, 1,
+// 		GLX_CONTEXT_FLAGS_ARB, GLX_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB,
+		None
+	};
+	
+	ON_DEBUG(std::cout << "Creating GLX context." << std::endl);
+	ON_DEBUG(std::cout << "  Asking for GLX context with version " << RequestedContextAttributes[1] << '.' << RequestedContextAttributes[3] << "." << std::endl);
+	g_GLXContext = CreateContextWithAttributes(g_Display, Configurations[0], 0, true, RequestedContextAttributes);
+	if(glXIsDirect(g_Display, g_GLXContext) == false)
+	{
+		std::cerr << "Failed to acquire direct rendering context." << std::endl;
+		exit(1);
+	}
+	else
+	{
+		ON_DEBUG(std::cout << "  Direct rendering context acquired." << std::endl);
+	}
+	ON_DEBUG(std::cout << "Activating context." << std::endl);
+	glXMakeCurrent(g_Display, g_Window, g_GLXContext);
+	XFree(Configurations);
+}
+
+void InitializeOpenGL(void)
 {
 	vSetupViewport();
 	vSetupProjection();
@@ -3079,22 +3011,119 @@ void vInit(void)
 	vResetView(LITTLEM_VIEW_FRONT);
 }
 
-bool StartsWith(const std::string & One, const std::string & Two)
+void ProcessEvents(void)
 {
-	auto OneIterator(One.begin());
-	auto OneEnd(One.end());
-	auto TwoIterator(Two.begin());
-	auto TwoEnd(Two.end());
+	XEvent Event;
 	
-	for(; (OneIterator != OneEnd) && (TwoIterator != TwoEnd); ++OneIterator, ++TwoIterator)
+	while(XPending(g_Display) > 0)
 	{
-		if(*OneIterator != *TwoIterator)
+		XNextEvent(g_Display, &Event);
+		switch(Event.type)
 		{
-			return false;
+		case ConfigureNotify:
+			{
+				if((Event.xconfigure.width != g_Width) || (Event.xconfigure.height != g_Height))
+				{
+					g_Width = Event.xconfigure.width;
+					g_Height = Event.xconfigure.height;
+					Resize();
+				}
+				
+				break;
+			}
+		case MotionNotify:
+			{
+				MouseMotion(Vector2f(static_cast< float >(Event.xbutton.x), static_cast< float >(Event.xbutton.y)));
+				
+				break;
+			}
+		case ButtonPress:
+		case ButtonRelease:
+			{
+				MouseButton Button(MouseButton::Undefined);
+				
+				switch(Event.xbutton.button)
+				{
+				case 1:
+					{
+						Button = MouseButton::Left;
+						
+						break;
+					}
+				case 2:
+					{
+						Button = MouseButton::Middle;
+						
+						break;
+					}
+				case 3:
+					{
+						Button = MouseButton::Right;
+						
+						break;
+					}
+				case 4:
+					{
+						Button = MouseButton::WheelUp;
+						
+						break;
+					}
+				case 5:
+					{
+						Button = MouseButton::WheelDown;
+						
+						break;
+					}
+				default:
+					{
+						assert(false);
+					}
+				}
+				MouseButtonEvent(Button, Event.xbutton.type == ButtonPress, Vector2f(static_cast< float >(Event.xbutton.x), static_cast< float >(Event.xbutton.y)));
+				
+				break;
+			}
+		case KeyPress:
+		case KeyRelease:
+			{
+				if((Event.xkey.keycode == 50) || (Event.xkey.keycode == 62)) // LEFT SHIFT or RIGHT SHIFT
+				{
+					g_ShiftActive = Event.xkey.type == KeyPress;
+				}
+				else if((Event.xkey.keycode == 37) || (Event.xkey.keycode == 105)) // LEFT CONTROL or RIGHT CONTROL
+				{
+					g_ControlActive = Event.xkey.type == KeyPress;
+				}
+				else if(Event.xkey.keycode == 64)
+				{
+					g_AltActive = Event.xkey.type == KeyPress;
+				}
+				KeyEvent(Event.xkey.keycode, Event.xkey.type == KeyPress);
+				
+				break;
+			}
 		}
 	}
-	
-	return TwoIterator == TwoEnd;
+}
+
+void DestroyWindow(void)
+{
+	XAutoRepeatOn(g_Display);
+    if(g_GLXContext != 0)
+    {
+        if(glXMakeCurrent(g_Display, None, 0) == 0)
+        {
+            std::cerr << "Could not release GLX context." << std::endl;
+        }
+        glXDestroyContext(g_Display, g_GLXContext);
+        g_GLXContext = 0;
+    }
+	XDestroyWindow(g_Display, g_Window);
+	g_Window = 0;
+	XFreeColormap(g_Display, g_ColorMap);
+	g_ColorMap = 0;
+    XCloseDisplay(g_Display);
+	g_Display = 0;
 }
 
 int main(int argc, char ** argv)
@@ -3103,23 +3132,14 @@ int main(int argc, char ** argv)
 	g_UpAxis = LITTLEM_AXIS_POSITIVE_Z;
 	g_FrontAxis = LITTLEM_AXIS_NEGATIVE_X;
 	// </static-initialization>
-	
-	srandom(time(0));
-	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
-	glutInitWindowSize(g_Width, g_Height);
-	glutInitWindowPosition(0, 0);
-	glutCreateWindow("littlem - the light-weight 3D model editor");
-	glutFullScreen();
-	vInit();
-	glutDisplayFunc(vDisplay);
-	glutKeyboardFunc(vKey);
-	glutSpecialFunc(vSpecialKey);
-	glutMouseFunc(vMouse);
-	glutMotionFunc(vMouseMotion);
-	glutPassiveMotionFunc(vPassiveMouseMotion);
-	glutReshapeFunc(vReshape);
+	// setup the random number generator for everyday use
+	srand(time(0));
+	ON_DEBUG(std::cout << "Setting up the window." << std::endl);
+	CreateWindow();
+	ON_DEBUG(std::cout << "Initializing OpenGL." << std::endl);
+	InitializeOpenGL();
 	vSetupUserInterface();
+	Resize();
 	for(auto Argument : std::vector< std::string >(argv + 1, argv + argc))
 	{
 		if(StartsWith(Argument, "--import-mesh=") == true)
@@ -3127,7 +3147,17 @@ int main(int argc, char ** argv)
 			ImportMesh(Argument.substr(14));
 		}
 	}
-	glutMainLoop();
+	// main loop
+	ON_DEBUG(std::cout << "Entering game loop." << std::endl);
+	while(g_Quit == false)
+	{
+		ProcessEvents();
+		vDisplay();
+		glXSwapBuffers(g_Display, g_Window);
+	}
+	ON_DEBUG(std::cout << "Left game loop." << std::endl);
+	ON_DEBUG(std::cout << "Destroying window." << std::endl);
+	DestroyWindow();
 	
 	return 0;
 }
