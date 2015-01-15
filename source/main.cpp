@@ -1148,6 +1148,8 @@ void OnOutputEnterSystem(System * EnterSystem)
 	HeadsUpDisplay->SetName("heads_up_display");
 	HeadsUpDisplay->SetPosition(Vector2f(0.0f, 0.0f));
 	HeadsUpDisplay->SetSize(Vector2f(g_Width, g_Height));
+	HeadsUpDisplay->SetAnchorRight(true);
+	HeadsUpDisplay->SetAnchorBottom(true);
 }
 
 void OnOutputLeaveSystem(System * System)
