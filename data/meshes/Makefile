@@ -33,12 +33,6 @@ generated/littlem/fighter_faction.xml: generated/raw/fighter_faction.raw Makefil
 generated/littlem/fighter_hull.xml: generated/raw/fighter_hull.raw Makefile $(raw_to_littlem_dependencies)
 	$(command_raw_to_littlem) --in=$< --out=$@ --identifier=fighter_hull --smooth
 
-generated/littlem/laser_shot.xml: generated/raw/laser_shot.raw Makefile $(raw_to_littlem_dependencies)
-	$(command_raw_to_littlem) --in=$< --out=$@ --identifier=laser_shot
-
-generated/littlem/light_laser.xml: generated/raw/light_laser.raw Makefile $(raw_to_littlem_dependencies)
-	$(command_raw_to_littlem) --in=$< --out=$@ --identifier=light_laser
-
 generated/littlem/planet.xml: generated/raw/planet.raw Makefile $(raw_to_littlem_dependencies)
 	$(command_raw_to_littlem) --in=$< --out=$@ --identifier=planet --smooth
 
