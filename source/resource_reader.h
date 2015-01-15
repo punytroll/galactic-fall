@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006  Hagen Möbius
+ * Copyright (C) 2015  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,12 +17,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef ARX_READING_H
-#define ARX_READING_H
+#ifndef RESOURCE_READER_H
+#define RESOURCE_READER_H
 
 namespace Arxx
 {
 	class Archive;
+	class Reference;
 }
 
 namespace Graphics
@@ -57,7 +58,8 @@ public:
 	void ReadWeaponClasses(void);
 	std::string ReadSavegameFromScenarioPath(const std::string & ScenarioPath);
 private:
-	Arxx::Archive * m_Archive;
+	void _ReadItems(const std::string & Path, std::function< void (Arxx::Reference &) > ReaderFunction);
+	Arxx::Archive * _Archive;
 };
 
 #endif

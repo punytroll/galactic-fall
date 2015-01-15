@@ -23,7 +23,7 @@
 
 #include <string_cast/string_cast.h>
 
-#include "arx_resources.h"
+#include "arx_types.h"
 #include "buffer_reading.h"
 #include "settings.h"
 
