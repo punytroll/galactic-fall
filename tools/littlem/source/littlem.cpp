@@ -148,6 +148,8 @@ enum
 
 int g_UpAxis;
 int g_FrontAxis;
+float g_Width(800.0f);
+float g_Height(800.0f);
 
 #include "point.h"
 #include "triangle.h"
@@ -538,8 +540,6 @@ std::vector< Camera * > g_Cameras;
 Camera * g_pHoveredCamera = 0;
 Camera * g_pSelectedCamera = 0;
 Camera * g_CurrentCamera = 0;
-GLsizei g_sWidth = 800;
-GLsizei g_sHeight = 800;
 int g_iLastMotionX = -1;
 int g_iLastMotionY = -1;
 int g_iMouseX = 0;
@@ -564,7 +564,7 @@ void vCheckGLError(const char * pcFile, int iLine)
 
 void vSetupViewport(void)
 {
-	glViewport(0, 0, g_sWidth, g_sHeight);
+	glViewport(0, 0, static_cast< GLsizei >(g_Width), static_cast< GLsizei >(g_Height));
 }
 
 void vSetupProjection(bool bInitialize = true)
@@ -576,7 +576,7 @@ void vSetupProjection(bool bInitialize = true)
 	}
 	if(g_CurrentCamera != 0)
 	{
-		gluPerspective(g_CurrentCamera->m_fFieldOfView, static_cast< GLfloat >(g_sWidth) / static_cast< GLfloat >(g_sHeight), 0.0001f, 1000.0f);
+		gluPerspective(g_CurrentCamera->m_fFieldOfView, g_Width / g_Height, 0.0001f, 1000.0f);
 	}
 }
 
@@ -833,17 +833,17 @@ void vDisplayTexts(void)
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
 	glLoadIdentity();
-	glOrtho(0.0, static_cast< GLfloat >(g_sWidth), 0.0, static_cast< GLfloat >(g_sHeight), -1, 1);
+	glOrtho(0.0, g_Width, 0.0, g_Height, -1, 1);
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
 	glLoadIdentity();
 	glScalef(1.0f, -1.0f, 1.0f);
-	glTranslatef(0.0f, -g_sHeight, 0.0f);
+	glTranslatef(0.0f, -g_Height, 0.0f);
 	glColor3f(0.4f, 1.0f, 0.4f);
 	
 	std::stringstream ssStatusText;
 	
-	ssStatusText << "#Points: " << g_Points.size() << "   #TrianglePoints: " << g_TrianglePoints.size() << "   #Triangles: " << g_Triangles.size() << "   #Selected Points: " << g_SelectedPoints.size() << "   Width: " << g_sWidth << "   Height: " << g_sHeight << "   Front Face: ";
+	ssStatusText << "#Points: " << g_Points.size() << "   #TrianglePoints: " << g_TrianglePoints.size() << "   #Triangles: " << g_Triangles.size() << "   #Selected Points: " << g_SelectedPoints.size() << "   Width: " << g_Width << "   Height: " << g_Height << "   Front Face: ";
 	
 	GLint iFrontFace;
 	
@@ -869,20 +869,20 @@ void vDisplayTexts(void)
 	{
 		ssSnapInformationText << "off";
 	}
-	vDrawTextAt(0, g_sHeight - 24, ssSnapInformationText.str());
+	vDrawTextAt(0, g_Height - 24, ssSnapInformationText.str());
 	if(g_SelectedPoints.size() > 0)
 	{
 		std::stringstream ssPointInformationText;
 		
 		ssPointInformationText << "Point:  X: " << g_SelectedPoints.front()->GetX() << "   Y: " << g_SelectedPoints.front()->GetY() << "   Z: " << g_SelectedPoints.front()->GetZ() << "   Name: \"" << g_SelectedPoints.front()->sGetName() << "\"   #TrianglePoints: " << g_SelectedPoints.front()->m_TrianglePoints.size();
-		vDrawTextAt(0, g_sHeight - 36, ssPointInformationText.str());
+		vDrawTextAt(0, g_Height - 36, ssPointInformationText.str());
 	}
 	if(g_SelectedTriangles.size() > 0)
 	{
 		std::stringstream ssTriangleInformationText;
 		
 		ssTriangleInformationText << "Triangle:  Name: \"" << g_SelectedTriangles.front()->sGetName() << '"';
-		vDrawTextAt(0, g_sHeight - 48, ssTriangleInformationText.str());
+		vDrawTextAt(0, g_Height - 48, ssTriangleInformationText.str());
 	}
 	g_UserInterface.vDraw();
 	glFlush();
@@ -3022,10 +3022,10 @@ void vMouseMotion(int iX, int iY)
 	}
 }
 
-void vReshape(int iWidth, int iHeight)
+void vReshape(int Width, int Height)
 {
-	g_sWidth = iWidth;
-	g_sHeight = iHeight;
+	g_Width = static_cast< float >(Width);
+	g_Height = static_cast< float >(Height);
 	vSetupViewport();
 	vSetupProjection();
 	glutPostRedisplay();
@@ -3107,7 +3107,7 @@ int main(int argc, char ** argv)
 	srandom(time(0));
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
-	glutInitWindowSize(g_sWidth, g_sHeight);
+	glutInitWindowSize(g_Width, g_Height);
 	glutInitWindowPosition(0, 0);
 	glutCreateWindow("littlem - the light-weight 3D model editor");
 	glutFullScreen();
