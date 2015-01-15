@@ -3481,7 +3481,7 @@ int main(int argc, char ** argv)
 	g_UIProjection->SetTop(0.0f);
 	g_UIView = new Graphics::View();
 	g_UIView->SetClearColor(Color(0.0f, 0.0f, 0.0f, 1.0f));
-	assert(g_UIView->GetCamera() != 0);
+	assert(g_UIView->GetCamera() != nullptr);
 	g_UIView->GetCamera()->SetProjection(g_UIProjection);
 	g_UIView->GetCamera()->SetSpacialMatrix(Matrix4f::CreateIdentity());
 	g_GraphicsEngine->AddView(g_UIView);
@@ -3508,7 +3508,7 @@ int main(int argc, char ** argv)
 	g_MainProjection->SetFarClippingPlane(1000.0f);
 	g_MainView = new Graphics::View();
 	g_MainView->SetClearColor(Color(0.0f, 0.0f, 0.0f, 1.0f));
-	assert(g_MainView->GetCamera() != 0);
+	assert(g_MainView->GetCamera() != nullptr);
 	g_MainView->GetCamera()->SetProjection(g_MainProjection);
 	
 	Graphics::DefaultRenderTarget * MainViewRenderTarget(new Graphics::DefaultRenderTarget());
@@ -3603,10 +3603,10 @@ int main(int argc, char ** argv)
 		Object::Dump(Out);
 		std::cout << std::endl;
 	}
-	if(g_ScenarioManager != 0)
+	if(g_ScenarioManager != nullptr)
 	{
 		delete g_ScenarioManager;
-		g_ScenarioManager = 0;
+		g_ScenarioManager = nullptr;
 	}
 	// destroying global variables in reverse order
 	delete g_CharacterObserver;
@@ -3623,28 +3623,28 @@ int main(int argc, char ** argv)
 	delete g_ScenarioManager;
 	delete g_UserInterface;
 	// main view
-	assert(g_MainView != 0);
+	assert(g_MainView != nullptr);
 	assert(g_MainView->GetRenderTarget() == MainViewRenderTarget);
-	assert(MainViewRenderTarget != 0);
-	g_MainView->SetRenderTarget(0);
+	assert(MainViewRenderTarget != nullptr);
+	g_MainView->SetRenderTarget(nullptr);
 	delete MainViewRenderTarget;
-	assert(g_MainView->GetCamera() != 0);
+	assert(g_MainView->GetCamera() != nullptr);
 	assert(g_MainView->GetCamera()->GetProjection() == g_MainProjection);
-	assert(g_MainProjection != 0);
-	g_MainView->GetCamera()->SetProjection(0);
+	assert(g_MainProjection != nullptr);
+	g_MainView->GetCamera()->SetProjection(nullptr);
 	delete g_MainProjection;
 	g_GraphicsEngine->RemoveView(g_MainView);
 	delete g_MainView;
 	// ui view
-	assert(g_UIView != 0);
-	assert(g_UIView->GetCamera() != 0);
+	assert(g_UIView != nullptr);
+	assert(g_UIView->GetCamera() != nullptr);
 	assert(g_UIView->GetCamera()->GetProjection() == g_UIProjection);
-	assert(g_UIProjection != 0);
-	g_UIView->GetCamera()->SetProjection(0);
+	assert(g_UIProjection != nullptr);
+	g_UIView->GetCamera()->SetProjection(nullptr);
 	delete g_UIProjection;
 	assert(g_UIView->GetScene() == UIScene);
-	assert(UIScene != 0);
-	g_UIView->SetScene(0);
+	assert(UIScene != nullptr);
+	g_UIView->SetScene(nullptr);
 	delete UIScene;
 	g_GraphicsEngine->RemoveView(g_UIView);
 	delete g_UIView;
