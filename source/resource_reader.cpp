@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006  Hagen Möbius
+ * Copyright (C) 2015  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -27,8 +27,7 @@
 
 #include <string_cast/string_cast.h>
 
-#include "arx_reading.h"
-#include "arx_resources.h"
+#include "arx_types.h"
 #include "asset_class.h"
 #include "battery_class.h"
 #include "buffer_reading.h"
@@ -55,6 +54,7 @@
 #include "object_aspect_visualization.h"
 #include "object_factory.h"
 #include "planet.h"
+#include "resource_reader.h"
 #include "scenario.h"
 #include "scenario_manager.h"
 #include "settings.h"
@@ -88,7 +88,7 @@ static void ReadWeaponClass(Arxx::Reference & Reference);
 
 static void MakeItemAvailable(Arxx::Item * Item)
 {
-	assert(Item != 0);
+	assert(Item != nullptr);
 	if(Item->IsFetched() == false)
 	{
 		if(Item->Fetch() == false)
@@ -112,9 +112,9 @@ static void MakeItemAvailable(Arxx::Item * Item)
 
 static Arxx::Item * Resolve(Arxx::Reference & Reference)
 {
-	Arxx::Item * Item(Reference.pGetItem());
+	auto Item(Reference.pGetItem());
 	
-	if(Item == 0)
+	if(Item == nullptr)
 	{
 		throw std::runtime_error("The unique identifier '" + to_string_cast(Reference.u4GetUniqueID()) + "' is referenced but could not be resolved.");
 	}
@@ -123,11 +123,38 @@ static Arxx::Item * Resolve(Arxx::Reference & Reference)
 	return Item;
 }
 
-void ReadItems(Arxx::Archive * Archive, const std::string & Path, std::function< void (Arxx::Reference &) > Reader)
+ResourceReader::ResourceReader(const std::string & DataDirectoryPath) :
+	_Archive(nullptr)
 {
-	Arxx::Item * Directory(Archive->GetItem(Path));
+}
+
+ResourceReader::~ResourceReader(void)
+{
+	delete _Archive;
+	_Archive = nullptr;
+}
+
+bool ResourceReader::LoadArchive(const std::string & ArchivePath)
+{
+	assert(_Archive == nullptr);
+	_Archive = new Arxx::Archive();
+	if(_Archive->Load(ArchivePath) == false)
+	{
+		std::cerr << "Could not find or open \"" << ArchivePath << "\"." << std::endl;
+		
+		return false;
+	}
 	
-	if(Directory == 0)
+	return true;
+}
+
+void ResourceReader::_ReadItems(const std::string & Path, std::function< void (Arxx::Reference &) > Reader)
+{
+	assert(_Archive != nullptr);
+	
+	auto Directory(_Archive->GetItem(Path));
+	
+	if(Directory == nullptr)
 	{
 		throw std::runtime_error("Could not find an item at the path '" + Path + "'.");
 	}
@@ -146,76 +173,51 @@ void ReadItems(Arxx::Archive * Archive, const std::string & Path, std::function<
 	}
 }
 
-ResourceReader::ResourceReader(const std::string & DataDirectoryPath) :
-	m_Archive(0)
-{
-}
-
-ResourceReader::~ResourceReader(void)
-{
-	delete m_Archive;
-	m_Archive = 0;
-}
-
-bool ResourceReader::LoadArchive(const std::string & ArchivePath)
-{
-	assert(m_Archive == 0);
-	m_Archive = new Arxx::Archive();
-	if(m_Archive->Load(ArchivePath) == false)
-	{
-		std::cerr << "Could not find or open \"" << ArchivePath << "\"." << std::endl;
-		
-		return false;
-	}
-	
-	return true;
-}
-
 void ResourceReader::ReadAssetClasses(void)
 {
-	ReadItems(m_Archive, "/Asset Classes", ReadAssetClass);
+	_ReadItems("/Asset Classes", ReadAssetClass);
 }
 
 void ResourceReader::ReadBatteryClasses(void)
 {
-	ReadItems(m_Archive, "/Battery Classes", ReadBatteryClass);
+	_ReadItems("/Battery Classes", ReadBatteryClass);
 }
 
 void ResourceReader::ReadCommodityClasses(void)
 {
-	ReadItems(m_Archive, "/Commodity Classes", ReadCommodityClass);
+	_ReadItems("/Commodity Classes", ReadCommodityClass);
 }
 
 void ResourceReader::ReadFactions(void)
 {
-	ReadItems(m_Archive, "/Factions", ReadFaction);
+	_ReadItems("/Factions", ReadFaction);
 }
 
 void ResourceReader::ReadGeneratorClasses(void)
 {
-	ReadItems(m_Archive, "/Generator Classes", ReadGeneratorClass);
+	_ReadItems("/Generator Classes", ReadGeneratorClass);
 }
 
 void ResourceReader::ReadMeshes(void)
 {
-	ReadItems(m_Archive, "/Meshes", ReadMesh);
+	_ReadItems("/Meshes", ReadMesh);
 }
 
 void ResourceReader::ReadModels(void)
 {
-	ReadItems(m_Archive, "/Models", ReadModel);
+	_ReadItems("/Models", ReadModel);
 }
 
 void ResourceReader::ReadScenarios(ScenarioManager * ScenarioManager)
 {
-	ReadItems(m_Archive, "/Scenarios", std::bind(ReadScenario, std::placeholders::_1, ScenarioManager));
+	_ReadItems("/Scenarios", std::bind(ReadScenario, std::placeholders::_1, ScenarioManager));
 }
 
 void ResourceReader::ReadSettings(Settings * Settings)
 {
-	Arxx::Item * Item(m_Archive->GetItem("/Settings"));
+	auto Item(_Archive->GetItem("/Settings"));
 	
-	if(Item == 0)
+	if(Item == nullptr)
 	{
 		throw std::runtime_error("Could not find an item at the path '/Settings'.");
 	}
@@ -224,46 +226,46 @@ void ResourceReader::ReadSettings(Settings * Settings)
 
 void ResourceReader::ReadShadersAndPrograms(Graphics::ShadingManager * ShadingManager)
 {
-	ReadItems(m_Archive, "/Shaders", std::bind(ReadShader, std::placeholders::_1, ShadingManager));
-	ReadItems(m_Archive, "/Programs", std::bind(ReadProgram, std::placeholders::_1, ShadingManager));
+	_ReadItems("/Shaders", std::bind(ReadShader, std::placeholders::_1, ShadingManager));
+	_ReadItems("/Programs", std::bind(ReadProgram, std::placeholders::_1, ShadingManager));
 }
 
 void ResourceReader::ReadShipClasses(void)
 {
-	ReadItems(m_Archive, "/Ship Classes", ReadShipClass);
+	_ReadItems("/Ship Classes", ReadShipClass);
 }
 
 void ResourceReader::ReadSlotClasses(void)
 {
-	ReadItems(m_Archive, "/Slot Classes", ReadSlotClass);
+	_ReadItems("/Slot Classes", ReadSlotClass);
 }
 
 void ResourceReader::ReadSystems(void)
 {
-	ReadItems(m_Archive, "/Systems", ReadSystem);
+	_ReadItems("/Systems", ReadSystem);
 }
 
 void ResourceReader::ReadSystemLinks(void)
 {
-	ReadItems(m_Archive, "/System Links", ReadSystemLink);
+	_ReadItems("/System Links", ReadSystemLink);
 }
 
 void ResourceReader::ReadTextures(void)
 {
-	ReadItems(m_Archive, "/Textures", ReadTexture);
+	_ReadItems("/Textures", ReadTexture);
 }
 
 void ResourceReader::ReadWeaponClasses(void)
 {
-	ReadItems(m_Archive, "/Weapon Classes", ReadWeaponClass);
+	_ReadItems("/Weapon Classes", ReadWeaponClass);
 }
 
 std::string ResourceReader::ReadSavegameFromScenarioPath(const std::string & ScenarioPath)
 {
-	Arxx::Item * Item(m_Archive->GetItem(ScenarioPath));
+	auto Item(_Archive->GetItem(ScenarioPath));
 	std::string Result;
 	
-	if(Item != 0)
+	if(Item != nullptr)
 	{
 		MakeItemAvailable(Item);
 		
@@ -280,7 +282,7 @@ std::string ResourceReader::ReadSavegameFromScenarioPath(const std::string & Sce
 
 static void ReadAssetClass(Arxx::Reference & Reference)
 {
-	Arxx::Item * Item(Resolve(Reference));
+	auto Item(Resolve(Reference));
 	
 	if(Item->GetType() != DATA_TYPE_ASSET_CLASS)
 	{
@@ -296,9 +298,9 @@ static void ReadAssetClass(Arxx::Reference & Reference)
 	
 	Reader >> Identifier;
 	
-	AssetClass * NewAssetClass(g_AssetClassManager->Create(Identifier));
+	auto NewAssetClass(g_AssetClassManager->Create(Identifier));
 	
-	if(NewAssetClass == 0)
+	if(NewAssetClass == nullptr)
 	{
 		throw std::runtime_error("Could not create asset class '" + Identifier + "'.");
 	}
@@ -320,7 +322,7 @@ static void ReadAssetClass(Arxx::Reference & Reference)
 
 static void ReadBatteryClass(Arxx::Reference & Reference)
 {
-	Arxx::Item * Item(Resolve(Reference));
+	auto Item(Resolve(Reference));
 	
 	if(Item->GetType() != DATA_TYPE_BATTERY_CLASS)
 	{
@@ -336,9 +338,9 @@ static void ReadBatteryClass(Arxx::Reference & Reference)
 	
 	Reader >> Identifier;
 	
-	BatteryClass * NewBatteryClass(g_BatteryClassManager->Create(Identifier));
+	auto NewBatteryClass(g_BatteryClassManager->Create(Identifier));
 	
-	if(NewBatteryClass == 0)
+	if(NewBatteryClass == nullptr)
 	{
 		throw std::runtime_error("Could not create battery class '" + Identifier + "'.");
 	}
@@ -364,7 +366,7 @@ static void ReadBatteryClass(Arxx::Reference & Reference)
 
 static void ReadCommodityClass(Arxx::Reference & Reference)
 {
-	Arxx::Item * Item(Resolve(Reference));
+	auto Item(Resolve(Reference));
 	
 	if(Item->GetType() != DATA_TYPE_COMMODITY_CLASS)
 	{
@@ -380,9 +382,9 @@ static void ReadCommodityClass(Arxx::Reference & Reference)
 	
 	Reader >> Identifier;
 	
-	CommodityClass * NewCommodityClass(g_CommodityClassManager->Create(Identifier));
+	auto NewCommodityClass(g_CommodityClassManager->Create(Identifier));
 	
-	if(NewCommodityClass == 0)
+	if(NewCommodityClass == nullptr)
 	{
 		throw std::runtime_error("Could not create commodity class '" + Identifier + "'.");
 	}
@@ -402,7 +404,7 @@ static void ReadCommodityClass(Arxx::Reference & Reference)
 
 static void ReadFaction(Arxx::Reference & Reference)
 {
-	Arxx::Item * Item(Resolve(Reference));
+	auto Item(Resolve(Reference));
 	
 	if(Item->GetType() != DATA_TYPE_FACTION)
 	{
@@ -418,9 +420,9 @@ static void ReadFaction(Arxx::Reference & Reference)
 	
 	Reader >> Identifier;
 	
-	Faction * NewFaction(dynamic_cast< Faction * >(g_ObjectFactory->Create("faction", Identifier, false)));
+	auto NewFaction(dynamic_cast< Faction * >(g_ObjectFactory->Create("faction", Identifier, false)));
 	
-	if(NewFaction == 0)
+	if(NewFaction == nullptr)
 	{
 		throw std::runtime_error("Could not create faction '" + Identifier + "'.");
 	}
@@ -437,7 +439,7 @@ static void ReadFaction(Arxx::Reference & Reference)
 
 static void ReadGeneratorClass(Arxx::Reference & Reference)
 {
-	Arxx::Item * Item(Resolve(Reference));
+	auto Item(Resolve(Reference));
 	
 	if(Item->GetType() != DATA_TYPE_GENERATOR_CLASS)
 	{
@@ -453,9 +455,9 @@ static void ReadGeneratorClass(Arxx::Reference & Reference)
 	
 	Reader >> Identifier;
 	
-	GeneratorClass * NewGeneratorClass(g_GeneratorClassManager->Create(Identifier));
+	auto NewGeneratorClass(g_GeneratorClassManager->Create(Identifier));
 	
-	if(NewGeneratorClass == 0)
+	if(NewGeneratorClass == nullptr)
 	{
 		throw std::runtime_error("Could not create generator class '" + Identifier + "'.");
 	}
@@ -475,7 +477,7 @@ static void ReadGeneratorClass(Arxx::Reference & Reference)
 
 static void ReadMesh(Arxx::Reference & Reference)
 {
-	Arxx::Item * Item(Resolve(Reference));
+	auto Item(Resolve(Reference));
 	
 	if(Item->GetType() != DATA_TYPE_MESH)
 	{
@@ -491,9 +493,9 @@ static void ReadMesh(Arxx::Reference & Reference)
 	
 	Reader >> Identifier;
 	
-	Graphics::Mesh * NewMesh(g_GraphicsEngine->GetMeshManager()->Create(Identifier));
+	auto NewMesh(g_GraphicsEngine->GetMeshManager()->Create(Identifier));
 	
-	if(NewMesh == 0)
+	if(NewMesh == nullptr)
 	{
 		throw std::runtime_error("Could not create mesh '" + Identifier + "'.");
 	}
@@ -542,7 +544,7 @@ static void ReadMesh(Arxx::Reference & Reference)
 
 static void ReadModel(Arxx::Reference & Reference)
 {
-	Arxx::Item * Item(Resolve(Reference));
+	auto Item(Resolve(Reference));
 	
 	if(Item->GetType() != DATA_TYPE_MODEL)
 	{
@@ -560,7 +562,7 @@ static void ReadModel(Arxx::Reference & Reference)
 	
 	Graphics::Model * NewModel(g_GraphicsEngine->GetModelManager()->Create(Identifier));
 	
-	if(NewModel == 0)
+	if(NewModel == nullptr)
 	{
 		throw std::runtime_error("Could not create model '" + Identifier + "'.");
 	}
@@ -577,7 +579,7 @@ static void ReadModel(Arxx::Reference & Reference)
 		
 		const Graphics::Mesh * Mesh(g_GraphicsEngine->GetMeshManager()->Get(MeshIdentifier));
 		
-		if(Mesh == 0)
+		if(Mesh == nullptr)
 		{
 			throw std::runtime_error("For model '" + Identifier + "' could not find the mesh '" + MeshIdentifier + "' for part '" + PartIdentifier + "'.");
 		}
@@ -620,7 +622,7 @@ static void ReadProgram(Arxx::Reference & Reference, Graphics::ShadingManager * 
 
 static void ReadScenario(Arxx::Reference & Reference, ScenarioManager * ScenarioManager)
 {
-	Arxx::Item * Item(Resolve(Reference));
+	auto Item(Resolve(Reference));
 	
 	if(Item->GetType() != DATA_TYPE_SCENARIO)
 	{
@@ -636,9 +638,9 @@ static void ReadScenario(Arxx::Reference & Reference, ScenarioManager * Scenario
 	
 	Reader >> Identifier;
 	
-	Scenario * NewScenario(ScenarioManager->Create(Identifier));
+	auto NewScenario(ScenarioManager->Create(Identifier));
 	
-	if(NewScenario == 0)
+	if(NewScenario == nullptr)
 	{
 		throw std::runtime_error("Could not create scenario '" + Identifier + "'.");
 	}
@@ -693,7 +695,7 @@ static void ReadShader(Arxx::Reference & Reference, Graphics::ShadingManager * S
 
 static void ReadShipClass(Arxx::Reference & Reference)
 {
-	Arxx::Item * Item(Resolve(Reference));
+	auto Item(Resolve(Reference));
 	
 	if(Item->GetType() != DATA_TYPE_SHIP_CLASS)
 	{
@@ -709,9 +711,9 @@ static void ReadShipClass(Arxx::Reference & Reference)
 	
 	Reader >> Identifier;
 	
-	ShipClass * NewShipClass(g_ShipClassManager->Create(Identifier));
+	auto NewShipClass(g_ShipClassManager->Create(Identifier));
 	
-	if(NewShipClass == 0)
+	if(NewShipClass == nullptr)
 	{
 		throw std::runtime_error("Could not create ship class '" + Identifier + "'.");
 	}
@@ -763,9 +765,9 @@ static void ReadShipClass(Arxx::Reference & Reference)
 		
 		Reader >> SlotIdentifier >> SlotClassIdentifier;
 		
-		const SlotClass * SlotClass(g_SlotClassManager->Get(SlotClassIdentifier));
+		auto SlotClass(g_SlotClassManager->Get(SlotClassIdentifier));
 		
-		if(SlotClass == 0)
+		if(SlotClass == nullptr)
 		{
 			throw std::runtime_error("Could not get slot class '" + SlotClassIdentifier + "' for slot '" + SlotIdentifier + "' of ship class '" + Identifier + "'.");
 		}
@@ -777,7 +779,7 @@ static void ReadShipClass(Arxx::Reference & Reference)
 		
 		Reader >> Name >> SlotPosition >> SlotOrientation >> VisualizeAccessory;
 		
-		Slot * NewSlot(new Slot(SlotClass, SlotIdentifier));
+		auto NewSlot(new Slot(SlotClass, SlotIdentifier));
 		
 		NewSlot->SetName(Name);
 		NewSlot->SetPosition(SlotPosition);
@@ -792,7 +794,7 @@ static void ReadShipClass(Arxx::Reference & Reference)
 
 static void ReadSlotClass(Arxx::Reference & Reference)
 {
-	Arxx::Item * Item(Resolve(Reference));
+	auto Item(Resolve(Reference));
 	
 	if(Item->GetType() != DATA_TYPE_SLOT_CLASS)
 	{
@@ -808,9 +810,9 @@ static void ReadSlotClass(Arxx::Reference & Reference)
 	
 	Reader >> Identifier;
 	
-	SlotClass * NewSlotClass(g_SlotClassManager->Create(Identifier));
+	auto NewSlotClass(g_SlotClassManager->Create(Identifier));
 	
-	if(NewSlotClass == 0)
+	if(NewSlotClass == nullptr)
 	{
 		throw std::runtime_error("Could not create slot class '" + Identifier + "'.");
 	}
@@ -847,8 +849,12 @@ static void ReadSystem(Arxx::Reference & Reference)
 	
 	Reader >> Identifier;
 	
-	System * NewSystem(dynamic_cast< System * >(g_ObjectFactory->Create("system", Identifier, false)));
+	auto NewSystem(dynamic_cast< System * >(g_ObjectFactory->Create("system", Identifier, false)));
 	
+	if(NewSystem == nullptr)
+	{
+		throw std::runtime_error("Could not create system '" + Identifier + "'.");
+	}
 	NewSystem->SetObjectIdentifier("::system(" + NewSystem->GetClassIdentifier() + ")");
 	
 	std::string Name;
@@ -876,8 +882,12 @@ static void ReadSystem(Arxx::Reference & Reference)
 		
 		Reader >> PlanetIdentifier;
 		
-		Planet * NewPlanet(dynamic_cast< Planet * >(g_ObjectFactory->Create("planet", PlanetIdentifier, false)));
+		auto NewPlanet(dynamic_cast< Planet * >(g_ObjectFactory->Create("planet", PlanetIdentifier, false)));
 		
+		if(NewPlanet == nullptr)
+		{
+			throw std::runtime_error("Could not create planet '" + PlanetIdentifier + "'.");
+		}
 		NewPlanet->SetObjectIdentifier("::planet(" + NewPlanet->GetClassIdentifier() + ")::in_system(" + NewSystem->GetClassIdentifier() + ")");
 		
 		std::string Name;
@@ -888,11 +898,11 @@ static void ReadSystem(Arxx::Reference & Reference)
 		NewPlanet->SetDescription(Description);
 		
 		// read the visualization
-		VisualizationPrototype * PlanetVisualizationPrototype(new VisualizationPrototype());
+		auto PlanetVisualizationPrototype(new VisualizationPrototype());
 		
 		ReadVisualizationPrototype(Reader, PlanetVisualizationPrototype);
-		assert(NewPlanet->GetAspectVisualization() != 0);
-		assert(NewPlanet->GetAspectVisualization()->GetVisualizationPrototype() == 0);
+		assert(NewPlanet->GetAspectVisualization() != nullptr);
+		assert(NewPlanet->GetAspectVisualization()->GetVisualizationPrototype() == nullptr);
 		NewPlanet->GetAspectVisualization()->SetVisualizationPrototype(PlanetVisualizationPrototype);
 		
 		Vector2f PlanetPosition;
@@ -909,9 +919,9 @@ static void ReadSystem(Arxx::Reference & Reference)
 			
 			Reader >> AssetClassIdentifier >> BasePriceModifier;
 			
-			const AssetClass * ManagedAssetClass(g_AssetClassManager->Get(AssetClassIdentifier));
+			auto ManagedAssetClass(g_AssetClassManager->Get(AssetClassIdentifier));
 			
-			if(ManagedAssetClass == 0)
+			if(ManagedAssetClass == nullptr)
 			{
 				throw std::runtime_error("Could not find asset class '" + AssetClassIdentifier + "' for planet '" + PlanetIdentifier + "' in system '" + Identifier + "'.");
 			}
@@ -935,9 +945,9 @@ static void ReadSystem(Arxx::Reference & Reference)
 		NewPlanet->SetOffersRepairing(OffersRepairing);
 		NewPlanet->SetRepairingFeePerHull(RepairingFeePerHull);
 		
-		Faction * Faction(g_Galaxy->GetFaction(FactionIdentifier));
+		auto Faction(g_Galaxy->GetFaction(FactionIdentifier));
 		
-		if(Faction == 0)
+		if(Faction == nullptr)
 		{
 			throw std::runtime_error("Could not find faction '" + FactionIdentifier + "' for planet '" + PlanetIdentifier + "' in system '" + Identifier + "'.");
 		}
@@ -949,7 +959,7 @@ static void ReadSystem(Arxx::Reference & Reference)
 
 static void ReadSystemLink(Arxx::Reference & Reference)
 {
-	Arxx::Item * Item(Resolve(Reference));
+	auto Item(Resolve(Reference));
 	
 	if(Item->GetType() != DATA_TYPE_SYSTEM_LINK)
 	{
@@ -966,14 +976,14 @@ static void ReadSystemLink(Arxx::Reference & Reference)
 	
 	Reader >> System1Identifier >> System2Identifier;
 	
-	System * System1(g_Galaxy->GetSystem(System1Identifier));
-	System * System2(g_Galaxy->GetSystem(System2Identifier));
+	auto System1(g_Galaxy->GetSystem(System1Identifier));
+	auto System2(g_Galaxy->GetSystem(System2Identifier));
 	
-	if(System1 == 0)
+	if(System1 == nullptr)
 	{
 		throw std::runtime_error("For the system link '" + Item->GetName() + "' the first system '" + System1Identifier + "' must be defined.");
 	}		
-	if(System2 == 0)
+	if(System2 == nullptr)
 	{
 		throw std::runtime_error("For the system link '" + Item->GetName() + "' the second system '" + System2Identifier + "' must be defined.");
 	}
@@ -983,7 +993,7 @@ static void ReadSystemLink(Arxx::Reference & Reference)
 
 static void ReadTexture(Arxx::Reference & Reference)
 {
-	Arxx::Item * Item(Resolve(Reference));
+	auto Item(Resolve(Reference));
 	
 	if(Item->GetType() != DATA_TYPE_TEXTURE)
 	{
@@ -1005,9 +1015,9 @@ static void ReadTexture(Arxx::Reference & Reference)
 	Height = ntohl(Height);
 	Format = ntohl(Format);
 	
-	Graphics::Texture * Texture(g_GraphicsEngine->GetTextureManager()->Create(Identifier));
+	auto Texture(g_GraphicsEngine->GetTextureManager()->Create(Identifier));
 	
-	if(Texture == 0)
+	if(Texture == nullptr)
 	{
 		throw std::runtime_error("Could not create texture '" + Identifier + "'.");
 	}
@@ -1066,7 +1076,7 @@ static void ReadVisualizationPrototype(Arxx::BufferReader & Reader, Visualizatio
 
 static void ReadWeaponClass(Arxx::Reference & Reference)
 {
-	Arxx::Item * Item(Resolve(Reference));
+	auto Item(Resolve(Reference));
 	
 	if(Item->GetType() != DATA_TYPE_WEAPON_CLASS)
 	{
@@ -1082,9 +1092,9 @@ static void ReadWeaponClass(Arxx::Reference & Reference)
 	
 	Reader >> Identifier;
 	
-	WeaponClass * NewWeaponClass(g_WeaponClassManager->Create(Identifier));
+	auto NewWeaponClass(g_WeaponClassManager->Create(Identifier));
 	
-	if(NewWeaponClass == 0)
+	if(NewWeaponClass == nullptr)
 	{
 		throw std::runtime_error("Could not create weapon class '" + Identifier + "'.");
 	}

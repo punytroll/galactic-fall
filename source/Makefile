@@ -22,7 +22,7 @@ OBJECT_FILES := $(sort $(patsubst %.cpp,$(OBJECT_DIRECTORY)/%.o,$(SOURCE_FILES))
 DEPENDENCY_DIRECTORY := .dependency-files
 DEPENDENCY_DIRECTORIES := $(sort $(patsubst .%, $(DEPENDENCY_DIRECTORY)%, $(SOURCE_DIRECTORIES)))
 DEPENDENCY_FILES := $(sort $(foreach file,$(SOURCE_FILES),$(DEPENDENCY_DIRECTORY)/$(file).dep))
-GENERATED_HEADER_FILES := arx_resources.h
+GENERATED_HEADER_FILES := arx_types.h
 GENERATED_FILES := $(GENERATED_HEADER_FILES)
 
 ifeq (0, $(words $(findstring $(MAKECMDGOALS), clean clean-recursive clean-here)))
@@ -69,7 +69,7 @@ check-dependencies: generate_cpp_resource_constants-check-dependencies
 		echo -e "\nThe library \"libarxx\" that is installed on your system is too old.\nYou have: Version `pkg-config --modversion libarxx`\nYou need: Version 0.8.9\nYou can get the most recent library from \"http://libarxx.sourceforge.net\"./\n"; false; \
 	fi
 
-arx_resources.h: $(root)/data/tools/declarations.xml $(generate_cpp_resource_constants_dependencies)
+arx_types.h: $(root)/data/tools/declarations.xml $(generate_cpp_resource_constants_dependencies)
 	$(command_generate_cpp_resource_constants) --declarations=$< > $@
 
 binary: $(OBJECT_FILES) $(EVENTS_LIBRARY) $(STRING_CAST_LIBRARY) $(XML_PUNY_DOM_LIBRARY) $(XML_STREAM_LIBRARY) $(LDFLAGS_configuration)

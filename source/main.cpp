@@ -39,7 +39,6 @@
 
 #include <xml_stream/xml_stream.h>
 
-#include "arx_reading.h"
 #include "asset_class.h"
 #include "battery.h"
 #include "battery_class.h"
@@ -95,6 +94,7 @@
 #include "output_observer.h"
 #include "planet.h"
 #include "real_time.h"
+#include "resource_reader.h"
 #include "scenario.h"
 #include "scenario_manager.h"
 #include "settings.h"
