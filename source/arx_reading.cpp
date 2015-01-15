@@ -1016,10 +1016,22 @@ static void ReadTexture(Arxx::Reference & Reference)
 
 static void ReadVisualizationPrototype(Arxx::BufferReader & Reader, VisualizationPrototype * VisualizationPrototype)
 {
+	assert(VisualizationPrototype != nullptr);
+	
 	std::string ModelIdentifier;
 	
 	Reader >> ModelIdentifier;
-	VisualizationPrototype->SetModel(g_GraphicsEngine->GetModelManager()->Get(ModelIdentifier));
+	
+	assert(g_GraphicsEngine != nullptr);
+	assert(g_GraphicsEngine->GetModelManager() != nullptr);
+	
+	auto Model(g_GraphicsEngine->GetModelManager()->Get(ModelIdentifier));
+	
+	if(Model == nullptr)
+	{
+		throw std::runtime_error("Could not find the model \"" + ModelIdentifier + "\".");
+	}
+	VisualizationPrototype->SetModel(Model);
 	
 	Arxx::u4byte VisualizationPartCount;
 	
