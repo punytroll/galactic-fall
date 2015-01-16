@@ -35,6 +35,7 @@ public:
 	// constructor & destructor
 	VisualizationPrototype(void);
 	VisualizationPrototype(const VisualizationPrototype * VisualizationPrototype);
+	VisualizationPrototype(const VisualizationPrototype & VisualizationPrototype);
 	~VisualizationPrototype(void);
 	// getters
 	const Graphics::Model * GetModel(void) const;

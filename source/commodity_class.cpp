@@ -25,18 +25,18 @@
 CommodityClass::CommodityClass(const std::string & Identifier) :
 	_Identifier(Identifier),
 	_SpaceRequirement(0),
-	_VisualizationPrototype(0)
+	_VisualizationPrototype(nullptr)
 {
 }
 
 CommodityClass::~CommodityClass(void)
 {
 	delete _VisualizationPrototype;
-	_VisualizationPrototype = 0;
+	_VisualizationPrototype = nullptr;
 }
 
-void CommodityClass::AddVisualizationPrototype(void)
+void CommodityClass::SetVisualizationPrototype(const VisualizationPrototype & NewVisualizationPrototype)
 {
-	assert(_VisualizationPrototype == 0);
-	_VisualizationPrototype = new VisualizationPrototype();
+	delete _VisualizationPrototype;
+	_VisualizationPrototype = new VisualizationPrototype(NewVisualizationPrototype);
 }

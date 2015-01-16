@@ -38,15 +38,13 @@ public:
 	const std::string & GetName(void) const;
 	const std::string & GetSlotClassIdentifier(void) const;
 	unsigned_numeric GetSpaceRequirement(void) const;
-	VisualizationPrototype * GetVisualizationPrototype(void);
 	const VisualizationPrototype * GetVisualizationPrototype(void) const;
 	// setters
 	void SetEnergyCapacity(float EnergyCapacity);
 	void SetName(const std::string & Name);
 	void SetSlotClassIdentifier(const std::string & SlotClassIdentifier);
 	void SetSpaceRequirement(unsigned_numeric SpaceRequirement);
-	// modifiers
-	void AddVisualizationPrototype(void);
+	void SetVisualizationPrototype(const VisualizationPrototype & VisualizationPrototype);
 private:
 	float _EnergyCapacity;
 	std::string _Identifier;
@@ -79,11 +77,6 @@ inline const std::string & BatteryClass::GetSlotClassIdentifier(void) const
 inline unsigned_numeric BatteryClass::GetSpaceRequirement(void) const
 {
 	return _SpaceRequirement;
-}
-
-inline VisualizationPrototype * BatteryClass::GetVisualizationPrototype(void)
-{
-	return _VisualizationPrototype;
 }
 
 inline const VisualizationPrototype * BatteryClass::GetVisualizationPrototype(void) const

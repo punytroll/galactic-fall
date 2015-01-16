@@ -34,6 +34,15 @@ VisualizationPrototype::VisualizationPrototype(const VisualizationPrototype * Vi
 	}
 }
 
+VisualizationPrototype::VisualizationPrototype(const VisualizationPrototype & VisualizationPrototype) :
+	_Model(VisualizationPrototype._Model)
+{
+	for(auto & PartStyle : VisualizationPrototype._PartStyles)
+	{
+		_PartStyles[PartStyle.first] = new Graphics::Style(PartStyle.second);
+	}
+}
+
 VisualizationPrototype::~VisualizationPrototype(void)
 {
 	_Model = nullptr;

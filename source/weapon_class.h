@@ -47,170 +47,157 @@ public:
 	const std::string & GetIdentifier(void) const;
 	const std::string & GetName(void) const;
 	const Quaternion & GetOrientation(void) const;
-	const Vector3f & GetParticleExitPosition(void) const;
-	float GetParticleExitSpeed(void) const;
-	float GetParticleDamage(void) const;
-	float GetParticleLifeTime(void) const;
-	VisualizationPrototype * GetParticleVisualizationPrototype(void);
-	const VisualizationPrototype * GetParticleVisualizationPrototype(void) const;
+	const Vector3f & GetShotExitPosition(void) const;
+	float GetShotExitSpeed(void) const;
+	float GetShotDamage(void) const;
+	float GetShotLifeTime(void) const;
+	const VisualizationPrototype * GetShotVisualizationPrototype(void) const;
 	float GetReloadTime(void) const;
 	const std::string & GetSlotClassIdentifier(void) const;
 	unsigned_numeric GetSpaceRequirement(void) const;
-	VisualizationPrototype * GetVisualizationPrototype(void);
-	const VisualizationPrototype * GetVisualizationPrototype(void) const;
+	const VisualizationPrototype * GetWeaponVisualizationPrototype(void) const;
 	// setters
 	void SetEnergyUsagePerShot(float EnergyUsagePerShot);
 	void SetName(const std::string & Name);
 	void SetOrientation(const Quaternion & Orientation);
-	void SetParticleExitPosition(const Vector3f & ParticleExitPosition);
-	void SetParticleExitSpeed(float ParticleExitSpeed);
-	void SetParticleDamage(float ParticleDamage);
-	void SetParticleLifeTime(float ParticleLifeTime);
 	void SetReloadTime(float ReloadTime);
+	void SetShotExitPosition(const Vector3f & ShotExitPosition);
+	void SetShotExitSpeed(float ShotExitSpeed);
+	void SetShotDamage(float ShotDamage);
+	void SetShotLifeTime(float ShotLifeTime);
+	void SetShotVisualizationPrototype(const VisualizationPrototype & ShotVisualizationPrototype);
 	void SetSlotClassIdentifier(const std::string & SlotClassIdentifier);
 	void SetSpaceRequirement(unsigned_numeric SpaceRequirement);
-	// modifiers
-	void AddParticleVisualizationPrototype(void);
-	void AddVisualizationPrototype(void);
+	void SetWeaponVisualizationPrototype(const VisualizationPrototype & WeaponVisualizationPrototype);
 private:
-	float m_EnergyUsagePerShot;
-	std::string m_Identifier;
-	std::string m_Name;
-	std::string m_SlotClassIdentifier;
-	Quaternion m_Orientation;
-	float m_ReloadTime;
-	Vector3f m_ParticleExitPosition;
-	float m_ParticleExitSpeed;
-	float m_ParticleDamage;
-	float m_ParticleLifeTime;
-	VisualizationPrototype * m_ParticleVisualizationPrototype;
-	unsigned_numeric m_SpaceRequirement;
-	VisualizationPrototype * m_VisualizationPrototype;
+	float _EnergyUsagePerShot;
+	std::string _Identifier;
+	std::string _Name;
+	std::string _SlotClassIdentifier;
+	Quaternion _Orientation;
+	float _ReloadTime;
+	Vector3f _ShotExitPosition;
+	float _ShotExitSpeed;
+	float _ShotDamage;
+	float _ShotLifeTime;
+	VisualizationPrototype * _ShotVisualizationPrototype;
+	unsigned_numeric _SpaceRequirement;
+	VisualizationPrototype * _WeaponVisualizationPrototype;
 };
 
 inline float WeaponClass::GetEnergyUsagePerShot(void) const
 {
-	return m_EnergyUsagePerShot;
+	return _EnergyUsagePerShot;
 }
 
 inline const std::string & WeaponClass::GetIdentifier(void) const
 {
-	return m_Identifier;
+	return _Identifier;
 }
 
 inline const std::string & WeaponClass::GetName(void) const
 {
-	return m_Name;
+	return _Name;
 }
 
-inline const Vector3f & WeaponClass::GetParticleExitPosition(void) const
+inline const Vector3f & WeaponClass::GetShotExitPosition(void) const
 {
-	return m_ParticleExitPosition;
+	return _ShotExitPosition;
 }
 
 inline const Quaternion & WeaponClass::GetOrientation(void) const
 {
-	return m_Orientation;
+	return _Orientation;
 }
 
-inline float WeaponClass::GetParticleExitSpeed(void) const
+inline float WeaponClass::GetShotExitSpeed(void) const
 {
-	return m_ParticleExitSpeed;
+	return _ShotExitSpeed;
 }
 
-inline float WeaponClass::GetParticleDamage(void) const
+inline float WeaponClass::GetShotDamage(void) const
 {
-	return m_ParticleDamage;
+	return _ShotDamage;
 }
 
-inline float WeaponClass::GetParticleLifeTime(void) const
+inline float WeaponClass::GetShotLifeTime(void) const
 {
-	return m_ParticleLifeTime;
+	return _ShotLifeTime;
 }
 
-inline VisualizationPrototype * WeaponClass::GetParticleVisualizationPrototype(void)
+inline const VisualizationPrototype * WeaponClass::GetShotVisualizationPrototype(void) const
 {
-	return m_ParticleVisualizationPrototype;
-}
-
-inline const VisualizationPrototype * WeaponClass::GetParticleVisualizationPrototype(void) const
-{
-	return m_ParticleVisualizationPrototype;
+	return _ShotVisualizationPrototype;
 }
 
 inline float WeaponClass::GetReloadTime(void) const
 {
-	return m_ReloadTime;
+	return _ReloadTime;
 }
 
 inline const std::string & WeaponClass::GetSlotClassIdentifier(void) const
 {
-	return m_SlotClassIdentifier;
+	return _SlotClassIdentifier;
 }
 
 inline unsigned_numeric WeaponClass::GetSpaceRequirement(void) const
 {
-	return m_SpaceRequirement;
+	return _SpaceRequirement;
 }
 
-inline VisualizationPrototype * WeaponClass::GetVisualizationPrototype(void)
+inline const VisualizationPrototype * WeaponClass::GetWeaponVisualizationPrototype(void) const
 {
-	return m_VisualizationPrototype;
-}
-
-inline const VisualizationPrototype * WeaponClass::GetVisualizationPrototype(void) const
-{
-	return m_VisualizationPrototype;
+	return _WeaponVisualizationPrototype;
 }
 
 inline void WeaponClass::SetEnergyUsagePerShot(float EnergyUsagePerShot)
 {
-	m_EnergyUsagePerShot = EnergyUsagePerShot;
+	_EnergyUsagePerShot = EnergyUsagePerShot;
 }
 
 inline void WeaponClass::SetName(const std::string & Name)
 {
-	m_Name = Name;
+	_Name = Name;
 }
 
 inline void WeaponClass::SetOrientation(const Quaternion & Orientation)
 {
-	m_Orientation = Orientation;
+	_Orientation = Orientation;
 }
 
-inline void WeaponClass::SetParticleExitPosition(const Vector3f & ParticleExitPosition)
+inline void WeaponClass::SetShotExitPosition(const Vector3f & ShotExitPosition)
 {
-	m_ParticleExitPosition = ParticleExitPosition;
+	_ShotExitPosition = ShotExitPosition;
 }
 
-inline void WeaponClass::SetParticleExitSpeed(float ParticleExitSpeed)
+inline void WeaponClass::SetShotExitSpeed(float ShotExitSpeed)
 {
-	m_ParticleExitSpeed = ParticleExitSpeed;
+	_ShotExitSpeed = ShotExitSpeed;
 }
 
-inline void WeaponClass::SetParticleDamage(float ParticleDamage)
+inline void WeaponClass::SetShotDamage(float ShotDamage)
 {
-	m_ParticleDamage = ParticleDamage;
+	_ShotDamage = ShotDamage;
 }
 
-inline void WeaponClass::SetParticleLifeTime(float ParticleLifeTime)
+inline void WeaponClass::SetShotLifeTime(float ShotLifeTime)
 {
-	m_ParticleLifeTime = ParticleLifeTime;
+	_ShotLifeTime = ShotLifeTime;
 }
 
 inline void WeaponClass::SetReloadTime(float ReloadTime)
 {
-	m_ReloadTime = ReloadTime;
+	_ReloadTime = ReloadTime;
 }
 
 inline void WeaponClass::SetSlotClassIdentifier(const std::string & SlotClassIdentifier)
 {
-	m_SlotClassIdentifier = SlotClassIdentifier;
+	_SlotClassIdentifier = SlotClassIdentifier;
 }
 
 inline void WeaponClass::SetSpaceRequirement(unsigned_numeric SpaceRequirement)
 {
-	m_SpaceRequirement = SpaceRequirement;
+	_SpaceRequirement = SpaceRequirement;
 }
 
 #endif

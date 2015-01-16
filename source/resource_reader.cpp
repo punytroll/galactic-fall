@@ -83,7 +83,6 @@ static void ReadSlotClass(Arxx::Reference & Reference, ClassManager< SlotClass >
 static void ReadSystem(Arxx::Reference & Reference, ClassManager< AssetClass > * AssetClassManager);
 static void ReadSystemLink(Arxx::Reference & Reference);
 static void ReadTexture(Arxx::Reference & Reference);
-static void ReadVisualizationPrototype(Arxx::BufferReader & Reader, VisualizationPrototype * VisualizationPrototype);
 static void ReadWeaponClass(Arxx::Reference & Reference, ClassManager< WeaponClass > * WeaponClassManager);
 
 static void MakeItemAvailable(Arxx::Item * Item)
@@ -341,19 +340,14 @@ static void ReadBatteryClass(Arxx::Reference & Reference, ClassManager< BatteryC
 	}
 	
 	std::string Name;
-	
-	Reader >> Name;
-	NewBatteryClass->SetName(Name);
-	
-	// read visualization prototype
-	NewBatteryClass->AddVisualizationPrototype();
-	ReadVisualizationPrototype(Reader, NewBatteryClass->GetVisualizationPrototype());
-	
+	VisualizationPrototype VisualizationPrototype;
 	Arxx::u4byte SpaceRequirement;
 	float EnergyCapacity;
 	std::string SlotClassIdentifier;
 	
-	Reader >> SpaceRequirement >> EnergyCapacity >> SlotClassIdentifier;
+	Reader >> Name >> VisualizationPrototype >> SpaceRequirement >> EnergyCapacity >> SlotClassIdentifier;
+	NewBatteryClass->SetName(Name);
+	NewBatteryClass->SetVisualizationPrototype(VisualizationPrototype);
 	NewBatteryClass->SetSpaceRequirement(SpaceRequirement);
 	NewBatteryClass->SetEnergyCapacity(EnergyCapacity);
 	NewBatteryClass->SetSlotClassIdentifier(SlotClassIdentifier);
@@ -386,15 +380,13 @@ static void ReadCommodityClass(Arxx::Reference & Reference, ClassManager< Commod
 	
 	std::string Name;
 	Arxx::u4byte SpaceRequirement;
+	VisualizationPrototype VisualizationPrototype;
 	
-	Reader >> Name >> SpaceRequirement;
+	Reader >> Name >> SpaceRequirement >> VisualizationPrototype;
 	
 	NewCommodityClass->SetName(Name);
 	NewCommodityClass->SetSpaceRequirement(SpaceRequirement);
-	
-	// read visualization prototype
-	NewCommodityClass->AddVisualizationPrototype();
-	ReadVisualizationPrototype(Reader, NewCommodityClass->GetVisualizationPrototype());
+	NewCommodityClass->SetVisualizationPrototype(VisualizationPrototype);
 }
 
 static void ReadFaction(Arxx::Reference & Reference)
@@ -714,20 +706,8 @@ static void ReadShipClass(Arxx::Reference & Reference, ClassManager< ShipClass >
 	}
 	// read the name aspect
 	std::string Name;
-	
-	Reader >> Name;
-	NewShipClass->SetName(Name);
-	
-	// read the physical aspect
 	Arxx::u4byte SpaceRequirement;
-	
-	Reader >> SpaceRequirement;
-	NewShipClass->SetSpaceRequirement(SpaceRequirement);
-	
-	// read the visualization
-	NewShipClass->AddVisualizationPrototype();
-	ReadVisualizationPrototype(Reader, NewShipClass->GetVisualizationPrototype());
-	
+	VisualizationPrototype VisualizationPrototype;
 	float FuelCapacity;
 	float ForwardThrust;
 	float TurnSpeed;
@@ -741,7 +721,10 @@ static void ReadShipClass(Arxx::Reference & Reference, ClassManager< ShipClass >
 	float ExhaustRadius;
 	Arxx::u4byte SlotCount;
 	
-	Reader >> ForwardThrust >> TurnSpeed >> MaximumSpeed >> MaximumAvailableSpace >> FuelCapacity >> JumpFuel >> ForwardFuel >> TurnFuel >> Hull >> ExhaustOffset >> ExhaustRadius >> SlotCount;
+	Reader >> Name >> SpaceRequirement >> VisualizationPrototype >> ForwardThrust >> TurnSpeed >> MaximumSpeed >> MaximumAvailableSpace >> FuelCapacity >> JumpFuel >> ForwardFuel >> TurnFuel >> Hull >> ExhaustOffset >> ExhaustRadius >> SlotCount;
+	NewShipClass->SetName(Name);
+	NewShipClass->SetSpaceRequirement(SpaceRequirement);
+	NewShipClass->SetVisualizationPrototype(VisualizationPrototype);
 	NewShipClass->SetFuelCapacity(FuelCapacity);
 	NewShipClass->SetForwardThrust(ForwardThrust);
 	NewShipClass->SetJumpFuel(JumpFuel);
@@ -887,18 +870,14 @@ static void ReadSystem(Arxx::Reference & Reference, ClassManager< AssetClass > *
 		
 		std::string Name;
 		std::string Description;
+		VisualizationPrototype VisualizationPrototype;
 		
-		Reader >> Name >> Description;
+		Reader >> Name >> Description >> VisualizationPrototype;
 		NewPlanet->GetAspectName()->SetName(Name);
 		NewPlanet->SetDescription(Description);
-		
-		// read the visualization
-		auto PlanetVisualizationPrototype(new VisualizationPrototype());
-		
-		ReadVisualizationPrototype(Reader, PlanetVisualizationPrototype);
 		assert(NewPlanet->GetAspectVisualization() != nullptr);
 		assert(NewPlanet->GetAspectVisualization()->GetVisualizationPrototype() == nullptr);
-		NewPlanet->GetAspectVisualization()->SetVisualizationPrototype(PlanetVisualizationPrototype);
+		NewPlanet->GetAspectVisualization()->SetVisualizationPrototype(VisualizationPrototype);
 		
 		Vector2f PlanetPosition;
 		float Size;
@@ -1019,56 +998,6 @@ static void ReadTexture(Arxx::Reference & Reference)
 	Texture->SetData(Width, Height, Format, Reader.GetBuffer().GetBegin() + Reader.stGetPosition());
 }
 
-static void ReadVisualizationPrototype(Arxx::BufferReader & Reader, VisualizationPrototype * VisualizationPrototype)
-{
-	assert(VisualizationPrototype != nullptr);
-	
-	std::string ModelIdentifier;
-	
-	Reader >> ModelIdentifier;
-	
-	assert(g_GraphicsEngine != nullptr);
-	assert(g_GraphicsEngine->GetModelManager() != nullptr);
-	
-	auto Model(g_GraphicsEngine->GetModelManager()->Get(ModelIdentifier));
-	
-	if(Model == nullptr)
-	{
-		throw std::runtime_error("Could not find the model \"" + ModelIdentifier + "\".");
-	}
-	VisualizationPrototype->SetModel(Model);
-	
-	Arxx::u4byte VisualizationPartCount;
-	
-	Reader >> VisualizationPartCount;
-	for(Arxx::u4byte VisualizationPartNumber = 1; VisualizationPartNumber <= VisualizationPartCount; ++VisualizationPartNumber)
-	{
-		std::string PartIdentifier;
-		Color PartDiffuseColor;
-		bool PartValidSpecularColor;
-		Color PartSpecularColor;
-		bool PartValidShininess;
-		float PartShininess;
-		std::string PartProgramIdentifier;
-		
-		Reader >> PartIdentifier >> PartDiffuseColor >> PartValidSpecularColor >> PartSpecularColor >> PartValidShininess >> PartShininess >> PartProgramIdentifier;
-		
-		auto PartStyle(new Graphics::Style());
-		
-		PartStyle->SetDiffuseColor(PartDiffuseColor);
-		if(PartValidSpecularColor == true)
-		{
-			PartStyle->SetSpecularColor(PartSpecularColor);
-		}
-		if(PartValidShininess == true)
-		{
-			PartStyle->SetShininess(PartShininess);
-		}
-		PartStyle->SetProgramIdentifier(PartProgramIdentifier);
-		VisualizationPrototype->SetPartStyle(PartIdentifier, PartStyle);
-	}
-}
-
 static void ReadWeaponClass(Arxx::Reference & Reference, ClassManager< WeaponClass > * WeaponClassManager)
 {
 	auto Item(Resolve(Reference));
@@ -1095,34 +1024,32 @@ static void ReadWeaponClass(Arxx::Reference & Reference, ClassManager< WeaponCla
 	}
 	
 	std::string Name;
+	VisualizationPrototype WeaponVisualizationPrototype;
 	
-	Reader >> Name;
+	Reader >> Name >> WeaponVisualizationPrototype;
 	NewWeaponClass->SetName(Name);
-	
-	// read the visualization
-	NewWeaponClass->AddVisualizationPrototype();
-	ReadVisualizationPrototype(Reader, NewWeaponClass->GetVisualizationPrototype());
+	NewWeaponClass->SetWeaponVisualizationPrototype(WeaponVisualizationPrototype);
 	
 	std::string SlotClassIdentifier;
 	Quaternion Orientation;
 	float ReloadTime;
 	Arxx::u4byte SpaceRequirement;
 	float EnergyUsagePerShot;
-	Vector3f ParticleExitPosition;
-	float ParticleExitSpeed;
-	float ParticleDamage;
-	float ParticleLifeTime;
+	Vector3f ShotExitPosition;
+	float ShotExitSpeed;
+	float ShotDamage;
+	float ShotLifeTime;
+	VisualizationPrototype ShotVisualizationPrototype;
 	
-	Reader >> SlotClassIdentifier >> Orientation >> ReloadTime >> SpaceRequirement >> EnergyUsagePerShot >> ParticleExitPosition >> ParticleExitSpeed >> ParticleDamage >> ParticleLifeTime;
+	Reader >> SlotClassIdentifier >> Orientation >> ReloadTime >> SpaceRequirement >> EnergyUsagePerShot >> ShotExitPosition >> ShotExitSpeed >> ShotDamage >> ShotLifeTime >> ShotVisualizationPrototype;
 	NewWeaponClass->SetSlotClassIdentifier(SlotClassIdentifier);
 	NewWeaponClass->SetOrientation(Orientation);
 	NewWeaponClass->SetReloadTime(ReloadTime);
 	NewWeaponClass->SetSpaceRequirement(static_cast< unsigned_numeric >(SpaceRequirement));
 	NewWeaponClass->SetEnergyUsagePerShot(EnergyUsagePerShot);
-	NewWeaponClass->SetParticleExitPosition(ParticleExitPosition);
-	NewWeaponClass->SetParticleExitSpeed(ParticleExitSpeed);
-	NewWeaponClass->SetParticleDamage(ParticleDamage);
-	NewWeaponClass->SetParticleLifeTime(ParticleLifeTime);
-	NewWeaponClass->AddParticleVisualizationPrototype();
-	ReadVisualizationPrototype(Reader, NewWeaponClass->GetParticleVisualizationPrototype());
+	NewWeaponClass->SetShotExitPosition(ShotExitPosition);
+	NewWeaponClass->SetShotExitSpeed(ShotExitSpeed);
+	NewWeaponClass->SetShotDamage(ShotDamage);
+	NewWeaponClass->SetShotLifeTime(ShotLifeTime);
+	NewWeaponClass->SetShotVisualizationPrototype(ShotVisualizationPrototype);
 }

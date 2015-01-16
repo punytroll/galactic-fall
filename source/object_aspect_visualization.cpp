@@ -50,10 +50,16 @@ Visualization * ObjectAspectVisualization::CreateVisualizationForGraphics(Graphi
 	return NewVisualization;
 }
 
-void ObjectAspectVisualization::SetVisualizationPrototype(VisualizationPrototype * VisualizationPrototype)
+void ObjectAspectVisualization::SetVisualizationPrototype(const VisualizationPrototype * NewVisualizationPrototype)
 {
 	delete _VisualizationPrototype;
-	_VisualizationPrototype = VisualizationPrototype;
+	_VisualizationPrototype = new VisualizationPrototype(NewVisualizationPrototype);
+}
+
+void ObjectAspectVisualization::SetVisualizationPrototype(const VisualizationPrototype & NewVisualizationPrototype)
+{
+	delete _VisualizationPrototype;
+	_VisualizationPrototype = new VisualizationPrototype(NewVisualizationPrototype);
 }
 
 void ObjectAspectVisualization::Destroy(void)
