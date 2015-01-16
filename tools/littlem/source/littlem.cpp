@@ -668,14 +668,11 @@ void vSetupProjection(bool bInitialize = true)
 
 void vStartPicking(const Vector2f & MousePosition)
 {
-	GLint piViewport[4];
-	
 	glSelectBuffer(1024, g_puiSelectionBuffer);
 	glRenderMode(GL_SELECT);
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
 	glLoadIdentity();
-	glGetIntegerv(GL_VIEWPORT, piViewport);
 	glTranslatef((g_Width - 2.0f * MousePosition[0]) / 5.0f, (g_Height - 2.0f * (g_Height - MousePosition[1])) / 5.0f, 0.0f);
 	glScalef(g_Width / 5.0f, g_Height / 5.0f, 1.0);
 	vSetupProjection(false);
