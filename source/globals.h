@@ -33,7 +33,6 @@
 template < class ClassType >
 class ClassManager;
 
-class CommodityClass;
 class Galaxy;
 class GeneratorClass;
 class MessageDispatcher;
@@ -73,7 +72,6 @@ enum WantReturnCode
 };
 
 extern OutputObserver * g_CharacterObserver;
-extern ClassManager< CommodityClass > * g_CommodityClassManager;
 extern Galaxy * g_Galaxy;
 extern TimeoutNotificationManager * g_GameTimeTimeoutNotifications;
 extern ClassManager< GeneratorClass > * g_GeneratorClassManager;

@@ -60,6 +60,7 @@ Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSyst
 
 ObjectFactory::ObjectFactory(void) :
 	_BatteryClassManager(new ClassManager< BatteryClass >()),
+	_CommodityClassManager(new ClassManager< CommodityClass >()),
 	_WeaponClassManager(new ClassManager< WeaponClass >())
 {
 }
@@ -68,6 +69,8 @@ ObjectFactory::~ObjectFactory(void)
 {
 	delete _BatteryClassManager;
 	_BatteryClassManager = nullptr;
+	delete _CommodityClassManager;
+	_CommodityClassManager = nullptr;
 	delete _WeaponClassManager;
 	_WeaponClassManager = nullptr;
 }
@@ -108,19 +111,25 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 	}
 	else if(TypeIdentifier == "commodity")
 	{
-		const CommodityClass * CommodityClass(g_CommodityClassManager->Get(ClassIdentifier));
+		assert(_CommodityClassManager != nullptr);
 		
-		Result = new Commodity();
+		auto CommodityClass(_CommodityClassManager->Get(ClassIdentifier));
+		
+		assert(CommodityClass != nullptr);
+		
+		auto NewCommodity(new Commodity());
+		
 		// set up name aspect
-		assert(Result->GetAspectName() != 0);
-		Result->GetAspectName()->SetName(CommodityClass->GetName());
+		assert(NewCommodity->GetAspectName() != nullptr);
+		NewCommodity->GetAspectName()->SetName(CommodityClass->GetName());
 		// set up physical aspect
-		assert(Result->GetAspectPhysical() != 0);
-		Result->GetAspectPhysical()->SetRadialSize(CommodityClass->GetVisualizationPrototype()->GetModel()->GetRadialSize());
-		Result->GetAspectPhysical()->SetSpaceRequirement(CommodityClass->GetSpaceRequirement());
+		assert(NewCommodity->GetAspectPhysical() != nullptr);
+		NewCommodity->GetAspectPhysical()->SetRadialSize(CommodityClass->GetVisualizationPrototype()->GetModel()->GetRadialSize());
+		NewCommodity->GetAspectPhysical()->SetSpaceRequirement(CommodityClass->GetSpaceRequirement());
 		// set up visualization aspect
-		assert(Result->GetAspectVisualization() != 0);
-		Result->GetAspectVisualization()->SetVisualizationPrototype(new VisualizationPrototype(CommodityClass->GetVisualizationPrototype()));
+		assert(NewCommodity->GetAspectVisualization() != nullptr);
+		NewCommodity->GetAspectVisualization()->SetVisualizationPrototype(new VisualizationPrototype(CommodityClass->GetVisualizationPrototype()));
+		Result = NewCommodity;
 	}
 	else if(TypeIdentifier == "faction")
 	{
@@ -320,7 +329,13 @@ unsigned_numeric ObjectFactory::GetSpaceRequirement(const std::string & TypeIden
 	}
 	else if(TypeIdentifier == "commodity")
 	{
-		return g_CommodityClassManager->Get(ClassIdentifier)->GetSpaceRequirement();
+		assert(_CommodityClassManager != nullptr);
+		
+		auto CommodityClass(_CommodityClassManager->Get(ClassIdentifier));
+		
+		assert(CommodityClass != nullptr);
+		
+		return CommodityClass->GetSpaceRequirement();
 	}
 	else if(TypeIdentifier == "generator")
 	{
@@ -358,7 +373,13 @@ const VisualizationPrototype * ObjectFactory::GetVisualizationPrototype(const st
 	}
 	else if(TypeIdentifier == "commodity")
 	{
-		return g_CommodityClassManager->Get(ClassIdentifier)->GetVisualizationPrototype();
+		assert(_CommodityClassManager != nullptr);
+		
+		auto CommodityClass(_CommodityClassManager->Get(ClassIdentifier));
+		
+		assert(CommodityClass != nullptr);
+		
+		return CommodityClass->GetVisualizationPrototype();
 	}
 	else if(TypeIdentifier == "generator")
 	{

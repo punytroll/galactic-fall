@@ -35,6 +35,7 @@ template< class Class >
 class ClassManager;
 
 class AssetClass;
+class CommodityManager;
 class ScenarioManager;
 class Settings;
 class WeaponClass;
@@ -47,7 +48,7 @@ public:
 	bool LoadArchive(const std::string & Path);
 	void ReadAssetClasses(ClassManager< AssetClass > * AssetClassManager);
 	void ReadBatteryClasses(ClassManager< BatteryClass > * BatteryClassManager);
-	void ReadCommodityClasses(void);
+	void ReadCommodityClasses(ClassManager< CommodityClass > * CommodityClassManager);
 	void ReadFactions(void);
 	void ReadGeneratorClasses(void);
 	void ReadMeshes(void);
