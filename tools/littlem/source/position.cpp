@@ -2,7 +2,8 @@
 
 #include "position.h"
 
-Position::Position(void)
+Position::Position(void) :
+	_Position(Vector3f::CreateZero())
 {
 }
 
