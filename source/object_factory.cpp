@@ -268,7 +268,7 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		NewShot->SetTimeOfDeath(GameTime::Get() + WeaponClass->GetParticleLifeTime());
 		// set up physical aspect
 		assert(NewShot->GetAspectPhysical() != 0);
-		NewShot->GetAspectPhysical()->SetRadialSize(0.54f);
+		NewShot->GetAspectPhysical()->SetRadialSize(WeaponClass->GetParticleVisualizationPrototype()->GetModel()->GetRadialSize());
 		// set up visualization aspect
 		assert(NewShot->GetAspectVisualization() != 0);
 		NewShot->GetAspectVisualization()->SetVisualizationPrototype(new VisualizationPrototype(WeaponClass->GetParticleVisualizationPrototype()));
