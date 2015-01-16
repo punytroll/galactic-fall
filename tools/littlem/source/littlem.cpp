@@ -3,7 +3,6 @@
 #include <stdlib.h>
 
 #include <GL/gl.h>
-#include <GL/glu.h>
 #include <GL/glx.h>
 
 #include <algorithm>
@@ -677,7 +676,8 @@ void vStartPicking(const Vector2f & MousePosition)
 	glPushMatrix();
 	glLoadIdentity();
 	glGetIntegerv(GL_VIEWPORT, piViewport);
-	gluPickMatrix(MousePosition[0], piViewport[3] - MousePosition[1], 5, 5, piViewport);
+	glTranslatef((g_Width - 2.0f * MousePosition[0]) / 5.0f, (g_Height - 2.0f * (g_Height - MousePosition[1])) / 5.0f, 0.0f);
+	glScalef(g_Width / 5.0f, g_Height / 5.0f, 1.0);
 	vSetupProjection(false);
 	glMatrixMode(GL_MODELVIEW);
 	glInitNames();
