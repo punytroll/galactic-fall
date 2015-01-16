@@ -27,7 +27,9 @@ class ClassManager;
 
 class BatteryClass;
 class CommodityClass;
+class GeneratorClass;
 class Object;
+class ShipClass;
 class VisualizationPrototype;
 class WeaponClass;
 
@@ -43,10 +45,14 @@ public:
 	const VisualizationPrototype * GetVisualizationPrototype(const std::string & TypeIdentifier, const std::string & ClassIdentifier) const;
 	ClassManager< BatteryClass > * GetBatteryClassManager(void);
 	ClassManager< CommodityClass > * GetCommodityClassManager(void);
+	ClassManager< GeneratorClass > * GetGeneratorClassManager(void);
+	ClassManager< ShipClass > * GetShipClassManager(void);
 	ClassManager< WeaponClass > * GetWeaponClassManager(void);
 private:
 	ClassManager< BatteryClass > * _BatteryClassManager;
 	ClassManager< CommodityClass > * _CommodityClassManager;
+	ClassManager< GeneratorClass > * _GeneratorClassManager;
+	ClassManager< ShipClass > * _ShipClassManager;
 	ClassManager< WeaponClass > * _WeaponClassManager;
 };
 
@@ -58,6 +64,16 @@ inline ClassManager< BatteryClass > * ObjectFactory::GetBatteryClassManager(void
 inline ClassManager< CommodityClass > * ObjectFactory::GetCommodityClassManager(void)
 {
 	return _CommodityClassManager;
+}
+
+inline ClassManager< GeneratorClass > * ObjectFactory::GetGeneratorClassManager(void)
+{
+	return _GeneratorClassManager;
+}
+
+inline ClassManager< ShipClass > * ObjectFactory::GetShipClassManager(void)
+{
+	return _ShipClassManager;
 }
 
 inline ClassManager< WeaponClass > * ObjectFactory::GetWeaponClassManager(void)

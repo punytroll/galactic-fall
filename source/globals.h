@@ -34,11 +34,9 @@ template < class ClassType >
 class ClassManager;
 
 class Galaxy;
-class GeneratorClass;
 class MessageDispatcher;
 class ObjectFactory;
 class OutputObserver;
-class ShipClass;
 class SlotClass;
 class SystemStatistics;
 class TimeoutNotificationManager;
@@ -74,13 +72,11 @@ enum WantReturnCode
 extern OutputObserver * g_CharacterObserver;
 extern Galaxy * g_Galaxy;
 extern TimeoutNotificationManager * g_GameTimeTimeoutNotifications;
-extern ClassManager< GeneratorClass > * g_GeneratorClassManager;
 extern Graphics::Engine * g_GraphicsEngine;
 extern MessageDispatcher * g_MessageDispatcher;
 extern ObjectFactory * g_ObjectFactory;
 extern std::vector< Graphics::View * > g_PrerenderedViews;
 extern TimeoutNotificationManager * g_RealTimeTimeoutNotifications;
-extern ClassManager< ShipClass > * g_ShipClassManager;
 extern ClassManager< SlotClass > * g_SlotClassManager;
 extern SystemStatistics * g_SystemStatistics;
 extern float g_TimeWarp;
