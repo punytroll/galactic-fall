@@ -92,6 +92,5 @@ extern ClassManager< SlotClass > * g_SlotClassManager;
 extern SystemStatistics * g_SystemStatistics;
 extern float g_TimeWarp;
 extern UI::UserInterface * g_UserInterface;
-extern ClassManager< WeaponClass > * g_WeaponClassManager;
 
 #endif

@@ -84,7 +84,7 @@ static void ReadSystem(Arxx::Reference & Reference);
 static void ReadSystemLink(Arxx::Reference & Reference);
 static void ReadTexture(Arxx::Reference & Reference);
 static void ReadVisualizationPrototype(Arxx::BufferReader & Reader, VisualizationPrototype * VisualizationPrototype);
-static void ReadWeaponClass(Arxx::Reference & Reference);
+static void ReadWeaponClass(Arxx::Reference & Reference, ClassManager< WeaponClass > * WeaponClassManager);
 
 static void MakeItemAvailable(Arxx::Item * Item)
 {
@@ -250,9 +250,9 @@ void ResourceReader::ReadTextures(void)
 	_ReadItems("/Textures", ReadTexture);
 }
 
-void ResourceReader::ReadWeaponClasses(void)
+void ResourceReader::ReadWeaponClasses(ClassManager< WeaponClass > * WeaponClassManager)
 {
-	_ReadItems("/Weapon Classes", ReadWeaponClass);
+	_ReadItems("/Weapon Classes", std::bind(ReadWeaponClass, std::placeholders::_1, WeaponClassManager));
 }
 
 std::string ResourceReader::ReadSavegameFromScenarioPath(const std::string & ScenarioPath)
@@ -1069,7 +1069,7 @@ static void ReadVisualizationPrototype(Arxx::BufferReader & Reader, Visualizatio
 	}
 }
 
-static void ReadWeaponClass(Arxx::Reference & Reference)
+static void ReadWeaponClass(Arxx::Reference & Reference, ClassManager< WeaponClass > * WeaponClassManager)
 {
 	auto Item(Resolve(Reference));
 	
@@ -1087,7 +1087,7 @@ static void ReadWeaponClass(Arxx::Reference & Reference)
 	
 	Reader >> Identifier;
 	
-	auto NewWeaponClass(g_WeaponClassManager->Create(Identifier));
+	auto NewWeaponClass(WeaponClassManager->Create(Identifier));
 	
 	if(NewWeaponClass == nullptr)
 	{

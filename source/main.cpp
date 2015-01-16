@@ -128,7 +128,6 @@
 #include "visualization_prototype.h"
 #include "visualizations.h"
 #include "weapon.h"
-#include "weapon_class.h"
 #include "write_to_xml_stream.h"
 
 // these objects are exported via globals.h
@@ -150,7 +149,6 @@ ClassManager< ShipClass > * g_ShipClassManager(0);
 ClassManager< SlotClass > * g_SlotClassManager(0);
 SystemStatistics * g_SystemStatistics(0);
 UI::UserInterface * g_UserInterface(0);
-ClassManager< WeaponClass > * g_WeaponClassManager(0);
 
 // global dialog pointers
 UI::MainMenuWindow * g_MainMenuWindow(0);
@@ -3532,7 +3530,6 @@ int main(int argc, char ** argv)
 	g_GeneratorClassManager = new ClassManager< GeneratorClass >();
 	g_ShipClassManager = new ClassManager< ShipClass >();
 	g_SlotClassManager = new ClassManager< SlotClass >();
-	g_WeaponClassManager = new ClassManager< WeaponClass >();
 	g_AssetClassManager = new ClassManager< AssetClass >();
 	g_BatteryClassManager = new ClassManager< BatteryClass >();
 	g_CommodityClassManager = new ClassManager< CommodityClass >();
@@ -3549,7 +3546,7 @@ int main(int argc, char ** argv)
 	g_ResourceReader->ReadGeneratorClasses();
 	g_ResourceReader->ReadSlotClasses();
 	g_ResourceReader->ReadShipClasses();
-	g_ResourceReader->ReadWeaponClasses();
+	g_ResourceReader->ReadWeaponClasses(g_ObjectFactory->GetWeaponClassManager());
 	g_ResourceReader->ReadScenarios(g_ScenarioManager);
 	// reading shaders and programs could be done earlier and without OpenGL, but initializing them requires OpenGL
 	g_ResourceReader->ReadShadersAndPrograms(g_GraphicsEngine->GetShadingManager());
@@ -3614,7 +3611,6 @@ int main(int argc, char ** argv)
 	delete g_CommodityClassManager;
 	delete g_BatteryClassManager;
 	delete g_AssetClassManager;
-	delete g_WeaponClassManager;
 	delete g_SlotClassManager;
 	delete g_ShipClassManager;
 	delete g_GeneratorClassManager;

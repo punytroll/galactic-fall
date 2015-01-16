@@ -58,6 +58,17 @@
 
 Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSystemClassIdentifier);
 
+ObjectFactory::ObjectFactory(void) :
+	_WeaponClassManager(new ClassManager< WeaponClass >())
+{
+}
+
+ObjectFactory::~ObjectFactory(void)
+{
+	delete _WeaponClassManager;
+	_WeaponClassManager = nullptr;
+}
+
 Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::string & ClassIdentifier, bool CreateNestedObjects) const
 {
 	Object * Result(0);
@@ -214,7 +225,9 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 	}
 	else if(TypeIdentifier == "shot")
 	{
-		const WeaponClass * WeaponClass(g_WeaponClassManager->Get(ClassIdentifier));
+		assert(_WeaponClassManager != nullptr);
+		
+		const WeaponClass * WeaponClass(_WeaponClassManager->Get(ClassIdentifier));
 		Shot * NewShot(new Shot());
 		
 		// set up type specific things
@@ -245,8 +258,10 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 	}
 	else if(TypeIdentifier == "weapon")
 	{
-		const WeaponClass * WeaponClass(g_WeaponClassManager->Get(ClassIdentifier));
-		Weapon * NewWeapon(new Weapon());
+		assert(_WeaponClassManager != nullptr);
+		
+		auto WeaponClass(_WeaponClassManager->Get(ClassIdentifier));
+		auto NewWeapon(new Weapon());
 		
 		NewWeapon->SetEnergyUsagePerShot(WeaponClass->GetEnergyUsagePerShot());
 		NewWeapon->SetParticleExitPosition(WeaponClass->GetParticleExitPosition());
@@ -300,7 +315,7 @@ unsigned_numeric ObjectFactory::GetSpaceRequirement(const std::string & TypeIden
 	}
 	else if(TypeIdentifier == "weapon")
 	{
-		return g_WeaponClassManager->Get(ClassIdentifier)->GetSpaceRequirement();
+		return _WeaponClassManager->Get(ClassIdentifier)->GetSpaceRequirement();
 	}
 	else
 	{
@@ -328,7 +343,7 @@ const VisualizationPrototype * ObjectFactory::GetVisualizationPrototype(const st
 	}
 	else if(TypeIdentifier == "weapon")
 	{
-		return g_WeaponClassManager->Get(ClassIdentifier)->GetVisualizationPrototype();
+		return _WeaponClassManager->Get(ClassIdentifier)->GetVisualizationPrototype();
 	}
 	else
 	{
