@@ -172,7 +172,7 @@ KeyAcceptor::~KeyAcceptor(void)
 	}
 }
 
-bool KeyAcceptor::bAcceptKey(int iKeyCode)
+bool KeyAcceptor::AcceptKey(int iKeyCode, bool IsDown)
 {
 	return false;
 }
@@ -343,9 +343,9 @@ UserInterface::~UserInterface(void)
 {
 }
 
-bool UserInterface::bAcceptKey(int iKeyCode)
+bool UserInterface::AcceptKey(int iKeyCode, bool IsDown)
 {
-	return bAcceptKeyAtKeyAcceptor(pGetKeyAcceptor(), iKeyCode);
+	return _AcceptKeyAtKeyAcceptor(pGetKeyAcceptor(), iKeyCode, IsDown);
 }
 
 void UserInterface::vGrabKeyFocus(KeyAcceptor * pKeyAcceptor)
@@ -381,7 +381,7 @@ void UserInterface::vDraw(void)
 	}
 }
 
-bool UserInterface::bAcceptKeyAtKeyAcceptor(KeyAcceptor * pKeyAcceptor, int iKeyCode)
+bool UserInterface::_AcceptKeyAtKeyAcceptor(KeyAcceptor * pKeyAcceptor, int KeyCode, bool IsDown)
 {
 	bool bKeyAccepted(false);
 	
@@ -389,11 +389,11 @@ bool UserInterface::bAcceptKeyAtKeyAcceptor(KeyAcceptor * pKeyAcceptor, int iKey
 	if(pKeyAcceptor != 0)
 	{
 		// recursive call for the pKeyAcceptor's current KeyAcceptor
-		bKeyAccepted = bAcceptKeyAtKeyAcceptor(pKeyAcceptor->pGetKeyAcceptor(), iKeyCode);
+		bKeyAccepted = _AcceptKeyAtKeyAcceptor(pKeyAcceptor->pGetKeyAcceptor(), KeyCode, IsDown);
 		// fallback: if no sub KeyAcceptor wanted the input we try the KeyAcceptor
 		if(bKeyAccepted == false)
 		{
-			bKeyAccepted = pKeyAcceptor->bAcceptKey(iKeyCode);
+			bKeyAccepted = pKeyAcceptor->AcceptKey(KeyCode, IsDown);
 		}
 	}
 	
