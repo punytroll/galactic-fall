@@ -36,8 +36,11 @@ class ClassManager;
 
 class AssetClass;
 class CommodityManager;
+class GeneratorClass;
 class ScenarioManager;
 class Settings;
+class ShipClass;
+class SlotClass;
 class WeaponClass;
 
 class ResourceReader
@@ -50,14 +53,14 @@ public:
 	void ReadBatteryClasses(ClassManager< BatteryClass > * BatteryClassManager);
 	void ReadCommodityClasses(ClassManager< CommodityClass > * CommodityClassManager);
 	void ReadFactions(void);
-	void ReadGeneratorClasses(void);
+	void ReadGeneratorClasses(ClassManager< GeneratorClass > * GeneratorClassManager);
 	void ReadMeshes(void);
 	void ReadModels(void);
 	void ReadScenarios(ScenarioManager * ScenarioManager);
 	void ReadSettings(Settings * Settings);
 	void ReadShadersAndPrograms(Graphics::ShadingManager * ShadingManager);
-	void ReadShipClasses(void);
-	void ReadSlotClasses(void);
+	void ReadShipClasses(ClassManager< ShipClass > * ShipClassManager, ClassManager< SlotClass > * SlotClassManager);
+	void ReadSlotClasses(ClassManager< SlotClass > * SlotClassManager);
 	void ReadSystems(ClassManager< AssetClass > * AssetClassManager);
 	void ReadSystemLinks(void);
 	void ReadTextures(void);

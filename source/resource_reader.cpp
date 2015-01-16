@@ -72,14 +72,14 @@ static void ReadAssetClass(Arxx::Reference & Reference, ClassManager< AssetClass
 static void ReadBatteryClass(Arxx::Reference & Reference, ClassManager< BatteryClass > * BatteryClassManager);
 static void ReadCommodityClass(Arxx::Reference & Reference, ClassManager< CommodityClass > * CommodityClassManager);
 static void ReadFaction(Arxx::Reference & Reference);
-static void ReadGeneratorClass(Arxx::Reference & Reference);
+static void ReadGeneratorClass(Arxx::Reference & Reference, ClassManager< GeneratorClass > * GeneratorClassManager);
 static void ReadMesh(Arxx::Reference & Reference);
 static void ReadModel(Arxx::Reference & Reference);
 static void ReadProgram(Arxx::Reference & Reference, Graphics::ShadingManager * ShadingManager);
 static void ReadScenario(Arxx::Reference & Reference, ScenarioManager * ScenarioManager);
 static void ReadShader(Arxx::Reference & Reference, Graphics::ShadingManager * ShadingManager);
-static void ReadShipClass(Arxx::Reference & Reference);
-static void ReadSlotClass(Arxx::Reference & Reference);
+static void ReadShipClass(Arxx::Reference & Reference, ClassManager< ShipClass > * ShipClassManager, ClassManager< SlotClass > * SlotClassManager);
+static void ReadSlotClass(Arxx::Reference & Reference, ClassManager< SlotClass > * SlotClassManager);
 static void ReadSystem(Arxx::Reference & Reference, ClassManager< AssetClass > * AssetClassManager);
 static void ReadSystemLink(Arxx::Reference & Reference);
 static void ReadTexture(Arxx::Reference & Reference);
@@ -188,9 +188,9 @@ void ResourceReader::ReadFactions(void)
 	_ReadItems("/Factions", ReadFaction);
 }
 
-void ResourceReader::ReadGeneratorClasses(void)
+void ResourceReader::ReadGeneratorClasses(ClassManager< GeneratorClass > * GeneratorClassManager)
 {
-	_ReadItems("/Generator Classes", ReadGeneratorClass);
+	_ReadItems("/Generator Classes", std::bind(ReadGeneratorClass, std::placeholders::_1, GeneratorClassManager));
 }
 
 void ResourceReader::ReadMeshes(void)
@@ -225,14 +225,14 @@ void ResourceReader::ReadShadersAndPrograms(Graphics::ShadingManager * ShadingMa
 	_ReadItems("/Programs", std::bind(ReadProgram, std::placeholders::_1, ShadingManager));
 }
 
-void ResourceReader::ReadShipClasses(void)
+void ResourceReader::ReadShipClasses(ClassManager< ShipClass > * ShipClassManager, ClassManager< SlotClass > * SlotClassManager)
 {
-	_ReadItems("/Ship Classes", ReadShipClass);
+	_ReadItems("/Ship Classes", std::bind(ReadShipClass, std::placeholders::_1, ShipClassManager, SlotClassManager));
 }
 
-void ResourceReader::ReadSlotClasses(void)
+void ResourceReader::ReadSlotClasses(ClassManager< SlotClass > * SlotClassManager)
 {
-	_ReadItems("/Slot Classes", ReadSlotClass);
+	_ReadItems("/Slot Classes", std::bind(ReadSlotClass, std::placeholders::_1, SlotClassManager));
 }
 
 void ResourceReader::ReadSystems(ClassManager< AssetClass > * AssetClassManager)
@@ -432,7 +432,7 @@ static void ReadFaction(Arxx::Reference & Reference)
 	g_Galaxy->GetAspectObjectContainer()->AddContent(NewFaction);
 }
 
-static void ReadGeneratorClass(Arxx::Reference & Reference)
+static void ReadGeneratorClass(Arxx::Reference & Reference, ClassManager< GeneratorClass > * GeneratorClassManager)
 {
 	auto Item(Resolve(Reference));
 	
@@ -450,7 +450,7 @@ static void ReadGeneratorClass(Arxx::Reference & Reference)
 	
 	Reader >> Identifier;
 	
-	auto NewGeneratorClass(g_GeneratorClassManager->Create(Identifier));
+	auto NewGeneratorClass(GeneratorClassManager->Create(Identifier));
 	
 	if(NewGeneratorClass == nullptr)
 	{
@@ -688,7 +688,7 @@ static void ReadShader(Arxx::Reference & Reference, Graphics::ShadingManager * S
 	Shader->SetSource(Source);
 }
 
-static void ReadShipClass(Arxx::Reference & Reference)
+static void ReadShipClass(Arxx::Reference & Reference, ClassManager< ShipClass > * ShipClassManager, ClassManager< SlotClass > * SlotClassManager)
 {
 	auto Item(Resolve(Reference));
 	
@@ -706,7 +706,7 @@ static void ReadShipClass(Arxx::Reference & Reference)
 	
 	Reader >> Identifier;
 	
-	auto NewShipClass(g_ShipClassManager->Create(Identifier));
+	auto NewShipClass(ShipClassManager->Create(Identifier));
 	
 	if(NewShipClass == nullptr)
 	{
@@ -760,7 +760,7 @@ static void ReadShipClass(Arxx::Reference & Reference)
 		
 		Reader >> SlotIdentifier >> SlotClassIdentifier;
 		
-		auto SlotClass(g_SlotClassManager->Get(SlotClassIdentifier));
+		auto SlotClass(SlotClassManager->Get(SlotClassIdentifier));
 		
 		if(SlotClass == nullptr)
 		{
@@ -787,7 +787,7 @@ static void ReadShipClass(Arxx::Reference & Reference)
 	}
 }
 
-static void ReadSlotClass(Arxx::Reference & Reference)
+static void ReadSlotClass(Arxx::Reference & Reference, ClassManager< SlotClass > * SlotClassManager)
 {
 	auto Item(Resolve(Reference));
 	
@@ -805,7 +805,7 @@ static void ReadSlotClass(Arxx::Reference & Reference)
 	
 	Reader >> Identifier;
 	
-	auto NewSlotClass(g_SlotClassManager->Create(Identifier));
+	auto NewSlotClass(SlotClassManager->Create(Identifier));
 	
 	if(NewSlotClass == nullptr)
 	{

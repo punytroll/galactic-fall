@@ -61,6 +61,8 @@ Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSyst
 ObjectFactory::ObjectFactory(void) :
 	_BatteryClassManager(new ClassManager< BatteryClass >()),
 	_CommodityClassManager(new ClassManager< CommodityClass >()),
+	_GeneratorClassManager(new ClassManager< GeneratorClass >()),
+	_ShipClassManager(new ClassManager< ShipClass >()),
 	_WeaponClassManager(new ClassManager< WeaponClass >())
 {
 }
@@ -71,6 +73,10 @@ ObjectFactory::~ObjectFactory(void)
 	_BatteryClassManager = nullptr;
 	delete _CommodityClassManager;
 	_CommodityClassManager = nullptr;
+	delete _GeneratorClassManager;
+	_GeneratorClassManager = nullptr;
+	delete _ShipClassManager;
+	_ShipClassManager = nullptr;
 	delete _WeaponClassManager;
 	_WeaponClassManager = nullptr;
 }
@@ -138,20 +144,25 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 	}
 	else if(TypeIdentifier == "generator")
 	{
-		const GeneratorClass * GeneratorClass(g_GeneratorClassManager->Get(ClassIdentifier));
-		Generator * NewGenerator(new Generator());
+		assert(_GeneratorClassManager != nullptr);
+		
+		auto GeneratorClass(_GeneratorClassManager->Get(ClassIdentifier));
+		
+		assert(GeneratorClass != nullptr);
+		
+		auto NewGenerator(new Generator());
 		
 		// set up type specific things
 		NewGenerator->SetEnergyProvisionPerSecond(GeneratorClass->GetEnergyProvisionPerSecond());
 		// set up aspects
 		// set up accessory aspect
-		assert(NewGenerator->GetAspectAccessory() != 0);
+		assert(NewGenerator->GetAspectAccessory() != nullptr);
 		NewGenerator->GetAspectAccessory()->SetSlotClassIdentifier(GeneratorClass->GetSlotClassIdentifier());
 		// set up name aspect
-		assert(NewGenerator->GetAspectName() != 0);
+		assert(NewGenerator->GetAspectName() != nullptr);
 		NewGenerator->GetAspectName()->SetName(GeneratorClass->GetName());
 		// set up physical aspect
-		assert(NewGenerator->GetAspectPhysical() != 0);
+		assert(NewGenerator->GetAspectPhysical() != nullptr);
 		NewGenerator->GetAspectPhysical()->SetSpaceRequirement(GeneratorClass->GetSpaceRequirement());
 		Result = NewGenerator;
 	}
@@ -178,7 +189,12 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 	}
 	else if(TypeIdentifier == "ship")
 	{
-		auto ShipClass(g_ShipClassManager->Get(ClassIdentifier));
+		assert(_ShipClassManager != nullptr);
+		
+		auto ShipClass(_ShipClassManager->Get(ClassIdentifier));
+		
+		assert(ShipClass != nullptr);
+		
 		auto NewShip(new Ship());
 		
 		// set up type specific things
@@ -339,11 +355,23 @@ unsigned_numeric ObjectFactory::GetSpaceRequirement(const std::string & TypeIden
 	}
 	else if(TypeIdentifier == "generator")
 	{
-		return g_GeneratorClassManager->Get(ClassIdentifier)->GetSpaceRequirement();
+		assert(_GeneratorClassManager != nullptr);
+		
+		auto GeneratorClass(_GeneratorClassManager->Get(ClassIdentifier));
+		
+		assert(GeneratorClass != nullptr);
+		
+		return GeneratorClass->GetSpaceRequirement();
 	}
 	else if(TypeIdentifier == "ship")
 	{
-		return g_ShipClassManager->Get(ClassIdentifier)->GetSpaceRequirement();
+		assert(_ShipClassManager != nullptr);
+		
+		auto ShipClass(_ShipClassManager->Get(ClassIdentifier));
+		
+		assert(ShipClass != nullptr);
+		
+		return ShipClass->GetSpaceRequirement();
 	}
 	else if(TypeIdentifier == "weapon")
 	{
@@ -383,11 +411,17 @@ const VisualizationPrototype * ObjectFactory::GetVisualizationPrototype(const st
 	}
 	else if(TypeIdentifier == "generator")
 	{
-		return 0;
+		return nullptr;
 	}
 	else if(TypeIdentifier == "ship")
 	{
-		return g_ShipClassManager->Get(ClassIdentifier)->GetVisualizationPrototype();
+		assert(_ShipClassManager != nullptr);
+		
+		auto ShipClass(_ShipClassManager->Get(ClassIdentifier));
+		
+		assert(ShipClass != nullptr);
+		
+		return ShipClass->GetVisualizationPrototype();
 	}
 	else if(TypeIdentifier == "weapon")
 	{

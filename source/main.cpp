@@ -52,7 +52,6 @@
 #include "galaxy.h"
 #include "game_time.h"
 #include "generator.h"
-#include "generator_class.h"
 #include "globals.h"
 #include "goals.h"
 #include "graphics/camera.h"
@@ -97,7 +96,6 @@
 #include "scenario_manager.h"
 #include "settings.h"
 #include "ship.h"
-#include "ship_class.h"
 #include "shot.h"
 #include "slot.h"
 #include "slot_class.h"
@@ -131,7 +129,6 @@
 // these objects are exported via globals.h
 ClassManager< AssetClass > * g_AssetClassManager(nullptr);
 Galaxy * g_Galaxy(0);
-ClassManager< GeneratorClass > * g_GeneratorClassManager(0);
 Graphics::Engine * g_GraphicsEngine(0);
 Graphics::PerspectiveProjection * g_MainProjection(0);
 Graphics::View * g_MainView(0);
@@ -141,7 +138,6 @@ std::vector< Graphics::View * > g_PrerenderedViews;
 MessageDispatcher * g_MessageDispatcher(0);
 ObjectFactory * g_ObjectFactory(0);
 ScenarioManager * g_ScenarioManager(0);
-ClassManager< ShipClass > * g_ShipClassManager(0);
 ClassManager< SlotClass > * g_SlotClassManager(0);
 SystemStatistics * g_SystemStatistics(0);
 UI::UserInterface * g_UserInterface(0);
@@ -3523,8 +3519,6 @@ int main(int argc, char ** argv)
 	g_ScenarioManager = new ScenarioManager();
 	g_MessageDispatcher = new MessageDispatcher();
 	g_ObjectFactory = new ObjectFactory();
-	g_GeneratorClassManager = new ClassManager< GeneratorClass >();
-	g_ShipClassManager = new ClassManager< ShipClass >();
 	g_SlotClassManager = new ClassManager< SlotClass >();
 	g_AssetClassManager = new ClassManager< AssetClass >();
 	g_SystemStatistics = new SystemStatistics();
@@ -3537,9 +3531,9 @@ int main(int argc, char ** argv)
 	g_ResourceReader->ReadAssetClasses(g_AssetClassManager);
 	g_ResourceReader->ReadBatteryClasses(g_ObjectFactory->GetBatteryClassManager());
 	g_ResourceReader->ReadCommodityClasses(g_ObjectFactory->GetCommodityClassManager());
-	g_ResourceReader->ReadGeneratorClasses();
-	g_ResourceReader->ReadSlotClasses();
-	g_ResourceReader->ReadShipClasses();
+	g_ResourceReader->ReadGeneratorClasses(g_ObjectFactory->GetGeneratorClassManager());
+	g_ResourceReader->ReadSlotClasses(g_SlotClassManager);
+	g_ResourceReader->ReadShipClasses(g_ObjectFactory->GetShipClassManager(), g_SlotClassManager);
 	g_ResourceReader->ReadWeaponClasses(g_ObjectFactory->GetWeaponClassManager());
 	g_ResourceReader->ReadScenarios(g_ScenarioManager);
 	// reading shaders and programs could be done earlier and without OpenGL, but initializing them requires OpenGL
@@ -3604,8 +3598,6 @@ int main(int argc, char ** argv)
 	delete g_SystemStatistics;
 	delete g_AssetClassManager;
 	delete g_SlotClassManager;
-	delete g_ShipClassManager;
-	delete g_GeneratorClassManager;
 	delete g_ObjectFactory;
 	delete g_MessageDispatcher;
 	delete g_ScenarioManager;
