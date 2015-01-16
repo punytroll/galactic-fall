@@ -31,8 +31,12 @@ namespace Graphics
 	class ShadingManager;
 }
 
+template< class Class >
+class ClassManager;
+
 class ScenarioManager;
 class Settings;
+class WeaponClass;
 
 class ResourceReader
 {
@@ -55,7 +59,7 @@ public:
 	void ReadSystems(void);
 	void ReadSystemLinks(void);
 	void ReadTextures(void);
-	void ReadWeaponClasses(void);
+	void ReadWeaponClasses(ClassManager< WeaponClass > * WeaponClassManager);
 	std::string ReadSavegameFromScenarioPath(const std::string & ScenarioPath);
 private:
 	void _ReadItems(const std::string & Path, std::function< void (Arxx::Reference &) > ReaderFunction);

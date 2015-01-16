@@ -22,15 +22,31 @@
 
 #include <string>
 
+template< class Class >
+class ClassManager;
+
 class Object;
 class VisualizationPrototype;
+class WeaponClass;
 
 class ObjectFactory
 {
 public:
+	// constructor & destructor
+	ObjectFactory(void);
+	~ObjectFactory(void);
+	// getters
 	Object * Create(const std::string & TypeIdentifier, const std::string & ClassIdentifier, bool CreateNestedObjects) const;
 	unsigned_numeric GetSpaceRequirement(const std::string & TypeIdentifier, const std::string & ClassIdentifier) const;
 	const VisualizationPrototype * GetVisualizationPrototype(const std::string & TypeIdentifier, const std::string & ClassIdentifier) const;
+	ClassManager< WeaponClass > * GetWeaponClassManager(void);
+private:
+	ClassManager< WeaponClass > * _WeaponClassManager;
 };
+
+inline ClassManager< WeaponClass > * ObjectFactory::GetWeaponClassManager(void)
+{
+	return _WeaponClassManager;
+}
 
 #endif
