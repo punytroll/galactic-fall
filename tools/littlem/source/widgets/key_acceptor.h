@@ -9,7 +9,7 @@ class KeyAcceptor
 public:
 	KeyAcceptor(void);
 	virtual ~KeyAcceptor(void);
-	virtual bool bAcceptKey(int iKeyCode);
+	virtual bool AcceptKey(int iKeyCode, bool IsDown);
 	KeyAcceptor * pGetKeyAcceptor(void);
 	void vAddKeyAcceptor(KeyAcceptor * pKeyAcceptor);
 	void vRemoveKeyAcceptor(KeyAcceptor * pKeyAcceptor);

@@ -1545,11 +1545,11 @@ void MovePosition(Position * Position, int Axis, float Delta)
 class PointsView : public KeyAcceptor
 {
 public:
-	virtual bool bAcceptKey(int iKeyCode)
+	virtual bool AcceptKey(int KeyCode, bool IsDown) override
 	{
 		bool bKeyAccepted(false);
 		
-		switch(iKeyCode)
+		switch(KeyCode)
 		{
 		case 65: // SPACE
 			{
@@ -1765,11 +1765,11 @@ public:
 class TriangleView : public KeyAcceptor
 {
 public:
-	virtual bool bAcceptKey(int iKeyCode)
+	virtual bool AcceptKey(int KeyCode, bool IsDown) override
 	{
 		bool bKeyAccepted(false);
 		
-		switch(iKeyCode)
+		switch(KeyCode)
 		{
 		case 31: // I
 			{
@@ -1896,11 +1896,11 @@ public:
 class CameraView : public KeyAcceptor
 {
 public:
-	virtual bool bAcceptKey(int iKeyCode)
+	virtual bool AcceptKey(int KeyCode, bool IsDown) override
 	{
 		bool bKeyAccepted(false);
 		
-		switch(iKeyCode)
+		switch(KeyCode)
 		{
 		case 54: // C
 			{
@@ -2121,11 +2121,11 @@ public:
 		g_CurrentView.vSetString("Model View");
 	}
 	
-	virtual bool bAcceptKey(int iKeyCode)
+	virtual bool AcceptKey(int KeyCode, bool IsDown) override
 	{
 		bool bKeyAccepted(true);
 		
-		switch(iKeyCode)
+		switch(KeyCode)
 		{
 		case 54: // C
 			{
@@ -2563,7 +2563,7 @@ ModelView g_ModelView;
 void KeyEvent(unsigned int KeyCode, bool IsDown)
 {
 	ON_DEBUG(std::cout << "Key event " << KeyCode << " / " << IsDown << "." << std::endl);
-	g_UserInterface.bAcceptKey(KeyCode);
+	g_UserInterface.AcceptKey(KeyCode, IsDown);
 }
 
 void MouseButtonEvent(MouseButton Button, bool IsDown, const Vector2f & MousePosition)

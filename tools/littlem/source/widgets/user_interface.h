@@ -16,7 +16,7 @@ public:
 	/**
 	 * @brief Overloaded from KeyAcceptor::bAcceptKey this function is the top entry point for all key commands.
 	 **/
-	virtual bool bAcceptKey(int iKeyCode);
+	virtual bool AcceptKey(int iKeyCode, bool IsDown) override;
 	void vGrabKeyFocus(KeyAcceptor * pKeyAcceptor);
 	void vDelete(Widget * pWidget);
 	void vSetSize(const Boxes::Size & Size);
@@ -24,7 +24,7 @@ public:
 	void vSetRootWidget(Widget * pWidget);
 	Widget * pGetRootWidget(void);
 private:
-	bool bAcceptKeyAtKeyAcceptor(KeyAcceptor * pKeyAcceptor, int iKeyCode);
+	bool _AcceptKeyAtKeyAcceptor(KeyAcceptor * pKeyAcceptor, int iKeyCode, bool IsDown);
 	Widget * m_pRootWidget;
 	Boxes::Size m_Size;
 };
