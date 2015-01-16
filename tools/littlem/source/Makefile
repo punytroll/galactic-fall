@@ -50,7 +50,7 @@ clean-recursive: clean-here
 $(OBJECT_FILES): $(CXXFLAGS_configuration)
 
 binary: $(OBJECT_FILES) $(XML_STREAM_LIBRARY) $(LDFLAGS_configuration)
-	$(CXX) $(LDFLAGS) $(OBJECT_FILES) $(XML_STREAM_LIBRARY) -lGL -lX11 -lGLU -o $@
+	$(CXX) $(LDFLAGS) $(OBJECT_FILES) $(XML_STREAM_LIBRARY) -lGL -lX11 -o $@
 
 $(DEPENDENCY_DIRECTORY)/%.dep: %
 	@test -d $(@D) || mkdir $(@D)
