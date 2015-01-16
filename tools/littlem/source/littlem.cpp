@@ -613,8 +613,6 @@ Camera * g_pSelectedCamera = 0;
 Camera * g_CurrentCamera = 0;
 int g_iLastMotionX = -1;
 int g_iLastMotionY = -1;
-int g_iMouseX = 0;
-int g_iMouseY = 0;
 bool g_bMoved = false;
 bool g_Quit(false);
 GLuint g_puiSelectionBuffer[1024];
@@ -623,6 +621,7 @@ float g_fSnapFactor = 0.1;
 MouseButton g_MouseButton(MouseButton::Undefined);
 std::deque< int > g_FreeLights;
 UserInterface g_UserInterface;
+Vector2f g_MousePosition;
 
 std::vector< std::string > SplitString(const std::string & String, char Delimiter)
 {
@@ -668,7 +667,7 @@ void vSetupProjection(bool bInitialize = true)
 	}
 }
 
-void vStartPicking(int iCursorX, int iCursorY)
+void vStartPicking(const Vector2f & MousePosition)
 {
 	GLint piViewport[4];
 	
@@ -678,7 +677,7 @@ void vStartPicking(int iCursorX, int iCursorY)
 	glPushMatrix();
 	glLoadIdentity();
 	glGetIntegerv(GL_VIEWPORT, piViewport);
-	gluPickMatrix(iCursorX, piViewport[3] - iCursorY, 5, 5, piViewport);
+	gluPickMatrix(MousePosition[0], piViewport[3] - MousePosition[1], 5, 5, piViewport);
 	vSetupProjection(false);
 	glMatrixMode(GL_MODELVIEW);
 	glInitNames();
@@ -872,7 +871,7 @@ void vPerformPicking(void)
 {
 	assert(g_CurrentCamera != 0);
 	
-	vStartPicking(g_iMouseX, g_iMouseY);
+	vStartPicking(g_MousePosition);
 	glPushName(LITTLEM_TRIANGLE);
 	// dummy entry so that we can call glLoadName in the loop below: it will be replace immediately
 	glPushName(0xFFFFFFFF);
@@ -2728,8 +2727,7 @@ void MouseButtonEvent(MouseButton Button, bool IsDown, const Vector2f & MousePos
 void MouseMotion(const Vector2f MousePosition)
 {
 	g_bMoved = true;
-	g_iMouseX = MousePosition[0];
-	g_iMouseY = MousePosition[1];
+	g_MousePosition = MousePosition;
 	
 	int iDeltaX = MousePosition[0] - g_iLastMotionX;
 	int iDeltaY = MousePosition[1] - g_iLastMotionY;
