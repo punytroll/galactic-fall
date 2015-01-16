@@ -26,18 +26,18 @@ BatteryClass::BatteryClass(const std::string & Identifier) :
 	_EnergyCapacity(0.0),
 	_Identifier(Identifier),
 	_SpaceRequirement(0),
-	_VisualizationPrototype(0)
+	_VisualizationPrototype(nullptr)
 {
 }
 
 BatteryClass::~BatteryClass(void)
 {
 	delete _VisualizationPrototype;
-	_VisualizationPrototype = 0;
+	_VisualizationPrototype = nullptr;
 }
 
-void BatteryClass::AddVisualizationPrototype(void)
+void BatteryClass::SetVisualizationPrototype(const VisualizationPrototype & NewVisualizationPrototype)
 {
-	assert(_VisualizationPrototype == 0);
-	_VisualizationPrototype = new VisualizationPrototype();
+	delete _VisualizationPrototype;
+	_VisualizationPrototype = new VisualizationPrototype(NewVisualizationPrototype);
 }

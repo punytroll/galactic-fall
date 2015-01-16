@@ -35,13 +35,11 @@ public:
 	const std::string & GetIdentifier(void) const;
 	const std::string & GetName(void) const;
 	unsigned_numeric GetSpaceRequirement(void) const;
-	VisualizationPrototype * GetVisualizationPrototype(void);
 	const VisualizationPrototype * GetVisualizationPrototype(void) const;
 	// setters
 	void SetName(const std::string & Name);
 	void SetSpaceRequirement(unsigned_numeric SpaceRequirement);
-	// modifiers
-	void AddVisualizationPrototype(void);
+	void SetVisualizationPrototype(const VisualizationPrototype & VisualizationPrototype);
 private:
 	std::string _Identifier;
 	std::string _Name;
@@ -62,11 +60,6 @@ inline const std::string & CommodityClass::GetName(void) const
 inline unsigned_numeric CommodityClass::GetSpaceRequirement(void) const
 {
 	return _SpaceRequirement;
-}
-
-inline VisualizationPrototype * CommodityClass::GetVisualizationPrototype(void)
-{
-	return _VisualizationPrototype;
 }
 
 inline const VisualizationPrototype * CommodityClass::GetVisualizationPrototype(void) const

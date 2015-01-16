@@ -25,29 +25,29 @@
 #include "visualization_prototype.h"
 
 ShipClass::ShipClass(const std::string & Identifier) :
-	m_ExhaustOffset(Vector3f::CreateZero()),
-	m_Identifier(Identifier),
-	m_MaximumAvailableSpace(0),
-	m_VisualizationPrototype(0)
+	_ExhaustOffset(Vector3f::CreateZero()),
+	_Identifier(Identifier),
+	_MaximumAvailableSpace(0),
+	_VisualizationPrototype(nullptr)
 {
 }
 
 ShipClass::~ShipClass(void)
 {
-	while(m_Slots.empty() == false)
+	while(_Slots.empty() == false)
 	{
-		delete m_Slots.begin()->second;
-		m_Slots.erase(m_Slots.begin());
+		delete _Slots.begin()->second;
+		_Slots.erase(_Slots.begin());
 	}
-	delete m_VisualizationPrototype;
-	m_VisualizationPrototype = 0;
+	delete _VisualizationPrototype;
+	_VisualizationPrototype = nullptr;
 }
 
 bool ShipClass::AddSlot(const std::string & SlotIdentifier, Slot * Slot)
 {
-	if(m_Slots.find(SlotIdentifier) == m_Slots.end())
+	if(_Slots.find(SlotIdentifier) == _Slots.end())
 	{
-		m_Slots[SlotIdentifier] = Slot;
+		_Slots[SlotIdentifier] = Slot;
 		
 		return true;
 	}
@@ -57,8 +57,8 @@ bool ShipClass::AddSlot(const std::string & SlotIdentifier, Slot * Slot)
 	}
 }
 
-void ShipClass::AddVisualizationPrototype(void)
+void ShipClass::SetVisualizationPrototype(const VisualizationPrototype & NewVisualizationPrototype)
 {
-	assert(m_VisualizationPrototype == 0);
-	m_VisualizationPrototype = new VisualizationPrototype();
+	delete _VisualizationPrototype;
+	_VisualizationPrototype = new VisualizationPrototype(NewVisualizationPrototype);
 }

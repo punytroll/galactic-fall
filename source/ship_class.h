@@ -53,7 +53,6 @@ public:
 	float GetTurnFuel(void) const;
 	float GetHull(void) const;
 	const std::map< std::string, Slot * > & GetSlots(void) const;
-	VisualizationPrototype * GetVisualizationPrototype(void);
 	const VisualizationPrototype * GetVisualizationPrototype(void) const;
 	// setters
 	void SetExhaustOffset(const Vector3f & ExhaustOffset);
@@ -69,49 +68,49 @@ public:
 	void SetForwardFuel(float ForwardFuel);
 	void SetTurnFuel(float TurnFuel);
 	void SetHull(float Hull);
+	void SetVisualizationPrototype(const VisualizationPrototype & VisualizationPrototype);
 	
 	/**
 	 * @note Passes memory management responsibility for @a Slot to the ship class.
 	 **/
 	bool AddSlot(const std::string & SlotIdentifier, Slot * Slot);
-	void AddVisualizationPrototype(void);
 private:
-	Vector3f m_ExhaustOffset;
-	float m_ExhaustRadius;
-	float m_FuelCapacity;
-	std::string m_Identifier;
+	Vector3f _ExhaustOffset;
+	float _ExhaustRadius;
+	float _FuelCapacity;
+	std::string _Identifier;
 	std::string _Name;
-	unsigned_numeric m_SpaceRequirement;
-	float m_ForwardThrust;
-	float m_TurnSpeed;
-	float m_MaximumSpeed;
-	unsigned_numeric m_MaximumAvailableSpace;
-	float m_JumpFuel;
-	float m_ForwardFuel;
-	float m_TurnFuel;
-	float m_Hull;
-	std::map< std::string, Slot * > m_Slots;
-	VisualizationPrototype * m_VisualizationPrototype;
+	unsigned_numeric _SpaceRequirement;
+	float _ForwardThrust;
+	float _TurnSpeed;
+	float _MaximumSpeed;
+	unsigned_numeric _MaximumAvailableSpace;
+	float _JumpFuel;
+	float _ForwardFuel;
+	float _TurnFuel;
+	float _Hull;
+	std::map< std::string, Slot * > _Slots;
+	VisualizationPrototype * _VisualizationPrototype;
 };
 
 inline const Vector3f & ShipClass::GetExhaustOffset(void) const
 {
-	return m_ExhaustOffset;
+	return _ExhaustOffset;
 }
 
 inline float ShipClass::GetExhaustRadius(void) const
 {
-	return m_ExhaustRadius;
+	return _ExhaustRadius;
 }
 
 inline float ShipClass::GetFuelCapacity(void) const
 {
-	return m_FuelCapacity;
+	return _FuelCapacity;
 }
 
 inline const std::string & ShipClass::GetIdentifier(void) const
 {
-	return m_Identifier;
+	return _Identifier;
 }
 
 inline const std::string & ShipClass::GetName(void) const
@@ -121,82 +120,77 @@ inline const std::string & ShipClass::GetName(void) const
 
 inline unsigned_numeric ShipClass::GetSpaceRequirement(void) const
 {
-	return m_SpaceRequirement;
+	return _SpaceRequirement;
 }
 
 inline float ShipClass::GetForwardThrust(void) const
 {
-	return m_ForwardThrust;
+	return _ForwardThrust;
 }
 
 inline float ShipClass::GetTurnSpeed(void) const
 {
-	return m_TurnSpeed;
+	return _TurnSpeed;
 }
 
 inline float ShipClass::GetMaximumSpeed(void) const
 {
-	return m_MaximumSpeed;
+	return _MaximumSpeed;
 }
 
 inline unsigned_numeric ShipClass::GetMaximumAvailableSpace(void) const
 {
-	return m_MaximumAvailableSpace;
+	return _MaximumAvailableSpace;
 }
 
 inline float ShipClass::GetJumpFuel(void) const
 {
-	return m_JumpFuel;
+	return _JumpFuel;
 }
 
 inline float ShipClass::GetForwardFuel(void) const
 {
-	return m_ForwardFuel;
+	return _ForwardFuel;
 }
 
 inline float ShipClass::GetTurnFuel(void) const
 {
-	return m_TurnFuel;
+	return _TurnFuel;
 }
 
 inline float ShipClass::GetHull(void) const
 {
-	return m_Hull;
+	return _Hull;
 }
 
 inline const std::map< std::string, Slot * > & ShipClass::GetSlots(void) const
 {
-	return m_Slots;
-}
-
-inline VisualizationPrototype * ShipClass::GetVisualizationPrototype(void)
-{
-	return m_VisualizationPrototype;
+	return _Slots;
 }
 
 inline const VisualizationPrototype * ShipClass::GetVisualizationPrototype(void) const
 {
-	return m_VisualizationPrototype;
+	return _VisualizationPrototype;
 }
 
 inline void ShipClass::SetExhaustOffset(const Vector3f & ExhaustOffset)
 {
-	m_ExhaustOffset = ExhaustOffset;
+	_ExhaustOffset = ExhaustOffset;
 }
 
 inline void ShipClass::SetExhaustRadius(float ExhaustRadius)
 {
-	m_ExhaustRadius = ExhaustRadius;
+	_ExhaustRadius = ExhaustRadius;
 }
 
 inline void ShipClass::SetFuelCapacity(float FuelCapacity)
 {
-	m_FuelCapacity = FuelCapacity;
+	_FuelCapacity = FuelCapacity;
 }
 
 inline void ShipClass::SetForwardThrust(float ForwardThrust)
 {
-	m_ForwardThrust = ForwardThrust;
+	_ForwardThrust = ForwardThrust;
 }
 
 inline void ShipClass::SetName(const std::string & Name)
@@ -206,42 +200,42 @@ inline void ShipClass::SetName(const std::string & Name)
 
 inline void ShipClass::SetSpaceRequirement(unsigned_numeric SpaceRequirement)
 {
-	m_SpaceRequirement = SpaceRequirement;
+	_SpaceRequirement = SpaceRequirement;
 }
 
 inline void ShipClass::SetTurnSpeed(float TurnSpeed)
 {
-	m_TurnSpeed = TurnSpeed;
+	_TurnSpeed = TurnSpeed;
 }
 
 inline void ShipClass::SetMaximumSpeed(float MaximumSpeed)
 {
-	m_MaximumSpeed = MaximumSpeed;
+	_MaximumSpeed = MaximumSpeed;
 }
 
 inline void ShipClass::SetMaximumAvailableSpace(unsigned_numeric MaximumAvailableSpace)
 {
-	m_MaximumAvailableSpace = MaximumAvailableSpace;
+	_MaximumAvailableSpace = MaximumAvailableSpace;
 }
 
 inline void ShipClass::SetJumpFuel(float JumpFuel)
 {
-	m_JumpFuel = JumpFuel;
+	_JumpFuel = JumpFuel;
 }
 
 inline void ShipClass::SetForwardFuel(float ForwardFuel)
 {
-	m_ForwardFuel = ForwardFuel;
+	_ForwardFuel = ForwardFuel;
 }
 
 inline void ShipClass::SetTurnFuel(float TurnFuel)
 {
-	m_TurnFuel = TurnFuel;
+	_TurnFuel = TurnFuel;
 }
 
 inline void ShipClass::SetHull(float Hull)
 {
-	m_Hull = Hull;
+	_Hull = Hull;
 }
 
 #endif

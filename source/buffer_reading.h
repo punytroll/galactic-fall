@@ -22,15 +22,16 @@
 
 #include <BufferReader.h>
 
-#include <algebra/quaternion.h>
-#include <algebra/vector2f.h>
-#include <algebra/vector3f.h>
-
-#include "color.h"
+class Color;
+class Quaternion;
+class Vector2f;
+class Vector3f;
+class VisualizationPrototype;
 
 Arxx::BufferReader & operator>>(Arxx::BufferReader & BufferReader, Color & Color);
 Arxx::BufferReader & operator>>(Arxx::BufferReader & BufferReader, Quaternion & Quaternion);
 Arxx::BufferReader & operator>>(Arxx::BufferReader & BufferReader, Vector2f & Vector);
 Arxx::BufferReader & operator>>(Arxx::BufferReader & BufferReader, Vector3f & Vector);
+Arxx::BufferReader & operator>>(Arxx::BufferReader & BufferReader, VisualizationPrototype & VisualizationPrototype);
 
 #endif

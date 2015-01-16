@@ -25,32 +25,32 @@
 #include "weapon_class.h"
 
 WeaponClass::WeaponClass(const std::string & Identifier) :
-	m_Identifier(Identifier),
-	m_ReloadTime(FLT_MAX),
-	m_ParticleExitSpeed(0.0f),
-	m_ParticleDamage(0.0f),
-	m_ParticleLifeTime(0.0f),
-	m_ParticleVisualizationPrototype(0),
-	m_VisualizationPrototype(0)
+	_Identifier(Identifier),
+	_ReloadTime(FLT_MAX),
+	_ShotExitSpeed(0.0f),
+	_ShotDamage(0.0f),
+	_ShotLifeTime(0.0f),
+	_ShotVisualizationPrototype(nullptr),
+	_WeaponVisualizationPrototype(nullptr)
 {
 }
 
 WeaponClass::~WeaponClass(void)
 {
-	delete m_ParticleVisualizationPrototype;
-	m_ParticleVisualizationPrototype = 0;
-	delete m_VisualizationPrototype;
-	m_VisualizationPrototype = 0;
+	delete _ShotVisualizationPrototype;
+	_ShotVisualizationPrototype = nullptr;
+	delete _WeaponVisualizationPrototype;
+	_WeaponVisualizationPrototype = nullptr;
 }
 
-void WeaponClass::AddParticleVisualizationPrototype(void)
+void WeaponClass::SetShotVisualizationPrototype(const VisualizationPrototype & ShotVisualizationPrototype)
 {
-	assert(m_ParticleVisualizationPrototype == 0);
-	m_ParticleVisualizationPrototype = new VisualizationPrototype();
+	delete _ShotVisualizationPrototype;
+	_ShotVisualizationPrototype = new VisualizationPrototype(ShotVisualizationPrototype);
 }
 
-void WeaponClass::AddVisualizationPrototype(void)
+void WeaponClass::SetWeaponVisualizationPrototype(const VisualizationPrototype & WeaponVisualizationPrototype)
 {
-	assert(m_VisualizationPrototype == 0);
-	m_VisualizationPrototype = new VisualizationPrototype();
+	delete _WeaponVisualizationPrototype;
+	_WeaponVisualizationPrototype = new VisualizationPrototype(WeaponVisualizationPrototype);
 }

@@ -28,10 +28,12 @@
 #include "battery.h"
 #include "game_time.h"
 #include "globals.h"
+#include "graphics/model.h"
 #include "graphics/node.h"
 #include "math.h"
 #include "object_aspect_accessory.h"
 #include "object_aspect_object_container.h"
+#include "object_aspect_physical.h"
 #include "object_aspect_position.h"
 #include "object_aspect_update.h"
 #include "object_aspect_visualization.h"
@@ -40,15 +42,19 @@
 #include "shot.h"
 #include "slot.h"
 #include "visualization.h"
+#include "visualization_prototype.h"
 #include "weapon.h"
 
 Weapon::Weapon(void) :
 	_EnergyUsagePerShot(0.0f),
 	_Fire(false),
 	_NextTimeToFire(0.0),
-	_ParticleExitPosition(Vector3f::CreateZero()),
-	_ParticleExitSpeed(0.0f),
-	_ReloadTime(0.0f)
+	_ReloadTime(0.0f),
+	_ShotDamage(0.0f),
+	_ShotExitPosition(Vector3f::CreateZero()),
+	_ShotExitSpeed(0.0f),
+	_ShotLifeTime(0.0f),
+	_ShotVisualizationPrototype(nullptr)
 {
 	// initialize object aspects
 	AddAspectAccessory();
@@ -63,6 +69,14 @@ Weapon::Weapon(void) :
 
 Weapon::~Weapon(void)
 {
+	delete _ShotVisualizationPrototype;
+	_ShotVisualizationPrototype = nullptr;
+}
+
+void Weapon::SetShotVisualizationPrototype(const VisualizationPrototype * ShotVisualizationPrototype)
+{
+	delete _ShotVisualizationPrototype;
+	_ShotVisualizationPrototype = new VisualizationPrototype(ShotVisualizationPrototype);
 }
 
 bool Weapon::_Update(float Seconds)
@@ -83,13 +97,24 @@ bool Weapon::_Update(float Seconds)
 			assert(Container->GetAspectPosition() != nullptr);
 			assert(Container->GetContainer() != nullptr);
 			
-			auto NewShot(dynamic_cast< Shot * >(g_ObjectFactory->Create("shot", _ShotClassIdentifier, true)));
+			auto NewShot(dynamic_cast< Shot * >(g_ObjectFactory->Create("shot", "", true)));
 			
+			assert(NewShot != nullptr);
+			// set up type specific things
+			NewShot->SetDamage(_ShotDamage);
+			NewShot->SetTimeOfDeath(GameTime::Get() + _ShotLifeTime);
+			// set up physical aspect
+			assert(NewShot->GetAspectPhysical() != nullptr);
+			assert(_ShotVisualizationPrototype != nullptr);
+			NewShot->GetAspectPhysical()->SetRadialSize(_ShotVisualizationPrototype->GetModel()->GetRadialSize());
+			// set up visualization aspect
+			assert(NewShot->GetAspectVisualization() != nullptr);
+			NewShot->GetAspectVisualization()->SetVisualizationPrototype(_ShotVisualizationPrototype);
 			assert(NewShot->GetAspectPosition() != nullptr);
 			NewShot->SetShooter(Container->GetReference());
 			
 			// calculating the shot's position in the world coordinate system
-			Vector3f ShotPosition(_ParticleExitPosition);
+			Vector3f ShotPosition(_ShotExitPosition);
 			
 			ShotPosition.Rotate(GetAspectPosition()->GetOrientation());
 			ShotPosition.Rotate(GetAspectAccessory()->GetSlot()->GetOrientation());
@@ -106,10 +131,10 @@ bool Weapon::_Update(float Seconds)
 			NewShot->GetAspectPosition()->SetOrientation(ShotOrientation);
 			
 			// calculate the shot's velocity
-			Vector3f ParticleVelocity(_ParticleExitSpeed, 0.0f, 0.0f);
+			Vector3f ShotVelocity(_ShotExitSpeed, 0.0f, 0.0f);
 			
-			ParticleVelocity.Rotate(ShotOrientation);
-			NewShot->SetVelocity(TheShip->GetVelocity() + Vector3f(ParticleVelocity[0], ParticleVelocity[1], 0.0f));
+			ShotVelocity.Rotate(ShotOrientation);
+			NewShot->SetVelocity(TheShip->GetVelocity() + Vector3f(ShotVelocity[0], ShotVelocity[1], 0.0f));
 			Container->GetContainer()->GetAspectObjectContainer()->AddContent(NewShot);
 			_NextTimeToFire = GameTime::Get() + _ReloadTime;
 		}

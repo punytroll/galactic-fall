@@ -42,10 +42,8 @@ public:
 	const std::list< Visualization * > & GetVisualizations(void) const;
 	// setters
 	void SetUpdateVisualizationCallback(std::function< void (Visualization *) > Callback);
-	/**
-	 * @note Passes memory management reponsibility of the VisualizationPrototype to this ObjectAspectVisualization.
-	 **/
-	void SetVisualizationPrototype(VisualizationPrototype * VisualizationPrototype);
+	void SetVisualizationPrototype(const VisualizationPrototype * VisualizationPrototype);
+	void SetVisualizationPrototype(const VisualizationPrototype & VisualizationPrototype);
 	// modifiers
 	Visualization * CreateVisualizationForGraphics(Graphics::Node * Graphics);
 	void Destroy(void);

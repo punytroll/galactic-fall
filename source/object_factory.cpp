@@ -134,7 +134,7 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		NewCommodity->GetAspectPhysical()->SetSpaceRequirement(CommodityClass->GetSpaceRequirement());
 		// set up visualization aspect
 		assert(NewCommodity->GetAspectVisualization() != nullptr);
-		NewCommodity->GetAspectVisualization()->SetVisualizationPrototype(new VisualizationPrototype(CommodityClass->GetVisualizationPrototype()));
+		NewCommodity->GetAspectVisualization()->SetVisualizationPrototype(CommodityClass->GetVisualizationPrototype());
 		Result = NewCommodity;
 	}
 	else if(TypeIdentifier == "faction")
@@ -237,7 +237,7 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		NewShip->GetAspectPhysical()->SetSpaceRequirement(ShipClass->GetSpaceRequirement());
 		// set up visualization aspect
 		assert(NewShip->GetAspectVisualization() != nullptr);
-		NewShip->GetAspectVisualization()->SetVisualizationPrototype(new VisualizationPrototype(ShipClass->GetVisualizationPrototype()));
+		NewShip->GetAspectVisualization()->SetVisualizationPrototype(ShipClass->GetVisualizationPrototype());
 		
 		auto & PartStyles(NewShip->GetAspectVisualization()->GetVisualizationPrototype()->GetPartStyles());
 		
@@ -258,21 +258,8 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 	}
 	else if(TypeIdentifier == "shot")
 	{
-		assert(_WeaponClassManager != nullptr);
-		
-		const WeaponClass * WeaponClass(_WeaponClassManager->Get(ClassIdentifier));
-		Shot * NewShot(new Shot());
-		
-		// set up type specific things
-		NewShot->SetDamage(WeaponClass->GetParticleDamage());
-		NewShot->SetTimeOfDeath(GameTime::Get() + WeaponClass->GetParticleLifeTime());
-		// set up physical aspect
-		assert(NewShot->GetAspectPhysical() != 0);
-		NewShot->GetAspectPhysical()->SetRadialSize(WeaponClass->GetParticleVisualizationPrototype()->GetModel()->GetRadialSize());
-		// set up visualization aspect
-		assert(NewShot->GetAspectVisualization() != 0);
-		NewShot->GetAspectVisualization()->SetVisualizationPrototype(new VisualizationPrototype(WeaponClass->GetParticleVisualizationPrototype()));
-		Result = NewShot;
+		assert(ClassIdentifier.empty() == true);
+		Result = new Shot();
 	}
 	else if(TypeIdentifier == "star")
 	{
@@ -300,10 +287,12 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		auto NewWeapon(new Weapon());
 		
 		NewWeapon->SetEnergyUsagePerShot(WeaponClass->GetEnergyUsagePerShot());
-		NewWeapon->SetParticleExitPosition(WeaponClass->GetParticleExitPosition());
-		NewWeapon->SetParticleExitSpeed(WeaponClass->GetParticleExitSpeed());
+		NewWeapon->SetShotDamage(WeaponClass->GetShotDamage());
+		NewWeapon->SetShotExitPosition(WeaponClass->GetShotExitPosition());
+		NewWeapon->SetShotExitSpeed(WeaponClass->GetShotExitSpeed());
+		NewWeapon->SetShotLifeTime(WeaponClass->GetShotLifeTime());
+		NewWeapon->SetShotVisualizationPrototype(WeaponClass->GetShotVisualizationPrototype());
 		NewWeapon->SetReloadTime(WeaponClass->GetReloadTime());
-		NewWeapon->SetShotClassIdentifier(WeaponClass->GetIdentifier());
 		// set up accessory aspect
 		assert(NewWeapon->GetAspectAccessory() != nullptr);
 		NewWeapon->GetAspectAccessory()->SetSlotClassIdentifier(WeaponClass->GetSlotClassIdentifier());
@@ -318,7 +307,7 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		NewWeapon->GetAspectPosition()->SetOrientation(WeaponClass->GetOrientation());
 		// set up visualization aspect
 		assert(NewWeapon->GetAspectVisualization() != nullptr);
-		NewWeapon->GetAspectVisualization()->SetVisualizationPrototype(new VisualizationPrototype(WeaponClass->GetVisualizationPrototype()));
+		NewWeapon->GetAspectVisualization()->SetVisualizationPrototype(WeaponClass->GetWeaponVisualizationPrototype());
 		Result = NewWeapon;
 	}
 	else
@@ -429,7 +418,7 @@ const VisualizationPrototype * ObjectFactory::GetVisualizationPrototype(const st
 		
 		auto WeaponClass(_WeaponClassManager->Get(ClassIdentifier));
 		
-		return WeaponClass->GetVisualizationPrototype();
+		return WeaponClass->GetWeaponVisualizationPrototype();
 	}
 	else
 	{
