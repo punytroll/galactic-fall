@@ -131,7 +131,7 @@
 #include "write_to_xml_stream.h"
 
 // these objects are exported via globals.h
-ClassManager< AssetClass > * g_AssetClassManager(0);
+ClassManager< AssetClass > * g_AssetClassManager(nullptr);
 ClassManager< BatteryClass > * g_BatteryClassManager(0);
 ClassManager< CommodityClass > * g_CommodityClassManager(0);
 Galaxy * g_Galaxy(0);
@@ -1351,7 +1351,7 @@ void SetupInitialGalaxyState(void)
 	// read the factions from the data archive
 	g_ResourceReader->ReadFactions();
 	// read the systems from the data archive
-	g_ResourceReader->ReadSystems();
+	g_ResourceReader->ReadSystems(g_AssetClassManager);
 	// read the system links from the data archive
 	g_ResourceReader->ReadSystemLinks();
 }
@@ -3540,7 +3540,7 @@ int main(int argc, char ** argv)
 	ON_DEBUG(std::cout << "Reading the data objects from the game archive." << std::endl);
 	g_ResourceReader->ReadMeshes();
 	g_ResourceReader->ReadModels();
-	g_ResourceReader->ReadAssetClasses();
+	g_ResourceReader->ReadAssetClasses(g_AssetClassManager);
 	g_ResourceReader->ReadBatteryClasses();
 	g_ResourceReader->ReadCommodityClasses();
 	g_ResourceReader->ReadGeneratorClasses();

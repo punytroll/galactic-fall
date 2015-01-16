@@ -33,7 +33,6 @@
 template < class ClassType >
 class ClassManager;
 
-class AssetClass;
 class BatteryClass;
 class CommodityClass;
 class Galaxy;
@@ -45,7 +44,6 @@ class ShipClass;
 class SlotClass;
 class SystemStatistics;
 class TimeoutNotificationManager;
-class WeaponClass;
 
 namespace Graphics
 {
@@ -75,7 +73,6 @@ enum WantReturnCode
 	TOO_NEAR_TO_STELLAR_OBJECT
 };
 
-extern ClassManager< AssetClass > * g_AssetClassManager;
 extern ClassManager< BatteryClass > * g_BatteryClassManager;
 extern OutputObserver * g_CharacterObserver;
 extern ClassManager< CommodityClass > * g_CommodityClassManager;

@@ -34,6 +34,7 @@ namespace Graphics
 template< class Class >
 class ClassManager;
 
+class AssetClass;
 class ScenarioManager;
 class Settings;
 class WeaponClass;
@@ -44,7 +45,7 @@ public:
 	ResourceReader(const std::string & DataDirectoryPath);
 	~ResourceReader(void);
 	bool LoadArchive(const std::string & Path);
-	void ReadAssetClasses(void);
+	void ReadAssetClasses(ClassManager< AssetClass > * AssetClassManager);
 	void ReadBatteryClasses(void);
 	void ReadCommodityClasses(void);
 	void ReadFactions(void);
@@ -56,7 +57,7 @@ public:
 	void ReadShadersAndPrograms(Graphics::ShadingManager * ShadingManager);
 	void ReadShipClasses(void);
 	void ReadSlotClasses(void);
-	void ReadSystems(void);
+	void ReadSystems(ClassManager< AssetClass > * AssetClassManager);
 	void ReadSystemLinks(void);
 	void ReadTextures(void);
 	void ReadWeaponClasses(ClassManager< WeaponClass > * WeaponClassManager);

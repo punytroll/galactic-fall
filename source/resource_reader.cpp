@@ -68,7 +68,7 @@
 
 static Arxx::Item * Resolve(Arxx::Reference & Reference);
 
-static void ReadAssetClass(Arxx::Reference & Reference);
+static void ReadAssetClass(Arxx::Reference & Reference, ClassManager< AssetClass > * AssetClassManager);
 static void ReadBatteryClass(Arxx::Reference & Reference);
 static void ReadCommodityClass(Arxx::Reference & Reference);
 static void ReadFaction(Arxx::Reference & Reference);
@@ -80,7 +80,7 @@ static void ReadScenario(Arxx::Reference & Reference, ScenarioManager * Scenario
 static void ReadShader(Arxx::Reference & Reference, Graphics::ShadingManager * ShadingManager);
 static void ReadShipClass(Arxx::Reference & Reference);
 static void ReadSlotClass(Arxx::Reference & Reference);
-static void ReadSystem(Arxx::Reference & Reference);
+static void ReadSystem(Arxx::Reference & Reference, ClassManager< AssetClass > * AssetClassManager);
 static void ReadSystemLink(Arxx::Reference & Reference);
 static void ReadTexture(Arxx::Reference & Reference);
 static void ReadVisualizationPrototype(Arxx::BufferReader & Reader, VisualizationPrototype * VisualizationPrototype);
@@ -168,9 +168,9 @@ void ResourceReader::_ReadItems(const std::string & Path, std::function< void (A
 	}
 }
 
-void ResourceReader::ReadAssetClasses(void)
+void ResourceReader::ReadAssetClasses(ClassManager< AssetClass > * AssetClassManager)
 {
-	_ReadItems("/Asset Classes", ReadAssetClass);
+	_ReadItems("/Asset Classes", std::bind(ReadAssetClass, std::placeholders::_1, AssetClassManager));
 }
 
 void ResourceReader::ReadBatteryClasses(void)
@@ -235,9 +235,9 @@ void ResourceReader::ReadSlotClasses(void)
 	_ReadItems("/Slot Classes", ReadSlotClass);
 }
 
-void ResourceReader::ReadSystems(void)
+void ResourceReader::ReadSystems(ClassManager< AssetClass > * AssetClassManager)
 {
-	_ReadItems("/Systems", ReadSystem);
+	_ReadItems("/Systems", std::bind(ReadSystem, std::placeholders::_1, AssetClassManager));
 }
 
 void ResourceReader::ReadSystemLinks(void)
@@ -275,7 +275,7 @@ std::string ResourceReader::ReadSavegameFromScenarioPath(const std::string & Sce
 	return Result;
 }
 
-static void ReadAssetClass(Arxx::Reference & Reference)
+static void ReadAssetClass(Arxx::Reference & Reference, ClassManager< AssetClass > * AssetClassManager)
 {
 	auto Item(Resolve(Reference));
 	
@@ -293,7 +293,7 @@ static void ReadAssetClass(Arxx::Reference & Reference)
 	
 	Reader >> Identifier;
 	
-	auto NewAssetClass(g_AssetClassManager->Create(Identifier));
+	auto NewAssetClass(AssetClassManager->Create(Identifier));
 	
 	if(NewAssetClass == nullptr)
 	{
@@ -826,7 +826,7 @@ static void ReadSlotClass(Arxx::Reference & Reference)
 	}
 }
 
-static void ReadSystem(Arxx::Reference & Reference)
+static void ReadSystem(Arxx::Reference & Reference, ClassManager< AssetClass > * AssetClassManager)
 {
 	Arxx::Item * Item(Resolve(Reference));
 	
@@ -914,14 +914,14 @@ static void ReadSystem(Arxx::Reference & Reference)
 			
 			Reader >> AssetClassIdentifier >> BasePriceModifier;
 			
-			auto ManagedAssetClass(g_AssetClassManager->Get(AssetClassIdentifier));
+			auto AssetClass(AssetClassManager->Get(AssetClassIdentifier));
 			
-			if(ManagedAssetClass == nullptr)
+			if(AssetClass == nullptr)
 			{
 				throw std::runtime_error("Could not find asset class '" + AssetClassIdentifier + "' for planet '" + PlanetIdentifier + "' in system '" + Identifier + "'.");
 			}
 			
-			PlanetAssetClass * NewPlanetAssetClass(NewPlanet->CreatePlanetAssetClass(ManagedAssetClass));
+			auto NewPlanetAssetClass(NewPlanet->CreatePlanetAssetClass(AssetClass));
 			
 			NewPlanetAssetClass->SetBasePriceModifier(BasePriceModifier);
 		}
