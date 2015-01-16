@@ -52,6 +52,8 @@
 #include "star.h"
 #include "storage.h"
 #include "system.h"
+#include "turret.h"
+#include "turret_class.h"
 #include "weapon.h"
 #include "weapon_class.h"
 #include "visualization_prototype.h"
@@ -63,6 +65,7 @@ ObjectFactory::ObjectFactory(void) :
 	_CommodityClassManager(new ClassManager< CommodityClass >()),
 	_GeneratorClassManager(new ClassManager< GeneratorClass >()),
 	_ShipClassManager(new ClassManager< ShipClass >()),
+	_TurretClassManager(new ClassManager< TurretClass >()),
 	_WeaponClassManager(new ClassManager< WeaponClass >())
 {
 }
@@ -77,6 +80,8 @@ ObjectFactory::~ObjectFactory(void)
 	_GeneratorClassManager = nullptr;
 	delete _ShipClassManager;
 	_ShipClassManager = nullptr;
+	delete _TurretClassManager;
+	_TurretClassManager = nullptr;
 	delete _WeaponClassManager;
 	_WeaponClassManager = nullptr;
 }
@@ -276,6 +281,40 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		assert(ClassIdentifier.empty() == false);
 		Result = new System();
 	}
+	else if(TypeIdentifier == "turret")
+	{
+		assert(_TurretClassManager != nullptr);
+		
+		auto TurretClass(_TurretClassManager->Get(ClassIdentifier));
+		
+		assert(TurretClass != nullptr);
+		
+		auto NewTurret(new Turret());
+		
+		NewTurret->SetEnergyUsagePerShot(TurretClass->GetEnergyUsagePerShot());
+		NewTurret->SetShotDamage(TurretClass->GetShotDamage());
+		NewTurret->SetShotExitPosition(TurretClass->GetShotExitPosition());
+		NewTurret->SetShotExitSpeed(TurretClass->GetShotExitSpeed());
+		NewTurret->SetShotLifeTime(TurretClass->GetShotLifeTime());
+		NewTurret->SetShotVisualizationPrototype(TurretClass->GetShotVisualizationPrototype());
+		NewTurret->SetReloadTime(TurretClass->GetReloadTime());
+		// set up accessory aspect
+		assert(NewTurret->GetAspectAccessory() != nullptr);
+		NewTurret->GetAspectAccessory()->SetSlotClassIdentifier(TurretClass->GetSlotClassIdentifier());
+		// set up name aspect
+		assert(NewTurret->GetAspectName() != nullptr);
+		NewTurret->GetAspectName()->SetName(TurretClass->GetName());
+		// set up physical aspect
+		assert(NewTurret->GetAspectPhysical() != nullptr);
+		NewTurret->GetAspectPhysical()->SetSpaceRequirement(TurretClass->GetSpaceRequirement());
+		// set up position aspect
+		assert(NewTurret->GetAspectPosition() != nullptr);
+		NewTurret->GetAspectPosition()->SetOrientation(TurretClass->GetOrientation());
+		// set up visualization aspect
+		assert(NewTurret->GetAspectVisualization() != nullptr);
+		NewTurret->GetAspectVisualization()->SetVisualizationPrototype(new VisualizationPrototype(TurretClass->GetTurretVisualizationPrototype()));
+		Result = NewTurret;
+	}
 	else if(TypeIdentifier == "weapon")
 	{
 		assert(_WeaponClassManager != nullptr);
@@ -362,6 +401,16 @@ unsigned_numeric ObjectFactory::GetSpaceRequirement(const std::string & TypeIden
 		
 		return ShipClass->GetSpaceRequirement();
 	}
+	else if(TypeIdentifier == "turret")
+	{
+		assert(_TurretClassManager != nullptr);
+		
+		auto TurretClass(_TurretClassManager->Get(ClassIdentifier));
+		
+		assert(TurretClass != nullptr);
+		
+		return TurretClass->GetSpaceRequirement();
+	}
 	else if(TypeIdentifier == "weapon")
 	{
 		assert(_WeaponClassManager != nullptr);
@@ -411,6 +460,16 @@ const VisualizationPrototype * ObjectFactory::GetVisualizationPrototype(const st
 		assert(ShipClass != nullptr);
 		
 		return ShipClass->GetVisualizationPrototype();
+	}
+	else if(TypeIdentifier == "turret")
+	{
+		assert(_TurretClassManager != nullptr);
+		
+		auto TurretClass(_TurretClassManager->Get(ClassIdentifier));
+		
+		assert(TurretClass != nullptr);
+		
+		return TurretClass->GetTurretVisualizationPrototype();
 	}
 	else if(TypeIdentifier == "weapon")
 	{

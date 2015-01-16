@@ -91,6 +91,23 @@
 			<visualize-accessory>true</visualize-accessory>
 		</slot>
 		<slot>
+			<identifier>rear_turret</identifier>
+			<class-identifier>light_turret</class-identifier>
+			<name>Rear Turret</name>
+			<position>
+				<x>-1.85</x>
+				<y>0.0</y>
+				<z>1.21</z>
+			</position>
+			<orientation>
+				<w>0.7071067812</w>
+				<x>0</x>
+				<y>-0.7071067812</y>
+				<z>0</z>
+			</orientation>
+			<visualize-accessory>true</visualize-accessory>
+		</slot>
+		<slot>
 			<identifier>battery</identifier>
 			<class-identifier>light_battery</class-identifier>
 			<name>Battery</name>

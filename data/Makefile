@@ -21,6 +21,7 @@ all_data = \
 	.data/asset_class_industrial.data \
 	.data/asset_class_light_battery.data \
 	.data/asset_class_light_laser.data \
+	.data/asset_class_light_laser_turret.data \
 	.data/asset_class_luxury_goods.data \
 	.data/asset_class_medical_supplies.data \
 	.data/asset_class_medium_laser.data \
@@ -59,6 +60,7 @@ all_data = \
 	.data/model_laser_shot.data \
 	.data/model_light_battery.data \
 	.data/model_light_laser.data \
+	.data/model_light_laser_turret.data \
 	.data/model_planet.data \
 	.data/model_shuttle.data \
 	.data/model_transporter.data \
@@ -73,6 +75,7 @@ all_data = \
 	.data/ship_class_shuttle.data \
 	.data/ship_class_transporter.data \
 	.data/slot_class_light_battery.data \
+	.data/slot_class_light_turret.data \
 	.data/slot_class_light_weapon.data \
 	.data/slot_class_medium_weapon.data \
 	.data/slot_class_small_generator.data \
@@ -86,6 +89,7 @@ all_data = \
 	.data/system_link_rigel_tichel.data \
 	.data/texture_font.data \
 	.data/texture_particle.data \
+	.data/turret_class_light_laser.data \
 	.data/vertex_shader_default.data \
 	.data/vertex_shader_no_lighting.data \
 	.data/weapon_class_light_laser.data \
@@ -139,6 +143,7 @@ data.arx: $(data_arx) $(arxtouch_dependencies) $(arxadd_dependencies)
 	$(command_arxadd) $@ --name="Systems" --type=0 --sub-type=0 --relation="::child"
 	$(command_arxadd) $@ --name="System Links" --type=0 --sub-type=0 --relation="::child"
 	$(command_arxadd) $@ --name="Weapon Classes" --type=0 --sub-type=0 --relation="::child"
+	$(command_arxadd) $@ --name="Turret Classes" --type=0 --sub-type=0 --relation="::child"
 	$(command_arxadd) $@ --name="Commodity Classes" --type=0 --sub-type=0 --relation="::child"
 	$(command_arxadd) $@ --name="Slot Classes" --type=0 --sub-type=0 --relation="::child"
 	$(command_arxadd) $@ --name="Textures" --type=0 --sub-type=0 --relation="::child"
@@ -159,12 +164,15 @@ data.arx: $(data_arx) $(arxtouch_dependencies) $(arxadd_dependencies)
 	$(command_arxadd) $@ --name="Pirates Faction" --type=e --sub-type=0 --relation="/Factions::child" --data-file=.data/faction_pirates.data
 	@echo "\n\nAdding slot classes ...\n"
 	$(command_arxadd) $@ --name="Light Battery" --type=9 --sub-type=0 --relation="/Slot Classes::child" --data-file=.data/slot_class_light_battery.data
+	$(command_arxadd) $@ --name="Light Turret" --type=9 --sub-type=0 --relation="/Slot Classes::child" --data-file=.data/slot_class_light_turret.data
 	$(command_arxadd) $@ --name="Light Weapon" --type=9 --sub-type=0 --relation="/Slot Classes::child" --data-file=.data/slot_class_light_weapon.data
 	$(command_arxadd) $@ --name="Medium Weapon" --type=9 --sub-type=0 --relation="/Slot Classes::child" --data-file=.data/slot_class_medium_weapon.data
 	$(command_arxadd) $@ --name="Small Generator" --type=9 --sub-type=0 --relation="/Slot Classes::child" --data-file=.data/slot_class_small_generator.data
 	@echo "\n\nAdding weapon classes ...\n"
 	$(command_arxadd) $@ --name="Light Laser" --type=7 --sub-type=0 --relation="/Weapon Classes::child" --data-file=.data/weapon_class_light_laser.data
 	$(command_arxadd) $@ --name="Medium Laser" --type=7 --sub-type=0 --relation="/Weapon Classes::child" --data-file=.data/weapon_class_medium_laser.data
+	@echo "\n\nAdding turret classes ...\n"
+	$(command_arxadd) $@ --name="Light Laser Turret" --type=16 --sub-type=0 --relation="/Turret Classes::child" --data-file=.data/turret_class_light_laser.data
 	@echo "\n\nAdding battery classes ...\n"
 	$(command_arxadd) $@ --name="Light Battery" --type=c --sub-type=0 --relation="/Battery Classes::child" --data-file=.data/battery_class_light_battery.data
 	@echo "\n\nAdding generator classes ...\n"
@@ -181,6 +189,7 @@ data.arx: $(data_arx) $(arxtouch_dependencies) $(arxadd_dependencies)
 	$(command_arxadd) $@ --name="Industrial" --type=4 --sub-type=0 --relation="/Asset Classes::child" --data-file=.data/asset_class_industrial.data
 	$(command_arxadd) $@ --name="Light Battery" --type=4 --sub-type=0 --relation="/Asset Classes::child" --data-file=.data/asset_class_light_battery.data
 	$(command_arxadd) $@ --name="Light Laser" --type=4 --sub-type=0 --relation="/Asset Classes::child" --data-file=.data/asset_class_light_laser.data
+	$(command_arxadd) $@ --name="Light Laser Turret" --type=4 --sub-type=0 --relation="/Asset Classes::child" --data-file=.data/asset_class_light_laser_turret.data
 	$(command_arxadd) $@ --name="Luxury Goods" --type=4 --sub-type=0 --relation="/Asset Classes::child" --data-file=.data/asset_class_luxury_goods.data
 	$(command_arxadd) $@ --name="Medical Supplies" --type=4 --sub-type=0 --relation="/Asset Classes::child" --data-file=.data/asset_class_medical_supplies.data
 	$(command_arxadd) $@ --name="Medium Laser" --type=4 --sub-type=0 --relation="/Asset Classes::child" --data-file=.data/asset_class_medium_laser.data
@@ -212,6 +221,7 @@ data.arx: $(data_arx) $(arxtouch_dependencies) $(arxadd_dependencies)
 	$(command_arxadd) $@ --name="Laser Shot" --type=b --sub-type=0 --relation="/Models::child" --data-file=.data/model_laser_shot.data
 	$(command_arxadd) $@ --name="Light Battery" --type=b --sub-type=0 --relation="/Models::child" --data-file=.data/model_light_battery.data
 	$(command_arxadd) $@ --name="Light Laser" --type=b --sub-type=0 --relation="/Models::child" --data-file=.data/model_light_laser.data
+	$(command_arxadd) $@ --name="Light Laser Turret" --type=b --sub-type=0 --relation="/Models::child" --data-file=.data/model_light_laser_turret.data
 	$(command_arxadd) $@ --name="Planet" --type=b --sub-type=0 --relation="/Models::child" --data-file=.data/model_planet.data
 	$(command_arxadd) $@ --name="Shuttle" --type=b --sub-type=0 --relation="/Models::child" --data-file=.data/model_shuttle.data
 	$(command_arxadd) $@ --name="Transporter" --type=b --sub-type=0 --relation="/Models::child" --data-file=.data/model_transporter.data

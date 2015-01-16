@@ -3534,6 +3534,7 @@ int main(int argc, char ** argv)
 	g_ResourceReader->ReadGeneratorClasses(g_ObjectFactory->GetGeneratorClassManager());
 	g_ResourceReader->ReadSlotClasses(g_SlotClassManager);
 	g_ResourceReader->ReadShipClasses(g_ObjectFactory->GetShipClassManager(), g_SlotClassManager);
+	g_ResourceReader->ReadTurretClasses(g_ObjectFactory->GetTurretClassManager());
 	g_ResourceReader->ReadWeaponClasses(g_ObjectFactory->GetWeaponClassManager());
 	g_ResourceReader->ReadScenarios(g_ScenarioManager);
 	// reading shaders and programs could be done earlier and without OpenGL, but initializing them requires OpenGL

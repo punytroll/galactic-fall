@@ -41,6 +41,7 @@
 #include "shot.h"
 #include "slot.h"
 #include "system.h"
+#include "turret.h"
 #include "visualization.h"
 #include "visualization_prototype.h"
 #include "visualizations.h"
@@ -55,6 +56,7 @@ static Visualization * VisualizePlanet(Planet * Planet, Graphics::Node * Contain
 static Visualization * VisualizeShip(Ship * Ship, Graphics::Node * Container);
 static Visualization * VisualizeShot(Shot * Shot, Graphics::Node * Container);
 static Visualization * VisualizeSystem(System * System, Graphics::Node * Container);
+static Visualization * VisualizeTurret(Turret * Turret, Graphics::Node * Container);
 static Visualization * VisualizeWeapon(Weapon * Weapon, Graphics::Node * Container);
 
 void InvalidateVisualizationReference(Graphics::Node * Node)
@@ -89,6 +91,10 @@ Visualization * VisualizeObject(Object * Object, Graphics::Node * Container)
 	else if(Object->GetTypeIdentifier() == "system")
 	{
 		return VisualizeSystem(static_cast< System * >(Object), Container);
+	}
+	else if(Object->GetTypeIdentifier() == "turret")
+	{
+		return VisualizeTurret(static_cast< Turret * >(Object), Container);
 	}
 	else if(Object->GetTypeIdentifier() == "weapon")
 	{
@@ -248,6 +254,26 @@ Visualization * VisualizeSystem(System * System, Graphics::Node * Container)
 	{
 		VisualizeObject(Ship, Graphics->GetShipLayer());
 	}
+	// add to the container node
+	assert(Container != nullptr);
+	Container->AddNode(Graphics);
+	
+	return Visualization;
+}
+
+Visualization * VisualizeTurret(Turret * Turret, Graphics::Node * Container)
+{
+	assert(Turret != nullptr);
+	assert(Turret->GetAspectVisualization() != nullptr);
+	assert(Turret->GetAspectVisualization()->GetVisualizationPrototype() != nullptr);
+	
+	auto Graphics(VisualizePrototype(Turret->GetAspectVisualization()->GetVisualizationPrototype()));
+	
+	g_ObjectVisualizations[Graphics] = Turret->GetAspectVisualization();
+	
+	// set as the object's visualization
+	auto Visualization(Turret->GetAspectVisualization()->CreateVisualizationForGraphics(Graphics));
+	
 	// add to the container node
 	assert(Container != nullptr);
 	Container->AddNode(Graphics);

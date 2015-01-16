@@ -1,0 +1,7 @@
+<slot-class>
+	<identifier>light_turret</identifier>
+	<name>Light Turret</name>
+	<accepted-slot-classes>
+		<accepted-slot-class>light_turret</accepted-slot-class>
+	</accepted-slot-classes>
+</slot-class>

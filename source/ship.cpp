@@ -43,6 +43,7 @@
 #include "slot_class.h"
 #include "storage.h"
 #include "system.h"
+#include "turret.h"
 #include "visualization.h"
 #include "visualizations.h"
 #include "weapon.h"
@@ -138,9 +139,16 @@ void Ship::SetFire(bool Fire)
 		// only update *mounted* *weapons*
 		auto MountedObject(SlotPair.second->GetMountedObject());
 		
-		if((MountedObject != 0) && (MountedObject->GetTypeIdentifier() == "weapon"))
+		if(MountedObject != nullptr)
 		{
-			dynamic_cast< Weapon * >(MountedObject)->SetFire(Fire);
+			if(MountedObject->GetTypeIdentifier() == "weapon")
+			{
+				dynamic_cast< Weapon * >(MountedObject)->SetFire(Fire);
+			}
+			else if(MountedObject->GetTypeIdentifier() == "turret")
+			{
+				dynamic_cast< Turret * >(MountedObject)->SetFire(Fire);
+			}
 		}
 	}
 }
