@@ -69,7 +69,7 @@
 static Arxx::Item * Resolve(Arxx::Reference & Reference);
 
 static void ReadAssetClass(Arxx::Reference & Reference, ClassManager< AssetClass > * AssetClassManager);
-static void ReadBatteryClass(Arxx::Reference & Reference);
+static void ReadBatteryClass(Arxx::Reference & Reference, ClassManager< BatteryClass > * BatteryClassManager);
 static void ReadCommodityClass(Arxx::Reference & Reference);
 static void ReadFaction(Arxx::Reference & Reference);
 static void ReadGeneratorClass(Arxx::Reference & Reference);
@@ -173,9 +173,9 @@ void ResourceReader::ReadAssetClasses(ClassManager< AssetClass > * AssetClassMan
 	_ReadItems("/Asset Classes", std::bind(ReadAssetClass, std::placeholders::_1, AssetClassManager));
 }
 
-void ResourceReader::ReadBatteryClasses(void)
+void ResourceReader::ReadBatteryClasses(ClassManager< BatteryClass > * BatteryClassManager)
 {
-	_ReadItems("/Battery Classes", ReadBatteryClass);
+	_ReadItems("/Battery Classes", std::bind(ReadBatteryClass, std::placeholders::_1, BatteryClassManager));
 }
 
 void ResourceReader::ReadCommodityClasses(void)
@@ -315,7 +315,7 @@ static void ReadAssetClass(Arxx::Reference & Reference, ClassManager< AssetClass
 	NewAssetClass->SetObjectClassIdentifier(ObjectClassIdentifier);
 }
 
-static void ReadBatteryClass(Arxx::Reference & Reference)
+static void ReadBatteryClass(Arxx::Reference & Reference, ClassManager< BatteryClass > * BatteryClassManager)
 {
 	auto Item(Resolve(Reference));
 	
@@ -333,7 +333,7 @@ static void ReadBatteryClass(Arxx::Reference & Reference)
 	
 	Reader >> Identifier;
 	
-	auto NewBatteryClass(g_BatteryClassManager->Create(Identifier));
+	auto NewBatteryClass(BatteryClassManager->Create(Identifier));
 	
 	if(NewBatteryClass == nullptr)
 	{

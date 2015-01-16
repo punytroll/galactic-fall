@@ -46,7 +46,7 @@ public:
 	~ResourceReader(void);
 	bool LoadArchive(const std::string & Path);
 	void ReadAssetClasses(ClassManager< AssetClass > * AssetClassManager);
-	void ReadBatteryClasses(void);
+	void ReadBatteryClasses(ClassManager< BatteryClass > * BatteryClassManager);
 	void ReadCommodityClasses(void);
 	void ReadFactions(void);
 	void ReadGeneratorClasses(void);

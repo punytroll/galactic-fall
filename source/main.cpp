@@ -132,7 +132,6 @@
 
 // these objects are exported via globals.h
 ClassManager< AssetClass > * g_AssetClassManager(nullptr);
-ClassManager< BatteryClass > * g_BatteryClassManager(0);
 ClassManager< CommodityClass > * g_CommodityClassManager(0);
 Galaxy * g_Galaxy(0);
 ClassManager< GeneratorClass > * g_GeneratorClassManager(0);
@@ -3531,7 +3530,6 @@ int main(int argc, char ** argv)
 	g_ShipClassManager = new ClassManager< ShipClass >();
 	g_SlotClassManager = new ClassManager< SlotClass >();
 	g_AssetClassManager = new ClassManager< AssetClass >();
-	g_BatteryClassManager = new ClassManager< BatteryClass >();
 	g_CommodityClassManager = new ClassManager< CommodityClass >();
 	g_SystemStatistics = new SystemStatistics();
 	g_CharacterObserver = new OutputObserver();
@@ -3541,7 +3539,7 @@ int main(int argc, char ** argv)
 	g_ResourceReader->ReadMeshes();
 	g_ResourceReader->ReadModels();
 	g_ResourceReader->ReadAssetClasses(g_AssetClassManager);
-	g_ResourceReader->ReadBatteryClasses();
+	g_ResourceReader->ReadBatteryClasses(g_ObjectFactory->GetBatteryClassManager());
 	g_ResourceReader->ReadCommodityClasses();
 	g_ResourceReader->ReadGeneratorClasses();
 	g_ResourceReader->ReadSlotClasses();
@@ -3609,7 +3607,6 @@ int main(int argc, char ** argv)
 	delete g_CharacterObserver;
 	delete g_SystemStatistics;
 	delete g_CommodityClassManager;
-	delete g_BatteryClassManager;
 	delete g_AssetClassManager;
 	delete g_SlotClassManager;
 	delete g_ShipClassManager;

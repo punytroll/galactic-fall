@@ -33,7 +33,6 @@
 template < class ClassType >
 class ClassManager;
 
-class BatteryClass;
 class CommodityClass;
 class Galaxy;
 class GeneratorClass;
@@ -73,7 +72,6 @@ enum WantReturnCode
 	TOO_NEAR_TO_STELLAR_OBJECT
 };
 
-extern ClassManager< BatteryClass > * g_BatteryClassManager;
 extern OutputObserver * g_CharacterObserver;
 extern ClassManager< CommodityClass > * g_CommodityClassManager;
 extern Galaxy * g_Galaxy;
