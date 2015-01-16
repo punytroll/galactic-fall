@@ -41,17 +41,6 @@
 
 enum
 {
-	LITTLEM_VIEW_NONE = -1,
-	LITTLEM_VIEW_FRONT = 0,
-	LITTLEM_VIEW_LEFT = 1,
-	LITTLEM_VIEW_BACK = 2,
-	LITTLEM_VIEW_RIGHT = 3,
-	LITTLEM_VIEW_TOP = 4,
-	LITTLEM_VIEW_BOTTOM = 5
-};
-
-enum
-{
 	LITTLEM_AXIS_POSITIVE_X = 0,
 	LITTLEM_AXIS_NEGATIVE_X = 1,
 	LITTLEM_AXIS_POSITIVE_Y = 2,
@@ -59,6 +48,41 @@ enum
 	LITTLEM_AXIS_POSITIVE_Z = 4,
 	LITTLEM_AXIS_NEGATIVE_Z = 5
 };
+
+std::string GetAxisString(int Axis)
+{
+	switch(Axis)
+	{
+	case LITTLEM_AXIS_NEGATIVE_X:
+		{
+			return "-X";
+		}
+	case LITTLEM_AXIS_NEGATIVE_Y:
+		{
+			return "-Y";
+		}
+	case LITTLEM_AXIS_NEGATIVE_Z:
+		{
+			return "-Z";
+		}
+	case LITTLEM_AXIS_POSITIVE_X:
+		{
+			return "+X";
+		}
+	case LITTLEM_AXIS_POSITIVE_Y:
+		{
+			return "+Y";
+		}
+	case LITTLEM_AXIS_POSITIVE_Z:
+		{
+			return "+Z";
+		}
+	default:
+		{
+			assert(false);
+		}
+	}
+}
 
 enum class MouseButton
 {
@@ -313,16 +337,132 @@ public:
 	GLenum m_LightNumber;
 };
 
+enum class PredefinedView
+{
+	Front,
+	Left,
+	Back,
+	Right,
+	Top,
+	Bottom
+};
+
+std::string GetViewString(PredefinedView View)
+{
+	switch(View)
+	{
+	case PredefinedView::Back:
+		{
+			return "Back";
+		}
+	case PredefinedView::Bottom:
+		{
+			return "Bottom";
+		}
+	case PredefinedView::Front:
+		{
+			return "Front";
+		}
+	case PredefinedView::Left:
+		{
+			return "Left";
+		}
+	case PredefinedView::Right:
+		{
+			return "Right";
+		}
+	case PredefinedView::Top:
+		{
+			return "Top";
+		}
+	}
+	assert(false);
+}
+
 class Camera : public Position
 {
 public:
-	Matrix4f GetSpacialMatrix(void)
+	Camera(void) :
+		_FieldOfViewY(52.0f),
+		_Orientation(Quaternion::CreateIdentity())
 	{
-		return Matrix4f::CreateTranslation(GetPosition()).Rotate(m_Orientation);
 	}
 	
-	Quaternion m_Orientation;
-	float m_fFieldOfView;
+	Matrix4f GetProjectionMatrix(void) const
+	{
+		float Aspect(static_cast< float >(g_Width) / static_cast< float >(g_Height));
+		float NearClippingPlane(0.0001f);
+		float FarClippingPlane(1000.0f);
+		Matrix4f Result;
+		float Top(NearClippingPlane * tan(_FieldOfViewY / 2.0f));
+		float Right(Top * Aspect);
+		
+		Result[0] = NearClippingPlane / Right;
+		Result[1] = 0.0f;
+		Result[2] = 0.0f;
+		Result[3] = 0.0f;
+		Result[4] = 0.0f;
+		Result[5] = NearClippingPlane / Top;
+		Result[6] = 0.0f;
+		Result[7] = 0.0f;
+		Result[8] = 0.0f;
+		Result[9] = 0.0f;
+		Result[10] = -(FarClippingPlane + NearClippingPlane) / (FarClippingPlane - NearClippingPlane);
+		Result[11] = -1.0f;
+		Result[12] = 0.0f;
+		Result[13] = 0.0f;
+		Result[14] = -(2.0f * FarClippingPlane * NearClippingPlane) / (FarClippingPlane - NearClippingPlane);
+		Result[15] = 0.0f;
+		
+		return Result;
+	}
+	
+	Matrix4f GetSpacialMatrix(void)
+	{
+		return Matrix4f::CreateTranslation(GetPosition()).Rotate(_Orientation);
+	}
+	
+	void SetView(PredefinedView View)
+	{
+		if((View == PredefinedView::Front) && (g_UpAxis == LITTLEM_AXIS_POSITIVE_Z) && (g_FrontAxis == LITTLEM_AXIS_NEGATIVE_X))
+		{
+			SetPosition(4.0f, 0.0f, 0.0f);
+			_Orientation.RotationX(M_PI_2).RotateY(M_PI_2);
+		}
+		else if((View == PredefinedView::Back) && (g_UpAxis == LITTLEM_AXIS_POSITIVE_Z) && (g_FrontAxis == LITTLEM_AXIS_NEGATIVE_X))
+		{
+			SetPosition(-4.0f, 0.0f, 0.0f);
+			_Orientation.RotationX(M_PI_2).RotateY(-M_PI_2);
+		}
+		else if((View == PredefinedView::Left) && (g_UpAxis == LITTLEM_AXIS_POSITIVE_Z) && (g_FrontAxis == LITTLEM_AXIS_NEGATIVE_X))
+		{
+			SetPosition(0.0f, -4.0f, 0.0f);
+			_Orientation.RotationX(M_PI_2);
+		}
+		else if((View == PredefinedView::Right) && (g_UpAxis == LITTLEM_AXIS_POSITIVE_Z) && (g_FrontAxis == LITTLEM_AXIS_NEGATIVE_X))
+		{
+			SetPosition(0.0f, 4.0f, 0.0f);
+			_Orientation.RotationY(M_PI).RotateX(-M_PI_2);
+		}
+		else if((View == PredefinedView::Top) && (g_UpAxis == LITTLEM_AXIS_POSITIVE_Z) && (g_FrontAxis == LITTLEM_AXIS_NEGATIVE_X))
+		{
+			SetPosition(0.0f, 0.0f, 4.0f);
+			_Orientation.RotationZ(M_PI_2);
+		}
+		else if((View == PredefinedView::Bottom) && (g_UpAxis == LITTLEM_AXIS_POSITIVE_Z) && (g_FrontAxis == LITTLEM_AXIS_NEGATIVE_X))
+		{
+			SetPosition(0.0f, 0.0f, -4.0f);
+			_Orientation.RotationZ(M_PI_2).RotateY(M_PI);
+		}
+		else
+		{
+			std::cout << "Unknown combination: View=" << GetViewString(View) << ", Up=" << GetAxisString(g_UpAxis) << ", Front=" << GetAxisString(g_FrontAxis) << std::endl;
+			assert(false);
+		}
+	}
+	
+	float _FieldOfViewY;
+	Quaternion _Orientation;
 };
 
 class CameraDescription
@@ -334,14 +474,14 @@ public:
 	
 	CameraDescription(Camera * Camera) :
 		Position(Camera->GetPosition()),
-		Orientation(Camera->m_Orientation),
-		FieldOfView(Camera->m_fFieldOfView)
+		Orientation(Camera->_Orientation),
+		FieldOfViewY(Camera->_FieldOfViewY)
 	{
 	}
 	
 	Vector3f Position;
 	Quaternion Orientation;
-	float FieldOfView;
+	float FieldOfViewY;
 };
 
 CameraDescription camera(Camera * Camera)
@@ -359,7 +499,7 @@ XMLStream & operator<<(XMLStream & XMLStream, const CameraDescription & CameraDe
 	XMLStream << attribute << "orientation-x" << value << CameraDescription.Orientation[1];
 	XMLStream << attribute << "orientation-y" << value << CameraDescription.Orientation[2];
 	XMLStream << attribute << "orientation-z" << value << CameraDescription.Orientation[3];
-	XMLStream << attribute << "field-of-view" << value << CameraDescription.FieldOfView;
+	XMLStream << attribute << "field-of-view" << value << CameraDescription.FieldOfViewY;
 	
 	return XMLStream;
 }
@@ -424,7 +564,7 @@ public:
 			
 			CameraDescription.Position = Vector3f(ConvertToFloat(Attributes.find("position-x")->second), ConvertToFloat(Attributes.find("position-y")->second), ConvertToFloat(Attributes.find("position-z")->second));
 			CameraDescription.Orientation = Quaternion(ConvertToFloat(Attributes.find("orientation-w")->second), ConvertToFloat(Attributes.find("orientation-x")->second), ConvertToFloat(Attributes.find("orientation-y")->second), ConvertToFloat(Attributes.find("orientation-z")->second));
-			CameraDescription.FieldOfView = ConvertToFloat(Attributes.find("field-of-view")->second);
+			CameraDescription.FieldOfViewY = ConvertToFloat(Attributes.find("field-of-view")->second);
 			m_CameraDescriptions.push_back(CameraDescription);
 		}
 		else
@@ -522,9 +662,9 @@ void vSetupProjection(bool bInitialize = true)
 	{
 		glLoadIdentity();
 	}
-	if(g_CurrentCamera != 0)
+	if(g_CurrentCamera != nullptr)
 	{
-		gluPerspective(g_CurrentCamera->m_fFieldOfView, g_Width / g_Height, 0.0001f, 1000.0f);
+		glMultMatrixf(g_CurrentCamera->GetProjectionMatrix().GetPointer());
 	}
 }
 
@@ -608,123 +748,6 @@ void vStopPicking(void)
 				
 				break;
 			}
-		}
-	}
-}
-
-std::string GetViewString(int View)
-{
-	switch(View)
-	{
-	case LITTLEM_VIEW_BACK:
-		{
-			return "Back";
-		}
-	case LITTLEM_VIEW_BOTTOM:
-		{
-			return "Bottom";
-		}
-	case LITTLEM_VIEW_FRONT:
-		{
-			return "Front";
-		}
-	case LITTLEM_VIEW_LEFT:
-		{
-			return "Left";
-		}
-	case LITTLEM_VIEW_NONE:
-		{
-			return "None";
-		}
-	case LITTLEM_VIEW_RIGHT:
-		{
-			return "Right";
-		}
-	case LITTLEM_VIEW_TOP:
-		{
-			return "Top";
-		}
-	default:
-		{
-			assert(false);
-		}
-	}
-}
-
-std::string GetAxisString(int Axis)
-{
-	switch(Axis)
-	{
-	case LITTLEM_AXIS_NEGATIVE_X:
-		{
-			return "-X";
-		}
-	case LITTLEM_AXIS_NEGATIVE_Y:
-		{
-			return "-Y";
-		}
-	case LITTLEM_AXIS_NEGATIVE_Z:
-		{
-			return "-Z";
-		}
-	case LITTLEM_AXIS_POSITIVE_X:
-		{
-			return "+X";
-		}
-	case LITTLEM_AXIS_POSITIVE_Y:
-		{
-			return "+Y";
-		}
-	case LITTLEM_AXIS_POSITIVE_Z:
-		{
-			return "+Z";
-		}
-	default:
-		{
-			assert(false);
-		}
-	}
-}
-
-void vResetView(int FixedViewIndex)
-{
-	if(g_CurrentCamera != 0)
-	{
-		g_CurrentCamera->m_fFieldOfView = 52.0f;
-		if((FixedViewIndex == LITTLEM_VIEW_FRONT) && (g_UpAxis == LITTLEM_AXIS_POSITIVE_Z) && (g_FrontAxis == LITTLEM_AXIS_NEGATIVE_X))
-		{
-			g_CurrentCamera->SetPosition(4.0f, 0.0f, 0.0f);
-			g_CurrentCamera->m_Orientation.RotationX(M_PI_2).RotateY(M_PI_2);
-		}
-		else if((FixedViewIndex == LITTLEM_VIEW_BACK) && (g_UpAxis == LITTLEM_AXIS_POSITIVE_Z) && (g_FrontAxis == LITTLEM_AXIS_NEGATIVE_X))
-		{
-			g_CurrentCamera->SetPosition(-4.0f, 0.0f, 0.0f);
-			g_CurrentCamera->m_Orientation.RotationX(M_PI_2).RotateY(-M_PI_2);
-		}
-		else if((FixedViewIndex == LITTLEM_VIEW_LEFT) && (g_UpAxis == LITTLEM_AXIS_POSITIVE_Z) && (g_FrontAxis == LITTLEM_AXIS_NEGATIVE_X))
-		{
-			g_CurrentCamera->SetPosition(0.0f, -4.0f, 0.0f);
-			g_CurrentCamera->m_Orientation.RotationX(M_PI_2);
-		}
-		else if((FixedViewIndex == LITTLEM_VIEW_RIGHT) && (g_UpAxis == LITTLEM_AXIS_POSITIVE_Z) && (g_FrontAxis == LITTLEM_AXIS_NEGATIVE_X))
-		{
-			g_CurrentCamera->SetPosition(0.0f, 4.0f, 0.0f);
-			g_CurrentCamera->m_Orientation.RotationY(M_PI).RotateX(-M_PI_2);
-		}
-		else if((FixedViewIndex == LITTLEM_VIEW_TOP) && (g_UpAxis == LITTLEM_AXIS_POSITIVE_Z) && (g_FrontAxis == LITTLEM_AXIS_NEGATIVE_X))
-		{
-			g_CurrentCamera->SetPosition(0.0f, 0.0f, 4.0f);
-			g_CurrentCamera->m_Orientation.RotationZ(M_PI_2);
-		}
-		else if((FixedViewIndex == LITTLEM_VIEW_BOTTOM) && (g_UpAxis == LITTLEM_AXIS_POSITIVE_Z) && (g_FrontAxis == LITTLEM_AXIS_NEGATIVE_X))
-		{
-			g_CurrentCamera->SetPosition(0.0f, 0.0f, -4.0f);
-			g_CurrentCamera->m_Orientation.RotationZ(M_PI_2).RotateY(M_PI);
-		}
-		else
-		{
-			std::cout << "Unknown combination: View=" << GetViewString(FixedViewIndex) << ", Up=" << GetAxisString(g_UpAxis) << ", Front=" << GetAxisString(g_FrontAxis) << std::endl;
-			exit(0);
 		}
 	}
 }
@@ -999,12 +1022,14 @@ void vDisplayModel(void)
 	}
 	if(g_SelectedPoints.size() > 0)
 	{
-		Matrix4f Matrix(Matrix4f::CreateRotation(g_CurrentCamera->m_Orientation.Conjugated()));
+		glDisable(GL_DEPTH_TEST);
 		
-		for(std::vector< Point * >::size_type stI = 0; stI < g_SelectedPoints.size(); ++stI)
+		auto Matrix(Matrix4f::CreateRotation(g_CurrentCamera->_Orientation));
+		
+		for(auto Point : g_SelectedPoints)
 		{
 			glPushMatrix();
-			glTranslatef(g_SelectedPoints[stI]->GetX(), g_SelectedPoints[stI]->GetY(), g_SelectedPoints[stI]->GetZ());
+			glTranslatef(Point->GetX(), Point->GetY(), Point->GetZ());
 			glMultMatrixf(Matrix.GetPointer());
 			glBegin(GL_POINTS);
 			glColor3f(1.0f, 0.0f, 0.0f);
@@ -1015,12 +1040,13 @@ void vDisplayModel(void)
 			glEnd();
 			glPopMatrix();
 		}
+		glEnable(GL_DEPTH_TEST);
 	}
 	if(g_pSelectedLight != 0)
 	{
 		glPushMatrix();
 		glTranslatef(g_pSelectedLight->GetX(), g_pSelectedLight->GetY(), g_pSelectedLight->GetZ());
-		glMultMatrixf(Matrix4f::CreateRotation(g_CurrentCamera->m_Orientation.Conjugated()).GetPointer());
+		glMultMatrixf(Matrix4f::CreateRotation(g_CurrentCamera->_Orientation).GetPointer());
 		glBegin(GL_POINTS);
 		glColor3f(1.0f, 1.0f, 0.0f);
 		glVertex3f(-0.05f, -0.05f, 0.0f);
@@ -1035,7 +1061,7 @@ void vDisplayModel(void)
 		glPushMatrix();
 		glTranslatef(g_pSelectedCamera->GetX(), g_pSelectedCamera->GetY(), g_pSelectedCamera->GetZ());
 		glPushMatrix();
-		glMultMatrixf(Matrix4f::CreateRotation(g_CurrentCamera->m_Orientation.Conjugated()).GetPointer());
+		glMultMatrixf(Matrix4f::CreateRotation(g_CurrentCamera->_Orientation).GetPointer());
 		glBegin(GL_POINTS);
 		glColor3f(1.0f, 1.0f, 0.0f);
 		glVertex3f(-0.05f, -0.05f, 0.0f);
@@ -1044,7 +1070,7 @@ void vDisplayModel(void)
 		glVertex3f(-0.05f, 0.05f, 0.0f);
 		glEnd();
 		glPopMatrix();
-		glMultMatrixf(Matrix4f::CreateRotation(g_pSelectedCamera->m_Orientation.Conjugated()).GetPointer());
+		glMultMatrixf(Matrix4f::CreateRotation(g_pSelectedCamera->_Orientation).GetPointer());
 		glColor3f(0.2f, 0.8f, 0.5f);
 		glBegin(GL_LINES);
 		glVertex3f(0.0f, 0.0f, 0.0f);
@@ -1115,7 +1141,7 @@ void vDisplayModel(void)
 		glEnd();
 		glPushMatrix();
 		glTranslatef(g_pHoveredCamera->GetX(), g_pHoveredCamera->GetY(), g_pHoveredCamera->GetZ());
-		glMultMatrixf(Matrix4f::CreateRotation(g_pHoveredCamera->m_Orientation.Conjugated()).GetPointer());
+		glMultMatrixf(Matrix4f::CreateRotation(g_pHoveredCamera->_Orientation.Conjugated()).GetPointer());
 		glColor3f(0.0f, 0.5f, 0.5f);
 		glBegin(GL_LINES);
 		glVertex3f(0.0f, 0.0f, 0.0f);
@@ -1884,9 +1910,6 @@ public:
 			{
 				Camera * pCamera(new Camera());
 				
-				pCamera->SetPosition(0.0f, 0.0f, 0.0f);
-				pCamera->m_Orientation.Identity();
-				pCamera->m_fFieldOfView = 52.0f;
 				g_Cameras.push_back(pCamera);
 				bKeyAccepted = true;
 				
@@ -1993,11 +2016,11 @@ public:
 			{
 				if(g_pSelectedCamera != 0)
 				{
-					g_pSelectedCamera->m_fFieldOfView += 1.0f;
+					g_pSelectedCamera->_FieldOfViewY += 1.0f;
 				}
 				else if(g_CurrentCamera != 0)
 				{
-					g_CurrentCamera->m_fFieldOfView += 1.0f;
+					g_CurrentCamera->_FieldOfViewY += 1.0f;
 					vSetupProjection();
 				}
 				
@@ -2007,55 +2030,13 @@ public:
 			{
 				if(g_pSelectedCamera != 0)
 				{
-					g_pSelectedCamera->m_fFieldOfView -= 1.0f;
+					g_pSelectedCamera->_FieldOfViewY -= 1.0f;
 				}
 				else if(g_CurrentCamera != 0)
 				{
-					g_CurrentCamera->m_fFieldOfView -= 1.0f;
+					g_CurrentCamera->_FieldOfViewY -= 1.0f;
 					vSetupProjection();
 				}
-				
-				break;
-			}
-		case 67: // F!
-			{
-				// switch to normalized front view
-				vResetView(LITTLEM_VIEW_FRONT);
-				
-				break;
-			}
-		case 68: // F2
-			{
-				// switch to normalized left view
-				vResetView(LITTLEM_VIEW_LEFT);
-				
-				break;
-			}
-		case 69: // F3
-			{
-				// switch to normalized right view
-				vResetView(LITTLEM_VIEW_RIGHT);
-				
-				break;
-			}
-		case 70: // F4
-			{
-				// switch to normalized back view
-				vResetView(LITTLEM_VIEW_BACK);
-				
-				break;
-			}
-		case 71: // F5
-			{
-				// switch to normalized top view
-				vResetView(LITTLEM_VIEW_TOP);
-				
-				break;
-			}
-		case 72: // F6
-			{
-				// switch to normalized bottom view
-				vResetView(LITTLEM_VIEW_BOTTOM);
 				
 				break;
 			}
@@ -2245,8 +2226,8 @@ public:
 						auto NewCamera(new Camera());
 						
 						NewCamera->SetPosition(CameraDescription.Position[0], CameraDescription.Position[1], CameraDescription.Position[2]);
-						NewCamera->m_Orientation = CameraDescription.Orientation;
-						NewCamera->m_fFieldOfView = CameraDescription.FieldOfView;
+						NewCamera->_Orientation = CameraDescription.Orientation;
+						NewCamera->_FieldOfViewY = CameraDescription.FieldOfViewY;
 						g_Cameras.push_back(NewCamera);
 					}
 					if(g_Cameras.size() > 0)
@@ -2505,6 +2486,72 @@ public:
 				
 				break;
 			}
+		case 67: // F1
+			{
+				// switch to normalized front view
+				if(g_CurrentCamera != nullptr)
+				{
+					g_CurrentCamera->SetView(PredefinedView::Front);
+					bKeyAccepted = true;
+				}
+				
+				break;
+			}
+		case 68: // F2
+			{
+				// switch to normalized left view
+				if(g_CurrentCamera != nullptr)
+				{
+					g_CurrentCamera->SetView(PredefinedView::Left);
+					bKeyAccepted = true;
+				}
+				
+				break;
+			}
+		case 69: // F3
+			{
+				// switch to normalized right view
+				if(g_CurrentCamera != nullptr)
+				{
+					g_CurrentCamera->SetView(PredefinedView::Right);
+					bKeyAccepted = true;
+				}
+				
+				break;
+			}
+		case 70: // F4
+			{
+				// switch to normalized back view
+				if(g_CurrentCamera != nullptr)
+				{
+					g_CurrentCamera->SetView(PredefinedView::Back);
+					bKeyAccepted = true;
+				}
+				
+				break;
+			}
+		case 71: // F5
+			{
+				// switch to normalized top view
+				if(g_CurrentCamera != nullptr)
+				{
+					g_CurrentCamera->SetView(PredefinedView::Top);
+					bKeyAccepted = true;
+				}
+				
+				break;
+			}
+		case 72: // F6
+			{
+				// switch to normalized bottom view
+				if(g_CurrentCamera != nullptr)
+				{
+					g_CurrentCamera->SetView(PredefinedView::Bottom);
+					bKeyAccepted = true;
+				}
+				
+				break;
+			}
 		default:
 			{
 				bKeyAccepted = false;
@@ -2653,7 +2700,7 @@ void MouseButtonEvent(MouseButton Button, bool IsDown, const Vector2f & MousePos
 			{
 				Vector3f Forward(0.0f, 0.0f, -0.2f);
 				
-				Forward.Rotate(g_CurrentCamera->m_Orientation);
+				Forward.Rotate(g_CurrentCamera->_Orientation);
 				g_CurrentCamera->SetPosition(g_CurrentCamera->GetPosition() + Forward);
 			}
 			
@@ -2665,7 +2712,7 @@ void MouseButtonEvent(MouseButton Button, bool IsDown, const Vector2f & MousePos
 			{
 				Vector3f Backward(0.0f, 0.0f, 0.2f);
 				
-				Backward.Rotate(g_CurrentCamera->m_Orientation);
+				Backward.Rotate(g_CurrentCamera->_Orientation);
 				g_CurrentCamera->SetPosition(g_CurrentCamera->GetPosition() + Backward);
 			}
 			
@@ -2691,8 +2738,8 @@ void MouseMotion(const Vector2f MousePosition)
 	g_iLastMotionY = MousePosition[1];
 	if((g_MouseButton == MouseButton::Middle) && (g_CurrentCamera != 0))
 	{
-		g_CurrentCamera->m_Orientation.RotateX(-0.005 * iDeltaY);
-		g_CurrentCamera->m_Orientation.RotateY(-0.005 * iDeltaX);
+		g_CurrentCamera->_Orientation.RotateX(-0.005 * iDeltaY);
+		g_CurrentCamera->_Orientation.RotateY(-0.005 * iDeltaX);
 	}
 }
 
@@ -3008,7 +3055,7 @@ void InitializeOpenGL(void)
 	
 	g_Cameras.push_back(pCamera);
 	g_CurrentCamera = pCamera;
-	vResetView(LITTLEM_VIEW_FRONT);
+	g_CurrentCamera->SetView(PredefinedView::Front);
 }
 
 void ProcessEvents(void)
