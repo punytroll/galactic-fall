@@ -148,7 +148,7 @@ bool ResourceReader::LoadArchive(const std::string & ArchivePath)
 	return true;
 }
 
-void ResourceReader::_ReadItems(const std::string & Path, std::function< void (Arxx::Reference &) > Reader)
+void ResourceReader::_ReadItems(const std::string & Path, std::function< void (Arxx::Reference &) > ReaderFunction)
 {
 	assert(_Archive != nullptr);
 	
@@ -162,14 +162,9 @@ void ResourceReader::_ReadItems(const std::string & Path, std::function< void (A
 	{
 		throw std::runtime_error("The directory '" + Path + "' does not contain a 'child' relation.");
 	}
-	
-	Arxx::Structure::Relation & Relation(Directory->GetStructure().GetRelation("child"));
-	Arxx::Structure::Relation::iterator CommodityIterator(Relation.begin());
-	
-	while(CommodityIterator != Relation.end())
+	for(auto & Child : Directory->GetStructure().GetRelation("child"))
 	{
-		Reader(*CommodityIterator);
-		++CommodityIterator;
+		ReaderFunction(Child);
 	}
 }
 
