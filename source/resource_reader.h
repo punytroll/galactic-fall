@@ -41,6 +41,7 @@ class ScenarioManager;
 class Settings;
 class ShipClass;
 class SlotClass;
+class TurretClass;
 class WeaponClass;
 
 class ResourceReader
@@ -63,6 +64,7 @@ public:
 	void ReadSlotClasses(ClassManager< SlotClass > * SlotClassManager);
 	void ReadSystems(ClassManager< AssetClass > * AssetClassManager);
 	void ReadSystemLinks(void);
+	void ReadTurretClasses(ClassManager< TurretClass > * TurretClassManager);
 	void ReadTextures(void);
 	void ReadWeaponClasses(ClassManager< WeaponClass > * WeaponClassManager);
 	std::string ReadSavegameFromScenarioPath(const std::string & ScenarioPath);

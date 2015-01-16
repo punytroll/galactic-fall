@@ -30,6 +30,7 @@ class CommodityClass;
 class GeneratorClass;
 class Object;
 class ShipClass;
+class TurretClass;
 class VisualizationPrototype;
 class WeaponClass;
 
@@ -47,12 +48,14 @@ public:
 	ClassManager< CommodityClass > * GetCommodityClassManager(void);
 	ClassManager< GeneratorClass > * GetGeneratorClassManager(void);
 	ClassManager< ShipClass > * GetShipClassManager(void);
+	ClassManager< TurretClass > * GetTurretClassManager(void);
 	ClassManager< WeaponClass > * GetWeaponClassManager(void);
 private:
 	ClassManager< BatteryClass > * _BatteryClassManager;
 	ClassManager< CommodityClass > * _CommodityClassManager;
 	ClassManager< GeneratorClass > * _GeneratorClassManager;
 	ClassManager< ShipClass > * _ShipClassManager;
+	ClassManager< TurretClass > * _TurretClassManager;
 	ClassManager< WeaponClass > * _WeaponClassManager;
 };
 
@@ -74,6 +77,11 @@ inline ClassManager< GeneratorClass > * ObjectFactory::GetGeneratorClassManager(
 inline ClassManager< ShipClass > * ObjectFactory::GetShipClassManager(void)
 {
 	return _ShipClassManager;
+}
+
+inline ClassManager< TurretClass > * ObjectFactory::GetTurretClassManager(void)
+{
+	return _TurretClassManager;
 }
 
 inline ClassManager< WeaponClass > * ObjectFactory::GetWeaponClassManager(void)

@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2007  Hagen Möbius
+ * Copyright (C) 2015  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,8 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef WEAPON_CLASS_H
-#define WEAPON_CLASS_H
+#ifndef TURRET_CLASS_H
+#define TURRET_CLASS_H
 
 #include <string>
 
@@ -35,27 +35,27 @@ namespace Graphics
 	class Model;
 }
 
-class WeaponClass
+class TurretClass
 {
 public:
 	// constructor
-	WeaponClass(const std::string & Identifier);
+	TurretClass(const std::string & Identifier);
 	// destructor
-	~WeaponClass(void);
+	~TurretClass(void);
 	// getters
 	float GetEnergyUsagePerShot(void) const;
 	const std::string & GetIdentifier(void) const;
 	const std::string & GetName(void) const;
 	const Quaternion & GetOrientation(void) const;
+	float GetReloadTime(void) const;
 	const Vector3f & GetShotExitPosition(void) const;
 	float GetShotExitSpeed(void) const;
 	float GetShotDamage(void) const;
 	float GetShotLifeTime(void) const;
 	const VisualizationPrototype * GetShotVisualizationPrototype(void) const;
-	float GetReloadTime(void) const;
 	const std::string & GetSlotClassIdentifier(void) const;
 	unsigned_numeric GetSpaceRequirement(void) const;
-	const VisualizationPrototype * GetWeaponVisualizationPrototype(void) const;
+	const VisualizationPrototype * GetTurretVisualizationPrototype(void) const;
 	// setters
 	void SetEnergyUsagePerShot(float EnergyUsagePerShot);
 	void SetName(const std::string & Name);
@@ -68,7 +68,7 @@ public:
 	void SetShotVisualizationPrototype(const VisualizationPrototype & ShotVisualizationPrototype);
 	void SetSlotClassIdentifier(const std::string & SlotClassIdentifier);
 	void SetSpaceRequirement(unsigned_numeric SpaceRequirement);
-	void SetWeaponVisualizationPrototype(const VisualizationPrototype & WeaponVisualizationPrototype);
+	void SetTurretVisualizationPrototype(const VisualizationPrototype & TurretVisualizationPrototype);
 private:
 	float _EnergyUsagePerShot;
 	std::string _Identifier;
@@ -76,126 +76,126 @@ private:
 	std::string _SlotClassIdentifier;
 	Quaternion _Orientation;
 	float _ReloadTime;
+	float _ShotDamage;
 	Vector3f _ShotExitPosition;
 	float _ShotExitSpeed;
-	float _ShotDamage;
 	float _ShotLifeTime;
 	VisualizationPrototype * _ShotVisualizationPrototype;
 	unsigned_numeric _SpaceRequirement;
-	VisualizationPrototype * _WeaponVisualizationPrototype;
+	VisualizationPrototype * _TurretVisualizationPrototype;
 };
 
-inline float WeaponClass::GetEnergyUsagePerShot(void) const
+inline float TurretClass::GetEnergyUsagePerShot(void) const
 {
 	return _EnergyUsagePerShot;
 }
 
-inline const std::string & WeaponClass::GetIdentifier(void) const
+inline const std::string & TurretClass::GetIdentifier(void) const
 {
 	return _Identifier;
 }
 
-inline const std::string & WeaponClass::GetName(void) const
+inline const std::string & TurretClass::GetName(void) const
 {
 	return _Name;
 }
 
-inline const Vector3f & WeaponClass::GetShotExitPosition(void) const
-{
-	return _ShotExitPosition;
-}
-
-inline const Quaternion & WeaponClass::GetOrientation(void) const
+inline const Quaternion & TurretClass::GetOrientation(void) const
 {
 	return _Orientation;
 }
 
-inline float WeaponClass::GetShotExitSpeed(void) const
-{
-	return _ShotExitSpeed;
-}
-
-inline float WeaponClass::GetShotDamage(void) const
-{
-	return _ShotDamage;
-}
-
-inline float WeaponClass::GetShotLifeTime(void) const
-{
-	return _ShotLifeTime;
-}
-
-inline const VisualizationPrototype * WeaponClass::GetShotVisualizationPrototype(void) const
-{
-	return _ShotVisualizationPrototype;
-}
-
-inline float WeaponClass::GetReloadTime(void) const
+inline float TurretClass::GetReloadTime(void) const
 {
 	return _ReloadTime;
 }
 
-inline const std::string & WeaponClass::GetSlotClassIdentifier(void) const
+inline float TurretClass::GetShotDamage(void) const
+{
+	return _ShotDamage;
+}
+
+inline const Vector3f & TurretClass::GetShotExitPosition(void) const
+{
+	return _ShotExitPosition;
+}
+
+inline float TurretClass::GetShotExitSpeed(void) const
+{
+	return _ShotExitSpeed;
+}
+
+inline float TurretClass::GetShotLifeTime(void) const
+{
+	return _ShotLifeTime;
+}
+
+inline const VisualizationPrototype * TurretClass::GetShotVisualizationPrototype(void) const
+{
+	return _ShotVisualizationPrototype;
+}
+
+inline const std::string & TurretClass::GetSlotClassIdentifier(void) const
 {
 	return _SlotClassIdentifier;
 }
 
-inline unsigned_numeric WeaponClass::GetSpaceRequirement(void) const
+inline unsigned_numeric TurretClass::GetSpaceRequirement(void) const
 {
 	return _SpaceRequirement;
 }
 
-inline const VisualizationPrototype * WeaponClass::GetWeaponVisualizationPrototype(void) const
+inline const VisualizationPrototype * TurretClass::GetTurretVisualizationPrototype(void) const
 {
-	return _WeaponVisualizationPrototype;
+	return _TurretVisualizationPrototype;
 }
 
-inline void WeaponClass::SetEnergyUsagePerShot(float EnergyUsagePerShot)
+inline void TurretClass::SetEnergyUsagePerShot(float EnergyUsagePerShot)
 {
 	_EnergyUsagePerShot = EnergyUsagePerShot;
 }
 
-inline void WeaponClass::SetName(const std::string & Name)
+inline void TurretClass::SetName(const std::string & Name)
 {
 	_Name = Name;
 }
 
-inline void WeaponClass::SetOrientation(const Quaternion & Orientation)
+inline void TurretClass::SetOrientation(const Quaternion & Orientation)
 {
 	_Orientation = Orientation;
 }
 
-inline void WeaponClass::SetReloadTime(float ReloadTime)
+inline void TurretClass::SetReloadTime(float ReloadTime)
 {
 	_ReloadTime = ReloadTime;
 }
 
-inline void WeaponClass::SetShotExitPosition(const Vector3f & ShotExitPosition)
+inline void TurretClass::SetShotExitPosition(const Vector3f & ShotExitPosition)
 {
 	_ShotExitPosition = ShotExitPosition;
 }
 
-inline void WeaponClass::SetShotExitSpeed(float ShotExitSpeed)
+inline void TurretClass::SetShotExitSpeed(float ShotExitSpeed)
 {
 	_ShotExitSpeed = ShotExitSpeed;
 }
 
-inline void WeaponClass::SetShotDamage(float ShotDamage)
+inline void TurretClass::SetShotDamage(float ShotDamage)
 {
 	_ShotDamage = ShotDamage;
 }
 
-inline void WeaponClass::SetShotLifeTime(float ShotLifeTime)
+inline void TurretClass::SetShotLifeTime(float ShotLifeTime)
 {
 	_ShotLifeTime = ShotLifeTime;
 }
 
-inline void WeaponClass::SetSlotClassIdentifier(const std::string & SlotClassIdentifier)
+inline void TurretClass::SetSlotClassIdentifier(const std::string & SlotClassIdentifier)
 {
 	_SlotClassIdentifier = SlotClassIdentifier;
 }
 
-inline void WeaponClass::SetSpaceRequirement(unsigned_numeric SpaceRequirement)
+inline void TurretClass::SetSpaceRequirement(unsigned_numeric SpaceRequirement)
 {
 	_SpaceRequirement = SpaceRequirement;
 }

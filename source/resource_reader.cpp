@@ -63,6 +63,7 @@
 #include "slot_class.h"
 #include "star.h"
 #include "system.h"
+#include "turret_class.h"
 #include "visualization_prototype.h"
 #include "weapon_class.h"
 
@@ -83,6 +84,7 @@ static void ReadSlotClass(Arxx::Reference & Reference, ClassManager< SlotClass >
 static void ReadSystem(Arxx::Reference & Reference, ClassManager< AssetClass > * AssetClassManager);
 static void ReadSystemLink(Arxx::Reference & Reference);
 static void ReadTexture(Arxx::Reference & Reference);
+static void ReadTurretClass(Arxx::Reference & Reference, ClassManager< TurretClass > * TurretClassManager);
 static void ReadWeaponClass(Arxx::Reference & Reference, ClassManager< WeaponClass > * WeaponClassManager);
 
 static void MakeItemAvailable(Arxx::Item * Item)
@@ -247,6 +249,11 @@ void ResourceReader::ReadSystemLinks(void)
 void ResourceReader::ReadTextures(void)
 {
 	_ReadItems("/Textures", ReadTexture);
+}
+
+void ResourceReader::ReadTurretClasses(ClassManager< TurretClass > * TurretClassManager)
+{
+	_ReadItems("/Turret Classes", std::bind(ReadTurretClass, std::placeholders::_1, TurretClassManager));
 }
 
 void ResourceReader::ReadWeaponClasses(ClassManager< WeaponClass > * WeaponClassManager)
@@ -996,6 +1003,59 @@ static void ReadTexture(Arxx::Reference & Reference)
 		throw std::runtime_error("Could not create texture '" + Identifier + "'.");
 	}
 	Texture->SetData(Width, Height, Format, Reader.GetBuffer().GetBegin() + Reader.stGetPosition());
+}
+
+static void ReadTurretClass(Arxx::Reference & Reference, ClassManager< TurretClass > * TurretClassManager)
+{
+	Arxx::Item * Item(Resolve(Reference));
+	
+	if(Item->GetType() != DATA_TYPE_TURRET_CLASS)
+	{
+		throw std::runtime_error("Item type for turret class '" + Item->GetName() + "' should be '" + to_string_cast(DATA_TYPE_TURRET_CLASS) + "' not '" + to_string_cast(Item->GetType()) + "'.");
+	}
+	if(Item->GetSubType() != 0)
+	{
+		throw std::runtime_error("Item sub type for turret class '" + Item->GetName() + "' should be '0' not '" + to_string_cast(Item->GetSubType()) + "'.");
+	}
+	
+	Arxx::BufferReader Reader(*Item);
+	std::string Identifier;
+	
+	Reader >> Identifier;
+	
+	auto NewTurretClass(TurretClassManager->Create(Identifier));
+	
+	if(NewTurretClass == nullptr)
+	{
+		throw std::runtime_error("Could not create turret class '" + Identifier + "'.");
+	}
+	
+	std::string Name;
+	VisualizationPrototype TurretVisualizationPrototype;
+	std::string SlotClassIdentifier;
+	Quaternion Orientation;
+	float ReloadTime;
+	Arxx::u4byte SpaceRequirement;
+	float EnergyUsagePerShot;
+	Vector3f ShotExitPosition;
+	float ShotExitSpeed;
+	float ShotDamage;
+	float ShotLifeTime;
+	VisualizationPrototype ShotVisualizationPrototype;
+	
+	Reader >> Name >> TurretVisualizationPrototype >> SlotClassIdentifier >> Orientation >> ReloadTime >> SpaceRequirement >> EnergyUsagePerShot >> ShotExitPosition >> ShotExitSpeed >> ShotDamage >> ShotLifeTime >> ShotVisualizationPrototype;
+	NewTurretClass->SetName(Name);
+	NewTurretClass->SetTurretVisualizationPrototype(TurretVisualizationPrototype);
+	NewTurretClass->SetSlotClassIdentifier(SlotClassIdentifier);
+	NewTurretClass->SetOrientation(Orientation);
+	NewTurretClass->SetReloadTime(ReloadTime);
+	NewTurretClass->SetSpaceRequirement(static_cast< unsigned_numeric >(SpaceRequirement));
+	NewTurretClass->SetEnergyUsagePerShot(EnergyUsagePerShot);
+	NewTurretClass->SetShotExitPosition(ShotExitPosition);
+	NewTurretClass->SetShotExitSpeed(ShotExitSpeed);
+	NewTurretClass->SetShotDamage(ShotDamage);
+	NewTurretClass->SetShotLifeTime(ShotLifeTime);
+	NewTurretClass->SetShotVisualizationPrototype(ShotVisualizationPrototype);
 }
 
 static void ReadWeaponClass(Arxx::Reference & Reference, ClassManager< WeaponClass > * WeaponClassManager)

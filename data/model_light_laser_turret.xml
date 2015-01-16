@@ -1,0 +1,9 @@
+<model>
+	<identifier>light_laser_turret</identifier>
+	<mesh-parts>
+		<mesh-part>
+			<part-identifier>light_laser</part-identifier>
+			<mesh-identifier>light_laser</mesh-identifier>
+		</mesh-part>
+	</mesh-parts>
+</model>

@@ -234,6 +234,18 @@
 		<bytes identifier="data"/>
 	</texture>
 	
+	<turret-class type="22" sub-type="0">
+		<string identifier="identifier"/>
+		<string identifier="name"/>
+		<visualization identifier="visualization"/>
+		<string identifier="slot-class-identifier"/>
+		<quaternion identifier="orientation"/>
+		<float identifier="reload-time"/>
+		<u4byte identifier="space-requirement"/>
+		<float identifier="energy-usage-per-shot"/>
+		<particle identifier="particle"/>
+	</turret-class>
+	
 	<triangle>
 		<string identifier="identifier"/>
 		<string identifier="name"/>
