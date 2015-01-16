@@ -59,37 +59,45 @@
 Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSystemClassIdentifier);
 
 ObjectFactory::ObjectFactory(void) :
+	_BatteryClassManager(new ClassManager< BatteryClass >()),
 	_WeaponClassManager(new ClassManager< WeaponClass >())
 {
 }
 
 ObjectFactory::~ObjectFactory(void)
 {
+	delete _BatteryClassManager;
+	_BatteryClassManager = nullptr;
 	delete _WeaponClassManager;
 	_WeaponClassManager = nullptr;
 }
 
 Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::string & ClassIdentifier, bool CreateNestedObjects) const
 {
-	Object * Result(0);
+	Object * Result(nullptr);
 	
 	if(TypeIdentifier == "battery")
 	{
-		const BatteryClass * BatteryClass(g_BatteryClassManager->Get(ClassIdentifier));
-		Battery * NewBattery(new Battery());
+		assert(_BatteryClassManager != nullptr);
+		
+		auto BatteryClass(_BatteryClassManager->Get(ClassIdentifier));
+		
+		assert(BatteryClass != nullptr);
+		
+		auto NewBattery(new Battery());
 		
 		// set up type specific things
 		NewBattery->SetEnergy(BatteryClass->GetEnergyCapacity());
 		NewBattery->SetEnergyCapacity(BatteryClass->GetEnergyCapacity());
 		// set up aspects
 		// set up accessory aspect
-		assert(NewBattery->GetAspectAccessory() != 0);
+		assert(NewBattery->GetAspectAccessory() != nullptr);
 		NewBattery->GetAspectAccessory()->SetSlotClassIdentifier(BatteryClass->GetSlotClassIdentifier());
 		// set up name aspect
-		assert(NewBattery->GetAspectName() != 0);
+		assert(NewBattery->GetAspectName() != nullptr);
 		NewBattery->GetAspectName()->SetName(BatteryClass->GetName());
 		// set up physical aspect
-		assert(NewBattery->GetAspectPhysical() != 0);
+		assert(NewBattery->GetAspectPhysical() != nullptr);
 		NewBattery->GetAspectPhysical()->SetSpaceRequirement(BatteryClass->GetSpaceRequirement());
 		Result = NewBattery;
 	}
@@ -261,6 +269,9 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		assert(_WeaponClassManager != nullptr);
 		
 		auto WeaponClass(_WeaponClassManager->Get(ClassIdentifier));
+		
+		assert(WeaponClass != nullptr);
+		
 		auto NewWeapon(new Weapon());
 		
 		NewWeapon->SetEnergyUsagePerShot(WeaponClass->GetEnergyUsagePerShot());
@@ -269,19 +280,19 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		NewWeapon->SetReloadTime(WeaponClass->GetReloadTime());
 		NewWeapon->SetShotClassIdentifier(WeaponClass->GetIdentifier());
 		// set up accessory aspect
-		assert(NewWeapon->GetAspectAccessory() != 0);
+		assert(NewWeapon->GetAspectAccessory() != nullptr);
 		NewWeapon->GetAspectAccessory()->SetSlotClassIdentifier(WeaponClass->GetSlotClassIdentifier());
 		// set up name aspect
-		assert(NewWeapon->GetAspectName() != 0);
+		assert(NewWeapon->GetAspectName() != nullptr);
 		NewWeapon->GetAspectName()->SetName(WeaponClass->GetName());
 		// set up physical aspect
-		assert(NewWeapon->GetAspectPhysical() != 0);
+		assert(NewWeapon->GetAspectPhysical() != nullptr);
 		NewWeapon->GetAspectPhysical()->SetSpaceRequirement(WeaponClass->GetSpaceRequirement());
 		// set up position aspect
-		assert(NewWeapon->GetAspectPosition() != 0);
+		assert(NewWeapon->GetAspectPosition() != nullptr);
 		NewWeapon->GetAspectPosition()->SetOrientation(WeaponClass->GetOrientation());
 		// set up visualization aspect
-		assert(NewWeapon->GetAspectVisualization() != 0);
+		assert(NewWeapon->GetAspectVisualization() != nullptr);
 		NewWeapon->GetAspectVisualization()->SetVisualizationPrototype(new VisualizationPrototype(WeaponClass->GetVisualizationPrototype()));
 		Result = NewWeapon;
 	}
@@ -299,7 +310,13 @@ unsigned_numeric ObjectFactory::GetSpaceRequirement(const std::string & TypeIden
 {
 	if(TypeIdentifier == "battery")
 	{
-		return g_BatteryClassManager->Get(ClassIdentifier)->GetSpaceRequirement();
+		assert(_BatteryClassManager != nullptr);
+		
+		auto BatteryClass(_BatteryClassManager->Get(ClassIdentifier));
+		
+		assert(BatteryClass != nullptr);
+		
+		return BatteryClass->GetSpaceRequirement();
 	}
 	else if(TypeIdentifier == "commodity")
 	{
@@ -315,7 +332,11 @@ unsigned_numeric ObjectFactory::GetSpaceRequirement(const std::string & TypeIden
 	}
 	else if(TypeIdentifier == "weapon")
 	{
-		return _WeaponClassManager->Get(ClassIdentifier)->GetSpaceRequirement();
+		assert(_WeaponClassManager != nullptr);
+		
+		auto WeaponClass(_WeaponClassManager->Get(ClassIdentifier));
+		
+		return WeaponClass->GetSpaceRequirement();
 	}
 	else
 	{
@@ -327,7 +348,13 @@ const VisualizationPrototype * ObjectFactory::GetVisualizationPrototype(const st
 {
 	if(TypeIdentifier == "battery")
 	{
-		return g_BatteryClassManager->Get(ClassIdentifier)->GetVisualizationPrototype();
+		assert(_BatteryClassManager != nullptr);
+		
+		auto BatteryClass(_BatteryClassManager->Get(ClassIdentifier));
+		
+		assert(BatteryClass != nullptr);
+		
+		return BatteryClass->GetVisualizationPrototype();
 	}
 	else if(TypeIdentifier == "commodity")
 	{
@@ -343,7 +370,11 @@ const VisualizationPrototype * ObjectFactory::GetVisualizationPrototype(const st
 	}
 	else if(TypeIdentifier == "weapon")
 	{
-		return _WeaponClassManager->Get(ClassIdentifier)->GetVisualizationPrototype();
+		assert(_WeaponClassManager != nullptr);
+		
+		auto WeaponClass(_WeaponClassManager->Get(ClassIdentifier));
+		
+		return WeaponClass->GetVisualizationPrototype();
 	}
 	else
 	{

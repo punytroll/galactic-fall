@@ -25,6 +25,7 @@
 template< class Class >
 class ClassManager;
 
+class BatteryClass;
 class Object;
 class VisualizationPrototype;
 class WeaponClass;
@@ -39,10 +40,17 @@ public:
 	Object * Create(const std::string & TypeIdentifier, const std::string & ClassIdentifier, bool CreateNestedObjects) const;
 	unsigned_numeric GetSpaceRequirement(const std::string & TypeIdentifier, const std::string & ClassIdentifier) const;
 	const VisualizationPrototype * GetVisualizationPrototype(const std::string & TypeIdentifier, const std::string & ClassIdentifier) const;
+	ClassManager< BatteryClass > * GetBatteryClassManager(void);
 	ClassManager< WeaponClass > * GetWeaponClassManager(void);
 private:
+	ClassManager< BatteryClass > * _BatteryClassManager;
 	ClassManager< WeaponClass > * _WeaponClassManager;
 };
+
+inline ClassManager< BatteryClass > * ObjectFactory::GetBatteryClassManager(void)
+{
+	return _BatteryClassManager;
+}
 
 inline ClassManager< WeaponClass > * ObjectFactory::GetWeaponClassManager(void)
 {
