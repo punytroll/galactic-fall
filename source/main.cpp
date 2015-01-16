@@ -41,13 +41,11 @@
 
 #include "asset_class.h"
 #include "battery.h"
-#include "battery_class.h"
 #include "character.h"
 #include "class_manager.h"
 #include "color.h"
 #include "command_mind.h"
 #include "commodity.h"
-#include "commodity_class.h"
 #include "draw_text.h"
 #include "faction.h"
 #include "file_handling.h"
@@ -132,7 +130,6 @@
 
 // these objects are exported via globals.h
 ClassManager< AssetClass > * g_AssetClassManager(nullptr);
-ClassManager< CommodityClass > * g_CommodityClassManager(0);
 Galaxy * g_Galaxy(0);
 ClassManager< GeneratorClass > * g_GeneratorClassManager(0);
 Graphics::Engine * g_GraphicsEngine(0);
@@ -3530,7 +3527,6 @@ int main(int argc, char ** argv)
 	g_ShipClassManager = new ClassManager< ShipClass >();
 	g_SlotClassManager = new ClassManager< SlotClass >();
 	g_AssetClassManager = new ClassManager< AssetClass >();
-	g_CommodityClassManager = new ClassManager< CommodityClass >();
 	g_SystemStatistics = new SystemStatistics();
 	g_CharacterObserver = new OutputObserver();
 	
@@ -3540,7 +3536,7 @@ int main(int argc, char ** argv)
 	g_ResourceReader->ReadModels();
 	g_ResourceReader->ReadAssetClasses(g_AssetClassManager);
 	g_ResourceReader->ReadBatteryClasses(g_ObjectFactory->GetBatteryClassManager());
-	g_ResourceReader->ReadCommodityClasses();
+	g_ResourceReader->ReadCommodityClasses(g_ObjectFactory->GetCommodityClassManager());
 	g_ResourceReader->ReadGeneratorClasses();
 	g_ResourceReader->ReadSlotClasses();
 	g_ResourceReader->ReadShipClasses();
@@ -3606,7 +3602,6 @@ int main(int argc, char ** argv)
 	// destroying global variables in reverse order
 	delete g_CharacterObserver;
 	delete g_SystemStatistics;
-	delete g_CommodityClassManager;
 	delete g_AssetClassManager;
 	delete g_SlotClassManager;
 	delete g_ShipClassManager;

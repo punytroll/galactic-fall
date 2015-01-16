@@ -26,6 +26,7 @@ template< class Class >
 class ClassManager;
 
 class BatteryClass;
+class CommodityClass;
 class Object;
 class VisualizationPrototype;
 class WeaponClass;
@@ -41,15 +42,22 @@ public:
 	unsigned_numeric GetSpaceRequirement(const std::string & TypeIdentifier, const std::string & ClassIdentifier) const;
 	const VisualizationPrototype * GetVisualizationPrototype(const std::string & TypeIdentifier, const std::string & ClassIdentifier) const;
 	ClassManager< BatteryClass > * GetBatteryClassManager(void);
+	ClassManager< CommodityClass > * GetCommodityClassManager(void);
 	ClassManager< WeaponClass > * GetWeaponClassManager(void);
 private:
 	ClassManager< BatteryClass > * _BatteryClassManager;
+	ClassManager< CommodityClass > * _CommodityClassManager;
 	ClassManager< WeaponClass > * _WeaponClassManager;
 };
 
 inline ClassManager< BatteryClass > * ObjectFactory::GetBatteryClassManager(void)
 {
 	return _BatteryClassManager;
+}
+
+inline ClassManager< CommodityClass > * ObjectFactory::GetCommodityClassManager(void)
+{
+	return _CommodityClassManager;
 }
 
 inline ClassManager< WeaponClass > * ObjectFactory::GetWeaponClassManager(void)
