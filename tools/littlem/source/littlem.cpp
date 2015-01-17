@@ -429,8 +429,24 @@ class Camera
 public:
 	Camera(void) :
 		_FieldOfViewY(1.0f),
-		_Orientation(Quaternion::CreateIdentity())
+		_Orientation(Quaternion::CreateIdentity()),
+		_Position(Vector3f::CreateZero())
 	{
+	}
+	
+	float GetFieldOfViewY(void) const
+	{
+		return _FieldOfViewY;
+	}
+	
+	const Quaternion & GetOrientation(void) const
+	{
+		return _Orientation;
+	}
+	
+	const Vector3f & GetPosition(void) const
+	{
+		return _Position;
 	}
 	
 	Matrix4f GetProjectionMatrix(void) const
@@ -467,45 +483,6 @@ public:
 		return Matrix4f::CreateTranslation(_Position).Rotate(_Orientation);
 	}
 	
-	void SetView(FixedView View)
-	{
-		if((View == FixedView::Front) && (g_UpAxis == FixedAxis::PositiveZ) && (g_ForwardAxis == FixedAxis::PositiveX))
-		{
-			_Position.Set(4.0f, 0.0f, 0.0f);
-			_Orientation.RotationX(M_PI_2).RotateY(M_PI_2);
-		}
-		else if((View == FixedView::Back) && (g_UpAxis == FixedAxis::PositiveZ) && (g_ForwardAxis == FixedAxis::PositiveX))
-		{
-			_Position.Set(-4.0f, 0.0f, 0.0f);
-			_Orientation.RotationX(M_PI_2).RotateY(-M_PI_2);
-		}
-		else if((View == FixedView::Left) && (g_UpAxis == FixedAxis::PositiveZ) && (g_ForwardAxis == FixedAxis::PositiveX))
-		{
-			_Position.Set(0.0f, -4.0f, 0.0f);
-			_Orientation.RotationX(M_PI_2);
-		}
-		else if((View == FixedView::Right) && (g_UpAxis == FixedAxis::PositiveZ) && (g_ForwardAxis == FixedAxis::PositiveX))
-		{
-			_Position.Set(0.0f, 4.0f, 0.0f);
-			_Orientation.RotationY(M_PI).RotateX(-M_PI_2);
-		}
-		else if((View == FixedView::Top) && (g_UpAxis == FixedAxis::PositiveZ) && (g_ForwardAxis == FixedAxis::PositiveX))
-		{
-			_Position.Set(0.0f, 0.0f, 4.0f);
-			_Orientation.RotationZ(M_PI_2);
-		}
-		else if((View == FixedView::Bottom) && (g_UpAxis == FixedAxis::PositiveZ) && (g_ForwardAxis == FixedAxis::PositiveX))
-		{
-			_Position.Set(0.0f, 0.0f, -4.0f);
-			_Orientation.RotationZ(M_PI_2).RotateY(M_PI);
-		}
-		else
-		{
-			std::cout << "Unknown combination: View=" << GetViewString(View) << ", Up=" << GetAxisString(g_UpAxis) << ", Front=" << GetAxisString(g_ForwardAxis) << std::endl;
-			assert(false);
-		}
-	}
-	
 	void MoveBackward(float Amount)
 	{
                 _Position.Translate(Vector3f::CreateTranslationZ(Amount).Rotate(_Orientation));
@@ -536,6 +513,21 @@ public:
                 _Position.Translate(Vector3f::CreateTranslationY(Amount).Rotate(_Orientation));
 	}
 	
+	void SetFieldOfViewY(float FieldOfViewY)
+	{
+		_FieldOfViewY = FieldOfViewY;
+	}
+	
+	void SetOrientation(const Quaternion & Orientation)
+	{
+		_Orientation = Orientation;
+	}
+	
+	void SetPosition(const Vector3f & Position)
+	{
+		_Position = Position;
+	}
+	
 	void TurnDown(float Amount)
 	{
 		_Orientation.RotateX(-Amount);
@@ -555,7 +547,7 @@ public:
 	{
 		_Orientation.RotateX(Amount);
 	}
-	
+private:
 	float _FieldOfViewY;
 	Quaternion _Orientation;
 	Vector3f _Position;
@@ -569,9 +561,9 @@ public:
 	}
 	
 	CameraDescription(Camera * Camera) :
-		Position(Camera->_Position),
-		Orientation(Camera->_Orientation),
-		FieldOfViewY(Camera->_FieldOfViewY)
+		Position(Camera->GetPosition()),
+		Orientation(Camera->GetOrientation()),
+		FieldOfViewY(Camera->GetFieldOfViewY())
 	{
 	}
 	
@@ -1006,7 +998,7 @@ void vPerformPicking(void)
 	{
 		glLoadName(stCamera);
 		glBegin(GL_POINTS);
-		glVertex3fv(g_Cameras[stCamera]->_Position.GetPointer());
+		glVertex3fv(g_Cameras[stCamera]->GetPosition().GetPointer());
 		glEnd();
 	}
 	glPopName();
@@ -1065,7 +1057,7 @@ void vDisplayModel(void)
 	glBegin(GL_POINTS);
 	for(std::vector< Camera * >::size_type stCamera = 0; stCamera < g_Cameras.size(); ++stCamera)
 	{
-		glVertex3fv(g_Cameras[stCamera]->_Position.GetPointer());
+		glVertex3fv(g_Cameras[stCamera]->GetPosition().GetPointer());
 	}
 	glEnd();
 	// now draw selected stuff
@@ -1117,7 +1109,7 @@ void vDisplayModel(void)
 	{
 		glDisable(GL_DEPTH_TEST);
 		
-		auto Matrix(Matrix4f::CreateRotation(g_CurrentCamera->_Orientation));
+		auto Matrix(Matrix4f::CreateRotation(g_CurrentCamera->GetOrientation()));
 		
 		for(auto Point : g_SelectedPoints)
 		{
@@ -1139,7 +1131,7 @@ void vDisplayModel(void)
 	{
 		glPushMatrix();
 		glTranslatef(g_pSelectedLight->GetX(), g_pSelectedLight->GetY(), g_pSelectedLight->GetZ());
-		glMultMatrixf(Matrix4f::CreateRotation(g_CurrentCamera->_Orientation).GetPointer());
+		glMultMatrixf(Matrix4f::CreateRotation(g_CurrentCamera->GetOrientation()).GetPointer());
 		glBegin(GL_POINTS);
 		glColor3f(1.0f, 1.0f, 0.0f);
 		glVertex3f(-0.05f, -0.05f, 0.0f);
@@ -1152,9 +1144,9 @@ void vDisplayModel(void)
 	if(g_SelectedCamera != 0)
 	{
 		glPushMatrix();
-		glTranslatef(g_SelectedCamera->_Position[0], g_SelectedCamera->_Position[1], g_SelectedCamera->_Position[2]);
+		glTranslatef(g_SelectedCamera->GetPosition()[0], g_SelectedCamera->GetPosition()[1], g_SelectedCamera->GetPosition()[2]);
 		glPushMatrix();
-		glMultMatrixf(Matrix4f::CreateRotation(g_CurrentCamera->_Orientation).GetPointer());
+		glMultMatrixf(Matrix4f::CreateRotation(g_CurrentCamera->GetOrientation()).GetPointer());
 		glBegin(GL_POINTS);
 		glColor3f(1.0f, 1.0f, 0.0f);
 		glVertex3f(-0.05f, -0.05f, 0.0f);
@@ -1163,7 +1155,7 @@ void vDisplayModel(void)
 		glVertex3f(-0.05f, 0.05f, 0.0f);
 		glEnd();
 		glPopMatrix();
-		glMultMatrixf(Matrix4f::CreateRotation(g_SelectedCamera->_Orientation).GetPointer());
+		glMultMatrixf(Matrix4f::CreateRotation(g_SelectedCamera->GetOrientation()).GetPointer());
 		glColor3f(0.2f, 0.8f, 0.5f);
 		glBegin(GL_LINES);
 		glVertex3f(0.0f, 0.0f, 0.0f);
@@ -1230,11 +1222,11 @@ void vDisplayModel(void)
 	{
 		glColor3f(0.0f, 1.0f, 0.5f);
 		glBegin(GL_POINTS);
-		glVertex3fv(g_pHoveredCamera->_Position.GetPointer());
+		glVertex3fv(g_pHoveredCamera->GetPosition().GetPointer());
 		glEnd();
 		glPushMatrix();
-		glTranslatef(g_pHoveredCamera->_Position[0], g_pHoveredCamera->_Position[1], g_pHoveredCamera->_Position[2]);
-		glMultMatrixf(Matrix4f::CreateRotation(g_pHoveredCamera->_Orientation.Conjugated()).GetPointer());
+		glTranslatef(g_pHoveredCamera->GetPosition()[0], g_pHoveredCamera->GetPosition()[1], g_pHoveredCamera->GetPosition()[2]);
+		glMultMatrixf(Matrix4f::CreateRotation(g_pHoveredCamera->GetOrientation().Conjugated()).GetPointer());
 		glColor3f(0.0f, 0.5f, 0.5f);
 		glBegin(GL_LINES);
 		glVertex3f(0.0f, 0.0f, 0.0f);
@@ -1649,7 +1641,7 @@ Vector3f GetAdjustedStepInView(const Vector3f & Position, FixedDirection Directi
 	}
 	assert(g_CurrentCamera != nullptr);
 	
-	auto Result(Position + GetDirectionVector(Direction).Scaled(Delta).Rotate(g_CurrentCamera->_Orientation));
+	auto Result(Position + GetDirectionVector(Direction).Scaled(Delta).Rotate(g_CurrentCamera->GetOrientation()));
 	
 	if(g_Snapping == true)
 	{
@@ -2090,7 +2082,7 @@ public:
 				{
 					if(g_SelectedCamera != nullptr)
 					{
-						g_SelectedCamera->_Position = GetAdjustedStepInView(g_SelectedCamera->_Position, FixedDirection::Right);
+						g_SelectedCamera->SetPosition(GetAdjustedStepInView(g_SelectedCamera->GetPosition(), FixedDirection::Right));
 					}
 					else if(g_CurrentCamera != nullptr)
 					{
@@ -2114,7 +2106,7 @@ public:
 				{
 					if(g_SelectedCamera != nullptr)
 					{
-						g_SelectedCamera->_Position = GetAdjustedStepInView(g_SelectedCamera->_Position, FixedDirection::Left);
+						g_SelectedCamera->SetPosition(GetAdjustedStepInView(g_SelectedCamera->GetPosition(), FixedDirection::Left));
 					}
 					else if(g_CurrentCamera != nullptr)
 					{
@@ -2138,7 +2130,7 @@ public:
 				{
 					if(g_SelectedCamera != nullptr)
 					{
-						g_SelectedCamera->_Position = GetAdjustedStepInView(g_SelectedCamera->_Position, FixedDirection::Up);
+						g_SelectedCamera->SetPosition(GetAdjustedStepInView(g_SelectedCamera->GetPosition(), FixedDirection::Up));
 					}
 					else if(g_CurrentCamera != nullptr)
 					{
@@ -2162,7 +2154,7 @@ public:
 				{
 					if(g_SelectedCamera != nullptr)
 					{
-						g_SelectedCamera->_Position = GetAdjustedStepInView(g_SelectedCamera->_Position, FixedDirection::Down);
+						g_SelectedCamera->SetPosition(GetAdjustedStepInView(g_SelectedCamera->GetPosition(), FixedDirection::Down));
 					}
 					else if(g_CurrentCamera != nullptr)
 					{
@@ -2186,7 +2178,7 @@ public:
 				{
 					if(g_SelectedCamera != nullptr)
 					{
-						g_SelectedCamera->_Position = GetAdjustedStepInView(g_SelectedCamera->_Position, FixedDirection::Backward);
+						g_SelectedCamera->SetPosition(GetAdjustedStepInView(g_SelectedCamera->GetPosition(), FixedDirection::Backward));
 					}
 					else if(g_CurrentCamera != nullptr)
 					{
@@ -2203,7 +2195,7 @@ public:
 				{
 					if(g_SelectedCamera != nullptr)
 					{
-						g_SelectedCamera->_Position = GetAdjustedStepInView(g_SelectedCamera->_Position, FixedDirection::Forward);
+						g_SelectedCamera->SetPosition(GetAdjustedStepInView(g_SelectedCamera->GetPosition(), FixedDirection::Forward));
 					}
 					else if(g_CurrentCamera != nullptr)
 					{
@@ -2218,11 +2210,11 @@ public:
 			{
 				if(g_SelectedCamera != 0)
 				{
-					g_SelectedCamera->_FieldOfViewY += 1.0f;
+					g_SelectedCamera->SetFieldOfViewY(g_SelectedCamera->GetFieldOfViewY() + 1.0f);
 				}
 				else if(g_CurrentCamera != 0)
 				{
-					g_CurrentCamera->_FieldOfViewY += 1.0f;
+					g_CurrentCamera->SetFieldOfViewY(g_SelectedCamera->GetFieldOfViewY() + 1.0f);
 					vSetupProjection();
 				}
 				
@@ -2232,11 +2224,11 @@ public:
 			{
 				if(g_SelectedCamera != 0)
 				{
-					g_SelectedCamera->_FieldOfViewY -= 1.0f;
+					g_SelectedCamera->SetFieldOfViewY(g_SelectedCamera->GetFieldOfViewY() - 1.0f);
 				}
 				else if(g_CurrentCamera != 0)
 				{
-					g_CurrentCamera->_FieldOfViewY -= 1.0f;
+					g_CurrentCamera->SetFieldOfViewY(g_SelectedCamera->GetFieldOfViewY() - 1.0f);
 					vSetupProjection();
 				}
 				
@@ -2427,9 +2419,9 @@ public:
 					{
 						auto NewCamera(new Camera());
 						
-						NewCamera->_Position = CameraDescription.Position;
-						NewCamera->_Orientation = CameraDescription.Orientation;
-						NewCamera->_FieldOfViewY = CameraDescription.FieldOfViewY;
+						NewCamera->SetPosition(CameraDescription.Position);
+						NewCamera->SetOrientation(CameraDescription.Orientation);
+						NewCamera->SetFieldOfViewY(CameraDescription.FieldOfViewY);
 						g_Cameras.push_back(NewCamera);
 					}
 					if(g_Cameras.size() > 0)
@@ -2723,78 +2715,153 @@ public:
 			}
 		case 67: // F1
 			{
-				// switch to normalized front view
-				if(g_CurrentCamera != nullptr)
+				if(IsDown == false)
 				{
-					g_CurrentCamera->SetView(FixedView::Front);
-					bKeyAccepted = true;
+					// switch to normalized front view
+					if(g_CurrentCamera != nullptr)
+					{
+						if((g_UpAxis == FixedAxis::PositiveZ) && (g_ForwardAxis == FixedAxis::PositiveX))
+						{
+							g_CurrentCamera->SetOrientation(Quaternion::CreateAsRotationX(M_PI_2).RotateY(M_PI_2));
+							g_CurrentCamera->SetPosition(Vector3f::CreateTranslationX(4.0f));
+							bKeyAccepted = true;
+						}
+						else
+						{
+							std::cout << "Unknown combination: View=Front, Up=" << GetAxisString(g_UpAxis) << ", Front=" << GetAxisString(g_ForwardAxis) << std::endl;
+							assert(false);
+						}
+					}
 				}
 				
 				break;
 			}
 		case 68: // F2
 			{
-				// switch to normalized left view
-				if(g_CurrentCamera != nullptr)
+				if(IsDown == false)
 				{
-					g_CurrentCamera->SetView(FixedView::Left);
-					bKeyAccepted = true;
+					// switch to normalized left view
+					if(g_CurrentCamera != nullptr)
+					{
+						if((g_UpAxis == FixedAxis::PositiveZ) && (g_ForwardAxis == FixedAxis::PositiveX))
+						{
+							g_CurrentCamera->SetOrientation(Quaternion::CreateAsRotationX(M_PI_2));
+							g_CurrentCamera->SetPosition(Vector3f::CreateTranslationY(-4.0f));
+							bKeyAccepted = true;
+						}
+						else
+						{
+							std::cout << "Unknown combination: View=Left, Up=" << GetAxisString(g_UpAxis) << ", Front=" << GetAxisString(g_ForwardAxis) << std::endl;
+							assert(false);
+						}
+					}
 				}
 				
 				break;
 			}
 		case 69: // F3
 			{
-				// switch to normalized right view
-				if(g_CurrentCamera != nullptr)
+				if(IsDown == false)
 				{
-					g_CurrentCamera->SetView(FixedView::Right);
-					bKeyAccepted = true;
+					// switch to normalized right view
+					if(g_CurrentCamera != nullptr)
+					{
+						if((g_UpAxis == FixedAxis::PositiveZ) && (g_ForwardAxis == FixedAxis::PositiveX))
+						{
+							g_CurrentCamera->SetOrientation(Quaternion::CreateAsRotationY(M_PI).RotateX(-M_PI_2));
+							g_CurrentCamera->SetPosition(Vector3f::CreateTranslationY(4.0f));
+							bKeyAccepted = true;
+						}
+						else
+						{
+							std::cout << "Unknown combination: View=Right, Up=" << GetAxisString(g_UpAxis) << ", Front=" << GetAxisString(g_ForwardAxis) << std::endl;
+							assert(false);
+						}
+					}
 				}
 				
 				break;
 			}
 		case 70: // F4
 			{
-				// switch to normalized back view
-				if(g_CurrentCamera != nullptr)
+				if(IsDown == false)
 				{
-					g_CurrentCamera->SetView(FixedView::Back);
-					bKeyAccepted = true;
+					// switch to normalized back view
+					if(g_CurrentCamera != nullptr)
+					{
+						if((g_UpAxis == FixedAxis::PositiveZ) && (g_ForwardAxis == FixedAxis::PositiveX))
+						{
+							g_CurrentCamera->SetOrientation(Quaternion::CreateAsRotationX(M_PI_2).RotateY(-M_PI_2));
+							g_CurrentCamera->SetPosition(Vector3f::CreateTranslationX(-4.0f));
+							bKeyAccepted = true;
+						}
+						else
+						{
+							std::cout << "Unknown combination: View=Back, Up=" << GetAxisString(g_UpAxis) << ", Front=" << GetAxisString(g_ForwardAxis) << std::endl;
+							assert(false);
+						}
+					}
 				}
 				
 				break;
 			}
 		case 71: // F5
 			{
-				// switch to normalized top view
-				if(g_CurrentCamera != nullptr)
+				if(IsDown == false)
 				{
-					g_CurrentCamera->SetView(FixedView::Top);
-					bKeyAccepted = true;
+					// switch to normalized top view
+					if(g_CurrentCamera != nullptr)
+					{
+						if((g_UpAxis == FixedAxis::PositiveZ) && (g_ForwardAxis == FixedAxis::PositiveX))
+						{
+							g_CurrentCamera->SetOrientation(Quaternion::CreateAsRotationZ(M_PI_2));
+							g_CurrentCamera->SetPosition(Vector3f::CreateTranslationZ(4.0f));
+							bKeyAccepted = true;
+						}
+						else
+						{
+							std::cout << "Unknown combination: View=Top, Up=" << GetAxisString(g_UpAxis) << ", Front=" << GetAxisString(g_ForwardAxis) << std::endl;
+							assert(false);
+						}
+					}
 				}
 				
 				break;
 			}
 		case 72: // F6
 			{
-				// switch to normalized bottom view
-				if(g_CurrentCamera != nullptr)
+				if(IsDown == false)
 				{
-					g_CurrentCamera->SetView(FixedView::Bottom);
-					bKeyAccepted = true;
+					// switch to normalized bottom view
+					if(g_CurrentCamera != nullptr)
+					{
+						if((g_UpAxis == FixedAxis::PositiveZ) && (g_ForwardAxis == FixedAxis::PositiveX))
+						{
+							g_CurrentCamera->SetOrientation(Quaternion::CreateAsRotationZ(M_PI_2).RotateY(M_PI));
+							g_CurrentCamera->SetPosition(Vector3f::CreateTranslationZ(-4.0f));
+							bKeyAccepted = true;
+						}
+						else
+						{
+							std::cout << "Unknown combination: View=Bottom, Up=" << GetAxisString(g_UpAxis) << ", Front=" << GetAxisString(g_ForwardAxis) << std::endl;
+							assert(false);
+						}
+					}
 				}
 				
 				break;
 			}
 		case 73: // F7
 			{
-				// switch to normalized view
-				if(g_CurrentCamera != nullptr)
+				if(IsDown == false)
 				{
-					g_CurrentCamera->_Orientation.Identity();
-					g_CurrentCamera->_Position = Vector3f::CreateTranslationZ(4.0f);
-					bKeyAccepted = true;
+					// switch to normalized view
+					if(g_CurrentCamera != nullptr)
+					{
+						g_CurrentCamera->SetPosition(Vector3f::CreateTranslationZ(4.0f));
+						g_CurrentCamera->SetOrientation(Quaternion::CreateIdentity());
+						bKeyAccepted = true;
+					}
 				}
 				
 				break;
@@ -2984,8 +3051,7 @@ void MouseMotion(const Vector2f MousePosition)
 	g_iLastMotionY = MousePosition[1];
 	if((g_MouseButton == MouseButton::Middle) && (g_CurrentCamera != 0))
 	{
-		g_CurrentCamera->_Orientation.RotateX(-0.005 * iDeltaY);
-		g_CurrentCamera->_Orientation.RotateY(-0.005 * iDeltaX);
+		g_CurrentCamera->SetOrientation(g_CurrentCamera->GetOrientation().RotatedX(-0.005 * iDeltaY).RotateY(-0.005 * iDeltaX));
 	}
 }
 
@@ -3301,7 +3367,11 @@ void InitializeOpenGL(void)
 	
 	g_Cameras.push_back(pCamera);
 	g_CurrentCamera = pCamera;
-	g_CurrentCamera->SetView(FixedView::Front);
+	if((g_UpAxis == FixedAxis::PositiveZ) && (g_ForwardAxis == FixedAxis::PositiveX))
+	{
+		g_CurrentCamera->SetOrientation(Quaternion::CreateAsRotationX(M_PI_2).RotateY(M_PI_2));
+		g_CurrentCamera->SetPosition(Vector3f::CreateTranslationX(4.0f));
+	}
 }
 
 void ProcessEvents(void)
