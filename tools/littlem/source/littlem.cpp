@@ -181,13 +181,51 @@ enum class MouseButton
 	WheelUp
 };
 
+class Keyboard
+{
+public:
+	Keyboard(void)
+	{
+		for(auto & IsDown : _Keys)
+		{
+			IsDown = false;
+		}
+	}
+	
+	bool IsAnyShiftActive(void) const
+	{
+		return (_Keys[50] == true) || (_Keys[62] == true);
+	}
+
+	bool IsAnyControlActive(void) const
+	{
+		return (_Keys[37] == true) || (_Keys[105] == true);
+	}
+
+	bool IsAltActive(void) const
+	{
+		return _Keys[64] == true;
+	}
+	
+	bool IsNoModifierKeyActive(void) const
+	{
+		return (_Keys[50] == false) && (_Keys[62] == false) && (_Keys[37] == false) && (_Keys[105] == false) && (_Keys[64] == false);
+	}
+	
+	void SetKey(int KeyCode, bool IsDown)
+	{
+		assert((KeyCode >= 0) && (KeyCode < 256));
+		_Keys[KeyCode] = IsDown;
+	}
+private:
+	bool _Keys[256];
+};
+
 FixedAxis g_UpAxis;
 FixedAxis g_ForwardAxis;
 float g_Width(800.0f);
 float g_Height(800.0f);
-bool g_AltActive(false);
-bool g_ShiftActive(false);
-bool g_ControlActive(false);
+Keyboard g_Keyboard;
 
 #include "point.h"
 #include "triangle.h"
@@ -692,15 +730,13 @@ std::vector< Triangle * > g_SelectedTriangles;
 Point * g_pHoveredPoint = 0;
 Triangle * g_pHoveredTriangle = 0;
 Light * g_pHoveredLight = 0;
-Light * g_pSelectedLight = 0;
+Light * g_SelectedLight = 0;
 std::vector< Light * > g_Lights;
 std::vector< Light * > g_EnabledLights;
 std::vector< Camera * > g_Cameras;
 Camera * g_pHoveredCamera = 0;
 Camera * g_SelectedCamera = 0;
 Camera * g_CurrentCamera = 0;
-int g_iLastMotionX = -1;
-int g_iLastMotionY = -1;
 bool g_bMoved = false;
 bool g_Quit(false);
 GLuint g_puiSelectionBuffer[1024];
@@ -710,6 +746,7 @@ MouseButton g_MouseButton(MouseButton::Undefined);
 std::deque< int > g_FreeLights;
 UserInterface g_UserInterface;
 Vector2f g_MousePosition;
+Vector2f g_LastMousePosition;
 
 std::vector< std::string > SplitString(const std::string & String, char Delimiter)
 {
@@ -1138,10 +1175,10 @@ void vDisplayModel(void)
 		}
 		glEnable(GL_DEPTH_TEST);
 	}
-	if(g_pSelectedLight != 0)
+	if(g_SelectedLight != 0)
 	{
 		glPushMatrix();
-		glTranslatef(g_pSelectedLight->GetX(), g_pSelectedLight->GetY(), g_pSelectedLight->GetZ());
+		glTranslatef(g_SelectedLight->GetX(), g_SelectedLight->GetY(), g_SelectedLight->GetZ());
 		glMultMatrixf(Matrix4f::CreateRotation(g_CurrentCamera->GetOrientation()).GetPointer());
 		glBegin(GL_POINTS);
 		glColor3f(1.0f, 1.0f, 0.0f);
@@ -1403,9 +1440,9 @@ void vDeleteLight(std::vector< Light * >::iterator iLight)
 	{
 		g_pHoveredLight = 0;
 	}
-	if(pLight == g_pSelectedLight)
+	if(pLight == g_SelectedLight)
 	{
-		g_pSelectedLight = 0;
+		g_SelectedLight = 0;
 	}
 	pLight->vDisable();
 	g_Lights.erase(iLight);
@@ -1763,7 +1800,7 @@ public:
 			{
 				if(IsDown == true)
 				{
-					if(g_ShiftActive == true)
+					if(g_Keyboard.IsAnyShiftActive() == true)
 					{
 						// create new point at coordinates (0.0, 0.0, 0.0)
 						g_Points.push_back(new Point(0.0f, 0.0f, 0.0f));
@@ -1780,7 +1817,7 @@ public:
 			}
 		case 28: // T
 			{
-				if(IsDown == true)
+				if((IsDown == true) && (g_Keyboard.IsNoModifierKeyActive() == true))
 				{
 					// select all triangles which contain the selected points
 					if(g_SelectedPoints.size() > 0)
@@ -1789,11 +1826,11 @@ public:
 						
 						std::vector< Triangle * > TrianglesToSelect;
 						
-						for(std::vector< Point * >::size_type stPoint = 0; stPoint < g_SelectedPoints.size(); ++stPoint)
+						for(auto Point : g_SelectedPoints)
 						{
-							for(std::vector< TrianglePoint * >::size_type stTrianglePoint = 0; stTrianglePoint < g_SelectedPoints[stPoint]->m_TrianglePoints.size(); ++stTrianglePoint)
+							for(auto TrianglePoint : Point->GetTrianglePoints())
 							{
-								copy(g_SelectedPoints[stPoint]->m_TrianglePoints[stTrianglePoint]->m_Triangles.begin(), g_SelectedPoints[stPoint]->m_TrianglePoints[stTrianglePoint]->m_Triangles.end(), back_inserter(TrianglesToSelect));
+								std::copy(TrianglePoint->GetTriangles().begin(), TrianglePoint->GetTriangles().end(), back_inserter(TrianglesToSelect));
 							}
 						}
 						std::sort(TrianglesToSelect.begin(), TrianglesToSelect.end());
@@ -1966,23 +2003,27 @@ public:
 				
 				break;
 			}
-		case 28: // T
+		case 33: // P
 			{
-				if(g_SelectedTriangles.size() > 0)
+				if((IsDown == true) && (g_Keyboard.IsNoModifierKeyActive() == true))
 				{
-					g_SelectedPoints.clear();
-					
-					std::vector< Point * > PointsToSelect;
-					
-					for(std::vector< Triangle * >::size_type stTriangle = 0; stTriangle < g_SelectedTriangles.size(); ++stTriangle)
+					// select all points on the selected triangles
+					if(g_SelectedTriangles.size() > 0)
 					{
-						PointsToSelect.push_back(g_SelectedTriangles[stTriangle]->pGetPoint(1));
-						PointsToSelect.push_back(g_SelectedTriangles[stTriangle]->pGetPoint(2));
-						PointsToSelect.push_back(g_SelectedTriangles[stTriangle]->pGetPoint(3));
+						g_SelectedPoints.clear();
+						
+						std::vector< Point * > PointsToSelect;
+						
+						for(auto Triangle : g_SelectedTriangles)
+						{
+							PointsToSelect.push_back(Triangle->pGetPoint(1));
+							PointsToSelect.push_back(Triangle->pGetPoint(2));
+							PointsToSelect.push_back(Triangle->pGetPoint(3));
+						}
+						std::sort(PointsToSelect.begin(), PointsToSelect.end());
+						std::unique_copy(PointsToSelect.begin(), PointsToSelect.end(), back_inserter(g_SelectedPoints));
+						bKeyAccepted = true;
 					}
-					std::sort(PointsToSelect.begin(), PointsToSelect.end());
-					std::unique_copy(PointsToSelect.begin(), PointsToSelect.end(), back_inserter(g_SelectedPoints));
-					bKeyAccepted = true;
 				}
 				
 				break;
@@ -2098,7 +2139,7 @@ public:
 					}
 					else if(g_CurrentCamera != nullptr)
 					{
-						if(g_ControlActive == true)
+						if(g_Keyboard.IsAnyControlActive() == true)
 						{
 							g_CurrentCamera->TurnRight(0.02f);
 						}
@@ -2122,7 +2163,7 @@ public:
 					}
 					else if(g_CurrentCamera != nullptr)
 					{
-						if(g_ControlActive == true)
+						if(g_Keyboard.IsAnyControlActive() == true)
 						{
 							g_CurrentCamera->TurnLeft(0.02f);
 						}
@@ -2146,7 +2187,7 @@ public:
 					}
 					else if(g_CurrentCamera != nullptr)
 					{
-						if(g_ControlActive == true)
+						if(g_Keyboard.IsAnyControlActive() == true)
 						{
 							g_CurrentCamera->TurnUp(0.02f);
 						}
@@ -2170,7 +2211,7 @@ public:
 					}
 					else if(g_CurrentCamera != nullptr)
 					{
-						if(g_ControlActive == true)
+						if(g_Keyboard.IsAnyControlActive() == true)
 						{
 							g_CurrentCamera->TurnDown(0.02f);
 						}
@@ -2339,30 +2380,36 @@ public:
 		{
 		case 54: // C
 			{
-				if(g_AltActive == true)
+				if(IsDown == true)
 				{
-					vToggleCullFace();
-				}
-				else if(g_ShiftActive == true)
-				{
-					vSetKeyAcceptor(&m_CameraView);
-					g_CurrentView.vSetString("Camera View");
+					if(g_Keyboard.IsAltActive() == true)
+					{
+						vToggleCullFace();
+					}
+					else if(g_Keyboard.IsAnyShiftActive() == true)
+					{
+						vSetKeyAcceptor(&m_CameraView);
+						g_CurrentView.vSetString("Camera View");
+					}
 				}
 				
 				break;
 			}
 		case 40: // D
 			{
-				if(g_AltActive == true)
+				if(IsDown == true)
 				{
-					vToggleDepthTest();
+					if(g_Keyboard.IsAltActive() == true)
+					{
+						vToggleDepthTest();
+					}
 				}
 				
 				break;
 			}
 		case 26: // E
 			{
-				if(g_AltActive == true)
+				if(g_Keyboard.IsAltActive() == true)
 				{
 					std::cout << "Exporting to mesh.xml." << std::endl;
 					
@@ -2376,7 +2423,7 @@ public:
 			}
 		case 41: // F
 			{
-				if(g_AltActive == true)
+				if(g_Keyboard.IsAltActive() == true)
 				{
 					vToggleFrontFace();
 				}
@@ -2385,7 +2432,7 @@ public:
 			}
 		case 31: // I
 			{
-				if(g_AltActive == true)
+				if(g_Keyboard.IsAltActive() == true)
 				{
 					ImportMesh("mesh.xml");
 				}
@@ -2394,11 +2441,11 @@ public:
 			}
 		case 46: // L
 			{
-				if(g_AltActive == true)
+				if(g_Keyboard.IsAltActive() == true)
 				{
 					vToggleLighting();
 				}
-				else if(g_ShiftActive == true)
+				else if(g_Keyboard.IsAnyShiftActive() == true)
 				{
 					std::cout << "Loading scene.xml." << std::endl;
 					vClearScene();
@@ -2455,7 +2502,7 @@ public:
 			}
 		case 58: // M
 			{
-				if(g_ShiftActive == true)
+				if(g_Keyboard.IsAnyShiftActive() == true)
 				{
 					vSetKeyAcceptor(0);
 					g_CurrentView.vSetString("Model View");
@@ -2465,7 +2512,7 @@ public:
 			}
 		case 33: // P
 			{
-				if(g_ShiftActive == true)
+				if(g_Keyboard.IsAnyShiftActive() == true)
 				{
 					vSetKeyAcceptor(&m_PointView);
 					g_CurrentView.vSetString("Point View");
@@ -2475,14 +2522,14 @@ public:
 			}
 		case 39: // S
 			{
-				if(g_AltActive == true)
+				if(g_Keyboard.IsAltActive() == true)
 				{
 					if(IsDown == true)
 					{
 						vToggleSnapping();
 					}
 				}
-				else if(g_ShiftActive == true)
+				else if(g_Keyboard.IsAnyShiftActive() == true)
 				{
 					if(IsDown == false)
 					{
@@ -2509,7 +2556,7 @@ public:
 			{
 				if(IsDown == false)
 				{
-					if(g_ShiftActive == true)
+					if(g_Keyboard.IsAnyShiftActive() == true)
 					{
 						vSetKeyAcceptor(&m_TriangleView);
 						g_CurrentView.vSetString("Triangle View");
@@ -2522,15 +2569,15 @@ public:
 			{
 				if(IsDown == true)
 				{
-					if(g_pSelectedLight != 0)
+					if(g_SelectedLight != 0)
 					{
-						if(g_pSelectedLight->bIsEnabled() == true)
+						if(g_SelectedLight->bIsEnabled() == true)
 						{
-							g_pSelectedLight->vDisable();
+							g_SelectedLight->vDisable();
 						}
 						else
 						{
-							g_pSelectedLight->vEnable();
+							g_SelectedLight->vEnable();
 						}
 					}
 				}
@@ -2550,9 +2597,9 @@ public:
 			{
 				if(IsDown == false)
 				{
-					if(g_pSelectedLight != 0)
+					if(g_SelectedLight != 0)
 					{
-						vDeleteLight(g_pSelectedLight);
+						vDeleteLight(g_SelectedLight);
 					}
 				}
 				
@@ -2667,9 +2714,9 @@ public:
 			}
 		case 114: // RIGHT
 			{
-				if(g_pSelectedLight != 0)
+				if(g_SelectedLight != 0)
 				{
-					MovePosition(g_pSelectedLight, 0, 0.01);
+					MovePosition(g_SelectedLight, 0, 0.01);
 					bKeyAccepted = true;
 				}
 				
@@ -2677,9 +2724,9 @@ public:
 			}
 		case 113: // LEFT
 			{
-				if(g_pSelectedLight != 0)
+				if(g_SelectedLight != 0)
 				{
-					MovePosition(g_pSelectedLight, 0, -0.01);
+					MovePosition(g_SelectedLight, 0, -0.01);
 					bKeyAccepted = true;
 				}
 				
@@ -2687,9 +2734,9 @@ public:
 			}
 		case 111: // UP
 			{
-				if(g_pSelectedLight != 0)
+				if(g_SelectedLight != 0)
 				{
-					MovePosition(g_pSelectedLight, 1, 0.01);
+					MovePosition(g_SelectedLight, 1, 0.01);
 					bKeyAccepted = true;
 				}
 				
@@ -2697,9 +2744,9 @@ public:
 			}
 		case 116: // DOWN
 			{
-				if(g_pSelectedLight != 0)
+				if(g_SelectedLight != 0)
 				{
-					MovePosition(g_pSelectedLight, 1, -0.01);
+					MovePosition(g_SelectedLight, 1, -0.01);
 					bKeyAccepted = true;
 				}
 				
@@ -2707,9 +2754,9 @@ public:
 			}
 		case 117: // PAGE DOWN
 			{
-				if(g_pSelectedLight != 0)
+				if(g_SelectedLight != 0)
 				{
-					MovePosition(g_pSelectedLight, 2, 0.01);
+					MovePosition(g_SelectedLight, 2, 0.01);
 					bKeyAccepted = true;
 				}
 				
@@ -2717,9 +2764,9 @@ public:
 			}
 		case 112: // PAGE UP
 			{
-				if(g_pSelectedLight != 0)
+				if(g_SelectedLight != 0)
 				{
-					MovePosition(g_pSelectedLight, 2, -0.01);
+					MovePosition(g_SelectedLight, 2, -0.01);
 					bKeyAccepted = true;
 				}
 				
@@ -2890,9 +2937,10 @@ public:
 
 ModelView g_ModelView;
 
-void KeyEvent(unsigned int KeyCode, bool IsDown)
+void KeyEvent(int KeyCode, bool IsDown)
 {
 	ON_DEBUG(std::cout << "Key event " << KeyCode << " / " << IsDown << "." << std::endl);
+	g_Keyboard.SetKey(KeyCode, IsDown);
 	g_UserInterface.AcceptKey(KeyCode, IsDown);
 }
 
@@ -2906,7 +2954,7 @@ void MouseButtonEvent(MouseButton Button, bool IsDown, const Vector2f & MousePos
 			{
 				if(g_pHoveredPoint != 0)
 				{
-					if(g_ShiftActive == true)
+					if(g_Keyboard.IsAnyShiftActive() == true)
 					{
 						std::vector< Point * >::iterator iHoveredPoint(std::find(g_SelectedPoints.begin(), g_SelectedPoints.end(), g_pHoveredPoint));
 						
@@ -2934,7 +2982,7 @@ void MouseButtonEvent(MouseButton Button, bool IsDown, const Vector2f & MousePos
 				}
 				else if(g_pHoveredTriangle != 0)
 				{
-					if(g_ShiftActive == true)
+					if(g_Keyboard.IsAnyShiftActive() == true)
 					{
 						std::vector< Triangle * >::iterator iHoveredTriangle(std::find(g_SelectedTriangles.begin(), g_SelectedTriangles.end(), g_pHoveredTriangle));
 						
@@ -2962,13 +3010,13 @@ void MouseButtonEvent(MouseButton Button, bool IsDown, const Vector2f & MousePos
 				}
 				else if(g_pHoveredLight != 0)
 				{
-					if(g_pSelectedLight == g_pHoveredLight)
+					if(g_SelectedLight == g_pHoveredLight)
 					{
-						g_pSelectedLight = 0;
+						g_SelectedLight = 0;
 					}
 					else
 					{
-						g_pSelectedLight = g_pHoveredLight;
+						g_SelectedLight = g_pHoveredLight;
 					}
 				}
 				else if(g_pHoveredCamera != 0)
@@ -2991,8 +3039,7 @@ void MouseButtonEvent(MouseButton Button, bool IsDown, const Vector2f & MousePos
 			if(IsDown == true)
 			{
 				g_MouseButton = MouseButton::Middle;
-				g_iLastMotionX = MousePosition[0];
-				g_iLastMotionY = MousePosition[1];
+				g_LastMousePosition = MousePosition;
 			}
 			else
 			{
@@ -3013,8 +3060,8 @@ void MouseButtonEvent(MouseButton Button, bool IsDown, const Vector2f & MousePos
 				{
 					g_SelectedPoints.clear();
 					g_SelectedTriangles.clear();
-					g_pSelectedLight = 0;
-					g_SelectedCamera = 0;
+					g_SelectedLight = nullptr;
+					g_SelectedCamera = nullptr;
 				}
 			}
 			
@@ -3056,14 +3103,12 @@ void MouseMotion(const Vector2f MousePosition)
 	g_bMoved = true;
 	g_MousePosition = MousePosition;
 	
-	int iDeltaX = MousePosition[0] - g_iLastMotionX;
-	int iDeltaY = MousePosition[1] - g_iLastMotionY;
+	auto Delta(MousePosition - g_LastMousePosition);
 	
-	g_iLastMotionX = MousePosition[0];
-	g_iLastMotionY = MousePosition[1];
+	g_LastMousePosition = MousePosition;
 	if((g_MouseButton == MouseButton::Middle) && (g_CurrentCamera != 0))
 	{
-		g_CurrentCamera->SetOrientation(g_CurrentCamera->GetOrientation().RotatedX(-0.005 * iDeltaY).RotateY(-0.005 * iDeltaX));
+		g_CurrentCamera->SetOrientation(g_CurrentCamera->GetOrientation().RotatedX(-0.005 * Delta[1]).RotateY(-0.005 * Delta[0]));
 	}
 }
 
@@ -3462,18 +3507,6 @@ void ProcessEvents(void)
 		case KeyPress:
 		case KeyRelease:
 			{
-				if((Event.xkey.keycode == 50) || (Event.xkey.keycode == 62)) // LEFT SHIFT or RIGHT SHIFT
-				{
-					g_ShiftActive = Event.xkey.type == KeyPress;
-				}
-				else if((Event.xkey.keycode == 37) || (Event.xkey.keycode == 105)) // LEFT CONTROL or RIGHT CONTROL
-				{
-					g_ControlActive = Event.xkey.type == KeyPress;
-				}
-				else if(Event.xkey.keycode == 64)
-				{
-					g_AltActive = Event.xkey.type == KeyPress;
-				}
 				KeyEvent(Event.xkey.keycode, Event.xkey.type == KeyPress);
 				
 				break;
