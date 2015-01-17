@@ -8,7 +8,7 @@ Position::Position(void) :
 }
 
 Position::Position(float X, float Y, float Z) :
-	_Position(X, Y, Z)
+	_Position(Vector3f::CreateFromComponents(X, Y, Z))
 {
 }
 

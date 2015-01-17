@@ -115,7 +115,7 @@ void Graphics::RenderContext::ActivateProgram(void)
 		case Graphics::Program::UniformContent::CameraPositionVector3F:
 			{
 				assert(_Camera != nullptr);
-				_Program->_SetUniform(Uniform.first, Vector3f(0.0f, 0.0f, 0.0f).Transform(_Camera->GetSpacialMatrix().Inverted()));
+				_Program->_SetUniform(Uniform.first, Vector3f::CreateZero().Transform(_Camera->GetSpacialMatrix().Inverted()));
 				
 				break;
 			}

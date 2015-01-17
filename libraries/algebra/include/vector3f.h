@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 1.8.17 of algebra.
+ * This is part of version 1.8.18 of algebra.
  **/
 
 #ifndef ALGEBRA_VECTOR3F_H
@@ -43,16 +43,17 @@ public:
 	{
 	}
 	
-	static Vector3f CreateZero(void);
-	
-	Vector3f(float Value1, float Value2, float Value3)
-	{
-		_[0] = Value1;
-		_[1] = Value2;
-		_[2] = Value3;
-	}
+	static Vector3f CreateFromComponents(float Value1, float Value2, float Value3);
 	
 	static Vector3f CreateFromVector4f(const Vector4f & Vector);
+	
+	static Vector3f CreateTranslationX(float X);
+	
+	static Vector3f CreateTranslationY(float Y);
+	
+	static Vector3f CreateTranslationZ(float Z);
+	
+	static Vector3f CreateZero(void);
 	
 	Vector3f & Set(float Value1, float Value2, float Value3)
 	{
@@ -89,12 +90,12 @@ public:
 	
 	Vector3f operator+(const Vector3f & Other) const
 	{
-		return Vector3f(_[0] + Other._[0], _[1] + Other._[1], _[2] + Other._[2]);
+		return CreateFromComponents(_[0] + Other._[0], _[1] + Other._[1], _[2] + Other._[2]);
 	}
 	
 	Vector3f operator-(const Vector3f & Other) const
 	{
-		return Vector3f(_[0] - Other._[0], _[1] - Other._[1], _[2] - Other._[2]);
+		return CreateFromComponents(_[0] - Other._[0], _[1] - Other._[1], _[2] - Other._[2]);
 	}
 
 	Vector3f operator+(void) const
@@ -104,17 +105,17 @@ public:
 	
 	Vector3f operator-(void) const
 	{
-		return Vector3f(-_[0], -_[1], -_[2]);
+		return CreateFromComponents(-_[0], -_[1], -_[2]);
 	}
 	
 	Vector3f operator*(float Scalar) const
 	{
-		return Vector3f(_[0] * Scalar, _[1] * Scalar, _[2] * Scalar);
+		return CreateFromComponents(_[0] * Scalar, _[1] * Scalar, _[2] * Scalar);
 	}
 	
 	Vector3f operator/(float Scalar) const
 	{
-		return Vector3f(_[0] / Scalar, _[1] / Scalar, _[2] / Scalar);
+		return CreateFromComponents(_[0] / Scalar, _[1] / Scalar, _[2] / Scalar);
 	}
 	
 	Vector3f operator%(const Vector3f & Other)
@@ -165,7 +166,7 @@ public:
 	
 	Vector3f Cross(const Vector3f & Other) const
 	{
-		return Vector3f(_[1] * Other._[2] - _[2] * Other._[1], _[2] * Other._[0] - _[0] * Other._[2], _[0] * Other._[1] - _[1] * Other._[0]);
+		return CreateFromComponents(_[1] * Other._[2] - _[2] * Other._[1], _[2] * Other._[0] - _[0] * Other._[2], _[0] * Other._[1] - _[1] * Other._[0]);
 	}
 	
 	Vector3f & operator*=(const Matrix3f & Matrix);
@@ -200,6 +201,17 @@ public:
 #include "matrix4f.h"
 #include "quaternion.h"
 #include "vector4f.h"
+	
+inline Vector3f Vector3f::CreateFromComponents(float Value0, float Value1, float Value2)
+{
+	Vector3f Result;
+	
+	Result._[0] = Value0;
+	Result._[1] = Value1;
+	Result._[2] = Value2;
+	
+	return Result;
+}
 
 inline Vector3f Vector3f::CreateFromVector4f(const Vector4f & Vector)
 {
@@ -208,6 +220,39 @@ inline Vector3f Vector3f::CreateFromVector4f(const Vector4f & Vector)
 	Result._[0] = Vector._[0];
 	Result._[1] = Vector._[1];
 	Result._[2] = Vector._[2];
+	
+	return Result;
+}
+	
+inline Vector3f Vector3f::CreateTranslationX(float X)
+{
+	Vector3f Result;
+	
+	Result._[0] = X;
+	Result._[1] = 0.0f;
+	Result._[2] = 0.0f;
+	
+	return Result;
+}
+
+inline Vector3f Vector3f::CreateTranslationY(float Y)
+{
+	Vector3f Result;
+	
+	Result._[0] = 0.0f;
+	Result._[1] = Y;
+	Result._[2] = 0.0f;
+	
+	return Result;
+}
+
+inline Vector3f Vector3f::CreateTranslationZ(float Z)
+{
+	Vector3f Result;
+	
+	Result._[0] = 0.0f;
+	Result._[1] = 0.0f;
+	Result._[2] = Z;
 	
 	return Result;
 }
@@ -294,7 +339,13 @@ inline Vector3f & Vector3f::Rotate(const Quaternion & Quaternion)
 
 inline Vector3f operator*(float Scalar, const Vector3f & Vector)
 {
-	return Vector3f(Scalar * Vector._[0], Scalar * Vector._[1], Scalar * Vector._[2]);
+	Vector3f Result;
+	
+	Result._[0] = Scalar * Vector._[0];
+	Result._[1] = Scalar * Vector._[1];
+	Result._[2] = Scalar * Vector._[2];
+	
+	return Result;
 }
 
 #endif

@@ -852,13 +852,13 @@ static void ReadSystem(Arxx::Reference & Reference, ClassManager< AssetClass > *
 	
 	Reader >> Name >> Position >> TrafficDensity >> StarIdentifier >> StarPosition >> StarColor >> PlanetCount;
 	NewSystem->GetAspectName()->SetName(Name);
-	NewSystem->GetAspectPosition()->SetPosition(Vector3f(Position[0], Position[1], 0.0f));
+	NewSystem->GetAspectPosition()->SetPosition(Vector3f::CreateFromComponents(Position[0], Position[1], 0.0f));
 	NewSystem->SetTrafficDensity(TrafficDensity);
 	
 	Star * NewStar(dynamic_cast< Star * >(g_ObjectFactory->Create("star", StarIdentifier, false)));
 	
 	NewStar->SetObjectIdentifier("::star(" + StarIdentifier + ")::in_system(" + NewSystem->GetClassIdentifier() + ")");
-	NewStar->GetAspectPosition()->SetPosition(Vector3f(StarPosition[0], StarPosition[1], 0.0f));
+	NewStar->GetAspectPosition()->SetPosition(Vector3f::CreateFromComponents(StarPosition[0], StarPosition[1], 0.0f));
 	NewStar->SetColor(StarColor);
 	NewSystem->GetAspectObjectContainer()->AddContent(NewStar);
 	for(Arxx::u4byte Number = 1; Number <= PlanetCount; ++Number)
@@ -891,7 +891,7 @@ static void ReadSystem(Arxx::Reference & Reference, ClassManager< AssetClass > *
 		Arxx::u4byte OfferedAssetsCount;
 		
 		Reader >> PlanetPosition >> Size >> OfferedAssetsCount;
-		NewPlanet->GetAspectPosition()->SetPosition(Vector3f(PlanetPosition[0], PlanetPosition[1], 0.0f));
+		NewPlanet->GetAspectPosition()->SetPosition(Vector3f::CreateFromComponents(PlanetPosition[0], PlanetPosition[1], 0.0f));
 		NewPlanet->SetSize(Size);
 		for(Arxx::u4byte OfferedAssetNumber = 1; OfferedAssetNumber <= OfferedAssetsCount; ++OfferedAssetNumber)
 		{

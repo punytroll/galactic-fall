@@ -433,7 +433,7 @@ void UI::TradeCenterWidget::_OnAssetClassMouseButton(UI::MouseButtonEvent & Mous
 				View->SetClearColor(Color(1.0f, 1.0f, 1.0f, 0.0f));
 				assert(View->GetCamera() != 0);
 				View->GetCamera()->SetProjection(PerspectiveProjection);
-				View->GetCamera()->SetSpacialMatrix(Matrix4f::CreateTranslation(Vector3f(0.0f, -2.5f, 1.4f).Normalize() * 4.0f * RadialSize).RotateX(1.05f));
+				View->GetCamera()->SetSpacialMatrix(Matrix4f::CreateTranslation(Vector3f::CreateFromComponents(0.0f, -2.5f, 1.4f).Normalize() * 4.0f * RadialSize).RotateX(1.05f));
 				
 				auto Scene(new Graphics::Scene());
 				
@@ -441,7 +441,7 @@ void UI::TradeCenterWidget::_OnAssetClassMouseButton(UI::MouseButtonEvent & Mous
 				Scene->ActivateLight();
 				assert(Scene->GetLight() != nullptr);
 				Scene->GetLight()->SetType(Graphics::Light::Type::Directional);
-				Scene->GetLight()->SetDirection(Vector3f(20.0f, 10.0f, -20.0f));
+				Scene->GetLight()->SetDirection(Vector3f::CreateFromComponents(20.0f, 10.0f, -20.0f));
 				Scene->GetLight()->SetColor(Color(1.0f, 1.0f, 1.0f, 0.0f));
 				View->SetScene(Scene);
 				

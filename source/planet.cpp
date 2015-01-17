@@ -124,7 +124,7 @@ void Planet::Land(Ship * Ship, Character * Character)
 {
 	assert(Character != nullptr);
 	assert(Ship != nullptr);
-	Ship->SetVelocity(Vector3f(0.0f, 0.0f, 0.0f));
+	Ship->SetVelocity(Vector3f::CreateZero());
 	assert(Ship->GetContainer() != nullptr);
 	assert(Ship->GetContainer()->GetAspectObjectContainer() != nullptr);
 	Ship->GetContainer()->GetAspectObjectContainer()->RemoveContent(Ship);

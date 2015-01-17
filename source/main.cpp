@@ -708,11 +708,11 @@ void CollisionDetection(System * System)
 										TheStorage->GetAspectObjectContainer()->RemoveContent(TheCommodity);
 										TheCommodity->GetAspectPosition()->SetPosition(Ship->GetAspectPosition()->GetPosition());
 										
-										Vector2f Velocity(Vector2f::CreateFromMagnitudeAndAngle(GetRandomFloat(0.0f, 1.2f), GetRandomFloat(0.0f, 2 * M_PI)));
+										auto Velocity(Vector2f::CreateFromMagnitudeAndAngle(GetRandomFloat(0.0f, 1.2f), GetRandomFloat(0.0f, 2 * M_PI)));
 										
-										TheCommodity->SetVelocity(Vector3f(Ship->GetVelocity()[0] * 0.8f + Velocity[0], Ship->GetVelocity()[1] * 0.8 + Velocity[1], 0.0f));
+										TheCommodity->SetVelocity(Vector3f::CreateFromComponents(Ship->GetVelocity()[0] * 0.8f + Velocity[0], Ship->GetVelocity()[1] * 0.8 + Velocity[1], 0.0f));
 										
-										Vector3f RotationAxis(GetRandomFloat(-1.0f, 1.0f), GetRandomFloat(-1.0f, 1.0f), GetRandomFloat(-1.0f, 1.0f));
+										auto RotationAxis(Vector3f::CreateFromComponents(GetRandomFloat(-1.0f, 1.0f), GetRandomFloat(-1.0f, 1.0f), GetRandomFloat(-1.0f, 1.0f)));
 										
 										RotationAxis.Normalize();
 										TheCommodity->SetAngularVelocity(AxisAngle(RotationAxis[0], RotationAxis[1], RotationAxis[2], GetRandomFloat(0.0f, 0.7f)));
@@ -964,12 +964,12 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 	{
 		PartStyles["faction"]->SetDiffuseColor(Faction->GetColor());
 	}
-	NewShip->GetAspectPosition()->SetPosition(Vector3f(GetRandomFloat(-200.0f, 200.0f), GetRandomFloat(-200.0f, 200.0f), 0.0f));
+	NewShip->GetAspectPosition()->SetPosition(Vector3f::CreateFromComponents(GetRandomFloat(-200.0f, 200.0f), GetRandomFloat(-200.0f, 200.0f), 0.0f));
 	NewShip->GetAspectPosition()->SetOrientation(Quaternion::CreateAsRotationZ(GetRandomFloat(0.0f, 2.0f * M_PI)));
 	
 	Vector2f Velocity(Vector2f::CreateFromMagnitudeAndAngle(GetRandomFloat(0.0f, NewShip->GetMaximumSpeed()), GetRandomFloat(0.0f, 2.0f * M_PI)));
 	
-	NewShip->SetVelocity(Vector3f(Velocity[0], Velocity[1], 0.0f));
+	NewShip->SetVelocity(Vector3f::CreateFromComponents(Velocity[0], Velocity[1], 0.0f));
 	NewShip->SetFuel(NewShip->GetFuelCapacity());
 	
 	Object * NewBattery(g_ObjectFactory->Create("battery", "light_battery", true));
@@ -1109,7 +1109,7 @@ void OnOutputEnterSystem(System * EnterSystem)
 		MainScene->GetLight()->SetType(Graphics::Light::Type::Directional);
 		MainScene->GetLight()->SetColor(Star->GetColor());
 		assert(Star->GetAspectPosition() != nullptr);
-		MainScene->GetLight()->SetDirection(Vector3f(-Star->GetAspectPosition()->GetPosition()[0], -Star->GetAspectPosition()->GetPosition()[1], -100.0f));
+		MainScene->GetLight()->SetDirection(Vector3f::CreateFromComponents(-Star->GetAspectPosition()->GetPosition()[0], -Star->GetAspectPosition()->GetPosition()[1], -100.0f));
 	}
 	else
 	{
@@ -1525,7 +1525,7 @@ void LoadGameFromElement(const Element * SaveElement)
 							assert(AspectChild->HasAttribute("x") == true);
 							assert(AspectChild->HasAttribute("y") == true);
 							assert(AspectChild->HasAttribute("z") == true);
-							NewObject->GetAspectPosition()->SetPosition(Vector3f(from_string_cast< float >(AspectChild->GetAttribute("x")), from_string_cast< float >(AspectChild->GetAttribute("y")), from_string_cast< float >(AspectChild->GetAttribute("z"))));
+							NewObject->GetAspectPosition()->SetPosition(Vector3f::CreateFromComponents(from_string_cast< float >(AspectChild->GetAttribute("x")), from_string_cast< float >(AspectChild->GetAttribute("y")), from_string_cast< float >(AspectChild->GetAttribute("z"))));
 						}
 						else
 						{
@@ -1670,7 +1670,7 @@ void LoadGameFromElement(const Element * SaveElement)
 								assert(TypeSpecificChild->HasAttribute("x") == true);
 								assert(TypeSpecificChild->HasAttribute("y") == true);
 								assert(TypeSpecificChild->HasAttribute("z") == true);
-								NewCommodity->SetVelocity(Vector3f(from_string_cast< float >(TypeSpecificChild->GetAttribute("x")), from_string_cast< float >(TypeSpecificChild->GetAttribute("y")), from_string_cast< float >(TypeSpecificChild->GetAttribute("z"))));
+								NewCommodity->SetVelocity(Vector3f::CreateFromComponents(from_string_cast< float >(TypeSpecificChild->GetAttribute("x")), from_string_cast< float >(TypeSpecificChild->GetAttribute("y")), from_string_cast< float >(TypeSpecificChild->GetAttribute("z"))));
 							}
 							else
 							{
@@ -1744,7 +1744,7 @@ void LoadGameFromElement(const Element * SaveElement)
 								assert(TypeSpecificChild->HasAttribute("x") == true);
 								assert(TypeSpecificChild->HasAttribute("y") == true);
 								assert(TypeSpecificChild->HasAttribute("z") == true);
-								NewShip->SetExhaustOffset(Vector3f(from_string_cast< float >(TypeSpecificChild->GetAttribute("x")), from_string_cast< float >(TypeSpecificChild->GetAttribute("y")), from_string_cast< float >(TypeSpecificChild->GetAttribute("z"))));
+								NewShip->SetExhaustOffset(Vector3f::CreateFromComponents(from_string_cast< float >(TypeSpecificChild->GetAttribute("x")), from_string_cast< float >(TypeSpecificChild->GetAttribute("y")), from_string_cast< float >(TypeSpecificChild->GetAttribute("z"))));
 							}
 							else if(TypeSpecificChild->GetName() == "faction")
 							{
@@ -1796,7 +1796,7 @@ void LoadGameFromElement(const Element * SaveElement)
 								assert(TypeSpecificChild->HasAttribute("x") == true);
 								assert(TypeSpecificChild->HasAttribute("y") == true);
 								assert(TypeSpecificChild->HasAttribute("z") == true);
-								NewShip->SetVelocity(Vector3f(from_string_cast< float >(TypeSpecificChild->GetAttribute("x")), from_string_cast< float >(TypeSpecificChild->GetAttribute("y")), from_string_cast< float >(TypeSpecificChild->GetAttribute("z"))));
+								NewShip->SetVelocity(Vector3f::CreateFromComponents(from_string_cast< float >(TypeSpecificChild->GetAttribute("x")), from_string_cast< float >(TypeSpecificChild->GetAttribute("y")), from_string_cast< float >(TypeSpecificChild->GetAttribute("z"))));
 							}
 							else
 							{
