@@ -54,7 +54,7 @@ void Graphics::ParticleSystem::Update(float Seconds)
 		}
 		else if(*ScriptLine == "move")
 		{
-			SetPosition(GetPosition() + Seconds * _Velocity);
+			SetPosition(GetPosition() + _Velocity.Scaled(Seconds));
 		}
 		else if(*ScriptLine == "update-particles")
 		{

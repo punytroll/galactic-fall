@@ -125,7 +125,7 @@ void UI::StarMapDisplay::Draw(void)
 			GLBegin(GL_LINES);
 			GLVertex2f(0.0f, 0.0f);
 			
-			Vector3f To(m_Scale * ((*LinkedSystemIterator)->GetAspectPosition()->GetPosition() - (*ExploredSystemIterator)->GetAspectPosition()->GetPosition()));
+			Vector3f To(((*LinkedSystemIterator)->GetAspectPosition()->GetPosition() - (*ExploredSystemIterator)->GetAspectPosition()->GetPosition()).Scale(m_Scale));
 			
 			GLVertex2f(To[0], To[1]);
 			GLEnd();

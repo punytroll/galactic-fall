@@ -80,6 +80,55 @@ std::string GetAxisString(FixedAxis Axis)
 	assert(false);
 }
 
+enum class FixedDirection
+{
+	Backward,
+	Down,
+	Forward,
+	Left,
+	Right,
+	Up
+};
+
+const Vector3f & GetDirectionVector(FixedDirection Direction)
+{
+	static auto Backward(Vector3f::CreateTranslationZ(1.0f));
+	static auto Down(Vector3f::CreateTranslationY(-1.0f));
+	static auto Forward(Vector3f::CreateTranslationZ(-1.0f));
+	static auto Left(Vector3f::CreateTranslationX(-1.0f));
+	static auto Right(Vector3f::CreateTranslationX(1.0f));
+	static auto Up(Vector3f::CreateTranslationY(1.0f));
+	
+	switch(Direction)
+	{
+	case FixedDirection::Backward:
+		{
+			return Backward;
+		}
+	case FixedDirection::Down:
+		{
+			return Down;
+		}
+	case FixedDirection::Forward:
+		{
+			return Forward;
+		}
+	case FixedDirection::Left:
+		{
+			return Left;
+		}
+	case FixedDirection::Right:
+		{
+			return Right;
+		}
+	case FixedDirection::Up:
+		{
+			return Up;
+		}
+	}
+	assert(false);
+}
+
 enum class FixedView
 {
 	Front,
@@ -375,7 +424,7 @@ public:
 	GLenum m_LightNumber;
 };
 
-class Camera : public Position
+class Camera
 {
 public:
 	Camera(void) :
@@ -415,39 +464,39 @@ public:
 	
 	Matrix4f GetSpacialMatrix(void)
 	{
-		return Matrix4f::CreateTranslation(GetPosition()).Rotate(_Orientation);
+		return Matrix4f::CreateTranslation(_Position).Rotate(_Orientation);
 	}
 	
 	void SetView(FixedView View)
 	{
 		if((View == FixedView::Front) && (g_UpAxis == FixedAxis::PositiveZ) && (g_ForwardAxis == FixedAxis::PositiveX))
 		{
-			SetPosition(4.0f, 0.0f, 0.0f);
+			_Position.Set(4.0f, 0.0f, 0.0f);
 			_Orientation.RotationX(M_PI_2).RotateY(M_PI_2);
 		}
 		else if((View == FixedView::Back) && (g_UpAxis == FixedAxis::PositiveZ) && (g_ForwardAxis == FixedAxis::PositiveX))
 		{
-			SetPosition(-4.0f, 0.0f, 0.0f);
+			_Position.Set(-4.0f, 0.0f, 0.0f);
 			_Orientation.RotationX(M_PI_2).RotateY(-M_PI_2);
 		}
 		else if((View == FixedView::Left) && (g_UpAxis == FixedAxis::PositiveZ) && (g_ForwardAxis == FixedAxis::PositiveX))
 		{
-			SetPosition(0.0f, -4.0f, 0.0f);
+			_Position.Set(0.0f, -4.0f, 0.0f);
 			_Orientation.RotationX(M_PI_2);
 		}
 		else if((View == FixedView::Right) && (g_UpAxis == FixedAxis::PositiveZ) && (g_ForwardAxis == FixedAxis::PositiveX))
 		{
-			SetPosition(0.0f, 4.0f, 0.0f);
+			_Position.Set(0.0f, 4.0f, 0.0f);
 			_Orientation.RotationY(M_PI).RotateX(-M_PI_2);
 		}
 		else if((View == FixedView::Top) && (g_UpAxis == FixedAxis::PositiveZ) && (g_ForwardAxis == FixedAxis::PositiveX))
 		{
-			SetPosition(0.0f, 0.0f, 4.0f);
+			_Position.Set(0.0f, 0.0f, 4.0f);
 			_Orientation.RotationZ(M_PI_2);
 		}
 		else if((View == FixedView::Bottom) && (g_UpAxis == FixedAxis::PositiveZ) && (g_ForwardAxis == FixedAxis::PositiveX))
 		{
-			SetPosition(0.0f, 0.0f, -4.0f);
+			_Position.Set(0.0f, 0.0f, -4.0f);
 			_Orientation.RotationZ(M_PI_2).RotateY(M_PI);
 		}
 		else
@@ -459,32 +508,32 @@ public:
 	
 	void MoveBackward(float Amount)
 	{
-		SetPosition(GetPosition() + Vector3f::CreateFromComponents(0.0f, 0.0f, Amount).Rotate(_Orientation));
+                _Position.Translate(Vector3f::CreateTranslationZ(Amount).Rotate(_Orientation));
 	}
 	
 	void MoveDown(float Amount)
 	{
-		SetPosition(GetPosition() + Vector3f::CreateFromComponents(0.0f, -Amount, 0.0f).Rotate(_Orientation));
+                _Position.Translate(Vector3f::CreateTranslationY(-Amount).Rotate(_Orientation));
 	}
 	
 	void MoveForward(float Amount)
 	{
-		SetPosition(GetPosition() + Vector3f::CreateFromComponents(0.0f, 0.0f, -Amount).Rotate(_Orientation));
+                _Position.Translate(Vector3f::CreateTranslationZ(-Amount).Rotate(_Orientation));
 	}
 	
 	void MoveLeft(float Amount)
 	{
-		SetPosition(GetPosition() + Vector3f::CreateFromComponents(-Amount, 0.0f, 0.0f).Rotate(_Orientation));
+                _Position.Translate(Vector3f::CreateTranslationX(-Amount).Rotate(_Orientation));
 	}
 	
 	void MoveRight(float Amount)
 	{
-		SetPosition(GetPosition() + Vector3f::CreateFromComponents(Amount, 0.0f, 0.0f).Rotate(_Orientation));
+                _Position.Translate(Vector3f::CreateTranslationX(Amount).Rotate(_Orientation));
 	}
 	
 	void MoveUp(float Amount)
 	{
-		SetPosition(GetPosition() + Vector3f::CreateFromComponents(0.0f, Amount, 0.0f).Rotate(_Orientation));
+                _Position.Translate(Vector3f::CreateTranslationY(Amount).Rotate(_Orientation));
 	}
 	
 	void TurnDown(float Amount)
@@ -509,6 +558,7 @@ public:
 	
 	float _FieldOfViewY;
 	Quaternion _Orientation;
+	Vector3f _Position;
 };
 
 class CameraDescription
@@ -519,7 +569,7 @@ public:
 	}
 	
 	CameraDescription(Camera * Camera) :
-		Position(Camera->GetPosition()),
+		Position(Camera->_Position),
 		Orientation(Camera->_Orientation),
 		FieldOfViewY(Camera->_FieldOfViewY)
 	{
@@ -655,15 +705,15 @@ std::vector< Light * > g_Lights;
 std::vector< Light * > g_EnabledLights;
 std::vector< Camera * > g_Cameras;
 Camera * g_pHoveredCamera = 0;
-Camera * g_pSelectedCamera = 0;
+Camera * g_SelectedCamera = 0;
 Camera * g_CurrentCamera = 0;
 int g_iLastMotionX = -1;
 int g_iLastMotionY = -1;
 bool g_bMoved = false;
 bool g_Quit(false);
 GLuint g_puiSelectionBuffer[1024];
-bool g_bSnapping = false;
-float g_fSnapFactor = 0.1;
+bool g_Snapping = false;
+float g_SnapFactor = 0.1;
 MouseButton g_MouseButton(MouseButton::Undefined);
 std::deque< int > g_FreeLights;
 UserInterface g_UserInterface;
@@ -875,9 +925,9 @@ void vDisplayTexts(void)
 	std::stringstream ssSnapInformationText;
 	
 	ssSnapInformationText << "Snapping: ";
-	if(g_bSnapping == true)
+	if(g_Snapping == true)
 	{
-		ssSnapInformationText << "on   SnapFactor: " << g_fSnapFactor;
+		ssSnapInformationText << "on   SnapFactor: " << g_SnapFactor;
 	}
 	else
 	{
@@ -956,7 +1006,7 @@ void vPerformPicking(void)
 	{
 		glLoadName(stCamera);
 		glBegin(GL_POINTS);
-		g_Cameras[stCamera]->DrawSelection();
+		glVertex3fv(g_Cameras[stCamera]->_Position.GetPointer());
 		glEnd();
 	}
 	glPopName();
@@ -1015,7 +1065,7 @@ void vDisplayModel(void)
 	glBegin(GL_POINTS);
 	for(std::vector< Camera * >::size_type stCamera = 0; stCamera < g_Cameras.size(); ++stCamera)
 	{
-		g_Cameras[stCamera]->Draw();
+		glVertex3fv(g_Cameras[stCamera]->_Position.GetPointer());
 	}
 	glEnd();
 	// now draw selected stuff
@@ -1099,10 +1149,10 @@ void vDisplayModel(void)
 		glEnd();
 		glPopMatrix();
 	}
-	if(g_pSelectedCamera != 0)
+	if(g_SelectedCamera != 0)
 	{
 		glPushMatrix();
-		glTranslatef(g_pSelectedCamera->GetX(), g_pSelectedCamera->GetY(), g_pSelectedCamera->GetZ());
+		glTranslatef(g_SelectedCamera->_Position[0], g_SelectedCamera->_Position[1], g_SelectedCamera->_Position[2]);
 		glPushMatrix();
 		glMultMatrixf(Matrix4f::CreateRotation(g_CurrentCamera->_Orientation).GetPointer());
 		glBegin(GL_POINTS);
@@ -1113,7 +1163,7 @@ void vDisplayModel(void)
 		glVertex3f(-0.05f, 0.05f, 0.0f);
 		glEnd();
 		glPopMatrix();
-		glMultMatrixf(Matrix4f::CreateRotation(g_pSelectedCamera->_Orientation).GetPointer());
+		glMultMatrixf(Matrix4f::CreateRotation(g_SelectedCamera->_Orientation).GetPointer());
 		glColor3f(0.2f, 0.8f, 0.5f);
 		glBegin(GL_LINES);
 		glVertex3f(0.0f, 0.0f, 0.0f);
@@ -1180,10 +1230,10 @@ void vDisplayModel(void)
 	{
 		glColor3f(0.0f, 1.0f, 0.5f);
 		glBegin(GL_POINTS);
-		g_pHoveredCamera->Draw();
+		glVertex3fv(g_pHoveredCamera->_Position.GetPointer());
 		glEnd();
 		glPushMatrix();
-		glTranslatef(g_pHoveredCamera->GetX(), g_pHoveredCamera->GetY(), g_pHoveredCamera->GetZ());
+		glTranslatef(g_pHoveredCamera->_Position[0], g_pHoveredCamera->_Position[1], g_pHoveredCamera->_Position[2]);
 		glMultMatrixf(Matrix4f::CreateRotation(g_pHoveredCamera->_Orientation.Conjugated()).GetPointer());
 		glColor3f(0.0f, 0.5f, 0.5f);
 		glBegin(GL_LINES);
@@ -1514,60 +1564,60 @@ void vToggleLighting(void)
  **/
 void vToggleSnapping(void)
 {
-	g_bSnapping = !g_bSnapping;
+	g_Snapping = !g_Snapping;
 }
 
 void vAdjustFloatValue(float & fValue, float fDelta)
 {
-	if(g_bSnapping == true)
+	if(g_Snapping == true)
 	{
 		if(fDelta < 0)
 		{
-			if(fDelta > -g_fSnapFactor)
+			if(fDelta > -g_SnapFactor)
 			{
-				fDelta = -g_fSnapFactor;
+				fDelta = -g_SnapFactor;
 			}
 		}
 		else
 		{
-			if(fDelta < g_fSnapFactor)
+			if(fDelta < g_SnapFactor)
 			{
-				fDelta = g_fSnapFactor;
+				fDelta = g_SnapFactor;
 			}
 		}
 	}
 	fValue += fDelta;
-	if(g_bSnapping == true)
+	if(g_Snapping == true)
 	{
-		fValue = roundf(fValue / g_fSnapFactor) * g_fSnapFactor;
+		fValue = roundf(fValue / g_SnapFactor) * g_SnapFactor;
 	}
 }
 
 float GetAdjustedFloatValue(float Value, float Delta)
 {
-	if(g_bSnapping == true)
+	if(g_Snapping == true)
 	{
 		if(Delta < 0)
 		{
-			if(Delta > -g_fSnapFactor)
+			if(Delta > -g_SnapFactor)
 			{
-				Delta = -g_fSnapFactor;
+				Delta = -g_SnapFactor;
 			}
 		}
 		else
 		{
-			if(Delta < g_fSnapFactor)
+			if(Delta < g_SnapFactor)
 			{
-				Delta = g_fSnapFactor;
+				Delta = g_SnapFactor;
 			}
 		}
 	}
 	
 	float Result(Value + Delta);
 	
-	if(g_bSnapping == true)
+	if(g_Snapping == true)
 	{
-		Result = roundf(Result / g_fSnapFactor) * g_fSnapFactor;
+		Result = roundf(Result / g_SnapFactor) * g_SnapFactor;
 	}
 	
 	return Result;
@@ -1587,6 +1637,28 @@ void MovePosition(Position * Position, int Axis, float Delta)
 	{
 		Position->SetZ(GetAdjustedFloatValue(Position->GetZ(), Delta));
 	}
+}
+
+Vector3f GetAdjustedStepInView(const Vector3f & Position, FixedDirection Direction)
+{
+	auto Delta(0.01f);
+	
+	if(g_Snapping == true)
+	{
+		Delta = g_SnapFactor;
+	}
+	assert(g_CurrentCamera != nullptr);
+	
+	auto Result(Position + GetDirectionVector(Direction).Scaled(Delta).Rotate(g_CurrentCamera->_Orientation));
+	
+	if(g_Snapping == true)
+	{
+		Result[0] = roundf(Result[0] / g_SnapFactor) * g_SnapFactor;
+		Result[1] = roundf(Result[1] / g_SnapFactor) * g_SnapFactor;
+		Result[2] = roundf(Result[2] / g_SnapFactor) * g_SnapFactor;
+	}
+	
+	return Result;
 }
 
 class PointsView : public KeyAcceptor
@@ -1751,7 +1823,7 @@ public:
 					{
 						for(std::vector< Point * >::size_type stI = 0; stI < g_SelectedPoints.size(); ++stI)
 						{
-							MovePosition(g_SelectedPoints[stI], 0, g_fSnapFactor);
+							MovePosition(g_SelectedPoints[stI], 0, g_SnapFactor);
 						}
 						bKeyAccepted = true;
 					}
@@ -1767,7 +1839,7 @@ public:
 					{
 						for(std::vector< Point * >::size_type stI = 0; stI < g_SelectedPoints.size(); ++stI)
 						{
-							MovePosition(g_SelectedPoints[stI], 0, -g_fSnapFactor);
+							MovePosition(g_SelectedPoints[stI], 0, -g_SnapFactor);
 						}
 						bKeyAccepted = true;
 					}
@@ -1783,7 +1855,7 @@ public:
 					{
 						for(std::vector< Point * >::size_type stI = 0; stI < g_SelectedPoints.size(); ++stI)
 						{
-							MovePosition(g_SelectedPoints[stI], 1, g_fSnapFactor);
+							MovePosition(g_SelectedPoints[stI], 1, g_SnapFactor);
 						}
 						bKeyAccepted = true;
 					}
@@ -1799,7 +1871,7 @@ public:
 					{
 						for(std::vector< Point * >::size_type stI = 0; stI < g_SelectedPoints.size(); ++stI)
 						{
-							MovePosition(g_SelectedPoints[stI], 1, -g_fSnapFactor);
+							MovePosition(g_SelectedPoints[stI], 1, -g_SnapFactor);
 						}
 						bKeyAccepted = true;
 					}
@@ -1815,7 +1887,7 @@ public:
 					{
 						for(std::vector< Point * >::size_type stI = 0; stI < g_SelectedPoints.size(); ++stI)
 						{
-							MovePosition(g_SelectedPoints[stI], 2, g_fSnapFactor);
+							MovePosition(g_SelectedPoints[stI], 2, g_SnapFactor);
 						}
 						bKeyAccepted = true;
 					}
@@ -1831,7 +1903,7 @@ public:
 					{
 						for(std::vector< Point * >::size_type stI = 0; stI < g_SelectedPoints.size(); ++stI)
 						{
-							MovePosition(g_SelectedPoints[stI], 2, -g_fSnapFactor);
+							MovePosition(g_SelectedPoints[stI], 2, -g_SnapFactor);
 						}
 						bKeyAccepted = true;
 					}
@@ -1987,10 +2059,13 @@ public:
 		{
 		case 54: // C
 			{
-				Camera * pCamera(new Camera());
-				
-				g_Cameras.push_back(pCamera);
-				bKeyAccepted = true;
+				if(IsDown == true)
+				{
+					Camera * pCamera(new Camera());
+					
+					g_Cameras.push_back(pCamera);
+					bKeyAccepted = true;
+				}
 				
 				break;
 			}
@@ -2001,19 +2076,21 @@ public:
 					g_CurrentCamera = g_pHoveredCamera;
 					bKeyAccepted = true;
 				}
-				else if(g_pSelectedCamera != 0)
+				else if(g_SelectedCamera != 0)
 				{
-					g_CurrentCamera = g_pSelectedCamera;
+					g_CurrentCamera = g_SelectedCamera;
 					bKeyAccepted = true;
 				}
+				
+				break;
 			}
 		case 114: // RIGHT
 			{
 				if(IsDown == true)
 				{
-					if(g_pSelectedCamera != nullptr)
+					if(g_SelectedCamera != nullptr)
 					{
-						MovePosition(g_pSelectedCamera, 0, 0.01);
+						g_SelectedCamera->_Position = GetAdjustedStepInView(g_SelectedCamera->_Position, FixedDirection::Right);
 					}
 					else if(g_CurrentCamera != nullptr)
 					{
@@ -2035,9 +2112,9 @@ public:
 			{
 				if(IsDown == true)
 				{
-					if(g_pSelectedCamera != nullptr)
+					if(g_SelectedCamera != nullptr)
 					{
-						MovePosition(g_pSelectedCamera, 0, -0.01);
+						g_SelectedCamera->_Position = GetAdjustedStepInView(g_SelectedCamera->_Position, FixedDirection::Left);
 					}
 					else if(g_CurrentCamera != nullptr)
 					{
@@ -2059,9 +2136,9 @@ public:
 			{
 				if(IsDown == true)
 				{
-					if(g_pSelectedCamera != nullptr)
+					if(g_SelectedCamera != nullptr)
 					{
-						MovePosition(g_pSelectedCamera, 1, 0.01);
+						g_SelectedCamera->_Position = GetAdjustedStepInView(g_SelectedCamera->_Position, FixedDirection::Up);
 					}
 					else if(g_CurrentCamera != nullptr)
 					{
@@ -2083,9 +2160,9 @@ public:
 			{
 				if(IsDown == true)
 				{
-					if(g_pSelectedCamera != nullptr)
+					if(g_SelectedCamera != nullptr)
 					{
-						MovePosition(g_pSelectedCamera, 1, -0.01);
+						g_SelectedCamera->_Position = GetAdjustedStepInView(g_SelectedCamera->_Position, FixedDirection::Down);
 					}
 					else if(g_CurrentCamera != nullptr)
 					{
@@ -2107,9 +2184,9 @@ public:
 			{
 				if(IsDown == true)
 				{
-					if(g_pSelectedCamera != nullptr)
+					if(g_SelectedCamera != nullptr)
 					{
-						MovePosition(g_pSelectedCamera, 2, 0.01);
+						g_SelectedCamera->_Position = GetAdjustedStepInView(g_SelectedCamera->_Position, FixedDirection::Backward);
 					}
 					else if(g_CurrentCamera != nullptr)
 					{
@@ -2124,9 +2201,9 @@ public:
 			{
 				if(IsDown == true)
 				{
-					if(g_pSelectedCamera != nullptr)
+					if(g_SelectedCamera != nullptr)
 					{
-						MovePosition(g_pSelectedCamera, 2, -0.01);
+						g_SelectedCamera->_Position = GetAdjustedStepInView(g_SelectedCamera->_Position, FixedDirection::Forward);
 					}
 					else if(g_CurrentCamera != nullptr)
 					{
@@ -2139,9 +2216,9 @@ public:
 			}
 		case 110: // HOME
 			{
-				if(g_pSelectedCamera != 0)
+				if(g_SelectedCamera != 0)
 				{
-					g_pSelectedCamera->_FieldOfViewY += 1.0f;
+					g_SelectedCamera->_FieldOfViewY += 1.0f;
 				}
 				else if(g_CurrentCamera != 0)
 				{
@@ -2153,9 +2230,9 @@ public:
 			}
 		case 115: // END
 			{
-				if(g_pSelectedCamera != 0)
+				if(g_SelectedCamera != 0)
 				{
-					g_pSelectedCamera->_FieldOfViewY -= 1.0f;
+					g_SelectedCamera->_FieldOfViewY -= 1.0f;
 				}
 				else if(g_CurrentCamera != 0)
 				{
@@ -2350,7 +2427,7 @@ public:
 					{
 						auto NewCamera(new Camera());
 						
-						NewCamera->SetPosition(CameraDescription.Position[0], CameraDescription.Position[1], CameraDescription.Position[2]);
+						NewCamera->_Position = CameraDescription.Position;
 						NewCamera->_Orientation = CameraDescription.Orientation;
 						NewCamera->_FieldOfViewY = CameraDescription.FieldOfViewY;
 						g_Cameras.push_back(NewCamera);
@@ -2396,23 +2473,29 @@ public:
 			{
 				if(g_AltActive == true)
 				{
-					vToggleSnapping();
+					if(IsDown == true)
+					{
+						vToggleSnapping();
+					}
 				}
 				else if(g_ShiftActive == true)
 				{
-					std::cout << "Saving scene.xml." << std::endl;
-					
-					std::ofstream OutputFileStream("scene.xml");
-					XMLStream XMLStream(OutputFileStream);
-					
-					XMLStream << element << "scene" << mesh;
-					for(auto Light : g_Lights)
+					if(IsDown == false)
 					{
-						XMLStream << light(Light) << end;
-					}
-					for(auto Camera : g_Cameras)
-					{
-						XMLStream << camera(Camera) << end;
+						std::cout << "Saving scene.xml." << std::endl;
+						
+						std::ofstream OutputFileStream("scene.xml");
+						XMLStream XMLStream(OutputFileStream);
+						
+						XMLStream << element << "scene" << mesh;
+						for(auto Light : g_Lights)
+						{
+							XMLStream << light(Light) << end;
+						}
+						for(auto Camera : g_Cameras)
+						{
+							XMLStream << camera(Camera) << end;
+						}
 					}
 				}
 				
@@ -2420,25 +2503,31 @@ public:
 			}
 		case 28: // T
 			{
-				if(g_ShiftActive == true)
+				if(IsDown == false)
 				{
-					vSetKeyAcceptor(&m_TriangleView);
-					g_CurrentView.vSetString("Triangle View");
+					if(g_ShiftActive == true)
+					{
+						vSetKeyAcceptor(&m_TriangleView);
+						g_CurrentView.vSetString("Triangle View");
+					}
 				}
 				
 				break;
 			}
 		case 36: // ENTER
 			{
-				if(g_pSelectedLight != 0)
+				if(IsDown == true)
 				{
-					if(g_pSelectedLight->bIsEnabled() == true)
+					if(g_pSelectedLight != 0)
 					{
-						g_pSelectedLight->vDisable();
-					}
-					else
-					{
-						g_pSelectedLight->vEnable();
+						if(g_pSelectedLight->bIsEnabled() == true)
+						{
+							g_pSelectedLight->vDisable();
+						}
+						else
+						{
+							g_pSelectedLight->vEnable();
+						}
 					}
 				}
 				
@@ -2446,54 +2535,75 @@ public:
 			}
 		case 9: // ESCAPE
 			{
-				g_Quit = true;
+				if(IsDown == false)
+				{
+					g_Quit = true;
+				}
 				
 				break;
 			}
 		case 119: // DELETE
 			{
-				if(g_pSelectedLight != 0)
+				if(IsDown == false)
 				{
-					vDeleteLight(g_pSelectedLight);
+					if(g_pSelectedLight != 0)
+					{
+						vDeleteLight(g_pSelectedLight);
+					}
 				}
 				
 				break;
 			}
 		case 86: // NUMPAD PLUS
 			{
-				GLfloat fPointSize;
-				
-				glGetFloatv(GL_POINT_SIZE, &fPointSize);
-				fPointSize += 1.0f;
-				glPointSize(fPointSize);
+				if(IsDown == true)
+				{
+					GLfloat fPointSize;
+					
+					glGetFloatv(GL_POINT_SIZE, &fPointSize);
+					fPointSize += 1.0f;
+					glPointSize(fPointSize);
+				}
 				
 				break;
 			}
 		case 82: // NUMPAD MINUS
 			{
-				GLfloat fPointSize;
-				
-				glGetFloatv(GL_POINT_SIZE, &fPointSize);
-				fPointSize -= 1.0f;
-				glPointSize(fPointSize);
+				if(IsDown == true)
+				{
+					GLfloat fPointSize;
+					
+					glGetFloatv(GL_POINT_SIZE, &fPointSize);
+					fPointSize -= 1.0f;
+					glPointSize(fPointSize);
+				}
 				
 				break;
 			}
 		case 63: // NUMPAD ASTERISK
 			{
-				vTogglePointSmooth();
+				if(IsDown == true)
+				{
+					vTogglePointSmooth();
+				}
 				
 				break;
 			}
 		case 59: // COMMA
 			{
-				g_fSnapFactor *= 10;
+				if(IsDown == true)
+				{
+					g_SnapFactor *= 10;
+				}
 				
 				break;
 			}
 		case 60: // FULL STOP
 			{
-				g_fSnapFactor /= 10;
+				if(IsDown == true)
+				{
+					g_SnapFactor /= 10;
+				}
 				
 				break;
 			}
@@ -2683,7 +2793,7 @@ public:
 				if(g_CurrentCamera != nullptr)
 				{
 					g_CurrentCamera->_Orientation.Identity();
-					g_CurrentCamera->SetPosition(0.0f, 0.0f, 4.0f);
+					g_CurrentCamera->_Position = Vector3f::CreateTranslationZ(4.0f);
 					bKeyAccepted = true;
 				}
 				
@@ -2784,13 +2894,13 @@ void MouseButtonEvent(MouseButton Button, bool IsDown, const Vector2f & MousePos
 				}
 				else if(g_pHoveredCamera != 0)
 				{
-					if(g_pSelectedCamera == g_pHoveredCamera)
+					if(g_SelectedCamera == g_pHoveredCamera)
 					{
-						g_pSelectedCamera = 0;
+						g_SelectedCamera = 0;
 					}
 					else
 					{
-						g_pSelectedCamera = g_pHoveredCamera;
+						g_SelectedCamera = g_pHoveredCamera;
 					}
 				}
 			}
@@ -2825,7 +2935,7 @@ void MouseButtonEvent(MouseButton Button, bool IsDown, const Vector2f & MousePos
 					g_SelectedPoints.clear();
 					g_SelectedTriangles.clear();
 					g_pSelectedLight = 0;
-					g_pSelectedCamera = 0;
+					g_SelectedCamera = 0;
 				}
 			}
 			
