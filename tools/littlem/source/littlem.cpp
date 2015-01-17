@@ -1233,7 +1233,7 @@ void vDisplayModel(void)
 		glEnd();
 		glPushMatrix();
 		glTranslatef(g_pHoveredCamera->GetPosition()[0], g_pHoveredCamera->GetPosition()[1], g_pHoveredCamera->GetPosition()[2]);
-		glMultMatrixf(Matrix4f::CreateRotation(g_pHoveredCamera->GetOrientation().Conjugated()).GetPointer());
+		glMultMatrixf(Matrix4f::CreateRotation(g_pHoveredCamera->GetOrientation()).GetPointer());
 		glColor3f(0.0f, 0.5f, 0.5f);
 		glBegin(GL_LINES);
 		glVertex3f(0.0f, 0.0f, 0.0f);
