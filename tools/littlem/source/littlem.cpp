@@ -2714,60 +2714,78 @@ public:
 			}
 		case 114: // RIGHT
 			{
-				if(g_SelectedLight != 0)
+				if((IsDown == true) && (g_Keyboard.IsNoModifierKeyActive() == true))
 				{
-					MovePosition(g_SelectedLight, 0, 0.01);
-					bKeyAccepted = true;
+					if(g_SelectedLight != nullptr)
+					{
+						g_SelectedLight->SetPosition(GetAdjustedStepInView(g_SelectedLight->GetPosition(), FixedDirection::Right));
+						bKeyAccepted = true;
+					}
 				}
 				
 				break;
 			}
 		case 113: // LEFT
 			{
-				if(g_SelectedLight != 0)
+				if((IsDown == true) && (g_Keyboard.IsNoModifierKeyActive() == true))
 				{
-					MovePosition(g_SelectedLight, 0, -0.01);
-					bKeyAccepted = true;
+					if(g_SelectedLight != nullptr)
+					{
+						g_SelectedLight->SetPosition(GetAdjustedStepInView(g_SelectedLight->GetPosition(), FixedDirection::Left));
+						bKeyAccepted = true;
+					}
 				}
 				
 				break;
 			}
 		case 111: // UP
 			{
-				if(g_SelectedLight != 0)
+				if((IsDown == true) && (g_Keyboard.IsNoModifierKeyActive() == true))
 				{
-					MovePosition(g_SelectedLight, 1, 0.01);
-					bKeyAccepted = true;
+					if(g_SelectedLight != nullptr)
+					{
+						g_SelectedLight->SetPosition(GetAdjustedStepInView(g_SelectedLight->GetPosition(), FixedDirection::Up));
+						bKeyAccepted = true;
+					}
 				}
 				
 				break;
 			}
 		case 116: // DOWN
 			{
-				if(g_SelectedLight != 0)
+				if((IsDown == true) && (g_Keyboard.IsNoModifierKeyActive() == true))
 				{
-					MovePosition(g_SelectedLight, 1, -0.01);
-					bKeyAccepted = true;
+					if(g_SelectedLight != nullptr)
+					{
+						g_SelectedLight->SetPosition(GetAdjustedStepInView(g_SelectedLight->GetPosition(), FixedDirection::Down));
+						bKeyAccepted = true;
+					}
 				}
 				
 				break;
 			}
 		case 117: // PAGE DOWN
 			{
-				if(g_SelectedLight != 0)
+				if((IsDown == true) && (g_Keyboard.IsNoModifierKeyActive() == true))
 				{
-					MovePosition(g_SelectedLight, 2, 0.01);
-					bKeyAccepted = true;
+					if(g_SelectedLight != nullptr)
+					{
+						g_SelectedLight->SetPosition(GetAdjustedStepInView(g_SelectedLight->GetPosition(), FixedDirection::Backward));
+						bKeyAccepted = true;
+					}
 				}
 				
 				break;
 			}
 		case 112: // PAGE UP
 			{
-				if(g_SelectedLight != 0)
+				if((IsDown == true) && (g_Keyboard.IsNoModifierKeyActive() == true))
 				{
-					MovePosition(g_SelectedLight, 2, -0.01);
-					bKeyAccepted = true;
+					if(g_SelectedLight != nullptr)
+					{
+						g_SelectedLight->SetPosition(GetAdjustedStepInView(g_SelectedLight->GetPosition(), FixedDirection::Forward));
+						bKeyAccepted = true;
+					}
 				}
 				
 				break;
