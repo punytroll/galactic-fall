@@ -2060,9 +2060,10 @@ public:
 			{
 				if(IsDown == true)
 				{
-					Camera * pCamera(new Camera());
+					auto NewCamera(new Camera());
 					
-					g_Cameras.push_back(pCamera);
+					g_Cameras.push_back(NewCamera);
+					g_SelectedCamera = NewCamera;
 					bKeyAccepted = true;
 				}
 				
