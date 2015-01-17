@@ -1123,12 +1123,16 @@ void vDisplayModel(void)
 			glPushMatrix();
 			glTranslatef(Point->GetX(), Point->GetY(), Point->GetZ());
 			glMultMatrixf(Matrix.GetPointer());
+			
+			auto Scale(2.0f * (Point->GetPosition() - g_CurrentCamera->GetPosition()).Length() * tan(g_CurrentCamera->GetFieldOfViewY() / 2.0f));
+			
+			glScalef(Scale, Scale, Scale);
 			glBegin(GL_POINTS);
 			glColor3f(1.0f, 0.0f, 0.0f);
-			glVertex3f(-0.05f, -0.05f, 0.0f);
-			glVertex3f(0.05f, -0.05f, 0.0f);
-			glVertex3f(0.05f, 0.05f, 0.0f);
-			glVertex3f(-0.05f, 0.05f, 0.0f);
+			glVertex3f(-0.01f, -0.01f, 0.0f);
+			glVertex3f(0.01f, -0.01f, 0.0f);
+			glVertex3f(0.01f, 0.01f, 0.0f);
+			glVertex3f(-0.01f, 0.01f, 0.0f);
 			glEnd();
 			glPopMatrix();
 		}
