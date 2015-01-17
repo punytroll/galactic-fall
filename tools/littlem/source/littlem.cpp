@@ -3372,6 +3372,7 @@ void InitializeOpenGL(void)
 		g_CurrentCamera->SetOrientation(Quaternion::CreateAsRotationX(M_PI_2).RotateY(M_PI_2));
 		g_CurrentCamera->SetPosition(Vector3f::CreateTranslationX(4.0f));
 	}
+	g_Snapping = true;
 }
 
 void ProcessEvents(void)
