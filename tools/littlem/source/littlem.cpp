@@ -940,6 +940,13 @@ void vDisplayTexts(void)
 		ssTriangleInformationText << "Triangle:  Name: \"" << g_SelectedTriangles.front()->sGetName() << '"';
 		vDrawTextAt(0, g_Height - 48, ssTriangleInformationText.str());
 	}
+	if(g_SelectedCamera != nullptr)
+	{
+		std::stringstream ssCameraInformationText;
+		
+		ssCameraInformationText << "Camera:  X: " << g_SelectedCamera->GetPosition()[0] << "   Y: " << g_SelectedCamera->GetPosition()[1] << "   Z: " << g_SelectedCamera->GetPosition()[2];
+		vDrawTextAt(0, g_Height - 60, ssCameraInformationText.str());
+	}
 	g_UserInterface.vDraw();
 	glFlush();
 	glMatrixMode(GL_PROJECTION);
