@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 1.8.18 of algebra.
+ * This is part of version 1.8.19 of algebra.
  **/
 
 #ifndef ALGEBRA_VECTOR3F_H
@@ -35,7 +35,6 @@ class Vector3f
 {
 	friend Matrix4f;
 	friend Quaternion;
-	friend Vector3f operator*(float Scalar, const Vector3f & Vector);
 private:
 	float _[3];
 public:
@@ -176,6 +175,10 @@ public:
 	Vector3f & Translate(const Vector3f & Vector);
 	
 	Vector3f & Rotate(const Quaternion & Quaternion);
+	
+	Vector3f & Scale(float Scale);
+	
+	Vector3f Scaled(float Scale) const;
 	
 	const float & operator[](int Index) const
 	{
@@ -337,13 +340,22 @@ inline Vector3f & Vector3f::Rotate(const Quaternion & Quaternion)
 	return *this;
 }
 
-inline Vector3f operator*(float Scalar, const Vector3f & Vector)
+inline Vector3f & Vector3f::Scale(float Scale)
+{
+	_[0] *= Scale;
+	_[1] *= Scale;
+	_[2] *= Scale;
+	
+	return *this;
+}
+
+inline Vector3f Vector3f::Scaled(float Scale) const
 {
 	Vector3f Result;
 	
-	Result._[0] = Scalar * Vector._[0];
-	Result._[1] = Scalar * Vector._[1];
-	Result._[2] = Scalar * Vector._[2];
+	Result._[0] = Scale * _[0];
+	Result._[1] = Scale * _[1];
+	Result._[2] = Scale * _[2];
 	
 	return Result;
 }

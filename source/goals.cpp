@@ -819,7 +819,7 @@ void GoalSelectMeasuredCargo::Process(void)
 	{
 		// what this formula does is effectively calculating the distance of the cargo from a point that is twice a much away from the system center as the ship
 		// Why is this sensible? Because fighters will prefer cargo that is on "their" side of the system and is farther away from the system center than they are.
-		float Cost(((*CommodityIterator)->GetAspectPosition()->GetPosition() - 2.0f * GetMind()->GetCharacter()->GetShip()->GetAspectPosition()->GetPosition()).SquaredLength());
+		float Cost(((*CommodityIterator)->GetAspectPosition()->GetPosition() - GetMind()->GetCharacter()->GetShip()->GetAspectPosition()->GetPosition().Scaled(2.0f)).SquaredLength());
 		
 		if(Cost < MinimumCost)
 		{
