@@ -459,32 +459,32 @@ public:
 	
 	void MoveBackward(float Amount)
 	{
-		SetPosition(GetPosition() + Vector3f(0.0f, 0.0f, Amount).Rotate(_Orientation));
+		SetPosition(GetPosition() + Vector3f::CreateFromComponents(0.0f, 0.0f, Amount).Rotate(_Orientation));
 	}
 	
 	void MoveDown(float Amount)
 	{
-		SetPosition(GetPosition() + Vector3f(0.0f, -Amount, 0.0f).Rotate(_Orientation));
+		SetPosition(GetPosition() + Vector3f::CreateFromComponents(0.0f, -Amount, 0.0f).Rotate(_Orientation));
 	}
 	
 	void MoveForward(float Amount)
 	{
-		SetPosition(GetPosition() + Vector3f(0.0f, 0.0f, -Amount).Rotate(_Orientation));
+		SetPosition(GetPosition() + Vector3f::CreateFromComponents(0.0f, 0.0f, -Amount).Rotate(_Orientation));
 	}
 	
 	void MoveLeft(float Amount)
 	{
-		SetPosition(GetPosition() + Vector3f(-Amount, 0.0f, 0.0f).Rotate(_Orientation));
+		SetPosition(GetPosition() + Vector3f::CreateFromComponents(-Amount, 0.0f, 0.0f).Rotate(_Orientation));
 	}
 	
 	void MoveRight(float Amount)
 	{
-		SetPosition(GetPosition() + Vector3f(Amount, 0.0f, 0.0f).Rotate(_Orientation));
+		SetPosition(GetPosition() + Vector3f::CreateFromComponents(Amount, 0.0f, 0.0f).Rotate(_Orientation));
 	}
 	
 	void MoveUp(float Amount)
 	{
-		SetPosition(GetPosition() + Vector3f(0.0f, Amount, 0.0f).Rotate(_Orientation));
+		SetPosition(GetPosition() + Vector3f::CreateFromComponents(0.0f, Amount, 0.0f).Rotate(_Orientation));
 	}
 	
 	void TurnDown(float Amount)
@@ -598,7 +598,7 @@ public:
 		{
 			LightDescription LightDescription;
 			
-			LightDescription.m_Position = Vector3f(ConvertToFloat(Attributes.find("position-x")->second), ConvertToFloat(Attributes.find("position-y")->second), ConvertToFloat(Attributes.find("position-z")->second));
+			LightDescription.m_Position = Vector3f::CreateFromComponents(ConvertToFloat(Attributes.find("position-x")->second), ConvertToFloat(Attributes.find("position-y")->second), ConvertToFloat(Attributes.find("position-z")->second));
 			LightDescription.m_DiffuseColor = Vector4f(ConvertToFloat(Attributes.find("color-red")->second), ConvertToFloat(Attributes.find("color-green")->second), ConvertToFloat(Attributes.find("color-blue")->second), ConvertToFloat(Attributes.find("color-alpha")->second));
 			LightDescription.m_bEnabled = ConvertToBool(Attributes.find("enabled")->second);
 			
@@ -608,7 +608,7 @@ public:
 		{
 			CameraDescription CameraDescription;
 			
-			CameraDescription.Position = Vector3f(ConvertToFloat(Attributes.find("position-x")->second), ConvertToFloat(Attributes.find("position-y")->second), ConvertToFloat(Attributes.find("position-z")->second));
+			CameraDescription.Position = Vector3f::CreateFromComponents(ConvertToFloat(Attributes.find("position-x")->second), ConvertToFloat(Attributes.find("position-y")->second), ConvertToFloat(Attributes.find("position-z")->second));
 			CameraDescription.Orientation = Quaternion(ConvertToFloat(Attributes.find("orientation-w")->second), ConvertToFloat(Attributes.find("orientation-x")->second), ConvertToFloat(Attributes.find("orientation-y")->second), ConvertToFloat(Attributes.find("orientation-z")->second));
 			CameraDescription.FieldOfViewY = ConvertToFloat(Attributes.find("field-of-view")->second);
 			m_CameraDescriptions.push_back(CameraDescription);

@@ -131,10 +131,10 @@ bool Weapon::_Update(float Seconds)
 			NewShot->GetAspectPosition()->SetOrientation(ShotOrientation);
 			
 			// calculate the shot's velocity
-			Vector3f ShotVelocity(_ShotExitSpeed, 0.0f, 0.0f);
+			auto ShotVelocity(Vector3f::CreateTranslationX(_ShotExitSpeed));
 			
 			ShotVelocity.Rotate(ShotOrientation);
-			NewShot->SetVelocity(TheShip->GetVelocity() + Vector3f(ShotVelocity[0], ShotVelocity[1], 0.0f));
+			NewShot->SetVelocity(TheShip->GetVelocity() + Vector3f::CreateFromComponents(ShotVelocity[0], ShotVelocity[1], 0.0f));
 			Container->GetContainer()->GetAspectObjectContainer()->AddContent(NewShot);
 			_NextTimeToFire = GameTime::Get() + _ReloadTime;
 		}

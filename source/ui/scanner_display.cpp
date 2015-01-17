@@ -157,7 +157,7 @@ void UI::ScannerDisplay::_Setup(void)
 	assert(TheSystem->GetStar() != nullptr);
 	assert(TheSystem->GetStar()->GetAspectPosition() != nullptr);
 	Scene->GetLight()->SetType(Graphics::Light::Type::Directional);
-	Scene->GetLight()->SetDirection(Vector3f(-TheSystem->GetStar()->GetAspectPosition()->GetPosition()[0], -TheSystem->GetStar()->GetAspectPosition()->GetPosition()[1], -100.0f));
+	Scene->GetLight()->SetDirection(Vector3f::CreateFromComponents(-TheSystem->GetStar()->GetAspectPosition()->GetPosition()[0], -TheSystem->GetStar()->GetAspectPosition()->GetPosition()[1], -100.0f));
 	Scene->GetLight()->SetColor(TheSystem->GetStar()->GetColor());
 	View->SetScene(Scene);
 	

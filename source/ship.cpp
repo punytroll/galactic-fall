@@ -171,7 +171,7 @@ bool Ship::Update(float Seconds)
 			auto NewJumpParticleSystem(CreateParticleSystem("jump"));
 			
 			NewJumpParticleSystem->SetPosition(GetAspectPosition()->GetPosition());
-			NewJumpParticleSystem->SetVelocity(Vector3f(0.0f, 0.0f, 0.0f));
+			NewJumpParticleSystem->SetVelocity(Vector3f::CreateZero());
 			VisualizeParticleSystem(NewJumpParticleSystem, dynamic_cast< System * >(OldSystem));
 			
 			// set the ship's position according to the old system
@@ -308,13 +308,13 @@ bool Ship::Update(float Seconds)
 			
 			if(GetFuel() >= FuelConsumption)
 			{
-				Vector3f ForwardThrust(GetMaximumForwardThrust(), 0.0f, 0.0f);
+				auto ForwardThrust(Vector3f::CreateTranslationX(GetMaximumForwardThrust()));
 				
 				ForwardThrust.Rotate(GetAspectPosition()->GetOrientation());
 				ForwardThrust *= Seconds;
-				m_Velocity.Translate(Vector3f(ForwardThrust[0], ForwardThrust[1], 0.0f));
+				m_Velocity.Translate(Vector3f::CreateFromComponents(ForwardThrust[0], ForwardThrust[1], 0.0f));
 				ForwardThrust *= 0.5f * Seconds;
-				GetAspectPosition()->ModifyPosition(Vector3f(ForwardThrust[0], ForwardThrust[1], 0.0f));
+				GetAspectPosition()->ModifyPosition(Vector3f::CreateFromComponents(ForwardThrust[0], ForwardThrust[1], 0.0f));
 				if(m_Velocity.Length() > GetMaximumSpeed())
 				{
 					m_Velocity.Normalize();
@@ -341,8 +341,8 @@ bool Ship::Update(float Seconds)
 					VelocityFactor = 1 - X * X - Y * Y;
 					X *= GetExhaustRadius();
 					Y *= GetExhaustRadius();
-					Particle._Position = Vector3f(0.0f, X, Y);
-					Particle._Velocity = Vector3f(GetRandomFloat(-0.3f * VelocityFactor, 0.0f), 0.0f, 0.0f);
+					Particle._Position = Vector3f::CreateFromComponents(0.0f, X, Y);
+					Particle._Velocity = Vector3f::CreateFromComponents(GetRandomFloat(-0.3f * VelocityFactor, 0.0f), 0.0f, 0.0f);
 					Particle._Size = 0.2f;
 					_EngineGlowParticleSystem->AddParticle(Particle);
 				}
@@ -368,11 +368,11 @@ bool Ship::Update(float Seconds)
 					Content->GetAspectPosition()->SetPosition(GetAspectPosition()->GetPosition());
 					
 					Commodity * TheCommodity(dynamic_cast< Commodity * >(Content));
-					Vector2f Velocity(Vector2f::CreateFromMagnitudeAndAngle(GetRandomFloat(0.0f, 0.5f), GetRandomFloat(0.0f, 2 * M_PI)));
+					auto Velocity(Vector2f::CreateFromMagnitudeAndAngle(GetRandomFloat(0.0f, 0.5f), GetRandomFloat(0.0f, 2 * M_PI)));
 					
-					TheCommodity->SetVelocity(Vector3f(GetVelocity()[0] * 0.8f + Velocity[0], GetVelocity()[1] * 0.8 + Velocity[1], 0.0f));
+					TheCommodity->SetVelocity(Vector3f::CreateFromComponents(GetVelocity()[0] * 0.8f + Velocity[0], GetVelocity()[1] * 0.8 + Velocity[1], 0.0f));
 					
-					Vector3f RotationAxis(GetRandomFloat(-1.0f, 1.0f), GetRandomFloat(-1.0f, 1.0f), GetRandomFloat(-1.0f, 1.0f));
+					auto RotationAxis(Vector3f::CreateFromComponents(GetRandomFloat(-1.0f, 1.0f), GetRandomFloat(-1.0f, 1.0f), GetRandomFloat(-1.0f, 1.0f)));
 					
 					RotationAxis.Normalize();
 					TheCommodity->SetAngularVelocity(AxisAngle(RotationAxis[0], RotationAxis[1], RotationAxis[2], GetRandomFloat(0.0f, 0.7f)));

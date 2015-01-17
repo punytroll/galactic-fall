@@ -37,7 +37,7 @@ Graphics::Node::Node(void) :
 	_Container(nullptr),
 	_Normalize(false),
 	_Orientation(Quaternion::CreateIdentity()),
-	_Position(0.0f, 0.0f, 0.0f),
+	_Position(Vector3f::CreateZero()),
 	_Scale(1.0f),
 	_Scene(nullptr),
 	_UseBlending(false),
