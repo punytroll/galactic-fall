@@ -38,49 +38,88 @@
 #define ON_DEBUG(A)
 #endif
 
-enum
+enum class FixedAxis
 {
-	LITTLEM_AXIS_POSITIVE_X = 0,
-	LITTLEM_AXIS_NEGATIVE_X = 1,
-	LITTLEM_AXIS_POSITIVE_Y = 2,
-	LITTLEM_AXIS_NEGATIVE_Y = 3,
-	LITTLEM_AXIS_POSITIVE_Z = 4,
-	LITTLEM_AXIS_NEGATIVE_Z = 5
+	NegativeX,
+	NegativeY,
+	NegativeZ,
+	PositiveX,
+	PositiveY,
+	PositiveZ
 };
 
-std::string GetAxisString(int Axis)
+std::string GetAxisString(FixedAxis Axis)
 {
 	switch(Axis)
 	{
-	case LITTLEM_AXIS_NEGATIVE_X:
+	case FixedAxis::NegativeX:
 		{
 			return "-X";
 		}
-	case LITTLEM_AXIS_NEGATIVE_Y:
+	case FixedAxis::NegativeY:
 		{
 			return "-Y";
 		}
-	case LITTLEM_AXIS_NEGATIVE_Z:
+	case FixedAxis::NegativeZ:
 		{
 			return "-Z";
 		}
-	case LITTLEM_AXIS_POSITIVE_X:
+	case FixedAxis::PositiveX:
 		{
 			return "+X";
 		}
-	case LITTLEM_AXIS_POSITIVE_Y:
+	case FixedAxis::PositiveY:
 		{
 			return "+Y";
 		}
-	case LITTLEM_AXIS_POSITIVE_Z:
+	case FixedAxis::PositiveZ:
 		{
 			return "+Z";
 		}
-	default:
+	}
+	assert(false);
+}
+
+enum class FixedView
+{
+	Front,
+	Left,
+	Back,
+	Right,
+	Top,
+	Bottom
+};
+
+std::string GetViewString(FixedView View)
+{
+	switch(View)
+	{
+	case FixedView::Back:
 		{
-			assert(false);
+			return "Back";
+		}
+	case FixedView::Bottom:
+		{
+			return "Bottom";
+		}
+	case FixedView::Front:
+		{
+			return "Front";
+		}
+	case FixedView::Left:
+		{
+			return "Left";
+		}
+	case FixedView::Right:
+		{
+			return "Right";
+		}
+	case FixedView::Top:
+		{
+			return "Top";
 		}
 	}
+	assert(false);
 }
 
 enum class MouseButton
@@ -93,8 +132,8 @@ enum class MouseButton
 	WheelUp
 };
 
-int g_UpAxis;
-int g_FrontAxis;
+FixedAxis g_UpAxis;
+FixedAxis g_ForwardAxis;
 float g_Width(800.0f);
 float g_Height(800.0f);
 bool g_AltActive(false);
@@ -336,53 +375,11 @@ public:
 	GLenum m_LightNumber;
 };
 
-enum class PredefinedView
-{
-	Front,
-	Left,
-	Back,
-	Right,
-	Top,
-	Bottom
-};
-
-std::string GetViewString(PredefinedView View)
-{
-	switch(View)
-	{
-	case PredefinedView::Back:
-		{
-			return "Back";
-		}
-	case PredefinedView::Bottom:
-		{
-			return "Bottom";
-		}
-	case PredefinedView::Front:
-		{
-			return "Front";
-		}
-	case PredefinedView::Left:
-		{
-			return "Left";
-		}
-	case PredefinedView::Right:
-		{
-			return "Right";
-		}
-	case PredefinedView::Top:
-		{
-			return "Top";
-		}
-	}
-	assert(false);
-}
-
 class Camera : public Position
 {
 public:
 	Camera(void) :
-		_FieldOfViewY(52.0f),
+		_FieldOfViewY(1.0f),
 		_Orientation(Quaternion::CreateIdentity())
 	{
 	}
@@ -421,43 +418,93 @@ public:
 		return Matrix4f::CreateTranslation(GetPosition()).Rotate(_Orientation);
 	}
 	
-	void SetView(PredefinedView View)
+	void SetView(FixedView View)
 	{
-		if((View == PredefinedView::Front) && (g_UpAxis == LITTLEM_AXIS_POSITIVE_Z) && (g_FrontAxis == LITTLEM_AXIS_NEGATIVE_X))
+		if((View == FixedView::Front) && (g_UpAxis == FixedAxis::PositiveZ) && (g_ForwardAxis == FixedAxis::PositiveX))
 		{
 			SetPosition(4.0f, 0.0f, 0.0f);
 			_Orientation.RotationX(M_PI_2).RotateY(M_PI_2);
 		}
-		else if((View == PredefinedView::Back) && (g_UpAxis == LITTLEM_AXIS_POSITIVE_Z) && (g_FrontAxis == LITTLEM_AXIS_NEGATIVE_X))
+		else if((View == FixedView::Back) && (g_UpAxis == FixedAxis::PositiveZ) && (g_ForwardAxis == FixedAxis::PositiveX))
 		{
 			SetPosition(-4.0f, 0.0f, 0.0f);
 			_Orientation.RotationX(M_PI_2).RotateY(-M_PI_2);
 		}
-		else if((View == PredefinedView::Left) && (g_UpAxis == LITTLEM_AXIS_POSITIVE_Z) && (g_FrontAxis == LITTLEM_AXIS_NEGATIVE_X))
+		else if((View == FixedView::Left) && (g_UpAxis == FixedAxis::PositiveZ) && (g_ForwardAxis == FixedAxis::PositiveX))
 		{
 			SetPosition(0.0f, -4.0f, 0.0f);
 			_Orientation.RotationX(M_PI_2);
 		}
-		else if((View == PredefinedView::Right) && (g_UpAxis == LITTLEM_AXIS_POSITIVE_Z) && (g_FrontAxis == LITTLEM_AXIS_NEGATIVE_X))
+		else if((View == FixedView::Right) && (g_UpAxis == FixedAxis::PositiveZ) && (g_ForwardAxis == FixedAxis::PositiveX))
 		{
 			SetPosition(0.0f, 4.0f, 0.0f);
 			_Orientation.RotationY(M_PI).RotateX(-M_PI_2);
 		}
-		else if((View == PredefinedView::Top) && (g_UpAxis == LITTLEM_AXIS_POSITIVE_Z) && (g_FrontAxis == LITTLEM_AXIS_NEGATIVE_X))
+		else if((View == FixedView::Top) && (g_UpAxis == FixedAxis::PositiveZ) && (g_ForwardAxis == FixedAxis::PositiveX))
 		{
 			SetPosition(0.0f, 0.0f, 4.0f);
 			_Orientation.RotationZ(M_PI_2);
 		}
-		else if((View == PredefinedView::Bottom) && (g_UpAxis == LITTLEM_AXIS_POSITIVE_Z) && (g_FrontAxis == LITTLEM_AXIS_NEGATIVE_X))
+		else if((View == FixedView::Bottom) && (g_UpAxis == FixedAxis::PositiveZ) && (g_ForwardAxis == FixedAxis::PositiveX))
 		{
 			SetPosition(0.0f, 0.0f, -4.0f);
 			_Orientation.RotationZ(M_PI_2).RotateY(M_PI);
 		}
 		else
 		{
-			std::cout << "Unknown combination: View=" << GetViewString(View) << ", Up=" << GetAxisString(g_UpAxis) << ", Front=" << GetAxisString(g_FrontAxis) << std::endl;
+			std::cout << "Unknown combination: View=" << GetViewString(View) << ", Up=" << GetAxisString(g_UpAxis) << ", Front=" << GetAxisString(g_ForwardAxis) << std::endl;
 			assert(false);
 		}
+	}
+	
+	void MoveBackward(float Amount)
+	{
+		SetPosition(GetPosition() + Vector3f(0.0f, 0.0f, Amount).Rotate(_Orientation));
+	}
+	
+	void MoveDown(float Amount)
+	{
+		SetPosition(GetPosition() + Vector3f(0.0f, -Amount, 0.0f).Rotate(_Orientation));
+	}
+	
+	void MoveForward(float Amount)
+	{
+		SetPosition(GetPosition() + Vector3f(0.0f, 0.0f, -Amount).Rotate(_Orientation));
+	}
+	
+	void MoveLeft(float Amount)
+	{
+		SetPosition(GetPosition() + Vector3f(-Amount, 0.0f, 0.0f).Rotate(_Orientation));
+	}
+	
+	void MoveRight(float Amount)
+	{
+		SetPosition(GetPosition() + Vector3f(Amount, 0.0f, 0.0f).Rotate(_Orientation));
+	}
+	
+	void MoveUp(float Amount)
+	{
+		SetPosition(GetPosition() + Vector3f(0.0f, Amount, 0.0f).Rotate(_Orientation));
+	}
+	
+	void TurnDown(float Amount)
+	{
+		_Orientation.RotateX(-Amount);
+	}
+	
+	void TurnLeft(float Amount)
+	{
+		_Orientation.RotateY(Amount);
+	}
+	
+	void TurnRight(float Amount)
+	{
+		_Orientation.RotateY(-Amount);
+	}
+	
+	void TurnUp(float Amount)
+	{
+		_Orientation.RotateX(Amount);
 	}
 	
 	float _FieldOfViewY;
@@ -1553,205 +1600,241 @@ public:
 		{
 		case 65: // SPACE
 			{
-				// create triangle from three selected points
-				if(g_SelectedPoints.size() == 3)
+				if(IsDown == true)
 				{
-					TrianglePoint * pTrianglePoint1(new TrianglePoint(g_SelectedPoints[0]));
-					
-					g_TrianglePoints.push_back(pTrianglePoint1);
-					g_SelectedPoints[0]->m_TrianglePoints.push_back(pTrianglePoint1);
-					
-					TrianglePoint * pTrianglePoint2(new TrianglePoint(g_SelectedPoints[1]));
-					
-					g_TrianglePoints.push_back(pTrianglePoint2);
-					g_SelectedPoints[1]->m_TrianglePoints.push_back(pTrianglePoint2);
-					
-					TrianglePoint * pTrianglePoint3(new TrianglePoint(g_SelectedPoints[2]));
-					
-					g_TrianglePoints.push_back(pTrianglePoint3);
-					g_SelectedPoints[2]->m_TrianglePoints.push_back(pTrianglePoint3);
-					
-					Triangle * pNewTriangle(new Triangle());
-					
-					vAttachTrianglePoint(pNewTriangle, 1, pTrianglePoint1);
-					vAttachTrianglePoint(pNewTriangle, 2, pTrianglePoint2);
-					vAttachTrianglePoint(pNewTriangle, 3, pTrianglePoint3);
-					pNewTriangle->vRealignNormal();
-					g_Triangles.push_back(pNewTriangle);
-					g_SelectedTriangles.push_back(pNewTriangle);
-					g_SelectedPoints.clear();
-					bKeyAccepted = true;
+					// create triangle from three selected points
+					if(g_SelectedPoints.size() == 3)
+					{
+						TrianglePoint * pTrianglePoint1(new TrianglePoint(g_SelectedPoints[0]));
+						
+						g_TrianglePoints.push_back(pTrianglePoint1);
+						g_SelectedPoints[0]->m_TrianglePoints.push_back(pTrianglePoint1);
+						
+						TrianglePoint * pTrianglePoint2(new TrianglePoint(g_SelectedPoints[1]));
+						
+						g_TrianglePoints.push_back(pTrianglePoint2);
+						g_SelectedPoints[1]->m_TrianglePoints.push_back(pTrianglePoint2);
+						
+						TrianglePoint * pTrianglePoint3(new TrianglePoint(g_SelectedPoints[2]));
+						
+						g_TrianglePoints.push_back(pTrianglePoint3);
+						g_SelectedPoints[2]->m_TrianglePoints.push_back(pTrianglePoint3);
+						
+						Triangle * pNewTriangle(new Triangle());
+						
+						vAttachTrianglePoint(pNewTriangle, 1, pTrianglePoint1);
+						vAttachTrianglePoint(pNewTriangle, 2, pTrianglePoint2);
+						vAttachTrianglePoint(pNewTriangle, 3, pTrianglePoint3);
+						pNewTriangle->vRealignNormal();
+						g_Triangles.push_back(pNewTriangle);
+						g_SelectedTriangles.push_back(pNewTriangle);
+						g_SelectedPoints.clear();
+						bKeyAccepted = true;
+					}
 				}
 				
 				break;
 			}
 		case 23: // TABULATOR
 			{
-				// rotate point selection
-				if(g_SelectedPoints.size() > 0)
+				if(IsDown == true)
 				{
-					bKeyAccepted = true;
-				}
-				
-				std::vector< Point * > NewSelectedPoints;
-				
-				for(std::vector< Point * >::size_type stSelectedPoint = 0; stSelectedPoint < g_SelectedPoints.size(); ++stSelectedPoint)
-				{
-					std::vector< Point * >::iterator iPoint(std::find(g_Points.begin(), g_Points.end(), g_SelectedPoints[stSelectedPoint]));
-					
-					++iPoint;
-					if(iPoint == g_Points.end())
+					// rotate point selection
+					if(g_SelectedPoints.size() > 0)
 					{
-						iPoint = g_Points.begin();
+						bKeyAccepted = true;
 					}
-					g_SelectedPoints[stSelectedPoint] = *iPoint;
+					
+					std::vector< Point * > NewSelectedPoints;
+					
+					for(std::vector< Point * >::size_type stSelectedPoint = 0; stSelectedPoint < g_SelectedPoints.size(); ++stSelectedPoint)
+					{
+						std::vector< Point * >::iterator iPoint(std::find(g_Points.begin(), g_Points.end(), g_SelectedPoints[stSelectedPoint]));
+						
+						++iPoint;
+						if(iPoint == g_Points.end())
+						{
+							iPoint = g_Points.begin();
+						}
+						g_SelectedPoints[stSelectedPoint] = *iPoint;
+					}
 				}
 				
 				break;
 			}
 		case 40: // D
 			{
-				// duplicate selected points
-				if(g_SelectedPoints.size() > 0)
+				if(IsDown == true)
 				{
-					bKeyAccepted = true;
+					// duplicate selected points
+					if(g_SelectedPoints.size() > 0)
+					{
+						bKeyAccepted = true;
+					}
+					
+					std::vector< Point * > NewSelectedPoints;
+					
+					for(std::vector< Point * >::size_type stI = 0; stI < g_SelectedPoints.size(); ++stI)
+					{
+						g_Points.push_back(new Point(*g_SelectedPoints[stI]));
+						NewSelectedPoints.push_back(g_Points.back());
+					}
+					g_SelectedPoints = NewSelectedPoints;
 				}
-				
-				std::vector< Point * > NewSelectedPoints;
-				
-				for(std::vector< Point * >::size_type stI = 0; stI < g_SelectedPoints.size(); ++stI)
-				{
-					g_Points.push_back(new Point(*g_SelectedPoints[stI]));
-					NewSelectedPoints.push_back(g_Points.back());
-				}
-				g_SelectedPoints = NewSelectedPoints;
 				
 				break;
 			}
 		case 57: // N
 			{
-				if(g_ShiftActive == true)
+				if(IsDown == true)
 				{
-					// create new point at coordinates (0.0, 0.0, 0.0)
-					g_Points.push_back(new Point(0.0f, 0.0f, 0.0f));
+					if(g_ShiftActive == true)
+					{
+						// create new point at coordinates (0.0, 0.0, 0.0)
+						g_Points.push_back(new Point(0.0f, 0.0f, 0.0f));
+					}
+					else
+					{
+						// create new point at random coordinates within (-1.0 .. 1.0, -1.0 .. 1.0, -1.0 .. 1.0)
+						g_Points.push_back(new Point(-1.0f + 2 * (static_cast< double> (random()) / RAND_MAX), -1.0f + 2 * (static_cast< double> (random()) / RAND_MAX), -1.0f + 2 * (static_cast< double> (random()) / RAND_MAX)));
+					}
+					bKeyAccepted = true;
 				}
-				else
-				{
-					// create new point at random coordinates within (-1.0 .. 1.0, -1.0 .. 1.0, -1.0 .. 1.0)
-					g_Points.push_back(new Point(-1.0f + 2 * (static_cast< double> (random()) / RAND_MAX), -1.0f + 2 * (static_cast< double> (random()) / RAND_MAX), -1.0f + 2 * (static_cast< double> (random()) / RAND_MAX)));
-				}
-				bKeyAccepted = true;
 				
 				break;
 			}
 		case 28: // T
 			{
-				// select all triangles which contain the selected points
-				if(g_SelectedPoints.size() > 0)
+				if(IsDown == true)
 				{
-					g_SelectedTriangles.clear();
-					
-					std::vector< Triangle * > TrianglesToSelect;
-					
-					for(std::vector< Point * >::size_type stPoint = 0; stPoint < g_SelectedPoints.size(); ++stPoint)
+					// select all triangles which contain the selected points
+					if(g_SelectedPoints.size() > 0)
 					{
-						for(std::vector< TrianglePoint * >::size_type stTrianglePoint = 0; stTrianglePoint < g_SelectedPoints[stPoint]->m_TrianglePoints.size(); ++stTrianglePoint)
+						g_SelectedTriangles.clear();
+						
+						std::vector< Triangle * > TrianglesToSelect;
+						
+						for(std::vector< Point * >::size_type stPoint = 0; stPoint < g_SelectedPoints.size(); ++stPoint)
 						{
-							copy(g_SelectedPoints[stPoint]->m_TrianglePoints[stTrianglePoint]->m_Triangles.begin(), g_SelectedPoints[stPoint]->m_TrianglePoints[stTrianglePoint]->m_Triangles.end(), back_inserter(TrianglesToSelect));
+							for(std::vector< TrianglePoint * >::size_type stTrianglePoint = 0; stTrianglePoint < g_SelectedPoints[stPoint]->m_TrianglePoints.size(); ++stTrianglePoint)
+							{
+								copy(g_SelectedPoints[stPoint]->m_TrianglePoints[stTrianglePoint]->m_Triangles.begin(), g_SelectedPoints[stPoint]->m_TrianglePoints[stTrianglePoint]->m_Triangles.end(), back_inserter(TrianglesToSelect));
+							}
 						}
+						std::sort(TrianglesToSelect.begin(), TrianglesToSelect.end());
+						std::unique_copy(TrianglesToSelect.begin(), TrianglesToSelect.end(), back_inserter(g_SelectedTriangles));
+						bKeyAccepted = true;
 					}
-					std::sort(TrianglesToSelect.begin(), TrianglesToSelect.end());
-					std::unique_copy(TrianglesToSelect.begin(), TrianglesToSelect.end(), back_inserter(g_SelectedTriangles));
-					bKeyAccepted = true;
 				}
 				
 				break;
 			}
 		case 119: // DELETE
 			{
-				// delete selected points
-				while(g_SelectedPoints.size() > 0)
+				if(IsDown == true)
 				{
-					vDeletePoint(g_SelectedPoints.front());
+					// delete selected points
+					while(g_SelectedPoints.size() > 0)
+					{
+						vDeletePoint(g_SelectedPoints.front());
+					}
+					bKeyAccepted = true;
 				}
-				bKeyAccepted = true;
 				
 				break;
 			}
 		case 114: // RIGHT
 			{
-				if(g_SelectedPoints.size() > 0)
+				if(IsDown == true)
 				{
-					for(std::vector< Point * >::size_type stI = 0; stI < g_SelectedPoints.size(); ++stI)
+					if(g_SelectedPoints.size() > 0)
 					{
-						MovePosition(g_SelectedPoints[stI], 0, g_fSnapFactor);
+						for(std::vector< Point * >::size_type stI = 0; stI < g_SelectedPoints.size(); ++stI)
+						{
+							MovePosition(g_SelectedPoints[stI], 0, g_fSnapFactor);
+						}
+						bKeyAccepted = true;
 					}
-					bKeyAccepted = true;
 				}
 				
 				break;
 			}
 		case 113: // LEFT
 			{
-				if(g_SelectedPoints.size() > 0)
+				if(IsDown == true)
 				{
-					for(std::vector< Point * >::size_type stI = 0; stI < g_SelectedPoints.size(); ++stI)
+					if(g_SelectedPoints.size() > 0)
 					{
-						MovePosition(g_SelectedPoints[stI], 0, -g_fSnapFactor);
+						for(std::vector< Point * >::size_type stI = 0; stI < g_SelectedPoints.size(); ++stI)
+						{
+							MovePosition(g_SelectedPoints[stI], 0, -g_fSnapFactor);
+						}
+						bKeyAccepted = true;
 					}
-					bKeyAccepted = true;
 				}
 				
 				break;
 			}
 		case 111: // UP
 			{
-				if(g_SelectedPoints.size() > 0)
+				if(IsDown == true)
 				{
-					for(std::vector< Point * >::size_type stI = 0; stI < g_SelectedPoints.size(); ++stI)
+					if(g_SelectedPoints.size() > 0)
 					{
-						MovePosition(g_SelectedPoints[stI], 1, g_fSnapFactor);
+						for(std::vector< Point * >::size_type stI = 0; stI < g_SelectedPoints.size(); ++stI)
+						{
+							MovePosition(g_SelectedPoints[stI], 1, g_fSnapFactor);
+						}
+						bKeyAccepted = true;
 					}
-					bKeyAccepted = true;
 				}
 				
 				break;
 			}
 		case 116: // DOWN
 			{
-				if(g_SelectedPoints.size() > 0)
+				if(IsDown == true)
 				{
-					for(std::vector< Point * >::size_type stI = 0; stI < g_SelectedPoints.size(); ++stI)
+					if(g_SelectedPoints.size() > 0)
 					{
-						MovePosition(g_SelectedPoints[stI], 1, -g_fSnapFactor);
+						for(std::vector< Point * >::size_type stI = 0; stI < g_SelectedPoints.size(); ++stI)
+						{
+							MovePosition(g_SelectedPoints[stI], 1, -g_fSnapFactor);
+						}
+						bKeyAccepted = true;
 					}
-					bKeyAccepted = true;
 				}
 				
 				break;
 			}
 		case 117: // PAGE DOWN
 			{
-				if(g_SelectedPoints.size() > 0)
+				if(IsDown == true)
 				{
-					for(std::vector< Point * >::size_type stI = 0; stI < g_SelectedPoints.size(); ++stI)
+					if(g_SelectedPoints.size() > 0)
 					{
-						MovePosition(g_SelectedPoints[stI], 2, g_fSnapFactor);
+						for(std::vector< Point * >::size_type stI = 0; stI < g_SelectedPoints.size(); ++stI)
+						{
+							MovePosition(g_SelectedPoints[stI], 2, g_fSnapFactor);
+						}
+						bKeyAccepted = true;
 					}
-					bKeyAccepted = true;
 				}
 				
 				break;
 			}
 		case 112: // PAGE UP
 			{
-				if(g_SelectedPoints.size() > 0)
+				if(IsDown == true)
 				{
-					for(std::vector< Point * >::size_type stI = 0; stI < g_SelectedPoints.size(); ++stI)
+					if(g_SelectedPoints.size() > 0)
 					{
-						MovePosition(g_SelectedPoints[stI], 2, -g_fSnapFactor);
+						for(std::vector< Point * >::size_type stI = 0; stI < g_SelectedPoints.size(); ++stI)
+						{
+							MovePosition(g_SelectedPoints[stI], 2, -g_fSnapFactor);
+						}
+						bKeyAccepted = true;
 					}
-					bKeyAccepted = true;
 				}
 				
 				break;
@@ -1926,85 +2009,131 @@ public:
 			}
 		case 114: // RIGHT
 			{
-				if(g_pSelectedCamera != 0)
+				if(IsDown == true)
 				{
-					MovePosition(g_pSelectedCamera, 0, 0.01);
+					if(g_pSelectedCamera != nullptr)
+					{
+						MovePosition(g_pSelectedCamera, 0, 0.01);
+					}
+					else if(g_CurrentCamera != nullptr)
+					{
+						if(g_ControlActive == true)
+						{
+							g_CurrentCamera->TurnRight(0.02f);
+						}
+						else
+						{
+							g_CurrentCamera->MoveRight(0.2f);
+						}
+					}
+					bKeyAccepted = true;
 				}
-				else if(g_CurrentCamera != 0)
-				{
-					MovePosition(g_CurrentCamera, 0, 0.01);
-				}
-				bKeyAccepted = true;
 				
 				break;
 			}
 		case 113: // LEFT
 			{
-				if(g_pSelectedCamera != 0)
+				if(IsDown == true)
 				{
-					MovePosition(g_pSelectedCamera, 0, -0.01);
+					if(g_pSelectedCamera != nullptr)
+					{
+						MovePosition(g_pSelectedCamera, 0, -0.01);
+					}
+					else if(g_CurrentCamera != nullptr)
+					{
+						if(g_ControlActive == true)
+						{
+							g_CurrentCamera->TurnLeft(0.02f);
+						}
+						else
+						{
+							g_CurrentCamera->MoveLeft(0.2f);
+						}
+					}
+					bKeyAccepted = true;
 				}
-				else if(g_CurrentCamera != 0)
-				{
-					MovePosition(g_CurrentCamera, 0, -0.01);
-				}
-				bKeyAccepted = true;
 				
 				break;
 			}
 		case 111: // UP
 			{
-				if(g_pSelectedCamera != 0)
+				if(IsDown == true)
 				{
-					MovePosition(g_pSelectedCamera, 1, 0.01);
+					if(g_pSelectedCamera != nullptr)
+					{
+						MovePosition(g_pSelectedCamera, 1, 0.01);
+					}
+					else if(g_CurrentCamera != nullptr)
+					{
+						if(g_ControlActive == true)
+						{
+							g_CurrentCamera->TurnUp(0.02f);
+						}
+						else
+						{
+							g_CurrentCamera->MoveUp(0.2f);
+						}
+					}
+					bKeyAccepted = true;
 				}
-				else if(g_CurrentCamera != 0)
-				{
-					MovePosition(g_CurrentCamera, 1, 0.01);
-				}
-				bKeyAccepted = true;
 				
 				break;
 			}
 		case 116: // DOWN
 			{
-				if(g_pSelectedCamera != 0)
+				if(IsDown == true)
 				{
-					MovePosition(g_pSelectedCamera, 1, -0.01);
+					if(g_pSelectedCamera != nullptr)
+					{
+						MovePosition(g_pSelectedCamera, 1, -0.01);
+					}
+					else if(g_CurrentCamera != nullptr)
+					{
+						if(g_ControlActive == true)
+						{
+							g_CurrentCamera->TurnDown(0.02f);
+						}
+						else
+						{
+							g_CurrentCamera->MoveDown(0.2f);
+						}
+					}
+					bKeyAccepted = true;
 				}
-				else if(g_CurrentCamera != 0)
-				{
-					MovePosition(g_CurrentCamera, 1, -0.01);
-				}
-				bKeyAccepted = true;
 				
 				break;
 			}
 		case 117: // PAGE DOWN
 			{
-				if(g_pSelectedCamera != 0)
+				if(IsDown == true)
 				{
-					MovePosition(g_pSelectedCamera, 2, 0.01);
+					if(g_pSelectedCamera != nullptr)
+					{
+						MovePosition(g_pSelectedCamera, 2, 0.01);
+					}
+					else if(g_CurrentCamera != nullptr)
+					{
+						g_CurrentCamera->MoveBackward(0.2f);
+					}
+					bKeyAccepted = true;
 				}
-				else if(g_CurrentCamera != 0)
-				{
-					MovePosition(g_CurrentCamera, 2, 0.01);
-				}
-				bKeyAccepted = true;
 				
 				break;
 			}
 		case 112: // PAGE UP
 			{
-				if(g_pSelectedCamera != 0)
+				if(IsDown == true)
 				{
-					MovePosition(g_pSelectedCamera, 2, -0.01);
+					if(g_pSelectedCamera != nullptr)
+					{
+						MovePosition(g_pSelectedCamera, 2, -0.01);
+					}
+					else if(g_CurrentCamera != nullptr)
+					{
+						g_CurrentCamera->MoveForward(0.2f);
+					}
+					bKeyAccepted = true;
 				}
-				else if(g_CurrentCamera != 0)
-				{
-					MovePosition(g_CurrentCamera, 2, -0.01);
-				}
-				bKeyAccepted = true;
 				
 				break;
 			}
@@ -2487,7 +2616,7 @@ public:
 				// switch to normalized front view
 				if(g_CurrentCamera != nullptr)
 				{
-					g_CurrentCamera->SetView(PredefinedView::Front);
+					g_CurrentCamera->SetView(FixedView::Front);
 					bKeyAccepted = true;
 				}
 				
@@ -2498,7 +2627,7 @@ public:
 				// switch to normalized left view
 				if(g_CurrentCamera != nullptr)
 				{
-					g_CurrentCamera->SetView(PredefinedView::Left);
+					g_CurrentCamera->SetView(FixedView::Left);
 					bKeyAccepted = true;
 				}
 				
@@ -2509,7 +2638,7 @@ public:
 				// switch to normalized right view
 				if(g_CurrentCamera != nullptr)
 				{
-					g_CurrentCamera->SetView(PredefinedView::Right);
+					g_CurrentCamera->SetView(FixedView::Right);
 					bKeyAccepted = true;
 				}
 				
@@ -2520,7 +2649,7 @@ public:
 				// switch to normalized back view
 				if(g_CurrentCamera != nullptr)
 				{
-					g_CurrentCamera->SetView(PredefinedView::Back);
+					g_CurrentCamera->SetView(FixedView::Back);
 					bKeyAccepted = true;
 				}
 				
@@ -2531,7 +2660,7 @@ public:
 				// switch to normalized top view
 				if(g_CurrentCamera != nullptr)
 				{
-					g_CurrentCamera->SetView(PredefinedView::Top);
+					g_CurrentCamera->SetView(FixedView::Top);
 					bKeyAccepted = true;
 				}
 				
@@ -2542,7 +2671,19 @@ public:
 				// switch to normalized bottom view
 				if(g_CurrentCamera != nullptr)
 				{
-					g_CurrentCamera->SetView(PredefinedView::Bottom);
+					g_CurrentCamera->SetView(FixedView::Bottom);
+					bKeyAccepted = true;
+				}
+				
+				break;
+			}
+		case 73: // F7
+			{
+				// switch to normalized view
+				if(g_CurrentCamera != nullptr)
+				{
+					g_CurrentCamera->_Orientation.Identity();
+					g_CurrentCamera->SetPosition(0.0f, 0.0f, 4.0f);
 					bKeyAccepted = true;
 				}
 				
@@ -2692,24 +2833,24 @@ void MouseButtonEvent(MouseButton Button, bool IsDown, const Vector2f & MousePos
 		}
 	case MouseButton::WheelUp:
 		{
-			if(g_CurrentCamera != 0)
+			if(IsDown == true)
 			{
-				Vector3f Forward(0.0f, 0.0f, -0.2f);
-				
-				Forward.Rotate(g_CurrentCamera->_Orientation);
-				g_CurrentCamera->SetPosition(g_CurrentCamera->GetPosition() + Forward);
+				if(g_CurrentCamera != nullptr)
+				{
+					g_CurrentCamera->MoveForward(0.2f);
+				}
 			}
 			
 			break;
 		}
 	case MouseButton::WheelDown:
 		{
-			if(g_CurrentCamera != 0)
+			if(IsDown == true)
 			{
-				Vector3f Backward(0.0f, 0.0f, 0.2f);
-				
-				Backward.Rotate(g_CurrentCamera->_Orientation);
-				g_CurrentCamera->SetPosition(g_CurrentCamera->GetPosition() + Backward);
+				if(g_CurrentCamera != nullptr)
+				{
+					g_CurrentCamera->MoveBackward(0.2f);
+				}
 			}
 			
 			break;
@@ -3050,7 +3191,7 @@ void InitializeOpenGL(void)
 	
 	g_Cameras.push_back(pCamera);
 	g_CurrentCamera = pCamera;
-	g_CurrentCamera->SetView(PredefinedView::Front);
+	g_CurrentCamera->SetView(FixedView::Front);
 }
 
 void ProcessEvents(void)
@@ -3171,8 +3312,8 @@ void DestroyWindow(void)
 int main(int argc, char ** argv)
 {
 	// <static-initialization>
-	g_UpAxis = LITTLEM_AXIS_POSITIVE_Z;
-	g_FrontAxis = LITTLEM_AXIS_NEGATIVE_X;
+	g_UpAxis = FixedAxis::PositiveZ;
+	g_ForwardAxis = FixedAxis::PositiveX;
 	// </static-initialization>
 	// setup the random number generator for everyday use
 	srand(time(0));
