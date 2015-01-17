@@ -11,6 +11,12 @@ class Point : public Position
 {
 public:
 	Point(float fX, float fY, float fZ);
+	
+	const std::vector< TrianglePoint * > & GetTrianglePoints(void) const
+	{
+		return m_TrianglePoints;
+	}
+	
 	std::vector< TrianglePoint * > m_TrianglePoints;
 };
 

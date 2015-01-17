@@ -13,6 +13,12 @@ class TrianglePoint
 public:
 	TrianglePoint(void);
 	TrianglePoint(Point * pPoint);
+
+	const std::vector< Triangle * > & GetTriangles(void) const
+	{
+		return m_Triangles;
+	}
+	
 	void vDraw(void);
 	void vDrawSelection(void);
 	Point * m_pPoint;
