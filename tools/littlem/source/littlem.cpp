@@ -2202,13 +2202,13 @@ public:
 			}
 		case 110: // HOME
 			{
-				if(g_SelectedCamera != 0)
+				if(g_SelectedCamera != nullptr)
 				{
 					g_SelectedCamera->SetFieldOfViewY(g_SelectedCamera->GetFieldOfViewY() + 0.01f);
 				}
-				else if(g_CurrentCamera != 0)
+				else if(g_CurrentCamera != nullptr)
 				{
-					g_CurrentCamera->SetFieldOfViewY(g_SelectedCamera->GetFieldOfViewY() + 0.01f);
+					g_CurrentCamera->SetFieldOfViewY(g_CurrentCamera->GetFieldOfViewY() + 0.01f);
 					vSetupProjection();
 				}
 				
@@ -2216,13 +2216,13 @@ public:
 			}
 		case 115: // END
 			{
-				if(g_SelectedCamera != 0)
+				if(g_SelectedCamera != nullptr)
 				{
 					g_SelectedCamera->SetFieldOfViewY(g_SelectedCamera->GetFieldOfViewY() - 0.01f);
 				}
-				else if(g_CurrentCamera != 0)
+				else if(g_CurrentCamera != nullptr)
 				{
-					g_CurrentCamera->SetFieldOfViewY(g_SelectedCamera->GetFieldOfViewY() - 0.01f);
+					g_CurrentCamera->SetFieldOfViewY(g_CurrentCamera->GetFieldOfViewY() - 0.01f);
 					vSetupProjection();
 				}
 				
