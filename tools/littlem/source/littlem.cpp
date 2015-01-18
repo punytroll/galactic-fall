@@ -909,21 +909,6 @@ void vStopPicking(void)
 	}
 }
 
-void vDrawBoxAt(float fX, float fY, float fWidth, float fHeight)
-{
-	glBegin(GL_QUADS);
-	glVertex2f(fX, fY);
-	glVertex2f(fX, fY + fHeight);
-	glVertex2f(fX + fWidth, fY + fHeight);
-	glVertex2f(fX + fWidth, fY);
-	glEnd();
-}
-
-void vDrawBoxAt(Vector2f & Position, Vector2f & Size)
-{
-	vDrawBoxAt(Position[0], Position[1], Size[0], Size[1]);
-}
-
 void vDrawTextAt(GLfloat fPositionX, GLfloat fPositionY, const std::string & sString)
 {
 	glPushMatrix();
@@ -1008,7 +993,6 @@ void vDisplayTexts(void)
 		vDrawTextAt(0.0f, g_Height - 24.0f, "Snapping: off");
 	}
 	vDrawTextAt(0, g_Height - 12, "SnapFactor: " + to_string_cast(g_SnapFactor));
-	g_UserInterface.vDraw();
 	glFlush();
 	glMatrixMode(GL_PROJECTION);
 	glPopMatrix();
@@ -2329,7 +2313,7 @@ void ImportMesh(const std::string & FilePath)
 	copy(Triangles.begin(), Triangles.end(), back_inserter(g_Triangles));
 }
 
-class ModelView : public Widget
+class ModelView : public KeyAcceptor
 {
 public:
 	PointsView m_PointView;
@@ -3110,14 +3094,6 @@ void Resize(void)
 	vSetupProjection();
 }
 
-void vSetupUserInterface(void)
-{
-	Widget * pRootWidget(new Widget());
-	
-	pRootWidget->vSetLayout(new Boxes::FreeLayout());
-	g_UserInterface.vSetRootWidget(pRootWidget);
-}
-
 bool StartsWith(const std::string & One, const std::string & Two)
 {
 	auto OneIterator(One.begin());
@@ -3535,7 +3511,6 @@ int main(int argc, char ** argv)
 	CreateWindow();
 	ON_DEBUG(std::cout << "Initializing OpenGL." << std::endl);
 	InitializeOpenGL();
-	vSetupUserInterface();
 	Resize();
 	for(auto Argument : std::vector< std::string >(argv + 1, argv + argc))
 	{

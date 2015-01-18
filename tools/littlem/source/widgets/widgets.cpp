@@ -2,10 +2,8 @@
 
 #include <algorithm>
 
-#include "color.h"
 #include "drawing.h"
 #include "key_acceptor.h"
-#include "widget.h"
 #include "user_interface.h"
 
 #define CHARACTERS 95
@@ -119,40 +117,6 @@ void vDrawText(const std::string & sString)
 	}
 }
 
-void vDrawBox(const Boxes::Size & Size)
-{
-	glBegin(GL_QUADS);
-	glVertex2f(0.0f, 0.0f);
-	glVertex2f(0.0f, Size.m_fHeight);
-	glVertex2f(Size.m_fWidth, Size.m_fHeight);
-	glVertex2f(Size.m_fWidth, 0.0f);
-	glEnd();
-}
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
-// Color                                                                                         //
-///////////////////////////////////////////////////////////////////////////////////////////////////
-Color::Color(float fRed, float fGreen, float fBlue) :
-	m_fRed(fRed),
-	m_fGreen(fGreen),
-	m_fBlue(fBlue),
-	m_fAlpha(0.0f)
-{
-}
-
-Color::Color(const Color & OtherColor) :
-	m_fRed(OtherColor.m_fRed),
-	m_fGreen(OtherColor.m_fGreen),
-	m_fBlue(OtherColor.m_fBlue),
-	m_fAlpha(OtherColor.m_fAlpha)
-{
-}
-
-Color::~Color(void)
-{
-}
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // KeyAcceptor                                                                                   //
@@ -232,84 +196,6 @@ void KeyAcceptor::vSetKeyAcceptor(KeyAcceptor * pKeyAcceptor)
 	}
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
-// Widget                                                                                        //
-///////////////////////////////////////////////////////////////////////////////////////////////////
-Widget::Widget(void) :
-	m_pBackgroundColor(0)
-{
-}
-
-Widget::~Widget(void)
-{
-	delete m_pBackgroundColor;
-}
-
-void Widget::vDraw(void)
-{
-	if(m_pBackgroundColor != 0)
-	{
-		glColor4fv(m_pBackgroundColor->m_Color);
-		vDrawBox(GetSize());
-	}
-	if(pGetLayout() != 0)
-	{
-		for(Boxes::Layout::iterator iBox = pGetLayout()->begin(); iBox != pGetLayout()->end(); ++iBox)
-		{
-			Widget * pWidget(dynamic_cast< Widget * >(*iBox));
-			
-			if(pWidget != 0)
-			{
-				glTranslatef(iBox.pGetOptions()->m_fPositionX, iBox.pGetOptions()->m_fPositionY, 0.0f);
-				pWidget->vDraw();
-				glTranslatef(-iBox.pGetOptions()->m_fPositionX, -iBox.pGetOptions()->m_fPositionY, 0.0f);
-			}
-		}
-	}
-}
-
-void Widget::vDelete(void)
-{
-	if(pGetParent() != 0)
-	{
-		pGetParent()->vDeleteBox(this);
-	}
-}
-
-void Widget::vSetBackgroundColor(const Color & BackgroundColor)
-{
-	delete m_pBackgroundColor;
-	m_pBackgroundColor = new Color(BackgroundColor);
-}
-
-bool Widget::bAcceptMouseButtons(int iButton, int iState, float fX, float fY)
-{
-	if(pGetLayout() != 0)
-	{
-		for(Boxes::Layout::iterator iBox = pGetLayout()->begin(); iBox != pGetLayout()->end(); ++iBox)
-		{
-			Boxes::Layout::ChildOptions & ChildOptions(*(iBox.pGetOptions()));
-			Boxes::Size ChildSize(iBox->GetSize());
-			Widget * pWidget(dynamic_cast< Widget * >(*iBox));
-			
-			if((pWidget != 0) && (fX > ChildOptions.m_fPositionX) && (fX <= ChildOptions.m_fPositionX + ChildSize.m_fWidth) && (fY > ChildOptions.m_fPositionY) && (fY <= ChildOptions.m_fPositionY + ChildSize.m_fHeight))
-			{
-				if(pWidget->bAcceptMouseButtons(iButton, iState, fX - ChildOptions.m_fPositionX, fY - ChildOptions.m_fPositionY) == true)
-				{
-					return true;
-				}
-			}
-		}
-	}
-	
-	return bOnMouseButton(iButton, iState, fX, fY);
-}
-
-bool Widget::bOnMouseButton(int iButton, int iState, float fX, float fY)
-{
-	return false;
-}
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // UserInterface                                                                                 //
@@ -330,34 +216,6 @@ bool UserInterface::AcceptKey(int iKeyCode, bool IsDown)
 void UserInterface::vGrabKeyFocus(KeyAcceptor * pKeyAcceptor)
 {
 	vSetKeyAcceptor(pKeyAcceptor);
-}
-
-void UserInterface::vSetRootWidget(Widget * pWidget)
-{
-	m_pRootWidget = pWidget;
-}
-
-Widget * UserInterface::pGetRootWidget(void)
-{
-	return m_pRootWidget;
-}
-
-void UserInterface::vDelete(Widget * pWidget)
-{
-	delete pWidget;
-}
-
-void UserInterface::vSetSize(const Boxes::Size & Size)
-{
-	m_Size = Size;
-}
-
-void UserInterface::vDraw(void)
-{
-	if(m_pRootWidget != 0)
-	{
-		m_pRootWidget->vDraw();
-	}
 }
 
 bool UserInterface::_AcceptKeyAtKeyAcceptor(KeyAcceptor * pKeyAcceptor, int KeyCode, bool IsDown)
