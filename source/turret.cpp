@@ -57,8 +57,7 @@ Turret::Turret(void) :
 	_ShotExitSpeed(0.0f),
 	_ShotLifeTime(0.0f),
 	_ShotVisualizationPrototype(nullptr),
-	_TurretAngle(0.0f),
-	_TurretRotationOffset(Vector3f::CreateFromComponents(0.0f, 0.0f, 0.0f))
+	_TurretAngle(0.0f)
 {
 	// initialize object aspects
 	AddAspectAccessory();
@@ -124,11 +123,29 @@ bool Turret::_Update(float Seconds)
 			assert(NewShot->GetAspectPosition() != nullptr);
 			NewShot->SetShooter(Container->GetReference());
 			
+			Vector3f GunPosition;
+			Quaternion GunOrientation;
+			
+			assert(GetAspectVisualization() != nullptr);
+			assert(GetAspectVisualization()->GetVisualizationPrototype() != nullptr);
+			assert(GetAspectVisualization()->GetVisualizationPrototype()->GetModel() != nullptr);
+			for(auto & Part : GetAspectVisualization()->GetVisualizationPrototype()->GetModel()->GetParts())
+			{
+				if(Part.second->Identifier == "gun")
+				{
+					GunPosition = Part.second->Position;
+					GunOrientation = Part.second->Orientation;
+					
+					break;
+				}
+			}
+			
 			// calculating the shot's position in the world coordinate system
-			Vector3f ShotPosition(_ShotExitPosition - _TurretRotationOffset);
+			Vector3f ShotPosition(_ShotExitPosition);
 			
 			ShotPosition.Rotate(Quaternion::CreateAsRotationZ(_TurretAngle));
-			ShotPosition.Translate(_TurretRotationOffset);
+			ShotPosition.Rotate(GunOrientation);
+			ShotPosition.Translate(GunPosition);
 			ShotPosition.Rotate(GetAspectPosition()->GetOrientation());
 			ShotPosition.Rotate(GetAspectAccessory()->GetSlot()->GetOrientation());
 			ShotPosition.Translate(GetAspectAccessory()->GetSlot()->GetPosition());
@@ -137,11 +154,12 @@ bool Turret::_Update(float Seconds)
 			NewShot->GetAspectPosition()->SetPosition(ShotPosition);
 			
 			// calculating the shot's angular position in world coordinate system
-			Quaternion ShotOrientation(Quaternion::CreateAsRotationZ(_TurretAngle));
+			Quaternion ShotOrientation(Container->GetAspectPosition()->GetOrientation());
 			
-			ShotOrientation.Rotate(Container->GetAspectPosition()->GetOrientation());
 			ShotOrientation.Rotate(GetAspectAccessory()->GetSlot()->GetOrientation());
 			ShotOrientation.Rotate(GetAspectPosition()->GetOrientation());
+			ShotOrientation.Rotate(GunOrientation);
+			ShotOrientation.RotateZ(_TurretAngle);
 			NewShot->GetAspectPosition()->SetOrientation(ShotOrientation);
 			
 			// calculate the shot's velocity

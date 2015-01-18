@@ -54,7 +54,6 @@ private:
 	float _ShotLifeTime;
 	VisualizationPrototype * _ShotVisualizationPrototype;
 	float _TurretAngle;
-	Vector3f _TurretRotationOffset;
 };
 
 inline void Turret::SetEnergyUsagePerShot(float EnergyUsagePerShot)
