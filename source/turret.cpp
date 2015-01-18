@@ -28,6 +28,8 @@
 #include "battery.h"
 #include "game_time.h"
 #include "globals.h"
+#include "graphics/mesh.h"
+#include "graphics/mesh_node.h"
 #include "graphics/model.h"
 #include "graphics/node.h"
 #include "math.h"
@@ -54,7 +56,9 @@ Turret::Turret(void) :
 	_ShotExitPosition(Vector3f::CreateZero()),
 	_ShotExitSpeed(0.0f),
 	_ShotLifeTime(0.0f),
-	_ShotVisualizationPrototype(nullptr)
+	_ShotVisualizationPrototype(nullptr),
+	_TurretAngle(0.0f),
+	_TurretRotationOffset(Vector3f::CreateFromComponents(0.0f, 0.0f, 0.0f))
 {
 	// initialize object aspects
 	AddAspectAccessory();
@@ -79,8 +83,15 @@ void Turret::SetShotVisualizationPrototype(const VisualizationPrototype * ShotVi
 	_ShotVisualizationPrototype = new VisualizationPrototype(ShotVisualizationPrototype);
 }
 
+#include <iostream>
+
 bool Turret::_Update(float Seconds)
 {
+	_TurretAngle += Seconds;
+	if(_TurretAngle > 2.0f * M_PI)
+	{
+		_TurretAngle -= 2.0f * M_PI;
+	}
 	if((_Fire == true) && (_NextTimeToFire <= GameTime::Get()))
 	{
 		auto Container(GetContainer());
@@ -114,8 +125,10 @@ bool Turret::_Update(float Seconds)
 			NewShot->SetShooter(Container->GetReference());
 			
 			// calculating the shot's position in the world coordinate system
-			Vector3f ShotPosition(_ShotExitPosition);
+			Vector3f ShotPosition(_ShotExitPosition - _TurretRotationOffset);
 			
+			ShotPosition.Rotate(Quaternion::CreateAsRotationZ(_TurretAngle));
+			ShotPosition.Translate(_TurretRotationOffset);
 			ShotPosition.Rotate(GetAspectPosition()->GetOrientation());
 			ShotPosition.Rotate(GetAspectAccessory()->GetSlot()->GetOrientation());
 			ShotPosition.Translate(GetAspectAccessory()->GetSlot()->GetPosition());
@@ -124,8 +137,9 @@ bool Turret::_Update(float Seconds)
 			NewShot->GetAspectPosition()->SetPosition(ShotPosition);
 			
 			// calculating the shot's angular position in world coordinate system
-			Quaternion ShotOrientation(Container->GetAspectPosition()->GetOrientation());
+			Quaternion ShotOrientation(Quaternion::CreateAsRotationZ(_TurretAngle));
 			
+			ShotOrientation.Rotate(Container->GetAspectPosition()->GetOrientation());
 			ShotOrientation.Rotate(GetAspectAccessory()->GetSlot()->GetOrientation());
 			ShotOrientation.Rotate(GetAspectPosition()->GetOrientation());
 			NewShot->GetAspectPosition()->SetOrientation(ShotOrientation);
@@ -158,6 +172,18 @@ void Turret::_UpdateVisualization(Visualization * Visualization)
 		if(Visualization->GetUpdatePosition() == true)
 		{
 			Visualization->GetGraphics()->SetPosition(GetAspectAccessory()->GetSlot()->GetPosition() + GetAspectPosition()->GetPosition());
+		}
+		for(auto Node : Visualization->GetGraphics()->GetContent())
+		{
+			auto MeshNode(dynamic_cast< Graphics::MeshNode * >(Node));
+			
+			assert(MeshNode != nullptr);
+			assert(MeshNode->GetMesh() != nullptr);
+			if(MeshNode->GetMesh()->GetIdentifier() == "light_laser_turret_gun")
+			{
+				MeshNode->SetOrientation(Quaternion::CreateAsRotationZ(_TurretAngle));
+				MeshNode->SetPosition(_TurretRotationOffset);
+			}
 		}
 	}
 }
