@@ -1,0 +1,294 @@
+<mesh identifier="light_laser_turret_base">
+	<point identifier="0" position-x="-0.27" position-y="-0.3" position-z="0"/>
+	<point identifier="1" position-x="-0.3" position-y="-0.27" position-z="0"/>
+	<point identifier="2" position-x="-0.3" position-y="0.27" position-z="0"/>
+	<point identifier="3" position-x="-0.27" position-y="0.3" position-z="0"/>
+	<point identifier="4" position-x="0.27" position-y="0.3" position-z="0"/>
+	<point identifier="5" position-x="0.3" position-y="0.27" position-z="0"/>
+	<point identifier="6" position-x="0.3" position-y="-0.27" position-z="0"/>
+	<point identifier="7" position-x="0.27" position-y="-0.3" position-z="0"/>
+	<point identifier="8" position-x="-0.22" position-y="0.22" position-z="0.12"/>
+	<point identifier="9" position-x="-0.22" position-y="-0.22" position-z="0.12"/>
+	<point identifier="10" position-x="0.22" position-y="-0.22" position-z="0.12"/>
+	<point identifier="11" position-x="0.22" position-y="0.22" position-z="0.12"/>
+	<triangle-point identifier="0" normal-x="-0.561336" normal-y="0.561336" normal-z="0.608114">
+		<point point-identifier="3"/>
+	</triangle-point>
+	<triangle-point identifier="1" normal-x="-0.561336" normal-y="0.561336" normal-z="0.608114">
+		<point point-identifier="8"/>
+	</triangle-point>
+	<triangle-point identifier="2" normal-x="-0.561336" normal-y="0.561336" normal-z="0.608114">
+		<point point-identifier="2"/>
+	</triangle-point>
+	<triangle-point identifier="3" normal-x="-0.83205" normal-y="0" normal-z="0.5547">
+		<point point-identifier="2"/>
+	</triangle-point>
+	<triangle-point identifier="4" normal-x="-0.83205" normal-y="0" normal-z="0.5547">
+		<point point-identifier="8"/>
+	</triangle-point>
+	<triangle-point identifier="5" normal-x="-0.83205" normal-y="0" normal-z="0.5547">
+		<point point-identifier="1"/>
+	</triangle-point>
+	<triangle-point identifier="6" normal-x="-0.83205" normal-y="0" normal-z="0.5547">
+		<point point-identifier="8"/>
+	</triangle-point>
+	<triangle-point identifier="7" normal-x="-0.83205" normal-y="0" normal-z="0.5547">
+		<point point-identifier="9"/>
+	</triangle-point>
+	<triangle-point identifier="8" normal-x="-0.83205" normal-y="0" normal-z="0.5547">
+		<point point-identifier="1"/>
+	</triangle-point>
+	<triangle-point identifier="9" normal-x="-0.561336" normal-y="-0.561336" normal-z="0.608114">
+		<point point-identifier="9"/>
+	</triangle-point>
+	<triangle-point identifier="10" normal-x="-0.561336" normal-y="-0.561336" normal-z="0.608114">
+		<point point-identifier="0"/>
+	</triangle-point>
+	<triangle-point identifier="11" normal-x="-0.561336" normal-y="-0.561336" normal-z="0.608114">
+		<point point-identifier="1"/>
+	</triangle-point>
+	<triangle-point identifier="12" normal-x="0" normal-y="-0.83205" normal-z="0.5547">
+		<point point-identifier="9"/>
+	</triangle-point>
+	<triangle-point identifier="13" normal-x="0" normal-y="-0.83205" normal-z="0.5547">
+		<point point-identifier="7"/>
+	</triangle-point>
+	<triangle-point identifier="14" normal-x="0" normal-y="-0.83205" normal-z="0.5547">
+		<point point-identifier="0"/>
+	</triangle-point>
+	<triangle-point identifier="15" normal-x="0" normal-y="-0.83205" normal-z="0.5547">
+		<point point-identifier="9"/>
+	</triangle-point>
+	<triangle-point identifier="16" normal-x="0" normal-y="-0.83205" normal-z="0.5547">
+		<point point-identifier="10"/>
+	</triangle-point>
+	<triangle-point identifier="17" normal-x="0" normal-y="-0.83205" normal-z="0.5547">
+		<point point-identifier="7"/>
+	</triangle-point>
+	<triangle-point identifier="18" normal-x="0.561336" normal-y="-0.561336" normal-z="0.608114">
+		<point point-identifier="10"/>
+	</triangle-point>
+	<triangle-point identifier="19" normal-x="0.561336" normal-y="-0.561336" normal-z="0.608114">
+		<point point-identifier="6"/>
+	</triangle-point>
+	<triangle-point identifier="20" normal-x="0.561336" normal-y="-0.561336" normal-z="0.608114">
+		<point point-identifier="7"/>
+	</triangle-point>
+	<triangle-point identifier="21" normal-x="0.83205" normal-y="0" normal-z="0.5547">
+		<point point-identifier="10"/>
+	</triangle-point>
+	<triangle-point identifier="22" normal-x="0.83205" normal-y="0" normal-z="0.5547">
+		<point point-identifier="5"/>
+	</triangle-point>
+	<triangle-point identifier="23" normal-x="0.83205" normal-y="0" normal-z="0.5547">
+		<point point-identifier="6"/>
+	</triangle-point>
+	<triangle-point identifier="24" normal-x="0.83205" normal-y="-0" normal-z="0.5547">
+		<point point-identifier="10"/>
+	</triangle-point>
+	<triangle-point identifier="25" normal-x="0.83205" normal-y="-0" normal-z="0.5547">
+		<point point-identifier="11"/>
+	</triangle-point>
+	<triangle-point identifier="26" normal-x="0.83205" normal-y="-0" normal-z="0.5547">
+		<point point-identifier="5"/>
+	</triangle-point>
+	<triangle-point identifier="27" normal-x="0.561336" normal-y="0.561336" normal-z="0.608114">
+		<point point-identifier="11"/>
+	</triangle-point>
+	<triangle-point identifier="28" normal-x="0.561336" normal-y="0.561336" normal-z="0.608114">
+		<point point-identifier="4"/>
+	</triangle-point>
+	<triangle-point identifier="29" normal-x="0.561336" normal-y="0.561336" normal-z="0.608114">
+		<point point-identifier="5"/>
+	</triangle-point>
+	<triangle-point identifier="30" normal-x="0" normal-y="0.83205" normal-z="0.5547">
+		<point point-identifier="11"/>
+	</triangle-point>
+	<triangle-point identifier="31" normal-x="0" normal-y="0.83205" normal-z="0.5547">
+		<point point-identifier="8"/>
+	</triangle-point>
+	<triangle-point identifier="32" normal-x="0" normal-y="0.83205" normal-z="0.5547">
+		<point point-identifier="4"/>
+	</triangle-point>
+	<triangle-point identifier="33" normal-x="0" normal-y="0.83205" normal-z="0.5547">
+		<point point-identifier="4"/>
+	</triangle-point>
+	<triangle-point identifier="34" normal-x="0" normal-y="0.83205" normal-z="0.5547">
+		<point point-identifier="8"/>
+	</triangle-point>
+	<triangle-point identifier="35" normal-x="0" normal-y="0.83205" normal-z="0.5547">
+		<point point-identifier="3"/>
+	</triangle-point>
+	<triangle-point identifier="36" normal-x="0" normal-y="0" normal-z="1">
+		<point point-identifier="8"/>
+	</triangle-point>
+	<triangle-point identifier="37" normal-x="0" normal-y="0" normal-z="1">
+		<point point-identifier="10"/>
+	</triangle-point>
+	<triangle-point identifier="38" normal-x="0" normal-y="0" normal-z="1">
+		<point point-identifier="9"/>
+	</triangle-point>
+	<triangle-point identifier="39" normal-x="-0" normal-y="0" normal-z="1">
+		<point point-identifier="8"/>
+	</triangle-point>
+	<triangle-point identifier="40" normal-x="-0" normal-y="0" normal-z="1">
+		<point point-identifier="11"/>
+	</triangle-point>
+	<triangle-point identifier="41" normal-x="-0" normal-y="0" normal-z="1">
+		<point point-identifier="10"/>
+	</triangle-point>
+	<triangle-point identifier="42" normal-x="0" normal-y="0" normal-z="-1">
+		<point point-identifier="1"/>
+	</triangle-point>
+	<triangle-point identifier="43" normal-x="0" normal-y="0" normal-z="-1">
+		<point point-identifier="3"/>
+	</triangle-point>
+	<triangle-point identifier="44" normal-x="0" normal-y="0" normal-z="-1">
+		<point point-identifier="2"/>
+	</triangle-point>
+	<triangle-point identifier="45" normal-x="0" normal-y="0" normal-z="-1">
+		<point point-identifier="1"/>
+	</triangle-point>
+	<triangle-point identifier="46" normal-x="0" normal-y="0" normal-z="-1">
+		<point point-identifier="4"/>
+	</triangle-point>
+	<triangle-point identifier="47" normal-x="0" normal-y="0" normal-z="-1">
+		<point point-identifier="3"/>
+	</triangle-point>
+	<triangle-point identifier="48" normal-x="0" normal-y="0" normal-z="-1">
+		<point point-identifier="1"/>
+	</triangle-point>
+	<triangle-point identifier="49" normal-x="0" normal-y="0" normal-z="-1">
+		<point point-identifier="5"/>
+	</triangle-point>
+	<triangle-point identifier="50" normal-x="0" normal-y="0" normal-z="-1">
+		<point point-identifier="4"/>
+	</triangle-point>
+	<triangle-point identifier="51" normal-x="0" normal-y="0" normal-z="-1">
+		<point point-identifier="1"/>
+	</triangle-point>
+	<triangle-point identifier="52" normal-x="0" normal-y="0" normal-z="-1">
+		<point point-identifier="6"/>
+	</triangle-point>
+	<triangle-point identifier="53" normal-x="0" normal-y="0" normal-z="-1">
+		<point point-identifier="5"/>
+	</triangle-point>
+	<triangle-point identifier="54" normal-x="0" normal-y="0" normal-z="-1">
+		<point point-identifier="1"/>
+	</triangle-point>
+	<triangle-point identifier="55" normal-x="0" normal-y="0" normal-z="-1">
+		<point point-identifier="7"/>
+	</triangle-point>
+	<triangle-point identifier="56" normal-x="0" normal-y="0" normal-z="-1">
+		<point point-identifier="6"/>
+	</triangle-point>
+	<triangle-point identifier="57" normal-x="0" normal-y="0" normal-z="-1">
+		<point point-identifier="1"/>
+	</triangle-point>
+	<triangle-point identifier="58" normal-x="0" normal-y="0" normal-z="-1">
+		<point point-identifier="0"/>
+	</triangle-point>
+	<triangle-point identifier="59" normal-x="0" normal-y="0" normal-z="-1">
+		<point point-identifier="7"/>
+	</triangle-point>
+	<triangle identifier="0">
+		<triangle-point triangle-point-identifier="0"/>
+		<triangle-point triangle-point-identifier="2"/>
+		<triangle-point triangle-point-identifier="1"/>
+	</triangle>
+	<triangle identifier="1">
+		<triangle-point triangle-point-identifier="3"/>
+		<triangle-point triangle-point-identifier="5"/>
+		<triangle-point triangle-point-identifier="4"/>
+	</triangle>
+	<triangle identifier="2">
+		<triangle-point triangle-point-identifier="6"/>
+		<triangle-point triangle-point-identifier="8"/>
+		<triangle-point triangle-point-identifier="7"/>
+	</triangle>
+	<triangle identifier="3">
+		<triangle-point triangle-point-identifier="9"/>
+		<triangle-point triangle-point-identifier="11"/>
+		<triangle-point triangle-point-identifier="10"/>
+	</triangle>
+	<triangle identifier="4">
+		<triangle-point triangle-point-identifier="12"/>
+		<triangle-point triangle-point-identifier="14"/>
+		<triangle-point triangle-point-identifier="13"/>
+	</triangle>
+	<triangle identifier="5">
+		<triangle-point triangle-point-identifier="15"/>
+		<triangle-point triangle-point-identifier="17"/>
+		<triangle-point triangle-point-identifier="16"/>
+	</triangle>
+	<triangle identifier="6">
+		<triangle-point triangle-point-identifier="18"/>
+		<triangle-point triangle-point-identifier="20"/>
+		<triangle-point triangle-point-identifier="19"/>
+	</triangle>
+	<triangle identifier="7">
+		<triangle-point triangle-point-identifier="21"/>
+		<triangle-point triangle-point-identifier="23"/>
+		<triangle-point triangle-point-identifier="22"/>
+	</triangle>
+	<triangle identifier="8">
+		<triangle-point triangle-point-identifier="24"/>
+		<triangle-point triangle-point-identifier="26"/>
+		<triangle-point triangle-point-identifier="25"/>
+	</triangle>
+	<triangle identifier="9">
+		<triangle-point triangle-point-identifier="27"/>
+		<triangle-point triangle-point-identifier="29"/>
+		<triangle-point triangle-point-identifier="28"/>
+	</triangle>
+	<triangle identifier="10">
+		<triangle-point triangle-point-identifier="30"/>
+		<triangle-point triangle-point-identifier="32"/>
+		<triangle-point triangle-point-identifier="31"/>
+	</triangle>
+	<triangle identifier="11">
+		<triangle-point triangle-point-identifier="33"/>
+		<triangle-point triangle-point-identifier="35"/>
+		<triangle-point triangle-point-identifier="34"/>
+	</triangle>
+	<triangle identifier="12">
+		<triangle-point triangle-point-identifier="36"/>
+		<triangle-point triangle-point-identifier="38"/>
+		<triangle-point triangle-point-identifier="37"/>
+	</triangle>
+	<triangle identifier="13">
+		<triangle-point triangle-point-identifier="39"/>
+		<triangle-point triangle-point-identifier="41"/>
+		<triangle-point triangle-point-identifier="40"/>
+	</triangle>
+	<triangle identifier="14">
+		<triangle-point triangle-point-identifier="42"/>
+		<triangle-point triangle-point-identifier="44"/>
+		<triangle-point triangle-point-identifier="43"/>
+	</triangle>
+	<triangle identifier="15">
+		<triangle-point triangle-point-identifier="45"/>
+		<triangle-point triangle-point-identifier="47"/>
+		<triangle-point triangle-point-identifier="46"/>
+	</triangle>
+	<triangle identifier="16">
+		<triangle-point triangle-point-identifier="48"/>
+		<triangle-point triangle-point-identifier="50"/>
+		<triangle-point triangle-point-identifier="49"/>
+	</triangle>
+	<triangle identifier="17">
+		<triangle-point triangle-point-identifier="51"/>
+		<triangle-point triangle-point-identifier="53"/>
+		<triangle-point triangle-point-identifier="52"/>
+	</triangle>
+	<triangle identifier="18">
+		<triangle-point triangle-point-identifier="54"/>
+		<triangle-point triangle-point-identifier="56"/>
+		<triangle-point triangle-point-identifier="55"/>
+	</triangle>
+	<triangle identifier="19">
+		<triangle-point triangle-point-identifier="57"/>
+		<triangle-point triangle-point-identifier="59"/>
+		<triangle-point triangle-point-identifier="58"/>
+	</triangle>
+</mesh>
