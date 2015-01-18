@@ -267,19 +267,15 @@ public:
 		{
 			if(_CurrentTrianglePoint == 0)
 			{
-				Point * CurrentPoint(new Point(ConvertToFloat(Attributes.find("position-x")->second), ConvertToFloat(Attributes.find("position-y")->second), ConvertToFloat(Attributes.find("position-z")->second)));
-				std::map< std::string, std::string >::const_iterator NameAttribute(Attributes.find("name"));
+				auto CurrentPoint(new Point());
 				
-				if(NameAttribute != Attributes.end())
-				{
-					CurrentPoint->vSetName(NameAttribute->second);
-				}
+				CurrentPoint->SetPosition(Vector3f::CreateFromComponents(ConvertToFloat(Attributes.find("position-x")->second), ConvertToFloat(Attributes.find("position-y")->second), ConvertToFloat(Attributes.find("position-z")->second)));
 				_Points[ConvertToUnsigedLong(Attributes.find("identifier")->second)] = CurrentPoint;
 			}
 			else
 			{
-				_CurrentTrianglePoint->m_pPoint = _Points[ConvertToUnsigedLong(Attributes.find("point-identifier")->second)];
-				_CurrentTrianglePoint->m_pPoint->m_TrianglePoints.push_back(_CurrentTrianglePoint);
+				_CurrentTrianglePoint->m_Point = _Points[ConvertToUnsigedLong(Attributes.find("point-identifier")->second)];
+				_CurrentTrianglePoint->m_Point->m_TrianglePoints.push_back(_CurrentTrianglePoint);
 			}
 		}
 		else if(ElementName == "triangle-point")
@@ -302,13 +298,6 @@ public:
 		{
 			assert(_CurrentTriangle == 0);
 			_CurrentTriangle = new Triangle();
-		
-			std::map< std::string, std::string >::const_iterator NameAttribute(Attributes.find("name"));
-			
-			if(NameAttribute != Attributes.end())
-			{
-				_CurrentTriangle->vSetName(NameAttribute->second);
-			}
 			_Triangles[ConvertToUnsigedLong(Attributes.find("identifier")->second)] = _CurrentTriangle;
 		}
 	}
@@ -412,12 +401,17 @@ class Light;
 void vEnableLight(Light * pLight);
 void vDisableLight(Light * pLight);
 
-class Light : public Position
+class Light
 {
 public:
 	Light(void) :
 		m_LightNumber(0)
 	{
+	}
+	
+	const Vector3f & GetPosition(void) const
+	{
+		return _Position;
 	}
 	
 	void vSetDiffuseColor(float Red, float Green, float Blue, float Alpha = 0.0f)
@@ -435,6 +429,11 @@ public:
 	void vSetDiffuseColor(void)
 	{
 		glLightfv(m_LightNumber, GL_DIFFUSE, m_DiffuseColor.GetPointer());
+	}
+	
+	void SetPosition(const Vector3f & Position)
+	{
+		_Position = Position;
 	}
 	
 	bool bIsEnabled(void) const
@@ -460,6 +459,7 @@ public:
 	
 	Vector4f m_DiffuseColor;
 	GLenum m_LightNumber;
+	Vector3f _Position;
 };
 
 class Camera
@@ -727,9 +727,9 @@ std::vector< TrianglePoint * > g_TrianglePoints;
 std::vector< Triangle * > g_Triangles;
 std::vector< Point * > g_SelectedPoints;
 std::vector< Triangle * > g_SelectedTriangles;
-Point * g_pHoveredPoint = 0;
-Triangle * g_pHoveredTriangle = 0;
-Light * g_pHoveredLight = 0;
+Point * g_HoveredPoint = 0;
+Triangle * g_HoveredTriangle = 0;
+Light * g_HoveredLight = 0;
 Light * g_SelectedLight = 0;
 std::vector< Light * > g_Lights;
 std::vector< Light * > g_EnabledLights;
@@ -820,9 +820,9 @@ void vStopPicking(void)
 	GLuint * puiHitPointer = g_puiSelectionBuffer;
 	bool bHover = false;
 	
-	g_pHoveredPoint = 0;
-	g_pHoveredTriangle = 0;
-	g_pHoveredLight = 0;
+	g_HoveredPoint = 0;
+	g_HoveredTriangle = 0;
+	g_HoveredLight = 0;
 	g_HoveredCamera = 0;
 	for(int iHit = 1; iHit <= iHits; iHit++)
 	{
@@ -848,19 +848,19 @@ void vStopPicking(void)
 			}
 		case LITTLEM_LIGHT:
 			{
-				g_pHoveredLight = g_Lights[uiNearestObject];
+				g_HoveredLight = g_Lights[uiNearestObject];
 				
 				break;
 			}
 		case LITTLEM_POINT:
 			{
-				g_pHoveredPoint = g_Points[uiNearestObject];
+				g_HoveredPoint = g_Points[uiNearestObject];
 				
 				break;
 			}
 		case LITTLEM_TRIANGLE:
 			{
-				g_pHoveredTriangle = g_Triangles[uiNearestObject];
+				g_HoveredTriangle = g_Triangles[uiNearestObject];
 				
 				break;
 			}
@@ -967,15 +967,8 @@ void vDisplayTexts(void)
 	{
 		std::stringstream ssPointInformationText;
 		
-		ssPointInformationText << "Point:  X: " << g_SelectedPoints.front()->GetX() << "   Y: " << g_SelectedPoints.front()->GetY() << "   Z: " << g_SelectedPoints.front()->GetZ() << "   Name: \"" << g_SelectedPoints.front()->sGetName() << "\"   #TrianglePoints: " << g_SelectedPoints.front()->m_TrianglePoints.size();
+		ssPointInformationText << "Point:  X: " << g_SelectedPoints.front()->GetPosition()[0] << "   Y: " << g_SelectedPoints.front()->GetPosition()[1] << "   Z: " << g_SelectedPoints.front()->GetPosition()[2] << "   #TrianglePoints: " << g_SelectedPoints.front()->m_TrianglePoints.size();
 		vDrawTextAt(0, g_Height - 36, ssPointInformationText.str());
-	}
-	if(g_SelectedTriangles.size() > 0)
-	{
-		std::stringstream ssTriangleInformationText;
-		
-		ssTriangleInformationText << "Triangle:  Name: \"" << g_SelectedTriangles.front()->sGetName() << '"';
-		vDrawTextAt(0, g_Height - 48, ssTriangleInformationText.str());
 	}
 	if(g_SelectedCamera != nullptr)
 	{
@@ -1020,7 +1013,7 @@ void vPerformPicking(void)
 	{
 		glLoadName(stI);
 		glBegin(GL_POINTS);
-		g_Points[stI]->DrawSelection();
+		glVertex3fv(g_Points[stI]->GetPosition().GetPointer());
 		glEnd();
 	}
 	glPopName();
@@ -1031,7 +1024,7 @@ void vPerformPicking(void)
 	{
 		glLoadName(stLight);
 		glBegin(GL_POINTS);
-		g_Lights[stLight]->DrawSelection();
+		glVertex3fv(g_Lights[stLight]->GetPosition().GetPointer());
 		glEnd();
 	}
 	glPopName();
@@ -1062,7 +1055,7 @@ void vDisplayModel(void)
 	glLoadMatrixf(g_CurrentCamera->GetSpacialMatrix().Inverted().GetPointer());
 	for(std::vector< Light * >::size_type stLight = 0; stLight < g_EnabledLights.size(); ++stLight)
 	{
-		Vector4f LightPosition(g_EnabledLights[stLight]->GetX(), g_EnabledLights[stLight]->GetY(), g_EnabledLights[stLight]->GetZ(), 1.0f);
+		Vector4f LightPosition(g_EnabledLights[stLight]->GetPosition()[0], g_EnabledLights[stLight]->GetPosition()[1], g_EnabledLights[stLight]->GetPosition()[2], 1.0f);
 		
 		glLightfv(g_EnabledLights[stLight]->m_LightNumber, GL_POSITION, LightPosition.GetPointer());
 	}
@@ -1085,7 +1078,7 @@ void vDisplayModel(void)
 	glBegin(GL_POINTS);
 	for(std::vector< Point * >::size_type stI = 0; stI < g_Points.size(); ++stI)
 	{
-		g_Points[stI]->Draw();
+		glVertex3fv(g_Points[stI]->GetPosition().GetPointer());
 	}
 	glEnd();
 	// draw all lights with deactivated lighting
@@ -1093,7 +1086,7 @@ void vDisplayModel(void)
 	glBegin(GL_POINTS);
 	for(std::vector< Light * >::size_type stLight = 0; stLight < g_Lights.size(); ++stLight)
 	{
-		g_Lights[stLight]->Draw();
+		glVertex3fv(g_Lights[stLight]->GetPosition().GetPointer());
 	}
 	glEnd();
 	// draw all cameras with deactivated lighting
@@ -1127,21 +1120,21 @@ void vDisplayModel(void)
 			glPopMatrix();
 			glColor3f(0.4f, 0.1f, 0.0f);
 			glPushMatrix();
-			glTranslatef(g_SelectedTriangles[stTriangle]->pGetPoint(1)->GetX(), g_SelectedTriangles[stTriangle]->pGetPoint(1)->GetY(), g_SelectedTriangles[stTriangle]->pGetPoint(1)->GetZ());
+			glTranslatef(g_SelectedTriangles[stTriangle]->pGetPoint(1)->GetPosition()[0], g_SelectedTriangles[stTriangle]->pGetPoint(1)->GetPosition()[1], g_SelectedTriangles[stTriangle]->pGetPoint(1)->GetPosition()[2]);
 			glBegin(GL_LINES);
 			glVertex3f(0.0f, 0.0f, 0.0f);
 			glVertex3fv(g_SelectedTriangles[stTriangle]->pGetTrianglePoint(1)->m_Normal.GetPointer());
 			glEnd();
 			glPopMatrix();
 			glPushMatrix();
-			glTranslatef(g_SelectedTriangles[stTriangle]->pGetPoint(2)->GetX(), g_SelectedTriangles[stTriangle]->pGetPoint(2)->GetY(), g_SelectedTriangles[stTriangle]->pGetPoint(2)->GetZ());
+			glTranslatef(g_SelectedTriangles[stTriangle]->pGetPoint(2)->GetPosition()[0], g_SelectedTriangles[stTriangle]->pGetPoint(2)->GetPosition()[1], g_SelectedTriangles[stTriangle]->pGetPoint(2)->GetPosition()[2]);
 			glBegin(GL_LINES);
 			glVertex3f(0.0f, 0.0f, 0.0f);
 			glVertex3fv(g_SelectedTriangles[stTriangle]->pGetTrianglePoint(2)->m_Normal.GetPointer());
 			glEnd();
 			glPopMatrix();
 			glPushMatrix();
-			glTranslatef(g_SelectedTriangles[stTriangle]->pGetPoint(3)->GetX(), g_SelectedTriangles[stTriangle]->pGetPoint(3)->GetY(), g_SelectedTriangles[stTriangle]->pGetPoint(3)->GetZ());
+			glTranslatef(g_SelectedTriangles[stTriangle]->pGetPoint(3)->GetPosition()[0], g_SelectedTriangles[stTriangle]->pGetPoint(3)->GetPosition()[1], g_SelectedTriangles[stTriangle]->pGetPoint(3)->GetPosition()[2]);
 			glBegin(GL_LINES);
 			glVertex3f(0.0f, 0.0f, 0.0f);
 			glVertex3fv(g_SelectedTriangles[stTriangle]->pGetTrianglePoint(3)->m_Normal.GetPointer());
@@ -1158,7 +1151,7 @@ void vDisplayModel(void)
 		for(auto Point : g_SelectedPoints)
 		{
 			glPushMatrix();
-			glTranslatef(Point->GetX(), Point->GetY(), Point->GetZ());
+			glTranslatef(Point->GetPosition()[0], Point->GetPosition()[1], Point->GetPosition()[2]);
 			glMultMatrixf(Matrix.GetPointer());
 			
 			auto Scale(2.0f * (Point->GetPosition() - g_CurrentCamera->GetPosition()).Length() * tan(g_CurrentCamera->GetFieldOfViewY() / 2.0f));
@@ -1178,7 +1171,7 @@ void vDisplayModel(void)
 	if(g_SelectedLight != 0)
 	{
 		glPushMatrix();
-		glTranslatef(g_SelectedLight->GetX(), g_SelectedLight->GetY(), g_SelectedLight->GetZ());
+		glTranslatef(g_SelectedLight->GetPosition()[0], g_SelectedLight->GetPosition()[1], g_SelectedLight->GetPosition()[2]);
 		glMultMatrixf(Matrix4f::CreateRotation(g_CurrentCamera->GetOrientation()).GetPointer());
 		glBegin(GL_POINTS);
 		glColor3f(1.0f, 1.0f, 0.0f);
@@ -1211,24 +1204,24 @@ void vDisplayModel(void)
 		glEnd();
 		glPopMatrix();
 	}
-	if(g_pHoveredPoint != 0)
+	if(g_HoveredPoint != 0)
 	{
 		glColor3f(0.5f, 0.5f, 1.0f);
 		glBegin(GL_POINTS);
-		g_pHoveredPoint->Draw();
+		glVertex3fv(g_HoveredPoint->GetPosition().GetPointer());
 		glEnd();
 	}
-	else if(g_pHoveredTriangle != 0)
+	else if(g_HoveredTriangle != 0)
 	{
 		glColor3f(1.0f, 0.7f, 0.3f);
 		glBegin(GL_TRIANGLES);
-		g_pHoveredTriangle->vDraw();
+		g_HoveredTriangle->vDraw();
 		glEnd();
 		glColor3f(0.3f, 0.1f, 0.3f);
 		glPushMatrix();
 		
-		Vector3f TriangleCenter(g_pHoveredTriangle->GetTriangleCenter());
-		Vector3f TriangleNormal(g_pHoveredTriangle->GetTriangleNormal());
+		Vector3f TriangleCenter(g_HoveredTriangle->GetTriangleCenter());
+		Vector3f TriangleNormal(g_HoveredTriangle->GetTriangleNormal());
 		
 		glTranslatef(TriangleCenter[0], TriangleCenter[1], TriangleCenter[2]);
 		glBegin(GL_LINES);
@@ -1238,32 +1231,32 @@ void vDisplayModel(void)
 		glPopMatrix();
 		glColor3f(0.0f, 0.1f, 0.4f);
 		glPushMatrix();
-		glTranslatef(g_pHoveredTriangle->pGetPoint(1)->GetX(), g_pHoveredTriangle->pGetPoint(1)->GetY(), g_pHoveredTriangle->pGetPoint(1)->GetZ());
+		glTranslatef(g_HoveredTriangle->pGetPoint(1)->GetPosition()[0], g_HoveredTriangle->pGetPoint(1)->GetPosition()[1], g_HoveredTriangle->pGetPoint(1)->GetPosition()[2]);
 		glBegin(GL_LINES);
 		glVertex3f(0.0f, 0.0f, 0.0f);
-		glVertex3fv(g_pHoveredTriangle->pGetTrianglePoint(1)->m_Normal.GetPointer());
+		glVertex3fv(g_HoveredTriangle->pGetTrianglePoint(1)->m_Normal.GetPointer());
 		glEnd();
 		glPopMatrix();
 		glPushMatrix();
-		glTranslatef(g_pHoveredTriangle->pGetPoint(2)->GetX(), g_pHoveredTriangle->pGetPoint(2)->GetY(), g_pHoveredTriangle->pGetPoint(2)->GetZ());
+		glTranslatef(g_HoveredTriangle->pGetPoint(2)->GetPosition()[0], g_HoveredTriangle->pGetPoint(2)->GetPosition()[1], g_HoveredTriangle->pGetPoint(2)->GetPosition()[2]);
 		glBegin(GL_LINES);
 		glVertex3f(0.0f, 0.0f, 0.0f);
-		glVertex3fv(g_pHoveredTriangle->pGetTrianglePoint(2)->m_Normal.GetPointer());
+		glVertex3fv(g_HoveredTriangle->pGetTrianglePoint(2)->m_Normal.GetPointer());
 		glEnd();
 		glPopMatrix();
 		glPushMatrix();
-		glTranslatef(g_pHoveredTriangle->pGetPoint(3)->GetX(), g_pHoveredTriangle->pGetPoint(3)->GetY(), g_pHoveredTriangle->pGetPoint(3)->GetZ());
+		glTranslatef(g_HoveredTriangle->pGetPoint(3)->GetPosition()[0], g_HoveredTriangle->pGetPoint(3)->GetPosition()[1], g_HoveredTriangle->pGetPoint(3)->GetPosition()[2]);
 		glBegin(GL_LINES);
 		glVertex3f(0.0f, 0.0f, 0.0f);
-		glVertex3fv(g_pHoveredTriangle->pGetTrianglePoint(3)->m_Normal.GetPointer());
+		glVertex3fv(g_HoveredTriangle->pGetTrianglePoint(3)->m_Normal.GetPointer());
 		glEnd();
 		glPopMatrix();
 	}
-	else if(g_pHoveredLight != 0)
+	else if(g_HoveredLight != 0)
 	{
 		glColor3f(1.0f, 0.5f, 0.5f);
 		glBegin(GL_POINTS);
-		g_pHoveredLight->Draw();
+		glVertex3fv(g_HoveredLight->GetPosition().GetPointer());
 		glEnd();
 	}
 	else if(g_HoveredCamera != 0)
@@ -1323,7 +1316,7 @@ void vDisplay(void)
 
 void vDeleteTrianglePoint(TrianglePoint * pTrianglePoint)
 {
-	pTrianglePoint->m_pPoint->m_TrianglePoints.erase(std::find(pTrianglePoint->m_pPoint->m_TrianglePoints.begin(), pTrianglePoint->m_pPoint->m_TrianglePoints.end(), pTrianglePoint));
+	pTrianglePoint->m_Point->m_TrianglePoints.erase(std::find(pTrianglePoint->m_Point->m_TrianglePoints.begin(), pTrianglePoint->m_Point->m_TrianglePoints.end(), pTrianglePoint));
 	g_TrianglePoints.erase(std::find(g_TrianglePoints.begin(), g_TrianglePoints.end(), pTrianglePoint));
 	delete pTrianglePoint;
 }
@@ -1383,9 +1376,9 @@ void vDeleteTriangle(std::vector< Triangle * >::iterator iTriangle)
 	
 	Triangle * pTriangle(*iTriangle);
 	
-	if(pTriangle == g_pHoveredTriangle)
+	if(pTriangle == g_HoveredTriangle)
 	{
-		g_pHoveredTriangle = 0;
+		g_HoveredTriangle = 0;
 	}
 	
 	std::vector< Triangle * >::iterator iSelectedTriangle(std::find(g_SelectedTriangles.begin(), g_SelectedTriangles.end(), pTriangle));
@@ -1446,9 +1439,9 @@ void vDeleteLight(std::vector< Light * >::iterator iLight)
 	
 	Light * pLight(*iLight);
 	
-	if(pLight == g_pHoveredLight)
+	if(pLight == g_HoveredLight)
 	{
-		g_pHoveredLight = 0;
+		g_HoveredLight = 0;
 	}
 	if(pLight == g_SelectedLight)
 	{
@@ -1477,9 +1470,9 @@ void vDeletePoint(std::vector< Point * >::iterator iPoint)
 			vDeleteTriangle(pPoint->m_TrianglePoints.front()->m_Triangles.front());
 		}
 	}
-	if(g_pHoveredPoint == pPoint)
+	if(g_HoveredPoint == pPoint)
 	{
-		g_pHoveredPoint = 0;
+		g_HoveredPoint = 0;
 	}
 	
 	std::vector< Point * >::iterator iSelectedPoint(std::find(g_SelectedPoints.begin(), g_SelectedPoints.end(), pPoint));
@@ -1746,16 +1739,14 @@ public:
 			{
 				if(IsDown == true)
 				{
-					if(g_Keyboard.IsAnyShiftActive() == true)
+					auto NewPoint(new Point());
+					
+					if(g_Keyboard.IsAltActive() == true)
 					{
-						// create new point at coordinates (0.0, 0.0, 0.0)
-						g_Points.push_back(new Point(0.0f, 0.0f, 0.0f));
+						// assign random coordinates within (-1.0 .. 1.0, -1.0 .. 1.0, -1.0 .. 1.0)
+						NewPoint->SetPosition(Vector3f::CreateFromComponents(-1.0f + 2 * (static_cast< double> (random()) / RAND_MAX), -1.0f + 2 * (static_cast< double> (random()) / RAND_MAX), -1.0f + 2 * (static_cast< double> (random()) / RAND_MAX)));
 					}
-					else
-					{
-						// create new point at random coordinates within (-1.0 .. 1.0, -1.0 .. 1.0, -1.0 .. 1.0)
-						g_Points.push_back(new Point(-1.0f + 2 * (static_cast< double> (random()) / RAND_MAX), -1.0f + 2 * (static_cast< double> (random()) / RAND_MAX), -1.0f + 2 * (static_cast< double> (random()) / RAND_MAX)));
-					}
+					g_Points.push_back(NewPoint);
 					bKeyAccepted = true;
 				}
 				
@@ -1933,7 +1924,7 @@ public:
 						{
 							TrianglePoint * pNewTrianglePoint(new TrianglePoint());
 							
-							pNewTrianglePoint->m_pPoint = g_SelectedPoints[stPoint];
+							pNewTrianglePoint->m_Point = g_SelectedPoints[stPoint];
 							pNewTrianglePoint->m_Normal = g_SelectedTriangles[stTriangle]->GetTriangleNormal();
 							g_TrianglePoints.push_back(pNewTrianglePoint);
 							vExchangeTrianglePoint(g_SelectedTriangles[stTriangle], pOldTrianglePoint, pNewTrianglePoint);
@@ -2257,7 +2248,7 @@ XMLStream & mesh(XMLStream & XMLStream)
 	
 	for(auto Point : g_Points)
 	{
-		XMLStream << element << "point" << attribute << "identifier" << value << PointIdentifier << attribute << "position-x" << value << Point->GetPosition()[0] << attribute << "position-y" << value << Point->GetPosition()[1] << attribute << "position-z" << value << Point->GetPosition()[2] << attribute << "name" << value << Point->sGetName() << end;
+		XMLStream << element << "point" << attribute << "identifier" << value << PointIdentifier << attribute << "position-x" << value << Point->GetPosition()[0] << attribute << "position-y" << value << Point->GetPosition()[1] << attribute << "position-z" << value << Point->GetPosition()[2] << end;
 		PointMap[Point] = PointIdentifier;
 		++PointIdentifier;
 	}
@@ -2267,7 +2258,7 @@ XMLStream & mesh(XMLStream & XMLStream)
 	for(auto TrianglePoint : g_TrianglePoints)
 	{
 		XMLStream << element << "triangle-point" << attribute << "identifier" << value << TrianglePointIdentifier << attribute << "normal-x" << value << TrianglePoint->m_Normal[0] << attribute << "normal-y" << value << TrianglePoint->m_Normal[1] << attribute << "normal-z" << value << TrianglePoint->m_Normal[2];
-		XMLStream << element << "point" << attribute << "point-identifier" << value << PointMap[TrianglePoint->m_pPoint] << end;
+		XMLStream << element << "point" << attribute << "point-identifier" << value << PointMap[TrianglePoint->m_Point] << end;
 		XMLStream << end;
 		TrianglePointMap[TrianglePoint] = TrianglePointIdentifier;
 		++TrianglePointIdentifier;
@@ -2277,7 +2268,7 @@ XMLStream & mesh(XMLStream & XMLStream)
 	
 	for(auto Triangle : g_Triangles)
 	{
-		XMLStream << element << "triangle" << attribute << "identifier" << value << TriangleIdentifier << attribute << "name" << value << Triangle->sGetName();
+		XMLStream << element << "triangle" << attribute << "identifier" << value << TriangleIdentifier;
 		XMLStream << element << "triangle-point" << attribute << "triangle-point-identifier" << value << TrianglePointMap[Triangle->pGetTrianglePoint(1)] << end;
 		XMLStream << element << "triangle-point" << attribute << "triangle-point-identifier" << value << TrianglePointMap[Triangle->pGetTrianglePoint(2)] << end;
 		XMLStream << element << "triangle-point" << attribute << "triangle-point-identifier" << value << TrianglePointMap[Triangle->pGetTrianglePoint(3)] << end;
@@ -2420,7 +2411,7 @@ public:
 					{
 						auto NewLight(new Light());
 						
-						NewLight->SetPosition(LightDescription.m_Position[0], LightDescription.m_Position[1], LightDescription.m_Position[2]);
+						NewLight->SetPosition(LightDescription.m_Position);
 						NewLight->vSetDiffuseColor(LightDescription.m_DiffuseColor[0], LightDescription.m_DiffuseColor[1], LightDescription.m_DiffuseColor[2], LightDescription.m_DiffuseColor[3]);
 						if(LightDescription.m_bEnabled == true)
 						{
@@ -2448,7 +2439,7 @@ public:
 					Light * pLight(new Light());
 					
 					g_Lights.push_back(pLight);
-					pLight->SetPosition(0.0f, 0.0f, 0.0f);
+					pLight->SetPosition(Vector3f::CreateZero());
 					pLight->vSetDiffuseColor(1.0f, 1.0f, 1.0f);
 				}
 				
@@ -2924,15 +2915,15 @@ void MouseButtonEvent(MouseButton Button, bool IsDown, const Vector2f & MousePos
 		{
 			if(IsDown == false)
 			{
-				if(g_pHoveredPoint != 0)
+				if(g_HoveredPoint != 0)
 				{
 					if(g_Keyboard.IsAnyShiftActive() == true)
 					{
-						std::vector< Point * >::iterator iHoveredPoint(std::find(g_SelectedPoints.begin(), g_SelectedPoints.end(), g_pHoveredPoint));
+						std::vector< Point * >::iterator iHoveredPoint(std::find(g_SelectedPoints.begin(), g_SelectedPoints.end(), g_HoveredPoint));
 						
 						if(iHoveredPoint == g_SelectedPoints.end())
 						{
-							g_SelectedPoints.push_back(g_pHoveredPoint);
+							g_SelectedPoints.push_back(g_HoveredPoint);
 						}
 						else
 						{
@@ -2941,26 +2932,26 @@ void MouseButtonEvent(MouseButton Button, bool IsDown, const Vector2f & MousePos
 					}
 					else
 					{
-						if((g_SelectedPoints.size() == 1) && (g_SelectedPoints.front() == g_pHoveredPoint))
+						if((g_SelectedPoints.size() == 1) && (g_SelectedPoints.front() == g_HoveredPoint))
 						{
 							g_SelectedPoints.clear();
 						}
 						else
 						{
 							g_SelectedPoints.clear();
-							g_SelectedPoints.push_back(g_pHoveredPoint);
+							g_SelectedPoints.push_back(g_HoveredPoint);
 						}
 					}
 				}
-				else if(g_pHoveredTriangle != 0)
+				else if(g_HoveredTriangle != 0)
 				{
 					if(g_Keyboard.IsAnyShiftActive() == true)
 					{
-						std::vector< Triangle * >::iterator iHoveredTriangle(std::find(g_SelectedTriangles.begin(), g_SelectedTriangles.end(), g_pHoveredTriangle));
+						std::vector< Triangle * >::iterator iHoveredTriangle(std::find(g_SelectedTriangles.begin(), g_SelectedTriangles.end(), g_HoveredTriangle));
 						
 						if(iHoveredTriangle == g_SelectedTriangles.end())
 						{
-							g_SelectedTriangles.push_back(g_pHoveredTriangle);
+							g_SelectedTriangles.push_back(g_HoveredTriangle);
 						}
 						else
 						{
@@ -2969,26 +2960,26 @@ void MouseButtonEvent(MouseButton Button, bool IsDown, const Vector2f & MousePos
 					}
 					else
 					{
-						if((g_SelectedTriangles.size() == 1) && (g_SelectedTriangles.front() == g_pHoveredTriangle))
+						if((g_SelectedTriangles.size() == 1) && (g_SelectedTriangles.front() == g_HoveredTriangle))
 						{
 							g_SelectedTriangles.clear();
 						}
 						else
 						{
 							g_SelectedTriangles.clear();
-							g_SelectedTriangles.push_back(g_pHoveredTriangle);
+							g_SelectedTriangles.push_back(g_HoveredTriangle);
 						}
 					}
 				}
-				else if(g_pHoveredLight != 0)
+				else if(g_HoveredLight != 0)
 				{
-					if(g_SelectedLight == g_pHoveredLight)
+					if(g_SelectedLight == g_HoveredLight)
 					{
 						g_SelectedLight = 0;
 					}
 					else
 					{
-						g_SelectedLight = g_pHoveredLight;
+						g_SelectedLight = g_HoveredLight;
 					}
 				}
 				else if(g_HoveredCamera != 0)
@@ -3387,7 +3378,7 @@ void InitializeOpenGL(void)
 	Light * pLight(new Light());
 	
 	g_Lights.push_back(pLight);
-	pLight->SetPosition(0.0f, 0.0f, 4.0f);
+	pLight->SetPosition(Vector3f::CreateTranslationZ(4.0f));
 	pLight->vSetDiffuseColor(1.0f, 1.0f, 1.0f);
 	pLight->vEnable();
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);

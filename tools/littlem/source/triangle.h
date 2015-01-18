@@ -3,12 +3,10 @@
 
 #include <algebra/vector4f.h>
 
-#include "object.h"
-
 class Point;
 class TrianglePoint;
 
-class Triangle : public Object
+class Triangle
 {
 public:
 	Triangle(void);

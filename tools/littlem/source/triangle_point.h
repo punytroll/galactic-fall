@@ -12,7 +12,7 @@ class TrianglePoint
 {
 public:
 	TrianglePoint(void);
-	TrianglePoint(Point * pPoint);
+	TrianglePoint(Point * Point);
 
 	const std::vector< Triangle * > & GetTriangles(void) const
 	{
@@ -21,7 +21,7 @@ public:
 	
 	void vDraw(void);
 	void vDrawSelection(void);
-	Point * m_pPoint;
+	Point * m_Point;
 	Vector3f m_Normal;
 	std::vector< Triangle * > m_Triangles;
 };
