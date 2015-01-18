@@ -2,8 +2,12 @@
 	<identifier>light_laser_turret</identifier>
 	<mesh-parts>
 		<mesh-part>
-			<part-identifier>light_laser</part-identifier>
-			<mesh-identifier>light_laser</mesh-identifier>
+			<part-identifier>gun</part-identifier>
+			<mesh-identifier>light_laser_turret_gun</mesh-identifier>
+		</mesh-part>
+		<mesh-part>
+			<part-identifier>base</part-identifier>
+			<mesh-identifier>light_laser_turret_base</mesh-identifier>
 		</mesh-part>
 	</mesh-parts>
 </model>

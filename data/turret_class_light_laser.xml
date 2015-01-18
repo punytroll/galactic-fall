@@ -5,23 +5,46 @@
 		<model-identifier>light_laser_turret</model-identifier>
 		<visualization-parts>
 			<visualization-part>
-				<part-identifier>light_laser</part-identifier>
+				<part-identifier>base</part-identifier>
 				<style>
 					<diffuse-color>
-						<red>0.2</red>
-						<green>0.2</green>
-						<blue>0.2</blue>
+						<red>0.4</red>
+						<green>0.4</green>
+						<blue>0.5</blue>
 						<opacity>1.0</opacity>
 					</diffuse-color>
 					<specular-color>
-						<valid>true</valid>
+						<valid>false</valid>
 						<red>1.0</red>
 						<green>1.0</green>
 						<blue>1.0</blue>
 						<opacity>1.0</opacity>
 					</specular-color>
 					<shininess>
-						<valid>true</valid>
+						<valid>false</valid>
+						<value>40.0</value>
+					</shininess>
+					<program-identifier>default</program-identifier>
+				</style>
+			</visualization-part>
+			<visualization-part>
+				<part-identifier>gun</part-identifier>
+				<style>
+					<diffuse-color>
+						<red>0.66</red>
+						<green>0.66</green>
+						<blue>0.75</blue>
+						<opacity>1.0</opacity>
+					</diffuse-color>
+					<specular-color>
+						<valid>false</valid>
+						<red>1.0</red>
+						<green>1.0</green>
+						<blue>1.0</blue>
+						<opacity>1.0</opacity>
+					</specular-color>
+					<shininess>
+						<valid>false</valid>
 						<value>40.0</value>
 					</shininess>
 					<program-identifier>default</program-identifier>
