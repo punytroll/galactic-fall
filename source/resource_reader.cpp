@@ -567,17 +567,19 @@ static void ReadModel(Arxx::Reference & Reference)
 	for(Arxx::u4byte Number = 1; Number <= Count; ++Number)
 	{
 		std::string PartIdentifier;
-		std::string MeshIdentifier;
+		std::string PartMeshIdentifier;
+		Vector3f PartPosition;
+		Quaternion PartOrientation;
 		
-		Reader >> PartIdentifier >> MeshIdentifier;
+		Reader >> PartIdentifier >> PartMeshIdentifier >> PartPosition >> PartOrientation;
 		
-		const Graphics::Mesh * Mesh(g_GraphicsEngine->GetMeshManager()->Get(MeshIdentifier));
+		auto PartMesh(g_GraphicsEngine->GetMeshManager()->Get(PartMeshIdentifier));
 		
-		if(Mesh == nullptr)
+		if(PartMesh == nullptr)
 		{
-			throw std::runtime_error("For model '" + Identifier + "' could not find the mesh '" + MeshIdentifier + "' for part '" + PartIdentifier + "'.");
+			throw std::runtime_error("For model '" + Identifier + "' could not find the mesh '" + PartMeshIdentifier + "' for part '" + PartIdentifier + "'.");
 		}
-		NewModel->AddMesh(PartIdentifier, Mesh);
+		NewModel->AddPart(PartIdentifier, PartMesh, PartPosition, PartOrientation);
 	}
 }
 

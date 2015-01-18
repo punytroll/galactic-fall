@@ -23,6 +23,9 @@
 #include <map>
 #include <string>
 
+#include <algebra/quaternion.h>
+#include <algebra/vector3f.h>
+
 namespace Graphics
 {
 	class Mesh;
@@ -30,14 +33,26 @@ namespace Graphics
 	class Model
 	{
 	public:
+		struct Part
+		{
+			std::string Identifier;
+			const Graphics::Mesh * Mesh;
+			Vector3f Position;
+			Quaternion Orientation;
+		};
+		
+		// constructor
 		Model(const std::string & Identifier);
+		~Model(void);
+		// getters
 		const std::string & GetIdentifier(void) const;
-		const std::map< std::string, const Graphics::Mesh * > & GetMeshes(void) const;
+		const std::map< std::string, const Graphics::Model::Part * > & GetParts(void) const;
 		float GetRadialSize(void) const;
-		void AddMesh(const std::string & MeshIdentifier, const Graphics::Mesh * Mesh);
+		// modifiers
+		void AddPart(const std::string & PartIdentifier, const Graphics::Mesh * PartMesh, const Vector3f & PartPosition, const Quaternion & PartOrientation);
 	private:
 		std::string _Identifier;
-		std::map< std::string, const Graphics::Mesh * > _Meshes;
+		std::map< std::string, const Graphics::Model::Part * > _Parts;
 		mutable float _RadialSize;
 	};
 	
@@ -46,9 +61,9 @@ namespace Graphics
 		return _Identifier;
 	}
 	
-	inline const std::map< std::string, const Graphics::Mesh * > & Model::GetMeshes(void) const
+	inline const std::map< std::string, const Graphics::Model::Part * > & Model::GetParts(void) const
 	{
-		return _Meshes;
+		return _Parts;
 	}
 }
 
