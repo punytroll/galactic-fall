@@ -42,6 +42,7 @@
 #include "slot.h"
 #include "storage.h"
 #include "system.h"
+#include "turret.h"
 #include "visualization_prototype.h"
 #include "weapon.h"
 #include "write_to_xml_stream.h"
@@ -58,6 +59,7 @@ static void WriteHangarToXMLStream(XMLStream & XMLStream, Hangar * Hangar);
 static void WriteMindToXMLStream(XMLStream & XMLStream, Mind * TheMind);
 static void WriteShipToXMLStream(XMLStream & XMLStream, Ship * TheShip);
 static void WriteStorageToXMLStream(XMLStream & XMLStream, Storage * TheStorage);
+static void WriteTurretToXMLStream(XMLStream & XMLStream, Turret * TheTurret);
 static void WriteWeaponToXMLStream(XMLStream & XMLStream, Weapon * TheWeapon);
 
 void WriteToXMLStream(XMLStream & XMLStream, Object * TheObject, bool Recursive)
@@ -197,6 +199,10 @@ void WriteToXMLStream(XMLStream & XMLStream, Object * TheObject)
 	{
 		WriteStorageToXMLStream(XMLStream, dynamic_cast< Storage * >(TheObject));
 	}
+	else if(TheObject->GetTypeIdentifier() == "turret")
+	{
+		WriteTurretToXMLStream(XMLStream, dynamic_cast< Turret * >(TheObject));
+	}
 	else if(TheObject->GetTypeIdentifier() == "weapon")
 	{
 		WriteWeaponToXMLStream(XMLStream, dynamic_cast< Weapon * >(TheObject));
@@ -278,6 +284,11 @@ static void WriteStorageToXMLStream(XMLStream & XMLStream, Storage * TheStorage)
 {
 	assert(TheStorage != nullptr);
 	XMLStream << element << "space-capacity" << attribute << "value" << value << TheStorage->GetSpaceCapacity() << end;
+}
+
+static void WriteTurretToXMLStream(XMLStream & XMLStream, Turret * TheTurret)
+{
+	assert(TheTurret != nullptr);
 }
 
 static void WriteWeaponToXMLStream(XMLStream & XMLStream, Weapon * TheWeapon)
