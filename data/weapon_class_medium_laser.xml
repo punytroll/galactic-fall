@@ -39,7 +39,7 @@
 	<reload-time>0.85</reload-time>
 	<space-requirement>500</space-requirement>
 	<energy-usage-per-shot>8</energy-usage-per-shot>
-	<particle>
+	<shot>
 		<exit-position>
 			<x>0.8</x>
 			<y>0</y>
@@ -76,5 +76,5 @@
 				</visualization-part>
 			</visualization-parts>
 		</visualization>
-	</particle>
+	</shot>
 </weapon-class>

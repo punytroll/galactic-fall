@@ -117,14 +117,6 @@
 		<float identifier="value"/>
 	</optional-float>
 	
-	<particle>
-		<vector3f identifier="exit-position"/>
-		<float identifier="exit-speed"/>
-		<float identifier="damage"/>
-		<float identifier="life-time"/>
-		<visualization identifier="visualization"/>
-	</particle>
-	
 	<physical-aspect>
 		<u4byte identifier="space-requirement"/>
 	</physical-aspect>
@@ -196,6 +188,14 @@
 		<collection identifier="slots" element-type="slot"/>
 	</ship-class>
 	
+	<shot>
+		<vector3f identifier="exit-position"/>
+		<float identifier="exit-speed"/>
+		<float identifier="damage"/>
+		<float identifier="life-time"/>
+		<visualization identifier="visualization"/>
+	</shot>
+	
 	<slot>
 		<string identifier="identifier"/>
 		<string identifier="class-identifier"/>
@@ -245,7 +245,7 @@
 		<float identifier="reload-time"/>
 		<u4byte identifier="space-requirement"/>
 		<float identifier="energy-usage-per-shot"/>
-		<particle identifier="particle"/>
+		<shot identifier="shot"/>
 	</turret-class>
 	
 	<triangle>
@@ -296,7 +296,7 @@
 		<float identifier="reload-time"/>
 		<u4byte identifier="space-requirement"/>
 		<float identifier="energy-usage-per-shot"/>
-		<particle identifier="particle"/>
+		<shot identifier="shot"/>
 	</weapon-class>
 	
 </declarations>
