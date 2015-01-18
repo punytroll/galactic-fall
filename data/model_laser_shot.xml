@@ -1,9 +1,20 @@
 <model>
 	<identifier>laser_shot</identifier>
-	<mesh-parts>
-		<mesh-part>
-			<part-identifier>laser_shot</part-identifier>
+	<model-parts>
+		<model-part>
+			<identifier>laser_shot</identifier>
 			<mesh-identifier>laser_shot</mesh-identifier>
-		</mesh-part>
-	</mesh-parts>
+			<position>
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</position>
+			<orientation>
+				<w>1.0</w>
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</orientation>
+		</model-part>
+	</model-parts>
 </model>

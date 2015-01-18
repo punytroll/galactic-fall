@@ -28,13 +28,22 @@ Graphics::Model::Model(const std::string & Identifier) :
 {
 }
 
+Graphics::Model::~Model(void)
+{
+	while(_Parts.empty() == false)
+	{
+		delete _Parts.begin()->second;
+		_Parts.erase(_Parts.begin());
+	}
+}
+
 float Graphics::Model::GetRadialSize(void) const
 {
 	if(_RadialSize < 0.0f)
 	{
-		for(std::map< std::string, const Graphics::Mesh * >::const_iterator MeshIterator = _Meshes.begin(); MeshIterator != _Meshes.end(); ++MeshIterator)
+		for(auto & PartIterator : _Parts)
 		{
-			float RadialSize(MeshIterator->second->GetRadialSize());
+			float RadialSize(PartIterator.second->Position.Length() + PartIterator.second->Mesh->GetRadialSize());
 			
 			if(_RadialSize < RadialSize)
 			{
@@ -46,9 +55,15 @@ float Graphics::Model::GetRadialSize(void) const
 	return _RadialSize;
 }
 
-void Graphics::Model::AddMesh(const std::string & MeshIdentifier, const Graphics::Mesh * Mesh)
+void Graphics::Model::AddPart(const std::string & PartIdentifier, const Graphics::Mesh * PartMesh, const Vector3f & PartPosition, const Quaternion & PartOrientation)
 {
-	assert(_Meshes.find(MeshIdentifier) == _Meshes.end());
+	assert(_Parts.find(PartIdentifier) == _Parts.end());
 	
-	_Meshes[MeshIdentifier] = Mesh;
+	auto Part(new Graphics::Model::Part());
+	
+	Part->Identifier = PartIdentifier;
+	Part->Mesh = PartMesh;
+	Part->Position = PartPosition;
+	Part->Orientation = PartOrientation;
+	_Parts[PartIdentifier] = Part;
 }

@@ -1,17 +1,50 @@
 <model>
 	<identifier>fighter</identifier>
-	<mesh-parts>
-		<mesh-part>
-			<part-identifier>hull</part-identifier>
+	<model-parts>
+		<model-part>
+			<identifier>hull</identifier>
 			<mesh-identifier>fighter_hull</mesh-identifier>
-		</mesh-part>
-		<mesh-part>
-			<part-identifier>cockpit</part-identifier>
+			<position>
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</position>
+			<orientation>
+				<w>1.0</w>
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</orientation>
+		</model-part>
+		<model-part>
+			<identifier>cockpit</identifier>
 			<mesh-identifier>fighter_cockpit</mesh-identifier>
-		</mesh-part>
-		<mesh-part>
-			<part-identifier>faction</part-identifier>
+			<position>
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</position>
+			<orientation>
+				<w>1.0</w>
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</orientation>
+		</model-part>
+		<model-part>
+			<identifier>faction</identifier>
 			<mesh-identifier>fighter_faction</mesh-identifier>
-		</mesh-part>
-	</mesh-parts>
+			<position>
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</position>
+			<orientation>
+				<w>1.0</w>
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</orientation>
+		</model-part>
+	</model-parts>
 </model>

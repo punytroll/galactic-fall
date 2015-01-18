@@ -308,22 +308,25 @@ Graphics::Node * VisualizePrototype(const VisualizationPrototype * Visualization
 	assert(VisualizationPrototype != nullptr);
 	assert(VisualizationPrototype->GetModel() != nullptr);
 	
-	auto Meshes(VisualizationPrototype->GetModel()->GetMeshes());
+	auto Parts(VisualizationPrototype->GetModel()->GetParts());
 	
-	assert(Meshes.size() > 0);
-	if(Meshes.size() > 1)
+	assert(Parts.size() > 0);
+	if(Parts.size() > 1)
 	{
 		Result = new Graphics::Node();
 	}
 	for(auto & PartStyle : VisualizationPrototype->GetPartStyles())
 	{
 		auto MeshNode(new Graphics::MeshNode());
-		auto MeshIterator(Meshes.find(PartStyle.first));
+		auto PartIterator(Parts.find(PartStyle.first));
 		
-		assert(MeshIterator != Meshes.end());
-		assert(MeshIterator->second != nullptr);
-		MeshNode->SetMesh(MeshIterator->second);
+		assert(PartIterator != Parts.end());
+		assert(PartIterator->second != nullptr);
+		assert(PartIterator->second->Mesh != nullptr);
+		MeshNode->SetMesh(PartIterator->second->Mesh);
 		MeshNode->SetStyle(new Graphics::Style(PartStyle.second));
+		MeshNode->SetPosition(PartIterator->second->Position);
+		MeshNode->SetOrientation(PartIterator->second->Orientation);
 		if(Result == nullptr)
 		{
 			Result = MeshNode;

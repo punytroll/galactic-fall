@@ -83,15 +83,17 @@
 		<collection identifier="triangles" element-type="triangle"/>
 	</mesh>
 	
-	<mesh-part>
-		<string identifier="part-identifier"/>
-		<string identifier="mesh-identifier"/>
-	</mesh-part>
-	
 	<model type="11">
 		<string identifier="identifier"/>
-		<collection identifier="mesh-parts" element-type="mesh-part"/>
+		<collection identifier="model-parts" element-type="model-part"/>
 	</model>
+	
+	<model-part>
+		<string identifier="identifier"/>
+		<string identifier="mesh-identifier"/>
+		<vector3f identifier="position"/>
+		<quaternion identifier="orientation"/>
+	</model-part>
 	
 	<name-aspect>
 		<string identifier="name"/>

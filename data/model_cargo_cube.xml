@@ -1,9 +1,20 @@
 <model>
 	<identifier>cargo_cube</identifier>
-	<mesh-parts>
-		<mesh-part>
-			<part-identifier>cargo_cube</part-identifier>
+	<model-parts>
+		<model-part>
+			<identifier>cargo_cube</identifier>
 			<mesh-identifier>cargo_cube</mesh-identifier>
-		</mesh-part>
-	</mesh-parts>
+			<position>
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</position>
+			<orientation>
+				<w>1.0</w>
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</orientation>
+		</model-part>
+	</model-parts>
 </model>
