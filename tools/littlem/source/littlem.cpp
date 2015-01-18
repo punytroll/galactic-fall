@@ -1835,7 +1835,18 @@ Vector3f GetSnappedStepInView(const Vector3f & Position, FixedDirection Directio
 	
 	if(g_Snapping == true)
 	{
-		Result = GetSnapped(Result);
+		if(Result[0] != Position[0])
+		{
+			Result[0] = GetSnapped(Result[0]);
+		}
+		if(Result[1] != Position[1])
+		{
+			Result[1] = GetSnapped(Result[1]);
+		}
+		if(Result[2] != Position[2])
+		{
+			Result[2] = GetSnapped(Result[2]);
+		}
 	}
 	
 	return Result;
