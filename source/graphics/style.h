@@ -34,10 +34,13 @@ namespace Graphics
 		explicit Style(const Graphics::Style * Style);
 		~Style(void);
 		// getters
-		const Color * GetDiffuseColor(void) const;
+		const Color & GetDiffuseColor(void) const;
 		const std::string & GetProgramIdentifier(void) const;
 		float GetShininess(void) const;
-		const Color * GetSpecularColor(void) const;
+		const Color & GetSpecularColor(void) const;
+		bool HasDiffuseColor(void) const;
+		bool HasShininess(void) const;
+		bool HasSpecularColor(void) const;
 		// setters
 		void SetDiffuseColor(const Color & DiffuseColor);
 		void SetProgramIdentifier(const std::string & ProgramIdentifier);
@@ -46,7 +49,7 @@ namespace Graphics
 	private:
 		Color * _DiffuseColor;
 		std::string _ProgramIdentifier;
-		float _Shininess;
+		float * _Shininess;
 		Color * _SpecularColor;
 	private:
 		/**
@@ -60,34 +63,29 @@ namespace Graphics
 		Graphics::Style & operator=(const Graphics::Style & Style);
 	};
 	
-	inline const Color * Style::GetDiffuseColor(void) const
-	{
-		return _DiffuseColor;
-	}
-	
 	inline const std::string & Style::GetProgramIdentifier(void) const
 	{
 		return _ProgramIdentifier;
 	}
 	
-	inline float Style::GetShininess(void) const
+	inline bool Style::HasDiffuseColor(void) const
 	{
-		return _Shininess;
+		return _DiffuseColor != nullptr;
 	}
 	
-	inline const Color * Style::GetSpecularColor(void) const
+	inline bool Style::HasShininess(void) const
 	{
-		return _SpecularColor;
+		return _Shininess != nullptr;
+	}
+	
+	inline bool Style::HasSpecularColor(void) const
+	{
+		return _SpecularColor != nullptr;
 	}
 	
 	inline void Style::SetProgramIdentifier(const std::string & ProgramIdentifier)
 	{
 		_ProgramIdentifier = ProgramIdentifier;
-	}
-	
-	inline void Style::SetShininess(float Shininess)
-	{
-		_Shininess = Shininess;
 	}
 }
 
