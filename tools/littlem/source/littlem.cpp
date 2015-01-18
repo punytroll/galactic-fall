@@ -734,7 +734,7 @@ Light * g_SelectedLight = 0;
 std::vector< Light * > g_Lights;
 std::vector< Light * > g_EnabledLights;
 std::vector< Camera * > g_Cameras;
-Camera * g_pHoveredCamera = 0;
+Camera * g_HoveredCamera = 0;
 Camera * g_SelectedCamera = 0;
 Camera * g_CurrentCamera = 0;
 bool g_bMoved = false;
@@ -823,7 +823,7 @@ void vStopPicking(void)
 	g_pHoveredPoint = 0;
 	g_pHoveredTriangle = 0;
 	g_pHoveredLight = 0;
-	g_pHoveredCamera = 0;
+	g_HoveredCamera = 0;
 	for(int iHit = 1; iHit <= iHits; iHit++)
 	{
 		//~ std::cout << "Hit " << iHit << " is the " << ((puiHitPointer[3] == GL_POINTS) ? ("Point") : ("Triangle")) << ' ' << puiHitPointer[4] << " with minimum depth " << puiHitPointer[1] << std::endl;
@@ -842,7 +842,7 @@ void vStopPicking(void)
 		{
 		case LITTLEM_CAMERA:
 			{
-				g_pHoveredCamera = g_Cameras[uiNearestObject];
+				g_HoveredCamera = g_Cameras[uiNearestObject];
 				
 				break;
 			}
@@ -1266,15 +1266,15 @@ void vDisplayModel(void)
 		g_pHoveredLight->Draw();
 		glEnd();
 	}
-	else if(g_pHoveredCamera != 0)
+	else if(g_HoveredCamera != 0)
 	{
 		glColor3f(0.0f, 1.0f, 0.5f);
 		glBegin(GL_POINTS);
-		glVertex3fv(g_pHoveredCamera->GetPosition().GetPointer());
+		glVertex3fv(g_HoveredCamera->GetPosition().GetPointer());
 		glEnd();
 		glPushMatrix();
-		glTranslatef(g_pHoveredCamera->GetPosition()[0], g_pHoveredCamera->GetPosition()[1], g_pHoveredCamera->GetPosition()[2]);
-		glMultMatrixf(Matrix4f::CreateRotation(g_pHoveredCamera->GetOrientation()).GetPointer());
+		glTranslatef(g_HoveredCamera->GetPosition()[0], g_HoveredCamera->GetPosition()[1], g_HoveredCamera->GetPosition()[2]);
+		glMultMatrixf(Matrix4f::CreateRotation(g_HoveredCamera->GetOrientation()).GetPointer());
 		glColor3f(0.0f, 0.5f, 0.5f);
 		glBegin(GL_LINES);
 		glVertex3f(0.0f, 0.0f, 0.0f);
@@ -1413,21 +1413,31 @@ void vDeleteTriangle(Triangle * pTriangle)
 	vDeleteTriangle(std::find(g_Triangles.begin(), g_Triangles.end(), pTriangle));
 }
 
-void vDeleteCamera(std::vector< Camera * >::iterator iCamera)
+void DeleteCamera(std::vector< Camera * >::iterator iCamera)
 {
 	assert(iCamera != g_Cameras.end());
 	
-	Camera * pCamera(*iCamera);
+	auto pCamera(*iCamera);
 	
-	if(pCamera == g_pHoveredCamera)
+	if(pCamera == g_HoveredCamera)
 	{
-		g_pHoveredCamera = 0;
+		g_HoveredCamera = nullptr;
 	}
 	if(pCamera == g_CurrentCamera)
 	{
-		g_CurrentCamera = 0;
+		g_CurrentCamera = nullptr;
+	}
+	if(pCamera == g_SelectedCamera)
+	{
+		g_SelectedCamera = nullptr;
 	}
 	g_Cameras.erase(iCamera);
+}
+
+void DeleteCamera(Camera * Camera)
+{
+	assert(Camera != nullptr);
+	DeleteCamera(std::find(g_Cameras.begin(), g_Cameras.end(), Camera));
 }
 
 void vDeleteLight(std::vector< Light * >::iterator iLight)
@@ -1504,7 +1514,7 @@ void vClearScene(void)
 	}
 	while(g_Cameras.size() > 0)
 	{
-		vDeleteCamera(g_Cameras.begin());
+		DeleteCamera(g_Cameras.begin());
 	}
 }
 
@@ -2114,14 +2124,14 @@ public:
 				
 				break;
 			}
-		case 65: // SPACE
+		case 36: // ENTER
 			{
-				if(g_pHoveredCamera != 0)
+				if(g_HoveredCamera != nullptr)
 				{
-					g_CurrentCamera = g_pHoveredCamera;
+					g_CurrentCamera = g_HoveredCamera;
 					bKeyAccepted = true;
 				}
-				else if(g_SelectedCamera != 0)
+				else if(g_SelectedCamera != nullptr)
 				{
 					g_CurrentCamera = g_SelectedCamera;
 					bKeyAccepted = true;
@@ -2283,6 +2293,19 @@ public:
 				{
 					g_CurrentCamera->SetFieldOfViewY(g_SelectedCamera->GetFieldOfViewY() - 1.0f);
 					vSetupProjection();
+				}
+				
+				break;
+			}
+		case 119: // DELETE
+			{
+				if((IsDown == true) && (g_Keyboard.IsNoModifierKeyActive() == true))
+				{
+					if(g_SelectedCamera != nullptr)
+					{
+						DeleteCamera(g_SelectedCamera);
+						bKeyAccepted = true;
+					}
 				}
 				
 				break;
@@ -3037,15 +3060,15 @@ void MouseButtonEvent(MouseButton Button, bool IsDown, const Vector2f & MousePos
 						g_SelectedLight = g_pHoveredLight;
 					}
 				}
-				else if(g_pHoveredCamera != 0)
+				else if(g_HoveredCamera != 0)
 				{
-					if(g_SelectedCamera == g_pHoveredCamera)
+					if(g_SelectedCamera == g_HoveredCamera)
 					{
 						g_SelectedCamera = 0;
 					}
 					else
 					{
-						g_SelectedCamera = g_pHoveredCamera;
+						g_SelectedCamera = g_HoveredCamera;
 					}
 				}
 			}
