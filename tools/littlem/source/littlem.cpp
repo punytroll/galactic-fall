@@ -23,7 +23,6 @@
 
 #include <xml_stream/xml_stream.h>
 
-#include "widgets/widgets.h"
 #include "xmlparser.h"
 
 // types of objects
@@ -779,9 +778,119 @@ bool g_Snapping = false;
 float g_SnapFactor = 0.1;
 MouseButton g_MouseButton(MouseButton::Undefined);
 std::deque< int > g_FreeLights;
-UserInterface g_UserInterface;
 Vector2f g_MousePosition;
 Vector2f g_LastMousePosition;
+
+#define CHARACTERS 95
+#define CHARACTEROFFSET 32
+
+const GLubyte g_ppuLetters[][12] = 
+{
+	{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }, // 00 => ' '
+	{ 0x00, 0x00, 0x00, 0x20, 0x00, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x00 }, // 01 => '!'
+	{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x50, 0x50, 0x50, 0x00 }, // 02 => '"'
+	{ 0x00, 0x00, 0x00, 0x50, 0x50, 0xF8, 0x50, 0xF8, 0x50, 0x50, 0x00, 0x00 }, // 03 => '#'
+	{ 0x00, 0x00, 0x00, 0x20, 0xF0, 0x28, 0x70, 0xA0, 0x78, 0x20, 0x00, 0x00 }, // 04 => '$'
+	{ 0x00, 0x00, 0x00, 0x18, 0x98, 0x40, 0x20, 0x10, 0xC8, 0xC0, 0x00, 0x00 }, // 05 => '%'
+	{ 0x00, 0x00, 0x00, 0x68, 0x90, 0xA8, 0x40, 0x80, 0x80, 0x70, 0x00, 0x00 }, // 06 => '&'
+	{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x20, 0x20, 0x20, 0x00 }, // 07 => '''
+	{ 0x00, 0x08, 0x10, 0x10, 0x20, 0x20, 0x20, 0x20, 0x20, 0x10, 0x10, 0x08 }, // 08 => '('
+	{ 0x00, 0x40, 0x20, 0x20, 0x10, 0x10, 0x10, 0x10, 0x10, 0x20, 0x20, 0x40 }, // 09 => ')'
+	{ 0x00, 0x00, 0x00, 0x00, 0x20, 0xA8, 0x70, 0xA8, 0x20, 0x00, 0x00, 0x00 }, // 10 => '*'
+	{ 0x00, 0x00, 0x00, 0x00, 0x20, 0x20, 0xF8, 0x20, 0x20, 0x00, 0x00, 0x00 }, // 11 => '+'
+	{ 0x00, 0x40, 0x20, 0x30, 0x30, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }, // 12 => ','
+	{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xF8, 0x00, 0x00, 0x00, 0x00, 0x00 }, // 13 => '-'
+	{ 0x00, 0x00, 0x00, 0x30, 0x30, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }, // 14 => '.'
+	{ 0x00, 0x00, 0x80, 0x80, 0x40, 0x40, 0x20, 0x20, 0x10, 0x10, 0x08, 0x08 }, // 15 => '/'
+	{ 0x00, 0x00, 0x00, 0x70, 0x88, 0x88, 0xC8, 0xA8, 0x98, 0x88, 0x70, 0x00 }, // 16 => '0'
+	{ 0x00, 0x00, 0x00, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x30, 0x10, 0x00 }, // 17 => '1'
+	{ 0x00, 0x00, 0x00, 0xF8, 0x80, 0x40, 0x20, 0x10, 0x08, 0x88, 0x70, 0x00 }, // 18 => '2'
+	{ 0x00, 0x00, 0x00, 0x70, 0x88, 0x08, 0x08, 0x30, 0x08, 0x88, 0x70, 0x00 }, // 19 => '3'
+	{ 0x00, 0x00, 0x00, 0x38, 0x10, 0xF8, 0x50, 0x50, 0x30, 0x30, 0x10, 0x00 }, // 20 => '4'
+	{ 0x00, 0x00, 0x00, 0x70, 0x88, 0x08, 0x08, 0xF0, 0x80, 0x80, 0xF8, 0x00 }, // 21 => '5'
+	{ 0x00, 0x00, 0x00, 0x70, 0x88, 0x88, 0x88, 0xF0, 0x80, 0x40, 0x30, 0x00 }, // 22 => '6'
+	{ 0x00, 0x00, 0x00, 0x20, 0x20, 0x10, 0x10, 0x08, 0x08, 0x88, 0xF8, 0x00 }, // 23 => '7'
+	{ 0x00, 0x00, 0x00, 0x70, 0x88, 0x88, 0x88, 0x70, 0x88, 0x88, 0x70, 0x00 }, // 24 => '8'
+	{ 0x00, 0x00, 0x00, 0x60, 0x10, 0x08, 0x78, 0x88, 0x88, 0x88, 0x70, 0x00 }, // 25 => '9'
+	{ 0x00, 0x00, 0x00, 0x30, 0x30, 0x00, 0x00, 0x30, 0x30, 0x00, 0x00, 0x00 }, // 26 => ':'
+	{ 0x00, 0x40, 0x20, 0x30, 0x30, 0x00, 0x00, 0x30, 0x30, 0x00, 0x00, 0x00 }, // 27 => ';'
+	{ 0x00, 0x00, 0x00, 0x00, 0x0C, 0x30, 0xC0, 0x30, 0x0C, 0x00, 0x00, 0x00 }, // 28 => '<'
+	{ 0x00, 0x00, 0x00, 0x00, 0x00, 0xF8, 0x00, 0xF8, 0x00, 0x00, 0x00, 0x00 }, // 29 => '='
+	{ 0x00, 0x00, 0x00, 0x00, 0xC0, 0x30, 0x0C, 0x30, 0xC0, 0x00, 0x00, 0x00 }, // 30 => '>'
+	{ 0x00, 0x00, 0x00, 0x20, 0x00, 0x20, 0x20, 0x10, 0x08, 0x88, 0x70, 0x00 }, // 31 => '?'
+	{ 0x00, 0x00, 0x00, 0x70, 0x80, 0xB0, 0xB8, 0xB8, 0x88, 0x70, 0x00, 0x00 }, // 32 => '@'
+	{ 0x00, 0x00, 0x00, 0x88, 0x88, 0xF8, 0x88, 0x88, 0x50, 0x20, 0x00, 0x00 }, // 33 => 'A'
+	{ 0x00, 0x00, 0x00, 0xF0, 0x88, 0x88, 0xF0, 0x88, 0x88, 0xF0, 0x00, 0x00 }, // 34 => 'B'
+	{ 0x00, 0x00, 0x00, 0x70, 0x88, 0x80, 0x80, 0x80, 0x88, 0x70, 0x00, 0x00 }, // 35 => 'C'
+	{ 0x00, 0x00, 0x00, 0xE0, 0x90, 0x88, 0x88, 0x88, 0x90, 0xE0, 0x00, 0x00 }, // 36 => 'D'
+	{ 0x00, 0x00, 0x00, 0xF8, 0x80, 0x80, 0xF0, 0x80, 0x80, 0xF8, 0x00, 0x00 }, // 37 => 'E'
+	{ 0x00, 0x00, 0x00, 0x80, 0x80, 0x80, 0xF0, 0x80, 0x80, 0xF8, 0x00, 0x00 }, // 38 => 'F'
+	{ 0x00, 0x00, 0x00, 0x78, 0x88, 0x88, 0x98, 0x80, 0x88, 0x70, 0x00, 0x00 }, // 39 => 'G'
+	{ 0x00, 0x00, 0x00, 0x88, 0x88, 0x88, 0xF8, 0x88, 0x88, 0x88, 0x00, 0x00 }, // 40 => 'H'
+	{ 0x00, 0x00, 0x00, 0xF8, 0x20, 0x20, 0x20, 0x20, 0x20, 0xF8, 0x00, 0x00 }, // 41 => 'I'
+	{ 0x00, 0x00, 0x00, 0x70, 0x88, 0x88, 0x08, 0x08, 0x08, 0x38, 0x00, 0x00 }, // 42 => 'J'
+	{ 0x00, 0x00, 0x00, 0x88, 0x90, 0xA0, 0xC0, 0xA0, 0x90, 0x88, 0x00, 0x00 }, // 43 => 'K'
+	{ 0x00, 0x00, 0x00, 0xF8, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x00, 0x00 }, // 44 => 'L'
+	{ 0x00, 0x00, 0x00, 0x88, 0x88, 0x88, 0xA8, 0xA8, 0xD8, 0x88, 0x00, 0x00 }, // 45 => 'M'
+	{ 0x00, 0x00, 0x00, 0x88, 0x98, 0x98, 0xA8, 0xC8, 0xC8, 0x88, 0x00, 0x00 }, // 46 => 'N'
+	{ 0x00, 0x00, 0x00, 0x70, 0x88, 0x88, 0x88, 0x88, 0x88, 0x70, 0x00, 0x00 }, // 47 => 'O'
+	{ 0x00, 0x00, 0x00, 0x80, 0x80, 0x80, 0xF0, 0x88, 0x88, 0xF0, 0x00, 0x00 }, // 48 => 'P'
+	{ 0x00, 0x00, 0x18, 0x70, 0x88, 0x88, 0x88, 0x88, 0x88, 0x70, 0x00, 0x00 }, // 49 => 'Q'
+	{ 0x00, 0x00, 0x00, 0x88, 0x90, 0xA0, 0xF0, 0x88, 0x88, 0xF0, 0x00, 0x00 }, // 50 => 'R'
+	{ 0x00, 0x00, 0x00, 0x70, 0x88, 0x08, 0x70, 0x80, 0x88, 0x70, 0x00, 0x00 }, // 51 => 'S'
+	{ 0x00, 0x00, 0x00, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0xF8, 0x00, 0x00 }, // 52 => 'T'
+	{ 0x00, 0x00, 0x00, 0x70, 0x88, 0x88, 0x88, 0x88, 0x88, 0x88, 0x00, 0x00 }, // 53 => 'U'
+	{ 0x00, 0x00, 0x00, 0x20, 0x20, 0x50, 0x50, 0x88, 0x88, 0x88, 0x00, 0x00 }, // 54 => 'V'
+	{ 0x00, 0x00, 0x00, 0x88, 0xD8, 0xA8, 0xA8, 0x88, 0x88, 0x88, 0x00, 0x00 }, // 55 => 'W'
+	{ 0x00, 0x00, 0x00, 0x88, 0x88, 0x50, 0x20, 0x50, 0x88, 0x88, 0x00, 0x00 }, // 56 => 'X'
+	{ 0x00, 0x00, 0x00, 0x20, 0x20, 0x20, 0x20, 0x50, 0x88, 0x88, 0x00, 0x00 }, // 57 => 'Y'
+	{ 0x00, 0x00, 0x00, 0xF8, 0x80, 0x40, 0x20, 0x10, 0x08, 0xF8, 0x00, 0x00 }, // 58 => 'Z'
+	{ 0x00, 0x38, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x38 }, // 59 => '['
+	{ 0x00, 0x00, 0x08, 0x08, 0x10, 0x10, 0x20, 0x20, 0x40, 0x40, 0x80, 0x80 }, // 60 => '\'
+	{ 0x00, 0x70, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x10, 0x70 }, // 61 => ']'
+	{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x88, 0x50, 0x20, 0x00 }, // 62 => '^'
+	{ 0x00, 0x00, 0xFC, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }, // 63 => '_'
+	{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x10, 0x20, 0x00 }, // 64 => '`'
+	{ 0x00, 0x00, 0x00, 0x68, 0x98, 0x88, 0x88, 0x78, 0x00, 0x00, 0x00, 0x00 }, // 65 => 'a'
+	{ 0x00, 0x00, 0x00, 0xF0, 0x88, 0x88, 0x88, 0xF0, 0x80, 0x80, 0x80, 0x00 }, // 66 => 'b'
+	{ 0x00, 0x00, 0x00, 0x78, 0x80, 0x80, 0x80, 0x78, 0x00, 0x00, 0x00, 0x00 }, // 67 => 'c'
+	{ 0x00, 0x00, 0x00, 0x78, 0x88, 0x88, 0x88, 0x78, 0x08, 0x08, 0x08, 0x00 }, // 68 => 'd'
+	{ 0x00, 0x00, 0x00, 0x70, 0x80, 0xF8, 0x88, 0x70, 0x00, 0x00, 0x00, 0x00 }, // 69 => 'e'
+	{ 0x00, 0x00, 0x00, 0x40, 0x40, 0x40, 0x40, 0xF0, 0x40, 0x40, 0x38, 0x00 }, // 70 => 'f'
+	{ 0x70, 0x08, 0x08, 0x78, 0x88, 0x88, 0x88, 0x78, 0x00, 0x00, 0x00, 0x00 }, // 71 => 'g'
+	{ 0x00, 0x00, 0x00, 0x88, 0x88, 0x88, 0x88, 0xF0, 0x80, 0x80, 0x80, 0x00 }, // 72 => 'h'
+	{ 0x00, 0x00, 0x00, 0x70, 0x20, 0x20, 0x20, 0x60, 0x00, 0x20, 0x20, 0x00 }, // 73 => 'i'
+	{ 0x70, 0x08, 0x08, 0x08, 0x08, 0x08, 0x08, 0x38, 0x00, 0x08, 0x08, 0x00 }, // 74 => 'j'
+	{ 0x00, 0x00, 0x00, 0x48, 0x50, 0x60, 0x50, 0x48, 0x40, 0x40, 0x40, 0x00 }, // 75 => 'k'
+	{ 0x00, 0x00, 0x00, 0x70, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x60, 0x00 }, // 76 => 'l'
+	{ 0x00, 0x00, 0x00, 0x88, 0xA8, 0xA8, 0xA8, 0xD0, 0x00, 0x00, 0x00, 0x00 }, // 77 => 'm'
+	{ 0x00, 0x00, 0x00, 0x88, 0x88, 0x88, 0xC8, 0xB0, 0x00, 0x00, 0x00, 0x00 }, // 78 => 'n'
+	{ 0x00, 0x00, 0x00, 0x70, 0x88, 0x88, 0x88, 0x70, 0x00, 0x00, 0x00, 0x00 }, // 79 => 'o'
+	{ 0x80, 0x80, 0x80, 0xF0, 0x88, 0x88, 0x88, 0xF0, 0x00, 0x00, 0x00, 0x00 }, // 80 => 'p'
+	{ 0x08, 0x08, 0x08, 0x78, 0x88, 0x88, 0x88, 0x78, 0x00, 0x00, 0x00, 0x00 }, // 81 => 'q'
+	{ 0x00, 0x00, 0x00, 0x40, 0x40, 0x40, 0x60, 0x58, 0x00, 0x00, 0x00, 0x00 }, // 82 => 'r'
+	{ 0x00, 0x00, 0x00, 0xF0, 0x08, 0x70, 0x80, 0x78, 0x00, 0x00, 0x00, 0x00 }, // 83 => 's'
+	{ 0x00, 0x00, 0x00, 0x18, 0x20, 0x20, 0x20, 0x70, 0x20, 0x20, 0x20, 0x00 }, // 84 => 't'
+	{ 0x00, 0x00, 0x00, 0x68, 0x98, 0x88, 0x88, 0x88, 0x00, 0x00, 0x00, 0x00 }, // 85 => 'u'
+	{ 0x00, 0x00, 0x00, 0x20, 0x20, 0x50, 0x50, 0xD8, 0x00, 0x00, 0x00, 0x00 }, // 86 => 'v'
+	{ 0x00, 0x00, 0x00, 0x50, 0xA8, 0xA8, 0xA8, 0x88, 0x00, 0x00, 0x00, 0x00 }, // 87 => 'w'
+	{ 0x00, 0x00, 0x00, 0x88, 0x50, 0x20, 0x50, 0x88, 0x00, 0x00, 0x00, 0x00 }, // 88 => 'x'
+	{ 0x70, 0x08, 0x08, 0x78, 0x88, 0x88, 0x88, 0x88, 0x00, 0x00, 0x00, 0x00 }, // 89 => 'y'
+	{ 0x00, 0x00, 0x00, 0xF8, 0x40, 0x20, 0x10, 0xF8, 0x00, 0x00, 0x00, 0x00 }, // 90 => 'z'
+	{ 0x00, 0x08, 0x10, 0x10, 0x10, 0x10, 0x20, 0x10, 0x10, 0x10, 0x10, 0x08 }, // 91 => '{'
+	{ 0x00, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20, 0x20 }, // 92 => '|'
+	{ 0x00, 0x40, 0x20, 0x20, 0x20, 0x20, 0x10, 0x20, 0x20, 0x20, 0x20, 0x40 }, // 93 => '}'
+	{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x10, 0xA8, 0x40, 0x00, 0x00, 0x00, 0x00 }  // 94 => '~'
+};
+
+void vDrawText(const std::string & sString)
+{
+	glRasterPos2f(0.0f, 12.0f);
+	for(std::string::size_type stI = 0; stI < sString.length(); ++stI)
+	{
+		glBitmap(6, 12, 0, 0, 6, 0, g_ppuLetters[sString[stI] - CHARACTEROFFSET]);
+	}
+}
 
 std::vector< std::string > SplitString(const std::string & String, char Delimiter)
 {
@@ -1655,603 +1764,591 @@ Vector3f GetSnappedStepInView(const Vector3f & Position, FixedDirection Directio
 	return Result;
 }
 
-class PointsView : public KeyAcceptor
+bool AcceptKeyInPointView(int KeyCode, bool IsDown)
 {
-public:
-	virtual bool AcceptKey(int KeyCode, bool IsDown) override
+	bool bKeyAccepted(false);
+	
+	switch(KeyCode)
 	{
-		bool bKeyAccepted(false);
-		
-		switch(KeyCode)
+	case 65: // SPACE
 		{
-		case 65: // SPACE
+			if(IsDown == true)
 			{
-				if(IsDown == true)
+				// create triangle from three selected points
+				if(g_SelectedPoints.size() == 3)
 				{
-					// create triangle from three selected points
-					if(g_SelectedPoints.size() == 3)
-					{
-						TrianglePoint * pTrianglePoint1(new TrianglePoint(g_SelectedPoints[0]));
-						
-						g_TrianglePoints.push_back(pTrianglePoint1);
-						g_SelectedPoints[0]->m_TrianglePoints.push_back(pTrianglePoint1);
-						
-						TrianglePoint * pTrianglePoint2(new TrianglePoint(g_SelectedPoints[1]));
-						
-						g_TrianglePoints.push_back(pTrianglePoint2);
-						g_SelectedPoints[1]->m_TrianglePoints.push_back(pTrianglePoint2);
-						
-						TrianglePoint * pTrianglePoint3(new TrianglePoint(g_SelectedPoints[2]));
-						
-						g_TrianglePoints.push_back(pTrianglePoint3);
-						g_SelectedPoints[2]->m_TrianglePoints.push_back(pTrianglePoint3);
-						
-						Triangle * pNewTriangle(new Triangle());
-						
-						vAttachTrianglePoint(pNewTriangle, 1, pTrianglePoint1);
-						vAttachTrianglePoint(pNewTriangle, 2, pTrianglePoint2);
-						vAttachTrianglePoint(pNewTriangle, 3, pTrianglePoint3);
-						pNewTriangle->vRealignNormal();
-						g_Triangles.push_back(pNewTriangle);
-						g_SelectedTriangles.push_back(pNewTriangle);
-						g_SelectedPoints.clear();
-						bKeyAccepted = true;
-					}
-				}
-				
-				break;
-			}
-		case 23: // TABULATOR
-			{
-				if(IsDown == true)
-				{
-					// rotate point selection
-					if(g_SelectedPoints.size() > 0)
-					{
-						bKeyAccepted = true;
-					}
+					TrianglePoint * pTrianglePoint1(new TrianglePoint(g_SelectedPoints[0]));
 					
-					std::vector< Point * > NewSelectedPoints;
+					g_TrianglePoints.push_back(pTrianglePoint1);
+					g_SelectedPoints[0]->m_TrianglePoints.push_back(pTrianglePoint1);
 					
-					for(std::vector< Point * >::size_type stSelectedPoint = 0; stSelectedPoint < g_SelectedPoints.size(); ++stSelectedPoint)
-					{
-						std::vector< Point * >::iterator iPoint(std::find(g_Points.begin(), g_Points.end(), g_SelectedPoints[stSelectedPoint]));
-						
-						++iPoint;
-						if(iPoint == g_Points.end())
-						{
-							iPoint = g_Points.begin();
-						}
-						g_SelectedPoints[stSelectedPoint] = *iPoint;
-					}
-				}
-				
-				break;
-			}
-		case 40: // D
-			{
-				if(IsDown == true)
-				{
-					// duplicate selected points
-					if(g_SelectedPoints.size() > 0)
-					{
-						bKeyAccepted = true;
-					}
+					TrianglePoint * pTrianglePoint2(new TrianglePoint(g_SelectedPoints[1]));
 					
-					std::vector< Point * > NewSelectedPoints;
+					g_TrianglePoints.push_back(pTrianglePoint2);
+					g_SelectedPoints[1]->m_TrianglePoints.push_back(pTrianglePoint2);
 					
-					for(std::vector< Point * >::size_type stI = 0; stI < g_SelectedPoints.size(); ++stI)
-					{
-						g_Points.push_back(new Point(*g_SelectedPoints[stI]));
-						NewSelectedPoints.push_back(g_Points.back());
-					}
-					g_SelectedPoints = NewSelectedPoints;
-				}
-				
-				break;
-			}
-		case 57: // N
-			{
-				if(IsDown == true)
-				{
-					auto NewPoint(new Point());
+					TrianglePoint * pTrianglePoint3(new TrianglePoint(g_SelectedPoints[2]));
 					
-					if(g_Keyboard.IsAltActive() == true)
-					{
-						// assign random coordinates within (-1.0 .. 1.0, -1.0 .. 1.0, -1.0 .. 1.0)
-						NewPoint->SetPosition(Vector3f::CreateFromComponents(-1.0f + 2 * (static_cast< double> (random()) / RAND_MAX), -1.0f + 2 * (static_cast< double> (random()) / RAND_MAX), -1.0f + 2 * (static_cast< double> (random()) / RAND_MAX)));
-					}
-					g_Points.push_back(NewPoint);
+					g_TrianglePoints.push_back(pTrianglePoint3);
+					g_SelectedPoints[2]->m_TrianglePoints.push_back(pTrianglePoint3);
+					
+					Triangle * pNewTriangle(new Triangle());
+					
+					vAttachTrianglePoint(pNewTriangle, 1, pTrianglePoint1);
+					vAttachTrianglePoint(pNewTriangle, 2, pTrianglePoint2);
+					vAttachTrianglePoint(pNewTriangle, 3, pTrianglePoint3);
+					pNewTriangle->vRealignNormal();
+					g_Triangles.push_back(pNewTriangle);
+					g_SelectedTriangles.push_back(pNewTriangle);
+					g_SelectedPoints.clear();
 					bKeyAccepted = true;
 				}
-				
-				break;
 			}
-		case 39: // S
-			{
-				if((IsDown == true) && (g_Keyboard.IsAnyControlActive() == true) && (g_SelectedPoints.empty() == false))
-				{
-					for(auto Point : g_SelectedPoints)
-					{
-						Point->SetPosition(GetSnapped(Point->GetPosition()));
-					}
-					bKeyAccepted = true;
-				}
-				
-				break;
-			}
-		case 28: // T
-			{
-				if((IsDown == true) && (g_Keyboard.IsNoModifierKeyActive() == true))
-				{
-					// select all triangles which contain the selected points
-					if(g_SelectedPoints.size() > 0)
-					{
-						g_SelectedTriangles.clear();
-						
-						std::vector< Triangle * > TrianglesToSelect;
-						
-						for(auto Point : g_SelectedPoints)
-						{
-							for(auto TrianglePoint : Point->GetTrianglePoints())
-							{
-								std::copy(TrianglePoint->GetTriangles().begin(), TrianglePoint->GetTriangles().end(), back_inserter(TrianglesToSelect));
-							}
-						}
-						std::sort(TrianglesToSelect.begin(), TrianglesToSelect.end());
-						std::unique_copy(TrianglesToSelect.begin(), TrianglesToSelect.end(), back_inserter(g_SelectedTriangles));
-						bKeyAccepted = true;
-					}
-				}
-				
-				break;
-			}
-		case 119: // DELETE
-			{
-				if(IsDown == true)
-				{
-					// delete selected points
-					while(g_SelectedPoints.size() > 0)
-					{
-						vDeletePoint(g_SelectedPoints.front());
-					}
-					bKeyAccepted = true;
-				}
-				
-				break;
-			}
-		case 114: // RIGHT
-			{
-				if((IsDown == true) && (g_Keyboard.IsNoModifierKeyActive() == true) && (g_SelectedPoints.empty() == false))
-				{
-					for(auto Point : g_SelectedPoints)
-					{
-						Point->SetPosition(GetSnappedStepInView(Point->GetPosition(), FixedDirection::Right));
-					}
-					bKeyAccepted = true;
-				}
-				
-				break;
-			}
-		case 113: // LEFT
-			{
-				if((IsDown == true) && (g_Keyboard.IsNoModifierKeyActive() == true) && (g_SelectedPoints.empty() == false))
-				{
-					for(auto Point : g_SelectedPoints)
-					{
-						Point->SetPosition(GetSnappedStepInView(Point->GetPosition(), FixedDirection::Left));
-					}
-					bKeyAccepted = true;
-				}
-				
-				break;
-			}
-		case 111: // UP
-			{
-				if((IsDown == true) && (g_Keyboard.IsNoModifierKeyActive() == true) && (g_SelectedPoints.empty() == false))
-				{
-					for(auto Point : g_SelectedPoints)
-					{
-						Point->SetPosition(GetSnappedStepInView(Point->GetPosition(), FixedDirection::Up));
-					}
-					bKeyAccepted = true;
-				}
-				
-				break;
-			}
-		case 116: // DOWN
-			{
-				if((IsDown == true) && (g_Keyboard.IsNoModifierKeyActive() == true) && (g_SelectedPoints.empty() == false))
-				{
-					for(auto Point : g_SelectedPoints)
-					{
-						Point->SetPosition(GetSnappedStepInView(Point->GetPosition(), FixedDirection::Down));
-					}
-					bKeyAccepted = true;
-				}
-				
-				break;
-			}
-		case 117: // PAGE DOWN
-			{
-				if((IsDown == true) && (g_Keyboard.IsNoModifierKeyActive() == true) && (g_SelectedPoints.empty() == false))
-				{
-					for(auto Point : g_SelectedPoints)
-					{
-						Point->SetPosition(GetSnappedStepInView(Point->GetPosition(), FixedDirection::Backward));
-					}
-					bKeyAccepted = true;
-				}
-				
-				break;
-			}
-		case 112: // PAGE UP
-			{
-				if((IsDown == true) && (g_Keyboard.IsNoModifierKeyActive() == true) && (g_SelectedPoints.empty() == false))
-				{
-					for(auto Point : g_SelectedPoints)
-					{
-						Point->SetPosition(GetSnappedStepInView(Point->GetPosition(), FixedDirection::Forward));
-					}
-					bKeyAccepted = true;
-				}
-				
-				break;
-			}
+			
+			break;
 		}
-		
-		return bKeyAccepted;
-	}
-};
-
-class TriangleView : public KeyAcceptor
-{
-public:
-	virtual bool AcceptKey(int KeyCode, bool IsDown) override
-	{
-		bool bKeyAccepted(false);
-		
-		switch(KeyCode)
+	case 23: // TABULATOR
 		{
-		case 31: // I
+			if(IsDown == true)
 			{
-				// change triangle front and back
+				// rotate point selection
+				if(g_SelectedPoints.size() > 0)
+				{
+					bKeyAccepted = true;
+				}
+				
+				std::vector< Point * > NewSelectedPoints;
+				
+				for(std::vector< Point * >::size_type stSelectedPoint = 0; stSelectedPoint < g_SelectedPoints.size(); ++stSelectedPoint)
+				{
+					std::vector< Point * >::iterator iPoint(std::find(g_Points.begin(), g_Points.end(), g_SelectedPoints[stSelectedPoint]));
+					
+					++iPoint;
+					if(iPoint == g_Points.end())
+					{
+						iPoint = g_Points.begin();
+					}
+					g_SelectedPoints[stSelectedPoint] = *iPoint;
+				}
+			}
+			
+			break;
+		}
+	case 40: // D
+		{
+			if(IsDown == true)
+			{
+				// duplicate selected points
+				if(g_SelectedPoints.size() > 0)
+				{
+					bKeyAccepted = true;
+				}
+				
+				std::vector< Point * > NewSelectedPoints;
+				
+				for(std::vector< Point * >::size_type stI = 0; stI < g_SelectedPoints.size(); ++stI)
+				{
+					g_Points.push_back(new Point(*g_SelectedPoints[stI]));
+					NewSelectedPoints.push_back(g_Points.back());
+				}
+				g_SelectedPoints = NewSelectedPoints;
+			}
+			
+			break;
+		}
+	case 57: // N
+		{
+			if(IsDown == true)
+			{
+				auto NewPoint(new Point());
+				
+				if(g_Keyboard.IsAltActive() == true)
+				{
+					// assign random coordinates within (-1.0 .. 1.0, -1.0 .. 1.0, -1.0 .. 1.0)
+					NewPoint->SetPosition(Vector3f::CreateFromComponents(-1.0f + 2 * (static_cast< double> (random()) / RAND_MAX), -1.0f + 2 * (static_cast< double> (random()) / RAND_MAX), -1.0f + 2 * (static_cast< double> (random()) / RAND_MAX)));
+				}
+				g_Points.push_back(NewPoint);
+				bKeyAccepted = true;
+			}
+			
+			break;
+		}
+	case 39: // S
+		{
+			if((IsDown == true) && (g_Keyboard.IsAnyControlActive() == true) && (g_SelectedPoints.empty() == false))
+			{
+				for(auto Point : g_SelectedPoints)
+				{
+					Point->SetPosition(GetSnapped(Point->GetPosition()));
+				}
+				bKeyAccepted = true;
+			}
+			
+			break;
+		}
+	case 28: // T
+		{
+			if((IsDown == true) && (g_Keyboard.IsNoModifierKeyActive() == true))
+			{
+				// select all triangles which contain the selected points
+				if(g_SelectedPoints.size() > 0)
+				{
+					g_SelectedTriangles.clear();
+					
+					std::vector< Triangle * > TrianglesToSelect;
+					
+					for(auto Point : g_SelectedPoints)
+					{
+						for(auto TrianglePoint : Point->GetTrianglePoints())
+						{
+							std::copy(TrianglePoint->GetTriangles().begin(), TrianglePoint->GetTriangles().end(), back_inserter(TrianglesToSelect));
+						}
+					}
+					std::sort(TrianglesToSelect.begin(), TrianglesToSelect.end());
+					std::unique_copy(TrianglesToSelect.begin(), TrianglesToSelect.end(), back_inserter(g_SelectedTriangles));
+					bKeyAccepted = true;
+				}
+			}
+			
+			break;
+		}
+	case 119: // DELETE
+		{
+			if(IsDown == true)
+			{
+				// delete selected points
+				while(g_SelectedPoints.size() > 0)
+				{
+					vDeletePoint(g_SelectedPoints.front());
+				}
+				bKeyAccepted = true;
+			}
+			
+			break;
+		}
+	case 114: // RIGHT
+		{
+			if((IsDown == true) && (g_Keyboard.IsNoModifierKeyActive() == true) && (g_SelectedPoints.empty() == false))
+			{
+				for(auto Point : g_SelectedPoints)
+				{
+					Point->SetPosition(GetSnappedStepInView(Point->GetPosition(), FixedDirection::Right));
+				}
+				bKeyAccepted = true;
+			}
+			
+			break;
+		}
+	case 113: // LEFT
+		{
+			if((IsDown == true) && (g_Keyboard.IsNoModifierKeyActive() == true) && (g_SelectedPoints.empty() == false))
+			{
+				for(auto Point : g_SelectedPoints)
+				{
+					Point->SetPosition(GetSnappedStepInView(Point->GetPosition(), FixedDirection::Left));
+				}
+				bKeyAccepted = true;
+			}
+			
+			break;
+		}
+	case 111: // UP
+		{
+			if((IsDown == true) && (g_Keyboard.IsNoModifierKeyActive() == true) && (g_SelectedPoints.empty() == false))
+			{
+				for(auto Point : g_SelectedPoints)
+				{
+					Point->SetPosition(GetSnappedStepInView(Point->GetPosition(), FixedDirection::Up));
+				}
+				bKeyAccepted = true;
+			}
+			
+			break;
+		}
+	case 116: // DOWN
+		{
+			if((IsDown == true) && (g_Keyboard.IsNoModifierKeyActive() == true) && (g_SelectedPoints.empty() == false))
+			{
+				for(auto Point : g_SelectedPoints)
+				{
+					Point->SetPosition(GetSnappedStepInView(Point->GetPosition(), FixedDirection::Down));
+				}
+				bKeyAccepted = true;
+			}
+			
+			break;
+		}
+	case 117: // PAGE DOWN
+		{
+			if((IsDown == true) && (g_Keyboard.IsNoModifierKeyActive() == true) && (g_SelectedPoints.empty() == false))
+			{
+				for(auto Point : g_SelectedPoints)
+				{
+					Point->SetPosition(GetSnappedStepInView(Point->GetPosition(), FixedDirection::Backward));
+				}
+				bKeyAccepted = true;
+			}
+			
+			break;
+		}
+	case 112: // PAGE UP
+		{
+			if((IsDown == true) && (g_Keyboard.IsNoModifierKeyActive() == true) && (g_SelectedPoints.empty() == false))
+			{
+				for(auto Point : g_SelectedPoints)
+				{
+					Point->SetPosition(GetSnappedStepInView(Point->GetPosition(), FixedDirection::Forward));
+				}
+				bKeyAccepted = true;
+			}
+			
+			break;
+		}
+	}
+	
+	return bKeyAccepted;
+}
+
+bool AcceptKeyInTriangleView(int KeyCode, bool IsDown)
+{
+	bool bKeyAccepted(false);
+	
+	switch(KeyCode)
+	{
+	case 31: // I
+		{
+			// change triangle front and back
+			if(g_SelectedTriangles.size() > 0)
+			{
+				for(std::vector< Triangle * >::size_type stTriangle = 0; stTriangle < g_SelectedTriangles.size(); ++stTriangle)
+				{
+					g_SelectedTriangles[stTriangle]->vInvert();
+				}
+				bKeyAccepted = true;
+			}
+			
+			break;
+		}
+	case 39: // S
+		{
+			for(std::vector< Point * >::size_type stPoint = 0; stPoint < g_SelectedPoints.size(); ++stPoint)
+			{
+				for(std::vector< Triangle * >::size_type stTriangle = 0; stTriangle < g_SelectedTriangles.size(); ++stTriangle)
+				{
+					TrianglePoint * pOldTrianglePoint(g_SelectedTriangles[stTriangle]->pGetTrianglePoint(g_SelectedPoints[stPoint]));
+					
+					if(pOldTrianglePoint != 0)
+					{
+						TrianglePoint * pNewTrianglePoint(new TrianglePoint());
+						
+						pNewTrianglePoint->m_Point = g_SelectedPoints[stPoint];
+						pNewTrianglePoint->m_Normal = g_SelectedTriangles[stTriangle]->GetTriangleNormal();
+						g_TrianglePoints.push_back(pNewTrianglePoint);
+						vExchangeTrianglePoint(g_SelectedTriangles[stTriangle], pOldTrianglePoint, pNewTrianglePoint);
+					}
+				}
+			}
+			bKeyAccepted = true;
+			
+			break;
+		}
+	case 33: // P
+		{
+			if((IsDown == true) && (g_Keyboard.IsNoModifierKeyActive() == true))
+			{
+				// select all points on the selected triangles
 				if(g_SelectedTriangles.size() > 0)
 				{
-					for(std::vector< Triangle * >::size_type stTriangle = 0; stTriangle < g_SelectedTriangles.size(); ++stTriangle)
+					g_SelectedPoints.clear();
+					
+					std::vector< Point * > PointsToSelect;
+					
+					for(auto Triangle : g_SelectedTriangles)
 					{
-						g_SelectedTriangles[stTriangle]->vInvert();
+						PointsToSelect.push_back(Triangle->pGetPoint(1));
+						PointsToSelect.push_back(Triangle->pGetPoint(2));
+						PointsToSelect.push_back(Triangle->pGetPoint(3));
 					}
+					std::sort(PointsToSelect.begin(), PointsToSelect.end());
+					std::unique_copy(PointsToSelect.begin(), PointsToSelect.end(), back_inserter(g_SelectedPoints));
 					bKeyAccepted = true;
 				}
-				
-				break;
 			}
-		case 39: // S
+			
+			break;
+		}
+	case 30: // U
+		{
+			for(std::vector< Point * >::size_type stPoint = 0; stPoint < g_SelectedPoints.size(); ++stPoint)
 			{
-				for(std::vector< Point * >::size_type stPoint = 0; stPoint < g_SelectedPoints.size(); ++stPoint)
+				TrianglePoint * pNewTrianglePoint(0);
+				
+				for(std::vector< Triangle * >::size_type stTriangle = 0; stTriangle < g_SelectedTriangles.size(); ++stTriangle)
 				{
-					for(std::vector< Triangle * >::size_type stTriangle = 0; stTriangle < g_SelectedTriangles.size(); ++stTriangle)
+					TrianglePoint * pTrianglePoint(g_SelectedTriangles[stTriangle]->pGetTrianglePoint(g_SelectedPoints[stPoint]));
+					
+					if(pTrianglePoint != 0)
 					{
-						TrianglePoint * pOldTrianglePoint(g_SelectedTriangles[stTriangle]->pGetTrianglePoint(g_SelectedPoints[stPoint]));
-						
-						if(pOldTrianglePoint != 0)
+						if(pNewTrianglePoint == 0)
 						{
-							TrianglePoint * pNewTrianglePoint(new TrianglePoint());
-							
-							pNewTrianglePoint->m_Point = g_SelectedPoints[stPoint];
-							pNewTrianglePoint->m_Normal = g_SelectedTriangles[stTriangle]->GetTriangleNormal();
+							pNewTrianglePoint = new TrianglePoint(g_SelectedPoints[stPoint]);
+							pNewTrianglePoint->m_Normal.Set(0.0f, 0.0f, 0.0f);
 							g_TrianglePoints.push_back(pNewTrianglePoint);
-							vExchangeTrianglePoint(g_SelectedTriangles[stTriangle], pOldTrianglePoint, pNewTrianglePoint);
+							g_SelectedPoints[stPoint]->m_TrianglePoints.push_back(pNewTrianglePoint);
 						}
+						pNewTrianglePoint->m_Normal.Translate(pTrianglePoint->m_Normal);
+						vExchangeTrianglePoint(g_SelectedTriangles[stTriangle], pTrianglePoint, pNewTrianglePoint);
 					}
 				}
-				bKeyAccepted = true;
-				
-				break;
-			}
-		case 33: // P
-			{
-				if((IsDown == true) && (g_Keyboard.IsNoModifierKeyActive() == true))
+				if(pNewTrianglePoint != 0)
 				{
-					// select all points on the selected triangles
-					if(g_SelectedTriangles.size() > 0)
-					{
-						g_SelectedPoints.clear();
-						
-						std::vector< Point * > PointsToSelect;
-						
-						for(auto Triangle : g_SelectedTriangles)
-						{
-							PointsToSelect.push_back(Triangle->pGetPoint(1));
-							PointsToSelect.push_back(Triangle->pGetPoint(2));
-							PointsToSelect.push_back(Triangle->pGetPoint(3));
-						}
-						std::sort(PointsToSelect.begin(), PointsToSelect.end());
-						std::unique_copy(PointsToSelect.begin(), PointsToSelect.end(), back_inserter(g_SelectedPoints));
-						bKeyAccepted = true;
-					}
+					pNewTrianglePoint->m_Normal.Normalize();
 				}
-				
-				break;
 			}
-		case 30: // U
-			{
-				for(std::vector< Point * >::size_type stPoint = 0; stPoint < g_SelectedPoints.size(); ++stPoint)
-				{
-					TrianglePoint * pNewTrianglePoint(0);
-					
-					for(std::vector< Triangle * >::size_type stTriangle = 0; stTriangle < g_SelectedTriangles.size(); ++stTriangle)
-					{
-						TrianglePoint * pTrianglePoint(g_SelectedTriangles[stTriangle]->pGetTrianglePoint(g_SelectedPoints[stPoint]));
-						
-						if(pTrianglePoint != 0)
-						{
-							if(pNewTrianglePoint == 0)
-							{
-								pNewTrianglePoint = new TrianglePoint(g_SelectedPoints[stPoint]);
-								pNewTrianglePoint->m_Normal.Set(0.0f, 0.0f, 0.0f);
-								g_TrianglePoints.push_back(pNewTrianglePoint);
-								g_SelectedPoints[stPoint]->m_TrianglePoints.push_back(pNewTrianglePoint);
-							}
-							pNewTrianglePoint->m_Normal.Translate(pTrianglePoint->m_Normal);
-							vExchangeTrianglePoint(g_SelectedTriangles[stTriangle], pTrianglePoint, pNewTrianglePoint);
-						}
-					}
-					if(pNewTrianglePoint != 0)
-					{
-						pNewTrianglePoint->m_Normal.Normalize();
-					}
-				}
-				bKeyAccepted = true;
-				
-				break;
-			}
-		case 36: // ENTER
-			{
-				if(g_SelectedTriangles.size() > 0)
-				{
-					for(std::vector< Triangle * >::size_type stTriangle = 0; stTriangle < g_SelectedTriangles.size(); ++stTriangle)
-					{
-						g_SelectedTriangles[stTriangle]->vRealignNormal();
-					}
-					bKeyAccepted = true;
-				}
-				
-				break;
-			}
-		case 119: // DELETE
-			{
-				if(g_SelectedTriangles.size() > 0)
-				{
-					while(g_SelectedTriangles.size() > 0)
-					{
-						vDeleteTriangle(g_SelectedTriangles.front());
-					}
-					bKeyAccepted = true;
-				}
-				
-				break;
-			}
+			bKeyAccepted = true;
+			
+			break;
 		}
-		
-		return bKeyAccepted;
-	}
-};
-
-class CameraView : public KeyAcceptor
-{
-public:
-	virtual bool AcceptKey(int KeyCode, bool IsDown) override
-	{
-		bool bKeyAccepted(false);
-		
-		switch(KeyCode)
+	case 36: // ENTER
 		{
-		case 54: // C
+			if(g_SelectedTriangles.size() > 0)
 			{
-				if(IsDown == true)
+				for(std::vector< Triangle * >::size_type stTriangle = 0; stTriangle < g_SelectedTriangles.size(); ++stTriangle)
 				{
-					auto NewCamera(new Camera());
-					
-					g_Cameras.push_back(NewCamera);
-					g_SelectedCamera = NewCamera;
-					bKeyAccepted = true;
+					g_SelectedTriangles[stTriangle]->vRealignNormal();
 				}
-				
-				break;
+				bKeyAccepted = true;
 			}
-		case 36: // ENTER
-			{
-				if(g_HoveredCamera != nullptr)
-				{
-					g_CurrentCamera = g_HoveredCamera;
-					bKeyAccepted = true;
-				}
-				else if(g_SelectedCamera != nullptr)
-				{
-					g_CurrentCamera = g_SelectedCamera;
-					bKeyAccepted = true;
-				}
-				
-				break;
-			}
-		case 114: // RIGHT
-			{
-				if(IsDown == true)
-				{
-					if(g_SelectedCamera != nullptr)
-					{
-						g_SelectedCamera->SetPosition(GetSnappedStepInView(g_SelectedCamera->GetPosition(), FixedDirection::Right));
-					}
-					else if(g_CurrentCamera != nullptr)
-					{
-						if(g_Keyboard.IsAnyControlActive() == true)
-						{
-							g_CurrentCamera->TurnRight(0.02f);
-						}
-						else
-						{
-							g_CurrentCamera->MoveRight(0.2f);
-						}
-					}
-					bKeyAccepted = true;
-				}
-				
-				break;
-			}
-		case 113: // LEFT
-			{
-				if(IsDown == true)
-				{
-					if(g_SelectedCamera != nullptr)
-					{
-						g_SelectedCamera->SetPosition(GetSnappedStepInView(g_SelectedCamera->GetPosition(), FixedDirection::Left));
-					}
-					else if(g_CurrentCamera != nullptr)
-					{
-						if(g_Keyboard.IsAnyControlActive() == true)
-						{
-							g_CurrentCamera->TurnLeft(0.02f);
-						}
-						else
-						{
-							g_CurrentCamera->MoveLeft(0.2f);
-						}
-					}
-					bKeyAccepted = true;
-				}
-				
-				break;
-			}
-		case 111: // UP
-			{
-				if(IsDown == true)
-				{
-					if(g_SelectedCamera != nullptr)
-					{
-						g_SelectedCamera->SetPosition(GetSnappedStepInView(g_SelectedCamera->GetPosition(), FixedDirection::Up));
-					}
-					else if(g_CurrentCamera != nullptr)
-					{
-						if(g_Keyboard.IsAnyControlActive() == true)
-						{
-							g_CurrentCamera->TurnUp(0.02f);
-						}
-						else
-						{
-							g_CurrentCamera->MoveUp(0.2f);
-						}
-					}
-					bKeyAccepted = true;
-				}
-				
-				break;
-			}
-		case 116: // DOWN
-			{
-				if(IsDown == true)
-				{
-					if(g_SelectedCamera != nullptr)
-					{
-						g_SelectedCamera->SetPosition(GetSnappedStepInView(g_SelectedCamera->GetPosition(), FixedDirection::Down));
-					}
-					else if(g_CurrentCamera != nullptr)
-					{
-						if(g_Keyboard.IsAnyControlActive() == true)
-						{
-							g_CurrentCamera->TurnDown(0.02f);
-						}
-						else
-						{
-							g_CurrentCamera->MoveDown(0.2f);
-						}
-					}
-					bKeyAccepted = true;
-				}
-				
-				break;
-			}
-		case 117: // PAGE DOWN
-			{
-				if(IsDown == true)
-				{
-					if(g_SelectedCamera != nullptr)
-					{
-						g_SelectedCamera->SetPosition(GetSnappedStepInView(g_SelectedCamera->GetPosition(), FixedDirection::Backward));
-					}
-					else if(g_CurrentCamera != nullptr)
-					{
-						g_CurrentCamera->MoveBackward(0.2f);
-					}
-					bKeyAccepted = true;
-				}
-				
-				break;
-			}
-		case 112: // PAGE UP
-			{
-				if(IsDown == true)
-				{
-					if(g_SelectedCamera != nullptr)
-					{
-						g_SelectedCamera->SetPosition(GetSnappedStepInView(g_SelectedCamera->GetPosition(), FixedDirection::Forward));
-					}
-					else if(g_CurrentCamera != nullptr)
-					{
-						g_CurrentCamera->MoveForward(0.2f);
-					}
-					bKeyAccepted = true;
-				}
-				
-				break;
-			}
-		case 110: // HOME
-			{
-				if(g_SelectedCamera != nullptr)
-				{
-					g_SelectedCamera->SetFieldOfViewY(g_SelectedCamera->GetFieldOfViewY() + 0.01f);
-				}
-				else if(g_CurrentCamera != nullptr)
-				{
-					g_CurrentCamera->SetFieldOfViewY(g_CurrentCamera->GetFieldOfViewY() + 0.01f);
-					vSetupProjection();
-				}
-				
-				break;
-			}
-		case 115: // END
-			{
-				if(g_SelectedCamera != nullptr)
-				{
-					g_SelectedCamera->SetFieldOfViewY(g_SelectedCamera->GetFieldOfViewY() - 0.01f);
-				}
-				else if(g_CurrentCamera != nullptr)
-				{
-					g_CurrentCamera->SetFieldOfViewY(g_CurrentCamera->GetFieldOfViewY() - 0.01f);
-					vSetupProjection();
-				}
-				
-				break;
-			}
-		case 119: // DELETE
-			{
-				if((IsDown == true) && (g_Keyboard.IsNoModifierKeyActive() == true))
-				{
-					if(g_SelectedCamera != nullptr)
-					{
-						DeleteCamera(g_SelectedCamera);
-						bKeyAccepted = true;
-					}
-				}
-				
-				break;
-			}
+			
+			break;
 		}
-		
-		return bKeyAccepted;
+	case 119: // DELETE
+		{
+			if(g_SelectedTriangles.size() > 0)
+			{
+				while(g_SelectedTriangles.size() > 0)
+				{
+					vDeleteTriangle(g_SelectedTriangles.front());
+				}
+				bKeyAccepted = true;
+			}
+			
+			break;
+		}
 	}
-};
+	
+	return bKeyAccepted;
+}
+
+bool AcceptKeyInCameraView(int KeyCode, bool IsDown)
+{
+	bool bKeyAccepted(false);
+	
+	switch(KeyCode)
+	{
+	case 54: // C
+		{
+			if(IsDown == true)
+			{
+				auto NewCamera(new Camera());
+				
+				g_Cameras.push_back(NewCamera);
+				g_SelectedCamera = NewCamera;
+				bKeyAccepted = true;
+			}
+			
+			break;
+		}
+	case 36: // ENTER
+		{
+			if(g_HoveredCamera != nullptr)
+			{
+				g_CurrentCamera = g_HoveredCamera;
+				bKeyAccepted = true;
+			}
+			else if(g_SelectedCamera != nullptr)
+			{
+				g_CurrentCamera = g_SelectedCamera;
+				bKeyAccepted = true;
+			}
+			
+			break;
+		}
+	case 114: // RIGHT
+		{
+			if(IsDown == true)
+			{
+				if(g_SelectedCamera != nullptr)
+				{
+					g_SelectedCamera->SetPosition(GetSnappedStepInView(g_SelectedCamera->GetPosition(), FixedDirection::Right));
+				}
+				else if(g_CurrentCamera != nullptr)
+				{
+					if(g_Keyboard.IsAnyControlActive() == true)
+					{
+						g_CurrentCamera->TurnRight(0.02f);
+					}
+					else
+					{
+						g_CurrentCamera->MoveRight(0.2f);
+					}
+				}
+				bKeyAccepted = true;
+			}
+			
+			break;
+		}
+	case 113: // LEFT
+		{
+			if(IsDown == true)
+			{
+				if(g_SelectedCamera != nullptr)
+				{
+					g_SelectedCamera->SetPosition(GetSnappedStepInView(g_SelectedCamera->GetPosition(), FixedDirection::Left));
+				}
+				else if(g_CurrentCamera != nullptr)
+				{
+					if(g_Keyboard.IsAnyControlActive() == true)
+					{
+						g_CurrentCamera->TurnLeft(0.02f);
+					}
+					else
+					{
+						g_CurrentCamera->MoveLeft(0.2f);
+					}
+				}
+				bKeyAccepted = true;
+			}
+			
+			break;
+		}
+	case 111: // UP
+		{
+			if(IsDown == true)
+			{
+				if(g_SelectedCamera != nullptr)
+				{
+					g_SelectedCamera->SetPosition(GetSnappedStepInView(g_SelectedCamera->GetPosition(), FixedDirection::Up));
+				}
+				else if(g_CurrentCamera != nullptr)
+				{
+					if(g_Keyboard.IsAnyControlActive() == true)
+					{
+						g_CurrentCamera->TurnUp(0.02f);
+					}
+					else
+					{
+						g_CurrentCamera->MoveUp(0.2f);
+					}
+				}
+				bKeyAccepted = true;
+			}
+			
+			break;
+		}
+	case 116: // DOWN
+		{
+			if(IsDown == true)
+			{
+				if(g_SelectedCamera != nullptr)
+				{
+					g_SelectedCamera->SetPosition(GetSnappedStepInView(g_SelectedCamera->GetPosition(), FixedDirection::Down));
+				}
+				else if(g_CurrentCamera != nullptr)
+				{
+					if(g_Keyboard.IsAnyControlActive() == true)
+					{
+						g_CurrentCamera->TurnDown(0.02f);
+					}
+					else
+					{
+						g_CurrentCamera->MoveDown(0.2f);
+					}
+				}
+				bKeyAccepted = true;
+			}
+			
+			break;
+		}
+	case 117: // PAGE DOWN
+		{
+			if(IsDown == true)
+			{
+				if(g_SelectedCamera != nullptr)
+				{
+					g_SelectedCamera->SetPosition(GetSnappedStepInView(g_SelectedCamera->GetPosition(), FixedDirection::Backward));
+				}
+				else if(g_CurrentCamera != nullptr)
+				{
+					g_CurrentCamera->MoveBackward(0.2f);
+				}
+				bKeyAccepted = true;
+			}
+			
+			break;
+		}
+	case 112: // PAGE UP
+		{
+			if(IsDown == true)
+			{
+				if(g_SelectedCamera != nullptr)
+				{
+					g_SelectedCamera->SetPosition(GetSnappedStepInView(g_SelectedCamera->GetPosition(), FixedDirection::Forward));
+				}
+				else if(g_CurrentCamera != nullptr)
+				{
+					g_CurrentCamera->MoveForward(0.2f);
+				}
+				bKeyAccepted = true;
+			}
+			
+			break;
+		}
+	case 110: // HOME
+		{
+			if(g_SelectedCamera != nullptr)
+			{
+				g_SelectedCamera->SetFieldOfViewY(g_SelectedCamera->GetFieldOfViewY() + 0.01f);
+			}
+			else if(g_CurrentCamera != nullptr)
+			{
+				g_CurrentCamera->SetFieldOfViewY(g_CurrentCamera->GetFieldOfViewY() + 0.01f);
+				vSetupProjection();
+			}
+			
+			break;
+		}
+	case 115: // END
+		{
+			if(g_SelectedCamera != nullptr)
+			{
+				g_SelectedCamera->SetFieldOfViewY(g_SelectedCamera->GetFieldOfViewY() - 0.01f);
+			}
+			else if(g_CurrentCamera != nullptr)
+			{
+				g_CurrentCamera->SetFieldOfViewY(g_CurrentCamera->GetFieldOfViewY() - 0.01f);
+				vSetupProjection();
+			}
+			
+			break;
+		}
+	case 119: // DELETE
+		{
+			if((IsDown == true) && (g_Keyboard.IsNoModifierKeyActive() == true))
+			{
+				if(g_SelectedCamera != nullptr)
+				{
+					DeleteCamera(g_SelectedCamera);
+					bKeyAccepted = true;
+				}
+			}
+			
+			break;
+		}
+	}
+	
+	return bKeyAccepted;
+}
 
 XMLStream & mesh(XMLStream & XMLStream)
 {
@@ -2313,611 +2410,605 @@ void ImportMesh(const std::string & FilePath)
 	copy(Triangles.begin(), Triangles.end(), back_inserter(g_Triangles));
 }
 
-class ModelView : public KeyAcceptor
+bool AcceptKeyInModelView(int KeyCode, bool IsDown)
 {
-public:
-	PointsView m_PointView;
-	TriangleView m_TriangleView;
-	CameraView m_CameraView;
+	bool bKeyAccepted(true);
 	
-	ModelView(void)
+	switch(KeyCode)
 	{
-		g_UserInterface.vAddKeyAcceptor(this);
-		g_UserInterface.vGrabKeyFocus(this);
-		vAddKeyAcceptor(&m_PointView);
-		vAddKeyAcceptor(&m_TriangleView);
-		vAddKeyAcceptor(&m_CameraView);
-		g_ModelerView = ModelerView::Model;
-	}
-	
-	virtual bool AcceptKey(int KeyCode, bool IsDown) override
-	{
-		bool bKeyAccepted(true);
-		
-		switch(KeyCode)
+	case 54: // C
 		{
-		case 54: // C
-			{
-				if(IsDown == true)
-				{
-					if(g_Keyboard.IsAltActive() == true)
-					{
-						vToggleCullFace();
-					}
-					else if(g_Keyboard.IsAnyShiftActive() == true)
-					{
-						vSetKeyAcceptor(&m_CameraView);
-						g_ModelerView = ModelerView::Camera;
-					}
-				}
-				
-				break;
-			}
-		case 40: // D
-			{
-				if(IsDown == true)
-				{
-					if(g_Keyboard.IsAltActive() == true)
-					{
-						vToggleDepthTest();
-					}
-				}
-				
-				break;
-			}
-		case 26: // E
+			if(IsDown == true)
 			{
 				if(g_Keyboard.IsAltActive() == true)
 				{
-					std::cout << "Exporting to mesh.xml." << std::endl;
-					
-					std::ofstream OutputFileStream("mesh.xml");
-					XMLStream XMLStream(OutputFileStream);
-					
-					XMLStream << mesh;
-				}
-				
-				break;
-			}
-		case 41: // F
-			{
-				if(g_Keyboard.IsAltActive() == true)
-				{
-					vToggleFrontFace();
-				}
-				
-				break;
-			}
-		case 31: // I
-			{
-				if(g_Keyboard.IsAltActive() == true)
-				{
-					ImportMesh("mesh.xml");
-				}
-				
-				break;
-			}
-		case 46: // L
-			{
-				if(g_Keyboard.IsAltActive() == true)
-				{
-					vToggleLighting();
+					vToggleCullFace();
 				}
 				else if(g_Keyboard.IsAnyShiftActive() == true)
 				{
-					std::cout << "Loading scene.xml." << std::endl;
-					vClearScene();
+					g_ModelerView = ModelerView::Camera;
+				}
+			}
+			
+			break;
+		}
+	case 40: // D
+		{
+			if(IsDown == true)
+			{
+				if(g_Keyboard.IsAltActive() == true)
+				{
+					vToggleDepthTest();
+				}
+			}
+			
+			break;
+		}
+	case 26: // E
+		{
+			if(g_Keyboard.IsAltActive() == true)
+			{
+				std::cout << "Exporting to mesh.xml." << std::endl;
+				
+				std::ofstream OutputFileStream("mesh.xml");
+				XMLStream XMLStream(OutputFileStream);
+				
+				XMLStream << mesh;
+			}
+			
+			break;
+		}
+	case 41: // F
+		{
+			if(g_Keyboard.IsAltActive() == true)
+			{
+				vToggleFrontFace();
+			}
+			
+			break;
+		}
+	case 31: // I
+		{
+			if(g_Keyboard.IsAltActive() == true)
+			{
+				ImportMesh("mesh.xml");
+			}
+			
+			break;
+		}
+	case 46: // L
+		{
+			if(g_Keyboard.IsAltActive() == true)
+			{
+				vToggleLighting();
+			}
+			else if(g_Keyboard.IsAnyShiftActive() == true)
+			{
+				std::cout << "Loading scene.xml." << std::endl;
+				vClearScene();
+				
+				std::ifstream InputFileStream("scene.xml");
+				SceneReader SceneReader(InputFileStream);
+				
+				SceneReader.parse();
+				
+				std::vector< Point * > Points(SceneReader.GetPoints());
+				std::vector< TrianglePoint * > TrianglePoints(SceneReader.GetTrianglePoints());
+				std::vector< Triangle * > Triangles(SceneReader.GetTriangles());
+				
+				copy(Points.begin(), Points.end(), back_inserter(g_Points));
+				copy(TrianglePoints.begin(), TrianglePoints.end(), back_inserter(g_TrianglePoints));
+				copy(Triangles.begin(), Triangles.end(), back_inserter(g_Triangles));
+				for(auto & LightDescription : SceneReader.GetLightDescriptions())
+				{
+					auto NewLight(new Light());
 					
-					std::ifstream InputFileStream("scene.xml");
-					SceneReader SceneReader(InputFileStream);
-					
-					SceneReader.parse();
-					
-					std::vector< Point * > Points(SceneReader.GetPoints());
-					std::vector< TrianglePoint * > TrianglePoints(SceneReader.GetTrianglePoints());
-					std::vector< Triangle * > Triangles(SceneReader.GetTriangles());
-					
-					copy(Points.begin(), Points.end(), back_inserter(g_Points));
-					copy(TrianglePoints.begin(), TrianglePoints.end(), back_inserter(g_TrianglePoints));
-					copy(Triangles.begin(), Triangles.end(), back_inserter(g_Triangles));
-					for(auto & LightDescription : SceneReader.GetLightDescriptions())
+					NewLight->SetPosition(LightDescription.m_Position);
+					NewLight->vSetDiffuseColor(LightDescription.m_DiffuseColor[0], LightDescription.m_DiffuseColor[1], LightDescription.m_DiffuseColor[2], LightDescription.m_DiffuseColor[3]);
+					if(LightDescription.m_bEnabled == true)
 					{
-						auto NewLight(new Light());
-						
-						NewLight->SetPosition(LightDescription.m_Position);
-						NewLight->vSetDiffuseColor(LightDescription.m_DiffuseColor[0], LightDescription.m_DiffuseColor[1], LightDescription.m_DiffuseColor[2], LightDescription.m_DiffuseColor[3]);
-						if(LightDescription.m_bEnabled == true)
-						{
-							NewLight->vEnable();
-						}
-						g_Lights.push_back(NewLight);
+						NewLight->vEnable();
 					}
-					for(auto & CameraDescription : SceneReader.GetCameraDescriptions())
+					g_Lights.push_back(NewLight);
+				}
+				for(auto & CameraDescription : SceneReader.GetCameraDescriptions())
+				{
+					auto NewCamera(new Camera());
+					
+					NewCamera->SetPosition(CameraDescription.Position);
+					NewCamera->SetOrientation(CameraDescription.Orientation);
+					NewCamera->SetFieldOfViewY(CameraDescription.FieldOfViewY);
+					g_Cameras.push_back(NewCamera);
+				}
+				if(g_Cameras.size() > 0)
+				{
+					g_CurrentCamera = g_Cameras.front();
+					vSetupProjection();
+				}
+			}
+			else
+			{
+				Light * pLight(new Light());
+				
+				g_Lights.push_back(pLight);
+				pLight->SetPosition(Vector3f::CreateZero());
+				pLight->vSetDiffuseColor(1.0f, 1.0f, 1.0f);
+			}
+			
+			break;
+		}
+	case 58: // M
+		{
+			if(g_Keyboard.IsAnyShiftActive() == true)
+			{
+				g_ModelerView = ModelerView::Model;
+			}
+			
+			break;
+		}
+	case 33: // P
+		{
+			if(g_Keyboard.IsAnyShiftActive() == true)
+			{
+				g_ModelerView = ModelerView::Point;
+			}
+			
+			break;
+		}
+	case 39: // S
+		{
+			if(g_Keyboard.IsAltActive() == true)
+			{
+				if(IsDown == true)
+				{
+					vToggleSnapping();
+				}
+			}
+			else if(g_Keyboard.IsAnyShiftActive() == true)
+			{
+				if(IsDown == false)
+				{
+					std::cout << "Saving scene.xml." << std::endl;
+					
+					std::ofstream OutputFileStream("scene.xml");
+					XMLStream XMLStream(OutputFileStream);
+					
+					XMLStream << element << "scene" << mesh;
+					for(auto Light : g_Lights)
 					{
-						auto NewCamera(new Camera());
-						
-						NewCamera->SetPosition(CameraDescription.Position);
-						NewCamera->SetOrientation(CameraDescription.Orientation);
-						NewCamera->SetFieldOfViewY(CameraDescription.FieldOfViewY);
-						g_Cameras.push_back(NewCamera);
+						XMLStream << light(Light) << end;
 					}
-					if(g_Cameras.size() > 0)
+					for(auto Camera : g_Cameras)
 					{
-						g_CurrentCamera = g_Cameras.front();
-						vSetupProjection();
+						XMLStream << camera(Camera) << end;
 					}
+				}
+			}
+			
+			break;
+		}
+	case 28: // T
+		{
+			if(IsDown == false)
+			{
+				if(g_Keyboard.IsAnyShiftActive() == true)
+				{
+					g_ModelerView = ModelerView::Triangle;
+				}
+			}
+			
+			break;
+		}
+	case 36: // ENTER
+		{
+			if(IsDown == true)
+			{
+				if(g_SelectedLight != 0)
+				{
+					if(g_SelectedLight->bIsEnabled() == true)
+					{
+						g_SelectedLight->vDisable();
+					}
+					else
+					{
+						g_SelectedLight->vEnable();
+					}
+				}
+			}
+			
+			break;
+		}
+	case 9: // ESCAPE
+		{
+			if(IsDown == false)
+			{
+				g_Quit = true;
+			}
+			
+			break;
+		}
+	case 119: // DELETE
+		{
+			if(IsDown == false)
+			{
+				if(g_SelectedLight != 0)
+				{
+					vDeleteLight(g_SelectedLight);
+				}
+			}
+			
+			break;
+		}
+	case 86: // NUMPAD PLUS
+		{
+			if(IsDown == true)
+			{
+				GLfloat fPointSize;
+				
+				glGetFloatv(GL_POINT_SIZE, &fPointSize);
+				fPointSize += 1.0f;
+				glPointSize(fPointSize);
+			}
+			
+			break;
+		}
+	case 82: // NUMPAD MINUS
+		{
+			if(IsDown == true)
+			{
+				GLfloat fPointSize;
+				
+				glGetFloatv(GL_POINT_SIZE, &fPointSize);
+				fPointSize -= 1.0f;
+				glPointSize(fPointSize);
+			}
+			
+			break;
+		}
+	case 63: // NUMPAD ASTERISK
+		{
+			if(IsDown == true)
+			{
+				vTogglePointSmooth();
+			}
+			
+			break;
+		}
+	case 59: // COMMA
+		{
+			if(IsDown == true)
+			{
+				g_SnapFactor *= 10;
+			}
+			
+			break;
+		}
+	case 60: // FULL STOP
+		{
+			if(IsDown == true)
+			{
+				g_SnapFactor /= 10;
+			}
+			
+			break;
+		}
+	case 34: // LEFT BRACKET
+		{
+			if(g_SelectedTriangles.size() == 1)
+			{
+				Point * pPoint(0);
+				
+				if(g_SelectedPoints.size() > 0)
+				{
+					pPoint = g_SelectedPoints[0];
+				}
+				g_SelectedPoints.clear();
+				if(pPoint == g_SelectedTriangles.front()->pGetPoint(2))
+				{
+					g_SelectedPoints.push_back(g_SelectedTriangles.front()->pGetPoint(1));
+				}
+				else if(pPoint == g_SelectedTriangles.front()->pGetPoint(3))
+				{
+					g_SelectedPoints.push_back(g_SelectedTriangles.front()->pGetPoint(2));
 				}
 				else
 				{
-					Light * pLight(new Light());
-					
-					g_Lights.push_back(pLight);
-					pLight->SetPosition(Vector3f::CreateZero());
-					pLight->vSetDiffuseColor(1.0f, 1.0f, 1.0f);
+					g_SelectedPoints.push_back(g_SelectedTriangles.front()->pGetPoint(3));
 				}
-				
-				break;
 			}
-		case 58: // M
-			{
-				if(g_Keyboard.IsAnyShiftActive() == true)
-				{
-					vSetKeyAcceptor(0);
-					g_ModelerView = ModelerView::Model;
-				}
-				
-				break;
-			}
-		case 33: // P
-			{
-				if(g_Keyboard.IsAnyShiftActive() == true)
-				{
-					vSetKeyAcceptor(&m_PointView);
-					g_ModelerView = ModelerView::Point;
-				}
-				
-				break;
-			}
-		case 39: // S
-			{
-				if(g_Keyboard.IsAltActive() == true)
-				{
-					if(IsDown == true)
-					{
-						vToggleSnapping();
-					}
-				}
-				else if(g_Keyboard.IsAnyShiftActive() == true)
-				{
-					if(IsDown == false)
-					{
-						std::cout << "Saving scene.xml." << std::endl;
-						
-						std::ofstream OutputFileStream("scene.xml");
-						XMLStream XMLStream(OutputFileStream);
-						
-						XMLStream << element << "scene" << mesh;
-						for(auto Light : g_Lights)
-						{
-							XMLStream << light(Light) << end;
-						}
-						for(auto Camera : g_Cameras)
-						{
-							XMLStream << camera(Camera) << end;
-						}
-					}
-				}
-				
-				break;
-			}
-		case 28: // T
-			{
-				if(IsDown == false)
-				{
-					if(g_Keyboard.IsAnyShiftActive() == true)
-					{
-						vSetKeyAcceptor(&m_TriangleView);
-						g_ModelerView = ModelerView::Triangle;
-					}
-				}
-				
-				break;
-			}
-		case 36: // ENTER
-			{
-				if(IsDown == true)
-				{
-					if(g_SelectedLight != 0)
-					{
-						if(g_SelectedLight->bIsEnabled() == true)
-						{
-							g_SelectedLight->vDisable();
-						}
-						else
-						{
-							g_SelectedLight->vEnable();
-						}
-					}
-				}
-				
-				break;
-			}
-		case 9: // ESCAPE
-			{
-				if(IsDown == false)
-				{
-					g_Quit = true;
-				}
-				
-				break;
-			}
-		case 119: // DELETE
-			{
-				if(IsDown == false)
-				{
-					if(g_SelectedLight != 0)
-					{
-						vDeleteLight(g_SelectedLight);
-					}
-				}
-				
-				break;
-			}
-		case 86: // NUMPAD PLUS
-			{
-				if(IsDown == true)
-				{
-					GLfloat fPointSize;
-					
-					glGetFloatv(GL_POINT_SIZE, &fPointSize);
-					fPointSize += 1.0f;
-					glPointSize(fPointSize);
-				}
-				
-				break;
-			}
-		case 82: // NUMPAD MINUS
-			{
-				if(IsDown == true)
-				{
-					GLfloat fPointSize;
-					
-					glGetFloatv(GL_POINT_SIZE, &fPointSize);
-					fPointSize -= 1.0f;
-					glPointSize(fPointSize);
-				}
-				
-				break;
-			}
-		case 63: // NUMPAD ASTERISK
-			{
-				if(IsDown == true)
-				{
-					vTogglePointSmooth();
-				}
-				
-				break;
-			}
-		case 59: // COMMA
-			{
-				if(IsDown == true)
-				{
-					g_SnapFactor *= 10;
-				}
-				
-				break;
-			}
-		case 60: // FULL STOP
-			{
-				if(IsDown == true)
-				{
-					g_SnapFactor /= 10;
-				}
-				
-				break;
-			}
-		case 34: // LEFT BRACKET
-			{
-				if(g_SelectedTriangles.size() == 1)
-				{
-					Point * pPoint(0);
-					
-					if(g_SelectedPoints.size() > 0)
-					{
-						pPoint = g_SelectedPoints[0];
-					}
-					g_SelectedPoints.clear();
-					if(pPoint == g_SelectedTriangles.front()->pGetPoint(2))
-					{
-						g_SelectedPoints.push_back(g_SelectedTriangles.front()->pGetPoint(1));
-					}
-					else if(pPoint == g_SelectedTriangles.front()->pGetPoint(3))
-					{
-						g_SelectedPoints.push_back(g_SelectedTriangles.front()->pGetPoint(2));
-					}
-					else
-					{
-						g_SelectedPoints.push_back(g_SelectedTriangles.front()->pGetPoint(3));
-					}
-				}
-				
-				break;
-			}
-		case 35: // RIGHT BRACKET
-			{
-				if(g_SelectedTriangles.size() == 1)
-				{
-					Point * pPoint(0);
-					
-					if(g_SelectedPoints.size() > 0)
-					{
-						pPoint = g_SelectedPoints[0];
-					}
-					g_SelectedPoints.clear();
-					if(pPoint == g_SelectedTriangles.front()->pGetPoint(1))
-					{
-						g_SelectedPoints.push_back(g_SelectedTriangles.front()->pGetPoint(2));
-					}
-					else if(pPoint == g_SelectedTriangles.front()->pGetPoint(2))
-					{
-						g_SelectedPoints.push_back(g_SelectedTriangles.front()->pGetPoint(3));
-					}
-					else
-					{
-						g_SelectedPoints.push_back(g_SelectedTriangles.front()->pGetPoint(1));
-					}
-				}
-				
-				break;
-			}
-		case 114: // RIGHT
-			{
-				if((IsDown == true) && (g_Keyboard.IsNoModifierKeyActive() == true))
-				{
-					if(g_SelectedLight != nullptr)
-					{
-						g_SelectedLight->SetPosition(GetSnappedStepInView(g_SelectedLight->GetPosition(), FixedDirection::Right));
-						bKeyAccepted = true;
-					}
-				}
-				
-				break;
-			}
-		case 113: // LEFT
-			{
-				if((IsDown == true) && (g_Keyboard.IsNoModifierKeyActive() == true))
-				{
-					if(g_SelectedLight != nullptr)
-					{
-						g_SelectedLight->SetPosition(GetSnappedStepInView(g_SelectedLight->GetPosition(), FixedDirection::Left));
-						bKeyAccepted = true;
-					}
-				}
-				
-				break;
-			}
-		case 111: // UP
-			{
-				if((IsDown == true) && (g_Keyboard.IsNoModifierKeyActive() == true))
-				{
-					if(g_SelectedLight != nullptr)
-					{
-						g_SelectedLight->SetPosition(GetSnappedStepInView(g_SelectedLight->GetPosition(), FixedDirection::Up));
-						bKeyAccepted = true;
-					}
-				}
-				
-				break;
-			}
-		case 116: // DOWN
-			{
-				if((IsDown == true) && (g_Keyboard.IsNoModifierKeyActive() == true))
-				{
-					if(g_SelectedLight != nullptr)
-					{
-						g_SelectedLight->SetPosition(GetSnappedStepInView(g_SelectedLight->GetPosition(), FixedDirection::Down));
-						bKeyAccepted = true;
-					}
-				}
-				
-				break;
-			}
-		case 117: // PAGE DOWN
-			{
-				if((IsDown == true) && (g_Keyboard.IsNoModifierKeyActive() == true))
-				{
-					if(g_SelectedLight != nullptr)
-					{
-						g_SelectedLight->SetPosition(GetSnappedStepInView(g_SelectedLight->GetPosition(), FixedDirection::Backward));
-						bKeyAccepted = true;
-					}
-				}
-				
-				break;
-			}
-		case 112: // PAGE UP
-			{
-				if((IsDown == true) && (g_Keyboard.IsNoModifierKeyActive() == true))
-				{
-					if(g_SelectedLight != nullptr)
-					{
-						g_SelectedLight->SetPosition(GetSnappedStepInView(g_SelectedLight->GetPosition(), FixedDirection::Forward));
-						bKeyAccepted = true;
-					}
-				}
-				
-				break;
-			}
-		case 67: // F1
-			{
-				if(IsDown == false)
-				{
-					// switch to normalized front view
-					if(g_CurrentCamera != nullptr)
-					{
-						if((g_UpAxis == FixedAxis::PositiveZ) && (g_ForwardAxis == FixedAxis::PositiveX))
-						{
-							g_CurrentCamera->SetOrientation(Quaternion::CreateAsRotationX(M_PI_2).RotateY(M_PI_2));
-							g_CurrentCamera->SetPosition(Vector3f::CreateTranslationX(4.0f));
-							bKeyAccepted = true;
-						}
-						else
-						{
-							std::cout << "Unknown combination: View=Front, Up=" << GetAxisString(g_UpAxis) << ", Front=" << GetAxisString(g_ForwardAxis) << std::endl;
-							assert(false);
-						}
-					}
-				}
-				
-				break;
-			}
-		case 68: // F2
-			{
-				if(IsDown == false)
-				{
-					// switch to normalized left view
-					if(g_CurrentCamera != nullptr)
-					{
-						if((g_UpAxis == FixedAxis::PositiveZ) && (g_ForwardAxis == FixedAxis::PositiveX))
-						{
-							g_CurrentCamera->SetOrientation(Quaternion::CreateAsRotationX(M_PI_2));
-							g_CurrentCamera->SetPosition(Vector3f::CreateTranslationY(-4.0f));
-							bKeyAccepted = true;
-						}
-						else
-						{
-							std::cout << "Unknown combination: View=Left, Up=" << GetAxisString(g_UpAxis) << ", Front=" << GetAxisString(g_ForwardAxis) << std::endl;
-							assert(false);
-						}
-					}
-				}
-				
-				break;
-			}
-		case 69: // F3
-			{
-				if(IsDown == false)
-				{
-					// switch to normalized right view
-					if(g_CurrentCamera != nullptr)
-					{
-						if((g_UpAxis == FixedAxis::PositiveZ) && (g_ForwardAxis == FixedAxis::PositiveX))
-						{
-							g_CurrentCamera->SetOrientation(Quaternion::CreateAsRotationY(M_PI).RotateX(-M_PI_2));
-							g_CurrentCamera->SetPosition(Vector3f::CreateTranslationY(4.0f));
-							bKeyAccepted = true;
-						}
-						else
-						{
-							std::cout << "Unknown combination: View=Right, Up=" << GetAxisString(g_UpAxis) << ", Front=" << GetAxisString(g_ForwardAxis) << std::endl;
-							assert(false);
-						}
-					}
-				}
-				
-				break;
-			}
-		case 70: // F4
-			{
-				if(IsDown == false)
-				{
-					// switch to normalized back view
-					if(g_CurrentCamera != nullptr)
-					{
-						if((g_UpAxis == FixedAxis::PositiveZ) && (g_ForwardAxis == FixedAxis::PositiveX))
-						{
-							g_CurrentCamera->SetOrientation(Quaternion::CreateAsRotationX(M_PI_2).RotateY(-M_PI_2));
-							g_CurrentCamera->SetPosition(Vector3f::CreateTranslationX(-4.0f));
-							bKeyAccepted = true;
-						}
-						else
-						{
-							std::cout << "Unknown combination: View=Back, Up=" << GetAxisString(g_UpAxis) << ", Front=" << GetAxisString(g_ForwardAxis) << std::endl;
-							assert(false);
-						}
-					}
-				}
-				
-				break;
-			}
-		case 71: // F5
-			{
-				if(IsDown == false)
-				{
-					// switch to normalized top view
-					if(g_CurrentCamera != nullptr)
-					{
-						if((g_UpAxis == FixedAxis::PositiveZ) && (g_ForwardAxis == FixedAxis::PositiveX))
-						{
-							g_CurrentCamera->SetOrientation(Quaternion::CreateAsRotationZ(M_PI_2));
-							g_CurrentCamera->SetPosition(Vector3f::CreateTranslationZ(4.0f));
-							bKeyAccepted = true;
-						}
-						else
-						{
-							std::cout << "Unknown combination: View=Top, Up=" << GetAxisString(g_UpAxis) << ", Front=" << GetAxisString(g_ForwardAxis) << std::endl;
-							assert(false);
-						}
-					}
-				}
-				
-				break;
-			}
-		case 72: // F6
-			{
-				if(IsDown == false)
-				{
-					// switch to normalized bottom view
-					if(g_CurrentCamera != nullptr)
-					{
-						if((g_UpAxis == FixedAxis::PositiveZ) && (g_ForwardAxis == FixedAxis::PositiveX))
-						{
-							g_CurrentCamera->SetOrientation(Quaternion::CreateAsRotationZ(M_PI_2).RotateY(M_PI));
-							g_CurrentCamera->SetPosition(Vector3f::CreateTranslationZ(-4.0f));
-							bKeyAccepted = true;
-						}
-						else
-						{
-							std::cout << "Unknown combination: View=Bottom, Up=" << GetAxisString(g_UpAxis) << ", Front=" << GetAxisString(g_ForwardAxis) << std::endl;
-							assert(false);
-						}
-					}
-				}
-				
-				break;
-			}
-		case 73: // F7
-			{
-				if(IsDown == false)
-				{
-					// switch to normalized view
-					if(g_CurrentCamera != nullptr)
-					{
-						g_CurrentCamera->SetPosition(Vector3f::CreateTranslationZ(4.0f));
-						g_CurrentCamera->SetOrientation(Quaternion::CreateIdentity());
-						bKeyAccepted = true;
-					}
-				}
-				
-				break;
-			}
-		default:
-			{
-				bKeyAccepted = false;
-			}
+			
+			break;
 		}
-		
-		return bKeyAccepted;
+	case 35: // RIGHT BRACKET
+		{
+			if(g_SelectedTriangles.size() == 1)
+			{
+				Point * pPoint(0);
+				
+				if(g_SelectedPoints.size() > 0)
+				{
+					pPoint = g_SelectedPoints[0];
+				}
+				g_SelectedPoints.clear();
+				if(pPoint == g_SelectedTriangles.front()->pGetPoint(1))
+				{
+					g_SelectedPoints.push_back(g_SelectedTriangles.front()->pGetPoint(2));
+				}
+				else if(pPoint == g_SelectedTriangles.front()->pGetPoint(2))
+				{
+					g_SelectedPoints.push_back(g_SelectedTriangles.front()->pGetPoint(3));
+				}
+				else
+				{
+					g_SelectedPoints.push_back(g_SelectedTriangles.front()->pGetPoint(1));
+				}
+			}
+			
+			break;
+		}
+	case 114: // RIGHT
+		{
+			if((IsDown == true) && (g_Keyboard.IsNoModifierKeyActive() == true))
+			{
+				if(g_SelectedLight != nullptr)
+				{
+					g_SelectedLight->SetPosition(GetSnappedStepInView(g_SelectedLight->GetPosition(), FixedDirection::Right));
+					bKeyAccepted = true;
+				}
+			}
+			
+			break;
+		}
+	case 113: // LEFT
+		{
+			if((IsDown == true) && (g_Keyboard.IsNoModifierKeyActive() == true))
+			{
+				if(g_SelectedLight != nullptr)
+				{
+					g_SelectedLight->SetPosition(GetSnappedStepInView(g_SelectedLight->GetPosition(), FixedDirection::Left));
+					bKeyAccepted = true;
+				}
+			}
+			
+			break;
+		}
+	case 111: // UP
+		{
+			if((IsDown == true) && (g_Keyboard.IsNoModifierKeyActive() == true))
+			{
+				if(g_SelectedLight != nullptr)
+				{
+					g_SelectedLight->SetPosition(GetSnappedStepInView(g_SelectedLight->GetPosition(), FixedDirection::Up));
+					bKeyAccepted = true;
+				}
+			}
+			
+			break;
+		}
+	case 116: // DOWN
+		{
+			if((IsDown == true) && (g_Keyboard.IsNoModifierKeyActive() == true))
+			{
+				if(g_SelectedLight != nullptr)
+				{
+					g_SelectedLight->SetPosition(GetSnappedStepInView(g_SelectedLight->GetPosition(), FixedDirection::Down));
+					bKeyAccepted = true;
+				}
+			}
+			
+			break;
+		}
+	case 117: // PAGE DOWN
+		{
+			if((IsDown == true) && (g_Keyboard.IsNoModifierKeyActive() == true))
+			{
+				if(g_SelectedLight != nullptr)
+				{
+					g_SelectedLight->SetPosition(GetSnappedStepInView(g_SelectedLight->GetPosition(), FixedDirection::Backward));
+					bKeyAccepted = true;
+				}
+			}
+			
+			break;
+		}
+	case 112: // PAGE UP
+		{
+			if((IsDown == true) && (g_Keyboard.IsNoModifierKeyActive() == true))
+			{
+				if(g_SelectedLight != nullptr)
+				{
+					g_SelectedLight->SetPosition(GetSnappedStepInView(g_SelectedLight->GetPosition(), FixedDirection::Forward));
+					bKeyAccepted = true;
+				}
+			}
+			
+			break;
+		}
+	case 67: // F1
+		{
+			if(IsDown == false)
+			{
+				// switch to normalized front view
+				if(g_CurrentCamera != nullptr)
+				{
+					if((g_UpAxis == FixedAxis::PositiveZ) && (g_ForwardAxis == FixedAxis::PositiveX))
+					{
+						g_CurrentCamera->SetOrientation(Quaternion::CreateAsRotationX(M_PI_2).RotateY(M_PI_2));
+						g_CurrentCamera->SetPosition(Vector3f::CreateTranslationX(4.0f));
+						bKeyAccepted = true;
+					}
+					else
+					{
+						std::cout << "Unknown combination: View=Front, Up=" << GetAxisString(g_UpAxis) << ", Front=" << GetAxisString(g_ForwardAxis) << std::endl;
+						assert(false);
+					}
+				}
+			}
+			
+			break;
+		}
+	case 68: // F2
+		{
+			if(IsDown == false)
+			{
+				// switch to normalized left view
+				if(g_CurrentCamera != nullptr)
+				{
+					if((g_UpAxis == FixedAxis::PositiveZ) && (g_ForwardAxis == FixedAxis::PositiveX))
+					{
+						g_CurrentCamera->SetOrientation(Quaternion::CreateAsRotationX(M_PI_2));
+						g_CurrentCamera->SetPosition(Vector3f::CreateTranslationY(-4.0f));
+						bKeyAccepted = true;
+					}
+					else
+					{
+						std::cout << "Unknown combination: View=Left, Up=" << GetAxisString(g_UpAxis) << ", Front=" << GetAxisString(g_ForwardAxis) << std::endl;
+						assert(false);
+					}
+				}
+			}
+			
+			break;
+		}
+	case 69: // F3
+		{
+			if(IsDown == false)
+			{
+				// switch to normalized right view
+				if(g_CurrentCamera != nullptr)
+				{
+					if((g_UpAxis == FixedAxis::PositiveZ) && (g_ForwardAxis == FixedAxis::PositiveX))
+					{
+						g_CurrentCamera->SetOrientation(Quaternion::CreateAsRotationY(M_PI).RotateX(-M_PI_2));
+						g_CurrentCamera->SetPosition(Vector3f::CreateTranslationY(4.0f));
+						bKeyAccepted = true;
+					}
+					else
+					{
+						std::cout << "Unknown combination: View=Right, Up=" << GetAxisString(g_UpAxis) << ", Front=" << GetAxisString(g_ForwardAxis) << std::endl;
+						assert(false);
+					}
+				}
+			}
+			
+			break;
+		}
+	case 70: // F4
+		{
+			if(IsDown == false)
+			{
+				// switch to normalized back view
+				if(g_CurrentCamera != nullptr)
+				{
+					if((g_UpAxis == FixedAxis::PositiveZ) && (g_ForwardAxis == FixedAxis::PositiveX))
+					{
+						g_CurrentCamera->SetOrientation(Quaternion::CreateAsRotationX(M_PI_2).RotateY(-M_PI_2));
+						g_CurrentCamera->SetPosition(Vector3f::CreateTranslationX(-4.0f));
+						bKeyAccepted = true;
+					}
+					else
+					{
+						std::cout << "Unknown combination: View=Back, Up=" << GetAxisString(g_UpAxis) << ", Front=" << GetAxisString(g_ForwardAxis) << std::endl;
+						assert(false);
+					}
+				}
+			}
+			
+			break;
+		}
+	case 71: // F5
+		{
+			if(IsDown == false)
+			{
+				// switch to normalized top view
+				if(g_CurrentCamera != nullptr)
+				{
+					if((g_UpAxis == FixedAxis::PositiveZ) && (g_ForwardAxis == FixedAxis::PositiveX))
+					{
+						g_CurrentCamera->SetOrientation(Quaternion::CreateAsRotationZ(M_PI_2));
+						g_CurrentCamera->SetPosition(Vector3f::CreateTranslationZ(4.0f));
+						bKeyAccepted = true;
+					}
+					else
+					{
+						std::cout << "Unknown combination: View=Top, Up=" << GetAxisString(g_UpAxis) << ", Front=" << GetAxisString(g_ForwardAxis) << std::endl;
+						assert(false);
+					}
+				}
+			}
+			
+			break;
+		}
+	case 72: // F6
+		{
+			if(IsDown == false)
+			{
+				// switch to normalized bottom view
+				if(g_CurrentCamera != nullptr)
+				{
+					if((g_UpAxis == FixedAxis::PositiveZ) && (g_ForwardAxis == FixedAxis::PositiveX))
+					{
+						g_CurrentCamera->SetOrientation(Quaternion::CreateAsRotationZ(M_PI_2).RotateY(M_PI));
+						g_CurrentCamera->SetPosition(Vector3f::CreateTranslationZ(-4.0f));
+						bKeyAccepted = true;
+					}
+					else
+					{
+						std::cout << "Unknown combination: View=Bottom, Up=" << GetAxisString(g_UpAxis) << ", Front=" << GetAxisString(g_ForwardAxis) << std::endl;
+						assert(false);
+					}
+				}
+			}
+			
+			break;
+		}
+	case 73: // F7
+		{
+			if(IsDown == false)
+			{
+				// switch to normalized view
+				if(g_CurrentCamera != nullptr)
+				{
+					g_CurrentCamera->SetPosition(Vector3f::CreateTranslationZ(4.0f));
+					g_CurrentCamera->SetOrientation(Quaternion::CreateIdentity());
+					bKeyAccepted = true;
+				}
+			}
+			
+			break;
+		}
+	default:
+		{
+			bKeyAccepted = false;
+		}
 	}
-};
-
-ModelView g_ModelView;
+	
+	return bKeyAccepted;
+}
 
 void KeyEvent(int KeyCode, bool IsDown)
 {
 	ON_DEBUG(std::cout << "Key event " << KeyCode << " / " << IsDown << "." << std::endl);
 	g_Keyboard.SetKey(KeyCode, IsDown);
-	g_UserInterface.AcceptKey(KeyCode, IsDown);
+	
+	bool KeyAccepted(false);
+	
+	if(g_ModelerView == ModelerView::Camera)
+	{
+		KeyAccepted = AcceptKeyInCameraView(KeyCode, IsDown);
+	}
+	else if(g_ModelerView == ModelerView::Point)
+	{
+		KeyAccepted = AcceptKeyInPointView(KeyCode, IsDown);
+	}
+	else if(g_ModelerView == ModelerView::Triangle)
+	{
+		KeyAccepted = AcceptKeyInTriangleView(KeyCode, IsDown);
+	}
+	if(KeyAccepted == false)
+	{
+		AcceptKeyInModelView(KeyCode, IsDown);
+	}
 }
 
 void MouseButtonEvent(MouseButton Button, bool IsDown, const Vector2f & MousePosition)
