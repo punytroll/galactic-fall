@@ -1266,7 +1266,7 @@ void vDisplayModel(void)
 			glPopMatrix();
 		}
 	}
-	if(g_SelectedPoints.size() > 0)
+	if(g_SelectedPoints.empty() == false)
 	{
 		glDisable(GL_DEPTH_TEST);
 		
@@ -1281,12 +1281,26 @@ void vDisplayModel(void)
 			auto Scale(2.0f * (Point->GetPosition() - g_CurrentCamera->GetPosition()).Length() * tan(g_CurrentCamera->GetFieldOfViewY() / 2.0f));
 			
 			glScalef(Scale, Scale, Scale);
-			glBegin(GL_POINTS);
 			glColor3f(1.0f, 0.0f, 0.0f);
-			glVertex3f(-0.01f, -0.01f, 0.0f);
-			glVertex3f(0.01f, -0.01f, 0.0f);
-			glVertex3f(0.01f, 0.01f, 0.0f);
-			glVertex3f(-0.01f, 0.01f, 0.0f);
+			glBegin(GL_LINE_STRIP);
+			glVertex2f(-0.01f, 0.005f);
+			glVertex2f(-0.01f, 0.01f);
+			glVertex2f(-0.005f, 0.01f);
+			glEnd();
+			glBegin(GL_LINE_STRIP);
+			glVertex2f(0.005f, 0.01f);
+			glVertex2f(0.01f, 0.01f);
+			glVertex2f(0.01f, 0.005f);
+			glEnd();
+			glBegin(GL_LINE_STRIP);
+			glVertex2f(0.01f, -0.005f);
+			glVertex2f(0.01f, -0.01f);
+			glVertex2f(0.005f, -0.01f);
+			glEnd();
+			glBegin(GL_LINE_STRIP);
+			glVertex2f(-0.005f, -0.01f);
+			glVertex2f(-0.01f, -0.01f);
+			glVertex2f(-0.01f, -0.005f);
 			glEnd();
 			glPopMatrix();
 		}
