@@ -1922,6 +1922,17 @@ bool AcceptKeyInPointView(int KeyCode, bool IsDown)
 			
 			break;
 		}
+	case 38: // A
+		{
+			if((IsDown == true) && (g_Keyboard.IsAnyControlActive() == true))
+			{
+				g_SelectedPoints.clear();
+				std::copy(g_Points.begin(), g_Points.end(), std::back_inserter(g_SelectedPoints));
+				bKeyAccepted = true;
+				
+				break;
+			}
+		}
 	case 40: // D
 		{
 			if(IsDown == true)
