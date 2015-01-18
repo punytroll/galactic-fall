@@ -5,7 +5,6 @@
 
 #include "color.h"
 #include "drawing.h"
-#include "label.h"
 #include "user_interface.h"
 #include "widget.h"
 

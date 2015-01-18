@@ -5,7 +5,6 @@
 #include "color.h"
 #include "drawing.h"
 #include "key_acceptor.h"
-#include "label.h"
 #include "widget.h"
 #include "user_interface.h"
 
@@ -231,26 +230,6 @@ void KeyAcceptor::vSetKeyAcceptor(KeyAcceptor * pKeyAcceptor)
 	{
 		m_pKeyAcceptor = 0;
 	}
-}
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
-// Label                                                                                         //
-///////////////////////////////////////////////////////////////////////////////////////////////////
-Label::Label(const std::string & sString) :
-	m_sString(sString)
-{
-}
-
-void Label::vDraw(void)
-{
-	glColor3f(1.0f, 1.0f, 1.0f);
-	vDrawText(m_sString);
-}
-
-void Label::vSetString(const std::string & sString)
-{
-	m_sString = sString;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
