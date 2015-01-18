@@ -182,7 +182,6 @@ void Turret::_UpdateVisualization(Visualization * Visualization)
 			if(MeshNode->GetMesh()->GetIdentifier() == "light_laser_turret_gun")
 			{
 				MeshNode->SetOrientation(Quaternion::CreateAsRotationZ(_TurretAngle));
-				MeshNode->SetPosition(_TurretRotationOffset);
 			}
 		}
 	}
