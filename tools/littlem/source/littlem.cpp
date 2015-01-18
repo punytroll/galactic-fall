@@ -19,6 +19,8 @@
 #include <algebra/vector3f.h>
 #include <algebra/vector4f.h>
 
+#include <string_cast/string_cast.h>
+
 #include <xml_stream/xml_stream.h>
 
 #include "widgets/widgets.h"
@@ -139,7 +141,7 @@ enum class FixedView
 	Bottom
 };
 
-std::string GetViewString(FixedView View)
+std::string GetFixedViewString(FixedView View)
 {
 	switch(View)
 	{
@@ -180,6 +182,38 @@ enum class MouseButton
 	WheelDown,
 	WheelUp
 };
+
+enum class ModelerView
+{
+	Camera,
+	Model,
+	Point,
+	Triangle
+};
+
+std::string GetModelerViewString(ModelerView View)
+{
+	switch(View)
+	{
+	case ModelerView::Camera:
+		{
+			return "Camera";
+		}
+	case ModelerView::Model:
+		{
+			return "Model";
+		}
+	case ModelerView::Point:
+		{
+			return "Point";
+		}
+	case ModelerView::Triangle:
+		{
+			return "Triangle";
+		}
+	}
+	assert(false);
+}
 
 class Keyboard
 {
@@ -223,6 +257,7 @@ private:
 
 FixedAxis g_UpAxis;
 FixedAxis g_ForwardAxis;
+ModelerView g_ModelerView;
 float g_Width(800.0f);
 float g_Height(800.0f);
 Keyboard g_Keyboard;
@@ -933,50 +968,46 @@ void vDisplayTexts(void)
 	glScalef(1.0f, -1.0f, 1.0f);
 	glTranslatef(0.0f, -g_Height, 0.0f);
 	glColor3f(0.4f, 1.0f, 0.4f);
-	
-	std::stringstream ssStatusText;
-	
-	ssStatusText << "#Points: " << g_Points.size() << "   #TrianglePoints: " << g_TrianglePoints.size() << "   #Triangles: " << g_Triangles.size() << "   #Selected Points: " << g_SelectedPoints.size() << "   Width: " << g_Width << "   Height: " << g_Height << "   Front Face: ";
-	
-	GLint iFrontFace;
-	
-	glGetIntegerv(GL_FRONT_FACE, &iFrontFace);
-	if(iFrontFace == GL_CCW)
-	{
-		ssStatusText << "Counter Clock Wise";
-	}
-	else
-	{
-		ssStatusText << "Clock Wise";
-	}
-	vDrawTextAt(0, 0, ssStatusText.str());
-	
-	std::stringstream ssSnapInformationText;
-	
-	ssSnapInformationText << "Snapping: ";
-	if(g_Snapping == true)
-	{
-		ssSnapInformationText << "on   SnapFactor: " << g_SnapFactor;
-	}
-	else
-	{
-		ssSnapInformationText << "off";
-	}
-	vDrawTextAt(0, g_Height - 24, ssSnapInformationText.str());
+	vDrawTextAt(0.0f, 0.0f, "#Points: " + to_string_cast(g_Points.size()) + "   #TrianglePoints: " + to_string_cast(g_TrianglePoints.size()) + "   #Triangles: " + to_string_cast(g_Triangles.size()));
+	vDrawTextAt(0.0f, 12.0f, "#Selected Points: " + to_string_cast(g_SelectedPoints.size()) + "   #Selected Triangles: " + to_string_cast(g_SelectedTriangles.size()));
+	glColor3f(1.0f, 0.4f, 0.4f);
 	if(g_SelectedPoints.size() > 0)
 	{
 		std::stringstream ssPointInformationText;
 		
 		ssPointInformationText << "Point:  X: " << g_SelectedPoints.front()->GetPosition()[0] << "   Y: " << g_SelectedPoints.front()->GetPosition()[1] << "   Z: " << g_SelectedPoints.front()->GetPosition()[2] << "   #TrianglePoints: " << g_SelectedPoints.front()->m_TrianglePoints.size();
-		vDrawTextAt(0, g_Height - 36, ssPointInformationText.str());
+		vDrawTextAt(0.0f, 24.0f, ssPointInformationText.str());
 	}
 	if(g_SelectedCamera != nullptr)
 	{
 		std::stringstream ssCameraInformationText;
 		
 		ssCameraInformationText << "Camera:  X: " << g_SelectedCamera->GetPosition()[0] << "   Y: " << g_SelectedCamera->GetPosition()[1] << "   Z: " << g_SelectedCamera->GetPosition()[2];
-		vDrawTextAt(0, g_Height - 60, ssCameraInformationText.str());
+		vDrawTextAt(0.0f, 36.0f, ssCameraInformationText.str());
 	}
+	glColor3f(1.0f, 1.0f, 1.0f);
+	vDrawTextAt(0.0f, 48.0f, "View: " + GetModelerViewString(g_ModelerView));
+	
+	GLint iFrontFace;
+	
+	glGetIntegerv(GL_FRONT_FACE, &iFrontFace);
+	if(iFrontFace == GL_CCW)
+	{
+		vDrawTextAt(0.0f, g_Height - 36.0f, "Front Face: Counter Clock Wise");
+	}
+	else
+	{
+		vDrawTextAt(0.0f, g_Height - 36.0f, "Front Face: Clock Wise");
+	}
+	if(g_Snapping == true)
+	{
+		vDrawTextAt(0.0f, g_Height - 24.0f, "Snapping: on");
+	}
+	else
+	{
+		vDrawTextAt(0.0f, g_Height - 24.0f, "Snapping: off");
+	}
+	vDrawTextAt(0, g_Height - 12, "SnapFactor: " + to_string_cast(g_SnapFactor));
 	g_UserInterface.vDraw();
 	glFlush();
 	glMatrixMode(GL_PROJECTION);
@@ -2280,8 +2311,6 @@ XMLStream & mesh(XMLStream & XMLStream)
 	return XMLStream;
 }
 
-Label g_CurrentView;
-
 void ImportMesh(const std::string & FilePath)
 {
 	std::cout << "Importing from \"" << FilePath << "\"." << std::endl;
@@ -2314,7 +2343,7 @@ public:
 		vAddKeyAcceptor(&m_PointView);
 		vAddKeyAcceptor(&m_TriangleView);
 		vAddKeyAcceptor(&m_CameraView);
-		g_CurrentView.vSetString("Model View");
+		g_ModelerView = ModelerView::Model;
 	}
 	
 	virtual bool AcceptKey(int KeyCode, bool IsDown) override
@@ -2334,7 +2363,7 @@ public:
 					else if(g_Keyboard.IsAnyShiftActive() == true)
 					{
 						vSetKeyAcceptor(&m_CameraView);
-						g_CurrentView.vSetString("Camera View");
+						g_ModelerView = ModelerView::Camera;
 					}
 				}
 				
@@ -2450,7 +2479,7 @@ public:
 				if(g_Keyboard.IsAnyShiftActive() == true)
 				{
 					vSetKeyAcceptor(0);
-					g_CurrentView.vSetString("Model View");
+					g_ModelerView = ModelerView::Model;
 				}
 				
 				break;
@@ -2460,7 +2489,7 @@ public:
 				if(g_Keyboard.IsAnyShiftActive() == true)
 				{
 					vSetKeyAcceptor(&m_PointView);
-					g_CurrentView.vSetString("Point View");
+					g_ModelerView = ModelerView::Point;
 				}
 				
 				break;
@@ -2504,7 +2533,7 @@ public:
 					if(g_Keyboard.IsAnyShiftActive() == true)
 					{
 						vSetKeyAcceptor(&m_TriangleView);
-						g_CurrentView.vSetString("Triangle View");
+						g_ModelerView = ModelerView::Triangle;
 					}
 				}
 				
@@ -3087,11 +3116,6 @@ void vSetupUserInterface(void)
 	
 	pRootWidget->vSetLayout(new Boxes::FreeLayout());
 	g_UserInterface.vSetRootWidget(pRootWidget);
-	
-	Widget * pCopyright(new Label("littlem by PunyTroll"));
-	
-	pRootWidget->vAddBox(pCopyright, Boxes::FreeLayout::AddOptions(0.0f, 20.0f));
-	pRootWidget->vAddBox(&g_CurrentView, Boxes::FreeLayout::AddOptions(0.0f, 36.0f));
 }
 
 bool StartsWith(const std::string & One, const std::string & Two)
