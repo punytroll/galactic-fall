@@ -1235,33 +1235,42 @@ void vDisplayModel(void)
 			
 			Vector3f TriangleCenter(g_SelectedTriangles[stTriangle]->GetTriangleCenter());
 			Vector3f TriangleNormal(g_SelectedTriangles[stTriangle]->GetTriangleNormal());
+			float Scale(0.0f);
 			
 			glTranslatef(TriangleCenter[0], TriangleCenter[1], TriangleCenter[2]);
+			Scale = 2.0f * (TriangleCenter - g_CurrentCamera->GetPosition()).Length() * tan(g_CurrentCamera->GetFieldOfViewY() / 2.0f);
+			glScalef(Scale, Scale, Scale);
 			glBegin(GL_LINES);
 			glVertex3f(0.0f, 0.0f, 0.0f);
-			glVertex3fv(TriangleNormal.GetPointer());
+			glVertex3fv(TriangleNormal.Scale(0.05f).GetPointer());
 			glEnd();
 			glPopMatrix();
 			glColor3f(0.4f, 0.1f, 0.0f);
 			glPushMatrix();
 			glTranslatef(g_SelectedTriangles[stTriangle]->pGetPoint(1)->GetPosition()[0], g_SelectedTriangles[stTriangle]->pGetPoint(1)->GetPosition()[1], g_SelectedTriangles[stTriangle]->pGetPoint(1)->GetPosition()[2]);
+			Scale = 2.0f * (g_SelectedTriangles[stTriangle]->pGetPoint(1)->GetPosition() - g_CurrentCamera->GetPosition()).Length() * tan(g_CurrentCamera->GetFieldOfViewY() / 2.0f);
+			glScalef(Scale, Scale, Scale);
 			glBegin(GL_LINES);
 			glVertex3f(0.0f, 0.0f, 0.0f);
-			glVertex3fv(g_SelectedTriangles[stTriangle]->pGetTrianglePoint(1)->m_Normal.GetPointer());
+			glVertex3fv(g_SelectedTriangles[stTriangle]->pGetTrianglePoint(1)->m_Normal.Scaled(0.05f).GetPointer());
 			glEnd();
 			glPopMatrix();
 			glPushMatrix();
 			glTranslatef(g_SelectedTriangles[stTriangle]->pGetPoint(2)->GetPosition()[0], g_SelectedTriangles[stTriangle]->pGetPoint(2)->GetPosition()[1], g_SelectedTriangles[stTriangle]->pGetPoint(2)->GetPosition()[2]);
+			Scale = 2.0f * (g_SelectedTriangles[stTriangle]->pGetPoint(2)->GetPosition() - g_CurrentCamera->GetPosition()).Length() * tan(g_CurrentCamera->GetFieldOfViewY() / 2.0f);
+			glScalef(Scale, Scale, Scale);
 			glBegin(GL_LINES);
 			glVertex3f(0.0f, 0.0f, 0.0f);
-			glVertex3fv(g_SelectedTriangles[stTriangle]->pGetTrianglePoint(2)->m_Normal.GetPointer());
+			glVertex3fv(g_SelectedTriangles[stTriangle]->pGetTrianglePoint(2)->m_Normal.Scaled(0.05f).GetPointer());
 			glEnd();
 			glPopMatrix();
 			glPushMatrix();
 			glTranslatef(g_SelectedTriangles[stTriangle]->pGetPoint(3)->GetPosition()[0], g_SelectedTriangles[stTriangle]->pGetPoint(3)->GetPosition()[1], g_SelectedTriangles[stTriangle]->pGetPoint(3)->GetPosition()[2]);
+			Scale = 2.0f * (g_SelectedTriangles[stTriangle]->pGetPoint(3)->GetPosition() - g_CurrentCamera->GetPosition()).Length() * tan(g_CurrentCamera->GetFieldOfViewY() / 2.0f);
+			glScalef(Scale, Scale, Scale);
 			glBegin(GL_LINES);
 			glVertex3f(0.0f, 0.0f, 0.0f);
-			glVertex3fv(g_SelectedTriangles[stTriangle]->pGetTrianglePoint(3)->m_Normal.GetPointer());
+			glVertex3fv(g_SelectedTriangles[stTriangle]->pGetTrianglePoint(3)->m_Normal.Scaled(0.05f).GetPointer());
 			glEnd();
 			glPopMatrix();
 		}
@@ -1306,41 +1315,82 @@ void vDisplayModel(void)
 		}
 		glEnable(GL_DEPTH_TEST);
 	}
-	if(g_SelectedLight != 0)
+	if(g_SelectedLight != nullptr)
 	{
+		glDisable(GL_DEPTH_TEST);
 		glPushMatrix();
 		glTranslatef(g_SelectedLight->GetPosition()[0], g_SelectedLight->GetPosition()[1], g_SelectedLight->GetPosition()[2]);
 		glMultMatrixf(Matrix4f::CreateRotation(g_CurrentCamera->GetOrientation()).GetPointer());
-		glBegin(GL_POINTS);
+		
+		auto Scale(2.0f * (g_SelectedLight->GetPosition() - g_CurrentCamera->GetPosition()).Length() * tan(g_CurrentCamera->GetFieldOfViewY() / 2.0f));
+		
+		glScalef(Scale, Scale, Scale);
 		glColor3f(1.0f, 1.0f, 0.0f);
-		glVertex3f(-0.05f, -0.05f, 0.0f);
-		glVertex3f(0.05f, -0.05f, 0.0f);
-		glVertex3f(0.05f, 0.05f, 0.0f);
-		glVertex3f(-0.05f, 0.05f, 0.0f);
+		glBegin(GL_LINE_STRIP);
+		glVertex2f(-0.01f, 0.005f);
+		glVertex2f(-0.01f, 0.01f);
+		glVertex2f(-0.005f, 0.01f);
+		glEnd();
+		glBegin(GL_LINE_STRIP);
+		glVertex2f(0.005f, 0.01f);
+		glVertex2f(0.01f, 0.01f);
+		glVertex2f(0.01f, 0.005f);
+		glEnd();
+		glBegin(GL_LINE_STRIP);
+		glVertex2f(0.01f, -0.005f);
+		glVertex2f(0.01f, -0.01f);
+		glVertex2f(0.005f, -0.01f);
+		glEnd();
+		glBegin(GL_LINE_STRIP);
+		glVertex2f(-0.005f, -0.01f);
+		glVertex2f(-0.01f, -0.01f);
+		glVertex2f(-0.01f, -0.005f);
 		glEnd();
 		glPopMatrix();
+		glEnable(GL_DEPTH_TEST);
 	}
-	if(g_SelectedCamera != 0)
+	if(g_SelectedCamera != nullptr)
 	{
+		glDisable(GL_DEPTH_TEST);
 		glPushMatrix();
 		glTranslatef(g_SelectedCamera->GetPosition()[0], g_SelectedCamera->GetPosition()[1], g_SelectedCamera->GetPosition()[2]);
 		glPushMatrix();
 		glMultMatrixf(Matrix4f::CreateRotation(g_CurrentCamera->GetOrientation()).GetPointer());
-		glBegin(GL_POINTS);
-		glColor3f(1.0f, 1.0f, 0.0f);
-		glVertex3f(-0.05f, -0.05f, 0.0f);
-		glVertex3f(0.05f, -0.05f, 0.0f);
-		glVertex3f(0.05f, 0.05f, 0.0f);
-		glVertex3f(-0.05f, 0.05f, 0.0f);
+		
+		auto Scale(2.0f * (g_SelectedCamera->GetPosition() - g_CurrentCamera->GetPosition()).Length() * tan(g_CurrentCamera->GetFieldOfViewY() / 2.0f));
+		
+		glScalef(Scale, Scale, Scale);
+		glColor3f(0.0f, 1.0f, 1.0f);
+		glBegin(GL_LINE_STRIP);
+		glVertex2f(-0.01f, 0.005f);
+		glVertex2f(-0.01f, 0.01f);
+		glVertex2f(-0.005f, 0.01f);
+		glEnd();
+		glBegin(GL_LINE_STRIP);
+		glVertex2f(0.005f, 0.01f);
+		glVertex2f(0.01f, 0.01f);
+		glVertex2f(0.01f, 0.005f);
+		glEnd();
+		glBegin(GL_LINE_STRIP);
+		glVertex2f(0.01f, -0.005f);
+		glVertex2f(0.01f, -0.01f);
+		glVertex2f(0.005f, -0.01f);
+		glEnd();
+		glBegin(GL_LINE_STRIP);
+		glVertex2f(-0.005f, -0.01f);
+		glVertex2f(-0.01f, -0.01f);
+		glVertex2f(-0.01f, -0.005f);
 		glEnd();
 		glPopMatrix();
 		glMultMatrixf(Matrix4f::CreateRotation(g_SelectedCamera->GetOrientation()).GetPointer());
+		glScalef(Scale, Scale, Scale);
 		glColor3f(0.2f, 0.8f, 0.5f);
 		glBegin(GL_LINES);
 		glVertex3f(0.0f, 0.0f, 0.0f);
-		glVertex3f(0.0f, 0.0f, -1.0f); // the default camera is looking along the negative z axis
+		glVertex3f(0.0f, 0.0f, -0.05f); // the default camera is looking along the negative z axis
 		glEnd();
 		glPopMatrix();
+		glEnable(GL_DEPTH_TEST);
 	}
 	if(g_HoveredPoint != 0)
 	{
@@ -1349,7 +1399,7 @@ void vDisplayModel(void)
 		glVertex3fv(g_HoveredPoint->GetPosition().GetPointer());
 		glEnd();
 	}
-	else if(g_HoveredTriangle != 0)
+	else if(g_HoveredTriangle != nullptr)
 	{
 		glColor3f(1.0f, 0.7f, 0.3f);
 		glBegin(GL_TRIANGLES);
@@ -1360,33 +1410,42 @@ void vDisplayModel(void)
 		
 		Vector3f TriangleCenter(g_HoveredTriangle->GetTriangleCenter());
 		Vector3f TriangleNormal(g_HoveredTriangle->GetTriangleNormal());
+		float Scale(0.0f);
 		
 		glTranslatef(TriangleCenter[0], TriangleCenter[1], TriangleCenter[2]);
+		Scale = 2.0f * (TriangleCenter - g_CurrentCamera->GetPosition()).Length() * tan(g_CurrentCamera->GetFieldOfViewY() / 2.0f);
+		glScalef(Scale, Scale, Scale);
 		glBegin(GL_LINES);
 		glVertex3f(0.0f, 0.0f, 0.0f);
-		glVertex3fv(TriangleNormal.GetPointer());
+		glVertex3fv(TriangleNormal.Scale(0.05).GetPointer());
 		glEnd();
 		glPopMatrix();
 		glColor3f(0.0f, 0.1f, 0.4f);
 		glPushMatrix();
 		glTranslatef(g_HoveredTriangle->pGetPoint(1)->GetPosition()[0], g_HoveredTriangle->pGetPoint(1)->GetPosition()[1], g_HoveredTriangle->pGetPoint(1)->GetPosition()[2]);
+		Scale = 2.0f * (g_HoveredTriangle->pGetPoint(1)->GetPosition() - g_CurrentCamera->GetPosition()).Length() * tan(g_CurrentCamera->GetFieldOfViewY() / 2.0f);
+		glScalef(Scale, Scale, Scale);
 		glBegin(GL_LINES);
 		glVertex3f(0.0f, 0.0f, 0.0f);
-		glVertex3fv(g_HoveredTriangle->pGetTrianglePoint(1)->m_Normal.GetPointer());
+		glVertex3fv(g_HoveredTriangle->pGetTrianglePoint(1)->m_Normal.Scaled(0.05f).GetPointer());
 		glEnd();
 		glPopMatrix();
 		glPushMatrix();
 		glTranslatef(g_HoveredTriangle->pGetPoint(2)->GetPosition()[0], g_HoveredTriangle->pGetPoint(2)->GetPosition()[1], g_HoveredTriangle->pGetPoint(2)->GetPosition()[2]);
+		Scale = 2.0f * (g_HoveredTriangle->pGetPoint(2)->GetPosition() - g_CurrentCamera->GetPosition()).Length() * tan(g_CurrentCamera->GetFieldOfViewY() / 2.0f);
+		glScalef(Scale, Scale, Scale);
 		glBegin(GL_LINES);
 		glVertex3f(0.0f, 0.0f, 0.0f);
-		glVertex3fv(g_HoveredTriangle->pGetTrianglePoint(2)->m_Normal.GetPointer());
+		glVertex3fv(g_HoveredTriangle->pGetTrianglePoint(2)->m_Normal.Scaled(0.05f).GetPointer());
 		glEnd();
 		glPopMatrix();
 		glPushMatrix();
 		glTranslatef(g_HoveredTriangle->pGetPoint(3)->GetPosition()[0], g_HoveredTriangle->pGetPoint(3)->GetPosition()[1], g_HoveredTriangle->pGetPoint(3)->GetPosition()[2]);
+		Scale = 2.0f * (g_HoveredTriangle->pGetPoint(3)->GetPosition() - g_CurrentCamera->GetPosition()).Length() * tan(g_CurrentCamera->GetFieldOfViewY() / 2.0f);
+		glScalef(Scale, Scale, Scale);
 		glBegin(GL_LINES);
 		glVertex3f(0.0f, 0.0f, 0.0f);
-		glVertex3fv(g_HoveredTriangle->pGetTrianglePoint(3)->m_Normal.GetPointer());
+		glVertex3fv(g_HoveredTriangle->pGetTrianglePoint(3)->m_Normal.Scaled(0.05f).GetPointer());
 		glEnd();
 		glPopMatrix();
 	}
@@ -1397,7 +1456,7 @@ void vDisplayModel(void)
 		glVertex3fv(g_HoveredLight->GetPosition().GetPointer());
 		glEnd();
 	}
-	else if(g_HoveredCamera != 0)
+	else if(g_HoveredCamera != nullptr)
 	{
 		glColor3f(0.0f, 1.0f, 0.5f);
 		glBegin(GL_POINTS);
@@ -1406,10 +1465,14 @@ void vDisplayModel(void)
 		glPushMatrix();
 		glTranslatef(g_HoveredCamera->GetPosition()[0], g_HoveredCamera->GetPosition()[1], g_HoveredCamera->GetPosition()[2]);
 		glMultMatrixf(Matrix4f::CreateRotation(g_HoveredCamera->GetOrientation()).GetPointer());
+		
+		auto Scale(2.0f * (g_HoveredCamera->GetPosition() - g_CurrentCamera->GetPosition()).Length() * tan(g_CurrentCamera->GetFieldOfViewY() / 2.0f));
+		
+		glScalef(Scale, Scale, Scale);
 		glColor3f(0.0f, 0.5f, 0.5f);
 		glBegin(GL_LINES);
 		glVertex3f(0.0f, 0.0f, 0.0f);
-		glVertex3f(0.0f, 0.0f, -1.0f); // the default camera is looking along the negative z axis
+		glVertex3f(0.0f, 0.0f, -0.05f); // the default camera is looking along the negative z axis
 		glEnd();
 		glPopMatrix();
 	}
