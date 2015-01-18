@@ -2095,11 +2095,11 @@ bool AcceptKeyInTriangleView(int KeyCode, bool IsDown)
 	case 31: // I
 		{
 			// change triangle front and back
-			if(g_SelectedTriangles.size() > 0)
+			if((IsDown == true) && (g_Keyboard.IsNoModifierKeyActive() == true) && (g_SelectedTriangles.empty() == false))
 			{
-				for(std::vector< Triangle * >::size_type stTriangle = 0; stTriangle < g_SelectedTriangles.size(); ++stTriangle)
+				for(auto Triangle : g_SelectedTriangles)
 				{
-					g_SelectedTriangles[stTriangle]->vInvert();
+					Triangle->vInvert();
 				}
 				bKeyAccepted = true;
 			}
@@ -2108,48 +2108,49 @@ bool AcceptKeyInTriangleView(int KeyCode, bool IsDown)
 		}
 	case 39: // S
 		{
-			for(std::vector< Point * >::size_type stPoint = 0; stPoint < g_SelectedPoints.size(); ++stPoint)
+			// separate all triangle points of selected points and triangles
+			if((IsDown == true) && (g_Keyboard.IsNoModifierKeyActive() == true) && (g_SelectedTriangles.empty() == false))
 			{
-				for(std::vector< Triangle * >::size_type stTriangle = 0; stTriangle < g_SelectedTriangles.size(); ++stTriangle)
+				for(auto Point : g_SelectedPoints)
 				{
-					TrianglePoint * pOldTrianglePoint(g_SelectedTriangles[stTriangle]->pGetTrianglePoint(g_SelectedPoints[stPoint]));
-					
-					if(pOldTrianglePoint != 0)
+					for(auto Triangle : g_SelectedTriangles)
 					{
-						TrianglePoint * pNewTrianglePoint(new TrianglePoint());
+						auto OldTrianglePoint(Triangle->pGetTrianglePoint(Point));
 						
-						pNewTrianglePoint->m_Point = g_SelectedPoints[stPoint];
-						pNewTrianglePoint->m_Normal = g_SelectedTriangles[stTriangle]->GetTriangleNormal();
-						g_TrianglePoints.push_back(pNewTrianglePoint);
-						vExchangeTrianglePoint(g_SelectedTriangles[stTriangle], pOldTrianglePoint, pNewTrianglePoint);
+						if(OldTrianglePoint != nullptr)
+						{
+							auto NewTrianglePoint(new TrianglePoint());
+							
+							NewTrianglePoint->m_Point = Point;
+							NewTrianglePoint->m_Normal = Triangle->GetTriangleNormal();
+							g_TrianglePoints.push_back(NewTrianglePoint);
+							vExchangeTrianglePoint(Triangle, OldTrianglePoint, NewTrianglePoint);
+						}
 					}
 				}
+				bKeyAccepted = true;
 			}
-			bKeyAccepted = true;
 			
 			break;
 		}
 	case 33: // P
 		{
-			if((IsDown == true) && (g_Keyboard.IsNoModifierKeyActive() == true))
+			if((IsDown == true) && (g_Keyboard.IsNoModifierKeyActive() == true) && (g_SelectedTriangles.empty() == false))
 			{
 				// select all points on the selected triangles
-				if(g_SelectedTriangles.size() > 0)
+				g_SelectedPoints.clear();
+				
+				std::vector< Point * > PointsToSelect;
+				
+				for(auto Triangle : g_SelectedTriangles)
 				{
-					g_SelectedPoints.clear();
-					
-					std::vector< Point * > PointsToSelect;
-					
-					for(auto Triangle : g_SelectedTriangles)
-					{
-						PointsToSelect.push_back(Triangle->pGetPoint(1));
-						PointsToSelect.push_back(Triangle->pGetPoint(2));
-						PointsToSelect.push_back(Triangle->pGetPoint(3));
-					}
-					std::sort(PointsToSelect.begin(), PointsToSelect.end());
-					std::unique_copy(PointsToSelect.begin(), PointsToSelect.end(), back_inserter(g_SelectedPoints));
-					bKeyAccepted = true;
+					PointsToSelect.push_back(Triangle->pGetPoint(1));
+					PointsToSelect.push_back(Triangle->pGetPoint(2));
+					PointsToSelect.push_back(Triangle->pGetPoint(3));
 				}
+				std::sort(PointsToSelect.begin(), PointsToSelect.end());
+				std::unique_copy(PointsToSelect.begin(), PointsToSelect.end(), back_inserter(g_SelectedPoints));
+				bKeyAccepted = true;
 			}
 			
 			break;
@@ -2188,11 +2189,11 @@ bool AcceptKeyInTriangleView(int KeyCode, bool IsDown)
 		}
 	case 36: // ENTER
 		{
-			if(g_SelectedTriangles.size() > 0)
+			if((IsDown == true) && (g_Keyboard.IsNoModifierKeyActive() == true) && (g_SelectedTriangles.empty() == false))
 			{
-				for(std::vector< Triangle * >::size_type stTriangle = 0; stTriangle < g_SelectedTriangles.size(); ++stTriangle)
+				for(auto Triangle : g_SelectedTriangles)
 				{
-					g_SelectedTriangles[stTriangle]->vRealignNormal();
+					Triangle->vRealignNormal();
 				}
 				bKeyAccepted = true;
 			}
