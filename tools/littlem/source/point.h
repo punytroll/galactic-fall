@@ -3,21 +3,31 @@
 
 #include <vector>
 
-#include "position.h"
+#include <algebra/vector3f.h>
 
 class TrianglePoint;
 
-class Point : public Position
+class Point
 {
 public:
-	Point(float fX, float fY, float fZ);
+	const Vector3f & GetPosition(void) const
+	{
+		return _Position;
+	}
 	
 	const std::vector< TrianglePoint * > & GetTrianglePoints(void) const
 	{
 		return m_TrianglePoints;
 	}
 	
+	void SetPosition(const Vector3f & Position)
+	{
+		_Position = Position;
+	}
+	
 	std::vector< TrianglePoint * > m_TrianglePoints;
+private:
+	Vector3f _Position;
 };
 
 #endif

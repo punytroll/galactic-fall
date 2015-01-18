@@ -4,22 +4,22 @@
 #include "triangle_point.h"
 
 TrianglePoint::TrianglePoint(void) :
-	m_pPoint(0)
+	m_Point(nullptr)
 {
 }
 
-TrianglePoint::TrianglePoint(Point * pPoint) :
-	m_pPoint(pPoint)
+TrianglePoint::TrianglePoint(Point * Point) :
+	m_Point(Point)
 {
 }
 
 void TrianglePoint::vDraw(void)
 {
 	glNormal3fv(m_Normal.GetPointer());
-	m_pPoint->Draw();
+	glVertex3fv(m_Point->GetPosition().GetPointer());
 }
 
 void TrianglePoint::vDrawSelection(void)
 {
-	m_pPoint->DrawSelection();
+	glVertex3fv(m_Point->GetPosition().GetPointer());
 }

@@ -54,7 +54,7 @@ Point * Triangle::pGetPoint(int iPoint)
 {
 	if((iPoint >= 1) && (iPoint <= 3))
 	{
-		return pGetTrianglePoint(iPoint)->m_pPoint;
+		return pGetTrianglePoint(iPoint)->m_Point;
 	}
 	
 	return 0;
@@ -64,7 +64,7 @@ const Point * Triangle::pGetPoint(int iPoint) const
 {
 	if((iPoint >= 1) && (iPoint <= 3))
 	{
-		return pGetTrianglePoint(iPoint)->m_pPoint;
+		return pGetTrianglePoint(iPoint)->m_Point;
 	}
 	
 	return 0;
