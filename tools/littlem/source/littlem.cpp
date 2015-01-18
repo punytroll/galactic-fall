@@ -21,9 +21,9 @@
 
 #include <string_cast/string_cast.h>
 
-#include <xml_stream/xml_stream.h>
+#include <xml_parser/xml_parser.h>
 
-#include "xmlparser.h"
+#include <xml_stream/xml_stream.h>
 
 // types of objects
 #define LITTLEM_CAMERA 0
@@ -281,7 +281,7 @@ public:
 	{
 	}
 	
-	virtual void elementStart(const std::string & ElementName, const std::map< std::string, std::string > & Attributes)
+	virtual void ElementStart(const std::string & ElementName, const std::map< std::string, std::string > & Attributes) override
 	{
 		// safe-guard: only accept geometry input if we entered a mesh definition
 		if(ElementName == "mesh")
@@ -336,7 +336,7 @@ public:
 		}
 	}
 	
-	virtual void elementEnd(const std::string & ElementName)
+	virtual void ElementEnd(const std::string & ElementName) override
 	{
 		if(ElementName == "mesh")
 		{
@@ -706,7 +706,7 @@ public:
 	{
 	}
 	
-	virtual void elementStart(const std::string & sElementName, const std::map< std::string, std::string > & Attributes)
+	virtual void ElementStart(const std::string & sElementName, const std::map< std::string, std::string > & Attributes) override
 	{
 		if(sElementName == "light")
 		{
@@ -729,13 +729,13 @@ public:
 		}
 		else
 		{
-			MeshReader::elementStart(sElementName, Attributes);
+			MeshReader::ElementStart(sElementName, Attributes);
 		}
 	}
 	
-	virtual void elementEnd(const std::string & sElementName)
+	virtual void ElementEnd(const std::string & sElementName) override
 	{
-		MeshReader::elementEnd(sElementName);
+		MeshReader::ElementEnd(sElementName);
 	}
 	
 	const std::vector< CameraDescription > & GetCameraDescriptions(void) const
@@ -2399,7 +2399,7 @@ void ImportMesh(const std::string & FilePath)
 	std::ifstream InputFileStream(FilePath);
 	MeshReader MeshReader(InputFileStream);
 	
-	MeshReader.parse();
+	MeshReader.Parse();
 	
 	std::vector< Point * > Points(MeshReader.GetPoints());
 	std::vector< TrianglePoint * > TrianglePoints(MeshReader.GetTrianglePoints());
@@ -2490,7 +2490,7 @@ bool AcceptKeyInModelView(int KeyCode, bool IsDown)
 				std::ifstream InputFileStream("scene.xml");
 				SceneReader SceneReader(InputFileStream);
 				
-				SceneReader.parse();
+				SceneReader.Parse();
 				
 				std::vector< Point * > Points(SceneReader.GetPoints());
 				std::vector< TrianglePoint * > TrianglePoints(SceneReader.GetTrianglePoints());
