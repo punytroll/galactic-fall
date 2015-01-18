@@ -64,9 +64,9 @@
 	<energy-usage-per-shot>8</energy-usage-per-shot>
 	<shot>
 		<exit-position>
-			<x>0.8</x>
-			<y>0</y>
-			<z>0.08</z>
+			<x>0.85</x>
+			<y>0.0</y>
+			<z>0.07642</z>
 		</exit-position>
 		<exit-speed>40</exit-speed>
 		<damage>10</damage>
