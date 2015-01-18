@@ -138,22 +138,23 @@ void Graphics::RenderContext::ActivateProgram(void)
 		case Graphics::Program::UniformContent::MaterialColorVector3F:
 			{
 				assert(_Style != nullptr);
-				assert(_Style->GetDiffuseColor() != nullptr);
-				_Program->_SetUniform(Uniform.first, Vector3f::CreateFromVector4f(_Style->GetDiffuseColor()->GetColor()));
+				assert(_Style->HasDiffuseColor() == true);
+				_Program->_SetUniform(Uniform.first, Vector3f::CreateFromVector4f(_Style->GetDiffuseColor().GetColor()));
 				
 				break;
 			}
 		case Graphics::Program::UniformContent::MaterialColorVector4F:
 			{
 				assert(_Style != nullptr);
-				assert(_Style->GetDiffuseColor() != nullptr);
-				_Program->_SetUniform(Uniform.first, _Style->GetDiffuseColor()->GetColor());
+				assert(_Style->HasDiffuseColor() == true);
+				_Program->_SetUniform(Uniform.first, _Style->GetDiffuseColor().GetColor());
 				
 				break;
 			}
 		case Graphics::Program::UniformContent::MaterialShininessF:
 			{
 				assert(_Style != nullptr);
+				assert(_Style->HasShininess() == true);
 				_Program->_SetUniform(Uniform.first, _Style->GetShininess());
 				
 				break;
