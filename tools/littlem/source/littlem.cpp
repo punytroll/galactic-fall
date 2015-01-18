@@ -1617,79 +1617,17 @@ void vToggleSnapping(void)
 	g_Snapping = !g_Snapping;
 }
 
-void vAdjustFloatValue(float & fValue, float fDelta)
+float GetSnapped(float Value)
 {
-	if(g_Snapping == true)
-	{
-		if(fDelta < 0)
-		{
-			if(fDelta > -g_SnapFactor)
-			{
-				fDelta = -g_SnapFactor;
-			}
-		}
-		else
-		{
-			if(fDelta < g_SnapFactor)
-			{
-				fDelta = g_SnapFactor;
-			}
-		}
-	}
-	fValue += fDelta;
-	if(g_Snapping == true)
-	{
-		fValue = roundf(fValue / g_SnapFactor) * g_SnapFactor;
-	}
+	return roundf(Value / g_SnapFactor) * g_SnapFactor;
 }
 
-float GetAdjustedFloatValue(float Value, float Delta)
+Vector3f GetSnapped(const Vector3f & Position)
 {
-	if(g_Snapping == true)
-	{
-		if(Delta < 0)
-		{
-			if(Delta > -g_SnapFactor)
-			{
-				Delta = -g_SnapFactor;
-			}
-		}
-		else
-		{
-			if(Delta < g_SnapFactor)
-			{
-				Delta = g_SnapFactor;
-			}
-		}
-	}
-	
-	float Result(Value + Delta);
-	
-	if(g_Snapping == true)
-	{
-		Result = roundf(Result / g_SnapFactor) * g_SnapFactor;
-	}
-	
-	return Result;
+	return Vector3f::CreateFromComponents(GetSnapped(Position[0]), GetSnapped(Position[1]), GetSnapped(Position[2]));
 }
 
-void MovePosition(Position * Position, int Axis, float Delta)
-{
-	if(Axis == 0)
-	{
-		Position->SetX(GetAdjustedFloatValue(Position->GetX(), Delta));
-	}
-	else if(Axis == 1)
-	{
-		Position->SetY(GetAdjustedFloatValue(Position->GetY(), Delta));
-	}
-	else if(Axis == 2)
-	{
-		Position->SetZ(GetAdjustedFloatValue(Position->GetZ(), Delta));
-	}
-}
-
-Vector3f GetAdjustedStepInView(const Vector3f & Position, FixedDirection Direction)
+Vector3f GetSnappedStepInView(const Vector3f & Position, FixedDirection Direction)
 {
 	auto Delta(0.01f);
 	
@@ -1703,9 +1641,7 @@ Vector3f GetAdjustedStepInView(const Vector3f & Position, FixedDirection Directi
 	
 	if(g_Snapping == true)
 	{
-		Result[0] = roundf(Result[0] / g_SnapFactor) * g_SnapFactor;
-		Result[1] = roundf(Result[1] / g_SnapFactor) * g_SnapFactor;
-		Result[2] = roundf(Result[2] / g_SnapFactor) * g_SnapFactor;
+		Result = GetSnapped(Result);
 	}
 	
 	return Result;
@@ -1825,6 +1761,19 @@ public:
 				
 				break;
 			}
+		case 39: // S
+			{
+				if((IsDown == true) && (g_Keyboard.IsAnyControlActive() == true) && (g_SelectedPoints.empty() == false))
+				{
+					for(auto Point : g_SelectedPoints)
+					{
+						Point->SetPosition(GetSnapped(Point->GetPosition()));
+					}
+					bKeyAccepted = true;
+				}
+				
+				break;
+			}
 		case 28: // T
 			{
 				if((IsDown == true) && (g_Keyboard.IsNoModifierKeyActive() == true))
@@ -1867,96 +1816,78 @@ public:
 			}
 		case 114: // RIGHT
 			{
-				if(IsDown == true)
+				if((IsDown == true) && (g_Keyboard.IsNoModifierKeyActive() == true) && (g_SelectedPoints.empty() == false))
 				{
-					if(g_SelectedPoints.size() > 0)
+					for(auto Point : g_SelectedPoints)
 					{
-						for(std::vector< Point * >::size_type stI = 0; stI < g_SelectedPoints.size(); ++stI)
-						{
-							MovePosition(g_SelectedPoints[stI], 0, g_SnapFactor);
-						}
-						bKeyAccepted = true;
+						Point->SetPosition(GetSnappedStepInView(Point->GetPosition(), FixedDirection::Right));
 					}
+					bKeyAccepted = true;
 				}
 				
 				break;
 			}
 		case 113: // LEFT
 			{
-				if(IsDown == true)
+				if((IsDown == true) && (g_Keyboard.IsNoModifierKeyActive() == true) && (g_SelectedPoints.empty() == false))
 				{
-					if(g_SelectedPoints.size() > 0)
+					for(auto Point : g_SelectedPoints)
 					{
-						for(std::vector< Point * >::size_type stI = 0; stI < g_SelectedPoints.size(); ++stI)
-						{
-							MovePosition(g_SelectedPoints[stI], 0, -g_SnapFactor);
-						}
-						bKeyAccepted = true;
+						Point->SetPosition(GetSnappedStepInView(Point->GetPosition(), FixedDirection::Left));
 					}
+					bKeyAccepted = true;
 				}
 				
 				break;
 			}
 		case 111: // UP
 			{
-				if(IsDown == true)
+				if((IsDown == true) && (g_Keyboard.IsNoModifierKeyActive() == true) && (g_SelectedPoints.empty() == false))
 				{
-					if(g_SelectedPoints.size() > 0)
+					for(auto Point : g_SelectedPoints)
 					{
-						for(std::vector< Point * >::size_type stI = 0; stI < g_SelectedPoints.size(); ++stI)
-						{
-							MovePosition(g_SelectedPoints[stI], 1, g_SnapFactor);
-						}
-						bKeyAccepted = true;
+						Point->SetPosition(GetSnappedStepInView(Point->GetPosition(), FixedDirection::Up));
 					}
+					bKeyAccepted = true;
 				}
 				
 				break;
 			}
 		case 116: // DOWN
 			{
-				if(IsDown == true)
+				if((IsDown == true) && (g_Keyboard.IsNoModifierKeyActive() == true) && (g_SelectedPoints.empty() == false))
 				{
-					if(g_SelectedPoints.size() > 0)
+					for(auto Point : g_SelectedPoints)
 					{
-						for(std::vector< Point * >::size_type stI = 0; stI < g_SelectedPoints.size(); ++stI)
-						{
-							MovePosition(g_SelectedPoints[stI], 1, -g_SnapFactor);
-						}
-						bKeyAccepted = true;
+						Point->SetPosition(GetSnappedStepInView(Point->GetPosition(), FixedDirection::Down));
 					}
+					bKeyAccepted = true;
 				}
 				
 				break;
 			}
 		case 117: // PAGE DOWN
 			{
-				if(IsDown == true)
+				if((IsDown == true) && (g_Keyboard.IsNoModifierKeyActive() == true) && (g_SelectedPoints.empty() == false))
 				{
-					if(g_SelectedPoints.size() > 0)
+					for(auto Point : g_SelectedPoints)
 					{
-						for(std::vector< Point * >::size_type stI = 0; stI < g_SelectedPoints.size(); ++stI)
-						{
-							MovePosition(g_SelectedPoints[stI], 2, g_SnapFactor);
-						}
-						bKeyAccepted = true;
+						Point->SetPosition(GetSnappedStepInView(Point->GetPosition(), FixedDirection::Backward));
 					}
+					bKeyAccepted = true;
 				}
 				
 				break;
 			}
 		case 112: // PAGE UP
 			{
-				if(IsDown == true)
+				if((IsDown == true) && (g_Keyboard.IsNoModifierKeyActive() == true) && (g_SelectedPoints.empty() == false))
 				{
-					if(g_SelectedPoints.size() > 0)
+					for(auto Point : g_SelectedPoints)
 					{
-						for(std::vector< Point * >::size_type stI = 0; stI < g_SelectedPoints.size(); ++stI)
-						{
-							MovePosition(g_SelectedPoints[stI], 2, -g_SnapFactor);
-						}
-						bKeyAccepted = true;
+						Point->SetPosition(GetSnappedStepInView(Point->GetPosition(), FixedDirection::Forward));
 					}
+					bKeyAccepted = true;
 				}
 				
 				break;
@@ -2145,7 +2076,7 @@ public:
 				{
 					if(g_SelectedCamera != nullptr)
 					{
-						g_SelectedCamera->SetPosition(GetAdjustedStepInView(g_SelectedCamera->GetPosition(), FixedDirection::Right));
+						g_SelectedCamera->SetPosition(GetSnappedStepInView(g_SelectedCamera->GetPosition(), FixedDirection::Right));
 					}
 					else if(g_CurrentCamera != nullptr)
 					{
@@ -2169,7 +2100,7 @@ public:
 				{
 					if(g_SelectedCamera != nullptr)
 					{
-						g_SelectedCamera->SetPosition(GetAdjustedStepInView(g_SelectedCamera->GetPosition(), FixedDirection::Left));
+						g_SelectedCamera->SetPosition(GetSnappedStepInView(g_SelectedCamera->GetPosition(), FixedDirection::Left));
 					}
 					else if(g_CurrentCamera != nullptr)
 					{
@@ -2193,7 +2124,7 @@ public:
 				{
 					if(g_SelectedCamera != nullptr)
 					{
-						g_SelectedCamera->SetPosition(GetAdjustedStepInView(g_SelectedCamera->GetPosition(), FixedDirection::Up));
+						g_SelectedCamera->SetPosition(GetSnappedStepInView(g_SelectedCamera->GetPosition(), FixedDirection::Up));
 					}
 					else if(g_CurrentCamera != nullptr)
 					{
@@ -2217,7 +2148,7 @@ public:
 				{
 					if(g_SelectedCamera != nullptr)
 					{
-						g_SelectedCamera->SetPosition(GetAdjustedStepInView(g_SelectedCamera->GetPosition(), FixedDirection::Down));
+						g_SelectedCamera->SetPosition(GetSnappedStepInView(g_SelectedCamera->GetPosition(), FixedDirection::Down));
 					}
 					else if(g_CurrentCamera != nullptr)
 					{
@@ -2241,7 +2172,7 @@ public:
 				{
 					if(g_SelectedCamera != nullptr)
 					{
-						g_SelectedCamera->SetPosition(GetAdjustedStepInView(g_SelectedCamera->GetPosition(), FixedDirection::Backward));
+						g_SelectedCamera->SetPosition(GetSnappedStepInView(g_SelectedCamera->GetPosition(), FixedDirection::Backward));
 					}
 					else if(g_CurrentCamera != nullptr)
 					{
@@ -2258,7 +2189,7 @@ public:
 				{
 					if(g_SelectedCamera != nullptr)
 					{
-						g_SelectedCamera->SetPosition(GetAdjustedStepInView(g_SelectedCamera->GetPosition(), FixedDirection::Forward));
+						g_SelectedCamera->SetPosition(GetSnappedStepInView(g_SelectedCamera->GetPosition(), FixedDirection::Forward));
 					}
 					else if(g_CurrentCamera != nullptr)
 					{
@@ -2273,11 +2204,11 @@ public:
 			{
 				if(g_SelectedCamera != 0)
 				{
-					g_SelectedCamera->SetFieldOfViewY(g_SelectedCamera->GetFieldOfViewY() + 1.0f);
+					g_SelectedCamera->SetFieldOfViewY(g_SelectedCamera->GetFieldOfViewY() + 0.01f);
 				}
 				else if(g_CurrentCamera != 0)
 				{
-					g_CurrentCamera->SetFieldOfViewY(g_SelectedCamera->GetFieldOfViewY() + 1.0f);
+					g_CurrentCamera->SetFieldOfViewY(g_SelectedCamera->GetFieldOfViewY() + 0.01f);
 					vSetupProjection();
 				}
 				
@@ -2287,11 +2218,11 @@ public:
 			{
 				if(g_SelectedCamera != 0)
 				{
-					g_SelectedCamera->SetFieldOfViewY(g_SelectedCamera->GetFieldOfViewY() - 1.0f);
+					g_SelectedCamera->SetFieldOfViewY(g_SelectedCamera->GetFieldOfViewY() - 0.01f);
 				}
 				else if(g_CurrentCamera != 0)
 				{
-					g_CurrentCamera->SetFieldOfViewY(g_SelectedCamera->GetFieldOfViewY() - 1.0f);
+					g_CurrentCamera->SetFieldOfViewY(g_SelectedCamera->GetFieldOfViewY() - 0.01f);
 					vSetupProjection();
 				}
 				
@@ -2741,7 +2672,7 @@ public:
 				{
 					if(g_SelectedLight != nullptr)
 					{
-						g_SelectedLight->SetPosition(GetAdjustedStepInView(g_SelectedLight->GetPosition(), FixedDirection::Right));
+						g_SelectedLight->SetPosition(GetSnappedStepInView(g_SelectedLight->GetPosition(), FixedDirection::Right));
 						bKeyAccepted = true;
 					}
 				}
@@ -2754,7 +2685,7 @@ public:
 				{
 					if(g_SelectedLight != nullptr)
 					{
-						g_SelectedLight->SetPosition(GetAdjustedStepInView(g_SelectedLight->GetPosition(), FixedDirection::Left));
+						g_SelectedLight->SetPosition(GetSnappedStepInView(g_SelectedLight->GetPosition(), FixedDirection::Left));
 						bKeyAccepted = true;
 					}
 				}
@@ -2767,7 +2698,7 @@ public:
 				{
 					if(g_SelectedLight != nullptr)
 					{
-						g_SelectedLight->SetPosition(GetAdjustedStepInView(g_SelectedLight->GetPosition(), FixedDirection::Up));
+						g_SelectedLight->SetPosition(GetSnappedStepInView(g_SelectedLight->GetPosition(), FixedDirection::Up));
 						bKeyAccepted = true;
 					}
 				}
@@ -2780,7 +2711,7 @@ public:
 				{
 					if(g_SelectedLight != nullptr)
 					{
-						g_SelectedLight->SetPosition(GetAdjustedStepInView(g_SelectedLight->GetPosition(), FixedDirection::Down));
+						g_SelectedLight->SetPosition(GetSnappedStepInView(g_SelectedLight->GetPosition(), FixedDirection::Down));
 						bKeyAccepted = true;
 					}
 				}
@@ -2793,7 +2724,7 @@ public:
 				{
 					if(g_SelectedLight != nullptr)
 					{
-						g_SelectedLight->SetPosition(GetAdjustedStepInView(g_SelectedLight->GetPosition(), FixedDirection::Backward));
+						g_SelectedLight->SetPosition(GetSnappedStepInView(g_SelectedLight->GetPosition(), FixedDirection::Backward));
 						bKeyAccepted = true;
 					}
 				}
@@ -2806,7 +2737,7 @@ public:
 				{
 					if(g_SelectedLight != nullptr)
 					{
-						g_SelectedLight->SetPosition(GetAdjustedStepInView(g_SelectedLight->GetPosition(), FixedDirection::Forward));
+						g_SelectedLight->SetPosition(GetSnappedStepInView(g_SelectedLight->GetPosition(), FixedDirection::Forward));
 						bKeyAccepted = true;
 					}
 				}
@@ -3471,6 +3402,7 @@ void InitializeOpenGL(void)
 		g_CurrentCamera->SetPosition(Vector3f::CreateTranslationX(4.0f));
 	}
 	g_Snapping = true;
+	g_SnapFactor = 0.01;
 }
 
 void ProcessEvents(void)
