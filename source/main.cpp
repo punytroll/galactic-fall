@@ -106,6 +106,7 @@
 #include "system.h"
 #include "system_statistics.h"
 #include "timeout_notifications.h"
+#include "turret.h"
 #include "ui/button.h"
 #include "ui/heads_up_display.h"
 #include "ui/key_event.h"
@@ -1820,6 +1821,16 @@ void LoadGameFromElement(const Element * SaveElement)
 							{
 								throw std::runtime_error("The \"" + ObjectChild->GetName() + "\" element for the object \"" + SaveChild->GetAttribute("object-identifier") + "\" contains an unknown element \"" + TypeSpecificChild->GetName() + "\".");
 							}
+						}
+					}
+					else if(SaveChild->GetAttribute("type-identifier") == "turret")
+					{
+						auto NewTurret(dynamic_cast< Turret * >(NewObject));
+						
+						assert(NewTurret != nullptr);
+						for(auto TypeSpecificChild : ObjectChild->GetChilds())
+						{
+							throw std::runtime_error("The \"" + ObjectChild->GetName() + "\" element for the object \"" + SaveChild->GetAttribute("object-identifier") + "\" contains an unknown element \"" + TypeSpecificChild->GetName() + "\".");
 						}
 					}
 					else if(SaveChild->GetAttribute("type-identifier") == "weapon")
