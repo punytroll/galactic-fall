@@ -34,6 +34,8 @@ namespace Graphics
 		// constructor & destructor
 		MeshNode(void);
 		virtual ~MeshNode(void) override;
+		// getters
+		const Graphics::Mesh * GetMesh(void) const;
 		// setters
 		void SetMesh(const Graphics::Mesh * Mesh);
 		/**
@@ -46,6 +48,11 @@ namespace Graphics
 		const Graphics::Mesh * _Mesh;
 		const Graphics::Style * _Style;
 	};
+	
+	inline const Graphics::Mesh * MeshNode::GetMesh(void) const
+	{
+		return _Mesh;
+	}
 	
 	inline void MeshNode::SetMesh(const Graphics::Mesh * Mesh)
 	{
