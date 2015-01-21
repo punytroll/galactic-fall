@@ -198,7 +198,8 @@ void UI::HeadsUpDisplay::SetMessage(const std::string & Message)
 
 void UI::HeadsUpDisplay::_UpdateCreditsLabel(UI::Label * CreditsLabel, float RealTimeSeconds, float GameTimeSeconds)
 {
-	if(g_CharacterObserver->GetObservedCharacter().IsValid() == true)
+	assert(g_CharacterObserver != nullptr);
+	if(g_CharacterObserver->GetObservedCharacter() != nullptr)
 	{
 		CreditsLabel->SetVisible(true);
 		CreditsLabel->SetText("Credits: " + to_string_cast(g_CharacterObserver->GetObservedCharacter()->GetCredits()));
@@ -211,7 +212,8 @@ void UI::HeadsUpDisplay::_UpdateCreditsLabel(UI::Label * CreditsLabel, float Rea
 
 void UI::HeadsUpDisplay::_UpdateEnergyLabel(UI::Label * EnergyLabel, float RealTimeSeconds, float GameTimeSeconds)
 {
-	if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0) && (g_CharacterObserver->GetObservedCharacter()->GetShip()->GetBattery() != 0))
+	assert(g_CharacterObserver != nullptr);
+	if((g_CharacterObserver->GetObservedCharacter() != nullptr) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != nullptr) && (g_CharacterObserver->GetObservedCharacter()->GetShip()->GetBattery() != nullptr))
 	{
 		EnergyLabel->SetVisible(true);
 		EnergyLabel->SetText("Energy: " + to_string_cast(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetBattery()->GetEnergy(), 2));
@@ -224,7 +226,8 @@ void UI::HeadsUpDisplay::_UpdateEnergyLabel(UI::Label * EnergyLabel, float RealT
 
 void UI::HeadsUpDisplay::_UpdateFuelLabel(UI::Label * FuelLabel, float RealTimeSeconds, float GameTimeSeconds)
 {
-	if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0))
+	assert(g_CharacterObserver != nullptr);
+	if((g_CharacterObserver->GetObservedCharacter() != nullptr) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != nullptr))
 	{
 		FuelLabel->SetVisible(true);
 		FuelLabel->SetText("Fuel: " + to_string_cast(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetFuel(), 2));
@@ -237,7 +240,8 @@ void UI::HeadsUpDisplay::_UpdateFuelLabel(UI::Label * FuelLabel, float RealTimeS
 
 void UI::HeadsUpDisplay::_UpdateHullLabel(UI::Label * HullLabel, float RealTimeSeconds, float GameTimeSeconds)
 {
-	if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0))
+	assert(g_CharacterObserver != nullptr);
+	if((g_CharacterObserver->GetObservedCharacter() != nullptr) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != nullptr))
 	{
 		HullLabel->SetVisible(true);
 		HullLabel->SetText("Hull: " + to_string_cast(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetHull(), 2));
@@ -250,10 +254,11 @@ void UI::HeadsUpDisplay::_UpdateHullLabel(UI::Label * HullLabel, float RealTimeS
 
 void UI::HeadsUpDisplay::_UpdateLinkedSystemTargetLabel(UI::Label * LinkedSystemTargetLabel, float RealTimeSeconds, float GameTimeSeconds)
 {
-	if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0) && (g_CharacterObserver->GetObservedCharacter()->GetShip()->GetLinkedSystemTarget() != 0))
+	assert(g_CharacterObserver != nullptr);
+	if((g_CharacterObserver->GetObservedCharacter() != nullptr) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != nullptr) && (g_CharacterObserver->GetObservedCharacter()->GetShip()->GetLinkedSystemTarget() != nullptr))
 	{
 		LinkedSystemTargetLabel->SetVisible(true);
-		assert(g_CharacterObserver->GetObservedCharacter()->GetMapKnowledge() != 0);
+		assert(g_CharacterObserver->GetObservedCharacter()->GetMapKnowledge() != nullptr);
 		
 		const std::set< System * > UnexploredSystems(g_CharacterObserver->GetObservedCharacter()->GetMapKnowledge()->GetUnexploredSystems());
 		
@@ -282,7 +287,8 @@ void UI::HeadsUpDisplay::_UpdateLinkedSystemTargetLabel(UI::Label * LinkedSystem
 
 void UI::HeadsUpDisplay::_UpdateMiniMapSystemNameLabel(UI::Label * MiniMapSystemNameLabel, float RealTimeSeconds, float GameTimeSeconds)
 {
-	if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != nullptr))
+	assert(g_CharacterObserver != nullptr);
+	if((g_CharacterObserver->GetObservedCharacter() != nullptr) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != nullptr))
 	{
 		MiniMapSystemNameLabel->SetVisible(true);
 		assert(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetSystem() != nullptr);
@@ -297,7 +303,8 @@ void UI::HeadsUpDisplay::_UpdateMiniMapSystemNameLabel(UI::Label * MiniMapSystem
 
 void UI::HeadsUpDisplay::_UpdateMiniMapDisplay(UI::MiniMapDisplay * MiniMapDisplay, float RealTimeSeconds, float GameTimeSeconds)
 {
-	if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != nullptr))
+	assert(g_CharacterObserver != nullptr);
+	if((g_CharacterObserver->GetObservedCharacter() != nullptr) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != nullptr))
 	{
 		MiniMapDisplay->SetVisible(true);
 		MiniMapDisplay->SetOwner(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetReference());
@@ -310,7 +317,8 @@ void UI::HeadsUpDisplay::_UpdateMiniMapDisplay(UI::MiniMapDisplay * MiniMapDispl
 
 void UI::HeadsUpDisplay::_UpdateMiniMapWidget(UI::Widget * MiniMapWidget, float RealTimeSeconds, float GameTimeSeconds)
 {
-	if(g_CharacterObserver->GetObservedCharacter().IsValid() == true)
+	assert(g_CharacterObserver != nullptr);
+	if(g_CharacterObserver->GetObservedCharacter() != nullptr)
 	{
 		MiniMapWidget->SetVisible(true);
 	}
@@ -322,7 +330,8 @@ void UI::HeadsUpDisplay::_UpdateMiniMapWidget(UI::Widget * MiniMapWidget, float 
 
 void UI::HeadsUpDisplay::_UpdateScannerDisplay(UI::ScannerDisplay * ScannerDisplay, float RealTimeSeconds, float GameTimeSeconds)
 {
-	if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != nullptr) && (g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget() != nullptr))
+	assert(g_CharacterObserver != nullptr);
+	if((g_CharacterObserver->GetObservedCharacter() != nullptr) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != nullptr) && (g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget() != nullptr))
 	{
 		ScannerDisplay->SetVisible(true);
 		ScannerDisplay->SetTarget(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget());
@@ -335,7 +344,8 @@ void UI::HeadsUpDisplay::_UpdateScannerDisplay(UI::ScannerDisplay * ScannerDispl
 
 void UI::HeadsUpDisplay::_UpdateScannerTargetNameLabel(UI::Label * ScannerTargetNameLabel, float RealTimeSeconds, float GameTimeSeconds)
 {
-	if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != nullptr) && (g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget() != nullptr))
+	assert(g_CharacterObserver != nullptr);
+	if((g_CharacterObserver->GetObservedCharacter() != nullptr) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != nullptr) && (g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget() != nullptr))
 	{
 		ScannerTargetNameLabel->SetVisible(true);
 		assert(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget()->GetAspectName() != nullptr);
@@ -349,7 +359,8 @@ void UI::HeadsUpDisplay::_UpdateScannerTargetNameLabel(UI::Label * ScannerTarget
 
 void UI::HeadsUpDisplay::_UpdateScannerWidget(UI::Widget * ScannerWidget, float RealTimeSeconds, float GameTimeSeconds)
 {
-	if(g_CharacterObserver->GetObservedCharacter().IsValid() == true)
+	assert(g_CharacterObserver != nullptr);
+	if(g_CharacterObserver->GetObservedCharacter() != nullptr)
 	{
 		ScannerWidget->SetVisible(true);
 	}

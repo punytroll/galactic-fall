@@ -20,32 +20,42 @@
 #include "character.h"
 #include "character_observer.h"
 
-CharacterObserver::CharacterObserver(void)
+CharacterObserver::CharacterObserver(void) :
+	_ObservedCharacter(nullptr)
 {
 }
 
 CharacterObserver::~CharacterObserver(void)
 {
-	if(_ObservedCharacter.IsValid() == true)
-	{
-		_ObservedCharacter->RemoveObserver(this);
-	}
-}
-
-void CharacterObserver::SetObservedCharacter(Reference< Character > ObservedCharacter)
-{
-	if(_ObservedCharacter.IsValid() == true)
-	{
-		_ObservedCharacter->RemoveObserver(this);
-	}
-	_ObservedCharacter = ObservedCharacter;
-	if(_ObservedCharacter.IsValid() == true)
-	{
-		_ObservedCharacter->AddObserver(this);
-	}
+	assert(_ObservedCharacter == nullptr);
 }
 
 void CharacterObserver::HandleMessage(Message * Message)
 {
 	// silently ignore the message
+}
+
+void CharacterObserver::_OnObservedCharacterDestroying(void)
+{
+	assert(_ObservedCharacter != nullptr);
+	assert(_ObservedCharacterDestroyingConnection.IsValid() == true);
+	_ObservedCharacterDestroyingConnection.Disconnect();
+	_ObservedCharacter->RemoveObserver(this);
+	_ObservedCharacter = nullptr;
+}
+
+void CharacterObserver::SetObservedCharacter(Character * ObservedCharacter)
+{
+	if(_ObservedCharacter != nullptr)
+	{
+		assert(_ObservedCharacterDestroyingConnection.IsValid() == true);
+		_ObservedCharacterDestroyingConnection.Disconnect();
+		_ObservedCharacter->RemoveObserver(this);
+	}
+	_ObservedCharacter = ObservedCharacter;
+	if(_ObservedCharacter != nullptr)
+	{
+		_ObservedCharacterDestroyingConnection = _ObservedCharacter->ConnectDestroyingCallback(std::bind(&CharacterObserver::_OnObservedCharacterDestroying, this));
+		_ObservedCharacter->AddObserver(this);
+	}
 }

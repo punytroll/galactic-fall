@@ -31,16 +31,18 @@ public:
 	CharacterObserver(void);
 	virtual ~CharacterObserver(void);
 	// getters
-	Reference< Character > & GetObservedCharacter(void);
+	Character * GetObservedCharacter(void);
 	// setters
-	void SetObservedCharacter(Reference< Character > ObservedCharacter);
+	void SetObservedCharacter(Character * ObservedCharacter);
 	// modifiers
 	virtual void HandleMessage(Message * Message);
 private:
-	Reference< Character > _ObservedCharacter;
+	void _OnObservedCharacterDestroying(void);
+	Character * _ObservedCharacter;
+	Connection _ObservedCharacterDestroyingConnection;
 };
 
-inline Reference< Character > & CharacterObserver::GetObservedCharacter(void)
+inline Character * CharacterObserver::GetObservedCharacter(void)
 {
 	return _ObservedCharacter;
 }
