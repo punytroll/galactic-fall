@@ -22,8 +22,8 @@
 #include "generator_class.h"
 
 GeneratorClass::GeneratorClass(const std::string & Identifier) :
-	m_EnergyProvisionPerSecond(0.0),
-	m_Identifier(Identifier),
-	m_SpaceRequirement(0)
+	_EnergyProvisionPerSecond(0.0f),
+	_Identifier(Identifier),
+	_SpaceRequirement(0)
 {
 }

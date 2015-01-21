@@ -40,56 +40,56 @@ public:
 	void SetSlotClassIdentifier(const std::string & SlotClassIdentifier);
 	void SetSpaceRequirement(unsigned_numeric SpaceRequirement);
 private:
-	float m_EnergyProvisionPerSecond;
-	std::string m_Identifier;
-	std::string m_Name;
-	std::string m_SlotClassIdentifier;
-	unsigned_numeric m_SpaceRequirement;
+	float _EnergyProvisionPerSecond;
+	std::string _Identifier;
+	std::string _Name;
+	std::string _SlotClassIdentifier;
+	unsigned_numeric _SpaceRequirement;
 };
 
 inline float GeneratorClass::GetEnergyProvisionPerSecond(void) const
 {
-	return m_EnergyProvisionPerSecond;
+	return _EnergyProvisionPerSecond;
 }
 
 inline const std::string & GeneratorClass::GetIdentifier(void) const
 {
-	return m_Identifier;
+	return _Identifier;
 }
 
 inline const std::string & GeneratorClass::GetName(void) const
 {
-	return m_Name;
+	return _Name;
 }
 
 inline const std::string & GeneratorClass::GetSlotClassIdentifier(void) const
 {
-	return m_SlotClassIdentifier;
+	return _SlotClassIdentifier;
 }
 
 inline unsigned_numeric GeneratorClass::GetSpaceRequirement(void) const
 {
-	return m_SpaceRequirement;
+	return _SpaceRequirement;
 }
 
 inline void GeneratorClass::SetEnergyProvisionPerSecond(float EnergyProvisionPerSecond)
 {
-	m_EnergyProvisionPerSecond = EnergyProvisionPerSecond;
+	_EnergyProvisionPerSecond = EnergyProvisionPerSecond;
 }
 
 inline void GeneratorClass::SetName(const std::string & Name)
 {
-	m_Name = Name;
+	_Name = Name;
 }
 
 inline void GeneratorClass::SetSlotClassIdentifier(const std::string & SlotClassIdentifier)
 {
-	m_SlotClassIdentifier = SlotClassIdentifier;
+	_SlotClassIdentifier = SlotClassIdentifier;
 }
 
 inline void GeneratorClass::SetSpaceRequirement(unsigned_numeric SpaceRequirement)
 {
-	m_SpaceRequirement = SpaceRequirement;
+	_SpaceRequirement = SpaceRequirement;
 }
 
 #endif
