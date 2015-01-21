@@ -2518,13 +2518,16 @@ bool AcceptKeyInModelView(int KeyCode, bool IsDown)
 	{
 	case 54: // C
 		{
-			if(IsDown == true)
+			if(g_Keyboard.IsAltActive() == true)
 			{
-				if(g_Keyboard.IsAltActive() == true)
+				if(IsDown == true)
 				{
 					vToggleCullFace();
 				}
-				else if(g_Keyboard.IsAnyShiftActive() == true)
+			}
+			else if(g_Keyboard.IsAnyShiftActive() == true)
+			{
+				if(IsDown == false)
 				{
 					g_ModelerView = ModelerView::Camera;
 				}
@@ -2648,7 +2651,7 @@ bool AcceptKeyInModelView(int KeyCode, bool IsDown)
 		}
 	case 58: // M
 		{
-			if(g_Keyboard.IsAnyShiftActive() == true)
+			if((IsDown == false) && (g_Keyboard.IsAnyShiftActive() == true))
 			{
 				g_ModelerView = ModelerView::Model;
 			}
@@ -2657,7 +2660,7 @@ bool AcceptKeyInModelView(int KeyCode, bool IsDown)
 		}
 	case 33: // P
 		{
-			if(g_Keyboard.IsAnyShiftActive() == true)
+			if((IsDown == false) && (g_Keyboard.IsAnyShiftActive() == true))
 			{
 				g_ModelerView = ModelerView::Point;
 			}
@@ -2698,12 +2701,9 @@ bool AcceptKeyInModelView(int KeyCode, bool IsDown)
 		}
 	case 28: // T
 		{
-			if(IsDown == false)
+			if((IsDown == false) && (g_Keyboard.IsAnyShiftActive() == true))
 			{
-				if(g_Keyboard.IsAnyShiftActive() == true)
-				{
-					g_ModelerView = ModelerView::Triangle;
-				}
+				g_ModelerView = ModelerView::Triangle;
 			}
 			
 			break;
