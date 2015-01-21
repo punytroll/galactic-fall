@@ -305,6 +305,155 @@
 		</aspect-position>
 		<type-specific/>
 	</object>
+	<object class-identifier="earth" object-identifier="::planet(earth)::in_system(sol)" type-identifier="planet">
+		<aspect-object-container>
+			<content object-identifier="::hangar::on_planet(::planet(earth)::in_system(sol))::for_character(::character::player_character)"/>
+		</aspect-object-container>
+	</object>
+	<object class-identifier="" object-identifier="::hangar::on_planet(::planet(earth)::in_system(sol))::for_character(::character::player_character)" type-identifier="hangar">
+		<aspect-object-container>
+			<content object-identifier="::asset(transporter)::ship(transporter)::created_on(::planet(earth)::in_system(sol))::created_at_game_time(34.864446)::bought_by(::character::player_character)::created_at_address(0x14a28a0)"/>
+		</aspect-object-container>
+		<type-specific>
+			<character object-identifier="::character::player_character"/>
+		</type-specific>
+	</object>
+	<object class-identifier="transporter" object-identifier="::asset(transporter)::ship(transporter)::created_on(::planet(earth)::in_system(sol))::created_at_game_time(34.864446)::bought_by(::character::player_character)::created_at_address(0x14a28a0)" type-identifier="ship">
+		<aspect-name>
+			<name value="Transporter"/>
+		</aspect-name>
+		<aspect-object-container>
+			<content object-identifier="::storage()::0x141df50(1421846795.992)"/>
+			<content object-identifier="::asset(medium_laser)::weapon(medium_laser)::created_on(::planet(earth)::in_system(sol))::created_at_game_time(40.364063)::bought_by(::character::player_character)::created_at_address(0x1422aa0)"/>
+			<content object-identifier="::asset(light_laser_turret)::turret(light_laser_turret)::created_on(::planet(earth)::in_system(sol))::created_at_game_time(37.680931)::bought_by(::character::player_character)::created_at_address(0x1479f90)"/>
+			<content object-identifier="::asset(small_generator)::generator(small_generator)::created_on(::planet(earth)::in_system(sol))::created_at_game_time(36.681007)::bought_by(::character::player_character)::created_at_address(0x149e7d0)"/>
+			<content object-identifier="::asset(light_battery)::battery(light_battery)::created_on(::planet(earth)::in_system(sol))::created_at_game_time(41.947288)::bought_by(::character::player_character)::created_at_address(0x14a6470)"/>
+		</aspect-object-container>
+		<aspect-physical>
+			<radial-size value="9.02538"/>
+			<space-requirement value="160000"/>
+		</aspect-physical>
+		<aspect-position>
+			<orientation w="1" x="0" y="0" z="0"/>
+			<position x="0" y="0" z="0"/>
+		</aspect-position>
+		<aspect-visualization>
+			<part identifier="faction">
+				<style-diffuse-color blue="0.5" green="0" opacity="1" red="0"/>
+				<style-specular-color blue="1" green="1" opacity="1" red="1"/>
+				<style-shininess value="50"/>
+				<style-program-identifier value="default"/>
+			</part>
+			<part identifier="hull">
+				<style-diffuse-color blue="0.65" green="0.55" opacity="1" red="0.55"/>
+				<style-specular-color blue="0.55" green="0.55" opacity="1" red="0.55"/>
+				<style-shininess value="40"/>
+				<style-program-identifier value="default"/>
+			</part>
+		</aspect-visualization>
+		<type-specific>
+			<exhaust-offset x="-4.79" y="0" z="0"/>
+			<fuel-capacity value="4"/>
+			<fuel-needed-to-jump value="0.2"/>
+			<hull-capacity value="236"/>
+			<maximum-forward-thrust value="4"/>
+			<maximum-speed value="8.5"/>
+			<maximum-turn-speed value="0.8"/>
+			<faction identifier="earth"/>
+			<fuel value="4"/>
+			<hull value="236"/>
+			<velocity x="0" y="0" z="0"/>
+		</type-specific>
+	</object>
+	<object class-identifier="light_battery" object-identifier="::asset(light_battery)::battery(light_battery)::created_on(::planet(earth)::in_system(sol))::created_at_game_time(41.947288)::bought_by(::character::player_character)::created_at_address(0x14a6470)" type-identifier="battery">
+		<aspect-accessory>
+			<slot slot-identifier="battery"/>
+		</aspect-accessory>
+		<aspect-name>
+			<name value="Light Battery"/>
+		</aspect-name>
+		<aspect-physical>
+			<radial-size value="0"/>
+			<space-requirement value="80"/>
+		</aspect-physical>
+		<type-specific>
+			<energy value="200"/>
+			<energy-capacity value="200"/>
+		</type-specific>
+	</object>
+	<object class-identifier="small_generator" object-identifier="::asset(small_generator)::generator(small_generator)::created_on(::planet(earth)::in_system(sol))::created_at_game_time(36.681007)::bought_by(::character::player_character)::created_at_address(0x149e7d0)" type-identifier="generator">
+		<aspect-accessory>
+			<slot slot-identifier="generator"/>
+		</aspect-accessory>
+		<aspect-name>
+			<name value="Small Generator"/>
+		</aspect-name>
+		<aspect-physical>
+			<radial-size value="0"/>
+			<space-requirement value="500"/>
+		</aspect-physical>
+		<type-specific>
+			<energy-provision-per-second value="1.5"/>
+		</type-specific>
+	</object>
+	<object class-identifier="light_laser_turret" object-identifier="::asset(light_laser_turret)::turret(light_laser_turret)::created_on(::planet(earth)::in_system(sol))::created_at_game_time(37.680931)::bought_by(::character::player_character)::created_at_address(0x1479f90)" type-identifier="turret">
+		<aspect-accessory>
+			<slot slot-identifier="rear_turret"/>
+		</aspect-accessory>
+		<aspect-name>
+			<name value="Light Laser Turret"/>
+		</aspect-name>
+		<aspect-physical>
+			<radial-size value="0"/>
+			<space-requirement value="800"/>
+		</aspect-physical>
+		<aspect-position>
+			<orientation w="0.707107" x="0" y="0.707107" z="0"/>
+			<position x="0" y="0" z="0"/>
+		</aspect-position>
+		<aspect-visualization>
+			<part identifier="base">
+				<style-diffuse-color blue="0.5" green="0.4" opacity="1" red="0.4"/>
+				<style-program-identifier value="default"/>
+			</part>
+			<part identifier="gun">
+				<style-diffuse-color blue="0.75" green="0.66" opacity="1" red="0.66"/>
+				<style-program-identifier value="default"/>
+			</part>
+		</aspect-visualization>
+		<type-specific/>
+	</object>
+	<object class-identifier="medium_laser" object-identifier="::asset(medium_laser)::weapon(medium_laser)::created_on(::planet(earth)::in_system(sol))::created_at_game_time(40.364063)::bought_by(::character::player_character)::created_at_address(0x1422aa0)" type-identifier="weapon">
+		<aspect-accessory>
+			<slot slot-identifier="front_gun"/>
+		</aspect-accessory>
+		<aspect-name>
+			<name value="Medium Laser"/>
+		</aspect-name>
+		<aspect-physical>
+			<radial-size value="0"/>
+			<space-requirement value="500"/>
+		</aspect-physical>
+		<aspect-position>
+			<orientation w="0.707107" x="0" y="0.707107" z="0"/>
+			<position x="0" y="0" z="0"/>
+		</aspect-position>
+		<aspect-visualization>
+			<part identifier="light_laser">
+				<style-diffuse-color blue="0.4" green="0.38" opacity="1" red="0.38"/>
+				<style-specular-color blue="1" green="1" opacity="1" red="1"/>
+				<style-shininess value="40"/>
+				<style-program-identifier value="default"/>
+			</part>
+		</aspect-visualization>
+		<type-specific/>
+	</object>
+	<object class-identifier="" object-identifier="::storage()::0x141df50(1421846795.992)" type-identifier="storage">
+		<aspect-object-container/>
+		<type-specific>
+			<space-capacity value="60000"/>
+		</type-specific>
+	</object>
 	<object type-identifier="character" class-identifier="" object-identifier="::character::player_character">
 		<aspect-object-container>
 			<content object-identifier="::player_mind"/>
