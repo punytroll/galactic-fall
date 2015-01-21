@@ -1,4 +1,7 @@
-#include <assert.h>
+#include <GL/gl.h>
+
+#include <algorithm>
+#include <cassert>
 
 #include "point.h"
 #include "triangle.h"
@@ -18,7 +21,7 @@ void Triangle::vRealignNormal(void)
 	Vector3f Normal(Delta1.Cross(Delta2));
 	
 	Normal.Normalize();
-	pGetTrianglePoint(1)->m_Normal = pGetTrianglePoint(2)->m_Normal = pGetTrianglePoint(3)->m_Normal = Normal;
+	pGetTrianglePoint(1)->_Normal = pGetTrianglePoint(2)->_Normal = pGetTrianglePoint(3)->_Normal = Normal;
 }
 
 Vector3f Triangle::GetTriangleCenter(void) const
@@ -33,16 +36,19 @@ Vector3f Triangle::GetTriangleNormal(void) const
 
 void Triangle::vDraw(void)
 {
-	pGetTrianglePoint(1)->vDraw();
-	pGetTrianglePoint(2)->vDraw();
-	pGetTrianglePoint(3)->vDraw();
+	glNormal3fv(m_ppTrianglePoints[0]->_Normal.GetPointer());
+	glVertex3fv(m_ppTrianglePoints[0]->GetPoint()->GetPosition().GetPointer());
+	glNormal3fv(m_ppTrianglePoints[1]->_Normal.GetPointer());
+	glVertex3fv(m_ppTrianglePoints[1]->GetPoint()->GetPosition().GetPointer());
+	glNormal3fv(m_ppTrianglePoints[2]->_Normal.GetPointer());
+	glVertex3fv(m_ppTrianglePoints[2]->GetPoint()->GetPosition().GetPointer());
 }
 
 void Triangle::vDrawSelection(void)
 {
-	pGetTrianglePoint(1)->vDrawSelection();
-	pGetTrianglePoint(2)->vDrawSelection();
-	pGetTrianglePoint(3)->vDrawSelection();
+	glVertex3fv(m_ppTrianglePoints[0]->GetPoint()->GetPosition().GetPointer());
+	glVertex3fv(m_ppTrianglePoints[1]->GetPoint()->GetPosition().GetPointer());
+	glVertex3fv(m_ppTrianglePoints[2]->GetPoint()->GetPosition().GetPointer());
 }
 
 void Triangle::vInvert(void)
@@ -54,7 +60,7 @@ Point * Triangle::pGetPoint(int iPoint)
 {
 	if((iPoint >= 1) && (iPoint <= 3))
 	{
-		return pGetTrianglePoint(iPoint)->m_Point;
+		return pGetTrianglePoint(iPoint)->GetPoint();
 	}
 	
 	return 0;
@@ -64,7 +70,7 @@ const Point * Triangle::pGetPoint(int iPoint) const
 {
 	if((iPoint >= 1) && (iPoint <= 3))
 	{
-		return pGetTrianglePoint(iPoint)->m_Point;
+		return pGetTrianglePoint(iPoint)->GetPoint();
 	}
 	
 	return 0;
@@ -120,9 +126,21 @@ const TrianglePoint * Triangle::pGetTrianglePoint(Point * pPoint) const
 	return 0;
 }
 
-void Triangle::vSetTrianglePoint(int iTrianglePoint, TrianglePoint * pTrianglePoint)
+void Triangle::_SetTrianglePoint(int Slot, TrianglePoint * TrianglePoint)
 {
-	assert((iTrianglePoint >= 1) && (iTrianglePoint <= 3));
-	
-	m_ppTrianglePoints[iTrianglePoint - 1] = pTrianglePoint;;
+	assert(TrianglePoint != nullptr);
+	if(m_ppTrianglePoints[Slot] != nullptr)
+	{
+		m_ppTrianglePoints[Slot]->_Triangles.erase(std::find(m_ppTrianglePoints[Slot]->_Triangles.begin(), m_ppTrianglePoints[Slot]->_Triangles.end(), this));
+		if(m_ppTrianglePoints[Slot]->_Triangles.size() == 0)
+		{
+			delete m_ppTrianglePoints[Slot];
+			m_ppTrianglePoints[Slot] = nullptr;
+		}
+	}
+	m_ppTrianglePoints[Slot] = TrianglePoint;
+	if(TrianglePoint != nullptr)
+	{
+		TrianglePoint->_Triangles.push_back(this);
+	}
 }

@@ -1,25 +1,52 @@
+#include <algorithm>
+#include <cassert>
+
 #include <GL/gl.h>
 
 #include "point.h"
 #include "triangle_point.h"
 
+extern std::vector< TrianglePoint * > g_TrianglePoints;
+
 TrianglePoint::TrianglePoint(void) :
-	m_Point(nullptr)
+	_Point(nullptr)
 {
+	g_TrianglePoints.push_back(this);
 }
 
-TrianglePoint::TrianglePoint(Point * Point) :
-	m_Point(Point)
+TrianglePoint::~TrianglePoint(void)
 {
+	g_TrianglePoints.erase(std::find(g_TrianglePoints.begin(), g_TrianglePoints.end(), this));
+	if(_Point != nullptr)
+	{
+		_Point->m_TrianglePoints.erase(std::find(_Point->m_TrianglePoints.begin(), _Point->m_TrianglePoints.end(), this));
+	}
 }
 
-void TrianglePoint::vDraw(void)
+Point * TrianglePoint::GetPoint(void)
 {
-	glNormal3fv(m_Normal.GetPointer());
-	glVertex3fv(m_Point->GetPosition().GetPointer());
+	return _Point;
 }
 
-void TrianglePoint::vDrawSelection(void)
+const Point * TrianglePoint::GetPoint(void) const
 {
-	glVertex3fv(m_Point->GetPosition().GetPointer());
+	return _Point;
+}
+
+const std::vector< Triangle * > & TrianglePoint::GetTriangles(void) const
+{
+	return _Triangles;
+}
+
+void TrianglePoint::SetPoint(Point * Point)
+{
+	if(_Point != nullptr)
+	{
+		assert(false);
+	}
+	else
+	{
+		_Point = Point;
+		_Point->m_TrianglePoints.push_back(this);
+	}
 }
