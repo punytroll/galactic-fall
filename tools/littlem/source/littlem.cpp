@@ -2634,11 +2634,14 @@ bool AcceptKeyInModelView(int KeyCode, bool IsDown)
 			}
 			else
 			{
-				Light * pLight(new Light());
-				
-				g_Lights.push_back(pLight);
-				pLight->SetPosition(Vector3f::CreateZero());
-				pLight->vSetDiffuseColor(1.0f, 1.0f, 1.0f);
+				if(IsDown == true)
+				{
+					auto NewLight(new Light());
+					
+					g_Lights.push_back(NewLight);
+					NewLight->SetPosition(Vector3f::CreateZero());
+					NewLight->vSetDiffuseColor(1.0f, 1.0f, 1.0f);
+				}
 			}
 			
 			break;
