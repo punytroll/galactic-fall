@@ -38,7 +38,7 @@ class Character : public Object
 public:
 	static std::set< Character * > & GetCharacters(void);
 private:
-	static std::set< Character * > m_Characters;
+	static std::set< Character * > _Characters;
 
 /** individual **/
 public:
@@ -61,48 +61,48 @@ public:
 private:
 	void OnAdded(Object * Content);
 	void OnRemoved(Object * Content);
-	std::deque< Mind * > m_Minds;
-	std::set< CharacterObserver * > m_Observers;
-	unsigned_numeric m_Credits;
-	MapKnowledge * m_MapKnowledge;
-	Threat * m_Threat;
+	std::deque< Mind * > _Minds;
+	std::set< CharacterObserver * > _Observers;
+	unsigned_numeric _Credits;
+	MapKnowledge * _MapKnowledge;
+	Threat * _Threat;
 };
 
 inline Mind * Character::GetActiveMind(void)
 {
-	if(m_Minds.empty() == false)
+	if(_Minds.empty() == false)
 	{
-		return m_Minds.front();
+		return _Minds.front();
 	}
 	else
 	{
-		return 0;
+		return nullptr;
 	}
 }
 
 inline std::set< Character * > & Character::GetCharacters(void)
 {
-	return m_Characters;
+	return _Characters;
 }
 
 inline unsigned_numeric Character::GetCredits(void) const
 {
-	return m_Credits;
+	return _Credits;
 }
 
 inline MapKnowledge * Character::GetMapKnowledge(void)
 {
-	return m_MapKnowledge;
+	return _MapKnowledge;
 }
 
 inline Threat * Character::GetThreat(void)
 {
-	return m_Threat;
+	return _Threat;
 }
 
 inline void Character::SetCredits(unsigned_numeric Credits)
 {
-	m_Credits = Credits;
+	_Credits = Credits;
 }
 
 #endif

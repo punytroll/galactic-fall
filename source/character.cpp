@@ -29,15 +29,15 @@
 #include "ship.h"
 #include "threat.h"
 
-std::set< Character * > Character::m_Characters;
+std::set< Character * > Character::_Characters;
 
 Character::Character(void) :
-	m_Credits(0),
-	m_MapKnowledge(new MapKnowledge()),
-	m_Threat(new Threat())
+	_Credits(0),
+	_MapKnowledge(new MapKnowledge()),
+	_Threat(new Threat())
 {
 	// static initialization
-	m_Characters.insert(this);
+	_Characters.insert(this);
 	// initialize object aspects
 	AddAspectMessages();
 	AddAspectObjectContainer();
@@ -47,11 +47,11 @@ Character::Character(void) :
 
 Character::~Character(void)
 {
-	delete m_MapKnowledge;
-	m_MapKnowledge = nullptr;
-	delete m_Threat;
-	m_Threat = nullptr;
-	m_Characters.erase(m_Characters.find(this));
+	delete _MapKnowledge;
+	_MapKnowledge = nullptr;
+	delete _Threat;
+	_Threat = nullptr;
+	_Characters.erase(_Characters.find(this));
 }
 
 void Character::Update(void)
@@ -63,33 +63,33 @@ void Character::Update(void)
 	while((Message = GetAspectMessages()->PopMessage()) != nullptr)
 	{
 		// forward message to all registered CharacterObservers
-		for(std::set< CharacterObserver * >::iterator ObserverIterator = m_Observers.begin(); ObserverIterator != m_Observers.end(); ++ObserverIterator)
+		for(auto Observer : _Observers)
 		{
 			// we would like to push the messages because handling them brings us into another subsystem, but the delete down there is a stopper
-			(*ObserverIterator)->HandleMessage(Message);
+			Observer->HandleMessage(Message);
 		}
 		// forward message to the active mind
-		if(m_Minds.empty() == false)
+		if(_Minds.empty() == false)
 		{
-			m_Minds.front()->HandleMessage(Message);
+			_Minds.front()->HandleMessage(Message);
 		}
 		delete Message;
 	}
 	// let the mind act
-	if(m_Minds.empty() == false)
+	if(_Minds.empty() == false)
 	{
-		m_Minds.front()->Update();
+		_Minds.front()->Update();
 	}
 }
 
 void Character::AddCredits(unsigned_numeric Credits)
 {
-	m_Credits += Credits;
+	_Credits += Credits;
 }
 
 void Character::AddObserver(CharacterObserver * CharacterObserver)
 {
-	m_Observers.insert(CharacterObserver);
+	_Observers.insert(CharacterObserver);
 }
 
 Ship * Character::GetShip(void)
@@ -106,13 +106,13 @@ Ship * Character::GetShip(void)
 
 bool Character::RemoveCredits(unsigned_numeric Credits)
 {
-	if(m_Credits < Credits)
+	if(_Credits < Credits)
 	{
 		return false;
 	}
 	else
 	{
-		m_Credits -= Credits;
+		_Credits -= Credits;
 		
 		return true;
 	}
@@ -120,29 +120,29 @@ bool Character::RemoveCredits(unsigned_numeric Credits)
 
 void Character::RemoveObserver(CharacterObserver * CharacterObserver)
 {
-	m_Observers.erase(m_Observers.find(CharacterObserver));
+	_Observers.erase(_Observers.find(CharacterObserver));
 }
 
 void Character::OnAdded(Object * Content)
 {
 	assert(Content != nullptr);
 	
-	Mind * TheMind(dynamic_cast< Mind * >(Content));
+	auto TheMind(dynamic_cast< Mind * >(Content));
 	
 	assert(TheMind != nullptr);
-	m_Minds.push_front(TheMind);
+	_Minds.push_front(TheMind);
 }
 
 void Character::OnRemoved(Object * Content)
 {
 	assert(Content != nullptr);
 	
-	Mind * TheMind(dynamic_cast< Mind * >(Content));
+	auto TheMind(dynamic_cast< Mind * >(Content));
 	
 	assert(TheMind != nullptr);
 	
-	std::deque< Mind * >::iterator MindIterator(std::find(m_Minds.begin(), m_Minds.end(), TheMind));
+	auto MindIterator(std::find(_Minds.begin(), _Minds.end(), TheMind));
 	
-	assert(MindIterator != m_Minds.end());
-	m_Minds.erase(MindIterator);
+	assert(MindIterator != _Minds.end());
+	_Minds.erase(MindIterator);
 }

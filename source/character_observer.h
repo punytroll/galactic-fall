@@ -35,7 +35,7 @@ public:
 	// setters
 	void SetObservedCharacter(Character * ObservedCharacter);
 	// modifiers
-	virtual void HandleMessage(Message * Message);
+	virtual void HandleMessage(Message * Message) = 0;
 private:
 	void _OnObservedCharacterDestroying(void);
 	Character * _ObservedCharacter;

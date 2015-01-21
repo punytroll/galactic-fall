@@ -30,11 +30,6 @@ CharacterObserver::~CharacterObserver(void)
 	assert(_ObservedCharacter == nullptr);
 }
 
-void CharacterObserver::HandleMessage(Message * Message)
-{
-	// silently ignore the message
-}
-
 void CharacterObserver::_OnObservedCharacterDestroying(void)
 {
 	assert(_ObservedCharacter != nullptr);
