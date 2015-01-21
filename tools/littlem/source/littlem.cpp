@@ -2560,11 +2560,11 @@ bool AcceptKeyInModelView(int KeyCode, bool IsDown)
 		}
 	case 41: // F
 		{
-			if(g_Keyboard.IsAltActive() == true)
+			if((IsDown == true) && (g_Keyboard.IsAltActive() == true))
 			{
 				vToggleFrontFace();
 			}
-			
+		
 			break;
 		}
 	case 31: // I
