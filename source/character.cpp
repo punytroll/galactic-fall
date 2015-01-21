@@ -47,6 +47,7 @@ Character::Character(void) :
 
 Character::~Character(void)
 {
+	assert(_Observers.empty() == true);
 	delete _MapKnowledge;
 	_MapKnowledge = nullptr;
 	delete _Threat;
