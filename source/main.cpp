@@ -775,8 +775,9 @@ void CollisionDetection(System * System)
 void UpdateMainViewCamera(void)
 {
 	auto SpacialMatrix(Matrix4f::CreateIdentity());
-
-	if((g_CharacterObserver != nullptr) && (g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != nullptr))
+	
+	assert(g_CharacterObserver != nullptr);
+	if((g_CharacterObserver->GetObservedCharacter() != nullptr) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != nullptr))
 	{
 		auto Focus(g_CharacterObserver->GetObservedCharacter()->GetShip());
 		
@@ -798,7 +799,8 @@ void DisplayMainView(void)
 {
 	g_MainView->Render();
 	// HUD
-	if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0) && (g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget() != nullptr))
+	assert(g_CharacterObserver != nullptr);
+	if((g_CharacterObserver->GetObservedCharacter() != nullptr) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0) && (g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget() != nullptr))
 	{
 		Color Color(1.0f, 0.0f, 0.0f, 1.0f);
 		
@@ -828,13 +830,11 @@ void DisplayMainView(void)
 		GLPopMatrix();
 	}
 	// debug HUD
-	if((g_InputMind.IsValid() == false) && (g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0))
+	if((g_InputMind.IsValid() == false) && (g_CharacterObserver->GetObservedCharacter() != nullptr) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != nullptr))
 	{
-		Color Color(0.0f, 0.0f, 1.0f, 1.0f);
-		
 		GLClear(GL_DEPTH_BUFFER_BIT);
-		assert(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetAspectPhysical() != 0);
-		DrawSelection(g_CharacterObserver->GetObservedCharacter()->GetShip(), g_CharacterObserver->GetObservedCharacter()->GetShip()->GetAspectPhysical()->GetRadialSize(), Color);
+		assert(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetAspectPhysical() != nullptr);
+		DrawSelection(g_CharacterObserver->GetObservedCharacter()->GetShip(), g_CharacterObserver->GetObservedCharacter()->GetShip()->GetAspectPhysical()->GetRadialSize(), Color(0.0f, 0.0f, 1.0f, 1.0f));
 	}
 }
 
@@ -1078,7 +1078,8 @@ System * GetObservedSystem(void)
 {
 	System * Result(nullptr);
 	
-	if((g_CharacterObserver->GetObservedCharacter().IsValid() == true) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != nullptr))
+	assert(g_CharacterObserver != nullptr);
+	if((g_CharacterObserver->GetObservedCharacter() != nullptr) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != nullptr))
 	{
 		Result = g_CharacterObserver->GetObservedCharacter()->GetShip()->GetSystem();
 	}
@@ -2000,7 +2001,11 @@ void LoadGameFromElement(const Element * SaveElement)
 	}
 	if(ObservedCharacterObjectIdentifier.empty() == false)
 	{
-		g_CharacterObserver->SetObservedCharacter(Object::GetObject(ObservedCharacterObjectIdentifier)->GetReference());
+		auto ObservedCharacter(dynamic_cast< Character * >(Object::GetObject(ObservedCharacterObjectIdentifier)));
+		
+		assert(ObservedCharacter != nullptr);
+		assert(g_CharacterObserver != nullptr);
+		g_CharacterObserver->SetObservedCharacter(ObservedCharacter);
 	}
 	OnOutputEnterSystem(g_CurrentSystem);
 	RealTime::Invalidate();
@@ -2089,7 +2094,8 @@ void SaveGame(std::ostream & OStream)
 	{
 		XML << element << "input-mind" << attribute << "object-identifier" << value << g_InputMind->GetObjectIdentifier() << end;
 	}
-	if(g_CharacterObserver->GetObservedCharacter().IsValid() == true)
+	assert(g_CharacterObserver != nullptr);
+	if(g_CharacterObserver->GetObservedCharacter() != nullptr)
 	{
 		XML << element << "observed-character" << attribute << "object-identifier" << value << g_CharacterObserver->GetObservedCharacter()->GetObjectIdentifier() << end;
 	}
@@ -2168,9 +2174,13 @@ void ActionDeleteObservedObject(void)
 	{
 		DeleteObject(g_InputMind->GetCharacter()->GetShip());
 	}
-	else if(g_CharacterObserver->GetObservedCharacter().IsValid() == true)
+	else
 	{
-		DeleteObject(g_CharacterObserver->GetObservedCharacter()->GetShip());
+		assert(g_CharacterObserver != nullptr);
+		if(g_CharacterObserver->GetObservedCharacter() != nullptr)
+		{
+			DeleteObject(g_CharacterObserver->GetObservedCharacter()->GetShip());
+		}
 	}
 }
 
@@ -2350,31 +2360,33 @@ void ActionObserveNextCharacter(void)
 {
 	if(g_InputMind.IsValid() == false)
 	{
-		std::set< Character * > Characters(Character::GetCharacters());
+		assert(g_CharacterObserver != nullptr);
 		
-		if(g_CharacterObserver->GetObservedCharacter().IsValid() == false)
+		auto & Characters(Character::GetCharacters());
+		
+		if(g_CharacterObserver->GetObservedCharacter() == nullptr)
 		{
 			if(Characters.empty() == false)
 			{
-				g_CharacterObserver->SetObservedCharacter((*(Characters.begin()))->GetReference());
+				g_CharacterObserver->SetObservedCharacter(*(Characters.begin()));
 			}
 		}
 		else
 		{
-			std::set< Character * >::iterator CharacterIterator(Characters.find(g_CharacterObserver->GetObservedCharacter().Get()));
+			auto CharacterIterator(Characters.find(g_CharacterObserver->GetObservedCharacter()));
 			
 			assert(CharacterIterator != Characters.end());
 			++CharacterIterator;
 			if(CharacterIterator == Characters.end())
 			{
-				g_CharacterObserver->SetObservedCharacter(Reference< Character >());
+				g_CharacterObserver->SetObservedCharacter(nullptr);
 			}
 			else
 			{
-				g_CharacterObserver->SetObservedCharacter((*CharacterIterator)->GetReference());
+				g_CharacterObserver->SetObservedCharacter(*CharacterIterator);
 			}
 		}
-		if(g_CharacterObserver->GetObservedCharacter().IsValid() == true)
+		if(g_CharacterObserver->GetObservedCharacter() != nullptr)
 		{
 			g_CameraPosition[0] = 0.0f;
 			g_CameraPosition[1] = 0.0f;
@@ -2386,31 +2398,33 @@ void ActionObservePreviousCharacter(void)
 {
 	if(g_InputMind.IsValid() == false)
 	{
-		std::set< Character * > Characters(Character::GetCharacters());
+		assert(g_CharacterObserver != nullptr);
 		
-		if(g_CharacterObserver->GetObservedCharacter().IsValid() == false)
+		auto & Characters(Character::GetCharacters());
+		
+		if(g_CharacterObserver->GetObservedCharacter() == nullptr)
 		{
 			if(Characters.empty() == false)
 			{
-				g_CharacterObserver->SetObservedCharacter((*(Characters.rbegin()))->GetReference());
+				g_CharacterObserver->SetObservedCharacter(*(Characters.rbegin()));
 			}
 		}
 		else
 		{
-			std::set< Character * >::iterator CharacterIterator(Characters.find(g_CharacterObserver->GetObservedCharacter().Get()));
+			auto CharacterIterator(Characters.find(g_CharacterObserver->GetObservedCharacter()));
 			
 			assert(CharacterIterator != Characters.end());
 			if(CharacterIterator == Characters.begin())
 			{
-				g_CharacterObserver->SetObservedCharacter(Reference< Character >());
+				g_CharacterObserver->SetObservedCharacter(nullptr);
 			}
 			else
 			{
 				--CharacterIterator;
-				g_CharacterObserver->SetObservedCharacter((*CharacterIterator)->GetReference());
+				g_CharacterObserver->SetObservedCharacter(*CharacterIterator);
 			}
 		}
-		if(g_CharacterObserver->GetObservedCharacter().IsValid() == true)
+		if(g_CharacterObserver->GetObservedCharacter() != nullptr)
 		{
 			g_CameraPosition[0] = 0.0f;
 			g_CameraPosition[1] = 0.0f;
@@ -2438,12 +2452,13 @@ void ActionOpenMainMenuWindow(void)
 
 void ActionOpenMapDialog(void)
 {
-	if((g_MapDialog == 0) && (g_CharacterObserver->GetObservedCharacter().IsValid() == true))
+	assert(g_CharacterObserver != nullptr);
+	if((g_MapDialog == nullptr) && (g_CharacterObserver->GetObservedCharacter() != nullptr))
 	{
-		System * CurrentSystem(dynamic_cast< System * >(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetContainer()));
+		auto CurrentSystem(GetObservedSystem());
 		
-		assert(CurrentSystem != 0);
-		g_MapDialog = new UI::MapDialog(g_UserInterface->GetRootWidget(), CurrentSystem, g_CharacterObserver->GetObservedCharacter().Get());
+		assert(CurrentSystem != nullptr);
+		g_MapDialog = new UI::MapDialog(g_UserInterface->GetRootWidget(), CurrentSystem, g_CharacterObserver->GetObservedCharacter());
 		g_MapDialog->GrabKeyFocus();
 		g_MapDialog->ConnectDestroyingCallback(OnMapDialogDestroying);
 		if(g_InputMind.IsValid() == true)
@@ -2464,7 +2479,8 @@ void ActionOpenObjectInformationDialog(void)
 
 void ActionOpenOutfitShipDialog(void)
 {
-	if((g_OutfitShipDialog == 0) && (g_CharacterObserver->GetObservedCharacter().IsValid() == true))
+	assert(g_CharacterObserver != nullptr);
+	if((g_OutfitShipDialog == nullptr) && (g_CharacterObserver->GetObservedCharacter() != nullptr))
 	{
 		g_OutfitShipDialog = new UI::OutfitShipDialog(g_UserInterface->GetRootWidget(), g_CharacterObserver->GetObservedCharacter()->GetShip()->GetReference());
 		g_OutfitShipDialog->GrabKeyFocus();

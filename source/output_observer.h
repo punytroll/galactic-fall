@@ -31,7 +31,7 @@ class OutputObserver : public CharacterObserver
 {
 public:
 	OutputObserver(void);
-	virtual void HandleMessage(Message * Message);
+	virtual void HandleMessage(Message * Message) override;
 private:
 	UI::PlanetWindow * _PlanetWindow;
 };

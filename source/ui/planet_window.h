@@ -34,23 +34,27 @@ namespace UI
 	class PlanetWindow : public UI::Window
 	{
 	public:
-		PlanetWindow(UI::Widget * SupWidget, Reference< Planet > Planet, Reference< Character > Character);
+		PlanetWindow(UI::Widget * SupWidget, Planet * Planet, Character * Character);
 	private:
 		// callbacks
+		void _OnCharacterDestroying(void);
 		void _OnDestroying(void);
 		void _OnHangarButtonClicked(void);
 		void _OnHomeButtonClicked(void);
 		void _OnKey(UI::KeyEvent & KeyEvent);
+		void _OnPlanetDestroying(void);
 		void _OnTradeCenterButtonClicked(void);
 		// helper functions & actions
 		void _OpenHangar(void);
 		void _OpenHomeScreen(void);
 		void _OpenTradeCenter(void);
 		// member variables
-		Reference< Character > _Character;
+		Character * _Character;
+		Connection _CharacterDestroyingConnection;
 		UI::Label * _DescriptionLabel;
 		UI::HangarWidget * _HangarWidget;
-		Reference< Planet > _Planet;
+		Planet * _Planet;
+		Connection _PlanetDestroyingConnection;
 		UI::TradeCenterWidget * _TradeCenterWidget;
 	};
 }

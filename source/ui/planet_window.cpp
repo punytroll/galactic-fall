@@ -17,6 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include "../character.h"
 #include "../object_aspect_name.h"
 #include "../planet.h"
 #include "hangar_widget.h"
@@ -26,7 +27,7 @@
 #include "text_button.h"
 #include "trade_center_widget.h"
 
-UI::PlanetWindow::PlanetWindow(UI::Widget * SupWidget, Reference< Planet > Planet, Reference< Character > Character) :
+UI::PlanetWindow::PlanetWindow(UI::Widget * SupWidget, Planet * Planet, Character * Character) :
 	UI::Window(SupWidget),
 	_Character(Character),
 	_DescriptionLabel(nullptr),
@@ -34,8 +35,10 @@ UI::PlanetWindow::PlanetWindow(UI::Widget * SupWidget, Reference< Planet > Plane
 	_Planet(Planet),
 	_TradeCenterWidget(nullptr)
 {
-	assert(_Character.IsValid() == true);
-	assert(_Planet.IsValid() == true);
+	assert(_Character != nullptr);
+	_CharacterDestroyingConnection = _Character->ConnectDestroyingCallback(std::bind(&UI::PlanetWindow::_OnCharacterDestroying, this));
+	assert(_Planet != nullptr);
+	_PlanetDestroyingConnection = _Planet->ConnectDestroyingCallback(std::bind(&UI::PlanetWindow::_OnPlanetDestroying, this));
 	assert(_Planet->GetAspectName() != nullptr);
 	SetTitle("Planet: " + _Planet->GetAspectName()->GetName());
 	SetPosition(Vector2f(50.0f, 50.0f));
@@ -62,6 +65,33 @@ UI::PlanetWindow::PlanetWindow(UI::Widget * SupWidget, Reference< Planet > Plane
 	_OpenHomeScreen();
 }
 
+void UI::PlanetWindow::_OnDestroying(void)
+{
+	if(_Character != nullptr)
+	{
+		assert(_CharacterDestroyingConnection.IsValid() == true);
+		_CharacterDestroyingConnection.Disconnect();
+		assert(_CharacterDestroyingConnection.IsValid() == false);
+		_Character = nullptr;
+	}
+	if(_Planet != nullptr)
+	{
+		assert(_PlanetDestroyingConnection.IsValid() == true);
+		_PlanetDestroyingConnection.Disconnect();
+		assert(_PlanetDestroyingConnection.IsValid() == false);
+		_Planet = nullptr;
+	}
+}
+
+void UI::PlanetWindow::_OnCharacterDestroying(void)
+{
+	assert(_Character != nullptr);
+	assert(_CharacterDestroyingConnection.IsValid() == true);
+	_CharacterDestroyingConnection.Disconnect();
+	assert(_CharacterDestroyingConnection.IsValid() == false);
+	_Character = nullptr;
+}
+
 void UI::PlanetWindow::_OnHangarButtonClicked(void)
 {
 	_OpenHangar();
@@ -82,6 +112,15 @@ void UI::PlanetWindow::_OnKey(UI::KeyEvent & KeyEvent)
 	{
 		_OpenHangar();
 	}
+}
+
+void UI::PlanetWindow::_OnPlanetDestroying(void)
+{
+	assert(_Planet != nullptr);
+	assert(_PlanetDestroyingConnection.IsValid() == true);
+	_PlanetDestroyingConnection.Disconnect();
+	assert(_PlanetDestroyingConnection.IsValid() == false);
+	_Planet = nullptr;
 }
 
 void UI::PlanetWindow::_OnTradeCenterButtonClicked(void)
@@ -107,7 +146,7 @@ void UI::PlanetWindow::_OpenHangar(void)
 	}
 	if(_HangarWidget == nullptr)
 	{
-		_HangarWidget = new UI::HangarWidget(this, _Planet.Get(), _Character.Get());
+		_HangarWidget = new UI::HangarWidget(this, _Planet, _Character);
 		_HangarWidget->SetPosition(Vector2f(120.0f, 40.0f));
 		_HangarWidget->SetSize(Vector2f(GetSize()[0] - 130.0f, GetSize()[1] - 50.0f));
 		_HangarWidget->SetAnchorBottom(true);
@@ -134,6 +173,7 @@ void UI::PlanetWindow::_OpenHomeScreen(void)
 	}
 	if(_DescriptionLabel == nullptr)
 	{
+		assert(_Planet != nullptr);
 		_DescriptionLabel = new UI::Label(this, _Planet->GetDescription());
 		_DescriptionLabel->SetPosition(Vector2f(120.0f, 40.0f));
 		_DescriptionLabel->SetSize(Vector2f(GetSize()[0] - 130.0f, GetSize()[1] - 50.0f));
@@ -162,7 +202,7 @@ void UI::PlanetWindow::_OpenTradeCenter(void)
 	}
 	if(_TradeCenterWidget == nullptr)
 	{
-		_TradeCenterWidget = new UI::TradeCenterWidget(this, _Planet.Get(), _Character.Get());
+		_TradeCenterWidget = new UI::TradeCenterWidget(this, _Planet, _Character);
 		_TradeCenterWidget->SetPosition(Vector2f(120.0f, 40.0f));
 		_TradeCenterWidget->SetSize(Vector2f(GetSize()[0] - 130.0f, GetSize()[1] - 50.0f));
 		_TradeCenterWidget->SetAnchorBottom(true);
