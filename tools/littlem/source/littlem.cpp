@@ -2580,7 +2580,10 @@ bool AcceptKeyInModelView(int KeyCode, bool IsDown)
 		{
 			if(g_Keyboard.IsAltActive() == true)
 			{
-				vToggleLighting();
+				if(IsDown == true)
+				{
+					vToggleLighting();
+				}
 			}
 			else if(g_Keyboard.IsAnyControlActive() == true)
 			{
