@@ -1062,7 +1062,7 @@ void vDisplayTexts(void)
 	glScalef(1.0f, -1.0f, 1.0f);
 	glTranslatef(0.0f, -g_Height, 0.0f);
 	glColor3f(0.4f, 1.0f, 0.4f);
-	vDrawTextAt(0.0f, 0.0f, "#Points: " + to_string_cast(g_Points.size()) + "   #TrianglePoints: " + to_string_cast(g_TrianglePoints.size()) + "   #Triangles: " + to_string_cast(g_Triangles.size()));
+	vDrawTextAt(0.0f, 0.0f, "#Points: " + to_string_cast(g_Points.size()) + "   #TrianglePoints: " + to_string_cast(g_TrianglePoints.size()) + "   #Triangles: " + to_string_cast(g_Triangles.size()) + "   #Cameras: " + to_string_cast(g_Cameras.size()) + "   #Lights: " + to_string_cast(g_Lights.size()));
 	vDrawTextAt(0.0f, 12.0f, "#Selected Points: " + to_string_cast(g_SelectedPoints.size()) + "   #Selected Triangles: " + to_string_cast(g_SelectedTriangles.size()));
 	glColor3f(1.0f, 0.4f, 0.4f);
 	if(g_SelectedPoints.size() > 0)
