@@ -11,19 +11,19 @@ class Triangle;
 class TrianglePoint
 {
 public:
+	// constructor & destructor
 	TrianglePoint(void);
-	TrianglePoint(Point * Point);
-
-	const std::vector< Triangle * > & GetTriangles(void) const
-	{
-		return m_Triangles;
-	}
-	
-	void vDraw(void);
-	void vDrawSelection(void);
-	Point * m_Point;
-	Vector3f m_Normal;
-	std::vector< Triangle * > m_Triangles;
+	~TrianglePoint(void);
+	// getters
+	Point * GetPoint(void);
+	const Point * GetPoint(void) const;
+	const std::vector< Triangle * > & GetTriangles(void) const;
+	// setters
+	void SetPoint(Point * Point);
+	Vector3f _Normal;
+	std::vector< Triangle * > _Triangles;
+private:
+	Point * _Point;
 };
 
 #endif
