@@ -44,6 +44,7 @@ UI::PlanetWindow::PlanetWindow(UI::Widget * SupWidget, Planet * Planet, Characte
 	SetPosition(Vector2f(50.0f, 50.0f));
 	SetSize(Vector2f(700.0f, 400.0f));
 	ConnectKeyCallback(std::bind(&UI::PlanetWindow::_OnKey, this, std::placeholders::_1));
+	ConnectDestroyingCallback(std::bind(&UI::PlanetWindow::_OnDestroying, this, std::placeholders::_1));
 	
 	UI::Button * HomeButton(new UI::TextButton(this, "Home"));
 	
@@ -65,21 +66,24 @@ UI::PlanetWindow::PlanetWindow(UI::Widget * SupWidget, Planet * Planet, Characte
 	_OpenHomeScreen();
 }
 
-void UI::PlanetWindow::_OnDestroying(void)
+void UI::PlanetWindow::_OnDestroying(UI::Event & DestroyingEvent)
 {
-	if(_Character != nullptr)
+	if(DestroyingEvent.GetPhase() == UI::Event::Phase::Target)
 	{
-		assert(_CharacterDestroyingConnection.IsValid() == true);
-		_CharacterDestroyingConnection.Disconnect();
-		assert(_CharacterDestroyingConnection.IsValid() == false);
-		_Character = nullptr;
-	}
-	if(_Planet != nullptr)
-	{
-		assert(_PlanetDestroyingConnection.IsValid() == true);
-		_PlanetDestroyingConnection.Disconnect();
-		assert(_PlanetDestroyingConnection.IsValid() == false);
-		_Planet = nullptr;
+		if(_Character != nullptr)
+		{
+			assert(_CharacterDestroyingConnection.IsValid() == true);
+			_CharacterDestroyingConnection.Disconnect();
+			assert(_CharacterDestroyingConnection.IsValid() == false);
+			_Character = nullptr;
+		}
+		if(_Planet != nullptr)
+		{
+			assert(_PlanetDestroyingConnection.IsValid() == true);
+			_PlanetDestroyingConnection.Disconnect();
+			assert(_PlanetDestroyingConnection.IsValid() == false);
+			_Planet = nullptr;
+		}
 	}
 }
 

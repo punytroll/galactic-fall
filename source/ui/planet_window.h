@@ -38,7 +38,7 @@ namespace UI
 	private:
 		// callbacks
 		void _OnCharacterDestroying(void);
-		void _OnDestroying(void);
+		void _OnDestroying(UI::Event & DestroyingEvent);
 		void _OnHangarButtonClicked(void);
 		void _OnHomeButtonClicked(void);
 		void _OnKey(UI::KeyEvent & KeyEvent);
