@@ -3695,6 +3695,7 @@ int main(int argc, char ** argv)
 	// <static-initialization>
 	g_UpAxis = FixedAxis::PositiveZ;
 	g_ForwardAxis = FixedAxis::PositiveX;
+	g_ModelerView = ModelerView::Model;
 	// </static-initialization>
 	// setup the random number generator for everyday use
 	srand(time(0));
