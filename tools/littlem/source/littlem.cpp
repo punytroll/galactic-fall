@@ -2546,7 +2546,7 @@ bool AcceptKeyInModelView(int KeyCode, bool IsDown)
 		}
 	case 26: // E
 		{
-			if(g_Keyboard.IsAltActive() == true)
+			if((IsDown == false) && (g_Keyboard.IsAnyControlActive() == true))
 			{
 				std::cout << "Exporting to mesh.xml." << std::endl;
 				
@@ -2569,7 +2569,7 @@ bool AcceptKeyInModelView(int KeyCode, bool IsDown)
 		}
 	case 31: // I
 		{
-			if(g_Keyboard.IsAltActive() == true)
+			if((IsDown == false) && (g_Keyboard.IsAnyControlActive() == true))
 			{
 				ImportMesh("mesh.xml");
 			}
@@ -2582,48 +2582,51 @@ bool AcceptKeyInModelView(int KeyCode, bool IsDown)
 			{
 				vToggleLighting();
 			}
-			else if(g_Keyboard.IsAnyShiftActive() == true)
+			else if(g_Keyboard.IsAnyControlActive() == true)
 			{
-				std::cout << "Loading scene.xml." << std::endl;
-				vClearScene();
-				
-				std::ifstream InputFileStream("scene.xml");
-				SceneReader SceneReader(InputFileStream);
-				
-				SceneReader.Parse();
-				
-				std::vector< Point * > Points(SceneReader.GetPoints());
-				std::vector< TrianglePoint * > TrianglePoints(SceneReader.GetTrianglePoints());
-				std::vector< Triangle * > Triangles(SceneReader.GetTriangles());
-				
-				copy(Points.begin(), Points.end(), back_inserter(g_Points));
-				copy(TrianglePoints.begin(), TrianglePoints.end(), back_inserter(g_TrianglePoints));
-				copy(Triangles.begin(), Triangles.end(), back_inserter(g_Triangles));
-				for(auto & LightDescription : SceneReader.GetLightDescriptions())
+				if(IsDown == false)
 				{
-					auto NewLight(new Light());
+					std::cout << "Loading scene.xml." << std::endl;
+					vClearScene();
 					
-					NewLight->SetPosition(LightDescription.m_Position);
-					NewLight->vSetDiffuseColor(LightDescription.m_DiffuseColor[0], LightDescription.m_DiffuseColor[1], LightDescription.m_DiffuseColor[2], LightDescription.m_DiffuseColor[3]);
-					if(LightDescription.m_bEnabled == true)
+					std::ifstream InputFileStream("scene.xml");
+					SceneReader SceneReader(InputFileStream);
+					
+					SceneReader.Parse();
+					
+					std::vector< Point * > Points(SceneReader.GetPoints());
+					std::vector< TrianglePoint * > TrianglePoints(SceneReader.GetTrianglePoints());
+					std::vector< Triangle * > Triangles(SceneReader.GetTriangles());
+					
+					copy(Points.begin(), Points.end(), back_inserter(g_Points));
+					copy(TrianglePoints.begin(), TrianglePoints.end(), back_inserter(g_TrianglePoints));
+					copy(Triangles.begin(), Triangles.end(), back_inserter(g_Triangles));
+					for(auto & LightDescription : SceneReader.GetLightDescriptions())
 					{
-						NewLight->vEnable();
+						auto NewLight(new Light());
+						
+						NewLight->SetPosition(LightDescription.m_Position);
+						NewLight->vSetDiffuseColor(LightDescription.m_DiffuseColor[0], LightDescription.m_DiffuseColor[1], LightDescription.m_DiffuseColor[2], LightDescription.m_DiffuseColor[3]);
+						if(LightDescription.m_bEnabled == true)
+						{
+							NewLight->vEnable();
+						}
+						g_Lights.push_back(NewLight);
 					}
-					g_Lights.push_back(NewLight);
-				}
-				for(auto & CameraDescription : SceneReader.GetCameraDescriptions())
-				{
-					auto NewCamera(new Camera());
-					
-					NewCamera->SetPosition(CameraDescription.Position);
-					NewCamera->SetOrientation(CameraDescription.Orientation);
-					NewCamera->SetFieldOfViewY(CameraDescription.FieldOfViewY);
-					g_Cameras.push_back(NewCamera);
-				}
-				if(g_Cameras.size() > 0)
-				{
-					g_CurrentCamera = g_Cameras.front();
-					vSetupProjection();
+					for(auto & CameraDescription : SceneReader.GetCameraDescriptions())
+					{
+						auto NewCamera(new Camera());
+						
+						NewCamera->SetPosition(CameraDescription.Position);
+						NewCamera->SetOrientation(CameraDescription.Orientation);
+						NewCamera->SetFieldOfViewY(CameraDescription.FieldOfViewY);
+						g_Cameras.push_back(NewCamera);
+					}
+					if(g_Cameras.size() > 0)
+					{
+						g_CurrentCamera = g_Cameras.front();
+						vSetupProjection();
+					}
 				}
 			}
 			else
@@ -2664,7 +2667,7 @@ bool AcceptKeyInModelView(int KeyCode, bool IsDown)
 					vToggleSnapping();
 				}
 			}
-			else if(g_Keyboard.IsAnyShiftActive() == true)
+			else if(g_Keyboard.IsAnyControlActive() == true)
 			{
 				if(IsDown == false)
 				{
