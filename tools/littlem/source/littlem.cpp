@@ -3509,7 +3509,7 @@ void CreateWindow(void)
 	Atom wmDelete = XInternAtom(g_Display, "WM_DELETE_WINDOW", True);
 	
 	XSetWMProtocols(g_Display, g_Window, &wmDelete, 1);
-	XStoreName(g_Display, g_Window, "galactic-fall 0.2");
+	XStoreName(g_Display, g_Window, "LittleM - A small 3D modeller for Galactic Fall.");
 	XMapWindow(g_Display, g_Window);
 	ON_DEBUG(std::cout << "Getting function \"glXCreateContextAttribsARB\"." << std::endl);
 	
