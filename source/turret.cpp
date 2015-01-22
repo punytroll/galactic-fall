@@ -50,6 +50,7 @@
 Turret::Turret(void) :
 	_EnergyUsagePerShot(0.0f),
 	_Fire(false),
+	_GunPropertiesValid(false),
 	_NextTimeToFire(0.0),
 	_ReloadTime(0.0f),
 	_ShotDamage(0.0f),
@@ -86,6 +87,23 @@ void Turret::SetShotVisualizationPrototype(const VisualizationPrototype * ShotVi
 
 bool Turret::_Update(float Seconds)
 {
+	if(_GunPropertiesValid == false)
+	{
+		assert(GetAspectVisualization() != nullptr);
+		assert(GetAspectVisualization()->GetVisualizationPrototype() != nullptr);
+		assert(GetAspectVisualization()->GetVisualizationPrototype()->GetModel() != nullptr);
+		for(auto & Part : GetAspectVisualization()->GetVisualizationPrototype()->GetModel()->GetParts())
+		{
+			if(Part.second->Identifier == "gun")
+			{
+				_GunOrientation = Part.second->Orientation;
+				_GunPosition = Part.second->Position;
+				
+				break;
+			}
+		}
+		_GunPropertiesValid = true;
+	}
 	_TurretAngle += Seconds;
 	if(_TurretAngle > 2.0f * M_PI)
 	{
@@ -123,29 +141,12 @@ bool Turret::_Update(float Seconds)
 			assert(NewShot->GetAspectPosition() != nullptr);
 			NewShot->SetShooter(Container->GetReference());
 			
-			Vector3f GunPosition;
-			Quaternion GunOrientation;
-			
-			assert(GetAspectVisualization() != nullptr);
-			assert(GetAspectVisualization()->GetVisualizationPrototype() != nullptr);
-			assert(GetAspectVisualization()->GetVisualizationPrototype()->GetModel() != nullptr);
-			for(auto & Part : GetAspectVisualization()->GetVisualizationPrototype()->GetModel()->GetParts())
-			{
-				if(Part.second->Identifier == "gun")
-				{
-					GunPosition = Part.second->Position;
-					GunOrientation = Part.second->Orientation;
-					
-					break;
-				}
-			}
-			
 			// calculating the shot's position in the world coordinate system
 			Vector3f ShotPosition(_ShotExitPosition);
 			
 			ShotPosition.Rotate(Quaternion::CreateAsRotationZ(_TurretAngle));
-			ShotPosition.Rotate(GunOrientation);
-			ShotPosition.Translate(GunPosition);
+			ShotPosition.Rotate(_GunOrientation);
+			ShotPosition.Translate(_GunPosition);
 			ShotPosition.Rotate(GetAspectPosition()->GetOrientation());
 			ShotPosition.Rotate(GetAspectAccessory()->GetSlot()->GetOrientation());
 			ShotPosition.Translate(GetAspectAccessory()->GetSlot()->GetPosition());
@@ -158,7 +159,7 @@ bool Turret::_Update(float Seconds)
 			
 			ShotOrientation.Rotate(GetAspectAccessory()->GetSlot()->GetOrientation());
 			ShotOrientation.Rotate(GetAspectPosition()->GetOrientation());
-			ShotOrientation.Rotate(GunOrientation);
+			ShotOrientation.Rotate(_GunOrientation);
 			ShotOrientation.RotateZ(_TurretAngle);
 			NewShot->GetAspectPosition()->SetOrientation(ShotOrientation);
 			
