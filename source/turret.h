@@ -46,6 +46,9 @@ private:
 	// variables
 	float _EnergyUsagePerShot;
 	bool _Fire;
+	Quaternion _GunOrientation;
+	Vector3f _GunPosition;
+	bool _GunPropertiesValid;
 	double _NextTimeToFire;
 	float _ReloadTime;
 	float _ShotDamage;
