@@ -34,23 +34,6 @@ Vector3f Triangle::GetTriangleNormal(void) const
 	return Vector3f((pGetPoint(2)->GetPosition() - pGetPoint(1)->GetPosition()).Cross(pGetPoint(3)->GetPosition() - pGetPoint(1)->GetPosition())).Normalized();
 }
 
-void Triangle::vDraw(void)
-{
-	glNormal3fv(m_ppTrianglePoints[0]->_Normal.GetPointer());
-	glVertex3fv(m_ppTrianglePoints[0]->GetPoint()->GetPosition().GetPointer());
-	glNormal3fv(m_ppTrianglePoints[1]->_Normal.GetPointer());
-	glVertex3fv(m_ppTrianglePoints[1]->GetPoint()->GetPosition().GetPointer());
-	glNormal3fv(m_ppTrianglePoints[2]->_Normal.GetPointer());
-	glVertex3fv(m_ppTrianglePoints[2]->GetPoint()->GetPosition().GetPointer());
-}
-
-void Triangle::vDrawSelection(void)
-{
-	glVertex3fv(m_ppTrianglePoints[0]->GetPoint()->GetPosition().GetPointer());
-	glVertex3fv(m_ppTrianglePoints[1]->GetPoint()->GetPosition().GetPointer());
-	glVertex3fv(m_ppTrianglePoints[2]->GetPoint()->GetPosition().GetPointer());
-}
-
 void Triangle::vInvert(void)
 {
 	std::swap(m_ppTrianglePoints[1], m_ppTrianglePoints[2]);

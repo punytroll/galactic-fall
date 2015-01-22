@@ -21,8 +21,6 @@ public:
 	void vRealignNormal(void);
 	Vector3f GetTriangleCenter(void) const;
 	Vector3f GetTriangleNormal(void) const;
-	void vDraw(void);
-	void vDrawSelection(void);
 	void vInvert(void);
 	Point * pGetPoint(int iPoint);
 	const Point * pGetPoint(int iPoint) const;
