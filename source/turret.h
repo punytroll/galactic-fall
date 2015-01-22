@@ -43,6 +43,7 @@ private:
 	// modifiers
 	bool _Update(float Seconds);
 	void _UpdateVisualization(Visualization * Visualization);
+	void _CalculateCurrentGunProperties(Vector3f & CurrentGunExitPosition, Quaternion & CurrentGunOrientation, Vector3f & CurrentGunDirection);
 	// variables
 	float _EnergyUsagePerShot;
 	bool _Fire;

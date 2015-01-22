@@ -77,13 +77,37 @@ Turret::~Turret(void)
 	_ShotVisualizationPrototype = nullptr;
 }
 
+void Turret::_CalculateCurrentGunProperties(Vector3f & CurrentGunExitPosition, Quaternion & CurrentGunOrientation, Vector3f & CurrentGunDirection)
+{
+	assert(_GunPropertiesValid == true);
+	assert(GetAspectPosition() != nullptr);
+	assert(GetAspectAccessory() != nullptr);
+	assert(GetAspectAccessory()->GetSlot() != nullptr);
+	assert(GetContainer() != nullptr);
+	assert(GetContainer()->GetAspectPosition() != nullptr);
+	CurrentGunExitPosition = _ShotExitPosition;
+	CurrentGunExitPosition.Rotate(Quaternion::CreateAsRotationZ(_TurretAngle));
+	CurrentGunExitPosition.Rotate(_GunOrientation);
+	CurrentGunExitPosition.Translate(_GunPosition);
+	CurrentGunExitPosition.Rotate(GetAspectPosition()->GetOrientation());
+	CurrentGunExitPosition.Rotate(GetAspectAccessory()->GetSlot()->GetOrientation());
+	CurrentGunExitPosition.Translate(GetAspectAccessory()->GetSlot()->GetPosition());
+	CurrentGunExitPosition.Rotate(GetContainer()->GetAspectPosition()->GetOrientation());
+	CurrentGunExitPosition.Translate(GetContainer()->GetAspectPosition()->GetPosition());
+	CurrentGunOrientation = GetContainer()->GetAspectPosition()->GetOrientation();
+	CurrentGunOrientation.Rotate(GetAspectAccessory()->GetSlot()->GetOrientation());
+	CurrentGunOrientation.Rotate(GetAspectPosition()->GetOrientation());
+	CurrentGunOrientation.Rotate(_GunOrientation);
+	CurrentGunOrientation.RotateZ(_TurretAngle);
+	CurrentGunDirection = Vector3f::CreateTranslationX(1.0f);
+	CurrentGunDirection.Rotate(CurrentGunOrientation);
+}
+
 void Turret::SetShotVisualizationPrototype(const VisualizationPrototype * ShotVisualizationPrototype)
 {
 	delete _ShotVisualizationPrototype;
 	_ShotVisualizationPrototype = new VisualizationPrototype(ShotVisualizationPrototype);
 }
-
-#include <iostream>
 
 bool Turret::_Update(float Seconds)
 {
@@ -104,12 +128,8 @@ bool Turret::_Update(float Seconds)
 		}
 		_GunPropertiesValid = true;
 	}
-	_TurretAngle += Seconds;
-	if(_TurretAngle > 2.0f * M_PI)
-	{
-		_TurretAngle -= 2.0f * M_PI;
-	}
-	if((_Fire == true) && (_NextTimeToFire <= GameTime::Get()))
+	assert(GetAspectAccessory() != nullptr);
+	if(GetAspectAccessory()->GetSlot() != nullptr)
 	{
 		auto Container(GetContainer());
 		
@@ -119,7 +139,41 @@ bool Turret::_Update(float Seconds)
 		auto TheShip(dynamic_cast< Ship * >(Container));
 		
 		assert(TheShip != nullptr);
-		if((TheShip->GetBattery() != nullptr) && (TheShip->GetBattery()->GetEnergy() >= _EnergyUsagePerShot))
+		
+		Vector3f CurrentGunExitPosition;
+		Quaternion CurrentGunOrientation;
+		Vector3f CurrentGunDirection;
+		auto AreCurrentGunPropertiesValid(false);
+		
+		if(TheShip->GetTarget() != nullptr)
+		{
+			if(AreCurrentGunPropertiesValid == false)
+			{
+				_CalculateCurrentGunProperties(CurrentGunExitPosition, CurrentGunOrientation, CurrentGunDirection);
+				AreCurrentGunPropertiesValid = true;
+			}
+			assert(TheShip->GetTarget()->GetAspectPosition() != nullptr);
+			
+			auto Dot(CurrentGunDirection.Cross(TheShip->GetTarget()->GetAspectPosition()->GetPosition() - CurrentGunExitPosition).Dot(Vector3f::CreateTranslationZ(1.0f)));
+			
+			if(Dot > 0.01f)
+			{
+				_TurretAngle += Seconds;
+				if(_TurretAngle > 2.0f * M_PI)
+				{
+					_TurretAngle -= 2.0f * M_PI;
+				}
+			}
+			else if(Dot < -0.01f)
+			{
+				_TurretAngle -= Seconds;
+				if(_TurretAngle < 0.0f)
+				{
+					_TurretAngle += 2.0f * M_PI;
+				}
+			}
+		}
+		if((_Fire == true) && (_NextTimeToFire <= GameTime::Get()) && (TheShip->GetBattery() != nullptr) && (TheShip->GetBattery()->GetEnergy() >= _EnergyUsagePerShot))
 		{
 			TheShip->GetBattery()->SetEnergy(TheShip->GetBattery()->GetEnergy() - _EnergyUsagePerShot);
 			assert(Container->GetAspectPosition() != nullptr);
@@ -138,35 +192,19 @@ bool Turret::_Update(float Seconds)
 			// set up visualization aspect
 			assert(NewShot->GetAspectVisualization() != nullptr);
 			NewShot->GetAspectVisualization()->SetVisualizationPrototype(_ShotVisualizationPrototype);
-			assert(NewShot->GetAspectPosition() != nullptr);
 			NewShot->SetShooter(Container->GetReference());
 			
-			// calculating the shot's position in the world coordinate system
-			Vector3f ShotPosition(_ShotExitPosition);
+			if(AreCurrentGunPropertiesValid == false)
+			{
+				_CalculateCurrentGunProperties(CurrentGunExitPosition, CurrentGunOrientation, CurrentGunDirection);
+				AreCurrentGunPropertiesValid = true;
+			}
+			assert(NewShot->GetAspectPosition() != nullptr);
+			NewShot->GetAspectPosition()->SetPosition(CurrentGunExitPosition);
+			NewShot->GetAspectPosition()->SetOrientation(CurrentGunOrientation);
 			
-			ShotPosition.Rotate(Quaternion::CreateAsRotationZ(_TurretAngle));
-			ShotPosition.Rotate(_GunOrientation);
-			ShotPosition.Translate(_GunPosition);
-			ShotPosition.Rotate(GetAspectPosition()->GetOrientation());
-			ShotPosition.Rotate(GetAspectAccessory()->GetSlot()->GetOrientation());
-			ShotPosition.Translate(GetAspectAccessory()->GetSlot()->GetPosition());
-			ShotPosition.Rotate(Container->GetAspectPosition()->GetOrientation());
-			ShotPosition.Translate(Container->GetAspectPosition()->GetPosition());
-			NewShot->GetAspectPosition()->SetPosition(ShotPosition);
+			auto ShotVelocity(CurrentGunDirection * _ShotExitSpeed);
 			
-			// calculating the shot's angular position in world coordinate system
-			Quaternion ShotOrientation(Container->GetAspectPosition()->GetOrientation());
-			
-			ShotOrientation.Rotate(GetAspectAccessory()->GetSlot()->GetOrientation());
-			ShotOrientation.Rotate(GetAspectPosition()->GetOrientation());
-			ShotOrientation.Rotate(_GunOrientation);
-			ShotOrientation.RotateZ(_TurretAngle);
-			NewShot->GetAspectPosition()->SetOrientation(ShotOrientation);
-			
-			// calculate the shot's velocity
-			auto ShotVelocity(Vector3f::CreateTranslationX(_ShotExitSpeed));
-			
-			ShotVelocity.Rotate(ShotOrientation);
 			NewShot->SetVelocity(TheShip->GetVelocity() + Vector3f::CreateFromComponents(ShotVelocity[0], ShotVelocity[1], 0.0f));
 			Container->GetContainer()->GetAspectObjectContainer()->AddContent(NewShot);
 			_NextTimeToFire = GameTime::Get() + _ReloadTime;
