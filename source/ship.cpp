@@ -327,7 +327,7 @@ bool Ship::Update(float Seconds)
 					Graphics::ParticleSystem::Particle Particle;
 					
 					Particle._TimeOfDeath = GameTime::Get() + GetRandomFloat(0.5f, 0.9f);
-					Particle._Color = Color(GetRandomFloat(0.8f, 1.0f), GetRandomFloat(0.7f, 0.8f), 0.5f, 0.08f);
+					Particle._Color = Graphics::ColorRGBO(GetRandomFloat(0.8f, 1.0f), GetRandomFloat(0.7f, 0.8f), 0.5f, 0.08f);
 					
 					float X;
 					float Y;

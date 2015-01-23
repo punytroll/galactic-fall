@@ -20,7 +20,7 @@
 #ifndef STAR_H
 #define STAR_H
 
-#include "color.h"
+#include "graphics/color_rgb.h"
 #include "object.h"
 
 class Star : public Object
@@ -29,19 +29,19 @@ public:
 	Star(void);
 	virtual ~Star(void) override;
 	// getters
-	const Color & GetColor(void) const;
+	const Graphics::ColorRGB & GetColor(void) const;
 	// setters
-	void SetColor(const Color & Color);
+	void SetColor(const Graphics::ColorRGB & Color);
 private:
-	Color _Color;
+	Graphics::ColorRGB _Color;
 };
 
-inline const Color & Star::GetColor(void) const
+inline const Graphics::ColorRGB & Star::GetColor(void) const
 {
 	return _Color;
 }
 
-inline void Star::SetColor(const Color & Color)
+inline void Star::SetColor(const Graphics::ColorRGB & Color)
 {
 	_Color = Color;
 }

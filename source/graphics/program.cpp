@@ -25,6 +25,8 @@
 #include <algebra/vector4f.h>
 
 #include "../globals.h"
+#include "color_rgb.h"
+#include "color_rgbo.h"
 #include "gl.h"
 #include "program.h"
 #include "shader.h"
@@ -147,15 +149,15 @@ void Graphics::Program::Build(Graphics::ShadingManager * ShadingManager)
 		}
 		else if((Name == std::string("in_LightColor")) && (Type == GL_FLOAT_VEC3) && (Size == 1))
 		{
-			_Uniforms[Location] = Graphics::Program::UniformContent::LightColorVector3F;
+			_Uniforms[Location] = Graphics::Program::UniformContent::LightColorRGB3F;
 		}
 		else if((Name == std::string("in_MaterialColor")) && (Type == GL_FLOAT_VEC3) && (Size == 1))
 		{
-			_Uniforms[Location] = Graphics::Program::UniformContent::MaterialColorVector3F;
+			_Uniforms[Location] = Graphics::Program::UniformContent::MaterialColorRGB3F;
 		}
 		else if((Name == std::string("in_MaterialColor")) && (Type == GL_FLOAT_VEC4) && (Size == 1))
 		{
-			_Uniforms[Location] = Graphics::Program::UniformContent::MaterialColorVector4F;
+			_Uniforms[Location] = Graphics::Program::UniformContent::MaterialColorRGBO4F;
 		}
 		else if((Name == std::string("in_MaterialShininess")) && (Type == GL_FLOAT) && (Size == 1))
 		{
@@ -179,6 +181,16 @@ void Graphics::Program::Dispose(void)
 	GLDeleteProgram(_Handle);
 	_Handle = 0;
 	_Uniforms.clear();
+}
+
+void Graphics::Program::_SetUniform(GLint Location, const Graphics::ColorRGB & Color)
+{
+	GLUniform3fv(Location, 1, Color.GetPointer());
+}
+
+void Graphics::Program::_SetUniform(GLint Location, const Graphics::ColorRGBO & Color)
+{
+	GLUniform4fv(Location, 1, Color.GetPointer());
 }
 
 void Graphics::Program::_SetUniform(GLint Location, float Float)

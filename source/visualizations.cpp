@@ -21,7 +21,6 @@
 
 #include <GL/gl.h>
 
-#include "color.h"
 #include "commodity.h"
 #include "commodity_class.h"
 #include "globals.h"

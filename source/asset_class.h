@@ -22,7 +22,6 @@
 
 #include <string>
 
-class Color;
 class Model;
 
 class AssetClass

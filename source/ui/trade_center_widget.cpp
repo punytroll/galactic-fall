@@ -21,12 +21,12 @@
 
 #include "../asset_class.h"
 #include "../character.h"
-#include "../color.h"
 #include "../commodity.h"
 #include "../commodity_class.h"
 #include "../game_time.h"
 #include "../globals.h"
 #include "../graphics/camera.h"
+#include "../graphics/color_rgbo.h"
 #include "../graphics/engine.h"
 #include "../graphics/light.h"
 #include "../graphics/model.h"
@@ -193,7 +193,7 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet
 	
 	HeaderRow->SetPosition(Vector2f(0.0f, 0.0f));
 	HeaderRow->SetSize(Vector2f(470.0f, 20.0f));
-	HeaderRow->SetBackgroundColor(Color(0.3f, 0.3f, 0.3f, 1.0f));
+	HeaderRow->SetBackgroundColor(Graphics::ColorRGBO(0.3f, 0.3f, 0.3f, 1.0f));
 	HeaderRow->SetAnchorRight(true);
 	
 	auto NameColumnHeader(new UI::Label(HeaderRow, "Name"));
@@ -260,7 +260,7 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet
 	_AssetClassViewDisplay->SetSize(Vector2f(150.0f, 150.0f));
 	_AssetClassViewDisplay->SetAnchorLeft(false);
 	_AssetClassViewDisplay->SetAnchorRight(true);
-	_AssetClassViewDisplay->SetBackgroundColor(Color(0.15f, 0.15f, 0.15f, 1.0f));
+	_AssetClassViewDisplay->SetBackgroundColor(Graphics::ColorRGBO(0.15f, 0.15f, 0.15f, 1.0f));
 	
 	auto AssetClassPriceCaptionLabel(new UI::Label(this, "Price:"));
 	
@@ -430,7 +430,7 @@ void UI::TradeCenterWidget::_OnAssetClassMouseButton(UI::MouseButtonEvent & Mous
 				auto View(new Graphics::View());
 				
 				g_GraphicsEngine->AddView(View);
-				View->SetClearColor(Color(1.0f, 1.0f, 1.0f, 0.0f));
+				View->SetClearColor(Graphics::ColorRGBO(1.0f, 1.0f, 1.0f, 0.0f));
 				assert(View->GetCamera() != 0);
 				View->GetCamera()->SetProjection(PerspectiveProjection);
 				View->GetCamera()->SetSpacialMatrix(Matrix4f::CreateTranslation(Vector3f::CreateFromComponents(0.0f, -2.5f, 1.4f).Normalize() * 4.0f * RadialSize).RotateX(1.05f));
@@ -442,7 +442,7 @@ void UI::TradeCenterWidget::_OnAssetClassMouseButton(UI::MouseButtonEvent & Mous
 				assert(Scene->GetLight() != nullptr);
 				Scene->GetLight()->SetType(Graphics::Light::Type::Directional);
 				Scene->GetLight()->SetDirection(Vector3f::CreateFromComponents(20.0f, 10.0f, -20.0f));
-				Scene->GetLight()->SetColor(Color(1.0f, 1.0f, 1.0f, 0.0f));
+				Scene->GetLight()->SetColor(Graphics::ColorRGB(1.0f, 1.0f, 1.0f));
 				View->SetScene(Scene);
 				
 				auto Texture(new Graphics::Texture());

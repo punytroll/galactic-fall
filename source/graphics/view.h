@@ -20,11 +20,10 @@
 #ifndef GRAPHICS_VIEW_H
 #define GRAPHICS_VIEW_H
 
-class Color;
-
 namespace Graphics
 {
 	class Camera;
+	class ColorRGBO;
 	class Engine;
 	class RenderTarget;
 	class Scene;
@@ -41,7 +40,7 @@ namespace Graphics
 		Graphics::RenderTarget * GetRenderTarget(void);
 		Graphics::Scene * GetScene(void);
 		// setters
-		void SetClearColor(const Color & ClearColor);
+		void SetClearColor(const Graphics::ColorRGBO & ClearColor);
 		void SetRenderTarget(Graphics::RenderTarget * RenderTarget);
 		void SetScene(Graphics::Scene * Scene);
 		// modifiers
@@ -49,7 +48,7 @@ namespace Graphics
 	private:
 		void _SetEngine(Graphics::Engine * Engine);
 		Graphics::Camera * _Camera;
-		Color * _ClearColor;
+		Graphics::ColorRGBO * _ClearColor;
 		Graphics::Engine * _Engine;
 		Graphics::RenderTarget * _RenderTarget;
 		Graphics::Scene * _Scene;

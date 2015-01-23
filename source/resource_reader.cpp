@@ -423,7 +423,7 @@ static void ReadFaction(Arxx::Reference & Reference)
 	NewFaction->SetObjectIdentifier("::faction(" + NewFaction->GetClassIdentifier() + ")");
 	
 	std::string Name;
-	Color FactionColor;
+	Graphics::ColorRGBO FactionColor;
 	
 	Reader >> Name >> FactionColor;
 	NewFaction->GetAspectName()->SetName(Name);
@@ -849,7 +849,7 @@ static void ReadSystem(Arxx::Reference & Reference, ClassManager< AssetClass > *
 	float TrafficDensity;
 	std::string StarIdentifier;
 	Vector2f StarPosition;
-	Color StarColor;
+	Graphics::ColorRGB StarColor;
 	Arxx::u4byte PlanetCount;
 	
 	Reader >> Name >> Position >> TrafficDensity >> StarIdentifier >> StarPosition >> StarColor >> PlanetCount;

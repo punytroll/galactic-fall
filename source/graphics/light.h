@@ -22,10 +22,12 @@
 
 #include <algebra/vector3f.h>
 
-class Color;
+#include "color_rgb.h"
 
 namespace Graphics
 {
+	class ColorRGB;
+	
 	class Light
 	{
 	public:
@@ -37,27 +39,36 @@ namespace Graphics
 		};
 		
 		Light(void);
-		~Light(void);
 		// getters
-		const Color * GetColor(void) const;
+		const Graphics::ColorRGB & GetColor(void) const;
 		const Vector3f & GetDirection(void) const;
 		const Vector3f & GetPosition(void) const;
 		Graphics::Light::Type GetType(void) const;
 		// setters
-		void SetColor(const Color & Color);
+		void SetColor(const Graphics::ColorRGB & Color);
 		void SetDirection(const Vector3f & Direction);
 		void SetPosition(const Vector3f & Position);
 		void SetType(Graphics::Light::Type Type);
 	private:
-		Color * _Color;
+		Graphics::ColorRGB _Color;
 		Vector3f _Direction;
 		Vector3f _Position;
 		Graphics::Light::Type _Type;
 	};
 	
+	inline const Graphics::ColorRGB & Graphics::Light::GetColor(void) const
+	{
+		return _Color;
+	}
+	
 	inline Graphics::Light::Type Graphics::Light::GetType(void) const
 	{
 		return _Type;
+	}
+	
+	inline void Graphics::Light::SetColor(const Graphics::ColorRGB & Color)
+	{
+		_Color = Color;
 	}
 	
 	inline void Graphics::Light::SetType(Graphics::Light::Type Type)

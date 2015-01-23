@@ -17,7 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include "../color.h"
+#include "../graphics/color_rgbo.h"
 #include "event.h"
 #include "mouse_button_event.h"
 #include "scroll_bar.h"
@@ -37,7 +37,7 @@ UI::ScrollBox::ScrollBox(UI::Widget * SupWidget) :
 	_View->ConnectSizeChangedCallback(std::bind(&UI::ScrollBox::_OnContentOrViewSizeChanged, this, std::placeholders::_1));
 	_Content = new UI::Widget(_View);
 	_Content->SetPosition(Vector2f(0.0f, 0.0f));
-	_Content->SetBackgroundColor(Color(0.15f, 0.15f, 0.15f, 1.0f));
+	_Content->SetBackgroundColor(Graphics::ColorRGBO(0.15f, 0.15f, 0.15f, 1.0f));
 	_Content->ConnectSizeChangedCallback(std::bind(&UI::ScrollBox::_OnContentOrViewSizeChanged, this, std::placeholders::_1));
 	_HorizontalScrollBar = new UI::ScrollBar(this, UI::ScrollBar::Alignment::HORIZONTAL);
 	_HorizontalScrollBar->SetPosition(Vector2f(0.0f, GetSize()[1] - 20.0f));

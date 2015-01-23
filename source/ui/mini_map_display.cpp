@@ -19,11 +19,11 @@
 
 #include <algebra/matrix4f.h>
 
-#include "../color.h"
 #include "../commodity.h"
 #include "../globals.h"
 #include "../graphics/callback_node.h"
 #include "../graphics/camera.h"
+#include "../graphics/color_rgbo.h"
 #include "../graphics/engine.h"
 #include "../graphics/perspective_projection.h"
 #include "../graphics/scene.h"
@@ -104,7 +104,7 @@ void UI::MiniMapDisplay::_SetupView(void)
 	
 	auto View(new Graphics::View());
 	
-	View->SetClearColor(Color(1.0f, 1.0f, 1.0f, 0.0f));
+	View->SetClearColor(Graphics::ColorRGBO(1.0f, 1.0f, 1.0f, 0.0f));
 	assert(View->GetCamera() != nullptr);
 	View->GetCamera()->SetProjection(PerspectiveProjection);
 	View->GetCamera()->SetSpacialMatrix(Matrix4f::CreateTranslation(0.0f, 0.0f, 1500.0f));

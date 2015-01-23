@@ -27,7 +27,6 @@
 
 #include "type_definitions.h"
 
-class Color;
 class VisualizationPrototype;
 
 namespace Graphics

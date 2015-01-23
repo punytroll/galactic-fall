@@ -19,8 +19,8 @@
 
 #include <vector>
 
-#include "../color.h"
 #include "../draw_text.h"
+#include "../graphics/color_rgbo.h"
 #include "../graphics/gl.h"
 #include "label.h"
 
@@ -28,12 +28,11 @@ UI::Label::Label(Widget * SupWidget, const std::string & Text) :
 	Widget(SupWidget),
 	m_HorizontalAlignment(Label::ALIGN_LEFT),
 	m_Text(Text),
-	m_TextColor(0),
+	m_TextColor(new Graphics::ColorRGBO(1.0f, 1.0f, 1.0f, 1.0f)),
 	m_VerticalAlignment(Label::ALIGN_TOP),
 	m_Wrap(false),
 	m_WordWrap(false)
 {
-	m_TextColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
 UI::Label::~Label(void)
@@ -41,10 +40,10 @@ UI::Label::~Label(void)
 	delete m_TextColor;
 }
 
-void UI::Label::SetTextColor(const Color & TextColor)
+void UI::Label::SetTextColor(const Graphics::ColorRGBO & TextColor)
 {
 	delete m_TextColor;
-	m_TextColor = new Color(TextColor);
+	m_TextColor = new Graphics::ColorRGBO(TextColor);
 }
 
 void UI::Label::Draw(void)
@@ -52,7 +51,7 @@ void UI::Label::Draw(void)
 	float Width(GetSize()[0]);
 	
 	Widget::Draw();
-	GLColor4fv(m_TextColor->GetColor().GetPointer());
+	GLColor4fv(m_TextColor->GetPointer());
 	if(m_Wrap == false)
 	{
 		GLPushMatrix();

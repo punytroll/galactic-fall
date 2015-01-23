@@ -28,7 +28,6 @@
 
 class AssetClass;
 class Character;
-class Color;
 class Faction;
 class Hangar;
 class Ship;

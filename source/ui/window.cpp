@@ -17,8 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include "../color.h"
 #include "../globals.h"
+#include "../graphics/color_rgbo.h"
 #include "border.h"
 #include "label.h"
 #include "mouse_button_event.h"
@@ -29,7 +29,7 @@
 UI::Window::Window(Widget * SupWidget, const std::string & Title) :
 	Widget(SupWidget)
 {
-	SetBackgroundColor(Color(0.2f, 0.2f, 0.2f, 1.0f));
+	SetBackgroundColor(Graphics::ColorRGBO(0.2f, 0.2f, 0.2f, 1.0f));
 	
 	auto Border(new UI::Border(this));
 	
@@ -38,14 +38,14 @@ UI::Window::Window(Widget * SupWidget, const std::string & Title) :
 	Border->SetAnchorBottom(true);
 	Border->SetAnchorRight(true);
 	Border->SetWidth(1.0f);
-	Border->SetColor(Color(0.4f, 0.4f, 0.4f, 1.0f));
+	Border->SetColor(Graphics::ColorRGBO(0.4f, 0.4f, 0.4f, 1.0f));
 	_TitleLabel = new UI::Label(this, Title);
 	_TitleLabel->SetPosition(Vector2f(10.0f, 10.0f));
 	_TitleLabel->SetSize(Vector2f(GetSize()[0] - 20.0f, 20.0f));
 	_TitleLabel->SetAnchorRight(true);
 	_TitleLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
 	_TitleLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
-	_TitleLabel->SetBackgroundColor(Color(0.2f, 0.2f, 0.4f, 1.0f));
+	_TitleLabel->SetBackgroundColor(Graphics::ColorRGBO(0.2f, 0.2f, 0.4f, 1.0f));
 	_TitleLabel->ConnectMouseButtonCallback(std::bind(&UI::Window::_OnTitleLabelMouseButton, this, std::placeholders::_1));
 	_TitleLabel->ConnectMouseMoveCallback(std::bind(&UI::Window::_OnTitleLabelMouseMove, this, std::placeholders::_1));
 	
@@ -57,7 +57,7 @@ UI::Window::Window(Widget * SupWidget, const std::string & Title) :
 	ResizeDragBox->SetAnchorLeft(false);
 	ResizeDragBox->SetAnchorRight(true);
 	ResizeDragBox->SetAnchorTop(false);
-	ResizeDragBox->SetBackgroundColor(Color(0.2f, 0.2f, 0.4f, 1.0f));
+	ResizeDragBox->SetBackgroundColor(Graphics::ColorRGBO(0.2f, 0.2f, 0.4f, 1.0f));
 	ResizeDragBox->ConnectMouseButtonCallback(std::bind(&UI::Window::_OnResizeDragBoxMouseButton, this, std::placeholders::_1, ResizeDragBox));
 	ResizeDragBox->ConnectMouseMoveCallback(std::bind(&UI::Window::_OnResizeDragBoxMouseMove, this, std::placeholders::_1, ResizeDragBox));
 }

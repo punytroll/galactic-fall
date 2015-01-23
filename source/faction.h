@@ -20,10 +20,8 @@
 #ifndef FACTION_H
 #define FACTION_H
 
-#include "color.h"
+#include "graphics/color_rgbo.h"
 #include "object.h"
-
-class Color;
 
 class Faction : public Object
 {
@@ -31,19 +29,19 @@ public:
 	Faction(void);
 	virtual ~Faction(void) override;
 	// getters
-	const Color & GetColor(void) const;
+	const Graphics::ColorRGBO & GetColor(void) const;
 	// setters
-	void SetColor(const Color & Color);
+	void SetColor(const Graphics::ColorRGBO & Color);
 private:
-	Color _Color;
+	Graphics::ColorRGBO _Color;
 };
 
-inline const Color & Faction::GetColor(void) const
+inline const Graphics::ColorRGBO & Faction::GetColor(void) const
 {
 	return _Color;
 }
 
-inline void Faction::SetColor(const Color & Color)
+inline void Faction::SetColor(const Graphics::ColorRGBO & Color)
 {
 	_Color = Color;
 }

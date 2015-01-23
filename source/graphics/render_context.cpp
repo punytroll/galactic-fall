@@ -20,7 +20,6 @@
 #include <cassert>
 #include <iostream>
 
-#include "../color.h"
 #include "camera.h"
 #include "engine.h"
 #include "light.h"
@@ -127,27 +126,26 @@ void Graphics::RenderContext::ActivateProgram(void)
 				
 				break;
 			}
-		case Graphics::Program::UniformContent::LightColorVector3F:
+		case Graphics::Program::UniformContent::LightColorRGB3F:
 			{
 				assert(_Light != nullptr);
-				assert(_Light->GetColor() != nullptr);
-				_Program->_SetUniform(Uniform.first, Vector3f::CreateFromVector4f(_Light->GetColor()->GetColor()));
+				_Program->_SetUniform(Uniform.first, _Light->GetColor());
 				
 				break;
 			}
-		case Graphics::Program::UniformContent::MaterialColorVector3F:
+		case Graphics::Program::UniformContent::MaterialColorRGB3F:
 			{
 				assert(_Style != nullptr);
 				assert(_Style->HasDiffuseColor() == true);
-				_Program->_SetUniform(Uniform.first, Vector3f::CreateFromVector4f(_Style->GetDiffuseColor().GetColor()));
+				_Program->_SetUniform(Uniform.first, Graphics::ColorRGB(_Style->GetDiffuseColor()));
 				
 				break;
 			}
-		case Graphics::Program::UniformContent::MaterialColorVector4F:
+		case Graphics::Program::UniformContent::MaterialColorRGBO4F:
 			{
 				assert(_Style != nullptr);
 				assert(_Style->HasDiffuseColor() == true);
-				_Program->_SetUniform(Uniform.first, _Style->GetDiffuseColor().GetColor());
+				_Program->_SetUniform(Uniform.first, _Style->GetDiffuseColor());
 				
 				break;
 			}

@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006  Hagen Möbius
+ * Copyright (C) 2015  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,27 +17,42 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef BUFFER_READING_H
-#define BUFFER_READING_H
-
-#include <BufferReader.h>
+#ifndef GRAPHICS_COLOR_RGB_H
+#define GRAPHICS_COLOR_RGB_H
 
 namespace Graphics
 {
-	class ColorRGB;
 	class ColorRGBO;
+	
+	class ColorRGB
+	{
+		friend class ColorRGBO;
+	public:
+		ColorRGB(void);
+		ColorRGB(const Graphics::ColorRGB & Color);
+		explicit ColorRGB(const Graphics::ColorRGBO & Color);
+		ColorRGB(float Red, float Green, float Blue);
+		const float * const GetPointer(void) const;
+		Graphics::ColorRGB & operator=(const Graphics::ColorRGB & Color);
+		Graphics::ColorRGB & operator=(const Graphics::ColorRGBO & Color);
+		void Set(float Red, float Green, float Blue);
+	private:
+		union
+		{
+			struct
+			{
+				float _Red;
+				float _Green;
+				float _Blue;
+			};
+			float _[3];
+		};
+	};
+	
+	inline const float * const Graphics::ColorRGB::GetPointer(void) const
+	{
+		return _;
+	}
 }
-
-class Quaternion;
-class Vector2f;
-class Vector3f;
-class VisualizationPrototype;
-
-Arxx::BufferReader & operator>>(Arxx::BufferReader & BufferReader, Graphics::ColorRGB & Color);
-Arxx::BufferReader & operator>>(Arxx::BufferReader & BufferReader, Graphics::ColorRGBO & Color);
-Arxx::BufferReader & operator>>(Arxx::BufferReader & BufferReader, Quaternion & Quaternion);
-Arxx::BufferReader & operator>>(Arxx::BufferReader & BufferReader, Vector2f & Vector);
-Arxx::BufferReader & operator>>(Arxx::BufferReader & BufferReader, Vector3f & Vector);
-Arxx::BufferReader & operator>>(Arxx::BufferReader & BufferReader, VisualizationPrototype & VisualizationPrototype);
 
 #endif

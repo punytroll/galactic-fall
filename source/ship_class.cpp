@@ -19,7 +19,6 @@
 
 #include <assert.h>
 
-#include "color.h"
 #include "ship_class.h"
 #include "slot.h"
 #include "visualization_prototype.h"

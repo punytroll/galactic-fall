@@ -19,7 +19,6 @@
 
 #include <algorithm>
 
-#include "../color.h"
 #include "../globals.h"
 #include "../graphics/gl.h"
 #include "../graphics/texture.h"

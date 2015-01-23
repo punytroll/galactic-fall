@@ -17,8 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include "../color.h"
 #include "../globals.h"
+#include "../graphics/color_rgbo.h"
 #include "../real_time.h"
 #include "../scenario.h"
 #include "../scenario_manager.h"
@@ -95,7 +95,7 @@ UI::LoadScenarioDialog::LoadScenarioDialog(UI::Widget * SupWidget, ScenarioManag
 	_MessageLabel = new UI::Label(this);
 	_MessageLabel->SetPosition(Vector2f(10.0f, 40.0f));
 	_MessageLabel->SetSize(Vector2f(GetSize()[0] - 10.0f - 10.0f, 30.0f));
-	_MessageLabel->SetTextColor(Color(1.0f, 0.3, 0.3f, 1.0f));
+	_MessageLabel->SetTextColor(Graphics::ColorRGBO(1.0f, 0.3, 0.3f, 1.0f));
 	_MessageLabel->SetAnchorBottom(false);
 	_MessageLabel->SetAnchorLeft(true);
 	_MessageLabel->SetAnchorRight(true);

@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2013  Hagen Möbius
+ * Copyright (C) 2015  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,37 +17,45 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include <cassert>
+#include "color_rgbo.h"
 
-#include "light.h"
-
-Graphics::Light::Light(void) :
-	_Type(Graphics::Light::Type::Undefined)
+Graphics::ColorRGBO::ColorRGBO(void)
 {
 }
 
-const Vector3f & Graphics::Light::GetDirection(void) const
+Graphics::ColorRGBO::ColorRGBO(const Graphics::ColorRGBO & Color) :
+	_Red(Color._Red),
+	_Green(Color._Green),
+	_Blue(Color._Blue),
+	_Opacity(Color._Opacity)
 {
-	assert(_Type == Graphics::Light::Type::Directional);
+}
+
+Graphics::ColorRGBO::ColorRGBO(float Red, float Green, float Blue, float Opacity) :
+	_Red(Red),
+	_Green(Green),
+	_Blue(Blue),
+	_Opacity(Opacity)
+{
+}
+
+Graphics::ColorRGBO & Graphics::ColorRGBO::operator=(const Graphics::ColorRGBO & Color)
+{
+	if(this != &Color)
+	{
+		_Red = Color._Red;
+		_Green = Color._Green;
+		_Blue = Color._Blue;
+		_Opacity = Color._Opacity;
+	}
 	
-	return _Direction;
+	return *this;
 }
 
-const Vector3f & Graphics::Light::GetPosition(void) const
+void Graphics::ColorRGBO::Set(float Red, float Green, float Blue, float Opacity)
 {
-	assert(_Type == Graphics::Light::Type::Positional);
-	
-	return _Position;
-}
-
-void Graphics::Light::SetDirection(const Vector3f & Direction)
-{
-	assert(_Type == Graphics::Light::Type::Directional);
-	_Direction = Direction.Normalized();
-}
-
-void Graphics::Light::SetPosition(const Vector3f & Position)
-{
-	assert(_Type == Graphics::Light::Type::Positional);
-	_Position = Position;
+	_Red = Red;
+	_Green = Green;
+	_Blue = Blue;
+	_Opacity = Opacity;
 }

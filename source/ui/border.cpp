@@ -17,13 +17,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include "../color.h"
+#include "../graphics/color_rgbo.h"
 #include "../graphics/gl.h"
 #include "border.h"
 
 UI::Border::Border(Widget * SupWidget) :
 	Widget(SupWidget),
-	_Color(0),
+	_Color(nullptr),
 	_Width(1.0f)
 {
 }
@@ -31,15 +31,15 @@ UI::Border::Border(Widget * SupWidget) :
 UI::Border::~Border(void)
 {
 	delete _Color;
-	_Color = 0;
+	_Color = nullptr;
 }
 
 void UI::Border::Draw(void)
 {
 	Widget::Draw();
-	if(_Color != 0)
+	if(_Color != nullptr)
 	{
-		GLColor4fv(_Color->GetColor().GetPointer());
+		GLColor4fv(_Color->GetPointer());
 		GLBegin(GL_QUADS);
 			// left
 			GLVertex2f(0.0f, 0.0f);
@@ -65,8 +65,8 @@ void UI::Border::Draw(void)
 	}
 }
 
-void UI::Border::SetColor(const Color & BorderColor)
+void UI::Border::SetColor(const Graphics::ColorRGBO & BorderColor)
 {
 	delete _Color;
-	_Color = new Color(BorderColor);
+	_Color = new Graphics::ColorRGBO(BorderColor);
 }

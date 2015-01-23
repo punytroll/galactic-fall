@@ -79,7 +79,7 @@ void Graphics::ParticleSystemNode::Draw(Graphics::RenderContext * RenderContext)
 	for(auto Particle : _ParticleSystem->GetParticles())
 	{
 		g_SystemStatistics->SetParticlesDrawnThisFrame(g_SystemStatistics->GetParticlesDrawnThisFrame() + 1);
-		GLColor4fv(Particle._Color.GetColor().GetPointer());
+		GLColor4fv(Particle._Color.GetPointer());
 		
 		const Vector3f & Position(Particle._Position);
 		const float & Size(Particle._Size);

@@ -17,9 +17,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include "../color.h"
 #include "../globals.h"
 #include "../graphics/camera.h"
+#include "../graphics/color_rgbo.h"
 #include "../graphics/engine.h"
 #include "../graphics/light.h"
 #include "../graphics/node.h"
@@ -139,7 +139,7 @@ void UI::ScannerDisplay::_Setup(void)
 	auto View(new Graphics::View());
 	
 	g_GraphicsEngine->AddView(View);
-	View->SetClearColor(Color(1.0f, 1.0f, 1.0f, 0.0f));
+	View->SetClearColor(Graphics::ColorRGBO(1.0f, 1.0f, 1.0f, 0.0f));
 	assert(View->GetCamera() != nullptr);
 	View->GetCamera()->SetProjection(PerspectiveProjection);
 	assert(_Target->GetAspectPosition() != nullptr);

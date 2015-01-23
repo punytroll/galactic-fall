@@ -21,9 +21,9 @@
 
 #include <fstream>
 
-#include "../color.h"
 #include "../file_handling.h"
 #include "../globals.h"
+#include "../graphics/color_rgbo.h"
 #include "../real_time.h"
 #include "key_event.h"
 #include "label.h"
@@ -79,7 +79,7 @@ UI::LoadGameDialog::LoadGameDialog(UI::Widget * SupWidget) :
 	_MessageLabel = new UI::Label(this);
 	_MessageLabel->SetPosition(Vector2f(10.0f, 40.0f));
 	_MessageLabel->SetSize(Vector2f(GetSize()[0] - 10.0f - 10.0f, 30.0f));
-	_MessageLabel->SetTextColor(Color(1.0f, 0.3, 0.3f, 1.0f));
+	_MessageLabel->SetTextColor(Graphics::ColorRGBO(1.0f, 0.3, 0.3f, 1.0f));
 	_MessageLabel->SetAnchorBottom(false);
 	_MessageLabel->SetAnchorLeft(true);
 	_MessageLabel->SetAnchorRight(true);
@@ -90,8 +90,8 @@ UI::LoadGameDialog::LoadGameDialog(UI::Widget * SupWidget) :
 	_FileNameLabel = new UI::Label(this);
 	_FileNameLabel->SetPosition(Vector2f(10.0f, 80.0f));
 	_FileNameLabel->SetSize(Vector2f(GetSize()[0] - 10.0f - 10.0f, 20.0f));
-	_FileNameLabel->SetTextColor(Color(1.0f, 1.0f, 0.5f, 1.0f));
-	_FileNameLabel->SetBackgroundColor(Color(0.1f, 0.1f, 0.1f, 1.0f));
+	_FileNameLabel->SetTextColor(Graphics::ColorRGBO(1.0f, 1.0f, 0.5f, 1.0f));
+	_FileNameLabel->SetBackgroundColor(Graphics::ColorRGBO(0.1f, 0.1f, 0.1f, 1.0f));
 	_FileNameLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	_FileNameLabel->SetAnchorRight(true);
 	_FileNameLabel->ConnectKeyCallback(std::bind(&UI::LoadGameDialog::_OnFileNameLabelKey, this, std::placeholders::_1));

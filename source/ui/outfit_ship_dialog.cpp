@@ -18,8 +18,8 @@
 **/
 
 #include "../class_manager.h"
-#include "../color.h"
 #include "../globals.h"
+#include "../graphics/color_rgbo.h"
 #include "../object_aspect_accessory.h"
 #include "../object_aspect_name.h"
 #include "../object_aspect_object_container.h"
@@ -182,19 +182,19 @@ void UI::SlotListItem::Update(void)
 		{
 			assert(MountedObject->GetAspectName() != nullptr);
 			_TypeOrWeaponLabel->SetText(MountedObject->GetAspectName()->GetName());
-			_TypeOrWeaponLabel->SetTextColor(Color(0.6f, 0.8f, 0.6f, 1.0f));
+			_TypeOrWeaponLabel->SetTextColor(Graphics::ColorRGBO(0.6f, 0.8f, 0.6f, 1.0f));
 		}
 		else
 		{
 			assert(_Slot->GetSlotClass() != nullptr);
 			_TypeOrWeaponLabel->SetText(_Slot->GetSlotClass()->GetName());
-			_TypeOrWeaponLabel->SetTextColor(Color(0.8f, 0.6f, 0.6f, 1.0f));
+			_TypeOrWeaponLabel->SetTextColor(Graphics::ColorRGBO(0.8f, 0.6f, 0.6f, 1.0f));
 		}
 	}
 	else
 	{
 		_TypeOrWeaponLabel->SetText("<slot destroyed>");
-		_TypeOrWeaponLabel->SetTextColor(Color(1.0f, 0.0f, 0.0f, 1.0f));
+		_TypeOrWeaponLabel->SetTextColor(Graphics::ColorRGBO(1.0f, 0.0f, 0.0f, 1.0f));
 	}
 }
 

@@ -16,8 +16,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include "../color.h"
 #include "event.h"
+#include "../graphics/color_rgbo.h"
 #include "list_box_item.h"
 
 UI::ListBoxItem::ListBoxItem(UI::Widget * SupWidget) :
@@ -37,7 +37,7 @@ void UI::ListBoxItem::SetSelected(bool Selected)
 	}
 	else
 	{
-		SetBackgroundColor(Color(0.4f, 0.1f, 0.1f, 1.0f));
+		SetBackgroundColor(Graphics::ColorRGBO(0.4f, 0.1f, 0.1f, 1.0f));
 	}
 }
 
@@ -45,7 +45,7 @@ void UI::ListBoxItem::_OnMouseEnter(UI::Event & MouseEnterEvent)
 {
 	if((MouseEnterEvent.GetPhase() == UI::Event::Phase::Target) && (_Selected == false))
 	{
-		SetBackgroundColor(Color(0.3f, 0.2f, 0.2f, 1.0f));
+		SetBackgroundColor(Graphics::ColorRGBO(0.3f, 0.2f, 0.2f, 1.0f));
 	}
 }
 

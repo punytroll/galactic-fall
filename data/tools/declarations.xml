@@ -22,12 +22,18 @@
 	
 	<color type="18"/>
 	
-	<color4f type="18" sub-type="0">
+	<color-rgbo-4f type="18" sub-type="0">
 		<float identifier="red"/>
 		<float identifier="green"/>
 		<float identifier="blue"/>
 		<float identifier="opacity"/>
-	</color4f>
+	</color-rgbo-4f>
+	
+	<color-rgb-3f type="18" sub-type="2">
+		<float identifier="red"/>
+		<float identifier="green"/>
+		<float identifier="blue"/>
+	</color-rgb-3f>
 	
 	<commodity-class type="8">
 		<string identifier="identifier"/>
@@ -46,7 +52,7 @@
 	<faction type="14">
 		<string identifier="identifier"/>
 		<string identifier="name"/>
-		<color4f identifier="color"/>
+		<color-rgbo-4f identifier="color"/>
 	</faction>
 	
 	<float type="21" sub-type="0"/>
@@ -68,13 +74,6 @@
 	</key-binding>
 	
 	<key-binding-profile type="16" is="collection" element-type="key-binding"/>
-	
-	<style>
-		<color4f identifier="diffuse-color"/>
-		<optional-color4f identifier="specular-color"/>
-		<optional-float identifier="shininess"/>
-		<string identifier="program-identifier"/>
-	</style>
 	
 	<mesh type="2">
 		<string identifier="identifier"/>
@@ -104,13 +103,13 @@
 		<float identifier="base-price-modifier"/>
 	</offered-asset-class>
 	
-	<optional-color4f type="18" sub-type="1">
+	<optional-color-rgbo-4f type="18" sub-type="1">
 		<boolean identifier="valid"/>
 		<float identifier="red"/>
 		<float identifier="green"/>
 		<float identifier="blue"/>
 		<float identifier="opacity"/>
-	</optional-color4f>
+	</optional-color-rgbo-4f>
 	
 	<optional-float type="21" sub-type="1">
 		<boolean identifier="valid"/>
@@ -214,8 +213,15 @@
 	<star>
 		<string identifier="identifier"/>
 		<vector2f identifier="position"/>
-		<color4f identifier="color"/>
+		<color-rgb-3f identifier="color"/>
 	</star>
+	
+	<style>
+		<color-rgbo-4f identifier="diffuse-color"/>
+		<optional-color-rgbo-4f identifier="specular-color"/>
+		<optional-float identifier="shininess"/>
+		<string identifier="program-identifier"/>
+	</style>
 	
 	<system type="5">
 		<string identifier="identifier"/>
