@@ -72,11 +72,11 @@ void UI::Widget::Draw(void)
 	if(Color != nullptr)
 	{
 		GLColor4fv(Color->GetPointer());
-		GLBegin(GL_QUADS);
+		GLBegin(GL_TRIANGLE_STRIP);
 		GLVertex2f(0.0f, 0.0f);
 		GLVertex2f(0.0f, _Size[1]);
-		GLVertex2f(_Size[0], _Size[1]);
 		GLVertex2f(_Size[0], 0.0f);
+		GLVertex2f(_Size[0], _Size[1]);
 		GLEnd();
 	}
 	if(_SubWidgets.empty() == false)
