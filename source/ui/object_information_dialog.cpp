@@ -19,8 +19,8 @@
 
 #include <string_cast/string_cast.h>
 
-#include "../color.h"
 #include "../globals.h"
+#include "../graphics/color_rgbo.h"
 #include "../message.h"
 #include "../object.h"
 #include "../object_aspect_accessory.h"
@@ -106,7 +106,7 @@ float UI::ObjectInformationDialog::_AddSeparator(float Top, float Indentation, c
 	SeparatorLabel->SetSize(SeparatorDisplay->GetSize());
 	SeparatorLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	SeparatorLabel->SetAnchorBottom(true);
-	SeparatorLabel->SetTextColor(Color(0.5f, 0.8f, 1.0f, 1.0f));
+	SeparatorLabel->SetTextColor(Graphics::ColorRGBO(0.5f, 0.8f, 1.0f, 1.0f));
 	
 	return SeparatorDisplay->GetSize()[1];
 }

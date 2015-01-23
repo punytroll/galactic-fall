@@ -19,7 +19,7 @@
 
 #include <assert.h>
 
-#include "../color.h"
+#include "../graphics/color_rgbo.h"
 #include "border.h"
 #include "event.h"
 #include "label.h"
@@ -51,7 +51,7 @@ UI::ProgressBar::ProgressBar(UI::Widget * SupWidget) :
 	Border->SetPosition(Vector2f(0.0f, 0.0f));
 	Border->SetSize(GetSize());
 	Border->SetWidth(1.0f);
-	Border->SetColor(Color(1.0f, 1.0f, 1.0f, 1.0f));
+	Border->SetColor(Graphics::ColorRGBO(1.0f, 1.0f, 1.0f, 1.0f));
 	Border->SetAnchorBottom(true);
 	Border->SetAnchorLeft(true);
 	Border->SetAnchorRight(true);
@@ -71,7 +71,7 @@ void UI::ProgressBar::_ResizeFill(void)
 	_Fill->SetSize(Vector2f(_FillLevel * GetSize()[0], _Fill->GetSize()[1]));
 }
 
-void UI::ProgressBar::SetColor(const Color & Color)
+void UI::ProgressBar::SetColor(const Graphics::ColorRGBO & Color)
 {
 	_Fill->SetBackgroundColor(Color);
 }

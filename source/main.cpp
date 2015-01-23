@@ -43,7 +43,6 @@
 #include "battery.h"
 #include "character.h"
 #include "class_manager.h"
-#include "color.h"
 #include "command_mind.h"
 #include "commodity.h"
 #include "draw_text.h"
@@ -322,7 +321,7 @@ void SetMessage(const std::string & Message)
 	HeadsUpDisplay->SetMessage(Message);
 }
 
-void DrawSelection(const Object * Object, float RadialSize, const Color & Color)
+void DrawSelection(const Object * Object, float RadialSize, const Graphics::ColorRGBO & Color)
 {
 	static const float OuterFactor(0.9f);
 	static const float InnerFactor(1.1f);
@@ -333,7 +332,7 @@ void DrawSelection(const Object * Object, float RadialSize, const Color & Color)
 	GLPushAttrib(GL_LIGHTING_BIT);
 	GLDisable(GL_LIGHTING);
 	GLTranslatef(Object->GetAspectPosition()->GetPosition()[0], Object->GetAspectPosition()->GetPosition()[1], 0.0f);
-	GLColor4fv(Color.GetColor().GetPointer());
+	GLColor4fv(Color.GetPointer());
 	GLBegin(GL_LINE_STRIP);
 	GLVertex2f(-OuterSize, -InnerSize);
 	GLVertex2f(-OuterSize, -OuterSize);
@@ -802,7 +801,7 @@ void DisplayMainView(void)
 	assert(g_CharacterObserver != nullptr);
 	if((g_CharacterObserver->GetObservedCharacter() != nullptr) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0) && (g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget() != nullptr))
 	{
-		Color Color(1.0f, 0.0f, 0.0f, 1.0f);
+		Graphics::ColorRGBO Color(1.0f, 0.0f, 0.0f, 1.0f);
 		
 		GLClear(GL_DEPTH_BUFFER_BIT);
 		assert(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget()->GetAspectPhysical() != 0);
@@ -834,7 +833,7 @@ void DisplayMainView(void)
 	{
 		GLClear(GL_DEPTH_BUFFER_BIT);
 		assert(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetAspectPhysical() != nullptr);
-		DrawSelection(g_CharacterObserver->GetObservedCharacter()->GetShip(), g_CharacterObserver->GetObservedCharacter()->GetShip()->GetAspectPhysical()->GetRadialSize(), Color(0.0f, 0.0f, 1.0f, 1.0f));
+		DrawSelection(g_CharacterObserver->GetObservedCharacter()->GetShip(), g_CharacterObserver->GetObservedCharacter()->GetShip()->GetAspectPhysical()->GetRadialSize(), Graphics::ColorRGBO(0.0f, 0.0f, 1.0f, 1.0f));
 	}
 }
 
@@ -1556,7 +1555,7 @@ void LoadGameFromElement(const Element * SaveElement)
 									assert(PartChild->HasAttribute("green") == true);
 									assert(PartChild->HasAttribute("blue") == true);
 									assert(PartChild->HasAttribute("opacity") == true);
-									NewPartStyle->SetDiffuseColor(Color(from_string_cast< float >(PartChild->GetAttribute("red")), from_string_cast< float >(PartChild->GetAttribute("green")), from_string_cast< float >(PartChild->GetAttribute("blue")), from_string_cast< float >(PartChild->GetAttribute("opacity"))));
+									NewPartStyle->SetDiffuseColor(Graphics::ColorRGBO(from_string_cast< float >(PartChild->GetAttribute("red")), from_string_cast< float >(PartChild->GetAttribute("green")), from_string_cast< float >(PartChild->GetAttribute("blue")), from_string_cast< float >(PartChild->GetAttribute("opacity"))));
 								}
 								else if(PartChild->GetName() == "style-specular-color")
 								{
@@ -1564,7 +1563,7 @@ void LoadGameFromElement(const Element * SaveElement)
 									assert(PartChild->HasAttribute("green") == true);
 									assert(PartChild->HasAttribute("blue") == true);
 									assert(PartChild->HasAttribute("opacity") == true);
-									NewPartStyle->SetSpecularColor(Color(from_string_cast< float >(PartChild->GetAttribute("red")), from_string_cast< float >(PartChild->GetAttribute("green")), from_string_cast< float >(PartChild->GetAttribute("blue")), from_string_cast< float >(PartChild->GetAttribute("opacity"))));
+									NewPartStyle->SetSpecularColor(Graphics::ColorRGBO(from_string_cast< float >(PartChild->GetAttribute("red")), from_string_cast< float >(PartChild->GetAttribute("green")), from_string_cast< float >(PartChild->GetAttribute("blue")), from_string_cast< float >(PartChild->GetAttribute("opacity"))));
 								}
 								else if(PartChild->GetName() == "style-shininess")
 								{
@@ -3497,7 +3496,7 @@ int main(int argc, char ** argv)
 	g_UIProjection->SetLeft(0.0f);
 	g_UIProjection->SetTop(0.0f);
 	g_UIView = new Graphics::View();
-	g_UIView->SetClearColor(Color(0.0f, 0.0f, 0.0f, 1.0f));
+	g_UIView->SetClearColor(Graphics::ColorRGBO(0.0f, 0.0f, 0.0f, 1.0f));
 	assert(g_UIView->GetCamera() != nullptr);
 	g_UIView->GetCamera()->SetProjection(g_UIProjection);
 	g_UIView->GetCamera()->SetSpacialMatrix(Matrix4f::CreateIdentity());
@@ -3524,7 +3523,7 @@ int main(int argc, char ** argv)
 	g_MainProjection->SetNearClippingPlane(1.0f);
 	g_MainProjection->SetFarClippingPlane(1000.0f);
 	g_MainView = new Graphics::View();
-	g_MainView->SetClearColor(Color(0.0f, 0.0f, 0.0f, 1.0f));
+	g_MainView->SetClearColor(Graphics::ColorRGBO(0.0f, 0.0f, 0.0f, 1.0f));
 	assert(g_MainView->GetCamera() != nullptr);
 	g_MainView->GetCamera()->SetProjection(g_MainProjection);
 	

@@ -19,8 +19,8 @@
 
 #include <assert.h>
 
-#include "../color.h"
 #include "camera.h"
+#include "color_rgbo.h"
 #include "gl.h"
 #include "projection.h"
 #include "render_context.h"
@@ -61,7 +61,7 @@ void Graphics::View::Render(void)
 	}
 	if(_ClearColor != nullptr)
 	{
-		GLClearColor(_ClearColor->GetColor()[0], _ClearColor->GetColor()[1], _ClearColor->GetColor()[2], _ClearColor->GetColor()[3]);
+		GLClearColor(_ClearColor->GetRed(), _ClearColor->GetGreen(), _ClearColor->GetBlue(), _ClearColor->GetOpacity());
 	}
 	assert(_Camera != nullptr);
 	RenderContext->SetCamera(_Camera);
@@ -80,10 +80,10 @@ void Graphics::View::Render(void)
 	delete RenderContext;
 }
 
-void Graphics::View::SetClearColor(const Color & ClearColor)
+void Graphics::View::SetClearColor(const Graphics::ColorRGBO & ClearColor)
 {
 	delete _ClearColor;
-	_ClearColor = new Color(ClearColor);
+	_ClearColor = new Graphics::ColorRGBO(ClearColor);
 }
 
 void Graphics::View::_SetEngine(Graphics::Engine * Engine)

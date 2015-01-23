@@ -17,8 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include "../color.h"
 #include "../globals.h"
+#include "../graphics/color_rgbo.h"
 #include "../graphics/engine.h"
 #include "../graphics/gl.h"
 #include "../graphics/texture.h"
@@ -29,7 +29,7 @@ UI::Image::Image(Widget * SupWidget) :
 	Widget(SupWidget),
 	_TextureIdentifier(0)
 {
-	SetBackgroundColor(Color(0.15f, 0.15f, 0.15f, 1.0f));
+	SetBackgroundColor(Graphics::ColorRGBO(0.15f, 0.15f, 0.15f, 1.0f));
 }
 
 UI::Image::~Image(void)

@@ -19,7 +19,7 @@
 
 #include <cassert>
 
-#include "../color.h"
+#include "color_rgbo.h"
 #include "style.h"
 
 Graphics::Style::Style(void) :
@@ -30,10 +30,10 @@ Graphics::Style::Style(void) :
 }
 
 Graphics::Style::Style(const Graphics::Style * Style) :
-	_DiffuseColor((Style->_DiffuseColor != nullptr) ? (new Color(Style->_DiffuseColor)) : (nullptr)),
+	_DiffuseColor((Style->_DiffuseColor != nullptr) ? (new Graphics::ColorRGBO(*(Style->_DiffuseColor))) : (nullptr)),
 	_ProgramIdentifier(Style->_ProgramIdentifier),
 	_Shininess((Style->_Shininess != nullptr) ? (new float(*Style->_Shininess)) : (nullptr)),
-	_SpecularColor((Style->_SpecularColor != nullptr) ? (new Color(Style->_SpecularColor)) : (nullptr))
+	_SpecularColor((Style->_SpecularColor != nullptr) ? (new Graphics::ColorRGBO(*(Style->_SpecularColor))) : (nullptr))
 {
 }
 
@@ -47,7 +47,7 @@ Graphics::Style::~Style(void)
 	_SpecularColor = nullptr;
 }
 
-const Color & Graphics::Style::GetDiffuseColor(void) const
+const Graphics::ColorRGBO & Graphics::Style::GetDiffuseColor(void) const
 {
 	assert(_DiffuseColor != nullptr);
 	
@@ -61,17 +61,17 @@ float Graphics::Style::GetShininess(void) const
 	return *_Shininess;
 }
 
-const Color & Graphics::Style::GetSpecularColor(void) const
+const Graphics::ColorRGBO & Graphics::Style::GetSpecularColor(void) const
 {
 	assert(_SpecularColor != nullptr);
 	
 	return *_SpecularColor;
 }
 
-void Graphics::Style::SetDiffuseColor(const Color & DiffuseColor)
+void Graphics::Style::SetDiffuseColor(const Graphics::ColorRGBO & DiffuseColor)
 {
 	delete _DiffuseColor;
-	_DiffuseColor = new Color(DiffuseColor);
+	_DiffuseColor = new Graphics::ColorRGBO(DiffuseColor);
 }
 
 void Graphics::Style::SetShininess(float Shininess)
@@ -80,8 +80,8 @@ void Graphics::Style::SetShininess(float Shininess)
 	_Shininess = new float(Shininess);
 }
 
-void Graphics::Style::SetSpecularColor(const Color & SpecularColor)
+void Graphics::Style::SetSpecularColor(const Graphics::ColorRGBO & SpecularColor)
 {
 	delete _SpecularColor;
-	_SpecularColor = new Color(SpecularColor);
+	_SpecularColor = new Graphics::ColorRGBO(SpecularColor);
 }

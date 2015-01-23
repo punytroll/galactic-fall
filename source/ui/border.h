@@ -22,7 +22,10 @@
 
 #include "widget.h"
 
-class Color;
+namespace Graphics
+{
+	class ColorRGBO;
+}
 
 namespace UI
 {
@@ -32,19 +35,19 @@ namespace UI
 		Border(UI::Widget * SupWidget = nullptr);
 		virtual ~Border(void);
 		// getters
-		const Color * GetColor(void) const;
+		const Graphics::ColorRGBO * GetColor(void) const;
 		float GetWidth(void) const;
 		// setters
-		void SetColor(const Color & Color);
+		void SetColor(const Graphics::ColorRGBO & Color);
 		void SetWidth(float Width);
 		// draw
 		virtual void Draw(void) override;
 	private:
-		Color * _Color;
+		Graphics::ColorRGBO * _Color;
 		float _Width;
 	};
 
-	inline const Color * Border::GetColor(void) const
+	inline const Graphics::ColorRGBO * Border::GetColor(void) const
 	{
 		return _Color;
 	}

@@ -17,8 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include "../color.h"
 #include "../globals.h"
+#include "../graphics/color_rgbo.h"
 #include "button.h"
 #include "mouse_button_event.h"
 #include "user_interface.h"
@@ -26,8 +26,8 @@
 UI::Button::Button(Widget * SupWidget) :
 	Widget(SupWidget)
 {
-	SetBackgroundColor(Color(0.3f, 0.3f, 0.3f, 1.0f));
-	SetDisabledBackgroundColor(Color(0.23f, 0.23f, 0.23f, 1.0f));
+	SetBackgroundColor(Graphics::ColorRGBO(0.3f, 0.3f, 0.3f, 1.0f));
+	SetDisabledBackgroundColor(Graphics::ColorRGBO(0.23f, 0.23f, 0.23f, 1.0f));
 	ConnectMouseButtonCallback(std::bind(&UI::Button::_OnMouseButton, this, std::placeholders::_1));
 	ConnectMouseEnterCallback(std::bind(&UI::Button::_OnMouseEnter, this));
 	ConnectMouseLeaveCallback(std::bind(&UI::Button::_OnMouseLeave, this));
@@ -63,10 +63,10 @@ void UI::Button::_OnMouseButton(UI::MouseButtonEvent & MouseButtonEvent)
 
 void UI::Button::_OnMouseEnter(void)
 {
-	SetBackgroundColor(Color(0.4f, 0.4f, 0.4f, 1.0f));
+	SetBackgroundColor(Graphics::ColorRGBO(0.4f, 0.4f, 0.4f, 1.0f));
 }
 
 void UI::Button::_OnMouseLeave(void)
 {
-	SetBackgroundColor(Color(0.3f, 0.3f, 0.3f, 1.0f));
+	SetBackgroundColor(Graphics::ColorRGBO(0.3f, 0.3f, 0.3f, 1.0f));
 }

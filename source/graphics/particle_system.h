@@ -27,7 +27,7 @@
 
 #include <algebra/vector3f.h>
 
-#include "../color.h"
+#include "color_rgbo.h"
 
 namespace Graphics
 {
@@ -41,7 +41,7 @@ namespace Graphics
 		{
 			Vector3f _Position;
 			Vector3f _Velocity;
-			Color _Color;
+			Graphics::ColorRGBO _Color;
 			double _TimeOfDeath;
 			float _Size;
 		};

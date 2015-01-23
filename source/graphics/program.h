@@ -33,6 +33,8 @@ class Vector4f;
 
 namespace Graphics
 {
+	class ColorRGB;
+	class ColorRGBO;
 	class RenderContext;
 	class ShadingManager;
 	
@@ -50,9 +52,9 @@ namespace Graphics
 			ModelToWorldNormalMatrix3x3F,
 			CameraPositionVector3F,
 			LightDirectionVector3F,
-			LightColorVector3F,
-			MaterialColorVector3F,
-			MaterialColorVector4F,
+			LightColorRGB3F,
+			MaterialColorRGB3F,
+			MaterialColorRGBO4F,
 			MaterialShininessF
 		};
 		
@@ -70,6 +72,8 @@ namespace Graphics
 	private:
 		void _Activate(void);
 		void _Deactivate(void);
+		void _SetUniform(GLint Location, const Graphics::ColorRGB & Color);
+		void _SetUniform(GLint Location, const Graphics::ColorRGBO & Color);
 		void _SetUniform(GLint Location, float Float);
 		void _SetUniform(GLint Location, const Matrix3f & Matrix);
 		void _SetUniform(GLint Location, const Matrix4f & Matrix);

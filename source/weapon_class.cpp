@@ -20,7 +20,6 @@
 #include <assert.h>
 #include <float.h>
 
-#include "color.h"
 #include "visualization_prototype.h"
 #include "weapon_class.h"
 

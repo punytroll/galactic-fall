@@ -24,7 +24,10 @@
 
 #include "widget.h"
 
-class Color;
+namespace Graphics
+{
+	class ColorRGBO;
+}
 
 namespace UI
 {
@@ -51,13 +54,13 @@ namespace UI
 		// getters
 		UI::Label::HorizontalAlignment GetHorizontalAlignment(void) const;
 		const std::string & GetText(void) const;
-		const Color * GetTextColor(void) const;
+		const Graphics::ColorRGBO * GetTextColor(void) const;
 		UI::Label::VerticalAlignment GetVerticalAlignment(void) const;
 		bool GetWrap(void) const;
 		bool GetWordWrap(void) const;
 		// setters
 		void SetText(const std::string & Text);
-		void SetTextColor(const Color & ForegroundColor);
+		void SetTextColor(const Graphics::ColorRGBO & ForegroundColor);
 		void SetWrap(bool Wrap);
 		void SetWordWrap(bool WordWrap);
 		void SetHorizontalAlignment(UI::Label::HorizontalAlignment HorizontalAlignment);
@@ -67,7 +70,7 @@ namespace UI
 	private:
 		UI::Label::HorizontalAlignment m_HorizontalAlignment;
 		std::string m_Text;
-		Color * m_TextColor;
+		Graphics::ColorRGBO * m_TextColor;
 		UI::Label::VerticalAlignment m_VerticalAlignment;
 		bool m_Wrap;
 		bool m_WordWrap;
@@ -83,7 +86,7 @@ namespace UI
 		return m_Text;
 	}
 
-	inline const Color * Label::GetTextColor(void) const
+	inline const Graphics::ColorRGBO * Label::GetTextColor(void) const
 	{
 		return m_TextColor;
 	}

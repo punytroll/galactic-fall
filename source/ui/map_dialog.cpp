@@ -21,8 +21,8 @@
 
 #include <GL/gl.h>
 
-#include "../color.h"
 #include "../globals.h"
+#include "../graphics/color_rgbo.h"
 #include "../object_aspect_name.h"
 #include "../system.h"
 #include "key_event.h"
@@ -53,7 +53,7 @@ UI::MapDialog::MapDialog(UI::Widget * SupWidget, System * System, Character * Ch
 	_StarMapDisplay->SetAnchorLeft(true);
 	_StarMapDisplay->SetAnchorRight(true);
 	_StarMapDisplay->SetAnchorTop(true);
-	_StarMapDisplay->SetBackgroundColor(Color(0.15f, 0.15f, 0.15f, 1.0f));
+	_StarMapDisplay->SetBackgroundColor(Graphics::ColorRGBO(0.15f, 0.15f, 0.15f, 1.0f));
 }
 
 System * UI::MapDialog::GetSelectedSystem(void)

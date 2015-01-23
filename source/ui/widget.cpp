@@ -21,8 +21,8 @@
 
 #include <algorithm>
 
-#include "../color.h"
 #include "../globals.h"
+#include "../graphics/color_rgbo.h"
 #include "../graphics/gl.h"
 #include "../math.h"
 #include "event.h"
@@ -71,7 +71,7 @@ void UI::Widget::Draw(void)
 	
 	if(Color != nullptr)
 	{
-		GLColor4fv(Color->GetColor().GetPointer());
+		GLColor4fv(Color->GetPointer());
 		GLBegin(GL_QUADS);
 		GLVertex2f(0.0f, 0.0f);
 		GLVertex2f(0.0f, _Size[1]);
@@ -129,16 +129,16 @@ std::string UI::Widget::GetPath(void) const
 	return Result;
 }
 
-void UI::Widget::SetBackgroundColor(const Color & BackgroundColor)
+void UI::Widget::SetBackgroundColor(const Graphics::ColorRGBO & BackgroundColor)
 {
 	delete _BackgroundColor;
-	_BackgroundColor = new Color(BackgroundColor);
+	_BackgroundColor = new Graphics::ColorRGBO(BackgroundColor);
 }
 
-void UI::Widget::SetDisabledBackgroundColor(const Color & DisabledBackgroundColor)
+void UI::Widget::SetDisabledBackgroundColor(const Graphics::ColorRGBO & DisabledBackgroundColor)
 {
 	delete _DisabledBackgroundColor;
-	_DisabledBackgroundColor = new Color(DisabledBackgroundColor);
+	_DisabledBackgroundColor = new Graphics::ColorRGBO(DisabledBackgroundColor);
 }
 
 void UI::Widget::UnsetBackgroundColor(void)

@@ -29,7 +29,10 @@
 
 #include <events/event.h>
 
-class Color;
+namespace Graphics
+{
+	class ColorRGBO;
+}
 
 namespace UI
 {
@@ -48,8 +51,8 @@ namespace UI
 		Widget(Widget * SupWidget = 0, const std::string & Name = "");
 		virtual ~Widget(void);
 		virtual void Draw(void);
-		void SetBackgroundColor(const Color & BackgroundColor);
-		void SetDisabledBackgroundColor(const Color & DisabledBackgroundColor);
+		void SetBackgroundColor(const Graphics::ColorRGBO & BackgroundColor);
+		void SetDisabledBackgroundColor(const Graphics::ColorRGBO & DisabledBackgroundColor);
 		void UnsetBackgroundColor(void);
 		void UnsetDisabledBackgroundColor(void);
 		void SetPosition(const Vector2f & Position);
@@ -62,7 +65,7 @@ namespace UI
 		void GrabKeyFocus(void);
 		void SetName(const std::string & Name);
 		// getters
-		const Color * GetBackgroundColor(void) const;
+		const Graphics::ColorRGBO * GetBackgroundColor(void) const;
 		Widget * GetHoveredWidget(void);
 		const Vector2f & GetPosition(void) const;
 		Vector2f GetGlobalPosition(void) const;
@@ -108,8 +111,8 @@ namespace UI
 		bool _AnchorLeft;
 		bool _AnchorRight;
 		bool _AnchorTop;
-		Color * _BackgroundColor;
-		Color * _DisabledBackgroundColor;
+		Graphics::ColorRGBO * _BackgroundColor;
+		Graphics::ColorRGBO * _DisabledBackgroundColor;
 		bool _Enabled;
 		Widget * _HoverWidget;
 		Widget * _KeyFocus;

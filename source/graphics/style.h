@@ -22,10 +22,10 @@
 
 #include <string>
 
-class Color;
-
 namespace Graphics
 {
+	class ColorRGBO;
+	
 	class Style
 	{
 	public:
@@ -34,23 +34,23 @@ namespace Graphics
 		explicit Style(const Graphics::Style * Style);
 		~Style(void);
 		// getters
-		const Color & GetDiffuseColor(void) const;
+		const Graphics::ColorRGBO & GetDiffuseColor(void) const;
 		const std::string & GetProgramIdentifier(void) const;
 		float GetShininess(void) const;
-		const Color & GetSpecularColor(void) const;
+		const Graphics::ColorRGBO & GetSpecularColor(void) const;
 		bool HasDiffuseColor(void) const;
 		bool HasShininess(void) const;
 		bool HasSpecularColor(void) const;
 		// setters
-		void SetDiffuseColor(const Color & DiffuseColor);
+		void SetDiffuseColor(const Graphics::ColorRGBO & DiffuseColor);
 		void SetProgramIdentifier(const std::string & ProgramIdentifier);
 		void SetShininess(float Shininess);
-		void SetSpecularColor(const Color & SpecularColor);
+		void SetSpecularColor(const Graphics::ColorRGBO & SpecularColor);
 	private:
-		Color * _DiffuseColor;
+		Graphics::ColorRGBO * _DiffuseColor;
 		std::string _ProgramIdentifier;
 		float * _Shininess;
-		Color * _SpecularColor;
+		Graphics::ColorRGBO * _SpecularColor;
 	private:
 		/**
 		 * @brief Hidden copy constructor.

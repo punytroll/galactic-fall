@@ -22,6 +22,11 @@
 
 #include "widget.h"
 
+namespace Graphics
+{
+	class ColorRGBO;
+}
+
 namespace UI
 {
 	class Event;
@@ -32,7 +37,7 @@ namespace UI
 	public:
 		ProgressBar(UI::Widget * SupWidget);
 		// setters
-		void SetColor(const Color & Color);
+		void SetColor(const Graphics::ColorRGBO & Color);
 		void SetFillLevel(float FillLevel);
 		void SetText(const std::string & Text);
 	private:

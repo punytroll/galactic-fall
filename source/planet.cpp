@@ -20,7 +20,6 @@
 #include "asset_class.h"
 #include "battery.h"
 #include "character.h"
-#include "color.h"
 #include "globals.h"
 #include "graphics/node.h"
 #include "hangar.h"

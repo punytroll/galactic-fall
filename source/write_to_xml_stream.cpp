@@ -23,7 +23,6 @@
 
 #include "battery.h"
 #include "character.h"
-#include "color.h"
 #include "commodity.h"
 #include "faction.h"
 #include "generator.h"
@@ -151,11 +150,11 @@ void WriteToXMLStream(XMLStream & XMLStream, Object * TheObject)
 			XMLStream << element << "part" << attribute << "identifier" << value << PartStyle.first;
 			if(PartStyle.second->HasDiffuseColor() == true)
 			{
-				XMLStream << element << "style-diffuse-color" << attribute << "red" << value << PartStyle.second->GetDiffuseColor().GetColor()[0] << attribute << "green" << value << PartStyle.second->GetDiffuseColor().GetColor()[1] << attribute << "blue" << value << PartStyle.second->GetDiffuseColor().GetColor()[2] << attribute << "opacity" << value << PartStyle.second->GetDiffuseColor().GetColor()[3] << end;
+				XMLStream << element << "style-diffuse-color" << attribute << "red" << value << PartStyle.second->GetDiffuseColor().GetRed() << attribute << "green" << value << PartStyle.second->GetDiffuseColor().GetGreen() << attribute << "blue" << value << PartStyle.second->GetDiffuseColor().GetBlue() << attribute << "opacity" << value << PartStyle.second->GetDiffuseColor().GetOpacity() << end;
 			}
 			if(PartStyle.second->HasSpecularColor() == true)
 			{
-				XMLStream << element << "style-specular-color" << attribute << "red" << value << PartStyle.second->GetSpecularColor().GetColor()[0] << attribute << "green" << value << PartStyle.second->GetSpecularColor().GetColor()[1] << attribute << "blue" << value << PartStyle.second->GetSpecularColor().GetColor()[2] << attribute << "opacity" << value << PartStyle.second->GetSpecularColor().GetColor()[3] << end;
+				XMLStream << element << "style-specular-color" << attribute << "red" << value << PartStyle.second->GetSpecularColor().GetRed() << attribute << "green" << value << PartStyle.second->GetSpecularColor().GetGreen() << attribute << "blue" << value << PartStyle.second->GetSpecularColor().GetBlue() << attribute << "opacity" << value << PartStyle.second->GetSpecularColor().GetOpacity() << end;
 			}
 			if(PartStyle.second->HasShininess() == true)
 			{

@@ -24,9 +24,9 @@
 #include "../asset_class.h"
 #include "../battery.h"
 #include "../character.h"
-#include "../color.h"
 #include "../globals.h"
 #include "../graphics/camera.h"
+#include "../graphics/color_rgbo.h"
 #include "../graphics/engine.h"
 #include "../graphics/light.h"
 #include "../graphics/node.h"
@@ -174,7 +174,7 @@ namespace UI
 			auto View(new Graphics::View());
 			
 			g_GraphicsEngine->AddView(View);
-			View->SetClearColor(Color(1.0f, 1.0f, 1.0f, 0.0f));
+			View->SetClearColor(Graphics::ColorRGBO(1.0f, 1.0f, 1.0f, 0.0f));
 			assert(View->GetCamera() != nullptr);
 			View->GetCamera()->SetProjection(PerspectiveProjection);
 			View->GetCamera()->SetSpacialMatrix(Matrix4f::CreateTranslation(Vector3f::CreateFromComponents(0.0f, -2.5f, 1.4f).Normalize() * 4.0f * RadialSize).RotateX(1.05f));
@@ -186,7 +186,7 @@ namespace UI
 			assert(Scene->GetLight() != nullptr);
 			Scene->GetLight()->SetType(Graphics::Light::Type::Directional);
 			Scene->GetLight()->SetDirection(Vector3f::CreateFromComponents(-15.0f, 10.0f, -20.0f));
-			Scene->GetLight()->SetColor(Color(1.0f, 1.0f, 1.0f, 0.0f));
+			Scene->GetLight()->SetColor(Graphics::ColorRGB(1.0f, 1.0f, 1.0f));
 			View->SetScene(Scene);
 			
 			auto Texture(new Graphics::Texture());
@@ -255,7 +255,7 @@ namespace UI
 					_Border->SetAnchorBottom(true);
 					_Border->SetAnchorRight(true);
 					_Border->SetWidth(1.0f);
-					_Border->SetColor(Color(1.0f, 1.0f, 1.0f, 1.0f));
+					_Border->SetColor(Graphics::ColorRGBO(1.0f, 1.0f, 1.0f, 1.0f));
 					LowerSubWidget(_Border);
 				}
 			}
@@ -495,7 +495,7 @@ void UI::HangarWidget::_OnEnergyStateProgressBarUpdating(UI::ProgressBar * Energ
 	}
 	EnergyStateProgressBar->SetText(Text);
 	EnergyStateProgressBar->SetFillLevel(EnergyPercentage);
-	EnergyStateProgressBar->SetColor(Color(1.0f - EnergyPercentage, EnergyPercentage, 0.0f, 1.0f));
+	EnergyStateProgressBar->SetColor(Graphics::ColorRGBO(1.0f - EnergyPercentage, EnergyPercentage, 0.0f, 1.0f));
 }
 
 void UI::HangarWidget::_OnFuelStateProgressBarUpdating(UI::ProgressBar * FuelStateProgressBar, float RealTimeSeconds, float GameTimeSeconds)
@@ -515,7 +515,7 @@ void UI::HangarWidget::_OnFuelStateProgressBarUpdating(UI::ProgressBar * FuelSta
 		FuelStateProgressBar->SetText("n/a");
 	}
 	FuelStateProgressBar->SetFillLevel(FuelPercentage);
-	FuelStateProgressBar->SetColor(Color(1.0f - FuelPercentage, FuelPercentage, 0.0f, 1.0f));
+	FuelStateProgressBar->SetColor(Graphics::ColorRGBO(1.0f - FuelPercentage, FuelPercentage, 0.0f, 1.0f));
 }
 
 void UI::HangarWidget::_OnHangarContentAdded(Object * Content)
@@ -568,7 +568,7 @@ void UI::HangarWidget::_OnHullStateProgressBarUpdating(UI::ProgressBar * HullSta
 		HullStateProgressBar->SetText("n/a");
 	}
 	HullStateProgressBar->SetFillLevel(HullPercentage);
-	HullStateProgressBar->SetColor(Color(1.0f - HullPercentage, HullPercentage, 0.0f, 1.0f));
+	HullStateProgressBar->SetColor(Graphics::ColorRGBO(1.0f - HullPercentage, HullPercentage, 0.0f, 1.0f));
 }
 
 void UI::HangarWidget::_OnLoadButtonClicked(void)

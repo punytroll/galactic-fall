@@ -17,8 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include "../color.h"
 #include "../globals.h"
+#include "../graphics/color_rgbo.h"
 #include "button.h"
 #include "mouse_button_event.h"
 #include "mouse_move_event.h"
@@ -35,13 +35,13 @@ UI::ScrollBar::ScrollBar(Widget * SupWidget, UI::ScrollBar::Alignment Alignment)
 	m_MinimumPosition(0.0f)
 {
 	ConnectSizeChangedCallback(std::bind(&ScrollBar::OnSizeChanged, this, std::placeholders::_1));
-	SetBackgroundColor(Color(0.23f, 0.23f, 0.23f, 1.0f));
+	SetBackgroundColor(Graphics::ColorRGBO(0.23f, 0.23f, 0.23f, 1.0f));
 	m_LessButton = new UI::Button(this);
 	m_LessButton->ConnectClickedCallback(std::bind(&UI::ScrollBar::OnLessClicked, this));
 	m_MoreButton = new UI::Button(this);
 	m_MoreButton->ConnectClickedCallback(std::bind(&UI::ScrollBar::OnMoreClicked, this));
 	m_Tracker = new UI::Widget(this);
-	m_Tracker->SetBackgroundColor(Color(0.3f, 0.3f, 0.3f, 1.0f));
+	m_Tracker->SetBackgroundColor(Graphics::ColorRGBO(0.3f, 0.3f, 0.3f, 1.0f));
 	m_Tracker->ConnectMouseEnterCallback(std::bind(&UI::ScrollBar::OnTrackerMouseEnter, this));
 	m_Tracker->ConnectMouseLeaveCallback(std::bind(&UI::ScrollBar::OnTrackerMouseLeave, this));
 	m_Tracker->ConnectMouseButtonCallback(std::bind(&UI::ScrollBar::OnTrackerMouseButton, this, std::placeholders::_1));
@@ -104,12 +104,12 @@ void UI::ScrollBar::OnTrackerMouseButton(UI::MouseButtonEvent & MouseButtonEvent
 
 void UI::ScrollBar::OnTrackerMouseEnter(void)
 {
-	m_Tracker->SetBackgroundColor(Color(0.4f, 0.4f, 0.4f, 1.0f));
+	m_Tracker->SetBackgroundColor(Graphics::ColorRGBO(0.4f, 0.4f, 0.4f, 1.0f));
 }
 
 void UI::ScrollBar::OnTrackerMouseLeave(void)
 {
-	m_Tracker->SetBackgroundColor(Color(0.3f, 0.3f, 0.3f, 1.0f));
+	m_Tracker->SetBackgroundColor(Graphics::ColorRGBO(0.3f, 0.3f, 0.3f, 1.0f));
 }
 
 void UI::ScrollBar::OnTrackerMouseMove(UI::MouseMoveEvent & MouseMoveEvent)

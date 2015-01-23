@@ -24,14 +24,27 @@
 #include <algebra/vector3f.h>
 
 #include "buffer_reading.h"
-#include "color.h"
 #include "globals.h"
+#include "graphics/color_rgb.h"
+#include "graphics/color_rgbo.h"
 #include "graphics/engine.h"
 #include "graphics/model_manager.h"
 #include "graphics/style.h"
 #include "visualization_prototype.h"
 
-Arxx::BufferReader & operator>>(Arxx::BufferReader & BufferReader, Color & Color)
+Arxx::BufferReader & operator>>(Arxx::BufferReader & BufferReader, Graphics::ColorRGB & Color)
+{
+	float Red;
+	float Green;
+	float Blue;
+	
+	BufferReader >> Red >> Green >> Blue;
+	Color.Set(Red, Green, Blue);
+	
+	return BufferReader;
+}
+
+Arxx::BufferReader & operator>>(Arxx::BufferReader & BufferReader, Graphics::ColorRGBO & Color)
 {
 	float Red;
 	float Green;
@@ -103,9 +116,9 @@ Arxx::BufferReader & operator>>(Arxx::BufferReader & BufferReader, Visualization
 	for(Arxx::u4byte VisualizationPartNumber = 1; VisualizationPartNumber <= VisualizationPartCount; ++VisualizationPartNumber)
 	{
 		std::string PartIdentifier;
-		Color PartDiffuseColor;
+		Graphics::ColorRGBO PartDiffuseColor;
 		bool PartValidSpecularColor;
-		Color PartSpecularColor;
+		Graphics::ColorRGBO PartSpecularColor;
 		bool PartValidShininess;
 		float PartShininess;
 		std::string PartProgramIdentifier;
