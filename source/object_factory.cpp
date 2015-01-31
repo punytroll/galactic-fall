@@ -147,6 +147,11 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		assert(ClassIdentifier.empty() == false);
 		Result = new Faction();
 	}
+	else if(TypeIdentifier == "galaxy")
+	{
+		assert(ClassIdentifier.empty() == false);
+		Result = new Galaxy();
+	}
 	else if(TypeIdentifier == "generator")
 	{
 		assert(_GeneratorClassManager != nullptr);
