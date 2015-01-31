@@ -1336,10 +1336,7 @@ void SetupInitialGalaxyState(void)
 {
 	assert(g_Galaxy == nullptr);
 	// initialize the galaxy object with hard coded properties
-	g_Galaxy = new Galaxy();
-	g_Galaxy->SetTypeIdentifier("galaxy");
-	g_Galaxy->SetClassIdentifier("milky_way");
-	g_Galaxy->SetObjectIdentifier("::galaxy");
+	g_Galaxy = dynamic_cast< Galaxy * >(g_ObjectFactory->Create("galaxy", "milky_way", false));
 	g_Galaxy->GetAspectName()->SetName("Milky Way");
 	// read the factions from the data archive
 	g_ResourceReader->ReadFactions();
