@@ -20,6 +20,8 @@
 #ifndef RESOURCE_READER_H
 #define RESOURCE_READER_H
 
+#include <Structure.h>
+
 namespace Arxx
 {
 	class Archive;
@@ -36,6 +38,7 @@ class ClassManager;
 
 class AssetClass;
 class CommodityManager;
+class Galaxy;
 class GeneratorClass;
 class ScenarioManager;
 class Settings;
@@ -53,7 +56,7 @@ public:
 	void ReadAssetClasses(ClassManager< AssetClass > * AssetClassManager);
 	void ReadBatteryClasses(ClassManager< BatteryClass > * BatteryClassManager);
 	void ReadCommodityClasses(ClassManager< CommodityClass > * CommodityClassManager);
-	void ReadFactions(void);
+	Galaxy * ReadGalaxy(const std::string & GalaxyIdentifier);
 	void ReadGeneratorClasses(ClassManager< GeneratorClass > * GeneratorClassManager);
 	void ReadMeshes(void);
 	void ReadModels(void);
@@ -70,6 +73,7 @@ public:
 	std::string ReadSavegameFromScenarioPath(const std::string & ScenarioPath);
 private:
 	void _ReadItems(const std::string & Path, std::function< void (Arxx::Reference &) > ReaderFunction);
+	void _ReadItems(Arxx::Structure::Relation & Relation, std::function< void (Arxx::Reference &) > ReaderFunction);
 	Arxx::Archive * _Archive;
 };
 

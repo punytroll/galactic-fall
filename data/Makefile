@@ -37,11 +37,14 @@ all_data = \
 	.data/commodity_class_luxury_goods.data \
 	.data/commodity_class_medical_supplies.data \
 	.data/commodity_class_metal.data \
-	.data/faction_earth.data \
-	.data/faction_neutral.data \
-	.data/faction_pirates.data \
 	.data/fragment_shader_default.data \
 	.data/fragment_shader_no_lighting.data \
+	.data/galaxies \
+	.data/galaxies/milky_way \
+	.data/galaxies/milky_way/faction_earth.data \
+	.data/galaxies/milky_way/faction_neutral.data \
+	.data/galaxies/milky_way/faction_pirates.data \
+	.data/galaxies/milky_way/galaxy.data \
 	.data/generator_class_small_generator.data \
 	.data/mesh_cargo_cube.data \
 	.data/mesh_fighter_cockpit.data \
@@ -152,18 +155,14 @@ data.arx: $(data_arx) $(arxtouch_dependencies) $(arxadd_dependencies)
 	$(command_arxadd) $@ --name="Models" --type=0 --sub-type=0 --relation="::child"
 	$(command_arxadd) $@ --name="Battery Classes" --type=0 --sub-type=0 --relation="::child"
 	$(command_arxadd) $@ --name="Generator Classes" --type=0 --sub-type=0 --relation="::child"
-	$(command_arxadd) $@ --name="Factions" --type=0 --sub-type=0 --relation="::child"
 	$(command_arxadd) $@ --name="Settings" --type=0 --sub-type=0 --relation="::child"
 	$(command_arxadd) $@ --name="Scenarios" --type=0 --sub-type=0 --relation="::child"
 	$(command_arxadd) $@ --name="Shaders" --type=0 --sub-type=0 --relation="::child"
 	$(command_arxadd) $@ --name="Programs" --type=0 --sub-type=0 --relation="::child"
+	$(command_arxadd) $@ --name="Galaxies" --type=0 --sub-type=0 --relation="::child"
 	@echo "\n\nAdding settings ...\n"
 	$(command_arxadd) $@ --name="Key Binding Profile" --type=10 --sub-type=0 --relation="/Settings::child" --data-file=.data/setting_key_binding_profile.data
 	$(command_arxadd) $@ --name="Window Dimensions" --type=f --sub-type=0 --relation="/Settings::child" --data-file=.data/setting_window_dimensions.data
-	@echo "\n\nAdding factions ...\n"
-	$(command_arxadd) $@ --name="Earth Faction" --type=e --sub-type=0 --relation="/Factions::child" --data-file=.data/faction_earth.data
-	$(command_arxadd) $@ --name="Neutral Faction" --type=e --sub-type=0 --relation="/Factions::child" --data-file=.data/faction_neutral.data
-	$(command_arxadd) $@ --name="Pirates Faction" --type=e --sub-type=0 --relation="/Factions::child" --data-file=.data/faction_pirates.data
 	@echo "\n\nAdding slot classes ...\n"
 	$(command_arxadd) $@ --name="Light Battery" --type=9 --sub-type=0 --relation="/Slot Classes::child" --data-file=.data/slot_class_light_battery.data
 	$(command_arxadd) $@ --name="Light Turret" --type=9 --sub-type=0 --relation="/Slot Classes::child" --data-file=.data/slot_class_light_turret.data
@@ -257,12 +256,17 @@ data.arx: $(data_arx) $(arxtouch_dependencies) $(arxadd_dependencies)
 	@echo "\n\nAdding programs ...\n"
 	$(command_arxadd) $@ --name="Default Program" --type=14 --sub-type=0 --relation="/Programs::child" --data-file=.data/program_default.data
 	$(command_arxadd) $@ --name="No Lighting Program" --type=14 --sub-type=0 --relation="/Programs::child" --data-file=.data/program_no_lighting.data
+	@echo "\n\nAdding \"Milky Way\" galaxy ...\n"
+	$(command_arxadd) $@ --name="Milky Way" --type=17 --sub-type=0 --relation="/Galaxies::child" --data-file=.data/galaxies/milky_way/galaxy.data
+	$(command_arxadd) $@ --name="Earth" --type=e --sub-type=0 --relation="/Galaxies/Milky Way::factions" --data-file=.data/galaxies/milky_way/faction_earth.data
+	$(command_arxadd) $@ --name="Neutral" --type=e --sub-type=0 --relation="/Galaxies/Milky Way::factions" --data-file=.data/galaxies/milky_way/faction_neutral.data
+	$(command_arxadd) $@ --name="Pirates" --type=e --sub-type=0 --relation="/Galaxies/Milky Way::factions" --data-file=.data/galaxies/milky_way/faction_pirates.data
 
-.data:
+.data .data/galaxies .data/galaxies/milky_way:
 	mkdir $@
 
 .data/%.data: %.xml $(declarations_xml) $(xml_to_data_dependencies)
-	$(command_xml_to_data) --declarations=tools/declarations.xml --in=$< --out=$@
+	$(command_xml_to_data) --declarations=$(declarations_xml) --in=$< --out=$@
 
 mesh_%.xml: meshes/original/littlem/%.xml $(littlem_to_xml_xsl)
 	xsltproc -output $@ tools/littlem_to_xml.xsl $<
