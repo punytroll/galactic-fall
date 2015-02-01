@@ -2,6 +2,10 @@
 	
 	<accepted-slot-class is="string"/>
 	
+	<aspect-name>
+		<string identifier="name"/>
+	</aspect-name>
+	
 	<asset-class type="4">
 		<string identifier="identifier"/>
 		<string identifier="name"/>
@@ -51,13 +55,18 @@
 	
 	<faction type="14">
 		<string identifier="identifier"/>
-		<string identifier="name"/>
+		<aspect-name identifier="aspect-name"/>
 		<color-rgbo-4f identifier="color"/>
 	</faction>
 	
 	<float type="21" sub-type="0"/>
 	
 	<fragment-shader is="shader" type="19" sub-type="1"/>
+	
+	<galaxy type="23" sub-type="0">
+		<string identifier="identifier"/>
+		<aspect-name identifier="aspect-name"/>
+	</galaxy>
 	
 	<generator-class type="13">
 		<string identifier="identifier"/>

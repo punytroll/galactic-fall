@@ -1336,10 +1336,7 @@ void SetupInitialGalaxyState(void)
 {
 	assert(g_Galaxy == nullptr);
 	// initialize the galaxy object with hard coded properties
-	g_Galaxy = dynamic_cast< Galaxy * >(g_ObjectFactory->Create("galaxy", "milky_way", false));
-	g_Galaxy->GetAspectName()->SetName("Milky Way");
-	// read the factions from the data archive
-	g_ResourceReader->ReadFactions();
+	g_Galaxy = g_ResourceReader->ReadGalaxy("milky_way");
 	// read the systems from the data archive
 	g_ResourceReader->ReadSystems(g_AssetClassManager);
 	// read the system links from the data archive

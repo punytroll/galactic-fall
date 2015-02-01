@@ -72,7 +72,7 @@ static Arxx::Item * Resolve(Arxx::Reference & Reference);
 static void ReadAssetClass(Arxx::Reference & Reference, ClassManager< AssetClass > * AssetClassManager);
 static void ReadBatteryClass(Arxx::Reference & Reference, ClassManager< BatteryClass > * BatteryClassManager);
 static void ReadCommodityClass(Arxx::Reference & Reference, ClassManager< CommodityClass > * CommodityClassManager);
-static void ReadFaction(Arxx::Reference & Reference);
+static void ReadFaction(Arxx::Reference & Reference, Galaxy * Galaxy);
 static void ReadGeneratorClass(Arxx::Reference & Reference, ClassManager< GeneratorClass > * GeneratorClassManager);
 static void ReadMesh(Arxx::Reference & Reference);
 static void ReadModel(Arxx::Reference & Reference);
@@ -161,9 +161,14 @@ void ResourceReader::_ReadItems(const std::string & Path, std::function< void (A
 	}
 	if(Directory->GetStructure().bHasRelation("child") == false)
 	{
-		throw std::runtime_error("The directory '" + Path + "' does not contain a 'child' relation.");
+		throw std::runtime_error("The item '" + Path + "' does not contain a 'child' relation.");
 	}
-	for(auto & Child : Directory->GetStructure().GetRelation("child"))
+	_ReadItems(Directory->GetStructure().GetRelation("child"), ReaderFunction);
+}
+
+void ResourceReader::_ReadItems(Arxx::Structure::Relation & Relation, std::function< void (Arxx::Reference &) > ReaderFunction)
+{
+	for(auto & Child : Relation)
 	{
 		ReaderFunction(Child);
 	}
@@ -184,9 +189,57 @@ void ResourceReader::ReadCommodityClasses(ClassManager< CommodityClass > * Commo
 	_ReadItems("/Commodity Classes", std::bind(ReadCommodityClass, std::placeholders::_1, CommodityClassManager));
 }
 
-void ResourceReader::ReadFactions(void)
+Galaxy * ResourceReader::ReadGalaxy(const std::string & GalaxyIdentifier)
 {
-	_ReadItems("/Factions", ReadFaction);
+	assert(_Archive != nullptr);
+	
+	std::string Path("/Galaxies");
+	auto Directory(_Archive->GetItem(Path));
+	
+	if(Directory == nullptr)
+	{
+		throw std::runtime_error("Could not find an item at the path '" + Path + "'.");
+	}
+	if(Directory->GetStructure().bHasRelation("child") == false)
+	{
+		throw std::runtime_error("The item '" + Path + "' does not contain a 'child' relation.");
+	}
+	for(auto & Child : Directory->GetStructure().GetRelation("child"))
+	{
+		auto GalaxyItem(Resolve(Child));
+		
+		if(GalaxyItem->GetType() != DATA_TYPE_GALAXY)
+		{
+			throw std::runtime_error("Item type for galaxy '" + GalaxyItem->GetName() + "' should be '" + to_string_cast(DATA_TYPE_GALAXY) + "' not '" + to_string_cast(GalaxyItem->GetType()) + "'.");
+		}
+		if(GalaxyItem->GetSubType() != 0)
+		{
+			throw std::runtime_error("Item sub type for galaxy '" + GalaxyItem->GetName() + "' should be '0' not '" + to_string_cast(GalaxyItem->GetSubType()) + "'.");
+		}
+		
+		Arxx::BufferReader Reader(*GalaxyItem);
+		std::string Identifier;
+		
+		Reader >> Identifier;
+		if(Identifier == GalaxyIdentifier)
+		{
+			auto NewGalaxy(dynamic_cast< Galaxy * >(g_ObjectFactory->Create("galaxy", Identifier, false)));
+			std::string Name;
+			
+			Reader >> Name;
+			assert(NewGalaxy->GetAspectName() != nullptr);
+			NewGalaxy->GetAspectName()->SetName(Name);
+			if(GalaxyItem->GetStructure().bHasRelation("factions") == false)
+			{
+				throw std::runtime_error("The item '" + Path + "/" + GalaxyItem->GetName() + "' does not contain a 'factions' relation.");
+			}
+			_ReadItems(GalaxyItem->GetStructure().GetRelation("factions"), std::bind(ReadFaction, std::placeholders::_1, NewGalaxy));
+			
+			return NewGalaxy;
+		}
+	}
+	
+	return nullptr;
 }
 
 void ResourceReader::ReadGeneratorClasses(ClassManager< GeneratorClass > * GeneratorClassManager)
@@ -396,7 +449,7 @@ static void ReadCommodityClass(Arxx::Reference & Reference, ClassManager< Commod
 	NewCommodityClass->SetVisualizationPrototype(VisualizationPrototype);
 }
 
-static void ReadFaction(Arxx::Reference & Reference)
+static void ReadFaction(Arxx::Reference & Reference, Galaxy * Galaxy)
 {
 	auto Item(Resolve(Reference));
 	
@@ -428,7 +481,7 @@ static void ReadFaction(Arxx::Reference & Reference)
 	Reader >> Name >> FactionColor;
 	NewFaction->GetAspectName()->SetName(Name);
 	NewFaction->SetColor(FactionColor);
-	g_Galaxy->GetAspectObjectContainer()->AddContent(NewFaction);
+	Galaxy->GetAspectObjectContainer()->AddContent(NewFaction);
 }
 
 static void ReadGeneratorClass(Arxx::Reference & Reference, ClassManager< GeneratorClass > * GeneratorClassManager)
