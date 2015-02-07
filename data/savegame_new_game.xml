@@ -1,4 +1,5 @@
 <save>
+	<galaxy identifier="milky_way"/>
 	<current-system identifier="sol"/>
 	<time-warp value="1"/>
 	<input-mind object-identifier="::player_mind"/>

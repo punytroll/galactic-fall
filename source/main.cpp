@@ -1332,13 +1332,6 @@ void PurgeGame(void)
 	}
 }
 
-void SetupInitialGalaxyState(void)
-{
-	assert(g_Galaxy == nullptr);
-	// initialize the galaxy object with hard coded properties
-	g_Galaxy = g_ResourceReader->ReadGalaxy("milky_way", g_AssetClassManager);
-}
-
 void LoadGameFromElement(const Element * SaveElement)
 {
 	if(SaveElement->GetName() != "save")
@@ -1352,10 +1345,14 @@ void LoadGameFromElement(const Element * SaveElement)
 	
 	// setup the game world
 	PurgeGame();
-	SetupInitialGalaxyState();
+	assert(g_Galaxy == nullptr);
 	for(auto SaveChild : SaveElement->GetChilds())
 	{
-		if(SaveChild->GetName() == "game-time")
+		if(SaveChild->GetName() == "galaxy")
+		{
+			g_Galaxy = g_ResourceReader->ReadGalaxy(SaveChild->GetAttribute("identifier"), g_AssetClassManager);
+		}
+		else if(SaveChild->GetName() == "game-time")
 		{
 			GameTime::Set(from_string_cast< double >(SaveChild->GetAttribute("value")));
 		}
@@ -1850,6 +1847,7 @@ void LoadGameFromElement(const Element * SaveElement)
 		}
 	}
 	// this is a hack
+	assert(g_Galaxy != nullptr);
 	assert(CurrentSystem.empty() == false);
 	g_CurrentSystem = g_Galaxy->GetSystem(CurrentSystem);
 	assert(g_CurrentSystem != nullptr);
@@ -2072,7 +2070,8 @@ void SaveGame(std::ostream & OStream)
 	XMLStream XML(OStream);
 	
 	XML << element << "save";
-	
+	assert(g_Galaxy != nullptr);
+	XML << element << "galaxy" << attribute << "identifier" << value << g_Galaxy->GetClassIdentifier() << end;
 	XML << element << "game-time" << attribute << "value" << value << GameTime::Get() << end;
 	if(g_CurrentSystem != nullptr)
 	{
