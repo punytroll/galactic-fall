@@ -1336,11 +1336,7 @@ void SetupInitialGalaxyState(void)
 {
 	assert(g_Galaxy == nullptr);
 	// initialize the galaxy object with hard coded properties
-	g_Galaxy = g_ResourceReader->ReadGalaxy("milky_way");
-	// read the systems from the data archive
-	g_ResourceReader->ReadSystems(g_AssetClassManager);
-	// read the system links from the data archive
-	g_ResourceReader->ReadSystemLinks();
+	g_Galaxy = g_ResourceReader->ReadGalaxy("milky_way", g_AssetClassManager);
 }
 
 void LoadGameFromElement(const Element * SaveElement)

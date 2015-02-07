@@ -45,6 +45,20 @@ all_data = \
 	.data/galaxies/milky_way/faction_neutral.data \
 	.data/galaxies/milky_way/faction_pirates.data \
 	.data/galaxies/milky_way/galaxy.data \
+	.data/galaxies/milky_way/planet_earth.data \
+	.data/galaxies/milky_way/planet_hephant.data \
+	.data/galaxies/milky_way/planet_mars.data \
+	.data/galaxies/milky_way/planet_moon.data \
+	.data/galaxies/milky_way/planet_rigel_guardian.data \
+	.data/galaxies/milky_way/planet_tau_prime.data \
+	.data/galaxies/milky_way/star_alpha_centauri.data \
+	.data/galaxies/milky_way/star_rigel.data \
+	.data/galaxies/milky_way/star_sol.data \
+	.data/galaxies/milky_way/star_tichel.data \
+	.data/galaxies/milky_way/system_alpha_centauri.data \
+	.data/galaxies/milky_way/system_rigel.data \
+	.data/galaxies/milky_way/system_sol.data \
+	.data/galaxies/milky_way/system_tichel.data \
 	.data/generator_class_small_generator.data \
 	.data/mesh_cargo_cube.data \
 	.data/mesh_fighter_cockpit.data \
@@ -84,14 +98,6 @@ all_data = \
 	.data/slot_class_light_weapon.data \
 	.data/slot_class_medium_weapon.data \
 	.data/slot_class_small_generator.data \
-	.data/system_alpha_centauri.data \
-	.data/system_rigel.data \
-	.data/system_sol.data \
-	.data/system_tichel.data \
-	.data/system_link_alpha_centauri_sol.data \
-	.data/system_link_alpha_centauri_tichel.data \
-	.data/system_link_rigel_sol.data \
-	.data/system_link_rigel_tichel.data \
 	.data/texture_font.data \
 	.data/texture_particle.data \
 	.data/turret_class_light_laser.data \
@@ -145,8 +151,6 @@ data.arx: $(data_arx) $(arxtouch_dependencies) $(arxadd_dependencies)
 	$(command_arxadd) $@ --name="Meshes" --type=0 --sub-type=0 --relation="::child"
 	$(command_arxadd) $@ --name="Ship Classes" --type=0 --sub-type=0 --relation="::child"
 	$(command_arxadd) $@ --name="Asset Classes" --type=0 --sub-type=0 --relation="::child"
-	$(command_arxadd) $@ --name="Systems" --type=0 --sub-type=0 --relation="::child"
-	$(command_arxadd) $@ --name="System Links" --type=0 --sub-type=0 --relation="::child"
 	$(command_arxadd) $@ --name="Weapon Classes" --type=0 --sub-type=0 --relation="::child"
 	$(command_arxadd) $@ --name="Turret Classes" --type=0 --sub-type=0 --relation="::child"
 	$(command_arxadd) $@ --name="Commodity Classes" --type=0 --sub-type=0 --relation="::child"
@@ -206,16 +210,6 @@ data.arx: $(data_arx) $(arxtouch_dependencies) $(arxadd_dependencies)
 	$(command_arxadd) $@ --name="Luxury Goods" --type=8 --sub-type=0 --relation="/Commodity Classes::child" --data-file=.data/commodity_class_luxury_goods.data
 	$(command_arxadd) $@ --name="Medical Supplies" --type=8 --sub-type=0 --relation="/Commodity Classes::child" --data-file=.data/commodity_class_medical_supplies.data
 	$(command_arxadd) $@ --name="Metal" --type=8 --sub-type=0 --relation="/Commodity Classes::child" --data-file=.data/commodity_class_metal.data
-	@echo "\n\nAdding systems ...\n"
-	$(command_arxadd) $@ --name="Alpha Centauri" --type=5 --sub-type=0 --relation="/Systems::child" --data-file=.data/system_alpha_centauri.data
-	$(command_arxadd) $@ --name="Rigel" --type=5 --sub-type=0 --relation="/Systems::child" --data-file=.data/system_rigel.data
-	$(command_arxadd) $@ --name="Sol" --type=5 --sub-type=0 --sub-type=0 --relation="/Systems::child" --data-file=.data/system_sol.data
-	$(command_arxadd) $@ --name="Tichel" --type=5 --sub-type=0 --relation="/Systems::child" --data-file=.data/system_tichel.data
-	@echo "\n\nAdding system links ...\n"
-	$(command_arxadd) $@ --name="Alpha Centauri / Sol" --type=6 --sub-type=0 --relation="/System Links::child" --data-file=.data/system_link_alpha_centauri_sol.data
-	$(command_arxadd) $@ --name="Alpha Centauri / Tichel" --type=6 --sub-type=0 --relation="/System Links::child" --data-file=.data/system_link_alpha_centauri_tichel.data
-	$(command_arxadd) $@ --name="Rigel / Sol" --type=6 --sub-type=0 --relation="/System Links::child" --data-file=.data/system_link_rigel_sol.data
-	$(command_arxadd) $@ --name="Rigel / Tichel" --type=6 --sub-type=0 --relation="/System Links::child" --data-file=.data/system_link_rigel_tichel.data
 	@echo "\n\nAdding models ...\n"
 	$(command_arxadd) $@ --name="Cargo Cube" --type=b --sub-type=0 --relation="/Models::child" --data-file=.data/model_cargo_cube.data
 	$(command_arxadd) $@ --name="Fighter" --type=b --sub-type=0 --relation="/Models::child" --data-file=.data/model_fighter.data
@@ -261,6 +255,28 @@ data.arx: $(data_arx) $(arxtouch_dependencies) $(arxadd_dependencies)
 	$(command_arxadd) $@ --name="Earth" --type=e --sub-type=0 --relation="/Galaxies/Milky Way::factions" --data-file=.data/galaxies/milky_way/faction_earth.data
 	$(command_arxadd) $@ --name="Neutral" --type=e --sub-type=0 --relation="/Galaxies/Milky Way::factions" --data-file=.data/galaxies/milky_way/faction_neutral.data
 	$(command_arxadd) $@ --name="Pirates" --type=e --sub-type=0 --relation="/Galaxies/Milky Way::factions" --data-file=.data/galaxies/milky_way/faction_pirates.data
+	$(command_arxadd) $@ --name="Alpha Centauri" --type=5 --sub-type=0 --relation="/Galaxies/Milky Way::systems" --data-file=.data/galaxies/milky_way/system_alpha_centauri.data
+	$(command_arxadd) $@ --name="Alpha Centauri" --type=18 --sub-type=0 --relation="/Galaxies/Milky Way::systems/Alpha Centauri::stars" --data-file=.data/galaxies/milky_way/star_alpha_centauri.data
+	$(command_arxadd) $@ --name="Hephant" --type=19 --sub-type=0 --relation="/Galaxies/Milky Way::systems/Alpha Centauri::planets" --data-file=.data/galaxies/milky_way/planet_hephant.data
+	$(command_arxadd) $@ --name="Tau Prime" --type=19 --sub-type=0 --relation="/Galaxies/Milky Way::systems/Alpha Centauri::planets" --data-file=.data/galaxies/milky_way/planet_tau_prime.data
+	$(command_arxadd) $@ --name="Rigel" --type=5 --sub-type=0 --relation="/Galaxies/Milky Way::systems" --data-file=.data/galaxies/milky_way/system_rigel.data
+	$(command_arxadd) $@ --name="Rigel" --type=18 --sub-type=0 --relation="/Galaxies/Milky Way::systems/Rigel::stars" --data-file=.data/galaxies/milky_way/star_rigel.data
+	$(command_arxadd) $@ --name="Rigel Guardian" --type=19 --sub-type=0 --relation="/Galaxies/Milky Way::systems/Rigel::planets" --data-file=.data/galaxies/milky_way/planet_rigel_guardian.data
+	$(command_arxadd) $@ --name="Sol" --type=5 --sub-type=0 --relation="/Galaxies/Milky Way::systems" --data-file=.data/galaxies/milky_way/system_sol.data
+	$(command_arxadd) $@ --name="Sol" --type=18 --sub-type=0 --relation="/Galaxies/Milky Way::systems/Sol::stars" --data-file=.data/galaxies/milky_way/star_sol.data
+	$(command_arxadd) $@ --name="Earth" --type=19 --sub-type=0 --relation="/Galaxies/Milky Way::systems/Sol::planets" --data-file=.data/galaxies/milky_way/planet_earth.data
+	$(command_arxadd) $@ --name="Mars" --type=19 --sub-type=0 --relation="/Galaxies/Milky Way::systems/Sol::planets" --data-file=.data/galaxies/milky_way/planet_mars.data
+	$(command_arxadd) $@ --name="Moon" --type=19 --sub-type=0 --relation="/Galaxies/Milky Way::systems/Sol::planets" --data-file=.data/galaxies/milky_way/planet_moon.data
+	$(command_arxadd) $@ --name="Tichel" --type=5 --sub-type=0 --relation="/Galaxies/Milky Way::systems" --data-file=.data/galaxies/milky_way/system_tichel.data
+	$(command_arxadd) $@ --name="Tichel" --type=18 --sub-type=0 --relation="/Galaxies/Milky Way::systems/Tichel::stars" --data-file=.data/galaxies/milky_way/star_tichel.data
+	$(command_arxadd) $@ --path="/Galaxies/Milky Way::systems/Alpha Centauri" --relation="/Galaxies/Milky Way::systems/Sol::linked-systems"
+	$(command_arxadd) $@ --path="/Galaxies/Milky Way::systems/Alpha Centauri" --relation="/Galaxies/Milky Way::systems/Tichel::linked-systems"
+	$(command_arxadd) $@ --path="/Galaxies/Milky Way::systems/Rigel" --relation="/Galaxies/Milky Way::systems/Sol::linked-systems"
+	$(command_arxadd) $@ --path="/Galaxies/Milky Way::systems/Rigel" --relation="/Galaxies/Milky Way::systems/Tichel::linked-systems"
+	$(command_arxadd) $@ --path="/Galaxies/Milky Way::systems/Sol" --relation="/Galaxies/Milky Way::systems/Alpha Centauri::linked-systems"
+	$(command_arxadd) $@ --path="/Galaxies/Milky Way::systems/Sol" --relation="/Galaxies/Milky Way::systems/Rigel::linked-systems"
+	$(command_arxadd) $@ --path="/Galaxies/Milky Way::systems/Tichel" --relation="/Galaxies/Milky Way::systems/Alpha Centauri::linked-systems"
+	$(command_arxadd) $@ --path="/Galaxies/Milky Way::systems/Tichel" --relation="/Galaxies/Milky Way::systems/Rigel::linked-systems"
 
 .data .data/galaxies .data/galaxies/milky_way:
 	mkdir $@

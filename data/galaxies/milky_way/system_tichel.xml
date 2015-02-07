@@ -1,0 +1,9 @@
+<system>
+	<identifier>tichel</identifier>
+	<name>Tichel</name>
+	<position>
+		<x>4.0</x>
+		<y>9.0</y>
+	</position>
+	<traffic-density>0.005</traffic-density>
+</system>

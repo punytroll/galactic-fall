@@ -56,7 +56,7 @@ public:
 	void ReadAssetClasses(ClassManager< AssetClass > * AssetClassManager);
 	void ReadBatteryClasses(ClassManager< BatteryClass > * BatteryClassManager);
 	void ReadCommodityClasses(ClassManager< CommodityClass > * CommodityClassManager);
-	Galaxy * ReadGalaxy(const std::string & GalaxyIdentifier);
+	Galaxy * ReadGalaxy(const std::string & GalaxyIdentifier, ClassManager< AssetClass > * AssetClassManager);
 	void ReadGeneratorClasses(ClassManager< GeneratorClass > * GeneratorClassManager);
 	void ReadMeshes(void);
 	void ReadModels(void);
@@ -65,8 +65,6 @@ public:
 	void ReadShadersAndPrograms(Graphics::ShadingManager * ShadingManager);
 	void ReadShipClasses(ClassManager< ShipClass > * ShipClassManager, ClassManager< SlotClass > * SlotClassManager);
 	void ReadSlotClasses(ClassManager< SlotClass > * SlotClassManager);
-	void ReadSystems(ClassManager< AssetClass > * AssetClassManager);
-	void ReadSystemLinks(void);
 	void ReadTurretClasses(ClassManager< TurretClass > * TurretClassManager);
 	void ReadTextures(void);
 	void ReadWeaponClasses(ClassManager< WeaponClass > * WeaponClassManager);
@@ -74,6 +72,7 @@ public:
 private:
 	void _ReadItems(const std::string & Path, std::function< void (Arxx::Reference &) > ReaderFunction);
 	void _ReadItems(Arxx::Structure::Relation & Relation, std::function< void (Arxx::Reference &) > ReaderFunction);
+	void _ReadSystem(Arxx::Reference & Reference, ClassManager< AssetClass > * AssetClassManager, Galaxy * Galaxy, std::multimap< std::string, std::string > & SystemLinks);
 	Arxx::Archive * _Archive;
 };
 

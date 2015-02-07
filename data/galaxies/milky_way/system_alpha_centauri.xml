@@ -1,0 +1,9 @@
+<system>
+	<identifier>alpha_centauri</identifier>
+	<name>Alpha Centauri</name>
+	<position>
+		<x>10.0</x>
+		<y>5.0</y>
+	</position>
+	<traffic-density>0.015</traffic-density>
+</system>

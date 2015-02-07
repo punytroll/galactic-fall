@@ -1,0 +1,9 @@
+<system>
+	<identifier>sol</identifier>
+	<name>Sol</name>
+	<position>
+		<x>0.0</x>
+		<y>0.0</y>
+	</position>
+	<traffic-density>0.05</traffic-density>
+</system>
