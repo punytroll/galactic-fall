@@ -299,6 +299,8 @@ meshes-all-recursive:
 
 .data/scenario_new_game.data: savegame_new_game.xml
 
+.data/scenario_rich_game.data: savegame_rich_game.xml
+
 .data/scenario_sol_spectator.data: savegame_sol_spectator.xml
 
 .data/vertex_shader_default.data: shaders/vertex_shader_default
