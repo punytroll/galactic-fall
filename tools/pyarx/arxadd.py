@@ -66,11 +66,15 @@ parser.add_argument("--sub-type", dest="item-sub-type", action=HexadecimalString
 parser.add_argument("--version", dest="item-version", action=VersionString, help="The item version given in hexadecimal version form.")
 parser.add_argument("--relation", dest="item-relations", action="append", default=[])
 parser.add_argument("--root-item", dest="root-item", action="store_true")
+parser.add_argument("--path", dest="item-path", help="Refers to an item in the archive which can be changed.")
 arguments = vars(parser.parse_args())
 if arguments["archive-file"] != None:
 	archive = Archive()
 	archive.load(arguments["archive-file"])
-	item = Item()
+	if arguments["item-path"] != None:
+		item = archive.get_item_by_path(arguments["item-path"])
+	else:
+		item = Item()
 	if arguments["item-identifier"] != None:
 		item.set_identifier(arguments["item-identifier"])
 	if arguments["item-name"] != None:
@@ -84,7 +88,8 @@ if arguments["archive-file"] != None:
 		item.get_version().set_minor_number(arguments["item-version"].get_minor_number())
 		item.get_version().set_revision_number(arguments["item-version"].get_revision_number())
 		item.get_version().set_candidate_number(arguments["item-version"].get_candidate_number())
-	archive.register_item(item)
+	if item.get_archive() == None:
+		archive.register_item(item)
 	for add_to_relation in arguments["item-relations"]:
 		if "::" in add_to_relation:
 			item_description, relation = add_to_relation.rsplit("::", 1)
