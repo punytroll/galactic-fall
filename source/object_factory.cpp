@@ -218,6 +218,7 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		NewShip->SetMaximumForwardThrust(ShipClass->GetForwardThrust());
 		NewShip->SetMaximumSpeed(ShipClass->GetMaximumSpeed());
 		NewShip->SetMaximumTurnSpeed(ShipClass->GetTurnSpeed());
+		assert(g_Galaxy != nullptr);
 		NewShip->SetFaction(g_Galaxy->GetFaction("neutral")->GetReference());
 		NewShip->SetHull(ShipClass->GetHull());
 		
