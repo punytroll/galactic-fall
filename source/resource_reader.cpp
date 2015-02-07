@@ -76,13 +76,14 @@ static void ReadFaction(Arxx::Reference & Reference, Galaxy * Galaxy);
 static void ReadGeneratorClass(Arxx::Reference & Reference, ClassManager< GeneratorClass > * GeneratorClassManager);
 static void ReadMesh(Arxx::Reference & Reference);
 static void ReadModel(Arxx::Reference & Reference);
+static void ReadPlanet(Arxx::Reference & Reference, Galaxy * Galaxy, System * System, ClassManager< AssetClass > * AssetClassManager);
 static void ReadProgram(Arxx::Reference & Reference, Graphics::ShadingManager * ShadingManager);
 static void ReadScenario(Arxx::Reference & Reference, ScenarioManager * ScenarioManager);
 static void ReadShader(Arxx::Reference & Reference, Graphics::ShadingManager * ShadingManager);
 static void ReadShipClass(Arxx::Reference & Reference, ClassManager< ShipClass > * ShipClassManager, ClassManager< SlotClass > * SlotClassManager);
 static void ReadSlotClass(Arxx::Reference & Reference, ClassManager< SlotClass > * SlotClassManager);
-static void ReadSystem(Arxx::Reference & Reference, ClassManager< AssetClass > * AssetClassManager);
-static void ReadSystemLink(Arxx::Reference & Reference);
+static void ReadStar(Arxx::Reference & Reference, System * System);
+static void ReadSystemLink(Arxx::Reference & Reference, System * System, std::multimap< std::string, std::string > & SystemLinks);
 static void ReadTexture(Arxx::Reference & Reference);
 static void ReadTurretClass(Arxx::Reference & Reference, ClassManager< TurretClass > * TurretClassManager);
 static void ReadWeaponClass(Arxx::Reference & Reference, ClassManager< WeaponClass > * WeaponClassManager);
@@ -189,7 +190,7 @@ void ResourceReader::ReadCommodityClasses(ClassManager< CommodityClass > * Commo
 	_ReadItems("/Commodity Classes", std::bind(ReadCommodityClass, std::placeholders::_1, CommodityClassManager));
 }
 
-Galaxy * ResourceReader::ReadGalaxy(const std::string & GalaxyIdentifier)
+Galaxy * ResourceReader::ReadGalaxy(const std::string & GalaxyIdentifier, ClassManager< AssetClass > * AssetClassManager)
 {
 	assert(_Archive != nullptr);
 	
@@ -234,6 +235,14 @@ Galaxy * ResourceReader::ReadGalaxy(const std::string & GalaxyIdentifier)
 				throw std::runtime_error("The item '" + Path + "/" + GalaxyItem->GetName() + "' does not contain a 'factions' relation.");
 			}
 			_ReadItems(GalaxyItem->GetStructure().GetRelation("factions"), std::bind(ReadFaction, std::placeholders::_1, NewGalaxy));
+			
+			std::multimap< std::string, std::string > SystemLinks;
+			
+			_ReadItems(GalaxyItem->GetStructure().GetRelation("systems"), std::bind(&ResourceReader::_ReadSystem, this, std::placeholders::_1, AssetClassManager, NewGalaxy, SystemLinks));
+			for(auto & SystemLink : SystemLinks)
+			{
+				std::cout << SystemLink.first << " -> " << SystemLink.second << std::endl;
+			}
 			
 			return NewGalaxy;
 		}
@@ -289,14 +298,53 @@ void ResourceReader::ReadSlotClasses(ClassManager< SlotClass > * SlotClassManage
 	_ReadItems("/Slot Classes", std::bind(ReadSlotClass, std::placeholders::_1, SlotClassManager));
 }
 
-void ResourceReader::ReadSystems(ClassManager< AssetClass > * AssetClassManager)
+void ResourceReader::_ReadSystem(Arxx::Reference & Reference, ClassManager< AssetClass > * AssetClassManager, Galaxy * Galaxy, std::multimap< std::string, std::string > & SystemLinks)
 {
-	_ReadItems("/Systems", std::bind(ReadSystem, std::placeholders::_1, AssetClassManager));
-}
-
-void ResourceReader::ReadSystemLinks(void)
-{
-	_ReadItems("/System Links", ReadSystemLink);
+	Arxx::Item * Item(Resolve(Reference));
+	
+	if(Item->GetType() != DATA_TYPE_SYSTEM)
+	{
+		throw std::runtime_error("Item type for system '" + Item->GetName() + "' should be '" + to_string_cast(DATA_TYPE_SYSTEM) + "' not '" + to_string_cast(Item->GetType()) + "'.");
+	}
+	if(Item->GetSubType() != 0)
+	{
+		throw std::runtime_error("Item sub type for system '" + Item->GetName() + "' should be '0' not '" + to_string_cast(Item->GetSubType()) + "'.");
+	}
+	
+	Arxx::BufferReader Reader(*Item);
+	std::string Identifier;
+	
+	Reader >> Identifier;
+	
+	auto NewSystem(dynamic_cast< System * >(g_ObjectFactory->Create("system", Identifier, false)));
+	
+	if(NewSystem == nullptr)
+	{
+		throw std::runtime_error("Could not create system '" + Identifier + "'.");
+	}
+	NewSystem->SetObjectIdentifier("::system(" + NewSystem->GetClassIdentifier() + ")");
+	
+	std::string Name;
+	Vector2f Position;
+	float TrafficDensity;
+	
+	Reader >> Name >> Position >> TrafficDensity;
+	NewSystem->GetAspectName()->SetName(Name);
+	NewSystem->GetAspectPosition()->SetPosition(Vector3f::CreateFromComponents(Position[0], Position[1], 0.0f));
+	NewSystem->SetTrafficDensity(TrafficDensity);
+	Galaxy->GetAspectObjectContainer()->AddContent(NewSystem);
+	if(Item->GetStructure().bHasRelation("stars") == true)
+	{
+		_ReadItems(Item->GetStructure().GetRelation("stars"), std::bind(ReadStar, std::placeholders::_1, NewSystem));
+	}
+	if(Item->GetStructure().bHasRelation("planets") == true)
+	{
+		_ReadItems(Item->GetStructure().GetRelation("planets"), std::bind(ReadPlanet, std::placeholders::_1, Galaxy, NewSystem, AssetClassManager));
+	}
+	if(Item->GetStructure().bHasRelation("linked-systems") == true)
+	{
+		_ReadItems(Item->GetStructure().GetRelation("linked-systems"), std::bind(ReadSystemLink, std::placeholders::_1, NewSystem, SystemLinks));
+	}
 }
 
 void ResourceReader::ReadTextures(void)
@@ -636,6 +684,93 @@ static void ReadModel(Arxx::Reference & Reference)
 	}
 }
 
+static void ReadPlanet(Arxx::Reference & Reference, Galaxy * Galaxy, System * System, ClassManager< AssetClass > * AssetClassManager)
+{
+	Arxx::Item * Item(Resolve(Reference));
+	
+	if(Item->GetType() != DATA_TYPE_PLANET)
+	{
+		throw std::runtime_error("Item type for planet '" + Item->GetName() + "' should be '" + to_string_cast(DATA_TYPE_PLANET) + "' not '" + to_string_cast(Item->GetType()) + "'.");
+	}
+	if(Item->GetSubType() != 0)
+	{
+		throw std::runtime_error("Item sub type for planet '" + Item->GetName() + "' should be '0' not '" + to_string_cast(Item->GetSubType()) + "'.");
+	}
+	
+	Arxx::BufferReader Reader(*Item);
+	std::string Identifier;
+	
+	Reader >> Identifier;
+	
+	auto NewPlanet(dynamic_cast< Planet * >(g_ObjectFactory->Create("planet", Identifier, false)));
+	
+	if(NewPlanet == nullptr)
+	{
+		throw std::runtime_error("Could not create planet '" + Identifier + "'.");
+	}
+	NewPlanet->SetObjectIdentifier("::planet(" + NewPlanet->GetClassIdentifier() + ")::in_system(" + System->GetClassIdentifier() + ")");
+	
+	std::string Name;
+	std::string Description;
+	VisualizationPrototype VisualizationPrototype;
+	
+	Reader >> Name >> Description >> VisualizationPrototype;
+	NewPlanet->GetAspectName()->SetName(Name);
+	NewPlanet->SetDescription(Description);
+	assert(NewPlanet->GetAspectVisualization() != nullptr);
+	assert(NewPlanet->GetAspectVisualization()->GetVisualizationPrototype() == nullptr);
+	NewPlanet->GetAspectVisualization()->SetVisualizationPrototype(VisualizationPrototype);
+	
+	Vector2f PlanetPosition;
+	float Size;
+	Arxx::u4byte OfferedAssetsCount;
+	
+	Reader >> PlanetPosition >> Size >> OfferedAssetsCount;
+	NewPlanet->GetAspectPosition()->SetPosition(Vector3f::CreateFromComponents(PlanetPosition[0], PlanetPosition[1], 0.0f));
+	NewPlanet->SetSize(Size);
+	for(Arxx::u4byte OfferedAssetNumber = 1; OfferedAssetNumber <= OfferedAssetsCount; ++OfferedAssetNumber)
+	{
+		std::string AssetClassIdentifier;
+		float BasePriceModifier;
+		
+		Reader >> AssetClassIdentifier >> BasePriceModifier;
+		
+		auto AssetClass(AssetClassManager->Get(AssetClassIdentifier));
+		
+		if(AssetClass == nullptr)
+		{
+			throw std::runtime_error("Could not find asset class '" + AssetClassIdentifier + "' for planet '" + Identifier + "' in system '" + System->GetObjectIdentifier() + "'.");
+		}
+		
+		auto NewPlanetAssetClass(NewPlanet->CreatePlanetAssetClass(AssetClass));
+		
+		NewPlanetAssetClass->SetBasePriceModifier(BasePriceModifier);
+	}
+	
+	float LandingFeePerSpace;
+	bool OffersRecharging;
+	float RechargingFeePerEnergy;
+	bool OffersRepairing;
+	float RepairingFeePerHull;
+	std::string FactionIdentifier;
+	
+	Reader >> LandingFeePerSpace >> OffersRecharging >> RechargingFeePerEnergy >> OffersRepairing >> RepairingFeePerHull >> FactionIdentifier;
+	NewPlanet->SetLandingFeePerSpace(LandingFeePerSpace / 1000.0f);
+	NewPlanet->SetOffersRecharging(OffersRecharging);
+	NewPlanet->SetRechargingFeePerEnergy(RechargingFeePerEnergy);
+	NewPlanet->SetOffersRepairing(OffersRepairing);
+	NewPlanet->SetRepairingFeePerHull(RepairingFeePerHull);
+	
+	auto Faction(Galaxy->GetFaction(FactionIdentifier));
+	
+	if(Faction == nullptr)
+	{
+		throw std::runtime_error("Could not find faction '" + FactionIdentifier + "' for planet '" + Identifier + "' in system '" + System->GetObjectIdentifier() + "'.");
+	}
+	NewPlanet->SetFaction(Faction->GetReference());
+	System->GetAspectObjectContainer()->AddContent(NewPlanet);
+}
+
 static void ReadProgram(Arxx::Reference & Reference, Graphics::ShadingManager * ShadingManager)
 {
 	auto Item(Resolve(Reference));
@@ -871,7 +1006,35 @@ static void ReadSlotClass(Arxx::Reference & Reference, ClassManager< SlotClass >
 	}
 }
 
-static void ReadSystem(Arxx::Reference & Reference, ClassManager< AssetClass > * AssetClassManager)
+static void ReadStar(Arxx::Reference & Reference, System * System)
+{
+	Arxx::Item * Item(Resolve(Reference));
+	
+	if(Item->GetType() != DATA_TYPE_STAR)
+	{
+		throw std::runtime_error("Item type for star '" + Item->GetName() + "' should be '" + to_string_cast(DATA_TYPE_STAR) + "' not '" + to_string_cast(Item->GetType()) + "'.");
+	}
+	if(Item->GetSubType() != 0)
+	{
+		throw std::runtime_error("Item sub type for star '" + Item->GetName() + "' should be '0' not '" + to_string_cast(Item->GetSubType()) + "'.");
+	}
+	
+	Arxx::BufferReader Reader(*Item);
+	std::string Identifier;
+	Vector2f Position;
+	Graphics::ColorRGB Color;
+	
+	Reader >> Identifier >> Position >> Color;
+	
+	auto NewStar(dynamic_cast< Star * >(g_ObjectFactory->Create("star", Identifier, false)));
+	
+	NewStar->SetObjectIdentifier("::star(" + Identifier + ")::in_system(" + System->GetClassIdentifier() + ")");
+	NewStar->GetAspectPosition()->SetPosition(Vector3f::CreateFromComponents(Position[0], Position[1], 0.0f));
+	NewStar->SetColor(Color);
+	System->GetAspectObjectContainer()->AddContent(NewStar);
+}
+
+static void ReadSystemLink(Arxx::Reference & Reference, System * System, std::multimap< std::string, std::string > & SystemLinks)
 {
 	Arxx::Item * Item(Resolve(Reference));
 	
@@ -888,143 +1051,7 @@ static void ReadSystem(Arxx::Reference & Reference, ClassManager< AssetClass > *
 	std::string Identifier;
 	
 	Reader >> Identifier;
-	
-	auto NewSystem(dynamic_cast< System * >(g_ObjectFactory->Create("system", Identifier, false)));
-	
-	if(NewSystem == nullptr)
-	{
-		throw std::runtime_error("Could not create system '" + Identifier + "'.");
-	}
-	NewSystem->SetObjectIdentifier("::system(" + NewSystem->GetClassIdentifier() + ")");
-	
-	std::string Name;
-	Vector2f Position;
-	float TrafficDensity;
-	std::string StarIdentifier;
-	Vector2f StarPosition;
-	Graphics::ColorRGB StarColor;
-	Arxx::u4byte PlanetCount;
-	
-	Reader >> Name >> Position >> TrafficDensity >> StarIdentifier >> StarPosition >> StarColor >> PlanetCount;
-	NewSystem->GetAspectName()->SetName(Name);
-	NewSystem->GetAspectPosition()->SetPosition(Vector3f::CreateFromComponents(Position[0], Position[1], 0.0f));
-	NewSystem->SetTrafficDensity(TrafficDensity);
-	
-	Star * NewStar(dynamic_cast< Star * >(g_ObjectFactory->Create("star", StarIdentifier, false)));
-	
-	NewStar->SetObjectIdentifier("::star(" + StarIdentifier + ")::in_system(" + NewSystem->GetClassIdentifier() + ")");
-	NewStar->GetAspectPosition()->SetPosition(Vector3f::CreateFromComponents(StarPosition[0], StarPosition[1], 0.0f));
-	NewStar->SetColor(StarColor);
-	NewSystem->GetAspectObjectContainer()->AddContent(NewStar);
-	for(Arxx::u4byte Number = 1; Number <= PlanetCount; ++Number)
-	{
-		std::string PlanetIdentifier;
-		
-		Reader >> PlanetIdentifier;
-		
-		auto NewPlanet(dynamic_cast< Planet * >(g_ObjectFactory->Create("planet", PlanetIdentifier, false)));
-		
-		if(NewPlanet == nullptr)
-		{
-			throw std::runtime_error("Could not create planet '" + PlanetIdentifier + "'.");
-		}
-		NewPlanet->SetObjectIdentifier("::planet(" + NewPlanet->GetClassIdentifier() + ")::in_system(" + NewSystem->GetClassIdentifier() + ")");
-		
-		std::string Name;
-		std::string Description;
-		VisualizationPrototype VisualizationPrototype;
-		
-		Reader >> Name >> Description >> VisualizationPrototype;
-		NewPlanet->GetAspectName()->SetName(Name);
-		NewPlanet->SetDescription(Description);
-		assert(NewPlanet->GetAspectVisualization() != nullptr);
-		assert(NewPlanet->GetAspectVisualization()->GetVisualizationPrototype() == nullptr);
-		NewPlanet->GetAspectVisualization()->SetVisualizationPrototype(VisualizationPrototype);
-		
-		Vector2f PlanetPosition;
-		float Size;
-		Arxx::u4byte OfferedAssetsCount;
-		
-		Reader >> PlanetPosition >> Size >> OfferedAssetsCount;
-		NewPlanet->GetAspectPosition()->SetPosition(Vector3f::CreateFromComponents(PlanetPosition[0], PlanetPosition[1], 0.0f));
-		NewPlanet->SetSize(Size);
-		for(Arxx::u4byte OfferedAssetNumber = 1; OfferedAssetNumber <= OfferedAssetsCount; ++OfferedAssetNumber)
-		{
-			std::string AssetClassIdentifier;
-			float BasePriceModifier;
-			
-			Reader >> AssetClassIdentifier >> BasePriceModifier;
-			
-			auto AssetClass(AssetClassManager->Get(AssetClassIdentifier));
-			
-			if(AssetClass == nullptr)
-			{
-				throw std::runtime_error("Could not find asset class '" + AssetClassIdentifier + "' for planet '" + PlanetIdentifier + "' in system '" + Identifier + "'.");
-			}
-			
-			auto NewPlanetAssetClass(NewPlanet->CreatePlanetAssetClass(AssetClass));
-			
-			NewPlanetAssetClass->SetBasePriceModifier(BasePriceModifier);
-		}
-		
-		float LandingFeePerSpace;
-		bool OffersRecharging;
-		float RechargingFeePerEnergy;
-		bool OffersRepairing;
-		float RepairingFeePerHull;
-		std::string FactionIdentifier;
-		
-		Reader >> LandingFeePerSpace >> OffersRecharging >> RechargingFeePerEnergy >> OffersRepairing >> RepairingFeePerHull >> FactionIdentifier;
-		NewPlanet->SetLandingFeePerSpace(LandingFeePerSpace / 1000.0f);
-		NewPlanet->SetOffersRecharging(OffersRecharging);
-		NewPlanet->SetRechargingFeePerEnergy(RechargingFeePerEnergy);
-		NewPlanet->SetOffersRepairing(OffersRepairing);
-		NewPlanet->SetRepairingFeePerHull(RepairingFeePerHull);
-		
-		auto Faction(g_Galaxy->GetFaction(FactionIdentifier));
-		
-		if(Faction == nullptr)
-		{
-			throw std::runtime_error("Could not find faction '" + FactionIdentifier + "' for planet '" + PlanetIdentifier + "' in system '" + Identifier + "'.");
-		}
-		NewPlanet->SetFaction(Faction->GetReference());
-		NewSystem->GetAspectObjectContainer()->AddContent(NewPlanet);
-	}
-	g_Galaxy->GetAspectObjectContainer()->AddContent(NewSystem);
-}
-
-static void ReadSystemLink(Arxx::Reference & Reference)
-{
-	auto Item(Resolve(Reference));
-	
-	if(Item->GetType() != DATA_TYPE_SYSTEM_LINK)
-	{
-		throw std::runtime_error("Item type for system link '" + Item->GetName() + "' should be '" + to_string_cast(DATA_TYPE_SYSTEM_LINK) + "' not '" + to_string_cast(Item->GetType()) + "'.");
-	}
-	if(Item->GetSubType() != 0)
-	{
-		throw std::runtime_error("Item sub type for system link '" + Item->GetName() + "' should be '0' not '" + to_string_cast(Item->GetSubType()) + "'.");
-	}
-	
-	Arxx::BufferReader Reader(*Item);
-	std::string System1Identifier;
-	std::string System2Identifier;
-	
-	Reader >> System1Identifier >> System2Identifier;
-	
-	auto System1(g_Galaxy->GetSystem(System1Identifier));
-	auto System2(g_Galaxy->GetSystem(System2Identifier));
-	
-	if(System1 == nullptr)
-	{
-		throw std::runtime_error("For the system link '" + Item->GetName() + "' the first system '" + System1Identifier + "' must be defined.");
-	}		
-	if(System2 == nullptr)
-	{
-		throw std::runtime_error("For the system link '" + Item->GetName() + "' the second system '" + System2Identifier + "' must be defined.");
-	}
-	System1->AddLinkedSystem(System2);
-	System2->AddLinkedSystem(System1);
+	SystemLinks.insert(std::make_pair(System->GetObjectIdentifier(), Identifier));
 }
 
 static void ReadTexture(Arxx::Reference & Reference)

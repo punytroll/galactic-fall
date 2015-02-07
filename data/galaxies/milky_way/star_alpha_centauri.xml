@@ -1,0 +1,12 @@
+<star>
+	<identifier>alpha_centauri</identifier>
+	<position>
+		<x>50.0</x>
+		<y>-50.0</y>
+	</position>
+	<color>
+		<red>0.8</red>
+		<green>0.95</green>
+		<blue>1.0</blue>
+	</color>
+</star>

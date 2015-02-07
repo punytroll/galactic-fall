@@ -1,0 +1,9 @@
+<system>
+	<identifier>rigel</identifier>
+	<name>Rigel</name>
+	<position>
+		<x>-4.0</x>
+		<y>6.0</y>
+	</position>
+	<traffic-density>0.01</traffic-density>
+</system>

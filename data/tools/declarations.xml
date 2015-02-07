@@ -129,7 +129,7 @@
 		<u4byte identifier="space-requirement"/>
 	</physical-aspect>
 	
-	<planet>
+	<planet type="25" sub-type="0">
 		<string identifier="identifier"/>
 		<string identifier="name"/>
 		<string identifier="description"/>
@@ -219,7 +219,7 @@
 		<collection identifier="accepted-slot-classes" element-type="accepted-slot-class"/>
 	</slot-class>
 	
-	<star>
+	<star type="24" sub-type="0">
 		<string identifier="identifier"/>
 		<vector2f identifier="position"/>
 		<color-rgb-3f identifier="color"/>
@@ -232,13 +232,11 @@
 		<string identifier="program-identifier"/>
 	</style>
 	
-	<system type="5">
+	<system type="5" sub-type="0">
 		<string identifier="identifier"/>
 		<string identifier="name"/>
 		<vector2f identifier="position"/>
 		<float identifier="traffic-density"/>
-		<star identifier="star"/>
-		<collection identifier="planets" element-type="planet"/>
 	</system>
 	
 	<system-link type="6">
