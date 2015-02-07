@@ -87,7 +87,7 @@ if arguments["archive-file"] != None:
 	archive.register_item(item)
 	for add_to_relation in arguments["item-relations"]:
 		if "::" in add_to_relation:
-			item_description, relation = add_to_relation.split("::")
+			item_description, relation = add_to_relation.rsplit("::", 1)
 		else:
 			item_description = add_to_relation
 			relation = "child"
