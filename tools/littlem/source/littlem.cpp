@@ -77,6 +77,7 @@ std::string GetAxisString(FixedAxis Axis)
 		}
 	}
 	assert(false);
+	exit(1);
 }
 
 enum class FixedDirection
@@ -126,6 +127,7 @@ const Vector3f & GetDirectionVector(FixedDirection Direction)
 		}
 	}
 	assert(false);
+	exit(1);
 }
 
 enum class FixedView
@@ -168,6 +170,7 @@ std::string GetFixedViewString(FixedView View)
 		}
 	}
 	assert(false);
+	exit(1);
 }
 
 enum class MouseButton
@@ -210,6 +213,7 @@ std::string GetModelerViewString(ModelerView View)
 		}
 	}
 	assert(false);
+	exit(1);
 }
 
 class Keyboard
