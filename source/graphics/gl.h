@@ -20,8 +20,9 @@
 #ifndef GRAPHICS_GL_H
 #define GRAPHICS_GL_H
 
-#include <assert.h>
 #include <GL/gl.h>
+
+#include <cassert>
 
 #define LoadOpenGLFunction(name) { \
 		assert(__ ## name == nullptr); \
@@ -79,7 +80,7 @@ extern glCallListsFunction __glCallLists;
 typedef GLenum (* glCheckFramebufferStatusFunction)(GLenum target);
 extern glCheckFramebufferStatusFunction __glCheckFramebufferStatus;
 #ifdef NDEBUG
-#define GLCheckFramebufferStatus(target) __glCheckFramebufferStatus(target); CheckGLError;
+#define GLCheckFramebufferStatus(target) __glCheckFramebufferStatus(target)
 #else
 inline GLenum GLCheckFramebufferStatus(GLenum target)
 {
@@ -124,7 +125,7 @@ extern glCompileShaderFunction __glCompileShader;
 typedef GLuint (* glCreateProgramFunction)(void);
 extern glCreateProgramFunction __glCreateProgram;
 #ifdef NDEBUG
-#define GLCreateProgram() __glCreateProgram(); CheckGLError;
+#define GLCreateProgram() __glCreateProgram()
 #else
 inline GLuint GLCreateProgram(void)
 {
@@ -141,7 +142,7 @@ inline GLuint GLCreateProgram(void)
 typedef GLuint (* glCreateShaderFunction)(GLenum shaderType);
 extern glCreateShaderFunction __glCreateShader;
 #ifdef NDEBUG
-#define GLCreateShader(shaderType) __glCreateShader(shaderType); CheckGLError;
+#define GLCreateShader(shaderType) __glCreateShader(shaderType)
 #else
 inline GLuint GLCreateShader(GLenum shaderType)
 {
@@ -222,7 +223,7 @@ extern glGenFramebuffersFunction __glGenFramebuffers;
 typedef GLuint (* glGenListsFunction)(GLsizei range);
 extern glGenListsFunction __glGenLists;
 #ifdef NDEBUG
-#define GLGenLists(range) __glGenLists(range); CheckGLError;
+#define GLGenLists(range) __glGenLists(range)
 #else
 inline GLuint GLGenLists(GLsizei range)
 {
@@ -259,7 +260,7 @@ extern glGetActiveUniformFunction __glGetActiveUniform;
 typedef GLint (* glGetAttribLocationFunction)(GLuint program, const GLchar * name);
 extern glGetAttribLocationFunction __glGetAttribLocation;
 #ifdef NDEBUG
-#define GLGetAttribLocation(name) __glGetAttribLocation(name); CheckGLError;
+#define GLGetAttribLocation(program, name) __glGetAttribLocation(program, name)
 #else
 inline GLint GLGetAttribLocation(GLuint program, const GLchar * name)
 {
@@ -288,7 +289,7 @@ extern glGetShaderivFunction __glGetShaderiv;
 typedef const GLubyte * (* glGetStringFunction)(GLenum name);
 extern glGetStringFunction __glGetString;
 #ifdef NDEBUG
-#define GLGetString(name) __glGetString(name); CheckGLError;
+#define GLGetString(name) __glGetString(name)
 #else
 inline const GLubyte * GLGetString(GLenum name)
 {
@@ -305,7 +306,7 @@ inline const GLubyte * GLGetString(GLenum name)
 typedef GLint (* glGetUniformLocationFunction)(GLuint program, const GLchar * name);
 extern glGetUniformLocationFunction __glGetUniformLocation;
 #ifdef NDEBUG
-#define GLGetUniformLocation(name) __glGetUniformLocation(name); CheckGLError;
+#define GLGetUniformLocation(program, name) __glGetUniformLocation(program, name)
 #else
 inline GLint GLGetUniformLocation(GLuint program, const GLchar * name)
 {
