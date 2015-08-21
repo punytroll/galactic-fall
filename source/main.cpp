@@ -18,10 +18,10 @@
 **/
 
 #include <arpa/inet.h>
-#include <assert.h>
 #include <errno.h>
 
 #include <algorithm>
+#include <cassert>
 #include <fstream>
 #include <iostream>
 #include <list>
@@ -128,42 +128,42 @@
 
 // these objects are exported via globals.h
 ClassManager< AssetClass > * g_AssetClassManager(nullptr);
-Galaxy * g_Galaxy(0);
-Graphics::Engine * g_GraphicsEngine(0);
-Graphics::PerspectiveProjection * g_MainProjection(0);
-Graphics::View * g_MainView(0);
-Graphics::Orthogonal2DProjection * g_UIProjection(0);
-Graphics::View * g_UIView(0);
+Galaxy * g_Galaxy(nullptr);
+Graphics::Engine * g_GraphicsEngine(nullptr);
+Graphics::PerspectiveProjection * g_MainProjection(nullptr);
+Graphics::View * g_MainView(nullptr);
+Graphics::Orthogonal2DProjection * g_UIProjection(nullptr);
+Graphics::View * g_UIView(nullptr);
 std::vector< Graphics::View * > g_PrerenderedViews;
-MessageDispatcher * g_MessageDispatcher(0);
-ObjectFactory * g_ObjectFactory(0);
-ScenarioManager * g_ScenarioManager(0);
-ClassManager< SlotClass > * g_SlotClassManager(0);
-SystemStatistics * g_SystemStatistics(0);
-UI::UserInterface * g_UserInterface(0);
+MessageDispatcher * g_MessageDispatcher(nullptr);
+ObjectFactory * g_ObjectFactory(nullptr);
+ScenarioManager * g_ScenarioManager(nullptr);
+ClassManager< SlotClass > * g_SlotClassManager(nullptr);
+SystemStatistics * g_SystemStatistics(nullptr);
+UI::UserInterface * g_UserInterface(nullptr);
 
 // global dialog pointers
-UI::MainMenuWindow * g_MainMenuWindow(0);
-UI::MapDialog * g_MapDialog(0);
-UI::OutfitShipDialog * g_OutfitShipDialog(0);
-UI::TimingDialog * g_TimingDialog(0);
+UI::MainMenuWindow * g_MainMenuWindow(nullptr);
+UI::MapDialog * g_MapDialog(nullptr);
+UI::OutfitShipDialog * g_OutfitShipDialog(nullptr);
+UI::TimingDialog * g_TimingDialog(nullptr);
 
 Vector2f g_LastMotion(-1.0f, -1.0f);
 UI::MouseButtonEvent::MouseButton g_MouseButton(UI::MouseButtonEvent::MouseButton::Unspecified);
 Vector3f g_CameraPosition;
 bool g_FirstPersonCameraMode(false);
 Reference< CommandMind > g_InputMind;
-OutputObserver * g_CharacterObserver;
+OutputObserver * g_CharacterObserver(nullptr);
 float g_Width(0.0f);
 float g_Height(0.0f);
-System * g_CurrentSystem;
+System * g_CurrentSystem(nullptr);
 float g_TimeWarp(1.0f);
 bool g_Quit(false);
 bool g_Pause(false);
-TimeoutNotificationManager * g_GameTimeTimeoutNotifications;
+TimeoutNotificationManager * g_GameTimeTimeoutNotifications(nullptr);
 TimeoutNotification g_SpawnShipTimeoutNotification;
-TimeoutNotificationManager * g_RealTimeTimeoutNotifications;
-Display * g_Display;
+TimeoutNotificationManager * g_RealTimeTimeoutNotifications(nullptr);
+Display * g_Display(nullptr);
 GLXContext g_GLXContext;
 Window g_Window;
 Colormap g_ColorMap;
@@ -171,8 +171,8 @@ bool g_EchoEvents(false);
 bool g_EchoResizes(false);
 bool g_DumpEndReport(false);
 bool g_TakeScreenShot(false);
-ResourceReader * g_ResourceReader(0);
-Settings * g_Settings(0);
+ResourceReader * g_ResourceReader(nullptr);
+Settings * g_Settings(nullptr);
 void (*g_KeyboardLookupTable[128][2])(void);
 
 namespace Graphics
