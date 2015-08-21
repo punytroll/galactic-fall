@@ -132,7 +132,6 @@ Galaxy * g_Galaxy(nullptr);
 Graphics::Engine * g_GraphicsEngine(nullptr);
 Graphics::PerspectiveProjection * g_MainProjection(nullptr);
 Graphics::View * g_MainView(nullptr);
-Graphics::Orthogonal2DProjection * g_UIProjection(nullptr);
 Graphics::View * g_UIView(nullptr);
 std::vector< Graphics::View * > g_PrerenderedViews;
 MessageDispatcher * g_MessageDispatcher(nullptr);
@@ -866,9 +865,14 @@ void Resize(void)
 	MainViewRenderTarget->SetSize(g_Width, g_Height);
 	assert(g_MainProjection != 0);
 	g_MainProjection->SetAspect(g_Width / g_Height);
-	assert(g_UIProjection != 0);
-	g_UIProjection->SetRight(g_Width);
-	g_UIProjection->SetBottom(g_Height);
+	assert(g_UIView != nullptr);
+	assert(g_UIView->GetCamera() != nullptr);
+	
+	auto UIProjection(dynamic_cast< Graphics::Orthogonal2DProjection * >(g_UIView->GetCamera()->GetProjection()));
+	
+	assert(UIProjection != nullptr);
+	UIProjection->SetRight(g_Width);
+	UIProjection->SetBottom(g_Height);
 	assert(g_UserInterface != 0);
 	assert(g_UserInterface->GetRootWidget() != 0);
 	g_UserInterface->GetRootWidget()->SetSize(Vector2f(g_Width, g_Height));
@@ -3481,13 +3485,14 @@ int main(int argc, char ** argv)
 	g_Galaxy = 0;
 	g_GraphicsEngine = new Graphics::Engine();
 	// UI view
-	g_UIProjection = new Graphics::Orthogonal2DProjection();
-	g_UIProjection->SetLeft(0.0f);
-	g_UIProjection->SetTop(0.0f);
+	Graphics::Orthogonal2DProjection * UIProjection(new Graphics::Orthogonal2DProjection());
+	
+	UIProjection->SetLeft(0.0f);
+	UIProjection->SetTop(0.0f);
 	g_UIView = new Graphics::View();
 	g_UIView->SetClearColor(Graphics::ColorRGBO(0.0f, 0.0f, 0.0f, 1.0f));
 	assert(g_UIView->GetCamera() != nullptr);
-	g_UIView->GetCamera()->SetProjection(g_UIProjection);
+	g_UIView->GetCamera()->SetProjection(UIProjection);
 	g_UIView->GetCamera()->SetSpacialMatrix(Matrix4f::CreateIdentity());
 	g_GraphicsEngine->AddView(g_UIView);
 	
@@ -3634,10 +3639,10 @@ int main(int argc, char ** argv)
 	// ui view
 	assert(g_UIView != nullptr);
 	assert(g_UIView->GetCamera() != nullptr);
-	assert(g_UIView->GetCamera()->GetProjection() == g_UIProjection);
-	assert(g_UIProjection != nullptr);
+	assert(g_UIView->GetCamera()->GetProjection() == UIProjection);
+	assert(UIProjection != nullptr);
 	g_UIView->GetCamera()->SetProjection(nullptr);
-	delete g_UIProjection;
+	delete UIProjection;
 	assert(g_UIView->GetScene() == UIScene);
 	assert(UIScene != nullptr);
 	g_UIView->SetScene(nullptr);
