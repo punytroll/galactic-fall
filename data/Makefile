@@ -1,9 +1,8 @@
 root = ..
 
--include $(root)/configuration
-
 default: all
 
+include $(root)/tools/littlem_to_xml/Makefile.include
 include $(root)/tools/raw_to_littlem/Makefile.include
 include $(root)/tools/xml_to_data/Makefile.include
 include $(root)/tools/pyarx/Makefile.include
@@ -118,13 +117,7 @@ all-here: check-dependencies $(all_data) data.arx
 
 all-recursive: meshes-all-recursive textures-all-recursive all-here
 
-check-dependencies: raw_to_littlem-check-dependencies xml_to_data-check-dependencies arxadd-check-dependencies arxtouch-check-dependencies
-	@if [ x`which python` = x ]; then \
-	    echo -e "\nYour system is missing the python interpreter.\nIn order to build the data file you will need to install it on your system.\n"; false; \
-	fi
-	@if [ x`which xsltproc` = x ]; then \
-	    echo -e "\nYour system is missing the xsltproc program.\nTo build the data file you will need to install it on your system.\n"; false; \
-	fi
+check-dependencies: littlem_to_xml-check-dependencies raw_to_littlem-check-dependencies xml_to_data-check-dependencies arxadd-check-dependencies arxtouch-check-dependencies
 
 clean: clean-recursive
 
@@ -284,11 +277,11 @@ data.arx: $(data_arx) $(arxtouch_dependencies) $(arxadd_dependencies)
 .data/%.data: %.xml $(declarations_xml) $(xml_to_data_dependencies)
 	$(command_xml_to_data) --declarations=$(declarations_xml) --in=$< --out=$@
 
-mesh_%.xml: meshes/original/littlem/%.xml $(littlem_to_xml_xsl)
-	xsltproc -output $@ tools/littlem_to_xml.xsl $<
+mesh_%.xml: meshes/original/littlem/%.xml $(littlem_to_xml_dependencies)
+	$(command_littlem_to_xml) --in=$< --out=$@
 
-mesh_%.xml: meshes/generated/littlem/%.xml $(littlem_to_xml_xsl)
-	xsltproc -output $@ tools/littlem_to_xml.xsl $<
+mesh_%.xml: meshes/generated/littlem/%.xml $(littlem_to_xml_dependencies)
+	$(command_littlem_to_xml) --in=$< --out=$@
 
 meshes-all-recursive:
 	@$(MAKE) -C meshes all-recursive
