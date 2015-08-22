@@ -128,7 +128,7 @@ def end():
 	pass
 
 if __name__ == "__main__":
-	from StringIO import StringIO
+	from io import StringIO
 	
 	string_stream = StringIO()
 	xml_stream = XMLStream(string_stream)
@@ -139,6 +139,13 @@ if __name__ == "__main__":
 	xml_stream = XMLStream(string_stream)
 	xml_stream << element << "name" << text << "TEXT" << end
 	assert string_stream.getvalue() == "<name>TEXT</name>"
+	
+	string_stream = StringIO()
+	xml_stream = XMLStream(string_stream)
+	xml_stream << element << "first"
+	xml_stream << element << "second" << text << "text" << end
+	xml_stream << end
+	assert string_stream.getvalue() == "<first><second>text</second></first>"
 	
 	string_stream = StringIO()
 	xml_stream = XMLStream(string_stream)
