@@ -1,0 +1,15 @@
+include $(root)/.configuration.d/PYTHON
+
+littlem_to_xml-check-dependencies: xml_stream-check-dependencies
+	@if [ x`which ${PYTHON}` = x ]; then \
+	    echo -e "\nYour system is missing the ${PYTHON} interpreter.\nIn order to convert littlem files to xml files you will need to install it on your system.\n"; false; \
+	fi
+
+littlem_to_xml_dependencies = \
+	$(PYTHON_configuration) \
+	$(root)/tools/littlem_to_xml/littlem_to_xml.py \
+	$(xml_stream_dependencies)
+
+command_littlem_to_xml = PYTHONPATH=$(root)/tools/xml_stream/ ${PYTHON} $(root)/tools/littlem_to_xml/littlem_to_xml.py
+
+.PHONY: littlem_to_xml-check-dependencies
