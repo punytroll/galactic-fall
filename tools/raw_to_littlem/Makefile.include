@@ -6,7 +6,7 @@ raw_to_littlem-check-dependencies: xml_stream-check-dependencies
 	fi
 
 raw_to_littlem_dependencies = \
-	$(root)/tools/rasterizer/rasterizer.py \
+	$(root)/tools/raw_to_littlem/raw_to_littlem.py \
 	$(xml_stream_dependencies)
 
 command_raw_to_littlem = PYTHONPATH=$(root)/tools/xml_stream/ python $(root)/tools/raw_to_littlem/raw_to_littlem.py
