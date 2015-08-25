@@ -181,7 +181,15 @@ namespace Graphics
 	public:
 		virtual void Draw(Graphics::RenderContext * RenderContext) override
 		{
+			GLEnable(GL_CLIP_PLANE0);
+			GLEnable(GL_CLIP_PLANE1);
+			GLEnable(GL_CLIP_PLANE2);
+			GLEnable(GL_CLIP_PLANE3);
 			g_UserInterface->Draw();
+			GLDisable(GL_CLIP_PLANE0);
+			GLDisable(GL_CLIP_PLANE1);
+			GLDisable(GL_CLIP_PLANE2);
+			GLDisable(GL_CLIP_PLANE3);
 		}
 	};
 }
@@ -3506,10 +3514,6 @@ int main(int argc, char ** argv)
 	UIRootNode->SetClearColorBuffer(true);
 	UIRootNode->SetUseDepthTest(false);
 	UIRootNode->SetUseBlending(true);
-	UIRootNode->SetUseClipPlane0(true);
-	UIRootNode->SetUseClipPlane1(true);
-	UIRootNode->SetUseClipPlane2(true);
-	UIRootNode->SetUseClipPlane3(true);
 	UIRootNode->SetBlendFunction(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	UIScene->SetRootNode(UIRootNode);
 	// main view
