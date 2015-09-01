@@ -32,19 +32,19 @@
 #define CHARACTERS 95
 #define CHARACTEROFFSET 32
 
-const Graphics::Texture * g_FontTexture(0);
+const Graphics::Texture * g_FontTexture(nullptr);
 
 void InitializeFont(void)
 {
-	assert(g_GraphicsEngine != 0);
-	assert(g_GraphicsEngine->GetTextureManager() != 0);
+	assert(g_GraphicsEngine != nullptr);
+	assert(g_GraphicsEngine->GetTextureManager() != nullptr);
 	g_FontTexture = g_GraphicsEngine->GetTextureManager()->Get("font");
-	assert(g_FontTexture != 0);
+	assert(g_FontTexture != nullptr);
 }
 
 void DeinitializeFont(void)
 {
-	g_FontTexture = 0;
+	g_FontTexture = nullptr;
 }
 
 void DrawText(const std::string & String)
@@ -55,17 +55,18 @@ void DrawText(const std::string & String)
 	
 	GLPushAttrib(GL_ENABLE_BIT);
 	GLEnable(GL_TEXTURE_2D);
-	assert(g_FontTexture != 0);
+	assert(g_FontTexture != nullptr);
 	g_FontTexture->Activate();
 	
 	const float GlyphWidth(6.0f / 128.0f);
 	const float GlyphHeight(12.0f / 64.0f);
 	const unsigned int GlyphsPerLine(128 / 6);
 	
-	for(std::string::const_iterator CharacterIterator = String.begin(); CharacterIterator != String.end(); ++CharacterIterator)
+	for(auto Character : String)
 	{
-		int GlyphIndex(*CharacterIterator - CHARACTEROFFSET);
+		auto GlyphIndex(Character - CHARACTEROFFSET);
 		
+		assert((GlyphIndex >= 0) && (GlyphIndex < CHARACTERS));
 		GLBegin(GL_TRIANGLE_FAN);
 		GLTexCoord2f((GlyphIndex % GlyphsPerLine) * GlyphWidth, 1.0f - (GlyphHeight * static_cast< unsigned int >(GlyphIndex / GlyphsPerLine + 1)));
 		GLVertex2f(0.0f, 12.0f);
