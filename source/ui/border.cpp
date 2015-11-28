@@ -34,9 +34,9 @@ UI::Border::~Border(void)
 	_Color = nullptr;
 }
 
-void UI::Border::Draw(void)
+void UI::Border::Draw(Graphics::RenderContext * RenderContext)
 {
-	Widget::Draw();
+	Widget::Draw(RenderContext);
 	if(_Color != nullptr)
 	{
 		GLColor4fv(_Color->GetPointer());

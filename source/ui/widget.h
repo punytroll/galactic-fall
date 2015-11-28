@@ -32,6 +32,7 @@
 namespace Graphics
 {
 	class ColorRGBO;
+	class RenderContext;
 }
 
 namespace UI
@@ -50,7 +51,7 @@ namespace UI
 		
 		Widget(Widget * SupWidget = 0, const std::string & Name = "");
 		virtual ~Widget(void);
-		virtual void Draw(void);
+		virtual void Draw(Graphics::RenderContext * RenderContext);
 		void SetBackgroundColor(const Graphics::ColorRGBO & BackgroundColor);
 		void SetDisabledBackgroundColor(const Graphics::ColorRGBO & DisabledBackgroundColor);
 		void UnsetBackgroundColor(void);

@@ -25,6 +25,7 @@
 namespace Graphics
 {
 	class ColorRGBO;
+	class RenderContext;
 }
 
 namespace UI
@@ -41,7 +42,7 @@ namespace UI
 		void SetColor(const Graphics::ColorRGBO & Color);
 		void SetWidth(float Width);
 		// draw
-		virtual void Draw(void) override;
+		virtual void Draw(Graphics::RenderContext * RenderContext) override;
 	private:
 		Graphics::ColorRGBO * _Color;
 		float _Width;

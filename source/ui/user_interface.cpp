@@ -79,7 +79,7 @@ UI::UserInterface::~UserInterface(void)
 	_RootWidget = nullptr;
 }
 
-void UI::UserInterface::Draw(void) const
+void UI::UserInterface::Draw(Graphics::RenderContext * RenderContext) const
 {
 	if((_RootWidget != nullptr) && (_RootWidget->IsVisible() == true))
 	{
@@ -87,7 +87,7 @@ void UI::UserInterface::Draw(void) const
 		UI::Widget::_PushClippingRectangle(_RootWidget->_Position, _RootWidget->_Size);
 		GLTranslatef(_RootWidget->_Position[0], _RootWidget->_Position[1], 0.0f);
 		UI::Widget::_DrawClippingRectangle();
-		_RootWidget->Draw();
+		_RootWidget->Draw(RenderContext);
 		UI::Widget::_PopClippingRectangle();
 		GLPopMatrix();
 	}

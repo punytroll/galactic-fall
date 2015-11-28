@@ -25,13 +25,18 @@
 class Character;
 class System;
 
+namespace Graphics
+{
+	class RenderContext;
+}
+
 namespace UI
 {
 	class StarMapDisplay : public UI::Widget
 	{
 	public:
 		StarMapDisplay(UI::Widget * SupWidget, System * System, Character * Character);
-		virtual void Draw(void) override;
+		virtual void Draw(Graphics::RenderContext * RenderContext) override;
 		System * GetSelectedSystem(void);
 	private:
 		// callbacks

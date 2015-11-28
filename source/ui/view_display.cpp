@@ -58,9 +58,9 @@ void UI::ViewDisplay::SetView(Graphics::View * View)
 	}
 }
 
-void UI::ViewDisplay::Draw(void)
+void UI::ViewDisplay::Draw(Graphics::RenderContext * RenderContext)
 {
-	Widget::Draw();
+	Widget::Draw(RenderContext);
 	if(_View != nullptr)
 	{
 		assert(_View->GetRenderTarget() != nullptr);

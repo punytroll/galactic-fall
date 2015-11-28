@@ -26,6 +26,11 @@
 
 class KeyEventInformation;
 
+namespace Graphics
+{
+	class RenderContext;
+}
+
 namespace UI
 {
 	class Event;
@@ -40,7 +45,7 @@ namespace UI
 	public:
 		UserInterface(void);
 		virtual ~UserInterface(void);
-		void Draw(void) const;
+		void Draw(Graphics::RenderContext * RenderContext) const;
 		void DispatchDestroyingEvent(UI::Event & DestroyingEvent);
 		void DispatchKeyEvent(UI::KeyEvent & KeyEvent);
 		void DispatchMouseButtonEvent(UI::MouseButtonEvent & MouseButtonEvent);

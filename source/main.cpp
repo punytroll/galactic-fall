@@ -185,7 +185,7 @@ namespace Graphics
 			GLEnable(GL_CLIP_PLANE1);
 			GLEnable(GL_CLIP_PLANE2);
 			GLEnable(GL_CLIP_PLANE3);
-			g_UserInterface->Draw();
+			g_UserInterface->Draw(RenderContext);
 			GLDisable(GL_CLIP_PLANE0);
 			GLDisable(GL_CLIP_PLANE1);
 			GLDisable(GL_CLIP_PLANE2);
