@@ -238,10 +238,10 @@ Galaxy * ResourceReader::ReadGalaxy(const std::string & GalaxyIdentifier, ClassM
 			
 			std::multimap< std::string, std::string > SystemLinks;
 			
-			_ReadItems(GalaxyItem->GetStructure().GetRelation("systems"), std::bind(&ResourceReader::_ReadSystem, this, std::placeholders::_1, AssetClassManager, NewGalaxy, SystemLinks));
+			_ReadItems(GalaxyItem->GetStructure().GetRelation("systems"), std::bind(&ResourceReader::_ReadSystem, this, std::placeholders::_1, AssetClassManager, NewGalaxy, std::ref(SystemLinks)));
 			for(auto & SystemLink : SystemLinks)
 			{
-				std::cout << SystemLink.first << " -> " << SystemLink.second << std::endl;
+				NewGalaxy->GetSystem(SystemLink.first)->AddLinkedSystem(NewGalaxy->GetSystem(SystemLink.second));
 			}
 			
 			return NewGalaxy;
@@ -343,7 +343,7 @@ void ResourceReader::_ReadSystem(Arxx::Reference & Reference, ClassManager< Asse
 	}
 	if(Item->GetStructure().bHasRelation("linked-systems") == true)
 	{
-		_ReadItems(Item->GetStructure().GetRelation("linked-systems"), std::bind(ReadSystemLink, std::placeholders::_1, NewSystem, SystemLinks));
+		_ReadItems(Item->GetStructure().GetRelation("linked-systems"), std::bind(ReadSystemLink, std::placeholders::_1, NewSystem, std::ref(SystemLinks)));
 	}
 }
 
@@ -1051,7 +1051,7 @@ static void ReadSystemLink(Arxx::Reference & Reference, System * System, std::mu
 	std::string Identifier;
 	
 	Reader >> Identifier;
-	SystemLinks.insert(std::make_pair(System->GetObjectIdentifier(), Identifier));
+	SystemLinks.insert(std::make_pair(System->GetClassIdentifier(), Identifier));
 }
 
 static void ReadTexture(Arxx::Reference & Reference)
