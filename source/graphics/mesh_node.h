@@ -41,12 +41,12 @@ namespace Graphics
 		/**
 		 * @note This passes the memory responsibility of the style to the mesh node.
 		 **/
-		void SetStyle(const Graphics::Style * Style);
+		void SetStyle(Graphics::Style * Style);
 		// modifiers
 		virtual void Draw(Graphics::RenderContext * RenderContext) override;
 	private:
 		const Graphics::Mesh * _Mesh;
-		const Graphics::Style * _Style;
+		Graphics::Style * _Style;
 	};
 	
 	inline const Graphics::Mesh * MeshNode::GetMesh(void) const

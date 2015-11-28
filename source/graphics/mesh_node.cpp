@@ -46,7 +46,7 @@ void Graphics::MeshNode::Draw(Graphics::RenderContext * RenderContext)
 	RenderContext->SetStyle(nullptr);
 }
 
-void Graphics::MeshNode::SetStyle(const Graphics::Style * Style)
+void Graphics::MeshNode::SetStyle(Graphics::Style * Style)
 {
 	delete _Style;
 	_Style = Style;
