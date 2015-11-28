@@ -32,6 +32,7 @@
 
 Graphics::RenderContext::RenderContext(void) :
 	_Camera(nullptr),
+	_Clipping(nullptr),
 	_Engine(nullptr),
 	_Light(nullptr),
 	_Node(nullptr),
@@ -43,6 +44,7 @@ Graphics::RenderContext::RenderContext(void) :
 Graphics::RenderContext::~RenderContext(void)
 {
 	assert(_Camera == nullptr);
+	assert(_Clipping == nullptr);
 	assert(_Engine == nullptr);
 	assert(_Light == nullptr);
 	assert(_Node == nullptr);
@@ -157,6 +159,13 @@ void Graphics::RenderContext::ActivateProgram(void)
 				
 				break;
 			}
+		case Graphics::Program::UniformContent::Clipping4F:
+			{
+				assert(_Clipping != nullptr);
+				_Program->_SetUniform(Uniform.first, *_Clipping);
+				
+				break;
+			}
 		}
 	}
 }
@@ -166,4 +175,19 @@ void Graphics::RenderContext::DeactivateProgram(void)
 	assert(_Program != nullptr);
 	_Program->_Deactivate();
 	_Program = nullptr;
+}
+
+void Graphics::RenderContext::SetClipping(float Left, float Top, float Bottom, float Right)
+{
+	UnsetClipping();
+	_Clipping = new Vector4f(Left, Top, Bottom, Right);
+}
+
+void Graphics::RenderContext::UnsetClipping(void)
+{
+	if(_Clipping != nullptr)
+	{
+		delete _Clipping;
+		_Clipping = nullptr;
+	}
 }

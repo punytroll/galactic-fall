@@ -23,6 +23,8 @@
 #include <set>
 #include <vector>
 
+class Vector4f;
+
 namespace Graphics
 {
 	class Camera;
@@ -40,6 +42,7 @@ namespace Graphics
 		~RenderContext(void);
 		// setters
 		void SetCamera(Graphics::Camera * Camera);
+		void SetClipping(float Left, float Top, float Bottom, float Right);
 		void SetEngine(Graphics::Engine * Engine);
 		void SetLight(Graphics::Light * Light);
 		void SetNode(Graphics::Node * Node);
@@ -47,8 +50,10 @@ namespace Graphics
 		// modifiers
 		void ActivateProgram(void);
 		void DeactivateProgram(void);
+		void UnsetClipping(void);
 	private:
 		Graphics::Camera * _Camera;
+		Vector4f * _Clipping;
 		Graphics::Engine * _Engine;
 		Graphics::Light * _Light;
 		Graphics::Node * _Node;

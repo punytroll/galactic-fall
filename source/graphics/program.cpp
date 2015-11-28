@@ -163,6 +163,10 @@ void Graphics::Program::Build(Graphics::ShadingManager * ShadingManager)
 		{
 			_Uniforms[Location] = Graphics::Program::UniformContent::MaterialShininessF;
 		}
+		else if((Name == std::string("in_Clipping")) && (Type == GL_FLOAT_VEC4) && (Size == 1))
+		{
+			_Uniforms[Location] = Graphics::Program::UniformContent::Clipping4F;
+		}
 		else
 		{
 			ON_DEBUG(std::cout << "        => no recognized combination." << std::endl);
