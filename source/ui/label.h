@@ -27,6 +27,7 @@
 namespace Graphics
 {
 	class ColorRGBO;
+	class RenderContext;
 }
 
 namespace UI
@@ -66,7 +67,7 @@ namespace UI
 		void SetHorizontalAlignment(UI::Label::HorizontalAlignment HorizontalAlignment);
 		void SetVerticalAlignment(UI::Label::VerticalAlignment VerticalAlignment);
 		// modifiers
-		virtual void Draw(void) override;
+		virtual void Draw(Graphics::RenderContext * RenderContext) override;
 	private:
 		UI::Label::HorizontalAlignment m_HorizontalAlignment;
 		std::string m_Text;

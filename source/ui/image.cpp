@@ -52,9 +52,9 @@ void UI::Image::UnsetTexture(void)
 	}
 }
 
-void UI::Image::Draw(void)
+void UI::Image::Draw(Graphics::RenderContext * RenderContext)
 {
-	Widget::Draw();
+	Widget::Draw(RenderContext);
 	if(_TextureIdentifier != 0)
 	{
 		GLPushAttrib(GL_ENABLE_BIT | GL_COLOR_BUFFER_BIT);

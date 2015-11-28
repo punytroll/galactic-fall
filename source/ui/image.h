@@ -24,6 +24,11 @@
 
 #include "widget.h"
 
+namespace Graphics
+{
+	class RenderContext;
+}
+
 namespace UI
 {
 	class Image : public Widget
@@ -36,7 +41,7 @@ namespace UI
 		// modifiers
 		void UnsetTexture(void);
 		// draw
-		virtual void Draw(void) override;
+		virtual void Draw(Graphics::RenderContext * RenderContext) override;
 	private:
 		std::string * _TextureIdentifier;
 	};

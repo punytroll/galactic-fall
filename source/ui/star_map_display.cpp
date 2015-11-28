@@ -45,9 +45,9 @@ UI::StarMapDisplay::StarMapDisplay(Widget * SupWidget, System * System, Characte
 	ConnectMouseMoveCallback(std::bind(&UI::StarMapDisplay::_OnMouseMove, this, std::placeholders::_1));
 }
 
-void UI::StarMapDisplay::Draw(void)
+void UI::StarMapDisplay::Draw(Graphics::RenderContext * RenderContext)
 {
-	Widget::Draw();
+	Widget::Draw(RenderContext);
 	
 	Vector2f Middle(GetSize() / 2);
 	

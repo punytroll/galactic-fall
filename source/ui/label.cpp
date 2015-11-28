@@ -46,11 +46,12 @@ void UI::Label::SetTextColor(const Graphics::ColorRGBO & TextColor)
 	m_TextColor = new Graphics::ColorRGBO(TextColor);
 }
 
-void UI::Label::Draw(void)
+void UI::Label::Draw(Graphics::RenderContext * RenderContext)
 {
+	Widget::Draw(RenderContext);
+	
 	float Width(GetSize()[0]);
 	
-	Widget::Draw();
 	GLColor4fv(m_TextColor->GetPointer());
 	if(m_Wrap == false)
 	{

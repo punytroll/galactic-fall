@@ -26,6 +26,7 @@
 
 namespace Graphics
 {
+	class RenderContext;
 	class View;
 }
 
@@ -41,7 +42,7 @@ namespace UI
 		// setters
 		void SetView(Graphics::View * View);
 		// draw
-		virtual void Draw(void) override;
+		virtual void Draw(Graphics::RenderContext * RenderContext) override;
 	private:
 		Graphics::View * _View;
 	};

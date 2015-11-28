@@ -65,7 +65,7 @@ UI::Widget::~Widget(void)
 	_DisabledBackgroundColor = nullptr;
 }
 
-void UI::Widget::Draw(void)
+void UI::Widget::Draw(Graphics::RenderContext * RenderContext)
 {
 	auto Color((_Enabled == true) ? (_BackgroundColor) : (_DisabledBackgroundColor));
 	
@@ -91,7 +91,7 @@ void UI::Widget::Draw(void)
 				_PushClippingRectangle(SubWidget->_Position, SubWidget->_Size);
 				GLTranslatef(SubWidget->_Position[0], SubWidget->_Position[1], 0.0f);
 				_DrawClippingRectangle();
-				SubWidget->Draw();
+				SubWidget->Draw(RenderContext);
 				_PopClippingRectangle();
 				GLPopMatrix();
 			}
