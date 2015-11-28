@@ -43,7 +43,7 @@ namespace Graphics
 		void SetEngine(Graphics::Engine * Engine);
 		void SetLight(Graphics::Light * Light);
 		void SetNode(Graphics::Node * Node);
-		void SetStyle(const Graphics::Style * Style);
+		void SetStyle(Graphics::Style * Style);
 		// modifiers
 		void ActivateProgram(void);
 		void DeactivateProgram(void);
@@ -53,7 +53,7 @@ namespace Graphics
 		Graphics::Light * _Light;
 		Graphics::Node * _Node;
 		Graphics::Program * _Program;
-		const Graphics::Style * _Style;
+		Graphics::Style * _Style;
 	};
 	
 	inline void Graphics::RenderContext::SetCamera(Graphics::Camera * Camera)
@@ -76,7 +76,7 @@ namespace Graphics
 		_Node = Node;
 	}
 	
-	inline void Graphics::RenderContext::SetStyle(const Graphics::Style * Style)
+	inline void Graphics::RenderContext::SetStyle(Graphics::Style * Style)
 	{
 		_Style = Style;
 	}
