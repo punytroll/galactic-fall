@@ -3030,12 +3030,14 @@ void InitializeOpenGL(void)
 	LoadOpenGLFunction(glCompileShader);
 	LoadOpenGLFunction(glCreateProgram);
 	LoadOpenGLFunction(glCreateShader);
+	LoadOpenGLFunction(glDeleteBuffers);
 	LoadOpenGLFunction(glDeleteFramebuffers);
 	LoadOpenGLFunction(glDeleteLists);
 	LoadOpenGLFunction(glDeleteProgram);
 	LoadOpenGLFunction(glDeleteRenderbuffers);
 	LoadOpenGLFunction(glDeleteShader);
 	LoadOpenGLFunction(glDeleteTextures);
+	LoadOpenGLFunction(glDeleteVertexArrays);
 	LoadOpenGLFunction(glDisable);
 	LoadOpenGLFunction(glDrawArrays);
 	LoadOpenGLFunction(glEnable);

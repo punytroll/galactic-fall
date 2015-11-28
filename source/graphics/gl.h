@@ -156,6 +156,10 @@ inline GLuint GLCreateShader(GLenum shaderType)
 }
 #endif
 
+typedef void (* glDeleteBuffersFunction)(GLsizei n, GLuint * buffers);
+extern glDeleteBuffersFunction __glDeleteBuffers;
+#define GLDeleteBuffers(n, buffers) { assert(__glDeleteBuffers != nullptr); __glDeleteBuffers(n, buffers); CheckGLError; }
+
 typedef void (* glDeleteFramebuffersFunction)(GLsizei n, GLuint * framebuffers);
 extern glDeleteFramebuffersFunction __glDeleteFramebuffers;
 #define GLDeleteFramebuffers(n, framebuffers) { assert(__glDeleteFramebuffers != nullptr); __glDeleteFramebuffers(n, framebuffers); CheckGLError; }
@@ -179,6 +183,10 @@ extern glDeleteShaderFunction __glDeleteShader;
 typedef void (* glDeleteTexturesFunction)(GLsizei n, const GLuint * textures);
 extern glDeleteTexturesFunction __glDeleteTextures;
 #define GLDeleteTextures(n, textures) { assert(__glDeleteTextures != nullptr); __glDeleteTextures(n, textures); CheckGLError; }
+
+typedef void (* glDeleteVertexArraysFunction)(GLsizei n, GLuint * arrays);
+extern glDeleteVertexArraysFunction __glDeleteVertexArrays;
+#define GLDeleteVertexArrays(n, arrays) { assert(__glDeleteVertexArrays != nullptr); __glDeleteVertexArrays(n, arrays); CheckGLError; }
 
 typedef void (* glDisableFunction)(GLenum cap);
 extern glDisableFunction __glDisable;
