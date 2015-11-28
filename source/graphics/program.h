@@ -55,7 +55,8 @@ namespace Graphics
 			LightColorRGB3F,
 			MaterialColorRGB3F,
 			MaterialColorRGBO4F,
-			MaterialShininessF
+			MaterialShininessF,
+			Clipping4F
 		};
 		
 		// constructor
