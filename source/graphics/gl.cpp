@@ -76,7 +76,6 @@ glLightfvFunction __glLightfv(nullptr);
 glLightModelfvFunction __glLightModelfv(nullptr);
 glLinkProgramFunction __glLinkProgram(nullptr);
 glListBaseFunction __glListBase(nullptr);
-glLoadIdentityFunction __glLoadIdentity(nullptr);
 glLoadMatrixfFunction __glLoadMatrixf(nullptr);
 glMaterialfFunction __glMaterialf(nullptr);
 glMaterialfvFunction __glMaterialfv(nullptr);
