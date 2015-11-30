@@ -3057,7 +3057,6 @@ void InitializeOpenGL(void)
 	LoadOpenGLFunction(glLightfv);
 	LoadOpenGLFunction(glLightModelfv);
 	LoadOpenGLFunction(glLinkProgram);
-	LoadOpenGLFunction(glListBase);
 	LoadOpenGLFunction(glLoadMatrixf);
 	LoadOpenGLFunction(glMaterialf);
 	LoadOpenGLFunction(glMaterialfv);
