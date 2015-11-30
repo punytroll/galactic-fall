@@ -74,6 +74,14 @@ void Graphics::RenderContext::ActivateProgram(void)
 	{
 		switch(Uniform.second)
 		{
+		case Graphics::Program::UniformContent::ColorRGBO4F:
+			{
+				assert(_Style != nullptr);
+				assert(_Style->HasDiffuseColor() == true);
+				_Program->_SetUniform(Uniform.first, _Style->GetDiffuseColor());
+				
+				break;
+			}
 		case Graphics::Program::UniformContent::ViewToMonitorMatrix4x4F:
 			{
 				assert(_Camera != nullptr);

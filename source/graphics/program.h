@@ -44,6 +44,7 @@ namespace Graphics
 	public:
 		enum class UniformContent : std::uint32_t
 		{
+			ColorRGBO4F,
 			ViewToMonitorMatrix4x4F,
 			WorldToViewMatrix4x4F,
 			ModelToWorldMatrix4x4F,
