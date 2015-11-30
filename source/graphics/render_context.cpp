@@ -22,6 +22,7 @@
 
 #include "camera.h"
 #include "engine.h"
+#include "gl.h"
 #include "light.h"
 #include "node.h"
 #include "program.h"

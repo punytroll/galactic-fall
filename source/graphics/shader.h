@@ -20,9 +20,9 @@
 #ifndef GRAPHICS_SHADER_H
 #define GRAPHICS_SHADER_H
 
-#include <string>
+#include <GL/gl.h>
 
-#include "gl.h"
+#include <string>
 
 namespace Graphics
 {
