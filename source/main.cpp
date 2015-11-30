@@ -3009,6 +3009,7 @@ void CreateWindow(void)
 void InitializeOpenGL(void)
 {
 	ON_DEBUG(std::cout << "Loading OpenGL functions." << std::endl);
+	LoadOpenGLFunction(glActiveTexture);
 	LoadOpenGLFunction(glAttachShader);
 	LoadOpenGLFunction(glBegin);
 	LoadOpenGLFunction(glBindBuffer);
@@ -3040,6 +3041,7 @@ void InitializeOpenGL(void)
 	LoadOpenGLFunction(glDeleteVertexArrays);
 	LoadOpenGLFunction(glDisable);
 	LoadOpenGLFunction(glDrawArrays);
+	LoadOpenGLFunction(glDrawElements);
 	LoadOpenGLFunction(glEnable);
 	LoadOpenGLFunction(glEnableVertexAttribArray);
 	LoadOpenGLFunction(glEnd);
@@ -3076,6 +3078,7 @@ void InitializeOpenGL(void)
 	LoadOpenGLFunction(glPixelStorei);
 	LoadOpenGLFunction(glPopAttrib);
 	LoadOpenGLFunction(glPopMatrix);
+	LoadOpenGLFunction(glPrimitiveRestartIndex);
 	LoadOpenGLFunction(glPushAttrib);
 	LoadOpenGLFunction(glPushMatrix);
 	LoadOpenGLFunction(glRasterPos2i);
@@ -3090,6 +3093,7 @@ void InitializeOpenGL(void)
 	LoadOpenGLFunction(glTexParameteri);
 	LoadOpenGLFunction(glTranslatef);
 	LoadOpenGLFunction(glUniform1f);
+	LoadOpenGLFunction(glUniform1i);
 	LoadOpenGLFunction(glUniform3fv);
 	LoadOpenGLFunction(glUniform4fv);
 	LoadOpenGLFunction(glUniformMatrix3fv);

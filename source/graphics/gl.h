@@ -33,6 +33,10 @@
 
 #define CheckGLError assert(glGetError() == GL_NO_ERROR);
 
+typedef void (* glActiveTextureFunction)(GLenum texture);
+extern glActiveTextureFunction __glActiveTexture;
+#define GLActiveTexture(texture) { assert(__glActiveTexture != nullptr); __glActiveTexture(texture); CheckGLError; }
+
 typedef void (* glAttachShaderFunction)(GLuint program, GLuint shader);
 extern glAttachShaderFunction __glAttachShader;
 #define GLAttachShader(program, shader) { assert(__glAttachShader != nullptr); __glAttachShader(program, shader); CheckGLError; }
@@ -195,6 +199,10 @@ extern glDisableFunction __glDisable;
 typedef void (* glDrawArraysFunction)(GLenum mode, GLint first, GLsizei count);
 extern glDrawArraysFunction __glDrawArrays;
 #define GLDrawArrays(mode, first, count) { assert(__glDrawArrays != nullptr); __glDrawArrays(mode, first, count); CheckGLError; }
+
+typedef void (* glDrawElementsFunction)(GLenum mode, GLsizei count, GLenum type, const GLvoid * indices);
+extern glDrawElementsFunction __glDrawElements;
+#define GLDrawElements(mode, count, type, indices) { assert(__glDrawElements != nullptr); __glDrawElements(mode, count, type, indices); CheckGLError; }
 
 typedef void (* glEnableFunction)(GLenum cap);
 extern glEnableFunction __glEnable;
@@ -392,6 +400,10 @@ typedef void (* glPopMatrixFunction)(void);
 extern glPopMatrixFunction __glPopMatrix;
 #define GLPopMatrix() { assert(__glPopMatrix != nullptr); __glPopMatrix(); CheckGLError; }
 
+typedef void (* glPrimitiveRestartIndexFunction)(GLuint index);
+extern glPrimitiveRestartIndexFunction __glPrimitiveRestartIndex;
+#define GLPrimitiveRestartIndex(index) { assert(__glPrimitiveRestartIndex != nullptr); __glPrimitiveRestartIndex(index); CheckGLError; }
+
 typedef void (* glPushAttribFunction)(GLbitfield mask);
 extern glPushAttribFunction __glPushAttrib;
 #define GLPushAttrib(mask) { assert(__glPushAttrib != nullptr); __glPushAttrib(mask); CheckGLError; };
@@ -447,6 +459,10 @@ extern glTranslatefFunction __glTranslatef;
 typedef void (* glUniform1fFunction)(GLint location, GLfloat v0);
 extern glUniform1fFunction __glUniform1f;
 #define GLUniform1f(location, v0) { assert(__glUniform1f != nullptr); __glUniform1f(location, v0); CheckGLError; }
+
+typedef void (* glUniform1iFunction)(GLint location, GLint v0);
+extern glUniform1iFunction __glUniform1i;
+#define GLUniform1i(location, v0) { assert(__glUniform1i != nullptr); __glUniform1i(location, v0); CheckGLError; }
 
 typedef void (* glUniform3fvFunction)(GLint location, GLsizei count, const GLfloat * value);
 extern glUniform3fvFunction __glUniform3fv;

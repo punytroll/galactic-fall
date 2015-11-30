@@ -19,6 +19,7 @@
 
 #include "gl.h"
 
+glActiveTextureFunction __glActiveTexture(nullptr);
 glAttachShaderFunction __glAttachShader(nullptr);
 glBeginFunction __glBegin(nullptr);
 glBindBufferFunction __glBindBuffer(nullptr);
@@ -50,6 +51,7 @@ glDeleteTexturesFunction __glDeleteTextures(nullptr);
 glDeleteVertexArraysFunction __glDeleteVertexArrays(nullptr);
 glDisableFunction __glDisable(nullptr);
 glDrawArraysFunction __glDrawArrays(nullptr);
+glDrawElementsFunction __glDrawElements(nullptr);
 glEnableFunction __glEnable(nullptr);
 glEnableVertexAttribArrayFunction __glEnableVertexAttribArray(nullptr);
 glEndFunction __glEnd(nullptr);
@@ -86,6 +88,7 @@ glOrthoFunction __glOrtho(nullptr);
 glPixelStoreiFunction __glPixelStorei(nullptr);
 glPopAttribFunction __glPopAttrib(nullptr);
 glPopMatrixFunction __glPopMatrix(nullptr);
+glPrimitiveRestartIndexFunction __glPrimitiveRestartIndex(nullptr);
 glPushAttribFunction __glPushAttrib(nullptr);
 glPushMatrixFunction __glPushMatrix(nullptr);
 glRasterPos2iFunction __glRasterPos2i(nullptr);
@@ -100,6 +103,7 @@ glTexImage2DFunction __glTexImage2D(nullptr);
 glTexParameteriFunction __glTexParameteri(nullptr);
 glTranslatefFunction __glTranslatef(nullptr);
 glUniform1fFunction __glUniform1f(nullptr);
+glUniform1iFunction __glUniform1i(nullptr);
 glUniform3fvFunction __glUniform3fv(nullptr);
 glUniform4fvFunction __glUniform4fv(nullptr);
 glUniformMatrix3fvFunction __glUniformMatrix3fv(nullptr);
