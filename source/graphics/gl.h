@@ -315,14 +315,6 @@ typedef void (* glLoadMatrixfFunction)(const GLfloat * m);
 extern glLoadMatrixfFunction __glLoadMatrixf;
 #define GLLoadMatrixf(m) { assert(__glLoadMatrixf != nullptr); __glLoadMatrixf(m); CheckGLError; }
 
-typedef void (* glMaterialfFunction)(GLenum face, GLenum pname, GLfloat param);
-extern glMaterialfFunction __glMaterialf;
-#define GLMaterialf(face, pname, param) { assert(__glMaterialf != nullptr); __glMaterialf(face, pname, param); }
-
-typedef void (* glMaterialfvFunction)(GLenum face, GLenum pname, const GLfloat * params);
-extern glMaterialfvFunction __glMaterialfv;
-#define GLMaterialfv(face, pname, params) { assert(__glMaterialfv != nullptr); __glMaterialfv(face, pname, params); }
-
 typedef void (* glMatrixModeFunction)(GLenum mode);
 extern glMatrixModeFunction __glMatrixMode;
 #define GLMatrixMode(mode) { assert(__glMatrixMode != nullptr); __glMatrixMode(mode); CheckGLError; }
@@ -330,18 +322,6 @@ extern glMatrixModeFunction __glMatrixMode;
 typedef void (* glMultMatrixfFunction)(const GLfloat * m);
 extern glMultMatrixfFunction __glMultMatrixf;
 #define GLMultMatrixf(m) { assert(__glMultMatrixf != nullptr); __glMultMatrixf(m); CheckGLError; }
-
-typedef void (* glNewListFunction)(GLuint list, GLenum mode);
-extern glNewListFunction __glNewList;
-#define GLNewList(list, mode) { assert(__glNewList != nullptr); __glNewList(list, mode); CheckGLError; }
-
-typedef void (* glNormal3fvFunction)(const GLfloat * v);
-extern glNormal3fvFunction __glNormal3fv;
-#define GLNormal3fv(v) { assert(__glNormal3fv != nullptr); __glNormal3fv(v); }
-
-typedef void (* glOrthoFunction)(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble nearVal, GLdouble farVal);
-extern glOrthoFunction __glOrtho;
-#define GLOrtho(left, right, bottom, top, nearVal, farVal) { assert(__glOrtho != nullptr); __glOrtho(left, right, bottom, top, nearVal, farVal); CheckGLError; }
 
 typedef void (* glPixelStoreiFunction)(GLenum pname, GLint param);
 extern glPixelStoreiFunction __glPixelStorei;
