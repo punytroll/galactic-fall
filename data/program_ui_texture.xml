@@ -1,0 +1,7 @@
+<shader-program>
+	<identifier>ui_texture</identifier>
+	<shaders>
+		<shader-identifier>vertex_shader_ui_texture</shader-identifier>
+		<shader-identifier>fragment_shader_ui_texture</shader-identifier>
+	</shaders>
+</shader-program>

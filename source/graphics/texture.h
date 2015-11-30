@@ -45,6 +45,7 @@ namespace Graphics
 		// modifiers
 		void Activate(void) const;
 		void Create(unsigned_numeric Width, unsigned_numeric Height, unsigned_numeric Format);
+		void Deactivate(void) const;
 	private:
 		unsigned_numeric _Height;
 		std::string * _Identifier;

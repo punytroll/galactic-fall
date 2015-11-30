@@ -1,0 +1,7 @@
+<shader-program>
+	<identifier>widget</identifier>
+	<shaders>
+		<shader-identifier>vertex_shader_widget</shader-identifier>
+		<shader-identifier>fragment_shader_widget</shader-identifier>
+	</shaders>
+</shader-program>

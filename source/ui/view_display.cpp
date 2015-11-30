@@ -20,6 +20,7 @@
 #include <algorithm>
 
 #include "../globals.h"
+#include "../graphics/drawing.h"
 #include "../graphics/gl.h"
 #include "../graphics/texture.h"
 #include "../graphics/texture_render_target.h"
@@ -65,29 +66,14 @@ void UI::ViewDisplay::Draw(Graphics::RenderContext * RenderContext)
 	{
 		assert(_View->GetRenderTarget() != nullptr);
 		
-		Graphics::TextureRenderTarget * TextureRenderTarget(dynamic_cast< Graphics::TextureRenderTarget * >(_View->GetRenderTarget()));
+		auto TextureRenderTarget(dynamic_cast< Graphics::TextureRenderTarget * >(_View->GetRenderTarget()));
 		
 		assert(TextureRenderTarget != nullptr);
 		assert(TextureRenderTarget->GetTexture() != nullptr);
-		TextureRenderTarget->GetTexture()->Activate();
-		GLPushAttrib(GL_ENABLE_BIT | GL_COLOR_BUFFER_BIT);
-		GLDisable(GL_LIGHTING);
-		GLDisable(GL_DEPTH_TEST);
-		GLEnable(GL_BLEND);
-		GLBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		GLColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-		GLEnable(GL_TEXTURE_2D);
-		GLBegin(GL_QUADS);
-		GLTexCoord2f(0.0f, 1.0f);
-		GLVertex2f(0.0f, 0.0f);
-		GLTexCoord2f(0.0f, 0.0f);
-		GLVertex2f(0.0f, GetSize()[1]);
-		GLTexCoord2f(1.0f, 0.0f);
-		GLVertex2f(GetSize()[0], GetSize()[1]);
-		GLTexCoord2f(1.0f, 1.0f);
-		GLVertex2f(GetSize()[0], 0.0f);
-		GLEnd();
-		GLPopAttrib();
+		
+		auto GlobalPosition{GetGlobalPosition()};
+		
+		Graphics::Drawing::DrawTexture(RenderContext, GlobalPosition[0], GlobalPosition[1], GlobalPosition[1] + GetSize()[1], GlobalPosition[0] + GetSize()[0], TextureRenderTarget->GetTexture());
 	}
 }
  

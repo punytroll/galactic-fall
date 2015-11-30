@@ -103,6 +103,11 @@ void Graphics::Texture::Create(unsigned_numeric Width, unsigned_numeric Height, 
 	_Width = Width;
 	_Height = Height;
 }
+
+void Graphics::Texture::Deactivate(void) const
+{
+	GLBindTexture(GL_TEXTURE_2D, 0);
+}
 	
 const std::string & Graphics::Texture::GetIdentifier(void)
 {

@@ -18,7 +18,9 @@
 **/
 
 #include "../graphics/color_rgbo.h"
-#include "../graphics/gl.h"
+#include "../graphics/drawing.h"
+#include "../graphics/render_context.h"
+#include "../graphics/style.h"
 #include "border.h"
 
 UI::Border::Border(Widget * SupWidget) :
@@ -39,29 +41,19 @@ void UI::Border::Draw(Graphics::RenderContext * RenderContext)
 	Widget::Draw(RenderContext);
 	if(_Color != nullptr)
 	{
-		GLColor4fv(_Color->GetPointer());
-		GLBegin(GL_QUADS);
-			// left
-			GLVertex2f(0.0f, 0.0f);
-			GLVertex2f(0.0f, GetSize()[1]);
-			GLVertex2f(_Width, GetSize()[1]);
-			GLVertex2f(_Width, 0.0f);
-			// bottom
-			GLVertex2f(0.0f, GetSize()[1]);
-			GLVertex2f(GetSize()[0], GetSize()[1]);
-			GLVertex2f(GetSize()[0], GetSize()[1] - _Width);
-			GLVertex2f(0.0f, GetSize()[1] - _Width);
-			// right
-			GLVertex2f(GetSize()[0], GetSize()[1]);
-			GLVertex2f(GetSize()[0], 0.0f);
-			GLVertex2f(GetSize()[0] - _Width, 0.0f);
-			GLVertex2f(GetSize()[0] - _Width, GetSize()[1]);
-			// top
-			GLVertex2f(GetSize()[0], 0.0f);
-			GLVertex2f(0.0f, 0.0f);
-			GLVertex2f(0.0f, _Width);
-			GLVertex2f(GetSize()[0], _Width);
-		GLEnd();
+		assert(RenderContext != nullptr);
+		assert(RenderContext->GetStyle() != nullptr);
+		RenderContext->GetStyle()->SetDiffuseColor(*_Color);
+		RenderContext->GetStyle()->SetProgramIdentifier("widget");
+		RenderContext->ActivateProgram();
+		
+		auto GlobalPosition{GetGlobalPosition()};
+		
+		Graphics::Drawing::DrawBox(RenderContext, GlobalPosition[0], GlobalPosition[1], GlobalPosition[1] + GetSize()[1], GlobalPosition[0] + _Width);
+		Graphics::Drawing::DrawBox(RenderContext, GlobalPosition[0], GlobalPosition[1], GlobalPosition[1] + _Width, GlobalPosition[0] + GetSize()[0]);
+		Graphics::Drawing::DrawBox(RenderContext, GlobalPosition[0], GlobalPosition[1] + GetSize()[1] - _Width, GlobalPosition[1] + GetSize()[1], GlobalPosition[0] + GetSize()[0]);
+		Graphics::Drawing::DrawBox(RenderContext, GlobalPosition[0] + GetSize()[0] - _Width, GlobalPosition[1], GlobalPosition[1] + GetSize()[1], GlobalPosition[0] + GetSize()[0]);
+		RenderContext->DeactivateProgram();
 	}
 }
 
