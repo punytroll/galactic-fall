@@ -33,7 +33,6 @@ glBufferDataFunction __glBufferData(nullptr);
 glCheckFramebufferStatusFunction __glCheckFramebufferStatus(nullptr);
 glClearFunction __glClear(nullptr);
 glClearColorFunction __glClearColor(nullptr);
-glClipPlaneFunction __glClipPlane(nullptr);
 glColor3fFunction __glColor3f(nullptr);
 glColor4fFunction __glColor4f(nullptr);
 glColor4fvFunction __glColor4fv(nullptr);

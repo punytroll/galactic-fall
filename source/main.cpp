@@ -3015,7 +3015,6 @@ void InitializeOpenGL(void)
 	LoadOpenGLFunction(glCheckFramebufferStatus);
 	LoadOpenGLFunction(glClear);
 	LoadOpenGLFunction(glClearColor);
-	LoadOpenGLFunction(glClipPlane);
 	LoadOpenGLFunction(glColor3f);
 	LoadOpenGLFunction(glColor4f);
 	LoadOpenGLFunction(glColor4fv);
