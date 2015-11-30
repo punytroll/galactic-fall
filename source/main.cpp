@@ -3052,13 +3052,8 @@ void InitializeOpenGL(void)
 	LoadOpenGLFunction(glGetUniformLocation);
 	LoadOpenGLFunction(glLinkProgram);
 	LoadOpenGLFunction(glLoadMatrixf);
-	LoadOpenGLFunction(glMaterialf);
-	LoadOpenGLFunction(glMaterialfv);
 	LoadOpenGLFunction(glMatrixMode);
 	LoadOpenGLFunction(glMultMatrixf);
-	LoadOpenGLFunction(glNewList);
-	LoadOpenGLFunction(glNormal3fv);
-	LoadOpenGLFunction(glOrtho);
 	LoadOpenGLFunction(glPixelStorei);
 	LoadOpenGLFunction(glPopAttrib);
 	LoadOpenGLFunction(glPopMatrix);
