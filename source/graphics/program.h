@@ -56,7 +56,8 @@ namespace Graphics
 			MaterialColorRGB3F,
 			MaterialColorRGBO4F,
 			MaterialShininessF,
-			Clipping4F
+			Clipping4F,
+			Texture
 		};
 		
 		// constructor
@@ -76,6 +77,7 @@ namespace Graphics
 		void _SetUniform(GLint Location, const Graphics::ColorRGB & Color);
 		void _SetUniform(GLint Location, const Graphics::ColorRGBO & Color);
 		void _SetUniform(GLint Location, float Float);
+		void _SetUniform(GLint Location, int Integer);
 		void _SetUniform(GLint Location, const Matrix3f & Matrix);
 		void _SetUniform(GLint Location, const Matrix4f & Matrix);
 		void _SetUniform(GLint Location, const Vector3f & Vector);

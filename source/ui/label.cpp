@@ -19,9 +19,10 @@
 
 #include <vector>
 
-#include "../draw_text.h"
 #include "../graphics/color_rgbo.h"
-#include "../graphics/gl.h"
+#include "../graphics/drawing.h"
+#include "../graphics/render_context.h"
+#include "../graphics/style.h"
 #include "label.h"
 
 UI::Label::Label(Widget * SupWidget, const std::string & Text) :
@@ -52,13 +53,15 @@ void UI::Label::Draw(Graphics::RenderContext * RenderContext)
 	
 	float Width(GetSize()[0]);
 	
-	GLColor4fv(m_TextColor->GetPointer());
+	assert(RenderContext != nullptr);
+	assert(RenderContext->GetStyle() != nullptr);
+	RenderContext->GetStyle()->SetDiffuseColor(*m_TextColor);
+	
+	auto GlobalPosition{GetGlobalPosition()};
+	
 	if(m_Wrap == false)
 	{
-		GLPushMatrix();
-		GLTranslatef(((m_HorizontalAlignment == Label::ALIGN_LEFT) ? (0.0f) : ((m_HorizontalAlignment == Label::ALIGN_RIGHT) ? (Width - 6.0f * m_Text.length()) : (0.5f * (Width - 6.0f * m_Text.length())))), ((m_VerticalAlignment == Label::ALIGN_TOP) ? (0.0f) : ((m_VerticalAlignment == Label::ALIGN_BOTTOM) ? (GetSize()[1] - 12.0f) : (0.5f * (GetSize()[1] - 12.0f)))), 0.0f);
-		DrawText(m_Text);
-		GLPopMatrix();
+		Graphics::Drawing::DrawText(RenderContext, GlobalPosition[0] + ((m_HorizontalAlignment == Label::ALIGN_LEFT) ? (0.0f) : ((m_HorizontalAlignment == Label::ALIGN_RIGHT) ? (Width - 6.0f * m_Text.length()) : (0.5f * (Width - 6.0f * m_Text.length())))), GlobalPosition[1] + ((m_VerticalAlignment == Label::ALIGN_TOP) ? (0.0f) : ((m_VerticalAlignment == Label::ALIGN_BOTTOM) ? (GetSize()[1] - 12.0f) : (0.5f * (GetSize()[1] - 12.0f)))), m_Text);
 	}
 	else
 	{
@@ -89,10 +92,7 @@ void UI::Label::Draw(Graphics::RenderContext * RenderContext)
 		}
 		for(std::vector< std::pair< std::string::size_type, std::string::size_type > >::size_type Line = 0; Line < Lines.size(); ++Line)
 		{
-			GLPushMatrix();
-			GLTranslatef(((m_HorizontalAlignment == Label::ALIGN_LEFT) ? (0.0f) : ((m_HorizontalAlignment == Label::ALIGN_RIGHT) ? (Width - 6.0f * Lines[Line].second) : ((Width - 6.0f * Lines[Line].second) / 2.0f))),  ((m_VerticalAlignment == Label::ALIGN_TOP) ? (12.0f * Line) : ((m_VerticalAlignment == Label::ALIGN_BOTTOM) ? (GetSize()[1] - 12.0f * Line) : (0.5f * (GetSize()[1] - 12.0f * Lines.size()) + 12.0f * Line))), 0.0f);
-			DrawText(m_Text.substr(Lines[Line].first, Lines[Line].second));
-			GLPopMatrix();
+			Graphics::Drawing::DrawText(RenderContext, GlobalPosition[0] + ((m_HorizontalAlignment == Label::ALIGN_LEFT) ? (0.0f) : ((m_HorizontalAlignment == Label::ALIGN_RIGHT) ? (Width - 6.0f * Lines[Line].second) : ((Width - 6.0f * Lines[Line].second) / 2.0f))), GlobalPosition[1] + ((m_VerticalAlignment == Label::ALIGN_TOP) ? (12.0f * Line) : ((m_VerticalAlignment == Label::ALIGN_BOTTOM) ? (GetSize()[1] - 12.0f * Line) : (0.5f * (GetSize()[1] - 12.0f * Lines.size()) + 12.0f * Line))), m_Text.substr(Lines[Line].first, Lines[Line].second));
 		}
 	}
 }

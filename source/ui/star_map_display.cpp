@@ -20,9 +20,9 @@
 #include <map>
 
 #include "../character.h"
-#include "../draw_text.h"
 #include "../galaxy.h"
 #include "../globals.h"
+#include "../graphics/drawing.h"
 #include "../graphics/gl.h"
 #include "../map_knowledge.h"
 #include "../object_aspect_name.h"
@@ -51,6 +51,7 @@ void UI::StarMapDisplay::Draw(Graphics::RenderContext * RenderContext)
 	
 	Vector2f Middle(GetSize() / 2);
 	
+	Middle += GetGlobalPosition();
 	Middle += m_OffsetPosition;
 	
 	float SystemSize(5.0f);
@@ -160,7 +161,7 @@ void UI::StarMapDisplay::Draw(Graphics::RenderContext * RenderContext)
 		GLScalef(1.0f, -1.0f, 1.0f);
 		GLTranslatef(0.0f, 12.0f, 0.0f);
 		GLColor3f(1.0f, 1.0f, 1.0f);
-		DrawText((*ExploredSystemIterator)->GetAspectName()->GetName());
+		Graphics::Drawing::DrawText(RenderContext, Middle + Vector2f(Position[0], Position[1] + 12.0f), (*ExploredSystemIterator)->GetAspectName()->GetName());
 		GLPopMatrix();
 		GLPopMatrix();
 	}

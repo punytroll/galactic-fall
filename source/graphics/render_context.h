@@ -33,6 +33,7 @@ namespace Graphics
 	class Node;
 	class Program;
 	class Style;
+	class Texture;
 	
 	class RenderContext
 	{
@@ -40,6 +41,8 @@ namespace Graphics
 		// constructor & destructor
 		RenderContext(void);
 		~RenderContext(void);
+		// getters
+		Graphics::Style * GetStyle(void);
 		// setters
 		void SetCamera(Graphics::Camera * Camera);
 		void SetClipping(float Left, float Top, float Bottom, float Right);
@@ -47,6 +50,7 @@ namespace Graphics
 		void SetLight(Graphics::Light * Light);
 		void SetNode(Graphics::Node * Node);
 		void SetStyle(Graphics::Style * Style);
+		void SetTexture(const Graphics::Texture * Texture);
 		// modifiers
 		void ActivateProgram(void);
 		void DeactivateProgram(void);
@@ -59,7 +63,13 @@ namespace Graphics
 		Graphics::Node * _Node;
 		Graphics::Program * _Program;
 		Graphics::Style * _Style;
+		const Graphics::Texture * _Texture;
 	};
+	
+	inline Graphics::Style * Graphics::RenderContext::GetStyle(void)
+	{
+		return _Style;
+	}
 	
 	inline void Graphics::RenderContext::SetCamera(Graphics::Camera * Camera)
 	{
@@ -84,6 +94,11 @@ namespace Graphics
 	inline void Graphics::RenderContext::SetStyle(Graphics::Style * Style)
 	{
 		_Style = Style;
+	}
+	
+	inline void Graphics::RenderContext::SetTexture(const Graphics::Texture * Texture)
+	{
+		_Texture = Texture;
 	}
 }
 

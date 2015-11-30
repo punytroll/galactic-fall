@@ -38,6 +38,8 @@ all_data = \
 	.data/commodity_class_metal.data \
 	.data/fragment_shader_default.data \
 	.data/fragment_shader_no_lighting.data \
+	.data/fragment_shader_ui_texture.data \
+	.data/fragment_shader_widget.data \
 	.data/galaxies \
 	.data/galaxies/milky_way \
 	.data/galaxies/milky_way/faction_earth.data \
@@ -84,6 +86,8 @@ all_data = \
 	.data/model_transporter.data \
 	.data/program_default.data \
 	.data/program_no_lighting.data \
+	.data/program_ui_texture.data \
+	.data/program_widget.data \
 	.data/scenario_new_game.data \
 	.data/scenario_rich_game.data \
 	.data/scenario_sol_spectator.data \
@@ -102,6 +106,8 @@ all_data = \
 	.data/turret_class_light_laser.data \
 	.data/vertex_shader_default.data \
 	.data/vertex_shader_no_lighting.data \
+	.data/vertex_shader_ui_texture.data \
+	.data/vertex_shader_widget.data \
 	.data/weapon_class_light_laser.data \
 	.data/weapon_class_medium_laser.data
 
@@ -240,9 +246,15 @@ data.arx: $(data_arx) $(arxtouch_dependencies) $(arxadd_dependencies)
 	$(command_arxadd) $@ --name="Default Vertex Shader" --type=13 --sub-type=0 --relation="/Shaders::child" --data-file=.data/vertex_shader_default.data
 	$(command_arxadd) $@ --name="No Lighting Fragment Shader" --type=13 --sub-type=1 --relation="/Shaders::child" --data-file=.data/fragment_shader_no_lighting.data
 	$(command_arxadd) $@ --name="No Lighting Vertex Shader" --type=13 --sub-type=0 --relation="/Shaders::child" --data-file=.data/vertex_shader_no_lighting.data
+	$(command_arxadd) $@ --name="UI Texture Fragment Shader" --type=13 --sub-type=1 --relation="/Shaders::child" --data-file=.data/fragment_shader_ui_texture.data
+	$(command_arxadd) $@ --name="UI Texture Vertex Shader" --type=13 --sub-type=0 --relation="/Shaders::child" --data-file=.data/vertex_shader_ui_texture.data
+	$(command_arxadd) $@ --name="Widget Fragment Shader" --type=13 --sub-type=1 --relation="/Shaders::child" --data-file=.data/fragment_shader_widget.data
+	$(command_arxadd) $@ --name="Widget Vertex Shader" --type=13 --sub-type=0 --relation="/Shaders::child" --data-file=.data/vertex_shader_widget.data
 	@echo "\n\nAdding programs ...\n"
 	$(command_arxadd) $@ --name="Default Program" --type=14 --sub-type=0 --relation="/Programs::child" --data-file=.data/program_default.data
 	$(command_arxadd) $@ --name="No Lighting Program" --type=14 --sub-type=0 --relation="/Programs::child" --data-file=.data/program_no_lighting.data
+	$(command_arxadd) $@ --name="UI Texture Program" --type=14 --sub-type=0 --relation="/Programs::child" --data-file=.data/program_ui_texture.data
+	$(command_arxadd) $@ --name="Widget Program" --type=14 --sub-type=0 --relation="/Programs::child" --data-file=.data/program_widget.data
 	@echo "\n\nAdding \"Milky Way\" galaxy ...\n"
 	$(command_arxadd) $@ --name="Milky Way" --type=17 --sub-type=0 --relation="/Galaxies::child" --data-file=.data/galaxies/milky_way/galaxy.data
 	$(command_arxadd) $@ --name="Earth" --type=e --sub-type=0 --relation="/Galaxies/Milky Way::factions" --data-file=.data/galaxies/milky_way/faction_earth.data
@@ -290,6 +302,10 @@ meshes-all-recursive:
 
 .data/fragment_shader_no_lighting.data: shaders/fragment_shader_no_lighting
 
+.data/fragment_shader_ui_texture.data: shaders/fragment_shader_ui_texture
+
+.data/fragment_shader_widget.data: shaders/fragment_shader_widget
+
 .data/scenario_new_game.data: savegame_new_game.xml
 
 .data/scenario_rich_game.data: savegame_rich_game.xml
@@ -299,6 +315,10 @@ meshes-all-recursive:
 .data/vertex_shader_default.data: shaders/vertex_shader_default
 
 .data/vertex_shader_no_lighting.data: shaders/vertex_shader_no_lighting
+
+.data/vertex_shader_ui_texture.data: shaders/vertex_shader_ui_texture
+
+.data/vertex_shader_widget.data: shaders/vertex_shader_widget
 
 textures-all-recursive:
 	@$(MAKE) -C textures all-recursive

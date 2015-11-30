@@ -23,7 +23,9 @@
 
 #include "../globals.h"
 #include "../graphics/color_rgbo.h"
-#include "../graphics/gl.h"
+#include "../graphics/drawing.h"
+#include "../graphics/render_context.h"
+#include "../graphics/style.h"
 #include "../math.h"
 #include "event.h"
 #include "sub_widget_event.h"
@@ -31,7 +33,7 @@
 #include "widget.h"
 
 std::list< UI::Widget * > UI::Widget::_DestroyedWidgets;
-std::stack< std::pair< Vector2f, Vector2f > > UI::Widget::_ClippingRectangles;
+std::stack< std::tuple< float, float, float, float > > UI::Widget::_ClippingRectangles;
 
 UI::Widget::Widget(UI::Widget * SupWidget, const std::string & Name) :
 	_AnchorBottom(false),
@@ -68,16 +70,17 @@ UI::Widget::~Widget(void)
 void UI::Widget::Draw(Graphics::RenderContext * RenderContext)
 {
 	auto Color((_Enabled == true) ? (_BackgroundColor) : (_DisabledBackgroundColor));
+	auto GlobalPosition{GetGlobalPosition()};
 	
 	if(Color != nullptr)
 	{
-		GLColor4fv(Color->GetPointer());
-		GLBegin(GL_TRIANGLE_STRIP);
-		GLVertex2f(0.0f, 0.0f);
-		GLVertex2f(0.0f, _Size[1]);
-		GLVertex2f(_Size[0], 0.0f);
-		GLVertex2f(_Size[0], _Size[1]);
-		GLEnd();
+		assert(RenderContext != nullptr);
+		assert(RenderContext->GetStyle() != nullptr);
+		RenderContext->GetStyle()->SetDiffuseColor(*Color);
+		RenderContext->GetStyle()->SetProgramIdentifier("widget");
+		RenderContext->ActivateProgram();
+		Graphics::Drawing::DrawBoxFromPositionAndSize(RenderContext, GlobalPosition, _Size);
+		RenderContext->DeactivateProgram();
 	}
 	if(_SubWidgets.empty() == false)
 	{
@@ -87,17 +90,11 @@ void UI::Widget::Draw(Graphics::RenderContext * RenderContext)
 			
 			if(SubWidget->_Visible == true)
 			{
-				GLPushMatrix();
-				_PushClippingRectangle(SubWidget->_Position, SubWidget->_Size);
-				GLTranslatef(SubWidget->_Position[0], SubWidget->_Position[1], 0.0f);
-				_DrawClippingRectangle();
+				_PushClippingRectangle(RenderContext, GlobalPosition[0] + SubWidget->_Position[0], GlobalPosition[1] + SubWidget->_Position[1], GlobalPosition[1] + SubWidget->_Position[1] + SubWidget->_Size[1], GlobalPosition[0] + SubWidget->_Position[0] + SubWidget->_Size[0]);
 				SubWidget->Draw(RenderContext);
-				_PopClippingRectangle();
-				GLPopMatrix();
+				_PopClippingRectangle(RenderContext);
 			}
 		}
-		// restore the clipping rectangle for this widget
-		_DrawClippingRectangle();
 	}
 }
 
@@ -373,35 +370,29 @@ Connection UI::Widget::ConnectUpdatingCallback(std::function< void (float, float
 	return _UpdatingEvent.Connect(Callback);
 }
 
-void UI::Widget::_PushClippingRectangle(const Vector2f & Position, const Vector2f & Size)
+void UI::Widget::_PopClippingRectangle(Graphics::RenderContext * RenderContext)
 {
-	Vector2f LeftTop(true);
-	Vector2f RightBottom(Size);
-	
+	RenderContext->UnsetClipping();
+	_ClippingRectangles.pop();
 	if(_ClippingRectangles.empty() == false)
 	{
-		LeftTop[0] = std::max(0.0f, _ClippingRectangles.top().first[0] - Position[0]);
-		LeftTop[1] = std::max(0.0f, _ClippingRectangles.top().first[1] - Position[1]);
-		RightBottom[0] = std::min(RightBottom[0], _ClippingRectangles.top().second[0] - Position[0]);
-		RightBottom[1] = std::min(RightBottom[1], _ClippingRectangles.top().second[1] - Position[1]);
+		auto & TopClippingRectangle{UI::Widget::_ClippingRectangles.top()};
+		
+		RenderContext->SetClipping(std::get<0>(TopClippingRectangle), std::get<1>(TopClippingRectangle), std::get<2>(TopClippingRectangle), std::get<3>(TopClippingRectangle));
 	}
-	_ClippingRectangles.push(std::make_pair(LeftTop, RightBottom));
 }
 
-void UI::Widget::_PopClippingRectangle(void)
+void UI::Widget::_PushClippingRectangle(Graphics::RenderContext * RenderContext, float Left, float Top, float Bottom, float Right)
 {
-	_ClippingRectangles.pop();
-}
-
-void UI::Widget::_DrawClippingRectangle(void)
-{
-	double LeftPlane[4] = { 1.0, 0.0, 0.0, -_ClippingRectangles.top().first[0] };
-	double TopPlane[4] = { 0.0, 1.0, 0.0, -_ClippingRectangles.top().first[1] };
-	double RightPlane[4] = { -1.0, 0.0, 0.0, _ClippingRectangles.top().second[0] };
-	double BottomPlane[4] = { 0.0, -1.0, 0.0, _ClippingRectangles.top().second[1] };
+	if(_ClippingRectangles.empty() == false)
+	{
+		auto & TopClippingRectangle{UI::Widget::_ClippingRectangles.top()};
 	
-	GLClipPlane(GL_CLIP_PLANE0, LeftPlane);
-	GLClipPlane(GL_CLIP_PLANE1, TopPlane);
-	GLClipPlane(GL_CLIP_PLANE2, RightPlane);
-	GLClipPlane(GL_CLIP_PLANE3, BottomPlane);
+		Left = std::max(std::get<0>(TopClippingRectangle), Left);
+		Top = std::max(std::get<1>(TopClippingRectangle), Top);
+		Bottom = std::min(std::get<2>(TopClippingRectangle), Bottom);
+		Right = std::min(std::get<3>(TopClippingRectangle), Right);
+	}
+	_ClippingRectangles.push(std::make_tuple(Left, Top, Bottom, Right));
+	RenderContext->SetClipping(Left, Top, Bottom, Right);
 }

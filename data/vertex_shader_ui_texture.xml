@@ -1,0 +1,4 @@
+<vertex-shader>
+	<identifier>vertex_shader_ui_texture</identifier>
+	<source from-file="shaders/vertex_shader_ui_texture"/>
+</vertex-shader>

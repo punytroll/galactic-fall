@@ -29,6 +29,7 @@
 #include "render_context.h"
 #include "shading_manager.h"
 #include "style.h"
+#include "texture.h"
 
 Graphics::RenderContext::RenderContext(void) :
 	_Camera(nullptr),
@@ -37,7 +38,8 @@ Graphics::RenderContext::RenderContext(void) :
 	_Light(nullptr),
 	_Node(nullptr),
 	_Program(nullptr),
-	_Style(nullptr)
+	_Style(nullptr),
+	_Texture(nullptr)
 {
 }
 
@@ -49,7 +51,8 @@ Graphics::RenderContext::~RenderContext(void)
 	assert(_Light == nullptr);
 	assert(_Node == nullptr);
 	assert(_Program == nullptr);
-	assert(_Style== nullptr);
+	assert(_Style == nullptr);
+	assert(_Texture == nullptr);
 }
 
 void Graphics::RenderContext::ActivateProgram(void)
@@ -166,12 +169,26 @@ void Graphics::RenderContext::ActivateProgram(void)
 				
 				break;
 			}
+		case Graphics::Program::UniformContent::Texture:
+			{
+				assert(_Texture != nullptr);
+				_Program->_SetUniform(Uniform.first, 0);
+				GLActiveTexture(GL_TEXTURE0);
+				_Texture->Activate();
+				
+				break;
+			}
 		}
 	}
 }
 
 void Graphics::RenderContext::DeactivateProgram(void)
 {
+	if(_Texture != nullptr)
+	{
+		GLActiveTexture(GL_TEXTURE0);
+		_Texture->Deactivate();
+	}
 	assert(_Program != nullptr);
 	_Program->_Deactivate();
 	_Program = nullptr;

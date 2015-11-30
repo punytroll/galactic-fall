@@ -45,7 +45,6 @@
 #include "class_manager.h"
 #include "command_mind.h"
 #include "commodity.h"
-#include "draw_text.h"
 #include "faction.h"
 #include "file_handling.h"
 #include "galaxy.h"
@@ -55,6 +54,7 @@
 #include "goals.h"
 #include "graphics/camera.h"
 #include "graphics/default_render_target.h"
+#include "graphics/drawing.h"
 #include "graphics/engine.h"
 #include "graphics/gl.h"
 #include "graphics/light.h"
@@ -181,15 +181,7 @@ namespace Graphics
 	public:
 		virtual void Draw(Graphics::RenderContext * RenderContext) override
 		{
-			GLEnable(GL_CLIP_PLANE0);
-			GLEnable(GL_CLIP_PLANE1);
-			GLEnable(GL_CLIP_PLANE2);
-			GLEnable(GL_CLIP_PLANE3);
 			g_UserInterface->Draw(RenderContext);
-			GLDisable(GL_CLIP_PLANE0);
-			GLDisable(GL_CLIP_PLANE1);
-			GLDisable(GL_CLIP_PLANE2);
-			GLDisable(GL_CLIP_PLANE3);
 		}
 	};
 }
@@ -3575,7 +3567,7 @@ int main(int argc, char ** argv)
 	g_ResourceReader->ReadTextures();
 	// since initializing the font uses a texture, we have to do it after reading the textures
 	ON_DEBUG(std::cout << "Initializing font." << std::endl);
-	InitializeFont();
+	Graphics::Drawing::InitializeFont();
 	// load the specified savegame
 	if(LoadSavegameFileName.empty() == false)
 	{
@@ -3608,7 +3600,7 @@ int main(int argc, char ** argv)
 	ON_DEBUG(std::cout << "Purging game." << std::endl);
 	PurgeGame();
 	ON_DEBUG(std::cout << "Deinitializing font." << std::endl);
-	DeinitializeFont();
+	Graphics::Drawing::DeinitializeFont();
 	ON_DEBUG(std::cout << "Destroying window." << std::endl);
 	DestroyWindow();
 	// if requested print some final debugging information

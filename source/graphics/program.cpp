@@ -167,6 +167,10 @@ void Graphics::Program::Build(Graphics::ShadingManager * ShadingManager)
 		{
 			_Uniforms[Location] = Graphics::Program::UniformContent::Clipping4F;
 		}
+		else if((Name == std::string("in_Texture")) && (Type == GL_SAMPLER_2D) && (Size == 1))
+		{
+			_Uniforms[Location] = Graphics::Program::UniformContent::Texture;
+		}
 		else
 		{
 			ON_DEBUG(std::cout << "        => no recognized combination." << std::endl);
@@ -200,6 +204,11 @@ void Graphics::Program::_SetUniform(GLint Location, const Graphics::ColorRGBO & 
 void Graphics::Program::_SetUniform(GLint Location, float Float)
 {
 	GLUniform1f(Location, Float);
+}
+
+void Graphics::Program::_SetUniform(GLint Location, int Integer)
+{
+	GLUniform1i(Location, Integer);
 }
 
 void Graphics::Program::_SetUniform(GLint Location, const Matrix3f & Matrix)

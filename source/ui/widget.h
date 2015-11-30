@@ -102,9 +102,8 @@ namespace UI
 		// static manager functions
 		static std::list< Widget * > & GetDestroyedWidgets(void);
 	protected:
-		static void _PushClippingRectangle(const Vector2f & Position, const Vector2f & Size);
-		static void _PopClippingRectangle(void);
-		static void _DrawClippingRectangle(void);
+		static void _PopClippingRectangle(Graphics::RenderContext * RenderContext);
+		static void _PushClippingRectangle(Graphics::RenderContext * RenderContext, float Left, float Top, float Bottom, float Right);
 	private:
 		void _UnsetHoverWidget(void);
 		void _SetHoverWidget(UI::Widget * HoverWidget);
@@ -137,7 +136,7 @@ namespace UI
 		::Event< void, float, float > _UpdatingEvent;
 		// static manager properties
 		static std::list< Widget * > _DestroyedWidgets;
-		static std::stack< std::pair< Vector2f, Vector2f > > _ClippingRectangles;
+		static std::stack< std::tuple< float, float, float, float > > _ClippingRectangles;
 	};
 	
 	inline Widget * Widget::GetHoveredWidget(void)

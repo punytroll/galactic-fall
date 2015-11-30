@@ -22,6 +22,8 @@
 #include <vector>
 
 #include "../graphics/gl.h"
+#include "../graphics/render_context.h"
+#include "../graphics/style.h"
 #include "key_event.h"
 #include "mouse_button_event.h"
 #include "mouse_move_event.h"
@@ -81,16 +83,25 @@ UI::UserInterface::~UserInterface(void)
 
 void UI::UserInterface::Draw(Graphics::RenderContext * RenderContext) const
 {
+	GLEnable(GL_CLIP_PLANE0);
+	GLEnable(GL_CLIP_PLANE1);
+	GLEnable(GL_CLIP_PLANE2);
+	GLEnable(GL_CLIP_PLANE3);
+	
+	auto Style{new Graphics::Style()};
+	
+	RenderContext->SetStyle(Style);
 	if((_RootWidget != nullptr) && (_RootWidget->IsVisible() == true))
 	{
-		GLPushMatrix();
-		UI::Widget::_PushClippingRectangle(_RootWidget->_Position, _RootWidget->_Size);
-		GLTranslatef(_RootWidget->_Position[0], _RootWidget->_Position[1], 0.0f);
-		UI::Widget::_DrawClippingRectangle();
+		UI::Widget::_PushClippingRectangle(RenderContext, _RootWidget->_Position[0], _RootWidget->_Position[1], _RootWidget->_Position[1] + _RootWidget->_Size[1], _RootWidget->_Position[0] + _RootWidget->_Size[0]);
 		_RootWidget->Draw(RenderContext);
-		UI::Widget::_PopClippingRectangle();
-		GLPopMatrix();
+		UI::Widget::_PopClippingRectangle(RenderContext);
 	}
+	RenderContext->SetStyle(nullptr);
+	GLDisable(GL_CLIP_PLANE0);
+	GLDisable(GL_CLIP_PLANE1);
+	GLDisable(GL_CLIP_PLANE2);
+	GLDisable(GL_CLIP_PLANE3);
 }
 
 void UI::UserInterface::SetCaptureWidget(UI::Widget * Widget)
