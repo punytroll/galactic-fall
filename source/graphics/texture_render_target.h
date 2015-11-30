@@ -20,7 +20,8 @@
 #ifndef GRAPHICS_TEXTURE_RENDER_TARGET_H
 #define GRAPHICS_TEXTURE_RENDER_TARGET_H
 
-#include "gl.h"
+#include <GL/gl.h>
+
 #include "render_target.h"
 
 namespace Graphics

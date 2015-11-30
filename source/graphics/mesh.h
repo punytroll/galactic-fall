@@ -20,12 +20,12 @@
 #ifndef GRAPHICS_MESH_H
 #define GRAPHICS_MESH_H
 
+#include <GL/gl.h>
+
 #include <vector>
 #include <string>
 
 #include <algebra/vector3f.h>
-
-#include "gl.h"
 
 namespace Graphics
 {

@@ -25,6 +25,7 @@
 #include "../graphics/camera.h"
 #include "../graphics/color_rgbo.h"
 #include "../graphics/engine.h"
+#include "../graphics/gl.h"
 #include "../graphics/perspective_projection.h"
 #include "../graphics/scene.h"
 #include "../graphics/texture.h"

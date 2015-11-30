@@ -17,6 +17,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include <cassert>
+
+#include "gl.h"
 #include "shader.h"
 
 Graphics::Shader::Shader(const std::string & Identifier) :
