@@ -307,14 +307,6 @@ inline GLint GLGetUniformLocation(GLuint program, const GLchar * name)
 }
 #endif
 
-typedef void (* glLightfvFunction)(GLenum light, GLenum pname, const GLfloat * params);
-extern glLightfvFunction __glLightfv;
-#define GLLightfv(light, pname, params) { assert(__glLightfv != nullptr); __glLightfv(light, pname, params); CheckGLError; }
-
-typedef void (* glLightModelfvFunction)(GLenum pname, const GLfloat * params);
-extern glLightModelfvFunction __glLightModelfv;
-#define GLLightModelfv(pname, params) { assert(__glLightModelfv != nullptr); __glLightModelfv(pname, params); CheckGLError; }
-
 typedef void (* glLinkProgramFunction)(GLuint program);
 extern glLinkProgramFunction __glLinkProgram;
 #define GLLinkProgram(program) { assert(__glLinkProgram != nullptr); __glLinkProgram(program); CheckGLError; }
@@ -374,10 +366,6 @@ extern glPushAttribFunction __glPushAttrib;
 typedef void (* glPushMatrixFunction)(void);
 extern glPushMatrixFunction __glPushMatrix;
 #define GLPushMatrix() { assert(__glPushMatrix != nullptr); __glPushMatrix(); CheckGLError; }
-
-typedef void (* glRasterPos2iFunction)(GLint x, GLint y);
-extern glRasterPos2iFunction __glRasterPos2i;
-#define GLRasterPos2i(x, y) { assert(__glRasterPos2i != nullptr); __glRasterPos2i(x, y); CheckGLError; }
 
 typedef void (* glReadBufferFunction)(GLenum mode);
 extern glReadBufferFunction __glReadBuffer;

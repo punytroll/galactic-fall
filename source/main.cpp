@@ -3050,8 +3050,6 @@ void InitializeOpenGL(void)
 	LoadOpenGLFunction(glGetShaderiv);
 	LoadOpenGLFunction(glGetString);
 	LoadOpenGLFunction(glGetUniformLocation);
-	LoadOpenGLFunction(glLightfv);
-	LoadOpenGLFunction(glLightModelfv);
 	LoadOpenGLFunction(glLinkProgram);
 	LoadOpenGLFunction(glLoadMatrixf);
 	LoadOpenGLFunction(glMaterialf);
@@ -3067,7 +3065,6 @@ void InitializeOpenGL(void)
 	LoadOpenGLFunction(glPrimitiveRestartIndex);
 	LoadOpenGLFunction(glPushAttrib);
 	LoadOpenGLFunction(glPushMatrix);
-	LoadOpenGLFunction(glRasterPos2i);
 	LoadOpenGLFunction(glReadBuffer);
 	LoadOpenGLFunction(glReadPixels);
 	LoadOpenGLFunction(glRenderbufferStorage);
