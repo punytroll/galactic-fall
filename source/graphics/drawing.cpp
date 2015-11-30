@@ -76,98 +76,101 @@ void Graphics::Drawing::DrawText(Graphics::RenderContext * RenderContext, const 
 
 void Graphics::Drawing::DrawText(Graphics::RenderContext * RenderContext, float Left, float Top, const std::string & Text)
 {
-	RealTime::Invalidate();
-	
-	double Begin(RealTime::Get());
-	const std::uint32_t CHARACTERS{95};
-	const std::uint32_t CHARACTEROFFSET{32};
-	const float GLYPHWIDTH{6.0f};
-	const float GLYPHHEIGHT{12.0f};
-	GLuint VertexArray{0};
-	
-	GLGenVertexArrays(1, &VertexArray);
-	GLBindVertexArray(VertexArray);
-	
-	const GLsizei NumberOfVertices{static_cast< GLsizei >(4 * Text.length())};
-	float Vertices[2 * NumberOfVertices];
-	float TextureCoordinates[2 * NumberOfVertices];
-	unsigned short Indices[NumberOfVertices + Text.length() - 1];
-	const float GlyphWidth{6.0f / 128.0f};
-	const float GlyphHeight{12.0f / 64.0f};
-	const unsigned int GlyphsPerLine{128 / 6};
-	float TextLeft{Left};
-	int CharacterIndex{0};
-	int IndexIndex{0};
-	
-	for(auto Character : Text)
+	if(Text.empty() == false)
 	{
-		if(IndexIndex > 0)
+		RealTime::Invalidate();
+		
+		double Begin(RealTime::Get());
+		const std::uint32_t CHARACTERS{95};
+		const std::uint32_t CHARACTEROFFSET{32};
+		const float GLYPHWIDTH{6.0f};
+		const float GLYPHHEIGHT{12.0f};
+		GLuint VertexArray{0};
+		
+		GLGenVertexArrays(1, &VertexArray);
+		GLBindVertexArray(VertexArray);
+		
+		const GLsizei NumberOfVertices{static_cast< GLsizei >(4 * Text.length())};
+		float Vertices[2 * NumberOfVertices];
+		float TextureCoordinates[2 * NumberOfVertices];
+		unsigned short Indices[NumberOfVertices + Text.length() - 1];
+		const float GlyphWidth{6.0f / 128.0f};
+		const float GlyphHeight{12.0f / 64.0f};
+		const unsigned int GlyphsPerLine{128 / 6};
+		float TextLeft{Left};
+		int CharacterIndex{0};
+		int IndexIndex{0};
+		
+		for(auto Character : Text)
 		{
-			Indices[IndexIndex++] = 0xFFFF;
+			if(IndexIndex > 0)
+			{
+				Indices[IndexIndex++] = 0xFFFF;
+			}
+			
+			auto GlyphIndex{Character - CHARACTEROFFSET};
+			
+			assert((GlyphIndex >= 0) && (GlyphIndex < CHARACTERS));
+			Vertices[CharacterIndex * 8 + 0] = TextLeft;
+			Vertices[CharacterIndex * 8 + 1] = Top;
+			TextureCoordinates[CharacterIndex * 8 + 0] = (GlyphIndex % GlyphsPerLine) * GlyphWidth;
+			TextureCoordinates[CharacterIndex * 8 + 1] = 1.0f - (GlyphHeight * static_cast< unsigned int >(GlyphIndex / GlyphsPerLine));
+			Indices[IndexIndex++] = CharacterIndex * 4 + 0;
+			Vertices[CharacterIndex * 8 + 2] = TextLeft;
+			Vertices[CharacterIndex * 8 + 3] = Top + GLYPHHEIGHT;
+			TextureCoordinates[CharacterIndex * 8 + 2] = (GlyphIndex % GlyphsPerLine) * GlyphWidth;
+			TextureCoordinates[CharacterIndex * 8 + 3] = 1.0f - (GlyphHeight * static_cast< unsigned int >(GlyphIndex / GlyphsPerLine + 1));
+			Indices[IndexIndex++] = CharacterIndex * 4 + 1;
+			Vertices[CharacterIndex * 8 + 4] = TextLeft + GLYPHWIDTH;
+			Vertices[CharacterIndex * 8 + 5] = Top + GLYPHHEIGHT;
+			TextureCoordinates[CharacterIndex * 8 + 4] = (GlyphIndex % GlyphsPerLine + 1) * GlyphWidth;
+			TextureCoordinates[CharacterIndex * 8 + 5] = 1.0f - (GlyphHeight * static_cast< unsigned int >(GlyphIndex / GlyphsPerLine + 1));
+			Indices[IndexIndex++] = CharacterIndex * 4 + 2;
+			Vertices[CharacterIndex * 8 + 6] = TextLeft + GLYPHWIDTH;
+			Vertices[CharacterIndex * 8 + 7] = Top;
+			TextureCoordinates[CharacterIndex * 8 + 6] = (GlyphIndex % GlyphsPerLine + 1) * GlyphWidth;
+			TextureCoordinates[CharacterIndex * 8 + 7] = 1.0f - (GlyphHeight * static_cast< unsigned int >(GlyphIndex / GlyphsPerLine));
+			Indices[IndexIndex++] = CharacterIndex * 4 + 3;
+			CharacterIndex += 1;
+			TextLeft += GLYPHWIDTH;
 		}
 		
-		auto GlyphIndex{Character - CHARACTEROFFSET};
+		GLuint Buffers[3];
 		
-		assert((GlyphIndex >= 0) && (GlyphIndex < CHARACTERS));
-		Vertices[CharacterIndex * 8 + 0] = TextLeft;
-		Vertices[CharacterIndex * 8 + 1] = Top;
-		TextureCoordinates[CharacterIndex * 8 + 0] = (GlyphIndex % GlyphsPerLine) * GlyphWidth;
-		TextureCoordinates[CharacterIndex * 8 + 1] = 1.0f - (GlyphHeight * static_cast< unsigned int >(GlyphIndex / GlyphsPerLine));
-		Indices[IndexIndex++] = CharacterIndex * 4 + 0;
-		Vertices[CharacterIndex * 8 + 2] = TextLeft;
-		Vertices[CharacterIndex * 8 + 3] = Top + GLYPHHEIGHT;
-		TextureCoordinates[CharacterIndex * 8 + 2] = (GlyphIndex % GlyphsPerLine) * GlyphWidth;
-		TextureCoordinates[CharacterIndex * 8 + 3] = 1.0f - (GlyphHeight * static_cast< unsigned int >(GlyphIndex / GlyphsPerLine + 1));
-		Indices[IndexIndex++] = CharacterIndex * 4 + 1;
-		Vertices[CharacterIndex * 8 + 4] = TextLeft + GLYPHWIDTH;
-		Vertices[CharacterIndex * 8 + 5] = Top + GLYPHHEIGHT;
-		TextureCoordinates[CharacterIndex * 8 + 4] = (GlyphIndex % GlyphsPerLine + 1) * GlyphWidth;
-		TextureCoordinates[CharacterIndex * 8 + 5] = 1.0f - (GlyphHeight * static_cast< unsigned int >(GlyphIndex / GlyphsPerLine + 1));
-		Indices[IndexIndex++] = CharacterIndex * 4 + 2;
-		Vertices[CharacterIndex * 8 + 6] = TextLeft + GLYPHWIDTH;
-		Vertices[CharacterIndex * 8 + 7] = Top;
-		TextureCoordinates[CharacterIndex * 8 + 6] = (GlyphIndex % GlyphsPerLine + 1) * GlyphWidth;
-		TextureCoordinates[CharacterIndex * 8 + 7] = 1.0f - (GlyphHeight * static_cast< unsigned int >(GlyphIndex / GlyphsPerLine));
-		Indices[IndexIndex++] = CharacterIndex * 4 + 3;
-		CharacterIndex += 1;
-		TextLeft += GLYPHWIDTH;
+		GLGenBuffers(3, Buffers);
+		// index buffer
+		GLBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Buffers[0]);
+		GLBufferData(GL_ELEMENT_ARRAY_BUFFER, (NumberOfVertices + Text.length() - 1) * sizeof(unsigned int), Indices, GL_STREAM_DRAW);
+		// vertex coordinates
+		GLBindBuffer(GL_ARRAY_BUFFER, Buffers[1]);
+		GLBufferData(GL_ARRAY_BUFFER, 2 * NumberOfVertices * sizeof(GLfloat), Vertices, GL_STREAM_DRAW);
+		GLVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
+		GLEnableVertexAttribArray(0);
+		// texture coordinates
+		GLBindBuffer(GL_ARRAY_BUFFER, Buffers[2]);
+		GLBufferData(GL_ARRAY_BUFFER, 2 * NumberOfVertices * sizeof(GLfloat), TextureCoordinates, GL_STREAM_DRAW);
+		GLVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
+		GLEnableVertexAttribArray(1);
+		assert(RenderContext != nullptr);
+		assert(RenderContext->GetStyle() != nullptr);
+		RenderContext->GetStyle()->SetProgramIdentifier("ui_texture");
+		RenderContext->SetTexture(_FontTexture);
+		RenderContext->ActivateProgram();
+		GLEnable(GL_PRIMITIVE_RESTART);
+		GLPrimitiveRestartIndex(0xFFFF);
+		GLDrawElements(GL_TRIANGLE_FAN, NumberOfVertices + Text.length() - 1, GL_UNSIGNED_SHORT, NULL);
+		GLBindVertexArray(0);
+		GLDeleteBuffers(3, Buffers);
+		GLDeleteVertexArrays(1, &VertexArray);
+		RenderContext->SetTexture(nullptr);
+		RenderContext->DeactivateProgram();
+		RealTime::Invalidate();
+		
+		double End(RealTime::Get());
+		double Delta(End - Begin);
+		
+		g_SystemStatistics->SetFontSecondsThisFrame(g_SystemStatistics->GetFontSecondsThisFrame() + Delta);
 	}
-	
-	GLuint Buffers[3];
-	
-	GLGenBuffers(3, Buffers);
-	// index buffer
-	GLBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Buffers[0]);
-	GLBufferData(GL_ELEMENT_ARRAY_BUFFER, (NumberOfVertices + Text.length() - 1) * sizeof(unsigned int), Indices, GL_STREAM_DRAW);
-	// vertex coordinates
-	GLBindBuffer(GL_ARRAY_BUFFER, Buffers[1]);
-	GLBufferData(GL_ARRAY_BUFFER, 2 * NumberOfVertices * sizeof(GLfloat), Vertices, GL_STREAM_DRAW);
-	GLVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
-	GLEnableVertexAttribArray(0);
-	// texture coordinates
-	GLBindBuffer(GL_ARRAY_BUFFER, Buffers[2]);
-	GLBufferData(GL_ARRAY_BUFFER, 2 * NumberOfVertices * sizeof(GLfloat), TextureCoordinates, GL_STREAM_DRAW);
-	GLVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
-	GLEnableVertexAttribArray(1);
-	assert(RenderContext != nullptr);
-	assert(RenderContext->GetStyle() != nullptr);
-	RenderContext->GetStyle()->SetProgramIdentifier("ui_texture");
-	RenderContext->SetTexture(_FontTexture);
-	RenderContext->ActivateProgram();
-	GLEnable(GL_PRIMITIVE_RESTART);
-	GLPrimitiveRestartIndex(0xFFFF);
-	GLDrawElements(GL_TRIANGLE_FAN, NumberOfVertices + Text.length() - 1, GL_UNSIGNED_SHORT, NULL);
-	GLBindVertexArray(0);
-	GLDeleteBuffers(3, Buffers);
-	GLDeleteVertexArrays(1, &VertexArray);
-	RenderContext->SetTexture(nullptr);
-	RenderContext->DeactivateProgram();
-	RealTime::Invalidate();
-	
-	double End(RealTime::Get());
-	double Delta(End - Begin);
-	
-	g_SystemStatistics->SetFontSecondsThisFrame(g_SystemStatistics->GetFontSecondsThisFrame() + Delta);
 }
 
 void Graphics::Drawing::DrawTexture(Graphics::RenderContext * RenderContext, float Left, float Top, float Bottom, float Right, Graphics::Texture * Texture)
