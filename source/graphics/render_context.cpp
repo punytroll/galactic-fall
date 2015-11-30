@@ -195,10 +195,46 @@ void Graphics::RenderContext::DeactivateProgram(void)
 	_Program = nullptr;
 }
 
+void Graphics::RenderContext::SetCamera(Graphics::Camera * Camera)
+{
+	assert((_Camera == nullptr) || (Camera == nullptr));
+	_Camera = Camera;
+}
+
 void Graphics::RenderContext::SetClipping(float Left, float Top, float Bottom, float Right)
 {
 	UnsetClipping();
 	_Clipping = new Vector4f(Left, Top, Bottom, Right);
+}
+
+void Graphics::RenderContext::SetEngine(Graphics::Engine * Engine)
+{
+	assert((_Engine == nullptr) || (Engine == nullptr));
+	_Engine = Engine;
+}
+
+void Graphics::RenderContext::SetLight(Graphics::Light * Light)
+{
+	assert((_Light == nullptr) || (Light == nullptr));
+	_Light = Light;
+}
+
+void Graphics::RenderContext::SetNode(Graphics::Node * Node)
+{
+	assert((_Node == nullptr) || (Node == nullptr));
+	_Node = Node;
+}
+
+void Graphics::RenderContext::SetStyle(Graphics::Style * Style)
+{
+	assert((_Style == nullptr) || (Style == nullptr));
+	_Style = Style;
+}
+
+void Graphics::RenderContext::SetTexture(const Graphics::Texture * Texture)
+{
+	assert((_Texture == nullptr) || (Texture == nullptr));
+	_Texture = Texture;
 }
 
 void Graphics::RenderContext::UnsetClipping(void)
