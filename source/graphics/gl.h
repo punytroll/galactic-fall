@@ -102,10 +102,6 @@ typedef void (* glClearColorFunction)(GLclampf red, GLclampf green, GLclampf blu
 extern glClearColorFunction __glClearColor;
 #define GLClearColor(red, green, blue, alpha) { assert(__glClearColor != nullptr); __glClearColor(red, green, blue, alpha); CheckGLError; }
 
-typedef void (* glClipPlaneFunction)(GLenum plane, const GLdouble * equation);
-extern glClipPlaneFunction __glClipPlane;
-#define GLClipPlane(plane, equation) { assert(__glClipPlane != nullptr); __glClipPlane(plane, equation); CheckGLError; }
-
 typedef void (* glColor3fFunction)(GLfloat red, GLfloat green, GLfloat blue);
 extern glColor3fFunction __glColor3f;
 #define GLColor3f(red, green, blue) { assert(__glColor3f != nullptr); __glColor3f(red, green, blue); }
