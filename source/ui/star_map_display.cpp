@@ -22,6 +22,7 @@
 #include "../character.h"
 #include "../galaxy.h"
 #include "../globals.h"
+#include "../graphics/color_rgbo.h"
 #include "../graphics/drawing.h"
 #include "../graphics/gl.h"
 #include "../map_knowledge.h"
@@ -157,12 +158,7 @@ void UI::StarMapDisplay::Draw(Graphics::RenderContext * RenderContext)
 		GLVertex2f(SystemSize * 0.5f, -SystemSize * 0.866f);
 		GLVertex2f(SystemSize * 0.866f, -SystemSize * 0.5f);
 		GLEnd();
-		GLPushMatrix();
-		GLScalef(1.0f, -1.0f, 1.0f);
-		GLTranslatef(0.0f, 12.0f, 0.0f);
-		GLColor3f(1.0f, 1.0f, 1.0f);
-		Graphics::Drawing::DrawText(RenderContext, Middle + Vector2f(Position[0], Position[1] + 12.0f), (*ExploredSystemIterator)->GetAspectName()->GetName());
-		GLPopMatrix();
+		Graphics::Drawing::DrawText(RenderContext, Middle + Vector2f(Position[0], 1.2f * SystemSize - Position[1]), (*ExploredSystemIterator)->GetAspectName()->GetName(), Graphics::ColorRGBO(1.0f, 1.0f, 1.0f, 1.0f));
 		GLPopMatrix();
 	}
 	GLPopMatrix();

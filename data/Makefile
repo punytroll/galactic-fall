@@ -37,6 +37,7 @@ all_data = \
 	.data/commodity_class_medical_supplies.data \
 	.data/commodity_class_metal.data \
 	.data/fragment_shader_default.data \
+	.data/fragment_shader_font.data \
 	.data/fragment_shader_no_lighting.data \
 	.data/fragment_shader_ui_texture.data \
 	.data/fragment_shader_widget.data \
@@ -85,6 +86,7 @@ all_data = \
 	.data/model_shuttle.data \
 	.data/model_transporter.data \
 	.data/program_default.data \
+	.data/program_font.data \
 	.data/program_no_lighting.data \
 	.data/program_ui_texture.data \
 	.data/program_widget.data \
@@ -105,6 +107,7 @@ all_data = \
 	.data/texture_particle.data \
 	.data/turret_class_light_laser.data \
 	.data/vertex_shader_default.data \
+	.data/vertex_shader_font.data \
 	.data/vertex_shader_no_lighting.data \
 	.data/vertex_shader_ui_texture.data \
 	.data/vertex_shader_widget.data \
@@ -244,6 +247,8 @@ data.arx: $(data_arx) $(arxtouch_dependencies) $(arxadd_dependencies)
 	@echo "\n\nAdding shaders ...\n"
 	$(command_arxadd) $@ --name="Default Fragment Shader" --type=13 --sub-type=1 --relation="/Shaders::child" --data-file=.data/fragment_shader_default.data
 	$(command_arxadd) $@ --name="Default Vertex Shader" --type=13 --sub-type=0 --relation="/Shaders::child" --data-file=.data/vertex_shader_default.data
+	$(command_arxadd) $@ --name="Font Fragment Shader" --type=13 --sub-type=1 --relation="/Shaders::child" --data-file=.data/fragment_shader_font.data
+	$(command_arxadd) $@ --name="Font Vertex Shader" --type=13 --sub-type=0 --relation="/Shaders::child" --data-file=.data/vertex_shader_font.data
 	$(command_arxadd) $@ --name="No Lighting Fragment Shader" --type=13 --sub-type=1 --relation="/Shaders::child" --data-file=.data/fragment_shader_no_lighting.data
 	$(command_arxadd) $@ --name="No Lighting Vertex Shader" --type=13 --sub-type=0 --relation="/Shaders::child" --data-file=.data/vertex_shader_no_lighting.data
 	$(command_arxadd) $@ --name="UI Texture Fragment Shader" --type=13 --sub-type=1 --relation="/Shaders::child" --data-file=.data/fragment_shader_ui_texture.data
@@ -252,6 +257,7 @@ data.arx: $(data_arx) $(arxtouch_dependencies) $(arxadd_dependencies)
 	$(command_arxadd) $@ --name="Widget Vertex Shader" --type=13 --sub-type=0 --relation="/Shaders::child" --data-file=.data/vertex_shader_widget.data
 	@echo "\n\nAdding programs ...\n"
 	$(command_arxadd) $@ --name="Default Program" --type=14 --sub-type=0 --relation="/Programs::child" --data-file=.data/program_default.data
+	$(command_arxadd) $@ --name="Font Program" --type=14 --sub-type=0 --relation="/Programs::child" --data-file=.data/program_font.data
 	$(command_arxadd) $@ --name="No Lighting Program" --type=14 --sub-type=0 --relation="/Programs::child" --data-file=.data/program_no_lighting.data
 	$(command_arxadd) $@ --name="UI Texture Program" --type=14 --sub-type=0 --relation="/Programs::child" --data-file=.data/program_ui_texture.data
 	$(command_arxadd) $@ --name="Widget Program" --type=14 --sub-type=0 --relation="/Programs::child" --data-file=.data/program_widget.data
@@ -300,6 +306,8 @@ meshes-all-recursive:
 
 .data/fragment_shader_default.data: shaders/fragment_shader_default
 
+.data/fragment_shader_font.data: shaders/fragment_shader_font
+
 .data/fragment_shader_no_lighting.data: shaders/fragment_shader_no_lighting
 
 .data/fragment_shader_ui_texture.data: shaders/fragment_shader_ui_texture
@@ -313,6 +321,8 @@ meshes-all-recursive:
 .data/scenario_sol_spectator.data: savegame_sol_spectator.xml
 
 .data/vertex_shader_default.data: shaders/vertex_shader_default
+
+.data/vertex_shader_font.data: shaders/vertex_shader_font
 
 .data/vertex_shader_no_lighting.data: shaders/vertex_shader_no_lighting
 

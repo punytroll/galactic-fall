@@ -26,6 +26,7 @@
 
 namespace Graphics
 {
+	class ColorRGBO;
 	class RenderContext;
 	class Texture;
 	
@@ -34,8 +35,8 @@ namespace Graphics
 	public:
 		static void DrawBoxFromPositionAndSize(Graphics::RenderContext * RenderContext, const Vector2f & Position, const Vector2f & Size);
 		static void DrawBox(Graphics::RenderContext * RenderContext, float Left, float Top, float Bottom, float Right);
-		static void DrawText(Graphics::RenderContext * RenderContext, const Vector2f & Position, const std::string & Text);
-		static void DrawText(Graphics::RenderContext * RenderContext, float Left, float Top, const std::string & Text);
+		static void DrawText(Graphics::RenderContext * RenderContext, const Vector2f & Position, const std::string & Text, const Graphics::ColorRGBO & Color);
+		static void DrawText(Graphics::RenderContext * RenderContext, float Left, float Top, const std::string & Text, const Graphics::ColorRGBO & Color);
 		static void DrawTexture(Graphics::RenderContext * RenderContext, float Left, float Top, float Bottom, float Right, Graphics::Texture * Texture);
 		static void InitializeFont(void);
 		static void DeinitializeFont(void);

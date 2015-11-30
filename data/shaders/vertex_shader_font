@@ -1,0 +1,19 @@
+#version 330
+
+uniform mat4 in_ViewToMonitorMatrix;
+uniform vec4 in_Clipping;
+
+layout (location = 0) in vec2 in_Position;
+layout (location = 1) in vec2 in_TextureCoordinates;
+
+out vec2 pass_TextureCoordinates;
+
+void main()
+{
+	pass_TextureCoordinates = in_TextureCoordinates;
+	gl_Position = in_ViewToMonitorMatrix * vec4(in_Position, 0.0f, 1.0f);
+	gl_ClipDistance[0] = in_Position[0] - in_Clipping[0];
+	gl_ClipDistance[1] = in_Position[1] - in_Clipping[1];
+	gl_ClipDistance[2] = in_Clipping[2] - in_Position[1];
+	gl_ClipDistance[3] = in_Clipping[3] - in_Position[0];
+}

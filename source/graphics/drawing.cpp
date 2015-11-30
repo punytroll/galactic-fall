@@ -69,12 +69,12 @@ void Graphics::Drawing::DrawBox(Graphics::RenderContext * RenderContext, float L
 	GLDeleteVertexArrays(1, &VertexArray);
 }
 
-void Graphics::Drawing::DrawText(Graphics::RenderContext * RenderContext, const Vector2f & Position, const std::string & Text)
+void Graphics::Drawing::DrawText(Graphics::RenderContext * RenderContext, const Vector2f & Position, const std::string & Text, const Graphics::ColorRGBO & Color)
 {
-	Graphics::Drawing::DrawText(RenderContext, Position[0], Position[1], Text);
+	Graphics::Drawing::DrawText(RenderContext, Position[0], Position[1], Text, Color);
 }
 
-void Graphics::Drawing::DrawText(Graphics::RenderContext * RenderContext, float Left, float Top, const std::string & Text)
+void Graphics::Drawing::DrawText(Graphics::RenderContext * RenderContext, float Left, float Top, const std::string & Text, const Graphics::ColorRGBO & Color)
 {
 	if(Text.empty() == false)
 	{
@@ -153,7 +153,8 @@ void Graphics::Drawing::DrawText(Graphics::RenderContext * RenderContext, float 
 		GLEnableVertexAttribArray(1);
 		assert(RenderContext != nullptr);
 		assert(RenderContext->GetStyle() != nullptr);
-		RenderContext->GetStyle()->SetProgramIdentifier("ui_texture");
+		RenderContext->GetStyle()->SetDiffuseColor(Color);
+		RenderContext->GetStyle()->SetProgramIdentifier("font");
 		RenderContext->SetTexture(_FontTexture);
 		RenderContext->ActivateProgram();
 		GLEnable(GL_PRIMITIVE_RESTART);

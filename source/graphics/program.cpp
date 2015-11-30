@@ -115,7 +115,11 @@ void Graphics::Program::Build(Graphics::ShadingManager * ShadingManager)
 		GLint Location(GLGetUniformLocation(_Handle, Name));
 		
 		ON_DEBUG(std::cout << "        Uniform \"" << Name << "\" with size " << Size << " and type " << Type << " at location " << Location << "." << std::endl);
-		if((Name == std::string("in_ViewToMonitorMatrix")) && (Type == GL_FLOAT_MAT4) && (Size == 1))
+		if((Name == std::string("in_Color")) && (Type == GL_FLOAT_VEC4) && (Size == 1))
+		{
+			_Uniforms[Location] = Graphics::Program::UniformContent::ColorRGBO4F;
+		}
+		else if((Name == std::string("in_ViewToMonitorMatrix")) && (Type == GL_FLOAT_MAT4) && (Size == 1))
 		{
 			_Uniforms[Location] = Graphics::Program::UniformContent::ViewToMonitorMatrix4x4F;
 		}
