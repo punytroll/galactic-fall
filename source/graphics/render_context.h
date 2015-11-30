@@ -70,36 +70,6 @@ namespace Graphics
 	{
 		return _Style;
 	}
-	
-	inline void Graphics::RenderContext::SetCamera(Graphics::Camera * Camera)
-	{
-		_Camera = Camera;
-	}
-	
-	inline void Graphics::RenderContext::SetEngine(Graphics::Engine * Engine)
-	{
-		_Engine = Engine;
-	}
-	
-	inline void Graphics::RenderContext::SetLight(Graphics::Light * Light)
-	{
-		_Light = Light;
-	}
-	
-	inline void Graphics::RenderContext::SetNode(Graphics::Node * Node)
-	{
-		_Node = Node;
-	}
-	
-	inline void Graphics::RenderContext::SetStyle(Graphics::Style * Style)
-	{
-		_Style = Style;
-	}
-	
-	inline void Graphics::RenderContext::SetTexture(const Graphics::Texture * Texture)
-	{
-		_Texture = Texture;
-	}
 }
 
 #endif
