@@ -352,10 +352,6 @@ typedef void (* glListBaseFunction)(GLuint base);
 extern glListBaseFunction __glListBase;
 #define GLListBase(base) { assert(__glListBase != nullptr); __glListBase(base); CheckGLError; }
 
-typedef void (* glLoadIdentityFunction)(void);
-extern glLoadIdentityFunction __glLoadIdentity;
-#define GLLoadIdentity() { assert(__glLoadIdentity != nullptr); __glLoadIdentity(); CheckGLError; }
-
 typedef void (* glLoadMatrixfFunction)(const GLfloat * m);
 extern glLoadMatrixfFunction __glLoadMatrixf;
 #define GLLoadMatrixf(m) { assert(__glLoadMatrixf != nullptr); __glLoadMatrixf(m); CheckGLError; }
