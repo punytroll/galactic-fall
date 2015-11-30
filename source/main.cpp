@@ -3012,7 +3012,6 @@ void InitializeOpenGL(void)
 	LoadOpenGLFunction(glBitmap);
 	LoadOpenGLFunction(glBlendFunc);
 	LoadOpenGLFunction(glBufferData);
-	LoadOpenGLFunction(glCallLists);
 	LoadOpenGLFunction(glCheckFramebufferStatus);
 	LoadOpenGLFunction(glClear);
 	LoadOpenGLFunction(glClearColor);
@@ -3025,7 +3024,6 @@ void InitializeOpenGL(void)
 	LoadOpenGLFunction(glCreateShader);
 	LoadOpenGLFunction(glDeleteBuffers);
 	LoadOpenGLFunction(glDeleteFramebuffers);
-	LoadOpenGLFunction(glDeleteLists);
 	LoadOpenGLFunction(glDeleteProgram);
 	LoadOpenGLFunction(glDeleteRenderbuffers);
 	LoadOpenGLFunction(glDeleteShader);
@@ -3042,7 +3040,6 @@ void InitializeOpenGL(void)
 	LoadOpenGLFunction(glFramebufferTexture);
 	LoadOpenGLFunction(glGenBuffers);
 	LoadOpenGLFunction(glGenFramebuffers);
-	LoadOpenGLFunction(glGenLists);
 	LoadOpenGLFunction(glGenRenderbuffers);
 	LoadOpenGLFunction(glGenTextures);
 	LoadOpenGLFunction(glGenVertexArrays);

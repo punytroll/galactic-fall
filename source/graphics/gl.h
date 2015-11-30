@@ -77,10 +77,6 @@ typedef void (* glBufferDataFunction)(GLenum target, GLsizeiptr size, const GLvo
 extern glBufferDataFunction __glBufferData;
 #define GLBufferData(target, size, data, usage) { assert(__glBufferData != nullptr); __glBufferData(target, size, data, usage); CheckGLError; }
 
-typedef void (* glCallListsFunction)(GLsizei n, GLenum type, const GLvoid * lists);
-extern glCallListsFunction __glCallLists;
-#define GLCallLists(n, type, lists) { assert(__glCallLists != nullptr); __glCallLists(n, type, lists); CheckGLError; }
-
 typedef GLenum (* glCheckFramebufferStatusFunction)(GLenum target);
 extern glCheckFramebufferStatusFunction __glCheckFramebufferStatus;
 #ifdef NDEBUG
@@ -168,10 +164,6 @@ typedef void (* glDeleteFramebuffersFunction)(GLsizei n, GLuint * framebuffers);
 extern glDeleteFramebuffersFunction __glDeleteFramebuffers;
 #define GLDeleteFramebuffers(n, framebuffers) { assert(__glDeleteFramebuffers != nullptr); __glDeleteFramebuffers(n, framebuffers); CheckGLError; }
 
-typedef void (* glDeleteListsFunction)(GLuint list, GLsizei range);;
-extern glDeleteListsFunction __glDeleteLists;
-#define GLDeleteLists(list, range) { assert(__glDeleteLists != nullptr); __glDeleteLists(list, range); CheckGLError; }
-
 typedef void (* glDeleteProgramFunction)(GLuint program);
 extern glDeleteProgramFunction __glDeleteProgram;
 #define GLDeleteProgram(program) { assert(__glDeleteProgram != nullptr); __glDeleteProgram(program); CheckGLError; }
@@ -235,23 +227,6 @@ extern glGenBuffersFunction __glGenBuffers;
 typedef void (* glGenFramebuffersFunction)(GLsizei n, GLuint * ids);
 extern glGenFramebuffersFunction __glGenFramebuffers;
 #define GLGenFramebuffers(n, ids) { assert(__glGenFramebuffers != nullptr); __glGenFramebuffers(n, ids); CheckGLError; }
-
-typedef GLuint (* glGenListsFunction)(GLsizei range);
-extern glGenListsFunction __glGenLists;
-#ifdef NDEBUG
-#define GLGenLists(range) __glGenLists(range)
-#else
-inline GLuint GLGenLists(GLsizei range)
-{
-	GLuint Result;
-	
-	assert(__glGenLists != nullptr);
-	Result = __glGenLists(range);
-	CheckGLError;
-	
-	return Result;
-}
-#endif
 
 typedef void (* glGenRenderbuffersFunction)(GLsizei n, GLuint * renderbuffers);
 extern glGenRenderbuffersFunction __glGenRenderbuffers;
