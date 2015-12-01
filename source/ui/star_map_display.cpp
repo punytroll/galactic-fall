@@ -182,11 +182,11 @@ void UI::StarMapDisplay::Draw(Graphics::RenderContext * RenderContext)
 
 void UI::StarMapDisplay::_OnCharacterDestroying(void)
 {
-	assert(_CharacterDestroyingConnection.IsValid() == true);
 	assert(_Character != nullptr);
-	_Character->DisconnectDestroyingCallback(_CharacterDestroyingConnection);
-	assert(_CharacterDestroyingConnection.IsValid() == false);
 	_Character = nullptr;
+	assert(_CharacterDestroyingConnection.IsValid() == true);
+	_CharacterDestroyingConnection.Disconnect();
+	assert(_CharacterDestroyingConnection.IsValid() == false);
 }
 
 void UI::StarMapDisplay::_OnDestroying(UI::Event & DestroyingEvent)
@@ -279,20 +279,20 @@ void UI::StarMapDisplay::_OnMouseMove(UI::MouseMoveEvent & MouseMoveEvent)
 
 void UI::StarMapDisplay::_OnSelectedSystemDestroying(void)
 {
-	assert(_SelectedSystemDestroyingConnection.IsValid() == true);
 	assert(_SelectedSystem != nullptr);
-	_SelectedSystem->DisconnectDestroyingCallback(_SelectedSystemDestroyingConnection);
-	assert(_SelectedSystemDestroyingConnection.IsValid() == false);
 	_SelectedSystem = nullptr;
+	assert(_SelectedSystemDestroyingConnection.IsValid() == true);
+	_SelectedSystemDestroyingConnection.Disconnect();
+	assert(_SelectedSystemDestroyingConnection.IsValid() == false);
 }
 
 void UI::StarMapDisplay::SetSelectedSystem(System * SelectedSystem)
 {
 	if(_SelectedSystem != nullptr)
 	{
-		assert(_SelectedSystemDestroyingConnection.IsValid() == true);
-		_SelectedSystem->DisconnectDestroyingCallback(_SelectedSystemDestroyingConnection);
 		_SelectedSystem = nullptr;
+		assert(_SelectedSystemDestroyingConnection.IsValid() == true);
+		_SelectedSystemDestroyingConnection.Disconnect();
 	}
 	assert(_SelectedSystemDestroyingConnection.IsValid() == false);
 	_SelectedSystem = SelectedSystem;
