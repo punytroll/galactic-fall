@@ -98,6 +98,7 @@ void UI::UserInterface::Draw(Graphics::RenderContext * RenderContext) const
 		UI::Widget::_PopClippingRectangle(RenderContext);
 	}
 	RenderContext->SetStyle(nullptr);
+	delete Style;
 	GLDisable(GL_CLIP_PLANE0);
 	GLDisable(GL_CLIP_PLANE1);
 	GLDisable(GL_CLIP_PLANE2);
