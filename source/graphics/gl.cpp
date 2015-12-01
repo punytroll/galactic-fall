@@ -65,6 +65,7 @@ glGetActiveUniformFunction __glGetActiveUniform(nullptr);
 glGetAttribLocationFunction __glGetAttribLocation(nullptr);
 glGetIntegervFunction __glGetIntegerv(nullptr);
 glGetProgramivFunction __glGetProgramiv(nullptr);
+glGetShaderInfoLogFunction __glGetShaderInfoLog(nullptr);
 glGetShaderivFunction __glGetShaderiv(nullptr);
 glGetStringFunction __glGetString(nullptr);
 glGetUniformLocationFunction __glGetUniformLocation(nullptr);

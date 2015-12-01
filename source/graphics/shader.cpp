@@ -18,7 +18,9 @@
 **/
 
 #include <cassert>
+#include <iostream>
 
+#include "../globals.h"
 #include "gl.h"
 #include "shader.h"
 
@@ -58,6 +60,22 @@ void Graphics::Shader::Build(void)
 	GLint CompileStatus;
 	
 	GLGetShaderiv(_Handle, GL_COMPILE_STATUS, &CompileStatus);
+	if(CompileStatus == GL_FALSE)
+	{
+		std::cout << "Compilation of the shader \"" << _Identifier << "\" failed." << std::endl;
+		
+		int InfoLogLength;
+		
+		GLGetShaderiv(_Handle, GL_INFO_LOG_LENGTH, &InfoLogLength);
+		if(InfoLogLength > 1)
+		{
+			GLchar * InfoLog(new GLchar[InfoLogLength]);
+			
+			GLGetShaderInfoLog(_Handle, InfoLogLength, nullptr, InfoLog);
+			ON_DEBUG(std::cout << InfoLog << std::endl);
+			delete[] InfoLog;
+		}
+	}
 	assert(CompileStatus == GL_TRUE);
 }
 
