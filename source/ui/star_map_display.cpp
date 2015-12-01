@@ -34,14 +34,16 @@
 #include "star_map_display.h"
 #include "user_interface.h"
 
-UI::StarMapDisplay::StarMapDisplay(Widget * SupWidget, System * System, Character * Character) :
+UI::StarMapDisplay::StarMapDisplay(Widget * SupWidget, Character * Character) :
 	Widget(SupWidget),
 	_Character(Character),
 	_OffsetPosition(true),
 	_Scale(5.0f),
-	_SelectedSystem(nullptr),
-	_System(System)
+	_SelectedSystem(nullptr)
 {
+	assert(_Character != nullptr);
+	_CharacterDestroyingConnection = _Character->ConnectDestroyingCallback(std::bind(&UI::StarMapDisplay::_OnCharacterDestroying, this));
+	ConnectDestroyingCallback(std::bind(&UI::StarMapDisplay::_OnDestroying, this, std::placeholders::_1));
 	ConnectMouseButtonCallback(std::bind(&UI::StarMapDisplay::_OnMouseButton, this, std::placeholders::_1));
 	ConnectMouseMoveCallback(std::bind(&UI::StarMapDisplay::_OnMouseMove, this, std::placeholders::_1));
 }
@@ -49,126 +51,163 @@ UI::StarMapDisplay::StarMapDisplay(Widget * SupWidget, System * System, Characte
 void UI::StarMapDisplay::Draw(Graphics::RenderContext * RenderContext)
 {
 	Widget::Draw(RenderContext);
-	
-	Vector2f Middle(GetSize() / 2);
-	
-	Middle += GetGlobalPosition();
-	Middle += _OffsetPosition;
-	
-	auto SystemSize{5.0f};
-	
-	GLPushAttrib(GL_ENABLE_BIT);
-	GLPushMatrix();
-	GLTranslatef(Middle[0], Middle[1], 0.0f);
-	GLScalef(1.0f, -1.0f, 1.0f);
-	
-	auto & UnexploredSystems{_Character->GetMapKnowledge()->GetUnexploredSystems()};
-	
-	for(auto UnexploredSystem : UnexploredSystems)
+	if(_Character != nullptr)
 	{
-		auto Position{UnexploredSystem->GetAspectPosition()->GetPosition() - _System->GetAspectPosition()->GetPosition()};
+		auto System{_Character->GetSystem()};
 		
-		Position *= _Scale;
+		assert(System);
+		assert(_Character->GetMapKnowledge() != nullptr);
+		
+		auto Middle{GetSize() / 2.0f};
+		
+		Middle += GetGlobalPosition();
+		Middle += _OffsetPosition;
+		
+		auto SystemSize{5.0f};
+		
+		GLPushAttrib(GL_ENABLE_BIT);
 		GLPushMatrix();
-		GLTranslatef(Position[0], Position[1], 0.0f);
-		if(UnexploredSystem == _SelectedSystem)
-		{
-			GLColor3f(0.0f, 1.0f, 0.0f);
-		}
-		else if(UnexploredSystem == _System)
-		{
-			GLColor3f(0.8f, 0.8f, 0.0f);
-		}
-		else
-		{
-			GLColor3f(0.5f, 0.5f, 0.5f);
-		}
-		GLBegin(GL_LINE_LOOP);
-		GLVertex2f(SystemSize, 0.0f);
-		GLVertex2f(SystemSize * 0.866f, SystemSize * 0.5f);
-		GLVertex2f(SystemSize * 0.5f, SystemSize * 0.866f);
-		GLVertex2f(0.0f, SystemSize);
-		GLVertex2f(-SystemSize * 0.5f, SystemSize * 0.866f);
-		GLVertex2f(-SystemSize * 0.866f, SystemSize * 0.5f);
-		GLVertex2f(-SystemSize, 0.0f);
-		GLVertex2f(-SystemSize * 0.866f, -SystemSize * 0.5f);
-		GLVertex2f(-SystemSize * 0.5f, -SystemSize * 0.866f);
-		GLVertex2f(0.0f, -SystemSize);
-		GLVertex2f(SystemSize * 0.5f, -SystemSize * 0.866f);
-		GLVertex2f(SystemSize * 0.866f, -SystemSize * 0.5f);
-		GLEnd();
-		GLPopMatrix();
-	}
-	
-	auto & ExploredSystems{_Character->GetMapKnowledge()->GetExploredSystems()};
-	
-	for(auto ExploredSystem : ExploredSystems)
-	{
-		assert(ExploredSystem != nullptr);
-		assert(ExploredSystem->GetAspectPosition() != nullptr);
+		GLTranslatef(Middle[0], Middle[1], 0.0f);
+		GLScalef(1.0f, -1.0f, 1.0f);
 		
-		auto Position{ExploredSystem->GetAspectPosition()->GetPosition() - _System->GetAspectPosition()->GetPosition()};
+		auto & UnexploredSystems{_Character->GetMapKnowledge()->GetUnexploredSystems()};
 		
-		Position *= _Scale;
-		GLPushMatrix();
-		GLTranslatef(Position[0], Position[1], 0.0f);
-		
-		auto & LinkedSystems{ExploredSystem->GetLinkedSystems()};
-		
-		for(auto LinkedSystem : LinkedSystems)
+		for(auto UnexploredSystem : UnexploredSystems)
 		{
-			assert(LinkedSystem != nullptr);
-			if(UnexploredSystems.find(LinkedSystem) == UnexploredSystems.end())
+			auto Position{UnexploredSystem->GetAspectPosition()->GetPosition() - System->GetAspectPosition()->GetPosition()};
+			
+			Position *= _Scale;
+			GLPushMatrix();
+			GLTranslatef(Position[0], Position[1], 0.0f);
+			if(UnexploredSystem == _SelectedSystem)
 			{
-				// system already explored so make it blue
-				GLColor3f(0.0f, 0.0f, 0.8f);
+				GLColor3f(0.0f, 1.0f, 0.0f);
+			}
+			else if(UnexploredSystem == System)
+			{
+				GLColor3f(0.8f, 0.8f, 0.0f);
 			}
 			else
 			{
-				// system still unexplored so make it grey
 				GLColor3f(0.5f, 0.5f, 0.5f);
 			}
-			GLBegin(GL_LINES);
-			GLVertex2f(0.0f, 0.0f);
-			assert(LinkedSystem->GetAspectPosition() != nullptr);
-			
-			auto To{(LinkedSystem->GetAspectPosition()->GetPosition() - ExploredSystem->GetAspectPosition()->GetPosition()).Scale(_Scale)};
-			
-			GLVertex2f(To[0], To[1]);
+			GLBegin(GL_LINE_LOOP);
+			GLVertex2f(SystemSize, 0.0f);
+			GLVertex2f(SystemSize * 0.866f, SystemSize * 0.5f);
+			GLVertex2f(SystemSize * 0.5f, SystemSize * 0.866f);
+			GLVertex2f(0.0f, SystemSize);
+			GLVertex2f(-SystemSize * 0.5f, SystemSize * 0.866f);
+			GLVertex2f(-SystemSize * 0.866f, SystemSize * 0.5f);
+			GLVertex2f(-SystemSize, 0.0f);
+			GLVertex2f(-SystemSize * 0.866f, -SystemSize * 0.5f);
+			GLVertex2f(-SystemSize * 0.5f, -SystemSize * 0.866f);
+			GLVertex2f(0.0f, -SystemSize);
+			GLVertex2f(SystemSize * 0.5f, -SystemSize * 0.866f);
+			GLVertex2f(SystemSize * 0.866f, -SystemSize * 0.5f);
 			GLEnd();
+			GLPopMatrix();
 		}
-		if(ExploredSystem == _SelectedSystem)
+		
+		auto & ExploredSystems{_Character->GetMapKnowledge()->GetExploredSystems()};
+		
+		for(auto ExploredSystem : ExploredSystems)
 		{
-			GLColor3f(0.0f, 1.0f, 0.0f);
+			assert(ExploredSystem != nullptr);
+			assert(ExploredSystem->GetAspectPosition() != nullptr);
+			
+			auto Position{ExploredSystem->GetAspectPosition()->GetPosition() - System->GetAspectPosition()->GetPosition()};
+			
+			Position *= _Scale;
+			GLPushMatrix();
+			GLTranslatef(Position[0], Position[1], 0.0f);
+			
+			auto & LinkedSystems{ExploredSystem->GetLinkedSystems()};
+			
+			for(auto LinkedSystem : LinkedSystems)
+			{
+				assert(LinkedSystem != nullptr);
+				if(UnexploredSystems.find(LinkedSystem) == UnexploredSystems.end())
+				{
+					// system already explored so make it blue
+					GLColor3f(0.0f, 0.0f, 0.8f);
+				}
+				else
+				{
+					// system still unexplored so make it grey
+					GLColor3f(0.5f, 0.5f, 0.5f);
+				}
+				GLBegin(GL_LINES);
+				GLVertex2f(0.0f, 0.0f);
+				assert(LinkedSystem->GetAspectPosition() != nullptr);
+				
+				auto To{(LinkedSystem->GetAspectPosition()->GetPosition() - ExploredSystem->GetAspectPosition()->GetPosition()).Scale(_Scale)};
+				
+				GLVertex2f(To[0], To[1]);
+				GLEnd();
+			}
+			if(ExploredSystem == _SelectedSystem)
+			{
+				GLColor3f(0.0f, 1.0f, 0.0f);
+			}
+			else if(ExploredSystem == System)
+			{
+				GLColor3f(0.8f, 0.8f, 0.0f);
+			}
+			else
+			{
+				GLColor3f(0.0f, 0.0f, 0.8f);
+			}
+			GLBegin(GL_LINE_LOOP);
+			GLVertex2f(SystemSize, 0.0f);
+			GLVertex2f(SystemSize * 0.866f, SystemSize * 0.5f);
+			GLVertex2f(SystemSize * 0.5f, SystemSize * 0.866f);
+			GLVertex2f(0.0f, SystemSize);
+			GLVertex2f(-SystemSize * 0.5f, SystemSize * 0.866f);
+			GLVertex2f(-SystemSize * 0.866f, SystemSize * 0.5f);
+			GLVertex2f(-SystemSize, 0.0f);
+			GLVertex2f(-SystemSize * 0.866f, -SystemSize * 0.5f);
+			GLVertex2f(-SystemSize * 0.5f, -SystemSize * 0.866f);
+			GLVertex2f(0.0f, -SystemSize);
+			GLVertex2f(SystemSize * 0.5f, -SystemSize * 0.866f);
+			GLVertex2f(SystemSize * 0.866f, -SystemSize * 0.5f);
+			GLEnd();
+			assert(ExploredSystem->GetAspectName() != nullptr);
+			Graphics::Drawing::DrawText(RenderContext, Middle + Vector2f(Position[0], 1.2f * SystemSize - Position[1]), ExploredSystem->GetAspectName()->GetName(), Graphics::ColorRGBO(1.0f, 1.0f, 1.0f, 1.0f));
+			GLPopMatrix();
 		}
-		else if(ExploredSystem == _System)
-		{
-			GLColor3f(0.8f, 0.8f, 0.0f);
-		}
-		else
-		{
-			GLColor3f(0.0f, 0.0f, 0.8f);
-		}
-		GLBegin(GL_LINE_LOOP);
-		GLVertex2f(SystemSize, 0.0f);
-		GLVertex2f(SystemSize * 0.866f, SystemSize * 0.5f);
-		GLVertex2f(SystemSize * 0.5f, SystemSize * 0.866f);
-		GLVertex2f(0.0f, SystemSize);
-		GLVertex2f(-SystemSize * 0.5f, SystemSize * 0.866f);
-		GLVertex2f(-SystemSize * 0.866f, SystemSize * 0.5f);
-		GLVertex2f(-SystemSize, 0.0f);
-		GLVertex2f(-SystemSize * 0.866f, -SystemSize * 0.5f);
-		GLVertex2f(-SystemSize * 0.5f, -SystemSize * 0.866f);
-		GLVertex2f(0.0f, -SystemSize);
-		GLVertex2f(SystemSize * 0.5f, -SystemSize * 0.866f);
-		GLVertex2f(SystemSize * 0.866f, -SystemSize * 0.5f);
-		GLEnd();
-		assert(ExploredSystem->GetAspectName() != nullptr);
-		Graphics::Drawing::DrawText(RenderContext, Middle + Vector2f(Position[0], 1.2f * SystemSize - Position[1]), ExploredSystem->GetAspectName()->GetName(), Graphics::ColorRGBO(1.0f, 1.0f, 1.0f, 1.0f));
 		GLPopMatrix();
+		GLPopAttrib();
 	}
-	GLPopMatrix();
-	GLPopAttrib();
+}
+
+void UI::StarMapDisplay::_OnCharacterDestroying(void)
+{
+	assert(_CharacterDestroyingConnection.IsValid() == true);
+	assert(_Character != nullptr);
+	_Character->DisconnectDestroyingCallback(_CharacterDestroyingConnection);
+	assert(_CharacterDestroyingConnection.IsValid() == false);
+	_Character = nullptr;
+}
+
+void UI::StarMapDisplay::_OnDestroying(UI::Event & DestroyingEvent)
+{
+	if(DestroyingEvent.GetPhase() == UI::Event::Phase::Target)
+	{
+		if(_Character != nullptr)
+		{
+			assert(_CharacterDestroyingConnection.IsValid() == true);
+			_Character->DisconnectDestroyingCallback(_CharacterDestroyingConnection);
+			_Character = nullptr;
+		}
+		assert(_CharacterDestroyingConnection.IsValid() == false);
+		if(_SelectedSystem != nullptr)
+		{
+			assert(_SelectedSystemDestroyingConnection.IsValid() == true);
+			_SelectedSystem->DisconnectDestroyingCallback(_SelectedSystemDestroyingConnection);
+			_SelectedSystem = nullptr;
+		}
+		assert(_SelectedSystemDestroyingConnection.IsValid() == false);
+	}
 }
 
 void UI::StarMapDisplay::_OnMouseButton(UI::MouseButtonEvent & MouseButtonEvent)
@@ -187,23 +226,30 @@ void UI::StarMapDisplay::_OnMouseButton(UI::MouseButtonEvent & MouseButtonEvent)
 		}
 		else if((MouseButtonEvent.GetMouseButton() == UI::MouseButtonEvent::MouseButton::Left) && (MouseButtonEvent.IsDown() == true))
 		{
-			auto NormalizedPosition{MouseButtonEvent.GetPosition() - GetSize() / 2.0f};
-			
-			for(auto SystemPair : g_Galaxy->GetSystems())
+			if(_Character != nullptr)
 			{
-				assert(SystemPair.second != nullptr);
-				assert(SystemPair.second->GetAspectPosition() != nullptr);
+				auto System{_Character->GetSystem()};
 				
-				auto Position{SystemPair.second->GetAspectPosition()->GetPosition() - _System->GetAspectPosition()->GetPosition()};
+				assert(System != nullptr);
 				
-				Position *= _Scale;
-				Position[0] -= NormalizedPosition[0] - _OffsetPosition[0];
-				Position[1] += NormalizedPosition[1] - _OffsetPosition[1];
-				if(Position.SquaredLength() < 40.0f)
+				auto NormalizedPosition{MouseButtonEvent.GetPosition() - GetSize() / 2.0f};
+				
+				for(auto SystemPair : g_Galaxy->GetSystems())
 				{
-					_SelectedSystem = SystemPair.second;
+					assert(SystemPair.second != nullptr);
+					assert(SystemPair.second->GetAspectPosition() != nullptr);
 					
-					break;
+					auto Position{SystemPair.second->GetAspectPosition()->GetPosition() - System->GetAspectPosition()->GetPosition()};
+					
+					Position *= _Scale;
+					Position[0] -= NormalizedPosition[0] - _OffsetPosition[0];
+					Position[1] += NormalizedPosition[1] - _OffsetPosition[1];
+					if(Position.SquaredLength() < 40.0f)
+					{
+						SetSelectedSystem(SystemPair.second);
+						
+						break;
+					}
 				}
 			}
 		}
@@ -229,4 +275,26 @@ void UI::StarMapDisplay::_OnMouseMove(UI::MouseMoveEvent & MouseMoveEvent)
 		_OffsetPosition += (MouseMoveEvent.GetPosition() - _GrabPosition);
 		_GrabPosition = MouseMoveEvent.GetPosition();
 	}
+}
+
+void UI::StarMapDisplay::_OnSelectedSystemDestroying(void)
+{
+	assert(_SelectedSystemDestroyingConnection.IsValid() == true);
+	assert(_SelectedSystem != nullptr);
+	_SelectedSystem->DisconnectDestroyingCallback(_SelectedSystemDestroyingConnection);
+	assert(_SelectedSystemDestroyingConnection.IsValid() == false);
+	_SelectedSystem = nullptr;
+}
+
+void UI::StarMapDisplay::SetSelectedSystem(System * SelectedSystem)
+{
+	if(_SelectedSystem != nullptr)
+	{
+		assert(_SelectedSystemDestroyingConnection.IsValid() == true);
+		_SelectedSystem->DisconnectDestroyingCallback(_SelectedSystemDestroyingConnection);
+		_SelectedSystem = nullptr;
+	}
+	assert(_SelectedSystemDestroyingConnection.IsValid() == false);
+	_SelectedSystem = SelectedSystem;
+	_SelectedSystemDestroyingConnection = _SelectedSystem->ConnectDestroyingCallback(std::bind(&UI::StarMapDisplay::_OnSelectedSystemDestroying, this));
 }

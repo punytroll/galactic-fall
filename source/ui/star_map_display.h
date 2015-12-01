@@ -35,20 +35,27 @@ namespace UI
 	class StarMapDisplay : public UI::Widget
 	{
 	public:
-		StarMapDisplay(UI::Widget * SupWidget, System * System, Character * Character);
+		StarMapDisplay(UI::Widget * SupWidget, Character * Character);
 		virtual void Draw(Graphics::RenderContext * RenderContext) override;
+		// getters
 		System * GetSelectedSystem(void);
+		// setters
+		void SetSelectedSystem(System * SelectedSystem);
 	private:
 		// callbacks
+		void _OnCharacterDestroying(void);
+		void _OnDestroying(UI::Event & DestroyingEvent);
 		void _OnMouseButton(UI::MouseButtonEvent & MouseButtonEvent);
 		void _OnMouseMove(UI::MouseMoveEvent & MouseMoveEvent);
+		void _OnSelectedSystemDestroying(void);
 		// member variables
 		Character * _Character;
+		Connection _CharacterDestroyingConnection;
 		Vector2f _GrabPosition;
 		Vector2f _OffsetPosition;
 		float _Scale;
 		System * _SelectedSystem;
-		System * _System;
+		Connection _SelectedSystemDestroyingConnection;
 	};
 
 	inline System * StarMapDisplay::GetSelectedSystem(void)
