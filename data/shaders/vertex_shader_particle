@@ -1,0 +1,17 @@
+#version 330
+
+uniform mat4 in_ModelToMonitorMatrix;
+
+layout (location = 0) in vec3 in_ModelPosition;
+layout (location = 1) in vec2 in_TextureCoordinates;
+layout (location = 2) in vec4 in_Color;
+
+out vec4 pass_Color;
+out vec2 pass_TextureCoordinates;
+
+void main()
+{
+	pass_TextureCoordinates = in_TextureCoordinates;
+	pass_Color = in_Color;
+    gl_Position = in_ModelToMonitorMatrix * vec4(in_ModelPosition, 1.0f);
+}
