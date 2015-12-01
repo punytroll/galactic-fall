@@ -33,14 +33,14 @@ namespace Graphics
 		CallbackNode(void);
 		virtual ~CallbackNode(void);
 		// setters
-		void SetDrawCallback(std::function< void (void) > Callback);
+		void SetDrawCallback(std::function< void (Graphics::RenderContext * RenderContext) > Callback);
 		// modifiers
 		virtual void Draw(Graphics::RenderContext * RenderContext) override;
 	private:
-		std::function< void (void) > _DrawCallback;
+		std::function< void (Graphics::RenderContext * RenderContext) > _DrawCallback;
 	};
 	
-	inline void CallbackNode::SetDrawCallback(std::function< void (void) > Callback)
+	inline void CallbackNode::SetDrawCallback(std::function< void (Graphics::RenderContext * RenderContext) > Callback)
 	{
 		_DrawCallback = Callback;
 	}

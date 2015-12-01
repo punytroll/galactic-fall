@@ -128,7 +128,7 @@ void UI::MiniMapDisplay::_SetupView(void)
 	
 	auto RootNode(new Graphics::CallbackNode());
 	
-	RootNode->SetDrawCallback(std::bind(&UI::MiniMapDisplay::_OnDraw, this));
+	RootNode->SetDrawCallback(std::bind(&UI::MiniMapDisplay::_OnDraw, this, std::placeholders::_1));
 	RootNode->SetClearColorBuffer(true);
 	RootNode->SetClearDepthBuffer(true);
 	RootNode->SetUseBlending(false);
@@ -150,7 +150,7 @@ void UI::MiniMapDisplay::_OnDestroyInScene(Graphics::Node * Node)
 	delete Node;
 }
 
-void UI::MiniMapDisplay::_OnDraw(void)
+void UI::MiniMapDisplay::_OnDraw(Graphics::RenderContext * RenderContext)
 {
 	if(_Owner.IsValid() == true)
 	{
