@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 1.8.19 of algebra.
+ * This is part of version 1.8.20 of algebra.
  **/
 
 #ifndef ALGEBRA_MATRIX4F_H
@@ -41,6 +41,12 @@ private:
 	float _[16];
 public:
 	static Matrix4f CreateIdentity(void);
+	
+	static Matrix4f CreateFlipX(void);
+	
+	static Matrix4f CreateFlipY(void);
+	
+	static Matrix4f CreateFlipZ(void);
 	
 	static Matrix4f CreateTranslation(float X, float Y, float Z);
 	
@@ -133,6 +139,78 @@ inline Matrix4f Matrix4f::CreateIdentity(void)
 	Result._[8] = 0.0f;
 	Result._[9] = 0.0f;
 	Result._[10] = 1.0f;
+	Result._[11] = 0.0f;
+	Result._[12] = 0.0f;
+	Result._[13] = 0.0f;
+	Result._[14] = 0.0f;
+	Result._[15] = 1.0f;
+	
+	return Result;
+}
+
+inline Matrix4f Matrix4f::CreateFlipX(void)
+{
+	Matrix4f Result;
+	
+	Result._[0] = -1.0f;
+	Result._[1] = 0.0f;
+	Result._[2] = 0.0f;
+	Result._[3] = 0.0f;
+	Result._[4] = 0.0f;
+	Result._[5] = 1.0f;
+	Result._[6] = 0.0f;
+	Result._[7] = 0.0f;
+	Result._[8] = 0.0f;
+	Result._[9] = 0.0f;
+	Result._[10] = 1.0f;
+	Result._[11] = 0.0f;
+	Result._[12] = 0.0f;
+	Result._[13] = 0.0f;
+	Result._[14] = 0.0f;
+	Result._[15] = 1.0f;
+	
+	return Result;
+}
+
+inline Matrix4f Matrix4f::CreateFlipY(void)
+{
+	Matrix4f Result;
+	
+	Result._[0] = 1.0f;
+	Result._[1] = 0.0f;
+	Result._[2] = 0.0f;
+	Result._[3] = 0.0f;
+	Result._[4] = 0.0f;
+	Result._[5] = -1.0f;
+	Result._[6] = 0.0f;
+	Result._[7] = 0.0f;
+	Result._[8] = 0.0f;
+	Result._[9] = 0.0f;
+	Result._[10] = 1.0f;
+	Result._[11] = 0.0f;
+	Result._[12] = 0.0f;
+	Result._[13] = 0.0f;
+	Result._[14] = 0.0f;
+	Result._[15] = 1.0f;
+	
+	return Result;
+}
+
+inline Matrix4f Matrix4f::CreateFlipZ(void)
+{
+	Matrix4f Result;
+	
+	Result._[0] = 1.0f;
+	Result._[1] = 0.0f;
+	Result._[2] = 0.0f;
+	Result._[3] = 0.0f;
+	Result._[4] = 0.0f;
+	Result._[5] = 1.0f;
+	Result._[6] = 0.0f;
+	Result._[7] = 0.0f;
+	Result._[8] = 0.0f;
+	Result._[9] = 0.0f;
+	Result._[10] = -1.0f;
 	Result._[11] = 0.0f;
 	Result._[12] = 0.0f;
 	Result._[13] = 0.0f;
