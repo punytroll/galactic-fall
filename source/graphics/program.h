@@ -57,8 +57,11 @@ namespace Graphics
 			MaterialColorRGB3F,
 			MaterialColorRGBO4F,
 			MaterialShininessF,
-			Clipping4F,
-			Texture
+			Texture,
+			WorldClippingBottomF,
+			WorldClippingLeftF,
+			WorldClippingRightF,
+			WorldClippingTopF
 		};
 		
 		// constructor

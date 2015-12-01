@@ -167,13 +167,25 @@ void Graphics::Program::Build(Graphics::ShadingManager * ShadingManager)
 		{
 			_Uniforms[Location] = Graphics::Program::UniformContent::MaterialShininessF;
 		}
-		else if((Name == std::string("in_Clipping")) && (Type == GL_FLOAT_VEC4) && (Size == 1))
-		{
-			_Uniforms[Location] = Graphics::Program::UniformContent::Clipping4F;
-		}
 		else if((Name == std::string("in_Texture")) && (Type == GL_SAMPLER_2D) && (Size == 1))
 		{
 			_Uniforms[Location] = Graphics::Program::UniformContent::Texture;
+		}
+		else if((Name == std::string("in_WorldClipping.Bottom")) && (Type == GL_FLOAT) && (Size == 1))
+		{
+			_Uniforms[Location] = Graphics::Program::UniformContent::WorldClippingBottomF;
+		}
+		else if((Name == std::string("in_WorldClipping.Left")) && (Type == GL_FLOAT) && (Size == 1))
+		{
+			_Uniforms[Location] = Graphics::Program::UniformContent::WorldClippingLeftF;
+		}
+		else if((Name == std::string("in_WorldClipping.Right")) && (Type == GL_FLOAT) && (Size == 1))
+		{
+			_Uniforms[Location] = Graphics::Program::UniformContent::WorldClippingRightF;
+		}
+		else if((Name == std::string("in_WorldClipping.Top")) && (Type == GL_FLOAT) && (Size == 1))
+		{
+			_Uniforms[Location] = Graphics::Program::UniformContent::WorldClippingTopF;
 		}
 		else
 		{
