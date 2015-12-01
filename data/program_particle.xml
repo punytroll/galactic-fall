@@ -1,0 +1,7 @@
+<shader-program>
+	<identifier>particle</identifier>
+	<shaders>
+		<shader-identifier>vertex_shader_particle</shader-identifier>
+		<shader-identifier>fragment_shader_particle</shader-identifier>
+	</shaders>
+</shader-program>

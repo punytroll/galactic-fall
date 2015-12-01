@@ -1,0 +1,4 @@
+<vertex-shader>
+	<identifier>vertex_shader_particle</identifier>
+	<source from-file="shaders/vertex_shader_particle"/>
+</vertex-shader>
