@@ -30,5 +30,5 @@ Graphics::CallbackNode::~CallbackNode(void)
 void Graphics::CallbackNode::Draw(Graphics::RenderContext * RenderContext)
 {
 	assert((bool)_DrawCallback == true);
-	_DrawCallback();
+	_DrawCallback(RenderContext);
 }

@@ -25,6 +25,11 @@
 
 class Ship;
 
+namespace Graphics
+{
+	class RenderContext;
+}
+
 namespace UI
 {
 	class Event;
@@ -44,7 +49,7 @@ namespace UI
 		// callback handlers
 		void _OnDestroying(UI::Event & DestroyingEvent);
 		void _OnDestroyInScene(Graphics::Node * Node);
-		void _OnDraw(void);
+		void _OnDraw(Graphics::RenderContext * RenderContext);
 		void _OnSizeChanged(UI::Event & SizeChangedEvent);
 		Reference< Ship > _Owner;
 	};
