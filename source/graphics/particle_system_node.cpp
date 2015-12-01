@@ -75,26 +75,21 @@ void Graphics::ParticleSystemNode::Draw(Graphics::RenderContext * RenderContext)
 {
 	g_SystemStatistics->SetParticleSystemsDrawnThisFrame(g_SystemStatistics->GetParticleSystemsDrawnThisFrame() + 1);
 	assert(_ParticleSystem != nullptr);
-	GLBegin(GL_QUADS);
 	for(auto Particle : _ParticleSystem->GetParticles())
 	{
 		g_SystemStatistics->SetParticlesDrawnThisFrame(g_SystemStatistics->GetParticlesDrawnThisFrame() + 1);
 		GLColor4fv(Particle._Color.GetPointer());
-		
-		const Vector3f & Position(Particle._Position);
-		const float & Size(Particle._Size);
-		
-		// TODO: billboarding
+		GLBegin(GL_TRIANGLE_FAN);
 		GLTexCoord2f(0.0f, 0.0f);
-		GLVertex3f(Position[0] - Size, Position[1] - Size, Position[2]);
+		GLVertex3f(Particle._Position[0] - Particle._Size, Particle._Position[1] - Particle._Size, Particle._Position[2]);
 		GLTexCoord2f(1.0f, 0.0f);
-		GLVertex3f(Position[0] + Size, Position[1] - Size, Position[2]);
+		GLVertex3f(Particle._Position[0] + Particle._Size, Particle._Position[1] - Particle._Size, Particle._Position[2]);
 		GLTexCoord2f(1.0f, 1.0f);
-		GLVertex3f(Position[0] + Size, Position[1] + Size, Position[2]);
+		GLVertex3f(Particle._Position[0] + Particle._Size, Particle._Position[1] + Particle._Size, Particle._Position[2]);
 		GLTexCoord2f(0.0f, 1.0f);
-		GLVertex3f(Position[0] - Size, Position[1] + Size, Position[2]);
+		GLVertex3f(Particle._Position[0] - Particle._Size, Particle._Position[1] + Particle._Size, Particle._Position[2]);
+		GLEnd();
 	}
-	GLEnd();
 }
 
 void Graphics::ParticleSystemNode::End(Graphics::RenderContext * RenderContext)
