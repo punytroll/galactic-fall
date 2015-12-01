@@ -2447,10 +2447,11 @@ void ActionOpenMapDialog(void)
 	assert(g_CharacterObserver != nullptr);
 	if((g_MapDialog == nullptr) && (g_CharacterObserver->GetObservedCharacter() != nullptr))
 	{
-		auto CurrentSystem(GetObservedSystem());
-		
-		assert(CurrentSystem != nullptr);
-		g_MapDialog = new UI::MapDialog(g_UserInterface->GetRootWidget(), CurrentSystem, g_CharacterObserver->GetObservedCharacter());
+		g_MapDialog = new UI::MapDialog(g_UserInterface->GetRootWidget(), g_CharacterObserver->GetObservedCharacter());
+		if((g_CharacterObserver->GetObservedCharacter()->GetShip() != nullptr) && (g_CharacterObserver->GetObservedCharacter()->GetShip()->GetLinkedSystemTarget() != nullptr))
+		{
+			g_MapDialog->SetSelectedSystem(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetLinkedSystemTarget());
+		}
 		g_MapDialog->GrabKeyFocus();
 		g_MapDialog->ConnectDestroyingCallback(OnMapDialogDestroying);
 		if(g_InputMind.IsValid() == true)

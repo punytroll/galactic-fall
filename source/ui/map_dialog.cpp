@@ -30,8 +30,8 @@
 #include "star_map_display.h"
 #include "text_button.h"
 
-UI::MapDialog::MapDialog(UI::Widget * SupWidget, System * System, Character * Character) :
-	UI::Window(SupWidget, "Map: " + System->GetAspectName()->GetName())
+UI::MapDialog::MapDialog(UI::Widget * SupWidget, Character * Character) :
+	UI::Window(SupWidget, "Map")
 {
 	SetPosition(Vector2f(70.0f, 200.0f));
 	SetSize(Vector2f(500.0f, 530.0f));
@@ -46,7 +46,7 @@ UI::MapDialog::MapDialog(UI::Widget * SupWidget, System * System, Character * Ch
 	OKButton->SetAnchorRight(true);
 	OKButton->SetAnchorTop(false);
 	OKButton->ConnectClickedCallback(std::bind(&UI::MapDialog::Destroy, this));
-	_StarMapDisplay = new UI::StarMapDisplay(this, System, Character);
+	_StarMapDisplay = new UI::StarMapDisplay(this, Character);
 	_StarMapDisplay->SetPosition(Vector2f(10.0f, 40.0f));
 	_StarMapDisplay->SetSize(Vector2f(480.0f, 450.0f));
 	_StarMapDisplay->SetAnchorBottom(true);
@@ -61,6 +61,12 @@ System * UI::MapDialog::GetSelectedSystem(void)
 	assert(_StarMapDisplay != nullptr);
 	
 	return _StarMapDisplay->GetSelectedSystem();
+}
+
+void UI::MapDialog::SetSelectedSystem(System * SelectedSystem)
+{
+	assert(_StarMapDisplay != nullptr);
+	_StarMapDisplay->SetSelectedSystem(SelectedSystem);
 }
 
 void UI::MapDialog::_OnKey(UI::KeyEvent & KeyEvent)

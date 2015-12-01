@@ -33,8 +33,12 @@ namespace UI
 	class MapDialog : public UI::Window
 	{
 	public:
-		MapDialog(UI::Widget * SupWidget, System * System, Character * Character);
+		// constructor
+		MapDialog(UI::Widget * SupWidget, Character * Character);
+		// getters
 		System * GetSelectedSystem(void);
+		// setters
+		void SetSelectedSystem(System * SelectedSystem);
 	protected:
 		// callbacks
 		void _OnKey(UI::KeyEvent & KeyEvent);
