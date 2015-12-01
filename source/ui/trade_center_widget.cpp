@@ -49,7 +49,6 @@
 #include "../visualizations.h"
 #include "../weapon.h"
 #include "../weapon_class.h"
-#include "image.h"
 #include "key_event.h"
 #include "label.h"
 #include "list_box_item.h"
