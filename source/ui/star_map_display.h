@@ -20,7 +20,7 @@
 #ifndef UI_STAR_MAP_DISPLAY_H
 #define UI_STAR_MAP_DISPLAY_H
 
-#include "widget.h"
+#include "view_display.h"
 
 class Character;
 class System;
@@ -32,22 +32,27 @@ namespace Graphics
 
 namespace UI
 {
-	class StarMapDisplay : public UI::Widget
+	class StarMapDisplay : public UI::ViewDisplay
 	{
 	public:
 		StarMapDisplay(UI::Widget * SupWidget, Character * Character);
-		virtual void Draw(Graphics::RenderContext * RenderContext) override;
 		// getters
 		System * GetSelectedSystem(void);
 		// setters
 		void SetSelectedSystem(System * SelectedSystem);
 	private:
+		// modifiers
+		void _ClearView(void);
+		void _SetupView(void);
 		// callbacks
 		void _OnCharacterDestroying(void);
+		void _OnDraw(Graphics::RenderContext * RenderContext);
 		void _OnDestroying(UI::Event & DestroyingEvent);
+		void _OnDestroyInScene(Graphics::Node * Node);
 		void _OnMouseButton(UI::MouseButtonEvent & MouseButtonEvent);
 		void _OnMouseMove(UI::MouseMoveEvent & MouseMoveEvent);
 		void _OnSelectedSystemDestroying(void);
+		void _OnSizeChanged(UI::Event & SizeChangedEvent);
 		// member variables
 		Character * _Character;
 		Connection _CharacterDestroyingConnection;

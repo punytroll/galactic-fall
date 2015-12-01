@@ -22,9 +22,19 @@
 #include "../character.h"
 #include "../galaxy.h"
 #include "../globals.h"
+#include "../graphics/callback_node.h"
+#include "../graphics/camera.h"
 #include "../graphics/color_rgbo.h"
 #include "../graphics/drawing.h"
+#include "../graphics/engine.h"
 #include "../graphics/gl.h"
+#include "../graphics/orthogonal_2d_projection.h"
+#include "../graphics/render_context.h"
+#include "../graphics/scene.h"
+#include "../graphics/style.h"
+#include "../graphics/texture.h"
+#include "../graphics/texture_render_target.h"
+#include "../graphics/view.h"
 #include "../map_knowledge.h"
 #include "../object_aspect_name.h"
 #include "../object_aspect_position.h"
@@ -35,7 +45,7 @@
 #include "user_interface.h"
 
 UI::StarMapDisplay::StarMapDisplay(Widget * SupWidget, Character * Character) :
-	Widget(SupWidget),
+	UI::ViewDisplay(SupWidget),
 	_Character(Character),
 	_OffsetPosition(true),
 	_Scale(5.0f),
@@ -43,14 +53,94 @@ UI::StarMapDisplay::StarMapDisplay(Widget * SupWidget, Character * Character) :
 {
 	assert(_Character != nullptr);
 	_CharacterDestroyingConnection = _Character->ConnectDestroyingCallback(std::bind(&UI::StarMapDisplay::_OnCharacterDestroying, this));
+	SetSize(Vector2f(100.0f, 100.0f));
 	ConnectDestroyingCallback(std::bind(&UI::StarMapDisplay::_OnDestroying, this, std::placeholders::_1));
 	ConnectMouseButtonCallback(std::bind(&UI::StarMapDisplay::_OnMouseButton, this, std::placeholders::_1));
 	ConnectMouseMoveCallback(std::bind(&UI::StarMapDisplay::_OnMouseMove, this, std::placeholders::_1));
+	ConnectSizeChangedCallback(std::bind(&UI::StarMapDisplay::_OnSizeChanged, this, std::placeholders::_1));
+	_SetupView();
 }
 
-void UI::StarMapDisplay::Draw(Graphics::RenderContext * RenderContext)
+void UI::StarMapDisplay::_ClearView(void)
 {
-	Widget::Draw(RenderContext);
+	auto OldView(GetView());
+	
+	if(OldView != nullptr)
+	{
+		SetView(nullptr);
+		assert(OldView->GetScene() != nullptr);
+		
+		auto Scene(OldView->GetScene());
+		
+		OldView->SetScene(nullptr);
+		delete Scene;
+		
+		assert(OldView->GetCamera() != nullptr);
+		assert(OldView->GetCamera()->GetProjection() != nullptr);
+		
+		auto Projection(OldView->GetCamera()->GetProjection());
+		
+		OldView->GetCamera()->SetProjection(nullptr);
+		delete Projection;
+		
+		auto TextureRenderTarget(dynamic_cast< Graphics::TextureRenderTarget * >(OldView->GetRenderTarget()));
+		
+		assert(TextureRenderTarget != nullptr);
+		OldView->SetRenderTarget(nullptr);
+		
+		auto Texture(TextureRenderTarget->GetTexture());
+		
+		TextureRenderTarget->SetTexture(nullptr);
+		delete TextureRenderTarget;
+		delete Texture;
+		g_GraphicsEngine->RemoveView(OldView);
+		delete OldView;
+	}
+}
+
+void UI::StarMapDisplay::_SetupView(void)
+{
+	auto OrthogonalProjection{new Graphics::Orthogonal2DProjection()};
+	
+	OrthogonalProjection->SetRight(GetSize()[0]);
+	OrthogonalProjection->SetBottom(GetSize()[1]);
+	
+	auto View{new Graphics::View()};
+	
+	View->SetClearColor(Graphics::ColorRGBO(0.0f, 0.0f, 0.0f, 0.0f));
+	assert(View->GetCamera() != nullptr);
+	View->GetCamera()->SetProjection(OrthogonalProjection);
+	View->GetCamera()->SetSpacialMatrix(Matrix4f::CreateFlipY());
+	assert(g_GraphicsEngine != nullptr);
+	g_GraphicsEngine->AddView(View);
+	
+	auto Scene{new Graphics::Scene()};
+	
+	Scene->SetDestroyCallback(std::bind(&UI::StarMapDisplay::_OnDestroyInScene, this, std::placeholders::_1));
+	View->SetScene(Scene);
+	
+	auto Texture{new Graphics::Texture()};
+	
+	Texture->Create(GetSize()[0], GetSize()[1], 1);
+	
+	auto RenderTarget{new Graphics::TextureRenderTarget()};
+	
+	RenderTarget->SetTexture(Texture);
+	View->SetRenderTarget(RenderTarget);
+	
+	auto RootNode{new Graphics::CallbackNode()};
+	
+	RootNode->SetDrawCallback(std::bind(&UI::StarMapDisplay::_OnDraw, this, std::placeholders::_1));
+	RootNode->SetClearColorBuffer(true);
+	RootNode->SetClearDepthBuffer(true);
+	RootNode->SetUseBlending(false);
+	RootNode->SetUseDepthTest(true);
+	Scene->SetRootNode(RootNode);
+	SetView(View);
+}
+
+void UI::StarMapDisplay::_OnDraw(Graphics::RenderContext * RenderContext)
+{
 	if(_Character != nullptr)
 	{
 		auto System{_Character->GetSystem()};
@@ -60,16 +150,11 @@ void UI::StarMapDisplay::Draw(Graphics::RenderContext * RenderContext)
 		
 		auto Middle{GetSize() / 2.0f};
 		
-		Middle += GetGlobalPosition();
 		Middle += _OffsetPosition;
+		Middle[1] = -Middle[1];
+		GLTranslatef(Middle[0], Middle[1], 0.0f);
 		
 		auto SystemSize{5.0f};
-		
-		GLPushAttrib(GL_ENABLE_BIT);
-		GLPushMatrix();
-		GLTranslatef(Middle[0], Middle[1], 0.0f);
-		GLScalef(1.0f, -1.0f, 1.0f);
-		
 		auto & UnexploredSystems{_Character->GetMapKnowledge()->GetUnexploredSystems()};
 		
 		for(auto UnexploredSystem : UnexploredSystems)
@@ -140,8 +225,9 @@ void UI::StarMapDisplay::Draw(Graphics::RenderContext * RenderContext)
 				GLVertex2f(0.0f, 0.0f);
 				assert(LinkedSystem->GetAspectPosition() != nullptr);
 				
-				auto To{(LinkedSystem->GetAspectPosition()->GetPosition() - ExploredSystem->GetAspectPosition()->GetPosition()).Scale(_Scale)};
+				auto To{LinkedSystem->GetAspectPosition()->GetPosition() - ExploredSystem->GetAspectPosition()->GetPosition()};
 				
+				To *= _Scale;
 				GLVertex2f(To[0], To[1]);
 				GLEnd();
 			}
@@ -172,11 +258,17 @@ void UI::StarMapDisplay::Draw(Graphics::RenderContext * RenderContext)
 			GLVertex2f(SystemSize * 0.866f, -SystemSize * 0.5f);
 			GLEnd();
 			assert(ExploredSystem->GetAspectName() != nullptr);
-			Graphics::Drawing::DrawText(RenderContext, Middle + Vector2f(Position[0], 1.2f * SystemSize - Position[1]), ExploredSystem->GetAspectName()->GetName(), Graphics::ColorRGBO(1.0f, 1.0f, 1.0f, 1.0f));
+			
+			auto Style{new Graphics::Style()};
+			
+			RenderContext->SetStyle(Style);
+			RenderContext->SetClipping(0.0f, 0.0f, GetSize()[1], GetSize()[0]);
+			Graphics::Drawing::DrawText(RenderContext, Vector2f(Middle[0] + Position[0], -Middle[1] + SystemSize * 1.2f - Position[1]), ExploredSystem->GetAspectName()->GetName(), Graphics::ColorRGBO(1.0f, 1.0f, 1.0f, 1.0f));
+			RenderContext->UnsetClipping();
+			RenderContext->SetStyle(nullptr);
+			delete Style;
 			GLPopMatrix();
 		}
-		GLPopMatrix();
-		GLPopAttrib();
 	}
 }
 
@@ -193,6 +285,7 @@ void UI::StarMapDisplay::_OnDestroying(UI::Event & DestroyingEvent)
 {
 	if(DestroyingEvent.GetPhase() == UI::Event::Phase::Target)
 	{
+		_ClearView();
 		if(_Character != nullptr)
 		{
 			assert(_CharacterDestroyingConnection.IsValid() == true);
@@ -208,6 +301,11 @@ void UI::StarMapDisplay::_OnDestroying(UI::Event & DestroyingEvent)
 		}
 		assert(_SelectedSystemDestroyingConnection.IsValid() == false);
 	}
+}
+
+void UI::StarMapDisplay::_OnDestroyInScene(Graphics::Node * Node)
+{
+	delete Node;
 }
 
 void UI::StarMapDisplay::_OnMouseButton(UI::MouseButtonEvent & MouseButtonEvent)
@@ -297,4 +395,13 @@ void UI::StarMapDisplay::SetSelectedSystem(System * SelectedSystem)
 	assert(_SelectedSystemDestroyingConnection.IsValid() == false);
 	_SelectedSystem = SelectedSystem;
 	_SelectedSystemDestroyingConnection = _SelectedSystem->ConnectDestroyingCallback(std::bind(&UI::StarMapDisplay::_OnSelectedSystemDestroying, this));
+}
+
+void UI::StarMapDisplay::_OnSizeChanged(UI::Event & SizeChangedEvent)
+{
+	if(SizeChangedEvent.GetPhase() == UI::Event::Phase::Target)
+	{
+		_ClearView();
+		_SetupView();
+	}
 }
