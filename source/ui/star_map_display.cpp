@@ -36,11 +36,11 @@
 
 UI::StarMapDisplay::StarMapDisplay(Widget * SupWidget, System * System, Character * Character) :
 	Widget(SupWidget),
-	m_Character(Character),
-	m_System(System),
-	m_SelectedSystem(0),
-	m_Scale(5.0f),
-	m_OffsetPosition(true)
+	_Character(Character),
+	_OffsetPosition(true),
+	_Scale(5.0f),
+	_SelectedSystem(nullptr),
+	_System(System)
 {
 	ConnectMouseButtonCallback(std::bind(&UI::StarMapDisplay::_OnMouseButton, this, std::placeholders::_1));
 	ConnectMouseMoveCallback(std::bind(&UI::StarMapDisplay::_OnMouseMove, this, std::placeholders::_1));
@@ -53,29 +53,29 @@ void UI::StarMapDisplay::Draw(Graphics::RenderContext * RenderContext)
 	Vector2f Middle(GetSize() / 2);
 	
 	Middle += GetGlobalPosition();
-	Middle += m_OffsetPosition;
+	Middle += _OffsetPosition;
 	
-	float SystemSize(5.0f);
+	auto SystemSize{5.0f};
 	
 	GLPushAttrib(GL_ENABLE_BIT);
 	GLPushMatrix();
 	GLTranslatef(Middle[0], Middle[1], 0.0f);
 	GLScalef(1.0f, -1.0f, 1.0f);
 	
-	const std::set< System * > & UnexploredSystems(m_Character->GetMapKnowledge()->GetUnexploredSystems());
+	auto & UnexploredSystems{_Character->GetMapKnowledge()->GetUnexploredSystems()};
 	
-	for(std::set< System * >::const_iterator UnexploredSystemIterator = UnexploredSystems.begin(); UnexploredSystemIterator != UnexploredSystems.end(); ++UnexploredSystemIterator)
+	for(auto UnexploredSystem : UnexploredSystems)
 	{
-		Vector3f Position((*UnexploredSystemIterator)->GetAspectPosition()->GetPosition() - m_System->GetAspectPosition()->GetPosition());
+		auto Position{UnexploredSystem->GetAspectPosition()->GetPosition() - _System->GetAspectPosition()->GetPosition()};
 		
-		Position *= m_Scale;
+		Position *= _Scale;
 		GLPushMatrix();
 		GLTranslatef(Position[0], Position[1], 0.0f);
-		if(*UnexploredSystemIterator == m_SelectedSystem)
+		if(UnexploredSystem == _SelectedSystem)
 		{
 			GLColor3f(0.0f, 1.0f, 0.0f);
 		}
-		else if(*UnexploredSystemIterator == m_System)
+		else if(UnexploredSystem == _System)
 		{
 			GLColor3f(0.8f, 0.8f, 0.0f);
 		}
@@ -100,21 +100,25 @@ void UI::StarMapDisplay::Draw(Graphics::RenderContext * RenderContext)
 		GLPopMatrix();
 	}
 	
-	const std::set< System * > & ExploredSystems(m_Character->GetMapKnowledge()->GetExploredSystems());
+	auto & ExploredSystems{_Character->GetMapKnowledge()->GetExploredSystems()};
 	
-	for(std::set< System * >::const_iterator ExploredSystemIterator = ExploredSystems.begin(); ExploredSystemIterator != ExploredSystems.end(); ++ExploredSystemIterator)
+	for(auto ExploredSystem : ExploredSystems)
 	{
-		Vector3f Position((*ExploredSystemIterator)->GetAspectPosition()->GetPosition() - m_System->GetAspectPosition()->GetPosition());
+		assert(ExploredSystem != nullptr);
+		assert(ExploredSystem->GetAspectPosition() != nullptr);
 		
-		Position *= m_Scale;
+		auto Position{ExploredSystem->GetAspectPosition()->GetPosition() - _System->GetAspectPosition()->GetPosition()};
+		
+		Position *= _Scale;
 		GLPushMatrix();
 		GLTranslatef(Position[0], Position[1], 0.0f);
 		
-		const std::list< System * > & LinkedSystems((*ExploredSystemIterator)->GetLinkedSystems());
+		auto & LinkedSystems{ExploredSystem->GetLinkedSystems()};
 		
-		for(std::list< System * >::const_iterator LinkedSystemIterator = LinkedSystems.begin(); LinkedSystemIterator != LinkedSystems.end(); ++LinkedSystemIterator)
+		for(auto LinkedSystem : LinkedSystems)
 		{
-			if(UnexploredSystems.find(*LinkedSystemIterator) == UnexploredSystems.end())
+			assert(LinkedSystem != nullptr);
+			if(UnexploredSystems.find(LinkedSystem) == UnexploredSystems.end())
 			{
 				// system already explored so make it blue
 				GLColor3f(0.0f, 0.0f, 0.8f);
@@ -126,17 +130,18 @@ void UI::StarMapDisplay::Draw(Graphics::RenderContext * RenderContext)
 			}
 			GLBegin(GL_LINES);
 			GLVertex2f(0.0f, 0.0f);
+			assert(LinkedSystem->GetAspectPosition() != nullptr);
 			
-			Vector3f To(((*LinkedSystemIterator)->GetAspectPosition()->GetPosition() - (*ExploredSystemIterator)->GetAspectPosition()->GetPosition()).Scale(m_Scale));
+			auto To{(LinkedSystem->GetAspectPosition()->GetPosition() - ExploredSystem->GetAspectPosition()->GetPosition()).Scale(_Scale)};
 			
 			GLVertex2f(To[0], To[1]);
 			GLEnd();
 		}
-		if(*ExploredSystemIterator == m_SelectedSystem)
+		if(ExploredSystem == _SelectedSystem)
 		{
 			GLColor3f(0.0f, 1.0f, 0.0f);
 		}
-		else if(*ExploredSystemIterator == m_System)
+		else if(ExploredSystem == _System)
 		{
 			GLColor3f(0.8f, 0.8f, 0.0f);
 		}
@@ -158,7 +163,8 @@ void UI::StarMapDisplay::Draw(Graphics::RenderContext * RenderContext)
 		GLVertex2f(SystemSize * 0.5f, -SystemSize * 0.866f);
 		GLVertex2f(SystemSize * 0.866f, -SystemSize * 0.5f);
 		GLEnd();
-		Graphics::Drawing::DrawText(RenderContext, Middle + Vector2f(Position[0], 1.2f * SystemSize - Position[1]), (*ExploredSystemIterator)->GetAspectName()->GetName(), Graphics::ColorRGBO(1.0f, 1.0f, 1.0f, 1.0f));
+		assert(ExploredSystem->GetAspectName() != nullptr);
+		Graphics::Drawing::DrawText(RenderContext, Middle + Vector2f(Position[0], 1.2f * SystemSize - Position[1]), ExploredSystem->GetAspectName()->GetName(), Graphics::ColorRGBO(1.0f, 1.0f, 1.0f, 1.0f));
 		GLPopMatrix();
 	}
 	GLPopMatrix();
@@ -171,29 +177,31 @@ void UI::StarMapDisplay::_OnMouseButton(UI::MouseButtonEvent & MouseButtonEvent)
 	{
 		if((MouseButtonEvent.GetMouseButton() == UI::MouseButtonEvent::MouseButton::WheelUp) && (MouseButtonEvent.IsDown() == true))
 		{
-			m_Scale *= 1.1f;
+			_Scale *= 1.1f;
 			MouseButtonEvent.StopPropagation();
 		}
 		else if((MouseButtonEvent.GetMouseButton() == UI::MouseButtonEvent::MouseButton::WheelDown) && (MouseButtonEvent.IsDown() == true))
 		{
-			m_Scale *= 0.9f;
+			_Scale *= 0.9f;
 			MouseButtonEvent.StopPropagation();
 		}
 		else if((MouseButtonEvent.GetMouseButton() == UI::MouseButtonEvent::MouseButton::Left) && (MouseButtonEvent.IsDown() == true))
 		{
-			Vector2f NormalizedPosition(MouseButtonEvent.GetPosition() - GetSize() / 2.0f);
-			const std::map< std::string, System * > & Systems(g_Galaxy->GetSystems());
+			auto NormalizedPosition{MouseButtonEvent.GetPosition() - GetSize() / 2.0f};
 			
-			for(std::map< std::string, System * >::const_iterator SystemIterator = Systems.begin(); SystemIterator != Systems.end(); ++SystemIterator)
+			for(auto SystemPair : g_Galaxy->GetSystems())
 			{
-				Vector3f Position(SystemIterator->second->GetAspectPosition()->GetPosition() - m_System->GetAspectPosition()->GetPosition());
+				assert(SystemPair.second != nullptr);
+				assert(SystemPair.second->GetAspectPosition() != nullptr);
 				
-				Position *= m_Scale;
-				Position[0] -= NormalizedPosition[0] - m_OffsetPosition[0];
-				Position[1] += NormalizedPosition[1] - m_OffsetPosition[1];
+				auto Position{SystemPair.second->GetAspectPosition()->GetPosition() - _System->GetAspectPosition()->GetPosition()};
+				
+				Position *= _Scale;
+				Position[0] -= NormalizedPosition[0] - _OffsetPosition[0];
+				Position[1] += NormalizedPosition[1] - _OffsetPosition[1];
 				if(Position.SquaredLength() < 40.0f)
 				{
-					m_SelectedSystem = SystemIterator->second;
+					_SelectedSystem = SystemPair.second;
 					
 					break;
 				}
@@ -203,7 +211,7 @@ void UI::StarMapDisplay::_OnMouseButton(UI::MouseButtonEvent & MouseButtonEvent)
 		{
 			if(MouseButtonEvent.IsDown() == true)
 			{
-				m_GrabPosition = MouseButtonEvent.GetPosition();
+				_GrabPosition = MouseButtonEvent.GetPosition();
 				g_UserInterface->SetCaptureWidget(this);
 			}
 			else if(MouseButtonEvent.IsUp() == true)
@@ -218,7 +226,7 @@ void UI::StarMapDisplay::_OnMouseMove(UI::MouseMoveEvent & MouseMoveEvent)
 {
 	if((MouseMoveEvent.GetPhase() == UI::Event::Phase::Target) && (g_UserInterface->GetCaptureWidget() == this))
 	{
-		m_OffsetPosition += (MouseMoveEvent.GetPosition() - m_GrabPosition);
-		m_GrabPosition = MouseMoveEvent.GetPosition();
+		_OffsetPosition += (MouseMoveEvent.GetPosition() - _GrabPosition);
+		_GrabPosition = MouseMoveEvent.GetPosition();
 	}
 }

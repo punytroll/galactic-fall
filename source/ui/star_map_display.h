@@ -43,17 +43,17 @@ namespace UI
 		void _OnMouseButton(UI::MouseButtonEvent & MouseButtonEvent);
 		void _OnMouseMove(UI::MouseMoveEvent & MouseMoveEvent);
 		// member variables
-		Character * m_Character;
-		System * m_System;
-		System * m_SelectedSystem;
-		float m_Scale;
-		Vector2f m_GrabPosition;
-		Vector2f m_OffsetPosition;
+		Character * _Character;
+		Vector2f _GrabPosition;
+		Vector2f _OffsetPosition;
+		float _Scale;
+		System * _SelectedSystem;
+		System * _System;
 	};
 
 	inline System * StarMapDisplay::GetSelectedSystem(void)
 	{
-		return m_SelectedSystem;
+		return _SelectedSystem;
 	}
 }
 
