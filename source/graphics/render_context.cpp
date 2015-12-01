@@ -106,13 +106,14 @@ void Graphics::RenderContext::ActivateProgram(void)
 			}
 		case Graphics::Program::UniformContent::WorldToMonitorMatrix4x4F:
 			{
-				assert(_Node != nullptr);
+				assert(_Camera != nullptr);
 				_Program->_SetUniform(Uniform.first, _Camera->GetProjection()->GetMatrix().Transformed(_Camera->GetSpacialMatrix().Inverted()));
 				
 				break;
 			}
 		case Graphics::Program::UniformContent::ModelToMonitorMatrix4x4F:
 			{
+				assert(_Camera != nullptr);
 				assert(_Node != nullptr);
 				_Program->_SetUniform(Uniform.first, _Camera->GetProjection()->GetMatrix().Transformed(_Camera->GetSpacialMatrix().Inverted()).Transform(_Node->GetSpacialMatrix().Scaled(_Node->GetScale())));
 				
