@@ -30,6 +30,7 @@ class CharacterObserver;
 class MapKnowledge;
 class Mind;
 class Ship;
+class System;
 class Threat;
 
 class Character : public Object
@@ -49,6 +50,7 @@ public:
 	unsigned_numeric GetCredits(void) const;
 	MapKnowledge * GetMapKnowledge(void);
 	Ship * GetShip(void);
+	System * GetSystem(void);
 	Threat * GetThreat(void);
 	// setters
 	void SetCredits(unsigned_numeric Credits);

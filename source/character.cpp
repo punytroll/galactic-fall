@@ -27,6 +27,7 @@
 #include "object_aspect_messages.h"
 #include "object_aspect_object_container.h"
 #include "ship.h"
+#include "system.h"
 #include "threat.h"
 
 std::set< Character * > Character::_Characters;
@@ -103,6 +104,18 @@ Ship * Character::GetShip(void)
 	}
 	
 	return dynamic_cast< Ship * >(Container);
+}
+
+System * Character::GetSystem(void)
+{
+	auto Container(GetContainer());
+	
+	while((Container != nullptr) && (Container->GetTypeIdentifier() != "system"))
+	{
+		Container = Container->GetContainer();
+	}
+	
+	return dynamic_cast< System * >(Container);
 }
 
 bool Character::RemoveCredits(unsigned_numeric Credits)
