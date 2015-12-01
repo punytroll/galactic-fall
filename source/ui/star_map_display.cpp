@@ -162,8 +162,6 @@ void UI::StarMapDisplay::_OnDraw(Graphics::RenderContext * RenderContext)
 			auto Position{UnexploredSystem->GetAspectPosition()->GetPosition() - System->GetAspectPosition()->GetPosition()};
 			
 			Position *= _Scale;
-			GLPushMatrix();
-			GLTranslatef(Position[0], Position[1], 0.0f);
 			if(UnexploredSystem == _SelectedSystem)
 			{
 				GLColor3f(0.0f, 1.0f, 0.0f);
@@ -177,20 +175,19 @@ void UI::StarMapDisplay::_OnDraw(Graphics::RenderContext * RenderContext)
 				GLColor3f(0.5f, 0.5f, 0.5f);
 			}
 			GLBegin(GL_LINE_LOOP);
-			GLVertex2f(SystemSize, 0.0f);
-			GLVertex2f(SystemSize * 0.866f, SystemSize * 0.5f);
-			GLVertex2f(SystemSize * 0.5f, SystemSize * 0.866f);
-			GLVertex2f(0.0f, SystemSize);
-			GLVertex2f(-SystemSize * 0.5f, SystemSize * 0.866f);
-			GLVertex2f(-SystemSize * 0.866f, SystemSize * 0.5f);
-			GLVertex2f(-SystemSize, 0.0f);
-			GLVertex2f(-SystemSize * 0.866f, -SystemSize * 0.5f);
-			GLVertex2f(-SystemSize * 0.5f, -SystemSize * 0.866f);
-			GLVertex2f(0.0f, -SystemSize);
-			GLVertex2f(SystemSize * 0.5f, -SystemSize * 0.866f);
-			GLVertex2f(SystemSize * 0.866f, -SystemSize * 0.5f);
+			GLVertex2f(Position[0] + SystemSize, Position[1]);
+			GLVertex2f(Position[0] + SystemSize * 0.866f, Position[1] + SystemSize * 0.5f);
+			GLVertex2f(Position[0] + SystemSize * 0.5f, Position[1] + SystemSize * 0.866f);
+			GLVertex2f(Position[0], Position[1] + SystemSize);
+			GLVertex2f(Position[0] - SystemSize * 0.5f, Position[1] + SystemSize * 0.866f);
+			GLVertex2f(Position[0] - SystemSize * 0.866f, Position[1] + SystemSize * 0.5f);
+			GLVertex2f(Position[0] - SystemSize, Position[1]);
+			GLVertex2f(Position[0] - SystemSize * 0.866f, Position[1] - SystemSize * 0.5f);
+			GLVertex2f(Position[0] - SystemSize * 0.5f, Position[1] - SystemSize * 0.866f);
+			GLVertex2f(Position[0], Position[1] - SystemSize);
+			GLVertex2f(Position[0] + SystemSize * 0.5f, Position[1] - SystemSize * 0.866f);
+			GLVertex2f(Position[0] + SystemSize * 0.866f, Position[1] - SystemSize * 0.5f);
 			GLEnd();
-			GLPopMatrix();
 		}
 		
 		auto & ExploredSystems{_Character->GetMapKnowledge()->GetExploredSystems()};
@@ -203,8 +200,6 @@ void UI::StarMapDisplay::_OnDraw(Graphics::RenderContext * RenderContext)
 			auto Position{ExploredSystem->GetAspectPosition()->GetPosition() - System->GetAspectPosition()->GetPosition()};
 			
 			Position *= _Scale;
-			GLPushMatrix();
-			GLTranslatef(Position[0], Position[1], 0.0f);
 			
 			auto & LinkedSystems{ExploredSystem->GetLinkedSystems()};
 			
@@ -222,13 +217,13 @@ void UI::StarMapDisplay::_OnDraw(Graphics::RenderContext * RenderContext)
 					GLColor3f(0.5f, 0.5f, 0.5f);
 				}
 				GLBegin(GL_LINES);
-				GLVertex2f(0.0f, 0.0f);
+				GLVertex2f(Position[0], Position[1]);
 				assert(LinkedSystem->GetAspectPosition() != nullptr);
 				
 				auto To{LinkedSystem->GetAspectPosition()->GetPosition() - ExploredSystem->GetAspectPosition()->GetPosition()};
 				
 				To *= _Scale;
-				GLVertex2f(To[0], To[1]);
+				GLVertex2f(Position[0] + To[0], Position[1] + To[1]);
 				GLEnd();
 			}
 			if(ExploredSystem == _SelectedSystem)
@@ -244,18 +239,18 @@ void UI::StarMapDisplay::_OnDraw(Graphics::RenderContext * RenderContext)
 				GLColor3f(0.0f, 0.0f, 0.8f);
 			}
 			GLBegin(GL_LINE_LOOP);
-			GLVertex2f(SystemSize, 0.0f);
-			GLVertex2f(SystemSize * 0.866f, SystemSize * 0.5f);
-			GLVertex2f(SystemSize * 0.5f, SystemSize * 0.866f);
-			GLVertex2f(0.0f, SystemSize);
-			GLVertex2f(-SystemSize * 0.5f, SystemSize * 0.866f);
-			GLVertex2f(-SystemSize * 0.866f, SystemSize * 0.5f);
-			GLVertex2f(-SystemSize, 0.0f);
-			GLVertex2f(-SystemSize * 0.866f, -SystemSize * 0.5f);
-			GLVertex2f(-SystemSize * 0.5f, -SystemSize * 0.866f);
-			GLVertex2f(0.0f, -SystemSize);
-			GLVertex2f(SystemSize * 0.5f, -SystemSize * 0.866f);
-			GLVertex2f(SystemSize * 0.866f, -SystemSize * 0.5f);
+			GLVertex2f(Position[0] + SystemSize, Position[1]);
+			GLVertex2f(Position[0] + SystemSize * 0.866f, Position[1] + SystemSize * 0.5f);
+			GLVertex2f(Position[0] + SystemSize * 0.5f, Position[1] + SystemSize * 0.866f);
+			GLVertex2f(Position[0], Position[1] + SystemSize);
+			GLVertex2f(Position[0] - SystemSize * 0.5f, Position[1] + SystemSize * 0.866f);
+			GLVertex2f(Position[0] - SystemSize * 0.866f, Position[1] + SystemSize * 0.5f);
+			GLVertex2f(Position[0] - SystemSize, Position[1]);
+			GLVertex2f(Position[0] - SystemSize * 0.866f, Position[1] - SystemSize * 0.5f);
+			GLVertex2f(Position[0] - SystemSize * 0.5f, Position[1] - SystemSize * 0.866f);
+			GLVertex2f(Position[0], Position[1] - SystemSize);
+			GLVertex2f(Position[0] + SystemSize * 0.5f, Position[1] - SystemSize * 0.866f);
+			GLVertex2f(Position[0] + SystemSize * 0.866f, Position[1] - SystemSize * 0.5f);
 			GLEnd();
 			assert(ExploredSystem->GetAspectName() != nullptr);
 			
@@ -267,7 +262,6 @@ void UI::StarMapDisplay::_OnDraw(Graphics::RenderContext * RenderContext)
 			RenderContext->UnsetClipping();
 			RenderContext->SetStyle(nullptr);
 			delete Style;
-			GLPopMatrix();
 		}
 	}
 }
