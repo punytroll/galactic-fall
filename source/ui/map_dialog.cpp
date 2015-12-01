@@ -53,7 +53,7 @@ UI::MapDialog::MapDialog(UI::Widget * SupWidget, Character * Character) :
 	_StarMapDisplay->SetAnchorLeft(true);
 	_StarMapDisplay->SetAnchorRight(true);
 	_StarMapDisplay->SetAnchorTop(true);
-	_StarMapDisplay->SetBackgroundColor(Graphics::ColorRGBO(0.15f, 0.15f, 0.15f, 1.0f));
+	_StarMapDisplay->SetBackgroundColor(Graphics::ColorRGBO(0.0f, 0.0f, 0.0f, 1.0f));
 }
 
 System * UI::MapDialog::GetSelectedSystem(void)
