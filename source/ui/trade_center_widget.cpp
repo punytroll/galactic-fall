@@ -557,11 +557,11 @@ void UI::TradeCenterWidget::_OnDestroyInScene(Graphics::Node * Node)
 
 void UI::TradeCenterWidget::_OnKey(UI::KeyEvent & KeyEvent)
 {
-	if((KeyEvent.GetPhase() == UI::Event::Phase::Bubbling) && (KeyEvent.GetKeyCode() == 56 /* B */) && (_SelectedTradeCenterAssetClassListWidget != 0) && (KeyEvent.IsDown() == true))
+	if((KeyEvent.GetPhase() == UI::Event::Phase::Bubbling) && (KeyEvent.GetKeyCode() == 56 /* B */) && (_SelectedTradeCenterAssetClassListWidget != nullptr) && (KeyEvent.IsDown() == true))
 	{
 		_Buy(_SelectedTradeCenterAssetClassListWidget->GetPlanetAssetClass());
 	}
-	else if((KeyEvent.GetPhase() == UI::Event::Phase::Bubbling) && (KeyEvent.GetKeyCode() == 39 /* S */) && (_SelectedTradeCenterAssetClassListWidget != 0) && (KeyEvent.IsDown() == true))
+	else if((KeyEvent.GetPhase() == UI::Event::Phase::Bubbling) && (KeyEvent.GetKeyCode() == 39 /* S */) && (_SelectedTradeCenterAssetClassListWidget != nullptr) && (KeyEvent.IsDown() == true))
 	{
 		_Sell(_SelectedTradeCenterAssetClassListWidget->GetPlanetAssetClass());
 	}
