@@ -172,19 +172,40 @@ void Graphics::RenderContext::ActivateProgram(void)
 				
 				break;
 			}
-		case Graphics::Program::UniformContent::Clipping4F:
-			{
-				assert(_Clipping != nullptr);
-				_Program->_SetUniform(Uniform.first, *_Clipping);
-				
-				break;
-			}
 		case Graphics::Program::UniformContent::Texture:
 			{
 				assert(_Texture != nullptr);
 				_Program->_SetUniform(Uniform.first, 0);
 				GLActiveTexture(GL_TEXTURE0);
 				_Texture->Activate();
+				
+				break;
+			}
+		case Graphics::Program::UniformContent::WorldClippingBottomF:
+			{
+				assert(_Clipping != nullptr);
+				_Program->_SetUniform(Uniform.first, (*_Clipping)[2]);
+				
+				break;
+			}
+		case Graphics::Program::UniformContent::WorldClippingLeftF:
+			{
+				assert(_Clipping != nullptr);
+				_Program->_SetUniform(Uniform.first, (*_Clipping)[0]);
+				
+				break;
+			}
+		case Graphics::Program::UniformContent::WorldClippingRightF:
+			{
+				assert(_Clipping != nullptr);
+				_Program->_SetUniform(Uniform.first, (*_Clipping)[3]);
+				
+				break;
+			}
+		case Graphics::Program::UniformContent::WorldClippingTopF:
+			{
+				assert(_Clipping != nullptr);
+				_Program->_SetUniform(Uniform.first, (*_Clipping)[1]);
 				
 				break;
 			}
