@@ -857,13 +857,13 @@ void Resize(void)
 	{
 		g_Height = 1;
 	}
-	assert(g_MainView != 0);
+	assert(g_MainView != nullptr);
 	
 	Graphics::DefaultRenderTarget * MainViewRenderTarget(dynamic_cast< Graphics::DefaultRenderTarget * >(g_MainView->GetRenderTarget()));
 	
-	assert(MainViewRenderTarget != 0);
+	assert(MainViewRenderTarget != nullptr);
 	MainViewRenderTarget->SetSize(g_Width, g_Height);
-	assert(g_MainProjection != 0);
+	assert(g_MainProjection != nullptr);
 	g_MainProjection->SetAspect(g_Width / g_Height);
 	assert(g_UIView != nullptr);
 	assert(g_UIView->GetCamera() != nullptr);
@@ -873,8 +873,8 @@ void Resize(void)
 	assert(UIProjection != nullptr);
 	UIProjection->SetRight(g_Width);
 	UIProjection->SetBottom(g_Height);
-	assert(g_UserInterface != 0);
-	assert(g_UserInterface->GetRootWidget() != 0);
+	assert(g_UserInterface != nullptr);
+	assert(g_UserInterface->GetRootWidget() != nullptr);
 	g_UserInterface->GetRootWidget()->SetSize(Vector2f(g_Width, g_Height));
 }
 
@@ -882,7 +882,7 @@ void OnMainMenuDestroying(UI::Event & DestroyingEvent)
 {
 	if(DestroyingEvent.GetPhase() == UI::Event::Phase::Target)
 	{
-		g_MainMenuWindow = 0;
+		g_MainMenuWindow = nullptr;
 		g_Pause = false;
 	}
 }
@@ -891,17 +891,17 @@ void OnMapDialogDestroying(UI::Event & DestroyingEvent)
 {
 	if(DestroyingEvent.GetPhase() == UI::Event::Phase::Target)
 	{
-		if((g_InputMind.IsValid() == true) && (g_InputMind->GetCharacter() != 0) && (g_InputMind->GetCharacter()->GetShip() != 0))
+		if((g_InputMind.IsValid() == true) && (g_InputMind->GetCharacter() != nullptr) && (g_InputMind->GetCharacter()->GetShip() != nullptr))
 		{
 			const System * CurrentSystem(dynamic_cast< System * >(g_InputMind->GetCharacter()->GetShip()->GetContainer()));
 			
-			assert(CurrentSystem != 0);
+			assert(CurrentSystem != nullptr);
 			if(CurrentSystem->IsLinkedToSystem(g_MapDialog->GetSelectedSystem()) == true)
 			{
 				g_InputMind->SelectLinkedSystem(g_MapDialog->GetSelectedSystem());
 			}
 		}
-		g_MapDialog = 0;
+		g_MapDialog = nullptr;
 	}
 }
 
@@ -909,7 +909,7 @@ void OnOutfitShipDialogDestroying(UI::Event & DestroyingEvent)
 {
 	if(DestroyingEvent.GetPhase() == UI::Event::Phase::Target)
 	{
-		g_OutfitShipDialog = 0;
+		g_OutfitShipDialog = nullptr;
 	}
 }
 
@@ -917,7 +917,7 @@ void OnTimingDialogDestroying(UI::Event & DestroyingEvent)
 {
 	if(DestroyingEvent.GetPhase() == UI::Event::Phase::Target)
 	{
-		g_TimingDialog = 0;
+		g_TimingDialog = nullptr;
 	}
 }
 
