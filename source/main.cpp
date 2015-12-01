@@ -3048,6 +3048,7 @@ void InitializeOpenGL(void)
 	LoadOpenGLFunction(glGetAttribLocation);
 	LoadOpenGLFunction(glGetIntegerv);
 	LoadOpenGLFunction(glGetProgramiv);
+	LoadOpenGLFunction(glGetShaderInfoLog);
 	LoadOpenGLFunction(glGetShaderiv);
 	LoadOpenGLFunction(glGetString);
 	LoadOpenGLFunction(glGetUniformLocation);

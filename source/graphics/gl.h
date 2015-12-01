@@ -269,6 +269,10 @@ typedef void (* glGetProgramivFunction)(GLuint program, GLenum pname, GLint * pa
 extern glGetProgramivFunction __glGetProgramiv;
 #define GLGetProgramiv(program, pname, params) { assert(__glGetProgramiv != nullptr); __glGetProgramiv(program, pname, params); CheckGLError; }
 
+typedef void (* glGetShaderInfoLogFunction)(GLuint shader, GLsizei maxLength, GLsizei * length, GLchar * infoLog);
+extern glGetShaderInfoLogFunction __glGetShaderInfoLog;
+#define GLGetShaderInfoLog(shader, maxLength, length, infoLog) { assert(__glGetShaderInfoLog != nullptr); __glGetShaderInfoLog(shader, maxLength, length, infoLog); CheckGLError; }
+
 typedef void (* glGetShaderivFunction)(GLuint shader, GLenum pname, GLint * params);
 extern glGetShaderivFunction __glGetShaderiv;
 #define GLGetShaderiv(program, pname, params) { assert(__glGetShaderiv != nullptr); __glGetShaderiv(program, pname, params); CheckGLError; }
