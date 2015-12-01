@@ -140,7 +140,7 @@ void Graphics::Drawing::DrawText(Graphics::RenderContext * RenderContext, float 
 		GLGenBuffers(3, Buffers);
 		// index buffer
 		GLBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Buffers[0]);
-		GLBufferData(GL_ELEMENT_ARRAY_BUFFER, (NumberOfVertices + Text.length() - 1) * sizeof(unsigned int), Indices, GL_STREAM_DRAW);
+		GLBufferData(GL_ELEMENT_ARRAY_BUFFER, (NumberOfVertices + Text.length() - 1) * sizeof(unsigned short), Indices, GL_STREAM_DRAW);
 		// vertex coordinates
 		GLBindBuffer(GL_ARRAY_BUFFER, Buffers[1]);
 		GLBufferData(GL_ARRAY_BUFFER, 2 * NumberOfVertices * sizeof(GLfloat), Vertices, GL_STREAM_DRAW);
