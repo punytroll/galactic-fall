@@ -463,6 +463,9 @@
 			<credits value="1000000"/>
 			<map-knowledge>
 				<explored-system object-identifier="::system(sol)"/>
+				<explored-system object-identifier="::system(rigel)"/>
+				<explored-system object-identifier="::system(tichel)"/>
+				<explored-system object-identifier="::system(alpha_centauri)"/>
 			</map-knowledge>
 		</type-specific>
 	</object>
