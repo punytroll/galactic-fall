@@ -320,42 +320,6 @@ void SetMessage(const std::string & Message)
 	HeadsUpDisplay->SetMessage(Message);
 }
 
-void DrawSelection(const Object * Object, float RadialSize, const Graphics::ColorRGBO & Color)
-{
-	static const float OuterFactor(0.9f);
-	static const float InnerFactor(1.1f);
-	float OuterSize(RadialSize / OuterFactor);
-	float InnerSize(RadialSize / InnerFactor);
-	
-	GLPushMatrix();
-	GLPushAttrib(GL_LIGHTING_BIT);
-	GLDisable(GL_LIGHTING);
-	GLTranslatef(Object->GetAspectPosition()->GetPosition()[0], Object->GetAspectPosition()->GetPosition()[1], 0.0f);
-	GLColor4fv(Color.GetPointer());
-	GLBegin(GL_LINE_STRIP);
-	GLVertex2f(-OuterSize, -InnerSize);
-	GLVertex2f(-OuterSize, -OuterSize);
-	GLVertex2f(-InnerSize, -OuterSize);
-	GLEnd();
-	GLBegin(GL_LINE_STRIP);
-	GLVertex2f(-OuterSize, InnerSize);
-	GLVertex2f(-OuterSize, OuterSize);
-	GLVertex2f(-InnerSize, OuterSize);
-	GLEnd();
-	GLBegin(GL_LINE_STRIP);
-	GLVertex2f(OuterSize, -InnerSize);
-	GLVertex2f(OuterSize, -OuterSize);
-	GLVertex2f(InnerSize, -OuterSize);
-	GLEnd();
-	GLBegin(GL_LINE_STRIP);
-	GLVertex2f(OuterSize, InnerSize);
-	GLVertex2f(OuterSize, OuterSize);
-	GLVertex2f(InnerSize, OuterSize);
-	GLEnd();
-	GLPopAttrib();
-	GLPopMatrix();
-}
-
 void CollectWidgets(void)
 {
 	std::list< UI::Widget * > & DestroyedWidgets(UI::Widget::GetDestroyedWidgets());
@@ -795,45 +759,6 @@ void UpdateMainViewCamera(void)
 
 void DisplayMainView(void)
 {
-	g_MainView->Render();
-	// HUD
-	assert(g_CharacterObserver != nullptr);
-	if((g_CharacterObserver->GetObservedCharacter() != nullptr) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != 0) && (g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget() != nullptr))
-	{
-		Graphics::ColorRGBO Color(1.0f, 0.0f, 0.0f, 1.0f);
-		
-		GLClear(GL_DEPTH_BUFFER_BIT);
-		assert(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget()->GetAspectPhysical() != 0);
-		DrawSelection(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget(), g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget()->GetAspectPhysical()->GetRadialSize(), Color);
-		
-		assert(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget()->GetAspectPosition() != 0);
-		Vector3f RelativePosition(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetTarget()->GetAspectPosition()->GetPosition() - g_CharacterObserver->GetObservedCharacter()->GetShip()->GetAspectPosition()->GetPosition());
-		
-		RelativePosition.Normalize();
-		GLPushMatrix();
-		GLPushAttrib(GL_LIGHTING_BIT);
-		GLDisable(GL_LIGHTING);
-		GLTranslatef(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetAspectPosition()->GetPosition()[0], g_CharacterObserver->GetObservedCharacter()->GetShip()->GetAspectPosition()->GetPosition()[1], 0.0f);
-		GLRotatef(GetRadians(Vector2f(RelativePosition[0], RelativePosition[1])) * 180.0f / M_PI, 0.0f, 0.0f, 1.0f);
-		GLColor3f(0.0f, 0.5f, 0.5f);
-		GLBegin(GL_LINES);
-		GLVertex2f(20.0f, 0.0f);
-		GLVertex2f(30.0f, 0.0f);
-		GLVertex2f(26.0f, 4.0f);
-		GLVertex2f(30.0f, 0.0f);
-		GLVertex2f(26.0f, -4.0f);
-		GLVertex2f(30.0f, 0.0f);
-		GLEnd();
-		GLPopAttrib();
-		GLPopMatrix();
-	}
-	// debug HUD
-	if((g_InputMind.IsValid() == false) && (g_CharacterObserver->GetObservedCharacter() != nullptr) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != nullptr))
-	{
-		GLClear(GL_DEPTH_BUFFER_BIT);
-		assert(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetAspectPhysical() != nullptr);
-		DrawSelection(g_CharacterObserver->GetObservedCharacter()->GetShip(), g_CharacterObserver->GetObservedCharacter()->GetShip()->GetAspectPhysical()->GetRadialSize(), Graphics::ColorRGBO(0.0f, 0.0f, 1.0f, 1.0f));
-	}
 }
 
 void OnMainSceneNodeDestroy(Graphics::Node * Node)
@@ -1296,7 +1221,7 @@ void GameFrame(void)
 	assert(g_GraphicsEngine != nullptr);
 	g_GraphicsEngine->Update(Seconds);
 	PrerenderViews();
-	DisplayMainView();
+	g_MainView->Render();
 	g_UIView->Render();
 	RealTime::Invalidate();
 	
