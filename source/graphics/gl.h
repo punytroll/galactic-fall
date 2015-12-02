@@ -363,14 +363,6 @@ typedef void (* glRenderbufferStorageFunction)(GLenum target, GLenum internalfor
 extern glRenderbufferStorageFunction __glRenderbufferStorage;
 #define GLRenderbufferStorage(target, internalformat, width, height) { assert(__glRenderbufferStorage != nullptr); __glRenderbufferStorage(target, internalformat, width, height); CheckGLError; }
 
-typedef void (* glRotatefFunction)(GLfloat angle, GLfloat x, GLfloat y, GLfloat z);
-extern glRotatefFunction __glRotatef;
-#define GLRotatef(angle, x, y, z) { assert(__glRotatef != nullptr); __glRotatef(angle, x, y, z); CheckGLError; }
-
-typedef void (* glScalefFunction)(GLfloat x, GLfloat y, GLfloat z);
-extern glScalefFunction __glScalef;
-#define GLScalef(x, y, z) { assert(__glScalef != nullptr); __glScalef(x, y, z); CheckGLError; }
-
 typedef void (* glShaderSourceFunction)(GLuint shader, GLsizei count, const GLchar ** string, const GLint * length);
 extern glShaderSourceFunction __glShaderSource;
 #define GLShaderSource(shader, count, string, length) { assert(__glShaderSource != nullptr); __glShaderSource(shader, count, string, length); CheckGLError; }
@@ -386,10 +378,6 @@ extern glTexImage2DFunction __glTexImage2D;
 typedef void (* glTexParameteriFunction)(GLenum target, GLenum pname, GLint param);
 extern glTexParameteriFunction __glTexParameteri;
 #define GLTexParameteri(target, pname, param) { assert(__glTexParameteri != nullptr); __glTexParameteri(target, pname, param); CheckGLError; }
-
-typedef void (* glTranslatefFunction)(GLfloat x, GLfloat y, GLfloat z);
-extern glTranslatefFunction __glTranslatef;
-#define GLTranslatef(x, y, z) { assert(__glTranslatef != nullptr); __glTranslatef(x, y, z); CheckGLError; }
 
 typedef void (* glUniform1fFunction)(GLint location, GLfloat v0);
 extern glUniform1fFunction __glUniform1f;
