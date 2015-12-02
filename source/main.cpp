@@ -2991,7 +2991,6 @@ void InitializeOpenGL(void)
 	LoadOpenGLFunction(glReadPixels);
 	LoadOpenGLFunction(glRenderbufferStorage);
 	LoadOpenGLFunction(glShaderSource);
-	LoadOpenGLFunction(glTexCoord2f);
 	LoadOpenGLFunction(glTexImage2D);
 	LoadOpenGLFunction(glTexParameteri);
 	LoadOpenGLFunction(glUniform1f);

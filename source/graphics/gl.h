@@ -367,10 +367,6 @@ typedef void (* glShaderSourceFunction)(GLuint shader, GLsizei count, const GLch
 extern glShaderSourceFunction __glShaderSource;
 #define GLShaderSource(shader, count, string, length) { assert(__glShaderSource != nullptr); __glShaderSource(shader, count, string, length); CheckGLError; }
 
-typedef void (* glTexCoord2fFunction)(GLfloat s, GLfloat t);
-extern glTexCoord2fFunction __glTexCoord2f;
-#define GLTexCoord2f(s, t) { assert(__glTexCoord2f != nullptr); __glTexCoord2f(s, t); }
-
 typedef void (* glTexImage2DFunction)(GLenum target, GLint level, GLint internalFormat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, const GLvoid * data);
 extern glTexImage2DFunction __glTexImage2D;
 #define GLTexImage2D(target, level, internalFormat, width, height, border, format, type, data) { assert(__glTexImage2D != nullptr); __glTexImage2D(target, level, internalFormat, width, height, border, format, type, data); CheckGLError; }
