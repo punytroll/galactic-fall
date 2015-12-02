@@ -27,7 +27,7 @@
 #include "../graphics/color_rgbo.h"
 #include "../graphics/engine.h"
 #include "../graphics/gl.h"
-#include "../graphics/perspective_projection.h"
+#include "../graphics/orthogonal_2d_projection.h"
 #include "../graphics/scene.h"
 #include "../graphics/texture.h"
 #include "../graphics/texture_manager.h"
@@ -42,7 +42,8 @@
 
 UI::MiniMapDisplay::MiniMapDisplay(UI::Widget * SupWidget) :
 	UI::ViewDisplay(SupWidget),
-	_Character(nullptr)
+	_Character(nullptr),
+	_Scale(0.15f)
 {
 	SetSize(Vector2f(100.0f, 100.0f));
 	ConnectDestroyingCallback(std::bind(&UI::MiniMapDisplay::_OnDestroying, this, std::placeholders::_1));
@@ -113,19 +114,29 @@ void UI::MiniMapDisplay::_ClearView(void)
 
 void UI::MiniMapDisplay::_SetupView(void)
 {
-	Graphics::PerspectiveProjection * PerspectiveProjection(new Graphics::PerspectiveProjection());
+	auto OrthogonalProjection(new Graphics::Orthogonal2DProjection());
 	
-	PerspectiveProjection->SetFieldOfViewY(0.8f);
-	PerspectiveProjection->SetAspect(GetSize()[0] / GetSize()[1]);
-	PerspectiveProjection->SetNearClippingPlane(1.0f);
-	PerspectiveProjection->SetFarClippingPlane(10000.0f);
+	// the orthogonal pojection is designed to place (0.0, 0.0) in the middle of the widget, scale appropriately and make this a game coordinate view (y axis is up)
+	OrthogonalProjection->SetLeft(-GetSize()[0] / 2.0f / _Scale);
+	OrthogonalProjection->SetTop(GetSize()[1] / 2.0f / _Scale);
+	OrthogonalProjection->SetRight(GetSize()[0] / 2.0f / _Scale);
+	OrthogonalProjection->SetBottom(-GetSize()[1] / 2.0f / _Scale);
 	
 	auto View(new Graphics::View());
 	
 	View->SetClearColor(Graphics::ColorRGBO(1.0f, 1.0f, 1.0f, 0.0f));
 	assert(View->GetCamera() != nullptr);
-	View->GetCamera()->SetProjection(PerspectiveProjection);
-	View->GetCamera()->SetSpacialMatrix(Matrix4f::CreateTranslation(0.0f, 0.0f, 1500.0f));
+	View->GetCamera()->SetProjection(OrthogonalProjection);
+	if(_Character != nullptr)
+	{
+		assert(_Character->GetShip() != nullptr);
+		assert(_Character->GetShip()->GetAspectPosition() != nullptr);
+		View->GetCamera()->SetSpacialMatrix(Matrix4f::CreateTranslation(_Character->GetShip()->GetAspectPosition()->GetPosition()[0], _Character->GetShip()->GetAspectPosition()->GetPosition()[1], 0.0f));
+	}
+	else
+	{
+		View->GetCamera()->SetSpacialMatrix(Matrix4f::CreateTranslation(0.0f, 0.0f, 0.0f));
+	}
 	assert(g_GraphicsEngine != nullptr);
 	g_GraphicsEngine->AddView(View);
 	
@@ -185,12 +196,15 @@ void UI::MiniMapDisplay::_OnDestroyInScene(Graphics::Node * Node)
 
 void UI::MiniMapDisplay::_OnDraw(Graphics::RenderContext * RenderContext)
 {
+	assert(GetView() != nullptr);
+	assert(GetView()->GetCamera() != nullptr);
 	if(_Character != nullptr)
 	{
 		auto CharacterShip{_Character->GetShip()};
 		
 		assert(CharacterShip != nullptr);
 		assert(CharacterShip->GetAspectPosition() != nullptr);
+		GetView()->GetCamera()->SetSpacialMatrix(Matrix4f::CreateTranslation(_Character->GetShip()->GetAspectPosition()->GetPosition()[0], _Character->GetShip()->GetAspectPosition()->GetPosition()[1], 0.0f));
 		
 		auto System{_Character->GetSystem()};
 		
@@ -203,7 +217,7 @@ void UI::MiniMapDisplay::_OnDraw(Graphics::RenderContext * RenderContext)
 			{
 				GLColor3f(0.2f, 1.0f, 0.0f);
 			}
-			GLVertex2f(Planet->GetAspectPosition()->GetPosition()[0] - CharacterShip->GetAspectPosition()->GetPosition()[0], Planet->GetAspectPosition()->GetPosition()[1] - CharacterShip->GetAspectPosition()->GetPosition()[1]);
+			GLVertex2f(Planet->GetAspectPosition()->GetPosition()[0], Planet->GetAspectPosition()->GetPosition()[1]);
 			if(Planet == CharacterShip->GetTarget())
 			{
 				GLColor3f(0.8f, 0.8f, 0.8f);
@@ -215,7 +229,7 @@ void UI::MiniMapDisplay::_OnDraw(Graphics::RenderContext * RenderContext)
 			{
 				GLColor3f(0.2f, 1.0f, 0.0f);
 			}
-			GLVertex2f(Ship->GetAspectPosition()->GetPosition()[0] - CharacterShip->GetAspectPosition()->GetPosition()[0], Ship->GetAspectPosition()->GetPosition()[1] - CharacterShip->GetAspectPosition()->GetPosition()[1]);
+			GLVertex2f(Ship->GetAspectPosition()->GetPosition()[0], Ship->GetAspectPosition()->GetPosition()[1]);
 			if(Ship == CharacterShip->GetTarget())
 			{
 				GLColor3f(0.8f, 0.8f, 0.8f);
@@ -227,7 +241,7 @@ void UI::MiniMapDisplay::_OnDraw(Graphics::RenderContext * RenderContext)
 			{
 				GLColor3f(0.2f, 1.0f, 0.0f);
 			}
-			GLVertex2f(Commodity->GetAspectPosition()->GetPosition()[0] - CharacterShip->GetAspectPosition()->GetPosition()[0], Commodity->GetAspectPosition()->GetPosition()[1] - CharacterShip->GetAspectPosition()->GetPosition()[1]);
+			GLVertex2f(Commodity->GetAspectPosition()->GetPosition()[0], Commodity->GetAspectPosition()->GetPosition()[1]);
 			if(Commodity == CharacterShip->GetTarget())
 			{
 				GLColor3f(0.8f, 0.8f, 0.8f);
