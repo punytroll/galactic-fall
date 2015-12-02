@@ -47,12 +47,19 @@
 UI::StarMapDisplay::StarMapDisplay(Widget * SupWidget, Character * Character) :
 	UI::ViewDisplay(SupWidget),
 	_Character(Character),
-	_OffsetPosition(true),
+	_CameraWorldPosition(true),
 	_Scale(5.0f),
 	_SelectedSystem(nullptr)
 {
 	assert(_Character != nullptr);
 	_CharacterDestroyingConnection = _Character->ConnectDestroyingCallback(std::bind(&UI::StarMapDisplay::_OnCharacterDestroying, this));
+	
+	auto System{_Character->GetSystem()};
+	
+	assert(System != nullptr);
+	assert(System->GetAspectPosition() != nullptr);
+	_CameraWorldPosition[0] += System->GetAspectPosition()->GetPosition()[0];
+	_CameraWorldPosition[1] += System->GetAspectPosition()->GetPosition()[1];
 	SetSize(Vector2f(100.0f, 100.0f));
 	ConnectDestroyingCallback(std::bind(&UI::StarMapDisplay::_OnDestroying, this, std::placeholders::_1));
 	ConnectMouseButtonCallback(std::bind(&UI::StarMapDisplay::_OnMouseButton, this, std::placeholders::_1));
@@ -102,15 +109,18 @@ void UI::StarMapDisplay::_SetupView(void)
 {
 	auto OrthogonalProjection{new Graphics::Orthogonal2DProjection()};
 	
-	OrthogonalProjection->SetRight(GetSize()[0]);
-	OrthogonalProjection->SetBottom(GetSize()[1]);
+	// the orthogonal pojection is designed to place (0.0, 0.0) right in the middle of the widget and scale appropriately
+	OrthogonalProjection->SetLeft(-GetSize()[0] / 2.0f / _Scale);
+	OrthogonalProjection->SetTop(GetSize()[1] / 2.0f / _Scale);
+	OrthogonalProjection->SetRight(GetSize()[0] / 2.0f / _Scale);
+	OrthogonalProjection->SetBottom(-GetSize()[1] / 2.0f / _Scale);
 	
 	auto View{new Graphics::View()};
 	
 	View->SetClearColor(Graphics::ColorRGBO(0.0f, 0.0f, 0.0f, 0.0f));
 	assert(View->GetCamera() != nullptr);
 	View->GetCamera()->SetProjection(OrthogonalProjection);
-	View->GetCamera()->SetSpacialMatrix(Matrix4f::CreateFlipY());
+	View->GetCamera()->SetSpacialMatrix(Matrix4f::CreateTranslation(_CameraWorldPosition[0], _CameraWorldPosition[1], 0.0f));
 	assert(g_GraphicsEngine != nullptr);
 	g_GraphicsEngine->AddView(View);
 	
@@ -134,7 +144,9 @@ void UI::StarMapDisplay::_SetupView(void)
 	RootNode->SetClearColorBuffer(true);
 	RootNode->SetClearDepthBuffer(true);
 	RootNode->SetUseBlending(false);
-	RootNode->SetUseDepthTest(true);
+	RootNode->SetUseDepthTest(false);
+	RootNode->SetUseBlending(true);
+	RootNode->SetBlendFunction(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	Scene->SetRootNode(RootNode);
 	SetView(View);
 }
@@ -145,23 +157,16 @@ void UI::StarMapDisplay::_OnDraw(Graphics::RenderContext * RenderContext)
 	{
 		auto System{_Character->GetSystem()};
 		
-		assert(System);
+		assert(System != nullptr);
 		assert(_Character->GetMapKnowledge() != nullptr);
 		
-		auto Middle{GetSize() / 2.0f};
-		
-		Middle += _OffsetPosition;
-		Middle[1] = -Middle[1];
-		GLTranslatef(Middle[0], Middle[1], 0.0f);
-		
-		auto SystemSize{5.0f};
+		auto SystemSize{1.5f};
 		auto & UnexploredSystems{_Character->GetMapKnowledge()->GetUnexploredSystems()};
 		
 		for(auto UnexploredSystem : UnexploredSystems)
 		{
-			auto Position{UnexploredSystem->GetAspectPosition()->GetPosition() - System->GetAspectPosition()->GetPosition()};
+			auto Position{UnexploredSystem->GetAspectPosition()->GetPosition()};
 			
-			Position *= _Scale;
 			if(UnexploredSystem == _SelectedSystem)
 			{
 				GLColor3f(0.0f, 1.0f, 0.0f);
@@ -197,10 +202,7 @@ void UI::StarMapDisplay::_OnDraw(Graphics::RenderContext * RenderContext)
 			assert(ExploredSystem != nullptr);
 			assert(ExploredSystem->GetAspectPosition() != nullptr);
 			
-			auto Position{ExploredSystem->GetAspectPosition()->GetPosition() - System->GetAspectPosition()->GetPosition()};
-			
-			Position *= _Scale;
-			
+			auto Position{ExploredSystem->GetAspectPosition()->GetPosition()};
 			auto & LinkedSystems{ExploredSystem->GetLinkedSystems()};
 			
 			for(auto LinkedSystem : LinkedSystems)
@@ -222,7 +224,6 @@ void UI::StarMapDisplay::_OnDraw(Graphics::RenderContext * RenderContext)
 				
 				auto To{LinkedSystem->GetAspectPosition()->GetPosition() - ExploredSystem->GetAspectPosition()->GetPosition()};
 				
-				To *= _Scale;
 				GLVertex2f(Position[0] + To[0], Position[1] + To[1]);
 				GLEnd();
 			}
@@ -257,9 +258,7 @@ void UI::StarMapDisplay::_OnDraw(Graphics::RenderContext * RenderContext)
 			auto Style{new Graphics::Style()};
 			
 			RenderContext->SetStyle(Style);
-			RenderContext->SetClipping(0.0f, 0.0f, GetSize()[1], GetSize()[0]);
-			Graphics::Drawing::DrawText(RenderContext, Vector2f(Middle[0] + Position[0], -Middle[1] + SystemSize * 1.2f - Position[1]), ExploredSystem->GetAspectName()->GetName(), Graphics::ColorRGBO(1.0f, 1.0f, 1.0f, 1.0f));
-			RenderContext->UnsetClipping();
+			Graphics::Drawing::DrawTextWithoutClippingRightHanded(RenderContext, Position[0] - _CameraWorldPosition[0], Position[1] - _CameraWorldPosition[1] - SystemSize * 1.1f, 12.0f / _Scale, ExploredSystem->GetAspectName()->GetName(), Graphics::ColorRGBO(1.0f, 1.0f, 1.0f, 1.0f));
 			RenderContext->SetStyle(nullptr);
 			delete Style;
 		}
@@ -310,33 +309,32 @@ void UI::StarMapDisplay::_OnMouseButton(UI::MouseButtonEvent & MouseButtonEvent)
 		{
 			_Scale *= 1.1f;
 			MouseButtonEvent.StopPropagation();
+			_ClearView();
+			_SetupView();
 		}
 		else if((MouseButtonEvent.GetMouseButton() == UI::MouseButtonEvent::MouseButton::WheelDown) && (MouseButtonEvent.IsDown() == true))
 		{
 			_Scale *= 0.9f;
 			MouseButtonEvent.StopPropagation();
+			_ClearView();
+			_SetupView();
 		}
 		else if((MouseButtonEvent.GetMouseButton() == UI::MouseButtonEvent::MouseButton::Left) && (MouseButtonEvent.IsDown() == true))
 		{
 			if(_Character != nullptr)
 			{
-				auto System{_Character->GetSystem()};
+				auto ClickWorldPosition{(MouseButtonEvent.GetPosition() - GetSize() / 2.0f) / _Scale};
 				
-				assert(System != nullptr);
-				
-				auto NormalizedPosition{MouseButtonEvent.GetPosition() - GetSize() / 2.0f};
-				
+				ClickWorldPosition[1] = -ClickWorldPosition[1];
+				ClickWorldPosition += _CameraWorldPosition;
 				for(auto SystemPair : g_Galaxy->GetSystems())
 				{
 					assert(SystemPair.second != nullptr);
 					assert(SystemPair.second->GetAspectPosition() != nullptr);
 					
-					auto Position{SystemPair.second->GetAspectPosition()->GetPosition() - System->GetAspectPosition()->GetPosition()};
+					auto SystemWorldPosition{SystemPair.second->GetAspectPosition()->GetPosition()};
 					
-					Position *= _Scale;
-					Position[0] -= NormalizedPosition[0] - _OffsetPosition[0];
-					Position[1] += NormalizedPosition[1] - _OffsetPosition[1];
-					if(Position.SquaredLength() < 40.0f)
+					if((Vector2f(SystemWorldPosition[0], SystemWorldPosition[1]) - ClickWorldPosition).SquaredLength() < 2.25f)
 					{
 						SetSelectedSystem(SystemPair.second);
 						
@@ -364,8 +362,11 @@ void UI::StarMapDisplay::_OnMouseMove(UI::MouseMoveEvent & MouseMoveEvent)
 {
 	if((MouseMoveEvent.GetPhase() == UI::Event::Phase::Target) && (g_UserInterface->GetCaptureWidget() == this))
 	{
-		_OffsetPosition += (MouseMoveEvent.GetPosition() - _GrabPosition);
+		_CameraWorldPosition[0] -= (MouseMoveEvent.GetPosition()[0] - _GrabPosition[0]) / _Scale;
+		_CameraWorldPosition[1] += (MouseMoveEvent.GetPosition()[1] - _GrabPosition[1]) / _Scale;
 		_GrabPosition = MouseMoveEvent.GetPosition();
+		_ClearView();
+		_SetupView();
 	}
 }
 
