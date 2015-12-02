@@ -53,6 +53,7 @@ namespace UI
 		void _OnSizeChanged(UI::Event & SizeChangedEvent);
 		Character * _Character;
 		Connection _CharacterDestroyingConnection;
+		float _Scale;
 	};
 }
 
