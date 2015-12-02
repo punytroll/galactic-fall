@@ -37,10 +37,12 @@ namespace Graphics
 		static void DrawBox(Graphics::RenderContext * RenderContext, float Left, float Top, float Bottom, float Right);
 		static void DrawText(Graphics::RenderContext * RenderContext, const Vector2f & Position, const std::string & Text, const Graphics::ColorRGBO & Color);
 		static void DrawText(Graphics::RenderContext * RenderContext, float Left, float Top, const std::string & Text, const Graphics::ColorRGBO & Color);
+		static void DrawTextWithoutClippingRightHanded(Graphics::RenderContext * RenderContext, float Left, float Top, float Height, const std::string & Text, const Graphics::ColorRGBO & Color);
 		static void DrawTexture(Graphics::RenderContext * RenderContext, float Left, float Top, float Bottom, float Right, Graphics::Texture * Texture);
 		static void InitializeFont(void);
 		static void DeinitializeFont(void);
 	private:
+		static void _DrawText(Graphics::RenderContext * RenderContext, float Left, float Top, float Height, const std::string & Text, const Graphics::ColorRGBO & Color, const std::string & ProgamName, bool LeftHanded);
 		static const Graphics::Texture * _FontTexture;
 	};
 }

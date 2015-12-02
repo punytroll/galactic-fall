@@ -71,10 +71,20 @@ void Graphics::Drawing::DrawBox(Graphics::RenderContext * RenderContext, float L
 
 void Graphics::Drawing::DrawText(Graphics::RenderContext * RenderContext, const Vector2f & Position, const std::string & Text, const Graphics::ColorRGBO & Color)
 {
-	Graphics::Drawing::DrawText(RenderContext, Position[0], Position[1], Text, Color);
+	Graphics::Drawing::_DrawText(RenderContext, Position[0], Position[1], 12.0f, Text, Color, "font", true);
 }
 
 void Graphics::Drawing::DrawText(Graphics::RenderContext * RenderContext, float Left, float Top, const std::string & Text, const Graphics::ColorRGBO & Color)
+{
+	Graphics::Drawing::_DrawText(RenderContext, Left, Top, 12.0f, Text, Color, "font", true);
+}
+
+void Graphics::Drawing::DrawTextWithoutClippingRightHanded(Graphics::RenderContext * RenderContext, float Left, float Top, float Height, const std::string & Text, const Graphics::ColorRGBO & Color)
+{
+	Graphics::Drawing::_DrawText(RenderContext, Left, Top, Height, Text, Color, "font_without_clipping", false);
+}
+
+void Graphics::Drawing::_DrawText(Graphics::RenderContext * RenderContext, float Left, float Top, float CharacterHeight, const std::string & Text, const Graphics::ColorRGBO & Color, const std::string & ProgamName, bool LeftHanded)
 {
 	if(Text.empty() == false)
 	{
@@ -83,8 +93,6 @@ void Graphics::Drawing::DrawText(Graphics::RenderContext * RenderContext, float 
 		double Begin(RealTime::Get());
 		const std::uint32_t CHARACTERS{95};
 		const std::uint32_t CHARACTEROFFSET{32};
-		const float GLYPHWIDTH{6.0f};
-		const float GLYPHHEIGHT{12.0f};
 		GLuint VertexArray{0};
 		
 		GLGenVertexArrays(1, &VertexArray);
@@ -96,6 +104,7 @@ void Graphics::Drawing::DrawText(Graphics::RenderContext * RenderContext, float 
 		unsigned short Indices[NumberOfVertices + Text.length() - 1];
 		const float GlyphWidth{6.0f / 128.0f};
 		const float GlyphHeight{12.0f / 64.0f};
+		float CharacterWidth{CharacterHeight / 2.0f};
 		const unsigned int GlyphsPerLine{128 / 6};
 		float TextLeft{Left};
 		int CharacterIndex{0};
@@ -117,22 +126,36 @@ void Graphics::Drawing::DrawText(Graphics::RenderContext * RenderContext, float 
 			TextureCoordinates[CharacterIndex * 8 + 1] = 1.0f - (GlyphHeight * static_cast< unsigned int >(GlyphIndex / GlyphsPerLine));
 			Indices[IndexIndex++] = CharacterIndex * 4 + 0;
 			Vertices[CharacterIndex * 8 + 2] = TextLeft;
-			Vertices[CharacterIndex * 8 + 3] = Top + GLYPHHEIGHT;
+			if(LeftHanded == true)
+			{
+				Vertices[CharacterIndex * 8 + 3] = Top + CharacterHeight;
+			}
+			else
+			{
+				Vertices[CharacterIndex * 8 + 3] = Top - CharacterHeight;
+			}
 			TextureCoordinates[CharacterIndex * 8 + 2] = (GlyphIndex % GlyphsPerLine) * GlyphWidth;
 			TextureCoordinates[CharacterIndex * 8 + 3] = 1.0f - (GlyphHeight * static_cast< unsigned int >(GlyphIndex / GlyphsPerLine + 1));
 			Indices[IndexIndex++] = CharacterIndex * 4 + 1;
-			Vertices[CharacterIndex * 8 + 4] = TextLeft + GLYPHWIDTH;
-			Vertices[CharacterIndex * 8 + 5] = Top + GLYPHHEIGHT;
+			Vertices[CharacterIndex * 8 + 4] = TextLeft + CharacterWidth;
+			if(LeftHanded == true)
+			{
+				Vertices[CharacterIndex * 8 + 5] = Top + CharacterHeight;
+			}
+			else
+			{
+				Vertices[CharacterIndex * 8 + 5] = Top - CharacterHeight;
+			}
 			TextureCoordinates[CharacterIndex * 8 + 4] = (GlyphIndex % GlyphsPerLine + 1) * GlyphWidth;
 			TextureCoordinates[CharacterIndex * 8 + 5] = 1.0f - (GlyphHeight * static_cast< unsigned int >(GlyphIndex / GlyphsPerLine + 1));
 			Indices[IndexIndex++] = CharacterIndex * 4 + 2;
-			Vertices[CharacterIndex * 8 + 6] = TextLeft + GLYPHWIDTH;
+			Vertices[CharacterIndex * 8 + 6] = TextLeft + CharacterWidth;
 			Vertices[CharacterIndex * 8 + 7] = Top;
 			TextureCoordinates[CharacterIndex * 8 + 6] = (GlyphIndex % GlyphsPerLine + 1) * GlyphWidth;
 			TextureCoordinates[CharacterIndex * 8 + 7] = 1.0f - (GlyphHeight * static_cast< unsigned int >(GlyphIndex / GlyphsPerLine));
 			Indices[IndexIndex++] = CharacterIndex * 4 + 3;
 			CharacterIndex += 1;
-			TextLeft += GLYPHWIDTH;
+			TextLeft += CharacterWidth;
 		}
 		
 		GLuint Buffers[3];
@@ -154,7 +177,7 @@ void Graphics::Drawing::DrawText(Graphics::RenderContext * RenderContext, float 
 		assert(RenderContext != nullptr);
 		assert(RenderContext->GetStyle() != nullptr);
 		RenderContext->GetStyle()->SetDiffuseColor(Color);
-		RenderContext->GetStyle()->SetProgramIdentifier("font");
+		RenderContext->GetStyle()->SetProgramIdentifier(ProgamName);
 		RenderContext->SetTexture(_FontTexture);
 		RenderContext->ActivateProgram();
 		GLEnable(GL_PRIMITIVE_RESTART);
