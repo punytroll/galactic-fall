@@ -20,8 +20,6 @@
 #ifndef CHARACTER_OBSERVER_H
 #define CHARACTER_OBSERVER_H
 
-#include "referencing.h"
-
 class Character;
 class Message;
 
