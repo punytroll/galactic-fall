@@ -109,7 +109,7 @@ void UI::StarMapDisplay::_SetupView(void)
 {
 	auto OrthogonalProjection{new Graphics::Orthogonal2DProjection()};
 	
-	// the orthogonal pojection is designed to place (0.0, 0.0) right in the middle of the widget and scale appropriately
+	// the orthogonal pojection is designed to place (0.0, 0.0) in the middle of the widget, scale appropriately and make this a game coordinate view (y axis is up)
 	OrthogonalProjection->SetLeft(-GetSize()[0] / 2.0f / _Scale);
 	OrthogonalProjection->SetTop(GetSize()[1] / 2.0f / _Scale);
 	OrthogonalProjection->SetRight(GetSize()[0] / 2.0f / _Scale);
