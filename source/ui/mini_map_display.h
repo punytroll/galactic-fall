@@ -20,10 +20,9 @@
 #ifndef UI_MINI_MAP_DISPLAY_H
 #define UI_MINI_MAP_DISPLAY_H
 
-#include "../referencing.h"
 #include "view_display.h"
 
-class Ship;
+class Character;
 
 namespace Graphics
 {
@@ -41,17 +40,19 @@ namespace UI
 		MiniMapDisplay(UI::Widget * SupWidget = 0);
 		virtual ~MiniMapDisplay(void);
 		// setters
-		void SetOwner(Reference< Ship > Owner);
+		void SetCharacter(Character * Character);
 	private:
 		// modifiers
 		void _ClearView(void);
 		void _SetupView(void);
-		// callback handlers
+		// callbacks
+		void _OnCharacterDestroying(void);
 		void _OnDestroying(UI::Event & DestroyingEvent);
 		void _OnDestroyInScene(Graphics::Node * Node);
 		void _OnDraw(Graphics::RenderContext * RenderContext);
 		void _OnSizeChanged(UI::Event & SizeChangedEvent);
-		Reference< Ship > _Owner;
+		Character * _Character;
+		Connection _CharacterDestroyingConnection;
 	};
 }
 

@@ -19,6 +19,7 @@
 
 #include <algebra/matrix4f.h>
 
+#include "../character.h"
 #include "../commodity.h"
 #include "../globals.h"
 #include "../graphics/callback_node.h"
@@ -40,7 +41,8 @@
 #include "mini_map_display.h"
 
 UI::MiniMapDisplay::MiniMapDisplay(UI::Widget * SupWidget) :
-	UI::ViewDisplay(SupWidget)
+	UI::ViewDisplay(SupWidget),
+	_Character(nullptr)
 {
 	SetSize(Vector2f(100.0f, 100.0f));
 	ConnectDestroyingCallback(std::bind(&UI::MiniMapDisplay::_OnDestroying, this, std::placeholders::_1));
@@ -50,11 +52,26 @@ UI::MiniMapDisplay::MiniMapDisplay(UI::Widget * SupWidget) :
 
 UI::MiniMapDisplay::~MiniMapDisplay(void)
 {
+	assert(_Character == nullptr);
+	assert(_CharacterDestroyingConnection.IsValid() == false);
 }
 
-void UI::MiniMapDisplay::SetOwner(Reference< Ship > Owner)
+void UI::MiniMapDisplay::SetCharacter(Character * Character)
 {
-	_Owner = Owner;
+	if(_Character != nullptr)
+	{
+		assert(_CharacterDestroyingConnection.IsValid() == true);
+		_CharacterDestroyingConnection.Disconnect();
+		_Character = nullptr;
+	}
+	assert(_CharacterDestroyingConnection.IsValid() == false);
+	if(Character != nullptr)
+	{
+		_Character = Character;
+		_CharacterDestroyingConnection = _Character->ConnectDestroyingCallback(std::bind(&UI::MiniMapDisplay::_OnCharacterDestroying, this));
+	}
+	_ClearView();
+	_SetupView();
 }
 
 void UI::MiniMapDisplay::_ClearView(void)
@@ -137,11 +154,27 @@ void UI::MiniMapDisplay::_SetupView(void)
 	SetView(View);
 }
 
+void UI::MiniMapDisplay::_OnCharacterDestroying(void)
+{
+	assert(_Character != nullptr);
+	_Character = nullptr;
+	assert(_CharacterDestroyingConnection.IsValid() == true);
+	_CharacterDestroyingConnection.Disconnect();
+	assert(_CharacterDestroyingConnection.IsValid() == false);
+}
+
 void UI::MiniMapDisplay::_OnDestroying(UI::Event & DestroyingEvent)
 {
 	if(DestroyingEvent.GetPhase() == UI::Event::Phase::Target)
 	{
 		_ClearView();
+		if(_Character != nullptr)
+		{
+			assert(_CharacterDestroyingConnection.IsValid() == true);
+			_CharacterDestroyingConnection.Disconnect();
+			_Character = nullptr;
+		}
+		assert(_CharacterDestroyingConnection.IsValid() == false);
 	}
 }
 
@@ -152,47 +185,50 @@ void UI::MiniMapDisplay::_OnDestroyInScene(Graphics::Node * Node)
 
 void UI::MiniMapDisplay::_OnDraw(Graphics::RenderContext * RenderContext)
 {
-	if(_Owner.IsValid() == true)
+	if(_Character != nullptr)
 	{
-		assert(_Owner->GetAspectPosition() != nullptr);
+		auto CharacterShip{_Character->GetShip()};
 		
-		auto TheSystem(_Owner->GetSystem());
+		assert(CharacterShip != nullptr);
+		assert(CharacterShip->GetAspectPosition() != nullptr);
 		
-		assert(TheSystem != nullptr);
+		auto System{_Character->GetSystem()};
+		
+		assert(System != nullptr);
 		GLBegin(GL_POINTS);
 		GLColor3f(0.8f, 0.8f, 0.8f);
-		for(auto Planet : TheSystem->GetPlanets())
+		for(auto Planet : System->GetPlanets())
 		{
-			if(Planet == _Owner->GetTarget())
+			if(Planet == CharacterShip->GetTarget())
 			{
 				GLColor3f(0.2f, 1.0f, 0.0f);
 			}
-			GLVertex2f(Planet->GetAspectPosition()->GetPosition()[0] - _Owner->GetAspectPosition()->GetPosition()[0], Planet->GetAspectPosition()->GetPosition()[1] - _Owner->GetAspectPosition()->GetPosition()[1]);
-			if(Planet == _Owner->GetTarget())
+			GLVertex2f(Planet->GetAspectPosition()->GetPosition()[0] - CharacterShip->GetAspectPosition()->GetPosition()[0], Planet->GetAspectPosition()->GetPosition()[1] - CharacterShip->GetAspectPosition()->GetPosition()[1]);
+			if(Planet == CharacterShip->GetTarget())
 			{
 				GLColor3f(0.8f, 0.8f, 0.8f);
 			}
 		}
-		for(auto Ship : TheSystem->GetShips())
+		for(auto Ship : System->GetShips())
 		{
-			if(Ship == _Owner->GetTarget())
+			if(Ship == CharacterShip->GetTarget())
 			{
 				GLColor3f(0.2f, 1.0f, 0.0f);
 			}
-			GLVertex2f(Ship->GetAspectPosition()->GetPosition()[0] - _Owner->GetAspectPosition()->GetPosition()[0], Ship->GetAspectPosition()->GetPosition()[1] - _Owner->GetAspectPosition()->GetPosition()[1]);
-			if(Ship == _Owner->GetTarget())
+			GLVertex2f(Ship->GetAspectPosition()->GetPosition()[0] - CharacterShip->GetAspectPosition()->GetPosition()[0], Ship->GetAspectPosition()->GetPosition()[1] - CharacterShip->GetAspectPosition()->GetPosition()[1]);
+			if(Ship == CharacterShip->GetTarget())
 			{
 				GLColor3f(0.8f, 0.8f, 0.8f);
 			}
 		}
-		for(auto Commodity : TheSystem->GetCommodities())
+		for(auto Commodity : System->GetCommodities())
 		{
-			if(Commodity == _Owner->GetTarget())
+			if(Commodity == CharacterShip->GetTarget())
 			{
 				GLColor3f(0.2f, 1.0f, 0.0f);
 			}
-			GLVertex2f(Commodity->GetAspectPosition()->GetPosition()[0] - _Owner->GetAspectPosition()->GetPosition()[0], Commodity->GetAspectPosition()->GetPosition()[1] - _Owner->GetAspectPosition()->GetPosition()[1]);
-			if(Commodity == _Owner->GetTarget())
+			GLVertex2f(Commodity->GetAspectPosition()->GetPosition()[0] - CharacterShip->GetAspectPosition()->GetPosition()[0], Commodity->GetAspectPosition()->GetPosition()[1] - CharacterShip->GetAspectPosition()->GetPosition()[1]);
+			if(Commodity == CharacterShip->GetTarget())
 			{
 				GLColor3f(0.8f, 0.8f, 0.8f);
 			}
