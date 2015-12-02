@@ -1,0 +1,14 @@
+#version 330
+
+uniform mat4 in_ViewToMonitorMatrix;
+
+layout (location = 0) in vec2 in_WorldPosition;
+layout (location = 1) in vec2 in_TextureCoordinates;
+
+out vec2 pass_TextureCoordinates;
+
+void main()
+{
+	pass_TextureCoordinates = in_TextureCoordinates;
+	gl_Position = in_ViewToMonitorMatrix * vec4(in_WorldPosition, 0.0f, 1.0f);
+}
