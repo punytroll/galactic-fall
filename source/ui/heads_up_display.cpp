@@ -125,7 +125,7 @@ UI::HeadsUpDisplay::HeadsUpDisplay(UI::Widget * SupWidget) :
 	
 	MiniMapDisplay->SetName("display");
 	MiniMapDisplay->SetPosition(Vector2f(0.0f, 20.0f));
-	MiniMapDisplay->SetSize(Vector2f(MiniMapWidget->GetSize()[0], MiniMapWidget->GetSize()[1] - MiniMapDisplay->GetSize()[1]));
+	MiniMapDisplay->SetSize(Vector2f(MiniMapWidget->GetSize()[0], MiniMapWidget->GetSize()[1] - MiniMapDisplay->GetPosition()[1]));
 	MiniMapDisplay->SetAnchorBottom(true);
 	MiniMapDisplay->SetAnchorRight(true);
 	MiniMapDisplay->ConnectUpdatingCallback(std::bind(&UI::HeadsUpDisplay::_UpdateMiniMapDisplay, this, MiniMapDisplay, std::placeholders::_1, std::placeholders::_2));
