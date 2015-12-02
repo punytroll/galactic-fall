@@ -304,10 +304,10 @@ void UI::HeadsUpDisplay::_UpdateMiniMapSystemNameLabel(UI::Label * MiniMapSystem
 void UI::HeadsUpDisplay::_UpdateMiniMapDisplay(UI::MiniMapDisplay * MiniMapDisplay, float RealTimeSeconds, float GameTimeSeconds)
 {
 	assert(g_CharacterObserver != nullptr);
-	if((g_CharacterObserver->GetObservedCharacter() != nullptr) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != nullptr))
+	if(g_CharacterObserver->GetObservedCharacter() != nullptr)
 	{
 		MiniMapDisplay->SetVisible(true);
-		MiniMapDisplay->SetOwner(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetReference());
+		MiniMapDisplay->SetCharacter(g_CharacterObserver->GetObservedCharacter());
 	}
 	else
 	{
