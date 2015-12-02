@@ -155,7 +155,6 @@ void UI::MiniMapDisplay::_OnDraw(Graphics::RenderContext * RenderContext)
 	if(_Owner.IsValid() == true)
 	{
 		assert(_Owner->GetAspectPosition() != nullptr);
-		GLTranslatef(-_Owner->GetAspectPosition()->GetPosition()[0], -_Owner->GetAspectPosition()->GetPosition()[1], 0);
 		
 		auto TheSystem(_Owner->GetSystem());
 		
@@ -168,7 +167,7 @@ void UI::MiniMapDisplay::_OnDraw(Graphics::RenderContext * RenderContext)
 			{
 				GLColor3f(0.2f, 1.0f, 0.0f);
 			}
-			GLVertex2f(Planet->GetAspectPosition()->GetPosition()[0], Planet->GetAspectPosition()->GetPosition()[1]);
+			GLVertex2f(Planet->GetAspectPosition()->GetPosition()[0] - _Owner->GetAspectPosition()->GetPosition()[0], Planet->GetAspectPosition()->GetPosition()[1] - _Owner->GetAspectPosition()->GetPosition()[1]);
 			if(Planet == _Owner->GetTarget())
 			{
 				GLColor3f(0.8f, 0.8f, 0.8f);
@@ -180,7 +179,7 @@ void UI::MiniMapDisplay::_OnDraw(Graphics::RenderContext * RenderContext)
 			{
 				GLColor3f(0.2f, 1.0f, 0.0f);
 			}
-			GLVertex2f(Ship->GetAspectPosition()->GetPosition()[0], Ship->GetAspectPosition()->GetPosition()[1]);
+			GLVertex2f(Ship->GetAspectPosition()->GetPosition()[0] - _Owner->GetAspectPosition()->GetPosition()[0], Ship->GetAspectPosition()->GetPosition()[1] - _Owner->GetAspectPosition()->GetPosition()[1]);
 			if(Ship == _Owner->GetTarget())
 			{
 				GLColor3f(0.8f, 0.8f, 0.8f);
@@ -192,7 +191,7 @@ void UI::MiniMapDisplay::_OnDraw(Graphics::RenderContext * RenderContext)
 			{
 				GLColor3f(0.2f, 1.0f, 0.0f);
 			}
-			GLVertex2f(Commodity->GetAspectPosition()->GetPosition()[0], Commodity->GetAspectPosition()->GetPosition()[1]);
+			GLVertex2f(Commodity->GetAspectPosition()->GetPosition()[0] - _Owner->GetAspectPosition()->GetPosition()[0], Commodity->GetAspectPosition()->GetPosition()[1] - _Owner->GetAspectPosition()->GetPosition()[1]);
 			if(Commodity == _Owner->GetTarget())
 			{
 				GLColor3f(0.8f, 0.8f, 0.8f);
