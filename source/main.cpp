@@ -752,8 +752,8 @@ void UpdateMainViewCamera(void)
 		}
 	}
 	SpacialMatrix.Translate(g_CameraPosition);
-	assert(g_MainView != 0);
-	assert(g_MainView->GetCamera() != 0);
+	assert(g_MainView != nullptr);
+	assert(g_MainView->GetCamera() != nullptr);
 	g_MainView->GetCamera()->SetSpacialMatrix(SpacialMatrix);
 }
 
