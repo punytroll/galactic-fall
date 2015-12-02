@@ -83,7 +83,6 @@ glReadBufferFunction __glReadBuffer(nullptr);
 glReadPixelsFunction __glReadPixels(nullptr);
 glRenderbufferStorageFunction __glRenderbufferStorage(nullptr);
 glShaderSourceFunction __glShaderSource(nullptr);
-glTexCoord2fFunction __glTexCoord2f(nullptr);
 glTexImage2DFunction __glTexImage2D(nullptr);
 glTexParameteriFunction __glTexParameteri(nullptr);
 glUniform1fFunction __glUniform1f(nullptr);
