@@ -57,7 +57,7 @@ namespace UI
 		Character * _Character;
 		Connection _CharacterDestroyingConnection;
 		Vector2f _GrabPosition;
-		Vector2f _OffsetPosition;
+		Vector2f _CameraWorldPosition;
 		float _Scale;
 		System * _SelectedSystem;
 		Connection _SelectedSystemDestroyingConnection;
