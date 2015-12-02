@@ -323,10 +323,6 @@ typedef void (* glMatrixModeFunction)(GLenum mode);
 extern glMatrixModeFunction __glMatrixMode;
 #define GLMatrixMode(mode) { assert(__glMatrixMode != nullptr); __glMatrixMode(mode); CheckGLError; }
 
-typedef void (* glMultMatrixfFunction)(const GLfloat * m);
-extern glMultMatrixfFunction __glMultMatrixf;
-#define GLMultMatrixf(m) { assert(__glMultMatrixf != nullptr); __glMultMatrixf(m); CheckGLError; }
-
 typedef void (* glPixelStoreiFunction)(GLenum pname, GLint param);
 extern glPixelStoreiFunction __glPixelStorei;
 #define GLPixelStorei(pname, param) { assert(__glPixelStorei != nullptr); __glPixelStorei(pname, param); CheckGLError; }
@@ -335,10 +331,6 @@ typedef void (* glPopAttribFunction)(void);
 extern glPopAttribFunction __glPopAttrib;
 #define GLPopAttrib() { assert(__glPopAttrib != nullptr); __glPopAttrib(); CheckGLError; }
 
-typedef void (* glPopMatrixFunction)(void);
-extern glPopMatrixFunction __glPopMatrix;
-#define GLPopMatrix() { assert(__glPopMatrix != nullptr); __glPopMatrix(); CheckGLError; }
-
 typedef void (* glPrimitiveRestartIndexFunction)(GLuint index);
 extern glPrimitiveRestartIndexFunction __glPrimitiveRestartIndex;
 #define GLPrimitiveRestartIndex(index) { assert(__glPrimitiveRestartIndex != nullptr); __glPrimitiveRestartIndex(index); CheckGLError; }
@@ -346,10 +338,6 @@ extern glPrimitiveRestartIndexFunction __glPrimitiveRestartIndex;
 typedef void (* glPushAttribFunction)(GLbitfield mask);
 extern glPushAttribFunction __glPushAttrib;
 #define GLPushAttrib(mask) { assert(__glPushAttrib != nullptr); __glPushAttrib(mask); CheckGLError; };
-
-typedef void (* glPushMatrixFunction)(void);
-extern glPushMatrixFunction __glPushMatrix;
-#define GLPushMatrix() { assert(__glPushMatrix != nullptr); __glPushMatrix(); CheckGLError; }
 
 typedef void (* glReadBufferFunction)(GLenum mode);
 extern glReadBufferFunction __glReadBuffer;

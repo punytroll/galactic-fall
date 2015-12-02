@@ -2980,13 +2980,10 @@ void InitializeOpenGL(void)
 	LoadOpenGLFunction(glLinkProgram);
 	LoadOpenGLFunction(glLoadMatrixf);
 	LoadOpenGLFunction(glMatrixMode);
-	LoadOpenGLFunction(glMultMatrixf);
 	LoadOpenGLFunction(glPixelStorei);
 	LoadOpenGLFunction(glPopAttrib);
-	LoadOpenGLFunction(glPopMatrix);
 	LoadOpenGLFunction(glPrimitiveRestartIndex);
 	LoadOpenGLFunction(glPushAttrib);
-	LoadOpenGLFunction(glPushMatrix);
 	LoadOpenGLFunction(glReadBuffer);
 	LoadOpenGLFunction(glReadPixels);
 	LoadOpenGLFunction(glRenderbufferStorage);
