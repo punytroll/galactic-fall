@@ -388,8 +388,11 @@ void UI::StarMapDisplay::SetSelectedSystem(System * SelectedSystem)
 		_SelectedSystemDestroyingConnection.Disconnect();
 	}
 	assert(_SelectedSystemDestroyingConnection.IsValid() == false);
-	_SelectedSystem = SelectedSystem;
-	_SelectedSystemDestroyingConnection = _SelectedSystem->ConnectDestroyingCallback(std::bind(&UI::StarMapDisplay::_OnSelectedSystemDestroying, this));
+	if(SelectedSystem != nullptr)
+	{
+		_SelectedSystem = SelectedSystem;
+		_SelectedSystemDestroyingConnection = _SelectedSystem->ConnectDestroyingCallback(std::bind(&UI::StarMapDisplay::_OnSelectedSystemDestroying, this));
+	}
 }
 
 void UI::StarMapDisplay::_OnSizeChanged(UI::Event & SizeChangedEvent)
