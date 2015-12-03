@@ -31,21 +31,32 @@
 #include "text_button.h"
 
 UI::MapDialog::MapDialog(UI::Widget * SupWidget, Character * Character) :
-	UI::Window(SupWidget, "Map")
+	UI::Dialog(SupWidget)
 {
+	SetTitle("Map");
 	SetPosition(Vector2f(70.0f, 200.0f));
 	SetSize(Vector2f(500.0f, 530.0f));
 	ConnectKeyCallback(std::bind(&UI::MapDialog::_OnKey, this, std::placeholders::_1));
 	
-	auto OKButton(new UI::TextButton(this, "OK"));
+	auto OKButton{new UI::TextButton(this, "OK")};
 	
-	OKButton->SetPosition(Vector2f(390.0f, 500.0f));
 	OKButton->SetSize(Vector2f(100.0f, 20.0f));
+	OKButton->SetPosition(Vector2f(GetSize()[0] - 10.0f - OKButton->GetSize()[0], 500.0f));
 	OKButton->SetAnchorBottom(true);
 	OKButton->SetAnchorLeft(false);
 	OKButton->SetAnchorRight(true);
 	OKButton->SetAnchorTop(false);
-	OKButton->ConnectClickedCallback(std::bind(&UI::MapDialog::Destroy, this));
+	OKButton->ConnectClickedCallback(std::bind(&UI::MapDialog::_Close, this, UI::Dialog::ClosingReason::OK_BUTTON));
+	
+	auto CancelButton{new UI::TextButton(this, "Cancel")};
+	
+	CancelButton->SetSize(Vector2f(100.0f, 20.0f));
+	CancelButton->SetPosition(Vector2f(OKButton->GetPosition()[0] - 10.0f - CancelButton->GetSize()[0], 500.0f));
+	CancelButton->SetAnchorBottom(true);
+	CancelButton->SetAnchorLeft(false);
+	CancelButton->SetAnchorRight(true);
+	CancelButton->SetAnchorTop(false);
+	CancelButton->ConnectClickedCallback(std::bind(&UI::MapDialog::_Close, this, UI::Dialog::ClosingReason::CANCEL_BUTTON));
 	_StarMapDisplay = new UI::StarMapDisplay(this, Character);
 	_StarMapDisplay->SetPosition(Vector2f(10.0f, 40.0f));
 	_StarMapDisplay->SetSize(Vector2f(480.0f, 450.0f));
