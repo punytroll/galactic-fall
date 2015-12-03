@@ -20,7 +20,7 @@
 #ifndef MAP_DIALOG_H
 #define MAP_DIALOG_H
 
-#include "window.h"
+#include "dialog.h"
 
 class Character;
 class System;
@@ -30,7 +30,7 @@ namespace UI
 	class Button;
 	class StarMapDisplay;
 
-	class MapDialog : public UI::Window
+	class MapDialog : public UI::Dialog
 	{
 	public:
 		// constructor

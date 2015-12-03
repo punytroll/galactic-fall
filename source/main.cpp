@@ -816,18 +816,42 @@ void OnMapDialogDestroying(UI::Event & DestroyingEvent)
 {
 	if(DestroyingEvent.GetPhase() == UI::Event::Phase::Target)
 	{
-		if((g_InputMind.IsValid() == true) && (g_InputMind->GetCharacter() != nullptr) && (g_InputMind->GetCharacter()->GetShip() != nullptr))
-		{
-			const System * CurrentSystem(dynamic_cast< System * >(g_InputMind->GetCharacter()->GetShip()->GetContainer()));
-			
-			assert(CurrentSystem != nullptr);
-			if(CurrentSystem->IsLinkedToSystem(g_MapDialog->GetSelectedSystem()) == true)
-			{
-				g_InputMind->SelectLinkedSystem(g_MapDialog->GetSelectedSystem());
-			}
-		}
 		g_MapDialog = nullptr;
 	}
+}
+
+bool OnMapDialogClosing(UI::Dialog::ClosingReason ClosingReason)
+{
+	if(ClosingReason == UI::Dialog::ClosingReason::OK_BUTTON)
+	{
+		if((g_InputMind.IsValid() == true) && (g_InputMind->GetCharacter() != nullptr))
+		{
+			if(g_MapDialog->GetSelectedSystem() != nullptr)
+			{
+				auto CurrentSystem(g_InputMind->GetCharacter()->GetSystem());
+				
+				assert(CurrentSystem != nullptr);
+				if(CurrentSystem->IsLinkedToSystem(g_MapDialog->GetSelectedSystem()) == true)
+				{
+					g_InputMind->SelectLinkedSystem(g_MapDialog->GetSelectedSystem());
+					
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+			else
+			{
+				g_InputMind->SelectLinkedSystem(nullptr);
+				
+				return true;
+			}
+		}
+	}
+	
+	return true;
 }
 
 void OnOutfitShipDialogDestroying(UI::Event & DestroyingEvent)
@@ -2378,6 +2402,7 @@ void ActionOpenMapDialog(void)
 			g_MapDialog->SetSelectedSystem(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetLinkedSystemTarget());
 		}
 		g_MapDialog->GrabKeyFocus();
+		g_MapDialog->ConnectClosingCallback(OnMapDialogClosing);
 		g_MapDialog->ConnectDestroyingCallback(OnMapDialogDestroying);
 		if(g_InputMind.IsValid() == true)
 		{
