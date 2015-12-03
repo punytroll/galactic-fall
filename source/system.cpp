@@ -77,17 +77,9 @@ System::~System(void)
 	assert(_Star == nullptr);
 }
 
-bool System::IsLinkedToSystem(const System * LinkedSystem) const
+bool System::IsLinkedToSystem(const System * System) const
 {
-	for(auto LinkedSystem : _LinkedSystems)
-	{
-		if(LinkedSystem == LinkedSystem)
-		{
-			return true;
-		}
-	}
-	
-	return false;
+	return std::find(_LinkedSystems.begin(), _LinkedSystems.end(), System) != _LinkedSystems.end();
 }
 
 void System::_OnAdded(Object * Content)
