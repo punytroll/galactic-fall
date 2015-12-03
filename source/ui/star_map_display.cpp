@@ -343,6 +343,10 @@ void UI::StarMapDisplay::_OnMouseButton(UI::MouseButtonEvent & MouseButtonEvent)
 				}
 			}
 		}
+		else if((MouseButtonEvent.GetMouseButton() == UI::MouseButtonEvent::MouseButton::Right) && (MouseButtonEvent.IsDown() == true))
+		{
+			SetSelectedSystem(nullptr);
+		}
 		else if(MouseButtonEvent.GetMouseButton() == UI::MouseButtonEvent::MouseButton::Middle)
 		{
 			if(MouseButtonEvent.IsDown() == true)
