@@ -3419,7 +3419,6 @@ int main(int argc, char ** argv)
 	
 	// create managers and global objects
 	ON_DEBUG(std::cout << "Creating global managers and objects." << std::endl);
-	g_Galaxy = 0;
 	g_GraphicsEngine = new Graphics::Engine();
 	// UI view
 	Graphics::Orthogonal2DProjection * UIProjection(new Graphics::Orthogonal2DProjection());
