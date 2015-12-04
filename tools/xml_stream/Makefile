@@ -12,6 +12,7 @@ clean: clean-recursive
 
 clean-here: 
 	$(RM) xml_stream.pyc
+	$(RM) -r __pycache__
 
 clean-recursive: clean-here
 
