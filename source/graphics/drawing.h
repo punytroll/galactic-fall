@@ -37,14 +37,14 @@ namespace Graphics
 		static void DrawBoxFromPositionAndSize(Graphics::RenderContext * RenderContext, const Vector2f & Position, const Vector2f & Size);
 		static void DrawBox(Graphics::RenderContext * RenderContext, float Left, float Top, float Bottom, float Right);
 		static void DrawPoints(Graphics::RenderContext * RenderContext, const std::vector< Vector2f > & Positions, const std::vector< Graphics::ColorRGBO > & Colors);
-		static void DrawText(Graphics::RenderContext * RenderContext, const Vector2f & Position, const std::string & Text, const Graphics::ColorRGBO & Color);
-		static void DrawText(Graphics::RenderContext * RenderContext, float Left, float Top, const std::string & Text, const Graphics::ColorRGBO & Color);
-		static void DrawTextWithoutClippingRightHanded(Graphics::RenderContext * RenderContext, float Left, float Top, float Height, const std::string & Text, const Graphics::ColorRGBO & Color);
+		static void DrawText(Graphics::RenderContext * RenderContext, const Vector2f & Position, const std::string & Text);
+		static void DrawText(Graphics::RenderContext * RenderContext, float Left, float Top, const std::string & Text);
+		static void DrawTextWithoutClippingRightHanded(Graphics::RenderContext * RenderContext, float Left, float Top, float Height, const std::string & Text);
 		static void DrawTexture(Graphics::RenderContext * RenderContext, float Left, float Top, float Bottom, float Right, Graphics::Texture * Texture);
 		static void InitializeFont(void);
 		static void DeinitializeFont(void);
 	private:
-		static void _DrawText(Graphics::RenderContext * RenderContext, float Left, float Top, float Height, const std::string & Text, const Graphics::ColorRGBO & Color, const std::string & ProgamName, bool LeftHanded);
+		static void _DrawText(Graphics::RenderContext * RenderContext, float Left, float Top, float Height, const std::string & Text, const std::string & ProgamName, bool LeftHanded);
 		static const Graphics::Texture * _FontTexture;
 	};
 }

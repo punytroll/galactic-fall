@@ -111,22 +111,22 @@ void Graphics::Drawing::DrawPoints(Graphics::RenderContext * RenderContext, cons
 	GLDeleteVertexArrays(1, &VertexArray);
 }
 
-void Graphics::Drawing::DrawText(Graphics::RenderContext * RenderContext, const Vector2f & Position, const std::string & Text, const Graphics::ColorRGBO & Color)
+void Graphics::Drawing::DrawText(Graphics::RenderContext * RenderContext, const Vector2f & Position, const std::string & Text)
 {
-	Graphics::Drawing::_DrawText(RenderContext, Position[0], Position[1], 12.0f, Text, Color, "font", true);
+	Graphics::Drawing::_DrawText(RenderContext, Position[0], Position[1], 12.0f, Text, "font", true);
 }
 
-void Graphics::Drawing::DrawText(Graphics::RenderContext * RenderContext, float Left, float Top, const std::string & Text, const Graphics::ColorRGBO & Color)
+void Graphics::Drawing::DrawText(Graphics::RenderContext * RenderContext, float Left, float Top, const std::string & Text)
 {
-	Graphics::Drawing::_DrawText(RenderContext, Left, Top, 12.0f, Text, Color, "font", true);
+	Graphics::Drawing::_DrawText(RenderContext, Left, Top, 12.0f, Text, "font", true);
 }
 
-void Graphics::Drawing::DrawTextWithoutClippingRightHanded(Graphics::RenderContext * RenderContext, float Left, float Top, float Height, const std::string & Text, const Graphics::ColorRGBO & Color)
+void Graphics::Drawing::DrawTextWithoutClippingRightHanded(Graphics::RenderContext * RenderContext, float Left, float Top, float Height, const std::string & Text)
 {
-	Graphics::Drawing::_DrawText(RenderContext, Left, Top, Height, Text, Color, "font_without_clipping", false);
+	Graphics::Drawing::_DrawText(RenderContext, Left, Top, Height, Text, "font_without_clipping", false);
 }
 
-void Graphics::Drawing::_DrawText(Graphics::RenderContext * RenderContext, float Left, float Top, float CharacterHeight, const std::string & Text, const Graphics::ColorRGBO & Color, const std::string & ProgamName, bool LeftHanded)
+void Graphics::Drawing::_DrawText(Graphics::RenderContext * RenderContext, float Left, float Top, float CharacterHeight, const std::string & Text, const std::string & ProgamName, bool LeftHanded)
 {
 	if(Text.empty() == false)
 	{
@@ -217,9 +217,7 @@ void Graphics::Drawing::_DrawText(Graphics::RenderContext * RenderContext, float
 		GLVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
 		GLEnableVertexAttribArray(1);
 		assert(RenderContext != nullptr);
-		assert(RenderContext->GetStyle() != nullptr);
-		RenderContext->GetStyle()->SetDiffuseColor(Color);
-		RenderContext->GetStyle()->SetProgramIdentifier(ProgamName);
+		RenderContext->SetProgramIdentifier(ProgamName);
 		RenderContext->SetTexture(_FontTexture);
 		RenderContext->ActivateProgram();
 		GLEnable(GL_PRIMITIVE_RESTART);
@@ -229,6 +227,7 @@ void Graphics::Drawing::_DrawText(Graphics::RenderContext * RenderContext, float
 		GLDeleteBuffers(3, Buffers);
 		GLDeleteVertexArrays(1, &VertexArray);
 		RenderContext->SetTexture(nullptr);
+		RenderContext->UnsetProgramIdentifier();
 		RenderContext->DeactivateProgram();
 		RealTime::Invalidate();
 		

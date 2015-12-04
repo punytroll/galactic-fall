@@ -21,6 +21,7 @@
 #include <iostream>
 
 #include "camera.h"
+#include "color_rgbo.h"
 #include "engine.h"
 #include "gl.h"
 #include "light.h"
@@ -35,10 +36,12 @@
 Graphics::RenderContext::RenderContext(void) :
 	_Camera(nullptr),
 	_Clipping(nullptr),
+	_ColorRGBO(nullptr),
 	_Engine(nullptr),
 	_Light(nullptr),
 	_Node(nullptr),
 	_Program(nullptr),
+	_ProgramIdentifier(nullptr),
 	_Style(nullptr),
 	_Texture(nullptr)
 {
@@ -48,23 +51,33 @@ Graphics::RenderContext::~RenderContext(void)
 {
 	assert(_Camera == nullptr);
 	assert(_Clipping == nullptr);
+	assert(_ColorRGBO == nullptr);
 	assert(_Engine == nullptr);
 	assert(_Light == nullptr);
 	assert(_Node == nullptr);
 	assert(_Program == nullptr);
+	assert(_ProgramIdentifier == nullptr);
 	assert(_Style == nullptr);
 	assert(_Texture == nullptr);
 }
 
 void Graphics::RenderContext::ActivateProgram(void)
 {
+	assert(_Program == nullptr);
 	assert(_Engine != nullptr);
 	
 	auto ShadingManager(_Engine->GetShadingManager());
 	
-	assert(_Style != nullptr);
-	assert(_Program == nullptr);
-	_Program = ShadingManager->GetProgram(_Style->GetProgramIdentifier());
+	assert(ShadingManager != nullptr);
+	if(_ProgramIdentifier != nullptr)
+	{
+		_Program = ShadingManager->GetProgram(*_ProgramIdentifier);
+	}
+	else
+	{
+		assert(_Style != nullptr);
+		_Program = ShadingManager->GetProgram(_Style->GetProgramIdentifier());
+	}
 	assert(_Program != nullptr);
 	_Program->_Activate();
 	
@@ -76,9 +89,16 @@ void Graphics::RenderContext::ActivateProgram(void)
 		{
 		case Graphics::Program::UniformContent::ColorRGBO4F:
 			{
-				assert(_Style != nullptr);
-				assert(_Style->HasDiffuseColor() == true);
-				_Program->_SetUniform(Uniform.first, _Style->GetDiffuseColor());
+				if(_ColorRGBO != nullptr)
+				{
+					_Program->_SetUniform(Uniform.first, *_ColorRGBO);
+				}
+				else
+				{
+					assert(_Style != nullptr);
+					assert(_Style->HasDiffuseColor() == true);
+					_Program->_SetUniform(Uniform.first, _Style->GetDiffuseColor());
+				}
 				
 				break;
 			}
@@ -237,6 +257,12 @@ void Graphics::RenderContext::SetClipping(float Left, float Top, float Bottom, f
 	_Clipping = new Vector4f(Left, Top, Bottom, Right);
 }
 
+void Graphics::RenderContext::SetColorRGBO(const Graphics::ColorRGBO & Color)
+{
+	assert(_ColorRGBO == nullptr);
+	_ColorRGBO = new Graphics::ColorRGBO(Color);
+}
+
 void Graphics::RenderContext::SetEngine(Graphics::Engine * Engine)
 {
 	assert((_Engine == nullptr) || (Engine == nullptr));
@@ -253,6 +279,12 @@ void Graphics::RenderContext::SetNode(Graphics::Node * Node)
 {
 	assert((_Node == nullptr) || (Node == nullptr));
 	_Node = Node;
+}
+
+void Graphics::RenderContext::SetProgramIdentifier(const std::string & ProgramIdentifier)
+{
+	assert(_ProgramIdentifier == nullptr);
+	_ProgramIdentifier = new std::string(ProgramIdentifier);
 }
 
 void Graphics::RenderContext::SetStyle(Graphics::Style * Style)
@@ -274,4 +306,18 @@ void Graphics::RenderContext::UnsetClipping(void)
 		delete _Clipping;
 		_Clipping = nullptr;
 	}
+}
+
+void Graphics::RenderContext::UnsetColorRGBO(void)
+{
+	assert(_ColorRGBO != nullptr);
+	delete _ColorRGBO;
+	_ColorRGBO = nullptr;
+}
+
+void Graphics::RenderContext::UnsetProgramIdentifier(void)
+{
+	assert(_ProgramIdentifier != nullptr);
+	delete _ProgramIdentifier;
+	_ProgramIdentifier = nullptr;
 }

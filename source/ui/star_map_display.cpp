@@ -254,13 +254,9 @@ void UI::StarMapDisplay::_OnDraw(Graphics::RenderContext * RenderContext)
 			GLVertex2f(Position[0] + SystemSize * 0.866f, Position[1] - SystemSize * 0.5f);
 			GLEnd();
 			assert(ExploredSystem->GetAspectName() != nullptr);
-			
-			auto Style{new Graphics::Style()};
-			
-			RenderContext->SetStyle(Style);
-			Graphics::Drawing::DrawTextWithoutClippingRightHanded(RenderContext, Position[0] - _CameraWorldPosition[0], Position[1] - _CameraWorldPosition[1] - SystemSize * 1.1f, 12.0f / _Scale, ExploredSystem->GetAspectName()->GetName(), Graphics::ColorRGBO(1.0f, 1.0f, 1.0f, 1.0f));
-			RenderContext->SetStyle(nullptr);
-			delete Style;
+			RenderContext->SetColorRGBO(Graphics::ColorRGBO(1.0f, 1.0f, 1.0f, 1.0f));
+			Graphics::Drawing::DrawTextWithoutClippingRightHanded(RenderContext, Position[0] - _CameraWorldPosition[0], Position[1] - _CameraWorldPosition[1] - SystemSize * 1.1f, 12.0f / _Scale, ExploredSystem->GetAspectName()->GetName());
+			RenderContext->UnsetColorRGBO();
 		}
 	}
 }
