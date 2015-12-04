@@ -253,7 +253,7 @@ void Graphics::RenderContext::SetCamera(Graphics::Camera * Camera)
 
 void Graphics::RenderContext::SetClipping(float Left, float Top, float Bottom, float Right)
 {
-	UnsetClipping();
+	assert(_Clipping == nullptr);
 	_Clipping = new Vector4f(Left, Top, Bottom, Right);
 }
 
@@ -301,11 +301,9 @@ void Graphics::RenderContext::SetTexture(const Graphics::Texture * Texture)
 
 void Graphics::RenderContext::UnsetClipping(void)
 {
-	if(_Clipping != nullptr)
-	{
-		delete _Clipping;
-		_Clipping = nullptr;
-	}
+	assert(_Clipping != nullptr);
+	delete _Clipping;
+	_Clipping = nullptr;
 }
 
 void Graphics::RenderContext::UnsetColorRGBO(void)

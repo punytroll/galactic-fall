@@ -392,6 +392,7 @@ void UI::Widget::_PushClippingRectangle(Graphics::RenderContext * RenderContext,
 		Top = std::max(std::get<1>(TopClippingRectangle), Top);
 		Bottom = std::min(std::get<2>(TopClippingRectangle), Bottom);
 		Right = std::min(std::get<3>(TopClippingRectangle), Right);
+		RenderContext->UnsetClipping();
 	}
 	_ClippingRectangles.push(std::make_tuple(Left, Top, Bottom, Right));
 	RenderContext->SetClipping(Left, Top, Bottom, Right);
