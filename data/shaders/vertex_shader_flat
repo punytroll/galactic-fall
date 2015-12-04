@@ -1,0 +1,14 @@
+#version 330
+
+uniform mat4 in_WorldToMonitorMatrix;
+
+layout (location = 0) in vec2 in_WorldPosition;
+layout (location = 1) in vec4 in_Color;
+
+out vec4 pass_Color;
+
+void main()
+{
+	pass_Color = in_Color;
+    gl_Position = in_WorldToMonitorMatrix * vec4(in_WorldPosition, 0.0f, 1.0f);
+}

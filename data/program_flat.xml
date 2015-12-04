@@ -1,0 +1,7 @@
+<shader-program>
+	<identifier>flat</identifier>
+	<shaders>
+		<shader-identifier>vertex_shader_flat</shader-identifier>
+		<shader-identifier>fragment_shader_flat</shader-identifier>
+	</shaders>
+</shader-program>

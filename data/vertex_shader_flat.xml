@@ -1,0 +1,4 @@
+<vertex-shader>
+	<identifier>vertex_shader_flat</identifier>
+	<source from-file="shaders/vertex_shader_flat"/>
+</vertex-shader>

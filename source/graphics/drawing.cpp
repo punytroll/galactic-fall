@@ -19,6 +19,7 @@
 
 #include <algebra/vector2f.h>
 
+#include "color_rgbo.h"
 #include "engine.h"
 #include "drawing.h"
 #include "gl.h"
@@ -66,6 +67,47 @@ void Graphics::Drawing::DrawBox(Graphics::RenderContext * RenderContext, float L
 	GLDrawArrays(GL_TRIANGLE_FAN, 0, NumberOfVertices);
 	GLBindVertexArray(0);
 	GLDeleteBuffers(1, &VertexBuffer);
+	GLDeleteVertexArrays(1, &VertexArray);
+}
+
+void Graphics::Drawing::DrawPoints(Graphics::RenderContext * RenderContext, const std::vector< Vector2f > & Positions, const std::vector< Graphics::ColorRGBO > & Colors)
+{
+	GLuint VertexArray{0};
+	
+	GLGenVertexArrays(1, &VertexArray);
+	GLBindVertexArray(VertexArray);
+	
+	auto NumberOfVertices{static_cast< GLsizei >(Positions.size())};
+	float VertexData[2 * NumberOfVertices];
+	float ColorData[4 * NumberOfVertices];
+	
+	for(auto Index = 0u; Index < Positions.size(); ++Index)
+	{
+		VertexData[Index * 2 + 0] = Positions[Index][0];
+		VertexData[Index * 2 + 1] = Positions[Index][1];
+		ColorData[Index * 4 + 0] = Colors[Index].GetRed();
+		ColorData[Index * 4 + 1] = Colors[Index].GetGreen();
+		ColorData[Index * 4 + 2] = Colors[Index].GetBlue();
+		ColorData[Index * 4 + 3] = Colors[Index].GetOpacity();
+	}
+	
+	GLuint Buffers[2];
+	
+	GLGenBuffers(2, Buffers);
+	GLBindBuffer(GL_ARRAY_BUFFER, Buffers[0]);
+	GLBufferData(GL_ARRAY_BUFFER, 2 * NumberOfVertices * sizeof(GLfloat), VertexData, GL_STREAM_DRAW);
+	GLVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
+	GLEnableVertexAttribArray(0);
+	GLBindBuffer(GL_ARRAY_BUFFER, Buffers[1]);
+	GLBufferData(GL_ARRAY_BUFFER, 4 * NumberOfVertices * sizeof(GLfloat), ColorData, GL_STREAM_DRAW);
+	GLVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, 0);
+	GLEnableVertexAttribArray(1);
+	assert(RenderContext != nullptr);
+	RenderContext->ActivateProgram();
+	GLDrawArrays(GL_POINTS, 0, NumberOfVertices);
+	RenderContext->DeactivateProgram();
+	GLBindVertexArray(0);
+	GLDeleteBuffers(2, Buffers);
 	GLDeleteVertexArrays(1, &VertexArray);
 }
 
