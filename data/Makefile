@@ -37,6 +37,7 @@ all_data = \
 	.data/commodity_class_medical_supplies.data \
 	.data/commodity_class_metal.data \
 	.data/fragment_shader_default.data \
+	.data/fragment_shader_flat.data \
 	.data/fragment_shader_font.data \
 	.data/fragment_shader_no_lighting.data \
 	.data/fragment_shader_particle.data \
@@ -87,6 +88,7 @@ all_data = \
 	.data/model_shuttle.data \
 	.data/model_transporter.data \
 	.data/program_default.data \
+	.data/program_flat.data \
 	.data/program_font.data \
 	.data/program_font_without_clipping.data \
 	.data/program_no_lighting.data \
@@ -110,6 +112,7 @@ all_data = \
 	.data/texture_particle.data \
 	.data/turret_class_light_laser.data \
 	.data/vertex_shader_default.data \
+	.data/vertex_shader_flat.data \
 	.data/vertex_shader_font.data \
 	.data/vertex_shader_font_without_clipping.data \
 	.data/vertex_shader_no_lighting.data \
@@ -252,6 +255,8 @@ data.arx: $(data_arx) $(arxtouch_dependencies) $(arxadd_dependencies)
 	@echo "\n\nAdding shaders ...\n"
 	$(command_arxadd) $@ --name="Default Fragment Shader" --type=13 --sub-type=1 --relation="/Shaders::child" --data-file=.data/fragment_shader_default.data
 	$(command_arxadd) $@ --name="Default Vertex Shader" --type=13 --sub-type=0 --relation="/Shaders::child" --data-file=.data/vertex_shader_default.data
+	$(command_arxadd) $@ --name="Flat Fragment Shader" --type=13 --sub-type=1 --relation="/Shaders::child" --data-file=.data/fragment_shader_flat.data
+	$(command_arxadd) $@ --name="Flat Vertex Shader" --type=13 --sub-type=0 --relation="/Shaders::child" --data-file=.data/vertex_shader_flat.data
 	$(command_arxadd) $@ --name="Font Fragment Shader" --type=13 --sub-type=1 --relation="/Shaders::child" --data-file=.data/fragment_shader_font.data
 	$(command_arxadd) $@ --name="Font Vertex Shader" --type=13 --sub-type=0 --relation="/Shaders::child" --data-file=.data/vertex_shader_font.data
 	$(command_arxadd) $@ --name="Font Without Clipping Vertex Shader" --type=13 --sub-type=0 --relation="/Shaders::child" --data-file=.data/vertex_shader_font_without_clipping.data
@@ -265,6 +270,7 @@ data.arx: $(data_arx) $(arxtouch_dependencies) $(arxadd_dependencies)
 	$(command_arxadd) $@ --name="Widget Vertex Shader" --type=13 --sub-type=0 --relation="/Shaders::child" --data-file=.data/vertex_shader_widget.data
 	@echo "\n\nAdding programs ...\n"
 	$(command_arxadd) $@ --name="Default Program" --type=14 --sub-type=0 --relation="/Programs::child" --data-file=.data/program_default.data
+	$(command_arxadd) $@ --name="Flat Program" --type=14 --sub-type=0 --relation="/Programs::child" --data-file=.data/program_flat.data
 	$(command_arxadd) $@ --name="Font Program" --type=14 --sub-type=0 --relation="/Programs::child" --data-file=.data/program_font.data
 	$(command_arxadd) $@ --name="Font Without Clipping Program" --type=14 --sub-type=0 --relation="/Programs::child" --data-file=.data/program_font_without_clipping.data
 	$(command_arxadd) $@ --name="No Lighting Program" --type=14 --sub-type=0 --relation="/Programs::child" --data-file=.data/program_no_lighting.data
@@ -316,6 +322,8 @@ meshes-all-recursive:
 
 .data/fragment_shader_default.data: shaders/fragment_shader_default
 
+.data/fragment_shader_flat.data: shaders/fragment_shader_flat
+
 .data/fragment_shader_font.data: shaders/fragment_shader_font
 
 .data/fragment_shader_no_lighting.data: shaders/fragment_shader_no_lighting
@@ -333,6 +341,8 @@ meshes-all-recursive:
 .data/scenario_sol_spectator.data: savegame_sol_spectator.xml
 
 .data/vertex_shader_default.data: shaders/vertex_shader_default
+
+.data/vertex_shader_flat.data: shaders/vertex_shader_flat
 
 .data/vertex_shader_font.data: shaders/vertex_shader_font
 

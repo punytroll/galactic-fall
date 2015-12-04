@@ -25,10 +25,13 @@
 #include "../graphics/callback_node.h"
 #include "../graphics/camera.h"
 #include "../graphics/color_rgbo.h"
+#include "../graphics/drawing.h"
 #include "../graphics/engine.h"
 #include "../graphics/gl.h"
 #include "../graphics/orthogonal_2d_projection.h"
+#include "../graphics/render_context.h"
 #include "../graphics/scene.h"
+#include "../graphics/style.h"
 #include "../graphics/texture.h"
 #include "../graphics/texture_manager.h"
 #include "../graphics/texture_render_target.h"
@@ -209,45 +212,54 @@ void UI::MiniMapDisplay::_OnDraw(Graphics::RenderContext * RenderContext)
 		auto System{_Character->GetSystem()};
 		
 		assert(System != nullptr);
-		GLBegin(GL_POINTS);
-		GLColor3f(0.8f, 0.8f, 0.8f);
+		
+		std::vector< Vector2f > Positions;
+		std::vector< Graphics::ColorRGBO > Colors;
+		
 		for(auto Planet : System->GetPlanets())
 		{
+			Positions.push_back(Vector2f(Planet->GetAspectPosition()->GetPosition()[0], Planet->GetAspectPosition()->GetPosition()[1]));
 			if(Planet == CharacterShip->GetTarget())
 			{
-				GLColor3f(0.2f, 1.0f, 0.0f);
+				Colors.push_back(Graphics::ColorRGBO(0.2f, 1.0f, 0.0f, 1.0f));
 			}
-			GLVertex2f(Planet->GetAspectPosition()->GetPosition()[0], Planet->GetAspectPosition()->GetPosition()[1]);
-			if(Planet == CharacterShip->GetTarget())
+			else
 			{
-				GLColor3f(0.8f, 0.8f, 0.8f);
+				Colors.push_back(Graphics::ColorRGBO(0.8f, 0.8f, 0.8f, 1.0f));
 			}
 		}
 		for(auto Ship : System->GetShips())
 		{
+			Positions.push_back(Vector2f(Ship->GetAspectPosition()->GetPosition()[0], Ship->GetAspectPosition()->GetPosition()[1]));
 			if(Ship == CharacterShip->GetTarget())
 			{
-				GLColor3f(0.2f, 1.0f, 0.0f);
+				Colors.push_back(Graphics::ColorRGBO(0.2f, 1.0f, 0.0f, 1.0f));
 			}
-			GLVertex2f(Ship->GetAspectPosition()->GetPosition()[0], Ship->GetAspectPosition()->GetPosition()[1]);
-			if(Ship == CharacterShip->GetTarget())
+			else
 			{
-				GLColor3f(0.8f, 0.8f, 0.8f);
+				Colors.push_back(Graphics::ColorRGBO(0.8f, 0.8f, 0.8f, 1.0f));
 			}
 		}
 		for(auto Commodity : System->GetCommodities())
 		{
+			Positions.push_back(Vector2f(Commodity->GetAspectPosition()->GetPosition()[0], Commodity->GetAspectPosition()->GetPosition()[1]));
 			if(Commodity == CharacterShip->GetTarget())
 			{
-				GLColor3f(0.2f, 1.0f, 0.0f);
+				Colors.push_back(Graphics::ColorRGBO(0.2f, 1.0f, 0.0f, 1.0f));
 			}
-			GLVertex2f(Commodity->GetAspectPosition()->GetPosition()[0], Commodity->GetAspectPosition()->GetPosition()[1]);
-			if(Commodity == CharacterShip->GetTarget())
+			else
 			{
-				GLColor3f(0.8f, 0.8f, 0.8f);
+				Colors.push_back(Graphics::ColorRGBO(0.8f, 0.8f, 0.8f, 1.0f));
 			}
 		}
-		GLEnd();
+		
+		auto Style{new Graphics::Style()};
+		
+		Style->SetProgramIdentifier("flat");
+		RenderContext->SetStyle(Style);
+		Graphics::Drawing::DrawPoints(RenderContext, Positions, Colors);
+		RenderContext->SetStyle(nullptr);
+		delete Style;
 	}
 }
 
