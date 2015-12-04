@@ -2,7 +2,7 @@
 
 uniform mat4 in_ModelToMonitorMatrix;
 
-layout(location = 0) in vec3 in_ModelPosition;
+layout (location = 0) in vec3 in_ModelPosition;
 
 void main()
 {
