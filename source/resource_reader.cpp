@@ -125,7 +125,7 @@ static Arxx::Item * Resolve(Arxx::Reference & Reference)
 	return Item;
 }
 
-ResourceReader::ResourceReader(const std::string & DataDirectoryPath) :
+ResourceReader::ResourceReader(void) :
 	_Archive(nullptr)
 {
 }

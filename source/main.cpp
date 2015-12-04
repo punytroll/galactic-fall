@@ -3367,35 +3367,35 @@ int main(int argc, char ** argv)
 	std::string LoadSavegameFileName;
 	std::string DataFileName("data/data.arx");
 	
-	for(std::vector< std::string >::size_type Index = 0; Index < Arguments.size(); ++Index)
+	for(auto Argument : Arguments)
 	{
-		if(Arguments[Index].substr(0, 6) == "--load")
+		if(Argument.substr(0, 7) == "--load=")
 		{
-			if(Arguments[Index].length() > 7)
+			if(Argument.length() > 7)
 			{
-				LoadSavegameFileName = Arguments[Index].substr(7);
+				LoadSavegameFileName = Argument.substr(7);
 			}
 		}
-		else if(Arguments[Index].substr(0, 6) == "--data")
+		else if(Argument.substr(0, 7) == "--data=")
 		{
-			if(Arguments[Index].length() > 7)
+			if(Argument.length() > 7)
 			{
-				DataFileName = Arguments[Index].substr(7);
+				DataFileName = Argument.substr(7);
 			}
 		}
-		else if(Arguments[Index] == "--echo-events")
+		else if(Argument == "--echo-events")
 		{
 			g_EchoEvents = true;
 		}
-		else if(Arguments[Index] == "--echo-resizes")
+		else if(Argument == "--echo-resizes")
 		{
 			g_EchoResizes = true;
 		}
 	}
 	
 	// try loading the game data archive
-	ON_DEBUG(std::cout << "Loading game archive." << std::endl);
-	g_ResourceReader = new ResourceReader(DataFileName.substr(0, DataFileName.rfind('/')));
+	ON_DEBUG(std::cout << "Loading game archive \"" << DataFileName << "\"." << std::endl);
+	g_ResourceReader = new ResourceReader();
 	if(g_ResourceReader->LoadArchive(DataFileName) == false)
 	{
 		return 1;

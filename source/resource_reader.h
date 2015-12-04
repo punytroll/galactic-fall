@@ -50,7 +50,7 @@ class WeaponClass;
 class ResourceReader
 {
 public:
-	ResourceReader(const std::string & DataDirectoryPath);
+	ResourceReader(void);
 	~ResourceReader(void);
 	bool LoadArchive(const std::string & Path);
 	void ReadAssetClasses(ClassManager< AssetClass > * AssetClassManager);
