@@ -4,8 +4,8 @@ uniform mat4 in_WorldToMonitorMatrix;
 uniform mat4 in_ModelToWorldMatrix;
 uniform mat3 in_ModelToWorldNormalMatrix;
 
-layout(location = 0) in vec3 in_ModelPosition;
-layout(location = 1) in vec3 in_ModelNormal;
+layout (location = 0) in vec3 in_ModelPosition;
+layout (location = 1) in vec3 in_ModelNormal;
 
 out vec3 pass_WorldPosition;
 out vec3 pass_WorldNormal;
