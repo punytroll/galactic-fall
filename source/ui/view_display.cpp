@@ -21,7 +21,6 @@
 
 #include "../globals.h"
 #include "../graphics/drawing.h"
-#include "../graphics/gl.h"
 #include "../graphics/texture.h"
 #include "../graphics/texture_render_target.h"
 #include "../graphics/view.h"

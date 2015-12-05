@@ -19,8 +19,6 @@
 
 #include <map>
 
-#include <GL/gl.h>
-
 #include "../globals.h"
 #include "../graphics/color_rgbo.h"
 #include "../object_aspect_name.h"
