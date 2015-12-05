@@ -20,7 +20,6 @@
 #include "../graphics/color_rgbo.h"
 #include "../graphics/drawing.h"
 #include "../graphics/render_context.h"
-#include "../graphics/style.h"
 #include "border.h"
 
 UI::Border::Border(Widget * SupWidget) :
@@ -42,9 +41,8 @@ void UI::Border::Draw(Graphics::RenderContext * RenderContext)
 	if(_Color != nullptr)
 	{
 		assert(RenderContext != nullptr);
-		assert(RenderContext->GetStyle() != nullptr);
-		RenderContext->GetStyle()->SetDiffuseColor(*_Color);
-		RenderContext->GetStyle()->SetProgramIdentifier("widget");
+		RenderContext->SetColorRGBO(*_Color);
+		RenderContext->SetProgramIdentifier("widget");
 		RenderContext->ActivateProgram();
 		
 		auto GlobalPosition{GetGlobalPosition()};
@@ -54,6 +52,8 @@ void UI::Border::Draw(Graphics::RenderContext * RenderContext)
 		Graphics::Drawing::DrawBox(RenderContext, GlobalPosition[0], GlobalPosition[1] + GetSize()[1] - _Width, GlobalPosition[1] + GetSize()[1], GlobalPosition[0] + GetSize()[0]);
 		Graphics::Drawing::DrawBox(RenderContext, GlobalPosition[0] + GetSize()[0] - _Width, GlobalPosition[1], GlobalPosition[1] + GetSize()[1], GlobalPosition[0] + GetSize()[0]);
 		RenderContext->DeactivateProgram();
+		RenderContext->UnsetProgramIdentifier();
+		RenderContext->UnsetColorRGBO();
 	}
 }
 

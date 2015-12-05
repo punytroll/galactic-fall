@@ -22,7 +22,6 @@
 #include "../graphics/color_rgbo.h"
 #include "../graphics/drawing.h"
 #include "../graphics/render_context.h"
-#include "../graphics/style.h"
 #include "label.h"
 
 UI::Label::Label(Widget * SupWidget, const std::string & Text) :

@@ -31,7 +31,6 @@
 #include "../graphics/orthogonal_2d_projection.h"
 #include "../graphics/render_context.h"
 #include "../graphics/scene.h"
-#include "../graphics/style.h"
 #include "../graphics/texture.h"
 #include "../graphics/texture_render_target.h"
 #include "../graphics/view.h"

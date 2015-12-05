@@ -23,7 +23,6 @@
 
 #include "../graphics/gl.h"
 #include "../graphics/render_context.h"
-#include "../graphics/style.h"
 #include "key_event.h"
 #include "mouse_button_event.h"
 #include "mouse_move_event.h"
@@ -87,18 +86,12 @@ void UI::UserInterface::Draw(Graphics::RenderContext * RenderContext) const
 	GLEnable(GL_CLIP_PLANE1);
 	GLEnable(GL_CLIP_PLANE2);
 	GLEnable(GL_CLIP_PLANE3);
-	
-	auto Style{new Graphics::Style()};
-	
-	RenderContext->SetStyle(Style);
 	if((_RootWidget != nullptr) && (_RootWidget->IsVisible() == true))
 	{
 		UI::Widget::_PushClippingRectangle(RenderContext, _RootWidget->_Position[0], _RootWidget->_Position[1], _RootWidget->_Position[1] + _RootWidget->_Size[1], _RootWidget->_Position[0] + _RootWidget->_Size[0]);
 		_RootWidget->Draw(RenderContext);
 		UI::Widget::_PopClippingRectangle(RenderContext);
 	}
-	RenderContext->SetStyle(nullptr);
-	delete Style;
 	GLDisable(GL_CLIP_PLANE0);
 	GLDisable(GL_CLIP_PLANE1);
 	GLDisable(GL_CLIP_PLANE2);

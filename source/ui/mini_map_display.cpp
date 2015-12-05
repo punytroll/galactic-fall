@@ -31,7 +31,6 @@
 #include "../graphics/orthogonal_2d_projection.h"
 #include "../graphics/render_context.h"
 #include "../graphics/scene.h"
-#include "../graphics/style.h"
 #include "../graphics/texture.h"
 #include "../graphics/texture_manager.h"
 #include "../graphics/texture_render_target.h"
@@ -252,14 +251,9 @@ void UI::MiniMapDisplay::_OnDraw(Graphics::RenderContext * RenderContext)
 				Colors.push_back(Graphics::ColorRGBO(0.8f, 0.8f, 0.8f, 1.0f));
 			}
 		}
-		
-		auto Style{new Graphics::Style()};
-		
-		Style->SetProgramIdentifier("flat");
-		RenderContext->SetStyle(Style);
+		RenderContext->SetProgramIdentifier("flat");
 		Graphics::Drawing::DrawPoints(RenderContext, Positions, Colors);
-		RenderContext->SetStyle(nullptr);
-		delete Style;
+		RenderContext->UnsetProgramIdentifier();
 	}
 }
 

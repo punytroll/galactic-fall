@@ -25,7 +25,6 @@
 #include "../graphics/color_rgbo.h"
 #include "../graphics/drawing.h"
 #include "../graphics/render_context.h"
-#include "../graphics/style.h"
 #include "../math.h"
 #include "event.h"
 #include "sub_widget_event.h"
@@ -75,12 +74,13 @@ void UI::Widget::Draw(Graphics::RenderContext * RenderContext)
 	if(Color != nullptr)
 	{
 		assert(RenderContext != nullptr);
-		assert(RenderContext->GetStyle() != nullptr);
-		RenderContext->GetStyle()->SetDiffuseColor(*Color);
-		RenderContext->GetStyle()->SetProgramIdentifier("widget");
+		RenderContext->SetColorRGBO(*Color);
+		RenderContext->SetProgramIdentifier("widget");
 		RenderContext->ActivateProgram();
 		Graphics::Drawing::DrawBoxFromPositionAndSize(RenderContext, GlobalPosition, _Size);
 		RenderContext->DeactivateProgram();
+		RenderContext->UnsetProgramIdentifier();
+		RenderContext->UnsetColorRGBO();
 	}
 	if(_SubWidgets.empty() == false)
 	{
