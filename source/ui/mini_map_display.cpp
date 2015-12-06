@@ -27,7 +27,6 @@
 #include "../graphics/color_rgbo.h"
 #include "../graphics/drawing.h"
 #include "../graphics/engine.h"
-#include "../graphics/gl.h"
 #include "../graphics/orthogonal_2d_projection.h"
 #include "../graphics/render_context.h"
 #include "../graphics/scene.h"

@@ -2954,21 +2954,16 @@ void InitializeOpenGL(void)
 	ON_DEBUG(std::cout << "Loading OpenGL functions." << std::endl);
 	LoadOpenGLFunction(glActiveTexture);
 	LoadOpenGLFunction(glAttachShader);
-	LoadOpenGLFunction(glBegin);
 	LoadOpenGLFunction(glBindBuffer);
 	LoadOpenGLFunction(glBindFramebuffer);
 	LoadOpenGLFunction(glBindRenderbuffer);
 	LoadOpenGLFunction(glBindTexture);
 	LoadOpenGLFunction(glBindVertexArray);
-	LoadOpenGLFunction(glBitmap);
 	LoadOpenGLFunction(glBlendFunc);
 	LoadOpenGLFunction(glBufferData);
 	LoadOpenGLFunction(glCheckFramebufferStatus);
 	LoadOpenGLFunction(glClear);
 	LoadOpenGLFunction(glClearColor);
-	LoadOpenGLFunction(glColor3f);
-	LoadOpenGLFunction(glColor4f);
-	LoadOpenGLFunction(glColor4fv);
 	LoadOpenGLFunction(glCompileShader);
 	LoadOpenGLFunction(glCreateProgram);
 	LoadOpenGLFunction(glCreateShader);
@@ -2984,8 +2979,6 @@ void InitializeOpenGL(void)
 	LoadOpenGLFunction(glDrawElements);
 	LoadOpenGLFunction(glEnable);
 	LoadOpenGLFunction(glEnableVertexAttribArray);
-	LoadOpenGLFunction(glEnd);
-	LoadOpenGLFunction(glEndList);
 	LoadOpenGLFunction(glFramebufferRenderbuffer);
 	LoadOpenGLFunction(glFramebufferTexture);
 	LoadOpenGLFunction(glGenBuffers);
@@ -3003,8 +2996,6 @@ void InitializeOpenGL(void)
 	LoadOpenGLFunction(glGetString);
 	LoadOpenGLFunction(glGetUniformLocation);
 	LoadOpenGLFunction(glLinkProgram);
-	LoadOpenGLFunction(glLoadMatrixf);
-	LoadOpenGLFunction(glMatrixMode);
 	LoadOpenGLFunction(glPixelStorei);
 	LoadOpenGLFunction(glPopAttrib);
 	LoadOpenGLFunction(glPrimitiveRestartIndex);
@@ -3022,10 +3013,6 @@ void InitializeOpenGL(void)
 	LoadOpenGLFunction(glUniformMatrix3fv);
 	LoadOpenGLFunction(glUniformMatrix4fv);
 	LoadOpenGLFunction(glUseProgram);
-	LoadOpenGLFunction(glVertex2f);
-	LoadOpenGLFunction(glVertex2fv);
-	LoadOpenGLFunction(glVertex3f);
-	LoadOpenGLFunction(glVertex3fv);
 	LoadOpenGLFunction(glVertexAttribPointer);
 	LoadOpenGLFunction(glViewport);
 	

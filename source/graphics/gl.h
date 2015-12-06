@@ -41,10 +41,6 @@ typedef void (* glAttachShaderFunction)(GLuint program, GLuint shader);
 extern glAttachShaderFunction __glAttachShader;
 #define GLAttachShader(program, shader) { assert(__glAttachShader != nullptr); __glAttachShader(program, shader); CheckGLError; }
 
-typedef void (* glBeginFunction)(GLenum mode);
-extern glBeginFunction __glBegin;
-#define GLBegin(mode) { assert(__glBegin != nullptr); __glBegin(mode); }
-
 typedef void (* glBindBufferFunction)(GLenum target, GLuint buffer);
 extern glBindBufferFunction __glBindBuffer;
 #define GLBindBuffer(target, buffer) { assert(__glBindBuffer != nullptr); __glBindBuffer(target, buffer); CheckGLError; }
@@ -64,10 +60,6 @@ extern glBindTextureFunction __glBindTexture;
 typedef void (* glBindVertexArrayFunction)(GLuint array);
 extern glBindVertexArrayFunction __glBindVertexArray;
 #define GLBindVertexArray(array) { assert(__glBindVertexArray != nullptr); __glBindVertexArray(array); CheckGLError; }
-
-typedef void (* glBitmapFunction)(GLsizei width, GLsizei height, GLfloat xorig, GLfloat yorig, GLfloat xmove, GLfloat ymove, const GLubyte * bitmap);
-extern glBitmapFunction __glBitmap;
-#define GLBitmap(width, height, xorig, yorig, xmove, ymove, bitmap) { assert(__glBitmap != nullptr); __glBitmap(width, height, xorig, yorig, xmove, ymove, bitmap); CheckGLError; }
 
 typedef void (* glBlendFuncFunction)(GLenum sfactor, GLenum dfactor);
 extern glBlendFuncFunction __glBlendFunc;
@@ -101,18 +93,6 @@ extern glClearFunction __glClear;
 typedef void (* glClearColorFunction)(GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha);
 extern glClearColorFunction __glClearColor;
 #define GLClearColor(red, green, blue, alpha) { assert(__glClearColor != nullptr); __glClearColor(red, green, blue, alpha); CheckGLError; }
-
-typedef void (* glColor3fFunction)(GLfloat red, GLfloat green, GLfloat blue);
-extern glColor3fFunction __glColor3f;
-#define GLColor3f(red, green, blue) { assert(__glColor3f != nullptr); __glColor3f(red, green, blue); }
-
-typedef void (* glColor4fFunction)(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha);
-extern glColor4fFunction __glColor4f;
-#define GLColor4f(red, green, blue, alpha) { assert(__glColor4f != nullptr); __glColor4f(red, green, blue, alpha); }
-
-typedef void (* glColor4fvFunction)(const GLfloat * v);
-extern glColor4fvFunction __glColor4fv;
-#define GLColor4fv(v) { assert(__glColor4fv != nullptr); __glColor4fv(v); }
 
 typedef void (* glCompileShaderFunction)(GLuint shader);
 extern glCompileShaderFunction __glCompileShader;
@@ -199,14 +179,6 @@ extern glEnableFunction __glEnable;
 typedef void (* glEnableVertexAttribArrayFunction)(GLuint index);
 extern glEnableVertexAttribArrayFunction __glEnableVertexAttribArray;
 #define GLEnableVertexAttribArray(index) { assert(__glEnableVertexAttribArray != nullptr); __glEnableVertexAttribArray(index); CheckGLError; }
-
-typedef void (* glEndFunction)(void);
-extern glEndFunction __glEnd;
-#define GLEnd() { assert(__glEnd != nullptr); __glEnd(); CheckGLError; }
-
-typedef void (* glEndListFunction)(void);
-extern glEndListFunction __glEndList;
-#define GLEndList() { assert(__glEndList != nullptr); __glEndList(); CheckGLError; }
 
 typedef void (* glFramebufferRenderbufferFunction)(GLenum target, GLenum attachment, GLenum renderbuffertarget, GLuint renderbuffer);
 extern glFramebufferRenderbufferFunction __glFramebufferRenderbuffer;
@@ -315,14 +287,6 @@ typedef void (* glLinkProgramFunction)(GLuint program);
 extern glLinkProgramFunction __glLinkProgram;
 #define GLLinkProgram(program) { assert(__glLinkProgram != nullptr); __glLinkProgram(program); CheckGLError; }
 
-typedef void (* glLoadMatrixfFunction)(const GLfloat * m);
-extern glLoadMatrixfFunction __glLoadMatrixf;
-#define GLLoadMatrixf(m) { assert(__glLoadMatrixf != nullptr); __glLoadMatrixf(m); CheckGLError; }
-
-typedef void (* glMatrixModeFunction)(GLenum mode);
-extern glMatrixModeFunction __glMatrixMode;
-#define GLMatrixMode(mode) { assert(__glMatrixMode != nullptr); __glMatrixMode(mode); CheckGLError; }
-
 typedef void (* glPixelStoreiFunction)(GLenum pname, GLint param);
 extern glPixelStoreiFunction __glPixelStorei;
 #define GLPixelStorei(pname, param) { assert(__glPixelStorei != nullptr); __glPixelStorei(pname, param); CheckGLError; }
@@ -390,22 +354,6 @@ extern glUniformMatrix4fvFunction __glUniformMatrix4fv;
 typedef void (* glUseProgramFunction)(GLuint program);
 extern glUseProgramFunction __glUseProgram;
 #define GLUseProgram(program) { assert(__glUseProgram != nullptr); __glUseProgram(program); CheckGLError; }
-
-typedef void (* glVertex2fFunction)(GLfloat x, GLfloat y);
-extern glVertex2fFunction __glVertex2f;
-#define GLVertex2f(x, y) { assert(__glVertex2f != nullptr); __glVertex2f(x, y); }
-
-typedef void (* glVertex2fvFunction)(const GLfloat * v);
-extern glVertex2fvFunction __glVertex2fv;
-#define GLVertex2fv(v) { assert(__glVertex2fv != nullptr); __glVertex2fv(v); }
-
-typedef void (* glVertex3fFunction)(GLfloat x, GLfloat y, GLfloat z);
-extern glVertex3fFunction __glVertex3f;
-#define GLVertex3f(x, y, z) { assert(__glVertex3f != nullptr); __glVertex3f(x, y, z); }
-
-typedef void (* glVertex3fvFunction)(const GLfloat * v);
-extern glVertex3fvFunction __glVertex3fv;
-#define GLVertex3fv(v) { assert(__glVertex3fv != nullptr); __glVertex3fv(v); }
 
 typedef void (* glVertexAttribPointerFunction)(GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid * pointer);
 extern glVertexAttribPointerFunction __glVertexAttribPointer;
