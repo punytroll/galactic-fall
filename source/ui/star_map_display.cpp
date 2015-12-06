@@ -161,37 +161,25 @@ void UI::StarMapDisplay::_OnDraw(Graphics::RenderContext * RenderContext)
 		
 		auto SystemSize{1.5f};
 		auto & UnexploredSystems{_Character->GetMapKnowledge()->GetUnexploredSystems()};
+		std::vector< Vector2f > CenterPositions;
+		std::vector< Graphics::ColorRGBO > Colors;
 		
 		for(auto UnexploredSystem : UnexploredSystems)
 		{
-			auto Position{UnexploredSystem->GetAspectPosition()->GetPosition()};
-			
+			assert(UnexploredSystem->GetAspectPosition() != nullptr);
+			CenterPositions.push_back(Vector2f(UnexploredSystem->GetAspectPosition()->GetPosition()[0], UnexploredSystem->GetAspectPosition()->GetPosition()[1]));
 			if(UnexploredSystem == _SelectedSystem)
 			{
-				GLColor3f(0.0f, 1.0f, 0.0f);
+				Colors.push_back(Graphics::ColorRGBO(0.0f, 1.0f, 0.0f, 1.0f));
 			}
 			else if(UnexploredSystem == System)
 			{
-				GLColor3f(0.8f, 0.8f, 0.0f);
+				Colors.push_back(Graphics::ColorRGBO(0.8f, 0.8f, 0.0f, 1.0f));
 			}
 			else
 			{
-				GLColor3f(0.5f, 0.5f, 0.5f);
+				Colors.push_back(Graphics::ColorRGBO(0.5f, 0.5f, 0.5f, 1.0f));
 			}
-			GLBegin(GL_LINE_LOOP);
-			GLVertex2f(Position[0] + SystemSize, Position[1]);
-			GLVertex2f(Position[0] + SystemSize * 0.866f, Position[1] + SystemSize * 0.5f);
-			GLVertex2f(Position[0] + SystemSize * 0.5f, Position[1] + SystemSize * 0.866f);
-			GLVertex2f(Position[0], Position[1] + SystemSize);
-			GLVertex2f(Position[0] - SystemSize * 0.5f, Position[1] + SystemSize * 0.866f);
-			GLVertex2f(Position[0] - SystemSize * 0.866f, Position[1] + SystemSize * 0.5f);
-			GLVertex2f(Position[0] - SystemSize, Position[1]);
-			GLVertex2f(Position[0] - SystemSize * 0.866f, Position[1] - SystemSize * 0.5f);
-			GLVertex2f(Position[0] - SystemSize * 0.5f, Position[1] - SystemSize * 0.866f);
-			GLVertex2f(Position[0], Position[1] - SystemSize);
-			GLVertex2f(Position[0] + SystemSize * 0.5f, Position[1] - SystemSize * 0.866f);
-			GLVertex2f(Position[0] + SystemSize * 0.866f, Position[1] - SystemSize * 0.5f);
-			GLEnd();
 		}
 		
 		auto & ExploredSystems{_Character->GetMapKnowledge()->GetExploredSystems()};
@@ -226,37 +214,26 @@ void UI::StarMapDisplay::_OnDraw(Graphics::RenderContext * RenderContext)
 				GLVertex2f(Position[0] + To[0], Position[1] + To[1]);
 				GLEnd();
 			}
+			assert(ExploredSystem->GetAspectPosition() != nullptr);
+			CenterPositions.push_back(Vector2f(ExploredSystem->GetAspectPosition()->GetPosition()[0], ExploredSystem->GetAspectPosition()->GetPosition()[1]));
 			if(ExploredSystem == _SelectedSystem)
 			{
-				GLColor3f(0.0f, 1.0f, 0.0f);
+				Colors.push_back(Graphics::ColorRGBO(0.0f, 1.0f, 0.0f, 1.0f));
 			}
 			else if(ExploredSystem == System)
 			{
-				GLColor3f(0.8f, 0.8f, 0.0f);
+				Colors.push_back(Graphics::ColorRGBO(0.8f, 0.8f, 0.0f, 1.0f));
 			}
 			else
 			{
-				GLColor3f(0.0f, 0.0f, 0.8f);
+				Colors.push_back(Graphics::ColorRGBO(0.0f, 0.0f, 0.8f, 1.0f));
 			}
-			GLBegin(GL_LINE_LOOP);
-			GLVertex2f(Position[0] + SystemSize, Position[1]);
-			GLVertex2f(Position[0] + SystemSize * 0.866f, Position[1] + SystemSize * 0.5f);
-			GLVertex2f(Position[0] + SystemSize * 0.5f, Position[1] + SystemSize * 0.866f);
-			GLVertex2f(Position[0], Position[1] + SystemSize);
-			GLVertex2f(Position[0] - SystemSize * 0.5f, Position[1] + SystemSize * 0.866f);
-			GLVertex2f(Position[0] - SystemSize * 0.866f, Position[1] + SystemSize * 0.5f);
-			GLVertex2f(Position[0] - SystemSize, Position[1]);
-			GLVertex2f(Position[0] - SystemSize * 0.866f, Position[1] - SystemSize * 0.5f);
-			GLVertex2f(Position[0] - SystemSize * 0.5f, Position[1] - SystemSize * 0.866f);
-			GLVertex2f(Position[0], Position[1] - SystemSize);
-			GLVertex2f(Position[0] + SystemSize * 0.5f, Position[1] - SystemSize * 0.866f);
-			GLVertex2f(Position[0] + SystemSize * 0.866f, Position[1] - SystemSize * 0.5f);
-			GLEnd();
 			assert(ExploredSystem->GetAspectName() != nullptr);
 			RenderContext->SetColorRGBO(Graphics::ColorRGBO(1.0f, 1.0f, 1.0f, 1.0f));
 			Graphics::Drawing::DrawTextWithoutClippingRightHanded(RenderContext, Position[0] - _CameraWorldPosition[0], Position[1] - _CameraWorldPosition[1] - SystemSize * 1.1f, 12.0f / _Scale, ExploredSystem->GetAspectName()->GetName());
 			RenderContext->UnsetColorRGBO();
 		}
+		Graphics::Drawing::DrawCircles(RenderContext, CenterPositions, Colors, SystemSize, 4);
 	}
 }
 
