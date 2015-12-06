@@ -66,10 +66,6 @@ void Graphics::View::Render(void)
 	assert(_Camera != nullptr);
 	RenderContext->SetCamera(_Camera);
 	assert(_Camera->GetProjection() != nullptr);
-	GLMatrixMode(GL_PROJECTION);
-	GLLoadMatrixf(_Camera->GetProjection()->GetMatrix().GetPointer());
-	GLMatrixMode(GL_MODELVIEW);
-	GLLoadMatrixf(_Camera->GetSpacialMatrix().Inverted().GetPointer());
 	if(_Scene != nullptr)
 	{
 		_Scene->Update();

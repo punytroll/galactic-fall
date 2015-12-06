@@ -19,12 +19,11 @@
 
 #include <iostream>
 
-#include <GL/gl.h>
-
 #include "commodity.h"
 #include "commodity_class.h"
 #include "globals.h"
 #include "graphics/engine.h"
+#include "graphics/gl.h"
 #include "graphics/mesh_node.h"
 #include "graphics/model.h"
 #include "graphics/model_manager.h"
