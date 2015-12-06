@@ -70,6 +70,114 @@ void Graphics::Drawing::DrawBox(Graphics::RenderContext * RenderContext, float L
 	GLDeleteVertexArrays(1, &VertexArray);
 }
 
+void Graphics::Drawing::DrawCircles(Graphics::RenderContext * RenderContext, const std::vector< Vector2f > & CenterPositions, const std::vector< Graphics::ColorRGBO > & Colors, float Size, std::uint32_t NumberOfVerticesPerQuarter)
+{
+	assert(CenterPositions.size() == Colors.size());
+	
+	float QuarterData[2 * NumberOfVerticesPerQuarter];
+	auto Step{static_cast< float >(M_PI_2 / NumberOfVerticesPerQuarter)};
+	
+	for(auto QuarterIndex = 0u; QuarterIndex < NumberOfVerticesPerQuarter; ++QuarterIndex)
+	{
+		QuarterData[2 * QuarterIndex + 0] = cos(Step * QuarterIndex);
+		QuarterData[2 * QuarterIndex + 1] = sin(Step * QuarterIndex);
+	}
+	
+	const GLsizei NumberOfVertices{static_cast< GLsizei >(CenterPositions.size() * 4 * NumberOfVerticesPerQuarter)};
+	float VertexData[2 * NumberOfVertices];
+	int VertexDataIndex{0};
+	float ColorData[4 * NumberOfVertices];
+	int ColorDataIndex{0};
+	unsigned short Indices[NumberOfVertices + CenterPositions.size() - 1];
+	int IndexIndex{0};
+	int VertexIndex{0};
+	
+	for(auto CircleIndex = 0u; CircleIndex < CenterPositions.size(); ++CircleIndex)
+	{
+		if(CircleIndex > 0)
+		{
+			Indices[IndexIndex++] = 0xFFFF;
+		}
+		for(auto QuarterIndex = 0u; QuarterIndex < NumberOfVerticesPerQuarter; ++QuarterIndex)
+		{
+			Indices[IndexIndex++] = VertexIndex++;
+			VertexData[VertexDataIndex++] = CenterPositions[CircleIndex][0] + Size * QuarterData[2 * QuarterIndex + 0];
+			VertexData[VertexDataIndex++] = CenterPositions[CircleIndex][1] + Size * QuarterData[2 * QuarterIndex + 1];
+			ColorData[ColorDataIndex++] = Colors[CircleIndex].GetRed();
+			ColorData[ColorDataIndex++] = Colors[CircleIndex].GetGreen();
+			ColorData[ColorDataIndex++] = Colors[CircleIndex].GetBlue();
+			ColorData[ColorDataIndex++] = Colors[CircleIndex].GetOpacity();
+		}
+		for(auto QuarterIndex = 0u; QuarterIndex < NumberOfVerticesPerQuarter; ++QuarterIndex)
+		{
+			Indices[IndexIndex++] = VertexIndex++;
+			VertexData[VertexDataIndex++] = CenterPositions[CircleIndex][0] - Size * QuarterData[2 * QuarterIndex + 1];
+			VertexData[VertexDataIndex++] = CenterPositions[CircleIndex][1] + Size * QuarterData[2 * QuarterIndex + 0];
+			ColorData[ColorDataIndex++] = Colors[CircleIndex].GetRed();
+			ColorData[ColorDataIndex++] = Colors[CircleIndex].GetGreen();
+			ColorData[ColorDataIndex++] = Colors[CircleIndex].GetBlue();
+			ColorData[ColorDataIndex++] = Colors[CircleIndex].GetOpacity();
+		}
+		for(auto QuarterIndex = 0u; QuarterIndex < NumberOfVerticesPerQuarter; ++QuarterIndex)
+		{
+			Indices[IndexIndex++] = VertexIndex++;
+			VertexData[VertexDataIndex++] = CenterPositions[CircleIndex][0] - Size * QuarterData[2 * QuarterIndex + 0];
+			VertexData[VertexDataIndex++] = CenterPositions[CircleIndex][1] - Size * QuarterData[2 * QuarterIndex + 1];
+			ColorData[ColorDataIndex++] = Colors[CircleIndex].GetRed();
+			ColorData[ColorDataIndex++] = Colors[CircleIndex].GetGreen();
+			ColorData[ColorDataIndex++] = Colors[CircleIndex].GetBlue();
+			ColorData[ColorDataIndex++] = Colors[CircleIndex].GetOpacity();
+		}
+		for(auto QuarterIndex = 0u; QuarterIndex < NumberOfVerticesPerQuarter; ++QuarterIndex)
+		{
+			Indices[IndexIndex++] = VertexIndex++;
+			VertexData[VertexDataIndex++] = CenterPositions[CircleIndex][0] + Size * QuarterData[2 * QuarterIndex + 1];
+			VertexData[VertexDataIndex++] = CenterPositions[CircleIndex][1] - Size * QuarterData[2 * QuarterIndex + 0];
+			ColorData[ColorDataIndex++] = Colors[CircleIndex].GetRed();
+			ColorData[ColorDataIndex++] = Colors[CircleIndex].GetGreen();
+			ColorData[ColorDataIndex++] = Colors[CircleIndex].GetBlue();
+			ColorData[ColorDataIndex++] = Colors[CircleIndex].GetOpacity();
+		}
+	}
+	assert(VertexDataIndex == 2 * NumberOfVertices);
+	assert(ColorDataIndex == 4 * NumberOfVertices);
+	
+	GLuint VertexArray{0};
+	
+	GLGenVertexArrays(1, &VertexArray);
+	GLBindVertexArray(VertexArray);
+	
+	GLuint Buffers[3];
+	
+	GLGenBuffers(3, Buffers);
+	// index data
+	GLBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Buffers[0]);
+	GLBufferData(GL_ELEMENT_ARRAY_BUFFER, (NumberOfVertices + CenterPositions.size() - 1) * sizeof(unsigned short), Indices, GL_STREAM_DRAW);
+	// vertex data
+	GLBindBuffer(GL_ARRAY_BUFFER, Buffers[1]);
+	GLBufferData(GL_ARRAY_BUFFER, 2 * NumberOfVertices * sizeof(GLfloat), VertexData, GL_STREAM_DRAW);
+	GLVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
+	GLEnableVertexAttribArray(0);
+	// color data
+	GLBindBuffer(GL_ARRAY_BUFFER, Buffers[2]);
+	GLBufferData(GL_ARRAY_BUFFER, 4 * NumberOfVertices * sizeof(GLfloat), ColorData, GL_STREAM_DRAW);
+	GLVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, 0);
+	GLEnableVertexAttribArray(1);
+	// setup
+	GLEnable(GL_PRIMITIVE_RESTART);
+	GLPrimitiveRestartIndex(0xFFFF);
+	assert(RenderContext != nullptr);
+	RenderContext->SetProgramIdentifier("flat");
+	RenderContext->ActivateProgram();
+	GLDrawElements(GL_LINE_LOOP, NumberOfVertices + CenterPositions.size() - 1, GL_UNSIGNED_SHORT, NULL);
+	RenderContext->UnsetProgramIdentifier();
+	RenderContext->DeactivateProgram();
+	GLDisable(GL_PRIMITIVE_RESTART);
+	GLBindVertexArray(0);
+	GLDeleteBuffers(2, Buffers);
+	GLDeleteVertexArrays(1, &VertexArray);
+}
+
 void Graphics::Drawing::DrawPoints(Graphics::RenderContext * RenderContext, const std::vector< Vector2f > & Positions, const std::vector< Graphics::ColorRGBO > & Colors)
 {
 	GLuint VertexArray{0};
