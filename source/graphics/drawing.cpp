@@ -174,6 +174,64 @@ void Graphics::Drawing::DrawCircles(Graphics::RenderContext * RenderContext, con
 	RenderContext->DeactivateProgram();
 	GLDisable(GL_PRIMITIVE_RESTART);
 	GLBindVertexArray(0);
+	GLDeleteBuffers(3, Buffers);
+	GLDeleteVertexArrays(1, &VertexArray);
+}
+
+void Graphics::Drawing::DrawLines(Graphics::RenderContext * RenderContext, const std::vector< std::pair< Vector2f, Vector2f > > & Positions, const std::vector< Graphics::ColorRGBO > & Colors)
+{
+	assert(Positions.size() == Colors.size());
+	
+	const GLsizei NumberOfVertices{static_cast< GLsizei >(2 * Positions.size())};
+	float VertexData[2 * NumberOfVertices];
+	int VertexDataIndex{0};
+	float ColorData[4 * NumberOfVertices];
+	int ColorDataIndex{0};
+	
+	for(auto LineIndex = 0u; LineIndex < Positions.size(); ++LineIndex)
+	{
+		VertexData[VertexDataIndex++] = Positions[LineIndex].first[0];
+		VertexData[VertexDataIndex++] = Positions[LineIndex].first[1];
+		ColorData[ColorDataIndex++] = Colors[LineIndex].GetRed();
+		ColorData[ColorDataIndex++] = Colors[LineIndex].GetGreen();
+		ColorData[ColorDataIndex++] = Colors[LineIndex].GetBlue();
+		ColorData[ColorDataIndex++] = Colors[LineIndex].GetOpacity();
+		VertexData[VertexDataIndex++] = Positions[LineIndex].second[0];
+		VertexData[VertexDataIndex++] = Positions[LineIndex].second[1];
+		ColorData[ColorDataIndex++] = Colors[LineIndex].GetRed();
+		ColorData[ColorDataIndex++] = Colors[LineIndex].GetGreen();
+		ColorData[ColorDataIndex++] = Colors[LineIndex].GetBlue();
+		ColorData[ColorDataIndex++] = Colors[LineIndex].GetOpacity();
+	}
+	assert(VertexDataIndex == 2 * NumberOfVertices);
+	assert(ColorDataIndex == 4 * NumberOfVertices);
+	
+	GLuint VertexArray{0};
+	
+	GLGenVertexArrays(1, &VertexArray);
+	GLBindVertexArray(VertexArray);
+	
+	GLuint Buffers[2];
+	
+	GLGenBuffers(2, Buffers);
+	// vertex data
+	GLBindBuffer(GL_ARRAY_BUFFER, Buffers[0]);
+	GLBufferData(GL_ARRAY_BUFFER, 2 * NumberOfVertices * sizeof(GLfloat), VertexData, GL_STREAM_DRAW);
+	GLVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
+	GLEnableVertexAttribArray(0);
+	// color data
+	GLBindBuffer(GL_ARRAY_BUFFER, Buffers[1]);
+	GLBufferData(GL_ARRAY_BUFFER, 4 * NumberOfVertices * sizeof(GLfloat), ColorData, GL_STREAM_DRAW);
+	GLVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, 0);
+	GLEnableVertexAttribArray(1);
+	// setup
+	assert(RenderContext != nullptr);
+	RenderContext->SetProgramIdentifier("flat");
+	RenderContext->ActivateProgram();
+	GLDrawArrays(GL_LINES, 0, NumberOfVertices);
+	RenderContext->UnsetProgramIdentifier();
+	RenderContext->DeactivateProgram();
+	GLBindVertexArray(0);
 	GLDeleteBuffers(2, Buffers);
 	GLDeleteVertexArrays(1, &VertexArray);
 }
