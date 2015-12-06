@@ -157,7 +157,6 @@ Visualization * VisualizePlanet(Planet * Planet, Graphics::Node * Container)
 	
 	assert(Planet->GetAspectPhysical() != nullptr);
 	Graphics->SetScale(Planet->GetAspectPhysical()->GetRadialSize());
-	Graphics->SetNormalize(true);
 	g_ObjectVisualizations[Graphics] = Planet->GetAspectVisualization();
 	
 	// set as the object's visualization

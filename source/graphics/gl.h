@@ -291,17 +291,9 @@ typedef void (* glPixelStoreiFunction)(GLenum pname, GLint param);
 extern glPixelStoreiFunction __glPixelStorei;
 #define GLPixelStorei(pname, param) { assert(__glPixelStorei != nullptr); __glPixelStorei(pname, param); CheckGLError; }
 
-typedef void (* glPopAttribFunction)(void);
-extern glPopAttribFunction __glPopAttrib;
-#define GLPopAttrib() { assert(__glPopAttrib != nullptr); __glPopAttrib(); CheckGLError; }
-
 typedef void (* glPrimitiveRestartIndexFunction)(GLuint index);
 extern glPrimitiveRestartIndexFunction __glPrimitiveRestartIndex;
 #define GLPrimitiveRestartIndex(index) { assert(__glPrimitiveRestartIndex != nullptr); __glPrimitiveRestartIndex(index); CheckGLError; }
-
-typedef void (* glPushAttribFunction)(GLbitfield mask);
-extern glPushAttribFunction __glPushAttrib;
-#define GLPushAttrib(mask) { assert(__glPushAttrib != nullptr); __glPushAttrib(mask); CheckGLError; };
 
 typedef void (* glReadBufferFunction)(GLenum mode);
 extern glReadBufferFunction __glReadBuffer;

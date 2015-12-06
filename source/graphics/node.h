@@ -53,13 +53,11 @@ namespace Graphics
 		void SetBlendFunction(int SourceFactor, int DestinationFactor);
 		void SetClearColorBuffer(bool ClearColorBuffer);
 		void SetClearDepthBuffer(bool ClearDepthBuffer);
-		void SetNormalize(bool Normalize);
 		void SetOrientation(const Quaternion & Orientation);
 		void SetPosition(const Vector3f & Position);
 		void SetScale(float Scale);
 		void SetUseBlending(bool UseBlending);
 		void SetUseDepthTest(bool UseDepthTest);
-		void SetUse2DTexture(bool Use2DTexture);
 		// modifiers
 		void AddNode(Graphics::Node * Content);
 		virtual void Begin(Graphics::RenderContext * RenderContext);
@@ -78,7 +76,6 @@ namespace Graphics
 		bool _ClearDepthBuffer;
 		Graphics::Node * _Container;
 		std::vector< Graphics::Node * > _Content;
-		bool _Normalize;
 		Quaternion _Orientation;
 		Vector3f _Position;
 		float _Scale;
@@ -86,8 +83,6 @@ namespace Graphics
 		Matrix4f _SpacialMatrix;
 		bool _UseBlending;
 		bool _UseDepthTest;
-		bool _UseLighting;
-		bool _Use2DTexture;
 	};
 	
 	inline Graphics::Node * Node::GetContainer(void)
@@ -146,11 +141,6 @@ namespace Graphics
 		_ClearDepthBuffer = ClearDepthBuffer;
 	}
 	
-	inline void Node::SetNormalize(bool Normalize)
-	{
-		_Normalize = Normalize;
-	}
-	
 	inline void Node::SetOrientation(const Quaternion & Orientation)
 	{
 		_Orientation = Orientation;
@@ -174,11 +164,6 @@ namespace Graphics
 	inline void Node::SetUseDepthTest(bool UseDepthTest)
 	{
 		_UseDepthTest = UseDepthTest;
-	}
-	
-	inline void Node::SetUse2DTexture(bool Use2DTexture)
-	{
-		_Use2DTexture = Use2DTexture;
 	}
 }
 

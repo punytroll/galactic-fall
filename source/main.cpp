@@ -1137,13 +1137,7 @@ void TakeScreenShot(void)
 {
 	GLubyte * ScreenshotData(new GLubyte[static_cast< GLsizei >(g_Width) * static_cast< GLsizei >(g_Height) * 3]);
 	
-	// store the read buffer and change it to the front buffer so we get what we see
-	GLPushAttrib(GL_PIXEL_MODE_BIT);
-	GLReadBuffer(GL_FRONT);
-	// now read the bits
 	GLReadPixels(0, 0, static_cast< GLsizei >(g_Width), static_cast< GLsizei >(g_Height), GL_RGB, GL_UNSIGNED_BYTE, ScreenshotData);
-	// revert the read buffer
-	GLPopAttrib();
 	
 	// the file name with the current datetime in the format YYYYMMDD-HHMMSS
 	std::string FileName(MakeTimeStampedFileName("screenshot", "tex"));
@@ -2928,7 +2922,7 @@ void CreateWindow(void)
 	{
 		GLX_CONTEXT_MAJOR_VERSION_ARB, 3,
 		GLX_CONTEXT_MINOR_VERSION_ARB, 1,
-// 		GLX_CONTEXT_FLAGS_ARB, GLX_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB,
+ 		GLX_CONTEXT_FLAGS_ARB, GLX_CONTEXT_FORWARD_COMPATIBLE_BIT_ARB,
 		None
 	};
 	
@@ -2997,9 +2991,7 @@ void InitializeOpenGL(void)
 	LoadOpenGLFunction(glGetUniformLocation);
 	LoadOpenGLFunction(glLinkProgram);
 	LoadOpenGLFunction(glPixelStorei);
-	LoadOpenGLFunction(glPopAttrib);
 	LoadOpenGLFunction(glPrimitiveRestartIndex);
-	LoadOpenGLFunction(glPushAttrib);
 	LoadOpenGLFunction(glReadBuffer);
 	LoadOpenGLFunction(glReadPixels);
 	LoadOpenGLFunction(glRenderbufferStorage);
