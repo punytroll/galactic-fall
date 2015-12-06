@@ -35,14 +35,12 @@ Graphics::Node::Node(void) :
 	_ClearColorBuffer(false),
 	_ClearDepthBuffer(false),
 	_Container(nullptr),
-	_Normalize(false),
 	_Orientation(Quaternion::CreateIdentity()),
 	_Position(Vector3f::CreateZero()),
 	_Scale(1.0f),
 	_Scene(nullptr),
 	_UseBlending(false),
-	_UseDepthTest(false),
-	_Use2DTexture(false)
+	_UseDepthTest(false)
 {
 }
 
@@ -77,15 +75,6 @@ void Graphics::Node::Begin(Graphics::RenderContext * RenderContext)
 	{
 		GLClear(GL_COLOR_BUFFER_BIT);
 	}
-	GLPushAttrib(GL_ENABLE_BIT | GL_COLOR_BUFFER_BIT);
-	if(_Normalize == true)
-	{
-		GLEnable(GL_NORMALIZE);
-	}
-	else
-	{
-		GLDisable(GL_NORMALIZE);
-	}
 	if(_UseBlending == true)
 	{
 		GLEnable(GL_BLEND);
@@ -101,14 +90,6 @@ void Graphics::Node::Begin(Graphics::RenderContext * RenderContext)
 	else
 	{
 		GLDisable(GL_DEPTH_TEST);
-	}
-	if(_Use2DTexture == true)
-	{
-		GLEnable(GL_TEXTURE_2D);
-	}
-	else
-	{
-		GLDisable(GL_TEXTURE_2D);
 	}
 	GLBlendFunc(_BlendFunctionSourceFactor, _BlendFunctionDestinationFactor);
 }
@@ -141,7 +122,6 @@ void Graphics::Node::Draw(Graphics::RenderContext * RenderContext)
 
 void Graphics::Node::End(Graphics::RenderContext * RenderContext)
 {
-	GLPopAttrib();
 }
 
 void Graphics::Node::_Destroy(Graphics::Node * Node)
