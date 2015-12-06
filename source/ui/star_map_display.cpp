@@ -161,24 +161,27 @@ void UI::StarMapDisplay::_OnDraw(Graphics::RenderContext * RenderContext)
 		
 		auto SystemSize{1.5f};
 		auto & UnexploredSystems{_Character->GetMapKnowledge()->GetUnexploredSystems()};
-		std::vector< Vector2f > CenterPositions;
-		std::vector< Graphics::ColorRGBO > Colors;
+		std::vector< Vector2f > SystemPositions;
+		std::vector< Graphics::ColorRGBO > SystemColors;
+		std::vector< std::pair< Vector2f, Vector2f > > LinkPositions;
+		std::vector< Graphics::ColorRGBO > LinkColors;
 		
 		for(auto UnexploredSystem : UnexploredSystems)
 		{
+			assert(UnexploredSystem != nullptr);
 			assert(UnexploredSystem->GetAspectPosition() != nullptr);
-			CenterPositions.push_back(Vector2f(UnexploredSystem->GetAspectPosition()->GetPosition()[0], UnexploredSystem->GetAspectPosition()->GetPosition()[1]));
+			SystemPositions.push_back(Vector2f(UnexploredSystem->GetAspectPosition()->GetPosition()[0], UnexploredSystem->GetAspectPosition()->GetPosition()[1]));
 			if(UnexploredSystem == _SelectedSystem)
 			{
-				Colors.push_back(Graphics::ColorRGBO(0.0f, 1.0f, 0.0f, 1.0f));
+				SystemColors.push_back(Graphics::ColorRGBO(0.0f, 1.0f, 0.0f, 1.0f));
 			}
 			else if(UnexploredSystem == System)
 			{
-				Colors.push_back(Graphics::ColorRGBO(0.8f, 0.8f, 0.0f, 1.0f));
+				SystemColors.push_back(Graphics::ColorRGBO(0.8f, 0.8f, 0.0f, 1.0f));
 			}
 			else
 			{
-				Colors.push_back(Graphics::ColorRGBO(0.5f, 0.5f, 0.5f, 1.0f));
+				SystemColors.push_back(Graphics::ColorRGBO(0.5f, 0.5f, 0.5f, 1.0f));
 			}
 		}
 		
@@ -188,6 +191,19 @@ void UI::StarMapDisplay::_OnDraw(Graphics::RenderContext * RenderContext)
 		{
 			assert(ExploredSystem != nullptr);
 			assert(ExploredSystem->GetAspectPosition() != nullptr);
+			SystemPositions.push_back(Vector2f(ExploredSystem->GetAspectPosition()->GetPosition()[0], ExploredSystem->GetAspectPosition()->GetPosition()[1]));
+			if(ExploredSystem == _SelectedSystem)
+			{
+				SystemColors.push_back(Graphics::ColorRGBO(0.0f, 1.0f, 0.0f, 1.0f));
+			}
+			else if(ExploredSystem == System)
+			{
+				SystemColors.push_back(Graphics::ColorRGBO(0.8f, 0.8f, 0.0f, 1.0f));
+			}
+			else
+			{
+				SystemColors.push_back(Graphics::ColorRGBO(0.0f, 0.0f, 0.8f, 1.0f));
+			}
 			
 			auto Position{ExploredSystem->GetAspectPosition()->GetPosition()};
 			auto & LinkedSystems{ExploredSystem->GetLinkedSystems()};
@@ -195,45 +211,29 @@ void UI::StarMapDisplay::_OnDraw(Graphics::RenderContext * RenderContext)
 			for(auto LinkedSystem : LinkedSystems)
 			{
 				assert(LinkedSystem != nullptr);
+				assert(LinkedSystem->GetAspectPosition() != nullptr);
+				
+				auto To{LinkedSystem->GetAspectPosition()->GetPosition()};
+				
+				LinkPositions.push_back(std::make_pair(Vector2f(Position[0], Position[1]), Vector2f(To[0], To[1])));
 				if(UnexploredSystems.find(LinkedSystem) == UnexploredSystems.end())
 				{
 					// system already explored so make it blue
-					GLColor3f(0.0f, 0.0f, 0.8f);
+					LinkColors.push_back(Graphics::ColorRGBO(0.0f, 0.0f, 8.0f, 1.0f));
 				}
 				else
 				{
 					// system still unexplored so make it grey
-					GLColor3f(0.5f, 0.5f, 0.5f);
+					LinkColors.push_back(Graphics::ColorRGBO(0.5f, 0.5f, 0.5f, 1.0f));
 				}
-				GLBegin(GL_LINES);
-				GLVertex2f(Position[0], Position[1]);
-				assert(LinkedSystem->GetAspectPosition() != nullptr);
-				
-				auto To{LinkedSystem->GetAspectPosition()->GetPosition() - ExploredSystem->GetAspectPosition()->GetPosition()};
-				
-				GLVertex2f(Position[0] + To[0], Position[1] + To[1]);
-				GLEnd();
-			}
-			assert(ExploredSystem->GetAspectPosition() != nullptr);
-			CenterPositions.push_back(Vector2f(ExploredSystem->GetAspectPosition()->GetPosition()[0], ExploredSystem->GetAspectPosition()->GetPosition()[1]));
-			if(ExploredSystem == _SelectedSystem)
-			{
-				Colors.push_back(Graphics::ColorRGBO(0.0f, 1.0f, 0.0f, 1.0f));
-			}
-			else if(ExploredSystem == System)
-			{
-				Colors.push_back(Graphics::ColorRGBO(0.8f, 0.8f, 0.0f, 1.0f));
-			}
-			else
-			{
-				Colors.push_back(Graphics::ColorRGBO(0.0f, 0.0f, 0.8f, 1.0f));
 			}
 			assert(ExploredSystem->GetAspectName() != nullptr);
 			RenderContext->SetColorRGBO(Graphics::ColorRGBO(1.0f, 1.0f, 1.0f, 1.0f));
 			Graphics::Drawing::DrawTextWithoutClippingRightHanded(RenderContext, Position[0] - _CameraWorldPosition[0], Position[1] - _CameraWorldPosition[1] - SystemSize * 1.1f, 12.0f / _Scale, ExploredSystem->GetAspectName()->GetName());
 			RenderContext->UnsetColorRGBO();
 		}
-		Graphics::Drawing::DrawCircles(RenderContext, CenterPositions, Colors, SystemSize, 4);
+		Graphics::Drawing::DrawLines(RenderContext, LinkPositions, LinkColors);
+		Graphics::Drawing::DrawCircles(RenderContext, SystemPositions, SystemColors, SystemSize, 4);
 	}
 }
 

@@ -37,6 +37,7 @@ namespace Graphics
 		static void DrawBoxFromPositionAndSize(Graphics::RenderContext * RenderContext, const Vector2f & Position, const Vector2f & Size);
 		static void DrawBox(Graphics::RenderContext * RenderContext, float Left, float Top, float Bottom, float Right);
 		static void DrawCircles(Graphics::RenderContext * RenderContext, const std::vector< Vector2f > & CenterPositions, const std::vector< Graphics::ColorRGBO > & Colors, float Size, std::uint32_t NumberOfVerticesPerQuarter);
+		static void DrawLines(Graphics::RenderContext * RenderContext, const std::vector< std::pair< Vector2f, Vector2f > > & Positions, const std::vector< Graphics::ColorRGBO > & Colors);
 		static void DrawPoints(Graphics::RenderContext * RenderContext, const std::vector< Vector2f > & Positions, const std::vector< Graphics::ColorRGBO > & Colors);
 		static void DrawText(Graphics::RenderContext * RenderContext, const Vector2f & Position, const std::string & Text);
 		static void DrawText(Graphics::RenderContext * RenderContext, float Left, float Top, const std::string & Text);
