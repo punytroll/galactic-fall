@@ -1137,6 +1137,7 @@ void TakeScreenShot(void)
 {
 	GLubyte * ScreenshotData(new GLubyte[static_cast< GLsizei >(g_Width) * static_cast< GLsizei >(g_Height) * 3]);
 	
+	GLReadBuffer(GL_FRONT);
 	GLReadPixels(0, 0, static_cast< GLsizei >(g_Width), static_cast< GLsizei >(g_Height), GL_RGB, GL_UNSIGNED_BYTE, ScreenshotData);
 	
 	// the file name with the current datetime in the format YYYYMMDD-HHMMSS
