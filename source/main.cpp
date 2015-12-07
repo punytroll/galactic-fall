@@ -3126,200 +3126,200 @@ void DestroyWindow(void)
 
 void LoadKeyboardLookupTable(const std::list< Settings::KeyBinding > * KeyBindings)
 {
-	assert(KeyBindings != 0);
-	assert(g_KeyboardLookupTable != 0);
-	for(int Index = 0; Index < 128; ++Index)
+	assert(KeyBindings != nullptr);
+	assert(g_KeyboardLookupTable != nullptr);
+	for(auto Index = 0; Index < 128; ++Index)
 	{
-		g_KeyboardLookupTable[Index][0] = 0;
-		g_KeyboardLookupTable[Index][1] = 0;
+		g_KeyboardLookupTable[Index][0] = nullptr;
+		g_KeyboardLookupTable[Index][1] = nullptr;
 	}
-	for(std::list< Settings::KeyBinding >::const_iterator KeyBindingIterator = KeyBindings->begin(); KeyBindingIterator != KeyBindings->end(); ++KeyBindingIterator)
+	for(auto & KeyBinding : (*KeyBindings))
 	{
-		if((KeyBindingIterator->Code >= 0) && (KeyBindingIterator->Code < 128))
+		if((KeyBinding.Code >= 0) && (KeyBinding.Code < 128))
 		{
-			int EventIndex = -1;
+			auto EventIndex{-1};
 			
-			if(KeyBindingIterator->Event == "down")
+			if(KeyBinding.Event == "down")
 			{
 				EventIndex = 0;
 			}
-			else if(KeyBindingIterator->Event == "up")
+			else if(KeyBinding.Event == "up")
 			{
 				EventIndex = 1;
 			}
 			if(EventIndex != -1)
 			{
-				if(KeyBindingIterator->Action == "decrease_field_of_view")
+				if(KeyBinding.Action == "decrease_field_of_view")
 				{
-					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionDecreaseFieldOfView;
+					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionDecreaseFieldOfView;
 				}
-				else if(KeyBindingIterator->Action == "decrease_time_warp")
+				else if(KeyBinding.Action == "decrease_time_warp")
 				{
-					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionDecreaseTimeWarp;
+					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionDecreaseTimeWarp;
 				}
-				else if(KeyBindingIterator->Action == "delete_observed_object")
+				else if(KeyBinding.Action == "delete_observed_object")
 				{
-					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionDeleteObservedObject;
+					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionDeleteObservedObject;
 				}
-				else if(KeyBindingIterator->Action == "disable_accelerate")
+				else if(KeyBinding.Action == "disable_accelerate")
 				{
-					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionDisableAccelerate;
+					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionDisableAccelerate;
 				}
-				else if(KeyBindingIterator->Action == "disable_fire")
+				else if(KeyBinding.Action == "disable_fire")
 				{
-					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionDisableFire;
+					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionDisableFire;
 				}
-				else if(KeyBindingIterator->Action == "disable_turn_left")
+				else if(KeyBinding.Action == "disable_turn_left")
 				{
-					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionDisableTurnLeft;
+					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionDisableTurnLeft;
 				}
-				else if(KeyBindingIterator->Action == "disable_turn_right")
+				else if(KeyBinding.Action == "disable_turn_right")
 				{
-					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionDisableTurnRight;
+					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionDisableTurnRight;
 				}
-				else if(KeyBindingIterator->Action == "dump_object_report")
+				else if(KeyBinding.Action == "dump_object_report")
 				{
-					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionDumpObjectReport;
+					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionDumpObjectReport;
 				}
-				else if(KeyBindingIterator->Action == "enable_accelerate")
+				else if(KeyBinding.Action == "enable_accelerate")
 				{
-					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionEnableAccelerate;
+					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionEnableAccelerate;
 				}
-				else if(KeyBindingIterator->Action == "enable_fire")
+				else if(KeyBinding.Action == "enable_fire")
 				{
-					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionEnableFire;
+					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionEnableFire;
 				}
-				else if(KeyBindingIterator->Action == "enable_turn_left")
+				else if(KeyBinding.Action == "enable_turn_left")
 				{
-					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionEnableTurnLeft;
+					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionEnableTurnLeft;
 				}
-				else if(KeyBindingIterator->Action == "enable_turn_right")
+				else if(KeyBinding.Action == "enable_turn_right")
 				{
-					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionEnableTurnRight;
+					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionEnableTurnRight;
 				}
-				else if(KeyBindingIterator->Action == "increase_field_of_view")
+				else if(KeyBinding.Action == "increase_field_of_view")
 				{
-					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionIncreaseFieldOfView;
+					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionIncreaseFieldOfView;
 				}
-				else if(KeyBindingIterator->Action == "increase_time_warp")
+				else if(KeyBinding.Action == "increase_time_warp")
 				{
-					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionIncreaseTimeWarp;
+					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionIncreaseTimeWarp;
 				}
-				else if(KeyBindingIterator->Action == "jettison_cargo")
+				else if(KeyBinding.Action == "jettison_cargo")
 				{
-					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionJettisonCargo;
+					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionJettisonCargo;
 				}
-				else if(KeyBindingIterator->Action == "jump")
+				else if(KeyBinding.Action == "jump")
 				{
-					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionJump;
+					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionJump;
 				}
-				else if(KeyBindingIterator->Action == "land")
+				else if(KeyBinding.Action == "land")
 				{
-					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionLand;
+					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionLand;
 				}
-				else if(KeyBindingIterator->Action == "observe_next_character")
+				else if(KeyBinding.Action == "observe_next_character")
 				{
-					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionObserveNextCharacter;
+					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionObserveNextCharacter;
 				}
-				else if(KeyBindingIterator->Action == "observe_previous_character")
+				else if(KeyBinding.Action == "observe_previous_character")
 				{
-					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionObservePreviousCharacter;
+					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionObservePreviousCharacter;
 				}
-				else if(KeyBindingIterator->Action == "open_main_menu_window")
+				else if(KeyBinding.Action == "open_main_menu_window")
 				{
-					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionOpenMainMenuWindow;
+					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionOpenMainMenuWindow;
 				}
-				else if(KeyBindingIterator->Action == "open_map_dialog")
+				else if(KeyBinding.Action == "open_map_dialog")
 				{
-					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionOpenMapDialog;
+					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionOpenMapDialog;
 				}
-				else if(KeyBindingIterator->Action == "open_object_information_dialog")
+				else if(KeyBinding.Action == "open_object_information_dialog")
 				{
-					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionOpenObjectInformationDialog;
+					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionOpenObjectInformationDialog;
 				}
-				else if(KeyBindingIterator->Action == "open_outfit_ship_dialog")
+				else if(KeyBinding.Action == "open_outfit_ship_dialog")
 				{
-					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionOpenOutfitShipDialog;
+					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionOpenOutfitShipDialog;
 				}
-				else if(KeyBindingIterator->Action == "purge_game")
+				else if(KeyBinding.Action == "purge_game")
 				{
-					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionPurgeGame;
+					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionPurgeGame;
 				}
-				else if(KeyBindingIterator->Action == "quit_game_and_dump_object_report")
+				else if(KeyBinding.Action == "quit_game_and_dump_object_report")
 				{
-					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionQuitGameAndDumpObjectReport;
+					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionQuitGameAndDumpObjectReport;
 				}
-				else if(KeyBindingIterator->Action == "refuel")
+				else if(KeyBinding.Action == "refuel")
 				{
-					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionRefuel;
+					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionRefuel;
 				}
-				else if(KeyBindingIterator->Action == "reset_camera_position")
+				else if(KeyBinding.Action == "reset_camera_position")
 				{
-					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionResetCameraPosition;
+					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionResetCameraPosition;
 				}
-				else if(KeyBindingIterator->Action == "reset_time_warp")
+				else if(KeyBinding.Action == "reset_time_warp")
 				{
-					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionResetTimeWarp;
+					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionResetTimeWarp;
 				}
-				else if(KeyBindingIterator->Action == "scoop")
+				else if(KeyBinding.Action == "scoop")
 				{
-					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionScoop;
+					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionScoop;
 				}
-				else if(KeyBindingIterator->Action == "spawn_fighter")
+				else if(KeyBinding.Action == "spawn_fighter")
 				{
-					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionSpawnFighter;
+					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionSpawnFighter;
 				}
-				else if(KeyBindingIterator->Action == "take_screen_shot")
+				else if(KeyBinding.Action == "take_screen_shot")
 				{
-					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionTakeScreenShot;
+					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionTakeScreenShot;
 				}
-				else if(KeyBindingIterator->Action == "target_nearest_cargo")
+				else if(KeyBinding.Action == "target_nearest_cargo")
 				{
-					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionTargetNearestCargo;
+					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionTargetNearestCargo;
 				}
-				else if(KeyBindingIterator->Action == "target_next_cargo")
+				else if(KeyBinding.Action == "target_next_cargo")
 				{
-					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionTargetNextCargo;
+					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionTargetNextCargo;
 				}
-				else if(KeyBindingIterator->Action == "target_next_planet")
+				else if(KeyBinding.Action == "target_next_planet")
 				{
-					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionTargetNextPlanet;
+					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionTargetNextPlanet;
 				}
-				else if(KeyBindingIterator->Action == "target_next_ship")
+				else if(KeyBinding.Action == "target_next_ship")
 				{
-					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionTargetNextShip;
+					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionTargetNextShip;
 				}
-				else if(KeyBindingIterator->Action == "target_previous_cargo")
+				else if(KeyBinding.Action == "target_previous_cargo")
 				{
-					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionTargetPreviousCargo;
+					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionTargetPreviousCargo;
 				}
-				else if(KeyBindingIterator->Action == "target_previous_planet")
+				else if(KeyBinding.Action == "target_previous_planet")
 				{
-					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionTargetPreviousPlanet;
+					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionTargetPreviousPlanet;
 				}
-				else if(KeyBindingIterator->Action == "target_previous_ship")
+				else if(KeyBinding.Action == "target_previous_ship")
 				{
-					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionTargetPreviousShip;
+					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionTargetPreviousShip;
 				}
-				else if(KeyBindingIterator->Action == "toggle_first_person_camera_mode")
+				else if(KeyBinding.Action == "toggle_first_person_camera_mode")
 				{
-					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionToggleFirstPersonCameraMode;
+					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionToggleFirstPersonCameraMode;
 				}
-				else if(KeyBindingIterator->Action == "toggle_timing_dialog")
+				else if(KeyBinding.Action == "toggle_timing_dialog")
 				{
-					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionToggleTimingDialog;
+					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionToggleTimingDialog;
 				}
-				else if(KeyBindingIterator->Action == "select_next_linked_system")
+				else if(KeyBinding.Action == "select_next_linked_system")
 				{
-					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionSelectNextLinkedSystem;
+					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionSelectNextLinkedSystem;
 				}
-				else if(KeyBindingIterator->Action == "spawn_random_ship")
+				else if(KeyBinding.Action == "spawn_random_ship")
 				{
-					g_KeyboardLookupTable[KeyBindingIterator->Code][EventIndex] = ActionSpawnRandomShip;
+					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionSpawnRandomShip;
 				}
 				else
 				{
-					throw std::runtime_error("The action '" + KeyBindingIterator->Action + "' is unknown.");
+					throw std::runtime_error("The action '" + KeyBinding.Action + "' is unknown.");
 				}
 			}
 		}
@@ -3328,11 +3328,11 @@ void LoadKeyboardLookupTable(const std::list< Settings::KeyBinding > * KeyBindin
 
 void PrintSettings(void)
 {
-	std::cout << "  - Window Dimensions = " << g_Settings->GetWindowDimensions()->operator[](0) << " x " << g_Settings->GetWindowDimensions()->operator[](1) << std::endl;
+	std::cout << "  - Window Dimensions = " << (*(g_Settings->GetWindowDimensions()))[0] << " x " << (*(g_Settings->GetWindowDimensions()))[1] << std::endl;
 	std::cout << "  - Key Binding Profile =" << std::endl;
-	for(std::list< Settings::KeyBinding >::const_iterator KeyBindingIterator = g_Settings->GetKeyBindings()->begin(); KeyBindingIterator != g_Settings->GetKeyBindings()->end(); ++KeyBindingIterator)
+	for(auto & KeyBinding : *(g_Settings->GetKeyBindings()))
 	{
-		std::cout << "      Code=" << KeyBindingIterator->Code << "  Event=" << KeyBindingIterator->Event << "  Action=" << KeyBindingIterator->Action << std::endl;
+		std::cout << "      Code=" << KeyBinding.Code << "  Event=" << KeyBinding.Event << "  Action=" << KeyBinding.Action << std::endl;
 	}
 }
 
