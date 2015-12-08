@@ -135,7 +135,7 @@ void Graphics::Engine::Initialize(void)
 	LoadOpenGLFunction(glViewport);
 	ON_DEBUG(std::cout << "OpenGL capabilities:" << std::endl);
 	
-	const unsigned char * ShadingLanguageVersion(0);
+	const unsigned char * ShadingLanguageVersion(nullptr);
 	
 	ShadingLanguageVersion = GLGetString(GL_SHADING_LANGUAGE_VERSION);
 	ON_DEBUG(std::cout << "    Shading Language Version: " << ShadingLanguageVersion << std::endl);
