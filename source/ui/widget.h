@@ -67,6 +67,7 @@ namespace UI
 		void SetName(const std::string & Name);
 		// getters
 		const Graphics::ColorRGBO * GetBackgroundColor(void) const;
+		bool GetEnabled(void) const;
 		Widget * GetHoveredWidget(void);
 		const Vector2f & GetPosition(void) const;
 		Vector2f GetGlobalPosition(void) const;
@@ -138,6 +139,11 @@ namespace UI
 		static std::list< Widget * > _DestroyedWidgets;
 		static std::stack< std::tuple< float, float, float, float > > _ClippingRectangles;
 	};
+	
+	inline bool Widget::GetEnabled(void) const
+	{
+		return _Enabled;
+	}
 	
 	inline Widget * Widget::GetHoveredWidget(void)
 	{
