@@ -757,10 +757,6 @@ void UpdateMainViewCamera(void)
 	g_MainView->GetCamera()->SetSpacialMatrix(SpacialMatrix);
 }
 
-void DisplayMainView(void)
-{
-}
-
 void OnMainSceneNodeDestroy(Graphics::Node * Node)
 {
 	InvalidateVisualizationReference(Node);
