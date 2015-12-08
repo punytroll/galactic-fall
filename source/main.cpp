@@ -2944,101 +2944,6 @@ void CreateWindow(void)
 	XFree(Configurations);
 }
 
-void InitializeOpenGL(void)
-{
-	ON_DEBUG(std::cout << "Loading OpenGL functions." << std::endl);
-	LoadOpenGLFunction(glActiveTexture);
-	LoadOpenGLFunction(glAttachShader);
-	LoadOpenGLFunction(glBindBuffer);
-	LoadOpenGLFunction(glBindFramebuffer);
-	LoadOpenGLFunction(glBindRenderbuffer);
-	LoadOpenGLFunction(glBindTexture);
-	LoadOpenGLFunction(glBindVertexArray);
-	LoadOpenGLFunction(glBlendFunc);
-	LoadOpenGLFunction(glBufferData);
-	LoadOpenGLFunction(glCheckFramebufferStatus);
-	LoadOpenGLFunction(glClear);
-	LoadOpenGLFunction(glClearColor);
-	LoadOpenGLFunction(glCompileShader);
-	LoadOpenGLFunction(glCreateProgram);
-	LoadOpenGLFunction(glCreateShader);
-	LoadOpenGLFunction(glDeleteBuffers);
-	LoadOpenGLFunction(glDeleteFramebuffers);
-	LoadOpenGLFunction(glDeleteProgram);
-	LoadOpenGLFunction(glDeleteRenderbuffers);
-	LoadOpenGLFunction(glDeleteShader);
-	LoadOpenGLFunction(glDeleteTextures);
-	LoadOpenGLFunction(glDeleteVertexArrays);
-	LoadOpenGLFunction(glDisable);
-	LoadOpenGLFunction(glDrawArrays);
-	LoadOpenGLFunction(glDrawElements);
-	LoadOpenGLFunction(glEnable);
-	LoadOpenGLFunction(glEnableVertexAttribArray);
-	LoadOpenGLFunction(glFramebufferRenderbuffer);
-	LoadOpenGLFunction(glFramebufferTexture);
-	LoadOpenGLFunction(glGenBuffers);
-	LoadOpenGLFunction(glGenFramebuffers);
-	LoadOpenGLFunction(glGenRenderbuffers);
-	LoadOpenGLFunction(glGenTextures);
-	LoadOpenGLFunction(glGenVertexArrays);
-	LoadOpenGLFunction(glGetActiveAttrib);
-	LoadOpenGLFunction(glGetActiveUniform);
-	LoadOpenGLFunction(glGetAttribLocation);
-	LoadOpenGLFunction(glGetIntegerv);
-	LoadOpenGLFunction(glGetProgramiv);
-	LoadOpenGLFunction(glGetShaderInfoLog);
-	LoadOpenGLFunction(glGetShaderiv);
-	LoadOpenGLFunction(glGetString);
-	LoadOpenGLFunction(glGetUniformLocation);
-	LoadOpenGLFunction(glLinkProgram);
-	LoadOpenGLFunction(glPixelStorei);
-	LoadOpenGLFunction(glPrimitiveRestartIndex);
-	LoadOpenGLFunction(glReadBuffer);
-	LoadOpenGLFunction(glReadPixels);
-	LoadOpenGLFunction(glRenderbufferStorage);
-	LoadOpenGLFunction(glShaderSource);
-	LoadOpenGLFunction(glTexImage2D);
-	LoadOpenGLFunction(glTexParameteri);
-	LoadOpenGLFunction(glUniform1f);
-	LoadOpenGLFunction(glUniform1i);
-	LoadOpenGLFunction(glUniform3fv);
-	LoadOpenGLFunction(glUniform4fv);
-	LoadOpenGLFunction(glUniformMatrix3fv);
-	LoadOpenGLFunction(glUniformMatrix4fv);
-	LoadOpenGLFunction(glUseProgram);
-	LoadOpenGLFunction(glVertexAttribPointer);
-	LoadOpenGLFunction(glViewport);
-	
-	ON_DEBUG(std::cout << "OpenGL capabilities:" << std::endl);
-	
-	const unsigned char * ShadingLanguageVersion(0);
-	
-	ShadingLanguageVersion = GLGetString(GL_SHADING_LANGUAGE_VERSION);
-	ON_DEBUG(std::cout << "  Shading Language Version: " << ShadingLanguageVersion << std::endl);
-	
-	int MaximalNumberOfLights(0);
-	
-	GLGetIntegerv(GL_MAX_LIGHTS, &MaximalNumberOfLights);
-	ON_DEBUG(std::cout << "  Maximal number of lights: " << MaximalNumberOfLights << std::endl);
-	
-	int MaximalNumberOfUniformComponentsForVertexShaders(0);
-	
-	GLGetIntegerv(GL_MAX_VERTEX_UNIFORM_COMPONENTS, &MaximalNumberOfUniformComponentsForVertexShaders);
-	ON_DEBUG(std::cout << "  Maximal number of uniform components for vertex shaders: " << MaximalNumberOfUniformComponentsForVertexShaders << std::endl);
-	
-	int MaximalNumberOfUniformComponentsForFragmentShaders(0);
-	
-	GLGetIntegerv(GL_MAX_FRAGMENT_UNIFORM_COMPONENTS, &MaximalNumberOfUniformComponentsForFragmentShaders);
-	ON_DEBUG(std::cout << "  Maximal number of uniform components for fragment shaders: " << MaximalNumberOfUniformComponentsForFragmentShaders << std::endl);
-	
-	int MaximalNumberOfVertexAtributes(0);
-	
-	GLGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &MaximalNumberOfVertexAtributes);
-	ON_DEBUG(std::cout << "  Maximal number of vertex attributes: " << MaximalNumberOfVertexAtributes << std::endl);
-	GLEnable(GL_CULL_FACE);
-	GLEnable(GL_DEPTH_TEST);
-}
-
 void ProcessEvents(void)
 {
 	XEvent Event;
@@ -3394,12 +3299,12 @@ int main(int argc, char ** argv)
 	// setting up the graphical environment
 	ON_DEBUG(std::cout << "Setting up the window." << std::endl);
 	CreateWindow();
-	ON_DEBUG(std::cout << "Initializing OpenGL." << std::endl);
-	InitializeOpenGL();
 	
 	// create managers and global objects
 	ON_DEBUG(std::cout << "Creating global managers and objects." << std::endl);
+	ON_DEBUG(std::cout << "    Creating an initializing graphics engine." << std::endl);
 	g_GraphicsEngine = new Graphics::Engine();
+	g_GraphicsEngine->Initialize();
 	// UI view
 	Graphics::Orthogonal2DProjection * UIProjection(new Graphics::Orthogonal2DProjection());
 	
