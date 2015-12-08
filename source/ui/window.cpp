@@ -47,7 +47,7 @@ UI::Window::Window(Widget * SupWidget, const std::string & Title) :
 	_TitleLabel->SetAnchorRight(true);
 	_TitleLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
 	_TitleLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
-	_TitleLabel->SetBackgroundColor(Graphics::ColorRGBO(0.2f, 0.2f, 0.4f, 1.0f));
+	_TitleLabel->SetBackgroundColor(Graphics::ColorRGBO(0.23f, 0.35f, 0.55f, 1.0f));
 	_TitleLabel->ConnectMouseButtonCallback(std::bind(&UI::Window::_OnTitleLabelMouseButton, this, std::placeholders::_1));
 	_TitleLabel->ConnectMouseMoveCallback(std::bind(&UI::Window::_OnTitleLabelMouseMove, this, std::placeholders::_1));
 	_ResizeDragBox = new Widget(this);
@@ -57,7 +57,7 @@ UI::Window::Window(Widget * SupWidget, const std::string & Title) :
 	_ResizeDragBox->SetAnchorLeft(false);
 	_ResizeDragBox->SetAnchorRight(true);
 	_ResizeDragBox->SetAnchorTop(false);
-	_ResizeDragBox->SetBackgroundColor(Graphics::ColorRGBO(0.2f, 0.2f, 0.4f, 1.0f));
+	_ResizeDragBox->SetBackgroundColor(Graphics::ColorRGBO(0.23f, 0.35f, 0.55f, 1.0f));
 	_ResizeDragBox->ConnectMouseButtonCallback(std::bind(&UI::Window::_OnResizeDragBoxMouseButton, this, std::placeholders::_1));
 	_ResizeDragBox->ConnectMouseMoveCallback(std::bind(&UI::Window::_OnResizeDragBoxMouseMove, this, std::placeholders::_1));
 }
