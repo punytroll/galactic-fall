@@ -3302,7 +3302,7 @@ int main(int argc, char ** argv)
 	g_GraphicsEngine = new Graphics::Engine();
 	g_GraphicsEngine->Initialize();
 	// UI view
-	Graphics::Orthogonal2DProjection * UIProjection(new Graphics::Orthogonal2DProjection());
+	auto UIProjection{new Graphics::Orthogonal2DProjection()};
 	
 	UIProjection->SetLeft(0.0f);
 	UIProjection->SetTop(0.0f);
@@ -3313,12 +3313,12 @@ int main(int argc, char ** argv)
 	g_UIView->GetCamera()->SetSpacialMatrix(Matrix4f::CreateIdentity());
 	g_GraphicsEngine->AddView(g_UIView);
 	
-	Graphics::Scene * UIScene(new Graphics::Scene());
+	auto UIScene{new Graphics::Scene()};
 	
 	UIScene->SetDestroyCallback(OnUISceneNodeDestroy);
 	g_UIView->SetScene(UIScene);
 	
-	Graphics::UIRootNode * UIRootNode(new Graphics::UIRootNode());
+	auto UIRootNode{new Graphics::UIRootNode()};
 	
 	UIRootNode->SetClearColorBuffer(true);
 	UIRootNode->SetUseDepthTest(false);
@@ -3334,7 +3334,7 @@ int main(int argc, char ** argv)
 	assert(g_MainView->GetCamera() != nullptr);
 	g_MainView->GetCamera()->SetProjection(g_MainProjection);
 	
-	Graphics::DefaultRenderTarget * MainViewRenderTarget(new Graphics::DefaultRenderTarget());
+	auto MainViewRenderTarget{new Graphics::DefaultRenderTarget()};
 	
 	g_MainView->SetRenderTarget(MainViewRenderTarget);
 	g_GraphicsEngine->AddView(g_MainView);
