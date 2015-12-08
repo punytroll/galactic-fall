@@ -819,7 +819,7 @@ void OnMapDialogDestroying(UI::Event & DestroyingEvent)
 bool OnMapDialogClosing(UI::Dialog::ClosingReason ClosingReason, UI::MapDialog * MapDialog)
 {
 	assert(MapDialog != nullptr);
-	if(ClosingReason == UI::Dialog::ClosingReason::OK_BUTTON)
+	if((ClosingReason == UI::Dialog::ClosingReason::OK_BUTTON) || (ClosingReason == UI::Dialog::ClosingReason::RETURN_KEY))
 	{
 		if((g_InputMind.IsValid() == true) && (g_InputMind->GetCharacter() != nullptr))
 		{
