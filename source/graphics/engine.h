@@ -47,6 +47,7 @@ namespace Graphics
 		// modifiers
 		void AddParticleSystem(Graphics::ParticleSystem * ParticleSystem);
 		void AddView(Graphics::View * View);
+		void Initialize(void);
 		void RemoveParticleSystem(Graphics::ParticleSystem * ParticleSystem);
 		void RemoveView(Graphics::View * View);
 		void Update(float Seconds);

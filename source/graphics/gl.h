@@ -21,12 +21,13 @@
 #define GRAPHICS_GL_H
 
 #include <GL/gl.h>
+#include <GL/glx.h>
 
 #include <cassert>
 
 #define LoadOpenGLFunction(name) { \
 		assert(__ ## name == nullptr); \
-		ON_DEBUG(std::cout << "  Loading function \"" << #name << "\"." << std::endl); \
+		ON_DEBUG(std::cout << "    Loading function \"" << #name << "\"." << std::endl); \
 		__ ## name = reinterpret_cast< name ## Function >(glXGetProcAddressARB(reinterpret_cast< const GLubyte * >( #name ))); \
 		assert(__ ## name != nullptr); \
 	}

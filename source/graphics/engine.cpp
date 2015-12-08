@@ -17,11 +17,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include <assert.h>
-
 #include <algorithm>
+#include <cassert>
+#include <iostream>
 
+#include "../globals.h"
 #include "engine.h"
+#include "gl.h"
 #include "mesh_manager.h"
 #include "model_manager.h"
 #include "particle_system.h"
@@ -65,6 +67,94 @@ void Graphics::Engine::AddView(Graphics::View * View)
 void Graphics::Engine::AddParticleSystem(Graphics::ParticleSystem * ParticleSystem)
 {
 	_ParticleSystems.insert(ParticleSystem);
+}
+
+void Graphics::Engine::Initialize(void)
+{
+	ON_DEBUG(std::cout << "Loading OpenGL functions." << std::endl);
+	LoadOpenGLFunction(glActiveTexture);
+	LoadOpenGLFunction(glAttachShader);
+	LoadOpenGLFunction(glBindBuffer);
+	LoadOpenGLFunction(glBindFramebuffer);
+	LoadOpenGLFunction(glBindRenderbuffer);
+	LoadOpenGLFunction(glBindTexture);
+	LoadOpenGLFunction(glBindVertexArray);
+	LoadOpenGLFunction(glBlendFunc);
+	LoadOpenGLFunction(glBufferData);
+	LoadOpenGLFunction(glCheckFramebufferStatus);
+	LoadOpenGLFunction(glClear);
+	LoadOpenGLFunction(glClearColor);
+	LoadOpenGLFunction(glCompileShader);
+	LoadOpenGLFunction(glCreateProgram);
+	LoadOpenGLFunction(glCreateShader);
+	LoadOpenGLFunction(glDeleteBuffers);
+	LoadOpenGLFunction(glDeleteFramebuffers);
+	LoadOpenGLFunction(glDeleteProgram);
+	LoadOpenGLFunction(glDeleteRenderbuffers);
+	LoadOpenGLFunction(glDeleteShader);
+	LoadOpenGLFunction(glDeleteTextures);
+	LoadOpenGLFunction(glDeleteVertexArrays);
+	LoadOpenGLFunction(glDisable);
+	LoadOpenGLFunction(glDrawArrays);
+	LoadOpenGLFunction(glDrawElements);
+	LoadOpenGLFunction(glEnable);
+	LoadOpenGLFunction(glEnableVertexAttribArray);
+	LoadOpenGLFunction(glFramebufferRenderbuffer);
+	LoadOpenGLFunction(glFramebufferTexture);
+	LoadOpenGLFunction(glGenBuffers);
+	LoadOpenGLFunction(glGenFramebuffers);
+	LoadOpenGLFunction(glGenRenderbuffers);
+	LoadOpenGLFunction(glGenTextures);
+	LoadOpenGLFunction(glGenVertexArrays);
+	LoadOpenGLFunction(glGetActiveAttrib);
+	LoadOpenGLFunction(glGetActiveUniform);
+	LoadOpenGLFunction(glGetAttribLocation);
+	LoadOpenGLFunction(glGetIntegerv);
+	LoadOpenGLFunction(glGetProgramiv);
+	LoadOpenGLFunction(glGetShaderInfoLog);
+	LoadOpenGLFunction(glGetShaderiv);
+	LoadOpenGLFunction(glGetString);
+	LoadOpenGLFunction(glGetUniformLocation);
+	LoadOpenGLFunction(glLinkProgram);
+	LoadOpenGLFunction(glPixelStorei);
+	LoadOpenGLFunction(glPrimitiveRestartIndex);
+	LoadOpenGLFunction(glReadBuffer);
+	LoadOpenGLFunction(glReadPixels);
+	LoadOpenGLFunction(glRenderbufferStorage);
+	LoadOpenGLFunction(glShaderSource);
+	LoadOpenGLFunction(glTexImage2D);
+	LoadOpenGLFunction(glTexParameteri);
+	LoadOpenGLFunction(glUniform1f);
+	LoadOpenGLFunction(glUniform1i);
+	LoadOpenGLFunction(glUniform3fv);
+	LoadOpenGLFunction(glUniform4fv);
+	LoadOpenGLFunction(glUniformMatrix3fv);
+	LoadOpenGLFunction(glUniformMatrix4fv);
+	LoadOpenGLFunction(glUseProgram);
+	LoadOpenGLFunction(glVertexAttribPointer);
+	LoadOpenGLFunction(glViewport);
+	ON_DEBUG(std::cout << "OpenGL capabilities:" << std::endl);
+	
+	const unsigned char * ShadingLanguageVersion(0);
+	
+	ShadingLanguageVersion = GLGetString(GL_SHADING_LANGUAGE_VERSION);
+	ON_DEBUG(std::cout << "    Shading Language Version: " << ShadingLanguageVersion << std::endl);
+	
+	int MaximalNumberOfUniformComponentsForVertexShaders(0);
+	
+	GLGetIntegerv(GL_MAX_VERTEX_UNIFORM_COMPONENTS, &MaximalNumberOfUniformComponentsForVertexShaders);
+	ON_DEBUG(std::cout << "    Maximal number of uniform components for vertex shaders: " << MaximalNumberOfUniformComponentsForVertexShaders << std::endl);
+	
+	int MaximalNumberOfUniformComponentsForFragmentShaders(0);
+	
+	GLGetIntegerv(GL_MAX_FRAGMENT_UNIFORM_COMPONENTS, &MaximalNumberOfUniformComponentsForFragmentShaders);
+	ON_DEBUG(std::cout << "    Maximal number of uniform components for fragment shaders: " << MaximalNumberOfUniformComponentsForFragmentShaders << std::endl);
+	
+	int MaximalNumberOfVertexAtributes(0);
+	
+	GLGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &MaximalNumberOfVertexAtributes);
+	ON_DEBUG(std::cout << "    Maximal number of vertex attributes: " << MaximalNumberOfVertexAtributes << std::endl);
+	GLEnable(GL_CULL_FACE);
 }
 
 void Graphics::Engine::RemoveParticleSystem(Graphics::ParticleSystem * ParticleSystem)
