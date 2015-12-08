@@ -33,15 +33,19 @@ namespace UI
 		Window(UI::Widget * SupWidget, const std::string & Title = "");
 		// setters
 		void SetTitle(const std::string & Title);
+		// modifiers
+		void HideResizeDragBox(void);
+		void ShowResizeDragBox(void);
 	private:
 		// callbacks
 		void _OnTitleLabelMouseButton(UI::MouseButtonEvent & MouseButtonEvent);
 		void _OnTitleLabelMouseMove(UI::MouseMoveEvent & MouseMoveEvent);
-		void _OnResizeDragBoxMouseButton(UI::MouseButtonEvent & MouseButtonEvent, Widget * ResizeDragBox);
-		void _OnResizeDragBoxMouseMove(UI::MouseMoveEvent & MouseMoveEvent, Widget * ResizeDragBox);
+		void _OnResizeDragBoxMouseButton(UI::MouseButtonEvent & MouseButtonEvent);
+		void _OnResizeDragBoxMouseMove(UI::MouseMoveEvent & MouseMoveEvent);
 		// member variables
-		UI::Label * _TitleLabel;
 		Vector2f _GrabPosition;
+		UI::Widget * _ResizeDragBox;
+		UI::Label * _TitleLabel;
 	};
 }
 
