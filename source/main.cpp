@@ -816,34 +816,16 @@ void OnMapDialogDestroying(UI::Event & DestroyingEvent)
 	}
 }
 
-bool OnMapDialogClosing(UI::Dialog::ClosingReason ClosingReason)
+bool OnMapDialogClosing(UI::Dialog::ClosingReason ClosingReason, UI::MapDialog * MapDialog)
 {
+	assert(MapDialog != nullptr);
 	if(ClosingReason == UI::Dialog::ClosingReason::OK_BUTTON)
 	{
 		if((g_InputMind.IsValid() == true) && (g_InputMind->GetCharacter() != nullptr))
 		{
-			if(g_MapDialog->GetSelectedSystem() != nullptr)
-			{
-				auto CurrentSystem(g_InputMind->GetCharacter()->GetSystem());
-				
-				assert(CurrentSystem != nullptr);
-				if(CurrentSystem->IsLinkedToSystem(g_MapDialog->GetSelectedSystem()) == true)
-				{
-					g_InputMind->SelectLinkedSystem(g_MapDialog->GetSelectedSystem());
-					
-					return true;
-				}
-				else
-				{
-					return false;
-				}
-			}
-			else
-			{
-				g_InputMind->SelectLinkedSystem(nullptr);
-				
-				return true;
-			}
+			g_InputMind->SelectLinkedSystem(MapDialog->GetSelectedSystem());
+			
+			return true;
 		}
 	}
 	
@@ -2393,7 +2375,7 @@ void ActionOpenMapDialog(void)
 			g_MapDialog->SetSelectedSystem(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetLinkedSystemTarget());
 		}
 		g_MapDialog->GrabKeyFocus();
-		g_MapDialog->ConnectClosingCallback(OnMapDialogClosing);
+		g_MapDialog->ConnectClosingCallback(std::bind(OnMapDialogClosing, std::placeholders::_1, g_MapDialog));
 		g_MapDialog->ConnectDestroyingCallback(OnMapDialogDestroying);
 		if(g_InputMind.IsValid() == true)
 		{

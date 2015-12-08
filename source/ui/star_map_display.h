@@ -37,6 +37,7 @@ namespace UI
 	public:
 		StarMapDisplay(UI::Widget * SupWidget, Character * Character);
 		// getters
+		Character * GetCharacter(void);
 		System * GetSelectedSystem(void);
 		// setters
 		void SetSelectedSystem(System * SelectedSystem);
@@ -62,6 +63,11 @@ namespace UI
 		System * _SelectedSystem;
 		Connection _SelectedSystemDestroyingConnection;
 	};
+
+	inline Character * StarMapDisplay::GetCharacter(void)
+	{
+		return _Character;
+	}
 
 	inline System * StarMapDisplay::GetSelectedSystem(void)
 	{
