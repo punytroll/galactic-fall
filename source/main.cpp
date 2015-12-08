@@ -143,7 +143,6 @@ UI::UserInterface * g_UserInterface(nullptr);
 
 // global dialog pointers
 UI::MainMenuWindow * g_MainMenuWindow(nullptr);
-UI::MapDialog * g_MapDialog(nullptr);
 UI::OutfitShipDialog * g_OutfitShipDialog(nullptr);
 UI::TimingDialog * g_TimingDialog(nullptr);
 
@@ -805,14 +804,6 @@ void OnMainMenuDestroying(UI::Event & DestroyingEvent)
 	{
 		g_MainMenuWindow = nullptr;
 		g_Pause = false;
-	}
-}
-
-void OnMapDialogDestroying(UI::Event & DestroyingEvent)
-{
-	if(DestroyingEvent.GetPhase() == UI::Event::Phase::Target)
-	{
-		g_MapDialog = nullptr;
 	}
 }
 
@@ -2367,16 +2358,17 @@ void ActionOpenMainMenuWindow(void)
 void ActionOpenMapDialog(void)
 {
 	assert(g_CharacterObserver != nullptr);
-	if((g_MapDialog == nullptr) && (g_CharacterObserver->GetObservedCharacter() != nullptr))
+	if((g_UserInterface->GetWidget("/map_dialog") == nullptr) && (g_CharacterObserver->GetObservedCharacter() != nullptr))
 	{
-		g_MapDialog = new UI::MapDialog(g_UserInterface->GetRootWidget(), g_CharacterObserver->GetObservedCharacter());
+		auto MapDialog{new UI::MapDialog(g_UserInterface->GetRootWidget(), g_CharacterObserver->GetObservedCharacter())};
+		
+		MapDialog->SetName("map_dialog");
 		if((g_CharacterObserver->GetObservedCharacter()->GetShip() != nullptr) && (g_CharacterObserver->GetObservedCharacter()->GetShip()->GetLinkedSystemTarget() != nullptr))
 		{
-			g_MapDialog->SetSelectedSystem(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetLinkedSystemTarget());
+			MapDialog->SetSelectedSystem(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetLinkedSystemTarget());
 		}
-		g_MapDialog->GrabKeyFocus();
-		g_MapDialog->ConnectClosingCallback(std::bind(OnMapDialogClosing, std::placeholders::_1, g_MapDialog));
-		g_MapDialog->ConnectDestroyingCallback(OnMapDialogDestroying);
+		MapDialog->GrabKeyFocus();
+		MapDialog->ConnectClosingCallback(std::bind(OnMapDialogClosing, std::placeholders::_1, MapDialog));
 		if(g_InputMind.IsValid() == true)
 		{
 			g_InputMind->DisableAccelerate();
