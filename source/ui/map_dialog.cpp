@@ -19,6 +19,7 @@
 
 #include <map>
 
+#include "../character.h"
 #include "../globals.h"
 #include "../graphics/color_rgbo.h"
 #include "../object_aspect_name.h"
@@ -45,6 +46,7 @@ UI::MapDialog::MapDialog(UI::Widget * SupWidget, Character * Character) :
 	OKButton->SetAnchorRight(true);
 	OKButton->SetAnchorTop(false);
 	OKButton->ConnectClickedCallback(std::bind(&UI::MapDialog::_Close, this, UI::Dialog::ClosingReason::OK_BUTTON));
+	OKButton->ConnectUpdatingCallback(std::bind(&UI::MapDialog::_OnOKButtonUpdating, this, OKButton, std::placeholders::_1, std::placeholders::_2));
 	
 	auto CancelButton{new UI::TextButton(this, "Cancel")};
 	
@@ -84,4 +86,11 @@ void UI::MapDialog::_OnKey(UI::KeyEvent & KeyEvent)
 	{
 		Destroy();
 	}
+}
+
+void UI::MapDialog::_OnOKButtonUpdating(UI::Button * OKButton, float RealTimeSeconds, float GameTimeSeconds)
+{
+	assert(OKButton != nullptr);
+	assert(_StarMapDisplay != nullptr);
+	OKButton->SetEnabled((_StarMapDisplay->GetSelectedSystem() == nullptr) || ((_StarMapDisplay->GetCharacter() != nullptr) && (_StarMapDisplay->GetCharacter()->GetSystem() != nullptr) && (_StarMapDisplay->GetSelectedSystem()->IsLinkedToSystem(_StarMapDisplay->GetCharacter()->GetSystem()) == true)));
 }
