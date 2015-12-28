@@ -5,6 +5,7 @@ root = ..
 default: all
 
 include $(root)/libraries/algebra/Makefile.include
+include $(root)/libraries/arx/Makefile.include
 include $(root)/libraries/events/Makefile.include
 include $(root)/libraries/string_cast/Makefile.include
 include $(root)/libraries/xml_parser/Makefile.include
@@ -28,9 +29,6 @@ GENERATED_FILES := $(GENERATED_HEADER_FILES)
 ifeq (0, $(words $(findstring $(MAKECMDGOALS), clean clean-recursive clean-here)))
     -include $(DEPENDENCY_FILES)
 endif
-
-ARXX_INCLUDE = $(shell pkg-config --cflags libarxx)
-ARXX_LIBRARIES = $(shell pkg-config --libs libarxx)
 
 all: all-recursive
 
@@ -59,30 +57,21 @@ clean-here:
 clean-recursive: clean-here
 
 check-dependencies: generate_cpp_resource_constants-check-dependencies
-	@if [ x`which pkg-config` = x ]; then \
-		echo -e "\nYour system is missing the \"pkg-config\" tool.\nThis tool is needed and you will need to install it in order to build the program.\n"; false; \
-	fi
-	@if ! pkg-config --exists libarxx; then \
-		echo -e "\nYour system is missing the \"libarxx\" library.\nYou can get this library from \"http://libarxx.sourceforge.net\"./\n"; false; \
-	fi
-	@if ! pkg-config --atleast-version=0.8.9 libarxx; then \
-		echo -e "\nThe library \"libarxx\" that is installed on your system is too old.\nYou have: Version `pkg-config --modversion libarxx`\nYou need: Version 0.8.9\nYou can get the most recent library from \"http://libarxx.sourceforge.net\"./\n"; false; \
-	fi
 
 arx_types.h: $(root)/data/tools/declarations.xml $(generate_cpp_resource_constants_dependencies)
 	$(command_generate_cpp_resource_constants) --declarations=$< > $@
 
 binary: $(OBJECT_FILES) $(EVENTS_LIBRARY) $(STRING_CAST_LIBRARY) $(XML_PUNY_DOM_LIBRARY) $(XML_STREAM_LIBRARY) $(LDFLAGS_configuration)
-	$(CXX) $(LDFLAGS) $(OBJECT_FILES) $(ARXX_LIBRARIES) $(EVENTS_LIBRARY) $(STRING_CAST_LIBRARY) $(XML_PUNY_DOM_LIBRARY) $(XML_STREAM_LIBRARY) -lGL -lX11 -o $@
+	$(CXX) $(LDFLAGS) $(OBJECT_FILES) $(ARX_LIBRARY) $(EVENTS_LIBRARY) $(STRING_CAST_LIBRARY) $(XML_PUNY_DOM_LIBRARY) $(XML_STREAM_LIBRARY) -lGL -lX11 -o $@
 
 $(OBJECT_FILES): $(CXXFLAGS_configuration)
 
 $(DEPENDENCY_DIRECTORY)/%.dep: % $(GENERATED_FILES)
 	@test -d $(@D) || mkdir $(@D)
-	$(CXX) $(CXXFLAGS) -MM $< $(ALGEBRA_INCLUDE) $(ARXX_INCLUDE) $(EVENTS_INCLUDE) $(STRING_CAST_INCLUDE) $(XML_PUNY_DOM_INCLUDE) $(XML_STREAM_INCLUDE) | sed 's/^\(.*\.o\):/$(OBJECT_DIRECTORY)\/$(subst /,\/,$(subst ./,,$(dir $<)))\1 $(subst /,\/,$@):/g' > $@
+	$(CXX) $(CXXFLAGS) -MM $< $(ALGEBRA_INCLUDE) $(ARX_INCLUDE) $(EVENTS_INCLUDE) $(STRING_CAST_INCLUDE) $(XML_PUNY_DOM_INCLUDE) $(XML_STREAM_INCLUDE) | sed 's/^\(.*\.o\):/$(OBJECT_DIRECTORY)\/$(subst /,\/,$(subst ./,,$(dir $<)))\1 $(subst /,\/,$@):/g' > $@
 
 $(OBJECT_DIRECTORY)/%.o: %.cpp
 	@test -d $(@D) || mkdir $(@D)
-	$(CXX) $(CXXFLAGS) -c $< $(ALGEBRA_INCLUDE) $(ARXX_INCLUDE) $(EVENTS_INCLUDE) $(STRING_CAST_INCLUDE) $(XML_PUNY_DOM_INCLUDE) $(XML_STREAM_INCLUDE) -o $@
+	$(CXX) $(CXXFLAGS) -c $< $(ALGEBRA_INCLUDE) $(ARX_INCLUDE) $(EVENTS_INCLUDE) $(STRING_CAST_INCLUDE) $(XML_PUNY_DOM_INCLUDE) $(XML_STREAM_INCLUDE) -o $@
 
 .PHONY: all all-here all-recursive clean clean-here clean-recursive check-dependencies default
