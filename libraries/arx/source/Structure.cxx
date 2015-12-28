@@ -17,15 +17,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include <assert.h>
+#include <cassert>
 #include <netinet/in.h>
 
 #include <iostream>
 
-#include "../include/Buffer.h"
-#include "../include/BufferWriter.h"
-#include "../include/Reference.h"
-#include "../include/Structure.h"
+#include <Buffer.h>
+#include <BufferWriter.h>
+#include <Reference.h>
+#include <Structure.h>
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
