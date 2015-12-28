@@ -25,12 +25,13 @@
 #include <iostream>
 #include <sstream>
 
+#include <Archive.h>
+#include <BufferWriter.h>
+#include <Item.h>
+#include <Reference.h>
+
 #include "ArchiveFile.h"
 #include "ReferenceImplementation.h"
-#include "../include/Archive.h"
-#include "../include/BufferWriter.h"
-#include "../include/Item.h"
-#include "../include/Reference.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////

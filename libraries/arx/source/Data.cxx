@@ -17,7 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include "../include/Data.h"
+#include <Data.h>
 
 /// optional headers
 #ifdef HAVE_ZLIB_H
@@ -36,8 +36,6 @@ Arxx::Data::Compression Arxx::Data::m_DefaultCompression = ZLIB_9;
 #else
 Arxx::Data::Compression Arxx::Data::m_DefaultCompression = NONE;
 #endif
-
-#include <iostream>
 
 Arxx::Data::Data(void) :
 	_Offset(0),

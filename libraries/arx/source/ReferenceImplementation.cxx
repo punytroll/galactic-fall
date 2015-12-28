@@ -17,11 +17,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include <assert.h>
+#include <cassert>
+
+#include <Item.h>
+#include <Archive.h>
 
 #include "ReferenceImplementation.h"
-#include "../include/Item.h"
-#include "../include/Archive.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////

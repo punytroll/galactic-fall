@@ -17,10 +17,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include "../include/Item.h"
-#include "../include/Archive.h"
-#include "../include/Reference.h"
-#include "../include/Structure.h"
+#include <Item.h>
+#include <Archive.h>
+#include <Reference.h>
+#include <Structure.h>
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////

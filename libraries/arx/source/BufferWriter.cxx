@@ -21,8 +21,8 @@
 
 #include <istream>
 
-#include "../include/Buffer.h"
-#include "../include/BufferWriter.h"
+#include <Buffer.h>
+#include <BufferWriter.h>
 
 #ifdef DEBUG
 #include <iostream>

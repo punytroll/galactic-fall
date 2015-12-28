@@ -20,7 +20,7 @@
 #ifndef ARXX_REFERENCEIMPLEMENTATION_H
 #define ARXX_REFERENCEIMPLEMENTATION_H
 
-#include "../include/Common.h"
+#include <Common.h>
 
 namespace Arxx
 {
