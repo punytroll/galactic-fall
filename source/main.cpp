@@ -2390,7 +2390,7 @@ void ActionOpenOutfitShipDialog(void)
 	assert(g_CharacterObserver != nullptr);
 	if((g_OutfitShipDialog == nullptr) && (g_CharacterObserver->GetObservedCharacter() != nullptr))
 	{
-		g_OutfitShipDialog = new UI::OutfitShipDialog(g_UserInterface->GetRootWidget(), g_CharacterObserver->GetObservedCharacter()->GetShip()->GetReference());
+		g_OutfitShipDialog = new UI::OutfitShipDialog(g_UserInterface->GetRootWidget(), g_CharacterObserver->GetObservedCharacter()->GetShip());
 		g_OutfitShipDialog->GrabKeyFocus();
 		g_OutfitShipDialog->ConnectDestroyingCallback(OnOutfitShipDialogDestroying);
 	}

@@ -608,7 +608,7 @@ void UI::HangarWidget::_OnOutfitButtonClicked(void)
 	{
 		assert(_SelectedShipListItem != nullptr);
 		assert(_SelectedShipListItem->GetShip() != nullptr);
-		_OutfitShipDialog = new UI::OutfitShipDialog(GetRootWidget(), _SelectedShipListItem->GetShip()->GetReference());
+		_OutfitShipDialog = new UI::OutfitShipDialog(GetRootWidget(), _SelectedShipListItem->GetShip());
 		_OutfitShipDialog->ConnectDestroyingCallback(std::bind(&UI::HangarWidget::_OnOutfitShipDialogDestroying, this, std::placeholders::_1));
 	}
 	else

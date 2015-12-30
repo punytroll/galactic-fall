@@ -34,14 +34,16 @@ namespace UI
 	class OutfitShipDialog : public UI::Window
 	{
 	public:
-		OutfitShipDialog(UI::Widget * SupWidget, Reference< Ship > Ship);
+		OutfitShipDialog(UI::Widget * SupWidget, Ship * Ship);
 	private:
 		// callbacks
 		void _OnAccessoryListItemMouseButton(UI::AccessoryListItem * AccessoryListItem, UI::MouseButtonEvent & MouseButtonEvent);
+		void _OnDestroying(UI::Event & DestroyingEvent);
 		void _OnKey(UI::KeyEvent & KeyEvent);
 		void _OnMountButtonClicked(void);
 		void _OnMountButtonUpdating(UI::Button * MountButton, float RealTimeSeconds, float GameTimeSeconds);
 		void _OnOKButtonClicked(void);
+		void _OnShipDestroying(void);
 		void _OnSizeChanged(UI::Event & SizeChangedEvent);
 		void _OnSlotListItemMouseButton(UI::SlotListItem * SlotListItem, UI::MouseButtonEvent & MouseButtonEvent);
 		void _OnUnmountButtonClicked(void);
@@ -55,7 +57,8 @@ namespace UI
 		UI::Widget * _RightPane;
 		UI::AccessoryListItem * _SelectedAccessoryListItem;
 		UI::SlotListItem * _SelectedSlotListItem;
-		Reference< Ship > _Ship;
+		Ship * _Ship;
+		Connection _ShipDestroyingConnection;
 		UI::ScrollBox * _SlotScrollBox;
 	};
 }
