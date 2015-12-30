@@ -212,12 +212,15 @@ void UI::SlotListItem::_OnSlotDestroying(void)
 	_Slot = nullptr;
 }
 
-UI::OutfitShipDialog::OutfitShipDialog(UI::Widget * SupWidget, Reference< Ship > Ship) :
+UI::OutfitShipDialog::OutfitShipDialog(UI::Widget * SupWidget, Ship * Ship) :
 	UI::Window(SupWidget, "Outfit Ship"),
-	_SelectedAccessoryListItem(0),
-	_SelectedSlotListItem(0),
+	_SelectedAccessoryListItem(nullptr),
+	_SelectedSlotListItem(nullptr),
 	_Ship(Ship)
 {
+	assert(_Ship != nullptr);
+	_ShipDestroyingConnection = _Ship->ConnectDestroyingCallback(std::bind(&UI::OutfitShipDialog::_OnShipDestroying, this));
+	ConnectDestroyingCallback(std::bind(&UI::OutfitShipDialog::_OnDestroying, this, std::placeholders::_1));
 	ConnectSizeChangedCallback(std::bind(&UI::OutfitShipDialog::_OnSizeChanged, this, std::placeholders::_1));
 	ConnectKeyCallback(std::bind(&UI::OutfitShipDialog::_OnKey, this, std::placeholders::_1));
 	_LeftPane = new UI::Widget(this);
@@ -324,17 +327,17 @@ void UI::OutfitShipDialog::_RebuildAccessoryList(void)
 		_AccessoryScrollBox->GetContent()->GetSubWidgets().front()->Destroy();
 	}
 	// now fill the weapon list
-	assert(_Ship.IsValid() == true);
-	assert(_Ship->GetCargoHold() != 0);
-	assert(_Ship->GetCargoHold()->GetAspectObjectContainer() != 0);
+	assert(_Ship != nullptr);
+	assert(_Ship->GetCargoHold() != nullptr);
+	assert(_Ship->GetCargoHold()->GetAspectObjectContainer() != nullptr);
 	
 	float Top(5.0f);
 	
 	for(auto Content : _Ship->GetCargoHold()->GetAspectObjectContainer()->GetContent())
 	{
-		if((Content->GetAspectAccessory() != 0) && (Content->GetAspectAccessory()->GetSlot() == 0))
+		if((Content->GetAspectAccessory() != nullptr) && (Content->GetAspectAccessory()->GetSlot() == nullptr))
 		{
-			AccessoryListItem * NewAccessoryListItem(new UI::AccessoryListItem(_AccessoryScrollBox->GetContent(), Content));
+			auto NewAccessoryListItem{new UI::AccessoryListItem(_AccessoryScrollBox->GetContent(), Content)};
 			
 			NewAccessoryListItem->SetPosition(Vector2f(5.0f, Top));
 			NewAccessoryListItem->SetSize(Vector2f(_AccessoryScrollBox->GetContent()->GetSize()[0] - 10.0f, 50.0f));
@@ -352,9 +355,23 @@ void UI::OutfitShipDialog::_RebuildAccessoryList(void)
 	_AccessoryScrollBox->GetContent()->SetAnchorRight(true);
 }
 
+void UI::OutfitShipDialog::_OnDestroying(UI::Event & DestroyingEvent)
+{
+	if(DestroyingEvent.GetPhase() == UI::Event::Phase::Target)
+	{
+		if(_Ship != nullptr)
+		{
+			_Ship = nullptr;
+			assert(_ShipDestroyingConnection.IsValid() == true);
+			_ShipDestroyingConnection.Disconnect();
+		}
+		assert(_ShipDestroyingConnection.IsValid() == false);
+	}
+}
+
 void UI::OutfitShipDialog::_OnMountButtonUpdating(UI::Button * MountButton, float RealTimeSeconds, float GameTimeSeconds)
 {
-	if(_SelectedSlotListItem != 0)
+	if(_SelectedSlotListItem != nullptr)
 	{
 		assert(_SelectedSlotListItem->GetSlot() != nullptr);
 		MountButton->SetEnabled((_SelectedSlotListItem->GetSlot()->GetMountedObject() == nullptr) && (_SelectedAccessoryListItem != 0) && (_SelectedSlotListItem->GetSlot()->GetSlotClass()->AcceptsSlotClassIdentifier(_SelectedAccessoryListItem->GetAccessory()->GetAspectAccessory()->GetSlotClassIdentifier()) == true));
@@ -367,7 +384,7 @@ void UI::OutfitShipDialog::_OnMountButtonUpdating(UI::Button * MountButton, floa
 
 void UI::OutfitShipDialog::_OnUnmountButtonUpdating(UI::Button * UnmountButton, float RealTimeSeconds, float GameTimeSeconds)
 {
-	if(_SelectedSlotListItem != 0)
+	if(_SelectedSlotListItem != nullptr)
 	{
 		assert(_SelectedSlotListItem->GetSlot() != nullptr);
 		if(_SelectedSlotListItem->GetSlot()->GetMountedObject() != nullptr)
@@ -388,13 +405,13 @@ void UI::OutfitShipDialog::_OnUnmountButtonUpdating(UI::Button * UnmountButton, 
 
 void UI::OutfitShipDialog::_OnMountButtonClicked(void)
 {
-	assert(_SelectedAccessoryListItem != 0);
-	assert(_SelectedSlotListItem != 0);
+	assert(_SelectedAccessoryListItem != nullptr);
+	assert(_SelectedSlotListItem != nullptr);
 	
-	Object * Accessory(_SelectedAccessoryListItem->GetAccessory());
+	auto Accessory{_SelectedAccessoryListItem->GetAccessory()};
 	
 	assert(Accessory != nullptr);
-	assert(_Ship.IsValid() == true);
+	assert(_Ship != nullptr);
 	_Ship->GetCargoHold()->GetAspectObjectContainer()->RemoveContent(Accessory);
 	_Ship->GetAspectObjectContainer()->AddContent(Accessory);
 	_SelectedSlotListItem->GetSlot()->Mount(Accessory);
@@ -409,18 +426,23 @@ void UI::OutfitShipDialog::_OnOKButtonClicked(void)
 
 void UI::OutfitShipDialog::_OnUnmountButtonClicked(void)
 {
-	assert(_SelectedSlotListItem != 0);
+	assert(_SelectedSlotListItem != nullptr);
+	assert(_SelectedSlotListItem->GetSlot() != nullptr);
 	
-	Object * Accessory(_SelectedSlotListItem->GetSlot()->GetMountedObject());
+	auto Accessory{_SelectedSlotListItem->GetSlot()->GetMountedObject()};
 	
-	assert(_Ship.IsValid() == true);
 	assert(Accessory != nullptr);
+	assert(_Ship != nullptr);
+	assert(_Ship->GetCargoHold() != nullptr);
 	if(Accessory->GetAspectPhysical() != 0)
 	{
+		assert(Accessory->GetAspectPhysical() != nullptr);
 		assert(_Ship->GetCargoHold()->GetSpace() >= Accessory->GetAspectPhysical()->GetSpaceRequirement());
 	}
 	_SelectedSlotListItem->GetSlot()->Unmount();
+	assert(_Ship->GetAspectObjectContainer() != nullptr);
 	_Ship->GetAspectObjectContainer()->RemoveContent(Accessory);
+	assert(_Ship->GetCargoHold()->GetAspectObjectContainer() != nullptr);
 	_Ship->GetCargoHold()->GetAspectObjectContainer()->AddContent(Accessory);
 	_SelectedSlotListItem->Update();
 	_RebuildAccessoryList();
@@ -432,6 +454,15 @@ void UI::OutfitShipDialog::_OnKey(UI::KeyEvent & KeyEvent)
 	{
 		Destroy();
 	}
+}
+
+void UI::OutfitShipDialog::_OnShipDestroying(void)
+{
+	assert(_Ship != nullptr);
+	_Ship = nullptr;
+	assert(_ShipDestroyingConnection.IsValid() == true);
+	_ShipDestroyingConnection.Disconnect();
+	assert(_ShipDestroyingConnection.IsValid() == false);
 }
 
 void UI::OutfitShipDialog::_OnSlotListItemMouseButton(UI::SlotListItem * SlotListItem, UI::MouseButtonEvent & MouseButtonEvent)
