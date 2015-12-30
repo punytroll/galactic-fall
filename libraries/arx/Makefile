@@ -1,8 +1,23 @@
 root = ../..
 
+-include $(root)/configuration
+
 default: all
 
--include $(root)/configuration
+HEADER_DIRECTORIES := $(patsubst %/,%,$(sort $(dir $(shell find . -name '*.h'))))
+HEADER_FILES := $(patsubst ./%,%,$(foreach HEADER_DIRECTORY,$(HEADER_DIRECTORIES),$(wildcard $(HEADER_DIRECTORY)/*.h)))
+SOURCE_DIRECTORIES := $(patsubst %/,%,$(sort $(dir $(shell find . -name '*.cxx'))))
+SOURCE_FILES := $(patsubst ./%,%,$(foreach SOURCE_DIRECTORY,$(SOURCE_DIRECTORIES),$(wildcard $(SOURCE_DIRECTORY)/*.cxx)))
+OBJECT_DIRECTORY := source/.object-files
+OBJECT_DIRECTORIES := $(patsubst .%, $(OBJECT_DIRECTORY)%, $(SOURCE_DIRECTORIES))
+OBJECT_FILES := $(sort $(patsubst %.cxx,$(OBJECT_DIRECTORY)/%.o,$(SOURCE_FILES)))
+DEPENDENCY_DIRECTORY := source/.dependency-files
+DEPENDENCY_DIRECTORIES := $(sort $(patsubst .%, $(DEPENDENCY_DIRECTORY)%, $(SOURCE_DIRECTORIES)))
+DEPENDENCY_FILES := $(sort $(foreach file,$(SOURCE_FILES),$(DEPENDENCY_DIRECTORY)/$(file).dep))
+
+ifeq (0, $(words $(findstring $(MAKECMDGOALS), clean clean-recursive clean-here)))
+    -include $(DEPENDENCY_FILES)
+endif
 
 all: all-recursive
 
@@ -17,54 +32,32 @@ clean: clean-recursive
 
 clean-here:
 	$(RM) libarx.a
-	$(RM) source/Archive.o
-	$(RM) source/Buffer.o
-	$(RM) source/BufferReader.o
-	$(RM) source/BufferWriter.o
-	$(RM) source/Common.o
-	$(RM) source/Data.o
-	$(RM) source/Item.o
-	$(RM) source/Reference.o
-	$(RM) source/ReferenceImplementation.o
-	$(RM) source/Relation.o
-	$(RM) source/Structure.o
+	$(RM) $(OBJECT_FILES)
+	@MORE_OBJECT_FILES="$(filter-out $(OBJECT_FILES),$(wildcard $(OBJECT_DIRECTORY)/*.o))"; \
+	if [ x"$${MORE_OBJECT_FILES}" != x ]; then \
+		echo "\nThe following object files have not been removed explicitly. They are deleted with the \"$(OBJECT_DIRECTORY)\" directory, nevertheless."; \
+		for OBJECT_FILE in $${MORE_OBJECT_FILES}; do \
+			echo "    $${OBJECT_FILE}"; \
+		done; \
+		echo ""; \
+	fi
+	$(RM) -r $(OBJECT_DIRECTORY)
+	$(RM) $(DEPENDENCY_FILES)
+	$(RM) -r $(DEPENDENCY_DIRECTORY)
 
 clean-recursive: clean-here
 
-source/Archive.o: source/Archive.cxx include/Archive.h $(CXXFLAGS_configuration)
+$(OBJECT_FILES): $(CXXFLAGS_configuration)
+
+$(DEPENDENCY_DIRECTORY)/%.dep: %
+	@test -d $(@D) || mkdir -p $(@D)
+	$(CXX) $(CXXFLAGS) -Iinclude -MM $< | sed 's/^\(.*\.o\):/$(subst /,\/,$(OBJECT_DIRECTORY))\/$(subst /,\/,$(subst ./,,$(dir $<)))\1 $(subst /,\/,$@):/g' > $@
+
+$(OBJECT_DIRECTORY)/%.o: %.cxx
+	@test -d $(@D) || mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) -Iinclude -c $< -o $@
 
-source/Buffer.o: source/Buffer.cxx include/Buffer.h $(CXXFLAGS_configuration)
-	$(CXX) $(CXXFLAGS) -Iinclude -c $< -o $@
-
-source/BufferReader.o: source/BufferReader.cxx include/BufferReader.h $(CXXFLAGS_configuration)
-	$(CXX) $(CXXFLAGS) -Iinclude -c $< -o $@
-
-source/BufferWriter.o: source/BufferWriter.cxx include/BufferWriter.h $(CXXFLAGS_configuration)
-	$(CXX) $(CXXFLAGS) -Iinclude -c $< -o $@
-
-source/Common.o: source/Common.cxx include/Common.h $(CXXFLAGS_configuration)
-	$(CXX) $(CXXFLAGS) -Iinclude -c $< -o $@
-
-source/Data.o: source/Data.cxx include/Data.h $(CXXFLAGS_configuration)
-	$(CXX) $(CXXFLAGS) -Iinclude -c $< -o $@
-
-source/Item.o: source/Item.cxx include/Item.h $(CXXFLAGS_configuration)
-	$(CXX) $(CXXFLAGS) -Iinclude -c $< -o $@
-
-source/Reference.o: source/Reference.cxx include/Reference.h $(CXXFLAGS_configuration)
-	$(CXX) $(CXXFLAGS) -Iinclude -c $< -o $@
-
-source/ReferenceImplementation.o: source/ReferenceImplementation.cxx source/ReferenceImplementation.h $(CXXFLAGS_configuration)
-	$(CXX) $(CXXFLAGS) -Iinclude -c $< -o $@
-
-source/Relation.o: source/Relation.cxx $(CXXFLAGS_configuration)
-	$(CXX) $(CXXFLAGS) -Iinclude -c $< -o $@
-
-source/Structure.o: source/Structure.cxx include/Structure.h $(CXXFLAGS_configuration)
-	$(CXX) $(CXXFLAGS) -Iinclude -c $< -o $@
-
-libarx.a: source/Archive.o source/Buffer.o source/BufferReader.o source/BufferWriter.o source/Common.o source/Data.o source/Item.o source/Reference.o source/ReferenceImplementation.o source/Relation.o source/Structure.o
-	ar rcs $@ $^
+libarx.a: $(OBJECT_FILES)
+	ar rcs $@ $(OBJECT_FILES)
 
 .PHONY: default all all-here all-recursive check clean clean-here clean-recursive
