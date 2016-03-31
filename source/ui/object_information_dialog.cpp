@@ -46,26 +46,30 @@ UI::ObjectInformationDialog::ObjectInformationDialog(UI::Widget * SupWidget, con
 	_CloseButton(0),
 	_RefreshButton(0)
 {
-	SetPosition(Vector2f(100.0f, 400.0f));
+	SetLeft(100.0f);
+	SetTop(400.0f);
 	SetSize(Vector2f(500.0f, 300.0f));
 	// set up widgets
 	_CloseButton = new UI::TextButton(this, "Close");
 	_CloseButton->SetSize(Vector2f(100.0f, 20.0f));
-	_CloseButton->SetPosition(Vector2f(GetSize()[0] - 10.0f - _CloseButton->GetSize()[0], GetSize()[1] - 10.0f - _CloseButton->GetSize()[1]));
+	_CloseButton->SetLeft(GetSize()[0] - 10.0f - _CloseButton->GetSize()[0]);
+	_CloseButton->SetTop(GetSize()[1] - 10.0f - _CloseButton->GetSize()[1]);
 	_CloseButton->SetAnchorBottom(true);
 	_CloseButton->SetAnchorLeft(false);
 	_CloseButton->SetAnchorRight(true);
 	_CloseButton->SetAnchorTop(false);
 	_CloseButton->ConnectClickedCallback(std::bind(&ObjectInformationDialog::_OnCloseClicked, this));
 	_PropertiesScrollBox = new UI::ScrollBox(this);
-	_PropertiesScrollBox->SetPosition(Vector2f(10.0f, 40.0f));
+	_PropertiesScrollBox->SetLeft(10.0f);
+	_PropertiesScrollBox->SetTop(40.0f);
 	_PropertiesScrollBox->SetSize(Vector2f(GetSize()[0] - 20.0f, GetSize()[1] - 80.0f));
 	_PropertiesScrollBox->SetHorizontalScrollBarVisible(false);
 	_PropertiesScrollBox->SetAnchorBottom(true);
 	_PropertiesScrollBox->SetAnchorRight(true);
 	_RefreshButton = new UI::TextButton(this, "Refresh");
 	_RefreshButton->SetSize(Vector2f(100.0f, 20.0f));
-	_RefreshButton->SetPosition(Vector2f(_CloseButton->GetPosition()[0] - 10.0f - _RefreshButton->GetSize()[0], GetSize()[1] - 10.0f - _RefreshButton->GetSize()[1]));
+	_RefreshButton->SetLeft(_CloseButton->GetLeft() - 10.0f - _RefreshButton->GetSize()[0]);
+	_RefreshButton->SetTop(GetSize()[1] - 10.0f - _RefreshButton->GetSize()[1]);
 	_RefreshButton->SetAnchorBottom(true);
 	_RefreshButton->SetAnchorLeft(false);
 	_RefreshButton->SetAnchorRight(true);
@@ -78,13 +82,15 @@ float UI::ObjectInformationDialog::_AddObjectProperty(float Top, float Indentati
 {
 	UI::Widget * PropertyDisplay(new UI::Widget(_PropertiesScrollBox->GetContent()));
 	
-	PropertyDisplay->SetPosition(Vector2f(10.0f, Top));
+	PropertyDisplay->SetLeft(10.0f);
+	PropertyDisplay->SetTop(Top);
 	PropertyDisplay->SetSize(Vector2f(_PropertiesScrollBox->GetContent()->GetSize()[0] - 20.0f, 30.0f));
 	PropertyDisplay->SetAnchorRight(true);
 	
 	UI::Button * ObjectButton(new UI::TextButton(PropertyDisplay, Object->GetObjectIdentifier()));
 	
-	ObjectButton->SetPosition(Vector2f(Indentation, 5.0f));
+	ObjectButton->SetLeft(Indentation);
+	ObjectButton->SetTop(5.0f);
 	ObjectButton->SetSize(Vector2f(PropertyDisplay->GetSize()[0] - Indentation, 20.0f));
 	ObjectButton->SetAnchorRight(true);
 	ObjectButton->ConnectClickedCallback(std::bind(&ObjectInformationDialog::_OnObjectClicked, this, Object));
@@ -96,13 +102,15 @@ float UI::ObjectInformationDialog::_AddSeparator(float Top, float Indentation, c
 {
 	UI::Widget * SeparatorDisplay(new UI::Widget(_PropertiesScrollBox->GetContent()));
 	
-	SeparatorDisplay->SetPosition(Vector2f(10.0f, Top));
+	SeparatorDisplay->SetLeft(10.0f);
+	SeparatorDisplay->SetTop(Top);
 	SeparatorDisplay->SetSize(Vector2f(_PropertiesScrollBox->GetContent()->GetSize()[0] - 20.0f, 20.0f));
 	SeparatorDisplay->SetAnchorRight(true);
 	
 	UI::Label * SeparatorLabel(new UI::Label(SeparatorDisplay, Separator));
 	
-	SeparatorLabel->SetPosition(Vector2f(Indentation, 0.0f));
+	SeparatorLabel->SetLeft(Indentation);
+	SeparatorLabel->SetTop(0.0f);
 	SeparatorLabel->SetSize(SeparatorDisplay->GetSize());
 	SeparatorLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	SeparatorLabel->SetAnchorBottom(true);
@@ -115,13 +123,15 @@ float UI::ObjectInformationDialog::_AddString(float Top, float Indentation, cons
 {
 	UI::Widget * StringDisplay(new UI::Widget(_PropertiesScrollBox->GetContent()));
 	
-	StringDisplay->SetPosition(Vector2f(10.0f, Top));
+	StringDisplay->SetLeft(10.0f);
+	StringDisplay->SetTop(Top);
 	StringDisplay->SetSize(Vector2f(_PropertiesScrollBox->GetContent()->GetSize()[0] - 20.0f, 20.0f));
 	StringDisplay->SetAnchorRight(true);
 	
 	UI::Label * StringLabel(new UI::Label(StringDisplay, String));
 	
-	StringLabel->SetPosition(Vector2f(Indentation, 0.0f));
+	StringLabel->SetLeft(Indentation);
+	StringLabel->SetTop(0.0f);
 	StringLabel->SetSize(StringDisplay->GetSize());
 	StringLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	StringLabel->SetAnchorBottom(true);
@@ -133,21 +143,24 @@ float UI::ObjectInformationDialog::_AddStringProperty(float Top, float Indentati
 {
 	UI::Widget * PropertyDisplay(new UI::Widget(_PropertiesScrollBox->GetContent()));
 	
-	PropertyDisplay->SetPosition(Vector2f(10.0f, Top));
+	PropertyDisplay->SetLeft(10.0f);
+	PropertyDisplay->SetTop(Top);
 	PropertyDisplay->SetSize(Vector2f(_PropertiesScrollBox->GetContent()->GetSize()[0] - 20.0f, 20.0f));
 	PropertyDisplay->SetAnchorRight(true);
 	
 	UI::Label * PropertyNameLabel(new UI::Label(PropertyDisplay, PropertyName + ":"));
 	
-	PropertyNameLabel->SetPosition(Vector2f(Indentation, 0.0f));
+	PropertyNameLabel->SetLeft(Indentation);
+	PropertyNameLabel->SetTop(0.0f);
 	PropertyNameLabel->SetSize(Vector2f(6.0f * (PropertyName.length() + 1), PropertyDisplay->GetSize()[1]));
 	PropertyNameLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	PropertyNameLabel->SetAnchorBottom(true);
 	
 	UI::Label * PropertyValueLabel(new UI::Label(PropertyDisplay, PropertyValue));
 	
-	PropertyValueLabel->SetPosition(Vector2f(PropertyNameLabel->GetPosition()[0] + PropertyNameLabel->GetSize()[0], 0.0f));
-	PropertyValueLabel->SetSize(Vector2f(PropertyDisplay->GetSize()[0] - PropertyNameLabel->GetPosition()[0] - PropertyNameLabel->GetSize()[0], PropertyDisplay->GetSize()[1]));
+	PropertyValueLabel->SetLeft(PropertyNameLabel->GetLeft() + PropertyNameLabel->GetSize()[0]);
+	PropertyValueLabel->SetTop(0.0f);
+	PropertyValueLabel->SetSize(Vector2f(PropertyDisplay->GetSize()[0] - PropertyNameLabel->GetLeft() - PropertyNameLabel->GetSize()[0], PropertyDisplay->GetSize()[1]));
 	PropertyValueLabel->SetHorizontalAlignment(UI::Label::ALIGN_RIGHT);
 	PropertyValueLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	PropertyValueLabel->SetAnchorRight(true);

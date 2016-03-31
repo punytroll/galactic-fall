@@ -56,7 +56,6 @@ namespace UI
 		void SetDisabledBackgroundColor(const Graphics::ColorRGBO & DisabledBackgroundColor);
 		void UnsetBackgroundColor(void);
 		void UnsetDisabledBackgroundColor(void);
-		void SetPosition(const Vector2f & Position);
 		void SetSize(const Vector2f & Size);
 		void AddSubWidget(Widget * SubWidget);
 		void RemoveSubWidget(Widget * SubWidget);
@@ -69,8 +68,8 @@ namespace UI
 		const Graphics::ColorRGBO * GetBackgroundColor(void) const;
 		bool GetEnabled(void) const;
 		Widget * GetHoveredWidget(void);
-		const Vector2f & GetPosition(void) const;
 		Vector2f GetGlobalPosition(void) const;
+		float GetLeft(void) const;
 		const Vector2f & GetSize(void) const;
 		const std::string & GetName(void) const;
 		std::string GetPath(void) const;
@@ -78,6 +77,7 @@ namespace UI
 		Widget * GetSupWidget(void);
 		Widget * GetSubWidget(const std::string & Name);
 		const std::list< Widget * > & GetSubWidgets(void) const;
+		float GetTop(void) const;
 		bool IsEnabled(void) const;
 		bool IsHovered(void) const;
 		bool IsVisible(void) const;
@@ -87,6 +87,8 @@ namespace UI
 		void SetAnchorRight(bool AnchorRight);
 		void SetAnchorTop(bool AnchorTop);
 		void SetEnabled(bool Enabled);
+		void SetLeft(float Left);
+		void SetTop(float Top);
 		void SetVisible(bool Visible);
 		// connect events
 		Connection ConnectDestroyingCallback(std::function< void (UI::Event &) > Callback);
@@ -117,11 +119,12 @@ namespace UI
 		bool _Enabled;
 		Widget * _HoverWidget;
 		Widget * _KeyFocus;
+		float _Left;
 		std::string _Name;
-		Vector2f _Position;
 		Vector2f _Size;
 		std::list< Widget * > _SubWidgets;
 		Widget * _SupWidget;
+		float _Top;
 		bool _Visible;
 		// events
 		::Event< void, UI::Event & > _DestroyingEvent;
@@ -149,15 +152,10 @@ namespace UI
 	{
 		return _HoverWidget;
 	}
-
-	inline const Vector2f & Widget::GetPosition(void) const
+	
+	inline float Widget::GetLeft(void) const
 	{
-		return _Position;
-	}
-
-	inline const Vector2f & Widget::GetSize(void) const
-	{
-		return _Size;
+		return _Left;
 	}
 
 	inline const std::string & Widget::GetName(void) const
@@ -182,6 +180,11 @@ namespace UI
 		return SupWidget;
 	}
 
+	inline const Vector2f & Widget::GetSize(void) const
+	{
+		return _Size;
+	}
+
 	inline Widget * Widget::GetSupWidget(void)
 	{
 		return _SupWidget;
@@ -203,6 +206,11 @@ namespace UI
 	inline const std::list< Widget * > & Widget::GetSubWidgets(void) const
 	{
 		return _SubWidgets;
+	}
+	
+	inline float Widget::GetTop(void) const
+	{
+		return _Top;
 	}
 	
 	inline bool Widget::IsEnabled(void) const
@@ -251,12 +259,22 @@ namespace UI
 	{
 		_Enabled = Enabled;
 	}
-
+	
+	inline void Widget::SetLeft(float Left)
+	{
+		_Left = Left;
+	}
+	
 	inline void Widget::SetName(const std::string & Name)
 	{
 		_Name = Name;
 	}
-
+	
+	inline void Widget::SetTop(float Top)
+	{
+		_Top = Top;
+	}
+	
 	inline void Widget::SetVisible(bool Visible)
 	{
 		_Visible = Visible;

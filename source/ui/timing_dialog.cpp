@@ -28,18 +28,21 @@
 UI::TimingDialog::TimingDialog(UI::Widget * SupWidget) :
 	UI::Window(SupWidget, "Timing Information")
 {
-	SetPosition(Vector2f(300.0f, 300.0f));
+	SetLeft(300.0f);
+	SetTop(300.0f);
 	SetSize(Vector2f(350.0f, 400.0f));
 	ConnectKeyCallback(std::bind(&UI::TimingDialog::_OnKey, this, std::placeholders::_1));
 	ConnectUpdatingCallback(std::bind(&UI::TimingDialog::_OnUpdating, this, std::placeholders::_1, std::placeholders::_2));
 	
 	UI::Label * FramesPerSecondCaptionLabel(new UI::Label(this, "Frames per Second:"));
 	
-	FramesPerSecondCaptionLabel->SetPosition(Vector2f(10.0f, 40.0f));
+	FramesPerSecondCaptionLabel->SetLeft(10.0f);
+	FramesPerSecondCaptionLabel->SetTop(40.0f);
 	FramesPerSecondCaptionLabel->SetSize(Vector2f(GetSize()[0] - 100.0f, 20.0f));
 	FramesPerSecondCaptionLabel->SetAnchorRight(true);
 	_FramesPerSecondLabel = new UI::Label(this, "0");
-	_FramesPerSecondLabel->SetPosition(Vector2f(GetSize()[0] - 80.0f, 40.0f));
+	_FramesPerSecondLabel->SetLeft(GetSize()[0] - 80.0f);
+	_FramesPerSecondLabel->SetTop(40.0f);
 	_FramesPerSecondLabel->SetSize(Vector2f(70.0f, 20.0f));
 	_FramesPerSecondLabel->SetAnchorLeft(false);
 	_FramesPerSecondLabel->SetAnchorRight(true);
@@ -47,11 +50,13 @@ UI::TimingDialog::TimingDialog(UI::Widget * SupWidget) :
 	
 	UI::Label * FrameToFrameSecondsThisFrameCaptionLabel(new UI::Label(this, "Seconds from Frame to Frame:"));
 	
-	FrameToFrameSecondsThisFrameCaptionLabel->SetPosition(Vector2f(10.0f, 60.0f));
+	FrameToFrameSecondsThisFrameCaptionLabel->SetLeft(10.0f);
+	FrameToFrameSecondsThisFrameCaptionLabel->SetTop(60.0f);
 	FrameToFrameSecondsThisFrameCaptionLabel->SetSize(Vector2f(GetSize()[0] - 100.0f, 20.0f));
 	FrameToFrameSecondsThisFrameCaptionLabel->SetAnchorRight(true);
 	_FrameToFrameSecondsThisFrameLabel = new UI::Label(this, "0");
-	_FrameToFrameSecondsThisFrameLabel->SetPosition(Vector2f(GetSize()[0] - 80.0f, 60.0f));
+	_FrameToFrameSecondsThisFrameLabel->SetLeft(GetSize()[0] - 80.0f);
+	_FrameToFrameSecondsThisFrameLabel->SetTop(60.0f);
 	_FrameToFrameSecondsThisFrameLabel->SetSize(Vector2f(70.0f, 20.0f));
 	_FrameToFrameSecondsThisFrameLabel->SetAnchorLeft(false);
 	_FrameToFrameSecondsThisFrameLabel->SetAnchorRight(true);
@@ -59,11 +64,13 @@ UI::TimingDialog::TimingDialog(UI::Widget * SupWidget) :
 	
 	UI::Label * ProcessingSecondsThisFrameCaptionLabel(new UI::Label(this, "Processing Seconds this Frame:"));
 	
-	ProcessingSecondsThisFrameCaptionLabel->SetPosition(Vector2f(10.0f, 80.0f));
+	ProcessingSecondsThisFrameCaptionLabel->SetLeft(10.0f);
+	ProcessingSecondsThisFrameCaptionLabel->SetTop(80.0f);
 	ProcessingSecondsThisFrameCaptionLabel->SetSize(Vector2f(GetSize()[0] - 100.0f, 20.0f));
 	ProcessingSecondsThisFrameCaptionLabel->SetAnchorRight(true);
 	_ProcessingSecondsThisFrameLabel = new UI::Label(this, "0");
-	_ProcessingSecondsThisFrameLabel->SetPosition(Vector2f(GetSize()[0] - 80.0f, 80.0f));
+	_ProcessingSecondsThisFrameLabel->SetLeft(GetSize()[0] - 80.0f);
+	_ProcessingSecondsThisFrameLabel->SetTop(80.0f);
 	_ProcessingSecondsThisFrameLabel->SetSize(Vector2f(70.0f, 20.0f));
 	_ProcessingSecondsThisFrameLabel->SetAnchorLeft(false);
 	_ProcessingSecondsThisFrameLabel->SetAnchorRight(true);
@@ -71,11 +78,13 @@ UI::TimingDialog::TimingDialog(UI::Widget * SupWidget) :
 	
 	UI::Label * AISecondsThisFrameCaptionLabel(new UI::Label(this, "AI Seconds this Frame:"));
 	
-	AISecondsThisFrameCaptionLabel->SetPosition(Vector2f(10.0f, 100.0f));
+	AISecondsThisFrameCaptionLabel->SetLeft(10.0f);
+	AISecondsThisFrameCaptionLabel->SetTop(100.0f);
 	AISecondsThisFrameCaptionLabel->SetSize(Vector2f(GetSize()[0] - 100.0f, 20.0f));
 	AISecondsThisFrameCaptionLabel->SetAnchorRight(true);
 	_AISecondsThisFrameLabel = new UI::Label(this, "0");
-	_AISecondsThisFrameLabel->SetPosition(Vector2f(GetSize()[0] - 80.0f, 100.0f));
+	_AISecondsThisFrameLabel->SetLeft(GetSize()[0] - 80.0f);
+	_AISecondsThisFrameLabel->SetTop(100.0f);
 	_AISecondsThisFrameLabel->SetSize(Vector2f(70.0f, 20.0f));
 	_AISecondsThisFrameLabel->SetAnchorLeft(false);
 	_AISecondsThisFrameLabel->SetAnchorRight(true);
@@ -83,11 +92,13 @@ UI::TimingDialog::TimingDialog(UI::Widget * SupWidget) :
 	
 	UI::Label * PhysicsSecondsThisFrameCaptionLabel(new UI::Label(this, "Physics Seconds this Frame:"));
 	
-	PhysicsSecondsThisFrameCaptionLabel->SetPosition(Vector2f(10.0f, 120.0f));
+	PhysicsSecondsThisFrameCaptionLabel->SetLeft(10.0f);
+	PhysicsSecondsThisFrameCaptionLabel->SetTop(120.0f);
 	PhysicsSecondsThisFrameCaptionLabel->SetSize(Vector2f(GetSize()[0] - 100.0f, 20.0f));
 	PhysicsSecondsThisFrameCaptionLabel->SetAnchorRight(true);
 	_PhysicsSecondsThisFrameLabel = new UI::Label(this, "0");
-	_PhysicsSecondsThisFrameLabel->SetPosition(Vector2f(GetSize()[0] - 80.0f, 120.0f));
+	_PhysicsSecondsThisFrameLabel->SetLeft(GetSize()[0] - 80.0f);
+	_PhysicsSecondsThisFrameLabel->SetTop(120.0f);
 	_PhysicsSecondsThisFrameLabel->SetSize(Vector2f(70.0f, 20.0f));
 	_PhysicsSecondsThisFrameLabel->SetAnchorLeft(false);
 	_PhysicsSecondsThisFrameLabel->SetAnchorRight(true);
@@ -95,11 +106,13 @@ UI::TimingDialog::TimingDialog(UI::Widget * SupWidget) :
 	
 	UI::Label * GraphicsSecondsThisFrameCaptionLabel(new UI::Label(this, "Graphics Seconds this Frame:"));
 	
-	GraphicsSecondsThisFrameCaptionLabel->SetPosition(Vector2f(10.0f, 140.0f));
+	GraphicsSecondsThisFrameCaptionLabel->SetLeft(10.0f);
+	GraphicsSecondsThisFrameCaptionLabel->SetTop(140.0f);
 	GraphicsSecondsThisFrameCaptionLabel->SetSize(Vector2f(GetSize()[0] - 100.0f, 20.0f));
 	GraphicsSecondsThisFrameCaptionLabel->SetAnchorRight(true);
 	_GraphicsSecondsThisFrameLabel = new UI::Label(this, "0");
-	_GraphicsSecondsThisFrameLabel->SetPosition(Vector2f(GetSize()[0] - 80.0f, 140.0f));
+	_GraphicsSecondsThisFrameLabel->SetLeft(GetSize()[0] - 80.0f);
+	_GraphicsSecondsThisFrameLabel->SetTop(140.0f);
 	_GraphicsSecondsThisFrameLabel->SetSize(Vector2f(70.0f, 20.0f));
 	_GraphicsSecondsThisFrameLabel->SetAnchorLeft(false);
 	_GraphicsSecondsThisFrameLabel->SetAnchorRight(true);
@@ -107,11 +120,13 @@ UI::TimingDialog::TimingDialog(UI::Widget * SupWidget) :
 	
 	UI::Label * MessagingSecondsThisFrameCaptionLabel(new UI::Label(this, "Messaging Seconds this Frame:"));
 	
-	MessagingSecondsThisFrameCaptionLabel->SetPosition(Vector2f(10.0f, 160.0f));
+	MessagingSecondsThisFrameCaptionLabel->SetLeft(10.0f);
+	MessagingSecondsThisFrameCaptionLabel->SetTop(160.0f);
 	MessagingSecondsThisFrameCaptionLabel->SetSize(Vector2f(GetSize()[0] - 100.0f, 20.0f));
 	MessagingSecondsThisFrameCaptionLabel->SetAnchorRight(true);
 	_MessagingSecondsThisFrameLabel = new UI::Label(this, "0");
-	_MessagingSecondsThisFrameLabel->SetPosition(Vector2f(GetSize()[0] - 80.0f, 160.0f));
+	_MessagingSecondsThisFrameLabel->SetLeft(GetSize()[0] - 80.0f);
+	_MessagingSecondsThisFrameLabel->SetTop(160.0f);
 	_MessagingSecondsThisFrameLabel->SetSize(Vector2f(70.0f, 20.0f));
 	_MessagingSecondsThisFrameLabel->SetAnchorLeft(false);
 	_MessagingSecondsThisFrameLabel->SetAnchorRight(true);
@@ -119,11 +134,13 @@ UI::TimingDialog::TimingDialog(UI::Widget * SupWidget) :
 	
 	UI::Label * DispatchedMessagesThisFrameCaptionLabel(new UI::Label(this, "Dispatched messages this Frame:"));
 	
-	DispatchedMessagesThisFrameCaptionLabel->SetPosition(Vector2f(10.0f, 180.0f));
+	DispatchedMessagesThisFrameCaptionLabel->SetLeft(10.0f);
+	DispatchedMessagesThisFrameCaptionLabel->SetTop(180.0f);
 	DispatchedMessagesThisFrameCaptionLabel->SetSize(Vector2f(GetSize()[0] - 100.0f, 20.0f));
 	DispatchedMessagesThisFrameCaptionLabel->SetAnchorRight(true);
 	_DispatchedMessagesThisFrameLabel = new UI::Label(this, "0");
-	_DispatchedMessagesThisFrameLabel->SetPosition(Vector2f(GetSize()[0] - 80.0f, 180.0f));
+	_DispatchedMessagesThisFrameLabel->SetLeft(GetSize()[0] - 80.0f);
+	_DispatchedMessagesThisFrameLabel->SetTop(180.0f);
 	_DispatchedMessagesThisFrameLabel->SetSize(Vector2f(70.0f, 20.0f));
 	_DispatchedMessagesThisFrameLabel->SetAnchorLeft(false);
 	_DispatchedMessagesThisFrameLabel->SetAnchorRight(true);
@@ -131,11 +148,13 @@ UI::TimingDialog::TimingDialog(UI::Widget * SupWidget) :
 	
 	UI::Label * CommoditiesInCurrentSystemThisFrameCaptionLabel(new UI::Label(this, "Commodities in current System this Frame:"));
 	
-	CommoditiesInCurrentSystemThisFrameCaptionLabel->SetPosition(Vector2f(10.0f, 200.0f));
+	CommoditiesInCurrentSystemThisFrameCaptionLabel->SetLeft(10.0f);
+	CommoditiesInCurrentSystemThisFrameCaptionLabel->SetTop(200.0f);
 	CommoditiesInCurrentSystemThisFrameCaptionLabel->SetSize(Vector2f(GetSize()[0] - 100.0f, 20.0f));
 	CommoditiesInCurrentSystemThisFrameCaptionLabel->SetAnchorRight(true);
 	_CommoditiesInCurrentSystemThisFrameLabel = new UI::Label(this, "0");
-	_CommoditiesInCurrentSystemThisFrameLabel->SetPosition(Vector2f(GetSize()[0] - 80.0f, 200.0f));
+	_CommoditiesInCurrentSystemThisFrameLabel->SetLeft(GetSize()[0] - 80.0f);
+	_CommoditiesInCurrentSystemThisFrameLabel->SetTop(200.0f);
 	_CommoditiesInCurrentSystemThisFrameLabel->SetSize(Vector2f(70.0f, 20.0f));
 	_CommoditiesInCurrentSystemThisFrameLabel->SetAnchorLeft(false);
 	_CommoditiesInCurrentSystemThisFrameLabel->SetAnchorRight(true);
@@ -143,11 +162,13 @@ UI::TimingDialog::TimingDialog(UI::Widget * SupWidget) :
 	
 	UI::Label * ShipsInCurrentSystemThisFrameCaptionLabel(new UI::Label(this, "Ships in current System this Frame:"));
 	
-	ShipsInCurrentSystemThisFrameCaptionLabel->SetPosition(Vector2f(10.0f, 220.0f));
+	ShipsInCurrentSystemThisFrameCaptionLabel->SetLeft(10.0f);
+	ShipsInCurrentSystemThisFrameCaptionLabel->SetTop(220.0f);
 	ShipsInCurrentSystemThisFrameCaptionLabel->SetSize(Vector2f(GetSize()[0] - 100.0f, 20.0f));
 	ShipsInCurrentSystemThisFrameCaptionLabel->SetAnchorRight(true);
 	_ShipsInCurrentSystemThisFrameLabel = new UI::Label(this, "0");
-	_ShipsInCurrentSystemThisFrameLabel->SetPosition(Vector2f(GetSize()[0] - 80.0f, 220.0f));
+	_ShipsInCurrentSystemThisFrameLabel->SetLeft(GetSize()[0] - 80.0f);
+	_ShipsInCurrentSystemThisFrameLabel->SetTop(220.0f);
 	_ShipsInCurrentSystemThisFrameLabel->SetSize(Vector2f(70.0f, 20.0f));
 	_ShipsInCurrentSystemThisFrameLabel->SetAnchorLeft(false);
 	_ShipsInCurrentSystemThisFrameLabel->SetAnchorRight(true);
@@ -155,11 +176,13 @@ UI::TimingDialog::TimingDialog(UI::Widget * SupWidget) :
 	
 	UI::Label * ShotsInCurrentSystemThisFrameCaptionLabel(new UI::Label(this, "Shots in current System this Frame:"));
 	
-	ShotsInCurrentSystemThisFrameCaptionLabel->SetPosition(Vector2f(10.0f, 240.0f));
+	ShotsInCurrentSystemThisFrameCaptionLabel->SetLeft(10.0f);
+	ShotsInCurrentSystemThisFrameCaptionLabel->SetTop(240.0f);
 	ShotsInCurrentSystemThisFrameCaptionLabel->SetSize(Vector2f(GetSize()[0] - 100.0f, 20.0f));
 	ShotsInCurrentSystemThisFrameCaptionLabel->SetAnchorRight(true);
 	_ShotsInCurrentSystemThisFrameLabel = new UI::Label(this, "0");
-	_ShotsInCurrentSystemThisFrameLabel->SetPosition(Vector2f(GetSize()[0] - 80.0f, 240.0f));
+	_ShotsInCurrentSystemThisFrameLabel->SetLeft(GetSize()[0] - 80.0f);
+	_ShotsInCurrentSystemThisFrameLabel->SetTop(240.0f);
 	_ShotsInCurrentSystemThisFrameLabel->SetSize(Vector2f(70.0f, 20.0f));
 	_ShotsInCurrentSystemThisFrameLabel->SetAnchorLeft(false);
 	_ShotsInCurrentSystemThisFrameLabel->SetAnchorRight(true);
@@ -167,11 +190,13 @@ UI::TimingDialog::TimingDialog(UI::Widget * SupWidget) :
 	
 	UI::Label * ParticleSystemsUpdatedThisFrameCaptionLabel(new UI::Label(this, "Particle systems updated this Frame:"));
 	
-	ParticleSystemsUpdatedThisFrameCaptionLabel->SetPosition(Vector2f(10.0f, 260.0f));
+	ParticleSystemsUpdatedThisFrameCaptionLabel->SetLeft(10.0f);
+	ParticleSystemsUpdatedThisFrameCaptionLabel->SetTop(260.0f);
 	ParticleSystemsUpdatedThisFrameCaptionLabel->SetSize(Vector2f(GetSize()[0] - 100.0f, 20.0f));
 	ParticleSystemsUpdatedThisFrameCaptionLabel->SetAnchorRight(true);
 	_ParticleSystemsUpdatedThisFrameLabel = new UI::Label(this, "0");
-	_ParticleSystemsUpdatedThisFrameLabel->SetPosition(Vector2f(GetSize()[0] - 80.0f, 260.0f));
+	_ParticleSystemsUpdatedThisFrameLabel->SetLeft(GetSize()[0] - 80.0f);
+	_ParticleSystemsUpdatedThisFrameLabel->SetTop(260.0f);
 	_ParticleSystemsUpdatedThisFrameLabel->SetSize(Vector2f(70.0f, 20.0f));
 	_ParticleSystemsUpdatedThisFrameLabel->SetAnchorLeft(false);
 	_ParticleSystemsUpdatedThisFrameLabel->SetAnchorRight(true);
@@ -179,11 +204,13 @@ UI::TimingDialog::TimingDialog(UI::Widget * SupWidget) :
 	
 	UI::Label * ParticleSystemsDrawnThisFrameCaptionLabel(new UI::Label(this, "Particle systems drawn this Frame:"));
 	
-	ParticleSystemsDrawnThisFrameCaptionLabel->SetPosition(Vector2f(10.0f, 280.0f));
+	ParticleSystemsDrawnThisFrameCaptionLabel->SetLeft(10.0f);
+	ParticleSystemsDrawnThisFrameCaptionLabel->SetTop(280.0f);
 	ParticleSystemsDrawnThisFrameCaptionLabel->SetSize(Vector2f(GetSize()[0] - 100.0f, 20.0f));
 	ParticleSystemsDrawnThisFrameCaptionLabel->SetAnchorRight(true);
 	_ParticleSystemsDrawnThisFrameLabel = new UI::Label(this, "0");
-	_ParticleSystemsDrawnThisFrameLabel->SetPosition(Vector2f(GetSize()[0] - 80.0f, 280.0f));
+	_ParticleSystemsDrawnThisFrameLabel->SetLeft(GetSize()[0] - 80.0f);
+	_ParticleSystemsDrawnThisFrameLabel->SetTop(280.0f);
 	_ParticleSystemsDrawnThisFrameLabel->SetSize(Vector2f(70.0f, 20.0f));
 	_ParticleSystemsDrawnThisFrameLabel->SetAnchorLeft(false);
 	_ParticleSystemsDrawnThisFrameLabel->SetAnchorRight(true);
@@ -191,11 +218,13 @@ UI::TimingDialog::TimingDialog(UI::Widget * SupWidget) :
 	
 	UI::Label * ParticlesUpdatedThisFrameCaptionLabel(new UI::Label(this, "Particles updated this Frame:"));
 	
-	ParticlesUpdatedThisFrameCaptionLabel->SetPosition(Vector2f(10.0f, 300.0f));
+	ParticlesUpdatedThisFrameCaptionLabel->SetLeft(10.0f);
+	ParticlesUpdatedThisFrameCaptionLabel->SetTop(300.0f);
 	ParticlesUpdatedThisFrameCaptionLabel->SetSize(Vector2f(GetSize()[0] - 100.0f, 20.0f));
 	ParticlesUpdatedThisFrameCaptionLabel->SetAnchorRight(true);
 	_ParticlesUpdatedThisFrameLabel = new UI::Label(this, "0");
-	_ParticlesUpdatedThisFrameLabel->SetPosition(Vector2f(GetSize()[0] - 80.0f, 300.0f));
+	_ParticlesUpdatedThisFrameLabel->SetLeft(GetSize()[0] - 80.0f);
+	_ParticlesUpdatedThisFrameLabel->SetTop(300.0f);
 	_ParticlesUpdatedThisFrameLabel->SetSize(Vector2f(70.0f, 20.0f));
 	_ParticlesUpdatedThisFrameLabel->SetAnchorLeft(false);
 	_ParticlesUpdatedThisFrameLabel->SetAnchorRight(true);
@@ -203,11 +232,13 @@ UI::TimingDialog::TimingDialog(UI::Widget * SupWidget) :
 	
 	UI::Label * ParticlesDrawnThisFrameCaptionLabel(new UI::Label(this, "Particles drawn this Frame:"));
 	
-	ParticlesDrawnThisFrameCaptionLabel->SetPosition(Vector2f(10.0f, 320.0f));
+	ParticlesDrawnThisFrameCaptionLabel->SetLeft(10.0f);
+	ParticlesDrawnThisFrameCaptionLabel->SetTop(320.0f);
 	ParticlesDrawnThisFrameCaptionLabel->SetSize(Vector2f(GetSize()[0] - 100.0f, 20.0f));
 	ParticlesDrawnThisFrameCaptionLabel->SetAnchorRight(true);
 	_ParticlesDrawnThisFrameLabel = new UI::Label(this, "0");
-	_ParticlesDrawnThisFrameLabel->SetPosition(Vector2f(GetSize()[0] - 80.0f, 320.0f));
+	_ParticlesDrawnThisFrameLabel->SetLeft(GetSize()[0] - 80.0f);
+	_ParticlesDrawnThisFrameLabel->SetTop(320.0f);
 	_ParticlesDrawnThisFrameLabel->SetSize(Vector2f(70.0f, 20.0f));
 	_ParticlesDrawnThisFrameLabel->SetAnchorLeft(false);
 	_ParticlesDrawnThisFrameLabel->SetAnchorRight(true);
@@ -215,11 +246,13 @@ UI::TimingDialog::TimingDialog(UI::Widget * SupWidget) :
 	
 	UI::Label * FontSecondsLastFrameCaptionLabel(new UI::Label(this, "Font Seconds last Frame:"));
 	
-	FontSecondsLastFrameCaptionLabel->SetPosition(Vector2f(10.0f, 340.0f));
+	FontSecondsLastFrameCaptionLabel->SetLeft(10.0f);
+	FontSecondsLastFrameCaptionLabel->SetTop(340.0f);
 	FontSecondsLastFrameCaptionLabel->SetSize(Vector2f(GetSize()[0] - 100.0f, 20.0f));
 	FontSecondsLastFrameCaptionLabel->SetAnchorRight(true);
 	_FontSecondsLastFrameLabel = new UI::Label(this, "0");
-	_FontSecondsLastFrameLabel->SetPosition(Vector2f(GetSize()[0] - 80.0f, 340.0f));
+	_FontSecondsLastFrameLabel->SetLeft(GetSize()[0] - 80.0f);
+	_FontSecondsLastFrameLabel->SetTop(340.0f);
 	_FontSecondsLastFrameLabel->SetSize(Vector2f(70.0f, 20.0f));
 	_FontSecondsLastFrameLabel->SetAnchorLeft(false);
 	_FontSecondsLastFrameLabel->SetAnchorRight(true);

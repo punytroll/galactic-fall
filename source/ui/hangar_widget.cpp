@@ -232,7 +232,8 @@ namespace UI
 			
 			auto ShipDisplay(new UI::ShipDisplay(this, Ship));
 			
-			ShipDisplay->SetPosition(Vector2f(1.0f, 1.0f));
+			ShipDisplay->SetLeft(1.0f);
+			ShipDisplay->SetTop(1.0f);
 			ShipDisplay->SetSize(Vector2f(GetSize()[0] - 2.0f, GetSize()[1] - 2.0f));
 			ShipDisplay->SetAnchorBottom(true);
 			ShipDisplay->SetAnchorRight(true);
@@ -250,7 +251,8 @@ namespace UI
 				if(_Border == nullptr)
 				{
 					_Border = new UI::Border(this);
-					_Border->SetPosition(Vector2f(0.0f, 0.0f));
+					_Border->SetLeft(0.0f);
+					_Border->SetTop(0.0f);
 					_Border->SetSize(GetSize());
 					_Border->SetAnchorBottom(true);
 					_Border->SetAnchorRight(true);
@@ -307,7 +309,8 @@ UI::HangarWidget::HangarWidget(UI::Widget * SupWidget, Planet * Planet, Characte
 	_PlanetDestroyingConnection = _Planet->ConnectDestroyingCallback(std::bind(&UI::HangarWidget::_OnPlanetDestroying, this));
 	SetSize(Vector2f(600.0f, 350.0f));
 	_ShipScrollBox = new UI::ScrollBox(this);
-	_ShipScrollBox->SetPosition(Vector2f(0.0f, 0.0f));
+	_ShipScrollBox->SetLeft(0.0f);
+	_ShipScrollBox->SetTop(0.0f);
 	_ShipScrollBox->SetSize(Vector2f(600.0f, 130.0f));
 	_ShipScrollBox->SetAnchorRight(true);
 	_ShipScrollBox->SetVerticalScrollBarVisible(false);
@@ -346,70 +349,80 @@ UI::HangarWidget::HangarWidget(UI::Widget * SupWidget, Planet * Planet, Characte
 	
 	UI::Button * BoardButton(new UI::TextButton(this, "Board"));
 	
-	BoardButton->SetPosition(Vector2f(0.0f, 140.0f));
+	BoardButton->SetLeft(0.0f);
+	BoardButton->SetTop(140.0f);
 	BoardButton->SetSize(Vector2f(180.0f, 20.0f));
 	BoardButton->ConnectClickedCallback(std::bind(&UI::HangarWidget::_OnBoardButtonClicked, this));
 	BoardButton->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnBoardButtonUpdating, this, BoardButton, std::placeholders::_1, std::placeholders::_2));
 	
 	UI::Button * LoadButton(new UI::TextButton(this, "Load"));
 	
-	LoadButton->SetPosition(Vector2f(0.0f, 170.0f));
+	LoadButton->SetLeft(0.0f);
+	LoadButton->SetTop(170.0f);
 	LoadButton->SetSize(Vector2f(180.0f, 20.0f));
 	LoadButton->ConnectClickedCallback(std::bind(&UI::HangarWidget::_OnLoadButtonClicked, this));
 	LoadButton->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnLoadButtonUpdating, this, LoadButton, std::placeholders::_1, std::placeholders::_2));
 	
 	UI::Button * OutfitButton(new UI::TextButton(this, "Outfit"));
 	
-	OutfitButton->SetPosition(Vector2f(0.0f, 200.0f));
+	OutfitButton->SetLeft(0.0f);
+	OutfitButton->SetTop(200.0f);
 	OutfitButton->SetSize(Vector2f(180.0f, 20.0f));
 	OutfitButton->ConnectClickedCallback(std::bind(&UI::HangarWidget::_OnOutfitButtonClicked, this));
 	OutfitButton->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnOutfitButtonUpdating, this, OutfitButton, std::placeholders::_1, std::placeholders::_2));
 	
 	UI::Button * RepairButton(new UI::TextButton(this, "Repair"));
 	
-	RepairButton->SetPosition(Vector2f(0.0f, 230.0f));
+	RepairButton->SetLeft(0.0f);
+	RepairButton->SetTop(230.0f);
 	RepairButton->SetSize(Vector2f(180.0f, 20.0f));
 	RepairButton->ConnectClickedCallback(std::bind(&UI::HangarWidget::_OnRepairButtonClicked, this));
 	RepairButton->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnRepairButtonUpdating, this, RepairButton, std::placeholders::_1, std::placeholders::_2));
 	
 	UI::ProgressBar * HullStateProgressBar(new UI::ProgressBar(this));
 	
-	HullStateProgressBar->SetPosition(Vector2f(190.0f, 230.0f));
+	HullStateProgressBar->SetLeft(190.0f);
+	HullStateProgressBar->SetTop(230.0f);
 	HullStateProgressBar->SetSize(Vector2f(410.0f, 20.0f));
 	HullStateProgressBar->SetAnchorRight(true);
 	HullStateProgressBar->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnHullStateProgressBarUpdating, this, HullStateProgressBar, std::placeholders::_1, std::placeholders::_2));
 	
 	UI::Button * RechargeButton(new UI::TextButton(this, "Recharge"));
 	
-	RechargeButton->SetPosition(Vector2f(0.0f, 260.0f));
+	RechargeButton->SetLeft(0.0f);
+	RechargeButton->SetTop(260.0f);
 	RechargeButton->SetSize(Vector2f(180.0f, 20.0f));
 	RechargeButton->ConnectClickedCallback(std::bind(&UI::HangarWidget::_OnRechargeButtonClicked, this));
 	RechargeButton->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnRechargeButtonUpdating, this, RechargeButton, std::placeholders::_1, std::placeholders::_2));
 	
 	UI::ProgressBar * EnergyStateProgressBar(new UI::ProgressBar(this));
 	
-	EnergyStateProgressBar->SetPosition(Vector2f(190.0f, 260.0f));
+	EnergyStateProgressBar->SetLeft(190.0f);
+	EnergyStateProgressBar->SetTop(260.0f);
 	EnergyStateProgressBar->SetSize(Vector2f(410.0f, 20.0f));
 	EnergyStateProgressBar->SetAnchorRight(true);
 	EnergyStateProgressBar->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnEnergyStateProgressBarUpdating, this, EnergyStateProgressBar, std::placeholders::_1, std::placeholders::_2));
 	
 	UI::Button * RefuelButton(new UI::TextButton(this, "Refuel"));
 	
-	RefuelButton->SetPosition(Vector2f(0.0f, 290.0f));
+	RefuelButton->SetLeft(0.0f);
+	RefuelButton->SetTop(290.0f);
 	RefuelButton->SetSize(Vector2f(180.0f, 20.0f));
 	RefuelButton->ConnectClickedCallback(std::bind(&UI::HangarWidget::_OnRefuelButtonClicked, this));
 	RefuelButton->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnRefuelButtonUpdating, this, RefuelButton, std::placeholders::_1, std::placeholders::_2));
 	
 	UI::ProgressBar * FuelStateProgressBar(new UI::ProgressBar(this));
 	
-	FuelStateProgressBar->SetPosition(Vector2f(190.0f, 290.0f));
+	FuelStateProgressBar->SetLeft(190.0f);
+	FuelStateProgressBar->SetTop(290.0f);
 	FuelStateProgressBar->SetSize(Vector2f(410.0f, 20.0f));
 	FuelStateProgressBar->SetAnchorRight(true);
 	FuelStateProgressBar->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnFuelStateProgressBarUpdating, this, FuelStateProgressBar, std::placeholders::_1, std::placeholders::_2));
 	
 	UI::Button * TakeOffButton(new UI::TextButton(this, "Take Off"));
 	
-	TakeOffButton->SetPosition(Vector2f(0.0f, 320.0f));
+	TakeOffButton->SetLeft(0.0f);
+	TakeOffButton->SetTop(320.0f);
 	TakeOffButton->SetSize(Vector2f(180.0f, 20.0f));
 	TakeOffButton->ConnectClickedCallback(std::bind(&UI::HangarWidget::_OnTakeOffButtonClicked, this));
 	TakeOffButton->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnTakeOffButtonUpdating, this, TakeOffButton, std::placeholders::_1, std::placeholders::_2));
@@ -737,15 +750,16 @@ void UI::HangarWidget::_OnShipScrollBoxSubWidgetAdded(UI::SubWidgetEvent & SubWi
 		{
 			if(OldWidget != NewItem)
 			{
-				Left = std::max(Left, OldWidget->GetPosition()[0] + OldWidget->GetSize()[0]);
+				Left = std::max(Left, OldWidget->GetLeft() + OldWidget->GetSize()[0]);
 			}
 		}
 		Left += 5.0f;
-		NewItem->SetPosition(Vector2f(Left, 5.0f));
+		NewItem->SetLeft(Left);
+		NewItem->SetTop(5.0f);
 		NewItem->SetSize(Vector2f(100.0f, 100.0f));
 		NewItem->ConnectMouseButtonCallback(std::bind(&UI::HangarWidget::_OnShipListItemMouseButton, this, std::placeholders::_1, NewItem));
 		NewItem->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnShipListItemUpdating, this, std::placeholders::_1, std::placeholders::_2, NewItem));
-		_ShipScrollBox->GetContent()->SetSize(Vector2f(std::max(NewItem->GetPosition()[0] + NewItem->GetSize()[0], _ShipScrollBox->GetView()->GetSize()[0]), _ShipScrollBox->GetView()->GetSize()[1]));
+		_ShipScrollBox->GetContent()->SetSize(Vector2f(std::max(NewItem->GetLeft() + NewItem->GetSize()[0], _ShipScrollBox->GetView()->GetSize()[0]), _ShipScrollBox->GetView()->GetSize()[1]));
 	}
 }
 
@@ -759,24 +773,24 @@ void UI::HangarWidget::_OnShipScrollBoxSubWidgetRemoved(UI::SubWidgetEvent & Sub
 		
 		for(auto OldSubWidget : _ShipScrollBox->GetContent()->GetSubWidgets())
 		{
-			if(OldSubWidget->GetPosition()[0] > SubWidgetEvent.GetSubWidget()->GetPosition()[0])
+			if(OldSubWidget->GetLeft() > SubWidgetEvent.GetSubWidget()->GetLeft())
 			{
-				if((NextSelectedListItem == nullptr) || (OldSubWidget->GetPosition()[0] < NextLeft))
+				if((NextSelectedListItem == nullptr) || (OldSubWidget->GetLeft() < NextLeft))
 				{
 					NextSelectedListItem = dynamic_cast< UI::ShipListItem * >(OldSubWidget);
-					NextLeft = OldSubWidget->GetPosition()[0];
+					NextLeft = OldSubWidget->GetLeft();
 				}
-				OldSubWidget->SetPosition(Vector2f(OldSubWidget->GetPosition()[0] - (SubWidgetEvent.GetSubWidget()->GetSize()[0] + 5.0f), OldSubWidget->GetPosition()[1]));
+				OldSubWidget->SetLeft(OldSubWidget->GetLeft() - (SubWidgetEvent.GetSubWidget()->GetSize()[0] + 5.0f));
 			}
 			else
 			{
-				if((NextSelectedListItem == nullptr) || (OldSubWidget->GetPosition()[0] > NextLeft))
+				if((NextSelectedListItem == nullptr) || (OldSubWidget->GetLeft() > NextLeft))
 				{
 					NextSelectedListItem = dynamic_cast< UI::ShipListItem * >(OldSubWidget);
-					NextLeft = OldSubWidget->GetPosition()[0];
+					NextLeft = OldSubWidget->GetLeft();
 				}
 			}
-			Left = std::max(Left, OldSubWidget->GetPosition()[0] + OldSubWidget->GetSize()[0]);
+			Left = std::max(Left, OldSubWidget->GetLeft() + OldSubWidget->GetSize()[0]);
 		}
 		if(SubWidgetEvent.GetSubWidget() == _SelectedShipListItem)
 		{
