@@ -34,10 +34,12 @@ UI::ProgressBar::ProgressBar(UI::Widget * SupWidget) :
 	SetSize(Vector2f(100.0f, 20.0f));
 	ConnectSizeChangedCallback(std::bind(&UI::ProgressBar::_OnSizeChanged, this, std::placeholders::_1));
 	_Fill = new UI::Widget(this);
-	_Fill->SetPosition(Vector2f(0.0f, 0.0f));
+	_Fill->SetLeft(0.0f);
+	_Fill->SetTop(0.0f);
 	_Fill->SetSize(GetSize());
 	_Label = new UI::Label(this);
-	_Label->SetPosition(Vector2f(0.0f, 0.0f));
+	_Label->SetLeft(0.0f);
+	_Label->SetTop(0.0f);
 	_Label->SetSize(GetSize());
 	_Label->SetAnchorBottom(true);
 	_Label->SetAnchorLeft(true);
@@ -48,7 +50,8 @@ UI::ProgressBar::ProgressBar(UI::Widget * SupWidget) :
 	
 	UI::Border * Border(new UI::Border(this));
 	
-	Border->SetPosition(Vector2f(0.0f, 0.0f));
+	Border->SetLeft(0.0f);
+	Border->SetTop(0.0f);
 	Border->SetSize(GetSize());
 	Border->SetWidth(1.0f);
 	Border->SetColor(Graphics::ColorRGBO(1.0f, 1.0f, 1.0f, 1.0f));

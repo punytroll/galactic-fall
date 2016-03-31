@@ -88,7 +88,7 @@ void UI::UserInterface::Draw(Graphics::RenderContext * RenderContext) const
 	GLEnable(GL_CLIP_PLANE3);
 	if((_RootWidget != nullptr) && (_RootWidget->IsVisible() == true))
 	{
-		UI::Widget::_PushClippingRectangle(RenderContext, _RootWidget->_Position[0], _RootWidget->_Position[1], _RootWidget->_Position[1] + _RootWidget->_Size[1], _RootWidget->_Position[0] + _RootWidget->_Size[0]);
+		UI::Widget::_PushClippingRectangle(RenderContext, _RootWidget->GetLeft(), _RootWidget->GetTop(), _RootWidget->GetTop() + _RootWidget->_Size[1], _RootWidget->GetLeft() + _RootWidget->_Size[0]);
 		_RootWidget->Draw(RenderContext);
 		UI::Widget::_PopClippingRectangle(RenderContext);
 	}
@@ -290,9 +290,9 @@ void UI::UserInterface::DispatchKeyEvent(UI::KeyEvent & KeyEvent)
 	}
 }
 
-bool IsInside(const Vector2f & Position, const Vector2f & WidgetPosition, const Vector2f & WidgetSize)
+bool IsInside(const Vector2f & Position, float WidgetLeft, float WidgetTop, const Vector2f & WidgetSize)
 {
-	return (Position[0] >= WidgetPosition[0]) && (Position[0] < WidgetPosition[0] + WidgetSize[0]) && (Position[1] >= WidgetPosition[1]) && (Position[1] < WidgetPosition[1] + WidgetSize[1]);
+	return (Position[0] >= WidgetLeft) && (Position[0] < WidgetLeft + WidgetSize[0]) && (Position[1] >= WidgetTop) && (Position[1] < WidgetTop + WidgetSize[1]);
 }
 
 bool IsInside(const Vector2f & Position, const Vector2f & WidgetSize)
@@ -310,7 +310,7 @@ void UI::UserInterface::DispatchMouseButtonEvent(UI::MouseButtonEvent & MouseBut
 	{
 		if((_RootWidget != nullptr) && (_RootWidget->IsVisible() == true) && (_RootWidget->IsEnabled() == true))
 		{
-			auto Position(MouseButtonEvent.GetPosition() - _RootWidget->_Position);
+			auto Position(MouseButtonEvent.GetPosition() - Vector2f(_RootWidget->GetLeft(), _RootWidget->GetTop()));
 			
 			if(IsInside(Position, _RootWidget->GetSize()) == true)
 			{
@@ -330,9 +330,9 @@ void UI::UserInterface::DispatchMouseButtonEvent(UI::MouseButtonEvent & MouseBut
 					
 					for(auto SubWidget : PathWidget->_SubWidgets)
 					{
-						if((SubWidget->IsVisible() == true) && (SubWidget->IsEnabled() == true) && (IsInside(Position, SubWidget->GetPosition(), SubWidget->GetSize()) == true))
+						if((SubWidget->IsVisible() == true) && (SubWidget->IsEnabled() == true) && (IsInside(Position, SubWidget->GetLeft(), SubWidget->GetTop(), SubWidget->GetSize()) == true))
 						{
-							Position -= SubWidget->GetPosition();
+							Position -= Vector2f(SubWidget->GetLeft(), SubWidget->GetTop());
 							NextWidget = SubWidget;
 							
 							break;
@@ -357,7 +357,8 @@ void UI::UserInterface::DispatchMouseButtonEvent(UI::MouseButtonEvent & MouseBut
 			CapturingWidget->_Position = MouseButtonEvent.GetPosition() - GlobalPosition;
 			CapturingWidget->_Connection = PathWidget->ConnectDestroyingCallback(std::bind(DestroyingPropagationPathItem, std::placeholders::_1, CapturingWidget));
 			PropagationPath.push_front(CapturingWidget);
-			GlobalPosition -= PathWidget->GetPosition();
+			GlobalPosition[0] -= PathWidget->GetLeft();
+			GlobalPosition[1] -= PathWidget->GetTop();
 			PathWidget = PathWidget->_SupWidget;
 		}
 	}
@@ -587,7 +588,7 @@ void UI::UserInterface::DispatchMouseMoveEvent(UI::MouseMoveEvent & MouseMoveEve
 			auto Position(MouseMoveEvent.GetPosition());
 			
 			assert((_HoverWidget == nullptr) || (_HoverWidget == _RootWidget));
-			if(IsInside(Position, _RootWidget->GetPosition(), _RootWidget->GetSize()) == true)
+			if(IsInside(Position, _RootWidget->GetLeft(), _RootWidget->GetTop(), _RootWidget->GetSize()) == true)
 			{
 				if(_HoverWidget == nullptr)
 				{
@@ -605,7 +606,8 @@ void UI::UserInterface::DispatchMouseMoveEvent(UI::MouseMoveEvent & MouseMoveEve
 				{
 					UI::Widget * NextWidget(nullptr);
 					
-					Position -= CurrentWidget->GetPosition();
+					Position[0] -= CurrentWidget->GetLeft();
+					Position[1] -= CurrentWidget->GetTop();
 					
 					// insert bubbling phase path item
 					auto BubblingItem(new MouseMoveEventPropagationPathItem());
@@ -620,7 +622,7 @@ void UI::UserInterface::DispatchMouseMoveEvent(UI::MouseMoveEvent & MouseMoveEve
 					for(auto SubWidget : CurrentWidget->_SubWidgets)
 					{
 						assert(SubWidget != nullptr);
-						if((SubWidget->IsEnabled() == true) && (SubWidget->IsVisible() == true) && (IsInside(Position, SubWidget->GetPosition(), SubWidget->GetSize()) == true))
+						if((SubWidget->IsEnabled() == true) && (SubWidget->IsVisible() == true) && (IsInside(Position, SubWidget->GetLeft(), SubWidget->GetTop(), SubWidget->GetSize()) == true))
 						{
 							if(CurrentWidget->_HoverWidget != SubWidget)
 							{
@@ -716,7 +718,8 @@ void UI::UserInterface::DispatchMouseMoveEvent(UI::MouseMoveEvent & MouseMoveEve
 				BubblingItem->_Position = Position;
 				BubblingItem->_Connection = CurrentWidget->ConnectDestroyingCallback(std::bind(DestroyingPropagationPathItem, std::placeholders::_1, BubblingItem));
 				PropagationPath.push_back(BubblingItem);
-				Position = Position + CurrentWidget->GetPosition();
+				Position[0] += CurrentWidget->GetLeft();
+				Position[1] += CurrentWidget->GetTop();
 				CurrentWidget = CurrentWidget->_SupWidget;
 			}
 		}

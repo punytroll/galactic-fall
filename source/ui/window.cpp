@@ -35,14 +35,16 @@ UI::Window::Window(Widget * SupWidget, const std::string & Title) :
 	
 	auto Border(new UI::Border(this));
 	
-	Border->SetPosition(Vector2f(0.0f, 0.0f));
+	Border->SetLeft(0.0f);
+	Border->SetTop(0.0f);
 	Border->SetSize(GetSize());
 	Border->SetAnchorBottom(true);
 	Border->SetAnchorRight(true);
 	Border->SetWidth(1.0f);
 	Border->SetColor(Graphics::ColorRGBO(0.4f, 0.4f, 0.4f, 1.0f));
 	_TitleLabel = new UI::Label(this, Title);
-	_TitleLabel->SetPosition(Vector2f(10.0f, 10.0f));
+	_TitleLabel->SetLeft(10.0f);
+	_TitleLabel->SetTop(10.0f);
 	_TitleLabel->SetSize(Vector2f(GetSize()[0] - 20.0f, 20.0f));
 	_TitleLabel->SetAnchorRight(true);
 	_TitleLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
@@ -51,7 +53,8 @@ UI::Window::Window(Widget * SupWidget, const std::string & Title) :
 	_TitleLabel->ConnectMouseButtonCallback(std::bind(&UI::Window::_OnTitleLabelMouseButton, this, std::placeholders::_1));
 	_TitleLabel->ConnectMouseMoveCallback(std::bind(&UI::Window::_OnTitleLabelMouseMove, this, std::placeholders::_1));
 	_ResizeDragBox = new Widget(this);
-	_ResizeDragBox->SetPosition(Vector2f(GetSize()[0] - 9.0f, GetSize()[1] - 9.0f));
+	_ResizeDragBox->SetLeft(GetSize()[0] - 9.0f);
+	_ResizeDragBox->SetTop(GetSize()[1] - 9.0f);
 	_ResizeDragBox->SetSize(Vector2f(7.0f, 7.0f));
 	_ResizeDragBox->SetAnchorBottom(true);
 	_ResizeDragBox->SetAnchorLeft(false);
@@ -113,7 +116,8 @@ void UI::Window::_OnTitleLabelMouseMove(UI::MouseMoveEvent & MouseMoveEvent)
 {
 	if((MouseMoveEvent.GetPhase() == UI::Event::Phase::Target) && (g_UserInterface->GetCaptureWidget() == _TitleLabel))
 	{
-		SetPosition(GetPosition() + MouseMoveEvent.GetPosition() - _GrabPosition);
+		SetLeft(GetLeft() + MouseMoveEvent.GetPosition()[0] - _GrabPosition[0]);
+		SetTop(GetTop() + MouseMoveEvent.GetPosition()[1] - _GrabPosition[1]);
 	}
 }
 

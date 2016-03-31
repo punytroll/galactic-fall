@@ -51,7 +51,8 @@ UI::DirectoryEntryItem::DirectoryEntryItem(UI::Widget * SupWidget, const std::st
 	UI::ListBoxItem(SupWidget)
 {
 	_CaptionLabel = new UI::Label(this, Caption);
-	_CaptionLabel->SetPosition(Vector2f(5.0f, 0.0f));
+	_CaptionLabel->SetLeft(5.0f);
+	_CaptionLabel->SetTop(0.0f);
 	_CaptionLabel->SetSize(Vector2f(GetSize()[0] - 10.0f, 20.0f));
 	_CaptionLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	_CaptionLabel->SetAnchorLeft(true);
@@ -69,14 +70,16 @@ UI::SaveGameDialog::SaveGameDialog(UI::Widget * SupWidget) :
 	_SelectedDirectoryEntryItem(nullptr)
 {
 	SetTitle("Save Game");
-	SetPosition(Vector2f(120.0f, 200.0f));
+	SetLeft(120.0f);
+	SetTop(200.0f);
 	SetSize(Vector2f(300.0f, 400.0f));
 	ConnectKeyCallback(std::bind(&UI::SaveGameDialog::_OnKey, this, std::placeholders::_1));
 	
 	auto OKButton(new UI::TextButton(this, "OK"));
 	
 	OKButton->SetSize(Vector2f(100.0f, 20.0f));
-	OKButton->SetPosition(Vector2f(GetSize()[0] - 10.0f - OKButton->GetSize()[0], GetSize()[1] - 10.0f - OKButton->GetSize()[1]));
+	OKButton->SetLeft(GetSize()[0] - 10.0f - OKButton->GetSize()[0]);
+	OKButton->SetTop(GetSize()[1] - 10.0f - OKButton->GetSize()[1]);
 	OKButton->SetAnchorBottom(true);
 	OKButton->SetAnchorLeft(false);
 	OKButton->SetAnchorRight(true);
@@ -86,14 +89,16 @@ UI::SaveGameDialog::SaveGameDialog(UI::Widget * SupWidget) :
 	auto CancelButton(new UI::TextButton(this, "Cancel"));
 	
 	CancelButton->SetSize(Vector2f(100.0f, 20.0f));
-	CancelButton->SetPosition(Vector2f(GetSize()[0] - 10.0f - OKButton->GetSize()[0] - 10.0f - CancelButton->GetSize()[0], GetSize()[1] - 10.0f - CancelButton->GetSize()[1]));
+	CancelButton->SetLeft(GetSize()[0] - 10.0f - OKButton->GetSize()[0] - 10.0f - CancelButton->GetSize()[0]);
+	CancelButton->SetTop(GetSize()[1] - 10.0f - CancelButton->GetSize()[1]);
 	CancelButton->SetAnchorBottom(true);
 	CancelButton->SetAnchorLeft(false);
 	CancelButton->SetAnchorRight(true);
 	CancelButton->SetAnchorTop(false);
 	CancelButton->ConnectClickedCallback(std::bind(&UI::SaveGameDialog::_Close, this, UI::Dialog::ClosingReason::CANCEL_BUTTON));
 	_MessageLabel = new UI::Label(this);
-	_MessageLabel->SetPosition(Vector2f(10.0f, 40.0f));
+	_MessageLabel->SetLeft(10.0f);
+	_MessageLabel->SetTop(40.0f);
 	_MessageLabel->SetSize(Vector2f(GetSize()[0] - 10.0f - 10.0f, 30.0f));
 	_MessageLabel->SetTextColor(Graphics::ColorRGBO(1.0f, 0.3, 0.3f, 1.0f));
 	_MessageLabel->SetAnchorBottom(false);
@@ -104,7 +109,8 @@ UI::SaveGameDialog::SaveGameDialog(UI::Widget * SupWidget) :
 	_MessageLabel->SetWordWrap(true);
 	_MessageLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	_FileNameLabel = new UI::Label(this);
-	_FileNameLabel->SetPosition(Vector2f(10.0f, 80.0f));
+	_FileNameLabel->SetLeft(10.0f);
+	_FileNameLabel->SetTop(80.0f);
 	_FileNameLabel->SetSize(Vector2f(GetSize()[0] - 10.0f - 10.0f, 20.0f));
 	_FileNameLabel->SetTextColor(Graphics::ColorRGBO(1.0f, 1.0f, 0.5f, 1.0f));
 	_FileNameLabel->SetBackgroundColor(Graphics::ColorRGBO(0.1f, 0.1f, 0.1f, 1.0f));
@@ -113,7 +119,8 @@ UI::SaveGameDialog::SaveGameDialog(UI::Widget * SupWidget) :
 	_FileNameLabel->ConnectKeyCallback(std::bind(&UI::SaveGameDialog::_OnFileNameLabelKey, this, std::placeholders::_1));
 	_FileNameLabel->GrabKeyFocus();
 	_FileScrollBox = new UI::ScrollBox(this);
-	_FileScrollBox->SetPosition(Vector2f(10.0f, 110.0f));
+	_FileScrollBox->SetLeft(10.0f);
+	_FileScrollBox->SetTop(110.0f);
 	_FileScrollBox->SetSize(Vector2f(GetSize()[0] - 10.0f - 10.0f, GetSize()[1] - 110.0f - 30.0f - 10.0f - OKButton->GetSize()[1]));
 	_FileScrollBox->SetAnchorBottom(true);
 	_FileScrollBox->SetAnchorRight(true);
@@ -151,7 +158,8 @@ void UI::SaveGameDialog::SetDirectoryPath(const std::string & DirectoryPath)
 	{
 		DirectoryEntryItem * EntryLabel(new DirectoryEntryItem(_FileScrollBox->GetContent(), DirectoryEntry.substr(0, DirectoryEntry.rfind(".xml"))));
 		
-		EntryLabel->SetPosition(Vector2f(5.0f, Top));
+		EntryLabel->SetLeft(5.0f);
+		EntryLabel->SetTop(Top);
 		EntryLabel->SetSize(Vector2f(_FileScrollBox->GetContent()->GetSize()[0] - 10.0f, 20.0f));
 		EntryLabel->SetAnchorRight(true);
 		EntryLabel->ConnectMouseButtonCallback(std::bind(&UI::SaveGameDialog::_OnDirectoryEntryItemMouseButton, this, EntryLabel, std::placeholders::_1));

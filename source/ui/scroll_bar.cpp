@@ -140,19 +140,22 @@ void UI::ScrollBar::SetAlignment(UI::ScrollBar::Alignment Alignment)
 	{
 		if(Alignment == UI::ScrollBar::Alignment::HORIZONTAL)
 		{
-			m_LessButton->SetPosition(Vector2f(0.0f, 0.0f));
+			m_LessButton->SetLeft(0.0f);
+			m_LessButton->SetTop(0.0f);
 			m_LessButton->SetSize(Vector2f(20.0f, GetSize()[1]));
 			m_LessButton->SetAnchorBottom(true);
 			m_LessButton->SetAnchorLeft(true);
 			m_LessButton->SetAnchorRight(false);
 			m_LessButton->SetAnchorTop(true);
-			m_MoreButton->SetPosition(Vector2f(GetSize()[0] - 20.0f, 0.0f));
+			m_MoreButton->SetLeft(GetSize()[0] - 20.0f);
+			m_MoreButton->SetTop(0.0f);
 			m_MoreButton->SetSize(Vector2f(20.0f, GetSize()[1]));
 			m_MoreButton->SetAnchorBottom(true);
 			m_MoreButton->SetAnchorLeft(false);
 			m_MoreButton->SetAnchorRight(true);
 			m_MoreButton->SetAnchorTop(true);
-			m_Tracker->SetPosition(Vector2f(m_LessButton->GetSize()[0] + g_ScrollBarTrackerBorderWidth, g_ScrollBarTrackerBorderWidth));
+			m_Tracker->SetLeft(m_LessButton->GetSize()[0] + g_ScrollBarTrackerBorderWidth);
+			m_Tracker->SetTop(g_ScrollBarTrackerBorderWidth);
 			m_Tracker->SetSize(Vector2f(20.0f, GetSize()[1] - 2 * g_ScrollBarTrackerBorderWidth));
 			m_Tracker->SetAnchorBottom(true);
 			m_Tracker->SetAnchorLeft(false);
@@ -162,19 +165,22 @@ void UI::ScrollBar::SetAlignment(UI::ScrollBar::Alignment Alignment)
 		}
 		else if(Alignment == UI::ScrollBar::Alignment::VERTICAL)
 		{
-			m_LessButton->SetPosition(Vector2f(0.0f, 0.0f));
+			m_LessButton->SetLeft(0.0f);
+			m_LessButton->SetTop(0.0f);
 			m_LessButton->SetSize(Vector2f(GetSize()[0], 20.0f));
 			m_LessButton->SetAnchorBottom(false);
 			m_LessButton->SetAnchorLeft(true);
 			m_LessButton->SetAnchorRight(true);
 			m_LessButton->SetAnchorTop(true);
-			m_MoreButton->SetPosition(Vector2f(0.0f, GetSize()[1] - 20.0f));
+			m_MoreButton->SetLeft(0.0f);
+			m_MoreButton->SetTop(GetSize()[1] - 20.0f);
 			m_MoreButton->SetSize(Vector2f(GetSize()[0], 20.0f));
 			m_MoreButton->SetAnchorBottom(true);
 			m_MoreButton->SetAnchorLeft(true);
 			m_MoreButton->SetAnchorRight(true);
 			m_MoreButton->SetAnchorTop(false);
-			m_Tracker->SetPosition(Vector2f(g_ScrollBarTrackerBorderWidth, m_LessButton->GetSize()[1] + g_ScrollBarTrackerBorderWidth));
+			m_Tracker->SetLeft(g_ScrollBarTrackerBorderWidth);
+			m_Tracker->SetTop(m_LessButton->GetSize()[1] + g_ScrollBarTrackerBorderWidth);
 			m_Tracker->SetSize(Vector2f(GetSize()[0] - 2 * g_ScrollBarTrackerBorderWidth, 20.0f));
 			m_Tracker->SetAnchorBottom(false);
 			m_Tracker->SetAnchorLeft(true);
@@ -242,13 +248,13 @@ void UI::ScrollBar::AdjustTrackerPosition(void)
 		{
 			float AvailableRange = GetSize()[0] - m_LessButton->GetSize()[0] - g_ScrollBarTrackerBorderWidth - m_Tracker->GetSize()[0] - g_ScrollBarTrackerBorderWidth - m_MoreButton->GetSize()[0];
 			
-			m_Tracker->SetPosition(Vector2f(m_LessButton->GetSize()[0] + g_ScrollBarTrackerBorderWidth + AvailableRange * ((m_CurrentPosition - GetMinimumPosition()) / (GetMaximumPosition() - GetMinimumPosition())), g_ScrollBarTrackerBorderWidth));
+			m_Tracker->SetLeft(m_LessButton->GetSize()[0] + g_ScrollBarTrackerBorderWidth + AvailableRange * ((m_CurrentPosition - GetMinimumPosition()) / (GetMaximumPosition() - GetMinimumPosition())));
 		}
 		else if(GetAlignment() == UI::ScrollBar::Alignment::VERTICAL)
 		{
 			float AvailableRange = GetSize()[1] - m_LessButton->GetSize()[1] - g_ScrollBarTrackerBorderWidth - m_Tracker->GetSize()[1] - g_ScrollBarTrackerBorderWidth - m_MoreButton->GetSize()[1];
 			
-			m_Tracker->SetPosition(Vector2f(g_ScrollBarTrackerBorderWidth, m_LessButton->GetSize()[1] + g_ScrollBarTrackerBorderWidth + AvailableRange * ((m_CurrentPosition - GetMinimumPosition()) / (GetMaximumPosition() - GetMinimumPosition()))));
+			m_Tracker->SetTop(m_LessButton->GetSize()[1] + g_ScrollBarTrackerBorderWidth + AvailableRange * ((m_CurrentPosition - GetMinimumPosition()) / (GetMaximumPosition() - GetMinimumPosition())));
 		}
 	}
 	else

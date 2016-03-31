@@ -43,15 +43,16 @@ void UI::ListBox::_OnSubWidgetAdded(UI::SubWidgetEvent & SubWidgetEvent)
 			{
 				if(OldWidget != NewWidget)
 				{
-					Top = std::max(Top, OldWidget->GetPosition()[1] + OldWidget->GetSize()[1]);
+					Top = std::max(Top, OldWidget->GetTop() + OldWidget->GetSize()[1]);
 				}
 			}
 			Top += 5.0f;
-			NewWidget->SetPosition(Vector2f(5.0f, Top));
+			NewWidget->SetLeft(5.0f);
+			NewWidget->SetTop(Top);
 			NewWidget->SetSize(Vector2f(GetContent()->GetSize()[0] - 10.0f, 20.0f));
 			NewWidget->SetAnchorRight(true);
 			NewWidget->ConnectMouseButtonCallback(std::bind(&UI::ListBox::_OnItemMouseButton, this, std::placeholders::_1, NewWidget));
-			GetContent()->SetSize(Vector2f(GetContent()->GetSize()[0], std::max(NewWidget->GetPosition()[1] + NewWidget->GetSize()[1], GetView()->GetSize()[1])));
+			GetContent()->SetSize(Vector2f(GetContent()->GetSize()[0], std::max(NewWidget->GetTop() + NewWidget->GetSize()[1], GetView()->GetSize()[1])));
 		}
 	}
 }
@@ -66,24 +67,24 @@ void UI::ListBox::_OnSubWidgetRemoved(UI::SubWidgetEvent & SubWidgetEvent)
 		
 		for(auto OldSubWidget : GetContent()->GetSubWidgets())
 		{
-			if(OldSubWidget->GetPosition()[1] > SubWidgetEvent.GetSubWidget()->GetPosition()[1])
+			if(OldSubWidget->GetTop() > SubWidgetEvent.GetSubWidget()->GetTop())
 			{
-				if((NextSelectedListItem == nullptr) || (OldSubWidget->GetPosition()[1] < NextTop))
+				if((NextSelectedListItem == nullptr) || (OldSubWidget->GetTop() < NextTop))
 				{
 					NextSelectedListItem = dynamic_cast< UI::ListBoxItem * >(OldSubWidget);
-					NextTop = OldSubWidget->GetPosition()[1];
+					NextTop = OldSubWidget->GetTop();
 				}
-				OldSubWidget->SetPosition(Vector2f(OldSubWidget->GetPosition()[0], OldSubWidget->GetPosition()[1] - (SubWidgetEvent.GetSubWidget()->GetSize()[1] + 5.0f)));
+				OldSubWidget->SetTop(OldSubWidget->GetTop() - (SubWidgetEvent.GetSubWidget()->GetSize()[1] + 5.0f));
 			}
 			else
 			{
-				if((NextSelectedListItem == nullptr) || (OldSubWidget->GetPosition()[1] > NextTop))
+				if((NextSelectedListItem == nullptr) || (OldSubWidget->GetTop() > NextTop))
 				{
 					NextSelectedListItem = dynamic_cast< UI::ListBoxItem * >(OldSubWidget);
-					NextTop = OldSubWidget->GetPosition()[1];
+					NextTop = OldSubWidget->GetTop();
 				}
 			}
-			Top = std::max(Top, OldSubWidget->GetPosition()[1] + OldSubWidget->GetSize()[1]);
+			Top = std::max(Top, OldSubWidget->GetTop() + OldSubWidget->GetSize()[1]);
 		}
 		if(SubWidgetEvent.GetSubWidget() == _SelectedItem)
 		{

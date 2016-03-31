@@ -1059,7 +1059,8 @@ void OnOutputEnterSystem(System * EnterSystem)
 	auto HeadsUpDisplay(new UI::HeadsUpDisplay(g_UserInterface->GetRootWidget()));
 	
 	HeadsUpDisplay->SetName("heads_up_display");
-	HeadsUpDisplay->SetPosition(Vector2f(0.0f, 0.0f));
+	HeadsUpDisplay->SetLeft(0.0f);
+	HeadsUpDisplay->SetTop(0.0f);
 	HeadsUpDisplay->SetSize(Vector2f(g_Width, g_Height));
 	HeadsUpDisplay->SetAnchorRight(true);
 	HeadsUpDisplay->SetAnchorBottom(true);
@@ -2349,7 +2350,8 @@ void ActionOpenMainMenuWindow(void)
 			g_MainMenuWindow->GetResumeGameButton()->SetEnabled(false);
 			g_MainMenuWindow->GetSaveGameButton()->SetEnabled(false);
 		}
-		g_MainMenuWindow->SetPosition(Vector2f((g_UserInterface->GetRootWidget()->GetSize()[0] - g_MainMenuWindow->GetSize()[0]) / 2.0f, (g_UserInterface->GetRootWidget()->GetSize()[1] - g_MainMenuWindow->GetSize()[1]) / 2.0f));
+		g_MainMenuWindow->SetLeft((g_UserInterface->GetRootWidget()->GetSize()[0] - g_MainMenuWindow->GetSize()[0]) / 2.0f);
+		g_MainMenuWindow->SetTop((g_UserInterface->GetRootWidget()->GetSize()[1] - g_MainMenuWindow->GetSize()[1]) / 2.0f);
 		g_MainMenuWindow->GrabKeyFocus();
 		g_MainMenuWindow->ConnectDestroyingCallback(OnMainMenuDestroying);
 	}

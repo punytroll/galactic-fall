@@ -50,7 +50,8 @@ UI::ScenarioItem::ScenarioItem(UI::Widget * SupWidget, Scenario * Scenario) :
 {
 	UI::Label * CaptionLabel(new UI::Label(this, Scenario->GetName()));
 	
-	CaptionLabel->SetPosition(Vector2f(5.0f, 0.0f));
+	CaptionLabel->SetLeft(5.0f);
+	CaptionLabel->SetTop(0.0f);
 	CaptionLabel->SetSize(Vector2f(GetSize()[0] - 10.0f, 20.0f));
 	CaptionLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	CaptionLabel->SetAnchorLeft(true);
@@ -69,14 +70,16 @@ UI::LoadScenarioDialog::LoadScenarioDialog(UI::Widget * SupWidget, ScenarioManag
 	_SelectedScenarioItem(0)
 {
 	SetTitle("Load Scenario");
-	SetPosition(Vector2f(120.0f, 200.0f));
+	SetLeft(120.0f);
+	SetTop(200.0f);
 	SetSize(Vector2f(300.0f, 400.0f));
 	ConnectKeyCallback(std::bind(&UI::LoadScenarioDialog::_OnKey, this, std::placeholders::_1));
 
 	auto OKButton(new UI::TextButton(this, "OK"));
 	
 	OKButton->SetSize(Vector2f(100.0f, 20.0f));
-	OKButton->SetPosition(Vector2f(GetSize()[0] - 10.0f - OKButton->GetSize()[0], GetSize()[1] - 10.0f - OKButton->GetSize()[1]));
+	OKButton->SetLeft(GetSize()[0] - 10.0f - OKButton->GetSize()[0]);
+	OKButton->SetTop(GetSize()[1] - 10.0f - OKButton->GetSize()[1]);
 	OKButton->SetAnchorBottom(true);
 	OKButton->SetAnchorLeft(false);
 	OKButton->SetAnchorRight(true);
@@ -86,14 +89,16 @@ UI::LoadScenarioDialog::LoadScenarioDialog(UI::Widget * SupWidget, ScenarioManag
 	auto CancelButton(new UI::TextButton(this, "Cancel"));
 	
 	CancelButton->SetSize(Vector2f(100.0f, 20.0f));
-	CancelButton->SetPosition(Vector2f(GetSize()[0] - 10.0f - OKButton->GetSize()[0] - 10.0f - CancelButton->GetSize()[0], GetSize()[1] - 10.0f - CancelButton->GetSize()[1]));
+	CancelButton->SetLeft(GetSize()[0] - 10.0f - OKButton->GetSize()[0] - 10.0f - CancelButton->GetSize()[0]);
+	CancelButton->SetTop(GetSize()[1] - 10.0f - CancelButton->GetSize()[1]);
 	CancelButton->SetAnchorBottom(true);
 	CancelButton->SetAnchorLeft(false);
 	CancelButton->SetAnchorRight(true);
 	CancelButton->SetAnchorTop(false);
 	CancelButton->ConnectClickedCallback(std::bind(&UI::LoadScenarioDialog::_Close, this, UI::Dialog::ClosingReason::CANCEL_BUTTON));
 	_MessageLabel = new UI::Label(this);
-	_MessageLabel->SetPosition(Vector2f(10.0f, 40.0f));
+	_MessageLabel->SetLeft(10.0f);
+	_MessageLabel->SetTop(40.0f);
 	_MessageLabel->SetSize(Vector2f(GetSize()[0] - 10.0f - 10.0f, 30.0f));
 	_MessageLabel->SetTextColor(Graphics::ColorRGBO(1.0f, 0.3, 0.3f, 1.0f));
 	_MessageLabel->SetAnchorBottom(false);
@@ -104,7 +109,8 @@ UI::LoadScenarioDialog::LoadScenarioDialog(UI::Widget * SupWidget, ScenarioManag
 	_MessageLabel->SetWordWrap(true);
 	_MessageLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	_ScenarioScrollBox = new UI::ScrollBox(this);
-	_ScenarioScrollBox->SetPosition(Vector2f(10.0f, 110.0f));
+	_ScenarioScrollBox->SetLeft(10.0f);
+	_ScenarioScrollBox->SetTop(110.0f);
 	_ScenarioScrollBox->SetSize(Vector2f(GetSize()[0] - 10.0f - 10.0f, GetSize()[1] - 110.0f - 30.0f - 10.0f - OKButton->GetSize()[1]));
 	_ScenarioScrollBox->SetAnchorBottom(true);
 	_ScenarioScrollBox->SetAnchorRight(true);
@@ -118,7 +124,8 @@ UI::LoadScenarioDialog::LoadScenarioDialog(UI::Widget * SupWidget, ScenarioManag
 	{
 		UI::ScenarioItem * ScenarioItem(new UI::ScenarioItem(_ScenarioScrollBox->GetContent(), ScenarioIterator->second));
 		
-		ScenarioItem->SetPosition(Vector2f(5.0f, Top));
+		ScenarioItem->SetLeft(5.0f);
+		ScenarioItem->SetTop(Top);
 		ScenarioItem->SetSize(Vector2f(_ScenarioScrollBox->GetContent()->GetSize()[0] - 10.0f, 20.0f));
 		ScenarioItem->SetAnchorRight(true);
 		ScenarioItem->ConnectMouseButtonCallback(std::bind(&UI::LoadScenarioDialog::_OnScenarioItemMouseButton, this, ScenarioItem, std::placeholders::_1));

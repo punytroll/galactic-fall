@@ -61,7 +61,8 @@ UI::MainMenuWindow::MainMenuWindow(UI::Widget * SupWidget, ScenarioManager * Sce
 	
 	// "Resume Game" button
 	_ResumeGameButton = new UI::TextButton(this, "Resume Game");
-	_ResumeGameButton->SetPosition(Vector2f(20.0f, 60.0f));
+	_ResumeGameButton->SetLeft(20.0f);
+	_ResumeGameButton->SetTop(60.0f);
 	_ResumeGameButton->SetSize(Vector2f(160.0f, 20.0f));
 	_ResumeGameButton->SetAnchorBottom(false);
 	_ResumeGameButton->SetAnchorLeft(true);
@@ -71,7 +72,8 @@ UI::MainMenuWindow::MainMenuWindow(UI::Widget * SupWidget, ScenarioManager * Sce
 	
 	// "New Game" button
 	_NewGameButton = new UI::TextButton(this, "New Game");
-	_NewGameButton->SetPosition(Vector2f(20.0f, _ResumeGameButton->GetPosition()[1] + 40.0f));
+	_NewGameButton->SetLeft(20.0f);
+	_NewGameButton->SetTop(_ResumeGameButton->GetTop() + 40.0f);
 	_NewGameButton->SetSize(Vector2f(160.0f, 20.0f));
 	_NewGameButton->SetAnchorBottom(false);
 	_NewGameButton->SetAnchorLeft(true);
@@ -81,7 +83,8 @@ UI::MainMenuWindow::MainMenuWindow(UI::Widget * SupWidget, ScenarioManager * Sce
 	
 	// "Load Scenario" button
 	_LoadScenarioButton = new UI::TextButton(this, "Load Scenario");
-	_LoadScenarioButton->SetPosition(Vector2f(20.0f, _NewGameButton->GetPosition()[1] + 40.0f));
+	_LoadScenarioButton->SetLeft(20.0f);
+	_LoadScenarioButton->SetTop(_NewGameButton->GetTop() + 40.0f);
 	_LoadScenarioButton->SetSize(Vector2f(160.0f, 20.0f));
 	_LoadScenarioButton->SetAnchorBottom(false);
 	_LoadScenarioButton->SetAnchorLeft(true);
@@ -91,7 +94,8 @@ UI::MainMenuWindow::MainMenuWindow(UI::Widget * SupWidget, ScenarioManager * Sce
 	
 	// "Load Game" button
 	_LoadGameButton = new UI::TextButton(this, "Load Game");
-	_LoadGameButton->SetPosition(Vector2f(20.0f, _LoadScenarioButton->GetPosition()[1] + 40.0f));
+	_LoadGameButton->SetLeft(20.0f);
+	_LoadGameButton->SetTop(_LoadScenarioButton->GetTop() + 40.0f);
 	_LoadGameButton->SetSize(Vector2f(160.0f, 20.0f));
 	_LoadGameButton->SetAnchorBottom(false);
 	_LoadGameButton->SetAnchorLeft(true);
@@ -101,7 +105,8 @@ UI::MainMenuWindow::MainMenuWindow(UI::Widget * SupWidget, ScenarioManager * Sce
 	
 	// "Save Game" button
 	_SaveGameButton = new UI::TextButton(this, "Save Game");
-	_SaveGameButton->SetPosition(Vector2f(20.0f, _LoadGameButton->GetPosition()[1] + 40.0f));
+	_SaveGameButton->SetLeft(20.0f);
+	_SaveGameButton->SetTop(_LoadGameButton->GetTop() + 40.0f);
 	_SaveGameButton->SetSize(Vector2f(160.0f, 20.0f));
 	_SaveGameButton->SetAnchorBottom(false);
 	_SaveGameButton->SetAnchorLeft(true);
@@ -111,7 +116,8 @@ UI::MainMenuWindow::MainMenuWindow(UI::Widget * SupWidget, ScenarioManager * Sce
 	
 	// "Quit" button
 	_QuitButton = new UI::TextButton(this, "Quit");
-	_QuitButton->SetPosition(Vector2f(20.0f, _SaveGameButton->GetPosition()[1] + 40.0f));
+	_QuitButton->SetLeft(20.0f);
+	_QuitButton->SetTop(_SaveGameButton->GetTop() + 40.0f);
 	_QuitButton->SetSize(Vector2f(160.0f, 20.0f));
 	_QuitButton->SetAnchorBottom(false);
 	_QuitButton->SetAnchorLeft(true);

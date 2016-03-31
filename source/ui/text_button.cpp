@@ -28,7 +28,8 @@ UI::TextButton::TextButton(UI::Widget * SupWidget, const std::string & Text) :
 {
 	SetSize(Vector2f(100.0f, 20.0f));
 	_Label = new UI::Label(this);
-	_Label->SetPosition(Vector2f(0.0f, 0.0f));
+	_Label->SetLeft(0.0f);
+	_Label->SetTop(0.0f);
 	_Label->SetSize(GetSize());
 	_Label->SetAnchorBottom(true);
 	_Label->SetAnchorLeft(true);

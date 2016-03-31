@@ -28,7 +28,8 @@ UI::ScrollBox::ScrollBox(UI::Widget * SupWidget) :
 {
 	ConnectMouseButtonCallback(std::bind(&UI::ScrollBox::_OnMouseButton, this, std::placeholders::_1));
 	_View = new UI::Widget(this);
-	_View->SetPosition(Vector2f(0.0f, 0.0f));
+	_View->SetLeft(0.0f);
+	_View->SetTop(0.0f);
 	_View->SetSize(Vector2f(GetSize()[0] - 20.0f, GetSize()[1] - 20.0f));
 	_View->SetAnchorBottom(true);
 	_View->SetAnchorLeft(true);
@@ -36,11 +37,13 @@ UI::ScrollBox::ScrollBox(UI::Widget * SupWidget) :
 	_View->SetAnchorTop(true);
 	_View->ConnectSizeChangedCallback(std::bind(&UI::ScrollBox::_OnContentOrViewSizeChanged, this, std::placeholders::_1));
 	_Content = new UI::Widget(_View);
-	_Content->SetPosition(Vector2f(0.0f, 0.0f));
+	_Content->SetLeft(0.0f);
+	_Content->SetTop(0.0f);
 	_Content->SetBackgroundColor(Graphics::ColorRGBO(0.15f, 0.15f, 0.15f, 1.0f));
 	_Content->ConnectSizeChangedCallback(std::bind(&UI::ScrollBox::_OnContentOrViewSizeChanged, this, std::placeholders::_1));
 	_HorizontalScrollBar = new UI::ScrollBar(this, UI::ScrollBar::Alignment::HORIZONTAL);
-	_HorizontalScrollBar->SetPosition(Vector2f(0.0f, GetSize()[1] - 20.0f));
+	_HorizontalScrollBar->SetLeft(0.0f);
+	_HorizontalScrollBar->SetTop(GetSize()[1] - 20.0f);
 	_HorizontalScrollBar->SetSize(Vector2f(GetSize()[0] - 20.0f, 20.0f));
 	_HorizontalScrollBar->ConnectScrollPositionChangedCallback(std::bind(&UI::ScrollBox::_OnHorizontalScrollPositionChanged, this));
 	_HorizontalScrollBar->SetAnchorBottom(true);
@@ -52,7 +55,8 @@ UI::ScrollBox::ScrollBox(UI::Widget * SupWidget) :
 	_HorizontalScrollBar->SetCurrentPosition(0.0f);
 	_HorizontalScrollBar->SetStepSize(_HorizontalScrollBar->GetMaximumPosition() / 10.0f);
 	_VerticalScrollBar = new UI::ScrollBar(this, UI::ScrollBar::Alignment::VERTICAL);
-	_VerticalScrollBar->SetPosition(Vector2f(GetSize()[0] - 20.0f, 0.0f));
+	_VerticalScrollBar->SetLeft(GetSize()[0] - 20.0f);
+	_VerticalScrollBar->SetTop(0.0f);
 	_VerticalScrollBar->SetSize(Vector2f(20.0f, GetSize()[1] - 20.0f));
 	_VerticalScrollBar->ConnectScrollPositionChangedCallback(std::bind(&UI::ScrollBox::_OnVerticalScrollPositionChanged, this));
 	_VerticalScrollBar->SetAnchorBottom(true);
@@ -74,22 +78,13 @@ void UI::ScrollBox::_OnContentOrViewSizeChanged(UI::Event & SizeChangedEvent)
 	if(SizeChangedEvent.GetPhase() == UI::Event::Phase::Target)
 	{
 		// setting the position
-		Vector2f NewContentPosition(_Content->GetPosition());
-		bool SetContentPosition(false);
-		
-		if(_Content->GetPosition()[0] + _Content->GetSize()[0] < _View->GetSize()[0])
+		if(_Content->GetLeft() + _Content->GetSize()[0] < _View->GetSize()[0])
 		{
-			NewContentPosition[0] = std::min(0.0f, _View->GetSize()[0] - _Content->GetSize()[0]);
-			SetContentPosition = true;
+			_Content->SetLeft(std::min(0.0f, _View->GetSize()[0] - _Content->GetSize()[0]));
 		}
-		if(_Content->GetPosition()[1] + _Content->GetSize()[1] < _View->GetSize()[1])
+		if(_Content->GetTop() + _Content->GetSize()[1] < _View->GetSize()[1])
 		{
-			NewContentPosition[1] = std::min(0.0f, _View->GetSize()[1] - _Content->GetSize()[1]);
-			SetContentPosition = true;
-		}
-		if(SetContentPosition == true)
-		{
-			_Content->SetPosition(NewContentPosition);
+			_Content->SetTop(std::min(0.0f, _View->GetSize()[1] - _Content->GetSize()[1]));
 		}
 		
 		// setting the position
@@ -98,8 +93,8 @@ void UI::ScrollBox::_OnContentOrViewSizeChanged(UI::Event & SizeChangedEvent)
 		
 		for(auto ContentWidget : _Content->GetSubWidgets())
 		{
-			Bottom = std::max(Bottom, ContentWidget->GetPosition()[1] + ContentWidget->GetSize()[1]);
-			Right = std::max(Right, ContentWidget->GetPosition()[0] + ContentWidget->GetSize()[0]);
+			Bottom = std::max(Bottom, ContentWidget->GetTop() + ContentWidget->GetSize()[1]);
+			Right = std::max(Right, ContentWidget->GetLeft() + ContentWidget->GetSize()[0]);
 		}
 		//~ // add padding at the bottom and the right
 		//~ /// @todo This has to leave eventually since it is not general.
@@ -118,7 +113,7 @@ void UI::ScrollBox::_OnHorizontalScrollPositionChanged(void)
 {
 	if(_Content->GetSize()[0] > _View->GetSize()[0])
 	{
-		_Content->SetPosition(Vector2f(-_HorizontalScrollBar->GetCurrentPosition(), _Content->GetPosition()[1]));
+		_Content->SetLeft(-_HorizontalScrollBar->GetCurrentPosition());
 	}
 }
 
@@ -156,7 +151,7 @@ void UI::ScrollBox::_OnVerticalScrollPositionChanged(void)
 {
 	if(_Content->GetSize()[1] > _View->GetSize()[1])
 	{
-		_Content->SetPosition(Vector2f(_Content->GetPosition()[0], -_VerticalScrollBar->GetCurrentPosition()));
+		_Content->SetTop(-_VerticalScrollBar->GetCurrentPosition());
 	}
 }
 
