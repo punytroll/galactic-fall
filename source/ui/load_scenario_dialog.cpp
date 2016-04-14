@@ -48,11 +48,11 @@ UI::ScenarioItem::ScenarioItem(UI::Widget * SupWidget, Scenario * Scenario) :
 	UI::ListBoxItem(SupWidget),
 	_Scenario(Scenario)
 {
-	UI::Label * CaptionLabel(new UI::Label(this, Scenario->GetName()));
+	auto CaptionLabel{new UI::Label{this, Scenario->GetName()}};
 	
 	CaptionLabel->SetLeft(5.0f);
 	CaptionLabel->SetTop(0.0f);
-	CaptionLabel->SetSize(Vector2f(GetSize()[0] - 10.0f, 20.0f));
+	CaptionLabel->SetSize(Vector2f(GetWidth() - 10.0f, 20.0f));
 	CaptionLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
 	CaptionLabel->SetAnchorLeft(true);
 	CaptionLabel->SetAnchorRight(true);
@@ -67,12 +67,9 @@ Scenario * UI::ScenarioItem::GetScenario(void)
 UI::LoadScenarioDialog::LoadScenarioDialog(UI::Widget * SupWidget, ScenarioManager * ScenarioManager) :
 	UI::Dialog(SupWidget),
 	_ScenarioManager(ScenarioManager),
-	_SelectedScenarioItem(0)
+	_SelectedScenarioItem(nullptr)
 {
 	SetTitle("Load Scenario");
-	SetLeft(120.0f);
-	SetTop(200.0f);
-	SetSize(Vector2f(300.0f, 400.0f));
 	ConnectKeyCallback(std::bind(&UI::LoadScenarioDialog::_OnKey, this, std::placeholders::_1));
 
 	auto OKButton(new UI::TextButton(this, "OK"));
@@ -108,7 +105,7 @@ UI::LoadScenarioDialog::LoadScenarioDialog(UI::Widget * SupWidget, ScenarioManag
 	_MessageLabel->SetWrap(true);
 	_MessageLabel->SetWordWrap(true);
 	_MessageLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
-	_ScenarioScrollBox = new UI::ScrollBox(this);
+	_ScenarioScrollBox = new UI::ScrollBox{this};
 	_ScenarioScrollBox->SetLeft(10.0f);
 	_ScenarioScrollBox->SetTop(110.0f);
 	_ScenarioScrollBox->SetSize(Vector2f(GetSize()[0] - 10.0f - 10.0f, GetSize()[1] - 110.0f - 30.0f - 10.0f - OKButton->GetSize()[1]));
@@ -116,13 +113,14 @@ UI::LoadScenarioDialog::LoadScenarioDialog(UI::Widget * SupWidget, ScenarioManag
 	_ScenarioScrollBox->SetAnchorRight(true);
 	_ScenarioScrollBox->SetAnchorTop(true);
 	_ScenarioScrollBox->SetHorizontalScrollBarVisible(false);
+	_ScenarioScrollBox->GetContent()->SetSize(_ScenarioScrollBox->GetView()->GetSize());
+	_ScenarioScrollBox->GetContent()->SetAnchorRight(true);
 	
 	float Top(5.0f);
-	const std::map< std::string, Scenario * > & Scenarios(_ScenarioManager->GetScenarios());
 	
-	for(std::map< std::string, Scenario * >::const_iterator ScenarioIterator = Scenarios.begin(); ScenarioIterator != Scenarios.end(); ++ScenarioIterator)
+	for(auto ScenarioPair : _ScenarioManager->GetScenarios())
 	{
-		UI::ScenarioItem * ScenarioItem(new UI::ScenarioItem(_ScenarioScrollBox->GetContent(), ScenarioIterator->second));
+		auto ScenarioItem{new UI::ScenarioItem{_ScenarioScrollBox->GetContent(), ScenarioPair.second}};
 		
 		ScenarioItem->SetLeft(5.0f);
 		ScenarioItem->SetTop(Top);
@@ -131,7 +129,7 @@ UI::LoadScenarioDialog::LoadScenarioDialog(UI::Widget * SupWidget, ScenarioManag
 		ScenarioItem->ConnectMouseButtonCallback(std::bind(&UI::LoadScenarioDialog::_OnScenarioItemMouseButton, this, ScenarioItem, std::placeholders::_1));
 		Top += 25.0f;
 	}
-	_ScenarioScrollBox->GetContent()->SetSize(Vector2f(_ScenarioScrollBox->GetView()->GetSize()[0], std::max(Top, _ScenarioScrollBox->GetView()->GetSize()[1])));
+	_ScenarioScrollBox->GetContent()->SetSize(Vector2f(_ScenarioScrollBox->GetContent()->GetWidth(), std::max(Top, _ScenarioScrollBox->GetView()->GetHeight())));
 }
 
 Scenario * UI::LoadScenarioDialog::GetScenario(void)

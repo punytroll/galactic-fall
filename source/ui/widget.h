@@ -67,6 +67,7 @@ namespace UI
 		// getters
 		const Graphics::ColorRGBO * GetBackgroundColor(void) const;
 		bool GetEnabled(void) const;
+		float GetHeight(void) const;
 		Widget * GetHoveredWidget(void);
 		Vector2f GetGlobalPosition(void) const;
 		float GetLeft(void) const;
@@ -78,6 +79,7 @@ namespace UI
 		Widget * GetSubWidget(const std::string & Name);
 		const std::list< Widget * > & GetSubWidgets(void) const;
 		float GetTop(void) const;
+		float GetWidth(void) const;
 		bool IsEnabled(void) const;
 		bool IsHovered(void) const;
 		bool IsVisible(void) const;
@@ -148,6 +150,11 @@ namespace UI
 		return _Enabled;
 	}
 	
+	inline float Widget::GetHeight(void) const
+	{
+		return _Size[1];
+	}
+	
 	inline Widget * Widget::GetHoveredWidget(void)
 	{
 		return _HoverWidget;
@@ -211,6 +218,11 @@ namespace UI
 	inline float Widget::GetTop(void) const
 	{
 		return _Top;
+	}
+	
+	inline float Widget::GetWidth(void) const
+	{
+		return _Size[0];
 	}
 	
 	inline bool Widget::IsEnabled(void) const

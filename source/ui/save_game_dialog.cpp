@@ -70,12 +70,9 @@ UI::SaveGameDialog::SaveGameDialog(UI::Widget * SupWidget) :
 	_SelectedDirectoryEntryItem(nullptr)
 {
 	SetTitle("Save Game");
-	SetLeft(120.0f);
-	SetTop(200.0f);
-	SetSize(Vector2f(300.0f, 400.0f));
 	ConnectKeyCallback(std::bind(&UI::SaveGameDialog::_OnKey, this, std::placeholders::_1));
 	
-	auto OKButton(new UI::TextButton(this, "OK"));
+	auto OKButton{new UI::TextButton(this, "OK")};
 	
 	OKButton->SetSize(Vector2f(100.0f, 20.0f));
 	OKButton->SetLeft(GetSize()[0] - 10.0f - OKButton->GetSize()[0]);
@@ -86,7 +83,7 @@ UI::SaveGameDialog::SaveGameDialog(UI::Widget * SupWidget) :
 	OKButton->SetAnchorTop(false);
 	OKButton->ConnectClickedCallback(std::bind(&UI::SaveGameDialog::_Close, this, UI::Dialog::ClosingReason::OK_BUTTON));
 	
-	auto CancelButton(new UI::TextButton(this, "Cancel"));
+	auto CancelButton{new UI::TextButton(this, "Cancel")};
 	
 	CancelButton->SetSize(Vector2f(100.0f, 20.0f));
 	CancelButton->SetLeft(GetSize()[0] - 10.0f - OKButton->GetSize()[0] - 10.0f - CancelButton->GetSize()[0]);

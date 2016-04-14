@@ -105,48 +105,51 @@ void UI::StarMapDisplay::_ClearView(void)
 
 void UI::StarMapDisplay::_SetupView(void)
 {
-	auto OrthogonalProjection{new Graphics::Orthogonal2DProjection()};
-	
-	// the orthogonal pojection is designed to place (0.0, 0.0) in the middle of the widget, scale appropriately and make this a game coordinate view (y axis is up)
-	OrthogonalProjection->SetLeft(-GetSize()[0] / 2.0f / _Scale);
-	OrthogonalProjection->SetTop(GetSize()[1] / 2.0f / _Scale);
-	OrthogonalProjection->SetRight(GetSize()[0] / 2.0f / _Scale);
-	OrthogonalProjection->SetBottom(-GetSize()[1] / 2.0f / _Scale);
-	
-	auto View{new Graphics::View()};
-	
-	View->SetClearColor(Graphics::ColorRGBO(0.0f, 0.0f, 0.0f, 0.0f));
-	assert(View->GetCamera() != nullptr);
-	View->GetCamera()->SetProjection(OrthogonalProjection);
-	View->GetCamera()->SetSpacialMatrix(Matrix4f::CreateTranslation(_CameraWorldPosition[0], _CameraWorldPosition[1], 0.0f));
-	assert(g_GraphicsEngine != nullptr);
-	g_GraphicsEngine->AddView(View);
-	
-	auto Scene{new Graphics::Scene()};
-	
-	Scene->SetDestroyCallback(std::bind(&UI::StarMapDisplay::_OnDestroyInScene, this, std::placeholders::_1));
-	View->SetScene(Scene);
-	
-	auto Texture{new Graphics::Texture()};
-	
-	Texture->Create(GetSize()[0], GetSize()[1], 1);
-	
-	auto RenderTarget{new Graphics::TextureRenderTarget()};
-	
-	RenderTarget->SetTexture(Texture);
-	View->SetRenderTarget(RenderTarget);
-	
-	auto RootNode{new Graphics::CallbackNode()};
-	
-	RootNode->SetDrawCallback(std::bind(&UI::StarMapDisplay::_OnDraw, this, std::placeholders::_1));
-	RootNode->SetClearColorBuffer(true);
-	RootNode->SetClearDepthBuffer(true);
-	RootNode->SetUseBlending(false);
-	RootNode->SetUseDepthTest(false);
-	RootNode->SetUseBlending(true);
-	RootNode->SetBlendFunction(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	Scene->SetRootNode(RootNode);
-	SetView(View);
+	if((GetWidth() > 0.0f) && (GetHeight() > 0.0f))
+	{
+		auto OrthogonalProjection{new Graphics::Orthogonal2DProjection{}};
+		
+		// the orthogonal pojection is designed to place (0.0, 0.0) in the middle of the widget, scale appropriately and make this a game coordinate view (y axis is up)
+		OrthogonalProjection->SetLeft(-GetWidth() / 2.0f / _Scale);
+		OrthogonalProjection->SetTop(GetHeight() / 2.0f / _Scale);
+		OrthogonalProjection->SetRight(GetWidth() / 2.0f / _Scale);
+		OrthogonalProjection->SetBottom(-GetHeight() / 2.0f / _Scale);
+		
+		auto View{new Graphics::View{}};
+		
+		View->SetClearColor(Graphics::ColorRGBO(0.0f, 0.0f, 0.0f, 0.0f));
+		assert(View->GetCamera() != nullptr);
+		View->GetCamera()->SetProjection(OrthogonalProjection);
+		View->GetCamera()->SetSpacialMatrix(Matrix4f::CreateTranslation(_CameraWorldPosition[0], _CameraWorldPosition[1], 0.0f));
+		assert(g_GraphicsEngine != nullptr);
+		g_GraphicsEngine->AddView(View);
+		
+		auto Scene{new Graphics::Scene{}};
+		
+		Scene->SetDestroyCallback(std::bind(&UI::StarMapDisplay::_OnDestroyInScene, this, std::placeholders::_1));
+		View->SetScene(Scene);
+		
+		auto Texture{new Graphics::Texture{}};
+		
+		Texture->Create(GetWidth(), GetHeight(), 1);
+		
+		auto RenderTarget{new Graphics::TextureRenderTarget{}};
+		
+		RenderTarget->SetTexture(Texture);
+		View->SetRenderTarget(RenderTarget);
+		
+		auto RootNode{new Graphics::CallbackNode{}};
+		
+		RootNode->SetDrawCallback(std::bind(&UI::StarMapDisplay::_OnDraw, this, std::placeholders::_1));
+		RootNode->SetClearColorBuffer(true);
+		RootNode->SetClearDepthBuffer(true);
+		RootNode->SetUseBlending(false);
+		RootNode->SetUseDepthTest(false);
+		RootNode->SetUseBlending(true);
+		RootNode->SetBlendFunction(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		Scene->SetRootNode(RootNode);
+		SetView(View);
+	}
 }
 
 void UI::StarMapDisplay::_OnDraw(Graphics::RenderContext * RenderContext)

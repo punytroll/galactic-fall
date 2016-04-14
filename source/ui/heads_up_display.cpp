@@ -41,8 +41,6 @@ UI::HeadsUpDisplay::HeadsUpDisplay(UI::Widget * SupWidget) :
 	UI::Widget(SupWidget),
 	_MessageLabel(nullptr)
 {
-	SetSize(Vector2f(1000.0f, 1000.0f));
-	
 	auto TimeWarpLabel(new UI::Label(this));
 	
 	TimeWarpLabel->SetName("time_warp");
@@ -145,7 +143,7 @@ UI::HeadsUpDisplay::HeadsUpDisplay(UI::Widget * SupWidget) :
 	MiniMapBorder->SetSize(MiniMapWidget->GetSize());
 	MiniMapBorder->SetAnchorBottom(true);
 	MiniMapBorder->SetAnchorRight(true);
-	MiniMapBorder->SetWidth(1.0f);
+	MiniMapBorder->SetLineWidth(1.0f);
 	MiniMapBorder->SetColor(Graphics::ColorRGBO(0.1f, 0.2f, 0.3f, 1.0f));
 	
 	auto ScannerWidget(new UI::Widget(this));
@@ -185,7 +183,7 @@ UI::HeadsUpDisplay::HeadsUpDisplay(UI::Widget * SupWidget) :
 	ScannerBorder->SetSize(ScannerWidget->GetSize());
 	ScannerBorder->SetAnchorBottom(true);
 	ScannerBorder->SetAnchorRight(true);
-	ScannerBorder->SetWidth(1.0f);
+	ScannerBorder->SetLineWidth(1.0f);
 	ScannerBorder->SetColor(Graphics::ColorRGBO(0.1f, 0.2f, 0.3f, 1.0f));
 }
 

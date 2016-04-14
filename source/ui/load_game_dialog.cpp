@@ -53,9 +53,6 @@ UI::LoadGameDialog::LoadGameDialog(UI::Widget * SupWidget) :
 	_SelectedDirectoryEntryItem(nullptr)
 {
 	SetTitle("Load Game");
-	SetLeft(120.0f);
-	SetTop(200.0f);
-	SetSize(Vector2f(300.0f, 400.0f));
 	ConnectKeyCallback(std::bind(&UI::LoadGameDialog::_OnKey, this, std::placeholders::_1));
 	
 	auto OKButton(new UI::TextButton(this, "OK"));

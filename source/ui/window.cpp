@@ -40,7 +40,7 @@ UI::Window::Window(Widget * SupWidget, const std::string & Title) :
 	Border->SetSize(GetSize());
 	Border->SetAnchorBottom(true);
 	Border->SetAnchorRight(true);
-	Border->SetWidth(1.0f);
+	Border->SetLineWidth(1.0f);
 	Border->SetColor(Graphics::ColorRGBO(0.4f, 0.4f, 0.4f, 1.0f));
 	_TitleLabel = new UI::Label(this, Title);
 	_TitleLabel->SetLeft(10.0f);

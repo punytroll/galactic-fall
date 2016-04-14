@@ -48,8 +48,6 @@ namespace UI
 			assert(_Object != nullptr);
 			ConnectDestroyingCallback(std::bind(&UI::ObjectListItem::_OnDestroying, this, std::placeholders::_1));
 			_ObjectDestroyingConnection = _Object->ConnectDestroyingCallback(std::bind(&UI::ObjectListItem::_OnObjectDestroying, this));
-			// set design size
-			SetSize(Vector2f(100.0f, 20.0f));
 			assert(_Object->GetAspectName() != nullptr);
 			
 			auto NameLabel(new UI::Label(this, _Object->GetAspectName()->GetName()));

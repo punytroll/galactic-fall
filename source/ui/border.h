@@ -37,15 +37,15 @@ namespace UI
 		virtual ~Border(void);
 		// getters
 		const Graphics::ColorRGBO * GetColor(void) const;
-		float GetWidth(void) const;
+		float GetLineWidth(void) const;
 		// setters
 		void SetColor(const Graphics::ColorRGBO & Color);
-		void SetWidth(float Width);
+		void SetLineWidth(float LineWidth);
 		// draw
 		virtual void Draw(Graphics::RenderContext * RenderContext) override;
 	private:
 		Graphics::ColorRGBO * _Color;
-		float _Width;
+		float _LineWidth;
 	};
 
 	inline const Graphics::ColorRGBO * Border::GetColor(void) const
@@ -53,14 +53,14 @@ namespace UI
 		return _Color;
 	}
 
-	inline float Border::GetWidth(void) const
+	inline float Border::GetLineWidth(void) const
 	{
-		return _Width;
+		return _LineWidth;
 	}
 
-	inline void Border::SetWidth(float Width)
+	inline void Border::SetLineWidth(float LineWidth)
 	{
-		_Width = Width;
+		_LineWidth = LineWidth;
 	}
 }
 

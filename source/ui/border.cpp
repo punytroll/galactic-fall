@@ -25,7 +25,7 @@
 UI::Border::Border(Widget * SupWidget) :
 	Widget(SupWidget),
 	_Color(nullptr),
-	_Width(1.0f)
+	_LineWidth(1.0f)
 {
 }
 
@@ -47,10 +47,10 @@ void UI::Border::Draw(Graphics::RenderContext * RenderContext)
 		
 		auto GlobalPosition{GetGlobalPosition()};
 		
-		Graphics::Drawing::DrawBox(RenderContext, GlobalPosition[0], GlobalPosition[1], GlobalPosition[1] + GetSize()[1], GlobalPosition[0] + _Width);
-		Graphics::Drawing::DrawBox(RenderContext, GlobalPosition[0], GlobalPosition[1], GlobalPosition[1] + _Width, GlobalPosition[0] + GetSize()[0]);
-		Graphics::Drawing::DrawBox(RenderContext, GlobalPosition[0], GlobalPosition[1] + GetSize()[1] - _Width, GlobalPosition[1] + GetSize()[1], GlobalPosition[0] + GetSize()[0]);
-		Graphics::Drawing::DrawBox(RenderContext, GlobalPosition[0] + GetSize()[0] - _Width, GlobalPosition[1], GlobalPosition[1] + GetSize()[1], GlobalPosition[0] + GetSize()[0]);
+		Graphics::Drawing::DrawBox(RenderContext, GlobalPosition[0], GlobalPosition[1], GlobalPosition[1] + GetSize()[1], GlobalPosition[0] + _LineWidth);
+		Graphics::Drawing::DrawBox(RenderContext, GlobalPosition[0], GlobalPosition[1], GlobalPosition[1] + _LineWidth, GlobalPosition[0] + GetSize()[0]);
+		Graphics::Drawing::DrawBox(RenderContext, GlobalPosition[0], GlobalPosition[1] + GetSize()[1] - _LineWidth, GlobalPosition[1] + GetSize()[1], GlobalPosition[0] + GetSize()[0]);
+		Graphics::Drawing::DrawBox(RenderContext, GlobalPosition[0] + GetSize()[0] - _LineWidth, GlobalPosition[1], GlobalPosition[1] + GetSize()[1], GlobalPosition[0] + GetSize()[0]);
 		RenderContext->DeactivateProgram();
 		RenderContext->UnsetProgramIdentifier();
 		RenderContext->UnsetColorRGBO();
