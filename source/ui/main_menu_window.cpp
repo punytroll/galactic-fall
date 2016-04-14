@@ -44,26 +44,26 @@ UI::MainMenuWindow::MainMenuWindow(UI::Widget * SupWidget, ScenarioManager * Sce
 	_DestroyOnLoadGameDialogDestroy(false),
 	_DestroyOnLoadScenarioDialogDestroy(false),
 	_DestroyOnSaveGameDialogDestroy(false),
-	_LoadGameButton(0),
-	_LoadGameDialog(0),
-	_LoadScenarioButton(0),
-	_LoadScenarioDialog(0),
-	_NewGameButton(0),
-	_QuitButton(0),
-	_ResumeGameButton(0),
-	_SaveGameButton(0),
-	_SaveGameDialog(0),
+	_LoadGameButton(nullptr),
+	_LoadGameDialog(nullptr),
+	_LoadScenarioButton(nullptr),
+	_LoadScenarioDialog(nullptr),
+	_NewGameButton(nullptr),
+	_QuitButton(nullptr),
+	_ResumeGameButton(nullptr),
+	_SaveGameButton(nullptr),
+	_SaveGameDialog(nullptr),
 	_ScenarioManager(ScenarioManager)
 {
 	ConnectKeyCallback(std::bind(&UI::MainMenuWindow::_OnKey, this, std::placeholders::_1));
-	SetSize(Vector2f(200.0f, 300.0f));
 	HideResizeDragBox();
 	
 	// "Resume Game" button
 	_ResumeGameButton = new UI::TextButton(this, "Resume Game");
+	_ResumeGameButton->SetName("resume_game");
 	_ResumeGameButton->SetLeft(20.0f);
 	_ResumeGameButton->SetTop(60.0f);
-	_ResumeGameButton->SetSize(Vector2f(160.0f, 20.0f));
+	_ResumeGameButton->SetSize(Vector2f(GetWidth() - 40.0f, 20.0f));
 	_ResumeGameButton->SetAnchorBottom(false);
 	_ResumeGameButton->SetAnchorLeft(true);
 	_ResumeGameButton->SetAnchorRight(true);
@@ -72,9 +72,10 @@ UI::MainMenuWindow::MainMenuWindow(UI::Widget * SupWidget, ScenarioManager * Sce
 	
 	// "New Game" button
 	_NewGameButton = new UI::TextButton(this, "New Game");
+	_NewGameButton->SetName("new_game");
 	_NewGameButton->SetLeft(20.0f);
 	_NewGameButton->SetTop(_ResumeGameButton->GetTop() + 40.0f);
-	_NewGameButton->SetSize(Vector2f(160.0f, 20.0f));
+	_NewGameButton->SetSize(Vector2f(GetWidth() - 40.0f, 20.0f));
 	_NewGameButton->SetAnchorBottom(false);
 	_NewGameButton->SetAnchorLeft(true);
 	_NewGameButton->SetAnchorRight(true);
@@ -83,9 +84,10 @@ UI::MainMenuWindow::MainMenuWindow(UI::Widget * SupWidget, ScenarioManager * Sce
 	
 	// "Load Scenario" button
 	_LoadScenarioButton = new UI::TextButton(this, "Load Scenario");
+	_LoadScenarioButton->SetName("load_scenario");
 	_LoadScenarioButton->SetLeft(20.0f);
 	_LoadScenarioButton->SetTop(_NewGameButton->GetTop() + 40.0f);
-	_LoadScenarioButton->SetSize(Vector2f(160.0f, 20.0f));
+	_LoadScenarioButton->SetSize(Vector2f(GetWidth() - 40.0f, 20.0f));
 	_LoadScenarioButton->SetAnchorBottom(false);
 	_LoadScenarioButton->SetAnchorLeft(true);
 	_LoadScenarioButton->SetAnchorRight(true);
@@ -94,9 +96,10 @@ UI::MainMenuWindow::MainMenuWindow(UI::Widget * SupWidget, ScenarioManager * Sce
 	
 	// "Load Game" button
 	_LoadGameButton = new UI::TextButton(this, "Load Game");
+	_LoadGameButton->SetName("load_game");
 	_LoadGameButton->SetLeft(20.0f);
 	_LoadGameButton->SetTop(_LoadScenarioButton->GetTop() + 40.0f);
-	_LoadGameButton->SetSize(Vector2f(160.0f, 20.0f));
+	_LoadGameButton->SetSize(Vector2f(GetWidth() - 40.0f, 20.0f));
 	_LoadGameButton->SetAnchorBottom(false);
 	_LoadGameButton->SetAnchorLeft(true);
 	_LoadGameButton->SetAnchorRight(true);
@@ -105,9 +108,10 @@ UI::MainMenuWindow::MainMenuWindow(UI::Widget * SupWidget, ScenarioManager * Sce
 	
 	// "Save Game" button
 	_SaveGameButton = new UI::TextButton(this, "Save Game");
+	_SaveGameButton->SetName("save_game");
 	_SaveGameButton->SetLeft(20.0f);
 	_SaveGameButton->SetTop(_LoadGameButton->GetTop() + 40.0f);
-	_SaveGameButton->SetSize(Vector2f(160.0f, 20.0f));
+	_SaveGameButton->SetSize(Vector2f(GetWidth() - 40.0f, 20.0f));
 	_SaveGameButton->SetAnchorBottom(false);
 	_SaveGameButton->SetAnchorLeft(true);
 	_SaveGameButton->SetAnchorRight(true);
@@ -116,9 +120,10 @@ UI::MainMenuWindow::MainMenuWindow(UI::Widget * SupWidget, ScenarioManager * Sce
 	
 	// "Quit" button
 	_QuitButton = new UI::TextButton(this, "Quit");
+	_QuitButton->SetName("quit");
 	_QuitButton->SetLeft(20.0f);
 	_QuitButton->SetTop(_SaveGameButton->GetTop() + 40.0f);
-	_QuitButton->SetSize(Vector2f(160.0f, 20.0f));
+	_QuitButton->SetSize(Vector2f(GetWidth() - 40.0f, 20.0f));
 	_QuitButton->SetAnchorBottom(false);
 	_QuitButton->SetAnchorLeft(true);
 	_QuitButton->SetAnchorRight(true);
@@ -165,6 +170,10 @@ void UI::MainMenuWindow::_OnLoadGameButtonClicked(void)
 	if(_LoadGameDialog == 0)
 	{
 		_LoadGameDialog = new UI::LoadGameDialog(GetRootWidget());
+		_LoadGameDialog->SetName("load_game");
+		_LoadGameDialog->SetLeft(120.0f);
+		_LoadGameDialog->SetTop(200.0f);
+		_LoadGameDialog->SetSize(Vector2f(300.0f, 400.0f));
 		_LoadGameDialog->GrabKeyFocus();
 		_LoadGameDialog->ConnectClosingCallback(std::bind(&UI::MainMenuWindow::_OnLoadGameDialogClosing, this, std::placeholders::_1));
 		_LoadGameDialog->ConnectDestroyingCallback(std::bind(&UI::MainMenuWindow::_OnLoadGameDialogDestroying, this, std::placeholders::_1));
@@ -238,7 +247,7 @@ void UI::MainMenuWindow::_OnLoadGameDialogDestroying(UI::Event & DestroyingEvent
 {
 	if(DestroyingEvent.GetPhase() == UI::Event::Phase::Target)
 	{
-		_LoadGameDialog = 0;
+		_LoadGameDialog = nullptr;
 		if(_DestroyOnLoadGameDialogDestroy == true)
 		{
 			Destroy();
@@ -248,9 +257,13 @@ void UI::MainMenuWindow::_OnLoadGameDialogDestroying(UI::Event & DestroyingEvent
 
 void UI::MainMenuWindow::_OnLoadScenarioButtonClicked(void)
 {
-	if(_LoadScenarioDialog == 0)
+	if(_LoadScenarioDialog == nullptr)
 	{
 		_LoadScenarioDialog = new UI::LoadScenarioDialog(GetRootWidget(), _ScenarioManager);
+		_LoadScenarioDialog->SetName("load_scenario");
+		_LoadScenarioDialog->SetLeft(120.0f);
+		_LoadScenarioDialog->SetTop(200.0f);
+		_LoadScenarioDialog->SetSize(Vector2f(300.0f, 400.0f));
 		_LoadScenarioDialog->GrabKeyFocus();
 		_LoadScenarioDialog->ConnectClosingCallback(std::bind(&UI::MainMenuWindow::_OnLoadScenarioDialogClosing, this, std::placeholders::_1));
 		_LoadScenarioDialog->ConnectDestroyingCallback(std::bind(&UI::MainMenuWindow::_OnLoadScenarioDialogDestroying, this, std::placeholders::_1));
@@ -266,9 +279,9 @@ bool UI::MainMenuWindow::_OnLoadScenarioDialogClosing(UI::Dialog::ClosingReason 
 	}
 	else if((ClosingReason == UI::Dialog::ClosingReason::OK_BUTTON) || (ClosingReason == UI::Dialog::ClosingReason::RETURN_KEY))
 	{
-		Scenario * Scenario(_LoadScenarioDialog->GetScenario());
+		auto Scenario(_LoadScenarioDialog->GetScenario());
 		
-		if(Scenario != 0)
+		if(Scenario != nullptr)
 		{
 			if(LoadScenario(Scenario) == false)
 			{
@@ -303,7 +316,7 @@ void UI::MainMenuWindow::_OnLoadScenarioDialogDestroying(UI::Event & DestroyingE
 {
 	if(DestroyingEvent.GetPhase() == UI::Event::Phase::Target)
 	{
-		_LoadScenarioDialog = 0;
+		_LoadScenarioDialog = nullptr;
 		if(_DestroyOnLoadScenarioDialogDestroy == true)
 		{
 			Destroy();
@@ -323,9 +336,13 @@ void UI::MainMenuWindow::_OnResumeGameButtonClicked(void)
 
 void UI::MainMenuWindow::_OnSaveGameButtonClicked(void)
 {
-	if(_SaveGameDialog == 0)
+	if(_SaveGameDialog == nullptr)
 	{
 		_SaveGameDialog = new UI::SaveGameDialog(GetRootWidget());
+		_SaveGameDialog->SetName("save_game");
+		_SaveGameDialog->SetLeft(120.0f);
+		_SaveGameDialog->SetTop(200.0f);
+		_SaveGameDialog->SetSize(Vector2f(300.0f, 400.0f));
 		_SaveGameDialog->GrabKeyFocus();
 		_SaveGameDialog->ConnectClosingCallback(std::bind(&UI::MainMenuWindow::_OnSaveGameDialogClosing, this, std::placeholders::_1));
 		_SaveGameDialog->ConnectDestroyingCallback(std::bind(&UI::MainMenuWindow::_OnSaveGameDialogDestroying, this, std::placeholders::_1));
@@ -391,7 +408,7 @@ void UI::MainMenuWindow::_OnSaveGameDialogDestroying(UI::Event & DestroyingEvent
 {
 	if(DestroyingEvent.GetPhase() == UI::Event::Phase::Target)
 	{
-		_SaveGameDialog = 0;
+		_SaveGameDialog = nullptr;
 		if(_DestroyOnSaveGameDialogDestroy == true)
 		{
 			Destroy();

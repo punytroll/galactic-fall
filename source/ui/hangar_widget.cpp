@@ -159,57 +159,60 @@ namespace UI
 		
 		void _Setup(void)
 		{
-			assert(_Ship != nullptr);
-			assert(_Ship->GetAspectPhysical() != nullptr);
-			
-			Graphics::PerspectiveProjection * PerspectiveProjection(new Graphics::PerspectiveProjection());
-			float RadialSize(_Ship->GetAspectPhysical()->GetRadialSize());
-			float ExtendedRadialSize((5.0f / 4.0f) * RadialSize);
-			
-			PerspectiveProjection->SetFieldOfViewY(asinf(ExtendedRadialSize / sqrtf(ExtendedRadialSize * ExtendedRadialSize + 16 * RadialSize * RadialSize)) * 2.0f);
-			PerspectiveProjection->SetAspect(GetSize()[0] / GetSize()[1]);
-			PerspectiveProjection->SetNearClippingPlane(1.0f);
-			PerspectiveProjection->SetFarClippingPlane(1000.0f);
-			
-			auto View(new Graphics::View());
-			
-			g_GraphicsEngine->AddView(View);
-			View->SetClearColor(Graphics::ColorRGBO(1.0f, 1.0f, 1.0f, 0.0f));
-			assert(View->GetCamera() != nullptr);
-			View->GetCamera()->SetProjection(PerspectiveProjection);
-			View->GetCamera()->SetSpacialMatrix(Matrix4f::CreateTranslation(Vector3f::CreateFromComponents(0.0f, -2.5f, 1.4f).Normalize() * 4.0f * RadialSize).RotateX(1.05f));
-			
-			auto Scene(new Graphics::Scene());
-			
-			Scene->SetDestroyCallback(std::bind(&UI::ShipDisplay::_OnDestroyInScene, this, std::placeholders::_1));
-			Scene->ActivateLight();
-			assert(Scene->GetLight() != nullptr);
-			Scene->GetLight()->SetType(Graphics::Light::Type::Directional);
-			Scene->GetLight()->SetDirection(Vector3f::CreateFromComponents(-15.0f, 10.0f, -20.0f));
-			Scene->GetLight()->SetColor(Graphics::ColorRGB(1.0f, 1.0f, 1.0f));
-			View->SetScene(Scene);
-			
-			auto Texture(new Graphics::Texture());
-			
-			Texture->Create(GetSize()[0], GetSize()[1], 1);
-			
-			auto RenderTarget(new Graphics::TextureRenderTarget());
-			
-			RenderTarget->SetTexture(Texture);
-			View->SetRenderTarget(RenderTarget);
-			
-			auto RootNode(new Graphics::Node());
-			
-			RootNode->SetClearColorBuffer(true);
-			RootNode->SetClearDepthBuffer(true);
-			RootNode->SetUseDepthTest(true);
-			Scene->SetRootNode(RootNode);
-			assert(_Visualization == nullptr);
-			_Visualization = VisualizeObject(_Ship, RootNode);
-			_Visualization->GetGraphics()->SetOrientation(Quaternion::CreateAsRotationZ(-2.4f));
-			_Visualization->SetUpdateOrientation(false);
-			_Visualization->SetUpdatePosition(false);
-			SetView(View);
+			if((GetWidth() > 0.0f) && (GetHeight() > 0.0f))
+			{
+				assert(_Ship != nullptr);
+				assert(_Ship->GetAspectPhysical() != nullptr);
+				
+				auto PerspectiveProjection{new Graphics::PerspectiveProjection{}};
+				float RadialSize{_Ship->GetAspectPhysical()->GetRadialSize()};
+				float ExtendedRadialSize{(5.0f / 4.0f) * RadialSize};
+				
+				PerspectiveProjection->SetFieldOfViewY(asinf(ExtendedRadialSize / sqrtf(ExtendedRadialSize * ExtendedRadialSize + 16 * RadialSize * RadialSize)) * 2.0f);
+				PerspectiveProjection->SetAspect(GetWidth() / GetHeight());
+				PerspectiveProjection->SetNearClippingPlane(1.0f);
+				PerspectiveProjection->SetFarClippingPlane(1000.0f);
+				
+				auto View{new Graphics::View{}};
+				
+				g_GraphicsEngine->AddView(View);
+				View->SetClearColor(Graphics::ColorRGBO(1.0f, 1.0f, 1.0f, 0.0f));
+				assert(View->GetCamera() != nullptr);
+				View->GetCamera()->SetProjection(PerspectiveProjection);
+				View->GetCamera()->SetSpacialMatrix(Matrix4f::CreateTranslation(Vector3f::CreateFromComponents(0.0f, -2.5f, 1.4f).Normalize() * 4.0f * RadialSize).RotateX(1.05f));
+				
+				auto Scene{new Graphics::Scene{}};
+				
+				Scene->SetDestroyCallback(std::bind(&UI::ShipDisplay::_OnDestroyInScene, this, std::placeholders::_1));
+				Scene->ActivateLight();
+				assert(Scene->GetLight() != nullptr);
+				Scene->GetLight()->SetType(Graphics::Light::Type::Directional);
+				Scene->GetLight()->SetDirection(Vector3f::CreateFromComponents(-15.0f, 10.0f, -20.0f));
+				Scene->GetLight()->SetColor(Graphics::ColorRGB(1.0f, 1.0f, 1.0f));
+				View->SetScene(Scene);
+				
+				auto Texture{new Graphics::Texture{}};
+				
+				Texture->Create(GetWidth(), GetHeight(), 1);
+				
+				auto RenderTarget{new Graphics::TextureRenderTarget{}};
+				
+				RenderTarget->SetTexture(Texture);
+				View->SetRenderTarget(RenderTarget);
+				
+				auto RootNode{new Graphics::Node{}};
+				
+				RootNode->SetClearColorBuffer(true);
+				RootNode->SetClearDepthBuffer(true);
+				RootNode->SetUseDepthTest(true);
+				Scene->SetRootNode(RootNode);
+				assert(_Visualization == nullptr);
+				_Visualization = VisualizeObject(_Ship, RootNode);
+				_Visualization->GetGraphics()->SetOrientation(Quaternion::CreateAsRotationZ(-2.4f));
+				_Visualization->SetUpdateOrientation(false);
+				_Visualization->SetUpdatePosition(false);
+				SetView(View);
+			}
 		}
 		
 		Ship * _Ship;
@@ -228,13 +231,12 @@ namespace UI
 			assert(_Ship != nullptr);
 			_ShipDestroyingConnection = _Ship->ConnectDestroyingCallback(std::bind(&UI::ShipListItem::_OnShipDestroying, this));
 			ConnectDestroyingCallback(std::bind(&UI::ShipListItem::_OnDestroying, this, std::placeholders::_1));
-			SetSize(Vector2f(100.0f, 100.0f));
 			
-			auto ShipDisplay(new UI::ShipDisplay(this, Ship));
+			auto ShipDisplay{new UI::ShipDisplay{this, Ship}};
 			
 			ShipDisplay->SetLeft(1.0f);
 			ShipDisplay->SetTop(1.0f);
-			ShipDisplay->SetSize(Vector2f(GetSize()[0] - 2.0f, GetSize()[1] - 2.0f));
+			ShipDisplay->SetSize(Vector2f(GetWidth() - 2.0f, GetHeight() - 2.0f));
 			ShipDisplay->SetAnchorBottom(true);
 			ShipDisplay->SetAnchorRight(true);
 		}
@@ -250,13 +252,13 @@ namespace UI
 			{
 				if(_Border == nullptr)
 				{
-					_Border = new UI::Border(this);
+					_Border = new UI::Border{this};
 					_Border->SetLeft(0.0f);
 					_Border->SetTop(0.0f);
 					_Border->SetSize(GetSize());
 					_Border->SetAnchorBottom(true);
 					_Border->SetAnchorRight(true);
-					_Border->SetWidth(1.0f);
+					_Border->SetLineWidth(1.0f);
 					_Border->SetColor(Graphics::ColorRGBO(1.0f, 1.0f, 1.0f, 1.0f));
 					LowerSubWidget(_Border);
 				}
@@ -307,19 +309,17 @@ UI::HangarWidget::HangarWidget(UI::Widget * SupWidget, Planet * Planet, Characte
 	_CharacterDestroyingConnection = _Character->ConnectDestroyingCallback(std::bind(&UI::HangarWidget::_OnCharacterDestroying, this));
 	assert(_Planet != nullptr);
 	_PlanetDestroyingConnection = _Planet->ConnectDestroyingCallback(std::bind(&UI::HangarWidget::_OnPlanetDestroying, this));
-	SetSize(Vector2f(600.0f, 350.0f));
-	_ShipScrollBox = new UI::ScrollBox(this);
+	_ShipScrollBox = new UI::ScrollBox{this};
 	_ShipScrollBox->SetLeft(0.0f);
 	_ShipScrollBox->SetTop(0.0f);
-	_ShipScrollBox->SetSize(Vector2f(600.0f, 130.0f));
+	_ShipScrollBox->SetSize(Vector2f(GetWidth(), 130.0f));
 	_ShipScrollBox->SetAnchorRight(true);
 	_ShipScrollBox->SetVerticalScrollBarVisible(false);
 	_ShipScrollBox->GetContent()->ConnectSubWidgetAddedCallback(std::bind(&UI::HangarWidget::_OnShipScrollBoxSubWidgetAdded, this, std::placeholders::_1));
 	_ShipScrollBox->GetContent()->ConnectSubWidgetRemovedCallback(std::bind(&UI::HangarWidget::_OnShipScrollBoxSubWidgetRemoved, this, std::placeholders::_1));
-	_ShipScrollBox->GetContent()->SetSize(Vector2f(600.0f, 0.0f));
-	_ShipScrollBox->GetContent()->SetAnchorRight(true);
+	_ShipScrollBox->GetContent()->SetSize(_ShipScrollBox->GetView()->GetSize());
 	
-	auto Hangar(_Planet->GetHangar(_Character));
+	auto Hangar{_Planet->GetHangar(_Character)};
 	
 	assert(Hangar != nullptr);
 	assert(Hangar->GetAspectObjectContainer() != nullptr);
@@ -329,11 +329,11 @@ UI::HangarWidget::HangarWidget(UI::Widget * SupWidget, Planet * Planet, Characte
 	{
 		if(Content->GetTypeIdentifier() == "ship")
 		{
-			auto TheShip(dynamic_cast< Ship * >(Content));
+			auto TheShip{dynamic_cast< Ship * >(Content)};
 			
 			assert(TheShip != nullptr);
 			
-			auto NewShipListItem(new UI::ShipListItem(TheShip));
+			auto NewShipListItem{new UI::ShipListItem{TheShip}};
 			
 			_ShipScrollBox->GetContent()->AddSubWidget(NewShipListItem);
 			if(TheShip == _Character->GetShip())
@@ -347,7 +347,7 @@ UI::HangarWidget::HangarWidget(UI::Widget * SupWidget, Planet * Planet, Characte
 		_SelectedShipListItem->SetSelected(true);
 	}
 	
-	UI::Button * BoardButton(new UI::TextButton(this, "Board"));
+	auto BoardButton{new UI::TextButton{this, "Board"}};
 	
 	BoardButton->SetLeft(0.0f);
 	BoardButton->SetTop(140.0f);
@@ -355,7 +355,7 @@ UI::HangarWidget::HangarWidget(UI::Widget * SupWidget, Planet * Planet, Characte
 	BoardButton->ConnectClickedCallback(std::bind(&UI::HangarWidget::_OnBoardButtonClicked, this));
 	BoardButton->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnBoardButtonUpdating, this, BoardButton, std::placeholders::_1, std::placeholders::_2));
 	
-	UI::Button * LoadButton(new UI::TextButton(this, "Load"));
+	auto LoadButton{new UI::TextButton{this, "Load"}};
 	
 	LoadButton->SetLeft(0.0f);
 	LoadButton->SetTop(170.0f);
@@ -363,7 +363,7 @@ UI::HangarWidget::HangarWidget(UI::Widget * SupWidget, Planet * Planet, Characte
 	LoadButton->ConnectClickedCallback(std::bind(&UI::HangarWidget::_OnLoadButtonClicked, this));
 	LoadButton->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnLoadButtonUpdating, this, LoadButton, std::placeholders::_1, std::placeholders::_2));
 	
-	UI::Button * OutfitButton(new UI::TextButton(this, "Outfit"));
+	auto OutfitButton{new UI::TextButton{this, "Outfit"}};
 	
 	OutfitButton->SetLeft(0.0f);
 	OutfitButton->SetTop(200.0f);
@@ -371,7 +371,7 @@ UI::HangarWidget::HangarWidget(UI::Widget * SupWidget, Planet * Planet, Characte
 	OutfitButton->ConnectClickedCallback(std::bind(&UI::HangarWidget::_OnOutfitButtonClicked, this));
 	OutfitButton->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnOutfitButtonUpdating, this, OutfitButton, std::placeholders::_1, std::placeholders::_2));
 	
-	UI::Button * RepairButton(new UI::TextButton(this, "Repair"));
+	auto RepairButton{new UI::TextButton{this, "Repair"}};
 	
 	RepairButton->SetLeft(0.0f);
 	RepairButton->SetTop(230.0f);
@@ -379,15 +379,15 @@ UI::HangarWidget::HangarWidget(UI::Widget * SupWidget, Planet * Planet, Characte
 	RepairButton->ConnectClickedCallback(std::bind(&UI::HangarWidget::_OnRepairButtonClicked, this));
 	RepairButton->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnRepairButtonUpdating, this, RepairButton, std::placeholders::_1, std::placeholders::_2));
 	
-	UI::ProgressBar * HullStateProgressBar(new UI::ProgressBar(this));
+	auto HullStateProgressBar{new UI::ProgressBar{this}};
 	
 	HullStateProgressBar->SetLeft(190.0f);
 	HullStateProgressBar->SetTop(230.0f);
-	HullStateProgressBar->SetSize(Vector2f(410.0f, 20.0f));
+	HullStateProgressBar->SetSize(Vector2f(GetWidth() - 190.0f, 20.0f));
 	HullStateProgressBar->SetAnchorRight(true);
 	HullStateProgressBar->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnHullStateProgressBarUpdating, this, HullStateProgressBar, std::placeholders::_1, std::placeholders::_2));
 	
-	UI::Button * RechargeButton(new UI::TextButton(this, "Recharge"));
+	auto RechargeButton{new UI::TextButton{this, "Recharge"}};
 	
 	RechargeButton->SetLeft(0.0f);
 	RechargeButton->SetTop(260.0f);
@@ -395,15 +395,15 @@ UI::HangarWidget::HangarWidget(UI::Widget * SupWidget, Planet * Planet, Characte
 	RechargeButton->ConnectClickedCallback(std::bind(&UI::HangarWidget::_OnRechargeButtonClicked, this));
 	RechargeButton->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnRechargeButtonUpdating, this, RechargeButton, std::placeholders::_1, std::placeholders::_2));
 	
-	UI::ProgressBar * EnergyStateProgressBar(new UI::ProgressBar(this));
+	auto EnergyStateProgressBar{new UI::ProgressBar{this}};
 	
 	EnergyStateProgressBar->SetLeft(190.0f);
 	EnergyStateProgressBar->SetTop(260.0f);
-	EnergyStateProgressBar->SetSize(Vector2f(410.0f, 20.0f));
+	EnergyStateProgressBar->SetSize(Vector2f(GetWidth() - 190.0f, 20.0f));
 	EnergyStateProgressBar->SetAnchorRight(true);
 	EnergyStateProgressBar->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnEnergyStateProgressBarUpdating, this, EnergyStateProgressBar, std::placeholders::_1, std::placeholders::_2));
 	
-	UI::Button * RefuelButton(new UI::TextButton(this, "Refuel"));
+	auto RefuelButton{new UI::TextButton{this, "Refuel"}};
 	
 	RefuelButton->SetLeft(0.0f);
 	RefuelButton->SetTop(290.0f);
@@ -411,15 +411,15 @@ UI::HangarWidget::HangarWidget(UI::Widget * SupWidget, Planet * Planet, Characte
 	RefuelButton->ConnectClickedCallback(std::bind(&UI::HangarWidget::_OnRefuelButtonClicked, this));
 	RefuelButton->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnRefuelButtonUpdating, this, RefuelButton, std::placeholders::_1, std::placeholders::_2));
 	
-	UI::ProgressBar * FuelStateProgressBar(new UI::ProgressBar(this));
+	auto FuelStateProgressBar{new UI::ProgressBar{this}};
 	
 	FuelStateProgressBar->SetLeft(190.0f);
 	FuelStateProgressBar->SetTop(290.0f);
-	FuelStateProgressBar->SetSize(Vector2f(410.0f, 20.0f));
+	FuelStateProgressBar->SetSize(Vector2f(GetWidth() - 190.0f, 20.0f));
 	FuelStateProgressBar->SetAnchorRight(true);
 	FuelStateProgressBar->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnFuelStateProgressBarUpdating, this, FuelStateProgressBar, std::placeholders::_1, std::placeholders::_2));
 	
-	UI::Button * TakeOffButton(new UI::TextButton(this, "Take Off"));
+	auto TakeOffButton{new UI::TextButton{this, "Take Off"}};
 	
 	TakeOffButton->SetLeft(0.0f);
 	TakeOffButton->SetTop(320.0f);
@@ -495,7 +495,7 @@ void UI::HangarWidget::_OnEnergyStateProgressBarUpdating(UI::ProgressBar * Energ
 	assert(EnergyStateProgressBar != nullptr);
 	
 	std::string Text("n/a");
-	float EnergyPercentage(0.0f);
+	float EnergyPercentage{0.0f};
 	
 	if(_SelectedShipListItem != nullptr)
 	{
@@ -515,7 +515,7 @@ void UI::HangarWidget::_OnFuelStateProgressBarUpdating(UI::ProgressBar * FuelSta
 {
 	assert(FuelStateProgressBar != nullptr);
 	
-	float FuelPercentage(0.0f);
+	float FuelPercentage{0.0f};
 	
 	if(_SelectedShipListItem != nullptr)
 	{
@@ -535,13 +535,13 @@ void UI::HangarWidget::_OnHangarContentAdded(Object * Content)
 {
 	if(Content->GetTypeIdentifier() == "ship")
 	{
-		auto TheShip(dynamic_cast< Ship * >(Content));
+		auto TheShip{dynamic_cast< Ship * >(Content)};
 		
 		assert(TheShip != nullptr);
 		assert(_ShipScrollBox != nullptr);
 		assert(_ShipScrollBox->GetContent() != nullptr);
 		
-		_ShipScrollBox->GetContent()->AddSubWidget(new ShipListItem(TheShip));
+		_ShipScrollBox->GetContent()->AddSubWidget(new ShipListItem{TheShip});
 	}
 }
 
@@ -549,7 +549,7 @@ void UI::HangarWidget::_OnHangarContentRemoved(Object * Content)
 {
 	if(Content->GetTypeIdentifier() == "ship")
 	{
-		auto TheShip(dynamic_cast< Ship * >(Content));
+		auto TheShip{dynamic_cast< Ship * >(Content)};
 		
 		assert(TheShip != nullptr);
 		assert(_ShipScrollBox != nullptr);
@@ -568,7 +568,7 @@ void UI::HangarWidget::_OnHullStateProgressBarUpdating(UI::ProgressBar * HullSta
 {
 	assert(HullStateProgressBar != nullptr);
 	
-	float HullPercentage(0.0f);
+	float HullPercentage{0.0f};
 	
 	if(_SelectedShipListItem != nullptr)
 	{
@@ -622,6 +622,9 @@ void UI::HangarWidget::_OnOutfitButtonClicked(void)
 		assert(_SelectedShipListItem != nullptr);
 		assert(_SelectedShipListItem->GetShip() != nullptr);
 		_OutfitShipDialog = new UI::OutfitShipDialog(GetRootWidget(), _SelectedShipListItem->GetShip());
+		_OutfitShipDialog->SetLeft(70.0f);
+		_OutfitShipDialog->SetTop(280.0f);
+		_OutfitShipDialog->SetSize(Vector2f(600.0f, 400.0f));
 		_OutfitShipDialog->ConnectDestroyingCallback(std::bind(&UI::HangarWidget::_OnOutfitShipDialogDestroying, this, std::placeholders::_1));
 	}
 	else
@@ -679,12 +682,11 @@ void UI::HangarWidget::_OnRefuelButtonUpdating(UI::Button * RefuelButton, float 
 {
 	assert(_Planet != nullptr);
 	
-	const std::vector< PlanetAssetClass * > & PlanetAssetClasses(_Planet->GetPlanetAssetClasses());
-	bool OffersRefueling(false);
+	bool OffersRefueling{false};
 	
-	for(std::vector< PlanetAssetClass * >::const_iterator PlanetAssetClassIterator = PlanetAssetClasses.begin(); PlanetAssetClassIterator != PlanetAssetClasses.end(); ++PlanetAssetClassIterator)
+	for(auto PlanetAssetClass : _Planet->GetPlanetAssetClasses())
 	{
-		if((*PlanetAssetClassIterator)->GetAssetClass()->GetIdentifier() == "fuel")
+		if(PlanetAssetClass->GetAssetClass()->GetIdentifier() == "fuel")
 		{
 			OffersRefueling = true;
 			
@@ -740,7 +742,7 @@ void UI::HangarWidget::_OnShipScrollBoxSubWidgetAdded(UI::SubWidgetEvent & SubWi
 {
 	if(SubWidgetEvent.GetPhase() == UI::Event::Phase::Target)
 	{
-		auto NewItem(dynamic_cast< UI::ShipListItem * >(SubWidgetEvent.GetSubWidget()));
+		auto NewItem{dynamic_cast< UI::ShipListItem * >(SubWidgetEvent.GetSubWidget())};
 		
 		assert(NewItem != nullptr);
 		
@@ -750,7 +752,7 @@ void UI::HangarWidget::_OnShipScrollBoxSubWidgetAdded(UI::SubWidgetEvent & SubWi
 		{
 			if(OldWidget != NewItem)
 			{
-				Left = std::max(Left, OldWidget->GetLeft() + OldWidget->GetSize()[0]);
+				Left = std::max(Left, OldWidget->GetLeft() + OldWidget->GetWidth());
 			}
 		}
 		Left += 5.0f;
@@ -759,7 +761,7 @@ void UI::HangarWidget::_OnShipScrollBoxSubWidgetAdded(UI::SubWidgetEvent & SubWi
 		NewItem->SetSize(Vector2f(100.0f, 100.0f));
 		NewItem->ConnectMouseButtonCallback(std::bind(&UI::HangarWidget::_OnShipListItemMouseButton, this, std::placeholders::_1, NewItem));
 		NewItem->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnShipListItemUpdating, this, std::placeholders::_1, std::placeholders::_2, NewItem));
-		_ShipScrollBox->GetContent()->SetSize(Vector2f(std::max(NewItem->GetLeft() + NewItem->GetSize()[0], _ShipScrollBox->GetView()->GetSize()[0]), _ShipScrollBox->GetView()->GetSize()[1]));
+		_ShipScrollBox->GetContent()->SetSize(Vector2f(std::max(NewItem->GetLeft() + NewItem->GetWidth(), _ShipScrollBox->GetView()->GetWidth()), _ShipScrollBox->GetView()->GetHeight()));
 	}
 }
 
@@ -780,7 +782,7 @@ void UI::HangarWidget::_OnShipScrollBoxSubWidgetRemoved(UI::SubWidgetEvent & Sub
 					NextSelectedListItem = dynamic_cast< UI::ShipListItem * >(OldSubWidget);
 					NextLeft = OldSubWidget->GetLeft();
 				}
-				OldSubWidget->SetLeft(OldSubWidget->GetLeft() - (SubWidgetEvent.GetSubWidget()->GetSize()[0] + 5.0f));
+				OldSubWidget->SetLeft(OldSubWidget->GetLeft() - (SubWidgetEvent.GetSubWidget()->GetWidth() + 5.0f));
 			}
 			else
 			{
@@ -790,7 +792,7 @@ void UI::HangarWidget::_OnShipScrollBoxSubWidgetRemoved(UI::SubWidgetEvent & Sub
 					NextLeft = OldSubWidget->GetLeft();
 				}
 			}
-			Left = std::max(Left, OldSubWidget->GetLeft() + OldSubWidget->GetSize()[0]);
+			Left = std::max(Left, OldSubWidget->GetLeft() + OldSubWidget->GetWidth());
 		}
 		if(SubWidgetEvent.GetSubWidget() == _SelectedShipListItem)
 		{
@@ -805,7 +807,7 @@ void UI::HangarWidget::_OnShipScrollBoxSubWidgetRemoved(UI::SubWidgetEvent & Sub
 				_SelectedShipListItem = nullptr;
 			}
 		}
-		_ShipScrollBox->GetContent()->SetSize(Vector2f(std::max(Left + 5.0f, _ShipScrollBox->GetView()->GetSize()[0]), _ShipScrollBox->GetContent()->GetSize()[1]));
+		_ShipScrollBox->GetContent()->SetSize(Vector2f(std::max(Left + 5.0f, _ShipScrollBox->GetView()->GetWidth()), _ShipScrollBox->GetContent()->GetHeight()));
 	}
 }
 

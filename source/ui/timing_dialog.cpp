@@ -28,13 +28,10 @@
 UI::TimingDialog::TimingDialog(UI::Widget * SupWidget) :
 	UI::Window(SupWidget, "Timing Information")
 {
-	SetLeft(300.0f);
-	SetTop(300.0f);
-	SetSize(Vector2f(350.0f, 400.0f));
 	ConnectKeyCallback(std::bind(&UI::TimingDialog::_OnKey, this, std::placeholders::_1));
 	ConnectUpdatingCallback(std::bind(&UI::TimingDialog::_OnUpdating, this, std::placeholders::_1, std::placeholders::_2));
 	
-	UI::Label * FramesPerSecondCaptionLabel(new UI::Label(this, "Frames per Second:"));
+	auto FramesPerSecondCaptionLabel{new UI::Label(this, "Frames per Second:")};
 	
 	FramesPerSecondCaptionLabel->SetLeft(10.0f);
 	FramesPerSecondCaptionLabel->SetTop(40.0f);
@@ -48,7 +45,7 @@ UI::TimingDialog::TimingDialog(UI::Widget * SupWidget) :
 	_FramesPerSecondLabel->SetAnchorRight(true);
 	_FramesPerSecondLabel->SetHorizontalAlignment(UI::Label::ALIGN_RIGHT);
 	
-	UI::Label * FrameToFrameSecondsThisFrameCaptionLabel(new UI::Label(this, "Seconds from Frame to Frame:"));
+	auto FrameToFrameSecondsThisFrameCaptionLabel{new UI::Label(this, "Seconds from Frame to Frame:")};
 	
 	FrameToFrameSecondsThisFrameCaptionLabel->SetLeft(10.0f);
 	FrameToFrameSecondsThisFrameCaptionLabel->SetTop(60.0f);
@@ -62,7 +59,7 @@ UI::TimingDialog::TimingDialog(UI::Widget * SupWidget) :
 	_FrameToFrameSecondsThisFrameLabel->SetAnchorRight(true);
 	_FrameToFrameSecondsThisFrameLabel->SetHorizontalAlignment(UI::Label::ALIGN_RIGHT);
 	
-	UI::Label * ProcessingSecondsThisFrameCaptionLabel(new UI::Label(this, "Processing Seconds this Frame:"));
+	auto ProcessingSecondsThisFrameCaptionLabel{new UI::Label(this, "Processing Seconds this Frame:")};
 	
 	ProcessingSecondsThisFrameCaptionLabel->SetLeft(10.0f);
 	ProcessingSecondsThisFrameCaptionLabel->SetTop(80.0f);
@@ -76,7 +73,7 @@ UI::TimingDialog::TimingDialog(UI::Widget * SupWidget) :
 	_ProcessingSecondsThisFrameLabel->SetAnchorRight(true);
 	_ProcessingSecondsThisFrameLabel->SetHorizontalAlignment(UI::Label::ALIGN_RIGHT);
 	
-	UI::Label * AISecondsThisFrameCaptionLabel(new UI::Label(this, "AI Seconds this Frame:"));
+	auto AISecondsThisFrameCaptionLabel{new UI::Label(this, "AI Seconds this Frame:")};
 	
 	AISecondsThisFrameCaptionLabel->SetLeft(10.0f);
 	AISecondsThisFrameCaptionLabel->SetTop(100.0f);
@@ -90,7 +87,7 @@ UI::TimingDialog::TimingDialog(UI::Widget * SupWidget) :
 	_AISecondsThisFrameLabel->SetAnchorRight(true);
 	_AISecondsThisFrameLabel->SetHorizontalAlignment(UI::Label::ALIGN_RIGHT);
 	
-	UI::Label * PhysicsSecondsThisFrameCaptionLabel(new UI::Label(this, "Physics Seconds this Frame:"));
+	auto PhysicsSecondsThisFrameCaptionLabel{new UI::Label(this, "Physics Seconds this Frame:")};
 	
 	PhysicsSecondsThisFrameCaptionLabel->SetLeft(10.0f);
 	PhysicsSecondsThisFrameCaptionLabel->SetTop(120.0f);
@@ -104,7 +101,7 @@ UI::TimingDialog::TimingDialog(UI::Widget * SupWidget) :
 	_PhysicsSecondsThisFrameLabel->SetAnchorRight(true);
 	_PhysicsSecondsThisFrameLabel->SetHorizontalAlignment(UI::Label::ALIGN_RIGHT);
 	
-	UI::Label * GraphicsSecondsThisFrameCaptionLabel(new UI::Label(this, "Graphics Seconds this Frame:"));
+	auto GraphicsSecondsThisFrameCaptionLabel{new UI::Label(this, "Graphics Seconds this Frame:")};
 	
 	GraphicsSecondsThisFrameCaptionLabel->SetLeft(10.0f);
 	GraphicsSecondsThisFrameCaptionLabel->SetTop(140.0f);
@@ -118,7 +115,7 @@ UI::TimingDialog::TimingDialog(UI::Widget * SupWidget) :
 	_GraphicsSecondsThisFrameLabel->SetAnchorRight(true);
 	_GraphicsSecondsThisFrameLabel->SetHorizontalAlignment(UI::Label::ALIGN_RIGHT);
 	
-	UI::Label * MessagingSecondsThisFrameCaptionLabel(new UI::Label(this, "Messaging Seconds this Frame:"));
+	auto MessagingSecondsThisFrameCaptionLabel{new UI::Label(this, "Messaging Seconds this Frame:")};
 	
 	MessagingSecondsThisFrameCaptionLabel->SetLeft(10.0f);
 	MessagingSecondsThisFrameCaptionLabel->SetTop(160.0f);
@@ -132,7 +129,7 @@ UI::TimingDialog::TimingDialog(UI::Widget * SupWidget) :
 	_MessagingSecondsThisFrameLabel->SetAnchorRight(true);
 	_MessagingSecondsThisFrameLabel->SetHorizontalAlignment(UI::Label::ALIGN_RIGHT);
 	
-	UI::Label * DispatchedMessagesThisFrameCaptionLabel(new UI::Label(this, "Dispatched messages this Frame:"));
+	auto DispatchedMessagesThisFrameCaptionLabel{new UI::Label(this, "Dispatched messages this Frame:")};
 	
 	DispatchedMessagesThisFrameCaptionLabel->SetLeft(10.0f);
 	DispatchedMessagesThisFrameCaptionLabel->SetTop(180.0f);
@@ -146,7 +143,7 @@ UI::TimingDialog::TimingDialog(UI::Widget * SupWidget) :
 	_DispatchedMessagesThisFrameLabel->SetAnchorRight(true);
 	_DispatchedMessagesThisFrameLabel->SetHorizontalAlignment(UI::Label::ALIGN_RIGHT);
 	
-	UI::Label * CommoditiesInCurrentSystemThisFrameCaptionLabel(new UI::Label(this, "Commodities in current System this Frame:"));
+	auto CommoditiesInCurrentSystemThisFrameCaptionLabel{new UI::Label(this, "Commodities in current System this Frame:")};
 	
 	CommoditiesInCurrentSystemThisFrameCaptionLabel->SetLeft(10.0f);
 	CommoditiesInCurrentSystemThisFrameCaptionLabel->SetTop(200.0f);
@@ -160,7 +157,7 @@ UI::TimingDialog::TimingDialog(UI::Widget * SupWidget) :
 	_CommoditiesInCurrentSystemThisFrameLabel->SetAnchorRight(true);
 	_CommoditiesInCurrentSystemThisFrameLabel->SetHorizontalAlignment(UI::Label::ALIGN_RIGHT);
 	
-	UI::Label * ShipsInCurrentSystemThisFrameCaptionLabel(new UI::Label(this, "Ships in current System this Frame:"));
+	auto ShipsInCurrentSystemThisFrameCaptionLabel{new UI::Label(this, "Ships in current System this Frame:")};
 	
 	ShipsInCurrentSystemThisFrameCaptionLabel->SetLeft(10.0f);
 	ShipsInCurrentSystemThisFrameCaptionLabel->SetTop(220.0f);
@@ -174,7 +171,7 @@ UI::TimingDialog::TimingDialog(UI::Widget * SupWidget) :
 	_ShipsInCurrentSystemThisFrameLabel->SetAnchorRight(true);
 	_ShipsInCurrentSystemThisFrameLabel->SetHorizontalAlignment(UI::Label::ALIGN_RIGHT);
 	
-	UI::Label * ShotsInCurrentSystemThisFrameCaptionLabel(new UI::Label(this, "Shots in current System this Frame:"));
+	auto ShotsInCurrentSystemThisFrameCaptionLabel{new UI::Label(this, "Shots in current System this Frame:")};
 	
 	ShotsInCurrentSystemThisFrameCaptionLabel->SetLeft(10.0f);
 	ShotsInCurrentSystemThisFrameCaptionLabel->SetTop(240.0f);
@@ -188,7 +185,7 @@ UI::TimingDialog::TimingDialog(UI::Widget * SupWidget) :
 	_ShotsInCurrentSystemThisFrameLabel->SetAnchorRight(true);
 	_ShotsInCurrentSystemThisFrameLabel->SetHorizontalAlignment(UI::Label::ALIGN_RIGHT);
 	
-	UI::Label * ParticleSystemsUpdatedThisFrameCaptionLabel(new UI::Label(this, "Particle systems updated this Frame:"));
+	auto ParticleSystemsUpdatedThisFrameCaptionLabel{new UI::Label(this, "Particle systems updated this Frame:")};
 	
 	ParticleSystemsUpdatedThisFrameCaptionLabel->SetLeft(10.0f);
 	ParticleSystemsUpdatedThisFrameCaptionLabel->SetTop(260.0f);
@@ -202,7 +199,7 @@ UI::TimingDialog::TimingDialog(UI::Widget * SupWidget) :
 	_ParticleSystemsUpdatedThisFrameLabel->SetAnchorRight(true);
 	_ParticleSystemsUpdatedThisFrameLabel->SetHorizontalAlignment(UI::Label::ALIGN_RIGHT);
 	
-	UI::Label * ParticleSystemsDrawnThisFrameCaptionLabel(new UI::Label(this, "Particle systems drawn this Frame:"));
+	auto ParticleSystemsDrawnThisFrameCaptionLabel{new UI::Label(this, "Particle systems drawn this Frame:")};
 	
 	ParticleSystemsDrawnThisFrameCaptionLabel->SetLeft(10.0f);
 	ParticleSystemsDrawnThisFrameCaptionLabel->SetTop(280.0f);
@@ -216,7 +213,7 @@ UI::TimingDialog::TimingDialog(UI::Widget * SupWidget) :
 	_ParticleSystemsDrawnThisFrameLabel->SetAnchorRight(true);
 	_ParticleSystemsDrawnThisFrameLabel->SetHorizontalAlignment(UI::Label::ALIGN_RIGHT);
 	
-	UI::Label * ParticlesUpdatedThisFrameCaptionLabel(new UI::Label(this, "Particles updated this Frame:"));
+	auto ParticlesUpdatedThisFrameCaptionLabel{new UI::Label(this, "Particles updated this Frame:")};
 	
 	ParticlesUpdatedThisFrameCaptionLabel->SetLeft(10.0f);
 	ParticlesUpdatedThisFrameCaptionLabel->SetTop(300.0f);
@@ -230,7 +227,7 @@ UI::TimingDialog::TimingDialog(UI::Widget * SupWidget) :
 	_ParticlesUpdatedThisFrameLabel->SetAnchorRight(true);
 	_ParticlesUpdatedThisFrameLabel->SetHorizontalAlignment(UI::Label::ALIGN_RIGHT);
 	
-	UI::Label * ParticlesDrawnThisFrameCaptionLabel(new UI::Label(this, "Particles drawn this Frame:"));
+	auto ParticlesDrawnThisFrameCaptionLabel{new UI::Label(this, "Particles drawn this Frame:")};
 	
 	ParticlesDrawnThisFrameCaptionLabel->SetLeft(10.0f);
 	ParticlesDrawnThisFrameCaptionLabel->SetTop(320.0f);
@@ -244,7 +241,7 @@ UI::TimingDialog::TimingDialog(UI::Widget * SupWidget) :
 	_ParticlesDrawnThisFrameLabel->SetAnchorRight(true);
 	_ParticlesDrawnThisFrameLabel->SetHorizontalAlignment(UI::Label::ALIGN_RIGHT);
 	
-	UI::Label * FontSecondsLastFrameCaptionLabel(new UI::Label(this, "Font Seconds last Frame:"));
+	auto FontSecondsLastFrameCaptionLabel{new UI::Label(this, "Font Seconds last Frame:")};
 	
 	FontSecondsLastFrameCaptionLabel->SetLeft(10.0f);
 	FontSecondsLastFrameCaptionLabel->SetTop(340.0f);

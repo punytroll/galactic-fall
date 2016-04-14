@@ -203,21 +203,21 @@ std::vector< std::string > SplitString(const std::string & String, char Delimite
 
 int WantToJump(Ship * Ship, System * TargetSystem)
 {
-	if(TargetSystem == 0)
+	if(TargetSystem == nullptr)
 	{
 		return NO_JUMP_TARGET;
 	}
+	assert(Ship != nullptr);
+	assert(Ship->GetAspectPosition() != nullptr);
 	
-	const System * CurrentSystem(dynamic_cast< System * >(Ship->GetContainer()));
+	auto CurrentSystem(dynamic_cast< System * >(Ship->GetContainer()));
 	
-	assert(CurrentSystem != 0);
+	assert(CurrentSystem != nullptr);
 	
 	// only let the ship jump if it is not near any other stellar object
-	const std::vector< Planet * > & Planets(CurrentSystem->GetPlanets());
-	
-	for(std::vector< Planet * >::const_iterator PlanetIterator = Planets.begin(); PlanetIterator != Planets.end(); ++PlanetIterator)
+	for(auto Planet : CurrentSystem->GetPlanets())
 	{
-		if((Ship->GetAspectPosition()->GetPosition() - (*PlanetIterator)->GetAspectPosition()->GetPosition()).SquaredLength() < 4 * (*PlanetIterator)->GetSize() * (*PlanetIterator)->GetSize())
+		if((Ship->GetAspectPosition()->GetPosition() - Planet->GetAspectPosition()->GetPosition()).SquaredLength() < 4 * Planet->GetSize() * Planet->GetSize())
 		{
 			return TOO_NEAR_TO_STELLAR_OBJECT;
 		}
@@ -233,10 +233,13 @@ int WantToJump(Ship * Ship, System * TargetSystem)
 
 int WantToLand(const Character * Character, const Ship * Ship, const Planet * Planet)
 {
-	if(Planet == 0)
+	if(Planet == nullptr)
 	{
 		return NO_LAND_TARGET;
 	}
+	assert(Planet->GetAspectPosition() != nullptr);
+	assert(Ship != nullptr);
+	assert(Ship->GetAspectPosition() != nullptr);
 	// test distance
 	if((Planet->GetAspectPosition()->GetPosition() - Ship->GetAspectPosition()->GetPosition()).SquaredLength() > Planet->GetSize() * Planet->GetSize())
 	{
@@ -247,7 +250,8 @@ int WantToLand(const Character * Character, const Ship * Ship, const Planet * Pl
 	{
 		return TOO_FAST;
 	}
-	assert(Ship->GetAspectPhysical() !=0);
+	assert(Character != nullptr);
+	assert(Ship->GetAspectPhysical() != nullptr);
 	// test credits
 	if(Character->GetCredits() < (Planet->GetLandingFeePerSpace() * Ship->GetAspectPhysical()->GetSpaceRequirement()))
 	{
@@ -259,13 +263,15 @@ int WantToLand(const Character * Character, const Ship * Ship, const Planet * Pl
 
 int WantToScoop(const Ship * Ship, const Commodity * Commodity)
 {
-	if(Commodity == 0)
+	if(Commodity == nullptr)
 	{
 		return NO_SCOOP_TARGET;
 	}
 	// test distance
-	assert(Commodity->GetAspectPhysical() != 0);
-	assert(Commodity->GetAspectPosition() != 0);
+	assert(Commodity->GetAspectPhysical() != nullptr);
+	assert(Commodity->GetAspectPosition() != nullptr);
+	assert(Ship != nullptr);
+	assert(Ship->GetAspectPosition() != nullptr);
 	if((Commodity->GetAspectPosition()->GetPosition() - Ship->GetAspectPosition()->GetPosition()).SquaredLength() > 5.0f * Commodity->GetAspectPhysical()->GetRadialSize() * Commodity->GetAspectPhysical()->GetRadialSize())
 	{
 		return TOO_FAR_AWAY;
@@ -276,7 +282,7 @@ int WantToScoop(const Ship * Ship, const Commodity * Commodity)
 		return TOO_HIGH_RELATIVE_VELOCITY;
 	}
 	// test storage availability
-	if(Ship->GetCargoHold() == 0)
+	if(Ship->GetCargoHold() == nullptr)
 	{
 		return NO_STORAGE;
 	}
@@ -291,11 +297,11 @@ int WantToScoop(const Ship * Ship, const Commodity * Commodity)
 
 float CalculateTime(void)
 {
-	static double LastTime(RealTime::Get());
+	static double LastTime{RealTime::Get()};
 	
 	RealTime::Invalidate();
 	
-	double DeltaSeconds(RealTime::Get() - LastTime);
+	double DeltaSeconds{RealTime::Get() - LastTime};
 	
 	LastTime = RealTime::Get();
 	if(g_Pause == false)
@@ -313,7 +319,7 @@ float CalculateTime(void)
 
 void SetMessage(const std::string & Message)
 {
-	auto HeadsUpDisplay(dynamic_cast< UI::HeadsUpDisplay * >(g_UserInterface->GetWidget("/heads_up_display")));
+	auto HeadsUpDisplay{dynamic_cast< UI::HeadsUpDisplay * >(g_UserInterface->GetWidget("/heads_up_display"))};
 	
 	assert(HeadsUpDisplay != nullptr);
 	HeadsUpDisplay->SetMessage(Message);
@@ -321,13 +327,11 @@ void SetMessage(const std::string & Message)
 
 void CollectWidgets(void)
 {
-	std::list< UI::Widget * > & DestroyedWidgets(UI::Widget::GetDestroyedWidgets());
-	
-	for(std::list< UI::Widget * >::iterator DestroyedWidgetIterator = DestroyedWidgets.begin(); DestroyedWidgetIterator != DestroyedWidgets.end(); ++DestroyedWidgetIterator)
+	for(auto DestroyedWidget : UI::Widget::GetDestroyedWidgets())
 	{
-		delete *DestroyedWidgetIterator;
+		delete DestroyedWidget;
 	}
-	DestroyedWidgets.clear();
+	UI::Widget::GetDestroyedWidgets().clear();
 }
 
 void CollectWidgetsRecurrent(void)
@@ -353,7 +357,7 @@ void CalculateCharacters(void)
 
 Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSystemClassIdentifier)
 {
-	Graphics::ParticleSystem * ParticleSystem(new Graphics::ParticleSystem());
+	auto ParticleSystem(new Graphics::ParticleSystem());
 	
 	if(ParticleSystemClassIdentifier == "hit")
 	{
@@ -508,7 +512,7 @@ Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSyst
 	{
 		throw std::runtime_error("Could not create a paricle system with the class identifier'" + ParticleSystemClassIdentifier + "'.");
 	}
-	assert(g_GraphicsEngine != 0);
+	assert(g_GraphicsEngine != nullptr);
 	g_GraphicsEngine->AddParticleSystem(ParticleSystem);
 	
 	return ParticleSystem;
@@ -795,6 +799,8 @@ void Resize(void)
 	UIProjection->SetBottom(g_Height);
 	assert(g_UserInterface != nullptr);
 	assert(g_UserInterface->GetRootWidget() != nullptr);
+	g_UserInterface->GetRootWidget()->SetLeft(0.0f);
+	g_UserInterface->GetRootWidget()->SetTop(0.0f);
 	g_UserInterface->GetRootWidget()->SetSize(Vector2f(g_Width, g_Height));
 }
 
@@ -894,13 +900,13 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 	NewShip->SetVelocity(Vector3f::CreateFromComponents(Velocity[0], Velocity[1], 0.0f));
 	NewShip->SetFuel(NewShip->GetFuelCapacity());
 	
-	Object * NewBattery(g_ObjectFactory->Create("battery", "light_battery", true));
+	auto NewBattery(g_ObjectFactory->Create("battery", "light_battery", true));
 	
 	NewBattery->SetObjectIdentifier("::battery(" + NewBattery->GetClassIdentifier() + ")::created_for(" + NewShip->GetObjectIdentifier() + ")" + IdentifierSuffix);
 	NewShip->GetAspectObjectContainer()->AddContent(NewBattery);
 	NewShip->GetAspectOutfitting()->GetSlot("battery")->Mount(NewBattery);
 	
-	Character * NewCharacter(dynamic_cast< Character * >(g_ObjectFactory->Create("character", "", true)));
+	auto NewCharacter(dynamic_cast< Character * >(g_ObjectFactory->Create("character", "", true)));
 	
 	NewCharacter->SetObjectIdentifier("::character(" + NewShip->GetClassIdentifier() + ")" + IdentifierSuffix);
 	NewCharacter->GetMapKnowledge()->AddExploredSystem(System);
@@ -908,7 +914,7 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 	{
 		NewCharacter->SetCredits(200 + GetRandomU4Byte(50, 250));
 		
-		Object * NewWeapon(g_ObjectFactory->Create("weapon", "light_laser", true));
+		auto NewWeapon(g_ObjectFactory->Create("weapon", "light_laser", true));
 		
 		NewWeapon->SetObjectIdentifier("::weapon(" + NewWeapon->GetClassIdentifier() + ")::created_for(" + NewShip->GetObjectIdentifier() + ")" + IdentifierSuffix);
 		NewShip->GetAspectObjectContainer()->AddContent(NewWeapon);
@@ -931,7 +937,7 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 			
 			while((AmountOfAssets > 0) && (NewShip->GetCargoHold()->GetSpace() >= g_ObjectFactory->GetSpaceRequirement(AssetClassIterator->second->GetObjectTypeIdentifier(), AssetClassIterator->second->GetObjectClassIdentifier())))
 			{
-				Object * NewCommodity(g_ObjectFactory->Create(AssetClassIterator->second->GetObjectTypeIdentifier(), AssetClassIterator->second->GetObjectClassIdentifier(), true));
+				auto NewCommodity(g_ObjectFactory->Create(AssetClassIterator->second->GetObjectTypeIdentifier(), AssetClassIterator->second->GetObjectClassIdentifier(), true));
 				
 				NewCommodity->SetObjectIdentifier("::" + AssetClassIterator->second->GetObjectTypeIdentifier() + "(" + AssetClassIterator->second->GetIdentifier() + ")::(" + to_string_cast(NumberOfAssetClasses) + "|" + to_string_cast(AmountOfAssets) + ")" + IdentifierSuffix);
 				NewShip->GetCargoHold()->GetAspectObjectContainer()->AddContent(NewCommodity);
@@ -950,7 +956,7 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 	NewShip->SetFuel(GetRandomFloat(0.1f * NewShip->GetFuelCapacity(), 0.8f * NewShip->GetFuelCapacity()));
 	if((ShipClassIdentifier == "transporter") || (ShipClassIdentifier == "shuttle"))
 	{
-		StateMachineMind * NewMind(new StateMachineMind());
+		auto NewMind(new StateMachineMind());
 		
 		NewMind->SetObjectIdentifier("::mind(state_machine)" + IdentifierSuffix);
 		NewMind->SetCharacter(NewCharacter);
@@ -960,7 +966,7 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 	}
 	else
 	{
-		GoalMind * NewMind(new GoalMind());
+		auto NewMind(new GoalMind());
 		
 		NewMind->SetObjectIdentifier("::mind(goal)" + IdentifierSuffix);
 		NewMind->SetCharacter(NewCharacter);
@@ -1553,9 +1559,9 @@ void LoadGameFromElement(const Element * SaveElement)
 					}
 					else if(SaveChild->GetAttribute("type-identifier") == "commodity")
 					{
-						Commodity * NewCommodity(dynamic_cast< Commodity * >(NewObject));
+						auto NewCommodity(dynamic_cast< Commodity * >(NewObject));
 						
-						assert(NewCommodity != 0);
+						assert(NewCommodity != nullptr);
 						for(auto TypeSpecificChild : ObjectChild->GetChilds())
 						{
 							if(TypeSpecificChild->GetName() == "angular-velocity")
@@ -1586,9 +1592,9 @@ void LoadGameFromElement(const Element * SaveElement)
 					}
 					else if(SaveChild->GetAttribute("type-identifier") == "generator")
 					{
-						Generator * NewGenerator(dynamic_cast< Generator * >(NewObject));
+						auto NewGenerator(dynamic_cast< Generator * >(NewObject));
 						
-						assert(NewGenerator != 0);
+						assert(NewGenerator != nullptr);
 						for(auto TypeSpecificChild : ObjectChild->GetChilds())
 						{
 							if(TypeSpecificChild->GetName() == "energy-provision-per-second")
@@ -1604,7 +1610,7 @@ void LoadGameFromElement(const Element * SaveElement)
 					}
 					else if(SaveChild->GetAttribute("type-identifier") == "hangar")
 					{
-						Hangar * NewHangar(dynamic_cast< Hangar * >(NewObject));
+						auto NewHangar(dynamic_cast< Hangar * >(NewObject));
 						
 						assert(NewHangar != nullptr);
 						for(auto TypeSpecificChild : ObjectChild->GetChilds())
@@ -1622,7 +1628,7 @@ void LoadGameFromElement(const Element * SaveElement)
 					}
 					else if(SaveChild->GetAttribute("type-identifier") == "mind")
 					{
-						Mind * NewMind(dynamic_cast< Mind * >(NewObject));
+						auto NewMind(dynamic_cast< Mind * >(NewObject));
 						
 						assert(NewMind != nullptr);
 						for(auto TypeSpecificChild : ObjectChild->GetChilds())
@@ -1640,7 +1646,7 @@ void LoadGameFromElement(const Element * SaveElement)
 					}
 					else if(SaveChild->GetAttribute("type-identifier") == "ship")
 					{
-						Ship * NewShip(dynamic_cast< Ship * >(NewObject));
+						auto NewShip(dynamic_cast< Ship * >(NewObject));
 						
 						assert(NewShip != nullptr);
 						for(auto TypeSpecificChild : ObjectChild->GetChilds())
@@ -1712,7 +1718,7 @@ void LoadGameFromElement(const Element * SaveElement)
 					}
 					else if(SaveChild->GetAttribute("type-identifier") == "storage")
 					{
-						Storage * NewStorage(dynamic_cast< Storage * >(NewObject));
+						auto NewStorage(dynamic_cast< Storage * >(NewObject));
 						
 						assert(NewStorage != nullptr);
 						for(auto TypeSpecificChild : ObjectChild->GetChilds())
@@ -1740,7 +1746,7 @@ void LoadGameFromElement(const Element * SaveElement)
 					}
 					else if(SaveChild->GetAttribute("type-identifier") == "weapon")
 					{
-						Weapon * NewWeapon(dynamic_cast< Weapon * >(NewObject));
+						auto NewWeapon(dynamic_cast< Weapon * >(NewObject));
 						
 						assert(NewWeapon != nullptr);
 						for(auto TypeSpecificChild : ObjectChild->GetChilds())
@@ -1778,7 +1784,7 @@ void LoadGameFromElement(const Element * SaveElement)
 		{
 			assert(SaveChild->HasAttribute("object-identifier"));
 			
-			Object * TheObject(Object::GetObject(SaveChild->GetAttribute("object-identifier")));
+			auto TheObject(Object::GetObject(SaveChild->GetAttribute("object-identifier")));
 			
 			assert(TheObject != nullptr);
 			for(auto ObjectChild : SaveChild->GetChilds())
@@ -1789,7 +1795,7 @@ void LoadGameFromElement(const Element * SaveElement)
 					{
 						if(AspectChild->GetName() == "content")
 						{
-							Object * Content(Object::GetObject(AspectChild->GetAttribute("object-identifier")));
+							auto Content(Object::GetObject(AspectChild->GetAttribute("object-identifier")));
 							
 							assert(Content != nullptr);
 							TheObject->GetAspectObjectContainer()->AddContent(Content);
@@ -1800,7 +1806,7 @@ void LoadGameFromElement(const Element * SaveElement)
 				{
 					if(SaveChild->GetAttribute("type-identifier") == "character")
 					{
-						Character * TheCharacter(dynamic_cast< Character * >(TheObject));
+						auto TheCharacter(dynamic_cast< Character * >(TheObject));
 						
 						assert(TheCharacter != nullptr);
 						for(auto TypeSpecificChild : ObjectChild->GetChilds())
@@ -1811,7 +1817,7 @@ void LoadGameFromElement(const Element * SaveElement)
 								{
 									if(MapKnowledgeChild->GetName() == "explored-system")
 									{
-										Object * ExploredSystem(Object::GetObject(MapKnowledgeChild->GetAttribute("object-identifier")));
+										auto ExploredSystem(Object::GetObject(MapKnowledgeChild->GetAttribute("object-identifier")));
 										
 										assert(ExploredSystem != nullptr);
 										assert(dynamic_cast< System * >(ExploredSystem) != nullptr);
@@ -1823,14 +1829,14 @@ void LoadGameFromElement(const Element * SaveElement)
 					}
 					else if(SaveChild->GetAttribute("type-identifier") == "hangar")
 					{
-						Hangar * TheHangar(dynamic_cast< Hangar * >(TheObject));
+						auto TheHangar(dynamic_cast< Hangar * >(TheObject));
 						
 						assert(TheHangar != nullptr);
 						for(auto TypeSpecificChild : ObjectChild->GetChilds())
 						{
 							if(TypeSpecificChild->GetName() == "character")
 							{
-								Object * TheCharacter(Object::GetObject(TypeSpecificChild->GetAttribute("object-identifier")));
+								auto TheCharacter(Object::GetObject(TypeSpecificChild->GetAttribute("object-identifier")));
 								
 								assert(TheCharacter != nullptr);
 								assert(dynamic_cast< Character * >(TheCharacter) != nullptr);
@@ -1840,14 +1846,14 @@ void LoadGameFromElement(const Element * SaveElement)
 					}
 					else if(SaveChild->GetAttribute("type-identifier") == "mind")
 					{
-						Mind * TheMind(dynamic_cast< Mind * >(TheObject));
+						auto TheMind(dynamic_cast< Mind * >(TheObject));
 						
 						assert(TheMind != nullptr);
 						for(auto TypeSpecificChild : ObjectChild->GetChilds())
 						{
 							if(TypeSpecificChild->GetName() == "character")
 							{
-								Object * TheCharacter(Object::GetObject(TypeSpecificChild->GetAttribute("object-identifier")));
+								auto TheCharacter(Object::GetObject(TypeSpecificChild->GetAttribute("object-identifier")));
 								
 								assert(TheCharacter != nullptr);
 								assert(dynamic_cast< Character * >(TheCharacter) != nullptr);
@@ -1859,7 +1865,7 @@ void LoadGameFromElement(const Element * SaveElement)
 					{
 						// the current system has been read in the first pass
 						// now we can place all the ships in the current system
-						Ship * TheShip(dynamic_cast< Ship * >(TheObject));
+						auto TheShip(dynamic_cast< Ship * >(TheObject));
 						
 						assert(TheShip != nullptr);
 						if(TheShip->GetContainer() == nullptr)
@@ -1878,7 +1884,7 @@ void LoadGameFromElement(const Element * SaveElement)
 		{
 			assert(SaveChild->HasAttribute("object-identifier"));
 			
-			Object * TheObject(Object::GetObject(SaveChild->GetAttribute("object-identifier")));
+			auto TheObject(Object::GetObject(SaveChild->GetAttribute("object-identifier")));
 			
 			assert(TheObject != nullptr);
 			for(auto ObjectChild : SaveChild->GetChilds())
@@ -1889,7 +1895,7 @@ void LoadGameFromElement(const Element * SaveElement)
 					{
 						if(AspectChild->GetName() == "slot")
 						{
-							Object * TheShip(TheObject->GetContainer());
+							auto TheShip(TheObject->GetContainer());
 							
 							assert(TheShip != nullptr);
 							assert(TheShip->GetAspectOutfitting() != nullptr);
@@ -1921,7 +1927,7 @@ bool LoadGameFromInputStream(std::istream & InputStream)
 {
 	Document Document(InputStream);
 	
-	if(Document.GetDocumentElement() == 0)
+	if(Document.GetDocumentElement() == nullptr)
 	{
 		std::cerr << "The game file does not seem to be parsable." << std::endl;
 		
@@ -1960,7 +1966,7 @@ bool LoadGameFromFileName(const std::string & FileName)
 
 bool LoadScenario(const Scenario * Scenario)
 {
-	assert(Scenario != 0);
+	assert(Scenario != nullptr);
 	
 	std::string SavegameString(g_ResourceReader->ReadSavegameFromScenarioPath(Scenario->GetResourcePath()));
 	
@@ -2340,18 +2346,20 @@ void ActionObservePreviousCharacter(void)
 
 void ActionOpenMainMenuWindow(void)
 {
-	if(g_MainMenuWindow == 0)
+	if(g_MainMenuWindow == nullptr)
 	{
 		g_Pause = true;
 		g_MainMenuWindow = new UI::MainMenuWindow(g_UserInterface->GetRootWidget(), g_ScenarioManager);
+		g_MainMenuWindow->SetName("main_menu");
+		g_MainMenuWindow->SetSize(Vector2f(200.0f, 300.0f));
+		g_MainMenuWindow->SetLeft((g_UserInterface->GetRootWidget()->GetWidth() - g_MainMenuWindow->GetWidth()) / 2.0f);
+		g_MainMenuWindow->SetTop((g_UserInterface->GetRootWidget()->GetHeight() - g_MainMenuWindow->GetHeight()) / 2.0f);
 		// crude heuristic: if we are not in a system, no game is running
-		if(g_CurrentSystem == 0)
+		if(g_CurrentSystem == nullptr)
 		{
 			g_MainMenuWindow->GetResumeGameButton()->SetEnabled(false);
 			g_MainMenuWindow->GetSaveGameButton()->SetEnabled(false);
 		}
-		g_MainMenuWindow->SetLeft((g_UserInterface->GetRootWidget()->GetSize()[0] - g_MainMenuWindow->GetSize()[0]) / 2.0f);
-		g_MainMenuWindow->SetTop((g_UserInterface->GetRootWidget()->GetSize()[1] - g_MainMenuWindow->GetSize()[1]) / 2.0f);
 		g_MainMenuWindow->GrabKeyFocus();
 		g_MainMenuWindow->ConnectDestroyingCallback(OnMainMenuDestroying);
 	}
@@ -2365,6 +2373,9 @@ void ActionOpenMapDialog(void)
 		auto MapDialog{new UI::MapDialog(g_UserInterface->GetRootWidget(), g_CharacterObserver->GetObservedCharacter())};
 		
 		MapDialog->SetName("map_dialog");
+		MapDialog->SetLeft(70.0f);
+		MapDialog->SetTop(200.0f);
+		MapDialog->SetSize(Vector2f(500.0f, 530.0f));
 		if((g_CharacterObserver->GetObservedCharacter()->GetShip() != nullptr) && (g_CharacterObserver->GetObservedCharacter()->GetShip()->GetLinkedSystemTarget() != nullptr))
 		{
 			MapDialog->SetSelectedSystem(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetLinkedSystemTarget());
@@ -2382,9 +2393,16 @@ void ActionOpenMapDialog(void)
 
 void ActionOpenObjectInformationDialog(void)
 {
-	UI::ObjectInformationDialog * Dialog(new UI::ObjectInformationDialog(g_UserInterface->GetRootWidget(), g_Galaxy->GetReference()));
+	assert(g_UserInterface != nullptr);
+	assert(g_Galaxy != nullptr);
 	
-	Dialog->GrabKeyFocus();
+	auto ObjectInformationDialog{new UI::ObjectInformationDialog(g_UserInterface->GetRootWidget(), g_Galaxy->GetReference())};
+	
+	ObjectInformationDialog->SetName("object_information(" + g_Galaxy->GetObjectIdentifier() + ")");
+	ObjectInformationDialog->SetLeft(100.0f);
+	ObjectInformationDialog->SetTop(400.0f);
+	ObjectInformationDialog->SetSize(Vector2f(500.0f, 300.0f));
+	ObjectInformationDialog->GrabKeyFocus();
 }
 
 void ActionOpenOutfitShipDialog(void)
@@ -2392,7 +2410,11 @@ void ActionOpenOutfitShipDialog(void)
 	assert(g_CharacterObserver != nullptr);
 	if((g_OutfitShipDialog == nullptr) && (g_CharacterObserver->GetObservedCharacter() != nullptr))
 	{
-		g_OutfitShipDialog = new UI::OutfitShipDialog(g_UserInterface->GetRootWidget(), g_CharacterObserver->GetObservedCharacter()->GetShip());
+		g_OutfitShipDialog = new UI::OutfitShipDialog{g_UserInterface->GetRootWidget(), g_CharacterObserver->GetObservedCharacter()->GetShip()};
+		g_OutfitShipDialog->SetName("outfit_ship");
+		g_OutfitShipDialog->SetLeft(70.0f);
+		g_OutfitShipDialog->SetTop(280.0f);
+		g_OutfitShipDialog->SetSize(Vector2f(600.0f, 400.0f));
 		g_OutfitShipDialog->GrabKeyFocus();
 		g_OutfitShipDialog->ConnectDestroyingCallback(OnOutfitShipDialogDestroying);
 	}
@@ -2567,9 +2589,13 @@ void ActionToggleFirstPersonCameraMode(void)
 
 void ActionToggleTimingDialog(void)
 {
-	if(g_TimingDialog == 0)
+	if(g_TimingDialog == nullptr)
 	{
-		g_TimingDialog = new UI::TimingDialog(g_UserInterface->GetRootWidget());
+		g_TimingDialog = new UI::TimingDialog{g_UserInterface->GetRootWidget()};
+		g_TimingDialog->SetName("timing");
+		g_TimingDialog->SetLeft(300.0f);
+		g_TimingDialog->SetTop(300.0f);
+		g_TimingDialog->SetSize(Vector2f(350.0f, 400.0f));
 		g_TimingDialog->GrabKeyFocus();
 		g_TimingDialog->ConnectDestroyingCallback(OnTimingDialogDestroying);
 	}
@@ -2596,7 +2622,7 @@ void MainViewKeyEvent(UI::KeyEvent & KeyEvent)
 		{
 			EventIndex = 1;
 		}
-		if(g_KeyboardLookupTable[KeyEvent.GetKeyCode()][EventIndex] != 0)
+		if(g_KeyboardLookupTable[KeyEvent.GetKeyCode()][EventIndex] != nullptr)
 		{
 			g_KeyboardLookupTable[KeyEvent.GetKeyCode()][EventIndex]();
 		}
@@ -2653,7 +2679,7 @@ void MainViewMouseMove(UI::MouseMoveEvent & MouseMoveEvent)
 {
 	if(MouseMoveEvent.GetPhase() == UI::Event::Phase::Target)
 	{
-		auto Delta(MouseMoveEvent.GetPosition() - g_LastMotion);
+		auto Delta{MouseMoveEvent.GetPosition() - g_LastMotion};
 		
 		g_LastMotion = MouseMoveEvent.GetPosition();
 		if(g_MouseButton == UI::MouseButtonEvent::MouseButton::Middle)
@@ -3319,6 +3345,8 @@ int main(int argc, char ** argv)
 	g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 5.0f, CollectWidgetsRecurrent);
 	// user interface
 	g_UserInterface = new UI::UserInterface();
+	g_UserInterface->GetRootWidget()->SetLeft(0.0f);
+	g_UserInterface->GetRootWidget()->SetTop(0.0f);
 	g_UserInterface->GetRootWidget()->SetSize(Vector2f(g_Width, g_Height));
 	g_UserInterface->GetRootWidget()->ConnectKeyCallback(MainViewKeyEvent);
 	g_UserInterface->GetRootWidget()->ConnectMouseButtonCallback(MainViewMouseButtonEvent);
