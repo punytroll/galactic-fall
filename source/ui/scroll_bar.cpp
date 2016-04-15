@@ -29,23 +29,23 @@ static const float g_ScrollBarTrackerBorderWidth = 4.0f;
 
 UI::ScrollBar::ScrollBar(Widget * SupWidget, UI::ScrollBar::Alignment Alignment) :
 	Widget(SupWidget),
-	m_Alignment(UI::ScrollBar::Alignment::UNDEFINED),
-	m_CurrentPosition(0.0f),
-	m_MaximumPosition(0.0f),
-	m_MinimumPosition(0.0f)
+	_Alignment(UI::ScrollBar::Alignment::UNDEFINED),
+	_CurrentPosition(0.0f),
+	_MaximumPosition(0.0f),
+	_MinimumPosition(0.0f)
 {
-	ConnectSizeChangedCallback(std::bind(&ScrollBar::OnSizeChanged, this, std::placeholders::_1));
+	ConnectSizeChangedCallback(std::bind(&ScrollBar::_OnSizeChanged, this, std::placeholders::_1));
 	SetBackgroundColor(Graphics::ColorRGBO(0.23f, 0.23f, 0.23f, 1.0f));
-	m_LessButton = new UI::Button(this);
-	m_LessButton->ConnectClickedCallback(std::bind(&UI::ScrollBar::OnLessClicked, this));
-	m_MoreButton = new UI::Button(this);
-	m_MoreButton->ConnectClickedCallback(std::bind(&UI::ScrollBar::OnMoreClicked, this));
-	m_Tracker = new UI::Widget(this);
-	m_Tracker->SetBackgroundColor(Graphics::ColorRGBO(0.3f, 0.3f, 0.3f, 1.0f));
-	m_Tracker->ConnectMouseEnterCallback(std::bind(&UI::ScrollBar::OnTrackerMouseEnter, this));
-	m_Tracker->ConnectMouseLeaveCallback(std::bind(&UI::ScrollBar::OnTrackerMouseLeave, this));
-	m_Tracker->ConnectMouseButtonCallback(std::bind(&UI::ScrollBar::OnTrackerMouseButton, this, std::placeholders::_1));
-	m_Tracker->ConnectMouseMoveCallback(std::bind(&UI::ScrollBar::OnTrackerMouseMove, this, std::placeholders::_1));
+	_LessButton = new UI::Button{this};
+	_LessButton->ConnectClickedCallback(std::bind(&UI::ScrollBar::_OnLessClicked, this));
+	_MoreButton = new UI::Button{this};
+	_MoreButton->ConnectClickedCallback(std::bind(&UI::ScrollBar::_OnMoreClicked, this));
+	_Tracker = new UI::Widget{this};
+	_Tracker->SetBackgroundColor(Graphics::ColorRGBO(0.3f, 0.3f, 0.3f, 1.0f));
+	_Tracker->ConnectMouseEnterCallback(std::bind(&UI::ScrollBar::_OnTrackerMouseEnter, this));
+	_Tracker->ConnectMouseLeaveCallback(std::bind(&UI::ScrollBar::_OnTrackerMouseLeave, this));
+	_Tracker->ConnectMouseButtonCallback(std::bind(&UI::ScrollBar::_OnTrackerMouseButton, this, std::placeholders::_1));
+	_Tracker->ConnectMouseMoveCallback(std::bind(&UI::ScrollBar::_OnTrackerMouseMove, this, std::placeholders::_1));
 	SetAlignment(Alignment);
 	SetMinimumPosition(0.0f);
 	SetMaximumPosition(1.0f);
@@ -67,33 +67,33 @@ void UI::ScrollBar::DisconnectScrollPositionChangedCallback(Connection & Connect
 	_ScrollPositionChangedEvent.Disconnect(Connection);
 }
 
-void UI::ScrollBar::OnLessClicked(void)
+void UI::ScrollBar::_OnLessClicked(void)
 {
 	SetCurrentPosition(GetCurrentPosition() - GetStepSize());
 }
 
-void UI::ScrollBar::OnMoreClicked(void)
+void UI::ScrollBar::_OnMoreClicked(void)
 {
 	SetCurrentPosition(GetCurrentPosition() + GetStepSize());
 }
 
-void UI::ScrollBar::OnSizeChanged(UI::Event & SizeChangedEvent)
+void UI::ScrollBar::_OnSizeChanged(UI::Event & SizeChangedEvent)
 {
 	if(SizeChangedEvent.GetPhase() == UI::Event::Phase::Target)
 	{
-		AdjustTrackerPosition();
+		_AdjustTrackerPosition();
 	}
 }
 
-void UI::ScrollBar::OnTrackerMouseButton(UI::MouseButtonEvent & MouseButtonEvent)
+void UI::ScrollBar::_OnTrackerMouseButton(UI::MouseButtonEvent & MouseButtonEvent)
 {
 	GetSupWidget()->RaiseSubWidget(this);
 	if((MouseButtonEvent.GetPhase() == UI::Event::Phase::Target) && (MouseButtonEvent.GetMouseButton() == UI::MouseButtonEvent::MouseButton::Left))
 	{
 		if(MouseButtonEvent.IsDown() == true)
 		{
-			m_GrabPosition = MouseButtonEvent.GetPosition();
-			g_UserInterface->SetCaptureWidget(m_Tracker);
+			_GrabPosition = MouseButtonEvent.GetPosition();
+			g_UserInterface->SetCaptureWidget(_Tracker);
 		}
 		else if(MouseButtonEvent.IsUp() == true)
 		{
@@ -102,33 +102,33 @@ void UI::ScrollBar::OnTrackerMouseButton(UI::MouseButtonEvent & MouseButtonEvent
 	}
 }
 
-void UI::ScrollBar::OnTrackerMouseEnter(void)
+void UI::ScrollBar::_OnTrackerMouseEnter(void)
 {
-	m_Tracker->SetBackgroundColor(Graphics::ColorRGBO(0.4f, 0.4f, 0.4f, 1.0f));
+	_Tracker->SetBackgroundColor(Graphics::ColorRGBO(0.4f, 0.4f, 0.4f, 1.0f));
 }
 
-void UI::ScrollBar::OnTrackerMouseLeave(void)
+void UI::ScrollBar::_OnTrackerMouseLeave(void)
 {
-	m_Tracker->SetBackgroundColor(Graphics::ColorRGBO(0.3f, 0.3f, 0.3f, 1.0f));
+	_Tracker->SetBackgroundColor(Graphics::ColorRGBO(0.3f, 0.3f, 0.3f, 1.0f));
 }
 
-void UI::ScrollBar::OnTrackerMouseMove(UI::MouseMoveEvent & MouseMoveEvent)
+void UI::ScrollBar::_OnTrackerMouseMove(UI::MouseMoveEvent & MouseMoveEvent)
 {
 	if(MouseMoveEvent.GetPhase() == UI::Event::Phase::Target)
 	{
-		if(g_UserInterface->GetCaptureWidget() == m_Tracker)
+		if(g_UserInterface->GetCaptureWidget() == _Tracker)
 		{
-			if(m_Alignment == ScrollBar::Alignment::HORIZONTAL)
+			if(_Alignment == ScrollBar::Alignment::HORIZONTAL)
 			{
-				float AvailableRange = GetSize()[0] - m_LessButton->GetSize()[0] - g_ScrollBarTrackerBorderWidth - m_Tracker->GetSize()[0] - g_ScrollBarTrackerBorderWidth - m_MoreButton->GetSize()[0];
+				float AvailableRange = GetWidth() - _LessButton->GetWidth() - g_ScrollBarTrackerBorderWidth - _Tracker->GetWidth() - g_ScrollBarTrackerBorderWidth - _MoreButton->GetWidth();
 				
-				SetCurrentPosition(GetCurrentPosition() + (((MouseMoveEvent.GetPosition()[0] - m_GrabPosition[0]) * (GetMaximumPosition() - GetMinimumPosition()) / AvailableRange)));
+				SetCurrentPosition(GetCurrentPosition() + (((MouseMoveEvent.GetPosition()[0] - _GrabPosition[0]) * (GetMaximumPosition() - GetMinimumPosition()) / AvailableRange)));
 			}
-			else if(m_Alignment == ScrollBar::Alignment::VERTICAL)
+			else if(_Alignment == ScrollBar::Alignment::VERTICAL)
 			{
-				float AvailableRange = GetSize()[1] - m_LessButton->GetSize()[1] - g_ScrollBarTrackerBorderWidth - m_Tracker->GetSize()[1] - g_ScrollBarTrackerBorderWidth - m_MoreButton->GetSize()[1];
+				float AvailableRange = GetHeight() - _LessButton->GetHeight() - g_ScrollBarTrackerBorderWidth - _Tracker->GetHeight() - g_ScrollBarTrackerBorderWidth - _MoreButton->GetHeight();
 				
-				SetCurrentPosition(GetCurrentPosition() + (((MouseMoveEvent.GetPosition()[1] - m_GrabPosition[1]) * (GetMaximumPosition() - GetMinimumPosition()) / AvailableRange)));
+				SetCurrentPosition(GetCurrentPosition() + (((MouseMoveEvent.GetPosition()[1] - _GrabPosition[1]) * (GetMaximumPosition() - GetMinimumPosition()) / AvailableRange)));
 			}
 		}
 	}
@@ -140,53 +140,53 @@ void UI::ScrollBar::SetAlignment(UI::ScrollBar::Alignment Alignment)
 	{
 		if(Alignment == UI::ScrollBar::Alignment::HORIZONTAL)
 		{
-			m_LessButton->SetLeft(0.0f);
-			m_LessButton->SetTop(0.0f);
-			m_LessButton->SetSize(Vector2f(20.0f, GetSize()[1]));
-			m_LessButton->SetAnchorBottom(true);
-			m_LessButton->SetAnchorLeft(true);
-			m_LessButton->SetAnchorRight(false);
-			m_LessButton->SetAnchorTop(true);
-			m_MoreButton->SetLeft(GetSize()[0] - 20.0f);
-			m_MoreButton->SetTop(0.0f);
-			m_MoreButton->SetSize(Vector2f(20.0f, GetSize()[1]));
-			m_MoreButton->SetAnchorBottom(true);
-			m_MoreButton->SetAnchorLeft(false);
-			m_MoreButton->SetAnchorRight(true);
-			m_MoreButton->SetAnchorTop(true);
-			m_Tracker->SetLeft(m_LessButton->GetSize()[0] + g_ScrollBarTrackerBorderWidth);
-			m_Tracker->SetTop(g_ScrollBarTrackerBorderWidth);
-			m_Tracker->SetSize(Vector2f(20.0f, GetSize()[1] - 2 * g_ScrollBarTrackerBorderWidth));
-			m_Tracker->SetAnchorBottom(true);
-			m_Tracker->SetAnchorLeft(false);
-			m_Tracker->SetAnchorRight(false);
-			m_Tracker->SetAnchorTop(true);
-			m_Alignment = UI::ScrollBar::Alignment::HORIZONTAL;
+			_LessButton->SetLeft(0.0f);
+			_LessButton->SetTop(0.0f);
+			_LessButton->SetSize(Vector2f(20.0f, GetHeight()));
+			_LessButton->SetAnchorBottom(true);
+			_LessButton->SetAnchorLeft(true);
+			_LessButton->SetAnchorRight(false);
+			_LessButton->SetAnchorTop(true);
+			_MoreButton->SetLeft(GetWidth() - 20.0f);
+			_MoreButton->SetTop(0.0f);
+			_MoreButton->SetSize(Vector2f(20.0f, GetHeight()));
+			_MoreButton->SetAnchorBottom(true);
+			_MoreButton->SetAnchorLeft(false);
+			_MoreButton->SetAnchorRight(true);
+			_MoreButton->SetAnchorTop(true);
+			_Tracker->SetLeft(_LessButton->GetWidth() + g_ScrollBarTrackerBorderWidth);
+			_Tracker->SetTop(g_ScrollBarTrackerBorderWidth);
+			_Tracker->SetSize(Vector2f(20.0f, GetHeight() - 2 * g_ScrollBarTrackerBorderWidth));
+			_Tracker->SetAnchorBottom(true);
+			_Tracker->SetAnchorLeft(false);
+			_Tracker->SetAnchorRight(false);
+			_Tracker->SetAnchorTop(true);
+			_Alignment = UI::ScrollBar::Alignment::HORIZONTAL;
 		}
 		else if(Alignment == UI::ScrollBar::Alignment::VERTICAL)
 		{
-			m_LessButton->SetLeft(0.0f);
-			m_LessButton->SetTop(0.0f);
-			m_LessButton->SetSize(Vector2f(GetSize()[0], 20.0f));
-			m_LessButton->SetAnchorBottom(false);
-			m_LessButton->SetAnchorLeft(true);
-			m_LessButton->SetAnchorRight(true);
-			m_LessButton->SetAnchorTop(true);
-			m_MoreButton->SetLeft(0.0f);
-			m_MoreButton->SetTop(GetSize()[1] - 20.0f);
-			m_MoreButton->SetSize(Vector2f(GetSize()[0], 20.0f));
-			m_MoreButton->SetAnchorBottom(true);
-			m_MoreButton->SetAnchorLeft(true);
-			m_MoreButton->SetAnchorRight(true);
-			m_MoreButton->SetAnchorTop(false);
-			m_Tracker->SetLeft(g_ScrollBarTrackerBorderWidth);
-			m_Tracker->SetTop(m_LessButton->GetSize()[1] + g_ScrollBarTrackerBorderWidth);
-			m_Tracker->SetSize(Vector2f(GetSize()[0] - 2 * g_ScrollBarTrackerBorderWidth, 20.0f));
-			m_Tracker->SetAnchorBottom(false);
-			m_Tracker->SetAnchorLeft(true);
-			m_Tracker->SetAnchorRight(true);
-			m_Tracker->SetAnchorTop(false);
-			m_Alignment = UI::ScrollBar::Alignment::VERTICAL;
+			_LessButton->SetLeft(0.0f);
+			_LessButton->SetTop(0.0f);
+			_LessButton->SetSize(Vector2f(GetWidth(), 20.0f));
+			_LessButton->SetAnchorBottom(false);
+			_LessButton->SetAnchorLeft(true);
+			_LessButton->SetAnchorRight(true);
+			_LessButton->SetAnchorTop(true);
+			_MoreButton->SetLeft(0.0f);
+			_MoreButton->SetTop(GetHeight() - 20.0f);
+			_MoreButton->SetSize(Vector2f(GetWidth(), 20.0f));
+			_MoreButton->SetAnchorBottom(true);
+			_MoreButton->SetAnchorLeft(true);
+			_MoreButton->SetAnchorRight(true);
+			_MoreButton->SetAnchorTop(false);
+			_Tracker->SetLeft(g_ScrollBarTrackerBorderWidth);
+			_Tracker->SetTop(_LessButton->GetHeight() + g_ScrollBarTrackerBorderWidth);
+			_Tracker->SetSize(Vector2f(GetWidth() - 2 * g_ScrollBarTrackerBorderWidth, 20.0f));
+			_Tracker->SetAnchorBottom(false);
+			_Tracker->SetAnchorLeft(true);
+			_Tracker->SetAnchorRight(true);
+			_Tracker->SetAnchorTop(false);
+			_Alignment = UI::ScrollBar::Alignment::VERTICAL;
 		}
 	}
 }
@@ -203,8 +203,8 @@ void UI::ScrollBar::SetCurrentPosition(float CurrentPosition)
 	}
 	if(CurrentPosition != GetCurrentPosition())
 	{
-		m_CurrentPosition = CurrentPosition;
-		AdjustTrackerPosition();
+		_CurrentPosition = CurrentPosition;
+		_AdjustTrackerPosition();
 		// fire the scroll position listeners
 		_ScrollPositionChangedEvent();
 	}
@@ -212,7 +212,7 @@ void UI::ScrollBar::SetCurrentPosition(float CurrentPosition)
 
 void UI::ScrollBar::SetMinimumPosition(float MinimumPosition)
 {
-	m_MinimumPosition = MinimumPosition;
+	_MinimumPosition = MinimumPosition;
 	if(GetCurrentPosition() < GetMinimumPosition())
 	{
 		SetCurrentPosition(GetMinimumPosition());
@@ -221,12 +221,12 @@ void UI::ScrollBar::SetMinimumPosition(float MinimumPosition)
 	{
 		SetMaximumPosition(GetMinimumPosition());
 	}
-	AdjustTrackerPosition();
+	_AdjustTrackerPosition();
 }
 
 void UI::ScrollBar::SetMaximumPosition(float MaximumPosition)
 {
-	m_MaximumPosition = MaximumPosition;
+	_MaximumPosition = MaximumPosition;
 	if(GetCurrentPosition() > GetMaximumPosition())
 	{
 		SetCurrentPosition(GetMaximumPosition());
@@ -235,30 +235,30 @@ void UI::ScrollBar::SetMaximumPosition(float MaximumPosition)
 	{
 		SetMinimumPosition(GetMaximumPosition());
 	}
-	AdjustTrackerPosition();
+	_AdjustTrackerPosition();
 }
 
-void UI::ScrollBar::AdjustTrackerPosition(void)
+void UI::ScrollBar::_AdjustTrackerPosition(void)
 {
 	// adjust the tracker's position
 	if(GetMaximumPosition() != GetMinimumPosition())
 	{
-		m_Tracker->SetVisible(true);
+		_Tracker->SetVisible(true);
 		if(GetAlignment() == UI::ScrollBar::Alignment::HORIZONTAL)
 		{
-			float AvailableRange = GetSize()[0] - m_LessButton->GetSize()[0] - g_ScrollBarTrackerBorderWidth - m_Tracker->GetSize()[0] - g_ScrollBarTrackerBorderWidth - m_MoreButton->GetSize()[0];
+			float AvailableRange = GetWidth() - _LessButton->GetWidth() - g_ScrollBarTrackerBorderWidth - _Tracker->GetWidth() - g_ScrollBarTrackerBorderWidth - _MoreButton->GetWidth();
 			
-			m_Tracker->SetLeft(m_LessButton->GetSize()[0] + g_ScrollBarTrackerBorderWidth + AvailableRange * ((m_CurrentPosition - GetMinimumPosition()) / (GetMaximumPosition() - GetMinimumPosition())));
+			_Tracker->SetLeft(_LessButton->GetWidth() + g_ScrollBarTrackerBorderWidth + AvailableRange * ((_CurrentPosition - GetMinimumPosition()) / (GetMaximumPosition() - GetMinimumPosition())));
 		}
 		else if(GetAlignment() == UI::ScrollBar::Alignment::VERTICAL)
 		{
-			float AvailableRange = GetSize()[1] - m_LessButton->GetSize()[1] - g_ScrollBarTrackerBorderWidth - m_Tracker->GetSize()[1] - g_ScrollBarTrackerBorderWidth - m_MoreButton->GetSize()[1];
+			float AvailableRange = GetHeight() - _LessButton->GetHeight() - g_ScrollBarTrackerBorderWidth - _Tracker->GetHeight() - g_ScrollBarTrackerBorderWidth - _MoreButton->GetHeight();
 			
-			m_Tracker->SetTop(m_LessButton->GetSize()[1] + g_ScrollBarTrackerBorderWidth + AvailableRange * ((m_CurrentPosition - GetMinimumPosition()) / (GetMaximumPosition() - GetMinimumPosition())));
+			_Tracker->SetTop(_LessButton->GetHeight() + g_ScrollBarTrackerBorderWidth + AvailableRange * ((_CurrentPosition - GetMinimumPosition()) / (GetMaximumPosition() - GetMinimumPosition())));
 		}
 	}
 	else
 	{
-		m_Tracker->SetVisible(false);
+		_Tracker->SetVisible(false);
 	}
 }

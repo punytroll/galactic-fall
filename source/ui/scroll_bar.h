@@ -59,57 +59,57 @@ namespace UI
 		void StepMore(void);
 	private:
 		// callbacks
-		void OnLessClicked(void);
-		void OnMoreClicked(void);
-		void OnSizeChanged(UI::Event & SizeChangedEvent);
-		void OnTrackerMouseButton(UI::MouseButtonEvent & MouseButtonEvent);
-		void OnTrackerMouseEnter(void);
-		void OnTrackerMouseLeave(void);
-		void OnTrackerMouseMove(UI::MouseMoveEvent & MouseMoveEvent);
+		void _OnLessClicked(void);
+		void _OnMoreClicked(void);
+		void _OnSizeChanged(UI::Event & SizeChangedEvent);
+		void _OnTrackerMouseButton(UI::MouseButtonEvent & MouseButtonEvent);
+		void _OnTrackerMouseEnter(void);
+		void _OnTrackerMouseLeave(void);
+		void _OnTrackerMouseMove(UI::MouseMoveEvent & MouseMoveEvent);
 		// helper functions and actions
-		void AdjustTrackerPosition(void);
+		void _AdjustTrackerPosition(void);
 		// member variables
-		Vector2f m_GrabPosition;
-		UI::Button * m_LessButton;
-		UI::Button * m_MoreButton;
-		UI::Widget * m_Tracker;
-		UI::ScrollBar::Alignment m_Alignment;
-		float m_CurrentPosition;
-		float m_MaximumPosition;
-		float m_MinimumPosition;
-		float m_StepSize;
+		Vector2f _GrabPosition;
+		UI::Button * _LessButton;
+		UI::Button * _MoreButton;
+		UI::Widget * _Tracker;
+		UI::ScrollBar::Alignment _Alignment;
+		float _CurrentPosition;
+		float _MaximumPosition;
+		float _MinimumPosition;
+		float _StepSize;
 		// events
 		::Event< void > _ScrollPositionChangedEvent;
 	};
 
 	inline ScrollBar::Alignment ScrollBar::GetAlignment(void) const
 	{
-		return m_Alignment;
+		return _Alignment;
 	}
 
 	inline float ScrollBar::GetCurrentPosition(void) const
 	{
-		return m_CurrentPosition;
+		return _CurrentPosition;
 	}
 
 	inline float ScrollBar::GetMinimumPosition(void) const
 	{
-		return m_MinimumPosition;
+		return _MinimumPosition;
 	}
 
 	inline float ScrollBar::GetMaximumPosition(void) const
 	{
-		return m_MaximumPosition;
+		return _MaximumPosition;
 	}
 
 	inline float ScrollBar::GetStepSize(void) const
 	{
-		return m_StepSize;
+		return _StepSize;
 	}
 
 	inline void ScrollBar::SetStepSize(float StepSize)
 	{
-		m_StepSize = StepSize;
+		_StepSize = StepSize;
 	}
 
 	inline void ScrollBar::StepLess(void)
