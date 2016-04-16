@@ -110,7 +110,7 @@ float UI::ObjectInformationDialog::_AddSeparator(float Top, float Indentation, c
 	SeparatorLabel->SetLeft(Indentation);
 	SeparatorLabel->SetTop(0.0f);
 	SeparatorLabel->SetSize(SeparatorDisplay->GetSize());
-	SeparatorLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
+	SeparatorLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	SeparatorLabel->SetAnchorBottom(true);
 	SeparatorLabel->SetTextColor(Graphics::ColorRGBO(0.5f, 0.8f, 1.0f, 1.0f));
 	
@@ -131,7 +131,7 @@ float UI::ObjectInformationDialog::_AddString(float Top, float Indentation, cons
 	StringLabel->SetLeft(Indentation);
 	StringLabel->SetTop(0.0f);
 	StringLabel->SetSize(StringDisplay->GetSize());
-	StringLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
+	StringLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	StringLabel->SetAnchorBottom(true);
 	
 	return StringDisplay->GetHeight();
@@ -151,7 +151,7 @@ float UI::ObjectInformationDialog::_AddStringProperty(float Top, float Indentati
 	PropertyNameLabel->SetLeft(Indentation);
 	PropertyNameLabel->SetTop(0.0f);
 	PropertyNameLabel->SetSize(Vector2f(6.0f * (PropertyName.length() + 1), PropertyDisplay->GetHeight()));
-	PropertyNameLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
+	PropertyNameLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	PropertyNameLabel->SetAnchorBottom(true);
 	
 	auto PropertyValueLabel{new UI::Label(PropertyDisplay, PropertyValue)};
@@ -159,8 +159,8 @@ float UI::ObjectInformationDialog::_AddStringProperty(float Top, float Indentati
 	PropertyValueLabel->SetLeft(PropertyNameLabel->GetLeft() + PropertyNameLabel->GetWidth());
 	PropertyValueLabel->SetTop(0.0f);
 	PropertyValueLabel->SetSize(Vector2f(PropertyDisplay->GetWidth() - PropertyNameLabel->GetLeft() - PropertyNameLabel->GetWidth(), PropertyDisplay->GetHeight()));
-	PropertyValueLabel->SetHorizontalAlignment(UI::Label::ALIGN_RIGHT);
-	PropertyValueLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
+	PropertyValueLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Right);
+	PropertyValueLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	PropertyValueLabel->SetAnchorRight(true);
 	PropertyValueLabel->SetAnchorBottom(true);
 	

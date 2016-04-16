@@ -54,7 +54,7 @@ UI::DirectoryEntryItem::DirectoryEntryItem(UI::Widget * SupWidget, const std::st
 	_CaptionLabel->SetLeft(5.0f);
 	_CaptionLabel->SetTop(0.0f);
 	_CaptionLabel->SetSize(Vector2f(GetSize()[0] - 10.0f, 20.0f));
-	_CaptionLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
+	_CaptionLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	_CaptionLabel->SetAnchorLeft(true);
 	_CaptionLabel->SetAnchorRight(true);
 	_CaptionLabel->SetAnchorTop(true);
@@ -104,14 +104,14 @@ UI::SaveGameDialog::SaveGameDialog(UI::Widget * SupWidget) :
 	_MessageLabel->SetAnchorTop(true);
 	_MessageLabel->SetWrap(true);
 	_MessageLabel->SetWordWrap(true);
-	_MessageLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
+	_MessageLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	_FileNameLabel = new UI::Label(this);
 	_FileNameLabel->SetLeft(10.0f);
 	_FileNameLabel->SetTop(80.0f);
 	_FileNameLabel->SetSize(Vector2f(GetSize()[0] - 10.0f - 10.0f, 20.0f));
 	_FileNameLabel->SetTextColor(Graphics::ColorRGBO(1.0f, 1.0f, 0.5f, 1.0f));
 	_FileNameLabel->SetBackgroundColor(Graphics::ColorRGBO(0.1f, 0.1f, 0.1f, 1.0f));
-	_FileNameLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
+	_FileNameLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	_FileNameLabel->SetAnchorRight(true);
 	_FileNameLabel->ConnectKeyCallback(std::bind(&UI::SaveGameDialog::_OnFileNameLabelKey, this, std::placeholders::_1));
 	_FileNameLabel->GrabKeyFocus();

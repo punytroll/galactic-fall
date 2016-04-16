@@ -101,7 +101,7 @@ UI::HeadsUpDisplay::HeadsUpDisplay(UI::Widget * SupWidget) :
 	_MessageLabel->SetSize(Vector2f(GetSize()[0], 12.0f));
 	_MessageLabel->SetAnchorRight(true);
 	_MessageLabel->SetTextColor(Graphics::ColorRGBO(1.0f, 0.3f, 0.3f, 1.0f));
-	_MessageLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
+	_MessageLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Center);
 	_MessageLabel->SetVisible(false);
 	
 	auto MiniMapWidget(new UI::Widget(this));
@@ -123,8 +123,8 @@ UI::HeadsUpDisplay::HeadsUpDisplay(UI::Widget * SupWidget) :
 	MiniMapSystemNameLabel->SetSize(Vector2f(MiniMapWidget->GetSize()[0], 20.0f));
 	MiniMapSystemNameLabel->SetAnchorRight(true);
 	MiniMapSystemNameLabel->SetTextColor(Graphics::ColorRGBO(0.7f, 0.8f, 1.0f, 1.0f));
-	MiniMapSystemNameLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
-	MiniMapSystemNameLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
+	MiniMapSystemNameLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Center);
+	MiniMapSystemNameLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	MiniMapSystemNameLabel->ConnectUpdatingCallback(std::bind(&UI::HeadsUpDisplay::_UpdateMiniMapSystemNameLabel, this, MiniMapSystemNameLabel, std::placeholders::_1, std::placeholders::_2));
 	
 	auto MiniMapDisplay(new UI::MiniMapDisplay(MiniMapWidget));
@@ -163,8 +163,8 @@ UI::HeadsUpDisplay::HeadsUpDisplay(UI::Widget * SupWidget) :
 	ScannerTargetNameLabel->SetSize(Vector2f(ScannerWidget->GetSize()[0], 20.0f));
 	ScannerTargetNameLabel->SetAnchorRight(true);
 	ScannerTargetNameLabel->SetTextColor(Graphics::ColorRGBO(0.7f, 0.8f, 1.0f, 1.0f));
-	ScannerTargetNameLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
-	ScannerTargetNameLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
+	ScannerTargetNameLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Center);
+	ScannerTargetNameLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	ScannerTargetNameLabel->ConnectUpdatingCallback(std::bind(&UI::HeadsUpDisplay::_UpdateScannerTargetNameLabel, this, ScannerTargetNameLabel, std::placeholders::_1, std::placeholders::_2));
 	
 	auto ScannerDisplay(new UI::ScannerDisplay(ScannerWidget));

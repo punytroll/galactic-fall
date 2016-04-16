@@ -93,7 +93,7 @@ UI::AccessoryListItem::AccessoryListItem(UI::Widget * SupWidget, Object * Access
 	NameLabel->SetLeft(5.0f);
 	NameLabel->SetTop(5.0f);
 	NameLabel->SetSize(Vector2f(GetWidth() - 10.0f, 20.0f));
-	NameLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
+	NameLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	NameLabel->SetAnchorLeft(true);
 	NameLabel->SetAnchorRight(true);
 	NameLabel->SetAnchorTop(true);
@@ -103,7 +103,7 @@ UI::AccessoryListItem::AccessoryListItem(UI::Widget * SupWidget, Object * Access
 	SlotTypeLabel->SetLeft(25.0f);
 	SlotTypeLabel->SetTop(25.0f);
 	SlotTypeLabel->SetSize(Vector2f(GetWidth() - 30.0f, 20.0f));
-	SlotTypeLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
+	SlotTypeLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	SlotTypeLabel->SetAnchorLeft(true);
 	SlotTypeLabel->SetAnchorRight(true);
 	SlotTypeLabel->SetAnchorTop(true);
@@ -146,7 +146,7 @@ UI::SlotListItem::SlotListItem(UI::Widget * SupWidget, Slot * Slot) :
 	IdentifierLabel->SetLeft(5.0f);
 	IdentifierLabel->SetTop(5.0f);
 	IdentifierLabel->SetSize(Vector2f(GetWidth() - 10.0f, 20.0f));
-	IdentifierLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
+	IdentifierLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	IdentifierLabel->SetAnchorLeft(true);
 	IdentifierLabel->SetAnchorRight(true);
 	IdentifierLabel->SetAnchorTop(true);
@@ -154,7 +154,7 @@ UI::SlotListItem::SlotListItem(UI::Widget * SupWidget, Slot * Slot) :
 	_TypeOrWeaponLabel->SetLeft(25.0f);
 	_TypeOrWeaponLabel->SetTop(25.0f);
 	_TypeOrWeaponLabel->SetSize(Vector2f(GetWidth() - 30.0f, 20.0f));
-	_TypeOrWeaponLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
+	_TypeOrWeaponLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	_TypeOrWeaponLabel->SetAnchorLeft(true);
 	_TypeOrWeaponLabel->SetAnchorRight(true);
 	_TypeOrWeaponLabel->SetAnchorTop(true);
@@ -234,8 +234,8 @@ UI::OutfitShipDialog::OutfitShipDialog(UI::Widget * SupWidget, Ship * Ship) :
 	SlotListLabel->SetLeft(0.0f);
 	SlotListLabel->SetTop(0.0f);
 	SlotListLabel->SetSize(Vector2f(_LeftPane->GetWidth(), 20.0f));
-	SlotListLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
-	SlotListLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
+	SlotListLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Center);
+	SlotListLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	SlotListLabel->SetAnchorRight(true);
 	_SlotScrollBox = new UI::ScrollBox(_LeftPane);
 	_SlotScrollBox->SetLeft(0.0f);
@@ -307,8 +307,8 @@ UI::OutfitShipDialog::OutfitShipDialog(UI::Widget * SupWidget, Ship * Ship) :
 	AccessoryListLabel->SetLeft(0.0f);
 	AccessoryListLabel->SetTop(0.0f);
 	AccessoryListLabel->SetSize(Vector2f(_RightPane->GetSize()[0], 20.0f));
-	AccessoryListLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
-	AccessoryListLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
+	AccessoryListLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Center);
+	AccessoryListLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	AccessoryListLabel->SetAnchorRight(true);
 	_AccessoryScrollBox = new UI::ScrollBox(_RightPane);
 	_AccessoryScrollBox->SetLeft(0.0f);

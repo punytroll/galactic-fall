@@ -55,7 +55,7 @@ namespace UI
 			NameLabel->SetLeft(5.0f);
 			NameLabel->SetTop(0.0f);
 			NameLabel->SetSize(Vector2f(90.0f, 20.0f));
-			NameLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
+			NameLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 			NameLabel->SetAnchorLeft(true);
 			NameLabel->SetAnchorRight(true);
 			NameLabel->SetAnchorTop(true);
@@ -118,8 +118,8 @@ UI::LoadShipWindow::LoadShipWindow(UI::Widget * SupWidget, Hangar * Hangar, Ship
 	HangarLabel->SetLeft(0.0f);
 	HangarLabel->SetTop(0.0f);
 	HangarLabel->SetSize(Vector2f(LeftPane->GetSize()[0], 20.0f));
-	HangarLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
-	HangarLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
+	HangarLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Center);
+	HangarLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	HangarLabel->SetAnchorRight(true);
 	_HangarListBox = new UI::ListBox(LeftPane);
 	_HangarListBox->SetLeft(0.0f);
@@ -201,8 +201,8 @@ UI::LoadShipWindow::LoadShipWindow(UI::Widget * SupWidget, Hangar * Hangar, Ship
 	ShipLabel->SetLeft(0.0f);
 	ShipLabel->SetTop(0.0f);
 	ShipLabel->SetSize(Vector2f(RightPane->GetSize()[0], 20.0f));
-	ShipLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
-	ShipLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
+	ShipLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Center);
+	ShipLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	ShipLabel->SetAnchorRight(true);
 	ConnectSizeChangedCallback(std::bind(&UI::LoadShipWindow::_OnSizeChanged, this, std::placeholders::_1, LeftPane, CenterPane, RightPane));
 	SetSize(Vector2f(600.0f, 400.0f));
