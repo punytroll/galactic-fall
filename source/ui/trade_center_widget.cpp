@@ -78,7 +78,7 @@ namespace UI
 			NameLabel->SetLeft(10.0f);
 			NameLabel->SetTop(0.0f);
 			NameLabel->SetSize(Vector2f(GetWidth() - 170.0f, 20.0f));
-			NameLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
+			NameLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 			NameLabel->SetAnchorRight(true);
 			
 			auto HangarAmountLabel(new UI::Label(this, ""));
@@ -86,8 +86,8 @@ namespace UI
 			HangarAmountLabel->SetLeft(GetWidth() - 150.0f);
 			HangarAmountLabel->SetTop(0.0f);
 			HangarAmountLabel->SetSize(Vector2f(40.0f, 20.0f));
-			HangarAmountLabel->SetHorizontalAlignment(UI::Label::ALIGN_RIGHT);
-			HangarAmountLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
+			HangarAmountLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Right);
+			HangarAmountLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 			HangarAmountLabel->SetAnchorLeft(false);
 			HangarAmountLabel->SetAnchorRight(true);
 			HangarAmountLabel->ConnectUpdatingCallback(std::bind(&UI::TradeCenterAssetClassListWidget::_OnHangarAmountLabelUpdating, this, std::placeholders::_1, std::placeholders::_2, HangarAmountLabel));
@@ -97,8 +97,8 @@ namespace UI
 			SizeRequirementLabel->SetLeft(GetWidth() - 100.0f);
 			SizeRequirementLabel->SetTop(0.0f);
 			SizeRequirementLabel->SetSize(Vector2f(40.0f, 20.0f));
-			SizeRequirementLabel->SetHorizontalAlignment(UI::Label::ALIGN_RIGHT);
-			SizeRequirementLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
+			SizeRequirementLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Right);
+			SizeRequirementLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 			SizeRequirementLabel->SetAnchorLeft(false);
 			SizeRequirementLabel->SetAnchorRight(true);
 			
@@ -107,8 +107,8 @@ namespace UI
 			PriceLabel->SetLeft(GetWidth() - 50.0f);
 			PriceLabel->SetTop(0.0f);
 			PriceLabel->SetSize(Vector2f(40.0f, 20.0f));
-			PriceLabel->SetHorizontalAlignment(UI::Label::ALIGN_RIGHT);
-			PriceLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
+			PriceLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Right);
+			PriceLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 			PriceLabel->SetAnchorLeft(false);
 			PriceLabel->SetAnchorRight(true);
 		}
@@ -205,8 +205,8 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet
 	NameColumnHeader->SetLeft(15.0f);
 	NameColumnHeader->SetTop(0.0f);
 	NameColumnHeader->SetSize(Vector2f(HeaderRow->GetWidth() - 180.0f, 20.0f));
-	NameColumnHeader->SetHorizontalAlignment(UI::Label::ALIGN_LEFT);
-	NameColumnHeader->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
+	NameColumnHeader->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Left);
+	NameColumnHeader->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	NameColumnHeader->SetAnchorRight(true);
 	
 	auto CharacterAmountColumnHeader(new UI::Label(HeaderRow, "Amount"));
@@ -214,8 +214,8 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet
 	CharacterAmountColumnHeader->SetLeft(HeaderRow->GetWidth() - 155.0f);
 	CharacterAmountColumnHeader->SetTop(0.0f);
 	CharacterAmountColumnHeader->SetSize(Vector2f(40.0f, 20.0f));
-	CharacterAmountColumnHeader->SetHorizontalAlignment(UI::Label::ALIGN_RIGHT);
-	CharacterAmountColumnHeader->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
+	CharacterAmountColumnHeader->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Right);
+	CharacterAmountColumnHeader->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	CharacterAmountColumnHeader->SetAnchorLeft(false);
 	CharacterAmountColumnHeader->SetAnchorRight(true);
 	
@@ -224,8 +224,8 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet
 	SizeColumnHeader->SetLeft(HeaderRow->GetWidth() - 105.0f);
 	SizeColumnHeader->SetTop(0.0f);
 	SizeColumnHeader->SetSize(Vector2f(40.0f, 20.0f));
-	SizeColumnHeader->SetHorizontalAlignment(UI::Label::ALIGN_RIGHT);
-	SizeColumnHeader->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
+	SizeColumnHeader->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Right);
+	SizeColumnHeader->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	SizeColumnHeader->SetAnchorLeft(false);
 	SizeColumnHeader->SetAnchorRight(true);
 	
@@ -234,8 +234,8 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet
 	PriceColumnHeader->SetLeft(HeaderRow->GetWidth() - 55.0f);
 	PriceColumnHeader->SetTop(0.0f);
 	PriceColumnHeader->SetSize(Vector2f(40.0f, 20.0f));
-	PriceColumnHeader->SetHorizontalAlignment(UI::Label::ALIGN_RIGHT);
-	PriceColumnHeader->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
+	PriceColumnHeader->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Right);
+	PriceColumnHeader->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	PriceColumnHeader->SetAnchorLeft(false);
 	PriceColumnHeader->SetAnchorRight(true);
 	_AssetClassScrollBox = new UI::ScrollBox(this);
@@ -292,7 +292,7 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet
 	AssetClassPriceLabel->SetAnchorLeft(false);
 	AssetClassPriceLabel->SetAnchorRight(true);
 	AssetClassPriceLabel->SetVisible(false);
-	AssetClassPriceLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::ALIGN_RIGHT);
+	AssetClassPriceLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Right);
 	AssetClassPriceLabel->ConnectUpdatingCallback(std::bind(&UI::TradeCenterWidget::_OnAssetClassPriceLabelUpdating, this, AssetClassPriceLabel, std::placeholders::_1, std::placeholders::_2));
 	
 	auto AssetClassSizeCaptionLabel(new UI::Label(this, "Size:"));
@@ -313,7 +313,7 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet
 	AssetClassSizeLabel->SetAnchorLeft(false);
 	AssetClassSizeLabel->SetAnchorRight(true);
 	AssetClassSizeLabel->SetVisible(false);
-	AssetClassSizeLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::ALIGN_RIGHT);
+	AssetClassSizeLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Right);
 	AssetClassSizeLabel->ConnectUpdatingCallback(std::bind(&UI::TradeCenterWidget::_OnAssetClassSizeLabelUpdating, this, AssetClassSizeLabel, std::placeholders::_1, std::placeholders::_2));
 	
 	auto AssetClassDescriptionCaptionLabel(new UI::Label(this, "Description:"));

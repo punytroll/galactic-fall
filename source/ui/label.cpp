@@ -26,38 +26,38 @@
 
 UI::Label::Label(Widget * SupWidget, const std::string & Text) :
 	Widget(SupWidget),
-	m_HorizontalAlignment(Label::ALIGN_LEFT),
-	m_Text(Text),
-	m_TextColor(new Graphics::ColorRGBO(1.0f, 1.0f, 1.0f, 1.0f)),
-	m_VerticalAlignment(Label::ALIGN_TOP),
-	m_Wrap(false),
-	m_WordWrap(false)
+	_HorizontalAlignment(UI::Label::HorizontalAlignment::Left),
+	_Text(Text),
+	_TextColor(new Graphics::ColorRGBO(1.0f, 1.0f, 1.0f, 1.0f)),
+	_VerticalAlignment(UI::Label::VerticalAlignment::Top),
+	_Wrap(false),
+	_WordWrap(false)
 {
 }
 
 UI::Label::~Label(void)
 {
-	delete m_TextColor;
+	delete _TextColor;
 }
 
 void UI::Label::SetTextColor(const Graphics::ColorRGBO & TextColor)
 {
-	delete m_TextColor;
-	m_TextColor = new Graphics::ColorRGBO(TextColor);
+	delete _TextColor;
+	_TextColor = new Graphics::ColorRGBO{TextColor};
 }
 
 void UI::Label::Draw(Graphics::RenderContext * RenderContext)
 {
 	Widget::Draw(RenderContext);
-	assert(m_TextColor != nullptr);
-	RenderContext->SetColorRGBO(*m_TextColor);
+	assert(_TextColor != nullptr);
+	RenderContext->SetColorRGBO(*_TextColor);
 	
-	float Width(GetSize()[0]);
+	auto Width{GetWidth()};
 	auto GlobalPosition{GetGlobalPosition()};
 	
-	if(m_Wrap == false)
+	if(_Wrap == false)
 	{
-		Graphics::Drawing::DrawText(RenderContext, GlobalPosition[0] + ((m_HorizontalAlignment == Label::ALIGN_LEFT) ? (0.0f) : ((m_HorizontalAlignment == Label::ALIGN_RIGHT) ? (Width - 6.0f * m_Text.length()) : (0.5f * (Width - 6.0f * m_Text.length())))), GlobalPosition[1] + ((m_VerticalAlignment == Label::ALIGN_TOP) ? (0.0f) : ((m_VerticalAlignment == Label::ALIGN_BOTTOM) ? (GetSize()[1] - 12.0f) : (0.5f * (GetSize()[1] - 12.0f)))), m_Text);
+		Graphics::Drawing::DrawText(RenderContext, GlobalPosition[0] + ((_HorizontalAlignment == UI::Label::HorizontalAlignment::Left) ? (0.0f) : ((_HorizontalAlignment == UI::Label::HorizontalAlignment::Right) ? (Width - 6.0f * _Text.length()) : (0.5f * (Width - 6.0f * _Text.length())))), GlobalPosition[1] + ((_VerticalAlignment == UI::Label::VerticalAlignment::Top) ? (0.0f) : ((_VerticalAlignment == UI::Label::VerticalAlignment::Bottom) ? (GetHeight() - 12.0f) : (0.5f * (GetHeight() - 12.0f)))), _Text);
 	}
 	else
 	{
@@ -66,14 +66,14 @@ void UI::Label::Draw(Graphics::RenderContext * RenderContext)
 		std::string::size_type Start(0);
 		std::vector< std::pair< std::string::size_type, std::string::size_type > > Lines;
 		
-		while(Start < m_Text.length())
+		while(Start < _Text.length())
 		{
 			// set the length of the line string to the label width and count downwards
 			Length = LabelWidthInCharacters;
 			// only look for a separator if we want to wrap at word boundaries and this is not the last line, else just wrap
-			if((m_WordWrap == true) && (Start + Length < m_Text.length()))
+			if((_WordWrap == true) && (Start + Length < _Text.length()))
 			{
-				while((Length > 0) && (m_Text[Start + Length] != ' '))
+				while((Length > 0) && (_Text[Start + Length] != ' '))
 				{
 					--Length;
 				}
@@ -83,12 +83,12 @@ void UI::Label::Draw(Graphics::RenderContext * RenderContext)
 			{
 				Length = LabelWidthInCharacters;
 			}
-			Lines.push_back(std::make_pair(Start, std::min(m_Text.length() - Start, Length)));
+			Lines.push_back(std::make_pair(Start, std::min(_Text.length() - Start, Length)));
 			Start += Length + 1;
 		}
 		for(std::vector< std::pair< std::string::size_type, std::string::size_type > >::size_type Line = 0; Line < Lines.size(); ++Line)
 		{
-			Graphics::Drawing::DrawText(RenderContext, GlobalPosition[0] + ((m_HorizontalAlignment == Label::ALIGN_LEFT) ? (0.0f) : ((m_HorizontalAlignment == Label::ALIGN_RIGHT) ? (Width - 6.0f * Lines[Line].second) : ((Width - 6.0f * Lines[Line].second) / 2.0f))), GlobalPosition[1] + ((m_VerticalAlignment == Label::ALIGN_TOP) ? (12.0f * Line) : ((m_VerticalAlignment == Label::ALIGN_BOTTOM) ? (GetSize()[1] - 12.0f * Line) : (0.5f * (GetSize()[1] - 12.0f * Lines.size()) + 12.0f * Line))), m_Text.substr(Lines[Line].first, Lines[Line].second));
+			Graphics::Drawing::DrawText(RenderContext, GlobalPosition[0] + ((_HorizontalAlignment == UI::Label::HorizontalAlignment::Left) ? (0.0f) : ((_HorizontalAlignment == UI::Label::HorizontalAlignment::Right) ? (Width - 6.0f * Lines[Line].second) : ((Width - 6.0f * Lines[Line].second) / 2.0f))), GlobalPosition[1] + ((_VerticalAlignment == UI::Label::VerticalAlignment::Top) ? (12.0f * Line) : ((_VerticalAlignment == UI::Label::VerticalAlignment::Bottom) ? (GetHeight() - 12.0f * Line) : (0.5f * (GetHeight() - 12.0f * Lines.size()) + 12.0f * Line))), _Text.substr(Lines[Line].first, Lines[Line].second));
 		}
 	}
 	RenderContext->UnsetColorRGBO();

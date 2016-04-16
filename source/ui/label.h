@@ -35,22 +35,22 @@ namespace UI
 	class Label : public UI::Widget
 	{
 	public:
-		enum HorizontalAlignment
+		enum class HorizontalAlignment
 		{
-			ALIGN_LEFT,
-			ALIGN_RIGHT,
-			ALIGN_HORIZONTAL_CENTER
+			Left,
+			Right,
+			Center
 		};
 		
-		enum VerticalAlignment
+		enum class VerticalAlignment
 		{
-			ALIGN_TOP,
-			ALIGN_BOTTOM,
-			ALIGN_VERTICAL_CENTER
+			Top,
+			Bottom,
+			Center
 		};
 		
 		// constructor & destructor
-		Label(UI::Widget * SupWidget = 0, const std::string & Text = "");
+		Label(UI::Widget * SupWidget = nullptr, const std::string & Text = "");
 		virtual ~Label(void);
 		// getters
 		UI::Label::HorizontalAlignment GetHorizontalAlignment(void) const;
@@ -69,67 +69,67 @@ namespace UI
 		// modifiers
 		virtual void Draw(Graphics::RenderContext * RenderContext) override;
 	private:
-		UI::Label::HorizontalAlignment m_HorizontalAlignment;
-		std::string m_Text;
-		Graphics::ColorRGBO * m_TextColor;
-		UI::Label::VerticalAlignment m_VerticalAlignment;
-		bool m_Wrap;
-		bool m_WordWrap;
+		UI::Label::HorizontalAlignment _HorizontalAlignment;
+		std::string _Text;
+		Graphics::ColorRGBO * _TextColor;
+		UI::Label::VerticalAlignment _VerticalAlignment;
+		bool _Wrap;
+		bool _WordWrap;
 	};
 
 	inline UI::Label::HorizontalAlignment Label::GetHorizontalAlignment(void) const
 	{
-		return m_HorizontalAlignment;
+		return _HorizontalAlignment;
 	}
 
 	inline const std::string & Label::GetText(void) const
 	{
-		return m_Text;
+		return _Text;
 	}
 
 	inline const Graphics::ColorRGBO * Label::GetTextColor(void) const
 	{
-		return m_TextColor;
+		return _TextColor;
 	}
 
 	inline bool Label::GetWrap(void) const
 	{
-		return m_Wrap;
+		return _Wrap;
 	}
 
 	inline bool Label::GetWordWrap(void) const
 	{
-		return m_WordWrap;
+		return _WordWrap;
 	}
 
 	inline UI::Label::VerticalAlignment Label::GetVerticalAlignment(void) const
 	{
-		return m_VerticalAlignment;
+		return _VerticalAlignment;
 	}
 
 	inline void Label::SetHorizontalAlignment(UI::Label::HorizontalAlignment HorizontalAlignment)
 	{
-		m_HorizontalAlignment = HorizontalAlignment;
+		_HorizontalAlignment = HorizontalAlignment;
 	}
 
 	inline void Label::SetText(const std::string & Text)
 	{
-		m_Text = Text;
+		_Text = Text;
 	}
 
 	inline void Label::SetWrap(bool Wrap)
 	{
-		m_Wrap = Wrap;
+		_Wrap = Wrap;
 	}
 
 	inline void Label::SetWordWrap(bool WordWrap)
 	{
-		m_WordWrap = WordWrap;
+		_WordWrap = WordWrap;
 	}
 
 	inline void Label::SetVerticalAlignment(UI::Label::VerticalAlignment VerticalAlignment)
 	{
-		m_VerticalAlignment = VerticalAlignment;
+		_VerticalAlignment = VerticalAlignment;
 	}
 }
 

@@ -53,7 +53,7 @@ UI::ScenarioItem::ScenarioItem(UI::Widget * SupWidget, Scenario * Scenario) :
 	CaptionLabel->SetLeft(5.0f);
 	CaptionLabel->SetTop(0.0f);
 	CaptionLabel->SetSize(Vector2f(GetWidth() - 10.0f, 20.0f));
-	CaptionLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
+	CaptionLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	CaptionLabel->SetAnchorLeft(true);
 	CaptionLabel->SetAnchorRight(true);
 	CaptionLabel->SetAnchorTop(true);
@@ -104,7 +104,7 @@ UI::LoadScenarioDialog::LoadScenarioDialog(UI::Widget * SupWidget, ScenarioManag
 	_MessageLabel->SetAnchorTop(true);
 	_MessageLabel->SetWrap(true);
 	_MessageLabel->SetWordWrap(true);
-	_MessageLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
+	_MessageLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	_ScenarioScrollBox = new UI::ScrollBox{this};
 	_ScenarioScrollBox->SetLeft(10.0f);
 	_ScenarioScrollBox->SetTop(110.0f);

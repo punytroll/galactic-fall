@@ -24,10 +24,10 @@
 
 UI::TextButton::TextButton(UI::Widget * SupWidget, const std::string & Text) :
 	UI::Button(SupWidget),
-	_Label(0)
+	_Label(nullptr)
 {
 	SetSize(Vector2f(100.0f, 20.0f));
-	_Label = new UI::Label(this);
+	_Label = new UI::Label{this};
 	_Label->SetLeft(0.0f);
 	_Label->SetTop(0.0f);
 	_Label->SetSize(GetSize());
@@ -35,13 +35,13 @@ UI::TextButton::TextButton(UI::Widget * SupWidget, const std::string & Text) :
 	_Label->SetAnchorLeft(true);
 	_Label->SetAnchorRight(true);
 	_Label->SetAnchorTop(true);
-	_Label->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
-	_Label->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
+	_Label->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Center);
+	_Label->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	_Label->SetText(Text);
 }
 
 void UI::TextButton::SetText(const std::string & Text)
 {
-	assert(_Label != 0);
+	assert(_Label != nullptr);
 	_Label->SetText(Text);
 }

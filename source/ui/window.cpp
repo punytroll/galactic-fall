@@ -47,8 +47,8 @@ UI::Window::Window(Widget * SupWidget, const std::string & Title) :
 	_TitleLabel->SetTop(10.0f);
 	_TitleLabel->SetSize(Vector2f(GetSize()[0] - 20.0f, 20.0f));
 	_TitleLabel->SetAnchorRight(true);
-	_TitleLabel->SetHorizontalAlignment(UI::Label::ALIGN_HORIZONTAL_CENTER);
-	_TitleLabel->SetVerticalAlignment(UI::Label::ALIGN_VERTICAL_CENTER);
+	_TitleLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Center);
+	_TitleLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	_TitleLabel->SetBackgroundColor(Graphics::ColorRGBO(0.23f, 0.35f, 0.55f, 1.0f));
 	_TitleLabel->ConnectMouseButtonCallback(std::bind(&UI::Window::_OnTitleLabelMouseButton, this, std::placeholders::_1));
 	_TitleLabel->ConnectMouseMoveCallback(std::bind(&UI::Window::_OnTitleLabelMouseMove, this, std::placeholders::_1));
