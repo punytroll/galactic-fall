@@ -68,6 +68,7 @@ namespace UI
 		void _OnTrackerMouseMove(UI::MouseMoveEvent & MouseMoveEvent);
 		// helper functions and actions
 		void _AdjustTrackerPosition(void);
+		float _GetAvailableRange(void);
 		// member variables
 		Vector2f _GrabPosition;
 		UI::Button * _LessButton;
