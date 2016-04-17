@@ -50,15 +50,17 @@ namespace UI
 			_ObjectDestroyingConnection = _Object->ConnectDestroyingCallback(std::bind(&UI::ObjectListItem::_OnObjectDestroying, this));
 			assert(_Object->GetAspectName() != nullptr);
 			
-			auto NameLabel(new UI::Label(this, _Object->GetAspectName()->GetName()));
+			auto NameLabel{new UI::Label{this, _Object->GetAspectName()->GetName()}};
 			
 			NameLabel->SetLeft(5.0f);
 			NameLabel->SetTop(0.0f);
-			NameLabel->SetSize(Vector2f(90.0f, 20.0f));
+			NameLabel->SetSize(Vector2f(GetWidth() - 10.0f, GetHeight()));
 			NameLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 			NameLabel->SetAnchorLeft(true);
 			NameLabel->SetAnchorRight(true);
 			NameLabel->SetAnchorTop(true);
+			NameLabel->SetAnchorBottom(true);
+			SetSize(Vector2f(100.0f, 20.0f));
 		}
 
 		Object * GetObject(void)
