@@ -88,7 +88,7 @@ void UI::UserInterface::Draw(Graphics::RenderContext * RenderContext) const
 	GLEnable(GL_CLIP_PLANE3);
 	if((_RootWidget != nullptr) && (_RootWidget->IsVisible() == true))
 	{
-		UI::Widget::_PushClippingRectangle(RenderContext, _RootWidget->GetLeft(), _RootWidget->GetTop(), _RootWidget->GetTop() + _RootWidget->_Size[1], _RootWidget->GetLeft() + _RootWidget->_Size[0]);
+		UI::Widget::_PushClippingRectangle(RenderContext, _RootWidget->GetLeft(), _RootWidget->GetTop(), _RootWidget->GetTop() + _RootWidget->GetHeight(), _RootWidget->GetLeft() + _RootWidget->GetWidth());
 		_RootWidget->Draw(RenderContext);
 		UI::Widget::_PopClippingRectangle(RenderContext);
 	}
@@ -290,14 +290,14 @@ void UI::UserInterface::DispatchKeyEvent(UI::KeyEvent & KeyEvent)
 	}
 }
 
-bool IsInside(const Vector2f & Position, float WidgetLeft, float WidgetTop, const Vector2f & WidgetSize)
+bool IsInside(const Vector2f & Position, float WidgetLeft, float WidgetTop, float WidgetWidth, float WidgetHeight)
 {
-	return (Position[0] >= WidgetLeft) && (Position[0] < WidgetLeft + WidgetSize[0]) && (Position[1] >= WidgetTop) && (Position[1] < WidgetTop + WidgetSize[1]);
+	return (Position[0] >= WidgetLeft) && (Position[0] < WidgetLeft + WidgetWidth) && (Position[1] >= WidgetTop) && (Position[1] < WidgetTop + WidgetHeight);
 }
 
-bool IsInside(const Vector2f & Position, const Vector2f & WidgetSize)
+bool IsInside(const Vector2f & Position, float WidgetWidth, float WidgetHeight)
 {
-	return (Position[0] >= 0.0f) && (Position[0] < WidgetSize[0]) && (Position[1] >= 0.0f) && (Position[1] < WidgetSize[1]);
+	return (Position[0] >= 0.0f) && (Position[0] < WidgetWidth) && (Position[1] >= 0.0f) && (Position[1] < WidgetHeight);
 }
 
 void UI::UserInterface::DispatchMouseButtonEvent(UI::MouseButtonEvent & MouseButtonEvent)
@@ -312,7 +312,7 @@ void UI::UserInterface::DispatchMouseButtonEvent(UI::MouseButtonEvent & MouseBut
 		{
 			auto Position(MouseButtonEvent.GetPosition() - Vector2f(_RootWidget->GetLeft(), _RootWidget->GetTop()));
 			
-			if(IsInside(Position, _RootWidget->GetSize()) == true)
+			if(IsInside(Position, _RootWidget->GetWidth(), _RootWidget->GetHeight()) == true)
 			{
 				auto PathWidget(_RootWidget);
 				
@@ -330,7 +330,7 @@ void UI::UserInterface::DispatchMouseButtonEvent(UI::MouseButtonEvent & MouseBut
 					
 					for(auto SubWidget : PathWidget->_SubWidgets)
 					{
-						if((SubWidget->IsVisible() == true) && (SubWidget->IsEnabled() == true) && (IsInside(Position, SubWidget->GetLeft(), SubWidget->GetTop(), SubWidget->GetSize()) == true))
+						if((SubWidget->IsVisible() == true) && (SubWidget->IsEnabled() == true) && (IsInside(Position, SubWidget->GetLeft(), SubWidget->GetTop(), SubWidget->GetWidth(), SubWidget->GetHeight()) == true))
 						{
 							Position -= Vector2f(SubWidget->GetLeft(), SubWidget->GetTop());
 							NextWidget = SubWidget;
@@ -588,7 +588,7 @@ void UI::UserInterface::DispatchMouseMoveEvent(UI::MouseMoveEvent & MouseMoveEve
 			auto Position(MouseMoveEvent.GetPosition());
 			
 			assert((_HoverWidget == nullptr) || (_HoverWidget == _RootWidget));
-			if(IsInside(Position, _RootWidget->GetLeft(), _RootWidget->GetTop(), _RootWidget->GetSize()) == true)
+			if(IsInside(Position, _RootWidget->GetLeft(), _RootWidget->GetTop(), _RootWidget->GetWidth(), _RootWidget->GetHeight()) == true)
 			{
 				if(_HoverWidget == nullptr)
 				{
@@ -622,7 +622,7 @@ void UI::UserInterface::DispatchMouseMoveEvent(UI::MouseMoveEvent & MouseMoveEve
 					for(auto SubWidget : CurrentWidget->_SubWidgets)
 					{
 						assert(SubWidget != nullptr);
-						if((SubWidget->IsEnabled() == true) && (SubWidget->IsVisible() == true) && (IsInside(Position, SubWidget->GetLeft(), SubWidget->GetTop(), SubWidget->GetSize()) == true))
+						if((SubWidget->IsEnabled() == true) && (SubWidget->IsVisible() == true) && (IsInside(Position, SubWidget->GetLeft(), SubWidget->GetTop(), SubWidget->GetWidth(), SubWidget->GetHeight()) == true))
 						{
 							if(CurrentWidget->_HoverWidget != SubWidget)
 							{
@@ -691,11 +691,11 @@ void UI::UserInterface::DispatchMouseMoveEvent(UI::MouseMoveEvent & MouseMoveEve
 				}
 				if(CurrentWidget->_SupWidget != nullptr)
 				{
-					if((IsInside(Position, CurrentWidget->GetSize()) == true) && (CurrentWidget->_SupWidget->_HoverWidget != CurrentWidget))
+					if((IsInside(Position, CurrentWidget->GetWidth(), CurrentWidget->GetHeight()) == true) && (CurrentWidget->_SupWidget->_HoverWidget != CurrentWidget))
 					{
 						CurrentWidget->_SupWidget->_SetHoverWidget(CurrentWidget);
 					}
-					if((IsInside(Position, CurrentWidget->GetSize()) == false) && (CurrentWidget->_SupWidget->_HoverWidget == CurrentWidget))
+					if((IsInside(Position, CurrentWidget->GetWidth(), CurrentWidget->GetHeight()) == false) && (CurrentWidget->_SupWidget->_HoverWidget == CurrentWidget))
 					{
 						CurrentWidget->_SupWidget->_UnsetHoverWidget();
 					}

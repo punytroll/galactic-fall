@@ -53,7 +53,7 @@ void UI::Button::_OnMouseButton(UI::MouseButtonEvent & MouseButtonEvent)
 		else if((MouseButtonEvent.IsUp() == true) && (g_UserInterface->GetCaptureWidget() == this))
 		{
 			g_UserInterface->ReleaseCaptureWidget();
-			if((MouseButtonEvent.GetPosition()[0] >= 0) && (MouseButtonEvent.GetPosition()[0] <= GetSize()[0]) && (MouseButtonEvent.GetPosition()[1] >= 0) && (MouseButtonEvent.GetPosition()[1] <= GetSize()[1]))
+			if((MouseButtonEvent.GetPosition()[0] >= 0) && (MouseButtonEvent.GetPosition()[0] <= GetWidth()) && (MouseButtonEvent.GetPosition()[1] >= 0) && (MouseButtonEvent.GetPosition()[1] <= GetHeight()))
 			{
 				_ClickedEvent();
 			}

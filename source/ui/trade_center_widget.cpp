@@ -73,44 +73,53 @@ namespace UI
 			_HangarDestroyingConnection = _Hangar->ConnectDestroyingCallback(std::bind(&UI::TradeCenterAssetClassListWidget::_OnHangarDestroying, this));
 			ConnectDestroyingCallback(std::bind(&UI::TradeCenterAssetClassListWidget::_OnDestroying, this, std::placeholders::_1));
 			
-			auto NameLabel(new UI::Label(this, PlanetAssetClass->GetAssetClass()->GetName()));
+			auto NameLabel{new UI::Label{this, PlanetAssetClass->GetAssetClass()->GetName()}};
 			
 			NameLabel->SetLeft(10.0f);
 			NameLabel->SetTop(0.0f);
-			NameLabel->SetSize(Vector2f(GetWidth() - 170.0f, 20.0f));
+			NameLabel->SetWidth(GetWidth() - 170.0f);
+			NameLabel->SetHeight(GetHeight());
 			NameLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
+			NameLabel->SetAnchorBottom(true);
 			NameLabel->SetAnchorRight(true);
 			
-			auto HangarAmountLabel(new UI::Label(this, ""));
+			auto HangarAmountLabel{new UI::Label{this, ""}};
 			
 			HangarAmountLabel->SetLeft(GetWidth() - 150.0f);
 			HangarAmountLabel->SetTop(0.0f);
-			HangarAmountLabel->SetSize(Vector2f(40.0f, 20.0f));
+			HangarAmountLabel->SetWidth(40.0f);
+			HangarAmountLabel->SetHeight(GetHeight());
 			HangarAmountLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Right);
 			HangarAmountLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
+			HangarAmountLabel->SetAnchorBottom(true);
 			HangarAmountLabel->SetAnchorLeft(false);
 			HangarAmountLabel->SetAnchorRight(true);
 			HangarAmountLabel->ConnectUpdatingCallback(std::bind(&UI::TradeCenterAssetClassListWidget::_OnHangarAmountLabelUpdating, this, std::placeholders::_1, std::placeholders::_2, HangarAmountLabel));
 			
-			auto SizeRequirementLabel(new UI::Label(this, to_string_cast(0.001 * g_ObjectFactory->GetSpaceRequirement(PlanetAssetClass->GetAssetClass()->GetObjectTypeIdentifier(), PlanetAssetClass->GetAssetClass()->GetObjectClassIdentifier()), 3)));
+			auto SizeRequirementLabel{new UI::Label{this, to_string_cast(0.001 * g_ObjectFactory->GetSpaceRequirement(PlanetAssetClass->GetAssetClass()->GetObjectTypeIdentifier(), PlanetAssetClass->GetAssetClass()->GetObjectClassIdentifier()), 3)}};
 			
 			SizeRequirementLabel->SetLeft(GetWidth() - 100.0f);
 			SizeRequirementLabel->SetTop(0.0f);
-			SizeRequirementLabel->SetSize(Vector2f(40.0f, 20.0f));
+			SizeRequirementLabel->SetWidth(40.0f);
+			SizeRequirementLabel->SetHeight(GetHeight());
 			SizeRequirementLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Right);
 			SizeRequirementLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
+			SizeRequirementLabel->SetAnchorBottom(true);
 			SizeRequirementLabel->SetAnchorLeft(false);
 			SizeRequirementLabel->SetAnchorRight(true);
 			
-			auto PriceLabel(new UI::Label(this, to_string_cast(PlanetAssetClass->GetPrice())));
+			auto PriceLabel{new UI::Label{this, to_string_cast(PlanetAssetClass->GetPrice())}};
 			
 			PriceLabel->SetLeft(GetWidth() - 50.0f);
 			PriceLabel->SetTop(0.0f);
-			PriceLabel->SetSize(Vector2f(40.0f, 20.0f));
+			PriceLabel->SetWidth(40.0f);
+			PriceLabel->SetHeight(GetHeight());
 			PriceLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Right);
 			PriceLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
+			PriceLabel->SetAnchorBottom(true);
 			PriceLabel->SetAnchorLeft(false);
 			PriceLabel->SetAnchorRight(true);
+			SetHeight(20.0f);
 		}
 		
 		const PlanetAssetClass * GetPlanetAssetClass(void) const
@@ -172,165 +181,183 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet
 	ConnectKeyCallback(std::bind(&UI::TradeCenterWidget::_OnKey, this, std::placeholders::_1));
 	ConnectUpdatingCallback(std::bind(&UI::TradeCenterWidget::_OnUpdating, this, std::placeholders::_1, std::placeholders::_2));
 	
-	auto BuyButton(new UI::TextButton(this, "Buy"));
+	auto BuyButton{new UI::TextButton{this, "Buy"}};
 	
 	BuyButton->SetLeft(0.0f);
 	BuyButton->SetTop(GetHeight() - 20.0f);
-	BuyButton->SetSize(Vector2f(100.0f, 20.0f));
+	BuyButton->SetWidth(100.0f);
+	BuyButton->SetHeight(20.0f);
 	BuyButton->SetAnchorBottom(true);
 	BuyButton->SetAnchorTop(false);
 	BuyButton->ConnectClickedCallback(std::bind(&UI::TradeCenterWidget::_OnBuyButtonClicked, this));
 	BuyButton->ConnectUpdatingCallback(std::bind(&UI::TradeCenterWidget::_OnBuyButtonUpdating, this, BuyButton, std::placeholders::_1, std::placeholders::_2));
 	
-	auto SellButton(new UI::TextButton(this, "Sell"));
+	auto SellButton{new UI::TextButton{this, "Sell"}};
 	
 	SellButton->SetLeft(110.0f);
 	SellButton->SetTop(GetHeight() - 20.0f);
-	SellButton->SetSize(Vector2f(100.0f, 20.0f));
+	SellButton->SetWidth(100.0f);
+	SellButton->SetHeight(20.0f);
 	SellButton->SetAnchorBottom(true);
 	SellButton->SetAnchorTop(false);
 	SellButton->ConnectClickedCallback(std::bind(&UI::TradeCenterWidget::_OnSellButtonClicked, this));
 	SellButton->ConnectUpdatingCallback(std::bind(&UI::TradeCenterWidget::_OnSellButtonUpdating, this, SellButton, std::placeholders::_1, std::placeholders::_2));
 	
-	auto HeaderRow(new UI::Widget(this));
+	auto HeaderRow{new UI::Widget{this}};
 	
 	HeaderRow->SetLeft(0.0f);
 	HeaderRow->SetTop(0.0f);
-	HeaderRow->SetSize(Vector2f(GetWidth() - 180.0f, 20.0f));
+	HeaderRow->SetWidth(GetWidth() - 180.0f);
+	HeaderRow->SetHeight(20.0f);
 	HeaderRow->SetBackgroundColor(Graphics::ColorRGBO(0.3f, 0.3f, 0.3f, 1.0f));
 	HeaderRow->SetAnchorRight(true);
 	
-	auto NameColumnHeader(new UI::Label(HeaderRow, "Name"));
+	auto NameColumnHeader{new UI::Label{HeaderRow, "Name"}};
 	
 	NameColumnHeader->SetLeft(15.0f);
 	NameColumnHeader->SetTop(0.0f);
-	NameColumnHeader->SetSize(Vector2f(HeaderRow->GetWidth() - 180.0f, 20.0f));
+	NameColumnHeader->SetWidth(HeaderRow->GetWidth() - 180.0f);
+	NameColumnHeader->SetHeight(HeaderRow->GetHeight());
 	NameColumnHeader->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Left);
 	NameColumnHeader->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
+	NameColumnHeader->SetAnchorBottom(true);
 	NameColumnHeader->SetAnchorRight(true);
 	
-	auto CharacterAmountColumnHeader(new UI::Label(HeaderRow, "Amount"));
+	auto CharacterAmountColumnHeader{new UI::Label{HeaderRow, "Amount"}};
 	
 	CharacterAmountColumnHeader->SetLeft(HeaderRow->GetWidth() - 155.0f);
 	CharacterAmountColumnHeader->SetTop(0.0f);
-	CharacterAmountColumnHeader->SetSize(Vector2f(40.0f, 20.0f));
+	CharacterAmountColumnHeader->SetWidth(40.0f);
+	CharacterAmountColumnHeader->SetHeight(HeaderRow->GetHeight());
 	CharacterAmountColumnHeader->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Right);
 	CharacterAmountColumnHeader->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
+	CharacterAmountColumnHeader->SetAnchorBottom(true);
 	CharacterAmountColumnHeader->SetAnchorLeft(false);
 	CharacterAmountColumnHeader->SetAnchorRight(true);
 	
-	auto SizeColumnHeader(new UI::Label(HeaderRow, "Size"));
+	auto SizeColumnHeader{new UI::Label{HeaderRow, "Size"}};
 	
 	SizeColumnHeader->SetLeft(HeaderRow->GetWidth() - 105.0f);
 	SizeColumnHeader->SetTop(0.0f);
-	SizeColumnHeader->SetSize(Vector2f(40.0f, 20.0f));
+	SizeColumnHeader->SetWidth(40.0f);
+	SizeColumnHeader->SetHeight(HeaderRow->GetHeight());
 	SizeColumnHeader->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Right);
 	SizeColumnHeader->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
+	SizeColumnHeader->SetAnchorBottom(true);
 	SizeColumnHeader->SetAnchorLeft(false);
 	SizeColumnHeader->SetAnchorRight(true);
 	
-	auto PriceColumnHeader(new UI::Label(HeaderRow, "Price"));
+	auto PriceColumnHeader{new UI::Label{HeaderRow, "Price"}};
 	
 	PriceColumnHeader->SetLeft(HeaderRow->GetWidth() - 55.0f);
 	PriceColumnHeader->SetTop(0.0f);
-	PriceColumnHeader->SetSize(Vector2f(40.0f, 20.0f));
+	PriceColumnHeader->SetWidth(40.0f);
+	PriceColumnHeader->SetHeight(HeaderRow->GetHeight());
 	PriceColumnHeader->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Right);
 	PriceColumnHeader->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	PriceColumnHeader->SetAnchorLeft(false);
 	PriceColumnHeader->SetAnchorRight(true);
-	_AssetClassScrollBox = new UI::ScrollBox(this);
+	_AssetClassScrollBox = new UI::ScrollBox{this};
 	_AssetClassScrollBox->SetLeft(0.0f);
 	_AssetClassScrollBox->SetTop(20.0f);
-	_AssetClassScrollBox->SetSize(Vector2f(GetWidth() - 160.0f, GetHeight() - 50.0f));
+	_AssetClassScrollBox->SetWidth(GetWidth() - 160.0f);
+	_AssetClassScrollBox->SetHeight(GetHeight() - 50.0f);
 	_AssetClassScrollBox->SetHorizontalScrollBarVisible(false);
 	_AssetClassScrollBox->SetAnchorRight(true);
 	_AssetClassScrollBox->SetAnchorBottom(true);
-	_AssetClassScrollBox->GetContent()->SetSize(_AssetClassScrollBox->GetView()->GetSize());
+	_AssetClassScrollBox->GetContent()->SetWidth(_AssetClassScrollBox->GetView()->GetWidth());
 	_AssetClassScrollBox->GetContent()->SetAnchorRight(true);
 	
 	auto Hangar(_Planet->GetHangar(_Character));
 	
 	assert(Hangar != nullptr);
 	
-	float Top(5.0f);
+	auto Top{5.0f};
 	
 	for(auto PlanetAssetClass : Planet->GetPlanetAssetClasses())
 	{
-		auto NewTradeCenterAssetClassListWidget(new UI::TradeCenterAssetClassListWidget(_AssetClassScrollBox->GetContent(), PlanetAssetClass, Hangar));
+		auto NewTradeCenterAssetClassListWidget{new UI::TradeCenterAssetClassListWidget{_AssetClassScrollBox->GetContent(), PlanetAssetClass, Hangar}};
 		
 		NewTradeCenterAssetClassListWidget->SetLeft(5.0f);
 		NewTradeCenterAssetClassListWidget->SetTop(Top);
-		NewTradeCenterAssetClassListWidget->SetSize(Vector2f(_AssetClassScrollBox->GetContent()->GetWidth() - 10.0f, 20.0f));
+		NewTradeCenterAssetClassListWidget->SetWidth(_AssetClassScrollBox->GetContent()->GetWidth());
 		NewTradeCenterAssetClassListWidget->SetAnchorRight(true);
 		NewTradeCenterAssetClassListWidget->ConnectMouseButtonCallback(std::bind(&UI::TradeCenterWidget::_OnAssetClassMouseButton, this, std::placeholders::_1, NewTradeCenterAssetClassListWidget));
-		Top += 25.0f;
+		Top += NewTradeCenterAssetClassListWidget->GetHeight() + 5.0f;
 	}
-	_AssetClassScrollBox->GetContent()->SetSize(Vector2f(_AssetClassScrollBox->GetContent()->GetWidth(), std::max(_AssetClassScrollBox->GetView()->GetHeight(), Top)));
-	_AssetClassViewDisplay = new UI::ViewDisplay(this);
+	_AssetClassScrollBox->GetContent()->SetHeight(Top);
+	_AssetClassViewDisplay = new UI::ViewDisplay{this};
 	_AssetClassViewDisplay->SetLeft(GetWidth() - 150.0f);
 	_AssetClassViewDisplay->SetTop(0.0f);
-	_AssetClassViewDisplay->SetSize(Vector2f(150.0f, 150.0f));
+	_AssetClassViewDisplay->SetWidth(150.0f);
+	_AssetClassViewDisplay->SetHeight(150.0f);
 	_AssetClassViewDisplay->SetAnchorLeft(false);
 	_AssetClassViewDisplay->SetAnchorRight(true);
 	_AssetClassViewDisplay->SetBackgroundColor(Graphics::ColorRGBO(0.15f, 0.15f, 0.15f, 1.0f));
 	
-	auto AssetClassPriceCaptionLabel(new UI::Label(this, "Price:"));
+	auto AssetClassPriceCaptionLabel{new UI::Label{this, "Price:"}};
 	
 	AssetClassPriceCaptionLabel->SetLeft(GetWidth() - 150.0f);
 	AssetClassPriceCaptionLabel->SetTop(160.0f);
-	AssetClassPriceCaptionLabel->SetSize(Vector2f(150.0f, 20.0f));
+	AssetClassPriceCaptionLabel->SetWidth(150.0f);
+	AssetClassPriceCaptionLabel->SetHeight(20.0f);
 	AssetClassPriceCaptionLabel->SetAnchorLeft(false);
 	AssetClassPriceCaptionLabel->SetAnchorRight(true);
 	AssetClassPriceCaptionLabel->SetVisible(false);
 	AssetClassPriceCaptionLabel->ConnectUpdatingCallback(std::bind(&UI::TradeCenterWidget::_OnAssetClassPriceCaptionLabelUpdating, this, AssetClassPriceCaptionLabel, std::placeholders::_1, std::placeholders::_2));
 	
-	auto AssetClassPriceLabel(new UI::Label(this, ""));
+	auto AssetClassPriceLabel{new UI::Label{this, ""}};
 	
 	AssetClassPriceLabel->SetLeft(GetWidth() - 150.0f);
 	AssetClassPriceLabel->SetTop(160.0f);
-	AssetClassPriceLabel->SetSize(Vector2f(150.0f, 20.0f));
+	AssetClassPriceLabel->SetWidth(150.0f);
+	AssetClassPriceLabel->SetHeight(20.0f);
 	AssetClassPriceLabel->SetAnchorLeft(false);
 	AssetClassPriceLabel->SetAnchorRight(true);
 	AssetClassPriceLabel->SetVisible(false);
 	AssetClassPriceLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Right);
 	AssetClassPriceLabel->ConnectUpdatingCallback(std::bind(&UI::TradeCenterWidget::_OnAssetClassPriceLabelUpdating, this, AssetClassPriceLabel, std::placeholders::_1, std::placeholders::_2));
 	
-	auto AssetClassSizeCaptionLabel(new UI::Label(this, "Size:"));
+	auto AssetClassSizeCaptionLabel{new UI::Label{this, "Size:"}};
 	
 	AssetClassSizeCaptionLabel->SetLeft(GetWidth() - 150.0f);
 	AssetClassSizeCaptionLabel->SetTop(180.0f);
-	AssetClassSizeCaptionLabel->SetSize(Vector2f(150.0f, 20.0f));
+	AssetClassSizeCaptionLabel->SetWidth(150.0f);
+	AssetClassSizeCaptionLabel->SetHeight(20.0f);
 	AssetClassSizeCaptionLabel->SetAnchorLeft(false);
 	AssetClassSizeCaptionLabel->SetAnchorRight(true);
 	AssetClassSizeCaptionLabel->SetVisible(false);
 	AssetClassSizeCaptionLabel->ConnectUpdatingCallback(std::bind(&UI::TradeCenterWidget::_OnAssetClassSizeCaptionLabelUpdating, this, AssetClassSizeCaptionLabel, std::placeholders::_1, std::placeholders::_2));
 	
-	auto AssetClassSizeLabel(new UI::Label(this, ""));
+	auto AssetClassSizeLabel{new UI::Label{this, ""}};
 	
 	AssetClassSizeLabel->SetLeft(GetWidth() - 150.0f);
 	AssetClassSizeLabel->SetTop(180.0f);
-	AssetClassSizeLabel->SetSize(Vector2f(150.0f, 20.0f));
+	AssetClassSizeLabel->SetWidth(150.0f);
+	AssetClassSizeLabel->SetHeight(20.0f);
 	AssetClassSizeLabel->SetAnchorLeft(false);
 	AssetClassSizeLabel->SetAnchorRight(true);
 	AssetClassSizeLabel->SetVisible(false);
 	AssetClassSizeLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Right);
 	AssetClassSizeLabel->ConnectUpdatingCallback(std::bind(&UI::TradeCenterWidget::_OnAssetClassSizeLabelUpdating, this, AssetClassSizeLabel, std::placeholders::_1, std::placeholders::_2));
 	
-	auto AssetClassDescriptionCaptionLabel(new UI::Label(this, "Description:"));
+	auto AssetClassDescriptionCaptionLabel{new UI::Label{this, "Description:"}};
 	
 	AssetClassDescriptionCaptionLabel->SetLeft(GetWidth() - 150.0f);
 	AssetClassDescriptionCaptionLabel->SetTop(200.0f);
-	AssetClassDescriptionCaptionLabel->SetSize(Vector2f(150.0f, 20.0f));
+	AssetClassDescriptionCaptionLabel->SetWidth(150.0f);
+	AssetClassDescriptionCaptionLabel->SetHeight(20.0f);
 	AssetClassDescriptionCaptionLabel->SetAnchorLeft(false);
 	AssetClassDescriptionCaptionLabel->SetAnchorRight(true);
 	AssetClassDescriptionCaptionLabel->SetVisible(false);
 	AssetClassDescriptionCaptionLabel->ConnectUpdatingCallback(std::bind(&UI::TradeCenterWidget::_OnAssetClassDescriptionCaptionLabelUpdating, this, AssetClassDescriptionCaptionLabel, std::placeholders::_1, std::placeholders::_2));
 	
-	auto AssetClassDescriptionLabel(new UI::Label(this, ""));
+	auto AssetClassDescriptionLabel{new UI::Label{this, ""}};
 	
 	AssetClassDescriptionLabel->SetLeft(GetWidth() - 150.0f);
 	AssetClassDescriptionLabel->SetTop(220.0f);
-	AssetClassDescriptionLabel->SetSize(Vector2f(150.0f, 30.0f));
+	AssetClassDescriptionLabel->SetWidth(150.0f);
+	AssetClassDescriptionLabel->SetHeight(30.0f);
 	AssetClassDescriptionLabel->SetAnchorLeft(false);
 	AssetClassDescriptionLabel->SetAnchorRight(true);
 	AssetClassDescriptionLabel->SetAnchorBottom(true);
@@ -427,55 +454,57 @@ void UI::TradeCenterWidget::_OnAssetClassMouseButton(UI::MouseButtonEvent & Mous
 		_SelectedTradeCenterAssetClassListWidget = TradeCenterAssetClassListWidget;
 		_SelectedTradeCenterAssetClassListWidget->SetSelected(true);
 		_ClearAssetClassViewDisplay();
-		
-		const VisualizationPrototype * VisualizationPrototype(g_ObjectFactory->GetVisualizationPrototype(_SelectedTradeCenterAssetClassListWidget->GetPlanetAssetClass()->GetAssetClass()->GetObjectTypeIdentifier(), _SelectedTradeCenterAssetClassListWidget->GetPlanetAssetClass()->GetAssetClass()->GetObjectClassIdentifier()));
-		
-		if(VisualizationPrototype != nullptr)
+		if((_AssetClassViewDisplay->GetWidth() > 0.0f) && (_AssetClassViewDisplay->GetHeight() > 0.0f))
 		{
-			auto VisualizationNode(VisualizePrototype(VisualizationPrototype));
+			auto VisualizationPrototype{g_ObjectFactory->GetVisualizationPrototype(_SelectedTradeCenterAssetClassListWidget->GetPlanetAssetClass()->GetAssetClass()->GetObjectTypeIdentifier(), _SelectedTradeCenterAssetClassListWidget->GetPlanetAssetClass()->GetAssetClass()->GetObjectClassIdentifier())};
 			
-			if(VisualizationNode != nullptr)
+			if(VisualizationPrototype != nullptr)
 			{
-				float RadialSize(VisualizationPrototype->GetModel()->GetRadialSize());
-				float ExtendedRadialSize((5.0f / 4.0f) * RadialSize);
-				Graphics::PerspectiveProjection * PerspectiveProjection(new Graphics::PerspectiveProjection());
+				auto VisualizationNode(VisualizePrototype(VisualizationPrototype));
 				
-				PerspectiveProjection->SetFieldOfViewY(asinf(ExtendedRadialSize / sqrtf(ExtendedRadialSize * ExtendedRadialSize + 16 * RadialSize * RadialSize)) * 2.0f);
-				PerspectiveProjection->SetAspect(_AssetClassViewDisplay->GetSize()[0] / _AssetClassViewDisplay->GetSize()[1]);
-				PerspectiveProjection->SetNearClippingPlane(0.1f);
-				PerspectiveProjection->SetFarClippingPlane(100.0f);
-				
-				auto View(new Graphics::View());
-				
-				g_GraphicsEngine->AddView(View);
-				View->SetClearColor(Graphics::ColorRGBO(1.0f, 1.0f, 1.0f, 0.0f));
-				assert(View->GetCamera() != 0);
-				View->GetCamera()->SetProjection(PerspectiveProjection);
-				View->GetCamera()->SetSpacialMatrix(Matrix4f::CreateTranslation(Vector3f::CreateFromComponents(0.0f, -2.5f, 1.4f).Normalize() * 4.0f * RadialSize).RotateX(1.05f));
-				
-				auto Scene(new Graphics::Scene());
-				
-				Scene->SetDestroyCallback(std::bind(&UI::TradeCenterWidget::_OnDestroyInScene, this, std::placeholders::_1));
-				Scene->ActivateLight();
-				assert(Scene->GetLight() != nullptr);
-				Scene->GetLight()->SetType(Graphics::Light::Type::Directional);
-				Scene->GetLight()->SetDirection(Vector3f::CreateFromComponents(20.0f, 10.0f, -20.0f));
-				Scene->GetLight()->SetColor(Graphics::ColorRGB(1.0f, 1.0f, 1.0f));
-				View->SetScene(Scene);
-				
-				auto Texture(new Graphics::Texture());
-				
-				Texture->Create(_AssetClassViewDisplay->GetSize()[0], _AssetClassViewDisplay->GetSize()[1], 1);
-				
-				auto RenderTarget(new Graphics::TextureRenderTarget());
-				
-				RenderTarget->SetTexture(Texture);
-				View->SetRenderTarget(RenderTarget);
-				Scene->SetRootNode(VisualizationNode);
-				VisualizationNode->SetClearColorBuffer(true);
-				VisualizationNode->SetClearDepthBuffer(true);
-				VisualizationNode->SetUseDepthTest(true);
-				_AssetClassViewDisplay->SetView(View);
+				if(VisualizationNode != nullptr)
+				{
+					float RadialSize(VisualizationPrototype->GetModel()->GetRadialSize());
+					float ExtendedRadialSize((5.0f / 4.0f) * RadialSize);
+					Graphics::PerspectiveProjection * PerspectiveProjection(new Graphics::PerspectiveProjection());
+					
+					PerspectiveProjection->SetFieldOfViewY(asinf(ExtendedRadialSize / sqrtf(ExtendedRadialSize * ExtendedRadialSize + 16 * RadialSize * RadialSize)) * 2.0f);
+					PerspectiveProjection->SetAspect(_AssetClassViewDisplay->GetWidth() / _AssetClassViewDisplay->GetHeight());
+					PerspectiveProjection->SetNearClippingPlane(0.1f);
+					PerspectiveProjection->SetFarClippingPlane(100.0f);
+					
+					auto View(new Graphics::View());
+					
+					g_GraphicsEngine->AddView(View);
+					View->SetClearColor(Graphics::ColorRGBO(1.0f, 1.0f, 1.0f, 0.0f));
+					assert(View->GetCamera() != nullptr);
+					View->GetCamera()->SetProjection(PerspectiveProjection);
+					View->GetCamera()->SetSpacialMatrix(Matrix4f::CreateTranslation(Vector3f::CreateFromComponents(0.0f, -2.5f, 1.4f).Normalize() * 4.0f * RadialSize).RotateX(1.05f));
+					
+					auto Scene(new Graphics::Scene());
+					
+					Scene->SetDestroyCallback(std::bind(&UI::TradeCenterWidget::_OnDestroyInScene, this, std::placeholders::_1));
+					Scene->ActivateLight();
+					assert(Scene->GetLight() != nullptr);
+					Scene->GetLight()->SetType(Graphics::Light::Type::Directional);
+					Scene->GetLight()->SetDirection(Vector3f::CreateFromComponents(20.0f, 10.0f, -20.0f));
+					Scene->GetLight()->SetColor(Graphics::ColorRGB(1.0f, 1.0f, 1.0f));
+					View->SetScene(Scene);
+					
+					auto Texture(new Graphics::Texture());
+					
+					Texture->Create(_AssetClassViewDisplay->GetWidth(), _AssetClassViewDisplay->GetHeight(), 1);
+					
+					auto RenderTarget(new Graphics::TextureRenderTarget());
+					
+					RenderTarget->SetTexture(Texture);
+					View->SetRenderTarget(RenderTarget);
+					Scene->SetRootNode(VisualizationNode);
+					VisualizationNode->SetClearColorBuffer(true);
+					VisualizationNode->SetClearDepthBuffer(true);
+					VisualizationNode->SetUseDepthTest(true);
+					_AssetClassViewDisplay->SetView(View);
+				}
 			}
 		}
 		MouseButtonEvent.StopPropagation();
@@ -646,7 +675,7 @@ void UI::TradeCenterWidget::_Sell(const PlanetAssetClass * PlanetAssetClass)
 	assert(_Character != nullptr);
 	assert(_Planet != nullptr);
 	
-	auto Hangar(_Planet->GetHangar(_Character));
+	auto Hangar{_Planet->GetHangar(_Character)};
 	std::list< Object * > ToAdd;
 	
 	assert(Hangar != nullptr);
@@ -669,7 +698,7 @@ void UI::TradeCenterWidget::_Sell(const PlanetAssetClass * PlanetAssetClass)
 			{
 				while(Content->GetAspectObjectContainer()->GetContent().empty() == false)
 				{
-					auto InnerContent(*(Content->GetAspectObjectContainer()->GetContent().begin()));
+					auto InnerContent{*(Content->GetAspectObjectContainer()->GetContent().begin())};
 					
 					Content->GetAspectObjectContainer()->RemoveContent(InnerContent);
 					if(InnerContent->GetTypeIdentifier() != "storage")

@@ -37,9 +37,10 @@ UI::MapDialog::MapDialog(UI::Widget * SupWidget, Character * Character) :
 	SetTitle("Map");
 	ConnectKeyCallback(std::bind(&UI::MapDialog::_OnKey, this, std::placeholders::_1));
 	_OKButton = new UI::TextButton{this, "OK"};
-	_OKButton->SetSize(Vector2f(100.0f, 20.0f));
-	_OKButton->SetLeft(GetWidth() - 10.0f - _OKButton->GetWidth());
+	_OKButton->SetLeft(GetWidth() - 110.0f);
 	_OKButton->SetTop(GetHeight() - 30.0f);
+	_OKButton->SetWidth(100.0f);
+	_OKButton->SetHeight(20.0f);
 	_OKButton->SetAnchorBottom(true);
 	_OKButton->SetAnchorLeft(false);
 	_OKButton->SetAnchorRight(true);
@@ -49,9 +50,10 @@ UI::MapDialog::MapDialog(UI::Widget * SupWidget, Character * Character) :
 	
 	auto CancelButton{new UI::TextButton(this, "Cancel")};
 	
-	CancelButton->SetSize(Vector2f(100.0f, 20.0f));
-	CancelButton->SetLeft(_OKButton->GetLeft() - 10.0f - CancelButton->GetWidth());
+	CancelButton->SetLeft(GetWidth() - 220.0f);
 	CancelButton->SetTop(GetHeight() - 30.0f);
+	CancelButton->SetWidth(100.0f);
+	CancelButton->SetHeight(20.0f);
 	CancelButton->SetAnchorBottom(true);
 	CancelButton->SetAnchorLeft(false);
 	CancelButton->SetAnchorRight(true);
@@ -60,7 +62,8 @@ UI::MapDialog::MapDialog(UI::Widget * SupWidget, Character * Character) :
 	_StarMapDisplay = new UI::StarMapDisplay{this, Character};
 	_StarMapDisplay->SetLeft(10.0f);
 	_StarMapDisplay->SetTop(40.0f);
-	_StarMapDisplay->SetSize(Vector2f(GetWidth() - 20.0f, GetHeight() - 80.0f));
+	_StarMapDisplay->SetWidth(GetWidth() - 20.0f);
+	_StarMapDisplay->SetHeight(GetHeight() - 80.0f);
 	_StarMapDisplay->SetAnchorBottom(true);
 	_StarMapDisplay->SetAnchorLeft(true);
 	_StarMapDisplay->SetAnchorRight(true);

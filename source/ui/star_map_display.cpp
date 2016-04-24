@@ -58,7 +58,6 @@ UI::StarMapDisplay::StarMapDisplay(Widget * SupWidget, Character * Character) :
 	assert(System->GetAspectPosition() != nullptr);
 	_CameraWorldPosition[0] += System->GetAspectPosition()->GetPosition()[0];
 	_CameraWorldPosition[1] += System->GetAspectPosition()->GetPosition()[1];
-	SetSize(Vector2f(100.0f, 100.0f));
 	ConnectDestroyingCallback(std::bind(&UI::StarMapDisplay::_OnDestroying, this, std::placeholders::_1));
 	ConnectMouseButtonCallback(std::bind(&UI::StarMapDisplay::_OnMouseButton, this, std::placeholders::_1));
 	ConnectMouseMoveCallback(std::bind(&UI::StarMapDisplay::_OnMouseMove, this, std::placeholders::_1));
@@ -297,7 +296,7 @@ void UI::StarMapDisplay::_OnMouseButton(UI::MouseButtonEvent & MouseButtonEvent)
 		{
 			if(_Character != nullptr)
 			{
-				auto ClickWorldPosition{(MouseButtonEvent.GetPosition() - GetSize() / 2.0f) / _Scale};
+				auto ClickWorldPosition{(MouseButtonEvent.GetPosition() - Vector2f(GetWidth(), GetHeight()) / 2.0f) / _Scale};
 				
 				ClickWorldPosition[1] = -ClickWorldPosition[1];
 				ClickWorldPosition += _CameraWorldPosition;

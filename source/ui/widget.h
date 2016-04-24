@@ -56,7 +56,6 @@ namespace UI
 		void SetDisabledBackgroundColor(const Graphics::ColorRGBO & DisabledBackgroundColor);
 		void UnsetBackgroundColor(void);
 		void UnsetDisabledBackgroundColor(void);
-		void SetSize(const Vector2f & Size);
 		void AddSubWidget(Widget * SubWidget);
 		void RemoveSubWidget(Widget * SubWidget);
 		void RaiseSubWidget(Widget * SubWidget);
@@ -66,14 +65,15 @@ namespace UI
 		void SetName(const std::string & Name);
 		// getters
 		const Graphics::ColorRGBO * GetBackgroundColor(void) const;
+		float GetBottom(void) const;
 		bool GetEnabled(void) const;
 		float GetHeight(void) const;
 		Widget * GetHoveredWidget(void);
 		Vector2f GetGlobalPosition(void) const;
 		float GetLeft(void) const;
-		const Vector2f & GetSize(void) const;
 		const std::string & GetName(void) const;
 		std::string GetPath(void) const;
+		float GetRight(void) const;
 		Widget * GetRootWidget(void);
 		Widget * GetSupWidget(void);
 		Widget * GetSubWidget(const std::string & Name);
@@ -89,9 +89,11 @@ namespace UI
 		void SetAnchorRight(bool AnchorRight);
 		void SetAnchorTop(bool AnchorTop);
 		void SetEnabled(bool Enabled);
+		void SetHeight(float Height);
 		void SetLeft(float Left);
 		void SetTop(float Top);
 		void SetVisible(bool Visible);
+		void SetWidth(float Width);
 		// connect events
 		Connection ConnectDestroyingCallback(std::function< void (UI::Event &) > Callback);
 		Connection ConnectKeyCallback(std::function< void (UI::KeyEvent &) > Callback);
@@ -119,15 +121,16 @@ namespace UI
 		Graphics::ColorRGBO * _BackgroundColor;
 		Graphics::ColorRGBO * _DisabledBackgroundColor;
 		bool _Enabled;
+		float _Height;
 		Widget * _HoverWidget;
 		Widget * _KeyFocus;
 		float _Left;
 		std::string _Name;
-		Vector2f _Size;
 		std::list< Widget * > _SubWidgets;
 		Widget * _SupWidget;
 		float _Top;
 		bool _Visible;
+		float _Width;
 		// events
 		::Event< void, UI::Event & > _DestroyingEvent;
 		::Event< void, UI::KeyEvent & > _KeyEvent;
@@ -145,6 +148,11 @@ namespace UI
 		static std::stack< std::tuple< float, float, float, float > > _ClippingRectangles;
 	};
 	
+	inline float Widget::GetBottom(void) const
+	{
+		return _Top + _Height;
+	}
+	
 	inline bool Widget::GetEnabled(void) const
 	{
 		return _Enabled;
@@ -152,7 +160,7 @@ namespace UI
 	
 	inline float Widget::GetHeight(void) const
 	{
-		return _Size[1];
+		return _Height;
 	}
 	
 	inline Widget * Widget::GetHoveredWidget(void)
@@ -174,6 +182,11 @@ namespace UI
 	{
 		return _DestroyedWidgets;
 	}
+	
+	inline float Widget::GetRight(void) const
+	{
+		return _Left + _Width;
+	}
 
 	inline Widget * Widget::GetRootWidget(void)
 	{
@@ -185,11 +198,6 @@ namespace UI
 		}
 		
 		return SupWidget;
-	}
-
-	inline const Vector2f & Widget::GetSize(void) const
-	{
-		return _Size;
 	}
 
 	inline Widget * Widget::GetSupWidget(void)
@@ -222,7 +230,7 @@ namespace UI
 	
 	inline float Widget::GetWidth(void) const
 	{
-		return _Size[0];
+		return _Width;
 	}
 	
 	inline bool Widget::IsEnabled(void) const
