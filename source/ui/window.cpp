@@ -33,29 +33,32 @@ UI::Window::Window(Widget * SupWidget, const std::string & Title) :
 {
 	SetBackgroundColor(Graphics::ColorRGBO(0.2f, 0.2f, 0.2f, 1.0f));
 	
-	auto Border(new UI::Border(this));
+	auto Border{new UI::Border{this}};
 	
 	Border->SetLeft(0.0f);
 	Border->SetTop(0.0f);
-	Border->SetSize(GetSize());
+	Border->SetWidth(GetWidth());
+	Border->SetHeight(GetHeight());
 	Border->SetAnchorBottom(true);
 	Border->SetAnchorRight(true);
 	Border->SetLineWidth(1.0f);
 	Border->SetColor(Graphics::ColorRGBO(0.4f, 0.4f, 0.4f, 1.0f));
-	_TitleLabel = new UI::Label(this, Title);
+	_TitleLabel = new UI::Label{this, Title};
 	_TitleLabel->SetLeft(10.0f);
 	_TitleLabel->SetTop(10.0f);
-	_TitleLabel->SetSize(Vector2f(GetSize()[0] - 20.0f, 20.0f));
+	_TitleLabel->SetWidth(GetWidth() - 20.0f);
+	_TitleLabel->SetHeight(20.0f);
 	_TitleLabel->SetAnchorRight(true);
 	_TitleLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Center);
 	_TitleLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	_TitleLabel->SetBackgroundColor(Graphics::ColorRGBO(0.23f, 0.35f, 0.55f, 1.0f));
 	_TitleLabel->ConnectMouseButtonCallback(std::bind(&UI::Window::_OnTitleLabelMouseButton, this, std::placeholders::_1));
 	_TitleLabel->ConnectMouseMoveCallback(std::bind(&UI::Window::_OnTitleLabelMouseMove, this, std::placeholders::_1));
-	_ResizeDragBox = new Widget(this);
-	_ResizeDragBox->SetLeft(GetSize()[0] - 9.0f);
-	_ResizeDragBox->SetTop(GetSize()[1] - 9.0f);
-	_ResizeDragBox->SetSize(Vector2f(7.0f, 7.0f));
+	_ResizeDragBox = new Widget{this};
+	_ResizeDragBox->SetLeft(GetWidth() - 9.0f);
+	_ResizeDragBox->SetTop(GetHeight() - 9.0f);
+	_ResizeDragBox->SetWidth(7.0f);
+	_ResizeDragBox->SetHeight(7.0f);
 	_ResizeDragBox->SetAnchorBottom(true);
 	_ResizeDragBox->SetAnchorLeft(false);
 	_ResizeDragBox->SetAnchorRight(true);
@@ -125,6 +128,7 @@ void UI::Window::_OnResizeDragBoxMouseMove(UI::MouseMoveEvent & MouseMoveEvent)
 {
 	if((MouseMoveEvent.GetPhase() == UI::Event::Phase::Target) && (g_UserInterface->GetCaptureWidget() == _ResizeDragBox))
 	{
-		SetSize(GetSize() + MouseMoveEvent.GetPosition() - _GrabPosition);
+		SetWidth(GetWidth() + MouseMoveEvent.GetPosition()[0] - _GrabPosition[0]);
+		SetHeight(GetHeight() + MouseMoveEvent.GetPosition()[1] - _GrabPosition[1]);
 	}
 }

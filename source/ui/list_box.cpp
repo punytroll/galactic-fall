@@ -50,10 +50,10 @@ void UI::ListBox::_OnSubWidgetAdded(UI::SubWidgetEvent & SubWidgetEvent)
 			}
 			NewWidget->SetLeft(g_ListBoxItemPadding);
 			NewWidget->SetTop(Top + g_ListBoxItemPadding);
-			NewWidget->SetSize(Vector2f(GetContent()->GetWidth() - 2.0f * g_ListBoxItemPadding, NewWidget->GetHeight()));
+			NewWidget->SetWidth(GetContent()->GetWidth() - 2.0f * g_ListBoxItemPadding);
 			NewWidget->SetAnchorRight(true);
 			NewWidget->ConnectMouseButtonCallback(std::bind(&UI::ListBox::_OnItemMouseButton, this, std::placeholders::_1, NewWidget));
-			GetContent()->SetSize(Vector2f(GetContent()->GetWidth(), NewWidget->GetTop() + NewWidget->GetHeight() + g_ListBoxItemPadding));
+			GetContent()->SetHeight(NewWidget->GetBottom() + g_ListBoxItemPadding);
 		}
 	}
 }
@@ -85,7 +85,7 @@ void UI::ListBox::_OnSubWidgetRemoved(UI::SubWidgetEvent & SubWidgetEvent)
 					NextTop = OldSubWidget->GetTop();
 				}
 			}
-			Top = std::max(Top, OldSubWidget->GetTop() + OldSubWidget->GetHeight() + g_ListBoxItemPadding);
+			Top = std::max(Top, OldSubWidget->GetBottom() + g_ListBoxItemPadding);
 		}
 		if(SubWidgetEvent.GetSubWidget() == _SelectedItem)
 		{
@@ -100,7 +100,7 @@ void UI::ListBox::_OnSubWidgetRemoved(UI::SubWidgetEvent & SubWidgetEvent)
 				_SelectedItem = nullptr;
 			}
 		}
-		GetContent()->SetSize(Vector2f(GetContent()->GetWidth(), Top));
+		GetContent()->SetHeight(Top);
 	}
 }
 

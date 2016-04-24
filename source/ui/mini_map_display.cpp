@@ -46,7 +46,6 @@ UI::MiniMapDisplay::MiniMapDisplay(UI::Widget * SupWidget) :
 	_Character(nullptr),
 	_Scale(0.15f)
 {
-	SetSize(Vector2f(100.0f, 100.0f));
 	ConnectDestroyingCallback(std::bind(&UI::MiniMapDisplay::_OnDestroying, this, std::placeholders::_1));
 	ConnectSizeChangedCallback(std::bind(&UI::MiniMapDisplay::_OnSizeChanged, this, std::placeholders::_1));
 	_SetupView();
@@ -115,55 +114,58 @@ void UI::MiniMapDisplay::_ClearView(void)
 
 void UI::MiniMapDisplay::_SetupView(void)
 {
-	auto OrthogonalProjection(new Graphics::Orthogonal2DProjection());
-	
-	// the orthogonal pojection is designed to place (0.0, 0.0) in the middle of the widget, scale appropriately and make this a game coordinate view (y axis is up)
-	OrthogonalProjection->SetLeft(-GetSize()[0] / 2.0f / _Scale);
-	OrthogonalProjection->SetTop(GetSize()[1] / 2.0f / _Scale);
-	OrthogonalProjection->SetRight(GetSize()[0] / 2.0f / _Scale);
-	OrthogonalProjection->SetBottom(-GetSize()[1] / 2.0f / _Scale);
-	
-	auto View(new Graphics::View());
-	
-	View->SetClearColor(Graphics::ColorRGBO(1.0f, 1.0f, 1.0f, 0.0f));
-	assert(View->GetCamera() != nullptr);
-	View->GetCamera()->SetProjection(OrthogonalProjection);
-	if(_Character != nullptr)
+	if((GetWidth() > 0.0f) && (GetHeight() > 0.0f))
 	{
-		assert(_Character->GetShip() != nullptr);
-		assert(_Character->GetShip()->GetAspectPosition() != nullptr);
-		View->GetCamera()->SetSpacialMatrix(Matrix4f::CreateTranslation(_Character->GetShip()->GetAspectPosition()->GetPosition()[0], _Character->GetShip()->GetAspectPosition()->GetPosition()[1], 0.0f));
+		auto OrthogonalProjection{new Graphics::Orthogonal2DProjection{}};
+		
+		// the orthogonal pojection is designed to place (0.0, 0.0) in the middle of the widget, scale appropriately and make this a game coordinate view (y axis is up)
+		OrthogonalProjection->SetLeft(-GetWidth() / 2.0f / _Scale);
+		OrthogonalProjection->SetTop(GetHeight() / 2.0f / _Scale);
+		OrthogonalProjection->SetRight(GetWidth() / 2.0f / _Scale);
+		OrthogonalProjection->SetBottom(-GetHeight() / 2.0f / _Scale);
+		
+		auto View{new Graphics::View{}};
+		
+		View->SetClearColor(Graphics::ColorRGBO(1.0f, 1.0f, 1.0f, 0.0f));
+		assert(View->GetCamera() != nullptr);
+		View->GetCamera()->SetProjection(OrthogonalProjection);
+		if(_Character != nullptr)
+		{
+			assert(_Character->GetShip() != nullptr);
+			assert(_Character->GetShip()->GetAspectPosition() != nullptr);
+			View->GetCamera()->SetSpacialMatrix(Matrix4f::CreateTranslation(_Character->GetShip()->GetAspectPosition()->GetPosition()[0], _Character->GetShip()->GetAspectPosition()->GetPosition()[1], 0.0f));
+		}
+		else
+		{
+			View->GetCamera()->SetSpacialMatrix(Matrix4f::CreateTranslation(0.0f, 0.0f, 0.0f));
+		}
+		assert(g_GraphicsEngine != nullptr);
+		g_GraphicsEngine->AddView(View);
+		
+		auto Scene{new Graphics::Scene{}};
+		
+		Scene->SetDestroyCallback(std::bind(&UI::MiniMapDisplay::_OnDestroyInScene, this, std::placeholders::_1));
+		View->SetScene(Scene);
+		
+		auto Texture{new Graphics::Texture{}};
+		
+		Texture->Create(GetWidth(), GetHeight(), 1);
+		
+		auto RenderTarget{new Graphics::TextureRenderTarget{}};
+		
+		RenderTarget->SetTexture(Texture);
+		View->SetRenderTarget(RenderTarget);
+		
+		auto RootNode{new Graphics::CallbackNode{}};
+		
+		RootNode->SetDrawCallback(std::bind(&UI::MiniMapDisplay::_OnDraw, this, std::placeholders::_1));
+		RootNode->SetClearColorBuffer(true);
+		RootNode->SetClearDepthBuffer(true);
+		RootNode->SetUseBlending(false);
+		RootNode->SetUseDepthTest(true);
+		Scene->SetRootNode(RootNode);
+		SetView(View);
 	}
-	else
-	{
-		View->GetCamera()->SetSpacialMatrix(Matrix4f::CreateTranslation(0.0f, 0.0f, 0.0f));
-	}
-	assert(g_GraphicsEngine != nullptr);
-	g_GraphicsEngine->AddView(View);
-	
-	auto Scene(new Graphics::Scene());
-	
-	Scene->SetDestroyCallback(std::bind(&UI::MiniMapDisplay::_OnDestroyInScene, this, std::placeholders::_1));
-	View->SetScene(Scene);
-	
-	auto Texture(new Graphics::Texture());
-	
-	Texture->Create(GetSize()[0], GetSize()[1], 1);
-	
-	auto RenderTarget(new Graphics::TextureRenderTarget());
-	
-	RenderTarget->SetTexture(Texture);
-	View->SetRenderTarget(RenderTarget);
-	
-	auto RootNode(new Graphics::CallbackNode());
-	
-	RootNode->SetDrawCallback(std::bind(&UI::MiniMapDisplay::_OnDraw, this, std::placeholders::_1));
-	RootNode->SetClearColorBuffer(true);
-	RootNode->SetClearDepthBuffer(true);
-	RootNode->SetUseBlending(false);
-	RootNode->SetUseDepthTest(true);
-	Scene->SetRootNode(RootNode);
-	SetView(View);
 }
 
 void UI::MiniMapDisplay::_OnCharacterDestroying(void)

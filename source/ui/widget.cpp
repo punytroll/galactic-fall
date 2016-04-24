@@ -42,14 +42,15 @@ UI::Widget::Widget(UI::Widget * SupWidget, const std::string & Name) :
 	_BackgroundColor(nullptr),
 	_DisabledBackgroundColor(nullptr),
 	_Enabled(true),
+	_Height(0.0f),
 	_HoverWidget(nullptr),
 	_KeyFocus(nullptr),
 	_Left(0.0f),
 	_Name(Name),
-	_Size(true),
 	_SupWidget(nullptr),
 	_Top(0.0f),
-	_Visible(true)
+	_Visible(true),
+	_Width(0.0f)
 {
 	if(SupWidget != nullptr)
 	{
@@ -78,7 +79,7 @@ void UI::Widget::Draw(Graphics::RenderContext * RenderContext)
 		RenderContext->SetColorRGBO(*Color);
 		RenderContext->SetProgramIdentifier("widget");
 		RenderContext->ActivateProgram();
-		Graphics::Drawing::DrawBoxFromPositionAndSize(RenderContext, GlobalPosition, _Size);
+		Graphics::Drawing::DrawBoxFromPositionAndSize(RenderContext, GlobalPosition, Vector2f(_Width, _Height));
 		RenderContext->DeactivateProgram();
 		RenderContext->UnsetProgramIdentifier();
 		RenderContext->UnsetColorRGBO();
@@ -91,7 +92,7 @@ void UI::Widget::Draw(Graphics::RenderContext * RenderContext)
 			
 			if(SubWidget->_Visible == true)
 			{
-				_PushClippingRectangle(RenderContext, GlobalPosition[0] + SubWidget->_Left, GlobalPosition[1] + SubWidget->_Top, GlobalPosition[1] + SubWidget->_Top + SubWidget->_Size[1], GlobalPosition[0] + SubWidget->_Left + SubWidget->_Size[0]);
+				_PushClippingRectangle(RenderContext, GlobalPosition[0] + SubWidget->_Left, GlobalPosition[1] + SubWidget->_Top, GlobalPosition[1] + SubWidget->_Top + SubWidget->_Height, GlobalPosition[0] + SubWidget->_Left + SubWidget->_Width);
 				SubWidget->Draw(RenderContext);
 				_PopClippingRectangle(RenderContext);
 			}
@@ -152,42 +153,59 @@ void UI::Widget::UnsetDisabledBackgroundColor(void)
 	_DisabledBackgroundColor = nullptr;
 }
 
-void UI::Widget::SetSize(const Vector2f & Size)
+void UI::Widget::SetHeight(float Height)
 {
 	// early bailing out if this is a no-op
-	if(Size != _Size)
+	if(_Height != Height)
 	{
-		Vector2f Offset(GetSize() - Size);
+		auto Offset{_Height - Height};
 		
-		_Size = Size;
+		_Height = Height;
 		// iterate through the list of sub widgets and correct widget positions and sizes
 		for(auto SubWidget : _SubWidgets)
 		{
-			Vector2f SubWidgetNewSize(SubWidget->GetSize());
-			
-			if(SubWidget->_AnchorRight == true)
-			{
-				if(SubWidget->_AnchorLeft == true)
-				{
-					SubWidgetNewSize[0] -= Offset[0];
-				}
-				else
-				{
-					SubWidget->SetLeft(SubWidget->GetLeft() - Offset[0]);
-				}
-			}
 			if(SubWidget->_AnchorBottom == true)
 			{
 				if(SubWidget->_AnchorTop == true)
 				{
-					SubWidgetNewSize[1] -= Offset[1];
+					SubWidget->SetHeight(SubWidget->GetHeight() - Offset);
 				}
 				else
 				{
-					SubWidget->SetTop(SubWidget->GetTop() - Offset[1]);
+					SubWidget->SetTop(SubWidget->GetTop() - Offset);
 				}
 			}
-			SubWidget->SetSize(SubWidgetNewSize);
+		}
+		
+		UI::Event SizeChangedEvent;
+		
+		SizeChangedEvent.SetTarget(this);
+		g_UserInterface->DispatchSizeChangedEvent(SizeChangedEvent);
+	}
+}
+
+void UI::Widget::SetWidth(float Width)
+{
+	// early bailing out if this is a no-op
+	if(_Width != Width)
+	{
+		auto Offset{_Width - Width};
+		
+		_Width = Width;
+		// iterate through the list of sub widgets and correct widget positions and sizes
+		for(auto SubWidget : _SubWidgets)
+		{
+			if(SubWidget->_AnchorRight == true)
+			{
+				if(SubWidget->_AnchorLeft == true)
+				{
+					SubWidget->SetWidth(SubWidget->GetWidth() - Offset);
+				}
+				else
+				{
+					SubWidget->SetLeft(SubWidget->GetLeft() - Offset);
+				}
+			}
 		}
 		
 		UI::Event SizeChangedEvent;

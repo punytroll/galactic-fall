@@ -72,7 +72,7 @@ void UI::ViewDisplay::Draw(Graphics::RenderContext * RenderContext)
 		
 		auto GlobalPosition{GetGlobalPosition()};
 		
-		Graphics::Drawing::DrawTexture(RenderContext, GlobalPosition[0], GlobalPosition[1], GlobalPosition[1] + GetSize()[1], GlobalPosition[0] + GetSize()[0], TextureRenderTarget->GetTexture());
+		Graphics::Drawing::DrawTexture(RenderContext, GlobalPosition[0], GlobalPosition[1], GlobalPosition[1] + GetHeight(), GlobalPosition[0] + GetWidth(), TextureRenderTarget->GetTexture());
 	}
 }
  

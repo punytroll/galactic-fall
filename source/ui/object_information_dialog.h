@@ -29,7 +29,6 @@ class Vector3f;
 
 namespace UI
 {
-	class Button;
 	class ScrollBox;
 	
 	class ObjectInformationDialog : public UI::Window
@@ -51,9 +50,7 @@ namespace UI
 		void _Refresh(void);
 		// member variables
 		Reference< Object > _Object;
-		UI::Button * _CloseButton;
 		UI::ScrollBox * _PropertiesScrollBox;
-		UI::Button * _RefreshButton;
 	};
 }
 

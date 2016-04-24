@@ -48,21 +48,24 @@ UI::PlanetWindow::PlanetWindow(UI::Widget * SupWidget, Planet * Planet, Characte
 	
 	HomeButton->SetLeft(10.0f);
 	HomeButton->SetTop(40.0f);
-	HomeButton->SetSize(Vector2f(100.0f, 20.0f));
+	HomeButton->SetWidth(100.0f);
+	HomeButton->SetHeight(20.0f);
 	HomeButton->ConnectClickedCallback(std::bind(&UI::PlanetWindow::_OnHomeButtonClicked, this));
 	
 	auto TradeCenterButton{new UI::TextButton{this, "Trade Center"}};
 	
 	TradeCenterButton->SetLeft(10.0f);
 	TradeCenterButton->SetTop(70.0f);
-	TradeCenterButton->SetSize(Vector2f(100.0f, 20.0f));
+	TradeCenterButton->SetWidth(100.0f);
+	TradeCenterButton->SetHeight(20.0f);
 	TradeCenterButton->ConnectClickedCallback(std::bind(&UI::PlanetWindow::_OnTradeCenterButtonClicked, this));
 	
 	auto HangarButton{new UI::TextButton{this, "Hangar"}};
 	
 	HangarButton->SetLeft(10.0f);
 	HangarButton->SetTop(100.0f);
-	HangarButton->SetSize(Vector2f(100.0f, 20.0f));
+	HangarButton->SetWidth(100.0f);
+	HangarButton->SetHeight(20.0f);
 	HangarButton->ConnectClickedCallback(std::bind(&UI::PlanetWindow::_OnHangarButtonClicked, this));
 	_OpenHomeScreen();
 }
@@ -154,7 +157,8 @@ void UI::PlanetWindow::_OpenHangar(void)
 		_HangarWidget = new UI::HangarWidget{this, _Planet, _Character};
 		_HangarWidget->SetLeft(120.0f);
 		_HangarWidget->SetTop(40.0f);
-		_HangarWidget->SetSize(Vector2f(GetWidth() - 130.0f, GetHeight() - 50.0f));
+		_HangarWidget->SetWidth(GetWidth() - 130.0f);
+		_HangarWidget->SetHeight(GetHeight() - 50.0f);
 		_HangarWidget->SetAnchorBottom(true);
 		_HangarWidget->SetAnchorRight(true);
 	}
@@ -183,7 +187,8 @@ void UI::PlanetWindow::_OpenHomeScreen(void)
 		_DescriptionLabel = new UI::Label{this, _Planet->GetDescription()};
 		_DescriptionLabel->SetLeft(120.0f);
 		_DescriptionLabel->SetTop(40.0f);
-		_DescriptionLabel->SetSize(Vector2f(GetWidth() - 130.0f, GetHeight() - 50.0f));
+		_DescriptionLabel->SetWidth(GetWidth() - 130.0f);
+		_DescriptionLabel->SetHeight(GetHeight() - 50.0f);
 		_DescriptionLabel->SetWrap(true);
 		_DescriptionLabel->SetWordWrap(true);
 		_DescriptionLabel->SetAnchorBottom(true);
@@ -213,7 +218,8 @@ void UI::PlanetWindow::_OpenTradeCenter(void)
 		_TradeCenterWidget = new UI::TradeCenterWidget{this, _Planet, _Character};
 		_TradeCenterWidget->SetLeft(120.0f);
 		_TradeCenterWidget->SetTop(40.0f);
-		_TradeCenterWidget->SetSize(Vector2f(GetWidth() - 130.0f, GetHeight() - 50.0f));
+		_TradeCenterWidget->SetWidth(GetWidth() - 130.0f);
+		_TradeCenterWidget->SetHeight(GetHeight() - 50.0f);
 		_TradeCenterWidget->SetAnchorBottom(true);
 		_TradeCenterWidget->SetAnchorRight(true);
 	}
