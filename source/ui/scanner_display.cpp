@@ -124,61 +124,64 @@ void UI::ScannerDisplay::_OnTargetDestroying(void)
 
 void UI::ScannerDisplay::_Setup(void)
 {
-	assert(_Target != nullptr);
-	assert(_Target->GetAspectPhysical() != nullptr);
-	
-	Graphics::PerspectiveProjection * PerspectiveProjection(new Graphics::PerspectiveProjection());
-	float RadialSize(_Target->GetAspectPhysical()->GetRadialSize());
-	float ExtendedRadialSize((5.0f / 4.0f) * RadialSize);
-	
-	PerspectiveProjection->SetFieldOfViewY(asinf(ExtendedRadialSize / sqrtf(ExtendedRadialSize * ExtendedRadialSize + 16 * RadialSize * RadialSize)) * 2.0f);
-	PerspectiveProjection->SetAspect(GetSize()[0] / GetSize()[1]);
-	PerspectiveProjection->SetNearClippingPlane(1.0f);
-	PerspectiveProjection->SetFarClippingPlane(1000.0f);
-	
-	auto View(new Graphics::View());
-	
-	g_GraphicsEngine->AddView(View);
-	View->SetClearColor(Graphics::ColorRGBO(1.0f, 1.0f, 1.0f, 0.0f));
-	assert(View->GetCamera() != nullptr);
-	View->GetCamera()->SetProjection(PerspectiveProjection);
-	assert(_Target->GetAspectPosition() != nullptr);
-	View->GetCamera()->SetSpacialMatrix(Matrix4f::CreateTranslation(0.0f, 0.0f, 4.0f * RadialSize));
-	
-	auto Scene(new Graphics::Scene());
-	
-	Scene->SetDestroyCallback(std::bind(&UI::ScannerDisplay::_OnDestroyInScene, this, std::placeholders::_1));
-	Scene->ActivateLight();
-	assert(Scene->GetLight() != nullptr);
-	
-	auto TheSystem(dynamic_cast< System * >(_Target->GetContainer()));
-	
-	assert(TheSystem != nullptr);
-	assert(TheSystem->GetStar() != nullptr);
-	assert(TheSystem->GetStar()->GetAspectPosition() != nullptr);
-	Scene->GetLight()->SetType(Graphics::Light::Type::Directional);
-	Scene->GetLight()->SetDirection(Vector3f::CreateFromComponents(-TheSystem->GetStar()->GetAspectPosition()->GetPosition()[0], -TheSystem->GetStar()->GetAspectPosition()->GetPosition()[1], -100.0f));
-	Scene->GetLight()->SetColor(TheSystem->GetStar()->GetColor());
-	View->SetScene(Scene);
-	
-	auto Texture(new Graphics::Texture());
-	
-	Texture->Create(GetSize()[0], GetSize()[1], 1);
-	
-	auto RenderTarget(new Graphics::TextureRenderTarget());
-	
-	RenderTarget->SetTexture(Texture);
-	View->SetRenderTarget(RenderTarget);
-	
-	auto RootNode(new Graphics::Node());
-	
-	RootNode->SetClearColorBuffer(true);
-	RootNode->SetClearDepthBuffer(true);
-	RootNode->SetUseDepthTest(true);
-	Scene->SetRootNode(RootNode);
-	
-	auto Visualization(VisualizeObject(_Target, RootNode));
-	
-	Visualization->SetUpdatePosition(false);
-	SetView(View);
+	if((GetWidth() > 0.0f) && (GetHeight() > 0.0f))
+	{
+		assert(_Target != nullptr);
+		assert(_Target->GetAspectPhysical() != nullptr);
+		
+		auto PerspectiveProjection{new Graphics::PerspectiveProjection{}};
+		float RadialSize(_Target->GetAspectPhysical()->GetRadialSize());
+		float ExtendedRadialSize((5.0f / 4.0f) * RadialSize);
+		
+		PerspectiveProjection->SetFieldOfViewY(asinf(ExtendedRadialSize / sqrtf(ExtendedRadialSize * ExtendedRadialSize + 16 * RadialSize * RadialSize)) * 2.0f);
+		PerspectiveProjection->SetAspect(GetWidth() / GetHeight());
+		PerspectiveProjection->SetNearClippingPlane(1.0f);
+		PerspectiveProjection->SetFarClippingPlane(1000.0f);
+		
+		auto View{new Graphics::View{}};
+		
+		g_GraphicsEngine->AddView(View);
+		View->SetClearColor(Graphics::ColorRGBO(1.0f, 1.0f, 1.0f, 0.0f));
+		assert(View->GetCamera() != nullptr);
+		View->GetCamera()->SetProjection(PerspectiveProjection);
+		assert(_Target->GetAspectPosition() != nullptr);
+		View->GetCamera()->SetSpacialMatrix(Matrix4f::CreateTranslation(0.0f, 0.0f, 4.0f * RadialSize));
+		
+		auto Scene{new Graphics::Scene{}};
+		
+		Scene->SetDestroyCallback(std::bind(&UI::ScannerDisplay::_OnDestroyInScene, this, std::placeholders::_1));
+		Scene->ActivateLight();
+		assert(Scene->GetLight() != nullptr);
+		
+		auto TheSystem{dynamic_cast< System * >(_Target->GetContainer())};
+		
+		assert(TheSystem != nullptr);
+		assert(TheSystem->GetStar() != nullptr);
+		assert(TheSystem->GetStar()->GetAspectPosition() != nullptr);
+		Scene->GetLight()->SetType(Graphics::Light::Type::Directional);
+		Scene->GetLight()->SetDirection(Vector3f::CreateFromComponents(-TheSystem->GetStar()->GetAspectPosition()->GetPosition()[0], -TheSystem->GetStar()->GetAspectPosition()->GetPosition()[1], -100.0f));
+		Scene->GetLight()->SetColor(TheSystem->GetStar()->GetColor());
+		View->SetScene(Scene);
+		
+		auto Texture{new Graphics::Texture{}};
+		
+		Texture->Create(GetWidth(), GetHeight(), 1);
+		
+		auto RenderTarget{new Graphics::TextureRenderTarget{}};
+		
+		RenderTarget->SetTexture(Texture);
+		View->SetRenderTarget(RenderTarget);
+		
+		auto RootNode{new Graphics::Node{}};
+		
+		RootNode->SetClearColorBuffer(true);
+		RootNode->SetClearDepthBuffer(true);
+		RootNode->SetUseDepthTest(true);
+		Scene->SetRootNode(RootNode);
+		
+		auto Visualization{VisualizeObject(_Target, RootNode)};
+		
+		Visualization->SetUpdatePosition(false);
+		SetView(View);
+	}
 }
