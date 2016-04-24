@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2013  Hagen Möbius
+ * Copyright (C) 2016  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,36 +17,23 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef UI_LOAD_SCENARIO_DIALOG_H
-#define UI_LOAD_SCENARIO_DIALOG_H
+#include "../scenario.h"
+#include "label.h"
+#include "scenario_list_box_item.h"
 
-#include "../timeout_notifications.h"
-#include "dialog.h"
-
-class ScenarioManager;
-
-namespace UI
+UI::ScenarioListBoxItem::ScenarioListBoxItem(Scenario * Scenario) :
+	_Scenario(Scenario)
 {
-	class Label;
-	class ListBox;
+	auto CaptionLabel{new UI::Label{this, Scenario->GetName()}};
 	
-	class LoadScenarioDialog : public UI::Dialog
-	{
-	public:
-		LoadScenarioDialog(UI::Widget * SupWidget, ScenarioManager * ScenarioManager);
-		// getters
-		Scenario * GetScenario(void);
-		// modifiers
-		void ShowErrorMessage(const std::string & ErrorMessage);
-	private:
-		// callbacks
-		void _OnKey(UI::KeyEvent & KeyEvent);
-		// member variables
-		UI::Label * _MessageLabel;
-		TimeoutNotification _MessageTimeoutNotification;
-		UI::ListBox * _ScenarioListBox;
-		ScenarioManager * _ScenarioManager;
-	};
+	CaptionLabel->SetLeft(5.0f);
+	CaptionLabel->SetTop(0.0f);
+	CaptionLabel->SetWidth(GetWidth() - 10.0f);
+	CaptionLabel->SetHeight(GetHeight());
+	CaptionLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
+	CaptionLabel->SetAnchorBottom(true);
+	CaptionLabel->SetAnchorLeft(true);
+	CaptionLabel->SetAnchorRight(true);
+	CaptionLabel->SetAnchorTop(true);
+	SetHeight(20.0f);
 }
-
-#endif

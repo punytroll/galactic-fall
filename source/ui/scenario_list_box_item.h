@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2013  Hagen Möbius
+ * Copyright (C) 2016  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,36 +17,30 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef UI_LOAD_SCENARIO_DIALOG_H
-#define UI_LOAD_SCENARIO_DIALOG_H
+#ifndef SCENARIO_LIST_BOX_ITEM_H
+#define SCENARIO_LIST_BOX_ITEM_H
 
-#include "../timeout_notifications.h"
-#include "dialog.h"
+#include "list_box_item.h"
 
-class ScenarioManager;
+class Scenario;
 
 namespace UI
 {
-	class Label;
-	class ListBox;
-	
-	class LoadScenarioDialog : public UI::Dialog
+	class ScenarioListBoxItem : public UI::ListBoxItem
 	{
 	public:
-		LoadScenarioDialog(UI::Widget * SupWidget, ScenarioManager * ScenarioManager);
+		ScenarioListBoxItem(Scenario * Scenario);
 		// getters
 		Scenario * GetScenario(void);
-		// modifiers
-		void ShowErrorMessage(const std::string & ErrorMessage);
 	private:
-		// callbacks
-		void _OnKey(UI::KeyEvent & KeyEvent);
 		// member variables
-		UI::Label * _MessageLabel;
-		TimeoutNotification _MessageTimeoutNotification;
-		UI::ListBox * _ScenarioListBox;
-		ScenarioManager * _ScenarioManager;
+		Scenario * _Scenario;
 	};
+
+	inline Scenario * ScenarioListBoxItem::GetScenario(void)
+	{
+		return _Scenario;
+	}
 }
 
 #endif

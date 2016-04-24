@@ -24,53 +24,16 @@
 #include "../scenario_manager.h"
 #include "key_event.h"
 #include "label.h"
+#include "list_box.h"
 #include "list_box_item.h"
 #include "load_scenario_dialog.h"
 #include "mouse_button_event.h"
-#include "scroll_box.h"
+#include "scenario_list_box_item.h"
 #include "text_button.h"
-
-namespace UI
-{
-	class ScenarioItem : public UI::ListBoxItem
-	{
-	public:
-		ScenarioItem(UI::Widget * SupWidget, Scenario * Scenario);
-		// getters
-		Scenario * GetScenario(void);
-	private:
-		// member variables
-		Scenario * _Scenario;
-	};
-}
-
-UI::ScenarioItem::ScenarioItem(UI::Widget * SupWidget, Scenario * Scenario) :
-	UI::ListBoxItem(SupWidget),
-	_Scenario(Scenario)
-{
-	auto CaptionLabel{new UI::Label{this, Scenario->GetName()}};
-	
-	CaptionLabel->SetLeft(5.0f);
-	CaptionLabel->SetTop(0.0f);
-	CaptionLabel->SetWidth(GetWidth() - 10.0f);
-	CaptionLabel->SetHeight(GetHeight());
-	CaptionLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
-	CaptionLabel->SetAnchorBottom(true);
-	CaptionLabel->SetAnchorLeft(true);
-	CaptionLabel->SetAnchorRight(true);
-	CaptionLabel->SetAnchorTop(true);
-	SetHeight(20.0f);
-}
-
-Scenario * UI::ScenarioItem::GetScenario(void)
-{
-	return _Scenario;
-}
 
 UI::LoadScenarioDialog::LoadScenarioDialog(UI::Widget * SupWidget, ScenarioManager * ScenarioManager) :
 	UI::Dialog(SupWidget),
-	_ScenarioManager(ScenarioManager),
-	_SelectedScenarioItem(nullptr)
+	_ScenarioManager(ScenarioManager)
 {
 	SetTitle("Load Scenario");
 	ConnectKeyCallback(std::bind(&UI::LoadScenarioDialog::_OnKey, this, std::placeholders::_1));
@@ -111,39 +74,32 @@ UI::LoadScenarioDialog::LoadScenarioDialog(UI::Widget * SupWidget, ScenarioManag
 	_MessageLabel->SetWrap(true);
 	_MessageLabel->SetWordWrap(true);
 	_MessageLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
-	_ScenarioScrollBox = new UI::ScrollBox{this};
-	_ScenarioScrollBox->SetLeft(10.0f);
-	_ScenarioScrollBox->SetTop(110.0f);
-	_ScenarioScrollBox->SetWidth(GetWidth() - 20.0f);
-	_ScenarioScrollBox->SetHeight(GetHeight() - 170.0f);
-	_ScenarioScrollBox->SetAnchorBottom(true);
-	_ScenarioScrollBox->SetAnchorRight(true);
-	_ScenarioScrollBox->SetAnchorTop(true);
-	_ScenarioScrollBox->SetHorizontalScrollBarVisible(false);
-	_ScenarioScrollBox->GetContent()->SetWidth(_ScenarioScrollBox->GetView()->GetWidth());
-	_ScenarioScrollBox->GetContent()->SetAnchorRight(true);
-	
-	float Top(5.0f);
-	
+	_ScenarioListBox = new UI::ListBox{this};
+	_ScenarioListBox->SetLeft(10.0f);
+	_ScenarioListBox->SetTop(110.0f);
+	_ScenarioListBox->SetWidth(GetWidth() - 20.0f);
+	_ScenarioListBox->SetHeight(GetHeight() - 170.0f);
+	_ScenarioListBox->SetAnchorBottom(true);
+	_ScenarioListBox->SetAnchorRight(true);
+	_ScenarioListBox->SetAnchorTop(true);
+	_ScenarioListBox->SetHorizontalScrollBarVisible(false);
+	_ScenarioListBox->GetContent()->SetWidth(_ScenarioListBox->GetView()->GetWidth());
+	_ScenarioListBox->GetContent()->SetAnchorRight(true);
 	for(auto ScenarioPair : _ScenarioManager->GetScenarios())
 	{
-		auto ScenarioItem{new UI::ScenarioItem{_ScenarioScrollBox->GetContent(), ScenarioPair.second}};
-		
-		ScenarioItem->SetLeft(5.0f);
-		ScenarioItem->SetTop(Top);
-		ScenarioItem->SetWidth(_ScenarioScrollBox->GetContent()->GetWidth() - 10.0f);
-		ScenarioItem->SetAnchorRight(true);
-		ScenarioItem->ConnectMouseButtonCallback(std::bind(&UI::LoadScenarioDialog::_OnScenarioItemMouseButton, this, ScenarioItem, std::placeholders::_1));
-		Top += 25.0f;
+		_ScenarioListBox->GetContent()->AddSubWidget(new UI::ScenarioListBoxItem{ScenarioPair.second});
 	}
-	_ScenarioScrollBox->GetContent()->SetHeight(Top);
 }
 
 Scenario * UI::LoadScenarioDialog::GetScenario(void)
 {
-	if(_SelectedScenarioItem != nullptr)
+	if(_ScenarioListBox->GetSelectedItem() != nullptr)
 	{
-		return _SelectedScenarioItem->GetScenario();
+		auto SelectedScenarioListBoxItem{dynamic_cast< UI::ScenarioListBoxItem * >(_ScenarioListBox->GetSelectedItem())};
+		
+		assert(SelectedScenarioListBoxItem != nullptr);
+		
+		return SelectedScenarioListBoxItem->GetScenario();
 	}
 	else
 	{
@@ -171,18 +127,5 @@ void UI::LoadScenarioDialog::_OnKey(UI::KeyEvent & KeyEvent)
 	else if((KeyEvent.GetKeyCode() == 36 /* RETURN */) && (KeyEvent.IsDown() == true))
 	{
 		_Close(UI::Dialog::ClosingReason::RETURN_KEY);
-	}
-}
-
-void UI::LoadScenarioDialog::_OnScenarioItemMouseButton(UI::ScenarioItem * ScenarioItem, UI::MouseButtonEvent & MouseButtonEvent)
-{
-	if((MouseButtonEvent.GetMouseButton() == UI::MouseButtonEvent::MouseButton::Left) && (MouseButtonEvent.IsDown() == true))
-	{
-		if(_SelectedScenarioItem != nullptr)
-		{
-			_SelectedScenarioItem->SetSelected(false);
-		}
-		_SelectedScenarioItem = ScenarioItem;
-		_SelectedScenarioItem->SetSelected(true);
 	}
 }
