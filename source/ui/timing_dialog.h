@@ -31,6 +31,7 @@ namespace UI
 	public:
 		TimingDialog(UI::Widget * SupWidget);
 	private:
+		float _AddMeasure(float Top, const std::string & Label, UI::Label *& ValueLabel);
 		// callbacks
 		void _OnKey(UI::KeyEvent & KeyEvent);
 		void _OnUpdating(float RealTimeSeconds, float GameTimeSeconds);
