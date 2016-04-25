@@ -31,7 +31,7 @@ UI::ProgressBar::ProgressBar(UI::Widget * SupWidget) :
 	_FillLevel(1.0f),
 	_Label(nullptr)
 {
-	ConnectSizeChangedCallback(std::bind(&UI::ProgressBar::_OnSizeChanged, this, std::placeholders::_1));
+	ConnectWidthChangedCallback(std::bind(&UI::ProgressBar::_OnWidthChanged, this, std::placeholders::_1));
 	_Fill = new UI::Widget{this};
 	_Fill->SetLeft(0.0f);
 	_Fill->SetTop(0.0f);
@@ -66,9 +66,9 @@ UI::ProgressBar::ProgressBar(UI::Widget * SupWidget) :
 	Border->SetAnchorTop(true);
 }
 
-void UI::ProgressBar::_OnSizeChanged(UI::Event & SizeChangedEvent)
+void UI::ProgressBar::_OnWidthChanged(UI::Event & WidthChangedEvent)
 {
-	if(SizeChangedEvent.GetPhase() == UI::Event::Phase::Target)
+	if(WidthChangedEvent.GetPhase() == UI::Event::Phase::Target)
 	{
 		_ResizeFill();
 	}

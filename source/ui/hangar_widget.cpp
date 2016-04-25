@@ -71,7 +71,8 @@ namespace UI
 			assert(_Ship != nullptr);
 			ConnectDestroyingCallback(std::bind(&UI::ShipDisplay::_OnDestroying, this, std::placeholders::_1));
 			ConnectUpdatingCallback(std::bind(&UI::ShipDisplay::_OnUpdating, this, std::placeholders::_1, std::placeholders::_2));
-			ConnectSizeChangedCallback(std::bind(&UI::ShipDisplay::_OnSizeChanged, this, std::placeholders::_1));
+			ConnectHeightChangedCallback(std::bind(&UI::ShipDisplay::_OnSizeChanged, this, std::placeholders::_1));
+			ConnectWidthChangedCallback(std::bind(&UI::ShipDisplay::_OnSizeChanged, this, std::placeholders::_1));
 			_ShipDestroyingConnection = _Ship->ConnectDestroyingCallback(std::bind(&UI::ShipDisplay::_OnShipDestroying, this));
 		}
 	private:

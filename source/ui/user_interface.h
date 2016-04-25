@@ -48,14 +48,16 @@ namespace UI
 		void Draw(Graphics::RenderContext * RenderContext) const;
 		void DispatchDestroyingEvent(UI::Event & DestroyingEvent);
 		void DispatchKeyEvent(UI::KeyEvent & KeyEvent);
+		void DispatchHeightChangedEvent(UI::Event & HeightChangedEvent);
+		void DispatchLeftChangedEvent(UI::Event & LeftChangedEvent);
 		void DispatchMouseButtonEvent(UI::MouseButtonEvent & MouseButtonEvent);
 		void DispatchMouseEnterEvent(UI::Event & MouseEnterEvent);
 		void DispatchMouseLeaveEvent(UI::Event & MouseLeaveEvent);
 		void DispatchMouseMoveEvent(UI::MouseMoveEvent & MouseMoveEvent);
-		void DispatchPositionChangedEvent(UI::Event & PositionChangedEvent);
-		void DispatchSizeChangedEvent(UI::Event & SizeChangedEvent);
 		void DispatchSubWidgetAddedEvent(UI::SubWidgetEvent & SubWidgetAddedEvent);
 		void DispatchSubWidgetRemovedEvent(UI::SubWidgetEvent & SubWidgetRemovedEvent);
+		void DispatchTopChangedEvent(UI::Event & TopChangedEvent);
+		void DispatchWidthChangedEvent(UI::Event & WidthChangedEvent);
 		void Update(float RealTimeSeconds, float GameTimeSeconds);
 		// setters
 		void SetCaptureWidget(UI::Widget * Widget);

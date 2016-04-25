@@ -47,7 +47,8 @@ UI::MiniMapDisplay::MiniMapDisplay(UI::Widget * SupWidget) :
 	_Scale(0.15f)
 {
 	ConnectDestroyingCallback(std::bind(&UI::MiniMapDisplay::_OnDestroying, this, std::placeholders::_1));
-	ConnectSizeChangedCallback(std::bind(&UI::MiniMapDisplay::_OnSizeChanged, this, std::placeholders::_1));
+	ConnectHeightChangedCallback(std::bind(&UI::MiniMapDisplay::_OnSizeChanged, this, std::placeholders::_1));
+	ConnectWidthChangedCallback(std::bind(&UI::MiniMapDisplay::_OnSizeChanged, this, std::placeholders::_1));
 	_SetupView();
 }
 

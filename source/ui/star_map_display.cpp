@@ -61,7 +61,8 @@ UI::StarMapDisplay::StarMapDisplay(Widget * SupWidget, Character * Character) :
 	ConnectDestroyingCallback(std::bind(&UI::StarMapDisplay::_OnDestroying, this, std::placeholders::_1));
 	ConnectMouseButtonCallback(std::bind(&UI::StarMapDisplay::_OnMouseButton, this, std::placeholders::_1));
 	ConnectMouseMoveCallback(std::bind(&UI::StarMapDisplay::_OnMouseMove, this, std::placeholders::_1));
-	ConnectSizeChangedCallback(std::bind(&UI::StarMapDisplay::_OnSizeChanged, this, std::placeholders::_1));
+	ConnectHeightChangedCallback(std::bind(&UI::StarMapDisplay::_OnSizeChanged, this, std::placeholders::_1));
+	ConnectWidthChangedCallback(std::bind(&UI::StarMapDisplay::_OnSizeChanged, this, std::placeholders::_1));
 	_SetupView();
 }
 

@@ -177,10 +177,10 @@ void UI::Widget::SetHeight(float Height)
 			}
 		}
 		
-		UI::Event SizeChangedEvent;
+		UI::Event HeightChangedEvent;
 		
-		SizeChangedEvent.SetTarget(this);
-		g_UserInterface->DispatchSizeChangedEvent(SizeChangedEvent);
+		HeightChangedEvent.SetTarget(this);
+		g_UserInterface->DispatchHeightChangedEvent(HeightChangedEvent);
 	}
 }
 
@@ -208,10 +208,10 @@ void UI::Widget::SetWidth(float Width)
 			}
 		}
 		
-		UI::Event SizeChangedEvent;
+		UI::Event WidthChangedEvent;
 		
-		SizeChangedEvent.SetTarget(this);
-		g_UserInterface->DispatchSizeChangedEvent(SizeChangedEvent);
+		WidthChangedEvent.SetTarget(this);
+		g_UserInterface->DispatchWidthChangedEvent(WidthChangedEvent);
 	}
 }
 
@@ -325,9 +325,19 @@ Connection UI::Widget::ConnectDestroyingCallback(std::function< void (UI::Event 
 	return _DestroyingEvent.Connect(Callback);
 }
 
+Connection UI::Widget::ConnectHeightChangedCallback(std::function< void (UI::Event &) > Callback)
+{
+	return _HeightChangedEvent.Connect(Callback);
+}
+
 Connection UI::Widget::ConnectKeyCallback(std::function< void (UI::KeyEvent &) > Callback)
 {
 	return _KeyEvent.Connect(Callback);
+}
+
+Connection UI::Widget::ConnectLeftChangedCallback(std::function< void (UI::Event &) > Callback)
+{
+	return _LeftChangedEvent.Connect(Callback);
 }
 
 Connection UI::Widget::ConnectMouseButtonCallback(std::function< void (UI::MouseButtonEvent &) > Callback)
@@ -350,16 +360,6 @@ Connection UI::Widget::ConnectMouseMoveCallback(std::function< void (UI::MouseMo
 	return _MouseMoveEvent.Connect(Callback);
 }
 
-Connection UI::Widget::ConnectPositionChangedCallback(std::function< void (UI::Event &) > Callback)
-{
-	return _PositionChangedEvent.Connect(Callback);
-}
-
-Connection UI::Widget::ConnectSizeChangedCallback(std::function< void (UI::Event &) > Callback)
-{
-	return _SizeChangedEvent.Connect(Callback);
-}
-
 Connection UI::Widget::ConnectSubWidgetAddedCallback(std::function< void (UI::SubWidgetEvent &) > Callback)
 {
 	return _SubWidgetAddedEvent.Connect(Callback);
@@ -368,6 +368,16 @@ Connection UI::Widget::ConnectSubWidgetAddedCallback(std::function< void (UI::Su
 Connection UI::Widget::ConnectSubWidgetRemovedCallback(std::function< void (UI::SubWidgetEvent &) > Callback)
 {
 	return _SubWidgetRemovedEvent.Connect(Callback);
+}
+
+Connection UI::Widget::ConnectTopChangedCallback(std::function< void (UI::Event &) > Callback)
+{
+	return _TopChangedEvent.Connect(Callback);
+}
+
+Connection UI::Widget::ConnectWidthChangedCallback(std::function< void (UI::Event &) > Callback)
+{
+	return _WidthChangedEvent.Connect(Callback);
 }
 
 Connection UI::Widget::ConnectUpdatingCallback(std::function< void (float, float) > Callback)

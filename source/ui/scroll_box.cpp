@@ -38,12 +38,14 @@ UI::ScrollBox::ScrollBox(UI::Widget * SupWidget) :
 	_View->SetAnchorLeft(true);
 	_View->SetAnchorRight(true);
 	_View->SetAnchorTop(true);
-	_View->ConnectSizeChangedCallback(std::bind(&UI::ScrollBox::_OnContentOrViewSizeChanged, this, std::placeholders::_1));
+	_View->ConnectHeightChangedCallback(std::bind(&UI::ScrollBox::_OnContentOrViewSizeChanged, this, std::placeholders::_1));
+	_View->ConnectWidthChangedCallback(std::bind(&UI::ScrollBox::_OnContentOrViewSizeChanged, this, std::placeholders::_1));
 	_Content = new UI::Widget{_View};
 	_Content->SetName("content");
 	_Content->SetLeft(0.0f);
 	_Content->SetTop(0.0f);
-	_Content->ConnectSizeChangedCallback(std::bind(&UI::ScrollBox::_OnContentOrViewSizeChanged, this, std::placeholders::_1));
+	_Content->ConnectHeightChangedCallback(std::bind(&UI::ScrollBox::_OnContentOrViewSizeChanged, this, std::placeholders::_1));
+	_Content->ConnectWidthChangedCallback(std::bind(&UI::ScrollBox::_OnContentOrViewSizeChanged, this, std::placeholders::_1));
 	_HorizontalScrollBar = new UI::ScrollBar{this, UI::ScrollBar::Alignment::HORIZONTAL};
 	_HorizontalScrollBar->SetName("horizontal_scroll_bar");
 	_HorizontalScrollBar->SetLeft(0.0f);

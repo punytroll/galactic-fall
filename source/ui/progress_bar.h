@@ -41,7 +41,7 @@ namespace UI
 		void SetFillLevel(float FillLevel);
 		void SetText(const std::string & Text);
 	private:
-		void _OnSizeChanged(UI::Event & SizeChangedEvent);
+		void _OnWidthChanged(UI::Event & WidthChangedEvent);
 		void _ResizeFill(void);
 		// variables
 		UI::Widget * _Fill;
