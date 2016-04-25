@@ -213,7 +213,7 @@ UI::LoadShipWindow::LoadShipWindow(UI::Widget * SupWidget, Hangar * Hangar, Ship
 	ShipLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Center);
 	ShipLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	ShipLabel->SetAnchorRight(true);
-	ConnectSizeChangedCallback(std::bind(&UI::LoadShipWindow::_OnSizeChanged, this, std::placeholders::_1, LeftPane, CenterPane, RightPane));
+	ConnectWidthChangedCallback(std::bind(&UI::LoadShipWindow::_OnWidthChanged, this, std::placeholders::_1, LeftPane, CenterPane, RightPane));
 }
 
 void UI::LoadShipWindow::_OnDestroying(UI::Event & DestroyingEvent)
@@ -374,9 +374,9 @@ void UI::LoadShipWindow::_OnShipDestroying(void)
 	assert(false);
 }
 
-void UI::LoadShipWindow::_OnSizeChanged(UI::Event & SizeChangedEvent, UI::Widget * LeftPane, UI::Widget * CenterPane, UI::Widget * RightPane)
+void UI::LoadShipWindow::_OnWidthChanged(UI::Event & WidthChangedEvent, UI::Widget * LeftPane, UI::Widget * CenterPane, UI::Widget * RightPane)
 {
-	if(SizeChangedEvent.GetPhase() == UI::Event::Phase::Target)
+	if(WidthChangedEvent.GetPhase() == UI::Event::Phase::Target)
 	{
 		float AvailableWidth{GetWidth()};
 		

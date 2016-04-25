@@ -229,7 +229,7 @@ UI::OutfitShipDialog::OutfitShipDialog(UI::Widget * SupWidget, Ship * Ship) :
 	assert(_Ship != nullptr);
 	_ShipDestroyingConnection = _Ship->ConnectDestroyingCallback(std::bind(&UI::OutfitShipDialog::_OnShipDestroying, this));
 	ConnectDestroyingCallback(std::bind(&UI::OutfitShipDialog::_OnDestroying, this, std::placeholders::_1));
-	ConnectSizeChangedCallback(std::bind(&UI::OutfitShipDialog::_OnSizeChanged, this, std::placeholders::_1));
+	ConnectWidthChangedCallback(std::bind(&UI::OutfitShipDialog::_OnWidthChanged, this, std::placeholders::_1));
 	ConnectKeyCallback(std::bind(&UI::OutfitShipDialog::_OnKey, this, std::placeholders::_1));
 	_LeftPane = new UI::Widget{this};
 	_LeftPane->SetLeft(10.0f);
@@ -517,9 +517,9 @@ void UI::OutfitShipDialog::_OnAccessoryListItemMouseButton(UI::AccessoryListItem
 	}
 }
 
-void UI::OutfitShipDialog::_OnSizeChanged(UI::Event & SizeChangedEvent)
+void UI::OutfitShipDialog::_OnWidthChanged(UI::Event & WidthChangedEvent)
 {
-	if(SizeChangedEvent.GetPhase() == UI::Event::Phase::Target)
+	if(WidthChangedEvent.GetPhase() == UI::Event::Phase::Target)
 	{
 		auto AvailableWidth(GetWidth());
 		

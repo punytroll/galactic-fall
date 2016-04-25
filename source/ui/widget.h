@@ -96,16 +96,18 @@ namespace UI
 		void SetWidth(float Width);
 		// connect events
 		Connection ConnectDestroyingCallback(std::function< void (UI::Event &) > Callback);
+		Connection ConnectHeightChangedCallback(std::function< void (UI::Event &) > Callback);
 		Connection ConnectKeyCallback(std::function< void (UI::KeyEvent &) > Callback);
+		Connection ConnectLeftChangedCallback(std::function< void (UI::Event &) > Callback);
 		Connection ConnectMouseButtonCallback(std::function< void (UI::MouseButtonEvent &) > Callback);
 		Connection ConnectMouseEnterCallback(std::function< void (UI::Event &) > Callback);
 		Connection ConnectMouseLeaveCallback(std::function< void (UI::Event &) > Callback);
 		Connection ConnectMouseMoveCallback(std::function< void (UI::MouseMoveEvent &) > Callback);
-		Connection ConnectPositionChangedCallback(std::function< void (UI::Event &) > Callback);
-		Connection ConnectSizeChangedCallback(std::function< void (UI::Event &) > Callback);
 		Connection ConnectSubWidgetAddedCallback(std::function< void (UI::SubWidgetEvent &) > Callback);
 		Connection ConnectSubWidgetRemovedCallback(std::function< void (UI::SubWidgetEvent &) > Callback);
+		Connection ConnectTopChangedCallback(std::function< void (UI::Event &) > Callback);
 		Connection ConnectUpdatingCallback(std::function< void (float, float) > Callback);
+		Connection ConnectWidthChangedCallback(std::function< void (UI::Event &) > Callback);
 		// static manager functions
 		static std::list< Widget * > & GetDestroyedWidgets(void);
 	protected:
@@ -133,16 +135,18 @@ namespace UI
 		float _Width;
 		// events
 		::Event< void, UI::Event & > _DestroyingEvent;
+		::Event< void, UI::Event & > _HeightChangedEvent;
 		::Event< void, UI::KeyEvent & > _KeyEvent;
+		::Event< void, UI::Event & > _LeftChangedEvent;
 		::Event< void, UI::MouseButtonEvent & > _MouseButtonEvent;
 		::Event< void, UI::Event & > _MouseEnterEvent;
 		::Event< void, UI::Event & > _MouseLeaveEvent;
 		::Event< void, UI::MouseMoveEvent & > _MouseMoveEvent;
-		::Event< void, UI::Event & > _PositionChangedEvent;
-		::Event< void, UI::Event & > _SizeChangedEvent;
 		::Event< void, UI::SubWidgetEvent & > _SubWidgetAddedEvent;
 		::Event< void, UI::SubWidgetEvent & > _SubWidgetRemovedEvent;
+		::Event< void, UI::Event & > _TopChangedEvent;
 		::Event< void, float, float > _UpdatingEvent;
+		::Event< void, UI::Event & > _WidthChangedEvent;
 		// static manager properties
 		static std::list< Widget * > _DestroyedWidgets;
 		static std::stack< std::tuple< float, float, float, float > > _ClippingRectangles;

@@ -52,7 +52,7 @@ namespace UI
 		void _OnShipContentAdded(Object * Content);
 		void _OnShipContentRemoved(Object * Content);
 		void _OnShipDestroying(void);
-		void _OnSizeChanged(UI::Event & SizeChangedEvent, UI::Widget * LeftPane, UI::Widget * CenterPane, UI::Widget * RightPane);
+		void _OnWidthChanged(UI::Event & WidthChangedEvent, UI::Widget * LeftPane, UI::Widget * CenterPane, UI::Widget * RightPane);
 		// member variables
 		Hangar * _Hangar;
 		Connection _HangarContentAddedCallbackConnection;
