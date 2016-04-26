@@ -19,55 +19,87 @@
 
 #include <float.h>
 
+#include <algorithm>
+
+#include "object.h"
 #include "threat.h"
 
-Reference< Object > * Threat::GetObjectWithHighestThreat(void)
+class ThreatByObject
 {
-	Reference< Object > * ObjectWithHighestThreat(0);
-	float HighestThreat(FLT_MIN);
-	std::deque< std::pair< Reference< Object >, float > >::iterator ThreatIterator(m_Threats.begin());
-	
-	while(ThreatIterator != m_Threats.end())
+public:
+	Object * _Object;
+	float _Threat;
+	Connection _ObjectDestroyingConnection;
+};
+
+Threat::~Threat(void)
+{
+	while(_Threats.empty() == false)
 	{
-		if(ThreatIterator->first.IsValid() == true)
-		{
-			if(ThreatIterator->second > HighestThreat)
-			{
-				ObjectWithHighestThreat = &(ThreatIterator->first);
-				HighestThreat = ThreatIterator->second;
-			}
-			++ThreatIterator;
-		}
-		else
-		{
-			ThreatIterator = m_Threats.erase(ThreatIterator);
-		}
+		auto ThreatByObject{_Threats.front()};
+		
+		assert(ThreatByObject != nullptr);
+		assert(ThreatByObject->_Object != nullptr);
+		ThreatByObject->_Object = nullptr;
+		assert(ThreatByObject->_ObjectDestroyingConnection.IsValid() == true);
+		ThreatByObject->_ObjectDestroyingConnection.Disconnect();
+		assert(ThreatByObject->_ObjectDestroyingConnection.IsValid() == false);
+		_Threats.erase(_Threats.begin());
 	}
-	
-	return ObjectWithHighestThreat;
 }
 
-void Threat::ModifyThreat(const Reference< Object > & ThreateningObject, float DeltaThreat)
+Object * Threat::GetObjectWithHighestThreat(void)
 {
-	std::deque< std::pair< Reference< Object >, float > >::iterator ThreatIterator(m_Threats.begin());
+	Object * Result(nullptr);
+	float HighestThreat(FLT_MIN);
 	
-	while((ThreatIterator != m_Threats.end()) && (ThreatIterator->first != ThreateningObject))
+	for(auto & Threat : _Threats)
 	{
-		if(ThreatIterator->first.IsValid() == true)
+		if(Threat->_Threat > HighestThreat)
 		{
-			++ThreatIterator;
-		}
-		else
-		{
-			ThreatIterator = m_Threats.erase(ThreatIterator);
+			Result = Threat->_Object;
+			HighestThreat = Threat->_Threat;
 		}
 	}
-	if(ThreatIterator != m_Threats.end())
+	
+	return Result;
+}
+
+void Threat::ModifyThreat(Object * ThreateningObject, float DeltaThreat)
+{
+	auto Found{false};
+	
+	for(auto ThreatByObject : _Threats)
 	{
-		ThreatIterator->second += DeltaThreat;
+		if(ThreatByObject->_Object == ThreateningObject)
+		{
+			ThreatByObject->_Threat += DeltaThreat;
+			Found = true;
+			
+			break;
+		}
 	}
-	else
+	if(Found == false)
 	{
-		m_Threats.push_back(std::make_pair(ThreateningObject, DeltaThreat));
+		auto NewThreatByObject{new ThreatByObject{}};
+		
+		NewThreatByObject->_Object = ThreateningObject;
+		NewThreatByObject->_ObjectDestroyingConnection = ThreateningObject->ConnectDestroyingCallback(std::bind(&Threat::_OnObjectDestroying, this, NewThreatByObject));
+		NewThreatByObject->_Threat = DeltaThreat;
+		_Threats.push_back(NewThreatByObject);
 	}
+}
+
+void Threat::_OnObjectDestroying(ThreatByObject * ThreatByObject)
+{
+	assert(ThreatByObject != nullptr);
+	assert(ThreatByObject->_ObjectDestroyingConnection.IsValid() == true);
+	ThreatByObject->_ObjectDestroyingConnection.Disconnect();
+	assert(ThreatByObject->_ObjectDestroyingConnection.IsValid() == false);
+	ThreatByObject->_Object = nullptr;
+	
+	auto Iterator{std::find(_Threats.begin(), _Threats.end(), ThreatByObject)};
+	
+	assert(Iterator != _Threats.end());
+	_Threats.erase(Iterator);
 }
