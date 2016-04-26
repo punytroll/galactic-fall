@@ -2400,7 +2400,7 @@ void ActionOpenObjectInformationDialog(void)
 	assert(g_UserInterface != nullptr);
 	assert(g_Galaxy != nullptr);
 	
-	auto ObjectInformationDialog{new UI::ObjectInformationDialog(g_UserInterface->GetRootWidget(), g_Galaxy->GetReference())};
+	auto ObjectInformationDialog{new UI::ObjectInformationDialog(g_UserInterface->GetRootWidget(), g_Galaxy)};
 	
 	ObjectInformationDialog->SetName("object_information(" + g_Galaxy->GetObjectIdentifier() + ")");
 	ObjectInformationDialog->SetLeft(100.0f);
