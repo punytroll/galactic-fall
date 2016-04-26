@@ -40,11 +40,79 @@
 #include "scroll_box.h"
 #include "text_button.h"
 
-UI::ObjectInformationDialog::ObjectInformationDialog(UI::Widget * SupWidget, const Reference< Object > & Object) :
+namespace UI
+{
+	class ObjectPropertyWidget : public UI::Widget
+	{
+	public:
+		ObjectPropertyWidget(float Indentation, Object * Object) :
+			_Object(Object)
+		{
+			assert(_Object != nullptr);
+			_ObjectDestroyingConnection = _Object->ConnectDestroyingCallback(std::bind(&UI::ObjectPropertyWidget::_OnObjectDestroying, this));
+			ConnectDestroyingCallback(std::bind(&UI::ObjectPropertyWidget::_OnDestroying, this, std::placeholders::_1));
+			_Button = new UI::TextButton{this, Object->GetObjectIdentifier()};
+			_Button->SetLeft(Indentation);
+			_Button->SetTop(5.0f);
+			_Button->SetWidth(GetWidth() - Indentation);
+			_Button->SetHeight(GetHeight() - 10.0f);
+			_Button->SetAnchorBottom(true);
+			_Button->SetAnchorRight(true);
+			_Button->ConnectClickedCallback(std::bind(&UI::ObjectPropertyWidget::_OnButtonClicked, this));
+		}
+	private:
+		void _OnButtonClicked(void)
+		{
+			auto ObjectInformationDialog{new UI::ObjectInformationDialog{GetRootWidget(), _Object}};
+			
+			ObjectInformationDialog->SetName("object_information(" + _Object->GetObjectIdentifier() + ")");
+			ObjectInformationDialog->SetLeft(100.0f);
+			ObjectInformationDialog->SetTop(400.0f);
+			ObjectInformationDialog->SetWidth(500.0f);
+			ObjectInformationDialog->SetHeight(300.0f);
+			ObjectInformationDialog->GrabKeyFocus();
+		}
+		
+		void _OnDestroying(UI::Event & DestroyingEvent)
+		{
+			if(DestroyingEvent.GetPhase() == UI::Event::Phase::Target)
+			{
+				if(_Object != nullptr)
+				{
+					_Object = nullptr;
+					assert(_ObjectDestroyingConnection.IsValid() == true);
+					_ObjectDestroyingConnection.Disconnect();
+					assert(_ObjectDestroyingConnection.IsValid() == false);
+				}
+			}
+		}
+		
+		void _OnObjectDestroying(void)
+		{
+			assert(_Object != nullptr);
+			_Object = nullptr;
+			assert(_ObjectDestroyingConnection.IsValid() == true);
+			_ObjectDestroyingConnection.Disconnect();
+			assert(_ObjectDestroyingConnection.IsValid() == false);
+			_Button->SetText("<destroyed>");
+			_Button->SetEnabled(false);
+		}
+		
+		UI::TextButton * _Button;
+		Object * _Object;
+		Connection _ObjectDestroyingConnection;
+	};
+}
+
+UI::ObjectInformationDialog::ObjectInformationDialog(UI::Widget * SupWidget, Object * Object) :
 	UI::Window(SupWidget, "Object Information"),
 	_Object(Object),
 	_PropertiesScrollBox(nullptr)
 {
+	assert(_Object != nullptr);
+	_ObjectDestroyingConnection = _Object->ConnectDestroyingCallback(std::bind(&ObjectInformationDialog::_OnObjectDestroying, this));
+	ConnectDestroyingCallback(std::bind(&ObjectInformationDialog::_OnDestroying, this, std::placeholders::_1));
+	
 	// set up widgets
 	auto CloseButton{new UI::TextButton{this, "Close"}};
 	
@@ -65,7 +133,7 @@ UI::ObjectInformationDialog::ObjectInformationDialog(UI::Widget * SupWidget, con
 	_PropertiesScrollBox->SetHorizontalScrollBarVisible(false);
 	_PropertiesScrollBox->SetAnchorBottom(true);
 	_PropertiesScrollBox->SetAnchorRight(true);
-	_PropertiesScrollBox->GetContent()->SetWidth(_PropertiesScrollBox->GetView()->GetHeight());
+	_PropertiesScrollBox->GetContent()->SetWidth(_PropertiesScrollBox->GetView()->GetWidth());
 	_PropertiesScrollBox->GetContent()->SetAnchorRight(true);
 	
 	auto RefreshButton{new UI::TextButton{this, "Refresh"}};
@@ -82,26 +150,18 @@ UI::ObjectInformationDialog::ObjectInformationDialog(UI::Widget * SupWidget, con
 	_Refresh();
 }
 
-float UI::ObjectInformationDialog::_AddObjectProperty(float Top, float Indentation, const Reference< Object > & Object)
+float UI::ObjectInformationDialog::_AddObjectProperty(float Top, float Indentation, Object * Object)
 {
-	auto PropertyDisplay{new UI::Widget{_PropertiesScrollBox->GetContent()}};
+	auto ObjectPropertyWidget{new UI::ObjectPropertyWidget{Indentation, Object}};
 	
-	PropertyDisplay->SetLeft(10.0f);
-	PropertyDisplay->SetTop(Top);
-	PropertyDisplay->SetWidth(_PropertiesScrollBox->GetContent()->GetWidth() - 20.0f);
-	PropertyDisplay->SetHeight(30.0f);
-	PropertyDisplay->SetAnchorRight(true);
+	ObjectPropertyWidget->SetLeft(10.0f);
+	ObjectPropertyWidget->SetTop(Top);
+	ObjectPropertyWidget->SetWidth(_PropertiesScrollBox->GetContent()->GetWidth() - 20.0f);
+	ObjectPropertyWidget->SetHeight(30.0f);
+	ObjectPropertyWidget->SetAnchorRight(true);
+	_PropertiesScrollBox->GetContent()->AddSubWidget(ObjectPropertyWidget);
 	
-	auto ObjectButton{new UI::TextButton{PropertyDisplay, Object->GetObjectIdentifier()}};
-	
-	ObjectButton->SetLeft(Indentation);
-	ObjectButton->SetTop(5.0f);
-	ObjectButton->SetWidth(PropertyDisplay->GetWidth() - Indentation);
-	ObjectButton->SetHeight(20.0f);
-	ObjectButton->SetAnchorRight(true);
-	ObjectButton->ConnectClickedCallback(std::bind(&ObjectInformationDialog::_OnObjectClicked, this, Object));
-	
-	return PropertyDisplay->GetHeight();
+	return ObjectPropertyWidget->GetHeight();
 }
 
 float UI::ObjectInformationDialog::_AddSeparator(float Top, float Indentation, const std::string & Separator)
@@ -122,6 +182,7 @@ float UI::ObjectInformationDialog::_AddSeparator(float Top, float Indentation, c
 	SeparatorLabel->SetHeight(SeparatorDisplay->GetHeight());
 	SeparatorLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	SeparatorLabel->SetAnchorBottom(true);
+	SeparatorLabel->SetAnchorRight(true);
 	SeparatorLabel->SetTextColor(Graphics::ColorRGBO(0.5f, 0.8f, 1.0f, 1.0f));
 	
 	return SeparatorDisplay->GetHeight();
@@ -170,7 +231,7 @@ float UI::ObjectInformationDialog::_AddStringProperty(float Top, float Indentati
 	
 	auto PropertyValueLabel{new UI::Label(PropertyDisplay, PropertyValue)};
 	
-	PropertyValueLabel->SetLeft(PropertyNameLabel->GetLeft() + PropertyNameLabel->GetWidth());
+	PropertyValueLabel->SetLeft(PropertyNameLabel->GetRight());
 	PropertyValueLabel->SetTop(0.0f);
 	PropertyValueLabel->SetWidth(PropertyDisplay->GetWidth() - PropertyNameLabel->GetRight());
 	PropertyValueLabel->SetHeight(PropertyDisplay->GetHeight());
@@ -197,16 +258,28 @@ void UI::ObjectInformationDialog::_OnCloseClicked(void)
 	Destroy();
 }
 
-void UI::ObjectInformationDialog::_OnObjectClicked(const Reference< Object > Object)
+void UI::ObjectInformationDialog::_OnDestroying(UI::Event & DestroyingEvent)
 {
-	auto ObjectInformationDialog{new UI::ObjectInformationDialog{GetRootWidget(), Object}};
-	
-	ObjectInformationDialog->SetName("object_information(" + Object->GetObjectIdentifier() + ")");
-	ObjectInformationDialog->SetLeft(100.0f);
-	ObjectInformationDialog->SetTop(400.0f);
-	ObjectInformationDialog->SetWidth(500.0f);
-	ObjectInformationDialog->SetHeight(300.0f);
-	ObjectInformationDialog->GrabKeyFocus();
+	if(DestroyingEvent.GetPhase() == UI::Event::Phase::Target)
+	{
+		if(_Object != nullptr)
+		{
+			_Object = nullptr;
+			assert(_ObjectDestroyingConnection.IsValid() == true);
+			_ObjectDestroyingConnection.Disconnect();
+			assert(_ObjectDestroyingConnection.IsValid() == false);
+		}
+	}
+}
+
+void UI::ObjectInformationDialog::_OnObjectDestroying(void)
+{
+	assert(_Object != nullptr);
+	_Object = nullptr;
+	assert(_ObjectDestroyingConnection.IsValid() == true);
+	_ObjectDestroyingConnection.Disconnect();
+	assert(_ObjectDestroyingConnection.IsValid() == false);
+	_Refresh();
 }
 
 void UI::ObjectInformationDialog::_OnRefreshClicked(void)
@@ -222,10 +295,10 @@ void UI::ObjectInformationDialog::_Refresh(void)
 		_PropertiesScrollBox->GetContent()->GetSubWidgets().front()->Destroy();
 	}
 	
-	float Top{0.0f};
+	auto Top{0.0f};
 	
 	// fill the properties view
-	if(_Object.IsValid() == true)
+	if(_Object != nullptr)
 	{
 		Top += _AddStringProperty(Top, 0.0f, "Type", _Object->GetTypeIdentifier());
 		Top += _AddStringProperty(Top, 0.0f, "Class", _Object->GetClassIdentifier());
@@ -233,7 +306,7 @@ void UI::ObjectInformationDialog::_Refresh(void)
 		Top += _AddSeparator(Top, 0.0f, "Container");
 		if(_Object->GetContainer() != nullptr)
 		{
-			Top += _AddObjectProperty(Top, 20.0f, _Object->GetContainer()->GetReference());
+			Top += _AddObjectProperty(Top, 20.0f, _Object->GetContainer());
 		}
 		else
 		{
@@ -254,7 +327,7 @@ void UI::ObjectInformationDialog::_Refresh(void)
 			Top += _AddSeparator(Top, 0.0f, "Object Container Aspect");
 			for(auto Content : _Object->GetAspectObjectContainer()->GetContent())
 			{
-				Top += _AddObjectProperty(Top, 20.0f, Content->GetReference());
+				Top += _AddObjectProperty(Top, 20.0f, Content);
 			}
 		}
 		if(_Object->GetAspectPosition() != nullptr)

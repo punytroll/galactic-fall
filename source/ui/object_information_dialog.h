@@ -20,7 +20,6 @@
 #ifndef UI_OBJECT_INFORMATION_DIALOG_H
 #define UI_OBJECT_INFORMATION_DIALOG_H
 
-#include "../referencing.h"
 #include "window.h"
 
 class Object;
@@ -34,14 +33,15 @@ namespace UI
 	class ObjectInformationDialog : public UI::Window
 	{
 	public:
-		ObjectInformationDialog(UI::Widget * SupWidget, const Reference< Object > & Object);
+		ObjectInformationDialog(UI::Widget * SupWidget, Object * Object);
 	private:
 		// callbacks
-		void _OnObjectClicked(const Reference< Object > Object);
 		void _OnCloseClicked(void);
+		void _OnDestroying(UI::Event & DestroyingEvent);
 		void _OnRefreshClicked(void);
+		void _OnObjectDestroying(void);
 		// helper functions and actions
-		float _AddObjectProperty(float Top, float Indentation, const Reference< Object > & Object);
+		float _AddObjectProperty(float Top, float Indentation, Object *	Object);
 		float _AddSeparator(float Top, float Indentation, const std::string & Separator);
 		float _AddString(float Top, float Indentation, const std::string & String);
 		float _AddStringProperty(float Top, float Indentation, const std::string & PropertyName, const std::string & PropertyValue);
@@ -49,7 +49,8 @@ namespace UI
 		std::string _GetOrientationString(const Quaternion & Orientation);
 		void _Refresh(void);
 		// member variables
-		Reference< Object > _Object;
+		Object * _Object;
+		Connection _ObjectDestroyingConnection;
 		UI::ScrollBox * _PropertiesScrollBox;
 	};
 }
