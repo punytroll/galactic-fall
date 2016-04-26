@@ -164,7 +164,7 @@ bool GoalFighterThink::OnMessageReceived(Message * Message)
 		
 		if((TheThreatMessage->GetSender().IsValid() == true) && (TheThreatMessage->GetSender()->GetTypeIdentifier() == "ship") && (dynamic_cast< Ship * >(TheThreatMessage->GetSender().Get())->GetFaction()->GetClassIdentifier() != GetMind()->GetCharacter()->GetShip()->GetFaction()->GetClassIdentifier()))
 		{
-			GetMind()->GetCharacter()->GetThreat()->ModifyThreat(TheThreatMessage->GetSender(), TheThreatMessage->GetDeltaThreat());
+			GetMind()->GetCharacter()->GetThreat()->ModifyThreat(TheThreatMessage->GetSender().Get(), TheThreatMessage->GetDeltaThreat());
 		}
 		
 		return true;
@@ -269,11 +269,11 @@ void GoalFightSomeTarget::Process(void)
 	assert(GetState() == Goal::ACTIVE);
 	assert(GetSubGoals().empty() == false);
 	
-	Reference< Object > * ObjectWithHighestThreat(GetMind()->GetCharacter()->GetThreat()->GetObjectWithHighestThreat());
+	auto ObjectWithHighestThreat{GetMind()->GetCharacter()->GetThreat()->GetObjectWithHighestThreat()};
 	
-	if(ObjectWithHighestThreat != 0)
+	if(ObjectWithHighestThreat != nullptr)
 	{
-		GetMind()->GetCharacter()->GetShip()->SetTarget((*ObjectWithHighestThreat).Get());
+		GetMind()->GetCharacter()->GetShip()->SetTarget(ObjectWithHighestThreat);
 	}
 	
 	Goal * SubGoal(GetSubGoals().front());

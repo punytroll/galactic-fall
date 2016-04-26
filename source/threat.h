@@ -22,19 +22,21 @@
 
 #include <deque>
 
-#include "referencing.h"
-
 class Object;
+class ThreatByObject;
 
 class Threat
 {
 public:
+	// destructor
+	~Threat(void);
 	// getters
-	Reference< Object > * GetObjectWithHighestThreat(void);
+	Object * GetObjectWithHighestThreat(void);
 	// modifiers
-	void ModifyThreat(const Reference< Object > & ThreateningObject, float DeltaThreat);
+	void ModifyThreat(Object * ThreateningObject, float DeltaThreat);
 private:
-	std::deque< std::pair< Reference< Object >, float > > m_Threats;
+	void _OnObjectDestroying(ThreatByObject * ThreatByObject);
+	std::deque< ThreatByObject * > _Threats;
 };
 
 #endif
