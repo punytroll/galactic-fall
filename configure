@@ -2,6 +2,7 @@
 
 import argparse
 import os
+import sys
 
 parser = argparse.ArgumentParser()
 debugging_group = parser.add_mutually_exclusive_group()
@@ -39,7 +40,10 @@ def get_line_string(line, name):
 configuration_directory = ".configuration.d"
 if os.path.isdir(configuration_directory) == False:
 	if os.path.exists(configuration_directory) == True:
-		os.remove(configuration_directory)
+		print("Error: Path \"" + configuration_directory + "\" is a file.")
+		print("       Please remove the file manually.")
+		print("       Bailing out ...")
+		sys.exit(1)
 	os.makedirs(configuration_directory)
 	write_all = True
 
