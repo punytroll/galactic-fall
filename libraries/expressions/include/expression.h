@@ -1,5 +1,5 @@
 /**
- * algebra
+ * expressions
  * Copyright (C) 2017-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 0.5.0 of expressions.
+ * This is part of version 0.5.1 of expressions.
  **/
 
 #ifndef EXPRESSIONS_EXPRESSION_H
@@ -43,6 +43,7 @@ namespace Expressions
 	public:
 		friend class Expressions::Variable;
 		friend Expressions::Expression Expressions::Operators::operator"" _c(long double Value);
+		friend Expressions::Expression Expressions::Operators::constant(double Value);
 		friend Expressions::Expression Expressions::Operators::operator-(Expressions::Expression && One);
 		friend Expressions::Expression Expressions::Operators::operator-(Expressions::Variable & Variable);
 		friend Expressions::Expression Expressions::Operators::operator+(Expressions::Expression && One, Expressions::Expression && Two);

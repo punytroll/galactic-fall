@@ -1,6 +1,6 @@
 /**
- * algebra
- * Copyright (C) 2017-2018  Hagen Möbius
+ * expressions
+ * Copyright (C) 2017-2018  Hagen MÃ¶bius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 0.5.0 of expressions.
+ * This is part of version 0.5.1 of expressions.
  **/
 
 #include <iostream>
@@ -38,6 +38,13 @@
 Expressions::Expression Expressions::Operators::operator"" _c(long double Value)
 {
 	ON_DEBUG(std::cout << "Expressions::Operators::operator\"\" _c(long double)" << std::endl);
+	
+	return Expressions::Expression(std::make_unique< Expressions::ConstantTerm >(Value));
+}
+
+Expressions::Expression Expressions::Operators::constant(double Value)
+{
+	ON_DEBUG(std::cout << "Expressions::Operators::constant(double)" << std::endl);
 	
 	return Expressions::Expression(std::make_unique< Expressions::ConstantTerm >(Value));
 }
