@@ -30,8 +30,16 @@ namespace UI
 	class Dimension : public Expressions::Variable
 	{
 	public:
+		enum class Type
+		{
+			Height,
+			Left,
+			Top,
+			Width
+		};
+		
 		// constructor & destructor
-		Dimension(UI::Widget * Owner);
+		Dimension(UI::Widget * Owner, UI::Dimension::Type Type);
 		virtual ~Dimension(void);
 		// operators
 		void operator=(Expressions::Expression && Expression);
@@ -39,6 +47,7 @@ namespace UI
 		virtual void InvalidateValue(void) override;
 	private:
 		UI::Widget * _Owner;
+		UI::Dimension::Type _Type;
 	};
 }
 
