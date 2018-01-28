@@ -192,12 +192,28 @@ void UI::Widget::SetHeight(float Height)
 
 void UI::Widget::SetLeft(float Left)
 {
-	_Left = constant(Left);
+	if(_Left.GetValue() != Left)
+	{
+		_Left = constant(Left);
+		
+		UI::Event LeftChangedEvent;
+		
+		LeftChangedEvent.SetTarget(this);
+		g_UserInterface->DispatchLeftChangedEvent(LeftChangedEvent);
+	}
 }
 
 void UI::Widget::SetTop(float Top)
 {
-	_Top = constant(Top);
+	if(_Top.GetValue() != Top)
+	{
+		_Top = constant(Top);
+		
+		UI::Event TopChangedEvent;
+		
+		TopChangedEvent.SetTarget(this);
+		g_UserInterface->DispatchTopChangedEvent(TopChangedEvent);
+	}
 }
 
 void UI::Widget::SetWidth(float Width)
