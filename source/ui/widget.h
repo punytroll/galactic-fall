@@ -29,6 +29,8 @@
 
 #include <events/event.h>
 
+#include "dimension.h"
+
 namespace Graphics
 {
 	class ColorRGBO;
@@ -65,21 +67,21 @@ namespace UI
 		void SetName(const std::string & Name);
 		// getters
 		const Graphics::ColorRGBO * GetBackgroundColor(void) const;
-		float GetBottom(void) const;
+		float GetBottom(void);
 		bool GetEnabled(void) const;
-		float GetHeight(void) const;
+		float GetHeight(void);
 		Widget * GetHoveredWidget(void);
-		Vector2f GetGlobalPosition(void) const;
-		float GetLeft(void) const;
+		Vector2f GetGlobalPosition(void);
+		float GetLeft(void);
 		const std::string & GetName(void) const;
 		std::string GetPath(void) const;
-		float GetRight(void) const;
+		float GetRight(void);
 		Widget * GetRootWidget(void);
 		Widget * GetSupWidget(void);
 		Widget * GetSubWidget(const std::string & Name);
 		const std::list< Widget * > & GetSubWidgets(void) const;
-		float GetTop(void) const;
-		float GetWidth(void) const;
+		float GetTop(void);
+		float GetWidth(void);
 		bool IsEnabled(void) const;
 		bool IsHovered(void) const;
 		bool IsVisible(void) const;
@@ -123,16 +125,16 @@ namespace UI
 		Graphics::ColorRGBO * _BackgroundColor;
 		Graphics::ColorRGBO * _DisabledBackgroundColor;
 		bool _Enabled;
-		float _Height;
+		UI::Dimension _Height;
 		Widget * _HoverWidget;
 		Widget * _KeyFocus;
-		float _Left;
+		UI::Dimension _Left;
 		std::string _Name;
 		std::list< Widget * > _SubWidgets;
 		Widget * _SupWidget;
-		float _Top;
+		UI::Dimension _Top;
 		bool _Visible;
-		float _Width;
+		UI::Dimension _Width;
 		// events
 		::Event< void, UI::Event & > _DestroyingEvent;
 		::Event< void, UI::Event & > _HeightChangedEvent;
@@ -152,9 +154,9 @@ namespace UI
 		static std::stack< std::tuple< float, float, float, float > > _ClippingRectangles;
 	};
 	
-	inline float Widget::GetBottom(void) const
+	inline float Widget::GetBottom(void)
 	{
-		return _Top + _Height;
+		return _Top.GetValue() + _Height.GetValue();
 	}
 	
 	inline bool Widget::GetEnabled(void) const
@@ -162,9 +164,9 @@ namespace UI
 		return _Enabled;
 	}
 	
-	inline float Widget::GetHeight(void) const
+	inline float Widget::GetHeight(void)
 	{
-		return _Height;
+		return _Height.GetValue();
 	}
 	
 	inline Widget * Widget::GetHoveredWidget(void)
@@ -172,9 +174,9 @@ namespace UI
 		return _HoverWidget;
 	}
 	
-	inline float Widget::GetLeft(void) const
+	inline float Widget::GetLeft(void)
 	{
-		return _Left;
+		return _Left.GetValue();
 	}
 
 	inline const std::string & Widget::GetName(void) const
@@ -187,9 +189,9 @@ namespace UI
 		return _DestroyedWidgets;
 	}
 	
-	inline float Widget::GetRight(void) const
+	inline float Widget::GetRight(void)
 	{
-		return _Left + _Width;
+		return _Left.GetValue() + _Width.GetValue();
 	}
 
 	inline Widget * Widget::GetRootWidget(void)
@@ -227,14 +229,14 @@ namespace UI
 		return _SubWidgets;
 	}
 	
-	inline float Widget::GetTop(void) const
+	inline float Widget::GetTop(void)
 	{
-		return _Top;
+		return _Top.GetValue();
 	}
 	
-	inline float Widget::GetWidth(void) const
+	inline float Widget::GetWidth(void)
 	{
-		return _Width;
+		return _Width.GetValue();
 	}
 	
 	inline bool Widget::IsEnabled(void) const
@@ -284,19 +286,9 @@ namespace UI
 		_Enabled = Enabled;
 	}
 	
-	inline void Widget::SetLeft(float Left)
-	{
-		_Left = Left;
-	}
-	
 	inline void Widget::SetName(const std::string & Name)
 	{
 		_Name = Name;
-	}
-	
-	inline void Widget::SetTop(float Top)
-	{
-		_Top = Top;
 	}
 	
 	inline void Widget::SetVisible(bool Visible)

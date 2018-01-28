@@ -31,6 +31,8 @@
 #include "user_interface.h"
 #include "widget.h"
 
+using namespace Expressions::Operators;
+
 std::list< UI::Widget * > UI::Widget::_DestroyedWidgets;
 std::stack< std::tuple< float, float, float, float > > UI::Widget::_ClippingRectangles;
 
@@ -42,16 +44,20 @@ UI::Widget::Widget(UI::Widget * SupWidget, const std::string & Name) :
 	_BackgroundColor(nullptr),
 	_DisabledBackgroundColor(nullptr),
 	_Enabled(true),
-	_Height(0.0f),
+	_Height(this),
 	_HoverWidget(nullptr),
 	_KeyFocus(nullptr),
-	_Left(0.0f),
+	_Left(this),
 	_Name(Name),
 	_SupWidget(nullptr),
-	_Top(0.0f),
+	_Top(this),
 	_Visible(true),
-	_Width(0.0f)
+	_Width(this)
 {
+	_Height = 0.0_c;
+	_Left = 0.0_c;
+	_Top = 0.0_c;
+	_Width = 0.0_c;
 	if(SupWidget != nullptr)
 	{
 		SupWidget->AddSubWidget(this);
@@ -79,7 +85,7 @@ void UI::Widget::Draw(Graphics::RenderContext * RenderContext)
 		RenderContext->SetColorRGBO(*Color);
 		RenderContext->SetProgramIdentifier("widget");
 		RenderContext->ActivateProgram();
-		Graphics::Drawing::DrawBoxFromPositionAndSize(RenderContext, GlobalPosition, Vector2f(_Width, _Height));
+		Graphics::Drawing::DrawBoxFromPositionAndSize(RenderContext, GlobalPosition, Vector2f(_Width.GetValue(), _Height.GetValue()));
 		RenderContext->DeactivateProgram();
 		RenderContext->UnsetProgramIdentifier();
 		RenderContext->UnsetColorRGBO();
@@ -92,7 +98,7 @@ void UI::Widget::Draw(Graphics::RenderContext * RenderContext)
 			
 			if(SubWidget->_Visible == true)
 			{
-				_PushClippingRectangle(RenderContext, GlobalPosition[0] + SubWidget->_Left, GlobalPosition[1] + SubWidget->_Top, GlobalPosition[1] + SubWidget->_Top + SubWidget->_Height, GlobalPosition[0] + SubWidget->_Left + SubWidget->_Width);
+				_PushClippingRectangle(RenderContext, GlobalPosition[0] + SubWidget->_Left.GetValue(), GlobalPosition[1] + SubWidget->_Top.GetValue(), GlobalPosition[1] + SubWidget->_Top.GetValue() + SubWidget->_Height.GetValue(), GlobalPosition[0] + SubWidget->_Left.GetValue() + SubWidget->_Width.GetValue());
 				SubWidget->Draw(RenderContext);
 				_PopClippingRectangle(RenderContext);
 			}
@@ -100,9 +106,9 @@ void UI::Widget::Draw(Graphics::RenderContext * RenderContext)
 	}
 }
 
-Vector2f UI::Widget::GetGlobalPosition(void) const
+Vector2f UI::Widget::GetGlobalPosition(void)
 {
-	const UI::Widget * CurrentWidget(this);
+	auto * CurrentWidget(this);
 	Vector2f Result(true);
 	
 	while(CurrentWidget != nullptr)
@@ -156,11 +162,11 @@ void UI::Widget::UnsetDisabledBackgroundColor(void)
 void UI::Widget::SetHeight(float Height)
 {
 	// early bailing out if this is a no-op
-	if(_Height != Height)
+	if(_Height.GetValue() != Height)
 	{
-		auto Offset{_Height - Height};
+		auto Offset{_Height.GetValue() - Height};
 		
-		_Height = Height;
+		_Height = constant(Height);
 		// iterate through the list of sub widgets and correct widget positions and sizes
 		for(auto SubWidget : _SubWidgets)
 		{
@@ -184,14 +190,24 @@ void UI::Widget::SetHeight(float Height)
 	}
 }
 
+void UI::Widget::SetLeft(float Left)
+{
+	_Left = constant(Left);
+}
+
+void UI::Widget::SetTop(float Top)
+{
+	_Top = constant(Top);
+}
+
 void UI::Widget::SetWidth(float Width)
 {
 	// early bailing out if this is a no-op
-	if(_Width != Width)
+	if(_Width.GetValue() != Width)
 	{
-		auto Offset{_Width - Width};
+		auto Offset{_Width.GetValue() - Width};
 		
-		_Width = Width;
+		_Width = constant(Width);
 		// iterate through the list of sub widgets and correct widget positions and sizes
 		for(auto SubWidget : _SubWidgets)
 		{
