@@ -1,6 +1,6 @@
 /**
- * algebra
- * Copyright (C) 2017-2018  Hagen Möbius
+ * expressions
+ * Copyright (C) 2017-2018  Hagen MÃ¶bius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 0.5.0 of expressions.
+ * This is part of version 0.5.1 of expressions.
  **/
 
 #ifndef EXPRESSIONS_CONSTANT_TERM_H
