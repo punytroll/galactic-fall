@@ -7,6 +7,7 @@ default: all
 include $(root)/libraries/algebra/Makefile.include
 include $(root)/libraries/arx/Makefile.include
 include $(root)/libraries/events/Makefile.include
+include $(root)/libraries/expressions/Makefile.include
 include $(root)/libraries/string_cast/Makefile.include
 include $(root)/libraries/xml_parser/Makefile.include
 include $(root)/libraries/xml_puny_dom/Makefile.include
@@ -61,17 +62,17 @@ check-dependencies: generate_cpp_resource_constants-check-dependencies
 arx_types.h: $(root)/data/tools/declarations.xml $(generate_cpp_resource_constants_dependencies)
 	$(command_generate_cpp_resource_constants) --declarations=$< > $@
 
-binary: $(OBJECT_FILES) $(EVENTS_LIBRARY) $(STRING_CAST_LIBRARY) $(XML_PUNY_DOM_LIBRARY) $(XML_STREAM_LIBRARY) $(LDFLAGS_configuration)
-	$(CXX) $(LDFLAGS) $(OBJECT_FILES) $(ARX_LIBRARY) $(EVENTS_LIBRARY) $(STRING_CAST_LIBRARY) $(XML_PUNY_DOM_LIBRARY) $(XML_STREAM_LIBRARY) -lGL -lX11 -o $@
+binary: $(OBJECT_FILES) $(EVENTS_LIBRARY) $(EXPRESSIONS_LIBRARY) $(STRING_CAST_LIBRARY) $(XML_PUNY_DOM_LIBRARY) $(XML_STREAM_LIBRARY) $(LDFLAGS_configuration)
+	$(CXX) $(LDFLAGS) $(OBJECT_FILES) $(ARX_LIBRARY) $(EVENTS_LIBRARY) $(EXPRESSIONS_LIBRARY) $(STRING_CAST_LIBRARY) $(XML_PUNY_DOM_LIBRARY) $(XML_STREAM_LIBRARY) -lGL -lX11 -o $@
 
 $(OBJECT_FILES): $(CXXFLAGS_configuration)
 
 $(DEPENDENCY_DIRECTORY)/%.dep: % $(GENERATED_FILES)
 	@test -d $(@D) || mkdir $(@D)
-	$(CXX) $(CXXFLAGS) -MM $< $(ALGEBRA_INCLUDE) $(ARX_INCLUDE) $(EVENTS_INCLUDE) $(STRING_CAST_INCLUDE) $(XML_PUNY_DOM_INCLUDE) $(XML_STREAM_INCLUDE) | sed 's/^\(.*\.o\):/$(OBJECT_DIRECTORY)\/$(subst /,\/,$(subst ./,,$(dir $<)))\1 $(subst /,\/,$@):/g' > $@
+	$(CXX) $(CXXFLAGS) -MM $< $(ALGEBRA_INCLUDE) $(ARX_INCLUDE) $(EVENTS_INCLUDE) $(EXPRESSIONS_INCLUDE) $(STRING_CAST_INCLUDE) $(XML_PUNY_DOM_INCLUDE) $(XML_STREAM_INCLUDE) | sed 's/^\(.*\.o\):/$(OBJECT_DIRECTORY)\/$(subst /,\/,$(subst ./,,$(dir $<)))\1 $(subst /,\/,$@):/g' > $@
 
 $(OBJECT_DIRECTORY)/%.o: %.cpp
 	@test -d $(@D) || mkdir $(@D)
-	$(CXX) $(CXXFLAGS) -c $< $(ALGEBRA_INCLUDE) $(ARX_INCLUDE) $(EVENTS_INCLUDE) $(STRING_CAST_INCLUDE) $(XML_PUNY_DOM_INCLUDE) $(XML_STREAM_INCLUDE) -o $@
+	$(CXX) $(CXXFLAGS) -c $< $(ALGEBRA_INCLUDE) $(ARX_INCLUDE) $(EVENTS_INCLUDE) $(EXPRESSIONS_INCLUDE) $(STRING_CAST_INCLUDE) $(XML_PUNY_DOM_INCLUDE) $(XML_STREAM_INCLUDE) -o $@
 
 .PHONY: all all-here all-recursive clean clean-here clean-recursive check-dependencies default
