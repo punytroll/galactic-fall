@@ -44,15 +44,15 @@ UI::Widget::Widget(UI::Widget * SupWidget, const std::string & Name) :
 	_BackgroundColor(nullptr),
 	_DisabledBackgroundColor(nullptr),
 	_Enabled(true),
-	_Height(this),
+	_Height(this, UI::Dimension::Type::Height),
 	_HoverWidget(nullptr),
 	_KeyFocus(nullptr),
-	_Left(this),
+	_Left(this, UI::Dimension::Type::Left),
 	_Name(Name),
 	_SupWidget(nullptr),
-	_Top(this),
+	_Top(this, UI::Dimension::Type::Top),
 	_Visible(true),
-	_Width(this)
+	_Width(this, UI::Dimension::Type::Width)
 {
 	_Height = 0.0_c;
 	_Left = 0.0_c;

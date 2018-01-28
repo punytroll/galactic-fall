@@ -21,8 +21,9 @@
 
 #include "dimension.h"
 
-UI::Dimension::Dimension(Widget * Owner) :
-	_Owner(Owner)
+UI::Dimension::Dimension(UI::Widget * Owner, UI::Dimension::Type Type) :
+	_Owner(Owner),
+	_Type(Type)
 {
 }
 
@@ -37,5 +38,31 @@ void UI::Dimension::operator=(Expressions::Expression && Expression)
 
 void UI::Dimension::InvalidateValue(void)
 {
-	std::cout << "HERE" << std::endl;
+	switch(_Type)
+	{
+	case UI::Dimension::Type::Height:
+		{
+			std::cout << "Height changed: " << GetValue() << std::endl;
+			
+			break;
+		}
+	case UI::Dimension::Type::Left:
+		{
+			std::cout << "Left changed: " << GetValue() << std::endl;
+			
+			break;
+		}
+	case UI::Dimension::Type::Top:
+		{
+			std::cout << "Top changed: " << GetValue() << std::endl;
+			
+			break;
+		}
+	case UI::Dimension::Type::Width:
+		{
+			std::cout << "Width changed: " << GetValue() << std::endl;
+			
+			break;
+		}
+	}
 }
