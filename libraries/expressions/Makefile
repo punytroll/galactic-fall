@@ -50,11 +50,11 @@ $(OBJECT_FILES): $(CXXFLAGS_configuration)
 
 $(DEPENDENCY_DIRECTORY)/%.dep: % $(CXXFLAGS_configuration)
 	@test -d $(@D) || mkdir -p $(@D)
-	$(CXX) $(CXXFLAGS) -Iinclude -MM $< | sed 's/^\(.*\.o\):/$(subst /,\/,$(OBJECT_DIRECTORY))\/$(subst /,\/,$(subst ./,,$(dir $<)))\1 $(subst /,\/,$@):/g' > $@
+	$(CXX) $(CXXFLAGS) -DNDEBUG -Iinclude -MM $< | sed 's/^\(.*\.o\):/$(subst /,\/,$(OBJECT_DIRECTORY))\/$(subst /,\/,$(subst ./,,$(dir $<)))\1 $(subst /,\/,$@):/g' > $@
 
 $(OBJECT_DIRECTORY)/%.o: %.cpp $(CXXFLAGS_configuration)
 	@test -d $(@D) || mkdir -p $(@D)
-	$(CXX) $(CXXFLAGS) -Iinclude -c $< -o $@
+	$(CXX) $(CXXFLAGS) -DNDEBUG -Iinclude -c $< -o $@
 
 libexpressions.a: $(OBJECT_FILES)
 	ar rcs $@ $(OBJECT_FILES)
