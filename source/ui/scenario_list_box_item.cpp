@@ -17,16 +17,20 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include <expressions/operators.h>
+
 #include "../scenario.h"
 #include "label.h"
 #include "scenario_list_box_item.h"
+
+using namespace Expressions::Operators;
 
 UI::ScenarioListBoxItem::ScenarioListBoxItem(Scenario * Scenario) :
 	_Scenario(Scenario)
 {
 	auto CaptionLabel{new UI::Label{this, Scenario->GetName()}};
 	
-	CaptionLabel->SetLeft(5.0f);
+	CaptionLabel->SetLeft(5.0_c);
 	CaptionLabel->SetTop(0.0f);
 	CaptionLabel->SetWidth(GetWidth() - 10.0f);
 	CaptionLabel->SetHeight(GetHeight());

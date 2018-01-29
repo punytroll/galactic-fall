@@ -17,6 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include <expressions/operators.h>
+
 #include <string_cast/string_cast.h>
 
 #include "../globals.h"
@@ -24,6 +26,8 @@
 #include "key_event.h"
 #include "label.h"
 #include "timing_dialog.h"
+
+using namespace Expressions::Operators;
 
 UI::TimingDialog::TimingDialog(UI::Widget * SupWidget) :
 	UI::Window(SupWidget, "Timing Information"),
@@ -73,13 +77,13 @@ float UI::TimingDialog::_AddMeasure(float Top, const std::string & Label, UI::La
 	
 	auto CaptionLabel{new UI::Label{this, Label}};
 	
-	CaptionLabel->SetLeft(10.0f);
+	CaptionLabel->SetLeft(10.0_c);
 	CaptionLabel->SetTop(Top);
 	CaptionLabel->SetWidth(GetWidth() - 100.0f);
 	CaptionLabel->SetHeight(20.0f);
 	CaptionLabel->SetAnchorRight(true);
 	ValueLabel = new UI::Label{this, ""};
-	ValueLabel->SetLeft(GetWidth() - 80.0f);
+	ValueLabel->SetLeft(constant(GetWidth() - 80.0f));
 	ValueLabel->SetTop(Top);
 	ValueLabel->SetWidth(70.0f);
 	ValueLabel->SetHeight(20.0f);

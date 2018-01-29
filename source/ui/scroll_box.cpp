@@ -17,11 +17,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include <expressions/operators.h>
+
 #include "../graphics/color_rgbo.h"
 #include "event.h"
 #include "mouse_button_event.h"
 #include "scroll_bar.h"
 #include "scroll_box.h"
+
+using namespace Expressions::Operators;
 
 UI::ScrollBox::ScrollBox(UI::Widget * SupWidget) :
 	UI::Widget(SupWidget)
@@ -30,7 +34,7 @@ UI::ScrollBox::ScrollBox(UI::Widget * SupWidget) :
 	SetBackgroundColor(Graphics::ColorRGBO(0.15f, 0.15f, 0.15f, 1.0f));
 	_View = new UI::Widget{this};
 	_View->SetName("view");
-	_View->SetLeft(0.0f);
+	_View->SetLeft(0.0_c);
 	_View->SetTop(0.0f);
 	_View->SetWidth(GetWidth() - 20.0f);
 	_View->SetHeight(GetHeight() - 20.0f);
@@ -42,13 +46,13 @@ UI::ScrollBox::ScrollBox(UI::Widget * SupWidget) :
 	_View->ConnectWidthChangedCallback(std::bind(&UI::ScrollBox::_OnContentOrViewSizeChanged, this, std::placeholders::_1));
 	_Content = new UI::Widget{_View};
 	_Content->SetName("content");
-	_Content->SetLeft(0.0f);
+	_Content->SetLeft(0.0_c);
 	_Content->SetTop(0.0f);
 	_Content->ConnectHeightChangedCallback(std::bind(&UI::ScrollBox::_OnContentOrViewSizeChanged, this, std::placeholders::_1));
 	_Content->ConnectWidthChangedCallback(std::bind(&UI::ScrollBox::_OnContentOrViewSizeChanged, this, std::placeholders::_1));
 	_HorizontalScrollBar = new UI::ScrollBar{this, UI::ScrollBar::Alignment::HORIZONTAL};
 	_HorizontalScrollBar->SetName("horizontal_scroll_bar");
-	_HorizontalScrollBar->SetLeft(0.0f);
+	_HorizontalScrollBar->SetLeft(0.0_c);
 	_HorizontalScrollBar->SetTop(GetHeight() - 20.0f);
 	_HorizontalScrollBar->SetWidth(GetWidth() - 20.0f);
 	_HorizontalScrollBar->SetHeight(20.0f);
@@ -63,7 +67,7 @@ UI::ScrollBox::ScrollBox(UI::Widget * SupWidget) :
 	_HorizontalScrollBar->SetStepSize(_HorizontalScrollBar->GetMaximumPosition() / 10.0f);
 	_VerticalScrollBar = new UI::ScrollBar{this, UI::ScrollBar::Alignment::VERTICAL};
 	_HorizontalScrollBar->SetName("Vertical_scroll_bar");
-	_VerticalScrollBar->SetLeft(GetWidth() - 20.0f);
+	_VerticalScrollBar->SetLeft(constant(GetWidth() - 20.0f));
 	_VerticalScrollBar->SetTop(0.0f);
 	_VerticalScrollBar->SetWidth(20.0f);
 	_VerticalScrollBar->SetHeight(GetHeight() - 20.0f);
@@ -97,7 +101,7 @@ void UI::ScrollBox::_OnHorizontalScrollPositionChanged(void)
 {
 	if(_Content->GetWidth() > _View->GetWidth())
 	{
-		_Content->SetLeft(-_HorizontalScrollBar->GetCurrentPosition());
+		_Content->SetLeft(constant(-_HorizontalScrollBar->GetCurrentPosition()));
 	}
 }
 

@@ -17,6 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include <expressions/operators.h>
+
 #include "../character.h"
 #include "../object_aspect_name.h"
 #include "../planet.h"
@@ -26,6 +28,8 @@
 #include "planet_window.h"
 #include "text_button.h"
 #include "trade_center_widget.h"
+
+using namespace Expressions::Operators;
 
 UI::PlanetWindow::PlanetWindow(UI::Widget * SupWidget, Planet * Planet, Character * Character) :
 	UI::Window(SupWidget),
@@ -46,7 +50,7 @@ UI::PlanetWindow::PlanetWindow(UI::Widget * SupWidget, Planet * Planet, Characte
 	
 	auto HomeButton{new UI::TextButton{this, "Home"}};
 	
-	HomeButton->SetLeft(10.0f);
+	HomeButton->SetLeft(10.0_c);
 	HomeButton->SetTop(40.0f);
 	HomeButton->SetWidth(100.0f);
 	HomeButton->SetHeight(20.0f);
@@ -54,7 +58,7 @@ UI::PlanetWindow::PlanetWindow(UI::Widget * SupWidget, Planet * Planet, Characte
 	
 	auto TradeCenterButton{new UI::TextButton{this, "Trade Center"}};
 	
-	TradeCenterButton->SetLeft(10.0f);
+	TradeCenterButton->SetLeft(10.0_c);
 	TradeCenterButton->SetTop(70.0f);
 	TradeCenterButton->SetWidth(100.0f);
 	TradeCenterButton->SetHeight(20.0f);
@@ -62,7 +66,7 @@ UI::PlanetWindow::PlanetWindow(UI::Widget * SupWidget, Planet * Planet, Characte
 	
 	auto HangarButton{new UI::TextButton{this, "Hangar"}};
 	
-	HangarButton->SetLeft(10.0f);
+	HangarButton->SetLeft(10.0_c);
 	HangarButton->SetTop(100.0f);
 	HangarButton->SetWidth(100.0f);
 	HangarButton->SetHeight(20.0f);
@@ -155,7 +159,7 @@ void UI::PlanetWindow::_OpenHangar(void)
 	if(_HangarWidget == nullptr)
 	{
 		_HangarWidget = new UI::HangarWidget{this, _Planet, _Character};
-		_HangarWidget->SetLeft(120.0f);
+		_HangarWidget->SetLeft(120.0_c);
 		_HangarWidget->SetTop(40.0f);
 		_HangarWidget->SetWidth(GetWidth() - 130.0f);
 		_HangarWidget->SetHeight(GetHeight() - 50.0f);
@@ -185,7 +189,7 @@ void UI::PlanetWindow::_OpenHomeScreen(void)
 	{
 		assert(_Planet != nullptr);
 		_DescriptionLabel = new UI::Label{this, _Planet->GetDescription()};
-		_DescriptionLabel->SetLeft(120.0f);
+		_DescriptionLabel->SetLeft(120.0_c);
 		_DescriptionLabel->SetTop(40.0f);
 		_DescriptionLabel->SetWidth(GetWidth() - 130.0f);
 		_DescriptionLabel->SetHeight(GetHeight() - 50.0f);
@@ -216,7 +220,7 @@ void UI::PlanetWindow::_OpenTradeCenter(void)
 	if(_TradeCenterWidget == nullptr)
 	{
 		_TradeCenterWidget = new UI::TradeCenterWidget{this, _Planet, _Character};
-		_TradeCenterWidget->SetLeft(120.0f);
+		_TradeCenterWidget->SetLeft(120.0_c);
 		_TradeCenterWidget->SetTop(40.0f);
 		_TradeCenterWidget->SetWidth(GetWidth() - 130.0f);
 		_TradeCenterWidget->SetHeight(GetHeight() - 50.0f);

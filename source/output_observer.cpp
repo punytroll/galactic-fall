@@ -19,6 +19,8 @@
 
 #include <iostream>
 
+#include <expressions/operators.h>
+
 #include "globals.h"
 #include "message.h"
 #include "object.h"
@@ -26,6 +28,8 @@
 #include "planet.h"
 #include "ui/planet_window.h"
 #include "ui/user_interface.h"
+
+using namespace Expressions::Operators;
 
 OutputObserver::OutputObserver(void) :
 	_PlanetWindow(nullptr)
@@ -39,7 +43,7 @@ void OutputObserver::HandleMessage(Message * Message)
 		assert(_PlanetWindow == nullptr);
 		assert(Message->GetSender()->GetTypeIdentifier() == "planet");
 		_PlanetWindow = new UI::PlanetWindow(g_UserInterface->GetRootWidget(), dynamic_cast< Planet * >(Message->GetSender().Get()), GetObservedCharacter());
-		_PlanetWindow->SetLeft(50.0f);
+		_PlanetWindow->SetLeft(50.0_c);
 		_PlanetWindow->SetTop(50.0f);
 		_PlanetWindow->SetWidth(700.0f);
 		_PlanetWindow->SetHeight(400.0f);

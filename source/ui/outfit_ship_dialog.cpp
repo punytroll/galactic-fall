@@ -17,6 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include <expressions/operators.h>
+
 #include "../class_manager.h"
 #include "../globals.h"
 #include "../graphics/color_rgbo.h"
@@ -38,6 +40,8 @@
 #include "outfit_ship_dialog.h"
 #include "scroll_box.h"
 #include "text_button.h"
+
+using namespace Expressions::Operators;
 
 namespace UI
 {
@@ -90,7 +94,7 @@ UI::AccessoryListItem::AccessoryListItem(UI::Widget * SupWidget, Object * Access
 	
 	auto NameLabel{new UI::Label{this, Accessory->GetAspectName()->GetName()}};
 	
-	NameLabel->SetLeft(5.0f);
+	NameLabel->SetLeft(5.0_c);
 	NameLabel->SetTop(5.0f);
 	NameLabel->SetWidth(GetWidth() - 10.0f);
 	NameLabel->SetHeight(20.0f);
@@ -101,7 +105,7 @@ UI::AccessoryListItem::AccessoryListItem(UI::Widget * SupWidget, Object * Access
 	
 	auto SlotTypeLabel{new UI::Label{this, g_SlotClassManager->Get(Accessory->GetAspectAccessory()->GetSlotClassIdentifier())->GetName()}};
 	
-	SlotTypeLabel->SetLeft(25.0f);
+	SlotTypeLabel->SetLeft(25.0_c);
 	SlotTypeLabel->SetTop(GetHeight() - 25.0f);
 	SlotTypeLabel->SetWidth(GetWidth() - 30.0f);
 	SlotTypeLabel->SetHeight(20.0f);
@@ -147,7 +151,7 @@ UI::SlotListItem::SlotListItem(UI::Widget * SupWidget, Slot * Slot) :
 	
 	auto IdentifierLabel{new UI::Label{this, _Slot->GetName()}};
 	
-	IdentifierLabel->SetLeft(5.0f);
+	IdentifierLabel->SetLeft(5.0_c);
 	IdentifierLabel->SetTop(5.0f);
 	IdentifierLabel->SetWidth(GetWidth() - 10.0f);
 	IdentifierLabel->SetHeight(20.0f);
@@ -156,7 +160,7 @@ UI::SlotListItem::SlotListItem(UI::Widget * SupWidget, Slot * Slot) :
 	IdentifierLabel->SetAnchorRight(true);
 	IdentifierLabel->SetAnchorTop(true);
 	_TypeOrWeaponLabel = new UI::Label{this};
-	_TypeOrWeaponLabel->SetLeft(25.0f);
+	_TypeOrWeaponLabel->SetLeft(25.0_c);
 	_TypeOrWeaponLabel->SetTop(GetHeight() - 25.0f);
 	_TypeOrWeaponLabel->SetWidth(GetWidth() - 30.0f);
 	_TypeOrWeaponLabel->SetHeight(20.0f);
@@ -232,14 +236,14 @@ UI::OutfitShipDialog::OutfitShipDialog(UI::Widget * SupWidget, Ship * Ship) :
 	ConnectWidthChangedCallback(std::bind(&UI::OutfitShipDialog::_OnWidthChanged, this, std::placeholders::_1));
 	ConnectKeyCallback(std::bind(&UI::OutfitShipDialog::_OnKey, this, std::placeholders::_1));
 	_LeftPane = new UI::Widget{this};
-	_LeftPane->SetLeft(10.0f);
+	_LeftPane->SetLeft(10.0_c);
 	_LeftPane->SetTop(40.0f);
 	_LeftPane->SetHeight(GetHeight() - 50.0f);
 	_LeftPane->SetAnchorBottom(true);
 	
 	auto SlotListLabel{new UI::Label{_LeftPane, "Slots"}};
 	
-	SlotListLabel->SetLeft(0.0f);
+	SlotListLabel->SetLeft(0.0_c);
 	SlotListLabel->SetTop(0.0f);
 	SlotListLabel->SetWidth(_LeftPane->GetWidth());
 	SlotListLabel->SetHeight(20.0f);
@@ -247,7 +251,7 @@ UI::OutfitShipDialog::OutfitShipDialog(UI::Widget * SupWidget, Ship * Ship) :
 	SlotListLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	SlotListLabel->SetAnchorRight(true);
 	_SlotScrollBox = new UI::ScrollBox{_LeftPane};
-	_SlotScrollBox->SetLeft(0.0f);
+	_SlotScrollBox->SetLeft(0.0_c);
 	_SlotScrollBox->SetTop(30.0f);
 	_SlotScrollBox->SetWidth(_LeftPane->GetWidth());
 	_SlotScrollBox->SetHeight(_LeftPane->GetHeight() - 30.0f);
@@ -263,7 +267,7 @@ UI::OutfitShipDialog::OutfitShipDialog(UI::Widget * SupWidget, Ship * Ship) :
 	{
 		auto NewSlotListItem{new SlotListItem{_SlotScrollBox->GetContent(), SlotPair.second}};
 		
-		NewSlotListItem->SetLeft(5.0f);
+		NewSlotListItem->SetLeft(5.0_c);
 		NewSlotListItem->SetTop(Top);
 		NewSlotListItem->SetWidth(_SlotScrollBox->GetContent()->GetWidth() - 10.0f);
 		NewSlotListItem->SetAnchorRight(true);
@@ -280,7 +284,7 @@ UI::OutfitShipDialog::OutfitShipDialog(UI::Widget * SupWidget, Ship * Ship) :
 	
 	auto MountButton{new UI::TextButton{_CenterPane, "Mount"}};
 	
-	MountButton->SetLeft(0.0f);
+	MountButton->SetLeft(0.0_c);
 	MountButton->SetTop(40.0f);
 	MountButton->SetWidth(_CenterPane->GetWidth());
 	MountButton->SetHeight(20.0f);
@@ -290,7 +294,7 @@ UI::OutfitShipDialog::OutfitShipDialog(UI::Widget * SupWidget, Ship * Ship) :
 	
 	auto UnmountButton{new UI::TextButton{_CenterPane, "Unmount"}};
 	
-	UnmountButton->SetLeft(0.0f);
+	UnmountButton->SetLeft(0.0_c);
 	UnmountButton->SetTop(70.0f);
 	UnmountButton->SetWidth(_CenterPane->GetWidth());
 	UnmountButton->SetHeight(20.0f);
@@ -300,7 +304,7 @@ UI::OutfitShipDialog::OutfitShipDialog(UI::Widget * SupWidget, Ship * Ship) :
 	
 	auto OKButton{new UI::TextButton{_CenterPane, "OK"}};
 	
-	OKButton->SetLeft(0.0f);
+	OKButton->SetLeft(0.0_c);
 	OKButton->SetTop(_CenterPane->GetHeight() - 30.0f);
 	OKButton->SetWidth(_CenterPane->GetWidth());
 	OKButton->SetHeight(20.0f);
@@ -316,7 +320,7 @@ UI::OutfitShipDialog::OutfitShipDialog(UI::Widget * SupWidget, Ship * Ship) :
 	
 	auto AccessoryListLabel{new UI::Label{_RightPane, "Accessories"}};
 	
-	AccessoryListLabel->SetLeft(0.0f);
+	AccessoryListLabel->SetLeft(0.0_c);
 	AccessoryListLabel->SetTop(0.0f);
 	AccessoryListLabel->SetWidth(_RightPane->GetWidth());
 	AccessoryListLabel->SetHeight(20.0f);
@@ -324,7 +328,7 @@ UI::OutfitShipDialog::OutfitShipDialog(UI::Widget * SupWidget, Ship * Ship) :
 	AccessoryListLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	AccessoryListLabel->SetAnchorRight(true);
 	_AccessoryScrollBox = new UI::ScrollBox{_RightPane};
-	_AccessoryScrollBox->SetLeft(0.0f);
+	_AccessoryScrollBox->SetLeft(0.0_c);
 	_AccessoryScrollBox->SetTop(30.0f);
 	_AccessoryScrollBox->SetWidth(_RightPane->GetWidth());
 	_AccessoryScrollBox->SetHeight(_RightPane->GetHeight() - 30.0f);
@@ -364,7 +368,7 @@ void UI::OutfitShipDialog::_RebuildAccessoryList(void)
 		{
 			auto NewAccessoryListItem{new UI::AccessoryListItem{_AccessoryScrollBox->GetContent(), Content}};
 			
-			NewAccessoryListItem->SetLeft(5.0f);
+			NewAccessoryListItem->SetLeft(5.0_c);
 			NewAccessoryListItem->SetTop(Top);
 			NewAccessoryListItem->SetWidth(_AccessoryScrollBox->GetContent()->GetWidth() - 10.0f);
 			NewAccessoryListItem->SetHeight(50.0f);
@@ -528,8 +532,8 @@ void UI::OutfitShipDialog::_OnWidthChanged(UI::Event & WidthChangedEvent)
 		AvailableWidth -= _CenterPane->GetWidth();
 		AvailableWidth /= 2.0f;
 		_LeftPane->SetWidth(AvailableWidth);
-		_CenterPane->SetLeft(_LeftPane->GetRight() + 10.0f);
-		_RightPane->SetLeft(_CenterPane->GetRight() + 10.0f);
+		_CenterPane->SetLeft(constant(_LeftPane->GetRight() + 10.0f));
+		_RightPane->SetLeft(constant(_CenterPane->GetRight() + 10.0f));
 		_RightPane->SetWidth(AvailableWidth);
 	}
 }

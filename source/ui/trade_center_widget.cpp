@@ -17,6 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include <expressions/operators.h>
+
 #include <string_cast/string_cast.h>
 
 #include "../asset_class.h"
@@ -59,6 +61,8 @@
 #include "trade_center_widget.h"
 #include "view_display.h"
 
+using namespace Expressions::Operators;
+
 namespace UI
 {
 	class TradeCenterAssetClassListWidget : public UI::ListBoxItem
@@ -75,7 +79,7 @@ namespace UI
 			
 			auto NameLabel{new UI::Label{this, PlanetAssetClass->GetAssetClass()->GetName()}};
 			
-			NameLabel->SetLeft(10.0f);
+			NameLabel->SetLeft(10.0_c);
 			NameLabel->SetTop(0.0f);
 			NameLabel->SetWidth(GetWidth() - 170.0f);
 			NameLabel->SetHeight(GetHeight());
@@ -85,7 +89,7 @@ namespace UI
 			
 			auto HangarAmountLabel{new UI::Label{this, ""}};
 			
-			HangarAmountLabel->SetLeft(GetWidth() - 150.0f);
+			HangarAmountLabel->SetLeft(constant(GetWidth() - 150.0f));
 			HangarAmountLabel->SetTop(0.0f);
 			HangarAmountLabel->SetWidth(40.0f);
 			HangarAmountLabel->SetHeight(GetHeight());
@@ -98,7 +102,7 @@ namespace UI
 			
 			auto SizeRequirementLabel{new UI::Label{this, to_string_cast(0.001 * g_ObjectFactory->GetSpaceRequirement(PlanetAssetClass->GetAssetClass()->GetObjectTypeIdentifier(), PlanetAssetClass->GetAssetClass()->GetObjectClassIdentifier()), 3)}};
 			
-			SizeRequirementLabel->SetLeft(GetWidth() - 100.0f);
+			SizeRequirementLabel->SetLeft(constant(GetWidth() - 100.0f));
 			SizeRequirementLabel->SetTop(0.0f);
 			SizeRequirementLabel->SetWidth(40.0f);
 			SizeRequirementLabel->SetHeight(GetHeight());
@@ -110,7 +114,7 @@ namespace UI
 			
 			auto PriceLabel{new UI::Label{this, to_string_cast(PlanetAssetClass->GetPrice())}};
 			
-			PriceLabel->SetLeft(GetWidth() - 50.0f);
+			PriceLabel->SetLeft(constant(GetWidth() - 50.0f));
 			PriceLabel->SetTop(0.0f);
 			PriceLabel->SetWidth(40.0f);
 			PriceLabel->SetHeight(GetHeight());
@@ -183,7 +187,7 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet
 	
 	auto BuyButton{new UI::TextButton{this, "Buy"}};
 	
-	BuyButton->SetLeft(0.0f);
+	BuyButton->SetLeft(0.0_c);
 	BuyButton->SetTop(GetHeight() - 20.0f);
 	BuyButton->SetWidth(100.0f);
 	BuyButton->SetHeight(20.0f);
@@ -194,7 +198,7 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet
 	
 	auto SellButton{new UI::TextButton{this, "Sell"}};
 	
-	SellButton->SetLeft(110.0f);
+	SellButton->SetLeft(110.0_c);
 	SellButton->SetTop(GetHeight() - 20.0f);
 	SellButton->SetWidth(100.0f);
 	SellButton->SetHeight(20.0f);
@@ -205,7 +209,7 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet
 	
 	auto HeaderRow{new UI::Widget{this}};
 	
-	HeaderRow->SetLeft(0.0f);
+	HeaderRow->SetLeft(0.0_c);
 	HeaderRow->SetTop(0.0f);
 	HeaderRow->SetWidth(GetWidth() - 180.0f);
 	HeaderRow->SetHeight(20.0f);
@@ -214,7 +218,7 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet
 	
 	auto NameColumnHeader{new UI::Label{HeaderRow, "Name"}};
 	
-	NameColumnHeader->SetLeft(15.0f);
+	NameColumnHeader->SetLeft(15.0_c);
 	NameColumnHeader->SetTop(0.0f);
 	NameColumnHeader->SetWidth(HeaderRow->GetWidth() - 180.0f);
 	NameColumnHeader->SetHeight(HeaderRow->GetHeight());
@@ -225,7 +229,7 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet
 	
 	auto CharacterAmountColumnHeader{new UI::Label{HeaderRow, "Amount"}};
 	
-	CharacterAmountColumnHeader->SetLeft(HeaderRow->GetWidth() - 155.0f);
+	CharacterAmountColumnHeader->SetLeft(constant(HeaderRow->GetWidth() - 155.0f));
 	CharacterAmountColumnHeader->SetTop(0.0f);
 	CharacterAmountColumnHeader->SetWidth(40.0f);
 	CharacterAmountColumnHeader->SetHeight(HeaderRow->GetHeight());
@@ -237,7 +241,7 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet
 	
 	auto SizeColumnHeader{new UI::Label{HeaderRow, "Size"}};
 	
-	SizeColumnHeader->SetLeft(HeaderRow->GetWidth() - 105.0f);
+	SizeColumnHeader->SetLeft(constant(HeaderRow->GetWidth() - 105.0f));
 	SizeColumnHeader->SetTop(0.0f);
 	SizeColumnHeader->SetWidth(40.0f);
 	SizeColumnHeader->SetHeight(HeaderRow->GetHeight());
@@ -249,7 +253,7 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet
 	
 	auto PriceColumnHeader{new UI::Label{HeaderRow, "Price"}};
 	
-	PriceColumnHeader->SetLeft(HeaderRow->GetWidth() - 55.0f);
+	PriceColumnHeader->SetLeft(constant(HeaderRow->GetWidth() - 55.0f));
 	PriceColumnHeader->SetTop(0.0f);
 	PriceColumnHeader->SetWidth(40.0f);
 	PriceColumnHeader->SetHeight(HeaderRow->GetHeight());
@@ -258,7 +262,7 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet
 	PriceColumnHeader->SetAnchorLeft(false);
 	PriceColumnHeader->SetAnchorRight(true);
 	_AssetClassScrollBox = new UI::ScrollBox{this};
-	_AssetClassScrollBox->SetLeft(0.0f);
+	_AssetClassScrollBox->SetLeft(0.0_c);
 	_AssetClassScrollBox->SetTop(20.0f);
 	_AssetClassScrollBox->SetWidth(GetWidth() - 160.0f);
 	_AssetClassScrollBox->SetHeight(GetHeight() - 50.0f);
@@ -278,7 +282,7 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet
 	{
 		auto NewTradeCenterAssetClassListWidget{new UI::TradeCenterAssetClassListWidget{_AssetClassScrollBox->GetContent(), PlanetAssetClass, Hangar}};
 		
-		NewTradeCenterAssetClassListWidget->SetLeft(5.0f);
+		NewTradeCenterAssetClassListWidget->SetLeft(5.0_c);
 		NewTradeCenterAssetClassListWidget->SetTop(Top);
 		NewTradeCenterAssetClassListWidget->SetWidth(_AssetClassScrollBox->GetContent()->GetWidth());
 		NewTradeCenterAssetClassListWidget->SetAnchorRight(true);
@@ -287,7 +291,7 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet
 	}
 	_AssetClassScrollBox->GetContent()->SetHeight(Top);
 	_AssetClassViewDisplay = new UI::ViewDisplay{this};
-	_AssetClassViewDisplay->SetLeft(GetWidth() - 150.0f);
+	_AssetClassViewDisplay->SetLeft(constant(GetWidth() - 150.0f));
 	_AssetClassViewDisplay->SetTop(0.0f);
 	_AssetClassViewDisplay->SetWidth(150.0f);
 	_AssetClassViewDisplay->SetHeight(150.0f);
@@ -297,7 +301,7 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet
 	
 	auto AssetClassPriceCaptionLabel{new UI::Label{this, "Price:"}};
 	
-	AssetClassPriceCaptionLabel->SetLeft(GetWidth() - 150.0f);
+	AssetClassPriceCaptionLabel->SetLeft(constant(GetWidth() - 150.0f));
 	AssetClassPriceCaptionLabel->SetTop(160.0f);
 	AssetClassPriceCaptionLabel->SetWidth(150.0f);
 	AssetClassPriceCaptionLabel->SetHeight(20.0f);
@@ -308,7 +312,7 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet
 	
 	auto AssetClassPriceLabel{new UI::Label{this, ""}};
 	
-	AssetClassPriceLabel->SetLeft(GetWidth() - 150.0f);
+	AssetClassPriceLabel->SetLeft(constant(GetWidth() - 150.0f));
 	AssetClassPriceLabel->SetTop(160.0f);
 	AssetClassPriceLabel->SetWidth(150.0f);
 	AssetClassPriceLabel->SetHeight(20.0f);
@@ -320,7 +324,7 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet
 	
 	auto AssetClassSizeCaptionLabel{new UI::Label{this, "Size:"}};
 	
-	AssetClassSizeCaptionLabel->SetLeft(GetWidth() - 150.0f);
+	AssetClassSizeCaptionLabel->SetLeft(constant(GetWidth() - 150.0f));
 	AssetClassSizeCaptionLabel->SetTop(180.0f);
 	AssetClassSizeCaptionLabel->SetWidth(150.0f);
 	AssetClassSizeCaptionLabel->SetHeight(20.0f);
@@ -331,7 +335,7 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet
 	
 	auto AssetClassSizeLabel{new UI::Label{this, ""}};
 	
-	AssetClassSizeLabel->SetLeft(GetWidth() - 150.0f);
+	AssetClassSizeLabel->SetLeft(constant(GetWidth() - 150.0f));
 	AssetClassSizeLabel->SetTop(180.0f);
 	AssetClassSizeLabel->SetWidth(150.0f);
 	AssetClassSizeLabel->SetHeight(20.0f);
@@ -343,7 +347,7 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet
 	
 	auto AssetClassDescriptionCaptionLabel{new UI::Label{this, "Description:"}};
 	
-	AssetClassDescriptionCaptionLabel->SetLeft(GetWidth() - 150.0f);
+	AssetClassDescriptionCaptionLabel->SetLeft(constant(GetWidth() - 150.0f));
 	AssetClassDescriptionCaptionLabel->SetTop(200.0f);
 	AssetClassDescriptionCaptionLabel->SetWidth(150.0f);
 	AssetClassDescriptionCaptionLabel->SetHeight(20.0f);
@@ -354,7 +358,7 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet
 	
 	auto AssetClassDescriptionLabel{new UI::Label{this, ""}};
 	
-	AssetClassDescriptionLabel->SetLeft(GetWidth() - 150.0f);
+	AssetClassDescriptionLabel->SetLeft(constant(GetWidth() - 150.0f));
 	AssetClassDescriptionLabel->SetTop(220.0f);
 	AssetClassDescriptionLabel->SetWidth(150.0f);
 	AssetClassDescriptionLabel->SetHeight(30.0f);
