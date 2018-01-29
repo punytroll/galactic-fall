@@ -45,7 +45,7 @@ UI::LoadScenarioDialog::LoadScenarioDialog(UI::Widget * SupWidget, ScenarioManag
 	auto OKButton{new UI::TextButton{this, "OK"}};
 	
 	OKButton->SetLeft(constant(GetWidth() - 110.0f));
-	OKButton->SetTop(GetHeight() - 30.0f);
+	OKButton->SetTop(constant(GetHeight() - 30.0f));
 	OKButton->SetWidth(100.0f);
 	OKButton->SetHeight(20.0f);
 	OKButton->SetAnchorBottom(true);
@@ -57,7 +57,7 @@ UI::LoadScenarioDialog::LoadScenarioDialog(UI::Widget * SupWidget, ScenarioManag
 	auto CancelButton{new UI::TextButton{this, "Cancel"}};
 	
 	CancelButton->SetLeft(constant(GetWidth() - 220.0f));
-	CancelButton->SetTop(GetHeight() - 30.0f);
+	CancelButton->SetTop(constant(GetHeight() - 30.0f));
 	CancelButton->SetWidth(100.0f);
 	CancelButton->SetHeight(20.0f);
 	CancelButton->SetAnchorBottom(true);
@@ -67,7 +67,7 @@ UI::LoadScenarioDialog::LoadScenarioDialog(UI::Widget * SupWidget, ScenarioManag
 	CancelButton->ConnectClickedCallback(std::bind(&UI::LoadScenarioDialog::_Close, this, UI::Dialog::ClosingReason::CANCEL_BUTTON));
 	_MessageLabel = new UI::Label{this};
 	_MessageLabel->SetLeft(10.0_c);
-	_MessageLabel->SetTop(40.0f);
+	_MessageLabel->SetTop(40.0_c);
 	_MessageLabel->SetWidth(GetWidth() - 20.0f);
 	_MessageLabel->SetHeight(30.0f);
 	_MessageLabel->SetTextColor(Graphics::ColorRGBO(1.0f, 0.3, 0.3f, 1.0f));
@@ -80,7 +80,7 @@ UI::LoadScenarioDialog::LoadScenarioDialog(UI::Widget * SupWidget, ScenarioManag
 	_MessageLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	_ScenarioListBox = new UI::ListBox{this};
 	_ScenarioListBox->SetLeft(10.0_c);
-	_ScenarioListBox->SetTop(110.0f);
+	_ScenarioListBox->SetTop(110.0_c);
 	_ScenarioListBox->SetWidth(GetWidth() - 20.0f);
 	_ScenarioListBox->SetHeight(GetHeight() - 170.0f);
 	_ScenarioListBox->SetAnchorBottom(true);

@@ -57,7 +57,7 @@ namespace UI
 			auto NameLabel{new UI::Label{this, _Object->GetAspectName()->GetName()}};
 			
 			NameLabel->SetLeft(5.0_c);
-			NameLabel->SetTop(0.0f);
+			NameLabel->SetTop(0.0_c);
 			NameLabel->SetWidth(GetWidth() - 10.0f);
 			NameLabel->SetHeight(GetHeight());
 			NameLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
@@ -116,14 +116,14 @@ UI::LoadShipWindow::LoadShipWindow(UI::Widget * SupWidget, Hangar * Hangar, Ship
 	auto LeftPane{new UI::Widget{this}};
 	
 	LeftPane->SetLeft(10.0_c);
-	LeftPane->SetTop(40.0f);
+	LeftPane->SetTop(40.0_c);
 	LeftPane->SetHeight(GetHeight() - 50.0f);
 	LeftPane->SetAnchorBottom(true);
 	
 	auto HangarLabel{new UI::Label{LeftPane, "Hangar"}};
 	
 	HangarLabel->SetLeft(0.0_c);
-	HangarLabel->SetTop(0.0f);
+	HangarLabel->SetTop(0.0_c);
 	HangarLabel->SetWidth(LeftPane->GetWidth());
 	HangarLabel->SetHeight(20.0f);
 	HangarLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Center);
@@ -131,7 +131,7 @@ UI::LoadShipWindow::LoadShipWindow(UI::Widget * SupWidget, Hangar * Hangar, Ship
 	HangarLabel->SetAnchorRight(true);
 	_HangarListBox = new UI::ListBox{LeftPane};
 	_HangarListBox->SetLeft(0.0_c);
-	_HangarListBox->SetTop(30.0f);
+	_HangarListBox->SetTop(30.0_c);
 	_HangarListBox->SetWidth(LeftPane->GetWidth());
 	_HangarListBox->SetHeight(LeftPane->GetHeight() - 30.0f);
 	_HangarListBox->SetHorizontalScrollBarVisible(false);
@@ -150,7 +150,7 @@ UI::LoadShipWindow::LoadShipWindow(UI::Widget * SupWidget, Hangar * Hangar, Ship
 	
 	auto CenterPane{new UI::Widget{this}};
 	
-	CenterPane->SetTop(70.0f);
+	CenterPane->SetTop(70.0_c);
 	CenterPane->SetWidth(100.0f);
 	CenterPane->SetHeight(GetHeight() - 80.0f);
 	CenterPane->SetAnchorBottom(true);
@@ -158,7 +158,7 @@ UI::LoadShipWindow::LoadShipWindow(UI::Widget * SupWidget, Hangar * Hangar, Ship
 	auto MoveToHangarButton{new UI::TextButton{CenterPane, "<<"}};
 	
 	MoveToHangarButton->SetLeft(0.0_c);
-	MoveToHangarButton->SetTop(50.0f);
+	MoveToHangarButton->SetTop(50.0_c);
 	MoveToHangarButton->SetWidth(CenterPane->GetWidth());
 	MoveToHangarButton->SetHeight(20.0f);
 	MoveToHangarButton->SetAnchorRight(true);
@@ -168,7 +168,7 @@ UI::LoadShipWindow::LoadShipWindow(UI::Widget * SupWidget, Hangar * Hangar, Ship
 	auto MoveToShipButton(new UI::TextButton(CenterPane, ">>"));
 	
 	MoveToShipButton->SetLeft(0.0_c);
-	MoveToShipButton->SetTop(80.0f);
+	MoveToShipButton->SetTop(80.0_c);
 	MoveToShipButton->SetWidth(CenterPane->GetWidth());
 	MoveToShipButton->SetHeight(20.0f);
 	MoveToShipButton->SetAnchorRight(true);
@@ -178,7 +178,7 @@ UI::LoadShipWindow::LoadShipWindow(UI::Widget * SupWidget, Hangar * Hangar, Ship
 	auto OKButton{new UI::TextButton{CenterPane, "OK"}};
 	
 	OKButton->SetLeft(0.0_c);
-	OKButton->SetTop(CenterPane->GetHeight() - 30.0f);
+	OKButton->SetTop(constant(CenterPane->GetHeight() - 30.0f));
 	OKButton->SetWidth(CenterPane->GetWidth());
 	OKButton->SetHeight(20.0f);
 	OKButton->SetAnchorBottom(true);
@@ -188,12 +188,12 @@ UI::LoadShipWindow::LoadShipWindow(UI::Widget * SupWidget, Hangar * Hangar, Ship
 	
 	auto RightPane{new UI::Widget{this}};
 	
-	RightPane->SetTop(40.0f);
+	RightPane->SetTop(40.0_c);
 	RightPane->SetHeight(GetHeight() - 50.0f);
 	RightPane->SetAnchorBottom(true);
 	_ShipListBox = new UI::ListBox{RightPane};
 	_ShipListBox->SetLeft(0.0_c);
-	_ShipListBox->SetTop(30.0f);
+	_ShipListBox->SetTop(30.0_c);
 	_ShipListBox->SetWidth(RightPane->GetWidth());
 	_ShipListBox->SetHeight(RightPane->GetHeight() - 30.0f);
 	_ShipListBox->SetHorizontalScrollBarVisible(false);
@@ -211,7 +211,7 @@ UI::LoadShipWindow::LoadShipWindow(UI::Widget * SupWidget, Hangar * Hangar, Ship
 	auto ShipLabel{new UI::Label{RightPane, "Ship"}};
 	
 	ShipLabel->SetLeft(0.0_c);
-	ShipLabel->SetTop(0.0f);
+	ShipLabel->SetTop(0.0_c);
 	ShipLabel->SetWidth(RightPane->GetWidth());
 	ShipLabel->SetHeight(20.0f);
 	ShipLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Center);

@@ -93,7 +93,7 @@ namespace UI
 		void SetEnabled(bool Enabled);
 		void SetHeight(float Height);
 		void SetLeft(Expressions::Expression && Left);
-		void SetTop(float Top);
+		void SetTop(Expressions::Expression && Top);
 		void SetVisible(bool Visible);
 		void SetWidth(float Width);
 		// connect events

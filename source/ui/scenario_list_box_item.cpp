@@ -31,7 +31,7 @@ UI::ScenarioListBoxItem::ScenarioListBoxItem(Scenario * Scenario) :
 	auto CaptionLabel{new UI::Label{this, Scenario->GetName()}};
 	
 	CaptionLabel->SetLeft(5.0_c);
-	CaptionLabel->SetTop(0.0f);
+	CaptionLabel->SetTop(0.0_c);
 	CaptionLabel->SetWidth(GetWidth() - 10.0f);
 	CaptionLabel->SetHeight(GetHeight());
 	CaptionLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
