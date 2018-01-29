@@ -81,7 +81,7 @@ namespace UI
 			
 			NameLabel->SetLeft(10.0_c);
 			NameLabel->SetTop(0.0_c);
-			NameLabel->SetWidth(GetWidth() - 170.0f);
+			NameLabel->SetWidth(constant(GetWidth() - 170.0f));
 			NameLabel->SetHeight(GetHeight());
 			NameLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 			NameLabel->SetAnchorBottom(true);
@@ -91,7 +91,7 @@ namespace UI
 			
 			HangarAmountLabel->SetLeft(constant(GetWidth() - 150.0f));
 			HangarAmountLabel->SetTop(0.0_c);
-			HangarAmountLabel->SetWidth(40.0f);
+			HangarAmountLabel->SetWidth(40.0_c);
 			HangarAmountLabel->SetHeight(GetHeight());
 			HangarAmountLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Right);
 			HangarAmountLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
@@ -104,7 +104,7 @@ namespace UI
 			
 			SizeRequirementLabel->SetLeft(constant(GetWidth() - 100.0f));
 			SizeRequirementLabel->SetTop(0.0_c);
-			SizeRequirementLabel->SetWidth(40.0f);
+			SizeRequirementLabel->SetWidth(40.0_c);
 			SizeRequirementLabel->SetHeight(GetHeight());
 			SizeRequirementLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Right);
 			SizeRequirementLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
@@ -116,7 +116,7 @@ namespace UI
 			
 			PriceLabel->SetLeft(constant(GetWidth() - 50.0f));
 			PriceLabel->SetTop(0.0_c);
-			PriceLabel->SetWidth(40.0f);
+			PriceLabel->SetWidth(40.0_c);
 			PriceLabel->SetHeight(GetHeight());
 			PriceLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Right);
 			PriceLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
@@ -189,7 +189,7 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet
 	
 	BuyButton->SetLeft(0.0_c);
 	BuyButton->SetTop(constant(GetHeight() - 20.0f));
-	BuyButton->SetWidth(100.0f);
+	BuyButton->SetWidth(100.0_c);
 	BuyButton->SetHeight(20.0f);
 	BuyButton->SetAnchorBottom(true);
 	BuyButton->SetAnchorTop(false);
@@ -200,7 +200,7 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet
 	
 	SellButton->SetLeft(110.0_c);
 	SellButton->SetTop(constant(GetHeight() - 20.0f));
-	SellButton->SetWidth(100.0f);
+	SellButton->SetWidth(100.0_c);
 	SellButton->SetHeight(20.0f);
 	SellButton->SetAnchorBottom(true);
 	SellButton->SetAnchorTop(false);
@@ -211,7 +211,7 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet
 	
 	HeaderRow->SetLeft(0.0_c);
 	HeaderRow->SetTop(0.0_c);
-	HeaderRow->SetWidth(GetWidth() - 180.0f);
+	HeaderRow->SetWidth(constant(GetWidth() - 180.0f));
 	HeaderRow->SetHeight(20.0f);
 	HeaderRow->SetBackgroundColor(Graphics::ColorRGBO(0.3f, 0.3f, 0.3f, 1.0f));
 	HeaderRow->SetAnchorRight(true);
@@ -220,7 +220,7 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet
 	
 	NameColumnHeader->SetLeft(15.0_c);
 	NameColumnHeader->SetTop(0.0_c);
-	NameColumnHeader->SetWidth(HeaderRow->GetWidth() - 180.0f);
+	NameColumnHeader->SetWidth(constant(HeaderRow->GetWidth() - 180.0f));
 	NameColumnHeader->SetHeight(HeaderRow->GetHeight());
 	NameColumnHeader->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Left);
 	NameColumnHeader->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
@@ -231,7 +231,7 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet
 	
 	CharacterAmountColumnHeader->SetLeft(constant(HeaderRow->GetWidth() - 155.0f));
 	CharacterAmountColumnHeader->SetTop(0.0_c);
-	CharacterAmountColumnHeader->SetWidth(40.0f);
+	CharacterAmountColumnHeader->SetWidth(40.0_c);
 	CharacterAmountColumnHeader->SetHeight(HeaderRow->GetHeight());
 	CharacterAmountColumnHeader->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Right);
 	CharacterAmountColumnHeader->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
@@ -243,7 +243,7 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet
 	
 	SizeColumnHeader->SetLeft(constant(HeaderRow->GetWidth() - 105.0f));
 	SizeColumnHeader->SetTop(0.0_c);
-	SizeColumnHeader->SetWidth(40.0f);
+	SizeColumnHeader->SetWidth(40.0_c);
 	SizeColumnHeader->SetHeight(HeaderRow->GetHeight());
 	SizeColumnHeader->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Right);
 	SizeColumnHeader->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
@@ -255,7 +255,7 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet
 	
 	PriceColumnHeader->SetLeft(constant(HeaderRow->GetWidth() - 55.0f));
 	PriceColumnHeader->SetTop(0.0_c);
-	PriceColumnHeader->SetWidth(40.0f);
+	PriceColumnHeader->SetWidth(40.0_c);
 	PriceColumnHeader->SetHeight(HeaderRow->GetHeight());
 	PriceColumnHeader->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Right);
 	PriceColumnHeader->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
@@ -264,12 +264,12 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet
 	_AssetClassScrollBox = new UI::ScrollBox{this};
 	_AssetClassScrollBox->SetLeft(0.0_c);
 	_AssetClassScrollBox->SetTop(20.0_c);
-	_AssetClassScrollBox->SetWidth(GetWidth() - 160.0f);
+	_AssetClassScrollBox->SetWidth(constant(GetWidth() - 160.0f));
 	_AssetClassScrollBox->SetHeight(GetHeight() - 50.0f);
 	_AssetClassScrollBox->SetHorizontalScrollBarVisible(false);
 	_AssetClassScrollBox->SetAnchorRight(true);
 	_AssetClassScrollBox->SetAnchorBottom(true);
-	_AssetClassScrollBox->GetContent()->SetWidth(_AssetClassScrollBox->GetView()->GetWidth());
+	_AssetClassScrollBox->GetContent()->SetWidth(constant(_AssetClassScrollBox->GetView()->GetWidth()));
 	_AssetClassScrollBox->GetContent()->SetAnchorRight(true);
 	
 	auto Hangar(_Planet->GetHangar(_Character));
@@ -284,7 +284,7 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet
 		
 		NewTradeCenterAssetClassListWidget->SetLeft(5.0_c);
 		NewTradeCenterAssetClassListWidget->SetTop(constant(Top));
-		NewTradeCenterAssetClassListWidget->SetWidth(_AssetClassScrollBox->GetContent()->GetWidth());
+		NewTradeCenterAssetClassListWidget->SetWidth(constant(_AssetClassScrollBox->GetContent()->GetWidth()));
 		NewTradeCenterAssetClassListWidget->SetAnchorRight(true);
 		NewTradeCenterAssetClassListWidget->ConnectMouseButtonCallback(std::bind(&UI::TradeCenterWidget::_OnAssetClassMouseButton, this, std::placeholders::_1, NewTradeCenterAssetClassListWidget));
 		Top += NewTradeCenterAssetClassListWidget->GetHeight() + 5.0f;
@@ -293,7 +293,7 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet
 	_AssetClassViewDisplay = new UI::ViewDisplay{this};
 	_AssetClassViewDisplay->SetLeft(constant(GetWidth() - 150.0f));
 	_AssetClassViewDisplay->SetTop(0.0_c);
-	_AssetClassViewDisplay->SetWidth(150.0f);
+	_AssetClassViewDisplay->SetWidth(150.0_c);
 	_AssetClassViewDisplay->SetHeight(150.0f);
 	_AssetClassViewDisplay->SetAnchorLeft(false);
 	_AssetClassViewDisplay->SetAnchorRight(true);
@@ -303,7 +303,7 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet
 	
 	AssetClassPriceCaptionLabel->SetLeft(constant(GetWidth() - 150.0f));
 	AssetClassPriceCaptionLabel->SetTop(160.0_c);
-	AssetClassPriceCaptionLabel->SetWidth(150.0f);
+	AssetClassPriceCaptionLabel->SetWidth(150.0_c);
 	AssetClassPriceCaptionLabel->SetHeight(20.0f);
 	AssetClassPriceCaptionLabel->SetAnchorLeft(false);
 	AssetClassPriceCaptionLabel->SetAnchorRight(true);
@@ -314,7 +314,7 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet
 	
 	AssetClassPriceLabel->SetLeft(constant(GetWidth() - 150.0f));
 	AssetClassPriceLabel->SetTop(160.0_c);
-	AssetClassPriceLabel->SetWidth(150.0f);
+	AssetClassPriceLabel->SetWidth(150.0_c);
 	AssetClassPriceLabel->SetHeight(20.0f);
 	AssetClassPriceLabel->SetAnchorLeft(false);
 	AssetClassPriceLabel->SetAnchorRight(true);
@@ -326,7 +326,7 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet
 	
 	AssetClassSizeCaptionLabel->SetLeft(constant(GetWidth() - 150.0f));
 	AssetClassSizeCaptionLabel->SetTop(180.0_c);
-	AssetClassSizeCaptionLabel->SetWidth(150.0f);
+	AssetClassSizeCaptionLabel->SetWidth(150.0_c);
 	AssetClassSizeCaptionLabel->SetHeight(20.0f);
 	AssetClassSizeCaptionLabel->SetAnchorLeft(false);
 	AssetClassSizeCaptionLabel->SetAnchorRight(true);
@@ -337,7 +337,7 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet
 	
 	AssetClassSizeLabel->SetLeft(constant(GetWidth() - 150.0f));
 	AssetClassSizeLabel->SetTop(180.0_c);
-	AssetClassSizeLabel->SetWidth(150.0f);
+	AssetClassSizeLabel->SetWidth(150.0_c);
 	AssetClassSizeLabel->SetHeight(20.0f);
 	AssetClassSizeLabel->SetAnchorLeft(false);
 	AssetClassSizeLabel->SetAnchorRight(true);
@@ -349,7 +349,7 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet
 	
 	AssetClassDescriptionCaptionLabel->SetLeft(constant(GetWidth() - 150.0f));
 	AssetClassDescriptionCaptionLabel->SetTop(200.0_c);
-	AssetClassDescriptionCaptionLabel->SetWidth(150.0f);
+	AssetClassDescriptionCaptionLabel->SetWidth(150.0_c);
 	AssetClassDescriptionCaptionLabel->SetHeight(20.0f);
 	AssetClassDescriptionCaptionLabel->SetAnchorLeft(false);
 	AssetClassDescriptionCaptionLabel->SetAnchorRight(true);
@@ -360,7 +360,7 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet
 	
 	AssetClassDescriptionLabel->SetLeft(constant(GetWidth() - 150.0f));
 	AssetClassDescriptionLabel->SetTop(220.0_c);
-	AssetClassDescriptionLabel->SetWidth(150.0f);
+	AssetClassDescriptionLabel->SetWidth(150.0_c);
 	AssetClassDescriptionLabel->SetHeight(30.0f);
 	AssetClassDescriptionLabel->SetAnchorLeft(false);
 	AssetClassDescriptionLabel->SetAnchorRight(true);

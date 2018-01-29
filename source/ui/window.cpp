@@ -41,7 +41,7 @@ UI::Window::Window(Widget * SupWidget, const std::string & Title) :
 	
 	Border->SetLeft(0.0_c);
 	Border->SetTop(0.0_c);
-	Border->SetWidth(GetWidth());
+	Border->SetWidth(constant(GetWidth()));
 	Border->SetHeight(GetHeight());
 	Border->SetAnchorBottom(true);
 	Border->SetAnchorRight(true);
@@ -50,7 +50,7 @@ UI::Window::Window(Widget * SupWidget, const std::string & Title) :
 	_TitleLabel = new UI::Label{this, Title};
 	_TitleLabel->SetLeft(10.0_c);
 	_TitleLabel->SetTop(10.0_c);
-	_TitleLabel->SetWidth(GetWidth() - 20.0f);
+	_TitleLabel->SetWidth(constant(GetWidth() - 20.0f));
 	_TitleLabel->SetHeight(20.0f);
 	_TitleLabel->SetAnchorRight(true);
 	_TitleLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Center);
@@ -61,7 +61,7 @@ UI::Window::Window(Widget * SupWidget, const std::string & Title) :
 	_ResizeDragBox = new Widget{this};
 	_ResizeDragBox->SetLeft(constant(GetWidth() - 9.0f));
 	_ResizeDragBox->SetTop(constant(GetHeight() - 9.0f));
-	_ResizeDragBox->SetWidth(7.0f);
+	_ResizeDragBox->SetWidth(constant(7.0f));
 	_ResizeDragBox->SetHeight(7.0f);
 	_ResizeDragBox->SetAnchorBottom(true);
 	_ResizeDragBox->SetAnchorLeft(false);
@@ -132,7 +132,7 @@ void UI::Window::_OnResizeDragBoxMouseMove(UI::MouseMoveEvent & MouseMoveEvent)
 {
 	if((MouseMoveEvent.GetPhase() == UI::Event::Phase::Target) && (g_UserInterface->GetCaptureWidget() == _ResizeDragBox))
 	{
-		SetWidth(GetWidth() + MouseMoveEvent.GetPosition()[0] - _GrabPosition[0]);
+		SetWidth(constant(GetWidth() + MouseMoveEvent.GetPosition()[0] - _GrabPosition[0]));
 		SetHeight(GetHeight() + MouseMoveEvent.GetPosition()[1] - _GrabPosition[1]);
 	}
 }

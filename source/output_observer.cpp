@@ -45,7 +45,7 @@ void OutputObserver::HandleMessage(Message * Message)
 		_PlanetWindow = new UI::PlanetWindow(g_UserInterface->GetRootWidget(), dynamic_cast< Planet * >(Message->GetSender().Get()), GetObservedCharacter());
 		_PlanetWindow->SetLeft(50.0_c);
 		_PlanetWindow->SetTop(50.0_c);
-		_PlanetWindow->SetWidth(700.0f);
+		_PlanetWindow->SetWidth(700.0_c);
 		_PlanetWindow->SetHeight(400.0f);
 		_PlanetWindow->GrabKeyFocus();
 	}

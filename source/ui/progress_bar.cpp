@@ -39,7 +39,7 @@ UI::ProgressBar::ProgressBar(UI::Widget * SupWidget) :
 	_Fill = new UI::Widget{this};
 	_Fill->SetLeft(0.0_c);
 	_Fill->SetTop(0.0_c);
-	_Fill->SetWidth(GetWidth());
+	_Fill->SetWidth(constant(GetWidth()));
 	_Fill->SetHeight(GetHeight());
 	_Fill->SetAnchorBottom(true);
 	_Fill->SetAnchorLeft(true);
@@ -47,7 +47,7 @@ UI::ProgressBar::ProgressBar(UI::Widget * SupWidget) :
 	_Label = new UI::Label{this};
 	_Label->SetLeft(0.0_c);
 	_Label->SetTop(0.0_c);
-	_Label->SetWidth(GetWidth());
+	_Label->SetWidth(constant(GetWidth()));
 	_Label->SetHeight(GetHeight());
 	_Label->SetAnchorBottom(true);
 	_Label->SetAnchorLeft(true);
@@ -60,7 +60,7 @@ UI::ProgressBar::ProgressBar(UI::Widget * SupWidget) :
 	
 	Border->SetLeft(0.0_c);
 	Border->SetTop(0.0_c);
-	Border->SetWidth(GetWidth());
+	Border->SetWidth(constant(GetWidth()));
 	Border->SetHeight(GetHeight());
 	Border->SetLineWidth(1.0f);
 	Border->SetColor(Graphics::ColorRGBO(1.0f, 1.0f, 1.0f, 1.0f));
@@ -80,7 +80,7 @@ void UI::ProgressBar::_OnWidthChanged(UI::Event & WidthChangedEvent)
 
 void UI::ProgressBar::_ResizeFill(void)
 {
-	_Fill->SetWidth(_FillLevel * GetWidth());
+	_Fill->SetWidth(constant(_FillLevel * GetWidth()));
 }
 
 void UI::ProgressBar::SetColor(const Graphics::ColorRGBO & Color)
