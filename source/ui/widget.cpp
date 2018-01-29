@@ -178,7 +178,7 @@ void UI::Widget::SetHeight(float Height)
 				}
 				else
 				{
-					SubWidget->SetTop(SubWidget->GetTop() - Offset);
+					SubWidget->SetTop(constant(SubWidget->GetTop() - Offset));
 				}
 			}
 		}
@@ -200,17 +200,14 @@ void UI::Widget::SetLeft(Expressions::Expression && Left)
 	g_UserInterface->DispatchLeftChangedEvent(LeftChangedEvent);
 }
 
-void UI::Widget::SetTop(float Top)
+void UI::Widget::SetTop(Expressions::Expression && Top)
 {
-	if(_Top.GetValue() != Top)
-	{
-		_Top = constant(Top);
-		
-		UI::Event TopChangedEvent;
-		
-		TopChangedEvent.SetTarget(this);
-		g_UserInterface->DispatchTopChangedEvent(TopChangedEvent);
-	}
+	_Top = std::move(Top);
+	
+	UI::Event TopChangedEvent;
+	
+	TopChangedEvent.SetTarget(this);
+	g_UserInterface->DispatchTopChangedEvent(TopChangedEvent);
 }
 
 void UI::Widget::SetWidth(float Width)

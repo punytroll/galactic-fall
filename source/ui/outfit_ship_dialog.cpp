@@ -95,7 +95,7 @@ UI::AccessoryListItem::AccessoryListItem(UI::Widget * SupWidget, Object * Access
 	auto NameLabel{new UI::Label{this, Accessory->GetAspectName()->GetName()}};
 	
 	NameLabel->SetLeft(5.0_c);
-	NameLabel->SetTop(5.0f);
+	NameLabel->SetTop(5.0_c);
 	NameLabel->SetWidth(GetWidth() - 10.0f);
 	NameLabel->SetHeight(20.0f);
 	NameLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
@@ -106,7 +106,7 @@ UI::AccessoryListItem::AccessoryListItem(UI::Widget * SupWidget, Object * Access
 	auto SlotTypeLabel{new UI::Label{this, g_SlotClassManager->Get(Accessory->GetAspectAccessory()->GetSlotClassIdentifier())->GetName()}};
 	
 	SlotTypeLabel->SetLeft(25.0_c);
-	SlotTypeLabel->SetTop(GetHeight() - 25.0f);
+	SlotTypeLabel->SetTop(constant(GetHeight() - 25.0f));
 	SlotTypeLabel->SetWidth(GetWidth() - 30.0f);
 	SlotTypeLabel->SetHeight(20.0f);
 	SlotTypeLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
@@ -152,7 +152,7 @@ UI::SlotListItem::SlotListItem(UI::Widget * SupWidget, Slot * Slot) :
 	auto IdentifierLabel{new UI::Label{this, _Slot->GetName()}};
 	
 	IdentifierLabel->SetLeft(5.0_c);
-	IdentifierLabel->SetTop(5.0f);
+	IdentifierLabel->SetTop(5.0_c);
 	IdentifierLabel->SetWidth(GetWidth() - 10.0f);
 	IdentifierLabel->SetHeight(20.0f);
 	IdentifierLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
@@ -161,7 +161,7 @@ UI::SlotListItem::SlotListItem(UI::Widget * SupWidget, Slot * Slot) :
 	IdentifierLabel->SetAnchorTop(true);
 	_TypeOrWeaponLabel = new UI::Label{this};
 	_TypeOrWeaponLabel->SetLeft(25.0_c);
-	_TypeOrWeaponLabel->SetTop(GetHeight() - 25.0f);
+	_TypeOrWeaponLabel->SetTop(constant(GetHeight() - 25.0f));
 	_TypeOrWeaponLabel->SetWidth(GetWidth() - 30.0f);
 	_TypeOrWeaponLabel->SetHeight(20.0f);
 	_TypeOrWeaponLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
@@ -237,14 +237,14 @@ UI::OutfitShipDialog::OutfitShipDialog(UI::Widget * SupWidget, Ship * Ship) :
 	ConnectKeyCallback(std::bind(&UI::OutfitShipDialog::_OnKey, this, std::placeholders::_1));
 	_LeftPane = new UI::Widget{this};
 	_LeftPane->SetLeft(10.0_c);
-	_LeftPane->SetTop(40.0f);
+	_LeftPane->SetTop(40.0_c);
 	_LeftPane->SetHeight(GetHeight() - 50.0f);
 	_LeftPane->SetAnchorBottom(true);
 	
 	auto SlotListLabel{new UI::Label{_LeftPane, "Slots"}};
 	
 	SlotListLabel->SetLeft(0.0_c);
-	SlotListLabel->SetTop(0.0f);
+	SlotListLabel->SetTop(0.0_c);
 	SlotListLabel->SetWidth(_LeftPane->GetWidth());
 	SlotListLabel->SetHeight(20.0f);
 	SlotListLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Center);
@@ -252,7 +252,7 @@ UI::OutfitShipDialog::OutfitShipDialog(UI::Widget * SupWidget, Ship * Ship) :
 	SlotListLabel->SetAnchorRight(true);
 	_SlotScrollBox = new UI::ScrollBox{_LeftPane};
 	_SlotScrollBox->SetLeft(0.0_c);
-	_SlotScrollBox->SetTop(30.0f);
+	_SlotScrollBox->SetTop(30.0_c);
 	_SlotScrollBox->SetWidth(_LeftPane->GetWidth());
 	_SlotScrollBox->SetHeight(_LeftPane->GetHeight() - 30.0f);
 	_SlotScrollBox->SetHorizontalScrollBarVisible(false);
@@ -268,7 +268,7 @@ UI::OutfitShipDialog::OutfitShipDialog(UI::Widget * SupWidget, Ship * Ship) :
 		auto NewSlotListItem{new SlotListItem{_SlotScrollBox->GetContent(), SlotPair.second}};
 		
 		NewSlotListItem->SetLeft(5.0_c);
-		NewSlotListItem->SetTop(Top);
+		NewSlotListItem->SetTop(constant(Top));
 		NewSlotListItem->SetWidth(_SlotScrollBox->GetContent()->GetWidth() - 10.0f);
 		NewSlotListItem->SetAnchorRight(true);
 		NewSlotListItem->ConnectMouseButtonCallback(std::bind(&UI::OutfitShipDialog::_OnSlotListItemMouseButton, this, NewSlotListItem, std::placeholders::_1));
@@ -277,7 +277,7 @@ UI::OutfitShipDialog::OutfitShipDialog(UI::Widget * SupWidget, Ship * Ship) :
 	_SlotScrollBox->GetContent()->SetHeight(Top);
 	// center pane
 	_CenterPane = new UI::Widget{this};
-	_CenterPane->SetTop(70.0f);
+	_CenterPane->SetTop(70.0_c);
 	_CenterPane->SetWidth(160.0f);
 	_CenterPane->SetHeight(GetHeight() - 80.0f);
 	_CenterPane->SetAnchorBottom(true);
@@ -285,7 +285,7 @@ UI::OutfitShipDialog::OutfitShipDialog(UI::Widget * SupWidget, Ship * Ship) :
 	auto MountButton{new UI::TextButton{_CenterPane, "Mount"}};
 	
 	MountButton->SetLeft(0.0_c);
-	MountButton->SetTop(40.0f);
+	MountButton->SetTop(40.0_c);
 	MountButton->SetWidth(_CenterPane->GetWidth());
 	MountButton->SetHeight(20.0f);
 	MountButton->SetAnchorRight(true);
@@ -295,7 +295,7 @@ UI::OutfitShipDialog::OutfitShipDialog(UI::Widget * SupWidget, Ship * Ship) :
 	auto UnmountButton{new UI::TextButton{_CenterPane, "Unmount"}};
 	
 	UnmountButton->SetLeft(0.0_c);
-	UnmountButton->SetTop(70.0f);
+	UnmountButton->SetTop(70.0_c);
 	UnmountButton->SetWidth(_CenterPane->GetWidth());
 	UnmountButton->SetHeight(20.0f);
 	UnmountButton->SetAnchorRight(true);
@@ -305,7 +305,7 @@ UI::OutfitShipDialog::OutfitShipDialog(UI::Widget * SupWidget, Ship * Ship) :
 	auto OKButton{new UI::TextButton{_CenterPane, "OK"}};
 	
 	OKButton->SetLeft(0.0_c);
-	OKButton->SetTop(_CenterPane->GetHeight() - 30.0f);
+	OKButton->SetTop(constant(_CenterPane->GetHeight() - 30.0f));
 	OKButton->SetWidth(_CenterPane->GetWidth());
 	OKButton->SetHeight(20.0f);
 	OKButton->SetAnchorBottom(true);
@@ -314,14 +314,14 @@ UI::OutfitShipDialog::OutfitShipDialog(UI::Widget * SupWidget, Ship * Ship) :
 	OKButton->ConnectClickedCallback(std::bind(&UI::OutfitShipDialog::_OnOKButtonClicked, this));
 	// right pane
 	_RightPane = new UI::Widget{this};
-	_RightPane->SetTop(40.0f);
+	_RightPane->SetTop(40.0_c);
 	_RightPane->SetHeight(GetHeight() - 50.0f);
 	_RightPane->SetAnchorBottom(true);
 	
 	auto AccessoryListLabel{new UI::Label{_RightPane, "Accessories"}};
 	
 	AccessoryListLabel->SetLeft(0.0_c);
-	AccessoryListLabel->SetTop(0.0f);
+	AccessoryListLabel->SetTop(0.0_c);
 	AccessoryListLabel->SetWidth(_RightPane->GetWidth());
 	AccessoryListLabel->SetHeight(20.0f);
 	AccessoryListLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Center);
@@ -329,7 +329,7 @@ UI::OutfitShipDialog::OutfitShipDialog(UI::Widget * SupWidget, Ship * Ship) :
 	AccessoryListLabel->SetAnchorRight(true);
 	_AccessoryScrollBox = new UI::ScrollBox{_RightPane};
 	_AccessoryScrollBox->SetLeft(0.0_c);
-	_AccessoryScrollBox->SetTop(30.0f);
+	_AccessoryScrollBox->SetTop(30.0_c);
 	_AccessoryScrollBox->SetWidth(_RightPane->GetWidth());
 	_AccessoryScrollBox->SetHeight(_RightPane->GetHeight() - 30.0f);
 	_AccessoryScrollBox->SetHorizontalScrollBarVisible(false);
@@ -369,7 +369,7 @@ void UI::OutfitShipDialog::_RebuildAccessoryList(void)
 			auto NewAccessoryListItem{new UI::AccessoryListItem{_AccessoryScrollBox->GetContent(), Content}};
 			
 			NewAccessoryListItem->SetLeft(5.0_c);
-			NewAccessoryListItem->SetTop(Top);
+			NewAccessoryListItem->SetTop(constant(Top));
 			NewAccessoryListItem->SetWidth(_AccessoryScrollBox->GetContent()->GetWidth() - 10.0f);
 			NewAccessoryListItem->SetHeight(50.0f);
 			NewAccessoryListItem->SetAnchorRight(true);

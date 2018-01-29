@@ -38,7 +38,7 @@ UI::ProgressBar::ProgressBar(UI::Widget * SupWidget) :
 	ConnectWidthChangedCallback(std::bind(&UI::ProgressBar::_OnWidthChanged, this, std::placeholders::_1));
 	_Fill = new UI::Widget{this};
 	_Fill->SetLeft(0.0_c);
-	_Fill->SetTop(0.0f);
+	_Fill->SetTop(0.0_c);
 	_Fill->SetWidth(GetWidth());
 	_Fill->SetHeight(GetHeight());
 	_Fill->SetAnchorBottom(true);
@@ -46,7 +46,7 @@ UI::ProgressBar::ProgressBar(UI::Widget * SupWidget) :
 	_Fill->SetAnchorTop(true);
 	_Label = new UI::Label{this};
 	_Label->SetLeft(0.0_c);
-	_Label->SetTop(0.0f);
+	_Label->SetTop(0.0_c);
 	_Label->SetWidth(GetWidth());
 	_Label->SetHeight(GetHeight());
 	_Label->SetAnchorBottom(true);
@@ -59,7 +59,7 @@ UI::ProgressBar::ProgressBar(UI::Widget * SupWidget) :
 	auto Border{new UI::Border{this}};
 	
 	Border->SetLeft(0.0_c);
-	Border->SetTop(0.0f);
+	Border->SetTop(0.0_c);
 	Border->SetWidth(GetWidth());
 	Border->SetHeight(GetHeight());
 	Border->SetLineWidth(1.0f);

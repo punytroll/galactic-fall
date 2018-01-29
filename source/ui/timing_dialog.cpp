@@ -78,13 +78,13 @@ float UI::TimingDialog::_AddMeasure(float Top, const std::string & Label, UI::La
 	auto CaptionLabel{new UI::Label{this, Label}};
 	
 	CaptionLabel->SetLeft(10.0_c);
-	CaptionLabel->SetTop(Top);
+	CaptionLabel->SetTop(constant(Top));
 	CaptionLabel->SetWidth(GetWidth() - 100.0f);
 	CaptionLabel->SetHeight(20.0f);
 	CaptionLabel->SetAnchorRight(true);
 	ValueLabel = new UI::Label{this, ""};
 	ValueLabel->SetLeft(constant(GetWidth() - 80.0f));
-	ValueLabel->SetTop(Top);
+	ValueLabel->SetTop(constant(Top));
 	ValueLabel->SetWidth(70.0f);
 	ValueLabel->SetHeight(20.0f);
 	ValueLabel->SetAnchorLeft(false);

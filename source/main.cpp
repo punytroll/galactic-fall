@@ -804,7 +804,7 @@ void Resize(void)
 	assert(g_UserInterface != nullptr);
 	assert(g_UserInterface->GetRootWidget() != nullptr);
 	g_UserInterface->GetRootWidget()->SetLeft(0.0_c);
-	g_UserInterface->GetRootWidget()->SetTop(0.0f);
+	g_UserInterface->GetRootWidget()->SetTop(0.0_c);
 	g_UserInterface->GetRootWidget()->SetWidth(g_Width);
 	g_UserInterface->GetRootWidget()->SetHeight(g_Height);
 }
@@ -1071,7 +1071,7 @@ void OnOutputEnterSystem(System * EnterSystem)
 	
 	HeadsUpDisplay->SetName("heads_up_display");
 	HeadsUpDisplay->SetLeft(0.0_c);
-	HeadsUpDisplay->SetTop(0.0f);
+	HeadsUpDisplay->SetTop(0.0_c);
 	HeadsUpDisplay->SetWidth(g_UserInterface->GetRootWidget()->GetWidth());
 	HeadsUpDisplay->SetHeight(g_UserInterface->GetRootWidget()->GetHeight());
 	HeadsUpDisplay->SetAnchorRight(true);
@@ -2358,7 +2358,7 @@ void ActionOpenMainMenuWindow(void)
 		g_MainMenuWindow = new UI::MainMenuWindow(g_UserInterface->GetRootWidget(), g_ScenarioManager);
 		g_MainMenuWindow->SetName("main_menu");
 		g_MainMenuWindow->SetLeft(constant((g_UserInterface->GetRootWidget()->GetWidth() - 200.0f) / 2.0f));
-		g_MainMenuWindow->SetTop((g_UserInterface->GetRootWidget()->GetHeight() - 300.0f) / 2.0f);
+		g_MainMenuWindow->SetTop(constant((g_UserInterface->GetRootWidget()->GetHeight() - 300.0f) / 2.0f));
 		g_MainMenuWindow->SetWidth(200.0f);
 		g_MainMenuWindow->SetHeight(300.0f);
 		// crude heuristic: if we are not in a system, no game is running
@@ -2381,7 +2381,7 @@ void ActionOpenMapDialog(void)
 		
 		MapDialog->SetName("map_dialog");
 		MapDialog->SetLeft(70.0_c);
-		MapDialog->SetTop(200.0f);
+		MapDialog->SetTop(200.0_c);
 		MapDialog->SetWidth(500.0f);
 		MapDialog->SetHeight(530.0f);
 		if((g_CharacterObserver->GetObservedCharacter()->GetShip() != nullptr) && (g_CharacterObserver->GetObservedCharacter()->GetShip()->GetLinkedSystemTarget() != nullptr))
@@ -2408,7 +2408,7 @@ void ActionOpenObjectInformationDialog(void)
 	
 	ObjectInformationDialog->SetName("object_information(" + g_Galaxy->GetObjectIdentifier() + ")");
 	ObjectInformationDialog->SetLeft(100.0_c);
-	ObjectInformationDialog->SetTop(400.0f);
+	ObjectInformationDialog->SetTop(400.0_c);
 	ObjectInformationDialog->SetWidth(500.0f);
 	ObjectInformationDialog->SetHeight(300.0f);
 	ObjectInformationDialog->GrabKeyFocus();
@@ -2422,7 +2422,7 @@ void ActionOpenOutfitShipDialog(void)
 		g_OutfitShipDialog = new UI::OutfitShipDialog{g_UserInterface->GetRootWidget(), g_CharacterObserver->GetObservedCharacter()->GetShip()};
 		g_OutfitShipDialog->SetName("outfit_ship");
 		g_OutfitShipDialog->SetLeft(70.0_c);
-		g_OutfitShipDialog->SetTop(280.0f);
+		g_OutfitShipDialog->SetTop(280.0_c);
 		g_OutfitShipDialog->SetWidth(600.0f);
 		g_OutfitShipDialog->SetHeight(400.0f);
 		g_OutfitShipDialog->GrabKeyFocus();
@@ -2604,7 +2604,7 @@ void ActionToggleTimingDialog(void)
 		g_TimingDialog = new UI::TimingDialog{g_UserInterface->GetRootWidget()};
 		g_TimingDialog->SetName("timing");
 		g_TimingDialog->SetLeft(300.0_c);
-		g_TimingDialog->SetTop(300.0f);
+		g_TimingDialog->SetTop(300.0_c);
 		g_TimingDialog->SetWidth(350.0f);
 		g_TimingDialog->SetHeight(400.0f);
 		g_TimingDialog->GrabKeyFocus();
@@ -3357,7 +3357,7 @@ int main(int argc, char ** argv)
 	// user interface
 	g_UserInterface = new UI::UserInterface();
 	g_UserInterface->GetRootWidget()->SetLeft(0.0_c);
-	g_UserInterface->GetRootWidget()->SetTop(0.0f);
+	g_UserInterface->GetRootWidget()->SetTop(0.0_c);
 	g_UserInterface->GetRootWidget()->SetWidth(g_Width);
 	g_UserInterface->GetRootWidget()->SetHeight(g_Height);
 	g_UserInterface->GetRootWidget()->ConnectKeyCallback(MainViewKeyEvent);

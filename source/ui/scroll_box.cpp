@@ -35,7 +35,7 @@ UI::ScrollBox::ScrollBox(UI::Widget * SupWidget) :
 	_View = new UI::Widget{this};
 	_View->SetName("view");
 	_View->SetLeft(0.0_c);
-	_View->SetTop(0.0f);
+	_View->SetTop(0.0_c);
 	_View->SetWidth(GetWidth() - 20.0f);
 	_View->SetHeight(GetHeight() - 20.0f);
 	_View->SetAnchorBottom(true);
@@ -47,13 +47,13 @@ UI::ScrollBox::ScrollBox(UI::Widget * SupWidget) :
 	_Content = new UI::Widget{_View};
 	_Content->SetName("content");
 	_Content->SetLeft(0.0_c);
-	_Content->SetTop(0.0f);
+	_Content->SetTop(0.0_c);
 	_Content->ConnectHeightChangedCallback(std::bind(&UI::ScrollBox::_OnContentOrViewSizeChanged, this, std::placeholders::_1));
 	_Content->ConnectWidthChangedCallback(std::bind(&UI::ScrollBox::_OnContentOrViewSizeChanged, this, std::placeholders::_1));
 	_HorizontalScrollBar = new UI::ScrollBar{this, UI::ScrollBar::Alignment::HORIZONTAL};
 	_HorizontalScrollBar->SetName("horizontal_scroll_bar");
 	_HorizontalScrollBar->SetLeft(0.0_c);
-	_HorizontalScrollBar->SetTop(GetHeight() - 20.0f);
+	_HorizontalScrollBar->SetTop(constant(GetHeight() - 20.0f));
 	_HorizontalScrollBar->SetWidth(GetWidth() - 20.0f);
 	_HorizontalScrollBar->SetHeight(20.0f);
 	_HorizontalScrollBar->ConnectScrollPositionChangedCallback(std::bind(&UI::ScrollBox::_OnHorizontalScrollPositionChanged, this));
@@ -68,7 +68,7 @@ UI::ScrollBox::ScrollBox(UI::Widget * SupWidget) :
 	_VerticalScrollBar = new UI::ScrollBar{this, UI::ScrollBar::Alignment::VERTICAL};
 	_HorizontalScrollBar->SetName("Vertical_scroll_bar");
 	_VerticalScrollBar->SetLeft(constant(GetWidth() - 20.0f));
-	_VerticalScrollBar->SetTop(0.0f);
+	_VerticalScrollBar->SetTop(0.0_c);
 	_VerticalScrollBar->SetWidth(20.0f);
 	_VerticalScrollBar->SetHeight(GetHeight() - 20.0f);
 	_VerticalScrollBar->ConnectScrollPositionChangedCallback(std::bind(&UI::ScrollBox::_OnVerticalScrollPositionChanged, this));
@@ -139,7 +139,7 @@ void UI::ScrollBox::_OnVerticalScrollPositionChanged(void)
 {
 	if(_Content->GetHeight() > _View->GetHeight())
 	{
-		_Content->SetTop(-_VerticalScrollBar->GetCurrentPosition());
+		_Content->SetTop(constant(-_VerticalScrollBar->GetCurrentPosition()));
 	}
 }
 
