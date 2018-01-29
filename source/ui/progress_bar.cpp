@@ -19,11 +19,15 @@
 
 #include <assert.h>
 
+#include <expressions/operators.h>
+
 #include "../graphics/color_rgbo.h"
 #include "border.h"
 #include "event.h"
 #include "label.h"
 #include "progress_bar.h"
+
+using namespace Expressions::Operators;
 
 UI::ProgressBar::ProgressBar(UI::Widget * SupWidget) :
 	UI::Widget(SupWidget),
@@ -33,7 +37,7 @@ UI::ProgressBar::ProgressBar(UI::Widget * SupWidget) :
 {
 	ConnectWidthChangedCallback(std::bind(&UI::ProgressBar::_OnWidthChanged, this, std::placeholders::_1));
 	_Fill = new UI::Widget{this};
-	_Fill->SetLeft(0.0f);
+	_Fill->SetLeft(0.0_c);
 	_Fill->SetTop(0.0f);
 	_Fill->SetWidth(GetWidth());
 	_Fill->SetHeight(GetHeight());
@@ -41,7 +45,7 @@ UI::ProgressBar::ProgressBar(UI::Widget * SupWidget) :
 	_Fill->SetAnchorLeft(true);
 	_Fill->SetAnchorTop(true);
 	_Label = new UI::Label{this};
-	_Label->SetLeft(0.0f);
+	_Label->SetLeft(0.0_c);
 	_Label->SetTop(0.0f);
 	_Label->SetWidth(GetWidth());
 	_Label->SetHeight(GetHeight());
@@ -54,7 +58,7 @@ UI::ProgressBar::ProgressBar(UI::Widget * SupWidget) :
 	
 	auto Border{new UI::Border{this}};
 	
-	Border->SetLeft(0.0f);
+	Border->SetLeft(0.0_c);
 	Border->SetTop(0.0f);
 	Border->SetWidth(GetWidth());
 	Border->SetHeight(GetHeight());

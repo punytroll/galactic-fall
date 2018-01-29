@@ -190,17 +190,14 @@ void UI::Widget::SetHeight(float Height)
 	}
 }
 
-void UI::Widget::SetLeft(float Left)
+void UI::Widget::SetLeft(Expressions::Expression && Left)
 {
-	if(_Left.GetValue() != Left)
-	{
-		_Left = constant(Left);
-		
-		UI::Event LeftChangedEvent;
-		
-		LeftChangedEvent.SetTarget(this);
-		g_UserInterface->DispatchLeftChangedEvent(LeftChangedEvent);
-	}
+	_Left = std::move(Left);
+	
+	UI::Event LeftChangedEvent;
+	
+	LeftChangedEvent.SetTarget(this);
+	g_UserInterface->DispatchLeftChangedEvent(LeftChangedEvent);
 }
 
 void UI::Widget::SetTop(float Top)
@@ -235,7 +232,7 @@ void UI::Widget::SetWidth(float Width)
 				}
 				else
 				{
-					SubWidget->SetLeft(SubWidget->GetLeft() - Offset);
+					SubWidget->SetLeft(constant(SubWidget->GetLeft() - Offset));
 				}
 			}
 		}

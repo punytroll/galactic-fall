@@ -17,6 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include <expressions/operators.h>
+
 #include "../globals.h"
 #include "../graphics/color_rgbo.h"
 #include "../real_time.h"
@@ -31,6 +33,8 @@
 #include "scenario_list_box_item.h"
 #include "text_button.h"
 
+using namespace Expressions::Operators;
+
 UI::LoadScenarioDialog::LoadScenarioDialog(UI::Widget * SupWidget, ScenarioManager * ScenarioManager) :
 	UI::Dialog(SupWidget),
 	_ScenarioManager(ScenarioManager)
@@ -40,7 +44,7 @@ UI::LoadScenarioDialog::LoadScenarioDialog(UI::Widget * SupWidget, ScenarioManag
 
 	auto OKButton{new UI::TextButton{this, "OK"}};
 	
-	OKButton->SetLeft(GetWidth() - 110.0f);
+	OKButton->SetLeft(constant(GetWidth() - 110.0f));
 	OKButton->SetTop(GetHeight() - 30.0f);
 	OKButton->SetWidth(100.0f);
 	OKButton->SetHeight(20.0f);
@@ -52,7 +56,7 @@ UI::LoadScenarioDialog::LoadScenarioDialog(UI::Widget * SupWidget, ScenarioManag
 	
 	auto CancelButton{new UI::TextButton{this, "Cancel"}};
 	
-	CancelButton->SetLeft(GetWidth() - 220.0f);
+	CancelButton->SetLeft(constant(GetWidth() - 220.0f));
 	CancelButton->SetTop(GetHeight() - 30.0f);
 	CancelButton->SetWidth(100.0f);
 	CancelButton->SetHeight(20.0f);
@@ -62,7 +66,7 @@ UI::LoadScenarioDialog::LoadScenarioDialog(UI::Widget * SupWidget, ScenarioManag
 	CancelButton->SetAnchorTop(false);
 	CancelButton->ConnectClickedCallback(std::bind(&UI::LoadScenarioDialog::_Close, this, UI::Dialog::ClosingReason::CANCEL_BUTTON));
 	_MessageLabel = new UI::Label{this};
-	_MessageLabel->SetLeft(10.0f);
+	_MessageLabel->SetLeft(10.0_c);
 	_MessageLabel->SetTop(40.0f);
 	_MessageLabel->SetWidth(GetWidth() - 20.0f);
 	_MessageLabel->SetHeight(30.0f);
@@ -75,7 +79,7 @@ UI::LoadScenarioDialog::LoadScenarioDialog(UI::Widget * SupWidget, ScenarioManag
 	_MessageLabel->SetWordWrap(true);
 	_MessageLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	_ScenarioListBox = new UI::ListBox{this};
-	_ScenarioListBox->SetLeft(10.0f);
+	_ScenarioListBox->SetLeft(10.0_c);
 	_ScenarioListBox->SetTop(110.0f);
 	_ScenarioListBox->SetWidth(GetWidth() - 20.0f);
 	_ScenarioListBox->SetHeight(GetHeight() - 170.0f);

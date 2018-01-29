@@ -17,6 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include <expressions/operators.h>
+
 #include <string_cast/string_cast.h>
 
 #include "../battery.h"
@@ -35,6 +37,8 @@
 #include "mini_map_display.h"
 #include "scanner_display.h"
 
+using namespace Expressions::Operators;
+
 int WantToJump(Ship * Ship, System * System);
 
 UI::HeadsUpDisplay::HeadsUpDisplay(UI::Widget * SupWidget) :
@@ -44,7 +48,7 @@ UI::HeadsUpDisplay::HeadsUpDisplay(UI::Widget * SupWidget) :
 	auto TimeWarpLabel{new UI::Label{this}};
 	
 	TimeWarpLabel->SetName("time_warp");
-	TimeWarpLabel->SetLeft(0.0f);
+	TimeWarpLabel->SetLeft(0.0_c);
 	TimeWarpLabel->SetTop(0.0f);
 	TimeWarpLabel->SetWidth(200.0f);
 	TimeWarpLabel->SetHeight(20.0f);
@@ -54,7 +58,7 @@ UI::HeadsUpDisplay::HeadsUpDisplay(UI::Widget * SupWidget) :
 	auto LinkedSystemTargetLabel{new UI::Label{this}};
 	
 	LinkedSystemTargetLabel->SetName("linked_system_target");
-	LinkedSystemTargetLabel->SetLeft(0.0f);
+	LinkedSystemTargetLabel->SetLeft(0.0_c);
 	LinkedSystemTargetLabel->SetTop(20.0f);
 	LinkedSystemTargetLabel->SetWidth(200.0f);
 	LinkedSystemTargetLabel->SetHeight(20.0f);
@@ -64,7 +68,7 @@ UI::HeadsUpDisplay::HeadsUpDisplay(UI::Widget * SupWidget) :
 	auto CreditsLabel{new UI::Label{this}};
 	
 	CreditsLabel->SetName("credits");
-	CreditsLabel->SetLeft(0.0f);
+	CreditsLabel->SetLeft(0.0_c);
 	CreditsLabel->SetTop(40.0f);
 	CreditsLabel->SetWidth(200.0f);
 	CreditsLabel->SetHeight(20.0f);
@@ -74,7 +78,7 @@ UI::HeadsUpDisplay::HeadsUpDisplay(UI::Widget * SupWidget) :
 	auto FuelLabel{new UI::Label{this}};
 	
 	FuelLabel->SetName("fuel");
-	FuelLabel->SetLeft(0.0f);
+	FuelLabel->SetLeft(0.0_c);
 	FuelLabel->SetTop(60.0f);
 	FuelLabel->SetWidth(200.0f);
 	FuelLabel->SetHeight(20.0f);
@@ -84,7 +88,7 @@ UI::HeadsUpDisplay::HeadsUpDisplay(UI::Widget * SupWidget) :
 	auto EnergyLabel{new UI::Label{this}};
 	
 	EnergyLabel->SetName("energy");
-	EnergyLabel->SetLeft(0.0f);
+	EnergyLabel->SetLeft(0.0_c);
 	EnergyLabel->SetTop(80.0f);
 	EnergyLabel->SetWidth(200.0f);
 	EnergyLabel->SetHeight(20.0f);
@@ -94,7 +98,7 @@ UI::HeadsUpDisplay::HeadsUpDisplay(UI::Widget * SupWidget) :
 	auto HullLabel{new UI::Label{this}};
 	
 	HullLabel->SetName("hull");
-	HullLabel->SetLeft(0.0f);
+	HullLabel->SetLeft(0.0_c);
 	HullLabel->SetTop(100.0f);
 	HullLabel->SetWidth(200.0f);
 	HullLabel->SetHeight(20.0f);
@@ -102,7 +106,7 @@ UI::HeadsUpDisplay::HeadsUpDisplay(UI::Widget * SupWidget) :
 	HullLabel->ConnectUpdatingCallback(std::bind(&UI::HeadsUpDisplay::_UpdateHullLabel, this, HullLabel, std::placeholders::_1, std::placeholders::_2));
 	_MessageLabel = new UI::Label{this};
 	_MessageLabel->SetName("message");
-	_MessageLabel->SetLeft(0.0f);
+	_MessageLabel->SetLeft(0.0_c);
 	_MessageLabel->SetTop(40.0f);
 	_MessageLabel->SetWidth(GetWidth());
 	_MessageLabel->SetHeight(12.0f);
@@ -114,7 +118,7 @@ UI::HeadsUpDisplay::HeadsUpDisplay(UI::Widget * SupWidget) :
 	auto MiniMapWidget{new UI::Widget{this}};
 	
 	MiniMapWidget->SetName("mini_map");
-	MiniMapWidget->SetLeft(GetWidth() - 220.0f);
+	MiniMapWidget->SetLeft(constant(GetWidth() - 220.0f));
 	MiniMapWidget->SetTop(GetHeight() - 240.0f);
 	MiniMapWidget->SetWidth(220.0f);
 	MiniMapWidget->SetHeight(240.0f);
@@ -139,7 +143,7 @@ UI::HeadsUpDisplay::HeadsUpDisplay(UI::Widget * SupWidget) :
 	auto MiniMapDisplay{new UI::MiniMapDisplay{MiniMapWidget}};
 	
 	MiniMapDisplay->SetName("display");
-	MiniMapDisplay->SetLeft(0.0f);
+	MiniMapDisplay->SetLeft(0.0_c);
 	MiniMapDisplay->SetTop(20.0f);
 	MiniMapDisplay->SetWidth(MiniMapWidget->GetWidth());
 	MiniMapDisplay->SetHeight(MiniMapWidget->GetHeight() - 20.0f);
@@ -160,7 +164,7 @@ UI::HeadsUpDisplay::HeadsUpDisplay(UI::Widget * SupWidget) :
 	auto ScannerWidget{new UI::Widget{this}};
 	
 	ScannerWidget->SetName("scanner");
-	ScannerWidget->SetLeft(0.0f);
+	ScannerWidget->SetLeft(0.0_c);
 	ScannerWidget->SetTop(GetHeight() - 240.0f);
 	ScannerWidget->SetWidth(220.0f);
 	ScannerWidget->SetHeight(240.0f);
@@ -183,7 +187,7 @@ UI::HeadsUpDisplay::HeadsUpDisplay(UI::Widget * SupWidget) :
 	auto ScannerDisplay{new UI::ScannerDisplay{ScannerWidget}};
 	
 	ScannerDisplay->SetName("display");
-	ScannerDisplay->SetLeft(0.0f);
+	ScannerDisplay->SetLeft(0.0_c);
 	ScannerDisplay->SetTop(20.0f);
 	ScannerDisplay->SetWidth(ScannerWidget->GetWidth());
 	ScannerDisplay->SetHeight(ScannerWidget->GetHeight() - 20.0f);

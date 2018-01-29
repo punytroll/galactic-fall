@@ -16,10 +16,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include <expressions/operators.h>
+
 #include "list_box.h"
 #include "list_box_item.h"
 #include "mouse_button_event.h"
 #include "sub_widget_event.h"
+
+using namespace Expressions::Operators;
 
 float g_ListBoxItemPadding{2.0f};
 
@@ -48,7 +52,7 @@ void UI::ListBox::_OnSubWidgetAdded(UI::SubWidgetEvent & SubWidgetEvent)
 					Top = std::max(Top, OldWidget->GetTop() + OldWidget->GetHeight());
 				}
 			}
-			NewWidget->SetLeft(g_ListBoxItemPadding);
+			NewWidget->SetLeft(constant(g_ListBoxItemPadding));
 			NewWidget->SetTop(Top + g_ListBoxItemPadding);
 			NewWidget->SetWidth(GetContent()->GetWidth() - 2.0f * g_ListBoxItemPadding);
 			NewWidget->SetAnchorRight(true);

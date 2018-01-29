@@ -19,15 +19,19 @@
 
 #include <assert.h>
 
+#include <expressions/operators.h>
+
 #include "label.h"
 #include "text_button.h"
+
+using namespace Expressions::Operators;
 
 UI::TextButton::TextButton(UI::Widget * SupWidget, const std::string & Text) :
 	UI::Button(SupWidget),
 	_Label(nullptr)
 {
 	_Label = new UI::Label{this};
-	_Label->SetLeft(0.0f);
+	_Label->SetLeft(0.0_c);
 	_Label->SetTop(0.0f);
 	_Label->SetWidth(GetWidth());
 	_Label->SetHeight(GetHeight());

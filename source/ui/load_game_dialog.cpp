@@ -21,6 +21,8 @@
 
 #include <fstream>
 
+#include <expressions/operators.h>
+
 #include "../file_handling.h"
 #include "../globals.h"
 #include "../graphics/color_rgbo.h"
@@ -32,6 +34,8 @@
 #include "mouse_button_event.h"
 #include "scroll_box.h"
 #include "text_button.h"
+
+using namespace Expressions::Operators;
 
 // this class is declared here, so we can use it, but defined in save_game_dialog.cpp
 namespace UI
@@ -57,7 +61,7 @@ UI::LoadGameDialog::LoadGameDialog(UI::Widget * SupWidget) :
 	
 	auto OKButton{new UI::TextButton{this, "OK"}};
 	
-	OKButton->SetLeft(GetWidth() - 110.0f);
+	OKButton->SetLeft(constant(GetWidth() - 110.0f));
 	OKButton->SetTop(GetHeight() - 30.0f);
 	OKButton->SetWidth(100.0f);
 	OKButton->SetHeight(20.0f);
@@ -69,7 +73,7 @@ UI::LoadGameDialog::LoadGameDialog(UI::Widget * SupWidget) :
 	
 	auto CancelButton{new UI::TextButton{this, "Cancel"}};
 	
-	CancelButton->SetLeft(GetWidth() - 220.0f);
+	CancelButton->SetLeft(constant(GetWidth() - 220.0f));
 	CancelButton->SetTop(GetHeight() - 30.0f);
 	CancelButton->SetWidth(100.0f);
 	CancelButton->SetHeight(20.0f);
@@ -79,7 +83,7 @@ UI::LoadGameDialog::LoadGameDialog(UI::Widget * SupWidget) :
 	CancelButton->SetAnchorTop(false);
 	CancelButton->ConnectClickedCallback(std::bind(&UI::LoadGameDialog::_Close, this, UI::Dialog::ClosingReason::CANCEL_BUTTON));
 	_MessageLabel = new UI::Label{this};
-	_MessageLabel->SetLeft(10.0f);
+	_MessageLabel->SetLeft(10.0_c);
 	_MessageLabel->SetTop(40.0f);
 	_MessageLabel->SetWidth(GetWidth() - 20.0f);
 	_MessageLabel->SetHeight(30.0f);
@@ -92,7 +96,7 @@ UI::LoadGameDialog::LoadGameDialog(UI::Widget * SupWidget) :
 	_MessageLabel->SetWordWrap(true);
 	_MessageLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	_FileNameLabel = new UI::Label{this};
-	_FileNameLabel->SetLeft(10.0f);
+	_FileNameLabel->SetLeft(10.0_c);
 	_FileNameLabel->SetTop(80.0f);
 	_FileNameLabel->SetWidth(GetWidth() - 20.0f);
 	_FileNameLabel->SetHeight(20.0f);
@@ -103,7 +107,7 @@ UI::LoadGameDialog::LoadGameDialog(UI::Widget * SupWidget) :
 	_FileNameLabel->ConnectKeyCallback(std::bind(&UI::LoadGameDialog::_OnFileNameLabelKey, this, std::placeholders::_1));
 	_FileNameLabel->GrabKeyFocus();
 	_FileScrollBox = new UI::ScrollBox{this};
-	_FileScrollBox->SetLeft(10.0f);
+	_FileScrollBox->SetLeft(10.0_c);
 	_FileScrollBox->SetTop(110.0f);
 	_FileScrollBox->SetWidth(GetWidth() - 20.0f);
 	_FileScrollBox->SetHeight(GetHeight() - 170.0f);
@@ -145,7 +149,7 @@ void UI::LoadGameDialog::SetDirectoryPath(const std::string & DirectoryPath)
 	{
 		auto EntryLabel{new DirectoryEntryItem{_FileScrollBox->GetContent(), Entry.substr(0, Entry.rfind(".xml"))}};
 		
-		EntryLabel->SetLeft(5.0f);
+		EntryLabel->SetLeft(5.0_c);
 		EntryLabel->SetTop(Top);
 		EntryLabel->SetWidth(_FileScrollBox->GetContent()->GetWidth() - 5.0f);
 		EntryLabel->SetHeight(20.0f);

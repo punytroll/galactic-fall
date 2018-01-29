@@ -19,6 +19,8 @@
 
 #include <map>
 
+#include <expressions/operators.h>
+
 #include "../character.h"
 #include "../globals.h"
 #include "../graphics/color_rgbo.h"
@@ -29,6 +31,8 @@
 #include "star_map_display.h"
 #include "text_button.h"
 
+using namespace Expressions::Operators;
+
 UI::MapDialog::MapDialog(UI::Widget * SupWidget, Character * Character) :
 	UI::Dialog(SupWidget),
 	_OKButton(nullptr),
@@ -37,7 +41,7 @@ UI::MapDialog::MapDialog(UI::Widget * SupWidget, Character * Character) :
 	SetTitle("Map");
 	ConnectKeyCallback(std::bind(&UI::MapDialog::_OnKey, this, std::placeholders::_1));
 	_OKButton = new UI::TextButton{this, "OK"};
-	_OKButton->SetLeft(GetWidth() - 110.0f);
+	_OKButton->SetLeft(constant(GetWidth() - 110.0f));
 	_OKButton->SetTop(GetHeight() - 30.0f);
 	_OKButton->SetWidth(100.0f);
 	_OKButton->SetHeight(20.0f);
@@ -50,7 +54,7 @@ UI::MapDialog::MapDialog(UI::Widget * SupWidget, Character * Character) :
 	
 	auto CancelButton{new UI::TextButton(this, "Cancel")};
 	
-	CancelButton->SetLeft(GetWidth() - 220.0f);
+	CancelButton->SetLeft(constant(GetWidth() - 220.0f));
 	CancelButton->SetTop(GetHeight() - 30.0f);
 	CancelButton->SetWidth(100.0f);
 	CancelButton->SetHeight(20.0f);
@@ -60,7 +64,7 @@ UI::MapDialog::MapDialog(UI::Widget * SupWidget, Character * Character) :
 	CancelButton->SetAnchorTop(false);
 	CancelButton->ConnectClickedCallback(std::bind(&UI::MapDialog::_Close, this, UI::Dialog::ClosingReason::CANCEL_BUTTON));
 	_StarMapDisplay = new UI::StarMapDisplay{this, Character};
-	_StarMapDisplay->SetLeft(10.0f);
+	_StarMapDisplay->SetLeft(10.0_c);
 	_StarMapDisplay->SetTop(40.0f);
 	_StarMapDisplay->SetWidth(GetWidth() - 20.0f);
 	_StarMapDisplay->SetHeight(GetHeight() - 80.0f);

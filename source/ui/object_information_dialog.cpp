@@ -17,6 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include <expressions/operators.h>
+
 #include <string_cast/string_cast.h>
 
 #include "../globals.h"
@@ -40,6 +42,8 @@
 #include "scroll_box.h"
 #include "text_button.h"
 
+using namespace Expressions::Operators;
+
 namespace UI
 {
 	class ObjectPropertyWidget : public UI::Widget
@@ -52,7 +56,7 @@ namespace UI
 			_ObjectDestroyingConnection = _Object->ConnectDestroyingCallback(std::bind(&UI::ObjectPropertyWidget::_OnObjectDestroying, this));
 			ConnectDestroyingCallback(std::bind(&UI::ObjectPropertyWidget::_OnDestroying, this, std::placeholders::_1));
 			_Button = new UI::TextButton{this, Object->GetObjectIdentifier()};
-			_Button->SetLeft(Indentation);
+			_Button->SetLeft(constant(Indentation));
 			_Button->SetTop(5.0f);
 			_Button->SetWidth(GetWidth() - Indentation);
 			_Button->SetHeight(GetHeight() - 10.0f);
@@ -66,7 +70,7 @@ namespace UI
 			auto ObjectInformationDialog{new UI::ObjectInformationDialog{GetRootWidget(), _Object}};
 			
 			ObjectInformationDialog->SetName("object_information(" + _Object->GetObjectIdentifier() + ")");
-			ObjectInformationDialog->SetLeft(100.0f);
+			ObjectInformationDialog->SetLeft(100.0_c);
 			ObjectInformationDialog->SetTop(400.0f);
 			ObjectInformationDialog->SetWidth(500.0f);
 			ObjectInformationDialog->SetHeight(300.0f);
@@ -116,7 +120,7 @@ UI::ObjectInformationDialog::ObjectInformationDialog(UI::Widget * SupWidget, Obj
 	// set up widgets
 	auto CloseButton{new UI::TextButton{this, "Close"}};
 	
-	CloseButton->SetLeft(GetWidth() - 110.0f);
+	CloseButton->SetLeft(constant(GetWidth() - 110.0f));
 	CloseButton->SetTop(GetHeight() - 30.0f);
 	CloseButton->SetWidth(100.0f);
 	CloseButton->SetHeight(20.0f);
@@ -126,7 +130,7 @@ UI::ObjectInformationDialog::ObjectInformationDialog(UI::Widget * SupWidget, Obj
 	CloseButton->SetAnchorTop(false);
 	CloseButton->ConnectClickedCallback(std::bind(&ObjectInformationDialog::_OnCloseClicked, this));
 	_PropertiesScrollBox = new UI::ScrollBox{this};
-	_PropertiesScrollBox->SetLeft(10.0f);
+	_PropertiesScrollBox->SetLeft(10.0_c);
 	_PropertiesScrollBox->SetTop(40.0f);
 	_PropertiesScrollBox->SetWidth(GetWidth() - 20.0f);
 	_PropertiesScrollBox->SetHeight(GetHeight() - 80.0f);
@@ -138,7 +142,7 @@ UI::ObjectInformationDialog::ObjectInformationDialog(UI::Widget * SupWidget, Obj
 	
 	auto RefreshButton{new UI::TextButton{this, "Refresh"}};
 	
-	RefreshButton->SetLeft(GetWidth() - 220.0f);
+	RefreshButton->SetLeft(constant(GetWidth() - 220.0f));
 	RefreshButton->SetTop(GetHeight() - 30.0f);
 	RefreshButton->SetWidth(100.0f);
 	RefreshButton->SetHeight(20.0f);
@@ -154,7 +158,7 @@ float UI::ObjectInformationDialog::_AddObjectProperty(float Top, float Indentati
 {
 	auto ObjectPropertyWidget{new UI::ObjectPropertyWidget{Indentation, Object}};
 	
-	ObjectPropertyWidget->SetLeft(10.0f);
+	ObjectPropertyWidget->SetLeft(10.0_c);
 	ObjectPropertyWidget->SetTop(Top);
 	ObjectPropertyWidget->SetWidth(_PropertiesScrollBox->GetContent()->GetWidth() - 20.0f);
 	ObjectPropertyWidget->SetHeight(30.0f);
@@ -168,7 +172,7 @@ float UI::ObjectInformationDialog::_AddSeparator(float Top, float Indentation, c
 {
 	auto SeparatorDisplay{new UI::Widget{_PropertiesScrollBox->GetContent()}};
 	
-	SeparatorDisplay->SetLeft(10.0f);
+	SeparatorDisplay->SetLeft(10.0_c);
 	SeparatorDisplay->SetTop(Top);
 	SeparatorDisplay->SetWidth(_PropertiesScrollBox->GetContent()->GetWidth() - 20.0f);
 	SeparatorDisplay->SetHeight(20.0f);
@@ -176,7 +180,7 @@ float UI::ObjectInformationDialog::_AddSeparator(float Top, float Indentation, c
 	
 	auto SeparatorLabel{new UI::Label{SeparatorDisplay, Separator}};
 	
-	SeparatorLabel->SetLeft(Indentation);
+	SeparatorLabel->SetLeft(constant(Indentation));
 	SeparatorLabel->SetTop(0.0f);
 	SeparatorLabel->SetWidth(SeparatorDisplay->GetWidth());
 	SeparatorLabel->SetHeight(SeparatorDisplay->GetHeight());
@@ -192,7 +196,7 @@ float UI::ObjectInformationDialog::_AddString(float Top, float Indentation, cons
 {
 	auto StringDisplay{new UI::Widget{_PropertiesScrollBox->GetContent()}};
 	
-	StringDisplay->SetLeft(10.0f);
+	StringDisplay->SetLeft(10.0_c);
 	StringDisplay->SetTop(Top);
 	StringDisplay->SetWidth(_PropertiesScrollBox->GetContent()->GetWidth() - 20.0f);
 	StringDisplay->SetHeight(20.0f);
@@ -200,7 +204,7 @@ float UI::ObjectInformationDialog::_AddString(float Top, float Indentation, cons
 	
 	auto StringLabel{new UI::Label{StringDisplay, String}};
 	
-	StringLabel->SetLeft(Indentation);
+	StringLabel->SetLeft(constant(Indentation));
 	StringLabel->SetTop(0.0f);
 	StringLabel->SetWidth(StringDisplay->GetWidth());
 	StringLabel->SetHeight(StringDisplay->GetHeight());
@@ -214,7 +218,7 @@ float UI::ObjectInformationDialog::_AddStringProperty(float Top, float Indentati
 {
 	auto PropertyDisplay{new UI::Widget{_PropertiesScrollBox->GetContent()}};
 	
-	PropertyDisplay->SetLeft(10.0f);
+	PropertyDisplay->SetLeft(10.0_c);
 	PropertyDisplay->SetTop(Top);
 	PropertyDisplay->SetWidth(_PropertiesScrollBox->GetContent()->GetWidth() - 20.0f);
 	PropertyDisplay->SetHeight(20.0f);
@@ -222,7 +226,7 @@ float UI::ObjectInformationDialog::_AddStringProperty(float Top, float Indentati
 	
 	auto PropertyNameLabel{new UI::Label{PropertyDisplay, PropertyName + ":"}};
 	
-	PropertyNameLabel->SetLeft(Indentation);
+	PropertyNameLabel->SetLeft(constant(Indentation));
 	PropertyNameLabel->SetTop(0.0f);
 	PropertyNameLabel->SetWidth(6.0f * (PropertyName.length() + 1));
 	PropertyNameLabel->SetHeight(PropertyDisplay->GetHeight());
@@ -231,7 +235,7 @@ float UI::ObjectInformationDialog::_AddStringProperty(float Top, float Indentati
 	
 	auto PropertyValueLabel{new UI::Label(PropertyDisplay, PropertyValue)};
 	
-	PropertyValueLabel->SetLeft(PropertyNameLabel->GetRight());
+	PropertyValueLabel->SetLeft(constant(PropertyNameLabel->GetRight()));
 	PropertyValueLabel->SetTop(0.0f);
 	PropertyValueLabel->SetWidth(PropertyDisplay->GetWidth() - PropertyNameLabel->GetRight());
 	PropertyValueLabel->SetHeight(PropertyDisplay->GetHeight());

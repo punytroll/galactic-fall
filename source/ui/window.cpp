@@ -17,6 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include <expressions/operators.h>
+
 #include "../globals.h"
 #include "../graphics/color_rgbo.h"
 #include "border.h"
@@ -25,6 +27,8 @@
 #include "mouse_move_event.h"
 #include "user_interface.h"
 #include "window.h"
+
+using namespace Expressions::Operators;
 
 UI::Window::Window(Widget * SupWidget, const std::string & Title) :
 	Widget(SupWidget),
@@ -35,7 +39,7 @@ UI::Window::Window(Widget * SupWidget, const std::string & Title) :
 	
 	auto Border{new UI::Border{this}};
 	
-	Border->SetLeft(0.0f);
+	Border->SetLeft(0.0_c);
 	Border->SetTop(0.0f);
 	Border->SetWidth(GetWidth());
 	Border->SetHeight(GetHeight());
@@ -44,7 +48,7 @@ UI::Window::Window(Widget * SupWidget, const std::string & Title) :
 	Border->SetLineWidth(1.0f);
 	Border->SetColor(Graphics::ColorRGBO(0.4f, 0.4f, 0.4f, 1.0f));
 	_TitleLabel = new UI::Label{this, Title};
-	_TitleLabel->SetLeft(10.0f);
+	_TitleLabel->SetLeft(10.0_c);
 	_TitleLabel->SetTop(10.0f);
 	_TitleLabel->SetWidth(GetWidth() - 20.0f);
 	_TitleLabel->SetHeight(20.0f);
@@ -55,7 +59,7 @@ UI::Window::Window(Widget * SupWidget, const std::string & Title) :
 	_TitleLabel->ConnectMouseButtonCallback(std::bind(&UI::Window::_OnTitleLabelMouseButton, this, std::placeholders::_1));
 	_TitleLabel->ConnectMouseMoveCallback(std::bind(&UI::Window::_OnTitleLabelMouseMove, this, std::placeholders::_1));
 	_ResizeDragBox = new Widget{this};
-	_ResizeDragBox->SetLeft(GetWidth() - 9.0f);
+	_ResizeDragBox->SetLeft(constant(GetWidth() - 9.0f));
 	_ResizeDragBox->SetTop(GetHeight() - 9.0f);
 	_ResizeDragBox->SetWidth(7.0f);
 	_ResizeDragBox->SetHeight(7.0f);
@@ -119,7 +123,7 @@ void UI::Window::_OnTitleLabelMouseMove(UI::MouseMoveEvent & MouseMoveEvent)
 {
 	if((MouseMoveEvent.GetPhase() == UI::Event::Phase::Target) && (g_UserInterface->GetCaptureWidget() == _TitleLabel))
 	{
-		SetLeft(GetLeft() + MouseMoveEvent.GetPosition()[0] - _GrabPosition[0]);
+		SetLeft(constant(GetLeft() + MouseMoveEvent.GetPosition()[0] - _GrabPosition[0]));
 		SetTop(GetTop() + MouseMoveEvent.GetPosition()[1] - _GrabPosition[1]);
 	}
 }
