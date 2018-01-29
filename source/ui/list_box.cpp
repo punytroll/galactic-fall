@@ -54,7 +54,7 @@ void UI::ListBox::_OnSubWidgetAdded(UI::SubWidgetEvent & SubWidgetEvent)
 			}
 			NewWidget->SetLeft(constant(g_ListBoxItemPadding));
 			NewWidget->SetTop(constant(Top + g_ListBoxItemPadding));
-			NewWidget->SetWidth(GetContent()->GetWidth() - 2.0f * g_ListBoxItemPadding);
+			NewWidget->SetWidth(constant(GetContent()->GetWidth() - 2.0f * g_ListBoxItemPadding));
 			NewWidget->SetAnchorRight(true);
 			NewWidget->ConnectMouseButtonCallback(std::bind(&UI::ListBox::_OnItemMouseButton, this, std::placeholders::_1, NewWidget));
 			GetContent()->SetHeight(NewWidget->GetBottom() + g_ListBoxItemPadding);

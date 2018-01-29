@@ -46,7 +46,7 @@ UI::LoadScenarioDialog::LoadScenarioDialog(UI::Widget * SupWidget, ScenarioManag
 	
 	OKButton->SetLeft(constant(GetWidth() - 110.0f));
 	OKButton->SetTop(constant(GetHeight() - 30.0f));
-	OKButton->SetWidth(100.0f);
+	OKButton->SetWidth(100.0_c);
 	OKButton->SetHeight(20.0f);
 	OKButton->SetAnchorBottom(true);
 	OKButton->SetAnchorLeft(false);
@@ -58,7 +58,7 @@ UI::LoadScenarioDialog::LoadScenarioDialog(UI::Widget * SupWidget, ScenarioManag
 	
 	CancelButton->SetLeft(constant(GetWidth() - 220.0f));
 	CancelButton->SetTop(constant(GetHeight() - 30.0f));
-	CancelButton->SetWidth(100.0f);
+	CancelButton->SetWidth(100.0_c);
 	CancelButton->SetHeight(20.0f);
 	CancelButton->SetAnchorBottom(true);
 	CancelButton->SetAnchorLeft(false);
@@ -68,7 +68,7 @@ UI::LoadScenarioDialog::LoadScenarioDialog(UI::Widget * SupWidget, ScenarioManag
 	_MessageLabel = new UI::Label{this};
 	_MessageLabel->SetLeft(10.0_c);
 	_MessageLabel->SetTop(40.0_c);
-	_MessageLabel->SetWidth(GetWidth() - 20.0f);
+	_MessageLabel->SetWidth(constant(GetWidth() - 20.0f));
 	_MessageLabel->SetHeight(30.0f);
 	_MessageLabel->SetTextColor(Graphics::ColorRGBO(1.0f, 0.3, 0.3f, 1.0f));
 	_MessageLabel->SetAnchorBottom(false);
@@ -81,13 +81,13 @@ UI::LoadScenarioDialog::LoadScenarioDialog(UI::Widget * SupWidget, ScenarioManag
 	_ScenarioListBox = new UI::ListBox{this};
 	_ScenarioListBox->SetLeft(10.0_c);
 	_ScenarioListBox->SetTop(110.0_c);
-	_ScenarioListBox->SetWidth(GetWidth() - 20.0f);
+	_ScenarioListBox->SetWidth(constant(GetWidth() - 20.0f));
 	_ScenarioListBox->SetHeight(GetHeight() - 170.0f);
 	_ScenarioListBox->SetAnchorBottom(true);
 	_ScenarioListBox->SetAnchorRight(true);
 	_ScenarioListBox->SetAnchorTop(true);
 	_ScenarioListBox->SetHorizontalScrollBarVisible(false);
-	_ScenarioListBox->GetContent()->SetWidth(_ScenarioListBox->GetView()->GetWidth());
+	_ScenarioListBox->GetContent()->SetWidth(constant(_ScenarioListBox->GetView()->GetWidth()));
 	_ScenarioListBox->GetContent()->SetAnchorRight(true);
 	for(auto ScenarioPair : _ScenarioManager->GetScenarios())
 	{

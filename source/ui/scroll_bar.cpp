@@ -159,7 +159,7 @@ void UI::ScrollBar::SetAlignment(UI::ScrollBar::Alignment Alignment)
 		{
 			_LessButton->SetLeft(0.0_c);
 			_LessButton->SetTop(0.0_c);
-			_LessButton->SetWidth(20.0f);
+			_LessButton->SetWidth(20.0_c);
 			_LessButton->SetHeight(GetHeight());
 			_LessButton->SetAnchorBottom(true);
 			_LessButton->SetAnchorLeft(true);
@@ -167,7 +167,7 @@ void UI::ScrollBar::SetAlignment(UI::ScrollBar::Alignment Alignment)
 			_LessButton->SetAnchorTop(true);
 			_MoreButton->SetLeft(constant(GetWidth() - 20.0f));
 			_MoreButton->SetTop(0.0_c);
-			_MoreButton->SetWidth(20.0f);
+			_MoreButton->SetWidth(20.0_c);
 			_MoreButton->SetHeight(GetHeight());
 			_MoreButton->SetAnchorBottom(true);
 			_MoreButton->SetAnchorLeft(false);
@@ -175,7 +175,7 @@ void UI::ScrollBar::SetAlignment(UI::ScrollBar::Alignment Alignment)
 			_MoreButton->SetAnchorTop(true);
 			_Tracker->SetLeft(constant(_LessButton->GetWidth() + g_ScrollBarTrackerBorderWidth));
 			_Tracker->SetTop(constant(g_ScrollBarTrackerBorderWidth));
-			_Tracker->SetWidth(20.0f);
+			_Tracker->SetWidth(20.0_c);
 			_Tracker->SetHeight(GetHeight() - 2 * g_ScrollBarTrackerBorderWidth);
 			_Tracker->SetAnchorBottom(true);
 			_Tracker->SetAnchorLeft(false);
@@ -187,7 +187,7 @@ void UI::ScrollBar::SetAlignment(UI::ScrollBar::Alignment Alignment)
 		{
 			_LessButton->SetLeft(0.0_c);
 			_LessButton->SetTop(0.0_c);
-			_LessButton->SetWidth(GetWidth());
+			_LessButton->SetWidth(constant(GetWidth()));
 			_LessButton->SetHeight(20.0f);
 			_LessButton->SetAnchorBottom(false);
 			_LessButton->SetAnchorLeft(true);
@@ -195,7 +195,7 @@ void UI::ScrollBar::SetAlignment(UI::ScrollBar::Alignment Alignment)
 			_LessButton->SetAnchorTop(true);
 			_MoreButton->SetLeft(0.0_c);
 			_MoreButton->SetTop(constant(GetHeight() - 20.0f));
-			_MoreButton->SetWidth(GetWidth());
+			_MoreButton->SetWidth(constant(GetWidth()));
 			_MoreButton->SetHeight(20.0f);
 			_MoreButton->SetAnchorBottom(true);
 			_MoreButton->SetAnchorLeft(true);
@@ -203,7 +203,7 @@ void UI::ScrollBar::SetAlignment(UI::ScrollBar::Alignment Alignment)
 			_MoreButton->SetAnchorTop(false);
 			_Tracker->SetLeft(constant(g_ScrollBarTrackerBorderWidth));
 			_Tracker->SetTop(constant(_LessButton->GetHeight() + g_ScrollBarTrackerBorderWidth));
-			_Tracker->SetWidth(GetWidth() - 2 * g_ScrollBarTrackerBorderWidth);
+			_Tracker->SetWidth(constant(GetWidth() - 2 * g_ScrollBarTrackerBorderWidth));
 			_Tracker->SetHeight(20.0f);
 			_Tracker->SetAnchorBottom(false);
 			_Tracker->SetAnchorLeft(true);

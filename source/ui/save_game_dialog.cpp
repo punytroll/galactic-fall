@@ -57,7 +57,7 @@ UI::DirectoryEntryItem::DirectoryEntryItem(UI::Widget * SupWidget, const std::st
 	_CaptionLabel = new UI::Label{this, Caption};
 	_CaptionLabel->SetLeft(5.0_c);
 	_CaptionLabel->SetTop(0.0_c);
-	_CaptionLabel->SetWidth(GetWidth() - 10.0f);
+	_CaptionLabel->SetWidth(constant(GetWidth() - 10.0f));
 	_CaptionLabel->SetHeight(GetHeight());
 	_CaptionLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	_CaptionLabel->SetAnchorBottom(true);
@@ -83,7 +83,7 @@ UI::SaveGameDialog::SaveGameDialog(UI::Widget * SupWidget) :
 	
 	OKButton->SetLeft(constant(GetWidth() - 110.0f));
 	OKButton->SetTop(constant(GetHeight() - 30.0f));
-	OKButton->SetWidth(100.0f);
+	OKButton->SetWidth(100.0_c);
 	OKButton->SetHeight(20.0f);
 	OKButton->SetAnchorBottom(true);
 	OKButton->SetAnchorLeft(false);
@@ -95,7 +95,7 @@ UI::SaveGameDialog::SaveGameDialog(UI::Widget * SupWidget) :
 	
 	CancelButton->SetLeft(constant(GetWidth() - 220.0f));
 	CancelButton->SetTop(constant(GetHeight() - 30.0f));
-	CancelButton->SetWidth(100.0f);
+	CancelButton->SetWidth(100.0_c);
 	CancelButton->SetHeight(20.0f);
 	CancelButton->SetAnchorBottom(true);
 	CancelButton->SetAnchorLeft(false);
@@ -105,7 +105,7 @@ UI::SaveGameDialog::SaveGameDialog(UI::Widget * SupWidget) :
 	_MessageLabel = new UI::Label{this};
 	_MessageLabel->SetLeft(10.0_c);
 	_MessageLabel->SetTop(40.0_c);
-	_MessageLabel->SetWidth(GetWidth() - 20.0f);
+	_MessageLabel->SetWidth(constant(GetWidth() - 20.0f));
 	_MessageLabel->SetHeight(30.0f);
 	_MessageLabel->SetTextColor(Graphics::ColorRGBO(1.0f, 0.3, 0.3f, 1.0f));
 	_MessageLabel->SetAnchorBottom(false);
@@ -118,7 +118,7 @@ UI::SaveGameDialog::SaveGameDialog(UI::Widget * SupWidget) :
 	_FileNameLabel = new UI::Label{this};
 	_FileNameLabel->SetLeft(10.0_c);
 	_FileNameLabel->SetTop(80.0_c);
-	_FileNameLabel->SetWidth(GetWidth() - 20.0f);
+	_FileNameLabel->SetWidth(constant(GetWidth() - 20.0f));
 	_FileNameLabel->SetHeight(20.0f);
 	_FileNameLabel->SetTextColor(Graphics::ColorRGBO(1.0f, 1.0f, 0.5f, 1.0f));
 	_FileNameLabel->SetBackgroundColor(Graphics::ColorRGBO(0.1f, 0.1f, 0.1f, 1.0f));
@@ -129,13 +129,13 @@ UI::SaveGameDialog::SaveGameDialog(UI::Widget * SupWidget) :
 	_FileScrollBox = new UI::ScrollBox{this};
 	_FileScrollBox->SetLeft(10.0_c);
 	_FileScrollBox->SetTop(110.0_c);
-	_FileScrollBox->SetWidth(GetWidth() - 20.0f);
+	_FileScrollBox->SetWidth(constant(GetWidth() - 20.0f));
 	_FileScrollBox->SetHeight(GetHeight() - 170.0f);
 	_FileScrollBox->SetAnchorBottom(true);
 	_FileScrollBox->SetAnchorRight(true);
 	_FileScrollBox->SetAnchorTop(true);
 	_FileScrollBox->SetHorizontalScrollBarVisible(false);
-	_FileScrollBox->GetContent()->SetWidth(_FileScrollBox->GetView()->GetWidth());
+	_FileScrollBox->GetContent()->SetWidth(constant(_FileScrollBox->GetView()->GetWidth()));
 	_FileScrollBox->GetContent()->SetAnchorRight(true);
 }
 
@@ -171,7 +171,7 @@ void UI::SaveGameDialog::SetDirectoryPath(const std::string & DirectoryPath)
 		
 		EntryLabel->SetLeft(5.0_c);
 		EntryLabel->SetTop(constant(Top));
-		EntryLabel->SetWidth(_FileScrollBox->GetContent()->GetWidth() - 10.0f);
+		EntryLabel->SetWidth(constant(_FileScrollBox->GetContent()->GetWidth() - 10.0f));
 		EntryLabel->SetAnchorRight(true);
 		EntryLabel->ConnectMouseButtonCallback(std::bind(&UI::SaveGameDialog::_OnDirectoryEntryItemMouseButton, this, EntryLabel, std::placeholders::_1));
 		Top += 25.0f;

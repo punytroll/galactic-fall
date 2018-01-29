@@ -95,7 +95,7 @@ namespace UI
 		void SetLeft(Expressions::Expression && Left);
 		void SetTop(Expressions::Expression && Top);
 		void SetVisible(bool Visible);
-		void SetWidth(float Width);
+		void SetWidth(Expressions::Expression && Width);
 		// connect events
 		Connection ConnectDestroyingCallback(std::function< void (UI::Event &) > Callback);
 		Connection ConnectHeightChangedCallback(std::function< void (UI::Event &) > Callback);

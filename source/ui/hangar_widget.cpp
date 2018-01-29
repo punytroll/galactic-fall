@@ -241,7 +241,7 @@ namespace UI
 			
 			ShipDisplay->SetLeft(1.0_c);
 			ShipDisplay->SetTop(1.0_c);
-			ShipDisplay->SetWidth(GetWidth() - 2.0f);
+			ShipDisplay->SetWidth(constant(GetWidth() - 2.0f));
 			ShipDisplay->SetHeight(GetHeight() - 2.0f);
 			ShipDisplay->SetAnchorBottom(true);
 			ShipDisplay->SetAnchorRight(true);
@@ -261,7 +261,7 @@ namespace UI
 					_Border = new UI::Border{this};
 					_Border->SetLeft(0.0_c);
 					_Border->SetTop(0.0_c);
-					_Border->SetWidth(GetWidth());
+					_Border->SetWidth(constant(GetWidth()));
 					_Border->SetHeight(GetHeight());
 					_Border->SetAnchorBottom(true);
 					_Border->SetAnchorRight(true);
@@ -319,7 +319,7 @@ UI::HangarWidget::HangarWidget(UI::Widget * SupWidget, Planet * Planet, Characte
 	_ShipScrollBox = new UI::ScrollBox{this};
 	_ShipScrollBox->SetLeft(0.0_c);
 	_ShipScrollBox->SetTop(0.0_c);
-	_ShipScrollBox->SetWidth(GetWidth());
+	_ShipScrollBox->SetWidth(constant(GetWidth()));
 	_ShipScrollBox->SetHeight(130.0f);
 	_ShipScrollBox->SetAnchorRight(true);
 	_ShipScrollBox->SetVerticalScrollBarVisible(false);
@@ -359,7 +359,7 @@ UI::HangarWidget::HangarWidget(UI::Widget * SupWidget, Planet * Planet, Characte
 	
 	BoardButton->SetLeft(0.0_c);
 	BoardButton->SetTop(140.0_c);
-	BoardButton->SetWidth(180.0f);
+	BoardButton->SetWidth(180.0_c);
 	BoardButton->SetHeight(20.0f);
 	BoardButton->ConnectClickedCallback(std::bind(&UI::HangarWidget::_OnBoardButtonClicked, this));
 	BoardButton->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnBoardButtonUpdating, this, BoardButton, std::placeholders::_1, std::placeholders::_2));
@@ -368,7 +368,7 @@ UI::HangarWidget::HangarWidget(UI::Widget * SupWidget, Planet * Planet, Characte
 	
 	LoadButton->SetLeft(0.0_c);
 	LoadButton->SetTop(170.0_c);
-	LoadButton->SetWidth(180.0f);
+	LoadButton->SetWidth(180.0_c);
 	LoadButton->SetHeight(20.0f);
 	LoadButton->ConnectClickedCallback(std::bind(&UI::HangarWidget::_OnLoadButtonClicked, this));
 	LoadButton->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnLoadButtonUpdating, this, LoadButton, std::placeholders::_1, std::placeholders::_2));
@@ -377,7 +377,7 @@ UI::HangarWidget::HangarWidget(UI::Widget * SupWidget, Planet * Planet, Characte
 	
 	OutfitButton->SetLeft(0.0_c);
 	OutfitButton->SetTop(200.0_c);
-	OutfitButton->SetWidth(180.0f);
+	OutfitButton->SetWidth(180.0_c);
 	OutfitButton->SetHeight(20.0f);
 	OutfitButton->ConnectClickedCallback(std::bind(&UI::HangarWidget::_OnOutfitButtonClicked, this));
 	OutfitButton->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnOutfitButtonUpdating, this, OutfitButton, std::placeholders::_1, std::placeholders::_2));
@@ -386,7 +386,7 @@ UI::HangarWidget::HangarWidget(UI::Widget * SupWidget, Planet * Planet, Characte
 	
 	RepairButton->SetLeft(0.0_c);
 	RepairButton->SetTop(230.0_c);
-	RepairButton->SetWidth(180.0f);
+	RepairButton->SetWidth(180.0_c);
 	RepairButton->SetHeight(20.0f);
 	RepairButton->ConnectClickedCallback(std::bind(&UI::HangarWidget::_OnRepairButtonClicked, this));
 	RepairButton->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnRepairButtonUpdating, this, RepairButton, std::placeholders::_1, std::placeholders::_2));
@@ -395,7 +395,7 @@ UI::HangarWidget::HangarWidget(UI::Widget * SupWidget, Planet * Planet, Characte
 	
 	HullStateProgressBar->SetLeft(190.0_c);
 	HullStateProgressBar->SetTop(230.0_c);
-	HullStateProgressBar->SetWidth(GetWidth() - 190.0f);
+	HullStateProgressBar->SetWidth(constant(GetWidth() - 190.0f));
 	HullStateProgressBar->SetHeight(20.0f);
 	HullStateProgressBar->SetAnchorRight(true);
 	HullStateProgressBar->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnHullStateProgressBarUpdating, this, HullStateProgressBar, std::placeholders::_1, std::placeholders::_2));
@@ -404,7 +404,7 @@ UI::HangarWidget::HangarWidget(UI::Widget * SupWidget, Planet * Planet, Characte
 	
 	RechargeButton->SetLeft(0.0_c);
 	RechargeButton->SetTop(260.0_c);
-	RechargeButton->SetWidth(180.0f);
+	RechargeButton->SetWidth(180.0_c);
 	RechargeButton->SetHeight(20.0f);
 	RechargeButton->ConnectClickedCallback(std::bind(&UI::HangarWidget::_OnRechargeButtonClicked, this));
 	RechargeButton->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnRechargeButtonUpdating, this, RechargeButton, std::placeholders::_1, std::placeholders::_2));
@@ -413,7 +413,7 @@ UI::HangarWidget::HangarWidget(UI::Widget * SupWidget, Planet * Planet, Characte
 	
 	EnergyStateProgressBar->SetLeft(190.0_c);
 	EnergyStateProgressBar->SetTop(260.0_c);
-	EnergyStateProgressBar->SetWidth(GetWidth() - 190.0f);
+	EnergyStateProgressBar->SetWidth(constant(GetWidth() - 190.0f));
 	EnergyStateProgressBar->SetHeight(20.0f);
 	EnergyStateProgressBar->SetAnchorRight(true);
 	EnergyStateProgressBar->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnEnergyStateProgressBarUpdating, this, EnergyStateProgressBar, std::placeholders::_1, std::placeholders::_2));
@@ -422,7 +422,7 @@ UI::HangarWidget::HangarWidget(UI::Widget * SupWidget, Planet * Planet, Characte
 	
 	RefuelButton->SetLeft(0.0_c);
 	RefuelButton->SetTop(290.0_c);
-	RefuelButton->SetWidth(180.0f);
+	RefuelButton->SetWidth(180.0_c);
 	RefuelButton->SetHeight(20.0f);
 	RefuelButton->ConnectClickedCallback(std::bind(&UI::HangarWidget::_OnRefuelButtonClicked, this));
 	RefuelButton->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnRefuelButtonUpdating, this, RefuelButton, std::placeholders::_1, std::placeholders::_2));
@@ -431,7 +431,7 @@ UI::HangarWidget::HangarWidget(UI::Widget * SupWidget, Planet * Planet, Characte
 	
 	FuelStateProgressBar->SetLeft(190.0_c);
 	FuelStateProgressBar->SetTop(290.0_c);
-	FuelStateProgressBar->SetWidth(GetWidth() - 190.0f);
+	FuelStateProgressBar->SetWidth(constant(GetWidth() - 190.0f));
 	FuelStateProgressBar->SetHeight(20.0f);
 	FuelStateProgressBar->SetAnchorRight(true);
 	FuelStateProgressBar->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnFuelStateProgressBarUpdating, this, FuelStateProgressBar, std::placeholders::_1, std::placeholders::_2));
@@ -440,7 +440,7 @@ UI::HangarWidget::HangarWidget(UI::Widget * SupWidget, Planet * Planet, Characte
 	
 	TakeOffButton->SetLeft(0.0_c);
 	TakeOffButton->SetTop(320.0_c);
-	TakeOffButton->SetWidth(180.0f);
+	TakeOffButton->SetWidth(180.0_c);
 	TakeOffButton->SetHeight(20.0f);
 	TakeOffButton->ConnectClickedCallback(std::bind(&UI::HangarWidget::_OnTakeOffButtonClicked, this));
 	TakeOffButton->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnTakeOffButtonUpdating, this, TakeOffButton, std::placeholders::_1, std::placeholders::_2));
@@ -612,7 +612,7 @@ void UI::HangarWidget::_OnLoadButtonClicked(void)
 		_LoadShipWindow = new UI::LoadShipWindow{GetRootWidget(), _Planet->GetHangar(_Character), _SelectedShipListItem->GetShip()};
 		_LoadShipWindow->SetLeft(100.0_c);
 		_LoadShipWindow->SetTop(100.0_c);
-		_LoadShipWindow->SetWidth(600.0f);
+		_LoadShipWindow->SetWidth(600.0_c);
 		_LoadShipWindow->SetHeight(400.0f);
 		_LoadShipWindow->ConnectDestroyingCallback(std::bind(&UI::HangarWidget::_OnLoadShipWindowDestroying, this, std::placeholders::_1));
 		_LoadShipWindow->GrabKeyFocus();
@@ -646,7 +646,7 @@ void UI::HangarWidget::_OnOutfitButtonClicked(void)
 		_OutfitShipDialog = new UI::OutfitShipDialog(GetRootWidget(), _SelectedShipListItem->GetShip());
 		_OutfitShipDialog->SetLeft(70.0_c);
 		_OutfitShipDialog->SetTop(280.0_c);
-		_OutfitShipDialog->SetWidth(600.0f);
+		_OutfitShipDialog->SetWidth(600.0_c);
 		_OutfitShipDialog->SetHeight(400.0f);
 		_OutfitShipDialog->ConnectDestroyingCallback(std::bind(&UI::HangarWidget::_OnOutfitShipDialogDestroying, this, std::placeholders::_1));
 		_OutfitShipDialog->GrabKeyFocus();
@@ -782,11 +782,11 @@ void UI::HangarWidget::_OnShipScrollBoxSubWidgetAdded(UI::SubWidgetEvent & SubWi
 		Left += 5.0f;
 		NewItem->SetLeft(constant(Left));
 		NewItem->SetTop(5.0_c);
-		NewItem->SetWidth(100.0f);
+		NewItem->SetWidth(100.0_c);
 		NewItem->SetHeight(100.0f);
 		NewItem->ConnectMouseButtonCallback(std::bind(&UI::HangarWidget::_OnShipListItemMouseButton, this, std::placeholders::_1, NewItem));
 		NewItem->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnShipListItemUpdating, this, std::placeholders::_1, std::placeholders::_2, NewItem));
-		_ShipScrollBox->GetContent()->SetWidth(NewItem->GetRight());
+		_ShipScrollBox->GetContent()->SetWidth(constant(NewItem->GetRight()));
 	}
 }
 
@@ -832,7 +832,7 @@ void UI::HangarWidget::_OnShipScrollBoxSubWidgetRemoved(UI::SubWidgetEvent & Sub
 				_SelectedShipListItem = nullptr;
 			}
 		}
-		_ShipScrollBox->GetContent()->SetWidth(Left + 5.0f);
+		_ShipScrollBox->GetContent()->SetWidth(constant(Left + 5.0f));
 	}
 }
 
