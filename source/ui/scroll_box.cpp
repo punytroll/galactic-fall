@@ -37,7 +37,7 @@ UI::ScrollBox::ScrollBox(UI::Widget * SupWidget) :
 	_View->SetLeft(0.0_c);
 	_View->SetTop(0.0_c);
 	_View->SetWidth(constant(GetWidth() - 20.0f));
-	_View->SetHeight(GetHeight() - 20.0f);
+	_View->SetHeight(constant(GetHeight() - 20.0f));
 	_View->SetAnchorBottom(true);
 	_View->SetAnchorLeft(true);
 	_View->SetAnchorRight(true);
@@ -55,7 +55,7 @@ UI::ScrollBox::ScrollBox(UI::Widget * SupWidget) :
 	_HorizontalScrollBar->SetLeft(0.0_c);
 	_HorizontalScrollBar->SetTop(constant(GetHeight() - 20.0f));
 	_HorizontalScrollBar->SetWidth(constant(GetWidth() - 20.0f));
-	_HorizontalScrollBar->SetHeight(20.0f);
+	_HorizontalScrollBar->SetHeight(20.0_c);
 	_HorizontalScrollBar->ConnectScrollPositionChangedCallback(std::bind(&UI::ScrollBox::_OnHorizontalScrollPositionChanged, this));
 	_HorizontalScrollBar->SetAnchorBottom(true);
 	_HorizontalScrollBar->SetAnchorLeft(true);
@@ -70,7 +70,7 @@ UI::ScrollBox::ScrollBox(UI::Widget * SupWidget) :
 	_VerticalScrollBar->SetLeft(constant(GetWidth() - 20.0f));
 	_VerticalScrollBar->SetTop(0.0_c);
 	_VerticalScrollBar->SetWidth(20.0_c);
-	_VerticalScrollBar->SetHeight(GetHeight() - 20.0f);
+	_VerticalScrollBar->SetHeight(constant(GetHeight() - 20.0f));
 	_VerticalScrollBar->ConnectScrollPositionChangedCallback(std::bind(&UI::ScrollBox::_OnVerticalScrollPositionChanged, this));
 	_VerticalScrollBar->SetAnchorBottom(true);
 	_VerticalScrollBar->SetAnchorLeft(false);
@@ -149,13 +149,13 @@ void UI::ScrollBox::SetHorizontalScrollBarVisible(bool Visible)
 	{
 		if(Visible == true)
 		{
-			_View->SetHeight(GetHeight() - 20.0f);
-			_VerticalScrollBar->SetHeight(GetHeight() - 20.0f);
+			_View->SetHeight(constant(GetHeight() - 20.0f));
+			_VerticalScrollBar->SetHeight(constant(GetHeight() - 20.0f));
 		}
 		else
 		{
-			_View->SetHeight(GetHeight());
-			_VerticalScrollBar->SetHeight(GetHeight());
+			_View->SetHeight(constant(GetHeight()));
+			_VerticalScrollBar->SetHeight(constant(GetHeight()));
 		}
 		_HorizontalScrollBar->SetVisible(Visible);
 	}

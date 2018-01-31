@@ -47,7 +47,7 @@ UI::LoadScenarioDialog::LoadScenarioDialog(UI::Widget * SupWidget, ScenarioManag
 	OKButton->SetLeft(constant(GetWidth() - 110.0f));
 	OKButton->SetTop(constant(GetHeight() - 30.0f));
 	OKButton->SetWidth(100.0_c);
-	OKButton->SetHeight(20.0f);
+	OKButton->SetHeight(20.0_c);
 	OKButton->SetAnchorBottom(true);
 	OKButton->SetAnchorLeft(false);
 	OKButton->SetAnchorRight(true);
@@ -59,7 +59,7 @@ UI::LoadScenarioDialog::LoadScenarioDialog(UI::Widget * SupWidget, ScenarioManag
 	CancelButton->SetLeft(constant(GetWidth() - 220.0f));
 	CancelButton->SetTop(constant(GetHeight() - 30.0f));
 	CancelButton->SetWidth(100.0_c);
-	CancelButton->SetHeight(20.0f);
+	CancelButton->SetHeight(20.0_c);
 	CancelButton->SetAnchorBottom(true);
 	CancelButton->SetAnchorLeft(false);
 	CancelButton->SetAnchorRight(true);
@@ -69,7 +69,7 @@ UI::LoadScenarioDialog::LoadScenarioDialog(UI::Widget * SupWidget, ScenarioManag
 	_MessageLabel->SetLeft(10.0_c);
 	_MessageLabel->SetTop(40.0_c);
 	_MessageLabel->SetWidth(constant(GetWidth() - 20.0f));
-	_MessageLabel->SetHeight(30.0f);
+	_MessageLabel->SetHeight(30.0_c);
 	_MessageLabel->SetTextColor(Graphics::ColorRGBO(1.0f, 0.3, 0.3f, 1.0f));
 	_MessageLabel->SetAnchorBottom(false);
 	_MessageLabel->SetAnchorLeft(true);
@@ -82,7 +82,7 @@ UI::LoadScenarioDialog::LoadScenarioDialog(UI::Widget * SupWidget, ScenarioManag
 	_ScenarioListBox->SetLeft(10.0_c);
 	_ScenarioListBox->SetTop(110.0_c);
 	_ScenarioListBox->SetWidth(constant(GetWidth() - 20.0f));
-	_ScenarioListBox->SetHeight(GetHeight() - 170.0f);
+	_ScenarioListBox->SetHeight(constant(GetHeight() - 170.0f));
 	_ScenarioListBox->SetAnchorBottom(true);
 	_ScenarioListBox->SetAnchorRight(true);
 	_ScenarioListBox->SetAnchorTop(true);

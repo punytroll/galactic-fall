@@ -68,7 +68,7 @@ UI::MainMenuWindow::MainMenuWindow(UI::Widget * SupWidget, ScenarioManager * Sce
 	_ResumeGameButton->SetLeft(20.0_c);
 	_ResumeGameButton->SetTop(60.0_c);
 	_ResumeGameButton->SetWidth(constant(GetWidth() - 40.0f));
-	_ResumeGameButton->SetHeight(20.0f);
+	_ResumeGameButton->SetHeight(20.0_c);
 	_ResumeGameButton->SetAnchorBottom(false);
 	_ResumeGameButton->SetAnchorLeft(true);
 	_ResumeGameButton->SetAnchorRight(true);
@@ -81,7 +81,7 @@ UI::MainMenuWindow::MainMenuWindow(UI::Widget * SupWidget, ScenarioManager * Sce
 	_NewGameButton->SetLeft(20.0_c);
 	_NewGameButton->SetTop(constant(_ResumeGameButton->GetBottom() + 20.0f));
 	_NewGameButton->SetWidth(constant(GetWidth() - 40.0f));
-	_NewGameButton->SetHeight(20.0f);
+	_NewGameButton->SetHeight(20.0_c);
 	_NewGameButton->SetAnchorBottom(false);
 	_NewGameButton->SetAnchorLeft(true);
 	_NewGameButton->SetAnchorRight(true);
@@ -94,7 +94,7 @@ UI::MainMenuWindow::MainMenuWindow(UI::Widget * SupWidget, ScenarioManager * Sce
 	_LoadScenarioButton->SetLeft(20.0_c);
 	_LoadScenarioButton->SetTop(constant(_NewGameButton->GetBottom() + 20.0f));
 	_LoadScenarioButton->SetWidth(constant(GetWidth() - 40.0f));
-	_LoadScenarioButton->SetHeight(20.0f);
+	_LoadScenarioButton->SetHeight(20.0_c);
 	_LoadScenarioButton->SetAnchorBottom(false);
 	_LoadScenarioButton->SetAnchorLeft(true);
 	_LoadScenarioButton->SetAnchorRight(true);
@@ -107,7 +107,7 @@ UI::MainMenuWindow::MainMenuWindow(UI::Widget * SupWidget, ScenarioManager * Sce
 	_LoadGameButton->SetLeft(20.0_c);
 	_LoadGameButton->SetTop(constant(_LoadScenarioButton->GetBottom() + 20.0f));
 	_LoadGameButton->SetWidth(constant(GetWidth() - 40.0f));
-	_LoadGameButton->SetHeight(20.0f);
+	_LoadGameButton->SetHeight(20.0_c);
 	_LoadGameButton->SetAnchorBottom(false);
 	_LoadGameButton->SetAnchorLeft(true);
 	_LoadGameButton->SetAnchorRight(true);
@@ -120,7 +120,7 @@ UI::MainMenuWindow::MainMenuWindow(UI::Widget * SupWidget, ScenarioManager * Sce
 	_SaveGameButton->SetLeft(20.0_c);
 	_SaveGameButton->SetTop(constant(_LoadGameButton->GetBottom() + 20.0f));
 	_SaveGameButton->SetWidth(constant(GetWidth() - 40.0f));
-	_SaveGameButton->SetHeight(20.0f);
+	_SaveGameButton->SetHeight(20.0_c);
 	_SaveGameButton->SetAnchorBottom(false);
 	_SaveGameButton->SetAnchorLeft(true);
 	_SaveGameButton->SetAnchorRight(true);
@@ -133,7 +133,7 @@ UI::MainMenuWindow::MainMenuWindow(UI::Widget * SupWidget, ScenarioManager * Sce
 	_QuitButton->SetLeft(20.0_c);
 	_QuitButton->SetTop(constant(_SaveGameButton->GetBottom() + 20.0f));
 	_QuitButton->SetWidth(constant(GetWidth() - 40.0f));
-	_QuitButton->SetHeight(20.0f);
+	_QuitButton->SetHeight(20.0_c);
 	_QuitButton->SetAnchorBottom(false);
 	_QuitButton->SetAnchorLeft(true);
 	_QuitButton->SetAnchorRight(true);
@@ -184,7 +184,7 @@ void UI::MainMenuWindow::_OnLoadGameButtonClicked(void)
 		_LoadGameDialog->SetLeft(120.0_c);
 		_LoadGameDialog->SetTop(200.0_c);
 		_LoadGameDialog->SetWidth(300.0_c);
-		_LoadGameDialog->SetHeight(400.0f);
+		_LoadGameDialog->SetHeight(400.0_c);
 		_LoadGameDialog->GrabKeyFocus();
 		_LoadGameDialog->ConnectClosingCallback(std::bind(&UI::MainMenuWindow::_OnLoadGameDialogClosing, this, std::placeholders::_1));
 		_LoadGameDialog->ConnectDestroyingCallback(std::bind(&UI::MainMenuWindow::_OnLoadGameDialogDestroying, this, std::placeholders::_1));
@@ -275,7 +275,7 @@ void UI::MainMenuWindow::_OnLoadScenarioButtonClicked(void)
 		_LoadScenarioDialog->SetLeft(120.0_c);
 		_LoadScenarioDialog->SetTop(200.0_c);
 		_LoadScenarioDialog->SetWidth(300.0_c);
-		_LoadScenarioDialog->SetHeight(400.0f);
+		_LoadScenarioDialog->SetHeight(400.0_c);
 		_LoadScenarioDialog->GrabKeyFocus();
 		_LoadScenarioDialog->ConnectClosingCallback(std::bind(&UI::MainMenuWindow::_OnLoadScenarioDialogClosing, this, std::placeholders::_1));
 		_LoadScenarioDialog->ConnectDestroyingCallback(std::bind(&UI::MainMenuWindow::_OnLoadScenarioDialogDestroying, this, std::placeholders::_1));
@@ -355,7 +355,7 @@ void UI::MainMenuWindow::_OnSaveGameButtonClicked(void)
 		_SaveGameDialog->SetLeft(120.0_c);
 		_SaveGameDialog->SetTop(200.0_c);
 		_SaveGameDialog->SetWidth(300.0_c);
-		_SaveGameDialog->SetHeight(400.0f);
+		_SaveGameDialog->SetHeight(400.0_c);
 		_SaveGameDialog->GrabKeyFocus();
 		_SaveGameDialog->ConnectClosingCallback(std::bind(&UI::MainMenuWindow::_OnSaveGameDialogClosing, this, std::placeholders::_1));
 		_SaveGameDialog->ConnectDestroyingCallback(std::bind(&UI::MainMenuWindow::_OnSaveGameDialogDestroying, this, std::placeholders::_1));

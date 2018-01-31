@@ -33,11 +33,11 @@ UI::ScenarioListBoxItem::ScenarioListBoxItem(Scenario * Scenario) :
 	CaptionLabel->SetLeft(5.0_c);
 	CaptionLabel->SetTop(0.0_c);
 	CaptionLabel->SetWidth(constant(GetWidth() - 10.0f));
-	CaptionLabel->SetHeight(GetHeight());
+	CaptionLabel->SetHeight(constant(GetHeight()));
 	CaptionLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	CaptionLabel->SetAnchorBottom(true);
 	CaptionLabel->SetAnchorLeft(true);
 	CaptionLabel->SetAnchorRight(true);
 	CaptionLabel->SetAnchorTop(true);
-	SetHeight(20.0f);
+	SetHeight(20.0_c);
 }

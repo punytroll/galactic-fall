@@ -806,7 +806,7 @@ void Resize(void)
 	g_UserInterface->GetRootWidget()->SetLeft(0.0_c);
 	g_UserInterface->GetRootWidget()->SetTop(0.0_c);
 	g_UserInterface->GetRootWidget()->SetWidth(constant(g_Width));
-	g_UserInterface->GetRootWidget()->SetHeight(g_Height);
+	g_UserInterface->GetRootWidget()->SetHeight(constant(g_Height));
 }
 
 void OnMainMenuDestroying(UI::Event & DestroyingEvent)
@@ -1073,7 +1073,7 @@ void OnOutputEnterSystem(System * EnterSystem)
 	HeadsUpDisplay->SetLeft(0.0_c);
 	HeadsUpDisplay->SetTop(0.0_c);
 	HeadsUpDisplay->SetWidth(constant(g_UserInterface->GetRootWidget()->GetWidth()));
-	HeadsUpDisplay->SetHeight(g_UserInterface->GetRootWidget()->GetHeight());
+	HeadsUpDisplay->SetHeight(constant(g_UserInterface->GetRootWidget()->GetHeight()));
 	HeadsUpDisplay->SetAnchorRight(true);
 	HeadsUpDisplay->SetAnchorBottom(true);
 }
@@ -2360,7 +2360,7 @@ void ActionOpenMainMenuWindow(void)
 		g_MainMenuWindow->SetLeft(constant((g_UserInterface->GetRootWidget()->GetWidth() - 200.0f) / 2.0f));
 		g_MainMenuWindow->SetTop(constant((g_UserInterface->GetRootWidget()->GetHeight() - 300.0f) / 2.0f));
 		g_MainMenuWindow->SetWidth(200.0_c);
-		g_MainMenuWindow->SetHeight(300.0f);
+		g_MainMenuWindow->SetHeight(300.0_c);
 		// crude heuristic: if we are not in a system, no game is running
 		if(g_CurrentSystem == nullptr)
 		{
@@ -2383,7 +2383,7 @@ void ActionOpenMapDialog(void)
 		MapDialog->SetLeft(70.0_c);
 		MapDialog->SetTop(200.0_c);
 		MapDialog->SetWidth(500.0_c);
-		MapDialog->SetHeight(530.0f);
+		MapDialog->SetHeight(530.0_c);
 		if((g_CharacterObserver->GetObservedCharacter()->GetShip() != nullptr) && (g_CharacterObserver->GetObservedCharacter()->GetShip()->GetLinkedSystemTarget() != nullptr))
 		{
 			MapDialog->SetSelectedSystem(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetLinkedSystemTarget());
@@ -2410,7 +2410,7 @@ void ActionOpenObjectInformationDialog(void)
 	ObjectInformationDialog->SetLeft(100.0_c);
 	ObjectInformationDialog->SetTop(400.0_c);
 	ObjectInformationDialog->SetWidth(500.0_c);
-	ObjectInformationDialog->SetHeight(300.0f);
+	ObjectInformationDialog->SetHeight(300.0_c);
 	ObjectInformationDialog->GrabKeyFocus();
 }
 
@@ -2424,7 +2424,7 @@ void ActionOpenOutfitShipDialog(void)
 		g_OutfitShipDialog->SetLeft(70.0_c);
 		g_OutfitShipDialog->SetTop(280.0_c);
 		g_OutfitShipDialog->SetWidth(600.0_c);
-		g_OutfitShipDialog->SetHeight(400.0f);
+		g_OutfitShipDialog->SetHeight(400.0_c);
 		g_OutfitShipDialog->GrabKeyFocus();
 		g_OutfitShipDialog->ConnectDestroyingCallback(OnOutfitShipDialogDestroying);
 	}
@@ -2606,7 +2606,7 @@ void ActionToggleTimingDialog(void)
 		g_TimingDialog->SetLeft(300.0_c);
 		g_TimingDialog->SetTop(300.0_c);
 		g_TimingDialog->SetWidth(350.0_c);
-		g_TimingDialog->SetHeight(400.0f);
+		g_TimingDialog->SetHeight(400.0_c);
 		g_TimingDialog->GrabKeyFocus();
 		g_TimingDialog->ConnectDestroyingCallback(OnTimingDialogDestroying);
 	}
@@ -3359,7 +3359,7 @@ int main(int argc, char ** argv)
 	g_UserInterface->GetRootWidget()->SetLeft(0.0_c);
 	g_UserInterface->GetRootWidget()->SetTop(0.0_c);
 	g_UserInterface->GetRootWidget()->SetWidth(constant(g_Width));
-	g_UserInterface->GetRootWidget()->SetHeight(g_Height);
+	g_UserInterface->GetRootWidget()->SetHeight(constant(g_Height));
 	g_UserInterface->GetRootWidget()->ConnectKeyCallback(MainViewKeyEvent);
 	g_UserInterface->GetRootWidget()->ConnectMouseButtonCallback(MainViewMouseButtonEvent);
 	g_UserInterface->GetRootWidget()->ConnectMouseMoveCallback(MainViewMouseMove);

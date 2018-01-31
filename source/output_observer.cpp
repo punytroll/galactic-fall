@@ -46,7 +46,7 @@ void OutputObserver::HandleMessage(Message * Message)
 		_PlanetWindow->SetLeft(50.0_c);
 		_PlanetWindow->SetTop(50.0_c);
 		_PlanetWindow->SetWidth(700.0_c);
-		_PlanetWindow->SetHeight(400.0f);
+		_PlanetWindow->SetHeight(400.0_c);
 		_PlanetWindow->GrabKeyFocus();
 	}
 	else if(Message->GetTypeIdentifier() == "taken_off")
