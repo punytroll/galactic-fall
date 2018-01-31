@@ -57,7 +57,7 @@ void UI::ListBox::_OnSubWidgetAdded(UI::SubWidgetEvent & SubWidgetEvent)
 			NewWidget->SetWidth(constant(GetContent()->GetWidth() - 2.0f * g_ListBoxItemPadding));
 			NewWidget->SetAnchorRight(true);
 			NewWidget->ConnectMouseButtonCallback(std::bind(&UI::ListBox::_OnItemMouseButton, this, std::placeholders::_1, NewWidget));
-			GetContent()->SetHeight(NewWidget->GetBottom() + g_ListBoxItemPadding);
+			GetContent()->SetHeight(constant(NewWidget->GetBottom() + g_ListBoxItemPadding));
 		}
 	}
 }
@@ -104,7 +104,7 @@ void UI::ListBox::_OnSubWidgetRemoved(UI::SubWidgetEvent & SubWidgetEvent)
 				_SelectedItem = nullptr;
 			}
 		}
-		GetContent()->SetHeight(Top);
+		GetContent()->SetHeight(constant(Top));
 	}
 }
 

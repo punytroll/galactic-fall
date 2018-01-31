@@ -40,7 +40,7 @@ UI::ProgressBar::ProgressBar(UI::Widget * SupWidget) :
 	_Fill->SetLeft(0.0_c);
 	_Fill->SetTop(0.0_c);
 	_Fill->SetWidth(constant(GetWidth()));
-	_Fill->SetHeight(GetHeight());
+	_Fill->SetHeight(constant(GetHeight()));
 	_Fill->SetAnchorBottom(true);
 	_Fill->SetAnchorLeft(true);
 	_Fill->SetAnchorTop(true);
@@ -48,7 +48,7 @@ UI::ProgressBar::ProgressBar(UI::Widget * SupWidget) :
 	_Label->SetLeft(0.0_c);
 	_Label->SetTop(0.0_c);
 	_Label->SetWidth(constant(GetWidth()));
-	_Label->SetHeight(GetHeight());
+	_Label->SetHeight(constant(GetHeight()));
 	_Label->SetAnchorBottom(true);
 	_Label->SetAnchorLeft(true);
 	_Label->SetAnchorRight(true);
@@ -61,7 +61,7 @@ UI::ProgressBar::ProgressBar(UI::Widget * SupWidget) :
 	Border->SetLeft(0.0_c);
 	Border->SetTop(0.0_c);
 	Border->SetWidth(constant(GetWidth()));
-	Border->SetHeight(GetHeight());
+	Border->SetHeight(constant(GetHeight()));
 	Border->SetLineWidth(1.0f);
 	Border->SetColor(Graphics::ColorRGBO(1.0f, 1.0f, 1.0f, 1.0f));
 	Border->SetAnchorBottom(true);

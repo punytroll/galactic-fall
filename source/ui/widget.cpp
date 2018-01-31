@@ -159,35 +159,31 @@ void UI::Widget::UnsetDisabledBackgroundColor(void)
 	_DisabledBackgroundColor = nullptr;
 }
 
-void UI::Widget::SetHeight(float Height)
+void UI::Widget::SetHeight(Expressions::Expression && Height)
 {
-	// early bailing out if this is a no-op
-	if(_Height.GetValue() != Height)
+	auto Offset{_Height.GetValue() - Height.GetValue()};
+	
+	_Height = std::move(Height);
+	// iterate through the list of sub widgets and correct widget positions and sizes
+	for(auto SubWidget : _SubWidgets)
 	{
-		auto Offset{_Height.GetValue() - Height};
-		
-		_Height = constant(Height);
-		// iterate through the list of sub widgets and correct widget positions and sizes
-		for(auto SubWidget : _SubWidgets)
+		if(SubWidget->_AnchorBottom == true)
 		{
-			if(SubWidget->_AnchorBottom == true)
+			if(SubWidget->_AnchorTop == true)
 			{
-				if(SubWidget->_AnchorTop == true)
-				{
-					SubWidget->SetHeight(SubWidget->GetHeight() - Offset);
-				}
-				else
-				{
-					SubWidget->SetTop(constant(SubWidget->GetTop() - Offset));
-				}
+				SubWidget->SetHeight(constant(SubWidget->GetHeight() - Offset));
+			}
+			else
+			{
+				SubWidget->SetTop(constant(SubWidget->GetTop() - Offset));
 			}
 		}
-		
-		UI::Event HeightChangedEvent;
-		
-		HeightChangedEvent.SetTarget(this);
-		g_UserInterface->DispatchHeightChangedEvent(HeightChangedEvent);
 	}
+	
+	UI::Event HeightChangedEvent;
+	
+	HeightChangedEvent.SetTarget(this);
+	g_UserInterface->DispatchHeightChangedEvent(HeightChangedEvent);
 }
 
 void UI::Widget::SetLeft(Expressions::Expression && Left)

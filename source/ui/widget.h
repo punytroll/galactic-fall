@@ -91,7 +91,7 @@ namespace UI
 		void SetAnchorRight(bool AnchorRight);
 		void SetAnchorTop(bool AnchorTop);
 		void SetEnabled(bool Enabled);
-		void SetHeight(float Height);
+		void SetHeight(Expressions::Expression && Height);
 		void SetLeft(Expressions::Expression && Left);
 		void SetTop(Expressions::Expression && Top);
 		void SetVisible(bool Visible);

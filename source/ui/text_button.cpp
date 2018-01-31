@@ -34,7 +34,7 @@ UI::TextButton::TextButton(UI::Widget * SupWidget, const std::string & Text) :
 	_Label->SetLeft(0.0_c);
 	_Label->SetTop(0.0_c);
 	_Label->SetWidth(constant(GetWidth()));
-	_Label->SetHeight(GetHeight());
+	_Label->SetHeight(constant(GetHeight()));
 	_Label->SetAnchorBottom(true);
 	_Label->SetAnchorLeft(true);
 	_Label->SetAnchorRight(true);

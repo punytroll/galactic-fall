@@ -44,7 +44,7 @@ UI::MapDialog::MapDialog(UI::Widget * SupWidget, Character * Character) :
 	_OKButton->SetLeft(constant(GetWidth() - 110.0f));
 	_OKButton->SetTop(constant(GetHeight() - 30.0f));
 	_OKButton->SetWidth(100.0_c);
-	_OKButton->SetHeight(20.0f);
+	_OKButton->SetHeight(20.0_c);
 	_OKButton->SetAnchorBottom(true);
 	_OKButton->SetAnchorLeft(false);
 	_OKButton->SetAnchorRight(true);
@@ -57,7 +57,7 @@ UI::MapDialog::MapDialog(UI::Widget * SupWidget, Character * Character) :
 	CancelButton->SetLeft(constant(GetWidth() - 220.0f));
 	CancelButton->SetTop(constant(GetHeight() - 30.0f));
 	CancelButton->SetWidth(100.0_c);
-	CancelButton->SetHeight(20.0f);
+	CancelButton->SetHeight(20.0_c);
 	CancelButton->SetAnchorBottom(true);
 	CancelButton->SetAnchorLeft(false);
 	CancelButton->SetAnchorRight(true);
@@ -67,7 +67,7 @@ UI::MapDialog::MapDialog(UI::Widget * SupWidget, Character * Character) :
 	_StarMapDisplay->SetLeft(10.0_c);
 	_StarMapDisplay->SetTop(40.0_c);
 	_StarMapDisplay->SetWidth(constant(GetWidth() - 20.0f));
-	_StarMapDisplay->SetHeight(GetHeight() - 80.0f);
+	_StarMapDisplay->SetHeight(constant(GetHeight() - 80.0f));
 	_StarMapDisplay->SetAnchorBottom(true);
 	_StarMapDisplay->SetAnchorLeft(true);
 	_StarMapDisplay->SetAnchorRight(true);
