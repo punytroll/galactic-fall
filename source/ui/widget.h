@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006  Hagen Möbius
+ * Copyright (C) 2006-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -50,6 +50,12 @@ namespace UI
 	{
 	public:
 		friend class UI::UserInterface;
+		friend Expressions::Expression UI::bottom(UI::Widget * Widget);
+		friend Expressions::Expression UI::height(UI::Widget * Widget);
+		friend Expressions::Expression UI::left(UI::Widget * Widget);
+		friend Expressions::Expression UI::right(UI::Widget * Widget);
+		friend Expressions::Expression UI::top(UI::Widget * Widget);
+		friend Expressions::Expression UI::width(UI::Widget * Widget);
 		
 		Widget(Widget * SupWidget = 0, const std::string & Name = "");
 		virtual ~Widget(void);

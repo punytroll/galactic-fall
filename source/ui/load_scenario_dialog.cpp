@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2013  Hagen Möbius
+ * Copyright (C) 2013-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -44,37 +44,25 @@ UI::LoadScenarioDialog::LoadScenarioDialog(UI::Widget * SupWidget, ScenarioManag
 
 	auto OKButton{new UI::TextButton{this, "OK"}};
 	
-	OKButton->SetLeft(constant(GetWidth() - 110.0f));
-	OKButton->SetTop(constant(GetHeight() - 30.0f));
+	OKButton->SetLeft(width(this) - 10.0_c - width(OKButton));
+	OKButton->SetTop(height(this) - 30.0_c);
 	OKButton->SetWidth(100.0_c);
 	OKButton->SetHeight(20.0_c);
-	OKButton->SetAnchorBottom(true);
-	OKButton->SetAnchorLeft(false);
-	OKButton->SetAnchorRight(true);
-	OKButton->SetAnchorTop(false);
 	OKButton->ConnectClickedCallback(std::bind(&UI::LoadScenarioDialog::_Close, this, UI::Dialog::ClosingReason::OK_BUTTON));
 	
 	auto CancelButton{new UI::TextButton{this, "Cancel"}};
 	
-	CancelButton->SetLeft(constant(GetWidth() - 220.0f));
-	CancelButton->SetTop(constant(GetHeight() - 30.0f));
+	CancelButton->SetLeft(left(OKButton) - 10.0_c - width(CancelButton));
+	CancelButton->SetTop(height(this) - 30.0_c);
 	CancelButton->SetWidth(100.0_c);
 	CancelButton->SetHeight(20.0_c);
-	CancelButton->SetAnchorBottom(true);
-	CancelButton->SetAnchorLeft(false);
-	CancelButton->SetAnchorRight(true);
-	CancelButton->SetAnchorTop(false);
 	CancelButton->ConnectClickedCallback(std::bind(&UI::LoadScenarioDialog::_Close, this, UI::Dialog::ClosingReason::CANCEL_BUTTON));
 	_MessageLabel = new UI::Label{this};
 	_MessageLabel->SetLeft(10.0_c);
 	_MessageLabel->SetTop(40.0_c);
-	_MessageLabel->SetWidth(constant(GetWidth() - 20.0f));
+	_MessageLabel->SetWidth(width(this) - 2.0_c * left(_MessageLabel));
 	_MessageLabel->SetHeight(30.0_c);
 	_MessageLabel->SetTextColor(Graphics::ColorRGBO(1.0f, 0.3, 0.3f, 1.0f));
-	_MessageLabel->SetAnchorBottom(false);
-	_MessageLabel->SetAnchorLeft(true);
-	_MessageLabel->SetAnchorRight(true);
-	_MessageLabel->SetAnchorTop(true);
 	_MessageLabel->SetWrap(true);
 	_MessageLabel->SetWordWrap(true);
 	_MessageLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
