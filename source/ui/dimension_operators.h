@@ -17,38 +17,21 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef UI_DIMENSION_H
-#define UI_DIMENSION_H
+#ifndef UI_DIMENSION_OPERATORS_H
+#define UI_DIMENSION_OPERATORS_H
 
 #include <expressions/expression.h>
-#include <expressions/variable.h>
 
 namespace UI
 {
 	class Widget;
 	
-	class Dimension : public Expressions::Variable
-	{
-	public:
-		enum class Type
-		{
-			Height,
-			Left,
-			Top,
-			Width
-		};
-		
-		// constructor & destructor
-		Dimension(UI::Widget * Owner, UI::Dimension::Type Type);
-		virtual ~Dimension(void);
-		// operators
-		void operator=(Expressions::Expression && Expression);
-	protected:
-		virtual void InvalidateValue(void) override;
-	private:
-		UI::Widget * _Owner;
-		UI::Dimension::Type _Type;
-	};
+	Expressions::Expression bottom(UI::Widget * Widget);
+	Expressions::Expression height(UI::Widget * Widget);
+	Expressions::Expression left(UI::Widget * Widget);
+	Expressions::Expression right(UI::Widget * Widget);
+	Expressions::Expression top(UI::Widget * Widget);
+	Expressions::Expression width(UI::Widget * Widget);
 }
 
 #endif

@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006-2018  Hagen Möbius
+ * Copyright (C) 2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -38,6 +38,7 @@ void UI::Dimension::operator=(Expressions::Expression && Expression)
 
 void UI::Dimension::InvalidateValue(void)
 {
+	Expressions::Variable::InvalidateValue();
 	switch(_Type)
 	{
 	case UI::Dimension::Type::Height:
