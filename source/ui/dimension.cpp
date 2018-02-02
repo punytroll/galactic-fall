@@ -17,9 +17,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include <cassert>
 #include <iostream>
 
+#include "../globals.h"
 #include "dimension.h"
+#include "event.h"
+#include "user_interface.h"
 
 UI::Dimension::Dimension(UI::Widget * Owner, UI::Dimension::Type Type) :
 	_Owner(Owner),
@@ -38,32 +42,45 @@ void UI::Dimension::operator=(Expressions::Expression && Expression)
 
 void UI::Dimension::InvalidateValue(void)
 {
-	Expressions::Variable::InvalidateValue();
+	assert(_Owner != nullptr);
 	switch(_Type)
 	{
 	case UI::Dimension::Type::Height:
 		{
-			std::cout << "Height changed: " << GetValue() << std::endl;
+			UI::Event HeightChangedEvent;
+			
+			HeightChangedEvent.SetTarget(_Owner);
+			g_UserInterface->DispatchHeightChangedEvent(HeightChangedEvent);
 			
 			break;
 		}
 	case UI::Dimension::Type::Left:
 		{
-			std::cout << "Left changed: " << GetValue() << std::endl;
+			UI::Event LeftChangedEvent;
+			
+			LeftChangedEvent.SetTarget(_Owner);
+			g_UserInterface->DispatchLeftChangedEvent(LeftChangedEvent);
 			
 			break;
 		}
 	case UI::Dimension::Type::Top:
 		{
-			std::cout << "Top changed: " << GetValue() << std::endl;
+			UI::Event TopChangedEvent;
+			
+			TopChangedEvent.SetTarget(_Owner);
+			g_UserInterface->DispatchTopChangedEvent(TopChangedEvent);
 			
 			break;
 		}
 	case UI::Dimension::Type::Width:
 		{
-			std::cout << "Width changed: " << GetValue() << std::endl;
+			UI::Event WidthChangedEvent;
+			
+			WidthChangedEvent.SetTarget(_Owner);
+			g_UserInterface->DispatchWidthChangedEvent(WidthChangedEvent);
 			
 			break;
 		}
 	}
+	Expressions::Variable::InvalidateValue();
 }

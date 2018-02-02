@@ -179,31 +179,17 @@ void UI::Widget::SetHeight(Expressions::Expression && Height)
 			}
 		}
 	}
-	
-	UI::Event HeightChangedEvent;
-	
-	HeightChangedEvent.SetTarget(this);
-	g_UserInterface->DispatchHeightChangedEvent(HeightChangedEvent);
 }
 
 void UI::Widget::SetLeft(Expressions::Expression && Left)
 {
 	_Left = std::move(Left);
 	
-	UI::Event LeftChangedEvent;
-	
-	LeftChangedEvent.SetTarget(this);
-	g_UserInterface->DispatchLeftChangedEvent(LeftChangedEvent);
 }
 
 void UI::Widget::SetTop(Expressions::Expression && Top)
 {
 	_Top = std::move(Top);
-	
-	UI::Event TopChangedEvent;
-	
-	TopChangedEvent.SetTarget(this);
-	g_UserInterface->DispatchTopChangedEvent(TopChangedEvent);
 }
 
 void UI::Widget::SetWidth(Expressions::Expression && Width)
@@ -226,11 +212,6 @@ void UI::Widget::SetWidth(Expressions::Expression && Width)
 			}
 		}
 	}
-	
-	UI::Event WidthChangedEvent;
-	
-	WidthChangedEvent.SetTarget(this);
-	g_UserInterface->DispatchWidthChangedEvent(WidthChangedEvent);
 }
 
 void UI::Widget::GrabKeyFocus(void)
