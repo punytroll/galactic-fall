@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2007  Hagen Möbius
+ * Copyright (C) 2007-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -160,55 +160,31 @@ void UI::ScrollBar::SetAlignment(UI::ScrollBar::Alignment Alignment)
 			_LessButton->SetLeft(0.0_c);
 			_LessButton->SetTop(0.0_c);
 			_LessButton->SetWidth(20.0_c);
-			_LessButton->SetHeight(constant(GetHeight()));
-			_LessButton->SetAnchorBottom(true);
-			_LessButton->SetAnchorLeft(true);
-			_LessButton->SetAnchorRight(false);
-			_LessButton->SetAnchorTop(true);
-			_MoreButton->SetLeft(constant(GetWidth() - 20.0f));
+			_LessButton->SetHeight(height(this));
+			_MoreButton->SetLeft(width(this) - width(_MoreButton));
 			_MoreButton->SetTop(0.0_c);
 			_MoreButton->SetWidth(20.0_c);
-			_MoreButton->SetHeight(constant(GetHeight()));
-			_MoreButton->SetAnchorBottom(true);
-			_MoreButton->SetAnchorLeft(false);
-			_MoreButton->SetAnchorRight(true);
-			_MoreButton->SetAnchorTop(true);
-			_Tracker->SetLeft(constant(_LessButton->GetWidth() + g_ScrollBarTrackerBorderWidth));
+			_MoreButton->SetHeight(height(this));
+			_Tracker->SetLeft(right(_LessButton) + constant(g_ScrollBarTrackerBorderWidth));
 			_Tracker->SetTop(constant(g_ScrollBarTrackerBorderWidth));
 			_Tracker->SetWidth(20.0_c);
-			_Tracker->SetHeight(constant(GetHeight() - 2 * g_ScrollBarTrackerBorderWidth));
-			_Tracker->SetAnchorBottom(true);
-			_Tracker->SetAnchorLeft(false);
-			_Tracker->SetAnchorRight(false);
-			_Tracker->SetAnchorTop(true);
+			_Tracker->SetHeight(height(this) - 2.0_c * constant(g_ScrollBarTrackerBorderWidth));
 			_Alignment = UI::ScrollBar::Alignment::HORIZONTAL;
 		}
 		else if(Alignment == UI::ScrollBar::Alignment::VERTICAL)
 		{
 			_LessButton->SetLeft(0.0_c);
 			_LessButton->SetTop(0.0_c);
-			_LessButton->SetWidth(constant(GetWidth()));
+			_LessButton->SetWidth(width(this));
 			_LessButton->SetHeight(20.0_c);
-			_LessButton->SetAnchorBottom(false);
-			_LessButton->SetAnchorLeft(true);
-			_LessButton->SetAnchorRight(true);
-			_LessButton->SetAnchorTop(true);
 			_MoreButton->SetLeft(0.0_c);
-			_MoreButton->SetTop(constant(GetHeight() - 20.0f));
-			_MoreButton->SetWidth(constant(GetWidth()));
+			_MoreButton->SetTop(height(this) - height(_MoreButton));
+			_MoreButton->SetWidth(width(this));
 			_MoreButton->SetHeight(20.0_c);
-			_MoreButton->SetAnchorBottom(true);
-			_MoreButton->SetAnchorLeft(true);
-			_MoreButton->SetAnchorRight(true);
-			_MoreButton->SetAnchorTop(false);
 			_Tracker->SetLeft(constant(g_ScrollBarTrackerBorderWidth));
-			_Tracker->SetTop(constant(_LessButton->GetHeight() + g_ScrollBarTrackerBorderWidth));
-			_Tracker->SetWidth(constant(GetWidth() - 2 * g_ScrollBarTrackerBorderWidth));
+			_Tracker->SetTop(bottom(_LessButton) + constant(g_ScrollBarTrackerBorderWidth));
+			_Tracker->SetWidth(width(this) - 2.0_c * constant(g_ScrollBarTrackerBorderWidth));
 			_Tracker->SetHeight(20.0_c);
-			_Tracker->SetAnchorBottom(false);
-			_Tracker->SetAnchorLeft(true);
-			_Tracker->SetAnchorRight(true);
-			_Tracker->SetAnchorTop(false);
 			_Alignment = UI::ScrollBar::Alignment::VERTICAL;
 		}
 	}
