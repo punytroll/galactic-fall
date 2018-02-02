@@ -1072,10 +1072,8 @@ void OnOutputEnterSystem(System * EnterSystem)
 	HeadsUpDisplay->SetName("heads_up_display");
 	HeadsUpDisplay->SetLeft(0.0_c);
 	HeadsUpDisplay->SetTop(0.0_c);
-	HeadsUpDisplay->SetWidth(constant(g_UserInterface->GetRootWidget()->GetWidth()));
-	HeadsUpDisplay->SetHeight(constant(g_UserInterface->GetRootWidget()->GetHeight()));
-	HeadsUpDisplay->SetAnchorRight(true);
-	HeadsUpDisplay->SetAnchorBottom(true);
+	HeadsUpDisplay->SetWidth(width(g_UserInterface->GetRootWidget()));
+	HeadsUpDisplay->SetHeight(height(g_UserInterface->GetRootWidget()));
 }
 
 void OnOutputLeaveSystem(System * System)

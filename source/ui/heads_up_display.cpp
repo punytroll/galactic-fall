@@ -108,9 +108,8 @@ UI::HeadsUpDisplay::HeadsUpDisplay(UI::Widget * SupWidget) :
 	_MessageLabel->SetName("message");
 	_MessageLabel->SetLeft(0.0_c);
 	_MessageLabel->SetTop(40.0_c);
-	_MessageLabel->SetWidth(constant(GetWidth()));
+	_MessageLabel->SetWidth(width(this));
 	_MessageLabel->SetHeight(12.0_c);
-	_MessageLabel->SetAnchorRight(true);
 	_MessageLabel->SetTextColor(Graphics::ColorRGBO(1.0f, 0.3f, 0.3f, 1.0f));
 	_MessageLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Center);
 	_MessageLabel->SetVisible(false);
@@ -118,23 +117,20 @@ UI::HeadsUpDisplay::HeadsUpDisplay(UI::Widget * SupWidget) :
 	auto MiniMapWidget{new UI::Widget{this}};
 	
 	MiniMapWidget->SetName("mini_map");
-	MiniMapWidget->SetLeft(constant(GetWidth() - 220.0f));
-	MiniMapWidget->SetTop(constant(GetHeight() - 240.0f));
+	MiniMapWidget->SetLeft(width(this) - width(MiniMapWidget));
+	MiniMapWidget->SetTop(height(this) - height(MiniMapWidget));
 	MiniMapWidget->SetWidth(220.0_c);
 	MiniMapWidget->SetHeight(240.0_c);
 	MiniMapWidget->SetBackgroundColor(Graphics::ColorRGBO(0.0f, 0.1f, 0.17f, 0.8f));
-	MiniMapWidget->SetAnchorBottom(true);
-	MiniMapWidget->SetAnchorLeft(false);
-	MiniMapWidget->SetAnchorRight(true);
-	MiniMapWidget->SetAnchorTop(false);
 	MiniMapWidget->ConnectUpdatingCallback(std::bind(&UI::HeadsUpDisplay::_UpdateMiniMapWidget, this, MiniMapWidget, std::placeholders::_1, std::placeholders::_2));
 	
 	auto MiniMapSystemNameLabel{new UI::Label{MiniMapWidget}};
 	
 	MiniMapSystemNameLabel->SetName("system_name");
-	MiniMapSystemNameLabel->SetWidth(constant(MiniMapWidget->GetWidth()));
+	MiniMapSystemNameLabel->SetLeft(0.0_c);
+	MiniMapSystemNameLabel->SetTop(0.0_c);
+	MiniMapSystemNameLabel->SetWidth(width(MiniMapWidget));
 	MiniMapSystemNameLabel->SetHeight(20.0_c);
-	MiniMapSystemNameLabel->SetAnchorRight(true);
 	MiniMapSystemNameLabel->SetTextColor(Graphics::ColorRGBO(0.7f, 0.8f, 1.0f, 1.0f));
 	MiniMapSystemNameLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Center);
 	MiniMapSystemNameLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
@@ -144,20 +140,18 @@ UI::HeadsUpDisplay::HeadsUpDisplay(UI::Widget * SupWidget) :
 	
 	MiniMapDisplay->SetName("display");
 	MiniMapDisplay->SetLeft(0.0_c);
-	MiniMapDisplay->SetTop(20.0_c);
-	MiniMapDisplay->SetWidth(constant(MiniMapWidget->GetWidth()));
-	MiniMapDisplay->SetHeight(constant(MiniMapWidget->GetHeight() - 20.0f));
-	MiniMapDisplay->SetAnchorBottom(true);
-	MiniMapDisplay->SetAnchorRight(true);
+	MiniMapDisplay->SetTop(bottom(MiniMapSystemNameLabel));
+	MiniMapDisplay->SetWidth(width(MiniMapWidget));
+	MiniMapDisplay->SetHeight(height(MiniMapWidget) - top(MiniMapDisplay));
 	MiniMapDisplay->ConnectUpdatingCallback(std::bind(&UI::HeadsUpDisplay::_UpdateMiniMapDisplay, this, MiniMapDisplay, std::placeholders::_1, std::placeholders::_2));
 	
 	auto MiniMapBorder{new UI::Border{MiniMapWidget}};
 	
 	MiniMapBorder->SetName("border");
-	MiniMapBorder->SetWidth(constant(MiniMapWidget->GetWidth()));
-	MiniMapBorder->SetHeight(constant(MiniMapWidget->GetHeight()));
-	MiniMapBorder->SetAnchorBottom(true);
-	MiniMapBorder->SetAnchorRight(true);
+	MiniMapBorder->SetLeft(0.0_c);
+	MiniMapBorder->SetTop(0.0_c);
+	MiniMapBorder->SetWidth(width(MiniMapWidget));
+	MiniMapBorder->SetHeight(height(MiniMapWidget));
 	MiniMapBorder->SetLineWidth(1.0f);
 	MiniMapBorder->SetColor(Graphics::ColorRGBO(0.1f, 0.2f, 0.3f, 1.0f));
 	
@@ -165,20 +159,19 @@ UI::HeadsUpDisplay::HeadsUpDisplay(UI::Widget * SupWidget) :
 	
 	ScannerWidget->SetName("scanner");
 	ScannerWidget->SetLeft(0.0_c);
-	ScannerWidget->SetTop(constant(GetHeight() - 240.0f));
+	ScannerWidget->SetTop(height(this) - height(ScannerWidget));
 	ScannerWidget->SetWidth(220.0_c);
 	ScannerWidget->SetHeight(240.0_c);
 	ScannerWidget->SetBackgroundColor(Graphics::ColorRGBO(0.0f, 0.1f, 0.17f, 0.8f));
-	ScannerWidget->SetAnchorBottom(true);
-	ScannerWidget->SetAnchorTop(false);
 	ScannerWidget->ConnectUpdatingCallback(std::bind(&UI::HeadsUpDisplay::_UpdateScannerWidget, this, ScannerWidget, std::placeholders::_1, std::placeholders::_2));
 	
 	auto ScannerTargetNameLabel{new UI::Label{ScannerWidget}};
 	
 	ScannerTargetNameLabel->SetName("target_name");
-	ScannerTargetNameLabel->SetWidth(constant(ScannerWidget->GetWidth()));
+	ScannerTargetNameLabel->SetLeft(0.0_c);
+	ScannerTargetNameLabel->SetTop(0.0_c);
+	ScannerTargetNameLabel->SetWidth(width(ScannerWidget));
 	ScannerTargetNameLabel->SetHeight(20.0_c);
-	ScannerTargetNameLabel->SetAnchorRight(true);
 	ScannerTargetNameLabel->SetTextColor(Graphics::ColorRGBO(0.7f, 0.8f, 1.0f, 1.0f));
 	ScannerTargetNameLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Center);
 	ScannerTargetNameLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
@@ -188,20 +181,18 @@ UI::HeadsUpDisplay::HeadsUpDisplay(UI::Widget * SupWidget) :
 	
 	ScannerDisplay->SetName("display");
 	ScannerDisplay->SetLeft(0.0_c);
-	ScannerDisplay->SetTop(20.0_c);
-	ScannerDisplay->SetWidth(constant(ScannerWidget->GetWidth()));
-	ScannerDisplay->SetHeight(constant(ScannerWidget->GetHeight() - 20.0f));
-	ScannerDisplay->SetAnchorBottom(true);
-	ScannerDisplay->SetAnchorRight(true);
+	ScannerDisplay->SetTop(bottom(ScannerTargetNameLabel));
+	ScannerDisplay->SetWidth(width(ScannerWidget));
+	ScannerDisplay->SetHeight(height(ScannerWidget) - top(ScannerDisplay));
 	ScannerDisplay->ConnectUpdatingCallback(std::bind(&UI::HeadsUpDisplay::_UpdateScannerDisplay, this, ScannerDisplay, std::placeholders::_1, std::placeholders::_2));
 	
 	auto ScannerBorder{new UI::Border{ScannerWidget}};
 	
 	ScannerBorder->SetName("border");
-	ScannerBorder->SetWidth(constant(ScannerWidget->GetWidth()));
-	ScannerBorder->SetHeight(constant(ScannerWidget->GetHeight()));
-	ScannerBorder->SetAnchorBottom(true);
-	ScannerBorder->SetAnchorRight(true);
+	ScannerBorder->SetLeft(0.0_c);
+	ScannerBorder->SetTop(0.0_c);
+	ScannerBorder->SetWidth(width(ScannerWidget));
+	ScannerBorder->SetHeight(height(ScannerWidget));
 	ScannerBorder->SetLineWidth(1.0f);
 	ScannerBorder->SetColor(Graphics::ColorRGBO(0.1f, 0.2f, 0.3f, 1.0f));
 }
