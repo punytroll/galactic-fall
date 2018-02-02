@@ -284,6 +284,11 @@ void UI::Widget::Destroy(void)
 	{
 		_SubWidgets.front()->Destroy();
 	}
+	// now reset our dimensions, so all dependencies are broken up
+	_Height.Reset();
+	_Left.Reset();
+	_Top.Reset();
+	_Width.Reset();
 	// now remove ourself from the sup widget
 	if(_SupWidget != nullptr)
 	{
