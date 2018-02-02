@@ -32,7 +32,12 @@ UI::ScrollBox::ScrollBox(UI::Widget * SupWidget) :
 {
 	ConnectMouseButtonCallback(std::bind(&UI::ScrollBox::_OnMouseButton, this, std::placeholders::_1));
 	SetBackgroundColor(Graphics::ColorRGBO(0.15f, 0.15f, 0.15f, 1.0f));
+	// create components
+	_HorizontalScrollBar = new UI::ScrollBar{this, UI::ScrollBar::Alignment::HORIZONTAL};
+	_VerticalScrollBar = new UI::ScrollBar{this, UI::ScrollBar::Alignment::VERTICAL};
 	_View = new UI::Widget{this};
+	_Content = new UI::Widget{_View};
+	// setup components
 	_View->SetName("view");
 	_View->SetLeft(0.0_c);
 	_View->SetTop(0.0_c);
@@ -44,13 +49,11 @@ UI::ScrollBox::ScrollBox(UI::Widget * SupWidget) :
 	_View->SetAnchorTop(true);
 	_View->ConnectHeightChangedCallback(std::bind(&UI::ScrollBox::_OnContentOrViewSizeChanged, this, std::placeholders::_1));
 	_View->ConnectWidthChangedCallback(std::bind(&UI::ScrollBox::_OnContentOrViewSizeChanged, this, std::placeholders::_1));
-	_Content = new UI::Widget{_View};
 	_Content->SetName("content");
 	_Content->SetLeft(0.0_c);
 	_Content->SetTop(0.0_c);
 	_Content->ConnectHeightChangedCallback(std::bind(&UI::ScrollBox::_OnContentOrViewSizeChanged, this, std::placeholders::_1));
 	_Content->ConnectWidthChangedCallback(std::bind(&UI::ScrollBox::_OnContentOrViewSizeChanged, this, std::placeholders::_1));
-	_HorizontalScrollBar = new UI::ScrollBar{this, UI::ScrollBar::Alignment::HORIZONTAL};
 	_HorizontalScrollBar->SetName("horizontal_scroll_bar");
 	_HorizontalScrollBar->SetLeft(0.0_c);
 	_HorizontalScrollBar->SetTop(constant(GetHeight() - 20.0f));
@@ -65,7 +68,6 @@ UI::ScrollBox::ScrollBox(UI::Widget * SupWidget) :
 	_HorizontalScrollBar->SetMaximumPosition(std::max(0.0f, _Content->GetWidth() - _View->GetWidth()));
 	_HorizontalScrollBar->SetCurrentPosition(0.0f);
 	_HorizontalScrollBar->SetStepSize(_HorizontalScrollBar->GetMaximumPosition() / 10.0f);
-	_VerticalScrollBar = new UI::ScrollBar{this, UI::ScrollBar::Alignment::VERTICAL};
 	_HorizontalScrollBar->SetName("Vertical_scroll_bar");
 	_VerticalScrollBar->SetLeft(constant(GetWidth() - 20.0f));
 	_VerticalScrollBar->SetTop(0.0_c);
