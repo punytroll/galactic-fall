@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 0.5.1 of expressions.
+ * This is part of version 0.6.0 of expressions.
  **/
 
 #ifndef EXPRESSIONS_DIVISION_TERM_H
