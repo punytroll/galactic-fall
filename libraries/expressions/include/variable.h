@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 0.5.1 of expressions.
+ * This is part of version 0.6.0 of expressions.
  **/
 
 #ifndef EXPRESSIONS_VARIABLE_H
@@ -58,6 +58,7 @@ namespace Expressions
 		~Variable(void);
 		float GetValue(void);
 		virtual void InvalidateValue(void) override;
+		void Reset(void);
 		void SetExpression(Expressions::Expression && Expression);
 		Expressions::Variable & operator=(Expressions::Variable & Variable);
 		Expressions::Variable & operator=(Expressions::Expression && Expression);

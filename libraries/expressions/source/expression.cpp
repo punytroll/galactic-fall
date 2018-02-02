@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 0.5.1 of expressions.
+ * This is part of version 0.6.0 of expressions.
  **/
 
 #include <cassert>
@@ -75,7 +75,10 @@ Expressions::Expression::~Expression(void)
 std::unique_ptr< Expressions::Term > Expressions::Expression::ExtractTerm(void)
 {
 	ON_DEBUG(std::cout << "std::unique_ptr< Expressions::Term > Expressions::Expression::ExtractTerm()" << std::endl);
-	_Term->SetParent(nullptr);
+	if(_Term != nullptr)
+	{
+		_Term->SetParent(nullptr);
+	}
 	
 	return std::move(_Term);
 }

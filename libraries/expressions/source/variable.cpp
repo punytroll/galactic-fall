@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 0.5.1 of expressions.
+ * This is part of version 0.6.0 of expressions.
  **/
 
 #include <cassert>
@@ -79,6 +79,24 @@ void Expressions::Variable::InvalidateValue(void)
 	{
 		ON_DEBUG(std::cout << "    Notifying one dependent variable term that we changed." << std::endl);
 		DependentVariableTerm->InvalidateValue();
+	}
+}
+
+void Expressions::Variable::Reset(void)
+{
+	ON_DEBUG(std::cout << "Expressions::Variable::Reset()" << std::endl);
+	float OldValue{std::nanf("")};
+	
+	if(_Term != nullptr)
+	{
+		OldValue = _Term->GetValue();
+		assert(_Term->_Parent == this);
+		_Term->SetParent(nullptr);
+	}
+	_Term = nullptr;
+	if(std::isnan(OldValue) == false)
+	{
+		InvalidateValue();
 	}
 }
 
