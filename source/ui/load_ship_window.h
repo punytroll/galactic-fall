@@ -29,7 +29,6 @@ class Ship;
 namespace UI
 {
 	class Button;
-	class ObjectListItem;
 	class ListBox;
 	
 	class LoadShipWindow : public UI::Window
