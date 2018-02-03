@@ -30,7 +30,8 @@ namespace UI
 	class Window : public UI::Widget
 	{
 	public:
-		Window(UI::Widget * SupWidget, const std::string & Title = "");
+		// constructor
+		Window(void);
 		// setters
 		void SetTitle(const std::string & Title);
 		// modifiers

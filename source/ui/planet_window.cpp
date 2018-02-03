@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2013  Hagen Möbius
+ * Copyright (C) 2013-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -31,8 +31,7 @@
 
 using namespace Expressions::Operators;
 
-UI::PlanetWindow::PlanetWindow(UI::Widget * SupWidget, Planet * Planet, Character * Character) :
-	UI::Window(SupWidget),
+UI::PlanetWindow::PlanetWindow(Planet * Planet, Character * Character) :
 	_Character(Character),
 	_DescriptionLabel(nullptr),
 	_HangarWidget(nullptr),

@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006  Hagen Möbius
+ * Copyright (C) 2006-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -30,8 +30,7 @@
 
 using namespace Expressions::Operators;
 
-UI::Window::Window(Widget * SupWidget, const std::string & Title) :
-	Widget(SupWidget),
+UI::Window::Window(void) :
 	_ResizeDragBox(nullptr),
 	_TitleLabel(nullptr)
 {
@@ -45,7 +44,7 @@ UI::Window::Window(Widget * SupWidget, const std::string & Title) :
 	Border->SetHeight(height(this));
 	Border->SetLineWidth(1.0f);
 	Border->SetColor(Graphics::ColorRGBO(0.4f, 0.4f, 0.4f, 1.0f));
-	_TitleLabel = new UI::Label{this, Title};
+	_TitleLabel = new UI::Label{this};
 	_TitleLabel->SetLeft(10.0_c);
 	_TitleLabel->SetTop(10.0_c);
 	_TitleLabel->SetWidth(width(this) - 2.0_c * 10.0_c);

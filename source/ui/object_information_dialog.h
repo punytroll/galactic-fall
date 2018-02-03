@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2008  Hagen Möbius
+ * Copyright (C) 2008-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -33,7 +33,8 @@ namespace UI
 	class ObjectInformationDialog : public UI::Window
 	{
 	public:
-		ObjectInformationDialog(UI::Widget * SupWidget, Object * Object);
+		// constructor
+		ObjectInformationDialog(Object * Object);
 	private:
 		// callbacks
 		void _OnCloseClicked(void);

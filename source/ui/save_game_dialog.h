@@ -32,7 +32,8 @@ namespace UI
 	class SaveGameDialog : public UI::Dialog
 	{
 	public:
-		SaveGameDialog(UI::Widget * SupWidget);
+		// constructor
+		SaveGameDialog(void);
 		// getters
 		std::string GetFilePath(void);
 		// setters

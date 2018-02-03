@@ -33,8 +33,7 @@
 
 using namespace Expressions::Operators;
 
-UI::MapDialog::MapDialog(UI::Widget * SupWidget, Character * Character) :
-	UI::Dialog(SupWidget),
+UI::MapDialog::MapDialog(Character * Character) :
 	_OKButton(nullptr),
 	_StarMapDisplay(nullptr)
 {

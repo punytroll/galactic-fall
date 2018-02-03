@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2007  Hagen Möbius
+ * Copyright (C) 2007-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -27,8 +27,7 @@
 
 using namespace Expressions::Operators;
 
-UI::ScrollBox::ScrollBox(UI::Widget * SupWidget) :
-	UI::Widget(SupWidget)
+UI::ScrollBox::ScrollBox(void)
 {
 	ConnectMouseButtonCallback(std::bind(&UI::ScrollBox::_OnMouseButton, this, std::placeholders::_1));
 	SetBackgroundColor(Graphics::ColorRGBO(0.15f, 0.15f, 0.15f, 1.0f));

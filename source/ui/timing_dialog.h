@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2007  Hagen Möbius
+ * Copyright (C) 2007-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -29,7 +29,8 @@ namespace UI
 	class TimingDialog : public UI::Window
 	{
 	public:
-		TimingDialog(UI::Widget * SupWidget);
+		// constructor
+		TimingDialog(void);
 	private:
 		float _AddMeasure(float Top, const std::string & Label, UI::Label *& ValueLabel);
 		// callbacks

@@ -29,8 +29,7 @@
 
 using namespace Expressions::Operators;
 
-UI::TimingDialog::TimingDialog(UI::Widget * SupWidget) :
-	UI::Window(SupWidget, "Timing Information"),
+UI::TimingDialog::TimingDialog(void) :
 	_AISecondsThisFrameLabel(nullptr),
 	_CommoditiesInCurrentSystemThisFrameLabel(nullptr),
 	_DispatchedMessagesThisFrameLabel(nullptr),
@@ -48,6 +47,7 @@ UI::TimingDialog::TimingDialog(UI::Widget * SupWidget) :
 	_ShipsInCurrentSystemThisFrameLabel(nullptr),
 	_ShotsInCurrentSystemThisFrameLabel(nullptr)
 {
+	SetTitle("Timing Information");
 	ConnectKeyCallback(std::bind(&UI::TimingDialog::_OnKey, this, std::placeholders::_1));
 	ConnectUpdatingCallback(std::bind(&UI::TimingDialog::_OnUpdating, this, std::placeholders::_1, std::placeholders::_2));
 	

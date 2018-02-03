@@ -37,8 +37,7 @@
 
 using namespace Expressions::Operators;
 
-UI::SaveGameDialog::SaveGameDialog(UI::Widget * SupWidget) :
-	UI::Dialog(SupWidget),
+UI::SaveGameDialog::SaveGameDialog(void) :
 	_SelectedDirectoryEntryItem(nullptr)
 {
 	SetTitle("Save Game");
@@ -91,7 +90,7 @@ UI::SaveGameDialog::SaveGameDialog(UI::Widget * SupWidget) :
 	_FileNameLabel->SetAnchorRight(true);
 	_FileNameLabel->ConnectKeyCallback(std::bind(&UI::SaveGameDialog::_OnFileNameLabelKey, this, std::placeholders::_1));
 	_FileNameLabel->GrabKeyFocus();
-	_FileScrollBox = new UI::ScrollBox{this};
+	_FileScrollBox = new UI::ScrollBox{};
 	_FileScrollBox->SetLeft(10.0_c);
 	_FileScrollBox->SetTop(110.0_c);
 	_FileScrollBox->SetWidth(constant(GetWidth() - 20.0f));
@@ -102,6 +101,7 @@ UI::SaveGameDialog::SaveGameDialog(UI::Widget * SupWidget) :
 	_FileScrollBox->SetHorizontalScrollBarVisible(false);
 	_FileScrollBox->GetContent()->SetWidth(constant(_FileScrollBox->GetView()->GetWidth()));
 	_FileScrollBox->GetContent()->SetAnchorRight(true);
+	AddSubWidget(_FileScrollBox);
 }
 
 std::string UI::SaveGameDialog::GetFilePath(void)

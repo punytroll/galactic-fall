@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2007  Hagen Möbius
+ * Copyright (C) 2007-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -224,12 +224,12 @@ void UI::SlotListItem::_OnSlotDestroying(void)
 	_Slot = nullptr;
 }
 
-UI::OutfitShipDialog::OutfitShipDialog(UI::Widget * SupWidget, Ship * Ship) :
-	UI::Window(SupWidget, "Outfit Ship"),
+UI::OutfitShipDialog::OutfitShipDialog(Ship * Ship) :
 	_SelectedAccessoryListItem(nullptr),
 	_SelectedSlotListItem(nullptr),
 	_Ship(Ship)
 {
+	SetTitle("Outfit Ship");
 	assert(_Ship != nullptr);
 	_ShipDestroyingConnection = _Ship->ConnectDestroyingCallback(std::bind(&UI::OutfitShipDialog::_OnShipDestroying, this));
 	ConnectDestroyingCallback(std::bind(&UI::OutfitShipDialog::_OnDestroying, this, std::placeholders::_1));
@@ -250,7 +250,7 @@ UI::OutfitShipDialog::OutfitShipDialog(UI::Widget * SupWidget, Ship * Ship) :
 	SlotListLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Center);
 	SlotListLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	SlotListLabel->SetAnchorRight(true);
-	_SlotScrollBox = new UI::ScrollBox{_LeftPane};
+	_SlotScrollBox = new UI::ScrollBox{};
 	_SlotScrollBox->SetLeft(0.0_c);
 	_SlotScrollBox->SetTop(30.0_c);
 	_SlotScrollBox->SetWidth(constant(_LeftPane->GetWidth()));
@@ -275,6 +275,7 @@ UI::OutfitShipDialog::OutfitShipDialog(UI::Widget * SupWidget, Ship * Ship) :
 		Top += 55.0f;
 	}
 	_SlotScrollBox->GetContent()->SetHeight(constant(Top));
+	_LeftPane->AddSubWidget(_SlotScrollBox);
 	// center pane
 	_CenterPane = new UI::Widget{this};
 	_CenterPane->SetTop(70.0_c);
@@ -327,7 +328,7 @@ UI::OutfitShipDialog::OutfitShipDialog(UI::Widget * SupWidget, Ship * Ship) :
 	AccessoryListLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Center);
 	AccessoryListLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	AccessoryListLabel->SetAnchorRight(true);
-	_AccessoryScrollBox = new UI::ScrollBox{_RightPane};
+	_AccessoryScrollBox = new UI::ScrollBox{};
 	_AccessoryScrollBox->SetLeft(0.0_c);
 	_AccessoryScrollBox->SetTop(30.0_c);
 	_AccessoryScrollBox->SetWidth(constant(_RightPane->GetWidth()));
@@ -337,6 +338,7 @@ UI::OutfitShipDialog::OutfitShipDialog(UI::Widget * SupWidget, Ship * Ship) :
 	_AccessoryScrollBox->SetAnchorRight(true);
 	_AccessoryScrollBox->GetContent()->SetWidth(constant(_AccessoryScrollBox->GetView()->GetWidth()));
 	_AccessoryScrollBox->GetContent()->SetAnchorRight(true);
+	_RightPane->AddSubWidget(_AccessoryScrollBox);
 	_RebuildAccessoryList();
 }
 

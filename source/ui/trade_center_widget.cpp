@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006  Hagen Möbius
+ * Copyright (C) 2006-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -261,7 +261,7 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet
 	PriceColumnHeader->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	PriceColumnHeader->SetAnchorLeft(false);
 	PriceColumnHeader->SetAnchorRight(true);
-	_AssetClassScrollBox = new UI::ScrollBox{this};
+	_AssetClassScrollBox = new UI::ScrollBox{};
 	_AssetClassScrollBox->SetLeft(0.0_c);
 	_AssetClassScrollBox->SetTop(20.0_c);
 	_AssetClassScrollBox->SetWidth(constant(GetWidth() - 160.0f));
@@ -271,6 +271,7 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet
 	_AssetClassScrollBox->SetAnchorBottom(true);
 	_AssetClassScrollBox->GetContent()->SetWidth(constant(_AssetClassScrollBox->GetView()->GetWidth()));
 	_AssetClassScrollBox->GetContent()->SetAnchorRight(true);
+	AddSubWidget(_AssetClassScrollBox);
 	
 	auto Hangar(_Planet->GetHangar(_Character));
 	

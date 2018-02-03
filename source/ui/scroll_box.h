@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2007  Hagen Möbius
+ * Copyright (C) 2007-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -31,7 +31,7 @@ namespace UI
 	class ScrollBox : public UI::Widget
 	{
 	public:
-		ScrollBox(UI::Widget * SupWidget);
+		ScrollBox(void);
 		virtual ~ScrollBox(void);
 		// getters
 		UI::Widget * GetContent(void);

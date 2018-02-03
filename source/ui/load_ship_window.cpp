@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Hagen Möbius
+ * Copyright (C) 2014-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -94,11 +94,11 @@ namespace UI
 	};
 }
 
-UI::LoadShipWindow::LoadShipWindow(UI::Widget * SupWidget, Hangar * Hangar, Ship * Ship) :
-	UI::Window(SupWidget, "Load Ship"),
+UI::LoadShipWindow::LoadShipWindow(Hangar * Hangar, Ship * Ship) :
 	_Hangar(Hangar),
 	_Ship(Ship)
 {
+	SetTitle("Load Ship");
 	assert(_Hangar != nullptr);
 	_HangarDestroyingCallbackConnection = _Hangar->ConnectDestroyingCallback(std::bind(&UI::LoadShipWindow::_OnHangarDestroying, this));
 	assert(_Hangar->GetAspectObjectContainer() != nullptr);
@@ -129,7 +129,7 @@ UI::LoadShipWindow::LoadShipWindow(UI::Widget * SupWidget, Hangar * Hangar, Ship
 	HangarLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Center);
 	HangarLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	HangarLabel->SetAnchorRight(true);
-	_HangarListBox = new UI::ListBox{LeftPane};
+	_HangarListBox = new UI::ListBox{};
 	_HangarListBox->SetLeft(0.0_c);
 	_HangarListBox->SetTop(30.0_c);
 	_HangarListBox->SetWidth(constant(LeftPane->GetWidth()));
@@ -147,6 +147,7 @@ UI::LoadShipWindow::LoadShipWindow(UI::Widget * SupWidget, Hangar * Hangar, Ship
 			_HangarListBox->GetContent()->AddSubWidget(new ObjectListItem(HangarObject));
 		}
 	}
+	LeftPane->AddSubWidget(_HangarListBox);
 	
 	auto CenterPane{new UI::Widget{this}};
 	
@@ -191,7 +192,7 @@ UI::LoadShipWindow::LoadShipWindow(UI::Widget * SupWidget, Hangar * Hangar, Ship
 	RightPane->SetTop(40.0_c);
 	RightPane->SetHeight(constant(GetHeight() - 50.0f));
 	RightPane->SetAnchorBottom(true);
-	_ShipListBox = new UI::ListBox{RightPane};
+	_ShipListBox = new UI::ListBox{};
 	_ShipListBox->SetLeft(0.0_c);
 	_ShipListBox->SetTop(30.0_c);
 	_ShipListBox->SetWidth(constant(RightPane->GetWidth()));
@@ -207,6 +208,7 @@ UI::LoadShipWindow::LoadShipWindow(UI::Widget * SupWidget, Hangar * Hangar, Ship
 	{
 		_ShipListBox->GetContent()->AddSubWidget(new ObjectListItem(ShipObject));
 	}
+	RightPane->AddSubWidget(_ShipListBox);
 	
 	auto ShipLabel{new UI::Label{RightPane, "Ship"}};
 	

@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2008  Hagen Möbius
+ * Copyright (C) 2008-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -67,7 +67,7 @@ namespace UI
 	private:
 		void _OnButtonClicked(void)
 		{
-			auto ObjectInformationDialog{new UI::ObjectInformationDialog{GetRootWidget(), _Object}};
+			auto ObjectInformationDialog{new UI::ObjectInformationDialog{_Object}};
 			
 			ObjectInformationDialog->SetName("object_information(" + _Object->GetObjectIdentifier() + ")");
 			ObjectInformationDialog->SetLeft(100.0_c);
@@ -75,6 +75,7 @@ namespace UI
 			ObjectInformationDialog->SetWidth(500.0_c);
 			ObjectInformationDialog->SetHeight(300.0_c);
 			ObjectInformationDialog->GrabKeyFocus();
+			GetRootWidget()->AddSubWidget(ObjectInformationDialog);
 		}
 		
 		void _OnDestroying(UI::Event & DestroyingEvent)
@@ -108,11 +109,11 @@ namespace UI
 	};
 }
 
-UI::ObjectInformationDialog::ObjectInformationDialog(UI::Widget * SupWidget, Object * Object) :
-	UI::Window(SupWidget, "Object Information"),
+UI::ObjectInformationDialog::ObjectInformationDialog(Object * Object) :
 	_Object(Object),
 	_PropertiesScrollBox(nullptr)
 {
+	SetTitle("Object Information");
 	assert(_Object != nullptr);
 	_ObjectDestroyingConnection = _Object->ConnectDestroyingCallback(std::bind(&ObjectInformationDialog::_OnObjectDestroying, this));
 	ConnectDestroyingCallback(std::bind(&ObjectInformationDialog::_OnDestroying, this, std::placeholders::_1));
@@ -129,7 +130,7 @@ UI::ObjectInformationDialog::ObjectInformationDialog(UI::Widget * SupWidget, Obj
 	CloseButton->SetAnchorRight(true);
 	CloseButton->SetAnchorTop(false);
 	CloseButton->ConnectClickedCallback(std::bind(&ObjectInformationDialog::_OnCloseClicked, this));
-	_PropertiesScrollBox = new UI::ScrollBox{this};
+	_PropertiesScrollBox = new UI::ScrollBox{};
 	_PropertiesScrollBox->SetLeft(10.0_c);
 	_PropertiesScrollBox->SetTop(40.0_c);
 	_PropertiesScrollBox->SetWidth(constant(GetWidth() - 20.0f));
@@ -139,6 +140,7 @@ UI::ObjectInformationDialog::ObjectInformationDialog(UI::Widget * SupWidget, Obj
 	_PropertiesScrollBox->SetAnchorRight(true);
 	_PropertiesScrollBox->GetContent()->SetWidth(constant(_PropertiesScrollBox->GetView()->GetWidth()));
 	_PropertiesScrollBox->GetContent()->SetAnchorRight(true);
+	AddSubWidget(_PropertiesScrollBox);
 	
 	auto RefreshButton{new UI::TextButton{this, "Refresh"}};
 	
