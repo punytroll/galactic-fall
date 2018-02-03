@@ -32,67 +32,13 @@
 #include "key_event.h"
 #include "label.h"
 #include "list_box.h"
-#include "list_box_item.h"
+#include "list_box_object_item.h"
 #include "load_ship_window.h"
 #include "mouse_button_event.h"
 #include "sub_widget_event.h"
 #include "text_button.h"
 
 using namespace Expressions::Operators;
-
-namespace UI
-{
-	class ObjectListItem : public UI::ListBoxItem
-	{
-	public:
-		ObjectListItem(Object * Object) :
-			UI::ListBoxItem(),
-			_Object(Object)
-		{
-			assert(_Object != nullptr);
-			ConnectDestroyingCallback(std::bind(&UI::ObjectListItem::_OnDestroying, this, std::placeholders::_1));
-			_ObjectDestroyingConnection = _Object->ConnectDestroyingCallback(std::bind(&UI::ObjectListItem::_OnObjectDestroying, this));
-			assert(_Object->GetAspectName() != nullptr);
-			
-			auto NameLabel{new UI::Label{this, _Object->GetAspectName()->GetName()}};
-			
-			NameLabel->SetLeft(5.0_c);
-			NameLabel->SetTop(0.0_c);
-			NameLabel->SetWidth(constant(GetWidth() - 10.0f));
-			NameLabel->SetHeight(constant(GetHeight()));
-			NameLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
-			NameLabel->SetAnchorLeft(true);
-			NameLabel->SetAnchorRight(true);
-			NameLabel->SetAnchorTop(true);
-			NameLabel->SetAnchorBottom(true);
-			SetHeight(20.0_c);
-		}
-
-		Object * GetObject(void)
-		{
-			return _Object;
-		}
-	private:
-		// event handlers
-		void _OnDestroying(UI::Event & DestroyingEvent)
-		{
-			if(DestroyingEvent.GetPhase() == UI::Event::Phase::Target)
-			{
-				assert(_Object != nullptr);
-				_ObjectDestroyingConnection.Disconnect();
-				_Object = nullptr;
-			}
-		}
-		
-		void _OnObjectDestroying(void)
-		{
-			Destroy();
-		}
-		// member variables
-		Object * _Object;
-		Connection _ObjectDestroyingConnection;
-	};
-}
 
 UI::LoadShipWindow::LoadShipWindow(Hangar * Hangar, Ship * Ship) :
 	_Hangar(Hangar),
@@ -144,7 +90,7 @@ UI::LoadShipWindow::LoadShipWindow(Hangar * Hangar, Ship * Ship) :
 	{
 		if(HangarObject->GetAspectName() != nullptr)
 		{
-			_HangarListBox->GetContent()->AddSubWidget(new ObjectListItem(HangarObject));
+			_HangarListBox->GetContent()->AddSubWidget(new UI::ListBoxObjectItem(HangarObject));
 		}
 	}
 	LeftPane->AddSubWidget(_HangarListBox);
@@ -206,7 +152,7 @@ UI::LoadShipWindow::LoadShipWindow(Hangar * Hangar, Ship * Ship) :
 	assert(_Ship->GetCargoHold()->GetAspectObjectContainer() != nullptr);
 	for(auto ShipObject : _Ship->GetCargoHold()->GetAspectObjectContainer()->GetContent())
 	{
-		_ShipListBox->GetContent()->AddSubWidget(new ObjectListItem(ShipObject));
+		_ShipListBox->GetContent()->AddSubWidget(new UI::ListBoxObjectItem(ShipObject));
 	}
 	RightPane->AddSubWidget(_ShipListBox);
 	
@@ -261,7 +207,7 @@ void UI::LoadShipWindow::_OnHangarContentAdded(Object * Content)
 	{
 		assert(_HangarListBox != nullptr);
 		assert(_HangarListBox->GetContent() != nullptr);
-		_HangarListBox->GetContent()->AddSubWidget(new UI::ObjectListItem(Content));
+		_HangarListBox->GetContent()->AddSubWidget(new UI::ListBoxObjectItem(Content));
 	}
 }
 
@@ -271,7 +217,7 @@ void UI::LoadShipWindow::_OnHangarContentRemoved(Object * Content)
 	assert(_HangarListBox != nullptr);
 	assert(_HangarListBox->GetContent() != nullptr);
 	
-	auto HangarWidgetIterator(std::find_if(_HangarListBox->GetContent()->GetSubWidgets().begin(), _HangarListBox->GetContent()->GetSubWidgets().end(), [Content](UI::Widget * Widget) { return dynamic_cast< UI::ObjectListItem * >(Widget)->GetObject() == Content; }));
+	auto HangarWidgetIterator(std::find_if(_HangarListBox->GetContent()->GetSubWidgets().begin(), _HangarListBox->GetContent()->GetSubWidgets().end(), [Content](UI::Widget * Widget) { return dynamic_cast< UI::ListBoxObjectItem * >(Widget)->GetObject() == Content; }));
 	
 	if(HangarWidgetIterator != _HangarListBox->GetContent()->GetSubWidgets().end())
 	{
@@ -309,7 +255,7 @@ void UI::LoadShipWindow::_OnKey(UI::KeyEvent & KeyEvent)
 
 void UI::LoadShipWindow::_OnMoveToHangarButtonClicked(void)
 {
-	auto SelectedShipItem(dynamic_cast< UI::ObjectListItem * >(_ShipListBox->GetSelectedItem()));
+	auto SelectedShipItem(dynamic_cast< UI::ListBoxObjectItem * >(_ShipListBox->GetSelectedItem()));
 	
 	assert(SelectedShipItem != nullptr);
 	
@@ -327,12 +273,12 @@ void UI::LoadShipWindow::_OnMoveToHangarButtonClicked(void)
 
 void UI::LoadShipWindow::_OnMoveToHangarButtonUpdating(float RealTimeSeconds, float GameTimeSeconds, UI::Button * MoveToHangarButton)
 {
-	MoveToHangarButton->SetEnabled((_Hangar != nullptr) && (dynamic_cast< UI::ObjectListItem * >(_ShipListBox->GetSelectedItem()) != nullptr));
+	MoveToHangarButton->SetEnabled((_Hangar != nullptr) && (dynamic_cast< UI::ListBoxObjectItem * >(_ShipListBox->GetSelectedItem()) != nullptr));
 }
 
 void UI::LoadShipWindow::_OnMoveToShipButtonClicked(void)
 {
-	auto SelectedHangarItem(dynamic_cast< UI::ObjectListItem * >(_HangarListBox->GetSelectedItem()));
+	auto SelectedHangarItem(dynamic_cast< UI::ListBoxObjectItem * >(_HangarListBox->GetSelectedItem()));
 	
 	assert(SelectedHangarItem != nullptr);
 	
@@ -350,7 +296,7 @@ void UI::LoadShipWindow::_OnMoveToShipButtonClicked(void)
 
 void UI::LoadShipWindow::_OnMoveToShipButtonUpdating(float RealTimeSeconds, float GameTimeSeconds, UI::Button * MoveToShipButton)
 {
-	auto SelectedHangarItem(dynamic_cast< UI::ObjectListItem * >(_HangarListBox->GetSelectedItem()));
+	auto SelectedHangarItem(dynamic_cast< UI::ListBoxObjectItem * >(_HangarListBox->GetSelectedItem()));
 	
 	MoveToShipButton->SetEnabled((_Hangar != nullptr) && (SelectedHangarItem != nullptr) && (SelectedHangarItem->GetObject() != nullptr) && (_Ship != nullptr) && (_Ship->GetCargoHold() != nullptr) && (_Ship->GetCargoHold()->GetAspectObjectContainer() != nullptr) && ((SelectedHangarItem->GetObject()->GetAspectPhysical() == nullptr) || (_Ship->GetCargoHold()->GetSpace() >= SelectedHangarItem->GetObject()->GetAspectPhysical()->GetSpaceRequirement())));
 }
@@ -362,12 +308,12 @@ void UI::LoadShipWindow::_OnOKButtonClicked(void)
 
 void UI::LoadShipWindow::_OnShipContentAdded(Object * Content)
 {
-	_ShipListBox->GetContent()->AddSubWidget(new ObjectListItem(Content));
+	_ShipListBox->GetContent()->AddSubWidget(new UI::ListBoxObjectItem(Content));
 }
 
 void UI::LoadShipWindow::_OnShipContentRemoved(Object * Content)
 {
-	auto ShipWidgetIterator(std::find_if(_ShipListBox->GetContent()->GetSubWidgets().begin(), _ShipListBox->GetContent()->GetSubWidgets().end(), [Content](UI::Widget * Widget) { return dynamic_cast< UI::ObjectListItem * >(Widget)->GetObject() == Content; }));
+	auto ShipWidgetIterator(std::find_if(_ShipListBox->GetContent()->GetSubWidgets().begin(), _ShipListBox->GetContent()->GetSubWidgets().end(), [Content](UI::Widget * Widget) { return dynamic_cast< UI::ListBoxObjectItem * >(Widget)->GetObject() == Content; }));
 	
 	if(ShipWidgetIterator != _ShipListBox->GetContent()->GetSubWidgets().end())
 	{
