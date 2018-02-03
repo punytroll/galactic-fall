@@ -241,10 +241,8 @@ namespace UI
 			
 			ShipDisplay->SetLeft(1.0_c);
 			ShipDisplay->SetTop(1.0_c);
-			ShipDisplay->SetWidth(constant(GetWidth() - 2.0f));
-			ShipDisplay->SetHeight(constant(GetHeight() - 2.0f));
-			ShipDisplay->SetAnchorBottom(true);
-			ShipDisplay->SetAnchorRight(true);
+			ShipDisplay->SetWidth(width(this) - 2.0_c);
+			ShipDisplay->SetHeight(height(this) - 2.0_c);
 		}
 		
 		Ship * GetShip(void)
@@ -261,10 +259,8 @@ namespace UI
 					_Border = new UI::Border{this};
 					_Border->SetLeft(0.0_c);
 					_Border->SetTop(0.0_c);
-					_Border->SetWidth(constant(GetWidth()));
-					_Border->SetHeight(constant(GetHeight()));
-					_Border->SetAnchorBottom(true);
-					_Border->SetAnchorRight(true);
+					_Border->SetWidth(width(this));
+					_Border->SetHeight(height(this));
 					_Border->SetLineWidth(1.0f);
 					_Border->SetColor(Graphics::ColorRGBO(1.0f, 1.0f, 1.0f, 1.0f));
 					LowerSubWidget(_Border);
@@ -396,9 +392,8 @@ UI::HangarWidget::HangarWidget(UI::Widget * SupWidget, Planet * Planet, Characte
 	
 	HullStateProgressBar->SetLeft(190.0_c);
 	HullStateProgressBar->SetTop(230.0_c);
-	HullStateProgressBar->SetWidth(constant(GetWidth() - 190.0f));
+	HullStateProgressBar->SetWidth(width(this) - left(HullStateProgressBar));
 	HullStateProgressBar->SetHeight(20.0_c);
-	HullStateProgressBar->SetAnchorRight(true);
 	HullStateProgressBar->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnHullStateProgressBarUpdating, this, HullStateProgressBar, std::placeholders::_1, std::placeholders::_2));
 	
 	auto RechargeButton{new UI::TextButton{this, "Recharge"}};
@@ -414,9 +409,8 @@ UI::HangarWidget::HangarWidget(UI::Widget * SupWidget, Planet * Planet, Characte
 	
 	EnergyStateProgressBar->SetLeft(190.0_c);
 	EnergyStateProgressBar->SetTop(260.0_c);
-	EnergyStateProgressBar->SetWidth(constant(GetWidth() - 190.0f));
+	EnergyStateProgressBar->SetWidth(width(this) - left(EnergyStateProgressBar));
 	EnergyStateProgressBar->SetHeight(20.0_c);
-	EnergyStateProgressBar->SetAnchorRight(true);
 	EnergyStateProgressBar->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnEnergyStateProgressBarUpdating, this, EnergyStateProgressBar, std::placeholders::_1, std::placeholders::_2));
 	
 	auto RefuelButton{new UI::TextButton{this, "Refuel"}};
@@ -432,9 +426,8 @@ UI::HangarWidget::HangarWidget(UI::Widget * SupWidget, Planet * Planet, Characte
 	
 	FuelStateProgressBar->SetLeft(190.0_c);
 	FuelStateProgressBar->SetTop(290.0_c);
-	FuelStateProgressBar->SetWidth(constant(GetWidth() - 190.0f));
+	FuelStateProgressBar->SetWidth(width(this) - left(FuelStateProgressBar));
 	FuelStateProgressBar->SetHeight(20.0_c);
-	FuelStateProgressBar->SetAnchorRight(true);
 	FuelStateProgressBar->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnFuelStateProgressBarUpdating, this, FuelStateProgressBar, std::placeholders::_1, std::placeholders::_2));
 	
 	auto TakeOffButton{new UI::TextButton{this, "Take Off"}};
