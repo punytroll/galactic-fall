@@ -149,15 +149,15 @@ void UI::LoadGameDialog::ShowErrorMessage(const std::string & ErrorMessage)
 
 void UI::LoadGameDialog::_OnFileNameLabelTextChanged(void)
 {
-	for(auto SubWidget : _FileListBox->GetContent()->GetSubWidgets())
+	for(auto ListBoxItem : _FileListBox->GetContent()->GetSubWidgets())
 	{
-		auto EntryLabel(dynamic_cast< UI::ListBoxTextItem * >(SubWidget));
+		auto ListBoxTextItem(dynamic_cast< UI::ListBoxTextItem * >(ListBoxItem));
 		
-		if(EntryLabel != nullptr)
+		if(ListBoxTextItem != nullptr)
 		{
-			if(EntryLabel->GetText() == _FileNameLabel->GetText())
+			if(ListBoxTextItem->GetText() == _FileNameLabel->GetText())
 			{
-				_FileListBox->SetSelectedItem(EntryLabel);
+				_FileListBox->SetSelectedItem(ListBoxTextItem);
 				
 				break;
 			}
