@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006  Hagen Möbius
+ * Copyright (C) 2006-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -2353,7 +2353,7 @@ void ActionOpenMainMenuWindow(void)
 	if(g_MainMenuWindow == nullptr)
 	{
 		g_Pause = true;
-		g_MainMenuWindow = new UI::MainMenuWindow(g_UserInterface->GetRootWidget(), g_ScenarioManager);
+		g_MainMenuWindow = new UI::MainMenuWindow{g_ScenarioManager};
 		g_MainMenuWindow->SetName("main_menu");
 		g_MainMenuWindow->SetLeft(constant((g_UserInterface->GetRootWidget()->GetWidth() - 200.0f) / 2.0f));
 		g_MainMenuWindow->SetTop(constant((g_UserInterface->GetRootWidget()->GetHeight() - 300.0f) / 2.0f));
@@ -2367,6 +2367,7 @@ void ActionOpenMainMenuWindow(void)
 		}
 		g_MainMenuWindow->GrabKeyFocus();
 		g_MainMenuWindow->ConnectDestroyingCallback(OnMainMenuDestroying);
+		g_UserInterface->GetRootWidget()->AddSubWidget(g_MainMenuWindow);
 	}
 }
 
@@ -2375,7 +2376,7 @@ void ActionOpenMapDialog(void)
 	assert(g_CharacterObserver != nullptr);
 	if((g_UserInterface->GetWidget("/map_dialog") == nullptr) && (g_CharacterObserver->GetObservedCharacter() != nullptr))
 	{
-		auto MapDialog{new UI::MapDialog(g_UserInterface->GetRootWidget(), g_CharacterObserver->GetObservedCharacter())};
+		auto MapDialog{new UI::MapDialog{g_CharacterObserver->GetObservedCharacter()}};
 		
 		MapDialog->SetName("map_dialog");
 		MapDialog->SetLeft(70.0_c);
@@ -2394,6 +2395,7 @@ void ActionOpenMapDialog(void)
 			g_InputMind->DisableTurnLeft();
 			g_InputMind->DisableTurnRight();
 		}
+		g_UserInterface->GetRootWidget()->AddSubWidget(MapDialog);
 	}
 }
 
@@ -2402,7 +2404,7 @@ void ActionOpenObjectInformationDialog(void)
 	assert(g_UserInterface != nullptr);
 	assert(g_Galaxy != nullptr);
 	
-	auto ObjectInformationDialog{new UI::ObjectInformationDialog(g_UserInterface->GetRootWidget(), g_Galaxy)};
+	auto ObjectInformationDialog{new UI::ObjectInformationDialog(g_Galaxy)};
 	
 	ObjectInformationDialog->SetName("object_information(" + g_Galaxy->GetObjectIdentifier() + ")");
 	ObjectInformationDialog->SetLeft(100.0_c);
@@ -2410,6 +2412,7 @@ void ActionOpenObjectInformationDialog(void)
 	ObjectInformationDialog->SetWidth(500.0_c);
 	ObjectInformationDialog->SetHeight(300.0_c);
 	ObjectInformationDialog->GrabKeyFocus();
+	g_UserInterface->GetRootWidget()->AddSubWidget(ObjectInformationDialog);
 }
 
 void ActionOpenOutfitShipDialog(void)
@@ -2417,7 +2420,7 @@ void ActionOpenOutfitShipDialog(void)
 	assert(g_CharacterObserver != nullptr);
 	if((g_OutfitShipDialog == nullptr) && (g_CharacterObserver->GetObservedCharacter() != nullptr))
 	{
-		g_OutfitShipDialog = new UI::OutfitShipDialog{g_UserInterface->GetRootWidget(), g_CharacterObserver->GetObservedCharacter()->GetShip()};
+		g_OutfitShipDialog = new UI::OutfitShipDialog{g_CharacterObserver->GetObservedCharacter()->GetShip()};
 		g_OutfitShipDialog->SetName("outfit_ship");
 		g_OutfitShipDialog->SetLeft(70.0_c);
 		g_OutfitShipDialog->SetTop(280.0_c);
@@ -2425,6 +2428,7 @@ void ActionOpenOutfitShipDialog(void)
 		g_OutfitShipDialog->SetHeight(400.0_c);
 		g_OutfitShipDialog->GrabKeyFocus();
 		g_OutfitShipDialog->ConnectDestroyingCallback(OnOutfitShipDialogDestroying);
+		g_UserInterface->GetRootWidget()->AddSubWidget(g_OutfitShipDialog);
 	}
 }
 
@@ -2599,7 +2603,7 @@ void ActionToggleTimingDialog(void)
 {
 	if(g_TimingDialog == nullptr)
 	{
-		g_TimingDialog = new UI::TimingDialog{g_UserInterface->GetRootWidget()};
+		g_TimingDialog = new UI::TimingDialog{};
 		g_TimingDialog->SetName("timing");
 		g_TimingDialog->SetLeft(300.0_c);
 		g_TimingDialog->SetTop(300.0_c);
@@ -2607,6 +2611,7 @@ void ActionToggleTimingDialog(void)
 		g_TimingDialog->SetHeight(400.0_c);
 		g_TimingDialog->GrabKeyFocus();
 		g_TimingDialog->ConnectDestroyingCallback(OnTimingDialogDestroying);
+		g_UserInterface->GetRootWidget()->AddSubWidget(g_TimingDialog);
 	}
 	else
 	{

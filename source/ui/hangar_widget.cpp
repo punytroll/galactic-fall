@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2014  Hagen Möbius
+ * Copyright (C) 2014-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -316,7 +316,7 @@ UI::HangarWidget::HangarWidget(UI::Widget * SupWidget, Planet * Planet, Characte
 	_CharacterDestroyingConnection = _Character->ConnectDestroyingCallback(std::bind(&UI::HangarWidget::_OnCharacterDestroying, this));
 	assert(_Planet != nullptr);
 	_PlanetDestroyingConnection = _Planet->ConnectDestroyingCallback(std::bind(&UI::HangarWidget::_OnPlanetDestroying, this));
-	_ShipScrollBox = new UI::ScrollBox{this};
+	_ShipScrollBox = new UI::ScrollBox{};
 	_ShipScrollBox->SetLeft(0.0_c);
 	_ShipScrollBox->SetTop(0.0_c);
 	_ShipScrollBox->SetWidth(constant(GetWidth()));
@@ -326,6 +326,7 @@ UI::HangarWidget::HangarWidget(UI::Widget * SupWidget, Planet * Planet, Characte
 	_ShipScrollBox->GetContent()->ConnectSubWidgetAddedCallback(std::bind(&UI::HangarWidget::_OnShipScrollBoxSubWidgetAdded, this, std::placeholders::_1));
 	_ShipScrollBox->GetContent()->ConnectSubWidgetRemovedCallback(std::bind(&UI::HangarWidget::_OnShipScrollBoxSubWidgetRemoved, this, std::placeholders::_1));
 	_ShipScrollBox->GetContent()->SetHeight(constant(_ShipScrollBox->GetView()->GetHeight()));
+	AddSubWidget(_ShipScrollBox);
 	
 	auto Hangar{_Planet->GetHangar(_Character)};
 	
@@ -609,13 +610,14 @@ void UI::HangarWidget::_OnLoadButtonClicked(void)
 		assert(_Planet != nullptr);
 		assert(_SelectedShipListItem != nullptr);
 		assert(_SelectedShipListItem->GetShip() != nullptr);
-		_LoadShipWindow = new UI::LoadShipWindow{GetRootWidget(), _Planet->GetHangar(_Character), _SelectedShipListItem->GetShip()};
+		_LoadShipWindow = new UI::LoadShipWindow{_Planet->GetHangar(_Character), _SelectedShipListItem->GetShip()};
 		_LoadShipWindow->SetLeft(100.0_c);
 		_LoadShipWindow->SetTop(100.0_c);
 		_LoadShipWindow->SetWidth(600.0_c);
 		_LoadShipWindow->SetHeight(400.0_c);
 		_LoadShipWindow->ConnectDestroyingCallback(std::bind(&UI::HangarWidget::_OnLoadShipWindowDestroying, this, std::placeholders::_1));
 		_LoadShipWindow->GrabKeyFocus();
+		GetRootWidget()->AddSubWidget(_LoadShipWindow);
 	}
 	else
 	{
@@ -643,13 +645,14 @@ void UI::HangarWidget::_OnOutfitButtonClicked(void)
 	{
 		assert(_SelectedShipListItem != nullptr);
 		assert(_SelectedShipListItem->GetShip() != nullptr);
-		_OutfitShipDialog = new UI::OutfitShipDialog(GetRootWidget(), _SelectedShipListItem->GetShip());
+		_OutfitShipDialog = new UI::OutfitShipDialog(_SelectedShipListItem->GetShip());
 		_OutfitShipDialog->SetLeft(70.0_c);
 		_OutfitShipDialog->SetTop(280.0_c);
 		_OutfitShipDialog->SetWidth(600.0_c);
 		_OutfitShipDialog->SetHeight(400.0_c);
 		_OutfitShipDialog->ConnectDestroyingCallback(std::bind(&UI::HangarWidget::_OnOutfitShipDialogDestroying, this, std::placeholders::_1));
 		_OutfitShipDialog->GrabKeyFocus();
+		GetRootWidget()->AddSubWidget(_OutfitShipDialog);
 	}
 	else
 	{

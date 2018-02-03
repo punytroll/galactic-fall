@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Hagen Möbius
+ * Copyright (C) 2014-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -27,12 +27,39 @@ using namespace Expressions::Operators;
 
 float g_ListBoxItemPadding{2.0f};
 
-UI::ListBox::ListBox(UI::Widget * SupWidget) :
-	UI::ScrollBox(SupWidget),
+UI::ListBox::ListBox(void) :
 	_SelectedItem(nullptr)
 {
 	GetContent()->ConnectSubWidgetAddedCallback(std::bind(&UI::ListBox::_OnSubWidgetAdded, this, std::placeholders::_1));
 	GetContent()->ConnectSubWidgetRemovedCallback(std::bind(&UI::ListBox::_OnSubWidgetRemoved, this, std::placeholders::_1));
+}
+
+Connection UI::ListBox::ConnectSelectedItemChangedCallback(std::function< void (void) > SelectedItemChangedHandler)
+{
+	return _SelectedItemChangedEvent.Connect(SelectedItemChangedHandler);
+}
+
+void UI::ListBox::SetSelectedItem(UI::ListBoxItem * ListBoxItem)
+{
+	auto SelectedItemChanged{false};
+	
+	if(_SelectedItem != nullptr)
+	{
+		_SelectedItem->SetSelected(false);
+		_SelectedItem = nullptr;
+		SelectedItemChanged = true;
+	}
+	_SelectedItem = ListBoxItem;
+	if(_SelectedItem != nullptr)
+	{
+		assert(ListBoxItem->GetSupWidget() == GetContent());
+		_SelectedItem->SetSelected(true);
+		SelectedItemChanged = true;
+	}
+	if(SelectedItemChanged == true)
+	{
+		_SelectedItemChangedEvent();
+	}
 }
 
 void UI::ListBox::_OnSubWidgetAdded(UI::SubWidgetEvent & SubWidgetEvent)
@@ -103,6 +130,7 @@ void UI::ListBox::_OnSubWidgetRemoved(UI::SubWidgetEvent & SubWidgetEvent)
 			{
 				_SelectedItem = nullptr;
 			}
+			_SelectedItemChangedEvent();
 		}
 		GetContent()->SetHeight(constant(Top));
 	}
@@ -112,11 +140,15 @@ void UI::ListBox::_OnItemMouseButton(UI::MouseButtonEvent & MouseButtonEvent, UI
 {
 	if((MouseButtonEvent.GetMouseButton() == UI::MouseButtonEvent::MouseButton::Left) && (MouseButtonEvent.IsDown() == true))
 	{
-		if(_SelectedItem != nullptr)
+		if(_SelectedItem != Item)
 		{
-			_SelectedItem->SetSelected(false);
+			if(_SelectedItem != nullptr)
+			{
+				_SelectedItem->SetSelected(false);
+			}
+			_SelectedItem = Item;
+			_SelectedItem->SetSelected(true);
+			_SelectedItemChangedEvent();
 		}
-		_SelectedItem = Item;
-		_SelectedItem->SetSelected(true);
 	}
 }

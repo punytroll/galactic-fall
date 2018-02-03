@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2013  Hagen Möbius
+ * Copyright (C) 2013-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -34,7 +34,7 @@ namespace UI
 	class PlanetWindow : public UI::Window
 	{
 	public:
-		PlanetWindow(UI::Widget * SupWidget, Planet * Planet, Character * Character);
+		PlanetWindow(Planet * Planet, Character * Character);
 	private:
 		// callbacks
 		void _OnCharacterDestroying(void);

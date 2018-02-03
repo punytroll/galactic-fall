@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014  Hagen Möbius
+ * Copyright (C) 2014-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -36,7 +36,7 @@ namespace UI
 	{
 	public:
 		// constructor and destructor
-		LoadShipWindow(UI::Widget * SupWidget, Hangar * Hangar, Ship * Ship);
+		LoadShipWindow(Hangar * Hangar, Ship * Ship);
 	private:
 		// event handler
 		void _OnDestroying(UI::Event & DestroyingEvent);

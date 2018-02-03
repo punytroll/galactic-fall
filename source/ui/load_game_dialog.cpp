@@ -29,17 +29,15 @@
 #include "../real_time.h"
 #include "key_event.h"
 #include "label.h"
+#include "list_box.h"
 #include "list_box_text_item.h"
 #include "load_game_dialog.h"
 #include "mouse_button_event.h"
-#include "scroll_box.h"
 #include "text_button.h"
 
 using namespace Expressions::Operators;
 
-UI::LoadGameDialog::LoadGameDialog(UI::Widget * SupWidget) :
-	UI::Dialog(SupWidget),
-	_SelectedDirectoryEntryItem(nullptr)
+UI::LoadGameDialog::LoadGameDialog()
 {
 	SetTitle("Load Game");
 	ConnectKeyCallback(std::bind(&UI::LoadGameDialog::_OnKey, this, std::placeholders::_1));
@@ -91,17 +89,19 @@ UI::LoadGameDialog::LoadGameDialog(UI::Widget * SupWidget) :
 	_FileNameLabel->SetAnchorRight(true);
 	_FileNameLabel->ConnectKeyCallback(std::bind(&UI::LoadGameDialog::_OnFileNameLabelKey, this, std::placeholders::_1));
 	_FileNameLabel->GrabKeyFocus();
-	_FileScrollBox = new UI::ScrollBox{this};
-	_FileScrollBox->SetLeft(10.0_c);
-	_FileScrollBox->SetTop(110.0_c);
-	_FileScrollBox->SetWidth(constant(GetWidth() - 20.0f));
-	_FileScrollBox->SetHeight(constant(GetHeight() - 170.0f));
-	_FileScrollBox->SetAnchorBottom(true);
-	_FileScrollBox->SetAnchorRight(true);
-	_FileScrollBox->SetAnchorTop(true);
-	_FileScrollBox->SetHorizontalScrollBarVisible(false);
-	_FileScrollBox->GetContent()->SetWidth(constant(_FileScrollBox->GetView()->GetWidth()));
-	_FileScrollBox->GetContent()->SetAnchorRight(true);
+	_FileListBox = new UI::ListBox{};
+	_FileListBox->SetLeft(10.0_c);
+	_FileListBox->SetTop(110.0_c);
+	_FileListBox->SetWidth(constant(GetWidth() - 20.0f));
+	_FileListBox->SetHeight(constant(GetHeight() - 170.0f));
+	_FileListBox->SetAnchorBottom(true);
+	_FileListBox->SetAnchorRight(true);
+	_FileListBox->SetAnchorTop(true);
+	_FileListBox->SetHorizontalScrollBarVisible(false);
+	_FileListBox->GetContent()->SetWidth(constant(_FileListBox->GetView()->GetWidth()));
+	_FileListBox->GetContent()->SetAnchorRight(true);
+	_FileListBox->ConnectSelectedItemChangedCallback(std::bind(&UI::LoadGameDialog::_OnFileListBoxSelectedItemChanged, this));
+	AddSubWidget(_FileListBox);
 }
 
 std::string UI::LoadGameDialog::GetFilePath(void)
@@ -119,32 +119,21 @@ std::string UI::LoadGameDialog::GetFilePath(void)
 void UI::LoadGameDialog::SetDirectoryPath(const std::string & DirectoryPath)
 {
 	_DirectoryPath = DirectoryPath;
-	while(_FileScrollBox->GetContent()->GetSubWidgets().empty() == false)
+	while(_FileListBox->GetContent()->GetSubWidgets().empty() == false)
 	{
-		_FileScrollBox->GetContent()->GetSubWidgets().front()->Destroy();
+		_FileListBox->GetContent()->GetSubWidgets().front()->Destroy();
 	}
 	if(IsExistingDirectory(_DirectoryPath) == false)
 	{
 		ShowErrorMessage("Is not an existing directory: \"" + _DirectoryPath + "\".");
 	}
-	
-	float Top(5.0f);
-	
 	for(auto Entry : GetDirectoryEntries(_DirectoryPath))
 	{
 		auto EntryLabel{new UI::ListBoxTextItem{}};
 		
-		EntryLabel->SetLeft(5.0_c);
-		EntryLabel->SetTop(constant(Top));
-		EntryLabel->SetWidth(constant(_FileScrollBox->GetContent()->GetWidth() - 10.0f));
-		EntryLabel->SetHeight(20.0_c);
-		EntryLabel->SetAnchorRight(true);
 		EntryLabel->SetText(Entry.substr(0, Entry.rfind(".xml")));
-		EntryLabel->ConnectMouseButtonCallback(std::bind(&UI::LoadGameDialog::_OnDirectoryEntryItemMouseButton, this, EntryLabel, std::placeholders::_1));
-		_FileScrollBox->GetContent()->AddSubWidget(EntryLabel);
-		Top += 25.0f;
+		_FileListBox->GetContent()->AddSubWidget(EntryLabel);
 	}
-	_FileScrollBox->GetContent()->SetHeight(constant(Top));
 }
 
 void UI::LoadGameDialog::ShowErrorMessage(const std::string & ErrorMessage)
@@ -160,12 +149,7 @@ void UI::LoadGameDialog::ShowErrorMessage(const std::string & ErrorMessage)
 
 void UI::LoadGameDialog::_OnFileNameLabelTextChanged(void)
 {
-	if(_SelectedDirectoryEntryItem != nullptr)
-	{
-		_SelectedDirectoryEntryItem->SetSelected(false);
-		_SelectedDirectoryEntryItem = nullptr;
-	}
-	for(auto SubWidget : _FileScrollBox->GetContent()->GetSubWidgets())
+	for(auto SubWidget : _FileListBox->GetContent()->GetSubWidgets())
 	{
 		auto EntryLabel(dynamic_cast< UI::ListBoxTextItem * >(SubWidget));
 		
@@ -173,10 +157,9 @@ void UI::LoadGameDialog::_OnFileNameLabelTextChanged(void)
 		{
 			if(EntryLabel->GetText() == _FileNameLabel->GetText())
 			{
-				_SelectedDirectoryEntryItem = EntryLabel;
-				_SelectedDirectoryEntryItem->SetSelected(true);
+				_FileListBox->SetSelectedItem(EntryLabel);
 				
-				return;
+				break;
 			}
 		}
 	}
@@ -215,16 +198,16 @@ void UI::LoadGameDialog::_OnKey(UI::KeyEvent & KeyEvent)
 	}
 }
 
-void UI::LoadGameDialog::_OnDirectoryEntryItemMouseButton(UI::ListBoxTextItem * DirectoryEntryItem, UI::MouseButtonEvent & MouseButtonEvent)
+void UI::LoadGameDialog::_OnFileListBoxSelectedItemChanged(void)
 {
-	if((MouseButtonEvent.GetMouseButton() == UI::MouseButtonEvent::MouseButton::Left) && (MouseButtonEvent.IsDown() == true))
+	auto SelectedFileListBoxItem{dynamic_cast< UI::ListBoxTextItem * >(_FileListBox->GetSelectedItem())};
+	
+	if(SelectedFileListBoxItem != nullptr)
 	{
-		if(_SelectedDirectoryEntryItem != nullptr)
-		{
-			_SelectedDirectoryEntryItem->SetSelected(false);
-		}
-		_SelectedDirectoryEntryItem = DirectoryEntryItem;
-		_SelectedDirectoryEntryItem->SetSelected(true);
-		_FileNameLabel->SetText(_SelectedDirectoryEntryItem->GetText());
+		_FileNameLabel->SetText(SelectedFileListBoxItem->GetText());
+	}
+	else
+	{
+		_FileNameLabel->SetText("");
 	}
 }

@@ -42,8 +42,7 @@ bool LoadScenario(const Scenario * Scenario);
 bool LoadScenarioFromScenarioIdentifier(const std::string & ScenarioIdentifier);
 void SaveGame(std::ostream & OStream);
 
-UI::MainMenuWindow::MainMenuWindow(UI::Widget * SupWidget, ScenarioManager * ScenarioManager) :
-	UI::Window(SupWidget, "Galactic Fall"),
+UI::MainMenuWindow::MainMenuWindow(ScenarioManager * ScenarioManager) :
 	_DestroyOnESCAPEKey(true),
 	_DestroyOnLoadGameDialogDestroy(false),
 	_DestroyOnLoadScenarioDialogDestroy(false),
@@ -59,6 +58,7 @@ UI::MainMenuWindow::MainMenuWindow(UI::Widget * SupWidget, ScenarioManager * Sce
 	_SaveGameDialog(nullptr),
 	_ScenarioManager(ScenarioManager)
 {
+	SetTitle("Galactic Fall");
 	ConnectKeyCallback(std::bind(&UI::MainMenuWindow::_OnKey, this, std::placeholders::_1));
 	HideResizeDragBox();
 	
@@ -153,9 +153,9 @@ void UI::MainMenuWindow::_OnKey(UI::KeyEvent & KeyEvent)
 
 void UI::MainMenuWindow::_OnLoadGameButtonClicked(void)
 {
-	if(_LoadGameDialog == 0)
+	if(_LoadGameDialog == nullptr)
 	{
-		_LoadGameDialog = new UI::LoadGameDialog(GetRootWidget());
+		_LoadGameDialog = new UI::LoadGameDialog{};
 		_LoadGameDialog->SetName("load_game");
 		_LoadGameDialog->SetLeft(120.0_c);
 		_LoadGameDialog->SetTop(200.0_c);
@@ -174,6 +174,7 @@ void UI::MainMenuWindow::_OnLoadGameButtonClicked(void)
 		}
 		_LoadGameDialog->SetDirectoryPath(DirectoryPath);
 		_DestroyOnLoadGameDialogDestroy = false;
+		GetRootWidget()->AddSubWidget(_LoadGameDialog);
 	}
 }
 
@@ -246,7 +247,7 @@ void UI::MainMenuWindow::_OnLoadScenarioButtonClicked(void)
 {
 	if(_LoadScenarioDialog == nullptr)
 	{
-		_LoadScenarioDialog = new UI::LoadScenarioDialog(GetRootWidget(), _ScenarioManager);
+		_LoadScenarioDialog = new UI::LoadScenarioDialog{_ScenarioManager};
 		_LoadScenarioDialog->SetName("load_scenario");
 		_LoadScenarioDialog->SetLeft(120.0_c);
 		_LoadScenarioDialog->SetTop(200.0_c);
@@ -256,6 +257,7 @@ void UI::MainMenuWindow::_OnLoadScenarioButtonClicked(void)
 		_LoadScenarioDialog->ConnectClosingCallback(std::bind(&UI::MainMenuWindow::_OnLoadScenarioDialogClosing, this, std::placeholders::_1));
 		_LoadScenarioDialog->ConnectDestroyingCallback(std::bind(&UI::MainMenuWindow::_OnLoadScenarioDialogDestroying, this, std::placeholders::_1));
 		_DestroyOnLoadScenarioDialogDestroy = false;
+		GetRootWidget()->AddSubWidget(_LoadScenarioDialog);
 	}
 }
 
@@ -326,7 +328,7 @@ void UI::MainMenuWindow::_OnSaveGameButtonClicked(void)
 {
 	if(_SaveGameDialog == nullptr)
 	{
-		_SaveGameDialog = new UI::SaveGameDialog(GetRootWidget());
+		_SaveGameDialog = new UI::SaveGameDialog{};
 		_SaveGameDialog->SetName("save_game");
 		_SaveGameDialog->SetLeft(120.0_c);
 		_SaveGameDialog->SetTop(200.0_c);
@@ -345,6 +347,7 @@ void UI::MainMenuWindow::_OnSaveGameButtonClicked(void)
 		}
 		_SaveGameDialog->SetDirectoryPath(DirectoryPath);
 		_DestroyOnSaveGameDialogDestroy = false;
+		GetRootWidget()->AddSubWidget(_SaveGameDialog);
 	}
 }
 

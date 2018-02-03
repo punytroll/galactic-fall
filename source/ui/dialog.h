@@ -34,8 +34,8 @@ namespace UI
 			RETURN_KEY,
 			ESCAPE_KEY
 		};
-		// constructors & destructor
-		Dialog(Widget * SupWidget);
+		// constructor
+		Dialog(void);
 		// connecting and disconnecting event callbacks
 		Connection ConnectClosingCallback(std::function< bool (UI::Dialog::ClosingReason) > Callback);
 		void DisconnectClosingCallback(Connection & Connection);

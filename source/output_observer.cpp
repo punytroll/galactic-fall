@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2008  Hagen Möbius
+ * Copyright (C) 2008-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -42,12 +42,13 @@ void OutputObserver::HandleMessage(Message * Message)
 	{
 		assert(_PlanetWindow == nullptr);
 		assert(Message->GetSender()->GetTypeIdentifier() == "planet");
-		_PlanetWindow = new UI::PlanetWindow(g_UserInterface->GetRootWidget(), dynamic_cast< Planet * >(Message->GetSender().Get()), GetObservedCharacter());
+		_PlanetWindow = new UI::PlanetWindow{dynamic_cast< Planet * >(Message->GetSender().Get()), GetObservedCharacter()};
 		_PlanetWindow->SetLeft(50.0_c);
 		_PlanetWindow->SetTop(50.0_c);
 		_PlanetWindow->SetWidth(700.0_c);
 		_PlanetWindow->SetHeight(400.0_c);
 		_PlanetWindow->GrabKeyFocus();
+		g_UserInterface->GetRootWidget()->AddSubWidget(_PlanetWindow);
 	}
 	else if(Message->GetTypeIdentifier() == "taken_off")
 	{

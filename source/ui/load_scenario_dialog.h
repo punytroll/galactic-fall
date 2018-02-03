@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2013  Hagen Möbius
+ * Copyright (C) 2013-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -33,7 +33,7 @@ namespace UI
 	class LoadScenarioDialog : public UI::Dialog
 	{
 	public:
-		LoadScenarioDialog(UI::Widget * SupWidget, ScenarioManager * ScenarioManager);
+		LoadScenarioDialog(ScenarioManager * ScenarioManager);
 		// getters
 		Scenario * GetScenario(void);
 		// modifiers

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2013  Hagen Möbius
+ * Copyright (C) 2013-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -35,7 +35,7 @@ namespace UI
 	{
 	public:
 		// constructor and destructor
-		MainMenuWindow(UI::Widget * SupWidget, ScenarioManager * ScenarioManager);
+		MainMenuWindow(ScenarioManager * ScenarioManager);
 		// getters
 		UI::Button * GetLoadGameButton(void);
 		UI::Button * GetLoadScenarioButton(void);

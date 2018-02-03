@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2014  Hagen Möbius
+ * Copyright (C) 2014-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -29,12 +29,22 @@ namespace UI
 	class ListBox : public UI::ScrollBox
 	{
 	public:
-		ListBox(UI::Widget * SupWidget = nullptr);
+		// constructor
+		ListBox(void);
+		// connect events
+		Connection ConnectSelectedItemChangedCallback(std::function< void (void) > SelectedItemChangedHandler);
+		// getters
 		UI::ListBoxItem * GetSelectedItem(void);
+		// setters
+		void SetSelectedItem(UI::ListBoxItem * ListBoxItem);
 	private:
+		// callbacks
 		void _OnItemMouseButton(UI::MouseButtonEvent & MouseButtonEvent, UI::ListBoxItem * Item);
 		void _OnSubWidgetAdded(UI::SubWidgetEvent & SubWidgetEvent);
 		void _OnSubWidgetRemoved(UI::SubWidgetEvent & SubWidgetEvent);
+		// events
+		::Event< void > _SelectedItemChangedEvent;
+		// components
 		UI::ListBoxItem * _SelectedItem;
 	};
 }

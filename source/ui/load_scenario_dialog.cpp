@@ -34,8 +34,7 @@
 
 using namespace Expressions::Operators;
 
-UI::LoadScenarioDialog::LoadScenarioDialog(UI::Widget * SupWidget, ScenarioManager * ScenarioManager) :
-	UI::Dialog(SupWidget),
+UI::LoadScenarioDialog::LoadScenarioDialog(ScenarioManager * ScenarioManager) :
 	_ScenarioManager(ScenarioManager)
 {
 	SetTitle("Load Scenario");
@@ -65,7 +64,7 @@ UI::LoadScenarioDialog::LoadScenarioDialog(UI::Widget * SupWidget, ScenarioManag
 	_MessageLabel->SetWrap(true);
 	_MessageLabel->SetWordWrap(true);
 	_MessageLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
-	_ScenarioListBox = new UI::ListBox{this};
+	_ScenarioListBox = new UI::ListBox{};
 	_ScenarioListBox->SetLeft(10.0_c);
 	_ScenarioListBox->SetTop(110.0_c);
 	_ScenarioListBox->SetWidth(constant(GetWidth() - 20.0f));
@@ -80,6 +79,7 @@ UI::LoadScenarioDialog::LoadScenarioDialog(UI::Widget * SupWidget, ScenarioManag
 	{
 		_ScenarioListBox->GetContent()->AddSubWidget(new UI::ListBoxScenarioItem{ScenarioPair.second});
 	}
+	AddSubWidget(_ScenarioListBox);
 }
 
 Scenario * UI::LoadScenarioDialog::GetScenario(void)
