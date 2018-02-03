@@ -26,8 +26,8 @@
 namespace UI
 {
 	class Label;
+	class ListBox;
 	class ListBoxTextItem;
-	class ScrollBox;
 	
 	class SaveGameDialog : public UI::Dialog
 	{
@@ -42,18 +42,17 @@ namespace UI
 		void ShowErrorMessage(const std::string & ErrorMessage);
 	private:
 		// callbacks
-		void _OnDirectoryEntryItemMouseButton(UI::ListBoxTextItem * DirectoryEntryItem, UI::MouseButtonEvent & MouseButtonEvent);
+		void _OnFileListBoxSelectedItemChanged(void);
 		void _OnFileNameLabelKey(UI::KeyEvent & KeyEvent);
 		void _OnKey(UI::KeyEvent & KeyEvent);
 		// helper functions and actions
 		void _OnFileNameLabelTextChanged(void);
 		// member variables
 		std::string _DirectoryPath;
+		UI::ListBox * _FileListBox;
+		UI::Label * _FileNameLabel;
 		UI::Label * _MessageLabel;
 		TimeoutNotification _MessageTimeoutNotification;
-		UI::Label * _FileNameLabel;
-		UI::ScrollBox * _FileScrollBox;
-		UI::ListBoxTextItem * _SelectedDirectoryEntryItem;
 	};
 }
 
