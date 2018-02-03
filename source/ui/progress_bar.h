@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2014  Hagen Möbius
+ * Copyright (C) 2014-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,6 +19,8 @@
 
 #ifndef UI_PROGRESS_BAR_H
 #define UI_PROGRESS_BAR_H
+
+#include <expressions/variable.h>
 
 #include "widget.h"
 
@@ -41,11 +43,9 @@ namespace UI
 		void SetFillLevel(float FillLevel);
 		void SetText(const std::string & Text);
 	private:
-		void _OnWidthChanged(UI::Event & WidthChangedEvent);
-		void _ResizeFill(void);
 		// variables
 		UI::Widget * _Fill;
-		float _FillLevel;
+		Expressions::Variable _FillLevel;
 		UI::Label * _Label;
 	};
 }
