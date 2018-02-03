@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2007  Hagen Möbius
+ * Copyright (C) 2007-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -79,16 +79,13 @@ float UI::TimingDialog::_AddMeasure(float Top, const std::string & Label, UI::La
 	
 	CaptionLabel->SetLeft(10.0_c);
 	CaptionLabel->SetTop(constant(Top));
-	CaptionLabel->SetWidth(constant(GetWidth() - 100.0f));
+	CaptionLabel->SetWidth(width(this) - 100.0_c);
 	CaptionLabel->SetHeight(20.0_c);
-	CaptionLabel->SetAnchorRight(true);
 	ValueLabel = new UI::Label{this, ""};
-	ValueLabel->SetLeft(constant(GetWidth() - 80.0f));
+	ValueLabel->SetLeft(width(this) - 80.0_c);
 	ValueLabel->SetTop(constant(Top));
 	ValueLabel->SetWidth(70.0_c);
 	ValueLabel->SetHeight(20.0_c);
-	ValueLabel->SetAnchorLeft(false);
-	ValueLabel->SetAnchorRight(true);
 	ValueLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Right);
 	
 	return 20.0f;
