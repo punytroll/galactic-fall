@@ -127,12 +127,12 @@ void UI::LoadGameDialog::SetDirectoryPath(const std::string & DirectoryPath)
 	{
 		ShowErrorMessage("Is not an existing directory: \"" + _DirectoryPath + "\".");
 	}
-	for(auto Entry : GetDirectoryEntries(_DirectoryPath))
+	for(auto DirectoryEntry : GetDirectoryEntries(_DirectoryPath))
 	{
-		auto EntryLabel{new UI::ListBoxTextItem{}};
+		auto ListBoxTextItem{new UI::ListBoxTextItem{}};
 		
-		EntryLabel->SetText(Entry.substr(0, Entry.rfind(".xml")));
-		_FileListBox->GetContent()->AddSubWidget(EntryLabel);
+		ListBoxTextItem->SetText(DirectoryEntry.substr(0, DirectoryEntry.rfind(".xml")));
+		_FileListBox->GetContent()->AddSubWidget(ListBoxTextItem);
 	}
 }
 
@@ -145,6 +145,20 @@ void UI::LoadGameDialog::ShowErrorMessage(const std::string & ErrorMessage)
 	_MessageLabel->SetVisible(true);
 	_MessageLabel->SetText(ErrorMessage);
 	_MessageTimeoutNotification = g_RealTimeTimeoutNotifications->Add(RealTime::Get() + 2.0f, std::bind(&UI::Label::SetVisible, _MessageLabel, false));
+}
+
+void UI::LoadGameDialog::_OnFileListBoxSelectedItemChanged(void)
+{
+	auto SelectedFileListBoxItem{dynamic_cast< UI::ListBoxTextItem * >(_FileListBox->GetSelectedItem())};
+	
+	if(SelectedFileListBoxItem != nullptr)
+	{
+		_FileNameLabel->SetText(SelectedFileListBoxItem->GetText());
+	}
+	else
+	{
+		_FileNameLabel->SetText("");
+	}
 }
 
 void UI::LoadGameDialog::_OnFileNameLabelTextChanged(void)
@@ -195,19 +209,5 @@ void UI::LoadGameDialog::_OnKey(UI::KeyEvent & KeyEvent)
 	else if((KeyEvent.GetKeyCode() == 36 /* RETURN */) && (KeyEvent.IsDown() == true))
 	{
 		_Close(UI::Dialog::ClosingReason::RETURN_KEY);
-	}
-}
-
-void UI::LoadGameDialog::_OnFileListBoxSelectedItemChanged(void)
-{
-	auto SelectedFileListBoxItem{dynamic_cast< UI::ListBoxTextItem * >(_FileListBox->GetSelectedItem())};
-	
-	if(SelectedFileListBoxItem != nullptr)
-	{
-		_FileNameLabel->SetText(SelectedFileListBoxItem->GetText());
-	}
-	else
-	{
-		_FileNameLabel->SetText("");
 	}
 }
