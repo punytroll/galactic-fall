@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2008  Hagen Möbius
+ * Copyright (C) 2008-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -29,28 +29,13 @@
 #include "../real_time.h"
 #include "key_event.h"
 #include "label.h"
-#include "list_box_item.h"
+#include "list_box_text_item.h"
 #include "load_game_dialog.h"
 #include "mouse_button_event.h"
 #include "scroll_box.h"
 #include "text_button.h"
 
 using namespace Expressions::Operators;
-
-// this class is declared here, so we can use it, but defined in save_game_dialog.cpp
-namespace UI
-{
-	class DirectoryEntryItem : public UI::ListBoxItem
-	{
-	public:
-		DirectoryEntryItem(UI::Widget * SupWidget, const std::string & Caption);
-		// getters
-		const std::string & GetCaption(void) const;
-	private:
-		// member variables
-		UI::Label * _CaptionLabel;
-	};
-}
 
 UI::LoadGameDialog::LoadGameDialog(UI::Widget * SupWidget) :
 	UI::Dialog(SupWidget),
@@ -147,14 +132,16 @@ void UI::LoadGameDialog::SetDirectoryPath(const std::string & DirectoryPath)
 	
 	for(auto Entry : GetDirectoryEntries(_DirectoryPath))
 	{
-		auto EntryLabel{new DirectoryEntryItem{_FileScrollBox->GetContent(), Entry.substr(0, Entry.rfind(".xml"))}};
+		auto EntryLabel{new UI::ListBoxTextItem{}};
 		
 		EntryLabel->SetLeft(5.0_c);
 		EntryLabel->SetTop(constant(Top));
-		EntryLabel->SetWidth(constant(_FileScrollBox->GetContent()->GetWidth() - 5.0f));
+		EntryLabel->SetWidth(constant(_FileScrollBox->GetContent()->GetWidth() - 10.0f));
 		EntryLabel->SetHeight(20.0_c);
 		EntryLabel->SetAnchorRight(true);
+		EntryLabel->SetText(Entry.substr(0, Entry.rfind(".xml")));
 		EntryLabel->ConnectMouseButtonCallback(std::bind(&UI::LoadGameDialog::_OnDirectoryEntryItemMouseButton, this, EntryLabel, std::placeholders::_1));
+		_FileScrollBox->GetContent()->AddSubWidget(EntryLabel);
 		Top += 25.0f;
 	}
 	_FileScrollBox->GetContent()->SetHeight(constant(Top));
@@ -180,11 +167,11 @@ void UI::LoadGameDialog::_OnFileNameLabelTextChanged(void)
 	}
 	for(auto SubWidget : _FileScrollBox->GetContent()->GetSubWidgets())
 	{
-		auto EntryLabel(dynamic_cast< DirectoryEntryItem * >(SubWidget));
+		auto EntryLabel(dynamic_cast< UI::ListBoxTextItem * >(SubWidget));
 		
 		if(EntryLabel != nullptr)
 		{
-			if(EntryLabel->GetCaption() == _FileNameLabel->GetText())
+			if(EntryLabel->GetText() == _FileNameLabel->GetText())
 			{
 				_SelectedDirectoryEntryItem = EntryLabel;
 				_SelectedDirectoryEntryItem->SetSelected(true);
@@ -228,7 +215,7 @@ void UI::LoadGameDialog::_OnKey(UI::KeyEvent & KeyEvent)
 	}
 }
 
-void UI::LoadGameDialog::_OnDirectoryEntryItemMouseButton(UI::DirectoryEntryItem * DirectoryEntryItem, UI::MouseButtonEvent & MouseButtonEvent)
+void UI::LoadGameDialog::_OnDirectoryEntryItemMouseButton(UI::ListBoxTextItem * DirectoryEntryItem, UI::MouseButtonEvent & MouseButtonEvent)
 {
 	if((MouseButtonEvent.GetMouseButton() == UI::MouseButtonEvent::MouseButton::Left) && (MouseButtonEvent.IsDown() == true))
 	{
@@ -238,6 +225,6 @@ void UI::LoadGameDialog::_OnDirectoryEntryItemMouseButton(UI::DirectoryEntryItem
 		}
 		_SelectedDirectoryEntryItem = DirectoryEntryItem;
 		_SelectedDirectoryEntryItem->SetSelected(true);
-		_FileNameLabel->SetText(_SelectedDirectoryEntryItem->GetCaption());
+		_FileNameLabel->SetText(_SelectedDirectoryEntryItem->GetText());
 	}
 }

@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2016  Hagen Möbius
+ * Copyright (C) 2016-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,23 +21,21 @@
 
 #include "../scenario.h"
 #include "label.h"
-#include "scenario_list_box_item.h"
+#include "list_box_scenario_item.h"
 
 using namespace Expressions::Operators;
 
-UI::ScenarioListBoxItem::ScenarioListBoxItem(Scenario * Scenario) :
+UI::ListBoxScenarioItem::ListBoxScenarioItem(Scenario * Scenario) :
 	_Scenario(Scenario)
 {
+	SetHeight(20.0_c);
+	// create components
 	auto CaptionLabel{new UI::Label{this, Scenario->GetName()}};
 	
+	// initialize components
 	CaptionLabel->SetLeft(5.0_c);
 	CaptionLabel->SetTop(0.0_c);
-	CaptionLabel->SetWidth(constant(GetWidth() - 10.0f));
-	CaptionLabel->SetHeight(constant(GetHeight()));
+	CaptionLabel->SetWidth(width(this) - 2.0_c * 5.0_c);
+	CaptionLabel->SetHeight(height(this));
 	CaptionLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
-	CaptionLabel->SetAnchorBottom(true);
-	CaptionLabel->SetAnchorLeft(true);
-	CaptionLabel->SetAnchorRight(true);
-	CaptionLabel->SetAnchorTop(true);
-	SetHeight(20.0_c);
 }

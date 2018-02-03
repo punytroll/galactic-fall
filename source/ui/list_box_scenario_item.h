@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2014-2018  Hagen Möbius
+ * Copyright (C) 2016-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,23 +17,30 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef UI_LIST_BOX_ITEM_H
-#define UI_LIST_BOX_ITEM_H
+#ifndef LIST_BOX_SCENARIO_ITEM_H
+#define LIST_BOX_SCENARIO_ITEM_H
 
-#include "widget.h"
+#include "list_box_item.h"
+
+class Scenario;
 
 namespace UI
 {
-	class ListBoxItem : public UI::Widget
+	class ListBoxScenarioItem : public UI::ListBoxItem
 	{
 	public:
-		ListBoxItem(UI::Widget * SupWidget = nullptr);
-		void SetSelected(bool Selected);
+		ListBoxScenarioItem(Scenario * Scenario);
+		// getters
+		Scenario * GetScenario(void);
 	private:
-		void _OnMouseEnter(UI::Event & MouseEnterEvent);
-		void _OnMouseLeave(UI::Event & MouseLeaveEvent);
-		bool _Selected;
+		// member variables
+		Scenario * _Scenario;
 	};
+
+	inline Scenario * ListBoxScenarioItem::GetScenario(void)
+	{
+		return _Scenario;
+	}
 }
 
 #endif

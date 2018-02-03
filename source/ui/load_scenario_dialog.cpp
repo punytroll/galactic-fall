@@ -27,10 +27,9 @@
 #include "key_event.h"
 #include "label.h"
 #include "list_box.h"
-#include "list_box_item.h"
+#include "list_box_scenario_item.h"
 #include "load_scenario_dialog.h"
 #include "mouse_button_event.h"
-#include "scenario_list_box_item.h"
 #include "text_button.h"
 
 using namespace Expressions::Operators;
@@ -79,7 +78,7 @@ UI::LoadScenarioDialog::LoadScenarioDialog(UI::Widget * SupWidget, ScenarioManag
 	_ScenarioListBox->GetContent()->SetAnchorRight(true);
 	for(auto ScenarioPair : _ScenarioManager->GetScenarios())
 	{
-		_ScenarioListBox->GetContent()->AddSubWidget(new UI::ScenarioListBoxItem{ScenarioPair.second});
+		_ScenarioListBox->GetContent()->AddSubWidget(new UI::ListBoxScenarioItem{ScenarioPair.second});
 	}
 }
 
@@ -87,11 +86,11 @@ Scenario * UI::LoadScenarioDialog::GetScenario(void)
 {
 	if(_ScenarioListBox->GetSelectedItem() != nullptr)
 	{
-		auto SelectedScenarioListBoxItem{dynamic_cast< UI::ScenarioListBoxItem * >(_ScenarioListBox->GetSelectedItem())};
+		auto SelectedListBoxScenarioItem{dynamic_cast< UI::ListBoxScenarioItem * >(_ScenarioListBox->GetSelectedItem())};
 		
-		assert(SelectedScenarioListBoxItem != nullptr);
+		assert(SelectedListBoxScenarioItem != nullptr);
 		
-		return SelectedScenarioListBoxItem->GetScenario();
+		return SelectedListBoxScenarioItem->GetScenario();
 	}
 	else
 	{
