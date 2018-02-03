@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2014  Hagen Möbius
+ * Copyright (C) 2014-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -32,55 +32,32 @@ using namespace Expressions::Operators;
 UI::ProgressBar::ProgressBar(UI::Widget * SupWidget) :
 	UI::Widget(SupWidget),
 	_Fill(nullptr),
-	_FillLevel(1.0f),
+	_FillLevel(1.0_c),
 	_Label(nullptr)
 {
-	ConnectWidthChangedCallback(std::bind(&UI::ProgressBar::_OnWidthChanged, this, std::placeholders::_1));
+	// create components
 	_Fill = new UI::Widget{this};
-	_Fill->SetLeft(0.0_c);
-	_Fill->SetTop(0.0_c);
-	_Fill->SetWidth(constant(GetWidth()));
-	_Fill->SetHeight(constant(GetHeight()));
-	_Fill->SetAnchorBottom(true);
-	_Fill->SetAnchorLeft(true);
-	_Fill->SetAnchorTop(true);
 	_Label = new UI::Label{this};
-	_Label->SetLeft(0.0_c);
-	_Label->SetTop(0.0_c);
-	_Label->SetWidth(constant(GetWidth()));
-	_Label->SetHeight(constant(GetHeight()));
-	_Label->SetAnchorBottom(true);
-	_Label->SetAnchorLeft(true);
-	_Label->SetAnchorRight(true);
-	_Label->SetAnchorTop(true);
-	_Label->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Center);
-	_Label->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	
 	auto Border{new UI::Border{this}};
 	
+	// initialize components
+	_Fill->SetLeft(0.0_c);
+	_Fill->SetTop(0.0_c);
+	_Fill->SetWidth(width(this) * _FillLevel);
+	_Fill->SetHeight(height(this));
+	_Label->SetLeft(0.0_c);
+	_Label->SetTop(0.0_c);
+	_Label->SetWidth(width(this));
+	_Label->SetHeight(height(this));
+	_Label->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Center);
+	_Label->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	Border->SetLeft(0.0_c);
 	Border->SetTop(0.0_c);
-	Border->SetWidth(constant(GetWidth()));
-	Border->SetHeight(constant(GetHeight()));
+	Border->SetWidth(width(this));
+	Border->SetHeight(height(this));
 	Border->SetLineWidth(1.0f);
 	Border->SetColor(Graphics::ColorRGBO(1.0f, 1.0f, 1.0f, 1.0f));
-	Border->SetAnchorBottom(true);
-	Border->SetAnchorLeft(true);
-	Border->SetAnchorRight(true);
-	Border->SetAnchorTop(true);
-}
-
-void UI::ProgressBar::_OnWidthChanged(UI::Event & WidthChangedEvent)
-{
-	if(WidthChangedEvent.GetPhase() == UI::Event::Phase::Target)
-	{
-		_ResizeFill();
-	}
-}
-
-void UI::ProgressBar::_ResizeFill(void)
-{
-	_Fill->SetWidth(constant(_FillLevel * GetWidth()));
 }
 
 void UI::ProgressBar::SetColor(const Graphics::ColorRGBO & Color)
@@ -90,8 +67,7 @@ void UI::ProgressBar::SetColor(const Graphics::ColorRGBO & Color)
 
 void UI::ProgressBar::SetFillLevel(float FillLevel)
 {
-	_FillLevel = FillLevel;
-	_ResizeFill();
+	_FillLevel = constant(FillLevel);
 }
 
 void UI::ProgressBar::SetText(const std::string & Text)
