@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2014-2018  Hagen MÃ¶bius
+ * Copyright (C) 2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,23 +17,35 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef UI_LIST_BOX_ITEM_H
-#define UI_LIST_BOX_ITEM_H
+#include <expressions/operators.h>
 
-#include "widget.h"
+#include "label.h"
+#include "list_box_text_item.h"
 
-namespace UI
+using namespace Expressions::Operators;
+
+UI::ListBoxTextItem::ListBoxTextItem(void)
 {
-	class ListBoxItem : public UI::Widget
-	{
-	public:
-		ListBoxItem(UI::Widget * SupWidget = nullptr);
-		void SetSelected(bool Selected);
-	private:
-		void _OnMouseEnter(UI::Event & MouseEnterEvent);
-		void _OnMouseLeave(UI::Event & MouseLeaveEvent);
-		bool _Selected;
-	};
+	SetHeight(20.0_c);
+	// create components
+	_Label = new UI::Label{this};
+	// initialize components
+	_Label->SetLeft(5.0_c);
+	_Label->SetTop(0.0_c);
+	_Label->SetWidth(width(this) - 2.0_c * 5.0_c);
+	_Label->SetHeight(height(this));
+	_Label->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 }
 
-#endif
+const std::string & UI::ListBoxTextItem::GetText(void) const
+{
+	assert(_Label != nullptr);
+	
+	return _Label->GetText();
+}
+
+void UI::ListBoxTextItem::SetText(const std::string & Text)
+{
+	assert(_Label != nullptr);
+	_Label->SetText(Text);
+}

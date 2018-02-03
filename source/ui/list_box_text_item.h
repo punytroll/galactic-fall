@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2016  Hagen Möbius
+ * Copyright (C) 2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,30 +17,29 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef SCENARIO_LIST_BOX_ITEM_H
-#define SCENARIO_LIST_BOX_ITEM_H
+#ifndef UI_LIST_BOX_TEXT_ITEM_H
+#define UI_LIST_BOX_TEXT_ITEM_H
+
+#include <string>
 
 #include "list_box_item.h"
 
-class Scenario;
-
 namespace UI
 {
-	class ScenarioListBoxItem : public UI::ListBoxItem
+	class Label;
+	
+	class ListBoxTextItem : public UI::ListBoxItem
 	{
 	public:
-		ScenarioListBoxItem(Scenario * Scenario);
+		ListBoxTextItem(void);
 		// getters
-		Scenario * GetScenario(void);
+		const std::string & GetText(void) const;
+		// setters
+		void SetText(const std::string & Text);
 	private:
 		// member variables
-		Scenario * _Scenario;
+		UI::Label * _Label;
 	};
-
-	inline Scenario * ScenarioListBoxItem::GetScenario(void)
-	{
-		return _Scenario;
-	}
 }
 
 #endif

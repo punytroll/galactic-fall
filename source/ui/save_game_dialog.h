@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2007  Hagen Möbius
+ * Copyright (C) 2007-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -25,8 +25,8 @@
 
 namespace UI
 {
-	class DirectoryEntryItem;
 	class Label;
+	class ListBoxTextItem;
 	class ScrollBox;
 	
 	class SaveGameDialog : public UI::Dialog
@@ -41,7 +41,7 @@ namespace UI
 		void ShowErrorMessage(const std::string & ErrorMessage);
 	private:
 		// callbacks
-		void _OnDirectoryEntryItemMouseButton(UI::DirectoryEntryItem * DirectoryEntryItem, UI::MouseButtonEvent & MouseButtonEvent);
+		void _OnDirectoryEntryItemMouseButton(UI::ListBoxTextItem * DirectoryEntryItem, UI::MouseButtonEvent & MouseButtonEvent);
 		void _OnFileNameLabelKey(UI::KeyEvent & KeyEvent);
 		void _OnKey(UI::KeyEvent & KeyEvent);
 		// helper functions and actions
@@ -52,7 +52,7 @@ namespace UI
 		TimeoutNotification _MessageTimeoutNotification;
 		UI::Label * _FileNameLabel;
 		UI::ScrollBox * _FileScrollBox;
-		UI::DirectoryEntryItem * _SelectedDirectoryEntryItem;
+		UI::ListBoxTextItem * _SelectedDirectoryEntryItem;
 	};
 }
 
