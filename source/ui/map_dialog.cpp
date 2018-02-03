@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006  Hagen Möbius
+ * Copyright (C) 2006-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -40,38 +40,28 @@ UI::MapDialog::MapDialog(UI::Widget * SupWidget, Character * Character) :
 {
 	SetTitle("Map");
 	ConnectKeyCallback(std::bind(&UI::MapDialog::_OnKey, this, std::placeholders::_1));
-	_OKButton = new UI::TextButton{this, "OK"};
-	_OKButton->SetLeft(constant(GetWidth() - 110.0f));
-	_OKButton->SetTop(constant(GetHeight() - 30.0f));
-	_OKButton->SetWidth(100.0_c);
-	_OKButton->SetHeight(20.0_c);
-	_OKButton->SetAnchorBottom(true);
-	_OKButton->SetAnchorLeft(false);
-	_OKButton->SetAnchorRight(true);
-	_OKButton->SetAnchorTop(false);
-	_OKButton->ConnectClickedCallback(std::bind(&UI::MapDialog::_Close, this, UI::Dialog::ClosingReason::OK_BUTTON));
-	_OKButton->ConnectUpdatingCallback(std::bind(&UI::MapDialog::_OnOKButtonUpdating, this, std::placeholders::_1, std::placeholders::_2));
 	
+	// create components
 	auto CancelButton{new UI::TextButton(this, "Cancel")};
 	
-	CancelButton->SetLeft(constant(GetWidth() - 220.0f));
-	CancelButton->SetTop(constant(GetHeight() - 30.0f));
+	_OKButton = new UI::TextButton{this, "OK"};
+	_StarMapDisplay = new UI::StarMapDisplay{this, Character};
+	// setup components
+	_OKButton->SetLeft(width(this) - 10.0_c - width(_OKButton));
+	_OKButton->SetTop(height(this) - 10.0_c - height(_OKButton));
+	_OKButton->SetWidth(100.0_c);
+	_OKButton->SetHeight(20.0_c);
+	_OKButton->ConnectClickedCallback(std::bind(&UI::MapDialog::_Close, this, UI::Dialog::ClosingReason::OK_BUTTON));
+	_OKButton->ConnectUpdatingCallback(std::bind(&UI::MapDialog::_OnOKButtonUpdating, this, std::placeholders::_1, std::placeholders::_2));
+	CancelButton->SetLeft(left(_OKButton) - 10.0_c - width(CancelButton));
+	CancelButton->SetTop(height(this) - 10.0_c - height(CancelButton));
 	CancelButton->SetWidth(100.0_c);
 	CancelButton->SetHeight(20.0_c);
-	CancelButton->SetAnchorBottom(true);
-	CancelButton->SetAnchorLeft(false);
-	CancelButton->SetAnchorRight(true);
-	CancelButton->SetAnchorTop(false);
 	CancelButton->ConnectClickedCallback(std::bind(&UI::MapDialog::_Close, this, UI::Dialog::ClosingReason::CANCEL_BUTTON));
-	_StarMapDisplay = new UI::StarMapDisplay{this, Character};
 	_StarMapDisplay->SetLeft(10.0_c);
 	_StarMapDisplay->SetTop(40.0_c);
-	_StarMapDisplay->SetWidth(constant(GetWidth() - 20.0f));
-	_StarMapDisplay->SetHeight(constant(GetHeight() - 80.0f));
-	_StarMapDisplay->SetAnchorBottom(true);
-	_StarMapDisplay->SetAnchorLeft(true);
-	_StarMapDisplay->SetAnchorRight(true);
-	_StarMapDisplay->SetAnchorTop(true);
+	_StarMapDisplay->SetWidth(width(this) - 2.0_c * 10.0_c);
+	_StarMapDisplay->SetHeight(top(_OKButton) - 10.0_c - top(_StarMapDisplay));
 	_StarMapDisplay->SetBackgroundColor(Graphics::ColorRGBO(0.0f, 0.0f, 0.0f, 1.0f));
 }
 
