@@ -66,25 +66,33 @@ void UI::ListBox::_OnSubWidgetAdded(UI::SubWidgetEvent & SubWidgetEvent)
 {
 	if(SubWidgetEvent.GetPhase() == UI::Event::Phase::Target)
 	{
-		auto NewWidget(dynamic_cast< UI::ListBoxItem * >(SubWidgetEvent.GetSubWidget()));
+		auto NewListBoxItem(dynamic_cast< UI::ListBoxItem * >(SubWidgetEvent.GetSubWidget()));
 		
-		if(NewWidget != nullptr)
+		if(NewListBoxItem != nullptr)
 		{
-			auto Top{0.0f};
+			UI::ListBoxItem * LeadingListBoxItem{nullptr};
 			
-			for(auto OldWidget : GetContent()->GetSubWidgets())
+			for(auto SubWidget : GetContent()->GetSubWidgets())
 			{
-				if(OldWidget != NewWidget)
+				auto ListBoxItem{dynamic_cast< UI::ListBoxItem * >(SubWidget)};
+				
+				if((ListBoxItem != nullptr) && (ListBoxItem != NewListBoxItem) && ((LeadingListBoxItem == nullptr) || (ListBoxItem->GetBottom() > LeadingListBoxItem->GetBottom())))
 				{
-					Top = std::max(Top, OldWidget->GetTop() + OldWidget->GetHeight());
+					LeadingListBoxItem = ListBoxItem;
 				}
 			}
-			NewWidget->SetLeft(constant(g_ListBoxItemPadding));
-			NewWidget->SetTop(constant(Top + g_ListBoxItemPadding));
-			NewWidget->SetWidth(constant(GetContent()->GetWidth() - 2.0f * g_ListBoxItemPadding));
-			NewWidget->SetAnchorRight(true);
-			NewWidget->ConnectMouseButtonCallback(std::bind(&UI::ListBox::_OnItemMouseButton, this, std::placeholders::_1, NewWidget));
-			GetContent()->SetHeight(constant(NewWidget->GetBottom() + g_ListBoxItemPadding));
+			NewListBoxItem->SetLeft(constant(g_ListBoxItemPadding));
+			if(LeadingListBoxItem != nullptr)
+			{
+				NewListBoxItem->SetTop(bottom(LeadingListBoxItem) + constant(g_ListBoxItemPadding));
+			}
+			else
+			{
+				NewListBoxItem->SetTop(constant(g_ListBoxItemPadding));
+			}
+			NewListBoxItem->SetWidth(width(GetContent()) - 2.0_c * constant(g_ListBoxItemPadding));
+			NewListBoxItem->ConnectMouseButtonCallback(std::bind(&UI::ListBox::_OnItemMouseButton, this, std::placeholders::_1, NewListBoxItem));
+			GetContent()->SetHeight(bottom(NewListBoxItem) + constant(g_ListBoxItemPadding));
 		}
 	}
 }
