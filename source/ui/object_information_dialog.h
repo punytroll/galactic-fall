@@ -42,10 +42,10 @@ namespace UI
 		void _OnRefreshClicked(void);
 		void _OnObjectDestroying(void);
 		// helper functions and actions
-		float _AddObjectProperty(float Top, float Indentation, Object *	Object);
-		float _AddSeparator(float Top, float Indentation, const std::string & Separator);
-		float _AddString(float Top, float Indentation, const std::string & String);
-		float _AddStringProperty(float Top, float Indentation, const std::string & PropertyName, const std::string & PropertyValue);
+		UI::Widget * _AddObjectProperty(UI::Widget * PreviousWidget, float Indentation, Object *	Object);
+		UI::Widget * _AddSeparator(UI::Widget * PreviousWidget, float Indentation, const std::string & Separator);
+		UI::Widget * _AddString(UI::Widget * PreviousWidget, float Indentation, const std::string & String);
+		UI::Widget * _AddStringProperty(UI::Widget * PreviousWidget, float Indentation, const std::string & PropertyName, const std::string & PropertyValue);
 		std::string _GetPositionString(const Vector3f & Position);
 		std::string _GetOrientationString(const Quaternion & Orientation);
 		void _Refresh(void);

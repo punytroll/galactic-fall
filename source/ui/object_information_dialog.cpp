@@ -58,10 +58,8 @@ namespace UI
 			_Button = new UI::TextButton{this, Object->GetObjectIdentifier()};
 			_Button->SetLeft(constant(Indentation));
 			_Button->SetTop(5.0_c);
-			_Button->SetWidth(constant(GetWidth() - Indentation));
-			_Button->SetHeight(constant(GetHeight() - 10.0f));
-			_Button->SetAnchorBottom(true);
-			_Button->SetAnchorRight(true);
+			_Button->SetWidth(width(this) - constant(Indentation));
+			_Button->SetHeight(height(this) - 2.0_c * 5.0_c);
 			_Button->ConnectClickedCallback(std::bind(&UI::ObjectPropertyWidget::_OnButtonClicked, this));
 		}
 	private:
@@ -121,14 +119,10 @@ UI::ObjectInformationDialog::ObjectInformationDialog(Object * Object) :
 	// set up widgets
 	auto CloseButton{new UI::TextButton{this, "Close"}};
 	
-	CloseButton->SetLeft(constant(GetWidth() - 110.0f));
-	CloseButton->SetTop(constant(GetHeight() - 30.0f));
+	CloseButton->SetLeft(width(this) - 10.0_c - width(CloseButton));
+	CloseButton->SetTop(height(this) - 10.0_c - height(CloseButton));
 	CloseButton->SetWidth(100.0_c);
 	CloseButton->SetHeight(20.0_c);
-	CloseButton->SetAnchorBottom(true);
-	CloseButton->SetAnchorLeft(false);
-	CloseButton->SetAnchorRight(true);
-	CloseButton->SetAnchorTop(false);
 	CloseButton->ConnectClickedCallback(std::bind(&ObjectInformationDialog::_OnCloseClicked, this));
 	_PropertiesScrollBox = new UI::ScrollBox{};
 	_PropertiesScrollBox->SetLeft(10.0_c);
@@ -144,109 +138,123 @@ UI::ObjectInformationDialog::ObjectInformationDialog(Object * Object) :
 	
 	auto RefreshButton{new UI::TextButton{this, "Refresh"}};
 	
-	RefreshButton->SetLeft(constant(GetWidth() - 220.0f));
-	RefreshButton->SetTop(constant(GetHeight() - 30.0f));
+	RefreshButton->SetLeft(left(CloseButton) - 10.0_c - width(RefreshButton));
+	RefreshButton->SetTop(height(this) - 10.0_c - height(RefreshButton));
 	RefreshButton->SetWidth(100.0_c);
 	RefreshButton->SetHeight(20.0_c);
-	RefreshButton->SetAnchorBottom(true);
-	RefreshButton->SetAnchorLeft(false);
-	RefreshButton->SetAnchorRight(true);
-	RefreshButton->SetAnchorTop(false);
 	RefreshButton->ConnectClickedCallback(std::bind(&ObjectInformationDialog::_OnRefreshClicked, this));
 	_Refresh();
 }
 
-float UI::ObjectInformationDialog::_AddObjectProperty(float Top, float Indentation, Object * Object)
+UI::Widget * UI::ObjectInformationDialog::_AddObjectProperty(UI::Widget * PreviousWidget, float Indentation, Object * Object)
 {
 	auto ObjectPropertyWidget{new UI::ObjectPropertyWidget{Indentation, Object}};
 	
 	ObjectPropertyWidget->SetLeft(10.0_c);
-	ObjectPropertyWidget->SetTop(constant(Top));
-	ObjectPropertyWidget->SetWidth(constant(_PropertiesScrollBox->GetContent()->GetWidth() - 20.0f));
+	if(PreviousWidget != nullptr)
+	{
+		ObjectPropertyWidget->SetTop(bottom(PreviousWidget));
+	}
+	else
+	{
+		ObjectPropertyWidget->SetTop(0.0_c);
+	}
+	ObjectPropertyWidget->SetWidth(width(_PropertiesScrollBox->GetContent()) - 2.0_c * 10.0_c);
 	ObjectPropertyWidget->SetHeight(30.0_c);
-	ObjectPropertyWidget->SetAnchorRight(true);
 	_PropertiesScrollBox->GetContent()->AddSubWidget(ObjectPropertyWidget);
 	
-	return ObjectPropertyWidget->GetHeight();
+	return ObjectPropertyWidget;
 }
 
-float UI::ObjectInformationDialog::_AddSeparator(float Top, float Indentation, const std::string & Separator)
+UI::Widget * UI::ObjectInformationDialog::_AddSeparator(UI::Widget * PreviousWidget, float Indentation, const std::string & Separator)
 {
 	auto SeparatorDisplay{new UI::Widget{_PropertiesScrollBox->GetContent()}};
 	
 	SeparatorDisplay->SetLeft(10.0_c);
-	SeparatorDisplay->SetTop(constant(Top));
-	SeparatorDisplay->SetWidth(constant(_PropertiesScrollBox->GetContent()->GetWidth() - 20.0f));
+	if(PreviousWidget != nullptr)
+	{
+		SeparatorDisplay->SetTop(bottom(PreviousWidget));
+	}
+	else
+	{
+		SeparatorDisplay->SetTop(0.0_c);
+	}
+	SeparatorDisplay->SetWidth(width(_PropertiesScrollBox->GetContent()) - 2.0_c * 10.0_c);
 	SeparatorDisplay->SetHeight(20.0_c);
-	SeparatorDisplay->SetAnchorRight(true);
 	
 	auto SeparatorLabel{new UI::Label{SeparatorDisplay, Separator}};
 	
 	SeparatorLabel->SetLeft(constant(Indentation));
 	SeparatorLabel->SetTop(0.0_c);
-	SeparatorLabel->SetWidth(constant(SeparatorDisplay->GetWidth()));
-	SeparatorLabel->SetHeight(constant(SeparatorDisplay->GetHeight()));
+	SeparatorLabel->SetWidth(width(SeparatorDisplay));
+	SeparatorLabel->SetHeight(height(SeparatorDisplay));
 	SeparatorLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
-	SeparatorLabel->SetAnchorBottom(true);
-	SeparatorLabel->SetAnchorRight(true);
 	SeparatorLabel->SetTextColor(Graphics::ColorRGBO(0.5f, 0.8f, 1.0f, 1.0f));
 	
-	return SeparatorDisplay->GetHeight();
+	return SeparatorDisplay;
 }
 
-float UI::ObjectInformationDialog::_AddString(float Top, float Indentation, const std::string & String)
+UI::Widget * UI::ObjectInformationDialog::_AddString(UI::Widget * PreviousWidget, float Indentation, const std::string & String)
 {
 	auto StringDisplay{new UI::Widget{_PropertiesScrollBox->GetContent()}};
 	
 	StringDisplay->SetLeft(10.0_c);
-	StringDisplay->SetTop(constant(Top));
-	StringDisplay->SetWidth(constant(_PropertiesScrollBox->GetContent()->GetWidth() - 20.0f));
+	if(PreviousWidget != nullptr)
+	{
+		StringDisplay->SetTop(bottom(PreviousWidget));
+	}
+	else
+	{
+		StringDisplay->SetTop(0.0_c);
+	}
+	StringDisplay->SetWidth(width(_PropertiesScrollBox->GetContent()) - 2.0_c * 10.0_c);
 	StringDisplay->SetHeight(20.0_c);
-	StringDisplay->SetAnchorRight(true);
 	
 	auto StringLabel{new UI::Label{StringDisplay, String}};
 	
 	StringLabel->SetLeft(constant(Indentation));
 	StringLabel->SetTop(0.0_c);
-	StringLabel->SetWidth(constant(StringDisplay->GetWidth()));
-	StringLabel->SetHeight(constant(StringDisplay->GetHeight()));
+	StringLabel->SetWidth(width(StringDisplay));
+	StringLabel->SetHeight(height(StringDisplay));
 	StringLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
-	StringLabel->SetAnchorBottom(true);
 	
-	return StringDisplay->GetHeight();
+	return StringDisplay;
 }
 
-float UI::ObjectInformationDialog::_AddStringProperty(float Top, float Indentation, const std::string & PropertyName, const std::string & PropertyValue)
+UI::Widget * UI::ObjectInformationDialog::_AddStringProperty(UI::Widget * PreviousWidget, float Indentation, const std::string & PropertyName, const std::string & PropertyValue)
 {
 	auto PropertyDisplay{new UI::Widget{_PropertiesScrollBox->GetContent()}};
 	
 	PropertyDisplay->SetLeft(10.0_c);
-	PropertyDisplay->SetTop(constant(Top));
-	PropertyDisplay->SetWidth(constant(_PropertiesScrollBox->GetContent()->GetWidth() - 20.0f));
+	if(PreviousWidget != nullptr)
+	{
+		PropertyDisplay->SetTop(bottom(PreviousWidget));
+	}
+	else
+	{
+		PropertyDisplay->SetTop(0.0_c);
+	}
+	PropertyDisplay->SetWidth(width(_PropertiesScrollBox->GetContent()) - 2.0_c * 10.0_c);
 	PropertyDisplay->SetHeight(20.0_c);
-	PropertyDisplay->SetAnchorRight(true);
 	
 	auto PropertyNameLabel{new UI::Label{PropertyDisplay, PropertyName + ":"}};
 	
 	PropertyNameLabel->SetLeft(constant(Indentation));
 	PropertyNameLabel->SetTop(0.0_c);
 	PropertyNameLabel->SetWidth(constant(6.0f * (PropertyName.length() + 1)));
-	PropertyNameLabel->SetHeight(constant(PropertyDisplay->GetHeight()));
+	PropertyNameLabel->SetHeight(height(PropertyDisplay));
 	PropertyNameLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
-	PropertyNameLabel->SetAnchorBottom(true);
 	
 	auto PropertyValueLabel{new UI::Label(PropertyDisplay, PropertyValue)};
 	
 	PropertyValueLabel->SetLeft(constant(PropertyNameLabel->GetRight()));
 	PropertyValueLabel->SetTop(0.0_c);
-	PropertyValueLabel->SetWidth(constant(PropertyDisplay->GetWidth() - PropertyNameLabel->GetRight()));
-	PropertyValueLabel->SetHeight(constant(PropertyDisplay->GetHeight()));
+	PropertyValueLabel->SetWidth(width(PropertyDisplay) - right(PropertyNameLabel));
+	PropertyValueLabel->SetHeight(height(PropertyDisplay));
 	PropertyValueLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Right);
 	PropertyValueLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
-	PropertyValueLabel->SetAnchorRight(true);
-	PropertyValueLabel->SetAnchorBottom(true);
 	
-	return PropertyDisplay->GetHeight();
+	return PropertyDisplay;
 }
 
 std::string UI::ObjectInformationDialog::_GetPositionString(const Vector3f & Position)
@@ -301,27 +309,27 @@ void UI::ObjectInformationDialog::_Refresh(void)
 		_PropertiesScrollBox->GetContent()->GetSubWidgets().front()->Destroy();
 	}
 	
-	auto Top{0.0f};
+	UI::Widget * PreviousWidget{nullptr};
 	
 	// fill the properties view
 	if(_Object != nullptr)
 	{
-		Top += _AddStringProperty(Top, 0.0f, "Type", _Object->GetTypeIdentifier());
-		Top += _AddStringProperty(Top, 0.0f, "Class", _Object->GetClassIdentifier());
-		Top += _AddStringProperty(Top, 0.0f, "Identifier", _Object->GetObjectIdentifier());
-		Top += _AddSeparator(Top, 0.0f, "Container");
+		PreviousWidget = _AddStringProperty(PreviousWidget, 0.0f, "Type", _Object->GetTypeIdentifier());
+		PreviousWidget = _AddStringProperty(PreviousWidget, 0.0f, "Class", _Object->GetClassIdentifier());
+		PreviousWidget = _AddStringProperty(PreviousWidget, 0.0f, "Identifier", _Object->GetObjectIdentifier());
+		PreviousWidget = _AddSeparator(PreviousWidget, 0.0f, "Container");
 		if(_Object->GetContainer() != nullptr)
 		{
-			Top += _AddObjectProperty(Top, 20.0f, _Object->GetContainer());
+			PreviousWidget = _AddObjectProperty(PreviousWidget, 20.0f, _Object->GetContainer());
 		}
 		else
 		{
-			Top += _AddString(Top, 20.0f, "No container.");
+			PreviousWidget = _AddString(PreviousWidget, 20.0f, "No container.");
 		}
 		if(_Object->GetAspectName() != nullptr)
 		{
-			Top += _AddSeparator(Top, 0.0f, "Name Aspect");
-			Top += _AddStringProperty(Top, 20.0f, "Name", _Object->GetAspectName()->GetName());
+			PreviousWidget = _AddSeparator(PreviousWidget, 0.0f, "Name Aspect");
+			PreviousWidget = _AddStringProperty(PreviousWidget, 20.0f, "Name", _Object->GetAspectName()->GetName());
 			SetTitle("Object Information: " + _Object->GetAspectName()->GetName());
 		}
 		else
@@ -330,67 +338,67 @@ void UI::ObjectInformationDialog::_Refresh(void)
 		}
 		if(_Object->GetAspectObjectContainer() != nullptr)
 		{
-			Top += _AddSeparator(Top, 0.0f, "Object Container Aspect");
+			PreviousWidget = _AddSeparator(PreviousWidget, 0.0f, "Object Container Aspect");
 			for(auto Content : _Object->GetAspectObjectContainer()->GetContent())
 			{
-				Top += _AddObjectProperty(Top, 20.0f, Content);
+				PreviousWidget = _AddObjectProperty(PreviousWidget, 20.0f, Content);
 			}
 		}
 		if(_Object->GetAspectPosition() != nullptr)
 		{
-			Top += _AddSeparator(Top, 0.0f, "Position");
-			Top += _AddStringProperty(Top, 20.0f, "Position", _GetPositionString(_Object->GetAspectPosition()->GetPosition()));
-			Top += _AddStringProperty(Top, 20.0f, "Orientation", _GetOrientationString(_Object->GetAspectPosition()->GetOrientation()));
+			PreviousWidget = _AddSeparator(PreviousWidget, 0.0f, "Position");
+			PreviousWidget = _AddStringProperty(PreviousWidget, 20.0f, "Position", _GetPositionString(_Object->GetAspectPosition()->GetPosition()));
+			PreviousWidget = _AddStringProperty(PreviousWidget, 20.0f, "Orientation", _GetOrientationString(_Object->GetAspectPosition()->GetOrientation()));
 		}
 		if(_Object->GetAspectPhysical() != nullptr)
 		{
-			Top += _AddSeparator(Top, 0.0f, "Physical");
-			Top += _AddStringProperty(Top, 20.0f, "Radial Size", to_string_cast(_Object->GetAspectPhysical()->GetRadialSize()));
-			Top += _AddStringProperty(Top, 20.0f, "Space Requirement", to_string_cast(_Object->GetAspectPhysical()->GetSpaceRequirement()));
+			PreviousWidget = _AddSeparator(PreviousWidget, 0.0f, "Physical");
+			PreviousWidget = _AddStringProperty(PreviousWidget, 20.0f, "Radial Size", to_string_cast(_Object->GetAspectPhysical()->GetRadialSize()));
+			PreviousWidget = _AddStringProperty(PreviousWidget, 20.0f, "Space Requirement", to_string_cast(_Object->GetAspectPhysical()->GetSpaceRequirement()));
 		}
 		if(_Object->GetAspectAccessory() != nullptr)
 		{
-			Top += _AddSeparator(Top, 0.0f, "Accessory");
-			Top += _AddStringProperty(Top, 20.0f, "Slot Class Identifier", _Object->GetAspectAccessory()->GetSlotClassIdentifier());
+			PreviousWidget = _AddSeparator(PreviousWidget, 0.0f, "Accessory");
+			PreviousWidget = _AddStringProperty(PreviousWidget, 20.0f, "Slot Class Identifier", _Object->GetAspectAccessory()->GetSlotClassIdentifier());
 			if(_Object->GetAspectAccessory()->GetSlot() != nullptr)
 			{
-				Top += _AddString(Top, 20.0f, "Mounted to:");
-				Top += _AddStringProperty(Top, 40.0f, "Slot Identifier", _Object->GetAspectAccessory()->GetSlot()->GetIdentifier());
-				Top += _AddStringProperty(Top, 40.0f, "Slot Name", _Object->GetAspectAccessory()->GetSlot()->GetName());
-				Top += _AddStringProperty(Top, 40.0f, "Slot Class Identifier", _Object->GetAspectAccessory()->GetSlot()->GetSlotClass()->GetIdentifier());
+				PreviousWidget = _AddString(PreviousWidget, 20.0f, "Mounted to:");
+				PreviousWidget = _AddStringProperty(PreviousWidget, 40.0f, "Slot Identifier", _Object->GetAspectAccessory()->GetSlot()->GetIdentifier());
+				PreviousWidget = _AddStringProperty(PreviousWidget, 40.0f, "Slot Name", _Object->GetAspectAccessory()->GetSlot()->GetName());
+				PreviousWidget = _AddStringProperty(PreviousWidget, 40.0f, "Slot Class Identifier", _Object->GetAspectAccessory()->GetSlot()->GetSlotClass()->GetIdentifier());
 			}
 			else
 			{
-				Top += _AddString(Top, 20.0f, "Not mounted.");
+				PreviousWidget = _AddString(PreviousWidget, 20.0f, "Not mounted.");
 			}
 		}
 		if(_Object->GetAspectMessages() != nullptr)
 		{
-			Top += _AddSeparator(Top, 0.0f, "Messages");
-			Top += _AddStringProperty(Top, 20.0f, "Number of messages", to_string_cast(_Object->GetAspectMessages()->GetMessages().size()));
+			PreviousWidget = _AddSeparator(PreviousWidget, 0.0f, "Messages");
+			PreviousWidget = _AddStringProperty(PreviousWidget, 20.0f, "Number of messages", to_string_cast(_Object->GetAspectMessages()->GetMessages().size()));
 			for(auto Message : _Object->GetAspectMessages()->GetMessages())
 			{
-				Top += _AddString(Top, 40.0f, Message->GetTypeIdentifier());
+				PreviousWidget = _AddString(PreviousWidget, 40.0f, Message->GetTypeIdentifier());
 			}
 		}
 		if(_Object->GetAspectOutfitting() != nullptr)
 		{
-			Top += _AddSeparator(Top, 0.0f, "Outfitting");
-			Top += _AddStringProperty(Top, 20.0f, "Number of slots", to_string_cast(_Object->GetAspectOutfitting()->GetSlots().size()));
+			PreviousWidget = _AddSeparator(PreviousWidget, 0.0f, "Outfitting");
+			PreviousWidget = _AddStringProperty(PreviousWidget, 20.0f, "Number of slots", to_string_cast(_Object->GetAspectOutfitting()->GetSlots().size()));
 			for(auto SlotPair : _Object->GetAspectOutfitting()->GetSlots())
 			{
-				Top += _AddStringProperty(Top, 40.0f, SlotPair.second->GetName(), SlotPair.second->GetSlotClass()->GetIdentifier());
+				PreviousWidget = _AddStringProperty(PreviousWidget, 40.0f, SlotPair.second->GetName(), SlotPair.second->GetSlotClass()->GetIdentifier());
 			}
 		}
 		if(_Object->GetAspectUpdate() != nullptr)
 		{
-			Top += _AddSeparator(Top, 0.0f, "Update");
+			PreviousWidget = _AddSeparator(PreviousWidget, 0.0f, "Update");
 		}
 		if(_Object->GetAspectVisualization() != nullptr)
 		{
-			Top += _AddSeparator(Top, 0.0f, "Visualization");
-			Top += _AddStringProperty(Top, 20.0f, "Number of visualizations", to_string_cast(_Object->GetAspectVisualization()->GetVisualizations().size()));
+			PreviousWidget = _AddSeparator(PreviousWidget, 0.0f, "Visualization");
+			PreviousWidget = _AddStringProperty(PreviousWidget, 20.0f, "Number of visualizations", to_string_cast(_Object->GetAspectVisualization()->GetVisualizations().size()));
 		}
 	}
-	_PropertiesScrollBox->GetContent()->SetHeight(constant(Top));
+	_PropertiesScrollBox->GetContent()->SetHeight(constant(PreviousWidget->GetBottom()));
 }
