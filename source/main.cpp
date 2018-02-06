@@ -2365,9 +2365,9 @@ void ActionOpenMainMenuWindow(void)
 			g_MainMenuWindow->GetResumeGameButton()->SetEnabled(false);
 			g_MainMenuWindow->GetSaveGameButton()->SetEnabled(false);
 		}
-		g_MainMenuWindow->GrabKeyFocus();
 		g_MainMenuWindow->ConnectDestroyingCallback(OnMainMenuDestroying);
 		g_UserInterface->GetRootWidget()->AddSubWidget(g_MainMenuWindow);
+		g_MainMenuWindow->GrabKeyFocus();
 	}
 }
 
@@ -2387,7 +2387,6 @@ void ActionOpenMapDialog(void)
 		{
 			MapDialog->SetSelectedSystem(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetLinkedSystemTarget());
 		}
-		MapDialog->GrabKeyFocus();
 		MapDialog->ConnectClosingCallback(std::bind(OnMapDialogClosing, std::placeholders::_1, MapDialog));
 		if(g_InputMind.IsValid() == true)
 		{
@@ -2396,6 +2395,7 @@ void ActionOpenMapDialog(void)
 			g_InputMind->DisableTurnRight();
 		}
 		g_UserInterface->GetRootWidget()->AddSubWidget(MapDialog);
+		MapDialog->GrabKeyFocus();
 	}
 }
 
@@ -2411,8 +2411,8 @@ void ActionOpenObjectInformationDialog(void)
 	ObjectInformationDialog->SetTop(400.0_c);
 	ObjectInformationDialog->SetWidth(500.0_c);
 	ObjectInformationDialog->SetHeight(300.0_c);
-	ObjectInformationDialog->GrabKeyFocus();
 	g_UserInterface->GetRootWidget()->AddSubWidget(ObjectInformationDialog);
+	ObjectInformationDialog->GrabKeyFocus();
 }
 
 void ActionOpenOutfitShipDialog(void)
@@ -2426,9 +2426,9 @@ void ActionOpenOutfitShipDialog(void)
 		g_OutfitShipDialog->SetTop(280.0_c);
 		g_OutfitShipDialog->SetWidth(600.0_c);
 		g_OutfitShipDialog->SetHeight(400.0_c);
-		g_OutfitShipDialog->GrabKeyFocus();
 		g_OutfitShipDialog->ConnectDestroyingCallback(OnOutfitShipDialogDestroying);
 		g_UserInterface->GetRootWidget()->AddSubWidget(g_OutfitShipDialog);
+		g_OutfitShipDialog->GrabKeyFocus();
 	}
 }
 
@@ -2609,9 +2609,9 @@ void ActionToggleTimingDialog(void)
 		g_TimingDialog->SetTop(300.0_c);
 		g_TimingDialog->SetWidth(350.0_c);
 		g_TimingDialog->SetHeight(400.0_c);
-		g_TimingDialog->GrabKeyFocus();
 		g_TimingDialog->ConnectDestroyingCallback(OnTimingDialogDestroying);
 		g_UserInterface->GetRootWidget()->AddSubWidget(g_TimingDialog);
+		g_TimingDialog->GrabKeyFocus();
 	}
 	else
 	{

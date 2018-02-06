@@ -161,7 +161,6 @@ void UI::MainMenuWindow::_OnLoadGameButtonClicked(void)
 		_LoadGameDialog->SetTop(200.0_c);
 		_LoadGameDialog->SetWidth(300.0_c);
 		_LoadGameDialog->SetHeight(400.0_c);
-		_LoadGameDialog->GrabKeyFocus();
 		_LoadGameDialog->ConnectClosingCallback(std::bind(&UI::MainMenuWindow::_OnLoadGameDialogClosing, this, std::placeholders::_1));
 		_LoadGameDialog->ConnectDestroyingCallback(std::bind(&UI::MainMenuWindow::_OnLoadGameDialogDestroying, this, std::placeholders::_1));
 		
@@ -175,6 +174,7 @@ void UI::MainMenuWindow::_OnLoadGameButtonClicked(void)
 		_LoadGameDialog->SetDirectoryPath(DirectoryPath);
 		_DestroyOnLoadGameDialogDestroy = false;
 		GetRootWidget()->AddSubWidget(_LoadGameDialog);
+		_LoadGameDialog->GrabKeyFocus();
 	}
 }
 
@@ -253,11 +253,11 @@ void UI::MainMenuWindow::_OnLoadScenarioButtonClicked(void)
 		_LoadScenarioDialog->SetTop(200.0_c);
 		_LoadScenarioDialog->SetWidth(300.0_c);
 		_LoadScenarioDialog->SetHeight(400.0_c);
-		_LoadScenarioDialog->GrabKeyFocus();
 		_LoadScenarioDialog->ConnectClosingCallback(std::bind(&UI::MainMenuWindow::_OnLoadScenarioDialogClosing, this, std::placeholders::_1));
 		_LoadScenarioDialog->ConnectDestroyingCallback(std::bind(&UI::MainMenuWindow::_OnLoadScenarioDialogDestroying, this, std::placeholders::_1));
 		_DestroyOnLoadScenarioDialogDestroy = false;
 		GetRootWidget()->AddSubWidget(_LoadScenarioDialog);
+		_LoadScenarioDialog->GrabKeyFocus();
 	}
 }
 
@@ -334,7 +334,6 @@ void UI::MainMenuWindow::_OnSaveGameButtonClicked(void)
 		_SaveGameDialog->SetTop(200.0_c);
 		_SaveGameDialog->SetWidth(300.0_c);
 		_SaveGameDialog->SetHeight(400.0_c);
-		_SaveGameDialog->GrabKeyFocus();
 		_SaveGameDialog->ConnectClosingCallback(std::bind(&UI::MainMenuWindow::_OnSaveGameDialogClosing, this, std::placeholders::_1));
 		_SaveGameDialog->ConnectDestroyingCallback(std::bind(&UI::MainMenuWindow::_OnSaveGameDialogDestroying, this, std::placeholders::_1));
 		
@@ -348,6 +347,7 @@ void UI::MainMenuWindow::_OnSaveGameButtonClicked(void)
 		_SaveGameDialog->SetDirectoryPath(DirectoryPath);
 		_DestroyOnSaveGameDialogDestroy = false;
 		GetRootWidget()->AddSubWidget(_SaveGameDialog);
+		_SaveGameDialog->GrabKeyFocus();
 	}
 }
 

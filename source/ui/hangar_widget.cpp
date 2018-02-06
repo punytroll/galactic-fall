@@ -608,8 +608,8 @@ void UI::HangarWidget::_OnLoadButtonClicked(void)
 		_LoadShipWindow->SetWidth(600.0_c);
 		_LoadShipWindow->SetHeight(400.0_c);
 		_LoadShipWindow->ConnectDestroyingCallback(std::bind(&UI::HangarWidget::_OnLoadShipWindowDestroying, this, std::placeholders::_1));
-		_LoadShipWindow->GrabKeyFocus();
 		GetRootWidget()->AddSubWidget(_LoadShipWindow);
+		_LoadShipWindow->GrabKeyFocus();
 	}
 	else
 	{
@@ -643,8 +643,8 @@ void UI::HangarWidget::_OnOutfitButtonClicked(void)
 		_OutfitShipDialog->SetWidth(600.0_c);
 		_OutfitShipDialog->SetHeight(400.0_c);
 		_OutfitShipDialog->ConnectDestroyingCallback(std::bind(&UI::HangarWidget::_OnOutfitShipDialogDestroying, this, std::placeholders::_1));
-		_OutfitShipDialog->GrabKeyFocus();
 		GetRootWidget()->AddSubWidget(_OutfitShipDialog);
+		_OutfitShipDialog->GrabKeyFocus();
 	}
 	else
 	{
