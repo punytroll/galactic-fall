@@ -74,56 +74,39 @@ namespace UI
 			_Hangar(Hangar)
 		{
 			assert(_Hangar != nullptr);
+			SetHeight(20.0_c);
 			_HangarDestroyingConnection = _Hangar->ConnectDestroyingCallback(std::bind(&UI::TradeCenterAssetClassListWidget::_OnHangarDestroying, this));
 			ConnectDestroyingCallback(std::bind(&UI::TradeCenterAssetClassListWidget::_OnDestroying, this, std::placeholders::_1));
 			
 			auto NameLabel{new UI::Label{this, PlanetAssetClass->GetAssetClass()->GetName()}};
-			
-			NameLabel->SetLeft(10.0_c);
-			NameLabel->SetTop(0.0_c);
-			NameLabel->SetWidth(constant(GetWidth() - 170.0f));
-			NameLabel->SetHeight(constant(GetHeight()));
-			NameLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
-			NameLabel->SetAnchorBottom(true);
-			NameLabel->SetAnchorRight(true);
-			
 			auto HangarAmountLabel{new UI::Label{this, ""}};
-			
-			HangarAmountLabel->SetLeft(constant(GetWidth() - 150.0f));
-			HangarAmountLabel->SetTop(0.0_c);
-			HangarAmountLabel->SetWidth(40.0_c);
-			HangarAmountLabel->SetHeight(constant(GetHeight()));
-			HangarAmountLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Right);
-			HangarAmountLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
-			HangarAmountLabel->SetAnchorBottom(true);
-			HangarAmountLabel->SetAnchorLeft(false);
-			HangarAmountLabel->SetAnchorRight(true);
-			HangarAmountLabel->ConnectUpdatingCallback(std::bind(&UI::TradeCenterAssetClassListWidget::_OnHangarAmountLabelUpdating, this, std::placeholders::_1, std::placeholders::_2, HangarAmountLabel));
-			
 			auto SizeRequirementLabel{new UI::Label{this, to_string_cast(0.001 * g_ObjectFactory->GetSpaceRequirement(PlanetAssetClass->GetAssetClass()->GetObjectTypeIdentifier(), PlanetAssetClass->GetAssetClass()->GetObjectClassIdentifier()), 3)}};
-			
-			SizeRequirementLabel->SetLeft(constant(GetWidth() - 100.0f));
-			SizeRequirementLabel->SetTop(0.0_c);
-			SizeRequirementLabel->SetWidth(40.0_c);
-			SizeRequirementLabel->SetHeight(constant(GetHeight()));
-			SizeRequirementLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Right);
-			SizeRequirementLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
-			SizeRequirementLabel->SetAnchorBottom(true);
-			SizeRequirementLabel->SetAnchorLeft(false);
-			SizeRequirementLabel->SetAnchorRight(true);
-			
 			auto PriceLabel{new UI::Label{this, to_string_cast(PlanetAssetClass->GetPrice())}};
 			
-			PriceLabel->SetLeft(constant(GetWidth() - 50.0f));
+			PriceLabel->SetLeft(width(this) - 5.0_c - width(PriceLabel));
 			PriceLabel->SetTop(0.0_c);
 			PriceLabel->SetWidth(40.0_c);
-			PriceLabel->SetHeight(constant(GetHeight()));
+			PriceLabel->SetHeight(height(this));
 			PriceLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Right);
 			PriceLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
-			PriceLabel->SetAnchorBottom(true);
-			PriceLabel->SetAnchorLeft(false);
-			PriceLabel->SetAnchorRight(true);
-			SetHeight(20.0_c);
+			SizeRequirementLabel->SetLeft(left(PriceLabel) - 5.0_c - width(SizeRequirementLabel));
+			SizeRequirementLabel->SetTop(0.0_c);
+			SizeRequirementLabel->SetWidth(40.0_c);
+			SizeRequirementLabel->SetHeight(height(this));
+			SizeRequirementLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Right);
+			SizeRequirementLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
+			HangarAmountLabel->SetLeft(left(SizeRequirementLabel) - 5.0_c - width(HangarAmountLabel));
+			HangarAmountLabel->SetTop(0.0_c);
+			HangarAmountLabel->SetWidth(40.0_c);
+			HangarAmountLabel->SetHeight(height(this));
+			HangarAmountLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Right);
+			HangarAmountLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
+			HangarAmountLabel->ConnectUpdatingCallback(std::bind(&UI::TradeCenterAssetClassListWidget::_OnHangarAmountLabelUpdating, this, std::placeholders::_1, std::placeholders::_2, HangarAmountLabel));
+			NameLabel->SetLeft(5.0_c);
+			NameLabel->SetTop(0.0_c);
+			NameLabel->SetWidth(left(HangarAmountLabel) - 2.0_c * 5.0_c);
+			NameLabel->SetHeight(height(this));
+			NameLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 		}
 		
 		const PlanetAssetClass * GetPlanetAssetClass(void) const
@@ -285,7 +268,7 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet
 		
 		NewTradeCenterAssetClassListWidget->SetLeft(5.0_c);
 		NewTradeCenterAssetClassListWidget->SetTop(constant(Top));
-		NewTradeCenterAssetClassListWidget->SetWidth(constant(_AssetClassScrollBox->GetContent()->GetWidth()));
+		NewTradeCenterAssetClassListWidget->SetWidth(constant(_AssetClassScrollBox->GetContent()->GetWidth() - 10.0f));
 		NewTradeCenterAssetClassListWidget->SetAnchorRight(true);
 		NewTradeCenterAssetClassListWidget->ConnectMouseButtonCallback(std::bind(&UI::TradeCenterWidget::_OnAssetClassMouseButton, this, std::placeholders::_1, NewTradeCenterAssetClassListWidget));
 		Top += NewTradeCenterAssetClassListWidget->GetHeight() + 5.0f;
