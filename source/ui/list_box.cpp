@@ -101,46 +101,88 @@ void UI::ListBox::_OnSubWidgetRemoved(UI::SubWidgetEvent & SubWidgetEvent)
 {
 	if(SubWidgetEvent.GetPhase() == UI::Event::Phase::Target)
 	{
-		float NextTop;
-		UI::ListBoxItem * NextSelectedListItem(nullptr);
-		float Top{0.0f};
+		auto RemovedListItem{dynamic_cast< UI::ListBoxItem * >(SubWidgetEvent.GetSubWidget())};
 		
-		for(auto OldSubWidget : GetContent()->GetSubWidgets())
+		if(RemovedListItem != nullptr)
 		{
-			if(OldSubWidget->GetTop() > SubWidgetEvent.GetSubWidget()->GetTop())
+			UI::ListBoxItem * LastListItem{nullptr};
+			UI::ListBoxItem * LeadingListItem{nullptr};
+			UI::ListBoxItem * FollowingListItem{nullptr};
+			
+			for(auto SubWidget : GetContent()->GetSubWidgets())
 			{
-				if((NextSelectedListItem == nullptr) || (OldSubWidget->GetTop() < NextTop))
+				if(SubWidget != RemovedListItem)
 				{
-					NextSelectedListItem = dynamic_cast< UI::ListBoxItem * >(OldSubWidget);
-					NextTop = OldSubWidget->GetTop();
+					auto ListItem{dynamic_cast< UI::ListBoxItem * >(SubWidget)};
+					
+					if(ListItem != nullptr)
+					{
+						// calculate the last widget in the list, so that we can set the content's height accordingly
+						if((LastListItem == nullptr) || (ListItem->GetTop() > LastListItem->GetTop()))
+						{
+							LastListItem = ListItem;
+						}
+						// calculate the widgets that immediately surround the removed widget, so that we can set the following widget's top accordingly
+						if(ListItem->GetTop() < RemovedListItem->GetTop())
+						{
+							if((LeadingListItem == nullptr) || (ListItem->GetTop() > LeadingListItem->GetTop()))
+							{
+								LeadingListItem = ListItem;
+							}
+						}
+						else
+						{
+							if((FollowingListItem == nullptr) || (ListItem->GetTop() < FollowingListItem->GetTop()))
+							{
+								FollowingListItem = ListItem;
+							}
+						}
+					}
 				}
-				OldSubWidget->SetTop(constant(OldSubWidget->GetTop() - SubWidgetEvent.GetSubWidget()->GetHeight() - g_ListBoxItemPadding));
+			}
+			std::cout << "Leading list item: " << LeadingListItem << std::endl;
+			std::cout << "Removed list item: " << RemovedListItem << " (top: " << RemovedListItem->GetTop() << ")" << std::endl;
+			std::cout << "Following list item: " << FollowingListItem << std::endl;
+			std::cout << "Last list item: " << LastListItem << std::endl << std::endl;
+			if(FollowingListItem != nullptr)
+			{
+				if(LeadingListItem != nullptr)
+				{
+					FollowingListItem->SetTop(bottom(LeadingListItem) + constant(g_ListBoxItemPadding));
+				}
+				else
+				{
+					FollowingListItem->SetTop(constant(g_ListBoxItemPadding));
+				}
+			}
+			if(RemovedListItem == _SelectedItem)
+			{
+				_SelectedItem->SetSelected(false);
+				if(FollowingListItem != nullptr)
+				{
+					FollowingListItem->SetSelected(true);
+					_SelectedItem = FollowingListItem;
+				}
+				else if(LeadingListItem != nullptr)
+				{
+					LeadingListItem->SetSelected(true);
+					_SelectedItem = LeadingListItem;
+				}
+				else
+				{
+					_SelectedItem = nullptr;
+				}
+			}
+			if(LastListItem != nullptr)
+			{
+				GetContent()->SetHeight(constant(LastListItem->GetBottom() + g_ListBoxItemPadding));
 			}
 			else
 			{
-				if((NextSelectedListItem == nullptr) || (OldSubWidget->GetTop() > NextTop))
-				{
-					NextSelectedListItem = dynamic_cast< UI::ListBoxItem * >(OldSubWidget);
-					NextTop = OldSubWidget->GetTop();
-				}
-			}
-			Top = std::max(Top, OldSubWidget->GetBottom() + g_ListBoxItemPadding);
-		}
-		if(SubWidgetEvent.GetSubWidget() == _SelectedItem)
-		{
-			_SelectedItem->SetSelected(false);
-			if(NextSelectedListItem != nullptr)
-			{
-				NextSelectedListItem->SetSelected(true);
-				_SelectedItem = NextSelectedListItem;
-			}
-			else
-			{
-				_SelectedItem = nullptr;
+				GetContent()->SetHeight(0.0_c);
 			}
 			_SelectedItemChangedEvent();
 		}
-		GetContent()->SetHeight(constant(Top));
 	}
 }
 
