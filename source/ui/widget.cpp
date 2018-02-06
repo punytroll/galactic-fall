@@ -37,10 +37,6 @@ std::list< UI::Widget * > UI::Widget::_DestroyedWidgets;
 std::stack< std::tuple< float, float, float, float > > UI::Widget::_ClippingRectangles;
 
 UI::Widget::Widget(UI::Widget * SupWidget, const std::string & Name) :
-	_AnchorBottom(false),
-	_AnchorLeft(true),
-	_AnchorRight(false),
-	_AnchorTop(true),
 	_BackgroundColor(nullptr),
 	_DisabledBackgroundColor(nullptr),
 	_Enabled(true),
@@ -161,24 +157,7 @@ void UI::Widget::UnsetDisabledBackgroundColor(void)
 
 void UI::Widget::SetHeight(Expressions::Expression && Height)
 {
-	auto Offset{_Height.GetValue() - Height.GetValue()};
-	
 	_Height = std::move(Height);
-	// iterate through the list of sub widgets and correct widget positions and sizes
-	for(auto SubWidget : _SubWidgets)
-	{
-		if(SubWidget->_AnchorBottom == true)
-		{
-			if(SubWidget->_AnchorTop == true)
-			{
-				SubWidget->SetHeight(constant(SubWidget->GetHeight() - Offset));
-			}
-			else
-			{
-				SubWidget->SetTop(constant(SubWidget->GetTop() - Offset));
-			}
-		}
-	}
 }
 
 void UI::Widget::SetLeft(Expressions::Expression && Left)
@@ -194,24 +173,7 @@ void UI::Widget::SetTop(Expressions::Expression && Top)
 
 void UI::Widget::SetWidth(Expressions::Expression && Width)
 {
-	auto Offset{_Width.GetValue() - Width.GetValue()};
-	
 	_Width = std::move(Width);
-	// iterate through the list of sub widgets and correct widget positions and sizes
-	for(auto SubWidget : _SubWidgets)
-	{
-		if(SubWidget->_AnchorRight == true)
-		{
-			if(SubWidget->_AnchorLeft == true)
-			{
-				SubWidget->SetWidth(constant(SubWidget->GetWidth() - Offset));
-			}
-			else
-			{
-				SubWidget->SetLeft(constant(SubWidget->GetLeft() - Offset));
-			}
-		}
-	}
 }
 
 void UI::Widget::GrabKeyFocus(void)

@@ -60,7 +60,7 @@ UI::SaveGameDialog::SaveGameDialog(void)
 	_MessageLabel = new UI::Label{this};
 	_MessageLabel->SetLeft(10.0_c);
 	_MessageLabel->SetTop(40.0_c);
-	_MessageLabel->SetWidth(width(this) - 2.0_c * 10.0_c);
+	_MessageLabel->SetWidth(width(this) - 2.0_c * left(_MessageLabel));
 	_MessageLabel->SetHeight(30.0_c);
 	_MessageLabel->SetTextColor(Graphics::ColorRGBO(1.0f, 0.3, 0.3f, 1.0f));
 	_MessageLabel->SetWrap(true);
@@ -69,7 +69,7 @@ UI::SaveGameDialog::SaveGameDialog(void)
 	_FileNameLabel = new UI::Label{this};
 	_FileNameLabel->SetLeft(10.0_c);
 	_FileNameLabel->SetTop(bottom(_MessageLabel) + 10.0_c);
-	_FileNameLabel->SetWidth(width(this) - 2.0_c * 10.0_c);
+	_FileNameLabel->SetWidth(width(this) - 2.0_c * left(_FileNameLabel));
 	_FileNameLabel->SetHeight(20.0_c);
 	_FileNameLabel->SetTextColor(Graphics::ColorRGBO(1.0f, 1.0f, 0.5f, 1.0f));
 	_FileNameLabel->SetBackgroundColor(Graphics::ColorRGBO(0.1f, 0.1f, 0.1f, 1.0f));
@@ -79,14 +79,9 @@ UI::SaveGameDialog::SaveGameDialog(void)
 	_FileListBox = new UI::ListBox{};
 	_FileListBox->SetLeft(10.0_c);
 	_FileListBox->SetTop(110.0_c);
-	_FileListBox->SetWidth(constant(GetWidth() - 20.0f));
-	_FileListBox->SetHeight(constant(GetHeight() - 170.0f));
-	_FileListBox->SetAnchorBottom(true);
-	_FileListBox->SetAnchorRight(true);
-	_FileListBox->SetAnchorTop(true);
+	_FileListBox->SetWidth(width(this) - 2.0_c * left(_FileListBox));
+	_FileListBox->SetHeight(top(OKButton) - 10.0_c - top(_FileListBox));
 	_FileListBox->SetHorizontalScrollBarVisible(false);
-	_FileListBox->GetContent()->SetWidth(constant(_FileListBox->GetView()->GetWidth()));
-	_FileListBox->GetContent()->SetAnchorRight(true);
 	_FileListBox->ConnectSelectedItemChangedCallback(std::bind(&UI::SaveGameDialog::_OnFileListBoxSelectedItemChanged, this));
 	AddSubWidget(_FileListBox);
 }

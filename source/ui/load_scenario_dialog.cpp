@@ -66,15 +66,10 @@ UI::LoadScenarioDialog::LoadScenarioDialog(ScenarioManager * ScenarioManager) :
 	_MessageLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	_ScenarioListBox = new UI::ListBox{};
 	_ScenarioListBox->SetLeft(10.0_c);
-	_ScenarioListBox->SetTop(110.0_c);
-	_ScenarioListBox->SetWidth(constant(GetWidth() - 20.0f));
-	_ScenarioListBox->SetHeight(constant(GetHeight() - 170.0f));
-	_ScenarioListBox->SetAnchorBottom(true);
-	_ScenarioListBox->SetAnchorRight(true);
-	_ScenarioListBox->SetAnchorTop(true);
+	_ScenarioListBox->SetTop(bottom(_MessageLabel) + 10.0_c);
+	_ScenarioListBox->SetWidth(width(this) - 2.0_c * left(_ScenarioListBox));
+	_ScenarioListBox->SetHeight(top(OKButton) - 10.0_c - top(_ScenarioListBox));
 	_ScenarioListBox->SetHorizontalScrollBarVisible(false);
-	_ScenarioListBox->GetContent()->SetWidth(constant(_ScenarioListBox->GetView()->GetWidth()));
-	_ScenarioListBox->GetContent()->SetAnchorRight(true);
 	for(auto ScenarioPair : _ScenarioManager->GetScenarios())
 	{
 		_ScenarioListBox->GetContent()->AddSubWidget(new UI::ListBoxScenarioItem{ScenarioPair.second});

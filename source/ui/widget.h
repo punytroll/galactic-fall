@@ -92,10 +92,6 @@ namespace UI
 		bool IsHovered(void) const;
 		bool IsVisible(void) const;
 		// setters
-		void SetAnchorBottom(bool AnchorBottom);
-		void SetAnchorLeft(bool AnchorLeft);
-		void SetAnchorRight(bool AnchorRight);
-		void SetAnchorTop(bool AnchorTop);
 		void SetEnabled(bool Enabled);
 		void SetHeight(Expressions::Expression && Height);
 		void SetLeft(Expressions::Expression && Left);
@@ -124,10 +120,6 @@ namespace UI
 	private:
 		void _UnsetHoverWidget(void);
 		void _SetHoverWidget(UI::Widget * HoverWidget);
-		bool _AnchorBottom;
-		bool _AnchorLeft;
-		bool _AnchorRight;
-		bool _AnchorTop;
 		Graphics::ColorRGBO * _BackgroundColor;
 		Graphics::ColorRGBO * _DisabledBackgroundColor;
 		bool _Enabled;
@@ -265,26 +257,6 @@ namespace UI
 	inline bool Widget::IsVisible(void) const
 	{
 		return _Visible;
-	}
-
-	inline void Widget::SetAnchorBottom(bool AnchorBottom)
-	{
-		_AnchorBottom = AnchorBottom;
-	}
-
-	inline void Widget::SetAnchorLeft(bool AnchorLeft)
-	{
-		_AnchorLeft = AnchorLeft;
-	}
-
-	inline void Widget::SetAnchorRight(bool AnchorRight)
-	{
-		_AnchorRight = AnchorRight;
-	}
-
-	inline void Widget::SetAnchorTop(bool AnchorTop)
-	{
-		_AnchorTop = AnchorTop;
 	}
 
 	inline void Widget::SetEnabled(bool Enabled)

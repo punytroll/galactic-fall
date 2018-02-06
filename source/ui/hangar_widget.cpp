@@ -315,9 +315,8 @@ UI::HangarWidget::HangarWidget(UI::Widget * SupWidget, Planet * Planet, Characte
 	_ShipScrollBox = new UI::ScrollBox{};
 	_ShipScrollBox->SetLeft(0.0_c);
 	_ShipScrollBox->SetTop(0.0_c);
-	_ShipScrollBox->SetWidth(constant(GetWidth()));
+	_ShipScrollBox->SetWidth(width(this));
 	_ShipScrollBox->SetHeight(130.0_c);
-	_ShipScrollBox->SetAnchorRight(true);
 	_ShipScrollBox->SetVerticalScrollBarVisible(false);
 	_ShipScrollBox->GetContent()->ConnectSubWidgetAddedCallback(std::bind(&UI::HangarWidget::_OnShipScrollBoxSubWidgetAdded, this, std::placeholders::_1));
 	_ShipScrollBox->GetContent()->ConnectSubWidgetRemovedCallback(std::bind(&UI::HangarWidget::_OnShipScrollBoxSubWidgetRemoved, this, std::placeholders::_1));
@@ -782,7 +781,7 @@ void UI::HangarWidget::_OnShipScrollBoxSubWidgetAdded(UI::SubWidgetEvent & SubWi
 		NewItem->SetHeight(100.0_c);
 		NewItem->ConnectMouseButtonCallback(std::bind(&UI::HangarWidget::_OnShipListItemMouseButton, this, std::placeholders::_1, NewItem));
 		NewItem->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnShipListItemUpdating, this, std::placeholders::_1, std::placeholders::_2, NewItem));
-		_ShipScrollBox->GetContent()->SetWidth(constant(NewItem->GetRight()));
+		_ShipScrollBox->GetContent()->SetWidth(constant(NewItem->GetRight() + 5.0f));
 	}
 }
 
