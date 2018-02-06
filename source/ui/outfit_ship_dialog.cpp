@@ -96,25 +96,18 @@ UI::AccessoryListItem::AccessoryListItem(UI::Widget * SupWidget, Object * Access
 	
 	NameLabel->SetLeft(5.0_c);
 	NameLabel->SetTop(5.0_c);
-	NameLabel->SetWidth(constant(GetWidth() - 10.0f));
+	NameLabel->SetWidth(width(this) - 5.0_c - left(NameLabel));
 	NameLabel->SetHeight(20.0_c);
 	NameLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
-	NameLabel->SetAnchorLeft(true);
-	NameLabel->SetAnchorRight(true);
-	NameLabel->SetAnchorTop(true);
 	
 	auto SlotTypeLabel{new UI::Label{this, g_SlotClassManager->Get(Accessory->GetAspectAccessory()->GetSlotClassIdentifier())->GetName()}};
 	
 	SlotTypeLabel->SetLeft(25.0_c);
-	SlotTypeLabel->SetTop(constant(GetHeight() - 25.0f));
-	SlotTypeLabel->SetWidth(constant(GetWidth() - 30.0f));
+	SlotTypeLabel->SetTop(bottom(NameLabel));
+	SlotTypeLabel->SetWidth(width(this) - 5.0_c - left(SlotTypeLabel));
 	SlotTypeLabel->SetHeight(20.0_c);
 	SlotTypeLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
-	SlotTypeLabel->SetAnchorBottom(true);
-	SlotTypeLabel->SetAnchorLeft(true);
-	SlotTypeLabel->SetAnchorRight(true);
-	SlotTypeLabel->SetAnchorTop(false);
-	SetHeight(50.0_c);
+	SetHeight(bottom(SlotTypeLabel) + 5.0_c);
 }
 
 UI::AccessoryListItem::~AccessoryListItem(void)
@@ -153,24 +146,17 @@ UI::SlotListItem::SlotListItem(UI::Widget * SupWidget, Slot * Slot) :
 	
 	IdentifierLabel->SetLeft(5.0_c);
 	IdentifierLabel->SetTop(5.0_c);
-	IdentifierLabel->SetWidth(constant(GetWidth() - 10.0f));
+	IdentifierLabel->SetWidth(width(this) - 5.0_c - left(IdentifierLabel));
 	IdentifierLabel->SetHeight(20.0_c);
 	IdentifierLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
-	IdentifierLabel->SetAnchorLeft(true);
-	IdentifierLabel->SetAnchorRight(true);
-	IdentifierLabel->SetAnchorTop(true);
 	_TypeOrWeaponLabel = new UI::Label{this};
 	_TypeOrWeaponLabel->SetLeft(25.0_c);
-	_TypeOrWeaponLabel->SetTop(constant(GetHeight() - 25.0f));
-	_TypeOrWeaponLabel->SetWidth(constant(GetWidth() - 30.0f));
+	_TypeOrWeaponLabel->SetTop(bottom(IdentifierLabel));
+	_TypeOrWeaponLabel->SetWidth(width(this) - 5.0_c - left(_TypeOrWeaponLabel));
 	_TypeOrWeaponLabel->SetHeight(20.0_c);
 	_TypeOrWeaponLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
-	_TypeOrWeaponLabel->SetAnchorBottom(true);
-	_TypeOrWeaponLabel->SetAnchorLeft(true);
-	_TypeOrWeaponLabel->SetAnchorRight(true);
-	_TypeOrWeaponLabel->SetAnchorTop(false);
+	SetHeight(bottom(_TypeOrWeaponLabel) + 5.0_c);
 	Update();
-	SetHeight(50.0_c);
 }
 
 UI::SlotListItem::~SlotListItem(void)
