@@ -140,10 +140,6 @@ void UI::ListBox::_OnSubWidgetRemoved(UI::SubWidgetEvent & SubWidgetEvent)
 					}
 				}
 			}
-			std::cout << "Leading list item: " << LeadingListItem << std::endl;
-			std::cout << "Removed list item: " << RemovedListItem << " (top: " << RemovedListItem->GetTop() << ")" << std::endl;
-			std::cout << "Following list item: " << FollowingListItem << std::endl;
-			std::cout << "Last list item: " << LastListItem << std::endl << std::endl;
 			if(FollowingListItem != nullptr)
 			{
 				if(LeadingListItem != nullptr)
