@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2008  Aram Altschudjian
+ * Copyright (C) 2008-2018  Aram Altschudjian, Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -36,7 +36,7 @@ public:
 	virtual void Process(void);
 	virtual void Terminate(void);
 private:
-	GoalFlyInDirection * m_FlyInDirection;
+	GoalFlyInDirection * _FlyInDirection;
 };
 
 class GoalDestroyTarget : public Goal
@@ -47,7 +47,7 @@ public:
 	virtual void Process(void);
 	virtual void Terminate(void);
 private:
-	GoalFlyInDirection * m_FlyInDirection;
+	GoalFlyInDirection * _FlyInDirection;
 };
 
 class GoalFighterThink : public Goal
@@ -78,8 +78,8 @@ public:
 	virtual void Activate(void);
 	virtual void Process(void);
 private:
-	Vector3f m_Direction;
-	bool m_FacesDirection;
+	Vector3f _Direction;
+	bool _FacesDirection;
 };
 
 class GoalFlyInSystemDirection : public Goal
@@ -90,7 +90,7 @@ public:
 	virtual void Process(void);
 	virtual void Terminate(void);
 private:
-	GoalFlyInDirection * m_FlyInDirection;
+	GoalFlyInDirection * _FlyInDirection;
 };
 
 class GoalFlyOverRandomPointWhileNoThreat : public Goal
@@ -101,8 +101,8 @@ public:
 	virtual void Process(void);
 	virtual void Terminate(void);
 private:
-	Vector3f m_Point;
-	GoalFlyInDirection * m_FlyInDirection;
+	Vector3f _Point;
+	GoalFlyInDirection * _FlyInDirection;
 };
 
 class GoalFullStop : public Goal
@@ -113,7 +113,7 @@ public:
 	virtual void Process(void);
 	virtual void Terminate(void);
 private:
-	GoalFlyInDirection * m_FlyInDirection;
+	GoalFlyInDirection * _FlyInDirection;
 };
 
 class GoalJump : public Goal
@@ -136,7 +136,7 @@ public:
 	virtual void Activate(void);
 	virtual void Process(void);
 private:
-	GoalJumpToSystem::SystemPolicy m_SystemPolicy;
+	GoalJumpToSystem::SystemPolicy _SystemPolicy;
 };
 
 class GoalLand : public Goal
@@ -154,7 +154,7 @@ public:
 	virtual void Activate(void);
 	virtual void Process(void);
 private:
-	Reference< Planet > m_Planet;
+	Reference< Planet > _Planet;
 };
 
 class GoalSelectFightableTarget : public Goal
@@ -235,7 +235,7 @@ public:
 	bool OnMessageReceived(Message * Message);
 	virtual void Process(void);
 private:
-	GoalVisitPlanet::PlanetPolicy m_PlanetPolicy;
+	GoalVisitPlanet::PlanetPolicy _PlanetPolicy;
 };
 
 class GoalWait : public Goal
@@ -245,8 +245,8 @@ public:
 	virtual void Activate(void);
 	virtual void Process(void);
 private:
-	float m_SecondsToWait;
-	float m_TimeToLeave;
+	float _SecondsToWait;
+	float _TimeToLeave;
 };
 
 #endif
