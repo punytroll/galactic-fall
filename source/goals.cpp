@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2008  Aram Altschudjian
+ * Copyright (C) 2008-2018  Aram Altschudjian, Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -47,7 +47,7 @@ int WantToJump(Ship * Ship, System * System);
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 GoalApproachTarget::GoalApproachTarget(GoalMind * GoalMind) :
 	Goal(GoalMind, "approach_target"),
-	m_FlyInDirection(0)
+	_FlyInDirection(nullptr)
 {
 	SetObjectIdentifier("::goal(approach_target)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
 }
@@ -55,9 +55,9 @@ GoalApproachTarget::GoalApproachTarget(GoalMind * GoalMind) :
 void GoalApproachTarget::Activate(void)
 {
 	assert(GetSubGoals().empty() == true);
-	m_FlyInDirection = new GoalFlyInDirection(GetMind());
-	AddSubGoal(m_FlyInDirection);
-	m_FlyInDirection->Activate();
+	_FlyInDirection = new GoalFlyInDirection(GetMind());
+	AddSubGoal(_FlyInDirection);
+	_FlyInDirection->Activate();
 	SetState(Goal::ACTIVE);
 }
 
@@ -74,7 +74,7 @@ void GoalApproachTarget::Process(void)
 	//  - accelerating: the ship will fly half distance that it could with maximum velocity towards the target
 	if(DistanceSquared > DistanceNeededToBrake * DistanceNeededToBrake)
 	{
-		m_FlyInDirection->SetDirection(ToDestination / sqrt(DistanceSquared));
+		_FlyInDirection->SetDirection(ToDestination / sqrt(DistanceSquared));
 		assert(GetSubGoals().size() == 1);
 		assert(GetSubGoals().front()->GetState() == Goal::ACTIVE);
 		GetSubGoals().front()->Process();
@@ -87,7 +87,7 @@ void GoalApproachTarget::Process(void)
 
 void GoalApproachTarget::Terminate(void)
 {
-	m_FlyInDirection->Terminate();
+	_FlyInDirection->Terminate();
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -95,7 +95,7 @@ void GoalApproachTarget::Terminate(void)
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 GoalDestroyTarget::GoalDestroyTarget(GoalMind * GoalMind) :
 	Goal(GoalMind, "destroy_target"),
-	m_FlyInDirection(0)
+	_FlyInDirection(nullptr)
 {
 	SetObjectIdentifier("::goal(destroy_target)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
 }
@@ -103,9 +103,9 @@ GoalDestroyTarget::GoalDestroyTarget(GoalMind * GoalMind) :
 void GoalDestroyTarget::Activate(void)
 {
 	assert(GetSubGoals().empty() == true);
-	m_FlyInDirection = new GoalFlyInDirection(GetMind());
-	AddSubGoal(m_FlyInDirection);
-	m_FlyInDirection->Activate();
+	_FlyInDirection = new GoalFlyInDirection(GetMind());
+	AddSubGoal(_FlyInDirection);
+	_FlyInDirection->Activate();
 	SetState(Goal::ACTIVE);
 }
 
@@ -121,12 +121,12 @@ void GoalDestroyTarget::Process(void)
 		
 		ToDestination -= GetMind()->GetCharacter()->GetShip()->GetVelocity() * SecondsForShot;
 		Length = ToDestination.Length();
-		m_FlyInDirection->SetDirection(ToDestination / Length);
+		_FlyInDirection->SetDirection(ToDestination / Length);
 		assert(GetSubGoals().size() == 1);
 		assert(GetSubGoals().front()->GetState() == Goal::ACTIVE);
 		GetSubGoals().front()->Process();
 		// TODO: shot reach
-		GetMind()->GetCharacter()->GetShip()->SetFire((m_FlyInDirection->GetFacesDirection() == true) && (Length < 50.0f));
+		GetMind()->GetCharacter()->GetShip()->SetFire((_FlyInDirection->GetFacesDirection() == true) && (Length < 50.0f));
 	}
 	else
 	{
@@ -137,7 +137,7 @@ void GoalDestroyTarget::Process(void)
 void GoalDestroyTarget::Terminate(void)
 {
 	GetMind()->GetCharacter()->GetShip()->SetFire(false);
-	m_FlyInDirection->Terminate();
+	_FlyInDirection->Terminate();
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -316,20 +316,20 @@ void GoalFightSomeTarget::Process(void)
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 GoalFlyInDirection::GoalFlyInDirection(GoalMind * GoalMind) :
 	Goal(GoalMind, "fly_in_direction"),
-	m_Direction(Vector3f::CreateZero()),
-	m_FacesDirection(false)
+	_Direction(Vector3f::CreateZero()),
+	_FacesDirection(false)
 {
 	SetObjectIdentifier("::goal(fly_in_direction)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
 }
 
 bool GoalFlyInDirection::GetFacesDirection(void) const
 {
-	return m_FacesDirection;
+	return _FacesDirection;
 }
 
 void GoalFlyInDirection::SetDirection(const Vector3f & Direction)
 {
-	m_Direction = Direction;
+	_Direction = Direction;
 }
 
 void GoalFlyInDirection::Activate(void)
@@ -342,7 +342,7 @@ void GoalFlyInDirection::Process(void)
 {
 	assert(GetState() == Goal::ACTIVE);
 	
-	Vector3f LocalizedDirection(m_Direction);
+	Vector3f LocalizedDirection(_Direction);
 	
 	LocalizedDirection.Rotate(GetMind()->GetCharacter()->GetShip()->GetAspectPosition()->GetOrientation().Conjugated());
 	if((LocalizedDirection[1] > 0.1f) || ((LocalizedDirection[0] < 0.0f) && (LocalizedDirection[1] >= 0.0f)))
@@ -350,21 +350,21 @@ void GoalFlyInDirection::Process(void)
 		GetMind()->GetCharacter()->GetShip()->SetTurnLeft(1.0f);
 		GetMind()->GetCharacter()->GetShip()->SetTurnRight(0.0f);
 		GetMind()->GetCharacter()->GetShip()->SetAccelerate(false);
-		m_FacesDirection = false;
+		_FacesDirection = false;
 	}
 	else if((LocalizedDirection[1] < -0.1f) || ((LocalizedDirection[0] < 0.0f) && (LocalizedDirection[1] < 0.0f)))
 	{
 		GetMind()->GetCharacter()->GetShip()->SetTurnLeft(0.0f);
 		GetMind()->GetCharacter()->GetShip()->SetTurnRight(1.0f);
 		GetMind()->GetCharacter()->GetShip()->SetAccelerate(false);
-		m_FacesDirection = false;
+		_FacesDirection = false;
 	}
 	else
 	{
 		GetMind()->GetCharacter()->GetShip()->SetTurnLeft(0.0f);
 		GetMind()->GetCharacter()->GetShip()->SetTurnRight(0.0f);
-		GetMind()->GetCharacter()->GetShip()->SetAccelerate(GetMind()->GetCharacter()->GetShip()->GetMaximumSpeed() - m_Direction.Dot(GetMind()->GetCharacter()->GetShip()->GetVelocity()) > 0.1f);
-		m_FacesDirection = true;
+		GetMind()->GetCharacter()->GetShip()->SetAccelerate(GetMind()->GetCharacter()->GetShip()->GetMaximumSpeed() - _Direction.Dot(GetMind()->GetCharacter()->GetShip()->GetVelocity()) > 0.1f);
+		_FacesDirection = true;
 	}
 }
 
@@ -373,7 +373,7 @@ void GoalFlyInDirection::Process(void)
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 GoalFlyInSystemDirection::GoalFlyInSystemDirection(GoalMind * GoalMind) :
 	Goal(GoalMind, "fly_in_system_direction"),
-	m_FlyInDirection(0)
+	_FlyInDirection(0)
 {
 	SetObjectIdentifier("::goal(fly_in_system_direction)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
 }
@@ -381,14 +381,14 @@ GoalFlyInSystemDirection::GoalFlyInSystemDirection(GoalMind * GoalMind) :
 void GoalFlyInSystemDirection::Activate(void)
 {
 	assert(GetSubGoals().empty() == true);
-	m_FlyInDirection = new GoalFlyInDirection(GetMind());
-	AddSubGoal(m_FlyInDirection);
-	m_FlyInDirection->Activate();
+	_FlyInDirection = new GoalFlyInDirection(GetMind());
+	AddSubGoal(_FlyInDirection);
+	_FlyInDirection->Activate();
 	
 	const System * CurrentSystem(dynamic_cast< System * >(GetMind()->GetCharacter()->GetShip()->GetContainer()));
 	
-	assert(CurrentSystem != 0);
-	m_FlyInDirection->SetDirection((GetMind()->GetCharacter()->GetShip()->GetLinkedSystemTarget()->GetAspectPosition()->GetPosition() - CurrentSystem->GetAspectPosition()->GetPosition()).Normalize());
+	assert(CurrentSystem != nullptr);
+	_FlyInDirection->SetDirection((GetMind()->GetCharacter()->GetShip()->GetLinkedSystemTarget()->GetAspectPosition()->GetPosition() - CurrentSystem->GetAspectPosition()->GetPosition()).Normalize());
 	SetState(Goal::ACTIVE);
 }
 
@@ -402,7 +402,7 @@ void GoalFlyInSystemDirection::Process(void)
 
 void GoalFlyInSystemDirection::Terminate(void)
 {
-	m_FlyInDirection->Terminate();
+	_FlyInDirection->Terminate();
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -410,7 +410,7 @@ void GoalFlyInSystemDirection::Terminate(void)
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 GoalFlyOverRandomPointWhileNoThreat::GoalFlyOverRandomPointWhileNoThreat(GoalMind * GoalMind) :
 	Goal(GoalMind, "fly_over_random_point_while_no_threat"),
-	m_FlyInDirection(0)
+	_FlyInDirection(nullptr)
 {
 	SetObjectIdentifier("::goal(fly_over_random_point_while_no_threat)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
 }
@@ -418,10 +418,10 @@ GoalFlyOverRandomPointWhileNoThreat::GoalFlyOverRandomPointWhileNoThreat(GoalMin
 void GoalFlyOverRandomPointWhileNoThreat::Activate(void)
 {
 	assert(GetSubGoals().empty() == true);
-	m_FlyInDirection = new GoalFlyInDirection(GetMind());
-	AddSubGoal(m_FlyInDirection);
-	m_FlyInDirection->Activate();
-	m_Point.Set(GetRandomFloat(-200.0f, 200.0f), GetRandomFloat(-200.0f, 200.0f), 0.0f);
+	_FlyInDirection = new GoalFlyInDirection(GetMind());
+	AddSubGoal(_FlyInDirection);
+	_FlyInDirection->Activate();
+	_Point.Set(GetRandomFloat(-200.0f, 200.0f), GetRandomFloat(-200.0f, 200.0f), 0.0f);
 	SetState(Goal::ACTIVE);
 }
 
@@ -434,12 +434,12 @@ void GoalFlyOverRandomPointWhileNoThreat::Process(void)
 	}
 	else
 	{
-		Vector3f ToDestination(m_Point - GetMind()->GetCharacter()->GetShip()->GetAspectPosition()->GetPosition());
+		Vector3f ToDestination(_Point - GetMind()->GetCharacter()->GetShip()->GetAspectPosition()->GetPosition());
 		float LengthSquared(ToDestination.SquaredLength());
 		
 		if(LengthSquared > 400.0f)
 		{
-			m_FlyInDirection->SetDirection(ToDestination / sqrt(LengthSquared));
+			_FlyInDirection->SetDirection(ToDestination / sqrt(LengthSquared));
 			assert(GetSubGoals().front()->GetState() == Goal::ACTIVE);
 			GetSubGoals().front()->Process();
 		}
@@ -452,7 +452,7 @@ void GoalFlyOverRandomPointWhileNoThreat::Process(void)
 
 void GoalFlyOverRandomPointWhileNoThreat::Terminate(void)
 {
-	m_FlyInDirection->Terminate();
+	_FlyInDirection->Terminate();
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -460,7 +460,7 @@ void GoalFlyOverRandomPointWhileNoThreat::Terminate(void)
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 GoalFullStop::GoalFullStop(GoalMind * GoalMind) :
 	Goal(GoalMind, "full_stop"),
-	m_FlyInDirection(0)
+	_FlyInDirection(nullptr)
 {
 	SetObjectIdentifier("::goal(full_stop)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
 }
@@ -468,9 +468,9 @@ GoalFullStop::GoalFullStop(GoalMind * GoalMind) :
 void GoalFullStop::Activate(void)
 {
 	assert(GetSubGoals().empty() == true);
-	m_FlyInDirection = new GoalFlyInDirection(GetMind());
-	AddSubGoal(m_FlyInDirection);
-	m_FlyInDirection->Activate();
+	_FlyInDirection = new GoalFlyInDirection(GetMind());
+	AddSubGoal(_FlyInDirection);
+	_FlyInDirection->Activate();
 	SetState(Goal::ACTIVE);
 }
 
@@ -482,7 +482,7 @@ void GoalFullStop::Process(void)
 	
 	if(SpeedSquared > 2.0f)
 	{
-		m_FlyInDirection->SetDirection(-GetMind()->GetCharacter()->GetShip()->GetVelocity().Normalized());
+		_FlyInDirection->SetDirection(-GetMind()->GetCharacter()->GetShip()->GetVelocity().Normalized());
 		assert(GetSubGoals().size() == 1);
 		assert(GetSubGoals().front()->GetState() == Goal::ACTIVE);
 		GetSubGoals().front()->Process();
@@ -495,7 +495,7 @@ void GoalFullStop::Process(void)
 
 void GoalFullStop::Terminate(void)
 {
-	m_FlyInDirection->Terminate();
+	_FlyInDirection->Terminate();
 	GetMind()->GetCharacter()->GetShip()->SetAccelerate(false);
 }
 
@@ -526,7 +526,7 @@ void GoalJump::Process(void)
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 GoalJumpToSystem::GoalJumpToSystem(GoalMind * GoalMind, GoalJumpToSystem::SystemPolicy SystemPolicy) :
 	Goal(GoalMind, "jump_to_system"),
-	m_SystemPolicy(SystemPolicy)
+	_SystemPolicy(SystemPolicy)
 {
 	SetObjectIdentifier("::goal(jump_to_system)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
 }
@@ -536,7 +536,7 @@ void GoalJumpToSystem::Activate(void)
 	assert(GetSubGoals().empty() == true);
 	AddSubGoal(new GoalJump(GetMind()));
 	AddSubGoal(new GoalFlyInSystemDirection(GetMind()));
-	if(m_SystemPolicy == GoalJumpToSystem::JUMP_TO_RANDOM_SYSTEM)
+	if(_SystemPolicy == GoalJumpToSystem::JUMP_TO_RANDOM_SYSTEM)
 	{
 		AddSubGoal(new GoalSelectRandomSystem(GetMind()));
 	}
@@ -646,7 +646,7 @@ void GoalLand::Process(void)
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 GoalRefuel::GoalRefuel(GoalMind * GoalMind, const Reference< Planet > & Planet) :
 	Goal(GoalMind, "refuel"),
-	m_Planet(Planet)
+	_Planet(Planet)
 {
 	SetObjectIdentifier("::goal(refuel)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
 }
@@ -661,7 +661,7 @@ void GoalRefuel::Process(void)
 {
 	assert(GetState() == Goal::ACTIVE);
 	
-	const std::vector< PlanetAssetClass * > & PlanetAssetClasses(m_Planet->GetPlanetAssetClasses());
+	const std::vector< PlanetAssetClass * > & PlanetAssetClasses(_Planet->GetPlanetAssetClasses());
 	bool SuccessfullyRefueled(false);
 	
 	for(std::vector< PlanetAssetClass * >::const_iterator PlanetAssetClassIterator = PlanetAssetClasses.begin(); PlanetAssetClassIterator != PlanetAssetClasses.end(); ++PlanetAssetClassIterator)
@@ -1057,7 +1057,7 @@ void GoalTakeOffFromPlanet::Process(void)
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 GoalVisitPlanet::GoalVisitPlanet(GoalMind * GoalMind, GoalVisitPlanet::PlanetPolicy PlanetPolicy) :
 	Goal(GoalMind, "visit_planet"),
-	m_PlanetPolicy(PlanetPolicy)
+	_PlanetPolicy(PlanetPolicy)
 {
 	SetObjectIdentifier("::goal(visit_planet)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
 }
@@ -1068,7 +1068,7 @@ void GoalVisitPlanet::Activate(void)
 	AddSubGoal(new GoalTakeOffFromPlanet(GetMind()));
 	AddSubGoal(new GoalLand(GetMind()));
 	AddSubGoal(new GoalStopAtTarget(GetMind()));
-	if((m_PlanetPolicy == GoalVisitPlanet::VISIT_NEAREST_PLANET_IN_SYSTEM) || (m_PlanetPolicy == GoalVisitPlanet::VISIT_NEAREST_PLANET))
+	if((_PlanetPolicy == GoalVisitPlanet::VISIT_NEAREST_PLANET_IN_SYSTEM) || (_PlanetPolicy == GoalVisitPlanet::VISIT_NEAREST_PLANET))
 	{
 		AddSubGoal(new GoalSelectNearestPlanetInSystem(GetMind()));
 	}
@@ -1125,7 +1125,7 @@ void GoalVisitPlanet::Process(void)
 		SubGoal->Terminate();
 		RemoveSubGoal(SubGoal);
 		// other actions may depend on the SubGoal variable
-		if((SubGoal->GetName() == "select_nearest_planet_in_system") && (m_PlanetPolicy == GoalVisitPlanet::VISIT_NEAREST_PLANET))
+		if((SubGoal->GetName() == "select_nearest_planet_in_system") && (_PlanetPolicy == GoalVisitPlanet::VISIT_NEAREST_PLANET))
 		{
 			AddSubGoal(new GoalSelectNearestPlanetInSystem(GetMind()));
 			AddSubGoal(new GoalJumpToSystem(GetMind(), GoalJumpToSystem::JUMP_TO_RANDOM_SYSTEM));
@@ -1145,21 +1145,21 @@ void GoalVisitPlanet::Process(void)
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 GoalWait::GoalWait(GoalMind * GoalMind, float Seconds) :
 	Goal(GoalMind, "wait"),
-	m_SecondsToWait(Seconds)
+	_SecondsToWait(Seconds)
 {
-	SetObjectIdentifier("::goal(wait)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")::seconds_to_wait(" + to_string_cast(m_SecondsToWait, 6) + ")");
+	SetObjectIdentifier("::goal(wait)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")::seconds_to_wait(" + to_string_cast(_SecondsToWait, 6) + ")");
 }
 
 void GoalWait::Activate(void)
 {
 	assert(GetSubGoals().empty() == true);
-	m_TimeToLeave = GameTime::Get() + m_SecondsToWait;
+	_TimeToLeave = GameTime::Get() + _SecondsToWait;
 	SetState(Goal::ACTIVE);
 }
 
 void GoalWait::Process(void)
 {
-	if(GameTime::Get() >= m_TimeToLeave)
+	if(GameTime::Get() >= _TimeToLeave)
 	{
 		SetState(Goal::COMPLETED);
 	}
