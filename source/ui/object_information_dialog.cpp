@@ -72,8 +72,8 @@ namespace UI
 			ObjectInformationDialog->SetTop(400.0_c);
 			ObjectInformationDialog->SetWidth(500.0_c);
 			ObjectInformationDialog->SetHeight(300.0_c);
-			ObjectInformationDialog->GrabKeyFocus();
 			GetRootWidget()->AddSubWidget(ObjectInformationDialog);
+			ObjectInformationDialog->GrabKeyFocus();
 		}
 		
 		void _OnDestroying(UI::Event & DestroyingEvent)
