@@ -127,13 +127,10 @@ UI::ObjectInformationDialog::ObjectInformationDialog(Object * Object) :
 	_PropertiesScrollBox = new UI::ScrollBox{};
 	_PropertiesScrollBox->SetLeft(10.0_c);
 	_PropertiesScrollBox->SetTop(40.0_c);
-	_PropertiesScrollBox->SetWidth(constant(GetWidth() - 20.0f));
-	_PropertiesScrollBox->SetHeight(constant(GetHeight() - 80.0f));
+	_PropertiesScrollBox->SetWidth(width(this) - 2.0_c * left(_PropertiesScrollBox));
+	_PropertiesScrollBox->SetHeight(top(CloseButton) - 10.0_c - top(_PropertiesScrollBox));
+	_PropertiesScrollBox->GetContent()->SetWidth(width(_PropertiesScrollBox->GetView()));
 	_PropertiesScrollBox->SetHorizontalScrollBarVisible(false);
-	_PropertiesScrollBox->SetAnchorBottom(true);
-	_PropertiesScrollBox->SetAnchorRight(true);
-	_PropertiesScrollBox->GetContent()->SetWidth(constant(_PropertiesScrollBox->GetView()->GetWidth()));
-	_PropertiesScrollBox->GetContent()->SetAnchorRight(true);
 	AddSubWidget(_PropertiesScrollBox);
 	
 	auto RefreshButton{new UI::TextButton{this, "Refresh"}};
@@ -400,5 +397,5 @@ void UI::ObjectInformationDialog::_Refresh(void)
 			PreviousWidget = _AddStringProperty(PreviousWidget, 20.0f, "Number of visualizations", to_string_cast(_Object->GetAspectVisualization()->GetVisualizations().size()));
 		}
 	}
-	_PropertiesScrollBox->GetContent()->SetHeight(constant(PreviousWidget->GetBottom()));
+	_PropertiesScrollBox->GetContent()->SetHeight(bottom(PreviousWidget));
 }

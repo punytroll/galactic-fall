@@ -35,8 +35,7 @@ namespace UI
 	class Button;
 	class Label;
 	class ViewDisplay;
-	class ScrollBox;
-	class TradeCenterAssetClassListWidget;
+	class ListBox;
 
 	class TradeCenterWidget : public UI::Widget
 	{
@@ -46,9 +45,7 @@ namespace UI
 		// callbacks
 		void _OnAssetClassDescriptionCaptionLabelUpdating(UI::Label * AssetClassDescriptionCaptionLabel, float RealTimeSeconds, float GameTimeSeconds);
 		void _OnAssetClassDescriptionLabelUpdating(UI::Label * AssetClassDescriptionLabel, float RealTimeSeconds, float GameTimeSeconds);
-		void _OnAssetClassMouseButton(UI::MouseButtonEvent & MouseButtonEvent, UI::TradeCenterAssetClassListWidget * TradeCenterAssetClassListWidget);
-		void _OnAssetClassMouseEnter(UI::Event & MouseEnterEvent, UI::TradeCenterAssetClassListWidget * TradeCenterAssetClassListWidget);
-		void _OnAssetClassMouseLeave(UI::Event & MouseEnterEvent, UI::TradeCenterAssetClassListWidget * TradeCenterAssetClassListWidget);
+		void _OnAssetClassListBoxSelectedItemChanged(void);
 		void _OnAssetClassPriceCaptionLabelUpdating(UI::Label * AssetClassPriceCaptionLabel, float RealTimeSeconds, float GameTimeSeconds);
 		void _OnAssetClassPriceLabelUpdating(UI::Label * AssetClassPriceLabel, float RealTimeSeconds, float GameTimeSeconds);
 		void _OnAssetClassSizeCaptionLabelUpdating(UI::Label * AssetClassSizeCaptionLabel, float RealTimeSeconds, float GameTimeSeconds);
@@ -68,13 +65,12 @@ namespace UI
 		void _ClearAssetClassViewDisplay(void);
 		void _Sell(const PlanetAssetClass * PlanetAssetClass);
 		// member variables
-		UI::ScrollBox * _AssetClassScrollBox;
+		UI::ListBox * _AssetClassListBox;
 		UI::ViewDisplay * _AssetClassViewDisplay;
 		Character * _Character;
 		Connection _CharacterDestroyingConnection;
 		Planet * _Planet;
 		Connection _PlanetDestroyingConnection;
-		UI::TradeCenterAssetClassListWidget * _SelectedTradeCenterAssetClassListWidget;
 	};
 }
 

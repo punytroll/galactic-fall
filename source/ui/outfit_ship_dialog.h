@@ -26,10 +26,8 @@ class Ship;
 
 namespace UI
 {
-	class AccessoryListItem;
 	class Button;
-	class ScrollBox;
-	class SlotListItem;
+	class ListBox;
 	
 	class OutfitShipDialog : public UI::Window
 	{
@@ -37,29 +35,21 @@ namespace UI
 		OutfitShipDialog(Ship * Ship);
 	private:
 		// callbacks
-		void _OnAccessoryListItemMouseButton(UI::AccessoryListItem * AccessoryListItem, UI::MouseButtonEvent & MouseButtonEvent);
 		void _OnDestroying(UI::Event & DestroyingEvent);
 		void _OnKey(UI::KeyEvent & KeyEvent);
 		void _OnMountButtonClicked(void);
 		void _OnMountButtonUpdating(UI::Button * MountButton, float RealTimeSeconds, float GameTimeSeconds);
 		void _OnOKButtonClicked(void);
 		void _OnShipDestroying(void);
-		void _OnSlotListItemMouseButton(UI::SlotListItem * SlotListItem, UI::MouseButtonEvent & MouseButtonEvent);
 		void _OnUnmountButtonClicked(void);
 		void _OnUnmountButtonUpdating(UI::Button * UnmountButton, float RealTimeSeconds, float GameTimeSeconds);
-		void _OnWidthChanged(UI::Event & WidthChangedEvent);
 		// helper function and actions
 		void _RebuildAccessoryList(void);
 		// member variables
-		UI::ScrollBox * _AccessoryScrollBox;
-		UI::Widget * _CenterPane;
-		UI::Widget * _LeftPane;
-		UI::Widget * _RightPane;
-		UI::AccessoryListItem * _SelectedAccessoryListItem;
-		UI::SlotListItem * _SelectedSlotListItem;
+		UI::ListBox * _AccessoryListBox;
 		Ship * _Ship;
 		Connection _ShipDestroyingConnection;
-		UI::ScrollBox * _SlotScrollBox;
+		UI::ListBox * _SlotListBox;
 	};
 }
 

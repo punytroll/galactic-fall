@@ -160,10 +160,8 @@ void UI::PlanetWindow::_OpenHangar(void)
 		_HangarWidget = new UI::HangarWidget{this, _Planet, _Character};
 		_HangarWidget->SetLeft(120.0_c);
 		_HangarWidget->SetTop(40.0_c);
-		_HangarWidget->SetWidth(constant(GetWidth() - 130.0f));
-		_HangarWidget->SetHeight(constant(GetHeight() - 50.0f));
-		_HangarWidget->SetAnchorBottom(true);
-		_HangarWidget->SetAnchorRight(true);
+		_HangarWidget->SetWidth(width(this) - 10.0_c - left(_HangarWidget));
+		_HangarWidget->SetHeight(height(this) - 10.0_c - top(_HangarWidget));
 	}
 	_HangarWidget->GrabKeyFocus();
 }
@@ -190,12 +188,10 @@ void UI::PlanetWindow::_OpenHomeScreen(void)
 		_DescriptionLabel = new UI::Label{this, _Planet->GetDescription()};
 		_DescriptionLabel->SetLeft(120.0_c);
 		_DescriptionLabel->SetTop(40.0_c);
-		_DescriptionLabel->SetWidth(constant(GetWidth() - 130.0f));
-		_DescriptionLabel->SetHeight(constant(GetHeight() - 50.0f));
+		_DescriptionLabel->SetWidth(width(this) - 10.0_c - left(_DescriptionLabel));
+		_DescriptionLabel->SetHeight(height(this) - 10.0_c - top(_DescriptionLabel));
 		_DescriptionLabel->SetWrap(true);
 		_DescriptionLabel->SetWordWrap(true);
-		_DescriptionLabel->SetAnchorBottom(true);
-		_DescriptionLabel->SetAnchorRight(true);
 	}
 	_DescriptionLabel->GrabKeyFocus();
 }
@@ -221,10 +217,8 @@ void UI::PlanetWindow::_OpenTradeCenter(void)
 		_TradeCenterWidget = new UI::TradeCenterWidget{this, _Planet, _Character};
 		_TradeCenterWidget->SetLeft(120.0_c);
 		_TradeCenterWidget->SetTop(40.0_c);
-		_TradeCenterWidget->SetWidth(constant(GetWidth() - 130.0f));
-		_TradeCenterWidget->SetHeight(constant(GetHeight() - 50.0f));
-		_TradeCenterWidget->SetAnchorBottom(true);
-		_TradeCenterWidget->SetAnchorRight(true);
+		_TradeCenterWidget->SetWidth(width(this) - 10.0_c - left(_TradeCenterWidget));
+		_TradeCenterWidget->SetHeight(height(this) - 10.0_c - top(_TradeCenterWidget));
 	}
 	_TradeCenterWidget->GrabKeyFocus();
 }

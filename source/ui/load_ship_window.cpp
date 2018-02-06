@@ -63,8 +63,7 @@ UI::LoadShipWindow::LoadShipWindow(Hangar * Hangar, Ship * Ship) :
 	
 	LeftPane->SetLeft(10.0_c);
 	LeftPane->SetTop(40.0_c);
-	LeftPane->SetHeight(constant(GetHeight() - 50.0f));
-	LeftPane->SetAnchorBottom(true);
+	LeftPane->SetHeight(height(this) - 10.0_c - top(LeftPane));
 	
 	auto HangarLabel{new UI::Label{LeftPane, "Hangar"}};
 	
@@ -76,14 +75,10 @@ UI::LoadShipWindow::LoadShipWindow(Hangar * Hangar, Ship * Ship) :
 	HangarLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	_HangarListBox = new UI::ListBox{};
 	_HangarListBox->SetLeft(0.0_c);
-	_HangarListBox->SetTop(30.0_c);
-	_HangarListBox->SetWidth(constant(LeftPane->GetWidth()));
-	_HangarListBox->SetHeight(constant(LeftPane->GetHeight() - 30.0f));
+	_HangarListBox->SetTop(bottom(HangarLabel));
+	_HangarListBox->SetWidth(width(LeftPane));
+	_HangarListBox->SetHeight(height(LeftPane) - top(_HangarListBox));
 	_HangarListBox->SetHorizontalScrollBarVisible(false);
-	_HangarListBox->SetAnchorBottom(true);
-	_HangarListBox->SetAnchorRight(true);
-	_HangarListBox->GetContent()->SetWidth(constant(_HangarListBox->GetView()->GetWidth()));
-	_HangarListBox->GetContent()->SetAnchorRight(true);
 	assert(_Hangar->GetAspectObjectContainer() != nullptr);
 	for(auto HangarObject : _Hangar->GetAspectObjectContainer()->GetContent())
 	{
@@ -129,25 +124,7 @@ UI::LoadShipWindow::LoadShipWindow(Hangar * Hangar, Ship * Ship) :
 	auto RightPane{new UI::Widget{this}};
 	
 	RightPane->SetTop(40.0_c);
-	RightPane->SetHeight(constant(GetHeight() - 50.0f));
-	RightPane->SetAnchorBottom(true);
-	_ShipListBox = new UI::ListBox{};
-	_ShipListBox->SetLeft(0.0_c);
-	_ShipListBox->SetTop(30.0_c);
-	_ShipListBox->SetWidth(constant(RightPane->GetWidth()));
-	_ShipListBox->SetHeight(constant(RightPane->GetHeight() - 30.0f));
-	_ShipListBox->SetHorizontalScrollBarVisible(false);
-	_ShipListBox->SetAnchorBottom(true);
-	_ShipListBox->SetAnchorRight(true);
-	_ShipListBox->GetContent()->SetWidth(constant(_ShipListBox->GetView()->GetWidth()));
-	_ShipListBox->GetContent()->SetAnchorRight(true);
-	assert(_Ship->GetCargoHold() != nullptr);
-	assert(_Ship->GetCargoHold()->GetAspectObjectContainer() != nullptr);
-	for(auto ShipObject : _Ship->GetCargoHold()->GetAspectObjectContainer()->GetContent())
-	{
-		_ShipListBox->GetContent()->AddSubWidget(new UI::ListBoxObjectItem(ShipObject));
-	}
-	RightPane->AddSubWidget(_ShipListBox);
+	RightPane->SetHeight(height(this) - 10.0_c - top(RightPane));
 	
 	auto ShipLabel{new UI::Label{RightPane, "Ship"}};
 	
@@ -158,6 +135,19 @@ UI::LoadShipWindow::LoadShipWindow(Hangar * Hangar, Ship * Ship) :
 	ShipLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Center);
 	ShipLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	ConnectWidthChangedCallback(std::bind(&UI::LoadShipWindow::_OnWidthChanged, this, std::placeholders::_1, LeftPane, CenterPane, RightPane));
+	_ShipListBox = new UI::ListBox{};
+	_ShipListBox->SetLeft(0.0_c);
+	_ShipListBox->SetTop(bottom(ShipLabel));
+	_ShipListBox->SetWidth(width(RightPane));
+	_ShipListBox->SetHeight(height(RightPane) - top(_ShipListBox));
+	_ShipListBox->SetHorizontalScrollBarVisible(false);
+	assert(_Ship->GetCargoHold() != nullptr);
+	assert(_Ship->GetCargoHold()->GetAspectObjectContainer() != nullptr);
+	for(auto ShipObject : _Ship->GetCargoHold()->GetAspectObjectContainer()->GetContent())
+	{
+		_ShipListBox->GetContent()->AddSubWidget(new UI::ListBoxObjectItem(ShipObject));
+	}
+	RightPane->AddSubWidget(_ShipListBox);
 }
 
 void UI::LoadShipWindow::_OnDestroying(UI::Event & DestroyingEvent)

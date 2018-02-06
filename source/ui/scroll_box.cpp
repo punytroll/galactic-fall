@@ -40,12 +40,8 @@ UI::ScrollBox::ScrollBox(void)
 	_View->SetName("view");
 	_View->SetLeft(0.0_c);
 	_View->SetTop(0.0_c);
-	_View->SetWidth(constant(GetWidth() - 20.0f));
-	_View->SetHeight(constant(GetHeight() - 20.0f));
-	_View->SetAnchorBottom(true);
-	_View->SetAnchorLeft(true);
-	_View->SetAnchorRight(true);
-	_View->SetAnchorTop(true);
+	_View->SetWidth(width(this) - width(_VerticalScrollBar));
+	_View->SetHeight(height(this) - height(_HorizontalScrollBar));
 	_View->ConnectHeightChangedCallback(std::bind(&UI::ScrollBox::_OnContentOrViewSizeChanged, this, std::placeholders::_1));
 	_View->ConnectWidthChangedCallback(std::bind(&UI::ScrollBox::_OnContentOrViewSizeChanged, this, std::placeholders::_1));
 	_Content->SetName("content");
@@ -77,6 +73,14 @@ UI::ScrollBox::ScrollBox(void)
 
 UI::ScrollBox::~ScrollBox(void)
 {
+}
+
+void UI::ScrollBox::Clear(void)
+{
+	while(GetContent()->GetSubWidgets().empty() == false)
+	{
+		GetContent()->GetSubWidgets().front()->Destroy();
+	}
 }
 
 void UI::ScrollBox::_OnContentOrViewSizeChanged(UI::Event & SizeChangedEvent)
@@ -142,12 +146,12 @@ void UI::ScrollBox::SetHorizontalScrollBarVisible(bool Visible)
 	{
 		if(Visible == true)
 		{
-			_View->SetHeight(constant(GetHeight() - 20.0f));
+			_View->SetHeight(height(this) - height(_HorizontalScrollBar));
 			_VerticalScrollBar->SetHeight(height(this) - height(_HorizontalScrollBar));
 		}
 		else
 		{
-			_View->SetHeight(constant(GetHeight()));
+			_View->SetHeight(height(this));
 			_VerticalScrollBar->SetHeight(height(this));
 		}
 		_HorizontalScrollBar->SetVisible(Visible);
@@ -160,12 +164,12 @@ void UI::ScrollBox::SetVerticalScrollBarVisible(bool Visible)
 	{
 		if(Visible == true)
 		{
-			_View->SetWidth(constant(GetWidth() - 20.0f));
+			_View->SetWidth(width(this) - width(_VerticalScrollBar));
 			_HorizontalScrollBar->SetWidth(width(this) - width(_VerticalScrollBar));
 		}
 		else
 		{
-			_View->SetWidth(constant(GetWidth()));
+			_View->SetWidth(width(this));
 			_HorizontalScrollBar->SetWidth(width(this));
 		}
 		_VerticalScrollBar->SetVisible(Visible);

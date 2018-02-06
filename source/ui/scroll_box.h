@@ -41,6 +41,8 @@ namespace UI
 		// setters
 		void SetHorizontalScrollBarVisible(bool Visible);
 		void SetVerticalScrollBarVisible(bool Visible);
+		// modifiers
+		void Clear(void);
 	protected:
 		// callbacks
 		void _OnContentOrViewSizeChanged(UI::Event & SizeChangedEvent);

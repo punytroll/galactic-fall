@@ -30,6 +30,7 @@ float g_ListBoxItemPadding{2.0f};
 UI::ListBox::ListBox(void) :
 	_SelectedItem(nullptr)
 {
+	GetContent()->SetWidth(width(GetView()));
 	GetContent()->ConnectSubWidgetAddedCallback(std::bind(&UI::ListBox::_OnSubWidgetAdded, this, std::placeholders::_1));
 	GetContent()->ConnectSubWidgetRemovedCallback(std::bind(&UI::ListBox::_OnSubWidgetRemoved, this, std::placeholders::_1));
 }
