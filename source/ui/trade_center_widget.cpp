@@ -268,10 +268,6 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet
 	{
 		_AssetClassScrollBox->GetContent()->SetHeight(bottom(PreviousTradeCenterAssetClassListWidget) + 2.0_c);
 	}
-	else
-	{
-		_AssetClassScrollBox->GetContent()->SetHeight(0.0_c);
-	}
 	_AssetClassViewDisplay = new UI::ViewDisplay{this};
 	_AssetClassViewDisplay->SetLeft(width(this) - width(_AssetClassViewDisplay));
 	_AssetClassViewDisplay->SetTop(0.0_c);
