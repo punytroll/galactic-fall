@@ -235,7 +235,6 @@ UI::OutfitShipDialog::OutfitShipDialog(Ship * Ship) :
 	SlotListLabel->SetHeight(20.0_c);
 	SlotListLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Center);
 	SlotListLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
-	SlotListLabel->SetAnchorRight(true);
 	_SlotScrollBox = new UI::ScrollBox{};
 	_SlotScrollBox->SetLeft(0.0_c);
 	_SlotScrollBox->SetTop(30.0_c);
@@ -247,57 +246,60 @@ UI::OutfitShipDialog::OutfitShipDialog(Ship * Ship) :
 	_SlotScrollBox->GetContent()->SetWidth(constant(_SlotScrollBox->GetView()->GetWidth()));
 	_SlotScrollBox->GetContent()->SetAnchorRight(true);
 	
-	auto Top{5.0f};
+	UI::SlotListItem * PreviousSlotListItem{nullptr};
 	
 	for(auto SlotPair : _Ship->GetAspectOutfitting()->GetSlots())
 	{
-		auto NewSlotListItem{new SlotListItem{_SlotScrollBox->GetContent(), SlotPair.second}};
+		auto NewSlotListItem{new UI::SlotListItem{_SlotScrollBox->GetContent(), SlotPair.second}};
 		
-		NewSlotListItem->SetLeft(5.0_c);
-		NewSlotListItem->SetTop(constant(Top));
-		NewSlotListItem->SetWidth(constant(_SlotScrollBox->GetContent()->GetWidth() - 10.0f));
-		NewSlotListItem->SetAnchorRight(true);
+		NewSlotListItem->SetLeft(2.0_c);
+		if(PreviousSlotListItem != nullptr)
+		{
+			NewSlotListItem->SetTop(bottom(PreviousSlotListItem) + 2.0_c);
+		}
+		else
+		{
+			NewSlotListItem->SetTop(2.0_c);
+		}
+		NewSlotListItem->SetWidth(width(_SlotScrollBox->GetContent()) - 4.0_c);
 		NewSlotListItem->ConnectMouseButtonCallback(std::bind(&UI::OutfitShipDialog::_OnSlotListItemMouseButton, this, NewSlotListItem, std::placeholders::_1));
-		Top += 55.0f;
+		PreviousSlotListItem = NewSlotListItem;
 	}
-	_SlotScrollBox->GetContent()->SetHeight(constant(Top));
+	if(PreviousSlotListItem != nullptr)
+	{
+		_SlotScrollBox->GetContent()->SetHeight(bottom(PreviousSlotListItem) + 2.0_c);
+	}
 	_LeftPane->AddSubWidget(_SlotScrollBox);
 	// center pane
 	_CenterPane = new UI::Widget{this};
 	_CenterPane->SetTop(70.0_c);
 	_CenterPane->SetWidth(160.0_c);
-	_CenterPane->SetHeight(constant(GetHeight() - 80.0f));
-	_CenterPane->SetAnchorBottom(true);
+	_CenterPane->SetHeight(height(this) - 10.0_c - top(_CenterPane));
 	
 	auto MountButton{new UI::TextButton{_CenterPane, "Mount"}};
 	
 	MountButton->SetLeft(0.0_c);
 	MountButton->SetTop(40.0_c);
-	MountButton->SetWidth(constant(_CenterPane->GetWidth()));
+	MountButton->SetWidth(width(_CenterPane));
 	MountButton->SetHeight(20.0_c);
-	MountButton->SetAnchorRight(true);
 	MountButton->ConnectClickedCallback(std::bind(&UI::OutfitShipDialog::_OnMountButtonClicked, this));
 	MountButton->ConnectUpdatingCallback(std::bind(&UI::OutfitShipDialog::_OnMountButtonUpdating, this, MountButton, std::placeholders::_1, std::placeholders::_2));
 	
 	auto UnmountButton{new UI::TextButton{_CenterPane, "Unmount"}};
 	
 	UnmountButton->SetLeft(0.0_c);
-	UnmountButton->SetTop(70.0_c);
-	UnmountButton->SetWidth(constant(_CenterPane->GetWidth()));
+	UnmountButton->SetTop(bottom(MountButton) + 10.0_c);
+	UnmountButton->SetWidth(width(_CenterPane));
 	UnmountButton->SetHeight(20.0_c);
-	UnmountButton->SetAnchorRight(true);
 	UnmountButton->ConnectClickedCallback(std::bind(&UI::OutfitShipDialog::_OnUnmountButtonClicked, this));
 	UnmountButton->ConnectUpdatingCallback(std::bind(&UI::OutfitShipDialog::_OnUnmountButtonUpdating, this, UnmountButton, std::placeholders::_1, std::placeholders::_2));
 	
 	auto OKButton{new UI::TextButton{_CenterPane, "OK"}};
 	
 	OKButton->SetLeft(0.0_c);
-	OKButton->SetTop(constant(_CenterPane->GetHeight() - 30.0f));
-	OKButton->SetWidth(constant(_CenterPane->GetWidth()));
+	OKButton->SetTop(height(_CenterPane) - 10.0_c - height(OKButton));
+	OKButton->SetWidth(width(_CenterPane));
 	OKButton->SetHeight(20.0_c);
-	OKButton->SetAnchorBottom(true);
-	OKButton->SetAnchorRight(true);
-	OKButton->SetAnchorTop(false);
 	OKButton->ConnectClickedCallback(std::bind(&UI::OutfitShipDialog::_OnOKButtonClicked, this));
 	// right pane
 	_RightPane = new UI::Widget{this};
@@ -309,11 +311,10 @@ UI::OutfitShipDialog::OutfitShipDialog(Ship * Ship) :
 	
 	AccessoryListLabel->SetLeft(0.0_c);
 	AccessoryListLabel->SetTop(0.0_c);
-	AccessoryListLabel->SetWidth(constant(_RightPane->GetWidth()));
+	AccessoryListLabel->SetWidth(width(_RightPane));
 	AccessoryListLabel->SetHeight(20.0_c);
 	AccessoryListLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Center);
 	AccessoryListLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
-	AccessoryListLabel->SetAnchorRight(true);
 	_AccessoryScrollBox = new UI::ScrollBox{};
 	_AccessoryScrollBox->SetLeft(0.0_c);
 	_AccessoryScrollBox->SetTop(30.0_c);
@@ -348,7 +349,7 @@ void UI::OutfitShipDialog::_RebuildAccessoryList(void)
 	assert(_Ship->GetCargoHold() != nullptr);
 	assert(_Ship->GetCargoHold()->GetAspectObjectContainer() != nullptr);
 	
-	float Top{5.0f};
+	UI::AccessoryListItem * PreviousAccessoryListItem{nullptr};
 	
 	for(auto Content : _Ship->GetCargoHold()->GetAspectObjectContainer()->GetContent())
 	{
@@ -356,21 +357,29 @@ void UI::OutfitShipDialog::_RebuildAccessoryList(void)
 		{
 			auto NewAccessoryListItem{new UI::AccessoryListItem{_AccessoryScrollBox->GetContent(), Content}};
 			
-			NewAccessoryListItem->SetLeft(5.0_c);
-			NewAccessoryListItem->SetTop(constant(Top));
-			NewAccessoryListItem->SetWidth(constant(_AccessoryScrollBox->GetContent()->GetWidth() - 10.0f));
-			NewAccessoryListItem->SetHeight(50.0_c);
-			NewAccessoryListItem->SetAnchorRight(true);
+			NewAccessoryListItem->SetLeft(2.0_c);
+			if(PreviousAccessoryListItem != nullptr)
+			{
+				NewAccessoryListItem->SetTop(bottom(PreviousAccessoryListItem));
+			}
+			else
+			{
+				NewAccessoryListItem->SetTop(2.0_c);
+			}
+			NewAccessoryListItem->SetWidth(width(_AccessoryScrollBox->GetContent()) - 4.0_c);
 			NewAccessoryListItem->ConnectMouseButtonCallback(std::bind(&UI::OutfitShipDialog::_OnAccessoryListItemMouseButton, this, NewAccessoryListItem, std::placeholders::_1));
 			if(Content== SelectedAccessory)
 			{
 				_SelectedAccessoryListItem = NewAccessoryListItem;
 				_SelectedAccessoryListItem->SetSelected(true);
 			}
-			Top += 55.0f;
+			PreviousAccessoryListItem = NewAccessoryListItem;
 		}
 	}
-	_AccessoryScrollBox->GetContent()->SetHeight(constant(Top));
+	if(PreviousAccessoryListItem != nullptr)
+	{
+		_AccessoryScrollBox->GetContent()->SetHeight(bottom(PreviousAccessoryListItem) + 2.0_c);
+	}
 }
 
 void UI::OutfitShipDialog::_OnDestroying(UI::Event & DestroyingEvent)
