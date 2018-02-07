@@ -114,7 +114,7 @@ Ship::~Ship(void)
 	assert(_FactionDestroyingConnection.IsValid() == false);
 	g_GraphicsEngine->RemoveParticleSystem(_EngineGlowParticleSystem);
 	delete _EngineGlowParticleSystem;
-	_EngineGlowParticleSystem = 0;
+	_EngineGlowParticleSystem = nullptr;
 }
 
 Battery * Ship::GetBattery(void)
