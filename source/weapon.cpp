@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2007  Hagen Möbius
+ * Copyright (C) 2007-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -111,7 +111,7 @@ bool Weapon::_Update(float Seconds)
 			assert(NewShot->GetAspectVisualization() != nullptr);
 			NewShot->GetAspectVisualization()->SetVisualizationPrototype(_ShotVisualizationPrototype);
 			assert(NewShot->GetAspectPosition() != nullptr);
-			NewShot->SetShooter(Container->GetReference());
+			NewShot->SetShooter(Container);
 			
 			// calculating the shot's position in the world coordinate system
 			Vector3f ShotPosition(_ShotExitPosition);

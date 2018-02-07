@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006  Hagen Möbius
+ * Copyright (C) 2006-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -26,9 +26,10 @@
 #include "visualization.h"
 
 Shot::Shot(void) :
+	_Damage(0.0),
+	_Shooter(nullptr),
 	_TimeOfDeath(0.0),
-	_Velocity(Vector3f::CreateZero()),
-	_Damage(0.0)
+	_Velocity(Vector3f::CreateZero())
 {
 	// initialize object aspects
 	AddAspectPhysical();
@@ -41,6 +42,30 @@ Shot::Shot(void) :
 
 Shot::~Shot(void)
 {
+	if(_Shooter != nullptr)
+	{
+		assert(_ShooterDestroyingConnection.IsValid() == true);
+		_ShooterDestroyingConnection.Disconnect();
+		_Shooter = nullptr;
+	}
+	assert(_ShooterDestroyingConnection.IsValid() == false);
+}
+
+void Shot::SetShooter(Object * Shooter)
+{
+	assert((Shooter != nullptr) && (_Shooter == nullptr) && (_ShooterDestroyingConnection.IsValid() == false));
+	_Shooter = Shooter;
+	_ShooterDestroyingConnection = _Shooter->ConnectDestroyingCallback(std::bind(&Shot::_OnShooterDestroying, this));
+	assert(_ShooterDestroyingConnection.IsValid() == true);
+}
+
+void Shot::_OnShooterDestroying(void)
+{
+	assert(_Shooter != nullptr);
+	assert(_ShooterDestroyingConnection.IsValid() == true);
+	_ShooterDestroyingConnection.Disconnect();
+	assert(_ShooterDestroyingConnection.IsValid() == false);
+	_Shooter = nullptr;
 }
 
 bool Shot::_Update(float Seconds)
