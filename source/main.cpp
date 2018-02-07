@@ -625,7 +625,7 @@ void CollisionDetection(System * System)
 		for(auto Ship : System->GetShips())
 		{
 			assert(Ship != nullptr);
-			if((Shot->GetShooter().IsValid() == true) && (Shot->GetShooter().Get() != Ship))
+			if((Shot->GetShooter() != nullptr) && (Shot->GetShooter() != Ship))
 			{
 				assert(Ship->GetAspectPhysical() != nullptr);
 				assert(Ship->GetAspectPosition() != nullptr);
@@ -644,7 +644,7 @@ void CollisionDetection(System * System)
 					{
 						if(Content->GetTypeIdentifier() == "character")
 						{
-							g_MessageDispatcher->PushMessage(new ThreatMessage(Shot->GetShooter(), Content->GetReference(), Shot->GetDamage()));
+							g_MessageDispatcher->PushMessage(new ThreatMessage(Shot->GetShooter(), Content, Shot->GetDamage()));
 						}
 					}
 					if(Ship->GetHull() <= 0.0f)

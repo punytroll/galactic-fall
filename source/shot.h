@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006  Hagen Möbius
+ * Copyright (C) 2006-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -33,7 +33,7 @@ public:
 	virtual ~Shot(void);
 	// getters
 	float GetDamage(void) const;
-	const Reference< Object > & GetShooter(void) const;
+	Object * GetShooter(void);
 	const Vector3f & GetVelocity(void) const;
 	// setters
 	void SetDamage(float Damage);
@@ -56,9 +56,9 @@ inline float Shot::GetDamage(void) const
 	return _Damage;
 }
 
-inline const Reference< Object > & Shot::GetShooter(void) const
+inline Object * Shot::GetShooter(void)
 {
-	return _Shooter;
+	return _Shooter.Get();
 }
 
 inline const Vector3f & Shot::GetVelocity(void) const

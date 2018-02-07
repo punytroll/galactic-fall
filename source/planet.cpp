@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006  Hagen Möbius
+ * Copyright (C) 2006-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -170,7 +170,7 @@ void Planet::Land(Ship * Ship, Character * Character)
 	{
 		if(Content->GetTypeIdentifier() == "character")
 		{
-			g_MessageDispatcher->PushMessage(new Message("landed", GetReference(), Content->GetReference()));
+			g_MessageDispatcher->PushMessage(new Message("landed", this, Content));
 		}
 	}
 }
@@ -260,7 +260,7 @@ void Planet::TakeOff(Ship * Ship, Character * Character)
 	{
 		if(Content->GetTypeIdentifier() == "character")
 		{
-			g_MessageDispatcher->PushMessage(new Message("taken_off", GetReference(), Content->GetReference()));
+			g_MessageDispatcher->PushMessage(new Message("taken_off", this, Content));
 		}
 	}
 }

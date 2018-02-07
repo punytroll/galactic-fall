@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2008  Aram Altschudjian
+ * Copyright (C) 2008-2018  Aram Altschudjian, Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -32,12 +32,12 @@ public:
 	void DispatchMessages(void);
 	void PushMessage(Message * Message);
 private:
-	std::deque< Message * > m_MessageQueue;
+	std::deque< Message * > _MessageQueue;
 };
 
 inline void MessageDispatcher::PushMessage(Message * Message)
 {
-	m_MessageQueue.push_back(Message);
+	_MessageQueue.push_back(Message);
 }
 
 #endif

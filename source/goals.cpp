@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2008-2018  Aram Altschudjian, Hagen Möbius
+ * Copyright (C) 2008-2018  Aram Altschudjian, Hagen MÃ¶bius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -162,9 +162,9 @@ bool GoalFighterThink::OnMessageReceived(Message * Message)
 	{
 		ThreatMessage * TheThreatMessage(dynamic_cast< ThreatMessage * >(Message));
 		
-		if((TheThreatMessage->GetSender().IsValid() == true) && (TheThreatMessage->GetSender()->GetTypeIdentifier() == "ship") && (dynamic_cast< Ship * >(TheThreatMessage->GetSender().Get())->GetFaction()->GetClassIdentifier() != GetMind()->GetCharacter()->GetShip()->GetFaction()->GetClassIdentifier()))
+		if((TheThreatMessage->GetSender() != nullptr) && (TheThreatMessage->GetSender()->GetTypeIdentifier() == "ship") && (dynamic_cast< Ship * >(TheThreatMessage->GetSender())->GetFaction()->GetClassIdentifier() != GetMind()->GetCharacter()->GetShip()->GetFaction()->GetClassIdentifier()))
 		{
-			GetMind()->GetCharacter()->GetThreat()->ModifyThreat(TheThreatMessage->GetSender().Get(), TheThreatMessage->GetDeltaThreat());
+			GetMind()->GetCharacter()->GetThreat()->ModifyThreat(TheThreatMessage->GetSender(), TheThreatMessage->GetDeltaThreat());
 		}
 		
 		return true;
@@ -1106,7 +1106,7 @@ bool GoalVisitPlanet::OnMessageReceived(Message * Message)
 	if(Message->GetTypeIdentifier() == "landed")
 	{
 		AddSubGoal(new GoalWait(GetMind(), GetRandomFloat(2.0f, 5.0f)));
-		AddSubGoal(new GoalRefuel(GetMind(), dynamic_cast< Planet * >(Message->GetSender().Get())));
+		AddSubGoal(new GoalRefuel(GetMind(), dynamic_cast< Planet * >(Message->GetSender())));
 		
 		return true;
 	}

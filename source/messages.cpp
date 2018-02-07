@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2008  Aram Altschudjian
+ * Copyright (C) 2008-2018  Aram Altschudjian, Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,8 +19,8 @@
 
 #include "messages.h"
 
-ThreatMessage::ThreatMessage(Reference< Object > Sender, Reference< Object > Receiver, float DeltaThreat) :
+ThreatMessage::ThreatMessage(Object * Sender, Object * Receiver, float DeltaThreat) :
 	Message("threat", Sender, Receiver),
-	m_DeltaThreat(DeltaThreat)
+	_DeltaThreat(DeltaThreat)
 {
 }
