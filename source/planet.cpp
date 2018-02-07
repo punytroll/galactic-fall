@@ -78,9 +78,9 @@ Planet::~Planet(void)
 	{
 		assert(_FactionDestroyingConnection.IsValid() == true);
 		_FactionDestroyingConnection.Disconnect();
-		assert(_FactionDestroyingConnection.IsValid() == false);
 		_Faction = nullptr;
 	}
+	assert(_FactionDestroyingConnection.IsValid() == false);
 }
 
 Hangar * Planet::GetHangar(Character * Character)
