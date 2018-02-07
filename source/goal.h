@@ -38,7 +38,7 @@ public:
 	};
 	
 	Goal(GoalMind * GoalMind, const std::string & Name);
-	~Goal(void);
+	virtual ~Goal(void);
 	// getters
 	GoalMind * GetMind(void) const;
 	const std::string & GetName(void) const;
