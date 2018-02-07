@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2008  Aram Altschudjian
+ * Copyright (C) 2008-2018  Aram Altschudjian, Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -24,33 +24,32 @@
 #include "message_dispatcher.h"
 #include "object.h"
 #include "object_aspect_messages.h"
-#include "referencing.h"
 #include "system_statistics.h"
 
 MessageDispatcher::~MessageDispatcher(void)
 {
-	assert(m_MessageQueue.empty() == true);
+	assert(_MessageQueue.empty() == true);
 }
 
 void MessageDispatcher::DispatchMessages(void)
 {
-	u4byte DispatchedMessages(0);
+	auto DispatchedMessages(0ul);
 	
-	while(m_MessageQueue.empty() == false)
+	while(_MessageQueue.empty() == false)
 	{
-		Reference< Object > Receiver(m_MessageQueue.front()->GetReceiver());
+		auto Receiver(_MessageQueue.front()->GetReceiver());
 		
-		if(Receiver.IsValid() == true)
+		if(Receiver != nullptr)
 		{
-			assert(Receiver->GetAspectMessages() != 0);
-			Receiver->GetAspectMessages()->PushMessage(m_MessageQueue.front());
+			assert(Receiver->GetAspectMessages() != nullptr);
+			Receiver->GetAspectMessages()->PushMessage(_MessageQueue.front());
 			++DispatchedMessages;
 		}
 		else
 		{
-			delete m_MessageQueue.front();
+			delete _MessageQueue.front();
 		}
-		m_MessageQueue.pop_front();
+		_MessageQueue.pop_front();
 	}
 	g_SystemStatistics->SetDispatchedMessagesThisFrame(DispatchedMessages);
 }

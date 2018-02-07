@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2008  Aram Altschudjian
+ * Copyright (C) 2008-2018  Aram Altschudjian, Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -25,16 +25,16 @@
 class ThreatMessage : public Message
 {
 public:
-	ThreatMessage(Reference< Object > Sender, Reference< Object > Receiver, float DeltaThreat);
+	ThreatMessage(Object * Sender, Object * Receiver, float DeltaThreat);
 	//getters
 	float GetDeltaThreat(void) const;
 private:
-	float m_DeltaThreat;
+	float _DeltaThreat;
 };
 
 inline float ThreatMessage::GetDeltaThreat(void) const
 {
-	return m_DeltaThreat;
+	return _DeltaThreat;
 }
 
 #endif

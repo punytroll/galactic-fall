@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006  Hagen Möbius
+ * Copyright (C) 2006-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -425,7 +425,7 @@ void Ship::SetFuel(float Fuel)
 			
 			if(Content->GetTypeIdentifier() == "character")
 			{
-				g_MessageDispatcher->PushMessage(new Message("fuel_low", GetReference(), Content->GetReference()));
+				g_MessageDispatcher->PushMessage(new Message("fuel_low", this, Content));
 			}
 		}
 	}
@@ -450,7 +450,7 @@ void Ship::SetHull(float Hull)
 			
 			if(Content->GetTypeIdentifier() == "character")
 			{
-				g_MessageDispatcher->PushMessage(new Message("hull_low", GetReference(), Content->GetReference()));
+				g_MessageDispatcher->PushMessage(new Message("hull_low", this, Content));
 			}
 		}
 	}

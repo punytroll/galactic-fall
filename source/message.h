@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2008  Hagen Möbius
+ * Copyright (C) 2008-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -22,31 +22,37 @@
 
 #include <string>
 
-#include "referencing.h"
+#include <events/connection.h>
 
 class Object;
 
 class Message
 {
 public:
-	Message(const std::string & TypeIdentifier, Reference< Object > Sender, Reference< Object > Receiver);
+	Message(const std::string & TypeIdentifier, Object * Sender, Object * Receiver);
 	virtual ~Message(void);
 	// getters
-	Reference< Object > & GetReceiver(void);
-	Reference< Object > & GetSender(void);
+	Object * GetReceiver(void);
+	Object * GetSender(void);
 	const std::string & GetTypeIdentifier(void) const;
 private:
-	Reference< Object > _Receiver;
-	Reference< Object > _Sender;
+	// event callbacks
+	void _OnReceiverDestroying(void);
+	void _OnSenderDestroying(void);
+	// members
+	Object * _Receiver;
+	Connection _ReceiverDestroyingConnection;
+	Object * _Sender;
+	Connection _SenderDestroyingConnection;
 	std::string _TypeIdentifier;
 };
 
-inline Reference< Object > & Message::GetReceiver(void)
+inline Object * Message::GetReceiver(void)
 {
 	return _Receiver;
 }
 
-inline Reference< Object > & Message::GetSender(void)
+inline Object * Message::GetSender(void)
 {
 	return _Sender;
 }

@@ -42,7 +42,7 @@ void OutputObserver::HandleMessage(Message * Message)
 	{
 		assert(_PlanetWindow == nullptr);
 		assert(Message->GetSender()->GetTypeIdentifier() == "planet");
-		_PlanetWindow = new UI::PlanetWindow{dynamic_cast< Planet * >(Message->GetSender().Get()), GetObservedCharacter()};
+		_PlanetWindow = new UI::PlanetWindow{dynamic_cast< Planet * >(Message->GetSender()), GetObservedCharacter()};
 		_PlanetWindow->SetLeft(50.0_c);
 		_PlanetWindow->SetTop(50.0_c);
 		_PlanetWindow->SetWidth(700.0_c);
