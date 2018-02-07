@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006  Hagen Möbius
+ * Copyright (C) 2006-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -26,8 +26,6 @@
 #include <string>
 
 #include <events/event.h>
-
-#include "referencing.h"
 
 class Message;
 class ObjectAspectAccessory;
@@ -74,7 +72,6 @@ public:
 	Object * GetContainer(void);
 	const Object * GetContainer(void) const;
 	const std::string & GetObjectIdentifier(void) const;
-	const Reference< Object > & GetReference(void) const;
 	const std::string & GetTypeIdentifier(void) const;
 	// setters
 	void SetClassIdentifier(const std::string & ClassIdentifier);
@@ -117,7 +114,6 @@ private:
 	Object * _Container;
 	Event< void > _DestroyingEvent;
 	std::string _ObjectIdentifier;
-	Reference< Object > _Reference;
 	std::string _TypeIdentifier;
 	
 	static std::set< Object * > _Objects;
@@ -232,11 +228,6 @@ inline const Object * Object::GetContainer(void) const
 inline const std::string & Object::GetObjectIdentifier(void) const
 {
 	return _ObjectIdentifier;
-}
-
-inline const Reference< Object > & Object::GetReference(void) const
-{
-	return _Reference;
 }
 
 inline const std::string & Object::GetTypeIdentifier(void) const
