@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2007  Hagen Möbius
+ * Copyright (C) 2007-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -192,7 +192,7 @@ bool Turret::_Update(float Seconds)
 			// set up visualization aspect
 			assert(NewShot->GetAspectVisualization() != nullptr);
 			NewShot->GetAspectVisualization()->SetVisualizationPrototype(_ShotVisualizationPrototype);
-			NewShot->SetShooter(Container->GetReference());
+			NewShot->SetShooter(Container);
 			
 			if(AreCurrentGunPropertiesValid == false)
 			{

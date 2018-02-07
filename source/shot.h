@@ -37,18 +37,20 @@ public:
 	const Vector3f & GetVelocity(void) const;
 	// setters
 	void SetDamage(float Damage);
-	void SetShooter(Reference< Object > Shooter);
+	void SetShooter(Object * Shooter);
 	void SetTimeOfDeath(float TimeOfDeath);
 	void SetVelocity(const Vector3f & Velocity);
 private:
 	// modifers
+	void _OnShooterDestroying(void);
 	bool _Update(float Seconds);
 	void _UpdateVisualization(Visualization * Visualization);
 	// variables
-	Reference< Object > _Shooter;
+	float _Damage;
+	Object * _Shooter;
+	Connection _ShooterDestroyingConnection;
 	double _TimeOfDeath;
 	Vector3f _Velocity;
-	float _Damage;
 };
 
 inline float Shot::GetDamage(void) const
@@ -58,7 +60,7 @@ inline float Shot::GetDamage(void) const
 
 inline Object * Shot::GetShooter(void)
 {
-	return _Shooter.Get();
+	return _Shooter;
 }
 
 inline const Vector3f & Shot::GetVelocity(void) const
@@ -69,11 +71,6 @@ inline const Vector3f & Shot::GetVelocity(void) const
 inline void Shot::SetDamage(float Damage)
 {
 	_Damage = Damage;
-}
-
-inline void Shot::SetShooter(Reference< Object > Shooter)
-{
-	_Shooter = Shooter;
 }
 
 inline void Shot::SetTimeOfDeath(float TimeOfDeath)
