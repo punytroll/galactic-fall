@@ -38,7 +38,7 @@ class PlanetAssetClass
 public:
 	// constructor & destructor
 	PlanetAssetClass(const AssetClass * AssetClass);
-	virtual ~PlanetAssetClass(void);
+	~PlanetAssetClass(void);
 	// getters
 	const AssetClass * GetAssetClass(void) const;
 	float GetBasePriceModifier(void) const;
