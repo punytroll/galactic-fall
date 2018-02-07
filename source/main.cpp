@@ -154,7 +154,7 @@ Vector2f g_LastMotion(-1.0f, -1.0f);
 UI::MouseButtonEvent::MouseButton g_MouseButton(UI::MouseButtonEvent::MouseButton::Unspecified);
 Vector3f g_CameraPosition;
 bool g_FirstPersonCameraMode(false);
-Reference< CommandMind > g_InputMind;
+CommandMind * g_CommandMind;
 OutputObserver * g_CharacterObserver(nullptr);
 float g_Width(0.0f);
 float g_Height(0.0f);
@@ -775,6 +775,11 @@ void OnUISceneNodeDestroy(Graphics::Node * Node)
 	delete Node;
 }
 
+void OnInputMindDestroying(void)
+{
+	g_CommandMind = nullptr;
+}
+
 void Resize(void)
 {
 	if(g_EchoResizes == true)
@@ -823,9 +828,9 @@ bool OnMapDialogClosing(UI::Dialog::ClosingReason ClosingReason, UI::MapDialog *
 	assert(MapDialog != nullptr);
 	if((ClosingReason == UI::Dialog::ClosingReason::OK_BUTTON) || (ClosingReason == UI::Dialog::ClosingReason::RETURN_KEY))
 	{
-		if((g_InputMind.IsValid() == true) && (g_InputMind->GetCharacter() != nullptr))
+		if((g_CommandMind != nullptr) && (g_CommandMind->GetCharacter() != nullptr))
 		{
-			g_InputMind->SelectLinkedSystem(MapDialog->GetSelectedSystem());
+			g_CommandMind->SelectLinkedSystem(MapDialog->GetSelectedSystem());
 			
 			return true;
 		}
@@ -1268,7 +1273,7 @@ void LoadGameFromElement(const Element * SaveElement)
 	}
 	
 	std::string CurrentSystem;
-	std::string InputMindObjectIdentifier;
+	std::string CommandMindObjectIdentifier;
 	std::string ObservedCharacterObjectIdentifier;
 	
 	// setup the game world
@@ -1292,9 +1297,9 @@ void LoadGameFromElement(const Element * SaveElement)
 		{
 			g_TimeWarp = from_string_cast< float >(SaveChild->GetAttribute("value"));
 		}
-		else if(SaveChild->GetName() == "input-mind")
+		else if(SaveChild->GetName() == "command-mind")
 		{
-			InputMindObjectIdentifier = SaveChild->GetAttribute("object-identifier");
+			CommandMindObjectIdentifier = SaveChild->GetAttribute("object-identifier");
 		}
 		else if(SaveChild->GetName() == "observed-character")
 		{
@@ -1910,9 +1915,11 @@ void LoadGameFromElement(const Element * SaveElement)
 			}
 		}
 	}
-	if(InputMindObjectIdentifier.empty() == false)
+	if(CommandMindObjectIdentifier.empty() == false)
 	{
-		g_InputMind = Object::GetObject(InputMindObjectIdentifier)->GetReference();
+		g_CommandMind = dynamic_cast< CommandMind * >(Object::GetObject(CommandMindObjectIdentifier));
+		assert(g_CommandMind != nullptr);
+		g_CommandMind->ConnectDestroyingCallback(OnInputMindDestroying);
 	}
 	if(ObservedCharacterObjectIdentifier.empty() == false)
 	{
@@ -2006,9 +2013,9 @@ void SaveGame(std::ostream & OStream)
 		XML << element << "current-system" << attribute << "identifier" << value << g_CurrentSystem->GetClassIdentifier() << end;
 	}
 	XML << element << "time-warp" << attribute << "value" << value << g_TimeWarp << end;
-	if(g_InputMind.IsValid() == true)
+	if(g_CommandMind != nullptr)
 	{
-		XML << element << "input-mind" << attribute << "object-identifier" << value << g_InputMind->GetObjectIdentifier() << end;
+		XML << element << "command-mind" << attribute << "object-identifier" << value << g_CommandMind->GetObjectIdentifier() << end;
 	}
 	assert(g_CharacterObserver != nullptr);
 	if(g_CharacterObserver->GetObservedCharacter() != nullptr)
@@ -2022,33 +2029,33 @@ void SaveGame(std::ostream & OStream)
 	XML << element << "field-of-view-y" << attribute << "radians" << value << g_MainProjection->GetFieldOfViewY() << end;
 	XML << end; // camera
 	// now save the impoartant objects
-	if(g_InputMind.IsValid() == true)
+	if(g_CommandMind != nullptr)
 	{
 		// if no character is available
-		if(g_InputMind->GetCharacter() == nullptr)
+		if(g_CommandMind->GetCharacter() == nullptr)
 		{
 			// only save the input mind
-			WriteToXMLStream(XML, g_InputMind.Get(), true);
+			WriteToXMLStream(XML, g_CommandMind, true);
 		}
 		else
 		{
 			// if no ship is available
-			if(g_InputMind->GetCharacter()->GetShip() == nullptr)
+			if(g_CommandMind->GetCharacter()->GetShip() == nullptr)
 			{
 				// only save the character
-				WriteToXMLStream(XML, g_InputMind->GetCharacter(), true);
+				WriteToXMLStream(XML, g_CommandMind->GetCharacter(), true);
 			}
 			else
 			{
 				// save the complete ship
-				WriteToXMLStream(XML, g_InputMind->GetCharacter()->GetShip(), true);
+				WriteToXMLStream(XML, g_CommandMind->GetCharacter()->GetShip(), true);
 			}
 			// save hangars
 			for(auto System : g_Galaxy->GetSystems())
 			{
 				for(auto Planet : System.second->GetPlanets())
 				{
-					auto Hangar(Planet->GetHangar(g_InputMind->GetCharacter()));
+					auto Hangar(Planet->GetHangar(g_CommandMind->GetCharacter()));
 					
 					if(Hangar != nullptr)
 					{
@@ -2086,9 +2093,9 @@ void ActionDecreaseTimeWarp(void)
 
 void ActionDeleteObservedObject(void)
 {
-	if(g_InputMind.IsValid() == true)
+	if(g_CommandMind != nullptr)
 	{
-		DeleteObject(g_InputMind->GetCharacter()->GetShip());
+		DeleteObject(g_CommandMind->GetCharacter()->GetShip());
 	}
 	else
 	{
@@ -2102,33 +2109,33 @@ void ActionDeleteObservedObject(void)
 
 void ActionDisableAccelerate(void)
 {
-	if(g_InputMind.IsValid() == true)
+	if(g_CommandMind != nullptr)
 	{
-		g_InputMind->DisableAccelerate();
+		g_CommandMind->DisableAccelerate();
 	}
 }
 
 void ActionDisableFire(void)
 {
-	if(g_InputMind.IsValid() == true)
+	if(g_CommandMind != nullptr)
 	{
-		g_InputMind->DisableFire();
+		g_CommandMind->DisableFire();
 	}
 }
 
 void ActionDisableTurnLeft(void)
 {
-	if(g_InputMind.IsValid() == true)
+	if(g_CommandMind != nullptr)
 	{
-		g_InputMind->DisableTurnLeft();
+		g_CommandMind->DisableTurnLeft();
 	}
 }
 
 void ActionDisableTurnRight(void)
 {
-	if(g_InputMind.IsValid() == true)
+	if(g_CommandMind != nullptr)
 	{
-		g_InputMind->DisableTurnRight();
+		g_CommandMind->DisableTurnRight();
 	}
 }
 
@@ -2145,33 +2152,33 @@ void ActionDumpObjectReport(void)
 
 void ActionEnableAccelerate(void)
 {
-	if(g_InputMind.IsValid() == true)
+	if(g_CommandMind != nullptr)
 	{
-		g_InputMind->EnableAccelerate();
+		g_CommandMind->EnableAccelerate();
 	}
 }
 
 void ActionEnableFire(void)
 {
-	if(g_InputMind.IsValid() == true)
+	if(g_CommandMind != nullptr)
 	{
-		g_InputMind->EnableFire();
+		g_CommandMind->EnableFire();
 	}
 }
 
 void ActionEnableTurnLeft(void)
 {
-	if(g_InputMind.IsValid() == true)
+	if(g_CommandMind != nullptr)
 	{
-		g_InputMind->EnableTurnLeft();
+		g_CommandMind->EnableTurnLeft();
 	}
 }
 
 void ActionEnableTurnRight(void)
 {
-	if(g_InputMind.IsValid() == true)
+	if(g_CommandMind != nullptr)
 	{
-		g_InputMind->EnableTurnRight();
+		g_CommandMind->EnableTurnRight();
 	}
 }
 
@@ -2188,22 +2195,22 @@ void ActionIncreaseTimeWarp(void)
 
 void ActionJettisonCargo(void)
 {
-	if(g_InputMind.IsValid() == true)
+	if(g_CommandMind != nullptr)
 	{
 		SetMessage("Jettison cargo.");
-		g_InputMind->Jettison();
+		g_CommandMind->Jettison();
 	}
 }
 
 void ActionJump(void)
 {
-	if(g_InputMind.IsValid() == true)
+	if(g_CommandMind != nullptr)
 	{
-		switch(WantToJump(g_InputMind->GetCharacter()->GetShip(), g_InputMind->GetCharacter()->GetShip()->GetLinkedSystemTarget()))
+		switch(WantToJump(g_CommandMind->GetCharacter()->GetShip(), g_CommandMind->GetCharacter()->GetShip()->GetLinkedSystemTarget()))
 		{
 		case OK:
 			{
-				g_InputMind->Jump();
+				g_CommandMind->Jump();
 				
 				break;
 			}
@@ -2231,22 +2238,22 @@ void ActionJump(void)
 
 void ActionLand(void)
 {
-	if(g_InputMind.IsValid() == true)
+	if(g_CommandMind != nullptr)
 	{
-		const Planet * SelectedPlanet(dynamic_cast< const Planet * >(g_InputMind->GetCharacter()->GetShip()->GetTarget()));
+		const Planet * SelectedPlanet(dynamic_cast< const Planet * >(g_CommandMind->GetCharacter()->GetShip()->GetTarget()));
 		
-		switch(WantToLand(g_InputMind->GetCharacter(), g_InputMind->GetCharacter()->GetShip(), SelectedPlanet))
+		switch(WantToLand(g_CommandMind->GetCharacter(), g_CommandMind->GetCharacter()->GetShip(), SelectedPlanet))
 		{
 		case OK:
 			{
-				g_InputMind->GetCharacter()->RemoveCredits(SelectedPlanet->GetLandingFeePerSpace() * g_InputMind->GetCharacter()->GetShip()->GetAspectPhysical()->GetSpaceRequirement());
-				g_InputMind->Land();
+				g_CommandMind->GetCharacter()->RemoveCredits(SelectedPlanet->GetLandingFeePerSpace() * g_CommandMind->GetCharacter()->GetShip()->GetAspectPhysical()->GetSpaceRequirement());
+				g_CommandMind->Land();
 				
 				break;
 			}
 		case NO_LAND_TARGET:
 			{
-				g_InputMind->TargetNearestPlanet();
+				g_CommandMind->TargetNearestPlanet();
 				
 				break;
 			}
@@ -2274,7 +2281,7 @@ void ActionLand(void)
 
 void ActionObserveNextCharacter(void)
 {
-	if(g_InputMind.IsValid() == false)
+	if(g_CommandMind == nullptr)
 	{
 		assert(g_CharacterObserver != nullptr);
 		
@@ -2312,7 +2319,7 @@ void ActionObserveNextCharacter(void)
 
 void ActionObservePreviousCharacter(void)
 {
-	if(g_InputMind.IsValid() == false)
+	if(g_CommandMind == nullptr)
 	{
 		assert(g_CharacterObserver != nullptr);
 		
@@ -2388,11 +2395,11 @@ void ActionOpenMapDialog(void)
 			MapDialog->SetSelectedSystem(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetLinkedSystemTarget());
 		}
 		MapDialog->ConnectClosingCallback(std::bind(OnMapDialogClosing, std::placeholders::_1, MapDialog));
-		if(g_InputMind.IsValid() == true)
+		if(g_CommandMind != nullptr)
 		{
-			g_InputMind->DisableAccelerate();
-			g_InputMind->DisableTurnLeft();
-			g_InputMind->DisableTurnRight();
+			g_CommandMind->DisableAccelerate();
+			g_CommandMind->DisableTurnLeft();
+			g_CommandMind->DisableTurnRight();
 		}
 		g_UserInterface->GetRootWidget()->AddSubWidget(MapDialog);
 		MapDialog->GrabKeyFocus();
@@ -2450,9 +2457,9 @@ void ActionQuitGameAndDumpObjectReport(void)
 
 void ActionRefuel(void)
 {
-	if(g_InputMind.IsValid() == true)
+	if(g_CommandMind != nullptr)
 	{
-		g_InputMind->Refuel();
+		g_CommandMind->Refuel();
 	}
 }
 
@@ -2469,19 +2476,19 @@ void ActionResetTimeWarp(void)
 
 void ActionScoop(void)
 {
-	if(g_InputMind.IsValid() == true)
+	if(g_CommandMind != nullptr)
 	{
-		switch(WantToScoop(g_InputMind->GetCharacter()->GetShip(), dynamic_cast< const Commodity * >(g_InputMind->GetCharacter()->GetShip()->GetTarget())))
+		switch(WantToScoop(g_CommandMind->GetCharacter()->GetShip(), dynamic_cast< const Commodity * >(g_CommandMind->GetCharacter()->GetShip()->GetTarget())))
 		{
 		case OK:
 			{
-				g_InputMind->Scoop();
+				g_CommandMind->Scoop();
 				
 				break;
 			}
 		case NO_SCOOP_TARGET:
 			{
-				g_InputMind->TargetNearestCargo();
+				g_CommandMind->TargetNearestCargo();
 				
 				break;
 			}
@@ -2509,9 +2516,9 @@ void ActionScoop(void)
 
 void ActionSelectNextLinkedSystem(void)
 {
-	if(g_InputMind.IsValid() == true)
+	if(g_CommandMind != nullptr)
 	{
-		g_InputMind->SelectNextLinkedSystem();
+		g_CommandMind->SelectNextLinkedSystem();
 	}
 }
 
@@ -2540,57 +2547,57 @@ void ActionTakeScreenShot(void)
 
 void ActionTargetNearestCargo(void)
 {
-	if(g_InputMind.IsValid() == true)
+	if(g_CommandMind != nullptr)
 	{
-		g_InputMind->TargetNearestCargo();
+		g_CommandMind->TargetNearestCargo();
 	}
 }
 
 void ActionTargetNextCargo(void)
 {
-	if(g_InputMind.IsValid() == true)
+	if(g_CommandMind != nullptr)
 	{
-		g_InputMind->TargetNextCargo();
+		g_CommandMind->TargetNextCargo();
 	}
 }
 
 void ActionTargetNextPlanet(void)
 {
-	if(g_InputMind.IsValid() == true)
+	if(g_CommandMind != nullptr)
 	{
-		g_InputMind->TargetNextPlanet();
+		g_CommandMind->TargetNextPlanet();
 	}
 }
 
 void ActionTargetNextShip(void)
 {
-	if(g_InputMind.IsValid() == true)
+	if(g_CommandMind != nullptr)
 	{
-		g_InputMind->TargetNextShip();
+		g_CommandMind->TargetNextShip();
 	}
 }
 
 void ActionTargetPreviousCargo(void)
 {
-	if(g_InputMind.IsValid() == true)
+	if(g_CommandMind != nullptr)
 	{
-		g_InputMind->TargetPreviousCargo();
+		g_CommandMind->TargetPreviousCargo();
 	}
 }
 
 void ActionTargetPreviousPlanet(void)
 {
-	if(g_InputMind.IsValid() == true)
+	if(g_CommandMind != nullptr)
 	{
-		g_InputMind->TargetPreviousPlanet();
+		g_CommandMind->TargetPreviousPlanet();
 	}
 }
 
 void ActionTargetPreviousShip(void)
 {
-	if(g_InputMind.IsValid() == true)
+	if(g_CommandMind != nullptr)
 	{
-		g_InputMind->TargetPreviousShip();
+		g_CommandMind->TargetPreviousShip();
 	}
 }
 

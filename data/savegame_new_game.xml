@@ -2,7 +2,7 @@
 	<galaxy identifier="milky_way"/>
 	<current-system identifier="sol"/>
 	<time-warp value="1"/>
-	<input-mind object-identifier="::player_mind"/>
+	<command-mind object-identifier="::player_mind"/>
 	<observed-character object-identifier="::character::player_character"/>
 	<main-camera>
 		<position x="0" y="0" z="200"/>
