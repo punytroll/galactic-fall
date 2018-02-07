@@ -219,7 +219,7 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		NewShip->SetMaximumSpeed(ShipClass->GetMaximumSpeed());
 		NewShip->SetMaximumTurnSpeed(ShipClass->GetTurnSpeed());
 		assert(g_Galaxy != nullptr);
-		NewShip->SetFaction(g_Galaxy->GetFaction("neutral")->GetReference());
+		NewShip->SetFaction(g_Galaxy->GetFaction("neutral"));
 		NewShip->SetHull(ShipClass->GetHull());
 		
 		auto EngineGlowParticleSystem(CreateParticleSystem("engine_glow"));

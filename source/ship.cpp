@@ -20,6 +20,7 @@
 #include "battery.h"
 #include "character.h"
 #include "commodity.h"
+#include "faction.h"
 #include "game_time.h"
 #include "generator.h"
 #include "globals.h"
@@ -57,6 +58,7 @@ Ship::Ship(void) :
 	_CargoHold(nullptr),
 	_EngineGlowParticleSystem(0),
 	m_ExhaustRadius(0.0f),
+	_Faction(nullptr),
 	m_Fuel(0.0f),
 	m_FuelCapacity(0.0f),
 	m_FuelNeededToAccelerate(0.0f),
@@ -103,6 +105,13 @@ Ship::~Ship(void)
 	{
 		_Target->DisconnectDestroyingCallback(_TargetDestroyingConnection);
 	}
+	if(_Faction != nullptr)
+	{
+		assert(_FactionDestroyingConnection.IsValid() == true);
+		_FactionDestroyingConnection.Disconnect();
+		_Faction = nullptr;
+	}
+	assert(_FactionDestroyingConnection.IsValid() == false);
 	g_GraphicsEngine->RemoveParticleSystem(_EngineGlowParticleSystem);
 	delete _EngineGlowParticleSystem;
 	_EngineGlowParticleSystem = 0;
@@ -406,6 +415,23 @@ bool Ship::Update(float Seconds)
 	return true;
 }
 
+void Ship::SetFaction(Faction * Faction)
+{
+	if(_Faction != nullptr)
+	{
+		assert(_FactionDestroyingConnection.IsValid() == true);
+		_FactionDestroyingConnection.Disconnect();
+		assert(_FactionDestroyingConnection.IsValid() == false);
+	}
+	_Faction = Faction;
+	if(_Faction != nullptr)
+	{
+		assert(_FactionDestroyingConnection.IsValid() == false);
+		_FactionDestroyingConnection = _Faction->ConnectDestroyingCallback(std::bind(&Ship::_OnFactionDestroying, this));
+		assert(_FactionDestroyingConnection.IsValid() == true);
+	}
+}
+
 void Ship::SetFuel(float Fuel)
 {
 	float FuelThreshold(GetFuelCapacity() * 0.2);
@@ -523,6 +549,15 @@ void Ship::OnRemoved(Object * Content)
 		assert(_CargoHold == Content);
 		_CargoHold = nullptr;
 	}
+}
+
+void Ship::_OnFactionDestroying(void)
+{
+	assert(_Faction != nullptr);
+	assert(_FactionDestroyingConnection.IsValid() == true);
+	_FactionDestroyingConnection.Disconnect();
+	assert(_FactionDestroyingConnection.IsValid() == false);
+	_Faction = nullptr;
 }
 
 void Ship::_OnTargetDestroying(void)
