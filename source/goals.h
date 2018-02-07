@@ -150,11 +150,16 @@ public:
 class GoalRefuel : public Goal
 {
 public:
-	GoalRefuel(GoalMind * GoalMind, const Reference< Planet > & Planet);
+	GoalRefuel(GoalMind * GoalMind, Planet * Planet);
+	virtual ~GoalRefuel(void);
 	virtual void Activate(void);
 	virtual void Process(void);
 private:
-	Reference< Planet > _Planet;
+	// event callbacks
+	void _OnPlanetDestroying(void);
+	// members
+	Planet * _Planet;
+	Connection _PlanetDestroyingConnection;
 };
 
 class GoalSelectFightableTarget : public Goal

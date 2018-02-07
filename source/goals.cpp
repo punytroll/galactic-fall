@@ -373,7 +373,7 @@ void GoalFlyInDirection::Process(void)
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 GoalFlyInSystemDirection::GoalFlyInSystemDirection(GoalMind * GoalMind) :
 	Goal(GoalMind, "fly_in_system_direction"),
-	_FlyInDirection(0)
+	_FlyInDirection(nullptr)
 {
 	SetObjectIdentifier("::goal(fly_in_system_direction)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
 }
@@ -644,11 +644,24 @@ void GoalLand::Process(void)
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // GoalRefuel                                                                                    //
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-GoalRefuel::GoalRefuel(GoalMind * GoalMind, const Reference< Planet > & Planet) :
+GoalRefuel::GoalRefuel(GoalMind * GoalMind, Planet * Planet) :
 	Goal(GoalMind, "refuel"),
 	_Planet(Planet)
 {
+	assert(_Planet != nullptr);
+	_PlanetDestroyingConnection = _Planet->ConnectDestroyingCallback(std::bind(&GoalRefuel::_OnPlanetDestroying, this));
 	SetObjectIdentifier("::goal(refuel)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
+}
+
+GoalRefuel::~GoalRefuel(void)
+{
+	if(_Planet != nullptr)
+	{
+		assert(_PlanetDestroyingConnection.IsValid() == true);
+		_PlanetDestroyingConnection.Disconnect();
+		_Planet = nullptr;
+	}
+	assert(_PlanetDestroyingConnection.IsValid() == false);
 }
 
 void GoalRefuel::Activate(void)
@@ -681,6 +694,15 @@ void GoalRefuel::Process(void)
 		}
 	}
 	SetState((SuccessfullyRefueled == true) ? (Goal::COMPLETED) : (Goal::FAILED));
+}
+
+void GoalRefuel::_OnPlanetDestroying(void)
+{
+	assert(_Planet != nullptr);
+	assert(_PlanetDestroyingConnection.IsValid() == true);
+	_PlanetDestroyingConnection.Disconnect();
+	assert(_PlanetDestroyingConnection.IsValid() == false);
+	_Planet = nullptr;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1084,7 +1106,7 @@ bool GoalVisitPlanet::OnMessageReceived(Message * Message)
 	if(Message->GetTypeIdentifier() == "landed")
 	{
 		AddSubGoal(new GoalWait(GetMind(), GetRandomFloat(2.0f, 5.0f)));
-		AddSubGoal(new GoalRefuel(GetMind(), Message->GetSender()));
+		AddSubGoal(new GoalRefuel(GetMind(), dynamic_cast< Planet * >(Message->GetSender().Get())));
 		
 		return true;
 	}
