@@ -767,7 +767,7 @@ static void ReadPlanet(Arxx::Reference & Reference, Galaxy * Galaxy, System * Sy
 	{
 		throw std::runtime_error("Could not find faction '" + FactionIdentifier + "' for planet '" + Identifier + "' in system '" + System->GetObjectIdentifier() + "'.");
 	}
-	NewPlanet->SetFaction(Faction->GetReference());
+	NewPlanet->SetFaction(Faction);
 	System->GetAspectObjectContainer()->AddContent(NewPlanet);
 }
 

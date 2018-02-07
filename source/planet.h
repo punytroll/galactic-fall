@@ -73,7 +73,7 @@ public:
 	virtual ~Planet(void) override;
 	// getters
 	const std::string & GetDescription(void) const;
-	Reference< Faction > GetFaction(void) const;
+	const Faction * GetFaction(void) const;
 	Hangar * GetHangar(Character * Character);
 	float GetLandingFeePerSpace(void) const;
 	bool GetOffersRecharging(void) const;
@@ -82,7 +82,7 @@ public:
 	float GetSize(void) const;
 	// setters
 	void SetDescription(const std::string & Description);
-	void SetFaction(Reference< Faction > Faction);
+	void SetFaction(Faction * Faction);
 	void SetLandingFeePerSpace(float LandingFeePerSpace);
 	void SetOffersRecharging(bool OffersRecharging);
 	void SetOffersRepairing(bool OffersRepairing);
@@ -100,9 +100,12 @@ private:
 	// helper functions
 	Hangar * _CreateHangar(Character * Character);
 	void _UpdateVisualization(Visualization * Visualization);
+	// callbacks
+	void _OnFactionDestroying(void);
 	// member variables
 	std::string _Description;
-	Reference< Faction > _Faction;
+	Faction * _Faction;
+	Connection _FactionDestroyingConnection;
 	float _LandingFeePerSpace;
 	bool _OffersRecharging;
 	bool _OffersRepairing;
@@ -117,7 +120,7 @@ inline const std::string & Planet::GetDescription(void) const
 	return _Description;
 }
 
-inline Reference< Faction > Planet::GetFaction(void) const
+inline const Faction * Planet::GetFaction(void) const
 {
 	return _Faction;
 }
@@ -145,11 +148,6 @@ inline const std::vector< PlanetAssetClass * > & Planet::GetPlanetAssetClasses(v
 inline float Planet::GetSize(void) const
 {
 	return _Size;
-}
-
-inline void Planet::SetFaction(Reference< Faction > Faction)
-{
-	_Faction = Faction;
 }
 
 inline void Planet::SetLandingFeePerSpace(float LandingFeePerSpace)

@@ -20,6 +20,7 @@
 #include "asset_class.h"
 #include "battery.h"
 #include "character.h"
+#include "faction.h"
 #include "globals.h"
 #include "graphics/node.h"
 #include "hangar.h"
@@ -50,6 +51,7 @@ unsigned_numeric PlanetAssetClass::GetPrice(void) const
 }
 
 Planet::Planet(void) :
+	_Faction(nullptr),
 	_LandingFeePerSpace(0.0f),
 	_OffersRecharging(false),
 	_OffersRepairing(false),
@@ -71,6 +73,13 @@ Planet::~Planet(void)
 	{
 		delete _PlanetAssetClasses.back();
 		_PlanetAssetClasses.pop_back();
+	}
+	if(_Faction != nullptr)
+	{
+		assert(_FactionDestroyingConnection.IsValid() == true);
+		_FactionDestroyingConnection.Disconnect();
+		assert(_FactionDestroyingConnection.IsValid() == false);
+		_Faction = nullptr;
 	}
 }
 
@@ -102,6 +111,23 @@ Hangar * Planet::GetHangar(Character * Character)
 void Planet::SetDescription(const std::string & Description)
 {
 	_Description = Description;
+}
+
+void Planet::SetFaction(Faction * Faction)
+{
+	if(_Faction != nullptr)
+	{
+		assert(_FactionDestroyingConnection.IsValid() == true);
+		_FactionDestroyingConnection.Disconnect();
+		assert(_FactionDestroyingConnection.IsValid() == false);
+	}
+	_Faction = Faction;
+	if(_Faction != nullptr)
+	{
+		assert(_FactionDestroyingConnection.IsValid() == false);
+		_FactionDestroyingConnection = _Faction->ConnectDestroyingCallback(std::bind(&Planet::_OnFactionDestroying, this));
+		assert(_FactionDestroyingConnection.IsValid() == true);
+	}
 }
 
 void Planet::SetSize(const float & Size)
@@ -250,6 +276,15 @@ Hangar * Planet::_CreateHangar(Character * Character)
 	Result->SetCharacter(Character);
 	
 	return Result;
+}
+
+void Planet::_OnFactionDestroying(void)
+{
+	assert(_Faction != nullptr);
+	assert(_FactionDestroyingConnection.IsValid() == true);
+	_FactionDestroyingConnection.Disconnect();
+	assert(_FactionDestroyingConnection.IsValid() == false);
+	_Faction = nullptr;
 }
 
 void Planet::_UpdateVisualization(Visualization * Visualization)
