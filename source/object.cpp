@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006  Hagen Möbius
+ * Copyright (C) 2006-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -50,8 +50,7 @@ Object::Object(void) :
 	_AspectPosition(nullptr),
 	_AspectUpdate(nullptr),
 	_AspectVisualization(nullptr),
-	_Container(nullptr),
-	_Reference(*this)
+	_Container(nullptr)
 {
 	_Objects.insert(this);
 }
@@ -79,8 +78,6 @@ Object::~Object(void)
 	_AspectUpdate = nullptr;
 	delete _AspectVisualization;
 	_AspectVisualization = nullptr;
-	// invalidate reference first, so no one accesses this object
-	_Reference.Invalidate();
 	SetObjectIdentifier("");
 	_Objects.erase(_Objects.find(this));
 }
