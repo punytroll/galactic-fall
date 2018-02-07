@@ -894,7 +894,7 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 	{
 		Faction = g_Galaxy->GetFactions().find("neutral")->second;
 	}
-	NewShip->SetFaction(Faction->GetReference());
+	NewShip->SetFaction(Faction);
 	
 	auto & PartStyles(NewShip->GetAspectVisualization()->GetVisualizationPrototype()->GetPartStyles());
 	
@@ -1670,7 +1670,7 @@ void LoadGameFromElement(const Element * SaveElement)
 							else if(TypeSpecificChild->GetName() == "faction")
 							{
 								assert(TypeSpecificChild->HasAttribute("identifier") == true);
-								NewShip->SetFaction(g_Galaxy->GetFaction(TypeSpecificChild->GetAttribute("identifier"))->GetReference());
+								NewShip->SetFaction(g_Galaxy->GetFaction(TypeSpecificChild->GetAttribute("identifier")));
 							}
 							else if(TypeSpecificChild->GetName() == "fuel")
 							{

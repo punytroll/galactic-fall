@@ -793,7 +793,7 @@ void GoalSelectEnemy::Process(void)
 	
 	for(std::list< Ship * >::const_iterator ShipIterator = Ships.begin(); ShipIterator != Ships.end(); ++ShipIterator)
 	{
-		assert((*ShipIterator)->GetFaction().IsValid() == true);
+		assert((*ShipIterator)->GetFaction() != nullptr);
 		if((*ShipIterator != GetMind()->GetCharacter()->GetShip()) && ((*ShipIterator)->GetFaction()->GetClassIdentifier() != GetMind()->GetCharacter()->GetShip()->GetFaction()->GetClassIdentifier()))
 		{
 			AttackPossibilities.push_back(*ShipIterator);

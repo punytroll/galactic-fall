@@ -272,7 +272,7 @@ static void WriteShipToXMLStream(XMLStream & XMLStream, Ship * TheShip)
 	XMLStream << element << "maximum-speed" << attribute << "value" << value << TheShip->GetMaximumSpeed() << end;
 	XMLStream << element << "maximum-turn-speed" << attribute << "value" << value << TheShip->GetMaximumTurnSpeed() << end;
 	// save current values
-	assert(TheShip->GetFaction().IsValid() == true);
+	assert(TheShip->GetFaction() != nullptr);
 	XMLStream << element << "faction" << attribute << "identifier" << value << TheShip->GetFaction()->GetClassIdentifier() << end;
 	XMLStream << element << "fuel" << attribute << "value" << value << TheShip->GetFuel() << end;
 	XMLStream << element << "hull" << attribute << "value" << value << TheShip->GetHull() << end;
