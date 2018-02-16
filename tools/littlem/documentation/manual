@@ -28,12 +28,12 @@ Model View commands:
 · ALT + F  --  toggle front face
 · ALT + I  --  import model
 · ALT + L  --  toggle lighting
-· SHIFT + L  --  load scene
+· CTRL + L  --  load scene
 · L  --  create light
 · SHIFT + M  --  change to model view
 · SHIFT + P  --  change to point view
 · ALT + S  --  toggle snapping
-· SHIFT + S  --  save scene
+· CTRL + S  --  save scene
 · SHIFT + T  --  change to triangle view
 · ENTER  --  toggle light active for selected light
 · ESCAPE  --  quits the program (without any questions and warnings)
@@ -74,7 +74,7 @@ Point View:
 · TABULATOR  --  every selected point is advanced once (cycling through all points)
 · D  --  duplicate point
 · N  --  create point
-· T  --  select all triangles connected to the selected triangles
+· T  --  select all triangles connected to the selected points
 · DELETE  --  deletes all selected points (also deletes attached triangles)
 · LEFT  --  move all selected points along the -x axis (using snapping)
 · RIGHT  --  move all selected points along the +x axis (using snapping)
