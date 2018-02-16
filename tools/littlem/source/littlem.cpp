@@ -2520,6 +2520,14 @@ void ImportMesh(const std::string & FilePath)
 	
 	copy(Points.begin(), Points.end(), back_inserter(g_Points));
 	copy(Triangles.begin(), Triangles.end(), back_inserter(g_Triangles));
+	for(auto TrianglePoint : TrianglePoints)
+	{
+		if(TrianglePoint->GetTriangles().size() == 0)
+		{
+			std::cout << "Removing corrupt triangle point." << std::endl;
+			delete TrianglePoint;
+		}
+	}
 }
 
 bool AcceptKeyInModelView(int KeyCode, bool IsDown)
