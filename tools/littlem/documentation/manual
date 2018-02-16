@@ -24,16 +24,16 @@ Model View commands:
 · ALT + C  --  toggle culling backfaces
 · SHIFT + C  --  change to camera view
 · ALT + D  --  toggle depth testing
-· ALT + E  --  export model
+· CTRL + E  --  export mesh to mesh.xml
 · ALT + F  --  toggle front face
-· ALT + I  --  import model
+· CTRL + I  --  import mesh from mesh.xml
 · ALT + L  --  toggle lighting
-· CTRL + L  --  load scene
+· CTRL + L  --  load scene from scene.xml
 · L  --  create light
 · SHIFT + M  --  change to model view
 · SHIFT + P  --  change to point view
 · ALT + S  --  toggle snapping
-· CTRL + S  --  save scene
+· CTRL + S  --  save scene to scene.xml
 · SHIFT + T  --  change to triangle view
 · ENTER  --  toggle light active for selected light
 · ESCAPE  --  quits the program (without any questions and warnings)
