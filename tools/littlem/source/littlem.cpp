@@ -1856,6 +1856,7 @@ bool AcceptKeyInPointView(int KeyCode, bool IsDown)
 	{
 	case 65: // SPACE
 		{
+			bKeyAccepted = true;
 			if(IsDown == true)
 			{
 				// create triangle from three selected points
@@ -1864,17 +1865,14 @@ bool AcceptKeyInPointView(int KeyCode, bool IsDown)
 					auto TrianglePoint1(new TrianglePoint());
 					
 					TrianglePoint1->SetPoint(g_SelectedPoints[0]);
-					g_TrianglePoints.push_back(TrianglePoint1);
 					
 					auto TrianglePoint2(new TrianglePoint());
 					
 					TrianglePoint2->SetPoint(g_SelectedPoints[1]);
-					g_TrianglePoints.push_back(TrianglePoint2);
 					
 					auto TrianglePoint3(new TrianglePoint());
 					
 					TrianglePoint3->SetPoint(g_SelectedPoints[2]);
-					g_TrianglePoints.push_back(TrianglePoint3);
 					
 					auto NewTriangle(new Triangle());
 					
@@ -1885,7 +1883,6 @@ bool AcceptKeyInPointView(int KeyCode, bool IsDown)
 					g_Triangles.push_back(NewTriangle);
 					g_SelectedTriangles.push_back(NewTriangle);
 					g_SelectedPoints.clear();
-					bKeyAccepted = true;
 				}
 			}
 			
