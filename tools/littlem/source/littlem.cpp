@@ -1559,12 +1559,6 @@ void vDisplay(void)
 	vDisplayUserInterface();
 }
 
-void vDeleteTrianglePoint(TrianglePoint * pTrianglePoint)
-{
-	g_TrianglePoints.erase(std::find(g_TrianglePoints.begin(), g_TrianglePoints.end(), pTrianglePoint));
-	delete pTrianglePoint;
-}
-
 void vDeleteTriangle(std::vector< Triangle * >::iterator iTriangle)
 {
 	assert(iTriangle != g_Triangles.end());
@@ -1652,38 +1646,47 @@ void vDeleteLight(Light * pLight)
 	vDeleteLight(std::find(g_Lights.begin(), g_Lights.end(), pLight));
 }
 
-void vDeletePoint(std::vector< Point * >::iterator iPoint)
+void DeletePoint(std::vector< Point * >::iterator PointIterator)
 {
-	assert(iPoint != g_Points.end());
+	assert(PointIterator != g_Points.end());
 	
-	Point * pPoint(*iPoint);
+	auto Point(*PointIterator);
 	
-	while(pPoint->m_TrianglePoints.size() > 0)
+	while(Point->m_TrianglePoints.size() > 0)
 	{
-		while(pPoint->m_TrianglePoints.front()->_Triangles.size() > 0)
+		assert(Point->m_TrianglePoints.front()->GetPoint() == Point);
+		if(Point->m_TrianglePoints.front()->_Triangles.size() == 0)
 		{
-			vDeleteTriangle(pPoint->m_TrianglePoints.front()->_Triangles.front());
+			std::cout << "encountered a triangle point without a triangle!" << std::endl;
+			delete Point->m_TrianglePoints.front();
+		}
+		else
+		{
+			while(Point->m_TrianglePoints.front()->_Triangles.size() > 0)
+			{
+				vDeleteTriangle(Point->m_TrianglePoints.front()->_Triangles.front());
+			}
 		}
 	}
-	if(g_HoveredPoint == pPoint)
+	if(g_HoveredPoint == Point)
 	{
-		g_HoveredPoint = 0;
+		g_HoveredPoint = nullptr;
 	}
 	
-	std::vector< Point * >::iterator iSelectedPoint(std::find(g_SelectedPoints.begin(), g_SelectedPoints.end(), pPoint));
+	auto SelectedPointIterator(std::find(g_SelectedPoints.begin(), g_SelectedPoints.end(), Point));
 	
-	if(iSelectedPoint != g_SelectedPoints.end())
+	if(SelectedPointIterator != g_SelectedPoints.end())
 	{
-		g_SelectedPoints.erase(iSelectedPoint);
+		g_SelectedPoints.erase(SelectedPointIterator);
 	}
-	g_Points.erase(iPoint);
-	delete pPoint;
+	g_Points.erase(PointIterator);
+	delete Point;
 }
 
 void vDeletePoint(Point * pPoint)
 {
 	assert(pPoint != 0);
-	vDeletePoint(std::find(g_Points.begin(), g_Points.end(), pPoint));
+	DeletePoint(std::find(g_Points.begin(), g_Points.end(), pPoint));
 }
 
 void vClearScene(void)
@@ -1698,7 +1701,7 @@ void vClearScene(void)
 	}
 	while(g_Points.size() > 0)
 	{
-		vDeletePoint(g_Points.begin());
+		DeletePoint(g_Points.begin());
 	}
 	while(g_Cameras.size() > 0)
 	{
@@ -2006,6 +2009,7 @@ bool AcceptKeyInPointView(int KeyCode, bool IsDown)
 		}
 	case 119: // DELETE
 		{
+			bKeyAccepted = true;
 			if(IsDown == true)
 			{
 				// delete selected points
@@ -2013,7 +2017,6 @@ bool AcceptKeyInPointView(int KeyCode, bool IsDown)
 				{
 					vDeletePoint(g_SelectedPoints.front());
 				}
-				bKeyAccepted = true;
 			}
 			
 			break;
