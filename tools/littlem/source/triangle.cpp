@@ -111,7 +111,6 @@ const TrianglePoint * Triangle::pGetTrianglePoint(Point * pPoint) const
 
 void Triangle::_SetTrianglePoint(int Slot, TrianglePoint * TrianglePoint)
 {
-	assert(TrianglePoint != nullptr);
 	if(m_ppTrianglePoints[Slot] != nullptr)
 	{
 		m_ppTrianglePoints[Slot]->_Triangles.erase(std::find(m_ppTrianglePoints[Slot]->_Triangles.begin(), m_ppTrianglePoints[Slot]->_Triangles.end(), this));
