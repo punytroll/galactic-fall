@@ -24,27 +24,34 @@
 
 #include "type_definitions.h"
 
+class VisualizationPrototype;
+
 class GeneratorClass
 {
 public:
+	// constructor and destructor
 	GeneratorClass(const std::string & Identifier);
+	~GeneratorClass(void);
 	// getters
 	float GetEnergyProvisionPerSecond(void) const;
 	const std::string & GetIdentifier(void) const;
 	const std::string & GetName(void) const;
 	const std::string & GetSlotClassIdentifier(void) const;
 	unsigned_numeric GetSpaceRequirement(void) const;
+	const VisualizationPrototype * GetVisualizationPrototype(void) const;
 	// setters
 	void SetEnergyProvisionPerSecond(float EnergyProvisionPerSecond);
 	void SetName(const std::string & Name);
 	void SetSlotClassIdentifier(const std::string & SlotClassIdentifier);
 	void SetSpaceRequirement(unsigned_numeric SpaceRequirement);
+	void SetVisualizationPrototype(const VisualizationPrototype & VisualizationPrototype);
 private:
 	float _EnergyProvisionPerSecond;
 	std::string _Identifier;
 	std::string _Name;
 	std::string _SlotClassIdentifier;
 	unsigned_numeric _SpaceRequirement;
+	VisualizationPrototype * _VisualizationPrototype;
 };
 
 inline float GeneratorClass::GetEnergyProvisionPerSecond(void) const
@@ -70,6 +77,11 @@ inline const std::string & GeneratorClass::GetSlotClassIdentifier(void) const
 inline unsigned_numeric GeneratorClass::GetSpaceRequirement(void) const
 {
 	return _SpaceRequirement;
+}
+
+inline const VisualizationPrototype * GeneratorClass::GetVisualizationPrototype(void) const
+{
+	return _VisualizationPrototype;
 }
 
 inline void GeneratorClass::SetEnergyProvisionPerSecond(float EnergyProvisionPerSecond)

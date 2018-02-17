@@ -78,6 +78,7 @@
 	<generator-class type="13">
 		<string identifier="identifier"/>
 		<string identifier="name"/>
+		<visualization identifier="visualization"/>
 		<u4byte identifier="space-requirement"/>
 		<float identifier="energy-provision-per-second"/>
 		<string identifier="slot-class-identifier"/>

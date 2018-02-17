@@ -20,10 +20,24 @@
 #include <assert.h>
 
 #include "generator_class.h"
+#include "visualization_prototype.h"
 
 GeneratorClass::GeneratorClass(const std::string & Identifier) :
 	_EnergyProvisionPerSecond(0.0f),
 	_Identifier(Identifier),
-	_SpaceRequirement(0)
+	_SpaceRequirement(0),
+	_VisualizationPrototype(nullptr)
 {
+}
+
+GeneratorClass::~GeneratorClass(void)
+{
+	delete _VisualizationPrototype;
+	_VisualizationPrototype = nullptr;
+}
+
+void GeneratorClass::SetVisualizationPrototype(const VisualizationPrototype & NewVisualizationPrototype)
+{
+	delete _VisualizationPrototype;
+	_VisualizationPrototype = new VisualizationPrototype(NewVisualizationPrototype);
 }
