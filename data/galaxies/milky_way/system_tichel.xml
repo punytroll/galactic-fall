@@ -6,4 +6,18 @@
 		<y>9.0</y>
 	</position>
 	<traffic-density>0.005</traffic-density>
+	<faction-influences>
+		<faction-influence>
+			<identifier>earth</identifier>
+			<influence>0.1</influence>
+		</faction-influence>
+		<faction-influence>
+			<identifier>pirates</identifier>
+			<influence>0.6</influence>
+		</faction-influence>
+		<faction-influence>
+			<identifier>neutral</identifier>
+			<influence>0.3</influence>
+		</faction-influence>
+	</faction-influences>
 </system>

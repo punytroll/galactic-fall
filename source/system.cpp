@@ -22,8 +22,10 @@
 #include <algorithm>
 
 #include "commodity.h"
+#include "faction.h"
 #include "globals.h"
 #include "graphics/system_node.h"
+#include "math.h"
 #include "object_aspect_object_container.h"
 #include "object_aspect_position.h"
 #include "object_aspect_visualization.h"
@@ -54,6 +56,14 @@ namespace std
 	}
 }
 
+class FactionInfluence
+{
+public:
+	Connection _DestroyingConnection;
+	Faction * _Faction;
+	float _Influence;
+};
+
 System::System(void) :
 	_TrafficDensity(FLT_MAX),
 	_Star(nullptr)
@@ -70,11 +80,62 @@ System::System(void) :
 
 System::~System(void)
 {
+	while(_FactionInfluences.size() > 0)
+	{
+		auto FactionInfluence{_FactionInfluences.back()};
+		
+		assert(FactionInfluence->_Faction != nullptr);
+		FactionInfluence->_Faction = nullptr;
+		assert(FactionInfluence->_DestroyingConnection.IsValid() == true);
+		FactionInfluence->_DestroyingConnection.Disconnect();
+		assert(FactionInfluence->_DestroyingConnection.IsValid() == false);
+		delete FactionInfluence;
+		_FactionInfluences.pop_back();
+	}
 	assert(_Commodities.empty() == true);
 	assert(_Planets.empty() == true);
 	assert(_Ships.empty() == true);
 	assert(_Shots.empty() == true);
 	assert(_Star == nullptr);
+}
+
+void System::AddFactionInfluence(Faction * Faction, float Influence)
+{
+	assert(Faction != nullptr);
+	for(auto FactionInfluence : _FactionInfluences)
+	{
+		assert(FactionInfluence->_Faction != Faction);
+	}
+	
+	auto NewFactionInfluence{new FactionInfluence{}};
+	
+	NewFactionInfluence->_Faction = Faction;
+	NewFactionInfluence->_Influence = Influence;
+	NewFactionInfluence->_DestroyingConnection = Faction->ConnectDestroyingCallback(std::bind(&System::_OnFactionDestroying, this, Faction));
+	_FactionInfluences.push_back(NewFactionInfluence);
+}
+
+Faction * System::GetRandomFactionAccordingToInfluences(void)
+{
+	auto TotalInfluence{0.0f};
+	
+	for(auto FactionInfluence : _FactionInfluences)
+	{
+		TotalInfluence += FactionInfluence->_Influence;
+	}
+	
+	auto Random{GetRandomFloat(0.0f, TotalInfluence)};
+	
+	for(auto FactionInfluence : _FactionInfluences)
+	{
+		Random -= FactionInfluence->_Influence;
+		if(Random <= 0.0f)
+		{
+			return FactionInfluence->_Faction;
+		}
+	}
+	
+	return nullptr;
 }
 
 bool System::IsLinkedToSystem(const System * System) const
@@ -150,6 +211,23 @@ void System::_OnAdded(Object * Content)
 	{
 		assert(false);
 	}
+}
+
+void System::_OnFactionDestroying(Faction * Faction)
+{
+	auto FactionInfluenceIterator{std::find_if(_FactionInfluences.begin(), _FactionInfluences.end(), [&] (FactionInfluence * FactionInfluence) { return FactionInfluence->_Faction == Faction; })};
+	
+	assert(FactionInfluenceIterator != _FactionInfluences.end());
+	
+	auto FactionInfluence{*FactionInfluenceIterator};
+	
+	assert(FactionInfluence->_Faction != nullptr);
+	FactionInfluence->_Faction = nullptr;
+	assert(FactionInfluence->_DestroyingConnection.IsValid() == true);
+	FactionInfluence->_DestroyingConnection.Disconnect();
+	assert(FactionInfluence->_DestroyingConnection.IsValid() == false);
+	delete FactionInfluence;
+	_FactionInfluences.erase(FactionInfluenceIterator);
 }
 
 void System::_OnRemoved(Object * Content)

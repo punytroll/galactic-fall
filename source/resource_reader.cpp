@@ -327,11 +327,27 @@ void ResourceReader::_ReadSystem(Arxx::Reference & Reference, ClassManager< Asse
 	std::string Name;
 	Vector2f Position;
 	float TrafficDensity;
+	u4byte FactionInfluencesCount;
 	
-	Reader >> Name >> Position >> TrafficDensity;
+	Reader >> Name >> Position >> TrafficDensity >> FactionInfluencesCount;
 	NewSystem->GetAspectName()->SetName(Name);
 	NewSystem->GetAspectPosition()->SetPosition(Vector3f::CreateFromComponents(Position[0], Position[1], 0.0f));
 	NewSystem->SetTrafficDensity(TrafficDensity);
+	for(auto FactionInfluenceIndex = 0ul; FactionInfluenceIndex < FactionInfluencesCount; ++FactionInfluenceIndex)
+	{
+		std::string FactionIdentifier;
+		float FactionInfluence;
+		
+		Reader >> FactionIdentifier >> FactionInfluence;
+		
+		auto Faction{Galaxy->GetFaction(FactionIdentifier)};
+		
+		if(Faction == nullptr)
+		{
+			throw std::runtime_error("Could not find faction '" + FactionIdentifier + "'.");
+		}
+		NewSystem->AddFactionInfluence(Faction, FactionInfluence);
+	}
 	Galaxy->GetAspectObjectContainer()->AddContent(NewSystem);
 	if(Item->GetStructure().bHasRelation("stars") == true)
 	{
