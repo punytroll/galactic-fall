@@ -56,6 +56,7 @@ namespace UI
 enum WantReturnCode
 {
 	OK,
+	FACTION_NOT_ALLOWED,
 	NO_STORAGE,
 	NO_JUMP_TARGET,
 	NO_LAND_TARGET,

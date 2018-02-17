@@ -235,7 +235,7 @@ int WantToJump(Ship * Ship, System * TargetSystem)
 	return OK;
 }
 
-int WantToLand(const Character * Character, const Ship * Ship, const Planet * Planet)
+int WantToLand(const Character * Character, Ship * Ship, Planet * Planet)
 {
 	if(Planet == nullptr)
 	{
@@ -253,6 +253,12 @@ int WantToLand(const Character * Character, const Ship * Ship, const Planet * Pl
 	if(Ship->GetVelocity().SquaredLength() > 2.0f)
 	{
 		return TOO_FAST;
+	}
+	// test faction standing
+	assert(Planet->GetFaction() != nullptr);
+	if(Planet->GetFaction()->GetStanding(Ship->GetFaction()) < 0.5f)
+	{
+		return FACTION_NOT_ALLOWED;
 	}
 	assert(Character != nullptr);
 	assert(Ship->GetAspectPhysical() != nullptr);
@@ -2233,7 +2239,7 @@ void ActionLand(void)
 {
 	if(g_CommandMind != nullptr)
 	{
-		const Planet * SelectedPlanet(dynamic_cast< const Planet * >(g_CommandMind->GetCharacter()->GetShip()->GetTarget()));
+		auto SelectedPlanet(dynamic_cast< Planet * >(g_CommandMind->GetCharacter()->GetShip()->GetTarget()));
 		
 		switch(WantToLand(g_CommandMind->GetCharacter(), g_CommandMind->GetCharacter()->GetShip(), SelectedPlanet))
 		{
@@ -2241,6 +2247,12 @@ void ActionLand(void)
 			{
 				g_CommandMind->GetCharacter()->RemoveCredits(SelectedPlanet->GetLandingFeePerSpace() * g_CommandMind->GetCharacter()->GetShip()->GetAspectPhysical()->GetSpaceRequirement());
 				g_CommandMind->Land();
+				
+				break;
+			}
+		case FACTION_NOT_ALLOWED:
+			{
+				SetMessage("You are not welcome on this planet.");
 				
 				break;
 			}

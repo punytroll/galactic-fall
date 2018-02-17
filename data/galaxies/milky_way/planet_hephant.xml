@@ -62,5 +62,5 @@
 	<recharging-fee-per-energy>0.025</recharging-fee-per-energy>
 	<offers-repairing>false</offers-repairing>
 	<repairing-fee-per-hull>0.0</repairing-fee-per-hull>
-	<faction-identifier>earth</faction-identifier>
+	<faction-identifier>neutral</faction-identifier>
 </planet>

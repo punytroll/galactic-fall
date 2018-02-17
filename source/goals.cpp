@@ -880,27 +880,31 @@ void GoalSelectNearestPlanetInSystem::Process(void)
 {
 	assert(GetState() == Goal::ACTIVE);
 	
-	const System * CurrentSystem(dynamic_cast< System * >(GetMind()->GetCharacter()->GetShip()->GetContainer()));
+	auto CurrentSystem(dynamic_cast< System * >(GetMind()->GetCharacter()->GetSystem()));
 	
-	assert(CurrentSystem != 0);
+	assert(CurrentSystem != nullptr);
 	
-	const std::vector< Planet * > & Planets(CurrentSystem->GetPlanets());
+	Planet * NearestLandablePlanet(nullptr);
 	float MinimumDistance(FLT_MAX);
-	Planet * NearestPlanet(0);
 	
-	for(std::vector< Planet * >::const_iterator PlanetIterator = Planets.begin(); PlanetIterator != Planets.end(); ++PlanetIterator)
+	for(auto Planet : CurrentSystem->GetPlanets())
 	{
-		float Distance(((*PlanetIterator)->GetAspectPosition()->GetPosition() - GetMind()->GetCharacter()->GetShip()->GetAspectPosition()->GetPosition()).SquaredLength());
-		
-		if(Distance < MinimumDistance)
+		assert(Planet != nullptr);
+		assert(Planet->GetFaction() != nullptr);
+		if(Planet->GetFaction()->GetStanding(GetMind()->GetCharacter()->GetShip()->GetFaction()) >= 0.5)
 		{
-			NearestPlanet = *PlanetIterator;
-			MinimumDistance = Distance;
+			float Distance((Planet->GetAspectPosition()->GetPosition() - GetMind()->GetCharacter()->GetShip()->GetAspectPosition()->GetPosition()).SquaredLength());
+			
+			if(Distance < MinimumDistance)
+			{
+				NearestLandablePlanet = Planet;
+				MinimumDistance = Distance;
+			}
 		}
 	}
-	if(NearestPlanet != nullptr)
+	if(NearestLandablePlanet != nullptr)
 	{
-		GetMind()->GetCharacter()->GetShip()->SetTarget(NearestPlanet);
+		GetMind()->GetCharacter()->GetShip()->SetTarget(NearestLandablePlanet);
 		SetState(Goal::COMPLETED);
 	}
 	else
