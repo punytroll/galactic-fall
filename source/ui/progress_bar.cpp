@@ -29,35 +29,41 @@
 
 using namespace Expressions::Operators;
 
-UI::ProgressBar::ProgressBar(UI::Widget * SupWidget) :
-	UI::Widget(SupWidget),
+UI::ProgressBar::ProgressBar(void) :
 	_Fill(nullptr),
 	_FillLevel(1.0_c),
 	_Label(nullptr)
 {
 	// create components
-	_Fill = new UI::Widget{this};
-	_Label = new UI::Label{this};
+	_Fill = new UI::Widget{};
+	_Label = new UI::Label{};
 	
-	auto Border{new UI::Border{this}};
+	auto Border{new UI::Border{}};
 	
 	// initialize components
+	_Fill->SetName("fill");
 	_Fill->SetLeft(0.0_c);
 	_Fill->SetTop(0.0_c);
 	_Fill->SetWidth(width(this) * _FillLevel);
 	_Fill->SetHeight(height(this));
+	_Label->SetName("label");
 	_Label->SetLeft(0.0_c);
 	_Label->SetTop(0.0_c);
 	_Label->SetWidth(width(this));
 	_Label->SetHeight(height(this));
 	_Label->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Center);
 	_Label->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
+	Border->SetName("border");
 	Border->SetLeft(0.0_c);
 	Border->SetTop(0.0_c);
 	Border->SetWidth(width(this));
 	Border->SetHeight(height(this));
 	Border->SetLineWidth(1.0f);
 	Border->SetColor(Graphics::ColorRGBO(1.0f, 1.0f, 1.0f, 1.0f));
+	// add components
+	AddSubWidget(_Fill);
+	AddSubWidget(_Label);
+	AddSubWidget(Border);
 }
 
 void UI::ProgressBar::SetColor(const Graphics::ColorRGBO & Color)

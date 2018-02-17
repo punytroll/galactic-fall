@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006  Hagen Möbius
+ * Copyright (C) 2006-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,23 +20,29 @@
 #ifndef GAME_TIME_H
 #define GAME_TIME_H
 
+#include <cstdint>
+
 class GameTime
 {
 public:
 	static void Set(double Time);
 	static double Get(void);
+	static std::uint32_t GetCycle(void);
+	static double GetCycleFraction(void);
 private:
-	static double m_Time;
+	static double _Cycle;
+	static double _Time;
 };
 
 inline void GameTime::Set(double Time)
 {
-	m_Time = Time;
+	_Cycle = Time / 2971.0;
+	_Time = Time;
 }
 
 inline double GameTime::Get(void)
 {
-	return m_Time;
+	return _Time;
 }
 
 #endif

@@ -23,6 +23,7 @@
 
 #include "../battery.h"
 #include "../character.h"
+#include "../game_time.h"
 #include "../globals.h"
 #include "../graphics/color_rgbo.h"
 #include "../map_knowledge.h"
@@ -35,6 +36,7 @@
 #include "heads_up_display.h"
 #include "label.h"
 #include "mini_map_display.h"
+#include "progress_bar.h"
 #include "scanner_display.h"
 
 using namespace Expressions::Operators;
@@ -45,14 +47,36 @@ UI::HeadsUpDisplay::HeadsUpDisplay(UI::Widget * SupWidget) :
 	UI::Widget(SupWidget),
 	_MessageLabel(nullptr)
 {
-	auto TimeWarpLabel{new UI::Label{this}};
+	auto CycleLabel{new UI::Label{this}};
+	
+	CycleLabel->SetName("cycle_label");
+	CycleLabel->SetLeft(0.0_c);
+	CycleLabel->SetTop(0.0_c);
+	CycleLabel->SetWidth(40.0_c);
+	CycleLabel->SetHeight(20.0_c);
+	CycleLabel->SetText("Cycle:");
+	CycleLabel->SetTextColor(Graphics::ColorRGBO(0.7f, 0.8f, 1.0f, 1.0f));
+	CycleLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
+	
+	auto CycleProgressBar{new UI::ProgressBar()};
+	
+	CycleProgressBar->SetName("cycle_progress_bar");
+	CycleProgressBar->SetLeft(right(CycleLabel) + 10.0_c);
+	CycleProgressBar->SetTop(top(CycleLabel) + 3.0_c);
+	CycleProgressBar->SetWidth(100.0_c);
+	CycleProgressBar->SetHeight(height(CycleLabel) - 2.0_c * top(CycleProgressBar));
+	CycleProgressBar->SetColor(Graphics::ColorRGBO(0.3f, 0.45f, 0.6f, 1.0f));
+	CycleProgressBar->ConnectUpdatingCallback(std::bind(&UI::HeadsUpDisplay::_UpdateCycleProgressBar, this, CycleProgressBar, std::placeholders::_1, std::placeholders::_2));
+	
+	auto TimeWarpLabel{new UI::Label{}};
 	
 	TimeWarpLabel->SetName("time_warp");
-	TimeWarpLabel->SetLeft(0.0_c);
-	TimeWarpLabel->SetTop(0.0_c);
+	TimeWarpLabel->SetLeft(right(CycleProgressBar) + 10.0_c);
+	TimeWarpLabel->SetTop(top(CycleLabel));
 	TimeWarpLabel->SetWidth(200.0_c);
-	TimeWarpLabel->SetHeight(20.0_c);
+	TimeWarpLabel->SetHeight(height(CycleLabel));
 	TimeWarpLabel->SetTextColor(Graphics::ColorRGBO(0.7f, 0.8f, 1.0f, 1.0f));
+	TimeWarpLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	TimeWarpLabel->ConnectUpdatingCallback(std::bind(&UI::HeadsUpDisplay::_UpdateTimeWarpLabel, this, TimeWarpLabel, std::placeholders::_1, std::placeholders::_2));
 	
 	auto LinkedSystemTargetLabel{new UI::Label{this}};
@@ -64,6 +88,7 @@ UI::HeadsUpDisplay::HeadsUpDisplay(UI::Widget * SupWidget) :
 	LinkedSystemTargetLabel->SetHeight(20.0_c);
 	LinkedSystemTargetLabel->SetTextColor(Graphics::ColorRGBO(0.7f, 0.8f, 1.0f, 1.0f));
 	LinkedSystemTargetLabel->ConnectUpdatingCallback(std::bind(&UI::HeadsUpDisplay::_UpdateLinkedSystemTargetLabel, this, LinkedSystemTargetLabel, std::placeholders::_1, std::placeholders::_2));
+	LinkedSystemTargetLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	
 	auto CreditsLabel{new UI::Label{this}};
 	
@@ -74,6 +99,7 @@ UI::HeadsUpDisplay::HeadsUpDisplay(UI::Widget * SupWidget) :
 	CreditsLabel->SetHeight(20.0_c);
 	CreditsLabel->SetTextColor(Graphics::ColorRGBO(0.7f, 0.8f, 1.0f, 1.0f));
 	CreditsLabel->ConnectUpdatingCallback(std::bind(&UI::HeadsUpDisplay::_UpdateCreditsLabel, this, CreditsLabel, std::placeholders::_1, std::placeholders::_2));
+	CreditsLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	
 	auto FuelLabel{new UI::Label{this}};
 	
@@ -84,6 +110,7 @@ UI::HeadsUpDisplay::HeadsUpDisplay(UI::Widget * SupWidget) :
 	FuelLabel->SetHeight(20.0_c);
 	FuelLabel->SetTextColor(Graphics::ColorRGBO(0.7f, 0.8f, 1.0f, 1.0f));
 	FuelLabel->ConnectUpdatingCallback(std::bind(&UI::HeadsUpDisplay::_UpdateFuelLabel, this, FuelLabel, std::placeholders::_1, std::placeholders::_2));
+	FuelLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	
 	auto EnergyLabel{new UI::Label{this}};
 	
@@ -94,6 +121,7 @@ UI::HeadsUpDisplay::HeadsUpDisplay(UI::Widget * SupWidget) :
 	EnergyLabel->SetHeight(20.0_c);
 	EnergyLabel->SetTextColor(Graphics::ColorRGBO(0.7f, 0.8f, 1.0f, 1.0f));
 	EnergyLabel->ConnectUpdatingCallback(std::bind(&UI::HeadsUpDisplay::_UpdateEnergyLabel, this, EnergyLabel, std::placeholders::_1, std::placeholders::_2));
+	EnergyLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	
 	auto HullLabel{new UI::Label{this}};
 	
@@ -104,6 +132,7 @@ UI::HeadsUpDisplay::HeadsUpDisplay(UI::Widget * SupWidget) :
 	HullLabel->SetHeight(20.0_c);
 	HullLabel->SetTextColor(Graphics::ColorRGBO(0.7f, 0.8f, 1.0f, 1.0f));
 	HullLabel->ConnectUpdatingCallback(std::bind(&UI::HeadsUpDisplay::_UpdateHullLabel, this, HullLabel, std::placeholders::_1, std::placeholders::_2));
+	HullLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	_MessageLabel = new UI::Label{this};
 	_MessageLabel->SetName("message");
 	_MessageLabel->SetLeft(0.0_c);
@@ -195,6 +224,9 @@ UI::HeadsUpDisplay::HeadsUpDisplay(UI::Widget * SupWidget) :
 	ScannerBorder->SetHeight(height(ScannerWidget));
 	ScannerBorder->SetLineWidth(1.0f);
 	ScannerBorder->SetColor(Graphics::ColorRGBO(0.1f, 0.2f, 0.3f, 1.0f));
+	// add components
+	AddSubWidget(CycleProgressBar);
+	AddSubWidget(TimeWarpLabel);
 }
 
 void UI::HeadsUpDisplay::_HideMessage(void)
@@ -226,6 +258,20 @@ void UI::HeadsUpDisplay::_UpdateCreditsLabel(UI::Label * CreditsLabel, float Rea
 	else
 	{
 		CreditsLabel->SetVisible(false);
+	}
+}
+
+void UI::HeadsUpDisplay::_UpdateCycleProgressBar(UI::ProgressBar * CycleProgressBar, float RealTimeSeconds, float GameTimeSeconds)
+{
+	if(g_Galaxy != nullptr)
+	{
+		CycleProgressBar->SetVisible(true);
+		CycleProgressBar->SetText(to_string_cast(GameTime::GetCycle()));
+		CycleProgressBar->SetFillLevel(GameTime::GetCycleFraction());
+	}
+	else
+	{
+		CycleProgressBar->SetVisible(false);
 	}
 }
 
@@ -394,7 +440,7 @@ void UI::HeadsUpDisplay::_UpdateTimeWarpLabel(UI::Label * TimeWarpLabel, float R
 	if(g_Galaxy != nullptr)
 	{
 		TimeWarpLabel->SetVisible(true);
-		TimeWarpLabel->SetText("Time Warp: " + to_string_cast(g_TimeWarp, 2));
+		TimeWarpLabel->SetText("(x" + to_string_cast(g_TimeWarp, 2) + ')');
 	}
 	else
 	{

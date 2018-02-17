@@ -387,7 +387,7 @@ UI::HangarWidget::HangarWidget(UI::Widget * SupWidget, Planet * Planet, Characte
 	RepairButton->ConnectClickedCallback(std::bind(&UI::HangarWidget::_OnRepairButtonClicked, this));
 	RepairButton->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnRepairButtonUpdating, this, RepairButton, std::placeholders::_1, std::placeholders::_2));
 	
-	auto HullStateProgressBar{new UI::ProgressBar{this}};
+	auto HullStateProgressBar{new UI::ProgressBar{}};
 	
 	HullStateProgressBar->SetLeft(190.0_c);
 	HullStateProgressBar->SetTop(230.0_c);
@@ -404,7 +404,7 @@ UI::HangarWidget::HangarWidget(UI::Widget * SupWidget, Planet * Planet, Characte
 	RechargeButton->ConnectClickedCallback(std::bind(&UI::HangarWidget::_OnRechargeButtonClicked, this));
 	RechargeButton->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnRechargeButtonUpdating, this, RechargeButton, std::placeholders::_1, std::placeholders::_2));
 	
-	auto EnergyStateProgressBar{new UI::ProgressBar{this}};
+	auto EnergyStateProgressBar{new UI::ProgressBar{}};
 	
 	EnergyStateProgressBar->SetLeft(190.0_c);
 	EnergyStateProgressBar->SetTop(260.0_c);
@@ -421,7 +421,7 @@ UI::HangarWidget::HangarWidget(UI::Widget * SupWidget, Planet * Planet, Characte
 	RefuelButton->ConnectClickedCallback(std::bind(&UI::HangarWidget::_OnRefuelButtonClicked, this));
 	RefuelButton->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnRefuelButtonUpdating, this, RefuelButton, std::placeholders::_1, std::placeholders::_2));
 	
-	auto FuelStateProgressBar{new UI::ProgressBar{this}};
+	auto FuelStateProgressBar{new UI::ProgressBar{}};
 	
 	FuelStateProgressBar->SetLeft(190.0_c);
 	FuelStateProgressBar->SetTop(290.0_c);
@@ -437,6 +437,10 @@ UI::HangarWidget::HangarWidget(UI::Widget * SupWidget, Planet * Planet, Characte
 	TakeOffButton->SetHeight(20.0_c);
 	TakeOffButton->ConnectClickedCallback(std::bind(&UI::HangarWidget::_OnTakeOffButtonClicked, this));
 	TakeOffButton->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnTakeOffButtonUpdating, this, TakeOffButton, std::placeholders::_1, std::placeholders::_2));
+	// add components
+	AddSubWidget(HullStateProgressBar);
+	AddSubWidget(EnergyStateProgressBar);
+	AddSubWidget(FuelStateProgressBar);
 }
 
 void UI::HangarWidget::_OnBoardButtonClicked(void)

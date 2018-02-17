@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006  Hagen Möbius
+ * Copyright (C) 2006-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -25,9 +25,10 @@ class RealTime
 public:
 	static void Invalidate(void);
 	static double Get(void);
+	static double GetSecondsSinceEpoche(void);
 private:
-	static bool m_Valid;
-	static double m_Time;
+	static bool _Valid;
+	static double _Time;
 };
 
 #endif
