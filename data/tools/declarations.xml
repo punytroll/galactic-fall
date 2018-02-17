@@ -59,6 +59,13 @@
 		<color-rgbo-4f identifier="color"/>
 	</faction>
 	
+	<faction-influence>
+		<string identifier="identifier"/>
+		<float identifier="influence"/>
+	</faction-influence>
+	
+	<faction-influences is="collection" element-type="faction-influence"/>
+	
 	<float type="21" sub-type="0"/>
 	
 	<fragment-shader is="shader" type="19" sub-type="1"/>
@@ -237,6 +244,7 @@
 		<string identifier="name"/>
 		<vector2f identifier="position"/>
 		<float identifier="traffic-density"/>
+		<faction-influences identifier="faction-influences"/>
 	</system>
 	
 	<system-link type="6">

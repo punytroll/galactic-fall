@@ -27,6 +27,8 @@
 #include "object.h"
 
 class Commodity;
+class Faction;
+class FactionInfluence;
 class Planet;
 class Ship;
 class Shot;
@@ -35,6 +37,8 @@ class Visualization;
 
 class System : public Object
 {
+public:
+	friend class FactionInfluence;
 public:
 	System(void);
 	virtual ~System(void) override;
@@ -45,15 +49,19 @@ public:
 	const std::list< System * > GetLinkedSystems(void) const;
 	const Star * GetStar(void) const;
 	bool IsLinkedToSystem(const System * System) const;
+	void AddFactionInfluence(Faction * Faction, float Influence);
 	void AddLinkedSystem(System * LinkedSystem);
 	// setters
 	void SetTrafficDensity(float TrafficDensity);
 	// getters
 	float GetTrafficDensity(void) const;
+	Faction * GetRandomFactionAccordingToInfluences(void);
 private:
 	void _OnAdded(Object * Content);
+	void _OnFactionDestroying(Faction * Faction);
 	void _OnRemoved(Object * Content);
 	void _UpdateVisualization(Visualization * Visualization);
+	std::vector< FactionInfluence * > _FactionInfluences;
 	float _TrafficDensity;
 	Star * _Star;
 	std::vector< Planet * > _Planets;

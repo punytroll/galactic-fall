@@ -879,21 +879,9 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 	
 	NewShip->SetObjectIdentifier("::ship(" + NewShip->GetClassIdentifier() + ")" + IdentifierSuffix);
 	
-	float Random(GetRandomUniform());
-	Faction * Faction(nullptr);
+	auto Faction{System->GetRandomFactionAccordingToInfluences()};
 	
-	if(Random < 0.2f)
-	{
-		Faction = g_Galaxy->GetFactions().find("pirates")->second;
-	}
-	else if(Random < 0.8f)
-	{
-		Faction = g_Galaxy->GetFactions().find("earth")->second;
-	}
-	else
-	{
-		Faction = g_Galaxy->GetFactions().find("neutral")->second;
-	}
+	assert(Faction != nullptr);
 	NewShip->SetFaction(Faction);
 	
 	auto & PartStyles(NewShip->GetAspectVisualization()->GetVisualizationPrototype()->GetPartStyles());
