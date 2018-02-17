@@ -24,6 +24,7 @@ namespace UI
 {
 	class Label;
 	class MiniMapDisplay;
+	class ProgressBar;
 	class ScannerDisplay;
 	
 	class HeadsUpDisplay : public UI::Widget
@@ -34,6 +35,7 @@ namespace UI
 	private:
 		void _HideMessage(void);
 		void _UpdateCreditsLabel(UI::Label * CreditsLabel, float RealTimeSeconds, float GameTimeSeconds);
+		void _UpdateCycleProgressBar(UI::ProgressBar * CycleProgressBar, float RealTimeSeconds, float GameTimeSeconds);
 		void _UpdateEnergyLabel(UI::Label * EnergyLabel, float RealTimeSeconds, float GameTimeSeconds);
 		void _UpdateFuelLabel(UI::Label * EnergyLabel, float RealTimeSeconds, float GameTimeSeconds);
 		void _UpdateHullLabel(UI::Label * EnergyLabel, float RealTimeSeconds, float GameTimeSeconds);

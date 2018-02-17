@@ -37,7 +37,7 @@ namespace UI
 	class ProgressBar : public UI::Widget
 	{
 	public:
-		ProgressBar(UI::Widget * SupWidget);
+		ProgressBar(void);
 		// setters
 		void SetColor(const Graphics::ColorRGBO & Color);
 		void SetFillLevel(float FillLevel);

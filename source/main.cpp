@@ -1263,6 +1263,7 @@ void PurgeGame(void)
 		delete g_Galaxy;
 		g_Galaxy = nullptr;
 	}
+	GameTime::Set(0.0);
 }
 
 void LoadGameFromElement(const Element * SaveElement)
@@ -1929,6 +1930,10 @@ void LoadGameFromElement(const Element * SaveElement)
 		assert(g_CharacterObserver != nullptr);
 		g_CharacterObserver->SetObservedCharacter(ObservedCharacter);
 	}
+	if(GameTime::Get() == 0.0)
+	{
+		GameTime::Set(RealTime::GetSecondsSinceEpoche());
+	}
 	OnOutputEnterSystem(g_CurrentSystem);
 	RealTime::Invalidate();
 	PopulateSystem(g_CurrentSystem);
@@ -2007,7 +2012,7 @@ void SaveGame(std::ostream & OStream)
 	XML << element << "save";
 	assert(g_Galaxy != nullptr);
 	XML << element << "galaxy" << attribute << "identifier" << value << g_Galaxy->GetClassIdentifier() << end;
-	XML << element << "game-time" << attribute << "value" << value << GameTime::Get() << end;
+	XML << element << "game-time" << attribute << "value" << value << to_string_cast(GameTime::Get(), 4) << end;
 	if(g_CurrentSystem != nullptr)
 	{
 		XML << element << "current-system" << attribute << "identifier" << value << g_CurrentSystem->GetClassIdentifier() << end;

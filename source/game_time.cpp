@@ -19,4 +19,15 @@
 
 #include "game_time.h"
 
-double GameTime::m_Time(0.0);
+double GameTime::_Cycle(0.0);
+double GameTime::_Time(0.0);
+
+std::uint32_t GameTime::GetCycle(void)
+{
+	return static_cast< std::uint32_t >(_Cycle);
+}
+
+double GameTime::GetCycleFraction(void)
+{
+	return _Cycle - GetCycle();
+}
