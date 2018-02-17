@@ -29,6 +29,7 @@
 #include "character.h"
 #include "commodity.h"
 #include "commodity_class.h"
+#include "faction.h"
 #include "game_time.h"
 #include "globals.h"
 #include "math.h"
@@ -156,15 +157,39 @@ TransporterPhase1::TransporterPhase1(StateMachineMind * Mind) :
 
 void TransporterPhase1::Enter(void)
 {
-	auto CurrentSystem(GetMind()->GetCharacter()->GetShip()->GetSystem());
+	auto CurrentSystem{GetMind()->GetCharacter()->GetSystem()};
 	
 	assert(CurrentSystem != nullptr);
-	
-	const std::vector< Planet * > & Planets(CurrentSystem->GetPlanets());
-	
-	if(Planets.size() != 0)
+	if(CurrentSystem->GetPlanets().size() > 0)
 	{
-		GetMind()->GetCharacter()->GetShip()->SetTarget((*(Planets.begin() + GetRandomInteger(Planets.size() - 1))));
+		Planet * NearestLandablePlanet{nullptr};
+		auto MinimumDistance{FLT_MAX};
+		
+		for(auto Planet : CurrentSystem->GetPlanets())
+		{
+			assert(Planet != nullptr);
+			assert(Planet->GetFaction() != nullptr);
+			assert(GetMind()->GetCharacter()->GetShip()->GetFaction() != nullptr);
+			if(Planet->GetFaction()->GetStanding(GetMind()->GetCharacter()->GetShip()->GetFaction()) > 0.5f)
+			{
+				auto Distance{(Planet->GetAspectPosition()->GetPosition() - GetMind()->GetCharacter()->GetShip()->GetAspectPosition()->GetPosition()).SquaredLength()};
+				
+				if(Distance < MinimumDistance)
+				{
+					NearestLandablePlanet = Planet;
+					MinimumDistance = Distance;
+				}
+			}
+		}
+		if(NearestLandablePlanet != nullptr)
+		{
+			GetMind()->GetCharacter()->GetShip()->SetTarget(NearestLandablePlanet);
+		}
+		else
+		{
+			GetMind()->GetStateMachine()->SetState(new TransporterPhase4(GetMind()));
+			delete this;
+		}
 	}
 	else
 	{
@@ -626,27 +651,31 @@ RefuelPhase1::RefuelPhase1(StateMachineMind * Mind) :
 
 void RefuelPhase1::Enter(void)
 {
-	auto CurrentSystem(GetMind()->GetCharacter()->GetShip()->GetSystem());
+	auto CurrentSystem(GetMind()->GetCharacter()->GetSystem());
 	
 	assert(CurrentSystem != nullptr);
 	
-	const std::vector< Planet * > & Planets(CurrentSystem->GetPlanets());
+	Planet * NearestLandablePlanet(nullptr);
 	float MinimumDistance(FLT_MAX);
-	Planet * NearestPlanet(0);
 	
-	for(std::vector< Planet * >::const_iterator PlanetIterator = Planets.begin(); PlanetIterator != Planets.end(); ++PlanetIterator)
+	for(auto Planet : CurrentSystem->GetPlanets())
 	{
-		float Distance(((*PlanetIterator)->GetAspectPosition()->GetPosition() - GetMind()->GetCharacter()->GetShip()->GetAspectPosition()->GetPosition()).SquaredLength());
-		
-		if(Distance < MinimumDistance)
+		assert(Planet != nullptr);
+		assert(Planet->GetFaction() != nullptr);
+		if(Planet->GetFaction()->GetStanding(GetMind()->GetCharacter()->GetShip()->GetFaction()) >= 0.5)
 		{
-			NearestPlanet = *PlanetIterator;
-			MinimumDistance = Distance;
+			float Distance((Planet->GetAspectPosition()->GetPosition() - GetMind()->GetCharacter()->GetShip()->GetAspectPosition()->GetPosition()).SquaredLength());
+			
+			if(Distance < MinimumDistance)
+			{
+				NearestLandablePlanet = Planet;
+				MinimumDistance = Distance;
+			}
 		}
 	}
-	if(NearestPlanet != 0)
+	if(NearestLandablePlanet != nullptr)
 	{
-		GetMind()->GetCharacter()->GetShip()->SetTarget(NearestPlanet);
+		GetMind()->GetCharacter()->GetShip()->SetTarget(NearestLandablePlanet);
 	}
 	else
 	{

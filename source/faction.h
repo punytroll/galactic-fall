@@ -34,7 +34,7 @@ public:
 	virtual ~Faction(void) override;
 	// queries
 	const Graphics::ColorRGBO & GetColor(void) const;
-	float GetStanding(Faction * Faction);
+	float GetStanding(Faction * Faction) const;
 	// modifiers
 	void AddFactionStanding(Faction * Faction, float Standing);
 	void SetColor(const Graphics::ColorRGBO & Color);

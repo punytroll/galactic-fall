@@ -68,7 +68,7 @@ void Faction::AddFactionStanding(Faction * Faction, float Standing)
 	_FactionStandings.push_back(NewFactionStanding);
 }
 
-float Faction::GetStanding(Faction * Faction)
+float Faction::GetStanding(Faction * Faction) const
 {
 	// If we don't know the other faction, assume slightly above neutral to avoid conflict
 	// This default value might later be tweaked per faction in relation to how aggressive a faction is when meeting new factions.
