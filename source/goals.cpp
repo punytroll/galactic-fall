@@ -784,19 +784,20 @@ void GoalSelectEnemy::Process(void)
 {
 	assert(GetState() == Goal::ACTIVE);
 	
-	const System * CurrentSystem(dynamic_cast< System * >(GetMind()->GetCharacter()->GetShip()->GetContainer()));
+	auto CurrentSystem(dynamic_cast< System * >(GetMind()->GetCharacter()->GetSystem()));
 	
-	assert(CurrentSystem != 0);
+	assert(CurrentSystem != nullptr);
 	
-	const std::list< Ship * > & Ships(CurrentSystem->GetShips());
 	std::vector< Ship * > AttackPossibilities;
 	
-	for(std::list< Ship * >::const_iterator ShipIterator = Ships.begin(); ShipIterator != Ships.end(); ++ShipIterator)
+	for(auto Ship : CurrentSystem->GetShips())
 	{
-		assert((*ShipIterator)->GetFaction() != nullptr);
-		if((*ShipIterator != GetMind()->GetCharacter()->GetShip()) && ((*ShipIterator)->GetFaction()->GetClassIdentifier() != GetMind()->GetCharacter()->GetShip()->GetFaction()->GetClassIdentifier()))
+		assert(Ship != nullptr);
+		assert(Ship->GetFaction() != nullptr);
+		// attack everything with a below neutral standing
+		if((Ship != GetMind()->GetCharacter()->GetShip()) && (GetMind()->GetCharacter()->GetShip()->GetFaction()->GetStanding(Ship->GetFaction()) < 0.5f))
 		{
-			AttackPossibilities.push_back(*ShipIterator);
+			AttackPossibilities.push_back(Ship);
 		}
 	}
 	if(AttackPossibilities.size() > 0)

@@ -57,6 +57,7 @@
 		<string identifier="identifier"/>
 		<aspect-name identifier="aspect-name"/>
 		<color-rgbo-4f identifier="color"/>
+		<faction-standings identifier="faction-standings"/>
 	</faction>
 	
 	<faction-influence>
@@ -65,6 +66,13 @@
 	</faction-influence>
 	
 	<faction-influences is="collection" element-type="faction-influence"/>
+	
+	<faction-standing>
+		<string identifier="identifier"/>
+		<float identifier="standing"/>
+	</faction-standing>
+	
+	<faction-standings is="collection" element-type="faction-standing"/>
 	
 	<float type="21" sub-type="0"/>
 	

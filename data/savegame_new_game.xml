@@ -28,7 +28,7 @@
 		</aspect-position>
 		<aspect-visualization>
 			<part identifier="faction">
-				<style-diffuse-color red="0" green="0" blue="1" opacity="1"/>
+				<style-diffuse-color red="1" green="1" blue="1" opacity="1"/>
 				<style-shininess value="0"/>
 				<style-program-identifier value="default"/>
 			</part>
@@ -47,7 +47,7 @@
 			<maximum-forward-thrust value="10"/>
 			<maximum-speed value="12"/>
 			<maximum-turn-speed value="1"/>
-			<faction identifier="earth"/>
+			<faction identifier="neutral"/>
 			<fuel value="1"/>
 			<hull value="100"/>
 			<velocity x="0" y="0" z="0"/>

@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006  Hagen Möbius
+ * Copyright (C) 2006-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -38,42 +38,48 @@ class Visualization;
 class System : public Object
 {
 public:
-	friend class FactionInfluence;
-public:
+	// constructor and destructor
 	System(void);
 	virtual ~System(void) override;
+	// queries
 	const std::list< Commodity * > & GetCommodities(void) const;
+	const std::list< System * > GetLinkedSystems(void) const;
 	const std::vector< Planet * > & GetPlanets(void) const;
+	Faction * GetRandomFactionAccordingToInfluences(void);
 	const std::list< Ship * > & GetShips(void) const;
 	const std::list< Shot * > & GetShots(void) const;
-	const std::list< System * > GetLinkedSystems(void) const;
 	const Star * GetStar(void) const;
+	float GetTrafficDensity(void) const;
 	bool IsLinkedToSystem(const System * System) const;
+	// modifiers
 	void AddFactionInfluence(Faction * Faction, float Influence);
 	void AddLinkedSystem(System * LinkedSystem);
-	// setters
 	void SetTrafficDensity(float TrafficDensity);
-	// getters
-	float GetTrafficDensity(void) const;
-	Faction * GetRandomFactionAccordingToInfluences(void);
 private:
+	// callbacks
 	void _OnAdded(Object * Content);
 	void _OnFactionDestroying(Faction * Faction);
 	void _OnRemoved(Object * Content);
 	void _UpdateVisualization(Visualization * Visualization);
-	std::vector< FactionInfluence * > _FactionInfluences;
-	float _TrafficDensity;
-	Star * _Star;
-	std::vector< Planet * > _Planets;
-	std::list< System * > _LinkedSystems;
-	std::list< Ship * > _Ships;
+	// member variables
 	std::list< Commodity * > _Commodities;
+	std::vector< FactionInfluence * > _FactionInfluences;
+	std::list< System * > _LinkedSystems;
+	std::vector< Planet * > _Planets;
+	std::list< Ship * > _Ships;
 	std::list< Shot * > _Shots;
+	Star * _Star;
+	float _TrafficDensity;
 };
 
 inline const std::list< Commodity * > & System::GetCommodities(void) const
 {
 	return _Commodities;
+}
+
+inline const std::list< System * > System::GetLinkedSystems(void) const
+{
+	return _LinkedSystems;
 }
 
 inline const std::vector< Planet * > & System::GetPlanets(void) const
@@ -91,24 +97,19 @@ inline const std::list< Shot * > & System::GetShots(void) const
 	return _Shots;
 }
 
-inline const std::list< System * > System::GetLinkedSystems(void) const
-{
-	return _LinkedSystems;
-}
-
 inline const Star * System::GetStar(void) const
 {
 	return _Star;
 }
 
-inline void System::SetTrafficDensity(float TrafficDensity)
-{
-	_TrafficDensity = TrafficDensity;
-}
-
 inline float System::GetTrafficDensity(void) const
 {
 	return _TrafficDensity;
+}
+
+inline void System::SetTrafficDensity(float TrafficDensity)
+{
+	_TrafficDensity = TrafficDensity;
 }
 
 #endif
