@@ -27,8 +27,8 @@ Galaxy::Galaxy(void)
 	// initialize object aspects
 	AddAspectName();
 	AddAspectObjectContainer();
-	GetAspectObjectContainer()->ConnectContentAddedCallback(std::bind(&Galaxy::OnAdded, this, std::placeholders::_1));
-	GetAspectObjectContainer()->ConnectContentRemovedCallback(std::bind(&Galaxy::OnRemoved, this, std::placeholders::_1));
+	GetAspectObjectContainer()->ConnectContentAddedCallback(std::bind(&Galaxy::_OnAdded, this, std::placeholders::_1));
+	GetAspectObjectContainer()->ConnectContentRemovedCallback(std::bind(&Galaxy::_OnRemoved, this, std::placeholders::_1));
 }
 
 Faction * Galaxy::GetFaction(const std::string & Identifier)
@@ -59,7 +59,7 @@ System * Galaxy::GetSystem(const std::string & Identifier)
 	}
 }
 
-void Galaxy::OnAdded(Object * Content)
+void Galaxy::_OnAdded(Object * Content)
 {
 	assert(Content != nullptr);
 	if(Content->GetTypeIdentifier() == "system")
@@ -86,7 +86,7 @@ void Galaxy::OnAdded(Object * Content)
 	}
 }
 
-void Galaxy::OnRemoved(Object * Content)
+void Galaxy::_OnRemoved(Object * Content)
 {
 	assert(Content != nullptr);
 	if(Content->GetTypeIdentifier() == "system")

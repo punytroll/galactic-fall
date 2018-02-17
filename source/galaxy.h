@@ -39,8 +39,8 @@ public:
 	System * GetSystem(const std::string & Identifier);
 	const std::map< std::string, System * > & GetSystems(void) const;
 private:
-	void OnAdded(Object * Content);
-	void OnRemoved(Object * Content);
+	void _OnAdded(Object * Content);
+	void _OnRemoved(Object * Content);
 	std::map< std::string, System * > m_Systems;
 	std::map< std::string, Faction * > m_Factions;
 };
