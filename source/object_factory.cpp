@@ -455,7 +455,13 @@ const VisualizationPrototype * ObjectFactory::GetVisualizationPrototype(const st
 	}
 	else if(TypeIdentifier == "generator")
 	{
-		return nullptr;
+		assert(_GeneratorClassManager != nullptr);
+		
+		auto GeneratorClass(_GeneratorClassManager->Get(ClassIdentifier));
+		
+		assert(GeneratorClass != nullptr);
+		
+		return GeneratorClass->GetVisualizationPrototype();
 	}
 	else if(TypeIdentifier == "ship")
 	{

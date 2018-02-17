@@ -76,6 +76,7 @@ all_data = \
 	.data/mesh_planet.data \
 	.data/mesh_shuttle_faction.data \
 	.data/mesh_shuttle_hull.data \
+	.data/mesh_small_generator.data \
 	.data/mesh_transporter_faction.data \
 	.data/mesh_transporter_hull.data \
 	.data/model_cargo_cube.data \
@@ -86,6 +87,7 @@ all_data = \
 	.data/model_light_laser_turret.data \
 	.data/model_planet.data \
 	.data/model_shuttle.data \
+	.data/model_small_generator.data \
 	.data/model_transporter.data \
 	.data/program_default.data \
 	.data/program_flat.data \
@@ -229,6 +231,7 @@ data.arx: $(data_arx) $(arxtouch_dependencies) $(arxadd_dependencies)
 	$(command_arxadd) $@ --name="Light Laser Turret" --type=b --sub-type=0 --relation="/Models::child" --data-file=.data/model_light_laser_turret.data
 	$(command_arxadd) $@ --name="Planet" --type=b --sub-type=0 --relation="/Models::child" --data-file=.data/model_planet.data
 	$(command_arxadd) $@ --name="Shuttle" --type=b --sub-type=0 --relation="/Models::child" --data-file=.data/model_shuttle.data
+	$(command_arxadd) $@ --name="Small Generator" --type=b --sub-type=0 --relation="/Models::child" --data-file=.data/model_small_generator.data
 	$(command_arxadd) $@ --name="Transporter" --type=b --sub-type=0 --relation="/Models::child" --data-file=.data/model_transporter.data
 	@echo "\n\nAdding meshes ...\n"
 	$(command_arxadd) $@ --name="Cargo Cube" --type=2 --sub-type=0 --relation="/Meshes::child" --data-file=.data/mesh_cargo_cube.data
@@ -243,6 +246,7 @@ data.arx: $(data_arx) $(arxtouch_dependencies) $(arxadd_dependencies)
 	$(command_arxadd) $@ --name="Planet" --type=2 --sub-type=0 --relation="/Meshes::child" --data-file=.data/mesh_planet.data
 	$(command_arxadd) $@ --name="Shuttle Faction" --type=2 --sub-type=0 --relation="/Meshes::child" --data-file=.data/mesh_shuttle_faction.data
 	$(command_arxadd) $@ --name="Shuttle Hull" --type=2 --sub-type=0 --relation="/Meshes::child" --data-file=.data/mesh_shuttle_hull.data
+	$(command_arxadd) $@ --name="Small Generator" --type=2 --sub-type=0 --relation="/Meshes::child" --data-file=.data/mesh_small_generator.data
 	$(command_arxadd) $@ --name="Transporter Faction" --type=2 --sub-type=0 --relation="/Meshes::child" --data-file=.data/mesh_transporter_faction.data
 	$(command_arxadd) $@ --name="Transporter Hull" --type=2 --sub-type=0 --relation="/Meshes::child" --data-file=.data/mesh_transporter_hull.data
 	@echo "\n\nAdding textures ...\n"

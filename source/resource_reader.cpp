@@ -574,13 +574,15 @@ static void ReadGeneratorClass(Arxx::Reference & Reference, ClassManager< Genera
 	}
 	
 	std::string Name;
+	VisualizationPrototype VisualizationPrototype;
 	Arxx::u4byte SpaceRequirement;
 	float EnergyProvisionPerSecond;
 	std::string SlotClassIdentifier;
 	
-	Reader >> Name >> SpaceRequirement >> EnergyProvisionPerSecond >> SlotClassIdentifier;
+	Reader >> Name >> VisualizationPrototype >> SpaceRequirement >> EnergyProvisionPerSecond >> SlotClassIdentifier;
 	
 	NewGeneratorClass->SetName(Name);
+	NewGeneratorClass->SetVisualizationPrototype(VisualizationPrototype);
 	NewGeneratorClass->SetSpaceRequirement(SpaceRequirement);
 	NewGeneratorClass->SetEnergyProvisionPerSecond(EnergyProvisionPerSecond);
 	NewGeneratorClass->SetSlotClassIdentifier(SlotClassIdentifier);
