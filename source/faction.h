@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006  Hagen Möbius
+ * Copyright (C) 2006-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,20 +20,30 @@
 #ifndef FACTION_H
 #define FACTION_H
 
+#include <vector>
+
 #include "graphics/color_rgbo.h"
 #include "object.h"
+
+class FactionStanding;
 
 class Faction : public Object
 {
 public:
 	Faction(void);
 	virtual ~Faction(void) override;
-	// getters
+	// queries
 	const Graphics::ColorRGBO & GetColor(void) const;
-	// setters
+	float GetStanding(Faction * Faction);
+	// modifiers
+	void AddFactionStanding(Faction * Faction, float Standing);
 	void SetColor(const Graphics::ColorRGBO & Color);
 private:
+	// callbacks
+	void _OnFactionDestroying(Faction * Faction);
+	// member variables
 	Graphics::ColorRGBO _Color;
+	std::vector< FactionStanding * > _FactionStandings;
 };
 
 inline const Graphics::ColorRGBO & Faction::GetColor(void) const

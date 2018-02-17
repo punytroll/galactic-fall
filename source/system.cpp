@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006  Hagen Möbius
+ * Copyright (C) 2006-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -65,8 +65,8 @@ public:
 };
 
 System::System(void) :
-	_TrafficDensity(FLT_MAX),
-	_Star(nullptr)
+	_Star(nullptr),
+	_TrafficDensity(0.0f)
 {
 	// initialize object aspects
 	AddAspectName();

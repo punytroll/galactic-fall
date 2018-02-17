@@ -9,4 +9,18 @@
 		<blue>1.0</blue>
 		<opacity>1.0</opacity>
 	</color>
+	<faction-standings>
+		<faction-standing>
+			<identifier>neutral</identifier>
+			<standing>0.6</standing>
+		</faction-standing>
+		<faction-standing>
+			<identifier>earth</identifier>
+			<standing>0.55</standing>
+		</faction-standing>
+		<faction-standing>
+			<identifier>pirates</identifier>
+			<standing>0.0</standing>
+		</faction-standing>
+	</faction-standings>
 </faction>

@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2015  Hagen Möbius
+ * Copyright (C) 2015-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -72,7 +72,7 @@ static Arxx::Item * Resolve(Arxx::Reference & Reference);
 static void ReadAssetClass(Arxx::Reference & Reference, ClassManager< AssetClass > * AssetClassManager);
 static void ReadBatteryClass(Arxx::Reference & Reference, ClassManager< BatteryClass > * BatteryClassManager);
 static void ReadCommodityClass(Arxx::Reference & Reference, ClassManager< CommodityClass > * CommodityClassManager);
-static void ReadFaction(Arxx::Reference & Reference, Galaxy * Galaxy);
+static void ReadFaction(Arxx::Reference & Reference, Galaxy * Galaxy, std::list< std::tuple< std::string, std::string, float > > & FactionStandings);
 static void ReadGeneratorClass(Arxx::Reference & Reference, ClassManager< GeneratorClass > * GeneratorClassManager);
 static void ReadMesh(Arxx::Reference & Reference);
 static void ReadModel(Arxx::Reference & Reference);
@@ -234,7 +234,14 @@ Galaxy * ResourceReader::ReadGalaxy(const std::string & GalaxyIdentifier, ClassM
 			{
 				throw std::runtime_error("The item '" + Path + "/" + GalaxyItem->GetName() + "' does not contain a 'factions' relation.");
 			}
-			_ReadItems(GalaxyItem->GetStructure().GetRelation("factions"), std::bind(ReadFaction, std::placeholders::_1, NewGalaxy));
+			
+			std::list< std::tuple< std::string, std::string, float > > FactionStandings;
+			
+			_ReadItems(GalaxyItem->GetStructure().GetRelation("factions"), std::bind(ReadFaction, std::placeholders::_1, NewGalaxy, std::ref(FactionStandings)));
+			for(auto & FactionStanding : FactionStandings)
+			{
+				NewGalaxy->GetFaction(std::get<0>(FactionStanding))->AddFactionStanding(NewGalaxy->GetFaction(std::get<1>(FactionStanding)), std::get<2>(FactionStanding));
+			}
 			
 			std::multimap< std::string, std::string > SystemLinks;
 			
@@ -513,7 +520,7 @@ static void ReadCommodityClass(Arxx::Reference & Reference, ClassManager< Commod
 	NewCommodityClass->SetVisualizationPrototype(VisualizationPrototype);
 }
 
-static void ReadFaction(Arxx::Reference & Reference, Galaxy * Galaxy)
+static void ReadFaction(Arxx::Reference & Reference, Galaxy * Galaxy, std::list< std::tuple< std::string, std::string, float > > & FactionStandings)
 {
 	auto Item(Resolve(Reference));
 	
@@ -541,10 +548,19 @@ static void ReadFaction(Arxx::Reference & Reference, Galaxy * Galaxy)
 	
 	std::string Name;
 	Graphics::ColorRGBO FactionColor;
+	u4byte StandingsCount;
 	
-	Reader >> Name >> FactionColor;
+	Reader >> Name >> FactionColor >> StandingsCount;
 	NewFaction->GetAspectName()->SetName(Name);
 	NewFaction->SetColor(FactionColor);
+	for(auto StandingsIndex = 0ul; StandingsIndex < StandingsCount; ++StandingsIndex)
+	{
+		std::string FactionIdentifier;
+		float FactionStanding;
+		
+		Reader >> FactionIdentifier >> FactionStanding;
+		FactionStandings.push_back(std::make_tuple(Identifier, FactionIdentifier, FactionStanding));
+	}
 	Galaxy->GetAspectObjectContainer()->AddContent(NewFaction);
 }
 
