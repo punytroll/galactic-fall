@@ -17,26 +17,36 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#ifndef GOAL_MIND_H
+#define GOAL_MIND_H
+
 #include "mind.h"
-#include "state_machine.h"
 
-StateMachineMind::StateMachineMind(void) :
-	_StateMachine(new StateMachine())
+class Goal;
+
+class GoalMind : public Mind
 {
+public:
+	// constructor and destructor
+	GoalMind(void);
+	virtual ~GoalMind(void);
+	// queries
+	Goal * GetGoal(void);
+	// modifiers
+	virtual void HandleMessage(Message * Message);
+	virtual void Update(void);
+private:
+	// callbacks
+	void _OnAdded(Object * Content);
+	void _OnRemoved(Object * Content);
+	// member variables
+	Goal * _Goal;
+};
+
+inline Goal * GoalMind::GetGoal(void)
+{
+	return _Goal;
 }
 
-StateMachineMind::~StateMachineMind(void)
-{
-	delete _StateMachine;
-	_StateMachine = nullptr;
-}
-
-void StateMachineMind::HandleMessage(Message * Message)
-{
-	_StateMachine->HandleMessage(Message);
-}
-
-void StateMachineMind::Update(void)
-{
-	_StateMachine->Update();
-}
+#endif
+ 

@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006  Hagen Möbius
+ * Copyright (C) 2006-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -29,35 +29,28 @@ class Message;
  * A Mind is the aggregation of the internal state of a character.
  * The Mind is meant to be inherited by classes which implement the resulting behavior.
  **/
-
 class Mind : public Object
 {
 public:
 	void SetCharacter(Character * Character);
 	// getters
 	Character * GetCharacter(void);
-	const Character * GetCharacter(void) const;
 	// actors
 	virtual void HandleMessage(Message * Message) = 0;
 	virtual void Update(void) = 0;
 protected:
 	/// no internal state yet
-	Character * m_Character;
+	Character * _Character;
 };
 
 inline void Mind::SetCharacter(Character * Character)
 {
-	m_Character = Character;
+	_Character = Character;
 }
 
 inline Character * Mind::GetCharacter(void)
 {
-	return m_Character;
-}
-
-inline const Character * Mind::GetCharacter(void) const
-{
-	return m_Character;
+	return _Character;
 }
 
 class StateMachine;
@@ -73,35 +66,12 @@ public:
 	virtual void HandleMessage(Message * Message);
 	virtual void Update(void);
 private:
-	StateMachine * m_StateMachine;
+	StateMachine * _StateMachine;
 };
 
 inline StateMachine * StateMachineMind::GetStateMachine(void)
 {
-	return m_StateMachine;
-}
-
-class Goal;
-
-class GoalMind : public Mind
-{
-public:
-	GoalMind(void);
-	virtual ~GoalMind(void);
-	// getters
-	Goal * GetGoal(void) const;
-	// actors
-	virtual void HandleMessage(Message * Message);
-	virtual void Update(void);
-private:
-	void OnAdded(Object * Content);
-	void OnRemoved(Object * Content);
-	Goal * m_Goal;
-};
-
-inline Goal * GoalMind::GetGoal(void) const
-{
-	return m_Goal;
+	return _StateMachine;
 }
 
 #endif
