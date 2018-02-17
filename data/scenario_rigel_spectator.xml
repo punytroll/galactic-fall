@@ -1,0 +1,6 @@
+<scenario>
+	<identifier>rigel_spectator</identifier>
+	<name>Rigel Spectator</name>
+	<description>Watch the constant battle of earth forces against pirates in the Rigel system.</description>
+	<savegame from-file="savegame_rigel_spectator.xml"/>
+</scenario>

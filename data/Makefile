@@ -97,7 +97,7 @@ all_data = \
 	.data/program_widget.data \
 	.data/scenario_new_game.data \
 	.data/scenario_rich_game.data \
-	.data/scenario_sol_spectator.data \
+	.data/scenario_rigel_spectator.data \
 	.data/setting_key_binding_profile.data \
 	.data/setting_window_dimensions.data \
 	.data/ship_class_fighter.data \
@@ -251,7 +251,7 @@ data.arx: $(data_arx) $(arxtouch_dependencies) $(arxadd_dependencies)
 	@echo "\n\nAdding scenarios ...\n"
 	$(command_arxadd) $@ --name="New Game" --type=11 --sub-type=0 --relation="/Scenarios::child" --data-file=.data/scenario_new_game.data
 	$(command_arxadd) $@ --name="Rich Game" --type=11 --sub-type=0 --relation="/Scenarios::child" --data-file=.data/scenario_rich_game.data
-	$(command_arxadd) $@ --name="Sol Spectator" --type=11 --sub-type=0 --relation="/Scenarios::child" --data-file=.data/scenario_sol_spectator.data
+	$(command_arxadd) $@ --name="Rigel Spectator" --type=11 --sub-type=0 --relation="/Scenarios::child" --data-file=.data/scenario_rigel_spectator.data
 	@echo "\n\nAdding shaders ...\n"
 	$(command_arxadd) $@ --name="Default Fragment Shader" --type=13 --sub-type=1 --relation="/Shaders::child" --data-file=.data/fragment_shader_default.data
 	$(command_arxadd) $@ --name="Default Vertex Shader" --type=13 --sub-type=0 --relation="/Shaders::child" --data-file=.data/vertex_shader_default.data
@@ -338,7 +338,7 @@ meshes-all-recursive:
 
 .data/scenario_rich_game.data: savegame_rich_game.xml
 
-.data/scenario_sol_spectator.data: savegame_sol_spectator.xml
+.data/scenario_rigel_spectator.data: savegame_rigel_spectator.xml
 
 .data/vertex_shader_default.data: shaders/vertex_shader_default
 
