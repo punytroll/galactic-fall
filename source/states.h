@@ -87,24 +87,6 @@ private:
 	Vector3f m_JumpDirection;
 };
 
-class Fight : public State
-{
-public:
-	Fight(StateMachineMind * Mind);
-	virtual void Enter(void);
-	virtual void Execute(void);
-	virtual void Exit(void);
-};
-
-class ShootFarthestCargo : public State
-{
-public:
-	ShootFarthestCargo(StateMachineMind * Mind);
-	virtual void Enter(void);
-	virtual void Execute(void);
-	virtual void Exit(void);
-};
-
 class MonitorFuel : public State
 {
 public:
