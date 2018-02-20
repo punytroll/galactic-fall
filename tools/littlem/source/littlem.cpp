@@ -443,15 +443,64 @@ private:
 
 class Light;
 
-void vEnableLight(Light * pLight);
-void vDisableLight(Light * pLight);
+Light * g_HoveredLight = nullptr;
+Light * g_SelectedLight = nullptr;
 
 class Light
 {
 public:
 	Light(void) :
-		m_LightNumber(0)
+		_LightNumber(0)
 	{
+		_Lights.push_back(this);
+	}
+	
+	~Light(void)
+	{
+		if(g_HoveredLight == this)
+		{
+			g_HoveredLight = nullptr;
+		}
+		if(g_SelectedLight == this)
+		{
+			g_SelectedLight = nullptr;
+		}
+		Disable();
+		_Lights.erase(std::find(_Lights.begin(), _Lights.end(), this));
+	}
+	
+	static void InitializeFreeLights(int NumberOfLights)
+	{
+		for(int LightIndex = 0; LightIndex < NumberOfLights; ++LightIndex)
+		{
+			Light::_FreeLights.push_back(GL_LIGHT0 + LightIndex);
+		}
+	}
+	
+	void DrawLight(void)
+	{
+		Vector4f LightPosition(_Position[0], _Position[1], _Position[2], 1.0f);
+		
+		glLightfv(_LightNumber, GL_POSITION, LightPosition.GetPointer());
+	}
+	
+	void DrawPoint(void)
+	{
+	}
+	
+	const Vector4f & GetDiffuseColor(void) const
+	{
+		return _DiffuseColor;
+	}
+	
+	static const std::vector< Light * > & GetEnabledLights(void)
+	{
+		return _EnabledLights;
+	}
+	
+	static const std::vector< Light * > & GetLights(void)
+	{
+		return _Lights;
 	}
 	
 	const Vector3f & GetPosition(void) const
@@ -459,21 +508,16 @@ public:
 		return _Position;
 	}
 	
-	void vSetDiffuseColor(float Red, float Green, float Blue, float Alpha = 0.0f)
+	void SetDiffuseColor(float Red, float Green, float Blue, float Alpha = 0.0f)
 	{
-		m_DiffuseColor[0] = Red;
-		m_DiffuseColor[1] = Green;
-		m_DiffuseColor[2] = Blue;
-		m_DiffuseColor[3] = Alpha;
-		if(m_LightNumber != 0)
+		_DiffuseColor[0] = Red;
+		_DiffuseColor[1] = Green;
+		_DiffuseColor[2] = Blue;
+		_DiffuseColor[3] = Alpha;
+		if(_LightNumber != 0)
 		{
-			vSetDiffuseColor();
+			glLightfv(_LightNumber, GL_DIFFUSE, _DiffuseColor.GetPointer());
 		}
-	}
-	
-	void vSetDiffuseColor(void)
-	{
-		glLightfv(m_LightNumber, GL_DIFFUSE, m_DiffuseColor.GetPointer());
 	}
 	
 	void SetPosition(const Vector3f & Position)
@@ -481,31 +525,60 @@ public:
 		_Position = Position;
 	}
 	
-	bool bIsEnabled(void) const
+	bool IsEnabled(void) const
 	{
-		return m_LightNumber != 0;
+		return _LightNumber != 0;
 	}
 	
-	void vEnable(void)
+	void Enable(void)
 	{
-		if(bIsEnabled() == false)
+		if(IsEnabled() == false)
 		{
-			vEnableLight(this);
+			if(_FreeLights.size() > 0)
+			{
+				auto LightNumber{_FreeLights.front()};
+				
+				_FreeLights.pop_front();
+				_EnabledLights.push_back(this);
+				_LightNumber = LightNumber;
+				glEnable(_LightNumber);
+				glLightfv(_LightNumber, GL_DIFFUSE, _DiffuseColor.GetPointer());
+			}
 		}
 	}
 	
-	void vDisable(void)
+	void Disable(void)
 	{
-		if(bIsEnabled() == true)
+		if(IsEnabled() == true)
 		{
-			vDisableLight(this);
+			auto EnabledLightIterator(std::find(_EnabledLights.begin(), _EnabledLights.end(), this));
+			
+			_EnabledLights.erase(EnabledLightIterator);
+			glDisable(_LightNumber);
+			_FreeLights.push_back(_LightNumber);
+			_LightNumber = 0;
 		}
 	}
 	
-	Vector4f m_DiffuseColor;
-	GLenum m_LightNumber;
+	static void DeleteLights(void)
+	{
+		while(_Lights.size() > 0)
+		{
+			delete _Lights.back();
+		}
+	}
+private:
+	static std::deque< int > _FreeLights;
+	static std::vector< Light * > _Lights;
+	static std::vector< Light * > _EnabledLights;
+	Vector4f _DiffuseColor;
+	GLenum _LightNumber;
 	Vector3f _Position;
 };
+
+std::deque< int > Light::_FreeLights;
+std::vector< Light * > Light::_Lights;
+std::vector< Light * > Light::_EnabledLights;
 
 class Camera
 {
@@ -568,32 +641,32 @@ public:
 	
 	void MoveBackward(float Amount)
 	{
-                _Position.Translate(Vector3f::CreateTranslationZ(Amount).Rotate(_Orientation));
+		_Position.Translate(Vector3f::CreateTranslationZ(Amount).Rotate(_Orientation));
 	}
 	
 	void MoveDown(float Amount)
 	{
-                _Position.Translate(Vector3f::CreateTranslationY(-Amount).Rotate(_Orientation));
+		_Position.Translate(Vector3f::CreateTranslationY(-Amount).Rotate(_Orientation));
 	}
 	
 	void MoveForward(float Amount)
 	{
-                _Position.Translate(Vector3f::CreateTranslationZ(-Amount).Rotate(_Orientation));
+		_Position.Translate(Vector3f::CreateTranslationZ(-Amount).Rotate(_Orientation));
 	}
 	
 	void MoveLeft(float Amount)
 	{
-                _Position.Translate(Vector3f::CreateTranslationX(-Amount).Rotate(_Orientation));
+		_Position.Translate(Vector3f::CreateTranslationX(-Amount).Rotate(_Orientation));
 	}
 	
 	void MoveRight(float Amount)
 	{
-                _Position.Translate(Vector3f::CreateTranslationX(Amount).Rotate(_Orientation));
+		_Position.Translate(Vector3f::CreateTranslationX(Amount).Rotate(_Orientation));
 	}
 	
 	void MoveUp(float Amount)
 	{
-                _Position.Translate(Vector3f::CreateTranslationY(Amount).Rotate(_Orientation));
+		_Position.Translate(Vector3f::CreateTranslationY(Amount).Rotate(_Orientation));
 	}
 	
 	void SetFieldOfViewY(float FieldOfViewY)
@@ -684,8 +757,8 @@ public:
 	
 	LightDescription(Light * pLight) :
 		m_Position(pLight->GetPosition()),
-		m_DiffuseColor(pLight->m_DiffuseColor),
-		m_bEnabled(pLight->bIsEnabled())
+		m_DiffuseColor(pLight->GetDiffuseColor()),
+		m_bEnabled(pLight->IsEnabled())
 	{
 	}
 	
@@ -774,10 +847,6 @@ std::vector< Point * > g_SelectedPoints;
 std::vector< Triangle * > g_SelectedTriangles;
 Point * g_HoveredPoint = 0;
 Triangle * g_HoveredTriangle = 0;
-Light * g_HoveredLight = 0;
-Light * g_SelectedLight = 0;
-std::vector< Light * > g_Lights;
-std::vector< Light * > g_EnabledLights;
 std::vector< Camera * > g_Cameras;
 Camera * g_HoveredCamera = 0;
 Camera * g_SelectedCamera = 0;
@@ -788,7 +857,6 @@ GLuint g_puiSelectionBuffer[1024];
 bool g_Snapping = false;
 float g_SnapFactor = 0.1;
 MouseButton g_MouseButton(MouseButton::Undefined);
-std::deque< int > g_FreeLights;
 Vector2f g_MousePosition;
 Vector2f g_LastMousePosition;
 
@@ -1003,7 +1071,7 @@ void vStopPicking(void)
 			}
 		case LITTLEM_LIGHT:
 			{
-				g_HoveredLight = g_Lights[uiNearestObject];
+				g_HoveredLight = Light::GetLights()[uiNearestObject];
 				
 				break;
 			}
@@ -1037,30 +1105,6 @@ void vDrawTextAt(GLfloat fPositionX, GLfloat fPositionY, const std::string & sSt
 	glPopMatrix();
 }
 
-void vEnableLight(Light * pLight)
-{
-	if(g_FreeLights.size() > 0)
-	{
-		int iLightNumber(g_FreeLights.front());
-		
-		g_FreeLights.pop_front();
-		g_EnabledLights.push_back(pLight);
-		pLight->m_LightNumber = GL_LIGHT0 + iLightNumber;
-		glEnable(pLight->m_LightNumber);
-		pLight->vSetDiffuseColor();
-	}
-}
-
-void vDisableLight(Light * pLight)
-{
-	std::vector< Light * >::iterator iLight(std::find(g_EnabledLights.begin(), g_EnabledLights.end(), pLight));
-	
-	g_EnabledLights.erase(iLight);
-	glDisable(pLight->m_LightNumber);
-	g_FreeLights.push_back(pLight->m_LightNumber - GL_LIGHT0);
-	pLight->m_LightNumber = 0;
-}
-
 void vDisplayTexts(void)
 {
 	glMatrixMode(GL_PROJECTION);
@@ -1073,7 +1117,7 @@ void vDisplayTexts(void)
 	glScalef(1.0f, -1.0f, 1.0f);
 	glTranslatef(0.0f, -g_Height, 0.0f);
 	glColor3f(0.4f, 1.0f, 0.4f);
-	vDrawTextAt(0.0f, 0.0f, "#Points: " + to_string_cast(g_Points.size()) + "   #TrianglePoints: " + to_string_cast(g_TrianglePoints.size()) + "   #Triangles: " + to_string_cast(g_Triangles.size()) + "   #Cameras: " + to_string_cast(g_Cameras.size()) + "   #Lights: " + to_string_cast(g_Lights.size()));
+	vDrawTextAt(0.0f, 0.0f, "#Points: " + to_string_cast(g_Points.size()) + "   #TrianglePoints: " + to_string_cast(g_TrianglePoints.size()) + "   #Triangles: " + to_string_cast(g_Triangles.size()) + "   #Cameras: " + to_string_cast(g_Cameras.size()) + "   #Lights: " + to_string_cast(Light::GetLights().size()));
 	vDrawTextAt(0.0f, 12.0f, "#Selected Points: " + to_string_cast(g_SelectedPoints.size()) + "   #Selected Triangles: " + to_string_cast(g_SelectedTriangles.size()));
 	glColor3f(1.0f, 0.4f, 0.4f);
 	if(g_SelectedPoints.size() > 0)
@@ -1173,11 +1217,11 @@ void vPerformPicking(void)
 	glLoadName(LITTLEM_LIGHT);
 	// dummy entry so that we can call glLoadName in the loop below: it will be replace immediately
 	glPushName(0xFFFFFFFF);
-	for(std::vector< Light * >::size_type stLight = 0; stLight < g_Lights.size(); ++stLight)
+	for(std::vector< Light * >::size_type stLight = 0; stLight < Light::GetLights().size(); ++stLight)
 	{
 		glLoadName(stLight);
 		glBegin(GL_POINTS);
-		glVertex3fv(g_Lights[stLight]->GetPosition().GetPointer());
+		glVertex3fv(Light::GetLights()[stLight]->GetPosition().GetPointer());
 		glEnd();
 	}
 	glPopName();
@@ -1203,14 +1247,12 @@ void vPerformPicking(void)
  **/
 void vDisplayModel(void)
 {
-	assert(g_CurrentCamera != 0);
+	assert(g_CurrentCamera != nullptr);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadMatrixf(g_CurrentCamera->GetSpacialMatrix().Inverted().GetPointer());
-	for(std::vector< Light * >::size_type stLight = 0; stLight < g_EnabledLights.size(); ++stLight)
+	for(auto EnabledLight : Light::GetEnabledLights())
 	{
-		Vector4f LightPosition(g_EnabledLights[stLight]->GetPosition()[0], g_EnabledLights[stLight]->GetPosition()[1], g_EnabledLights[stLight]->GetPosition()[2], 1.0f);
-		
-		glLightfv(g_EnabledLights[stLight]->m_LightNumber, GL_POSITION, LightPosition.GetPointer());
+		EnabledLight->DrawLight();
 	}
 	glBegin(GL_TRIANGLES);
 	glColor3f(0.3f, 0.3f, 0.5f);
@@ -1242,9 +1284,9 @@ void vDisplayModel(void)
 	// draw all lights with deactivated lighting
 	glColor3f(1.0f, 1.0f, 0.0f);
 	glBegin(GL_POINTS);
-	for(std::vector< Light * >::size_type stLight = 0; stLight < g_Lights.size(); ++stLight)
+	for(auto Light : Light::GetLights())
 	{
-		glVertex3fv(g_Lights[stLight]->GetPosition().GetPointer());
+		Light->DrawPoint();
 	}
 	glEnd();
 	// draw all cameras with deactivated lighting
@@ -1622,30 +1664,6 @@ void DeleteCamera(Camera * Camera)
 	DeleteCamera(std::find(g_Cameras.begin(), g_Cameras.end(), Camera));
 }
 
-void vDeleteLight(std::vector< Light * >::iterator iLight)
-{
-	assert(iLight != g_Lights.end());
-	
-	Light * pLight(*iLight);
-	
-	if(pLight == g_HoveredLight)
-	{
-		g_HoveredLight = 0;
-	}
-	if(pLight == g_SelectedLight)
-	{
-		g_SelectedLight = 0;
-	}
-	pLight->vDisable();
-	g_Lights.erase(iLight);
-}
-
-void vDeleteLight(Light * pLight)
-{
-	assert(pLight != 0);
-	vDeleteLight(std::find(g_Lights.begin(), g_Lights.end(), pLight));
-}
-
 void DeletePoint(std::vector< Point * >::iterator PointIterator)
 {
 	assert(PointIterator != g_Points.end());
@@ -1691,10 +1709,7 @@ void vDeletePoint(Point * pPoint)
 
 void vClearScene(void)
 {
-	while(g_Lights.size() > 0)
-	{
-		vDeleteLight(g_Lights.begin());
-	}
+	Light::DeleteLights();
 	while(g_Triangles.size() > 0)
 	{
 		vDeleteTriangle(g_Triangles.begin());
@@ -2632,12 +2647,11 @@ bool AcceptKeyInModelView(int KeyCode, bool IsDown)
 						auto NewLight(new Light());
 						
 						NewLight->SetPosition(LightDescription.m_Position);
-						NewLight->vSetDiffuseColor(LightDescription.m_DiffuseColor[0], LightDescription.m_DiffuseColor[1], LightDescription.m_DiffuseColor[2], LightDescription.m_DiffuseColor[3]);
+						NewLight->SetDiffuseColor(LightDescription.m_DiffuseColor[0], LightDescription.m_DiffuseColor[1], LightDescription.m_DiffuseColor[2], LightDescription.m_DiffuseColor[3]);
 						if(LightDescription.m_bEnabled == true)
 						{
-							NewLight->vEnable();
+							NewLight->Enable();
 						}
-						g_Lights.push_back(NewLight);
 					}
 					for(auto & CameraDescription : SceneReader.GetCameraDescriptions())
 					{
@@ -2661,9 +2675,9 @@ bool AcceptKeyInModelView(int KeyCode, bool IsDown)
 				{
 					auto NewLight(new Light());
 					
-					g_Lights.push_back(NewLight);
 					NewLight->SetPosition(Vector3f::CreateZero());
-					NewLight->vSetDiffuseColor(1.0f, 1.0f, 1.0f);
+					NewLight->SetDiffuseColor(1.0f, 1.0f, 1.0f);
+					NewLight->Enable();
 				}
 			}
 			
@@ -2706,7 +2720,7 @@ bool AcceptKeyInModelView(int KeyCode, bool IsDown)
 					XMLStream XMLStream(OutputFileStream);
 					
 					XMLStream << element << "scene" << mesh;
-					for(auto Light : g_Lights)
+					for(auto Light : Light::GetLights())
 					{
 						XMLStream << light(Light) << end;
 					}
@@ -2732,15 +2746,15 @@ bool AcceptKeyInModelView(int KeyCode, bool IsDown)
 		{
 			if(IsDown == true)
 			{
-				if(g_SelectedLight != 0)
+				if(g_SelectedLight != nullptr)
 				{
-					if(g_SelectedLight->bIsEnabled() == true)
+					if(g_SelectedLight->IsEnabled() == true)
 					{
-						g_SelectedLight->vDisable();
+						g_SelectedLight->Disable();
 					}
 					else
 					{
-						g_SelectedLight->vEnable();
+						g_SelectedLight->Enable();
 					}
 				}
 			}
@@ -2760,9 +2774,9 @@ bool AcceptKeyInModelView(int KeyCode, bool IsDown)
 		{
 			if(IsDown == false)
 			{
-				if(g_SelectedLight != 0)
+				if(g_SelectedLight != nullptr)
 				{
-					vDeleteLight(g_SelectedLight);
+					delete g_SelectedLight;
 				}
 			}
 			
@@ -3105,6 +3119,37 @@ bool AcceptKeyInModelView(int KeyCode, bool IsDown)
 			}
 			
 			break;
+		}
+	case 96: // F12
+		{
+			if(IsDown == false)
+			{
+				Light::DeleteLights();
+				
+				auto NewLight1(new Light());
+				
+				NewLight1->SetPosition(Vector3f::CreateFromComponents(6.0f, 12.0f, 12.0f));
+				NewLight1->SetDiffuseColor(1.0f, 1.0f, 1.0f);
+				NewLight1->Enable();
+				
+				auto NewLight2(new Light());
+				
+				NewLight2->SetPosition(Vector3f::CreateFromComponents(-12.0f, 6.0f, -12.0f));
+				NewLight2->SetDiffuseColor(1.0f, 1.0f, 1.0f);
+				NewLight2->Enable();
+				
+				auto NewLight3(new Light());
+				
+				NewLight3->SetPosition(Vector3f::CreateFromComponents(-12.0f, -12.0f, 6.0f));
+				NewLight3->SetDiffuseColor(1.0f, 1.0f, 1.0f);
+				NewLight3->Enable();
+				
+				auto NewLight4(new Light());
+				
+				NewLight4->SetPosition(Vector3f::CreateFromComponents(6.0f, -12.0f, -12.0f));
+				NewLight4->SetDiffuseColor(1.0f, 1.0f, 1.0f);
+				NewLight4->Enable();
+			}
 		}
 	default:
 		{
@@ -3589,18 +3634,14 @@ void InitializeOpenGL(void)
 	GLint iNumberOfLights(0);
 	
 	glGetIntegerv(GL_MAX_LIGHTS, &iNumberOfLights);
-	for(int iLight = 0; iLight < iNumberOfLights; ++iLight)
-	{
-		g_FreeLights.push_back(iLight);
-	}
+	Light::InitializeFreeLights(iNumberOfLights);
 	glEnable(GL_LIGHTING);
 	
-	Light * pLight(new Light());
+	auto NewLight(new Light());
 	
-	g_Lights.push_back(pLight);
-	pLight->SetPosition(Vector3f::CreateTranslationZ(4.0f));
-	pLight->vSetDiffuseColor(1.0f, 1.0f, 1.0f);
-	pLight->vEnable();
+	NewLight->SetPosition(Vector3f::CreateTranslationZ(4.0f));
+	NewLight->SetDiffuseColor(1.0f, 1.0f, 1.0f);
+	NewLight->Enable();
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	
 	Camera * pCamera(new Camera());
