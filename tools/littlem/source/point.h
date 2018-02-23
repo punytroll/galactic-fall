@@ -5,6 +5,7 @@
 
 #include <algebra/vector3f.h>
 
+class Triangle;
 class TrianglePoint;
 
 class Point
@@ -17,15 +18,17 @@ public:
 	
 	const std::vector< TrianglePoint * > & GetTrianglePoints(void) const
 	{
-		return m_TrianglePoints;
+		return _TrianglePoints;
 	}
+	
+	std::vector< Triangle * > GetTriangles(void) const;
 	
 	void SetPosition(const Vector3f & Position)
 	{
 		_Position = Position;
 	}
 	
-	std::vector< TrianglePoint * > m_TrianglePoints;
+	std::vector< TrianglePoint * > _TrianglePoints;
 private:
 	Vector3f _Position;
 };

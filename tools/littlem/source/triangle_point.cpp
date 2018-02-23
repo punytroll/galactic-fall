@@ -19,7 +19,7 @@ TrianglePoint::~TrianglePoint(void)
 	g_TrianglePoints.erase(std::find(g_TrianglePoints.begin(), g_TrianglePoints.end(), this));
 	if(_Point != nullptr)
 	{
-		_Point->m_TrianglePoints.erase(std::find(_Point->m_TrianglePoints.begin(), _Point->m_TrianglePoints.end(), this));
+		_Point->_TrianglePoints.erase(std::find(_Point->_TrianglePoints.begin(), _Point->_TrianglePoints.end(), this));
 	}
 }
 
@@ -47,6 +47,6 @@ void TrianglePoint::SetPoint(Point * Point)
 	else
 	{
 		_Point = Point;
-		_Point->m_TrianglePoints.push_back(this);
+		_Point->_TrianglePoints.push_back(this);
 	}
 }
