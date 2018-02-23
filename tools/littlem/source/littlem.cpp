@@ -2683,7 +2683,6 @@ bool AcceptKeyInModelView(int KeyCode, bool IsDown)
 					std::vector< Triangle * > Triangles(SceneReader.GetTriangles());
 					
 					copy(Points.begin(), Points.end(), back_inserter(g_Points));
-					copy(TrianglePoints.begin(), TrianglePoints.end(), back_inserter(g_TrianglePoints));
 					copy(Triangles.begin(), Triangles.end(), back_inserter(g_Triangles));
 					for(auto & LightDescription : SceneReader.GetLightDescriptions())
 					{
