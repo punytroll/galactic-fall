@@ -1980,16 +1980,18 @@ bool AcceptKeyInPointView(int KeyCode, bool IsDown)
 				if(g_SelectedPoints.size() > 0)
 				{
 					bKeyAccepted = true;
+					std::vector< Point * > NewSelectedPoints;
+					
+					for(auto SelectedPoint : g_SelectedPoints)
+					{
+						auto NewPoint{new Point{}};
+						
+						NewPoint->SetPosition(SelectedPoint->GetPosition());
+						g_Points.push_back(NewPoint);
+						NewSelectedPoints.push_back(NewPoint);
+					}
+					g_SelectedPoints = NewSelectedPoints;
 				}
-				
-				std::vector< Point * > NewSelectedPoints;
-				
-				for(std::vector< Point * >::size_type stI = 0; stI < g_SelectedPoints.size(); ++stI)
-				{
-					g_Points.push_back(new Point(*g_SelectedPoints[stI]));
-					NewSelectedPoints.push_back(g_Points.back());
-				}
-				g_SelectedPoints = NewSelectedPoints;
 			}
 			
 			break;
