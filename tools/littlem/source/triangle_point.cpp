@@ -6,17 +6,13 @@
 #include "point.h"
 #include "triangle_point.h"
 
-extern std::vector< TrianglePoint * > g_TrianglePoints;
-
 TrianglePoint::TrianglePoint(void) :
 	_Point(nullptr)
 {
-	g_TrianglePoints.push_back(this);
 }
 
 TrianglePoint::~TrianglePoint(void)
 {
-	g_TrianglePoints.erase(std::find(g_TrianglePoints.begin(), g_TrianglePoints.end(), this));
 	if(_Point != nullptr)
 	{
 		_Point->_TrianglePoints.erase(std::find(_Point->_TrianglePoints.begin(), _Point->_TrianglePoints.end(), this));
