@@ -274,8 +274,8 @@ public:
 	MeshReader(std::istream & InputStream) :
 		XMLParser(InputStream),
 		_InMesh(false),
-		_CurrentTrianglePoint(0),
-		_CurrentTriangle(0),
+		_CurrentTrianglePoint(nullptr),
+		_CurrentTriangle(nullptr),
 		_TrianglePoint(0)
 	{
 	}
@@ -354,6 +354,9 @@ public:
 		{
 			assert(_InMesh == true);
 			_InMesh = false;
+			std::cout << "Read " << _Points.size() << " points from mesh." << std::endl;
+			std::cout << "Read " << _TrianglePoints.size() << " triangle points from mesh." << std::endl;
+			std::cout << "Read " << _Triangles.size() << " triangles from mesh." << std::endl;
 		}
 		else if(ElementName == "triangle")
 		{
@@ -389,20 +392,6 @@ public:
 		{
 			Result.push_back(Triangle->second);
 			++Triangle;
-		}
-		
-		return Result;
-	}
-	
-	std::vector< TrianglePoint * > GetTrianglePoints(void)
-	{
-		std::vector< TrianglePoint * > Result;
-		std::map< unsigned long, TrianglePoint * >::iterator TrianglePoint(_TrianglePoints.begin());
-		
-		while(TrianglePoint != _TrianglePoints.end())
-		{
-			Result.push_back(TrianglePoint->second);
-			++TrianglePoint;
 		}
 		
 		return Result;
@@ -842,7 +831,6 @@ GLXContext g_GLXContext;
 Window g_Window;
 Colormap g_ColorMap;
 std::vector< Point * > g_Points;
-std::vector< TrianglePoint * > g_TrianglePoints;
 std::vector< Triangle * > g_Triangles;
 std::vector< Point * > g_SelectedPoints;
 std::vector< Triangle * > g_SelectedTriangles;
@@ -1118,7 +1106,7 @@ void vDisplayTexts(void)
 	glScalef(1.0f, -1.0f, 1.0f);
 	glTranslatef(0.0f, -g_Height, 0.0f);
 	glColor3f(0.4f, 1.0f, 0.4f);
-	vDrawTextAt(0.0f, 0.0f, "#Points: " + to_string_cast(g_Points.size()) + "   #TrianglePoints: " + to_string_cast(g_TrianglePoints.size()) + "   #Triangles: " + to_string_cast(g_Triangles.size()) + "   #Cameras: " + to_string_cast(g_Cameras.size()) + "   #Lights: " + to_string_cast(Light::GetLights().size()));
+	vDrawTextAt(0.0f, 0.0f, "#Points: " + to_string_cast(g_Points.size()) + "   #Triangles: " + to_string_cast(g_Triangles.size()) + "   #Cameras: " + to_string_cast(g_Cameras.size()) + "   #Lights: " + to_string_cast(Light::GetLights().size()));
 	vDrawTextAt(0.0f, 12.0f, "#Selected Points: " + to_string_cast(g_SelectedPoints.size()) + "   #Selected Triangles: " + to_string_cast(g_SelectedTriangles.size()));
 	glColor3f(1.0f, 0.4f, 0.4f);
 	if(g_SelectedPoints.size() > 0)
@@ -2535,17 +2523,22 @@ XMLStream & mesh(XMLStream & XMLStream)
 		PointMap[Point] = PointIdentifier;
 		++PointIdentifier;
 	}
+	std::cout << "Written " << PointIdentifier << " points to the stream." << std::endl;
 	
 	unsigned long TrianglePointIdentifier(0);
 	
-	for(auto TrianglePoint : g_TrianglePoints)
+	for(auto Point : g_Points)
 	{
-		XMLStream << element << "triangle-point" << attribute << "identifier" << value << TrianglePointIdentifier << attribute << "normal-x" << value << TrianglePoint->_Normal[0] << attribute << "normal-y" << value << TrianglePoint->_Normal[1] << attribute << "normal-z" << value << TrianglePoint->_Normal[2];
-		XMLStream << element << "point" << attribute << "point-identifier" << value << PointMap[TrianglePoint->GetPoint()] << end;
-		XMLStream << end;
-		TrianglePointMap[TrianglePoint] = TrianglePointIdentifier;
-		++TrianglePointIdentifier;
+		for(auto TrianglePoint : Point->GetTrianglePoints())
+		{
+			XMLStream << element << "triangle-point" << attribute << "identifier" << value << TrianglePointIdentifier << attribute << "normal-x" << value << TrianglePoint->_Normal[0] << attribute << "normal-y" << value << TrianglePoint->_Normal[1] << attribute << "normal-z" << value << TrianglePoint->_Normal[2];
+			XMLStream << element << "point" << attribute << "point-identifier" << value << PointMap[TrianglePoint->GetPoint()] << end;
+			XMLStream << end;
+			TrianglePointMap[TrianglePoint] = TrianglePointIdentifier;
+			++TrianglePointIdentifier;
+		}
 	}
+	std::cout << "Written " << TrianglePointIdentifier << " triangle points to the stream." << std::endl;
 	
 	unsigned long TriangleIdentifier(0);
 	
@@ -2558,6 +2551,7 @@ XMLStream & mesh(XMLStream & XMLStream)
 		XMLStream << end;
 		++TriangleIdentifier;
 	}
+	std::cout << "Written " << TriangleIdentifier << " triangles to the stream." << std::endl;
 	XMLStream << end;
 	
 	return XMLStream;
@@ -2573,19 +2567,10 @@ void ImportMesh(const std::string & FilePath)
 	MeshReader.Parse();
 	
 	std::vector< Point * > Points(MeshReader.GetPoints());
-	std::vector< TrianglePoint * > TrianglePoints(MeshReader.GetTrianglePoints());
 	std::vector< Triangle * > Triangles(MeshReader.GetTriangles());
 	
 	copy(Points.begin(), Points.end(), back_inserter(g_Points));
 	copy(Triangles.begin(), Triangles.end(), back_inserter(g_Triangles));
-	for(auto TrianglePoint : TrianglePoints)
-	{
-		if(TrianglePoint->GetTriangles().size() == 0)
-		{
-			std::cout << "Removing corrupt triangle point." << std::endl;
-			delete TrianglePoint;
-		}
-	}
 }
 
 bool AcceptKeyInModelView(int KeyCode, bool IsDown)
@@ -2679,7 +2664,6 @@ bool AcceptKeyInModelView(int KeyCode, bool IsDown)
 					SceneReader.Parse();
 					
 					std::vector< Point * > Points(SceneReader.GetPoints());
-					std::vector< TrianglePoint * > TrianglePoints(SceneReader.GetTrianglePoints());
 					std::vector< Triangle * > Triangles(SceneReader.GetTriangles());
 					
 					copy(Points.begin(), Points.end(), back_inserter(g_Points));
@@ -3181,25 +3165,25 @@ bool AcceptKeyInModelView(int KeyCode, bool IsDown)
 				auto NewLight1(new Light());
 				
 				NewLight1->SetPosition(Vector3f::CreateFromComponents(6.0f, 12.0f, 12.0f));
-				NewLight1->SetDiffuseColor(1.0f, 1.0f, 1.0f);
+				NewLight1->SetDiffuseColor(0.5f, 0.5f, 0.7f);
 				NewLight1->Enable();
 				
 				auto NewLight2(new Light());
 				
 				NewLight2->SetPosition(Vector3f::CreateFromComponents(-12.0f, 6.0f, -12.0f));
-				NewLight2->SetDiffuseColor(1.0f, 1.0f, 1.0f);
+				NewLight2->SetDiffuseColor(0.5f, 0.7f, 0.5f);
 				NewLight2->Enable();
 				
 				auto NewLight3(new Light());
 				
 				NewLight3->SetPosition(Vector3f::CreateFromComponents(-12.0f, -12.0f, 6.0f));
-				NewLight3->SetDiffuseColor(1.0f, 1.0f, 1.0f);
+				NewLight3->SetDiffuseColor(0.7f, 0.5f, 0.5f);
 				NewLight3->Enable();
 				
 				auto NewLight4(new Light());
 				
 				NewLight4->SetPosition(Vector3f::CreateFromComponents(6.0f, -12.0f, -12.0f));
-				NewLight4->SetDiffuseColor(1.0f, 1.0f, 1.0f);
+				NewLight4->SetDiffuseColor(0.4f, 0.65f, 0.65f);
 				NewLight4->Enable();
 			}
 		}
