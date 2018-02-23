@@ -262,6 +262,7 @@ ModelerView g_ModelerView;
 float g_Width(800.0f);
 float g_Height(800.0f);
 Keyboard g_Keyboard;
+bool g_CullPoints(false);
 
 #include "point.h"
 #include "triangle.h"
@@ -1124,7 +1125,7 @@ void vDisplayTexts(void)
 	{
 		std::stringstream ssPointInformationText;
 		
-		ssPointInformationText << "Point:  X: " << g_SelectedPoints.front()->GetPosition()[0] << "   Y: " << g_SelectedPoints.front()->GetPosition()[1] << "   Z: " << g_SelectedPoints.front()->GetPosition()[2] << "   #TrianglePoints: " << g_SelectedPoints.front()->m_TrianglePoints.size();
+		ssPointInformationText << "Point:  X: " << g_SelectedPoints.front()->GetPosition()[0] << "   Y: " << g_SelectedPoints.front()->GetPosition()[1] << "   Z: " << g_SelectedPoints.front()->GetPosition()[2] << "   #TrianglePoints: " << g_SelectedPoints.front()->GetTrianglePoints().size();
 		vDrawTextAt(0.0f, 24.0f, ssPointInformationText.str());
 	}
 	if(g_SelectedCamera != nullptr)
@@ -1136,6 +1137,14 @@ void vDisplayTexts(void)
 	}
 	glColor3f(1.0f, 1.0f, 1.0f);
 	vDrawTextAt(0.0f, 48.0f, "View: " + GetModelerViewString(g_ModelerView));
+	if(g_CullPoints == true)
+	{
+		vDrawTextAt(0.0f, g_Height - 72.0f, "Culling points: on");
+	}
+	else
+	{
+		vDrawTextAt(0.0f, g_Height - 72.0f, "Culling points: off");
+	}
 	if(glIsEnabled(GL_CULL_FACE) == GL_TRUE)
 	{
 		vDrawTextAt(0.0f, g_Height - 60.0f, "Culling faces: on");
@@ -1180,6 +1189,34 @@ void vDisplayTexts(void)
 	glPopMatrix();
 }
 
+bool IsPointDrawable(Point * Point, Camera * Camera)
+{
+	auto Result{true};
+	
+	if(g_CullPoints == true)
+	{
+		auto Triangles{Point->GetTriangles()};
+		
+		if(Triangles.size() > 0)
+		{
+			auto CameraToPoint{Point->GetPosition() - Camera->GetPosition()};
+			
+			Result = false;
+			for(auto Triangle : Point->GetTriangles())
+			{
+				if(Triangle->GetTriangleNormal().Dot(CameraToPoint) < 0.0f)
+				{
+					Result = true;
+					
+					break;
+				}
+			}
+		}
+	}
+	
+	return Result;
+}
+
 /**
  * @brief Performs the picking of model elements.
  * 
@@ -1208,10 +1245,13 @@ void vPerformPicking(void)
 	glPushName(0xFFFFFFFF);
 	for(std::vector< Point * >::size_type stI = 0; stI < g_Points.size(); ++stI)
 	{
-		glLoadName(stI);
-		glBegin(GL_POINTS);
-		glVertex3fv(g_Points[stI]->GetPosition().GetPointer());
-		glEnd();
+		if(IsPointDrawable(g_Points[stI], g_CurrentCamera) == true)
+		{
+			glLoadName(stI);
+			glBegin(GL_POINTS);
+			glVertex3fv(g_Points[stI]->GetPosition().GetPointer());
+			glEnd();
+		}
 	}
 	glPopName();
 	glLoadName(LITTLEM_LIGHT);
@@ -1276,9 +1316,12 @@ void vDisplayModel(void)
 	// draw all points with deactivated lighting
 	glColor3f(1.0f, 1.0f, 1.0f);
 	glBegin(GL_POINTS);
-	for(std::vector< Point * >::size_type stI = 0; stI < g_Points.size(); ++stI)
+	for(auto Point : g_Points)
 	{
-		glVertex3fv(g_Points[stI]->GetPosition().GetPointer());
+		if(IsPointDrawable(Point, g_CurrentCamera) == true)
+		{
+			glVertex3fv(Point->GetPosition().GetPointer());
+		}
 	}
 	glEnd();
 	// draw all lights with deactivated lighting
@@ -1292,9 +1335,9 @@ void vDisplayModel(void)
 	// draw all cameras with deactivated lighting
 	glColor3f(0.0f, 1.0f, 0.0f);
 	glBegin(GL_POINTS);
-	for(std::vector< Camera * >::size_type stCamera = 0; stCamera < g_Cameras.size(); ++stCamera)
+	for(auto Camera : g_Cameras)
 	{
-		glVertex3fv(g_Cameras[stCamera]->GetPosition().GetPointer());
+		glVertex3fv(Camera->GetPosition().GetPointer());
 	}
 	glEnd();
 	// now draw selected stuff
@@ -1535,7 +1578,7 @@ void vDisplayModel(void)
 		glEnd();
 		glPopMatrix();
 	}
-	else if(g_HoveredLight != 0)
+	else if(g_HoveredLight != nullptr)
 	{
 		glColor3f(1.0f, 0.5f, 0.5f);
 		glBegin(GL_POINTS);
@@ -1570,7 +1613,7 @@ void vDisplayModel(void)
 
 void vDisplayModelView(void)
 {
-	if(g_CurrentCamera != 0)
+	if(g_CurrentCamera != nullptr)
 	{
 		vPerformPicking();
 		vDisplayModel();
@@ -1579,16 +1622,16 @@ void vDisplayModelView(void)
 
 void vDisplayUserInterface(void)
 {
-	GLboolean bLighting = glIsEnabled(GL_LIGHTING);
+	auto Lighting{glIsEnabled(GL_LIGHTING)};
 	
-	if(bLighting == GL_TRUE)
+	if(Lighting == GL_TRUE)
 	{
 		glDisable(GL_LIGHTING);
 	}
 	glDisable(GL_DEPTH_TEST);
 	vDisplayTexts();
 	glEnable(GL_DEPTH_TEST);
-	if(bLighting == GL_TRUE)
+	if(Lighting == GL_TRUE)
 	{
 		glEnable(GL_LIGHTING);
 	}
@@ -1670,19 +1713,19 @@ void DeletePoint(std::vector< Point * >::iterator PointIterator)
 	
 	auto Point(*PointIterator);
 	
-	while(Point->m_TrianglePoints.size() > 0)
+	while(Point->GetTrianglePoints().size() > 0)
 	{
-		assert(Point->m_TrianglePoints.front()->GetPoint() == Point);
-		if(Point->m_TrianglePoints.front()->_Triangles.size() == 0)
+		assert(Point->GetTrianglePoints().front()->GetPoint() == Point);
+		if(Point->GetTrianglePoints().front()->_Triangles.size() == 0)
 		{
 			std::cout << "encountered a triangle point without a triangle!" << std::endl;
-			delete Point->m_TrianglePoints.front();
+			delete Point->GetTrianglePoints().front();
 		}
 		else
 		{
-			while(Point->m_TrianglePoints.front()->_Triangles.size() > 0)
+			while(Point->GetTrianglePoints().front()->_Triangles.size() > 0)
 			{
-				vDeleteTriangle(Point->m_TrianglePoints.front()->_Triangles.front());
+				vDeleteTriangle(Point->GetTrianglePoints().front()->_Triangles.front());
 			}
 		}
 	}
@@ -2694,9 +2737,19 @@ bool AcceptKeyInModelView(int KeyCode, bool IsDown)
 		}
 	case 33: // P
 		{
-			if((IsDown == false) && (g_Keyboard.IsAnyShiftActive() == true))
+			if(g_Keyboard.IsAltActive() == true)
 			{
-				g_ModelerView = ModelerView::Point;
+				if(IsDown == true)
+				{
+					g_CullPoints = !g_CullPoints;
+				}
+			}
+			else
+			{
+				if((IsDown == false) && (g_Keyboard.IsAnyShiftActive() == true))
+				{
+					g_ModelerView = ModelerView::Point;
+				}
 			}
 			
 			break;
@@ -3644,17 +3697,17 @@ void InitializeOpenGL(void)
 	NewLight->Enable();
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	
-	Camera * pCamera(new Camera());
+	auto NewCamera(new Camera());
 	
-	g_Cameras.push_back(pCamera);
-	g_CurrentCamera = pCamera;
+	g_Cameras.push_back(NewCamera);
+	g_CurrentCamera = NewCamera;
 	if((g_UpAxis == FixedAxis::PositiveZ) && (g_ForwardAxis == FixedAxis::PositiveX))
 	{
-		g_CurrentCamera->SetOrientation(Quaternion::CreateAsRotationX(M_PI_2).RotateY(M_PI_2));
-		g_CurrentCamera->SetPosition(Vector3f::CreateTranslationX(4.0f));
+		NewCamera->SetOrientation(Quaternion::CreateAsRotationX(M_PI_2).RotateY(M_PI_2));
+		NewCamera->SetPosition(Vector3f::CreateTranslationX(4.0f));
 	}
 	g_Snapping = true;
-	g_SnapFactor = 0.01;
+	g_SnapFactor = 0.1;
 }
 
 void ProcessEvents(void)
