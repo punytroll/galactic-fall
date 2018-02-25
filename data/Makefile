@@ -134,9 +134,9 @@ all: all-recursive
 
 all-here: check-dependencies $(all_data) data.arx
 
-all-recursive: meshes-all-recursive textures-all-recursive all-here
+all-recursive: textures-all-recursive all-here
 
-check-dependencies: littlem_to_xml-check-dependencies raw_to_littlem-check-dependencies xml_to_data-check-dependencies arxadd-check-dependencies arxtouch-check-dependencies
+check-dependencies: littlem_to_xml-check-dependencies xml_to_data-check-dependencies arxadd-check-dependencies arxtouch-check-dependencies
 
 clean: clean-recursive
 
@@ -152,7 +152,7 @@ clean-here:
 	$(RM) mesh_transporter.xml
 	$(RM) mesh_transporter_faction.xml
 
-clean-recursive: clean-here meshes-clean-recursive textures-clean-recursive
+clean-recursive: clean-here textures-clean-recursive
 
 data.arx: $(data_arx) $(arxtouch_dependencies) $(arxadd_dependencies)
 	@$(RM) -f $@
@@ -315,14 +315,8 @@ data.arx: $(data_arx) $(arxtouch_dependencies) $(arxadd_dependencies)
 .data/%.data: %.xml $(declarations_xml) $(xml_to_data_dependencies)
 	$(command_xml_to_data) --declarations=$(declarations_xml) --in=$< --out=$@
 
-mesh_%.xml: meshes/original/littlem/%.xml $(littlem_to_xml_dependencies)
+mesh_%.xml: meshes/%.xml $(littlem_to_xml_dependencies)
 	$(command_littlem_to_xml) --in=$< --out=$@
-
-mesh_%.xml: meshes/generated/littlem/%.xml $(littlem_to_xml_dependencies)
-	$(command_littlem_to_xml) --in=$< --out=$@
-
-meshes-all-recursive:
-	@$(MAKE) -C meshes all-recursive
 
 .data/fragment_shader_default.data: shaders/fragment_shader_default
 
@@ -362,9 +356,6 @@ meshes-all-recursive:
 
 textures-all-recursive:
 	@$(MAKE) -C textures all-recursive
-
-meshes-clean-recursive:
-	@$(MAKE) -C meshes clean-recursive
 
 textures-clean-recursive:
 	@$(MAKE) -C textures clean-recursive
