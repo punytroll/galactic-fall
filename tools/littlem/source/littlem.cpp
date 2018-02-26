@@ -30,6 +30,7 @@
 #define LITTLEM_LIGHT 1
 #define LITTLEM_POINT 2
 #define LITTLEM_TRIANGLE 3
+#define LITTLEM_MARKER 4
 
 #ifndef NDEBUG
 #define ON_DEBUG(A) (A)
@@ -188,7 +189,8 @@ enum class ModelerView
 	Camera,
 	Model,
 	Point,
-	Triangle
+	Triangle,
+	Marker
 };
 
 std::string GetModelerViewString(ModelerView View)
@@ -210,6 +212,10 @@ std::string GetModelerViewString(ModelerView View)
 	case ModelerView::Triangle:
 		{
 			return "Triangle";
+		}
+	case ModelerView::Marker:
+		{
+			return "Marker";
 		}
 	}
 	assert(false);
@@ -264,9 +270,43 @@ float g_Height(800.0f);
 Keyboard g_Keyboard;
 bool g_CullPoints(false);
 
+#include "marker.h"
 #include "point.h"
 #include "triangle.h"
 #include "triangle_point.h"
+
+class MarkerDescription
+{
+public:
+	MarkerDescription(void)
+	{
+	}
+	
+	MarkerDescription(Marker * Marker) :
+		Identifier(Marker->GetIdentifier()),
+		Position(Marker->GetPosition())
+	{
+	}
+	
+	std::string Identifier;
+	Vector3f Position;
+};
+
+MarkerDescription marker(Marker * Marker)
+{
+	return MarkerDescription(Marker);
+}
+
+XMLStream & operator<<(XMLStream & XMLStream, const MarkerDescription & MarkerDescription)
+{
+	XMLStream << element << "marker";
+	XMLStream << attribute << "identifier" << value << MarkerDescription.Identifier;
+	XMLStream << attribute << "position-x" << value << MarkerDescription.Position[0];
+	XMLStream << attribute << "position-y" << value << MarkerDescription.Position[1];
+	XMLStream << attribute << "position-z" << value << MarkerDescription.Position[2];
+	
+	return XMLStream;
+}
 
 class MeshReader : public XMLParser
 {
@@ -302,7 +342,7 @@ public:
 		// now we have confirmed that we in a model definition
 		if(ElementName == "point")
 		{
-			if(_CurrentTrianglePoint == 0)
+			if(_CurrentTrianglePoint == nullptr)
 			{
 				auto CurrentPoint(new Point());
 				
@@ -316,9 +356,9 @@ public:
 		}
 		else if(ElementName == "triangle-point")
 		{
-			if(_CurrentTriangle == 0)
+			if(_CurrentTriangle == nullptr)
 			{
-				assert(_CurrentTrianglePoint == 0);
+				assert(_CurrentTrianglePoint == nullptr);
 				_CurrentTrianglePoint = new TrianglePoint();
 				_TrianglePoints[ConvertToUnsigedLong(Attributes.find("identifier")->second)] = _CurrentTrianglePoint;
 				_CurrentTrianglePoint->_Normal.Set(ConvertToFloat(Attributes.find("normal-x")->second), ConvertToFloat(Attributes.find("normal-y")->second), ConvertToFloat(Attributes.find("normal-z")->second));
@@ -342,9 +382,17 @@ public:
 		}
 		else if(ElementName == "triangle")
 		{
-			assert(_CurrentTriangle == 0);
+			assert(_CurrentTriangle == nullptr);
 			_CurrentTriangle = new Triangle();
 			_Triangles[ConvertToUnsigedLong(Attributes.find("identifier")->second)] = _CurrentTriangle;
+		}
+		else if(ElementName == "marker")
+		{
+			MarkerDescription MarkerDescription;
+			
+			MarkerDescription.Identifier = Attributes.find("identifier")->second;
+			MarkerDescription.Position = Vector3f::CreateFromComponents(ConvertToFloat(Attributes.find("position-x")->second), ConvertToFloat(Attributes.find("position-y")->second), ConvertToFloat(Attributes.find("position-z")->second));
+			_MarkerDescriptions.push_back(MarkerDescription);
 		}
 	}
 	
@@ -357,15 +405,16 @@ public:
 			std::cout << "Read " << _Points.size() << " points from mesh." << std::endl;
 			std::cout << "Read " << _TrianglePoints.size() << " triangle points from mesh." << std::endl;
 			std::cout << "Read " << _Triangles.size() << " triangles from mesh." << std::endl;
+			std::cout << "Read " << _MarkerDescriptions.size() << " markers from mesh." << std::endl;
 		}
 		else if(ElementName == "triangle")
 		{
-			_CurrentTriangle = 0;
+			_CurrentTriangle = nullptr;
 			_TrianglePoint = 0;
 		}
 		else if(ElementName == "triangle-point")
 		{
-			_CurrentTrianglePoint = 0;
+			_CurrentTrianglePoint = nullptr;
 		}
 	}
 	
@@ -395,6 +444,11 @@ public:
 		}
 		
 		return Result;
+	}
+	
+	const std::vector< MarkerDescription > & GetMarkerDescriptions(void) const
+	{
+		return _MarkerDescriptions;
 	}
 protected:
 	unsigned long ConvertToUnsigedLong(const std::string & Value)
@@ -429,6 +483,7 @@ private:
 	std::map< unsigned long, Point * > _Points;
 	std::map< unsigned long, Triangle * > _Triangles;
 	std::map< unsigned long, TrianglePoint * > _TrianglePoints;
+	std::vector< MarkerDescription > _MarkerDescriptions;
 };
 
 class Light;
@@ -789,8 +844,7 @@ public:
 			LightDescription.m_Position = Vector3f::CreateFromComponents(ConvertToFloat(Attributes.find("position-x")->second), ConvertToFloat(Attributes.find("position-y")->second), ConvertToFloat(Attributes.find("position-z")->second));
 			LightDescription.m_DiffuseColor = Vector4f(ConvertToFloat(Attributes.find("color-red")->second), ConvertToFloat(Attributes.find("color-green")->second), ConvertToFloat(Attributes.find("color-blue")->second), ConvertToFloat(Attributes.find("color-alpha")->second));
 			LightDescription.m_bEnabled = ConvertToBool(Attributes.find("enabled")->second);
-			
-			m_LightDescriptions.push_back(LightDescription);
+			_LightDescriptions.push_back(LightDescription);
 		}
 		else if(sElementName == "camera")
 		{
@@ -799,7 +853,7 @@ public:
 			CameraDescription.Position = Vector3f::CreateFromComponents(ConvertToFloat(Attributes.find("position-x")->second), ConvertToFloat(Attributes.find("position-y")->second), ConvertToFloat(Attributes.find("position-z")->second));
 			CameraDescription.Orientation = Quaternion(ConvertToFloat(Attributes.find("orientation-w")->second), ConvertToFloat(Attributes.find("orientation-x")->second), ConvertToFloat(Attributes.find("orientation-y")->second), ConvertToFloat(Attributes.find("orientation-z")->second));
 			CameraDescription.FieldOfViewY = ConvertToFloat(Attributes.find("field-of-view")->second);
-			m_CameraDescriptions.push_back(CameraDescription);
+			_CameraDescriptions.push_back(CameraDescription);
 		}
 		else
 		{
@@ -814,22 +868,23 @@ public:
 	
 	const std::vector< CameraDescription > & GetCameraDescriptions(void) const
 	{
-		return m_CameraDescriptions;
+		return _CameraDescriptions;
 	}
 	
 	const std::vector< LightDescription > & GetLightDescriptions(void) const
 	{
-		return m_LightDescriptions;
+		return _LightDescriptions;
 	}
 private:
-	std::vector< CameraDescription > m_CameraDescriptions;
-	std::vector< LightDescription > m_LightDescriptions;
+	std::vector< CameraDescription > _CameraDescriptions;
+	std::vector< LightDescription > _LightDescriptions;
 };
 
 Display * g_Display;
 GLXContext g_GLXContext;
 Window g_Window;
 Colormap g_ColorMap;
+std::vector< Marker * > g_Markers;
 std::vector< Point * > g_Points;
 std::vector< Triangle * > g_Triangles;
 std::vector< Point * > g_SelectedPoints;
@@ -840,6 +895,8 @@ std::vector< Camera * > g_Cameras;
 Camera * g_HoveredCamera = 0;
 Camera * g_SelectedCamera = 0;
 Camera * g_CurrentCamera = 0;
+Marker * g_HoveredMarker = nullptr;
+Marker * g_SelectedMarker = nullptr;
 bool g_bMoved = false;
 bool g_Quit(false);
 GLuint g_puiSelectionBuffer[1024];
@@ -1025,20 +1082,22 @@ void vStopPicking(void)
 	glMatrixMode(GL_MODELVIEW);
 	glFlush();
 	
-	int iHits = glRenderMode(GL_RENDER);
+	int NumberOfHits = glRenderMode(GL_RENDER);
 	GLuint uiNearestDepth = 0xFFFFFFFF;
 	GLuint uiNearestObject = 0;
 	GLuint uiNearestObjectType = 0;
 	GLuint * puiHitPointer = g_puiSelectionBuffer;
 	bool bHover = false;
 	
-	g_HoveredPoint = 0;
-	g_HoveredTriangle = 0;
-	g_HoveredLight = 0;
-	g_HoveredCamera = 0;
-	for(int iHit = 1; iHit <= iHits; iHit++)
+	g_HoveredPoint = nullptr;
+	g_HoveredTriangle = nullptr;
+	g_HoveredLight = nullptr;
+	g_HoveredCamera = nullptr;
+	g_HoveredMarker = nullptr;
+	for(int HitIndex = 0; HitIndex < NumberOfHits; ++HitIndex)
 	{
-		//~ std::cout << "Hit " << iHit << " is the " << ((puiHitPointer[3] == GL_POINTS) ? ("Point") : ("Triangle")) << ' ' << puiHitPointer[4] << " with minimum depth " << puiHitPointer[1] << std::endl;
+		// number of names on the name stack is always 2: type of the object, index in the global vector of the index
+		assert(puiHitPointer[0] == 2);
 		if((puiHitPointer[1] < uiNearestDepth) || ((uiNearestObjectType == LITTLEM_TRIANGLE) && ((puiHitPointer[3] == LITTLEM_POINT) || (puiHitPointer[3] == LITTLEM_LIGHT))))
 		{
 			uiNearestDepth = puiHitPointer[1];
@@ -1076,6 +1135,12 @@ void vStopPicking(void)
 				
 				break;
 			}
+		case LITTLEM_MARKER:
+			{
+				g_HoveredMarker = g_Markers[uiNearestObject];
+				
+				break;
+			}
 		default:
 			{
 				std::cout << "Unknown type in selection buffer." << std::endl;
@@ -1109,11 +1174,13 @@ void vDisplayTexts(void)
 	vDrawTextAt(0.0f, 0.0f, "#Points: " + to_string_cast(g_Points.size()) + "   #Triangles: " + to_string_cast(g_Triangles.size()) + "   #Cameras: " + to_string_cast(g_Cameras.size()) + "   #Lights: " + to_string_cast(Light::GetLights().size()));
 	vDrawTextAt(0.0f, 12.0f, "#Selected Points: " + to_string_cast(g_SelectedPoints.size()) + "   #Selected Triangles: " + to_string_cast(g_SelectedTriangles.size()));
 	glColor3f(1.0f, 0.4f, 0.4f);
-	if(g_SelectedPoints.size() > 0)
+	if(g_SelectedPoints.size() == 1)
 	{
+		auto SelectedPoint{g_SelectedPoints.front()};
+		
 		std::stringstream ssPointInformationText;
 		
-		ssPointInformationText << "Point:  X: " << g_SelectedPoints.front()->GetPosition()[0] << "   Y: " << g_SelectedPoints.front()->GetPosition()[1] << "   Z: " << g_SelectedPoints.front()->GetPosition()[2] << "   #TrianglePoints: " << g_SelectedPoints.front()->GetTrianglePoints().size();
+		ssPointInformationText << "Point:  X: " << SelectedPoint->GetPosition()[0] << "   Y: " << SelectedPoint->GetPosition()[1] << "   Z: " << SelectedPoint->GetPosition()[2] << "   #TrianglePoints: " << SelectedPoint->GetTrianglePoints().size();
 		vDrawTextAt(0.0f, 24.0f, ssPointInformationText.str());
 	}
 	if(g_SelectedCamera != nullptr)
@@ -1264,6 +1331,17 @@ void vPerformPicking(void)
 		glEnd();
 	}
 	glPopName();
+	glLoadName(LITTLEM_MARKER);
+	// dummy entry so that we can call glLoadName in the loop below: it will be replace immediately
+	glPushName(0xFFFFFFFF);
+	for(auto MarkerIndex = 0ul; MarkerIndex < g_Markers.size(); ++MarkerIndex)
+	{
+		glLoadName(MarkerIndex);
+		glBegin(GL_POINTS);
+		glVertex3fv(g_Markers[MarkerIndex]->GetPosition().GetPointer());
+		glEnd();
+	}
+	glPopName();
 	glPopName();
 	vStopPicking();
 }
@@ -1318,6 +1396,14 @@ void vDisplayModel(void)
 	for(auto Light : Light::GetLights())
 	{
 		Light->DrawPoint();
+	}
+	glEnd();
+	// draw all markers with deactivated lighting
+	glColor3f(0.6f, 0.6f, 0.6f);
+	glBegin(GL_POINTS);
+	for(auto Marker : g_Markers)
+	{
+		glVertex3fv(Marker->GetPosition().GetPointer());
 	}
 	glEnd();
 	// draw all cameras with deactivated lighting
@@ -1504,7 +1590,41 @@ void vDisplayModel(void)
 		glPopMatrix();
 		glEnable(GL_DEPTH_TEST);
 	}
-	if(g_HoveredPoint != 0)
+	if(g_SelectedMarker != nullptr)
+	{
+		glDisable(GL_DEPTH_TEST);
+		glPushMatrix();
+		glTranslatef(g_SelectedMarker->GetPosition()[0], g_SelectedMarker->GetPosition()[1], g_SelectedMarker->GetPosition()[2]);
+		glMultMatrixf(Matrix4f::CreateRotation(g_CurrentCamera->GetOrientation()).GetPointer());
+		
+		auto Scale(2.0f * (g_SelectedMarker->GetPosition() - g_CurrentCamera->GetPosition()).Length() * tan(g_CurrentCamera->GetFieldOfViewY() / 2.0f));
+		
+		glScalef(Scale, Scale, Scale);
+		glColor3f(1.0f, 0.0f, 1.0f);
+		glBegin(GL_LINE_STRIP);
+		glVertex2f(-0.01f, 0.005f);
+		glVertex2f(-0.01f, 0.01f);
+		glVertex2f(-0.005f, 0.01f);
+		glEnd();
+		glBegin(GL_LINE_STRIP);
+		glVertex2f(0.005f, 0.01f);
+		glVertex2f(0.01f, 0.01f);
+		glVertex2f(0.01f, 0.005f);
+		glEnd();
+		glBegin(GL_LINE_STRIP);
+		glVertex2f(0.01f, -0.005f);
+		glVertex2f(0.01f, -0.01f);
+		glVertex2f(0.005f, -0.01f);
+		glEnd();
+		glBegin(GL_LINE_STRIP);
+		glVertex2f(-0.005f, -0.01f);
+		glVertex2f(-0.01f, -0.01f);
+		glVertex2f(-0.01f, -0.005f);
+		glEnd();
+		glPopMatrix();
+		glEnable(GL_DEPTH_TEST);
+	}
+	if(g_HoveredPoint != nullptr)
 	{
 		glColor3f(0.5f, 0.5f, 1.0f);
 		glBegin(GL_POINTS);
@@ -1592,6 +1712,13 @@ void vDisplayModel(void)
 		glVertex3f(0.0f, 0.0f, -0.05f); // the default camera is looking along the negative z axis
 		glEnd();
 		glPopMatrix();
+	}
+	else if(g_HoveredMarker != nullptr)
+	{
+		glColor3f(0.0f, 1.0f, 1.0f);
+		glBegin(GL_POINTS);
+		glVertex3fv(g_HoveredMarker->GetPosition().GetPointer());
+		glEnd();
 	}
 	if(bLighting == GL_TRUE)
 	{
@@ -1738,6 +1865,29 @@ void vDeletePoint(Point * pPoint)
 	DeletePoint(std::find(g_Points.begin(), g_Points.end(), pPoint));
 }
 
+void DeleteMarker(std::vector< Marker * >::iterator MarkerIterator)
+{
+	assert(MarkerIterator != g_Markers.end());
+	
+	auto Marker(*MarkerIterator);
+	
+	if(Marker == g_HoveredMarker)
+	{
+		g_HoveredMarker = nullptr;
+	}
+	if(Marker == g_SelectedMarker)
+	{
+		g_SelectedMarker = nullptr;
+	}
+	g_Markers.erase(MarkerIterator);
+}
+
+void DeleteMarker(Marker * Marker)
+{
+	assert(Marker != nullptr);
+	DeleteMarker(std::find(g_Markers.begin(), g_Markers.end(), Marker));
+}
+
 void vClearScene(void)
 {
 	Light::DeleteLights();
@@ -1752,6 +1902,10 @@ void vClearScene(void)
 	while(g_Cameras.size() > 0)
 	{
 		DeleteCamera(g_Cameras.begin());
+	}
+	while(g_Markers.size() > 0)
+	{
+		DeleteMarker(g_Markers.begin());
 	}
 }
 
@@ -2554,9 +2708,26 @@ XMLStream & mesh(XMLStream & XMLStream)
 		++TriangleIdentifier;
 	}
 	std::cout << "Written " << TriangleIdentifier << " triangles to the stream." << std::endl;
-	XMLStream << end;
+	
+	auto NumberOfMarkers{0};
+	
+	for(auto Marker : g_Markers)
+	{
+		XMLStream << marker(Marker) << end;
+		NumberOfMarkers++;
+	}
+	std::cout << "Written " << NumberOfMarkers << " markers to the stream." << std::endl;
 	
 	return XMLStream;
+}
+
+void Import(const MarkerDescription & MarkerDescription)
+{
+	auto NewMarker{new Marker{}};
+	
+	NewMarker->SetIdentifier(MarkerDescription.Identifier);
+	NewMarker->SetPosition(MarkerDescription.Position);
+	g_Markers.push_back(NewMarker);
 }
 
 void ImportMesh(const std::string & FilePath)
@@ -2573,6 +2744,121 @@ void ImportMesh(const std::string & FilePath)
 	
 	copy(Points.begin(), Points.end(), back_inserter(g_Points));
 	copy(Triangles.begin(), Triangles.end(), back_inserter(g_Triangles));
+	for(auto MarkerDescription : MeshReader.GetMarkerDescriptions())
+	{
+		Import(MarkerDescription);
+	}
+}
+
+inline long int GetRandomInteger(long int HighestValue)
+{
+	return random() % (HighestValue + 1);
+}
+
+bool AcceptKeyInMarkerView(int KeyCode, bool IsDown)
+{
+	auto Result{false};
+	
+	switch(KeyCode)
+	{
+	case 57: // N
+		{
+			if(IsDown == true)
+			{
+				auto NewMarker(new Marker());
+				
+				NewMarker->SetPosition(Vector3f::CreateFromComponents(0.0f, 0.0f, 0.0f));
+				
+				std::string Identifier{""};
+				
+				for(auto CharacterIndex = 0; CharacterIndex < 8; ++CharacterIndex)
+				{
+					Identifier += (char)('a' + GetRandomInteger(26));
+				}
+				NewMarker->SetIdentifier(Identifier);
+				g_Markers.push_back(NewMarker);
+			}
+			Result = true;
+			
+			break;
+		}
+	case 119: // DELETE
+		{
+			if(IsDown == true)
+			{
+				// delete selected marker
+				if(g_SelectedMarker != nullptr)
+				{
+					DeleteMarker(g_SelectedMarker);
+				}
+			}
+			Result = true;
+			
+			break;
+		}
+	case 114: // RIGHT
+		{
+			if((IsDown == true) && (g_Keyboard.IsNoModifierKeyActive() == true) && (g_SelectedMarker != nullptr))
+			{
+				g_SelectedMarker->SetPosition(GetSnappedStepInView(g_SelectedMarker->GetPosition(), FixedDirection::Right));
+			}
+			Result = true;
+			
+			break;
+		}
+	case 113: // LEFT
+		{
+			if((IsDown == true) && (g_Keyboard.IsNoModifierKeyActive() == true) && (g_SelectedMarker != nullptr))
+			{
+				g_SelectedMarker->SetPosition(GetSnappedStepInView(g_SelectedMarker->GetPosition(), FixedDirection::Left));
+			}
+			Result = true;
+			
+			break;
+		}
+	case 111: // UP
+		{
+			if((IsDown == true) && (g_Keyboard.IsNoModifierKeyActive() == true) && (g_SelectedMarker != nullptr))
+			{
+				g_SelectedMarker->SetPosition(GetSnappedStepInView(g_SelectedMarker->GetPosition(), FixedDirection::Up));
+			}
+			Result = true;
+			
+			break;
+		}
+	case 116: // DOWN
+		{
+			if((IsDown == true) && (g_Keyboard.IsNoModifierKeyActive() == true) && (g_SelectedMarker != nullptr))
+			{
+				g_SelectedMarker->SetPosition(GetSnappedStepInView(g_SelectedMarker->GetPosition(), FixedDirection::Down));
+			}
+			Result = true;
+			
+			break;
+		}
+	case 117: // PAGE DOWN
+		{
+			if((IsDown == true) && (g_Keyboard.IsNoModifierKeyActive() == true) && (g_SelectedMarker != nullptr))
+			{
+				g_SelectedMarker->SetPosition(GetSnappedStepInView(g_SelectedMarker->GetPosition(), FixedDirection::Backward));
+			}
+			Result = true;
+			
+			break;
+		}
+	case 112: // PAGE UP
+		{
+			if((IsDown == true) && (g_Keyboard.IsNoModifierKeyActive() == true) && (g_SelectedMarker != nullptr))
+			{
+				g_SelectedMarker->SetPosition(GetSnappedStepInView(g_SelectedMarker->GetPosition(), FixedDirection::Forward));
+			}
+			Result = true;
+			
+			break;
+		}
+	}
+	
+	return Result;
 }
 
 bool AcceptKeyInModelView(int KeyCode, bool IsDown)
@@ -2581,21 +2867,56 @@ bool AcceptKeyInModelView(int KeyCode, bool IsDown)
 	
 	switch(KeyCode)
 	{
+	case 10: // 1
+		{
+			if((IsDown == true) && (g_Keyboard.IsAnyShiftActive() == true))
+			{
+				g_ModelerView = ModelerView::Point;
+			}
+			
+			break;
+		}
+	case 11: // 2
+		{
+			if((IsDown == true) && (g_Keyboard.IsAnyShiftActive() == true))
+			{
+				g_ModelerView = ModelerView::Triangle;
+			}
+			
+			break;
+		}
+	case 12: // 3
+		{
+			if((IsDown == true) && (g_Keyboard.IsAnyShiftActive() == true))
+			{
+				g_ModelerView = ModelerView::Model;
+			}
+			
+			break;
+		}
+	case 13: // 4
+		{
+			if((IsDown == true) && (g_Keyboard.IsAnyShiftActive() == true))
+			{
+				g_ModelerView = ModelerView::Camera;
+			}
+			
+			break;
+		}
+	case 14: // 5
+		{
+			if((IsDown == true) && (g_Keyboard.IsAnyShiftActive() == true))
+			{
+				g_ModelerView = ModelerView::Marker;
+			}
+			
+			break;
+		}
 	case 54: // C
 		{
-			if(g_Keyboard.IsAltActive() == true)
+			if((IsDown == true) && (g_Keyboard.IsAltActive() == true))
 			{
-				if(IsDown == true)
-				{
-					vToggleCullFace();
-				}
-			}
-			else if(g_Keyboard.IsAnyShiftActive() == true)
-			{
-				if(IsDown == false)
-				{
-					g_ModelerView = ModelerView::Camera;
-				}
+				vToggleCullFace();
 			}
 			
 			break;
@@ -2690,6 +3011,10 @@ bool AcceptKeyInModelView(int KeyCode, bool IsDown)
 						NewCamera->SetFieldOfViewY(CameraDescription.FieldOfViewY);
 						g_Cameras.push_back(NewCamera);
 					}
+					for(auto & MarkerDescription : SceneReader.GetMarkerDescriptions())
+					{
+						Import(MarkerDescription);
+					}
 					if(g_Cameras.size() > 0)
 					{
 						g_CurrentCamera = g_Cameras.front();
@@ -2711,30 +3036,11 @@ bool AcceptKeyInModelView(int KeyCode, bool IsDown)
 			
 			break;
 		}
-	case 58: // M
-		{
-			if((IsDown == false) && (g_Keyboard.IsAnyShiftActive() == true))
-			{
-				g_ModelerView = ModelerView::Model;
-			}
-			
-			break;
-		}
 	case 33: // P
 		{
-			if(g_Keyboard.IsAltActive() == true)
+			if((IsDown == true) && (g_Keyboard.IsAltActive() == true))
 			{
-				if(IsDown == true)
-				{
-					g_CullPoints = !g_CullPoints;
-				}
-			}
-			else
-			{
-				if((IsDown == false) && (g_Keyboard.IsAnyShiftActive() == true))
-				{
-					g_ModelerView = ModelerView::Point;
-				}
+				g_CullPoints = !g_CullPoints;
 			}
 			
 			break;
@@ -2757,7 +3063,7 @@ bool AcceptKeyInModelView(int KeyCode, bool IsDown)
 					std::ofstream OutputFileStream("scene.xml");
 					XMLStream XMLStream(OutputFileStream);
 					
-					XMLStream << element << "scene" << mesh;
+					XMLStream << element << "scene";
 					for(auto Light : Light::GetLights())
 					{
 						XMLStream << light(Light) << end;
@@ -2766,16 +3072,8 @@ bool AcceptKeyInModelView(int KeyCode, bool IsDown)
 					{
 						XMLStream << camera(Camera) << end;
 					}
+					XMLStream << mesh << end;
 				}
-			}
-			
-			break;
-		}
-	case 28: // T
-		{
-			if((IsDown == false) && (g_Keyboard.IsAnyShiftActive() == true))
-			{
-				g_ModelerView = ModelerView::Triangle;
 			}
 			
 			break;
@@ -3205,17 +3503,21 @@ void KeyEvent(int KeyCode, bool IsDown)
 	
 	bool KeyAccepted(false);
 	
-	if(g_ModelerView == ModelerView::Camera)
-	{
-		KeyAccepted = AcceptKeyInCameraView(KeyCode, IsDown);
-	}
-	else if(g_ModelerView == ModelerView::Point)
+	if(g_ModelerView == ModelerView::Point)
 	{
 		KeyAccepted = AcceptKeyInPointView(KeyCode, IsDown);
 	}
 	else if(g_ModelerView == ModelerView::Triangle)
 	{
 		KeyAccepted = AcceptKeyInTriangleView(KeyCode, IsDown);
+	}
+	else if(g_ModelerView == ModelerView::Camera)
+	{
+		KeyAccepted = AcceptKeyInCameraView(KeyCode, IsDown);
+	}
+	else if(g_ModelerView == ModelerView::Marker)
+	{
+		KeyAccepted = AcceptKeyInMarkerView(KeyCode, IsDown);
 	}
 	if(KeyAccepted == false)
 	{
@@ -3231,19 +3533,19 @@ void MouseButtonEvent(MouseButton Button, bool IsDown, const Vector2f & MousePos
 		{
 			if(IsDown == false)
 			{
-				if(g_HoveredPoint != 0)
+				if(g_HoveredPoint != nullptr)
 				{
 					if(g_Keyboard.IsAnyShiftActive() == true)
 					{
-						std::vector< Point * >::iterator iHoveredPoint(std::find(g_SelectedPoints.begin(), g_SelectedPoints.end(), g_HoveredPoint));
+						auto HoveredPointIterator{std::find(g_SelectedPoints.begin(), g_SelectedPoints.end(), g_HoveredPoint)};
 						
-						if(iHoveredPoint == g_SelectedPoints.end())
+						if(HoveredPointIterator == g_SelectedPoints.end())
 						{
 							g_SelectedPoints.push_back(g_HoveredPoint);
 						}
 						else
 						{
-							g_SelectedPoints.erase(iHoveredPoint);
+							g_SelectedPoints.erase(HoveredPointIterator);
 						}
 					}
 					else
@@ -3259,19 +3561,19 @@ void MouseButtonEvent(MouseButton Button, bool IsDown, const Vector2f & MousePos
 						}
 					}
 				}
-				else if(g_HoveredTriangle != 0)
+				else if(g_HoveredTriangle != nullptr)
 				{
 					if(g_Keyboard.IsAnyShiftActive() == true)
 					{
-						std::vector< Triangle * >::iterator iHoveredTriangle(std::find(g_SelectedTriangles.begin(), g_SelectedTriangles.end(), g_HoveredTriangle));
+						auto HoveredTriangleIterator{std::find(g_SelectedTriangles.begin(), g_SelectedTriangles.end(), g_HoveredTriangle)};
 						
-						if(iHoveredTriangle == g_SelectedTriangles.end())
+						if(HoveredTriangleIterator == g_SelectedTriangles.end())
 						{
 							g_SelectedTriangles.push_back(g_HoveredTriangle);
 						}
 						else
 						{
-							g_SelectedTriangles.erase(iHoveredTriangle);
+							g_SelectedTriangles.erase(HoveredTriangleIterator);
 						}
 					}
 					else
@@ -3287,26 +3589,37 @@ void MouseButtonEvent(MouseButton Button, bool IsDown, const Vector2f & MousePos
 						}
 					}
 				}
-				else if(g_HoveredLight != 0)
+				else if(g_HoveredLight != nullptr)
 				{
 					if(g_SelectedLight == g_HoveredLight)
 					{
-						g_SelectedLight = 0;
+						g_SelectedLight = nullptr;
 					}
 					else
 					{
 						g_SelectedLight = g_HoveredLight;
 					}
 				}
-				else if(g_HoveredCamera != 0)
+				else if(g_HoveredCamera != nullptr)
 				{
 					if(g_SelectedCamera == g_HoveredCamera)
 					{
-						g_SelectedCamera = 0;
+						g_SelectedCamera = nullptr;
 					}
 					else
 					{
 						g_SelectedCamera = g_HoveredCamera;
+					}
+				}
+				else if(g_HoveredMarker != nullptr)
+				{
+					if(g_SelectedMarker == g_HoveredMarker)
+					{
+						g_SelectedMarker = nullptr;
+					}
+					else
+					{
+						g_SelectedMarker = g_HoveredMarker;
 					}
 				}
 			}
@@ -3341,6 +3654,7 @@ void MouseButtonEvent(MouseButton Button, bool IsDown, const Vector2f & MousePos
 					g_SelectedTriangles.clear();
 					g_SelectedLight = nullptr;
 					g_SelectedCamera = nullptr;
+					g_SelectedMarker = nullptr;
 				}
 			}
 			
@@ -3385,7 +3699,7 @@ void MouseMotion(const Vector2f MousePosition)
 	auto Delta(MousePosition - g_LastMousePosition);
 	
 	g_LastMousePosition = MousePosition;
-	if((g_MouseButton == MouseButton::Middle) && (g_CurrentCamera != 0))
+	if((g_MouseButton == MouseButton::Middle) && (g_CurrentCamera != nullptr))
 	{
 		g_CurrentCamera->SetOrientation(g_CurrentCamera->GetOrientation().RotatedX(-0.005 * Delta[1]).RotateY(-0.005 * Delta[0]));
 	}
