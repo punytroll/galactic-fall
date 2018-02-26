@@ -44,7 +44,7 @@ public:
 	// setters
 	void SetModel(const Graphics::Model * Model);
 	/**
-	 * @note Passes memory management responsibility for @a PartMaterial to the visualization prototype.
+	 * @note Passes memory management responsibility for @a PartStyle to the visualization prototype.
 	 **/
 	void SetPartStyle(const std::string & Identifier, Graphics::Style * PartStyle);
 private:
