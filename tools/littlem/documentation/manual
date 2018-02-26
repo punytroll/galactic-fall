@@ -1,17 +1,19 @@
-﻿There are four views:
-· Model View (default)
-· Camera View
-· Point View
-· Triangle Point
+﻿There are five views:
+· Model view (default)
+· Camera view
+· Point view
+· Triangle view
+· Marker view
 
 When a command is not recognized in the camera, point or triangle view it will be passed to the model view.
 This enables switching from one view to every other view although the change view commands are only defined in the model view.
 
 These view can be activated using:
-· Model View  --  SHIFT + M
-· Camera View  --  SHIFT + C
-· Point View  --  SHIFT + P
-· Triangle View  --  SHIFT + T
+· Model view  --  SHIFT + 1
+· Camera view  --  SHIFT + 2
+· Point view  --  SHIFT + 3
+· Triangle view  --  SHIFT + 4
+· Marker view  --  SHIFT + 5
 
 Model View responsibilities:
 · display property toggles
