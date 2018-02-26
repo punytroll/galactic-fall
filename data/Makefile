@@ -3,7 +3,6 @@ root = ..
 default: all
 
 include $(root)/tools/littlem_to_xml/Makefile.include
-include $(root)/tools/raw_to_littlem/Makefile.include
 include $(root)/tools/xml_to_data/Makefile.include
 include $(root)/tools/pyarx/Makefile.include
 

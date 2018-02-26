@@ -1,3 +1,5 @@
+include $(root)/.configuration.d/PYTHON
+
 xml_to_data-check-dependencies:
 	@if [ x`which $(PYTHON)` = x ]; then \
 	    echo -e "\nYour system is missing the $(PYTHON) interpreter.\nIn order to convert data xml files to binary form you will need to install it on your system.\n"; false; \
