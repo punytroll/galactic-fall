@@ -26,7 +26,7 @@
 #include "visualization.h"
 
 Shot::Shot(void) :
-	_Damage(0.0),
+	_Damage(0.0f),
 	_Shooter(nullptr),
 	_TimeOfDeath(0.0),
 	_Velocity(Vector3f::CreateZero())

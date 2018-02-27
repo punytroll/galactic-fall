@@ -38,7 +38,7 @@ public:
 	// setters
 	void SetDamage(float Damage);
 	void SetShooter(Object * Shooter);
-	void SetTimeOfDeath(float TimeOfDeath);
+	void SetTimeOfDeath(double TimeOfDeath);
 	void SetVelocity(const Vector3f & Velocity);
 private:
 	// modifers
@@ -73,7 +73,7 @@ inline void Shot::SetDamage(float Damage)
 	_Damage = Damage;
 }
 
-inline void Shot::SetTimeOfDeath(float TimeOfDeath)
+inline void Shot::SetTimeOfDeath(double TimeOfDeath)
 {
 	_TimeOfDeath = TimeOfDeath;
 }
