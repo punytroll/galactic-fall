@@ -635,4 +635,5 @@
 		<triangle-point triangle-point-identifier="116"/>
 		<triangle-point triangle-point-identifier="117"/>
 	</triangle>
+	<marker identifier="muzzle_position" position-x="0.85" position-y="0.0" position-z="0.07642"/>
 </mesh>

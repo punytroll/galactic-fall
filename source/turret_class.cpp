@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2015  Hagen Möbius
+ * Copyright (C) 2015-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -25,9 +25,9 @@
 
 TurretClass::TurretClass(const std::string & Identifier) :
 	_Identifier(Identifier),
+	_MuzzlePosition(Vector3f::CreateZero()),
 	_ReloadTime(FLT_MAX),
 	_ShotDamage(0.0f),
-	_ShotExitPosition(Vector3f::CreateZero()),
 	_ShotExitSpeed(0.0f),
 	_ShotLifeTime(0.0f),
 	_ShotVisualizationPrototype(nullptr),

@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006  Hagen Möbius
+ * Copyright (C) 2006-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -22,8 +22,9 @@
 
 #include <GL/gl.h>
 
-#include <vector>
+#include <map>
 #include <string>
+#include <vector>
 
 #include <algebra/vector3f.h>
 
@@ -40,15 +41,24 @@ namespace Graphics
 			Vector3f Normals[3];
 		};
 		
+		struct Marker
+		{
+			std::string Identifier;
+			Vector3f Position;
+		};
+		
 		Mesh(const std::string & Identifier);
 		void Draw(Graphics::RenderContext * RenderContext) const;
 		const std::string & GetIdentifier(void) const;
+		const Vector3f & GetMarkerPosition(const std::string MarkerIdentifier) const;
 		float GetRadialSize(void) const;
+		void AddMarker(const std::string & Identifier, const Vector3f & Position);
 		std::vector< Vector3f >::size_type AddPoint(const Vector3f & Point);
 		std::vector< Graphics::Mesh::Triangle >::size_type AddTriangle(std::vector< Vector3f >::size_type Point1Index, const Vector3f & Point1Normal, std::vector< Vector3f >::size_type Point2Index, const Vector3f & Point2Normal, std::vector< Vector3f >::size_type Point3Index, const Vector3f & Point3Normal);
 		void BuildVertexArray(void);
 	private:
 		std::string _Identifier;
+		std::map< std::string, Graphics::Mesh::Marker > _Markers;
 		GLsizei _NumberOfIndices;
 		std::vector< Vector3f > _Points;
 		mutable float _RadialSize;

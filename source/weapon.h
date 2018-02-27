@@ -33,18 +33,18 @@ public:
 	virtual ~Weapon(void) override;
 	// getters
 	float GetEnergyUsagePerShot(void) const;
+	const Vector3f & GetMuzzlePosition(void) const;
 	float GetReloadTime(void) const;
 	float GetShotDamage(void) const;
-	const Vector3f & GetShotExitPosition(void) const;
 	float GetShotExitSpeed(void) const;
 	float GetShotLifeTime(void) const;
 	const VisualizationPrototype * GetShotVisualizationPrototype(void) const;
 	// setters
 	void SetEnergyUsagePerShot(float EnergyUsagePerShot);
 	void SetFire(bool Fire);
+	void SetMuzzlePosition(const Vector3f & MuzzlePosition);
 	void SetReloadTime(float ReloadTime);
 	void SetShotDamage(float ShotDamage);
-	void SetShotExitPosition(const Vector3f & ShotExitPosition);
 	void SetShotExitSpeed(float ShotExitSpeed);
 	void SetShotLifeTime(float ShotLifeTime);
 	void SetShotVisualizationPrototype(const VisualizationPrototype * ShotVisualizationPrototype);
@@ -55,10 +55,10 @@ private:
 	// variables
 	float _EnergyUsagePerShot;
 	bool _Fire;
+	Vector3f _MuzzlePosition;
 	double _NextTimeToFire;
 	float _ReloadTime;
 	float _ShotDamage;
-	Vector3f _ShotExitPosition;
 	float _ShotExitSpeed;
 	float _ShotLifeTime;
 	VisualizationPrototype * _ShotVisualizationPrototype;
@@ -69,6 +69,11 @@ inline float Weapon::GetEnergyUsagePerShot(void) const
 	return _EnergyUsagePerShot;
 }
 
+inline const Vector3f & Weapon::GetMuzzlePosition(void) const
+{
+	return _MuzzlePosition;
+}
+
 inline float Weapon::GetReloadTime(void) const
 {
 	return _ReloadTime;
@@ -77,11 +82,6 @@ inline float Weapon::GetReloadTime(void) const
 inline float Weapon::GetShotDamage(void) const
 {
 	return _ShotDamage;
-}
-
-inline const Vector3f & Weapon::GetShotExitPosition(void) const
-{
-	return _ShotExitPosition;
 }
 
 inline float Weapon::GetShotExitSpeed(void) const
@@ -109,6 +109,11 @@ inline void Weapon::SetFire(bool Fire)
 	_Fire = Fire;
 }
 
+inline void Weapon::SetMuzzlePosition(const Vector3f & MuzzlePosition)
+{
+	_MuzzlePosition = MuzzlePosition;
+}
+
 inline void Weapon::SetReloadTime(float ReloadTime)
 {
 	_ReloadTime = ReloadTime;
@@ -117,11 +122,6 @@ inline void Weapon::SetReloadTime(float ReloadTime)
 inline void Weapon::SetShotDamage(float ShotDamage)
 {
 	_ShotDamage = ShotDamage;
-}
-
-inline void Weapon::SetShotExitPosition(const Vector3f & ShotExitPosition)
-{
-	_ShotExitPosition = ShotExitPosition;
 }
 
 inline void Weapon::SetShotExitSpeed(float ShotExitSpeed)

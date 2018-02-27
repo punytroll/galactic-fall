@@ -27,6 +27,13 @@ if options.out_file == None:
 	print(LightRed + "Usage" + White + ": Set the xml file output file with " + LightYellow + "--out" + White + ".")
 	exit(1)
 
+class Marker:
+	def __init__(self):
+		self.identifier = None
+		self.position_x = None
+		self.position_y = None
+		self.position_z = None
+
 class Point:
 	def __init__(self):
 		self.identifier = None
@@ -54,6 +61,7 @@ class Triangle:
 points = list()
 triangle_points = list()
 triangles = list()
+markers = list()
 in_document = parse(options.in_file)
 mesh_element = in_document.documentElement
 # now open the out file for writing
@@ -99,12 +107,22 @@ if mesh_element.nodeType == Node.ELEMENT_NODE:
 							elif triangle.triangle_point_3_identifier == None:
 								triangle.triangle_point_3_identifier = triangle_child_element.attributes.get("triangle-point-identifier").nodeValue
 				triangles.append(triangle)
+			elif mesh_child_element.tagName == "marker":
+				marker = Marker()
+				marker.identifier = mesh_child_element.attributes.get("identifier").nodeValue
+				marker.position_x = mesh_child_element.attributes.get("position-x").nodeValue
+				marker.position_y = mesh_child_element.attributes.get("position-y").nodeValue
+				marker.position_z = mesh_child_element.attributes.get("position-z").nodeValue
+				markers.append(marker)
 	# output
 	xml_stream << element << "mesh"
 	xml_stream << element << "identifier" << text << mesh_element.attributes.get("identifier").nodeValue << end
 	xml_stream << element << "points"
 	for point in points:
-		xml_stream << element << "point" << element << "identifier" << text << point.identifier << end << element << "name" << text << point.name << end << element << "position" << element << "x" << text << point.position_x << end << element << "y" << text << point.position_y << end << element << "z" << text << point.position_z << end << end << end
+		xml_stream << element << "point" << element << "identifier" << text << point.identifier << end << element << "name"
+		if point.name != None:
+			xml_stream << text << point.name
+		xml_stream << end << element << "position" << element << "x" << text << point.position_x << end << element << "y" << text << point.position_y << end << element << "z" << text << point.position_z << end << end << end
 	xml_stream << end
 	xml_stream << element << "triangle-points"
 	for triangle_point in triangle_points:
@@ -112,7 +130,14 @@ if mesh_element.nodeType == Node.ELEMENT_NODE:
 	xml_stream << end
 	xml_stream << element << "triangles"
 	for triangle in triangles:
-		xml_stream << element << "triangle" << element << "identifier" << text << triangle.identifier << end << element << "name" << text << triangle.name << end << element << "triangle-point-1-identifier" << text << triangle.triangle_point_1_identifier << end << element << "triangle-point-2-identifier" << text << triangle.triangle_point_2_identifier << end << element << "triangle-point-3-identifier" << text << triangle.triangle_point_3_identifier << end << end
+		xml_stream << element << "triangle" << element << "identifier" << text << triangle.identifier << end << element << "name"
+		if triangle.name != None:
+			xml_stream << text << triangle.name
+		xml_stream << end << element << "triangle-point-1-identifier" << text << triangle.triangle_point_1_identifier << end << element << "triangle-point-2-identifier" << text << triangle.triangle_point_2_identifier << end << element << "triangle-point-3-identifier" << text << triangle.triangle_point_3_identifier << end << end
+	xml_stream << end
+	xml_stream << element << "markers"
+	for marker in markers:
+		xml_stream << element << "marker" << element << "identifier" << text << marker.identifier << end << element << "position" << element << "x" << text << marker.position_x << end << element << "y" << text << marker.position_y << end << element << "z" << text << marker.position_z << end << end << end
 	xml_stream << end
 	xml_stream << end
 	out_file.close()

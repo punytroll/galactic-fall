@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2007  Hagen Möbius
+ * Copyright (C) 2007-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -44,9 +44,9 @@ public:
 	// getters
 	float GetEnergyUsagePerShot(void) const;
 	const std::string & GetIdentifier(void) const;
+	const Vector3f & GetMuzzlePosition(void) const;
 	const std::string & GetName(void) const;
 	const Quaternion & GetOrientation(void) const;
-	const Vector3f & GetShotExitPosition(void) const;
 	float GetShotExitSpeed(void) const;
 	float GetShotDamage(void) const;
 	float GetShotLifeTime(void) const;
@@ -57,10 +57,10 @@ public:
 	const VisualizationPrototype * GetWeaponVisualizationPrototype(void) const;
 	// setters
 	void SetEnergyUsagePerShot(float EnergyUsagePerShot);
+	void SetMuzzlePosition(const Vector3f & MuzzlePosition);
 	void SetName(const std::string & Name);
 	void SetOrientation(const Quaternion & Orientation);
 	void SetReloadTime(float ReloadTime);
-	void SetShotExitPosition(const Vector3f & ShotExitPosition);
 	void SetShotExitSpeed(float ShotExitSpeed);
 	void SetShotDamage(float ShotDamage);
 	void SetShotLifeTime(float ShotLifeTime);
@@ -71,15 +71,15 @@ public:
 private:
 	float _EnergyUsagePerShot;
 	std::string _Identifier;
+	Vector3f _MuzzlePosition;
 	std::string _Name;
-	std::string _SlotClassIdentifier;
 	Quaternion _Orientation;
 	float _ReloadTime;
-	Vector3f _ShotExitPosition;
 	float _ShotExitSpeed;
 	float _ShotDamage;
 	float _ShotLifeTime;
 	VisualizationPrototype * _ShotVisualizationPrototype;
+	std::string _SlotClassIdentifier;
 	unsigned_numeric _SpaceRequirement;
 	VisualizationPrototype * _WeaponVisualizationPrototype;
 };
@@ -94,14 +94,14 @@ inline const std::string & WeaponClass::GetIdentifier(void) const
 	return _Identifier;
 }
 
+inline const Vector3f & WeaponClass::GetMuzzlePosition(void) const
+{
+	return _MuzzlePosition;
+}
+
 inline const std::string & WeaponClass::GetName(void) const
 {
 	return _Name;
-}
-
-inline const Vector3f & WeaponClass::GetShotExitPosition(void) const
-{
-	return _ShotExitPosition;
 }
 
 inline const Quaternion & WeaponClass::GetOrientation(void) const
@@ -154,6 +154,11 @@ inline void WeaponClass::SetEnergyUsagePerShot(float EnergyUsagePerShot)
 	_EnergyUsagePerShot = EnergyUsagePerShot;
 }
 
+inline void WeaponClass::SetMuzzlePosition(const Vector3f & MuzzlePosition)
+{
+	_MuzzlePosition = MuzzlePosition;
+}
+
 inline void WeaponClass::SetName(const std::string & Name)
 {
 	_Name = Name;
@@ -167,11 +172,6 @@ inline void WeaponClass::SetOrientation(const Quaternion & Orientation)
 inline void WeaponClass::SetReloadTime(float ReloadTime)
 {
 	_ReloadTime = ReloadTime;
-}
-
-inline void WeaponClass::SetShotExitPosition(const Vector3f & ShotExitPosition)
-{
-	_ShotExitPosition = ShotExitPosition;
 }
 
 inline void WeaponClass::SetShotExitSpeed(float ShotExitSpeed)

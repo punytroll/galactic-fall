@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006  Hagen Möbius
+ * Copyright (C) 2006-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -35,6 +35,15 @@ Graphics::Model::~Model(void)
 		delete _Parts.begin()->second;
 		_Parts.erase(_Parts.begin());
 	}
+}
+
+const Vector3f & Graphics::Model::GetMarkerPosition(const std::string & PartIdentifier, const std::string MarkerIdentifier) const
+{
+	auto PartIterator{_Parts.find(PartIdentifier)};
+	
+	assert(PartIterator != _Parts.end());
+	
+	return PartIterator->second->Mesh->GetMarkerPosition(MarkerIdentifier);
 }
 
 float Graphics::Model::GetRadialSize(void) const

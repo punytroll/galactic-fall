@@ -298,8 +298,8 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		auto NewTurret(new Turret());
 		
 		NewTurret->SetEnergyUsagePerShot(TurretClass->GetEnergyUsagePerShot());
+		NewTurret->SetMuzzlePosition(TurretClass->GetMuzzlePosition());
 		NewTurret->SetShotDamage(TurretClass->GetShotDamage());
-		NewTurret->SetShotExitPosition(TurretClass->GetShotExitPosition());
 		NewTurret->SetShotExitSpeed(TurretClass->GetShotExitSpeed());
 		NewTurret->SetShotLifeTime(TurretClass->GetShotLifeTime());
 		NewTurret->SetShotVisualizationPrototype(TurretClass->GetShotVisualizationPrototype());
@@ -332,8 +332,8 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		auto NewWeapon(new Weapon());
 		
 		NewWeapon->SetEnergyUsagePerShot(WeaponClass->GetEnergyUsagePerShot());
+		NewWeapon->SetMuzzlePosition(WeaponClass->GetMuzzlePosition());
 		NewWeapon->SetShotDamage(WeaponClass->GetShotDamage());
-		NewWeapon->SetShotExitPosition(WeaponClass->GetShotExitPosition());
 		NewWeapon->SetShotExitSpeed(WeaponClass->GetShotExitSpeed());
 		NewWeapon->SetShotLifeTime(WeaponClass->GetShotLifeTime());
 		NewWeapon->SetShotVisualizationPrototype(WeaponClass->GetShotVisualizationPrototype());

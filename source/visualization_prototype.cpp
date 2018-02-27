@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2008  Hagen Möbius
+ * Copyright (C) 2008-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,6 +17,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include <cassert>
+
+#include "graphics/model.h"
 #include "graphics/style.h"
 #include "visualization_prototype.h"
 
@@ -51,6 +54,12 @@ VisualizationPrototype::~VisualizationPrototype(void)
 		delete _PartStyles.begin()->second;
 		_PartStyles.erase(_PartStyles.begin());
 	}
+}
+
+const Vector3f & VisualizationPrototype::GetMarkerPosition(const std::string & PartIdentifier, const std::string MarkerIdentifier) const
+{
+	assert(_Model != nullptr);
+	return _Model->GetMarkerPosition(PartIdentifier, MarkerIdentifier);
 }
 
 void VisualizationPrototype::SetPartStyle(const std::string & PartIdentifier, Graphics::Style * PartStyle)

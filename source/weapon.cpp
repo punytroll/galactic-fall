@@ -48,10 +48,10 @@
 Weapon::Weapon(void) :
 	_EnergyUsagePerShot(0.0f),
 	_Fire(false),
+	_MuzzlePosition(Vector3f::CreateZero()),
 	_NextTimeToFire(0.0),
 	_ReloadTime(0.0f),
 	_ShotDamage(0.0f),
-	_ShotExitPosition(Vector3f::CreateZero()),
 	_ShotExitSpeed(0.0f),
 	_ShotLifeTime(0.0f),
 	_ShotVisualizationPrototype(nullptr)
@@ -114,7 +114,7 @@ bool Weapon::_Update(float Seconds)
 			NewShot->SetShooter(Container);
 			
 			// calculating the shot's position in the world coordinate system
-			Vector3f ShotPosition(_ShotExitPosition);
+			Vector3f ShotPosition(_MuzzlePosition);
 			
 			ShotPosition.Rotate(GetAspectPosition()->GetOrientation());
 			ShotPosition.Rotate(GetAspectAccessory()->GetSlot()->GetOrientation());
