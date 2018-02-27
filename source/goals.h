@@ -251,7 +251,7 @@ public:
 	virtual void Process(void);
 private:
 	float _SecondsToWait;
-	float _TimeToLeave;
+	double _TimeToLeave;
 };
 
 #endif
