@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2008  Hagen Möbius
+ * Copyright (C) 2008-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -23,6 +23,8 @@
 #include <map>
 #include <string>
 
+#include <algebra/vector3f.h>
+
 namespace Graphics
 {
 	class Model;
@@ -41,6 +43,7 @@ public:
 	const Graphics::Model * GetModel(void) const;
 	std::map< std::string, Graphics::Style * > & GetPartStyles(void);
 	const std::map< std::string, Graphics::Style * > & GetPartStyles(void) const;
+	const Vector3f & GetMarkerPosition(const std::string & PartIdentifier, const std::string MarkerIdentifier) const;
 	// setters
 	void SetModel(const Graphics::Model * Model);
 	/**

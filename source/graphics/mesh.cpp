@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006  Hagen Möbius
+ * Copyright (C) 2006-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -109,6 +109,15 @@ void Graphics::Mesh::Draw(Graphics::RenderContext * RenderContext) const
 	GLBindVertexArray(0);
 }
 
+const Vector3f & Graphics::Mesh::GetMarkerPosition(const std::string MarkerIdentifier) const
+{
+	auto MarkerIterator{_Markers.find(MarkerIdentifier)};
+	
+	assert(MarkerIterator != _Markers.end());
+	
+	return MarkerIterator->second.Position;
+}
+
 float Graphics::Mesh::GetRadialSize(void) const
 {
 	if(_RadialSize < 0.0f)
@@ -126,6 +135,16 @@ float Graphics::Mesh::GetRadialSize(void) const
 	}
 	
 	return _RadialSize;
+}
+
+void Graphics::Mesh::AddMarker(const std::string & Identifier, const Vector3f & Position)
+{
+	assert(_Markers.find(Identifier) == _Markers.end());
+	
+	auto & Marker{_Markers[Identifier]};
+	
+	Marker.Identifier = Identifier;
+	Marker.Position = Position;
 }
 
 std::vector< Vector3f >::size_type Graphics::Mesh::AddPoint(const Vector3f & Point)

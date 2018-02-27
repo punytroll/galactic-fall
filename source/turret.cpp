@@ -51,10 +51,10 @@ Turret::Turret(void) :
 	_EnergyUsagePerShot(0.0f),
 	_Fire(false),
 	_GunPropertiesValid(false),
+	_MuzzlePosition(Vector3f::CreateZero()),
 	_NextTimeToFire(0.0),
 	_ReloadTime(0.0f),
 	_ShotDamage(0.0f),
-	_ShotExitPosition(Vector3f::CreateZero()),
 	_ShotExitSpeed(0.0f),
 	_ShotLifeTime(0.0f),
 	_ShotVisualizationPrototype(nullptr),
@@ -77,7 +77,7 @@ Turret::~Turret(void)
 	_ShotVisualizationPrototype = nullptr;
 }
 
-void Turret::_CalculateCurrentGunProperties(Vector3f & CurrentGunExitPosition, Quaternion & CurrentGunOrientation, Vector3f & CurrentGunDirection)
+void Turret::_CalculateMuzzleProperties(Vector3f & MuzzlePosition, Quaternion & MuzzleOrientation, Vector3f & MuzzleDirection)
 {
 	assert(_GunPropertiesValid == true);
 	assert(GetAspectPosition() != nullptr);
@@ -85,22 +85,22 @@ void Turret::_CalculateCurrentGunProperties(Vector3f & CurrentGunExitPosition, Q
 	assert(GetAspectAccessory()->GetSlot() != nullptr);
 	assert(GetContainer() != nullptr);
 	assert(GetContainer()->GetAspectPosition() != nullptr);
-	CurrentGunExitPosition = _ShotExitPosition;
-	CurrentGunExitPosition.Rotate(Quaternion::CreateAsRotationZ(_TurretAngle));
-	CurrentGunExitPosition.Rotate(_GunOrientation);
-	CurrentGunExitPosition.Translate(_GunPosition);
-	CurrentGunExitPosition.Rotate(GetAspectPosition()->GetOrientation());
-	CurrentGunExitPosition.Rotate(GetAspectAccessory()->GetSlot()->GetOrientation());
-	CurrentGunExitPosition.Translate(GetAspectAccessory()->GetSlot()->GetPosition());
-	CurrentGunExitPosition.Rotate(GetContainer()->GetAspectPosition()->GetOrientation());
-	CurrentGunExitPosition.Translate(GetContainer()->GetAspectPosition()->GetPosition());
-	CurrentGunOrientation = GetContainer()->GetAspectPosition()->GetOrientation();
-	CurrentGunOrientation.Rotate(GetAspectAccessory()->GetSlot()->GetOrientation());
-	CurrentGunOrientation.Rotate(GetAspectPosition()->GetOrientation());
-	CurrentGunOrientation.Rotate(_GunOrientation);
-	CurrentGunOrientation.RotateZ(_TurretAngle);
-	CurrentGunDirection = Vector3f::CreateTranslationX(1.0f);
-	CurrentGunDirection.Rotate(CurrentGunOrientation);
+	MuzzlePosition = _MuzzlePosition;
+	MuzzlePosition.Rotate(Quaternion::CreateAsRotationZ(_TurretAngle));
+	MuzzlePosition.Rotate(_GunOrientation);
+	MuzzlePosition.Translate(_GunPosition);
+	MuzzlePosition.Rotate(GetAspectPosition()->GetOrientation());
+	MuzzlePosition.Rotate(GetAspectAccessory()->GetSlot()->GetOrientation());
+	MuzzlePosition.Translate(GetAspectAccessory()->GetSlot()->GetPosition());
+	MuzzlePosition.Rotate(GetContainer()->GetAspectPosition()->GetOrientation());
+	MuzzlePosition.Translate(GetContainer()->GetAspectPosition()->GetPosition());
+	MuzzleOrientation = GetContainer()->GetAspectPosition()->GetOrientation();
+	MuzzleOrientation.Rotate(GetAspectAccessory()->GetSlot()->GetOrientation());
+	MuzzleOrientation.Rotate(GetAspectPosition()->GetOrientation());
+	MuzzleOrientation.Rotate(_GunOrientation);
+	MuzzleOrientation.RotateZ(_TurretAngle);
+	MuzzleDirection = Vector3f::CreateTranslationX(1.0f);
+	MuzzleDirection.Rotate(MuzzleOrientation);
 }
 
 void Turret::SetShotVisualizationPrototype(const VisualizationPrototype * ShotVisualizationPrototype)
@@ -140,21 +140,21 @@ bool Turret::_Update(float Seconds)
 		
 		assert(TheShip != nullptr);
 		
-		Vector3f CurrentGunExitPosition;
-		Quaternion CurrentGunOrientation;
-		Vector3f CurrentGunDirection;
-		auto AreCurrentGunPropertiesValid(false);
+		Vector3f MuzzlePosition;
+		Quaternion MuzzleOrientation;
+		Vector3f MuzzleDirection;
+		auto AreMuzzlePropertiesValid(false);
 		
 		if(TheShip->GetTarget() != nullptr)
 		{
-			if(AreCurrentGunPropertiesValid == false)
+			if(AreMuzzlePropertiesValid == false)
 			{
-				_CalculateCurrentGunProperties(CurrentGunExitPosition, CurrentGunOrientation, CurrentGunDirection);
-				AreCurrentGunPropertiesValid = true;
+				_CalculateMuzzleProperties(MuzzlePosition, MuzzleOrientation, MuzzleDirection);
+				AreMuzzlePropertiesValid = true;
 			}
 			assert(TheShip->GetTarget()->GetAspectPosition() != nullptr);
 			
-			auto Dot(CurrentGunDirection.Cross(TheShip->GetTarget()->GetAspectPosition()->GetPosition() - CurrentGunExitPosition).Dot(Vector3f::CreateTranslationZ(1.0f)));
+			auto Dot(MuzzleDirection.Cross(TheShip->GetTarget()->GetAspectPosition()->GetPosition() - MuzzlePosition).Dot(Vector3f::CreateTranslationZ(1.0f)));
 			
 			if(Dot > 0.01f)
 			{
@@ -194,16 +194,16 @@ bool Turret::_Update(float Seconds)
 			NewShot->GetAspectVisualization()->SetVisualizationPrototype(_ShotVisualizationPrototype);
 			NewShot->SetShooter(Container);
 			
-			if(AreCurrentGunPropertiesValid == false)
+			if(AreMuzzlePropertiesValid == false)
 			{
-				_CalculateCurrentGunProperties(CurrentGunExitPosition, CurrentGunOrientation, CurrentGunDirection);
-				AreCurrentGunPropertiesValid = true;
+				_CalculateMuzzleProperties(MuzzlePosition, MuzzleOrientation, MuzzleDirection);
+				AreMuzzlePropertiesValid = true;
 			}
 			assert(NewShot->GetAspectPosition() != nullptr);
-			NewShot->GetAspectPosition()->SetPosition(CurrentGunExitPosition);
-			NewShot->GetAspectPosition()->SetOrientation(CurrentGunOrientation);
+			NewShot->GetAspectPosition()->SetPosition(MuzzlePosition);
+			NewShot->GetAspectPosition()->SetOrientation(MuzzleOrientation);
 			
-			auto ShotVelocity(CurrentGunDirection * _ShotExitSpeed);
+			auto ShotVelocity(MuzzleDirection * _ShotExitSpeed);
 			
 			NewShot->SetVelocity(TheShip->GetVelocity() + Vector3f::CreateFromComponents(ShotVelocity[0], ShotVelocity[1], 0.0f));
 			Container->GetContainer()->GetAspectObjectContainer()->AddContent(NewShot);

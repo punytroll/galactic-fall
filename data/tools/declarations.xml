@@ -100,11 +100,22 @@
 	
 	<key-binding-profile type="16" is="collection" element-type="key-binding"/>
 	
+	<marker>
+		<string identifier="identifier"/>
+		<vector3f identifier="position"/>
+	</marker>
+	
+	<marker-reference>
+		<string identifier="part-identifier"/>
+		<string identifier="marker-identifier"/>
+	</marker-reference>
+	
 	<mesh type="2">
 		<string identifier="identifier"/>
 		<collection identifier="points" element-type="point"/>
 		<collection identifier="triangle-points" element-type="triangle-point"/>
 		<collection identifier="triangles" element-type="triangle"/>
+		<collection identifier="markers" element-type="marker"/>
 	</mesh>
 	
 	<model type="11">
@@ -213,7 +224,6 @@
 	</ship-class>
 	
 	<shot>
-		<vector3f identifier="exit-position"/>
 		<float identifier="exit-speed"/>
 		<float identifier="damage"/>
 		<float identifier="life-time"/>
@@ -275,6 +285,7 @@
 		<float identifier="reload-time"/>
 		<u4byte identifier="space-requirement"/>
 		<float identifier="energy-usage-per-shot"/>
+		<marker-reference identifier="muzzle-position"/>
 		<shot identifier="shot"/>
 	</turret-class>
 	
@@ -326,6 +337,7 @@
 		<float identifier="reload-time"/>
 		<u4byte identifier="space-requirement"/>
 		<float identifier="energy-usage-per-shot"/>
+		<marker-reference identifier="muzzle-position"/>
 		<shot identifier="shot"/>
 	</weapon-class>
 	

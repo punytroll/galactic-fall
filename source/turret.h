@@ -33,9 +33,9 @@ public:
 	// setters
 	void SetEnergyUsagePerShot(float EnergyUsagePerShot);
 	void SetFire(bool Fire);
+	void SetMuzzlePosition(const Vector3f & MuzzlePosition);
 	void SetReloadTime(float ReloadTime);
 	void SetShotDamage(float ShotDamage);
-	void SetShotExitPosition(const Vector3f & ShotExitPosition);
 	void SetShotExitSpeed(float ShotExitSpeed);
 	void SetShotLifeTime(float ShotLifeTime);
 	void SetShotVisualizationPrototype(const VisualizationPrototype * ShotVisualizationPrototype);
@@ -43,17 +43,17 @@ private:
 	// modifiers
 	bool _Update(float Seconds);
 	void _UpdateVisualization(Visualization * Visualization);
-	void _CalculateCurrentGunProperties(Vector3f & CurrentGunExitPosition, Quaternion & CurrentGunOrientation, Vector3f & CurrentGunDirection);
+	void _CalculateMuzzleProperties(Vector3f & MuzzlePosition, Quaternion & MuzzleOrientation, Vector3f & MuzzleDirection);
 	// variables
 	float _EnergyUsagePerShot;
 	bool _Fire;
 	Quaternion _GunOrientation;
 	Vector3f _GunPosition;
 	bool _GunPropertiesValid;
+	Vector3f _MuzzlePosition;
 	double _NextTimeToFire;
 	float _ReloadTime;
 	float _ShotDamage;
-	Vector3f _ShotExitPosition;
 	float _ShotExitSpeed;
 	float _ShotLifeTime;
 	VisualizationPrototype * _ShotVisualizationPrototype;
@@ -70,6 +70,11 @@ inline void Turret::SetFire(bool Fire)
 	_Fire = Fire;
 }
 
+inline void Turret::SetMuzzlePosition(const Vector3f & MuzzlePosition)
+{
+	_MuzzlePosition = MuzzlePosition;
+}
+
 inline void Turret::SetReloadTime(float ReloadTime)
 {
 	_ReloadTime = ReloadTime;
@@ -78,11 +83,6 @@ inline void Turret::SetReloadTime(float ReloadTime)
 inline void Turret::SetShotDamage(float ShotDamage)
 {
 	_ShotDamage = ShotDamage;
-}
-
-inline void Turret::SetShotExitPosition(const Vector3f & ShotExitPosition)
-{
-	_ShotExitPosition = ShotExitPosition;
 }
 
 inline void Turret::SetShotExitSpeed(float ShotExitSpeed)

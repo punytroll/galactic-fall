@@ -39,12 +39,11 @@
 	<reload-time>0.85</reload-time>
 	<space-requirement>500</space-requirement>
 	<energy-usage-per-shot>8</energy-usage-per-shot>
+	<muzzle-position>
+		<part-identifier>light_laser</part-identifier>
+		<marker-identifier>muzzle_position</marker-identifier>
+	</muzzle-position>
 	<shot>
-		<exit-position>
-			<x>0.8</x>
-			<y>0</y>
-			<z>0.08</z>
-		</exit-position>
 		<exit-speed>26</exit-speed>
 		<damage>28</damage>
 		<life-time>2.9</life-time>

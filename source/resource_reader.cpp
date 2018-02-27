@@ -668,6 +668,18 @@ static void ReadMesh(Arxx::Reference & Reference)
 		Reader >> TriangleIdentifier >> TriangleName >> TrianglePoint1Identifier >> TrianglePoint2Identifier >> TrianglePoint3Identifier;
 		NewMesh->AddTriangle(TrianglePoints[TrianglePoint1Identifier].first, TrianglePoints[TrianglePoint1Identifier].second, TrianglePoints[TrianglePoint2Identifier].first, TrianglePoints[TrianglePoint2Identifier].second, TrianglePoints[TrianglePoint3Identifier].first, TrianglePoints[TrianglePoint3Identifier].second);
 	}
+	
+	std::uint32_t MarkerCount;
+	
+	Reader >> MarkerCount;
+	for(auto MarkerIndex = 0ul; MarkerIndex < MarkerCount; ++MarkerIndex)
+	{
+		std::string MarkerIdentifier;
+		Vector3f MarkerPosition;
+		
+		Reader >> MarkerIdentifier >> MarkerPosition;
+		NewMesh->AddMarker(MarkerIdentifier, MarkerPosition);
+	}
 	NewMesh->BuildVertexArray();
 }
 
@@ -1153,13 +1165,14 @@ static void ReadTurretClass(Arxx::Reference & Reference, ClassManager< TurretCla
 	float ReloadTime;
 	Arxx::u4byte SpaceRequirement;
 	float EnergyUsagePerShot;
-	Vector3f ShotExitPosition;
+	std::string MuzzlePositionPartIdentifier;
+	std::string MuzzlePositionMarkerIdentifier;
 	float ShotExitSpeed;
 	float ShotDamage;
 	float ShotLifeTime;
 	VisualizationPrototype ShotVisualizationPrototype;
 	
-	Reader >> Name >> TurretVisualizationPrototype >> SlotClassIdentifier >> Orientation >> ReloadTime >> SpaceRequirement >> EnergyUsagePerShot >> ShotExitPosition >> ShotExitSpeed >> ShotDamage >> ShotLifeTime >> ShotVisualizationPrototype;
+	Reader >> Name >> TurretVisualizationPrototype >> SlotClassIdentifier >> Orientation >> ReloadTime >> SpaceRequirement >> EnergyUsagePerShot >> MuzzlePositionPartIdentifier >> MuzzlePositionMarkerIdentifier >> ShotExitSpeed >> ShotDamage >> ShotLifeTime >> ShotVisualizationPrototype;
 	NewTurretClass->SetName(Name);
 	NewTurretClass->SetTurretVisualizationPrototype(TurretVisualizationPrototype);
 	NewTurretClass->SetSlotClassIdentifier(SlotClassIdentifier);
@@ -1167,7 +1180,7 @@ static void ReadTurretClass(Arxx::Reference & Reference, ClassManager< TurretCla
 	NewTurretClass->SetReloadTime(ReloadTime);
 	NewTurretClass->SetSpaceRequirement(static_cast< unsigned_numeric >(SpaceRequirement));
 	NewTurretClass->SetEnergyUsagePerShot(EnergyUsagePerShot);
-	NewTurretClass->SetShotExitPosition(ShotExitPosition);
+	NewTurretClass->SetMuzzlePosition(TurretVisualizationPrototype.GetMarkerPosition(MuzzlePositionPartIdentifier, MuzzlePositionMarkerIdentifier));
 	NewTurretClass->SetShotExitSpeed(ShotExitSpeed);
 	NewTurretClass->SetShotDamage(ShotDamage);
 	NewTurretClass->SetShotLifeTime(ShotLifeTime);
@@ -1211,19 +1224,20 @@ static void ReadWeaponClass(Arxx::Reference & Reference, ClassManager< WeaponCla
 	float ReloadTime;
 	Arxx::u4byte SpaceRequirement;
 	float EnergyUsagePerShot;
-	Vector3f ShotExitPosition;
+	std::string MuzzlePositionPartIdentifier;
+	std::string MuzzlePositionMarkerIdentifier;
 	float ShotExitSpeed;
 	float ShotDamage;
 	float ShotLifeTime;
 	VisualizationPrototype ShotVisualizationPrototype;
 	
-	Reader >> SlotClassIdentifier >> Orientation >> ReloadTime >> SpaceRequirement >> EnergyUsagePerShot >> ShotExitPosition >> ShotExitSpeed >> ShotDamage >> ShotLifeTime >> ShotVisualizationPrototype;
+	Reader >> SlotClassIdentifier >> Orientation >> ReloadTime >> SpaceRequirement >> EnergyUsagePerShot >> MuzzlePositionPartIdentifier >> MuzzlePositionMarkerIdentifier >> ShotExitSpeed >> ShotDamage >> ShotLifeTime >> ShotVisualizationPrototype;
 	NewWeaponClass->SetSlotClassIdentifier(SlotClassIdentifier);
 	NewWeaponClass->SetOrientation(Orientation);
 	NewWeaponClass->SetReloadTime(ReloadTime);
 	NewWeaponClass->SetSpaceRequirement(static_cast< unsigned_numeric >(SpaceRequirement));
 	NewWeaponClass->SetEnergyUsagePerShot(EnergyUsagePerShot);
-	NewWeaponClass->SetShotExitPosition(ShotExitPosition);
+	NewWeaponClass->SetMuzzlePosition(WeaponVisualizationPrototype.GetMarkerPosition(MuzzlePositionPartIdentifier, MuzzlePositionMarkerIdentifier));
 	NewWeaponClass->SetShotExitSpeed(ShotExitSpeed);
 	NewWeaponClass->SetShotDamage(ShotDamage);
 	NewWeaponClass->SetShotLifeTime(ShotLifeTime);

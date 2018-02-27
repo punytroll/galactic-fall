@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006  Hagen Möbius
+ * Copyright (C) 2006-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -48,6 +48,7 @@ namespace Graphics
 		const std::string & GetIdentifier(void) const;
 		const std::map< std::string, const Graphics::Model::Part * > & GetParts(void) const;
 		float GetRadialSize(void) const;
+		const Vector3f & GetMarkerPosition(const std::string & PartIdentifier, const std::string MarkerIdentifier) const;
 		// modifiers
 		void AddPart(const std::string & PartIdentifier, const Graphics::Mesh * PartMesh, const Vector3f & PartPosition, const Quaternion & PartOrientation);
 	private:
