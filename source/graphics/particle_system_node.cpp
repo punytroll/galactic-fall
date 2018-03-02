@@ -38,7 +38,7 @@ Graphics::ParticleSystemNode::ParticleSystemNode(void) :
 {
 	SetBlendFunction(GL_SRC_ALPHA, GL_ONE);
 	SetUseBlending(true);
-	SetUseDepthTest(false);
+	SetUseDepthTest(true);
 }
 
 Graphics::ParticleSystemNode::~ParticleSystemNode(void)
@@ -70,6 +70,7 @@ void Graphics::ParticleSystemNode::Begin(Graphics::RenderContext * RenderContext
 	
 	RenderContext->SetStyle(Style);
 	RenderContext->SetTexture(g_ParticleTexture);
+	GLDepthMask(false);
 	Graphics::Node::Begin(RenderContext);
 }
 
@@ -181,6 +182,7 @@ void Graphics::ParticleSystemNode::Draw(Graphics::RenderContext * RenderContext)
 void Graphics::ParticleSystemNode::End(Graphics::RenderContext * RenderContext)
 {
 	Graphics::Node::End(RenderContext);
+	GLDepthMask(true);
 	RenderContext->SetTexture(nullptr);
 	
 	auto Style{RenderContext->GetStyle()};

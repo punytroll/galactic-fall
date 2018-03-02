@@ -177,6 +177,7 @@ Visualization * VisualizeShip(Ship * Ship, Graphics::Node * Container)
 	
 	auto Graphics{VisualizePrototype(Ship->GetAspectVisualization()->GetVisualizationPrototype())};
 	
+	Graphics->SetClearDepthBuffer(true);
 	g_ObjectVisualizations[Graphics] = Ship->GetAspectVisualization();
 	
 	// set as the object's visualization

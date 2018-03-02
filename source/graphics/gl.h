@@ -161,6 +161,10 @@ typedef void (* glDeleteVertexArraysFunction)(GLsizei n, GLuint * arrays);
 extern glDeleteVertexArraysFunction __glDeleteVertexArrays;
 #define GLDeleteVertexArrays(n, arrays) { assert(__glDeleteVertexArrays != nullptr); __glDeleteVertexArrays(n, arrays); CheckGLError; }
 
+typedef void (* glDepthMaskFunction)(GLboolean flag);
+extern glDepthMaskFunction __glDepthMask;
+#define GLDepthMask(flag) { assert(__glDepthMask != nullptr); __glDepthMask(flag); CheckGLError; }
+
 typedef void (* glDisableFunction)(GLenum cap);
 extern glDisableFunction __glDisable;
 #define GLDisable(cap) { assert(__glDisable != nullptr); __glDisable(cap); CheckGLError; }

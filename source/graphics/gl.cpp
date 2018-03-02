@@ -41,6 +41,7 @@ glDeleteRenderbuffersFunction __glDeleteRenderbuffers(nullptr);
 glDeleteShaderFunction __glDeleteShader(nullptr);
 glDeleteTexturesFunction __glDeleteTextures(nullptr);
 glDeleteVertexArraysFunction __glDeleteVertexArrays(nullptr);
+glDepthMaskFunction __glDepthMask(nullptr);
 glDisableFunction __glDisable(nullptr);
 glDrawArraysFunction __glDrawArrays(nullptr);
 glDrawElementsFunction __glDrawElements(nullptr);
