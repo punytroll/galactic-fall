@@ -94,6 +94,7 @@ void Graphics::Engine::Initialize(void)
 	LoadOpenGLFunction(glDeleteShader);
 	LoadOpenGLFunction(glDeleteTextures);
 	LoadOpenGLFunction(glDeleteVertexArrays);
+	LoadOpenGLFunction(glDepthMask);
 	LoadOpenGLFunction(glDisable);
 	LoadOpenGLFunction(glDrawArrays);
 	LoadOpenGLFunction(glDrawElements);
