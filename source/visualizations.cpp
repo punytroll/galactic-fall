@@ -46,7 +46,7 @@
 #include "weapon.h"
 #include "weapon_class.h"
 
-// This map holds the References to the Graphics::Nodes that have to be referenced in the Game subsystem
+// This maps from all the Graphics::Nodes to their respective objects.
 std::map< Graphics::Node *, ObjectAspectVisualization * > g_ObjectVisualizations;
 
 static Visualization * VisualizeCommodity(Commodity * Commodity, Graphics::Node * Container);
@@ -59,12 +59,12 @@ static Visualization * VisualizeWeapon(Weapon * Weapon, Graphics::Node * Contain
 
 void InvalidateVisualizationReference(Graphics::Node * Node)
 {
-	std::map< Graphics::Node *, ObjectAspectVisualization * >::iterator ObjectVisualizationIterator(g_ObjectVisualizations.find(Node));
+	auto ObjectAspectVisualizationIterator{g_ObjectVisualizations.find(Node)};
 	
-	if(ObjectVisualizationIterator != g_ObjectVisualizations.end())
+	if(ObjectAspectVisualizationIterator != g_ObjectVisualizations.end())
 	{
-		ObjectVisualizationIterator->second->RemoveGraphics(Node);
-		g_ObjectVisualizations.erase(ObjectVisualizationIterator);
+		ObjectAspectVisualizationIterator->second->RemoveGraphics(Node);
+		g_ObjectVisualizations.erase(ObjectAspectVisualizationIterator);
 	}
 }
 
@@ -111,12 +111,12 @@ Visualization * VisualizeCommodity(Commodity * Commodity, Graphics::Node * Conta
 	assert(Commodity->GetAspectVisualization() != nullptr);
 	assert(Commodity->GetAspectVisualization()->GetVisualizationPrototype() != nullptr);
 	
-	Graphics::Node * Graphics(VisualizePrototype(Commodity->GetAspectVisualization()->GetVisualizationPrototype()));
+	auto Graphics{VisualizePrototype(Commodity->GetAspectVisualization()->GetVisualizationPrototype())};
 	
 	g_ObjectVisualizations[Graphics] = Commodity->GetAspectVisualization();
 	
 	// set as the object's visualization
-	auto Visualization(Commodity->GetAspectVisualization()->CreateVisualizationForGraphics(Graphics));
+	auto Visualization{Commodity->GetAspectVisualization()->CreateVisualizationForGraphics(Graphics)};
 	
 	// add to the scene
 	assert(Container != nullptr);
@@ -141,7 +141,7 @@ void VisualizeParticleSystem(Graphics::ParticleSystem * ParticleSystem, Graphics
 	assert(ParticleSystem != nullptr);
 	assert(Container != nullptr);
 	
-	Graphics::ParticleSystemNode * Graphics(new Graphics::ParticleSystemNode());
+	auto Graphics{new Graphics::ParticleSystemNode{}};
 	
 	Graphics->SetParticleSystem(ParticleSystem);
 	Container->AddNode(Graphics);
@@ -153,14 +153,14 @@ Visualization * VisualizePlanet(Planet * Planet, Graphics::Node * Container)
 	assert(Planet->GetAspectVisualization() != nullptr);
 	assert(Planet->GetAspectVisualization()->GetVisualizationPrototype() != nullptr);
 	
-	Graphics::Node * Graphics(VisualizePrototype(Planet->GetAspectVisualization()->GetVisualizationPrototype()));
+	auto Graphics{VisualizePrototype(Planet->GetAspectVisualization()->GetVisualizationPrototype())};
 	
 	assert(Planet->GetAspectPhysical() != nullptr);
 	Graphics->SetScale(Planet->GetAspectPhysical()->GetRadialSize());
 	g_ObjectVisualizations[Graphics] = Planet->GetAspectVisualization();
 	
 	// set as the object's visualization
-	auto Visualization(Planet->GetAspectVisualization()->CreateVisualizationForGraphics(Graphics));
+	auto Visualization{Planet->GetAspectVisualization()->CreateVisualizationForGraphics(Graphics)};
 	
 	// add to the scene
 	assert(Container != nullptr);
@@ -175,12 +175,12 @@ Visualization * VisualizeShip(Ship * Ship, Graphics::Node * Container)
 	assert(Ship->GetAspectVisualization() != nullptr);
 	assert(Ship->GetAspectVisualization()->GetVisualizationPrototype() != nullptr);
 	
-	Graphics::Node * Graphics(VisualizePrototype(Ship->GetAspectVisualization()->GetVisualizationPrototype()));
+	auto Graphics{VisualizePrototype(Ship->GetAspectVisualization()->GetVisualizationPrototype())};
 	
 	g_ObjectVisualizations[Graphics] = Ship->GetAspectVisualization();
 	
 	// set as the object's visualization
-	auto Visualization(Ship->GetAspectVisualization()->CreateVisualizationForGraphics(Graphics));
+	auto Visualization{Ship->GetAspectVisualization()->CreateVisualizationForGraphics(Graphics)};
 	
 	// add to the scene
 	assert(Container != nullptr);
@@ -188,14 +188,11 @@ Visualization * VisualizeShip(Ship * Ship, Graphics::Node * Container)
 	
 	// add accessory visualizations
 	assert(Ship->GetAspectOutfitting() != nullptr);
-	
-	const std::map< std::string, Slot * > & Slots(Ship->GetAspectOutfitting()->GetSlots());
-	
-	for(std::map< std::string, Slot * >::const_iterator SlotIterator = Slots.begin(); SlotIterator != Slots.end(); ++SlotIterator)
+	for(auto Slot : Ship->GetAspectOutfitting()->GetSlots())
 	{
-		if((SlotIterator->second->GetVisualizeAccessory() == true) && (SlotIterator->second->GetMountedObject() != nullptr))
+		if((Slot.second->GetVisualizeAccessory() == true) && (Slot.second->GetMountedObject() != nullptr))
 		{
-			VisualizeObject(SlotIterator->second->GetMountedObject(), Graphics);
+			VisualizeObject(Slot.second->GetMountedObject(), Graphics);
 		}
 	}
 	// add engine glow particle system
@@ -211,14 +208,14 @@ Visualization * VisualizeShot(Shot * Shot, Graphics::Node * Container)
 	assert(Shot->GetAspectVisualization() != nullptr);
 	assert(Shot->GetAspectVisualization()->GetVisualizationPrototype() != nullptr);
 	
-	Graphics::Node * Graphics(VisualizePrototype(Shot->GetAspectVisualization()->GetVisualizationPrototype()));
+	auto Graphics{VisualizePrototype(Shot->GetAspectVisualization()->GetVisualizationPrototype())};
 	
 	Graphics->SetUseBlending(true);
 	Graphics->SetBlendFunction(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	g_ObjectVisualizations[Graphics] = Shot->GetAspectVisualization();
 	
 	// set as the object's visualization
-	auto Visualization(Shot->GetAspectVisualization()->CreateVisualizationForGraphics(Graphics));
+	auto Visualization{Shot->GetAspectVisualization()->CreateVisualizationForGraphics(Graphics)};
 	
 	// add to the scene
 	assert(Container != nullptr);
@@ -232,12 +229,12 @@ Visualization * VisualizeSystem(System * System, Graphics::Node * Container)
 	assert(System != nullptr);
 	assert(System->GetAspectVisualization() != nullptr);
 	
-	auto Graphics(new Graphics::SystemNode());
+	auto Graphics{new Graphics::SystemNode()};
 	
 	g_ObjectVisualizations[Graphics] = System->GetAspectVisualization();
 	
 	// set as the object's visualization
-	auto Visualization(System->GetAspectVisualization()->CreateVisualizationForGraphics(Graphics));
+	auto Visualization{System->GetAspectVisualization()->CreateVisualizationForGraphics(Graphics)};
 	
 	// add visualizations for all objects in the system
 	for(auto Planet : System->GetPlanets())
@@ -264,12 +261,12 @@ Visualization * VisualizeTurret(Turret * Turret, Graphics::Node * Container)
 	assert(Turret->GetAspectVisualization() != nullptr);
 	assert(Turret->GetAspectVisualization()->GetVisualizationPrototype() != nullptr);
 	
-	auto Graphics(VisualizePrototype(Turret->GetAspectVisualization()->GetVisualizationPrototype()));
+	auto Graphics{VisualizePrototype(Turret->GetAspectVisualization()->GetVisualizationPrototype())};
 	
 	g_ObjectVisualizations[Graphics] = Turret->GetAspectVisualization();
 	
 	// set as the object's visualization
-	auto Visualization(Turret->GetAspectVisualization()->CreateVisualizationForGraphics(Graphics));
+	auto Visualization{Turret->GetAspectVisualization()->CreateVisualizationForGraphics(Graphics)};
 	
 	// add to the container node
 	assert(Container != nullptr);
@@ -284,12 +281,12 @@ Visualization * VisualizeWeapon(Weapon * Weapon, Graphics::Node * Container)
 	assert(Weapon->GetAspectVisualization() != nullptr);
 	assert(Weapon->GetAspectVisualization()->GetVisualizationPrototype() != nullptr);
 	
-	Graphics::Node * Graphics(VisualizePrototype(Weapon->GetAspectVisualization()->GetVisualizationPrototype()));
+	auto Graphics{VisualizePrototype(Weapon->GetAspectVisualization()->GetVisualizationPrototype())};
 	
 	g_ObjectVisualizations[Graphics] = Weapon->GetAspectVisualization();
 	
 	// set as the object's visualization
-	auto Visualization(Weapon->GetAspectVisualization()->CreateVisualizationForGraphics(Graphics));
+	auto Visualization{Weapon->GetAspectVisualization()->CreateVisualizationForGraphics(Graphics)};
 	
 	// add to the container node
 	assert(Container != nullptr);
@@ -300,22 +297,22 @@ Visualization * VisualizeWeapon(Weapon * Weapon, Graphics::Node * Container)
 
 Graphics::Node * VisualizePrototype(const VisualizationPrototype * VisualizationPrototype)
 {
-	Graphics::Node * Result(nullptr);
+	Graphics::Node * Result{nullptr};
 	
 	assert(VisualizationPrototype != nullptr);
 	assert(VisualizationPrototype->GetModel() != nullptr);
 	
-	auto Parts(VisualizationPrototype->GetModel()->GetParts());
+	auto Parts{VisualizationPrototype->GetModel()->GetParts()};
 	
 	assert(Parts.size() > 0);
 	if(Parts.size() > 1)
 	{
-		Result = new Graphics::Node();
+		Result = new Graphics::Node{};
 	}
-	for(auto & PartStyle : VisualizationPrototype->GetPartStyles())
+	for(auto PartStyle : VisualizationPrototype->GetPartStyles())
 	{
-		auto MeshNode(new Graphics::MeshNode());
-		auto PartIterator(Parts.find(PartStyle.first));
+		auto MeshNode{new Graphics::MeshNode{}};
+		auto PartIterator{Parts.find(PartStyle.first)};
 		
 		assert(PartIterator != Parts.end());
 		assert(PartIterator->second != nullptr);
