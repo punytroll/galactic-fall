@@ -22,17 +22,17 @@ def load_texture(file_name):
 	else:
 		x = 0.5 * (float(dimension_x) / float(dimension_y))
 		y = 0.5
-	print "Reading texture with width='" + str(dimension_x) + "' and height='" + str(dimension_y) + "'."
+	print("Reading texture with width='" + str(dimension_x) + "' and height='" + str(dimension_y) + "'.")
 	if format == 1: # RGBA one byte each
-		print "Reading in format='RGBA one byte each'."
+		print("Reading in format='RGBA one byte each'.")
 		pixels = file.read(4 * dimension_x * dimension_y)
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, dimension_x, dimension_y, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels)
 	elif format == 2: # RGB one byte each
-		print "Reading in format='RGB one byte each'."
+		print("Reading in format='RGB one byte each'.")
 		pixels = file.read(3 * dimension_x * dimension_y)
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, dimension_x, dimension_y, 0, GL_RGB, GL_UNSIGNED_BYTE, pixels)
 	else:
-		print "Unknown format '" + str(format) + "'."
+		print("Unknown format '" + str(format) + "'.")
 		sys.exit(1)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
@@ -84,6 +84,7 @@ def draw_scene():
 	glutSwapBuffers()
 
 def key_pressed(key, x, y):
+	key = key.decode("utf-8")
 	if key == "\033":
 		glutDestroyWindow(window)
 		sys.exit()
