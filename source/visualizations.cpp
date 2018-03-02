@@ -47,7 +47,7 @@
 #include "weapon_class.h"
 
 // This maps from all the Graphics::Nodes to their respective objects.
-std::map< Graphics::Node *, ObjectAspectVisualization * > g_ObjectVisualizations;
+std::map< Graphics::Node *, Object * > g_ObjectPerVisualization;
 
 static Visualization * VisualizeCommodity(Commodity * Commodity, Graphics::Node * Container);
 static Visualization * VisualizePlanet(Planet * Planet, Graphics::Node * Container);
@@ -59,12 +59,14 @@ static Visualization * VisualizeWeapon(Weapon * Weapon, Graphics::Node * Contain
 
 void InvalidateVisualizationReference(Graphics::Node * Node)
 {
-	auto ObjectAspectVisualizationIterator{g_ObjectVisualizations.find(Node)};
+	auto ObjectVisualizationIterator{g_ObjectPerVisualization.find(Node)};
 	
-	if(ObjectAspectVisualizationIterator != g_ObjectVisualizations.end())
+	if(ObjectVisualizationIterator != g_ObjectPerVisualization.end())
 	{
-		ObjectAspectVisualizationIterator->second->RemoveGraphics(Node);
-		g_ObjectVisualizations.erase(ObjectAspectVisualizationIterator);
+		assert(ObjectVisualizationIterator->second != nullptr);
+		assert(ObjectVisualizationIterator->second->GetAspectVisualization() != nullptr);
+		ObjectVisualizationIterator->second->GetAspectVisualization()->RemoveGraphics(Node);
+		g_ObjectPerVisualization.erase(ObjectVisualizationIterator);
 	}
 }
 
@@ -113,7 +115,7 @@ Visualization * VisualizeCommodity(Commodity * Commodity, Graphics::Node * Conta
 	
 	auto Graphics{VisualizePrototype(Commodity->GetAspectVisualization()->GetVisualizationPrototype())};
 	
-	g_ObjectVisualizations[Graphics] = Commodity->GetAspectVisualization();
+	g_ObjectPerVisualization[Graphics] = Commodity;
 	
 	// set as the object's visualization
 	auto Visualization{Commodity->GetAspectVisualization()->CreateVisualizationForGraphics(Graphics)};
@@ -157,7 +159,7 @@ Visualization * VisualizePlanet(Planet * Planet, Graphics::Node * Container)
 	
 	assert(Planet->GetAspectPhysical() != nullptr);
 	Graphics->SetScale(Planet->GetAspectPhysical()->GetRadialSize());
-	g_ObjectVisualizations[Graphics] = Planet->GetAspectVisualization();
+	g_ObjectPerVisualization[Graphics] = Planet;
 	
 	// set as the object's visualization
 	auto Visualization{Planet->GetAspectVisualization()->CreateVisualizationForGraphics(Graphics)};
@@ -178,7 +180,7 @@ Visualization * VisualizeShip(Ship * Ship, Graphics::Node * Container)
 	auto Graphics{VisualizePrototype(Ship->GetAspectVisualization()->GetVisualizationPrototype())};
 	
 	Graphics->SetClearDepthBuffer(true);
-	g_ObjectVisualizations[Graphics] = Ship->GetAspectVisualization();
+	g_ObjectPerVisualization[Graphics] = Ship;
 	
 	// set as the object's visualization
 	auto Visualization{Ship->GetAspectVisualization()->CreateVisualizationForGraphics(Graphics)};
@@ -213,7 +215,7 @@ Visualization * VisualizeShot(Shot * Shot, Graphics::Node * Container)
 	
 	Graphics->SetUseBlending(true);
 	Graphics->SetBlendFunction(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	g_ObjectVisualizations[Graphics] = Shot->GetAspectVisualization();
+	g_ObjectPerVisualization[Graphics] = Shot;
 	
 	// set as the object's visualization
 	auto Visualization{Shot->GetAspectVisualization()->CreateVisualizationForGraphics(Graphics)};
@@ -232,7 +234,7 @@ Visualization * VisualizeSystem(System * System, Graphics::Node * Container)
 	
 	auto Graphics{new Graphics::SystemNode()};
 	
-	g_ObjectVisualizations[Graphics] = System->GetAspectVisualization();
+	g_ObjectPerVisualization[Graphics] = System;
 	
 	// set as the object's visualization
 	auto Visualization{System->GetAspectVisualization()->CreateVisualizationForGraphics(Graphics)};
@@ -264,7 +266,7 @@ Visualization * VisualizeTurret(Turret * Turret, Graphics::Node * Container)
 	
 	auto Graphics{VisualizePrototype(Turret->GetAspectVisualization()->GetVisualizationPrototype())};
 	
-	g_ObjectVisualizations[Graphics] = Turret->GetAspectVisualization();
+	g_ObjectPerVisualization[Graphics] = Turret;
 	
 	// set as the object's visualization
 	auto Visualization{Turret->GetAspectVisualization()->CreateVisualizationForGraphics(Graphics)};
@@ -284,7 +286,7 @@ Visualization * VisualizeWeapon(Weapon * Weapon, Graphics::Node * Container)
 	
 	auto Graphics{VisualizePrototype(Weapon->GetAspectVisualization()->GetVisualizationPrototype())};
 	
-	g_ObjectVisualizations[Graphics] = Weapon->GetAspectVisualization();
+	g_ObjectPerVisualization[Graphics] = Weapon;
 	
 	// set as the object's visualization
 	auto Visualization{Weapon->GetAspectVisualization()->CreateVisualizationForGraphics(Graphics)};
