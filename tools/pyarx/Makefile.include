@@ -1,4 +1,4 @@
-pyarx-check-dependencies: 
+pyarx-check-dependencies:
 	@if [ x`which $(PYTHON)` = x ]; then \
 	    echo -e "\nYour system is missing the $(PYTHON) interpreter.\nIn order to use the pyarx library you will need to install it on your system.\n"; false; \
 	fi
