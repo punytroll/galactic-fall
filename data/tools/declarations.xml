@@ -226,7 +226,8 @@
 		<float identifier="forward-fuel"/>
 		<float identifier="turn-fuel"/>
 		<float identifier="hull"/>
-		<vector3f identifier="exhaust-offset"/>
+		<string identifier="exhaust-marker-part-identifier"/>
+		<string identifier="exhaust-marker-identifier"/>
 		<float identifier="exhaust-radius"/>
 		<collection identifier="slots" element-type="slot"/>
 	</ship-class>
