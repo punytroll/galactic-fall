@@ -755,4 +755,20 @@
 		<triangle-point triangle-point-identifier="154"/>
 		<triangle-point triangle-point-identifier="155"/>
 	</triangle>
+	<marker identifier="backboard_gun_slot">
+		<position x="2" y="1.44" z="0"/>
+		<orientation w="0.5" x="-0.5" y="-0.5" z="0.5"/>
+	</marker>
+	<marker identifier="starboard_gun_slot">
+		<position x="2" y="-1.44" z="0"/>
+		<orientation w="0.5" x="0.5" y="-0.5" z="-0.5"/>
+	</marker>
+	<marker identifier="battery_slot">
+		<position x="3" y="0" z="0"/>
+		<orientation w="1" x="0" y="0" z="0"/>
+	</marker>
+	<marker identifier="generator_slot">
+		<position x="2" y="0" z="0"/>
+		<orientation w="1" x="0" y="0" z="0"/>
+	</marker>
 </mesh>

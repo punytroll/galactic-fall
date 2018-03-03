@@ -81,68 +81,32 @@
 			<identifier>front_gun</identifier>
 			<class-identifier>medium_weapon</class-identifier>
 			<name>Front Gun</name>
-			<position>
-				<x>7.1</x>
-				<y>0</y>
-				<z>0.9</z>
-			</position>
-			<orientation>
-				<w>0.7071067812</w>
-				<x>0</x>
-				<y>-0.7071067812</y>
-				<z>0</z>
-			</orientation>
+			<marker-part-identifier>hull</marker-part-identifier>
+			<marker-identifier>front_gun_slot</marker-identifier>
 			<visualize-accessory>true</visualize-accessory>
 		</slot>
 		<slot>
 			<identifier>rear_turret</identifier>
 			<class-identifier>light_turret</class-identifier>
 			<name>Rear Turret</name>
-			<position>
-				<x>-1.85</x>
-				<y>0.0</y>
-				<z>1.21</z>
-			</position>
-			<orientation>
-				<w>0.7071067812</w>
-				<x>0</x>
-				<y>-0.7071067812</y>
-				<z>0</z>
-			</orientation>
+			<marker-part-identifier>hull</marker-part-identifier>
+			<marker-identifier>rear_turret_slot</marker-identifier>
 			<visualize-accessory>true</visualize-accessory>
 		</slot>
 		<slot>
 			<identifier>battery</identifier>
 			<class-identifier>light_battery</class-identifier>
 			<name>Battery</name>
-			<position>
-				<x>3</x>
-				<y>0</y>
-				<z>0</z>
-			</position>
-			<orientation>
-				<w>1</w>
-				<x>0</x>
-				<y>0</y>
-				<z>0</z>
-			</orientation>
+			<marker-part-identifier>hull</marker-part-identifier>
+			<marker-identifier>battery_slot</marker-identifier>
 			<visualize-accessory>false</visualize-accessory>
 		</slot>
 		<slot>
 			<identifier>generator</identifier>
 			<class-identifier>small_generator</class-identifier>
 			<name>Generator</name>
-			<position>
-				<x>5</x>
-				<y>0</y>
-				<z>0</z>
-			</position>
-			<orientation>
-				<w>1</w>
-				<x>0</x>
-				<y>0</y>
-				<z>0</z>
-			</orientation>
+			<marker-part-identifier>hull</marker-part-identifier>
+			<marker-identifier>generator_slot</marker-identifier>
 			<visualize-accessory>false</visualize-accessory>
 		</slot>
 	</slots>

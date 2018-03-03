@@ -10209,4 +10209,20 @@
 		<triangle-point triangle-point-identifier="2110"/>
 		<triangle-point triangle-point-identifier="2111"/>
 	</triangle>
+	<marker identifier="front_gun_slot">
+		<position x="7.1" y="0" z="0.9"/>
+		<orientation w="0.7071067812" x="0" y="-0.7071067812" z="0"/>
+	</marker>
+	<marker identifier="rear_turret_slot">
+		<position x="-1.85" y="0" z="1.21"/>
+		<orientation w="0.7071067812" x="0" y="-0.7071067812" z="0"/>
+	</marker>
+	<marker identifier="battery_slot">
+		<position x="3" y="0" z="0"/>
+		<orientation w="1" x="0" y="0" z="0"/>
+	</marker>
+	<marker identifier="generator_slot">
+		<position x="5" y="0" z="0"/>
+		<orientation w="1" x="0" y="0" z="0"/>
+	</marker>
 </mesh>

@@ -37,6 +37,15 @@ Graphics::Model::~Model(void)
 	}
 }
 
+const Quaternion * Graphics::Model::GetMarkerOrientation(const std::string & PartIdentifier, const std::string MarkerIdentifier) const
+{
+	auto PartIterator{_Parts.find(PartIdentifier)};
+	
+	assert(PartIterator != _Parts.end());
+	
+	return PartIterator->second->Mesh->GetMarkerOrientation(MarkerIdentifier);
+}
+
 const Vector3f * Graphics::Model::GetMarkerPosition(const std::string & PartIdentifier, const std::string MarkerIdentifier) const
 {
 	auto PartIterator{_Parts.find(PartIdentifier)};
