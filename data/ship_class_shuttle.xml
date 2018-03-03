@@ -70,11 +70,8 @@
 	<forward-fuel>0.025</forward-fuel>
 	<turn-fuel>0.010</turn-fuel>
 	<hull>100</hull>
-	<exhaust-offset>
-		<x>-3</x>
-		<y>0</y>
-		<z>0</z>
-	</exhaust-offset>
+	<exhaust-marker-part-identifier>hull</exhaust-marker-part-identifier>
+	<exhaust-marker-identifier>exhaust</exhaust-marker-identifier>
 	<exhaust-radius>0.5</exhaust-radius>
 	<slots>
 		<slot>

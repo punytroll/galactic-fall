@@ -972,11 +972,12 @@ static void ReadShipClass(Arxx::Reference & Reference, ClassManager< ShipClass >
 	float ForwardFuel;
 	float TurnFuel;
 	float Hull;
-	Vector3f ExhaustOffset;
+	std::string ExhaustMarkerPartIdentifier;
+	std::string ExhaustMarkerIdentifier;
 	float ExhaustRadius;
 	Arxx::u4byte SlotCount;
 	
-	Reader >> Name >> SpaceRequirement >> VisualizationPrototype >> ForwardThrust >> TurnSpeed >> MaximumSpeed >> MaximumAvailableSpace >> FuelCapacity >> JumpFuel >> ForwardFuel >> TurnFuel >> Hull >> ExhaustOffset >> ExhaustRadius >> SlotCount;
+	Reader >> Name >> SpaceRequirement >> VisualizationPrototype >> ForwardThrust >> TurnSpeed >> MaximumSpeed >> MaximumAvailableSpace >> FuelCapacity >> JumpFuel >> ForwardFuel >> TurnFuel >> Hull >> ExhaustMarkerPartIdentifier >> ExhaustMarkerIdentifier >> ExhaustRadius >> SlotCount;
 	NewShipClass->SetName(Name);
 	NewShipClass->SetSpaceRequirement(SpaceRequirement);
 	NewShipClass->SetVisualizationPrototype(VisualizationPrototype);
@@ -989,7 +990,14 @@ static void ReadShipClass(Arxx::Reference & Reference, ClassManager< ShipClass >
 	NewShipClass->SetForwardFuel(ForwardFuel);
 	NewShipClass->SetTurnFuel(TurnFuel);
 	NewShipClass->SetHull(Hull);
-	NewShipClass->SetExhaustOffset(ExhaustOffset);
+	
+	auto ExhaustPosition{VisualizationPrototype.GetMarkerPosition(ExhaustMarkerPartIdentifier, ExhaustMarkerIdentifier)};
+	
+	if(ExhaustPosition == nullptr)
+	{
+		throw std::runtime_error("For the ship '" + Identifier + "', could not find a marker or its position for the exhaust position '" + ExhaustMarkerIdentifier + "' on the part '" + ExhaustMarkerPartIdentifier + "'.");
+	}
+	NewShipClass->SetExhaustOffset(*ExhaustPosition);
 	NewShipClass->SetExhaustRadius(ExhaustRadius);
 	for(Arxx::u4byte SlotNumber = 1; SlotNumber <= SlotCount; ++SlotNumber)
 	{
