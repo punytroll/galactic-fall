@@ -31,6 +31,10 @@ def load_texture(file_name):
 		print("Reading in format='RGB one byte each'.")
 		pixels = file.read(3 * dimension_x * dimension_y)
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, dimension_x, dimension_y, 0, GL_RGB, GL_UNSIGNED_BYTE, pixels)
+	elif format == 3: # premultiplied alpha RGBO
+		print("Reading in format='premultiplied alpha RGBO one byte each'.")
+		pixels = file.read(4 * dimension_x * dimension_y)
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, dimension_x, dimension_y, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels)
 	else:
 		print("Unknown format '" + str(format) + "'.")
 		sys.exit(1)

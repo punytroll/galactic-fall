@@ -68,6 +68,10 @@ void Graphics::Texture::SetData(unsigned_numeric Width, unsigned_numeric Height,
 	{
 		GLTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, Width, Height, 0, GL_RGB, GL_UNSIGNED_BYTE, Data);
 	}
+	else if(Format == 3) /// premultiplied alpha RGBO one byte each
+	{
+		GLTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, Width, Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, Data);
+	}
 	else
 	{
 		throw;
@@ -92,11 +96,19 @@ void Graphics::Texture::Create(unsigned_numeric Width, unsigned_numeric Height, 
 	GLBindTexture(GL_TEXTURE_2D, _TextureName);
 	if(Format == 1) /// RGBA one byte each
 	{
-		GLTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, Width, Height, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+		GLTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, Width, Height, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
 	}
 	else if(Format == 2) /// RGB one byte each
 	{
-		GLTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, Width, Height, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+		GLTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, Width, Height, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
+	}
+	else if(Format == 3) /// premultiplied alpha RGBO one byte each
+	{
+		GLTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, Width, Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+	}
+	else
+	{
+		throw;
 	}
 	GLTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	GLTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
