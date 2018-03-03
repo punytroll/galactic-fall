@@ -15,10 +15,12 @@
 					</diffuse-color>
 					<specular-color>
 						<valid>false</valid>
-						<red>1.0</red>
-						<green>1.0</green>
-						<blue>1.0</blue>
-						<opacity>1.0</opacity>
+						<value>
+							<red>1.0</red>
+							<green>1.0</green>
+							<blue>1.0</blue>
+							<opacity>1.0</opacity>
+						</value>
 					</specular-color>
 					<shininess>
 						<valid>false</valid>
@@ -38,10 +40,12 @@
 					</diffuse-color>
 					<specular-color>
 						<valid>false</valid>
-						<red>1.0</red>
-						<green>1.0</green>
-						<blue>1.0</blue>
-						<opacity>1.0</opacity>
+						<value>
+							<red>1.0</red>
+							<green>1.0</green>
+							<blue>1.0</blue>
+							<opacity>1.0</opacity>
+						</value>
 					</specular-color>
 					<shininess>
 						<valid>false</valid>
@@ -84,10 +88,12 @@
 						</diffuse-color>
 						<specular-color>
 							<valid>false</valid>
-							<red>0</red>
-							<green>0</green>
-							<blue>0</blue>
-							<opacity>1</opacity>
+							<value>
+								<red>0</red>
+								<green>0</green>
+								<blue>0</blue>
+								<opacity>1</opacity>
+							</value>
 						</specular-color>
 						<shininess>
 							<valid>false</valid>

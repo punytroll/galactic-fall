@@ -16,10 +16,12 @@
 					</diffuse-color>
 					<specular-color>
 						<valid>true</valid>
-						<red>1.0</red>
-						<green>0.9</green>
-						<blue>0.8</blue>
-						<opacity>1.0</opacity>
+						<value>
+							<red>1.0</red>
+							<green>0.9</green>
+							<blue>0.8</blue>
+							<opacity>1.0</opacity>
+						</value>
 					</specular-color>
 					<shininess>
 						<valid>true</valid>
