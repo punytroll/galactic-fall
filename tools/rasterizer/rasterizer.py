@@ -13,10 +13,10 @@ parser.add_option("-d", "--dimensions", dest="dimensions", help="The size of the
 # read the options and validate
 (options, args) = parser.parse_args()
 if options.in_file == None:
-	print "Set the file containing the xml description with '--in'."
+	print("Set the file containing the xml description with '--in'.")
 	exit(1)
 if options.out_file == None:
-	print "Set the file to write the image to with '--out'."
+	print("Set the file to write the image to with '--out'.")
 	exit(1)
 if options.sub_pixels == None:
 	stderr.write("Using default sub-pixels option '3' for 9 sub-pixels.\n")
@@ -24,12 +24,12 @@ if options.sub_pixels == None:
 else:
 	sub_pixels = int(options.sub_pixels)
 if options.dimensions == None:
-	print "Set the size of the resulting image with '--dimensions'."
+	print("Set the size of the resulting image with '--dimensions'.")
 	exit(1)
 else:
 	pixels_x, pixels_y = options.dimensions.split('x')
-	pixels_x = long(pixels_x)
-	pixels_y = long(pixels_y)
+	pixels_x = int(pixels_x)
+	pixels_y = int(pixels_y)
 
 def pad_left(string, padding):
 	pad = ""
@@ -162,7 +162,7 @@ for row in range(samples_y):
 # now open the out file for writing binary
 out_file = open(options.out_file, "wb")
 
-out_file.write(pack('!III', long(pixels_x), long(pixels_y), long(1)))
+out_file.write(pack('!III', pixels_x, pixels_y, 1))
 for row in range(pixels_y):
 	for column in range(pixels_x):
 		color = Color(0, 0, 0, 0)
