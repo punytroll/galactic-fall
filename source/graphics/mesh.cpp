@@ -28,6 +28,15 @@ Graphics::Mesh::Mesh(const std::string & Identifier) :
 {
 }
 
+Graphics::Mesh::~Mesh(void)
+{
+	for(auto MarkerIterator : _Markers)
+	{
+		delete MarkerIterator.second.Position;
+		MarkerIterator.second.Position = nullptr;
+	}
+}
+
 void Graphics::Mesh::BuildVertexArray(void)
 {
 	_NumberOfIndices = _Triangles.size() * 9;
@@ -109,7 +118,7 @@ void Graphics::Mesh::Draw(Graphics::RenderContext * RenderContext) const
 	GLBindVertexArray(0);
 }
 
-const Vector3f & Graphics::Mesh::GetMarkerPosition(const std::string MarkerIdentifier) const
+const Vector3f * Graphics::Mesh::GetMarkerPosition(const std::string MarkerIdentifier) const
 {
 	auto MarkerIterator{_Markers.find(MarkerIdentifier)};
 	
@@ -137,14 +146,23 @@ float Graphics::Mesh::GetRadialSize(void) const
 	return _RadialSize;
 }
 
-void Graphics::Mesh::AddMarker(const std::string & Identifier, const Vector3f & Position)
+void Graphics::Mesh::AddMarker(const std::string & Identifier)
 {
 	assert(_Markers.find(Identifier) == _Markers.end());
 	
 	auto & Marker{_Markers[Identifier]};
 	
 	Marker.Identifier = Identifier;
-	Marker.Position = Position;
+	Marker.Position = nullptr;
+}
+
+void Graphics::Mesh::SetMarkerPosition(const std::string & Identifier, const Vector3f & Position)
+{
+	assert(_Markers.find(Identifier) != _Markers.end());
+	
+	auto & Marker{_Markers[Identifier]};
+	
+	Marker.Position = new Vector3f(Position);
 }
 
 std::vector< Vector3f >::size_type Graphics::Mesh::AddPoint(const Vector3f & Point)
