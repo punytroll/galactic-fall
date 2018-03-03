@@ -56,7 +56,7 @@ VisualizationPrototype::~VisualizationPrototype(void)
 	}
 }
 
-const Vector3f & VisualizationPrototype::GetMarkerPosition(const std::string & PartIdentifier, const std::string MarkerIdentifier) const
+const Vector3f * VisualizationPrototype::GetMarkerPosition(const std::string & PartIdentifier, const std::string MarkerIdentifier) const
 {
 	assert(_Model != nullptr);
 	return _Model->GetMarkerPosition(PartIdentifier, MarkerIdentifier);

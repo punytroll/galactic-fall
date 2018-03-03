@@ -102,7 +102,7 @@
 	
 	<marker>
 		<string identifier="identifier"/>
-		<vector3f identifier="position"/>
+		<optional-vector3f identifier="position"/>
 	</marker>
 	
 	<marker-reference>
@@ -148,6 +148,11 @@
 		<boolean identifier="valid"/>
 		<float identifier="value"/>
 	</optional-float>
+	
+	<optional-vector3f type="1" sub-type="2">
+		<boolean identifier="valid"/>
+		<vector3f identifier="value"/>
+	</optional-vector3f>
 	
 	<physical-aspect>
 		<u4byte identifier="space-requirement"/>

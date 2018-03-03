@@ -37,7 +37,7 @@ Graphics::Model::~Model(void)
 	}
 }
 
-const Vector3f & Graphics::Model::GetMarkerPosition(const std::string & PartIdentifier, const std::string MarkerIdentifier) const
+const Vector3f * Graphics::Model::GetMarkerPosition(const std::string & PartIdentifier, const std::string MarkerIdentifier) const
 {
 	auto PartIterator{_Parts.find(PartIdentifier)};
 	

@@ -675,10 +675,16 @@ static void ReadMesh(Arxx::Reference & Reference)
 	for(auto MarkerIndex = 0ul; MarkerIndex < MarkerCount; ++MarkerIndex)
 	{
 		std::string MarkerIdentifier;
+		bool MarkerPositionValid;
 		Vector3f MarkerPosition;
 		
-		Reader >> MarkerIdentifier >> MarkerPosition;
-		NewMesh->AddMarker(MarkerIdentifier, MarkerPosition);
+		Reader >> MarkerIdentifier >> MarkerPositionValid >> MarkerPosition;
+		
+		NewMesh->AddMarker(MarkerIdentifier);
+		if(MarkerPositionValid == true)
+		{
+			NewMesh->SetMarkerPosition(MarkerIdentifier, MarkerPosition);
+		}
 	}
 	NewMesh->BuildVertexArray();
 }
@@ -1180,7 +1186,14 @@ static void ReadTurretClass(Arxx::Reference & Reference, ClassManager< TurretCla
 	NewTurretClass->SetReloadTime(ReloadTime);
 	NewTurretClass->SetSpaceRequirement(static_cast< unsigned_numeric >(SpaceRequirement));
 	NewTurretClass->SetEnergyUsagePerShot(EnergyUsagePerShot);
-	NewTurretClass->SetMuzzlePosition(TurretVisualizationPrototype.GetMarkerPosition(MuzzlePositionPartIdentifier, MuzzlePositionMarkerIdentifier));
+	
+	auto MuzzlePosition{TurretVisualizationPrototype.GetMarkerPosition(MuzzlePositionPartIdentifier, MuzzlePositionMarkerIdentifier)};
+	
+	if(MuzzlePosition == nullptr)
+	{
+		throw std::runtime_error("For the weapon '" + Identifier + "', could not find a marker or its position for the muzzle position '" + MuzzlePositionMarkerIdentifier + "' on the part '" + MuzzlePositionPartIdentifier + "'.");
+	}
+	NewTurretClass->SetMuzzlePosition(*MuzzlePosition);
 	NewTurretClass->SetShotExitSpeed(ShotExitSpeed);
 	NewTurretClass->SetShotDamage(ShotDamage);
 	NewTurretClass->SetShotLifeTime(ShotLifeTime);
@@ -1237,7 +1250,14 @@ static void ReadWeaponClass(Arxx::Reference & Reference, ClassManager< WeaponCla
 	NewWeaponClass->SetReloadTime(ReloadTime);
 	NewWeaponClass->SetSpaceRequirement(static_cast< unsigned_numeric >(SpaceRequirement));
 	NewWeaponClass->SetEnergyUsagePerShot(EnergyUsagePerShot);
-	NewWeaponClass->SetMuzzlePosition(WeaponVisualizationPrototype.GetMarkerPosition(MuzzlePositionPartIdentifier, MuzzlePositionMarkerIdentifier));
+	
+	auto MuzzlePosition{WeaponVisualizationPrototype.GetMarkerPosition(MuzzlePositionPartIdentifier, MuzzlePositionMarkerIdentifier)};
+	
+	if(MuzzlePosition == nullptr)
+	{
+		throw std::runtime_error("For the weapon '" + Identifier + "', could not find a marker or its position for the muzzle position '" + MuzzlePositionMarkerIdentifier + "' on the part '" + MuzzlePositionPartIdentifier + "'.");
+	}
+	NewWeaponClass->SetMuzzlePosition(*MuzzlePosition);
 	NewWeaponClass->SetShotExitSpeed(ShotExitSpeed);
 	NewWeaponClass->SetShotDamage(ShotDamage);
 	NewWeaponClass->SetShotLifeTime(ShotLifeTime);

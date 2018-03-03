@@ -44,15 +44,17 @@ namespace Graphics
 		struct Marker
 		{
 			std::string Identifier;
-			Vector3f Position;
+			Vector3f * Position;
 		};
 		
 		Mesh(const std::string & Identifier);
+		~Mesh(void);
 		void Draw(Graphics::RenderContext * RenderContext) const;
 		const std::string & GetIdentifier(void) const;
-		const Vector3f & GetMarkerPosition(const std::string MarkerIdentifier) const;
+		const Vector3f * GetMarkerPosition(const std::string MarkerIdentifier) const;
 		float GetRadialSize(void) const;
-		void AddMarker(const std::string & Identifier, const Vector3f & Position);
+		void AddMarker(const std::string & Identifier);
+		void SetMarkerPosition(const std::string & Identifier, const Vector3f & Position);
 		std::vector< Vector3f >::size_type AddPoint(const Vector3f & Point);
 		std::vector< Graphics::Mesh::Triangle >::size_type AddTriangle(std::vector< Vector3f >::size_type Point1Index, const Vector3f & Point1Normal, std::vector< Vector3f >::size_type Point2Index, const Vector3f & Point2Normal, std::vector< Vector3f >::size_type Point3Index, const Vector3f & Point3Normal);
 		void BuildVertexArray(void);

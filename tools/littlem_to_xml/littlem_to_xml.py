@@ -27,12 +27,16 @@ if options.out_file == None:
 	print(LightRed + "Usage" + White + ": Set the xml file output file with " + LightYellow + "--out" + White + ".")
 	exit(1)
 
+class Position:
+	def __init__(self):
+		self.x = None
+		self.y = None
+		self.z = None
+
 class Marker:
 	def __init__(self):
 		self.identifier = None
-		self.position_x = None
-		self.position_y = None
-		self.position_z = None
+		self.position = None
 
 class Point:
 	def __init__(self):
@@ -110,9 +114,15 @@ if mesh_element.nodeType == Node.ELEMENT_NODE:
 			elif mesh_child_element.tagName == "marker":
 				marker = Marker()
 				marker.identifier = mesh_child_element.attributes.get("identifier").nodeValue
-				marker.position_x = mesh_child_element.attributes.get("position-x").nodeValue
-				marker.position_y = mesh_child_element.attributes.get("position-y").nodeValue
-				marker.position_z = mesh_child_element.attributes.get("position-z").nodeValue
+				for marker_child_element in mesh_child_element.childNodes:
+					if marker_child_element.nodeType == Node.ELEMENT_NODE:
+						if marker_child_element.tagName == "position":
+							if marker.position == None:
+								position = Position()
+								position.x = marker_child_element.attributes.get("x").nodeValue
+								position.y = marker_child_element.attributes.get("y").nodeValue
+								position.z = marker_child_element.attributes.get("z").nodeValue
+								marker.position = position
 				markers.append(marker)
 	# output
 	xml_stream << element << "mesh"
@@ -137,7 +147,12 @@ if mesh_element.nodeType == Node.ELEMENT_NODE:
 	xml_stream << end
 	xml_stream << element << "markers"
 	for marker in markers:
-		xml_stream << element << "marker" << element << "identifier" << text << marker.identifier << end << element << "position" << element << "x" << text << marker.position_x << end << element << "y" << text << marker.position_y << end << element << "z" << text << marker.position_z << end << end << end
+		xml_stream << element << "marker" << element << "identifier" << text << marker.identifier << end << element << "position"
+		if marker.position != None:
+			xml_stream << element << "valid" << text << "true" << end << element << "value" << element << "x" << text << marker.position.x << end << element << "y" << text << marker.position.y << end << element << "z" << text << marker.position.z << end << end
+		else:
+			xml_stream << element << "valid" << text << "false" << end << element << "value" << element << "x" << text << "0.0" << end << element << "y" << text << "0.0" << end << element << "z" << text << "0.0" << end << end
+		xml_stream << end << end
 	xml_stream << end
 	xml_stream << end
 	out_file.close()

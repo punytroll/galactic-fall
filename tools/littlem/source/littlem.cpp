@@ -301,9 +301,11 @@ XMLStream & operator<<(XMLStream & XMLStream, const MarkerDescription & MarkerDe
 {
 	XMLStream << element << "marker";
 	XMLStream << attribute << "identifier" << value << MarkerDescription.Identifier;
-	XMLStream << attribute << "position-x" << value << MarkerDescription.Position[0];
-	XMLStream << attribute << "position-y" << value << MarkerDescription.Position[1];
-	XMLStream << attribute << "position-z" << value << MarkerDescription.Position[2];
+	XMLStream << element << "position";
+	XMLStream << attribute << "x" << value << MarkerDescription.Position[0];
+	XMLStream << attribute << "y" << value << MarkerDescription.Position[1];
+	XMLStream << attribute << "z" << value << MarkerDescription.Position[2];
+	XMLStream << end;
 	
 	return XMLStream;
 }
@@ -314,6 +316,7 @@ public:
 	MeshReader(std::istream & InputStream) :
 		XMLParser(InputStream),
 		_InMesh(false),
+		_CurrentMarker(-1),
 		_CurrentTrianglePoint(nullptr),
 		_CurrentTriangle(nullptr),
 		_TrianglePoint(0)
@@ -388,11 +391,17 @@ public:
 		}
 		else if(ElementName == "marker")
 		{
+			assert(_CurrentMarker == -1);
+			_CurrentMarker = _MarkerDescriptions.size();
+			
 			MarkerDescription MarkerDescription;
 			
 			MarkerDescription.Identifier = Attributes.find("identifier")->second;
-			MarkerDescription.Position = Vector3f::CreateFromComponents(ConvertToFloat(Attributes.find("position-x")->second), ConvertToFloat(Attributes.find("position-y")->second), ConvertToFloat(Attributes.find("position-z")->second));
 			_MarkerDescriptions.push_back(MarkerDescription);
+		}
+		else if(ElementName == "position")
+		{
+			_MarkerDescriptions[_CurrentMarker].Position = Vector3f::CreateFromComponents(ConvertToFloat(Attributes.find("x")->second), ConvertToFloat(Attributes.find("y")->second), ConvertToFloat(Attributes.find("z")->second));
 		}
 	}
 	
@@ -415,6 +424,10 @@ public:
 		else if(ElementName == "triangle-point")
 		{
 			_CurrentTrianglePoint = nullptr;
+		}
+		else if(ElementName == "marker")
+		{
+			_CurrentMarker = -1;
 		}
 	}
 	
@@ -477,6 +490,7 @@ protected:
 	}
 private:
 	bool _InMesh;
+	int _CurrentMarker;
 	TrianglePoint * _CurrentTrianglePoint;
 	Triangle * _CurrentTriangle;
 	int _TrianglePoint;
