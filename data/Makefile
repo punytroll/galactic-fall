@@ -337,6 +337,8 @@ mesh_%.xml: meshes/%.xml $(littlem_to_xml_dependencies)
 
 .data/scenario_rigel_spectator.data: savegame_rigel_spectator.xml
 
+.data/texture_particle.data: textures/generated/tex/particle.tex
+
 .data/vertex_shader_default.data: shaders/vertex_shader_default
 
 .data/vertex_shader_flat.data: shaders/vertex_shader_flat
