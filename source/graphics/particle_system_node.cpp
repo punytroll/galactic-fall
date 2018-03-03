@@ -36,7 +36,7 @@ const Graphics::Texture * g_ParticleTexture(nullptr);
 Graphics::ParticleSystemNode::ParticleSystemNode(void) :
 	_ParticleSystem(nullptr)
 {
-	SetBlendFunction(GL_SRC_ALPHA, GL_ONE);
+	SetBlendFunction(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 	SetUseBlending(true);
 	SetUseDepthTest(true);
 }
