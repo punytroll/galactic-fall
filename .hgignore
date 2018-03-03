@@ -10,6 +10,7 @@ tools/list_glx_fb_configurations/list_glx_fb_configurations
 configuration
 .configuration.d
 data/textures/generated/tex/*.tex
+data/mesh_*.xml
 test/referencing
 libraries/xml_stream/test/test
 libraries/events/test/test

@@ -362,3 +362,5 @@ textures-clean-recursive:
 	@$(MAKE) -C textures clean-recursive
 
 .PHONY: all all-here all-recursive check-dependencies clean clean-here clean-recursive default meshes-all-recursive meshes-clean-recursive textures-all-recursive textures-clean-recursive
+
+.PRECIOUS: mesh_%.xml
