@@ -41,19 +41,31 @@ namespace Graphics
 			Vector3f Normals[3];
 		};
 		
-		struct Marker
+		class Marker
 		{
-			std::string Identifier;
-			Vector3f * Position;
+		public:
+			// constructor and destructor
+			Marker(void);
+			~Marker(void);
+			// queries
+			const Quaternion * GetOrientation(void) const;
+			const Vector3f * GetPosition(void) const;
+			// modifications
+			void SetOrientation(const Quaternion & Orientation);
+			void SetPosition(const Vector3f & Position);
+		private:
+			Quaternion * _Orientation;
+			Vector3f * _Position;
 		};
 		
 		Mesh(const std::string & Identifier);
-		~Mesh(void);
 		void Draw(Graphics::RenderContext * RenderContext) const;
 		const std::string & GetIdentifier(void) const;
+		const Quaternion * GetMarkerOrientation(const std::string MarkerIdentifier) const;
 		const Vector3f * GetMarkerPosition(const std::string MarkerIdentifier) const;
 		float GetRadialSize(void) const;
 		void AddMarker(const std::string & Identifier);
+		void SetMarkerOrientation(const std::string & Identifier, const Quaternion & Orientation);
 		void SetMarkerPosition(const std::string & Identifier, const Vector3f & Position);
 		std::vector< Vector3f >::size_type AddPoint(const Vector3f & Point);
 		std::vector< Graphics::Mesh::Triangle >::size_type AddTriangle(std::vector< Vector3f >::size_type Point1Index, const Vector3f & Point1Normal, std::vector< Vector3f >::size_type Point2Index, const Vector3f & Point2Normal, std::vector< Vector3f >::size_type Point3Index, const Vector3f & Point3Normal);
@@ -67,6 +79,16 @@ namespace Graphics
 		std::vector< Graphics::Mesh::Triangle > _Triangles;
 		GLuint _VertexArray;
 	};
+	
+	inline const Quaternion * Mesh::Marker::GetOrientation(void) const
+	{
+		return _Orientation;
+	}
+	
+	inline const Vector3f * Mesh::Marker::GetPosition(void) const
+	{
+		return _Position;
+	}
 	
 	inline const std::string & Mesh::GetIdentifier(void) const
 	{

@@ -20,21 +20,38 @@
 #include "gl.h"
 #include "mesh.h"
 
+Graphics::Mesh::Marker::Marker(void) :
+	_Orientation(nullptr),
+	_Position(nullptr)
+{
+}
+
+Graphics::Mesh::Marker::~Marker(void)
+{
+	delete _Orientation;
+	_Orientation = nullptr;
+	delete _Position;
+	_Position = nullptr;
+}
+
+void Graphics::Mesh::Marker::SetOrientation(const Quaternion & Orientation)
+{
+	delete _Orientation;
+	_Orientation = new Quaternion(Orientation);
+}
+
+void Graphics::Mesh::Marker::SetPosition(const Vector3f & Position)
+{
+	delete _Position;
+	_Position = new Vector3f(Position);
+}
+
 Graphics::Mesh::Mesh(const std::string & Identifier) :
 	_Identifier(Identifier),
 	_NumberOfIndices(0),
 	_RadialSize(-1.0f),
 	_VertexArray(0)
 {
-}
-
-Graphics::Mesh::~Mesh(void)
-{
-	for(auto MarkerIterator : _Markers)
-	{
-		delete MarkerIterator.second.Position;
-		MarkerIterator.second.Position = nullptr;
-	}
 }
 
 void Graphics::Mesh::BuildVertexArray(void)
@@ -118,13 +135,32 @@ void Graphics::Mesh::Draw(Graphics::RenderContext * RenderContext) const
 	GLBindVertexArray(0);
 }
 
+const Quaternion * Graphics::Mesh::GetMarkerOrientation(const std::string MarkerIdentifier) const
+{
+	auto MarkerIterator{_Markers.find(MarkerIdentifier)};
+	
+	if(MarkerIterator != _Markers.end())
+	{
+		return MarkerIterator->second.GetOrientation();
+	}
+	else
+	{
+		return nullptr;
+	}
+}
+
 const Vector3f * Graphics::Mesh::GetMarkerPosition(const std::string MarkerIdentifier) const
 {
 	auto MarkerIterator{_Markers.find(MarkerIdentifier)};
 	
-	assert(MarkerIterator != _Markers.end());
-	
-	return MarkerIterator->second.Position;
+	if(MarkerIterator != _Markers.end())
+	{
+		return MarkerIterator->second.GetPosition();
+	}
+	else
+	{
+		return nullptr;
+	}
 }
 
 float Graphics::Mesh::GetRadialSize(void) const
@@ -149,20 +185,19 @@ float Graphics::Mesh::GetRadialSize(void) const
 void Graphics::Mesh::AddMarker(const std::string & Identifier)
 {
 	assert(_Markers.find(Identifier) == _Markers.end());
-	
-	auto & Marker{_Markers[Identifier]};
-	
-	Marker.Identifier = Identifier;
-	Marker.Position = nullptr;
+	_Markers[Identifier];
+}
+
+void Graphics::Mesh::SetMarkerOrientation(const std::string & Identifier, const Quaternion & Orientation)
+{
+	assert(_Markers.find(Identifier) != _Markers.end());
+	_Markers[Identifier].SetOrientation(Orientation);
 }
 
 void Graphics::Mesh::SetMarkerPosition(const std::string & Identifier, const Vector3f & Position)
 {
 	assert(_Markers.find(Identifier) != _Markers.end());
-	
-	auto & Marker{_Markers[Identifier]};
-	
-	Marker.Position = new Vector3f(Position);
+	_Markers[Identifier].SetPosition(Position);
 }
 
 std::vector< Vector3f >::size_type Graphics::Mesh::AddPoint(const Vector3f & Point)

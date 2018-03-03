@@ -103,6 +103,7 @@
 	<marker>
 		<string identifier="identifier"/>
 		<optional-vector3f identifier="position"/>
+		<optional-quaternion identifier="orientation"/>
 	</marker>
 	
 	<marker-reference>
@@ -148,6 +149,11 @@
 		<boolean identifier="valid"/>
 		<float identifier="value"/>
 	</optional-float>
+	
+	<optional-quaternion>
+		<boolean identifier="valid"/>
+		<quaternion identifier="value"/>
+	</optional-quaternion>
 	
 	<optional-vector3f type="1" sub-type="2">
 		<boolean identifier="valid"/>
@@ -236,8 +242,8 @@
 		<string identifier="identifier"/>
 		<string identifier="class-identifier"/>
 		<string identifier="name"/>
-		<vector3f identifier="position"/>
-		<quaternion identifier="orientation"/>
+		<string identifier="marker-part-identifier"/>
+		<string identifier="marker-identifier"/>
 		<boolean identifier="visualize-accessory"/>
 	</slot>
 	

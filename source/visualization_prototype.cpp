@@ -56,6 +56,12 @@ VisualizationPrototype::~VisualizationPrototype(void)
 	}
 }
 
+const Quaternion * VisualizationPrototype::GetMarkerOrientation(const std::string & PartIdentifier, const std::string MarkerIdentifier) const
+{
+	assert(_Model != nullptr);
+	return _Model->GetMarkerOrientation(PartIdentifier, MarkerIdentifier);
+}
+
 const Vector3f * VisualizationPrototype::GetMarkerPosition(const std::string & PartIdentifier, const std::string MarkerIdentifier) const
 {
 	assert(_Model != nullptr);

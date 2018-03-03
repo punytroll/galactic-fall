@@ -43,6 +43,7 @@ public:
 	const Graphics::Model * GetModel(void) const;
 	std::map< std::string, Graphics::Style * > & GetPartStyles(void);
 	const std::map< std::string, Graphics::Style * > & GetPartStyles(void) const;
+	const Quaternion * GetMarkerOrientation(const std::string & PartIdentifier, const std::string MarkerIdentifier) const;
 	const Vector3f * GetMarkerPosition(const std::string & PartIdentifier, const std::string MarkerIdentifier) const;
 	// setters
 	void SetModel(const Graphics::Model * Model);

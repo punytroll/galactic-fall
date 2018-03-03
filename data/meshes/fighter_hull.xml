@@ -19257,4 +19257,16 @@
 		<triangle-point triangle-point-identifier="3761"/>
 		<triangle-point triangle-point-identifier="3755"/>
 	</triangle>
+	<marker identifier="front_gun_slot">
+		<position x="2.5" y="0" z="-0.3"/>
+		<orientation w="0" x="0.7071067812" y="0" z="-0.7071067812"/>
+	</marker>
+	<marker identifier="battery_slot">
+		<position x="0.4" y="0" z="0"/>
+		<orientation w="1" x="0" y="0" z="0"/>
+	</marker>
+	<marker identifier="generator_slot">
+		<position x="-0.8" y="0" z="0"/>
+		<orientation w="1" x="0" y="0" z="0"/>
+	</marker>
 </mesh>

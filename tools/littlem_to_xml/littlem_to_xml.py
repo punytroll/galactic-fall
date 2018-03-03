@@ -33,9 +33,17 @@ class Position:
 		self.y = None
 		self.z = None
 
+class Orientation:
+	def __init__(self):
+		self.w = None
+		self.x = None
+		self.y = None
+		self.z = None
+
 class Marker:
 	def __init__(self):
 		self.identifier = None
+		self.orientation = None
 		self.position = None
 
 class Point:
@@ -123,6 +131,14 @@ if mesh_element.nodeType == Node.ELEMENT_NODE:
 								position.y = marker_child_element.attributes.get("y").nodeValue
 								position.z = marker_child_element.attributes.get("z").nodeValue
 								marker.position = position
+						elif marker_child_element.tagName == "orientation":
+							if marker.orientation == None:
+								orientation = Orientation()
+								orientation.w = marker_child_element.attributes.get("w").nodeValue
+								orientation.x = marker_child_element.attributes.get("x").nodeValue
+								orientation.y = marker_child_element.attributes.get("y").nodeValue
+								orientation.z = marker_child_element.attributes.get("z").nodeValue
+								marker.orientation = orientation
 				markers.append(marker)
 	# output
 	xml_stream << element << "mesh"
@@ -152,6 +168,11 @@ if mesh_element.nodeType == Node.ELEMENT_NODE:
 			xml_stream << element << "valid" << text << "true" << end << element << "value" << element << "x" << text << marker.position.x << end << element << "y" << text << marker.position.y << end << element << "z" << text << marker.position.z << end << end
 		else:
 			xml_stream << element << "valid" << text << "false" << end << element << "value" << element << "x" << text << "0.0" << end << element << "y" << text << "0.0" << end << element << "z" << text << "0.0" << end << end
+		xml_stream << end << element << "orientation"
+		if marker.orientation != None:
+			xml_stream << element << "valid" << text << "true" << end << element << "value" << element << "w" << text << marker.orientation.w << end << element << "x" << text << marker.orientation.x << end << element << "y" << text << marker.orientation.y << end << element << "z" << text << marker.orientation.z << end << end
+		else:
+			xml_stream << element << "valid" << text << "false" << end << element << "value" << element << "w" << text << "1.0" << end << element << "x" << text << "0.0" << end << element << "y" << text << "0.0" << end << element << "z" << text << "0.0" << end << end
 		xml_stream << end << end
 	xml_stream << end
 	xml_stream << end

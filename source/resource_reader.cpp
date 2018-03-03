@@ -677,13 +677,19 @@ static void ReadMesh(Arxx::Reference & Reference)
 		std::string MarkerIdentifier;
 		bool MarkerPositionValid;
 		Vector3f MarkerPosition;
+		bool MarkerOrientationValid;
+		Quaternion MarkerOrientation;
 		
-		Reader >> MarkerIdentifier >> MarkerPositionValid >> MarkerPosition;
+		Reader >> MarkerIdentifier >> MarkerPositionValid >> MarkerPosition >> MarkerOrientationValid >> MarkerOrientation;
 		
 		NewMesh->AddMarker(MarkerIdentifier);
 		if(MarkerPositionValid == true)
 		{
 			NewMesh->SetMarkerPosition(MarkerIdentifier, MarkerPosition);
+		}
+		if(MarkerOrientationValid == true)
+		{
+			NewMesh->SetMarkerOrientation(MarkerIdentifier, MarkerOrientation);
 		}
 	}
 	NewMesh->BuildVertexArray();
@@ -999,18 +1005,32 @@ static void ReadShipClass(Arxx::Reference & Reference, ClassManager< ShipClass >
 			throw std::runtime_error("Could not get slot class '" + SlotClassIdentifier + "' for slot '" + SlotIdentifier + "' of ship class '" + Identifier + "'.");
 		}
 		
-		std::string Name;
-		Vector3f SlotPosition;
-		Quaternion SlotOrientation;
+		std::string SlotName;
+		std::string SlotMarkerPartIdentifier;
+		std::string SlotMarkerIdentifier;
 		bool VisualizeAccessory;
 		
-		Reader >> Name >> SlotPosition >> SlotOrientation >> VisualizeAccessory;
+		Reader >> SlotName >> SlotMarkerPartIdentifier >> SlotMarkerIdentifier >> VisualizeAccessory;
 		
 		auto NewSlot(new Slot(SlotClass, SlotIdentifier));
 		
-		NewSlot->SetName(Name);
-		NewSlot->SetPosition(SlotPosition);
-		NewSlot->SetOrientation(SlotOrientation);
+		NewSlot->SetName(SlotName);
+	
+		auto SlotPosition{VisualizationPrototype.GetMarkerPosition(SlotMarkerPartIdentifier, SlotMarkerIdentifier)};
+
+		if(SlotPosition == nullptr)
+		{
+			throw std::runtime_error("For the ship '" + Identifier + "' and slot '" + SlotName + "', could not find the marker or its position for the slot position '" + SlotMarkerIdentifier + "' on the part '" + SlotMarkerPartIdentifier + "'.");
+		}
+	
+		auto SlotOrientation{VisualizationPrototype.GetMarkerOrientation(SlotMarkerPartIdentifier, SlotMarkerIdentifier)};
+
+		if(SlotOrientation == nullptr)
+		{
+			throw std::runtime_error("For the ship '" + Identifier + "' and slot '" + SlotName + "', could not find the marker or its orientation for the slot position '" + SlotMarkerIdentifier + "' on the part '" + SlotMarkerPartIdentifier + "'.");
+		}
+		NewSlot->SetPosition(*SlotPosition);
+		NewSlot->SetOrientation(*SlotOrientation);
 		NewSlot->SetVisualizeAccessory(VisualizeAccessory);
 		if(NewShipClass->AddSlot(SlotIdentifier, NewSlot) == false)
 		{
