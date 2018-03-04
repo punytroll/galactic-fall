@@ -112,7 +112,7 @@
 		</aspect-name>
 		<aspect-physical>
 			<radial-size value="0"/>
-			<space-requirement value="500"/>
+			<space-requirement value="400"/>
 		</aspect-physical>
 		<aspect-position>
 			<orientation w="0.707107" x="0" y="0.707107" z="0"/>
@@ -127,7 +127,7 @@
 		</aspect-name>
 		<aspect-physical>
 			<radial-size value="0"/>
-			<space-requirement value="500"/>
+			<space-requirement value="400"/>
 		</aspect-physical>
 		<aspect-position>
 			<orientation w="0.707107" x="0" y="0.707107" z="0"/>
@@ -142,7 +142,7 @@
 		</aspect-name>
 		<aspect-physical>
 			<radial-size value="0"/>
-			<space-requirement value="500"/>
+			<space-requirement value="400"/>
 		</aspect-physical>
 		<aspect-position>
 			<orientation w="0.707107" x="0" y="0.707107" z="0"/>
@@ -157,7 +157,7 @@
 		</aspect-name>
 		<aspect-physical>
 			<radial-size value="0"/>
-			<space-requirement value="300"/>
+			<space-requirement value="250"/>
 		</aspect-physical>
 		<aspect-position>
 			<orientation w="0.707107" x="0" y="0.707107" z="0"/>
@@ -282,7 +282,7 @@
 		</aspect-name>
 		<aspect-physical>
 			<radial-size value="0"/>
-			<space-requirement value="300"/>
+			<space-requirement value="250"/>
 		</aspect-physical>
 		<aspect-position>
 			<orientation w="0.707107" x="0" y="0.707107" z="0"/>
@@ -299,7 +299,7 @@
 		</aspect-name>
 		<aspect-physical>
 			<radial-size value="0"/>
-			<space-requirement value="300"/>
+			<space-requirement value="250"/>
 		</aspect-physical>
 		<aspect-position>
 			<orientation w="0.707107" x="0" y="0.707107" z="0"/>
@@ -434,7 +434,7 @@
 		</aspect-name>
 		<aspect-physical>
 			<radial-size value="0"/>
-			<space-requirement value="500"/>
+			<space-requirement value="400"/>
 		</aspect-physical>
 		<aspect-position>
 			<orientation w="0.707107" x="0" y="0.707107" z="0"/>
