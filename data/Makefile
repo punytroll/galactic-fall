@@ -143,13 +143,20 @@ clean-here:
 	$(RM) -r .data
 	$(RM) data.arx
 	$(RM) mesh_cargo_cube.xml
-	$(RM) mesh_fighter.xml
+	$(RM) mesh_fighter_cockpit.xml
+	$(RM) mesh_fighter_faction.xml
+	$(RM) mesh_fighter_hull.xml
 	$(RM) mesh_laser_shot.xml
+	$(RM) mesh_light_battery.xml
+	$(RM) mesh_light_laser_turret_base.xml
+	$(RM) mesh_light_laser_turret_gun.xml
 	$(RM) mesh_light_laser.xml
 	$(RM) mesh_planet.xml
-	$(RM) mesh_shuttle.xml
-	$(RM) mesh_transporter.xml
+	$(RM) mesh_shuttle_faction.xml
+	$(RM) mesh_shuttle_hull.xml
+	$(RM) mesh_small_generator.xml
 	$(RM) mesh_transporter_faction.xml
+	$(RM) mesh_transporter_hull.xml
 
 clean-recursive: clean-here textures-clean-recursive
 
