@@ -1,12 +1,12 @@
 <mesh identifier="laser_shot">
-	<point identifier="0" position-x="0.5" position-y="0.0" position-z="0.199565"/>
-	<point identifier="1" position-x="0.5" position-y="0.199565" position-z="-0.0"/>
-	<point identifier="2" position-x="-0.5" position-y="0.199565" position-z="0.0"/>
-	<point identifier="3" position-x="-0.5" position-y="-0.0" position-z="0.199565"/>
-	<point identifier="4" position-x="0.5" position-y="-0.199565" position-z="-0.0"/>
-	<point identifier="5" position-x="-0.5" position-y="-0.199565" position-z="0.0"/>
-	<point identifier="6" position-x="-0.5" position-y="-0.0" position-z="-0.199565"/>
-	<point identifier="7" position-x="0.5" position-y="0.0" position-z="-0.199565"/>
+	<point identifier="0" position-x="0.5" position-y="0.0" position-z="0.2"/>
+	<point identifier="1" position-x="0.5" position-y="0.2" position-z="-0.0"/>
+	<point identifier="2" position-x="-0.5" position-y="0.2" position-z="0.0"/>
+	<point identifier="3" position-x="-0.5" position-y="-0.0" position-z="0.2"/>
+	<point identifier="4" position-x="0.5" position-y="-0.2" position-z="-0.0"/>
+	<point identifier="5" position-x="-0.5" position-y="-0.2" position-z="0.0"/>
+	<point identifier="6" position-x="-0.5" position-y="-0.0" position-z="-0.2"/>
+	<point identifier="7" position-x="0.5" position-y="0.0" position-z="-0.2"/>
 	<triangle-point identifier="0" normal-x="0.0" normal-y="0.707106781187" normal-z="0.707106781187">
 		<point point-identifier="0"/>
 	</triangle-point>
