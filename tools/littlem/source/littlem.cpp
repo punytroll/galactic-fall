@@ -1112,7 +1112,7 @@ void vStopPicking(void)
 	{
 		// number of names on the name stack is always 2: type of the object, index in the global vector of the index
 		assert(puiHitPointer[0] == 2);
-		if((puiHitPointer[1] < uiNearestDepth) || ((uiNearestObjectType == LITTLEM_TRIANGLE) && ((puiHitPointer[3] == LITTLEM_POINT) || (puiHitPointer[3] == LITTLEM_LIGHT))))
+		if((puiHitPointer[1] < uiNearestDepth) || ((uiNearestObjectType == LITTLEM_TRIANGLE) && ((puiHitPointer[3] == LITTLEM_CAMERA) || (puiHitPointer[3] == LITTLEM_POINT) || (puiHitPointer[3] == LITTLEM_LIGHT) || (puiHitPointer[3] == LITTLEM_MARKER))))
 		{
 			uiNearestDepth = puiHitPointer[1];
 			uiNearestObjectType = puiHitPointer[3];
