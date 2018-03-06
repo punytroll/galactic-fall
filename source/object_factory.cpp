@@ -19,6 +19,8 @@
 
 #include <stdexcept>
 
+#include "ammunition.h"
+#include "ammunition_class.h"
 #include "battery.h"
 #include "battery_class.h"
 #include "character.h"
@@ -61,6 +63,7 @@
 Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSystemClassIdentifier);
 
 ObjectFactory::ObjectFactory(void) :
+	_AmmunitionClassManager(new ClassManager< AmmunitionClass >()),
 	_BatteryClassManager(new ClassManager< BatteryClass >()),
 	_CommodityClassManager(new ClassManager< CommodityClass >()),
 	_GeneratorClassManager(new ClassManager< GeneratorClass >()),
@@ -72,6 +75,8 @@ ObjectFactory::ObjectFactory(void) :
 
 ObjectFactory::~ObjectFactory(void)
 {
+	delete _AmmunitionClassManager;
+	_AmmunitionClassManager = nullptr;
 	delete _BatteryClassManager;
 	_BatteryClassManager = nullptr;
 	delete _CommodityClassManager;
@@ -90,7 +95,30 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 {
 	Object * Result(nullptr);
 	
-	if(TypeIdentifier == "battery")
+	if(TypeIdentifier == "ammunition")
+	{
+		assert(_AmmunitionClassManager != nullptr);
+		
+		auto AmmunitionClass(_AmmunitionClassManager->Get(ClassIdentifier));
+		
+		assert(AmmunitionClass != nullptr);
+		
+		auto NewAmmunition{new Ammunition{}};
+		
+		// set up type specific things
+		NewAmmunition->SetAmount(AmmunitionClass->GetCartridgeSize());
+		NewAmmunition->SetCapacity(AmmunitionClass->GetCartridgeSize());
+		// set up aspects
+		// set up name aspect
+		assert(NewAmmunition->GetAspectName() != nullptr);
+		NewAmmunition->GetAspectName()->SetName(AmmunitionClass->GetName());
+		// set up physical aspect
+		assert(NewAmmunition->GetAspectPhysical() != nullptr);
+		NewAmmunition->GetAspectPhysical()->SetRadialSize(AmmunitionClass->GetVisualizationPrototype()->GetModel()->GetRadialSize());
+		NewAmmunition->GetAspectPhysical()->SetSpaceRequirement(AmmunitionClass->GetSpaceRequirement());
+		Result = NewAmmunition;
+	}
+	else if(TypeIdentifier == "battery")
 	{
 		assert(_BatteryClassManager != nullptr);
 		
@@ -367,7 +395,17 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 
 unsigned_numeric ObjectFactory::GetSpaceRequirement(const std::string & TypeIdentifier, const std::string & ClassIdentifier) const
 {
-	if(TypeIdentifier == "battery")
+	if(TypeIdentifier == "ammunition")
+	{
+		assert(_AmmunitionClassManager != nullptr);
+		
+		auto AmmunitionClass{_AmmunitionClassManager->Get(ClassIdentifier)};
+		
+		assert(AmmunitionClass != nullptr);
+		
+		return AmmunitionClass->GetSpaceRequirement();
+	}
+	else if(TypeIdentifier == "battery")
 	{
 		assert(_BatteryClassManager != nullptr);
 		
@@ -433,7 +471,17 @@ unsigned_numeric ObjectFactory::GetSpaceRequirement(const std::string & TypeIden
 
 const VisualizationPrototype * ObjectFactory::GetVisualizationPrototype(const std::string & TypeIdentifier, const std::string & ClassIdentifier) const
 {
-	if(TypeIdentifier == "battery")
+	if(TypeIdentifier == "ammunition")
+	{
+		assert(_AmmunitionClassManager != nullptr);
+		
+		auto AmmunitionClass{_AmmunitionClassManager->Get(ClassIdentifier)};
+		
+		assert(AmmunitionClass != nullptr);
+		
+		return AmmunitionClass->GetVisualizationPrototype();
+	}
+	else if(TypeIdentifier == "battery")
 	{
 		assert(_BatteryClassManager != nullptr);
 		

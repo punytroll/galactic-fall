@@ -12,12 +12,15 @@ data_arx = \
 
 all_data = \
 	.data \
+	.data/ammunition_class_light_gauss_ammunition.data \
 	.data/asset_class_equipment.data \
 	.data/asset_class_fighter.data \
 	.data/asset_class_food.data \
 	.data/asset_class_fuel.data \
+	.data/asset_class_light_gauss_ammunition.data \
 	.data/asset_class_industrial.data \
 	.data/asset_class_light_battery.data \
+	.data/asset_class_light_gauss_cannon.data \
 	.data/asset_class_light_laser.data \
 	.data/asset_class_light_laser_turret.data \
 	.data/asset_class_luxury_goods.data \
@@ -67,8 +70,11 @@ all_data = \
 	.data/mesh_fighter_cockpit.data \
 	.data/mesh_fighter_faction.data \
 	.data/mesh_fighter_hull.data \
+	.data/mesh_gauss_shell.data \
 	.data/mesh_laser_shot.data \
 	.data/mesh_light_battery.data \
+	.data/mesh_light_gauss_ammunition.data \
+	.data/mesh_light_gauss_cannon.data \
 	.data/mesh_light_laser.data \
 	.data/mesh_light_laser_turret_base.data \
 	.data/mesh_light_laser_turret_gun.data \
@@ -80,8 +86,11 @@ all_data = \
 	.data/mesh_transporter_hull.data \
 	.data/model_cargo_cube.data \
 	.data/model_fighter.data \
+	.data/model_gauss_shell.data \
 	.data/model_laser_shot.data \
 	.data/model_light_battery.data \
+	.data/model_light_gauss_ammunition.data \
+	.data/model_light_gauss_cannon.data \
 	.data/model_light_laser.data \
 	.data/model_light_laser_turret.data \
 	.data/model_planet.data \
@@ -120,6 +129,7 @@ all_data = \
 	.data/vertex_shader_particle.data \
 	.data/vertex_shader_ui_texture.data \
 	.data/vertex_shader_widget.data \
+	.data/weapon_class_light_gauss_cannon.data \
 	.data/weapon_class_light_laser.data \
 	.data/weapon_class_medium_laser.data
 
@@ -146,8 +156,11 @@ clean-here:
 	$(RM) mesh_fighter_cockpit.xml
 	$(RM) mesh_fighter_faction.xml
 	$(RM) mesh_fighter_hull.xml
+	$(RM) mesh_gauss_shell.xml
 	$(RM) mesh_laser_shot.xml
 	$(RM) mesh_light_battery.xml
+	$(RM) mesh_light_gauss_ammunition.xml
+	$(RM) mesh_light_gauss_cannon.xml
 	$(RM) mesh_light_laser_turret_base.xml
 	$(RM) mesh_light_laser_turret_gun.xml
 	$(RM) mesh_light_laser.xml
@@ -182,6 +195,7 @@ data.arx: $(data_arx) $(arxtouch_dependencies) $(arxadd_dependencies)
 	$(command_arxadd) $@ --name="Shaders" --type=0 --sub-type=0 --relation="::child"
 	$(command_arxadd) $@ --name="Programs" --type=0 --sub-type=0 --relation="::child"
 	$(command_arxadd) $@ --name="Galaxies" --type=0 --sub-type=0 --relation="::child"
+	$(command_arxadd) $@ --name="Ammunition Classes" --type=0 --sub-type=0 --relation="::child"
 	@echo "\n\nAdding settings ...\n"
 	$(command_arxadd) $@ --name="Key Binding Profile" --type=10 --sub-type=0 --relation="/Settings::child" --data-file=.data/setting_key_binding_profile.data
 	$(command_arxadd) $@ --name="Window Dimensions" --type=f --sub-type=0 --relation="/Settings::child" --data-file=.data/setting_window_dimensions.data
@@ -192,6 +206,7 @@ data.arx: $(data_arx) $(arxtouch_dependencies) $(arxadd_dependencies)
 	$(command_arxadd) $@ --name="Medium Weapon" --type=9 --sub-type=0 --relation="/Slot Classes::child" --data-file=.data/slot_class_medium_weapon.data
 	$(command_arxadd) $@ --name="Small Generator" --type=9 --sub-type=0 --relation="/Slot Classes::child" --data-file=.data/slot_class_small_generator.data
 	@echo "\n\nAdding weapon classes ...\n"
+	$(command_arxadd) $@ --name="Light Gauss Cannon" --type=7 --sub-type=0 --relation="/Weapon Classes::child" --data-file=.data/weapon_class_light_gauss_cannon.data
 	$(command_arxadd) $@ --name="Light Laser" --type=7 --sub-type=0 --relation="/Weapon Classes::child" --data-file=.data/weapon_class_light_laser.data
 	$(command_arxadd) $@ --name="Medium Laser" --type=7 --sub-type=0 --relation="/Weapon Classes::child" --data-file=.data/weapon_class_medium_laser.data
 	@echo "\n\nAdding turret classes ...\n"
@@ -211,6 +226,8 @@ data.arx: $(data_arx) $(arxtouch_dependencies) $(arxadd_dependencies)
 	$(command_arxadd) $@ --name="Fuel" --type=4 --sub-type=0 --relation="/Asset Classes::child" --data-file=.data/asset_class_fuel.data
 	$(command_arxadd) $@ --name="Industrial" --type=4 --sub-type=0 --relation="/Asset Classes::child" --data-file=.data/asset_class_industrial.data
 	$(command_arxadd) $@ --name="Light Battery" --type=4 --sub-type=0 --relation="/Asset Classes::child" --data-file=.data/asset_class_light_battery.data
+	$(command_arxadd) $@ --name="Light Gauss Ammunition" --type=4 --sub-type=0 --relation="/Asset Classes::child" --data-file=.data/asset_class_light_gauss_ammunition.data
+	$(command_arxadd) $@ --name="Light Gauss Cannon" --type=4 --sub-type=0 --relation="/Asset Classes::child" --data-file=.data/asset_class_light_gauss_cannon.data
 	$(command_arxadd) $@ --name="Light Laser" --type=4 --sub-type=0 --relation="/Asset Classes::child" --data-file=.data/asset_class_light_laser.data
 	$(command_arxadd) $@ --name="Light Laser Turret" --type=4 --sub-type=0 --relation="/Asset Classes::child" --data-file=.data/asset_class_light_laser_turret.data
 	$(command_arxadd) $@ --name="Luxury Goods" --type=4 --sub-type=0 --relation="/Asset Classes::child" --data-file=.data/asset_class_luxury_goods.data
@@ -228,11 +245,16 @@ data.arx: $(data_arx) $(arxtouch_dependencies) $(arxadd_dependencies)
 	$(command_arxadd) $@ --name="Luxury Goods" --type=8 --sub-type=0 --relation="/Commodity Classes::child" --data-file=.data/commodity_class_luxury_goods.data
 	$(command_arxadd) $@ --name="Medical Supplies" --type=8 --sub-type=0 --relation="/Commodity Classes::child" --data-file=.data/commodity_class_medical_supplies.data
 	$(command_arxadd) $@ --name="Metal" --type=8 --sub-type=0 --relation="/Commodity Classes::child" --data-file=.data/commodity_class_metal.data
+	@echo "\n\nAdding ammunition classes ...\n"
+	$(command_arxadd) $@ --name="Light Gauss Ammunition" --type=1a --sub-type=0 --relation="/Ammunition Classes::child" --data-file=.data/ammunition_class_light_gauss_ammunition.data
 	@echo "\n\nAdding models ...\n"
 	$(command_arxadd) $@ --name="Cargo Cube" --type=b --sub-type=0 --relation="/Models::child" --data-file=.data/model_cargo_cube.data
 	$(command_arxadd) $@ --name="Fighter" --type=b --sub-type=0 --relation="/Models::child" --data-file=.data/model_fighter.data
+	$(command_arxadd) $@ --name="Gauss Shell" --type=b --sub-type=0 --relation="/Models::child" --data-file=.data/model_gauss_shell.data
 	$(command_arxadd) $@ --name="Laser Shot" --type=b --sub-type=0 --relation="/Models::child" --data-file=.data/model_laser_shot.data
 	$(command_arxadd) $@ --name="Light Battery" --type=b --sub-type=0 --relation="/Models::child" --data-file=.data/model_light_battery.data
+	$(command_arxadd) $@ --name="Light Gauss Ammunition" --type=b --sub-type=0 --relation="/Models::child" --data-file=.data/model_light_gauss_ammunition.data
+	$(command_arxadd) $@ --name="Light Gauss Cannon" --type=b --sub-type=0 --relation="/Models::child" --data-file=.data/model_light_gauss_cannon.data
 	$(command_arxadd) $@ --name="Light Laser" --type=b --sub-type=0 --relation="/Models::child" --data-file=.data/model_light_laser.data
 	$(command_arxadd) $@ --name="Light Laser Turret" --type=b --sub-type=0 --relation="/Models::child" --data-file=.data/model_light_laser_turret.data
 	$(command_arxadd) $@ --name="Planet" --type=b --sub-type=0 --relation="/Models::child" --data-file=.data/model_planet.data
@@ -244,8 +266,11 @@ data.arx: $(data_arx) $(arxtouch_dependencies) $(arxadd_dependencies)
 	$(command_arxadd) $@ --name="Fighter Cockpit" --type=2 --sub-type=0 --relation="/Meshes::child" --data-file=.data/mesh_fighter_cockpit.data
 	$(command_arxadd) $@ --name="Fighter Faction" --type=2 --sub-type=0 --relation="/Meshes::child" --data-file=.data/mesh_fighter_faction.data
 	$(command_arxadd) $@ --name="Fighter Hull" --type=2 --sub-type=0 --relation="/Meshes::child" --data-file=.data/mesh_fighter_hull.data
+	$(command_arxadd) $@ --name="Gauss Shell" --type=2 --sub-type=0 --relation="/Meshes::child" --data-file=.data/mesh_gauss_shell.data
 	$(command_arxadd) $@ --name="Laser Shot" --type=2 --sub-type=0 --relation="/Meshes::child" --data-file=.data/mesh_laser_shot.data
 	$(command_arxadd) $@ --name="Light Battery" --type=2 --sub-type=0 --relation="/Meshes::child" --data-file=.data/mesh_light_battery.data
+	$(command_arxadd) $@ --name="Light Gauss Ammunition" --type=2 --sub-type=0 --relation="/Meshes::child" --data-file=.data/mesh_light_gauss_ammunition.data
+	$(command_arxadd) $@ --name="Light Gauss Cannon" --type=2 --sub-type=0 --relation="/Meshes::child" --data-file=.data/mesh_light_gauss_cannon.data
 	$(command_arxadd) $@ --name="Light Laser" --type=2 --sub-type=0 --relation="/Meshes::child" --data-file=.data/mesh_light_laser.data
 	$(command_arxadd) $@ --name="Light Laser Turret Base" --type=2 --sub-type=0 --relation="/Meshes::child" --data-file=.data/mesh_light_laser_turret_base.data
 	$(command_arxadd) $@ --name="Light Laser Turret Gun" --type=2 --sub-type=0 --relation="/Meshes::child" --data-file=.data/mesh_light_laser_turret_gun.data

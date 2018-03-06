@@ -1,0 +1,20 @@
+<model>
+	<identifier>light_gauss_ammunition</identifier>
+	<model-parts>
+		<model-part>
+			<identifier>light_gauss_ammunition</identifier>
+			<mesh-identifier>light_gauss_ammunition</mesh-identifier>
+			<position>
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</position>
+			<orientation>
+				<w>1.0</w>
+				<x>0.0</x>
+				<y>0.0</y>
+				<z>0.0</z>
+			</orientation>
+		</model-part>
+	</model-parts>
+</model>

@@ -71,6 +71,14 @@
 			<base-price-modifier>0.92</base-price-modifier>
 		</offered-asset-class>
 		<offered-asset-class>
+			<identifier>light_gauss_ammunition</identifier>
+			<base-price-modifier>0.9</base-price-modifier>
+		</offered-asset-class>
+		<offered-asset-class>
+			<identifier>light_gauss_cannon</identifier>
+			<base-price-modifier>1.2</base-price-modifier>
+		</offered-asset-class>
+		<offered-asset-class>
 			<identifier>light_laser</identifier>
 			<base-price-modifier>0.89</base-price-modifier>
 		</offered-asset-class>

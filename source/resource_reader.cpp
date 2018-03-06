@@ -27,6 +27,7 @@
 
 #include <string_cast/string_cast.h>
 
+#include "ammunition_class.h"
 #include "arx_types.h"
 #include "asset_class.h"
 #include "battery_class.h"
@@ -69,6 +70,7 @@
 
 static Arxx::Item * Resolve(Arxx::Reference & Reference);
 
+static void ReadAmmunitionClass(Arxx::Reference & Reference, ClassManager< AmmunitionClass > * AmmunitionClassManager);
 static void ReadAssetClass(Arxx::Reference & Reference, ClassManager< AssetClass > * AssetClassManager);
 static void ReadBatteryClass(Arxx::Reference & Reference, ClassManager< BatteryClass > * BatteryClassManager);
 static void ReadCommodityClass(Arxx::Reference & Reference, ClassManager< CommodityClass > * CommodityClassManager);
@@ -173,6 +175,11 @@ void ResourceReader::_ReadItems(Arxx::Structure::Relation & Relation, std::funct
 	{
 		ReaderFunction(Child);
 	}
+}
+
+void ResourceReader::ReadAmmunitionClasses(ClassManager< AmmunitionClass > * AmmunitionClassManager)
+{
+	_ReadItems("/Ammunition Classes", std::bind(ReadAmmunitionClass, std::placeholders::_1, AmmunitionClassManager));
 }
 
 void ResourceReader::ReadAssetClasses(ClassManager< AssetClass > * AssetClassManager)
@@ -403,6 +410,44 @@ std::string ResourceReader::ReadSavegameFromScenarioPath(const std::string & Sce
 	}
 	
 	return Result;
+}
+
+static void ReadAmmunitionClass(Arxx::Reference & Reference, ClassManager< AmmunitionClass > * AmmunitionClassManager)
+{
+	auto Item(Resolve(Reference));
+	
+	if(Item->GetType() != DATA_TYPE_AMMUNITION_CLASS)
+	{
+		throw std::runtime_error("Item type for ammunition class '" + Item->GetName() + "' should be '" + to_string_cast(DATA_TYPE_AMMUNITION_CLASS) + "' not '" + to_string_cast(Item->GetType()) + "'.");
+	}
+	if(Item->GetSubType() != 0)
+	{
+		throw std::runtime_error("Item sub type for ammunition class '" + Item->GetName() + "' should be '0' not '" + to_string_cast(Item->GetSubType()) + "'.");
+	}
+	
+	Arxx::BufferReader Reader(*Item);
+	std::string Identifier;
+	
+	Reader >> Identifier;
+	
+	auto NewAmmunitionClass(AmmunitionClassManager->Create(Identifier));
+	
+	if(NewAmmunitionClass == nullptr)
+	{
+		throw std::runtime_error("Could not create ammunition class '" + Identifier + "'.");
+	}
+	
+	std::string Name;
+	std::uint32_t CartridgeSize;
+	std::uint32_t SpaceRequirement;
+	VisualizationPrototype VisualizationPrototype;
+	
+	Reader >> Name >> CartridgeSize >> SpaceRequirement >> VisualizationPrototype;
+	
+	NewAmmunitionClass->SetName(Name);
+	NewAmmunitionClass->SetCartridgeSize(CartridgeSize);
+	NewAmmunitionClass->SetSpaceRequirement(SpaceRequirement);
+	NewAmmunitionClass->SetVisualizationPrototype(VisualizationPrototype);
 }
 
 static void ReadAssetClass(Arxx::Reference & Reference, ClassManager< AssetClass > * AssetClassManager)

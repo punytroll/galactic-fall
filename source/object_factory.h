@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2007  Hagen Möbius
+ * Copyright (C) 2007-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -25,6 +25,7 @@
 template< class Class >
 class ClassManager;
 
+class AmmunitionClass;
 class BatteryClass;
 class CommodityClass;
 class GeneratorClass;
@@ -44,6 +45,7 @@ public:
 	Object * Create(const std::string & TypeIdentifier, const std::string & ClassIdentifier, bool CreateNestedObjects) const;
 	unsigned_numeric GetSpaceRequirement(const std::string & TypeIdentifier, const std::string & ClassIdentifier) const;
 	const VisualizationPrototype * GetVisualizationPrototype(const std::string & TypeIdentifier, const std::string & ClassIdentifier) const;
+	ClassManager< AmmunitionClass > * GetAmmunitionClassManager(void);
 	ClassManager< BatteryClass > * GetBatteryClassManager(void);
 	ClassManager< CommodityClass > * GetCommodityClassManager(void);
 	ClassManager< GeneratorClass > * GetGeneratorClassManager(void);
@@ -51,6 +53,7 @@ public:
 	ClassManager< TurretClass > * GetTurretClassManager(void);
 	ClassManager< WeaponClass > * GetWeaponClassManager(void);
 private:
+	ClassManager< AmmunitionClass > * _AmmunitionClassManager;
 	ClassManager< BatteryClass > * _BatteryClassManager;
 	ClassManager< CommodityClass > * _CommodityClassManager;
 	ClassManager< GeneratorClass > * _GeneratorClassManager;
@@ -58,6 +61,11 @@ private:
 	ClassManager< TurretClass > * _TurretClassManager;
 	ClassManager< WeaponClass > * _WeaponClassManager;
 };
+
+inline ClassManager< AmmunitionClass > * ObjectFactory::GetAmmunitionClassManager(void)
+{
+	return _AmmunitionClassManager;
+}
 
 inline ClassManager< BatteryClass > * ObjectFactory::GetBatteryClassManager(void)
 {
