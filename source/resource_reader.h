@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2015  Hagen Möbius
+ * Copyright (C) 2015-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -36,6 +36,7 @@ namespace Graphics
 template< class Class >
 class ClassManager;
 
+class AmmunitionClass;
 class AssetClass;
 class CommodityManager;
 class Galaxy;
@@ -53,6 +54,7 @@ public:
 	ResourceReader(void);
 	~ResourceReader(void);
 	bool LoadArchive(const std::string & Path);
+	void ReadAmmunitionClasses(ClassManager< AmmunitionClass > * AmmunitionClassManager);
 	void ReadAssetClasses(ClassManager< AssetClass > * AssetClassManager);
 	void ReadBatteryClasses(ClassManager< BatteryClass > * BatteryClassManager);
 	void ReadCommodityClasses(ClassManager< CommodityClass > * CommodityClassManager);

@@ -6,6 +6,14 @@
 		<string identifier="name"/>
 	</aspect-name>
 	
+	<ammunition-class type="26">
+		<string identifier="identifier"/>
+		<string identifier="name"/>
+		<u4byte identifier="cartridge-size"/>
+		<u4byte identifier="space-requirement"/>
+		<visualization identifier="visualization"/>
+	</ammunition-class>
+	
 	<asset-class type="4">
 		<string identifier="identifier"/>
 		<string identifier="name"/>

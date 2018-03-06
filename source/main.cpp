@@ -3392,6 +3392,7 @@ int main(int argc, char ** argv)
 	ON_DEBUG(std::cout << "Reading the data objects from the game archive." << std::endl);
 	g_ResourceReader->ReadMeshes();
 	g_ResourceReader->ReadModels();
+	g_ResourceReader->ReadAmmunitionClasses(g_ObjectFactory->GetAmmunitionClassManager());
 	g_ResourceReader->ReadAssetClasses(g_AssetClassManager);
 	g_ResourceReader->ReadBatteryClasses(g_ObjectFactory->GetBatteryClassManager());
 	g_ResourceReader->ReadCommodityClasses(g_ObjectFactory->GetCommodityClassManager());
