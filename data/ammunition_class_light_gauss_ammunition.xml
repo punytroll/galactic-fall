@@ -2,7 +2,7 @@
 	<identifier>light_gauss_ammunition</identifier>
 	<name>Light Gauss Ammunition</name>
 	<cartridge-size>25</cartridge-size>
-	<space-requirement>80</space-requirement>
+	<space-requirement>8</space-requirement>
 	<visualization>
 		<model-identifier>light_gauss_ammunition</model-identifier>
 		<visualization-parts>
