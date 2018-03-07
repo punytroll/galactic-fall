@@ -4,5 +4,5 @@
 	<base-price>4200</base-price>
 	<description>The medium laser is either used as heavy armament on small space crafts or as light armament on large space crafts.</description>
 	<object-type>weapon</object-type>
-	<object-class>medium_laser</object-class>
+	<object-sub-type>medium_laser</object-sub-type>
 </asset-class>

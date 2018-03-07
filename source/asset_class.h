@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2007  Hagen Möbius
+ * Copyright (C) 2007-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -35,20 +35,20 @@ public:
 	const std::string & GetDescription(void) const;
 	const std::string & GetIdentifier(void) const;
 	const std::string & GetName(void) const;
-	const std::string & GetObjectClassIdentifier(void) const;
+	const std::string & GetObjectSubTypeIdentifier(void) const;
 	const std::string & GetObjectTypeIdentifier(void) const;
 	// setters
 	void SetBasePrice(float BasePrice);
 	void SetDescription(const std::string & Description);
 	void SetName(const std::string & Name);
-	void SetObjectClassIdentifier(const std::string & ObjectClassIdentifier);
+	void SetObjectSubTypeIdentifier(const std::string & ObjectSubTypeIdentifier);
 	void SetObjectTypeIdentifier(const std::string & ObjectTypeIdentifier);
 private:
 	float _BasePrice;
 	std::string _Description;
 	std::string _Identifier;
 	std::string _Name;
-	std::string _ObjectClassIdentifier;
+	std::string _ObjectSubTypeIdentifier;
 	std::string _ObjectTypeIdentifier;
 };
 
@@ -72,9 +72,9 @@ inline const std::string & AssetClass::GetName(void) const
 	return _Name;
 }
 
-inline const std::string & AssetClass::GetObjectClassIdentifier(void) const
+inline const std::string & AssetClass::GetObjectSubTypeIdentifier(void) const
 {
-	return _ObjectClassIdentifier;
+	return _ObjectSubTypeIdentifier;
 }
 
 inline const std::string & AssetClass::GetObjectTypeIdentifier(void) const
@@ -97,9 +97,9 @@ inline void AssetClass::SetName(const std::string & Name)
 	_Name = Name;
 }
 
-inline void AssetClass::SetObjectClassIdentifier(const std::string & ObjectClassIdentifier)
+inline void AssetClass::SetObjectSubTypeIdentifier(const std::string & ObjectSubTypeIdentifier)
 {
-	_ObjectClassIdentifier = ObjectClassIdentifier;
+	_ObjectSubTypeIdentifier = ObjectSubTypeIdentifier;
 }
 
 inline void AssetClass::SetObjectTypeIdentifier(const std::string & ObjectTypeIdentifier)

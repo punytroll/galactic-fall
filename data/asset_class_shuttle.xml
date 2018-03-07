@@ -4,5 +4,5 @@
 	<base-price>18000</base-price>
 	<description>The small shuttle is the entry into space trade for most aspiring entrepreneurs.</description>
 	<object-type>ship</object-type>
-	<object-class>shuttle</object-class>
+	<object-sub-type>shuttle</object-sub-type>
 </asset-class>

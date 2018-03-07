@@ -312,7 +312,7 @@ void UI::ObjectInformationDialog::_Refresh(void)
 	if(_Object != nullptr)
 	{
 		PreviousWidget = _AddStringProperty(PreviousWidget, 0.0f, "Type", _Object->GetTypeIdentifier());
-		PreviousWidget = _AddStringProperty(PreviousWidget, 0.0f, "Class", _Object->GetClassIdentifier());
+		PreviousWidget = _AddStringProperty(PreviousWidget, 0.0f, "Sub-Type", _Object->GetSubTypeIdentifier());
 		PreviousWidget = _AddStringProperty(PreviousWidget, 0.0f, "Identifier", _Object->GetObjectIdentifier());
 		PreviousWidget = _AddSeparator(PreviousWidget, 0.0f, "Container");
 		if(_Object->GetContainer() != nullptr)

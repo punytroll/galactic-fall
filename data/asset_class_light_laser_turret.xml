@@ -4,5 +4,5 @@
 	<base-price>3800</base-price>
 	<description>The light laser turret is a basic automated armament for most civilian space crafts. It is also deployed in larger numbers on big military space crafts.</description>
 	<object-type>turret</object-type>
-	<object-class>light_laser_turret</object-class>
+	<object-sub-type>light_laser_turret</object-sub-type>
 </asset-class>

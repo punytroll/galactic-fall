@@ -861,29 +861,29 @@ void OnTimingDialogDestroying(UI::Event & DestroyingEvent)
 	}
 }
 
-void SpawnShip(System * System, const std::string & IdentifierSuffix, std::string ShipClassIdentifier = "")
+void SpawnShip(System * System, const std::string & IdentifierSuffix, std::string ShipSubTypeIdentifier = "")
 {
-	if(ShipClassIdentifier == "")
+	if(ShipSubTypeIdentifier == "")
 	{
 		double RandomUniform(GetRandomUniform());
 		
 		if(RandomUniform < 0.2f)
 		{
-			ShipClassIdentifier = "shuttle";
+			ShipSubTypeIdentifier = "shuttle";
 		}
 		else if(RandomUniform < 0.5f)
 		{
-			ShipClassIdentifier = "transporter";
+			ShipSubTypeIdentifier = "transporter";
 		}
 		else
 		{
-			ShipClassIdentifier = "fighter";
+			ShipSubTypeIdentifier = "fighter";
 		}
 	}
 	
-	auto NewShip(dynamic_cast< Ship * >(g_ObjectFactory->Create("ship", ShipClassIdentifier, true)));
+	auto NewShip{dynamic_cast< Ship * >(g_ObjectFactory->Create("ship", ShipSubTypeIdentifier, true))};
 	
-	NewShip->SetObjectIdentifier("::ship(" + NewShip->GetClassIdentifier() + ")" + IdentifierSuffix);
+	NewShip->SetObjectIdentifier("::ship(" + NewShip->GetSubTypeIdentifier() + ")" + IdentifierSuffix);
 	
 	auto Faction{System->GetRandomFactionAccordingToInfluences()};
 	
@@ -906,25 +906,25 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 	
 	auto NewBattery(g_ObjectFactory->Create("battery", "light_battery", true));
 	
-	NewBattery->SetObjectIdentifier("::battery(" + NewBattery->GetClassIdentifier() + ")::created_for(" + NewShip->GetObjectIdentifier() + ")" + IdentifierSuffix);
+	NewBattery->SetObjectIdentifier("::battery(" + NewBattery->GetSubTypeIdentifier() + ")::created_for(" + NewShip->GetObjectIdentifier() + ")" + IdentifierSuffix);
 	NewShip->GetAspectObjectContainer()->AddContent(NewBattery);
 	NewShip->GetAspectOutfitting()->GetSlot("battery")->Mount(NewBattery);
 	
 	auto NewCharacter(dynamic_cast< Character * >(g_ObjectFactory->Create("character", "", true)));
 	
-	NewCharacter->SetObjectIdentifier("::character(" + NewShip->GetClassIdentifier() + ")" + IdentifierSuffix);
+	NewCharacter->SetObjectIdentifier("::character(" + NewShip->GetSubTypeIdentifier() + ")" + IdentifierSuffix);
 	NewCharacter->GetMapKnowledge()->AddExploredSystem(System);
-	if(ShipClassIdentifier == "fighter")
+	if(ShipSubTypeIdentifier == "fighter")
 	{
 		NewCharacter->SetCredits(200 + GetRandomUnsignedInteger32Bit(50, 250));
 		
-		auto NewWeapon(g_ObjectFactory->Create("weapon", "light_laser", true));
+		auto NewWeapon{g_ObjectFactory->Create("weapon", "light_laser", true)};
 		
-		NewWeapon->SetObjectIdentifier("::weapon(" + NewWeapon->GetClassIdentifier() + ")::created_for(" + NewShip->GetObjectIdentifier() + ")" + IdentifierSuffix);
+		NewWeapon->SetObjectIdentifier("::weapon(" + NewWeapon->GetSubTypeIdentifier() + ")::created_for(" + NewShip->GetObjectIdentifier() + ")" + IdentifierSuffix);
 		NewShip->GetAspectObjectContainer()->AddContent(NewWeapon);
 		NewShip->GetAspectOutfitting()->GetSlot("front_gun")->Mount(NewWeapon);
 	}
-	else if((ShipClassIdentifier == "transporter") || (ShipClassIdentifier == "shuttle"))
+	else if((ShipSubTypeIdentifier == "transporter") || (ShipSubTypeIdentifier == "shuttle"))
 	{
 		NewCharacter->SetCredits(GetRandomUnsignedInteger32Bit(500, 2500));
 		for(int NumberOfAssetClasses = GetRandomIntegerFromExponentialDistribution(2); NumberOfAssetClasses > 0; --NumberOfAssetClasses)
@@ -937,11 +937,11 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 				++AssetClassIterator;
 			}
 			
-			int AmountOfAssets(GetRandomIntegerFromExponentialDistribution(NewShip->GetCargoHold()->GetSpaceCapacity() / g_ObjectFactory->GetSpaceRequirement(AssetClassIterator->second->GetObjectTypeIdentifier(), AssetClassIterator->second->GetObjectClassIdentifier())));
+			int AmountOfAssets(GetRandomIntegerFromExponentialDistribution(NewShip->GetCargoHold()->GetSpaceCapacity() / g_ObjectFactory->GetSpaceRequirement(AssetClassIterator->second->GetObjectTypeIdentifier(), AssetClassIterator->second->GetObjectSubTypeIdentifier())));
 			
-			while((AmountOfAssets > 0) && (NewShip->GetCargoHold()->GetSpace() >= g_ObjectFactory->GetSpaceRequirement(AssetClassIterator->second->GetObjectTypeIdentifier(), AssetClassIterator->second->GetObjectClassIdentifier())))
+			while((AmountOfAssets > 0) && (NewShip->GetCargoHold()->GetSpace() >= g_ObjectFactory->GetSpaceRequirement(AssetClassIterator->second->GetObjectTypeIdentifier(), AssetClassIterator->second->GetObjectSubTypeIdentifier())))
 			{
-				auto NewCommodity(g_ObjectFactory->Create(AssetClassIterator->second->GetObjectTypeIdentifier(), AssetClassIterator->second->GetObjectClassIdentifier(), true));
+				auto NewCommodity{g_ObjectFactory->Create(AssetClassIterator->second->GetObjectTypeIdentifier(), AssetClassIterator->second->GetObjectSubTypeIdentifier(), true)};
 				
 				NewCommodity->SetObjectIdentifier("::" + AssetClassIterator->second->GetObjectTypeIdentifier() + "(" + AssetClassIterator->second->GetIdentifier() + ")::(" + to_string_cast(NumberOfAssetClasses) + "|" + to_string_cast(AmountOfAssets) + ")" + IdentifierSuffix);
 				NewShip->GetCargoHold()->GetAspectObjectContainer()->AddContent(NewCommodity);
@@ -958,23 +958,23 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 		NewShip->SetHull(NewShip->GetHullCapacity());
 	}
 	NewShip->SetFuel(GetRandomFloat(0.1f * NewShip->GetFuelCapacity(), 0.8f * NewShip->GetFuelCapacity()));
-	if((ShipClassIdentifier == "transporter") || (ShipClassIdentifier == "shuttle"))
+	if((ShipSubTypeIdentifier == "transporter") || (ShipSubTypeIdentifier == "shuttle"))
 	{
-		auto NewMind(new StateMachineMind());
+		auto NewMind{new StateMachineMind{}};
 		
 		NewMind->SetObjectIdentifier("::mind(state_machine)" + IdentifierSuffix);
 		NewMind->SetCharacter(NewCharacter);
-		NewMind->GetStateMachine()->SetState(new SelectSteering(NewMind));
-		NewMind->GetStateMachine()->SetGlobalState(new MonitorFuel(NewMind));
+		NewMind->GetStateMachine()->SetState(new SelectSteering{NewMind});
+		NewMind->GetStateMachine()->SetGlobalState(new MonitorFuel{NewMind});
 		NewCharacter->GetAspectObjectContainer()->AddContent(NewMind);
 	}
 	else
 	{
-		auto NewMind(new GoalMind());
+		auto NewMind{new GoalMind{}};
 		
 		NewMind->SetObjectIdentifier("::mind(goal)" + IdentifierSuffix);
 		NewMind->SetCharacter(NewCharacter);
-		NewMind->GetAspectObjectContainer()->AddContent(new GoalFighterThink(NewMind));
+		NewMind->GetAspectObjectContainer()->AddContent(new GoalFighterThink{NewMind});
 		NewCharacter->GetAspectObjectContainer()->AddContent(NewMind);
 	}
 	NewShip->GetAspectObjectContainer()->AddContent(NewCharacter);
@@ -985,7 +985,7 @@ void SpawnShipOnTimeout(System * SpawnInSystem)
 {
 	std::stringstream IdentifierSuffix;
 	
-	IdentifierSuffix << "::created_at_game_time(" << std::fixed << GameTime::Get() << ")::in_system(" << SpawnInSystem->GetClassIdentifier() << ")";
+	IdentifierSuffix << "::created_at_game_time(" << std::fixed << GameTime::Get() << ")::in_system(" << SpawnInSystem->GetSubTypeIdentifier() << ")";
 	
 	SpawnShip(SpawnInSystem, IdentifierSuffix.str());
 	g_SpawnShipTimeoutNotification = g_GameTimeTimeoutNotifications->Add(GameTime::Get() + GetRandomFloatFromExponentialDistribution(1.0f / SpawnInSystem->GetTrafficDensity()), std::bind(SpawnShipOnTimeout, SpawnInSystem));
@@ -999,7 +999,7 @@ void PopulateSystem(System * System)
 	{
 		std::stringstream IdentifierSuffix;
 		
-		IdentifierSuffix << "::created_at_game_time(" << std::fixed << GameTime::Get() << "[" << ShipNumber << "])::in_system(" << System->GetClassIdentifier() << ")";
+		IdentifierSuffix << "::created_at_game_time(" << std::fixed << GameTime::Get() << "[" << ShipNumber << "])::in_system(" << System->GetSubTypeIdentifier() << ")";
 		
 		SpawnShip(System, IdentifierSuffix.str());
 	}
@@ -1331,16 +1331,16 @@ void LoadGameFromElement(const Element * SaveElement)
 			if(NewObject == nullptr)
 			{
 				assert(SaveChild->HasAttribute("type-identifier") == true);
-				assert(SaveChild->HasAttribute("class-identifier") == true);
-				NewObject = g_ObjectFactory->Create(SaveChild->GetAttribute("type-identifier"), SaveChild->GetAttribute("class-identifier"), false);
+				assert(SaveChild->HasAttribute("sub-type-identifier") == true);
+				NewObject = g_ObjectFactory->Create(SaveChild->GetAttribute("type-identifier"), SaveChild->GetAttribute("sub-type-identifier"), false);
 				NewObject->SetObjectIdentifier(SaveChild->GetAttribute("object-identifier"));
 			}
 			else
 			{
 				assert(SaveChild->HasAttribute("type-identifier") == true);
 				assert(SaveChild->GetAttribute("type-identifier") == NewObject->GetTypeIdentifier());
-				assert(SaveChild->HasAttribute("class-identifier") == true);
-				assert(SaveChild->GetAttribute("class-identifier") == NewObject->GetClassIdentifier());
+				assert(SaveChild->HasAttribute("sub-type-identifier") == true);
+				assert(SaveChild->GetAttribute("sub-type-identifier") == NewObject->GetSubTypeIdentifier());
 			}
 			for(auto ObjectChild : SaveChild->GetChilds())
 			{
@@ -2005,11 +2005,11 @@ void SaveGame(std::ostream & OStream)
 	
 	XML << element << "save";
 	assert(g_Galaxy != nullptr);
-	XML << element << "galaxy" << attribute << "identifier" << value << g_Galaxy->GetClassIdentifier() << end;
+	XML << element << "galaxy" << attribute << "identifier" << value << g_Galaxy->GetSubTypeIdentifier() << end;
 	XML << element << "game-time" << attribute << "value" << value << to_string_cast(GameTime::Get(), 4) << end;
 	if(g_CurrentSystem != nullptr)
 	{
-		XML << element << "current-system" << attribute << "identifier" << value << g_CurrentSystem->GetClassIdentifier() << end;
+		XML << element << "current-system" << attribute << "identifier" << value << g_CurrentSystem->GetSubTypeIdentifier() << end;
 	}
 	XML << element << "time-warp" << attribute << "value" << value << g_TimeWarp << end;
 	if(g_CommandMind != nullptr)
@@ -2059,7 +2059,7 @@ void SaveGame(std::ostream & OStream)
 					if(Hangar != nullptr)
 					{
 						assert(Planet->GetAspectObjectContainer() != nullptr);
-						XML << element << "object" << attribute << "type-identifier" << value << Planet->GetTypeIdentifier() << attribute << "class-identifier" << value << Planet->GetClassIdentifier() << attribute << "object-identifier" << value << Planet->GetObjectIdentifier();
+						XML << element << "object" << attribute << "type-identifier" << value << Planet->GetTypeIdentifier() << attribute << "sub-type-identifier" << value << Planet->GetSubTypeIdentifier() << attribute << "object-identifier" << value << Planet->GetObjectIdentifier();
 						XML << element << "aspect-object-container";
 						XML << element << "content" << attribute << "object-identifier" << value << Hangar->GetObjectIdentifier() << end;
 						XML << end;
@@ -2531,7 +2531,7 @@ void ActionSpawnFighter(void)
 {
 	std::stringstream IdentifierPrefix;
 	
-	IdentifierPrefix << "::system(" << g_CurrentSystem->GetClassIdentifier() << ")::created_at_game_time(" << std::fixed << GameTime::Get() << ")";
+	IdentifierPrefix << "::system(" << g_CurrentSystem->GetSubTypeIdentifier() << ")::created_at_game_time(" << std::fixed << GameTime::Get() << ")";
 	SpawnShip(g_CurrentSystem, IdentifierPrefix.str(), "fighter");
 }
 
@@ -2541,7 +2541,7 @@ void ActionSpawnRandomShip(void)
 	
 	std::stringstream IdentifierPrefix;
 	
-	IdentifierPrefix << "::system(" << g_CurrentSystem->GetClassIdentifier() << ")::created_at_game_time(" << std::fixed << GameTime::Get() << ")";
+	IdentifierPrefix << "::system(" << g_CurrentSystem->GetSubTypeIdentifier() << ")::created_at_game_time(" << std::fixed << GameTime::Get() << ")";
 	SpawnShip(g_CurrentSystem, IdentifierPrefix.str());
 }
 

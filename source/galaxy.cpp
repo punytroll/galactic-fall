@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2007  Hagen Möbius
+ * Copyright (C) 2007-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -33,29 +33,29 @@ Galaxy::Galaxy(void)
 
 Faction * Galaxy::GetFaction(const std::string & Identifier)
 {
-	std::map< std::string, Faction * >::iterator Faction(m_Factions.find(Identifier));
+	auto FactionIterator{_Factions.find(Identifier)};
 	
-	if(Faction != m_Factions.end())
+	if(FactionIterator != _Factions.end())
 	{
-		return Faction->second;
+		return FactionIterator->second;
 	}
 	else
 	{
-		return 0;
+		return nullptr;
 	}
 }
 
 System * Galaxy::GetSystem(const std::string & Identifier)
 {
-	std::map< std::string, System * >::iterator System(m_Systems.find(Identifier));
+	auto SystemIterator{_Systems.find(Identifier)};
 	
-	if(System != m_Systems.end())
+	if(SystemIterator != _Systems.end())
 	{
-		return System->second;
+		return SystemIterator->second;
 	}
 	else
 	{
-		return 0;
+		return nullptr;
 	}
 }
 
@@ -64,24 +64,25 @@ void Galaxy::_OnAdded(Object * Content)
 	assert(Content != nullptr);
 	if(Content->GetTypeIdentifier() == "system")
 	{
-		assert(m_Systems.find(Content->GetClassIdentifier()) == m_Systems.end());
+		assert(_Systems.find(Content->GetSubTypeIdentifier()) == _Systems.end());
 		
-		auto TheSystem(dynamic_cast< System * >(Content));
+		auto AddedSystem{dynamic_cast< System * >(Content)};
 		
-		assert(TheSystem != nullptr);
-		m_Systems[Content->GetClassIdentifier()] = TheSystem;
+		assert(AddedSystem != nullptr);
+		_Systems[Content->GetSubTypeIdentifier()] = AddedSystem;
 	}
 	else if(Content->GetTypeIdentifier() == "faction")
 	{
-		assert(m_Factions.find(Content->GetClassIdentifier()) == m_Factions.end());
+		assert(_Factions.find(Content->GetSubTypeIdentifier()) == _Factions.end());
 		
-		auto TheFaction(dynamic_cast< Faction * >(Content));
+		auto AddedFaction{dynamic_cast< Faction * >(Content)};
 		
-		assert(TheFaction != nullptr);
-		m_Factions[Content->GetClassIdentifier()] = TheFaction;
+		assert(AddedFaction != nullptr);
+		_Factions[Content->GetSubTypeIdentifier()] = AddedFaction;
 	}
 	else
 	{
+		// we don't allow objects of any other type
 		assert(false);
 	}
 }
@@ -91,20 +92,21 @@ void Galaxy::_OnRemoved(Object * Content)
 	assert(Content != nullptr);
 	if(Content->GetTypeIdentifier() == "system")
 	{
-		std::map< std::string, System * >::iterator Iterator(m_Systems.find(Content->GetClassIdentifier()));
+		auto SystemIterator(_Systems.find(Content->GetSubTypeIdentifier()));
 		
-		assert(Iterator != m_Systems.end());
-		m_Systems.erase(Iterator);
+		assert(SystemIterator != _Systems.end());
+		_Systems.erase(SystemIterator);
 	}
 	else if(Content->GetTypeIdentifier() == "faction")
 	{
-		std::map< std::string, Faction * >::iterator Iterator(m_Factions.find(Content->GetClassIdentifier()));
+		auto FactionIterator(_Factions.find(Content->GetSubTypeIdentifier()));
 		
-		assert(Iterator != m_Factions.end());
-		m_Factions.erase(Iterator);
+		assert(FactionIterator != _Factions.end());
+		_Factions.erase(FactionIterator);
 	}
 	else
 	{
+		// we don't allow objects of any other type
 		assert(false);
 	}
 }

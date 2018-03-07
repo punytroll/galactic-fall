@@ -9,7 +9,7 @@
 		<position x="0" y="0" z="200"/>
 		<field-of-view-y radians="0.8"/>
 	</main-camera>
-	<object type-identifier="ship" class-identifier="shuttle" object-identifier="::ship(shuttle)::player_ship">
+	<object type-identifier="ship" sub-type-identifier="shuttle" object-identifier="::ship(shuttle)::player_ship">
 		<aspect-name>
 			<name value="Stargazer Alpha 1-0"/>
 		</aspect-name>
@@ -57,7 +57,7 @@
 			<velocity x="0" y="0" z="0"/>
 		</type-specific>
 	</object>
-	<object type-identifier="battery" class-identifier="light_battery" object-identifier="::battery(::ship(shuttle)::player_ship)">
+	<object type-identifier="battery" sub-type-identifier="light_battery" object-identifier="::battery(::ship(shuttle)::player_ship)">
 		<aspect-accessory>
 			<slot slot-identifier="battery"/>
 		</aspect-accessory>
@@ -73,7 +73,7 @@
 			<energy-capacity value="200"/>
 		</type-specific>
 	</object>
-	<object type-identifier="generator" class-identifier="small_generator" object-identifier="::generator(::ship(shuttle)::player_ship)">
+	<object type-identifier="generator" sub-type-identifier="small_generator" object-identifier="::generator(::ship(shuttle)::player_ship)">
 		<aspect-accessory>
 			<slot slot-identifier="generator"/>
 		</aspect-accessory>
@@ -88,7 +88,7 @@
 			<energy-provision-per-second value="1.5"/>
 		</type-specific>
 	</object>
-	<object type-identifier="storage" class-identifier="" object-identifier="::storage(::ship(shuttle)::player_ship)">
+	<object type-identifier="storage" sub-type-identifier="" object-identifier="::storage(::ship(shuttle)::player_ship)">
 		<aspect-object-container>
 			<content object-identifier="::commodity(luxury_goods)::1"/>
 			<content object-identifier="::commodity(luxury_goods)::2"/>
@@ -105,7 +105,7 @@
 			<space-capacity value="12000"/>
 		</type-specific>
 	</object>
-	<object type-identifier="weapon" class-identifier="medium_laser" object-identifier="::weapon(medium_laser)::3">
+	<object type-identifier="weapon" sub-type-identifier="medium_laser" object-identifier="::weapon(medium_laser)::3">
 		<aspect-accessory/>
 		<aspect-name>
 			<name value="Medium Laser"/>
@@ -120,7 +120,7 @@
 		</aspect-position>
 		<type-specific/>
 	</object>
-	<object type-identifier="weapon" class-identifier="medium_laser" object-identifier="::weapon(medium_laser)::2">
+	<object type-identifier="weapon" sub-type-identifier="medium_laser" object-identifier="::weapon(medium_laser)::2">
 		<aspect-accessory/>
 		<aspect-name>
 			<name value="Medium Laser"/>
@@ -135,7 +135,7 @@
 		</aspect-position>
 		<type-specific/>
 	</object>
-	<object type-identifier="weapon" class-identifier="medium_laser" object-identifier="::weapon(medium_laser)::1">
+	<object type-identifier="weapon" sub-type-identifier="medium_laser" object-identifier="::weapon(medium_laser)::1">
 		<aspect-accessory/>
 		<aspect-name>
 			<name value="Medium Laser"/>
@@ -150,7 +150,7 @@
 		</aspect-position>
 		<type-specific/>
 	</object>
-	<object type-identifier="weapon" class-identifier="light_laser" object-identifier="::weapon(light_laser)::3">
+	<object type-identifier="weapon" sub-type-identifier="light_laser" object-identifier="::weapon(light_laser)::3">
 		<aspect-accessory/>
 		<aspect-name>
 			<name value="Light Laser"/>
@@ -165,7 +165,7 @@
 		</aspect-position>
 		<type-specific/>
 	</object>
-	<object type-identifier="commodity" class-identifier="luxury_goods" object-identifier="::commodity(luxury_goods)::6">
+	<object type-identifier="commodity" sub-type-identifier="luxury_goods" object-identifier="::commodity(luxury_goods)::6">
 		<aspect-name>
 			<name value="Luxury Goods"/>
 		</aspect-name>
@@ -183,7 +183,7 @@
 			<velocity x="0" y="0" z="0"/>
 		</type-specific>
 	</object>
-	<object type-identifier="commodity" class-identifier="luxury_goods" object-identifier="::commodity(luxury_goods)::5">
+	<object type-identifier="commodity" sub-type-identifier="luxury_goods" object-identifier="::commodity(luxury_goods)::5">
 		<aspect-name>
 			<name value="Luxury Goods"/>
 		</aspect-name>
@@ -201,7 +201,7 @@
 			<velocity x="0" y="0" z="0"/>
 		</type-specific>
 	</object>
-	<object type-identifier="commodity" class-identifier="luxury_goods" object-identifier="::commodity(luxury_goods)::4">
+	<object type-identifier="commodity" sub-type-identifier="luxury_goods" object-identifier="::commodity(luxury_goods)::4">
 		<aspect-name>
 			<name value="Luxury Goods"/>
 		</aspect-name>
@@ -219,7 +219,7 @@
 			<velocity x="0" y="0" z="0"/>
 		</type-specific>
 	</object>
-	<object type-identifier="commodity" class-identifier="luxury_goods" object-identifier="::commodity(luxury_goods)::3">
+	<object type-identifier="commodity" sub-type-identifier="luxury_goods" object-identifier="::commodity(luxury_goods)::3">
 		<aspect-name>
 			<name value="Luxury Goods"/>
 		</aspect-name>
@@ -237,7 +237,7 @@
 			<velocity x="0" y="0" z="0"/>
 		</type-specific>
 	</object>
-	<object type-identifier="commodity" class-identifier="luxury_goods" object-identifier="::commodity(luxury_goods)::2">
+	<object type-identifier="commodity" sub-type-identifier="luxury_goods" object-identifier="::commodity(luxury_goods)::2">
 		<aspect-name>
 			<name value="Luxury Goods"/>
 		</aspect-name>
@@ -255,7 +255,7 @@
 			<velocity x="0" y="0" z="0"/>
 		</type-specific>
 	</object>
-	<object type-identifier="commodity" class-identifier="luxury_goods" object-identifier="::commodity(luxury_goods)::1">
+	<object type-identifier="commodity" sub-type-identifier="luxury_goods" object-identifier="::commodity(luxury_goods)::1">
 		<aspect-name>
 			<name value="Luxury Goods"/>
 		</aspect-name>
@@ -273,7 +273,7 @@
 			<velocity x="0" y="0" z="0"/>
 		</type-specific>
 	</object>
-	<object type-identifier="weapon" class-identifier="light_laser" object-identifier="::weapon(light_laser)::2">
+	<object type-identifier="weapon" sub-type-identifier="light_laser" object-identifier="::weapon(light_laser)::2">
 		<aspect-accessory>
 			<slot slot-identifier="starboard_gun"/>
 		</aspect-accessory>
@@ -290,7 +290,7 @@
 		</aspect-position>
 		<type-specific/>
 	</object>
-	<object type-identifier="weapon" class-identifier="light_laser" object-identifier="::weapon(light_laser)::1">
+	<object type-identifier="weapon" sub-type-identifier="light_laser" object-identifier="::weapon(light_laser)::1">
 		<aspect-accessory>
 			<slot slot-identifier="backboard_gun"/>
 		</aspect-accessory>
@@ -307,12 +307,12 @@
 		</aspect-position>
 		<type-specific/>
 	</object>
-	<object class-identifier="earth" object-identifier="::planet(earth)::in_system(sol)" type-identifier="planet">
+	<object type-identifier="planet" sub-type-identifier="earth" object-identifier="::planet(earth)::in_system(sol)">
 		<aspect-object-container>
 			<content object-identifier="::hangar::on_planet(::planet(earth)::in_system(sol))::for_character(::character::player_character)"/>
 		</aspect-object-container>
 	</object>
-	<object class-identifier="" object-identifier="::hangar::on_planet(::planet(earth)::in_system(sol))::for_character(::character::player_character)" type-identifier="hangar">
+	<object type-identifier="hangar" sub-type-identifier="" object-identifier="::hangar::on_planet(::planet(earth)::in_system(sol))::for_character(::character::player_character)">
 		<aspect-object-container>
 			<content object-identifier="::asset(transporter)::ship(transporter)::created_on(::planet(earth)::in_system(sol))::created_at_game_time(34.864446)::bought_by(::character::player_character)::created_at_address(0x14a28a0)"/>
 		</aspect-object-container>
@@ -320,7 +320,7 @@
 			<character object-identifier="::character::player_character"/>
 		</type-specific>
 	</object>
-	<object class-identifier="transporter" object-identifier="::asset(transporter)::ship(transporter)::created_on(::planet(earth)::in_system(sol))::created_at_game_time(34.864446)::bought_by(::character::player_character)::created_at_address(0x14a28a0)" type-identifier="ship">
+	<object type-identifier="ship" sub-type-identifier="transporter" object-identifier="::asset(transporter)::ship(transporter)::created_on(::planet(earth)::in_system(sol))::created_at_game_time(34.864446)::bought_by(::character::player_character)::created_at_address(0x14a28a0)">
 		<aspect-name>
 			<name value="Transporter"/>
 		</aspect-name>
@@ -367,7 +367,7 @@
 			<velocity x="0" y="0" z="0"/>
 		</type-specific>
 	</object>
-	<object class-identifier="light_battery" object-identifier="::asset(light_battery)::battery(light_battery)::created_on(::planet(earth)::in_system(sol))::created_at_game_time(41.947288)::bought_by(::character::player_character)::created_at_address(0x14a6470)" type-identifier="battery">
+	<object type-identifier="battery" sub-type-identifier="light_battery" object-identifier="::asset(light_battery)::battery(light_battery)::created_on(::planet(earth)::in_system(sol))::created_at_game_time(41.947288)::bought_by(::character::player_character)::created_at_address(0x14a6470)">
 		<aspect-accessory>
 			<slot slot-identifier="battery"/>
 		</aspect-accessory>
@@ -383,7 +383,7 @@
 			<energy-capacity value="200"/>
 		</type-specific>
 	</object>
-	<object class-identifier="small_generator" object-identifier="::asset(small_generator)::generator(small_generator)::created_on(::planet(earth)::in_system(sol))::created_at_game_time(36.681007)::bought_by(::character::player_character)::created_at_address(0x149e7d0)" type-identifier="generator">
+	<object type-identifier="generator" sub-type-identifier="small_generator" object-identifier="::asset(small_generator)::generator(small_generator)::created_on(::planet(earth)::in_system(sol))::created_at_game_time(36.681007)::bought_by(::character::player_character)::created_at_address(0x149e7d0)">
 		<aspect-accessory>
 			<slot slot-identifier="generator"/>
 		</aspect-accessory>
@@ -398,7 +398,7 @@
 			<energy-provision-per-second value="1.5"/>
 		</type-specific>
 	</object>
-	<object class-identifier="light_laser_turret" object-identifier="::asset(light_laser_turret)::turret(light_laser_turret)::created_on(::planet(earth)::in_system(sol))::created_at_game_time(37.680931)::bought_by(::character::player_character)::created_at_address(0x1479f90)" type-identifier="turret">
+	<object type-identifier="turret" sub-type-identifier="light_laser_turret" object-identifier="::asset(light_laser_turret)::turret(light_laser_turret)::created_on(::planet(earth)::in_system(sol))::created_at_game_time(37.680931)::bought_by(::character::player_character)::created_at_address(0x1479f90)">
 		<aspect-accessory>
 			<slot slot-identifier="rear_turret"/>
 		</aspect-accessory>
@@ -425,7 +425,7 @@
 		</aspect-visualization>
 		<type-specific/>
 	</object>
-	<object class-identifier="medium_laser" object-identifier="::asset(medium_laser)::weapon(medium_laser)::created_on(::planet(earth)::in_system(sol))::created_at_game_time(40.364063)::bought_by(::character::player_character)::created_at_address(0x1422aa0)" type-identifier="weapon">
+	<object type-identifier="weapon" sub-type-identifier="medium_laser" object-identifier="::asset(medium_laser)::weapon(medium_laser)::created_on(::planet(earth)::in_system(sol))::created_at_game_time(40.364063)::bought_by(::character::player_character)::created_at_address(0x1422aa0)">
 		<aspect-accessory>
 			<slot slot-identifier="front_gun"/>
 		</aspect-accessory>
@@ -450,13 +450,13 @@
 		</aspect-visualization>
 		<type-specific/>
 	</object>
-	<object class-identifier="" object-identifier="::storage()::0x141df50(1421846795.992)" type-identifier="storage">
+	<object type-identifier="storage" sub-type-identifier="" object-identifier="::storage()::0x141df50(1421846795.992)">
 		<aspect-object-container/>
 		<type-specific>
 			<space-capacity value="60000"/>
 		</type-specific>
 	</object>
-	<object type-identifier="character" class-identifier="" object-identifier="::character::player_character">
+	<object type-identifier="character" sub-type-identifier="" object-identifier="::character::player_character">
 		<aspect-object-container>
 			<content object-identifier="::player_mind"/>
 		</aspect-object-container>
@@ -470,7 +470,7 @@
 			</map-knowledge>
 		</type-specific>
 	</object>
-	<object type-identifier="mind" class-identifier="command_mind" object-identifier="::player_mind">
+	<object type-identifier="mind" sub-type-identifier="command_mind" object-identifier="::player_mind">
 		<type-specific>
 			<character object-identifier="::character::player_character"/>
 		</type-specific>

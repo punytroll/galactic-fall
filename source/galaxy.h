@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2007  Hagen Möbius
+ * Copyright (C) 2007-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -41,18 +41,18 @@ public:
 private:
 	void _OnAdded(Object * Content);
 	void _OnRemoved(Object * Content);
-	std::map< std::string, System * > m_Systems;
-	std::map< std::string, Faction * > m_Factions;
+	std::map< std::string, System * > _Systems;
+	std::map< std::string, Faction * > _Factions;
 };
 
 inline const std::map< std::string, Faction * > & Galaxy::GetFactions(void) const
 {
-	return m_Factions;
+	return _Factions;
 }
 
 inline const std::map< std::string, System * > & Galaxy::GetSystems(void) const
 {
-	return m_Systems;
+	return _Systems;
 }
 
 #endif

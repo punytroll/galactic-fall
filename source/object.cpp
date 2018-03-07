@@ -173,7 +173,7 @@ void Object::SetObjectIdentifier(const std::string & ObjectIdentifier)
 void Object::GenerateObjectIdentifier(void)
 {
 	assert(_ObjectIdentifier.empty() == true);
-	SetObjectIdentifier("::" + _TypeIdentifier + "(" + _ClassIdentifier + ")::" + to_string_cast(reinterpret_cast< void * >(this)) + "(" + to_string_cast(RealTime::Get(), 3) + ")");
+	SetObjectIdentifier("::" + _TypeIdentifier + "(" + _SubTypeIdentifier + ")::" + to_string_cast(reinterpret_cast< void * >(this)) + "(" + to_string_cast(RealTime::Get(), 3) + ")");
 }
 
 void Object::Destroy(void)
@@ -230,7 +230,7 @@ void Object::Dump(std::ostream & OStream)
 
 void Object::Dump(XMLStream & XML, Object * Container)
 {
-	XML << element << "object" << attribute << "address" << value << Container << attribute << "type-identifier" << value << Container->_TypeIdentifier << attribute << "class-identifier" << value << Container->_ClassIdentifier << attribute << "identifier" << value << Container->_ObjectIdentifier;
+	XML << element << "object" << attribute << "address" << value << Container << attribute << "type-identifier" << value << Container->_TypeIdentifier << attribute << "sub-type-identifier" << value << Container->_SubTypeIdentifier << attribute << "identifier" << value << Container->_ObjectIdentifier;
 	if(Container->_AspectObjectContainer != nullptr)
 	{
 		for(auto Content : Container->_AspectObjectContainer->GetContent())

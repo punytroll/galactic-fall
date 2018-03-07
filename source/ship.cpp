@@ -278,7 +278,7 @@ bool Ship::Update(float Seconds)
 				assert(_CargoHold->GetAspectObjectContainer() != nullptr);
 				for(auto Content : _CargoHold->GetAspectObjectContainer()->GetContent())
 				{
-					if((Content->GetTypeIdentifier() == "commodity") && (Content->GetClassIdentifier() == "fuel"))
+					if((Content->GetTypeIdentifier() == "commodity") && (Content->GetSubTypeIdentifier() == "fuel"))
 					{
 						SetFuel(Clamp(GetFuel() + 1.0f, 0.0f, GetFuelCapacity()));
 						Content->Destroy();

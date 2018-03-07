@@ -68,15 +68,15 @@ public:
 	const ObjectAspectUpdate * GetAspectUpdate(void) const;
 	ObjectAspectVisualization * GetAspectVisualization(void);
 	const ObjectAspectVisualization * GetAspectVisualization(void) const;
-	const std::string & GetClassIdentifier(void) const;
 	Object * GetContainer(void);
 	const Object * GetContainer(void) const;
 	const std::string & GetObjectIdentifier(void) const;
+	const std::string & GetSubTypeIdentifier(void) const;
 	const std::string & GetTypeIdentifier(void) const;
 	// setters
-	void SetClassIdentifier(const std::string & ClassIdentifier);
 	void SetContainer(Object * Container);
 	void SetObjectIdentifier(const std::string & ObjectIdentifier);
+	void SetSubTypeIdentifier(const std::string & SubTypeIdentifier);
 	void SetTypeIdentifier(const std::string & TypeIdentifier);
 	// modifiers
 	void AddAspectAccessory(void);
@@ -110,10 +110,10 @@ private:
 	ObjectAspectUpdate * _AspectUpdate;
 	ObjectAspectVisualization * _AspectVisualization;
 	// other
-	std::string _ClassIdentifier;
 	Object * _Container;
 	Event< void > _DestroyingEvent;
 	std::string _ObjectIdentifier;
+	std::string _SubTypeIdentifier;
 	std::string _TypeIdentifier;
 	
 	static std::set< Object * > _Objects;
@@ -210,9 +210,9 @@ inline const ObjectAspectVisualization * Object::GetAspectVisualization(void) co
 	return _AspectVisualization;
 }
 
-inline const std::string & Object::GetClassIdentifier(void) const
+inline const std::string & Object::GetSubTypeIdentifier(void) const
 {
-	return _ClassIdentifier;
+	return _SubTypeIdentifier;
 }
 
 inline Object * Object::GetContainer(void)
@@ -235,9 +235,9 @@ inline const std::string & Object::GetTypeIdentifier(void) const
 	return _TypeIdentifier;
 }
 
-inline void Object::SetClassIdentifier(const std::string & ClassIdentifier)
+inline void Object::SetSubTypeIdentifier(const std::string & SubTypeIdentifier)
 {
-	_ClassIdentifier = ClassIdentifier;
+	_SubTypeIdentifier = SubTypeIdentifier;
 }
 
 inline void Object::SetTypeIdentifier(const std::string & TypeIdentifier)

@@ -77,7 +77,7 @@ namespace UI
 			
 			auto NameLabel{new UI::Label{this, PlanetAssetClass->GetAssetClass()->GetName()}};
 			auto HangarAmountLabel{new UI::Label{this, ""}};
-			auto SizeRequirementLabel{new UI::Label{this, to_string_cast(0.001 * g_ObjectFactory->GetSpaceRequirement(PlanetAssetClass->GetAssetClass()->GetObjectTypeIdentifier(), PlanetAssetClass->GetAssetClass()->GetObjectClassIdentifier()), 3)}};
+			auto SizeRequirementLabel{new UI::Label{this, to_string_cast(0.001 * g_ObjectFactory->GetSpaceRequirement(PlanetAssetClass->GetAssetClass()->GetObjectTypeIdentifier(), PlanetAssetClass->GetAssetClass()->GetObjectSubTypeIdentifier()), 3)}};
 			auto PriceLabel{new UI::Label{this, to_string_cast(PlanetAssetClass->GetPrice())}};
 			
 			PriceLabel->SetLeft(width(this) - 5.0_c - width(PriceLabel));
@@ -118,7 +118,7 @@ namespace UI
 			{
 				assert(_Hangar->GetAspectObjectContainer() != nullptr);
 				HangarAmountLabel->SetVisible(true);
-				HangarAmountLabel->SetText(to_string_cast(_Hangar->GetAspectObjectContainer()->GetAmount(_PlanetAssetClass->GetAssetClass()->GetObjectTypeIdentifier(), _PlanetAssetClass->GetAssetClass()->GetObjectClassIdentifier())));
+				HangarAmountLabel->SetText(to_string_cast(_Hangar->GetAspectObjectContainer()->GetAmount(_PlanetAssetClass->GetAssetClass()->GetObjectTypeIdentifier(), _PlanetAssetClass->GetAssetClass()->GetObjectSubTypeIdentifier())));
 			}
 			else
 			{
@@ -312,10 +312,10 @@ void UI::TradeCenterWidget::_Buy(const PlanetAssetClass * PlanetAssetClass)
 	assert(_Planet != nullptr);
 	if(_Character->RemoveCredits(PlanetAssetClass->GetPrice()) == true)
 	{
-		auto NewCargo(g_ObjectFactory->Create(PlanetAssetClass->GetAssetClass()->GetObjectTypeIdentifier(), PlanetAssetClass->GetAssetClass()->GetObjectClassIdentifier(), true));
+		auto NewCargo(g_ObjectFactory->Create(PlanetAssetClass->GetAssetClass()->GetObjectTypeIdentifier(), PlanetAssetClass->GetAssetClass()->GetObjectSubTypeIdentifier(), true));
 		
 		assert(NewCargo != nullptr);
-		NewCargo->SetObjectIdentifier("::asset(" + PlanetAssetClass->GetAssetClass()->GetIdentifier() + ")::" + PlanetAssetClass->GetAssetClass()->GetObjectTypeIdentifier() + "(" + PlanetAssetClass->GetAssetClass()->GetObjectClassIdentifier() + ")::created_on(" + _Planet->GetObjectIdentifier() + ")::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::bought_by(" + _Character->GetObjectIdentifier() + ")::created_at_address(" + to_string_cast(reinterpret_cast< void * >(NewCargo)) + ")");
+		NewCargo->SetObjectIdentifier("::asset(" + PlanetAssetClass->GetAssetClass()->GetIdentifier() + ")::" + PlanetAssetClass->GetAssetClass()->GetObjectTypeIdentifier() + "(" + PlanetAssetClass->GetAssetClass()->GetObjectSubTypeIdentifier() + ")::created_on(" + _Planet->GetObjectIdentifier() + ")::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::bought_by(" + _Character->GetObjectIdentifier() + ")::created_at_address(" + to_string_cast(reinterpret_cast< void * >(NewCargo)) + ")");
 		
 		auto Hangar(_Planet->GetHangar(_Character));
 		
@@ -391,7 +391,7 @@ void UI::TradeCenterWidget::_OnAssetClassListBoxSelectedItemChanged(void)
 	_ClearAssetClassViewDisplay();
 	if((SelectedAssetClassListBoxItem != nullptr) && (_AssetClassViewDisplay->GetWidth() > 0.0f) && (_AssetClassViewDisplay->GetHeight() > 0.0f))
 	{
-		auto VisualizationPrototype{g_ObjectFactory->GetVisualizationPrototype(SelectedAssetClassListBoxItem->GetPlanetAssetClass()->GetAssetClass()->GetObjectTypeIdentifier(), SelectedAssetClassListBoxItem->GetPlanetAssetClass()->GetAssetClass()->GetObjectClassIdentifier())};
+		auto VisualizationPrototype{g_ObjectFactory->GetVisualizationPrototype(SelectedAssetClassListBoxItem->GetPlanetAssetClass()->GetAssetClass()->GetObjectTypeIdentifier(), SelectedAssetClassListBoxItem->GetPlanetAssetClass()->GetAssetClass()->GetObjectSubTypeIdentifier())};
 		
 		if(VisualizationPrototype != nullptr)
 		{
@@ -480,7 +480,7 @@ void UI::TradeCenterWidget::_OnAssetClassSizeLabelUpdating(UI::Label * AssetClas
 	assert(AssetClassSizeLabel != nullptr);
 	if(SelectedAssetClassListBoxItem != nullptr)
 	{
-		AssetClassSizeLabel->SetText(to_string_cast(0.001 * g_ObjectFactory->GetSpaceRequirement(SelectedAssetClassListBoxItem->GetPlanetAssetClass()->GetAssetClass()->GetObjectTypeIdentifier(), SelectedAssetClassListBoxItem->GetPlanetAssetClass()->GetAssetClass()->GetObjectClassIdentifier()), 3));
+		AssetClassSizeLabel->SetText(to_string_cast(0.001 * g_ObjectFactory->GetSpaceRequirement(SelectedAssetClassListBoxItem->GetPlanetAssetClass()->GetAssetClass()->GetObjectTypeIdentifier(), SelectedAssetClassListBoxItem->GetPlanetAssetClass()->GetAssetClass()->GetObjectSubTypeIdentifier()), 3));
 		AssetClassSizeLabel->SetVisible(true);
 	}
 	else
@@ -595,7 +595,7 @@ void UI::TradeCenterWidget::_OnSellButtonUpdating(UI::Button * SellButton, float
 		assert(Hangar->GetAspectObjectContainer() != nullptr);
 		for(auto Content : Hangar->GetAspectObjectContainer()->GetContent())
 		{
-			if((Content->GetTypeIdentifier() == SelectedAssetClassListBoxItem->GetPlanetAssetClass()->GetAssetClass()->GetObjectTypeIdentifier()) && (Content->GetClassIdentifier() == SelectedAssetClassListBoxItem->GetPlanetAssetClass()->GetAssetClass()->GetObjectClassIdentifier()))
+			if((Content->GetTypeIdentifier() == SelectedAssetClassListBoxItem->GetPlanetAssetClass()->GetAssetClass()->GetObjectTypeIdentifier()) && (Content->GetSubTypeIdentifier() == SelectedAssetClassListBoxItem->GetPlanetAssetClass()->GetAssetClass()->GetObjectSubTypeIdentifier()))
 			{
 				Enabled = true;
 				
@@ -631,7 +631,7 @@ void UI::TradeCenterWidget::_Sell(const PlanetAssetClass * PlanetAssetClass)
 	assert(Hangar->GetAspectObjectContainer() != nullptr);
 	for(auto Content : Hangar->GetAspectObjectContainer()->GetContent())
 	{
-		if((Content->GetTypeIdentifier() == PlanetAssetClass->GetAssetClass()->GetObjectTypeIdentifier()) && (Content->GetClassIdentifier() == PlanetAssetClass->GetAssetClass()->GetObjectClassIdentifier()))
+		if((Content->GetTypeIdentifier() == PlanetAssetClass->GetAssetClass()->GetObjectTypeIdentifier()) && (Content->GetSubTypeIdentifier() == PlanetAssetClass->GetAssetClass()->GetObjectSubTypeIdentifier()))
 		{
 			if(Content->GetAspectOutfitting() != nullptr)
 			{

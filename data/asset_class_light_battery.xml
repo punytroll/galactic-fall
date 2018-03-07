@@ -4,5 +4,5 @@
 	<base-price>1300</base-price>
 	<description>The light battery provides a small energy capacitor for space crafts.</description>
 	<object-type>battery</object-type>
-	<object-class>light_battery</object-class>
+	<object-sub-type>light_battery</object-sub-type>
 </asset-class>

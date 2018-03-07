@@ -9,7 +9,7 @@
 		<position x="0" y="0" z="200"/>
 		<field-of-view-y radians="0.8"/>
 	</main-camera>
-	<object type-identifier="ship" class-identifier="shuttle" object-identifier="::ship(shuttle)::player_ship">
+	<object type-identifier="ship" sub-type-identifier="shuttle" object-identifier="::ship(shuttle)::player_ship">
 		<aspect-name>
 			<name value="Stargazer Alpha 1-0"/>
 		</aspect-name>
@@ -53,7 +53,7 @@
 			<velocity x="0" y="0" z="0"/>
 		</type-specific>
 	</object>
-	<object type-identifier="battery" class-identifier="light_battery" object-identifier="::battery(::ship(shuttle)::player_ship)">
+	<object type-identifier="battery" sub-type-identifier="light_battery" object-identifier="::battery(::ship(shuttle)::player_ship)">
 		<aspect-accessory>
 			<slot slot-identifier="battery"/>
 		</aspect-accessory>
@@ -69,13 +69,13 @@
 			<energy-capacity value="200"/>
 		</type-specific>
 	</object>
-	<object type-identifier="storage" class-identifier="" object-identifier="::storage(::ship(shuttle)::player_ship)">
+	<object type-identifier="storage" sub-type-identifier="" object-identifier="::storage(::ship(shuttle)::player_ship)">
 		<aspect-object-container/>
 		<type-specific>
 			<space-capacity value="12000"/>
 		</type-specific>
 	</object>
-	<object type-identifier="character" class-identifier="" object-identifier="::character::player_character">
+	<object type-identifier="character" sub-type-identifier="" object-identifier="::character::player_character">
 		<aspect-object-container>
 			<content object-identifier="::player_mind"/>
 		</aspect-object-container>
@@ -86,7 +86,7 @@
 			</map-knowledge>
 		</type-specific>
 	</object>
-	<object type-identifier="mind" class-identifier="command_mind" object-identifier="::player_mind">
+	<object type-identifier="mind" sub-type-identifier="command_mind" object-identifier="::player_mind">
 		<type-specific>
 			<character object-identifier="::character::player_character"/>
 		</type-specific>
