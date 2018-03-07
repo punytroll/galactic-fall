@@ -20,65 +20,65 @@
 #ifndef SYSTEM_STATISTICS_H
 #define SYSTEM_STATISTICS_H
 
-#include "type_definitions.h"
+#include <cstdint>
 
 class SystemStatistics
 {
 public:
 	// getters
 	float GetAISecondsThisFrame(void) const;
-	u4byte GetCommoditiesInCurrentSystemThisFrame(void) const;
-	u4byte GetDispatchedMessagesThisFrame(void) const;
+	std::uint32_t GetCommoditiesInCurrentSystemThisFrame(void) const;
+	std::uint32_t GetDispatchedMessagesThisFrame(void) const;
 	float GetFontSecondsLastFrame(void) const;
 	float GetFontSecondsThisFrame(void) const;
 	float GetFramesPerSecond(void) const;
 	float GetFrameToFrameSecondsThisFrame(void) const;
 	float GetGraphicsSecondsThisFrame(void) const;
 	float GetMessagingSecondsThisFrame(void) const;
-	u4byte GetParticleSystemsDrawnThisFrame(void) const;
-	u4byte GetParticleSystemsUpdatedThisFrame(void) const;
-	u4byte GetParticlesDrawnThisFrame(void) const;
-	u4byte GetParticlesUpdatedThisFrame(void) const;
+	std::uint32_t GetParticleSystemsDrawnThisFrame(void) const;
+	std::uint32_t GetParticleSystemsUpdatedThisFrame(void) const;
+	std::uint32_t GetParticlesDrawnThisFrame(void) const;
+	std::uint32_t GetParticlesUpdatedThisFrame(void) const;
 	float GetPhysicsSecondsThisFrame(void) const;
 	float GetProcessingSecondsThisFrame(void) const;
-	u4byte GetShipsInCurrentSystemThisFrame(void) const;
-	u4byte GetShotsInCurrentSystemThisFrame(void) const;
+	std::uint32_t GetShipsInCurrentSystemThisFrame(void) const;
+	std::uint32_t GetShotsInCurrentSystemThisFrame(void) const;
 	// setters
 	void SetAISecondsThisFrame(float AISecondsThisFrame);
-	void SetCommoditiesInCurrentSystemThisFrame(u4byte CommoditiesInCurrentSystemThisFrame);
-	void SetDispatchedMessagesThisFrame(u4byte DispatchedMessagesThisFrame);
+	void SetCommoditiesInCurrentSystemThisFrame(std::uint32_t CommoditiesInCurrentSystemThisFrame);
+	void SetDispatchedMessagesThisFrame(std::uint32_t DispatchedMessagesThisFrame);
 	void SetFontSecondsThisFrame(float FontSecondsThisFrame);
 	void SetFrameToFrameSecondsThisFrame(float FrameToFrameSecondsThisFrame);
 	void SetGraphicsSecondsThisFrame(float GraphicsSecondsThisFrame);
 	void SetMessagingSecondsThisFrame(float MessagingSecondsThisFrame);
-	void SetParticleSystemsDrawnThisFrame(u4byte ParticleSystemsDrawnThisFrame);
-	void SetParticleSystemsUpdatedThisFrame(u4byte ParticleSystemsUpdatedThisFrame);
-	void SetParticlesDrawnThisFrame(u4byte ParticlesDrawnThisFrame);
-	void SetParticlesUpdatedThisFrame(u4byte ParticlesUpdatedThisFrame);
+	void SetParticleSystemsDrawnThisFrame(std::uint32_t ParticleSystemsDrawnThisFrame);
+	void SetParticleSystemsUpdatedThisFrame(std::uint32_t ParticleSystemsUpdatedThisFrame);
+	void SetParticlesDrawnThisFrame(std::uint32_t ParticlesDrawnThisFrame);
+	void SetParticlesUpdatedThisFrame(std::uint32_t ParticlesUpdatedThisFrame);
 	void SetPhysicsSecondsThisFrame(float PhysicsSecondsThisFrame);
 	void SetProcessingSecondsThisFrame(float ProcessingSecondsThisFrame);
-	void SetShipsInCurrentSystemThisFrame(u4byte ShipsInCurrentSystemThisFrame);
-	void SetShotsInCurrentSystemThisFrame(u4byte ShotsInCurrentSystemThisFrame);
+	void SetShipsInCurrentSystemThisFrame(std::uint32_t ShipsInCurrentSystemThisFrame);
+	void SetShotsInCurrentSystemThisFrame(std::uint32_t ShotsInCurrentSystemThisFrame);
 	// modifiers
 	void NextFrame(void);
 private:
 	float _AISecondsThisFrame;
-	u4byte _CommoditiesInCurrentSystemThisFrame;
-	u4byte _DispatchedMessagesThisFrame;
+	std::uint32_t _CommoditiesInCurrentSystemThisFrame;
+	std::uint32_t _DispatchedMessagesThisFrame;
 	float _FontSecondsLastFrame;
 	float _FontSecondsThisFrame;
 	float _FramesPerSecond;
 	float _FrameToFrameSecondsThisFrame;
 	float _GraphicsSecondsThisFrame;
 	float _MessageSecondsThisFrame;
-	u4byte _ParticleSystemsDrawnThisFrame;
-	u4byte _ParticleSystemsUpdatedThisFrame;
-	u4byte _ParticlesDrawnThisFrame;
-	u4byte _ParticlesUpdatedThisFrame;
+	std::uint32_t _ParticleSystemsDrawnThisFrame;
+	std::uint32_t _ParticleSystemsUpdatedThisFrame;
+	std::uint32_t _ParticlesDrawnThisFrame;
+	std::uint32_t _ParticlesUpdatedThisFrame;
 	float _PhysicsSecondsThisFrame;
 	float _ProcessingSecondsThisFrame;
-	u4byte _ShipsInCurrentSystemThisFrame;
-	u4byte _ShotsInCurrentSystemThisFrame;
+	std::uint32_t _ShipsInCurrentSystemThisFrame;
+	std::uint32_t _ShotsInCurrentSystemThisFrame;
 };
 
 inline float SystemStatistics::GetAISecondsThisFrame(void) const
@@ -86,12 +86,12 @@ inline float SystemStatistics::GetAISecondsThisFrame(void) const
 	return _AISecondsThisFrame;
 }
 
-inline u4byte SystemStatistics::GetCommoditiesInCurrentSystemThisFrame(void) const
+inline std::uint32_t SystemStatistics::GetCommoditiesInCurrentSystemThisFrame(void) const
 {
 	return _CommoditiesInCurrentSystemThisFrame;
 }
 
-inline u4byte SystemStatistics::GetDispatchedMessagesThisFrame(void) const
+inline std::uint32_t SystemStatistics::GetDispatchedMessagesThisFrame(void) const
 {
 	return _DispatchedMessagesThisFrame;
 }
@@ -126,22 +126,22 @@ inline float SystemStatistics::GetMessagingSecondsThisFrame(void) const
 	return _MessageSecondsThisFrame;
 }
 
-inline u4byte SystemStatistics::GetParticleSystemsDrawnThisFrame(void) const
+inline std::uint32_t SystemStatistics::GetParticleSystemsDrawnThisFrame(void) const
 {
 	return _ParticleSystemsDrawnThisFrame;
 }
 
-inline u4byte SystemStatistics::GetParticleSystemsUpdatedThisFrame(void) const
+inline std::uint32_t SystemStatistics::GetParticleSystemsUpdatedThisFrame(void) const
 {
 	return _ParticleSystemsUpdatedThisFrame;
 }
 
-inline u4byte SystemStatistics::GetParticlesDrawnThisFrame(void) const
+inline std::uint32_t SystemStatistics::GetParticlesDrawnThisFrame(void) const
 {
 	return _ParticlesDrawnThisFrame;
 }
 
-inline u4byte SystemStatistics::GetParticlesUpdatedThisFrame(void) const
+inline std::uint32_t SystemStatistics::GetParticlesUpdatedThisFrame(void) const
 {
 	return _ParticlesUpdatedThisFrame;
 }
@@ -156,12 +156,12 @@ inline float SystemStatistics::GetProcessingSecondsThisFrame(void) const
 	return _ProcessingSecondsThisFrame;
 }
 
-inline u4byte SystemStatistics::GetShipsInCurrentSystemThisFrame(void) const
+inline std::uint32_t SystemStatistics::GetShipsInCurrentSystemThisFrame(void) const
 {
 	return _ShipsInCurrentSystemThisFrame;
 }
 
-inline u4byte SystemStatistics::GetShotsInCurrentSystemThisFrame(void) const
+inline std::uint32_t SystemStatistics::GetShotsInCurrentSystemThisFrame(void) const
 {
 	return _ShotsInCurrentSystemThisFrame;
 }
@@ -171,12 +171,12 @@ inline void SystemStatistics::SetAISecondsThisFrame(float AISecondsThisFrame)
 	_AISecondsThisFrame = AISecondsThisFrame;
 }
 
-inline void SystemStatistics::SetCommoditiesInCurrentSystemThisFrame(u4byte CommoditiesInCurrentSystemThisFrame)
+inline void SystemStatistics::SetCommoditiesInCurrentSystemThisFrame(std::uint32_t CommoditiesInCurrentSystemThisFrame)
 {
 	_CommoditiesInCurrentSystemThisFrame = CommoditiesInCurrentSystemThisFrame;
 }
 
-inline void SystemStatistics::SetDispatchedMessagesThisFrame(u4byte DispatchedMessagesThisFrame)
+inline void SystemStatistics::SetDispatchedMessagesThisFrame(std::uint32_t DispatchedMessagesThisFrame)
 {
 	_DispatchedMessagesThisFrame = DispatchedMessagesThisFrame;
 }
@@ -202,22 +202,22 @@ inline void SystemStatistics::SetMessagingSecondsThisFrame(float MessagingSecond
 	_MessageSecondsThisFrame = MessagingSecondsThisFrame;
 }
 
-inline void SystemStatistics::SetParticleSystemsDrawnThisFrame(u4byte ParticleSystemsDrawnThisFrame)
+inline void SystemStatistics::SetParticleSystemsDrawnThisFrame(std::uint32_t ParticleSystemsDrawnThisFrame)
 {
 	_ParticleSystemsDrawnThisFrame = ParticleSystemsDrawnThisFrame;
 }
 
-inline void SystemStatistics::SetParticleSystemsUpdatedThisFrame(u4byte ParticleSystemsUpdatedThisFrame)
+inline void SystemStatistics::SetParticleSystemsUpdatedThisFrame(std::uint32_t ParticleSystemsUpdatedThisFrame)
 {
 	_ParticleSystemsUpdatedThisFrame = ParticleSystemsUpdatedThisFrame;
 }
 
-inline void SystemStatistics::SetParticlesDrawnThisFrame(u4byte ParticlesDrawnThisFrame)
+inline void SystemStatistics::SetParticlesDrawnThisFrame(std::uint32_t ParticlesDrawnThisFrame)
 {
 	_ParticlesDrawnThisFrame = ParticlesDrawnThisFrame;
 }
 
-inline void SystemStatistics::SetParticlesUpdatedThisFrame(u4byte ParticlesUpdatedThisFrame)
+inline void SystemStatistics::SetParticlesUpdatedThisFrame(std::uint32_t ParticlesUpdatedThisFrame)
 {
 	_ParticlesUpdatedThisFrame = ParticlesUpdatedThisFrame;
 }
@@ -232,12 +232,12 @@ inline void SystemStatistics::SetProcessingSecondsThisFrame(float ProcessingSeco
 	_ProcessingSecondsThisFrame = ProcessingSecondsThisFrame;
 }
 
-inline void SystemStatistics::SetShipsInCurrentSystemThisFrame(u4byte ShipsInCurrentSystemThisFrame)
+inline void SystemStatistics::SetShipsInCurrentSystemThisFrame(std::uint32_t ShipsInCurrentSystemThisFrame)
 {
 	_ShipsInCurrentSystemThisFrame = ShipsInCurrentSystemThisFrame;
 }
 
-inline void SystemStatistics::SetShotsInCurrentSystemThisFrame(u4byte ShotsInCurrentSystemThisFrame)
+inline void SystemStatistics::SetShotsInCurrentSystemThisFrame(std::uint32_t ShotsInCurrentSystemThisFrame)
 {
 	_ShotsInCurrentSystemThisFrame = ShotsInCurrentSystemThisFrame;
 }

@@ -22,7 +22,6 @@
 #include <functional>
 
 #include "timeout_notifications.h"
-#include "type_definitions.h"
 
 class TimeoutNotificationCore
 {
@@ -51,7 +50,7 @@ public:
 		_References--;
 	}
 	
-	unsigned_numeric GetReferences(void) const
+	std::uint32_t GetReferences(void) const
 	{
 		return _References;
 	}
@@ -80,7 +79,7 @@ public:
 private:
 	TimeoutNotificationManager * _Manager;
 	std::multimap< double, TimeoutNotification * >::iterator _Iterator;
-	unsigned_numeric _References;
+	std::uint32_t _References;
 	std::function< void (void) > _Callback;
 };
 

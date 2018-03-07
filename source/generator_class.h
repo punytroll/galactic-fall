@@ -22,8 +22,6 @@
 
 #include <string>
 
-#include "type_definitions.h"
-
 class VisualizationPrototype;
 
 class GeneratorClass
@@ -37,20 +35,20 @@ public:
 	const std::string & GetIdentifier(void) const;
 	const std::string & GetName(void) const;
 	const std::string & GetSlotClassIdentifier(void) const;
-	unsigned_numeric GetSpaceRequirement(void) const;
+	std::uint32_t GetSpaceRequirement(void) const;
 	const VisualizationPrototype * GetVisualizationPrototype(void) const;
 	// setters
 	void SetEnergyProvisionPerSecond(float EnergyProvisionPerSecond);
 	void SetName(const std::string & Name);
 	void SetSlotClassIdentifier(const std::string & SlotClassIdentifier);
-	void SetSpaceRequirement(unsigned_numeric SpaceRequirement);
+	void SetSpaceRequirement(std::uint32_t SpaceRequirement);
 	void SetVisualizationPrototype(const VisualizationPrototype & VisualizationPrototype);
 private:
 	float _EnergyProvisionPerSecond;
 	std::string _Identifier;
 	std::string _Name;
 	std::string _SlotClassIdentifier;
-	unsigned_numeric _SpaceRequirement;
+	std::uint32_t _SpaceRequirement;
 	VisualizationPrototype * _VisualizationPrototype;
 };
 
@@ -74,7 +72,7 @@ inline const std::string & GeneratorClass::GetSlotClassIdentifier(void) const
 	return _SlotClassIdentifier;
 }
 
-inline unsigned_numeric GeneratorClass::GetSpaceRequirement(void) const
+inline std::uint32_t GeneratorClass::GetSpaceRequirement(void) const
 {
 	return _SpaceRequirement;
 }
@@ -99,7 +97,7 @@ inline void GeneratorClass::SetSlotClassIdentifier(const std::string & SlotClass
 	_SlotClassIdentifier = SlotClassIdentifier;
 }
 
-inline void GeneratorClass::SetSpaceRequirement(unsigned_numeric SpaceRequirement)
+inline void GeneratorClass::SetSpaceRequirement(std::uint32_t SpaceRequirement)
 {
 	_SpaceRequirement = SpaceRequirement;
 }

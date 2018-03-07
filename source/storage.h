@@ -21,7 +21,6 @@
 #define STORAGE_H
 
 #include "object.h"
-#include "type_definitions.h"
 
 class Storage : public Object
 {
@@ -30,23 +29,23 @@ public:
 	Storage(void);
 	virtual ~Storage(void) override;
 	// getters
-	unsigned_numeric GetSpace(void) const;
-	unsigned_numeric GetSpaceCapacity(void) const;
+	std::uint32_t GetSpace(void) const;
+	std::uint32_t GetSpaceCapacity(void) const;
 	// setters
-	void SetSpaceCapacity(unsigned_numeric SpaceCapacity);
+	void SetSpaceCapacity(std::uint32_t SpaceCapacity);
 private:
 	void _OnAdded(Object * Content);
 	void _OnRemoved(Object * Content);
-	unsigned_numeric _Space;
-	unsigned_numeric _SpaceCapacity;
+	std::uint32_t _Space;
+	std::uint32_t _SpaceCapacity;
 };
 
-inline unsigned_numeric Storage::GetSpace(void) const
+inline std::uint32_t Storage::GetSpace(void) const
 {
 	return _Space;
 }
 
-inline unsigned_numeric Storage::GetSpaceCapacity(void) const
+inline std::uint32_t Storage::GetSpaceCapacity(void) const
 {
 	return _SpaceCapacity;
 }

@@ -681,13 +681,13 @@ void GoalRefuel::Process(void)
 	{
 		if((*PlanetAssetClassIterator)->GetAssetClass()->GetIdentifier() == "fuel")
 		{
-			u4byte FuelPrice((*PlanetAssetClassIterator)->GetPrice());
+			auto FuelPrice{(*PlanetAssetClassIterator)->GetPrice()};
 			float CanBuy(GetMind()->GetCharacter()->GetCredits() / FuelPrice);
 			float Need(GetMind()->GetCharacter()->GetShip()->GetFuelCapacity() - GetMind()->GetCharacter()->GetShip()->GetFuel());
 			float Buy((CanBuy > Need) ? (Need) : (CanBuy));
 			
 			GetMind()->GetCharacter()->GetShip()->SetFuel(GetMind()->GetCharacter()->GetShip()->GetFuel() + Buy);
-			GetMind()->GetCharacter()->RemoveCredits(static_cast< u4byte >(Buy * FuelPrice));
+			GetMind()->GetCharacter()->RemoveCredits(static_cast< std::uint32_t >(Buy * FuelPrice));
 			SuccessfullyRefueled = true;
 			
 			break;

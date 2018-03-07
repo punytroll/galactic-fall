@@ -25,8 +25,6 @@
 
 #include <algebra/vector3f.h>
 
-#include "type_definitions.h"
-
 class Slot;
 class VisualizationPrototype;
 
@@ -43,11 +41,11 @@ public:
 	float GetFuelCapacity(void) const;
 	const std::string & GetIdentifier(void) const;
 	const std::string & GetName(void) const;
-	unsigned_numeric GetSpaceRequirement(void) const;
+	std::uint32_t GetSpaceRequirement(void) const;
 	float GetForwardThrust(void) const;
 	float GetTurnSpeed(void) const;
 	float GetMaximumSpeed(void) const;
-	unsigned_numeric GetMaximumAvailableSpace(void) const;
+	std::uint32_t GetMaximumAvailableSpace(void) const;
 	float GetJumpFuel(void) const;
 	float GetForwardFuel(void) const;
 	float GetTurnFuel(void) const;
@@ -60,10 +58,10 @@ public:
 	void SetFuelCapacity(float FuelCapacity);
 	void SetForwardThrust(float ForwardThrust);
 	void SetName(const std::string & Name);
-	void SetSpaceRequirement(unsigned_numeric SpaceRequirement);
+	void SetSpaceRequirement(std::uint32_t SpaceRequirement);
 	void SetTurnSpeed(float TurnSpeed);
 	void SetMaximumSpeed(float MaximumSpeed);
-	void SetMaximumAvailableSpace(unsigned_numeric MaximumAvailableSpace);
+	void SetMaximumAvailableSpace(std::uint32_t MaximumAvailableSpace);
 	void SetJumpFuel(float JumpFuel);
 	void SetForwardFuel(float ForwardFuel);
 	void SetTurnFuel(float TurnFuel);
@@ -80,11 +78,11 @@ private:
 	float _FuelCapacity;
 	std::string _Identifier;
 	std::string _Name;
-	unsigned_numeric _SpaceRequirement;
+	std::uint32_t _SpaceRequirement;
 	float _ForwardThrust;
 	float _TurnSpeed;
 	float _MaximumSpeed;
-	unsigned_numeric _MaximumAvailableSpace;
+	std::uint32_t _MaximumAvailableSpace;
 	float _JumpFuel;
 	float _ForwardFuel;
 	float _TurnFuel;
@@ -118,7 +116,7 @@ inline const std::string & ShipClass::GetName(void) const
 	return _Name;
 }
 
-inline unsigned_numeric ShipClass::GetSpaceRequirement(void) const
+inline std::uint32_t ShipClass::GetSpaceRequirement(void) const
 {
 	return _SpaceRequirement;
 }
@@ -138,7 +136,7 @@ inline float ShipClass::GetMaximumSpeed(void) const
 	return _MaximumSpeed;
 }
 
-inline unsigned_numeric ShipClass::GetMaximumAvailableSpace(void) const
+inline std::uint32_t ShipClass::GetMaximumAvailableSpace(void) const
 {
 	return _MaximumAvailableSpace;
 }
@@ -198,7 +196,7 @@ inline void ShipClass::SetName(const std::string & Name)
 	_Name = Name;
 }
 
-inline void ShipClass::SetSpaceRequirement(unsigned_numeric SpaceRequirement)
+inline void ShipClass::SetSpaceRequirement(std::uint32_t SpaceRequirement)
 {
 	_SpaceRequirement = SpaceRequirement;
 }
@@ -213,7 +211,7 @@ inline void ShipClass::SetMaximumSpeed(float MaximumSpeed)
 	_MaximumSpeed = MaximumSpeed;
 }
 
-inline void ShipClass::SetMaximumAvailableSpace(unsigned_numeric MaximumAvailableSpace)
+inline void ShipClass::SetMaximumAvailableSpace(std::uint32_t MaximumAvailableSpace)
 {
 	_MaximumAvailableSpace = MaximumAvailableSpace;
 }

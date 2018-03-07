@@ -916,7 +916,7 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 	NewCharacter->GetMapKnowledge()->AddExploredSystem(System);
 	if(ShipClassIdentifier == "fighter")
 	{
-		NewCharacter->SetCredits(200 + GetRandomU4Byte(50, 250));
+		NewCharacter->SetCredits(200 + GetRandomUnsignedInteger32Bit(50, 250));
 		
 		auto NewWeapon(g_ObjectFactory->Create("weapon", "light_laser", true));
 		
@@ -926,7 +926,7 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 	}
 	else if((ShipClassIdentifier == "transporter") || (ShipClassIdentifier == "shuttle"))
 	{
-		NewCharacter->SetCredits(GetRandomU4Byte(500, 2500));
+		NewCharacter->SetCredits(GetRandomUnsignedInteger32Bit(500, 2500));
 		for(int NumberOfAssetClasses = GetRandomIntegerFromExponentialDistribution(2); NumberOfAssetClasses > 0; --NumberOfAssetClasses)
 		{
 			const std::map< std::string, AssetClass * > & AssetClasses(g_AssetClassManager->GetClasses());
@@ -1538,7 +1538,7 @@ void LoadGameFromElement(const Element * SaveElement)
 							if(TypeSpecificChild->GetName() == "credits")
 							{
 								assert(TypeSpecificChild->HasAttribute("value") == true);
-								NewCharacter->SetCredits(from_string_cast< unsigned_numeric >(TypeSpecificChild->GetAttribute("value")));
+								NewCharacter->SetCredits(from_string_cast< std::uint32_t >(TypeSpecificChild->GetAttribute("value")));
 							}
 							else if(TypeSpecificChild->GetName() == "map-knowledge")
 							{
@@ -1730,7 +1730,7 @@ void LoadGameFromElement(const Element * SaveElement)
 							if(TypeSpecificChild->GetName() == "space-capacity")
 							{
 								assert(TypeSpecificChild->HasAttribute("value") == true);
-								NewStorage->SetSpaceCapacity(from_string_cast< unsigned_numeric >(TypeSpecificChild->GetAttribute("value")));
+								NewStorage->SetSpaceCapacity(from_string_cast< std::uint32_t >(TypeSpecificChild->GetAttribute("value")));
 							}
 							else
 							{

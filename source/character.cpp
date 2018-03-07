@@ -42,8 +42,8 @@ Character::Character(void) :
 	// initialize object aspects
 	AddAspectMessages();
 	AddAspectObjectContainer();
-	GetAspectObjectContainer()->ConnectContentAddedCallback(std::bind(&Character::OnAdded, this, std::placeholders::_1));
-	GetAspectObjectContainer()->ConnectContentRemovedCallback(std::bind(&Character::OnRemoved, this, std::placeholders::_1));
+	GetAspectObjectContainer()->ConnectContentAddedCallback(std::bind(&Character::_OnAdded, this, std::placeholders::_1));
+	GetAspectObjectContainer()->ConnectContentRemovedCallback(std::bind(&Character::_OnRemoved, this, std::placeholders::_1));
 }
 
 Character::~Character(void)
@@ -59,7 +59,7 @@ Character::~Character(void)
 void Character::Update(void)
 {
 	// forward all messages in the message queue
-	Message * Message(nullptr);
+	Message * Message{nullptr};
 	
 	// take responsibility for the popped message
 	while((Message = GetAspectMessages()->PopMessage()) != nullptr)
@@ -84,7 +84,7 @@ void Character::Update(void)
 	}
 }
 
-void Character::AddCredits(unsigned_numeric Credits)
+void Character::AddCredits(std::uint32_t Credits)
 {
 	_Credits += Credits;
 }
@@ -96,7 +96,7 @@ void Character::AddObserver(CharacterObserver * CharacterObserver)
 
 Ship * Character::GetShip(void)
 {
-	auto Container(GetContainer());
+	auto Container{GetContainer()};
 	
 	while((Container != nullptr) && (Container->GetTypeIdentifier() != "ship"))
 	{
@@ -108,7 +108,7 @@ Ship * Character::GetShip(void)
 
 System * Character::GetSystem(void)
 {
-	auto Container(GetContainer());
+	auto Container{GetContainer()};
 	
 	while((Container != nullptr) && (Container->GetTypeIdentifier() != "system"))
 	{
@@ -118,7 +118,7 @@ System * Character::GetSystem(void)
 	return dynamic_cast< System * >(Container);
 }
 
-bool Character::RemoveCredits(unsigned_numeric Credits)
+bool Character::RemoveCredits(std::uint32_t Credits)
 {
 	if(_Credits < Credits)
 	{
@@ -137,25 +137,25 @@ void Character::RemoveObserver(CharacterObserver * CharacterObserver)
 	_Observers.erase(_Observers.find(CharacterObserver));
 }
 
-void Character::OnAdded(Object * Content)
+void Character::_OnAdded(Object * Content)
 {
 	assert(Content != nullptr);
 	
-	auto TheMind(dynamic_cast< Mind * >(Content));
+	auto TheMind{dynamic_cast< Mind * >(Content)};
 	
 	assert(TheMind != nullptr);
 	_Minds.push_front(TheMind);
 }
 
-void Character::OnRemoved(Object * Content)
+void Character::_OnRemoved(Object * Content)
 {
 	assert(Content != nullptr);
 	
-	auto TheMind(dynamic_cast< Mind * >(Content));
+	auto TheMind{dynamic_cast< Mind * >(Content)};
 	
 	assert(TheMind != nullptr);
 	
-	auto MindIterator(std::find(_Minds.begin(), _Minds.end(), TheMind));
+	auto MindIterator{std::find(_Minds.begin(), _Minds.end(), TheMind)};
 	
 	assert(MindIterator != _Minds.end());
 	_Minds.erase(MindIterator);

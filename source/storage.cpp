@@ -35,9 +35,9 @@ Storage::~Storage(void)
 {
 }
 
-void Storage::SetSpaceCapacity(unsigned_numeric SpaceCapacity)
+void Storage::SetSpaceCapacity(std::uint32_t SpaceCapacity)
 {
-	signed_numeric SpaceDifference(SpaceCapacity - _SpaceCapacity);
+	auto SpaceDifference{SpaceCapacity - _SpaceCapacity};
 	
 	_SpaceCapacity = SpaceCapacity;
 	_Space += SpaceDifference;

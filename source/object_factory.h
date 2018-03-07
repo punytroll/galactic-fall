@@ -43,7 +43,7 @@ public:
 	~ObjectFactory(void);
 	// getters
 	Object * Create(const std::string & TypeIdentifier, const std::string & ClassIdentifier, bool CreateNestedObjects) const;
-	unsigned_numeric GetSpaceRequirement(const std::string & TypeIdentifier, const std::string & ClassIdentifier) const;
+	std::uint32_t GetSpaceRequirement(const std::string & TypeIdentifier, const std::string & ClassIdentifier) const;
 	const VisualizationPrototype * GetVisualizationPrototype(const std::string & TypeIdentifier, const std::string & ClassIdentifier) const;
 	ClassManager< AmmunitionClass > * GetAmmunitionClassManager(void);
 	ClassManager< BatteryClass > * GetBatteryClassManager(void);

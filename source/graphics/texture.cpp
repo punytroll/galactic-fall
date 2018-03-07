@@ -54,7 +54,7 @@ Graphics::Texture::~Texture(void)
 	}
 }
 
-void Graphics::Texture::SetData(unsigned_numeric Width, unsigned_numeric Height, unsigned_numeric Format, const unsigned char * Data)
+void Graphics::Texture::SetData(std::uint32_t Width, std::uint32_t Height, std::uint32_t Format, const unsigned char * Data)
 {
 	assert(_TextureName == 0);
 	GLGenTextures(1, &_TextureName);
@@ -88,7 +88,7 @@ void Graphics::Texture::Activate(void) const
 	GLBindTexture(GL_TEXTURE_2D, _TextureName);
 }
 
-void Graphics::Texture::Create(unsigned_numeric Width, unsigned_numeric Height, unsigned_numeric Format)
+void Graphics::Texture::Create(std::uint32_t Width, std::uint32_t Height, std::uint32_t Format)
 {
 	assert(_TextureName == 0);
 	GLGenTextures(1, &_TextureName);

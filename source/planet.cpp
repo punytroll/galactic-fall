@@ -45,9 +45,9 @@ PlanetAssetClass::~PlanetAssetClass(void)
 {
 }
 
-unsigned_numeric PlanetAssetClass::GetPrice(void) const
+std::uint32_t PlanetAssetClass::GetPrice(void) const
 {
-	return static_cast< unsigned_numeric >(_AssetClass->GetBasePrice() * _BasePriceModifier);
+	return static_cast< std::uint32_t >(_AssetClass->GetBasePrice() * _BasePriceModifier);
 }
 
 Planet::Planet(void) :
@@ -189,7 +189,7 @@ void Planet::Recharge(Ship * Ship, Character * Character)
 			float Buy((CanBuy > Need) ? (Need) : (CanBuy));
 			
 			Ship->GetBattery()->SetEnergy(Ship->GetBattery()->GetEnergy() + Buy);
-			Character->RemoveCredits(static_cast< unsigned_numeric >(Buy * _RechargingFeePerEnergy));
+			Character->RemoveCredits(static_cast< std::uint32_t >(Buy * _RechargingFeePerEnergy));
 		}
 	}
 }
@@ -200,7 +200,7 @@ void Planet::Refuel(Ship * Ship, Character * Character)
 	{
 		if(PlanetAssetClass->GetAssetClass()->GetIdentifier() == "fuel")
 		{
-			unsigned_numeric FuelPrice(PlanetAssetClass->GetPrice());
+			std::uint32_t FuelPrice(PlanetAssetClass->GetPrice());
 			
 			assert(Character != nullptr);
 			
@@ -212,7 +212,7 @@ void Planet::Refuel(Ship * Ship, Character * Character)
 			float Buy((CanBuy > Need) ? (Need) : (CanBuy));
 			
 			Ship->SetFuel(Ship->GetFuel() + Buy);
-			Character->RemoveCredits(static_cast< u4byte >(Buy * FuelPrice));
+			Character->RemoveCredits(static_cast< std::uint32_t >(Buy * FuelPrice));
 			
 			break;
 		}
@@ -233,7 +233,7 @@ void Planet::Repair(Ship * Ship, Character * Character)
 		float Buy((CanBuy > Need) ? (Need) : (CanBuy));
 		
 		Ship->SetHull(Ship->GetHull() + Buy);
-		Character->RemoveCredits(static_cast< unsigned_numeric >(Buy * _RepairingFeePerHull));
+		Character->RemoveCredits(static_cast< std::uint32_t >(Buy * _RepairingFeePerHull));
 	}
 }
 

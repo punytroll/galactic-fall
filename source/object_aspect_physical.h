@@ -20,7 +20,7 @@
 #ifndef OBJECT_ASPECT_PHYSICAL_H
 #define OBJECT_ASPECT_PHYSICAL_H
 
-#include "type_definitions.h"
+#include <cstdint>
 
 class ObjectAspectPhysical
 {
@@ -28,13 +28,13 @@ public:
 	ObjectAspectPhysical(void);
 	// getters
 	float GetRadialSize(void) const;
-	unsigned_numeric GetSpaceRequirement(void) const;
+	std::uint32_t GetSpaceRequirement(void) const;
 	// setters
 	void SetRadialSize(float RadialSize);
-	void SetSpaceRequirement(unsigned_numeric SpaceRequirement);
+	void SetSpaceRequirement(std::uint32_t SpaceRequirement);
 private:
 	float m_RadialSize;
-	unsigned_numeric m_SpaceRequirement;
+	std::uint32_t m_SpaceRequirement;
 };
 
 inline float ObjectAspectPhysical::GetRadialSize(void) const
@@ -42,7 +42,7 @@ inline float ObjectAspectPhysical::GetRadialSize(void) const
 	return m_RadialSize;
 }
 
-inline unsigned_numeric ObjectAspectPhysical::GetSpaceRequirement(void) const
+inline std::uint32_t ObjectAspectPhysical::GetSpaceRequirement(void) const
 {
 	return m_SpaceRequirement;
 }
@@ -52,7 +52,7 @@ inline void ObjectAspectPhysical::SetRadialSize(float RadialSize)
 	m_RadialSize = RadialSize;
 }
 
-inline void ObjectAspectPhysical::SetSpaceRequirement(unsigned_numeric SpaceRequirement)
+inline void ObjectAspectPhysical::SetSpaceRequirement(std::uint32_t SpaceRequirement)
 {
 	m_SpaceRequirement = SpaceRequirement;
 }

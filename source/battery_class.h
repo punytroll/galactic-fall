@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2007  Hagen Möbius
+ * Copyright (C) 2007-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -22,8 +22,6 @@
 
 #include <string>
 
-#include "type_definitions.h"
-
 class VisualizationPrototype;
 
 class BatteryClass
@@ -37,20 +35,20 @@ public:
 	const std::string & GetIdentifier(void) const;
 	const std::string & GetName(void) const;
 	const std::string & GetSlotClassIdentifier(void) const;
-	unsigned_numeric GetSpaceRequirement(void) const;
+	std::uint32_t GetSpaceRequirement(void) const;
 	const VisualizationPrototype * GetVisualizationPrototype(void) const;
 	// setters
 	void SetEnergyCapacity(float EnergyCapacity);
 	void SetName(const std::string & Name);
 	void SetSlotClassIdentifier(const std::string & SlotClassIdentifier);
-	void SetSpaceRequirement(unsigned_numeric SpaceRequirement);
+	void SetSpaceRequirement(std::uint32_t SpaceRequirement);
 	void SetVisualizationPrototype(const VisualizationPrototype & VisualizationPrototype);
 private:
 	float _EnergyCapacity;
 	std::string _Identifier;
 	std::string _Name;
 	std::string _SlotClassIdentifier;
-	unsigned_numeric _SpaceRequirement;
+	std::uint32_t _SpaceRequirement;
 	VisualizationPrototype * _VisualizationPrototype;
 };
 
@@ -74,7 +72,7 @@ inline const std::string & BatteryClass::GetSlotClassIdentifier(void) const
 	return _SlotClassIdentifier;
 }
 
-inline unsigned_numeric BatteryClass::GetSpaceRequirement(void) const
+inline std::uint32_t BatteryClass::GetSpaceRequirement(void) const
 {
 	return _SpaceRequirement;
 }
@@ -99,7 +97,7 @@ inline void BatteryClass::SetSlotClassIdentifier(const std::string & SlotClassId
 	_SlotClassIdentifier = SlotClassIdentifier;
 }
 
-inline void BatteryClass::SetSpaceRequirement(unsigned_numeric SpaceRequirement)
+inline void BatteryClass::SetSpaceRequirement(std::uint32_t SpaceRequirement)
 {
 	_SpaceRequirement = SpaceRequirement;
 }

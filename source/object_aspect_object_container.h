@@ -24,7 +24,6 @@
 #include <set>
 
 #include "event.h"
-#include "type_definitions.h"
 
 class Object;
 
@@ -38,7 +37,7 @@ public:
 	const std::set< Object * > & GetContent(void) const;
 	Object * GetObject(void);
 	const Object * GetObject(void) const;
-	unsigned_numeric GetAmount(const std::string & TypeIdentifier, const std::string & ClassIdentifier) const;
+	std::uint32_t GetAmount(const std::string & TypeIdentifier, const std::string & ClassIdentifier) const;
 	// modifiers
 	void AddContent(Object * Content);
 	void Destroy(void);
