@@ -9,8 +9,8 @@
 	<ammunition-class type="26">
 		<string identifier="identifier"/>
 		<string identifier="name"/>
-		<u4byte identifier="cartridge-size"/>
-		<u4byte identifier="space-requirement"/>
+		<unsigned-integer-32bit identifier="cartridge-size"/>
+		<unsigned-integer-32bit identifier="space-requirement"/>
 		<visualization identifier="visualization"/>
 	</ammunition-class>
 	
@@ -27,7 +27,7 @@
 		<string identifier="identifier"/>
 		<string identifier="name"/>
 		<visualization identifier="visualization"/>
-		<u4byte identifier="space-requirement"/>
+		<unsigned-integer-32bit identifier="space-requirement"/>
 		<float identifier="energy-capacity"/>
 		<string identifier="slot-class-identifier"/>
 	</battery-class>
@@ -50,7 +50,7 @@
 	<commodity-class type="8">
 		<string identifier="identifier"/>
 		<string identifier="name"/>
-		<u4byte identifier="space-requirement"/>
+		<unsigned-integer-32bit identifier="space-requirement"/>
 		<visualization identifier="visualization"/>
 	</commodity-class>
 	
@@ -95,13 +95,13 @@
 		<string identifier="identifier"/>
 		<string identifier="name"/>
 		<visualization identifier="visualization"/>
-		<u4byte identifier="space-requirement"/>
+		<unsigned-integer-32bit identifier="space-requirement"/>
 		<float identifier="energy-provision-per-second"/>
 		<string identifier="slot-class-identifier"/>
 	</generator-class>
 	
 	<key-binding>
-		<u4byte identifier="code"/>
+		<unsigned-integer-32bit identifier="code"/>
 		<string identifier="event"/>
 		<string identifier="action"/>
 	</key-binding>
@@ -169,7 +169,7 @@
 	</optional-vector3f>
 	
 	<physical-aspect>
-		<u4byte identifier="space-requirement"/>
+		<unsigned-integer-32bit identifier="space-requirement"/>
 	</physical-aspect>
 	
 	<planet type="25" sub-type="0">
@@ -300,7 +300,7 @@
 		<string identifier="slot-class-identifier"/>
 		<quaternion identifier="orientation"/>
 		<float identifier="reload-time"/>
-		<u4byte identifier="space-requirement"/>
+		<unsigned-integer-32bit identifier="space-requirement"/>
 		<float identifier="energy-usage-per-shot"/>
 		<marker-reference identifier="muzzle-position"/>
 		<shot identifier="shot"/>
@@ -352,7 +352,7 @@
 		<string identifier="slot-class-identifier"/>
 		<quaternion identifier="orientation"/>
 		<float identifier="reload-time"/>
-		<u4byte identifier="space-requirement"/>
+		<unsigned-integer-32bit identifier="space-requirement"/>
 		<float identifier="energy-usage-per-shot"/>
 		<marker-reference identifier="muzzle-position"/>
 		<shot identifier="shot"/>
