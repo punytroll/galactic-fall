@@ -129,8 +129,8 @@ add_built_in_type("bytes")
 add_built_in_type("collection")
 add_built_in_type("float")
 add_built_in_type("string")
-add_built_in_type("u1byte")
-add_built_in_type("u4byte")
+add_built_in_type("unsigned-integer-8bit")
+add_built_in_type("unsigned-integer-32bit")
 if options.declarations != None:
 	declarations_document = parse(options.declarations)
 	declarations_element = declarations_document.documentElement
@@ -213,12 +213,12 @@ def out(data_type, node, element_type = None):
 			raise ConvertException(LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " for " + LightYellow + stack_path + White + " of type " + DarkYellow + data_type + White + " I found an invalid value: " + LightRed + node.firstChild.nodeValue + White)
 	elif data_type == "float":
 		out_file.write(pack('f', float(node.firstChild.nodeValue)))
-	elif data_type == "u1byte":
+	elif data_type == "unsigned-integer-8bit":
 		try:
 			out_file.write(pack('B', int(node.firstChild.nodeValue)))
 		except ValueError:
 			raise ConvertException(LightRed + "Error" + White + ": In file " + LightYellow + options.in_file + White + " for " + LightYellow + stack_path + White + " of type " + DarkYellow + data_type + White + " I found an invalid value: " + LightRed + node.firstChild.nodeValue + White)
-	elif data_type == "u4byte":
+	elif data_type == "unsigned-integer-32bit":
 		try:
 			out_file.write(pack('I', int(node.firstChild.nodeValue)))
 		except ValueError:
