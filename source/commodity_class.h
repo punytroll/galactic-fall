@@ -22,8 +22,6 @@
 
 #include <string>
 
-#include "type_definitions.h"
-
 class VisualizationPrototype;
 
 class CommodityClass
@@ -34,16 +32,16 @@ public:
 	// getters
 	const std::string & GetIdentifier(void) const;
 	const std::string & GetName(void) const;
-	unsigned_numeric GetSpaceRequirement(void) const;
+	std::uint32_t GetSpaceRequirement(void) const;
 	const VisualizationPrototype * GetVisualizationPrototype(void) const;
 	// setters
 	void SetName(const std::string & Name);
-	void SetSpaceRequirement(unsigned_numeric SpaceRequirement);
+	void SetSpaceRequirement(std::uint32_t SpaceRequirement);
 	void SetVisualizationPrototype(const VisualizationPrototype & VisualizationPrototype);
 private:
 	std::string _Identifier;
 	std::string _Name;
-	unsigned_numeric _SpaceRequirement;
+	std::uint32_t _SpaceRequirement;
 	VisualizationPrototype * _VisualizationPrototype;
 };
 
@@ -57,7 +55,7 @@ inline const std::string & CommodityClass::GetName(void) const
 	return _Name;
 }
 
-inline unsigned_numeric CommodityClass::GetSpaceRequirement(void) const
+inline std::uint32_t CommodityClass::GetSpaceRequirement(void) const
 {
 	return _SpaceRequirement;
 }
@@ -72,7 +70,7 @@ inline void CommodityClass::SetName(const std::string & Name)
 	_Name = Name;
 }
 
-inline void CommodityClass::SetSpaceRequirement(unsigned_numeric SpaceRequirement)
+inline void CommodityClass::SetSpaceRequirement(std::uint32_t SpaceRequirement)
 {
 	_SpaceRequirement = SpaceRequirement;
 }

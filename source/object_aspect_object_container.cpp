@@ -65,9 +65,9 @@ void ObjectAspectObjectContainer::DisconnectContentRemovedCallback(Connection & 
 	_ContentRemovedEvent.Disconnect(Connection);
 }
 
-unsigned_numeric ObjectAspectObjectContainer::GetAmount(const std::string & TypeIdentifier, const std::string & ClassIdentifier) const
+std::uint32_t ObjectAspectObjectContainer::GetAmount(const std::string & TypeIdentifier, const std::string & ClassIdentifier) const
 {
-	unsigned_numeric Amount(0);
+	std::uint32_t Amount{0};
 	
 	for(auto Content : _Content)
 	{

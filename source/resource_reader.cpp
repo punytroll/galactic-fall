@@ -341,7 +341,7 @@ void ResourceReader::_ReadSystem(Arxx::Reference & Reference, ClassManager< Asse
 	std::string Name;
 	Vector2f Position;
 	float TrafficDensity;
-	u4byte FactionInfluencesCount;
+	std::uint32_t FactionInfluencesCount;
 	
 	Reader >> Name >> Position >> TrafficDensity >> FactionInfluencesCount;
 	NewSystem->GetAspectName()->SetName(Name);
@@ -593,7 +593,7 @@ static void ReadFaction(Arxx::Reference & Reference, Galaxy * Galaxy, std::list<
 	
 	std::string Name;
 	Graphics::ColorRGBO FactionColor;
-	u4byte StandingsCount;
+	std::uint32_t StandingsCount;
 	
 	Reader >> Name >> FactionColor >> StandingsCount;
 	NewFaction->GetAspectName()->SetName(Name);
@@ -1030,7 +1030,7 @@ static void ReadShipClass(Arxx::Reference & Reference, ClassManager< ShipClass >
 	NewShipClass->SetForwardThrust(ForwardThrust);
 	NewShipClass->SetJumpFuel(JumpFuel);
 	NewShipClass->SetMaximumSpeed(MaximumSpeed);
-	NewShipClass->SetMaximumAvailableSpace(static_cast< unsigned_numeric >(1000 * MaximumAvailableSpace));
+	NewShipClass->SetMaximumAvailableSpace(static_cast< std::uint32_t >(1000 * MaximumAvailableSpace));
 	NewShipClass->SetTurnSpeed(TurnSpeed);
 	NewShipClass->SetForwardFuel(ForwardFuel);
 	NewShipClass->SetTurnFuel(TurnFuel);
@@ -1257,7 +1257,7 @@ static void ReadTurretClass(Arxx::Reference & Reference, ClassManager< TurretCla
 	NewTurretClass->SetSlotClassIdentifier(SlotClassIdentifier);
 	NewTurretClass->SetOrientation(Orientation);
 	NewTurretClass->SetReloadTime(ReloadTime);
-	NewTurretClass->SetSpaceRequirement(static_cast< unsigned_numeric >(SpaceRequirement));
+	NewTurretClass->SetSpaceRequirement(static_cast< std::uint32_t >(SpaceRequirement));
 	NewTurretClass->SetEnergyUsagePerShot(EnergyUsagePerShot);
 	
 	auto MuzzlePosition{TurretVisualizationPrototype.GetMarkerPosition(MuzzlePositionPartIdentifier, MuzzlePositionMarkerIdentifier)};
@@ -1321,7 +1321,7 @@ static void ReadWeaponClass(Arxx::Reference & Reference, ClassManager< WeaponCla
 	NewWeaponClass->SetSlotClassIdentifier(SlotClassIdentifier);
 	NewWeaponClass->SetOrientation(Orientation);
 	NewWeaponClass->SetReloadTime(ReloadTime);
-	NewWeaponClass->SetSpaceRequirement(static_cast< unsigned_numeric >(SpaceRequirement));
+	NewWeaponClass->SetSpaceRequirement(static_cast< std::uint32_t >(SpaceRequirement));
 	NewWeaponClass->SetEnergyUsagePerShot(EnergyUsagePerShot);
 	
 	auto MuzzlePosition{WeaponVisualizationPrototype.GetMarkerPosition(MuzzlePositionPartIdentifier, MuzzlePositionMarkerIdentifier)};

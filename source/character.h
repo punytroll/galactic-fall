@@ -24,7 +24,6 @@
 #include <set>
 
 #include "object.h"
-#include "type_definitions.h"
 
 class CharacterObserver;
 class MapKnowledge;
@@ -47,26 +46,26 @@ public:
 	virtual ~Character(void) override;
 	// getters
 	Mind * GetActiveMind(void);
-	unsigned_numeric GetCredits(void) const;
+	std::uint32_t GetCredits(void) const;
 	MapKnowledge * GetMapKnowledge(void);
 	Ship * GetShip(void);
 	System * GetSystem(void);
 	Threat * GetThreat(void);
 	// setters
-	void SetCredits(unsigned_numeric Credits);
+	void SetCredits(std::uint32_t Credits);
 	// modifiers
 	void Update(void);
-	void AddCredits(unsigned_numeric Credits);
+	void AddCredits(std::uint32_t Credits);
 	void AddObserver(CharacterObserver * Reference);
-	bool RemoveCredits(unsigned_numeric Credits);
+	bool RemoveCredits(std::uint32_t Credits);
 	void RemoveObserver(CharacterObserver * Reference);
 private:
-	void OnAdded(Object * Content);
-	void OnRemoved(Object * Content);
+	void _OnAdded(Object * Content);
+	void _OnRemoved(Object * Content);
+	std::uint32_t _Credits;
+	MapKnowledge * _MapKnowledge;
 	std::deque< Mind * > _Minds;
 	std::set< CharacterObserver * > _Observers;
-	unsigned_numeric _Credits;
-	MapKnowledge * _MapKnowledge;
 	Threat * _Threat;
 };
 
@@ -87,7 +86,7 @@ inline std::set< Character * > & Character::GetCharacters(void)
 	return _Characters;
 }
 
-inline unsigned_numeric Character::GetCredits(void) const
+inline std::uint32_t Character::GetCredits(void) const
 {
 	return _Credits;
 }
@@ -102,7 +101,7 @@ inline Threat * Character::GetThreat(void)
 	return _Threat;
 }
 
-inline void Character::SetCredits(unsigned_numeric Credits)
+inline void Character::SetCredits(std::uint32_t Credits)
 {
 	_Credits = Credits;
 }

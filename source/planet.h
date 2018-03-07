@@ -24,7 +24,6 @@
 #include <vector>
 
 #include "object.h"
-#include "type_definitions.h"
 
 class AssetClass;
 class Character;
@@ -42,7 +41,7 @@ public:
 	// getters
 	const AssetClass * GetAssetClass(void) const;
 	float GetBasePriceModifier(void) const;
-	unsigned_numeric GetPrice(void) const;
+	std::uint32_t GetPrice(void) const;
 	// setters
 	void SetBasePriceModifier(float BasePriceModifier);
 private:

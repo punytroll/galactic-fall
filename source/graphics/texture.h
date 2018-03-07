@@ -24,8 +24,6 @@
 
 #include <GL/gl.h>
 
-#include "../type_definitions.h"
-
 namespace Graphics
 {
 	class Texture
@@ -36,24 +34,24 @@ namespace Graphics
 		Texture(const std::string & Identifier);
 		~Texture(void);
 		// getters
-		unsigned_numeric GetHeight(void);
+		std::uint32_t GetHeight(void);
 		const std::string & GetIdentifier(void);
 		GLuint GetTextureName(void);
-		unsigned_numeric GetWidth(void);
+		std::uint32_t GetWidth(void);
 		// setters
-		void SetData(unsigned_numeric Width, unsigned_numeric Height, unsigned_numeric Format, const unsigned char * Data);
+		void SetData(std::uint32_t Width, std::uint32_t Height, std::uint32_t Format, const unsigned char * Data);
 		// modifiers
 		void Activate(void) const;
-		void Create(unsigned_numeric Width, unsigned_numeric Height, unsigned_numeric Format);
+		void Create(std::uint32_t Width, std::uint32_t Height, std::uint32_t Format);
 		void Deactivate(void) const;
 	private:
-		unsigned_numeric _Height;
+		std::uint32_t _Height;
 		std::string * _Identifier;
 		GLuint _TextureName;
-		unsigned_numeric _Width;
+		std::uint32_t _Width;
 	};
 	
-	inline unsigned_numeric Texture::GetHeight(void)
+	inline std::uint32_t Texture::GetHeight(void)
 	{
 		return _Height;
 	}
@@ -63,7 +61,7 @@ namespace Graphics
 		return _TextureName;
 	}
 	
-	inline unsigned_numeric Texture::GetWidth(void)
+	inline std::uint32_t Texture::GetWidth(void)
 	{
 		return _Width;
 	}

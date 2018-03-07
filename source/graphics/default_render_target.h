@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2013  Hagen Möbius
+ * Copyright (C) 2013-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,7 +20,8 @@
 #ifndef GRAPHICS_DEFAULT_RENDER_TARGET_H
 #define GRAPHICS_DEFAULT_RENDER_TARGET_H
 
-#include "../type_definitions.h"
+#include <cstdint>
+
 #include "render_target.h"
 
 namespace Graphics
@@ -29,12 +30,12 @@ namespace Graphics
 	{
 	public:
 		// setters
-		void SetSize(unsigned_numeric Width, unsigned_numeric Height);
+		void SetSize(std::uint32_t Width, std::uint32_t Height);
 		// modifiers
 		virtual void Activate(void);
 	private:
-		unsigned_numeric _Height;
-		unsigned_numeric _Width;
+		std::uint32_t _Height;
+		std::uint32_t _Width;
 	};
 }
 

@@ -25,8 +25,6 @@
 #include <algebra/quaternion.h>
 #include <algebra/vector3f.h>
 
-#include "type_definitions.h"
-
 class VisualizationPrototype;
 
 namespace Graphics
@@ -53,7 +51,7 @@ public:
 	const VisualizationPrototype * GetShotVisualizationPrototype(void) const;
 	float GetReloadTime(void) const;
 	const std::string & GetSlotClassIdentifier(void) const;
-	unsigned_numeric GetSpaceRequirement(void) const;
+	std::uint32_t GetSpaceRequirement(void) const;
 	const VisualizationPrototype * GetWeaponVisualizationPrototype(void) const;
 	// setters
 	void SetEnergyUsagePerShot(float EnergyUsagePerShot);
@@ -66,7 +64,7 @@ public:
 	void SetShotLifeTime(float ShotLifeTime);
 	void SetShotVisualizationPrototype(const VisualizationPrototype & ShotVisualizationPrototype);
 	void SetSlotClassIdentifier(const std::string & SlotClassIdentifier);
-	void SetSpaceRequirement(unsigned_numeric SpaceRequirement);
+	void SetSpaceRequirement(std::uint32_t SpaceRequirement);
 	void SetWeaponVisualizationPrototype(const VisualizationPrototype & WeaponVisualizationPrototype);
 private:
 	float _EnergyUsagePerShot;
@@ -80,7 +78,7 @@ private:
 	float _ShotLifeTime;
 	VisualizationPrototype * _ShotVisualizationPrototype;
 	std::string _SlotClassIdentifier;
-	unsigned_numeric _SpaceRequirement;
+	std::uint32_t _SpaceRequirement;
 	VisualizationPrototype * _WeaponVisualizationPrototype;
 };
 
@@ -139,7 +137,7 @@ inline const std::string & WeaponClass::GetSlotClassIdentifier(void) const
 	return _SlotClassIdentifier;
 }
 
-inline unsigned_numeric WeaponClass::GetSpaceRequirement(void) const
+inline std::uint32_t WeaponClass::GetSpaceRequirement(void) const
 {
 	return _SpaceRequirement;
 }
@@ -194,7 +192,7 @@ inline void WeaponClass::SetSlotClassIdentifier(const std::string & SlotClassIde
 	_SlotClassIdentifier = SlotClassIdentifier;
 }
 
-inline void WeaponClass::SetSpaceRequirement(unsigned_numeric SpaceRequirement)
+inline void WeaponClass::SetSpaceRequirement(std::uint32_t SpaceRequirement)
 {
 	_SpaceRequirement = SpaceRequirement;
 }

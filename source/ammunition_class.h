@@ -22,8 +22,6 @@
 
 #include <string>
 
-#include "type_definitions.h"
-
 class VisualizationPrototype;
 
 class AmmunitionClass

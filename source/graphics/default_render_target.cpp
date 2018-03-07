@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2013  Hagen Möbius
+ * Copyright (C) 2013-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -26,7 +26,7 @@ void Graphics::DefaultRenderTarget::Activate(void)
 	GLViewport(0, 0, _Width, _Height);
 }
 
-void Graphics::DefaultRenderTarget::SetSize(unsigned_numeric Width, unsigned_numeric Height)
+void Graphics::DefaultRenderTarget::SetSize(std::uint32_t Width, std::uint32_t Height)
 {
 	_Width = Width;
 	_Height = Height;

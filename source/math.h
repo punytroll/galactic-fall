@@ -27,8 +27,6 @@
 #include <algebra/vector3f.h>
 #include <algebra/vector4d.h>
 
-#include "type_definitions.h"
-
 const float g_Epsilon(0.01f);
 
 inline void NormalizeRadians(float & Radians)
@@ -98,7 +96,7 @@ inline long int GetRandomInteger(long int HighestValue)
 	return random() % (HighestValue + 1);
 }
 
-inline u4byte GetRandomU4Byte(u4byte LowestValue, u4byte HighestValue)
+inline std::uint32_t GetRandomUnsignedInteger32Bit(std::uint32_t LowestValue, std::uint32_t HighestValue)
 {
 	assert(LowestValue <= HighestValue);
 	

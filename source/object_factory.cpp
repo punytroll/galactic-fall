@@ -393,7 +393,7 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 	return Result;
 }
 
-unsigned_numeric ObjectFactory::GetSpaceRequirement(const std::string & TypeIdentifier, const std::string & ClassIdentifier) const
+std::uint32_t ObjectFactory::GetSpaceRequirement(const std::string & TypeIdentifier, const std::string & ClassIdentifier) const
 {
 	if(TypeIdentifier == "ammunition")
 	{
