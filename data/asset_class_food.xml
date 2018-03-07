@@ -4,5 +4,5 @@
 	<base-price>70</base-price>
 	<description>Food is required on all  planets that cannot support their colonies through their own agricultural sector.</description>
 	<object-type>commodity</object-type>
-	<object-class>food</object-class>
+	<object-sub-type>food</object-sub-type>
 </asset-class>

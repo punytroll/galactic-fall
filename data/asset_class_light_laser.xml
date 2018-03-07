@@ -4,5 +4,5 @@
 	<base-price>2800</base-price>
 	<description>The light laser is a standard armament for most civilian and small military space crafts.</description>
 	<object-type>weapon</object-type>
-	<object-class>light_laser</object-class>
+	<object-sub-type>light_laser</object-sub-type>
 </asset-class>

@@ -4,5 +4,5 @@
 	<base-price>120</base-price>
 	<description>Industrial goods are required by industrial planets to produce consumer goods.</description>
 	<object-type>commodity</object-type>
-	<object-class>industrial</object-class>
+	<object-sub-type>industrial</object-sub-type>
 </asset-class>

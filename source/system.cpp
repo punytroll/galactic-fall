@@ -161,17 +161,11 @@ void System::_OnAdded(Object * Content)
 	}
 	else if(Content->GetTypeIdentifier() == "planet")
 	{
-		auto ThePlanet(dynamic_cast< Planet * >(Content));
+		auto AddedPlanet{dynamic_cast< Planet * >(Content)};
 		
-		assert(ThePlanet != nullptr);
-		for(auto Planet : _Planets)
-		{
-			if(Planet->GetClassIdentifier() == ThePlanet->GetClassIdentifier())
-			{
-				assert(false);
-			}
-		}
-		_Planets.push_back(ThePlanet);
+		assert(AddedPlanet != nullptr);
+		assert(std::find_if(_Planets.begin(), _Planets.end(), [&AddedPlanet](Planet * Planet) -> auto { return AddedPlanet->GetSubTypeIdentifier() == Planet->GetSubTypeIdentifier(); }) == _Planets.end());
+		_Planets.push_back(AddedPlanet);
 	}
 	else if(Content->GetTypeIdentifier() == "ship")
 	{

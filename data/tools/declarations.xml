@@ -20,7 +20,7 @@
 		<float identifier="base-price"/>
 		<string identifier="description"/>
 		<string identifier="object-type"/>
-		<string identifier="object-class"/>
+		<string identifier="object-sub-type"/>
 	</asset-class>
 	
 	<battery-class type="12">

@@ -336,7 +336,7 @@ void ResourceReader::_ReadSystem(Arxx::Reference & Reference, ClassManager< Asse
 	{
 		throw std::runtime_error("Could not create system '" + Identifier + "'.");
 	}
-	NewSystem->SetObjectIdentifier("::system(" + NewSystem->GetClassIdentifier() + ")");
+	NewSystem->SetObjectIdentifier("::system(" + NewSystem->GetSubTypeIdentifier() + ")");
 	
 	std::string Name;
 	Vector2f Position;
@@ -479,15 +479,15 @@ static void ReadAssetClass(Arxx::Reference & Reference, ClassManager< AssetClass
 	float BasePrice;
 	std::string Description;
 	std::string ObjectTypeIdentifier;
-	std::string ObjectClassIdentifier;
+	std::string ObjectSubTypeIdentifier;
 	
-	Reader >> Name >> BasePrice >> Description >> ObjectTypeIdentifier >> ObjectClassIdentifier;
+	Reader >> Name >> BasePrice >> Description >> ObjectTypeIdentifier >> ObjectSubTypeIdentifier;
 	
 	NewAssetClass->SetName(Name);
 	NewAssetClass->SetBasePrice(BasePrice);
 	NewAssetClass->SetDescription(Description);
 	NewAssetClass->SetObjectTypeIdentifier(ObjectTypeIdentifier);
-	NewAssetClass->SetObjectClassIdentifier(ObjectClassIdentifier);
+	NewAssetClass->SetObjectSubTypeIdentifier(ObjectSubTypeIdentifier);
 }
 
 static void ReadBatteryClass(Arxx::Reference & Reference, ClassManager< BatteryClass > * BatteryClassManager)
@@ -589,7 +589,7 @@ static void ReadFaction(Arxx::Reference & Reference, Galaxy * Galaxy, std::list<
 	{
 		throw std::runtime_error("Could not create faction '" + Identifier + "'.");
 	}
-	NewFaction->SetObjectIdentifier("::faction(" + NewFaction->GetClassIdentifier() + ")");
+	NewFaction->SetObjectIdentifier("::faction(" + NewFaction->GetSubTypeIdentifier() + ")");
 	
 	std::string Name;
 	Graphics::ColorRGBO FactionColor;
@@ -811,7 +811,7 @@ static void ReadPlanet(Arxx::Reference & Reference, Galaxy * Galaxy, System * Sy
 	{
 		throw std::runtime_error("Could not create planet '" + Identifier + "'.");
 	}
-	NewPlanet->SetObjectIdentifier("::planet(" + NewPlanet->GetClassIdentifier() + ")::in_system(" + System->GetClassIdentifier() + ")");
+	NewPlanet->SetObjectIdentifier("::planet(" + NewPlanet->GetSubTypeIdentifier() + ")::in_system(" + System->GetSubTypeIdentifier() + ")");
 	
 	std::string Name;
 	std::string Description;
@@ -1153,7 +1153,7 @@ static void ReadStar(Arxx::Reference & Reference, System * System)
 	
 	auto NewStar(dynamic_cast< Star * >(g_ObjectFactory->Create("star", Identifier, false)));
 	
-	NewStar->SetObjectIdentifier("::star(" + Identifier + ")::in_system(" + System->GetClassIdentifier() + ")");
+	NewStar->SetObjectIdentifier("::star(" + Identifier + ")::in_system(" + System->GetSubTypeIdentifier() + ")");
 	NewStar->GetAspectPosition()->SetPosition(Vector3f::CreateFromComponents(Position[0], Position[1], 0.0f));
 	NewStar->SetColor(Color);
 	System->GetAspectObjectContainer()->AddContent(NewStar);
@@ -1176,7 +1176,7 @@ static void ReadSystemLink(Arxx::Reference & Reference, System * System, std::mu
 	std::string Identifier;
 	
 	Reader >> Identifier;
-	SystemLinks.insert(std::make_pair(System->GetClassIdentifier(), Identifier));
+	SystemLinks.insert(std::make_pair(System->GetSubTypeIdentifier(), Identifier));
 }
 
 static void ReadTexture(Arxx::Reference & Reference)

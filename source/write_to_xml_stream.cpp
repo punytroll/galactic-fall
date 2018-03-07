@@ -99,7 +99,7 @@ void WriteToXMLStream(XMLStream & XMLStream, Object * TheObject)
 {
 	assert(TheObject != nullptr);
 	assert(TheObject->GetObjectIdentifier().empty() == false);
-	XMLStream << element << "object" << attribute << "type-identifier" << value << TheObject->GetTypeIdentifier() << attribute << "class-identifier" << value << TheObject->GetClassIdentifier() << attribute << "object-identifier" << value << TheObject->GetObjectIdentifier();
+	XMLStream << element << "object" << attribute << "type-identifier" << value << TheObject->GetTypeIdentifier() << attribute << "sub-type-identifier" << value << TheObject->GetSubTypeIdentifier() << attribute << "object-identifier" << value << TheObject->GetObjectIdentifier();
 	if(TheObject->GetAspectAccessory() != nullptr)
 	{
 		XMLStream << element << "aspect-accessory";
@@ -273,7 +273,7 @@ static void WriteShipToXMLStream(XMLStream & XMLStream, Ship * TheShip)
 	XMLStream << element << "maximum-turn-speed" << attribute << "value" << value << TheShip->GetMaximumTurnSpeed() << end;
 	// save current values
 	assert(TheShip->GetFaction() != nullptr);
-	XMLStream << element << "faction" << attribute << "identifier" << value << TheShip->GetFaction()->GetClassIdentifier() << end;
+	XMLStream << element << "faction" << attribute << "identifier" << value << TheShip->GetFaction()->GetSubTypeIdentifier() << end;
 	XMLStream << element << "fuel" << attribute << "value" << value << TheShip->GetFuel() << end;
 	XMLStream << element << "hull" << attribute << "value" << value << TheShip->GetHull() << end;
 	XMLStream << element << "velocity" << attribute << "x" << value << TheShip->GetVelocity()[0] << attribute << "y" << value << TheShip->GetVelocity()[1] << attribute << "z" << value << TheShip->GetVelocity()[2] << end;

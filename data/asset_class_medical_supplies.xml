@@ -4,5 +4,5 @@
 	<base-price>300</base-price>
 	<description>Medical supplies are produced by highly developed planets and mainly required by industrial planets and in times of crises.</description>
 	<object-type>commodity</object-type>
-	<object-class>medical_supplies</object-class>
+	<object-sub-type>medical_supplies</object-sub-type>
 </asset-class>

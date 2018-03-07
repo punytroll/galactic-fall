@@ -42,9 +42,10 @@ public:
 	ObjectFactory(void);
 	~ObjectFactory(void);
 	// getters
-	Object * Create(const std::string & TypeIdentifier, const std::string & ClassIdentifier, bool CreateNestedObjects) const;
-	std::uint32_t GetSpaceRequirement(const std::string & TypeIdentifier, const std::string & ClassIdentifier) const;
-	const VisualizationPrototype * GetVisualizationPrototype(const std::string & TypeIdentifier, const std::string & ClassIdentifier) const;
+	Object * Create(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier, bool CreateNestedObjects) const;
+	std::uint32_t GetBasePrice(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier) const;
+	std::uint32_t GetSpaceRequirement(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier) const;
+	const VisualizationPrototype * GetVisualizationPrototype(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier) const;
 	ClassManager< AmmunitionClass > * GetAmmunitionClassManager(void);
 	ClassManager< BatteryClass > * GetBatteryClassManager(void);
 	ClassManager< CommodityClass > * GetCommodityClassManager(void);

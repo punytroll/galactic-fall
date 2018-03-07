@@ -4,5 +4,5 @@
 	<base-price>210</base-price>
 	<description>Equipment is traded from and to industrial planets.</description>
 	<object-type>commodity</object-type>
-	<object-class>equipment</object-class>
+	<object-sub-type>equipment</object-sub-type>
 </asset-class>

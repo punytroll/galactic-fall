@@ -301,9 +301,9 @@ void TransporterPhase3::Enter(void)
 			if(SellCommodity != 0)
 			{
 				// update the asset class cache, hoping it will be right more than once
-				if((PlanetAssetClassIterator == PlanetAssetClasses.end()) || (PlanetAssetClassIterator->first != SellCommodity->GetClassIdentifier()))
+				if((PlanetAssetClassIterator == PlanetAssetClasses.end()) || (PlanetAssetClassIterator->first != SellCommodity->GetSubTypeIdentifier()))
 				{
-					PlanetAssetClassIterator = PlanetAssetClasses.find(SellCommodity->GetClassIdentifier());
+					PlanetAssetClassIterator = PlanetAssetClasses.find(SellCommodity->GetSubTypeIdentifier());
 				}
 				// work with the cached asset class
 				if((PlanetAssetClassIterator != PlanetAssetClasses.end()) && (PlanetAssetClassIterator->second->GetBasePriceModifier() > 1.0))
@@ -328,16 +328,16 @@ void TransporterPhase3::Enter(void)
 			{
 				PlanetAssetClass * PlanetAssetClassToBuy(BuyPlanetAssetClasses[GetRandomInteger(BuyPlanetAssetClasses.size() - 1)]);
 				
-				for(int NumberOfAssetsToBuy = GetRandomIntegerFromExponentialDistribution(GetMind()->GetCharacter()->GetShip()->GetCargoHold()->GetSpaceCapacity() / g_ObjectFactory->GetSpaceRequirement(PlanetAssetClassToBuy->GetAssetClass()->GetObjectTypeIdentifier(), PlanetAssetClassToBuy->GetAssetClass()->GetObjectClassIdentifier())); NumberOfAssetsToBuy > 0; --NumberOfAssetsToBuy)
+				for(int NumberOfAssetsToBuy = GetRandomIntegerFromExponentialDistribution(GetMind()->GetCharacter()->GetShip()->GetCargoHold()->GetSpaceCapacity() / g_ObjectFactory->GetSpaceRequirement(PlanetAssetClassToBuy->GetAssetClass()->GetObjectTypeIdentifier(), PlanetAssetClassToBuy->GetAssetClass()->GetObjectSubTypeIdentifier())); NumberOfAssetsToBuy > 0; --NumberOfAssetsToBuy)
 				{
 					// TODO: the 400.0f is a safety margin for landing fees and fuel
-					if((GetMind()->GetCharacter()->GetShip()->GetCargoHold()->GetSpace() >= g_ObjectFactory->GetSpaceRequirement(PlanetAssetClassToBuy->GetAssetClass()->GetObjectTypeIdentifier(), PlanetAssetClassToBuy->GetAssetClass()->GetObjectClassIdentifier())) && (GetMind()->GetCharacter()->GetCredits() - 400.0f >= PlanetAssetClassToBuy->GetPrice()))
+					if((GetMind()->GetCharacter()->GetShip()->GetCargoHold()->GetSpace() >= g_ObjectFactory->GetSpaceRequirement(PlanetAssetClassToBuy->GetAssetClass()->GetObjectTypeIdentifier(), PlanetAssetClassToBuy->GetAssetClass()->GetObjectSubTypeIdentifier())) && (GetMind()->GetCharacter()->GetCredits() - 400.0f >= PlanetAssetClassToBuy->GetPrice()))
 					{
 						GetMind()->GetCharacter()->RemoveCredits(PlanetAssetClassToBuy->GetPrice());
 						
-						Object * NewCommodity(g_ObjectFactory->Create(PlanetAssetClassToBuy->GetAssetClass()->GetObjectTypeIdentifier(), PlanetAssetClassToBuy->GetAssetClass()->GetObjectClassIdentifier(), true));
+						Object * NewCommodity(g_ObjectFactory->Create(PlanetAssetClassToBuy->GetAssetClass()->GetObjectTypeIdentifier(), PlanetAssetClassToBuy->GetAssetClass()->GetObjectSubTypeIdentifier(), true));
 						
-						NewCommodity->SetObjectIdentifier("::" + PlanetAssetClassToBuy->GetAssetClass()->GetObjectTypeIdentifier() + "(" + PlanetAssetClassToBuy->GetAssetClass()->GetObjectClassIdentifier() + ")::buy_index(" + to_string_cast(NumberOfPlanetAssetClassesToBuy) + "|" + to_string_cast(NumberOfAssetsToBuy) + ")::bought_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::bought_by(" + GetMind()->GetObjectIdentifier() + ")::bought_on(" + ThePlanet->GetObjectIdentifier() + ")");
+						NewCommodity->SetObjectIdentifier("::" + PlanetAssetClassToBuy->GetAssetClass()->GetObjectTypeIdentifier() + "(" + PlanetAssetClassToBuy->GetAssetClass()->GetObjectSubTypeIdentifier() + ")::buy_index(" + to_string_cast(NumberOfPlanetAssetClassesToBuy) + "|" + to_string_cast(NumberOfAssetsToBuy) + ")::bought_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::bought_by(" + GetMind()->GetObjectIdentifier() + ")::bought_on(" + ThePlanet->GetObjectIdentifier() + ")");
 						GetMind()->GetCharacter()->GetShip()->GetCargoHold()->GetAspectObjectContainer()->AddContent(NewCommodity);
 					}
 					else
