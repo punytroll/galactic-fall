@@ -110,13 +110,13 @@ void Settings::LoadFromItem(Arxx::Item * Item)
 		MakeItemAvailable(KeyBindingProfileItem);
 		
 		Arxx::BufferReader Reader(*KeyBindingProfileItem);
-		Arxx::u4byte NumberOfKeyBindings;
+		std::uint32_t NumberOfKeyBindings;
 		std::list< KeyBinding > KeyBindings;
 		
 		Reader >> NumberOfKeyBindings;
-		for(Arxx::u4byte KeyBindingIndex = 0; KeyBindingIndex < NumberOfKeyBindings; ++KeyBindingIndex)
+		for(auto KeyBindingIndex = 0ul; KeyBindingIndex < NumberOfKeyBindings; ++KeyBindingIndex)
 		{
-			Arxx::u4byte Code;
+			std::uint32_t Code;
 			std::string Event;
 			std::string Action;
 			

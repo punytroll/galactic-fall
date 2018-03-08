@@ -110,10 +110,10 @@ Arxx::BufferReader & operator>>(Arxx::BufferReader & BufferReader, Visualization
 	}
 	VisualizationPrototype.SetModel(Model);
 	
-	Arxx::u4byte VisualizationPartCount;
+	std::uint32_t VisualizationPartCount;
 	
 	BufferReader >> VisualizationPartCount;
-	for(Arxx::u4byte VisualizationPartNumber = 1; VisualizationPartNumber <= VisualizationPartCount; ++VisualizationPartNumber)
+	for(auto VisualizationPartIndex = 0ul; VisualizationPartIndex < VisualizationPartCount; ++VisualizationPartIndex)
 	{
 		std::string PartIdentifier;
 		Graphics::ColorRGBO PartDiffuseColor;

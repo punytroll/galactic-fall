@@ -645,10 +645,10 @@ static void ReadMesh(Arxx::Reference & Reference)
 	}
 	
 	std::map< std::string, std::vector< Vector3f >::size_type > Points;
-	Arxx::u4byte Count;
+	std::uint32_t PrimitiveCount;
 	
-	Reader >> Count;
-	for(Arxx::u4byte Number = 1; Number <= Count; ++Number)
+	Reader >> PrimitiveCount;
+	for(auto PointIndex = 0ul; PointIndex < PrimitiveCount; ++PointIndex)
 	{
 		std::string PointIdentifier;
 		std::string PointName;
@@ -660,8 +660,8 @@ static void ReadMesh(Arxx::Reference & Reference)
 	
 	std::map< std::string, std::pair< std::vector< Vector3f >::size_type, Vector3f > > TrianglePoints;
 	
-	Reader >> Count;
-	for(Arxx::u4byte Number = 1; Number <= Count; ++Number)
+	Reader >> PrimitiveCount;
+	for(auto TrianglePointIndex = 0ul; TrianglePointIndex < PrimitiveCount; ++TrianglePointIndex)
 	{
 		std::string TrianglePointIdentifier;
 		Vector3f TrianglePointNormal;
@@ -671,8 +671,8 @@ static void ReadMesh(Arxx::Reference & Reference)
 		TrianglePoints[TrianglePointIdentifier] = std::make_pair(Points[PointIdentifier], TrianglePointNormal);
 	}
 	
-	Reader >> Count;
-	for(Arxx::u4byte Number = 1; Number <= Count; ++Number)
+	Reader >> PrimitiveCount;
+	for(auto TriangleIndex = 0ul; TriangleIndex < PrimitiveCount; ++TriangleIndex)
 	{
 		std::string TriangleIdentifier;
 		std::string TriangleName;
@@ -735,10 +735,10 @@ static void ReadModel(Arxx::Reference & Reference)
 		throw std::runtime_error("Could not create model '" + Identifier + "'.");
 	}
 	
-	Arxx::u4byte Count;
+	std::uint32_t PartCount;
 	
-	Reader >> Count;
-	for(Arxx::u4byte Number = 1; Number <= Count; ++Number)
+	Reader >> PartCount;
+	for(auto PartIndex = 0ul; PartIndex < PartCount; ++PartIndex)
 	{
 		std::string PartIdentifier;
 		std::string PartMeshIdentifier;
@@ -796,12 +796,12 @@ static void ReadPlanet(Arxx::Reference & Reference, Galaxy * Galaxy, System * Sy
 	
 	Vector2f PlanetPosition;
 	float Size;
-	Arxx::u4byte OfferedAssetsCount;
+	std::uint32_t PlanetAssetsCount;
 	
-	Reader >> PlanetPosition >> Size >> OfferedAssetsCount;
+	Reader >> PlanetPosition >> Size >> PlanetAssetsCount;
 	NewPlanet->GetAspectPosition()->SetPosition(Vector3f::CreateFromComponents(PlanetPosition[0], PlanetPosition[1], 0.0f));
 	NewPlanet->SetSize(Size);
-	for(Arxx::u4byte OfferedAssetNumber = 1; OfferedAssetNumber <= OfferedAssetsCount; ++OfferedAssetNumber)
+	for(auto PlanetAssetsIndex = 0ul; PlanetAssetsIndex < PlanetAssetsCount; ++PlanetAssetsIndex)
 	{
 		std::string AssetsTypeIdentifier;
 		std::string AssetsSubTypeIdentifier;
@@ -992,7 +992,7 @@ static void ReadShipClass(Arxx::Reference & Reference, ClassManager< ShipClass >
 	std::string ExhaustMarkerPartIdentifier;
 	std::string ExhaustMarkerIdentifier;
 	float ExhaustRadius;
-	Arxx::u4byte SlotCount;
+	std::uint32_t SlotCount;
 	
 	Reader >> Name >> Description >> BasePrice >> SpaceRequirement >> VisualizationPrototype >> ForwardThrust >> TurnSpeed >> MaximumSpeed >> MaximumAvailableSpace >> FuelCapacity >> JumpFuel >> ForwardFuel >> TurnFuel >> Hull >> ExhaustMarkerPartIdentifier >> ExhaustMarkerIdentifier >> ExhaustRadius >> SlotCount;
 	NewShipClass->SetName(Name);
@@ -1018,7 +1018,7 @@ static void ReadShipClass(Arxx::Reference & Reference, ClassManager< ShipClass >
 	}
 	NewShipClass->SetExhaustOffset(*ExhaustPosition);
 	NewShipClass->SetExhaustRadius(ExhaustRadius);
-	for(Arxx::u4byte SlotNumber = 1; SlotNumber <= SlotCount; ++SlotNumber)
+	for(auto SlotIndex = 0ul; SlotIndex < SlotCount; ++SlotIndex)
 	{
 		std::string SlotIdentifier;
 		std::string SlotClassIdentifier;
@@ -1092,11 +1092,11 @@ static void ReadSlotClass(Arxx::Reference & Reference, ClassManager< SlotClass >
 	}
 	
 	std::string Name;
-	Arxx::u4byte AcceptedSlotClassIdentifierCount;
+	std::uint32_t AcceptedSlotClassIdentifierCount;
 	
 	Reader >> Name >> AcceptedSlotClassIdentifierCount;
 	NewSlotClass->SetName(Name);
-	for(Arxx::u4byte AcceptedSlotClassIdentifierNumber = 1; AcceptedSlotClassIdentifierNumber <= AcceptedSlotClassIdentifierCount; ++AcceptedSlotClassIdentifierNumber)
+	for(auto AcceptedSlotClassIdentifierIndex = 0ul; AcceptedSlotClassIdentifierIndex < AcceptedSlotClassIdentifierCount; ++AcceptedSlotClassIdentifierIndex)
 	{
 		std::string AcceptedSlotClassIdentifier;
 		
@@ -1168,9 +1168,9 @@ static void ReadTexture(Arxx::Reference & Reference)
 	
 	Arxx::BufferReader Reader(*Item);
 	std::string Identifier;
-	Arxx::u4byte Width;
-	Arxx::u4byte Height;
-	Arxx::u4byte Format;
+	std::uint32_t Width;
+	std::uint32_t Height;
+	std::uint32_t Format;
 	
 	Reader >> Identifier >> Width >> Height >> Format;
 	Width = ntohl(Width);
