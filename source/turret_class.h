@@ -40,6 +40,8 @@ public:
 	// destructor
 	~TurretClass(void);
 	// getters
+	std::uint32_t GetBasePrice(void) const;
+	const std::string & GetDescription(void) const;
 	float GetEnergyUsagePerShot(void) const;
 	const std::string & GetIdentifier(void) const;
 	const Vector3f & GetMuzzlePosition(void) const;
@@ -54,6 +56,8 @@ public:
 	std::uint32_t GetSpaceRequirement(void) const;
 	const VisualizationPrototype * GetTurretVisualizationPrototype(void) const;
 	// setters
+	void SetBasePrice(std::uint32_t BasePrice);
+	void SetDescription(const std::string & Description);
 	void SetEnergyUsagePerShot(float EnergyUsagePerShot);
 	void SetMuzzlePosition(const Vector3f & MuzzlePosition);
 	void SetName(const std::string & Name);
@@ -67,6 +71,8 @@ public:
 	void SetSpaceRequirement(std::uint32_t SpaceRequirement);
 	void SetTurretVisualizationPrototype(const VisualizationPrototype & TurretVisualizationPrototype);
 private:
+	std::uint32_t _BasePrice;
+	std::string _Description;
 	float _EnergyUsagePerShot;
 	std::string _Identifier;
 	Vector3f _MuzzlePosition;
@@ -81,6 +87,16 @@ private:
 	std::uint32_t _SpaceRequirement;
 	VisualizationPrototype * _TurretVisualizationPrototype;
 };
+
+inline std::uint32_t TurretClass::GetBasePrice(void) const
+{
+	return _BasePrice;
+}
+
+inline const std::string & TurretClass::GetDescription(void) const
+{
+	return _Description;
+}
 
 inline float TurretClass::GetEnergyUsagePerShot(void) const
 {
@@ -145,6 +161,16 @@ inline std::uint32_t TurretClass::GetSpaceRequirement(void) const
 inline const VisualizationPrototype * TurretClass::GetTurretVisualizationPrototype(void) const
 {
 	return _TurretVisualizationPrototype;
+}
+
+inline void TurretClass::SetBasePrice(std::uint32_t BasePrice)
+{
+	_BasePrice = BasePrice;
+}
+
+inline void TurretClass::SetDescription(const std::string & Description)
+{
+	_Description = Description;
 }
 
 inline void TurretClass::SetEnergyUsagePerShot(float EnergyUsagePerShot)

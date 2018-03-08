@@ -1,6 +1,9 @@
 <weapon-class>
 	<identifier>light_laser</identifier>
 	<name>Light Laser</name>
+	<description>The light laser is a standard armament for most civilian and small military space crafts.</description>
+	<base-price>2800</base-price>
+	<space-requirement>250</space-requirement>
 	<visualization>
 		<model-identifier>light_laser</model-identifier>
 		<visualization-parts>
@@ -39,7 +42,6 @@
 		<z>0</z>
 	</orientation>
 	<reload-time>0.63</reload-time>
-	<space-requirement>250</space-requirement>
 	<energy-usage-per-shot>5</energy-usage-per-shot>
 	<muzzle-position>
 		<part-identifier>light_laser</part-identifier>

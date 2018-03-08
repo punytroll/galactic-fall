@@ -1,6 +1,8 @@
 <commodity-class>
 	<identifier>medical_supplies</identifier>
 	<name>Medical Supplies</name>
+	<description>Medical supplies are produced by highly developed planets and mainly required by industrial planets and in times of crises.</description>
+	<base-price>300</base-price>
 	<space-requirement>1000</space-requirement>
 	<visualization>
 		<model-identifier>cargo_cube</model-identifier>

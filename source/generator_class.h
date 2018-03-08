@@ -31,6 +31,8 @@ public:
 	GeneratorClass(const std::string & Identifier);
 	~GeneratorClass(void);
 	// getters
+	std::uint32_t GetBasePrice(void) const;
+	const std::string & GetDescription(void) const;
 	float GetEnergyProvisionPerSecond(void) const;
 	const std::string & GetIdentifier(void) const;
 	const std::string & GetName(void) const;
@@ -38,12 +40,16 @@ public:
 	std::uint32_t GetSpaceRequirement(void) const;
 	const VisualizationPrototype * GetVisualizationPrototype(void) const;
 	// setters
+	void SetBasePrice(std::uint32_t BasePrice);
+	void SetDescription(const std::string & Description);
 	void SetEnergyProvisionPerSecond(float EnergyProvisionPerSecond);
 	void SetName(const std::string & Name);
 	void SetSlotClassIdentifier(const std::string & SlotClassIdentifier);
 	void SetSpaceRequirement(std::uint32_t SpaceRequirement);
 	void SetVisualizationPrototype(const VisualizationPrototype & VisualizationPrototype);
 private:
+	std::uint32_t _BasePrice;
+	std::string _Description;
 	float _EnergyProvisionPerSecond;
 	std::string _Identifier;
 	std::string _Name;
@@ -51,6 +57,16 @@ private:
 	std::uint32_t _SpaceRequirement;
 	VisualizationPrototype * _VisualizationPrototype;
 };
+
+inline std::uint32_t GeneratorClass::GetBasePrice(void) const
+{
+	return _BasePrice;
+}
+
+inline const std::string & GeneratorClass::GetDescription(void) const
+{
+	return _Description;
+}
 
 inline float GeneratorClass::GetEnergyProvisionPerSecond(void) const
 {
@@ -80,6 +96,16 @@ inline std::uint32_t GeneratorClass::GetSpaceRequirement(void) const
 inline const VisualizationPrototype * GeneratorClass::GetVisualizationPrototype(void) const
 {
 	return _VisualizationPrototype;
+}
+
+inline void GeneratorClass::SetBasePrice(std::uint32_t BasePrice)
+{
+	_BasePrice = BasePrice;
+}
+
+inline void GeneratorClass::SetDescription(const std::string & Description)
+{
+	_Description = Description;
 }
 
 inline void GeneratorClass::SetEnergyProvisionPerSecond(float EnergyProvisionPerSecond)

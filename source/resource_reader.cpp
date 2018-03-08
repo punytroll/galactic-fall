@@ -29,7 +29,6 @@
 
 #include "ammunition_class.h"
 #include "arx_types.h"
-#include "asset_class.h"
 #include "battery_class.h"
 #include "buffer_reading.h"
 #include "class_manager.h"
@@ -55,6 +54,7 @@
 #include "object_aspect_visualization.h"
 #include "object_factory.h"
 #include "planet.h"
+#include "planet_assets.h"
 #include "resource_reader.h"
 #include "scenario.h"
 #include "scenario_manager.h"
@@ -71,14 +71,13 @@
 static Arxx::Item * Resolve(Arxx::Reference & Reference);
 
 static void ReadAmmunitionClass(Arxx::Reference & Reference, ClassManager< AmmunitionClass > * AmmunitionClassManager);
-static void ReadAssetClass(Arxx::Reference & Reference, ClassManager< AssetClass > * AssetClassManager);
 static void ReadBatteryClass(Arxx::Reference & Reference, ClassManager< BatteryClass > * BatteryClassManager);
 static void ReadCommodityClass(Arxx::Reference & Reference, ClassManager< CommodityClass > * CommodityClassManager);
 static void ReadFaction(Arxx::Reference & Reference, Galaxy * Galaxy, std::list< std::tuple< std::string, std::string, float > > & FactionStandings);
 static void ReadGeneratorClass(Arxx::Reference & Reference, ClassManager< GeneratorClass > * GeneratorClassManager);
 static void ReadMesh(Arxx::Reference & Reference);
 static void ReadModel(Arxx::Reference & Reference);
-static void ReadPlanet(Arxx::Reference & Reference, Galaxy * Galaxy, System * System, ClassManager< AssetClass > * AssetClassManager);
+static void ReadPlanet(Arxx::Reference & Reference, Galaxy * Galaxy, System * System);
 static void ReadProgram(Arxx::Reference & Reference, Graphics::ShadingManager * ShadingManager);
 static void ReadScenario(Arxx::Reference & Reference, ScenarioManager * ScenarioManager);
 static void ReadShader(Arxx::Reference & Reference, Graphics::ShadingManager * ShadingManager);
@@ -182,11 +181,6 @@ void ResourceReader::ReadAmmunitionClasses(ClassManager< AmmunitionClass > * Amm
 	_ReadItems("/Ammunition Classes", std::bind(ReadAmmunitionClass, std::placeholders::_1, AmmunitionClassManager));
 }
 
-void ResourceReader::ReadAssetClasses(ClassManager< AssetClass > * AssetClassManager)
-{
-	_ReadItems("/Asset Classes", std::bind(ReadAssetClass, std::placeholders::_1, AssetClassManager));
-}
-
 void ResourceReader::ReadBatteryClasses(ClassManager< BatteryClass > * BatteryClassManager)
 {
 	_ReadItems("/Battery Classes", std::bind(ReadBatteryClass, std::placeholders::_1, BatteryClassManager));
@@ -197,7 +191,7 @@ void ResourceReader::ReadCommodityClasses(ClassManager< CommodityClass > * Commo
 	_ReadItems("/Commodity Classes", std::bind(ReadCommodityClass, std::placeholders::_1, CommodityClassManager));
 }
 
-Galaxy * ResourceReader::ReadGalaxy(const std::string & GalaxyIdentifier, ClassManager< AssetClass > * AssetClassManager)
+Galaxy * ResourceReader::ReadGalaxy(const std::string & GalaxyIdentifier)
 {
 	assert(_Archive != nullptr);
 	
@@ -252,7 +246,7 @@ Galaxy * ResourceReader::ReadGalaxy(const std::string & GalaxyIdentifier, ClassM
 			
 			std::multimap< std::string, std::string > SystemLinks;
 			
-			_ReadItems(GalaxyItem->GetStructure().GetRelation("systems"), std::bind(&ResourceReader::_ReadSystem, this, std::placeholders::_1, AssetClassManager, NewGalaxy, std::ref(SystemLinks)));
+			_ReadItems(GalaxyItem->GetStructure().GetRelation("systems"), std::bind(&ResourceReader::_ReadSystem, this, std::placeholders::_1, NewGalaxy, std::ref(SystemLinks)));
 			for(auto & SystemLink : SystemLinks)
 			{
 				NewGalaxy->GetSystem(SystemLink.first)->AddLinkedSystem(NewGalaxy->GetSystem(SystemLink.second));
@@ -312,7 +306,7 @@ void ResourceReader::ReadSlotClasses(ClassManager< SlotClass > * SlotClassManage
 	_ReadItems("/Slot Classes", std::bind(ReadSlotClass, std::placeholders::_1, SlotClassManager));
 }
 
-void ResourceReader::_ReadSystem(Arxx::Reference & Reference, ClassManager< AssetClass > * AssetClassManager, Galaxy * Galaxy, std::multimap< std::string, std::string > & SystemLinks)
+void ResourceReader::_ReadSystem(Arxx::Reference & Reference, Galaxy * Galaxy, std::multimap< std::string, std::string > & SystemLinks)
 {
 	Arxx::Item * Item(Resolve(Reference));
 	
@@ -369,7 +363,7 @@ void ResourceReader::_ReadSystem(Arxx::Reference & Reference, ClassManager< Asse
 	}
 	if(Item->GetStructure().bHasRelation("planets") == true)
 	{
-		_ReadItems(Item->GetStructure().GetRelation("planets"), std::bind(ReadPlanet, std::placeholders::_1, Galaxy, NewSystem, AssetClassManager));
+		_ReadItems(Item->GetStructure().GetRelation("planets"), std::bind(ReadPlanet, std::placeholders::_1, Galaxy, NewSystem));
 	}
 	if(Item->GetStructure().bHasRelation("linked-systems") == true)
 	{
@@ -438,56 +432,20 @@ static void ReadAmmunitionClass(Arxx::Reference & Reference, ClassManager< Ammun
 	}
 	
 	std::string Name;
-	std::uint32_t CartridgeSize;
+	std::string Description;
+	std::uint32_t BasePrice;
 	std::uint32_t SpaceRequirement;
 	VisualizationPrototype VisualizationPrototype;
+	std::uint32_t CartridgeSize;
 	
-	Reader >> Name >> CartridgeSize >> SpaceRequirement >> VisualizationPrototype;
+	Reader >> Name >> Description >> BasePrice >> SpaceRequirement >> VisualizationPrototype >> CartridgeSize;
 	
 	NewAmmunitionClass->SetName(Name);
-	NewAmmunitionClass->SetCartridgeSize(CartridgeSize);
+	NewAmmunitionClass->SetDescription(Description);
+	NewAmmunitionClass->SetBasePrice(BasePrice);
 	NewAmmunitionClass->SetSpaceRequirement(SpaceRequirement);
 	NewAmmunitionClass->SetVisualizationPrototype(VisualizationPrototype);
-}
-
-static void ReadAssetClass(Arxx::Reference & Reference, ClassManager< AssetClass > * AssetClassManager)
-{
-	auto Item(Resolve(Reference));
-	
-	if(Item->GetType() != DATA_TYPE_ASSET_CLASS)
-	{
-		throw std::runtime_error("Item type for asset class '" + Item->GetName() + "' should be '" + to_string_cast(DATA_TYPE_ASSET_CLASS) + "' not '" + to_string_cast(Item->GetType()) + "'.");
-	}
-	if(Item->GetSubType() != 0)
-	{
-		throw std::runtime_error("Item sub type for asset class '" + Item->GetName() + "' should be '0' not '" + to_string_cast(Item->GetSubType()) + "'.");
-	}
-	
-	Arxx::BufferReader Reader(*Item);
-	std::string Identifier;
-	
-	Reader >> Identifier;
-	
-	auto NewAssetClass(AssetClassManager->Create(Identifier));
-	
-	if(NewAssetClass == nullptr)
-	{
-		throw std::runtime_error("Could not create asset class '" + Identifier + "'.");
-	}
-	
-	std::string Name;
-	float BasePrice;
-	std::string Description;
-	std::string ObjectTypeIdentifier;
-	std::string ObjectSubTypeIdentifier;
-	
-	Reader >> Name >> BasePrice >> Description >> ObjectTypeIdentifier >> ObjectSubTypeIdentifier;
-	
-	NewAssetClass->SetName(Name);
-	NewAssetClass->SetBasePrice(BasePrice);
-	NewAssetClass->SetDescription(Description);
-	NewAssetClass->SetObjectTypeIdentifier(ObjectTypeIdentifier);
-	NewAssetClass->SetObjectSubTypeIdentifier(ObjectSubTypeIdentifier);
+	NewAmmunitionClass->SetCartridgeSize(CartridgeSize);
 }
 
 static void ReadBatteryClass(Arxx::Reference & Reference, ClassManager< BatteryClass > * BatteryClassManager)
@@ -516,15 +474,19 @@ static void ReadBatteryClass(Arxx::Reference & Reference, ClassManager< BatteryC
 	}
 	
 	std::string Name;
+	std::string Description;
+	std::uint32_t BasePrice;
+	std::uint32_t SpaceRequirement;
 	VisualizationPrototype VisualizationPrototype;
-	Arxx::u4byte SpaceRequirement;
 	float EnergyCapacity;
 	std::string SlotClassIdentifier;
 	
-	Reader >> Name >> VisualizationPrototype >> SpaceRequirement >> EnergyCapacity >> SlotClassIdentifier;
+	Reader >> Name >> Description >> BasePrice >> SpaceRequirement >> VisualizationPrototype >> EnergyCapacity >> SlotClassIdentifier;
 	NewBatteryClass->SetName(Name);
-	NewBatteryClass->SetVisualizationPrototype(VisualizationPrototype);
+	NewBatteryClass->SetDescription(Description);
+	NewBatteryClass->SetBasePrice(BasePrice);
 	NewBatteryClass->SetSpaceRequirement(SpaceRequirement);
+	NewBatteryClass->SetVisualizationPrototype(VisualizationPrototype);
 	NewBatteryClass->SetEnergyCapacity(EnergyCapacity);
 	NewBatteryClass->SetSlotClassIdentifier(SlotClassIdentifier);
 }
@@ -555,12 +517,16 @@ static void ReadCommodityClass(Arxx::Reference & Reference, ClassManager< Commod
 	}
 	
 	std::string Name;
-	Arxx::u4byte SpaceRequirement;
+	std::string Description;
+	std::uint32_t BasePrice;
+	std::uint32_t SpaceRequirement;
 	VisualizationPrototype VisualizationPrototype;
 	
-	Reader >> Name >> SpaceRequirement >> VisualizationPrototype;
+	Reader >> Name >> Description >> BasePrice >> SpaceRequirement >> VisualizationPrototype;
 	
 	NewCommodityClass->SetName(Name);
+	NewCommodityClass->SetDescription(Description);
+	NewCommodityClass->SetBasePrice(BasePrice);
 	NewCommodityClass->SetSpaceRequirement(SpaceRequirement);
 	NewCommodityClass->SetVisualizationPrototype(VisualizationPrototype);
 }
@@ -635,16 +601,20 @@ static void ReadGeneratorClass(Arxx::Reference & Reference, ClassManager< Genera
 	}
 	
 	std::string Name;
+	std::string Description;
+	std::uint32_t BasePrice;
+	std::uint32_t SpaceRequirement;
 	VisualizationPrototype VisualizationPrototype;
-	Arxx::u4byte SpaceRequirement;
 	float EnergyProvisionPerSecond;
 	std::string SlotClassIdentifier;
 	
-	Reader >> Name >> VisualizationPrototype >> SpaceRequirement >> EnergyProvisionPerSecond >> SlotClassIdentifier;
+	Reader >> Name >> Description >> BasePrice >> SpaceRequirement >> VisualizationPrototype >> EnergyProvisionPerSecond >> SlotClassIdentifier;
 	
 	NewGeneratorClass->SetName(Name);
-	NewGeneratorClass->SetVisualizationPrototype(VisualizationPrototype);
+	NewGeneratorClass->SetDescription(Description);
+	NewGeneratorClass->SetBasePrice(BasePrice);
 	NewGeneratorClass->SetSpaceRequirement(SpaceRequirement);
+	NewGeneratorClass->SetVisualizationPrototype(VisualizationPrototype);
 	NewGeneratorClass->SetEnergyProvisionPerSecond(EnergyProvisionPerSecond);
 	NewGeneratorClass->SetSlotClassIdentifier(SlotClassIdentifier);
 }
@@ -787,7 +757,7 @@ static void ReadModel(Arxx::Reference & Reference)
 	}
 }
 
-static void ReadPlanet(Arxx::Reference & Reference, Galaxy * Galaxy, System * System, ClassManager< AssetClass > * AssetClassManager)
+static void ReadPlanet(Arxx::Reference & Reference, Galaxy * Galaxy, System * System)
 {
 	Arxx::Item * Item(Resolve(Reference));
 	
@@ -833,21 +803,21 @@ static void ReadPlanet(Arxx::Reference & Reference, Galaxy * Galaxy, System * Sy
 	NewPlanet->SetSize(Size);
 	for(Arxx::u4byte OfferedAssetNumber = 1; OfferedAssetNumber <= OfferedAssetsCount; ++OfferedAssetNumber)
 	{
-		std::string AssetClassIdentifier;
+		std::string AssetsTypeIdentifier;
+		std::string AssetsSubTypeIdentifier;
 		float BasePriceModifier;
 		
-		Reader >> AssetClassIdentifier >> BasePriceModifier;
-		
-		auto AssetClass(AssetClassManager->Get(AssetClassIdentifier));
-		
-		if(AssetClass == nullptr)
+		Reader >> AssetsTypeIdentifier >> AssetsSubTypeIdentifier >> BasePriceModifier;
+		if(g_ObjectFactory->HasClass(AssetsTypeIdentifier, AssetsSubTypeIdentifier) == true)
 		{
-			throw std::runtime_error("Could not find asset class '" + AssetClassIdentifier + "' for planet '" + Identifier + "' in system '" + System->GetObjectIdentifier() + "'.");
+			auto NewPlanetAssets{NewPlanet->CreatePlanetAssets(AssetsTypeIdentifier, AssetsSubTypeIdentifier)};
+			
+			NewPlanetAssets->SetBasePriceModifier(BasePriceModifier);
 		}
-		
-		auto NewPlanetAssetClass(NewPlanet->CreatePlanetAssetClass(AssetClass));
-		
-		NewPlanetAssetClass->SetBasePriceModifier(BasePriceModifier);
+		else
+		{
+			throw std::runtime_error("Don't know a class of type '" + AssetsTypeIdentifier + "' and sub type '" + AssetsSubTypeIdentifier + "'.");
+		}
 	}
 	
 	float LandingFeePerSpace;
@@ -1006,7 +976,9 @@ static void ReadShipClass(Arxx::Reference & Reference, ClassManager< ShipClass >
 	}
 	// read the name aspect
 	std::string Name;
-	Arxx::u4byte SpaceRequirement;
+	std::string Description;
+	std::uint32_t BasePrice;
+	std::uint32_t SpaceRequirement;
 	VisualizationPrototype VisualizationPrototype;
 	float FuelCapacity;
 	float ForwardThrust;
@@ -1022,8 +994,10 @@ static void ReadShipClass(Arxx::Reference & Reference, ClassManager< ShipClass >
 	float ExhaustRadius;
 	Arxx::u4byte SlotCount;
 	
-	Reader >> Name >> SpaceRequirement >> VisualizationPrototype >> ForwardThrust >> TurnSpeed >> MaximumSpeed >> MaximumAvailableSpace >> FuelCapacity >> JumpFuel >> ForwardFuel >> TurnFuel >> Hull >> ExhaustMarkerPartIdentifier >> ExhaustMarkerIdentifier >> ExhaustRadius >> SlotCount;
+	Reader >> Name >> Description >> BasePrice >> SpaceRequirement >> VisualizationPrototype >> ForwardThrust >> TurnSpeed >> MaximumSpeed >> MaximumAvailableSpace >> FuelCapacity >> JumpFuel >> ForwardFuel >> TurnFuel >> Hull >> ExhaustMarkerPartIdentifier >> ExhaustMarkerIdentifier >> ExhaustRadius >> SlotCount;
 	NewShipClass->SetName(Name);
+	NewShipClass->SetDescription(Description);
+	NewShipClass->SetBasePrice(BasePrice);
 	NewShipClass->SetSpaceRequirement(SpaceRequirement);
 	NewShipClass->SetVisualizationPrototype(VisualizationPrototype);
 	NewShipClass->SetFuelCapacity(FuelCapacity);
@@ -1238,11 +1212,13 @@ static void ReadTurretClass(Arxx::Reference & Reference, ClassManager< TurretCla
 	}
 	
 	std::string Name;
+	std::string Description;
+	std::uint32_t BasePrice;
+	std::uint32_t SpaceRequirement;
 	VisualizationPrototype TurretVisualizationPrototype;
 	std::string SlotClassIdentifier;
 	Quaternion Orientation;
 	float ReloadTime;
-	Arxx::u4byte SpaceRequirement;
 	float EnergyUsagePerShot;
 	std::string MuzzlePositionPartIdentifier;
 	std::string MuzzlePositionMarkerIdentifier;
@@ -1251,13 +1227,15 @@ static void ReadTurretClass(Arxx::Reference & Reference, ClassManager< TurretCla
 	float ShotLifeTime;
 	VisualizationPrototype ShotVisualizationPrototype;
 	
-	Reader >> Name >> TurretVisualizationPrototype >> SlotClassIdentifier >> Orientation >> ReloadTime >> SpaceRequirement >> EnergyUsagePerShot >> MuzzlePositionPartIdentifier >> MuzzlePositionMarkerIdentifier >> ShotExitSpeed >> ShotDamage >> ShotLifeTime >> ShotVisualizationPrototype;
+	Reader >> Name >> Description >> BasePrice >> SpaceRequirement >> TurretVisualizationPrototype >> SlotClassIdentifier >> Orientation >> ReloadTime >> EnergyUsagePerShot >> MuzzlePositionPartIdentifier >> MuzzlePositionMarkerIdentifier >> ShotExitSpeed >> ShotDamage >> ShotLifeTime >> ShotVisualizationPrototype;
 	NewTurretClass->SetName(Name);
+	NewTurretClass->SetDescription(Description);
+	NewTurretClass->SetBasePrice(BasePrice);
+	NewTurretClass->SetSpaceRequirement(SpaceRequirement);
 	NewTurretClass->SetTurretVisualizationPrototype(TurretVisualizationPrototype);
 	NewTurretClass->SetSlotClassIdentifier(SlotClassIdentifier);
 	NewTurretClass->SetOrientation(Orientation);
 	NewTurretClass->SetReloadTime(ReloadTime);
-	NewTurretClass->SetSpaceRequirement(static_cast< std::uint32_t >(SpaceRequirement));
 	NewTurretClass->SetEnergyUsagePerShot(EnergyUsagePerShot);
 	
 	auto MuzzlePosition{TurretVisualizationPrototype.GetMarkerPosition(MuzzlePositionPartIdentifier, MuzzlePositionMarkerIdentifier)};
@@ -1299,16 +1277,13 @@ static void ReadWeaponClass(Arxx::Reference & Reference, ClassManager< WeaponCla
 	}
 	
 	std::string Name;
+	std::string Description;
+	std::uint32_t BasePrice;
+	std::uint32_t SpaceRequirement;
 	VisualizationPrototype WeaponVisualizationPrototype;
-	
-	Reader >> Name >> WeaponVisualizationPrototype;
-	NewWeaponClass->SetName(Name);
-	NewWeaponClass->SetWeaponVisualizationPrototype(WeaponVisualizationPrototype);
-	
 	std::string SlotClassIdentifier;
 	Quaternion Orientation;
 	float ReloadTime;
-	Arxx::u4byte SpaceRequirement;
 	float EnergyUsagePerShot;
 	std::string MuzzlePositionPartIdentifier;
 	std::string MuzzlePositionMarkerIdentifier;
@@ -1317,7 +1292,12 @@ static void ReadWeaponClass(Arxx::Reference & Reference, ClassManager< WeaponCla
 	float ShotLifeTime;
 	VisualizationPrototype ShotVisualizationPrototype;
 	
-	Reader >> SlotClassIdentifier >> Orientation >> ReloadTime >> SpaceRequirement >> EnergyUsagePerShot >> MuzzlePositionPartIdentifier >> MuzzlePositionMarkerIdentifier >> ShotExitSpeed >> ShotDamage >> ShotLifeTime >> ShotVisualizationPrototype;
+	
+	Reader >> Name >> Description >> BasePrice >> SpaceRequirement >> WeaponVisualizationPrototype >> SlotClassIdentifier >> Orientation >> ReloadTime >> EnergyUsagePerShot >> MuzzlePositionPartIdentifier >> MuzzlePositionMarkerIdentifier >> ShotExitSpeed >> ShotDamage >> ShotLifeTime >> ShotVisualizationPrototype;
+	NewWeaponClass->SetName(Name);
+	NewWeaponClass->SetDescription(Description);
+	NewWeaponClass->SetBasePrice(BasePrice);
+	NewWeaponClass->SetWeaponVisualizationPrototype(WeaponVisualizationPrototype);
 	NewWeaponClass->SetSlotClassIdentifier(SlotClassIdentifier);
 	NewWeaponClass->SetOrientation(Orientation);
 	NewWeaponClass->SetReloadTime(ReloadTime);

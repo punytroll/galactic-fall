@@ -24,6 +24,7 @@
 #include "visualization_prototype.h"
 
 ShipClass::ShipClass(const std::string & Identifier) :
+	_BasePrice(0),
 	_ExhaustOffset(Vector3f::CreateZero()),
 	_Identifier(Identifier),
 	_MaximumAvailableSpace(0),

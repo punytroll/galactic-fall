@@ -1,6 +1,8 @@
 <commodity-class>
 	<identifier>equipment</identifier>
 	<name>Equipment</name>
+	<description>Equipment is traded from and to industrial planets.</description>
+	<base-price>210</base-price>
 	<space-requirement>1000</space-requirement>
 	<visualization>
 		<model-identifier>cargo_cube</model-identifier>

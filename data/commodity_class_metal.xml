@@ -1,6 +1,8 @@
 <commodity-class>
 	<identifier>metal</identifier>
 	<name>Metal</name>
+	<description>Metal is the raw material that is required in every production project, mainly on industrial planets and produced by mining stations.</description>
+	<base-price>90</base-price>
 	<space-requirement>1000</space-requirement>
 	<visualization>
 		<model-identifier>cargo_cube</model-identifier>

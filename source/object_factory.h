@@ -44,6 +44,8 @@ public:
 	// getters
 	Object * Create(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier, bool CreateNestedObjects) const;
 	std::uint32_t GetBasePrice(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier) const;
+	const std::string & GetDescription(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier) const;
+	const std::string & GetName(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier) const;
 	std::uint32_t GetSpaceRequirement(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier) const;
 	const VisualizationPrototype * GetVisualizationPrototype(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier) const;
 	ClassManager< AmmunitionClass > * GetAmmunitionClassManager(void);
@@ -53,6 +55,7 @@ public:
 	ClassManager< ShipClass > * GetShipClassManager(void);
 	ClassManager< TurretClass > * GetTurretClassManager(void);
 	ClassManager< WeaponClass > * GetWeaponClassManager(void);
+	bool HasClass(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier) const;
 private:
 	ClassManager< AmmunitionClass > * _AmmunitionClassManager;
 	ClassManager< BatteryClass > * _BatteryClassManager;

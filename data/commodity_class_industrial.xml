@@ -1,6 +1,8 @@
 <commodity-class>
 	<identifier>industrial</identifier>
 	<name>Industrial</name>
+	<description>Industrial goods are required by industrial planets to produce consumer goods.</description>
+	<base-price>120</base-price>
 	<space-requirement>1000</space-requirement>
 	<visualization>
 		<model-identifier>cargo_cube</model-identifier>

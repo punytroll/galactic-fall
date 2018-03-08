@@ -1,6 +1,9 @@
 <turret-class>
 	<identifier>light_laser_turret</identifier>
 	<name>Light Laser Turret</name>
+	<description>The light laser turret is a basic automated armament for most civilian space crafts. It is also deployed in larger numbers on big military space crafts.</description>
+	<base-price>3800</base-price>
+	<space-requirement>800</space-requirement>
 	<visualization>
 		<model-identifier>light_laser_turret</model-identifier>
 		<visualization-parts>
@@ -64,7 +67,6 @@
 		<z>0</z>
 	</orientation>
 	<reload-time>0.94</reload-time>
-	<space-requirement>800</space-requirement>
 	<energy-usage-per-shot>8</energy-usage-per-shot>
 	<muzzle-position>
 		<part-identifier>gun</part-identifier>

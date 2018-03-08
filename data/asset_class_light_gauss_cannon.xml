@@ -1,8 +1,0 @@
-<asset-class>
-	<identifier>light_gauss_cannon</identifier>
-	<name>Light Gauss Cannon</name>
-	<base-price>3200</base-price>
-	<description>The light gauss cannon uses ferromagnetic ammunition that is accelerated to high velocities in order to inflict damage to the target.</description>
-	<object-type>weapon</object-type>
-	<object-sub-type>light_gauss_cannon</object-sub-type>
-</asset-class>

@@ -395,7 +395,230 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 
 std::uint32_t ObjectFactory::GetBasePrice(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier) const
 {
-	throw std::runtime_error("ObjectFactory::GetBasePrice(): Unknown object type '" + TypeIdentifier + "', sub type '" + SubTypeIdentifier + "'.");
+	if(TypeIdentifier == "ammunition")
+	{
+		assert(_AmmunitionClassManager != nullptr);
+		
+		auto AmmunitionClass{_AmmunitionClassManager->Get(SubTypeIdentifier)};
+		
+		assert(AmmunitionClass != nullptr);
+		
+		return AmmunitionClass->GetBasePrice();
+	}
+	else if(TypeIdentifier == "battery")
+	{
+		assert(_BatteryClassManager != nullptr);
+		
+		auto BatteryClass(_BatteryClassManager->Get(SubTypeIdentifier));
+		
+		assert(BatteryClass != nullptr);
+		
+		return BatteryClass->GetBasePrice();
+	}
+	else if(TypeIdentifier == "commodity")
+	{
+		assert(_CommodityClassManager != nullptr);
+		
+		auto CommodityClass(_CommodityClassManager->Get(SubTypeIdentifier));
+		
+		assert(CommodityClass != nullptr);
+		
+		return CommodityClass->GetBasePrice();
+	}
+	else if(TypeIdentifier == "generator")
+	{
+		assert(_GeneratorClassManager != nullptr);
+		
+		auto GeneratorClass(_GeneratorClassManager->Get(SubTypeIdentifier));
+		
+		assert(GeneratorClass != nullptr);
+		
+		return GeneratorClass->GetBasePrice();
+	}
+	else if(TypeIdentifier == "ship")
+	{
+		assert(_ShipClassManager != nullptr);
+		
+		auto ShipClass(_ShipClassManager->Get(SubTypeIdentifier));
+		
+		assert(ShipClass != nullptr);
+		
+		return ShipClass->GetBasePrice();
+	}
+	else if(TypeIdentifier == "turret")
+	{
+		assert(_TurretClassManager != nullptr);
+		
+		auto TurretClass(_TurretClassManager->Get(SubTypeIdentifier));
+		
+		assert(TurretClass != nullptr);
+		
+		return TurretClass->GetBasePrice();
+	}
+	else if(TypeIdentifier == "weapon")
+	{
+		assert(_WeaponClassManager != nullptr);
+		
+		auto WeaponClass(_WeaponClassManager->Get(SubTypeIdentifier));
+		
+		return WeaponClass->GetBasePrice();
+	}
+	else
+	{
+		throw std::runtime_error("ObjectFactory::GetBasePrice(): Unknown object type '" + TypeIdentifier + "', sub type '" + SubTypeIdentifier + "'.");
+	}
+}
+
+const std::string & ObjectFactory::GetDescription(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier) const
+{
+	if(TypeIdentifier == "ammunition")
+	{
+		assert(_AmmunitionClassManager != nullptr);
+		
+		auto AmmunitionClass{_AmmunitionClassManager->Get(SubTypeIdentifier)};
+		
+		assert(AmmunitionClass != nullptr);
+		
+		return AmmunitionClass->GetDescription();
+	}
+	else if(TypeIdentifier == "battery")
+	{
+		assert(_BatteryClassManager != nullptr);
+		
+		auto BatteryClass(_BatteryClassManager->Get(SubTypeIdentifier));
+		
+		assert(BatteryClass != nullptr);
+		
+		return BatteryClass->GetDescription();
+	}
+	else if(TypeIdentifier == "commodity")
+	{
+		assert(_CommodityClassManager != nullptr);
+		
+		auto CommodityClass(_CommodityClassManager->Get(SubTypeIdentifier));
+		
+		assert(CommodityClass != nullptr);
+		
+		return CommodityClass->GetDescription();
+	}
+	else if(TypeIdentifier == "generator")
+	{
+		assert(_GeneratorClassManager != nullptr);
+		
+		auto GeneratorClass(_GeneratorClassManager->Get(SubTypeIdentifier));
+		
+		assert(GeneratorClass != nullptr);
+		
+		return GeneratorClass->GetDescription();
+	}
+	else if(TypeIdentifier == "ship")
+	{
+		assert(_ShipClassManager != nullptr);
+		
+		auto ShipClass(_ShipClassManager->Get(SubTypeIdentifier));
+		
+		assert(ShipClass != nullptr);
+		
+		return ShipClass->GetDescription();
+	}
+	else if(TypeIdentifier == "turret")
+	{
+		assert(_TurretClassManager != nullptr);
+		
+		auto TurretClass(_TurretClassManager->Get(SubTypeIdentifier));
+		
+		assert(TurretClass != nullptr);
+		
+		return TurretClass->GetDescription();
+	}
+	else if(TypeIdentifier == "weapon")
+	{
+		assert(_WeaponClassManager != nullptr);
+		
+		auto WeaponClass(_WeaponClassManager->Get(SubTypeIdentifier));
+		
+		return WeaponClass->GetDescription();
+	}
+	else
+	{
+		throw std::runtime_error("ObjectFactory::GetDescription(): Unknown object type '" + TypeIdentifier + "', sub type '" + SubTypeIdentifier + "'.");
+	}
+}
+
+const std::string & ObjectFactory::GetName(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier) const
+{
+	if(TypeIdentifier == "ammunition")
+	{
+		assert(_AmmunitionClassManager != nullptr);
+		
+		auto AmmunitionClass{_AmmunitionClassManager->Get(SubTypeIdentifier)};
+		
+		assert(AmmunitionClass != nullptr);
+		
+		return AmmunitionClass->GetName();
+	}
+	else if(TypeIdentifier == "battery")
+	{
+		assert(_BatteryClassManager != nullptr);
+		
+		auto BatteryClass(_BatteryClassManager->Get(SubTypeIdentifier));
+		
+		assert(BatteryClass != nullptr);
+		
+		return BatteryClass->GetName();
+	}
+	else if(TypeIdentifier == "commodity")
+	{
+		assert(_CommodityClassManager != nullptr);
+		
+		auto CommodityClass(_CommodityClassManager->Get(SubTypeIdentifier));
+		
+		assert(CommodityClass != nullptr);
+		
+		return CommodityClass->GetName();
+	}
+	else if(TypeIdentifier == "generator")
+	{
+		assert(_GeneratorClassManager != nullptr);
+		
+		auto GeneratorClass(_GeneratorClassManager->Get(SubTypeIdentifier));
+		
+		assert(GeneratorClass != nullptr);
+		
+		return GeneratorClass->GetName();
+	}
+	else if(TypeIdentifier == "ship")
+	{
+		assert(_ShipClassManager != nullptr);
+		
+		auto ShipClass(_ShipClassManager->Get(SubTypeIdentifier));
+		
+		assert(ShipClass != nullptr);
+		
+		return ShipClass->GetName();
+	}
+	else if(TypeIdentifier == "turret")
+	{
+		assert(_TurretClassManager != nullptr);
+		
+		auto TurretClass(_TurretClassManager->Get(SubTypeIdentifier));
+		
+		assert(TurretClass != nullptr);
+		
+		return TurretClass->GetName();
+	}
+	else if(TypeIdentifier == "weapon")
+	{
+		assert(_WeaponClassManager != nullptr);
+		
+		auto WeaponClass(_WeaponClassManager->Get(SubTypeIdentifier));
+		
+		return WeaponClass->GetName();
+	}
+	else
+	{
+		throw std::runtime_error("ObjectFactory::GetName(): Unknown object type '" + TypeIdentifier + "', sub type '" + SubTypeIdentifier + "'.");
+	}
 }
 
 std::uint32_t ObjectFactory::GetSpaceRequirement(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier) const
@@ -547,5 +770,55 @@ const VisualizationPrototype * ObjectFactory::GetVisualizationPrototype(const st
 	else
 	{
 		throw std::runtime_error("ObjectFactory::GetVisualizationPrototype(): Unknown object type '" + TypeIdentifier + "', sub type '" + SubTypeIdentifier + "'.");
+	}
+}
+
+bool ObjectFactory::HasClass(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier) const
+{
+	if(TypeIdentifier == "ammunition")
+	{
+		assert(_AmmunitionClassManager != nullptr);
+		
+		return _AmmunitionClassManager->Get(SubTypeIdentifier) != nullptr;
+	}
+	else if(TypeIdentifier == "battery")
+	{
+		assert(_BatteryClassManager != nullptr);
+		
+		return _BatteryClassManager->Get(SubTypeIdentifier) != nullptr;
+	}
+	else if(TypeIdentifier == "commodity")
+	{
+		assert(_CommodityClassManager != nullptr);
+		
+		return _CommodityClassManager->Get(SubTypeIdentifier) != nullptr;
+	}
+	else if(TypeIdentifier == "generator")
+	{
+		assert(_GeneratorClassManager != nullptr);
+		
+		return _GeneratorClassManager->Get(SubTypeIdentifier) != nullptr;
+	}
+	else if(TypeIdentifier == "ship")
+	{
+		assert(_ShipClassManager != nullptr);
+		
+		return _ShipClassManager->Get(SubTypeIdentifier) != nullptr;
+	}
+	else if(TypeIdentifier == "turret")
+	{
+		assert(_TurretClassManager != nullptr);
+		
+		return _TurretClassManager->Get(SubTypeIdentifier) != nullptr;
+	}
+	else if(TypeIdentifier == "weapon")
+	{
+		assert(_WeaponClassManager != nullptr);
+		
+		return _WeaponClassManager->Get(SubTypeIdentifier) != nullptr;
+	}
+	else
+	{
+		throw std::runtime_error("ObjectFactory::HasClass(): Unknown object type '" + TypeIdentifier + "', sub type '" + SubTypeIdentifier + "'.");
 	}
 }

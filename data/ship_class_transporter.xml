@@ -1,11 +1,9 @@
 <ship-class>
 	<identifier>transporter</identifier>
-	<name-aspect>
-		<name>Transporter</name>
-	</name-aspect>
-	<physical-aspect>
-		<space-requirement>160000</space-requirement>
-	</physical-aspect>
+	<name>Transporter</name>
+	<description>The transporter is the backbone of agriculture and industry, used to transport goods from producer to consumer.</description>
+	<base-price>73000</base-price>
+	<space-requirement>160000</space-requirement>
 	<visualization>
 		<model-identifier>transporter</model-identifier>
 		<visualization-parts>

@@ -1,8 +1,0 @@
-<asset-class>
-	<identifier>fighter</identifier>
-	<name>Fighter</name>
-	<base-price>22000</base-price>
-	<description>A small and very lightly equipped space craft, that can also be used for courier runs.</description>
-	<object-type>ship</object-type>
-	<object-sub-type>fighter</object-sub-type>
-</asset-class>

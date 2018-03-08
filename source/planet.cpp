@@ -17,7 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include "asset_class.h"
+#include <algorithm>
+
 #include "battery.h"
 #include "character.h"
 #include "faction.h"
@@ -32,23 +33,9 @@
 #include "object_aspect_visualization.h"
 #include "object_factory.h"
 #include "planet.h"
+#include "planet_assets.h"
 #include "ship.h"
 #include "visualization.h"
-
-PlanetAssetClass::PlanetAssetClass(const AssetClass * AssetClass) :
-	_AssetClass(AssetClass),
-	_BasePriceModifier(1.0f)
-{
-}
-
-PlanetAssetClass::~PlanetAssetClass(void)
-{
-}
-
-std::uint32_t PlanetAssetClass::GetPrice(void) const
-{
-	return static_cast< std::uint32_t >(_AssetClass->GetBasePrice() * _BasePriceModifier);
-}
 
 Planet::Planet(void) :
 	_Faction(nullptr),
@@ -69,10 +56,10 @@ Planet::Planet(void) :
 
 Planet::~Planet(void)
 {
-	while(_PlanetAssetClasses.size() > 0)
+	while(_PlanetAssets.size() > 0)
 	{
-		delete _PlanetAssetClasses.back();
-		_PlanetAssetClasses.pop_back();
+		delete _PlanetAssets.back();
+		_PlanetAssets.pop_back();
 	}
 	if(_Faction != nullptr)
 	{
@@ -108,6 +95,20 @@ Hangar * Planet::GetHangar(Character * Character)
 	return Result;
 }
 
+PlanetAssets * Planet::GetPlanetAssets(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier) const
+{
+	auto PlanetAssetsIterator{std::find_if(_PlanetAssets.begin(), _PlanetAssets.end(), [&TypeIdentifier, &SubTypeIdentifier](PlanetAssets * PlanetAssets) -> auto { return (PlanetAssets->GetTypeIdentifier() == TypeIdentifier) && (PlanetAssets->GetSubTypeIdentifier() == SubTypeIdentifier); })};
+	
+	if(PlanetAssetsIterator != _PlanetAssets.end())
+	{
+		return *PlanetAssetsIterator;
+	}
+	else
+	{
+		return nullptr;
+	}
+}
+
 void Planet::SetDescription(const std::string & Description)
 {
 	_Description = Description;
@@ -137,12 +138,12 @@ void Planet::SetSize(const float & Size)
 	GetAspectPhysical()->SetRadialSize(_Size / 2.0f);
 }
 
-PlanetAssetClass * Planet::CreatePlanetAssetClass(const AssetClass * AssetClass)
+PlanetAssets * Planet::CreatePlanetAssets(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier)
 {
-	/// @todo check whether the planet asset class already exists
-	_PlanetAssetClasses.push_back(new PlanetAssetClass(AssetClass));
+	assert(GetPlanetAssets(TypeIdentifier, SubTypeIdentifier) == nullptr);
+	_PlanetAssets.push_back(new PlanetAssets(TypeIdentifier, SubTypeIdentifier));
 	
-	return _PlanetAssetClasses.back();
+	return _PlanetAssets.back();
 }
 
 void Planet::Land(Ship * Ship, Character * Character)
@@ -196,26 +197,23 @@ void Planet::Recharge(Ship * Ship, Character * Character)
 
 void Planet::Refuel(Ship * Ship, Character * Character)
 {
-	for(auto PlanetAssetClass : _PlanetAssetClasses)
+	auto FuelPlanetAssets{GetPlanetAssets("commodity", "fuel")};
+	
+	if(FuelPlanetAssets != nullptr)
 	{
-		if(PlanetAssetClass->GetAssetClass()->GetIdentifier() == "fuel")
-		{
-			std::uint32_t FuelPrice(PlanetAssetClass->GetPrice());
-			
-			assert(Character != nullptr);
-			
-			float CanBuy(Character->GetCredits() / FuelPrice);
-			
-			assert(Ship != nullptr);
-			
-			float Need(Ship->GetFuelCapacity() - Ship->GetFuel());
-			float Buy((CanBuy > Need) ? (Need) : (CanBuy));
-			
-			Ship->SetFuel(Ship->GetFuel() + Buy);
-			Character->RemoveCredits(static_cast< std::uint32_t >(Buy * FuelPrice));
-			
-			break;
-		}
+		auto FuelPrice{FuelPlanetAssets->GetPrice()};
+		
+		assert(Character != nullptr);
+		
+		auto CanBuy{Character->GetCredits() / FuelPrice};
+		
+		assert(Ship != nullptr);
+		
+		auto Need{Ship->GetFuelCapacity() - Ship->GetFuel()};
+		auto Buy{(CanBuy > Need) ? (Need) : (CanBuy)};
+		
+		Ship->SetFuel(Ship->GetFuel() + Buy);
+		Character->RemoveCredits(static_cast< std::uint32_t >(Buy * FuelPrice));
 	}
 }
 

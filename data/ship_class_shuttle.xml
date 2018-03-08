@@ -1,11 +1,9 @@
 <ship-class>
 	<identifier>shuttle</identifier>
-	<name-aspect>
-		<name>Shuttle</name>
-	</name-aspect>
-	<physical-aspect>
-		<space-requirement>60000</space-requirement>
-	</physical-aspect>
+	<name>Shuttle</name>
+	<description>The small shuttle is the entry into space trade for most aspiring entrepreneurs.</description>
+	<base-price>18000</base-price>
+	<space-requirement>60000</space-requirement>
 	<visualization>
 		<model-identifier>shuttle</model-identifier>
 		<visualization-parts>

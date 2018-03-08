@@ -37,48 +37,58 @@
 		<y>-20.0</y>
 	</position>
 	<size>60.0</size>
-	<offered-asset-classes>
-		<offered-asset-class>
-			<identifier>food</identifier>
+	<assets>
+		<assets>
+			<type-identifier>commodity</type-identifier>
+			<sub-type-identifier>food</sub-type-identifier>
 			<base-price-modifier>1.12</base-price-modifier>
-		</offered-asset-class>
-		<offered-asset-class>
-			<identifier>industrial</identifier>
+		</assets>
+		<assets>
+			<type-identifier>commodity</type-identifier>
+			<sub-type-identifier>industrial</sub-type-identifier>
 			<base-price-modifier>0.97</base-price-modifier>
-		</offered-asset-class>
-		<offered-asset-class>
-			<identifier>medical_supplies</identifier>
+		</assets>
+		<assets>
+			<type-identifier>commodity</type-identifier>
+			<sub-type-identifier>medical_supplies</sub-type-identifier>
 			<base-price-modifier>0.98</base-price-modifier>
-		</offered-asset-class>
-		<offered-asset-class>
-			<identifier>luxury_goods</identifier>
+		</assets>
+		<assets>
+			<type-identifier>commodity</type-identifier>
+			<sub-type-identifier>luxury_goods</sub-type-identifier>
 			<base-price-modifier>1.02</base-price-modifier>
-		</offered-asset-class>
-		<offered-asset-class>
-			<identifier>metal</identifier>
+		</assets>
+		<assets>
+			<type-identifier>commodity</type-identifier>
+			<sub-type-identifier>metal</sub-type-identifier>
 			<base-price-modifier>1.03</base-price-modifier>
-		</offered-asset-class>
-		<offered-asset-class>
-			<identifier>equipment</identifier>
+		</assets>
+		<assets>
+			<type-identifier>commodity</type-identifier>
+			<sub-type-identifier>equipment</sub-type-identifier>
 			<base-price-modifier>0.89</base-price-modifier>
-		</offered-asset-class>
-		<offered-asset-class>
-			<identifier>fuel</identifier>
+		</assets>
+		<assets>
+			<type-identifier>commodity</type-identifier>
+			<sub-type-identifier>fuel</sub-type-identifier>
 			<base-price-modifier>0.83</base-price-modifier>
-		</offered-asset-class>
-		<offered-asset-class>
-			<identifier>light_battery</identifier>
+		</assets>
+		<assets>
+			<type-identifier>battery</type-identifier>
+			<sub-type-identifier>light_battery</sub-type-identifier>
 			<base-price-modifier>1.01</base-price-modifier>
-		</offered-asset-class>
-		<offered-asset-class>
-			<identifier>light_laser</identifier>
+		</assets>
+		<assets>
+			<type-identifier>weapon</type-identifier>
+			<sub-type-identifier>light_laser</sub-type-identifier>
 			<base-price-modifier>1.02</base-price-modifier>
-		</offered-asset-class>
-		<offered-asset-class>
-			<identifier>medium_laser</identifier>
+		</assets>
+		<assets>
+			<type-identifier>weapon</type-identifier>
+			<sub-type-identifier>medium_laser</sub-type-identifier>
 			<base-price-modifier>1.02</base-price-modifier>
-		</offered-asset-class>
-	</offered-asset-classes>
+		</assets>
+	</assets>
 	<landing-fee-per-space>0.8</landing-fee-per-space>
 	<offers-recharging>true</offers-recharging>
 	<recharging-fee-per-energy>0.01</recharging-fee-per-energy>
