@@ -1,6 +1,9 @@
 <battery-class>
 	<identifier>light_battery</identifier>
 	<name>Light Battery</name>
+	<description>The light battery provides a small energy capacitor for space crafts.</description>
+	<base-price>1300</base-price>
+	<space-requirement>80</space-requirement>
 	<visualization>
 		<model-identifier>light_battery</model-identifier>
 		<visualization-parts>
@@ -31,7 +34,6 @@
 			</visualization-part>
 		</visualization-parts>
 	</visualization>
-	<space-requirement>80</space-requirement>
 	<energy-capacity>200</energy-capacity>
 	<slot-class-identifier>light_battery</slot-class-identifier>
 </battery-class>

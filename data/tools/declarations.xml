@@ -2,32 +2,29 @@
 	
 	<accepted-slot-class is="string"/>
 	
-	<aspect-name>
-		<string identifier="name"/>
-	</aspect-name>
-	
 	<ammunition-class type="26">
 		<string identifier="identifier"/>
 		<string identifier="name"/>
-		<unsigned-integer-32bit identifier="cartridge-size"/>
+		<string identifier="description"/>
+		<unsigned-integer-32bit identifier="base-price"/>
 		<unsigned-integer-32bit identifier="space-requirement"/>
 		<visualization identifier="visualization"/>
+		<unsigned-integer-32bit identifier="cartridge-size"/>
 	</ammunition-class>
 	
-	<asset-class type="4">
-		<string identifier="identifier"/>
-		<string identifier="name"/>
-		<float identifier="base-price"/>
-		<string identifier="description"/>
-		<string identifier="object-type"/>
-		<string identifier="object-sub-type"/>
-	</asset-class>
+	<assets>
+		<string identifier="type-identifier"/>
+		<string identifier="sub-type-identifier"/>
+		<float identifier="base-price-modifier"/>
+	</assets>
 	
 	<battery-class type="12">
 		<string identifier="identifier"/>
 		<string identifier="name"/>
-		<visualization identifier="visualization"/>
+		<string identifier="description"/>
+		<unsigned-integer-32bit identifier="base-price"/>
 		<unsigned-integer-32bit identifier="space-requirement"/>
+		<visualization identifier="visualization"/>
 		<float identifier="energy-capacity"/>
 		<string identifier="slot-class-identifier"/>
 	</battery-class>
@@ -50,6 +47,8 @@
 	<commodity-class type="8">
 		<string identifier="identifier"/>
 		<string identifier="name"/>
+		<string identifier="description"/>
+		<unsigned-integer-32bit identifier="base-price"/>
 		<unsigned-integer-32bit identifier="space-requirement"/>
 		<visualization identifier="visualization"/>
 	</commodity-class>
@@ -63,7 +62,7 @@
 	
 	<faction type="14">
 		<string identifier="identifier"/>
-		<aspect-name identifier="aspect-name"/>
+		<string identifier="name"/>
 		<color-rgbo-4f identifier="color"/>
 		<faction-standings identifier="faction-standings"/>
 	</faction>
@@ -88,14 +87,16 @@
 	
 	<galaxy type="23" sub-type="0">
 		<string identifier="identifier"/>
-		<aspect-name identifier="aspect-name"/>
+		<string identifier="name"/>
 	</galaxy>
 	
 	<generator-class type="13">
 		<string identifier="identifier"/>
 		<string identifier="name"/>
-		<visualization identifier="visualization"/>
+		<string identifier="description"/>
+		<unsigned-integer-32bit identifier="base-price"/>
 		<unsigned-integer-32bit identifier="space-requirement"/>
+		<visualization identifier="visualization"/>
 		<float identifier="energy-provision-per-second"/>
 		<string identifier="slot-class-identifier"/>
 	</generator-class>
@@ -139,15 +140,6 @@
 		<quaternion identifier="orientation"/>
 	</model-part>
 	
-	<name-aspect>
-		<string identifier="name"/>
-	</name-aspect>
-	
-	<offered-asset-class>
-		<string identifier="identifier"/>
-		<float identifier="base-price-modifier"/>
-	</offered-asset-class>
-	
 	<optional-color-rgbo-4f type="18" sub-type="1">
 		<boolean identifier="valid"/>
 		<color-rgbo-4f identifier="value"/>
@@ -168,10 +160,6 @@
 		<vector3f identifier="value"/>
 	</optional-vector3f>
 	
-	<physical-aspect>
-		<unsigned-integer-32bit identifier="space-requirement"/>
-	</physical-aspect>
-	
 	<planet type="25" sub-type="0">
 		<string identifier="identifier"/>
 		<string identifier="name"/>
@@ -179,7 +167,7 @@
 		<visualization identifier="visualization"/>
 		<vector2f identifier="position"/>
 		<float identifier="size"/>
-		<collection identifier="offered-asset-classes" element-type="offered-asset-class"/>
+		<collection identifier="assets" element-type="assets"/>
 		<float identifier="landing-fee-per-space"/>
 		<boolean identifier="offers-recharging"/>
 		<float identifier="recharging-fee-per-energy"/>
@@ -222,8 +210,10 @@
 	
 	<ship-class type="3">
 		<string identifier="identifier"/>
-		<name-aspect identifier="name-aspect"/>
-		<physical-aspect identifier="physical-aspect"/>
+		<string identifier="name"/>
+		<string identifier="description"/>
+		<unsigned-integer-32bit identifier="base-price"/>
+		<unsigned-integer-32bit identifier="space-requirement"/>
 		<visualization identifier="visualization"/>
 		<float identifier="forward-thrust"/>
 		<float identifier="turn-speed"/>
@@ -296,11 +286,13 @@
 	<turret-class type="22" sub-type="0">
 		<string identifier="identifier"/>
 		<string identifier="name"/>
+		<string identifier="description"/>
+		<unsigned-integer-32bit identifier="base-price"/>
+		<unsigned-integer-32bit identifier="space-requirement"/>
 		<visualization identifier="visualization"/>
 		<string identifier="slot-class-identifier"/>
 		<quaternion identifier="orientation"/>
 		<float identifier="reload-time"/>
-		<unsigned-integer-32bit identifier="space-requirement"/>
 		<float identifier="energy-usage-per-shot"/>
 		<marker-reference identifier="muzzle-position"/>
 		<shot identifier="shot"/>
@@ -348,11 +340,13 @@
 	<weapon-class type="7">
 		<string identifier="identifier"/>
 		<string identifier="name"/>
+		<string identifier="description"/>
+		<unsigned-integer-32bit identifier="base-price"/>
+		<unsigned-integer-32bit identifier="space-requirement"/>
 		<visualization identifier="visualization"/>
 		<string identifier="slot-class-identifier"/>
 		<quaternion identifier="orientation"/>
 		<float identifier="reload-time"/>
-		<unsigned-integer-32bit identifier="space-requirement"/>
 		<float identifier="energy-usage-per-shot"/>
 		<marker-reference identifier="muzzle-position"/>
 		<shot identifier="shot"/>

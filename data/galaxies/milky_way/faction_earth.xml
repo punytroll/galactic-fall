@@ -1,8 +1,6 @@
 <faction>
 	<identifier>earth</identifier>
-	<aspect-name>
-		<name>Earth</name>
-	</aspect-name>
+	<name>Earth</name>
 	<color>
 		<red>0.0</red>
 		<green>0.0</green>

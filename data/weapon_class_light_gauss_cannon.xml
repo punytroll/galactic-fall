@@ -1,6 +1,9 @@
 <weapon-class>
 	<identifier>light_gauss_cannon</identifier>
 	<name>Light Gauss Cannon</name>
+	<description>The light gauss cannon uses ferromagnetic ammunition that is accelerated to high velocities in order to inflict damage to the target.</description>
+	<base-price>3200</base-price>
+	<space-requirement>500</space-requirement>
 	<visualization>
 		<model-identifier>light_gauss_cannon</model-identifier>
 		<visualization-parts>
@@ -39,7 +42,6 @@
 		<z>0</z>
 	</orientation>
 	<reload-time>0.3</reload-time>
-	<space-requirement>500</space-requirement>
 	<energy-usage-per-shot>2.3</energy-usage-per-shot>
 	<muzzle-position>
 		<part-identifier>light_gauss_cannon</part-identifier>

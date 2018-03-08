@@ -23,7 +23,6 @@
 
 #include <string_cast/string_cast.h>
 
-#include "asset_class.h"
 #include "character.h"
 #include "commodity.h"
 #include "faction.h"
@@ -36,6 +35,7 @@
 #include "messages.h"
 #include "object_aspect_position.h"
 #include "planet.h"
+#include "planet_assets.h"
 #include "ship.h"
 #include "system.h"
 #include "threat.h"
@@ -674,14 +674,13 @@ void GoalRefuel::Process(void)
 {
 	assert(GetState() == Goal::ACTIVE);
 	
-	const std::vector< PlanetAssetClass * > & PlanetAssetClasses(_Planet->GetPlanetAssetClasses());
 	bool SuccessfullyRefueled(false);
 	
-	for(std::vector< PlanetAssetClass * >::const_iterator PlanetAssetClassIterator = PlanetAssetClasses.begin(); PlanetAssetClassIterator != PlanetAssetClasses.end(); ++PlanetAssetClassIterator)
+	for(auto PlanetAssets : _Planet->GetPlanetAssets())
 	{
-		if((*PlanetAssetClassIterator)->GetAssetClass()->GetIdentifier() == "fuel")
+		if((PlanetAssets->GetTypeIdentifier() == "commodity") && (PlanetAssets->GetSubTypeIdentifier() == "fuel"))
 		{
-			auto FuelPrice{(*PlanetAssetClassIterator)->GetPrice()};
+			auto FuelPrice{PlanetAssets->GetPrice()};
 			float CanBuy(GetMind()->GetCharacter()->GetCredits() / FuelPrice);
 			float Need(GetMind()->GetCharacter()->GetShip()->GetFuelCapacity() - GetMind()->GetCharacter()->GetShip()->GetFuel());
 			float Buy((CanBuy > Need) ? (Need) : (CanBuy));

@@ -23,6 +23,7 @@
 #include "visualization_prototype.h"
 
 AmmunitionClass::AmmunitionClass(const std::string & Identifier) :
+	_BasePrice(0),
 	_CartridgeSize(0),
 	_Identifier(Identifier),
 	_SpaceRequirement(0),

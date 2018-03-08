@@ -41,7 +41,6 @@
 
 #include <xml_stream/xml_stream.h>
 
-#include "asset_class.h"
 #include "battery.h"
 #include "character.h"
 #include "class_manager.h"
@@ -131,7 +130,6 @@
 using namespace Expressions::Operators;
 
 // these objects are exported via globals.h
-ClassManager< AssetClass > * g_AssetClassManager(nullptr);
 Galaxy * g_Galaxy(nullptr);
 Graphics::Engine * g_GraphicsEngine(nullptr);
 Graphics::PerspectiveProjection * g_MainProjection(nullptr);
@@ -926,28 +924,29 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 	}
 	else if((ShipSubTypeIdentifier == "transporter") || (ShipSubTypeIdentifier == "shuttle"))
 	{
-		NewCharacter->SetCredits(GetRandomUnsignedInteger32Bit(500, 2500));
-		for(int NumberOfAssetClasses = GetRandomIntegerFromExponentialDistribution(2); NumberOfAssetClasses > 0; --NumberOfAssetClasses)
-		{
-			const std::map< std::string, AssetClass * > & AssetClasses(g_AssetClassManager->GetClasses());
-			std::map< std::string, AssetClass * >::const_iterator AssetClassIterator(AssetClasses.begin());
+		NewCharacter->SetCredits(GetRandomUnsignedInteger32Bit(500, 25000));
+		/// @todo This doesn't work without asset classes. Solution: Ask the object factory for a list of type/sub-type combinations that are viable as cargo.
+		//~ for(int NumberOfAssetClasses = GetRandomIntegerFromExponentialDistribution(2); NumberOfAssetClasses > 0; --NumberOfAssetClasses)
+		//~ {
+			//~ const std::map< std::string, AssetClass * > & AssetClasses(g_AssetClassManager->GetClasses());
+			//~ std::map< std::string, AssetClass * >::const_iterator AssetClassIterator(AssetClasses.begin());
 			
-			for(std::map< std::string, AssetClass * >::size_type Choice = GetRandomInteger(AssetClasses.size() - 1); Choice > 0; --Choice)
-			{
-				++AssetClassIterator;
-			}
+			//~ for(std::map< std::string, AssetClass * >::size_type Choice = GetRandomInteger(AssetClasses.size() - 1); Choice > 0; --Choice)
+			//~ {
+				//~ ++AssetClassIterator;
+			//~ }
 			
-			int AmountOfAssets(GetRandomIntegerFromExponentialDistribution(NewShip->GetCargoHold()->GetSpaceCapacity() / g_ObjectFactory->GetSpaceRequirement(AssetClassIterator->second->GetObjectTypeIdentifier(), AssetClassIterator->second->GetObjectSubTypeIdentifier())));
+			//~ int AmountOfAssets(GetRandomIntegerFromExponentialDistribution(NewShip->GetCargoHold()->GetSpaceCapacity() / g_ObjectFactory->GetSpaceRequirement(AssetClassIterator->second->GetObjectTypeIdentifier(), AssetClassIterator->second->GetObjectSubTypeIdentifier())));
 			
-			while((AmountOfAssets > 0) && (NewShip->GetCargoHold()->GetSpace() >= g_ObjectFactory->GetSpaceRequirement(AssetClassIterator->second->GetObjectTypeIdentifier(), AssetClassIterator->second->GetObjectSubTypeIdentifier())))
-			{
-				auto NewCommodity{g_ObjectFactory->Create(AssetClassIterator->second->GetObjectTypeIdentifier(), AssetClassIterator->second->GetObjectSubTypeIdentifier(), true)};
+			//~ while((AmountOfAssets > 0) && (NewShip->GetCargoHold()->GetSpace() >= g_ObjectFactory->GetSpaceRequirement(AssetClassIterator->second->GetObjectTypeIdentifier(), AssetClassIterator->second->GetObjectSubTypeIdentifier())))
+			//~ {
+				//~ auto NewCommodity{g_ObjectFactory->Create(AssetClassIterator->second->GetObjectTypeIdentifier(), AssetClassIterator->second->GetObjectSubTypeIdentifier(), true)};
 				
-				NewCommodity->SetObjectIdentifier("::" + AssetClassIterator->second->GetObjectTypeIdentifier() + "(" + AssetClassIterator->second->GetIdentifier() + ")::(" + to_string_cast(NumberOfAssetClasses) + "|" + to_string_cast(AmountOfAssets) + ")" + IdentifierSuffix);
-				NewShip->GetCargoHold()->GetAspectObjectContainer()->AddContent(NewCommodity);
-				--AmountOfAssets;
-			}
-		}
+				//~ NewCommodity->SetObjectIdentifier("::" + AssetClassIterator->second->GetObjectTypeIdentifier() + "(" + AssetClassIterator->second->GetIdentifier() + ")::(" + to_string_cast(NumberOfAssetClasses) + "|" + to_string_cast(AmountOfAssets) + ")" + IdentifierSuffix);
+				//~ NewShip->GetCargoHold()->GetAspectObjectContainer()->AddContent(NewCommodity);
+				//~ --AmountOfAssets;
+			//~ }
+		//~ }
 	}
 	if(GetRandomBoolean(0.2) == true)
 	{
@@ -1278,7 +1277,7 @@ void LoadGameFromElement(const Element * SaveElement)
 	{
 		if(SaveChild->GetName() == "galaxy")
 		{
-			g_Galaxy = g_ResourceReader->ReadGalaxy(SaveChild->GetAttribute("identifier"), g_AssetClassManager);
+			g_Galaxy = g_ResourceReader->ReadGalaxy(SaveChild->GetAttribute("identifier"));
 		}
 		else if(SaveChild->GetName() == "game-time")
 		{
@@ -3384,7 +3383,6 @@ int main(int argc, char ** argv)
 	g_MessageDispatcher = new MessageDispatcher();
 	g_ObjectFactory = new ObjectFactory();
 	g_SlotClassManager = new ClassManager< SlotClass >();
-	g_AssetClassManager = new ClassManager< AssetClass >();
 	g_SystemStatistics = new SystemStatistics();
 	g_CharacterObserver = new OutputObserver();
 	
@@ -3393,7 +3391,6 @@ int main(int argc, char ** argv)
 	g_ResourceReader->ReadMeshes();
 	g_ResourceReader->ReadModels();
 	g_ResourceReader->ReadAmmunitionClasses(g_ObjectFactory->GetAmmunitionClassManager());
-	g_ResourceReader->ReadAssetClasses(g_AssetClassManager);
 	g_ResourceReader->ReadBatteryClasses(g_ObjectFactory->GetBatteryClassManager());
 	g_ResourceReader->ReadCommodityClasses(g_ObjectFactory->GetCommodityClassManager());
 	g_ResourceReader->ReadGeneratorClasses(g_ObjectFactory->GetGeneratorClassManager());
@@ -3462,7 +3459,6 @@ int main(int argc, char ** argv)
 	// destroying global variables in reverse order
 	delete g_CharacterObserver;
 	delete g_SystemStatistics;
-	delete g_AssetClassManager;
 	delete g_SlotClassManager;
 	delete g_ObjectFactory;
 	delete g_MessageDispatcher;

@@ -36,6 +36,8 @@ public:
 	// destructor
 	~ShipClass(void);
 	// getters
+	std::uint32_t GetBasePrice(void) const;
+	const std::string & GetDescription(void) const;
 	const Vector3f & GetExhaustOffset(void) const;
 	float GetExhaustRadius(void) const;
 	float GetFuelCapacity(void) const;
@@ -53,6 +55,8 @@ public:
 	const std::map< std::string, Slot * > & GetSlots(void) const;
 	const VisualizationPrototype * GetVisualizationPrototype(void) const;
 	// setters
+	void SetBasePrice(std::uint32_t BasePrice);
+	void SetDescription(const std::string & Description);
 	void SetExhaustOffset(const Vector3f & ExhaustOffset);
 	void SetExhaustRadius(float ExhaustRadius);
 	void SetFuelCapacity(float FuelCapacity);
@@ -73,6 +77,8 @@ public:
 	 **/
 	bool AddSlot(const std::string & SlotIdentifier, Slot * Slot);
 private:
+	std::uint32_t _BasePrice;
+	std::string _Description;
 	Vector3f _ExhaustOffset;
 	float _ExhaustRadius;
 	float _FuelCapacity;
@@ -90,6 +96,16 @@ private:
 	std::map< std::string, Slot * > _Slots;
 	VisualizationPrototype * _VisualizationPrototype;
 };
+
+inline std::uint32_t ShipClass::GetBasePrice(void) const
+{
+	return _BasePrice;
+}
+
+inline const std::string & ShipClass::GetDescription(void) const
+{
+	return _Description;
+}
 
 inline const Vector3f & ShipClass::GetExhaustOffset(void) const
 {
@@ -169,6 +185,16 @@ inline const std::map< std::string, Slot * > & ShipClass::GetSlots(void) const
 inline const VisualizationPrototype * ShipClass::GetVisualizationPrototype(void) const
 {
 	return _VisualizationPrototype;
+}
+
+inline void ShipClass::SetBasePrice(std::uint32_t BasePrice)
+{
+	_BasePrice = BasePrice;
+}
+
+inline void ShipClass::SetDescription(const std::string & Description)
+{
+	_Description = Description;
 }
 
 inline void ShipClass::SetExhaustOffset(const Vector3f & ExhaustOffset)

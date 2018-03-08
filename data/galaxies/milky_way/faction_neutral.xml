@@ -1,8 +1,6 @@
 <faction>
 	<identifier>neutral</identifier>
-	<aspect-name>
-		<name>Neutral</name>
-	</aspect-name>
+	<name>Neutral</name>
 	<color>
 		<red>1.0</red>
 		<green>1.0</green>

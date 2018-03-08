@@ -37,7 +37,6 @@ template< class Class >
 class ClassManager;
 
 class AmmunitionClass;
-class AssetClass;
 class CommodityManager;
 class Galaxy;
 class GeneratorClass;
@@ -55,10 +54,9 @@ public:
 	~ResourceReader(void);
 	bool LoadArchive(const std::string & Path);
 	void ReadAmmunitionClasses(ClassManager< AmmunitionClass > * AmmunitionClassManager);
-	void ReadAssetClasses(ClassManager< AssetClass > * AssetClassManager);
 	void ReadBatteryClasses(ClassManager< BatteryClass > * BatteryClassManager);
 	void ReadCommodityClasses(ClassManager< CommodityClass > * CommodityClassManager);
-	Galaxy * ReadGalaxy(const std::string & GalaxyIdentifier, ClassManager< AssetClass > * AssetClassManager);
+	Galaxy * ReadGalaxy(const std::string & GalaxyIdentifier);
 	void ReadGeneratorClasses(ClassManager< GeneratorClass > * GeneratorClassManager);
 	void ReadMeshes(void);
 	void ReadModels(void);
@@ -74,7 +72,7 @@ public:
 private:
 	void _ReadItems(const std::string & Path, std::function< void (Arxx::Reference &) > ReaderFunction);
 	void _ReadItems(Arxx::Structure::Relation & Relation, std::function< void (Arxx::Reference &) > ReaderFunction);
-	void _ReadSystem(Arxx::Reference & Reference, ClassManager< AssetClass > * AssetClassManager, Galaxy * Galaxy, std::multimap< std::string, std::string > & SystemLinks);
+	void _ReadSystem(Arxx::Reference & Reference, Galaxy * Galaxy, std::multimap< std::string, std::string > & SystemLinks);
 	Arxx::Archive * _Archive;
 };
 

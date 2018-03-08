@@ -1,7 +1,8 @@
 <ammunition-class>
 	<identifier>light_gauss_ammunition</identifier>
 	<name>Light Gauss Ammunition</name>
-	<cartridge-size>25</cartridge-size>
+	<description>This is a cartridge of 25 shells for light gauss cannons. The shell diameter is 4 cm, the length of the shell is 20 cm.</description>
+	<base-price>50</base-price>
 	<space-requirement>8</space-requirement>
 	<visualization>
 		<model-identifier>light_gauss_ammunition</model-identifier>
@@ -33,4 +34,5 @@
 			</visualization-part>
 		</visualization-parts>
 	</visualization>
+	<cartridge-size>25</cartridge-size>
 </ammunition-class>

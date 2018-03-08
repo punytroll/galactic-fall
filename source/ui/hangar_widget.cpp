@@ -23,7 +23,6 @@
 
 #include <string_cast/string_cast.h>
 
-#include "../asset_class.h"
 #include "../battery.h"
 #include "../character.h"
 #include "../globals.h"
@@ -705,22 +704,13 @@ void UI::HangarWidget::_OnRefuelButtonUpdating(UI::Button * RefuelButton, float 
 {
 	assert(_Planet != nullptr);
 	
-	bool OffersRefueling{false};
+	auto FuelPlanetAssets{_Planet->GetPlanetAssets("commodity", "fuel")};
 	
-	for(auto PlanetAssetClass : _Planet->GetPlanetAssetClasses())
-	{
-		if(PlanetAssetClass->GetAssetClass()->GetIdentifier() == "fuel")
-		{
-			OffersRefueling = true;
-			
-			break;
-		}
-	}
 	if(_SelectedShipListItem != nullptr)
 	{
 		assert(_SelectedShipListItem->GetShip() != nullptr);
 	}
-	RefuelButton->SetEnabled((OffersRefueling == true) && (_SelectedShipListItem != nullptr) && (_SelectedShipListItem->GetShip()->GetFuel() < _SelectedShipListItem->GetShip()->GetFuelCapacity()));
+	RefuelButton->SetEnabled((FuelPlanetAssets != nullptr) && (_SelectedShipListItem != nullptr) && (_SelectedShipListItem->GetShip()->GetFuel() < _SelectedShipListItem->GetShip()->GetFuelCapacity()));
 }
 
 void UI::HangarWidget::_OnRepairButtonClicked(void)

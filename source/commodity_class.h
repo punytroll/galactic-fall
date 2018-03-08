@@ -30,20 +30,36 @@ public:
 	CommodityClass(const std::string & Identifier);
 	~CommodityClass(void);
 	// getters
+	std::uint32_t GetBasePrice(void) const;
+	const std::string & GetDescription(void) const;
 	const std::string & GetIdentifier(void) const;
 	const std::string & GetName(void) const;
 	std::uint32_t GetSpaceRequirement(void) const;
 	const VisualizationPrototype * GetVisualizationPrototype(void) const;
 	// setters
+	void SetBasePrice(std::uint32_t BasePrice);
+	void SetDescription(const std::string & Description);
 	void SetName(const std::string & Name);
 	void SetSpaceRequirement(std::uint32_t SpaceRequirement);
 	void SetVisualizationPrototype(const VisualizationPrototype & VisualizationPrototype);
 private:
+	std::uint32_t _BasePrice;
+	std::string _Description;
 	std::string _Identifier;
 	std::string _Name;
 	std::uint32_t _SpaceRequirement;
 	VisualizationPrototype * _VisualizationPrototype;
 };
+
+inline std::uint32_t CommodityClass::GetBasePrice(void) const
+{
+	return _BasePrice;
+}
+
+inline const std::string & CommodityClass::GetDescription(void) const
+{
+	return _Description;
+}
 
 inline const std::string & CommodityClass::GetIdentifier(void) const
 {
@@ -63,6 +79,16 @@ inline std::uint32_t CommodityClass::GetSpaceRequirement(void) const
 inline const VisualizationPrototype * CommodityClass::GetVisualizationPrototype(void) const
 {
 	return _VisualizationPrototype;
+}
+
+inline void CommodityClass::SetBasePrice(std::uint32_t BasePrice)
+{
+	_BasePrice = BasePrice;
+}
+
+inline void CommodityClass::SetDescription(const std::string & Description)
+{
+	_Description = Description;
 }
 
 inline void CommodityClass::SetName(const std::string & Name)

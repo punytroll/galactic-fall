@@ -21,7 +21,6 @@
 
 #include <string_cast/string_cast.h>
 
-#include "../asset_class.h"
 #include "../character.h"
 #include "../commodity.h"
 #include "../commodity_class.h"
@@ -46,6 +45,7 @@
 #include "../object_aspect_outfitting.h"
 #include "../object_factory.h"
 #include "../planet.h"
+#include "../planet_assets.h"
 #include "../slot.h"
 #include "../visualization_prototype.h"
 #include "../visualizations.h"
@@ -63,22 +63,22 @@ using namespace Expressions::Operators;
 
 namespace UI
 {
-	class TradeCenterAssetClassListBoxItem : public UI::ListBoxItem
+	class TradeCenterAssetsListBoxItem : public UI::ListBoxItem
 	{
 	public:
-		TradeCenterAssetClassListBoxItem(PlanetAssetClass * PlanetAssetClass, Hangar * Hangar) :
-			_PlanetAssetClass(PlanetAssetClass),
+		TradeCenterAssetsListBoxItem(PlanetAssets * PlanetAssets, Hangar * Hangar) :
+			_PlanetAssets(PlanetAssets),
 			_Hangar(Hangar)
 		{
 			assert(_Hangar != nullptr);
 			SetHeight(20.0_c);
-			_HangarDestroyingConnection = _Hangar->ConnectDestroyingCallback(std::bind(&UI::TradeCenterAssetClassListBoxItem::_OnHangarDestroying, this));
-			ConnectDestroyingCallback(std::bind(&UI::TradeCenterAssetClassListBoxItem::_OnDestroying, this, std::placeholders::_1));
+			_HangarDestroyingConnection = _Hangar->ConnectDestroyingCallback(std::bind(&UI::TradeCenterAssetsListBoxItem::_OnHangarDestroying, this));
+			ConnectDestroyingCallback(std::bind(&UI::TradeCenterAssetsListBoxItem::_OnDestroying, this, std::placeholders::_1));
 			
-			auto NameLabel{new UI::Label{this, PlanetAssetClass->GetAssetClass()->GetName()}};
+			auto NameLabel{new UI::Label{this, PlanetAssets->GetName()}};
 			auto HangarAmountLabel{new UI::Label{this, ""}};
-			auto SizeRequirementLabel{new UI::Label{this, to_string_cast(0.001 * g_ObjectFactory->GetSpaceRequirement(PlanetAssetClass->GetAssetClass()->GetObjectTypeIdentifier(), PlanetAssetClass->GetAssetClass()->GetObjectSubTypeIdentifier()), 3)}};
-			auto PriceLabel{new UI::Label{this, to_string_cast(PlanetAssetClass->GetPrice())}};
+			auto SizeRequirementLabel{new UI::Label{this, to_string_cast(0.001 * g_ObjectFactory->GetSpaceRequirement(PlanetAssets->GetTypeIdentifier(), PlanetAssets->GetSubTypeIdentifier()), 3)}};
+			auto PriceLabel{new UI::Label{this, to_string_cast(PlanetAssets->GetPrice())}};
 			
 			PriceLabel->SetLeft(width(this) - 5.0_c - width(PriceLabel));
 			PriceLabel->SetTop(0.0_c);
@@ -98,7 +98,7 @@ namespace UI
 			HangarAmountLabel->SetHeight(height(this));
 			HangarAmountLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Right);
 			HangarAmountLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
-			HangarAmountLabel->ConnectUpdatingCallback(std::bind(&UI::TradeCenterAssetClassListBoxItem::_OnHangarAmountLabelUpdating, this, std::placeholders::_1, std::placeholders::_2, HangarAmountLabel));
+			HangarAmountLabel->ConnectUpdatingCallback(std::bind(&UI::TradeCenterAssetsListBoxItem::_OnHangarAmountLabelUpdating, this, std::placeholders::_1, std::placeholders::_2, HangarAmountLabel));
 			NameLabel->SetLeft(5.0_c);
 			NameLabel->SetTop(0.0_c);
 			NameLabel->SetWidth(left(HangarAmountLabel) - 5.0_c - left(NameLabel));
@@ -106,9 +106,9 @@ namespace UI
 			NameLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 		}
 		
-		const PlanetAssetClass * GetPlanetAssetClass(void) const
+		const PlanetAssets * GetPlanetAssets(void) const
 		{
-			return _PlanetAssetClass;
+			return _PlanetAssets;
 		}
 	private:
 		// event handlers
@@ -118,7 +118,7 @@ namespace UI
 			{
 				assert(_Hangar->GetAspectObjectContainer() != nullptr);
 				HangarAmountLabel->SetVisible(true);
-				HangarAmountLabel->SetText(to_string_cast(_Hangar->GetAspectObjectContainer()->GetAmount(_PlanetAssetClass->GetAssetClass()->GetObjectTypeIdentifier(), _PlanetAssetClass->GetAssetClass()->GetObjectSubTypeIdentifier())));
+				HangarAmountLabel->SetText(to_string_cast(_Hangar->GetAspectObjectContainer()->GetAmount(_PlanetAssets->GetTypeIdentifier(), _PlanetAssets->GetSubTypeIdentifier())));
 			}
 			else
 			{
@@ -145,7 +145,7 @@ namespace UI
 			_Hangar = nullptr;
 		}
 		
-		PlanetAssetClass * _PlanetAssetClass;
+		PlanetAssets * _PlanetAssets;
 		Hangar * _Hangar;
 		Connection _HangarDestroyingConnection;
 	};
@@ -295,29 +295,28 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet
 	_AssetClassListBox->ConnectSelectedItemChangedCallback(std::bind(&UI::TradeCenterWidget::_OnAssetClassListBoxSelectedItemChanged, this));
 	AddSubWidget(_AssetClassListBox);
 	
-	auto Hangar(_Planet->GetHangar(_Character));
+	auto Hangar{_Planet->GetHangar(_Character)};
 	
 	assert(Hangar != nullptr);
-	for(auto PlanetAssetClass : Planet->GetPlanetAssetClasses())
+	for(auto PlanetAssets : Planet->GetPlanetAssets())
 	{
-		_AssetClassListBox->GetContent()->AddSubWidget(new UI::TradeCenterAssetClassListBoxItem{PlanetAssetClass, Hangar});
+		_AssetClassListBox->GetContent()->AddSubWidget(new UI::TradeCenterAssetsListBoxItem{PlanetAssets, Hangar});
 	}
 }
 
-void UI::TradeCenterWidget::_Buy(const PlanetAssetClass * PlanetAssetClass)
+void UI::TradeCenterWidget::_Buy(const PlanetAssets * PlanetAssets)
 {
-	assert(PlanetAssetClass != nullptr);
-	assert(PlanetAssetClass->GetAssetClass() != nullptr);
+	assert(PlanetAssets != nullptr);
 	assert(_Character != nullptr);
 	assert(_Planet != nullptr);
-	if(_Character->RemoveCredits(PlanetAssetClass->GetPrice()) == true)
+	if(_Character->RemoveCredits(PlanetAssets->GetPrice()) == true)
 	{
-		auto NewCargo(g_ObjectFactory->Create(PlanetAssetClass->GetAssetClass()->GetObjectTypeIdentifier(), PlanetAssetClass->GetAssetClass()->GetObjectSubTypeIdentifier(), true));
+		auto NewCargo{g_ObjectFactory->Create(PlanetAssets->GetTypeIdentifier(), PlanetAssets->GetSubTypeIdentifier(), true)};
 		
 		assert(NewCargo != nullptr);
-		NewCargo->SetObjectIdentifier("::asset(" + PlanetAssetClass->GetAssetClass()->GetIdentifier() + ")::" + PlanetAssetClass->GetAssetClass()->GetObjectTypeIdentifier() + "(" + PlanetAssetClass->GetAssetClass()->GetObjectSubTypeIdentifier() + ")::created_on(" + _Planet->GetObjectIdentifier() + ")::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::bought_by(" + _Character->GetObjectIdentifier() + ")::created_at_address(" + to_string_cast(reinterpret_cast< void * >(NewCargo)) + ")");
+		NewCargo->SetObjectIdentifier("::" + PlanetAssets->GetTypeIdentifier() + "(" + PlanetAssets->GetSubTypeIdentifier() + ")::created_on(" + _Planet->GetObjectIdentifier() + ")::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::bought_by(" + _Character->GetObjectIdentifier() + ")::created_at_address(" + to_string_cast(reinterpret_cast< void * >(NewCargo)) + ")");
 		
-		auto Hangar(_Planet->GetHangar(_Character));
+		auto Hangar{_Planet->GetHangar(_Character)};
 		
 		assert(Hangar != nullptr);
 		assert(Hangar->GetAspectObjectContainer() != nullptr);
@@ -370,11 +369,11 @@ void UI::TradeCenterWidget::_OnAssetClassDescriptionCaptionLabelUpdating(UI::Lab
 
 void UI::TradeCenterWidget::_OnAssetClassDescriptionLabelUpdating(UI::Label * AssetClassDescriptionLabel, float RealTimeSeconds, float GameTimeSeconds)
 {
-	auto SelectedAssetClassListBoxItem{dynamic_cast< UI::TradeCenterAssetClassListBoxItem * >(_AssetClassListBox->GetSelectedItem())};
+	auto SelectedAssetClassListBoxItem{dynamic_cast< UI::TradeCenterAssetsListBoxItem * >(_AssetClassListBox->GetSelectedItem())};
 	
 	if(_AssetClassListBox->GetSelectedItem() != nullptr)
 	{
-		AssetClassDescriptionLabel->SetText(SelectedAssetClassListBoxItem->GetPlanetAssetClass()->GetAssetClass()->GetDescription());
+		AssetClassDescriptionLabel->SetText(SelectedAssetClassListBoxItem->GetPlanetAssets()->GetDescription());
 		AssetClassDescriptionLabel->SetVisible(true);
 	}
 	else
@@ -386,12 +385,12 @@ void UI::TradeCenterWidget::_OnAssetClassDescriptionLabelUpdating(UI::Label * As
 
 void UI::TradeCenterWidget::_OnAssetClassListBoxSelectedItemChanged(void)
 {
-	auto SelectedAssetClassListBoxItem{dynamic_cast< UI::TradeCenterAssetClassListBoxItem * >(_AssetClassListBox->GetSelectedItem())};
+	auto SelectedAssetClassListBoxItem{dynamic_cast< UI::TradeCenterAssetsListBoxItem * >(_AssetClassListBox->GetSelectedItem())};
 	
 	_ClearAssetClassViewDisplay();
 	if((SelectedAssetClassListBoxItem != nullptr) && (_AssetClassViewDisplay->GetWidth() > 0.0f) && (_AssetClassViewDisplay->GetHeight() > 0.0f))
 	{
-		auto VisualizationPrototype{g_ObjectFactory->GetVisualizationPrototype(SelectedAssetClassListBoxItem->GetPlanetAssetClass()->GetAssetClass()->GetObjectTypeIdentifier(), SelectedAssetClassListBoxItem->GetPlanetAssetClass()->GetAssetClass()->GetObjectSubTypeIdentifier())};
+		auto VisualizationPrototype{SelectedAssetClassListBoxItem->GetPlanetAssets()->GetVisualizationPrototype()};
 		
 		if(VisualizationPrototype != nullptr)
 		{
@@ -452,12 +451,12 @@ void UI::TradeCenterWidget::_OnAssetClassPriceCaptionLabelUpdating(UI::Label * A
 
 void UI::TradeCenterWidget::_OnAssetClassPriceLabelUpdating(UI::Label * AssetClassPriceLabel, float RealTimeSeconds, float GameTimeSeconds)
 {
-	auto SelectedAssetClassListBoxItem{dynamic_cast< UI::TradeCenterAssetClassListBoxItem * >(_AssetClassListBox->GetSelectedItem())};
+	auto SelectedAssetClassListBoxItem{dynamic_cast< UI::TradeCenterAssetsListBoxItem * >(_AssetClassListBox->GetSelectedItem())};
 	
 	assert(AssetClassPriceLabel != nullptr);
 	if(SelectedAssetClassListBoxItem != nullptr)
 	{
-		AssetClassPriceLabel->SetText(to_string_cast(SelectedAssetClassListBoxItem->GetPlanetAssetClass()->GetPrice()));
+		AssetClassPriceLabel->SetText(to_string_cast(SelectedAssetClassListBoxItem->GetPlanetAssets()->GetPrice()));
 		AssetClassPriceLabel->SetVisible(true);
 	}
 	else
@@ -475,12 +474,12 @@ void UI::TradeCenterWidget::_OnAssetClassSizeCaptionLabelUpdating(UI::Label * As
 
 void UI::TradeCenterWidget::_OnAssetClassSizeLabelUpdating(UI::Label * AssetClassSizeLabel, float RealTimeSeconds, float GameTimeSeconds)
 {
-	auto SelectedAssetClassListBoxItem{dynamic_cast< UI::TradeCenterAssetClassListBoxItem * >(_AssetClassListBox->GetSelectedItem())};
+	auto SelectedAssetClassListBoxItem{dynamic_cast< UI::TradeCenterAssetsListBoxItem * >(_AssetClassListBox->GetSelectedItem())};
 	
 	assert(AssetClassSizeLabel != nullptr);
 	if(SelectedAssetClassListBoxItem != nullptr)
 	{
-		AssetClassSizeLabel->SetText(to_string_cast(0.001 * g_ObjectFactory->GetSpaceRequirement(SelectedAssetClassListBoxItem->GetPlanetAssetClass()->GetAssetClass()->GetObjectTypeIdentifier(), SelectedAssetClassListBoxItem->GetPlanetAssetClass()->GetAssetClass()->GetObjectSubTypeIdentifier()), 3));
+		AssetClassSizeLabel->SetText(to_string_cast(0.001 * SelectedAssetClassListBoxItem->GetPlanetAssets()->GetSpaceRequirement(), 3));
 		AssetClassSizeLabel->SetVisible(true);
 	}
 	else
@@ -492,19 +491,19 @@ void UI::TradeCenterWidget::_OnAssetClassSizeLabelUpdating(UI::Label * AssetClas
 
 void UI::TradeCenterWidget::_OnBuyButtonClicked(void)
 {
-	auto SelectedAssetClassListBoxItem{dynamic_cast< UI::TradeCenterAssetClassListBoxItem * >(_AssetClassListBox->GetSelectedItem())};
+	auto SelectedAssetClassListBoxItem{dynamic_cast< UI::TradeCenterAssetsListBoxItem * >(_AssetClassListBox->GetSelectedItem())};
 	
 	if(SelectedAssetClassListBoxItem != nullptr)
 	{
-		_Buy(SelectedAssetClassListBoxItem->GetPlanetAssetClass());
+		_Buy(SelectedAssetClassListBoxItem->GetPlanetAssets());
 	}
 }
 
 void UI::TradeCenterWidget::_OnBuyButtonUpdating(UI::Button * BuyButton, float RealTimeSeconds, float GameTimeSeconds)
 {
-	auto SelectedAssetClassListBoxItem{dynamic_cast< UI::TradeCenterAssetClassListBoxItem * >(_AssetClassListBox->GetSelectedItem())};
+	auto SelectedAssetClassListBoxItem{dynamic_cast< UI::TradeCenterAssetsListBoxItem * >(_AssetClassListBox->GetSelectedItem())};
 	
-	BuyButton->SetEnabled((SelectedAssetClassListBoxItem != nullptr) && (_Character != nullptr) && (_Character->GetCredits() >= SelectedAssetClassListBoxItem->GetPlanetAssetClass()->GetPrice()) && (_Planet != nullptr) && (_Planet->GetHangar(_Character) != nullptr));
+	BuyButton->SetEnabled((SelectedAssetClassListBoxItem != nullptr) && (_Character != nullptr) && (_Character->GetCredits() >= SelectedAssetClassListBoxItem->GetPlanetAssets()->GetPrice()) && (_Planet != nullptr) && (_Planet->GetHangar(_Character) != nullptr));
 }
 
 void UI::TradeCenterWidget::_OnDestroying(UI::Event & DestroyingEvent)
@@ -545,17 +544,17 @@ void UI::TradeCenterWidget::_OnDestroyInScene(Graphics::Node * Node)
 
 void UI::TradeCenterWidget::_OnKey(UI::KeyEvent & KeyEvent)
 {
-	auto SelectedAssetClassListBoxItem{dynamic_cast< UI::TradeCenterAssetClassListBoxItem * >(_AssetClassListBox->GetSelectedItem())};
+	auto SelectedAssetClassListBoxItem{dynamic_cast< UI::TradeCenterAssetsListBoxItem * >(_AssetClassListBox->GetSelectedItem())};
 	
 	if((SelectedAssetClassListBoxItem != nullptr) && (KeyEvent.GetPhase() == UI::Event::Phase::Bubbling) && (KeyEvent.IsDown() == true))
 	{
 		if(KeyEvent.GetKeyCode() == 56 /* B */)
 		{
-			_Buy(SelectedAssetClassListBoxItem->GetPlanetAssetClass());
+			_Buy(SelectedAssetClassListBoxItem->GetPlanetAssets());
 		}
 		else if(KeyEvent.GetKeyCode() == 39 /* S */)
 		{
-		_Sell(SelectedAssetClassListBoxItem->GetPlanetAssetClass());
+			_Sell(SelectedAssetClassListBoxItem->GetPlanetAssets());
 		}
 	}
 }
@@ -571,31 +570,30 @@ void UI::TradeCenterWidget::_OnPlanetDestroying(void)
 
 void UI::TradeCenterWidget::_OnSellButtonClicked(void)
 {
-	auto SelectedAssetClassListBoxItem{dynamic_cast< UI::TradeCenterAssetClassListBoxItem * >(_AssetClassListBox->GetSelectedItem())};
+	auto SelectedAssetClassListBoxItem{dynamic_cast< UI::TradeCenterAssetsListBoxItem * >(_AssetClassListBox->GetSelectedItem())};
 	
 	if(SelectedAssetClassListBoxItem != nullptr)
 	{
-		_Sell(SelectedAssetClassListBoxItem->GetPlanetAssetClass());
+		_Sell(SelectedAssetClassListBoxItem->GetPlanetAssets());
 	}
 }
 
 void UI::TradeCenterWidget::_OnSellButtonUpdating(UI::Button * SellButton, float RealTimeSeconds, float GameTimeSeconds)
 {
-	auto SelectedAssetClassListBoxItem{dynamic_cast< UI::TradeCenterAssetClassListBoxItem * >(_AssetClassListBox->GetSelectedItem())};
+	auto SelectedAssetClassListBoxItem{dynamic_cast< UI::TradeCenterAssetsListBoxItem * >(_AssetClassListBox->GetSelectedItem())};
 	bool Enabled(false);
 	
 	if((SelectedAssetClassListBoxItem != nullptr) && (_Character != nullptr) && (_Planet != nullptr))
 	{
-		assert(SelectedAssetClassListBoxItem->GetPlanetAssetClass() != nullptr);
-		assert(SelectedAssetClassListBoxItem->GetPlanetAssetClass()->GetAssetClass() != nullptr);
+		assert(SelectedAssetClassListBoxItem->GetPlanetAssets() != nullptr);
 		
-		auto Hangar(_Planet->GetHangar(_Character));
+		auto Hangar{_Planet->GetHangar(_Character)};
 		
 		assert(Hangar != nullptr);
 		assert(Hangar->GetAspectObjectContainer() != nullptr);
 		for(auto Content : Hangar->GetAspectObjectContainer()->GetContent())
 		{
-			if((Content->GetTypeIdentifier() == SelectedAssetClassListBoxItem->GetPlanetAssetClass()->GetAssetClass()->GetObjectTypeIdentifier()) && (Content->GetSubTypeIdentifier() == SelectedAssetClassListBoxItem->GetPlanetAssetClass()->GetAssetClass()->GetObjectSubTypeIdentifier()))
+			if((Content->GetTypeIdentifier() == SelectedAssetClassListBoxItem->GetPlanetAssets()->GetTypeIdentifier()) && (Content->GetSubTypeIdentifier() == SelectedAssetClassListBoxItem->GetPlanetAssets()->GetSubTypeIdentifier()))
 			{
 				Enabled = true;
 				
@@ -617,10 +615,9 @@ void UI::TradeCenterWidget::_OnUpdating(float RealTimeSeconds, float GameTimeSec
 	}
 }
 
-void UI::TradeCenterWidget::_Sell(const PlanetAssetClass * PlanetAssetClass)
+void UI::TradeCenterWidget::_Sell(const PlanetAssets * PlanetAssets)
 {
-	assert(PlanetAssetClass != nullptr);
-	assert(PlanetAssetClass->GetAssetClass() != nullptr);
+	assert(PlanetAssets != nullptr);
 	assert(_Character != nullptr);
 	assert(_Planet != nullptr);
 	
@@ -631,7 +628,7 @@ void UI::TradeCenterWidget::_Sell(const PlanetAssetClass * PlanetAssetClass)
 	assert(Hangar->GetAspectObjectContainer() != nullptr);
 	for(auto Content : Hangar->GetAspectObjectContainer()->GetContent())
 	{
-		if((Content->GetTypeIdentifier() == PlanetAssetClass->GetAssetClass()->GetObjectTypeIdentifier()) && (Content->GetSubTypeIdentifier() == PlanetAssetClass->GetAssetClass()->GetObjectSubTypeIdentifier()))
+		if((Content->GetTypeIdentifier() == PlanetAssets->GetTypeIdentifier()) && (Content->GetSubTypeIdentifier() == PlanetAssets->GetSubTypeIdentifier()))
 		{
 			if(Content->GetAspectOutfitting() != nullptr)
 			{
@@ -670,7 +667,7 @@ void UI::TradeCenterWidget::_Sell(const PlanetAssetClass * PlanetAssetClass)
 			Content->Destroy();
 			delete Content;
 			assert(_Character != nullptr);
-			_Character->AddCredits(PlanetAssetClass->GetPrice());
+			_Character->AddCredits(PlanetAssets->GetPrice());
 			
 			break;
 		}

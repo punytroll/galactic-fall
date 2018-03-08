@@ -24,6 +24,7 @@
 #include "turret_class.h"
 
 TurretClass::TurretClass(const std::string & Identifier) :
+	_BasePrice(0),
 	_Identifier(Identifier),
 	_MuzzlePosition(Vector3f::CreateZero()),
 	_ReloadTime(FLT_MAX),

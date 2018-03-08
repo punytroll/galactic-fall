@@ -1,11 +1,9 @@
 <ship-class>
 	<identifier>fighter</identifier>
-	<name-aspect>
-		<name>Fighter</name>
-	</name-aspect>
-	<physical-aspect>
-		<space-requirement>46000</space-requirement>
-	</physical-aspect>
+	<name>Fighter</name>
+	<description>A small and very lightly equipped space craft, that can also be used for courier runs.</description>
+	<base-price>22000</base-price>
+	<space-requirement>46000</space-requirement>
 	<visualization>
 		<model-identifier>fighter</model-identifier>
 		<visualization-parts>

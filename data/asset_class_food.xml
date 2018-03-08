@@ -1,8 +1,0 @@
-<asset-class>
-	<identifier>food</identifier>
-	<name>Food</name>
-	<base-price>70</base-price>
-	<description>Food is required on all  planets that cannot support their colonies through their own agricultural sector.</description>
-	<object-type>commodity</object-type>
-	<object-sub-type>food</object-sub-type>
-</asset-class>

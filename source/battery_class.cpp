@@ -23,6 +23,7 @@
 #include "visualization_prototype.h"
 
 BatteryClass::BatteryClass(const std::string & Identifier) :
+	_BasePrice(0),
 	_EnergyCapacity(0.0),
 	_Identifier(Identifier),
 	_SpaceRequirement(0),

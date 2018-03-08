@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006  Hagen Möbius
+ * Copyright (C) 2006-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -25,44 +25,12 @@
 
 #include "object.h"
 
-class AssetClass;
 class Character;
 class Faction;
 class Hangar;
+class PlanetAssets;
 class Ship;
 class Visualization;
-
-class PlanetAssetClass
-{
-public:
-	// constructor & destructor
-	PlanetAssetClass(const AssetClass * AssetClass);
-	~PlanetAssetClass(void);
-	// getters
-	const AssetClass * GetAssetClass(void) const;
-	float GetBasePriceModifier(void) const;
-	std::uint32_t GetPrice(void) const;
-	// setters
-	void SetBasePriceModifier(float BasePriceModifier);
-private:
-	const AssetClass * _AssetClass;
-	float _BasePriceModifier;
-};
-
-inline const AssetClass * PlanetAssetClass::GetAssetClass(void) const
-{
-	return _AssetClass;
-}
-
-inline float PlanetAssetClass::GetBasePriceModifier(void) const
-{
-	return _BasePriceModifier;
-}
-
-inline void PlanetAssetClass::SetBasePriceModifier(float BasePriceModifier)
-{
-	_BasePriceModifier = BasePriceModifier;
-}
 
 class Planet : public Object
 {
@@ -77,7 +45,8 @@ public:
 	float GetLandingFeePerSpace(void) const;
 	bool GetOffersRecharging(void) const;
 	bool GetOffersRepairing(void) const;
-	const std::vector< PlanetAssetClass * > & GetPlanetAssetClasses(void) const;
+	const std::vector< PlanetAssets * > & GetPlanetAssets(void) const;
+	PlanetAssets * GetPlanetAssets(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier) const;
 	float GetSize(void) const;
 	// setters
 	void SetDescription(const std::string & Description);
@@ -89,7 +58,7 @@ public:
 	void SetRepairingFeePerHull(float RepairingFeePerHull);
 	void SetSize(const float & Size);
 	// modifiers
-	PlanetAssetClass * CreatePlanetAssetClass(const AssetClass * AssetClass);
+	PlanetAssets * CreatePlanetAssets(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier);
 	void Land(Ship * Ship, Character * Character);
 	void Recharge(Ship * Ship, Character * Character);
 	void Refuel(Ship * Ship, Character * Character);
@@ -108,7 +77,7 @@ private:
 	float _LandingFeePerSpace;
 	bool _OffersRecharging;
 	bool _OffersRepairing;
-	std::vector< PlanetAssetClass * > _PlanetAssetClasses;
+	std::vector< PlanetAssets * > _PlanetAssets;
 	float _RechargingFeePerEnergy;
 	float _RepairingFeePerHull;
 	float _Size;
@@ -139,9 +108,9 @@ inline bool Planet::GetOffersRepairing(void) const
 	return _OffersRepairing;
 }
 
-inline const std::vector< PlanetAssetClass * > & Planet::GetPlanetAssetClasses(void) const
+inline const std::vector< PlanetAssets * > & Planet::GetPlanetAssets(void) const
 {
-	return _PlanetAssetClasses;
+	return _PlanetAssets;
 }
 
 inline float Planet::GetSize(void) const

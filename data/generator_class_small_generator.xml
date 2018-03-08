@@ -1,6 +1,9 @@
 <generator-class>
 	<identifier>small_generator</identifier>
 	<name>Small Generator</name>
+	<description>The small generator provides barely enough energy to keep a small space craft running and occasionally firing a cannon for self defense.</description>
+	<base-price>2500</base-price>
+	<space-requirement>500</space-requirement>
 	<visualization>
 		<model-identifier>small_generator</model-identifier>
 		<visualization-parts>
@@ -31,7 +34,6 @@
 			</visualization-part>
 		</visualization-parts>
 	</visualization>
-	<space-requirement>500</space-requirement>
 	<energy-provision-per-second>1.5</energy-provision-per-second>
 	<slot-class-identifier>small_generator</slot-class-identifier>
 </generator-class>

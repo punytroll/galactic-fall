@@ -1,8 +1,0 @@
-<asset-class>
-	<identifier>industrial</identifier>
-	<name>Industrial</name>
-	<base-price>120</base-price>
-	<description>Industrial goods are required by industrial planets to produce consumer goods.</description>
-	<object-type>commodity</object-type>
-	<object-sub-type>industrial</object-sub-type>
-</asset-class>

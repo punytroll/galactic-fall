@@ -1,6 +1,8 @@
 <commodity-class>
 	<identifier>food</identifier>
 	<name>Food</name>
+	<description>Food is required on all  planets that cannot support their colonies through their own agricultural sector.</description>
+	<base-price>70</base-price>
 	<space-requirement>1000</space-requirement>
 	<visualization>
 		<model-identifier>cargo_cube</model-identifier>

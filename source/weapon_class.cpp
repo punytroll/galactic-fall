@@ -24,6 +24,7 @@
 #include "weapon_class.h"
 
 WeaponClass::WeaponClass(const std::string & Identifier) :
+	_BasePrice(0),
 	_Identifier(Identifier),
 	_ReloadTime(FLT_MAX),
 	_ShotExitSpeed(0.0f),

@@ -23,6 +23,7 @@
 #include "visualization_prototype.h"
 
 GeneratorClass::GeneratorClass(const std::string & Identifier) :
+	_BasePrice(0),
 	_EnergyProvisionPerSecond(0.0f),
 	_Identifier(Identifier),
 	_SpaceRequirement(0),

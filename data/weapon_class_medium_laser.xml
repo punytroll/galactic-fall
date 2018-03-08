@@ -1,6 +1,9 @@
 <weapon-class>
 	<identifier>medium_laser</identifier>
 	<name>Medium Laser</name>
+	<description>The medium laser is either used as heavy armament on small space crafts or as light armament on large space crafts.</description>
+	<base-price>4200</base-price>
+	<space-requirement>400</space-requirement>
 	<visualization>
 		<model-identifier>light_laser</model-identifier>
 		<visualization-parts>
@@ -39,7 +42,6 @@
 		<z>0</z>
 	</orientation>
 	<reload-time>0.85</reload-time>
-	<space-requirement>400</space-requirement>
 	<energy-usage-per-shot>8</energy-usage-per-shot>
 	<muzzle-position>
 		<part-identifier>light_laser</part-identifier>

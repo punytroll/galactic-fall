@@ -1,8 +1,6 @@
 <faction>
 	<identifier>pirates</identifier>
-	<aspect-name>
-		<name>Pirates</name>
-	</aspect-name>
+	<name>Pirates</name>
 	<color>
 		<red>1.0</red>
 		<green>0.0</green>

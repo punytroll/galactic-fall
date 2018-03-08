@@ -61,9 +61,9 @@ namespace UI
 		void _OnSellButtonUpdating(UI::Button * BuyButton, float RealTimeSeconds, float GameTimeSeconds);
 		void _OnUpdating(float RealTimeSeconds, float GameTimeSeconds);
 		// helper functions and actions
-		void _Buy(const PlanetAssetClass * PlanetAssetClass);
+		void _Buy(const PlanetAssets * PlanetAssets);
 		void _ClearAssetClassViewDisplay(void);
-		void _Sell(const PlanetAssetClass * PlanetAssetClass);
+		void _Sell(const PlanetAssets * PlanetAssets);
 		// member variables
 		UI::ListBox * _AssetClassListBox;
 		UI::ViewDisplay * _AssetClassViewDisplay;

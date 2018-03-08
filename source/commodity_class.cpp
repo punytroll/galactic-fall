@@ -23,6 +23,7 @@
 #include "visualization_prototype.h"
 
 CommodityClass::CommodityClass(const std::string & Identifier) :
+	_BasePrice(0),
 	_Identifier(Identifier),
 	_SpaceRequirement(0),
 	_VisualizationPrototype(nullptr)
