@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006  Hagen Möbius
+ * Copyright (C) 2006-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -25,24 +25,24 @@
 
 #include <algebra/vector3f.h>
 
+#include "template.h"
+
 class Slot;
 class VisualizationPrototype;
 
-class ShipClass
+class ShipClass : public Template
 {
 public:
 	// constructor
 	ShipClass(const std::string & Identifier);
 	// destructor
-	~ShipClass(void);
+	virtual ~ShipClass(void);
 	// getters
 	std::uint32_t GetBasePrice(void) const;
-	const std::string & GetDescription(void) const;
 	const Vector3f & GetExhaustOffset(void) const;
 	float GetExhaustRadius(void) const;
 	float GetFuelCapacity(void) const;
 	const std::string & GetIdentifier(void) const;
-	const std::string & GetName(void) const;
 	std::uint32_t GetSpaceRequirement(void) const;
 	float GetForwardThrust(void) const;
 	float GetTurnSpeed(void) const;
@@ -56,12 +56,10 @@ public:
 	const VisualizationPrototype * GetVisualizationPrototype(void) const;
 	// setters
 	void SetBasePrice(std::uint32_t BasePrice);
-	void SetDescription(const std::string & Description);
 	void SetExhaustOffset(const Vector3f & ExhaustOffset);
 	void SetExhaustRadius(float ExhaustRadius);
 	void SetFuelCapacity(float FuelCapacity);
 	void SetForwardThrust(float ForwardThrust);
-	void SetName(const std::string & Name);
 	void SetSpaceRequirement(std::uint32_t SpaceRequirement);
 	void SetTurnSpeed(float TurnSpeed);
 	void SetMaximumSpeed(float MaximumSpeed);
@@ -78,12 +76,9 @@ public:
 	bool AddSlot(const std::string & SlotIdentifier, Slot * Slot);
 private:
 	std::uint32_t _BasePrice;
-	std::string _Description;
 	Vector3f _ExhaustOffset;
 	float _ExhaustRadius;
 	float _FuelCapacity;
-	std::string _Identifier;
-	std::string _Name;
 	std::uint32_t _SpaceRequirement;
 	float _ForwardThrust;
 	float _TurnSpeed;
@@ -100,11 +95,6 @@ private:
 inline std::uint32_t ShipClass::GetBasePrice(void) const
 {
 	return _BasePrice;
-}
-
-inline const std::string & ShipClass::GetDescription(void) const
-{
-	return _Description;
 }
 
 inline const Vector3f & ShipClass::GetExhaustOffset(void) const
@@ -124,12 +114,7 @@ inline float ShipClass::GetFuelCapacity(void) const
 
 inline const std::string & ShipClass::GetIdentifier(void) const
 {
-	return _Identifier;
-}
-
-inline const std::string & ShipClass::GetName(void) const
-{
-	return _Name;
+	return GetSubTypeIdentifier();
 }
 
 inline std::uint32_t ShipClass::GetSpaceRequirement(void) const
@@ -192,11 +177,6 @@ inline void ShipClass::SetBasePrice(std::uint32_t BasePrice)
 	_BasePrice = BasePrice;
 }
 
-inline void ShipClass::SetDescription(const std::string & Description)
-{
-	_Description = Description;
-}
-
 inline void ShipClass::SetExhaustOffset(const Vector3f & ExhaustOffset)
 {
 	_ExhaustOffset = ExhaustOffset;
@@ -215,11 +195,6 @@ inline void ShipClass::SetFuelCapacity(float FuelCapacity)
 inline void ShipClass::SetForwardThrust(float ForwardThrust)
 {
 	_ForwardThrust = ForwardThrust;
-}
-
-inline void ShipClass::SetName(const std::string & Name)
-{
-	_Name = Name;
 }
 
 inline void ShipClass::SetSpaceRequirement(std::uint32_t SpaceRequirement)

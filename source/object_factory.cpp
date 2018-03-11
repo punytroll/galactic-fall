@@ -257,7 +257,7 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		// set up aspects
 		// set up name aspect
 		assert(NewShip->GetAspectName() != nullptr);
-		NewShip->GetAspectName()->SetName(ShipClass->GetName());
+		NewShip->GetAspectName()->SetName(ShipClass->GetString("name"));
 		// set up outfitting aspect
 		assert(NewShip->GetAspectOutfitting() != nullptr);
 		for(auto SlotPair : ShipClass->GetSlots())
@@ -519,7 +519,7 @@ const std::string & ObjectFactory::GetDescription(const std::string & TypeIdenti
 		
 		assert(ShipClass != nullptr);
 		
-		return ShipClass->GetDescription();
+		return ShipClass->GetString("description");
 	}
 	else if(TypeIdentifier == "turret")
 	{
@@ -595,7 +595,7 @@ const std::string & ObjectFactory::GetName(const std::string & TypeIdentifier, c
 		
 		assert(ShipClass != nullptr);
 		
-		return ShipClass->GetName();
+		return ShipClass->GetString("name");
 	}
 	else if(TypeIdentifier == "turret")
 	{
