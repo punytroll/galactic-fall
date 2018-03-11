@@ -29,12 +29,22 @@ Template::~Template(void)
 {
 }
 
-const std::experimental::any & Template::Get(const std::string & Identifier) const
+const std::experimental::any & Template::GetField(const std::string & FieldIdentifier) const
 {
-	return _Properties.at(Identifier);
+	return _Fields.at(FieldIdentifier);
 }
 
-const std::string & Template::GetString(const std::string & Identifier) const
+float Template::GetFieldAsFloat(const std::string & FieldIdentifier) const
 {
-	return std::experimental::any_cast< const std::string & >(_Properties.at(Identifier));
+	return std::experimental::any_cast< float >(_Fields.at(FieldIdentifier));
+}
+
+const std::string & Template::GetFieldAsString(const std::string & FieldIdentifier) const
+{
+	return std::experimental::any_cast< const std::string & >(_Fields.at(FieldIdentifier));
+}
+
+std::uint32_t Template::GetFieldAsUnsignedInteger32Bit(const std::string & FieldIdentifier) const
+{
+	return std::experimental::any_cast< std::uint32_t >(_Fields.at(FieldIdentifier));
 }

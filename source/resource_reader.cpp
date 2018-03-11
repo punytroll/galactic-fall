@@ -984,7 +984,7 @@ static void ReadShipClass(Arxx::Reference & Reference, ClassManager< ShipClass >
 	float ForwardThrust;
 	float TurnSpeed;
 	float MaximumSpeed;
-	float MaximumAvailableSpace;
+	std::uint32_t MaximumAvailableSpace;
 	float JumpFuel;
 	float ForwardFuel;
 	float TurnFuel;
@@ -995,20 +995,20 @@ static void ReadShipClass(Arxx::Reference & Reference, ClassManager< ShipClass >
 	std::uint32_t SlotCount;
 	
 	Reader >> Name >> Description >> BasePrice >> SpaceRequirement >> VisualizationPrototype >> ForwardThrust >> TurnSpeed >> MaximumSpeed >> MaximumAvailableSpace >> FuelCapacity >> JumpFuel >> ForwardFuel >> TurnFuel >> Hull >> ExhaustMarkerPartIdentifier >> ExhaustMarkerIdentifier >> ExhaustRadius >> SlotCount;
-	NewShipClass->Set("name", Name);
-	NewShipClass->Set("description", Description);
-	NewShipClass->SetBasePrice(BasePrice);
-	NewShipClass->SetSpaceRequirement(SpaceRequirement);
+	NewShipClass->SetField("name", Name);
+	NewShipClass->SetField("description", Description);
+	NewShipClass->SetField("base-price", BasePrice);
+	NewShipClass->SetField("space-requirement", SpaceRequirement);
 	NewShipClass->SetVisualizationPrototype(VisualizationPrototype);
-	NewShipClass->SetFuelCapacity(FuelCapacity);
-	NewShipClass->SetForwardThrust(ForwardThrust);
-	NewShipClass->SetJumpFuel(JumpFuel);
-	NewShipClass->SetMaximumSpeed(MaximumSpeed);
-	NewShipClass->SetMaximumAvailableSpace(static_cast< std::uint32_t >(1000 * MaximumAvailableSpace));
-	NewShipClass->SetTurnSpeed(TurnSpeed);
-	NewShipClass->SetForwardFuel(ForwardFuel);
-	NewShipClass->SetTurnFuel(TurnFuel);
-	NewShipClass->SetHull(Hull);
+	NewShipClass->SetField("fuel-capacity", FuelCapacity);
+	NewShipClass->SetField("forward-thrust", ForwardThrust);
+	NewShipClass->SetField("jump-fuel", JumpFuel);
+	NewShipClass->SetField("maximum-speed", MaximumSpeed);
+	NewShipClass->SetField("maximum-available-space", MaximumAvailableSpace);
+	NewShipClass->SetField("turn-speed", TurnSpeed);
+	NewShipClass->SetField("forward-fuel", ForwardFuel);
+	NewShipClass->SetField("turn-fuel", TurnFuel);
+	NewShipClass->SetField("hull", Hull);
 	
 	auto ExhaustPosition{VisualizationPrototype.GetMarkerPosition(ExhaustMarkerPartIdentifier, ExhaustMarkerIdentifier)};
 	
@@ -1017,7 +1017,7 @@ static void ReadShipClass(Arxx::Reference & Reference, ClassManager< ShipClass >
 		throw std::runtime_error("For the ship '" + Identifier + "', could not find a marker or its position for the exhaust position '" + ExhaustMarkerIdentifier + "' on the part '" + ExhaustMarkerPartIdentifier + "'.");
 	}
 	NewShipClass->SetExhaustOffset(*ExhaustPosition);
-	NewShipClass->SetExhaustRadius(ExhaustRadius);
+	NewShipClass->SetField("exhaust-radius", ExhaustRadius);
 	for(auto SlotIndex = 0ul; SlotIndex < SlotCount; ++SlotIndex)
 	{
 		std::string SlotIdentifier;

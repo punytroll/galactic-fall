@@ -38,36 +38,12 @@ public:
 	// destructor
 	virtual ~ShipClass(void);
 	// getters
-	std::uint32_t GetBasePrice(void) const;
 	const Vector3f & GetExhaustOffset(void) const;
-	float GetExhaustRadius(void) const;
-	float GetFuelCapacity(void) const;
 	const std::string & GetIdentifier(void) const;
-	std::uint32_t GetSpaceRequirement(void) const;
-	float GetForwardThrust(void) const;
-	float GetTurnSpeed(void) const;
-	float GetMaximumSpeed(void) const;
-	std::uint32_t GetMaximumAvailableSpace(void) const;
-	float GetJumpFuel(void) const;
-	float GetForwardFuel(void) const;
-	float GetTurnFuel(void) const;
-	float GetHull(void) const;
 	const std::map< std::string, Slot * > & GetSlots(void) const;
 	const VisualizationPrototype * GetVisualizationPrototype(void) const;
 	// setters
-	void SetBasePrice(std::uint32_t BasePrice);
 	void SetExhaustOffset(const Vector3f & ExhaustOffset);
-	void SetExhaustRadius(float ExhaustRadius);
-	void SetFuelCapacity(float FuelCapacity);
-	void SetForwardThrust(float ForwardThrust);
-	void SetSpaceRequirement(std::uint32_t SpaceRequirement);
-	void SetTurnSpeed(float TurnSpeed);
-	void SetMaximumSpeed(float MaximumSpeed);
-	void SetMaximumAvailableSpace(std::uint32_t MaximumAvailableSpace);
-	void SetJumpFuel(float JumpFuel);
-	void SetForwardFuel(float ForwardFuel);
-	void SetTurnFuel(float TurnFuel);
-	void SetHull(float Hull);
 	void SetVisualizationPrototype(const VisualizationPrototype & VisualizationPrototype);
 	
 	/**
@@ -75,91 +51,19 @@ public:
 	 **/
 	bool AddSlot(const std::string & SlotIdentifier, Slot * Slot);
 private:
-	std::uint32_t _BasePrice;
 	Vector3f _ExhaustOffset;
-	float _ExhaustRadius;
-	float _FuelCapacity;
-	std::uint32_t _SpaceRequirement;
-	float _ForwardThrust;
-	float _TurnSpeed;
-	float _MaximumSpeed;
-	std::uint32_t _MaximumAvailableSpace;
-	float _JumpFuel;
-	float _ForwardFuel;
-	float _TurnFuel;
-	float _Hull;
 	std::map< std::string, Slot * > _Slots;
 	VisualizationPrototype * _VisualizationPrototype;
 };
-
-inline std::uint32_t ShipClass::GetBasePrice(void) const
-{
-	return _BasePrice;
-}
 
 inline const Vector3f & ShipClass::GetExhaustOffset(void) const
 {
 	return _ExhaustOffset;
 }
 
-inline float ShipClass::GetExhaustRadius(void) const
-{
-	return _ExhaustRadius;
-}
-
-inline float ShipClass::GetFuelCapacity(void) const
-{
-	return _FuelCapacity;
-}
-
 inline const std::string & ShipClass::GetIdentifier(void) const
 {
 	return GetSubTypeIdentifier();
-}
-
-inline std::uint32_t ShipClass::GetSpaceRequirement(void) const
-{
-	return _SpaceRequirement;
-}
-
-inline float ShipClass::GetForwardThrust(void) const
-{
-	return _ForwardThrust;
-}
-
-inline float ShipClass::GetTurnSpeed(void) const
-{
-	return _TurnSpeed;
-}
-
-inline float ShipClass::GetMaximumSpeed(void) const
-{
-	return _MaximumSpeed;
-}
-
-inline std::uint32_t ShipClass::GetMaximumAvailableSpace(void) const
-{
-	return _MaximumAvailableSpace;
-}
-
-inline float ShipClass::GetJumpFuel(void) const
-{
-	return _JumpFuel;
-}
-
-inline float ShipClass::GetForwardFuel(void) const
-{
-	return _ForwardFuel;
-}
-
-inline float ShipClass::GetTurnFuel(void) const
-{
-	return _TurnFuel;
-}
-
-inline float ShipClass::GetHull(void) const
-{
-	return _Hull;
 }
 
 inline const std::map< std::string, Slot * > & ShipClass::GetSlots(void) const
@@ -172,69 +76,9 @@ inline const VisualizationPrototype * ShipClass::GetVisualizationPrototype(void)
 	return _VisualizationPrototype;
 }
 
-inline void ShipClass::SetBasePrice(std::uint32_t BasePrice)
-{
-	_BasePrice = BasePrice;
-}
-
 inline void ShipClass::SetExhaustOffset(const Vector3f & ExhaustOffset)
 {
 	_ExhaustOffset = ExhaustOffset;
-}
-
-inline void ShipClass::SetExhaustRadius(float ExhaustRadius)
-{
-	_ExhaustRadius = ExhaustRadius;
-}
-
-inline void ShipClass::SetFuelCapacity(float FuelCapacity)
-{
-	_FuelCapacity = FuelCapacity;
-}
-
-inline void ShipClass::SetForwardThrust(float ForwardThrust)
-{
-	_ForwardThrust = ForwardThrust;
-}
-
-inline void ShipClass::SetSpaceRequirement(std::uint32_t SpaceRequirement)
-{
-	_SpaceRequirement = SpaceRequirement;
-}
-
-inline void ShipClass::SetTurnSpeed(float TurnSpeed)
-{
-	_TurnSpeed = TurnSpeed;
-}
-
-inline void ShipClass::SetMaximumSpeed(float MaximumSpeed)
-{
-	_MaximumSpeed = MaximumSpeed;
-}
-
-inline void ShipClass::SetMaximumAvailableSpace(std::uint32_t MaximumAvailableSpace)
-{
-	_MaximumAvailableSpace = MaximumAvailableSpace;
-}
-
-inline void ShipClass::SetJumpFuel(float JumpFuel)
-{
-	_JumpFuel = JumpFuel;
-}
-
-inline void ShipClass::SetForwardFuel(float ForwardFuel)
-{
-	_ForwardFuel = ForwardFuel;
-}
-
-inline void ShipClass::SetTurnFuel(float TurnFuel)
-{
-	_TurnFuel = TurnFuel;
-}
-
-inline void ShipClass::SetHull(float Hull)
-{
-	_Hull = Hull;
 }
 
 #endif
