@@ -62,7 +62,7 @@
 	<forward-thrust>4</forward-thrust>
 	<turn-speed>0.8</turn-speed>
 	<maximum-speed>8.5</maximum-speed>
-	<maximum-available-space>60</maximum-available-space>
+	<maximum-available-space>60000</maximum-available-space>
 	<fuel-hold-size>4</fuel-hold-size>
 	<jump-fuel>0.2</jump-fuel>
 	<forward-fuel>0.025</forward-fuel>

@@ -31,18 +31,20 @@ public:
 	Template(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier);
 	virtual ~Template(void);
 	// getters
-	const std::experimental::any & Get(const std::string & Identifier) const;
-	const std::string & GetString(const std::string & Identifier) const;
+	const std::experimental::any & GetField(const std::string & FieldIdentifier) const;
+	float GetFieldAsFloat(const std::string & FieldIdentifier) const;
+	const std::string & GetFieldAsString(const std::string & FieldIdentifier) const;
+	std::uint32_t GetFieldAsUnsignedInteger32Bit(const std::string & FieldIdentifier) const;
 	const std::string & GetSubTypeIdentifier(void) const;
 	const std::string & GetTypeIdentifier(void) const;
 	// setters
 	template< typename AnyType >
-	void Set(const std::string & Identifier, const AnyType & Value)
+	void SetField(const std::string & FieldIdentifier, const AnyType & Value)
 	{
-		_Properties.insert({Identifier, Value});
+		_Fields.insert({FieldIdentifier, Value});
 	}
 private:
-	std::unordered_map< std::string, std::experimental::any > _Properties;
+	std::unordered_map< std::string, std::experimental::any > _Fields;
 	std::string _SubTypeIdentifier;
 	std::string _TypeIdentifier;
 };

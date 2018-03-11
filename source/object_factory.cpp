@@ -237,18 +237,18 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		
 		// set up type specific things
 		NewShip->SetExhaustOffset(ShipClass->GetExhaustOffset());
-		NewShip->SetExhaustRadius(ShipClass->GetExhaustRadius());
-		NewShip->SetFuelCapacity(ShipClass->GetFuelCapacity());
-		NewShip->SetFuelNeededToAccelerate(ShipClass->GetForwardFuel());
-		NewShip->SetFuelNeededToJump(ShipClass->GetJumpFuel());
-		NewShip->SetFuelNeededToTurn(ShipClass->GetTurnFuel());
-		NewShip->SetHullCapacity(ShipClass->GetHull());
-		NewShip->SetMaximumForwardThrust(ShipClass->GetForwardThrust());
-		NewShip->SetMaximumSpeed(ShipClass->GetMaximumSpeed());
-		NewShip->SetMaximumTurnSpeed(ShipClass->GetTurnSpeed());
+		NewShip->SetExhaustRadius(ShipClass->GetFieldAsFloat("exhaust-radius"));
+		NewShip->SetFuelCapacity(ShipClass->GetFieldAsFloat("fuel-capacity"));
+		NewShip->SetFuelNeededToAccelerate(ShipClass->GetFieldAsFloat("forward-fuel"));
+		NewShip->SetFuelNeededToJump(ShipClass->GetFieldAsFloat("jump-fuel"));
+		NewShip->SetFuelNeededToTurn(ShipClass->GetFieldAsFloat("turn-fuel"));
+		NewShip->SetHullCapacity(ShipClass->GetFieldAsFloat("hull"));
+		NewShip->SetHull(ShipClass->GetFieldAsFloat("hull"));
+		NewShip->SetMaximumForwardThrust(ShipClass->GetFieldAsFloat("forward-thrust"));
+		NewShip->SetMaximumSpeed(ShipClass->GetFieldAsFloat("maximum-speed"));
+		NewShip->SetMaximumTurnSpeed(ShipClass->GetFieldAsFloat("turn-speed"));
 		assert(g_Galaxy != nullptr);
 		NewShip->SetFaction(g_Galaxy->GetFaction("neutral"));
-		NewShip->SetHull(ShipClass->GetHull());
 		
 		auto EngineGlowParticleSystem(CreateParticleSystem("engine_glow"));
 		
@@ -257,7 +257,7 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		// set up aspects
 		// set up name aspect
 		assert(NewShip->GetAspectName() != nullptr);
-		NewShip->GetAspectName()->SetName(ShipClass->GetString("name"));
+		NewShip->GetAspectName()->SetName(ShipClass->GetFieldAsString("name"));
 		// set up outfitting aspect
 		assert(NewShip->GetAspectOutfitting() != nullptr);
 		for(auto SlotPair : ShipClass->GetSlots())
@@ -273,7 +273,7 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		// set up physical aspect
 		assert(NewShip->GetAspectPhysical() != nullptr);
 		NewShip->GetAspectPhysical()->SetRadialSize(ShipClass->GetVisualizationPrototype()->GetModel()->GetRadialSize());
-		NewShip->GetAspectPhysical()->SetSpaceRequirement(ShipClass->GetSpaceRequirement());
+		NewShip->GetAspectPhysical()->SetSpaceRequirement(ShipClass->GetFieldAsUnsignedInteger32Bit("space-requirement"));
 		// set up visualization aspect
 		assert(NewShip->GetAspectVisualization() != nullptr);
 		NewShip->GetAspectVisualization()->SetVisualizationPrototype(ShipClass->GetVisualizationPrototype());
@@ -289,7 +289,7 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		{
 			auto NewStorage(dynamic_cast< Storage * >(Create("storage", "", CreateNestedObjects)));
 			
-			NewStorage->SetSpaceCapacity(ShipClass->GetMaximumAvailableSpace());
+			NewStorage->SetSpaceCapacity(ShipClass->GetFieldAsUnsignedInteger32Bit("maximum-available-space"));
 			assert(NewShip->GetAspectObjectContainer() != nullptr);
 			NewShip->GetAspectObjectContainer()->AddContent(NewStorage);
 		}
@@ -443,7 +443,7 @@ std::uint32_t ObjectFactory::GetBasePrice(const std::string & TypeIdentifier, co
 		
 		assert(ShipClass != nullptr);
 		
-		return ShipClass->GetBasePrice();
+		return ShipClass->GetFieldAsUnsignedInteger32Bit("base-price");
 	}
 	else if(TypeIdentifier == "turret")
 	{
@@ -519,7 +519,7 @@ const std::string & ObjectFactory::GetDescription(const std::string & TypeIdenti
 		
 		assert(ShipClass != nullptr);
 		
-		return ShipClass->GetString("description");
+		return ShipClass->GetFieldAsString("description");
 	}
 	else if(TypeIdentifier == "turret")
 	{
@@ -595,7 +595,7 @@ const std::string & ObjectFactory::GetName(const std::string & TypeIdentifier, c
 		
 		assert(ShipClass != nullptr);
 		
-		return ShipClass->GetString("name");
+		return ShipClass->GetFieldAsString("name");
 	}
 	else if(TypeIdentifier == "turret")
 	{
@@ -671,7 +671,7 @@ std::uint32_t ObjectFactory::GetSpaceRequirement(const std::string & TypeIdentif
 		
 		assert(ShipClass != nullptr);
 		
-		return ShipClass->GetSpaceRequirement();
+		return ShipClass->GetFieldAsUnsignedInteger32Bit("space-requirement");
 	}
 	else if(TypeIdentifier == "turret")
 	{
