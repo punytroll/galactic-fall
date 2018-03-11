@@ -995,8 +995,8 @@ static void ReadShipClass(Arxx::Reference & Reference, ClassManager< ShipClass >
 	std::uint32_t SlotCount;
 	
 	Reader >> Name >> Description >> BasePrice >> SpaceRequirement >> VisualizationPrototype >> ForwardThrust >> TurnSpeed >> MaximumSpeed >> MaximumAvailableSpace >> FuelCapacity >> JumpFuel >> ForwardFuel >> TurnFuel >> Hull >> ExhaustMarkerPartIdentifier >> ExhaustMarkerIdentifier >> ExhaustRadius >> SlotCount;
-	NewShipClass->SetName(Name);
-	NewShipClass->SetDescription(Description);
+	NewShipClass->Set("name", Name);
+	NewShipClass->Set("description", Description);
 	NewShipClass->SetBasePrice(BasePrice);
 	NewShipClass->SetSpaceRequirement(SpaceRequirement);
 	NewShipClass->SetVisualizationPrototype(VisualizationPrototype);

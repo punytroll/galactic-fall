@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2006  Hagen Möbius
+ * Copyright (C) 2006-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -24,9 +24,9 @@
 #include "visualization_prototype.h"
 
 ShipClass::ShipClass(const std::string & Identifier) :
+	Template("ship", Identifier),
 	_BasePrice(0),
 	_ExhaustOffset(Vector3f::CreateZero()),
-	_Identifier(Identifier),
 	_MaximumAvailableSpace(0),
 	_VisualizationPrototype(nullptr)
 {
