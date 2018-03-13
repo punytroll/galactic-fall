@@ -17,20 +17,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include <assert.h>
-#include <float.h>
+#include <cassert>
 
 #include "visualization_prototype.h"
 #include "turret_class.h"
 
 TurretClass::TurretClass(const std::string & Identifier) :
-	_BasePrice(0),
-	_Identifier(Identifier),
+	Template("turret", Identifier),
 	_MuzzlePosition(Vector3f::CreateZero()),
-	_ReloadTime(FLT_MAX),
-	_ShotDamage(0.0f),
-	_ShotExitSpeed(0.0f),
-	_ShotLifeTime(0.0f),
 	_ShotVisualizationPrototype(nullptr),
 	_TurretVisualizationPrototype(nullptr)
 {

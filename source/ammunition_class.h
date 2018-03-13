@@ -22,98 +22,33 @@
 
 #include <string>
 
+#include "template.h"
+
 class VisualizationPrototype;
 
-class AmmunitionClass
+class AmmunitionClass : public Template
 {
 public:
 	// constructor & destructor
 	AmmunitionClass(const std::string & Identifier);
 	~AmmunitionClass(void);
 	// getters
-	std::uint32_t GetBasePrice(void) const;
-	std::uint32_t GetCartridgeSize(void) const;
-	const std::string & GetDescription(void) const;
 	const std::string & GetIdentifier(void) const;
-	const std::string & GetName(void) const;
-	const std::string & GetSlotClassIdentifier(void) const;
-	std::uint32_t GetSpaceRequirement(void) const;
 	const VisualizationPrototype * GetVisualizationPrototype(void) const;
 	// setters
-	void SetBasePrice(std::uint32_t BasePrice);
-	void SetCartridgeSize(std::uint32_t CartridgeSize);
-	void SetDescription(const std::string & Description);
-	void SetName(const std::string & Name);
-	void SetSpaceRequirement(std::uint32_t SpaceRequirement);
 	void SetVisualizationPrototype(const VisualizationPrototype & VisualizationPrototype);
 private:
-	std::uint32_t _BasePrice;
-	std::uint32_t _CartridgeSize;
-	std::string _Description;
-	std::string _Identifier;
-	std::string _Name;
-	std::uint32_t _SpaceRequirement;
 	VisualizationPrototype * _VisualizationPrototype;
 };
 
-inline std::uint32_t AmmunitionClass::GetBasePrice(void) const
-{
-	return _BasePrice;
-}
-
-inline std::uint32_t AmmunitionClass::GetCartridgeSize(void) const
-{
-	return _CartridgeSize;
-}
-
-inline const std::string & AmmunitionClass::GetDescription(void) const
-{
-	return _Description;
-}
-
 inline const std::string & AmmunitionClass::GetIdentifier(void) const
 {
-	return _Identifier;
-}
-
-inline const std::string & AmmunitionClass::GetName(void) const
-{
-	return _Name;
-}
-
-inline std::uint32_t AmmunitionClass::GetSpaceRequirement(void) const
-{
-	return _SpaceRequirement;
+	return GetSubTypeIdentifier();
 }
 
 inline const VisualizationPrototype * AmmunitionClass::GetVisualizationPrototype(void) const
 {
 	return _VisualizationPrototype;
-}
-
-inline void AmmunitionClass::SetBasePrice(std::uint32_t BasePrice)
-{
-	_BasePrice = BasePrice;
-}
-
-inline void AmmunitionClass::SetCartridgeSize(std::uint32_t CartridgeSize)
-{
-	_CartridgeSize = CartridgeSize;
-}
-
-inline void AmmunitionClass::SetDescription(const std::string & Description)
-{
-	_Description = Description;
-}
-
-inline void AmmunitionClass::SetName(const std::string & Name)
-{
-	_Name = Name;
-}
-
-inline void AmmunitionClass::SetSpaceRequirement(std::uint32_t SpaceRequirement)
-{
-	_SpaceRequirement = SpaceRequirement;
 }
 
 #endif

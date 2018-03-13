@@ -440,12 +440,12 @@ static void ReadAmmunitionClass(Arxx::Reference & Reference, ClassManager< Ammun
 	
 	Reader >> Name >> Description >> BasePrice >> SpaceRequirement >> VisualizationPrototype >> CartridgeSize;
 	
-	NewAmmunitionClass->SetName(Name);
-	NewAmmunitionClass->SetDescription(Description);
-	NewAmmunitionClass->SetBasePrice(BasePrice);
-	NewAmmunitionClass->SetSpaceRequirement(SpaceRequirement);
+	NewAmmunitionClass->SetField("name", Name);
+	NewAmmunitionClass->SetField("description", Description);
+	NewAmmunitionClass->SetField("base-price", BasePrice);
+	NewAmmunitionClass->SetField("space-requirement", SpaceRequirement);
 	NewAmmunitionClass->SetVisualizationPrototype(VisualizationPrototype);
-	NewAmmunitionClass->SetCartridgeSize(CartridgeSize);
+	NewAmmunitionClass->SetField("cartridge-size", CartridgeSize);
 }
 
 static void ReadBatteryClass(Arxx::Reference & Reference, ClassManager< BatteryClass > * BatteryClassManager)
@@ -482,13 +482,13 @@ static void ReadBatteryClass(Arxx::Reference & Reference, ClassManager< BatteryC
 	std::string SlotClassIdentifier;
 	
 	Reader >> Name >> Description >> BasePrice >> SpaceRequirement >> VisualizationPrototype >> EnergyCapacity >> SlotClassIdentifier;
-	NewBatteryClass->SetName(Name);
-	NewBatteryClass->SetDescription(Description);
-	NewBatteryClass->SetBasePrice(BasePrice);
-	NewBatteryClass->SetSpaceRequirement(SpaceRequirement);
+	NewBatteryClass->SetField("name", Name);
+	NewBatteryClass->SetField("description", Description);
+	NewBatteryClass->SetField("base-price", BasePrice);
+	NewBatteryClass->SetField("space-requirement", SpaceRequirement);
 	NewBatteryClass->SetVisualizationPrototype(VisualizationPrototype);
-	NewBatteryClass->SetEnergyCapacity(EnergyCapacity);
-	NewBatteryClass->SetSlotClassIdentifier(SlotClassIdentifier);
+	NewBatteryClass->SetField("energy-capacity", EnergyCapacity);
+	NewBatteryClass->SetField("slot-class-identifier", SlotClassIdentifier);
 }
 
 static void ReadCommodityClass(Arxx::Reference & Reference, ClassManager< CommodityClass > * CommodityClassManager)
@@ -524,10 +524,10 @@ static void ReadCommodityClass(Arxx::Reference & Reference, ClassManager< Commod
 	
 	Reader >> Name >> Description >> BasePrice >> SpaceRequirement >> VisualizationPrototype;
 	
-	NewCommodityClass->SetName(Name);
-	NewCommodityClass->SetDescription(Description);
-	NewCommodityClass->SetBasePrice(BasePrice);
-	NewCommodityClass->SetSpaceRequirement(SpaceRequirement);
+	NewCommodityClass->SetField("name", Name);
+	NewCommodityClass->SetField("description", Description);
+	NewCommodityClass->SetField("base-price", BasePrice);
+	NewCommodityClass->SetField("space-requirement", SpaceRequirement);
 	NewCommodityClass->SetVisualizationPrototype(VisualizationPrototype);
 }
 
@@ -610,13 +610,13 @@ static void ReadGeneratorClass(Arxx::Reference & Reference, ClassManager< Genera
 	
 	Reader >> Name >> Description >> BasePrice >> SpaceRequirement >> VisualizationPrototype >> EnergyProvisionPerSecond >> SlotClassIdentifier;
 	
-	NewGeneratorClass->SetName(Name);
-	NewGeneratorClass->SetDescription(Description);
-	NewGeneratorClass->SetBasePrice(BasePrice);
-	NewGeneratorClass->SetSpaceRequirement(SpaceRequirement);
+	NewGeneratorClass->SetField("name", Name);
+	NewGeneratorClass->SetField("description", Description);
+	NewGeneratorClass->SetField("base-price", BasePrice);
+	NewGeneratorClass->SetField("space-requirement", SpaceRequirement);
 	NewGeneratorClass->SetVisualizationPrototype(VisualizationPrototype);
-	NewGeneratorClass->SetEnergyProvisionPerSecond(EnergyProvisionPerSecond);
-	NewGeneratorClass->SetSlotClassIdentifier(SlotClassIdentifier);
+	NewGeneratorClass->SetField("energy-provision-per-second", EnergyProvisionPerSecond);
+	NewGeneratorClass->SetField("slot-class-identifier", SlotClassIdentifier);
 }
 
 static void ReadMesh(Arxx::Reference & Reference)
@@ -1228,15 +1228,15 @@ static void ReadTurretClass(Arxx::Reference & Reference, ClassManager< TurretCla
 	VisualizationPrototype ShotVisualizationPrototype;
 	
 	Reader >> Name >> Description >> BasePrice >> SpaceRequirement >> TurretVisualizationPrototype >> SlotClassIdentifier >> Orientation >> ReloadTime >> EnergyUsagePerShot >> MuzzlePositionPartIdentifier >> MuzzlePositionMarkerIdentifier >> ShotExitSpeed >> ShotDamage >> ShotLifeTime >> ShotVisualizationPrototype;
-	NewTurretClass->SetName(Name);
-	NewTurretClass->SetDescription(Description);
-	NewTurretClass->SetBasePrice(BasePrice);
-	NewTurretClass->SetSpaceRequirement(SpaceRequirement);
+	NewTurretClass->SetField("name", Name);
+	NewTurretClass->SetField("description", Description);
+	NewTurretClass->SetField("base-price", BasePrice);
+	NewTurretClass->SetField("space-requirement", SpaceRequirement);
 	NewTurretClass->SetTurretVisualizationPrototype(TurretVisualizationPrototype);
-	NewTurretClass->SetSlotClassIdentifier(SlotClassIdentifier);
+	NewTurretClass->SetField("slot-class-identifier", SlotClassIdentifier);
 	NewTurretClass->SetOrientation(Orientation);
-	NewTurretClass->SetReloadTime(ReloadTime);
-	NewTurretClass->SetEnergyUsagePerShot(EnergyUsagePerShot);
+	NewTurretClass->SetField("reload-time", ReloadTime);
+	NewTurretClass->SetField("energy-usage-per-shot", EnergyUsagePerShot);
 	
 	auto MuzzlePosition{TurretVisualizationPrototype.GetMarkerPosition(MuzzlePositionPartIdentifier, MuzzlePositionMarkerIdentifier)};
 	
@@ -1245,9 +1245,9 @@ static void ReadTurretClass(Arxx::Reference & Reference, ClassManager< TurretCla
 		throw std::runtime_error("For the weapon '" + Identifier + "', could not find a marker or its position for the muzzle position '" + MuzzlePositionMarkerIdentifier + "' on the part '" + MuzzlePositionPartIdentifier + "'.");
 	}
 	NewTurretClass->SetMuzzlePosition(*MuzzlePosition);
-	NewTurretClass->SetShotExitSpeed(ShotExitSpeed);
-	NewTurretClass->SetShotDamage(ShotDamage);
-	NewTurretClass->SetShotLifeTime(ShotLifeTime);
+	NewTurretClass->SetField("shot-exit-speed", ShotExitSpeed);
+	NewTurretClass->SetField("shot-damage", ShotDamage);
+	NewTurretClass->SetField("shot-life-time", ShotLifeTime);
 	NewTurretClass->SetShotVisualizationPrototype(ShotVisualizationPrototype);
 }
 
@@ -1294,15 +1294,15 @@ static void ReadWeaponClass(Arxx::Reference & Reference, ClassManager< WeaponCla
 	
 	
 	Reader >> Name >> Description >> BasePrice >> SpaceRequirement >> WeaponVisualizationPrototype >> SlotClassIdentifier >> Orientation >> ReloadTime >> EnergyUsagePerShot >> MuzzlePositionPartIdentifier >> MuzzlePositionMarkerIdentifier >> ShotExitSpeed >> ShotDamage >> ShotLifeTime >> ShotVisualizationPrototype;
-	NewWeaponClass->SetName(Name);
-	NewWeaponClass->SetDescription(Description);
-	NewWeaponClass->SetBasePrice(BasePrice);
+	NewWeaponClass->SetField("name", Name);
+	NewWeaponClass->SetField("description", Description);
+	NewWeaponClass->SetField("base-price", BasePrice);
 	NewWeaponClass->SetWeaponVisualizationPrototype(WeaponVisualizationPrototype);
-	NewWeaponClass->SetSlotClassIdentifier(SlotClassIdentifier);
+	NewWeaponClass->SetField("slot-class-identifier", SlotClassIdentifier);
 	NewWeaponClass->SetOrientation(Orientation);
-	NewWeaponClass->SetReloadTime(ReloadTime);
-	NewWeaponClass->SetSpaceRequirement(static_cast< std::uint32_t >(SpaceRequirement));
-	NewWeaponClass->SetEnergyUsagePerShot(EnergyUsagePerShot);
+	NewWeaponClass->SetField("reload-time", ReloadTime);
+	NewWeaponClass->SetField("space-requirement", SpaceRequirement);
+	NewWeaponClass->SetField("energy-usage-per-shot", EnergyUsagePerShot);
 	
 	auto MuzzlePosition{WeaponVisualizationPrototype.GetMarkerPosition(MuzzlePositionPartIdentifier, MuzzlePositionMarkerIdentifier)};
 	
@@ -1311,8 +1311,8 @@ static void ReadWeaponClass(Arxx::Reference & Reference, ClassManager< WeaponCla
 		throw std::runtime_error("For the weapon '" + Identifier + "', could not find a marker or its position for the muzzle position '" + MuzzlePositionMarkerIdentifier + "' on the part '" + MuzzlePositionPartIdentifier + "'.");
 	}
 	NewWeaponClass->SetMuzzlePosition(*MuzzlePosition);
-	NewWeaponClass->SetShotExitSpeed(ShotExitSpeed);
-	NewWeaponClass->SetShotDamage(ShotDamage);
-	NewWeaponClass->SetShotLifeTime(ShotLifeTime);
+	NewWeaponClass->SetField("shot-exit-speed", ShotExitSpeed);
+	NewWeaponClass->SetField("shot-damage", ShotDamage);
+	NewWeaponClass->SetField("shot-life-time", ShotLifeTime);
 	NewWeaponClass->SetShotVisualizationPrototype(ShotVisualizationPrototype);
 }

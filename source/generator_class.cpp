@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2009  Hagen Möbius
+ * Copyright (C) 2009-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,16 +17,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include <assert.h>
+#include <cassert>
 
 #include "generator_class.h"
 #include "visualization_prototype.h"
 
 GeneratorClass::GeneratorClass(const std::string & Identifier) :
-	_BasePrice(0),
-	_EnergyProvisionPerSecond(0.0f),
-	_Identifier(Identifier),
-	_SpaceRequirement(0),
+	Template("generator", Identifier),
 	_VisualizationPrototype(nullptr)
 {
 }
