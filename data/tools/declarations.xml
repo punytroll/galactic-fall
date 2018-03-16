@@ -224,8 +224,7 @@
 		<float identifier="forward-fuel"/>
 		<float identifier="turn-fuel"/>
 		<float identifier="hull"/>
-		<string identifier="exhaust-marker-part-identifier"/>
-		<string identifier="exhaust-marker-identifier"/>
+		<marker-reference identifier="exhaust-position"/>
 		<float identifier="exhaust-radius"/>
 		<collection identifier="slots" element-type="slot"/>
 	</ship-class>

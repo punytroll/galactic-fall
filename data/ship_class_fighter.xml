@@ -93,8 +93,10 @@
 	<forward-fuel>0.012</forward-fuel>
 	<turn-fuel>0.003</turn-fuel>
 	<hull>64</hull>
-	<exhaust-marker-part-identifier>hull</exhaust-marker-part-identifier>
-	<exhaust-marker-identifier>exhaust</exhaust-marker-identifier>
+	<exhaust-position>
+		<part-identifier>hull</part-identifier>
+		<marker-identifier>exhaust</marker-identifier>
+	</exhaust-position>
 	<exhaust-radius>0.3</exhaust-radius>
 	<slots>
 		<slot>
