@@ -236,7 +236,7 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		auto NewShip(new Ship());
 		
 		// set up type specific things
-		NewShip->SetExhaustOffset(ShipClass->GetExhaustOffset());
+		NewShip->SetExhaustOffset(ShipClass->GetFieldAsVector3f("exhaust-offset"));
 		NewShip->SetExhaustRadius(ShipClass->GetFieldAsFloat("exhaust-radius"));
 		NewShip->SetFuelCapacity(ShipClass->GetFieldAsFloat("fuel-capacity"));
 		NewShip->SetFuelNeededToAccelerate(ShipClass->GetFieldAsFloat("forward-fuel"));
@@ -252,7 +252,7 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		
 		auto EngineGlowParticleSystem(CreateParticleSystem("engine_glow"));
 		
-		EngineGlowParticleSystem->SetPosition(Vector3f(ShipClass->GetExhaustOffset()));
+		EngineGlowParticleSystem->SetPosition(ShipClass->GetFieldAsVector3f("exhaust-offset"));
 		NewShip->SetEngineGlowParticleSystem(EngineGlowParticleSystem);
 		// set up aspects
 		// set up name aspect
