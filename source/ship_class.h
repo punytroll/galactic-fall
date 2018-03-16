@@ -38,12 +38,10 @@ public:
 	// destructor
 	virtual ~ShipClass(void);
 	// getters
-	const Vector3f & GetExhaustOffset(void) const;
 	const std::string & GetIdentifier(void) const;
 	const std::map< std::string, Slot * > & GetSlots(void) const;
 	const VisualizationPrototype * GetVisualizationPrototype(void) const;
 	// setters
-	void SetExhaustOffset(const Vector3f & ExhaustOffset);
 	void SetVisualizationPrototype(const VisualizationPrototype & VisualizationPrototype);
 	
 	/**
@@ -51,15 +49,9 @@ public:
 	 **/
 	bool AddSlot(const std::string & SlotIdentifier, Slot * Slot);
 private:
-	Vector3f _ExhaustOffset;
 	std::map< std::string, Slot * > _Slots;
 	VisualizationPrototype * _VisualizationPrototype;
 };
-
-inline const Vector3f & ShipClass::GetExhaustOffset(void) const
-{
-	return _ExhaustOffset;
-}
 
 inline const std::string & ShipClass::GetIdentifier(void) const
 {
@@ -74,11 +66,6 @@ inline const std::map< std::string, Slot * > & ShipClass::GetSlots(void) const
 inline const VisualizationPrototype * ShipClass::GetVisualizationPrototype(void) const
 {
 	return _VisualizationPrototype;
-}
-
-inline void ShipClass::SetExhaustOffset(const Vector3f & ExhaustOffset)
-{
-	_ExhaustOffset = ExhaustOffset;
 }
 
 #endif

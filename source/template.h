@@ -24,6 +24,8 @@
 #include <string>
 #include <unordered_map>
 
+#include <algebra/vector3f.h>
+
 class Template
 {
 public:
@@ -35,6 +37,7 @@ public:
 	float GetFieldAsFloat(const std::string & FieldIdentifier) const;
 	const std::string & GetFieldAsString(const std::string & FieldIdentifier) const;
 	std::uint32_t GetFieldAsUnsignedInteger32Bit(const std::string & FieldIdentifier) const;
+	const Vector3f & GetFieldAsVector3f(const std::string & FieldIdentifier) const;
 	const std::string & GetSubTypeIdentifier(void) const;
 	const std::string & GetTypeIdentifier(void) const;
 	// setters

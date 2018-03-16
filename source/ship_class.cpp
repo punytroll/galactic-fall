@@ -25,7 +25,6 @@
 
 ShipClass::ShipClass(const std::string & Identifier) :
 	Template("ship", Identifier),
-	_ExhaustOffset(Vector3f::CreateZero()),
 	_VisualizationPrototype(nullptr)
 {
 }

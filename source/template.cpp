@@ -48,3 +48,8 @@ std::uint32_t Template::GetFieldAsUnsignedInteger32Bit(const std::string & Field
 {
 	return std::experimental::any_cast< std::uint32_t >(_Fields.at(FieldIdentifier));
 }
+
+const Vector3f & Template::GetFieldAsVector3f(const std::string & FieldIdentifier) const
+{
+	return std::experimental::any_cast< const Vector3f & >(_Fields.at(FieldIdentifier));
+}

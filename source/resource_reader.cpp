@@ -1016,7 +1016,7 @@ static void ReadShipClass(Arxx::Reference & Reference, ClassManager< ShipClass >
 	{
 		throw std::runtime_error("For the ship '" + Identifier + "', could not find a marker or its position for the exhaust position '" + ExhaustMarkerIdentifier + "' on the part '" + ExhaustMarkerPartIdentifier + "'.");
 	}
-	NewShipClass->SetExhaustOffset(*ExhaustPosition);
+	NewShipClass->SetField("exhaust-offset", *ExhaustPosition);
 	NewShipClass->SetField("exhaust-radius", ExhaustRadius);
 	for(auto SlotIndex = 0ul; SlotIndex < SlotCount; ++SlotIndex)
 	{
