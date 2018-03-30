@@ -34,21 +34,11 @@ public:
 	~AmmunitionClass(void);
 	// getters
 	const std::string & GetIdentifier(void) const;
-	const VisualizationPrototype * GetVisualizationPrototype(void) const;
-	// setters
-	void SetVisualizationPrototype(const VisualizationPrototype & VisualizationPrototype);
-private:
-	VisualizationPrototype * _VisualizationPrototype;
 };
 
 inline const std::string & AmmunitionClass::GetIdentifier(void) const
 {
 	return GetSubTypeIdentifier();
-}
-
-inline const VisualizationPrototype * AmmunitionClass::GetVisualizationPrototype(void) const
-{
-	return _VisualizationPrototype;
 }
 
 #endif

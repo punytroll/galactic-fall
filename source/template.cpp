@@ -18,6 +18,7 @@
 **/
 
 #include "template.h"
+#include "visualization_prototype.h"
 
 Template::Template(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier) :
 	_SubTypeIdentifier(SubTypeIdentifier),
@@ -52,4 +53,9 @@ std::uint32_t Template::GetFieldAsUnsignedInteger32Bit(const std::string & Field
 const Vector3f & Template::GetFieldAsVector3f(const std::string & FieldIdentifier) const
 {
 	return std::experimental::any_cast< const Vector3f & >(_Fields.at(FieldIdentifier));
+}
+
+const VisualizationPrototype & Template::GetFieldAsVisualizationPrototype(const std::string & FieldIdentifier) const
+{
+	return std::experimental::any_cast< const VisualizationPrototype & >(_Fields.at(FieldIdentifier));
 }
