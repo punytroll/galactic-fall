@@ -27,9 +27,7 @@
 
 #include <string_cast/string_cast.h>
 
-#include "ammunition_class.h"
 #include "arx_types.h"
-#include "battery_class.h"
 #include "buffer_reading.h"
 #include "class_manager.h"
 #include "commodity_class.h"
@@ -70,8 +68,8 @@
 
 static Arxx::Item * Resolve(Arxx::Reference & Reference);
 
-static void ReadAmmunitionClass(Arxx::Reference & Reference, ClassManager< AmmunitionClass > * AmmunitionClassManager);
-static void ReadBatteryClass(Arxx::Reference & Reference, ClassManager< BatteryClass > * BatteryClassManager);
+static void ReadAmmunitionClass(Arxx::Reference & Reference, ClassManager< Template > * AmmunitionClassManager);
+static void ReadBatteryClass(Arxx::Reference & Reference, ClassManager< Template > * BatteryClassManager);
 static void ReadCommodityClass(Arxx::Reference & Reference, ClassManager< CommodityClass > * CommodityClassManager);
 static void ReadFaction(Arxx::Reference & Reference, Galaxy * Galaxy, std::list< std::tuple< std::string, std::string, float > > & FactionStandings);
 static void ReadGeneratorClass(Arxx::Reference & Reference, ClassManager< GeneratorClass > * GeneratorClassManager);
@@ -176,12 +174,12 @@ void ResourceReader::_ReadItems(Arxx::Structure::Relation & Relation, std::funct
 	}
 }
 
-void ResourceReader::ReadAmmunitionClasses(ClassManager< AmmunitionClass > * AmmunitionClassManager)
+void ResourceReader::ReadAmmunitionClasses(ClassManager< Template > * AmmunitionClassManager)
 {
 	_ReadItems("/Ammunition Classes", std::bind(ReadAmmunitionClass, std::placeholders::_1, AmmunitionClassManager));
 }
 
-void ResourceReader::ReadBatteryClasses(ClassManager< BatteryClass > * BatteryClassManager)
+void ResourceReader::ReadBatteryClasses(ClassManager< Template > * BatteryClassManager)
 {
 	_ReadItems("/Battery Classes", std::bind(ReadBatteryClass, std::placeholders::_1, BatteryClassManager));
 }
@@ -406,7 +404,7 @@ std::string ResourceReader::ReadSavegameFromScenarioPath(const std::string & Sce
 	return Result;
 }
 
-static void ReadAmmunitionClass(Arxx::Reference & Reference, ClassManager< AmmunitionClass > * AmmunitionClassManager)
+static void ReadAmmunitionClass(Arxx::Reference & Reference, ClassManager< Template > * AmmunitionClassManager)
 {
 	auto Item(Resolve(Reference));
 	
@@ -424,7 +422,7 @@ static void ReadAmmunitionClass(Arxx::Reference & Reference, ClassManager< Ammun
 	
 	Reader >> Identifier;
 	
-	auto NewAmmunitionClass(AmmunitionClassManager->Create(Identifier));
+	auto NewAmmunitionClass(AmmunitionClassManager->Create("ammunition", Identifier));
 	
 	if(NewAmmunitionClass == nullptr)
 	{
@@ -448,7 +446,7 @@ static void ReadAmmunitionClass(Arxx::Reference & Reference, ClassManager< Ammun
 	NewAmmunitionClass->SetField("cartridge-size", CartridgeSize);
 }
 
-static void ReadBatteryClass(Arxx::Reference & Reference, ClassManager< BatteryClass > * BatteryClassManager)
+static void ReadBatteryClass(Arxx::Reference & Reference, ClassManager< Template > * BatteryClassManager)
 {
 	auto Item(Resolve(Reference));
 	
@@ -466,7 +464,7 @@ static void ReadBatteryClass(Arxx::Reference & Reference, ClassManager< BatteryC
 	
 	Reader >> Identifier;
 	
-	auto NewBatteryClass(BatteryClassManager->Create(Identifier));
+	auto NewBatteryClass(BatteryClassManager->Create("battery", Identifier));
 	
 	if(NewBatteryClass == nullptr)
 	{

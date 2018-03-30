@@ -25,12 +25,11 @@
 template< class Class >
 class ClassManager;
 
-class AmmunitionClass;
-class BatteryClass;
 class CommodityClass;
 class GeneratorClass;
 class Object;
 class ShipClass;
+class Template;
 class TurretClass;
 class VisualizationPrototype;
 class WeaponClass;
@@ -48,8 +47,8 @@ public:
 	const std::string & GetName(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier) const;
 	std::uint32_t GetSpaceRequirement(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier) const;
 	const VisualizationPrototype * GetVisualizationPrototype(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier) const;
-	ClassManager< AmmunitionClass > * GetAmmunitionClassManager(void);
-	ClassManager< BatteryClass > * GetBatteryClassManager(void);
+	ClassManager< Template > * GetAmmunitionClassManager(void);
+	ClassManager< Template > * GetBatteryClassManager(void);
 	ClassManager< CommodityClass > * GetCommodityClassManager(void);
 	ClassManager< GeneratorClass > * GetGeneratorClassManager(void);
 	ClassManager< ShipClass > * GetShipClassManager(void);
@@ -57,8 +56,8 @@ public:
 	ClassManager< WeaponClass > * GetWeaponClassManager(void);
 	bool HasClass(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier) const;
 private:
-	ClassManager< AmmunitionClass > * _AmmunitionClassManager;
-	ClassManager< BatteryClass > * _BatteryClassManager;
+	ClassManager< Template > * _AmmunitionClassManager;
+	ClassManager< Template > * _BatteryClassManager;
 	ClassManager< CommodityClass > * _CommodityClassManager;
 	ClassManager< GeneratorClass > * _GeneratorClassManager;
 	ClassManager< ShipClass > * _ShipClassManager;
@@ -66,12 +65,12 @@ private:
 	ClassManager< WeaponClass > * _WeaponClassManager;
 };
 
-inline ClassManager< AmmunitionClass > * ObjectFactory::GetAmmunitionClassManager(void)
+inline ClassManager< Template > * ObjectFactory::GetAmmunitionClassManager(void)
 {
 	return _AmmunitionClassManager;
 }
 
-inline ClassManager< BatteryClass > * ObjectFactory::GetBatteryClassManager(void)
+inline ClassManager< Template > * ObjectFactory::GetBatteryClassManager(void)
 {
 	return _BatteryClassManager;
 }
