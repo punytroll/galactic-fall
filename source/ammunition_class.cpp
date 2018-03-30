@@ -20,7 +20,6 @@
 #include <cassert>
 
 #include "ammunition_class.h"
-#include "visualization_prototype.h"
 
 AmmunitionClass::AmmunitionClass(const std::string & Identifier) :
 	Template("ammunition", Identifier)

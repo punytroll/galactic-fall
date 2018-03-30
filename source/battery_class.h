@@ -24,8 +24,6 @@
 
 #include "template.h"
 
-class VisualizationPrototype;
-
 class BatteryClass : public Template
 {
 public:
@@ -34,21 +32,11 @@ public:
 	~BatteryClass(void);
 	// getters
 	const std::string & GetIdentifier(void) const;
-	const VisualizationPrototype * GetVisualizationPrototype(void) const;
-	// setters
-	void SetVisualizationPrototype(const VisualizationPrototype & VisualizationPrototype);
-private:
-	VisualizationPrototype * _VisualizationPrototype;
 };
 
 inline const std::string & BatteryClass::GetIdentifier(void) const
 {
 	return GetSubTypeIdentifier();
-}
-
-inline const VisualizationPrototype * BatteryClass::GetVisualizationPrototype(void) const
-{
-	return _VisualizationPrototype;
 }
 
 #endif

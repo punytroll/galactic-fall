@@ -717,7 +717,7 @@ const VisualizationPrototype * ObjectFactory::GetVisualizationPrototype(const st
 		
 		assert(BatteryClass != nullptr);
 		
-		return BatteryClass->GetVisualizationPrototype();
+		return &(BatteryClass->GetFieldAsVisualizationPrototype("visualization-prototype"));
 	}
 	else if(TypeIdentifier == "commodity")
 	{

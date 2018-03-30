@@ -24,8 +24,6 @@
 
 #include "template.h"
 
-class VisualizationPrototype;
-
 class AmmunitionClass : public Template
 {
 public:
