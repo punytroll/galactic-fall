@@ -36,7 +36,6 @@ namespace Graphics
 template< class Class >
 class ClassManager;
 
-class AmmunitionClass;
 class CommodityManager;
 class Galaxy;
 class GeneratorClass;
@@ -53,8 +52,8 @@ public:
 	ResourceReader(void);
 	~ResourceReader(void);
 	bool LoadArchive(const std::string & Path);
-	void ReadAmmunitionClasses(ClassManager< AmmunitionClass > * AmmunitionClassManager);
-	void ReadBatteryClasses(ClassManager< BatteryClass > * BatteryClassManager);
+	void ReadAmmunitionClasses(ClassManager< Template > * AmmunitionClassManager);
+	void ReadBatteryClasses(ClassManager< Template > * BatteryClassManager);
 	void ReadCommodityClasses(ClassManager< CommodityClass > * CommodityClassManager);
 	Galaxy * ReadGalaxy(const std::string & GalaxyIdentifier);
 	void ReadGeneratorClasses(ClassManager< GeneratorClass > * GeneratorClassManager);

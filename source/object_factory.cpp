@@ -20,9 +20,7 @@
 #include <stdexcept>
 
 #include "ammunition.h"
-#include "ammunition_class.h"
 #include "battery.h"
-#include "battery_class.h"
 #include "character.h"
 #include "class_manager.h"
 #include "command_mind.h"
@@ -63,8 +61,8 @@
 Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSystemSubTypeIdentifier);
 
 ObjectFactory::ObjectFactory(void) :
-	_AmmunitionClassManager(new ClassManager< AmmunitionClass >()),
-	_BatteryClassManager(new ClassManager< BatteryClass >()),
+	_AmmunitionClassManager(new ClassManager< Template >()),
+	_BatteryClassManager(new ClassManager< Template >()),
 	_CommodityClassManager(new ClassManager< CommodityClass >()),
 	_GeneratorClassManager(new ClassManager< GeneratorClass >()),
 	_ShipClassManager(new ClassManager< ShipClass >()),

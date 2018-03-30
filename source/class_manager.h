@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2008  Hagen Möbius
+ * Copyright (C) 2008-2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -65,6 +65,17 @@ public:
 		ClassType * NewClass(new ClassType(Identifier));
 		
 		m_Classes[NewClass->GetIdentifier()] = NewClass;
+		
+		return NewClass;
+	}
+	
+	ClassType * Create(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier)
+	{
+		assert(m_Classes.find(SubTypeIdentifier) == m_Classes.end());
+		
+		auto NewClass{new ClassType{TypeIdentifier, SubTypeIdentifier}};
+		
+		m_Classes[NewClass->GetSubTypeIdentifier()] = NewClass;
 		
 		return NewClass;
 	}
