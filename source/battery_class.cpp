@@ -20,22 +20,12 @@
 #include <cassert>
 
 #include "battery_class.h"
-#include "visualization_prototype.h"
 
 BatteryClass::BatteryClass(const std::string & Identifier) :
-	Template("battery", Identifier),
-	_VisualizationPrototype(nullptr)
+	Template("battery", Identifier)
 {
 }
 
 BatteryClass::~BatteryClass(void)
 {
-	delete _VisualizationPrototype;
-	_VisualizationPrototype = nullptr;
-}
-
-void BatteryClass::SetVisualizationPrototype(const VisualizationPrototype & NewVisualizationPrototype)
-{
-	delete _VisualizationPrototype;
-	_VisualizationPrototype = new VisualizationPrototype(NewVisualizationPrototype);
 }

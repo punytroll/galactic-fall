@@ -486,7 +486,7 @@ static void ReadBatteryClass(Arxx::Reference & Reference, ClassManager< BatteryC
 	NewBatteryClass->SetField("description", Description);
 	NewBatteryClass->SetField("base-price", BasePrice);
 	NewBatteryClass->SetField("space-requirement", SpaceRequirement);
-	NewBatteryClass->SetVisualizationPrototype(VisualizationPrototype);
+	NewBatteryClass->SetField("visualization-prototype", VisualizationPrototype);
 	NewBatteryClass->SetField("energy-capacity", EnergyCapacity);
 	NewBatteryClass->SetField("slot-class-identifier", SlotClassIdentifier);
 }
