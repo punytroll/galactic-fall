@@ -114,7 +114,7 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		NewAmmunition->GetAspectName()->SetName(AmmunitionClass->GetFieldAsString("name"));
 		// set up physical aspect
 		assert(NewAmmunition->GetAspectPhysical() != nullptr);
-		NewAmmunition->GetAspectPhysical()->SetRadialSize(AmmunitionClass->GetVisualizationPrototype()->GetModel()->GetRadialSize());
+		NewAmmunition->GetAspectPhysical()->SetRadialSize(AmmunitionClass->GetFieldAsVisualizationPrototype("visualization-prototype").GetModel()->GetRadialSize());
 		NewAmmunition->GetAspectPhysical()->SetSpaceRequirement(AmmunitionClass->GetFieldAsUnsignedInteger32Bit("space-requirement"));
 		Result = NewAmmunition;
 	}
@@ -707,7 +707,7 @@ const VisualizationPrototype * ObjectFactory::GetVisualizationPrototype(const st
 		
 		assert(AmmunitionClass != nullptr);
 		
-		return AmmunitionClass->GetVisualizationPrototype();
+		return &(AmmunitionClass->GetFieldAsVisualizationPrototype("visualization-prototype"));
 	}
 	else if(TypeIdentifier == "battery")
 	{

@@ -444,7 +444,7 @@ static void ReadAmmunitionClass(Arxx::Reference & Reference, ClassManager< Ammun
 	NewAmmunitionClass->SetField("description", Description);
 	NewAmmunitionClass->SetField("base-price", BasePrice);
 	NewAmmunitionClass->SetField("space-requirement", SpaceRequirement);
-	NewAmmunitionClass->SetVisualizationPrototype(VisualizationPrototype);
+	NewAmmunitionClass->SetField("visualization-prototype", VisualizationPrototype);
 	NewAmmunitionClass->SetField("cartridge-size", CartridgeSize);
 }
 

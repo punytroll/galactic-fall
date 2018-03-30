@@ -23,19 +23,10 @@
 #include "visualization_prototype.h"
 
 AmmunitionClass::AmmunitionClass(const std::string & Identifier) :
-	Template("ammunition", Identifier),
-	_VisualizationPrototype(nullptr)
+	Template("ammunition", Identifier)
 {
 }
 
 AmmunitionClass::~AmmunitionClass(void)
 {
-	delete _VisualizationPrototype;
-	_VisualizationPrototype = nullptr;
-}
-
-void AmmunitionClass::SetVisualizationPrototype(const VisualizationPrototype & NewVisualizationPrototype)
-{
-	delete _VisualizationPrototype;
-	_VisualizationPrototype = new VisualizationPrototype(NewVisualizationPrototype);
 }
