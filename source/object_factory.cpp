@@ -161,11 +161,11 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		NewCommodity->GetAspectName()->SetName(CommodityClass->GetFieldAsString("name"));
 		// set up physical aspect
 		assert(NewCommodity->GetAspectPhysical() != nullptr);
-		NewCommodity->GetAspectPhysical()->SetRadialSize(CommodityClass->GetVisualizationPrototype()->GetModel()->GetRadialSize());
+		NewCommodity->GetAspectPhysical()->SetRadialSize(CommodityClass->GetFieldAsVisualizationPrototype("visualization-prototype").GetModel()->GetRadialSize());
 		NewCommodity->GetAspectPhysical()->SetSpaceRequirement(CommodityClass->GetFieldAsUnsignedInteger32Bit("space-requirement"));
 		// set up visualization aspect
 		assert(NewCommodity->GetAspectVisualization() != nullptr);
-		NewCommodity->GetAspectVisualization()->SetVisualizationPrototype(CommodityClass->GetVisualizationPrototype());
+		NewCommodity->GetAspectVisualization()->SetVisualizationPrototype(CommodityClass->GetFieldAsVisualizationPrototype("visualization-prototype"));
 		Result = NewCommodity;
 	}
 	else if(TypeIdentifier == "faction")
@@ -270,11 +270,11 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		}
 		// set up physical aspect
 		assert(NewShip->GetAspectPhysical() != nullptr);
-		NewShip->GetAspectPhysical()->SetRadialSize(ShipClass->GetVisualizationPrototype()->GetModel()->GetRadialSize());
+		NewShip->GetAspectPhysical()->SetRadialSize(ShipClass->GetFieldAsVisualizationPrototype("visualization-prototype").GetModel()->GetRadialSize());
 		NewShip->GetAspectPhysical()->SetSpaceRequirement(ShipClass->GetFieldAsUnsignedInteger32Bit("space-requirement"));
 		// set up visualization aspect
 		assert(NewShip->GetAspectVisualization() != nullptr);
-		NewShip->GetAspectVisualization()->SetVisualizationPrototype(ShipClass->GetVisualizationPrototype());
+		NewShip->GetAspectVisualization()->SetVisualizationPrototype(ShipClass->GetFieldAsVisualizationPrototype("visualization-prototype"));
 		
 		auto & PartStyles(NewShip->GetAspectVisualization()->GetVisualizationPrototype()->GetPartStyles());
 		
@@ -324,11 +324,11 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		auto NewTurret(new Turret());
 		
 		NewTurret->SetEnergyUsagePerShot(TurretClass->GetFieldAsFloat("energy-usage-per-shot"));
-		NewTurret->SetMuzzlePosition(TurretClass->GetMuzzlePosition());
+		NewTurret->SetMuzzlePosition(TurretClass->GetFieldAsVector3f("muzzle-position"));
 		NewTurret->SetShotDamage(TurretClass->GetFieldAsFloat("shot-damage"));
 		NewTurret->SetShotExitSpeed(TurretClass->GetFieldAsFloat("shot-exit-speed"));
 		NewTurret->SetShotLifeTime(TurretClass->GetFieldAsFloat("shot-life-time"));
-		NewTurret->SetShotVisualizationPrototype(TurretClass->GetShotVisualizationPrototype());
+		NewTurret->SetShotVisualizationPrototype(TurretClass->GetFieldAsVisualizationPrototype("shot-visualization-prototype"));
 		NewTurret->SetReloadTime(TurretClass->GetFieldAsFloat("reload-time"));
 		// set up accessory aspect
 		assert(NewTurret->GetAspectAccessory() != nullptr);
@@ -344,7 +344,7 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		NewTurret->GetAspectPosition()->SetOrientation(TurretClass->GetOrientation());
 		// set up visualization aspect
 		assert(NewTurret->GetAspectVisualization() != nullptr);
-		NewTurret->GetAspectVisualization()->SetVisualizationPrototype(new VisualizationPrototype(TurretClass->GetTurretVisualizationPrototype()));
+		NewTurret->GetAspectVisualization()->SetVisualizationPrototype(TurretClass->GetFieldAsVisualizationPrototype("visualization-prototype"));
 		Result = NewTurret;
 	}
 	else if(TypeIdentifier == "weapon")
@@ -358,11 +358,11 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		auto NewWeapon(new Weapon());
 		
 		NewWeapon->SetEnergyUsagePerShot(WeaponClass->GetFieldAsFloat("energy-usage-per-shot"));
-		NewWeapon->SetMuzzlePosition(WeaponClass->GetMuzzlePosition());
+		NewWeapon->SetMuzzlePosition(WeaponClass->GetFieldAsVector3f("muzzle-position"));
 		NewWeapon->SetShotDamage(WeaponClass->GetFieldAsFloat("shot-damage"));
 		NewWeapon->SetShotExitSpeed(WeaponClass->GetFieldAsFloat("shot-exit-speed"));
 		NewWeapon->SetShotLifeTime(WeaponClass->GetFieldAsFloat("shot-life-time"));
-		NewWeapon->SetShotVisualizationPrototype(WeaponClass->GetShotVisualizationPrototype());
+		NewWeapon->SetShotVisualizationPrototype(WeaponClass->GetFieldAsVisualizationPrototype("shot-visualization-prototype"));
 		NewWeapon->SetReloadTime(WeaponClass->GetFieldAsFloat("reload-time"));
 		// set up accessory aspect
 		assert(NewWeapon->GetAspectAccessory() != nullptr);
@@ -378,7 +378,7 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		NewWeapon->GetAspectPosition()->SetOrientation(WeaponClass->GetOrientation());
 		// set up visualization aspect
 		assert(NewWeapon->GetAspectVisualization() != nullptr);
-		NewWeapon->GetAspectVisualization()->SetVisualizationPrototype(WeaponClass->GetWeaponVisualizationPrototype());
+		NewWeapon->GetAspectVisualization()->SetVisualizationPrototype(WeaponClass->GetFieldAsVisualizationPrototype("visualization-prototype"));
 		Result = NewWeapon;
 	}
 	else
@@ -725,7 +725,7 @@ const VisualizationPrototype * ObjectFactory::GetVisualizationPrototype(const st
 		
 		assert(CommodityClass != nullptr);
 		
-		return CommodityClass->GetVisualizationPrototype();
+		return &(CommodityClass->GetFieldAsVisualizationPrototype("visualization-prototype"));
 	}
 	else if(TypeIdentifier == "generator")
 	{
@@ -735,7 +735,7 @@ const VisualizationPrototype * ObjectFactory::GetVisualizationPrototype(const st
 		
 		assert(GeneratorClass != nullptr);
 		
-		return GeneratorClass->GetVisualizationPrototype();
+		return &(GeneratorClass->GetFieldAsVisualizationPrototype("visualization-prototype"));
 	}
 	else if(TypeIdentifier == "ship")
 	{
@@ -745,7 +745,7 @@ const VisualizationPrototype * ObjectFactory::GetVisualizationPrototype(const st
 		
 		assert(ShipClass != nullptr);
 		
-		return ShipClass->GetVisualizationPrototype();
+		return &(ShipClass->GetFieldAsVisualizationPrototype("visualization-prototype"));
 	}
 	else if(TypeIdentifier == "turret")
 	{
@@ -755,7 +755,7 @@ const VisualizationPrototype * ObjectFactory::GetVisualizationPrototype(const st
 		
 		assert(TurretClass != nullptr);
 		
-		return TurretClass->GetTurretVisualizationPrototype();
+		return &(TurretClass->GetFieldAsVisualizationPrototype("visualization-prototype"));
 	}
 	else if(TypeIdentifier == "weapon")
 	{
@@ -763,7 +763,7 @@ const VisualizationPrototype * ObjectFactory::GetVisualizationPrototype(const st
 		
 		auto WeaponClass(_WeaponClassManager->Get(SubTypeIdentifier));
 		
-		return WeaponClass->GetWeaponVisualizationPrototype();
+		return &(WeaponClass->GetFieldAsVisualizationPrototype("visualization-prototype"));
 	}
 	else
 	{

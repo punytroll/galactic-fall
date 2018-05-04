@@ -23,29 +23,6 @@
 #include "turret_class.h"
 
 TurretClass::TurretClass(const std::string & Identifier) :
-	Template("turret", Identifier),
-	_MuzzlePosition(Vector3f::CreateZero()),
-	_ShotVisualizationPrototype(nullptr),
-	_TurretVisualizationPrototype(nullptr)
+	Template("turret", Identifier)
 {
-}
-
-TurretClass::~TurretClass(void)
-{
-	delete _ShotVisualizationPrototype;
-	_ShotVisualizationPrototype = nullptr;
-	delete _TurretVisualizationPrototype;
-	_TurretVisualizationPrototype = nullptr;
-}
-
-void TurretClass::SetShotVisualizationPrototype(const VisualizationPrototype & ShotVisualizationPrototype)
-{
-	delete _ShotVisualizationPrototype;
-	_ShotVisualizationPrototype = new VisualizationPrototype(ShotVisualizationPrototype);
-}
-
-void TurretClass::SetTurretVisualizationPrototype(const VisualizationPrototype & TurretVisualizationPrototype)
-{
-	delete _TurretVisualizationPrototype;
-	_TurretVisualizationPrototype = new VisualizationPrototype(TurretVisualizationPrototype);
 }

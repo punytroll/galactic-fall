@@ -103,7 +103,7 @@ void Turret::_CalculateMuzzleProperties(Vector3f & MuzzlePosition, Quaternion & 
 	MuzzleDirection.Rotate(MuzzleOrientation);
 }
 
-void Turret::SetShotVisualizationPrototype(const VisualizationPrototype * ShotVisualizationPrototype)
+void Turret::SetShotVisualizationPrototype(const VisualizationPrototype & ShotVisualizationPrototype)
 {
 	delete _ShotVisualizationPrototype;
 	_ShotVisualizationPrototype = new VisualizationPrototype(ShotVisualizationPrototype);

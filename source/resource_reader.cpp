@@ -526,7 +526,7 @@ static void ReadCommodityClass(Arxx::Reference & Reference, ClassManager< Commod
 	NewCommodityClass->SetField("description", Description);
 	NewCommodityClass->SetField("base-price", BasePrice);
 	NewCommodityClass->SetField("space-requirement", SpaceRequirement);
-	NewCommodityClass->SetVisualizationPrototype(VisualizationPrototype);
+	NewCommodityClass->SetField("visualization-prototype", VisualizationPrototype);
 }
 
 static void ReadFaction(Arxx::Reference & Reference, Galaxy * Galaxy, std::list< std::tuple< std::string, std::string, float > > & FactionStandings)
@@ -612,7 +612,7 @@ static void ReadGeneratorClass(Arxx::Reference & Reference, ClassManager< Genera
 	NewGeneratorClass->SetField("description", Description);
 	NewGeneratorClass->SetField("base-price", BasePrice);
 	NewGeneratorClass->SetField("space-requirement", SpaceRequirement);
-	NewGeneratorClass->SetVisualizationPrototype(VisualizationPrototype);
+	NewGeneratorClass->SetField("visualization-prototype", VisualizationPrototype);
 	NewGeneratorClass->SetField("energy-provision-per-second", EnergyProvisionPerSecond);
 	NewGeneratorClass->SetField("slot-class-identifier", SlotClassIdentifier);
 }
@@ -997,7 +997,7 @@ static void ReadShipClass(Arxx::Reference & Reference, ClassManager< ShipClass >
 	NewShipClass->SetField("description", Description);
 	NewShipClass->SetField("base-price", BasePrice);
 	NewShipClass->SetField("space-requirement", SpaceRequirement);
-	NewShipClass->SetVisualizationPrototype(VisualizationPrototype);
+	NewShipClass->SetField("visualization-prototype", VisualizationPrototype);
 	NewShipClass->SetField("fuel-capacity", FuelCapacity);
 	NewShipClass->SetField("forward-thrust", ForwardThrust);
 	NewShipClass->SetField("jump-fuel", JumpFuel);
@@ -1230,7 +1230,7 @@ static void ReadTurretClass(Arxx::Reference & Reference, ClassManager< TurretCla
 	NewTurretClass->SetField("description", Description);
 	NewTurretClass->SetField("base-price", BasePrice);
 	NewTurretClass->SetField("space-requirement", SpaceRequirement);
-	NewTurretClass->SetTurretVisualizationPrototype(TurretVisualizationPrototype);
+	NewTurretClass->SetField("visualization-prototype", TurretVisualizationPrototype);
 	NewTurretClass->SetField("slot-class-identifier", SlotClassIdentifier);
 	NewTurretClass->SetOrientation(Orientation);
 	NewTurretClass->SetField("reload-time", ReloadTime);
@@ -1242,11 +1242,11 @@ static void ReadTurretClass(Arxx::Reference & Reference, ClassManager< TurretCla
 	{
 		throw std::runtime_error("For the weapon '" + Identifier + "', could not find a marker or its position for the muzzle position '" + MuzzlePositionMarkerIdentifier + "' on the part '" + MuzzlePositionPartIdentifier + "'.");
 	}
-	NewTurretClass->SetMuzzlePosition(*MuzzlePosition);
+	NewTurretClass->SetField("muzzle-position", *MuzzlePosition);
 	NewTurretClass->SetField("shot-exit-speed", ShotExitSpeed);
 	NewTurretClass->SetField("shot-damage", ShotDamage);
 	NewTurretClass->SetField("shot-life-time", ShotLifeTime);
-	NewTurretClass->SetShotVisualizationPrototype(ShotVisualizationPrototype);
+	NewTurretClass->SetField("shot-visualization-prototype", ShotVisualizationPrototype);
 }
 
 static void ReadWeaponClass(Arxx::Reference & Reference, ClassManager< WeaponClass > * WeaponClassManager)
@@ -1295,7 +1295,7 @@ static void ReadWeaponClass(Arxx::Reference & Reference, ClassManager< WeaponCla
 	NewWeaponClass->SetField("name", Name);
 	NewWeaponClass->SetField("description", Description);
 	NewWeaponClass->SetField("base-price", BasePrice);
-	NewWeaponClass->SetWeaponVisualizationPrototype(WeaponVisualizationPrototype);
+	NewWeaponClass->SetField("visualization-prototype", WeaponVisualizationPrototype);
 	NewWeaponClass->SetField("slot-class-identifier", SlotClassIdentifier);
 	NewWeaponClass->SetOrientation(Orientation);
 	NewWeaponClass->SetField("reload-time", ReloadTime);
@@ -1308,9 +1308,9 @@ static void ReadWeaponClass(Arxx::Reference & Reference, ClassManager< WeaponCla
 	{
 		throw std::runtime_error("For the weapon '" + Identifier + "', could not find a marker or its position for the muzzle position '" + MuzzlePositionMarkerIdentifier + "' on the part '" + MuzzlePositionPartIdentifier + "'.");
 	}
-	NewWeaponClass->SetMuzzlePosition(*MuzzlePosition);
+	NewWeaponClass->SetField("muzzle-position", *MuzzlePosition);
 	NewWeaponClass->SetField("shot-exit-speed", ShotExitSpeed);
 	NewWeaponClass->SetField("shot-damage", ShotDamage);
 	NewWeaponClass->SetField("shot-life-time", ShotLifeTime);
-	NewWeaponClass->SetShotVisualizationPrototype(ShotVisualizationPrototype);
+	NewWeaponClass->SetField("shot-visualization-prototype", ShotVisualizationPrototype);
 }

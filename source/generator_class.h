@@ -24,31 +24,18 @@
 
 #include "template.h"
 
-class VisualizationPrototype;
-
 class GeneratorClass : public Template
 {
 public:
 	// constructor and destructor
 	GeneratorClass(const std::string & Identifier);
-	~GeneratorClass(void);
 	// getters
 	const std::string & GetIdentifier(void) const;
-	const VisualizationPrototype * GetVisualizationPrototype(void) const;
-	// setters
-	void SetVisualizationPrototype(const VisualizationPrototype & VisualizationPrototype);
-private:
-	VisualizationPrototype * _VisualizationPrototype;
 };
 
 inline const std::string & GeneratorClass::GetIdentifier(void) const
 {
 	return GetSubTypeIdentifier();
-}
-
-inline const VisualizationPrototype * GeneratorClass::GetVisualizationPrototype(void) const
-{
-	return _VisualizationPrototype;
 }
 
 #endif

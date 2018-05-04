@@ -38,7 +38,7 @@ public:
 	void SetShotDamage(float ShotDamage);
 	void SetShotExitSpeed(float ShotExitSpeed);
 	void SetShotLifeTime(float ShotLifeTime);
-	void SetShotVisualizationPrototype(const VisualizationPrototype * ShotVisualizationPrototype);
+	void SetShotVisualizationPrototype(const VisualizationPrototype & ShotVisualizationPrototype);
 private:
 	// modifiers
 	bool _Update(float Seconds);

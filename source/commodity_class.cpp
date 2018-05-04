@@ -20,22 +20,8 @@
 #include <cassert>
 
 #include "commodity_class.h"
-#include "visualization_prototype.h"
 
 CommodityClass::CommodityClass(const std::string & Identifier) :
-	Template("commodity", Identifier),
-	_VisualizationPrototype(nullptr)
+	Template("commodity", Identifier)
 {
-}
-
-CommodityClass::~CommodityClass(void)
-{
-	delete _VisualizationPrototype;
-	_VisualizationPrototype = nullptr;
-}
-
-void CommodityClass::SetVisualizationPrototype(const VisualizationPrototype & NewVisualizationPrototype)
-{
-	delete _VisualizationPrototype;
-	_VisualizationPrototype = new VisualizationPrototype(NewVisualizationPrototype);
 }

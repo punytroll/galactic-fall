@@ -24,8 +24,7 @@
 #include "visualization_prototype.h"
 
 ShipClass::ShipClass(const std::string & Identifier) :
-	Template("ship", Identifier),
-	_VisualizationPrototype(nullptr)
+	Template("ship", Identifier)
 {
 }
 
@@ -36,8 +35,6 @@ ShipClass::~ShipClass(void)
 		delete _Slots.begin()->second;
 		_Slots.erase(_Slots.begin());
 	}
-	delete _VisualizationPrototype;
-	_VisualizationPrototype = nullptr;
 }
 
 bool ShipClass::AddSlot(const std::string & SlotIdentifier, Slot * Slot)
@@ -52,10 +49,4 @@ bool ShipClass::AddSlot(const std::string & SlotIdentifier, Slot * Slot)
 	{
 		return false;
 	}
-}
-
-void ShipClass::SetVisualizationPrototype(const VisualizationPrototype & NewVisualizationPrototype)
-{
-	delete _VisualizationPrototype;
-	_VisualizationPrototype = new VisualizationPrototype(NewVisualizationPrototype);
 }
