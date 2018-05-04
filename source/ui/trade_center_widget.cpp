@@ -23,7 +23,6 @@
 
 #include "../character.h"
 #include "../commodity.h"
-#include "../commodity_class.h"
 #include "../game_time.h"
 #include "../globals.h"
 #include "../graphics/camera.h"
@@ -50,7 +49,6 @@
 #include "../visualization_prototype.h"
 #include "../visualizations.h"
 #include "../weapon.h"
-#include "../weapon_class.h"
 #include "key_event.h"
 #include "label.h"
 #include "list_box.h"

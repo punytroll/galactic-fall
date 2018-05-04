@@ -20,7 +20,6 @@
 #include <iostream>
 
 #include "commodity.h"
-#include "commodity_class.h"
 #include "globals.h"
 #include "graphics/engine.h"
 #include "graphics/gl.h"
@@ -44,7 +43,6 @@
 #include "visualization_prototype.h"
 #include "visualizations.h"
 #include "weapon.h"
-#include "weapon_class.h"
 
 // This maps from all the Graphics::Nodes to their respective objects.
 std::map< Graphics::Node *, Object * > g_ObjectPerVisualization;
