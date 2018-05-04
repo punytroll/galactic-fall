@@ -40,17 +40,12 @@ public:
 	// getters
 	const std::string & GetIdentifier(void) const;
 	const std::map< std::string, Slot * > & GetSlots(void) const;
-	const VisualizationPrototype * GetVisualizationPrototype(void) const;
-	// setters
-	void SetVisualizationPrototype(const VisualizationPrototype & VisualizationPrototype);
-	
 	/**
 	 * @note Passes memory management responsibility for @a Slot to the ship class.
 	 **/
 	bool AddSlot(const std::string & SlotIdentifier, Slot * Slot);
 private:
 	std::map< std::string, Slot * > _Slots;
-	VisualizationPrototype * _VisualizationPrototype;
 };
 
 inline const std::string & ShipClass::GetIdentifier(void) const
@@ -61,11 +56,6 @@ inline const std::string & ShipClass::GetIdentifier(void) const
 inline const std::map< std::string, Slot * > & ShipClass::GetSlots(void) const
 {
 	return _Slots;
-}
-
-inline const VisualizationPrototype * ShipClass::GetVisualizationPrototype(void) const
-{
-	return _VisualizationPrototype;
 }
 
 #endif

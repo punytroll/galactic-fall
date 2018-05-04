@@ -23,39 +23,21 @@
 #include <string>
 
 #include <algebra/quaternion.h>
-#include <algebra/vector3f.h>
 
 #include "template.h"
-
-class VisualizationPrototype;
-
-namespace Graphics
-{
-	class Model;
-}
 
 class WeaponClass : public Template
 {
 public:
 	// constructor & destructor
 	WeaponClass(const std::string & Identifier);
-	~WeaponClass(void);
 	// getters
 	const std::string & GetIdentifier(void) const;
-	const Vector3f & GetMuzzlePosition(void) const;
 	const Quaternion & GetOrientation(void) const;
-	const VisualizationPrototype * GetShotVisualizationPrototype(void) const;
-	const VisualizationPrototype * GetWeaponVisualizationPrototype(void) const;
 	// setters
-	void SetMuzzlePosition(const Vector3f & MuzzlePosition);
 	void SetOrientation(const Quaternion & Orientation);
-	void SetShotVisualizationPrototype(const VisualizationPrototype & ShotVisualizationPrototype);
-	void SetWeaponVisualizationPrototype(const VisualizationPrototype & WeaponVisualizationPrototype);
 private:
-	Vector3f _MuzzlePosition;
 	Quaternion _Orientation;
-	VisualizationPrototype * _ShotVisualizationPrototype;
-	VisualizationPrototype * _WeaponVisualizationPrototype;
 };
 
 inline const std::string & WeaponClass::GetIdentifier(void) const
@@ -63,29 +45,9 @@ inline const std::string & WeaponClass::GetIdentifier(void) const
 	return GetSubTypeIdentifier();
 }
 
-inline const Vector3f & WeaponClass::GetMuzzlePosition(void) const
-{
-	return _MuzzlePosition;
-}
-
 inline const Quaternion & WeaponClass::GetOrientation(void) const
 {
 	return _Orientation;
-}
-
-inline const VisualizationPrototype * WeaponClass::GetShotVisualizationPrototype(void) const
-{
-	return _ShotVisualizationPrototype;
-}
-
-inline const VisualizationPrototype * WeaponClass::GetWeaponVisualizationPrototype(void) const
-{
-	return _WeaponVisualizationPrototype;
-}
-
-inline void WeaponClass::SetMuzzlePosition(const Vector3f & MuzzlePosition)
-{
-	_MuzzlePosition = MuzzlePosition;
 }
 
 inline void WeaponClass::SetOrientation(const Quaternion & Orientation)

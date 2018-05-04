@@ -19,32 +19,9 @@
 
 #include <cassert>
 
-#include "visualization_prototype.h"
 #include "weapon_class.h"
 
 WeaponClass::WeaponClass(const std::string & Identifier) :
-	Template("weapon", Identifier),
-	_ShotVisualizationPrototype(nullptr),
-	_WeaponVisualizationPrototype(nullptr)
+	Template("weapon", Identifier)
 {
-}
-
-WeaponClass::~WeaponClass(void)
-{
-	delete _ShotVisualizationPrototype;
-	_ShotVisualizationPrototype = nullptr;
-	delete _WeaponVisualizationPrototype;
-	_WeaponVisualizationPrototype = nullptr;
-}
-
-void WeaponClass::SetShotVisualizationPrototype(const VisualizationPrototype & ShotVisualizationPrototype)
-{
-	delete _ShotVisualizationPrototype;
-	_ShotVisualizationPrototype = new VisualizationPrototype(ShotVisualizationPrototype);
-}
-
-void WeaponClass::SetWeaponVisualizationPrototype(const VisualizationPrototype & WeaponVisualizationPrototype)
-{
-	delete _WeaponVisualizationPrototype;
-	_WeaponVisualizationPrototype = new VisualizationPrototype(WeaponVisualizationPrototype);
 }

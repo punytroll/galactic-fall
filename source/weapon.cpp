@@ -73,7 +73,7 @@ Weapon::~Weapon(void)
 	_ShotVisualizationPrototype = nullptr;
 }
 
-void Weapon::SetShotVisualizationPrototype(const VisualizationPrototype * ShotVisualizationPrototype)
+void Weapon::SetShotVisualizationPrototype(const VisualizationPrototype & ShotVisualizationPrototype)
 {
 	delete _ShotVisualizationPrototype;
 	_ShotVisualizationPrototype = new VisualizationPrototype(ShotVisualizationPrototype);

@@ -20,22 +20,8 @@
 #include <cassert>
 
 #include "generator_class.h"
-#include "visualization_prototype.h"
 
 GeneratorClass::GeneratorClass(const std::string & Identifier) :
-	Template("generator", Identifier),
-	_VisualizationPrototype(nullptr)
+	Template("generator", Identifier)
 {
-}
-
-GeneratorClass::~GeneratorClass(void)
-{
-	delete _VisualizationPrototype;
-	_VisualizationPrototype = nullptr;
-}
-
-void GeneratorClass::SetVisualizationPrototype(const VisualizationPrototype & NewVisualizationPrototype)
-{
-	delete _VisualizationPrototype;
-	_VisualizationPrototype = new VisualizationPrototype(NewVisualizationPrototype);
 }
