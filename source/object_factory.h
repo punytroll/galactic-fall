@@ -25,14 +25,10 @@
 template< class Class >
 class ClassManager;
 
-class CommodityClass;
-class GeneratorClass;
 class Object;
 class ShipClass;
 class Template;
-class TurretClass;
 class VisualizationPrototype;
-class WeaponClass;
 
 class ObjectFactory
 {
@@ -49,20 +45,20 @@ public:
 	const VisualizationPrototype * GetVisualizationPrototype(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier) const;
 	ClassManager< Template > * GetAmmunitionClassManager(void);
 	ClassManager< Template > * GetBatteryClassManager(void);
-	ClassManager< CommodityClass > * GetCommodityClassManager(void);
-	ClassManager< GeneratorClass > * GetGeneratorClassManager(void);
+	ClassManager< Template > * GetCommodityClassManager(void);
+	ClassManager< Template > * GetGeneratorClassManager(void);
 	ClassManager< ShipClass > * GetShipClassManager(void);
-	ClassManager< TurretClass > * GetTurretClassManager(void);
-	ClassManager< WeaponClass > * GetWeaponClassManager(void);
+	ClassManager< Template > * GetTurretClassManager(void);
+	ClassManager< Template > * GetWeaponClassManager(void);
 	bool HasClass(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier) const;
 private:
 	ClassManager< Template > * _AmmunitionClassManager;
 	ClassManager< Template > * _BatteryClassManager;
-	ClassManager< CommodityClass > * _CommodityClassManager;
-	ClassManager< GeneratorClass > * _GeneratorClassManager;
+	ClassManager< Template > * _CommodityClassManager;
+	ClassManager< Template > * _GeneratorClassManager;
 	ClassManager< ShipClass > * _ShipClassManager;
-	ClassManager< TurretClass > * _TurretClassManager;
-	ClassManager< WeaponClass > * _WeaponClassManager;
+	ClassManager< Template > * _TurretClassManager;
+	ClassManager< Template > * _WeaponClassManager;
 };
 
 inline ClassManager< Template > * ObjectFactory::GetAmmunitionClassManager(void)
@@ -75,12 +71,12 @@ inline ClassManager< Template > * ObjectFactory::GetBatteryClassManager(void)
 	return _BatteryClassManager;
 }
 
-inline ClassManager< CommodityClass > * ObjectFactory::GetCommodityClassManager(void)
+inline ClassManager< Template > * ObjectFactory::GetCommodityClassManager(void)
 {
 	return _CommodityClassManager;
 }
 
-inline ClassManager< GeneratorClass > * ObjectFactory::GetGeneratorClassManager(void)
+inline ClassManager< Template > * ObjectFactory::GetGeneratorClassManager(void)
 {
 	return _GeneratorClassManager;
 }
@@ -90,12 +86,12 @@ inline ClassManager< ShipClass > * ObjectFactory::GetShipClassManager(void)
 	return _ShipClassManager;
 }
 
-inline ClassManager< TurretClass > * ObjectFactory::GetTurretClassManager(void)
+inline ClassManager< Template > * ObjectFactory::GetTurretClassManager(void)
 {
 	return _TurretClassManager;
 }
 
-inline ClassManager< WeaponClass > * ObjectFactory::GetWeaponClassManager(void)
+inline ClassManager< Template > * ObjectFactory::GetWeaponClassManager(void)
 {
 	return _WeaponClassManager;
 }

@@ -27,7 +27,6 @@
 
 #include "character.h"
 #include "commodity.h"
-#include "commodity_class.h"
 #include "faction.h"
 #include "game_time.h"
 #include "globals.h"

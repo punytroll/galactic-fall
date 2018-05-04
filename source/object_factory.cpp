@@ -25,12 +25,10 @@
 #include "class_manager.h"
 #include "command_mind.h"
 #include "commodity.h"
-#include "commodity_class.h"
 #include "faction.h"
 #include "galaxy.h"
 #include "game_time.h"
 #include "generator.h"
-#include "generator_class.h"
 #include "globals.h"
 #include "graphics/model.h"
 #include "graphics/particle_system.h"
@@ -53,9 +51,7 @@
 #include "storage.h"
 #include "system.h"
 #include "turret.h"
-#include "turret_class.h"
 #include "weapon.h"
-#include "weapon_class.h"
 #include "visualization_prototype.h"
 
 Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSystemSubTypeIdentifier);
@@ -63,11 +59,11 @@ Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSyst
 ObjectFactory::ObjectFactory(void) :
 	_AmmunitionClassManager(new ClassManager< Template >()),
 	_BatteryClassManager(new ClassManager< Template >()),
-	_CommodityClassManager(new ClassManager< CommodityClass >()),
-	_GeneratorClassManager(new ClassManager< GeneratorClass >()),
+	_CommodityClassManager(new ClassManager< Template >()),
+	_GeneratorClassManager(new ClassManager< Template >()),
 	_ShipClassManager(new ClassManager< ShipClass >()),
-	_TurretClassManager(new ClassManager< TurretClass >()),
-	_WeaponClassManager(new ClassManager< WeaponClass >())
+	_TurretClassManager(new ClassManager< Template >()),
+	_WeaponClassManager(new ClassManager< Template >())
 {
 }
 

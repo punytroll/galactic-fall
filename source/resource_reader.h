@@ -54,9 +54,9 @@ public:
 	bool LoadArchive(const std::string & Path);
 	void ReadAmmunitionClasses(ClassManager< Template > * AmmunitionClassManager);
 	void ReadBatteryClasses(ClassManager< Template > * BatteryClassManager);
-	void ReadCommodityClasses(ClassManager< CommodityClass > * CommodityClassManager);
+	void ReadCommodityClasses(ClassManager< Template > * CommodityClassManager);
 	Galaxy * ReadGalaxy(const std::string & GalaxyIdentifier);
-	void ReadGeneratorClasses(ClassManager< GeneratorClass > * GeneratorClassManager);
+	void ReadGeneratorClasses(ClassManager< Template > * GeneratorClassManager);
 	void ReadMeshes(void);
 	void ReadModels(void);
 	void ReadScenarios(ScenarioManager * ScenarioManager);
@@ -64,9 +64,9 @@ public:
 	void ReadShadersAndPrograms(Graphics::ShadingManager * ShadingManager);
 	void ReadShipClasses(ClassManager< ShipClass > * ShipClassManager, ClassManager< SlotClass > * SlotClassManager);
 	void ReadSlotClasses(ClassManager< SlotClass > * SlotClassManager);
-	void ReadTurretClasses(ClassManager< TurretClass > * TurretClassManager);
+	void ReadTurretClasses(ClassManager< Template > * TurretClassManager);
 	void ReadTextures(void);
-	void ReadWeaponClasses(ClassManager< WeaponClass > * WeaponClassManager);
+	void ReadWeaponClasses(ClassManager< Template > * WeaponClassManager);
 	std::string ReadSavegameFromScenarioPath(const std::string & ScenarioPath);
 private:
 	void _ReadItems(const std::string & Path, std::function< void (Arxx::Reference &) > ReaderFunction);
