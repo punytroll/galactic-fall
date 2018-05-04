@@ -24,6 +24,7 @@
 #include <string>
 #include <unordered_map>
 
+#include <algebra/quaternion.h>
 #include <algebra/vector3f.h>
 
 class VisualizationPrototype;
@@ -37,6 +38,7 @@ public:
 	// getters
 	const std::experimental::any & GetField(const std::string & FieldIdentifier) const;
 	float GetFieldAsFloat(const std::string & FieldIdentifier) const;
+	const Quaternion & GetFieldAsQuaternion(const std::string & FieldIdentifier) const;
 	const std::string & GetFieldAsString(const std::string & FieldIdentifier) const;
 	std::uint32_t GetFieldAsUnsignedInteger32Bit(const std::string & FieldIdentifier) const;
 	const Vector3f & GetFieldAsVector3f(const std::string & FieldIdentifier) const;

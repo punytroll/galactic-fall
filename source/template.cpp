@@ -40,6 +40,11 @@ float Template::GetFieldAsFloat(const std::string & FieldIdentifier) const
 	return std::experimental::any_cast< float >(_Fields.at(FieldIdentifier));
 }
 
+const Quaternion & Template::GetFieldAsQuaternion(const std::string & FieldIdentifier) const
+{
+	return std::experimental::any_cast< const Quaternion & >(_Fields.at(FieldIdentifier));
+}
+
 const std::string & Template::GetFieldAsString(const std::string & FieldIdentifier) const
 {
 	return std::experimental::any_cast< const std::string & >(_Fields.at(FieldIdentifier));
