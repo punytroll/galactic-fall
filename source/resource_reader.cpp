@@ -1232,7 +1232,7 @@ static void ReadTurretClass(Arxx::Reference & Reference, ClassManager< TurretCla
 	NewTurretClass->SetField("space-requirement", SpaceRequirement);
 	NewTurretClass->SetField("visualization-prototype", TurretVisualizationPrototype);
 	NewTurretClass->SetField("slot-class-identifier", SlotClassIdentifier);
-	NewTurretClass->SetOrientation(Orientation);
+	NewTurretClass->SetField("orientation", Orientation);
 	NewTurretClass->SetField("reload-time", ReloadTime);
 	NewTurretClass->SetField("energy-usage-per-shot", EnergyUsagePerShot);
 	
@@ -1297,7 +1297,7 @@ static void ReadWeaponClass(Arxx::Reference & Reference, ClassManager< WeaponCla
 	NewWeaponClass->SetField("base-price", BasePrice);
 	NewWeaponClass->SetField("visualization-prototype", WeaponVisualizationPrototype);
 	NewWeaponClass->SetField("slot-class-identifier", SlotClassIdentifier);
-	NewWeaponClass->SetOrientation(Orientation);
+	NewWeaponClass->SetField("orientation", Orientation);
 	NewWeaponClass->SetField("reload-time", ReloadTime);
 	NewWeaponClass->SetField("space-requirement", SpaceRequirement);
 	NewWeaponClass->SetField("energy-usage-per-shot", EnergyUsagePerShot);

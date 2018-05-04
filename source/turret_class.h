@@ -22,8 +22,6 @@
 
 #include <string>
 
-#include <algebra/quaternion.h>
-
 #include "template.h"
 
 class TurretClass : public Template
@@ -33,26 +31,11 @@ public:
 	TurretClass(const std::string & Identifier);
 	// getters
 	const std::string & GetIdentifier(void) const;
-	const Quaternion & GetOrientation(void) const;
-	// setters
-	void SetOrientation(const Quaternion & Orientation);
-private:
-	Quaternion _Orientation;
 };
 
 inline const std::string & TurretClass::GetIdentifier(void) const
 {
 	return GetSubTypeIdentifier();
-}
-
-inline const Quaternion & TurretClass::GetOrientation(void) const
-{
-	return _Orientation;
-}
-
-inline void TurretClass::SetOrientation(const Quaternion & Orientation)
-{
-	_Orientation = Orientation;
 }
 
 #endif

@@ -22,8 +22,6 @@
 
 #include <string>
 
-#include <algebra/quaternion.h>
-
 #include "template.h"
 
 class WeaponClass : public Template
@@ -33,26 +31,11 @@ public:
 	WeaponClass(const std::string & Identifier);
 	// getters
 	const std::string & GetIdentifier(void) const;
-	const Quaternion & GetOrientation(void) const;
-	// setters
-	void SetOrientation(const Quaternion & Orientation);
-private:
-	Quaternion _Orientation;
 };
 
 inline const std::string & WeaponClass::GetIdentifier(void) const
 {
 	return GetSubTypeIdentifier();
-}
-
-inline const Quaternion & WeaponClass::GetOrientation(void) const
-{
-	return _Orientation;
-}
-
-inline void WeaponClass::SetOrientation(const Quaternion & Orientation)
-{
-	_Orientation = Orientation;
 }
 
 #endif

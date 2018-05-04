@@ -341,7 +341,7 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		NewTurret->GetAspectPhysical()->SetSpaceRequirement(TurretClass->GetFieldAsUnsignedInteger32Bit("space-requirement"));
 		// set up position aspect
 		assert(NewTurret->GetAspectPosition() != nullptr);
-		NewTurret->GetAspectPosition()->SetOrientation(TurretClass->GetOrientation());
+		NewTurret->GetAspectPosition()->SetOrientation(TurretClass->GetFieldAsQuaternion("orientation"));
 		// set up visualization aspect
 		assert(NewTurret->GetAspectVisualization() != nullptr);
 		NewTurret->GetAspectVisualization()->SetVisualizationPrototype(TurretClass->GetFieldAsVisualizationPrototype("visualization-prototype"));
@@ -375,7 +375,7 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		NewWeapon->GetAspectPhysical()->SetSpaceRequirement(WeaponClass->GetFieldAsUnsignedInteger32Bit("space-requirement"));
 		// set up position aspect
 		assert(NewWeapon->GetAspectPosition() != nullptr);
-		NewWeapon->GetAspectPosition()->SetOrientation(WeaponClass->GetOrientation());
+		NewWeapon->GetAspectPosition()->SetOrientation(WeaponClass->GetFieldAsQuaternion("orientation"));
 		// set up visualization aspect
 		assert(NewWeapon->GetAspectVisualization() != nullptr);
 		NewWeapon->GetAspectVisualization()->SetVisualizationPrototype(WeaponClass->GetFieldAsVisualizationPrototype("visualization-prototype"));
