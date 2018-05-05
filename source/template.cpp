@@ -29,38 +29,3 @@ Template::Template(const std::string & TypeIdentifier, const std::string & SubTy
 Template::~Template(void)
 {
 }
-
-const std::experimental::any & Template::GetField(const std::string & FieldIdentifier) const
-{
-	return _Fields.at(FieldIdentifier);
-}
-
-float Template::GetFieldAsFloat(const std::string & FieldIdentifier) const
-{
-	return std::experimental::any_cast< float >(_Fields.at(FieldIdentifier));
-}
-
-const Quaternion & Template::GetFieldAsQuaternion(const std::string & FieldIdentifier) const
-{
-	return std::experimental::any_cast< const Quaternion & >(_Fields.at(FieldIdentifier));
-}
-
-const std::string & Template::GetFieldAsString(const std::string & FieldIdentifier) const
-{
-	return std::experimental::any_cast< const std::string & >(_Fields.at(FieldIdentifier));
-}
-
-std::uint32_t Template::GetFieldAsUnsignedInteger32Bit(const std::string & FieldIdentifier) const
-{
-	return std::experimental::any_cast< std::uint32_t >(_Fields.at(FieldIdentifier));
-}
-
-const Vector3f & Template::GetFieldAsVector3f(const std::string & FieldIdentifier) const
-{
-	return std::experimental::any_cast< const Vector3f & >(_Fields.at(FieldIdentifier));
-}
-
-const VisualizationPrototype & Template::GetFieldAsVisualizationPrototype(const std::string & FieldIdentifier) const
-{
-	return std::experimental::any_cast< const VisualizationPrototype & >(_Fields.at(FieldIdentifier));
-}

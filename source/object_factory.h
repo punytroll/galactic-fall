@@ -26,7 +26,6 @@ template< class Class >
 class ClassManager;
 
 class Object;
-class ShipClass;
 class Template;
 class VisualizationPrototype;
 
@@ -47,7 +46,7 @@ public:
 	ClassManager< Template > * GetBatteryClassManager(void);
 	ClassManager< Template > * GetCommodityClassManager(void);
 	ClassManager< Template > * GetGeneratorClassManager(void);
-	ClassManager< ShipClass > * GetShipClassManager(void);
+	ClassManager< Template > * GetShipClassManager(void);
 	ClassManager< Template > * GetTurretClassManager(void);
 	ClassManager< Template > * GetWeaponClassManager(void);
 	bool HasClass(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier) const;
@@ -56,7 +55,7 @@ private:
 	ClassManager< Template > * _BatteryClassManager;
 	ClassManager< Template > * _CommodityClassManager;
 	ClassManager< Template > * _GeneratorClassManager;
-	ClassManager< ShipClass > * _ShipClassManager;
+	ClassManager< Template > * _ShipClassManager;
 	ClassManager< Template > * _TurretClassManager;
 	ClassManager< Template > * _WeaponClassManager;
 };
@@ -81,7 +80,7 @@ inline ClassManager< Template > * ObjectFactory::GetGeneratorClassManager(void)
 	return _GeneratorClassManager;
 }
 
-inline ClassManager< ShipClass > * ObjectFactory::GetShipClassManager(void)
+inline ClassManager< Template > * ObjectFactory::GetShipClassManager(void)
 {
 	return _ShipClassManager;
 }

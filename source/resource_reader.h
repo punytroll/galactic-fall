@@ -36,15 +36,10 @@ namespace Graphics
 template< class Class >
 class ClassManager;
 
-class CommodityManager;
 class Galaxy;
-class GeneratorClass;
 class ScenarioManager;
 class Settings;
-class ShipClass;
 class SlotClass;
-class TurretClass;
-class WeaponClass;
 
 class ResourceReader
 {
@@ -62,7 +57,7 @@ public:
 	void ReadScenarios(ScenarioManager * ScenarioManager);
 	void ReadSettings(Settings * Settings);
 	void ReadShadersAndPrograms(Graphics::ShadingManager * ShadingManager);
-	void ReadShipClasses(ClassManager< ShipClass > * ShipClassManager, ClassManager< SlotClass > * SlotClassManager);
+	void ReadShipClasses(ClassManager< Template > * ShipClassManager, ClassManager< SlotClass > * SlotClassManager);
 	void ReadSlotClasses(ClassManager< SlotClass > * SlotClassManager);
 	void ReadTurretClasses(ClassManager< Template > * TurretClassManager);
 	void ReadTextures(void);
