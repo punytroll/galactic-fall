@@ -44,12 +44,12 @@
 #include "object_factory.h"
 #include "planet.h"
 #include "ship.h"
-#include "ship_class.h"
 #include "shot.h"
 #include "slot.h"
 #include "star.h"
 #include "storage.h"
 #include "system.h"
+#include "template.h"
 #include "turret.h"
 #include "weapon.h"
 #include "visualization_prototype.h"
@@ -61,7 +61,7 @@ ObjectFactory::ObjectFactory(void) :
 	_BatteryClassManager(new ClassManager< Template >()),
 	_CommodityClassManager(new ClassManager< Template >()),
 	_GeneratorClassManager(new ClassManager< Template >()),
-	_ShipClassManager(new ClassManager< ShipClass >()),
+	_ShipClassManager(new ClassManager< Template >()),
 	_TurretClassManager(new ClassManager< Template >()),
 	_WeaponClassManager(new ClassManager< Template >())
 {
@@ -100,16 +100,16 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		auto NewAmmunition{new Ammunition{}};
 		
 		// set up type specific things
-		NewAmmunition->SetAmount(AmmunitionClass->GetFieldAsUnsignedInteger32Bit("cartridge-size"));
-		NewAmmunition->SetCapacity(AmmunitionClass->GetFieldAsUnsignedInteger32Bit("cartridge-size"));
+		NewAmmunition->SetAmount(AmmunitionClass->GetPropertyAsUnsignedInteger32Bit("cartridge-size"));
+		NewAmmunition->SetCapacity(AmmunitionClass->GetPropertyAsUnsignedInteger32Bit("cartridge-size"));
 		// set up aspects
 		// set up name aspect
 		assert(NewAmmunition->GetAspectName() != nullptr);
-		NewAmmunition->GetAspectName()->SetName(AmmunitionClass->GetFieldAsString("name"));
+		NewAmmunition->GetAspectName()->SetName(AmmunitionClass->GetPropertyAsString("name"));
 		// set up physical aspect
 		assert(NewAmmunition->GetAspectPhysical() != nullptr);
-		NewAmmunition->GetAspectPhysical()->SetRadialSize(AmmunitionClass->GetFieldAsVisualizationPrototype("visualization-prototype").GetModel()->GetRadialSize());
-		NewAmmunition->GetAspectPhysical()->SetSpaceRequirement(AmmunitionClass->GetFieldAsUnsignedInteger32Bit("space-requirement"));
+		NewAmmunition->GetAspectPhysical()->SetRadialSize(AmmunitionClass->GetPropertyAsVisualizationPrototype("visualization-prototype").GetModel()->GetRadialSize());
+		NewAmmunition->GetAspectPhysical()->SetSpaceRequirement(AmmunitionClass->GetPropertyAsUnsignedInteger32Bit("space-requirement"));
 		Result = NewAmmunition;
 	}
 	else if(TypeIdentifier == "battery")
@@ -123,18 +123,18 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		auto NewBattery(new Battery());
 		
 		// set up type specific things
-		NewBattery->SetEnergy(BatteryClass->GetFieldAsFloat("energy-capacity"));
-		NewBattery->SetEnergyCapacity(BatteryClass->GetFieldAsFloat("energy-capacity"));
+		NewBattery->SetEnergy(BatteryClass->GetPropertyAsFloat("energy-capacity"));
+		NewBattery->SetEnergyCapacity(BatteryClass->GetPropertyAsFloat("energy-capacity"));
 		// set up aspects
 		// set up accessory aspect
 		assert(NewBattery->GetAspectAccessory() != nullptr);
-		NewBattery->GetAspectAccessory()->SetSlotClassIdentifier(BatteryClass->GetFieldAsString("slot-class-identifier"));
+		NewBattery->GetAspectAccessory()->SetSlotClassIdentifier(BatteryClass->GetPropertyAsString("slot-class-identifier"));
 		// set up name aspect
 		assert(NewBattery->GetAspectName() != nullptr);
-		NewBattery->GetAspectName()->SetName(BatteryClass->GetFieldAsString("name"));
+		NewBattery->GetAspectName()->SetName(BatteryClass->GetPropertyAsString("name"));
 		// set up physical aspect
 		assert(NewBattery->GetAspectPhysical() != nullptr);
-		NewBattery->GetAspectPhysical()->SetSpaceRequirement(BatteryClass->GetFieldAsUnsignedInteger32Bit("space-requirement"));
+		NewBattery->GetAspectPhysical()->SetSpaceRequirement(BatteryClass->GetPropertyAsUnsignedInteger32Bit("space-requirement"));
 		Result = NewBattery;
 	}
 	else if(TypeIdentifier == "character")
@@ -154,14 +154,14 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		
 		// set up name aspect
 		assert(NewCommodity->GetAspectName() != nullptr);
-		NewCommodity->GetAspectName()->SetName(CommodityClass->GetFieldAsString("name"));
+		NewCommodity->GetAspectName()->SetName(CommodityClass->GetPropertyAsString("name"));
 		// set up physical aspect
 		assert(NewCommodity->GetAspectPhysical() != nullptr);
-		NewCommodity->GetAspectPhysical()->SetRadialSize(CommodityClass->GetFieldAsVisualizationPrototype("visualization-prototype").GetModel()->GetRadialSize());
-		NewCommodity->GetAspectPhysical()->SetSpaceRequirement(CommodityClass->GetFieldAsUnsignedInteger32Bit("space-requirement"));
+		NewCommodity->GetAspectPhysical()->SetRadialSize(CommodityClass->GetPropertyAsVisualizationPrototype("visualization-prototype").GetModel()->GetRadialSize());
+		NewCommodity->GetAspectPhysical()->SetSpaceRequirement(CommodityClass->GetPropertyAsUnsignedInteger32Bit("space-requirement"));
 		// set up visualization aspect
 		assert(NewCommodity->GetAspectVisualization() != nullptr);
-		NewCommodity->GetAspectVisualization()->SetVisualizationPrototype(CommodityClass->GetFieldAsVisualizationPrototype("visualization-prototype"));
+		NewCommodity->GetAspectVisualization()->SetVisualizationPrototype(CommodityClass->GetPropertyAsVisualizationPrototype("visualization-prototype"));
 		Result = NewCommodity;
 	}
 	else if(TypeIdentifier == "faction")
@@ -185,17 +185,17 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		auto NewGenerator(new Generator());
 		
 		// set up type specific things
-		NewGenerator->SetEnergyProvisionPerSecond(GeneratorClass->GetFieldAsFloat("energy-provision-per-second"));
+		NewGenerator->SetEnergyProvisionPerSecond(GeneratorClass->GetPropertyAsFloat("energy-provision-per-second"));
 		// set up aspects
 		// set up accessory aspect
 		assert(NewGenerator->GetAspectAccessory() != nullptr);
-		NewGenerator->GetAspectAccessory()->SetSlotClassIdentifier(GeneratorClass->GetFieldAsString("slot-class-identifier"));
+		NewGenerator->GetAspectAccessory()->SetSlotClassIdentifier(GeneratorClass->GetPropertyAsString("slot-class-identifier"));
 		// set up name aspect
 		assert(NewGenerator->GetAspectName() != nullptr);
-		NewGenerator->GetAspectName()->SetName(GeneratorClass->GetFieldAsString("name"));
+		NewGenerator->GetAspectName()->SetName(GeneratorClass->GetPropertyAsString("name"));
 		// set up physical aspect
 		assert(NewGenerator->GetAspectPhysical() != nullptr);
-		NewGenerator->GetAspectPhysical()->SetSpaceRequirement(GeneratorClass->GetFieldAsUnsignedInteger32Bit("space-requirement"));
+		NewGenerator->GetAspectPhysical()->SetSpaceRequirement(GeneratorClass->GetPropertyAsUnsignedInteger32Bit("space-requirement"));
 		Result = NewGenerator;
 	}
 	else if(TypeIdentifier == "hangar")
@@ -230,47 +230,47 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		auto NewShip(new Ship());
 		
 		// set up type specific things
-		NewShip->SetExhaustOffset(ShipClass->GetFieldAsVector3f("exhaust-offset"));
-		NewShip->SetExhaustRadius(ShipClass->GetFieldAsFloat("exhaust-radius"));
-		NewShip->SetFuelCapacity(ShipClass->GetFieldAsFloat("fuel-capacity"));
-		NewShip->SetFuelNeededToAccelerate(ShipClass->GetFieldAsFloat("forward-fuel"));
-		NewShip->SetFuelNeededToJump(ShipClass->GetFieldAsFloat("jump-fuel"));
-		NewShip->SetFuelNeededToTurn(ShipClass->GetFieldAsFloat("turn-fuel"));
-		NewShip->SetHullCapacity(ShipClass->GetFieldAsFloat("hull"));
-		NewShip->SetHull(ShipClass->GetFieldAsFloat("hull"));
-		NewShip->SetMaximumForwardThrust(ShipClass->GetFieldAsFloat("forward-thrust"));
-		NewShip->SetMaximumSpeed(ShipClass->GetFieldAsFloat("maximum-speed"));
-		NewShip->SetMaximumTurnSpeed(ShipClass->GetFieldAsFloat("turn-speed"));
+		NewShip->SetExhaustOffset(ShipClass->GetPropertyAsVector3f("exhaust-offset"));
+		NewShip->SetExhaustRadius(ShipClass->GetPropertyAsFloat("exhaust-radius"));
+		NewShip->SetFuelCapacity(ShipClass->GetPropertyAsFloat("fuel-capacity"));
+		NewShip->SetFuelNeededToAccelerate(ShipClass->GetPropertyAsFloat("forward-fuel"));
+		NewShip->SetFuelNeededToJump(ShipClass->GetPropertyAsFloat("jump-fuel"));
+		NewShip->SetFuelNeededToTurn(ShipClass->GetPropertyAsFloat("turn-fuel"));
+		NewShip->SetHullCapacity(ShipClass->GetPropertyAsFloat("hull"));
+		NewShip->SetHull(ShipClass->GetPropertyAsFloat("hull"));
+		NewShip->SetMaximumForwardThrust(ShipClass->GetPropertyAsFloat("forward-thrust"));
+		NewShip->SetMaximumSpeed(ShipClass->GetPropertyAsFloat("maximum-speed"));
+		NewShip->SetMaximumTurnSpeed(ShipClass->GetPropertyAsFloat("turn-speed"));
 		assert(g_Galaxy != nullptr);
 		NewShip->SetFaction(g_Galaxy->GetFaction("neutral"));
 		
 		auto EngineGlowParticleSystem(CreateParticleSystem("engine_glow"));
 		
-		EngineGlowParticleSystem->SetPosition(ShipClass->GetFieldAsVector3f("exhaust-offset"));
+		EngineGlowParticleSystem->SetPosition(ShipClass->GetPropertyAsVector3f("exhaust-offset"));
 		NewShip->SetEngineGlowParticleSystem(EngineGlowParticleSystem);
 		// set up aspects
 		// set up name aspect
 		assert(NewShip->GetAspectName() != nullptr);
-		NewShip->GetAspectName()->SetName(ShipClass->GetFieldAsString("name"));
+		NewShip->GetAspectName()->SetName(ShipClass->GetPropertyAsString("name"));
 		// set up outfitting aspect
 		assert(NewShip->GetAspectOutfitting() != nullptr);
-		for(auto SlotPair : ShipClass->GetSlots())
+		for(auto SlotProperties : ShipClass->GetPropertyAsList("slots"))
 		{
-			auto NewSlot(new Slot(SlotPair.second->GetSlotClass(), SlotPair.first));
+			auto NewSlot(new Slot(SlotProperties.GetPropertyAsSlotClass("class"), SlotProperties.GetPropertyAsString("identifier")));
 			
-			NewSlot->SetName(SlotPair.second->GetName());
-			NewSlot->SetPosition(SlotPair.second->GetPosition());
-			NewSlot->SetOrientation(SlotPair.second->GetOrientation());
-			NewSlot->SetVisualizeAccessory(SlotPair.second->GetVisualizeAccessory());
+			NewSlot->SetName(SlotProperties.GetPropertyAsString("name"));
+			NewSlot->SetPosition(SlotProperties.GetPropertyAsVector3f("position"));
+			NewSlot->SetOrientation(SlotProperties.GetPropertyAsQuaternion("orientation"));
+			NewSlot->SetVisualizeAccessory(SlotProperties.GetPropertyAsBoolean("visualize-accessory"));
 			NewShip->GetAspectOutfitting()->AddSlot(NewSlot);
 		}
 		// set up physical aspect
 		assert(NewShip->GetAspectPhysical() != nullptr);
-		NewShip->GetAspectPhysical()->SetRadialSize(ShipClass->GetFieldAsVisualizationPrototype("visualization-prototype").GetModel()->GetRadialSize());
-		NewShip->GetAspectPhysical()->SetSpaceRequirement(ShipClass->GetFieldAsUnsignedInteger32Bit("space-requirement"));
+		NewShip->GetAspectPhysical()->SetRadialSize(ShipClass->GetPropertyAsVisualizationPrototype("visualization-prototype").GetModel()->GetRadialSize());
+		NewShip->GetAspectPhysical()->SetSpaceRequirement(ShipClass->GetPropertyAsUnsignedInteger32Bit("space-requirement"));
 		// set up visualization aspect
 		assert(NewShip->GetAspectVisualization() != nullptr);
-		NewShip->GetAspectVisualization()->SetVisualizationPrototype(ShipClass->GetFieldAsVisualizationPrototype("visualization-prototype"));
+		NewShip->GetAspectVisualization()->SetVisualizationPrototype(ShipClass->GetPropertyAsVisualizationPrototype("visualization-prototype"));
 		
 		auto & PartStyles(NewShip->GetAspectVisualization()->GetVisualizationPrototype()->GetPartStyles());
 		
@@ -283,7 +283,7 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		{
 			auto NewStorage(dynamic_cast< Storage * >(Create("storage", "", CreateNestedObjects)));
 			
-			NewStorage->SetSpaceCapacity(ShipClass->GetFieldAsUnsignedInteger32Bit("maximum-available-space"));
+			NewStorage->SetSpaceCapacity(ShipClass->GetPropertyAsUnsignedInteger32Bit("maximum-available-space"));
 			assert(NewShip->GetAspectObjectContainer() != nullptr);
 			NewShip->GetAspectObjectContainer()->AddContent(NewStorage);
 		}
@@ -319,28 +319,28 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		
 		auto NewTurret(new Turret());
 		
-		NewTurret->SetEnergyUsagePerShot(TurretClass->GetFieldAsFloat("energy-usage-per-shot"));
-		NewTurret->SetMuzzlePosition(TurretClass->GetFieldAsVector3f("muzzle-position"));
-		NewTurret->SetShotDamage(TurretClass->GetFieldAsFloat("shot-damage"));
-		NewTurret->SetShotExitSpeed(TurretClass->GetFieldAsFloat("shot-exit-speed"));
-		NewTurret->SetShotLifeTime(TurretClass->GetFieldAsFloat("shot-life-time"));
-		NewTurret->SetShotVisualizationPrototype(TurretClass->GetFieldAsVisualizationPrototype("shot-visualization-prototype"));
-		NewTurret->SetReloadTime(TurretClass->GetFieldAsFloat("reload-time"));
+		NewTurret->SetEnergyUsagePerShot(TurretClass->GetPropertyAsFloat("energy-usage-per-shot"));
+		NewTurret->SetMuzzlePosition(TurretClass->GetPropertyAsVector3f("muzzle-position"));
+		NewTurret->SetShotDamage(TurretClass->GetPropertyAsFloat("shot-damage"));
+		NewTurret->SetShotExitSpeed(TurretClass->GetPropertyAsFloat("shot-exit-speed"));
+		NewTurret->SetShotLifeTime(TurretClass->GetPropertyAsFloat("shot-life-time"));
+		NewTurret->SetShotVisualizationPrototype(TurretClass->GetPropertyAsVisualizationPrototype("shot-visualization-prototype"));
+		NewTurret->SetReloadTime(TurretClass->GetPropertyAsFloat("reload-time"));
 		// set up accessory aspect
 		assert(NewTurret->GetAspectAccessory() != nullptr);
-		NewTurret->GetAspectAccessory()->SetSlotClassIdentifier(TurretClass->GetFieldAsString("slot-class-identifier"));
+		NewTurret->GetAspectAccessory()->SetSlotClassIdentifier(TurretClass->GetPropertyAsString("slot-class-identifier"));
 		// set up name aspect
 		assert(NewTurret->GetAspectName() != nullptr);
-		NewTurret->GetAspectName()->SetName(TurretClass->GetFieldAsString("name"));
+		NewTurret->GetAspectName()->SetName(TurretClass->GetPropertyAsString("name"));
 		// set up physical aspect
 		assert(NewTurret->GetAspectPhysical() != nullptr);
-		NewTurret->GetAspectPhysical()->SetSpaceRequirement(TurretClass->GetFieldAsUnsignedInteger32Bit("space-requirement"));
+		NewTurret->GetAspectPhysical()->SetSpaceRequirement(TurretClass->GetPropertyAsUnsignedInteger32Bit("space-requirement"));
 		// set up position aspect
 		assert(NewTurret->GetAspectPosition() != nullptr);
-		NewTurret->GetAspectPosition()->SetOrientation(TurretClass->GetFieldAsQuaternion("orientation"));
+		NewTurret->GetAspectPosition()->SetOrientation(TurretClass->GetPropertyAsQuaternion("orientation"));
 		// set up visualization aspect
 		assert(NewTurret->GetAspectVisualization() != nullptr);
-		NewTurret->GetAspectVisualization()->SetVisualizationPrototype(TurretClass->GetFieldAsVisualizationPrototype("visualization-prototype"));
+		NewTurret->GetAspectVisualization()->SetVisualizationPrototype(TurretClass->GetPropertyAsVisualizationPrototype("visualization-prototype"));
 		Result = NewTurret;
 	}
 	else if(TypeIdentifier == "weapon")
@@ -353,28 +353,28 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		
 		auto NewWeapon(new Weapon());
 		
-		NewWeapon->SetEnergyUsagePerShot(WeaponClass->GetFieldAsFloat("energy-usage-per-shot"));
-		NewWeapon->SetMuzzlePosition(WeaponClass->GetFieldAsVector3f("muzzle-position"));
-		NewWeapon->SetShotDamage(WeaponClass->GetFieldAsFloat("shot-damage"));
-		NewWeapon->SetShotExitSpeed(WeaponClass->GetFieldAsFloat("shot-exit-speed"));
-		NewWeapon->SetShotLifeTime(WeaponClass->GetFieldAsFloat("shot-life-time"));
-		NewWeapon->SetShotVisualizationPrototype(WeaponClass->GetFieldAsVisualizationPrototype("shot-visualization-prototype"));
-		NewWeapon->SetReloadTime(WeaponClass->GetFieldAsFloat("reload-time"));
+		NewWeapon->SetEnergyUsagePerShot(WeaponClass->GetPropertyAsFloat("energy-usage-per-shot"));
+		NewWeapon->SetMuzzlePosition(WeaponClass->GetPropertyAsVector3f("muzzle-position"));
+		NewWeapon->SetShotDamage(WeaponClass->GetPropertyAsFloat("shot-damage"));
+		NewWeapon->SetShotExitSpeed(WeaponClass->GetPropertyAsFloat("shot-exit-speed"));
+		NewWeapon->SetShotLifeTime(WeaponClass->GetPropertyAsFloat("shot-life-time"));
+		NewWeapon->SetShotVisualizationPrototype(WeaponClass->GetPropertyAsVisualizationPrototype("shot-visualization-prototype"));
+		NewWeapon->SetReloadTime(WeaponClass->GetPropertyAsFloat("reload-time"));
 		// set up accessory aspect
 		assert(NewWeapon->GetAspectAccessory() != nullptr);
-		NewWeapon->GetAspectAccessory()->SetSlotClassIdentifier(WeaponClass->GetFieldAsString("slot-class-identifier"));
+		NewWeapon->GetAspectAccessory()->SetSlotClassIdentifier(WeaponClass->GetPropertyAsString("slot-class-identifier"));
 		// set up name aspect
 		assert(NewWeapon->GetAspectName() != nullptr);
-		NewWeapon->GetAspectName()->SetName(WeaponClass->GetFieldAsString("name"));
+		NewWeapon->GetAspectName()->SetName(WeaponClass->GetPropertyAsString("name"));
 		// set up physical aspect
 		assert(NewWeapon->GetAspectPhysical() != nullptr);
-		NewWeapon->GetAspectPhysical()->SetSpaceRequirement(WeaponClass->GetFieldAsUnsignedInteger32Bit("space-requirement"));
+		NewWeapon->GetAspectPhysical()->SetSpaceRequirement(WeaponClass->GetPropertyAsUnsignedInteger32Bit("space-requirement"));
 		// set up position aspect
 		assert(NewWeapon->GetAspectPosition() != nullptr);
-		NewWeapon->GetAspectPosition()->SetOrientation(WeaponClass->GetFieldAsQuaternion("orientation"));
+		NewWeapon->GetAspectPosition()->SetOrientation(WeaponClass->GetPropertyAsQuaternion("orientation"));
 		// set up visualization aspect
 		assert(NewWeapon->GetAspectVisualization() != nullptr);
-		NewWeapon->GetAspectVisualization()->SetVisualizationPrototype(WeaponClass->GetFieldAsVisualizationPrototype("visualization-prototype"));
+		NewWeapon->GetAspectVisualization()->SetVisualizationPrototype(WeaponClass->GetPropertyAsVisualizationPrototype("visualization-prototype"));
 		Result = NewWeapon;
 	}
 	else
@@ -397,7 +397,7 @@ std::uint32_t ObjectFactory::GetBasePrice(const std::string & TypeIdentifier, co
 		
 		assert(AmmunitionClass != nullptr);
 		
-		return AmmunitionClass->GetFieldAsUnsignedInteger32Bit("base-price");
+		return AmmunitionClass->GetPropertyAsUnsignedInteger32Bit("base-price");
 	}
 	else if(TypeIdentifier == "battery")
 	{
@@ -407,7 +407,7 @@ std::uint32_t ObjectFactory::GetBasePrice(const std::string & TypeIdentifier, co
 		
 		assert(BatteryClass != nullptr);
 		
-		return BatteryClass->GetFieldAsUnsignedInteger32Bit("base-price");
+		return BatteryClass->GetPropertyAsUnsignedInteger32Bit("base-price");
 	}
 	else if(TypeIdentifier == "commodity")
 	{
@@ -417,7 +417,7 @@ std::uint32_t ObjectFactory::GetBasePrice(const std::string & TypeIdentifier, co
 		
 		assert(CommodityClass != nullptr);
 		
-		return CommodityClass->GetFieldAsUnsignedInteger32Bit("base-price");
+		return CommodityClass->GetPropertyAsUnsignedInteger32Bit("base-price");
 	}
 	else if(TypeIdentifier == "generator")
 	{
@@ -427,7 +427,7 @@ std::uint32_t ObjectFactory::GetBasePrice(const std::string & TypeIdentifier, co
 		
 		assert(GeneratorClass != nullptr);
 		
-		return GeneratorClass->GetFieldAsUnsignedInteger32Bit("base-price");
+		return GeneratorClass->GetPropertyAsUnsignedInteger32Bit("base-price");
 	}
 	else if(TypeIdentifier == "ship")
 	{
@@ -437,7 +437,7 @@ std::uint32_t ObjectFactory::GetBasePrice(const std::string & TypeIdentifier, co
 		
 		assert(ShipClass != nullptr);
 		
-		return ShipClass->GetFieldAsUnsignedInteger32Bit("base-price");
+		return ShipClass->GetPropertyAsUnsignedInteger32Bit("base-price");
 	}
 	else if(TypeIdentifier == "turret")
 	{
@@ -447,7 +447,7 @@ std::uint32_t ObjectFactory::GetBasePrice(const std::string & TypeIdentifier, co
 		
 		assert(TurretClass != nullptr);
 		
-		return TurretClass->GetFieldAsUnsignedInteger32Bit("base-price");
+		return TurretClass->GetPropertyAsUnsignedInteger32Bit("base-price");
 	}
 	else if(TypeIdentifier == "weapon")
 	{
@@ -455,7 +455,7 @@ std::uint32_t ObjectFactory::GetBasePrice(const std::string & TypeIdentifier, co
 		
 		auto WeaponClass(_WeaponClassManager->Get(SubTypeIdentifier));
 		
-		return WeaponClass->GetFieldAsUnsignedInteger32Bit("base-price");
+		return WeaponClass->GetPropertyAsUnsignedInteger32Bit("base-price");
 	}
 	else
 	{
@@ -473,7 +473,7 @@ const std::string & ObjectFactory::GetDescription(const std::string & TypeIdenti
 		
 		assert(AmmunitionClass != nullptr);
 		
-		return AmmunitionClass->GetFieldAsString("description");
+		return AmmunitionClass->GetPropertyAsString("description");
 	}
 	else if(TypeIdentifier == "battery")
 	{
@@ -483,7 +483,7 @@ const std::string & ObjectFactory::GetDescription(const std::string & TypeIdenti
 		
 		assert(BatteryClass != nullptr);
 		
-		return BatteryClass->GetFieldAsString("description");
+		return BatteryClass->GetPropertyAsString("description");
 	}
 	else if(TypeIdentifier == "commodity")
 	{
@@ -493,7 +493,7 @@ const std::string & ObjectFactory::GetDescription(const std::string & TypeIdenti
 		
 		assert(CommodityClass != nullptr);
 		
-		return CommodityClass->GetFieldAsString("description");
+		return CommodityClass->GetPropertyAsString("description");
 	}
 	else if(TypeIdentifier == "generator")
 	{
@@ -503,7 +503,7 @@ const std::string & ObjectFactory::GetDescription(const std::string & TypeIdenti
 		
 		assert(GeneratorClass != nullptr);
 		
-		return GeneratorClass->GetFieldAsString("description");
+		return GeneratorClass->GetPropertyAsString("description");
 	}
 	else if(TypeIdentifier == "ship")
 	{
@@ -513,7 +513,7 @@ const std::string & ObjectFactory::GetDescription(const std::string & TypeIdenti
 		
 		assert(ShipClass != nullptr);
 		
-		return ShipClass->GetFieldAsString("description");
+		return ShipClass->GetPropertyAsString("description");
 	}
 	else if(TypeIdentifier == "turret")
 	{
@@ -523,7 +523,7 @@ const std::string & ObjectFactory::GetDescription(const std::string & TypeIdenti
 		
 		assert(TurretClass != nullptr);
 		
-		return TurretClass->GetFieldAsString("description");
+		return TurretClass->GetPropertyAsString("description");
 	}
 	else if(TypeIdentifier == "weapon")
 	{
@@ -531,7 +531,7 @@ const std::string & ObjectFactory::GetDescription(const std::string & TypeIdenti
 		
 		auto WeaponClass(_WeaponClassManager->Get(SubTypeIdentifier));
 		
-		return WeaponClass->GetFieldAsString("description");
+		return WeaponClass->GetPropertyAsString("description");
 	}
 	else
 	{
@@ -549,7 +549,7 @@ const std::string & ObjectFactory::GetName(const std::string & TypeIdentifier, c
 		
 		assert(AmmunitionClass != nullptr);
 		
-		return AmmunitionClass->GetFieldAsString("name");
+		return AmmunitionClass->GetPropertyAsString("name");
 	}
 	else if(TypeIdentifier == "battery")
 	{
@@ -559,7 +559,7 @@ const std::string & ObjectFactory::GetName(const std::string & TypeIdentifier, c
 		
 		assert(BatteryClass != nullptr);
 		
-		return BatteryClass->GetFieldAsString("name");
+		return BatteryClass->GetPropertyAsString("name");
 	}
 	else if(TypeIdentifier == "commodity")
 	{
@@ -569,7 +569,7 @@ const std::string & ObjectFactory::GetName(const std::string & TypeIdentifier, c
 		
 		assert(CommodityClass != nullptr);
 		
-		return CommodityClass->GetFieldAsString("name");
+		return CommodityClass->GetPropertyAsString("name");
 	}
 	else if(TypeIdentifier == "generator")
 	{
@@ -579,7 +579,7 @@ const std::string & ObjectFactory::GetName(const std::string & TypeIdentifier, c
 		
 		assert(GeneratorClass != nullptr);
 		
-		return GeneratorClass->GetFieldAsString("name");
+		return GeneratorClass->GetPropertyAsString("name");
 	}
 	else if(TypeIdentifier == "ship")
 	{
@@ -589,7 +589,7 @@ const std::string & ObjectFactory::GetName(const std::string & TypeIdentifier, c
 		
 		assert(ShipClass != nullptr);
 		
-		return ShipClass->GetFieldAsString("name");
+		return ShipClass->GetPropertyAsString("name");
 	}
 	else if(TypeIdentifier == "turret")
 	{
@@ -599,7 +599,7 @@ const std::string & ObjectFactory::GetName(const std::string & TypeIdentifier, c
 		
 		assert(TurretClass != nullptr);
 		
-		return TurretClass->GetFieldAsString("name");
+		return TurretClass->GetPropertyAsString("name");
 	}
 	else if(TypeIdentifier == "weapon")
 	{
@@ -607,7 +607,7 @@ const std::string & ObjectFactory::GetName(const std::string & TypeIdentifier, c
 		
 		auto WeaponClass(_WeaponClassManager->Get(SubTypeIdentifier));
 		
-		return WeaponClass->GetFieldAsString("name");
+		return WeaponClass->GetPropertyAsString("name");
 	}
 	else
 	{
@@ -625,7 +625,7 @@ std::uint32_t ObjectFactory::GetSpaceRequirement(const std::string & TypeIdentif
 		
 		assert(AmmunitionClass != nullptr);
 		
-		return AmmunitionClass->GetFieldAsUnsignedInteger32Bit("space-requirement");
+		return AmmunitionClass->GetPropertyAsUnsignedInteger32Bit("space-requirement");
 	}
 	else if(TypeIdentifier == "battery")
 	{
@@ -635,7 +635,7 @@ std::uint32_t ObjectFactory::GetSpaceRequirement(const std::string & TypeIdentif
 		
 		assert(BatteryClass != nullptr);
 		
-		return BatteryClass->GetFieldAsUnsignedInteger32Bit("space-requirement");
+		return BatteryClass->GetPropertyAsUnsignedInteger32Bit("space-requirement");
 	}
 	else if(TypeIdentifier == "commodity")
 	{
@@ -645,7 +645,7 @@ std::uint32_t ObjectFactory::GetSpaceRequirement(const std::string & TypeIdentif
 		
 		assert(CommodityClass != nullptr);
 		
-		return CommodityClass->GetFieldAsUnsignedInteger32Bit("space-requirement");
+		return CommodityClass->GetPropertyAsUnsignedInteger32Bit("space-requirement");
 	}
 	else if(TypeIdentifier == "generator")
 	{
@@ -655,7 +655,7 @@ std::uint32_t ObjectFactory::GetSpaceRequirement(const std::string & TypeIdentif
 		
 		assert(GeneratorClass != nullptr);
 		
-		return GeneratorClass->GetFieldAsUnsignedInteger32Bit("space-requirement");
+		return GeneratorClass->GetPropertyAsUnsignedInteger32Bit("space-requirement");
 	}
 	else if(TypeIdentifier == "ship")
 	{
@@ -665,7 +665,7 @@ std::uint32_t ObjectFactory::GetSpaceRequirement(const std::string & TypeIdentif
 		
 		assert(ShipClass != nullptr);
 		
-		return ShipClass->GetFieldAsUnsignedInteger32Bit("space-requirement");
+		return ShipClass->GetPropertyAsUnsignedInteger32Bit("space-requirement");
 	}
 	else if(TypeIdentifier == "turret")
 	{
@@ -675,7 +675,7 @@ std::uint32_t ObjectFactory::GetSpaceRequirement(const std::string & TypeIdentif
 		
 		assert(TurretClass != nullptr);
 		
-		return TurretClass->GetFieldAsUnsignedInteger32Bit("space-requirement");
+		return TurretClass->GetPropertyAsUnsignedInteger32Bit("space-requirement");
 	}
 	else if(TypeIdentifier == "weapon")
 	{
@@ -683,7 +683,7 @@ std::uint32_t ObjectFactory::GetSpaceRequirement(const std::string & TypeIdentif
 		
 		auto WeaponClass(_WeaponClassManager->Get(SubTypeIdentifier));
 		
-		return WeaponClass->GetFieldAsUnsignedInteger32Bit("space-requirement");
+		return WeaponClass->GetPropertyAsUnsignedInteger32Bit("space-requirement");
 	}
 	else
 	{
@@ -701,7 +701,7 @@ const VisualizationPrototype * ObjectFactory::GetVisualizationPrototype(const st
 		
 		assert(AmmunitionClass != nullptr);
 		
-		return &(AmmunitionClass->GetFieldAsVisualizationPrototype("visualization-prototype"));
+		return &(AmmunitionClass->GetPropertyAsVisualizationPrototype("visualization-prototype"));
 	}
 	else if(TypeIdentifier == "battery")
 	{
@@ -711,7 +711,7 @@ const VisualizationPrototype * ObjectFactory::GetVisualizationPrototype(const st
 		
 		assert(BatteryClass != nullptr);
 		
-		return &(BatteryClass->GetFieldAsVisualizationPrototype("visualization-prototype"));
+		return &(BatteryClass->GetPropertyAsVisualizationPrototype("visualization-prototype"));
 	}
 	else if(TypeIdentifier == "commodity")
 	{
@@ -721,7 +721,7 @@ const VisualizationPrototype * ObjectFactory::GetVisualizationPrototype(const st
 		
 		assert(CommodityClass != nullptr);
 		
-		return &(CommodityClass->GetFieldAsVisualizationPrototype("visualization-prototype"));
+		return &(CommodityClass->GetPropertyAsVisualizationPrototype("visualization-prototype"));
 	}
 	else if(TypeIdentifier == "generator")
 	{
@@ -731,7 +731,7 @@ const VisualizationPrototype * ObjectFactory::GetVisualizationPrototype(const st
 		
 		assert(GeneratorClass != nullptr);
 		
-		return &(GeneratorClass->GetFieldAsVisualizationPrototype("visualization-prototype"));
+		return &(GeneratorClass->GetPropertyAsVisualizationPrototype("visualization-prototype"));
 	}
 	else if(TypeIdentifier == "ship")
 	{
@@ -741,7 +741,7 @@ const VisualizationPrototype * ObjectFactory::GetVisualizationPrototype(const st
 		
 		assert(ShipClass != nullptr);
 		
-		return &(ShipClass->GetFieldAsVisualizationPrototype("visualization-prototype"));
+		return &(ShipClass->GetPropertyAsVisualizationPrototype("visualization-prototype"));
 	}
 	else if(TypeIdentifier == "turret")
 	{
@@ -751,7 +751,7 @@ const VisualizationPrototype * ObjectFactory::GetVisualizationPrototype(const st
 		
 		assert(TurretClass != nullptr);
 		
-		return &(TurretClass->GetFieldAsVisualizationPrototype("visualization-prototype"));
+		return &(TurretClass->GetPropertyAsVisualizationPrototype("visualization-prototype"));
 	}
 	else if(TypeIdentifier == "weapon")
 	{
@@ -759,7 +759,7 @@ const VisualizationPrototype * ObjectFactory::GetVisualizationPrototype(const st
 		
 		auto WeaponClass(_WeaponClassManager->Get(SubTypeIdentifier));
 		
-		return &(WeaponClass->GetFieldAsVisualizationPrototype("visualization-prototype"));
+		return &(WeaponClass->GetPropertyAsVisualizationPrototype("visualization-prototype"));
 	}
 	else
 	{
