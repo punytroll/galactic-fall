@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 0.6.0 of expressions.
+ * This is part of version 0.6.1 of expressions.
  **/
 
 #ifndef EXPRESSIONS_EXPRESSION_H

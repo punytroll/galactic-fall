@@ -18,7 +18,7 @@
 **/
 
 /**
- * This is part of version 0.6.0 of expressions.
+ * This is part of version 0.6.1 of expressions.
  **/
 
 #include <cassert>
@@ -37,6 +37,8 @@ Expressions::Term::Term(void) :
 
 Expressions::Term::~Term(void)
 {
+	delete _Value;
+	_Value = nullptr;
 	ON_DEBUG(std::cout << "Expressions::Term::~Term()" << std::endl);
 }
 
