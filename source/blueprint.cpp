@@ -17,15 +17,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include "template.h"
+#include "blueprint.h"
 #include "visualization_prototype.h"
 
-Template::Template(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier) :
+Blueprint::Blueprint(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier) :
 	_SubTypeIdentifier(SubTypeIdentifier),
 	_TypeIdentifier(TypeIdentifier)
 {
 }
 
-Template::~Template(void)
+Blueprint::~Blueprint(void)
 {
 }
