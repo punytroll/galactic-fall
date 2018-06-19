@@ -25,8 +25,8 @@
 template< class Class >
 class ClassManager;
 
+class Blueprint;
 class Object;
-class Template;
 class VisualizationPrototype;
 
 class ObjectFactory
@@ -42,55 +42,55 @@ public:
 	const std::string & GetName(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier) const;
 	std::uint32_t GetSpaceRequirement(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier) const;
 	const VisualizationPrototype * GetVisualizationPrototype(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier) const;
-	ClassManager< Template > * GetAmmunitionClassManager(void);
-	ClassManager< Template > * GetBatteryClassManager(void);
-	ClassManager< Template > * GetCommodityClassManager(void);
-	ClassManager< Template > * GetGeneratorClassManager(void);
-	ClassManager< Template > * GetShipClassManager(void);
-	ClassManager< Template > * GetTurretClassManager(void);
-	ClassManager< Template > * GetWeaponClassManager(void);
+	ClassManager< Blueprint > * GetAmmunitionClassManager(void);
+	ClassManager< Blueprint > * GetBatteryClassManager(void);
+	ClassManager< Blueprint > * GetCommodityClassManager(void);
+	ClassManager< Blueprint > * GetGeneratorClassManager(void);
+	ClassManager< Blueprint > * GetShipClassManager(void);
+	ClassManager< Blueprint > * GetTurretClassManager(void);
+	ClassManager< Blueprint > * GetWeaponClassManager(void);
 	bool HasClass(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier) const;
 private:
-	ClassManager< Template > * _AmmunitionClassManager;
-	ClassManager< Template > * _BatteryClassManager;
-	ClassManager< Template > * _CommodityClassManager;
-	ClassManager< Template > * _GeneratorClassManager;
-	ClassManager< Template > * _ShipClassManager;
-	ClassManager< Template > * _TurretClassManager;
-	ClassManager< Template > * _WeaponClassManager;
+	ClassManager< Blueprint > * _AmmunitionClassManager;
+	ClassManager< Blueprint > * _BatteryClassManager;
+	ClassManager< Blueprint > * _CommodityClassManager;
+	ClassManager< Blueprint > * _GeneratorClassManager;
+	ClassManager< Blueprint > * _ShipClassManager;
+	ClassManager< Blueprint > * _TurretClassManager;
+	ClassManager< Blueprint > * _WeaponClassManager;
 };
 
-inline ClassManager< Template > * ObjectFactory::GetAmmunitionClassManager(void)
+inline ClassManager< Blueprint > * ObjectFactory::GetAmmunitionClassManager(void)
 {
 	return _AmmunitionClassManager;
 }
 
-inline ClassManager< Template > * ObjectFactory::GetBatteryClassManager(void)
+inline ClassManager< Blueprint > * ObjectFactory::GetBatteryClassManager(void)
 {
 	return _BatteryClassManager;
 }
 
-inline ClassManager< Template > * ObjectFactory::GetCommodityClassManager(void)
+inline ClassManager< Blueprint > * ObjectFactory::GetCommodityClassManager(void)
 {
 	return _CommodityClassManager;
 }
 
-inline ClassManager< Template > * ObjectFactory::GetGeneratorClassManager(void)
+inline ClassManager< Blueprint > * ObjectFactory::GetGeneratorClassManager(void)
 {
 	return _GeneratorClassManager;
 }
 
-inline ClassManager< Template > * ObjectFactory::GetShipClassManager(void)
+inline ClassManager< Blueprint > * ObjectFactory::GetShipClassManager(void)
 {
 	return _ShipClassManager;
 }
 
-inline ClassManager< Template > * ObjectFactory::GetTurretClassManager(void)
+inline ClassManager< Blueprint > * ObjectFactory::GetTurretClassManager(void)
 {
 	return _TurretClassManager;
 }
 
-inline ClassManager< Template > * ObjectFactory::GetWeaponClassManager(void)
+inline ClassManager< Blueprint > * ObjectFactory::GetWeaponClassManager(void)
 {
 	return _WeaponClassManager;
 }

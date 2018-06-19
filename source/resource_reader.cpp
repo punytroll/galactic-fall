@@ -28,6 +28,7 @@
 #include <string_cast/string_cast.h>
 
 #include "arx_types.h"
+#include "blueprint.h"
 #include "buffer_reading.h"
 #include "class_manager.h"
 #include "faction.h"
@@ -59,29 +60,28 @@
 #include "slot_class.h"
 #include "star.h"
 #include "system.h"
-#include "template.h"
 #include "visualization_prototype.h"
 
 static Arxx::Item * Resolve(Arxx::Reference & Reference);
 
-static void ReadAmmunitionClass(Arxx::Reference & Reference, ClassManager< Template > * AmmunitionClassManager);
-static void ReadBatteryClass(Arxx::Reference & Reference, ClassManager< Template > * BatteryClassManager);
-static void ReadCommodityClass(Arxx::Reference & Reference, ClassManager< Template > * CommodityClassManager);
+static void ReadAmmunitionClass(Arxx::Reference & Reference, ClassManager< Blueprint > * AmmunitionClassManager);
+static void ReadBatteryClass(Arxx::Reference & Reference, ClassManager< Blueprint > * BatteryClassManager);
+static void ReadCommodityClass(Arxx::Reference & Reference, ClassManager< Blueprint > * CommodityClassManager);
 static void ReadFaction(Arxx::Reference & Reference, Galaxy * Galaxy, std::list< std::tuple< std::string, std::string, float > > & FactionStandings);
-static void ReadGeneratorClass(Arxx::Reference & Reference, ClassManager< Template > * GeneratorClassManager);
+static void ReadGeneratorClass(Arxx::Reference & Reference, ClassManager< Blueprint > * GeneratorClassManager);
 static void ReadMesh(Arxx::Reference & Reference);
 static void ReadModel(Arxx::Reference & Reference);
 static void ReadPlanet(Arxx::Reference & Reference, Galaxy * Galaxy, System * System);
 static void ReadProgram(Arxx::Reference & Reference, Graphics::ShadingManager * ShadingManager);
 static void ReadScenario(Arxx::Reference & Reference, ScenarioManager * ScenarioManager);
 static void ReadShader(Arxx::Reference & Reference, Graphics::ShadingManager * ShadingManager);
-static void ReadShipClass(Arxx::Reference & Reference, ClassManager< Template > * ShipClassManager, ClassManager< SlotClass > * SlotClassManager);
+static void ReadShipClass(Arxx::Reference & Reference, ClassManager< Blueprint > * ShipClassManager, ClassManager< SlotClass > * SlotClassManager);
 static void ReadSlotClass(Arxx::Reference & Reference, ClassManager< SlotClass > * SlotClassManager);
 static void ReadStar(Arxx::Reference & Reference, System * System);
 static void ReadSystemLink(Arxx::Reference & Reference, System * System, std::multimap< std::string, std::string > & SystemLinks);
 static void ReadTexture(Arxx::Reference & Reference);
-static void ReadTurretClass(Arxx::Reference & Reference, ClassManager< Template > * TurretClassManager);
-static void ReadWeaponClass(Arxx::Reference & Reference, ClassManager< Template > * WeaponClassManager);
+static void ReadTurretClass(Arxx::Reference & Reference, ClassManager< Blueprint > * TurretClassManager);
+static void ReadWeaponClass(Arxx::Reference & Reference, ClassManager< Blueprint > * WeaponClassManager);
 
 static void MakeItemAvailable(Arxx::Item * Item)
 {
@@ -170,17 +170,17 @@ void ResourceReader::_ReadItems(Arxx::Structure::Relation & Relation, std::funct
 	}
 }
 
-void ResourceReader::ReadAmmunitionClasses(ClassManager< Template > * AmmunitionClassManager)
+void ResourceReader::ReadAmmunitionClasses(ClassManager< Blueprint > * AmmunitionClassManager)
 {
 	_ReadItems("/Ammunition Classes", std::bind(ReadAmmunitionClass, std::placeholders::_1, AmmunitionClassManager));
 }
 
-void ResourceReader::ReadBatteryClasses(ClassManager< Template > * BatteryClassManager)
+void ResourceReader::ReadBatteryClasses(ClassManager< Blueprint > * BatteryClassManager)
 {
 	_ReadItems("/Battery Classes", std::bind(ReadBatteryClass, std::placeholders::_1, BatteryClassManager));
 }
 
-void ResourceReader::ReadCommodityClasses(ClassManager< Template > * CommodityClassManager)
+void ResourceReader::ReadCommodityClasses(ClassManager< Blueprint > * CommodityClassManager)
 {
 	_ReadItems("/Commodity Classes", std::bind(ReadCommodityClass, std::placeholders::_1, CommodityClassManager));
 }
@@ -253,7 +253,7 @@ Galaxy * ResourceReader::ReadGalaxy(const std::string & GalaxyIdentifier)
 	return nullptr;
 }
 
-void ResourceReader::ReadGeneratorClasses(ClassManager< Template > * GeneratorClassManager)
+void ResourceReader::ReadGeneratorClasses(ClassManager< Blueprint > * GeneratorClassManager)
 {
 	_ReadItems("/Generator Classes", std::bind(ReadGeneratorClass, std::placeholders::_1, GeneratorClassManager));
 }
@@ -290,7 +290,7 @@ void ResourceReader::ReadShadersAndPrograms(Graphics::ShadingManager * ShadingMa
 	_ReadItems("/Programs", std::bind(ReadProgram, std::placeholders::_1, ShadingManager));
 }
 
-void ResourceReader::ReadShipClasses(ClassManager< Template > * ShipClassManager, ClassManager< SlotClass > * SlotClassManager)
+void ResourceReader::ReadShipClasses(ClassManager< Blueprint > * ShipClassManager, ClassManager< SlotClass > * SlotClassManager)
 {
 	_ReadItems("/Ship Classes", std::bind(ReadShipClass, std::placeholders::_1, ShipClassManager, SlotClassManager));
 }
@@ -370,12 +370,12 @@ void ResourceReader::ReadTextures(void)
 	_ReadItems("/Textures", ReadTexture);
 }
 
-void ResourceReader::ReadTurretClasses(ClassManager< Template > * TurretClassManager)
+void ResourceReader::ReadTurretClasses(ClassManager< Blueprint > * TurretClassManager)
 {
 	_ReadItems("/Turret Classes", std::bind(ReadTurretClass, std::placeholders::_1, TurretClassManager));
 }
 
-void ResourceReader::ReadWeaponClasses(ClassManager< Template > * WeaponClassManager)
+void ResourceReader::ReadWeaponClasses(ClassManager< Blueprint > * WeaponClassManager)
 {
 	_ReadItems("/Weapon Classes", std::bind(ReadWeaponClass, std::placeholders::_1, WeaponClassManager));
 }
@@ -400,7 +400,7 @@ std::string ResourceReader::ReadSavegameFromScenarioPath(const std::string & Sce
 	return Result;
 }
 
-static void ReadAmmunitionClass(Arxx::Reference & Reference, ClassManager< Template > * AmmunitionClassManager)
+static void ReadAmmunitionClass(Arxx::Reference & Reference, ClassManager< Blueprint > * AmmunitionClassManager)
 {
 	auto Item(Resolve(Reference));
 	
@@ -442,7 +442,7 @@ static void ReadAmmunitionClass(Arxx::Reference & Reference, ClassManager< Templ
 	NewAmmunitionClass->AddProperty("cartridge-size", CartridgeSize);
 }
 
-static void ReadBatteryClass(Arxx::Reference & Reference, ClassManager< Template > * BatteryClassManager)
+static void ReadBatteryClass(Arxx::Reference & Reference, ClassManager< Blueprint > * BatteryClassManager)
 {
 	auto Item(Resolve(Reference));
 	
@@ -485,7 +485,7 @@ static void ReadBatteryClass(Arxx::Reference & Reference, ClassManager< Template
 	NewBatteryClass->AddProperty("slot-class-identifier", SlotClassIdentifier);
 }
 
-static void ReadCommodityClass(Arxx::Reference & Reference, ClassManager< Template > * CommodityClassManager)
+static void ReadCommodityClass(Arxx::Reference & Reference, ClassManager< Blueprint > * CommodityClassManager)
 {
 	auto Item(Resolve(Reference));
 	
@@ -569,7 +569,7 @@ static void ReadFaction(Arxx::Reference & Reference, Galaxy * Galaxy, std::list<
 	Galaxy->GetAspectObjectContainer()->AddContent(NewFaction);
 }
 
-static void ReadGeneratorClass(Arxx::Reference & Reference, ClassManager< Template > * GeneratorClassManager)
+static void ReadGeneratorClass(Arxx::Reference & Reference, ClassManager< Blueprint > * GeneratorClassManager)
 {
 	auto Item(Resolve(Reference));
 	
@@ -944,7 +944,7 @@ static void ReadShader(Arxx::Reference & Reference, Graphics::ShadingManager * S
 	Shader->SetSource(Source);
 }
 
-static void ReadShipClass(Arxx::Reference & Reference, ClassManager< Template > * ShipClassManager, ClassManager< SlotClass > * SlotClassManager)
+static void ReadShipClass(Arxx::Reference & Reference, ClassManager< Blueprint > * ShipClassManager, ClassManager< SlotClass > * SlotClassManager)
 {
 	auto Item(Resolve(Reference));
 	
@@ -1182,7 +1182,7 @@ static void ReadTexture(Arxx::Reference & Reference)
 	Texture->SetData(Width, Height, Format, Reader.GetBuffer().GetBegin() + Reader.stGetPosition());
 }
 
-static void ReadTurretClass(Arxx::Reference & Reference, ClassManager< Template > * TurretClassManager)
+static void ReadTurretClass(Arxx::Reference & Reference, ClassManager< Blueprint > * TurretClassManager)
 {
 	Arxx::Item * Item(Resolve(Reference));
 	
@@ -1247,7 +1247,7 @@ static void ReadTurretClass(Arxx::Reference & Reference, ClassManager< Template 
 	NewTurretClass->AddProperty("shot-visualization-prototype", ShotVisualizationPrototype);
 }
 
-static void ReadWeaponClass(Arxx::Reference & Reference, ClassManager< Template > * WeaponClassManager)
+static void ReadWeaponClass(Arxx::Reference & Reference, ClassManager< Blueprint > * WeaponClassManager)
 {
 	auto Item(Resolve(Reference));
 	

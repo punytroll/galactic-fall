@@ -17,8 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#ifndef TEMPLATE_H
-#define TEMPLATE_H
+#ifndef BLUEPRINT_H
+#define BLUEPRINT_H
 
 #include <string>
 
@@ -26,12 +26,12 @@
 
 class VisualizationPrototype;
 
-class Template : public Properties
+class Blueprint : public Properties
 {
 public:
 	// constructor & destructor
-	Template(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier);
-	virtual ~Template(void);
+	Blueprint(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier);
+	virtual ~Blueprint(void);
 	const std::string & GetSubTypeIdentifier(void) const;
 	const std::string & GetTypeIdentifier(void) const;
 private:
@@ -39,12 +39,12 @@ private:
 	std::string _TypeIdentifier;
 };
 
-inline const std::string & Template::GetSubTypeIdentifier(void) const
+inline const std::string & Blueprint::GetSubTypeIdentifier(void) const
 {
 	return _SubTypeIdentifier;
 }
 
-inline const std::string & Template::GetTypeIdentifier(void) const
+inline const std::string & Blueprint::GetTypeIdentifier(void) const
 {
 	return _TypeIdentifier;
 }
