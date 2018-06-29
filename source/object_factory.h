@@ -22,77 +22,13 @@
 
 #include <string>
 
-template< class Class >
-class ClassManager;
-
-class Blueprint;
 class Object;
-class VisualizationPrototype;
 
 class ObjectFactory
 {
 public:
-	// constructor & destructor
-	ObjectFactory(void);
-	~ObjectFactory(void);
 	// getters
 	Object * Create(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier, bool CreateNestedObjects) const;
-	std::uint32_t GetBasePrice(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier) const;
-	const std::string & GetDescription(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier) const;
-	const std::string & GetName(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier) const;
-	std::uint32_t GetSpaceRequirement(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier) const;
-	const VisualizationPrototype * GetVisualizationPrototype(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier) const;
-	ClassManager< Blueprint > * GetAmmunitionClassManager(void);
-	ClassManager< Blueprint > * GetBatteryClassManager(void);
-	ClassManager< Blueprint > * GetCommodityClassManager(void);
-	ClassManager< Blueprint > * GetGeneratorClassManager(void);
-	ClassManager< Blueprint > * GetShipClassManager(void);
-	ClassManager< Blueprint > * GetTurretClassManager(void);
-	ClassManager< Blueprint > * GetWeaponClassManager(void);
-	bool HasClass(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier) const;
-private:
-	ClassManager< Blueprint > * _AmmunitionClassManager;
-	ClassManager< Blueprint > * _BatteryClassManager;
-	ClassManager< Blueprint > * _CommodityClassManager;
-	ClassManager< Blueprint > * _GeneratorClassManager;
-	ClassManager< Blueprint > * _ShipClassManager;
-	ClassManager< Blueprint > * _TurretClassManager;
-	ClassManager< Blueprint > * _WeaponClassManager;
 };
-
-inline ClassManager< Blueprint > * ObjectFactory::GetAmmunitionClassManager(void)
-{
-	return _AmmunitionClassManager;
-}
-
-inline ClassManager< Blueprint > * ObjectFactory::GetBatteryClassManager(void)
-{
-	return _BatteryClassManager;
-}
-
-inline ClassManager< Blueprint > * ObjectFactory::GetCommodityClassManager(void)
-{
-	return _CommodityClassManager;
-}
-
-inline ClassManager< Blueprint > * ObjectFactory::GetGeneratorClassManager(void)
-{
-	return _GeneratorClassManager;
-}
-
-inline ClassManager< Blueprint > * ObjectFactory::GetShipClassManager(void)
-{
-	return _ShipClassManager;
-}
-
-inline ClassManager< Blueprint > * ObjectFactory::GetTurretClassManager(void)
-{
-	return _TurretClassManager;
-}
-
-inline ClassManager< Blueprint > * ObjectFactory::GetWeaponClassManager(void)
-{
-	return _WeaponClassManager;
-}
 
 #endif

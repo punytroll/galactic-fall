@@ -17,12 +17,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include "blueprint_manager.h"
 #include "globals.h"
-#include "object_factory.h"
 #include "planet_assets.h"
 
 PlanetAssets::PlanetAssets(const std::string & TypeIdentifier, const std::string & SubTypeIdentifier) :
-	_BasePrice(g_ObjectFactory->GetBasePrice(TypeIdentifier, SubTypeIdentifier)),
+	_BasePrice(g_BlueprintManager->GetBasePrice(TypeIdentifier, SubTypeIdentifier)),
 	_BasePriceModifier(1.0f),
 	_SubTypeIdentifier(SubTypeIdentifier),
 	_TypeIdentifier(TypeIdentifier)
@@ -35,12 +35,12 @@ PlanetAssets::~PlanetAssets(void)
 
 const std::string & PlanetAssets::GetDescription(void) const
 {
-	return g_ObjectFactory->GetDescription(_TypeIdentifier, _SubTypeIdentifier);
+	return g_BlueprintManager->GetDescription(_TypeIdentifier, _SubTypeIdentifier);
 }
 
 const std::string & PlanetAssets::GetName(void) const
 {
-	return g_ObjectFactory->GetName(_TypeIdentifier, _SubTypeIdentifier);
+	return g_BlueprintManager->GetName(_TypeIdentifier, _SubTypeIdentifier);
 }
 
 std::uint32_t PlanetAssets::GetPrice(void) const
@@ -50,10 +50,10 @@ std::uint32_t PlanetAssets::GetPrice(void) const
 
 std::uint32_t PlanetAssets::GetSpaceRequirement(void) const
 {
-	return g_ObjectFactory->GetSpaceRequirement(_TypeIdentifier, _SubTypeIdentifier);
+	return g_BlueprintManager->GetSpaceRequirement(_TypeIdentifier, _SubTypeIdentifier);
 }
 
 const VisualizationPrototype * PlanetAssets::GetVisualizationPrototype(void) const
 {
-	return g_ObjectFactory->GetVisualizationPrototype(_TypeIdentifier, _SubTypeIdentifier);
+	return g_BlueprintManager->GetVisualizationPrototype(_TypeIdentifier, _SubTypeIdentifier);
 }
