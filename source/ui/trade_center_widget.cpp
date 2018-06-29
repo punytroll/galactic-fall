@@ -17,6 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
+#include <algorithm>
+
 #include <expressions/operators.h>
 
 #include <string_cast/string_cast.h>
@@ -297,7 +299,14 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet
 	auto Hangar{_Planet->GetHangar(_Character)};
 	
 	assert(Hangar != nullptr);
-	for(auto PlanetAssets : Planet->GetPlanetAssets())
+	
+	std::vector< PlanetAssets * > SortedPlanetAssets{Planet->GetPlanetAssets()};
+	
+	std::sort(SortedPlanetAssets.begin(), SortedPlanetAssets.end(), [](PlanetAssets * One, PlanetAssets * Two)
+																	{
+																		return One->GetName() < Two->GetName();
+																	});
+	for(auto PlanetAssets : SortedPlanetAssets)
 	{
 		_AssetClassListBox->GetContent()->AddSubWidget(new UI::TradeCenterAssetsListBoxItem{PlanetAssets, Hangar});
 	}
