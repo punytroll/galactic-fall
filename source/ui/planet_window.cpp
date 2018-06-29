@@ -19,13 +19,18 @@
 
 #include <expressions/operators.h>
 
+#include <string_cast/string_cast.h>
+
 #include "../character.h"
+#include "../game_time.h"
+#include "../graphics/color_rgbo.h"
 #include "../object_aspect_name.h"
 #include "../planet.h"
 #include "hangar_widget.h"
 #include "key_event.h"
 #include "label.h"
 #include "planet_window.h"
+#include "progress_bar.h"
 #include "text_button.h"
 #include "trade_center_widget.h"
 
@@ -57,20 +62,41 @@ UI::PlanetWindow::PlanetWindow(Planet * Planet, Character * Character) :
 	
 	auto TradeCenterButton{new UI::TextButton{this, "Trade Center"}};
 	
-	TradeCenterButton->SetLeft(10.0_c);
-	TradeCenterButton->SetTop(70.0_c);
-	TradeCenterButton->SetWidth(100.0_c);
+	TradeCenterButton->SetLeft(left(HomeButton));
+	TradeCenterButton->SetTop(bottom(HomeButton) + 10.0_c);
+	TradeCenterButton->SetWidth(width(HomeButton));
 	TradeCenterButton->SetHeight(20.0_c);
 	TradeCenterButton->ConnectClickedCallback(std::bind(&UI::PlanetWindow::_OnTradeCenterButtonClicked, this));
 	
 	auto HangarButton{new UI::TextButton{this, "Hangar"}};
 	
-	HangarButton->SetLeft(10.0_c);
-	HangarButton->SetTop(100.0_c);
-	HangarButton->SetWidth(100.0_c);
+	HangarButton->SetLeft(left(HomeButton));
+	HangarButton->SetTop(bottom(TradeCenterButton) + 10.0_c);
+	HangarButton->SetWidth(width(HomeButton));
 	HangarButton->SetHeight(20.0_c);
 	HangarButton->ConnectClickedCallback(std::bind(&UI::PlanetWindow::_OnHangarButtonClicked, this));
+	
+	auto CreditsLabel{new UI::Label{}};
+	auto CycleProgressBar{new UI::ProgressBar{}};
+	
+	CreditsLabel->SetName("credits");
+	CreditsLabel->SetLeft(left(HomeButton));
+	CreditsLabel->SetTop(top(CycleProgressBar) - 10.0_c - height(CreditsLabel));
+	CreditsLabel->SetWidth(width(HomeButton));
+	CreditsLabel->SetHeight(20.0_c);
+	CreditsLabel->ConnectUpdatingCallback(std::bind(&UI::PlanetWindow::_OnUpdateCreditsLabel, this, CreditsLabel, std::placeholders::_1, std::placeholders::_2));
+	CreditsLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
+	CycleProgressBar->SetName("cycle_progress_bar");
+	CycleProgressBar->SetLeft(left(HomeButton));
+	CycleProgressBar->SetTop(height(this) - 10.0_c - height(CycleProgressBar));
+	CycleProgressBar->SetWidth(width(HomeButton));
+	CycleProgressBar->SetHeight(20.0_c);
+	CycleProgressBar->SetColor(Graphics::ColorRGBO{0.3f, 0.45f, 0.6f, 1.0f});
+	CycleProgressBar->ConnectUpdatingCallback(std::bind(&UI::PlanetWindow::_OnUpdateCycleProgressBar, this, CycleProgressBar, std::placeholders::_1, std::placeholders::_2));
 	_OpenHomeScreen();
+	// add components
+	AddSubWidget(CreditsLabel);
+	AddSubWidget(CycleProgressBar);
 }
 
 void UI::PlanetWindow::_OnDestroying(UI::Event & DestroyingEvent)
@@ -137,6 +163,20 @@ void UI::PlanetWindow::_OnPlanetDestroying(void)
 void UI::PlanetWindow::_OnTradeCenterButtonClicked(void)
 {
 	_OpenTradeCenter();
+}
+
+void UI::PlanetWindow::_OnUpdateCreditsLabel(UI::Label * CreditsLabel, float RealTimeSeconds, float GameTimeSeconds)
+{
+	if(_Character != nullptr)
+	{
+		CreditsLabel->SetText("Credits: " + to_string_cast(_Character->GetCredits()));
+	}
+}
+
+void UI::PlanetWindow::_OnUpdateCycleProgressBar(UI::ProgressBar * CycleProgressBar, float RealTimeSeconds, float GameTimeSeconds)
+{
+	CycleProgressBar->SetText(to_string_cast(GameTime::GetCycle()));
+	CycleProgressBar->SetFillLevel(GameTime::GetCycleFraction());
 }
 
 void UI::PlanetWindow::_OpenHangar(void)

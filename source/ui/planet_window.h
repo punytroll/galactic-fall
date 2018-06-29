@@ -29,6 +29,7 @@ namespace UI
 {
 	class Label;
 	class HangarWidget;
+	class ProgressBar;
 	class TradeCenterWidget;
 	
 	class PlanetWindow : public UI::Window
@@ -44,6 +45,8 @@ namespace UI
 		void _OnKey(UI::KeyEvent & KeyEvent);
 		void _OnPlanetDestroying(void);
 		void _OnTradeCenterButtonClicked(void);
+		void _OnUpdateCreditsLabel(UI::Label * CreditsLabel, float RealTimeSeconds, float GameTimeSeconds);
+		void _OnUpdateCycleProgressBar(UI::ProgressBar * CycleProgressBar, float RealTimeSeconds, float GameTimeSeconds);
 		// helper functions & actions
 		void _OpenHangar(void);
 		void _OpenHomeScreen(void);
