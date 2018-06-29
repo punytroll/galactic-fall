@@ -47,7 +47,7 @@ UI::HeadsUpDisplay::HeadsUpDisplay(UI::Widget * SupWidget) :
 	UI::Widget(SupWidget),
 	_MessageLabel(nullptr)
 {
-	auto CycleLabel{new UI::Label{this}};
+	auto CycleLabel{new UI::Label{}};
 	
 	CycleLabel->SetName("cycle_label");
 	CycleLabel->SetLeft(0.0_c);
@@ -58,7 +58,7 @@ UI::HeadsUpDisplay::HeadsUpDisplay(UI::Widget * SupWidget) :
 	CycleLabel->SetTextColor(Graphics::ColorRGBO(0.7f, 0.8f, 1.0f, 1.0f));
 	CycleLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	
-	auto CycleProgressBar{new UI::ProgressBar()};
+	auto CycleProgressBar{new UI::ProgressBar{}};
 	
 	CycleProgressBar->SetName("cycle_progress_bar");
 	CycleProgressBar->SetLeft(right(CycleLabel) + 10.0_c);
@@ -79,7 +79,7 @@ UI::HeadsUpDisplay::HeadsUpDisplay(UI::Widget * SupWidget) :
 	TimeWarpLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	TimeWarpLabel->ConnectUpdatingCallback(std::bind(&UI::HeadsUpDisplay::_UpdateTimeWarpLabel, this, TimeWarpLabel, std::placeholders::_1, std::placeholders::_2));
 	
-	auto LinkedSystemTargetLabel{new UI::Label{this}};
+	auto LinkedSystemTargetLabel{new UI::Label{}};
 	
 	LinkedSystemTargetLabel->SetName("linked_system_target");
 	LinkedSystemTargetLabel->SetLeft(0.0_c);
@@ -90,7 +90,7 @@ UI::HeadsUpDisplay::HeadsUpDisplay(UI::Widget * SupWidget) :
 	LinkedSystemTargetLabel->ConnectUpdatingCallback(std::bind(&UI::HeadsUpDisplay::_UpdateLinkedSystemTargetLabel, this, LinkedSystemTargetLabel, std::placeholders::_1, std::placeholders::_2));
 	LinkedSystemTargetLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	
-	auto CreditsLabel{new UI::Label{this}};
+	auto CreditsLabel{new UI::Label{}};
 	
 	CreditsLabel->SetName("credits");
 	CreditsLabel->SetLeft(0.0_c);
@@ -101,7 +101,7 @@ UI::HeadsUpDisplay::HeadsUpDisplay(UI::Widget * SupWidget) :
 	CreditsLabel->ConnectUpdatingCallback(std::bind(&UI::HeadsUpDisplay::_UpdateCreditsLabel, this, CreditsLabel, std::placeholders::_1, std::placeholders::_2));
 	CreditsLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	
-	auto FuelLabel{new UI::Label{this}};
+	auto FuelLabel{new UI::Label{}};
 	
 	FuelLabel->SetName("fuel");
 	FuelLabel->SetLeft(0.0_c);
@@ -112,7 +112,7 @@ UI::HeadsUpDisplay::HeadsUpDisplay(UI::Widget * SupWidget) :
 	FuelLabel->ConnectUpdatingCallback(std::bind(&UI::HeadsUpDisplay::_UpdateFuelLabel, this, FuelLabel, std::placeholders::_1, std::placeholders::_2));
 	FuelLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	
-	auto EnergyLabel{new UI::Label{this}};
+	auto EnergyLabel{new UI::Label{}};
 	
 	EnergyLabel->SetName("energy");
 	EnergyLabel->SetLeft(0.0_c);
@@ -123,7 +123,7 @@ UI::HeadsUpDisplay::HeadsUpDisplay(UI::Widget * SupWidget) :
 	EnergyLabel->ConnectUpdatingCallback(std::bind(&UI::HeadsUpDisplay::_UpdateEnergyLabel, this, EnergyLabel, std::placeholders::_1, std::placeholders::_2));
 	EnergyLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	
-	auto HullLabel{new UI::Label{this}};
+	auto HullLabel{new UI::Label{}};
 	
 	HullLabel->SetName("hull");
 	HullLabel->SetLeft(0.0_c);
@@ -133,7 +133,7 @@ UI::HeadsUpDisplay::HeadsUpDisplay(UI::Widget * SupWidget) :
 	HullLabel->SetTextColor(Graphics::ColorRGBO(0.7f, 0.8f, 1.0f, 1.0f));
 	HullLabel->ConnectUpdatingCallback(std::bind(&UI::HeadsUpDisplay::_UpdateHullLabel, this, HullLabel, std::placeholders::_1, std::placeholders::_2));
 	HullLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
-	_MessageLabel = new UI::Label{this};
+	_MessageLabel = new UI::Label{};
 	_MessageLabel->SetName("message");
 	_MessageLabel->SetLeft(0.0_c);
 	_MessageLabel->SetTop(40.0_c);
@@ -143,7 +143,7 @@ UI::HeadsUpDisplay::HeadsUpDisplay(UI::Widget * SupWidget) :
 	_MessageLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Center);
 	_MessageLabel->SetVisible(false);
 	
-	auto MiniMapWidget{new UI::Widget{this}};
+	auto MiniMapWidget{new UI::Widget{}};
 	
 	MiniMapWidget->SetName("mini_map");
 	MiniMapWidget->SetLeft(width(this) - width(MiniMapWidget));
@@ -184,7 +184,7 @@ UI::HeadsUpDisplay::HeadsUpDisplay(UI::Widget * SupWidget) :
 	MiniMapBorder->SetLineWidth(1.0f);
 	MiniMapBorder->SetColor(Graphics::ColorRGBO(0.1f, 0.2f, 0.3f, 1.0f));
 	
-	auto ScannerWidget{new UI::Widget{this}};
+	auto ScannerWidget{new UI::Widget{}};
 	
 	ScannerWidget->SetName("scanner");
 	ScannerWidget->SetLeft(0.0_c);
@@ -225,8 +225,17 @@ UI::HeadsUpDisplay::HeadsUpDisplay(UI::Widget * SupWidget) :
 	ScannerBorder->SetLineWidth(1.0f);
 	ScannerBorder->SetColor(Graphics::ColorRGBO(0.1f, 0.2f, 0.3f, 1.0f));
 	// add components
+	AddSubWidget(CycleLabel);
 	AddSubWidget(CycleProgressBar);
 	AddSubWidget(TimeWarpLabel);
+	AddSubWidget(LinkedSystemTargetLabel);
+	AddSubWidget(CreditsLabel);
+	AddSubWidget(FuelLabel);
+	AddSubWidget(EnergyLabel);
+	AddSubWidget(HullLabel);
+	AddSubWidget(_MessageLabel);
+	AddSubWidget(MiniMapWidget);
+	AddSubWidget(ScannerWidget);
 }
 
 void UI::HeadsUpDisplay::_HideMessage(void)

@@ -42,6 +42,7 @@ void OutputObserver::HandleMessage(Message * Message)
 	{
 		assert(_PlanetWindow == nullptr);
 		assert(Message->GetSender()->GetTypeIdentifier() == "planet");
+		g_UserInterface->GetWidget("/heads_up_display")->SetVisible(false);
 		_PlanetWindow = new UI::PlanetWindow{dynamic_cast< Planet * >(Message->GetSender()), GetObservedCharacter()};
 		_PlanetWindow->SetLeft(50.0_c);
 		_PlanetWindow->SetTop(50.0_c);
@@ -55,5 +56,6 @@ void OutputObserver::HandleMessage(Message * Message)
 		assert(_PlanetWindow != nullptr);
 		_PlanetWindow->Destroy();
 		_PlanetWindow = nullptr;
+		g_UserInterface->GetWidget("/heads_up_display")->SetVisible(true);
 	}
 }
