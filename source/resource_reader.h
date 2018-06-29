@@ -36,6 +36,7 @@ namespace Graphics
 template< class Class >
 class ClassManager;
 
+class BlueprintManager;
 class Galaxy;
 class ScenarioManager;
 class Settings;
@@ -47,21 +48,21 @@ public:
 	ResourceReader(void);
 	~ResourceReader(void);
 	bool LoadArchive(const std::string & Path);
-	void ReadAmmunitionClasses(ClassManager< Blueprint > * AmmunitionClassManager);
-	void ReadBatteryClasses(ClassManager< Blueprint > * BatteryClassManager);
-	void ReadCommodityClasses(ClassManager< Blueprint > * CommodityClassManager);
+	void ReadAmmunitionClasses(BlueprintManager * BlueprintManager);
+	void ReadBatteryClasses(BlueprintManager * BlueprintManager);
+	void ReadCommodityClasses(BlueprintManager * BlueprintManager);
 	Galaxy * ReadGalaxy(const std::string & GalaxyIdentifier);
-	void ReadGeneratorClasses(ClassManager< Blueprint > * GeneratorClassManager);
+	void ReadGeneratorClasses(BlueprintManager * BlueprintManager);
 	void ReadMeshes(void);
 	void ReadModels(void);
 	void ReadScenarios(ScenarioManager * ScenarioManager);
 	void ReadSettings(Settings * Settings);
 	void ReadShadersAndPrograms(Graphics::ShadingManager * ShadingManager);
-	void ReadShipClasses(ClassManager< Blueprint > * ShipClassManager, ClassManager< SlotClass > * SlotClassManager);
+	void ReadShipClasses(BlueprintManager * BlueprintManager, ClassManager< SlotClass > * SlotClassManager);
 	void ReadSlotClasses(ClassManager< SlotClass > * SlotClassManager);
-	void ReadTurretClasses(ClassManager< Blueprint > * TurretClassManager);
+	void ReadTurretClasses(BlueprintManager * BlueprintManager);
 	void ReadTextures(void);
-	void ReadWeaponClasses(ClassManager< Blueprint > * WeaponClassManager);
+	void ReadWeaponClasses(BlueprintManager * BlueprintManager);
 	std::string ReadSavegameFromScenarioPath(const std::string & ScenarioPath);
 private:
 	void _ReadItems(const std::string & Path, std::function< void (Arxx::Reference &) > ReaderFunction);

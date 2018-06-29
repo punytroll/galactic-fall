@@ -33,6 +33,7 @@
 template < class ClassType >
 class ClassManager;
 
+class BlueprintManager;
 class Galaxy;
 class MessageDispatcher;
 class ObjectFactory;
@@ -70,6 +71,7 @@ enum WantReturnCode
 	TOO_NEAR_TO_STELLAR_OBJECT
 };
 
+extern BlueprintManager * g_BlueprintManager;
 extern OutputObserver * g_CharacterObserver;
 extern Galaxy * g_Galaxy;
 extern TimeoutNotificationManager * g_GameTimeTimeoutNotifications;

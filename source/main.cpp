@@ -42,6 +42,7 @@
 #include <xml_stream/xml_stream.h>
 
 #include "battery.h"
+#include "blueprint_manager.h"
 #include "character.h"
 #include "class_manager.h"
 #include "command_mind.h"
@@ -130,6 +131,7 @@
 using namespace Expressions::Operators;
 
 // these objects are exported via globals.h
+BlueprintManager * g_BlueprintManager{nullptr};
 Galaxy * g_Galaxy(nullptr);
 Graphics::Engine * g_GraphicsEngine(nullptr);
 Graphics::PerspectiveProjection * g_MainProjection(nullptr);
@@ -3379,25 +3381,26 @@ int main(int argc, char ** argv)
 	g_UserInterface->GetRootWidget()->ConnectMouseMoveCallback(MainViewMouseMove);
 	// resize here after the graphics have been set up
 	Resize();
-	g_ScenarioManager = new ScenarioManager();
-	g_MessageDispatcher = new MessageDispatcher();
-	g_ObjectFactory = new ObjectFactory();
-	g_SlotClassManager = new ClassManager< SlotClass >();
-	g_SystemStatistics = new SystemStatistics();
-	g_CharacterObserver = new OutputObserver();
+	g_BlueprintManager = new BlueprintManager{};
+	g_ScenarioManager = new ScenarioManager{};
+	g_MessageDispatcher = new MessageDispatcher{};
+	g_ObjectFactory = new ObjectFactory{};
+	g_SlotClassManager = new ClassManager< SlotClass >{};
+	g_SystemStatistics = new SystemStatistics{};
+	g_CharacterObserver = new OutputObserver{};
 	
 	// read the data from the archive
 	ON_DEBUG(std::cout << "Reading the data objects from the game archive." << std::endl);
 	g_ResourceReader->ReadMeshes();
 	g_ResourceReader->ReadModels();
-	g_ResourceReader->ReadAmmunitionClasses(g_ObjectFactory->GetAmmunitionClassManager());
-	g_ResourceReader->ReadBatteryClasses(g_ObjectFactory->GetBatteryClassManager());
-	g_ResourceReader->ReadCommodityClasses(g_ObjectFactory->GetCommodityClassManager());
-	g_ResourceReader->ReadGeneratorClasses(g_ObjectFactory->GetGeneratorClassManager());
+	g_ResourceReader->ReadAmmunitionClasses(g_BlueprintManager);
+	g_ResourceReader->ReadBatteryClasses(g_BlueprintManager);
+	g_ResourceReader->ReadCommodityClasses(g_BlueprintManager);
+	g_ResourceReader->ReadGeneratorClasses(g_BlueprintManager);
 	g_ResourceReader->ReadSlotClasses(g_SlotClassManager);
-	g_ResourceReader->ReadShipClasses(g_ObjectFactory->GetShipClassManager(), g_SlotClassManager);
-	g_ResourceReader->ReadTurretClasses(g_ObjectFactory->GetTurretClassManager());
-	g_ResourceReader->ReadWeaponClasses(g_ObjectFactory->GetWeaponClassManager());
+	g_ResourceReader->ReadShipClasses(g_BlueprintManager, g_SlotClassManager);
+	g_ResourceReader->ReadTurretClasses(g_BlueprintManager);
+	g_ResourceReader->ReadWeaponClasses(g_BlueprintManager);
 	g_ResourceReader->ReadScenarios(g_ScenarioManager);
 	// reading shaders and programs could be done earlier and without OpenGL, but initializing them requires OpenGL
 	g_ResourceReader->ReadShadersAndPrograms(g_GraphicsEngine->GetShadingManager());
@@ -3457,6 +3460,7 @@ int main(int argc, char ** argv)
 		g_ScenarioManager = nullptr;
 	}
 	// destroying global variables in reverse order
+	delete g_BlueprintManager;
 	delete g_CharacterObserver;
 	delete g_SystemStatistics;
 	delete g_SlotClassManager;

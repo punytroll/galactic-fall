@@ -21,6 +21,7 @@
 
 #include <string_cast/string_cast.h>
 
+#include "../blueprint_manager.h"
 #include "../character.h"
 #include "../commodity.h"
 #include "../game_time.h"
@@ -75,7 +76,7 @@ namespace UI
 			
 			auto NameLabel{new UI::Label{this, PlanetAssets->GetName()}};
 			auto HangarAmountLabel{new UI::Label{this, ""}};
-			auto SizeRequirementLabel{new UI::Label{this, to_string_cast(0.001 * g_ObjectFactory->GetSpaceRequirement(PlanetAssets->GetTypeIdentifier(), PlanetAssets->GetSubTypeIdentifier()), 3)}};
+			auto SizeRequirementLabel{new UI::Label{this, to_string_cast(0.001 * g_BlueprintManager->GetSpaceRequirement(PlanetAssets->GetTypeIdentifier(), PlanetAssets->GetSubTypeIdentifier()), 3)}};
 			auto PriceLabel{new UI::Label{this, to_string_cast(PlanetAssets->GetPrice())}};
 			
 			PriceLabel->SetLeft(width(this) - 5.0_c - width(PriceLabel));
@@ -389,54 +390,50 @@ void UI::TradeCenterWidget::_OnAssetClassListBoxSelectedItemChanged(void)
 	if((SelectedAssetClassListBoxItem != nullptr) && (_AssetClassViewDisplay->GetWidth() > 0.0f) && (_AssetClassViewDisplay->GetHeight() > 0.0f))
 	{
 		auto VisualizationPrototype{SelectedAssetClassListBoxItem->GetPlanetAssets()->GetVisualizationPrototype()};
+		auto VisualizationNode(VisualizePrototype(VisualizationPrototype));
 		
-		if(VisualizationPrototype != nullptr)
+		if(VisualizationNode != nullptr)
 		{
-			auto VisualizationNode(VisualizePrototype(VisualizationPrototype));
+			float RadialSize(VisualizationPrototype->GetModel()->GetRadialSize());
+			float ExtendedRadialSize((5.0f / 4.0f) * RadialSize);
+			Graphics::PerspectiveProjection * PerspectiveProjection(new Graphics::PerspectiveProjection());
 			
-			if(VisualizationNode != nullptr)
-			{
-				float RadialSize(VisualizationPrototype->GetModel()->GetRadialSize());
-				float ExtendedRadialSize((5.0f / 4.0f) * RadialSize);
-				Graphics::PerspectiveProjection * PerspectiveProjection(new Graphics::PerspectiveProjection());
-				
-				PerspectiveProjection->SetFieldOfViewY(asinf(ExtendedRadialSize / sqrtf(ExtendedRadialSize * ExtendedRadialSize + 16 * RadialSize * RadialSize)) * 2.0f);
-				PerspectiveProjection->SetAspect(_AssetClassViewDisplay->GetWidth() / _AssetClassViewDisplay->GetHeight());
-				PerspectiveProjection->SetNearClippingPlane(0.1f);
-				PerspectiveProjection->SetFarClippingPlane(100.0f);
-				
-				auto View(new Graphics::View());
-				
-				g_GraphicsEngine->AddView(View);
-				View->SetClearColor(Graphics::ColorRGBO(1.0f, 1.0f, 1.0f, 0.0f));
-				assert(View->GetCamera() != nullptr);
-				View->GetCamera()->SetProjection(PerspectiveProjection);
-				View->GetCamera()->SetSpacialMatrix(Matrix4f::CreateTranslation(Vector3f::CreateFromComponents(0.0f, -2.5f, 1.4f).Normalize() * 4.0f * RadialSize).RotateX(1.05f));
-				
-				auto Scene(new Graphics::Scene());
-				
-				Scene->SetDestroyCallback(std::bind(&UI::TradeCenterWidget::_OnDestroyInScene, this, std::placeholders::_1));
-				Scene->ActivateLight();
-				assert(Scene->GetLight() != nullptr);
-				Scene->GetLight()->SetType(Graphics::Light::Type::Directional);
-				Scene->GetLight()->SetDirection(Vector3f::CreateFromComponents(20.0f, 10.0f, -20.0f));
-				Scene->GetLight()->SetColor(Graphics::ColorRGB(1.0f, 1.0f, 1.0f));
-				View->SetScene(Scene);
-				
-				auto Texture(new Graphics::Texture());
-				
-				Texture->Create(_AssetClassViewDisplay->GetWidth(), _AssetClassViewDisplay->GetHeight(), 1);
-				
-				auto RenderTarget(new Graphics::TextureRenderTarget());
-				
-				RenderTarget->SetTexture(Texture);
-				View->SetRenderTarget(RenderTarget);
-				Scene->SetRootNode(VisualizationNode);
-				VisualizationNode->SetClearColorBuffer(true);
-				VisualizationNode->SetClearDepthBuffer(true);
-				VisualizationNode->SetUseDepthTest(true);
-				_AssetClassViewDisplay->SetView(View);
-			}
+			PerspectiveProjection->SetFieldOfViewY(asinf(ExtendedRadialSize / sqrtf(ExtendedRadialSize * ExtendedRadialSize + 16 * RadialSize * RadialSize)) * 2.0f);
+			PerspectiveProjection->SetAspect(_AssetClassViewDisplay->GetWidth() / _AssetClassViewDisplay->GetHeight());
+			PerspectiveProjection->SetNearClippingPlane(0.1f);
+			PerspectiveProjection->SetFarClippingPlane(100.0f);
+			
+			auto View(new Graphics::View());
+			
+			g_GraphicsEngine->AddView(View);
+			View->SetClearColor(Graphics::ColorRGBO(1.0f, 1.0f, 1.0f, 0.0f));
+			assert(View->GetCamera() != nullptr);
+			View->GetCamera()->SetProjection(PerspectiveProjection);
+			View->GetCamera()->SetSpacialMatrix(Matrix4f::CreateTranslation(Vector3f::CreateFromComponents(0.0f, -2.5f, 1.4f).Normalize() * 4.0f * RadialSize).RotateX(1.05f));
+			
+			auto Scene(new Graphics::Scene());
+			
+			Scene->SetDestroyCallback(std::bind(&UI::TradeCenterWidget::_OnDestroyInScene, this, std::placeholders::_1));
+			Scene->ActivateLight();
+			assert(Scene->GetLight() != nullptr);
+			Scene->GetLight()->SetType(Graphics::Light::Type::Directional);
+			Scene->GetLight()->SetDirection(Vector3f::CreateFromComponents(20.0f, 10.0f, -20.0f));
+			Scene->GetLight()->SetColor(Graphics::ColorRGB(1.0f, 1.0f, 1.0f));
+			View->SetScene(Scene);
+			
+			auto Texture(new Graphics::Texture());
+			
+			Texture->Create(_AssetClassViewDisplay->GetWidth(), _AssetClassViewDisplay->GetHeight(), 1);
+			
+			auto RenderTarget(new Graphics::TextureRenderTarget());
+			
+			RenderTarget->SetTexture(Texture);
+			View->SetRenderTarget(RenderTarget);
+			Scene->SetRootNode(VisualizationNode);
+			VisualizationNode->SetClearColorBuffer(true);
+			VisualizationNode->SetClearDepthBuffer(true);
+			VisualizationNode->SetUseDepthTest(true);
+			_AssetClassViewDisplay->SetView(View);
 		}
 	}
 }
