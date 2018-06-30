@@ -311,7 +311,21 @@ UI::HangarWidget::HangarWidget(UI::Widget * SupWidget, Planet * Planet, Characte
 	_CharacterDestroyingConnection = _Character->ConnectDestroyingCallback(std::bind(&UI::HangarWidget::_OnCharacterDestroying, this));
 	assert(_Planet != nullptr);
 	_PlanetDestroyingConnection = _Planet->ConnectDestroyingCallback(std::bind(&UI::HangarWidget::_OnPlanetDestroying, this));
+	
+	// create components
+	auto BoardButton{new UI::TextButton{}};
+	auto EnergyStateProgressBar{new UI::ProgressBar{}};
+	auto FuelStateProgressBar{new UI::ProgressBar{}};
+	auto HullStateProgressBar{new UI::ProgressBar{}};
+	auto LoadButton{new UI::TextButton{}};
+	auto OutfitButton{new UI::TextButton{}};
+	auto RechargeButton{new UI::TextButton{}};
+	auto RefuelButton{new UI::TextButton{}};
+	auto RepairButton{new UI::TextButton{}};
+	auto TakeOffButton{new UI::TextButton{}};
+	
 	_ShipScrollBox = new UI::ScrollBox{};
+	//initialize components
 	_ShipScrollBox->SetLeft(0.0_c);
 	_ShipScrollBox->SetTop(0.0_c);
 	_ShipScrollBox->SetWidth(width(this));
@@ -320,7 +334,6 @@ UI::HangarWidget::HangarWidget(UI::Widget * SupWidget, Planet * Planet, Characte
 	_ShipScrollBox->GetContent()->ConnectSubWidgetAddedCallback(std::bind(&UI::HangarWidget::_OnShipScrollBoxSubWidgetAdded, this, std::placeholders::_1));
 	_ShipScrollBox->GetContent()->ConnectSubWidgetRemovedCallback(std::bind(&UI::HangarWidget::_OnShipScrollBoxSubWidgetRemoved, this, std::placeholders::_1));
 	_ShipScrollBox->GetContent()->SetHeight(constant(_ShipScrollBox->GetView()->GetHeight()));
-	AddSubWidget(_ShipScrollBox);
 	
 	auto Hangar{_Planet->GetHangar(_Character)};
 	
@@ -349,97 +362,82 @@ UI::HangarWidget::HangarWidget(UI::Widget * SupWidget, Planet * Planet, Characte
 	{
 		_SelectedShipListItem->SetSelected(true);
 	}
-	
-	auto BoardButton{new UI::TextButton{this, "Board"}};
-	
 	BoardButton->SetLeft(0.0_c);
 	BoardButton->SetTop(140.0_c);
 	BoardButton->SetWidth(180.0_c);
 	BoardButton->SetHeight(20.0_c);
+	BoardButton->SetText("Board");
 	BoardButton->ConnectClickedCallback(std::bind(&UI::HangarWidget::_OnBoardButtonClicked, this));
 	BoardButton->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnBoardButtonUpdating, this, BoardButton, std::placeholders::_1, std::placeholders::_2));
-	
-	auto LoadButton{new UI::TextButton{this, "Load"}};
-	
 	LoadButton->SetLeft(0.0_c);
 	LoadButton->SetTop(170.0_c);
 	LoadButton->SetWidth(180.0_c);
 	LoadButton->SetHeight(20.0_c);
+	LoadButton->SetText("Load");
 	LoadButton->ConnectClickedCallback(std::bind(&UI::HangarWidget::_OnLoadButtonClicked, this));
 	LoadButton->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnLoadButtonUpdating, this, LoadButton, std::placeholders::_1, std::placeholders::_2));
-	
-	auto OutfitButton{new UI::TextButton{this, "Outfit"}};
-	
 	OutfitButton->SetLeft(0.0_c);
 	OutfitButton->SetTop(200.0_c);
 	OutfitButton->SetWidth(180.0_c);
 	OutfitButton->SetHeight(20.0_c);
+	OutfitButton->SetText("Outfit");
 	OutfitButton->ConnectClickedCallback(std::bind(&UI::HangarWidget::_OnOutfitButtonClicked, this));
 	OutfitButton->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnOutfitButtonUpdating, this, OutfitButton, std::placeholders::_1, std::placeholders::_2));
-	
-	auto RepairButton{new UI::TextButton{this, "Repair"}};
-	
 	RepairButton->SetLeft(0.0_c);
 	RepairButton->SetTop(230.0_c);
 	RepairButton->SetWidth(180.0_c);
 	RepairButton->SetHeight(20.0_c);
+	RepairButton->SetText("Repair");
 	RepairButton->ConnectClickedCallback(std::bind(&UI::HangarWidget::_OnRepairButtonClicked, this));
 	RepairButton->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnRepairButtonUpdating, this, RepairButton, std::placeholders::_1, std::placeholders::_2));
-	
-	auto HullStateProgressBar{new UI::ProgressBar{}};
-	
 	HullStateProgressBar->SetLeft(190.0_c);
 	HullStateProgressBar->SetTop(230.0_c);
 	HullStateProgressBar->SetWidth(width(this) - left(HullStateProgressBar));
 	HullStateProgressBar->SetHeight(20.0_c);
 	HullStateProgressBar->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnHullStateProgressBarUpdating, this, HullStateProgressBar, std::placeholders::_1, std::placeholders::_2));
-	
-	auto RechargeButton{new UI::TextButton{this, "Recharge"}};
-	
 	RechargeButton->SetLeft(0.0_c);
 	RechargeButton->SetTop(260.0_c);
 	RechargeButton->SetWidth(180.0_c);
 	RechargeButton->SetHeight(20.0_c);
+	RechargeButton->SetText("Recharge");
 	RechargeButton->ConnectClickedCallback(std::bind(&UI::HangarWidget::_OnRechargeButtonClicked, this));
 	RechargeButton->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnRechargeButtonUpdating, this, RechargeButton, std::placeholders::_1, std::placeholders::_2));
-	
-	auto EnergyStateProgressBar{new UI::ProgressBar{}};
-	
 	EnergyStateProgressBar->SetLeft(190.0_c);
 	EnergyStateProgressBar->SetTop(260.0_c);
 	EnergyStateProgressBar->SetWidth(width(this) - left(EnergyStateProgressBar));
 	EnergyStateProgressBar->SetHeight(20.0_c);
 	EnergyStateProgressBar->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnEnergyStateProgressBarUpdating, this, EnergyStateProgressBar, std::placeholders::_1, std::placeholders::_2));
-	
-	auto RefuelButton{new UI::TextButton{this, "Refuel"}};
-	
 	RefuelButton->SetLeft(0.0_c);
 	RefuelButton->SetTop(290.0_c);
 	RefuelButton->SetWidth(180.0_c);
 	RefuelButton->SetHeight(20.0_c);
+	RefuelButton->SetText("Refuel");
 	RefuelButton->ConnectClickedCallback(std::bind(&UI::HangarWidget::_OnRefuelButtonClicked, this));
 	RefuelButton->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnRefuelButtonUpdating, this, RefuelButton, std::placeholders::_1, std::placeholders::_2));
-	
-	auto FuelStateProgressBar{new UI::ProgressBar{}};
-	
 	FuelStateProgressBar->SetLeft(190.0_c);
 	FuelStateProgressBar->SetTop(290.0_c);
 	FuelStateProgressBar->SetWidth(width(this) - left(FuelStateProgressBar));
 	FuelStateProgressBar->SetHeight(20.0_c);
 	FuelStateProgressBar->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnFuelStateProgressBarUpdating, this, FuelStateProgressBar, std::placeholders::_1, std::placeholders::_2));
-	
-	auto TakeOffButton{new UI::TextButton{this, "Take Off"}};
-	
 	TakeOffButton->SetLeft(0.0_c);
 	TakeOffButton->SetTop(320.0_c);
 	TakeOffButton->SetWidth(180.0_c);
 	TakeOffButton->SetHeight(20.0_c);
+	TakeOffButton->SetText("Take Off");
 	TakeOffButton->ConnectClickedCallback(std::bind(&UI::HangarWidget::_OnTakeOffButtonClicked, this));
 	TakeOffButton->ConnectUpdatingCallback(std::bind(&UI::HangarWidget::_OnTakeOffButtonUpdating, this, TakeOffButton, std::placeholders::_1, std::placeholders::_2));
 	// add components
-	AddSubWidget(HullStateProgressBar);
+	AddSubWidget(BoardButton);
 	AddSubWidget(EnergyStateProgressBar);
 	AddSubWidget(FuelStateProgressBar);
+	AddSubWidget(HullStateProgressBar);
+	AddSubWidget(LoadButton);
+	AddSubWidget(OutfitButton);
+	AddSubWidget(RechargeButton);
+	AddSubWidget(RefuelButton);
+	AddSubWidget(RepairButton);
+	AddSubWidget(_ShipScrollBox);
+	AddSubWidget(TakeOffButton);
 }
 
 void UI::HangarWidget::_OnBoardButtonClicked(void)
