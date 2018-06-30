@@ -27,7 +27,7 @@ namespace UI
 	class ListBoxItem : public UI::Widget
 	{
 	public:
-		ListBoxItem(UI::Widget * SupWidget = nullptr);
+		ListBoxItem(void);
 		void SetSelected(bool Selected);
 	private:
 		void _OnMouseEnter(UI::Event & MouseEnterEvent);

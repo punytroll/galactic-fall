@@ -36,14 +36,18 @@ UI::ListBoxObjectItem::ListBoxObjectItem(Object * Object) :
 	_ObjectDestroyingConnection = _Object->ConnectDestroyingCallback(std::bind(&UI::ListBoxObjectItem::_OnObjectDestroying, this));
 	assert(_Object->GetAspectName() != nullptr);
 	
-	auto NameLabel{new UI::Label{this}};
+	// create components
+	auto NameLabel{new UI::Label{}};
 	
+	// initialize components
 	NameLabel->SetText(_Object->GetAspectName()->GetName());
 	NameLabel->SetLeft(5.0_c);
 	NameLabel->SetTop(0.0_c);
 	NameLabel->SetWidth(width(this) - 2.0_c * 5.0_c);
 	NameLabel->SetHeight(height(this));
 	NameLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
+	// add components
+	AddSubWidget(NameLabel);
 }
 
 void UI::ListBoxObjectItem::_OnDestroying(UI::Event & DestroyingEvent)

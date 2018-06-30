@@ -39,23 +39,26 @@ UI::LoadScenarioDialog::LoadScenarioDialog(ScenarioManager * ScenarioManager) :
 {
 	SetTitle("Load Scenario");
 	ConnectKeyCallback(std::bind(&UI::LoadScenarioDialog::_OnKey, this, std::placeholders::_1));
-
-	auto OKButton{new UI::TextButton{this, "OK"}};
 	
+	// create components
+	auto CancelButton{new UI::TextButton{}};
+	auto OKButton{new UI::TextButton{}};
+	
+	_MessageLabel = new UI::Label{};
+	_ScenarioListBox = new UI::ListBox{};
+	// initialize components
 	OKButton->SetLeft(width(this) - 10.0_c - width(OKButton));
 	OKButton->SetTop(height(this) - 30.0_c);
 	OKButton->SetWidth(100.0_c);
 	OKButton->SetHeight(20.0_c);
+	OKButton->SetText("OK");
 	OKButton->ConnectClickedCallback(std::bind(&UI::LoadScenarioDialog::_Close, this, UI::Dialog::ClosingReason::OK_BUTTON));
-	
-	auto CancelButton{new UI::TextButton{this, "Cancel"}};
-	
 	CancelButton->SetLeft(left(OKButton) - 10.0_c - width(CancelButton));
 	CancelButton->SetTop(height(this) - 30.0_c);
 	CancelButton->SetWidth(100.0_c);
 	CancelButton->SetHeight(20.0_c);
+	CancelButton->SetText("Cancel");
 	CancelButton->ConnectClickedCallback(std::bind(&UI::LoadScenarioDialog::_Close, this, UI::Dialog::ClosingReason::CANCEL_BUTTON));
-	_MessageLabel = new UI::Label{this};
 	_MessageLabel->SetLeft(10.0_c);
 	_MessageLabel->SetTop(40.0_c);
 	_MessageLabel->SetWidth(width(this) - 2.0_c * left(_MessageLabel));
@@ -64,7 +67,6 @@ UI::LoadScenarioDialog::LoadScenarioDialog(ScenarioManager * ScenarioManager) :
 	_MessageLabel->SetWrap(true);
 	_MessageLabel->SetWordWrap(true);
 	_MessageLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
-	_ScenarioListBox = new UI::ListBox{};
 	_ScenarioListBox->SetLeft(10.0_c);
 	_ScenarioListBox->SetTop(bottom(_MessageLabel) + 10.0_c);
 	_ScenarioListBox->SetWidth(width(this) - 2.0_c * left(_ScenarioListBox));
@@ -74,6 +76,10 @@ UI::LoadScenarioDialog::LoadScenarioDialog(ScenarioManager * ScenarioManager) :
 	{
 		_ScenarioListBox->GetContent()->AddSubWidget(new UI::ListBoxScenarioItem{ScenarioPair.second});
 	}
+	// add components
+	AddSubWidget(CancelButton);
+	AddSubWidget(_MessageLabel);
+	AddSubWidget(OKButton);
 	AddSubWidget(_ScenarioListBox);
 }
 

@@ -28,13 +28,15 @@ UI::ListBoxTextItem::ListBoxTextItem(void)
 {
 	SetHeight(20.0_c);
 	// create components
-	_Label = new UI::Label{this};
+	_Label = new UI::Label{};
 	// initialize components
 	_Label->SetLeft(5.0_c);
 	_Label->SetTop(0.0_c);
 	_Label->SetWidth(width(this) - 2.0_c * 5.0_c);
 	_Label->SetHeight(height(this));
 	_Label->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
+	// add components
+	AddSubWidget(_Label);
 }
 
 const std::string & UI::ListBoxTextItem::GetText(void) const
