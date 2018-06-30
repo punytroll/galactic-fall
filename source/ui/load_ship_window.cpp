@@ -63,6 +63,9 @@ UI::LoadShipWindow::LoadShipWindow(Hangar * Hangar, Ship * Ship) :
 	auto CenterPane{new UI::Widget{}};
 	auto HangarLabel{new UI::Label{}};
 	auto LeftPane{new UI::Widget{}};
+	auto MoveToHangarButton{new UI::TextButton{}};
+	auto MoveToShipButton(new UI::TextButton());
+	auto OKButton{new UI::TextButton{}};
 	auto RightPane{new UI::Widget{}};
 	auto ShipLabel{new UI::Label{}};
 	
@@ -97,9 +100,6 @@ UI::LoadShipWindow::LoadShipWindow(Hangar * Hangar, Ship * Ship) :
 	CenterPane->SetTop(70.0_c);
 	CenterPane->SetWidth(100.0_c);
 	CenterPane->SetHeight(height(this) - 10.0_c - top(CenterPane));
-	
-	auto MoveToHangarButton{new UI::TextButton{CenterPane}};
-	
 	MoveToHangarButton->SetLeft(0.0_c);
 	MoveToHangarButton->SetTop(50.0_c);
 	MoveToHangarButton->SetWidth(width(CenterPane));
@@ -107,9 +107,6 @@ UI::LoadShipWindow::LoadShipWindow(Hangar * Hangar, Ship * Ship) :
 	MoveToHangarButton->SetText("<<");
 	MoveToHangarButton->ConnectClickedCallback(std::bind(&UI::LoadShipWindow::_OnMoveToHangarButtonClicked, this));
 	MoveToHangarButton->ConnectUpdatingCallback(std::bind(&UI::LoadShipWindow::_OnMoveToHangarButtonUpdating, this, std::placeholders::_1, std::placeholders::_2, MoveToHangarButton));
-	
-	auto MoveToShipButton(new UI::TextButton(CenterPane));
-	
 	MoveToShipButton->SetLeft(0.0_c);
 	MoveToShipButton->SetTop(bottom(MoveToHangarButton) + 10.0_c);
 	MoveToShipButton->SetWidth(width(CenterPane));
@@ -117,9 +114,6 @@ UI::LoadShipWindow::LoadShipWindow(Hangar * Hangar, Ship * Ship) :
 	MoveToShipButton->SetText(">>");
 	MoveToShipButton->ConnectClickedCallback(std::bind(&UI::LoadShipWindow::_OnMoveToShipButtonClicked, this));
 	MoveToShipButton->ConnectUpdatingCallback(std::bind(&UI::LoadShipWindow::_OnMoveToShipButtonUpdating, this, std::placeholders::_1, std::placeholders::_2, MoveToShipButton));
-	
-	auto OKButton{new UI::TextButton{CenterPane}};
-	
 	OKButton->SetLeft(0.0_c);
 	OKButton->SetTop(height(CenterPane) - 10.0_c - height(OKButton));
 	OKButton->SetWidth(width(CenterPane));
@@ -150,6 +144,9 @@ UI::LoadShipWindow::LoadShipWindow(Hangar * Hangar, Ship * Ship) :
 	}
 	// add components
 	AddSubWidget(CenterPane);
+	CenterPane->AddSubWidget(MoveToHangarButton);
+	CenterPane->AddSubWidget(MoveToShipButton);
+	CenterPane->AddSubWidget(OKButton);
 	AddSubWidget(LeftPane);
 	LeftPane->AddSubWidget(HangarLabel);
 	LeftPane->AddSubWidget(_HangarListBox);

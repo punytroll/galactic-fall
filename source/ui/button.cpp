@@ -23,8 +23,7 @@
 #include "mouse_button_event.h"
 #include "user_interface.h"
 
-UI::Button::Button(Widget * SupWidget) :
-	Widget(SupWidget)
+UI::Button::Button(void)
 {
 	SetBackgroundColor(Graphics::ColorRGBO(0.3f, 0.3f, 0.3f, 1.0f));
 	SetDisabledBackgroundColor(Graphics::ColorRGBO(0.23f, 0.23f, 0.23f, 1.0f));

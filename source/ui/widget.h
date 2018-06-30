@@ -57,7 +57,7 @@ namespace UI
 		friend Expressions::Expression UI::top(UI::Widget * Widget);
 		friend Expressions::Expression UI::width(UI::Widget * Widget);
 		
-		Widget(Widget * SupWidget = nullptr, const std::string & Name = "");
+		Widget(void);
 		virtual ~Widget(void);
 		virtual void Draw(Graphics::RenderContext * RenderContext);
 		void SetBackgroundColor(const Graphics::ColorRGBO & BackgroundColor);

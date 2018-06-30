@@ -181,18 +181,18 @@ UI::TradeCenterWidget::TradeCenterWidget(Planet * Planet, Character * Character)
 	auto AssetClassPriceLabel{new UI::Label{}};
 	auto AssetClassSizeCaptionLabel{new UI::Label{}};
 	auto AssetClassSizeLabel{new UI::Label{}};
+	auto BuyButton{new UI::TextButton{}};
 	auto CharacterAmountColumnHeader{new UI::Label{}};
 	auto HeaderRow{new UI::Widget{}};
 	auto NameColumnHeader{new UI::Label{}};
 	auto PriceColumnHeader{new UI::Label{}};
+	auto SellButton{new UI::TextButton{}};
 	auto SizeColumnHeader{new UI::Label{}};
 	
 	_AssetClassListBox = new UI::ListBox{};
 	_AssetClassViewDisplay = new UI::ViewDisplay{};
 	
 	// initialize components
-	auto BuyButton{new UI::TextButton{this}};
-	
 	BuyButton->SetLeft(0.0_c);
 	BuyButton->SetTop(height(this) - height(BuyButton));
 	BuyButton->SetWidth(100.0_c);
@@ -200,9 +200,6 @@ UI::TradeCenterWidget::TradeCenterWidget(Planet * Planet, Character * Character)
 	BuyButton->SetText("Buy");
 	BuyButton->ConnectClickedCallback(std::bind(&UI::TradeCenterWidget::_OnBuyButtonClicked, this));
 	BuyButton->ConnectUpdatingCallback(std::bind(&UI::TradeCenterWidget::_OnBuyButtonUpdating, this, BuyButton, std::placeholders::_1, std::placeholders::_2));
-	
-	auto SellButton{new UI::TextButton{this}};
-	
 	SellButton->SetLeft(width(BuyButton) + 10.0_c);
 	SellButton->SetTop(height(this) - height(SellButton));
 	SellButton->SetWidth(100.0_c);
@@ -315,11 +312,13 @@ UI::TradeCenterWidget::TradeCenterWidget(Planet * Planet, Character * Character)
 	AddSubWidget(AssetClassSizeCaptionLabel);
 	AddSubWidget(AssetClassSizeLabel);
 	AddSubWidget(_AssetClassViewDisplay);
+	AddSubWidget(BuyButton);
 	AddSubWidget(HeaderRow);
 	HeaderRow->AddSubWidget(CharacterAmountColumnHeader);
 	HeaderRow->AddSubWidget(NameColumnHeader);
 	HeaderRow->AddSubWidget(PriceColumnHeader);
 	HeaderRow->AddSubWidget(SizeColumnHeader);
+	AddSubWidget(SellButton);
 }
 
 void UI::TradeCenterWidget::_Buy(const PlanetAssets * PlanetAssets)

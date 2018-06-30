@@ -40,16 +40,22 @@ UI::ScrollBar::ScrollBar(UI::ScrollBar::Alignment Alignment) :
 	ConnectHeightChangedCallback(std::bind(&ScrollBar::_OnSizeChanged, this, std::placeholders::_1));
 	ConnectWidthChangedCallback(std::bind(&ScrollBar::_OnSizeChanged, this, std::placeholders::_1));
 	SetBackgroundColor(Graphics::ColorRGBO(0.23f, 0.23f, 0.23f, 1.0f));
-	_LessButton = new UI::Button{this};
+	// create components
+	_LessButton = new UI::Button{};
+	_MoreButton = new UI::Button{};
+	_Tracker = new UI::Widget{};
+	// initialize components
 	_LessButton->ConnectClickedCallback(std::bind(&UI::ScrollBar::_OnLessClicked, this));
-	_MoreButton = new UI::Button{this};
 	_MoreButton->ConnectClickedCallback(std::bind(&UI::ScrollBar::_OnMoreClicked, this));
-	_Tracker = new UI::Widget{this};
 	_Tracker->SetBackgroundColor(Graphics::ColorRGBO(0.3f, 0.3f, 0.3f, 1.0f));
 	_Tracker->ConnectMouseEnterCallback(std::bind(&UI::ScrollBar::_OnTrackerMouseEnter, this));
 	_Tracker->ConnectMouseLeaveCallback(std::bind(&UI::ScrollBar::_OnTrackerMouseLeave, this));
 	_Tracker->ConnectMouseButtonCallback(std::bind(&UI::ScrollBar::_OnTrackerMouseButton, this, std::placeholders::_1));
 	_Tracker->ConnectMouseMoveCallback(std::bind(&UI::ScrollBar::_OnTrackerMouseMove, this, std::placeholders::_1));
+	// add components
+	AddSubWidget(_LessButton);
+	AddSubWidget(_MoreButton);
+	AddSubWidget(_Tracker);
 	SetAlignment(Alignment);
 	SetMinimumPosition(0.0f);
 	SetMaximumPosition(1.0f);

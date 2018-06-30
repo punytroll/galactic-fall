@@ -64,7 +64,7 @@ struct MouseMoveEventPropagationPathItem : EventPropagationPathItem
 UI::UserInterface::UserInterface(void) :
 	_CaptureWidget(nullptr),
 	_HoverWidget(nullptr),
-	_RootWidget(new UI::Widget(nullptr))
+	_RootWidget(new UI::Widget{})
 {
 	_RootWidget->ConnectDestroyingCallback(std::bind(&UI::UserInterface::_OnRootWidgetDestroying, this, std::placeholders::_1));
 }

@@ -230,8 +230,11 @@ UI::OutfitShipDialog::OutfitShipDialog(Ship * Ship) :
 	auto AccessoryListLabel{new UI::Label{}};
 	auto LeftPane{new UI::Widget{}};
 	auto CenterPane{new UI::Widget{}};
+	auto MountButton{new UI::TextButton{}};
+	auto OKButton{new UI::TextButton{}};
 	auto RightPane{new UI::Widget{}};
 	auto SlotListLabel{new UI::Label{}};
+	auto UnmountButton{new UI::TextButton{}};
 	
 	_AccessoryListBox = new UI::ListBox{};
 	_SlotListBox = new UI::ListBox{};
@@ -260,9 +263,6 @@ UI::OutfitShipDialog::OutfitShipDialog(Ship * Ship) :
 	CenterPane->SetTop(70.0_c);
 	CenterPane->SetWidth(160.0_c);
 	CenterPane->SetHeight(height(this) - 10.0_c - top(CenterPane));
-	
-	auto MountButton{new UI::TextButton{CenterPane}};
-	
 	MountButton->SetLeft(0.0_c);
 	MountButton->SetTop(40.0_c);
 	MountButton->SetWidth(width(CenterPane));
@@ -270,9 +270,6 @@ UI::OutfitShipDialog::OutfitShipDialog(Ship * Ship) :
 	MountButton->SetText("Mount");
 	MountButton->ConnectClickedCallback(std::bind(&UI::OutfitShipDialog::_OnMountButtonClicked, this));
 	MountButton->ConnectUpdatingCallback(std::bind(&UI::OutfitShipDialog::_OnMountButtonUpdating, this, MountButton, std::placeholders::_1, std::placeholders::_2));
-	
-	auto UnmountButton{new UI::TextButton{CenterPane}};
-	
 	UnmountButton->SetLeft(0.0_c);
 	UnmountButton->SetTop(bottom(MountButton) + 10.0_c);
 	UnmountButton->SetWidth(width(CenterPane));
@@ -280,9 +277,6 @@ UI::OutfitShipDialog::OutfitShipDialog(Ship * Ship) :
 	UnmountButton->SetText("Unmount");
 	UnmountButton->ConnectClickedCallback(std::bind(&UI::OutfitShipDialog::_OnUnmountButtonClicked, this));
 	UnmountButton->ConnectUpdatingCallback(std::bind(&UI::OutfitShipDialog::_OnUnmountButtonUpdating, this, UnmountButton, std::placeholders::_1, std::placeholders::_2));
-	
-	auto OKButton{new UI::TextButton{CenterPane}};
-	
 	OKButton->SetLeft(0.0_c);
 	OKButton->SetTop(height(CenterPane) - 10.0_c - height(OKButton));
 	OKButton->SetWidth(width(CenterPane));
@@ -307,6 +301,9 @@ UI::OutfitShipDialog::OutfitShipDialog(Ship * Ship) :
 	_AccessoryListBox->SetHorizontalScrollBarVisible(false);
 	//add components
 	AddSubWidget(CenterPane);
+	CenterPane->AddSubWidget(MountButton);
+	CenterPane->AddSubWidget(UnmountButton);
+	CenterPane->AddSubWidget(OKButton);
 	AddSubWidget(LeftPane);
 	LeftPane->AddSubWidget(_SlotListBox);
 	LeftPane->AddSubWidget(SlotListLabel);

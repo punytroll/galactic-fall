@@ -32,7 +32,7 @@ namespace UI
 	{
 	public:
 		// constructors and deconstructors
-		Button(UI::Widget * SupWidget);
+		Button(void);
 		virtual ~Button(void);
 		// connect events
 		Connection ConnectClickedCallback(std::function< void (void) > ClickedHandler);

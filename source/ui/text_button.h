@@ -29,7 +29,7 @@ namespace UI
 	class TextButton : public UI::Button
 	{
 	public:
-		TextButton(UI::Widget * SupWidget = nullptr);
+		TextButton(void);
 		// setters
 		void SetText(const std::string & Text);
 	private:
