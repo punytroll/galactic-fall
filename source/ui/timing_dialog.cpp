@@ -75,18 +75,24 @@ float UI::TimingDialog::_AddMeasure(float Top, const std::string & Label, UI::La
 {
 	assert(ValueLabel == nullptr);
 	
-	auto CaptionLabel{new UI::Label{this, Label}};
+	// create components
+	auto CaptionLabel{new UI::Label{}};
 	
+	ValueLabel = new UI::Label{};
+	// initialize components
 	CaptionLabel->SetLeft(10.0_c);
 	CaptionLabel->SetTop(constant(Top));
 	CaptionLabel->SetWidth(width(this) - 100.0_c);
 	CaptionLabel->SetHeight(20.0_c);
-	ValueLabel = new UI::Label{this, ""};
+	CaptionLabel->SetText(Label);
 	ValueLabel->SetLeft(width(this) - 80.0_c);
 	ValueLabel->SetTop(constant(Top));
 	ValueLabel->SetWidth(70.0_c);
 	ValueLabel->SetHeight(20.0_c);
 	ValueLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Right);
+	// add components
+	AddSubWidget(CaptionLabel);
+	AddSubWidget(ValueLabel);
 	
 	return 20.0f;
 }

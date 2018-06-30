@@ -225,13 +225,15 @@ void UI::PlanetWindow::_OpenHomeScreen(void)
 	if(_DescriptionLabel == nullptr)
 	{
 		assert(_Planet != nullptr);
-		_DescriptionLabel = new UI::Label{this, _Planet->GetDescription()};
+		_DescriptionLabel = new UI::Label{};
 		_DescriptionLabel->SetLeft(120.0_c);
 		_DescriptionLabel->SetTop(40.0_c);
 		_DescriptionLabel->SetWidth(width(this) - 10.0_c - left(_DescriptionLabel));
 		_DescriptionLabel->SetHeight(height(this) - 10.0_c - top(_DescriptionLabel));
+		_DescriptionLabel->SetText(_Planet->GetDescription());
 		_DescriptionLabel->SetWrap(true);
 		_DescriptionLabel->SetWordWrap(true);
+		AddSubWidget(_DescriptionLabel);
 	}
 	_DescriptionLabel->GrabKeyFocus();
 }
