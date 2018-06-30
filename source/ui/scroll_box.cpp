@@ -32,11 +32,11 @@ UI::ScrollBox::ScrollBox(void)
 	ConnectMouseButtonCallback(std::bind(&UI::ScrollBox::_OnMouseButton, this, std::placeholders::_1));
 	SetBackgroundColor(Graphics::ColorRGBO(0.15f, 0.15f, 0.15f, 1.0f));
 	// create components
-	_HorizontalScrollBar = new UI::ScrollBar{this, UI::ScrollBar::Alignment::HORIZONTAL};
-	_VerticalScrollBar = new UI::ScrollBar{this, UI::ScrollBar::Alignment::VERTICAL};
-	_View = new UI::Widget{this};
-	_Content = new UI::Widget{_View};
-	// setup components
+	_HorizontalScrollBar = new UI::ScrollBar{UI::ScrollBar::Alignment::HORIZONTAL};
+	_VerticalScrollBar = new UI::ScrollBar{UI::ScrollBar::Alignment::VERTICAL};
+	_View = new UI::Widget{};
+	_Content = new UI::Widget{};
+	// initialize components
 	_View->SetName("view");
 	_View->SetLeft(0.0_c);
 	_View->SetTop(0.0_c);
@@ -69,6 +69,11 @@ UI::ScrollBox::ScrollBox(void)
 	_VerticalScrollBar->SetMaximumPosition(std::max(0.0f, _Content->GetHeight() - _View->GetHeight()));
 	_VerticalScrollBar->SetCurrentPosition(0.0f);
 	_VerticalScrollBar->SetStepSize(_VerticalScrollBar->GetMaximumPosition() / 10.0f);
+	// add components
+	AddSubWidget(_HorizontalScrollBar);
+	AddSubWidget(_VerticalScrollBar);
+	AddSubWidget(_View);
+	_View->AddSubWidget(_Content);
 }
 
 UI::ScrollBox::~ScrollBox(void)

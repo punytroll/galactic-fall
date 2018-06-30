@@ -40,7 +40,7 @@ namespace UI
 	class TradeCenterWidget : public UI::Widget
 	{
 	public:
-		TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet, Character * Character);
+		TradeCenterWidget(Planet * Planet, Character * Character);
 	private:
 		// callbacks
 		void _OnAssetClassDescriptionCaptionLabelUpdating(UI::Label * AssetClassDescriptionCaptionLabel, float RealTimeSeconds, float GameTimeSeconds);

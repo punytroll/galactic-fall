@@ -200,11 +200,15 @@ void UI::PlanetWindow::_OpenHangar(void)
 	}
 	if(_HangarWidget == nullptr)
 	{
-		_HangarWidget = new UI::HangarWidget{this, _Planet, _Character};
+		// create components
+		_HangarWidget = new UI::HangarWidget{_Planet, _Character};
+		// initialize components
 		_HangarWidget->SetLeft(120.0_c);
 		_HangarWidget->SetTop(40.0_c);
 		_HangarWidget->SetWidth(width(this) - 10.0_c - left(_HangarWidget));
 		_HangarWidget->SetHeight(height(this) - 10.0_c - top(_HangarWidget));
+		// add components
+		AddSubWidget(_HangarWidget);
 	}
 	_HangarWidget->GrabKeyFocus();
 }
@@ -259,11 +263,15 @@ void UI::PlanetWindow::_OpenTradeCenter(void)
 	}
 	if(_TradeCenterWidget == nullptr)
 	{
-		_TradeCenterWidget = new UI::TradeCenterWidget{this, _Planet, _Character};
+		// create components
+		_TradeCenterWidget = new UI::TradeCenterWidget{_Planet, _Character};
+		// initialize components
 		_TradeCenterWidget->SetLeft(120.0_c);
 		_TradeCenterWidget->SetTop(40.0_c);
 		_TradeCenterWidget->SetWidth(width(this) - 10.0_c - left(_TradeCenterWidget));
 		_TradeCenterWidget->SetHeight(height(this) - 10.0_c - top(_TradeCenterWidget));
+		// add components
+		AddSubWidget(_TradeCenterWidget);
 	}
 	_TradeCenterWidget->GrabKeyFocus();
 }

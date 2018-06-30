@@ -162,8 +162,7 @@ namespace UI
 	};
 }
 
-UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet, Character * Character) :
-	UI::Widget(SupWidget),
+UI::TradeCenterWidget::TradeCenterWidget(Planet * Planet, Character * Character) :
 	_Character(Character),
 	_Planet(Planet)
 {

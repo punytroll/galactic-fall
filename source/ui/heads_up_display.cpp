@@ -43,8 +43,7 @@ using namespace Expressions::Operators;
 
 int WantToJump(Ship * Ship, System * System);
 
-UI::HeadsUpDisplay::HeadsUpDisplay(UI::Widget * SupWidget) :
-	UI::Widget(SupWidget),
+UI::HeadsUpDisplay::HeadsUpDisplay(void) :
 	_MessageLabel(nullptr)
 {
 	// create components

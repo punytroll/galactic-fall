@@ -37,7 +37,7 @@ namespace UI
 			VERTICAL
 		};
 		
-		ScrollBar(UI::Widget * SupWidget, ScrollBar::Alignment Alignment);
+		ScrollBar(ScrollBar::Alignment Alignment);
 		virtual ~ScrollBar(void);
 		// events
 		Connection ConnectScrollPositionChangedCallback(std::function< void (void) > Callback);
