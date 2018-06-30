@@ -47,8 +47,26 @@ UI::HeadsUpDisplay::HeadsUpDisplay(UI::Widget * SupWidget) :
 	UI::Widget(SupWidget),
 	_MessageLabel(nullptr)
 {
+	// create components
+	auto CreditsLabel{new UI::Label{}};
 	auto CycleLabel{new UI::Label{}};
+	auto CycleProgressBar{new UI::ProgressBar{}};
+	auto EnergyLabel{new UI::Label{}};
+	auto FuelLabel{new UI::Label{}};
+	auto HullLabel{new UI::Label{}};
+	auto LinkedSystemTargetLabel{new UI::Label{}};
+	auto MiniMapBorder{new UI::Border{}};
+	auto MiniMapDisplay{new UI::MiniMapDisplay{}};
+	auto MiniMapSystemNameLabel{new UI::Label{}};
+	auto MiniMapWidget{new UI::Widget{}};
+	auto ScannerBorder{new UI::Border{}};
+	auto ScannerDisplay{new UI::ScannerDisplay{}};
+	auto ScannerTargetNameLabel{new UI::Label{}};
+	auto ScannerWidget{new UI::Widget{}};
+	auto TimeWarpLabel{new UI::Label{}};
 	
+	_MessageLabel = new UI::Label{};
+	// initialize components
 	CycleLabel->SetName("cycle_label");
 	CycleLabel->SetLeft(0.0_c);
 	CycleLabel->SetTop(0.0_c);
@@ -57,9 +75,6 @@ UI::HeadsUpDisplay::HeadsUpDisplay(UI::Widget * SupWidget) :
 	CycleLabel->SetText("Cycle:");
 	CycleLabel->SetTextColor(Graphics::ColorRGBO(0.7f, 0.8f, 1.0f, 1.0f));
 	CycleLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
-	
-	auto CycleProgressBar{new UI::ProgressBar{}};
-	
 	CycleProgressBar->SetName("cycle_progress_bar");
 	CycleProgressBar->SetLeft(right(CycleLabel) + 10.0_c);
 	CycleProgressBar->SetTop(top(CycleLabel) + 3.0_c);
@@ -67,9 +82,6 @@ UI::HeadsUpDisplay::HeadsUpDisplay(UI::Widget * SupWidget) :
 	CycleProgressBar->SetHeight(height(CycleLabel) - 2.0_c * top(CycleProgressBar));
 	CycleProgressBar->SetColor(Graphics::ColorRGBO(0.3f, 0.45f, 0.6f, 1.0f));
 	CycleProgressBar->ConnectUpdatingCallback(std::bind(&UI::HeadsUpDisplay::_UpdateCycleProgressBar, this, CycleProgressBar, std::placeholders::_1, std::placeholders::_2));
-	
-	auto TimeWarpLabel{new UI::Label{}};
-	
 	TimeWarpLabel->SetName("time_warp");
 	TimeWarpLabel->SetLeft(right(CycleProgressBar) + 10.0_c);
 	TimeWarpLabel->SetTop(top(CycleLabel));
@@ -78,9 +90,6 @@ UI::HeadsUpDisplay::HeadsUpDisplay(UI::Widget * SupWidget) :
 	TimeWarpLabel->SetTextColor(Graphics::ColorRGBO(0.7f, 0.8f, 1.0f, 1.0f));
 	TimeWarpLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	TimeWarpLabel->ConnectUpdatingCallback(std::bind(&UI::HeadsUpDisplay::_UpdateTimeWarpLabel, this, TimeWarpLabel, std::placeholders::_1, std::placeholders::_2));
-	
-	auto LinkedSystemTargetLabel{new UI::Label{}};
-	
 	LinkedSystemTargetLabel->SetName("linked_system_target");
 	LinkedSystemTargetLabel->SetLeft(0.0_c);
 	LinkedSystemTargetLabel->SetTop(20.0_c);
@@ -89,9 +98,6 @@ UI::HeadsUpDisplay::HeadsUpDisplay(UI::Widget * SupWidget) :
 	LinkedSystemTargetLabel->SetTextColor(Graphics::ColorRGBO(0.7f, 0.8f, 1.0f, 1.0f));
 	LinkedSystemTargetLabel->ConnectUpdatingCallback(std::bind(&UI::HeadsUpDisplay::_UpdateLinkedSystemTargetLabel, this, LinkedSystemTargetLabel, std::placeholders::_1, std::placeholders::_2));
 	LinkedSystemTargetLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
-	
-	auto CreditsLabel{new UI::Label{}};
-	
 	CreditsLabel->SetName("credits");
 	CreditsLabel->SetLeft(0.0_c);
 	CreditsLabel->SetTop(40.0_c);
@@ -100,9 +106,6 @@ UI::HeadsUpDisplay::HeadsUpDisplay(UI::Widget * SupWidget) :
 	CreditsLabel->SetTextColor(Graphics::ColorRGBO(0.7f, 0.8f, 1.0f, 1.0f));
 	CreditsLabel->ConnectUpdatingCallback(std::bind(&UI::HeadsUpDisplay::_UpdateCreditsLabel, this, CreditsLabel, std::placeholders::_1, std::placeholders::_2));
 	CreditsLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
-	
-	auto FuelLabel{new UI::Label{}};
-	
 	FuelLabel->SetName("fuel");
 	FuelLabel->SetLeft(0.0_c);
 	FuelLabel->SetTop(60.0_c);
@@ -111,9 +114,6 @@ UI::HeadsUpDisplay::HeadsUpDisplay(UI::Widget * SupWidget) :
 	FuelLabel->SetTextColor(Graphics::ColorRGBO(0.7f, 0.8f, 1.0f, 1.0f));
 	FuelLabel->ConnectUpdatingCallback(std::bind(&UI::HeadsUpDisplay::_UpdateFuelLabel, this, FuelLabel, std::placeholders::_1, std::placeholders::_2));
 	FuelLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
-	
-	auto EnergyLabel{new UI::Label{}};
-	
 	EnergyLabel->SetName("energy");
 	EnergyLabel->SetLeft(0.0_c);
 	EnergyLabel->SetTop(80.0_c);
@@ -122,9 +122,6 @@ UI::HeadsUpDisplay::HeadsUpDisplay(UI::Widget * SupWidget) :
 	EnergyLabel->SetTextColor(Graphics::ColorRGBO(0.7f, 0.8f, 1.0f, 1.0f));
 	EnergyLabel->ConnectUpdatingCallback(std::bind(&UI::HeadsUpDisplay::_UpdateEnergyLabel, this, EnergyLabel, std::placeholders::_1, std::placeholders::_2));
 	EnergyLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
-	
-	auto HullLabel{new UI::Label{}};
-	
 	HullLabel->SetName("hull");
 	HullLabel->SetLeft(0.0_c);
 	HullLabel->SetTop(100.0_c);
@@ -133,7 +130,6 @@ UI::HeadsUpDisplay::HeadsUpDisplay(UI::Widget * SupWidget) :
 	HullLabel->SetTextColor(Graphics::ColorRGBO(0.7f, 0.8f, 1.0f, 1.0f));
 	HullLabel->ConnectUpdatingCallback(std::bind(&UI::HeadsUpDisplay::_UpdateHullLabel, this, HullLabel, std::placeholders::_1, std::placeholders::_2));
 	HullLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
-	_MessageLabel = new UI::Label{};
 	_MessageLabel->SetName("message");
 	_MessageLabel->SetLeft(0.0_c);
 	_MessageLabel->SetTop(40.0_c);
@@ -142,9 +138,6 @@ UI::HeadsUpDisplay::HeadsUpDisplay(UI::Widget * SupWidget) :
 	_MessageLabel->SetTextColor(Graphics::ColorRGBO(1.0f, 0.3f, 0.3f, 1.0f));
 	_MessageLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Center);
 	_MessageLabel->SetVisible(false);
-	
-	auto MiniMapWidget{new UI::Widget{}};
-	
 	MiniMapWidget->SetName("mini_map");
 	MiniMapWidget->SetLeft(width(this) - width(MiniMapWidget));
 	MiniMapWidget->SetTop(height(this) - height(MiniMapWidget));
@@ -152,9 +145,6 @@ UI::HeadsUpDisplay::HeadsUpDisplay(UI::Widget * SupWidget) :
 	MiniMapWidget->SetHeight(240.0_c);
 	MiniMapWidget->SetBackgroundColor(Graphics::ColorRGBO(0.0f, 0.1f, 0.17f, 0.8f));
 	MiniMapWidget->ConnectUpdatingCallback(std::bind(&UI::HeadsUpDisplay::_UpdateMiniMapWidget, this, MiniMapWidget, std::placeholders::_1, std::placeholders::_2));
-	
-	auto MiniMapSystemNameLabel{new UI::Label{MiniMapWidget}};
-	
 	MiniMapSystemNameLabel->SetName("system_name");
 	MiniMapSystemNameLabel->SetLeft(0.0_c);
 	MiniMapSystemNameLabel->SetTop(0.0_c);
@@ -164,18 +154,12 @@ UI::HeadsUpDisplay::HeadsUpDisplay(UI::Widget * SupWidget) :
 	MiniMapSystemNameLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Center);
 	MiniMapSystemNameLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	MiniMapSystemNameLabel->ConnectUpdatingCallback(std::bind(&UI::HeadsUpDisplay::_UpdateMiniMapSystemNameLabel, this, MiniMapSystemNameLabel, std::placeholders::_1, std::placeholders::_2));
-	
-	auto MiniMapDisplay{new UI::MiniMapDisplay{MiniMapWidget}};
-	
 	MiniMapDisplay->SetName("display");
 	MiniMapDisplay->SetLeft(0.0_c);
 	MiniMapDisplay->SetTop(bottom(MiniMapSystemNameLabel));
 	MiniMapDisplay->SetWidth(width(MiniMapWidget));
 	MiniMapDisplay->SetHeight(height(MiniMapWidget) - top(MiniMapDisplay));
 	MiniMapDisplay->ConnectUpdatingCallback(std::bind(&UI::HeadsUpDisplay::_UpdateMiniMapDisplay, this, MiniMapDisplay, std::placeholders::_1, std::placeholders::_2));
-	
-	auto MiniMapBorder{new UI::Border{MiniMapWidget}};
-	
 	MiniMapBorder->SetName("border");
 	MiniMapBorder->SetLeft(0.0_c);
 	MiniMapBorder->SetTop(0.0_c);
@@ -183,9 +167,6 @@ UI::HeadsUpDisplay::HeadsUpDisplay(UI::Widget * SupWidget) :
 	MiniMapBorder->SetHeight(height(MiniMapWidget));
 	MiniMapBorder->SetLineWidth(1.0f);
 	MiniMapBorder->SetColor(Graphics::ColorRGBO(0.1f, 0.2f, 0.3f, 1.0f));
-	
-	auto ScannerWidget{new UI::Widget{}};
-	
 	ScannerWidget->SetName("scanner");
 	ScannerWidget->SetLeft(0.0_c);
 	ScannerWidget->SetTop(height(this) - height(ScannerWidget));
@@ -193,9 +174,6 @@ UI::HeadsUpDisplay::HeadsUpDisplay(UI::Widget * SupWidget) :
 	ScannerWidget->SetHeight(240.0_c);
 	ScannerWidget->SetBackgroundColor(Graphics::ColorRGBO(0.0f, 0.1f, 0.17f, 0.8f));
 	ScannerWidget->ConnectUpdatingCallback(std::bind(&UI::HeadsUpDisplay::_UpdateScannerWidget, this, ScannerWidget, std::placeholders::_1, std::placeholders::_2));
-	
-	auto ScannerTargetNameLabel{new UI::Label{ScannerWidget}};
-	
 	ScannerTargetNameLabel->SetName("target_name");
 	ScannerTargetNameLabel->SetLeft(0.0_c);
 	ScannerTargetNameLabel->SetTop(0.0_c);
@@ -205,18 +183,12 @@ UI::HeadsUpDisplay::HeadsUpDisplay(UI::Widget * SupWidget) :
 	ScannerTargetNameLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Center);
 	ScannerTargetNameLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	ScannerTargetNameLabel->ConnectUpdatingCallback(std::bind(&UI::HeadsUpDisplay::_UpdateScannerTargetNameLabel, this, ScannerTargetNameLabel, std::placeholders::_1, std::placeholders::_2));
-	
-	auto ScannerDisplay{new UI::ScannerDisplay{ScannerWidget}};
-	
 	ScannerDisplay->SetName("display");
 	ScannerDisplay->SetLeft(0.0_c);
 	ScannerDisplay->SetTop(bottom(ScannerTargetNameLabel));
 	ScannerDisplay->SetWidth(width(ScannerWidget));
 	ScannerDisplay->SetHeight(height(ScannerWidget) - top(ScannerDisplay));
 	ScannerDisplay->ConnectUpdatingCallback(std::bind(&UI::HeadsUpDisplay::_UpdateScannerDisplay, this, ScannerDisplay, std::placeholders::_1, std::placeholders::_2));
-	
-	auto ScannerBorder{new UI::Border{ScannerWidget}};
-	
 	ScannerBorder->SetName("border");
 	ScannerBorder->SetLeft(0.0_c);
 	ScannerBorder->SetTop(0.0_c);
@@ -235,7 +207,13 @@ UI::HeadsUpDisplay::HeadsUpDisplay(UI::Widget * SupWidget) :
 	AddSubWidget(HullLabel);
 	AddSubWidget(_MessageLabel);
 	AddSubWidget(MiniMapWidget);
+	MiniMapWidget->AddSubWidget(MiniMapBorder);
+	MiniMapWidget->AddSubWidget(MiniMapDisplay);
+	MiniMapWidget->AddSubWidget(MiniMapSystemNameLabel);
 	AddSubWidget(ScannerWidget);
+	ScannerWidget->AddSubWidget(ScannerBorder);
+	ScannerWidget->AddSubWidget(ScannerDisplay);
+	ScannerWidget->AddSubWidget(ScannerTargetNameLabel);
 }
 
 void UI::HeadsUpDisplay::_HideMessage(void)
