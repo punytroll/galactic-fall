@@ -50,7 +50,7 @@ namespace UI
 		};
 		
 		// constructor & destructor
-		Label(UI::Widget * SupWidget = nullptr);
+		Label(void);
 		virtual ~Label(void);
 		// getters
 		UI::Label::HorizontalAlignment GetHorizontalAlignment(void) const;

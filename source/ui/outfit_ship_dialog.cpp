@@ -227,9 +227,11 @@ UI::OutfitShipDialog::OutfitShipDialog(Ship * Ship) :
 	ConnectKeyCallback(std::bind(&UI::OutfitShipDialog::_OnKey, this, std::placeholders::_1));
 	
 	// create components
+	auto AccessoryListLabel{new UI::Label{}};
 	auto LeftPane{new UI::Widget{}};
 	auto CenterPane{new UI::Widget{}};
 	auto RightPane{new UI::Widget{}};
+	auto SlotListLabel{new UI::Label{}};
 	
 	_AccessoryListBox = new UI::ListBox{};
 	_SlotListBox = new UI::ListBox{};
@@ -238,9 +240,6 @@ UI::OutfitShipDialog::OutfitShipDialog(Ship * Ship) :
 	LeftPane->SetTop(40.0_c);
 	LeftPane->SetHeight(height(this) - 10.0_c - top(LeftPane));
 	LeftPane->SetWidth((width(this) - 10.0_c - 10.0_c - width(CenterPane) - 10.0_c - 10.0_c) / 2.0_c);
-	
-	auto SlotListLabel{new UI::Label{LeftPane}};
-	
 	SlotListLabel->SetLeft(0.0_c);
 	SlotListLabel->SetTop(0.0_c);
 	SlotListLabel->SetWidth(width(LeftPane));
@@ -294,9 +293,6 @@ UI::OutfitShipDialog::OutfitShipDialog(Ship * Ship) :
 	RightPane->SetTop(40.0_c);
 	RightPane->SetHeight(height(this) - 10.0_c - top(RightPane));
 	RightPane->SetWidth((width(this) - 10.0_c - 10.0_c - width(CenterPane) - 10.0_c - 10.0_c) / 2.0_c);
-	
-	auto AccessoryListLabel{new UI::Label{RightPane}};
-	
 	AccessoryListLabel->SetLeft(0.0_c);
 	AccessoryListLabel->SetTop(0.0_c);
 	AccessoryListLabel->SetWidth(width(RightPane));
@@ -313,8 +309,10 @@ UI::OutfitShipDialog::OutfitShipDialog(Ship * Ship) :
 	AddSubWidget(CenterPane);
 	AddSubWidget(LeftPane);
 	LeftPane->AddSubWidget(_SlotListBox);
+	LeftPane->AddSubWidget(SlotListLabel);
 	AddSubWidget(RightPane);
 	RightPane->AddSubWidget(_AccessoryListBox);
+	RightPane->AddSubWidget(AccessoryListLabel);
 	// initialize content
 	_RebuildAccessoryList();
 }

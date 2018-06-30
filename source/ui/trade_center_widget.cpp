@@ -176,6 +176,18 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet
 	ConnectUpdatingCallback(std::bind(&UI::TradeCenterWidget::_OnUpdating, this, std::placeholders::_1, std::placeholders::_2));
 	
 	// create components
+	auto AssetClassDescriptionCaptionLabel{new UI::Label{}};
+	auto AssetClassDescriptionLabel{new UI::Label{}};
+	auto AssetClassPriceCaptionLabel{new UI::Label{}};
+	auto AssetClassPriceLabel{new UI::Label{}};
+	auto AssetClassSizeCaptionLabel{new UI::Label{}};
+	auto AssetClassSizeLabel{new UI::Label{}};
+	auto CharacterAmountColumnHeader{new UI::Label{}};
+	auto HeaderRow{new UI::Widget{}};
+	auto NameColumnHeader{new UI::Label{}};
+	auto PriceColumnHeader{new UI::Label{}};
+	auto SizeColumnHeader{new UI::Label{}};
+	
 	_AssetClassListBox = new UI::ListBox{};
 	
 	// initialize components
@@ -196,17 +208,11 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet
 	SellButton->SetHeight(20.0_c);
 	SellButton->ConnectClickedCallback(std::bind(&UI::TradeCenterWidget::_OnSellButtonClicked, this));
 	SellButton->ConnectUpdatingCallback(std::bind(&UI::TradeCenterWidget::_OnSellButtonUpdating, this, SellButton, std::placeholders::_1, std::placeholders::_2));
-	
-	auto HeaderRow{new UI::Widget{this}};
-	
 	HeaderRow->SetLeft(0.0_c);
 	HeaderRow->SetTop(0.0_c);
 	HeaderRow->SetWidth(width(this) - 180.0_c);
 	HeaderRow->SetHeight(20.0_c);
 	HeaderRow->SetBackgroundColor(Graphics::ColorRGBO(0.3f, 0.3f, 0.3f, 1.0f));
-	
-	auto PriceColumnHeader{new UI::Label{HeaderRow}};
-	
 	PriceColumnHeader->SetLeft(width(HeaderRow) - 2.0_c - 5.0_c - width(PriceColumnHeader));
 	PriceColumnHeader->SetTop(0.0_c);
 	PriceColumnHeader->SetWidth(40.0_c);
@@ -214,9 +220,6 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet
 	PriceColumnHeader->SetText("Price");
 	PriceColumnHeader->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Right);
 	PriceColumnHeader->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
-	
-	auto SizeColumnHeader{new UI::Label{HeaderRow}};
-	
 	SizeColumnHeader->SetLeft(left(PriceColumnHeader) - 5.0_c - width(SizeColumnHeader));
 	SizeColumnHeader->SetTop(0.0_c);
 	SizeColumnHeader->SetWidth(40.0_c);
@@ -224,9 +227,6 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet
 	SizeColumnHeader->SetText("Size");
 	SizeColumnHeader->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Right);
 	SizeColumnHeader->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
-	
-	auto CharacterAmountColumnHeader{new UI::Label{HeaderRow}};
-	
 	CharacterAmountColumnHeader->SetLeft(left(SizeColumnHeader) - 5.0_c - width(CharacterAmountColumnHeader));
 	CharacterAmountColumnHeader->SetTop(0.0_c);
 	CharacterAmountColumnHeader->SetWidth(40.0_c);
@@ -234,9 +234,6 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet
 	CharacterAmountColumnHeader->SetText("Amount");
 	CharacterAmountColumnHeader->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Right);
 	CharacterAmountColumnHeader->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
-	
-	auto NameColumnHeader{new UI::Label{HeaderRow}};
-	
 	NameColumnHeader->SetLeft(5.0_c + 2.0_c);
 	NameColumnHeader->SetTop(0.0_c);
 	NameColumnHeader->SetWidth(left(CharacterAmountColumnHeader) - 5.0_c - left(NameColumnHeader));
@@ -250,54 +247,36 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet
 	_AssetClassViewDisplay->SetWidth(150.0_c);
 	_AssetClassViewDisplay->SetHeight(150.0_c);
 	_AssetClassViewDisplay->SetBackgroundColor(Graphics::ColorRGBO(0.15f, 0.15f, 0.15f, 1.0f));
-	
-	auto AssetClassPriceCaptionLabel{new UI::Label{this}};
-	
 	AssetClassPriceCaptionLabel->SetLeft(left(_AssetClassViewDisplay));
 	AssetClassPriceCaptionLabel->SetTop(bottom(_AssetClassViewDisplay) + 10.0_c);
 	AssetClassPriceCaptionLabel->SetWidth(width(_AssetClassViewDisplay));
 	AssetClassPriceCaptionLabel->SetHeight(20.0_c);
 	AssetClassPriceCaptionLabel->SetText("Price:");
 	AssetClassPriceCaptionLabel->ConnectUpdatingCallback(std::bind(&UI::TradeCenterWidget::_OnAssetClassPriceCaptionLabelUpdating, this, AssetClassPriceCaptionLabel, std::placeholders::_1, std::placeholders::_2));
-	
-	auto AssetClassPriceLabel{new UI::Label{this}};
-	
 	AssetClassPriceLabel->SetLeft(left(_AssetClassViewDisplay));
 	AssetClassPriceLabel->SetTop(bottom(_AssetClassViewDisplay) + 10.0_c);
 	AssetClassPriceLabel->SetWidth(width(_AssetClassViewDisplay));
 	AssetClassPriceLabel->SetHeight(20.0_c);
 	AssetClassPriceLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Right);
 	AssetClassPriceLabel->ConnectUpdatingCallback(std::bind(&UI::TradeCenterWidget::_OnAssetClassPriceLabelUpdating, this, AssetClassPriceLabel, std::placeholders::_1, std::placeholders::_2));
-	
-	auto AssetClassSizeCaptionLabel{new UI::Label{this}};
-	
 	AssetClassSizeCaptionLabel->SetLeft(left(_AssetClassViewDisplay));
 	AssetClassSizeCaptionLabel->SetTop(bottom(AssetClassPriceLabel));
 	AssetClassSizeCaptionLabel->SetWidth(width(_AssetClassViewDisplay));
 	AssetClassSizeCaptionLabel->SetHeight(20.0_c);
 	AssetClassSizeCaptionLabel->SetText("Size:");
 	AssetClassSizeCaptionLabel->ConnectUpdatingCallback(std::bind(&UI::TradeCenterWidget::_OnAssetClassSizeCaptionLabelUpdating, this, AssetClassSizeCaptionLabel, std::placeholders::_1, std::placeholders::_2));
-	
-	auto AssetClassSizeLabel{new UI::Label{this}};
-	
 	AssetClassSizeLabel->SetLeft(left(_AssetClassViewDisplay));
 	AssetClassSizeLabel->SetTop(bottom(AssetClassPriceLabel));
 	AssetClassSizeLabel->SetWidth(width(_AssetClassViewDisplay));
 	AssetClassSizeLabel->SetHeight(20.0_c);
 	AssetClassSizeLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Right);
 	AssetClassSizeLabel->ConnectUpdatingCallback(std::bind(&UI::TradeCenterWidget::_OnAssetClassSizeLabelUpdating, this, AssetClassSizeLabel, std::placeholders::_1, std::placeholders::_2));
-	
-	auto AssetClassDescriptionCaptionLabel{new UI::Label{this}};
-	
 	AssetClassDescriptionCaptionLabel->SetLeft(left(_AssetClassViewDisplay));
 	AssetClassDescriptionCaptionLabel->SetTop(bottom(AssetClassSizeLabel));
 	AssetClassDescriptionCaptionLabel->SetWidth(width(_AssetClassViewDisplay));
 	AssetClassDescriptionCaptionLabel->SetHeight(20.0_c);
 	AssetClassDescriptionCaptionLabel->SetText("Description:");
 	AssetClassDescriptionCaptionLabel->ConnectUpdatingCallback(std::bind(&UI::TradeCenterWidget::_OnAssetClassDescriptionCaptionLabelUpdating, this, AssetClassDescriptionCaptionLabel, std::placeholders::_1, std::placeholders::_2));
-	
-	auto AssetClassDescriptionLabel{new UI::Label{this}};
-	
 	AssetClassDescriptionLabel->SetLeft(left(_AssetClassViewDisplay));
 	AssetClassDescriptionLabel->SetTop(bottom(AssetClassDescriptionCaptionLabel));
 	AssetClassDescriptionLabel->SetWidth(width(_AssetClassViewDisplay));
@@ -327,6 +306,18 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet
 	{
 		_AssetClassListBox->GetContent()->AddSubWidget(new UI::TradeCenterAssetsListBoxItem{PlanetAssets, Hangar});
 	}
+	// add components
+	AddSubWidget(AssetClassDescriptionCaptionLabel);
+	AddSubWidget(AssetClassDescriptionLabel);
+	AddSubWidget(AssetClassPriceCaptionLabel);
+	AddSubWidget(AssetClassPriceLabel);
+	AddSubWidget(AssetClassSizeCaptionLabel);
+	AddSubWidget(AssetClassSizeLabel);
+	AddSubWidget(HeaderRow);
+	HeaderRow->AddSubWidget(CharacterAmountColumnHeader);
+	HeaderRow->AddSubWidget(NameColumnHeader);
+	HeaderRow->AddSubWidget(PriceColumnHeader);
+	HeaderRow->AddSubWidget(SizeColumnHeader);
 }
 
 void UI::TradeCenterWidget::_Buy(const PlanetAssets * PlanetAssets)

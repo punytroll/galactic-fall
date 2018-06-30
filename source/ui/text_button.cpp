@@ -30,14 +30,18 @@ UI::TextButton::TextButton(UI::Widget * SupWidget, const std::string & Text) :
 	UI::Button(SupWidget),
 	_Label(nullptr)
 {
-	_Label = new UI::Label{this};
+	// create components
+	_Label = new UI::Label{};
+	// initialize components
 	_Label->SetLeft(0.0_c);
 	_Label->SetTop(0.0_c);
 	_Label->SetWidth(width(this));
 	_Label->SetHeight(height(this));
+	_Label->SetText(Text);
 	_Label->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Center);
 	_Label->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
-	_Label->SetText(Text);
+	// add components
+	AddSubWidget(_Label);
 }
 
 void UI::TextButton::SetText(const std::string & Text)
