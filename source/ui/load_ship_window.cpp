@@ -59,11 +59,16 @@ UI::LoadShipWindow::LoadShipWindow(Hangar * Hangar, Ship * Ship) :
 	ConnectDestroyingCallback(std::bind(&UI::LoadShipWindow::_OnDestroying, this, std::placeholders::_1));
 	ConnectKeyCallback(std::bind(&UI::LoadShipWindow::_OnKey, this, std::placeholders::_1));
 	
-	auto LeftPane{new UI::Widget{this}};
+	// create components
+	auto CenterPane{new UI::Widget{}};
+	auto LeftPane{new UI::Widget{}};
+	auto RightPane{new UI::Widget{}};
 	
+	// initialize components
 	LeftPane->SetLeft(10.0_c);
 	LeftPane->SetTop(40.0_c);
 	LeftPane->SetHeight(height(this) - 10.0_c - top(LeftPane));
+	LeftPane->SetWidth((width(this) - 10.0_c - 10.0_c - width(CenterPane) - 10.0_c - 10.0_c) / 2.0_c);
 	
 	auto HangarLabel{new UI::Label{LeftPane, "Hangar"}};
 	
@@ -87,10 +92,7 @@ UI::LoadShipWindow::LoadShipWindow(Hangar * Hangar, Ship * Ship) :
 			_HangarListBox->GetContent()->AddSubWidget(new UI::ListBoxObjectItem(HangarObject));
 		}
 	}
-	LeftPane->AddSubWidget(_HangarListBox);
-	
-	auto CenterPane{new UI::Widget{this}};
-	
+	CenterPane->SetLeft(right(LeftPane) + 10.0_c);
 	CenterPane->SetTop(70.0_c);
 	CenterPane->SetWidth(100.0_c);
 	CenterPane->SetHeight(height(this) - 10.0_c - top(CenterPane));
@@ -120,11 +122,10 @@ UI::LoadShipWindow::LoadShipWindow(Hangar * Hangar, Ship * Ship) :
 	OKButton->SetWidth(width(CenterPane));
 	OKButton->SetHeight(20.0_c);
 	OKButton->ConnectClickedCallback(std::bind(&UI::LoadShipWindow::_OnOKButtonClicked, this));
-	
-	auto RightPane{new UI::Widget{this}};
-	
+	RightPane->SetLeft(right(CenterPane) + 10.0_c);
 	RightPane->SetTop(40.0_c);
 	RightPane->SetHeight(height(this) - 10.0_c - top(RightPane));
+	RightPane->SetWidth((width(this) - 10.0_c - 10.0_c - width(CenterPane) - 10.0_c - 10.0_c) / 2.0_c);
 	
 	auto ShipLabel{new UI::Label{RightPane, "Ship"}};
 	
@@ -134,7 +135,6 @@ UI::LoadShipWindow::LoadShipWindow(Hangar * Hangar, Ship * Ship) :
 	ShipLabel->SetHeight(20.0_c);
 	ShipLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Center);
 	ShipLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
-	ConnectWidthChangedCallback(std::bind(&UI::LoadShipWindow::_OnWidthChanged, this, std::placeholders::_1, LeftPane, CenterPane, RightPane));
 	_ShipListBox = new UI::ListBox{};
 	_ShipListBox->SetLeft(0.0_c);
 	_ShipListBox->SetTop(bottom(ShipLabel));
@@ -147,6 +147,11 @@ UI::LoadShipWindow::LoadShipWindow(Hangar * Hangar, Ship * Ship) :
 	{
 		_ShipListBox->GetContent()->AddSubWidget(new UI::ListBoxObjectItem(ShipObject));
 	}
+	// add components
+	AddSubWidget(CenterPane);
+	AddSubWidget(LeftPane);
+	LeftPane->AddSubWidget(_HangarListBox);
+	AddSubWidget(RightPane);
 	RightPane->AddSubWidget(_ShipListBox);
 }
 
@@ -306,21 +311,4 @@ void UI::LoadShipWindow::_OnShipContentRemoved(Object * Content)
 void UI::LoadShipWindow::_OnShipDestroying(void)
 {
 	assert(false);
-}
-
-void UI::LoadShipWindow::_OnWidthChanged(UI::Event & WidthChangedEvent, UI::Widget * LeftPane, UI::Widget * CenterPane, UI::Widget * RightPane)
-{
-	if(WidthChangedEvent.GetPhase() == UI::Event::Phase::Target)
-	{
-		float AvailableWidth{GetWidth()};
-		
-		// substract 10.0f for each border: left of left, between left and center, between center and right, right of right
-		AvailableWidth -= 10.0f + 10.0f + 10.0f + 10.0f;
-		AvailableWidth -= CenterPane->GetWidth();
-		AvailableWidth /= 2.0f;
-		LeftPane->SetWidth(constant(AvailableWidth));
-		CenterPane->SetLeft(constant(LeftPane->GetRight() + 10.0f));
-		RightPane->SetLeft(constant(CenterPane->GetRight() + 10.0f));
-		RightPane->SetWidth(constant(AvailableWidth));
-	}
 }
