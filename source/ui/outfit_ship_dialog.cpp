@@ -216,10 +216,12 @@ UI::OutfitShipDialog::OutfitShipDialog(Ship * Ship) :
 	ConnectKeyCallback(std::bind(&UI::OutfitShipDialog::_OnKey, this, std::placeholders::_1));
 	
 	// create components
-	auto LeftPane{new UI::Widget{this}};
-	auto CenterPane{new UI::Widget{this}};
-	auto RightPane{new UI::Widget{this}};
+	auto LeftPane{new UI::Widget{}};
+	auto CenterPane{new UI::Widget{}};
+	auto RightPane{new UI::Widget{}};
 	
+	_AccessoryListBox = new UI::ListBox{};
+	_SlotListBox = new UI::ListBox{};
 	// initialize components
 	LeftPane->SetLeft(10.0_c);
 	LeftPane->SetTop(40.0_c);
@@ -234,7 +236,6 @@ UI::OutfitShipDialog::OutfitShipDialog(Ship * Ship) :
 	SlotListLabel->SetHeight(20.0_c);
 	SlotListLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Center);
 	SlotListLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
-	_SlotListBox = new UI::ListBox{};
 	_SlotListBox->SetLeft(0.0_c);
 	_SlotListBox->SetTop(bottom(SlotListLabel));
 	_SlotListBox->SetWidth(width(LeftPane));
@@ -244,8 +245,6 @@ UI::OutfitShipDialog::OutfitShipDialog(Ship * Ship) :
 	{
 		_SlotListBox->GetContent()->AddSubWidget(new UI::SlotListItem{SlotPair.second});
 	}
-	LeftPane->AddSubWidget(_SlotListBox);
-	// center pane
 	CenterPane->SetLeft(right(LeftPane) + 10.0_c);
 	CenterPane->SetTop(70.0_c);
 	CenterPane->SetWidth(160.0_c);
@@ -276,7 +275,6 @@ UI::OutfitShipDialog::OutfitShipDialog(Ship * Ship) :
 	OKButton->SetWidth(width(CenterPane));
 	OKButton->SetHeight(20.0_c);
 	OKButton->ConnectClickedCallback(std::bind(&UI::OutfitShipDialog::_OnOKButtonClicked, this));
-	// right pane
 	RightPane->SetLeft(right(CenterPane) + 10.0_c);
 	RightPane->SetTop(40.0_c);
 	RightPane->SetHeight(height(this) - 10.0_c - top(RightPane));
@@ -290,13 +288,18 @@ UI::OutfitShipDialog::OutfitShipDialog(Ship * Ship) :
 	AccessoryListLabel->SetHeight(20.0_c);
 	AccessoryListLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Center);
 	AccessoryListLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
-	_AccessoryListBox = new UI::ListBox{};
 	_AccessoryListBox->SetLeft(0.0_c);
 	_AccessoryListBox->SetTop(bottom(AccessoryListLabel));
 	_AccessoryListBox->SetWidth(width(RightPane));
 	_AccessoryListBox->SetHeight(height(RightPane) - top(_AccessoryListBox));
 	_AccessoryListBox->SetHorizontalScrollBarVisible(false);
+	//add components
+	AddSubWidget(CenterPane);
+	AddSubWidget(LeftPane);
+	LeftPane->AddSubWidget(_SlotListBox);
+	AddSubWidget(RightPane);
 	RightPane->AddSubWidget(_AccessoryListBox);
+	// initialize content
 	_RebuildAccessoryList();
 }
 
