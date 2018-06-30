@@ -165,8 +165,11 @@ UI::Widget * UI::ObjectInformationDialog::_AddObjectProperty(UI::Widget * Previo
 
 UI::Widget * UI::ObjectInformationDialog::_AddSeparator(UI::Widget * PreviousWidget, float Indentation, const std::string & Separator)
 {
-	auto SeparatorDisplay{new UI::Widget{_PropertiesScrollBox->GetContent()}};
+	// create components
+	auto SeparatorDisplay{new UI::Widget{}};
+	auto SeparatorLabel{new UI::Label{}};
 	
+	// initialize components
 	SeparatorDisplay->SetLeft(10.0_c);
 	if(PreviousWidget != nullptr)
 	{
@@ -178,23 +181,27 @@ UI::Widget * UI::ObjectInformationDialog::_AddSeparator(UI::Widget * PreviousWid
 	}
 	SeparatorDisplay->SetWidth(width(_PropertiesScrollBox->GetContent()) - 2.0_c * 10.0_c);
 	SeparatorDisplay->SetHeight(20.0_c);
-	
-	auto SeparatorLabel{new UI::Label{SeparatorDisplay, Separator}};
-	
 	SeparatorLabel->SetLeft(constant(Indentation));
 	SeparatorLabel->SetTop(0.0_c);
 	SeparatorLabel->SetWidth(width(SeparatorDisplay));
 	SeparatorLabel->SetHeight(height(SeparatorDisplay));
+	SeparatorLabel->SetText(Separator);
 	SeparatorLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	SeparatorLabel->SetTextColor(Graphics::ColorRGBO(0.5f, 0.8f, 1.0f, 1.0f));
+	// add components
+	_PropertiesScrollBox->GetContent()->AddSubWidget(SeparatorDisplay);
+	SeparatorDisplay->AddSubWidget(SeparatorLabel);
 	
 	return SeparatorDisplay;
 }
 
 UI::Widget * UI::ObjectInformationDialog::_AddString(UI::Widget * PreviousWidget, float Indentation, const std::string & String)
 {
-	auto StringDisplay{new UI::Widget{_PropertiesScrollBox->GetContent()}};
+	// create components
+	auto StringDisplay{new UI::Widget{}};
+	auto StringLabel{new UI::Label{}};
 	
+	// initialize components
 	StringDisplay->SetLeft(10.0_c);
 	if(PreviousWidget != nullptr)
 	{
@@ -206,21 +213,25 @@ UI::Widget * UI::ObjectInformationDialog::_AddString(UI::Widget * PreviousWidget
 	}
 	StringDisplay->SetWidth(width(_PropertiesScrollBox->GetContent()) - 2.0_c * 10.0_c);
 	StringDisplay->SetHeight(20.0_c);
-	
-	auto StringLabel{new UI::Label{StringDisplay, String}};
-	
 	StringLabel->SetLeft(constant(Indentation));
 	StringLabel->SetTop(0.0_c);
 	StringLabel->SetWidth(width(StringDisplay));
 	StringLabel->SetHeight(height(StringDisplay));
+	StringLabel->SetText(String);
 	StringLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
+	// add components
+	_PropertiesScrollBox->GetContent()->AddSubWidget(StringDisplay);
+	StringDisplay->AddSubWidget(StringLabel);
 	
 	return StringDisplay;
 }
 
 UI::Widget * UI::ObjectInformationDialog::_AddStringProperty(UI::Widget * PreviousWidget, float Indentation, const std::string & PropertyName, const std::string & PropertyValue)
 {
-	auto PropertyDisplay{new UI::Widget{_PropertiesScrollBox->GetContent()}};
+	// create components
+	auto PropertyDisplay{new UI::Widget{}};
+	auto PropertyNameLabel{new UI::Label{}};
+	auto PropertyValueLabel{new UI::Label{}};
 	
 	PropertyDisplay->SetLeft(10.0_c);
 	if(PreviousWidget != nullptr)
@@ -233,23 +244,23 @@ UI::Widget * UI::ObjectInformationDialog::_AddStringProperty(UI::Widget * Previo
 	}
 	PropertyDisplay->SetWidth(width(_PropertiesScrollBox->GetContent()) - 2.0_c * 10.0_c);
 	PropertyDisplay->SetHeight(20.0_c);
-	
-	auto PropertyNameLabel{new UI::Label{PropertyDisplay, PropertyName + ":"}};
-	
 	PropertyNameLabel->SetLeft(constant(Indentation));
 	PropertyNameLabel->SetTop(0.0_c);
 	PropertyNameLabel->SetWidth(constant(6.0f * (PropertyName.length() + 1)));
 	PropertyNameLabel->SetHeight(height(PropertyDisplay));
+	PropertyNameLabel->SetText(PropertyName + ":");
 	PropertyNameLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
-	
-	auto PropertyValueLabel{new UI::Label(PropertyDisplay, PropertyValue)};
-	
 	PropertyValueLabel->SetLeft(constant(PropertyNameLabel->GetRight()));
 	PropertyValueLabel->SetTop(0.0_c);
 	PropertyValueLabel->SetWidth(width(PropertyDisplay) - right(PropertyNameLabel));
 	PropertyValueLabel->SetHeight(height(PropertyDisplay));
+	PropertyValueLabel->SetText(PropertyValue);
 	PropertyValueLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Right);
 	PropertyValueLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
+	// add components
+	_PropertiesScrollBox->GetContent()->AddSubWidget(PropertyDisplay);
+	PropertyDisplay->AddSubWidget(PropertyNameLabel);
+	PropertyDisplay->AddSubWidget(PropertyValueLabel);
 	
 	return PropertyDisplay;
 }

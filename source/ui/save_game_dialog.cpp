@@ -42,31 +42,26 @@ UI::SaveGameDialog::SaveGameDialog(void)
 	SetTitle("Save Game");
 	ConnectKeyCallback(std::bind(&UI::SaveGameDialog::_OnKey, this, std::placeholders::_1));
 	
-	auto OKButton{new UI::TextButton{this, "OK"}};
+	// create components
+	auto CancelButton{new UI::TextButton{}};
+	auto OKButton{new UI::TextButton{}};
 	
-	OKButton->SetLeft(width(this) - 10.0_c - width(OKButton));
-	OKButton->SetTop(height(this) - 10.0_c - height(OKButton));
-	OKButton->SetWidth(100.0_c);
-	OKButton->SetHeight(20.0_c);
-	OKButton->ConnectClickedCallback(std::bind(&UI::SaveGameDialog::_Close, this, UI::Dialog::ClosingReason::OK_BUTTON));
-	
-	auto CancelButton{new UI::TextButton{this, "Cancel"}};
-	
+	_FileListBox = new UI::ListBox{};
+	_FileNameLabel = new UI::Label{};
+	_MessageLabel = new UI::Label{};
+	// initialize components
 	CancelButton->SetLeft(left(OKButton) - 10.0_c - width(CancelButton));
 	CancelButton->SetTop(height(this) - 10.0_c - height(CancelButton));
 	CancelButton->SetWidth(100.0_c);
 	CancelButton->SetHeight(20.0_c);
+	CancelButton->SetText("Cancel");
 	CancelButton->ConnectClickedCallback(std::bind(&UI::SaveGameDialog::_Close, this, UI::Dialog::ClosingReason::CANCEL_BUTTON));
-	_MessageLabel = new UI::Label{this};
-	_MessageLabel->SetLeft(10.0_c);
-	_MessageLabel->SetTop(40.0_c);
-	_MessageLabel->SetWidth(width(this) - 2.0_c * left(_MessageLabel));
-	_MessageLabel->SetHeight(30.0_c);
-	_MessageLabel->SetTextColor(Graphics::ColorRGBO(1.0f, 0.3, 0.3f, 1.0f));
-	_MessageLabel->SetWrap(true);
-	_MessageLabel->SetWordWrap(true);
-	_MessageLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
-	_FileNameLabel = new UI::Label{this};
+	_FileListBox->SetLeft(10.0_c);
+	_FileListBox->SetTop(110.0_c);
+	_FileListBox->SetWidth(width(this) - 2.0_c * left(_FileListBox));
+	_FileListBox->SetHeight(top(OKButton) - 10.0_c - top(_FileListBox));
+	_FileListBox->SetHorizontalScrollBarVisible(false);
+	_FileListBox->ConnectSelectedItemChangedCallback(std::bind(&UI::SaveGameDialog::_OnFileListBoxSelectedItemChanged, this));
 	_FileNameLabel->SetLeft(10.0_c);
 	_FileNameLabel->SetTop(bottom(_MessageLabel) + 10.0_c);
 	_FileNameLabel->SetWidth(width(this) - 2.0_c * left(_FileNameLabel));
@@ -76,14 +71,26 @@ UI::SaveGameDialog::SaveGameDialog(void)
 	_FileNameLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	_FileNameLabel->ConnectKeyCallback(std::bind(&UI::SaveGameDialog::_OnFileNameLabelKey, this, std::placeholders::_1));
 	_FileNameLabel->GrabKeyFocus();
-	_FileListBox = new UI::ListBox{};
-	_FileListBox->SetLeft(10.0_c);
-	_FileListBox->SetTop(110.0_c);
-	_FileListBox->SetWidth(width(this) - 2.0_c * left(_FileListBox));
-	_FileListBox->SetHeight(top(OKButton) - 10.0_c - top(_FileListBox));
-	_FileListBox->SetHorizontalScrollBarVisible(false);
-	_FileListBox->ConnectSelectedItemChangedCallback(std::bind(&UI::SaveGameDialog::_OnFileListBoxSelectedItemChanged, this));
+	_MessageLabel->SetLeft(10.0_c);
+	_MessageLabel->SetTop(40.0_c);
+	_MessageLabel->SetWidth(width(this) - 2.0_c * left(_MessageLabel));
+	_MessageLabel->SetHeight(30.0_c);
+	_MessageLabel->SetTextColor(Graphics::ColorRGBO(1.0f, 0.3, 0.3f, 1.0f));
+	_MessageLabel->SetWrap(true);
+	_MessageLabel->SetWordWrap(true);
+	_MessageLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
+	OKButton->SetLeft(width(this) - 10.0_c - width(OKButton));
+	OKButton->SetTop(height(this) - 10.0_c - height(OKButton));
+	OKButton->SetWidth(100.0_c);
+	OKButton->SetHeight(20.0_c);
+	OKButton->SetText("OK");
+	OKButton->ConnectClickedCallback(std::bind(&UI::SaveGameDialog::_Close, this, UI::Dialog::ClosingReason::OK_BUTTON));
+	// add components
+	AddSubWidget(CancelButton);
 	AddSubWidget(_FileListBox);
+	AddSubWidget(_FileNameLabel);
+	AddSubWidget(_MessageLabel);
+	AddSubWidget(OKButton);
 }
 
 std::string UI::SaveGameDialog::GetFilePath(void)
