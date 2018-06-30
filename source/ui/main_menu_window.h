@@ -26,10 +26,10 @@ class ScenarioManager;
 
 namespace UI
 {
-	class Button;
 	class LoadGameDialog;
 	class LoadScenarioDialog;
 	class SaveGameDialog;
+	class TextButton;
 	
 	class MainMenuWindow : public UI::Window
 	{
@@ -37,12 +37,12 @@ namespace UI
 		// constructor and destructor
 		MainMenuWindow(ScenarioManager * ScenarioManager);
 		// getters
-		UI::Button * GetLoadGameButton(void);
-		UI::Button * GetLoadScenarioButton(void);
-		UI::Button * GetNewGameButton(void);
-		UI::Button * GetQuitButton(void);
-		UI::Button * GetResumeGameButton(void);
-		UI::Button * GetSaveGameButton(void);
+		UI::TextButton * GetLoadGameButton(void);
+		UI::TextButton * GetLoadScenarioButton(void);
+		UI::TextButton * GetNewGameButton(void);
+		UI::TextButton * GetQuitButton(void);
+		UI::TextButton * GetResumeGameButton(void);
+		UI::TextButton * GetSaveGameButton(void);
 		// setters
 		void SetDestroyOnESCAPEKey(bool DestroyOnESCAPEKey);
 	private:
@@ -68,44 +68,44 @@ namespace UI
 		bool _DestroyOnLoadGameDialogDestroy;
 		bool _DestroyOnLoadScenarioDialogDestroy;
 		bool _DestroyOnSaveGameDialogDestroy;
-		UI::Button * _LoadGameButton;
+		UI::TextButton * _LoadGameButton;
 		UI::LoadGameDialog * _LoadGameDialog;
-		UI::Button * _LoadScenarioButton;
+		UI::TextButton * _LoadScenarioButton;
 		UI::LoadScenarioDialog * _LoadScenarioDialog;
-		UI::Button * _NewGameButton;
-		UI::Button * _QuitButton;
-		UI::Button * _ResumeGameButton;
-		UI::Button * _SaveGameButton;
+		UI::TextButton * _NewGameButton;
+		UI::TextButton * _QuitButton;
+		UI::TextButton * _ResumeGameButton;
+		UI::TextButton * _SaveGameButton;
 		UI::SaveGameDialog * _SaveGameDialog;
 		ScenarioManager * _ScenarioManager;
 	};
 
-	inline UI::Button * MainMenuWindow::GetLoadGameButton(void)
+	inline UI::TextButton * MainMenuWindow::GetLoadGameButton(void)
 	{
 		return _LoadGameButton;
 	}
 	
-	inline UI::Button * MainMenuWindow::GetLoadScenarioButton(void)
+	inline UI::TextButton * MainMenuWindow::GetLoadScenarioButton(void)
 	{
 		return _LoadScenarioButton;
 	}
 
-	inline UI::Button * MainMenuWindow::GetNewGameButton(void)
+	inline UI::TextButton * MainMenuWindow::GetNewGameButton(void)
 	{
 		return _NewGameButton;
 	}
 
-	inline UI::Button * MainMenuWindow::GetQuitButton(void)
+	inline UI::TextButton * MainMenuWindow::GetQuitButton(void)
 	{
 		return _QuitButton;
 	}
 
-	inline UI::Button * MainMenuWindow::GetResumeGameButton(void)
+	inline UI::TextButton * MainMenuWindow::GetResumeGameButton(void)
 	{
 		return _ResumeGameButton;
 	}
 
-	inline UI::Button * MainMenuWindow::GetSaveGameButton(void)
+	inline UI::TextButton * MainMenuWindow::GetSaveGameButton(void)
 	{
 		return _SaveGameButton;
 	}

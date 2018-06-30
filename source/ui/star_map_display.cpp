@@ -42,8 +42,7 @@
 #include "star_map_display.h"
 #include "user_interface.h"
 
-UI::StarMapDisplay::StarMapDisplay(Widget * SupWidget, Character * Character) :
-	UI::ViewDisplay(SupWidget),
+UI::StarMapDisplay::StarMapDisplay(Character * Character) :
 	_Character(Character),
 	_CameraWorldPosition(true),
 	_Scale(5.0f),

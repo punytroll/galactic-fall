@@ -37,7 +37,7 @@ namespace UI
 	{
 	public:
 		// constructor & destructor
-		MiniMapDisplay(UI::Widget * SupWidget = 0);
+		MiniMapDisplay(void);
 		virtual ~MiniMapDisplay(void);
 		// setters
 		void SetCharacter(Character * Character);

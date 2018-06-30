@@ -41,8 +41,7 @@
 #include "event.h"
 #include "mini_map_display.h"
 
-UI::MiniMapDisplay::MiniMapDisplay(UI::Widget * SupWidget) :
-	UI::ViewDisplay(SupWidget),
+UI::MiniMapDisplay::MiniMapDisplay(void) :
 	_Character(nullptr),
 	_Scale(0.15f)
 {

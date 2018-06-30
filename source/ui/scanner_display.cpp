@@ -38,8 +38,7 @@
 #include "event.h"
 #include "scanner_display.h"
 
-UI::ScannerDisplay::ScannerDisplay(UI::Widget * SupWidget) :
-	UI::ViewDisplay(SupWidget),
+UI::ScannerDisplay::ScannerDisplay(void) :
 	_Target(nullptr)
 {
 	ConnectDestroyingCallback(std::bind(&UI::ScannerDisplay::_OnDestroying, this, std::placeholders::_1));

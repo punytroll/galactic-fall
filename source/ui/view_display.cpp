@@ -26,8 +26,7 @@
 #include "../graphics/view.h"
 #include "view_display.h"
 
-UI::ViewDisplay::ViewDisplay(Widget * SupWidget) :
-	Widget(SupWidget),
+UI::ViewDisplay::ViewDisplay(void) :
 	_View(nullptr)
 {
 }
