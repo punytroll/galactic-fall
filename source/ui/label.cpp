@@ -24,10 +24,9 @@
 #include "../graphics/render_context.h"
 #include "label.h"
 
-UI::Label::Label(Widget * SupWidget, const std::string & Text) :
+UI::Label::Label(Widget * SupWidget) :
 	Widget(SupWidget),
 	_HorizontalAlignment(UI::Label::HorizontalAlignment::Left),
-	_Text(Text),
 	_TextColor(new Graphics::ColorRGBO(1.0f, 1.0f, 1.0f, 1.0f)),
 	_VerticalAlignment(UI::Label::VerticalAlignment::Top),
 	_Wrap(false),

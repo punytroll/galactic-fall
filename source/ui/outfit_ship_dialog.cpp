@@ -89,21 +89,26 @@ UI::AccessoryListItem::AccessoryListItem(Object * Accessory) :
 	// safe-guard: only accept objects with a accessory aspect
 	assert(Accessory->GetAspectAccessory() != nullptr);
 	
-	auto NameLabel{new UI::Label{this, Accessory->GetAspectName()->GetName()}};
+	// create components
+	auto NameLabel{new UI::Label{}};
+	auto SlotTypeLabel{new UI::Label{}};
 	
+	// initialize components
 	NameLabel->SetLeft(5.0_c);
 	NameLabel->SetTop(5.0_c);
 	NameLabel->SetWidth(width(this) - 5.0_c - left(NameLabel));
 	NameLabel->SetHeight(20.0_c);
+	NameLabel->SetText(Accessory->GetAspectName()->GetName());
 	NameLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
-	
-	auto SlotTypeLabel{new UI::Label{this, g_SlotClassManager->Get(Accessory->GetAspectAccessory()->GetSlotClassIdentifier())->GetName()}};
-	
 	SlotTypeLabel->SetLeft(25.0_c);
 	SlotTypeLabel->SetTop(bottom(NameLabel));
 	SlotTypeLabel->SetWidth(width(this) - 5.0_c - left(SlotTypeLabel));
 	SlotTypeLabel->SetHeight(20.0_c);
+	SlotTypeLabel->SetText(g_SlotClassManager->Get(Accessory->GetAspectAccessory()->GetSlotClassIdentifier())->GetName());
 	SlotTypeLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
+	// add components
+	AddSubWidget(NameLabel);
+	AddSubWidget(SlotTypeLabel);
 	SetHeight(bottom(SlotTypeLabel) + 5.0_c);
 }
 
@@ -138,19 +143,25 @@ UI::SlotListItem::SlotListItem(Slot * Slot) :
 	assert(_Slot != nullptr);
 	_SlotDestroyingConnection = _Slot->ConnectDestroyingCallback(std::bind(&UI::SlotListItem::_OnSlotDestroying, this));
 	
-	auto IdentifierLabel{new UI::Label{this, _Slot->GetName()}};
+	// create components
+	auto IdentifierLabel{new UI::Label{}};
 	
+	_TypeOrWeaponLabel = new UI::Label{};
+	// initialize components
 	IdentifierLabel->SetLeft(5.0_c);
 	IdentifierLabel->SetTop(5.0_c);
 	IdentifierLabel->SetWidth(width(this) - 5.0_c - left(IdentifierLabel));
 	IdentifierLabel->SetHeight(20.0_c);
+	IdentifierLabel->SetText(_Slot->GetName());
 	IdentifierLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
-	_TypeOrWeaponLabel = new UI::Label{this};
 	_TypeOrWeaponLabel->SetLeft(25.0_c);
 	_TypeOrWeaponLabel->SetTop(bottom(IdentifierLabel));
 	_TypeOrWeaponLabel->SetWidth(width(this) - 5.0_c - left(_TypeOrWeaponLabel));
 	_TypeOrWeaponLabel->SetHeight(20.0_c);
 	_TypeOrWeaponLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
+	// add components
+	AddSubWidget(IdentifierLabel);
+	AddSubWidget(_TypeOrWeaponLabel);
 	SetHeight(bottom(_TypeOrWeaponLabel) + 5.0_c);
 	Update();
 }
@@ -228,12 +239,13 @@ UI::OutfitShipDialog::OutfitShipDialog(Ship * Ship) :
 	LeftPane->SetHeight(height(this) - 10.0_c - top(LeftPane));
 	LeftPane->SetWidth((width(this) - 10.0_c - 10.0_c - width(CenterPane) - 10.0_c - 10.0_c) / 2.0_c);
 	
-	auto SlotListLabel{new UI::Label{LeftPane, "Slots"}};
+	auto SlotListLabel{new UI::Label{LeftPane}};
 	
 	SlotListLabel->SetLeft(0.0_c);
 	SlotListLabel->SetTop(0.0_c);
 	SlotListLabel->SetWidth(width(LeftPane));
 	SlotListLabel->SetHeight(20.0_c);
+	SlotListLabel->SetText("Slots");
 	SlotListLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Center);
 	SlotListLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	_SlotListBox->SetLeft(0.0_c);
@@ -250,42 +262,46 @@ UI::OutfitShipDialog::OutfitShipDialog(Ship * Ship) :
 	CenterPane->SetWidth(160.0_c);
 	CenterPane->SetHeight(height(this) - 10.0_c - top(CenterPane));
 	
-	auto MountButton{new UI::TextButton{CenterPane, "Mount"}};
+	auto MountButton{new UI::TextButton{CenterPane}};
 	
 	MountButton->SetLeft(0.0_c);
 	MountButton->SetTop(40.0_c);
 	MountButton->SetWidth(width(CenterPane));
 	MountButton->SetHeight(20.0_c);
+	MountButton->SetText("Mount");
 	MountButton->ConnectClickedCallback(std::bind(&UI::OutfitShipDialog::_OnMountButtonClicked, this));
 	MountButton->ConnectUpdatingCallback(std::bind(&UI::OutfitShipDialog::_OnMountButtonUpdating, this, MountButton, std::placeholders::_1, std::placeholders::_2));
 	
-	auto UnmountButton{new UI::TextButton{CenterPane, "Unmount"}};
+	auto UnmountButton{new UI::TextButton{CenterPane}};
 	
 	UnmountButton->SetLeft(0.0_c);
 	UnmountButton->SetTop(bottom(MountButton) + 10.0_c);
 	UnmountButton->SetWidth(width(CenterPane));
 	UnmountButton->SetHeight(20.0_c);
+	UnmountButton->SetText("Unmount");
 	UnmountButton->ConnectClickedCallback(std::bind(&UI::OutfitShipDialog::_OnUnmountButtonClicked, this));
 	UnmountButton->ConnectUpdatingCallback(std::bind(&UI::OutfitShipDialog::_OnUnmountButtonUpdating, this, UnmountButton, std::placeholders::_1, std::placeholders::_2));
 	
-	auto OKButton{new UI::TextButton{CenterPane, "OK"}};
+	auto OKButton{new UI::TextButton{CenterPane}};
 	
 	OKButton->SetLeft(0.0_c);
 	OKButton->SetTop(height(CenterPane) - 10.0_c - height(OKButton));
 	OKButton->SetWidth(width(CenterPane));
 	OKButton->SetHeight(20.0_c);
+	OKButton->SetText("OK");
 	OKButton->ConnectClickedCallback(std::bind(&UI::OutfitShipDialog::_OnOKButtonClicked, this));
 	RightPane->SetLeft(right(CenterPane) + 10.0_c);
 	RightPane->SetTop(40.0_c);
 	RightPane->SetHeight(height(this) - 10.0_c - top(RightPane));
 	RightPane->SetWidth((width(this) - 10.0_c - 10.0_c - width(CenterPane) - 10.0_c - 10.0_c) / 2.0_c);
 	
-	auto AccessoryListLabel{new UI::Label{RightPane, "Accessories"}};
+	auto AccessoryListLabel{new UI::Label{RightPane}};
 	
 	AccessoryListLabel->SetLeft(0.0_c);
 	AccessoryListLabel->SetTop(0.0_c);
 	AccessoryListLabel->SetWidth(width(RightPane));
 	AccessoryListLabel->SetHeight(20.0_c);
+	AccessoryListLabel->SetText("Accessories");
 	AccessoryListLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Center);
 	AccessoryListLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	_AccessoryListBox->SetLeft(0.0_c);
