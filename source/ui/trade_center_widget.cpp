@@ -189,23 +189,26 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet
 	auto SizeColumnHeader{new UI::Label{}};
 	
 	_AssetClassListBox = new UI::ListBox{};
+	_AssetClassViewDisplay = new UI::ViewDisplay{};
 	
 	// initialize components
-	auto BuyButton{new UI::TextButton{this, "Buy"}};
+	auto BuyButton{new UI::TextButton{this}};
 	
 	BuyButton->SetLeft(0.0_c);
 	BuyButton->SetTop(height(this) - height(BuyButton));
 	BuyButton->SetWidth(100.0_c);
 	BuyButton->SetHeight(20.0_c);
+	BuyButton->SetText("Buy");
 	BuyButton->ConnectClickedCallback(std::bind(&UI::TradeCenterWidget::_OnBuyButtonClicked, this));
 	BuyButton->ConnectUpdatingCallback(std::bind(&UI::TradeCenterWidget::_OnBuyButtonUpdating, this, BuyButton, std::placeholders::_1, std::placeholders::_2));
 	
-	auto SellButton{new UI::TextButton{this, "Sell"}};
+	auto SellButton{new UI::TextButton{this}};
 	
 	SellButton->SetLeft(width(BuyButton) + 10.0_c);
 	SellButton->SetTop(height(this) - height(SellButton));
 	SellButton->SetWidth(100.0_c);
 	SellButton->SetHeight(20.0_c);
+	SellButton->SetText("Sell");
 	SellButton->ConnectClickedCallback(std::bind(&UI::TradeCenterWidget::_OnSellButtonClicked, this));
 	SellButton->ConnectUpdatingCallback(std::bind(&UI::TradeCenterWidget::_OnSellButtonUpdating, this, SellButton, std::placeholders::_1, std::placeholders::_2));
 	HeaderRow->SetLeft(0.0_c);
@@ -241,7 +244,6 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet
 	NameColumnHeader->SetText("Name");
 	NameColumnHeader->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Left);
 	NameColumnHeader->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
-	_AssetClassViewDisplay = new UI::ViewDisplay{this};
 	_AssetClassViewDisplay->SetLeft(width(this) - width(_AssetClassViewDisplay));
 	_AssetClassViewDisplay->SetTop(0.0_c);
 	_AssetClassViewDisplay->SetWidth(150.0_c);
@@ -313,6 +315,7 @@ UI::TradeCenterWidget::TradeCenterWidget(UI::Widget * SupWidget, Planet * Planet
 	AddSubWidget(AssetClassPriceLabel);
 	AddSubWidget(AssetClassSizeCaptionLabel);
 	AddSubWidget(AssetClassSizeLabel);
+	AddSubWidget(_AssetClassViewDisplay);
 	AddSubWidget(HeaderRow);
 	HeaderRow->AddSubWidget(CharacterAmountColumnHeader);
 	HeaderRow->AddSubWidget(NameColumnHeader);

@@ -66,8 +66,7 @@ namespace UI
 	class ShipDisplay : public UI::ViewDisplay
 	{
 	public:
-		ShipDisplay(UI::Widget * SupWidget, Ship * Ship) :
-			UI::ViewDisplay(SupWidget),
+		ShipDisplay(Ship * Ship) :
 			_Ship(Ship),
 			_Visualization(nullptr)
 		{
@@ -236,12 +235,16 @@ namespace UI
 			_ShipDestroyingConnection = _Ship->ConnectDestroyingCallback(std::bind(&UI::ShipListItem::_OnShipDestroying, this));
 			ConnectDestroyingCallback(std::bind(&UI::ShipListItem::_OnDestroying, this, std::placeholders::_1));
 			
-			auto ShipDisplay{new UI::ShipDisplay{this, Ship}};
+			// create components
+			auto ShipDisplay{new UI::ShipDisplay{Ship}};
 			
+			// initialize components
 			ShipDisplay->SetLeft(1.0_c);
 			ShipDisplay->SetTop(1.0_c);
 			ShipDisplay->SetWidth(width(this) - 2.0_c);
 			ShipDisplay->SetHeight(height(this) - 2.0_c);
+			// add components
+			AddSubWidget(ShipDisplay);
 		}
 		
 		Ship * GetShip(void)

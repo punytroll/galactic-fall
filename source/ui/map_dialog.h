@@ -42,9 +42,8 @@ namespace UI
 	protected:
 		// callbacks
 		void _OnKey(UI::KeyEvent & KeyEvent);
-		void _OnOKButtonUpdating(float RealTimeSeconds, float GameTimeSeconds);
+		void _OnOKButtonUpdating(UI::Button * OKButton, float RealTimeSeconds, float GameTimeSeconds);
 	private:
-		UI::Button * _OKButton;
 		UI::StarMapDisplay * _StarMapDisplay;
 	};
 }

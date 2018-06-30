@@ -55,12 +55,17 @@ namespace UI
 			assert(_Object != nullptr);
 			_ObjectDestroyingConnection = _Object->ConnectDestroyingCallback(std::bind(&UI::ObjectPropertyWidget::_OnObjectDestroying, this));
 			ConnectDestroyingCallback(std::bind(&UI::ObjectPropertyWidget::_OnDestroying, this, std::placeholders::_1));
-			_Button = new UI::TextButton{this, Object->GetObjectIdentifier()};
+			// create components
+			_Button = new UI::TextButton{};
+			// initialize components
 			_Button->SetLeft(constant(Indentation));
 			_Button->SetTop(5.0_c);
 			_Button->SetWidth(width(this) - constant(Indentation));
 			_Button->SetHeight(height(this) - 2.0_c * 5.0_c);
+			_Button->SetText(Object->GetObjectIdentifier());
 			_Button->ConnectClickedCallback(std::bind(&UI::ObjectPropertyWidget::_OnButtonClicked, this));
+			// add components
+			AddSubWidget(_Button);
 		}
 	private:
 		void _OnButtonClicked(void)
@@ -116,30 +121,34 @@ UI::ObjectInformationDialog::ObjectInformationDialog(Object * Object) :
 	_ObjectDestroyingConnection = _Object->ConnectDestroyingCallback(std::bind(&ObjectInformationDialog::_OnObjectDestroying, this));
 	ConnectDestroyingCallback(std::bind(&ObjectInformationDialog::_OnDestroying, this, std::placeholders::_1));
 	
-	// set up widgets
-	auto CloseButton{new UI::TextButton{this, "Close"}};
+	// create components
+	auto CloseButton{new UI::TextButton{}};
+	auto RefreshButton{new UI::TextButton{}};
 	
+	_PropertiesScrollBox = new UI::ScrollBox{};
+	// initialize components
 	CloseButton->SetLeft(width(this) - 10.0_c - width(CloseButton));
 	CloseButton->SetTop(height(this) - 10.0_c - height(CloseButton));
 	CloseButton->SetWidth(100.0_c);
 	CloseButton->SetHeight(20.0_c);
+	CloseButton->SetText("Close");
 	CloseButton->ConnectClickedCallback(std::bind(&ObjectInformationDialog::_OnCloseClicked, this));
-	_PropertiesScrollBox = new UI::ScrollBox{};
 	_PropertiesScrollBox->SetLeft(10.0_c);
 	_PropertiesScrollBox->SetTop(40.0_c);
 	_PropertiesScrollBox->SetWidth(width(this) - 2.0_c * left(_PropertiesScrollBox));
 	_PropertiesScrollBox->SetHeight(top(CloseButton) - 10.0_c - top(_PropertiesScrollBox));
 	_PropertiesScrollBox->GetContent()->SetWidth(width(_PropertiesScrollBox->GetView()));
 	_PropertiesScrollBox->SetHorizontalScrollBarVisible(false);
-	AddSubWidget(_PropertiesScrollBox);
-	
-	auto RefreshButton{new UI::TextButton{this, "Refresh"}};
-	
 	RefreshButton->SetLeft(left(CloseButton) - 10.0_c - width(RefreshButton));
 	RefreshButton->SetTop(height(this) - 10.0_c - height(RefreshButton));
 	RefreshButton->SetWidth(100.0_c);
 	RefreshButton->SetHeight(20.0_c);
+	RefreshButton->SetText("Refresh");
 	RefreshButton->ConnectClickedCallback(std::bind(&ObjectInformationDialog::_OnRefreshClicked, this));
+	// add components
+	AddSubWidget(CloseButton);
+	AddSubWidget(_PropertiesScrollBox);
+	AddSubWidget(RefreshButton);
 	_Refresh();
 }
 

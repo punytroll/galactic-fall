@@ -35,7 +35,7 @@ namespace UI
 	class StarMapDisplay : public UI::ViewDisplay
 	{
 	public:
-		StarMapDisplay(UI::Widget * SupWidget, Character * Character);
+		StarMapDisplay(Character * Character);
 		// getters
 		Character * GetCharacter(void);
 		System * GetSelectedSystem(void);

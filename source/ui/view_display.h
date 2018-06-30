@@ -35,7 +35,7 @@ namespace UI
 	class ViewDisplay : public Widget
 	{
 	public:
-		ViewDisplay(Widget * SupWidget);
+		ViewDisplay(void);
 		virtual ~ViewDisplay(void);
 		// getters
 		Graphics::View * GetView(void);

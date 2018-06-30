@@ -52,28 +52,31 @@ UI::PlanetWindow::PlanetWindow(Planet * Planet, Character * Character) :
 	ConnectKeyCallback(std::bind(&UI::PlanetWindow::_OnKey, this, std::placeholders::_1));
 	ConnectDestroyingCallback(std::bind(&UI::PlanetWindow::_OnDestroying, this, std::placeholders::_1));
 	
-	auto HomeButton{new UI::TextButton{this, "Home"}};
+	auto HomeButton{new UI::TextButton{this}};
 	
 	HomeButton->SetLeft(10.0_c);
 	HomeButton->SetTop(40.0_c);
 	HomeButton->SetWidth(100.0_c);
 	HomeButton->SetHeight(20.0_c);
+	HomeButton->SetText("Home");
 	HomeButton->ConnectClickedCallback(std::bind(&UI::PlanetWindow::_OnHomeButtonClicked, this));
 	
-	auto TradeCenterButton{new UI::TextButton{this, "Trade Center"}};
+	auto TradeCenterButton{new UI::TextButton{this}};
 	
 	TradeCenterButton->SetLeft(left(HomeButton));
 	TradeCenterButton->SetTop(bottom(HomeButton) + 10.0_c);
 	TradeCenterButton->SetWidth(width(HomeButton));
 	TradeCenterButton->SetHeight(20.0_c);
+	TradeCenterButton->SetText("Trade Center");
 	TradeCenterButton->ConnectClickedCallback(std::bind(&UI::PlanetWindow::_OnTradeCenterButtonClicked, this));
 	
-	auto HangarButton{new UI::TextButton{this, "Hangar"}};
+	auto HangarButton{new UI::TextButton{this}};
 	
 	HangarButton->SetLeft(left(HomeButton));
 	HangarButton->SetTop(bottom(TradeCenterButton) + 10.0_c);
 	HangarButton->SetWidth(width(HomeButton));
 	HangarButton->SetHeight(20.0_c);
+	HangarButton->SetText("Hangar");
 	HangarButton->ConnectClickedCallback(std::bind(&UI::PlanetWindow::_OnHangarButtonClicked, this));
 	
 	auto CreditsLabel{new UI::Label{}};

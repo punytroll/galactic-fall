@@ -34,34 +34,40 @@
 using namespace Expressions::Operators;
 
 UI::MapDialog::MapDialog(Character * Character) :
-	_OKButton(nullptr),
 	_StarMapDisplay(nullptr)
 {
 	SetTitle("Map");
 	ConnectKeyCallback(std::bind(&UI::MapDialog::_OnKey, this, std::placeholders::_1));
 	
 	// create components
-	auto CancelButton{new UI::TextButton(this, "Cancel")};
+	auto CancelButton{new UI::TextButton()};
+	auto OKButton{new UI::TextButton{}};
 	
-	_OKButton = new UI::TextButton{this, "OK"};
-	_StarMapDisplay = new UI::StarMapDisplay{this, Character};
-	// setup components
-	_OKButton->SetLeft(width(this) - 10.0_c - width(_OKButton));
-	_OKButton->SetTop(height(this) - 10.0_c - height(_OKButton));
-	_OKButton->SetWidth(100.0_c);
-	_OKButton->SetHeight(20.0_c);
-	_OKButton->ConnectClickedCallback(std::bind(&UI::MapDialog::_Close, this, UI::Dialog::ClosingReason::OK_BUTTON));
-	_OKButton->ConnectUpdatingCallback(std::bind(&UI::MapDialog::_OnOKButtonUpdating, this, std::placeholders::_1, std::placeholders::_2));
-	CancelButton->SetLeft(left(_OKButton) - 10.0_c - width(CancelButton));
+	_StarMapDisplay = new UI::StarMapDisplay{Character};
+	// initialize components
+	CancelButton->SetLeft(left(OKButton) - 10.0_c - width(CancelButton));
 	CancelButton->SetTop(height(this) - 10.0_c - height(CancelButton));
 	CancelButton->SetWidth(100.0_c);
 	CancelButton->SetHeight(20.0_c);
+	CancelButton->SetText("Cancel");
 	CancelButton->ConnectClickedCallback(std::bind(&UI::MapDialog::_Close, this, UI::Dialog::ClosingReason::CANCEL_BUTTON));
+	OKButton->SetName("ok_button");
+	OKButton->SetLeft(width(this) - 10.0_c - width(OKButton));
+	OKButton->SetTop(height(this) - 10.0_c - height(OKButton));
+	OKButton->SetWidth(100.0_c);
+	OKButton->SetHeight(20.0_c);
+	OKButton->SetText("OK");
+	OKButton->ConnectClickedCallback(std::bind(&UI::MapDialog::_Close, this, UI::Dialog::ClosingReason::OK_BUTTON));
+	OKButton->ConnectUpdatingCallback(std::bind(&UI::MapDialog::_OnOKButtonUpdating, this, OKButton, std::placeholders::_1, std::placeholders::_2));
 	_StarMapDisplay->SetLeft(10.0_c);
 	_StarMapDisplay->SetTop(40.0_c);
 	_StarMapDisplay->SetWidth(width(this) - 2.0_c * 10.0_c);
-	_StarMapDisplay->SetHeight(top(_OKButton) - 10.0_c - top(_StarMapDisplay));
+	_StarMapDisplay->SetHeight(top(OKButton) - 10.0_c - top(_StarMapDisplay));
 	_StarMapDisplay->SetBackgroundColor(Graphics::ColorRGBO(0.0f, 0.0f, 0.0f, 1.0f));
+	// add components
+	AddSubWidget(CancelButton);
+	AddSubWidget(OKButton);
+	AddSubWidget(_StarMapDisplay);
 }
 
 System * UI::MapDialog::GetSelectedSystem(void)
@@ -87,7 +93,10 @@ void UI::MapDialog::_OnKey(UI::KeyEvent & KeyEvent)
 		}
 		else if(KeyEvent.GetKeyCode() == 36 /* RETURN */)
 		{
-			if(_OKButton->GetEnabled() == true)
+			auto OKButton{GetSubWidget("ok_button")};
+			
+			assert(OKButton != nullptr);
+			if(OKButton->GetEnabled() == true)
 			{
 				_Close(UI::Dialog::ClosingReason::RETURN_KEY);
 			}
@@ -95,9 +104,9 @@ void UI::MapDialog::_OnKey(UI::KeyEvent & KeyEvent)
 	}
 }
 
-void UI::MapDialog::_OnOKButtonUpdating(float RealTimeSeconds, float GameTimeSeconds)
+void UI::MapDialog::_OnOKButtonUpdating(UI::Button * OKButton, float RealTimeSeconds, float GameTimeSeconds)
 {
-	assert(_OKButton != nullptr);
+	assert(OKButton != nullptr);
 	assert(_StarMapDisplay != nullptr);
-	_OKButton->SetEnabled((_StarMapDisplay->GetSelectedSystem() == nullptr) || ((_StarMapDisplay->GetCharacter() != nullptr) && (_StarMapDisplay->GetCharacter()->GetSystem() != nullptr) && (_StarMapDisplay->GetSelectedSystem()->IsLinkedToSystem(_StarMapDisplay->GetCharacter()->GetSystem()) == true)));
+	OKButton->SetEnabled((_StarMapDisplay->GetSelectedSystem() == nullptr) || ((_StarMapDisplay->GetCharacter() != nullptr) && (_StarMapDisplay->GetCharacter()->GetSystem() != nullptr) && (_StarMapDisplay->GetSelectedSystem()->IsLinkedToSystem(_StarMapDisplay->GetCharacter()->GetSystem()) == true)));
 }

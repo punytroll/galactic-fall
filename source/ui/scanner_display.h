@@ -35,7 +35,7 @@ namespace UI
 	{
 	public:
 		// constructor & destructor
-		ScannerDisplay(UI::Widget * SupWidget = 0);
+		ScannerDisplay(void);
 		// getters
 		Object * GetTarget(void);
 		// setters

@@ -26,7 +26,7 @@
 
 using namespace Expressions::Operators;
 
-UI::TextButton::TextButton(UI::Widget * SupWidget, const std::string & Text) :
+UI::TextButton::TextButton(UI::Widget * SupWidget) :
 	UI::Button(SupWidget),
 	_Label(nullptr)
 {
@@ -37,7 +37,6 @@ UI::TextButton::TextButton(UI::Widget * SupWidget, const std::string & Text) :
 	_Label->SetTop(0.0_c);
 	_Label->SetWidth(width(this));
 	_Label->SetHeight(height(this));
-	_Label->SetText(Text);
 	_Label->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Center);
 	_Label->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
 	// add components

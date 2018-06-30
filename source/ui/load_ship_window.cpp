@@ -98,30 +98,33 @@ UI::LoadShipWindow::LoadShipWindow(Hangar * Hangar, Ship * Ship) :
 	CenterPane->SetWidth(100.0_c);
 	CenterPane->SetHeight(height(this) - 10.0_c - top(CenterPane));
 	
-	auto MoveToHangarButton{new UI::TextButton{CenterPane, "<<"}};
+	auto MoveToHangarButton{new UI::TextButton{CenterPane}};
 	
 	MoveToHangarButton->SetLeft(0.0_c);
 	MoveToHangarButton->SetTop(50.0_c);
 	MoveToHangarButton->SetWidth(width(CenterPane));
 	MoveToHangarButton->SetHeight(20.0_c);
+	MoveToHangarButton->SetText("<<");
 	MoveToHangarButton->ConnectClickedCallback(std::bind(&UI::LoadShipWindow::_OnMoveToHangarButtonClicked, this));
 	MoveToHangarButton->ConnectUpdatingCallback(std::bind(&UI::LoadShipWindow::_OnMoveToHangarButtonUpdating, this, std::placeholders::_1, std::placeholders::_2, MoveToHangarButton));
 	
-	auto MoveToShipButton(new UI::TextButton(CenterPane, ">>"));
+	auto MoveToShipButton(new UI::TextButton(CenterPane));
 	
 	MoveToShipButton->SetLeft(0.0_c);
 	MoveToShipButton->SetTop(bottom(MoveToHangarButton) + 10.0_c);
 	MoveToShipButton->SetWidth(width(CenterPane));
 	MoveToShipButton->SetHeight(20.0_c);
+	MoveToShipButton->SetText(">>");
 	MoveToShipButton->ConnectClickedCallback(std::bind(&UI::LoadShipWindow::_OnMoveToShipButtonClicked, this));
 	MoveToShipButton->ConnectUpdatingCallback(std::bind(&UI::LoadShipWindow::_OnMoveToShipButtonUpdating, this, std::placeholders::_1, std::placeholders::_2, MoveToShipButton));
 	
-	auto OKButton{new UI::TextButton{CenterPane, "OK"}};
+	auto OKButton{new UI::TextButton{CenterPane}};
 	
 	OKButton->SetLeft(0.0_c);
 	OKButton->SetTop(height(CenterPane) - 10.0_c - height(OKButton));
 	OKButton->SetWidth(width(CenterPane));
 	OKButton->SetHeight(20.0_c);
+	OKButton->SetText("OK");
 	OKButton->ConnectClickedCallback(std::bind(&UI::LoadShipWindow::_OnOKButtonClicked, this));
 	RightPane->SetLeft(right(CenterPane) + 10.0_c);
 	RightPane->SetTop(40.0_c);
