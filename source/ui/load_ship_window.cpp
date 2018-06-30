@@ -61,24 +61,25 @@ UI::LoadShipWindow::LoadShipWindow(Hangar * Hangar, Ship * Ship) :
 	
 	// create components
 	auto CenterPane{new UI::Widget{}};
+	auto HangarLabel{new UI::Label{}};
 	auto LeftPane{new UI::Widget{}};
 	auto RightPane{new UI::Widget{}};
+	auto ShipLabel{new UI::Label{}};
 	
+	_HangarListBox = new UI::ListBox{};
+	_ShipListBox = new UI::ListBox{};
 	// initialize components
 	LeftPane->SetLeft(10.0_c);
 	LeftPane->SetTop(40.0_c);
 	LeftPane->SetHeight(height(this) - 10.0_c - top(LeftPane));
 	LeftPane->SetWidth((width(this) - 10.0_c - 10.0_c - width(CenterPane) - 10.0_c - 10.0_c) / 2.0_c);
-	
-	auto HangarLabel{new UI::Label{LeftPane, "Hangar"}};
-	
 	HangarLabel->SetLeft(0.0_c);
 	HangarLabel->SetTop(0.0_c);
 	HangarLabel->SetWidth(width(LeftPane));
 	HangarLabel->SetHeight(20.0_c);
+	HangarLabel->SetText("Hangar");
 	HangarLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Center);
 	HangarLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
-	_HangarListBox = new UI::ListBox{};
 	_HangarListBox->SetLeft(0.0_c);
 	_HangarListBox->SetTop(bottom(HangarLabel));
 	_HangarListBox->SetWidth(width(LeftPane));
@@ -126,16 +127,13 @@ UI::LoadShipWindow::LoadShipWindow(Hangar * Hangar, Ship * Ship) :
 	RightPane->SetTop(40.0_c);
 	RightPane->SetHeight(height(this) - 10.0_c - top(RightPane));
 	RightPane->SetWidth((width(this) - 10.0_c - 10.0_c - width(CenterPane) - 10.0_c - 10.0_c) / 2.0_c);
-	
-	auto ShipLabel{new UI::Label{RightPane, "Ship"}};
-	
 	ShipLabel->SetLeft(0.0_c);
 	ShipLabel->SetTop(0.0_c);
 	ShipLabel->SetWidth(width(RightPane));
 	ShipLabel->SetHeight(20.0_c);
+	ShipLabel->SetText("Ship");
 	ShipLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Center);
 	ShipLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
-	_ShipListBox = new UI::ListBox{};
 	_ShipListBox->SetLeft(0.0_c);
 	_ShipListBox->SetTop(bottom(ShipLabel));
 	_ShipListBox->SetWidth(width(RightPane));
@@ -150,8 +148,10 @@ UI::LoadShipWindow::LoadShipWindow(Hangar * Hangar, Ship * Ship) :
 	// add components
 	AddSubWidget(CenterPane);
 	AddSubWidget(LeftPane);
+	LeftPane->AddSubWidget(HangarLabel);
 	LeftPane->AddSubWidget(_HangarListBox);
 	AddSubWidget(RightPane);
+	RightPane->AddSubWidget(ShipLabel);
 	RightPane->AddSubWidget(_ShipListBox);
 }
 

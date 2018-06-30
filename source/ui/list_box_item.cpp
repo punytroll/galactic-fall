@@ -20,8 +20,7 @@
 #include "../graphics/color_rgbo.h"
 #include "list_box_item.h"
 
-UI::ListBoxItem::ListBoxItem(UI::Widget * SupWidget) :
-	UI::Widget(SupWidget),
+UI::ListBoxItem::ListBoxItem(void) :
 	_Selected(false)
 {
 	ConnectMouseEnterCallback(std::bind(&UI::ListBoxItem::_OnMouseEnter, this, std::placeholders::_1));

@@ -30,12 +30,15 @@ UI::ListBoxScenarioItem::ListBoxScenarioItem(Scenario * Scenario) :
 {
 	SetHeight(20.0_c);
 	// create components
-	auto CaptionLabel{new UI::Label{this, Scenario->GetName()}};
+	auto CaptionLabel{new UI::Label{}};
 	
 	// initialize components
 	CaptionLabel->SetLeft(5.0_c);
 	CaptionLabel->SetTop(0.0_c);
 	CaptionLabel->SetWidth(width(this) - 2.0_c * 5.0_c);
 	CaptionLabel->SetHeight(height(this));
+	CaptionLabel->SetText(Scenario->GetName());
 	CaptionLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
+	// add components
+	AddSubWidget(CaptionLabel);
 }
