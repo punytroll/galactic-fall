@@ -26,8 +26,7 @@
 
 using namespace Expressions::Operators;
 
-UI::TextButton::TextButton(UI::Widget * SupWidget) :
-	UI::Button(SupWidget),
+UI::TextButton::TextButton(void) :
 	_Label(nullptr)
 {
 	// create components

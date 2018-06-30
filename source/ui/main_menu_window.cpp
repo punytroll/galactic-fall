@@ -61,9 +61,15 @@ UI::MainMenuWindow::MainMenuWindow(ScenarioManager * ScenarioManager) :
 	SetTitle("Galactic Fall");
 	ConnectKeyCallback(std::bind(&UI::MainMenuWindow::_OnKey, this, std::placeholders::_1));
 	HideResizeDragBox();
+	// create components
+	_LoadGameButton = new UI::TextButton{};
+	_LoadScenarioButton = new UI::TextButton{};
+	_NewGameButton = new UI::TextButton{};
+	_QuitButton = new UI::TextButton{};
+	_ResumeGameButton = new UI::TextButton{};
+	_SaveGameButton = new UI::TextButton{};
 	
-	// "Resume Game" button
-	_ResumeGameButton = new UI::TextButton{this};
+	// initialize components
 	_ResumeGameButton->SetName("resume_game");
 	_ResumeGameButton->SetLeft(20.0_c);
 	_ResumeGameButton->SetTop(60.0_c);
@@ -71,9 +77,6 @@ UI::MainMenuWindow::MainMenuWindow(ScenarioManager * ScenarioManager) :
 	_ResumeGameButton->SetHeight(20.0_c);
 	_ResumeGameButton->SetText("Resume Game");
 	_ResumeGameButton->ConnectClickedCallback(std::bind(&UI::MainMenuWindow::_OnResumeGameButtonClicked, this));
-	
-	// "New Game" button
-	_NewGameButton = new UI::TextButton{this};
 	_NewGameButton->SetName("new_game");
 	_NewGameButton->SetLeft(20.0_c);
 	_NewGameButton->SetTop(bottom(_ResumeGameButton) + 20.0_c);
@@ -81,9 +84,6 @@ UI::MainMenuWindow::MainMenuWindow(ScenarioManager * ScenarioManager) :
 	_NewGameButton->SetHeight(20.0_c);
 	_NewGameButton->SetText("New Game");
 	_NewGameButton->ConnectClickedCallback(std::bind(&UI::MainMenuWindow::_OnNewGameButtonClicked, this));
-	
-	// "Load Scenario" button
-	_LoadScenarioButton = new UI::TextButton{this};
 	_LoadScenarioButton->SetName("load_scenario");
 	_LoadScenarioButton->SetLeft(20.0_c);
 	_LoadScenarioButton->SetTop(bottom(_NewGameButton) + 20.0_c);
@@ -91,9 +91,6 @@ UI::MainMenuWindow::MainMenuWindow(ScenarioManager * ScenarioManager) :
 	_LoadScenarioButton->SetHeight(20.0_c);
 	_LoadScenarioButton->SetText("Load Scenario");
 	_LoadScenarioButton->ConnectClickedCallback(std::bind(&UI::MainMenuWindow::_OnLoadScenarioButtonClicked, this));
-	
-	// "Load Game" button
-	_LoadGameButton = new UI::TextButton{this};
 	_LoadGameButton->SetName("load_game");
 	_LoadGameButton->SetLeft(20.0_c);
 	_LoadGameButton->SetTop(bottom(_LoadScenarioButton) + 20.0_c);
@@ -101,9 +98,6 @@ UI::MainMenuWindow::MainMenuWindow(ScenarioManager * ScenarioManager) :
 	_LoadGameButton->SetHeight(20.0_c);
 	_LoadGameButton->SetText("Load Game");
 	_LoadGameButton->ConnectClickedCallback(std::bind(&UI::MainMenuWindow::_OnLoadGameButtonClicked, this));
-	
-	// "Save Game" button
-	_SaveGameButton = new UI::TextButton{this};
 	_SaveGameButton->SetName("save_game");
 	_SaveGameButton->SetLeft(20.0_c);
 	_SaveGameButton->SetTop(bottom(_LoadGameButton) + 20.0_c);
@@ -111,9 +105,6 @@ UI::MainMenuWindow::MainMenuWindow(ScenarioManager * ScenarioManager) :
 	_SaveGameButton->SetHeight(20.0_c);
 	_SaveGameButton->SetText("Save Game");
 	_SaveGameButton->ConnectClickedCallback(std::bind(&UI::MainMenuWindow::_OnSaveGameButtonClicked, this));
-	
-	// "Quit" button
-	_QuitButton = new UI::TextButton{this};
 	_QuitButton->SetName("quit");
 	_QuitButton->SetLeft(20.0_c);
 	_QuitButton->SetTop(bottom(_SaveGameButton) + 20.0_c);
@@ -121,6 +112,13 @@ UI::MainMenuWindow::MainMenuWindow(ScenarioManager * ScenarioManager) :
 	_QuitButton->SetHeight(20.0_c);
 	_QuitButton->SetText("Quit");
 	_QuitButton->ConnectClickedCallback(std::bind(&UI::MainMenuWindow::_OnQuitButtonClicked, this));
+	// add components
+	AddSubWidget(_LoadGameButton);
+	AddSubWidget(_LoadScenarioButton);
+	AddSubWidget(_NewGameButton);
+	AddSubWidget(_QuitButton);
+	AddSubWidget(_ResumeGameButton);
+	AddSubWidget(_SaveGameButton);
 }
 
 void UI::MainMenuWindow::_ActionNewGame(void)

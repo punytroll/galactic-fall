@@ -36,7 +36,7 @@ using namespace Expressions::Operators;
 std::list< UI::Widget * > UI::Widget::_DestroyedWidgets;
 std::stack< std::tuple< float, float, float, float > > UI::Widget::_ClippingRectangles;
 
-UI::Widget::Widget(UI::Widget * SupWidget, const std::string & Name) :
+UI::Widget::Widget(void) :
 	_BackgroundColor(nullptr),
 	_DisabledBackgroundColor(nullptr),
 	_Enabled(true),
@@ -44,7 +44,6 @@ UI::Widget::Widget(UI::Widget * SupWidget, const std::string & Name) :
 	_HoverWidget(nullptr),
 	_KeyFocus(nullptr),
 	_Left(this, UI::Dimension::Type::Left),
-	_Name(Name),
 	_SupWidget(nullptr),
 	_Top(this, UI::Dimension::Type::Top),
 	_Visible(true),
@@ -54,10 +53,6 @@ UI::Widget::Widget(UI::Widget * SupWidget, const std::string & Name) :
 	_Left = 0.0_c;
 	_Top = 0.0_c;
 	_Width = 0.0_c;
-	if(SupWidget != nullptr)
-	{
-		SupWidget->AddSubWidget(this);
-	}
 }
 
 UI::Widget::~Widget(void)
