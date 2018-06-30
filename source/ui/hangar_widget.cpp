@@ -302,8 +302,7 @@ namespace UI
 	};
 }
 
-UI::HangarWidget::HangarWidget(UI::Widget * SupWidget, Planet * Planet, Character * Character) :
-	UI::Widget(SupWidget),
+UI::HangarWidget::HangarWidget(Planet * Planet, Character * Character) :
 	_Character(Character),
 	_LoadShipWindow(nullptr),
 	_OutfitShipDialog(nullptr),

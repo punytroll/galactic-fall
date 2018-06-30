@@ -38,7 +38,7 @@ namespace UI
 	class HangarWidget : public UI::Widget
 	{
 	public:
-		HangarWidget(UI::Widget * SupWidget, Planet * Planet, Character * Character);
+		HangarWidget(Planet * Planet, Character * Character);
 	private:
 		// callbacks
 		void _OnBoardButtonClicked(void);

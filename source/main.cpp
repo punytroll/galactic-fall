@@ -1067,13 +1067,14 @@ void OnOutputEnterSystem(System * EnterSystem)
 	g_UIView->GetScene()->GetRootNode()->SetClearColorBuffer(false);
 	g_SpawnShipTimeoutNotification = g_GameTimeTimeoutNotifications->Add(GameTime::Get() + GetRandomFloatFromExponentialDistribution(1.0f / EnterSystem->GetTrafficDensity()), std::bind(SpawnShipOnTimeout, EnterSystem));
 	
-	auto HeadsUpDisplay(new UI::HeadsUpDisplay(g_UserInterface->GetRootWidget()));
+	auto HeadsUpDisplay{new UI::HeadsUpDisplay{}};
 	
 	HeadsUpDisplay->SetName("heads_up_display");
 	HeadsUpDisplay->SetLeft(0.0_c);
 	HeadsUpDisplay->SetTop(0.0_c);
 	HeadsUpDisplay->SetWidth(width(g_UserInterface->GetRootWidget()));
 	HeadsUpDisplay->SetHeight(height(g_UserInterface->GetRootWidget()));
+	g_UserInterface->GetRootWidget()->AddSubWidget(HeadsUpDisplay);
 }
 
 void OnOutputLeaveSystem(System * System)

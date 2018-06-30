@@ -30,7 +30,7 @@ namespace UI
 	class HeadsUpDisplay : public UI::Widget
 	{
 	public:
-		HeadsUpDisplay(UI::Widget * SupWidget);
+		HeadsUpDisplay(void);
 		void SetMessage(const std::string & Message);
 	private:
 		void _HideMessage(void);

@@ -31,8 +31,7 @@ using namespace Expressions::Operators;
 
 static const float g_ScrollBarTrackerBorderWidth = 4.0f;
 
-UI::ScrollBar::ScrollBar(Widget * SupWidget, UI::ScrollBar::Alignment Alignment) :
-	Widget(SupWidget),
+UI::ScrollBar::ScrollBar(UI::ScrollBar::Alignment Alignment) :
 	_Alignment(UI::ScrollBar::Alignment::UNDEFINED),
 	_CurrentPosition(0.0f),
 	_MaximumPosition(0.0f),
