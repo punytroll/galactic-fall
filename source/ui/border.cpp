@@ -22,8 +22,7 @@
 #include "../graphics/render_context.h"
 #include "border.h"
 
-UI::Border::Border(Widget * SupWidget) :
-	Widget(SupWidget),
+UI::Border::Border(void) :
 	_Color(nullptr),
 	_LineWidth(1.0f)
 {

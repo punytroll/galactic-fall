@@ -33,7 +33,7 @@ namespace UI
 	class Border : public Widget
 	{
 	public:
-		Border(UI::Widget * SupWidget = nullptr);
+		Border(void);
 		virtual ~Border(void);
 		// getters
 		const Graphics::ColorRGBO * GetColor(void) const;

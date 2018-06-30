@@ -36,15 +36,18 @@ UI::Window::Window(void) :
 {
 	SetBackgroundColor(Graphics::ColorRGBO(0.2f, 0.2f, 0.2f, 1.0f));
 	
-	auto Border{new UI::Border{this}};
+	// create components
+	auto Border{new UI::Border{}};
 	
+	_ResizeDragBox = new Widget{};
+	_TitleLabel = new UI::Label{};
+	// initialize components
 	Border->SetLeft(0.0_c);
 	Border->SetTop(0.0_c);
 	Border->SetWidth(width(this));
 	Border->SetHeight(height(this));
 	Border->SetLineWidth(1.0f);
 	Border->SetColor(Graphics::ColorRGBO(0.4f, 0.4f, 0.4f, 1.0f));
-	_TitleLabel = new UI::Label{this};
 	_TitleLabel->SetLeft(10.0_c);
 	_TitleLabel->SetTop(10.0_c);
 	_TitleLabel->SetWidth(width(this) - 2.0_c * 10.0_c);
@@ -54,7 +57,6 @@ UI::Window::Window(void) :
 	_TitleLabel->SetBackgroundColor(Graphics::ColorRGBO(0.23f, 0.35f, 0.55f, 1.0f));
 	_TitleLabel->ConnectMouseButtonCallback(std::bind(&UI::Window::_OnTitleLabelMouseButton, this, std::placeholders::_1));
 	_TitleLabel->ConnectMouseMoveCallback(std::bind(&UI::Window::_OnTitleLabelMouseMove, this, std::placeholders::_1));
-	_ResizeDragBox = new Widget{this};
 	_ResizeDragBox->SetLeft(width(this) - 9.0_c);
 	_ResizeDragBox->SetTop(height(this) - 9.0_c);
 	_ResizeDragBox->SetWidth(7.0_c);
@@ -62,6 +64,10 @@ UI::Window::Window(void) :
 	_ResizeDragBox->SetBackgroundColor(Graphics::ColorRGBO(0.23f, 0.35f, 0.55f, 1.0f));
 	_ResizeDragBox->ConnectMouseButtonCallback(std::bind(&UI::Window::_OnResizeDragBoxMouseButton, this, std::placeholders::_1));
 	_ResizeDragBox->ConnectMouseMoveCallback(std::bind(&UI::Window::_OnResizeDragBoxMouseMove, this, std::placeholders::_1));
+	// add components
+	AddSubWidget(Border);
+	AddSubWidget(_ResizeDragBox);
+	AddSubWidget(_TitleLabel);
 }
 
 void UI::Window::SetTitle(const std::string & Title)

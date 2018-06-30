@@ -255,13 +255,14 @@ namespace UI
 			{
 				if(_Border == nullptr)
 				{
-					_Border = new UI::Border{this};
+					_Border = new UI::Border{};
 					_Border->SetLeft(0.0_c);
 					_Border->SetTop(0.0_c);
 					_Border->SetWidth(width(this));
 					_Border->SetHeight(height(this));
 					_Border->SetLineWidth(1.0f);
 					_Border->SetColor(Graphics::ColorRGBO(1.0f, 1.0f, 1.0f, 1.0f));
+					AddSubWidget(_Border);
 					LowerSubWidget(_Border);
 				}
 			}
