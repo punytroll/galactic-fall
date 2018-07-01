@@ -51,6 +51,7 @@ namespace UI
 		void _OnShipContentAdded(Object * Content);
 		void _OnShipContentRemoved(Object * Content);
 		void _OnShipDestroying(void);
+		void _OnShipFreeSpaceLabelUpdating(float RealTimeSeconds, float GameTimeSeconds, UI::Label * ShipFreeSpaceLabel);
 		// member variables
 		Hangar * _Hangar;
 		Connection _HangarContentAddedCallbackConnection;
