@@ -16,11 +16,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include <assert.h>
+#include <cassert>
 
 #include <algorithm>
 
 #include <expressions/operators.h>
+
+#include <string_cast/string_cast.h>
 
 #include "../hangar.h"
 #include "../object_aspect_name.h"
@@ -39,6 +41,38 @@
 #include "text_button.h"
 
 using namespace Expressions::Operators;
+
+namespace UI
+{
+	class LoadShipListBoxObjectItem : public UI::ListBoxObjectItem
+	{
+	public:
+		LoadShipListBoxObjectItem(Object * Object) :
+			ListBoxObjectItem(Object)
+		{
+			assert(Object != nullptr);
+			assert(Object->GetAspectPhysical() != nullptr);
+			SetHeight(20.0_c);
+			
+			// create components
+			auto NameLabel{GetSubWidget("name")};
+			auto SizeLabel{new UI::Label{}};
+			
+			// initialize components
+			assert(NameLabel != nullptr);
+			NameLabel->SetWidth(width(this) - 2.0_c * 5.0_c - width(SizeLabel));
+			SizeLabel->SetLeft(width(this) - 5.0_c - width(SizeLabel));
+			SizeLabel->SetTop(0.0_c);
+			SizeLabel->SetWidth(40.0_c);
+			SizeLabel->SetHeight(height(this));
+			SizeLabel->SetText(to_string_cast(0.001 * Object->GetAspectPhysical()->GetSpaceRequirement(), 3));
+			SizeLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Right);
+			SizeLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
+			// add components
+			AddSubWidget(SizeLabel);
+		}
+	};
+}
 
 UI::LoadShipWindow::LoadShipWindow(Hangar * Hangar, Ship * Ship) :
 	_Hangar(Hangar),
@@ -64,9 +98,11 @@ UI::LoadShipWindow::LoadShipWindow(Hangar * Hangar, Ship * Ship) :
 	auto HangarLabel{new UI::Label{}};
 	auto LeftPane{new UI::Widget{}};
 	auto MoveToHangarButton{new UI::TextButton{}};
-	auto MoveToShipButton(new UI::TextButton());
+	auto MoveToShipButton{new UI::TextButton{}};
 	auto OKButton{new UI::TextButton{}};
 	auto RightPane{new UI::Widget{}};
+	auto ShipFreeSpaceCaptionLabel{new UI::Label{}};
+	auto ShipFreeSpaceLabel{new UI::Label{}};
 	auto ShipLabel{new UI::Label{}};
 	
 	_HangarListBox = new UI::ListBox{};
@@ -86,14 +122,14 @@ UI::LoadShipWindow::LoadShipWindow(Hangar * Hangar, Ship * Ship) :
 	_HangarListBox->SetLeft(0.0_c);
 	_HangarListBox->SetTop(bottom(HangarLabel));
 	_HangarListBox->SetWidth(width(LeftPane));
-	_HangarListBox->SetHeight(height(LeftPane) - top(_HangarListBox));
+	_HangarListBox->SetHeight(top(ShipFreeSpaceCaptionLabel) - top(_HangarListBox));
 	_HangarListBox->SetHorizontalScrollBarVisible(false);
 	assert(_Hangar->GetAspectObjectContainer() != nullptr);
 	for(auto HangarObject : _Hangar->GetAspectObjectContainer()->GetContent())
 	{
 		if(HangarObject->GetAspectName() != nullptr)
 		{
-			_HangarListBox->GetContent()->AddSubWidget(new UI::ListBoxObjectItem(HangarObject));
+			_HangarListBox->GetContent()->AddSubWidget(new UI::LoadShipListBoxObjectItem(HangarObject));
 		}
 	}
 	CenterPane->SetLeft(right(LeftPane) + 10.0_c);
@@ -115,7 +151,7 @@ UI::LoadShipWindow::LoadShipWindow(Hangar * Hangar, Ship * Ship) :
 	MoveToShipButton->ConnectClickedCallback(std::bind(&UI::LoadShipWindow::_OnMoveToShipButtonClicked, this));
 	MoveToShipButton->ConnectUpdatingCallback(std::bind(&UI::LoadShipWindow::_OnMoveToShipButtonUpdating, this, std::placeholders::_1, std::placeholders::_2, MoveToShipButton));
 	OKButton->SetLeft(0.0_c);
-	OKButton->SetTop(height(CenterPane) - 10.0_c - height(OKButton));
+	OKButton->SetTop(height(CenterPane) - 40.0_c - height(OKButton));
 	OKButton->SetWidth(width(CenterPane));
 	OKButton->SetHeight(20.0_c);
 	OKButton->SetText("OK");
@@ -124,6 +160,20 @@ UI::LoadShipWindow::LoadShipWindow(Hangar * Hangar, Ship * Ship) :
 	RightPane->SetTop(40.0_c);
 	RightPane->SetHeight(height(this) - 10.0_c - top(RightPane));
 	RightPane->SetWidth((width(this) - 10.0_c - 10.0_c - width(CenterPane) - 10.0_c - 10.0_c) / 2.0_c);
+	ShipFreeSpaceCaptionLabel->SetLeft(0.0_c);
+	ShipFreeSpaceCaptionLabel->SetTop(height(RightPane) - height(ShipFreeSpaceLabel));
+	ShipFreeSpaceCaptionLabel->SetWidth(width(RightPane));
+	ShipFreeSpaceCaptionLabel->SetHeight(20.0_c);
+	ShipFreeSpaceCaptionLabel->SetText("Free space:");
+	ShipFreeSpaceCaptionLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Left);
+	ShipFreeSpaceCaptionLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
+	ShipFreeSpaceLabel->SetLeft(0.0_c);
+	ShipFreeSpaceLabel->SetTop(height(RightPane) - height(ShipFreeSpaceLabel));
+	ShipFreeSpaceLabel->SetWidth(width(RightPane));
+	ShipFreeSpaceLabel->SetHeight(20.0_c);
+	ShipFreeSpaceLabel->SetHorizontalAlignment(UI::Label::HorizontalAlignment::Right);
+	ShipFreeSpaceLabel->SetVerticalAlignment(UI::Label::VerticalAlignment::Center);
+	ShipFreeSpaceLabel->ConnectUpdatingCallback(std::bind(&UI::LoadShipWindow::_OnShipFreeSpaceLabelUpdating, this, std::placeholders::_1, std::placeholders::_2, ShipFreeSpaceLabel));
 	ShipLabel->SetLeft(0.0_c);
 	ShipLabel->SetTop(0.0_c);
 	ShipLabel->SetWidth(width(RightPane));
@@ -134,13 +184,13 @@ UI::LoadShipWindow::LoadShipWindow(Hangar * Hangar, Ship * Ship) :
 	_ShipListBox->SetLeft(0.0_c);
 	_ShipListBox->SetTop(bottom(ShipLabel));
 	_ShipListBox->SetWidth(width(RightPane));
-	_ShipListBox->SetHeight(height(RightPane) - top(_ShipListBox));
+	_ShipListBox->SetHeight(top(ShipFreeSpaceLabel) - top(_ShipListBox));
 	_ShipListBox->SetHorizontalScrollBarVisible(false);
 	assert(_Ship->GetCargoHold() != nullptr);
 	assert(_Ship->GetCargoHold()->GetAspectObjectContainer() != nullptr);
 	for(auto ShipObject : _Ship->GetCargoHold()->GetAspectObjectContainer()->GetContent())
 	{
-		_ShipListBox->GetContent()->AddSubWidget(new UI::ListBoxObjectItem(ShipObject));
+		_ShipListBox->GetContent()->AddSubWidget(new UI::LoadShipListBoxObjectItem(ShipObject));
 	}
 	// add components
 	AddSubWidget(CenterPane);
@@ -151,6 +201,8 @@ UI::LoadShipWindow::LoadShipWindow(Hangar * Hangar, Ship * Ship) :
 	LeftPane->AddSubWidget(HangarLabel);
 	LeftPane->AddSubWidget(_HangarListBox);
 	AddSubWidget(RightPane);
+	RightPane->AddSubWidget(ShipFreeSpaceCaptionLabel);
+	RightPane->AddSubWidget(ShipFreeSpaceLabel);
 	RightPane->AddSubWidget(ShipLabel);
 	RightPane->AddSubWidget(_ShipListBox);
 }
@@ -194,7 +246,7 @@ void UI::LoadShipWindow::_OnHangarContentAdded(Object * Content)
 	{
 		assert(_HangarListBox != nullptr);
 		assert(_HangarListBox->GetContent() != nullptr);
-		_HangarListBox->GetContent()->AddSubWidget(new UI::ListBoxObjectItem(Content));
+		_HangarListBox->GetContent()->AddSubWidget(new UI::LoadShipListBoxObjectItem(Content));
 	}
 }
 
@@ -204,7 +256,7 @@ void UI::LoadShipWindow::_OnHangarContentRemoved(Object * Content)
 	assert(_HangarListBox != nullptr);
 	assert(_HangarListBox->GetContent() != nullptr);
 	
-	auto HangarWidgetIterator(std::find_if(_HangarListBox->GetContent()->GetSubWidgets().begin(), _HangarListBox->GetContent()->GetSubWidgets().end(), [Content](UI::Widget * Widget) { return dynamic_cast< UI::ListBoxObjectItem * >(Widget)->GetObject() == Content; }));
+	auto HangarWidgetIterator(std::find_if(_HangarListBox->GetContent()->GetSubWidgets().begin(), _HangarListBox->GetContent()->GetSubWidgets().end(), [Content](UI::Widget * Widget) { return dynamic_cast< UI::LoadShipListBoxObjectItem * >(Widget)->GetObject() == Content; }));
 	
 	if(HangarWidgetIterator != _HangarListBox->GetContent()->GetSubWidgets().end())
 	{
@@ -242,7 +294,7 @@ void UI::LoadShipWindow::_OnKey(UI::KeyEvent & KeyEvent)
 
 void UI::LoadShipWindow::_OnMoveToHangarButtonClicked(void)
 {
-	auto SelectedShipItem(dynamic_cast< UI::ListBoxObjectItem * >(_ShipListBox->GetSelectedItem()));
+	auto SelectedShipItem(dynamic_cast< UI::LoadShipListBoxObjectItem * >(_ShipListBox->GetSelectedItem()));
 	
 	assert(SelectedShipItem != nullptr);
 	
@@ -260,12 +312,12 @@ void UI::LoadShipWindow::_OnMoveToHangarButtonClicked(void)
 
 void UI::LoadShipWindow::_OnMoveToHangarButtonUpdating(float RealTimeSeconds, float GameTimeSeconds, UI::Button * MoveToHangarButton)
 {
-	MoveToHangarButton->SetEnabled((_Hangar != nullptr) && (dynamic_cast< UI::ListBoxObjectItem * >(_ShipListBox->GetSelectedItem()) != nullptr));
+	MoveToHangarButton->SetEnabled((_Hangar != nullptr) && (dynamic_cast< UI::LoadShipListBoxObjectItem * >(_ShipListBox->GetSelectedItem()) != nullptr));
 }
 
 void UI::LoadShipWindow::_OnMoveToShipButtonClicked(void)
 {
-	auto SelectedHangarItem(dynamic_cast< UI::ListBoxObjectItem * >(_HangarListBox->GetSelectedItem()));
+	auto SelectedHangarItem(dynamic_cast< UI::LoadShipListBoxObjectItem * >(_HangarListBox->GetSelectedItem()));
 	
 	assert(SelectedHangarItem != nullptr);
 	
@@ -283,7 +335,7 @@ void UI::LoadShipWindow::_OnMoveToShipButtonClicked(void)
 
 void UI::LoadShipWindow::_OnMoveToShipButtonUpdating(float RealTimeSeconds, float GameTimeSeconds, UI::Button * MoveToShipButton)
 {
-	auto SelectedHangarItem(dynamic_cast< UI::ListBoxObjectItem * >(_HangarListBox->GetSelectedItem()));
+	auto SelectedHangarItem(dynamic_cast< UI::LoadShipListBoxObjectItem * >(_HangarListBox->GetSelectedItem()));
 	
 	MoveToShipButton->SetEnabled((_Hangar != nullptr) && (SelectedHangarItem != nullptr) && (SelectedHangarItem->GetObject() != nullptr) && (_Ship != nullptr) && (_Ship->GetCargoHold() != nullptr) && (_Ship->GetCargoHold()->GetAspectObjectContainer() != nullptr) && ((SelectedHangarItem->GetObject()->GetAspectPhysical() == nullptr) || (_Ship->GetCargoHold()->GetSpace() >= SelectedHangarItem->GetObject()->GetAspectPhysical()->GetSpaceRequirement())));
 }
@@ -295,12 +347,12 @@ void UI::LoadShipWindow::_OnOKButtonClicked(void)
 
 void UI::LoadShipWindow::_OnShipContentAdded(Object * Content)
 {
-	_ShipListBox->GetContent()->AddSubWidget(new UI::ListBoxObjectItem(Content));
+	_ShipListBox->GetContent()->AddSubWidget(new UI::LoadShipListBoxObjectItem(Content));
 }
 
 void UI::LoadShipWindow::_OnShipContentRemoved(Object * Content)
 {
-	auto ShipWidgetIterator(std::find_if(_ShipListBox->GetContent()->GetSubWidgets().begin(), _ShipListBox->GetContent()->GetSubWidgets().end(), [Content](UI::Widget * Widget) { return dynamic_cast< UI::ListBoxObjectItem * >(Widget)->GetObject() == Content; }));
+	auto ShipWidgetIterator(std::find_if(_ShipListBox->GetContent()->GetSubWidgets().begin(), _ShipListBox->GetContent()->GetSubWidgets().end(), [Content](UI::Widget * Widget) { return dynamic_cast< UI::LoadShipListBoxObjectItem * >(Widget)->GetObject() == Content; }));
 	
 	if(ShipWidgetIterator != _ShipListBox->GetContent()->GetSubWidgets().end())
 	{
@@ -311,4 +363,12 @@ void UI::LoadShipWindow::_OnShipContentRemoved(Object * Content)
 void UI::LoadShipWindow::_OnShipDestroying(void)
 {
 	assert(false);
+}
+
+void UI::LoadShipWindow::_OnShipFreeSpaceLabelUpdating(float RealTimeSeconds, float GameTimeSeconds, UI::Label * ShipFreeSpaceLabel)
+{
+	assert(_Ship != nullptr);
+	assert(_Ship->GetCargoHold() != nullptr);
+	assert(ShipFreeSpaceLabel != nullptr);
+	ShipFreeSpaceLabel->SetText(to_string_cast(0.001 * _Ship->GetCargoHold()->GetSpace(), 3) + " / " + to_string_cast(0.001 * _Ship->GetCargoHold()->GetSpaceCapacity(), 3));
 }
