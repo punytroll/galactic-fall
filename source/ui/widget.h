@@ -30,6 +30,7 @@
 #include <events/event.h>
 
 #include "dimension.h"
+#include "dimension_operators.h"
 
 namespace Graphics
 {

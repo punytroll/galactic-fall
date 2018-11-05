@@ -36,10 +36,14 @@
 namespace Arxx
 {
 	class Archive;
-	
 	class Buffer;
-	
 	class Item;
+	class Structure;
+	
+	/**
+	 * @brief Convenience function that streams the structural information into a Arxx::Buffer.
+	 **/
+	Arxx::Buffer & operator<<(Arxx::Buffer & Buffer, const Arxx::Structure & Structure);
 	
 	/**
 	 * @brief The structure of a ARX archive is saved inside these objects.
@@ -563,11 +567,6 @@ namespace Arxx
 		Arxx::Item & m_Item;
 		std::map< std::string, Arxx::Structure::Relation > m_Relations;
 	};
-	
-	/**
-	 * @brief Convenience function that streams the structural information into a Arxx::Buffer.
-	 **/
-	Arxx::Buffer & operator<<(Arxx::Buffer & Buffer, const Arxx::Structure & Structure);
 }
 
 #endif
