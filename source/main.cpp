@@ -41,6 +41,7 @@
 
 #include <xml_stream/xml_stream.h>
 
+#include "ammunition.h"
 #include "battery.h"
 #include "blueprint_manager.h"
 #include "character.h"
@@ -1272,6 +1273,7 @@ void LoadGameFromElement(const Element * SaveElement)
 	std::string CurrentSystem;
 	std::string CommandMindObjectIdentifier;
 	std::string ObservedCharacterObjectIdentifier;
+	std::unordered_map< std::string, Object * > ObjectsByIdentifier;
 	
 	// setup the game world
 	PurgeGame();
@@ -1507,7 +1509,25 @@ void LoadGameFromElement(const Element * SaveElement)
 				}
 				else if(ObjectChild->GetName() == "type-specific")
 				{
-					if(SaveChild->GetAttribute("type-identifier") == "battery")
+					if(SaveChild->GetAttribute("type-identifier") == "ammunition")
+					{
+						auto NewAmmunition{dynamic_cast< Ammunition * >(NewObject)};
+						
+						assert(NewAmmunition != nullptr);
+						for(auto TypeSpecificChild : ObjectChild->GetChilds())
+						{
+							if(TypeSpecificChild->GetName() == "amount")
+							{
+								assert(TypeSpecificChild->HasAttribute("value") == true);
+								NewAmmunition->SetAmount(from_string_cast< std::uint32_t >(TypeSpecificChild->GetAttribute("value")));
+							}
+							else
+							{
+								throw std::runtime_error{"The \"" + ObjectChild->GetName() + "\" element for the object \"" + SaveChild->GetAttribute("object-identifier") + "\" contains an unknown element \"" + TypeSpecificChild->GetName() + "\"."};
+							}
+						}
+					}
+					else if(SaveChild->GetAttribute("type-identifier") == "battery")
 					{
 						Battery * NewBattery(dynamic_cast< Battery * >(NewObject));
 						
