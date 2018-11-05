@@ -21,6 +21,7 @@
 
 #include <iostream>
 
+#include "ammunition.h"
 #include "battery.h"
 #include "character.h"
 #include "commodity.h"
@@ -50,6 +51,7 @@
 static void WriteToXMLStream(XMLStream & XMLStream, Object * TheObject);
 static void WriteToXMLStream(XMLStream & XMLStream, Object * TheObject, std::stack< Object * > & ObjectStack);
 
+static void WriteAmmunitionToXMLStream(XMLStream & XMLStream, Ammunition * Ammunition);
 static void WriteBatteryToXMLStream(XMLStream & XMLStream, Battery * TheBattery);
 static void WriteCharacterToXMLStream(XMLStream & XMLStream, Character * TheCharacter);
 static void WriteCommodityToXMLStream(XMLStream & XMLStream, Commodity * TheCommodity);
@@ -166,7 +168,11 @@ void WriteToXMLStream(XMLStream & XMLStream, Object * TheObject)
 		XMLStream << end;
 	}
 	XMLStream << element << "type-specific";
-	if(TheObject->GetTypeIdentifier() == "battery")
+	if(TheObject->GetTypeIdentifier() == "ammunition")
+	{
+		WriteAmmunitionToXMLStream(XMLStream, dynamic_cast< Ammunition * >(TheObject));
+	}
+	else if(TheObject->GetTypeIdentifier() == "battery")
 	{
 		WriteBatteryToXMLStream(XMLStream, dynamic_cast< Battery * >(TheObject));
 	}
@@ -213,6 +219,12 @@ void WriteToXMLStream(XMLStream & XMLStream, Object * TheObject)
 	}
 	XMLStream << end;
 	XMLStream << end;
+}
+
+static void WriteAmmunitionToXMLStream(XMLStream & XMLStream, Ammunition * Ammunition)
+{
+	assert(Ammunition != nullptr);
+	XMLStream << element << "amount" << attribute << "value" << value << Ammunition->GetAmount() << end;
 }
 
 static void WriteBatteryToXMLStream(XMLStream & XMLStream, Battery * TheBattery)
