@@ -2049,7 +2049,7 @@ void SaveGame(std::ostream & OStream)
 	assert(g_MainProjection != nullptr);
 	XML << element << "field-of-view-y" << attribute << "radians" << value << g_MainProjection->GetFieldOfViewY() << end;
 	XML << end; // camera
-	// now save the impoartant objects
+	// now save the important objects
 	if(g_CommandMind != nullptr)
 	{
 		// if no character is available
