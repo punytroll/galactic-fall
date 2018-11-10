@@ -1,4 +1,4 @@
-<save>
+<save version="0.1">
 	<galaxy identifier="milky_way"/>
 	<current-system identifier="sol"/>
 	<time-warp value="1"/>
