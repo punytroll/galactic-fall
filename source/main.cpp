@@ -1269,11 +1269,18 @@ void LoadGameFromElement(const Element * SaveElement)
 	{
 		throw std::runtime_error("The savegame is not rooted at a \"save\" element.");
 	}
+	if(SaveElement->HasAttribute("version") == false)
+	{
+		throw std::runtime_error("The save element has no \"version\" attribute.");
+	}
+	if(SaveElement->GetAttribute("version") != "0.1")
+	{
+		throw std::runtime_error("The save element's \"version\" attribute is not \"0.1\".");
+	}
 	
 	std::string CurrentSystem;
 	std::string CommandMindObjectIdentifier;
 	std::string ObservedCharacterObjectIdentifier;
-	std::unordered_map< std::string, Object * > ObjectsByIdentifier;
 	
 	// setup the game world
 	PurgeGame();
@@ -2025,7 +2032,7 @@ void SaveGame(std::ostream & OStream)
 {
 	XMLStream XML(OStream);
 	
-	XML << element << "save";
+	XML << element << "save" << attribute << "version" << value << "0.1";
 	assert(g_Galaxy != nullptr);
 	XML << element << "galaxy" << attribute << "identifier" << value << g_Galaxy->GetSubTypeIdentifier() << end;
 	XML << element << "game-time" << attribute << "value" << value << to_string_cast(GameTime::Get(), 4) << end;
