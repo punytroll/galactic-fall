@@ -270,7 +270,6 @@ Hangar * Planet::_CreateHangar(Character * Character)
 	
 	auto Result(dynamic_cast< Hangar * >(g_ObjectFactory->Create("hangar", "", true)));
 	
-	Result->SetObjectIdentifier("::hangar::on_planet(" + GetObjectIdentifier() + ")::for_character(" + Character->GetObjectIdentifier() + ")");
 	Result->SetCharacter(Character);
 	
 	return Result;
