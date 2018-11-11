@@ -331,7 +331,6 @@ void UI::TradeCenterWidget::_Buy(const PlanetAssets * PlanetAssets)
 		auto NewCargo{g_ObjectFactory->Create(PlanetAssets->GetTypeIdentifier(), PlanetAssets->GetSubTypeIdentifier(), true)};
 		
 		assert(NewCargo != nullptr);
-		NewCargo->SetObjectIdentifier("::" + PlanetAssets->GetTypeIdentifier() + "(" + PlanetAssets->GetSubTypeIdentifier() + ")::created_on(" + _Planet->GetObjectIdentifier() + ")::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::bought_by(" + _Character->GetObjectIdentifier() + ")::created_at_address(" + to_string_cast(reinterpret_cast< void * >(NewCargo)) + ")");
 		
 		auto Hangar{_Planet->GetHangar(_Character)};
 		

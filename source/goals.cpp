@@ -49,7 +49,6 @@ GoalApproachTarget::GoalApproachTarget(GoalMind * GoalMind) :
 	Goal(GoalMind, "approach_target"),
 	_FlyInDirection(nullptr)
 {
-	SetObjectIdentifier("::goal(approach_target)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
 }
 
 void GoalApproachTarget::Activate(void)
@@ -97,7 +96,6 @@ GoalDestroyTarget::GoalDestroyTarget(GoalMind * GoalMind) :
 	Goal(GoalMind, "destroy_target"),
 	_FlyInDirection(nullptr)
 {
-	SetObjectIdentifier("::goal(destroy_target)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
 }
 
 void GoalDestroyTarget::Activate(void)
@@ -146,7 +144,6 @@ void GoalDestroyTarget::Terminate(void)
 GoalFighterThink::GoalFighterThink(GoalMind * GoalMind) :
 	Goal(GoalMind, "fighter_think")
 {
-	SetObjectIdentifier("::goal(fighter_think)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
 }
 
 void GoalFighterThink::Activate(void)
@@ -253,7 +250,6 @@ void GoalFighterThink::Process(void)
 GoalFightSomeTarget::GoalFightSomeTarget(GoalMind * GoalMind) :
 	Goal(GoalMind, "fight_some_target")
 {
-	SetObjectIdentifier("::goal(fight_some_target)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
 }
 
 void GoalFightSomeTarget::Activate(void)
@@ -319,7 +315,6 @@ GoalFlyInDirection::GoalFlyInDirection(GoalMind * GoalMind) :
 	_Direction(Vector3f::CreateZero()),
 	_FacesDirection(false)
 {
-	SetObjectIdentifier("::goal(fly_in_direction)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
 }
 
 bool GoalFlyInDirection::GetFacesDirection(void) const
@@ -375,7 +370,6 @@ GoalFlyInSystemDirection::GoalFlyInSystemDirection(GoalMind * GoalMind) :
 	Goal(GoalMind, "fly_in_system_direction"),
 	_FlyInDirection(nullptr)
 {
-	SetObjectIdentifier("::goal(fly_in_system_direction)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
 }
 
 void GoalFlyInSystemDirection::Activate(void)
@@ -412,7 +406,6 @@ GoalFlyOverRandomPointWhileNoThreat::GoalFlyOverRandomPointWhileNoThreat(GoalMin
 	Goal(GoalMind, "fly_over_random_point_while_no_threat"),
 	_FlyInDirection(nullptr)
 {
-	SetObjectIdentifier("::goal(fly_over_random_point_while_no_threat)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
 }
 
 void GoalFlyOverRandomPointWhileNoThreat::Activate(void)
@@ -462,7 +455,6 @@ GoalFullStop::GoalFullStop(GoalMind * GoalMind) :
 	Goal(GoalMind, "full_stop"),
 	_FlyInDirection(nullptr)
 {
-	SetObjectIdentifier("::goal(full_stop)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
 }
 
 void GoalFullStop::Activate(void)
@@ -505,7 +497,6 @@ void GoalFullStop::Terminate(void)
 GoalJump::GoalJump(GoalMind * GoalMind) :
 	Goal(GoalMind, "jump")
 {
-	SetObjectIdentifier("::goal(jump)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
 }
 
 void GoalJump::Activate(void)
@@ -528,7 +519,6 @@ GoalJumpToSystem::GoalJumpToSystem(GoalMind * GoalMind, GoalJumpToSystem::System
 	Goal(GoalMind, "jump_to_system"),
 	_SystemPolicy(SystemPolicy)
 {
-	SetObjectIdentifier("::goal(jump_to_system)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
 }
 
 void GoalJumpToSystem::Activate(void)
@@ -625,7 +615,6 @@ void GoalJumpToSystem::Process(void)
 GoalLand::GoalLand(GoalMind * GoalMind) :
 	Goal(GoalMind, "land")
 {
-	SetObjectIdentifier("::goal(land)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
 }
 
 void GoalLand::Activate(void)
@@ -650,7 +639,6 @@ GoalRefuel::GoalRefuel(GoalMind * GoalMind, Planet * Planet) :
 {
 	assert(_Planet != nullptr);
 	_PlanetDestroyingConnection = _Planet->ConnectDestroyingCallback(std::bind(&GoalRefuel::_OnPlanetDestroying, this));
-	SetObjectIdentifier("::goal(refuel)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
 }
 
 GoalRefuel::~GoalRefuel(void)
@@ -710,7 +698,6 @@ void GoalRefuel::_OnPlanetDestroying(void)
 GoalSelectFightableTarget::GoalSelectFightableTarget(GoalMind * GoalMind) :
 	Goal(GoalMind, "select_fightable_target")
 {
-	SetObjectIdentifier("::goal(select_fightable_target)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
 }
 
 void GoalSelectFightableTarget::Activate(void)
@@ -770,7 +757,6 @@ void GoalSelectFightableTarget::Process(void)
 GoalSelectEnemy::GoalSelectEnemy(GoalMind * GoalMind) :
 	Goal(GoalMind, "select_enemy")
 {
-	SetObjectIdentifier("::goal(select_enemy)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
 }
 
 void GoalSelectEnemy::Activate(void)
@@ -816,7 +802,6 @@ void GoalSelectEnemy::Process(void)
 GoalSelectMeasuredCargo::GoalSelectMeasuredCargo(GoalMind * GoalMind) :
 	Goal(GoalMind, "select_measured_cargo")
 {
-	SetObjectIdentifier("::goal(select_measured_cargo)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
 }
 
 void GoalSelectMeasuredCargo::Activate(void)
@@ -866,7 +851,6 @@ void GoalSelectMeasuredCargo::Process(void)
 GoalSelectNearestPlanetInSystem::GoalSelectNearestPlanetInSystem(GoalMind * GoalMind) :
 	Goal(GoalMind, "select_nearest_planet_in_system")
 {
-	SetObjectIdentifier("::goal(select_nearest_planet_in_system)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
 }
 
 void GoalSelectNearestPlanetInSystem::Activate(void)
@@ -918,7 +902,6 @@ void GoalSelectNearestPlanetInSystem::Process(void)
 GoalSelectRandomSystem::GoalSelectRandomSystem(GoalMind * GoalMind) :
 	Goal(GoalMind, "select_random_system")
 {
-	SetObjectIdentifier("::goal(select_random_system)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
 }
 
 void GoalSelectRandomSystem::Activate(void)
@@ -961,7 +944,6 @@ void GoalSelectRandomSystem::Process(void)
 GoalSelectStrandedShip::GoalSelectStrandedShip(GoalMind * GoalMind) :
 	Goal(GoalMind, "select_stranded_ship")
 {
-	SetObjectIdentifier("::goal(select_stranded_ship)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
 }
 
 void GoalSelectStrandedShip::Activate(void)
@@ -1005,7 +987,6 @@ void GoalSelectStrandedShip::Process(void)
 GoalStopAtTarget::GoalStopAtTarget(GoalMind * GoalMind) :
 	Goal(GoalMind, "stop_at_target")
 {
-	SetObjectIdentifier("::goal(stop_at_target)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
 }
 
 void GoalStopAtTarget::Activate(void)
@@ -1062,7 +1043,6 @@ void GoalStopAtTarget::Process(void)
 GoalTakeOffFromPlanet::GoalTakeOffFromPlanet(GoalMind * GoalMind) :
 	Goal(GoalMind, "take_off_from_planet")
 {
-	SetObjectIdentifier("::goal(take_off_from_planet)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
 }
 
 void GoalTakeOffFromPlanet::Activate(void)
@@ -1085,7 +1065,6 @@ GoalVisitPlanet::GoalVisitPlanet(GoalMind * GoalMind, GoalVisitPlanet::PlanetPol
 	Goal(GoalMind, "visit_planet"),
 	_PlanetPolicy(PlanetPolicy)
 {
-	SetObjectIdentifier("::goal(visit_planet)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")");
 }
 
 void GoalVisitPlanet::Activate(void)
@@ -1173,7 +1152,6 @@ GoalWait::GoalWait(GoalMind * GoalMind, float Seconds) :
 	Goal(GoalMind, "wait"),
 	_SecondsToWait(Seconds)
 {
-	SetObjectIdentifier("::goal(wait)::created_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::at(" + to_string_cast(reinterpret_cast< void * >(this)) + ")::seconds_to_wait(" + to_string_cast(_SecondsToWait, 6) + ")");
 }
 
 void GoalWait::Activate(void)

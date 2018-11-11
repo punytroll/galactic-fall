@@ -883,9 +883,6 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 	}
 	
 	auto NewShip{dynamic_cast< Ship * >(g_ObjectFactory->Create("ship", ShipSubTypeIdentifier, true))};
-	
-	NewShip->SetObjectIdentifier("::ship(" + NewShip->GetSubTypeIdentifier() + ")" + IdentifierSuffix);
-	
 	auto Faction{System->GetRandomFactionAccordingToInfluences()};
 	
 	assert(Faction != nullptr);
@@ -907,13 +904,11 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 	
 	auto NewBattery(g_ObjectFactory->Create("battery", "light_battery", true));
 	
-	NewBattery->SetObjectIdentifier("::battery(" + NewBattery->GetSubTypeIdentifier() + ")::created_for(" + NewShip->GetObjectIdentifier() + ")" + IdentifierSuffix);
 	NewShip->GetAspectObjectContainer()->AddContent(NewBattery);
 	NewShip->GetAspectOutfitting()->GetSlot("battery")->Mount(NewBattery);
 	
 	auto NewCharacter(dynamic_cast< Character * >(g_ObjectFactory->Create("character", "", true)));
 	
-	NewCharacter->SetObjectIdentifier("::character(" + NewShip->GetSubTypeIdentifier() + ")" + IdentifierSuffix);
 	NewCharacter->GetMapKnowledge()->AddExploredSystem(System);
 	if(ShipSubTypeIdentifier == "fighter")
 	{
@@ -921,7 +916,6 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 		
 		auto NewWeapon{g_ObjectFactory->Create("weapon", "light_laser", true)};
 		
-		NewWeapon->SetObjectIdentifier("::weapon(" + NewWeapon->GetSubTypeIdentifier() + ")::created_for(" + NewShip->GetObjectIdentifier() + ")" + IdentifierSuffix);
 		NewShip->GetAspectObjectContainer()->AddContent(NewWeapon);
 		NewShip->GetAspectOutfitting()->GetSlot("front_gun")->Mount(NewWeapon);
 	}
@@ -945,7 +939,6 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 			//~ {
 				//~ auto NewCommodity{g_ObjectFactory->Create(AssetClassIterator->second->GetObjectTypeIdentifier(), AssetClassIterator->second->GetObjectSubTypeIdentifier(), true)};
 				
-				//~ NewCommodity->SetObjectIdentifier("::" + AssetClassIterator->second->GetObjectTypeIdentifier() + "(" + AssetClassIterator->second->GetIdentifier() + ")::(" + to_string_cast(NumberOfAssetClasses) + "|" + to_string_cast(AmountOfAssets) + ")" + IdentifierSuffix);
 				//~ NewShip->GetCargoHold()->GetAspectObjectContainer()->AddContent(NewCommodity);
 				//~ --AmountOfAssets;
 			//~ }
@@ -964,7 +957,6 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 	{
 		auto NewMind{new StateMachineMind{}};
 		
-		NewMind->SetObjectIdentifier("::mind(state_machine)" + IdentifierSuffix);
 		NewMind->SetCharacter(NewCharacter);
 		NewMind->GetStateMachine()->SetState(new SelectSteering{NewMind});
 		NewMind->GetStateMachine()->SetGlobalState(new MonitorFuel{NewMind});
@@ -974,7 +966,6 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 	{
 		auto NewMind{new GoalMind{}};
 		
-		NewMind->SetObjectIdentifier("::mind(goal)" + IdentifierSuffix);
 		NewMind->SetCharacter(NewCharacter);
 		NewMind->GetAspectObjectContainer()->AddContent(new GoalFighterThink{NewMind});
 		NewCharacter->GetAspectObjectContainer()->AddContent(NewMind);
