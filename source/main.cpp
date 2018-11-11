@@ -27,6 +27,7 @@
 #include <list>
 #include <sstream>
 #include <stdexcept>
+#include <unordered_map>
 #include <vector>
 
 #include <GL/glx.h>
@@ -51,6 +52,7 @@
 #include "faction.h"
 #include "file_handling.h"
 #include "galaxy.h"
+#include "game_saver.h"
 #include "game_time.h"
 #include "generator.h"
 #include "globals.h"
@@ -127,7 +129,6 @@
 #include "visualization_prototype.h"
 #include "visualizations.h"
 #include "weapon.h"
-#include "write_to_xml_stream.h"
 
 using namespace Expressions::Operators;
 
@@ -153,7 +154,7 @@ UI::TimingDialog * g_TimingDialog(nullptr);
 
 Vector2f g_LastMotion(-1.0f, -1.0f);
 UI::MouseButtonEvent::MouseButton g_MouseButton(UI::MouseButtonEvent::MouseButton::Unspecified);
-Vector3f g_CameraPosition;
+Vector3f g_CameraOffset;
 bool g_FirstPersonCameraMode(false);
 CommandMind * g_CommandMind;
 OutputObserver * g_CharacterObserver(nullptr);
@@ -765,7 +766,7 @@ void UpdateMainViewCamera(void)
 			SpacialMatrix.Rotate(Focus->GetAspectPosition()->GetOrientation());
 		}
 	}
-	SpacialMatrix.Translate(g_CameraPosition);
+	SpacialMatrix.Translate(g_CameraOffset);
 	assert(g_MainView != nullptr);
 	assert(g_MainView->GetCamera() != nullptr);
 	g_MainView->GetCamera()->SetSpacialMatrix(SpacialMatrix);
@@ -883,9 +884,6 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 	}
 	
 	auto NewShip{dynamic_cast< Ship * >(g_ObjectFactory->Create("ship", ShipSubTypeIdentifier, true))};
-	
-	NewShip->SetObjectIdentifier("::ship(" + NewShip->GetSubTypeIdentifier() + ")" + IdentifierSuffix);
-	
 	auto Faction{System->GetRandomFactionAccordingToInfluences()};
 	
 	assert(Faction != nullptr);
@@ -907,13 +905,11 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 	
 	auto NewBattery(g_ObjectFactory->Create("battery", "light_battery", true));
 	
-	NewBattery->SetObjectIdentifier("::battery(" + NewBattery->GetSubTypeIdentifier() + ")::created_for(" + NewShip->GetObjectIdentifier() + ")" + IdentifierSuffix);
 	NewShip->GetAspectObjectContainer()->AddContent(NewBattery);
 	NewShip->GetAspectOutfitting()->GetSlot("battery")->Mount(NewBattery);
 	
 	auto NewCharacter(dynamic_cast< Character * >(g_ObjectFactory->Create("character", "", true)));
 	
-	NewCharacter->SetObjectIdentifier("::character(" + NewShip->GetSubTypeIdentifier() + ")" + IdentifierSuffix);
 	NewCharacter->GetMapKnowledge()->AddExploredSystem(System);
 	if(ShipSubTypeIdentifier == "fighter")
 	{
@@ -921,7 +917,6 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 		
 		auto NewWeapon{g_ObjectFactory->Create("weapon", "light_laser", true)};
 		
-		NewWeapon->SetObjectIdentifier("::weapon(" + NewWeapon->GetSubTypeIdentifier() + ")::created_for(" + NewShip->GetObjectIdentifier() + ")" + IdentifierSuffix);
 		NewShip->GetAspectObjectContainer()->AddContent(NewWeapon);
 		NewShip->GetAspectOutfitting()->GetSlot("front_gun")->Mount(NewWeapon);
 	}
@@ -945,7 +940,6 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 			//~ {
 				//~ auto NewCommodity{g_ObjectFactory->Create(AssetClassIterator->second->GetObjectTypeIdentifier(), AssetClassIterator->second->GetObjectSubTypeIdentifier(), true)};
 				
-				//~ NewCommodity->SetObjectIdentifier("::" + AssetClassIterator->second->GetObjectTypeIdentifier() + "(" + AssetClassIterator->second->GetIdentifier() + ")::(" + to_string_cast(NumberOfAssetClasses) + "|" + to_string_cast(AmountOfAssets) + ")" + IdentifierSuffix);
 				//~ NewShip->GetCargoHold()->GetAspectObjectContainer()->AddContent(NewCommodity);
 				//~ --AmountOfAssets;
 			//~ }
@@ -964,7 +958,6 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 	{
 		auto NewMind{new StateMachineMind{}};
 		
-		NewMind->SetObjectIdentifier("::mind(state_machine)" + IdentifierSuffix);
 		NewMind->SetCharacter(NewCharacter);
 		NewMind->GetStateMachine()->SetState(new SelectSteering{NewMind});
 		NewMind->GetStateMachine()->SetGlobalState(new MonitorFuel{NewMind});
@@ -974,7 +967,6 @@ void SpawnShip(System * System, const std::string & IdentifierSuffix, std::strin
 	{
 		auto NewMind{new GoalMind{}};
 		
-		NewMind->SetObjectIdentifier("::mind(goal)" + IdentifierSuffix);
 		NewMind->SetCharacter(NewCharacter);
 		NewMind->GetAspectObjectContainer()->AddContent(new GoalFighterThink{NewMind});
 		NewCharacter->GetAspectObjectContainer()->AddContent(NewMind);
@@ -1263,21 +1255,40 @@ void PurgeGame(void)
 	GameTime::Set(0.0);
 }
 
+Planet * GetPlanetFromSubTypeIdentifier(const std::string & SubTypeIdentifier)
+{
+	assert(g_Galaxy != nullptr);
+	for(auto System : g_Galaxy->GetSystems())
+	{
+		for(auto Planet : System.second->GetPlanets())
+		{
+			if(Planet->GetSubTypeIdentifier() == SubTypeIdentifier)
+			{
+				return Planet;
+			}
+		}
+	}
+	assert(false);
+}
+
 void LoadGameFromElement(const Element * SaveElement)
 {
 	if(SaveElement->GetName() != "save")
 	{
 		throw std::runtime_error("The savegame is not rooted at a \"save\" element.");
 	}
-	
-	std::string CurrentSystem;
-	std::string CommandMindObjectIdentifier;
-	std::string ObservedCharacterObjectIdentifier;
-	std::unordered_map< std::string, Object * > ObjectsByIdentifier;
-	
+	if(SaveElement->HasAttribute("version") == false)
+	{
+		throw std::runtime_error("The save element has no \"version\" attribute.");
+	}
+	if(SaveElement->GetAttribute("version") != "0.1")
+	{
+		throw std::runtime_error("The save element's \"version\" attribute is not \"0.1\".");
+	}
 	// setup the game world
 	PurgeGame();
 	assert(g_Galaxy == nullptr);
+	// first pass: read galaxy and simple data that is not related to objects
 	for(auto SaveChild : SaveElement->GetChilds())
 	{
 		if(SaveChild->GetName() == "galaxy")
@@ -1288,29 +1299,17 @@ void LoadGameFromElement(const Element * SaveElement)
 		{
 			GameTime::Set(from_string_cast< double >(SaveChild->GetAttribute("value")));
 		}
-		else if(SaveChild->GetName() == "current-system")
-		{
-			CurrentSystem = SaveChild->GetAttribute("identifier");
-		}
 		else if(SaveChild->GetName() == "time-warp")
 		{
 			g_TimeWarp = from_string_cast< float >(SaveChild->GetAttribute("value"));
-		}
-		else if(SaveChild->GetName() == "command-mind")
-		{
-			CommandMindObjectIdentifier = SaveChild->GetAttribute("object-identifier");
-		}
-		else if(SaveChild->GetName() == "observed-character")
-		{
-			ObservedCharacterObjectIdentifier = SaveChild->GetAttribute("object-identifier");
 		}
 		else if(SaveChild->GetName() == "main-camera")
 		{
 			for(auto CameraChild : SaveChild->GetChilds())
 			{
-				if(CameraChild->GetName() == "position")
+				if(CameraChild->GetName() == "offset")
 				{
-					g_CameraPosition.Set(from_string_cast< float >(CameraChild->GetAttribute("x")), from_string_cast< float >(CameraChild->GetAttribute("y")), from_string_cast< float >(CameraChild->GetAttribute("z")));
+					g_CameraOffset.Set(from_string_cast< float >(CameraChild->GetAttribute("x")), from_string_cast< float >(CameraChild->GetAttribute("y")), from_string_cast< float >(CameraChild->GetAttribute("z")));
 				}
 				else if(CameraChild->GetName() == "field-of-view-y")
 				{
@@ -1326,26 +1325,46 @@ void LoadGameFromElement(const Element * SaveElement)
 				}
 			}
 		}
-		else if(SaveChild->GetName() == "object")
+	}
+	assert(g_Galaxy != nullptr);
+	// second pass: only read the current system and set it, now that the galaxy is loaded
+	for(auto SaveChild : SaveElement->GetChilds())
+	{
+		if(SaveChild->GetName() == "current-system")
 		{
+			assert(SaveChild->HasAttribute("identifier") == true);
+			g_CurrentSystem = g_Galaxy->GetSystem(SaveChild->GetAttribute("identifier"));
+		}
+	}
+	assert(g_CurrentSystem != nullptr);
+	
+	std::unordered_map< std::string, Object * > ObjectsByIdentifier;
+	
+	// third pass: read objects
+	for(auto SaveChild : SaveElement->GetChilds())
+	{
+		if(SaveChild->GetName() == "object")
+		{
+			assert(SaveChild->HasAttribute("type-identifier") == true);
+			assert(SaveChild->HasAttribute("sub-type-identifier") == true);
 			assert(SaveChild->HasAttribute("object-identifier") == true);
 			
-			Object * NewObject(Object::GetObject(SaveChild->GetAttribute("object-identifier")));
+			Object * NewObject;
 			
-			if(NewObject == nullptr)
+			if(SaveChild->GetAttribute("type-identifier") == "system")
 			{
-				assert(SaveChild->HasAttribute("type-identifier") == true);
-				assert(SaveChild->HasAttribute("sub-type-identifier") == true);
-				NewObject = g_ObjectFactory->Create(SaveChild->GetAttribute("type-identifier"), SaveChild->GetAttribute("sub-type-identifier"), false);
-				NewObject->SetObjectIdentifier(SaveChild->GetAttribute("object-identifier"));
+				NewObject = g_Galaxy->GetSystem(SaveChild->GetAttribute("sub-type-identifier"));
+			}
+			else if(SaveChild->GetAttribute("type-identifier") == "planet")
+			{
+				NewObject = GetPlanetFromSubTypeIdentifier(SaveChild->GetAttribute("sub-type-identifier"));
 			}
 			else
 			{
-				assert(SaveChild->HasAttribute("type-identifier") == true);
-				assert(SaveChild->GetAttribute("type-identifier") == NewObject->GetTypeIdentifier());
-				assert(SaveChild->HasAttribute("sub-type-identifier") == true);
-				assert(SaveChild->GetAttribute("sub-type-identifier") == NewObject->GetSubTypeIdentifier());
+				NewObject = g_ObjectFactory->Create(SaveChild->GetAttribute("type-identifier"), SaveChild->GetAttribute("sub-type-identifier"), false);
 			}
+			assert(NewObject != nullptr);
+			ObjectsByIdentifier.emplace(SaveChild->GetAttribute("object-identifier"), NewObject);
 			for(auto ObjectChild : SaveChild->GetChilds())
 			{
 				if(ObjectChild->GetName() == "aspect-accessory")
@@ -1358,7 +1377,7 @@ void LoadGameFromElement(const Element * SaveElement)
 						if(AspectChild->GetName() == "slot")
 						{
 							assert(AspectChild->HasAttribute("slot-identifier") == true);
-							// read in third pass
+							// read in later pass
 						}
 						else
 						{
@@ -1394,7 +1413,7 @@ void LoadGameFromElement(const Element * SaveElement)
 						if(AspectChild->GetName() == "content")
 						{
 							assert(AspectChild->HasAttribute("object-identifier") == true);
-							// read in second pass
+							// read in later pass
 						}
 						else
 						{
@@ -1569,7 +1588,7 @@ void LoadGameFromElement(const Element * SaveElement)
 									if((*MapKnowledgeChild)->GetName() == "explored-system")
 									{
 										assert((*MapKnowledgeChild)->HasAttribute("object-identifier") == true);
-										// red in second pass
+										// red in later pass
 									}
 									else
 									{
@@ -1644,7 +1663,7 @@ void LoadGameFromElement(const Element * SaveElement)
 							if(TypeSpecificChild->GetName() == "character")
 							{
 								assert(TypeSpecificChild->HasAttribute("object-identifier") == true);
-								// read in second pass
+								// read in later pass
 							}
 							else
 							{
@@ -1662,7 +1681,7 @@ void LoadGameFromElement(const Element * SaveElement)
 							if(TypeSpecificChild->GetName() == "character")
 							{
 								assert(TypeSpecificChild->HasAttribute("object-identifier") == true);
-								// read in second pass
+								// read in later pass
 							}
 							else
 							{
@@ -1791,26 +1810,34 @@ void LoadGameFromElement(const Element * SaveElement)
 				}
 			}
 		}
-		else
-		{
-			throw std::runtime_error("The \"save\" element contains an unidentified child element \"" + SaveChild->GetName() + "\".");
-		}
 	}
-	// this is a hack
-	assert(g_Galaxy != nullptr);
-	assert(CurrentSystem.empty() == false);
-	g_CurrentSystem = g_Galaxy->GetSystem(CurrentSystem);
-	assert(g_CurrentSystem != nullptr);
-	// in the second pass we do a fast skip over the childs to resolve any object references
+	// fourth pass: resolve any object references
 	// no errors except resolving errors will be displayed
 	// at the moment this also resolves back references/containments
 	for(auto SaveChild : SaveElement->GetChilds())
 	{
-		if(SaveChild->GetName() == "object")
+		if(SaveChild->GetName() == "command-mind")
+		{
+			assert(SaveChild->HasAttribute("object-identifier") == true);
+			g_CommandMind = dynamic_cast< CommandMind * >(ObjectsByIdentifier.at(SaveChild->GetAttribute("object-identifier")));
+			assert(g_CommandMind != nullptr);
+			g_CommandMind->ConnectDestroyingCallback(OnInputMindDestroying);
+		}
+		else if(SaveChild->GetName() == "observed-character")
+		{
+			assert(SaveChild->HasAttribute("object-identifier") == true);
+			
+			auto ObservedCharacter{dynamic_cast< Character * >(ObjectsByIdentifier.at(SaveChild->GetAttribute("object-identifier")))};
+			
+			assert(ObservedCharacter != nullptr);
+			assert(g_CharacterObserver != nullptr);
+			g_CharacterObserver->SetObservedCharacter(ObservedCharacter);
+		}
+		else if(SaveChild->GetName() == "object")
 		{
 			assert(SaveChild->HasAttribute("object-identifier"));
 			
-			auto TheObject(Object::GetObject(SaveChild->GetAttribute("object-identifier")));
+			auto TheObject(ObjectsByIdentifier.at(SaveChild->GetAttribute("object-identifier")));
 			
 			assert(TheObject != nullptr);
 			for(auto ObjectChild : SaveChild->GetChilds())
@@ -1821,7 +1848,7 @@ void LoadGameFromElement(const Element * SaveElement)
 					{
 						if(AspectChild->GetName() == "content")
 						{
-							auto Content(Object::GetObject(AspectChild->GetAttribute("object-identifier")));
+							auto Content(ObjectsByIdentifier.at(AspectChild->GetAttribute("object-identifier")));
 							
 							assert(Content != nullptr);
 							TheObject->GetAspectObjectContainer()->AddContent(Content);
@@ -1843,7 +1870,7 @@ void LoadGameFromElement(const Element * SaveElement)
 								{
 									if(MapKnowledgeChild->GetName() == "explored-system")
 									{
-										auto ExploredSystem(Object::GetObject(MapKnowledgeChild->GetAttribute("object-identifier")));
+										auto ExploredSystem(ObjectsByIdentifier.at(MapKnowledgeChild->GetAttribute("object-identifier")));
 										
 										assert(ExploredSystem != nullptr);
 										assert(dynamic_cast< System * >(ExploredSystem) != nullptr);
@@ -1862,7 +1889,7 @@ void LoadGameFromElement(const Element * SaveElement)
 						{
 							if(TypeSpecificChild->GetName() == "character")
 							{
-								auto TheCharacter(Object::GetObject(TypeSpecificChild->GetAttribute("object-identifier")));
+								auto TheCharacter(ObjectsByIdentifier.at(TypeSpecificChild->GetAttribute("object-identifier")));
 								
 								assert(TheCharacter != nullptr);
 								assert(dynamic_cast< Character * >(TheCharacter) != nullptr);
@@ -1879,7 +1906,7 @@ void LoadGameFromElement(const Element * SaveElement)
 						{
 							if(TypeSpecificChild->GetName() == "character")
 							{
-								auto TheCharacter(Object::GetObject(TypeSpecificChild->GetAttribute("object-identifier")));
+								auto TheCharacter(ObjectsByIdentifier.at(TypeSpecificChild->GetAttribute("object-identifier")));
 								
 								assert(TheCharacter != nullptr);
 								assert(dynamic_cast< Character * >(TheCharacter) != nullptr);
@@ -1889,7 +1916,7 @@ void LoadGameFromElement(const Element * SaveElement)
 					}
 					else if(SaveChild->GetAttribute("type-identifier") == "ship")
 					{
-						// the current system has been read in the first pass
+						// the current system has been read in a previous pass
 						// now we can place all the ships in the current system
 						auto TheShip(dynamic_cast< Ship * >(TheObject));
 						
@@ -1903,14 +1930,14 @@ void LoadGameFromElement(const Element * SaveElement)
 			}
 		}
 	}
-	// in the third pass we do a fast skip over the elements and mount the objects that have an accessory aspect and are mounted
+	// fifth pass: mount objects that have an accessory aspect and are mounted
 	for(auto SaveChild : SaveElement->GetChilds())
 	{
 		if(SaveChild->GetName() == "object")
 		{
 			assert(SaveChild->HasAttribute("object-identifier"));
 			
-			auto TheObject(Object::GetObject(SaveChild->GetAttribute("object-identifier")));
+			auto TheObject(ObjectsByIdentifier.at(SaveChild->GetAttribute("object-identifier")));
 			
 			assert(TheObject != nullptr);
 			for(auto ObjectChild : SaveChild->GetChilds())
@@ -1931,20 +1958,6 @@ void LoadGameFromElement(const Element * SaveElement)
 				}
 			}
 		}
-	}
-	if(CommandMindObjectIdentifier.empty() == false)
-	{
-		g_CommandMind = dynamic_cast< CommandMind * >(Object::GetObject(CommandMindObjectIdentifier));
-		assert(g_CommandMind != nullptr);
-		g_CommandMind->ConnectDestroyingCallback(OnInputMindDestroying);
-	}
-	if(ObservedCharacterObjectIdentifier.empty() == false)
-	{
-		auto ObservedCharacter(dynamic_cast< Character * >(Object::GetObject(ObservedCharacterObjectIdentifier)));
-		
-		assert(ObservedCharacter != nullptr);
-		assert(g_CharacterObserver != nullptr);
-		g_CharacterObserver->SetObservedCharacter(ObservedCharacter);
 	}
 	if(GameTime::Get() == 0.0)
 	{
@@ -2023,77 +2036,12 @@ bool LoadScenarioFromScenarioIdentifier(const std::string & ScenarioIdentifier)
 
 void SaveGame(std::ostream & OStream)
 {
-	XMLStream XML(OStream);
-	
-	XML << element << "save";
-	assert(g_Galaxy != nullptr);
-	XML << element << "galaxy" << attribute << "identifier" << value << g_Galaxy->GetSubTypeIdentifier() << end;
-	XML << element << "game-time" << attribute << "value" << value << to_string_cast(GameTime::Get(), 4) << end;
-	if(g_CurrentSystem != nullptr)
-	{
-		XML << element << "current-system" << attribute << "identifier" << value << g_CurrentSystem->GetSubTypeIdentifier() << end;
-	}
-	XML << element << "time-warp" << attribute << "value" << value << g_TimeWarp << end;
-	if(g_CommandMind != nullptr)
-	{
-		XML << element << "command-mind" << attribute << "object-identifier" << value << g_CommandMind->GetObjectIdentifier() << end;
-	}
-	assert(g_CharacterObserver != nullptr);
-	if(g_CharacterObserver->GetObservedCharacter() != nullptr)
-	{
-		XML << element << "observed-character" << attribute << "object-identifier" << value << g_CharacterObserver->GetObservedCharacter()->GetObjectIdentifier() << end;
-	}
-	// save main camera properties
-	XML << element << "main-camera";
-	XML << element << "position" << attribute << "x" << value << g_CameraPosition[0] << attribute << "y" << value << g_CameraPosition[1] << attribute << "z" << value << g_CameraPosition[2] << end;
 	assert(g_MainProjection != nullptr);
-	XML << element << "field-of-view-y" << attribute << "radians" << value << g_MainProjection->GetFieldOfViewY() << end;
-	XML << end; // camera
-	// now save the impoartant objects
-	if(g_CommandMind != nullptr)
-	{
-		// if no character is available
-		if(g_CommandMind->GetCharacter() == nullptr)
-		{
-			// only save the input mind
-			WriteToXMLStream(XML, g_CommandMind, true);
-		}
-		else
-		{
-			// if no ship is available
-			if(g_CommandMind->GetCharacter()->GetShip() == nullptr)
-			{
-				// only save the character
-				WriteToXMLStream(XML, g_CommandMind->GetCharacter(), true);
-			}
-			else
-			{
-				// save the complete ship
-				WriteToXMLStream(XML, g_CommandMind->GetCharacter()->GetShip(), true);
-			}
-			// save hangars
-			for(auto System : g_Galaxy->GetSystems())
-			{
-				for(auto Planet : System.second->GetPlanets())
-				{
-					auto Hangar(Planet->GetHangar(g_CommandMind->GetCharacter()));
-					
-					if(Hangar != nullptr)
-					{
-						assert(Planet->GetAspectObjectContainer() != nullptr);
-						XML << element << "object" << attribute << "type-identifier" << value << Planet->GetTypeIdentifier() << attribute << "sub-type-identifier" << value << Planet->GetSubTypeIdentifier() << attribute << "object-identifier" << value << Planet->GetObjectIdentifier();
-						XML << element << "aspect-object-container";
-						XML << element << "content" << attribute << "object-identifier" << value << Hangar->GetObjectIdentifier() << end;
-						XML << end;
-						XML << end;
-						WriteToXMLStream(XML, Hangar, true);
-					}
-				}
-			}
-		}
-	}
-	XML << end; // save
-	OStream << std::endl;
+	assert(g_CharacterObserver != nullptr);
+	
+	GameSaver GameSaver{OStream};
+	
+	GameSaver.Save(g_Galaxy, g_CurrentSystem, g_TimeWarp, g_CameraOffset, g_MainProjection->GetFieldOfViewY(), g_CommandMind, g_CharacterObserver->GetObservedCharacter());
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2338,8 +2286,8 @@ void ActionObserveNextCharacter(void)
 		}
 		if(g_CharacterObserver->GetObservedCharacter() != nullptr)
 		{
-			g_CameraPosition[0] = 0.0f;
-			g_CameraPosition[1] = 0.0f;
+			g_CameraOffset[0] = 0.0f;
+			g_CameraOffset[1] = 0.0f;
 		}
 	}
 }
@@ -2376,8 +2324,8 @@ void ActionObservePreviousCharacter(void)
 		}
 		if(g_CharacterObserver->GetObservedCharacter() != nullptr)
 		{
-			g_CameraPosition[0] = 0.0f;
-			g_CameraPosition[1] = 0.0f;
+			g_CameraOffset[0] = 0.0f;
+			g_CameraOffset[1] = 0.0f;
 		}
 	}
 }
@@ -2492,8 +2440,8 @@ void ActionRefuel(void)
 
 void ActionResetCameraPosition(void)
 {
-	g_CameraPosition[0] = 0.0f;
-	g_CameraPosition[1] = 0.0f;
+	g_CameraOffset[0] = 0.0f;
+	g_CameraOffset[1] = 0.0f;
 }
 
 void ActionResetTimeWarp(void)
@@ -2701,7 +2649,7 @@ void MainViewMouseButtonEvent(UI::MouseButtonEvent & MouseButtonEvent)
 			{
 				if(MouseButtonEvent.IsDown() == true)
 				{
-					g_CameraPosition[2] *= 0.95f;
+					g_CameraOffset[2] *= 0.95f;
 				}
 				
 				break;
@@ -2710,7 +2658,7 @@ void MainViewMouseButtonEvent(UI::MouseButtonEvent & MouseButtonEvent)
 			{
 				if(MouseButtonEvent.IsDown() == true)
 				{
-					g_CameraPosition[2] *= 1.05f;
+					g_CameraOffset[2] *= 1.05f;
 				}
 				
 				break;
@@ -2732,8 +2680,8 @@ void MainViewMouseMove(UI::MouseMoveEvent & MouseMoveEvent)
 		g_LastMotion = MouseMoveEvent.GetPosition();
 		if(g_MouseButton == UI::MouseButtonEvent::MouseButton::Middle)
 		{
-			g_CameraPosition[0] = g_CameraPosition[0] - Delta[0] * 0.0011f * g_CameraPosition[2];
-			g_CameraPosition[1] = g_CameraPosition[1] + Delta[1] * 0.0011f * g_CameraPosition[2];
+			g_CameraOffset[0] -= Delta[0] * 0.0011f * g_CameraOffset[2];
+			g_CameraOffset[1] += Delta[1] * 0.0011f * g_CameraOffset[2];
 		}
 	}
 }
