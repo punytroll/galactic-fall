@@ -117,10 +117,6 @@ void GameSaver::Save(Galaxy * Galaxy, System * CurrentSystem, float TimeWarp, co
 						assert(Planet->GetAspectObjectContainer() != nullptr);
 						_XMLStream << element << "object" << attribute << "type-identifier" << value << Planet->GetTypeIdentifier() << attribute << "sub-type-identifier" << value << Planet->GetSubTypeIdentifier() << attribute << "object-identifier" << value << _GetOrRegisterObjectIdentifier(Planet);
 						_XMLStream << element << "aspect-object-container";
-						if(Hangar->GetObjectIdentifier().empty() == true)
-						{
-							Hangar->GenerateObjectIdentifier();
-						}
 						_XMLStream << element << "content" << attribute << "object-identifier" << value << _GetOrRegisterObjectIdentifier(Hangar) << end;
 						_XMLStream << end;
 						_XMLStream << end;

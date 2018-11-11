@@ -17,12 +17,6 @@
 		<event>down</event>
 		<action>refuel</action>
 	</key-binding>
-	<!-- Q: quit game and dump object report -->
-	<key-binding>
-		<code>24</code>
-		<event>down</event>
-		<action>quit_game_and_dump_object_report</action>
-	</key-binding>
 	<!-- W: open outfit ship dialog -->
 	<key-binding>
 		<code>25</code>
@@ -166,12 +160,6 @@
 		<code>74</code>
 		<event>down</event>
 		<action>open_object_information_dialog</action>
-	</key-binding>
-	<!-- F9: dump object report -->
-	<key-binding>
-		<code>75</code>
-		<event>down</event>
-		<action>dump_object_report</action>
 	</key-binding>
 	<!-- F10: take screen shot -->
 	<key-binding>
