@@ -266,12 +266,18 @@ TransporterPhase3::TransporterPhase3(StateMachineMind * Mind) :
 
 void TransporterPhase3::Enter(void)
 {
+	assert(GetMind() != nullptr);
+	assert(GetMind()->GetCharacter() != nullptr);
+	assert(GetMind()->GetCharacter()->GetShip() != nullptr);
+	
 	// ATTENTION: the target is only valid because this Enter() function is called before the setting of m_Land is processed in the ship which invalidates the ship's target
-	auto ThePlanet(dynamic_cast< Planet * >(GetMind()->GetCharacter()->GetShip()->GetTarget()));
+	auto ThePlanet{dynamic_cast< Planet * >(GetMind()->GetCharacter()->GetShip()->GetTarget())};
 	
-	assert(GetMind()->GetCharacter()->GetShip()->GetAspectObjectContainer() != nullptr);
+	assert(ThePlanet != nullptr);
+	assert(GetMind()->GetCharacter()->GetShip()->GetCargoHold() != nullptr);
+	assert(GetMind()->GetCharacter()->GetShip()->GetCargoHold()->GetAspectObjectContainer() != nullptr);
 	
-	auto & Content{GetMind()->GetCharacter()->GetShip()->GetAspectObjectContainer()->GetContent()};
+	auto & Content{GetMind()->GetCharacter()->GetShip()->GetCargoHold()->GetAspectObjectContainer()->GetContent()};
 	auto ContentIterator(Content.begin());
 	
 	// first sell commodities ... but only those with base price modifier above 1
