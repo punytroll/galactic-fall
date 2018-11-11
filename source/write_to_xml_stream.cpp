@@ -100,7 +100,10 @@ static void WriteToXMLStream(XMLStream & XMLStream, Object * TheObject, std::sta
 void WriteToXMLStream(XMLStream & XMLStream, Object * TheObject)
 {
 	assert(TheObject != nullptr);
-	assert(TheObject->GetObjectIdentifier().empty() == false);
+	if(TheObject->GetObjectIdentifier().empty() == true)
+	{
+		TheObject->GenerateObjectIdentifier();
+	}
 	XMLStream << element << "object" << attribute << "type-identifier" << value << TheObject->GetTypeIdentifier() << attribute << "sub-type-identifier" << value << TheObject->GetSubTypeIdentifier() << attribute << "object-identifier" << value << TheObject->GetObjectIdentifier();
 	if(TheObject->GetAspectAccessory() != nullptr)
 	{
