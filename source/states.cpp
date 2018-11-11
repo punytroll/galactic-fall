@@ -266,79 +266,6 @@ TransporterPhase3::TransporterPhase3(StateMachineMind * Mind) :
 
 void TransporterPhase3::Enter(void)
 {
-	assert(GetMind() != nullptr);
-	assert(GetMind()->GetCharacter() != nullptr);
-	assert(GetMind()->GetCharacter()->GetShip() != nullptr);
-	
-	// ATTENTION: the target is only valid because this Enter() function is called before the setting of m_Land is processed in the ship which invalidates the ship's target
-	auto ThePlanet{dynamic_cast< Planet * >(GetMind()->GetCharacter()->GetShip()->GetTarget())};
-	
-	assert(ThePlanet != nullptr);
-	assert(GetMind()->GetCharacter()->GetShip()->GetCargoHold() != nullptr);
-	assert(GetMind()->GetCharacter()->GetShip()->GetCargoHold()->GetAspectObjectContainer() != nullptr);
-	
-	auto & Content{GetMind()->GetCharacter()->GetShip()->GetCargoHold()->GetAspectObjectContainer()->GetContent()};
-	auto ContentIterator(Content.begin());
-	
-	// first sell commodities ... but only those with base price modifier above 1
-	while(ContentIterator != Content.end())
-	{
-		auto ContentObject{*ContentIterator};
-		
-		if(ContentObject != nullptr)
-		{
-			auto PlanetAssets{ThePlanet->GetPlanetAssets(ContentObject->GetTypeIdentifier(), ContentObject->GetSubTypeIdentifier())};
-			
-			if((PlanetAssets != nullptr) && (PlanetAssets->GetBasePriceModifier() > 1.0))
-			{
-				auto NextIterator{ContentIterator};
-				
-				++NextIterator;
-				GetMind()->GetCharacter()->GetShip()->GetCargoHold()->GetAspectObjectContainer()->RemoveContent(ContentObject);
-				ContentIterator = NextIterator;
-				delete ContentObject;
-				GetMind()->GetCharacter()->AddCredits(PlanetAssets->GetPrice());
-				
-				continue;
-			}
-		}
-		++ContentIterator;
-	}
-	// second buy stuff ... but only stuff with base price modifier below 1
-	std::vector< PlanetAssets * > BuyablePlanetAssets;
-	
-	for(auto BuyPlanetAssets : ThePlanet->GetPlanetAssets())
-	{
-		if(BuyPlanetAssets->GetBasePriceModifier() < 1.0f)
-		{
-			BuyablePlanetAssets.push_back(BuyPlanetAssets);
-		}
-	}
-	if(BuyablePlanetAssets.empty() == false)
-	{
-		for(int NumberOfPlanetAssetClassesToBuy = GetRandomIntegerFromExponentialDistribution(2); NumberOfPlanetAssetClassesToBuy > 0; --NumberOfPlanetAssetClassesToBuy)
-		{
-			auto PlanetAssetClassToBuy(BuyablePlanetAssets[GetRandomInteger(BuyablePlanetAssets.size() - 1)]);
-			
-			for(int NumberOfAssetsToBuy = GetRandomIntegerFromExponentialDistribution(GetMind()->GetCharacter()->GetShip()->GetCargoHold()->GetSpaceCapacity() / g_BlueprintManager->GetSpaceRequirement(PlanetAssetClassToBuy->GetTypeIdentifier(), PlanetAssetClassToBuy->GetSubTypeIdentifier())); NumberOfAssetsToBuy > 0; --NumberOfAssetsToBuy)
-			{
-				// TODO: the 400.0f is a safety margin for landing fees and fuel
-				if((GetMind()->GetCharacter()->GetShip()->GetCargoHold()->GetSpace() >= g_BlueprintManager->GetSpaceRequirement(PlanetAssetClassToBuy->GetTypeIdentifier(), PlanetAssetClassToBuy->GetSubTypeIdentifier())) && (GetMind()->GetCharacter()->GetCredits() - 400.0f >= PlanetAssetClassToBuy->GetPrice()))
-				{
-					GetMind()->GetCharacter()->RemoveCredits(PlanetAssetClassToBuy->GetPrice());
-					
-					auto BuyObject(g_ObjectFactory->Create(PlanetAssetClassToBuy->GetTypeIdentifier(), PlanetAssetClassToBuy->GetSubTypeIdentifier(), true));
-					
-					BuyObject->SetObjectIdentifier("::" + PlanetAssetClassToBuy->GetTypeIdentifier() + "(" + PlanetAssetClassToBuy->GetSubTypeIdentifier() + ")::buy_index(" + to_string_cast(NumberOfPlanetAssetClassesToBuy) + "|" + to_string_cast(NumberOfAssetsToBuy) + ")::bought_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::bought_by(" + GetMind()->GetObjectIdentifier() + ")::bought_on(" + ThePlanet->GetObjectIdentifier() + ")");
-					GetMind()->GetCharacter()->GetShip()->GetCargoHold()->GetAspectObjectContainer()->AddContent(BuyObject);
-				}
-				else
-				{
-					break;
-				}
-			}
-		}
-	}
 }
 
 void TransporterPhase3::Execute(void)
@@ -355,7 +282,84 @@ void TransporterPhase3::Exit(void)
 
 bool TransporterPhase3::HandleMessage(Message * Message)
 {
-	if(Message->GetTypeIdentifier() == "taken_off")
+	if(Message->GetTypeIdentifier() == "landed")
+	{
+		assert(GetMind() != nullptr);
+		assert(GetMind()->GetCharacter() != nullptr);
+		
+		auto Planet{GetMind()->GetCharacter()->GetPlanet()};
+		
+		assert(Planet != nullptr);
+		assert(GetMind()->GetCharacter()->GetShip() != nullptr);
+		assert(GetMind()->GetCharacter()->GetShip()->GetCargoHold() != nullptr);
+		assert(GetMind()->GetCharacter()->GetShip()->GetCargoHold()->GetAspectObjectContainer() != nullptr);
+		
+		auto & Content{GetMind()->GetCharacter()->GetShip()->GetCargoHold()->GetAspectObjectContainer()->GetContent()};
+		auto ContentIterator(Content.begin());
+		
+		// first sell commodities ... but only those with base price modifier above 1
+		while(ContentIterator != Content.end())
+		{
+			auto ContentObject{*ContentIterator};
+			
+			if(ContentObject != nullptr)
+			{
+				auto PlanetAssets{Planet->GetPlanetAssets(ContentObject->GetTypeIdentifier(), ContentObject->GetSubTypeIdentifier())};
+				
+				if((PlanetAssets != nullptr) && (PlanetAssets->GetBasePriceModifier() > 1.0))
+				{
+					auto NextIterator{ContentIterator};
+					
+					++NextIterator;
+					GetMind()->GetCharacter()->GetShip()->GetCargoHold()->GetAspectObjectContainer()->RemoveContent(ContentObject);
+					ContentIterator = NextIterator;
+					delete ContentObject;
+					GetMind()->GetCharacter()->AddCredits(PlanetAssets->GetPrice());
+					
+					continue;
+				}
+			}
+			++ContentIterator;
+		}
+		// second buy stuff ... but only stuff with base price modifier below 1
+		std::vector< PlanetAssets * > BuyablePlanetAssets;
+		
+		for(auto BuyPlanetAssets : Planet->GetPlanetAssets())
+		{
+			if(BuyPlanetAssets->GetBasePriceModifier() < 1.0f)
+			{
+				BuyablePlanetAssets.push_back(BuyPlanetAssets);
+			}
+		}
+		if(BuyablePlanetAssets.empty() == false)
+		{
+			for(int NumberOfPlanetAssetClassesToBuy = GetRandomIntegerFromExponentialDistribution(2); NumberOfPlanetAssetClassesToBuy > 0; --NumberOfPlanetAssetClassesToBuy)
+			{
+				auto PlanetAssetClassToBuy(BuyablePlanetAssets[GetRandomInteger(BuyablePlanetAssets.size() - 1)]);
+				
+				for(int NumberOfAssetsToBuy = GetRandomIntegerFromExponentialDistribution(GetMind()->GetCharacter()->GetShip()->GetCargoHold()->GetSpaceCapacity() / g_BlueprintManager->GetSpaceRequirement(PlanetAssetClassToBuy->GetTypeIdentifier(), PlanetAssetClassToBuy->GetSubTypeIdentifier())); NumberOfAssetsToBuy > 0; --NumberOfAssetsToBuy)
+				{
+					// TODO: the 400.0f is a safety margin for landing fees and fuel
+					if((GetMind()->GetCharacter()->GetShip()->GetCargoHold()->GetSpace() >= g_BlueprintManager->GetSpaceRequirement(PlanetAssetClassToBuy->GetTypeIdentifier(), PlanetAssetClassToBuy->GetSubTypeIdentifier())) && (GetMind()->GetCharacter()->GetCredits() - 400.0f >= PlanetAssetClassToBuy->GetPrice()))
+					{
+						GetMind()->GetCharacter()->RemoveCredits(PlanetAssetClassToBuy->GetPrice());
+						
+						auto BuyObject(g_ObjectFactory->Create(PlanetAssetClassToBuy->GetTypeIdentifier(), PlanetAssetClassToBuy->GetSubTypeIdentifier(), true));
+						
+						BuyObject->SetObjectIdentifier("::" + PlanetAssetClassToBuy->GetTypeIdentifier() + "(" + PlanetAssetClassToBuy->GetSubTypeIdentifier() + ")::buy_index(" + to_string_cast(NumberOfPlanetAssetClassesToBuy) + "|" + to_string_cast(NumberOfAssetsToBuy) + ")::bought_at_game_time(" + to_string_cast(GameTime::Get(), 6) + ")::bought_by(" + GetMind()->GetObjectIdentifier() + ")::bought_on(" + Planet->GetObjectIdentifier() + ")");
+						GetMind()->GetCharacter()->GetShip()->GetCargoHold()->GetAspectObjectContainer()->AddContent(BuyObject);
+					}
+					else
+					{
+						break;
+					}
+				}
+			}
+		}
+		
+		return true;
+	}
+	else if(Message->GetTypeIdentifier() == "taken_off")
 	{
 		if(GetRandomBoolean() == true)
 		{
@@ -609,25 +613,6 @@ RefuelPhase3::RefuelPhase3(StateMachineMind * Mind) :
 
 void RefuelPhase3::Enter(void)
 {
-	// ATTENTION: the target is only valid because this Enter() function is called before the setting of m_Land is processed in the ship which invalidates the ship's target
-	auto ThePlanet(dynamic_cast< Planet * >(GetMind()->GetCharacter()->GetShip()->GetTarget()));
-	auto FuelPlanetAssets{ThePlanet->GetPlanetAssets("commodity", "fuel")};
-	
-	if(FuelPlanetAssets != nullptr)
-	{
-		auto FuelPrice{FuelPlanetAssets->GetPrice()};
-		auto CanBuy{GetMind()->GetCharacter()->GetCredits() / FuelPrice};
-		auto Need{GetMind()->GetCharacter()->GetShip()->GetFuelCapacity() - GetMind()->GetCharacter()->GetShip()->GetFuel()};
-		auto Buy{(CanBuy > Need) ? (Need) : (CanBuy)};
-		
-		GetMind()->GetCharacter()->GetShip()->SetFuel(GetMind()->GetCharacter()->GetShip()->GetFuel() + Buy);
-		GetMind()->GetCharacter()->RemoveCredits(static_cast< std::uint32_t >(Buy * FuelPrice));
-		
-		MonitorFuel * GlobalState(dynamic_cast< MonitorFuel * >(GetMind()->GetStateMachine()->GetGlobalState()));
-		
-		assert(GlobalState != nullptr);
-		GlobalState->SetRefueled();
-	}
 }
 
 void RefuelPhase3::Execute(void)
@@ -644,7 +629,36 @@ void RefuelPhase3::Exit(void)
 
 bool RefuelPhase3::HandleMessage(Message * Message)
 {
-	if(Message->GetTypeIdentifier() == "taken_off")
+	if(Message->GetTypeIdentifier() == "landed")
+	{
+		assert(GetMind() != nullptr);
+		assert(GetMind()->GetCharacter() != nullptr);
+		
+		auto Planet{GetMind()->GetCharacter()->GetPlanet()};
+		
+		assert(Planet != nullptr);
+		
+		auto FuelPlanetAssets{Planet->GetPlanetAssets("commodity", "fuel")};
+		
+		if(FuelPlanetAssets != nullptr)
+		{
+			auto FuelPrice{FuelPlanetAssets->GetPrice()};
+			auto CanBuy{GetMind()->GetCharacter()->GetCredits() / FuelPrice};
+			auto Need{GetMind()->GetCharacter()->GetShip()->GetFuelCapacity() - GetMind()->GetCharacter()->GetShip()->GetFuel()};
+			auto Buy{(CanBuy > Need) ? (Need) : (CanBuy)};
+			
+			GetMind()->GetCharacter()->GetShip()->SetFuel(GetMind()->GetCharacter()->GetShip()->GetFuel() + Buy);
+			GetMind()->GetCharacter()->RemoveCredits(static_cast< std::uint32_t >(Buy * FuelPrice));
+			
+			MonitorFuel * GlobalState(dynamic_cast< MonitorFuel * >(GetMind()->GetStateMachine()->GetGlobalState()));
+			
+			assert(GlobalState != nullptr);
+			GlobalState->SetRefueled();
+		}
+		
+		return true;
+	}
+	else if(Message->GetTypeIdentifier() == "taken_off")
 	{
 		GetMind()->GetStateMachine()->SetState(new SelectSteering(GetMind()));
 		delete this;
