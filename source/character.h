@@ -28,6 +28,7 @@
 class CharacterObserver;
 class MapKnowledge;
 class Mind;
+class Planet;
 class Ship;
 class System;
 class Threat;
@@ -48,6 +49,7 @@ public:
 	Mind * GetActiveMind(void);
 	std::uint32_t GetCredits(void) const;
 	MapKnowledge * GetMapKnowledge(void);
+	Planet * GetPlanet(void);
 	Ship * GetShip(void);
 	System * GetSystem(void);
 	Threat * GetThreat(void);

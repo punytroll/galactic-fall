@@ -26,6 +26,7 @@
 #include "mind.h"
 #include "object_aspect_messages.h"
 #include "object_aspect_object_container.h"
+#include "planet.h"
 #include "ship.h"
 #include "system.h"
 #include "threat.h"
@@ -92,6 +93,18 @@ void Character::AddCredits(std::uint32_t Credits)
 void Character::AddObserver(CharacterObserver * CharacterObserver)
 {
 	_Observers.insert(CharacterObserver);
+}
+
+Planet * Character::GetPlanet(void)
+{
+	auto Container{GetContainer()};
+	
+	while((Container != nullptr) && (Container->GetTypeIdentifier() != "planet"))
+	{
+		Container = Container->GetContainer();
+	}
+	
+	return dynamic_cast< Planet * >(Container);
 }
 
 Ship * Character::GetShip(void)
