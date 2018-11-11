@@ -9,6 +9,7 @@
 		<offset x="0" y="0" z="200"/>
 		<field-of-view-y radians="0.8"/>
 	</main-camera>
+	<object type-identifier="system" sub-type-identifier="sol" object-identifier="::system(sol)"/>
 	<object type-identifier="ship" sub-type-identifier="shuttle" object-identifier="::ship(shuttle)::player_ship">
 		<aspect-name>
 			<name value="Stargazer Alpha 1-0"/>

@@ -27,6 +27,7 @@
 #include <list>
 #include <sstream>
 #include <stdexcept>
+#include <unordered_map>
 #include <vector>
 
 #include <GL/glx.h>
@@ -1254,6 +1255,22 @@ void PurgeGame(void)
 	GameTime::Set(0.0);
 }
 
+Planet * GetPlanetFromSubTypeIdentifier(const std::string & SubTypeIdentifier)
+{
+	assert(g_Galaxy != nullptr);
+	for(auto System : g_Galaxy->GetSystems())
+	{
+		for(auto Planet : System.second->GetPlanets())
+		{
+			if(Planet->GetSubTypeIdentifier() == SubTypeIdentifier)
+			{
+				return Planet;
+			}
+		}
+	}
+	assert(false);
+}
+
 void LoadGameFromElement(const Element * SaveElement)
 {
 	if(SaveElement->GetName() != "save")
@@ -1320,29 +1337,34 @@ void LoadGameFromElement(const Element * SaveElement)
 		}
 	}
 	assert(g_CurrentSystem != nullptr);
+	
+	std::unordered_map< std::string, Object * > ObjectsByIdentifier;
+	
 	// third pass: read objects
 	for(auto SaveChild : SaveElement->GetChilds())
 	{
 		if(SaveChild->GetName() == "object")
 		{
+			assert(SaveChild->HasAttribute("type-identifier") == true);
+			assert(SaveChild->HasAttribute("sub-type-identifier") == true);
 			assert(SaveChild->HasAttribute("object-identifier") == true);
 			
-			Object * NewObject(Object::GetObject(SaveChild->GetAttribute("object-identifier")));
+			Object * NewObject;
 			
-			if(NewObject == nullptr)
+			if(SaveChild->GetAttribute("type-identifier") == "system")
 			{
-				assert(SaveChild->HasAttribute("type-identifier") == true);
-				assert(SaveChild->HasAttribute("sub-type-identifier") == true);
-				NewObject = g_ObjectFactory->Create(SaveChild->GetAttribute("type-identifier"), SaveChild->GetAttribute("sub-type-identifier"), false);
-				NewObject->SetObjectIdentifier(SaveChild->GetAttribute("object-identifier"));
+				NewObject = g_Galaxy->GetSystem(SaveChild->GetAttribute("sub-type-identifier"));
+			}
+			else if(SaveChild->GetAttribute("type-identifier") == "planet")
+			{
+				NewObject = GetPlanetFromSubTypeIdentifier(SaveChild->GetAttribute("sub-type-identifier"));
 			}
 			else
 			{
-				assert(SaveChild->HasAttribute("type-identifier") == true);
-				assert(SaveChild->GetAttribute("type-identifier") == NewObject->GetTypeIdentifier());
-				assert(SaveChild->HasAttribute("sub-type-identifier") == true);
-				assert(SaveChild->GetAttribute("sub-type-identifier") == NewObject->GetSubTypeIdentifier());
+				NewObject = g_ObjectFactory->Create(SaveChild->GetAttribute("type-identifier"), SaveChild->GetAttribute("sub-type-identifier"), false);
 			}
+			assert(NewObject != nullptr);
+			ObjectsByIdentifier.emplace(SaveChild->GetAttribute("object-identifier"), NewObject);
 			for(auto ObjectChild : SaveChild->GetChilds())
 			{
 				if(ObjectChild->GetName() == "aspect-accessory")
@@ -1797,7 +1819,7 @@ void LoadGameFromElement(const Element * SaveElement)
 		if(SaveChild->GetName() == "command-mind")
 		{
 			assert(SaveChild->HasAttribute("object-identifier") == true);
-			g_CommandMind = dynamic_cast< CommandMind * >(Object::GetObject(SaveChild->GetAttribute("object-identifier")));
+			g_CommandMind = dynamic_cast< CommandMind * >(ObjectsByIdentifier.at(SaveChild->GetAttribute("object-identifier")));
 			assert(g_CommandMind != nullptr);
 			g_CommandMind->ConnectDestroyingCallback(OnInputMindDestroying);
 		}
@@ -1805,7 +1827,7 @@ void LoadGameFromElement(const Element * SaveElement)
 		{
 			assert(SaveChild->HasAttribute("object-identifier") == true);
 			
-			auto ObservedCharacter{dynamic_cast< Character * >(Object::GetObject(SaveChild->GetAttribute("object-identifier")))};
+			auto ObservedCharacter{dynamic_cast< Character * >(ObjectsByIdentifier.at(SaveChild->GetAttribute("object-identifier")))};
 			
 			assert(ObservedCharacter != nullptr);
 			assert(g_CharacterObserver != nullptr);
@@ -1815,7 +1837,7 @@ void LoadGameFromElement(const Element * SaveElement)
 		{
 			assert(SaveChild->HasAttribute("object-identifier"));
 			
-			auto TheObject(Object::GetObject(SaveChild->GetAttribute("object-identifier")));
+			auto TheObject(ObjectsByIdentifier.at(SaveChild->GetAttribute("object-identifier")));
 			
 			assert(TheObject != nullptr);
 			for(auto ObjectChild : SaveChild->GetChilds())
@@ -1826,7 +1848,7 @@ void LoadGameFromElement(const Element * SaveElement)
 					{
 						if(AspectChild->GetName() == "content")
 						{
-							auto Content(Object::GetObject(AspectChild->GetAttribute("object-identifier")));
+							auto Content(ObjectsByIdentifier.at(AspectChild->GetAttribute("object-identifier")));
 							
 							assert(Content != nullptr);
 							TheObject->GetAspectObjectContainer()->AddContent(Content);
@@ -1848,7 +1870,7 @@ void LoadGameFromElement(const Element * SaveElement)
 								{
 									if(MapKnowledgeChild->GetName() == "explored-system")
 									{
-										auto ExploredSystem(Object::GetObject(MapKnowledgeChild->GetAttribute("object-identifier")));
+										auto ExploredSystem(ObjectsByIdentifier.at(MapKnowledgeChild->GetAttribute("object-identifier")));
 										
 										assert(ExploredSystem != nullptr);
 										assert(dynamic_cast< System * >(ExploredSystem) != nullptr);
@@ -1867,7 +1889,7 @@ void LoadGameFromElement(const Element * SaveElement)
 						{
 							if(TypeSpecificChild->GetName() == "character")
 							{
-								auto TheCharacter(Object::GetObject(TypeSpecificChild->GetAttribute("object-identifier")));
+								auto TheCharacter(ObjectsByIdentifier.at(TypeSpecificChild->GetAttribute("object-identifier")));
 								
 								assert(TheCharacter != nullptr);
 								assert(dynamic_cast< Character * >(TheCharacter) != nullptr);
@@ -1884,7 +1906,7 @@ void LoadGameFromElement(const Element * SaveElement)
 						{
 							if(TypeSpecificChild->GetName() == "character")
 							{
-								auto TheCharacter(Object::GetObject(TypeSpecificChild->GetAttribute("object-identifier")));
+								auto TheCharacter(ObjectsByIdentifier.at(TypeSpecificChild->GetAttribute("object-identifier")));
 								
 								assert(TheCharacter != nullptr);
 								assert(dynamic_cast< Character * >(TheCharacter) != nullptr);
@@ -1915,7 +1937,7 @@ void LoadGameFromElement(const Element * SaveElement)
 		{
 			assert(SaveChild->HasAttribute("object-identifier"));
 			
-			auto TheObject(Object::GetObject(SaveChild->GetAttribute("object-identifier")));
+			auto TheObject(ObjectsByIdentifier.at(SaveChild->GetAttribute("object-identifier")));
 			
 			assert(TheObject != nullptr);
 			for(auto ObjectChild : SaveChild->GetChilds())
@@ -2027,11 +2049,19 @@ void SaveGame(std::ostream & OStream)
 	XML << element << "time-warp" << attribute << "value" << value << g_TimeWarp << end;
 	if(g_CommandMind != nullptr)
 	{
+		if(g_CommandMind->GetObjectIdentifier().empty() == true)
+		{
+			g_CommandMind->GenerateObjectIdentifier();
+		}
 		XML << element << "command-mind" << attribute << "object-identifier" << value << g_CommandMind->GetObjectIdentifier() << end;
 	}
 	assert(g_CharacterObserver != nullptr);
 	if(g_CharacterObserver->GetObservedCharacter() != nullptr)
 	{
+		if(g_CharacterObserver->GetObservedCharacter()->GetObjectIdentifier().empty() == true)
+		{
+			g_CharacterObserver->GetObservedCharacter()->GenerateObjectIdentifier();
+		}
 		XML << element << "observed-character" << attribute << "object-identifier" << value << g_CharacterObserver->GetObservedCharacter()->GetObjectIdentifier() << end;
 	}
 	// save main camera properties
@@ -2051,6 +2081,11 @@ void SaveGame(std::ostream & OStream)
 		}
 		else
 		{
+			assert(g_CommandMind->GetCharacter()->GetMapKnowledge() != nullptr);
+			for(auto ExploredSystem : g_CommandMind->GetCharacter()->GetMapKnowledge()->GetExploredSystems())
+			{
+				XML << element << "object" << attribute << "type-identifier" << value << ExploredSystem->GetTypeIdentifier() << attribute << "sub-type-identifier" << value << ExploredSystem->GetSubTypeIdentifier() << attribute << "object-identifier" << value << ExploredSystem->GetObjectIdentifier() << end;
+			}
 			// if no ship is available
 			if(g_CommandMind->GetCharacter()->GetShip() == nullptr)
 			{
@@ -2074,6 +2109,10 @@ void SaveGame(std::ostream & OStream)
 						assert(Planet->GetAspectObjectContainer() != nullptr);
 						XML << element << "object" << attribute << "type-identifier" << value << Planet->GetTypeIdentifier() << attribute << "sub-type-identifier" << value << Planet->GetSubTypeIdentifier() << attribute << "object-identifier" << value << Planet->GetObjectIdentifier();
 						XML << element << "aspect-object-container";
+						if(Hangar->GetObjectIdentifier().empty() == true)
+						{
+							Hangar->GenerateObjectIdentifier();
+						}
 						XML << element << "content" << attribute << "object-identifier" << value << Hangar->GetObjectIdentifier() << end;
 						XML << end;
 						XML << end;
