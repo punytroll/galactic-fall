@@ -75,7 +75,6 @@ public:
 	const std::string & GetTypeIdentifier(void) const;
 	// setters
 	void SetContainer(Object * Container);
-	void SetObjectIdentifier(const std::string & ObjectIdentifier);
 	void SetSubTypeIdentifier(const std::string & SubTypeIdentifier);
 	void SetTypeIdentifier(const std::string & TypeIdentifier);
 	// modifiers
@@ -89,15 +88,9 @@ public:
 	void AddAspectUpdate(void);
 	void AddAspectVisualization(void);
 	void Destroy(void);
-	void GenerateObjectIdentifier(void);
 	// events
 	Connection ConnectDestroyingCallback(std::function< void (void) > Callback);
 	void DisconnectDestroyingCallback(Connection & Connection);
-	// static methods
-	static Object * GetObject(const std::string & ObjectIdentifier);
-	static void Dump(std::ostream & OStream);
-	static void Dump(XMLStream & XML, Object * Container);
-	static void Dump(XMLStream & XML);
 private:
 	// aspects
 	ObjectAspectAccessory * _AspectAccessory;
@@ -115,9 +108,6 @@ private:
 	std::string _ObjectIdentifier;
 	std::string _SubTypeIdentifier;
 	std::string _TypeIdentifier;
-	
-	static std::set< Object * > _Objects;
-	static std::map< std::string, Object * > _IdentifiedObjects;
 };
 
 inline ObjectAspectAccessory * Object::GetAspectAccessory(void)

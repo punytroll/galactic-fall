@@ -173,7 +173,6 @@ Window g_Window;
 Colormap g_ColorMap;
 bool g_EchoEvents(false);
 bool g_EchoResizes(false);
-bool g_DumpEndReport(false);
 bool g_TakeScreenShot(false);
 ResourceReader * g_ResourceReader(nullptr);
 Settings * g_Settings(nullptr);
@@ -2108,17 +2107,6 @@ void ActionDisableTurnRight(void)
 	}
 }
 
-void ActionDumpObjectReport(void)
-{
-	std::string FileName(MakeTimeStampedFileName("object-report", "xml"));
-	std::ofstream OutputFileStream(FileName.c_str());
-	XMLStream Out(OutputFileStream);
-	
-	Object::Dump(Out);
-	OutputFileStream << std::endl;
-	SetMessage("Object report written to file \"" + FileName + "\".");
-}
-
 void ActionEnableAccelerate(void)
 {
 	if(g_CommandMind != nullptr)
@@ -2388,7 +2376,7 @@ void ActionOpenObjectInformationDialog(void)
 	
 	auto ObjectInformationDialog{new UI::ObjectInformationDialog(g_Galaxy)};
 	
-	ObjectInformationDialog->SetName("object_information(" + g_Galaxy->GetObjectIdentifier() + ")");
+	ObjectInformationDialog->SetName("object_information(" + g_Galaxy->GetTypeIdentifier() + " / " + g_Galaxy->GetSubTypeIdentifier() + ")");
 	ObjectInformationDialog->SetLeft(100.0_c);
 	ObjectInformationDialog->SetTop(400.0_c);
 	ObjectInformationDialog->SetWidth(500.0_c);
@@ -2421,12 +2409,6 @@ void ActionPurgeGame(void)
 
 void ActionQuitGameLoop(void)
 {
-	g_Quit = true;
-}
-
-void ActionQuitGameAndDumpObjectReport(void)
-{
-	g_DumpEndReport = true;
 	g_Quit = true;
 }
 
@@ -3076,10 +3058,6 @@ void LoadKeyboardLookupTable(const std::list< Settings::KeyBinding > * KeyBindin
 				{
 					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionDisableTurnRight;
 				}
-				else if(KeyBinding.Action == "dump_object_report")
-				{
-					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionDumpObjectReport;
-				}
 				else if(KeyBinding.Action == "enable_accelerate")
 				{
 					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionEnableAccelerate;
@@ -3143,10 +3121,6 @@ void LoadKeyboardLookupTable(const std::list< Settings::KeyBinding > * KeyBindin
 				else if(KeyBinding.Action == "purge_game")
 				{
 					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionPurgeGame;
-				}
-				else if(KeyBinding.Action == "quit_game_and_dump_object_report")
-				{
-					g_KeyboardLookupTable[KeyBinding.Code][EventIndex] = ActionQuitGameAndDumpObjectReport;
 				}
 				else if(KeyBinding.Action == "refuel")
 				{
@@ -3415,14 +3389,6 @@ int main(int argc, char ** argv)
 	Graphics::Drawing::DeinitializeFont();
 	ON_DEBUG(std::cout << "Destroying window." << std::endl);
 	DestroyWindow();
-	// if requested print some final debugging information
-	if(g_DumpEndReport == true)
-	{
-		XMLStream Out(std::cout);
-		
-		Object::Dump(Out);
-		std::cout << std::endl;
-	}
 	if(g_ScenarioManager != nullptr)
 	{
 		delete g_ScenarioManager;

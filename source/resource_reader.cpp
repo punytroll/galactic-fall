@@ -325,7 +325,6 @@ void ResourceReader::_ReadSystem(Arxx::Reference & Reference, Galaxy * Galaxy, s
 	{
 		throw std::runtime_error("Could not create system '" + Identifier + "'.");
 	}
-	NewSystem->SetObjectIdentifier("::system(" + NewSystem->GetSubTypeIdentifier() + ")");
 	
 	std::string Name;
 	Vector2f Position;
@@ -550,7 +549,6 @@ static void ReadFaction(Arxx::Reference & Reference, Galaxy * Galaxy, std::list<
 	{
 		throw std::runtime_error("Could not create faction '" + Identifier + "'.");
 	}
-	NewFaction->SetObjectIdentifier("::faction(" + NewFaction->GetSubTypeIdentifier() + ")");
 	
 	std::string Name;
 	Graphics::ColorRGBO FactionColor;
@@ -776,7 +774,6 @@ static void ReadPlanet(Arxx::Reference & Reference, Galaxy * Galaxy, System * Sy
 	{
 		throw std::runtime_error("Could not create planet '" + Identifier + "'.");
 	}
-	NewPlanet->SetObjectIdentifier("::planet(" + NewPlanet->GetSubTypeIdentifier() + ")::in_system(" + System->GetSubTypeIdentifier() + ")");
 	
 	std::string Name;
 	std::string Description;
@@ -833,7 +830,7 @@ static void ReadPlanet(Arxx::Reference & Reference, Galaxy * Galaxy, System * Sy
 	
 	if(Faction == nullptr)
 	{
-		throw std::runtime_error("Could not find faction '" + FactionIdentifier + "' for planet '" + Identifier + "' in system '" + System->GetObjectIdentifier() + "'.");
+		throw std::runtime_error("Could not find faction '" + FactionIdentifier + "' for planet '" + Identifier + "' in system '" + System->GetSubTypeIdentifier() + "'.");
 	}
 	NewPlanet->SetFaction(Faction);
 	System->GetAspectObjectContainer()->AddContent(NewPlanet);
@@ -1124,7 +1121,6 @@ static void ReadStar(Arxx::Reference & Reference, System * System)
 	
 	auto NewStar(dynamic_cast< Star * >(g_ObjectFactory->Create("star", Identifier, false)));
 	
-	NewStar->SetObjectIdentifier("::star(" + Identifier + ")::in_system(" + System->GetSubTypeIdentifier() + ")");
 	NewStar->GetAspectPosition()->SetPosition(Vector3f::CreateFromComponents(Position[0], Position[1], 0.0f));
 	NewStar->SetColor(Color);
 	System->GetAspectObjectContainer()->AddContent(NewStar);

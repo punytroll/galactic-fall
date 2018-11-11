@@ -37,9 +37,6 @@
 #include "object_aspect_visualization.h"
 #include "real_time.h"
 
-std::set< Object * > Object::_Objects;
-std::map< std::string, Object * > Object::_IdentifiedObjects;
-
 Object::Object(void) :
 	_AspectAccessory(nullptr),
 	_AspectMessages(nullptr),
@@ -52,7 +49,6 @@ Object::Object(void) :
 	_AspectVisualization(nullptr),
 	_Container(nullptr)
 {
-	_Objects.insert(this);
 }
 
 Object::~Object(void)
@@ -78,8 +74,6 @@ Object::~Object(void)
 	_AspectUpdate = nullptr;
 	delete _AspectVisualization;
 	_AspectVisualization = nullptr;
-	SetObjectIdentifier("");
-	_Objects.erase(_Objects.find(this));
 }
 
 void Object::AddAspectAccessory(void)
@@ -152,30 +146,6 @@ void Object::SetContainer(Object * Container)
 	_Container = Container;
 }
 
-void Object::SetObjectIdentifier(const std::string & ObjectIdentifier)
-{
-	if(_ObjectIdentifier.empty() == false)
-	{
-		auto IdentifiedObjectIterator(_IdentifiedObjects.find(_ObjectIdentifier));
-		
-		assert(IdentifiedObjectIterator != _IdentifiedObjects.end());
-		_IdentifiedObjects.erase(IdentifiedObjectIterator);
-		_ObjectIdentifier = "";
-	}
-	if(ObjectIdentifier.empty() == false)
-	{
-		assert(_IdentifiedObjects.find(ObjectIdentifier) == _IdentifiedObjects.end());
-		_ObjectIdentifier = ObjectIdentifier;
-		_IdentifiedObjects[_ObjectIdentifier] = this;
-	}
-}
-
-void Object::GenerateObjectIdentifier(void)
-{
-	assert(_ObjectIdentifier.empty() == true);
-	SetObjectIdentifier("::" + _TypeIdentifier + "(" + _SubTypeIdentifier + ")::" + to_string_cast(reinterpret_cast< void * >(this)) + "(" + to_string_cast(RealTime::Get(), 3) + ")");
-}
-
 void Object::Destroy(void)
 {
 	// fire destroying event before aything is actually destroyed
@@ -195,75 +165,4 @@ void Object::Destroy(void)
 		assert(_Container->GetAspectObjectContainer() != nullptr);
 		_Container->GetAspectObjectContainer()->RemoveContent(this);
 	}
-}
-
-Object * Object::GetObject(const std::string & ObjectIdentifier)
-{
-	auto ObjectIterator(_IdentifiedObjects.find(ObjectIdentifier));
-	
-	if(ObjectIterator != _IdentifiedObjects.end())
-	{
-		return ObjectIterator->second;
-	}
-	else
-	{
-		return nullptr;
-	}
-}
-
-void Object::Dump(std::ostream & OStream)
-{
-	OStream << "Objects (Count " << _Objects.size() << "): \n";
-	
-	for(auto Object : _Objects)
-	{
-		OStream << "  " << Object << '\n';
-	}
-	OStream << '\n';
-	OStream << "Identified Objects (Count " << _IdentifiedObjects.size() << "): \n";
-	for(auto & ObjectPair : _IdentifiedObjects)
-	{
-		OStream << "  " << ObjectPair.second << " = '" << ObjectPair.first << "'\n";
-	}
-	OStream << std::endl;
-}
-
-void Object::Dump(XMLStream & XML, Object * Container)
-{
-	XML << element << "object" << attribute << "address" << value << Container << attribute << "type-identifier" << value << Container->_TypeIdentifier << attribute << "sub-type-identifier" << value << Container->_SubTypeIdentifier << attribute << "identifier" << value << Container->_ObjectIdentifier;
-	if(Container->_AspectObjectContainer != nullptr)
-	{
-		for(auto Content : Container->_AspectObjectContainer->GetContent())
-		{
-			Dump(XML, Content);
-		}
-	}
-	XML << end;
-}
-
-void Object::Dump(XMLStream & XML)
-{
-	XML << element << "object-report";
-	XML << element << "objects" << attribute << "count" << value << static_cast< int >(_Objects.size());
-	for(auto Object : _Objects)
-	{
-		XML << element << "object" << attribute << "address" << value << Object << end;
-	}
-	XML << end;
-	XML << element << "identified-objects" << attribute << "count" << value << static_cast< int >(_IdentifiedObjects.size());
-	for(auto & ObjectPair : _IdentifiedObjects)
-	{
-		XML << element << "object" << attribute << "address" << value << ObjectPair.second << attribute << "identifier" << value << ObjectPair.first << end;
-	}
-	XML << end;
-	XML << element << "object-hierarchy";
-	for(auto Object : _Objects)
-	{
-		if(Object->GetContainer() == nullptr)
-		{
-			Dump(XML, Object);
-		}
-	}
-	XML << end;
-	XML << end;
 }

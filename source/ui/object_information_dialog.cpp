@@ -72,7 +72,7 @@ namespace UI
 		{
 			auto ObjectInformationDialog{new UI::ObjectInformationDialog{_Object}};
 			
-			ObjectInformationDialog->SetName("object_information(" + _Object->GetObjectIdentifier() + ")");
+			ObjectInformationDialog->SetName("object_information(" + _Object->GetTypeIdentifier() + " / " + _Object->GetSubTypeIdentifier() + ")");
 			ObjectInformationDialog->SetLeft(100.0_c);
 			ObjectInformationDialog->SetTop(400.0_c);
 			ObjectInformationDialog->SetWidth(500.0_c);
@@ -333,7 +333,6 @@ void UI::ObjectInformationDialog::_Refresh(void)
 	{
 		PreviousWidget = _AddStringProperty(PreviousWidget, 0.0f, "Type", _Object->GetTypeIdentifier());
 		PreviousWidget = _AddStringProperty(PreviousWidget, 0.0f, "Sub-Type", _Object->GetSubTypeIdentifier());
-		PreviousWidget = _AddStringProperty(PreviousWidget, 0.0f, "Identifier", _Object->GetObjectIdentifier());
 		PreviousWidget = _AddSeparator(PreviousWidget, 0.0f, "Container");
 		if(_Object->GetContainer() != nullptr)
 		{
