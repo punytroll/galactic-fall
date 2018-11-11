@@ -153,7 +153,7 @@ UI::TimingDialog * g_TimingDialog(nullptr);
 
 Vector2f g_LastMotion(-1.0f, -1.0f);
 UI::MouseButtonEvent::MouseButton g_MouseButton(UI::MouseButtonEvent::MouseButton::Unspecified);
-Vector3f g_CameraPosition;
+Vector3f g_CameraOffset;
 bool g_FirstPersonCameraMode(false);
 CommandMind * g_CommandMind;
 OutputObserver * g_CharacterObserver(nullptr);
@@ -765,7 +765,7 @@ void UpdateMainViewCamera(void)
 			SpacialMatrix.Rotate(Focus->GetAspectPosition()->GetOrientation());
 		}
 	}
-	SpacialMatrix.Translate(g_CameraPosition);
+	SpacialMatrix.Translate(g_CameraOffset);
 	assert(g_MainView != nullptr);
 	assert(g_MainView->GetCamera() != nullptr);
 	g_MainView->GetCamera()->SetSpacialMatrix(SpacialMatrix);
@@ -1315,9 +1315,9 @@ void LoadGameFromElement(const Element * SaveElement)
 		{
 			for(auto CameraChild : SaveChild->GetChilds())
 			{
-				if(CameraChild->GetName() == "position")
+				if(CameraChild->GetName() == "offset")
 				{
-					g_CameraPosition.Set(from_string_cast< float >(CameraChild->GetAttribute("x")), from_string_cast< float >(CameraChild->GetAttribute("y")), from_string_cast< float >(CameraChild->GetAttribute("z")));
+					g_CameraOffset.Set(from_string_cast< float >(CameraChild->GetAttribute("x")), from_string_cast< float >(CameraChild->GetAttribute("y")), from_string_cast< float >(CameraChild->GetAttribute("z")));
 				}
 				else if(CameraChild->GetName() == "field-of-view-y")
 				{
@@ -2052,7 +2052,7 @@ void SaveGame(std::ostream & OStream)
 	}
 	// save main camera properties
 	XML << element << "main-camera";
-	XML << element << "position" << attribute << "x" << value << g_CameraPosition[0] << attribute << "y" << value << g_CameraPosition[1] << attribute << "z" << value << g_CameraPosition[2] << end;
+	XML << element << "offset" << attribute << "x" << value << g_CameraOffset[0] << attribute << "y" << value << g_CameraOffset[1] << attribute << "z" << value << g_CameraOffset[2] << end;
 	assert(g_MainProjection != nullptr);
 	XML << element << "field-of-view-y" << attribute << "radians" << value << g_MainProjection->GetFieldOfViewY() << end;
 	XML << end; // camera
@@ -2345,8 +2345,8 @@ void ActionObserveNextCharacter(void)
 		}
 		if(g_CharacterObserver->GetObservedCharacter() != nullptr)
 		{
-			g_CameraPosition[0] = 0.0f;
-			g_CameraPosition[1] = 0.0f;
+			g_CameraOffset[0] = 0.0f;
+			g_CameraOffset[1] = 0.0f;
 		}
 	}
 }
@@ -2383,8 +2383,8 @@ void ActionObservePreviousCharacter(void)
 		}
 		if(g_CharacterObserver->GetObservedCharacter() != nullptr)
 		{
-			g_CameraPosition[0] = 0.0f;
-			g_CameraPosition[1] = 0.0f;
+			g_CameraOffset[0] = 0.0f;
+			g_CameraOffset[1] = 0.0f;
 		}
 	}
 }
@@ -2499,8 +2499,8 @@ void ActionRefuel(void)
 
 void ActionResetCameraPosition(void)
 {
-	g_CameraPosition[0] = 0.0f;
-	g_CameraPosition[1] = 0.0f;
+	g_CameraOffset[0] = 0.0f;
+	g_CameraOffset[1] = 0.0f;
 }
 
 void ActionResetTimeWarp(void)
@@ -2708,7 +2708,7 @@ void MainViewMouseButtonEvent(UI::MouseButtonEvent & MouseButtonEvent)
 			{
 				if(MouseButtonEvent.IsDown() == true)
 				{
-					g_CameraPosition[2] *= 0.95f;
+					g_CameraOffset[2] *= 0.95f;
 				}
 				
 				break;
@@ -2717,7 +2717,7 @@ void MainViewMouseButtonEvent(UI::MouseButtonEvent & MouseButtonEvent)
 			{
 				if(MouseButtonEvent.IsDown() == true)
 				{
-					g_CameraPosition[2] *= 1.05f;
+					g_CameraOffset[2] *= 1.05f;
 				}
 				
 				break;
@@ -2739,8 +2739,8 @@ void MainViewMouseMove(UI::MouseMoveEvent & MouseMoveEvent)
 		g_LastMotion = MouseMoveEvent.GetPosition();
 		if(g_MouseButton == UI::MouseButtonEvent::MouseButton::Middle)
 		{
-			g_CameraPosition[0] = g_CameraPosition[0] - Delta[0] * 0.0011f * g_CameraPosition[2];
-			g_CameraPosition[1] = g_CameraPosition[1] + Delta[1] * 0.0011f * g_CameraPosition[2];
+			g_CameraOffset[0] -= Delta[0] * 0.0011f * g_CameraOffset[2];
+			g_CameraOffset[1] += Delta[1] * 0.0011f * g_CameraOffset[2];
 		}
 	}
 }
