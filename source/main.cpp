@@ -52,6 +52,7 @@
 #include "faction.h"
 #include "file_handling.h"
 #include "galaxy.h"
+#include "game_saver.h"
 #include "game_time.h"
 #include "generator.h"
 #include "globals.h"
@@ -128,7 +129,6 @@
 #include "visualization_prototype.h"
 #include "visualizations.h"
 #include "weapon.h"
-#include "write_to_xml_stream.h"
 
 using namespace Expressions::Operators;
 
@@ -2036,94 +2036,12 @@ bool LoadScenarioFromScenarioIdentifier(const std::string & ScenarioIdentifier)
 
 void SaveGame(std::ostream & OStream)
 {
-	XMLStream XML(OStream);
-	
-	XML << element << "save" << attribute << "version" << value << "0.1";
-	assert(g_Galaxy != nullptr);
-	XML << element << "galaxy" << attribute << "identifier" << value << g_Galaxy->GetSubTypeIdentifier() << end;
-	XML << element << "game-time" << attribute << "value" << value << to_string_cast(GameTime::Get(), 4) << end;
-	if(g_CurrentSystem != nullptr)
-	{
-		XML << element << "current-system" << attribute << "identifier" << value << g_CurrentSystem->GetSubTypeIdentifier() << end;
-	}
-	XML << element << "time-warp" << attribute << "value" << value << g_TimeWarp << end;
-	if(g_CommandMind != nullptr)
-	{
-		if(g_CommandMind->GetObjectIdentifier().empty() == true)
-		{
-			g_CommandMind->GenerateObjectIdentifier();
-		}
-		XML << element << "command-mind" << attribute << "object-identifier" << value << g_CommandMind->GetObjectIdentifier() << end;
-	}
-	assert(g_CharacterObserver != nullptr);
-	if(g_CharacterObserver->GetObservedCharacter() != nullptr)
-	{
-		if(g_CharacterObserver->GetObservedCharacter()->GetObjectIdentifier().empty() == true)
-		{
-			g_CharacterObserver->GetObservedCharacter()->GenerateObjectIdentifier();
-		}
-		XML << element << "observed-character" << attribute << "object-identifier" << value << g_CharacterObserver->GetObservedCharacter()->GetObjectIdentifier() << end;
-	}
-	// save main camera properties
-	XML << element << "main-camera";
-	XML << element << "offset" << attribute << "x" << value << g_CameraOffset[0] << attribute << "y" << value << g_CameraOffset[1] << attribute << "z" << value << g_CameraOffset[2] << end;
 	assert(g_MainProjection != nullptr);
-	XML << element << "field-of-view-y" << attribute << "radians" << value << g_MainProjection->GetFieldOfViewY() << end;
-	XML << end; // camera
-	// now save the important objects
-	if(g_CommandMind != nullptr)
-	{
-		// if no character is available
-		if(g_CommandMind->GetCharacter() == nullptr)
-		{
-			// only save the input mind
-			WriteToXMLStream(XML, g_CommandMind, true);
-		}
-		else
-		{
-			assert(g_CommandMind->GetCharacter()->GetMapKnowledge() != nullptr);
-			for(auto ExploredSystem : g_CommandMind->GetCharacter()->GetMapKnowledge()->GetExploredSystems())
-			{
-				XML << element << "object" << attribute << "type-identifier" << value << ExploredSystem->GetTypeIdentifier() << attribute << "sub-type-identifier" << value << ExploredSystem->GetSubTypeIdentifier() << attribute << "object-identifier" << value << ExploredSystem->GetObjectIdentifier() << end;
-			}
-			// if no ship is available
-			if(g_CommandMind->GetCharacter()->GetShip() == nullptr)
-			{
-				// only save the character
-				WriteToXMLStream(XML, g_CommandMind->GetCharacter(), true);
-			}
-			else
-			{
-				// save the complete ship
-				WriteToXMLStream(XML, g_CommandMind->GetCharacter()->GetShip(), true);
-			}
-			// save hangars
-			for(auto System : g_Galaxy->GetSystems())
-			{
-				for(auto Planet : System.second->GetPlanets())
-				{
-					auto Hangar(Planet->GetHangar(g_CommandMind->GetCharacter()));
-					
-					if(Hangar != nullptr)
-					{
-						assert(Planet->GetAspectObjectContainer() != nullptr);
-						XML << element << "object" << attribute << "type-identifier" << value << Planet->GetTypeIdentifier() << attribute << "sub-type-identifier" << value << Planet->GetSubTypeIdentifier() << attribute << "object-identifier" << value << Planet->GetObjectIdentifier();
-						XML << element << "aspect-object-container";
-						if(Hangar->GetObjectIdentifier().empty() == true)
-						{
-							Hangar->GenerateObjectIdentifier();
-						}
-						XML << element << "content" << attribute << "object-identifier" << value << Hangar->GetObjectIdentifier() << end;
-						XML << end;
-						XML << end;
-						WriteToXMLStream(XML, Hangar, true);
-					}
-				}
-			}
-		}
-	}
-	XML << end; // save
-	OStream << std::endl;
+	assert(g_CharacterObserver != nullptr);
+	
+	GameSaver GameSaver{OStream};
+	
+	GameSaver.Save(g_Galaxy, g_CurrentSystem, g_TimeWarp, g_CameraOffset, g_MainProjection->GetFieldOfViewY(), g_CommandMind, g_CharacterObserver->GetObservedCharacter());
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
