@@ -3300,7 +3300,7 @@ int main(int argc, char ** argv)
 	// main view
 	g_MainProjection = new Graphics::PerspectiveProjection();
 	g_MainProjection->SetNearClippingPlane(1.0f);
-	g_MainProjection->SetFarClippingPlane(1000.0f);
+	g_MainProjection->SetFarClippingPlane(10000.0f);
 	g_MainView = new Graphics::View();
 	g_MainView->SetClearColor(Graphics::ColorRGBO(0.0f, 0.0f, 0.0f, 1.0f));
 	assert(g_MainView->GetCamera() != nullptr);
