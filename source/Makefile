@@ -68,11 +68,11 @@ binary: $(OBJECT_FILES) $(EVENTS_LIBRARY) $(EXPRESSIONS_LIBRARY) $(STRING_CAST_L
 $(OBJECT_FILES): $(CXXFLAGS_configuration)
 
 $(DEPENDENCY_DIRECTORY)/%.dep: % $(GENERATED_FILES)
-	@test -d $(@D) || mkdir $(@D)
+	@test -d $(@D) || mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) -MM $< $(ALGEBRA_INCLUDE) $(ARX_INCLUDE) $(EVENTS_INCLUDE) $(EXPRESSIONS_INCLUDE) $(STRING_CAST_INCLUDE) $(XML_PUNY_DOM_INCLUDE) $(XML_STREAM_INCLUDE) | sed 's/^\(.*\.o\):/$(OBJECT_DIRECTORY)\/$(subst /,\/,$(subst ./,,$(dir $<)))\1 $(subst /,\/,$@):/g' > $@
 
 $(OBJECT_DIRECTORY)/%.o: %.cpp
-	@test -d $(@D) || mkdir $(@D)
+	@test -d $(@D) || mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) -c $< $(ALGEBRA_INCLUDE) $(ARX_INCLUDE) $(EVENTS_INCLUDE) $(EXPRESSIONS_INCLUDE) $(STRING_CAST_INCLUDE) $(XML_PUNY_DOM_INCLUDE) $(XML_STREAM_INCLUDE) -o $@
 
 .PHONY: all all-here all-recursive clean clean-here clean-recursive check-dependencies default
