@@ -48,17 +48,17 @@
 #include "turret.h"
 
 Turret::Turret(void) :
-	_EnergyUsagePerShot(0.0f),
-	_Fire(false),
-	_GunPropertiesValid(false),
-	_MuzzlePosition(Vector3f::CreateZero()),
-	_NextTimeToFire(0.0),
-	_ReloadTime(0.0f),
-	_ShotDamage(0.0f),
-	_ShotExitSpeed(0.0f),
-	_ShotLifeTime(0.0f),
-	_ShotVisualizationPrototype(nullptr),
-	_TurretAngle(0.0f)
+	_Energy{0.0f},
+	_EnergyUsagePerShot{0.0f},
+	_Fire{false},
+	_GunPropertiesValid{false},
+	_MaximumPowerInput{0.0f},
+	_MuzzlePosition{Vector3f::CreateZero()},
+	_ShotDamage{0.0f},
+	_ShotExitSpeed{0.0f},
+	_ShotLifeTime{0.0f},
+	_ShotVisualizationPrototype{nullptr},
+	_TurretAngle{0.0f}
 {
 	// initialize object aspects
 	AddAspectAccessory();
@@ -75,6 +75,40 @@ Turret::~Turret(void)
 {
 	delete _ShotVisualizationPrototype;
 	_ShotVisualizationPrototype = nullptr;
+}
+
+float Turret::GetMaximumEnergyInput(float Seconds) const
+{
+	auto Result{0.0f};
+	
+	if(_Fire == true)
+	{
+		Result = Seconds * _MaximumPowerInput;
+		if(_Energy + Result > _EnergyUsagePerShot)
+		{
+			Result = _EnergyUsagePerShot - _Energy;
+		}
+	}
+	
+	return Result;
+}
+
+float Turret::GetMaximumEnergyOutput(float Seconds) const
+{
+	auto Result{0.0f};
+	
+	if((_Fire == false) && (_Energy > 0.0f))
+	{
+		Result = _Energy;
+	}
+	
+	return Result;
+}
+
+void Turret::EnergyDelta(float EnergyDelta)
+{
+	_Energy += EnergyDelta;
+	assert(_Energy >= 0.0f);
 }
 
 void Turret::_CalculateMuzzleProperties(Vector3f & MuzzlePosition, Quaternion & MuzzleOrientation, Vector3f & MuzzleDirection)
@@ -173,9 +207,9 @@ bool Turret::_Update(float Seconds)
 				}
 			}
 		}
-		if((_Fire == true) && (_NextTimeToFire <= GameTime::Get()) && (TheShip->GetBattery() != nullptr) && (TheShip->GetBattery()->GetEnergy() >= _EnergyUsagePerShot))
+		if((_Fire == true) && (_Energy >= _EnergyUsagePerShot))
 		{
-			TheShip->GetBattery()->SetEnergy(TheShip->GetBattery()->GetEnergy() - _EnergyUsagePerShot);
+			_Energy -= _EnergyUsagePerShot;
 			assert(Container->GetAspectPosition() != nullptr);
 			assert(Container->GetContainer() != nullptr);
 			
@@ -207,7 +241,6 @@ bool Turret::_Update(float Seconds)
 			
 			NewShot->SetVelocity(TheShip->GetVelocity() + Vector3f::CreateFromComponents(ShotVelocity[0], ShotVelocity[1], 0.0f));
 			Container->GetContainer()->GetAspectObjectContainer()->AddContent(NewShot);
-			_NextTimeToFire = GameTime::Get() + _ReloadTime;
 		}
 	}
 	

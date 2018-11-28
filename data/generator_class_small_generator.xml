@@ -34,6 +34,6 @@
 			</visualization-part>
 		</visualization-parts>
 	</visualization>
-	<energy-provision-per-second>1.5</energy-provision-per-second>
+	<maximum-power-output>1.5</maximum-power-output>
 	<slot-class-identifier>small_generator</slot-class-identifier>
 </generator-class>

@@ -68,6 +68,8 @@
 		<type-specific>
 			<energy value="200"/>
 			<energy-capacity value="200"/>
+			<maximum-power-input value="5"/>
+			<maximum-power-output value="20"/>
 		</type-specific>
 	</object>
 	<object type-identifier="storage" sub-type-identifier="" object-identifier="::storage(::ship(shuttle)::player_ship)">

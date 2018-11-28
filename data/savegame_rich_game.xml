@@ -75,6 +75,8 @@
 		<type-specific>
 			<energy value="200"/>
 			<energy-capacity value="200"/>
+			<maximum-power-input value="5"/>
+			<maximum-power-output value="20"/>
 		</type-specific>
 	</object>
 	<object type-identifier="generator" sub-type-identifier="small_generator" object-identifier="::generator(::ship(shuttle)::player_ship)">
@@ -89,7 +91,7 @@
 			<space-requirement value="500"/>
 		</aspect-physical>
 		<type-specific>
-			<energy-provision-per-second value="1.5"/>
+			<maximum-power-output value="1.5"/>
 		</type-specific>
 	</object>
 	<object type-identifier="storage" sub-type-identifier="" object-identifier="::storage(::ship(shuttle)::player_ship)">
@@ -122,7 +124,9 @@
 			<orientation w="0.707107" x="0" y="0.707107" z="0"/>
 			<position x="0" y="0" z="0"/>
 		</aspect-position>
-		<type-specific/>
+		<type-specific>
+			<maximum-power-input value="9.5"/>
+		</type-specific>
 	</object>
 	<object type-identifier="weapon" sub-type-identifier="medium_laser" object-identifier="::weapon(medium_laser)::2">
 		<aspect-accessory/>
@@ -137,7 +141,9 @@
 			<orientation w="0.707107" x="0" y="0.707107" z="0"/>
 			<position x="0" y="0" z="0"/>
 		</aspect-position>
-		<type-specific/>
+		<type-specific>
+			<maximum-power-input value="9.5"/>
+		</type-specific>
 	</object>
 	<object type-identifier="weapon" sub-type-identifier="medium_laser" object-identifier="::weapon(medium_laser)::1">
 		<aspect-accessory/>
@@ -152,7 +158,9 @@
 			<orientation w="0.707107" x="0" y="0.707107" z="0"/>
 			<position x="0" y="0" z="0"/>
 		</aspect-position>
-		<type-specific/>
+		<type-specific>
+			<maximum-power-input value="9.5"/>
+		</type-specific>
 	</object>
 	<object type-identifier="weapon" sub-type-identifier="light_laser" object-identifier="::weapon(light_laser)::3">
 		<aspect-accessory/>
@@ -167,7 +175,9 @@
 			<orientation w="0.707107" x="0" y="0.707107" z="0"/>
 			<position x="0" y="0" z="0"/>
 		</aspect-position>
-		<type-specific/>
+		<type-specific>
+			<maximum-power-input value="8"/>
+		</type-specific>
 	</object>
 	<object type-identifier="commodity" sub-type-identifier="luxury_goods" object-identifier="::commodity(luxury_goods)::6">
 		<aspect-name>
@@ -292,7 +302,9 @@
 			<orientation w="0.707107" x="0" y="0.707107" z="0"/>
 			<position x="0" y="0" z="0"/>
 		</aspect-position>
-		<type-specific/>
+		<type-specific>
+			<maximum-power-input value="8"/>
+		</type-specific>
 	</object>
 	<object type-identifier="weapon" sub-type-identifier="light_laser" object-identifier="::weapon(light_laser)::1">
 		<aspect-accessory>
@@ -309,7 +321,9 @@
 			<orientation w="0.707107" x="0" y="0.707107" z="0"/>
 			<position x="0" y="0" z="0"/>
 		</aspect-position>
-		<type-specific/>
+		<type-specific>
+			<maximum-power-input value="8"/>
+		</type-specific>
 	</object>
 	<object type-identifier="planet" sub-type-identifier="earth" object-identifier="::planet(earth)::in_system(sol)">
 		<aspect-object-container>
@@ -385,6 +399,8 @@
 		<type-specific>
 			<energy value="200"/>
 			<energy-capacity value="200"/>
+			<maximum-power-input value="5"/>
+			<maximum-power-output value="20"/>
 		</type-specific>
 	</object>
 	<object type-identifier="generator" sub-type-identifier="small_generator" object-identifier="::asset(small_generator)::generator(small_generator)::created_on(::planet(earth)::in_system(sol))::created_at_game_time(36.681007)::bought_by(::character::player_character)::created_at_address(0x149e7d0)">
@@ -399,7 +415,7 @@
 			<space-requirement value="500"/>
 		</aspect-physical>
 		<type-specific>
-			<energy-provision-per-second value="1.5"/>
+			<maximum-power-output value="1.5"/>
 		</type-specific>
 	</object>
 	<object type-identifier="turret" sub-type-identifier="light_laser_turret" object-identifier="::asset(light_laser_turret)::turret(light_laser_turret)::created_on(::planet(earth)::in_system(sol))::created_at_game_time(37.680931)::bought_by(::character::player_character)::created_at_address(0x1479f90)">
@@ -452,7 +468,9 @@
 				<style-program-identifier value="default"/>
 			</part>
 		</aspect-visualization>
-		<type-specific/>
+		<type-specific>
+			<maximum-power-input value="9.5"/>
+		</type-specific>
 	</object>
 	<object type-identifier="storage" sub-type-identifier="" object-identifier="::storage()::0x141df50(1421846795.992)">
 		<aspect-object-container/>

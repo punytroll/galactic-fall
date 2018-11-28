@@ -515,11 +515,22 @@ void UI::HangarWidget::_OnEnergyStateProgressBarUpdating(UI::ProgressBar * Energ
 	if(_SelectedShipListItem != nullptr)
 	{
 		assert(_SelectedShipListItem->GetShip() != nullptr);
-		if(_SelectedShipListItem->GetShip()->GetBattery() != nullptr)
+		
+		auto Energy{0.0f};
+		auto EnergyCapacity{0.0f};
+		
+		for(auto Content : _SelectedShipListItem->GetShip()->GetAspectObjectContainer()->GetContent())
 		{
-			Text = to_string_cast(_SelectedShipListItem->GetShip()->GetBattery()->GetEnergy(), 2);
-			EnergyPercentage = _SelectedShipListItem->GetShip()->GetBattery()->GetEnergy() / _SelectedShipListItem->GetShip()->GetBattery()->GetEnergyCapacity();
+			auto TheBattery{dynamic_cast< Battery * >(Content)};
+			
+			if(TheBattery != nullptr)
+			{
+				Energy += TheBattery->GetEnergy();
+				EnergyCapacity += TheBattery->GetEnergyCapacity();
+			}
 		}
+		Text = to_string_cast(Energy, 2);
+		EnergyPercentage = Energy / EnergyCapacity;
 	}
 	EnergyStateProgressBar->SetText(Text);
 	EnergyStateProgressBar->SetFillLevel(EnergyPercentage);
@@ -686,11 +697,24 @@ void UI::HangarWidget::_OnRechargeButtonClicked(void)
 void UI::HangarWidget::_OnRechargeButtonUpdating(UI::Button * RechargeButton, float RealTimeSeconds, float GameTimeSeconds)
 {
 	assert(_Planet != nullptr);
+	
+	auto HasRechargableBattery{false};
+	
 	if(_SelectedShipListItem != nullptr)
 	{
 		assert(_SelectedShipListItem->GetShip() != nullptr);
+		assert(_SelectedShipListItem->GetShip()->GetAspectObjectContainer() != nullptr);
+		for(auto Content : _SelectedShipListItem->GetShip()->GetAspectObjectContainer()->GetContent())
+		{
+			auto TheBattery{dynamic_cast< Battery * >(Content)};
+			
+			if(TheBattery != nullptr)
+			{
+				HasRechargableBattery |= TheBattery->GetEnergy() < TheBattery->GetEnergyCapacity();
+			}
+		}
 	}
-	RechargeButton->SetEnabled((_Planet->GetOffersRecharging() == true) && (_SelectedShipListItem != nullptr) && (_SelectedShipListItem->GetShip()->GetBattery() != nullptr) && (_SelectedShipListItem->GetShip()->GetBattery()->GetEnergy() < _SelectedShipListItem->GetShip()->GetBattery()->GetEnergyCapacity()));
+	RechargeButton->SetEnabled((_Planet->GetOffersRecharging() == true) && (HasRechargableBattery == true));
 }
 
 void UI::HangarWidget::_OnRefuelButtonClicked(void)

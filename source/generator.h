@@ -21,27 +21,34 @@
 #define GENERATOR_H
 
 #include "object.h"
+#include "physics/energy/device.h"
 
-class Generator : public Object
+class Generator : public Object, public Physics::Energy::Device
 {
 public:
 	Generator(void);
+	virtual ~Generator(void);
+	// Physics::Energy::Device implementation
+	virtual float GetMaximumEnergyInput(float Seconds) const;
+	virtual float GetMaximumEnergyOutput(float Seconds) const;
+	virtual void EnergyDelta(float EnergyDelta);
 	// getters
-	float GetEnergyProvisionPerSecond(void) const;
+	float GetMaximumPowerOutput(void) const;
 	// setters
-	void SetEnergyProvisionPerSecond(float EnergyProvisionPerSecond);
+	void SetMaximumPowerOutput(float MaximumPowerOutput);
 private:
-	float m_EnergyProvisionPerSecond;
+	// in Watts
+	float _MaximumPowerOutput;
 };
 
-inline float Generator::GetEnergyProvisionPerSecond(void) const
+inline float Generator::GetMaximumPowerOutput(void) const
 {
-	return m_EnergyProvisionPerSecond;
+	return _MaximumPowerOutput;
 }
 
-inline void Generator::SetEnergyProvisionPerSecond(float EnergyProvisionPerSecond)
+inline void Generator::SetMaximumPowerOutput(float MaximumPowerOutput)
 {
-	m_EnergyProvisionPerSecond = EnergyProvisionPerSecond;
+	_MaximumPowerOutput = MaximumPowerOutput;
 }
 
 #endif

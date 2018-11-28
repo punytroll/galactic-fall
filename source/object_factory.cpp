@@ -94,8 +94,10 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		auto NewBattery{new Battery{}};
 		
 		// set up type specific things
-		NewBattery->SetEnergy(BatteryBlueprint->GetPropertyAsFloat("energy-capacity"));
 		NewBattery->SetEnergyCapacity(BatteryBlueprint->GetPropertyAsFloat("energy-capacity"));
+		NewBattery->SetEnergy(BatteryBlueprint->GetPropertyAsFloat("energy-capacity"));
+		NewBattery->SetMaximumPowerInput(BatteryBlueprint->GetPropertyAsFloat("maximum-power-input"));
+		NewBattery->SetMaximumPowerOutput(BatteryBlueprint->GetPropertyAsFloat("maximum-power-output"));
 		// set up aspects
 		// set up accessory aspect
 		assert(NewBattery->GetAspectAccessory() != nullptr);
@@ -156,7 +158,7 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		auto NewGenerator{new Generator{}};
 		
 		// set up type specific things
-		NewGenerator->SetEnergyProvisionPerSecond(GeneratorBlueprint->GetPropertyAsFloat("energy-provision-per-second"));
+		NewGenerator->SetMaximumPowerOutput(GeneratorBlueprint->GetPropertyAsFloat("maximum-power-output"));
 		// set up aspects
 		// set up accessory aspect
 		assert(NewGenerator->GetAspectAccessory() != nullptr);
@@ -296,7 +298,7 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		NewTurret->SetShotExitSpeed(TurretBlueprint->GetPropertyAsFloat("shot-exit-speed"));
 		NewTurret->SetShotLifeTime(TurretBlueprint->GetPropertyAsFloat("shot-life-time"));
 		NewTurret->SetShotVisualizationPrototype(TurretBlueprint->GetPropertyAsVisualizationPrototype("shot-visualization-prototype"));
-		NewTurret->SetReloadTime(TurretBlueprint->GetPropertyAsFloat("reload-time"));
+		NewTurret->SetMaximumPowerInput(TurretBlueprint->GetPropertyAsFloat("maximum-power-input"));
 		// set up accessory aspect
 		assert(NewTurret->GetAspectAccessory() != nullptr);
 		NewTurret->GetAspectAccessory()->SetSlotClassIdentifier(TurretBlueprint->GetPropertyAsString("slot-class-identifier"));
@@ -330,7 +332,7 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		NewWeapon->SetShotExitSpeed(WeaponBlueprint->GetPropertyAsFloat("shot-exit-speed"));
 		NewWeapon->SetShotLifeTime(WeaponBlueprint->GetPropertyAsFloat("shot-life-time"));
 		NewWeapon->SetShotVisualizationPrototype(WeaponBlueprint->GetPropertyAsVisualizationPrototype("shot-visualization-prototype"));
-		NewWeapon->SetReloadTime(WeaponBlueprint->GetPropertyAsFloat("reload-time"));
+		NewWeapon->SetMaximumPowerInput(WeaponBlueprint->GetPropertyAsFloat("maximum-power-input"));
 		// set up accessory aspect
 		assert(NewWeapon->GetAspectAccessory() != nullptr);
 		NewWeapon->GetAspectAccessory()->SetSlotClassIdentifier(WeaponBlueprint->GetPropertyAsString("slot-class-identifier"));

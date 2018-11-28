@@ -473,15 +473,19 @@ static void ReadBatteryClass(Arxx::Reference & Reference, BlueprintManager * Blu
 	std::uint32_t SpaceRequirement;
 	VisualizationPrototype VisualizationPrototype;
 	float EnergyCapacity;
+	float MaximumPowerInput;
+	float MaximumPowerOutput;
 	std::string SlotClassIdentifier;
 	
-	Reader >> Name >> Description >> BasePrice >> SpaceRequirement >> VisualizationPrototype >> EnergyCapacity >> SlotClassIdentifier;
+	Reader >> Name >> Description >> BasePrice >> SpaceRequirement >> VisualizationPrototype >> EnergyCapacity >> MaximumPowerInput >> MaximumPowerOutput >> SlotClassIdentifier;
 	NewBatteryClass->AddProperty("name", Name);
 	NewBatteryClass->AddProperty("description", Description);
 	NewBatteryClass->AddProperty("base-price", BasePrice);
 	NewBatteryClass->AddProperty("space-requirement", SpaceRequirement);
 	NewBatteryClass->AddProperty("visualization-prototype", VisualizationPrototype);
 	NewBatteryClass->AddProperty("energy-capacity", EnergyCapacity);
+	NewBatteryClass->AddProperty("maximum-power-input", MaximumPowerInput);
+	NewBatteryClass->AddProperty("maximum-power-output", MaximumPowerOutput);
 	NewBatteryClass->AddProperty("slot-class-identifier", SlotClassIdentifier);
 }
 
@@ -598,17 +602,17 @@ static void ReadGeneratorClass(Arxx::Reference & Reference, BlueprintManager * B
 	std::uint32_t BasePrice;
 	std::uint32_t SpaceRequirement;
 	VisualizationPrototype VisualizationPrototype;
-	float EnergyProvisionPerSecond;
+	float MaximumPowerOutput;
 	std::string SlotClassIdentifier;
 	
-	Reader >> Name >> Description >> BasePrice >> SpaceRequirement >> VisualizationPrototype >> EnergyProvisionPerSecond >> SlotClassIdentifier;
+	Reader >> Name >> Description >> BasePrice >> SpaceRequirement >> VisualizationPrototype >> MaximumPowerOutput >> SlotClassIdentifier;
 	
 	NewGeneratorClass->AddProperty("name", Name);
 	NewGeneratorClass->AddProperty("description", Description);
 	NewGeneratorClass->AddProperty("base-price", BasePrice);
 	NewGeneratorClass->AddProperty("space-requirement", SpaceRequirement);
 	NewGeneratorClass->AddProperty("visualization-prototype", VisualizationPrototype);
-	NewGeneratorClass->AddProperty("energy-provision-per-second", EnergyProvisionPerSecond);
+	NewGeneratorClass->AddProperty("maximum-power-output", MaximumPowerOutput);
 	NewGeneratorClass->AddProperty("slot-class-identifier", SlotClassIdentifier);
 }
 
@@ -1211,7 +1215,7 @@ static void ReadTurretClass(Arxx::Reference & Reference, BlueprintManager * Blue
 	VisualizationPrototype TurretVisualizationPrototype;
 	std::string SlotClassIdentifier;
 	Quaternion Orientation;
-	float ReloadTime;
+	float MaximumPowerInput;
 	float EnergyUsagePerShot;
 	std::string MuzzlePositionPartIdentifier;
 	std::string MuzzlePositionMarkerIdentifier;
@@ -1220,7 +1224,7 @@ static void ReadTurretClass(Arxx::Reference & Reference, BlueprintManager * Blue
 	float ShotLifeTime;
 	VisualizationPrototype ShotVisualizationPrototype;
 	
-	Reader >> Name >> Description >> BasePrice >> SpaceRequirement >> TurretVisualizationPrototype >> SlotClassIdentifier >> Orientation >> ReloadTime >> EnergyUsagePerShot >> MuzzlePositionPartIdentifier >> MuzzlePositionMarkerIdentifier >> ShotExitSpeed >> ShotDamage >> ShotLifeTime >> ShotVisualizationPrototype;
+	Reader >> Name >> Description >> BasePrice >> SpaceRequirement >> TurretVisualizationPrototype >> SlotClassIdentifier >> Orientation >> MaximumPowerInput >> EnergyUsagePerShot >> MuzzlePositionPartIdentifier >> MuzzlePositionMarkerIdentifier >> ShotExitSpeed >> ShotDamage >> ShotLifeTime >> ShotVisualizationPrototype;
 	NewTurretClass->AddProperty("name", Name);
 	NewTurretClass->AddProperty("description", Description);
 	NewTurretClass->AddProperty("base-price", BasePrice);
@@ -1228,7 +1232,7 @@ static void ReadTurretClass(Arxx::Reference & Reference, BlueprintManager * Blue
 	NewTurretClass->AddProperty("visualization-prototype", TurretVisualizationPrototype);
 	NewTurretClass->AddProperty("slot-class-identifier", SlotClassIdentifier);
 	NewTurretClass->AddProperty("orientation", Orientation);
-	NewTurretClass->AddProperty("reload-time", ReloadTime);
+	NewTurretClass->AddProperty("maximum-power-input", MaximumPowerInput);
 	NewTurretClass->AddProperty("energy-usage-per-shot", EnergyUsagePerShot);
 	
 	auto MuzzlePosition{TurretVisualizationPrototype.GetMarkerPosition(MuzzlePositionPartIdentifier, MuzzlePositionMarkerIdentifier)};
@@ -1276,7 +1280,7 @@ static void ReadWeaponClass(Arxx::Reference & Reference, BlueprintManager * Blue
 	VisualizationPrototype WeaponVisualizationPrototype;
 	std::string SlotClassIdentifier;
 	Quaternion Orientation;
-	float ReloadTime;
+	float MaximumPowerInput;
 	float EnergyUsagePerShot;
 	std::string MuzzlePositionPartIdentifier;
 	std::string MuzzlePositionMarkerIdentifier;
@@ -1286,14 +1290,14 @@ static void ReadWeaponClass(Arxx::Reference & Reference, BlueprintManager * Blue
 	VisualizationPrototype ShotVisualizationPrototype;
 	
 	
-	Reader >> Name >> Description >> BasePrice >> SpaceRequirement >> WeaponVisualizationPrototype >> SlotClassIdentifier >> Orientation >> ReloadTime >> EnergyUsagePerShot >> MuzzlePositionPartIdentifier >> MuzzlePositionMarkerIdentifier >> ShotExitSpeed >> ShotDamage >> ShotLifeTime >> ShotVisualizationPrototype;
+	Reader >> Name >> Description >> BasePrice >> SpaceRequirement >> WeaponVisualizationPrototype >> SlotClassIdentifier >> Orientation >> MaximumPowerInput >> EnergyUsagePerShot >> MuzzlePositionPartIdentifier >> MuzzlePositionMarkerIdentifier >> ShotExitSpeed >> ShotDamage >> ShotLifeTime >> ShotVisualizationPrototype;
 	NewWeaponClass->AddProperty("name", Name);
 	NewWeaponClass->AddProperty("description", Description);
 	NewWeaponClass->AddProperty("base-price", BasePrice);
 	NewWeaponClass->AddProperty("visualization-prototype", WeaponVisualizationPrototype);
 	NewWeaponClass->AddProperty("slot-class-identifier", SlotClassIdentifier);
 	NewWeaponClass->AddProperty("orientation", Orientation);
-	NewWeaponClass->AddProperty("reload-time", ReloadTime);
+	NewWeaponClass->AddProperty("maximum-power-input", MaximumPowerInput);
 	NewWeaponClass->AddProperty("space-requirement", SpaceRequirement);
 	NewWeaponClass->AddProperty("energy-usage-per-shot", EnergyUsagePerShot);
 	

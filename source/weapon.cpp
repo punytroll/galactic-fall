@@ -46,15 +46,15 @@
 #include "weapon.h"
 
 Weapon::Weapon(void) :
-	_EnergyUsagePerShot(0.0f),
-	_Fire(false),
-	_MuzzlePosition(Vector3f::CreateZero()),
-	_NextTimeToFire(0.0),
-	_ReloadTime(0.0f),
-	_ShotDamage(0.0f),
-	_ShotExitSpeed(0.0f),
-	_ShotLifeTime(0.0f),
-	_ShotVisualizationPrototype(nullptr)
+	_Energy{0.0f},
+	_EnergyUsagePerShot{0.0f},
+	_Fire{false},
+	_MaximumPowerInput{0.0f},
+	_MuzzlePosition{Vector3f::CreateZero()},
+	_ShotDamage{0.0f},
+	_ShotExitSpeed{0.0f},
+	_ShotLifeTime{0.0f},
+	_ShotVisualizationPrototype{nullptr}
 {
 	// initialize object aspects
 	AddAspectAccessory();
@@ -73,6 +73,40 @@ Weapon::~Weapon(void)
 	_ShotVisualizationPrototype = nullptr;
 }
 
+float Weapon::GetMaximumEnergyInput(float Seconds) const
+{
+	auto Result{0.0f};
+	
+	if(_Fire == true)
+	{
+		Result = Seconds * _MaximumPowerInput;
+		if(_Energy + Result > _EnergyUsagePerShot)
+		{
+			Result = _EnergyUsagePerShot - _Energy;
+		}
+	}
+	
+	return Result;
+}
+
+float Weapon::GetMaximumEnergyOutput(float Seconds) const
+{
+	auto Result{0.0f};
+	
+	if((_Fire == false) && (_Energy > 0.0f))
+	{
+		Result = _Energy;
+	}
+	
+	return Result;
+}
+
+void Weapon::EnergyDelta(float EnergyDelta)
+{
+	_Energy += EnergyDelta;
+	assert(_Energy >= 0.0f);
+}
+
 void Weapon::SetShotVisualizationPrototype(const VisualizationPrototype & ShotVisualizationPrototype)
 {
 	delete _ShotVisualizationPrototype;
@@ -81,63 +115,60 @@ void Weapon::SetShotVisualizationPrototype(const VisualizationPrototype & ShotVi
 
 bool Weapon::_Update(float Seconds)
 {
-	if((_Fire == true) && (_NextTimeToFire <= GameTime::Get()))
+	if((_Fire == true) && (_Energy >= _EnergyUsagePerShot))
 	{
-		auto Container(GetContainer());
+		_Energy -= _EnergyUsagePerShot;
+		
+		auto Container{GetContainer()};
 		
 		assert(Container != nullptr);
+		assert(Container->GetAspectPosition() != nullptr);
+		assert(Container->GetContainer() != nullptr);
+		
+		auto NewShot(dynamic_cast< Shot * >(g_ObjectFactory->Create("shot", "", true)));
+		
+		assert(NewShot != nullptr);
+		// set up type specific things
+		NewShot->SetDamage(_ShotDamage);
+		NewShot->SetTimeOfDeath(GameTime::Get() + _ShotLifeTime);
+		// set up physical aspect
+		assert(NewShot->GetAspectPhysical() != nullptr);
+		assert(_ShotVisualizationPrototype != nullptr);
+		NewShot->GetAspectPhysical()->SetRadialSize(_ShotVisualizationPrototype->GetModel()->GetRadialSize());
+		// set up visualization aspect
+		assert(NewShot->GetAspectVisualization() != nullptr);
+		NewShot->GetAspectVisualization()->SetVisualizationPrototype(_ShotVisualizationPrototype);
+		assert(NewShot->GetAspectPosition() != nullptr);
+		NewShot->SetShooter(Container);
+		
+		// calculating the shot's position in the world coordinate system
+		Vector3f ShotPosition(_MuzzlePosition);
+		
+		ShotPosition.Rotate(GetAspectPosition()->GetOrientation());
+		ShotPosition.Rotate(GetAspectAccessory()->GetSlot()->GetOrientation());
+		ShotPosition.Translate(GetAspectAccessory()->GetSlot()->GetPosition());
+		ShotPosition.Rotate(Container->GetAspectPosition()->GetOrientation());
+		ShotPosition.Translate(Container->GetAspectPosition()->GetPosition());
+		NewShot->GetAspectPosition()->SetPosition(ShotPosition);
+		
+		// calculating the shot's angular position in world coordinate system
+		Quaternion ShotOrientation(Container->GetAspectPosition()->GetOrientation());
+		
+		ShotOrientation.Rotate(GetAspectAccessory()->GetSlot()->GetOrientation());
+		ShotOrientation.Rotate(GetAspectPosition()->GetOrientation());
+		NewShot->GetAspectPosition()->SetOrientation(ShotOrientation);
 		assert(Container->GetTypeIdentifier() == "ship");
 		
-		auto TheShip(dynamic_cast< Ship * >(Container));
+		auto TheShip{dynamic_cast< Ship * >(Container)};
 		
 		assert(TheShip != nullptr);
-		if((TheShip->GetBattery() != nullptr) && (TheShip->GetBattery()->GetEnergy() >= _EnergyUsagePerShot))
-		{
-			TheShip->GetBattery()->SetEnergy(TheShip->GetBattery()->GetEnergy() - _EnergyUsagePerShot);
-			assert(Container->GetAspectPosition() != nullptr);
-			assert(Container->GetContainer() != nullptr);
-			
-			auto NewShot(dynamic_cast< Shot * >(g_ObjectFactory->Create("shot", "", true)));
-			
-			assert(NewShot != nullptr);
-			// set up type specific things
-			NewShot->SetDamage(_ShotDamage);
-			NewShot->SetTimeOfDeath(GameTime::Get() + _ShotLifeTime);
-			// set up physical aspect
-			assert(NewShot->GetAspectPhysical() != nullptr);
-			assert(_ShotVisualizationPrototype != nullptr);
-			NewShot->GetAspectPhysical()->SetRadialSize(_ShotVisualizationPrototype->GetModel()->GetRadialSize());
-			// set up visualization aspect
-			assert(NewShot->GetAspectVisualization() != nullptr);
-			NewShot->GetAspectVisualization()->SetVisualizationPrototype(_ShotVisualizationPrototype);
-			assert(NewShot->GetAspectPosition() != nullptr);
-			NewShot->SetShooter(Container);
-			
-			// calculating the shot's position in the world coordinate system
-			Vector3f ShotPosition(_MuzzlePosition);
-			
-			ShotPosition.Rotate(GetAspectPosition()->GetOrientation());
-			ShotPosition.Rotate(GetAspectAccessory()->GetSlot()->GetOrientation());
-			ShotPosition.Translate(GetAspectAccessory()->GetSlot()->GetPosition());
-			ShotPosition.Rotate(Container->GetAspectPosition()->GetOrientation());
-			ShotPosition.Translate(Container->GetAspectPosition()->GetPosition());
-			NewShot->GetAspectPosition()->SetPosition(ShotPosition);
-			
-			// calculating the shot's angular position in world coordinate system
-			Quaternion ShotOrientation(Container->GetAspectPosition()->GetOrientation());
-			
-			ShotOrientation.Rotate(GetAspectAccessory()->GetSlot()->GetOrientation());
-			ShotOrientation.Rotate(GetAspectPosition()->GetOrientation());
-			NewShot->GetAspectPosition()->SetOrientation(ShotOrientation);
-			
-			// calculate the shot's velocity
-			auto ShotVelocity(Vector3f::CreateTranslationX(_ShotExitSpeed));
-			
-			ShotVelocity.Rotate(ShotOrientation);
-			NewShot->SetVelocity(TheShip->GetVelocity() + Vector3f::CreateFromComponents(ShotVelocity[0], ShotVelocity[1], 0.0f));
-			Container->GetContainer()->GetAspectObjectContainer()->AddContent(NewShot);
-			_NextTimeToFire = GameTime::Get() + _ReloadTime;
-		}
+		
+		// calculate the shot's velocity
+		auto ShotVelocity{Vector3f::CreateTranslationX(_ShotExitSpeed)};
+		
+		ShotVelocity.Rotate(ShotOrientation);
+		NewShot->SetVelocity(TheShip->GetVelocity() + Vector3f::CreateFromComponents(ShotVelocity[0], ShotVelocity[1], 0.0f));
+		Container->GetContainer()->GetAspectObjectContainer()->AddContent(NewShot);
 	}
 	
 	return true;

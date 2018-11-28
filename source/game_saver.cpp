@@ -159,6 +159,8 @@ void GameSaver::_WriteBattery(Battery * Battery)
 	assert(Battery != nullptr);
 	_XMLStream << element << "energy" << attribute << "value" << value << Battery->GetEnergy() << end;
 	_XMLStream << element << "energy-capacity" << attribute << "value" << value << Battery->GetEnergyCapacity() << end;
+	_XMLStream << element << "maximum-power-input" << attribute << "value" << value << Battery->GetMaximumPowerInput() << end;
+	_XMLStream << element << "maximum-power-output" << attribute << "value" << value << Battery->GetMaximumPowerOutput() << end;
 }
 
 void GameSaver::_WriteCharacter(Character * Character)
@@ -184,7 +186,7 @@ void GameSaver::_WriteCommodity(Commodity * Commodity)
 void GameSaver::_WriteGenerator(Generator * Generator)
 {
 	assert(Generator != nullptr);
-	_XMLStream << element << "energy-provision-per-second" << attribute << "value" << value << Generator->GetEnergyProvisionPerSecond() << end;
+	_XMLStream << element << "maximum-power-output" << attribute << "value" << value << Generator->GetMaximumPowerOutput() << end;
 }
 
 void GameSaver::_WriteHangar(Hangar * Hangar)
@@ -368,9 +370,11 @@ void GameSaver::_WriteStorage(Storage * Storage)
 void GameSaver::_WriteTurret(Turret * Turret)
 {
 	assert(Turret != nullptr);
+	_XMLStream << element << "maximum-power-input" << attribute << "value" << value << Turret->GetMaximumPowerInput() << end;
 }
 
 void GameSaver::_WriteWeapon(Weapon * Weapon)
 {
 	assert(Weapon != nullptr);
+	_XMLStream << element << "maximum-power-input" << attribute << "value" << value << Weapon->GetMaximumPowerInput() << end;
 }

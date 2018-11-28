@@ -21,20 +21,27 @@
 #define TURRET_H
 
 #include "object.h"
+#include "physics/energy/device.h"
 
 class Visualization;
 class TurretClass;
 
-class Turret : public Object
+class Turret : public Object, public Physics::Energy::Device
 {
 public:
 	Turret(void);
 	virtual ~Turret(void) override;
+	// Physics::Energy::Device implementation
+	virtual float GetMaximumEnergyInput(float Seconds) const;
+	virtual float GetMaximumEnergyOutput(float Seconds) const;
+	virtual void EnergyDelta(float EnergyDelta);
+	// getters
+	float GetMaximumPowerInput(void) const;
 	// setters
 	void SetEnergyUsagePerShot(float EnergyUsagePerShot);
 	void SetFire(bool Fire);
+	void SetMaximumPowerInput(float MaximumPowerInput);
 	void SetMuzzlePosition(const Vector3f & MuzzlePosition);
-	void SetReloadTime(float ReloadTime);
 	void SetShotDamage(float ShotDamage);
 	void SetShotExitSpeed(float ShotExitSpeed);
 	void SetShotLifeTime(float ShotLifeTime);
@@ -45,20 +52,25 @@ private:
 	void _UpdateVisualization(Visualization * Visualization);
 	void _CalculateMuzzleProperties(Vector3f & MuzzlePosition, Quaternion & MuzzleOrientation, Vector3f & MuzzleDirection);
 	// variables
+	float _Energy;
 	float _EnergyUsagePerShot;
 	bool _Fire;
 	Quaternion _GunOrientation;
 	Vector3f _GunPosition;
 	bool _GunPropertiesValid;
+	float _MaximumPowerInput;
 	Vector3f _MuzzlePosition;
-	double _NextTimeToFire;
-	float _ReloadTime;
 	float _ShotDamage;
 	float _ShotExitSpeed;
 	float _ShotLifeTime;
 	VisualizationPrototype * _ShotVisualizationPrototype;
 	float _TurretAngle;
 };
+
+inline float Turret::GetMaximumPowerInput(void) const
+{
+	return _MaximumPowerInput;
+}
 
 inline void Turret::SetEnergyUsagePerShot(float EnergyUsagePerShot)
 {
@@ -70,14 +82,14 @@ inline void Turret::SetFire(bool Fire)
 	_Fire = Fire;
 }
 
+inline void Turret::SetMaximumPowerInput(float MaximumPowerInput)
+{
+	_MaximumPowerInput = MaximumPowerInput;
+}
+
 inline void Turret::SetMuzzlePosition(const Vector3f & MuzzlePosition)
 {
 	_MuzzlePosition = MuzzlePosition;
-}
-
-inline void Turret::SetReloadTime(float ReloadTime)
-{
-	_ReloadTime = ReloadTime;
 }
 
 inline void Turret::SetShotDamage(float ShotDamage)

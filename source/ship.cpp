@@ -38,6 +38,7 @@
 #include "object_aspect_position.h"
 #include "object_aspect_update.h"
 #include "object_aspect_visualization.h"
+#include "physics/energy/network.h"
 #include "planet.h"
 #include "ship.h"
 #include "slot.h"
@@ -56,6 +57,7 @@ Ship::Ship(void) :
 	m_Accelerate(false),
 	_Battery(nullptr),
 	_CargoHold(nullptr),
+	_EnergyNetwork{new Physics::Energy::Network{}},
 	_EngineGlowParticleSystem(0),
 	m_ExhaustRadius(0.0f),
 	_Faction(nullptr),
@@ -112,20 +114,11 @@ Ship::~Ship(void)
 		_Faction = nullptr;
 	}
 	assert(_FactionDestroyingConnection.IsValid() == false);
+	delete _EnergyNetwork;
+	_EnergyNetwork = nullptr;
 	g_GraphicsEngine->RemoveParticleSystem(_EngineGlowParticleSystem);
 	delete _EngineGlowParticleSystem;
 	_EngineGlowParticleSystem = nullptr;
-}
-
-Battery * Ship::GetBattery(void)
-{
-	if(_Battery != nullptr)
-	{
-		assert(_Battery->GetAspectAccessory() != 0);
-		assert(_Battery->GetAspectAccessory()->GetSlot() != 0);
-	}
-	
-	return _Battery;
 }
 
 System * Ship::GetSystem(void)
@@ -265,12 +258,6 @@ bool Ship::Update(float Seconds)
 	}
 	else
 	{
-		if((GetGenerator() != 0) && (GetBattery() != 0))
-		{
-			float Energy(GetBattery()->GetEnergy() + Seconds * GetGenerator()->GetEnergyProvisionPerSecond());
-			
-			GetBattery()->SetEnergy((Energy < GetBattery()->GetEnergyCapacity()) ? (Energy) : (GetBattery()->GetEnergyCapacity()));
-		}
 		if(m_Refuel == true)
 		{
 			if(_CargoHold != nullptr)
@@ -529,6 +516,14 @@ void Ship::OnAdded(Object * Content)
 		assert(TheCargoHold != nullptr);
 		_CargoHold = TheCargoHold;
 	}
+	
+	// polymorphic discovery
+	auto EnergyDevice{dynamic_cast< Physics::Energy::Device * >(Content)};
+	
+	if(EnergyDevice != nullptr)
+	{
+		_EnergyNetwork->AddDevice(EnergyDevice);
+	}
 }
 
 void Ship::OnRemoved(Object * Content)
@@ -548,6 +543,14 @@ void Ship::OnRemoved(Object * Content)
 	{
 		assert(_CargoHold == Content);
 		_CargoHold = nullptr;
+	}
+	
+	// polymorphic discovery
+	auto EnergyDevice{dynamic_cast< Physics::Energy::Device * >(Content)};
+	
+	if(EnergyDevice != nullptr)
+	{
+		_EnergyNetwork->RemoveDevice(EnergyDevice);
 	}
 }
 

@@ -28,6 +28,7 @@
 #include "../graphics/color_rgbo.h"
 #include "../map_knowledge.h"
 #include "../object_aspect_name.h"
+#include "../object_aspect_object_container.h"
 #include "../output_observer.h"
 #include "../real_time.h"
 #include "../ship.h"
@@ -264,10 +265,24 @@ void UI::HeadsUpDisplay::_UpdateCycleProgressBar(UI::ProgressBar * CycleProgress
 void UI::HeadsUpDisplay::_UpdateEnergyLabel(UI::Label * EnergyLabel, float RealTimeSeconds, float GameTimeSeconds)
 {
 	assert(g_CharacterObserver != nullptr);
-	if((g_CharacterObserver->GetObservedCharacter() != nullptr) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != nullptr) && (g_CharacterObserver->GetObservedCharacter()->GetShip()->GetBattery() != nullptr))
+	if((g_CharacterObserver->GetObservedCharacter() != nullptr) && (g_CharacterObserver->GetObservedCharacter()->GetShip() != nullptr))
 	{
-		EnergyLabel->SetVisible(true);
-		EnergyLabel->SetText("Energy: " + to_string_cast(g_CharacterObserver->GetObservedCharacter()->GetShip()->GetBattery()->GetEnergy(), 2));
+		auto Energy{0.0f};
+		
+		for(auto Content : g_CharacterObserver->GetObservedCharacter()->GetShip()->GetAspectObjectContainer()->GetContent())
+		{
+			auto TheBattery{dynamic_cast< Battery * >(Content)};
+			
+			if(TheBattery != nullptr)
+			{
+				Energy += TheBattery->GetEnergy();
+			}
+		}
+		if(Energy > 0.0f)
+		{
+			EnergyLabel->SetVisible(true);
+			EnergyLabel->SetText("Energy: " + to_string_cast(Energy, 2));
+		}
 	}
 	else
 	{

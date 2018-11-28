@@ -181,16 +181,21 @@ void Planet::Recharge(Ship * Ship, Character * Character)
 	if(_OffersRecharging == true)
 	{
 		assert(Ship != nullptr);
-		if(Ship->GetBattery() != nullptr)
+		for(auto Content : Ship->GetAspectObjectContainer()->GetContent())
 		{
-			assert(Character != nullptr);
+			auto TheBattery{dynamic_cast< Battery * >(Content)};
 			
-			float CanBuy(Character->GetCredits() / _RechargingFeePerEnergy);
-			float Need(Ship->GetBattery()->GetEnergyCapacity() - Ship->GetBattery()->GetEnergy());
-			float Buy((CanBuy > Need) ? (Need) : (CanBuy));
-			
-			Ship->GetBattery()->SetEnergy(Ship->GetBattery()->GetEnergy() + Buy);
-			Character->RemoveCredits(static_cast< std::uint32_t >(Buy * _RechargingFeePerEnergy));
+			if(TheBattery != nullptr)
+			{
+				assert(Character != nullptr);
+				
+				float CanBuy{Character->GetCredits() / _RechargingFeePerEnergy};
+				float Need{TheBattery->GetEnergyCapacity() - TheBattery->GetEnergy()};
+				float Buy{(CanBuy > Need) ? (Need) : (CanBuy)};
+				
+				TheBattery->SetEnergy(TheBattery->GetEnergy() + Buy);
+				Character->RemoveCredits(static_cast< std::uint32_t >(Buy * _RechargingFeePerEnergy));
+			}
 		}
 	}
 }

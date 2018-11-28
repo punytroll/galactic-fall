@@ -21,20 +21,25 @@
 #define WEAPON_H
 
 #include "object.h"
+#include "physics/energy/device.h"
 
 class Visualization;
 class VisualizationPrototype;
 class WeaponClass;
 
-class Weapon : public Object
+class Weapon : public Object, public Physics::Energy::Device
 {
 public:
 	Weapon(void);
 	virtual ~Weapon(void) override;
+	// Physics::Energy::Device implementation
+	virtual float GetMaximumEnergyInput(float Seconds) const;
+	virtual float GetMaximumEnergyOutput(float Seconds) const;
+	virtual void EnergyDelta(float EnergyDelta);
 	// getters
 	float GetEnergyUsagePerShot(void) const;
+	float GetMaximumPowerInput(void) const;
 	const Vector3f & GetMuzzlePosition(void) const;
-	float GetReloadTime(void) const;
 	float GetShotDamage(void) const;
 	float GetShotExitSpeed(void) const;
 	float GetShotLifeTime(void) const;
@@ -42,8 +47,8 @@ public:
 	// setters
 	void SetEnergyUsagePerShot(float EnergyUsagePerShot);
 	void SetFire(bool Fire);
+	void SetMaximumPowerInput(float MaximumPowerInput);
 	void SetMuzzlePosition(const Vector3f & MuzzlePosition);
-	void SetReloadTime(float ReloadTime);
 	void SetShotDamage(float ShotDamage);
 	void SetShotExitSpeed(float ShotExitSpeed);
 	void SetShotLifeTime(float ShotLifeTime);
@@ -53,11 +58,11 @@ private:
 	bool _Update(float Seconds);
 	void _UpdateVisualization(Visualization * Visualization);
 	// variables
+	float _Energy;
 	float _EnergyUsagePerShot;
 	bool _Fire;
+	float _MaximumPowerInput;
 	Vector3f _MuzzlePosition;
-	double _NextTimeToFire;
-	float _ReloadTime;
 	float _ShotDamage;
 	float _ShotExitSpeed;
 	float _ShotLifeTime;
@@ -69,14 +74,14 @@ inline float Weapon::GetEnergyUsagePerShot(void) const
 	return _EnergyUsagePerShot;
 }
 
+inline float Weapon::GetMaximumPowerInput(void) const
+{
+	return _MaximumPowerInput;
+}
+
 inline const Vector3f & Weapon::GetMuzzlePosition(void) const
 {
 	return _MuzzlePosition;
-}
-
-inline float Weapon::GetReloadTime(void) const
-{
-	return _ReloadTime;
 }
 
 inline float Weapon::GetShotDamage(void) const
@@ -109,14 +114,14 @@ inline void Weapon::SetFire(bool Fire)
 	_Fire = Fire;
 }
 
+inline void Weapon::SetMaximumPowerInput(float MaximumPowerInput)
+{
+	_MaximumPowerInput = MaximumPowerInput;
+}
+
 inline void Weapon::SetMuzzlePosition(const Vector3f & MuzzlePosition)
 {
 	_MuzzlePosition = MuzzlePosition;
-}
-
-inline void Weapon::SetReloadTime(float ReloadTime)
-{
-	_ReloadTime = ReloadTime;
 }
 
 inline void Weapon::SetShotDamage(float ShotDamage)
