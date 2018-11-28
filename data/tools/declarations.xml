@@ -26,6 +26,8 @@
 		<unsigned-integer-32bit identifier="space-requirement"/>
 		<visualization identifier="visualization"/>
 		<float identifier="energy-capacity"/>
+		<float identifier="maximum-power-input"/>
+		<float identifier="maximum-power-output"/>
 		<string identifier="slot-class-identifier"/>
 	</battery-class>
 	
@@ -97,7 +99,7 @@
 		<unsigned-integer-32bit identifier="base-price"/>
 		<unsigned-integer-32bit identifier="space-requirement"/>
 		<visualization identifier="visualization"/>
-		<float identifier="energy-provision-per-second"/>
+		<float identifier="maximum-power-output"/>
 		<string identifier="slot-class-identifier"/>
 	</generator-class>
 	
@@ -291,7 +293,7 @@
 		<visualization identifier="visualization"/>
 		<string identifier="slot-class-identifier"/>
 		<quaternion identifier="orientation"/>
-		<float identifier="reload-time"/>
+		<float identifier="maximum-power-input"/>
 		<float identifier="energy-usage-per-shot"/>
 		<marker-reference identifier="muzzle-position"/>
 		<shot identifier="shot"/>
@@ -345,7 +347,7 @@
 		<visualization identifier="visualization"/>
 		<string identifier="slot-class-identifier"/>
 		<quaternion identifier="orientation"/>
-		<float identifier="reload-time"/>
+		<float identifier="maximum-power-input"/>
 		<float identifier="energy-usage-per-shot"/>
 		<marker-reference identifier="muzzle-position"/>
 		<shot identifier="shot"/>

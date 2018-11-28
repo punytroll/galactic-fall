@@ -93,6 +93,7 @@
 #include "object_aspect_visualization.h"
 #include "object_factory.h"
 #include "output_observer.h"
+#include "physics/energy/network.h"
 #include "planet.h"
 #include "real_time.h"
 #include "resource_reader.h"
@@ -1178,6 +1179,8 @@ void GameFrame(void)
 	
 	if(g_Galaxy != nullptr)
 	{
+		Physics::Energy::Network::UpdateNetworks(Seconds);
+		
 		auto OldObservedSystem(GetObservedSystem());
 		
 		UpdateObjects(g_Galaxy, Seconds);
@@ -1562,6 +1565,16 @@ void LoadGameFromElement(const Element * SaveElement)
 								assert(TypeSpecificChild->HasAttribute("value") == true);
 								NewBattery->SetEnergyCapacity(from_string_cast< float >(TypeSpecificChild->GetAttribute("value")));
 							}
+							else if(TypeSpecificChild->GetName() == "maximum-power-input")
+							{
+								assert(TypeSpecificChild->HasAttribute("value") == true);
+								NewBattery->SetMaximumPowerInput(from_string_cast< float >(TypeSpecificChild->GetAttribute("value")));
+							}
+							else if(TypeSpecificChild->GetName() == "maximum-power-output")
+							{
+								assert(TypeSpecificChild->HasAttribute("value") == true);
+								NewBattery->SetMaximumPowerOutput(from_string_cast< float >(TypeSpecificChild->GetAttribute("value")));
+							}
 							else
 							{
 								throw std::runtime_error("The \"" + ObjectChild->GetName() + "\" element for the object \"" + SaveChild->GetAttribute("object-identifier") + "\" contains an unknown element \"" + TypeSpecificChild->GetName() + "\".");
@@ -1641,10 +1654,10 @@ void LoadGameFromElement(const Element * SaveElement)
 						assert(NewGenerator != nullptr);
 						for(auto TypeSpecificChild : ObjectChild->GetChilds())
 						{
-							if(TypeSpecificChild->GetName() == "energy-provision-per-second")
+							if(TypeSpecificChild->GetName() == "maximum-power-output")
 							{
 								assert(TypeSpecificChild->HasAttribute("value") == true);
-								NewGenerator->SetEnergyProvisionPerSecond(from_string_cast< float >(TypeSpecificChild->GetAttribute("value")));
+								NewGenerator->SetMaximumPowerOutput(from_string_cast< float >(TypeSpecificChild->GetAttribute("value")));
 							}
 							else
 							{
@@ -1785,7 +1798,15 @@ void LoadGameFromElement(const Element * SaveElement)
 						assert(NewTurret != nullptr);
 						for(auto TypeSpecificChild : ObjectChild->GetChilds())
 						{
-							throw std::runtime_error("The \"" + ObjectChild->GetName() + "\" element for the object \"" + SaveChild->GetAttribute("object-identifier") + "\" contains an unknown element \"" + TypeSpecificChild->GetName() + "\".");
+							if(TypeSpecificChild->GetName() == "maximum-power-input")
+							{
+								assert(TypeSpecificChild->HasAttribute("value") == true);
+								NewTurret->SetMaximumPowerInput(from_string_cast< float >(TypeSpecificChild->GetAttribute("value")));
+							}
+							else
+							{
+								throw std::runtime_error("The \"" + ObjectChild->GetName() + "\" element for the object \"" + SaveChild->GetAttribute("object-identifier") + "\" contains an unknown element \"" + TypeSpecificChild->GetName() + "\".");
+							}
 						}
 					}
 					else if(SaveChild->GetAttribute("type-identifier") == "weapon")
@@ -1795,7 +1816,15 @@ void LoadGameFromElement(const Element * SaveElement)
 						assert(NewWeapon != nullptr);
 						for(auto TypeSpecificChild : ObjectChild->GetChilds())
 						{
-							throw std::runtime_error("The \"" + ObjectChild->GetName() + "\" element for the object \"" + SaveChild->GetAttribute("object-identifier") + "\" contains an unknown element \"" + TypeSpecificChild->GetName() + "\".");
+							if(TypeSpecificChild->GetName() == "maximum-power-input")
+							{
+								assert(TypeSpecificChild->HasAttribute("value") == true);
+								NewWeapon->SetMaximumPowerInput(from_string_cast< float >(TypeSpecificChild->GetAttribute("value")));
+							}
+							else
+							{
+								throw std::runtime_error("The \"" + ObjectChild->GetName() + "\" element for the object \"" + SaveChild->GetAttribute("object-identifier") + "\" contains an unknown element \"" + TypeSpecificChild->GetName() + "\".");
+							}
 						}
 					}
 					else

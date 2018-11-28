@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2009  Hagen Möbius
+ * Copyright (C) 2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,31 +17,20 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include "generator.h"
+#include <cassert>
 
-Generator::Generator(void) :
-	_MaximumPowerOutput{0.0f}
-{
-	// initialize object aspects
-	AddAspectAccessory();
-	AddAspectName();
-	AddAspectPhysical();
-}
+#include "device.h"
 
-Generator::~Generator(void)
+Physics::Energy::Device::Device(void) :
+	_Network(nullptr)
 {
 }
 
-float Generator::GetMaximumEnergyInput(float Seconds) const
+Physics::Energy::Device::~Device(void)
 {
-	return 0.0f;
+	assert(_Network == nullptr);
 }
 
-float Generator::GetMaximumEnergyOutput(float Seconds) const
-{
-	return Seconds * _MaximumPowerOutput;
-}
-
-void Generator::EnergyDelta(float EnergyDelta)
+void Physics::Energy::Device::EnergyDelta(float EnergyDelta)
 {
 }

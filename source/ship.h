@@ -33,6 +33,14 @@ class Storage;
 class System;
 class Visualization;
 
+namespace Physics
+{
+	namespace Energy
+	{
+		class Network;
+	}
+}
+
 namespace Graphics
 {
 	class ParticleSystem;
@@ -44,7 +52,6 @@ public:
 	Ship(void);
 	virtual ~Ship(void) override;
 	// getters
-	Battery * GetBattery(void);
 	Storage * GetCargoHold(void);
 	const Storage * GetCargoHold(void) const;
 	Graphics::ParticleSystem * GetEngineGlowParticleSystem(void);
@@ -110,6 +117,7 @@ private:
 	bool m_Accelerate;
 	Battery * _Battery;
 	Storage * _CargoHold;
+	Physics::Energy::Network * _EnergyNetwork;
 	Graphics::ParticleSystem * _EngineGlowParticleSystem;
 	Vector3f m_ExhaustOffset;
 	float m_ExhaustRadius;

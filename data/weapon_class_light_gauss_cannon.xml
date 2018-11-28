@@ -41,7 +41,7 @@
 		<y>0.7071067812</y>
 		<z>0</z>
 	</orientation>
-	<reload-time>0.3</reload-time>
+	<maximum-power-input>8</maximum-power-input>
 	<energy-usage-per-shot>2.3</energy-usage-per-shot>
 	<muzzle-position>
 		<part-identifier>light_gauss_cannon</part-identifier>

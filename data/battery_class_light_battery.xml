@@ -35,5 +35,7 @@
 		</visualization-parts>
 	</visualization>
 	<energy-capacity>200</energy-capacity>
+	<maximum-power-input>5</maximum-power-input>
+	<maximum-power-output>20</maximum-power-output>
 	<slot-class-identifier>light_battery</slot-class-identifier>
 </battery-class>

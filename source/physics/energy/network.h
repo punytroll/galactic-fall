@@ -1,6 +1,6 @@
 /**
  * galactic-fall
- * Copyright (C) 2009  Hagen Möbius
+ * Copyright (C) 2018  Hagen Möbius
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,31 +17,32 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include "generator.h"
+#ifndef PHYSICS_ENERGY_NETWORK_H
+#define PHYSICS_ENERGY_NETWORK_H
 
-Generator::Generator(void) :
-	_MaximumPowerOutput{0.0f}
+#include <unordered_set>
+
+namespace Physics
 {
-	// initialize object aspects
-	AddAspectAccessory();
-	AddAspectName();
-	AddAspectPhysical();
+	namespace Energy
+	{
+		class Device;
+		
+		class Network
+		{
+		public:
+			Network(void);
+			~Network(void);
+			void AddDevice(Physics::Energy::Device * Device);
+			void RemoveDevice(Physics::Energy::Device * Device);
+			void Update(float Seconds);
+			// static managmement
+			static void UpdateNetworks(float seconds);
+		private:
+			std::unordered_set< Physics::Energy::Device * > _Devices;
+			static std::unordered_set< Physics::Energy::Network * > _Networks;
+		};
+	}
 }
 
-Generator::~Generator(void)
-{
-}
-
-float Generator::GetMaximumEnergyInput(float Seconds) const
-{
-	return 0.0f;
-}
-
-float Generator::GetMaximumEnergyOutput(float Seconds) const
-{
-	return Seconds * _MaximumPowerOutput;
-}
-
-void Generator::EnergyDelta(float EnergyDelta)
-{
-}
+#endif
