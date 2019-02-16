@@ -349,12 +349,16 @@ public:
 			{
 				auto CurrentPoint(new Point());
 				
-				CurrentPoint->SetPosition(Vector3f::CreateFromComponents(ConvertToFloat(Attributes.find("position-x")->second), ConvertToFloat(Attributes.find("position-y")->second), ConvertToFloat(Attributes.find("position-z")->second)));
-				_Points[ConvertToUnsigedLong(Attributes.find("identifier")->second)] = CurrentPoint;
+				assert(Attributes.find("position-x") != Attributes.end());
+				assert(Attributes.find("position-y") != Attributes.end());
+				assert(Attributes.find("position-z") != Attributes.end());
+				assert(Attributes.find("identifier") != Attributes.end());
+				CurrentPoint->SetPosition(Vector3f::CreateFromComponents(from_string_cast< float >(Attributes.find("position-x")->second), from_string_cast< float >(Attributes.find("position-y")->second), from_string_cast< float >(Attributes.find("position-z")->second)));
+				_Points[from_string_cast< unsigned long >(Attributes.find("identifier")->second)] = CurrentPoint;
 			}
 			else
 			{
-				_CurrentTrianglePoint->SetPoint(_Points[ConvertToUnsigedLong(Attributes.find("point-identifier")->second)]);
+				_CurrentTrianglePoint->SetPoint(_Points[from_string_cast< unsigned long >(Attributes.find("point-identifier")->second)]);
 			}
 		}
 		else if(ElementName == "triangle-point")
@@ -363,22 +367,22 @@ public:
 			{
 				assert(_CurrentTrianglePoint == nullptr);
 				_CurrentTrianglePoint = new TrianglePoint();
-				_TrianglePoints[ConvertToUnsigedLong(Attributes.find("identifier")->second)] = _CurrentTrianglePoint;
-				_CurrentTrianglePoint->_Normal.Set(ConvertToFloat(Attributes.find("normal-x")->second), ConvertToFloat(Attributes.find("normal-y")->second), ConvertToFloat(Attributes.find("normal-z")->second));
+				_TrianglePoints[from_string_cast< unsigned long >(Attributes.find("identifier")->second)] = _CurrentTrianglePoint;
+				_CurrentTrianglePoint->_Normal.Set(from_string_cast< float >(Attributes.find("normal-x")->second), from_string_cast< float >(Attributes.find("normal-y")->second), from_string_cast< float >(Attributes.find("normal-z")->second));
 			}
 			else
 			{
 				if(_TrianglePoint == 0)
 				{
-					_CurrentTriangle->SetTrianglePoint<0>(_TrianglePoints[ConvertToUnsigedLong(Attributes.find("triangle-point-identifier")->second)]);
+					_CurrentTriangle->SetTrianglePoint<0>(_TrianglePoints[from_string_cast< unsigned long >(Attributes.find("triangle-point-identifier")->second)]);
 				}
 				else if(_TrianglePoint == 1)
 				{
-					_CurrentTriangle->SetTrianglePoint<1>(_TrianglePoints[ConvertToUnsigedLong(Attributes.find("triangle-point-identifier")->second)]);
+					_CurrentTriangle->SetTrianglePoint<1>(_TrianglePoints[from_string_cast< unsigned long >(Attributes.find("triangle-point-identifier")->second)]);
 				}
 				else if(_TrianglePoint == 2)
 				{
-					_CurrentTriangle->SetTrianglePoint<2>(_TrianglePoints[ConvertToUnsigedLong(Attributes.find("triangle-point-identifier")->second)]);
+					_CurrentTriangle->SetTrianglePoint<2>(_TrianglePoints[from_string_cast< unsigned long >(Attributes.find("triangle-point-identifier")->second)]);
 				}
 				++_TrianglePoint;
 			}
@@ -387,7 +391,7 @@ public:
 		{
 			assert(_CurrentTriangle == nullptr);
 			_CurrentTriangle = new Triangle();
-			_Triangles[ConvertToUnsigedLong(Attributes.find("identifier")->second)] = _CurrentTriangle;
+			_Triangles[from_string_cast< unsigned long >(Attributes.find("identifier")->second)] = _CurrentTriangle;
 		}
 		else if(ElementName == "marker")
 		{
@@ -401,7 +405,7 @@ public:
 		}
 		else if(ElementName == "position")
 		{
-			_MarkerDescriptions[_CurrentMarker].Position = Vector3f::CreateFromComponents(ConvertToFloat(Attributes.find("x")->second), ConvertToFloat(Attributes.find("y")->second), ConvertToFloat(Attributes.find("z")->second));
+			_MarkerDescriptions[_CurrentMarker].Position = Vector3f::CreateFromComponents(from_string_cast< float >(Attributes.find("x")->second), from_string_cast< float >(Attributes.find("y")->second), from_string_cast< float >(Attributes.find("z")->second));
 		}
 	}
 	
@@ -462,31 +466,6 @@ public:
 	const std::vector< MarkerDescription > & GetMarkerDescriptions(void) const
 	{
 		return _MarkerDescriptions;
-	}
-protected:
-	unsigned long ConvertToUnsigedLong(const std::string & Value)
-	{
-		std::istringstream InputStringStream(Value);
-		unsigned long Result;
-		
-		InputStringStream >> Result;
-		
-		return Result;
-	}
-	
-	float ConvertToFloat(const std::string & Value)
-	{
-		std::istringstream InputStringStream(Value);
-		float Result;
-		
-		InputStringStream >> Result;
-		
-		return Result;
-	}
-	
-	bool ConvertToBool(const std::string & Value)
-	{
-		return Value == "true";
 	}
 private:
 	bool _InMesh;
@@ -855,18 +834,18 @@ public:
 		{
 			LightDescription LightDescription;
 			
-			LightDescription.m_Position = Vector3f::CreateFromComponents(ConvertToFloat(Attributes.find("position-x")->second), ConvertToFloat(Attributes.find("position-y")->second), ConvertToFloat(Attributes.find("position-z")->second));
-			LightDescription.m_DiffuseColor = Vector4f(ConvertToFloat(Attributes.find("color-red")->second), ConvertToFloat(Attributes.find("color-green")->second), ConvertToFloat(Attributes.find("color-blue")->second), ConvertToFloat(Attributes.find("color-alpha")->second));
-			LightDescription.m_bEnabled = ConvertToBool(Attributes.find("enabled")->second);
+			LightDescription.m_Position = Vector3f::CreateFromComponents(from_string_cast< float >(Attributes.find("position-x")->second), from_string_cast< float >(Attributes.find("position-y")->second), from_string_cast< float >(Attributes.find("position-z")->second));
+			LightDescription.m_DiffuseColor = Vector4f(from_string_cast< float >(Attributes.find("color-red")->second), from_string_cast< float >(Attributes.find("color-green")->second), from_string_cast< float >(Attributes.find("color-blue")->second), from_string_cast< float >(Attributes.find("color-alpha")->second));
+			LightDescription.m_bEnabled = from_string_cast< bool >(Attributes.find("enabled")->second);
 			_LightDescriptions.push_back(LightDescription);
 		}
 		else if(sElementName == "camera")
 		{
 			CameraDescription CameraDescription;
 			
-			CameraDescription.Position = Vector3f::CreateFromComponents(ConvertToFloat(Attributes.find("position-x")->second), ConvertToFloat(Attributes.find("position-y")->second), ConvertToFloat(Attributes.find("position-z")->second));
-			CameraDescription.Orientation = Quaternion(ConvertToFloat(Attributes.find("orientation-w")->second), ConvertToFloat(Attributes.find("orientation-x")->second), ConvertToFloat(Attributes.find("orientation-y")->second), ConvertToFloat(Attributes.find("orientation-z")->second));
-			CameraDescription.FieldOfViewY = ConvertToFloat(Attributes.find("field-of-view")->second);
+			CameraDescription.Position = Vector3f::CreateFromComponents(from_string_cast< float >(Attributes.find("position-x")->second), from_string_cast< float >(Attributes.find("position-y")->second), from_string_cast< float >(Attributes.find("position-z")->second));
+			CameraDescription.Orientation = Quaternion(from_string_cast< float >(Attributes.find("orientation-w")->second), from_string_cast< float >(Attributes.find("orientation-x")->second), from_string_cast< float >(Attributes.find("orientation-y")->second), from_string_cast< float >(Attributes.find("orientation-z")->second));
+			CameraDescription.FieldOfViewY = from_string_cast< float >(Attributes.find("field-of-view")->second);
 			_CameraDescriptions.push_back(CameraDescription);
 		}
 		else
