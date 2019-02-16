@@ -6,6 +6,7 @@
 #include <GL/glx.h>
 
 #include <algorithm>
+#include <experimental/optional>
 #include <iostream>
 #include <fstream>
 #include <map>
@@ -283,13 +284,21 @@ public:
 	}
 	
 	MarkerDescription(Marker * Marker) :
-		Identifier(Marker->GetIdentifier()),
-		Position(Marker->GetPosition())
+		Identifier(Marker->GetIdentifier())
 	{
+		if(Marker->HasOrientation() == true)
+		{
+			Orientation = Marker->GetOrientation();
+		}
+		if(Marker->HasPosition() == true)
+		{
+			Position = Marker->GetPosition();
+		}
 	}
 	
 	std::string Identifier;
-	Vector3f Position;
+	std::experimental::optional< Quaternion > Orientation;
+	std::experimental::optional< Vector3f > Position;
 };
 
 MarkerDescription marker(Marker * Marker)
@@ -301,11 +310,23 @@ XMLStream & operator<<(XMLStream & XMLStream, const MarkerDescription & MarkerDe
 {
 	XMLStream << element << "marker";
 	XMLStream << attribute << "identifier" << value << MarkerDescription.Identifier;
-	XMLStream << element << "position";
-	XMLStream << attribute << "x" << value << MarkerDescription.Position[0];
-	XMLStream << attribute << "y" << value << MarkerDescription.Position[1];
-	XMLStream << attribute << "z" << value << MarkerDescription.Position[2];
-	XMLStream << end;
+	if(MarkerDescription.Position)
+	{
+		XMLStream << element << "position";
+		XMLStream << attribute << "x" << value << MarkerDescription.Position.value()[0];
+		XMLStream << attribute << "y" << value << MarkerDescription.Position.value()[1];
+		XMLStream << attribute << "z" << value << MarkerDescription.Position.value()[2];
+		XMLStream << end;
+	}
+	if(MarkerDescription.Orientation)
+	{
+		XMLStream << element << "orientation";
+		XMLStream << attribute << "w" << value << MarkerDescription.Orientation.value()[0];
+		XMLStream << attribute << "x" << value << MarkerDescription.Orientation.value()[1];
+		XMLStream << attribute << "y" << value << MarkerDescription.Orientation.value()[2];
+		XMLStream << attribute << "z" << value << MarkerDescription.Orientation.value()[3];
+		XMLStream << end;
+	}
 	
 	return XMLStream;
 }
@@ -403,8 +424,21 @@ public:
 			MarkerDescription.Identifier = Attributes.find("identifier")->second;
 			_MarkerDescriptions.push_back(MarkerDescription);
 		}
+		else if(ElementName == "orientation")
+		{
+			assert(_CurrentMarker != -1);
+			assert(Attributes.find("w") != Attributes.end());
+			assert(Attributes.find("x") != Attributes.end());
+			assert(Attributes.find("y") != Attributes.end());
+			assert(Attributes.find("z") != Attributes.end());
+			_MarkerDescriptions[_CurrentMarker].Orientation = Quaternion(from_string_cast< float >(Attributes.find("w")->second), from_string_cast< float >(Attributes.find("x")->second), from_string_cast< float >(Attributes.find("y")->second), from_string_cast< float >(Attributes.find("z")->second));
+		}
 		else if(ElementName == "position")
 		{
+			assert(_CurrentMarker != -1);
+			assert(Attributes.find("x") != Attributes.end());
+			assert(Attributes.find("y") != Attributes.end());
+			assert(Attributes.find("z") != Attributes.end());
 			_MarkerDescriptions[_CurrentMarker].Position = Vector3f::CreateFromComponents(from_string_cast< float >(Attributes.find("x")->second), from_string_cast< float >(Attributes.find("y")->second), from_string_cast< float >(Attributes.find("z")->second));
 		}
 	}
@@ -1585,9 +1619,11 @@ void vDisplayModel(void)
 	}
 	if(g_SelectedMarker != nullptr)
 	{
+		assert(g_SelectedMarker->HasPosition() == true);
 		glDisable(GL_DEPTH_TEST);
 		glPushMatrix();
 		glTranslatef(g_SelectedMarker->GetPosition()[0], g_SelectedMarker->GetPosition()[1], g_SelectedMarker->GetPosition()[2]);
+		glPushMatrix();
 		glMultMatrixf(Matrix4f::CreateRotation(g_CurrentCamera->GetOrientation()).GetPointer());
 		
 		auto Scale(2.0f * (g_SelectedMarker->GetPosition() - g_CurrentCamera->GetPosition()).Length() * tan(g_CurrentCamera->GetFieldOfViewY() / 2.0f));
@@ -1614,6 +1650,18 @@ void vDisplayModel(void)
 		glVertex2f(-0.01f, -0.01f);
 		glVertex2f(-0.01f, -0.005f);
 		glEnd();
+		glPopMatrix();
+		if(g_SelectedMarker->HasOrientation() == true)
+		{
+			glPushMatrix();
+			glMultMatrixf(Matrix4f::CreateRotation(g_SelectedMarker->GetOrientation()).GetPointer());
+			glColor3f(1.0f, 0.0f, 1.0f);
+			glBegin(GL_LINE_STRIP);
+			glVertex3f(0.0f, 0.0f, 0.0f);
+			glVertex3f(1.0f, 0.0f, 0.0f);
+			glEnd();
+			glPopMatrix();
+		}
 		glPopMatrix();
 		glEnable(GL_DEPTH_TEST);
 	}
@@ -2719,7 +2767,14 @@ void Import(const MarkerDescription & MarkerDescription)
 	auto NewMarker{new Marker{}};
 	
 	NewMarker->SetIdentifier(MarkerDescription.Identifier);
-	NewMarker->SetPosition(MarkerDescription.Position);
+	if(MarkerDescription.Orientation)
+	{
+		NewMarker->SetOrientation(MarkerDescription.Orientation.value());
+	}
+	if(MarkerDescription.Position)
+	{
+		NewMarker->SetPosition(MarkerDescription.Position.value());
+	}
 	g_Markers.push_back(NewMarker);
 }
 
