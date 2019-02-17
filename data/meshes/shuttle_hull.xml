@@ -772,6 +772,7 @@
 		<orientation w="1" x="0" y="0" z="0"/>
 	</marker>
 	<marker identifier="exhaust">
+		<length value="0.5"/>
 		<position x="-3" y="0" z="0"/>
 	</marker>
 </mesh>

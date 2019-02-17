@@ -687,14 +687,20 @@ static void ReadMesh(Arxx::Reference & Reference)
 	for(auto MarkerIndex = 0ul; MarkerIndex < MarkerCount; ++MarkerIndex)
 	{
 		std::string MarkerIdentifier;
+		bool MarkerLengthValid;
+		float MarkerLength;
 		bool MarkerPositionValid;
 		Vector3f MarkerPosition;
 		bool MarkerOrientationValid;
 		Quaternion MarkerOrientation;
 		
-		Reader >> MarkerIdentifier >> MarkerPositionValid >> MarkerPosition >> MarkerOrientationValid >> MarkerOrientation;
+		Reader >> MarkerIdentifier >> MarkerLengthValid >> MarkerLength >> MarkerPositionValid >> MarkerPosition >> MarkerOrientationValid >> MarkerOrientation;
 		
 		NewMesh->AddMarker(MarkerIdentifier);
+		if(MarkerLengthValid == true)
+		{
+			NewMesh->SetMarkerLength(MarkerIdentifier, MarkerLength);
+		}
 		if(MarkerPositionValid == true)
 		{
 			NewMesh->SetMarkerPosition(MarkerIdentifier, MarkerPosition);
@@ -987,10 +993,9 @@ static void ReadShipClass(Arxx::Reference & Reference, BlueprintManager * Bluepr
 	float Hull;
 	std::string ExhaustMarkerPartIdentifier;
 	std::string ExhaustMarkerIdentifier;
-	float ExhaustRadius;
 	std::uint32_t SlotCount;
 	
-	Reader >> Name >> Description >> BasePrice >> SpaceRequirement >> VisualizationPrototype >> ForwardThrust >> TurnSpeed >> MaximumSpeed >> MaximumAvailableSpace >> FuelCapacity >> JumpFuel >> ForwardFuel >> TurnFuel >> Hull >> ExhaustMarkerPartIdentifier >> ExhaustMarkerIdentifier >> ExhaustRadius >> SlotCount;
+	Reader >> Name >> Description >> BasePrice >> SpaceRequirement >> VisualizationPrototype >> ForwardThrust >> TurnSpeed >> MaximumSpeed >> MaximumAvailableSpace >> FuelCapacity >> JumpFuel >> ForwardFuel >> TurnFuel >> Hull >> ExhaustMarkerPartIdentifier >> ExhaustMarkerIdentifier >> SlotCount;
 	NewShipClass->AddProperty("name", Name);
 	NewShipClass->AddProperty("description", Description);
 	NewShipClass->AddProperty("base-price", BasePrice);
@@ -1008,12 +1013,25 @@ static void ReadShipClass(Arxx::Reference & Reference, BlueprintManager * Bluepr
 	
 	auto ExhaustPosition{VisualizationPrototype.GetMarkerPosition(ExhaustMarkerPartIdentifier, ExhaustMarkerIdentifier)};
 	
-	if(ExhaustPosition == nullptr)
+	if(ExhaustPosition != nullptr)
+	{
+		NewShipClass->AddProperty("exhaust-offset", *ExhaustPosition);
+	}
+	else
 	{
 		throw std::runtime_error("For the ship '" + Identifier + "', could not find a marker or its position for the exhaust position '" + ExhaustMarkerIdentifier + "' on the part '" + ExhaustMarkerPartIdentifier + "'.");
 	}
-	NewShipClass->AddProperty("exhaust-offset", *ExhaustPosition);
-	NewShipClass->AddProperty("exhaust-radius", ExhaustRadius);
+	
+	auto ExhaustRadius{VisualizationPrototype.GetMarkerLength(ExhaustMarkerPartIdentifier, ExhaustMarkerIdentifier)};
+	
+	if(ExhaustRadius != nullptr)
+	{
+		NewShipClass->AddProperty("exhaust-radius", *ExhaustRadius);
+	}
+	else
+	{
+		throw std::runtime_error("For the ship '" + Identifier + "', could not find a marker or its length for the exhaust radius '" + ExhaustMarkerIdentifier + "' on the part '" + ExhaustMarkerPartIdentifier + "'.");
+	}
 	
 	std::list< Properties > Slots;
 	
