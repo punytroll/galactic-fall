@@ -113,6 +113,7 @@
 	
 	<marker>
 		<string identifier="identifier"/>
+		<optional-float identifier="length"/>
 		<optional-vector3f identifier="position"/>
 		<optional-quaternion identifier="orientation"/>
 	</marker>
@@ -226,8 +227,7 @@
 		<float identifier="forward-fuel"/>
 		<float identifier="turn-fuel"/>
 		<float identifier="hull"/>
-		<marker-reference identifier="exhaust-position"/>
-		<float identifier="exhaust-radius"/>
+		<marker-reference identifier="exhaust"/>
 		<collection identifier="slots" element-type="slot"/>
 	</ship-class>
 	

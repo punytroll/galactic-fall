@@ -68,11 +68,10 @@
 	<forward-fuel>0.025</forward-fuel>
 	<turn-fuel>0.010</turn-fuel>
 	<hull>100</hull>
-	<exhaust-position>
+	<exhaust>
 		<part-identifier>hull</part-identifier>
 		<marker-identifier>exhaust</marker-identifier>
-	</exhaust-position>
-	<exhaust-radius>0.5</exhaust-radius>
+	</exhaust>
 	<slots>
 		<slot>
 			<identifier>backboard_gun</identifier>

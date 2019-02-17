@@ -45,6 +45,7 @@ class Marker:
 		self.identifier = None
 		self.orientation = None
 		self.position = None
+		self.length = None
 
 class Point:
 	def __init__(self):
@@ -125,20 +126,23 @@ if mesh_element.nodeType == Node.ELEMENT_NODE:
 				for marker_child_element in mesh_child_element.childNodes:
 					if marker_child_element.nodeType == Node.ELEMENT_NODE:
 						if marker_child_element.tagName == "position":
-							if marker.position == None:
-								position = Position()
-								position.x = marker_child_element.attributes.get("x").nodeValue
-								position.y = marker_child_element.attributes.get("y").nodeValue
-								position.z = marker_child_element.attributes.get("z").nodeValue
-								marker.position = position
+							assert(marker.position == None)
+							position = Position()
+							position.x = marker_child_element.attributes.get("x").nodeValue
+							position.y = marker_child_element.attributes.get("y").nodeValue
+							position.z = marker_child_element.attributes.get("z").nodeValue
+							marker.position = position
 						elif marker_child_element.tagName == "orientation":
-							if marker.orientation == None:
-								orientation = Orientation()
-								orientation.w = marker_child_element.attributes.get("w").nodeValue
-								orientation.x = marker_child_element.attributes.get("x").nodeValue
-								orientation.y = marker_child_element.attributes.get("y").nodeValue
-								orientation.z = marker_child_element.attributes.get("z").nodeValue
-								marker.orientation = orientation
+							assert(marker.orientation == None)
+							orientation = Orientation()
+							orientation.w = marker_child_element.attributes.get("w").nodeValue
+							orientation.x = marker_child_element.attributes.get("x").nodeValue
+							orientation.y = marker_child_element.attributes.get("y").nodeValue
+							orientation.z = marker_child_element.attributes.get("z").nodeValue
+							marker.orientation = orientation
+						elif marker_child_element.tagName == "length":
+							assert(marker.length == None)
+							marker.length = marker_child_element.attributes.get("value").nodeValue
 				markers.append(marker)
 	# output
 	xml_stream << element << "mesh"
@@ -163,17 +167,26 @@ if mesh_element.nodeType == Node.ELEMENT_NODE:
 	xml_stream << end
 	xml_stream << element << "markers"
 	for marker in markers:
-		xml_stream << element << "marker" << element << "identifier" << text << marker.identifier << end << element << "position"
+		xml_stream << element << "marker" << element << "identifier" << text << marker.identifier << end
+		xml_stream << element << "length"
+		if marker.length != None:
+			xml_stream << element << "valid" << text << "true" << end << element << "value" << text << marker.length << end
+		else:
+			xml_stream << element << "valid" << text << "false" << end << element << "value" << text << "0.0" << end
+		xml_stream << end
+		xml_stream << element << "position"
 		if marker.position != None:
 			xml_stream << element << "valid" << text << "true" << end << element << "value" << element << "x" << text << marker.position.x << end << element << "y" << text << marker.position.y << end << element << "z" << text << marker.position.z << end << end
 		else:
 			xml_stream << element << "valid" << text << "false" << end << element << "value" << element << "x" << text << "0.0" << end << element << "y" << text << "0.0" << end << element << "z" << text << "0.0" << end << end
-		xml_stream << end << element << "orientation"
+		xml_stream << end
+		xml_stream << element << "orientation"
 		if marker.orientation != None:
 			xml_stream << element << "valid" << text << "true" << end << element << "value" << element << "w" << text << marker.orientation.w << end << element << "x" << text << marker.orientation.x << end << element << "y" << text << marker.orientation.y << end << element << "z" << text << marker.orientation.z << end << end
 		else:
 			xml_stream << element << "valid" << text << "false" << end << element << "value" << element << "w" << text << "1.0" << end << element << "x" << text << "0.0" << end << element << "y" << text << "0.0" << end << element << "z" << text << "0.0" << end << end
-		xml_stream << end << end
+		xml_stream << end
+		xml_stream << end
 	xml_stream << end
 	xml_stream << end
 	out_file.close()
