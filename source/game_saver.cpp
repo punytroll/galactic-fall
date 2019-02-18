@@ -346,7 +346,6 @@ void GameSaver::_WriteShip(Ship * Ship)
 {
 	assert(Ship != nullptr);
 	// save maximum & capacity values
-	_XMLStream << element << "exhaust-offset" << attribute << "x" << value << Ship->GetExhaustOffset()[0] << attribute << "y" << value << Ship->GetExhaustOffset()[1] << attribute << "z" << value << Ship->GetExhaustOffset()[2] << end;
 	_XMLStream << element << "fuel-capacity" << attribute << "value" << value << Ship->GetFuelCapacity() << end;
 	_XMLStream << element << "fuel-needed-to-jump" << attribute << "value" << value << Ship->GetFuelNeededToJump() << end;
 	_XMLStream << element << "hull-capacity" << attribute << "value" << value << Ship->GetHullCapacity() << end;

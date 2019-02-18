@@ -55,7 +55,8 @@ public:
 	Storage * GetCargoHold(void);
 	const Storage * GetCargoHold(void) const;
 	Graphics::ParticleSystem * GetEngineGlowParticleSystem(void);
-	const Vector3f & GetExhaustOffset(void) const;
+	const Quaternion & GetExhaustOrientation(void) const;
+	const Vector3f & GetExhaustPosition(void) const;
 	float GetExhaustRadius(void) const;
 	Faction * GetFaction(void);
 	float GetFuel(void) const;
@@ -77,7 +78,8 @@ public:
 	// setters
 	void SetAccelerate(bool Accelerate);
 	void SetEngineGlowParticleSystem(Graphics::ParticleSystem * EngineGlowParticleSystem);
-	void SetExhaustOffset(const Vector3f & ExhaustOffset);
+	void SetExhaustOrientation(const Quaternion & ExhaustOrientation);
+	void SetExhaustPosition(const Vector3f & ExhaustPosition);
 	void SetExhaustRadius(float ExhaustRadius);
 	void SetFaction(Faction * Faction);
 	void SetFire(bool Fire);
@@ -119,8 +121,9 @@ private:
 	Storage * _CargoHold;
 	Physics::Energy::Network * _EnergyNetwork;
 	Graphics::ParticleSystem * _EngineGlowParticleSystem;
-	Vector3f m_ExhaustOffset;
-	float m_ExhaustRadius;
+	Quaternion _ExhaustOrientation;
+	Vector3f _ExhaustPosition;
+	float _ExhaustRadius;
 	Faction * _Faction;
 	Connection _FactionDestroyingConnection;
 	float m_Fuel;
@@ -163,14 +166,19 @@ inline Graphics::ParticleSystem * Ship::GetEngineGlowParticleSystem(void)
 	return _EngineGlowParticleSystem;
 }
 
-inline const Vector3f & Ship::GetExhaustOffset(void) const
+inline const Quaternion & Ship::GetExhaustOrientation(void) const
 {
-	return m_ExhaustOffset;
+	return _ExhaustOrientation;
+}
+
+inline const Vector3f & Ship::GetExhaustPosition(void) const
+{
+	return _ExhaustPosition;
 }
 
 inline float Ship::GetExhaustRadius(void) const
 {
-	return m_ExhaustRadius;
+	return _ExhaustRadius;
 }
 
 inline Faction * Ship::GetFaction(void)
@@ -263,14 +271,19 @@ inline void Ship::SetEngineGlowParticleSystem(Graphics::ParticleSystem * EngineG
 	_EngineGlowParticleSystem = EngineGlowParticleSystem;
 }
 
-inline void Ship::SetExhaustOffset(const Vector3f & ExhaustOffset)
+inline void Ship::SetExhaustOrientation(const Quaternion & ExhaustOrientation)
 {
-	m_ExhaustOffset = ExhaustOffset;
+	_ExhaustOrientation = ExhaustOrientation;
+}
+
+inline void Ship::SetExhaustPosition(const Vector3f & ExhaustPosition)
+{
+	_ExhaustPosition = ExhaustPosition;
 }
 
 inline void Ship::SetExhaustRadius(float ExhaustRadius)
 {
-	m_ExhaustRadius = ExhaustRadius;
+	_ExhaustRadius = ExhaustRadius;
 }
 
 inline void Ship::SetFuelCapacity(float FuelCapacity)

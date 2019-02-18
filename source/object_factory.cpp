@@ -203,8 +203,6 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		auto NewShip{new Ship{}};
 		
 		// set up type specific things
-		NewShip->SetExhaustOffset(ShipBlueprint->GetPropertyAsVector3f("exhaust-offset"));
-		NewShip->SetExhaustRadius(ShipBlueprint->GetPropertyAsFloat("exhaust-radius"));
 		NewShip->SetFuelCapacity(ShipBlueprint->GetPropertyAsFloat("fuel-capacity"));
 		NewShip->SetFuelNeededToAccelerate(ShipBlueprint->GetPropertyAsFloat("forward-fuel"));
 		NewShip->SetFuelNeededToJump(ShipBlueprint->GetPropertyAsFloat("jump-fuel"));
@@ -217,9 +215,27 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		assert(g_Galaxy != nullptr);
 		NewShip->SetFaction(g_Galaxy->GetFaction("neutral"));
 		
+		auto & VisualizationPrototype{ShipBlueprint->GetPropertyAsVisualizationPrototype("visualization-prototype")};
+		auto & ExhaustMarkerPartIdentifier{ShipBlueprint->GetPropertyAsString("exhaust-marker-part-identifier")};
+		auto & ExhaustMarkerIdentifier{ShipBlueprint->GetPropertyAsString("exhaust-marker-identifier")};
+		auto ExhaustRadius{VisualizationPrototype.GetMarkerLength(ExhaustMarkerPartIdentifier, ExhaustMarkerIdentifier)};
+		
+		assert(ExhaustRadius != nullptr);
+		NewShip->SetExhaustRadius(*ExhaustRadius);
+		
+		auto ExhaustPosition{VisualizationPrototype.GetMarkerPosition(ExhaustMarkerPartIdentifier, ExhaustMarkerIdentifier)};
+		
+		assert(ExhaustPosition != nullptr);
+		NewShip->SetExhaustPosition(*ExhaustPosition);
+		
+		auto ExhaustOrientation{VisualizationPrototype.GetMarkerOrientation(ExhaustMarkerPartIdentifier, ExhaustMarkerIdentifier)};
+		
+		assert(ExhaustOrientation != nullptr);
+		NewShip->SetExhaustOrientation(*ExhaustOrientation);
+		
 		auto EngineGlowParticleSystem(CreateParticleSystem("engine_glow"));
 		
-		EngineGlowParticleSystem->SetPosition(ShipBlueprint->GetPropertyAsVector3f("exhaust-offset"));
+		EngineGlowParticleSystem->SetPosition(*ExhaustPosition);
 		NewShip->SetEngineGlowParticleSystem(EngineGlowParticleSystem);
 		// set up aspects
 		// set up name aspect
@@ -239,11 +255,11 @@ Object * ObjectFactory::Create(const std::string & TypeIdentifier, const std::st
 		}
 		// set up physical aspect
 		assert(NewShip->GetAspectPhysical() != nullptr);
-		NewShip->GetAspectPhysical()->SetRadialSize(ShipBlueprint->GetPropertyAsVisualizationPrototype("visualization-prototype").GetModel()->GetRadialSize());
+		NewShip->GetAspectPhysical()->SetRadialSize(VisualizationPrototype.GetModel()->GetRadialSize());
 		NewShip->GetAspectPhysical()->SetSpaceRequirement(ShipBlueprint->GetPropertyAsUnsignedInteger32Bit("space-requirement"));
 		// set up visualization aspect
 		assert(NewShip->GetAspectVisualization() != nullptr);
-		NewShip->GetAspectVisualization()->SetVisualizationPrototype(ShipBlueprint->GetPropertyAsVisualizationPrototype("visualization-prototype"));
+		NewShip->GetAspectVisualization()->SetVisualizationPrototype(VisualizationPrototype);
 		
 		auto & PartStyles{NewShip->GetAspectVisualization()->GetVisualizationPrototype()->GetPartStyles()};
 		

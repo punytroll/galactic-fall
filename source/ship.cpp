@@ -59,7 +59,9 @@ Ship::Ship(void) :
 	_CargoHold(nullptr),
 	_EnergyNetwork{new Physics::Energy::Network{}},
 	_EngineGlowParticleSystem(0),
-	m_ExhaustRadius(0.0f),
+	_ExhaustOrientation{Quaternion::CreateIdentity()},
+	_ExhaustPosition{Vector3f::CreateZero()},
+	_ExhaustRadius(0.0f),
 	_Faction(nullptr),
 	m_Fuel(0.0f),
 	m_FuelCapacity(0.0f),
@@ -317,7 +319,7 @@ bool Ship::Update(float Seconds)
 					m_Velocity *= GetMaximumSpeed();
 				}
 				SetFuel(GetFuel() - FuelConsumption);
-				assert(_EngineGlowParticleSystem != 0);
+				assert(_EngineGlowParticleSystem != nullptr);
 				for(int I = 0; I < 4; ++I)
 				{
 					Graphics::ParticleSystem::Particle Particle;
@@ -325,20 +327,13 @@ bool Ship::Update(float Seconds)
 					Particle._TimeOfDeath = GameTime::Get() + GetRandomFloat(0.5f, 0.9f);
 					Particle._Color = Graphics::ColorRGBO(GetRandomFloat(0.8f, 1.0f), GetRandomFloat(0.7f, 0.8f), 0.5f, 0.08f);
 					
-					float X;
-					float Y;
-					float VelocityFactor;
+					auto Distance{sqrt(GetRandomUniform())};
+					auto Theta{GetRandomRadians()};
+					auto Velocity{sqrt(1.0f - Distance)};
 					
-					do
-					{
-						X = GetRandomFloat(-1.0f, 1.0f);
-						Y = GetRandomFloat(-1.0f, 1.0f);
-					} while(X * X + Y * Y >= 1.0f);
-					VelocityFactor = 1 - X * X - Y * Y;
-					X *= GetExhaustRadius();
-					Y *= GetExhaustRadius();
-					Particle._Position = Vector3f::CreateFromComponents(0.0f, X, Y);
-					Particle._Velocity = Vector3f::CreateFromComponents(GetRandomFloat(-0.3f * VelocityFactor, 0.0f), 0.0f, 0.0f);
+					Distance *= GetExhaustRadius();
+					Particle._Position = Vector3f::CreateFromComponents(0.0f, Distance * cos(Theta), Distance * sin(Theta));
+					Particle._Velocity = Vector3f::CreateFromComponents(Velocity, 0.0f, 0.0f).Rotate(_ExhaustOrientation);
 					Particle._Size = 0.2f;
 					_EngineGlowParticleSystem->AddParticle(Particle);
 				}

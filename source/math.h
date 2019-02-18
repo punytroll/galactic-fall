@@ -115,6 +115,11 @@ inline float GetRandomFloat(float LowestValue, float HighestValue)
 	return ((HighestValue - LowestValue) * GetRandomUniform()) + LowestValue;
 }
 
+inline float GetRandomRadians(void)
+{
+	return GetRandomUniform() * 2.0f * M_PI;
+}
+
 inline bool GetRandomBoolean(float Probability = 0.5f)
 {
 	return GetRandomUniform() <= Probability;

@@ -1010,28 +1010,8 @@ static void ReadShipClass(Arxx::Reference & Reference, BlueprintManager * Bluepr
 	NewShipClass->AddProperty("forward-fuel", ForwardFuel);
 	NewShipClass->AddProperty("turn-fuel", TurnFuel);
 	NewShipClass->AddProperty("hull", Hull);
-	
-	auto ExhaustPosition{VisualizationPrototype.GetMarkerPosition(ExhaustMarkerPartIdentifier, ExhaustMarkerIdentifier)};
-	
-	if(ExhaustPosition != nullptr)
-	{
-		NewShipClass->AddProperty("exhaust-offset", *ExhaustPosition);
-	}
-	else
-	{
-		throw std::runtime_error("For the ship '" + Identifier + "', could not find a marker or its position for the exhaust position '" + ExhaustMarkerIdentifier + "' on the part '" + ExhaustMarkerPartIdentifier + "'.");
-	}
-	
-	auto ExhaustRadius{VisualizationPrototype.GetMarkerLength(ExhaustMarkerPartIdentifier, ExhaustMarkerIdentifier)};
-	
-	if(ExhaustRadius != nullptr)
-	{
-		NewShipClass->AddProperty("exhaust-radius", *ExhaustRadius);
-	}
-	else
-	{
-		throw std::runtime_error("For the ship '" + Identifier + "', could not find a marker or its length for the exhaust radius '" + ExhaustMarkerIdentifier + "' on the part '" + ExhaustMarkerPartIdentifier + "'.");
-	}
+	NewShipClass->AddProperty("exhaust-marker-part-identifier", ExhaustMarkerPartIdentifier);
+	NewShipClass->AddProperty("exhaust-marker-identifier", ExhaustMarkerIdentifier);
 	
 	std::list< Properties > Slots;
 	
