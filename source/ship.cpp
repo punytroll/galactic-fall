@@ -17,12 +17,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 **/
 
-#include "battery.h"
 #include "character.h"
 #include "commodity.h"
 #include "faction.h"
 #include "game_time.h"
-#include "generator.h"
 #include "globals.h"
 #include "graphics/engine.h"
 #include "graphics/node.h"
@@ -57,7 +55,6 @@ Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSyst
 
 Ship::Ship(void) :
 	m_Accelerate(false),
-	_Battery(nullptr),
 	_CargoHold(nullptr),
 	_EnergyNetwork{new Physics::Energy::Network{}},
 	_EngineGlowParticleSystem(0),
@@ -71,7 +68,6 @@ Ship::Ship(void) :
 	m_FuelNeededToAccelerate(0.0f),
 	m_FuelNeededToJump(0.0f),
 	m_FuelNeededToTurn(0.0f),
-	_Generator(nullptr),
 	m_Hull(0.0f),
 	m_HullCapacity(0.0f),
 	m_Jettison(false),
@@ -105,9 +101,7 @@ Ship::Ship(void) :
 
 Ship::~Ship(void)
 {
-	assert(_Battery == nullptr);
 	assert(_CargoHold == nullptr);
-	assert(_Generator == nullptr);
 	if(_Target != nullptr)
 	{
 		_Target->DisconnectDestroyingCallback(_TargetDestroyingConnection);
@@ -494,25 +488,7 @@ void Ship::SetTarget(Object * Target)
 void Ship::OnAdded(Object * Content)
 {
 	assert(Content != nullptr);
-	if(Content->GetTypeIdentifier() == "battery")
-	{
-		assert(_Battery == nullptr);
-		
-		auto TheBattery(dynamic_cast< Battery * >(Content));
-		
-		assert(TheBattery != nullptr);
-		_Battery = TheBattery;
-	}
-	else if(Content->GetTypeIdentifier() == "generator")
-	{
-		assert(_Generator == nullptr);
-		
-		auto TheGenerator(dynamic_cast< Generator * >(Content));
-		
-		assert(TheGenerator != nullptr);
-		_Generator = TheGenerator;
-	}
-	else if(Content->GetTypeIdentifier() == "storage")
+	if(Content->GetTypeIdentifier() == "storage")
 	{
 		assert(_CargoHold == nullptr);
 		
@@ -534,17 +510,7 @@ void Ship::OnAdded(Object * Content)
 void Ship::OnRemoved(Object * Content)
 {
 	assert(Content != nullptr);
-	if(Content->GetTypeIdentifier() == "battery")
-	{
-		assert(_Battery == Content);
-		_Battery = nullptr;
-	}
-	else if(Content->GetTypeIdentifier() == "generator")
-	{
-		assert(_Generator == Content);
-		_Generator = nullptr;
-	}
-	else if(Content->GetTypeIdentifier() == "storage")
+	if(Content->GetTypeIdentifier() == "storage")
 	{
 		assert(_CargoHold == Content);
 		_CargoHold = nullptr;

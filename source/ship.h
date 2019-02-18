@@ -24,9 +24,7 @@
 
 #include "object.h"
 
-class Battery;
 class Faction;
-class Generator;
 class Slot;
 class SlotClass;
 class Storage;
@@ -64,7 +62,6 @@ public:
 	float GetFuelNeededToAccelerate(void) const;
 	float GetFuelNeededToJump(void) const;
 	float GetFuelNeededToTurn(void) const;
-	Generator * GetGenerator(void);
 	float GetHull(void) const;
 	float GetHullCapacity(void) const;
 	System * GetLinkedSystemTarget(void);
@@ -117,7 +114,6 @@ private:
 	void _OnFactionDestroying(void);
 	// members
 	bool m_Accelerate;
-	Battery * _Battery;
 	Storage * _CargoHold;
 	Physics::Energy::Network * _EnergyNetwork;
 	Graphics::ParticleSystem * _EngineGlowParticleSystem;
@@ -132,7 +128,6 @@ private:
 	float m_FuelNeededToAccelerate;
 	float m_FuelNeededToJump;
 	float m_FuelNeededToTurn;
-	Generator * _Generator;
 	float m_Hull;
 	float m_HullCapacity;
 	bool m_Jettison;
@@ -210,11 +205,6 @@ inline float Ship::GetFuelNeededToJump(void) const
 inline float Ship::GetFuelNeededToTurn(void) const
 {
 	return m_FuelNeededToTurn;
-}
-
-inline Generator * Ship::GetGenerator(void)
-{
-	return _Generator;
 }
 
 inline float Ship::GetHull(void) const
