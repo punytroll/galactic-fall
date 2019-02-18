@@ -15,6 +15,13 @@ public:
 		return _Identifier;
 	}
 	
+	float GetLength(void) const
+	{
+		assert(_Length);
+		
+		return _Length.value();
+	}
+	
 	const Quaternion & GetOrientation(void) const
 	{
 		assert(_Orientation);
@@ -27,6 +34,11 @@ public:
 		assert(_Position);
 		
 		return _Position.value();
+	}
+	
+	bool HasLength(void) const
+	{
+		return (bool)_Length;
 	}
 	
 	bool HasOrientation(void) const
@@ -44,6 +56,11 @@ public:
 		_Identifier = Identifier;
 	}
 	
+	void SetLength(float Length)
+	{
+		_Length = Length;
+	}
+	
 	void SetOrientation(const Quaternion & Orientation)
 	{
 		_Orientation = Orientation;
@@ -55,6 +72,7 @@ public:
 	}
 private:
 	std::string _Identifier;
+	std::experimental::optional< float > _Length;
 	std::experimental::optional< Quaternion > _Orientation;
 	std::experimental::optional< Vector3f > _Position;
 };

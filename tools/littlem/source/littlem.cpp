@@ -276,55 +276,31 @@ bool g_CullPoints(false);
 #include "triangle.h"
 #include "triangle_point.h"
 
-class MarkerDescription
-{
-public:
-	MarkerDescription(void)
-	{
-	}
-	
-	MarkerDescription(Marker * Marker) :
-		Identifier(Marker->GetIdentifier())
-	{
-		if(Marker->HasOrientation() == true)
-		{
-			Orientation = Marker->GetOrientation();
-		}
-		if(Marker->HasPosition() == true)
-		{
-			Position = Marker->GetPosition();
-		}
-	}
-	
-	std::string Identifier;
-	std::experimental::optional< Quaternion > Orientation;
-	std::experimental::optional< Vector3f > Position;
-};
-
-MarkerDescription marker(Marker * Marker)
-{
-	return MarkerDescription(Marker);
-}
-
-XMLStream & operator<<(XMLStream & XMLStream, const MarkerDescription & MarkerDescription)
+XMLStream & operator<<(XMLStream & XMLStream, const Marker & Marker)
 {
 	XMLStream << element << "marker";
-	XMLStream << attribute << "identifier" << value << MarkerDescription.Identifier;
-	if(MarkerDescription.Position)
+	XMLStream << attribute << "identifier" << value << Marker.GetIdentifier();
+	if(Marker.HasLength() == true)
 	{
-		XMLStream << element << "position";
-		XMLStream << attribute << "x" << value << MarkerDescription.Position.value()[0];
-		XMLStream << attribute << "y" << value << MarkerDescription.Position.value()[1];
-		XMLStream << attribute << "z" << value << MarkerDescription.Position.value()[2];
+		XMLStream << element << "length";
+		XMLStream << attribute << "value" << value << Marker.GetLength();
 		XMLStream << end;
 	}
-	if(MarkerDescription.Orientation)
+	if(Marker.HasOrientation() == true)
 	{
 		XMLStream << element << "orientation";
-		XMLStream << attribute << "w" << value << MarkerDescription.Orientation.value()[0];
-		XMLStream << attribute << "x" << value << MarkerDescription.Orientation.value()[1];
-		XMLStream << attribute << "y" << value << MarkerDescription.Orientation.value()[2];
-		XMLStream << attribute << "z" << value << MarkerDescription.Orientation.value()[3];
+		XMLStream << attribute << "w" << value << Marker.GetOrientation()[0];
+		XMLStream << attribute << "x" << value << Marker.GetOrientation()[1];
+		XMLStream << attribute << "y" << value << Marker.GetOrientation()[2];
+		XMLStream << attribute << "z" << value << Marker.GetOrientation()[3];
+		XMLStream << end;
+	}
+	if(Marker.HasPosition() == true)
+	{
+		XMLStream << element << "position";
+		XMLStream << attribute << "x" << value << Marker.GetPosition()[0];
+		XMLStream << attribute << "y" << value << Marker.GetPosition()[1];
+		XMLStream << attribute << "z" << value << Marker.GetPosition()[2];
 		XMLStream << end;
 	}
 	
@@ -337,7 +313,7 @@ public:
 	MeshReader(std::istream & InputStream) :
 		XMLParser(InputStream),
 		_InMesh(false),
-		_CurrentMarker(-1),
+		_CurrentMarker(nullptr),
 		_CurrentTrianglePoint(nullptr),
 		_CurrentTriangle(nullptr),
 		_TrianglePoint(0)
@@ -416,30 +392,34 @@ public:
 		}
 		else if(ElementName == "marker")
 		{
-			assert(_CurrentMarker == -1);
-			_CurrentMarker = _MarkerDescriptions.size();
-			
-			MarkerDescription MarkerDescription;
-			
-			MarkerDescription.Identifier = Attributes.find("identifier")->second;
-			_MarkerDescriptions.push_back(MarkerDescription);
+			assert(_CurrentMarker == nullptr);
+			_CurrentMarker = new Marker{};
+			assert(Attributes.find("identifier") != Attributes.end());
+			_CurrentMarker->SetIdentifier(Attributes.find("identifier")->second);
+			_Markers.push_back(_CurrentMarker);
 		}
 		else if(ElementName == "orientation")
 		{
-			assert(_CurrentMarker != -1);
+			assert(_CurrentMarker != nullptr);
 			assert(Attributes.find("w") != Attributes.end());
 			assert(Attributes.find("x") != Attributes.end());
 			assert(Attributes.find("y") != Attributes.end());
 			assert(Attributes.find("z") != Attributes.end());
-			_MarkerDescriptions[_CurrentMarker].Orientation = Quaternion(from_string_cast< float >(Attributes.find("w")->second), from_string_cast< float >(Attributes.find("x")->second), from_string_cast< float >(Attributes.find("y")->second), from_string_cast< float >(Attributes.find("z")->second));
+			_CurrentMarker->SetOrientation(Quaternion{from_string_cast< float >(Attributes.find("w")->second), from_string_cast< float >(Attributes.find("x")->second), from_string_cast< float >(Attributes.find("y")->second), from_string_cast< float >(Attributes.find("z")->second)});
 		}
 		else if(ElementName == "position")
 		{
-			assert(_CurrentMarker != -1);
+			assert(_CurrentMarker != nullptr);
 			assert(Attributes.find("x") != Attributes.end());
 			assert(Attributes.find("y") != Attributes.end());
 			assert(Attributes.find("z") != Attributes.end());
-			_MarkerDescriptions[_CurrentMarker].Position = Vector3f::CreateFromComponents(from_string_cast< float >(Attributes.find("x")->second), from_string_cast< float >(Attributes.find("y")->second), from_string_cast< float >(Attributes.find("z")->second));
+			_CurrentMarker->SetPosition(Vector3f::CreateFromComponents(from_string_cast< float >(Attributes.find("x")->second), from_string_cast< float >(Attributes.find("y")->second), from_string_cast< float >(Attributes.find("z")->second)));
+		}
+		else if(ElementName == "length")
+		{
+			assert(_CurrentMarker != nullptr);
+			assert(Attributes.find("value") != Attributes.end());
+			_CurrentMarker->SetLength(from_string_cast< float >(Attributes.find("value")->second));
 		}
 	}
 	
@@ -452,7 +432,7 @@ public:
 			std::cout << "Read " << _Points.size() << " points from mesh." << std::endl;
 			std::cout << "Read " << _TrianglePoints.size() << " triangle points from mesh." << std::endl;
 			std::cout << "Read " << _Triangles.size() << " triangles from mesh." << std::endl;
-			std::cout << "Read " << _MarkerDescriptions.size() << " markers from mesh." << std::endl;
+			std::cout << "Read " << _Markers.size() << " markers from mesh." << std::endl;
 		}
 		else if(ElementName == "triangle")
 		{
@@ -465,7 +445,7 @@ public:
 		}
 		else if(ElementName == "marker")
 		{
-			_CurrentMarker = -1;
+			_CurrentMarker = nullptr;
 		}
 	}
 	
@@ -497,20 +477,20 @@ public:
 		return Result;
 	}
 	
-	const std::vector< MarkerDescription > & GetMarkerDescriptions(void) const
+	std::vector< Marker * > & GetMarkers(void)
 	{
-		return _MarkerDescriptions;
+		return _Markers;
 	}
 private:
 	bool _InMesh;
-	int _CurrentMarker;
+	Marker * _CurrentMarker;
 	TrianglePoint * _CurrentTrianglePoint;
 	Triangle * _CurrentTriangle;
 	int _TrianglePoint;
 	std::map< unsigned long, Point * > _Points;
 	std::map< unsigned long, Triangle * > _Triangles;
 	std::map< unsigned long, TrianglePoint * > _TrianglePoints;
-	std::vector< MarkerDescription > _MarkerDescriptions;
+	std::vector< Marker * > _Markers;
 };
 
 class Light;
@@ -2754,7 +2734,7 @@ XMLStream & mesh(XMLStream & XMLStream)
 	
 	for(auto Marker : g_Markers)
 	{
-		XMLStream << marker(Marker) << end;
+		XMLStream << *Marker << end;
 		NumberOfMarkers++;
 	}
 	std::cout << "Written " << NumberOfMarkers << " markers to the stream." << std::endl;
@@ -2762,20 +2742,9 @@ XMLStream & mesh(XMLStream & XMLStream)
 	return XMLStream;
 }
 
-void Import(const MarkerDescription & MarkerDescription)
+void Import(Marker * Marker)
 {
-	auto NewMarker{new Marker{}};
-	
-	NewMarker->SetIdentifier(MarkerDescription.Identifier);
-	if(MarkerDescription.Orientation)
-	{
-		NewMarker->SetOrientation(MarkerDescription.Orientation.value());
-	}
-	if(MarkerDescription.Position)
-	{
-		NewMarker->SetPosition(MarkerDescription.Position.value());
-	}
-	g_Markers.push_back(NewMarker);
+	g_Markers.push_back(Marker);
 }
 
 void ImportMesh(const std::string & FilePath)
@@ -2792,9 +2761,9 @@ void ImportMesh(const std::string & FilePath)
 	
 	copy(Points.begin(), Points.end(), back_inserter(g_Points));
 	copy(Triangles.begin(), Triangles.end(), back_inserter(g_Triangles));
-	for(auto MarkerDescription : MeshReader.GetMarkerDescriptions())
+	for(auto Marker : MeshReader.GetMarkers())
 	{
-		Import(MarkerDescription);
+		Import(Marker);
 	}
 }
 
@@ -3059,9 +3028,9 @@ bool AcceptKeyInModelView(int KeyCode, bool IsDown)
 						NewCamera->SetFieldOfViewY(CameraDescription.FieldOfViewY);
 						g_Cameras.push_back(NewCamera);
 					}
-					for(auto & MarkerDescription : SceneReader.GetMarkerDescriptions())
+					for(auto & Marker : SceneReader.GetMarkers())
 					{
-						Import(MarkerDescription);
+						Import(Marker);
 					}
 					if(g_Cameras.size() > 0)
 					{
