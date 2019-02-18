@@ -113,7 +113,7 @@ void Graphics::ParticleSystemNode::Draw(Graphics::RenderContext * RenderContext)
 			Indices[IndexIndex++] = ParticleIndex * 4 + 0;
 			Colors[ParticleIndex * 16 + 4] = Particle._Color.GetRed();
 			Colors[ParticleIndex * 16 + 5] = Particle._Color.GetGreen();
-			Colors[ParticleIndex * 16 + 6] = Particle._Color.GetGreen();
+			Colors[ParticleIndex * 16 + 6] = Particle._Color.GetBlue();
 			Colors[ParticleIndex * 16 + 7] = Particle._Color.GetOpacity();
 			Vertices[ParticleIndex * 12 + 3] = Particle._Position[0] + Particle._Size;
 			Vertices[ParticleIndex * 12 + 4] = Particle._Position[1] - Particle._Size;
@@ -123,7 +123,7 @@ void Graphics::ParticleSystemNode::Draw(Graphics::RenderContext * RenderContext)
 			Indices[IndexIndex++] = ParticleIndex * 4 + 1;
 			Colors[ParticleIndex * 16 + 8] = Particle._Color.GetRed();
 			Colors[ParticleIndex * 16 + 9] = Particle._Color.GetGreen();
-			Colors[ParticleIndex * 16 + 10] = Particle._Color.GetGreen();
+			Colors[ParticleIndex * 16 + 10] = Particle._Color.GetBlue();
 			Colors[ParticleIndex * 16 + 11] = Particle._Color.GetOpacity();
 			Vertices[ParticleIndex * 12 + 6] = Particle._Position[0] + Particle._Size;
 			Vertices[ParticleIndex * 12 + 7] = Particle._Position[1] + Particle._Size;
@@ -133,7 +133,7 @@ void Graphics::ParticleSystemNode::Draw(Graphics::RenderContext * RenderContext)
 			Indices[IndexIndex++] = ParticleIndex * 4 + 2;
 			Colors[ParticleIndex * 16 + 12] = Particle._Color.GetRed();
 			Colors[ParticleIndex * 16 + 13] = Particle._Color.GetGreen();
-			Colors[ParticleIndex * 16 + 14] = Particle._Color.GetGreen();
+			Colors[ParticleIndex * 16 + 14] = Particle._Color.GetBlue();
 			Colors[ParticleIndex * 16 + 15] = Particle._Color.GetOpacity();
 			Vertices[ParticleIndex * 12 + 9] = Particle._Position[0] - Particle._Size;
 			Vertices[ParticleIndex * 12 + 10] = Particle._Position[1] + Particle._Size;
