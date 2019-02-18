@@ -1708,14 +1708,7 @@ void LoadGameFromElement(const Element * SaveElement)
 						assert(NewShip != nullptr);
 						for(auto TypeSpecificChild : ObjectChild->GetChilds())
 						{
-							if(TypeSpecificChild->GetName() == "exhaust-offset")
-							{
-								assert(TypeSpecificChild->HasAttribute("x") == true);
-								assert(TypeSpecificChild->HasAttribute("y") == true);
-								assert(TypeSpecificChild->HasAttribute("z") == true);
-								NewShip->SetExhaustOffset(Vector3f::CreateFromComponents(from_string_cast< float >(TypeSpecificChild->GetAttribute("x")), from_string_cast< float >(TypeSpecificChild->GetAttribute("y")), from_string_cast< float >(TypeSpecificChild->GetAttribute("z"))));
-							}
-							else if(TypeSpecificChild->GetName() == "faction")
+							if(TypeSpecificChild->GetName() == "faction")
 							{
 								assert(TypeSpecificChild->HasAttribute("identifier") == true);
 								NewShip->SetFaction(g_Galaxy->GetFaction(TypeSpecificChild->GetAttribute("identifier")));
