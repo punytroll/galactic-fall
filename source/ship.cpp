@@ -50,6 +50,8 @@
 #include "visualizations.h"
 #include "weapon.h"
 
+const float g_ExhaustNextParticle{0.0005f};
+
 // this function defined in main.cpp
 Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSystemClassIdentifier);
 
@@ -59,6 +61,7 @@ Ship::Ship(void) :
 	_CargoHold(nullptr),
 	_EnergyNetwork{new Physics::Energy::Network{}},
 	_EngineGlowParticleSystem(0),
+	_ExhaustNextParticle{g_ExhaustNextParticle},
 	_ExhaustOrientation{Quaternion::CreateIdentity()},
 	_ExhaustPosition{Vector3f::CreateZero()},
 	_ExhaustRadius(0.0f),
@@ -320,16 +323,22 @@ bool Ship::Update(float Seconds)
 				}
 				SetFuel(GetFuel() - FuelConsumption);
 				assert(_EngineGlowParticleSystem != nullptr);
-				for(int I = 0; I < 4; ++I)
+				
+				auto SecondsForParticleExhaust{Seconds};
+				
+				while(SecondsForParticleExhaust >= _ExhaustNextParticle)
 				{
+					SecondsForParticleExhaust -= _ExhaustNextParticle;
+					_ExhaustNextParticle = g_ExhaustNextParticle;
+					
 					Graphics::ParticleSystem::Particle Particle;
 					
-					Particle._TimeOfDeath = GameTime::Get() + GetRandomFloat(0.5f, 0.9f);
+					Particle._TimeOfDeath = GameTime::Get() + GetRandomFloat(0.1f, 0.2f);
 					Particle._Color = Graphics::ColorRGBO(GetRandomFloat(0.8f, 1.0f), GetRandomFloat(0.7f, 0.8f), 0.5f, 0.08f);
 					
 					auto Distance{sqrt(GetRandomUniform())};
 					auto Theta{GetRandomRadians()};
-					auto Velocity{sqrt(1.0f - Distance)};
+					auto Velocity{8.0f * sqrt(1.0f - Distance)};
 					
 					Distance *= GetExhaustRadius();
 					Particle._Position = Vector3f::CreateFromComponents(0.0f, Distance * cos(Theta), Distance * sin(Theta));
@@ -337,6 +346,7 @@ bool Ship::Update(float Seconds)
 					Particle._Size = 0.2f;
 					_EngineGlowParticleSystem->AddParticle(Particle);
 				}
+				_ExhaustNextParticle -= SecondsForParticleExhaust;
 			}
 		}
 		if(m_Jettison == true)

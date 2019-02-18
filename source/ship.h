@@ -121,6 +121,7 @@ private:
 	Storage * _CargoHold;
 	Physics::Energy::Network * _EnergyNetwork;
 	Graphics::ParticleSystem * _EngineGlowParticleSystem;
+	float _ExhaustNextParticle;
 	Quaternion _ExhaustOrientation;
 	Vector3f _ExhaustPosition;
 	float _ExhaustRadius;
