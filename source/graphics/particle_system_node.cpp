@@ -90,6 +90,7 @@ void Graphics::ParticleSystemNode::Draw(Graphics::RenderContext * RenderContext)
 		float Colors[4 * NumberOfVertices];
 		float Vertices[3 * NumberOfVertices];
 		float TextureCoordinates[2 * NumberOfVertices];
+		float Opacities[1 * NumberOfVertices];
 		unsigned short Indices[NumberOfVertices + _ParticleSystem->GetParticles().size() - 1];
 		int ParticleIndex{0};
 		int IndexIndex{0};
@@ -110,6 +111,7 @@ void Graphics::ParticleSystemNode::Draw(Graphics::RenderContext * RenderContext)
 			Vertices[ParticleIndex * 12 + 2] = Particle._Position[2];
 			TextureCoordinates[ParticleIndex * 8 + 0] = 0.0f;
 			TextureCoordinates[ParticleIndex * 8 + 1] = 0.0f;
+			Opacities[ParticleIndex * 4 + 0] = Particle._Opacity;
 			Indices[IndexIndex++] = ParticleIndex * 4 + 0;
 			Colors[ParticleIndex * 16 + 4] = Particle._Color.GetRed();
 			Colors[ParticleIndex * 16 + 5] = Particle._Color.GetGreen();
@@ -120,6 +122,7 @@ void Graphics::ParticleSystemNode::Draw(Graphics::RenderContext * RenderContext)
 			Vertices[ParticleIndex * 12 + 5] = Particle._Position[2];
 			TextureCoordinates[ParticleIndex * 8 + 2] = 1.0f;
 			TextureCoordinates[ParticleIndex * 8 + 3] = 0.0f;
+			Opacities[ParticleIndex * 4 + 1] = Particle._Opacity;
 			Indices[IndexIndex++] = ParticleIndex * 4 + 1;
 			Colors[ParticleIndex * 16 + 8] = Particle._Color.GetRed();
 			Colors[ParticleIndex * 16 + 9] = Particle._Color.GetGreen();
@@ -130,6 +133,7 @@ void Graphics::ParticleSystemNode::Draw(Graphics::RenderContext * RenderContext)
 			Vertices[ParticleIndex * 12 + 8] = Particle._Position[2];
 			TextureCoordinates[ParticleIndex * 8 + 4] = 1.0f;
 			TextureCoordinates[ParticleIndex * 8 + 5] = 1.0f;
+			Opacities[ParticleIndex * 4 + 2] = Particle._Opacity;
 			Indices[IndexIndex++] = ParticleIndex * 4 + 2;
 			Colors[ParticleIndex * 16 + 12] = Particle._Color.GetRed();
 			Colors[ParticleIndex * 16 + 13] = Particle._Color.GetGreen();
@@ -140,13 +144,14 @@ void Graphics::ParticleSystemNode::Draw(Graphics::RenderContext * RenderContext)
 			Vertices[ParticleIndex * 12 + 11] = Particle._Position[2];
 			TextureCoordinates[ParticleIndex * 8 + 6] = 0.0f;
 			TextureCoordinates[ParticleIndex * 8 + 7] = 1.0f;
+			Opacities[ParticleIndex * 4 + 3] = Particle._Opacity;
 			Indices[IndexIndex++] = ParticleIndex * 4 + 3;
 			ParticleIndex += 1;
 		}
 		
-		GLuint Buffers[4];
+		GLuint Buffers[5];
 		
-		GLGenBuffers(4, Buffers);
+		GLGenBuffers(5, Buffers);
 		// index buffer
 		GLBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Buffers[0]);
 		GLBufferData(GL_ELEMENT_ARRAY_BUFFER, (NumberOfVertices + _ParticleSystem->GetParticles().size() - 1) * sizeof(unsigned short), Indices, GL_STREAM_DRAW);
@@ -165,6 +170,11 @@ void Graphics::ParticleSystemNode::Draw(Graphics::RenderContext * RenderContext)
 		GLBufferData(GL_ARRAY_BUFFER, 4 * NumberOfVertices * sizeof(GLfloat), Colors, GL_STREAM_DRAW);
 		GLVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 0, 0);
 		GLEnableVertexAttribArray(2);
+		// opacities
+		GLBindBuffer(GL_ARRAY_BUFFER, Buffers[4]);
+		GLBufferData(GL_ARRAY_BUFFER, 1 * NumberOfVertices * sizeof(GLfloat), Opacities, GL_STREAM_DRAW);
+		GLVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, 0, 0);
+		GLEnableVertexAttribArray(3);
 		assert(RenderContext != nullptr);
 		assert(RenderContext->GetStyle() != nullptr);
 		RenderContext->GetStyle()->SetProgramIdentifier("particle");
