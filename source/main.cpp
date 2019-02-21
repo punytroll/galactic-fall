@@ -380,9 +380,11 @@ Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSyst
 			
 			Particle._Position.Set(0.0f, 0.0f, 0.0f);
 			Particle._Velocity.Set(Velocity[0], Velocity[1], 0.0f);
+			Particle._TimeOfCreation = GameTime::Get();
 			Particle._TimeOfDeath = GameTime::Get() + GetRandomDouble(0.3f, 0.8f);
 			Particle._Color.Set(GetRandomFloat(0.4f, 0.5f), GetRandomFloat(0.35f, 0.45f), GetRandomFloat(0.35f, 0.65f), 0.3f);
 			Particle._Size = GetRandomFloat(0.25f, 0.4f);
+			Particle._Opacity = 1.0f;
 			ParticleSystem->AddParticle(Particle);
 		}
 		ParticleSystem->AddSystemScriptLine("kill-empty");
@@ -402,9 +404,11 @@ Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSyst
 			
 			Particle._Position.Set(Position[0], Position[1], 0.0f);
 			Particle._Velocity.Set(Velocity[0], Velocity[1], 0.0f);
+			Particle._TimeOfCreation = GameTime::Get();
 			Particle._TimeOfDeath = GameTime::Get() + GetRandomDouble(0.8f, 1.2f);
 			Particle._Color.Set(GetRandomFloat(0.5f, 0.65f), GetRandomFloat(0.6f, 0.65f), 1.0f, 0.5f);
 			Particle._Size = GetRandomFloat(0.5f, 0.9f);
+			Particle._Opacity = 1.0f;
 			ParticleSystem->AddParticle(Particle);
 		}
 		// add green cloud which turns counter-clockwise
@@ -415,9 +419,11 @@ Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSyst
 			
 			Particle._Position.Set(Position[0], Position[1], 0.0f);
 			Particle._Velocity.Set(Position[1], -Position[0], 0.0f);
+			Particle._TimeOfCreation = GameTime::Get();
 			Particle._TimeOfDeath = GameTime::Get() + GetRandomDouble(1.5f, 2.5f);
 			Particle._Color.Set(GetRandomFloat(0.4f, 0.5f), GetRandomFloat(0.85f, 1.0f), GetRandomFloat(0.75f, 0.95f), 0.05f);
 			Particle._Size = GetRandomFloat(10.0f, 12.0f);
+			Particle._Opacity = 1.0f;
 			ParticleSystem->AddParticle(Particle);
 		}
 		
@@ -426,14 +432,17 @@ Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSyst
 		
 		Particle._Position.Set(0.0f, 0.0f, 0.0f);
 		Particle._Velocity.Set(0.0f, 0.0f, 0.0f);
+		Particle._TimeOfCreation = GameTime::Get();
 		Particle._TimeOfDeath = GameTime::Get() + GetRandomDouble(0.1f, 0.15f);
 		Particle._Color.Set(0.4f, GetRandomFloat(0.4f, 1.0f), GetRandomFloat(0.95f, 1.0f), 0.3f);
 		Particle._Size = 200.0f;
+		Particle._Opacity = 1.0f;
 		ParticleSystem->AddParticle(Particle);
 		ParticleSystem->AddSystemScriptLine("kill-empty");
 		ParticleSystem->AddSystemScriptLine("move");
 		ParticleSystem->AddSystemScriptLine("update-particles");
 		ParticleSystem->AddParticleScriptLine("kill-old");
+		ParticleSystem->AddParticleScriptLine("fade");
 		ParticleSystem->AddParticleScriptLine("move");
 	}
 	else if(ParticleSystemClassIdentifier == "explosion")
@@ -447,9 +456,11 @@ Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSyst
 			
 			Particle._Velocity.Set(Velocity[0], Velocity[1], 0.0f);
 			Particle._Position.Set(0.0f, 0.0f, 0.0f);
+			Particle._TimeOfCreation = GameTime::Get();
 			Particle._TimeOfDeath = GameTime::Get() + GetRandomDouble(1.0f, 2.5f);
 			Particle._Color.Set(GetRandomFloat(0.4f, 0.8f), GetRandomFloat(0.2f, 0.4f), GetRandomFloat(0.05f, 0.15f), 0.5f);
 			Particle._Size = 5.0f / abs(Speed);
+			Particle._Opacity = 1.0f;
 			ParticleSystem->AddParticle(Particle);
 		}
 		
@@ -466,9 +477,11 @@ Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSyst
 			
 			Particle._Velocity.Set(Velocity[0], Velocity[1], 0.0f);
 			Particle._Position.Set(Position[0], Position[1], 0.0f);
+			Particle._TimeOfCreation = GameTime::Get();
 			Particle._TimeOfDeath = GameTime::Get() + GetRandomDouble(1.0f, 2.0f);
 			Particle._Color.Set(GetRandomFloat(0.6f, 0.9f), GetRandomFloat(0.3f, 0.5f), GetRandomFloat(0.15f, 0.2f), 0.5f);
 			Particle._Size = 5.0f / abs(abs(Speed) - 3.0f);
+			Particle._Opacity = 1.0f;
 			ParticleSystem->AddParticle(Particle);
 		}
 		// exhalting explosion cloud
@@ -481,9 +494,11 @@ Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSyst
 			
 			Particle._Velocity.Set(Velocity[0], Velocity[1], 0.0f);
 			Particle._Position.Set(0.0f, 0.0f, 0.0f);
+			Particle._TimeOfCreation = GameTime::Get();
 			Particle._TimeOfDeath = GameTime::Get() + GetRandomDouble(0.8f, 1.8f);
 			Particle._Color.Set(GetRandomFloat(0.6f, 0.8f), GetRandomFloat(0.3f, 0.4f), GetRandomFloat(0.3f, 0.3f), 0.5f);
 			Particle._Size = 3.0f / abs(abs(Speed) - 6.0f);
+			Particle._Opacity = 1.0f;
 			ParticleSystem->AddParticle(Particle);
 		}
 		// flash
@@ -494,9 +509,11 @@ Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSyst
 			
 			Particle._Position.Set(Position[0], Position[1], 0.0f);
 			Particle._Velocity.Set(0.0f, 0.0f, 0.0f);
+			Particle._TimeOfCreation = GameTime::Get();
 			Particle._TimeOfDeath = GameTime::Get() + GetRandomDouble(0.1f, 0.22f);
 			Particle._Color.Set(0.9f, GetRandomFloat(0.9f, 1.0f), GetRandomFloat(0.95f, 1.0f), 0.15f);
 			Particle._Size = 20.0f;
+			Particle._Opacity = 1.0f;
 			ParticleSystem->AddParticle(Particle);
 		}
 		
@@ -504,20 +521,24 @@ Graphics::ParticleSystem * CreateParticleSystem(const std::string & ParticleSyst
 		
 		Particle._Position.Set(0.0f, 0.0f, 0.0f);
 		Particle._Velocity.Set(0.0f, 0.0f, 0.0f);
+		Particle._TimeOfCreation = GameTime::Get();
 		Particle._TimeOfDeath = GameTime::Get() + GetRandomDouble(0.1f, 0.15f);
 		Particle._Color.Set(0.9f, GetRandomFloat(0.9f, 1.0f), GetRandomFloat(0.95f, 1.0f), 0.3f);
 		Particle._Size = 200.0f;
+		Particle._Opacity = 1.0f;
 		ParticleSystem->AddParticle(Particle);
 		ParticleSystem->AddSystemScriptLine("kill-empty");
 		ParticleSystem->AddSystemScriptLine("move");
 		ParticleSystem->AddSystemScriptLine("update-particles");
 		ParticleSystem->AddParticleScriptLine("kill-old");
+		ParticleSystem->AddParticleScriptLine("fade");
 		ParticleSystem->AddParticleScriptLine("move");
 	}
 	else if(ParticleSystemClassIdentifier == "engine_glow")
 	{
 		ParticleSystem->AddSystemScriptLine("update-particles");
 		ParticleSystem->AddParticleScriptLine("kill-old");
+		ParticleSystem->AddParticleScriptLine("fade");
 		ParticleSystem->AddParticleScriptLine("move");
 	}
 	else

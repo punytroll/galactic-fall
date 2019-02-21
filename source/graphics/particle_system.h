@@ -42,7 +42,9 @@ namespace Graphics
 			Vector3f _Position;
 			Vector3f _Velocity;
 			Graphics::ColorRGBO _Color;
+			double _TimeOfCreation;
 			double _TimeOfDeath;
+			float _Opacity;
 			float _Size;
 		};
 		

@@ -82,6 +82,10 @@ void Graphics::ParticleSystem::Update(float Seconds)
 					{
 						ParticleIterator->_Position.Translate(ParticleIterator->_Velocity * Seconds);
 					}
+					else if(*ScriptLine == "fade")
+					{
+						ParticleIterator->_Opacity = 1.0f - (GameTime::Get() - ParticleIterator->_TimeOfCreation) / (ParticleIterator->_TimeOfDeath - ParticleIterator->_TimeOfCreation);
+					}
 					else
 					{
 						throw std::runtime_error("Unknown particle command '" + *ScriptLine + "'.");

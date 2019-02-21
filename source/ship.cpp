@@ -327,6 +327,7 @@ bool Ship::Update(float Seconds)
 					
 					Graphics::ParticleSystem::Particle Particle;
 					
+					Particle._TimeOfCreation = GameTime::Get();
 					Particle._TimeOfDeath = GameTime::Get() + GetRandomFloat(0.1f, 0.2f);
 					Particle._Color = Graphics::ColorRGBO(GetRandomFloat(0.8f, 1.0f), GetRandomFloat(0.7f, 0.8f), 0.5f, 0.08f);
 					
@@ -338,6 +339,7 @@ bool Ship::Update(float Seconds)
 					Particle._Position = Vector3f::CreateFromComponents(0.0f, Distance * cos(Theta), Distance * sin(Theta));
 					Particle._Velocity = Vector3f::CreateFromComponents(Velocity, 0.0f, 0.0f).Rotate(_ExhaustOrientation);
 					Particle._Size = 0.2f;
+					Particle._Opacity = 1.0f;
 					_EngineGlowParticleSystem->AddParticle(Particle);
 				}
 				_ExhaustNextParticle -= SecondsForParticleExhaust;
